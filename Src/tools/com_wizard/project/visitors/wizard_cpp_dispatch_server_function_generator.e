@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Cpp dispatch server function generator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -19,7 +19,7 @@ inherit
 
 feature -- Basic operation
 
-	generate (a_component: WIZARD_COMPONENT_DESCRIPTOR; a_descriptor: WIZARD_FUNCTION_DESCRIPTOR) is
+	generate (a_component: WIZARD_COMPONENT_DESCRIPTOR; a_descriptor: WIZARD_FUNCTION_DESCRIPTOR)
 			--Generate C server feature
 		do
 			func_desc := a_descriptor
@@ -39,7 +39,7 @@ feature -- Basic operation
 
 feature {NONE} -- Implementation
 
-	signature: STRING is
+	signature: STRING
 			-- Set server signature
 		local
 			visitor: WIZARD_DATA_TYPE_VISITOR
@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	body: STRING is
+	body: STRING
 			-- Feature body
 		local
 			out_value: STRING
@@ -219,7 +219,7 @@ feature {NONE} -- Implementation
 			Result.append ("return S_OK;")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

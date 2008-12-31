@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Access
 
-	full_toc_text: STRING is
+	full_toc_text: STRING
 			-- Full TOC text
 		local
 			l_formatter: TABLE_OF_CONTENTS_WEB_HELP_FORMATTER
@@ -29,26 +29,26 @@ feature -- Access
 		
 feature {NONE} -- Implementation
 
-	template_file_name: STRING is
+	template_file_name: STRING
 			-- Template file		
 		do
 			Result := web_help_project_template_file_name
 		end
 
 	default_toc_file_name,
-	toc_template_file_name: STRING is
+	toc_template_file_name: STRING
 			-- Toc template file		
 		do
 			Result := html_tree_toc_template_file_name
 		end
 			
-	filter_template_file_name: STRING is
+	filter_template_file_name: STRING
 			-- Filter template file
 		do
 			Result := html_filter_template_file_name
 		end
 		
-	resource_files: ARRAYED_LIST [STRING] is
+	resource_files: ARRAYED_LIST [STRING]
 			-- List of resource file to copy with project
 		once
 			create Result.make (11)	
@@ -65,7 +65,7 @@ feature {NONE} -- Implementation
 			Result.extend ("sync_button.gif")
 		end	
 		
-	root_resource_files: ARRAYED_LIST [STRING] is
+	root_resource_files: ARRAYED_LIST [STRING]
 			-- List of root level resource file to copy with project
 		once		
 			create Result.make (6)
@@ -76,7 +76,7 @@ feature {NONE} -- Implementation
 			Result.extend ("header.css")	
 		end	
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Convert XML to HTML."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature -- Status Setting
 
-	clear is
+	clear
 			-- Clear
 		do
 			Precursor
@@ -39,7 +39,7 @@ feature -- Status Setting
 
 feature -- Tag	
 
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- Start of tag.
 		do
 			can_write_content := True
@@ -59,7 +59,7 @@ feature -- Tag
 			previous_elements.put (a_local_part)			
 		end
 
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- End of tag.
 		do
 			if conc_content /= Void then
@@ -100,13 +100,13 @@ feature -- Tag
 			previous_elements.remove
 		end
 
-	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
+	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
 			-- Attribute
 		do
 			process_attribute (a_local_part, a_value)
 		end
 
-	on_content (a_content: STRING) is
+	on_content (a_content: STRING)
 			-- Forward content.
 		local
 			l_tag,
@@ -163,7 +163,7 @@ feature -- Tag
 
 feature -- Status Setting
 
-	set_filename (a_file: STRING) is
+	set_filename (a_file: STRING)
 			-- Set filename indicating file being filtered
 		require
 			file_not_void: a_file /= Void
@@ -173,7 +173,7 @@ feature -- Status Setting
 
 feature {NONE} -- Processing
 
-	process_complex_element (e: STRING; is_start: BOOLEAN) is
+	process_complex_element (e: STRING; is_start: BOOLEAN)
 			-- Process complex element `e'
 		require
 			e_not_void: e/= Void
@@ -324,7 +324,7 @@ feature {NONE} -- Processing
 			end		
 		end	
 		
-	process_attribute_element (e: STRING) is
+	process_attribute_element (e: STRING)
 			-- Process attribute element `e'
 		require
 			e_not_void: e /= Void
@@ -333,7 +333,7 @@ feature {NONE} -- Processing
 			write_attribute (e, False)
 		end
 		
-	process_class_attribute_element (e: STRING) is
+	process_class_attribute_element (e: STRING)
 			-- Process class attribute element `e'
 		require
 			e_not_void: e /= Void
@@ -341,7 +341,7 @@ feature {NONE} -- Processing
 			write_attribute (e, True)
 		end
 		
-	process_character_mapping_element (e: STRING) is
+	process_character_mapping_element (e: STRING)
 			-- Convert element to associated character mapping
 		require
 			e_not_void: e /= Void
@@ -349,7 +349,7 @@ feature {NONE} -- Processing
 			on_content (character_mappings.item (e))
 		end
 
-	process_attribute (a_name, a_value: STRING) is
+	process_attribute (a_name, a_value: STRING)
 			-- Process attribute
 		require
 			name_not_void: a_name /= Void
@@ -409,7 +409,7 @@ feature {NONE} -- Processing
 
 feature {NONE} -- Query
 		
-	in_attribute: BOOLEAN is
+	in_attribute: BOOLEAN
 			-- Is current processing a attribute element??
 		do
 			Result := not Attribute_stack.is_empty
@@ -418,7 +418,7 @@ feature {NONE} -- Query
 	can_write_content: BOOLEAN
 			-- Can content be output based Current element?
 
-	link_convert (a_url: STRING): STRING is
+	link_convert (a_url: STRING): STRING
 			-- Converts `a_url' file link to html file link.  
 			-- Optionally converts it to relative links also.
 			-- Leaves directory urls unchanged.
@@ -462,7 +462,7 @@ feature {NONE} -- Query
 			end
 		end
 		
-	image_link_convert (a_url: STRING): STRING is
+	image_link_convert (a_url: STRING): STRING
 			-- Converts `a_url' image file link to relative link
 		require
 			url_not_void: a_url /= Void
@@ -495,7 +495,7 @@ feature {NONE} -- Query
 
 feature {NONE} -- Access
 
-	file_type: STRING is "html"
+	file_type: STRING = "html"
 
 	attribute_write_position,
 	attribute_value_write_position: INTEGER
@@ -511,7 +511,7 @@ feature {NONE} -- Access
 	content_offset: INTEGER
 			-- Content offset
 	
-	content_write_position: INTEGER is
+	content_write_position: INTEGER
 			-- Position to write current content text(s)
 		do
 			if in_attribute then
@@ -523,7 +523,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Output
 
-	write_element (e: STRING; start: BOOLEAN; is_complex: BOOLEAN) is
+	write_element (e: STRING; start: BOOLEAN; is_complex: BOOLEAN)
 			-- Write `e' as element
 		require
 			e_not_void: e /= Void
@@ -568,7 +568,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	write_attribute (e: STRING; is_class: BOOLEAN) is
+	write_attribute (e: STRING; is_class: BOOLEAN)
 			-- Write `e' as attribute
 		require
 			e_not_void: e /= Void
@@ -592,40 +592,40 @@ feature {NONE} -- Output
 
 feature {NONE} -- Implementation
 
-	buffered_tags: ARRAYED_STACK [STRING] is
+	buffered_tags: ARRAYED_STACK [STRING]
 			-- Buffered tag
 		once
 			create Result.make (1)
 		end
 
-	previous_elements: ARRAYED_STACK [STRING] is
+	previous_elements: ARRAYED_STACK [STRING]
 			-- Previously processed element name
 		once
 			create Result.make (1)
 			Result.compare_objects
 		end
 
-	complex_stack: ARRAYED_STACK [STRING] is
+	complex_stack: ARRAYED_STACK [STRING]
 			-- List of complex elements names currently being processed
 		once
 			create Result.make (1)
 			Result.compare_objects
 		end
 
-	attribute_stack: ARRAYED_STACK [STRING] is
+	attribute_stack: ARRAYED_STACK [STRING]
 			-- List of elements names currently being processed as attributes
 		once
 			create Result.make (1)
 			Result.compare_objects
 		end
 
-	list_type_stack: ARRAYED_STACK [BOOLEAN] is
+	list_type_stack: ARRAYED_STACK [BOOLEAN]
 			-- Stack indicating list type
 		once
 			create Result.make (1)		
 		end		
 
-	previous_element: STRING is
+	previous_element: STRING
 			-- Name of last processed element
 		do
 			Result := Previous_elements.item	
@@ -634,7 +634,7 @@ feature {NONE} -- Implementation
 	previous_attribute: TUPLE [STRING, STRING]
 			-- Previous attribute
 
-	previous_attribute_name: STRING is
+	previous_attribute_name: STRING
 			-- Previous attribute name
 		do
 			if previous_attribute /= Void then
@@ -642,7 +642,7 @@ feature {NONE} -- Implementation
 			end			
 		end
 		
-	previous_attribute_value: STRING is
+	previous_attribute_value: STRING
 			-- Previous attribute value
 		do
 			if previous_attribute /= Void then
@@ -655,7 +655,7 @@ feature {NONE} -- Implementation
 	filename: STRING
 			-- File name
 
-	empty_tag: STRING is
+	empty_tag: STRING
 			-- Empty tag
 		once
 			Result := "<>"
@@ -664,7 +664,7 @@ feature {NONE} -- Implementation
 	conc_content: STRING
 			-- Current concatenated content string	
 
-	cleaned_content (a_content: STRING): STRING is
+	cleaned_content (a_content: STRING): STRING
 			-- Content cleaned
 		do
 			Result := a_content.twin
@@ -676,7 +676,7 @@ feature {NONE} -- Implementation
 			Result := rt_output_escaped (Result)
 		end
 
-	in_pre_tag: BOOLEAN is
+	in_pre_tag: BOOLEAN
 			-- Are we inside a tag which should be treated as a pre tag?
 		do
 			Result := Previous_elements.has (code_block_string) or previous_elements.has (code_string)
@@ -688,7 +688,7 @@ feature {NONE} -- Implementation
 	title: STRING;
 			-- Document title
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

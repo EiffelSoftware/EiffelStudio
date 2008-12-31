@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Status report messages.
 	]"
@@ -17,7 +17,7 @@ feature -- Access
 	nothing_to_generate_message: STRING = "***Nothing to generate!***"
 	done_message: STRING_8 = "Done."
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

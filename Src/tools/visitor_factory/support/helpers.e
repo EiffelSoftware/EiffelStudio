@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 
 	]"
@@ -12,7 +12,7 @@ class
 
 feature -- Query
 
-	has_eiffel_extension (a_file_name: STRING): BOOLEAN is
+	has_eiffel_extension (a_file_name: STRING): BOOLEAN
 			-- Determines if `a_file_name' has an Eiffel source file extension
 		require
 			a_file_name_attached: a_file_name /= Void
@@ -29,7 +29,7 @@ feature -- Contants
 	eiffel_file_extension: STRING = ".e"
 			-- Eiffel source file extension
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

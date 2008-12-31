@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Code generator."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -41,29 +41,29 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize
 		do
 		end
 
 feature -- Access
 
-	Generation_title: STRING is "Generating code"
+	Generation_title: STRING = "Generating code"
 			-- Generation title.
 
-	Interface_generation_title: STRING is "Generating implemented interfaces"
+	Interface_generation_title: STRING = "Generating implemented interfaces"
 			-- Interface generation message.
 
-	Registration_code_generation_title: STRING is "Generating registration code"
+	Registration_code_generation_title: STRING = "Generating registration code"
 			-- Registration code generation message.
 
-	Runtime_functions_generation: STRING is "Generating runtime functions"
+	Runtime_functions_generation: STRING = "Generating runtime functions"
 			-- Runtime functions generation.
 
-	Ace_file_generation: STRING is "Generating Ace and resource files"
+	Ace_file_generation: STRING = "Generating Ace and resource files"
 			-- Ace and resource file genration.
 
-	Makefile_generation: STRING is "Generating makefiles"
+	Makefile_generation: STRING = "Generating makefiles"
 			-- Makefiles genration.
 
 	ace_file_generated: BOOLEAN
@@ -77,7 +77,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	generate is
+	generate
 			-- Code generation
 		do
 			message_output.add_title (Generation_title)
@@ -102,7 +102,7 @@ feature -- Basic operations
 			end
 		end
 
-	process_type_descriptors is
+	process_type_descriptors
 			-- Process type descriptors.
 		local
 			i: INTEGER
@@ -152,7 +152,7 @@ feature -- Basic operations
 			end
 		end
 
-	generate_implemented_interfaces is
+	generate_implemented_interfaces
 			-- Generate implemented interfaces.
 		local
 			l_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR
@@ -186,7 +186,7 @@ feature -- Basic operations
 			end
 		end
 
-	generate_registration_code is
+	generate_registration_code
 			-- Generating Registration code
 		local
 			outproc_reg_gen: WIZARD_OUTPROC_EIFFEL_REGISTRATION_GENERATOR
@@ -209,7 +209,7 @@ feature -- Basic operations
 			end
 		end
 
-	generate_mappers_and_c_alias is
+	generate_mappers_and_c_alias
 			-- Generating extra files
 		local
 			l_globals: WIZARD_GENERATED_RT_GLOBALS_GENERATOR
@@ -258,7 +258,7 @@ feature -- Basic operations
 			set_alias_c_writer (Void)
 		end
 
-	generate_ace_and_resource is
+	generate_ace_and_resource
 			-- Generating Ace and Resource files.
 		local
 			definition_file_generator: WIZARD_DEFINITION_FILE_GENERATOR
@@ -283,7 +283,7 @@ feature -- Basic operations
 			resource_file_generated := True
 		end
 
-	generate_makefiles is
+	generate_makefiles
 			-- Generate Makefiles.
 		local
 			makefile_generator: WIZARD_MAKEFILE_GENERATOR
@@ -315,7 +315,7 @@ feature -- Basic operations
 			makefile_generated := True
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

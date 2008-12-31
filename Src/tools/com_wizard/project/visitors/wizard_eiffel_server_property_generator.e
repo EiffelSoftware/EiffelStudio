@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel server property generator."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -16,7 +16,7 @@ create
 
 feature -- Basic operations
 
-	generate (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR; a_descriptor: WIZARD_PROPERTY_DESCRIPTOR) is
+	generate (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR; a_descriptor: WIZARD_PROPERTY_DESCRIPTOR)
 			-- Generate access and setting features from property.
 		local
 			access_name, setting_name, an_argument, a_comment, tmp_string: STRING
@@ -76,7 +76,7 @@ feature -- Basic operations
 			setting_feature.set_body (Empty_function_body)		
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

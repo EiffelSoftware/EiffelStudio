@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Spell checker wrapper."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,12 +11,12 @@ class
 
 feature -- Basic Operations
 
-	spell_check_documents (docs: ARRAYED_LIST [DOCUMENT]) is
+	spell_check_documents (docs: ARRAYED_LIST [DOCUMENT])
 			-- Spell check all `docs'
 		do			
 		end		
 
-	spell_check (a_filename: STRING) is
+	spell_check (a_filename: STRING)
 			-- Spell check `a_text'
 		require
 			file_not_void: a_filename /= Void	
@@ -24,7 +24,7 @@ feature -- Basic Operations
 		end
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

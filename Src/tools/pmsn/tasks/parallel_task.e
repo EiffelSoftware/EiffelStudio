@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Task made of other tasks whose execution doesn't need to be ordered."
 	date: "$Date$"
 	revision: "$Revision$"

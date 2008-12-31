@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Documents."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ create
 
 feature -- Creation
 
-	make_new (a_name: STRING) is
+	make_new (a_name: STRING)
 			-- Make new document
 		require
 			a_name_not_void: a_name /= Void
@@ -40,7 +40,7 @@ feature -- Creation
 			create schema_validator	
 		end
 		
-	make_from_file (a_file: PLAIN_TEXT_FILE) is
+	make_from_file (a_file: PLAIN_TEXT_FILE)
 			-- Make from existing file
 		require
 			file_not_void: a_file /= Void
@@ -69,7 +69,7 @@ feature -- File
 
 feature --Validation
 
-	is_valid_to_schema: BOOLEAN is
+	is_valid_to_schema: BOOLEAN
 			-- Is Current valid to the loaded schema?
 		do
 			if is_valid_xml (text) then
@@ -82,7 +82,7 @@ feature --Validation
 		
 feature -- XML
 
-	xml: DOCUMENT_XML is
+	xml: DOCUMENT_XML
 			-- XML Document built from `text'.  Void if text is not valid.
 		do
 			Result := internal_xml
@@ -96,7 +96,7 @@ feature -- XML
 			end
 		end
 			
-	title: STRING is
+	title: STRING
 			-- Document Title, Void if none or if Current is not valid xml.
 		local
 			l_element: XM_ELEMENT
@@ -118,7 +118,7 @@ feature -- XML
 			has_result: Result /= Void
 		end
 		
-	output_filter_text: STRING is
+	output_filter_text: STRING
 			-- Document level output filter text
 		local
 			l_element: XM_ELEMENT
@@ -153,7 +153,7 @@ feature -- XML
 			
 feature -- GUI
 
-	properties: DOCUMENT_PROPERTIES_DIALOG is
+	properties: DOCUMENT_PROPERTIES_DIALOG
 			-- Properties dialog for Current
 		require
 			is_valid_to_schema
@@ -163,7 +163,7 @@ feature -- GUI
 
 feature -- Query
 
-	is_modified: BOOLEAN is
+	is_modified: BOOLEAN
 			-- Has current been modified since last save?
 		do
 			Result := not saved_text.is_equal (text)
@@ -172,7 +172,7 @@ feature -- Query
 	do_update_link: BOOLEAN
 			-- Can links in Current be updated?
 
-	can_display, can_transform: BOOLEAN is
+	can_display, can_transform: BOOLEAN
 			-- Can we display/transform Current based on `output_filter'?
 		local
 			l_doc_filter, l_curr_filter: STRING
@@ -189,7 +189,7 @@ feature -- Query
 				l_curr_filter.has_substring (l_doc_filter)				
 		end	
 
-	is_persisted: BOOLEAN is
+	is_persisted: BOOLEAN
 			-- Is document persisted to physical disk?
 		do
 			Result := file /= Void and then file.exists
@@ -197,7 +197,7 @@ feature -- Query
 	
 feature -- Status Setting
 	
-	change_name (a_new_name: STRING) is
+	change_name (a_new_name: STRING)
 			-- Change name of current on disk to `a_new_name'
 		local
 			l_dir: FILE_NAME
@@ -213,13 +213,13 @@ feature -- Status Setting
 			end
 		end
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING)
 			-- Set `text'
 		do			
 			text := a_text
 		end
 
-	save is
+	save
 			-- Save `text' to disk
 		local
 			l_save_dialog: EV_FILE_SAVE_DIALOG
@@ -237,7 +237,7 @@ feature -- Status Setting
 
 feature {NONE} -- Implementation
 
-	read is
+	read
 			-- Read `file' and put result in `text'
 		require
 			persisted: is_persisted
@@ -263,7 +263,7 @@ feature {NONE} -- Implementation
 	schema_validator: SCHEMA_VALIDATOR
 			-- Schema Validator
 
-	internal_save (a_filename: STRING) is
+	internal_save (a_filename: STRING)
 			-- Save with `a_filename'
 		do
 			if not is_persisted then
@@ -273,7 +273,7 @@ feature {NONE} -- Implementation
 			internal_xml := Void
 		end		
 
-	write_to_disk is
+	write_to_disk
 			-- Write Current text to disk
 		do			
 			if file /= Void and then not file.is_closed then
@@ -298,7 +298,7 @@ feature {NONE} -- Implementation
 invariant
 	has_name: name /= Void
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

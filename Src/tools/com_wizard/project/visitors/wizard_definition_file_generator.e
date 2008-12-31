@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Definition file generator"
 	legal: "See notice at end of class."
@@ -28,7 +28,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	generate  is
+	generate
 			-- Generated writer
 		local
 			entry: WIZARD_WRITER_DEFINITION_ENTRY
@@ -86,22 +86,22 @@ feature -- Basic Operations
 			definition_file_writer.save_file (Shared_file_name_factory.last_created_file_name)
 		end
 
-	Dll_register_ordinal: INTEGER is 1
+	Dll_register_ordinal: INTEGER = 1
 			-- DllRegister exported function ordinal
 
-	Dll_unregister_ordinal: INTEGER is 2
+	Dll_unregister_ordinal: INTEGER = 2
 			-- DllUnregister exported function ordinal
 
-	Dll_get_class_object_ordinal: INTEGER is 3
+	Dll_get_class_object_ordinal: INTEGER = 3
 			-- DllGetClassObject exported function ordinal
 
-	Dll_can_unload_now_ordinal: INTEGER is 4
+	Dll_can_unload_now_ordinal: INTEGER = 4
 			-- DllCanUnloadNow exported function ordinal
 
-	Std_call_type: STRING is "__stdcall";
+	Std_call_type: STRING = "__stdcall";
 			-- Standard call type
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

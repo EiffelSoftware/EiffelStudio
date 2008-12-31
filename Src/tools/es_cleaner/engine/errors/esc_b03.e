@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Back error indicating a file could not be backed up to a particual file path.
 	]"
@@ -20,7 +20,7 @@ feature {NONE} -- Implementation
 
 	dollar_description: STRING = "Could not backup configuration data to a backup file '{1}'."
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstraction of template."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,17 +13,17 @@ feature -- Access
 	name: STRING
 			-- Template name
 
-	description: STRING is
+	description: STRING
 			-- Description
 		deferred
 		end
 		
-	content: STRING is
+	content: STRING
 			-- Content
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

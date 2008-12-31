@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A command line switch file validator that checks if a specifed value is a valid Eiffel class identifier.
 	]"
@@ -27,7 +27,7 @@ feature -- Validation
 			end
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

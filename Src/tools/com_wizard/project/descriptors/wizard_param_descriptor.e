@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Descriptor of function argument"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ create
 
 feature -- Initialization
 
-	make (a_creator: WIZARD_PARAMETER_DESCRIPTOR_FACTORY) is
+	make (a_creator: WIZARD_PARAMETER_DESCRIPTOR_FACTORY)
 			-- Initialize
 		require
 			valid_creator: a_creator /= Void
@@ -59,7 +59,7 @@ feature -- Access
 	
 feature -- Status report
 
-	is_equal (other: WIZARD_PARAM_DESCRIPTOR): BOOLEAN is
+	is_equal (other: WIZARD_PARAM_DESCRIPTOR): BOOLEAN
 			-- Is `other' same parameter?
 		do
 			Result := type.is_equal_data_type (other.type)
@@ -67,7 +67,7 @@ feature -- Status report
 
 feature -- Elements Setting
 
-	set_name (a_name: STRING) is
+	set_name (a_name: STRING)
 			-- Set `name' with `a_name'.
 		require
 			non_void_name: a_name /= Void 
@@ -78,7 +78,7 @@ feature -- Elements Setting
 			valid_name: name /= Void and then not name.is_empty and name.is_equal (a_name)
 		end
 
-	set_type (a_type: WIZARD_DATA_TYPE_DESCRIPTOR) is
+	set_type (a_type: WIZARD_DATA_TYPE_DESCRIPTOR)
 			-- Set `type' with `a_type'.
 		require
 			valid_type: a_type /= Void
@@ -88,7 +88,7 @@ feature -- Elements Setting
 			valid_type: type /= Void and type = a_type
 		end
 
-	set_flags (some_flags: INTEGER) is
+	set_flags (some_flags: INTEGER)
 			-- Set `falgs' with `some_flags'.
 		require
 			valid_flags: is_valid_paramflag (some_flags)
@@ -98,7 +98,7 @@ feature -- Elements Setting
 			valid_flags: is_valid_paramflag (flags) and flags = some_flags
 		end
 
-	set_description (a_description: STRING) is
+	set_description (a_description: STRING)
 			-- Set `description' with `a_description'.
 		do
 			description := a_description
@@ -106,7 +106,7 @@ feature -- Elements Setting
 			description_set: description = a_description
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

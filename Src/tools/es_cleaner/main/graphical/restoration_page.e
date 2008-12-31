@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A notebook tab page widget for backup and restoration related functions.
 	]"
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Initialization
 
-	user_initialization is
+	user_initialization
 			-- Called by `initialize'.
 			-- Any custom user initialization that
 			-- could not be performed in `initialize',
@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	siteable_entities: !ARRAYED_LIST [!SITE [PACKAGE]] is
+	siteable_entities: !ARRAYED_LIST [!SITE [PACKAGE]]
 			-- List of siteable entities to automatically site when `Current' is sited
 		do
 			Result := Precursor {SITE}
@@ -68,19 +68,19 @@ feature {NONE} -- Access
 
 feature -- Status report
 
-	process_environement_preferences: BOOLEAN is
+	process_environement_preferences: BOOLEAN
 			-- Indiciates if the environment preferences should be processed
 		do
 			Result := restore_environment_panel.process_environement_preferences
 		end
 
-	process_environement_editing_layout: BOOLEAN is
+	process_environement_editing_layout: BOOLEAN
 			-- Indiciates if the environment editing layout should be processed
 		do
 			Result := restore_environment_panel.process_environement_editing_layout
 		end
 
-	process_environement_debug_layout: BOOLEAN is
+	process_environement_debug_layout: BOOLEAN
 			-- Indiciates if the environment debug layout should be processed
 		do
 			Result := restore_environment_panel.process_environement_debug_layout
@@ -94,7 +94,7 @@ feature -- Actions
 
 feature {NONE} -- UI state setting
 
-	enable_backup_widgets is
+	enable_backup_widgets
 			-- Enabled cleaning widgets base on configuration state
 		local
 			l_enable: BOOLEAN
@@ -120,20 +120,20 @@ feature {NONE} -- UI state setting
 
 feature {NONE} -- Implementation
 
-	on_backup_clicked is
+	on_backup_clicked
 			-- Called by `select_actions' of `btn_backup'.
 		do
 			site.backup_configs (Current)
 			enable_backup_widgets
 		end
 
-	on_restore_clicked is
+	on_restore_clicked
 			-- Called by `select_actions' of `btn_restore'.
 		do
 			site.restore_configs (Current)
 		end
 
-	on_mode_changed (a_workbench: BOOLEAN) is
+	on_mode_changed (a_workbench: BOOLEAN)
 			-- Called when user changed mode
 		do
 			enable_backup_widgets

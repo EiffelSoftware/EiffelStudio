@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Provides additional windows-specific file and directory locations.
 	]"
@@ -18,7 +18,7 @@ create
 
 feature -- Access
 
-	preferences_registy_path: STRING is
+	preferences_registy_path: STRING
 			-- Registry path to preferences key
 		do
 			Result := package.eiffel_env.eiffel_preferences
@@ -27,7 +27,7 @@ feature -- Access
 			not_result_is_empty: not Result.is_empty
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

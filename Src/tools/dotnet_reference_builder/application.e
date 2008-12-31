@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Actual application entry point.
 	]"
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		local
 			l_parser: ARGUMENT_PARSER
 		do
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	loaded_assemblies: ARRAYED_LIST [ASSEMBLY] is
+	loaded_assemblies: ARRAYED_LIST [ASSEMBLY]
 			-- List of assemblies that have been loaded in current domain
 		once
 			create Result.make (30)
@@ -45,7 +45,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	failed_loaded_assemblies: ARRAYED_LIST [STRING] is
+	failed_loaded_assemblies: ARRAYED_LIST [STRING]
 			-- List of assembly names that failed to load in current domain
 		once
 			create Result.make (5)
@@ -57,7 +57,7 @@ feature -- Access
 
 feature {NONE} -- Basic Operations
 
-	start (a_parser: ARGUMENT_PARSER) is
+	start (a_parser: ARGUMENT_PARSER)
 			-- Start application
 		local
 			l_resolver: like resolver
@@ -147,7 +147,7 @@ feature {NONE} -- Basic Operations
 
 feature {NONE} -- Output
 
-	write_report (a_writer: IO_MEDIUM; a_located: LIST [LOCATED_ASSEMBLY]; a_failed: LIST [STRING]) is
+	write_report (a_writer: IO_MEDIUM; a_located: LIST [LOCATED_ASSEMBLY]; a_failed: LIST [STRING])
 			-- Writes loaded/failed report to `a_writer'.
 		require
 			a_writer_attached: a_writer /= Void
@@ -187,7 +187,7 @@ feature {NONE} -- Output
 
 feature {NONE} -- Reflection
 
-	load_assembly (a_path: STRING): ASSEMBLY is
+	load_assembly (a_path: STRING): ASSEMBLY
 			-- Loads assembly from path `a_path'
 		require
 			a_path_attached: a_path /= Void
@@ -204,7 +204,7 @@ feature {NONE} -- Reflection
 			retry
 		end
 
-	load_assembly_from_name (a_name: ASSEMBLY_NAME): ASSEMBLY is
+	load_assembly_from_name (a_name: ASSEMBLY_NAME): ASSEMBLY
 			-- Loads assembly from assembly name `a_name'
 		require
 			a_name_attached: a_name /= Void
@@ -230,7 +230,7 @@ feature {NONE} -- Reflection
 			retry
 		end
 
-	load_all_assemblies (a_asms: LIST [ASSEMBLY]) is
+	load_all_assemblies (a_asms: LIST [ASSEMBLY])
 			-- Adds all assemblies and referenced assemblies in `a_asms' to `loaded_assemblies' or `failed_loaded_assemblies' list
 			-- depending on the result of them loading.
 		require
@@ -252,7 +252,7 @@ feature {NONE} -- Reflection
 			a_asms_unmoved: a_asms.cursor.is_equal (old a_asms.cursor)
 		end
 
-	load_all_reference_assemblies (a_asm: ASSEMBLY) is
+	load_all_reference_assemblies (a_asm: ASSEMBLY)
 			-- Adds all referenced assemblies of `a_asm' to `loaded_assemblies' or `failed_loaded_assemblies' list
 			-- depending on the result of them loading.
 		require
@@ -285,7 +285,7 @@ feature {NONE} -- Reflection
 
 feature {NONE} -- Resolution
 
-	resolver: AR_RESOLVER is
+	resolver: AR_RESOLVER
 			-- Resolver used to resolve referenced assemblies
 		local
 			l_folders: like assembly_folders
@@ -309,7 +309,7 @@ feature {NONE} -- Resolution
 
 feature {NONE} -- Registry access
 
-	assembly_folders: LIST [STRING] is
+	assembly_folders: LIST [STRING]
 			-- Retrieve list of assembly folders from registry
 		local
 			l_result: ARRAYED_LIST [STRING]
@@ -340,7 +340,7 @@ feature {NONE} -- Registry access
 			result_attached: Result /= Void
 		end
 
-	add_key_content (a_key: REGISTRY_KEY; a_list: ARRAYED_LIST [STRING]) is
+	add_key_content (a_key: REGISTRY_KEY; a_list: ARRAYED_LIST [STRING])
 			-- Adds default values of all subkeys in `a_key' to `a_list'.
 		require
 			a_key_attached: a_key /= Void
@@ -366,7 +366,7 @@ feature {NONE} -- Registry access
 			end
 		end
 
-	framework_reg_key: SYSTEM_STRING is
+	framework_reg_key: SYSTEM_STRING
 			-- Retrieves .NET framework registry key.
 		once
 			if {DOTNET_POINTER}.get_size = 8 then
@@ -381,7 +381,7 @@ feature {NONE} -- Registry access
 
 feature -- Factory functions
 
-	create_located_assembly (a_asm: ASSEMBLY): LOCATED_ASSEMBLY is
+	create_located_assembly (a_asm: ASSEMBLY): LOCATED_ASSEMBLY
 			-- Creates a located assembly from assembly `a_asm'
 		require
 			a_asm_attached: a_asm /= Void
@@ -407,7 +407,7 @@ feature -- Factory functions
 			result_attached: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generate Eiffel Client code from property"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -16,7 +16,7 @@ create
 
 feature -- Basic operations
 
-	generate (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR; a_descriptor: WIZARD_PROPERTY_DESCRIPTOR) is
+	generate (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR; a_descriptor: WIZARD_PROPERTY_DESCRIPTOR)
 			-- Generate client access and setting features.
 		local
 			l_visitor: WIZARD_DATA_TYPE_VISITOR
@@ -49,7 +49,7 @@ feature {NONE} -- Implementation
 	external_set_feature_name: STRING 
 			-- Name of external set feature.
 
-	c_type (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR): STRING is
+	c_type (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR): STRING
 			-- C type of component.
 		require
 			non_void_component_descriptor: a_component_descriptor /= Void
@@ -65,7 +65,7 @@ feature {NONE} -- Implementation
 			valid_c_type: not Result.is_empty
 		end
 		
-	define_feature_names (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR; a_descriptor: WIZARD_PROPERTY_DESCRIPTOR) is
+	define_feature_names (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR; a_descriptor: WIZARD_PROPERTY_DESCRIPTOR)
 			-- Define feature names.
 		require
 			non_void_component: a_component_descriptor /= Void
@@ -106,7 +106,7 @@ feature {NONE} -- Implementation
 			valid_external_set_feature_name: not external_set_feature_name.is_empty
 		end
 
-	generate_access_feature (a_visitor: WIZARD_DATA_TYPE_VISITOR; a_descriptor: WIZARD_PROPERTY_DESCRIPTOR) is
+	generate_access_feature (a_visitor: WIZARD_DATA_TYPE_VISITOR; a_descriptor: WIZARD_PROPERTY_DESCRIPTOR)
 			-- Generate access feature.
 		require
 			non_void_visitor: a_visitor /= Void
@@ -127,7 +127,7 @@ feature {NONE} -- Implementation
 			non_void_access_feature_body: access_feature.body /= Void
 		end
 
-	generate_setting_feature (a_visitor: WIZARD_DATA_TYPE_VISITOR) is
+	generate_setting_feature (a_visitor: WIZARD_DATA_TYPE_VISITOR)
 			-- Generate setting feature.
 		require
 			non_void_visitor: a_visitor /= Void
@@ -155,7 +155,7 @@ feature {NONE} -- Implementation
 			valid_setting_feature_arguments: not setting_feature.arguments.is_empty
 		end
 
-	generate_external_access_feature (a_visitor: WIZARD_DATA_TYPE_VISITOR; a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR; a_descriptor: WIZARD_PROPERTY_DESCRIPTOR) is
+	generate_external_access_feature (a_visitor: WIZARD_DATA_TYPE_VISITOR; a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR; a_descriptor: WIZARD_PROPERTY_DESCRIPTOR)
 			-- Generate external access feature.
 		require
 			non_void_visitor: a_visitor /= Void
@@ -179,7 +179,7 @@ feature {NONE} -- Implementation
 			valid_external_access_feature_arguments: not external_access_feature.arguments.is_empty
 		end
 
-	generate_external_setting_feature (a_visitor: WIZARD_DATA_TYPE_VISITOR; a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR) is
+	generate_external_setting_feature (a_visitor: WIZARD_DATA_TYPE_VISITOR; a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR)
 			-- Generate external set feature.
 		require
 			non_void_visitor: a_visitor /= Void
@@ -213,7 +213,7 @@ feature {NONE} -- Implementation
 			valid_external_setting_feature_arguments: not external_setting_feature.arguments.is_empty
 		end
 
-	setting_feature_comment (a_name: STRING): STRING is
+	setting_feature_comment (a_name: STRING): STRING
 			-- Comment for setting feature.
 		require
 			non_void_name: a_name /= Void
@@ -228,7 +228,7 @@ feature {NONE} -- Implementation
 			valid_comment: not Result.is_empty
 		end
 
-	setting_body (a_visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
+	setting_body (a_visitor: WIZARD_DATA_TYPE_VISITOR): STRING
 			-- Coclass client setting body code
 		require
 			non_void_visitor: a_visitor /= Void
@@ -263,7 +263,7 @@ feature {NONE} -- Implementation
 			valid_body: not Result.is_empty		
 		end
 
-	access_body: STRING is
+	access_body: STRING
 			-- Coclass client access body
 		require
 			non_void_external_access_feature_name: external_access_feature_name /= Void
@@ -278,7 +278,7 @@ feature {NONE} -- Implementation
 			valid_body: not Result.is_empty		
 		end
 
-	external_access_body (a_class_name, a_header_file_name: STRING; a_visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
+	external_access_body (a_class_name, a_header_file_name: STRING; a_visitor: WIZARD_DATA_TYPE_VISITOR): STRING
 			-- External access feature body
 		require
 			non_void_class_name: a_class_name /= Void
@@ -304,7 +304,7 @@ feature {NONE} -- Implementation
 			valid_body: not Result.is_empty		
 		end
 
-	external_setting_body (a_class_name, a_header_file_name: STRING; a_visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
+	external_setting_body (a_class_name, a_header_file_name: STRING; a_visitor: WIZARD_DATA_TYPE_VISITOR): STRING
 			-- External setting body
 		require
 			non_void_class_name: a_class_name /= Void
@@ -337,7 +337,7 @@ feature {NONE} -- Implementation
 			valid_body: not Result.is_empty		
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Checked entity that describes a checked .NET type's member, require implementation by decendents.
 	]"
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_type: like type) is
+	make (a_type: like type)
 			-- Create an initialize CLS-compliant checked type.
 		require
 			a_type_not_void: a_type /= Void
@@ -46,10 +46,10 @@ feature -- Access
 
 feature -- Query
 
-	is_compliant_interface: BOOLEAN is
+	is_compliant_interface: BOOLEAN
 			-- Is type fully CLS-complaint interface?
 			-- This means that all accessible members are CLS-compliant.
-		indexing
+		note
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		require
 			not_is_being_checked: has_been_checked or not is_being_checked
@@ -65,10 +65,10 @@ feature -- Query
 			not_is_being_checked: has_been_checked or not is_being_checked
 		end
 
-	is_eiffel_compliant_interface: BOOLEAN is
+	is_eiffel_compliant_interface: BOOLEAN
 			-- Is type fully Eiffel-complaint interface?
 			-- This means that all accessible members are Eiffel-compliant.
-		indexing
+		note
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		require
 			not_is_being_checked: has_been_checked or not is_being_checked
@@ -86,9 +86,9 @@ feature -- Query
 
 feature {NONE} -- Basic Operations
 
-	frozen check_interface_compliance is
+	frozen check_interface_compliance
 			-- Checks type's abstract/interface members for full compliance.
-		indexing
+		note
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		require
 			has_been_checked: has_been_checked
@@ -104,7 +104,7 @@ feature {NONE} -- Basic Operations
 			not_is_being_checked: not is_being_checked
 		end
 
-	check_extended_interface_compliance is
+	check_extended_interface_compliance
 			-- Checks type's abstract/interface members for full compliance.
 		require
 			has_been_checked: has_been_checked
@@ -159,7 +159,7 @@ feature {NONE} -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	is_applicable_member (a_member: MEMBER_INFO): BOOLEAN is
+	is_applicable_member (a_member: MEMBER_INFO): BOOLEAN
 			-- Is `a_member' an applicable member to check?
 		require
 			a_member_not_void: a_member /= Void
@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 invariant
 	type_need_implementing: type.is_abstract or type.is_interface
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

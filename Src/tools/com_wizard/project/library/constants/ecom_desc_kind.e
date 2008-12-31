@@ -1,4 +1,4 @@
-indexing
+note
 	description: "COM DESCKIND constants"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	Desckind_none: INTEGER is
+	Desckind_none: INTEGER
 			-- No match was found
 		external
 			"C [macro <oaidl.h>]"
@@ -18,7 +18,7 @@ feature -- Access
 			"DESCKIND_NONE"
 		end
 
-	Desckind_funcdesc: INTEGER is
+	Desckind_funcdesc: INTEGER
 			-- FUNCDESC was returned
 		external
 			"C [macro <oaidl.h>]"
@@ -26,7 +26,7 @@ feature -- Access
 			"DESCKIND_FUNCDESC"
 		end
 
-	Desckind_vardesc: INTEGER is
+	Desckind_vardesc: INTEGER
 			-- VARDESC was returned
 		external
 			"C [macro <oaidl.h>]"
@@ -34,7 +34,7 @@ feature -- Access
 			"DESCKIND_VARDESC"
 		end
 
-	Desckind_typecomp: INTEGER is
+	Desckind_typecomp: INTEGER
 			-- ITypeComp was returned
 		external
 			"C [macro <oaidl.h>]"
@@ -42,7 +42,7 @@ feature -- Access
 			"DESCKIND_TYPECOMP"
 		end
 
-	Desckind_implicitappobj: INTEGER is
+	Desckind_implicitappobj: INTEGER
 			-- IMPLICITAPPOBJ was returned
 		external
 			"C [macro <oaidl.h>]"
@@ -50,7 +50,7 @@ feature -- Access
 			"DESCKIND_IMPLICITAPPOBJ"
 		end
 
-	Desckind_max: INTEGER is
+	Desckind_max: INTEGER
 		external
 			"C [macro <oaidl.h>]"
 		alias
@@ -59,7 +59,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_valid_desc_kind (kind: INTEGER): BOOLEAN is
+	is_valid_desc_kind (kind: INTEGER): BOOLEAN
 			-- Is `kind' valid?
 		do 
 			Result := kind = Desckind_none or
@@ -70,7 +70,7 @@ feature -- Status report
 					kind = Desckind_max
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel class interface generator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -13,7 +13,7 @@ inherit
 
 feature -- Basic operations
 
-	generate (a_descriptor: WIZARD_INTERFACE_DESCRIPTOR) is
+	generate (a_descriptor: WIZARD_INTERFACE_DESCRIPTOR)
 			-- Generate eiffel writer
 		local
 			inherit_clause_writer: WIZARD_WRITER_INHERIT_CLAUSE
@@ -43,14 +43,14 @@ feature -- Basic operations
 			eiffel_writer.save_file (Shared_file_name_factory.last_created_file_name)
 		end
 
-	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY) is
+	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY)
 		do
 			a_factory.process_interface_eiffel_server
 		end
 
 feature {NONE} -- Implementation
 
-	process_functions (a_descriptor: WIZARD_INTERFACE_DESCRIPTOR; inherit_clause_writer: WIZARD_WRITER_INHERIT_CLAUSE) is
+	process_functions (a_descriptor: WIZARD_INTERFACE_DESCRIPTOR; inherit_clause_writer: WIZARD_WRITER_INHERIT_CLAUSE)
 			-- Add undefine clauses
 		require
 			non_void_descriptor: a_descriptor /= Void
@@ -79,7 +79,7 @@ feature {NONE} -- Implementation
 		end
 		
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

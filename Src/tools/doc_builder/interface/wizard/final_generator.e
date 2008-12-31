@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object for performing generation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ inherit
 
 feature -- Commands
 
-	generate is
+	generate
 			-- Generate
 		do
 			generation_data.set_generating (True)
@@ -33,14 +33,14 @@ feature -- Commands
 		
 feature {NONE} -- Implmentation
 
-	generate_html is
+	generate_html
 			-- Generate HTML
 		do
 			generate_documentation_html
 			generate_code_html
 		end		
 
-	generate_documentation_html is
+	generate_documentation_html
 			-- Generate HTML for documentation
 		local
 			html: HTML_GENERATOR
@@ -72,7 +72,7 @@ feature {NONE} -- Implmentation
 			html.generate
 		end
 		
-	generate_code_html is
+	generate_code_html
 			-- Generate Eiffel code HTML
 		local
 			l_code_dir, 
@@ -159,7 +159,7 @@ feature {NONE} -- Implmentation
 			end
 		end		
 	
-	generate_help is
+	generate_help
 			-- Generate help	
 		local			
 			help: HELP_GENERATOR
@@ -188,7 +188,7 @@ feature {NONE} -- Implmentation
 			end
 		end
 
-	copy_files is
+	copy_files
 			-- Copy generated files to user chosen output directory
 		local
 			l_src, l_target: DIRECTORY
@@ -202,7 +202,7 @@ feature {NONE} -- Implmentation
 			copy_directory (l_src, l_target)
 		end		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

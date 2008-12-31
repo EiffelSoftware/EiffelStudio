@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Log generation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature -- Access
 
-	failed_on_rescue: BOOLEAN is
+	failed_on_rescue: BOOLEAN
 			-- Should rescue clauses be ignored?
 		local
 			a_string: STRING
@@ -28,16 +28,16 @@ feature -- Access
 
 feature {NONE} -- Implementation
 	
-	True_string: STRING is "True"
+	True_string: STRING = "True"
 			-- True string
 
-	False_string: STRING is "False"
+	False_string: STRING = "False"
 			-- False string
 	
-	Env_variable_name: STRING is "ECOM_FAILED_ON_RESCUE";
+	Env_variable_name: STRING = "ECOM_FAILED_ON_RESCUE";
 			-- Environmnent variable name
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

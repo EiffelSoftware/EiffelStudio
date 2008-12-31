@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Source interface C server generator."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -46,7 +46,7 @@ create
 
 feature -- Initialization
 
-	generate (a_interface: WIZARD_INTERFACE_DESCRIPTOR; a_coclass_writer: WIZARD_WRITER_CPP_CLASS) is
+	generate (a_interface: WIZARD_INTERFACE_DESCRIPTOR; a_coclass_writer: WIZARD_WRITER_CPP_CLASS)
 			-- Generate connection points features and inner class.
 		require
 			non_void_interface: a_interface /= Void
@@ -129,7 +129,7 @@ feature -- Access
 	coclass_writer: WIZARD_WRITER_CPP_CLASS
 			-- Writer of coclass.
 
-	inner_class_name: STRING is
+	inner_class_name: STRING
 			-- Name of inner class.
 		do
 			Result := connection_point_inner_class_name (source_interface, coclass_writer)
@@ -138,7 +138,7 @@ feature -- Access
 			valid_name: not Result.is_empty
 		end
 	
-	inner_class_definition_header_file: STRING is
+	inner_class_definition_header_file: STRING
 			-- Header file name of inner class.
 		do
 			create Result.make (100)
@@ -149,7 +149,7 @@ feature -- Access
 			valid_name: not Result.is_empty
 		end
 	
-	inner_class_declaration_header_file: STRING is
+	inner_class_declaration_header_file: STRING
 			-- Header file name of inner class.
 		do
 			Result := declaration_header_file_name (inner_class_definition_header_file)
@@ -158,7 +158,7 @@ feature -- Access
 			valid_name: not Result.is_empty
 		end
 	
-	attrubute_name: STRING is
+	attrubute_name: STRING
 			-- Name of connection point attribute.
 		do
 			Result := connection_point_attrubute_name (source_interface, coclass_writer)
@@ -167,7 +167,7 @@ feature -- Access
 			valid_name: not Result.is_empty
 		end
 		
-	coclass_c_type: STRING is
+	coclass_c_type: STRING
 			-- C type of coclass
 		require
 			non_void_coclass_wrier: coclass_writer /= Void
@@ -187,7 +187,7 @@ feature -- Access
 			valid_type: not Result.is_empty
 		end
 		
-	inner_class_constructor: WIZARD_WRITER_CPP_CONSTRUCTOR is
+	inner_class_constructor: WIZARD_WRITER_CPP_CONSTRUCTOR
 			-- Constructor of inner class.
 		require
 			non_void_coclass_wrier: coclass_writer /= Void
@@ -217,7 +217,7 @@ feature -- Access
 			can_generate: Result.can_generate
 		end
 	
-	inner_class_query_interface: WIZARD_WRITER_C_FUNCTION is
+	inner_class_query_interface: WIZARD_WRITER_C_FUNCTION
 			-- QueryInterface of IConnectionPoint.
 		do
 			create Result.make
@@ -242,7 +242,7 @@ feature -- Access
 			valid: Result.can_generate
 		end
 
-	inner_class_add_ref: WIZARD_WRITER_C_FUNCTION is
+	inner_class_add_ref: WIZARD_WRITER_C_FUNCTION
 			-- AddRef of IConnectionPoint.
 		do
 			create Result.make
@@ -259,7 +259,7 @@ feature -- Access
 			valid: Result.can_generate
 		end
 
-	inner_class_release: WIZARD_WRITER_C_FUNCTION is
+	inner_class_release: WIZARD_WRITER_C_FUNCTION
 			-- Release of IConnectionPoint.
 		do
 			create Result.make
@@ -276,7 +276,7 @@ feature -- Access
 			valid: Result.can_generate
 		end
 
-	inner_class_get_connection_interface : WIZARD_WRITER_C_FUNCTION is
+	inner_class_get_connection_interface : WIZARD_WRITER_C_FUNCTION
 			-- GetConnectionInterface of IConnectionPoint.
 		do
 			create Result.make
@@ -296,7 +296,7 @@ feature -- Access
 			valid: Result.can_generate
 		end
 
-	inner_class_get_connection_point_container : WIZARD_WRITER_C_FUNCTION is
+	inner_class_get_connection_point_container : WIZARD_WRITER_C_FUNCTION
 			-- GetConnectionPointContainer of IConnectionPoint.
 		do
 			create Result.make
@@ -316,7 +316,7 @@ feature -- Access
 			valid: Result.can_generate
 		end
 
-	inner_class_advise : WIZARD_WRITER_C_FUNCTION is
+	inner_class_advise : WIZARD_WRITER_C_FUNCTION
 			-- Advise of IConnectionPoint.
 		local
 			body: STRING
@@ -363,7 +363,7 @@ feature -- Access
 			valid: Result.can_generate
 		end
 
-	inner_class_unadvise : WIZARD_WRITER_C_FUNCTION is
+	inner_class_unadvise : WIZARD_WRITER_C_FUNCTION
 			-- Unadvise of IConnectionPoint.
 		local
 			body: STRING
@@ -397,7 +397,7 @@ feature -- Access
 			valid: Result.can_generate
 		end
 
-	inner_class_enum_connections : WIZARD_WRITER_C_FUNCTION is
+	inner_class_enum_connections : WIZARD_WRITER_C_FUNCTION
 			-- EnumConnections of IConnectionPoint.
 		do
 			create Result.make
@@ -416,7 +416,7 @@ feature -- Access
 
 feature -- Miscellaneous
 
-	add_attribute_to_coclass is
+	add_attribute_to_coclass
 			-- Add connection point attribute to coclass.
 		local
 			an_attribute: WIZARD_WRITER_C_MEMBER
@@ -429,7 +429,7 @@ feature -- Miscellaneous
 			coclass_writer.add_member (an_attribute, Private)
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Interface Elements, icons, bitmaps, etc."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 	
 feature -- Icon constants
 
-	folder_closed_icon: EV_PIXMAP is
+	folder_closed_icon: EV_PIXMAP
 			-- Icon for Closing
 		local
 			l_file: FILE_NAME
@@ -24,7 +24,7 @@ feature -- Icon constants
 			Result.set_with_named_file (l_file.string)
 		end
 		
-	folder_open_icon: EV_PIXMAP is
+	folder_open_icon: EV_PIXMAP
 			-- Icon for Opening
 		local
 			l_file: FILE_NAME
@@ -37,7 +37,7 @@ feature -- Icon constants
 		
 	css_file_icon, 
 	js_file_icon,
-	text_file_icon: EV_PIXMAP is
+	text_file_icon: EV_PIXMAP
 			-- File icon (text files)
 		local
 			l_file: FILE_NAME
@@ -48,7 +48,7 @@ feature -- Icon constants
 			Result.set_with_named_file (l_file.string)
 		end
 
-	xml_file_icon: EV_PIXMAP is
+	xml_file_icon: EV_PIXMAP
 			-- File icon (xml file)
 		local
 			l_file: FILE_NAME
@@ -59,7 +59,7 @@ feature -- Icon constants
 			Result.set_with_named_file (l_file.string)
 		end
 		
-	html_file_icon: EV_PIXMAP is
+	html_file_icon: EV_PIXMAP
 			-- File icon (html file)
 		local
 			l_file: FILE_NAME
@@ -70,7 +70,7 @@ feature -- Icon constants
 			Result.set_with_named_file (l_file.string)
 		end
 
-	png_file_icon: EV_PIXMAP is
+	png_file_icon: EV_PIXMAP
 			-- File icon (png file)
 		local
 			l_file: FILE_NAME
@@ -81,7 +81,7 @@ feature -- Icon constants
 			Result.set_with_named_file (l_file.string)
 		end
 		
-	jpg_file_icon: EV_PIXMAP is
+	jpg_file_icon: EV_PIXMAP
 			-- File icon (jpg file)
 		local
 			l_file: FILE_NAME
@@ -92,7 +92,7 @@ feature -- Icon constants
 			Result.set_with_named_file (l_file.string)
 		end
 
-	gif_file_icon: EV_PIXMAP is
+	gif_file_icon: EV_PIXMAP
 			-- File icon (gif file)
 		local
 			l_file: FILE_NAME
@@ -105,37 +105,37 @@ feature -- Icon constants
 
 feature -- Color constants
 
-	tag_color: EV_COLOR is
+	tag_color: EV_COLOR
 			-- Color for tags (<,>,=,/,")
 		once
 			create Result.make_with_rgb (0.0, 0.0, 1.0)	
 		end		
 
-	element_color: EV_COLOR is
+	element_color: EV_COLOR
 			-- Color for elements
 		once
 			create Result.make_with_rgb (1.0, 0.0, 0.0)	
 		end		
 		
-	attribute_color: EV_COLOR is
+	attribute_color: EV_COLOR
 			-- Color for attributes
 		once
 			create Result.make_with_rgb (203, 203, 152)	
 		end		
 
-	content_color: EV_COLOR is
+	content_color: EV_COLOR
 			-- Color for attributes
 		once
 			Result := (create {EV_STOCK_COLORS}).black
 		end	
 
-	white: EV_COLOR is
+	white: EV_COLOR
 			-- Color for attributes
 		once
 			Result := (create {EV_STOCK_COLORS}).white
 		end	
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

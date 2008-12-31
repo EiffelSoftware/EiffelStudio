@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Parent of C++ class"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -16,7 +16,7 @@ create
 
 feature -- Initialization
 
-	make (a_name: STRING; a_namespace: STRING; an_export_status: INTEGER) is
+	make (a_name: STRING; a_namespace: STRING; an_export_status: INTEGER)
 			-- Initialize
 		require
 			non_void_name: a_name /= Void
@@ -51,7 +51,7 @@ invariant
 	valid_name: not name.is_empty
 	valid_export_status: is_valid_export_status (export_status)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

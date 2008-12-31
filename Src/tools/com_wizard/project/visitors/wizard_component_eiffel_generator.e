@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Component Eiffel generator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -27,7 +27,7 @@ feature {NONE} -- Implementation
 	dispatch_interface: BOOLEAN
 			-- Is coclass has dispinterface?
 
-	add_default_features (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR) is
+	add_default_features (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR)
 			-- Add default features,
 			-- e.g. make, constructor, destructor, delete wrapper etc.
 		require
@@ -35,19 +35,19 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	add_creation is
+	add_creation
 			-- Add creation routines.
 		deferred
 		end
 
-	set_default_ancestors (an_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS) is
+	set_default_ancestors (an_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS)
 			-- Set default ancestors
 		require
 			non_void_eiffel_writer: an_eiffel_writer /= Void
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

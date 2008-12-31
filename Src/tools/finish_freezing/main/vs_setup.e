@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Setup environment variables for Visual Studio C compiler."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature -- Initialization
 
-	make (a_force_32bit_generation: BOOLEAN) is
+	make (a_force_32bit_generation: BOOLEAN)
 			-- Create and setup environment variables for currently installed
 			-- version of Visual Studio.
 		local
@@ -51,7 +51,7 @@ feature -- Status report
 
 feature -- Implementation
 
-	synchronize_variable (a_name: STRING; a_values: STRING) is
+	synchronize_variable (a_name: STRING; a_values: STRING)
 			-- Merges the process environment variable `a_name' values with `a_values', removing duplicates in the process.
 		require
 			a_name_attached: a_name /= Void
@@ -104,7 +104,7 @@ feature -- Implementation
 
 feature {NONE} -- Externals
 
-	set_environment_variable (name, value: POINTER): BOOLEAN is
+	set_environment_variable (name, value: POINTER): BOOLEAN
 			-- Set environment variable `name' with value `value'.
 			-- Return True if successful.
 		external
@@ -113,7 +113,7 @@ feature {NONE} -- Externals
 			"SetEnvironmentVariable"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Wizard Array Data Type names generator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Basic operations
 
-	process (a_array_descriptor: WIZARD_ARRAY_DATA_TYPE_DESCRIPTOR; a_visitor: WIZARD_DATA_TYPE_VISITOR) is
+	process (a_array_descriptor: WIZARD_ARRAY_DATA_TYPE_DESCRIPTOR; a_visitor: WIZARD_DATA_TYPE_VISITOR)
 			-- Process ARRAY
 		require
 			valid_descriptor: a_array_descriptor /= Void
@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 
 	ce_array_function_body_automation (rt_function_name: STRING; dim_count: INTEGER; 
 					element_count: ARRAY [INTEGER];
-					is_basic_array: BOOLEAN): STRING is
+					is_basic_array: BOOLEAN): STRING
 			-- C to Eiffel function body for ARRAY (of automation data type elements).
 		require
 			non_void_function_name: rt_function_name /= Void
@@ -202,7 +202,7 @@ feature {NONE} -- Implementation
 			non_empty_result: not Result.is_empty
 		end
 
-	ce_array_function_body_non_automation (a_visitor: WIZARD_DATA_TYPE_VISITOR; a_dim_count: INTEGER; a_elements_count: ARRAY [INTEGER]): STRING is
+	ce_array_function_body_non_automation (a_visitor: WIZARD_DATA_TYPE_VISITOR; a_dim_count: INTEGER; a_elements_count: ARRAY [INTEGER]): STRING
 			-- C to Eiffel function body for ARRAY (of non_automation data type elements).
 		require
 			non_void_visitor: a_visitor /= Void
@@ -329,7 +329,7 @@ feature {NONE} -- Implementation
 			valid_body: not Result.is_empty
 		end
 
-	ec_array_function_body_automation (a_rt_function_name: STRING; a_dim_count: INTEGER; a_c_cast_type, a_eiffel_cast_type: STRING): STRING is
+	ec_array_function_body_automation (a_rt_function_name: STRING; a_dim_count: INTEGER; a_c_cast_type, a_eiffel_cast_type: STRING): STRING
 			--
 		require
 			non_void_rt_function_name: a_rt_function_name /= Void
@@ -364,7 +364,7 @@ feature {NONE} -- Implementation
 			valid_body: not Result.is_empty
 		end
 
-	ec_array_function_body_non_automation (a_visitor: WIZARD_DATA_TYPE_VISITOR; a_dim_count: INTEGER; a_elements_count: ARRAY [INTEGER]): STRING is
+	ec_array_function_body_non_automation (a_visitor: WIZARD_DATA_TYPE_VISITOR; a_dim_count: INTEGER; a_elements_count: ARRAY [INTEGER]): STRING
 				-- C to Eiffel function body for ARRAY (of non_automation data type elements).
 		require
 			non_void_visitor: a_visitor /= Void
@@ -439,7 +439,7 @@ feature {NONE} -- Implementation
 			valid_body: not Result.is_empty
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

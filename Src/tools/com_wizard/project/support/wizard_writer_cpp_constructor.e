@@ -1,4 +1,4 @@
-indexing
+note
 	description: "C++ Constructor Writer"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -16,14 +16,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize data.
 		do
 		end
 
 feature -- Access
 
-	generated_code: STRING is
+	generated_code: STRING
 			-- Generated code
 		do
 			Result := Open_parenthesis.twin
@@ -44,7 +44,7 @@ feature -- Access
 			Result.append (Semicolon)
 		end
 
-	can_generate: BOOLEAN is
+	can_generate: BOOLEAN
 			-- Can code be generated?
 		do
 			Result := True
@@ -58,7 +58,7 @@ feature -- Access
 
 feature -- Element Change
 
-	set_signature (a_signature: like signature) is
+	set_signature (a_signature: like signature)
 			-- Set `signature' with `a_signature'.
 		require
 			signature_not_void: a_signature /= Void
@@ -68,7 +68,7 @@ feature -- Element Change
 			signature_set: signature.is_equal (a_signature)
 		end
 
-	set_body (a_body: like body) is
+	set_body (a_body: like body)
 			-- Set `body' with `a_body'
 		require
 			body_not_void: a_body /= Void
@@ -78,7 +78,7 @@ feature -- Element Change
 			body_set: body.is_equal (a_body)
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

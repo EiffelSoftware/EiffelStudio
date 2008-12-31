@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Efficient implementation of rich edit"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature {EV_ANY} -- Initialization
 
-	initialize is
+	initialize
 			-- Setup rich edit
 		do
 			Precursor {EV_WEL_CONTAINER_IMP}
@@ -39,7 +39,7 @@ feature {EV_ANY} -- Initialization
 
 feature -- Access
 
-	visible_lines_count: INTEGER is
+	visible_lines_count: INTEGER
 			-- Number of visible lines
 		do
 			Result := (wel_height / font_height).truncated_to_integer + 1
@@ -50,19 +50,19 @@ feature -- Access
 	font_height: INTEGER
 			-- Height of font in pixels
 
-	font: WEL_FONT is
+	font: WEL_FONT
 			-- Font
 		do
 			Result := wel_text_edit.font
 		end
 
-	first_visible_line: INTEGER is
+	first_visible_line: INTEGER
 			-- First visible line
 		do
 			Result := wel_text_edit.first_visible_line
 		end
 
-	line_count: INTEGER is
+	line_count: INTEGER
 			-- Line count in text
 		do
 			Result := wel_text_edit.line_count
@@ -72,7 +72,7 @@ feature -- Access
 
 feature -- Element Settings
 
-	set_font (a_font: WEL_FONT) is
+	set_font (a_font: WEL_FONT)
 			-- Set `font' with `a_font'.
 		do
 			wel_text_edit.set_font (a_font)
@@ -80,7 +80,7 @@ feature -- Element Settings
 
 feature -- Basic Operations
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING)
 			-- Set rich edit text with `a_text'
 		require
 			non_void_text: a_text /= Void
@@ -88,7 +88,7 @@ feature -- Basic Operations
 			wel_text_edit.set_text (a_text)
 		end
 
-	save (a_file_name: STRING) is
+	save (a_file_name: STRING)
 			-- Save content to `a_file_name'.
 		require
 			non_void_file_name: a_file_name /= Void
@@ -107,7 +107,7 @@ feature -- Basic Operations
 			retry
 		end
 
-	scroll_to_line (a_line: INTEGER) is
+	scroll_to_line (a_line: INTEGER)
 			-- Scroll to line `a_line'.
 		require
 			valid_line: a_line > 0
@@ -115,13 +115,13 @@ feature -- Basic Operations
 			wel_text_edit.scroll (0, a_line - first_visible_line - 1)
 		end
 
-	hide_scroll_bars is
+	hide_scroll_bars
 			-- Hide vertical scroll bar
 		do
 			wel_text_edit.hide_scroll_bars
 		end
 
-	show_scroll_bars is
+	show_scroll_bars
 			-- Hide vertical scroll bar
 		do
 			wel_text_edit.show_scroll_bars
@@ -137,18 +137,18 @@ feature {NONE} -- Implementation
 	wel_text_edit: WIZARD_MULTIPLE_LINE_EDIT
 			-- Wel control
 
-	Default_font: WEL_FONT is
+	Default_font: WEL_FONT
 			-- Log font
 		once
 			create Result.make_indirect (create {WEL_LOG_FONT}.make (10, "Lucida Console"))
 		end
 
-	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- Disable erase background message
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

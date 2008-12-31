@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Base implementation for checked entities that describes and examines an assembly type method.
 	]"
@@ -26,7 +26,7 @@ feature -- Access {EC_CHECKED_MEMBER}
 
 feature {NONE} -- Basic Operations {EC_CHECKED_MEMBER}
 
-	check_extended_compliance is
+	check_extended_compliance
 			-- Checks entity's CLS-compliance.
 		local
 			l_member: like member
@@ -48,7 +48,7 @@ feature {NONE} -- Basic Operations {EC_CHECKED_MEMBER}
 			end
 		end
 
-	check_eiffel_compliance is
+	check_eiffel_compliance
 			-- Checks entity to see if it is Eiffel-compliant.
 		local
 			l_member: like member
@@ -69,7 +69,7 @@ feature {NONE} -- Basic Operations {EC_CHECKED_MEMBER}
 
 feature -- Access
 
-	checked_parameter_types: ARRAY [EC_CHECKED_TYPE] is
+	checked_parameter_types: ARRAY [EC_CHECKED_TYPE]
 			-- `member' method checked parameter types.
 		local
 			l_params: NATIVE_ARRAY [PARAMETER_INFO]
@@ -95,7 +95,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	are_parameters_compliant (a_check_eiffel: BOOLEAN): BOOLEAN is
+	are_parameters_compliant (a_check_eiffel: BOOLEAN): BOOLEAN
 			-- Are `member' parameters compliant?
 			-- If `a_check_eiffel' then parameters are checked for Eiffel compliance.
 		local
@@ -122,7 +122,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

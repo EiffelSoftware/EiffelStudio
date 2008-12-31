@@ -1,4 +1,4 @@
-indexing	
+note	
 	description: 
 		"[
 			Item for use with EV_CHECKABLE_TREE.  If there is an expand function it is called
@@ -23,7 +23,7 @@ create
 
 feature -- Creation
 
-	make_with_text_and_expand_function (a_text: STRING; a_function: FUNCTION [ANY, TUPLE, ANY]) is
+	make_with_text_and_expand_function (a_text: STRING; a_function: FUNCTION [ANY, TUPLE, ANY])
 			-- Create `Current' and assign `a_text' to `text'
 		local
 			l_dummy_node: EV_TREE_ITEM
@@ -49,7 +49,7 @@ feature -- Access
 
 feature {EV_CHECKABLE_TREE, EV_CHECKABLE_TREE_ITEM} -- Status Setting
 
-	set_checked is
+	set_checked
 			-- Check
 		do
 			if parent_tree /= Void then				
@@ -61,7 +61,7 @@ feature {EV_CHECKABLE_TREE, EV_CHECKABLE_TREE_ITEM} -- Status Setting
 			end
 		end
 
-	set_unchecked is
+	set_unchecked
 			-- Ensure check associated with `tree_item' is
 			-- unchecked.
 		do
@@ -79,7 +79,7 @@ feature -- Implementation
 	expand_function: FUNCTION [ANY, TUPLE, ANY]
 			-- Function to call on expand
 
-	call_expand_function is
+	call_expand_function
 			-- Call `expand_function'
 		require
 			has_expand_function_to_call: expand_function /= Void
@@ -99,13 +99,13 @@ feature -- Implementation
 	expand_called: BOOLEAN
 			-- Has expand been called?
 
-	parent_tree: EV_CHECKABLE_TREE is
+	parent_tree: EV_CHECKABLE_TREE
 			-- Parent tree
 		do
 			Result ?= Precursor	
 		end	
 
-	set_recursive_state (checked: BOOLEAN) is
+	set_recursive_state (checked: BOOLEAN)
 			-- Set state recursively
 		require
 			has_parent_tree: parent_tree /= Void
@@ -134,7 +134,7 @@ feature -- Implementation
 			end
 		end		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

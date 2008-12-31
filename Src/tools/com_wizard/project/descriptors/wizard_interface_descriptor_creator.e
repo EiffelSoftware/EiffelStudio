@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Creator of Interface descriptors"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -55,7 +55,7 @@ inherit
 
 feature -- Basic operations
 
-	create_descriptor (a_documentation: ECOM_DOCUMENTATION; a_type_info: ECOM_TYPE_INFO): WIZARD_INTERFACE_DESCRIPTOR is
+	create_descriptor (a_documentation: ECOM_DOCUMENTATION; a_type_info: ECOM_TYPE_INFO): WIZARD_INTERFACE_DESCRIPTOR
 			-- Create descriptor.
 		require
 			valid_documentation: a_documentation /= Void and then a_documentation.name /= Void
@@ -96,7 +96,7 @@ feature -- Basic operations
 			Result := interface_descriptor (l_type_info)
 		end
 
-	create_dispinterface_descriptor  (a_documentation: ECOM_DOCUMENTATION; a_type_info: ECOM_TYPE_INFO; a_c_type_name: STRING): WIZARD_INTERFACE_DESCRIPTOR is
+	create_dispinterface_descriptor  (a_documentation: ECOM_DOCUMENTATION; a_type_info: ECOM_TYPE_INFO; a_c_type_name: STRING): WIZARD_INTERFACE_DESCRIPTOR
 			-- Create descriptor.
 		require
 			valid_documentation: a_documentation /= Void and then a_documentation.name /= Void
@@ -115,7 +115,7 @@ feature -- Basic operations
 			non_void_dispinterface: Result /= Void
 		end
 
-	interface_descriptor (a_type_info: ECOM_TYPE_INFO): WIZARD_INTERFACE_DESCRIPTOR is
+	interface_descriptor (a_type_info: ECOM_TYPE_INFO): WIZARD_INTERFACE_DESCRIPTOR
 			-- Create descriptor.
 		require
 			valid_type_info: a_type_info /= Void and then a_type_info.type_attr.type_kind = Tkind_interface
@@ -179,7 +179,7 @@ feature -- Basic operations
 						inherited_interface /= Void or inherited_interface_descriptor /= Void
 		end
 
-	initialize_descriptor (a_descriptor: WIZARD_INTERFACE_DESCRIPTOR) is
+	initialize_descriptor (a_descriptor: WIZARD_INTERFACE_DESCRIPTOR)
 				-- Initialize Descriptor
 			require
 				valid_descriptor: a_descriptor /= Void
@@ -201,7 +201,7 @@ feature -- Basic operations
 				a_descriptor.set_is_idispatch (guid.is_equal (Idispatch_guid))
 			end
 
-	create_function_descriptors (a_type_info: ECOM_TYPE_INFO) is
+	create_function_descriptors (a_type_info: ECOM_TYPE_INFO)
 			-- Create function descriptors
 		require
 			valid_type_info: a_type_info /= Void
@@ -239,7 +239,7 @@ feature -- Basic operations
 			non_void_function_table: function_table /= Void
 		end
 
-	create_property_descriptors (a_type_info: ECOM_TYPE_INFO) is
+	create_property_descriptors (a_type_info: ECOM_TYPE_INFO)
 			-- Create property descriptors
 		require
 			valid_type_info: a_type_info /= Void
@@ -270,7 +270,7 @@ feature -- Basic operations
 			valid_properties: a_type_info.type_attr.count_variables > 0 implies properties /= Void
 		end
 
-	create_inherited_interface (a_type_info: ECOM_TYPE_INFO) is
+	create_inherited_interface (a_type_info: ECOM_TYPE_INFO)
 			-- Create inherited interface descriptors
 		require
 			valid_type_info: a_type_info /= void
@@ -347,21 +347,21 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	counter: INTEGER is
+	counter: INTEGER
 			-- Counter
 		do
 			Result := counter_impl.item
 			counter_impl.set_item (Result + 1)
 		end
 
-	counter_impl: INTEGER_REF is
+	counter_impl: INTEGER_REF
 			-- Global counter
 		once
 			create Result
 			Result.set_item (1)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

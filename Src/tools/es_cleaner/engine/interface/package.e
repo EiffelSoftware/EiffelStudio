@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Provides the core functionality root for all specializing applications/libraries. The package class is designed
 		to be typically derived from a project root class.
@@ -13,7 +13,7 @@ deferred class
 
 feature -- Access
 
-	eiffel_env: like create_eiffel_env is
+	eiffel_env: like create_eiffel_env
 			-- Access to Eiffel environment settings
 		local
 			l_layout: EIFFEL_LAYOUT
@@ -36,7 +36,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	path_provider: like create_path_provider is
+	path_provider: like create_path_provider
 			-- Access to path provider
 		do
 			Result := internal_path_provider
@@ -48,7 +48,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	cleaner: I_CLEANER is
+	cleaner: I_CLEANER
 			-- Cleaner used to erase configuration information
 		do
 			Result := internal_cleaner
@@ -60,7 +60,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	backup_manager: I_BACKUP_MANAGER is
+	backup_manager: I_BACKUP_MANAGER
 			-- Backup manager use to backup and restore configurations
 		do
 			Result := internal_backup_manager
@@ -72,7 +72,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	error_handler: MULTI_ERROR_MANAGER is
+	error_handler: MULTI_ERROR_MANAGER
 			-- Access to global error manager
 		do
 			Result := internal_error_handler
@@ -86,7 +86,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	error_displayer: I_ERROR_DISPLAYER is
+	error_displayer: I_ERROR_DISPLAYER
 			-- Access to error display used to report errors and warnings
 		do
 			Result := internal_error_displayer
@@ -100,7 +100,7 @@ feature {NONE} -- Access
 
 feature -- Basic operations
 
-	clean_environment (a_config: I_CLEANING_CONFIG) is
+	clean_environment (a_config: I_CLEANING_CONFIG)
 			-- Performs a clean on environment configuration settings `a_config'
 		require
 			a_config_attached: a_config /= Void
@@ -118,7 +118,7 @@ feature -- Basic operations
 			retry
 		end
 
-	clean_project (a_config: I_CLEANING_CONFIG) is
+	clean_project (a_config: I_CLEANING_CONFIG)
 			-- Performs a clean on project configuration settings `a_config'
 		require
 			a_config_attached: a_config /= Void
@@ -136,7 +136,7 @@ feature -- Basic operations
 			retry
 		end
 
-	backup_configs (a_config: I_BACKUP_CONFIG) is
+	backup_configs (a_config: I_BACKUP_CONFIG)
 			-- Performs a backup on configuration settings `a_config'
 		require
 			a_config_attached: a_config /= Void
@@ -154,7 +154,7 @@ feature -- Basic operations
 			retry
 		end
 
-	restore_configs (a_config: I_BACKUP_CONFIG) is
+	restore_configs (a_config: I_BACKUP_CONFIG)
 			-- Performs a restore on configuration settings `a_config'
 		require
 			a_config_attached: a_config /= Void
@@ -174,13 +174,13 @@ feature -- Basic operations
 
 feature {NONE} -- Error reporting
 
-	reset_errors is
+	reset_errors
 			-- Removes any previous errors from the error handler, for the next operation
 		do
 			error_handler.reset
 		end
 
-	show_errors (a_category: STRING) is
+	show_errors (a_category: STRING)
 			-- Shows any errors or warnings from a performed operation
 		require
 			a_category_attached: a_category /= Void
@@ -193,7 +193,7 @@ feature {NONE} -- Error reporting
 
 feature -- Status report
 
-	is_workbench_mode: BOOLEAN assign set_is_workbench_mode is
+	is_workbench_mode: BOOLEAN assign set_is_workbench_mode
 			-- Indicates if pacakge is running under an emulated workbench mode
 		do
 			Result := eiffel_env.is_workbench
@@ -201,7 +201,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_is_workbench_mode (a_value: like is_workbench_mode) is
+	set_is_workbench_mode (a_value: like is_workbench_mode)
 			-- Set `is_workbench_mode' with `a_value'
 		do
 			eiffel_env.set_is_workbench (a_value)
@@ -218,7 +218,7 @@ feature -- Actions
 
 feature {NONE} -- Factory functions
 
-	create_eiffel_env: EC_CLEANER_EIFFEL_LAYOUT is
+	create_eiffel_env: EC_CLEANER_EIFFEL_LAYOUT
 			-- Creates Eiffel environment
 		do
 			create Result
@@ -226,28 +226,28 @@ feature {NONE} -- Factory functions
 			result_attached: Result /= Void
 		end
 
-	create_path_provider: PATH_PROVIDER is
+	create_path_provider: PATH_PROVIDER
 			-- Create a path provider
 		deferred
 		ensure
 			result_attached: Result /= Void
 		end
 
-	create_cleaner: I_CLEANER is
+	create_cleaner: I_CLEANER
 			-- Create a new configuration cleaner
 		deferred
 		ensure
 			result_attached: Result /= Void
 		end
 
-	create_backup_manager: I_BACKUP_MANAGER is
+	create_backup_manager: I_BACKUP_MANAGER
 			-- Create a new configuration backup manager
 		deferred
 		ensure
 			result_attached: Result /= Void
 		end
 
-	create_error_mananger: MULTI_ERROR_MANAGER is
+	create_error_mananger: MULTI_ERROR_MANAGER
 			-- Create a new error manager
 		do
 			create Result.make
@@ -291,7 +291,7 @@ feature {NONE} -- Internal implementation cache
 invariant
 	workbench_mode_change_actions_attached: workbench_mode_change_actions /= Void
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Feature parser"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	parse_routine (inputs: LIST [STRING]) is
+	parse_routine (inputs: LIST [STRING])
 		require
 			non_void_input: inputs /= Void
 			valid_input: not inputs.is_empty
@@ -71,7 +71,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	parse_signature (input: STRING) is
+	parse_signature (input: STRING)
 			-- Parse 'input'.
 		require
 			non_void_input: input /= Void
@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 			end
 		end
 	
-	parse_parameters (input: STRING) is
+	parse_parameters (input: STRING)
 			-- Parse list of parameters in 'input'.
 		require
 			valid_feature: parsed_feature /= Void
@@ -151,7 +151,7 @@ feature {NONE} -- Implementation
 			parse_succeed: not parsed_feature.parameters.is_empty
 		end
 
-	parse_parameter (input: STRING) is
+	parse_parameter (input: STRING)
 			-- Parse a parameter set from 'input'.
 		require
 			valid_feature: parsed_feature /= Void
@@ -188,7 +188,7 @@ feature {NONE} -- Implementation
 			parsed_feature.add_parameter (para)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

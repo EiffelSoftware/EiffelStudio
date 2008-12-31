@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A windows-specific implementation of a backup manager, used to backup and restore configurations.
 	]"
@@ -21,13 +21,13 @@ create
 
 feature {NONE} -- Access
 
-	path_provider: WINDOWS_PATH_PROVIDER is
+	path_provider: WINDOWS_PATH_PROVIDER
 			-- Access to Eiffel related paths
 		do
 			Result ?= package.path_provider
 		end
 
-	storable_utils: SED_STORABLE_FACILITIES is
+	storable_utils: SED_STORABLE_FACILITIES
 			-- Access to storable factilities
 		once
 			create Result
@@ -37,13 +37,13 @@ feature {NONE} -- Access
 
 feature {NONE} -- Access
 
-	backup_preferences_time_stamp: INTEGER_32 is
+	backup_preferences_time_stamp: INTEGER_32
 			-- Backup timestamp for preferences
 		do
 			Result := backup_file_time_stamp (preferences_file_name)
 		end
 
-	preferences_file_name: FILE_NAME is
+	preferences_file_name: FILE_NAME
 			-- File name given to the preferences file.
 			-- Note: This is not the name of the back up file. Use `backup_file_name' to retrieve the actual file name
 		do
@@ -56,7 +56,7 @@ feature {NONE} -- Access
 
 feature  -- Basic operations
 
-	backup_preferences is
+	backup_preferences
 			-- Backs up preferences configuration file(s)
 		local
 			l_path: STRING_8
@@ -116,7 +116,7 @@ feature  -- Basic operations
 			retry
 		end
 
-	restore_preferences is
+	restore_preferences
 			-- Restores from a back up the preferences configuration file(s).
 		local
 			l_path: STRING_8
@@ -179,13 +179,13 @@ feature  -- Basic operations
 
 feature -- Query
 
-	does_backup_preferences_exist: BOOLEAN is
+	does_backup_preferences_exist: BOOLEAN
 			-- Determines if the backed up preferences data exists
 		do
 			Result := does_backup_file_exist (preferences_file_name)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

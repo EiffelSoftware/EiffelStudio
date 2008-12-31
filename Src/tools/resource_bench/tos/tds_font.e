@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Font representation in the tds"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature	-- Initialization
 
-	make is
+	make
 		do
 			list_make
 			set_type (R_font)
@@ -28,7 +28,7 @@ feature	-- Initialization
 
 feature -- Code generation
 
-	display is
+	display
 			-- Display the tds.
 		local
 			font: TDS_FONT
@@ -56,7 +56,7 @@ feature -- Code generation
 			end
 		end
 
-	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE) is
+	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE)
 			-- Generate `a_resource_file' from the tds memory structure.
 		local
 			font: TDS_FONT
@@ -89,7 +89,7 @@ feature -- Code generation
 			a_resource_file.new_line
 		end
 
-	generate_tree_view (a_tree_view: WEL_TREE_VIEW; a_parent: POINTER) is
+	generate_tree_view (a_tree_view: WEL_TREE_VIEW; a_parent: POINTER)
 			-- Generate `a_tree_view' control from the tds memory structure.
 		local
 			tvis: WEL_TREE_VIEW_INSERT_STRUCT
@@ -117,12 +117,12 @@ feature -- Code generation
 			end 
 		end
 
-	generate_wel_code is
+	generate_wel_code
 			-- Generate the eiffel code.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

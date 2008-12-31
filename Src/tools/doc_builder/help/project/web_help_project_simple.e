@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature -- Commands
 
-	create_toc_frame is
+	create_toc_frame
 			-- Create left side navigation (toc)
 		do				
 			create formatter.make (toc)
@@ -31,7 +31,7 @@ feature -- Commands
 			end
 		end	
 
-	create_filter_frame is
+	create_filter_frame
 			-- Create left side navigation (filter)
 		local
 			l_file,
@@ -82,12 +82,12 @@ feature -- Commands
 
 feature -- Access
 
-	full_toc_text: STRING is
+	full_toc_text: STRING
 			-- Full TOC text
 		do			
 		end		
 		
-	full_filter_text: STRING is
+	full_filter_text: STRING
 			-- Create filter HTML for client-side filter processing
 		local
 			l_filters: HASH_TABLE [DOCUMENT_FILTER, STRING]
@@ -146,7 +146,7 @@ feature -- Access
 			end
 		end			
 		
-	create_node_sub_toc (a_node: TABLE_OF_CONTENTS_NODE) is
+	create_node_sub_toc (a_node: TABLE_OF_CONTENTS_NODE)
 			-- Create sub-toc file for `a_node'
 		require
 			node_not_void: a_node /= Void
@@ -230,7 +230,7 @@ feature {NONE} -- Implementation
 	formatter: TABLE_OF_CONTENTS_SIMPLE_WEB_HELP_FORMATTER
 			-- Formatter
 
-	tocs_directory: DIRECTORY is
+	tocs_directory: DIRECTORY
 			-- Directory to hold mini tocs
 		local
 			l_filename: FILE_NAME
@@ -258,25 +258,25 @@ feature {NONE} -- Implementation
 			create Result.make (l_filename.string)			
 		end
 
-	template_file_name: STRING is
+	template_file_name: STRING
 			-- Template file		
 		do
 			Result := web_help_project_template_file_name
 		end
 
-	toc_template_file_name: STRING is
+	toc_template_file_name: STRING
 			-- Toc template file		
 		do
 			Result := html_simple_toc_template_file_name
 		end
 
-	default_toc_file_name: STRING is
+	default_toc_file_name: STRING
 			-- Default toc
 		do
 			Result := tocs_directory.name + "/0.html"
 		end
 		
-	resource_files: ARRAYED_LIST [STRING] is
+	resource_files: ARRAYED_LIST [STRING]
 			-- List of resource file to copy with project
 		once
 			create Result.make (3)			
@@ -288,7 +288,7 @@ feature {NONE} -- Implementation
 			Result.extend ("spacer.gif")
 		end
 
-	root_resource_files: ARRAYED_LIST [STRING] is
+	root_resource_files: ARRAYED_LIST [STRING]
 			-- List of root level resource file to copy with project
 		once		
 			create Result.make (6)
@@ -300,13 +300,13 @@ feature {NONE} -- Implementation
 			Result.extend ("header.css")	
 		end
 		
-	toc_count: INTEGER is
+	toc_count: INTEGER
 			-- Number of tocs being generated
 		do
 			Result := generation_data.filter_toc_hash.count
 		end		
 		
-	toc_filename: STRING is
+	toc_filename: STRING
 			-- Toc filename
 		do
 			if toc_count < 2 then
@@ -316,13 +316,13 @@ feature {NONE} -- Implementation
 			end
 		end		
 		
-	filter_template_file_name: STRING is
+	filter_template_file_name: STRING
 			-- Filter file name
 		do
 			Result := html_simple_filter_template_file_name
 		end		
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Information about a compiler test"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature -- Initialization
 
-	make (the_result, name,key : STRING) is
+	make (the_result, name,key : STRING)
 			-- Initialize
 		do
 			test_result := the_result
@@ -33,7 +33,7 @@ feature -- Access
 	test_key : STRING;
 		-- Test's code
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Coclass descriptor"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_creator: WIZARD_COCLASS_DESCRIPTOR_CREATOR) is
+	make (a_creator: WIZARD_COCLASS_DESCRIPTOR_CREATOR)
 			-- Initialize descriptor
 		require
 			valid_creator: a_creator /= Void
@@ -67,7 +67,7 @@ feature -- Access
 	flags: INTEGER
 			-- See ECOM_TYPE_FLAGS for values.
 
-	creation_message: STRING is
+	creation_message: STRING
 			-- Creation message for wizard output
 		do
 			create Result.make (14 + name.count)
@@ -84,7 +84,7 @@ feature -- Access
 
 feature -- Element Change
 
-	set_source_interface_descriptors (some_descriptors: LIST [WIZARD_INTERFACE_DESCRIPTOR]) is
+	set_source_interface_descriptors (some_descriptors: LIST [WIZARD_INTERFACE_DESCRIPTOR])
 			-- Set `source_interface_descriptors' with `some_descriptors'.
 		require
 			valid_descriptors: some_descriptors /= Void
@@ -95,7 +95,7 @@ feature -- Element Change
 				source_interface_descriptors = some_descriptors
 		end
 
-	set_interface_descriptors (a_descriptors: LIST [WIZARD_INTERFACE_DESCRIPTOR]) is
+	set_interface_descriptors (a_descriptors: LIST [WIZARD_INTERFACE_DESCRIPTOR])
 			-- Set `interface_descriptors' with `some_descriptors'.
 		require
 			valid_descriptors: a_descriptors /= Void
@@ -113,7 +113,7 @@ feature -- Element Change
 			valid_descriptors: interface_descriptors /= Void and interface_descriptors = a_descriptors
 		end
 
-	set_lcid (a_lcid: INTEGER) is
+	set_lcid (a_lcid: INTEGER)
 			-- Set `lcid' with `a_lcid'.
 		do
 			lcid := a_lcid
@@ -121,7 +121,7 @@ feature -- Element Change
 			valid_lcid: lcid = a_lcid
 		end
 
-	set_default_dispinterface (a_name: STRING) is
+	set_default_dispinterface (a_name: STRING)
 			-- Set `default_dispinterface_name' with `a_name'.
 		require
 			non_void_name: a_name /= Void
@@ -133,7 +133,7 @@ feature -- Element Change
 			valid_default_dispinterface: not default_dispinterface_name.is_empty and default_dispinterface_name.is_equal (a_name)
 		end
 
-	set_default_source_dispinterface_name (a_name: STRING) is
+	set_default_source_dispinterface_name (a_name: STRING)
 			-- Set `default_source_dispinterface_name' with `a_name'.
 		require
 			non_void_name: a_name /= Void
@@ -145,7 +145,7 @@ feature -- Element Change
 			valid_default_source_dispinterface: not default_source_dispinterface_name.is_empty and default_source_dispinterface_name.is_equal (a_name)
 		end
 
-	set_default_interface (a_interface: WIZARD_INTERFACE_DESCRIPTOR) is
+	set_default_interface (a_interface: WIZARD_INTERFACE_DESCRIPTOR)
 			-- Set `default_interface_descriptor' with `a_interface'.
 		require
 			non_void_interface: a_interface /= Void
@@ -155,7 +155,7 @@ feature -- Element Change
 			non_void_default_interface: default_interface_descriptor /= Void
 		end
 
-	set_flags (some_flags: INTEGER) is
+	set_flags (some_flags: INTEGER)
 			-- Set `flags' with `some_flags'
 		do
 			flags := some_flags
@@ -165,7 +165,7 @@ feature -- Element Change
 
 feature -- Basic operations
 
-	disambiguate_feature_names is
+	disambiguate_feature_names
 			-- Disambiguate name clashes.
 		local
 			l_interface: WIZARD_INTERFACE_DESCRIPTOR
@@ -190,7 +190,7 @@ feature -- Basic operations
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
@@ -199,7 +199,7 @@ feature -- Comparison
 
 feature {WIZARD_TYPE_INFO_VISITOR} -- Visitor
 
-	visit (a_visitor: WIZARD_TYPE_VISITOR) is
+	visit (a_visitor: WIZARD_TYPE_VISITOR)
 			-- Call back `a_visitor' with appropriate feature.
 		do
 			a_visitor.process_coclass (Current)
@@ -207,7 +207,7 @@ feature {WIZARD_TYPE_INFO_VISITOR} -- Visitor
 
 feature {NONE} -- Implementation
 
-	rename_arguments (a_descriptors: LIST [WIZARD_INTERFACE_DESCRIPTOR]) is
+	rename_arguments (a_descriptors: LIST [WIZARD_INTERFACE_DESCRIPTOR])
 			-- Rename arguments in features of interfaces in `a_descriptors' to avoid name clashes.
 		require
 			non_void_descriptors: a_descriptors /= Void
@@ -252,7 +252,7 @@ invariant
 	valid_feature_c_names: feature_c_names.object_comparison
 	non_void_feature_eiffel_names: feature_eiffel_names /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

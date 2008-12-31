@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Parameter"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (new_name, new_type: STRING) is
+	make (new_name, new_type: STRING)
 			-- Create and initialize object with parameters.
 		require
 			non_void_name: new_name /= Void
@@ -35,7 +35,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_name (new_name: STRING) is
+	set_name (new_name: STRING)
 			-- Set 'name' to 'new_name'
 		require
 			non_void_name: new_name /= Void
@@ -46,7 +46,7 @@ feature -- Element change
 			name_set: name.is_equal (new_name)
 		end
 
-	set_type (new_type: STRING) is
+	set_type (new_type: STRING)
 			-- Set 'type' to 'new_type'
 		require
 			non_void_type: new_type /= Void
@@ -59,7 +59,7 @@ feature -- Element change
 
 feature -- Output
 
-	code: STRING is
+	code: STRING
 			-- Code output
 		do
 		end
@@ -70,7 +70,7 @@ invariant
 	valid_name: not name.is_empty
 	valid_type: not type.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

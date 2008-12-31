@@ -1,4 +1,4 @@
-indexing
+note
 	description: "GUID related strings."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -18,7 +18,7 @@ inherit
 
 feature -- Basic operations
 
-	iid_name (a_name: STRING): STRING is
+	iid_name (a_name: STRING): STRING
 			-- Name of IID constant.
 		require
 			non_void_name: a_name /= Void
@@ -42,7 +42,7 @@ feature -- Basic operations
 			valid_declaration: not Result.is_empty
 		end
 
-	iid_definition (a_name: STRING; a_guid: ECOM_GUID): STRING is
+	iid_definition (a_name: STRING; a_guid: ECOM_GUID): STRING
 			-- Definition of IID in source file.
 		require
 			non_void_name: a_name /= Void
@@ -68,7 +68,7 @@ feature -- Basic operations
 			non_void_definition: Result /= Void
 		end
 
-	libid_name (name: STRING): STRING is
+	libid_name (name: STRING): STRING
 			-- Name of library id
 		require
 			non_void_name: name /= Void
@@ -80,7 +80,7 @@ feature -- Basic operations
 			Result.append ("_")
 		end
 
-	libid_definition (name: STRING; guid: ECOM_GUID): STRING is
+	libid_definition (name: STRING; guid: ECOM_GUID): STRING
 			-- Definition of CLSID in source file.
 		require
 			non_void_name: name /= Void
@@ -104,7 +104,7 @@ feature -- Basic operations
 			valid_definition: not Result.is_empty
 		end
 
-	libid_declaration (name: STRING): STRING is
+	libid_declaration (name: STRING): STRING
 			-- Declaration of LIBID in header file
 		require
 			non_void_name: name /= Void
@@ -128,7 +128,7 @@ feature -- Basic operations
 		end
 
 
-	clsid_name (a_name: STRING): STRING is
+	clsid_name (a_name: STRING): STRING
 			-- Name of CLSID constant.
 		require
 			non_void_name: a_name /= Void
@@ -144,7 +144,7 @@ feature -- Basic operations
 			valid_declaration: not Result.is_empty
 		end
 
-	clsid_definition (a_name: STRING; a_guid: ECOM_GUID): STRING is
+	clsid_definition (a_name: STRING; a_guid: ECOM_GUID): STRING
 			-- Definition of CLSID in source file.
 		require
 			non_void_name: a_name /= Void
@@ -168,7 +168,7 @@ feature -- Basic operations
 			valid_definition: not Result.is_empty
 		end
 
-	clsid_declaration (a_name: STRING): STRING is
+	clsid_declaration (a_name: STRING): STRING
 			-- Declaration of CLSID in header file.
 		require
 			non_void_name: a_name /= Void
@@ -194,7 +194,7 @@ feature -- Basic operations
 			valid_declaration: not Result.is_empty
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

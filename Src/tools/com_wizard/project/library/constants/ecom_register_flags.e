@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "COM Component registration code"
 	legal: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 	
 feature -- Access
 
-	Regcls_singleuse: INTEGER is
+	Regcls_singleuse: INTEGER
 			-- Once an application is connected to a 
 			-- class object, it is removed from public view
 			-- so that no other applications can connect to it. 
@@ -21,7 +21,7 @@ feature -- Access
 			"REGCLS_SINGLEUSE"
 		end
 		
-	Regcls_multipleuse: INTEGER is
+	Regcls_multipleuse: INTEGER
 			-- Multiple applications can connect to the class object.
 		external
 			"C [macro <objbase.h>]"
@@ -29,14 +29,14 @@ feature -- Access
 			"REGCLS_MULTIPLEUSE"
 		end
 		
-	is_valid_register_flag (flag: INTEGER): BOOLEAN is
+	is_valid_register_flag (flag: INTEGER): BOOLEAN
 			-- Is `flag' a valid combination of registration flags?
 		do
 			Result := flag = Regcls_singleuse or
 						flag = Regcls_multipleuse
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

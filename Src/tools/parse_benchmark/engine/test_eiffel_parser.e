@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Wrapper for {EIFFEL_PARSER} so parsers can be indentified and may be performed easily."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -93,7 +93,7 @@ invariant
 	identity_attached: identity /= Void
 	not_identity_is_empty: not identity.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

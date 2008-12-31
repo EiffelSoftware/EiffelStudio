@@ -1,4 +1,4 @@
-indexing
+note
 	description: "C file writer"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize data.
 		do
 			create {ARRAYED_LIST [WIZARD_WRITER_C_FUNCTION]} functions.make (20)
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	generated_header_file: STRING is
+	generated_header_file: STRING
 			-- Generated header file
 		require
 			ready: can_generate
@@ -117,7 +117,7 @@ feature -- Access
 	header: STRING
 			-- C++ class header comment
 
-	generated_code: STRING is
+	generated_code: STRING
 			-- Generated code
 		do
 			create Result.make (4096)
@@ -146,7 +146,7 @@ feature -- Access
 			end
 		end
 
-	can_generate: BOOLEAN is
+	can_generate: BOOLEAN
 			-- Can code be generated?
 		do
 			Result := header /= Void and then not header.is_empty and header_file_name /= Void and then not header_file_name.is_empty
@@ -154,7 +154,7 @@ feature -- Access
 
 feature -- Element Change
 
-	add_function (a_function: WIZARD_WRITER_C_FUNCTION) is
+	add_function (a_function: WIZARD_WRITER_C_FUNCTION)
 			-- Add `a_function' to functions.
 		require
 			non_void_function: a_function /= Void
@@ -164,7 +164,7 @@ feature -- Element Change
 			added: functions.last = a_function
 		end
 	
-	set_header (a_header: like header) is
+	set_header (a_header: like header)
 			-- Set `header' with `a_header'.
 		require
 			non_void_header: a_header /= Void
@@ -176,7 +176,7 @@ feature -- Element Change
 
 feature -- Basic Operations
 
-	save_header_file (a_header_file: STRING) is
+	save_header_file (a_header_file: STRING)
 			-- Save header file into `a_header_file'.
    		require
    			can_generate: can_generate
@@ -191,7 +191,7 @@ invariant
 		non_void_others: others /= Void
 		non_void_import_files: import_files /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

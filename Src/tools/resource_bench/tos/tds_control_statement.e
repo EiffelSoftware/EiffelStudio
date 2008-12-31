@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control statement representation in the tds"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,17 +26,17 @@ inherit
 
 feature -- Initialization
 
-	make_style is
+	make_style
 		do
 			create style.make
 		end
 
-	make_exstyle is
+	make_exstyle
 		do
 			create exstyle.make
 		end
 
-	finish_control_setup is
+	finish_control_setup
 		deferred
 		end
 
@@ -83,7 +83,7 @@ feature	-- Access
 
 feature -- Element change
 
-	set_id (a_id: STRING) is
+	set_id (a_id: STRING)
 			-- Set `id' to `a_id'.
 		require
 			a_id_exists: a_id /= Void and then a_id.count > 0
@@ -117,7 +117,7 @@ feature -- Element change
 			end
 		end
 
-	set_x (a_x: INTEGER) is
+	set_x (a_x: INTEGER)
 			-- Set `x' to `a_x'.
 		do
 			x := a_x
@@ -125,7 +125,7 @@ feature -- Element change
 			x_set: x = a_x
 		end
 
-	set_y (a_y: INTEGER) is
+	set_y (a_y: INTEGER)
 			-- Set `y' to `a_y'.
 		do
 			y := a_y
@@ -133,7 +133,7 @@ feature -- Element change
 			y_set: y = a_y
 		end
 
-	set_width (a_width: INTEGER) is
+	set_width (a_width: INTEGER)
 			-- Set `width' to `a_width'.
 		do
 			width := a_width
@@ -141,7 +141,7 @@ feature -- Element change
 			width_set: width = a_width
 		end
 
-	set_height (a_height: INTEGER) is
+	set_height (a_height: INTEGER)
 			-- Set `height' to `a_height'.
 		do
 			height := a_height
@@ -149,7 +149,7 @@ feature -- Element change
 			height_set: height = a_height
 		end
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING)
 			-- Set `text' to `a_text'.
 		require
 			a_text_exist: a_text /= Void and then a_text.count > 0
@@ -159,7 +159,7 @@ feature -- Element change
 			text_set: text.is_equal (a_text)
 		end
 
-	set_style (a_style: TDS_STYLE) is
+	set_style (a_style: TDS_STYLE)
 			-- Set `style' to `a_style'.
 		require
 			a_style_not_void: a_style /= Void
@@ -171,7 +171,7 @@ feature -- Element change
 			style.extend (a_style)
 		end
 
-	set_exstyle (a_exstyle: TDS_STYLE) is
+	set_exstyle (a_exstyle: TDS_STYLE)
 			-- Set `exstyle' to `a_exstyle'.
 		require
 			a_exstyle_not_void: a_exstyle /= Void
@@ -183,7 +183,7 @@ feature -- Element change
 			exstyle.extend (a_exstyle)
 		end
 
-	set_class_name (a_class_name: STRING) is
+	set_class_name (a_class_name: STRING)
 			-- Set `class_name' to `a_class_name'.
 		require
 			a_class_name_exists: a_class_name /= Void and then a_class_name.count > 0
@@ -193,7 +193,7 @@ feature -- Element change
 			class_name_set: class_name.is_equal (a_class_name)
 		end
 
-	set_wel_class_name (a_class_name: STRING) is
+	set_wel_class_name (a_class_name: STRING)
 			-- Set `wel_class_name' to `a_class_name'.
 		require
 			a_class_name_exists: a_class_name /= Void and then a_class_name.count > 0
@@ -203,7 +203,7 @@ feature -- Element change
 			wel_class_name_set: wel_class_name.is_equal (a_class_name)
 		end
 
-	set_wel_code (a_value: BOOLEAN) is
+	set_wel_code (a_value: BOOLEAN)
 			-- Set `is_wel_code_on' to`a_value'.
 		do
 			is_wel_code_on := a_value
@@ -211,7 +211,7 @@ feature -- Element change
 			is_wel_code_on_set: is_wel_code_on = a_value
 		end
 
-	dupplicate (a_control: TDS_CONTROL_STATEMENT) is
+	dupplicate (a_control: TDS_CONTROL_STATEMENT)
 			-- Copy `a_control' field to Current.
 		require
 			a_control_not_void: a_control /= Void
@@ -242,7 +242,7 @@ feature -- Element change
 			end
 		end
 	
-	set_type (a_type: INTEGER) is
+	set_type (a_type: INTEGER)
 			-- Set `type' to `a_type'.
 		do
 			type := a_type
@@ -250,7 +250,7 @@ feature -- Element change
 			type_set: type = a_type
 		end
 
-	set_variable_name (a_name: STRING) is
+	set_variable_name (a_name: STRING)
 			-- Set `variable_name' to `a_name'.
 		require
 			a_name_not_void: a_name /= Void 
@@ -267,26 +267,26 @@ feature -- Element change
 			variable_name_set: variable_name.count >= a_name.count
 		end
 
-	insert (a_control: like Current) is
+	insert (a_control: like Current)
 		do
 			extend (a_control)
 		end
 		
 feature -- Code generation
 
-	display is
+	display
 		deferred
 		end
 
 
-	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE) is
+	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE)
 			-- Generate `a_resource_file' from the tds memory structure.
 		require
 			a_resource_file_exists: a_resource_file.exists
 		deferred
 		end
 
-	generate_make_wel_code (a_text_file: PLAIN_TEXT_FILE) is
+	generate_make_wel_code (a_text_file: PLAIN_TEXT_FILE)
 			-- Generate the eiffel code in `a_text_file'.
 		require
 			a_text_file_exists: a_text_file.exists
@@ -307,7 +307,7 @@ feature -- Code generation
 			end
 		end
 
-	generate_access_wel_code (a_text_file: PLAIN_TEXT_FILE) is
+	generate_access_wel_code (a_text_file: PLAIN_TEXT_FILE)
 			-- Generate the eiffel code in `a_text_file'.
 		require
 			a_text_file_exists: a_text_file.exists
@@ -329,7 +329,7 @@ feature -- Code generation
 
 feature {NONE}
 
-	specific_id: ARRAY [STRING] is
+	specific_id: ARRAY [STRING]
 			-- Store the specific ids used by the resource compiler:
 			-- idcancel, idok... (see WEL_ID_CONSTANTS for the list).
 		once
@@ -339,7 +339,7 @@ feature {NONE}
 						     "idno", "idclose", "idhelp">>)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

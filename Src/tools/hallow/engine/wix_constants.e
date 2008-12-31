@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Constants describing XML tags and attributes, and also any common default values.
 	]"
@@ -54,7 +54,7 @@ feature -- Constants
 	yes_value: SYSTEM_STRING = "yes"
 	no_value: SYSTEM_STRING = "no"
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

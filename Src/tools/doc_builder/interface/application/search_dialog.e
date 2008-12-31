@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Simple search dialog which performs searches on an EV_TEXT widget."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	user_initialization is
+	user_initialization
 			-- called by `initialize'.
 			-- Any custom user initialization that
 			-- could not be performed in `initialize',
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 	
 feature -- Display
 
-	show_relative_to_window (a_window: EV_WINDOW) is
+	show_relative_to_window (a_window: EV_WINDOW)
 			-- Show
 		do
 			Precursor (a_window)	
@@ -52,7 +52,7 @@ feature -- Display
 		
 feature -- Status Setting
 
-	set_widget (a_widget: EV_TEXT) is
+	set_widget (a_widget: EV_TEXT)
 			-- Set `text_widget' to `a_widget'
 		require
 			widget_not_void: a_widget /= Void
@@ -62,7 +62,7 @@ feature -- Status Setting
 
 feature -- Commands
 
-	search is
+	search
 			-- Search for text in 'search_text' and highlight in 
 			-- `text_widget' if found.  If not found load message dialog
 		local
@@ -108,7 +108,7 @@ feature {NONE} -- Implementation
 	text_widget: EV_TEXT
 			-- Widget
 
-	start_position: INTEGER is
+	start_position: INTEGER
 			-- Position from which to start search
 		do
 			Result := text_widget.caret_position
@@ -117,7 +117,7 @@ feature {NONE} -- Implementation
 			end
 		end
 	
-	key_released (a_key: EV_KEY) is
+	key_released (a_key: EV_KEY)
 			-- Key was released in search box
 		do
 			if (create {EV_KEY_CONSTANTS}).Key_enter = a_key.code and not search_text.text.is_empty then
@@ -125,7 +125,7 @@ feature {NONE} -- Implementation
 			end
 		end		
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "COM ELEMDESC structure"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_from_pointer (a_pointer: POINTER) is
+	make_from_pointer (a_pointer: POINTER)
 			-- Make from pointer.
 		do
 			make_by_pointer (a_pointer)
@@ -24,19 +24,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	type_desc: ECOM_TYPE_DESC is
+	type_desc: ECOM_TYPE_DESC
 			-- TYPEDESC structure
 		do
 			create Result.make_from_pointer (ccom_elemdesc_typedesc (item))
 		end
 
-	idl_desc: ECOM_IDL_DESC is
+	idl_desc: ECOM_IDL_DESC
 			-- IDLDESC structure
 		do
 			create Result.make_from_pointer (ccom_elemdesc_idldesc (item))
 		end
 
-	param_desc: ECOM_PARAM_DESC is
+	param_desc: ECOM_PARAM_DESC
 			-- PARAMDESC structure
 		do
 			create Result.make_from_pointer (ccom_elemdesc_paramdesc (item))
@@ -44,7 +44,7 @@ feature -- Access
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of ELEMDESC structure
 		do
 			Result := c_size_of_elem_desc
@@ -52,30 +52,30 @@ feature -- Measurement
 
 feature {NONE} -- Externals
 
-	c_size_of_elem_desc: INTEGER is
+	c_size_of_elem_desc: INTEGER
 		external 
 			"C [macro %"E_elemdesc.h%"]"
 		alias
 			"sizeof(ELEMDESC)"
 		end
 
-	ccom_elemdesc_typedesc (a_ptr: POINTER): POINTER is
+	ccom_elemdesc_typedesc (a_ptr: POINTER): POINTER
 		external
 			"C [macro %"E_elemdesc.h%"]"
 		end
 
-	ccom_elemdesc_idldesc (a_ptr: POINTER): POINTER is
+	ccom_elemdesc_idldesc (a_ptr: POINTER): POINTER
 		external
 			"C [macro %"E_elemdesc.h%"]"
 		end
 
-	ccom_elemdesc_paramdesc (a_ptr: POINTER): POINTER is
+	ccom_elemdesc_paramdesc (a_ptr: POINTER): POINTER
 		external
 			"C [macro %"E_elemdesc.h%"]"
 		end
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

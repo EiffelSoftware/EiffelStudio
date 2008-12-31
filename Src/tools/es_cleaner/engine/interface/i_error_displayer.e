@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Interface used to display error information to a user.
 	]"
@@ -12,7 +12,7 @@ deferred class
 
 feature -- Basic operations
 
-	show (a_cateory: STRING; a_manager: MULTI_ERROR_MANAGER) is
+	show (a_cateory: STRING; a_manager: MULTI_ERROR_MANAGER)
 			-- Show errors using manager `a_manager'.
 		require
 			a_cateory_attached: a_cateory /= Void
@@ -22,7 +22,7 @@ feature -- Basic operations
 		deferred
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

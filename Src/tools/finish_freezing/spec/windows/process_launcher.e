@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects to launch a process"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ inherit
 
 feature -- Basic Operations
 
-	launch (a_command_line, a_working_directory: STRING) is
+	launch (a_command_line, a_working_directory: STRING)
 			-- Spawn process described in `a_command_line' from `a_working_directory'.
 		require
 			non_void_command_line: a_command_line /= Void
@@ -62,7 +62,7 @@ feature {NONE} -- Implementation
 	process_info: WEL_PROCESS_INFO
 			-- Process information
 
-	startup_info: WEL_STARTUP_INFO is
+	startup_info: WEL_STARTUP_INFO
 			-- Process startup information
 		do
 			create Result.make
@@ -73,7 +73,7 @@ feature {NONE} -- Externals
 
 	cwin_create_process (a_name, a_command_line, a_sec_attributes1, a_sec_attributes2: POINTER;
 							a_herit_handles: BOOLEAN; a_flags: INTEGER; an_environment, a_directory,
-							a_startup_info, a_process_info: POINTER): BOOLEAN is
+							a_startup_info, a_process_info: POINTER): BOOLEAN
 			-- SDK CreateProcess
 		external
 			"C [macro <winbase.h>] (LPCTSTR, LPTSTR, LPSECURITY_ATTRIBUTES, LPSECURITY_ATTRIBUTES, BOOL, DWORD, LPVOID, LPCTSTR, LPSTARTUPINFO, LPPROCESS_INFORMATION) :EIF_BOOLEAN"
@@ -81,7 +81,7 @@ feature {NONE} -- Externals
 			"CreateProcess"
 		end
 
-	cwin_create_new_console: INTEGER is
+	cwin_create_new_console: INTEGER
 			-- SDK CREATE_NEW_CONSOLE constant
 		external
 			"C [macro <windows.h>]: EIF_INTEGER"
@@ -89,7 +89,7 @@ feature {NONE} -- Externals
 			"CREATE_NEW_CONSOLE"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

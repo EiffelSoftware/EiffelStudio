@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Synchronizer for types of document widgets."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature -- Status Setting
 
-	add_document (a_doc: DOCUMENT) is
+	add_document (a_doc: DOCUMENT)
 			-- Add `a_doc'
 		do
 			if  modified_documents.has (a_doc) then
@@ -24,7 +24,7 @@ feature -- Status Setting
 
 feature -- Commands
 	
-	synchronize is
+	synchronize
 			-- Synchronize
 		do
 			Modified_documents.do_all (agent update_toc)
@@ -33,19 +33,19 @@ feature -- Commands
 
 feature -- Implementation
 
-	modified_documents: ARRAYED_LIST [DOCUMENT] is
+	modified_documents: ARRAYED_LIST [DOCUMENT]
 			-- List of documents that have been modified and need synchronizing at
 			-- some point
 		once
 			create Result.make (3)
 		end		
 
-	update_toc (a_doc: DOCUMENT) is
+	update_toc (a_doc: DOCUMENT)
 			-- TOC
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

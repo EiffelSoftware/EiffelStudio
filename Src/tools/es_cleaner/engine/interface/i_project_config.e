@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Interface for project related user configuration settings, used to extract information from a UI or data store about a project to clean, backup or restore.
 	]"
@@ -20,7 +20,7 @@ inherit
 
 feature -- Access
 
-	project_location: STRING is
+	project_location: STRING
 			-- Location of the Eiffel project to clean.
 		require
 			process_project: process_project
@@ -33,7 +33,7 @@ feature -- Access
 
 feature -- Status report
 
-	can_any_processing_occur: BOOLEAN is
+	can_any_processing_occur: BOOLEAN
 			-- Indiciates if any processing can occur
 		do
 			Result := process_project and then
@@ -42,33 +42,33 @@ feature -- Status report
 				process_project_session)
 		end
 
-	process_project: BOOLEAN is
+	process_project: BOOLEAN
 			-- Indiciates if an Eiffel project should be processed
 		deferred
 		end
 
-	process_project_preferences: BOOLEAN is
+	process_project_preferences: BOOLEAN
 			-- Indiciates if the project preferences should be processed
 		require
 			process_project: process_project
 		deferred
 		end
 
-	process_project_layout: BOOLEAN is
+	process_project_layout: BOOLEAN
 			-- Indiciates if the project layout should be processed
 		require
 			process_project: process_project
 		deferred
 		end
 
-	process_project_session: BOOLEAN is
+	process_project_session: BOOLEAN
 			-- Indiciates if the project session should be processed
 		require
 			process_project: process_project
 		deferred
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

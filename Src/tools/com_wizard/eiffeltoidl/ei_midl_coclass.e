@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Implementation
 
-	make (c_name: STRING) is
+	make (c_name: STRING)
 			-- Initialize object.  Set 'name' to 'c_name'.
 		do
 			Precursor (c_name)
@@ -38,7 +38,7 @@ feature -- Access
 
 feature -- Element change
 
-	add_interface (idl_interface: EI_MIDL_INTERFACE) is
+	add_interface (idl_interface: EI_MIDL_INTERFACE)
 			-- Add 'idl_interface' to interfaces.
 		require
 			non_void_interface: idl_interface /= Void
@@ -50,7 +50,7 @@ feature -- Element change
 
 feature -- Output
 
-	code: STRING is
+	code: STRING
 			-- Code.
 		local
 			l_name, guid_str: STRING
@@ -90,7 +90,7 @@ feature -- Output
 			output_generated: code /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

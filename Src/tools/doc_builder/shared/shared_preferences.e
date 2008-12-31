@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Access
 
-	initialize is
+	initialize
 			-- 
 		local
 			l_loc, l_prefname: FILE_NAME
@@ -40,7 +40,7 @@ feature -- Access
 		
 feature -- Commands		
 		
-	show_preferences_window (a_window: EV_WINDOW) is
+	show_preferences_window (a_window: EV_WINDOW)
 			-- 
 		local
 			window: PREFERENCES_WINDOW
@@ -49,7 +49,7 @@ feature -- Commands
 			window.show
 		end		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

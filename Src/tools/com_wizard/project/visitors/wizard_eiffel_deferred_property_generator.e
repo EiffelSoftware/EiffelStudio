@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generate deferred features from property"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -18,7 +18,7 @@ create
 
 feature -- Basic operations
 
-	generate (a_descriptor: WIZARD_PROPERTY_DESCRIPTOR) is
+	generate (a_descriptor: WIZARD_PROPERTY_DESCRIPTOR)
 			-- Generate deferred access and setting features from property.
 		local
 			visitor: WIZARD_DATA_TYPE_VISITOR
@@ -76,7 +76,7 @@ feature -- Basic operations
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

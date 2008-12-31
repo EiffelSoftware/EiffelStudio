@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Build a javascript script for hash of sub-tocs and associated file."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature -- Access
 
-	text: STRING is
+	text: STRING
 			-- DHTML text
 		do			
 			Result := processed_text
@@ -24,7 +24,7 @@ feature -- Access
 
 feature -- Processing
 
-	node_text (a_node: TABLE_OF_CONTENTS_NODE): STRING is
+	node_text (a_node: TABLE_OF_CONTENTS_NODE): STRING
 			-- Node text.  Each node is made up from a table element.  Any sub nodes are then put 
 			-- inside div element in the table, and so on.
 		local
@@ -64,7 +64,7 @@ feature -- Processing
 			end
 		end		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

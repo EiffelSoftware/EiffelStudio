@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A full interface to expose configuration information to a backup manager.
 	]"
@@ -13,7 +13,7 @@ deferred class
 inherit
 	I_ENVIRONMENT_CONFIG
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

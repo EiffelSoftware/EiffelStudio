@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "COM component instantiation context constants"
 	legal: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Access
 
-	Clsctx_inproc_server: INTEGER is
+	Clsctx_inproc_server: INTEGER
 			-- The code that creates and manages objects of 
 			-- descendant class runs in the same process as the 
 			-- caller of the function specifying the class context. 
@@ -21,7 +21,7 @@ feature -- Access
 			"CLSCTX_INPROC_SERVER"
 		end
 		
-	Clsctx_inproc_handler: INTEGER is
+	Clsctx_inproc_handler: INTEGER
 			-- The code that manages objects of descendant class
 			-- is an in-process handler. This is a DLL that runs 
 			-- in the client process and implements client-side 
@@ -33,7 +33,7 @@ feature -- Access
 			"CLSCTX_INPROC_SERVER"
 		end			
 		
-	Clsctx_local_server: INTEGER is
+	Clsctx_local_server: INTEGER
 			-- The EXE code that creates and manages objects of
 			-- descendant class is loaded in a separate process space
 			-- (runs on same machine but in a different process).
@@ -43,7 +43,7 @@ feature -- Access
 			"CLSCTX_LOCAL_SERVER"
 		end
 		
-	Clsctx_server: INTEGER is
+	Clsctx_server: INTEGER
 			-- Indicates server code, whether in-process or local.
 		external
 			"C [macro <objbase.h>]"
@@ -51,7 +51,7 @@ feature -- Access
 			"CLSCTX_SERVER"
 		end
 		
-	Clsctx_all: INTEGER is
+	Clsctx_all: INTEGER
 			-- Indicates all class contexts.
 		external
 			"C [macro <objbase.h>]"
@@ -59,7 +59,7 @@ feature -- Access
 			"CLSCTX_ALL"
 		end
 		
-	is_valid_clsctx (context: INTEGER): BOOLEAN is
+	is_valid_clsctx (context: INTEGER): BOOLEAN
 			-- Is `context' a valid class context?
 		do
 			Result := context = Clsctx_inproc_server or
@@ -69,7 +69,7 @@ feature -- Access
 						context = Clsctx_all
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

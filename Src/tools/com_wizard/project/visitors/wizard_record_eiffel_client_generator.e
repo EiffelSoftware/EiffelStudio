@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Record eiffel client generator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -17,7 +17,7 @@ inherit
 
 feature -- Access
 
-	generate (a_descriptor: WIZARD_RECORD_DESCRIPTOR) is
+	generate (a_descriptor: WIZARD_RECORD_DESCRIPTOR)
 			-- Generate eiffel client for record.
 		do
 			if not standard_structures.has (a_descriptor.c_type_name) then
@@ -28,12 +28,12 @@ feature -- Access
 			eiffel_writer := Void
 		end
 	
-	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY) is
+	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY)
 		do
 			a_factory.process_record_eiffel_client
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

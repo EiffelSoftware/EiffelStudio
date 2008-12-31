@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Allows creating identifiers from given base that are unique in given set"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	unique_identifier (a_base: STRING; a_comparer: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]): STRING is
+	unique_identifier (a_base: STRING; a_comparer: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]): STRING
 			-- Unique identifier in `a_list' from `a_base'
 			--| An identifier is considered unique if applying `a_comparer' to it returns `False'
 		require
@@ -40,7 +40,7 @@ feature -- Access
 			is_unique: not a_comparer.item ([Result])
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

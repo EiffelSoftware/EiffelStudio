@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Warning to describe the use of unsupported registry named value types.
 	]"
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_file: like file_name; a_type: like type) is
+	make (a_file: like file_name; a_type: like type)
 			--
 		require
 			a_file_attached: a_file /= Void
@@ -50,7 +50,7 @@ invariant
 	type_attached: type /= Void
 	not_type_is_empty: not type.is_empty
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

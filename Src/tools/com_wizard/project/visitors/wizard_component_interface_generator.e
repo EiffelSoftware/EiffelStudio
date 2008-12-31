@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Processing interface for component."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -31,7 +31,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	generate_functions_and_properties (a_interface: WIZARD_INTERFACE_DESCRIPTOR) is
+	generate_functions_and_properties (a_interface: WIZARD_INTERFACE_DESCRIPTOR)
 			-- Generate functions and properties.
 		require
 			non_void_interface: a_interface /= Void
@@ -85,7 +85,7 @@ feature -- Basic operations
 			end
 		end
 
-	process_property (a_property: WIZARD_PROPERTY_DESCRIPTOR) is
+	process_property (a_property: WIZARD_PROPERTY_DESCRIPTOR)
 			-- Process property.
 		require
 			non_void_property: a_property/= Void
@@ -93,7 +93,7 @@ feature -- Basic operations
 		end
 
 
-	process_function (a_function: WIZARD_FUNCTION_DESCRIPTOR) is
+	process_function (a_function: WIZARD_FUNCTION_DESCRIPTOR)
 			-- Process function.
 		require
 			non_void_descriptor: a_function/= Void
@@ -105,14 +105,14 @@ feature {NONE} -- Implementation
 	finished: BOOLEAN
 			-- Is processing finished?
 
-	clean_up is
+	clean_up
 			-- Clean up.
 		require
 			finished: finished
 		deferred
 		end
 
-	is_interface_generated_for_coclass (a_interface: WIZARD_INTERFACE_DESCRIPTOR; a_coclass: WIZARD_COCLASS_DESCRIPTOR): BOOLEAN is
+	is_interface_generated_for_coclass (a_interface: WIZARD_INTERFACE_DESCRIPTOR; a_coclass: WIZARD_COCLASS_DESCRIPTOR): BOOLEAN
 			-- Was interface `a_interface' already generated in context of coclass `a_coclass'?
 		require
 			non_void_interface: a_interface /= Void
@@ -124,7 +124,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_generated_interface_for_coclass (a_interface: WIZARD_INTERFACE_DESCRIPTOR; a_coclass: WIZARD_COCLASS_DESCRIPTOR) is
+	add_generated_interface_for_coclass (a_interface: WIZARD_INTERFACE_DESCRIPTOR; a_coclass: WIZARD_COCLASS_DESCRIPTOR)
 			-- Add interface `a_interface' in list of generated interfaces for coclass `a_coclass'.
 		require
 			non_void_interface: a_interface /= Void
@@ -157,7 +157,7 @@ invariant
 	non_void_component: not finished implies component /= Void
 	non_void_generated_coclasses: generated_coclasses /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

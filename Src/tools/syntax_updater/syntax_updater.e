@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "System's root class"
 
 class
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		do
 			create factory
 			create parser.make_with_factory (factory)
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- File discovering and processing
 
-	execute is
+	execute
 			-- Process all files under directories specified on the command line arguments.
 		local
 			dir: KL_DIRECTORY
@@ -103,7 +103,7 @@ feature {NONE} -- File discovering and processing
 			end
 		end
 
-	test_recursive (a_dir: KL_DIRECTORY) is
+	test_recursive (a_dir: KL_DIRECTORY)
 			-- Process files and directories under `a_dir'.
 		require
 			a_dir_not_void: a_dir /= Void
@@ -137,7 +137,7 @@ feature {NONE} -- File discovering and processing
 
 feature {NONE} -- Implementation
 
-	update_eiffel_class (file_name: STRING) is
+	update_eiffel_class (file_name: STRING)
 		require
 			file_name_not_void: file_name /= Void
 		local
@@ -300,7 +300,7 @@ invariant
 	visitor_not_void: visitor /= Void
 	string_buffer_not_void: string_buffer /= Void
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

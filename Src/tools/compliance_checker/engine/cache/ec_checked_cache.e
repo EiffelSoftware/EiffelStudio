@@ -1,4 +1,4 @@
-indexing
+note
 	description : "[
 		Shared cache of checked entities.
 		
@@ -15,11 +15,11 @@ class
 
 feature -- Access
 
-	checked_entities: IDICTIONARY is
+	checked_entities: IDICTIONARY
 			-- Checked entities cache.
 			-- Key: An entity (an ASSEMBLY, SYSTEM_TYPE, etc.)
 			-- Value: Corresponding checked entity (ASSEMBLY => EC_CHECKED_ASSEMBLY)
-		indexing
+		note
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		do
 			Result := checked_entities_table
@@ -27,9 +27,9 @@ feature -- Access
 	
 feature -- Extension
 
-	set_checked_entity (a_entity: ICUSTOM_ATTRIBUTE_PROVIDER; a_checked_entity: EC_CHECKED_ENTITY) is
+	set_checked_entity (a_entity: ICUSTOM_ATTRIBUTE_PROVIDER; a_checked_entity: EC_CHECKED_ENTITY)
 			-- Adds or sets a checked entity `a_entity' to `checked_entities'.
-		indexing
+		note
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		require
 			a_entity_not_void: a_entity /= Void
@@ -42,9 +42,9 @@ feature -- Extension
 		
 feature -- Removal
 
-	wipe_out_cache is
+	wipe_out_cache
 			-- Clears `checked_entities'
-		indexing
+		note
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		do
 			checked_entities_table.clear
@@ -53,14 +53,14 @@ feature -- Removal
 	
 feature {NONE} -- Implementation
 
-	checked_entities_table: HASHTABLE is
+	checked_entities_table: HASHTABLE
 			-- Checked entities table containing:
 			-- Key: An entity (an ASSEMBLY, SYSTEM_TYPE, etc.)
 			-- Value: Corresponding checked entity (ASSEMBLY => EC_CHECKED_ASSEMBLY)
 			--
 			-- Note: Please use `set_checked_entity' to set item data instead of using HASHTABLE
 			--       features directly.
-		indexing
+		note
 			once_status: global
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		once
@@ -70,7 +70,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 		
-	add_predefine_checked_entities (a_table: HASHTABLE) is
+	add_predefine_checked_entities (a_table: HASHTABLE)
 			-- Predefined checked entities.
 		require
 			a_table_not_void: a_table /= Void
@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 		end
 		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

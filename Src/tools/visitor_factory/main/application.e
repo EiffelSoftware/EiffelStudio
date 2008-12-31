@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Application command line entry point.
 	]"
@@ -21,7 +21,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Creation procedure.
 		local
 			l_layout: EIFFEL_LAYOUT
@@ -38,7 +38,7 @@ feature -- Initialization
 			l_parser.execute (agent start (l_parser))
 		end
 
-	start (a_parser: ARGUMENT_PARSER) is
+	start (a_parser: ARGUMENT_PARSER)
 			-- Start exection of application
 		require
 			a_parser_attached: a_parser /= Void
@@ -68,7 +68,7 @@ feature -- Initialization
 			l_printer.new_line
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

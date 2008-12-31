@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel assertion used in WIZARD_WRITER classes"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_tag, a_body: STRING) is
+	make (a_tag, a_body: STRING)
 			-- Initialize data.
 		require
 			non_void_tag: a_tag /= Void
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 	
 feature -- Access
 
-	generated_code: STRING is
+	generated_code: STRING
 			-- Generated code
 		do
 			Result :=  tag.twin
@@ -42,7 +42,7 @@ feature -- Access
 			Result.append (body)
 		end
 
-	can_generate: BOOLEAN is
+	can_generate: BOOLEAN
 			-- Can code be generated?
 		do
 			Result := (tag /= Void and then not tag.is_empty) and (body /= Void and then not body.is_empty)
@@ -56,7 +56,7 @@ feature -- Access
 
 feature -- Element Change
 
-	set_tag (a_tag: like tag) is
+	set_tag (a_tag: like tag)
 			-- Set `tag' with `a_tag'.
 		require
 			non_void_tag: a_tag /= Void
@@ -66,7 +66,7 @@ feature -- Element Change
 			tag_set: tag.is_equal (a_tag)
 		end
 	
-	set_body (a_body: like body) is
+	set_body (a_body: like body)
 			-- Set `body' with `a_body'.
 		require
 			non_void_body: a_body /= Void
@@ -76,7 +76,7 @@ feature -- Element Change
 			body_set: body = a_body
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

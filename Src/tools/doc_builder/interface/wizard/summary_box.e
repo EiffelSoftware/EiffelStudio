@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Box containing a list of strings for reporting summary of%
 		%sequentially provided information."
 	legal: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Creation
 
-	make (a_dialog: EV_DIALOG; a_title: STRING) is
+	make (a_dialog: EV_DIALOG; a_title: STRING)
 			-- Make with `a_title'
 		require
 			a_dialog_not_void: a_dialog /= Void
@@ -40,7 +40,7 @@ feature -- Access
 
 feature -- Query
 
-	frame: EV_FRAME is
+	frame: EV_FRAME
 			-- Current represented as EV_FRAME
 		local
 			l_label: EV_LABEL
@@ -68,7 +68,7 @@ feature -- Query
 invariant
 	has_title: title /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

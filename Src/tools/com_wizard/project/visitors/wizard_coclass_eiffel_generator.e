@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Coclass eiffel generator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -15,7 +15,7 @@ inherit
 
 feature -- Basic Operations
 
-	generate (a_coclass: WIZARD_COCLASS_DESCRIPTOR) is
+	generate (a_coclass: WIZARD_COCLASS_DESCRIPTOR)
 			-- Generate eiffel class for coclass.
 		do
 			create eiffel_writer.make
@@ -31,7 +31,7 @@ feature -- Basic Operations
 			add_creation
 		end
 
-	process_interfaces (a_coclass: WIZARD_COCLASS_DESCRIPTOR) is
+	process_interfaces (a_coclass: WIZARD_COCLASS_DESCRIPTOR)
 			-- Process coclass interfaces.
 		deferred
 		end
@@ -42,7 +42,7 @@ feature {NONE} -- Implementation
 			-- Coclass descriptor
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract representation of a priority."
 	date: "$Date$"
 	revision: "$Revision$"

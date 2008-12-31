@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	generate is
+	generate
 			-- Generate IDL file
 		local
 			l_dir: DIRECTORY
@@ -97,7 +97,7 @@ feature -- Basic operations
 
 feature {NONE} -- Basic operations
 
-	write_to_output_file (a_output: STRING) is
+	write_to_output_file (a_output: STRING)
 			-- Write output to `Output_file_name'.
 		local
 			l_output_file: PLAIN_TEXT_FILE
@@ -114,14 +114,14 @@ feature {NONE} -- Basic operations
 			l_retried := True
 		end
 
-	Output_file_name: STRING is
+	Output_file_name: STRING
 			-- Intermediate file for IDL generator.
 		once
 			Result := environment.destination_folder.twin
 			Result.append ("idl\e2idl.output")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Inprocess registration code generator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -19,7 +19,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	generate is
+	generate
 			-- Generate Eiffel registration code for in-process server.
 		do
 			create eiffel_writer.make
@@ -48,24 +48,24 @@ feature -- Basic operations
 			eiffel_writer.save_file (Shared_file_name_factory.last_created_file_name)
 		end
 
-	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY) is
+	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY)
 		do
 			a_factory.process_coclass_eiffel_server
 		end
 
 feature {NONE} -- Implementation
 
-	description_message: STRING is 
+	description_message: STRING = 
 		"Set the registry keys necessary for COM to activate the component%%%N%T%T%T%T  %
 		% %%Do not modify this class."
 
-	add_creation is
+	add_creation
 			-- Add creation procedures.
 		do
 			eiffel_writer.add_creation_routine ("make")
 		end
 
-	make_feature: WIZARD_WRITER_FEATURE is
+	make_feature: WIZARD_WRITER_FEATURE
 			-- `make' feature
 		do
 			create Result.make
@@ -78,7 +78,7 @@ feature {NONE} -- Implementation
 			valid_writer: Result.can_generate
 		end
 
-	dll_register_server_feature: WIZARD_WRITER_FEATURE is
+	dll_register_server_feature: WIZARD_WRITER_FEATURE
 			-- Register Server.
 		do
 			create Result.make
@@ -92,7 +92,7 @@ feature {NONE} -- Implementation
 			valid_writer: Result.can_generate
 		end
 
-	ccom_dll_register_server_feature: WIZARD_WRITER_FEATURE is
+	ccom_dll_register_server_feature: WIZARD_WRITER_FEATURE
 			-- External Register server feature.
 		do
 			create Result.make
@@ -106,7 +106,7 @@ feature {NONE} -- Implementation
 			valid_writer: Result.can_generate
 		end
 
-	dll_unregister_server_feature: WIZARD_WRITER_FEATURE is
+	dll_unregister_server_feature: WIZARD_WRITER_FEATURE
 			-- Unregister Server.
 		do
 			create Result.make
@@ -120,7 +120,7 @@ feature {NONE} -- Implementation
 			valid_writer: Result.can_generate
 		end
 
-	ccom_dll_unregister_server_feature: WIZARD_WRITER_FEATURE is
+	ccom_dll_unregister_server_feature: WIZARD_WRITER_FEATURE
 			-- External Unregister server feature.
 		do
 			create Result.make
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 			valid_writer: Result.can_generate
 		end
 
-	dll_get_class_object_feature: WIZARD_WRITER_FEATURE is
+	dll_get_class_object_feature: WIZARD_WRITER_FEATURE
 			-- Get Class Object.
 		do
 			create Result.make
@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 			valid_writer: Result.can_generate
 		end
 
-	ccom_dll_get_class_object_feature: WIZARD_WRITER_FEATURE is
+	ccom_dll_get_class_object_feature: WIZARD_WRITER_FEATURE
 			-- External Get Class Object feature.
 		do
 			create Result.make
@@ -164,7 +164,7 @@ feature {NONE} -- Implementation
 			valid_writer: Result.can_generate
 		end
 
-	dll_can_unload_now_feature: WIZARD_WRITER_FEATURE is
+	dll_can_unload_now_feature: WIZARD_WRITER_FEATURE
 			-- DLL can unload now.
 		do
 			create Result.make
@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 			valid_writer: Result.can_generate
 		end
 
-	ccom_dll_can_unload_now_feature: WIZARD_WRITER_FEATURE is
+	ccom_dll_can_unload_now_feature: WIZARD_WRITER_FEATURE
 			-- External Can unload now feature.
 		do
 			create Result.make
@@ -192,7 +192,7 @@ feature {NONE} -- Implementation
 			valid_writer: Result.can_generate
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

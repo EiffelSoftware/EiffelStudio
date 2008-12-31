@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An abstract environment configuration for a C/C++ compiler."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature {NONE} -- Initalization
 
-	make (a_use_32bit: like use_32bit; a_code: like code; a_desc: like description; a_version: like version) is
+	make (a_use_32bit: like use_32bit; a_code: like code; a_desc: like description; a_version: like version)
 			-- Initialize a config
 		require
 			a_code_attached: a_code /= Void
@@ -39,7 +39,7 @@ feature {NONE} -- Initalization
 			version_set: version = a_version
 		end
 
-	frozen initialize is
+	frozen initialize
 			-- Initializes internal state variables, if possible
 		do
 			if not is_initialized and not is_initializing then
@@ -53,7 +53,7 @@ feature {NONE} -- Initalization
 			is_initialized: not is_initializing implies is_initialized
 		end
 
-	on_initialize is
+	on_initialize
 			-- Does actual initialization
 		require
 			is_initializing: is_initializing
@@ -65,7 +65,7 @@ feature {NONE} -- Initalization
 
 feature -- Clean up
 
-	frozen dispose is
+	frozen dispose
 			-- Action to be executed just before garbage collection
 			-- reclaims an object.
 		do
@@ -79,7 +79,7 @@ feature -- Clean up
 
 feature {NONE} -- Clean up
 
-	on_dispose is
+	on_dispose
 			-- Action to be executed just before garbage collection
 			-- reclaims an object.
 		require
@@ -91,7 +91,7 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-	install_path: STRING is
+	install_path: STRING
 			-- Location of Visual Studio install base
 		require
 			exists: exists
@@ -102,7 +102,7 @@ feature -- Access
 			result_ends_with_dir_separator: Result.item (Result.count) = operating_environment.directory_separator
 		end
 
-	path_var: STRING is
+	path_var: STRING
 			-- PATH environment variable
 		require
 			exists: exists
@@ -112,7 +112,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	include_var: STRING is
+	include_var: STRING
 			-- INCLUDE environment variable
 		require
 			exists: exists
@@ -122,7 +122,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	lib_var: STRING is
+	lib_var: STRING
 			-- LIBS environment variable
 		require
 			exists: exists
@@ -151,7 +151,7 @@ feature -- Access
 
 feature -- Status report
 
-	exists: BOOLEAN is
+	exists: BOOLEAN
 			-- Indicates if the product exists
 		deferred
 		end
@@ -174,7 +174,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Variable caching
 
-	extend_variable (a_name: STRING; a_values: STRING) is
+	extend_variable (a_name: STRING; a_values: STRING)
 			-- Extends internal variable `a_name' with values in `a_values'
 		require
 			a_name_attached: a_name /= Void
@@ -205,7 +205,7 @@ feature {NONE} -- Variable caching
 			variable_table_has_a_name: variable_table.has (a_name)
 		end
 
-	variable_for_name (a_name: STRING): STRING is
+	variable_for_name (a_name: STRING): STRING
 			-- Retrieves varaible for name `a_name'
 		require
 			a_name_attached: a_name /= Void
@@ -234,7 +234,7 @@ invariant
 	version_attached: version /= Void
 	not_version_is_empty: not version.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

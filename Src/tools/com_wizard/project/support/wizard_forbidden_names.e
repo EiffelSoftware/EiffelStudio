@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -23,7 +23,7 @@ inherit
 
 feature -- Access
 
-	Eiffel_keywords: HASH_TABLE [STRING, STRING] is
+	Eiffel_keywords: HASH_TABLE [STRING, STRING]
 			-- List of Eiffel key words.
 		local
 			tmp_string: STRING
@@ -557,7 +557,7 @@ feature -- Access
 			Result.force ("view_s_last", "view_s_last")
 		end
 
-	c_keywords: HASH_TABLE [STRING, STRING] is
+	c_keywords: HASH_TABLE [STRING, STRING]
 			-- List of C key words.
 		once
 			create Result.make (100)
@@ -632,7 +632,7 @@ feature -- Access
 			Result.force (Eof_word, Eof_word)
 		end
 
-	generator_words: HASH_TABLE [STRING, STRING] is
+	generator_words: HASH_TABLE [STRING, STRING]
 			-- List of generator words.
 		once
 			create Result.make (100)
@@ -656,7 +656,7 @@ feature -- Access
 			Result.merge (well_known_functions)
 		end
 
-	well_known_functions: HASH_TABLE [STRING, STRING] is
+	well_known_functions: HASH_TABLE [STRING, STRING]
 			-- List of generator words.
 		once
 			create Result.make (100)
@@ -670,7 +670,7 @@ feature -- Access
 			Result.force ("Invoke", "Invoke")
 		end
 
-	eiffel_runtime_macros: HASH_TABLE [STRING, STRING] is
+	eiffel_runtime_macros: HASH_TABLE [STRING, STRING]
 			-- List of Eiffel runtime macros.
 		once
 			create Result.make (1000)
@@ -987,7 +987,7 @@ feature -- Access
 			Result.force ("DLEFPatId", "DLEFPatId")
 		end
 
-	windows_api: HASH_TABLE [STRING, STRING] is
+	windows_api: HASH_TABLE [STRING, STRING]
 			-- Standard Windows structures.
 		local
 			a_file: PLAIN_TEXT_FILE
@@ -1024,7 +1024,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_forbidden_c_word (a_name: STRING): BOOLEAN is
+	is_forbidden_c_word (a_name: STRING): BOOLEAN
 			-- Is `a_name' forbidden c word?
 		require
 			non_void_name: a_name /= Void
@@ -1037,7 +1037,7 @@ feature -- Status report
 		end
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		An interface for concrete cleaner implementations, used to erase configuration data.
 	]"
@@ -12,7 +12,7 @@ deferred class
 
 feature -- Basic operations
 
-	clean_environment (a_config: I_CLEANING_CONFIG) is
+	clean_environment (a_config: I_CLEANING_CONFIG)
 			-- Cleans environment configuration files base on user settings.
 		require
 			a_config_attached: a_config /= Void
@@ -20,7 +20,7 @@ feature -- Basic operations
 		deferred
 		end
 
-	clean_project (a_config: I_CLEANING_CONFIG) is
+	clean_project (a_config: I_CLEANING_CONFIG)
 			-- Cleans project configuration files base on user settings.
 		require
 			a_config_attached: a_config /= Void
@@ -28,7 +28,7 @@ feature -- Basic operations
 		deferred
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

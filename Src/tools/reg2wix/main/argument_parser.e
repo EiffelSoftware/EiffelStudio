@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		reg2wix command line argument parser.
 	]"
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize command line argument parser
 		do
 			make_multi_parser (False, True)
@@ -85,7 +85,7 @@ feature {NONE} -- Switches
 	out_switch: !STRING = "out"
 			-- Command line switches
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

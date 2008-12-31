@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Common XML routines."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ inherit
 
 feature -- Access
 
-	document_text (a_doc: XM_DOCUMENT): STRING is
+	document_text (a_doc: XM_DOCUMENT): STRING
 			-- Full text of `a_doc', including all tags and content.
 		require
 			doc_not_void: a_doc /= Void
@@ -43,7 +43,7 @@ feature -- Access
 			retry
 		end
 
-	pretty_xml (a_xml: STRING): STRING is
+	pretty_xml (a_xml: STRING): STRING
 			-- Pretty formatted XML of `a_xml'
 		require
 			xml_not_void: a_xml /= Void
@@ -73,7 +73,7 @@ feature -- Access
 			retry
 		end	
 
-	output_escaped (a_string: STRING): STRING is
+	output_escaped (a_string: STRING): STRING
 			-- Escape and output content string.  The string "<>&" will become
 			-- "&gt;&lt;&amp;"
 		require
@@ -131,7 +131,7 @@ feature -- Error
 
 feature -- Status Setting
 
-	set_attribute (a_doc: XM_DOCUMENT; a_array_path: ARRAY [STRING]; a_attribute, a_value: STRING) is
+	set_attribute (a_doc: XM_DOCUMENT; a_array_path: ARRAY [STRING]; a_attribute, a_value: STRING)
 			-- Set the value of the attribute found at the tag path in string sequence of 
 			-- `a_array_path'.  If it does not exist then add a new attribute `a_attribute'.
 		require
@@ -177,7 +177,7 @@ feature -- Status Setting
 			end
 		end
 	
-	set_element (a_doc: XM_DOCUMENT; a_array_path: ARRAY [STRING]; a_element, a_value: STRING) is
+	set_element (a_doc: XM_DOCUMENT; a_array_path: ARRAY [STRING]; a_element, a_value: STRING)
 			-- Set the value of the element found at the end of tag path with name `a_element' in 
 			-- string sequence of `a_array_path'.  If it does not exist then create a new element.
 		require
@@ -227,7 +227,7 @@ feature -- Status Setting
 			end
 		end
 		
-	clear_element (a_doc: XM_DOCUMENT; a_array_path: ARRAY [STRING]) is
+	clear_element (a_doc: XM_DOCUMENT; a_array_path: ARRAY [STRING])
 			-- Remove all elements in the element found at the end of the array path.
 		require
 			a_doc_not_void: a_doc /= Void
@@ -259,7 +259,7 @@ feature -- Status Setting
 			end
 		end
 
-	set_element_name (composite: XM_COMPOSITE; old_element: ARRAYED_LIST [STRING]; new_name: STRING; start_index: INTEGER) is
+	set_element_name (composite: XM_COMPOSITE; old_element: ARRAYED_LIST [STRING]; new_name: STRING; start_index: INTEGER)
 			-- Rename all elements in `composite' conforming to `old_name' to `new_name'.  `start_index' indicates
 			-- index to begin matching in `old_element'.  If an element was renamed set `element_renamed' to true.
 			-- Result indicates if indeed an element in `composite' was renamed.
@@ -294,7 +294,7 @@ feature -- Status Setting
 			end
 		end
 
-	wipe_out_elements (a_el: XM_ELEMENT) is
+	wipe_out_elements (a_el: XM_ELEMENT)
 			-- Remove all elements from `a_el'.  Required because a simple `wipe_out'
 			-- will remove attributes also in GOBO.
 		require
@@ -315,7 +315,7 @@ feature -- Status Setting
 			end
 		end		
 
-	wipe_out_text (a_el: XM_ELEMENT) is
+	wipe_out_text (a_el: XM_ELEMENT)
 			-- Remove all text from `a_el'.
 		require
 			element_not_void: a_el /= Void
@@ -337,7 +337,7 @@ feature -- Status Setting
 			end
 		end	
 
-	set_element_renamed (a_flag: BOOLEAN) is
+	set_element_renamed (a_flag: BOOLEAN)
 			-- Set to indicate if element has been renamed through call to `set_element_name'
 		do
 			element_renamed := a_flag
@@ -345,7 +345,7 @@ feature -- Status Setting
 
 feature -- Commands
 
-	deserialize_text (a_text: STRING): XM_DOCUMENT is
+	deserialize_text (a_text: STRING): XM_DOCUMENT
 			-- Retrieve xml document from content of `a_text'.
 			-- If deserialization fails, return Void.
 		require
@@ -377,7 +377,7 @@ feature -- Commands
 			end
 		end
 
-	deserialize_document (a_doc_name: STRING): XM_DOCUMENT is
+	deserialize_document (a_doc_name: STRING): XM_DOCUMENT
 			-- Retrieve xml document associated to file with
 			-- name 'a_doc_name'.  If deserialization fails, return Void and
 			-- put error in `error_description'.
@@ -397,7 +397,7 @@ feature -- Commands
 
 feature -- Query
 
-	is_valid_xml (xml: STRING): BOOLEAN is
+	is_valid_xml (xml: STRING): BOOLEAN
 			-- Is `xml' valid xml?
 		require
 			xml_not_void: xml /= Void
@@ -416,7 +416,7 @@ feature -- Query
 
 feature -- Storage
 
-	save_xml_document (a_doc: XM_DOCUMENT; a_doc_name: STRING) is
+	save_xml_document (a_doc: XM_DOCUMENT; a_doc_name: STRING)
 			-- Save `a_doc'
 		require
 			doc_not_void: a_doc /= Void
@@ -449,7 +449,7 @@ feature -- Storage
 		
 feature {NONE} -- Implementation
 
-	is_escaped (a_char: INTEGER): BOOLEAN is
+	is_escaped (a_char: INTEGER): BOOLEAN
 			-- Is this an escapable character? (<, >, &)
 		do
 			Result := a_char = Lt_char.code
@@ -458,7 +458,7 @@ feature {NONE} -- Implementation
 				or a_char >= 128
 		end
 
-	escaped_char (a_char: INTEGER): STRING is
+	escaped_char (a_char: INTEGER): STRING
 			-- Escape char.
 		require
 			is_escaped: is_escaped (a_char)
@@ -477,13 +477,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	pretty_formatter: XM_PRETTY_FORMATTER is
+	pretty_formatter: XM_PRETTY_FORMATTER
 			-- Formatter for pretty XML
 		once
 			create Result
 		end
 
-	STRING_: KL_STRING_ROUTINES is
+	STRING_: KL_STRING_ROUTINES
 			-- Routines that ought to be in class STRING
 		once
 			create Result
@@ -491,7 +491,7 @@ feature {NONE} -- Implementation
 			string_routines_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

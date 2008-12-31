@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Checked entity that describes and examines an assembly type member.
 	]"
@@ -28,7 +28,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (a_member: like member) is
+	make (a_member: like member)
 			-- Create an initialize CLS-compliant checked member.
 		require
 			a_member_not_void: a_member /= Void
@@ -45,7 +45,7 @@ feature -- Access
 		
 feature {NONE} -- Basic Operations {EC_CHECKED_ENTITY}
 
-	check_extended_compliance is
+	check_extended_compliance
 			-- Checks entity's CLS-compliance.
 		local
 			l_checked_type: EC_CHECKED_TYPE
@@ -63,7 +63,7 @@ feature {NONE} -- Basic Operations {EC_CHECKED_ENTITY}
 			end
 		end
 		
-	check_eiffel_compliance is
+	check_eiffel_compliance
 			-- Checks entity to see if it is Eiffel-compliant.
 		local
 			l_checked_type: EC_CHECKED_TYPE
@@ -96,7 +96,7 @@ feature {NONE} -- Basic Operations {EC_CHECKED_ENTITY}
 	
 feature {NONE} -- Query {EC_CHECKED_ENTITY}
 
-	custom_attribute_provider: ICUSTOM_ATTRIBUTE_PROVIDER is
+	custom_attribute_provider: ICUSTOM_ATTRIBUTE_PROVIDER
 			-- Retrieve custom attribute provider for entity.
 		do
 			Result := member
@@ -105,7 +105,7 @@ feature {NONE} -- Query {EC_CHECKED_ENTITY}
 invariant
 	member_not_void: member /= Void
 			
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

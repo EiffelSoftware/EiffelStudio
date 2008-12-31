@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tree selector for browsing projects and documents, checkable."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 	
 feature -- Creation
 
-	make (root_directory: STRING; widget: EV_CHECKABLE_TREE) is
+	make (root_directory: STRING; widget: EV_CHECKABLE_TREE)
 			-- Make with `root_directory'
 		require
 			has_root: root_directory /= Void
@@ -36,7 +36,7 @@ feature -- Creation
 
 feature -- Commands
 
-	clear is
+	clear
 			-- Wipe out widget
 		do
 			internal_tree.wipe_out	
@@ -49,7 +49,7 @@ feature -- Access
 
 feature -- Query
 	
-	get_children (root_dir: DIRECTORY): ARRAYED_LIST [EV_TREE_NODE] is
+	get_children (root_dir: DIRECTORY): ARRAYED_LIST [EV_TREE_NODE]
 			-- Return child directory and file nodes list
 		require
 			dir_not_void: root_dir /= Void
@@ -107,7 +107,7 @@ invariant
 	has_root: root /= Void
 	has_widget: internal_tree /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

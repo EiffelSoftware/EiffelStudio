@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog for parsing project documents individually or project-wide using XML and/or regular expressions."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	user_initialization is
+	user_initialization
 			-- called by `initialize'.
 			-- Any custom user initialization that
 			-- could not be performed in `initialize',
@@ -64,13 +64,13 @@ feature {NONE} -- Initialization
 
 feature -- Access	
 		
-	all_documents: BOOLEAN is
+	all_documents: BOOLEAN
 			-- Should parsing be done on all open documents?
 		do
 			Result := all_open_radio.is_selected
 		end
 		
-	all_project: BOOLEAN is
+	all_project: BOOLEAN
 			-- Should parsing be done on all documents in loaded projet?
 		do
 			Result := all_project_radio.is_selected	
@@ -78,13 +78,13 @@ feature -- Access
 
 feature -- Interface Events
 
-	apply is
+	apply
 			-- Apply
 		do
 			run		
 		end
 		
-	okay is
+	okay
 			-- Apply changes
 		do
 			run
@@ -93,7 +93,7 @@ feature -- Interface Events
 		
 feature {NONE} -- Expressions Implementation
 	
-	list_selected is
+	list_selected
 			-- An item in the expression list was selected
 		local
 			l_row: EV_MULTI_COLUMN_LIST_ROW
@@ -105,7 +105,7 @@ feature {NONE} -- Expressions Implementation
 			end
 		end		
 
-	key_pressed (a_key: EV_KEY) is
+	key_pressed (a_key: EV_KEY)
 			-- A key was pressed on the list
 		do
 			if a_key.code = {EV_KEY_CONSTANTS}.Key_delete then
@@ -117,7 +117,7 @@ feature {NONE} -- Expressions Implementation
 			end
 		end		
 
-	update_expression is
+	update_expression
 			-- Update regular expression
 		local
 			l_row: EV_MULTI_COLUMN_LIST_ROW
@@ -132,7 +132,7 @@ feature {NONE} -- Expressions Implementation
 			end
 		end		
 		
-	load_expression_file is
+	load_expression_file
 			-- Attempt to load an file to populate `expression_list' from user
 			-- selected file
 		local
@@ -147,7 +147,7 @@ feature {NONE} -- Expressions Implementation
 			end
 		end	
 		
-	save_expressions_to_file is
+	save_expressions_to_file
 			-- Save expressions and replacement strings in `expression_list' to a 
 			-- file for later retrieval
 		local
@@ -162,7 +162,7 @@ feature {NONE} -- Expressions Implementation
 			end
 		end
 	
-	initialize_expressions (a_filename: STRING) is
+	initialize_expressions (a_filename: STRING)
 			-- Initial expressions from file
 		local
 			l_expr_file: PLAIN_TEXT_FILE
@@ -199,7 +199,7 @@ feature {NONE} -- Expressions Implementation
 			end
 		end
 	
-	save_expressions (a_filename: STRING) is
+	save_expressions (a_filename: STRING)
 			-- Save expression in list to file
 		local
 			l_file: PLAIN_TEXT_FILE
@@ -220,7 +220,7 @@ feature {NONE} -- Expressions Implementation
 			l_file.close
 		end		
 	
-	build_expressions is
+	build_expressions
 			-- Build expressions to run
 		local
 			l_row: EV_MULTI_COLUMN_LIST_ROW
@@ -237,7 +237,7 @@ feature {NONE} -- Expressions Implementation
 			end
 		end		
 
-	run_expressions_on_document (a_doc: DOCUMENT) is
+	run_expressions_on_document (a_doc: DOCUMENT)
 			-- Run expression on `a_file'
 		require
 			doc_not_void: a_doc /= void
@@ -303,14 +303,14 @@ feature {NONE} -- Expressions Implementation
 			a_doc.save
 		end
 	
-	expressions: HASH_TABLE [STRING, STRING] is
+	expressions: HASH_TABLE [STRING, STRING]
 			-- Regular Expressions and associated replacement strings for
 			-- matches
 		once
 			create Result.make (5)
 		end
 	
-	ordered_expressions: ARRAYED_LIST [STRING] is
+	ordered_expressions: ARRAYED_LIST [STRING]
 			-- List of regular expressions as found in expressions, used for
 			-- iterating expressions where correct order is required
 		once
@@ -319,7 +319,7 @@ feature {NONE} -- Expressions Implementation
 
 feature {NONE} -- XML Implementation
 
-	initialize_schema_element_selector is
+	initialize_schema_element_selector
 			-- Initialize the schema element selector
 		local
 			l_render_factory: SCHEMA_RENDERING_FACTORY
@@ -328,7 +328,7 @@ feature {NONE} -- XML Implementation
 			l_render_factory.element_tree_render (Shared_document_manager.schema, xml_structure_list)
 		end			
 
-	xml_list_selected is
+	xml_list_selected
 			-- An item in the schema XML list was selected
 		local
 			l_array: like element_name_array
@@ -336,7 +336,7 @@ feature {NONE} -- XML Implementation
 			l_array := element_name_array
 		end	
 
-	element_name_array: ARRAYED_LIST [STRING] is
+	element_name_array: ARRAYED_LIST [STRING]
 			-- Ordered name array denoting selected schema element (minus type information)
 		require
 			item_selected: xml_structure_list.selected_item /= Void
@@ -364,7 +364,7 @@ feature {NONE} -- XML Implementation
 			end
 		end		
 
-	run_parsing_on_document (a_doc: DOCUMENT) is
+	run_parsing_on_document (a_doc: DOCUMENT)
 			-- Run on `a_file'
 		require
 			doc_not_void: a_doc /= void
@@ -386,7 +386,7 @@ feature {NONE} -- XML Implementation
 
 feature {NONE} -- Implementation
 	
-	filetypes: ARRAYED_LIST [STRING] is
+	filetypes: ARRAYED_LIST [STRING]
 			-- File types to apply parsing to
 		once
 			create Result.make (3)
@@ -396,25 +396,25 @@ feature {NONE} -- Implementation
 			Result.compare_objects
 		end
 
-	new_files: ARRAYED_LIST [STRING] is
+	new_files: ARRAYED_LIST [STRING]
 			-- List of newly made filenames
 		once
 			create Result.make (1)
 		end
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is current information valid for beginning parsing?
 		do
 			Result := not expression_list.is_empty	
 		end		
 	
-	is_exp_mode: BOOLEAN is
+	is_exp_mode: BOOLEAN
 			-- Is regex mode?
 		do
 			Result := notebook.selected_item_index = 1	
 		end		
 	
-	run is
+	run
 			-- Run
 		do
 			new_files.wipe_out
@@ -432,7 +432,7 @@ feature {NONE} -- Implementation
 			end
 		end		
 		
-	run_on_directory (a_dir: DIRECTORY) is
+	run_on_directory (a_dir: DIRECTORY)
 			-- Run recursively on files in `a_dir'
 		local
 			cnt, l_dir_cnt: INTEGER
@@ -464,7 +464,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	run_on_documents (documents: ARRAYED_LIST [DOCUMENT]) is
+	run_on_documents (documents: ARRAYED_LIST [DOCUMENT])
 			-- Run on all DOCUMENTs in `documents'
 		do
 			from
@@ -479,7 +479,7 @@ feature {NONE} -- Implementation
 			end
 		end		
 
-	run_on_document (a_doc: DOCUMENT) is
+	run_on_document (a_doc: DOCUMENT)
 			-- Run on `a_file'
 		require
 			doc_not_void: a_doc /= void
@@ -492,7 +492,7 @@ feature {NONE} -- Implementation
 			end
 		end	
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Special type libraries"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	Non_generated_type_libraries: ARRAY [ECOM_GUID] is
+	Non_generated_type_libraries: ARRAY [ECOM_GUID]
 			-- Non generated type libraries
 		local
 			a_guid: ECOM_GUID
@@ -23,7 +23,7 @@ feature -- Access
 			Result.compare_objects
 		end
 
-	prefixed_libraries : ARRAY [ECOM_GUID] is
+	prefixed_libraries : ARRAY [ECOM_GUID]
 			-- Prefixed type libraries.
 		local
 			a_guid: ECOM_GUID
@@ -38,13 +38,13 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	stdole32: STRING is "{00020430-0000-0000-C000-000000000046}"
+	stdole32: STRING = "{00020430-0000-0000-C000-000000000046}"
 			-- Stdole32.tlb type library guid.
 
-	vba_tlb: STRING is "{000204EF-0000-0000-C000-000000000046}";
+	vba_tlb: STRING = "{000204EF-0000-0000-C000-000000000046}";
 			-- MSVBVM60.DLL type library guid.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

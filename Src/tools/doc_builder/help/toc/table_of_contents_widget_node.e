@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Table of contents node as widget."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -32,7 +32,7 @@ create
 
 feature -- Creation
 
-	make (a_title, a_url: STRING; a_id: INTEGER; heading: BOOLEAN) is
+	make (a_title, a_url: STRING; a_id: INTEGER; heading: BOOLEAN)
 			-- Create
 		require
 			has_title: a_title /= Void
@@ -71,7 +71,7 @@ feature -- Creation
 			valid_id: id > 0
 		end
 
-	make_from_node (a_node: TABLE_OF_CONTENTS_NODE) is
+	make_from_node (a_node: TABLE_OF_CONTENTS_NODE)
 			-- Make from a node
 		require
 			node_not_void: a_node /= Void
@@ -91,7 +91,7 @@ feature -- Creation
 
 feature -- Access
 
-	title: STRING is
+	title: STRING
 			-- Title in widget
 		do
 			Result := text
@@ -136,7 +136,7 @@ feature -- Actions
 --			end
 --		end		
 		
-	move_node (up: BOOLEAN) is
+	move_node (up: BOOLEAN)
 			-- Move `a_node'.  If up move `up' if not, move down.
 		local
 			l_index: INTEGER
@@ -163,13 +163,13 @@ feature -- Actions
 			parent_widget.set_modified (True)		
 		end	
 
-	can_insert_or_move_node (a_node: like Current): BOOLEAN is
+	can_insert_or_move_node (a_node: like Current): BOOLEAN
 			-- Can `a_node' be added into Current?
 		do
 			Result := a_node /= Current
 		end
 
-	open_file is
+	open_file
 			-- Open Current as file
 		do
 			if file_url /= Void and then not file_url.is_empty then
@@ -179,13 +179,13 @@ feature -- Actions
 
 feature -- Status Setting
 
-	set_expand_pixmap (a_pixmap: EV_PIXMAP) is
+	set_expand_pixmap (a_pixmap: EV_PIXMAP)
 			-- Set pixmap when expanded.
 		do
 			expand_pixmap := a_pixmap	
 		end
 		
-	set_collapse_pixmap (a_pixmap: EV_PIXMAP) is
+	set_collapse_pixmap (a_pixmap: EV_PIXMAP)
 			-- Set pixmap when collapsed.
 		do
 			collapse_pixmap := a_pixmap	
@@ -193,13 +193,13 @@ feature -- Status Setting
 
 feature {NONE} -- Implementation
 
-	parent_widget: TABLE_OF_CONTENTS_WIDGET is
+	parent_widget: TABLE_OF_CONTENTS_WIDGET
 			-- Parent widget
 		once
 			Result ?= parent_tree
 		end		
 
-	get_children: ARRAYED_LIST [EV_TREE_NODE] is
+	get_children: ARRAYED_LIST [EV_TREE_NODE]
 			-- Return children nodes
 		local
 			l_node: TABLE_OF_CONTENTS_NODE
@@ -226,7 +226,7 @@ feature {NONE} -- Implementation
 		
 	is_currently_populating: BOOLEAN
 
-	toggle_expand (on: BOOLEAN) is
+	toggle_expand (on: BOOLEAN)
 			-- Toggle expansion
 		do
 			if on then
@@ -245,7 +245,7 @@ feature {NONE} -- Properties Widget
 	properties_widget: EV_EDITABLE_LIST
 			-- Properties widget
 
-	build_properties_list is
+	build_properties_list
 			-- Build list of both editable and read-only properties
 		local			
 			l_row: EV_MULTI_COLUMN_LIST_ROW
@@ -280,14 +280,14 @@ feature {NONE} -- Properties Widget
 			Application_window.set_toc_node_widget (properties_widget)
 		end	
 
-	update_display is
+	update_display
 			-- Synchronize Current with associated widgets
 		do
 			set_text (properties_widget.i_th (1).i_th (2))
 			file_url := properties_widget.i_th (2).i_th (2)
 		end		
 
-	application: EV_APPLICATION is 
+	application: EV_APPLICATION 
 		once
 			create Result
 		end
@@ -296,7 +296,7 @@ invariant
 	has_title: title /= Void
 	valid_id: id > 0
 			
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

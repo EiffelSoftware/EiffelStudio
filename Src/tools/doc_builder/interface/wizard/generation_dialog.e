@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog for start generation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	user_initialization is
+	user_initialization
 			-- called by `initialize'.
 			-- Any custom user initialization that
 			-- could not be performed in `initialize',
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Status Setting
 
-	browse_location is
+	browse_location
 			-- Browse disk directory structure.  Write chosen location to `location_text'
 		local
 			l_directory_dialog: EV_DIRECTORY_DIALOG
@@ -55,19 +55,19 @@ feature -- Status Setting
 
 feature {NONE} -- Query
 
-	is_html: BOOLEAN is
+	is_html: BOOLEAN
 			-- Is html generation?
 		do
 			Result := transform_file_combo.selected_item.text.is_equal ("html")
 		end	
 		
-	is_help: BOOLEAN is
+	is_help: BOOLEAN
 			-- Is help project generation?
 		do
 			Result := transform_file_combo.selected_item.text.is_equal ("help project")
 		end
 
-	options_valid: BOOLEAN is
+	options_valid: BOOLEAN
 			-- Are options valid?
 		do
 			Result := True
@@ -101,7 +101,7 @@ feature {NONE} -- Query
 
 feature {NONE} -- GUI
 
-	populate_widgets is
+	populate_widgets
 			-- Build widgets with data
 		do
 			populate_file_combo			
@@ -109,7 +109,7 @@ feature {NONE} -- GUI
 			populate_filter_widgets
 		end		
 		
-	populate_file_combo is
+	populate_file_combo
 			-- Populate file type combo
 		do
 			transform_file_combo.wipe_out
@@ -119,14 +119,14 @@ feature {NONE} -- GUI
 
 feature {NONE} -- Filter UI
 	
-	populate_filter_widgets is
+	populate_filter_widgets
 			-- Populate filter widgets
 		do
 			populate_filter_combos
 			populate_filter_list
 		end		
 	
-	populate_filter_combos is
+	populate_filter_combos
 			-- Populate filter combo
 		local
 			l_filters: HASH_TABLE [DOCUMENT_FILTER, STRING]
@@ -154,7 +154,7 @@ feature {NONE} -- Filter UI
 			end			
 		end
 
-	populate_filter_list is
+	populate_filter_list
 			-- Populate filter list
 		local
 			l_filters: HASH_TABLE [DOCUMENT_FILTER, STRING]
@@ -186,7 +186,7 @@ feature {NONE} -- Filter UI
 			end
 		end
 
-	filter_combo_changed is
+	filter_combo_changed
 			-- Filter type combo was changed
 		local
 			l_description: STRING
@@ -197,7 +197,7 @@ feature {NONE} -- Filter UI
 			shared_project.filter_manager.set_filter (l_filter)
 		end	
 
-	filter_list_item_selected is
+	filter_list_item_selected
 			-- A filter list item was selected
 		do
 			if filter_list.selected_items.count > 1 then
@@ -207,7 +207,7 @@ feature {NONE} -- Filter UI
 			end	
 		end		
 		
-	filter_toc_option_selected (a_item: EV_LIST_ITEM) is
+	filter_toc_option_selected (a_item: EV_LIST_ITEM)
 			-- A filter type was chosen for a toc in the list
 		local
 			l_toc: TABLE_OF_CONTENTS
@@ -224,14 +224,14 @@ feature {NONE} -- Filter UI
 feature -- TOC UI
 
 		
-	populate_toc_widgets is
+	populate_toc_widgets
 			-- Populate toc widgets
 		do
 			populate_toc_list
 			populate_toc_combo
 		end
 
-	populate_toc_list is
+	populate_toc_list
 			-- Populate toc list
 		local
 			l_list_row: EV_MULTI_COLUMN_LIST_ROW
@@ -261,7 +261,7 @@ feature -- TOC UI
 			end
 		end
 
-	populate_toc_combo is
+	populate_toc_combo
 			-- Populate toc combo
 		local
 			l_list_item: EV_LIST_ITEM
@@ -285,7 +285,7 @@ feature -- TOC UI
 			web_toc_option_combo.select_actions.extend (agent toc_filter_option_selected)
 		end
 
-	toc_list_item_selected is
+	toc_list_item_selected
 			-- A toc list item was selected
 		do
 			if toc_list.selected_items.count > 1 then
@@ -295,7 +295,7 @@ feature -- TOC UI
 			end	
 		end
 
-	toc_filter_option_selected (a_item: EV_LIST_ITEM) is
+	toc_filter_option_selected (a_item: EV_LIST_ITEM)
 			-- A toc was chosen for association with a filter
 		do	
 			filter_list.selected_item.put_i_th (a_item.text, 2)
@@ -303,13 +303,13 @@ feature -- TOC UI
 
 feature {NONE} -- Implementation
 
-	cancel is
+	cancel
 			-- Cancel
 		do
 			hide	
 		end		
 		
-	run is
+	run
 			-- Run
 		local
 			l_html_dir, l_toc_dir: DIRECTORY					
@@ -355,7 +355,7 @@ feature {NONE} -- Implementation
 			end			
 		end	
 
-	generate is
+	generate
 			-- Generate
 		local
 			l_generator: FINAL_GENERATOR
@@ -400,7 +400,7 @@ feature {NONE} -- Implementation
 			end
 		end		
 
-	conversion_combo_changed is
+	conversion_combo_changed
 			-- Conversion type combo was changed
 		do
 			if is_help then
@@ -412,7 +412,7 @@ feature {NONE} -- Implementation
 			end	
 		end		
 
-	help_type_changed is
+	help_type_changed
 			-- Help type was changed
 		do
 			if web_radio.is_selected then				
@@ -427,7 +427,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

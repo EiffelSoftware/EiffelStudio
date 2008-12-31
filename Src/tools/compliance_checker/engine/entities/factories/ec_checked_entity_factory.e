@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Factory for creating new checked entities.
 		Note: This class will cache applicable checked entities and retrieve cached versions on repeat requests.
@@ -21,7 +21,7 @@ inherit
 
 feature -- Factory Routines
 
-	checked_assembly (a_assembly: ASSEMBLY): EC_CHECKED_ASSEMBLY is
+	checked_assembly (a_assembly: ASSEMBLY): EC_CHECKED_ASSEMBLY
 			-- Retrieve a checked assembly for `a_assembly'
 		require
 			a_assembly_not_void: a_assembly /= Void
@@ -37,7 +37,7 @@ feature -- Factory Routines
 			result_not_void: Result /= Void
 		end
 		
-	checked_type (a_type: SYSTEM_TYPE): EC_CHECKED_TYPE is
+	checked_type (a_type: SYSTEM_TYPE): EC_CHECKED_TYPE
 			-- Retrieve a checked type for `a_type'
 		require
 			a_type_not_void: a_type /= Void
@@ -57,7 +57,7 @@ feature -- Factory Routines
 			result_not_void: Result /= Void
 		end
 
-	checked_member (a_member: MEMBER_INFO): EC_CHECKED_MEMBER is
+	checked_member (a_member: MEMBER_INFO): EC_CHECKED_MEMBER
 			-- Retrieve a checked member for `a_member'
 		require
 			a_member_not_void: a_member /= Void
@@ -97,7 +97,7 @@ feature -- Factory Routines
 			end	
 		end
 	
-	checked_constructor (a_method: CONSTRUCTOR_INFO): EC_CHECKED_MEMBER_CONSTRUCTOR is
+	checked_constructor (a_method: CONSTRUCTOR_INFO): EC_CHECKED_MEMBER_CONSTRUCTOR
 			-- Retrieve a checked contructor for `a_method'
 		require
 			a_method_not_void: a_method /= Void
@@ -110,7 +110,7 @@ feature -- Factory Routines
 			result_not_void: Result /= Void
 		end
 	
-	checked_method (a_method: METHOD_INFO): EC_CHECKED_MEMBER_METHOD is
+	checked_method (a_method: METHOD_INFO): EC_CHECKED_MEMBER_METHOD
 			-- Retrieve a checked method for `a_method'
 		require
 			a_method_not_void: a_method /= Void
@@ -123,7 +123,7 @@ feature -- Factory Routines
 			result_not_void: Result /= Void
 		end
 		
-	checked_field (a_field: FIELD_INFO): EC_CHECKED_MEMBER_FIELD is
+	checked_field (a_field: FIELD_INFO): EC_CHECKED_MEMBER_FIELD
 			-- Retrieve a checked field for `a_field'
 		require
 			a_field_not_void: a_field /= Void
@@ -136,7 +136,7 @@ feature -- Factory Routines
 			result_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

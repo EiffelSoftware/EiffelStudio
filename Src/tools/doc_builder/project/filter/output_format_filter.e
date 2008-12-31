@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 		
 feature -- Creation
 
-	make (a_rich_text: EV_RICH_TEXT) is
+	make (a_rich_text: EV_RICH_TEXT)
 			-- 
 		local
 			l_filters: HASH_TABLE [DOCUMENT_FILTER, STRING]
@@ -53,13 +53,13 @@ feature -- Creation
 
 feature -- Status Setting
 
-	set_control (a_rich_text: EV_RICH_TEXT) is
+	set_control (a_rich_text: EV_RICH_TEXT)
 			-- Make
 		do
 			rich_text := a_rich_text	
 		end		
 			
-	set_outputs (a_output_list: ARRAYED_LIST [STRING]) is
+	set_outputs (a_output_list: ARRAYED_LIST [STRING])
 			-- Set `output_list'
 		do
 			output_list := a_output_list
@@ -67,13 +67,13 @@ feature -- Status Setting
 
 feature {NONE} -- Processing
 
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- Process `e'
 		do
 			Precursor (a_namespace, a_prefix, a_local_part)
 		end
 
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- Process `e'
 		do			
 			if a_local_part.is_equal (output_string_tag) then
@@ -90,7 +90,7 @@ feature {NONE} -- Processing
 			Precursor (a_namespace, a_prefix, a_local_part)
 		end
 
-	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
+	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
 			-- Process `att'
 		local
 			l_filter: OUTPUT_FILTER
@@ -116,9 +116,9 @@ feature {NONE} -- Implementation
 	output_list: ARRAYED_LIST [STRING]
 			-- Outputs to highlight
 
-	output_string_tag: STRING is "output"
+	output_string_tag: STRING = "output"
 
-	output_stack: ARRAYED_STACK [OUTPUT_FILTER] is
+	output_stack: ARRAYED_STACK [OUTPUT_FILTER]
 			-- Output stack
 		once
 			create Result.make (1)
@@ -128,7 +128,7 @@ feature {NONE} -- Implementation
 	current_filter: OUTPUT_FILTER;
 			-- Current filter
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

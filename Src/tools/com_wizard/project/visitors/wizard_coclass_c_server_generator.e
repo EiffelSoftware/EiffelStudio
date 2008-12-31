@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Coclass c server generator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -32,7 +32,7 @@ inherit
 
 feature -- Access
 
-	default_dispinterface (a_coclass: WIZARD_COMPONENT_DESCRIPTOR): WIZARD_INTERFACE_DESCRIPTOR is
+	default_dispinterface (a_coclass: WIZARD_COMPONENT_DESCRIPTOR): WIZARD_INTERFACE_DESCRIPTOR
 			-- Default dispinterface.
 		local
 			l_coclass_descriptor: like coclass_descriptor
@@ -55,7 +55,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	generate (a_coclass: WIZARD_COCLASS_DESCRIPTOR) is
+	generate (a_coclass: WIZARD_COCLASS_DESCRIPTOR)
 			-- Generate c server for coclass.
 		local
 			a_class_object: WIZARD_CLASS_OBJECT_GENERATOR
@@ -111,12 +111,12 @@ feature -- Basic operations
 			a_class_object.generate (a_coclass)
 		end
 
-	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY) is
+	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY)
 		do
 			a_factory.process_coclass_c_server
 		end
 
-	default_dispinterface_name (a_coclass_descriptor: WIZARD_COMPONENT_DESCRIPTOR): STRING is
+	default_dispinterface_name (a_coclass_descriptor: WIZARD_COMPONENT_DESCRIPTOR): STRING
 			-- Name of default dispinterface.
 		local
 			l_coclass_descriptor: like coclass_descriptor
@@ -131,7 +131,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	coclass_descriptor (a_descriptor: WIZARD_COMPONENT_DESCRIPTOR): WIZARD_COCLASS_DESCRIPTOR is
+	coclass_descriptor (a_descriptor: WIZARD_COMPONENT_DESCRIPTOR): WIZARD_COCLASS_DESCRIPTOR
 		require
 			a_descriptor_not_void: a_descriptor /= Void
 			a_valid_type: valid_descriptor (a_descriptor)
@@ -141,12 +141,12 @@ feature {NONE} -- Implementation
 			coclass_descriptor_not_void: Result /= Void
 		end
 
-	valid_descriptor (a_descriptor: WIZARD_COMPONENT_DESCRIPTOR): BOOLEAN is
+	valid_descriptor (a_descriptor: WIZARD_COMPONENT_DESCRIPTOR): BOOLEAN
 		do
 			Result := {l_desc: WIZARD_COCLASS_DESCRIPTOR} a_descriptor
 		end
 
-	process_interfaces (a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
+	process_interfaces (a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR)
 			-- Process inherited interfaces
 		require
 			non_void_coclass_descriptor: a_coclass_descriptor /= Void
@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 			source := interface_processor.source
 		end
 
-	default_source_dispinterface_name (a_coclass_descriptor: WIZARD_COMPONENT_DESCRIPTOR): STRING is
+	default_source_dispinterface_name (a_coclass_descriptor: WIZARD_COMPONENT_DESCRIPTOR): STRING
 			-- Name of default dispinterface.
 		local
 			l_descriptors: LIST [WIZARD_INTERFACE_DESCRIPTOR]
@@ -185,7 +185,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	constructor_addition (a_coclass: WIZARD_COMPONENT_DESCRIPTOR): STRING is
+	constructor_addition (a_coclass: WIZARD_COMPONENT_DESCRIPTOR): STRING
 			-- Constructor addition.
 		local
 			l_descriptors: LIST [WIZARD_INTERFACE_DESCRIPTOR]
@@ -209,7 +209,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	destructor_addition (a_coclass: WIZARD_COMPONENT_DESCRIPTOR): STRING is
+	destructor_addition (a_coclass: WIZARD_COMPONENT_DESCRIPTOR): STRING
 			-- Destructor addition.
 		local
 			l_descriptors: LIST [WIZARD_INTERFACE_DESCRIPTOR]
@@ -230,7 +230,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_constructor (a_coclass: WIZARD_COMPONENT_DESCRIPTOR) is
+	add_constructor (a_coclass: WIZARD_COMPONENT_DESCRIPTOR)
 			-- Add constructor.
 		local
 			l_writer: WIZARD_WRITER_CPP_CONSTRUCTOR
@@ -245,7 +245,7 @@ feature {NONE} -- Implementation
 			cpp_class_writer.add_constructor (l_writer)
 		end
 
-	add_query_interface (a_coclass_descriptor: WIZARD_COMPONENT_DESCRIPTOR) is
+	add_query_interface (a_coclass_descriptor: WIZARD_COMPONENT_DESCRIPTOR)
 			-- Add function 'QueryInterface'
 		local
 			l_writer: WIZARD_WRITER_C_FUNCTION
@@ -308,7 +308,7 @@ feature {NONE} -- Implementation
 			cpp_class_writer.add_function (l_writer, Public)
 		end
 
-	add_source_functions (a_coclass: WIZARD_COCLASS_DESCRIPTOR) is
+	add_source_functions (a_coclass: WIZARD_COCLASS_DESCRIPTOR)
 			-- Add source functions.
 		require
 			source: source
@@ -318,7 +318,7 @@ feature {NONE} -- Implementation
 			cpp_class_writer.add_function (find_connection_point_function (a_coclass), Public)
 		end
 
-	enum_connection_points_function: WIZARD_WRITER_C_FUNCTION is
+	enum_connection_points_function: WIZARD_WRITER_C_FUNCTION
 			-- EnumConnectionPoints
 		require
 			source: source
@@ -338,7 +338,7 @@ feature {NONE} -- Implementation
 			can_generate: Result.can_generate
 		end
 
-	find_connection_point_function (a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR): WIZARD_WRITER_C_FUNCTION is
+	find_connection_point_function (a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR): WIZARD_WRITER_C_FUNCTION
 			-- FindConnectionPoin
 		require
 			source: source
@@ -372,7 +372,7 @@ feature {NONE} -- Implementation
 			can_generate: Result.can_generate
 		end
 
-	case_body_in_find_connection_point (an_interface: WIZARD_INTERFACE_DESCRIPTOR; interface_id: STRING): STRING is
+	case_body_in_find_connection_point (an_interface: WIZARD_INTERFACE_DESCRIPTOR; interface_id: STRING): STRING
 			-- Case body in FindConnectionPoint function implemenatation.
 		require
 			non_void_interface: an_interface /= Void
@@ -390,7 +390,7 @@ feature {NONE} -- Implementation
 			valid_body: not Result.is_empty
 		end
 
-	get_class_info_function (a_coclass: WIZARD_COCLASS_DESCRIPTOR): WIZARD_WRITER_C_FUNCTION is
+	get_class_info_function (a_coclass: WIZARD_COCLASS_DESCRIPTOR): WIZARD_WRITER_C_FUNCTION
 			-- GetClassInfo of IProvideClassInfo.
 		local
 			l_body: STRING
@@ -420,7 +420,7 @@ feature {NONE} -- Implementation
 			valid: Result.can_generate
 		end
 
-	get_guid_function (a_coclass: WIZARD_COCLASS_DESCRIPTOR): WIZARD_WRITER_C_FUNCTION is
+	get_guid_function (a_coclass: WIZARD_COCLASS_DESCRIPTOR): WIZARD_WRITER_C_FUNCTION
 			-- GetGUID of IProvideClassInfo.
 		local
 			body, source_name: STRING
@@ -454,7 +454,7 @@ feature {NONE} -- Implementation
 			valid: Result.can_generate
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

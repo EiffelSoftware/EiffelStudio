@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Sample template"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,13 +13,13 @@ inherit
 	
 feature -- Access
 
-	description: STRING is
+	description: STRING
 			-- Description
 		do
 			Result := "A sample of a system including source code."
 		end
 		
-	content: STRING is
+	content: STRING
 			-- Content
 		do
 			create Result.make_empty
@@ -37,7 +37,7 @@ feature -- Access
 				%</document>")
 		end	
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

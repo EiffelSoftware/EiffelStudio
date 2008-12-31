@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that input cluster directories"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize object.
 		do
 			create {ARRAYED_LIST [STRING]} clusters.make (20)
@@ -34,7 +34,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	input_from_file (input_file: PLAIN_TEXT_FILE) is
+	input_from_file (input_file: PLAIN_TEXT_FILE)
 			-- Input clusters information from Ace file 'input_file'
 		require
 			non_void_file: input_file /= Void
@@ -79,7 +79,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	process_raw_data (a_raw_data: LIST [STRING]) is
+	process_raw_data (a_raw_data: LIST [STRING])
 			-- Process 'raw_data' into information.
 		require
 			non_void_list: a_raw_data /= Void
@@ -160,7 +160,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_common_path (a_path: STRING): BOOLEAN is
+	is_common_path (a_path: STRING): BOOLEAN
 			-- Is 'a_path' common for all program?
 		require
 			non_void_string: a_path /= Void
@@ -172,7 +172,7 @@ feature {NONE} -- Implementation
 				a_path.substring_index ("library\time", 1) > 0
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that provide access to constants loaded from files."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 	
 feature {NONE} -- Initialization
 
-	initialize_constants is
+	initialize_constants
 			-- Load all constants from file.
 		local
 			file: PLAIN_TEXT_FILE
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	icon_paste_ico: EV_PIXMAP is
+	icon_paste_ico: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -41,7 +41,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_refresh_ico: EV_PIXMAP is
+	icon_refresh_ico: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -51,7 +51,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_code_format_ico: EV_PIXMAP is
+	icon_code_format_ico: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -61,7 +61,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_html_file_ico: EV_PIXMAP is
+	icon_html_file_ico: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -71,13 +71,13 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	radio_button_width: INTEGER is 
+	radio_button_width: INTEGER 
 			-- `Result' is INTEGER constant named radio_button_width.
 		once
 			Result := 20
 		end
 
-	icon_down_triangle_ico: EV_PIXMAP is
+	icon_down_triangle_ico: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -87,7 +87,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	left_scroll_arrow_png: EV_PIXMAP is
+	left_scroll_arrow_png: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -97,7 +97,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_search_ico: EV_PIXMAP is
+	icon_search_ico: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -107,13 +107,13 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	empty_cell_width: INTEGER is 
+	empty_cell_width: INTEGER 
 			-- `Result' is INTEGER constant named empty_cell_width.
 		once
 			Result := 15
 		end
 
-	icon_link_check_ico: EV_PIXMAP is
+	icon_link_check_ico: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -123,7 +123,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_png_file_ico: EV_PIXMAP is
+	icon_png_file_ico: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -133,43 +133,43 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	dialog_height: INTEGER is 
+	dialog_height: INTEGER 
 			-- `Result' is INTEGER constant named dialog_height.
 		once
 			Result := 500
 		end
 
-	button_width: INTEGER is 
+	button_width: INTEGER 
 			-- `Result' is INTEGER constant named button_width.
 		once
 			Result := 80
 		end
 
-	button_browse_text: STRING is
+	button_browse_text: STRING
 			-- `Result' is STRING constant named `button_browse_text'.
 		once
 			Result := "Browse..."
 		end
 
-	inner_border_width: INTEGER is 
+	inner_border_width: INTEGER 
 			-- `Result' is INTEGER constant named inner_border_width.
 		once
 			Result := 5
 		end
 
-	dialog_short_height: INTEGER is 
+	dialog_short_height: INTEGER 
 			-- `Result' is INTEGER constant named dialog_short_height.
 		once
 			Result := 175
 		end
 
-	box_padding_width: INTEGER is 
+	box_padding_width: INTEGER 
 			-- `Result' is INTEGER constant named box_padding_width.
 		once
 			Result := 5
 		end
 
-	icon_toc_exclude_ico: EV_PIXMAP is
+	icon_toc_exclude_ico: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -179,7 +179,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_forth_color_ico: EV_PIXMAP is
+	icon_forth_color_ico: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -189,7 +189,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_ie_ico: EV_PIXMAP is
+	icon_ie_ico: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -199,7 +199,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_maximize_color_png: EV_PIXMAP is
+	icon_maximize_color_png: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -209,7 +209,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	uparrow_png: EV_PIXMAP is
+	uparrow_png: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -219,7 +219,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_validate_ico: EV_PIXMAP is
+	icon_validate_ico: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -229,7 +229,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_link_check_ico_ico: EV_PIXMAP is
+	icon_link_check_ico_ico: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -239,7 +239,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_unchecked_png: EV_PIXMAP is
+	icon_unchecked_png: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -249,7 +249,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_code_feature_ico: EV_PIXMAP is
+	icon_code_feature_ico: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -259,7 +259,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_redo_ico: EV_PIXMAP is
+	icon_redo_ico: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -269,7 +269,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_toc_folder_open_ico: EV_PIXMAP is
+	icon_toc_folder_open_ico: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -279,7 +279,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_info_ico: EV_PIXMAP is
+	icon_info_ico: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -289,7 +289,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_close_color_ico: EV_PIXMAP is
+	icon_close_color_ico: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -299,7 +299,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_gif_file_ico: EV_PIXMAP is
+	icon_gif_file_ico: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -309,7 +309,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_back_color_ico: EV_PIXMAP is
+	icon_back_color_ico: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -319,7 +319,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_close_folder_ico: EV_PIXMAP is
+	icon_close_folder_ico: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -329,7 +329,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_file_close_ico: EV_PIXMAP is
+	icon_file_close_ico: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -339,25 +339,25 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	button_cancel_text: STRING is
+	button_cancel_text: STRING
 			-- `Result' is STRING constant named `button_cancel_text'.
 		once
 			Result := "Cancel"
 		end
 
-	button_next_text: STRING is
+	button_next_text: STRING
 			-- `Result' is STRING constant named `button_next_text'.
 		once
 			Result := "Next"
 		end
 
-	unfiltered_text: STRING is
+	unfiltered_text: STRING
 			-- `Result' is STRING constant named `unfiltered_text'.
 		once
 			Result := "Unfiltered"
 		end
 
-	icon_ie_icon_ico: EV_PIXMAP is
+	icon_ie_icon_ico: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -367,7 +367,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_open_file_ico: EV_PIXMAP is
+	icon_open_file_ico: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -377,13 +377,13 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	dialog_medium_height: INTEGER is 
+	dialog_medium_height: INTEGER 
 			-- `Result' is INTEGER constant named dialog_medium_height.
 		once
 			Result := 250
 		end
 
-	icon_minimize_color_png: EV_PIXMAP is
+	icon_minimize_color_png: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -393,7 +393,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_new_ico: EV_PIXMAP is
+	icon_new_ico: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -403,7 +403,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_cut_color_ico: EV_PIXMAP is
+	icon_cut_color_ico: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -413,13 +413,13 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	button_open_text: STRING is
+	button_open_text: STRING
 			-- `Result' is STRING constant named `button_open_text'.
 		once
 			Result := "Open"
 		end
 
-	icon_search_ico_1: EV_PIXMAP is
+	icon_search_ico_1: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -429,7 +429,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_properties_color_ico: EV_PIXMAP is
+	icon_properties_color_ico: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -439,7 +439,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_new_color_ico: EV_PIXMAP is
+	icon_new_color_ico: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -449,7 +449,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_copy_color_ico: EV_PIXMAP is
+	icon_copy_color_ico: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -459,7 +459,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_undo_ico: EV_PIXMAP is
+	icon_undo_ico: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -469,13 +469,13 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	button_back_text: STRING is
+	button_back_text: STRING
 			-- `Result' is STRING constant named `button_back_text'.
 		once
 			Result := "Back"
 		end
 
-	icon_format_text_color_ico: EV_PIXMAP is
+	icon_format_text_color_ico: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -485,7 +485,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_new_editor_color_ico: EV_PIXMAP is
+	icon_new_editor_color_ico: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -495,13 +495,13 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	dialog_tall_height: INTEGER is 
+	dialog_tall_height: INTEGER 
 			-- `Result' is INTEGER constant named dialog_tall_height.
 		once
 			Result := 580
 		end
 
-	icon_envision_ico: EV_PIXMAP is
+	icon_envision_ico: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -511,13 +511,13 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	pixmap_directory: STRING is
+	pixmap_directory: STRING
 			-- `Result' is DIRECTORY constant named `pixmap_directory'.
 		once
 			Result := "D:\Src\tools\doc_builder\resources\icons"
 		end
 
-	icon_restore_color_png: EV_PIXMAP is
+	icon_restore_color_png: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -527,7 +527,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_code_cluster_ico: EV_PIXMAP is
+	icon_code_cluster_ico: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -537,7 +537,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_widget_edit_ico: EV_PIXMAP is
+	icon_widget_edit_ico: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -547,7 +547,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_merge_ico: EV_PIXMAP is
+	icon_merge_ico: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -557,13 +557,13 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	button_finish_text: STRING is
+	button_finish_text: STRING
 			-- `Result' is STRING constant named `button_finish_text'.
 		once
 			Result := "Finish"
 		end
 
-	icon_settings_ico: EV_PIXMAP is
+	icon_settings_ico: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -573,7 +573,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_jpeg_file_ico: EV_PIXMAP is
+	icon_jpeg_file_ico: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -583,7 +583,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_close_color_png: EV_PIXMAP is
+	icon_close_color_png: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -593,13 +593,13 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	dialog_width: INTEGER is 
+	dialog_width: INTEGER 
 			-- `Result' is INTEGER constant named dialog_width.
 		once
 			Result := 400
 		end
 
-	downarrow_png: EV_PIXMAP is
+	downarrow_png: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -609,19 +609,19 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	button_add_text: STRING is
+	button_add_text: STRING
 			-- `Result' is STRING constant named `button_add_text'.
 		once
 			Result := "Add"
 		end
 
-	button_ok_text: STRING is
+	button_ok_text: STRING
 			-- `Result' is STRING constant named `button_ok_text'.
 		once
 			Result := "OK"
 		end
 
-	icon_bitmap_file_ico: EV_PIXMAP is
+	icon_bitmap_file_ico: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -631,19 +631,19 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	box_border_width: INTEGER is 
+	box_border_width: INTEGER 
 			-- `Result' is INTEGER constant named box_border_width.
 		once
 			Result := 2
 		end
 
-	envision_filtered_text: STRING is
+	envision_filtered_text: STRING
 			-- `Result' is STRING constant named `envision_filtered_text'.
 		once
 			Result := "EiffelEnvision Filtered"
 		end
 
-	icon_save_ico: EV_PIXMAP is
+	icon_save_ico: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -653,13 +653,13 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	button_continue_text: STRING is
+	button_continue_text: STRING
 			-- `Result' is STRING constant named `button_continue_text'.
 		once
 			Result := "Continue"
 		end
 
-	icon_toc_file_node_ico: EV_PIXMAP is
+	icon_toc_file_node_ico: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -669,13 +669,13 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	button_find_text: STRING is
+	button_find_text: STRING
 			-- `Result' is STRING constant named `button_find_text'.
 		once
 			Result := "Find"
 		end
 
-	icon_toc_folder_closed_ico: EV_PIXMAP is
+	icon_toc_folder_closed_ico: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -685,13 +685,13 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	button_apply_text: STRING is
+	button_apply_text: STRING
 			-- `Result' is STRING constant named `button_apply_text'.
 		once
 			Result := "Apply"
 		end
 
-	icon_code_class_ico: EV_PIXMAP is
+	icon_code_class_ico: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -701,19 +701,19 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	dialog_wide_width: INTEGER is 
+	dialog_wide_width: INTEGER 
 			-- `Result' is INTEGER constant named dialog_wide_width.
 		once
 			Result := 600
 		end
 
-	studio_filtered_text: STRING is
+	studio_filtered_text: STRING
 			-- `Result' is STRING constant named `studio_filtered_text'.
 		once
 			Result := "EiffelStudio Filtered"
 		end
 
-	icon_checked_png: EV_PIXMAP is
+	icon_checked_png: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -723,7 +723,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	header_close_cross_png: EV_PIXMAP is
+	header_close_cross_png: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -733,13 +733,13 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	button_save_text: STRING is
+	button_save_text: STRING
 			-- `Result' is STRING constant named `button_save_text'.
 		once
 			Result := "Save..."
 		end
 
-	icon_sorter_ico: EV_PIXMAP is
+	icon_sorter_ico: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -749,7 +749,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	right_scroll_arrow_png: EV_PIXMAP is
+	right_scroll_arrow_png: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -759,7 +759,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_new_doc_ico: EV_PIXMAP is
+	icon_new_doc_ico: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -769,13 +769,13 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	button_create_text: STRING is
+	button_create_text: STRING
 			-- `Result' is STRING constant named `button_create_text'.
 		once
 			Result := "Create"
 		end
 
-	icon_studio_ico: EV_PIXMAP is
+	icon_studio_ico: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -785,7 +785,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_highlight_png: EV_PIXMAP is
+	icon_highlight_png: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -801,13 +801,13 @@ feature -- Access
 --| FIXME `constant_by_name' and `has_constant' `constants_initialized' are only required until the complete change to
 --| constants is complete. They are required for the pixmaps at the moment.
 
-	constants_initialized: BOOLEAN is
+	constants_initialized: BOOLEAN
 			-- Have constants been initialized from file?
 		do
 			Result := initialized_cell.item
 		end
 
-	string_constant_by_name (a_name: STRING): STRING is
+	string_constant_by_name (a_name: STRING): STRING
 			-- `Result' is STRING 
 		require
 			initialized: constants_initialized
@@ -819,7 +819,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 		
-	integer_constant_by_name (a_name: STRING): INTEGER is
+	integer_constant_by_name (a_name: STRING): INTEGER
 			-- `Result' is STRING 
 		require
 			initialized: constants_initialized
@@ -836,7 +836,7 @@ feature -- Access
 			Result := l_string.to_integer
 		end
 		
-	has_constant (a_name: STRING): BOOLEAN is
+	has_constant (a_name: STRING): BOOLEAN
 			-- Does constant `a_name' exist?
 		require
 			initialized: constants_initialized
@@ -847,26 +847,26 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	initialized_cell: CELL [BOOLEAN] is
+	initialized_cell: CELL [BOOLEAN]
 			-- A cell to hold whether the constants have been loaded.
 		once
 			create Result
 		end
 		
-	all_constants: HASH_TABLE [STRING, STRING] is
+	all_constants: HASH_TABLE [STRING, STRING]
 			-- All constants loaded from constants file.
 		once
 			create Result.make (4)
 		end
 		
-	file_name: STRING is "constants.txt"
+	file_name: STRING = "constants.txt"
 		-- File name from which constants must be loaded.
 		
-	String_constant: STRING is "STRING"
+	String_constant: STRING = "STRING"
 	
-	Integer_constant: STRING is "INTEGER"
+	Integer_constant: STRING = "INTEGER"
 		
-	parse_file_contents (content: STRING) is
+	parse_file_contents (content: STRING)
 			-- Parse contents of `content' into `all_constants'.
 		local
 			line_contents: STRING
@@ -896,7 +896,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	first_line (content: STRING): STRING is
+	first_line (content: STRING): STRING
 			-- `Result' is first line of `Content',
 			-- which will be stripped from `content'.
 		require
@@ -918,7 +918,7 @@ feature {NONE} -- Implementation
 			no_characters_lost: old content.count = Result.count + content.count
 		end
 
-	set_with_named_file (a_pixmap: EV_PIXMAP; a_file_name: STRING) is
+	set_with_named_file (a_pixmap: EV_PIXMAP; a_file_name: STRING)
 			-- Set image of `a_pixmap' from file, `a_file_name'.
 			-- If `a_file_name' does not exist, do nothing.
 		require
@@ -936,7 +936,7 @@ feature {NONE} -- Implementation
 invariant
 	all_constants_not_void: all_constants /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

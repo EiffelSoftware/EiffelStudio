@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog for displaying error informaion."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	user_initialization is
+	user_initialization
 			-- called by `initialize'.
 			-- Any custom user initialization that
 			-- could not be performed in `initialize',
@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 
 feature -- Status Setting
 
-	set_error (a_error: ERROR; a_context: STRING) is
+	set_error (a_error: ERROR; a_context: STRING)
 			-- Set errors with `error_list'.
 		require
 			error_not_void: a_error /= Void
@@ -38,7 +38,7 @@ feature -- Status Setting
 		
 feature {NONE} -- Implementation
 	
-	show_error_description (a_error: ERROR) is
+	show_error_description (a_error: ERROR)
 			-- Show error description of `a_error'
 		local
 			l_item: EV_LIST_ITEM
@@ -53,7 +53,7 @@ feature {NONE} -- Implementation
 	errors: EV_LIST;
 			-- Error widget
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

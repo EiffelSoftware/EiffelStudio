@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Shared access to compliance project settings.
 		]"
@@ -13,7 +13,7 @@ class
 
 feature -- Access
 	
-	project: EC_PROJECT_SETTINGS assign set_project is
+	project: EC_PROJECT_SETTINGS assign set_project
 			-- Compliance project.
 		do
 			Result := internal_project_settings.item
@@ -23,7 +23,7 @@ feature -- Access
 		
 feature -- Element change
 
-	set_project (a_project: like project) is
+	set_project (a_project: like project)
 			-- Set `project' to `a_project'.
 		require
 			a_project_not_void: a_project /= Void
@@ -35,7 +35,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	internal_project_settings: CELL [EC_PROJECT_SETTINGS] is
+	internal_project_settings: CELL [EC_PROJECT_SETTINGS]
 			-- Cache project settings.
 		once
 			create Result
@@ -45,7 +45,7 @@ feature {NONE} -- Implementation
 			result_item_not_void: Result.item /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Command line application root class.
 	]"
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Entry point.
 		local
 			l_parser: ARGUMENT_PARSER
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	start (a_options: I_OPTIONS) is
+	start (a_options: I_OPTIONS)
 			-- Start application executionoptions `a_options'
 		require
 			a_options_attached: a_options /= Void
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Factory functions
 
-	create_wix_generator (a_options: I_OPTIONS): I_WIX_FRAGMENT_GENERATOR is
+	create_wix_generator (a_options: I_OPTIONS): I_WIX_FRAGMENT_GENERATOR
 			-- Creates a new generator for WiX documents
 		require
 			a_options_attached: a_options /= Void
@@ -63,7 +63,7 @@ feature {NONE} -- Factory functions
 		end
 
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

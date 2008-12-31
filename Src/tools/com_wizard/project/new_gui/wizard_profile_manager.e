@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Store and retrieve profile items.%
 					%A Profile is a set of values for all entries in GUI"
 	legal: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize instance.
 		do
 			create {ARRAYED_LIST [ROUTINE [ANY, TUPLE []]]} active_profile_change_actions.make (10)
@@ -31,10 +31,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	Default_profile: STRING is "default"
+	Default_profile: STRING = "default"
 			-- Name of default profile
 
-	available_profiles: LIST [STRING] is
+	available_profiles: LIST [STRING]
 			-- List of available profiles
 		do
 			if is_saved_list (Profiles_key) then
@@ -66,7 +66,7 @@ feature -- Access
 
 feature -- Element Settings
 
-	set_active_profile (a_profile: like active_profile) is
+	set_active_profile (a_profile: like active_profile)
 			-- Set `active_profile' with `a_profile'.
 		require
 			non_void_profile: a_profile /= Void
@@ -98,7 +98,7 @@ feature -- Element Settings
 			active_profile_set: active_profile = a_profile
 		end
 
-	set_save_blocked (a_value: BOOLEAN) is
+	set_save_blocked (a_value: BOOLEAN)
 			-- Set `save_blocked' with `a_value'.
 		do
 			save_blocked := a_value
@@ -108,7 +108,7 @@ feature -- Element Settings
 
 feature -- Basic Operations
 
-	save_active_profile is
+	save_active_profile
 			-- Persist active profile if any.
 			-- Add profile to available profiles if not there already.
 			--| Profile items are stored in registry as follows:
@@ -119,7 +119,7 @@ feature -- Basic Operations
 			end
 		end
 
-	search_active_profile (a_name: STRING) is
+	search_active_profile (a_name: STRING)
 			-- Search items of active profile if any for item with name `a_name'.
 			-- Set `found_item' and `found' accordingly.
 		require
@@ -156,7 +156,7 @@ feature -- Basic Operations
 			found_item_set: (found_item /= Void) = found
 		end
 
-	remove_active_profile is
+	remove_active_profile
 			-- Remove active profile from profiles list.
 		local
 			l_stored_list: LIST [STRING]
@@ -175,12 +175,12 @@ feature -- Basic Operations
 
 feature {WIZARD_MAIN_WINDOW} -- Implementation
 
-	Profiles_key: STRING is "Profiles"
+	Profiles_key: STRING = "Profiles"
 			-- Key used to store profiles keys list
 
 feature {NONE} -- Implementation
 
-	initialize_profile (a_profile: STRING) is
+	initialize_profile (a_profile: STRING)
 			-- Initialize `a_profile' with values taken from `default_profile'.
 		do
 			set_active_profile (default_profile)
@@ -188,7 +188,7 @@ feature {NONE} -- Implementation
 			set_active_profile (a_profile)
 		end
 
-	save_active_profile_as (a_profile: STRING) is
+	save_active_profile_as (a_profile: STRING)
 			-- Save current profile with name `a_profile'.
 		require
 			non_void_profile_name: a_profile /= Void
@@ -220,13 +220,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	Profile_key_suffix: STRING is "_profile_key"
+	Profile_key_suffix: STRING = "_profile_key"
 			-- Registry key name suffix for key storing profiles
 
 invariant
 	non_void_active_profile_change_actions: active_profile_change_actions /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Help project for Web content."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ inherit
 	
 feature -- Commands
 
-	build_table_of_contents is
+	build_table_of_contents
 			-- Build table of contents and write to file
 		do						
 			create_toc_frame
@@ -23,7 +23,7 @@ feature -- Commands
 			create_resource_files
 		end
 
-	generate is
+	generate
 			-- Generate
 		do			
 			create_project_file			
@@ -31,30 +31,30 @@ feature -- Commands
 
 feature -- Access
 
-	template_file_name: STRING is
+	template_file_name: STRING
 			-- Template file		
 		deferred
 		end
 
-	toc_template_file_name: STRING is
+	toc_template_file_name: STRING
 			-- Toc template file
 		
 		deferred
 		end
 			
-	filter_template_file_name: STRING is
+	filter_template_file_name: STRING
 			-- Filter template file
 		deferred
 		end
 		
-	default_toc_file_name: STRING is
+	default_toc_file_name: STRING
 			-- Default toc
 		deferred
 		end
 		
 feature {NONE} -- File
 
-	create_project_file is
+	create_project_file
 			-- Create the project file
 		local
 			l_file: PLAIN_TEXT_FILE
@@ -108,7 +108,7 @@ feature {NONE} -- File
 
 feature {NONE} -- Implementation	
 
-	create_toc_frame is
+	create_toc_frame
 			-- Create left side navigation (toc)
 		local
 			l_file,
@@ -152,7 +152,7 @@ feature {NONE} -- Implementation
 			l_dest_file.close
 		end	
 
-	create_filter_frame is
+	create_filter_frame
 			-- Create left side navigation (filter)
 		local
 			l_file,
@@ -197,7 +197,7 @@ feature {NONE} -- Implementation
 			l_dest_file.close
 		end
 
-	create_resource_files is
+	create_resource_files
 			-- Copy any resource files needed
 		local
 			l_util: UTILITY_FUNCTIONS
@@ -246,7 +246,7 @@ feature {NONE} -- Implementation
 			copy_root_resource_files
 		end		
 
-	full_filter_text: STRING is
+	full_filter_text: STRING
 			-- Create filter HTML for client-side filter processing
 		local
 			l_filters: HASH_TABLE [DOCUMENT_FILTER, STRING]
@@ -304,7 +304,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end		
 
-	search_text: STRING is
+	search_text: STRING
 			-- Search HTML
 		do
 			create Result.make_empty
@@ -324,7 +324,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	filter_option_string (a_filter: OUTPUT_FILTER): STRING is
+	filter_option_string (a_filter: OUTPUT_FILTER): STRING
 			-- Comma separated filter string for filter type
 		local
 			l_filters: ARRAYED_LIST [STRING]
@@ -344,12 +344,12 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	full_toc_text: STRING is
+	full_toc_text: STRING
 			-- Full TOC text
 		deferred
 		end
 
-	filter_frame_height: INTEGER is
+	filter_frame_height: INTEGER
 			-- Height to set filter frame		
 		do
 			Result := 50
@@ -363,19 +363,19 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- File
 
-	compiled_filename_extension: STRING is
+	compiled_filename_extension: STRING
 			-- Extension for this project compiled file
 		do
 			Result := "html"
 		end
 
-	project_filename_extension: STRING is
+	project_filename_extension: STRING
 			-- Extension for this project type
 		do
 			Result := "html"
 		end
 		
-	toc_filename_extension: STRING is
+	toc_filename_extension: STRING
 			-- Extension for compiled help file
 		do
 			Result := "html"
@@ -384,17 +384,17 @@ feature {NONE} -- File
 	project_file: PLAIN_TEXT_FILE
 			-- Saved project file
 
-	resource_files: ARRAYED_LIST [STRING] is
+	resource_files: ARRAYED_LIST [STRING]
 			-- List of resource file to copy with project
 		deferred			
 		end
 
-	root_resource_files: ARRAYED_LIST [STRING] is
+	root_resource_files: ARRAYED_LIST [STRING]
 			-- List of resource file to copy with project
 		deferred				
 		end
 
-	copy_root_resource_files is
+	copy_root_resource_files
 			-- Copy any resource files needed
 		local
 			l_util: UTILITY_FUNCTIONS
@@ -427,7 +427,7 @@ feature {NONE} -- File
 			end
 		end	
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Inherited interface descriptor."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature -- Initialization
 
-	make (a_library: WIZARD_TYPE_LIBRARY_DESCRIPTOR; a_index: INTEGER) is
+	make (a_library: WIZARD_TYPE_LIBRARY_DESCRIPTOR; a_index: INTEGER)
 			-- Initialization.
 		require
 			non_void_library: a_library /= Void
@@ -38,7 +38,7 @@ invariant
 	non_void_library: library /= Void
 	valid_index: index > 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

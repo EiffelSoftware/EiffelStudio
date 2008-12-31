@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Message string constants for dialogs, windows, etc."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,37 +10,37 @@ class
 
 feature -- Title
 
-	invalid_files_title: STRING is
+	invalid_files_title: STRING
 			-- Invalid files dialog title text
 		once
 			Result := "Invalid files"
 		end
 
-	invalid_xml_dialog_title: STRING is
+	invalid_xml_dialog_title: STRING
 			-- Invalid XML dialog title text
 		once
 			Result := "Invalid XML"
 		end
 
-	invalid_project_name_title: STRING is
+	invalid_project_name_title: STRING
 			-- Invalid project name dialog title
 		once
 			Result := "Unable to create project"
 		end	
 
-	report_title: STRING is
+	report_title: STRING
 			-- Report title
 		once
 			Result := "Report"
 		end
 	
-	help_generation_progress_title: STRING is
+	help_generation_progress_title: STRING
 			-- Help generation progress notice
 		once
 			Result := "Generating Help"
 		end	
 
-	empty_toc_title: STRING is
+	empty_toc_title: STRING
 			-- Empty TOC title
 		once
 			Result := "Empty Table of Contents"
@@ -48,38 +48,38 @@ feature -- Title
 
 feature -- Messages
 
-	file_schema_valid_report: STRING is
+	file_schema_valid_report: STRING
 			-- Schema valid file
 		once
 			Result := "File valid to schema"
 		end
 
-	file_save_prompt: STRING is
+	file_save_prompt: STRING
 			-- File save prompt
 		once
 			Result := "Document has not been saved since last edit.%NDo you want to save?"	
 		end		
 
-	invalid_xml_file_warning: STRING is 
+	invalid_xml_file_warning: STRING 
 			-- Text in context is not XMl valid
 		once
 			Result := "The text is not valid XML"	
 		end
 
-	invalid_project_name: STRING is
+	invalid_project_name: STRING
 			-- Invalid project name
 		once
 			Result := "Empty project or path.  %NCannot create project"
 		end	
 
-	invalid_project_files_warning: STRING is
+	invalid_project_files_warning: STRING
 			-- Invalid project files warning
 		once
 			Result := "Some of the files in your project are not valid to your schema definition.%N%
 				%Do you wish to continue?"	
 		end
 
-	invalid_project_files_toc_warning: STRING is
+	invalid_project_files_toc_warning: STRING
 			-- Invalid project files warning for TOC rendering
 		once
 			Result := "Some of the files in your project are not valid to your schema definition.%N%
@@ -87,7 +87,7 @@ feature -- Messages
 				%represent a generated one.  Additionally generation will be slower.  Do you wish to continue?"	
 		end
 
-	document_name_change_warning: STRING is
+	document_name_change_warning: STRING
 			-- Warning for attempted document name change
 		once
 			Result := "You are trying to change the name of this document.  If you proceed links%N%
@@ -95,37 +95,37 @@ feature -- Messages
 				%fix these links automatically.  What would you like to do?"
 		end
 
-	help_generation_progress: STRING is
+	help_generation_progress: STRING
 			-- Help generation progress notice
 		once
 			Result := "Help is being generated...please wait"
 		end
 
-	valid_files: STRING is
+	valid_files: STRING
 			-- Valid files
 		once
 			Result := "All files are valid"			
 		end
 
-	unknown_toc_title: STRING is
+	unknown_toc_title: STRING
 			-- Unknown TOC title
 		once
 			Result := "!Unknown Title!"
 		end
 
-	directory_not_exist: STRING is
+	directory_not_exist: STRING
 			-- Unknown directory
 		once
 			Result := "Directory does not exist."
 		end
 
-	empty_location: STRING is
+	empty_location: STRING
 			-- Empty location
 		once
 			Result := "Location is empty.  Please choose a%Nlocation to generate the files."
 		end
 			
-	empty_toc: STRING is 
+	empty_toc: STRING 
 			-- Empty location
 		once
 			Result := 
@@ -137,7 +137,7 @@ feature -- Messages
 				%Please check your project and generation settings and try again."	
 		end
 		
-	html_pre_tag_warning: STRING is
+	html_pre_tag_warning: STRING
 			-- Warning when attempting to auto-format tag containing 'pre' text
 		once
 			Result := "The text selected for formatting contains tags which %N%
@@ -145,7 +145,7 @@ feature -- Messages
 				%lost.  Do you wish to continue anyway?"
 		end
 
-	empty_html_document: STRING is
+	empty_html_document: STRING
 			-- Empty HTML document
 		once
 			Result := "Error: After filtering the document the content is empty.%N%
@@ -158,37 +158,37 @@ feature -- Messages
 
 feature -- Command prompt messages
 
-	invalid_project_file: STRING is
+	invalid_project_file: STRING
 			-- Invalid project file argument
 		once
 			Result := "Missing or invalid project file.  For usage details enter %"docbuilder -h%""
 		end
 		
-	no_generation_type: STRING is
+	no_generation_type: STRING
 			-- No generation argument type
 		once
 			Result := "No generation options specified for generation.  For usage details enter %"docbuilder -h%""
 		end
 		
-	command_read_line: STRING is
+	command_read_line: STRING
 			-- Readline prompt
 		once
 			Result := "Press enter to terminate application..."
 		end
 
-	missing_xsl: STRING is
+	missing_xsl: STRING
 			-- Missing XSL
 		once
 			Result := "Could not find XSL file"
 		end
 		
-	missing_schema: STRING is
+	missing_schema: STRING
 			-- Readline promt
 		once
 			Result := "Could not find schema file"
 		end
 
-	output_report_header: STRING is
+	output_report_header: STRING
 			-- Header for new output report
 		local
 			l_date_time: DATE_TIME
@@ -201,7 +201,7 @@ feature -- Command prompt messages
 				"%N---------------------------------------------------------------------------%N%N"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

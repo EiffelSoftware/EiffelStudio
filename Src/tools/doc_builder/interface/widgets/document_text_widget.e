@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EV_TEXT widget representation of a document."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -53,7 +53,7 @@ create
 	
 feature -- Creation
 
-	make (a_document: DOCUMENT) is
+	make (a_document: DOCUMENT)
 			-- Make Current with `a_document'
 		do
 			document := a_document	
@@ -65,7 +65,7 @@ feature -- Creation
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialization
 		do	
 			Precursor {EV_RICH_TEXT}						
@@ -94,7 +94,7 @@ feature {NONE} -- Initialization
 
 feature -- Query
 			
-	is_valid_xml: BOOLEAN is
+	is_valid_xml: BOOLEAN
 			-- Is `text' valid xml?
 		local
 			l_error: ERROR
@@ -114,7 +114,7 @@ feature -- Query
 			end
 		end		
 
-	selection_is_valid_xml: BOOLEAN is
+	selection_is_valid_xml: BOOLEAN
 			-- Is `selected_text' valid XML?
 		do
 			if not text.is_empty then
@@ -122,7 +122,7 @@ feature -- Query
 			end			
 		end		
 
-	is_valid_to_schema: BOOLEAN is
+	is_valid_to_schema: BOOLEAN
 			-- Is Current valid to the loaded schema?
 		do
 			if is_valid_xml then
@@ -134,7 +134,7 @@ feature -- Query
 			end
 		end
 
-	can_insert (a_xml: STRING): BOOLEAN is
+	can_insert (a_xml: STRING): BOOLEAN
 			-- Can `xml' be inserted into Current?
 		local
 			l_constants: EV_DIALOG_CONSTANTS
@@ -163,7 +163,7 @@ feature -- Query
 
 feature -- Commands	
 	
-	highlight is
+	highlight
 			-- Highlight output sections		
 		local
 			l_highlight_filter: OUTPUT_FORMAT_FILTER
@@ -180,12 +180,12 @@ feature -- Commands
 			end	
 		end
 
-	highlight_error is
+	highlight_error
 			-- Highlight error.		
 		do			
 		end	
 
-	highlight_error_pos (a_no, a_pos: INTEGER) is
+	highlight_error_pos (a_no, a_pos: INTEGER)
 			-- Highlight line at `a_no' and position `a_pos'.  Since `l_no' denoted a file
 			-- line number this must be converted to the relevant position in Current.
 		local			
@@ -209,7 +209,7 @@ feature -- Commands
 			set_focus
 		end		
 
-	update_line_display is
+	update_line_display
 			-- Update line display to reflect caret position
 		do
 			Application_window.update_status_line (current_line_number, caret_position)
@@ -217,7 +217,7 @@ feature -- Commands
 
 feature -- Status Setting
 
-	set_font (a_font: EV_FONT) is
+	set_font (a_font: EV_FONT)
 			-- Assign `a_font' to `font'.
 		local
 			l_format: EV_CHARACTER_FORMAT
@@ -228,7 +228,7 @@ feature -- Status Setting
 				({EV_CHARACTER_FORMAT_CONSTANTS}.font_family))
 		end
 
-	tag_selection (a_tag: STRING) is
+	tag_selection (a_tag: STRING)
 			-- Enclose `selected_text' in `a_tag'.  Eg, `some_text'
 			-- becomes `a_tagsome_texta_tag'.  If there is no selection
 			-- just insert `a_taga_tag'.
@@ -264,7 +264,7 @@ feature -- Status Setting
 			end
 		end
 
-	tag_selection_as_xml (a_tag: STRING) is
+	tag_selection_as_xml (a_tag: STRING)
 			-- Enclose `selected_text' in XML `a_tag'.  Eg, `some_text'
 			-- becomes '<a_tag>some_text</a_tag>'.  If there is no selection
 			-- just insert '<a_tag></a_tag>'.
@@ -301,7 +301,7 @@ feature -- Status Setting
 			end
 		end
 
-	key_pressed (a_key: EV_KEY) is
+	key_pressed (a_key: EV_KEY)
 			-- A key was pressed
 		local
 			l_format: EV_CHARACTER_FORMAT
@@ -313,7 +313,7 @@ feature -- Status Setting
 			end
 		end
 		
-	update_subject (a_key: EV_KEY) is
+	update_subject (a_key: EV_KEY)
 			-- Update the observed subjects of changes so it can update
 			-- all of it observers
 		local
@@ -365,7 +365,7 @@ feature -- Query
 
 feature -- Access
 
-	xml: XM_DOCUMENT is
+	xml: XM_DOCUMENT
 			-- XML Document representation of `text' if `text' is valid XML (Void otherwise)
 		do
 			Result := internal_xml
@@ -382,7 +382,7 @@ feature -- Access
 
 feature {OBSERVED} -- Observer Pattern
 
-	update is
+	update
 			-- Update Current
 		do
 --			if not text.is_equal (document.text) then
@@ -398,14 +398,14 @@ feature {NONE} -- Implementation
 	schema_validator: SCHEMA_VALIDATOR
 			-- Schema Validator	
 
-	internal_update_subject is
+	internal_update_subject
 			-- Update subject
 		do
 			notify_observers
 			update_line_display
 		end		
 
-	pointer_pressed (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	pointer_pressed (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Pointer was pressed, catch right-click
 		local
 			l_popup: EV_MENU
@@ -439,7 +439,7 @@ feature {NONE} -- Implementation
 			end				
 		end
 
-	pointer_released is
+	pointer_released
 			-- Pointer was released
 		local
 			l_parent: STRING
@@ -452,7 +452,7 @@ feature {NONE} -- Implementation
 			end			
 		end		
 
-	xml_parent: STRING is
+	xml_parent: STRING
 			-- Determine the parent XML text based on the current
 			-- cursor position
 		local
@@ -511,7 +511,7 @@ feature {NONE} -- Implementation
 			end	
 		end
 
-	sub_element_list (a_parent: STRING): SORTED_TWO_WAY_LIST [STRING] is
+	sub_element_list (a_parent: STRING): SORTED_TWO_WAY_LIST [STRING]
 			-- Alphabetically sorted list of sub elements of `a_parent'
 		local
 			schema_element: DOCUMENT_SCHEMA_ELEMENT
@@ -539,7 +539,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	pebble_dropped (a_url: STRING) is
+	pebble_dropped (a_url: STRING)
 			-- Pebble dropped on target
 		local
 			l_start_pos,
@@ -563,16 +563,16 @@ feature {NONE} -- Implementation
 			select_region (l_start_pos, l_end_pos)
 		end		
 
-	is_in_default_state: BOOLEAN is True
+	is_in_default_state: BOOLEAN = True
 			-- Is in default state
 
-    enter_key_code: INTEGER is
+    enter_key_code: INTEGER
     		-- Enter key
     	once    		
     		Result := key_constants.key_enter	
     	end
 
-	append_rich_text (a_text: STRING) is
+	append_rich_text (a_text: STRING)
 			-- Append `a_text', formatted
 		local			
 			l_xml_filter: XML_FORMAT_FILTER
@@ -592,13 +592,13 @@ feature {NONE} -- Implementation
 			end			
 		end		
 
-	key_constants: EV_KEY_CONSTANTS is
+	key_constants: EV_KEY_CONSTANTS
 			-- Key constants
 		once
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

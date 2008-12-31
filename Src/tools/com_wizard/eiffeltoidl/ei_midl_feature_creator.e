@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -36,7 +36,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize object.
 		do
 			succeed := False
@@ -53,7 +53,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	create_from_eiffel_feature (l_feature: EI_FEATURE) is
+	create_from_eiffel_feature (l_feature: EI_FEATURE)
 			-- Create MIDL feature from Eiffel feature 'l_feature'.
 			-- Set 'succeed' to true if succeeded.
 		require
@@ -118,7 +118,7 @@ feature -- Basic operations
 			succeed := l_succeed
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

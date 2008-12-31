@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Interface eiffel generator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -13,7 +13,7 @@ inherit
 
 feature -- Basic Operations
 
-	generate (a_descriptor: WIZARD_INTERFACE_DESCRIPTOR) is
+	generate (a_descriptor: WIZARD_INTERFACE_DESCRIPTOR)
 			-- Generate eiffel writer
 		local
 			l_writer: WIZARD_WRITER_INHERIT_CLAUSE
@@ -44,7 +44,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	process_functions (a_descriptor: WIZARD_INTERFACE_DESCRIPTOR) is
+	process_functions (a_descriptor: WIZARD_INTERFACE_DESCRIPTOR)
 			-- Process functions
 		require
 			non_void_descriptor: a_descriptor /= Void
@@ -74,7 +74,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_properties (properties: LIST [WIZARD_PROPERTY_DESCRIPTOR]) is
+	process_properties (properties: LIST [WIZARD_PROPERTY_DESCRIPTOR])
 			-- Process properties
 		require
 			non_void_list: properties /= Void
@@ -99,7 +99,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

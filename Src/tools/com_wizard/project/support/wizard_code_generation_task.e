@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Task used for generating Eiffel and C code"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,10 +23,10 @@ inherit
 
 feature -- Access
 
-	title: STRING is "Generating code"
+	title: STRING = "Generating code"
 			-- Task title
 
-	steps_count: INTEGER is
+	steps_count: INTEGER
 			-- Number of steps involved in task
 			-- System descriptor must be generated first
 		local
@@ -59,7 +59,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	internal_execute is
+	internal_execute
 			-- Implementation of `execute'.
 			-- Use `step' `steps_count' times unless `stop' is called.
 		local
@@ -73,7 +73,7 @@ feature {NONE} -- Implementation
 			l_code_generator := Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

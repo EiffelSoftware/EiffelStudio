@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Well known interface GUIDs"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -10,36 +10,36 @@ class
 
 feature -- Access
 
-	Iunknown_guid: ECOM_GUID is
+	Iunknown_guid: ECOM_GUID
 			-- IUnknown IID
 		once
 			create Result.make_from_string (Iunknown_guid_string)
 		end
 
-	Iunknown_guid_string: STRING is "{00000000-0000-0000-C000-000000000046}"
+	Iunknown_guid_string: STRING = "{00000000-0000-0000-C000-000000000046}"
 			-- IUnknown IID
 
-	Idispatch_guid: ECOM_GUID is
+	Idispatch_guid: ECOM_GUID
 			-- IDispatch IID
 		once
 			create Result.make_from_string (Idispatch_guid_string)
 		end
 
-	Idispatch_guid_string: STRING is "{00020400-0000-0000-C000-000000000046}"
+	Idispatch_guid_string: STRING = "{00020400-0000-0000-C000-000000000046}"
 			-- IDispatch IID
 
-	Itypeinfo_guid: ECOM_GUID is
+	Itypeinfo_guid: ECOM_GUID
 			-- IDispatch IID
 		once
 			create Result.make_from_string (Itypeinfo_guid_string)
 		end
 
-	Itypeinfo_guid_string: STRING is "{00020401-0000-0000-C000-000000000046}"
+	Itypeinfo_guid_string: STRING = "{00020401-0000-0000-C000-000000000046}"
 			-- IDispatch IID
 
 feature -- Status Report
 
-	is_well_known_interface_guid (a_guid: ECOM_GUID): BOOLEAN is
+	is_well_known_interface_guid (a_guid: ECOM_GUID): BOOLEAN
 			-- Is `a_guid' IID of predefined interface?
 			-- Should be tru for interfaces for which we don't want to generate a namespace
 			-- when used in signatures
@@ -50,7 +50,7 @@ feature -- Status Report
 						a_guid.is_equal (Itypeinfo_guid)
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

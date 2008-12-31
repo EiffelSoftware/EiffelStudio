@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Cpp server function generator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -13,7 +13,7 @@ inherit
 
 feature -- Basic operations
 
-	generate (a_component: WIZARD_COMPONENT_DESCRIPTOR; a_descriptor: WIZARD_FUNCTION_DESCRIPTOR) is
+	generate (a_component: WIZARD_COMPONENT_DESCRIPTOR; a_descriptor: WIZARD_FUNCTION_DESCRIPTOR)
 			--Generate C server feature
 		require
 			non_void_descriptor: a_descriptor /= Void
@@ -51,13 +51,13 @@ feature {NONE} -- Implementation
 	is_function: BOOLEAN
 			-- Is feature a function?
 
-	is_return_hresult: BOOLEAN is
+	is_return_hresult: BOOLEAN
 			-- Is function returning HRESULT?
 		do
 			Result := func_desc.return_type.visitor.vt_type = Vt_hresult
 		end
 
-	is_return_data: BOOLEAN is
+	is_return_data: BOOLEAN
 			-- Is function returning data?
 		do
 			Result := not is_return_hresult and
@@ -87,7 +87,7 @@ feature {NONE} -- Implementation
 	return_type: STRING
 			--
 
-	body: STRING is
+	body: STRING
 			-- Feature body
 		local
 			l_visitor: WIZARD_DATA_TYPE_VISITOR
@@ -153,7 +153,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	generate_cecil_call_code is
+	generate_cecil_call_code
 			-- Generate CECIL call code.
 		require
 			has_arguments_or_return_type: not func_desc.arguments.is_empty or is_return_data
@@ -192,7 +192,7 @@ feature {NONE} -- Implementation
 		ensure
 		end
 
-	add_to_cecil_call_arguments (visitor: WIZARD_DATA_TYPE_VISITOR; an_argument_name: STRING) is
+	add_to_cecil_call_arguments (visitor: WIZARD_DATA_TYPE_VISITOR; an_argument_name: STRING)
 			-- Add to CECIL call arguments.
 		require
 			non_void_visitor: visitor /= Void
@@ -215,7 +215,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_free_object_code (a_argument_name: STRING)is
+	add_free_object_code (a_argument_name: STRING)
 			-- Add code for freeing object.
 		require
 			non_void_an_argument_name: a_argument_name /= Void
@@ -229,7 +229,7 @@ feature {NONE} -- Implementation
 			free_object.append (");%N%T")
 		end
 
-	process_argument (an_argument: WIZARD_PARAM_DESCRIPTOR) is
+	process_argument (an_argument: WIZARD_PARAM_DESCRIPTOR)
 			-- Process argument.
 		require
 			non_void_argument: an_argument /= Void
@@ -270,7 +270,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	variable_set_up (arg_name: STRING; visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
+	variable_set_up (arg_name: STRING; visitor: WIZARD_DATA_TYPE_VISITOR): STRING
 			-- Code to set variable.
 		require
 			non_void_visitor: visitor /= Void
@@ -346,7 +346,7 @@ feature {NONE} -- Implementation
 		end
 
 	out_value_set_up (arg_name: STRING; visitor: WIZARD_DATA_TYPE_VISITOR;
-					descriptor: WIZARD_DATA_TYPE_DESCRIPTOR): STRING is
+					descriptor: WIZARD_DATA_TYPE_DESCRIPTOR): STRING
 			-- Code to return out value
 		require
 			non_void_visitor: visitor /= Void
@@ -406,7 +406,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	return_value_set_up ( arg_name: STRING; type_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR): STRING is
+	return_value_set_up ( arg_name: STRING; type_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR): STRING
 			-- Code to return value
 		require
 			non_void_name: arg_name /= Void
@@ -498,7 +498,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	cecil_procedure_set_up: STRING is
+	cecil_procedure_set_up: STRING
 			-- Cecil procedure call
 		do
 			-- EIF_PROCEDURE eiffel_procedure = 0;
@@ -540,7 +540,7 @@ feature {NONE} -- Implementation
 			valid_result: not Result.is_empty
 		end
 
-	cecil_function_declaration (visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
+	cecil_function_declaration (visitor: WIZARD_DATA_TYPE_VISITOR): STRING
 			-- Code to set up eif_function call
 		require
 			non_void_visitor: visitor /= Void
@@ -597,7 +597,7 @@ feature {NONE} -- Implementation
 			Result.append (New_line_tab)
 		end
 
-	cecil_function_call: STRING is
+	cecil_function_call: STRING
 			-- CECIL feature call.
 		require
 			non_void_arguments: arguments /= Void
@@ -640,7 +640,7 @@ feature {NONE} -- Implementation
 			Result.append_character ('}')
 		end
 
-	cecil_function_declaration_code (cecil_function_return_type, cecil_function_type: STRING): STRING is
+	cecil_function_declaration_code (cecil_function_return_type, cecil_function_type: STRING): STRING
 			-- Cecil funcion declaration.
 		require
 			non_void_type: cecil_function_return_type /= Void
@@ -674,7 +674,7 @@ feature {NONE} -- Implementation
 			valid_code: not Result.is_empty
 		end
 
-	empty_argument_procedure_body: STRING is
+	empty_argument_procedure_body: STRING
 			-- Eiffel procedure call body
 		do
 			create Result.make (1000)
@@ -722,7 +722,7 @@ feature {NONE} -- Implementation
 			valid_body: not Result.is_empty
 		end
 
-	function_cast_code (a_return_type: STRING): STRING is
+	function_cast_code (a_return_type: STRING): STRING
 			-- Function cast code.
 		require
 			non_void_return_type: a_return_type /= Void
@@ -767,7 +767,7 @@ feature {NONE} -- Implementation
 			valid_cast: not Result.is_empty
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

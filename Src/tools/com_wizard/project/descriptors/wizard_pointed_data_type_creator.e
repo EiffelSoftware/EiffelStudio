@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Creator of Pointed Type Descriptors"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 feature -- Basic operations
 
 	create_descriptor (a_type_info: ECOM_TYPE_INFO; a_type_desc: ECOM_TYPE_DESC; 
-				a_system_description: WIZARD_SYSTEM_DESCRIPTOR): WIZARD_POINTED_DATA_TYPE_DESCRIPTOR is
+				a_system_description: WIZARD_SYSTEM_DESCRIPTOR): WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
 		require
 			valid_type_desc: a_type_desc /= Void
 			valid_type_desc_type: is_ptr (a_type_desc.var_type)
@@ -29,7 +29,7 @@ feature -- Basic operations
 			valid_result: Result /= Void and then is_ptr (Result.type)
 		end
 
-	initialize_descriptor (a_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR) is
+	initialize_descriptor (a_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR)
 			-- Initialize `a_descriptor' attributes.
 		require
 			valid_descriptor: a_descriptor /= Void
@@ -43,7 +43,7 @@ feature {NONE} -- Implementation
 	pointed_data_type_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR;
 			-- Description of array element type
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

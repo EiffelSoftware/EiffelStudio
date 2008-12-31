@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Type visitor"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ inherit
 
 feature -- Operations
 
-	visit (a_descriptor: WIZARD_TYPE_DESCRIPTOR) is
+	visit (a_descriptor: WIZARD_TYPE_DESCRIPTOR)
 			-- visit `a_descriptor'
 		require
 			non_void_descriptor: a_descriptor /= Void
@@ -33,7 +33,7 @@ feature -- Operations
 
 feature -- Processing
 
-	process_alias (alias_descriptor: WIZARD_ALIAS_DESCRIPTOR) is
+	process_alias (alias_descriptor: WIZARD_ALIAS_DESCRIPTOR)
 			-- process alias
 			-- generate code for alias described in `alias_descriptor'
 		require
@@ -41,7 +41,7 @@ feature -- Processing
 		deferred
 		end
 
-	process_coclass (coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR ) is
+	process_coclass (coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR )
 			-- process coclass
 			-- generate code for coclass described in `coclass_descriptor'
 			-- for every interface in `coclass_descriptor'
@@ -53,7 +53,7 @@ feature -- Processing
 		deferred
 		end
 
-	process_implemented_interface (interface_descriptor: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR) is
+	process_implemented_interface (interface_descriptor: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR)
 			-- process interface
 			-- generated class for interface
 			-- `inteface_descriptor' must provide information on
@@ -63,7 +63,7 @@ feature -- Processing
 		deferred
 		end
 
-	process_interface (interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR) is
+	process_interface (interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR)
 			-- process interface
 			-- generated deffered class for interface
 			-- `inteface_descriptor' must provide information on
@@ -73,7 +73,7 @@ feature -- Processing
 		deferred
 		end
 
-	process_enum (enum_descriptor: WIZARD_ENUM_DESCRIPTOR) is
+	process_enum (enum_descriptor: WIZARD_ENUM_DESCRIPTOR)
 			-- process enumeration
 			-- generate code for enumeration described by `enum_descriptor'
 			-- for every constant in `enum_descriptor'
@@ -87,7 +87,7 @@ feature -- Processing
 			end
 		end
 
-	process_record (record_descriptor: WIZARD_RECORD_DESCRIPTOR) is
+	process_record (record_descriptor: WIZARD_RECORD_DESCRIPTOR)
 			-- process structure
 			-- generate code for structure described by `record_descriptor'
 			-- for every field in `record_descriptor'
@@ -106,7 +106,7 @@ feature -- Processing
 		deferred
 		end
 
-	process_union (union_descriptor: WIZARD_UNION_DESCRIPTOR) is
+	process_union (union_descriptor: WIZARD_UNION_DESCRIPTOR)
 			-- process union
 			-- generate code for union described by `union_descriptor'
 			-- for every field in union
@@ -119,7 +119,7 @@ feature -- Processing
 			message_output.add_warning ("Unions are not supported")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

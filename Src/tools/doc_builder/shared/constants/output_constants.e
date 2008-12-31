@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants for output filtering"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 	
 feature -- Access
 
-	output_list: HASH_TABLE [STRING, STRING] is
+	output_list: HASH_TABLE [STRING, STRING]
 			-- List of possible filter output types hashed by description
 		once
 			create Result.make (3)
@@ -23,7 +23,7 @@ feature -- Access
 			Result.extend (unfiltered_flag, unfiltered)
 		end
 		
-	file_generation_types: ARRAYED_LIST [STRING] is
+	file_generation_types: ARRAYED_LIST [STRING]
 			-- Valid file generation options
 		once
 			create Result.make (3)
@@ -33,7 +33,7 @@ feature -- Access
 			Result.extend (xml_to_html_flag)
 		end
 		
-	help_generation_types: ARRAYED_LIST [STRING] is
+	help_generation_types: ARRAYED_LIST [STRING]
 			-- Valid help generation options
 		once
 			create Result.make (3)
@@ -46,51 +46,51 @@ feature -- Access
 		
 feature -- Help Tags
 	
-	mshtml_help_flag: STRING is "mshtml"
+	mshtml_help_flag: STRING = "mshtml"
 
-	vsip_help_flag: STRING is "vsip"
+	vsip_help_flag: STRING = "vsip"
 
-	web_help_tree_flag: STRING is "web_tree"
+	web_help_tree_flag: STRING = "web_tree"
 	
-	web_help_simple_flag: STRING is "web_simple"
+	web_help_simple_flag: STRING = "web_simple"
 
-	xml_to_html_flag: STRING is "xml2html"
+	xml_to_html_flag: STRING = "xml2html"
 	
-	html_to_help_flag: STRING is "html2help"
+	html_to_help_flag: STRING = "html2help"
 	
-	xml_to_help_flag: STRING is "xml2help"	
+	xml_to_help_flag: STRING = "xml2help"	
 		
 feature -- Filter tags
 		
-	unfiltered_flag: STRING is "all"	
+	unfiltered_flag: STRING = "all"	
 		
-	studio_flag: STRING is "studio"
+	studio_flag: STRING = "studio"
 	
-	studio_win_flag: STRING is "studio_win"
+	studio_win_flag: STRING = "studio_win"
 	
-	studio_lin_flag: STRING is "studio_lin"
+	studio_lin_flag: STRING = "studio_lin"
 	
-	studio_mac_flag: STRING is "studio_mac"
+	studio_mac_flag: STRING = "studio_mac"
 	
-	envision_flag: STRING is "envision"
+	envision_flag: STRING = "envision"
 
 feature -- Filter Descriptions
 
-	none_desc: STRING is "Excluded"
+	none_desc: STRING = "Excluded"
 
-	unfiltered: STRING is "Unfiltered"
+	unfiltered: STRING = "Unfiltered"
 	
-	studio_desc: STRING is "EiffelStudio"
+	studio_desc: STRING = "EiffelStudio"
 	
-	studio_win_desc: STRING is "EiffelStudio for Windows"
+	studio_win_desc: STRING = "EiffelStudio for Windows"
 	
-	studio_lin_desc: STRING is "EiffelStudio for Unix/Linux"
+	studio_lin_desc: STRING = "EiffelStudio for Unix/Linux"
 	
-	studio_mac_desc: STRING is "EiffelStudio for Mac OS X"
+	studio_mac_desc: STRING = "EiffelStudio for Mac OS X"
 	
-	envision_desc: STRING is "ENViSioN!";
+	envision_desc: STRING = "ENViSioN!";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Code generation manager."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -38,12 +38,12 @@ inherit
 
 feature -- Access
 
-	Analysis_title: STRING is "Analysing Type Library"
+	Analysis_title: STRING = "Analysing Type Library"
 			-- Analysis title.
 
 feature -- Basic Operations
 
-	run is
+	run
 			-- Start generation.
 		local
 			l_retried: BOOLEAN
@@ -108,7 +108,7 @@ feature -- Basic Operations
 			end
 		end
 
-	run_tasks (a_tasks: LIST [WIZARD_PROGRESS_REPORTING_TASK]) is
+	run_tasks (a_tasks: LIST [WIZARD_PROGRESS_REPORTING_TASK])
 			-- Run tasks in list `a_tasks'.
 		require
 			non_void_tasks: a_tasks /= Void
@@ -148,7 +148,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	setup_environment is
+	setup_environment
 			-- Setup environment variables for compilation
 		local
 			l_vs_setup: VS_SETUP
@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	smart_checking: BOOLEAN is
+	smart_checking: BOOLEAN
 			-- smart_checking value in config.eif file
 		local
 			l_file: PLAIN_TEXT_FILE
@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 	event_raiser: ROUTINE [ANY, TUPLE [EV_THREAD_EVENT]];
 			-- Agent used to raise events
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

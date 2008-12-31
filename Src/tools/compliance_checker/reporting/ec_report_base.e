@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Base, abstract implementation for all report entities.
 	]"
@@ -13,19 +13,19 @@ deferred class
 	
 feature -- Access
 
-	report: EC_REPORT is
+	report: EC_REPORT
 			-- Report associated with report entity.
 		deferred
 		ensure
 			result_not_void: Result /= Void
 		end
 		
-	parent: EC_REPORT_BASE is
+	parent: EC_REPORT_BASE
 			-- Parent report entity of current entity.
 		deferred
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

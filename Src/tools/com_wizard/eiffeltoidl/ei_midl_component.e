@@ -1,4 +1,4 @@
-indexing
+note
 	description: "MIDL component (coclass, interface)"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (c_name: STRING) is
+	make (c_name: STRING)
 			-- Initialize object.  Set 'name' to 'c_name'.
 		require
 			non_void_name: c_name /= Void
@@ -43,7 +43,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_name (c_name: STRING) is
+	set_name (c_name: STRING)
 			-- Set 'name' to 'c_name'.
 		require
 			non_void_name: c_name /= Void
@@ -54,7 +54,7 @@ feature -- Element change
 			name_set: name.is_equal (c_name)
 		end
 
-	set_guid (l_guid: ECOM_GUID) is
+	set_guid (l_guid: ECOM_GUID)
 			-- Set 'guid' to 'l_guid'.
 		require
 			non_void_guid: l_guid /= Void
@@ -65,7 +65,7 @@ feature -- Element change
 			guid_set: guid.is_equal (l_guid)
 		end
 
-	set_description ( desc: STRING) is
+	set_description ( desc: STRING)
 			-- Set 'description' to 'desc'.
 		require
 			non_void_description: desc /= Void
@@ -76,7 +76,7 @@ feature -- Element change
 			description_set: description.is_equal (desc)
 		end
 
-	set_version (ver: REAL) is
+	set_version (ver: REAL)
 			-- Set 'version' to 'ver'.
 		require
 			valid_version: ver > 0.0
@@ -91,7 +91,7 @@ invariant
 	valid_guid: guid /= Void and then guid.exists
 	valid_version: version > 0.0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

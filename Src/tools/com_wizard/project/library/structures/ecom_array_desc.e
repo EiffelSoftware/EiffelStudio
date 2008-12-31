@@ -1,4 +1,4 @@
-indexing
+note
 	description: "ARRAYDESC structure, contained within TYPEDESC structure %
 				% describes type of array's elements and array dimensions"
 	legal: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_from_pointer (a_pointer: POINTER) is
+	make_from_pointer (a_pointer: POINTER)
 			-- Make from pointer.
 		do
 			make_by_pointer (a_pointer)
@@ -27,19 +27,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	type_desc: ECOM_TYPE_DESC is
+	type_desc: ECOM_TYPE_DESC
 			-- Array elements type
 		do
 			create Result.make_from_pointer (ccom_arraydesc_typedesc (item))
 		end
 
-	count_dimension: INTEGER is
+	count_dimension: INTEGER
 			-- Number of dimensions
 		do
 			Result := ccom_arraydesc_dim_count (item)
 		end
 
-	bounds: ARRAY [ECOM_SAFE_ARRAY_BOUND] is
+	bounds: ARRAY [ECOM_SAFE_ARRAY_BOUND]
 			-- Bounds for each dimension.
 		do
 			Result := ccom_arraydesc_bounds (item)
@@ -47,7 +47,7 @@ feature -- Access
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of TYPEDESC structure
 		do
 			Result := c_size_of_array_desc
@@ -55,29 +55,29 @@ feature -- Measurement
 
 feature {NONE} -- externals
 
-	c_size_of_array_desc: INTEGER is
+	c_size_of_array_desc: INTEGER
 		external 
 			"C [macro %"E_arraydesc.h%"]"
 		alias
 			"sizeof(ARRAYDESC)"
 		end
 
-	ccom_arraydesc_typedesc (a_ptr: POINTER): POINTER is
+	ccom_arraydesc_typedesc (a_ptr: POINTER): POINTER
 		external
 			"C [macro %"E_arraydesc.h%"](EIF_POINTER): EIF_POINTER"
 		end
 
-	ccom_arraydesc_dim_count (a_ptr: POINTER): INTEGER is
+	ccom_arraydesc_dim_count (a_ptr: POINTER): INTEGER
 		external
 			"C [macro %"E_arraydesc.h%"](EIF_POINTER): EIF_INTEGER"
 		end
 
-	ccom_arraydesc_bounds (a_ptr: POINTER): ARRAY [ECOM_SAFE_ARRAY_BOUND] is
+	ccom_arraydesc_bounds (a_ptr: POINTER): ARRAY [ECOM_SAFE_ARRAY_BOUND]
 		external
 			"C (EIF_POINTER): EIF_REFERENCE | %"E_arraydesc.h%""
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

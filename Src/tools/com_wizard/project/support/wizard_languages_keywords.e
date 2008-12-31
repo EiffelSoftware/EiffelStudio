@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Languages Keywords"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,247 +11,247 @@ class
 
 feature -- IDL keywords
 
-	In: STRING is "in"
+	In: STRING = "in"
 
-	Out_keyword: STRING is "out"
+	Out_keyword: STRING = "out"
 
-	Inout: STRING is "in, out"
+	Inout: STRING = "in, out"
 
-	Retval: STRING is "retval"
+	Retval: STRING = "retval"
 
-	Out_retval: STRING is "out, retval"
+	Out_retval: STRING = "out, retval"
 
 feature -- Eiffel keywords 
 
-	Is_keyword: STRING is "is"
+	Is_keyword: STRING = "is"
 
-	If_keyword: STRING is "if"
+	If_keyword: STRING = "if"
 	
-	Do_keyword: STRING is "do"
+	Do_keyword: STRING = "do"
 	
-	Alias_keyword: STRING is "alias"
+	Alias_keyword: STRING = "alias"
 
-	Agent_keyword: STRING is "agent"
+	Agent_keyword: STRING = "agent"
 
-	Attribute_keyword: STRING is "attribute"
+	Attribute_keyword: STRING = "attribute"
 
-	Note_keyword: STRING is "note"
+	Note_keyword: STRING = "note"
 
-	Deferred_keyword: STRING is "deferred"
+	Deferred_keyword: STRING = "deferred"
 
-	Require_keyword: STRING is "require"
+	Require_keyword: STRING = "require"
 
-	Create_keyword: STRING is "create"
+	Create_keyword: STRING = "create"
 
-	Once_keyword: STRING is "once"
+	Once_keyword: STRING = "once"
 	
-	End_keyword: STRING is "end"
+	End_keyword: STRING = "end"
 	
-	Class_keyword: STRING is "class"
+	Class_keyword: STRING = "class"
 	
-	Convert_keyword: STRING is "convert"
+	Convert_keyword: STRING = "convert"
 
-	Inherit_keyword: STRING is "inherit"
+	Inherit_keyword: STRING = "inherit"
 
-	Rename_keyword: STRING is "rename"
+	Rename_keyword: STRING = "rename"
 
-	Redefine_keyword: STRING is "redefine"
+	Redefine_keyword: STRING = "redefine"
 
-	Undefine_keyword: STRING is "undefine"
+	Undefine_keyword: STRING = "undefine"
 
-	Export_keyword: STRING is "export"
+	Export_keyword: STRING = "export"
 
-	Select_keyword: STRING is "select"
+	Select_keyword: STRING = "select"
 
-	Like_keyword: STRING is "like "
+	Like_keyword: STRING = "like "
 
-	Ensure_keyword: STRING is "ensure"
+	Ensure_keyword: STRING = "ensure"
 
-	Local_keyword: STRING is "local"
+	Local_keyword: STRING = "local"
 
-	Result_keyword: STRING is "Result"
+	Result_keyword: STRING = "Result"
 
-	Current_keyword: STRING is "Current"
+	Current_keyword: STRING = "Current"
 
-	As_keyword: STRING is "as"
+	As_keyword: STRING = "as"
 
-	Or_keyword: STRING is "or"
+	Or_keyword: STRING = "or"
 
-	Then_keyword: STRING is "then"
+	Then_keyword: STRING = "then"
 
-	Feature_keyword: STRING is "feature"
+	Feature_keyword: STRING = "feature"
 
-	Indexing_keyword: STRING is "indexing"
+	Indexing_keyword: STRING = "indexing"
 	
-	Creation_keyword: STRING is "creation"
+	Creation_keyword: STRING = "creation"
 
-	External_keyword: STRING is "external"
+	External_keyword: STRING = "external"
 
-	Else_keyword: STRING is "else"
+	Else_keyword: STRING = "else"
 
-	All_keyword: STRING is "all"
+	All_keyword: STRING = "all"
 
-	And_keyword: STRING is "and"
+	And_keyword: STRING = "and"
 
-	Check_keyword: STRING is "check"
+	Check_keyword: STRING = "check"
 
-	Debug_keyword: STRING is "debug"
+	Debug_keyword: STRING = "debug"
 
-	Elseif_keyword: STRING is "elseif"
+	Elseif_keyword: STRING = "elseif"
 
-	Expanded_keyword: STRING is "expanded"
+	Expanded_keyword: STRING = "expanded"
 
-	From_keyword: STRING is "from"
+	From_keyword: STRING = "from"
 
-	Frozen_keyword: STRING is "frozen"
+	Frozen_keyword: STRING = "frozen"
 
-	Implies_keyword: STRING is "implies"
+	Implies_keyword: STRING = "implies"
 
-	Infix_keyword: STRING is "infix"
+	Infix_keyword: STRING = "infix"
 
-	Inspect_keyword: STRING is "inspect"
+	Inspect_keyword: STRING = "inspect"
 
-	Invariant_keyword: STRING is "invariant"
+	Invariant_keyword: STRING = "invariant"
 
-	Loop_keyword: STRING is "loop"
+	Loop_keyword: STRING = "loop"
 
-	Not_keyword: STRING is "not"
+	Not_keyword: STRING = "not"
 
-	Obsolete_keyword: STRING is "obsolete"
+	Obsolete_keyword: STRING = "obsolete"
 
-	Old_keyword: STRING is "old"
+	Old_keyword: STRING = "old"
 
-	Prefix_keyword: STRING is "prefix"
+	Prefix_keyword: STRING = "prefix"
 
-	Reference_keyword: STRING is "reference"
+	Reference_keyword: STRING = "reference"
 
-	Rescue_keyword: STRING is "rescue"
+	Rescue_keyword: STRING = "rescue"
 
-	Retry_keyword: STRING is "retry"
+	Retry_keyword: STRING = "retry"
 
-	Separate_keyword: STRING is "separate"
+	Separate_keyword: STRING = "separate"
 
-	Until_keyword: STRING is "until"
+	Until_keyword: STRING = "until"
 
-	Variant_keyword: STRING is "variant"
+	Variant_keyword: STRING = "variant"
 
-	When_keyword: STRING is "when"
+	When_keyword: STRING = "when"
 
-	Xor_keyword: STRING is "xor"
+	Xor_keyword: STRING = "xor"
 
-	Bit_keyword: STRING is "BIT"
+	Bit_keyword: STRING = "BIT"
 
-	True_keyword: STRING is "True"
+	True_keyword: STRING = "True"
 
-	False_keyword: STRING is "False"
+	False_keyword: STRING = "False"
 
-	Precursor_keyword: STRING is "Precursor"
+	Precursor_keyword: STRING = "Precursor"
 
-	Strip_keyword: STRING is "Strip"
+	Strip_keyword: STRING = "Strip"
 
-	Unique_keyword: STRING is "Unique"
+	Unique_keyword: STRING = "Unique"
 
 feature -- C keywords
 
-	Begin_comment: STRING is "/*"
+	Begin_comment: STRING = "/*"
 
-	End_comment: STRING is "*/"
+	End_comment: STRING = "*/"
 
-	Static_cast: STRING is "static_cast"
+	Static_cast: STRING = "static_cast"
 
-	Reinterpret_cast: STRING is "reinterpret_cast"
+	Reinterpret_cast: STRING = "reinterpret_cast"
 
-	Else_if: STRING is "else if"
+	Else_if: STRING = "else if"
 
-	Switch: STRING is "switch"
+	Switch: STRING = "switch"
 
-	Case: STRING is "case"
+	Case: STRING = "case"
 
-	For: STRING is "for"
+	For: STRING = "for"
 
-	Int: STRING is "int"
+	Int: STRING = "int"
 
-	New: STRING is "new"
+	New: STRING = "new"
 
-	Const: STRING is "const"
+	Const: STRING = "const"
 
-	Hash_if_def: STRING is "#ifdef"
+	Hash_if_def: STRING = "#ifdef"
 
-	Hash_if_ndef: STRING is "#ifndef"
+	Hash_if_ndef: STRING = "#ifndef"
 
-	Hash_else: STRING is "#else"
+	Hash_else: STRING = "#else"
 
-	Hash_end_if: STRING is "#endif"
+	Hash_end_if: STRING = "#endif"
 
-	Hash_define: STRING is "#define"
+	Hash_define: STRING = "#define"
 
-	While: STRING is "while"
+	While: STRING = "while"
 
-	This: STRING is "this"
+	This: STRING = "this"
 
-	Delete: STRING is "delete"
+	Delete: STRING = "delete"
 
-	Define: STRING is "define"
+	Define: STRING = "define"
 
-	Endif: STRING is "endif"
+	Endif: STRING = "endif"
 
-	Ifndef: STRING is "ifndef"
+	Ifndef: STRING = "ifndef"
 
-	Return: STRING is "return"
+	Return: STRING = "return"
 
-	Struct: STRING is "struct"
+	Struct: STRING = "struct"
 
-	Union: STRING is "union"
+	Union: STRING = "union"
 
-	Enum: STRING is "enum"
+	Enum: STRING = "enum"
 
-	Extern: STRING is "extern"
+	Extern: STRING = "extern"
 
-	Import: STRING is "%Simport"
+	Import: STRING = "%Simport"
 
-	Include_clause: STRING is "%Sinclude"
+	Include_clause: STRING = "%Sinclude"
 
-	C_class_keyword: STRING is "class"
+	C_class_keyword: STRING = "class"
 
-	Calloc: STRING is "calloc"
+	Calloc: STRING = "calloc"
 
-	Free: STRING is "free"
+	Free: STRING = "free"
 
-	Sizeof: STRING is "sizeof"
+	Sizeof: STRING = "sizeof"
 
-	Break: STRING is "break"
+	Break: STRING = "break"
 
-	C_binary_or: STRING is "|"
+	C_binary_or: STRING = "|"
 
-	Null: STRING is "NULL"
+	Null: STRING = "NULL"
 
-	Typedef: STRING is "typedef"
+	Typedef: STRING = "typedef"
 
-	C_true: STRING is "TRUE"
+	C_true: STRING = "TRUE"
 
-	Assert: STRING is "assert"
+	Assert: STRING = "assert"
 
-	String_copy_function: STRING is "strcpy"
+	String_copy_function: STRING = "strcpy"
 
-	Get_current_directory_function: STRING is "getcwd"
+	Get_current_directory_function: STRING = "getcwd"
 
-	String_length_function: STRING is "strlen"
+	String_length_function: STRING = "strlen"
 
-	Unicode_string_copy_function: STRING is "lstrcpy"
+	Unicode_string_copy_function: STRING = "lstrcpy"
 
-	Non_unicode_string_copy_function: STRING is "mbstowcs"
+	Non_unicode_string_copy_function: STRING = "mbstowcs"
 
-	Malloc: STRING is "malloc"
+	Malloc: STRING = "malloc"
 
-	Memcpy: STRING is "memcpy"
+	Memcpy: STRING = "memcpy"
 
-	Eof_word: STRING is "EOF"
+	Eof_word: STRING = "EOF"
 
 feature -- Lace keywords
 
-	System_keyword: STRING is "system";
+	System_keyword: STRING = "system";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Properties dialog for editor XML documents."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,7 +34,7 @@ create
 
 feature -- Creation
 
-	make (a_doc: DOCUMENT) is
+	make (a_doc: DOCUMENT)
 			-- Make with `a_doc'
 		require
 			a_doc_not_void: a_doc /= Void
@@ -48,7 +48,7 @@ feature -- Creation
 
 feature {NONE} -- Initialization
 
-	user_initialization is
+	user_initialization
 			-- called by `initialize'.
 			-- Any custom user initialization that
 			-- could not be performed in `initialize',
@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 			toggle_override_widgets
 		end
 
-	initialize_output is
+	initialize_output
 			-- Initialize output options
 		local
 			l_outputs: HASH_TABLE [DOCUMENT_FILTER, STRING]
@@ -87,13 +87,13 @@ feature {NONE} -- Initialization
 
 feature -- Commands
 
-	apply is
+	apply
 			-- Apply
 		do
 			set_options		
 		end
 		
-	okay is
+	okay
 			-- Okay
 		do
 			set_options
@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
 	old_name: STRING
 			-- Name prior to editing
 			
-	populate_widgets is
+	populate_widgets
 			-- Build the dialog with information from `a_doc'
 		local
 			l_toc_element, l_element: XM_ELEMENT
@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_options is
+	set_options
 			-- Set options chosen in widgets
 		local
 			l_meta_array,
@@ -241,7 +241,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Commands
 
-	set_text_from_element (widget: EV_TEXT_FIELD; element: XM_ELEMENT) is
+	set_text_from_element (widget: EV_TEXT_FIELD; element: XM_ELEMENT)
 			-- Set the text of `widget' from `element' text.
 		require
 			widget_not_void: widget /= Void
@@ -259,7 +259,7 @@ feature {NONE} -- Commands
 			end
 		end		
 
-	toggle_override_widgets is
+	toggle_override_widgets
 			-- Toggle widgets used for overriding default TOC options
 			-- based on output type in `output_combo'
 		do
@@ -283,7 +283,7 @@ feature {NONE} -- Commands
 			end			
 		end
 
-	display_name_change_warning is
+	display_name_change_warning
 			-- Display warning when attempting name change
 		local
 			l_question_dialog: EV_MESSAGE_DIALOG
@@ -314,7 +314,7 @@ feature {NONE} -- Commands
 
 feature {NONE} -- Query
 
-	has_name_changed: BOOLEAN is
+	has_name_changed: BOOLEAN
 			-- Has new name been entered?
 		local
 			l_new_name: STRING
@@ -328,7 +328,7 @@ feature {NONE} -- Query
 invariant
 	has_doc: document /= Void
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

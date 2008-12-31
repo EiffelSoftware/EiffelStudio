@@ -1,4 +1,4 @@
-indexing
+note
 	description: "SAFEARRAY data type Generator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature -- Basic operations
 
-	process (a_safearray_descriptor: WIZARD_SAFEARRAY_DATA_TYPE_DESCRIPTOR; a_visitor: WIZARD_DATA_TYPE_VISITOR) is
+	process (a_safearray_descriptor: WIZARD_SAFEARRAY_DATA_TYPE_DESCRIPTOR; a_visitor: WIZARD_DATA_TYPE_VISITOR)
 			-- Process SAFEARRAY
 		require
 			valid_descriptor: a_safearray_descriptor /= Void
@@ -197,7 +197,7 @@ feature -- Basic operations
 			set_visitor_atributes (a_visitor)
 		end
 
-	safearray_record_ec_function_body (a_record_descriptor: WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR): STRING is
+	safearray_record_ec_function_body (a_record_descriptor: WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR): STRING
 			-- Body of EC conversion function for SAFEARRAY of structure.
 		require
 			non_void_record_descriptor: a_record_descriptor /= Void
@@ -336,7 +336,7 @@ feature -- Basic operations
 			valid_function: not Result.is_empty
 		end
 
-	safearray_safearray_ec_function_body (a_safearray_descriptor: WIZARD_SAFEARRAY_DATA_TYPE_DESCRIPTOR): STRING is
+	safearray_safearray_ec_function_body (a_safearray_descriptor: WIZARD_SAFEARRAY_DATA_TYPE_DESCRIPTOR): STRING
 			-- Body of EC conversion function for SAFEARRAY of SAFEARRAY.
 		require
 			non_void_safearray_descriptor: a_safearray_descriptor /= Void
@@ -454,7 +454,7 @@ feature -- Basic operations
 		end
 
 
-	safearray_interface_ec_function_body (an_interface_pointer_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR): STRING is
+	safearray_interface_ec_function_body (an_interface_pointer_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR): STRING
 			-- Body of EC conversion function for SAFEARRAY of interface.
 		require
 			non_void_interface_descriptor: an_interface_pointer_descriptor /= Void
@@ -599,7 +599,7 @@ feature -- Basic operations
 		end
 
 
-	safearray_interface_ce_function_body (a_interface_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR): STRING is
+	safearray_interface_ce_function_body (a_interface_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR): STRING
 			-- Body of EC conversion function for SAFEARRAY of interface.
 		require
 			non_void_interface_descriptor: a_interface_descriptor /= Void
@@ -727,7 +727,7 @@ feature -- Basic operations
 			valid_function: not Result.is_empty
 		end
 
-	safearray_record_ce_function_body (a_record_descriptor: WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR): STRING is
+	safearray_record_ce_function_body (a_record_descriptor: WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR): STRING
 			-- Body of EC conversion function for SAFEARRAY of records.
 		require
 			non_void_record_descriptor: a_record_descriptor /= Void
@@ -855,7 +855,7 @@ feature -- Basic operations
 			valid_function: not Result.is_empty
 		end
 
-	safearray_safearray_ce_function_body (a_safearray_descriptor: WIZARD_SAFEARRAY_DATA_TYPE_DESCRIPTOR): STRING is
+	safearray_safearray_ce_function_body (a_safearray_descriptor: WIZARD_SAFEARRAY_DATA_TYPE_DESCRIPTOR): STRING
 			-- Body of EC conversion function for SAFEARRAY of safearrays.
 		require
 			non_void_safearray_descriptor: a_safearray_descriptor /= Void
@@ -988,7 +988,7 @@ feature -- Basic operations
 		end
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

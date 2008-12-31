@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A generator for creating Eiffel classes from a matrix INI file.
 	]"
@@ -41,7 +41,7 @@ feature {NONE} -- Access
 
 feature -- Basic Operations
 
-	generate (a_doc: INI_DOCUMENT; a_frame: STRING; a_class_name: STRING; a_output: STRING) is
+	generate (a_doc: INI_DOCUMENT; a_frame: STRING; a_class_name: STRING; a_output: STRING)
 			-- Generates a matrix file.
 		require
 			not_a_class_name_is_empty: a_class_name /= Void implies not a_class_name.is_empty
@@ -240,7 +240,7 @@ feature {NONE} -- Basic Operations
 
 feature {NONE} -- Processing
 
-	process_property (a_property: INI_PROPERTY): BOOLEAN is
+	process_property (a_property: INI_PROPERTY): BOOLEAN
 			-- Process document properties
 		local
 			l_name: STRING
@@ -258,7 +258,7 @@ feature {NONE} -- Processing
 			end
 		end
 
-	process_literal_item (a_item: INI_LITERAL; a_x: NATURAL_32; a_y: NATURAL_32) is
+	process_literal_item (a_item: INI_LITERAL; a_x: NATURAL_32; a_y: NATURAL_32)
 			-- Processes a literal from an INI matrix file.
 		local
 			l_base: !STRING
@@ -353,7 +353,7 @@ feature {NONE} -- Processing
 
 feature {NONE} -- Validation
 
-	validate_properties (a_doc: INI_DOCUMENT) is
+	validate_properties (a_doc: INI_DOCUMENT)
 			-- Validates properties examined in `generate' or those that are in `a_doc' that have not been examined from some reason.
 		do
 			Precursor {MATRIX_FILE_GENERATOR} (a_doc)
@@ -509,7 +509,7 @@ invariant
 	generated_file_name_not_empty: generated_file_name /= Void implies not generated_file_name.is_empty
 	class_name_not_empty: class_name /= Void implies not class_name.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

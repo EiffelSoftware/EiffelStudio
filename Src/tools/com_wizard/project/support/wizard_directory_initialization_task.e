@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Task used for initializing directories where EiffelCOM Wizard will generate files"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,15 +18,15 @@ inherit
 
 feature -- Access
 
-	title: STRING is "Initializing generation"
+	title: STRING = "Initializing generation"
 			-- Task title
 
-	steps_count: INTEGER is 12
+	steps_count: INTEGER = 12
 			-- Number of steps involved in task
 
 feature {NONE} -- Implementation
 
-	internal_execute is
+	internal_execute
 			-- Implementation of `execute'.
 			-- Use `step' `steps_count' times unless `stop' is called.
 		local
@@ -65,7 +65,7 @@ feature {NONE} -- Implementation
 			progress_report.step
 		end
 
-	initialize_clib_include (a_path: STRING) is
+	initialize_clib_include (a_path: STRING)
 			-- Initialize sub-directories `Clib' and `Include' of directory `a_path'.
 		require
 			non_void_path: a_path /= Void
@@ -75,7 +75,7 @@ feature {NONE} -- Implementation
 			initialize_subdirectory (a_path, "Include")
 		end
 
-	initialize_subdirectory (a_path, a_subdirectory: STRING) is
+	initialize_subdirectory (a_path, a_subdirectory: STRING)
 			-- Initialize sub-directory `a_subdirectory' from directory `a_path'.
 		require
 			non_void_path: a_path /= Void
@@ -91,7 +91,7 @@ feature {NONE} -- Implementation
 			initialize_directory (l_path)
 		end
 	
-	initialize_directory (a_path: STRING) is
+	initialize_directory (a_path: STRING)
 			-- Initialize directory `a_path'
 		require
 			non_void_path: a_path /= Void
@@ -128,7 +128,7 @@ feature {NONE} -- Implementation
 			end
 	end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

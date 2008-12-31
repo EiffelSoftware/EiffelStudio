@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Basic, common, implementation for a backup manager use to backup and restore configuration data.
 	]"
@@ -17,7 +17,7 @@ inherit
 
 feature -- Access
 
-	last_backup_date_stamp: INTEGER is
+	last_backup_date_stamp: INTEGER
 			-- Last back up date, in ticks
 		do
 			Result := backup_file_time_stamp (path_provider.docking_debug_layout_file.out)
@@ -31,7 +31,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	path_provider: PATH_PROVIDER is
+	path_provider: PATH_PROVIDER
 			-- Access to Eiffel related paths
 		do
 			Result := package.path_provider
@@ -39,7 +39,7 @@ feature {NONE} -- Access
 			result_attached: Result /= Void
 		end
 
-	error_handler: MULTI_ERROR_MANAGER is
+	error_handler: MULTI_ERROR_MANAGER
 			-- Access to error manager
 		do
 			Result := package.error_handler
@@ -47,7 +47,7 @@ feature {NONE} -- Access
 			result_attached: Result /= Void
 		end
 
-	backup_preferences_time_stamp: INTEGER is
+	backup_preferences_time_stamp: INTEGER
 			-- Backup timestamp for preferences
 		require
 			does_backup_preferences_exist: does_backup_preferences_exist
@@ -56,7 +56,7 @@ feature {NONE} -- Access
 
 feature -- Status report
 
-	is_restore_data_available: BOOLEAN is
+	is_restore_data_available: BOOLEAN
 			-- Determines if the any restore data is available
 		do
 			Result := does_backup_file_exist (path_provider.docking_debug_layout_file.out)
@@ -68,7 +68,7 @@ feature -- Status report
 			end
 		end
 
-	is_config_restore_data_available (a_config: I_BACKUP_CONFIG): BOOLEAN is
+	is_config_restore_data_available (a_config: I_BACKUP_CONFIG): BOOLEAN
 			-- Determines if the any restore data is available based on `a_config'
 		local
 			l_available: NATURAL
@@ -93,7 +93,7 @@ feature -- Status report
 
 feature {NONE} -- Status report
 
-	does_backup_file_exist (a_file: STRING): BOOLEAN is
+	does_backup_file_exist (a_file: STRING): BOOLEAN
 			-- Determines if the back up file for file `a_file' exists
 		require
 			a_file_attached: a_file /= Void
@@ -105,14 +105,14 @@ feature {NONE} -- Status report
 			Result := l_file.exists and then not l_file.is_device and not l_file.is_directory
 		end
 
-	does_backup_preferences_exist: BOOLEAN is
+	does_backup_preferences_exist: BOOLEAN
 			-- Determines if the backed up preferences data exists
 		deferred
 		end
 
 feature -- Basic operations
 
-	backup (a_config: I_BACKUP_CONFIG) is
+	backup (a_config: I_BACKUP_CONFIG)
 			-- Backs up configuration files base on user settings.
 		do
 			if a_config.process_environement_debug_layout then
@@ -126,7 +126,7 @@ feature -- Basic operations
 			end
 		end
 
-	restore (a_config: I_BACKUP_CONFIG) is
+	restore (a_config: I_BACKUP_CONFIG)
 			-- Restores from a back up, if available, configuration files base on user settings.
 		do
 			if a_config.process_environement_debug_layout and then does_backup_file_exist (path_provider.docking_debug_layout_file.out) then
@@ -142,13 +142,13 @@ feature -- Basic operations
 
 feature {NONE} -- Basic operations
 
-	backup_preferences is
+	backup_preferences
 			-- Backs up preferences configuration file(s)
 		deferred
 		ensure
 		end
 
-	restore_preferences is
+	restore_preferences
 			-- Restores from a back up the preferences configuration file(s).
 		require
 			does_backup_preferences_exist: does_backup_preferences_exist
@@ -157,7 +157,7 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Query
 
-	backup_file_name (a_file: STRING): STRING is
+	backup_file_name (a_file: STRING): STRING
 			-- Generates a back up file name for `a_file'
 		require
 			a_file_attached: a_file /= Void
@@ -170,7 +170,7 @@ feature {NONE} -- Query
 			not_result_is_empty: not Result.is_empty
 		end
 
-	backup_file_time_stamp (a_file: STRING): INTEGER is
+	backup_file_time_stamp (a_file: STRING): INTEGER
 			-- Retrieves the time stamp, in ticks, of a backup file, if it exists.
 		require
 			a_file_attached: a_file /= Void
@@ -185,7 +185,7 @@ feature {NONE} -- Query
 
 feature {NONE} -- Basic operations
 
-	backup_file (a_file: STRING) is
+	backup_file (a_file: STRING)
 			-- Backs up file `a_file', if it exists.
 		require
 			a_file_attached: a_file /= Void
@@ -198,7 +198,7 @@ feature {NONE} -- Basic operations
 			backup_created: (create {RAW_FILE}.make (a_file)).exists and error_handler.successful implies (create {RAW_FILE}.make (backup_file_name (a_file))).exists
 		end
 
-	restore_file (a_file: STRING) is
+	restore_file (a_file: STRING)
 			-- Restores file `a_file' from a backup.
 		require
 			a_file_attached: a_file /= Void
@@ -212,7 +212,7 @@ feature {NONE} -- Basic operations
 			backup_restored: does_backup_file_exist (a_file) and error_handler.successful implies (create {RAW_FILE}.make (backup_file_name (a_file))).exists
 		end
 
-	copy_file (a_src_file, a_dest_file: STRING): BOOLEAN is
+	copy_file (a_src_file, a_dest_file: STRING): BOOLEAN
 			-- Copied file `a_src_file' to `a_dest_file', if `a_src_file_exists'.
 		require
 			a_src_file_attached: a_src_file /= Void
@@ -248,7 +248,7 @@ feature {NONE} -- Basic operations
 			retry
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

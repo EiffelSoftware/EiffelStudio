@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Input class information"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize object.
 		do
 			class_not_found := True
@@ -39,7 +39,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	input_from_file (a_file_name: STRING) is
+	input_from_file (a_file_name: STRING)
 			-- Input features from text file `a_file_name'.
 		local
 			l_features: ARRAYED_LIST [STRING]
@@ -121,7 +121,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	parse_eiffel_type is
+	parse_eiffel_type
 			-- Parse through the feature list to set the 'like' type to appropriate type.
 		require
 			valid_class: eiffel_class /= Void
@@ -166,7 +166,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	parsed_description (desc: STRING): STRING is
+	parsed_description (desc: STRING): STRING
 			-- Description parsed from 'desc'
 		require
 			non_void_input: desc /= Void
@@ -184,7 +184,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

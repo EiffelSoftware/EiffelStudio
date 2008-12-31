@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Alias descriptor"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_creator: WIZARD_ALIAS_DESCRIPTOR_CREATOR) is
+	make (a_creator: WIZARD_ALIAS_DESCRIPTOR_CREATOR)
 			-- Initialize
 		require
 			valid_creator: a_creator /= Void
@@ -31,7 +31,7 @@ feature -- Access
 	type_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR
 			-- Description of data type to which this type is alias
 
-	creation_message: STRING is
+	creation_message: STRING
 			-- Creation message for wizard output
 		do
 			create Result.make (240)
@@ -44,7 +44,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	set_type_descriptor (a_type_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR) is
+	set_type_descriptor (a_type_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR)
 			-- Set `type_descriptor' with `a_type_descriptor'.
 		require
 			valid_type_descriptor: a_type_descriptor /= Void
@@ -54,13 +54,13 @@ feature -- Basic operations
 			valid_type_descriptor: type_descriptor /= Void and type_descriptor = a_type_descriptor
 		end
 
-	visit (a_visitor: WIZARD_TYPE_VISITOR) is
+	visit (a_visitor: WIZARD_TYPE_VISITOR)
 			-- Call back `a_visitor' with appropriate feature.
 		do
 			a_visitor.process_alias (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

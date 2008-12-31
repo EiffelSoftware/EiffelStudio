@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Method flags"
 	legal: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Access
 
-	Dispatch_method: INTEGER is
+	Dispatch_method: INTEGER
 			-- Automation client wants to access 
 			-- a method of Automation server
 		external
@@ -23,7 +23,7 @@ feature -- Access
 			"DISPATCH_METHOD"
 		end
 
-	Dispatch_propertyget: INTEGER is
+	Dispatch_propertyget: INTEGER
 			-- Automation client wants to access 
 			-- a property of Automation server
 		external
@@ -32,7 +32,7 @@ feature -- Access
 			"DISPATCH_PROPERTYGET"
 		end
 
-	Dispatch_propertyput: INTEGER is
+	Dispatch_propertyput: INTEGER
 			-- Automation client wants to set 
 			-- a property of Automation server
 		external
@@ -41,7 +41,7 @@ feature -- Access
 			"DISPATCH_PROPERTYPUT"
 		end
 
-	Dispatch_propertyputref: INTEGER is
+	Dispatch_propertyputref: INTEGER
 			-- Automation client wants to set a property
 			-- of Automation server by reference
 		external
@@ -50,7 +50,7 @@ feature -- Access
 			"DISPATCH_PROPERTYPUTREF"
 		end
 		
-	is_valid_method_flag (flag: INTEGER): BOOLEAN is
+	is_valid_method_flag (flag: INTEGER): BOOLEAN
 			-- Is `flag' a valid method flag?
 		do
 			Result := is_dispatch_method (flag) or
@@ -59,31 +59,31 @@ feature -- Access
 						is_dispatch_propertyputref (flag)
 		end
 	
-	is_dispatch_method (flag: INTEGER): BOOLEAN is
+	is_dispatch_method (flag: INTEGER): BOOLEAN
 			-- Is dispatch method bit is set?
 		do
 			Result := binary_and (Dispatch_method, flag) = Dispatch_method
 		end
 	
-	is_dispatch_propertyget (flag: INTEGER): BOOLEAN is
+	is_dispatch_propertyget (flag: INTEGER): BOOLEAN
 			-- Is dispatch propertyget bit is set?
 		do
 			Result := binary_and (Dispatch_propertyget, flag) = Dispatch_propertyget
 		end
 
-	is_dispatch_propertyput (flag: INTEGER): BOOLEAN is
+	is_dispatch_propertyput (flag: INTEGER): BOOLEAN
 			-- Is dispatch propertyput bit is set?
 		do
 			Result := binary_and (Dispatch_propertyput, flag) = Dispatch_propertyput
 		end
 
-	is_dispatch_propertyputref (flag: INTEGER): BOOLEAN is
+	is_dispatch_propertyputref (flag: INTEGER): BOOLEAN
 			-- Is dispatch propertyputref bit is set?
 		do
 			Result := binary_and (Dispatch_propertyputref, flag) = Dispatch_propertyputref
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

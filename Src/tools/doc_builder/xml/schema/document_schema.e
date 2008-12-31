@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Document Schema."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 	
 feature -- Initialization
 	
-	make_from_schema_file (a_filename: STRING) is
+	make_from_schema_file (a_filename: STRING)
 			-- Make from 'a_filename'
 		require
 			schema_file_not_void: a_filename /= Void
@@ -53,14 +53,14 @@ feature -- Initialization
 			retry
 		end			
 		
-	initialize is
+	initialize
 			-- Initialize
 		do
 			initialize_elements
 			initialize_types
 		end
 
-	initialize_elements is
+	initialize_elements
 			-- Initialize all schema level elements
 		local
 			cnt: INTEGER
@@ -83,7 +83,7 @@ feature -- Initialization
 			end
 		end
 		
-	initialize_types is
+	initialize_types
 			-- Initialize types
 		local
 			cnt: INTEGER
@@ -104,7 +104,7 @@ feature -- Initialization
 			end
 		end
 
-	initialize_attributes (element_list: ARRAYED_LIST [DOCUMENT_SCHEMA_ELEMENT]) is
+	initialize_attributes (element_list: ARRAYED_LIST [DOCUMENT_SCHEMA_ELEMENT])
 			-- Initialize the attributes for known types and elements
 		do
 			from
@@ -136,7 +136,7 @@ feature -- Access
 	document: XM_DOCUMENT
 			-- XML document structure
 
-	text: STRING is
+	text: STRING
 			-- Text of `document'
 		do
 			Result := document_text (document)	
@@ -147,13 +147,13 @@ feature -- Access
 
 feature -- Query	
 
-	is_valid_xml: BOOLEAN is
+	is_valid_xml: BOOLEAN
 			-- Is Current valid xml?
 		do
 			Result := document /= Void
 		end
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is Current valid schema definition according to W3C?
 		do
 			create validator
@@ -161,7 +161,7 @@ feature -- Query
 			Result := validator.is_valid	
 		end
 		
-	get_element_by_name (el_name: STRING): DOCUMENT_SCHEMA_ELEMENT is
+	get_element_by_name (el_name: STRING): DOCUMENT_SCHEMA_ELEMENT
 			-- Get a schema element with name `el_name', if exists.
 		require
 			el_name_not_void: el_name /= Void
@@ -188,7 +188,7 @@ feature {NONE} -- Implementation
 
 feature {DOCUMENT_SCHEMA_ELEMENT} -- Element Query
 
-	get_type_by_dotnet_type (a_type: XML_XML_SCHEMA_TYPE): DOCUMENT_SCHEMA_ELEMENT is
+	get_type_by_dotnet_type (a_type: XML_XML_SCHEMA_TYPE): DOCUMENT_SCHEMA_ELEMENT
 			-- Get schema element type associated with dotnet type `a_type'
 		require
 			a_type_not_void: a_type /= Void
@@ -208,7 +208,7 @@ feature {DOCUMENT_SCHEMA_ELEMENT} -- Element Query
 			end
 		end
 
-	get_type_by_name (type_name: STRING): XML_XML_SCHEMA_TYPE is
+	get_type_by_name (type_name: STRING): XML_XML_SCHEMA_TYPE
 			-- Get a dotnet schema type from 'type_name'
 		require
 			type_name_not_void: type_name /= Void
@@ -237,7 +237,7 @@ feature {DOCUMENT_SCHEMA_ELEMENT} -- Element Query
 			end
 		end
 
-	has_type (type_name: STRING): BOOLEAN is
+	has_type (type_name: STRING): BOOLEAN
 			-- Is there a type with `type_name' in Current
 		require
 			type_name_not_void: type_name /= Void
@@ -265,12 +265,12 @@ feature {DOCUMENT_SCHEMA_ELEMENT} -- Element Query
 
 feature {NONE} -- Implementation
 
-	validation_callback (object: SYSTEM_OBJECT; args: XML_VALIDATION_EVENT_ARGS) is
+	validation_callback (object: SYSTEM_OBJECT; args: XML_VALIDATION_EVENT_ARGS)
 			-- Validation callback handler
 		do			
 		end		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

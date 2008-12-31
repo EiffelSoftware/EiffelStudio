@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Convert XHTML to XML."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature -- Status Setting
 
-	clear is
+	clear
 			-- Clear
 		do
 			Precursor
@@ -36,7 +36,7 @@ feature -- Status Setting
 
 feature -- Tag	
 
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- Start of tag.
 		do
 			can_write_content := True
@@ -52,7 +52,7 @@ feature -- Tag
 			previous_elements.put (a_local_part)			
 		end
 
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- End of tag.
 		do
 			if Complex_element_mappings.has (a_local_part) then
@@ -66,13 +66,13 @@ feature -- Tag
 			previous_elements.remove
 		end
 
-	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
+	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
 			-- Attribute
 		do
 			process_attribute (a_local_part, a_value)
 		end
 
-	on_content (a_content: STRING) is
+	on_content (a_content: STRING)
 			-- Forward content.
 		local
 			l_content: STRING
@@ -105,7 +105,7 @@ feature -- Tag
 
 feature {NONE} -- Processing
 
-	process_complex_element (e: STRING; is_start: BOOLEAN) is
+	process_complex_element (e: STRING; is_start: BOOLEAN)
 			-- Process complex element `e'
 		require
 			e_not_void: e/= Void
@@ -175,7 +175,7 @@ feature {NONE} -- Processing
 			end		
 		end	
 		
-	process_attribute_element (e: STRING) is
+	process_attribute_element (e: STRING)
 			-- Process attribute element `e'
 		require
 			e_not_void: e /= Void
@@ -186,7 +186,7 @@ feature {NONE} -- Processing
 			write_attribute (e)
 		end
 
-	process_attribute (a_name, a_value: STRING) is
+	process_attribute (a_name, a_value: STRING)
 			-- Process attribute
 		require
 			name_not_void: a_name /= Void
@@ -210,7 +210,7 @@ feature {NONE} -- Processing
 
 feature {NONE} -- Query
 		
-	in_attribute: BOOLEAN is
+	in_attribute: BOOLEAN
 			-- Is current processing a attribute element??
 		do
 			Result := not Attribute_stack.is_empty
@@ -221,7 +221,7 @@ feature {NONE} -- Query
 
 feature {NONE} -- Access
 
-	description: STRING is
+	description: STRING
 			-- Textual description of filter
 		do
 			Result := "Web"	
@@ -231,7 +231,7 @@ feature {NONE} -- Access
 	attribute_value_write_position: INTEGER
 			-- Position to write attribute and attribute value
 	
-	content_write_position: INTEGER is
+	content_write_position: INTEGER
 			-- Position to write current content text(s)
 		do
 			if in_attribute then
@@ -243,7 +243,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Output
 
-	write_element (e: STRING; start: BOOLEAN; is_complex: BOOLEAN) is
+	write_element (e: STRING; start: BOOLEAN; is_complex: BOOLEAN)
 			-- Write `e' as element
 		require
 			e_not_void: e /= Void
@@ -279,7 +279,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	write_attribute (e: STRING) is
+	write_attribute (e: STRING)
 			-- Write `e' as attribute
 		require
 			e_not_void: e /= Void
@@ -292,7 +292,7 @@ feature {NONE} -- Output
 
 feature {NONE} -- Mapping Tables
 
-	basic_element_mappings: HASH_TABLE [STRING, STRING] is
+	basic_element_mappings: HASH_TABLE [STRING, STRING]
 			-- Basic element to element mapping strings
 		once
 			create Result.make (15)
@@ -313,7 +313,7 @@ feature {NONE} -- Mapping Tables
 			Result.extend ("img", "image")			
 		end
 		
-	complex_element_mappings: HASH_TABLE [STRING, STRING] is
+	complex_element_mappings: HASH_TABLE [STRING, STRING]
 			-- Complex element to element mapping strings
 		once
 			create Result.make (5)
@@ -337,7 +337,7 @@ feature {NONE} -- Mapping Tables
 			Result.extend ("", "list")
 		end
 		
-	element_attribute_mappings: HASH_TABLE [STRING, STRING] is
+	element_attribute_mappings: HASH_TABLE [STRING, STRING]
 			-- Elements which should be converted to HTML attributes
 		once
 			create Result.make (5)
@@ -368,7 +368,7 @@ feature {NONE} -- Mapping Tables
 			Result.extend ("alt", "alt_text")			
 		end	
 		
-	element_style_mappings: ARRAYED_LIST [STRING] is
+	element_style_mappings: ARRAYED_LIST [STRING]
 			-- Elements which represent `class' styles
 		once
 			create Result.make (5)
@@ -389,7 +389,7 @@ feature {NONE} -- Mapping Tables
 			Result.extend ("syntax")
 		end	
 		
-	content_elements: ARRAYED_LIST [STRING] is
+	content_elements: ARRAYED_LIST [STRING]
 			-- Elements denoting purely content
 		once
 			create Result.make (5)
@@ -397,7 +397,7 @@ feature {NONE} -- Mapping Tables
 			Result.extend ("label")
 		end
 
-	attributable_elements: ARRAYED_LIST [STRING] is
+	attributable_elements: ARRAYED_LIST [STRING]
 			-- Elements which may contain attributes
 		once
 			create Result.make (5)
@@ -409,7 +409,7 @@ feature {NONE} -- Mapping Tables
 			Result.extend ("map")
 		end
 		
-	attributes: ARRAYED_LIST [STRING] is
+	attributes: ARRAYED_LIST [STRING]
 			-- Attributes
 		once
 			create Result.make (5)
@@ -421,20 +421,20 @@ feature {NONE} -- Mapping Tables
 
 feature {NONE} -- Implementation
 
-	previous_elements: ARRAYED_STACK [STRING] is
+	previous_elements: ARRAYED_STACK [STRING]
 			-- Previously processed element name
 		once
 			create Result.make (5)
 		end
 
-	complex_stack: ARRAYED_STACK [STRING] is
+	complex_stack: ARRAYED_STACK [STRING]
 			-- List of complex elements names currently being processed
 		once
 			create Result.make (2)
 			Result.compare_objects
 		end
 
-	attribute_stack: ARRAYED_STACK [STRING] is
+	attribute_stack: ARRAYED_STACK [STRING]
 			-- List of elements names currently being processed as attributes
 		once
 			create Result.make (2)
@@ -444,19 +444,19 @@ feature {NONE} -- Implementation
 	previous_attribute: TUPLE [STRING, STRING]
 			-- Previous attribute
 
-	previous_attribute_name: STRING is
+	previous_attribute_name: STRING
 			-- Previous attribute name
 		do
 			Result ?= previous_attribute.item (1)
 		end
 		
-	previous_attribute_value: STRING is
+	previous_attribute_value: STRING
 			-- Previous attribute value
 		do
 			Result ?= previous_attribute.item (2)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

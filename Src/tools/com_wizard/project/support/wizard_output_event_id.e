@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Output events IDs"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,27 +10,27 @@ class
 
 feature -- Access
 
-	Display_title: INTEGER is 1
+	Display_title: INTEGER = 1
 			-- Event should display message
 	
-	Display_message: INTEGER is 2
+	Display_message: INTEGER = 2
 			-- Event should display message
 	
-	Display_text: INTEGER is 3
+	Display_text: INTEGER = 3
 			-- Event should display message
 	
-	Display_warning: INTEGER is 4
+	Display_warning: INTEGER = 4
 			-- Event should display warning
 	
-	Display_error: INTEGER is 5
+	Display_error: INTEGER = 5
 			-- Event should display error
 	
-	Clear: INTEGER is 6
+	Clear: INTEGER = 6
 			-- Event should clear output
 
 feature -- Status Report
 
-	is_valid_output_event_id (a_id: INTEGER): BOOLEAN is
+	is_valid_output_event_id (a_id: INTEGER): BOOLEAN
 			-- Is `a_id' a valid output event id?
 		do
 			Result := a_id = Display_title or a_id = Display_message or a_id = Display_warning or
@@ -48,7 +48,7 @@ invariant
 	Display_error_is_valid: is_valid_output_event_id (Display_error)
 	Clear_is_valid: is_valid_output_event_id (Clear)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

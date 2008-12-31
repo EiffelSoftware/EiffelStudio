@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A report entity for assembly type members.
 	]"
@@ -31,7 +31,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (a_member: like member; a_type: like parent) is
+	make (a_member: like member; a_type: like parent)
 			-- Create an initialize a report for a type's member `a_member'.
 		require
 			a_member_not_void: a_member /= Void
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 		
 feature -- Access
 
-	report: EC_REPORT is
+	report: EC_REPORT
 			-- Report member is associated with
 		do
 			Result := parent.report
@@ -60,13 +60,13 @@ feature -- Access
 	
 feature -- Comparison {COMPARABLE}
 
-	infix "<" (other: like Current): BOOLEAN is
+	infix "<" (other: like Current): BOOLEAN
 			-- Is current object less than `other'?
 		do
 			Result := {SYSTEM_STRING}.compare (member.member.name, other.member.member.name) < 0
 		end
 		
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
@@ -77,7 +77,7 @@ invariant
 	parent_not_void: parent /= Void
 	member_not_void: member /= Void
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

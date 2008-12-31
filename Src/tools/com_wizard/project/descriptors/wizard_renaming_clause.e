@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Renaming clause, conforms to feature so that it can be added and%
 					%treated as a feature for code generation."
 	legal: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_original_name, a_changed_name: STRING; a_component: WIZARD_COMPONENT_DESCRIPTOR) is
+	make (a_original_name, a_changed_name: STRING; a_component: WIZARD_COMPONENT_DESCRIPTOR)
 			-- Initialize instance.
 		require
 			non_void_original_name: a_original_name /= Void
@@ -41,7 +41,7 @@ invariant
 	non_void_components_eiffel_names: components_eiffel_names /= Void
 	valid_components_eiffel_names: components_eiffel_names.count = 1
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

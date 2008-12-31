@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Spell checker wrapper."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	spell_check_documents (docs: ARRAYED_LIST [DOCUMENT]) is
+	spell_check_documents (docs: ARRAYED_LIST [DOCUMENT])
 			-- Spell check all `docs'
 		do
 			initialize_speller
@@ -33,7 +33,7 @@ feature -- Basic Operations
 			end
 		end		
 
-	spell_check (a_filename: STRING) is
+	spell_check (a_filename: STRING)
 			-- Spell check `a_text'
 		require
 			file_not_void: a_filename /= Void			
@@ -61,7 +61,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	initialize_speller is
+	initialize_speller
 			-- 		
 		local	
 			l_eof_text_handler: END_OF_TEXT_EVENT_HANDLER_IN_SPELLING
@@ -81,7 +81,7 @@ feature {NONE} -- Implementation
 
 	speller_initialized: BOOLEAN
 	
-	changed: ARRAYED_STACK [BOOLEAN] is
+	changed: ARRAYED_STACK [BOOLEAN]
 			-- Was file modified during spell check?
 		once
 			create Result.make (10)
@@ -92,7 +92,7 @@ feature {NONE} -- Implementation
 
 	document_index: INTEGER
 
-	dictionary: WORD_DICTIONARY is
+	dictionary: WORD_DICTIONARY
 			-- Word dictionary
 		local
 			l_app_const: SHARED_OBJECTS
@@ -109,7 +109,7 @@ feature {NONE} -- Implementation
 			Result.set_user_file (l_user_loc.string)			
 		end		
 		
-	file_stack: ARRAYED_STACK [PLAIN_TEXT_FILE] is
+	file_stack: ARRAYED_STACK [PLAIN_TEXT_FILE]
 			-- File stack
 		once
 			create Result.make (10)
@@ -119,21 +119,21 @@ feature {NONE} -- Event Handling
 
 	events_processing: BOOLEAN
 
-	spelling_deleted_word (sender: SYSTEM_OBJECT; e: SPELLING_EVENT_ARGS) is
+	spelling_deleted_word (sender: SYSTEM_OBJECT; e: SPELLING_EVENT_ARGS)
 			-- Word was deleted
 		do			
 			changed.remove
 			changed.extend (True)
 		end
 
-	spelling_replaced_word (sender: SYSTEM_OBJECT; e: REPLACE_WORD_EVENT_ARGS) is
+	spelling_replaced_word (sender: SYSTEM_OBJECT; e: REPLACE_WORD_EVENT_ARGS)
 			-- Word was replaced
 		do
 			changed.remove
 			changed.extend (True)
 		end
 	
-	spelling_end_of_text (sender: SYSTEM_OBJECT; e: EVENT_ARGS) is
+	spelling_end_of_text (sender: SYSTEM_OBJECT; e: EVENT_ARGS)
 			-- End of text was reached
 		local
 			l_new_text: STRING
@@ -158,7 +158,7 @@ feature {NONE} -- Event Handling
 invariant
 	has_speller: speller /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog for creating new documents from pre-defined templates."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	user_initialization is
+	user_initialization
 			-- called by `initialize'.
 			-- Any custom user initialization that
 			-- could not be performed in `initialize',
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 
 feature -- Display
 
-	show_modal_to_window (a_window: EV_WINDOW) is
+	show_modal_to_window (a_window: EV_WINDOW)
 			-- Show
 		do
 			if shared_project.is_valid then
@@ -58,7 +58,7 @@ feature -- Display
 
 feature {NONE} -- Implementation
 
-	highlight_label (label_id: INTEGER; a_label: EV_LABEL) is
+	highlight_label (label_id: INTEGER; a_label: EV_LABEL)
 			-- Highlight label
 		do
 			label_selected.set_background_color (create {EV_COLOR}.make_with_rgb (1.0, 1.0, 1.0))
@@ -68,7 +68,7 @@ feature {NONE} -- Implementation
 			set_item_description
 		end
 		
-	set_item_description is
+	set_item_description
 			-- Set description for selected template			
 		do
 			inspect label_number
@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
 			end
 		end		
 		
-	load_new_item is
+	load_new_item
 			-- Load new chosen item
 		local
 			l_document: DOCUMENT
@@ -115,18 +115,18 @@ feature {NONE} -- Implementation
 	label_number: INTEGER
 			-- Selected label id number
 
-	selection_color: EV_COLOR is
+	selection_color: EV_COLOR
 			-- Selection Color
 		once
 			create Result.make_with_rgb (0.1, 0.3, 0.5)
 		end
 
-	empty_val: INTEGER is unique
-	sample_val: INTEGER is unique
-	project_val: INTEGER is unique;
+	empty_val: INTEGER = unique
+	sample_val: INTEGER = unique
+	project_val: INTEGER = unique;
 			-- Label number constants
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

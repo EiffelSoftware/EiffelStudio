@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Initialization task, initialize settings prior to generation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,16 +13,16 @@ inherit
 
 feature -- Access
 
-	title: STRING is "Initializing"
+	title: STRING = "Initializing"
 			-- Task title
 
-	steps_count: INTEGER is
+	steps_count: INTEGER
 			-- Number of steps involved in task
 		do
 			Result := 1
 		end
 
-	internal_execute is
+	internal_execute
 			-- Implementation of `execute'.
 			-- Use `step' `steps_count' times unless `stop' is called.
 		local
@@ -55,7 +55,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	recursive_create (a_folder: STRING) is
+	recursive_create (a_folder: STRING)
 			-- Create directory `a_folder' recursively, set `created' accordingly.
 		require
 			non_void_folder: a_folder /= Void
@@ -95,7 +95,7 @@ feature {NONE} -- Implementation
 	created: BOOLEAN;
 			-- Was directory successfully created by `recursive_create'?
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

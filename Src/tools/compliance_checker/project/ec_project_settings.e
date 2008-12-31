@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Compliance checker project settings.
 	]"
@@ -16,7 +16,7 @@ create
 	
 feature {NONE} -- Initialization
 	
-	make_empty is
+	make_empty
 			-- Create an initialize a new empty project
 		do
 			create assembly.make_empty
@@ -29,7 +29,7 @@ feature -- Access
 	is_dirty: BOOLEAN assign set_is_dirty
 			-- Has the project been modified?
 
-	reference_paths: LIST [STRING] is
+	reference_paths: LIST [STRING]
 			-- List of reference paths to resolve `assembly' references.
 		do
 			Result := internal_reference_paths
@@ -43,7 +43,7 @@ feature -- Access
 			
 feature -- Element change
 
-	set_is_dirty (an_is_dirty: like is_dirty) is
+	set_is_dirty (an_is_dirty: like is_dirty)
 			-- Set `is_dirty' to `an_is_dirty'.
 		do
 			is_dirty := an_is_dirty
@@ -51,7 +51,7 @@ feature -- Element change
 			is_dirty_assigned: is_dirty = an_is_dirty
 		end
 
-	set_assembly (a_assembly: like assembly) is
+	set_assembly (a_assembly: like assembly)
 			-- Set `assembly' to `a_assembly'.
 		require
 			a_assembly_not_void: a_assembly /= Void
@@ -67,7 +67,7 @@ feature -- Element change
 
 feature -- Basic operations
 
-	add_reference_path (a_path: STRING) is
+	add_reference_path (a_path: STRING)
 			-- Adds `a_path' to `reference_paths'
 		require
 			a_path_not_void: a_path /= Void
@@ -83,7 +83,7 @@ feature -- Basic operations
 
 feature -- Replacement
 
-	replace_reference_path (a_old: STRING; a_new: STRING) is
+	replace_reference_path (a_old: STRING; a_new: STRING)
 			-- Replaces `a_old' reference path with `a_new'
 		require
 			a_old_not_void: a_old /= Void
@@ -114,7 +114,7 @@ feature -- Replacement
 
 feature -- Removal
 
-	remove_reference_path (a_path: STRING) is
+	remove_reference_path (a_path: STRING)
 			-- Removed `a_path' from `reference_paths'
 		require
 			a_path_not_void: a_path /= Void
@@ -149,7 +149,7 @@ invariant
 	internal_reference_paths_not_void: internal_reference_paths /= Void
 	internal_reference_paths_compares_objects: internal_reference_paths.object_comparison
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

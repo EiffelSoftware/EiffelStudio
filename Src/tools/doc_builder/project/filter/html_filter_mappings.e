@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Mappings for Schema -> HTML filtering."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature {HTML_FILTER} -- Access
 
-	element_element_mappings: HASH_TABLE [STRING, STRING] is
+	element_element_mappings: HASH_TABLE [STRING, STRING]
 			-- Element to element mappings
 		once
 			create Result.make (15)
@@ -36,7 +36,7 @@ feature {HTML_FILTER} -- Access
 			Result.extend ("script", "script")
 		end
 		
-	element_element_complex_mappings: HASH_TABLE [STRING, STRING] is
+	element_element_complex_mappings: HASH_TABLE [STRING, STRING]
 			-- Complex element to element mappings
 		once
 			create Result.make (5)
@@ -70,7 +70,7 @@ feature {HTML_FILTER} -- Access
 			Result.extend ("a", "link")
 		end
 		
-	element_attribute_mappings: HASH_TABLE [STRING, STRING] is
+	element_attribute_mappings: HASH_TABLE [STRING, STRING]
 			-- Elements to attribute mappings
 		once
 			create Result.make (5)
@@ -110,7 +110,7 @@ feature {HTML_FILTER} -- Access
 			Result.extend ("name", "anchor")
 		end	
 		
-	attribute_attribute_mappings: HASH_TABLE [STRING, STRING] is
+	attribute_attribute_mappings: HASH_TABLE [STRING, STRING]
 			-- Attribute to attribute name mappings
 		once
 			create Result.make (5)
@@ -122,7 +122,7 @@ feature {HTML_FILTER} -- Access
 			Result.extend ("colspan", "columnspan")
 		end		
 		
-	single_element_element_mappings: HASH_TABLE [STRING, STRING] is
+	single_element_element_mappings: HASH_TABLE [STRING, STRING]
 			-- List of elements which don't require a closing tag (e.g, '<line_break/>')
 		once
 			create Result.make (1)
@@ -130,7 +130,7 @@ feature {HTML_FILTER} -- Access
 			Result.extend ("br", "line_break")
 		end		
 		
-	character_mappings: HASH_TABLE [STRING, STRING] is
+	character_mappings: HASH_TABLE [STRING, STRING]
 			-- Character mappings
 		once
 			create Result.make (5)
@@ -140,7 +140,7 @@ feature {HTML_FILTER} -- Access
 		
 feature -- Element Data		
 		
-	content_elements: ARRAYED_LIST [STRING] is
+	content_elements: ARRAYED_LIST [STRING]
 			-- Elements denoting only content
 		once
 			create Result.make (5)
@@ -153,7 +153,7 @@ feature -- Element Data
 			Result.extend ("output")
 		end
 
-	conc_content_elements: ARRAYED_LIST [STRING] is
+	conc_content_elements: ARRAYED_LIST [STRING]
 			-- Elements where content must be concatenated between callbacks
 		once
 			create Result.make (5)
@@ -168,7 +168,7 @@ feature -- Element Data
 			Result.extend ("anchor_name")
 		end
 
-	attributable_elements: ARRAYED_LIST [STRING] is
+	attributable_elements: ARRAYED_LIST [STRING]
 			-- Elements which may contain attributes (once converted to their HTML equivalent)
 		once
 			create Result.make (5)
@@ -197,7 +197,7 @@ feature -- Element Data
 			Result.extend ("anchor")
 		end
 	
-	style_elements: ARRAYED_LIST [STRING] is
+	style_elements: ARRAYED_LIST [STRING]
 			-- Elements which represent `class' styles
 		once
 			create Result.make (5)
@@ -222,7 +222,7 @@ feature -- Element Data
 			Result.extend ("compiler_error")
 		end	
 
-	bufferable: ARRAYED_LIST [STRING] is
+	bufferable: ARRAYED_LIST [STRING]
 			-- Bufferable elements
 		once
 			create Result.make (5)
@@ -232,114 +232,114 @@ feature -- Element Data
 
 feature -- String constans
 		
-	mapped_row_string: STRING is "tr"
-	mapped_cell_string: STRING is "td"
-	mapped_list_item_string: STRING is "li"
-	item_string: STRING is "item"
-	pre_string: STRING is "pre"
-	code_block_string: STRING is "code_block"
-	mapped_bold_string: STRING is "b"
-	bold_string: STRING is "bold"
-	mapped_underline_string: STRING is "u"
-	underline_string: STRING is "underline"
-	mapped_italic_string: STRING is "i"
-	italic_string: STRING is "italic"			
-	mapped_a_string: STRING is "a"
-	mapped_image_string: STRING is "img"
-	title_string: STRING is "title"
-	sub_script_string: STRING is  "sub_script"
-	super_script_string: STRING is  "super_script"					
-	meta_data_string: STRING is "meta_data"
-	paragraph_end_string: STRING is "paragraph_end"
-	start_end_string: STRING is "start_end"			
-	image_map_string: STRING is "image_map"
-	area_string: STRING is "area"
-	xml_string: STRING is "xml"
-	warning_string: STRING is "warning"
-	tip_string: STRING is "tip"
-	seealso_string: STRING is "seealso"
-	sample_string: STRING is "sample"
-	note_string: STRING is "note"
-	info_string: STRING is "info"						
-	list_ordered_string: STRING is "list_ordered"
-	list_unordered_string: STRING is "list_unordered"
-	id_string: STRING is "id"		
-	target_string: STRING is "target"
-	border_string: STRING is "border"
-	width_string: STRING is "width"
-	height_string: STRING is "height"
-	usemap_string: STRING is "usemap"
-	shape_string: STRING is "shape"
-	coordinates_string: STRING is "co-ordinates"						
-	rel_string: STRING is "rel"
-	padding_string: STRING is  "padding"
-	spacing_string: STRING is "spacing"
-	alignment_string: STRING is "alignment"		
-	vertical_alignment_string: STRING is "vertical_alignment"
-	name_string: STRING is "name"
-	index_moniker_string: STRING is "index_moniker"
-	tab_index_string: STRING is "tab_index"
-	hover_color_string: STRING is "hover_color"
-	disambiguator_string: STRING is "disambiguator"
-	error_url_string: STRING is "error_url"
-	filter_name_string: STRING is "filter_name"
-	filter_string_string: STRING is "filter_string"
-	namespace_string: STRING is "namespace"
-	options_string: STRING is "options"
-	index_string: STRING is "index"						
-	rowspan_string: STRING is "rowspan"
-	colspan_string: STRING is "columnspan"
-	line_break_string: STRING is "line_break"			
-	label_string: STRING is "label"
-	size_string: STRING is "size"
-	code_string: STRING is "code"
-	character_string: STRING is "character"
-	alt_text_string: STRING is "alt_text"
-	content_string: STRING is "content"
-	meta_content_string: STRING is "meta_content"
-	url_string: STRING is "url"
-	term_string: STRING is "term"
-	keywords_string: STRING is "keywords"
-	anchor_name_string: STRING is "anchor_name"
-	link_string: STRING is "link"
-	image_string: STRING is "image"
-	table_string: STRING is "table"
-	row_string: STRING is "row"
-	cell_string: STRING is "cell"
-	meta_string: STRING is "meta"
-	map_string: STRING is "map"
-	list_string: STRING is "list"
-	stylesheet_string: STRING is "stylesheet"
-	span_string: STRING is "span"
-	div_string: STRING is "div"
-	help_link_string: STRING is "help_link"
-	script_string: STRING is "script"
-	document_paragraph_string: STRING is "document_paragraph"
-	start_string: STRING is "start"
-	document_string: STRING is "document"
-	keyword_string: STRING is "keyword"
-	xmlkeyword_string: STRING is "xmlkeyword"
-	anchor_string: STRING is "anchor"
-	string_string: STRING is "string"			
-	number_string: STRING is "number"
-	reserved_word_string: STRING is "reserved_word"
-	comment_string: STRING is "comment"
-	local_variable_string: STRING is "local_variable"
-	symbol_string: STRING is "symbol"
-	local_variable_quoted_string: STRING is "local_variable_quoted"
-	contract_tag_string: STRING is "contract_tag"
-	generics_string: STRING is "generics"
-	indexing_tag_string: STRING is "indexing_tag"	
-	syntax_string: STRING is "syntax"
-	class_name_string: STRING is "class_name"
-	cluster_name_string: STRING is "cluster_name"
-	feature_name_string: STRING is "feature_name"
-	compiler_error_string: STRING is "compiler_error"
-	heading_string: STRING is "heading"	
-	paragraph_string: STRING is "paragraph"
-	image_url_string: STRING is "image_url";
+	mapped_row_string: STRING = "tr"
+	mapped_cell_string: STRING = "td"
+	mapped_list_item_string: STRING = "li"
+	item_string: STRING = "item"
+	pre_string: STRING = "pre"
+	code_block_string: STRING = "code_block"
+	mapped_bold_string: STRING = "b"
+	bold_string: STRING = "bold"
+	mapped_underline_string: STRING = "u"
+	underline_string: STRING = "underline"
+	mapped_italic_string: STRING = "i"
+	italic_string: STRING = "italic"			
+	mapped_a_string: STRING = "a"
+	mapped_image_string: STRING = "img"
+	title_string: STRING = "title"
+	sub_script_string: STRING =  "sub_script"
+	super_script_string: STRING =  "super_script"					
+	meta_data_string: STRING = "meta_data"
+	paragraph_end_string: STRING = "paragraph_end"
+	start_end_string: STRING = "start_end"			
+	image_map_string: STRING = "image_map"
+	area_string: STRING = "area"
+	xml_string: STRING = "xml"
+	warning_string: STRING = "warning"
+	tip_string: STRING = "tip"
+	seealso_string: STRING = "seealso"
+	sample_string: STRING = "sample"
+	note_string: STRING = "note"
+	info_string: STRING = "info"						
+	list_ordered_string: STRING = "list_ordered"
+	list_unordered_string: STRING = "list_unordered"
+	id_string: STRING = "id"		
+	target_string: STRING = "target"
+	border_string: STRING = "border"
+	width_string: STRING = "width"
+	height_string: STRING = "height"
+	usemap_string: STRING = "usemap"
+	shape_string: STRING = "shape"
+	coordinates_string: STRING = "co-ordinates"						
+	rel_string: STRING = "rel"
+	padding_string: STRING =  "padding"
+	spacing_string: STRING = "spacing"
+	alignment_string: STRING = "alignment"		
+	vertical_alignment_string: STRING = "vertical_alignment"
+	name_string: STRING = "name"
+	index_moniker_string: STRING = "index_moniker"
+	tab_index_string: STRING = "tab_index"
+	hover_color_string: STRING = "hover_color"
+	disambiguator_string: STRING = "disambiguator"
+	error_url_string: STRING = "error_url"
+	filter_name_string: STRING = "filter_name"
+	filter_string_string: STRING = "filter_string"
+	namespace_string: STRING = "namespace"
+	options_string: STRING = "options"
+	index_string: STRING = "index"						
+	rowspan_string: STRING = "rowspan"
+	colspan_string: STRING = "columnspan"
+	line_break_string: STRING = "line_break"			
+	label_string: STRING = "label"
+	size_string: STRING = "size"
+	code_string: STRING = "code"
+	character_string: STRING = "character"
+	alt_text_string: STRING = "alt_text"
+	content_string: STRING = "content"
+	meta_content_string: STRING = "meta_content"
+	url_string: STRING = "url"
+	term_string: STRING = "term"
+	keywords_string: STRING = "keywords"
+	anchor_name_string: STRING = "anchor_name"
+	link_string: STRING = "link"
+	image_string: STRING = "image"
+	table_string: STRING = "table"
+	row_string: STRING = "row"
+	cell_string: STRING = "cell"
+	meta_string: STRING = "meta"
+	map_string: STRING = "map"
+	list_string: STRING = "list"
+	stylesheet_string: STRING = "stylesheet"
+	span_string: STRING = "span"
+	div_string: STRING = "div"
+	help_link_string: STRING = "help_link"
+	script_string: STRING = "script"
+	document_paragraph_string: STRING = "document_paragraph"
+	start_string: STRING = "start"
+	document_string: STRING = "document"
+	keyword_string: STRING = "keyword"
+	xmlkeyword_string: STRING = "xmlkeyword"
+	anchor_string: STRING = "anchor"
+	string_string: STRING = "string"			
+	number_string: STRING = "number"
+	reserved_word_string: STRING = "reserved_word"
+	comment_string: STRING = "comment"
+	local_variable_string: STRING = "local_variable"
+	symbol_string: STRING = "symbol"
+	local_variable_quoted_string: STRING = "local_variable_quoted"
+	contract_tag_string: STRING = "contract_tag"
+	generics_string: STRING = "generics"
+	indexing_tag_string: STRING = "indexing_tag"	
+	syntax_string: STRING = "syntax"
+	class_name_string: STRING = "class_name"
+	cluster_name_string: STRING = "cluster_name"
+	feature_name_string: STRING = "feature_name"
+	compiler_error_string: STRING = "compiler_error"
+	heading_string: STRING = "heading"	
+	paragraph_string: STRING = "paragraph"
+	image_url_string: STRING = "image_url";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

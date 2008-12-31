@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shared Generators. Must be once so that if a parent interface is generated%
 					%this is known and next time the same interface is processed it is not%
 					%generated again"
@@ -12,44 +12,44 @@ class
 
 feature -- Access
 
-	C_client_generator: WIZARD_COMPONENT_INTERFACE_C_CLIENT_GENERATOR is
+	C_client_generator: WIZARD_COMPONENT_INTERFACE_C_CLIENT_GENERATOR
 			-- Component interface C client generator
 		once
 			create Result
 		end
 		
-	C_server_generator: WIZARD_COMPONENT_INTERFACE_C_SERVER_GENERATOR is
+	C_server_generator: WIZARD_COMPONENT_INTERFACE_C_SERVER_GENERATOR
 			-- Component interface C server generator
 		once
 			create Result
 		end
 
-	Eiffel_client_generator: WIZARD_COMPONENT_INTERFACE_EIFFEL_CLIENT_GENERATOR is
+	Eiffel_client_generator: WIZARD_COMPONENT_INTERFACE_EIFFEL_CLIENT_GENERATOR
 		once
 			create Result
 		end
 
-	Eiffel_server_generator: WIZARD_COMPONENT_INTERFACE_EIFFEL_SERVER_GENERATOR is
+	Eiffel_server_generator: WIZARD_COMPONENT_INTERFACE_EIFFEL_SERVER_GENERATOR
 		once
 			create Result
 		end
 
-	Eiffel_coclass_server_generator: WIZARD_COCLASS_INTERFACE_EIFFEL_SERVER_GENERATOR is
+	Eiffel_coclass_server_generator: WIZARD_COCLASS_INTERFACE_EIFFEL_SERVER_GENERATOR
 		once
 			create Result
 		end
 	
-	Eiffel_server_impl_generator: WIZARD_COCLASS_INTERFACE_EIFFEL_SERVER_IMPL_GENERATOR is
+	Eiffel_server_impl_generator: WIZARD_COCLASS_INTERFACE_EIFFEL_SERVER_IMPL_GENERATOR
 		once
 			create Result
 		end
 
-	Source_eiffel_server_generator: WIZARD_COMPONENT_INTERFACE_SOURCE_EIFFEL_SERVER_GENERATOR is
+	Source_eiffel_server_generator: WIZARD_COMPONENT_INTERFACE_SOURCE_EIFFEL_SERVER_GENERATOR
 		once
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

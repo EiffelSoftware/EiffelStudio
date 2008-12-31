@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel environment for the compile all tool."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -11,6 +11,6 @@ INHERIT
 
 feature -- Access
 
-	application_name: STRING is "cat"
+	application_name: STRING = "cat"
 
 end

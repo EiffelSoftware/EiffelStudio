@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Task used for compiling Eiffel and C code"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,10 +18,10 @@ inherit
 
 feature -- Access
 
-	title: STRING is "Compiling code"
+	title: STRING = "Compiling code"
 			-- Task title
 
-	steps_count: INTEGER is
+	steps_count: INTEGER
 			-- Number of steps involved in task
 		do
 			if environment.compile_eiffel then
@@ -33,7 +33,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	internal_execute is
+	internal_execute
 			-- Implementation of `execute'.
 			-- Use `step' `steps_count' times unless `stop' is called.
 		do
@@ -78,34 +78,34 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Private Access
 
-	Compilation_title_c: STRING is "Compiling C code"
+	Compilation_title_c: STRING = "Compiling C code"
 			-- Compilation message.
 
-	Compilation_title_eiffel: STRING is "Compiling Eiffel code"
+	Compilation_title_eiffel: STRING = "Compiling Eiffel code"
 			-- Compilation message.
 
-	C_client_compilation_title: STRING is "Compiling C client code"
+	C_client_compilation_title: STRING = "Compiling C client code"
 			-- C compilation message.
 
-	C_common_compilation_title: STRING is "Compiling C common code"
+	C_common_compilation_title: STRING = "Compiling C common code"
 			-- C compilation message.
 
-	C_server_compilation_title: STRING is "Compiling C server code"
+	C_server_compilation_title: STRING = "Compiling C server code"
 			-- C compilation message.
 
-	C_client_compilation_title_mt: STRING is "Compiling multi-threaded C client code"
+	C_client_compilation_title_mt: STRING = "Compiling multi-threaded C client code"
 			-- C compilation message.
 
-	C_common_compilation_title_mt: STRING is "Compiling multi-threaded C common code"
+	C_common_compilation_title_mt: STRING = "Compiling multi-threaded C common code"
 			-- C compilation message.
 
-	C_server_compilation_title_mt: STRING is "Compiling multi-threaded C server code"
+	C_server_compilation_title_mt: STRING = "Compiling multi-threaded C server code"
 			-- C compilation message.
 
-	Eiffel_compilation_title: STRING is "Compiling Eiffel code";
+	Eiffel_compilation_title: STRING = "Compiling Eiffel code";
 			-- Eiffel compilation message.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

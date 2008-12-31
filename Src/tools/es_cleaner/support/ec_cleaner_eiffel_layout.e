@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Specialize implementation of {EC_EIFFEL_LAYOUT} that overrides onces and allows `is_workbench' to be set irrespective on a containing
 		project's compiled status.
@@ -19,7 +19,7 @@ inherit
 
 feature -- Status report
 
-	is_workbench: BOOLEAN is
+	is_workbench: BOOLEAN
 			-- Is workbench
 		do
 			Result := internal_is_workbench
@@ -32,7 +32,7 @@ feature {NONE} -- Status report
 
 feature {PACKAGE} -- Status setting
 
-	set_is_workbench (a_value: like is_workbench) is
+	set_is_workbench (a_value: like is_workbench)
 			-- Set `is_workbench' with `a_value'
 		do
 			internal_is_workbench := a_value
@@ -40,7 +40,7 @@ feature {PACKAGE} -- Status setting
 			is_workbench_set: is_workbench = a_value
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

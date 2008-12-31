@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Descriptor of Abstract Data Type"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,18 +27,18 @@ feature -- Access
 			-- Type of Abstract Data.
 			-- See ECOM_VAR_TYPE for values.
 
-	name: STRING is
+	name: STRING
 			-- Type name
 		do
 			Result := vartype_namer.c_name (type)
 		end
 
-	description: STRING is
+	description: STRING
 		do
 			Result := vartype_namer.eiffel_name (type)
 		end
 
-	visitor: WIZARD_DATA_TYPE_VISITOR is
+	visitor: WIZARD_DATA_TYPE_VISITOR
 			-- Data type visitor.
 		do
 			if instance_visitor /= Void then
@@ -58,7 +58,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_equal_data_type (other: WIZARD_DATA_TYPE_DESCRIPTOR): BOOLEAN is
+	is_equal_data_type (other: WIZARD_DATA_TYPE_DESCRIPTOR): BOOLEAN
 			-- Is `other' describes same data type?
 		deferred
 		ensure
@@ -67,7 +67,7 @@ feature -- Status report
 
 feature -- Basic Operations
 
-	set_type (a_type: INTEGER) is
+	set_type (a_type: INTEGER)
 			-- Set `type' with `a_type'
 		do
 			type := a_type
@@ -75,7 +75,7 @@ feature -- Basic Operations
 			type_set: type = a_type
 		end
 
-	set_visited (a_counter: INTEGER) is
+	set_visited (a_counter: INTEGER)
 			-- Set `visited' to True,
 			-- Set `counter_value' to `a_counter'
 		do
@@ -86,7 +86,7 @@ feature -- Basic Operations
 			valid_counter: counter_value = a_counter
 		end
 
-	set_pointing_visitor (a_visitor: WIZARD_DATA_TYPE_VISITOR) is
+	set_pointing_visitor (a_visitor: WIZARD_DATA_TYPE_VISITOR)
 			-- Set `pointing_visitor' with `a_visitor'
 		do
 			pointing_visitor := a_visitor
@@ -94,7 +94,7 @@ feature -- Basic Operations
 
 feature -- Visitor
 
-	visit (a_visitor: WIZARD_DATA_VISITOR) is
+	visit (a_visitor: WIZARD_DATA_VISITOR)
 			-- Call back `a_visitor' with appropriate feature.
 		require
 			non_void_visitor: a_visitor /= Void
@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 	instance_visitor: WIZARD_DATA_TYPE_VISITOR;
 			-- Data type visitor.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

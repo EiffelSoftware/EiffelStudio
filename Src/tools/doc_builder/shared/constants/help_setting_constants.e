@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants for Help generation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -40,14 +40,14 @@ feature -- Access
 
 feature -- Path Locations
 
-	toc_path: DIRECTORY_NAME is
+	toc_path: DIRECTORY_NAME
 			-- Path to TOC directory
 		once
 			create Result.make_from_string (Temporary_help_directory)
 			Result.extend ("toc")
 		end
 		
-	help_compiler_location: FILE_NAME is
+	help_compiler_location: FILE_NAME
 			-- Location of HTML Help 1.x compiler executable
 		local
 			l_registry: WEL_REGISTRY
@@ -63,7 +63,7 @@ feature -- Path Locations
 			end
 		end		
 		
-	help_compiler_name: STRING is
+	help_compiler_name: STRING
 			-- Name of HTML Help 1.x compiler executable
 		once
 			Result := "hhc.exe"
@@ -71,45 +71,45 @@ feature -- Path Locations
 		
 feature -- XML Tags
 
-	directory_tag: STRING is "working_directory"
+	directory_tag: STRING = "working_directory"
 
-	help_project_tag: STRING is "help_project"
+	help_project_tag: STRING = "help_project"
 	
-	name_tag: STRING is "name"
+	name_tag: STRING = "name"
 	
-	title_tag: STRING is "title"
+	title_tag: STRING = "title"
 	
-	files_tag: STRING is "files"
+	files_tag: STRING = "files"
 	
-	project_file_tag: STRING is "project_file"
+	project_file_tag: STRING = "project_file"
 	
-	compiled_file_tag: STRING is "compiled_file"
+	compiled_file_tag: STRING = "compiled_file"
 	
-	toc_file_tag: STRING is "table_of_contents"
+	toc_file_tag: STRING = "table_of_contents"
 	
-	log_file_tag: STRING is "log_file"
+	log_file_tag: STRING = "log_file"
 
 feature -- Status Setting
 	
-	set_help_toc (a_toc: like toc) is
+	set_help_toc (a_toc: like toc)
 			-- Set Table of Contents
 		do
 			toc := a_toc
 		end
 		
-	set_compile (a_flag: BOOLEAN) is
+	set_compile (a_flag: BOOLEAN)
 			-- Set compile option
 		do
 			compile := a_flag
 		end	
 		
-	set_help_project_name (a_name: STRING) is
+	set_help_project_name (a_name: STRING)
 			-- Set name for help project
 		do
 			help_project_name := a_name
 		end	
 		
-	set_help_type (a_type: INTEGER) is
+	set_help_type (a_type: INTEGER)
 			-- Set chosen help generation type
 		do
 			inspect
@@ -140,7 +140,7 @@ feature -- Implementation
 	html_help,
 	vsip_help,
 	web_help_tree,
-	web_help_simple: INTEGER is unique
+	web_help_simple: INTEGER = unique
 			-- Transformation type chosen identifier
 		
 invariant
@@ -148,7 +148,7 @@ invariant
 	vsip_help_exclusive: is_vsip_help implies (not is_html_help and not is_web_help)
 	web_help_exclusive: is_web_help implies (not is_vsip_help and not is_html_help)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

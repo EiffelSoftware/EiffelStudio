@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Creator of Type Descriptor"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -38,7 +38,7 @@ inherit
 
 feature -- Basic Operations
 
-	add_c_type is
+	add_c_type
 			-- Add `c_type_name' to system's list.
 			-- Modify it to avoid name clashes in system if it's not a standard structure.
 		do
@@ -46,7 +46,7 @@ feature -- Basic Operations
 			system_descriptor.add_c_type (c_type_name.twin)
 		end
 
-	add_type_lib_description (a_type_lib: WIZARD_TYPE_LIBRARY_DESCRIPTOR) is
+	add_type_lib_description (a_type_lib: WIZARD_TYPE_LIBRARY_DESCRIPTOR)
 			-- Add Type Library description to type descriptor.
 		require
 			non_void_type_lib: a_type_lib /= Void
@@ -60,7 +60,7 @@ feature -- Basic Operations
 			description.append (a_type_lib.description)
 		end
 
-	set_common_fields (a_descriptor: WIZARD_TYPE_DESCRIPTOR) is
+	set_common_fields (a_descriptor: WIZARD_TYPE_DESCRIPTOR)
 			-- Set common fields in `a_descriptor'
 		require
 			valid_descriptor: a_descriptor /= Void
@@ -85,7 +85,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	has_c_type_or_is_forbidden (a_name: STRING): BOOLEAN is
+	has_c_type_or_is_forbidden (a_name: STRING): BOOLEAN
 			-- Does `system_descriptor.c_types' have `a_name' or `is_forbidden_c_word'?
 		do
 			Result := is_forbidden_c_word (a_name)
@@ -120,7 +120,7 @@ feature {NONE} -- Implementation
 	guid: ECOM_GUID;
 			-- GUID of type
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

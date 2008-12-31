@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Specialized configiration for Microsoft WindowsSDKs."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Access
 
-	batch_file_name: STRING is
+	batch_file_name: STRING
 			-- Absolute path to an environment configuration batch script
 		local
 			l_layout: FINISH_FREEZING_EIFFEL_LAYOUT
@@ -47,7 +47,7 @@ feature {NONE} -- Access
 			end
 		end
 
-	batch_file_arguments: STRING is
+	batch_file_arguments: STRING
 			-- Arguments for `batch_file_name' execution
 		local
 			l_layout: FINISH_FREEZING_EIFFEL_LAYOUT
@@ -68,13 +68,13 @@ feature {NONE} -- Access
 			end
 		end
 
-	batch_file_options: STRING is
+	batch_file_options: STRING
 			-- Option to the COMSPEC DOS prompt.
 		do
 			Result := "/V:ON"
 		end
 
-	full_product_reg_path: STRING is
+	full_product_reg_path: STRING
 			-- Absolute product registry location
 		do
 			create Result.make (256)
@@ -88,7 +88,7 @@ feature {NONE} -- Access
 			Result := "InstallationFolder"
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

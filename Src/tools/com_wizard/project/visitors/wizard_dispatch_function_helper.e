@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dispatch function helper."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -33,7 +33,7 @@ inherit
 
 feature -- Basic operations
 
-	does_routine_have_result (func_desc: WIZARD_FUNCTION_DESCRIPTOR): BOOLEAN is
+	does_routine_have_result (func_desc: WIZARD_FUNCTION_DESCRIPTOR): BOOLEAN
 			-- Does routine have result?
 		local
 			cursor: CURSOR
@@ -51,7 +51,7 @@ feature -- Basic operations
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

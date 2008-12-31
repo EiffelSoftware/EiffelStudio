@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Used in conjunction with `EC_CHECK_WORKER' as a means to recieve notification of proffered
 		checked entities.
@@ -14,27 +14,27 @@ deferred class
 
 feature -- Access
 
-	should_continue: BOOLEAN is
+	should_continue: BOOLEAN
 			-- Should checking continue?
-		indexing
+		note
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		deferred
 		end
 
 feature -- Starting
 
-	notify_start is
+	notify_start
 			-- Called when checker is about to begin checking an assembly.
-		indexing
+		note
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		require
 			should_continue: should_continue
 		deferred
 		end
 		
-	start_type (a_type: SYSTEM_TYPE) is
+	start_type (a_type: SYSTEM_TYPE)
 			-- Called when checker is about to begin checking type `a_type'.
-		indexing
+		note
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		require
 			a_type_not_void: a_type /= Void
@@ -42,9 +42,9 @@ feature -- Starting
 		deferred
 		end
 
-	start_constructor (a_ctor: CONSTRUCTOR_INFO) is
+	start_constructor (a_ctor: CONSTRUCTOR_INFO)
 			-- Called when checker is about to begin checking constructor `a_ctor'.
-		indexing
+		note
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		require
 			a_ctor_not_void: a_ctor /= Void
@@ -52,9 +52,9 @@ feature -- Starting
 		deferred
 		end
 		
-	start_method (a_method: METHOD_INFO) is
+	start_method (a_method: METHOD_INFO)
 			-- Called when checker is about to begin checking method `a_method'.
-		indexing
+		note
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		require
 			a_method_not_void: a_method /= Void
@@ -62,9 +62,9 @@ feature -- Starting
 		deferred
 		end
 		
-	start_property (a_property: PROPERTY_INFO) is
+	start_property (a_property: PROPERTY_INFO)
 			-- Called when checker is about to begin checking property `a_property'.
-		indexing
+		note
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		require
 			a_property_not_void: a_property /= Void
@@ -72,9 +72,9 @@ feature -- Starting
 		deferred
 		end	
 		
-	start_field (a_field: FIELD_INFO) is
+	start_field (a_field: FIELD_INFO)
 			-- Called when checker is about to begin checking field `a_field'.
-		indexing
+		note
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		require
 			a_field_not_void: a_field /= Void
@@ -82,9 +82,9 @@ feature -- Starting
 		deferred
 		end
 	
-	start_event (a_event: EVENT_INFO) is
+	start_event (a_event: EVENT_INFO)
 			-- Called when checker is about to begin checking ecent `a_event'.
-		indexing
+		note
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		require
 			a_event_not_void: a_event /= Void
@@ -94,54 +94,54 @@ feature -- Starting
 
 feature -- Checked
 		
-	checked_type (a_type: EC_CHECKED_TYPE) is
+	checked_type (a_type: EC_CHECKED_TYPE)
 			-- Called when checker is about to begin checking type `a_type'
-		indexing
+		note
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		require
 			a_type_not_void: a_type /= Void
 		deferred
 		end
 
-	checked_constructor (a_ctor: EC_CHECKED_MEMBER_CONSTRUCTOR) is
+	checked_constructor (a_ctor: EC_CHECKED_MEMBER_CONSTRUCTOR)
 			-- Called when checker is about to begin checking constructor `a_ctor'
-		indexing
+		note
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end			
 		require
 			a_ctor_not_void: a_ctor /= Void
 		deferred
 		end
 		
-	checked_method (a_method: EC_CHECKED_MEMBER_METHOD) is
+	checked_method (a_method: EC_CHECKED_MEMBER_METHOD)
 			-- Called when checker is about to begin checking method `a_method'
-		indexing
+		note
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		require
 			a_method_not_void: a_method /= Void
 		deferred
 		end
 
-	checked_property (a_property: EC_CHECKED_MEMBER) is
+	checked_property (a_property: EC_CHECKED_MEMBER)
 			-- Called when checker is about to begin checking property `a_property'
-		indexing
+		note
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		require
 			a_property_not_void: a_property /= Void
 		deferred
 		end	
 		
-	checked_field (a_field: EC_CHECKED_MEMBER_FIELD) is
+	checked_field (a_field: EC_CHECKED_MEMBER_FIELD)
 			-- Called when checker is about to begin checking field `a_field'
-		indexing
+		note
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end			
 		require
 			a_field_not_void: a_field /= Void
 		deferred
 		end
 	
-	checked_event (a_event: EC_CHECKED_MEMBER) is
+	checked_event (a_event: EC_CHECKED_MEMBER)
 			-- Called when checker is about to begin checking event `a_event'
-		indexing
+		note
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		require
 			a_event_not_void: a_event /= Void
@@ -150,68 +150,68 @@ feature -- Checked
 		
 feature -- Endding
 
-	notify_end (a_complete: BOOLEAN) is
+	notify_end (a_complete: BOOLEAN)
 			-- Called when checker is finished.
 			-- `a_complete' indicates if report is a full complete report.
-		indexing
+		note
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		deferred
 		end
 		
-	end_type is
+	end_type
 			-- Called when checker is finished checking last started checked type.
-		indexing
+		note
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end			
 		deferred
 		end
 		
-	end_constructor is
+	end_constructor
 			-- Called when checker is finished checking last started checked constructor.
-		indexing
+		note
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		deferred
 		end
 		
-	end_method is
+	end_method
 			-- Called when checker is finished checking last started checked method.
-		indexing
+		note
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		deferred
 		end
 		
-	end_property is
+	end_property
 			-- Called when checker is finished checking last started checked property.
-		indexing
+		note
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		deferred
 		end	
 		
-	end_field is
+	end_field
 			-- Called when checker is finished checking last started checked field.
-		indexing
+		note
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		deferred
 		end
 	
-	end_event is
+	end_event
 			-- Called when checker is about to begin checking event.
-		indexing
+		note
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		deferred
 		end	
 
 feature -- Percentage
 
-	notify_percentage_complete (a_percent: NATURAL_8) is
+	notify_percentage_complete (a_percent: NATURAL_8)
 			-- Called when percentage changes.
-		indexing
+		note
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		require
 			a_percent_small_enough: a_percent <= 100
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

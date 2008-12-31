@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tree selector for browsing projects and documents."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 	
 feature -- Creation
 
-	make (root_directory: STRING; widget: EV_TREE) is
+	make (root_directory: STRING; widget: EV_TREE)
 			-- Make with `root_directory'
 		require
 			has_root: root_directory /= Void
@@ -37,7 +37,7 @@ feature -- Creation
 
 feature -- Commands
 
-	clear is
+	clear
 			-- Wipe out widget
 		do
 			internal_tree.wipe_out	
@@ -50,7 +50,7 @@ feature -- Access
 
 feature -- Query
 	
-	get_children (root_dir: DIRECTORY; root_node: EV_DYNAMIC_TREE_ITEM): ARRAYED_LIST [EV_TREE_NODE] is
+	get_children (root_dir: DIRECTORY; root_node: EV_DYNAMIC_TREE_ITEM): ARRAYED_LIST [EV_TREE_NODE]
 			-- Return child directory and file nodes list
 		require
 			dir_not_void: root_dir /= Void
@@ -103,7 +103,7 @@ feature -- Query
 
 feature {NONE} -- Implementation
 
-	on_button_pressed (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER; name: STRING) is
+	on_button_pressed (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER; name: STRING)
 			-- Button pressed
 		do
 			if a_button = 1 then				
@@ -118,7 +118,7 @@ invariant
 	has_root: root /= Void
 	has_widget: internal_tree /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

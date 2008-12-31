@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -18,7 +18,7 @@ inherit
 
 feature -- Basic operations
 
-	add_feature_name (an_interface: WIZARD_INTERFACE_DESCRIPTOR): STRING is
+	add_feature_name (an_interface: WIZARD_INTERFACE_DESCRIPTOR): STRING
 			-- Name of add call-back interface feature.
 		require
 			non_void_interface: an_interface /= Void
@@ -34,7 +34,7 @@ feature -- Basic operations
 			valid_name: not Result.is_empty
 		end
 
-	remove_feature_name (an_interface: WIZARD_INTERFACE_DESCRIPTOR): STRING is
+	remove_feature_name (an_interface: WIZARD_INTERFACE_DESCRIPTOR): STRING
 			-- Name of remove call-back interface feature.
 		require
 			non_void_interface: an_interface /= Void
@@ -50,7 +50,7 @@ feature -- Basic operations
 			valid_name: not Result.is_empty
 		end
 
-	has_feature_name (an_interface: WIZARD_INTERFACE_DESCRIPTOR): STRING is
+	has_feature_name (an_interface: WIZARD_INTERFACE_DESCRIPTOR): STRING
 			-- Name of has call-back feature.
 		require
 			non_void_interface: an_interface /= Void
@@ -66,7 +66,7 @@ feature -- Basic operations
 			valid_name: not Result.is_empty
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "XML Schema Validator."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ feature -- Access
 
 feature -- Schema Validation
 
-	validate_by_filename (filename: STRING) is
+	validate_by_filename (filename: STRING)
 			-- Validate current schema with 'filename' .  Check to see
 			-- if schema is valid according to W3C standard.  Result
 			-- put to `is_valid' and error to `error_report'.
@@ -56,7 +56,7 @@ feature -- Schema Validation
 		
 feature -- Schema and file validation		
 		
-	validate_against_file (a_filename: STRING) is
+	validate_against_file (a_filename: STRING)
 			-- Validate 'a_filename' against schema definition.  Assume xml
 			-- file with 'a_filename' has declaration of schema within as
 			-- a 'SchemaName' attribute.
@@ -85,7 +85,7 @@ feature -- Schema and file validation
 			retry
 		end	
 		
-	validate_against_text (text, schema_filename: STRING) is
+	validate_against_text (text, schema_filename: STRING)
 			-- Validate 'text' against schema definition found in file 
 			-- with 'schema_filename'.
 		local
@@ -132,7 +132,7 @@ feature -- Schema and file validation
 		
 feature {NONE} -- Implementation		
 		
-	validation_callback (object: SYSTEM_OBJECT ; args: XML_VALIDATION_EVENT_ARGS) is
+	validation_callback (object: SYSTEM_OBJECT ; args: XML_VALIDATION_EVENT_ARGS)
 			-- Validation callback.
 		local
 			l_no, l_pos: INTEGER
@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 			shared_error_reporter.set_error (l_error)
     	end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

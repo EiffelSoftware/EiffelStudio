@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shared Factories of descriptors"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,37 +10,37 @@ class
 
 feature -- Access
 
-	Data_type_descriptor_factory: WIZARD_DATA_TYPE_DESCRIPTOR_FACTORY is	
+	Data_type_descriptor_factory: WIZARD_DATA_TYPE_DESCRIPTOR_FACTORY	
 			-- Data type descriptor factory
 		once
 			create Result
 		end
 
-	Type_descriptor_factory: WIZARD_TYPE_DESCRIPTOR_FACTORY is
+	Type_descriptor_factory: WIZARD_TYPE_DESCRIPTOR_FACTORY
 			-- Type descriptor main factory
 		once
 			create Result
 		end
 
-	Record_field_descriptor_factory: WIZARD_RECORD_FIELD_DESCRIPTOR_FACTORY is
+	Record_field_descriptor_factory: WIZARD_RECORD_FIELD_DESCRIPTOR_FACTORY
 			-- Record field descriptor factory
 		once
 			create Result
 		end
 
-	Enum_element_factory: WIZARD_ENUM_ELEMENT_DESCRIPTOR_FACTORY is
+	Enum_element_factory: WIZARD_ENUM_ELEMENT_DESCRIPTOR_FACTORY
 			-- Enumeration descriptor factory
 		once
 			create Result
 		end
 
-	Parameter_descriptor_factory: WIZARD_PARAMETER_DESCRIPTOR_FACTORY	is
+	Parameter_descriptor_factory: WIZARD_PARAMETER_DESCRIPTOR_FACTORY
 			-- Parameter descriptor factory
 		once
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

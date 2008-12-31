@@ -1,4 +1,4 @@
-indexing
+note
 	description: "COM CUSTDATAITEM structure"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_from_pointer (a_pointer: POINTER) is
+	make_from_pointer (a_pointer: POINTER)
 			-- Make from pointer.
 		do
 			make_by_pointer (a_pointer)
@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	guid: ECOM_GUID is
+	guid: ECOM_GUID
 			-- GUID
 		do
 			create Result.make_from_pointer (ccom_custdataitem_guid (item))
@@ -33,7 +33,7 @@ feature -- Access
 			Result /= Void
 		end
 
-	variant_structure: ECOM_VARIANT is
+	variant_structure: ECOM_VARIANT
 			-- VARIANT structure
 		do
 			create Result.make_from_pointer (ccom_custdataitem_variant (item))
@@ -43,7 +43,7 @@ feature -- Access
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of CUSTDATAITEM structure
 		do
 			Result := c_size_of_cust_data_item
@@ -51,24 +51,24 @@ feature -- Measurement
 
 feature {NONE} -- Externals
 
-	c_size_of_cust_data_item: INTEGER is
+	c_size_of_cust_data_item: INTEGER
 		external 
 			"C [macro %"E_custdataitem.h%"]"
 		alias
 			"sizeof(CUSTDATAITEM)"
 		end
 
-	ccom_custdataitem_guid (a_ptr: POINTER): POINTER is
+	ccom_custdataitem_guid (a_ptr: POINTER): POINTER
 		external
 			"C [macro %"E_custdataitem.h%"](EIF_POINTER): EIF_POINTER"
 		end
 
-	ccom_custdataitem_variant (a_ptr: POINTER): POINTER is
+	ccom_custdataitem_variant (a_ptr: POINTER): POINTER
 		external
 			"C [macro %"E_custdataitem.h%"](EIF_POINTER): EIF_POINTER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

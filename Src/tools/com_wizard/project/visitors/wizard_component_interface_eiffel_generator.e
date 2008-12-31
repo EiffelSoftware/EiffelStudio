@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Processing interface for Eiffel component."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -36,7 +36,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Initialize instance.
 		do
 			create generated_coclasses.make (10)
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	initialize (a_component: WIZARD_COMPONENT_DESCRIPTOR; a_interface: WIZARD_INTERFACE_DESCRIPTOR; a_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS; a_inherit_clause: WIZARD_WRITER_INHERIT_CLAUSE) is
+	initialize (a_component: WIZARD_COMPONENT_DESCRIPTOR; a_interface: WIZARD_INTERFACE_DESCRIPTOR; a_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS; a_inherit_clause: WIZARD_WRITER_INHERIT_CLAUSE)
 			-- Initialize
 		do
 			component := a_component
@@ -65,7 +65,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	add_feature_to_class (a_feature: WIZARD_WRITER_FEATURE) is
+	add_feature_to_class (a_feature: WIZARD_WRITER_FEATURE)
 			-- Add `a_feature' to `a_class'.
 			-- Add efffective, non-external feature to class.
 		require
@@ -80,7 +80,7 @@ feature -- Basic Operations
 			end
 		end
 
-	add_property_features_to_class (a_property: WIZARD_EIFFEL_EFFECTIVE_PROPERTY_GENERATOR) is
+	add_property_features_to_class (a_property: WIZARD_EIFFEL_EFFECTIVE_PROPERTY_GENERATOR)
 			-- Add property related features to `a_class'.
 		require
 			non_void_property: a_property /= Void
@@ -98,7 +98,7 @@ feature -- Basic Operations
 			end
 		end
 
-	add_feature_rename (a_function_generator: WIZARD_EIFFEL_EFFECTIVE_FUNCTION_GENERATOR) is
+	add_feature_rename (a_function_generator: WIZARD_EIFFEL_EFFECTIVE_FUNCTION_GENERATOR)
 			-- Add rename to `inherit_cluse'.
 		require
 			non_void_inherit_clause: inherit_clause /= Void
@@ -109,7 +109,7 @@ feature -- Basic Operations
 			end
 		end
 
-	add_property_rename (a_property_generator: WIZARD_EIFFEL_EFFECTIVE_PROPERTY_GENERATOR) is
+	add_property_rename (a_property_generator: WIZARD_EIFFEL_EFFECTIVE_PROPERTY_GENERATOR)
 			-- Add rename to `inherit_cluse'.
 		require
 			non_void_inherit_clause: inherit_clause /= Void
@@ -130,7 +130,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	clean_up is
+	clean_up
 			-- Clean up.
 		do
 			component := Void
@@ -143,7 +143,7 @@ invariant
 	non_void_eiffel_writer: not finished implies eiffel_writer /= Void
 	non_void_inherit_clause: not finished implies inherit_clause /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Class writer"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize writer.
 		do
 			description := ""
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	generated_code: STRING is
+	generated_code: STRING
 			-- Generated code
 		local
 			l_integer: INTEGER
@@ -137,7 +137,7 @@ feature -- Access
 	invariants: LIST [WIZARD_WRITER_ASSERTION]
 			-- List of invariants
 
-	can_generate: BOOLEAN is
+	can_generate: BOOLEAN
 			-- Can code be generated?
 		do
 			Result := class_name /= Void and then not class_name.is_empty
@@ -148,7 +148,7 @@ feature -- Access
 
 feature -- Element Change
 
-	set_empty_creation_routines is
+	set_empty_creation_routines
 			-- Set no creation routines with `create' keyword.
 		require
 			no_creation_routines: creation_routines.is_empty
@@ -158,7 +158,7 @@ feature -- Element Change
 			empty_creation_routines: empty_creation_routines
 		end
 
-	set_class_name (a_class_name: like class_name) is
+	set_class_name (a_class_name: like class_name)
 			-- Set `class_name' with `a_class_name'.
 		require
 			non_void_class_name: a_class_name /= Void
@@ -169,7 +169,7 @@ feature -- Element Change
 			class_name_set: class_name = a_class_name
 		end
 
-	set_description (a_description: like description) is
+	set_description (a_description: like description)
 			-- Set `description' with `a_description'.
 		require
 			non_void_description: a_description /= Void
@@ -179,7 +179,7 @@ feature -- Element Change
 			description_set: description = a_description
 		end
 
-	add_inherit_clause (a_clause: WIZARD_WRITER_INHERIT_CLAUSE) is
+	add_inherit_clause (a_clause: WIZARD_WRITER_INHERIT_CLAUSE)
 			-- Add inherit clause `a_clause' for class `a_class_name'.
 		require
 			non_void_clause: a_clause /= Void
@@ -189,7 +189,7 @@ feature -- Element Change
 			extended: inherit_clauses.last = a_clause
 		end
 
-	add_creation_routine (a_creation_routine: STRING) is
+	add_creation_routine (a_creation_routine: STRING)
 			-- Add `a_creation_routine' to creation routines.
 		require
 			non_void_creation_routines: a_creation_routine /= Void
@@ -200,7 +200,7 @@ feature -- Element Change
 			extended: creation_routines.last = a_creation_routine
 		end
 
-	add_feature (a_feature: WIZARD_WRITER_FEATURE; a_clause: INTEGER) is
+	add_feature (a_feature: WIZARD_WRITER_FEATURE; a_clause: INTEGER)
 			-- Add `a_feature' to list of features.
 		require
 			non_void_feature: a_feature /= Void
@@ -215,7 +215,7 @@ feature -- Element Change
 			features.item (a_clause).extend (a_feature)
 		end
 
-	add_invariant (an_invariant: WIZARD_WRITER_ASSERTION) is
+	add_invariant (an_invariant: WIZARD_WRITER_ASSERTION)
 			-- Add `an_invariant' to invariants list.
 		require
 			non_void_invariant: an_invariant /= Void
@@ -225,7 +225,7 @@ feature -- Element Change
 			extended: invariants.last = an_invariant
 		end
 
-	set_deferred is
+	set_deferred
 			-- Set `is_deferred' to `True'.
 		do
 			is_deferred := True
@@ -233,7 +233,7 @@ feature -- Element Change
 			is_deferred: is_deferred
 		end
 
-	set_effective is
+	set_effective
 			-- Set `is_deferred' to `False'.
 		do
 			is_deferred := False
@@ -249,7 +249,7 @@ invariant
 	non_void_inherit_clauses: inherit_clauses /= Void
 	valid_empty_creation_routines: empty_creation_routines implies creation_routines.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

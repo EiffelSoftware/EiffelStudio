@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog properties window of Resource Bench"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -39,7 +39,7 @@ create
 
 feature -- Initialization
 
-	make (a_parent: WEL_COMPOSITE_WINDOW; a_dialog: TDS_DIALOG) is
+	make (a_parent: WEL_COMPOSITE_WINDOW; a_dialog: TDS_DIALOG)
 			-- Create the dialog.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -72,7 +72,7 @@ feature -- Initialization
 			current_dialog_set: current_dialog = a_dialog
 		end
 
-	default_process_message (msg: INTEGER; wparam, lparam: POINTER) is
+	default_process_message (msg: INTEGER; wparam, lparam: POINTER)
 		local
 			tt1: WEL_TOOLTIP_TEXT
 		do
@@ -86,12 +86,12 @@ feature -- Initialization
 			end
 		end
 
-	setup_dialog is
+	setup_dialog
 		do
 			get_dialog_properties
 		end
 
-	notify (control: WEL_CONTROL; notify_code: INTEGER) is
+	notify (control: WEL_CONTROL; notify_code: INTEGER)
 		do
 			if control = check_code_generation then
 				if check_code_generation.checked then
@@ -128,7 +128,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_dialog_properties (a_dialog: TDS_DIALOG) is
+	set_dialog_properties (a_dialog: TDS_DIALOG)
 		local
 			selected_list: ARRAY [INTEGER]
 			control_list: TDS_CONTROL_STATEMENT
@@ -237,7 +237,7 @@ feature -- Element change
 			end
 		end
 
-	get_dialog_properties is
+	get_dialog_properties
 		local
 			control_name: STRING
 			control_list: TDS_CONTROL_STATEMENT
@@ -354,7 +354,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	enable_all_controls is
+	enable_all_controls
 		do
 			control_selection_list.enable
 			dialog_class_name.enable
@@ -372,7 +372,7 @@ feature {NONE} -- Implementation
 			idc_on_no.enable
 		end
 
-	disable_all_controls is
+	disable_all_controls
 		do
 			control_selection_list.disable
 			dialog_class_name.disable
@@ -390,7 +390,7 @@ feature {NONE} -- Implementation
 			idc_on_no.disable
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

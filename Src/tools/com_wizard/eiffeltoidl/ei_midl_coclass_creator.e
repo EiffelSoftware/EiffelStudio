@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Create MIDL coclass"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	create_from_eiffel_class (eiffel_class: EI_CLASS) is
+	create_from_eiffel_class (eiffel_class: EI_CLASS)
 			-- Generate MIDL coclass from 'eiffel_class'.
 		local
 			interface_creator: EI_MIDL_INTERFACE_CREATOR
@@ -39,7 +39,7 @@ feature -- Basic operations
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

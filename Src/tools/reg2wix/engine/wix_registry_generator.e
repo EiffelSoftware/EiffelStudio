@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Utility class to generated WiX registry include documents from {REG_FILE}s.
 	]"
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Access
 
-	short_hive_name_table: HASH_TABLE [STRING, STRING] is
+	short_hive_name_table: HASH_TABLE [STRING, STRING]
 			-- Table of short registry hive names indexed by their long name
 			-- Key: Long hive name
 			-- Value: Short hive name
@@ -30,7 +30,7 @@ feature {NONE} -- Access
 			result_compares_objects: Result.object_comparison
 		end
 
-	default_namespace: XM_NAMESPACE is
+	default_namespace: XM_NAMESPACE
 			-- Default namespace
 		once
 			create Result.make ("", "")
@@ -48,7 +48,7 @@ feature -- Status report
 
 feature -- Generation
 
-	generate (a_reg: REG_FILE; a_options: IREG2WIX_OPTIONS): XM_DOCUMENT is
+	generate (a_reg: REG_FILE; a_options: IREG2WIX_OPTIONS): XM_DOCUMENT
 			-- Generates a WiX document from the registry file `a_reg'
 		require
 			a_reg_attached: a_reg /= Void
@@ -70,7 +70,7 @@ feature -- Generation
 			not_is_generating: not is_generating
 		end
 
-	generate_collection (a_reg_files: LINEAR [REG_FILE]; a_options: IREG2WIX_OPTIONS): XM_DOCUMENT is
+	generate_collection (a_reg_files: LINEAR [REG_FILE]; a_options: IREG2WIX_OPTIONS): XM_DOCUMENT
 			-- Generates a WiX document from the collection fo registry files `a_reg_files'
 		require
 			a_reg_files_attached: a_reg_files /= Void
@@ -103,7 +103,7 @@ feature -- Generation
 
 feature {NONE} -- Generation
 
-	generate_registry_key (a_key: REG_FILE_KEY; a_parent: XM_ELEMENT; a_options: IREG2WIX_OPTIONS) is
+	generate_registry_key (a_key: REG_FILE_KEY; a_parent: XM_ELEMENT; a_options: IREG2WIX_OPTIONS)
 			-- Generates a WiX RegistryKey element from `a_key'
 		require
 			a_key_attached: a_key /= Void
@@ -134,7 +134,7 @@ feature {NONE} -- Generation
 			a_parent.force_last (l_elm)
 		end
 
-	generate_registry_value (a_value: REG_FILE_VALUE; a_parent: XM_ELEMENT; a_options: IREG2WIX_OPTIONS) is
+	generate_registry_value (a_value: REG_FILE_VALUE; a_parent: XM_ELEMENT; a_options: IREG2WIX_OPTIONS)
 			-- Generates a WiX RegistryValue element from `a_value'
 		require
 			a_value_attached: a_value /= Void
@@ -198,7 +198,7 @@ feature {NONE} -- Generation
 
 feature {NONE} -- Basic operations
 
-	split_key_path (a_key: STRING): TUPLE [root: STRING; key: STRING] is
+	split_key_path (a_key: STRING): TUPLE [root: STRING; key: STRING]
 			-- Splits a registry key path `a_key' into a hive root and a key path
 		require
 			a_key_attached: a_key /= Void
@@ -229,7 +229,7 @@ feature {NONE} -- Basic operations
 			not_result_key_is_empty: Result.key /= Void implies not Result.key.is_empty
 		end
 
-	short_hive_name (a_name: STRING): STRING is
+	short_hive_name (a_name: STRING): STRING
 			-- Generates a short registry hive name from `a_name'
 		local
 			l_names: like short_hive_name_table
@@ -266,7 +266,7 @@ feature {NONE} -- Basic operations
 			short_hive_name_table_has_result: short_hive_name_table.has (Result)
 		end
 
-	generate_new_id (a_prefix: STRING): STRING is
+	generate_new_id (a_prefix: STRING): STRING
 			-- Generates a new registry id
 		require
 			not_a_prefix_is_empty: a_prefix /= Void implies not a_prefix.is_empty
@@ -284,7 +284,7 @@ feature {NONE} -- Basic operations
 			not_result_is_empty: not Result.is_empty
 		end
 
-	uuid_generator: UUID_GENERATOR is
+	uuid_generator: UUID_GENERATOR
 			-- Generator used to create new registry ids.
 		once
 			create Result
@@ -294,7 +294,7 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Conversion routines
 
-	hex_string_to_natural (a_string: STRING): NATURAL is
+	hex_string_to_natural (a_string: STRING): NATURAL
 			-- Converts string `a_string' to a {NATURAL} number
 		require
 			a_string_attached: a_string /= Void
@@ -370,7 +370,7 @@ feature {NONE} -- Constants
 invariant
 	working_file_attached: is_generating implies working_file /= Void
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

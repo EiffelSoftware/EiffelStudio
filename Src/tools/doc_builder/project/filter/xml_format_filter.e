@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ create
 
 feature -- Creation
 
-	make (a_rich_text: EV_RICH_TEXT) is
+	make (a_rich_text: EV_RICH_TEXT)
 			-- Make
 		do
 			rich_text := a_rich_text
@@ -48,7 +48,7 @@ feature -- Access
 
 feature {NONE} -- Processing
 
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- Process `e'
 		do
 			if in_attribute then
@@ -59,7 +59,7 @@ feature {NONE} -- Processing
 			in_attribute := True
 		end
 
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- Process `e'
 		do
 			if in_attribute then
@@ -71,7 +71,7 @@ feature {NONE} -- Processing
 			rich_text.buffered_append (etag_end, tag_format)
 		end
 
-	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
+	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
 			-- Process `att'
 		do
 			in_attribute := True
@@ -81,7 +81,7 @@ feature {NONE} -- Processing
 			rich_text.buffered_append (quot_s, tag_format)
 		end	
 		
-	on_content (a_content: STRING) is
+	on_content (a_content: STRING)
 			-- Process `c'
 		local
 			l_content: STRING
@@ -96,7 +96,7 @@ feature {NONE} -- Processing
 
 feature -- Constants
 
-	background_color: EV_COLOR is
+	background_color: EV_COLOR
 			-- Background color
 		local
 			l_r, l_g, l_b: REAL
@@ -107,25 +107,25 @@ feature -- Constants
 			create Result.make_with_rgb (l_r, l_g, l_b)
 		end
 
-	tag_format: EV_CHARACTER_FORMAT is
+	tag_format: EV_CHARACTER_FORMAT
 			-- Tag format
 		do
 			create Result.make_with_font_and_color (rich_text_font, tag_color, background_color)
 		end		
 
-	element_format: EV_CHARACTER_FORMAT is
+	element_format: EV_CHARACTER_FORMAT
 			-- Element format
 		do
 			create Result.make_with_font_and_color (rich_text_font, element_color, background_color)
 		end
 		
-	attribute_format: EV_CHARACTER_FORMAT is
+	attribute_format: EV_CHARACTER_FORMAT
 			-- Tag format
 		do
 			create Result.make_with_font_and_color (rich_text_font, attribute_color, background_color)
 		end
 
-	content_format: EV_CHARACTER_FORMAT is
+	content_format: EV_CHARACTER_FORMAT
 			-- Content format
 		local
 			l_font: EV_FONT
@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 
 	in_attribute: BOOLEAN;	
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

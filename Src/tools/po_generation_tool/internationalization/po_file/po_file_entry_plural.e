@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Represents a .po file entry where the string should have its plural forms translated
 				]"
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_msgid:STRING_GENERAL) is
+	make (a_msgid:STRING_GENERAL)
 			-- Initialize plural entry with `a_msgid' as message ID.
 			--
 			-- `a_msgid': Message ID for new entry
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	set_msgid_plural (a_plural:STRING_GENERAL) is
+	set_msgid_plural (a_plural:STRING_GENERAL)
 			-- Set untranslated plural string to `a_plural'.
 		require
 			a_plural_not_void: a_plural /= Void
@@ -50,7 +50,7 @@ feature -- Element change
 			msgid_plural_set: msgid_plural.is_equal(a_plural.as_string_32)
 		end
 
-	set_msgstr_n (n:INTEGER; translation:STRING_GENERAL) is
+	set_msgstr_n (n:INTEGER; translation:STRING_GENERAL)
 			-- Set nth plural form translation to `translation'.
 		require
 			n_correct: n >= 0
@@ -63,13 +63,13 @@ feature -- Element change
 
 feature -- Access
 
-	msgid_plural: STRING_32 is
+	msgid_plural: STRING_32
 			-- Message ID of plural form
 		do
 			Result := unbreak_line (msgid_plural_lines)
 		end
 
-	 has_msgstr_n (n: INTEGER): BOOLEAN is
+	 has_msgstr_n (n: INTEGER): BOOLEAN
 	 		-- Does this entry have a translation for the nth plural of `msgid_plural'?
 	 		--
 	 		-- `n': Count of plural form
@@ -80,7 +80,7 @@ feature -- Access
  			Result := (msgstr_n_lines.valid_index (n) and then msgstr_n_lines.item (n) /= Void)
  		end
 
-	 msgstr_n (n: INTEGER): STRING_32 is
+	 msgstr_n (n: INTEGER): STRING_32
 	 		-- Translation for the nth plural form
 	 		--
 	 		-- `n': Count of plural form
@@ -96,7 +96,7 @@ feature -- Access
 
 feature -- Output
 
-	to_string: STRING_32 is
+	to_string: STRING_32
 			-- Entry as a unicode string
 		local
 			counter: INTEGER
@@ -126,7 +126,7 @@ feature {NONE} -- Implementation
 	msgid_plural_lines: LINKED_LIST[STRING_32];
 			-- List of message ID lines of plural form
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

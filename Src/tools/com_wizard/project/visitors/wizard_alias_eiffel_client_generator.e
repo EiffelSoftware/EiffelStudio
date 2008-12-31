@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Alias eiffel client generator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -15,7 +15,7 @@ inherit
 
 feature -- Access
 
-	generate (a_descriptor: WIZARD_ALIAS_DESCRIPTOR) is
+	generate (a_descriptor: WIZARD_ALIAS_DESCRIPTOR)
 			-- Generated eiffel client for alias.
 		do
 			Precursor (a_descriptor)
@@ -25,13 +25,13 @@ feature -- Access
 			end
 		end
 	
-	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY) is
+	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY)
 			-- Create file name.
 		do
 			a_factory.process_alias_eiffel_client
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

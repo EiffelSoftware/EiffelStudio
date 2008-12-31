@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Base error for all savecfg tool errors.
 	]"
@@ -18,7 +18,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_file_name: like file_name) is
+	make (a_file_name: like file_name)
 			-- Initialize error with file name `a_file_name'
 		require
 			a_file_name_attached: a_file_name /= Void
@@ -31,13 +31,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_fatal: BOOLEAN is
+	is_fatal: BOOLEAN
 			-- Is error fatal
 		once
 			Result := False
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

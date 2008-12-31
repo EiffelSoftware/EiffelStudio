@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Converts a table of contents file to a corresponding Microsoft Help 2.0 table of contents."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature -- Access
 
-	mshelp_text: STRING is
+	mshelp_text: STRING
 			-- HTML Help 1.x text
 		do			
 			Result := processed_text
@@ -27,7 +27,7 @@ feature -- Access
 
 feature -- Processing
 
-	node_text (a_node: TABLE_OF_CONTENTS_NODE): STRING is
+	node_text (a_node: TABLE_OF_CONTENTS_NODE): STRING
 			-- Node text
 		local
 			l_title,
@@ -75,7 +75,7 @@ feature -- Processing
 			Result.append ("</HelpTOCNode>%N")		
 		end				
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

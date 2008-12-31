@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Type names"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,223 +10,223 @@ class
 	
 feature -- Eiffel types
 
-	Arguments_type: STRING is "ARGUMENTS"
+	Arguments_type: STRING = "ARGUMENTS"
 
-	Integer_type: STRING is "INTEGER"
+	Integer_type: STRING = "INTEGER"
 
-	Internal_type: STRING is "INTERNAL"
+	Internal_type: STRING = "INTERNAL"
 
-	Void_type: STRING is "Void"
+	Void_type: STRING = "Void"
 
-	Character_type: STRING is "CHARACTER"
+	Character_type: STRING = "CHARACTER"
 
-	Real_type: STRING is "REAL"
+	Real_type: STRING = "REAL"
 
-	Double_type: STRING is "DOUBLE"
+	Double_type: STRING = "DOUBLE"
 
-	Boolean_type: STRING is "BOOLEAN"
+	Boolean_type: STRING = "BOOLEAN"
 
-	Date_time: STRING is "DATE_TIME"
+	Date_time: STRING = "DATE_TIME"
 
-	Ecom_hresult: STRING is "ECOM_HRESULT"
+	Ecom_hresult: STRING = "ECOM_HRESULT"
 
-	Ecom_variant: STRING is "ECOM_VARIANT"
+	Ecom_variant: STRING = "ECOM_VARIANT"
 
-	Ecom_currency: STRING is "ECOM_CURRENCY"
+	Ecom_currency: STRING = "ECOM_CURRENCY"
 
-	Ecom_decimal: STRING is "ECOM_DECIMAL"
+	Ecom_decimal: STRING = "ECOM_DECIMAL"
 
-	Ecom_interface: STRING  is "ECOM_INTERFACE"
+	Ecom_interface: STRING  = "ECOM_INTERFACE"
 
-	Ecom_unknown_interface: STRING  is "ECOM_UNKNOWN_INTERFACE"
+	Ecom_unknown_interface: STRING  = "ECOM_UNKNOWN_INTERFACE"
 
-	Ecom_automation_interface: STRING is "ECOM_AUTOMATION_INTERFACE"
+	Ecom_automation_interface: STRING = "ECOM_AUTOMATION_INTERFACE"
 
-	String_type: STRING is "STRING"
+	String_type: STRING = "STRING"
 
-	Ecom_large_integer: STRING is "ECOM_LARGE_INTEGER"
+	Ecom_large_integer: STRING = "ECOM_LARGE_INTEGER"
 
-	Ecom_ularge_integer: STRING is "ECOM_ULARGE_INTEGER"
+	Ecom_ularge_integer: STRING = "ECOM_ULARGE_INTEGER"
 
-	Any_type: STRING is "ANY"
+	Any_type: STRING = "ANY"
 
-	Pointer_type: STRING is "POINTER"
+	Pointer_type: STRING = "POINTER"
 
-	Exceptions_type: STRING is "EXCEPTIONS"
+	Exceptions_type: STRING = "EXCEPTIONS"
 
-	Queriable_type: STRING is "ECOM_QUERIABLE"
+	Queriable_type: STRING = "ECOM_QUERIABLE"
 
-	Error_handler_type: STRING is "ECOM_ERROR_HANDLER"
+	Error_handler_type: STRING = "ECOM_ERROR_HANDLER"
 
-	ecom_excep_info_type: STRING is "ECOM_EXCEP_INFO"
+	ecom_excep_info_type: STRING = "ECOM_EXCEP_INFO"
 
-	Character_ref_type: STRING is "CHARACTER_REF"
+	Character_ref_type: STRING = "CHARACTER_REF"
 
-	Integer_ref_type: STRING is "INTEGER_REF"
+	Integer_ref_type: STRING = "INTEGER_REF"
 
-	Integer64_ref_type: STRING is "INTEGER_64_REF"
+	Integer64_ref_type: STRING = "INTEGER_64_REF"
 
-	Real_ref_type: STRING is "REAL_REF"
+	Real_ref_type: STRING = "REAL_REF"
 
-	Double_ref_type: STRING is "DOUBLE_REF"
+	Double_ref_type: STRING = "DOUBLE_REF"
 
-	Boolean_ref_type: STRING is "BOOLEAN_REF"
+	Boolean_ref_type: STRING = "BOOLEAN_REF"
 
-	Array_type: STRING is "ARRAY"
+	Array_type: STRING = "ARRAY"
 
-	Ecom_array_type: STRING is "ECOM_ARRAY"
+	Ecom_array_type: STRING = "ECOM_ARRAY"
 
-	Cell_type: STRING is "CELL"
+	Cell_type: STRING = "CELL"
 
-	Alias_type: STRING is "ALIAS"
+	Alias_type: STRING = "ALIAS"
 
-	Ecom_structure: STRING is "ECOM_STRUCTURE"
+	Ecom_structure: STRING = "ECOM_STRUCTURE"
 
-	Cell_pointer: STRING is "CELL [POINTER]"
+	Cell_pointer: STRING = "CELL [POINTER]"
 
 feature -- COM/C types
 
-	Ulong_type: STRING is "ULONG"
+	Ulong_type: STRING = "ULONG"
 
-	Bool: STRING is "BOOL"
+	Bool: STRING = "BOOL"
 
-	Excepinfo: STRING is "EXCEPINFO"
+	Excepinfo: STRING = "EXCEPINFO"
 
-	Lpwstr: STRING is "LPWSTR"
+	Lpwstr: STRING = "LPWSTR"
 
-	Lpstr: STRING is "LPSTR"
+	Lpstr: STRING = "LPSTR"
 
-	Iunknown_type: STRING is "IUnknown"
+	Iunknown_type: STRING = "IUnknown"
 
-	Idispatch_type: STRING is "IDispatch"
+	Idispatch_type: STRING = "IDispatch"
 
-	Variant_bool: STRING is "VARIANT_BOOL"
+	Variant_bool: STRING = "VARIANT_BOOL"
 
-	Variant_bool_pointer: STRING is "VARIANT_BOOL *"
+	Variant_bool_pointer: STRING = "VARIANT_BOOL *"
 
-	Date_c_keyword, Com_date_type: STRING is "DATE"
+	Date_c_keyword, Com_date_type: STRING = "DATE"
 
-	Hresult: STRING is "HRESULT"
+	Hresult: STRING = "HRESULT"
 
-	Type_info: STRING is "ITypeInfo *"
+	Type_info: STRING = "ITypeInfo *"
 
-	Variant_c_keyword: STRING is "VARIANT"
+	Variant_c_keyword: STRING = "VARIANT"
 
-	Currency, Com_currency_type: STRING is "CURRENCY"
+	Currency, Com_currency_type: STRING = "CURRENCY"
 
-	Decimal, Com_decimal_type: STRING is "DECIMAL"
+	Decimal, Com_decimal_type: STRING = "DECIMAL"
 
-	Idispatch: STRING is "IDispatch *"
+	Idispatch: STRING = "IDispatch *"
 
-	Iunknown: STRING is "IUnknown *"
+	Iunknown: STRING = "IUnknown *"
 
-	Bstr: STRING is "BSTR"
+	Bstr: STRING = "BSTR"
 
-	Com_char_type: STRING is "CHAR"
+	Com_char_type: STRING = "CHAR"
 
-	Uchar_type: STRING is "UCHAR"
+	Uchar_type: STRING = "UCHAR"
 
-	Com_character_pointer: STRING is "CHAR *"
+	Com_character_pointer: STRING = "CHAR *"
 
-	Olechar: STRING is "OLECHAR"
+	Olechar: STRING = "OLECHAR"
 
-	Large_integer: STRING is "LONGLONG"
+	Large_integer: STRING = "LONGLONG"
 
-	Ularge_integer: STRING is "ULONGLONG"
+	Ularge_integer: STRING = "ULONGLONG"
 
-	Safearray: STRING is "SAFEARRAY"
+	Safearray: STRING = "SAFEARRAY"
 
-	Com_safearray_type: STRING is "SAFEARRAY *"
+	Com_safearray_type: STRING = "SAFEARRAY *"
 
-	Variantarg: STRING is "VARIANTARG"
+	Variantarg: STRING = "VARIANTARG"
 
-	Clsid_type: STRING is "CLSID"
+	Clsid_type: STRING = "CLSID"
 
-	Libid_type: STRING is "LIBID"
+	Libid_type: STRING = "LIBID"
 
-	Iid_type: STRING is "IID"
+	Iid_type: STRING = "IID"
 
-	Dword: STRING is "DWORD"
+	Dword: STRING = "DWORD"
 
-	Long_macro: STRING is "LONG"
+	Long_macro: STRING = "LONG"
 
-	C_void_pointer: STRING is "void *"
+	C_void_pointer: STRING = "void *"
 
-	Void_c_keyword: STRING is "void"
+	Void_c_keyword: STRING = "void"
 
-	Char: STRING is "char"
+	Char: STRING = "char"
 
-	Short: STRING is "short"
+	Short: STRING = "short"
 
-	Com_short_type: STRING is "SHORT"
+	Com_short_type: STRING = "SHORT"
 
-	Ushort_type: STRING is "USHORT"
+	Ushort_type: STRING = "USHORT"
 
-	Long: STRING is "long"
+	Long: STRING = "long"
 
-	Unsigned_char: STRING is "unsigned char"
+	Unsigned_char: STRING = "unsigned char"
 
-	Unsigned_short: STRING is "unsigned short"
+	Unsigned_short: STRING = "unsigned short"
 
-	Unsigned_long: STRING is "unsigned long"
+	Unsigned_long: STRING = "unsigned long"
 
-	Float: STRING is "float"
+	Float: STRING = "float"
 
-	Com_float_type: STRING is "FLOAT"
+	Com_float_type: STRING = "FLOAT"
 
-	Com_float_pointer: STRING is "FLOAT *"
+	Com_float_pointer: STRING = "FLOAT *"
 
-	Double_c_keyword: STRING is "double"
+	Double_c_keyword: STRING = "double"
 
-	Unsigned_int: STRING is "unsigned int"
+	Unsigned_int: STRING = "unsigned int"
 
-	Uint_type: STRING is "UINT"
+	Uint_type: STRING = "UINT"
 
-	Com_integer_type: STRING is "INT"
+	Com_integer_type: STRING = "INT"
 
-	Com_integer_pointer: STRING is "INT *"
+	Com_integer_pointer: STRING = "INT *"
 
-	Carray: STRING is "CARRAY"
+	Carray: STRING = "CARRAY"
 
-	Com_double_pointer: STRING is "DOUBLE *"
+	Com_double_pointer: STRING = "DOUBLE *"
 
 feature -- Cecil types
 
-	Eif_integer: STRING is "EIF_INTEGER"
+	Eif_integer: STRING = "EIF_INTEGER"
 
-	Eif_character: STRING is "EIF_CHARACTER"
+	Eif_character: STRING = "EIF_CHARACTER"
 
-	Eif_boolean: STRING is "EIF_BOOLEAN"
+	Eif_boolean: STRING = "EIF_BOOLEAN"
 
-	Eif_pointer: STRING is "EIF_POINTER"
+	Eif_pointer: STRING = "EIF_POINTER"
 
-	Eif_real: STRING is "EIF_REAL"
+	Eif_real: STRING = "EIF_REAL"
 
-	Eif_double: STRING is "EIF_DOUBLE"
+	Eif_double: STRING = "EIF_DOUBLE"
 
-	Eif_reference: STRING is "EIF_REFERENCE"
+	Eif_reference: STRING = "EIF_REFERENCE"
 
-	Eif_object: STRING is "EIF_OBJECT"
+	Eif_object: STRING = "EIF_OBJECT"
 
-	Eif_procedure: STRING is "EIF_PROCEDURE"
+	Eif_procedure: STRING = "EIF_PROCEDURE"
 
-	Eif_character_function: STRING is "EIF_CHARACTER_FUNCTION"
+	Eif_character_function: STRING = "EIF_CHARACTER_FUNCTION"
 
-	Eif_reference_function: STRING is "EIF_REFERENCE_FUNCTION"
+	Eif_reference_function: STRING = "EIF_REFERENCE_FUNCTION"
 
-	Eif_pointer_function: STRING is "EIF_POINTER_FUNCTION"
+	Eif_pointer_function: STRING = "EIF_POINTER_FUNCTION"
 
-	Eif_integer_function: STRING is "EIF_INTEGER_FUNCTION"
+	Eif_integer_function: STRING = "EIF_INTEGER_FUNCTION"
 
-	Eif_real_function: STRING is "EIF_REAL_FUNCTION"
+	Eif_real_function: STRING = "EIF_REAL_FUNCTION"
 
-	Eif_double_function: STRING is "EIF_DOUBLE_FUNCTION"
+	Eif_double_function: STRING = "EIF_DOUBLE_FUNCTION"
 
-	Eif_boolean_function: STRING is "EIF_BOOLEAN_FUNCTION"
+	Eif_boolean_function: STRING = "EIF_BOOLEAN_FUNCTION"
 
-	Eif_type_id: STRING is "EIF_TYPE_ID";
+	Eif_type_id: STRING = "EIF_TYPE_ID";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

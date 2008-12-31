@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Mapper class writer associated with an id"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_ec is
+	make_ec
 			-- Initialize `id'.
 		do
 			make
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			initialize
 		end
 		
-	make_ce is
+	make_ce
 			-- Initialize `id'.
 		do
 			make
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			initialize
 		end
 	
-	initialize is
+	initialize
 			-- Initialize instance according to `is_ec' and `id'.
 		local
 			l_header_file_name, l_header, l_source: STRING
@@ -120,7 +120,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	add_function (a_function: WIZARD_WRITER_C_FUNCTION; a_export_status: INTEGER) is
+	add_function (a_function: WIZARD_WRITER_C_FUNCTION; a_export_status: INTEGER)
 			-- Add `a_function' to functions.
 		do
 			functions_count := functions_count + 1
@@ -129,33 +129,33 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	Ec_counter: INTEGER is
+	Ec_counter: INTEGER
 			-- Incremental counter
 		do
 			Result := Ec_counter_cell.item + 1
 			Ec_counter_cell.set_item (Result)
 		end
 	
-	Ec_counter_cell: INTEGER_REF is
+	Ec_counter_cell: INTEGER_REF
 			-- Cell for `Ec_counter'.
 		once
 			create Result
 		end
 		
-	Ce_counter: INTEGER is
+	Ce_counter: INTEGER
 			-- Incremental counter
 		do
 			Result := Ce_counter_cell.item + 1
 			Ce_counter_cell.set_item (Result)
 		end
 	
-	Ce_counter_cell: INTEGER_REF is
+	Ce_counter_cell: INTEGER_REF
 			-- Cell for `Ce_counter'.
 		once
 			create Result
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Processing interfaces for Eiffel coclass."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -13,7 +13,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_coclass: WIZARD_COCLASS_DESCRIPTOR; an_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS) is
+	make (a_coclass: WIZARD_COCLASS_DESCRIPTOR; an_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS)
 			-- Initialize
 		require
 			non_void_coclass: a_coclass /= Void
@@ -33,7 +33,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	generate_interface_features (a_interface: WIZARD_INTERFACE_DESCRIPTOR) is
+	generate_interface_features (a_interface: WIZARD_INTERFACE_DESCRIPTOR)
 			-- Generate interface features.
 		local
 			l_clause: WIZARD_WRITER_INHERIT_CLAUSE
@@ -50,7 +50,7 @@ feature -- Basic operations
 feature {NONE} -- Implementation
 
 	generate_functions_and_properties (an_interface: WIZARD_INTERFACE_DESCRIPTOR;
-				an_inherit_clause: WIZARD_WRITER_INHERIT_CLAUSE) is
+				an_inherit_clause: WIZARD_WRITER_INHERIT_CLAUSE)
 			-- Generate functions and properties for interface.
 		require
 			non_void_interface: an_interface /= Void
@@ -58,7 +58,7 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	clean_up is
+	clean_up
 			-- Clean up.
 		do
 			coclass := Void
@@ -68,7 +68,7 @@ feature {NONE} -- Implementation
 invariant
 	non_void_writer: not finished implies eiffel_writer /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

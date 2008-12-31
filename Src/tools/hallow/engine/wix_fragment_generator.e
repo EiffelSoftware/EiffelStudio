@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A WiX generator used to generate XML content fragments adhearing to the WiX schema.
 	]"
@@ -17,7 +17,7 @@ inherit
 
 feature -- Basic operations
 
-	generate (a_options: I_OPTIONS; a_stream: TEXT_WRITER) is
+	generate (a_options: I_OPTIONS; a_stream: TEXT_WRITER)
 			-- Generate fragment XML with options `a_options'
 		local
 			l_writer: XML_TEXT_WRITER
@@ -30,7 +30,7 @@ feature -- Basic operations
 			l_writer.flush
 		end
 
-	reset is
+	reset
 			-- Resets internal for new generation
 		do
 			create name_table.make (512, {STRING_COMPARER}.invariant_culture_ignore_case)
@@ -44,7 +44,7 @@ feature -- Basic operations
 
 feature {NONE} -- Element generation
 
-	generate_root (a_options: I_OPTIONS; a_writer: XML_TEXT_WRITER) is
+	generate_root (a_options: I_OPTIONS; a_writer: XML_TEXT_WRITER)
 			-- Generates a WiX fragment.
 			--
 			-- `a_options': The options that determine how all elements are generated.
@@ -131,7 +131,7 @@ feature {NONE} -- Element generation
 			end
 		end
 
-	generate_component_group (a_options: I_OPTIONS; a_writer: XML_TEXT_WRITER) is
+	generate_component_group (a_options: I_OPTIONS; a_writer: XML_TEXT_WRITER)
 			-- Generates a ComponentGroup element
 			--
 			-- `a_options': The options that determine how the element is generated.
@@ -155,7 +155,7 @@ feature {NONE} -- Element generation
 			a_writer.write_end_element
 		end
 
-	generate_directory (a_dir: DIRECTORY_INFO; a_options: I_OPTIONS; a_writer: XML_TEXT_WRITER) is
+	generate_directory (a_dir: DIRECTORY_INFO; a_options: I_OPTIONS; a_writer: XML_TEXT_WRITER)
 			-- Generates a single WiX Directory element.
 			--
 			-- `a_dir': Directory to generate an element for.
@@ -179,7 +179,7 @@ feature {NONE} -- Element generation
 			a_writer.write_end_element
 		end
 
-	generate_directory_content (a_dir: DIRECTORY_INFO; a_root: BOOLEAN; a_options: I_OPTIONS; a_writer: XML_TEXT_WRITER) is
+	generate_directory_content (a_dir: DIRECTORY_INFO; a_root: BOOLEAN; a_options: I_OPTIONS; a_writer: XML_TEXT_WRITER)
 			-- Generates WiX Compent, File and Directory elements based on the content of a directory.
 			--
 			-- `a_dir': A directory to scan and generated XML elements base on content.
@@ -231,7 +231,7 @@ feature {NONE} -- Element generation
 			end
 		end
 
-	generate_directories (a_dirs: NATIVE_ARRAY [DIRECTORY_INFO]; a_options: I_OPTIONS; a_writer: XML_TEXT_WRITER) is
+	generate_directories (a_dirs: NATIVE_ARRAY [DIRECTORY_INFO]; a_options: I_OPTIONS; a_writer: XML_TEXT_WRITER)
 			-- Generates WiX Directory elements.
 			--
 			-- `a_dirs': An array of directories to generate Directory elements for
@@ -257,7 +257,7 @@ feature {NONE} -- Element generation
 			end
 		end
 
-	generate_component (a_path: SYSTEM_STRING; a_content_gen: PROCEDURE [WIX_FRAGMENT_GENERATOR, TUPLE [I_OPTIONS, XML_TEXT_WRITER]]; a_options: I_OPTIONS; a_writer: XML_TEXT_WRITER) is
+	generate_component (a_path: SYSTEM_STRING; a_content_gen: PROCEDURE [WIX_FRAGMENT_GENERATOR, TUPLE [I_OPTIONS, XML_TEXT_WRITER]]; a_options: I_OPTIONS; a_writer: XML_TEXT_WRITER)
 			-- Generates a single WiX Component element and its content using a generator agent.
 			--
 			-- `a_path': Full path to a disk entity that the component is generated for.
@@ -290,7 +290,7 @@ feature {NONE} -- Element generation
 			a_writer.write_end_element
 		end
 
-	generate_files (a_files: NATIVE_ARRAY [FILE_INFO]; a_root: BOOLEAN; a_options: I_OPTIONS; a_writer: XML_TEXT_WRITER) is
+	generate_files (a_files: NATIVE_ARRAY [FILE_INFO]; a_root: BOOLEAN; a_options: I_OPTIONS; a_writer: XML_TEXT_WRITER)
 			-- Generates WiX File elements.
 			--
 			-- `a_files': An array of files to generate File elements for
@@ -317,7 +317,7 @@ feature {NONE} -- Element generation
 			end
 		end
 
-	generate_file (a_file: FILE_INFO; a_root: BOOLEAN; a_options: I_OPTIONS; a_writer: XML_TEXT_WRITER) is
+	generate_file (a_file: FILE_INFO; a_root: BOOLEAN; a_options: I_OPTIONS; a_writer: XML_TEXT_WRITER)
 			-- Generates a single WiX File element.
 			--
 			-- `a_file': File to generate an element for.
@@ -355,7 +355,7 @@ feature {NONE} -- Element generation
 
 feature {NONE} -- Attribute generation
 
-	guid (a_options: I_OPTIONS): SYSTEM_STRING is
+	guid (a_options: I_OPTIONS): SYSTEM_STRING
 			-- Create a GUID based on `a_options'
 			--
 			-- `a_options': Options that determine how the resulting GUID string is generated
@@ -370,7 +370,7 @@ feature {NONE} -- Attribute generation
 			not_result_is_empty: not {SYSTEM_STRING}.is_null_or_empty (Result)
 		end
 
-	semantic_name (a_path: SYSTEM_STRING; a_options: I_OPTIONS; a_tag_name: SYSTEM_STRING; a_prefix: SYSTEM_STRING; a_use_short_name: BOOLEAN): SYSTEM_STRING is
+	semantic_name (a_path: SYSTEM_STRING; a_options: I_OPTIONS; a_tag_name: SYSTEM_STRING; a_prefix: SYSTEM_STRING; a_use_short_name: BOOLEAN): SYSTEM_STRING
 			-- Create a name based on specified user options `a_options'
 			--
 			-- `a_path': Full path to disk item to create a semantic name for.
@@ -464,7 +464,7 @@ feature {NONE} -- Attribute generation
 			not_result_is_empty: not {SYSTEM_STRING}.is_null_or_empty (Result)
 		end
 
-	format_identifier (a_id: SYSTEM_STRING): SYSTEM_STRING is
+	format_identifier (a_id: SYSTEM_STRING): SYSTEM_STRING
 			-- Formats identifier `a_id' to to ensure a valid WiX identifier
 			--
 			-- `a_id': An identifier
@@ -498,7 +498,7 @@ feature {NONE} -- Attribute generation
 			not_result_is_empty: not {SYSTEM_STRING}.is_null_or_empty (Result)
 		end
 
-	format_path (a_path: SYSTEM_STRING; a_options: I_OPTIONS): SYSTEM_STRING is
+	format_path (a_path: SYSTEM_STRING; a_options: I_OPTIONS): SYSTEM_STRING
 			-- Retrieves directory path for `a_path' given user options `a_options'
 			--
 			-- `a_path': Full path to an entity on disk to format.
@@ -523,7 +523,7 @@ feature {NONE} -- Attribute generation
 
 feature {NONE} --
 
-	files_for_options (a_files: NATIVE_ARRAY [FILE_INFO]; a_options: I_OPTIONS): NATIVE_ARRAY [FILE_INFO] is
+	files_for_options (a_files: NATIVE_ARRAY [FILE_INFO]; a_options: I_OPTIONS): NATIVE_ARRAY [FILE_INFO]
 			-- Processes files based on expression in the passed options to remove an invalid files.
 			--
 			-- `a_files': Files to process
@@ -584,7 +584,7 @@ feature {NONE} --
 			end
 		end
 
-	directories_for_options (a_dirs: NATIVE_ARRAY [DIRECTORY_INFO]; a_options: I_OPTIONS): NATIVE_ARRAY [DIRECTORY_INFO] is
+	directories_for_options (a_dirs: NATIVE_ARRAY [DIRECTORY_INFO]; a_options: I_OPTIONS): NATIVE_ARRAY [DIRECTORY_INFO]
 			-- Processes directories based on expression in the passed options to remove an invalid directory.
 			--
 			-- `a_dirs': Directories to process
@@ -664,7 +664,7 @@ feature {NONE} -- Tables
 
 feature {NONE} -- Counters
 
-	get_count (a_name: SYSTEM_STRING): NATURAL_32 is
+	get_count (a_name: SYSTEM_STRING): NATURAL_32
 			-- Retrieve counter for `a_name'
 			--
 			-- `a_name': A XML tag name to retrieve the count for.
@@ -683,7 +683,7 @@ feature {NONE} -- Counters
 			end
 		end
 
-	increase_count (a_name: SYSTEM_STRING) is
+	increase_count (a_name: SYSTEM_STRING)
 			-- Increase counter, for `a_name', by one.
 			--
 			-- `a_name': A XML tag name to increment the count for.
@@ -714,7 +714,7 @@ feature {NONE} -- Counters
 
 feature {NONE} -- Path utilities
 
-	frozen get_short_path_name (a_path: SYSTEM_STRING; a_options: I_OPTIONS): SYSTEM_STRING is
+	frozen get_short_path_name (a_path: SYSTEM_STRING; a_options: I_OPTIONS): SYSTEM_STRING
 			-- Retrieves the short path file or directory name of `a_path' using the options `a_options' to indicate
 			-- how the path is returned.
 		require
@@ -728,7 +728,7 @@ feature {NONE} -- Path utilities
 			not_result_is_empty: not {SYSTEM_STRING}.is_null_or_empty (Result)
 		end
 
-	frozen get_short_path (a_path: SYSTEM_STRING; a_options: I_OPTIONS): SYSTEM_STRING is
+	frozen get_short_path (a_path: SYSTEM_STRING; a_options: I_OPTIONS): SYSTEM_STRING
 			-- Retrieves the short path to a file or a directory of `a_path' using the options `a_options' to indicate
 			-- how the path is returned.
 		require
@@ -742,7 +742,7 @@ feature {NONE} -- Path utilities
 			not_result_is_empty: not {SYSTEM_STRING}.is_null_or_empty (Result)
 		end
 
-	frozen internal_get_short_path (a_path: SYSTEM_STRING; a_options: I_OPTIONS): SYSTEM_STRING is
+	frozen internal_get_short_path (a_path: SYSTEM_STRING; a_options: I_OPTIONS): SYSTEM_STRING
 			-- Retrieves the short path to a file or a directory of `a_path' using the options `a_options' to indicate
 			-- how the path is returned.
 		require
@@ -794,7 +794,7 @@ feature {NONE} -- Constants
 	max_wix_module_id_length: INTEGER = 35
 			-- Maximum length allowed for WiX identifiers
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

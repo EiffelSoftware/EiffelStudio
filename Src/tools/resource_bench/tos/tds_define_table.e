@@ -1,4 +1,4 @@
-indexing
+note
 	description: "To store the `#define' data"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -11,7 +11,7 @@ class
 
 feature -- Access
 
-	define_table: HASH_TABLE [COUPLE, STRING] is
+	define_table: HASH_TABLE [COUPLE, STRING]
 			-- Contain the define name and the define value.
 		do
 			Result := define_table_cell.item
@@ -19,7 +19,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_define_table (a_define_table: HASH_TABLE [COUPLE, STRING]) is
+	set_define_table (a_define_table: HASH_TABLE [COUPLE, STRING])
 			-- Set `define_table' to `a_define_table'.
 		require
 			a_define_table_not_void: a_define_table /= Void
@@ -31,7 +31,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	define_table_cell: CELL [HASH_TABLE [COUPLE, STRING]] is
+	define_table_cell: CELL [HASH_TABLE [COUPLE, STRING]]
 			-- The current `define_table'.
 		once
 			create Result.put (Void)
@@ -39,7 +39,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Description of user defined data type"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_creator: WIZARD_USER_DEFINED_DATA_TYPE_CREATOR) is
+	make (a_creator: WIZARD_USER_DEFINED_DATA_TYPE_CREATOR)
 			-- Initialize
 		require
 			valid_creator: a_creator /= Void
@@ -41,7 +41,7 @@ feature -- Access
 	library_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR
 			-- Description of type library
 
-	visitor: WIZARD_DATA_TYPE_VISITOR is
+	visitor: WIZARD_DATA_TYPE_VISITOR
 			-- Data type visitor.
 		local
 			type_descriptor: WIZARD_TYPE_DESCRIPTOR
@@ -64,7 +64,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_equal_data_type (other: WIZARD_DATA_TYPE_DESCRIPTOR): BOOLEAN is
+	is_equal_data_type (other: WIZARD_DATA_TYPE_DESCRIPTOR): BOOLEAN
 			-- Is `other' describes same data type?
 		local
 			other_user_descriptor: WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR
@@ -78,7 +78,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	set_type_descriptor_index (a_index: like type_descriptor_index) is
+	set_type_descriptor_index (a_index: like type_descriptor_index)
 			-- Set `type_descriptor_index' with `a_index'
 		require
 			valid_index: a_index /= 0
@@ -88,7 +88,7 @@ feature -- Basic operations
 			valid_index: type_descriptor_index = a_index
 		end
 
-	set_library_descriptor (a_library_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR) is
+	set_library_descriptor (a_library_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR)
 			--
 		require
 			valid_descriptor: a_library_descriptor /= Void
@@ -100,13 +100,13 @@ feature -- Basic operations
 
 feature -- Visitor
 
-	visit (a_visitor: WIZARD_DATA_VISITOR) is
+	visit (a_visitor: WIZARD_DATA_VISITOR)
 			-- Call back `a_visitor' with appropriate feature.
 		do
 			a_visitor.process_user_defined_data_type (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

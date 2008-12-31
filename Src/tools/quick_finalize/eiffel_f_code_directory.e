@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that describe a directory containing C code to merge into a single file"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature
 
-	make (a_path: STRING; extension_type: STRING; a_is_root: BOOLEAN) is
+	make (a_path: STRING; extension_type: STRING; a_is_root: BOOLEAN)
 			-- Create new EIFFEL_F_CODE_DIRECTORY.
 		require
 			a_path_not_void: a_path /= Void
@@ -139,7 +139,7 @@ feature
 			is_root_set: is_root = a_is_root
 		end
 
-	concat is
+	concat
 			-- Concatene all the x/c files and modify the Makefile.
 		local
 			l_directories: LINEAR [EIFFEL_F_CODE_DIRECTORY]
@@ -219,7 +219,7 @@ feature
 			end
 		end
 
-	path (a_name: STRING): STRING is
+	path (a_name: STRING): STRING
 		do
 			Result := name.twin
 			Result.append_character (Directory_separator)
@@ -260,10 +260,10 @@ feature {NONE} -- Access
 
 feature {NONE} -- Constants
 
-	big_file_prefix: STRING is "big_file_"
+	big_file_prefix: STRING = "big_file_"
 			-- Prefix of the big_file name.
 
-	buffered_input_string: STRING is
+	buffered_input_string: STRING
 			-- Buffer string filled by reading into a file.
 		once
 			create Result.make (10_000_000)
@@ -271,7 +271,7 @@ feature {NONE} -- Constants
 
 feature {NONE} -- Implementation
 
-	big_file_name (is_obj_file, is_c_file, is_cpp_file: BOOLEAN): STRING is
+	big_file_name (is_obj_file, is_c_file, is_cpp_file: BOOLEAN): STRING
 			-- Build big file name associated to current directory with `is_obj_file',
 			-- `is_c_file' and `is_cpp_file' specification.
 		do
@@ -311,7 +311,7 @@ feature {NONE} -- Implementation
 			big_file_name_not_empty: not Result.is_empty
 		end
 
-	fake_concat_files (l_files: ARRAYED_LIST [STRING]; l_output_name: STRING) is
+	fake_concat_files (l_files: ARRAYED_LIST [STRING]; l_output_name: STRING)
 			-- Put all files as includes in one file whose name is specified by `is_c_file' and
 			-- `is_cpp_file'.	
 		require
@@ -340,7 +340,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	concat_files (l_files: ARRAYED_LIST [STRING]; l_output_name: STRING) is
+	concat_files (l_files: ARRAYED_LIST [STRING]; l_output_name: STRING)
 			-- Concat all files into one file whose name is specified by `is_c_file' and
 			-- `is_cpp_file'.	
 		require
@@ -379,7 +379,7 @@ feature {NONE} -- Implementation
 invariant
 	big_file_name_prefix_not_void: big_file_name_prefix /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

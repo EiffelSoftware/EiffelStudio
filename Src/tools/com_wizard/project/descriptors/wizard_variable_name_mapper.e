@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Wizard name mapper"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -36,10 +36,10 @@ inherit
 
 feature -- Access
 
-	Registration_class_creation_routine: STRING is "make"
+	Registration_class_creation_routine: STRING = "make"
 			-- Registration class creation routine name
 
-	registration_class_name: STRING is
+	registration_class_name: STRING
 			-- Registration class name
 		do
 			Result := Ecom_prefix.twin
@@ -50,7 +50,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	to_legal_name_for_c_function (a_name: STRING) is
+	to_legal_name_for_c_function (a_name: STRING)
 			-- Modify `a_name' to make it legal C function name.
 		require
 			non_void_name: a_name /= Void
@@ -60,7 +60,7 @@ feature -- Basic Operations
 			a_name.replace_substring_all ("::", "_")
 		end
 
-	namespace_name (a_name: STRING): STRING is
+	namespace_name (a_name: STRING): STRING
 			-- Namespace name.
 		require
 			non_void_name: a_name /= Void
@@ -75,7 +75,7 @@ feature -- Basic Operations
 			non_void_namespace: Result /= Void
 		end
 
-	implemented_coclass_name (a_coclass_name: STRING): STRING is
+	implemented_coclass_name (a_coclass_name: STRING): STRING
 			-- Name of heir of coclass `a_coclass_name'
 			-- Implementation class for component server.
 		do
@@ -83,7 +83,7 @@ feature -- Basic Operations
 			Result.append (Implemented_coclass_extension)
 		end
 
-	to_eiffel_name (a_name: STRING): STRING is
+	to_eiffel_name (a_name: STRING): STRING
 			-- Convert `a_name' to Eiffel legitimate name.
 		require
 			non_void_name: a_name /= Void
@@ -120,7 +120,7 @@ feature -- Basic Operations
 			valid_name: not Result.is_empty
 		end
 
-	name_for_class (a_name: STRING; a_type: INTEGER; is_client: BOOLEAN): STRING is
+	name_for_class (a_name: STRING; a_type: INTEGER; is_client: BOOLEAN): STRING
 			-- Convert to Eiffel class name.
 		require
 			non_void_name: a_name /= Void
@@ -160,7 +160,7 @@ feature -- Basic Operations
 			valid_class_name: not Result.is_empty
 		end
 
-	name_for_feature (a_name: STRING): STRING is
+	name_for_feature (a_name: STRING): STRING
 			-- Convert to Eiffel feature name.
 		require
 			non_void_name: a_name /= Void
@@ -173,7 +173,7 @@ feature -- Basic Operations
 			valid_feature_name: not Result.is_empty
 		end
 
-	name_for_feature_with_keyword_check (a_name: STRING): STRING is
+	name_for_feature_with_keyword_check (a_name: STRING): STRING
 			-- Convert to Eiffel feature name and for conflicts with Eiffel keywords.
 		require
 			non_void_name: a_name /= Void
@@ -189,7 +189,7 @@ feature -- Basic Operations
 			valid_feature_name: not Result.is_empty
 		end
 
-	external_feature_name (a_name: STRING): STRING is
+	external_feature_name (a_name: STRING): STRING
 			-- Name of external feature name.
 		require
 			non_void_name: a_name /= Void
@@ -203,7 +203,7 @@ feature -- Basic Operations
 			valid_feature_name: not Result.is_empty
 		end
 
-	header_name (a_namespace, a_name: STRING): STRING is
+	header_name (a_namespace, a_name: STRING): STRING
 			-- Name for header file.
 		require
 			non_void_name: a_name /= Void
@@ -233,7 +233,7 @@ feature -- Basic Operations
 			valid_header_name: not Result.is_empty
 		end
 
-	variable_name (a_type_name: STRING): STRING is
+	variable_name (a_type_name: STRING): STRING
 			-- Variable naem that will contain instances of `a_type_name'
 		require
 			non_void_type_name: a_type_name /= Void
@@ -245,7 +245,7 @@ feature -- Basic Operations
 			non_void_variable_name: Result /= Void
 		end
 
-	standard_structures: HASH_TABLE [STRING, STRING] is
+	standard_structures: HASH_TABLE [STRING, STRING]
 			-- Names of standard structures.
 			-- Where item is Eiffel name, and key is C name
 		once
@@ -263,7 +263,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	library_headers: HASH_TABLE [STRING, STRING] is
+	library_headers: HASH_TABLE [STRING, STRING]
 			-- Names of header files in EiffelCOM library.
 		once
 			create result.make (10)
@@ -281,13 +281,13 @@ feature {NONE} -- Implementation
 			Result.put ("ecom_stdpicture.h", "ecom_stdpicture.h")
 		end
 
-	Ecom_prefix: STRING is "ECOM_"
+	Ecom_prefix: STRING = "ECOM_"
 			-- Prefix for registration class
 
-	Registration_suffix: STRING is "_REGISTRATION";
+	Registration_suffix: STRING = "_REGISTRATION";
 			-- Registration class suffix
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

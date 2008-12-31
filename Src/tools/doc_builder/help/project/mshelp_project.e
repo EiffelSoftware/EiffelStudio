@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Microsoft Help 2.0 Project (VSIP)."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- File
 
-	generate_files is
+	generate_files
 			-- Generate necessary files
 		do
 			create_project_file
@@ -32,7 +32,7 @@ feature -- File
 
 feature {NONE}  -- File
 
-	create_toc_file is
+	create_toc_file
 			-- Create table of contents file
 		local
 			template: PLAIN_TEXT_TEMPLATE_FILE
@@ -45,7 +45,7 @@ feature {NONE}  -- File
 			template.save_file (toc_file_name)
 		end	
 
-	create_project_file is
+	create_project_file
 			-- Create the actual project file for Visual Studio
 		local
 			template: PLAIN_TEXT_TEMPLATE_FILE
@@ -64,7 +64,7 @@ feature {NONE}  -- File
 			create project_file.make (template.template_filename)
 		end
 
-	create_files_file is
+	create_files_file
 			-- Create the project include files file
 		local
 			template: PLAIN_TEXT_TEMPLATE_FILE
@@ -78,7 +78,7 @@ feature {NONE}  -- File
 			create files_file.make (template.template_filename)
 		end
 		
-	create_collection_file is
+	create_collection_file
 			-- Create the projects collection file
 		local
 			template: PLAIN_TEXT_TEMPLATE_FILE		
@@ -92,7 +92,7 @@ feature {NONE}  -- File
 			create collection_file.make (template.template_filename)
 		end
 		
-	create_hxk_files is
+	create_hxk_files
 			-- Create the projects hxk files
 		local
 			template: PLAIN_TEXT_TEMPLATE_FILE
@@ -114,7 +114,7 @@ feature {NONE}  -- File
 			template.save_file (Help_directory.name + "\" + "FIndex.HxK")			
 		end
 
-	create_stylesheet_file is
+	create_stylesheet_file
 			-- Create the stylesheet
 		do
 			copy_stylesheet (temporary_help_location (Shared_project.root_directory, False))
@@ -137,13 +137,13 @@ feature {NONE}  -- File
 
 feature -- Commands
 
-	build_table_of_contents is
+	build_table_of_contents
 			-- Build table of contents
 		do
 			create_toc_file
 		end
 
-	generate is
+	generate
 			-- Generate help project
 		do
 			generate_files
@@ -151,7 +151,7 @@ feature -- Commands
 
 feature {NONE} -- Project
 
-	retrieve_files (a_dir: DIRECTORY; get_dirs, tags: BOOLEAN): STRING is
+	retrieve_files (a_dir: DIRECTORY; get_dirs, tags: BOOLEAN): STRING
 			-- Retrieve the project files string or directories string if `get_dirs'
 		local
 			l_cnt,
@@ -203,7 +203,7 @@ feature {NONE} -- Project
 			non_void_result: Result /= Void
 		end
 
-	retrieve_images (a_path: STRING): STRING is
+	retrieve_images (a_path: STRING): STRING
 			-- Retrieve all image files and add to list of files in project
 		require
 			path_not_void: a_path /= Void
@@ -251,25 +251,25 @@ feature {NONE} -- Project
 
 feature {NONE} -- Implementation
 
-	compiled_filename_extension: STRING is
+	compiled_filename_extension: STRING
 			-- Extension for this project compiled file
 		do
 			Result := "HxS"
 		end
 
-	project_filename_extension: STRING is
+	project_filename_extension: STRING
 			-- Extension for this project type
 		do
 			Result := "HWProj"
 		end
 		
-	toc_filename_extension: STRING is
+	toc_filename_extension: STRING
 			-- Extension for compiled help file
 		do
 			Result := "HxT"
 		end
 
-	full_toc_text: STRING is
+	full_toc_text: STRING
 			-- Full TOC text
 		local
 			l_formatter: TABLE_OF_CONTENTS_MSHELP_FORMATTER
@@ -278,7 +278,7 @@ feature {NONE} -- Implementation
 			Result := l_formatter.mshelp_text
 		end		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

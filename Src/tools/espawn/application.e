@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Application root class for starting process spawning.
 	]"
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize application
 		local
 			l_parser: ARGUMENT_PARSER
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			l_parser.execute (agent start (l_parser, l_layout.eiffel_layout))
 		end
 
-	start (a_options: ARGUMENT_PARSER; a_env: EIFFEL_ENV) is
+	start (a_options: ARGUMENT_PARSER; a_env: EIFFEL_ENV)
 			-- Starts application
 		require
 			a_options_attached: a_options /= Void
@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 
-	initialize_environment (a_options: ARGUMENT_PARSER; a_env: EIFFEL_ENV) is
+	initialize_environment (a_options: ARGUMENT_PARSER; a_env: EIFFEL_ENV)
 			-- Initializes an environment base on `a_options'
 		require
 			a_options_attached: a_options /= Void
@@ -99,7 +99,7 @@ feature -- Basic operations
 			end
 		end
 
-	spawn_processes (a_options: ARGUMENT_PARSER): BOOLEAN is
+	spawn_processes (a_options: ARGUMENT_PARSER): BOOLEAN
 			-- Spawns all processes found in `a_options' and returns successful result
 		require
 			a_options_attached: a_options /= Void
@@ -138,7 +138,7 @@ feature -- Basic operations
 			Result := l_spawner.successful
 		end
 
-	list_available_compilers (a_options: ARGUMENT_PARSER) is
+	list_available_compilers (a_options: ARGUMENT_PARSER)
 			-- Lists the available C/C++ compilers
 		require
 			a_options_attached: a_options /= Void
@@ -183,7 +183,7 @@ feature -- Basic operations
 
 feature {NONE} -- Basic operations
 
-	merge_variable (a_name: STRING; a_values: STRING; a_env: EIFFEL_ENV) is
+	merge_variable (a_name: STRING; a_values: STRING; a_env: EIFFEL_ENV)
 			-- Merges `a_value' with the environment variable `a_name'
 		require
 			a_name_attached: a_name /= Void
@@ -208,7 +208,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

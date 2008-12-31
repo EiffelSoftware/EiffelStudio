@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Alias C generator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ feature -- Access
 	c_writer: WIZARD_WRITER_C_FILE
 			-- Writer of C file.
 
-	generate (alias_descriptor: WIZARD_ALIAS_DESCRIPTOR) is
+	generate (alias_descriptor: WIZARD_ALIAS_DESCRIPTOR)
 			-- Generate C alias.
 		local
 			l_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR
@@ -43,7 +43,7 @@ feature -- Access
 			c_writer := Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

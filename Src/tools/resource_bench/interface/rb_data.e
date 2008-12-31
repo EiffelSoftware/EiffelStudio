@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Data for resource bench"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,16 +11,16 @@ class
 
 feature -- Access
 
-	Title: STRING is "Resource Bench"
+	Title: STRING = "Resource Bench"
 			-- Window's title.
 
-	Help_file: STRING is "rb.hlp"
+	Help_file: STRING = "rb.hlp"
 			-- Name of the help file.
 
-	Grammar_name: STRING is "rb.gram"
+	Grammar_name: STRING = "rb.gram"
 			-- Name of the grammar file.
 
-	Tmp_directory: STRING is "c:\temp"
+	Tmp_directory: STRING = "c:\temp"
 			-- Name of the temporary directory.
 
 	application_directory: STRING
@@ -31,7 +31,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_application_directory (a_path: STRING) is
+	set_application_directory (a_path: STRING)
 			-- Set `application_directory' to `a_path'.
 		require
 			a_path_not_void: a_path /= Void
@@ -42,7 +42,7 @@ feature -- Element change
 			application_directory_set: application_directory.is_equal (a_path)
 		end
 
-	set_working_directory (a_path: STRING) is
+	set_working_directory (a_path: STRING)
 			-- Set `working_directory' to `a_path'.
 		require
 			a_path_not_void: a_path /= Void
@@ -53,7 +53,7 @@ feature -- Element change
 			working_directory_set: working_directory.is_equal (a_path)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

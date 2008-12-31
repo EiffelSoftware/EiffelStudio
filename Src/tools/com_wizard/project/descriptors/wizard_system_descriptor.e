@@ -1,4 +1,4 @@
-indexing
+note
 	description: "System descriptor"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize system descriptor.
 		do
 			create library_descriptors.make (5)
@@ -65,13 +65,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	has_library (guid: ECOM_GUID): BOOLEAN is
+	has_library (guid: ECOM_GUID): BOOLEAN
 			-- Does `library_descriptors' have library descriptor with GUID `guid'?
 		do
 			Result := library_descriptors.has (guid.to_string)
 		end
 
-	library_descriptor (guid: ECOM_GUID): WIZARD_TYPE_LIBRARY_DESCRIPTOR is
+	library_descriptor (guid: ECOM_GUID): WIZARD_TYPE_LIBRARY_DESCRIPTOR
 			-- Library descriptor with GUID `guid'
 		require
 			has_library: has_library (guid)
@@ -81,13 +81,13 @@ feature -- Access
 			valid_descriptor: Result /= Void
 		end
 
-	library_descriptor_for_iteration: WIZARD_TYPE_LIBRARY_DESCRIPTOR is
+	library_descriptor_for_iteration: WIZARD_TYPE_LIBRARY_DESCRIPTOR
 			-- Library descriptor for current cursor position
 		do
 			Result := library_descriptors.item_for_iteration
 		end
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Is cursor off descriptor list?
 		do
 			Result := library_descriptors.after
@@ -128,7 +128,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_generated_coclass (a_coclass: WIZARD_COCLASS_DESCRIPTOR): BOOLEAN is
+	is_generated_coclass (a_coclass: WIZARD_COCLASS_DESCRIPTOR): BOOLEAN
 			-- Is `a_coclass' generated?
 		require
 			non_void_coclass: a_coclass /= Void
@@ -138,7 +138,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	generate (a_type_library_file_name: STRING) is
+	generate (a_type_library_file_name: STRING)
 			-- Generate system descriptors according to `a_type_library_file_name'.
 		require
 			non_void_file_name: a_type_library_file_name /= Void
@@ -223,7 +223,7 @@ feature -- Basic operations
 			end
 		end
 
-	add_library_descriptor (a_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR) is
+	add_library_descriptor (a_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR)
 			-- Add `descriptor' to `library_descriptors'.
 		require
 			non_void_descriptor: a_descriptor /= Void
@@ -234,7 +234,7 @@ feature -- Basic operations
 			has_descriptor: has_library (a_descriptor.guid)
 		end
 
-	add_enumerator (a_enumerator: WIZARD_ENUM_DESCRIPTOR) is
+	add_enumerator (a_enumerator: WIZARD_ENUM_DESCRIPTOR)
 			-- Add `a_enumerator' to `enumerators'
 		require
 			non_void_descriptor: a_enumerator /= Void
@@ -242,7 +242,7 @@ feature -- Basic operations
 			enumerators.force (a_enumerator)
 		end
 
-	add_coclass (a_coclass: WIZARD_COCLASS_DESCRIPTOR) is
+	add_coclass (a_coclass: WIZARD_COCLASS_DESCRIPTOR)
 			-- Add `a_coclass to `coclasses
 		require
 			non_void_descriptor: a_coclass /= Void
@@ -250,7 +250,7 @@ feature -- Basic operations
 			coclasses.force (a_coclass)
 		end
 
-	add_visible_class_client (a_class: WIZARD_WRITER_VISIBLE_CLAUSE) is
+	add_visible_class_client (a_class: WIZARD_WRITER_VISIBLE_CLAUSE)
 			-- Add `a_class' to `visible_classes_client'
 		require
 			non_void_descriptor: a_class /= Void
@@ -258,7 +258,7 @@ feature -- Basic operations
 			visible_classes_client.force (a_class)
 		end
 
-	add_visible_class_server (a_class: WIZARD_WRITER_VISIBLE_CLAUSE) is
+	add_visible_class_server (a_class: WIZARD_WRITER_VISIBLE_CLAUSE)
 			-- Add `a_class' to `visible_classes_server'
 		require
 			non_void_descriptor: a_class /= Void
@@ -266,7 +266,7 @@ feature -- Basic operations
 			visible_classes_server.force (a_class)
 		end
 
-	add_visible_class_common (a_class: WIZARD_WRITER_VISIBLE_CLAUSE) is
+	add_visible_class_common (a_class: WIZARD_WRITER_VISIBLE_CLAUSE)
 			-- Add `a_class' to `visible_classes_common'
 		require
 			non_void_descriptor: a_class /= Void
@@ -274,25 +274,25 @@ feature -- Basic operations
 			visible_classes_common.force (a_class)
 		end
 
-	start is
+	start
 			-- Set cursor to first descriptor
 		do
 			library_descriptors.start
 		end
 
-	forth is
+	forth
 			-- Change cursor to next descriptor in iteration
 		do
 			library_descriptors.forth
 		end
 
-	set_iunknown is
+	set_iunknown
 			-- Set `is_inknown' to `True'.
 		do
 			is_iunknown := True
 		end
 
-	add_c_type (a_type: STRING) is
+	add_c_type (a_type: STRING)
 			-- Add `a_type' to list of C types.
 		require
 			non_void_type: a_type /= Void
@@ -316,7 +316,7 @@ invariant
 	valid_coclasses: coclasses /= Void
 	valid_eiffel_names: eiffel_names /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

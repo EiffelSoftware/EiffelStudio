@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize object.
 		deferred
 		end
@@ -25,14 +25,14 @@ feature -- Access
 
 feature -- Basic operation
 
-	input_from_file (a_file_name: STRING) is
+	input_from_file (a_file_name: STRING)
 			-- Input data from 'a_file_name'.
 		require
 			non_void_file: a_file_name /= Void
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

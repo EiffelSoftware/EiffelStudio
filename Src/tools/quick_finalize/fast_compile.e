@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature 
 
-	make (a_arguments: ARRAY[STRING]) is
+	make (a_arguments: ARRAY[STRING])
 		do
 			if a_arguments.count > 2 then
 				create top_directory.make(a_arguments.item(1), a_arguments.item (2), True)
@@ -28,7 +28,7 @@ feature
 
 feature {NONE} -- Implementation
 
-	print_usage is
+	print_usage
 			-- Print the usage of `quick_finalize'.
 		do
 			io.put_string ("Usage: quick_finalize path object_extension%N")
@@ -36,7 +36,7 @@ feature {NONE} -- Implementation
 			io.put_string ("%Tobject_extension: either obj or o depending on the plaform%N")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

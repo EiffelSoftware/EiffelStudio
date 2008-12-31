@@ -1,4 +1,4 @@
-indexing
+note
 	description: "C/C++ class function used in WIZARD_WRITER_C_CLASS and WIZARD_WRITER_CPP_CLASS"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -28,7 +28,7 @@ feature -- Access
 	body: STRING
 			-- Function body (without "{" and "}")
 
-	generated_code: STRING is
+	generated_code: STRING
 			-- Generated code
 		do
 			create Result.make (10000)
@@ -40,7 +40,7 @@ feature -- Access
 			Result.append ("%N};")
 		end
 
-	generated_header_file: STRING is
+	generated_header_file: STRING
 			-- Generated header file
 		do
 			Result := generated_signature
@@ -55,7 +55,7 @@ feature -- Access
 
 feature -- Element Change
 
-	set_signature (a_signature: like signature) is
+	set_signature (a_signature: like signature)
 			-- Set `signature' with `a_signature'.
 		require
 			non_void_signature: a_signature /= Void
@@ -65,7 +65,7 @@ feature -- Element Change
 			signature_set: signature.is_equal (a_signature)
 		end
 
-	set_body (a_body: like body) is
+	set_body (a_body: like body)
 			-- Set `body' with `a_body'.
 		require
 			non_void_body: a_body /= Void
@@ -75,7 +75,7 @@ feature -- Element Change
 			body_set: body.is_equal (a_body)
 		end
 
-	set_pure_virtual is
+	set_pure_virtual
 			-- Set `is_pure_virtual' with `True'.
 		do
 			is_pure_virtual := True
@@ -85,7 +85,7 @@ feature -- Element Change
 
 feature {NONE} -- Implementation
 
-	generated_comment: STRING is
+	generated_comment: STRING
 			-- Comment
 		require
 			can_generate: can_generate
@@ -96,7 +96,7 @@ feature {NONE} -- Implementation
 			Result.append ("%N%T-----------------------------------------------------------*/%N")
 		end
 
-	generated_signature: STRING is
+	generated_signature: STRING
 			-- Signature
 		require
 			can_generate: can_generate
@@ -114,7 +114,7 @@ feature {NONE} -- Implementation
 			Result.append (Close_parenthesis)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

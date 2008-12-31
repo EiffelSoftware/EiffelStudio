@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Interface for all reg2wix options.
 	]"
@@ -12,7 +12,7 @@ deferred class
 
 feature -- Access
 
-	reg_files: !LINEAR [!STRING] is
+	reg_files: !LINEAR [!STRING]
 			-- List of registry files to process
 		require
 			can_query_options: can_query_options
@@ -23,7 +23,7 @@ feature -- Access
 			result_items_exists: Result.for_all (agent (a_item: !STRING): BOOLEAN do Result := (create {RAW_FILE}.make (a_item)).exists end)
 		end
 
-	output_file_name: !STRING is
+	output_file_name: !STRING
 			-- Optional output file name
 		require
 			can_query_options: can_query_options
@@ -35,19 +35,19 @@ feature -- Access
 
 feature -- Status report
 
-	can_query_options: BOOLEAN is
+	can_query_options: BOOLEAN
 			-- Determines if options are readable
 		deferred
 		end
 
-	use_output_file_name: BOOLEAN is
+	use_output_file_name: BOOLEAN
 			-- Indicate if `output_file_name' should be used
 		require
 			can_query_options: can_query_options
 		deferred
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

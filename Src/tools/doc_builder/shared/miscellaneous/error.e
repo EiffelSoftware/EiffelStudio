@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An error abstraction."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 	
 feature -- Creation
 
-	make (a_desc: like description) is
+	make (a_desc: like description)
 			-- New error with description
 		require
 			description_not_void: a_desc /= Void
@@ -26,7 +26,7 @@ feature -- Creation
 			description_valid: not description.is_empty
 		end
 		
-	make_with_line_information (a_desc: like description; a_no, a_pos: like line_number) is
+	make_with_line_information (a_desc: like description; a_no, a_pos: like line_number)
 			-- New error with description and line data
 		require
 			valid_number: a_no > 0
@@ -37,7 +37,7 @@ feature -- Creation
 
 feature -- Status Setting
 
-	set_action (a_action: like action) is
+	set_action (a_action: like action)
 			-- Set action
 		require
 			action_not_void: a_action /= Void
@@ -65,7 +65,7 @@ invariant
 	has_description: description /= Void
 	description_valid: not description.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

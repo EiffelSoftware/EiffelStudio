@@ -1,4 +1,4 @@
-indexing
+note
 	description: "C virtual property genetor.  Generate virtual functions for property"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -13,7 +13,7 @@ inherit
 
 feature -- Basic operations
 
-	generate (a_descriptor: WIZARD_PROPERTY_DESCRIPTOR) is
+	generate (a_descriptor: WIZARD_PROPERTY_DESCRIPTOR)
 			-- Generate C++ virtual functions
 		require
 			non_void_descriptor: a_descriptor /= Void
@@ -74,7 +74,7 @@ feature -- Basic operations
 			access_feature_exists: c_access_feature /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

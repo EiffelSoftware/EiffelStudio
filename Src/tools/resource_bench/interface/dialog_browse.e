@@ -1,4 +1,4 @@
-indexing
+note
 	description: "xxx"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ create
 
 feature -- Initialization
 
-	make (a_parent: WEL_COMPOSITE_WINDOW) is
+	make (a_parent: WEL_COMPOSITE_WINDOW)
 			-- Create the dialog.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -41,7 +41,7 @@ feature -- Initialization
 			activate
 		end
 
-	setup_dialog is
+	setup_dialog
 		do
 			edit_path.set_text (current_working_directory)
 			edit_path.select_all
@@ -49,7 +49,7 @@ feature -- Initialization
 
 feature -- Behavior
 
-	on_ok is
+	on_ok
 		local
 			folder: DIRECTORY
 			directory_name: STRING
@@ -71,7 +71,7 @@ feature -- Access
 
 	edit_path: WEL_SINGLE_LINE_EDIT;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A checked report root node.
 	]"
@@ -19,7 +19,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (a_assembly: like assembly) is
+	make (a_assembly: like assembly)
 			-- Create an initialize a report for `a_assembly'.
 		require
 			a_assembly_not_void: a_assembly /= Void
@@ -35,7 +35,7 @@ feature -- Access
 	assembly: ASSEMBLY
 			-- Assembly report was generated for
 			
-	types: DYNAMIC_LIST [EC_REPORT_TYPE] is
+	types: DYNAMIC_LIST [EC_REPORT_TYPE]
 			-- List of checked report types.
 		require
 			not_is_being_build: not is_being_built
@@ -45,13 +45,13 @@ feature -- Access
 		
 feature -- Access {EC_REPORT_BASE}
 
-	report: EC_REPORT is
+	report: EC_REPORT
 			-- Report associated with report entity.
 		do
 			Result := Current
 		end
 		
-	parent: EC_REPORT_BASE is
+	parent: EC_REPORT_BASE
 			-- Parent report entity of current entity.
 		do
 			-- There is no parent!
@@ -64,7 +64,7 @@ feature -- Query
 
 feature {EC_REPORT_BUILDER} -- Status Setting
 
-	set_is_being_built (a_building: like is_being_built) is
+	set_is_being_built (a_building: like is_being_built)
 			-- Sets `is_being_build' with `a_building'
 		do
 			is_being_built := a_building
@@ -74,7 +74,7 @@ feature {EC_REPORT_BUILDER} -- Status Setting
 	
 feature {EC_REPORT_BUILDER} -- Basic Operations
 
-	add_type_report (a_report: EC_REPORT_TYPE) is
+	add_type_report (a_report: EC_REPORT_TYPE)
 			-- Adds `a_report' to report
 		require
 			a_report_not_void: a_report /= Void
@@ -88,7 +88,7 @@ feature {EC_REPORT_BUILDER} -- Basic Operations
 		
 feature {EC_REPORT_BUILDER} -- Removal
 		
-	wipe_out is
+	wipe_out
 			-- Clears report
 		do
 			internal_checked_types.wipe_out
@@ -105,7 +105,7 @@ invariant
 	aassembly_not_void: assembly /= Void
 	internal_checked_types_not_void: internal_checked_types /= Void
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

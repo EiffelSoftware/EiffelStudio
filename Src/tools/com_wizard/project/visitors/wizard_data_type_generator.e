@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Data type names generator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -150,7 +150,7 @@ feature -- Access
 
 feature -- Basic operations 
 
-	set_visitor_atributes (a_visitor: WIZARD_DATA_TYPE_VISITOR) is
+	set_visitor_atributes (a_visitor: WIZARD_DATA_TYPE_VISITOR)
 			-- Initialize `a_visitor' attributes.
 		require
 			valid_visitor: a_visitor /= Void
@@ -221,7 +221,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	counter (a_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR): INTEGER is
+	counter (a_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR): INTEGER
 			-- Counter
 		do
 			if a_descriptor.visited then
@@ -233,7 +233,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	counter_impl: INTEGER_REF is
+	counter_impl: INTEGER_REF
 			-- Global counter
 		once
 			create Result
@@ -289,7 +289,7 @@ invariant
 							not is_coclass_pointer_pointer and 
 							not is_structure and not is_structure_pointer and not is_interface and not is_interface_pointer)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

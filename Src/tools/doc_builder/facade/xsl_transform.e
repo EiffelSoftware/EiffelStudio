@@ -1,4 +1,4 @@
-indexing
+note
 	description: "XSL transformation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,24 +25,24 @@ create
 
 feature	-- Facade
 
-	make_from_xsl_file (a_filename: STRING) is
+	make_from_xsl_file (a_filename: STRING)
 			-- Make from existing `xsl' file
 		do
 		end
 
-	name: STRING is "XSL is not supported in non .NET mode"
+	name: STRING = "XSL is not supported in non .NET mode"
 			-- Name
 
-	is_valid_xml: BOOLEAN is True
+	is_valid_xml: BOOLEAN = True
 			-- Is Current valid xml?
 
-	is_valid_xsl: BOOLEAN is True
+	is_valid_xsl: BOOLEAN = True
 			-- Is Current a valid Xslt file
 
-	load_error_message: STRING is "XSL is not supported in non .NET mode";
+	load_error_message: STRING = "XSL is not supported in non .NET mode";
 			-- Load error message		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

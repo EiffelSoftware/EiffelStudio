@@ -1,4 +1,4 @@
-indexing
+note
 	description: "C++ code writer"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize data.
 		do
 			create members.make (10)
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	generated_code: STRING is
+	generated_code: STRING
 			-- Generated code
 		local
 			l_writers: LIST [WIZARD_WRITER_C_FUNCTION]
@@ -148,7 +148,7 @@ feature -- Access
 	declaration_header_file_name: STRING
 			-- Declaration header file name
 
-	generated_declaration_header_file: STRING is
+	generated_declaration_header_file: STRING
 			-- Generated code for corresponding declaration header file
 		require
 			ready: can_generate
@@ -173,7 +173,7 @@ feature -- Access
 			end
 		end
 
-	generated_definition_header_file: STRING is
+	generated_definition_header_file: STRING
 			-- Generated code for corresponding definition header file
 		require
 			ready: can_generate
@@ -350,7 +350,7 @@ feature -- Access
 			Result.append ("%N#endif")
 		end
 
-	can_generate: BOOLEAN is
+	can_generate: BOOLEAN
 			-- Can code be generated?
 		do
 			Result := name /= Void and header /= Void 
@@ -394,7 +394,7 @@ feature -- Access
 
 feature -- Element Change
 
-	set_name (a_name: like name) is
+	set_name (a_name: like name)
 			-- Set `name' with `a_name'.
 		require
 			non_void_name: a_name /= Void
@@ -406,7 +406,7 @@ feature -- Element Change
 			name_set: name.is_equal (a_name)
 		end
 
-	set_namespace (a_name: like name) is
+	set_namespace (a_name: like name)
 			-- Set `namespace' with `a_name'.
 		require
 			non_void_name: a_name /= Void
@@ -420,7 +420,7 @@ feature -- Element Change
 			void_if_empty: a_name.is_empty implies namespace = Void
 		end
 
-	set_declaration_header_file_name (a_name: like declaration_header_file_name) is
+	set_declaration_header_file_name (a_name: like declaration_header_file_name)
 			-- Set `declaration_header_file_name' with `a_name'.
 		require
 			non_void_name: a_name /= Void
@@ -430,7 +430,7 @@ feature -- Element Change
 			declaration_header_file_name_set: declaration_header_file_name = a_name
 		end
 		
-	add_constructor (a_constructor: WIZARD_WRITER_CPP_CONSTRUCTOR) is
+	add_constructor (a_constructor: WIZARD_WRITER_CPP_CONSTRUCTOR)
 			-- Add `a_constructor' to class constructors.
 		require
 			non_void_constructor: a_constructor /= Void
@@ -440,7 +440,7 @@ feature -- Element Change
 			added: constructors.last = a_constructor
 		end
 
-	set_destructor (a_destructor_body: STRING) is
+	set_destructor (a_destructor_body: STRING)
 			-- Set `a_destructor_body' as destructor.
 		require
 			non_void_destructor: a_destructor_body /= Void
@@ -451,7 +451,7 @@ feature -- Element Change
 			destructor_set: destructor_body.is_equal (a_destructor_body)
 		end
 
-	add_member (a_member: WIZARD_WRITER_C_MEMBER; a_export_status: INTEGER) is
+	add_member (a_member: WIZARD_WRITER_C_MEMBER; a_export_status: INTEGER)
 			-- Add `a_member' to `members' with `export_status' export status.
 			-- See class WIZARD_WRITER_CPP_EXPORT_STATUS for possible `export_status' value.
 		require
@@ -469,7 +469,7 @@ feature -- Element Change
 			added: members.has (a_export_status) and then members.item (a_export_status).last = a_member
 		end
 	
-	add_function (a_function: WIZARD_WRITER_C_FUNCTION; a_export_status: INTEGER) is
+	add_function (a_function: WIZARD_WRITER_C_FUNCTION; a_export_status: INTEGER)
 			-- Add `a_function' to functions.
 		require
 			non_void_function: a_function /= Void
@@ -485,7 +485,7 @@ feature -- Element Change
 			added: functions.has (a_export_status) and then functions.item (a_export_status).last = a_function
 		end
 	
-	set_header (a_header: like header) is
+	set_header (a_header: like header)
 			-- Set `header' with `a_header'.
 		require
 			non_void_header: a_header /= Void
@@ -496,7 +496,7 @@ feature -- Element Change
 			header_set: header.is_equal (a_header)
 		end
 
-	add_parent (a_name: STRING; a_namespace: STRING; a_export_status: INTEGER) is
+	add_parent (a_name: STRING; a_namespace: STRING; a_export_status: INTEGER)
 			-- Add `a_parent' to `parents'.
 		require
 			non_void_parent: a_name /= Void
@@ -511,7 +511,7 @@ feature -- Element Change
 			added: parents.last.name.is_equal (a_name)
 		end
 
-	set_abstract is
+	set_abstract
 			-- Set `abstract' to `True'.
 		do
 			abstract := True
@@ -519,7 +519,7 @@ feature -- Element Change
 			valid_abstract: abstract = True
 		end
 
-	add_directive (a_directive: WIZARD_WRITER_C_DIRECTIVE) is
+	add_directive (a_directive: WIZARD_WRITER_C_DIRECTIVE)
 			-- Add directive `a_directive' to CPP class.
 		do
 			ordered_elements.extend (a_directive)
@@ -527,7 +527,7 @@ feature -- Element Change
 			added: ordered_elements.last = a_directive
 		end
 
-	add_static_function (a_static_function: WIZARD_WRITER_C_FUNCTION) is
+	add_static_function (a_static_function: WIZARD_WRITER_C_FUNCTION)
 			-- Add static function `a_static_function' to CPP class.
 		do
 			ordered_elements.extend (a_static_function)
@@ -535,7 +535,7 @@ feature -- Element Change
 			added: ordered_elements.last = a_static_function
 		end
 
-	add_extern_function (an_extern_function: WIZARD_WRITER_C_FUNCTION) is
+	add_extern_function (an_extern_function: WIZARD_WRITER_C_FUNCTION)
 			-- Add C extern function `an_extern_function' to CPP class.
 		do
 			extern_functions.extend (an_extern_function)
@@ -545,7 +545,7 @@ feature -- Element Change
 
 feature -- Basic Operations
 
-	save_declaration_header_file (a_header_file: STRING) is
+	save_declaration_header_file (a_header_file: STRING)
 			-- Save declaration header file into `a_header_file'.
    		require
    			can_generate: can_generate
@@ -555,7 +555,7 @@ feature -- Basic Operations
 			end
 	 	end
 
-	save_definition_header_file (a_header_file: STRING) is
+	save_definition_header_file (a_header_file: STRING)
 			-- Save definition header file into `a_header_file'.
    		require
    			can_generate: can_generate
@@ -565,7 +565,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	generate_members (a_members: HASH_TABLE [LIST [WIZARD_WRITER_C_MEMBER], INTEGER]; a_export_status: INTEGER): STRING is
+	generate_members (a_members: HASH_TABLE [LIST [WIZARD_WRITER_C_MEMBER], INTEGER]; a_export_status: INTEGER): STRING
 			-- Generate code for `a_members' functions with export status `a_export_status'.
 		require
 			non_void_members: a_members /= Void
@@ -590,7 +590,7 @@ feature {NONE} -- Implementation
 			Result.append ("%N")
 		end
 					
-	generated_function_code (a_function: WIZARD_WRITER_C_FUNCTION): STRING is
+	generated_function_code (a_function: WIZARD_WRITER_C_FUNCTION): STRING
 			-- Generated code
 		require
 			non_void_function: a_function /= Void
@@ -631,7 +631,7 @@ invariant
 	non_void_import_files: import_files /= Void
 	non_void_constructors: constructors /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

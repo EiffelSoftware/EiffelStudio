@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generated file cleaner, delete non necessary files"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -36,7 +36,7 @@ inherit
 
 feature -- Basic Operations
 
-	clean_all is
+	clean_all
 			-- Delete temporary generated files.
 		local
 			a_directory_name: STRING
@@ -73,7 +73,7 @@ feature -- Basic Operations
 			delete_file (a_directory_name)
 		end
 
-	clean_directory (a_directory_name: STRING) is
+	clean_directory (a_directory_name: STRING)
 			-- Delete all files and subdirectories from directory `a_directory_name'
 		require
 			non_void_directory_name: a_directory_name /= Void
@@ -118,7 +118,7 @@ feature -- Basic Operations
 			end
 		end
 		
-	delete_object_files (a_directory_name: STRING) is
+	delete_object_files (a_directory_name: STRING)
 			-- Delete all object files in directory `a_directory_name'.
 		require
 			non_void_directory_name: a_directory_name /= Void
@@ -150,7 +150,7 @@ feature -- Basic Operations
 			end
 		end
 
-	delete_file (a_file_name: STRING) is
+	delete_file (a_file_name: STRING)
 			-- Delete file `a_file_name'.
 		local
 			a_file: RAW_FILE
@@ -169,7 +169,7 @@ feature -- Basic Operations
 			retry
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

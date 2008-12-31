@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -30,7 +30,7 @@ feature -- Status report
 
 feature -- Reset
 
-	reset is
+	reset
 			-- Reset `Current'.
 		do
 			is_updated := False
@@ -39,7 +39,7 @@ feature -- Reset
 
 feature -- AST visiting
 
-	process_bang_creation_as (l_as: BANG_CREATION_AS) is
+	process_bang_creation_as (l_as: BANG_CREATION_AS)
 			-- Process `l_as'.
 		do
 			is_updated := True
@@ -72,7 +72,7 @@ feature -- AST visiting
 			safe_process (l_as.call)
 		end
 
-	process_bang_creation_expr_as (l_as: BANG_CREATION_EXPR_AS) is
+	process_bang_creation_expr_as (l_as: BANG_CREATION_EXPR_AS)
 			-- Process `l_as'.
 		do
 			is_updated := True
@@ -96,7 +96,7 @@ feature -- AST visiting
 			safe_process (l_as.call)
 		end
 
-	process_body_as (l_as: BODY_AS) is
+	process_body_as (l_as: BODY_AS)
 			-- <Precursor>
 		local
 			c_as: CONSTANT_AS
@@ -131,7 +131,7 @@ feature -- AST visiting
 			end
 		end
 
-	process_create_as (l_as: CREATE_AS) is
+	process_create_as (l_as: CREATE_AS)
 		local
 			l_keyword: KEYWORD_AS
 		do
@@ -150,7 +150,7 @@ feature -- AST visiting
 			safe_process (l_as.feature_list)
 		end
 
-	process_indexing_clause_as (l_as: INDEXING_CLAUSE_AS) is
+	process_indexing_clause_as (l_as: INDEXING_CLAUSE_AS)
 			-- <Precursor>'
 		local
 			l_keyword: KEYWORD_AS
@@ -170,7 +170,7 @@ feature -- AST visiting
 			safe_process (l_as.end_keyword (match_list))
 		end
 
-	process_static_access_as (l_as: STATIC_ACCESS_AS) is
+	process_static_access_as (l_as: STATIC_ACCESS_AS)
 			-- Process `l_as'.
 		do
 			if l_as.feature_keyword (match_list) /= Void then
@@ -192,7 +192,7 @@ feature {NONE} -- Access
 
 	context: ROUNDTRIP_STRING_LIST_CONTEXT
 
-	add_white_space_if_necessary is
+	add_white_space_if_necessary
 			-- Add a white space only if the next token is not already a break.
 		local
 			l_break_as: BREAK_AS
@@ -207,7 +207,7 @@ feature {NONE} -- Access
 			end
 		end
 
-	remove_following_spaces is
+	remove_following_spaces
 			-- Remove all white spaces..
 		local
 			l_break_as: BREAK_AS
@@ -244,7 +244,7 @@ feature {NONE} -- Access
 			end
 		end
 
-	process_following_breaks is
+	process_following_breaks
 			-- Process all breaks until a non-break is encountered.
 		local
 			i: INTEGER
@@ -272,7 +272,7 @@ feature {NONE} -- Access
 		end
 
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

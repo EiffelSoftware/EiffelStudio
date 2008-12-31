@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Descriptor; describes a type library element"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,17 +18,17 @@ inherit
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- Name of element
 		deferred
 		end
 
-	description: STRING is
+	description: STRING
 			-- Description of element
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

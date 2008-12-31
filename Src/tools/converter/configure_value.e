@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Configure value extracted from the configure_file"
@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name, a_value: STRING) is
+	make (a_name, a_value: STRING)
 			-- Initialize Current with `a_name' as `name'
 			-- and `a_value' as `value'
 		require
@@ -37,7 +37,7 @@ feature -- Access
 
 feature -- Debug
 
-	trace is
+	trace
 			-- Debug trace.
 		do
 			print (name);
@@ -46,7 +46,7 @@ feature -- Debug
 			io.put_new_line
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

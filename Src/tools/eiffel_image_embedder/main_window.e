@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Main window for this application"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Build the interface for this window.
 		local
 			l_acc: EV_ACCELERATOR
@@ -81,7 +81,7 @@ feature {NONE} -- Initialization
 			set_size (500, 600)
 		end
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is the window in its default state
 			-- (as stated in `initialize')
 		do
@@ -104,7 +104,7 @@ feature {NONE} -- Menu Implementation
 
 feature {NONE} -- Implementation, Close event
 
-	request_close_window is
+	request_close_window
 			-- The user wants to close the window
 		do
 			destroy;
@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 	main_container: EV_VERTICAL_BOX
 			-- Main container (contains all widgets displayed in this window)
 
-	build_main_container is
+	build_main_container
 			-- Create and populate `main_container'.
 		require
 			main_container_not_yet_created: main_container = Void
@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 			main_container_created: main_container /= Void
 		end
 
-	build_tool_bar is
+	build_tool_bar
 			-- Build tool bar
 		local
 			tool_bar_item: EV_TOOL_BAR_BUTTON
@@ -218,14 +218,14 @@ feature {NONE} -- Implementation
 	saved: BOOLEAN
 			-- Current class text saved?
 
-	on_file_dropped (fns: LIST [STRING_32]) is
+	on_file_dropped (fns: LIST [STRING_32])
 		do
 			if fns.count = 1 then
 				open_image_file (Void, fns.first.to_string_8)
 			end
 		end
 
-	open is
+	open
 			-- Execute when push open button.
 		do
 			create open_file_dialog.make_with_title ("Open Image")
@@ -238,7 +238,7 @@ feature {NONE} -- Implementation
 			open_file_dialog.show_modal_to_window (Current)
 		end
 
-	save is
+	save
 			-- Execute when push save button.
 		local
 			l_file: PLAIN_TEXT_FILE
@@ -262,19 +262,19 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	copy_to_clipboard is
+	copy_to_clipboard
 			-- copy to clipboard
 		do
 			ev_application.clipboard.set_text (class_file)
 		end
 
-	open_image is
+	open_image
 			-- Execute when an image is selected in open dialog.
 		do
 			open_image_file (open_file_dialog.file_title, open_file_dialog.file_name)
 		end
 
-	open_image_file	(sfn: STRING; fn: STRING) is
+	open_image_file	(sfn: STRING; fn: STRING)
 			-- Execute when an image is opened
 			-- if `sfn' is Void retrieve the short file name from `fn'.
 		local
@@ -318,7 +318,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	save_file is
+	save_file
 			-- Excute when saving in save dialog.
 		local
 			l_file: PLAIN_TEXT_FILE
@@ -331,7 +331,7 @@ feature {NONE} -- Implementation
 			set_title (default_title + " -- " + save_file_dialog.file_name)
 		end
 
-	select_all is
+	select_all
 			-- Select all text in `text_panel'.
 		do
 			text_panel.select_all
@@ -339,29 +339,29 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation / Constants
 
-	set_busy_pointer is
+	set_busy_pointer
 		do
 			set_pointer_style ((create {EV_STOCK_PIXMAPS}).Busy_cursor)
 		end
 
-	set_standard_pointer is
+	set_standard_pointer
 		do
 			set_pointer_style ((create {EV_STOCK_PIXMAPS}).Standard_cursor)
 		end
 
-	Window_title: STRING is "Image Eiffel Code"
+	Window_title: STRING = "Image Eiffel Code"
 			-- Title of the window.
 
-	Window_width: INTEGER is 400
+	Window_width: INTEGER = 400
 			-- Initial width for this window.
 
-	Window_height: INTEGER is 400
+	Window_height: INTEGER = 400
 			-- Initial height for this window.
 
 	pixmap_window: PICTURE_WINDOW
 			-- Window to show the actual pixmap.
 
-	set_change (b: BOOLEAN) is
+	set_change (b: BOOLEAN)
 			-- Set `changed' with `b'.
 		do
 			if b then
@@ -370,7 +370,7 @@ feature {NONE} -- Implementation / Constants
 			changed := b
 		end
 
-	toggle_save is
+	toggle_save
 			-- toggle save button.
 		do
 			if saved then
@@ -382,7 +382,7 @@ feature {NONE} -- Implementation / Constants
 			end
 		end
 
-	build_file (a_pixmap: EV_PIXEL_BUFFER) is
+	build_file (a_pixmap: EV_PIXEL_BUFFER)
 			-- Build class file according to `a_pixmap'.
 		require
 			a_pixmap_attached: a_pixmap /= Void
@@ -453,7 +453,7 @@ feature {NONE} -- Implementation / Constants
 	origin_pixmap: EV_PIXEL_BUFFER;
 			-- Original pixmap.
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Descriptor of Automation Data Type"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Status report
 
-	is_equal_data_type (other: WIZARD_DATA_TYPE_DESCRIPTOR): BOOLEAN is
+	is_equal_data_type (other: WIZARD_DATA_TYPE_DESCRIPTOR): BOOLEAN
 			-- Is `other' describes same data type?
 		local
 			other_automation: WIZARD_AUTOMATION_DATA_TYPE_DESCRIPTOR
@@ -28,13 +28,13 @@ feature -- Status report
 
 feature -- Visitor
 
-	visit (a_visitor: WIZARD_DATA_VISITOR) is
+	visit (a_visitor: WIZARD_DATA_VISITOR)
 			-- Call back `a_visitor' with appropriate feature.
 		do
 			a_visitor.process_automation_data_type (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "XM_DOCUMENT for DOCUMENTs"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 	
 feature {DOCUMENT} -- Creation
 
-	make_from_file (a_filename: STRING) is
+	make_from_file (a_filename: STRING)
 			-- Create from `a_filename'
 		require
 			filename_not_void: a_filename /= Void
@@ -46,7 +46,7 @@ feature {DOCUMENT} -- Creation
 			has_name: name /= Void
 		end
 
-	make_from_text (a_text: STRING) is
+	make_from_text (a_text: STRING)
 			-- Create from `a_text'
 		require
 			text_not_void: a_text /= Void
@@ -61,7 +61,7 @@ feature {DOCUMENT} -- Creation
 			end	
 		end
 	
-	make_from_document (a_doc: DOCUMENT) is
+	make_from_document (a_doc: DOCUMENT)
 			-- Make from a document
 		require
 			document_not_void: a_doc /= Void
@@ -78,7 +78,7 @@ feature -- Access
 	document: DOCUMENT
 			-- Document, if any
 
-	text: STRING is
+	text: STRING
 			-- Text
 		do
 			Result := document_text (Current)	
@@ -92,7 +92,7 @@ feature -- Access
 	
 feature {DOCUMENT} -- Status Setting
 
-	pre_process is
+	pre_process
 			-- Pre-process Current
 		local
 			l_processor: XML_PRE_PROCESSOR
@@ -101,7 +101,7 @@ feature {DOCUMENT} -- Status Setting
 			l_processor.process
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

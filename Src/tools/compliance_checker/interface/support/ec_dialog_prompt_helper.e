@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		EiffelVision 2 helper to ease of creation of EiffelVision2 question/error/warning dialogs.
 	]"
@@ -13,7 +13,7 @@ class
 
 feature -- Basic Operations
 
-	ask_question (a_question: STRING; a_confirm: STRING; a_cancel: STRING; a_default_button: STRING; a_format_args: TUPLE; a_window: EV_WINDOW): BOOLEAN is
+	ask_question (a_question: STRING; a_confirm: STRING; a_cancel: STRING; a_default_button: STRING; a_format_args: TUPLE; a_window: EV_WINDOW): BOOLEAN
 			-- Asks user a question via a question dialog.
 			-- `a_question' is a question to ask, it may include {n} where n relates to an index in `a_format_args'.
 			-- `a_confirm' confirmation button text.
@@ -49,7 +49,7 @@ feature -- Basic Operations
 			Result := l_dialog.selected_button.is_equal (a_confirm)
 		end
 	
-	show_information (a_message: STRING; a_format_args: TUPLE; a_window: EV_WINDOW) is
+	show_information (a_message: STRING; a_format_args: TUPLE; a_window: EV_WINDOW)
 			-- Shows information dialog prompt.
 			-- `a_message' information message.
 			-- `a_format_args' format arguments for `a_error'.
@@ -78,7 +78,7 @@ feature -- Basic Operations
 			l_dialog.show_modal_to_window (a_window)
 		end
 		
-	show_error (a_error: STRING; a_format_args: TUPLE; a_window: EV_WINDOW) is
+	show_error (a_error: STRING; a_format_args: TUPLE; a_window: EV_WINDOW)
 			-- Shows error dialog prompt.
 			-- `a_error' error message.
 			-- `a_format_args' format arguments for `a_error'.
@@ -109,7 +109,7 @@ feature -- Basic Operations
 		
 feature {NONE} -- Implementation
 
-	formatter: EC_STRING_FORMATTER is
+	formatter: EC_STRING_FORMATTER
 			-- STRING formatter
 		once
 			create Result
@@ -117,7 +117,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

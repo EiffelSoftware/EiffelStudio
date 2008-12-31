@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Actual application entry point.
 	]"
@@ -19,7 +19,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make_and_launch is
+	make_and_launch
 			-- Create `Current', build and display `main_window',
 			-- then launch the application.
 		local
@@ -47,7 +47,7 @@ feature {NONE} -- Implementation
 	main_window: EC_MAIN_WINDOW;
 		-- Main window of `Current'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Project settings pane to allow users to configure a compliance checking project.
 	]"
@@ -36,7 +36,7 @@ inherit
 		
 feature {NONE} -- Initialization
 
-	user_initialization is
+	user_initialization
 			-- Called by `initialize'.
 			-- Any custom user initialization that
 			-- could not be performed in `initialize',
@@ -90,7 +90,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_owner_window (an_owner_window: like owner_window) is
+	set_owner_window (an_owner_window: like owner_window)
 			-- Set `owner_window' to `an_owner_window'.
 		do
 			owner_window := an_owner_window
@@ -100,7 +100,7 @@ feature -- Element change
 
 feature -- Basic Operation
 
-	synchronize_project_with_interface is
+	synchronize_project_with_interface
 			-- Synchronized user interface with project settings
 		local
 			l_cursor: CURSOR
@@ -132,7 +132,7 @@ feature -- Basic Operation
 
 feature {NONE} -- Agent Handlers
 
-	on_assembly_changed is
+	on_assembly_changed
 			-- Called when `txt_assembly_path' text changes.
 		require
 			txt_assembly_path_not_void: txt_assembly_path /= Void
@@ -141,7 +141,7 @@ feature {NONE} -- Agent Handlers
 			show_hide_assembly_error_pixmap
 		end
 		
-	on_browse_for_assembly is
+	on_browse_for_assembly
 			-- Called when user selected to browse for an assembly.
 		require
 			txt_assembly_path_not_void: txt_assembly_path /= Void
@@ -172,7 +172,7 @@ feature {NONE} -- Agent Handlers
 	sticky_assembly_path: STRING
 			-- Last assembly path directory		
 				
-	on_grid_row_selection_changed (a_selected: BOOLEAN; a_row: EV_GRID_ROW) is
+	on_grid_row_selection_changed (a_selected: BOOLEAN; a_row: EV_GRID_ROW)
 			-- Called when selection changes in `grid_reference_paths'.
 			-- `a_selected' indicates a selection or deselection.
 		require
@@ -194,7 +194,7 @@ feature {NONE} -- Agent Handlers
 			end
 		end
 		
-	on_grid_key_released (a_key: EV_KEY) is
+	on_grid_key_released (a_key: EV_KEY)
 			-- Called when user presses key on focused item in `grid_reference_paths'
 		require
 			a_key_not_void: a_key /= Void
@@ -225,7 +225,7 @@ feature {NONE} -- Agent Handlers
 			end
 		end
 		
-	on_item_post_draw (a_drawable: EV_DRAWABLE; a_item: EV_GRID_ITEM; a_column: INTEGER; a_row: INTEGER) is
+	on_item_post_draw (a_drawable: EV_DRAWABLE; a_item: EV_GRID_ITEM; a_column: INTEGER; a_row: INTEGER)
 			-- Called after a item has been drawn.
 		do
 			if a_item /= Void then
@@ -233,7 +233,7 @@ feature {NONE} -- Agent Handlers
 			end
 		end
 		
-	on_grid_resize (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
+	on_grid_resize (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER)
 			-- Called when `grid_reference_paths' resizes
 		local
 			l_grid: like grid_reference_paths
@@ -244,7 +244,7 @@ feature {NONE} -- Agent Handlers
 			l_grid.virtual_size_changed_actions.resume
 		end		
 		
-	on_browse_path (a_item: EV_GRID_EDITABLE_ITEM; a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+	on_browse_path (a_item: EV_GRID_EDITABLE_ITEM; a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
 			-- Called when user selects to browse for an existing path (using folder icon on grid item)
 		require
 			a_item_not_void: a_item /= Void
@@ -267,7 +267,7 @@ feature {NONE} -- Agent Handlers
 			end	
 		end
 		
-	on_double_click_reference_path (a_item: EV_GRID_EDITABLE_ITEM; a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+	on_double_click_reference_path (a_item: EV_GRID_EDITABLE_ITEM; a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
 			-- Called when user double left clicks on reference path item in `grid_reference_paths'.
 		require
 			a_item_not_void: a_item /= Void
@@ -279,7 +279,7 @@ feature {NONE} -- Agent Handlers
 			end
 		end
 		
-	on_end_edit_reference_path (a_item: EV_GRID_EDITABLE_ITEM) is
+	on_end_edit_reference_path (a_item: EV_GRID_EDITABLE_ITEM)
 			-- Called when editable edit session reference path has ended.
 		require
 			a_item_not_void: a_item /= Void
@@ -310,7 +310,7 @@ feature {NONE} -- Agent Handlers
 			active_reference_text := Void
 		end	
 		
-	on_reference_path_pointer_move (a_item: EV_GRID_EDITABLE_ITEM; a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+	on_reference_path_pointer_move (a_item: EV_GRID_EDITABLE_ITEM; a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
 			-- Called when mouse moved over grid item.
 		do
 			if a_x > a_item.column.width - 18 then
@@ -322,7 +322,7 @@ feature {NONE} -- Agent Handlers
 			end
 		end
 
-	on_add_selected is
+	on_add_selected
 			-- Called when `btn_add' is selected.
 		local
 			l_dir: like browse_for_reference_path
@@ -340,7 +340,7 @@ feature {NONE} -- Agent Handlers
 			end
 		end
 		
-	on_remove_selected is
+	on_remove_selected
 			-- Called when `btn_remove' is selected.
 		require
 			grid_reference_paths_not_void: grid_reference_paths /= Void
@@ -382,7 +382,7 @@ feature {NONE} -- Agent Handlers
 
 feature {NONE} -- Implementation
 
-	show_hide_assembly_error_pixmap is
+	show_hide_assembly_error_pixmap
 			-- Shows or hides assembly cannot be found error pixmap based on `txt_assembly_path'
 		require
 			pixm_assembly_cannot_be_found_not_void: pixm_assembly_cannot_be_found /= Void
@@ -398,7 +398,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_reference_path (a_path: STRING) is
+	add_reference_path (a_path: STRING)
 			-- Addes `a_path' to `grid_reference_paths'
 		require
 			a_path_not_void: a_path /= Void
@@ -426,7 +426,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	browse_for_reference_path: STRING is
+	browse_for_reference_path: STRING
 			-- Browses for a reference path folder
 		local
 			l_dd: EV_DIRECTORY_DIALOG
@@ -446,7 +446,7 @@ feature {NONE} -- Implementation
 			not_result_is_empty: Result /= Void implies not Result.is_empty 
 		end
 	
-	set_path_pixmap (a_item: EV_GRID_EDITABLE_ITEM; a_dir: STRING) is
+	set_path_pixmap (a_item: EV_GRID_EDITABLE_ITEM; a_dir: STRING)
 			-- Sets pixmaps for `a_item' base on validity of `a_dir'
 		require
 			a_item_not_void: a_item /= Void
@@ -468,7 +468,7 @@ feature {NONE} -- Implementation
 		
 feature {NONE} -- Dialogs
 
-	display_already_added_error is
+	display_already_added_error
 			-- Displays already added dialog box.
 		local
 			l_error: EV_ERROR_DIALOG
@@ -482,7 +482,7 @@ feature {NONE} -- Dialogs
 invariant
 	owner_window_not_void: owner_window /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

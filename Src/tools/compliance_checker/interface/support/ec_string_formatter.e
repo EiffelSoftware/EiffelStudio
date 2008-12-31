@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Permits argument-based formatting of STRING instances.
 	]"
@@ -19,7 +19,7 @@ inherit
 
 feature -- Conversion
 
-	format (a_str: STRING; a_args: TUPLE): STRING is
+	format (a_str: STRING; a_args: TUPLE): STRING
 			-- Replaces each format item in `a_str' with the text equivalent of a corresponding to 
 			-- and object's value at `a_args' @ i.
 			--
@@ -113,13 +113,13 @@ feature -- Conversion
 		
 feature {NONE} -- Symbols
 
-	open_char: CHARACTER is '{'
+	open_char: CHARACTER = '{'
 			-- Index open character
 
-	close_char: CHARACTER is '}';
+	close_char: CHARACTER = '}';
 			-- Index close character
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

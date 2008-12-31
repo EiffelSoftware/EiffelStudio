@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Processing interface for C component."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -23,7 +23,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Initialize instance.
 		do
 			create generated_coclasses.make (10)
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 		
 feature -- Initialization
 
-	initialize (a_component: WIZARD_COMPONENT_DESCRIPTOR; a_interface: WIZARD_INTERFACE_DESCRIPTOR; a_writer: WIZARD_WRITER_CPP_CLASS) is
+	initialize (a_component: WIZARD_COMPONENT_DESCRIPTOR; a_interface: WIZARD_INTERFACE_DESCRIPTOR; a_writer: WIZARD_WRITER_CPP_CLASS)
 			-- Initialize
 		require
 			non_void_component: a_component /= Void
@@ -52,7 +52,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	clean_up is
+	clean_up
 			-- Clean up.
 		do
 			component := Void
@@ -63,7 +63,7 @@ feature {NONE} -- Implementation
 invariant
 	non_void_writer: not finished implies cpp_class_writer /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

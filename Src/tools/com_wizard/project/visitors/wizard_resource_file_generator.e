@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Resource file generator."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -30,12 +30,12 @@ inherit
 
 feature -- Access
 
-	Resource_file_extension: STRING is ".rc"
+	Resource_file_extension: STRING = ".rc"
 			-- Resource file extension
 
 feature -- Basic operations
 
-	generate (a_folder: STRING) is
+	generate (a_folder: STRING)
 			-- Generate resource file in `a_folder'.
 		require
 			non_void_folder: a_folder /= Void
@@ -54,7 +54,7 @@ feature -- Basic operations
 			a_file.close
 		end
 
-	Generated_resource_file: STRING is
+	Generated_resource_file: STRING
 			-- Resource file content
 		local
 			str_buffer: STRING
@@ -70,7 +70,7 @@ feature -- Basic operations
 			Result.append (Double_quote)
 		end
 
-	Resource_file_name: STRING is
+	Resource_file_name: STRING
 			-- Resource file name
 		do
 			create Result.make (100)
@@ -78,7 +78,7 @@ feature -- Basic operations
 			Result.append (Resource_file_extension)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

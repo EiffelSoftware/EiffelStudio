@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Restoration error indicating that the Windows registry preferences could not be written to.
 	]"
@@ -20,7 +20,7 @@ feature {NONE} -- Implementation
 
 	dollar_description: STRING = "Unable to write Windows registry preferences to key '{1}'."
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

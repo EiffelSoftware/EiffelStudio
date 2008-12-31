@@ -1,4 +1,4 @@
-indexing
+note
 	description: "ITypeLib wrapper"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_from_name (a_name: STRING) is
+	make_from_name (a_name: STRING)
 			-- Load type library with `file_name'.
 		require
 			non_void_file_name: a_name /= Void
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Status Report
 
-	initialized: BOOLEAN is
+	initialized: BOOLEAN
 			-- Was instance successfully initialized?
 		do
 			Result := item /= Default_pointer
@@ -51,7 +51,7 @@ feature -- Status Report
 
 feature -- Access
 
-	find_name (a_name: STRING; a_count: INTEGER): ECOM_TYPE_LIB_FIND_NAME_RESULT is
+	find_name (a_name: STRING; a_count: INTEGER): ECOM_TYPE_LIB_FIND_NAME_RESULT
 			-- Finds occurences of type description `a_name' in type library.
 			-- `count' indicates number of instances to look for.
 		require
@@ -84,7 +84,7 @@ feature -- Access
 			end
 		end
 
-	documentation (a_index: INTEGER): ECOM_DOCUMENTATION is
+	documentation (a_index: INTEGER): ECOM_DOCUMENTATION
 			-- Documentation of library if `a_index' is equal to -1,
 			-- or type description, if `a_index' is equal
 			-- to index of type description
@@ -113,7 +113,7 @@ feature -- Access
 			non_void_documentation: not disposed implies Result /= Void
 		end
 
-	library_attributes: ECOM_TLIB_ATTR is
+	library_attributes: ECOM_TLIB_ATTR
 			-- Library's attributes
 		require
 			not_disposed: not disposed
@@ -132,7 +132,7 @@ feature -- Access
 			valid_attributes: not disposed implies Result.exists
 		end
 
-	type_info (a_index: INTEGER): ECOM_TYPE_INFO is
+	type_info (a_index: INTEGER): ECOM_TYPE_INFO
 			-- Type description in library at `a_index'
 		require
 			valid_index: a_index >= 0 and a_index < type_info_count
@@ -148,7 +148,7 @@ feature -- Access
 			non_void_type_info: Result /= Void
 		end
 
-	type_info_count: INTEGER is
+	type_info_count: INTEGER
 			-- Number of type descriptions in type library
 		require
 			not_disposed: not disposed
@@ -158,7 +158,7 @@ feature -- Access
 			valid_count: not disposed implies Result >= 0
 		end
 
-	type_info_of_guid (a_guid: ECOM_GUID): ECOM_TYPE_INFO is
+	type_info_of_guid (a_guid: ECOM_GUID): ECOM_TYPE_INFO
 			-- ITypeInfo interface
 		require
 			non_void_guid: a_guid /= Void
@@ -175,7 +175,7 @@ feature -- Access
 			non_void_type_info: not disposed implies Result /= Void
 		end
 
-	type_info_type (a_index: INTEGER): INTEGER is
+	type_info_type (a_index: INTEGER): INTEGER
 			-- Type of type description
 			-- See ECOM_TYPE_KIND for return values
 		require
@@ -189,7 +189,7 @@ feature -- Access
 
 feature -- Access
 
-	is_name (a_name: STRING): BOOLEAN is
+	is_name (a_name: STRING): BOOLEAN
 			-- Is name described in library?
 		require
 			non_void_name: a_name /= Void
@@ -207,7 +207,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	release is
+	release
 			-- Release underlying ITypeLib interface pointer thereby releasing lock on file.
 			-- Do not call anything else on this instance after calling `release'.
 		do
@@ -219,7 +219,7 @@ feature {NONE} -- Implementation
 	library_attributes_impl: ECOM_TLIB_ATTR
 			-- Library' attributes
 
-	release_tlib_attr is
+	release_tlib_attr
 			-- Releases TLIBATTR structure
 		do
 			if library_attributes_impl /= Void then
@@ -230,7 +230,7 @@ feature {NONE} -- Implementation
 	type_attr_pointer: POINTER
 			-- Pointer to TYPEATTR structure
 
-	memory_free is
+	memory_free
 			--
 		do
 			if not disposed then
@@ -243,84 +243,84 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	c_release (a_item: POINTER) is
+	c_release (a_item: POINTER)
 		external
 			"C inline use <oaidl.h>"
 		alias
 			"((ITypeLib*)$a_item)->lpVtbl->Release((ITypeLib*)$a_item)"
 		end
 
-	c_load_type_lib (a_file_name, a_type_lib: POINTER): INTEGER is
+	c_load_type_lib (a_file_name, a_type_lib: POINTER): INTEGER
 		external
 			"C inline use <windows.h>"
 		alias
 			"LoadTypeLib ((const OLECHAR*)$a_file_name, (ITypeLib**)$a_type_lib)"
 		end
 
-	c_find_name (a_item, a_name, a_infos, a_ids: POINTER; a_count: TYPED_POINTER [INTEGER]): INTEGER is
+	c_find_name (a_item, a_name, a_infos, a_ids: POINTER; a_count: TYPED_POINTER [INTEGER]): INTEGER
 		external
 			"C inline use <oaidl.h>"
 		alias
 			"((ITypeLib*)$a_item)->lpVtbl->FindName ((ITypeLib*)$a_item, (OLECHAR*)$a_name, 0, (ITypeInfo**)$a_infos, (MEMBERID*)$a_ids, (unsigned int*)$a_count)"
 		end
 
-	c_get_documentation (a_item: POINTER; a_index: INTEGER; a_name, a_doc: TYPED_POINTER [POINTER]; a_context: TYPED_POINTER [NATURAL_32]; a_help: TYPED_POINTER [POINTER]): INTEGER is
+	c_get_documentation (a_item: POINTER; a_index: INTEGER; a_name, a_doc: TYPED_POINTER [POINTER]; a_context: TYPED_POINTER [NATURAL_32]; a_help: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"C inline use <oaidl.h>"
 		alias
 			"((ITypeLib*)$a_item)->lpVtbl->GetDocumentation ((ITypeLib*)$a_item, (int)$a_index, (BSTR*)$a_name, (BSTR*)$a_doc, (unsigned long*)$a_context, (BSTR*)$a_help)"
 		end
 
-	c_get_lib_attr (a_item: POINTER; a_res: TYPED_POINTER [POINTER]): INTEGER is
+	c_get_lib_attr (a_item: POINTER; a_res: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"C inline use <oaidl.h>"
 		alias
 			"((ITypeLib*)$a_item)->lpVtbl->GetLibAttr ((ITypeLib*)$a_item, (TLIBATTR**)$a_res)"
 		end
 
-	c_get_type_info (a_item: POINTER; a_index: INTEGER; a_res: TYPED_POINTER [POINTER]): INTEGER is
+	c_get_type_info (a_item: POINTER; a_index: INTEGER; a_res: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"C inline use <oaidl.h>"
 		alias
 			"((ITypeLib*)$a_item)->lpVtbl->GetTypeInfo ((ITypeLib*)$a_item, (unsigned int)$a_index, (ITypeInfo**)$a_res)"
 		end
 
-	c_get_type_info_count(a_item: POINTER): INTEGER is
+	c_get_type_info_count(a_item: POINTER): INTEGER
 		external
 			"C inline use <oaidl.h>"
 		alias
 			"((ITypeLib*)$a_item)->lpVtbl->GetTypeInfoCount((ITypeLib*)$a_item)"
 		end
 
-	c_get_type_info_of_guid (a_item: POINTER; a_guid: POINTER; a_res: TYPED_POINTER [POINTER]): INTEGER is
+	c_get_type_info_of_guid (a_item: POINTER; a_guid: POINTER; a_res: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"C inline use <oaidl.h>"
 		alias
 			"((ITypeLib*)$a_item)->lpVtbl->GetTypeInfoOfGuid((ITypeLib*)$a_item, (REFGUID)$a_guid, (ITypeInfo**)$a_res)"
 		end
 
-	c_get_type_info_type (a_item: POINTER; a_index: INTEGER; a_res: TYPED_POINTER [INTEGER]): INTEGER is
+	c_get_type_info_type (a_item: POINTER; a_index: INTEGER; a_res: TYPED_POINTER [INTEGER]): INTEGER
 		external
 			"C inline use <oaidl.h>"
 		alias
 			"((ITypeLib*)$a_item)->lpVtbl->GetTypeInfoType((ITypeLib*)$a_item, (unsigned int)$a_index, (TYPEKIND*)$a_res)"
 		end
 
-	c_is_name (a_item: POINTER; a_name: POINTER; a_res: TYPED_POINTER [BOOLEAN]): INTEGER is
+	c_is_name (a_item: POINTER; a_name: POINTER; a_res: TYPED_POINTER [BOOLEAN]): INTEGER
 		external
 			"C inline use <oaidl.h>"
 		alias
 			"((ITypeLib*)$a_item)->lpVtbl->IsName((ITypeLib*)$a_item, (OLECHAR*)$a_name, 0, (BOOL*)$a_res)"
 		end
 
-	c_release_tlib_attr (a_item: POINTER; a_tlib_attr: POINTER) is
+	c_release_tlib_attr (a_item: POINTER; a_tlib_attr: POINTER)
 		external
 			"C inline use <oaidl.h>"
 		alias
 			"((ITypeLib*)$a_item)->lpVtbl->ReleaseTLibAttr((ITypeLib*)$a_item, (TLIBATTR*)$a_tlib_attr)"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

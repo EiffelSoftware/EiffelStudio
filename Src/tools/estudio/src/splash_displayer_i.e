@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Splash displayer."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,19 +11,19 @@ class
 
 feature {NONE} -- Creation
 
-	make_with_text (s: STRING_GENERAL) is
+	make_with_text (s: STRING_GENERAL)
 		do
 			text := s
 		end
 
 feature -- Access
 
-	show is
+	show
 			-- Show spash box
 		deferred
 		end
 
-	close is
+	close
 			-- Close spash box
 		deferred
 		end
@@ -34,19 +34,19 @@ feature -- Access
 
 feature -- Change
 
-	set_splash_pixmap_filename (fn: STRING) is
+	set_splash_pixmap_filename (fn: STRING)
 		require
 			file_exists: (create {RAW_FILE}.make (fn)).exists
 		do
 			splash_pixmap_filename := fn
 		end
 
-	set_verbose_text (s: STRING_GENERAL) is
+	set_verbose_text (s: STRING_GENERAL)
 		do
 			verbose_text := s
 		end
 
-	output_text (s: STRING_GENERAL) is
+	output_text (s: STRING_GENERAL)
 		require
 			s /= Void
 		do
@@ -61,7 +61,7 @@ feature {NONE} -- Properties
 	text: STRING_GENERAL;
 			-- bottom text to display
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

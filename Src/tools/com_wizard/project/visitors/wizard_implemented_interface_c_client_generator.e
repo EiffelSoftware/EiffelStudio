@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented interface generator for C client"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -30,7 +30,7 @@ inherit
 
 feature -- Basic operations
 
-	generate (a_descriptor: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR) is
+	generate (a_descriptor: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR)
 			-- Generate C client for implemented interface.
 		local
 			l_member: WIZARD_WRITER_C_MEMBER
@@ -102,7 +102,7 @@ feature -- Basic operations
 			cpp_class_writer := Void
 		end
 
-	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY) is
+	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY)
 			-- Create file name.
 		do
 			a_factory.process_coclass_c_client
@@ -110,7 +110,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	pointer_constructor (a_descriptor: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR): WIZARD_WRITER_CPP_CONSTRUCTOR is
+	pointer_constructor (a_descriptor: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR): WIZARD_WRITER_CPP_CONSTRUCTOR
 			-- Constructor.
 		require
 			non_void_descriptor: a_descriptor /= Void
@@ -140,7 +140,7 @@ feature {NONE} -- Implementation
 			non_void_constructor: Result /= Void
 		end
 
-	destructor (a_descriptor: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR): STRING is
+	destructor (a_descriptor: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR): STRING
 			-- Desctructor
 		require
 			non_void_coclass_descriptor: a_descriptor /= Void
@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 		end
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

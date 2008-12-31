@@ -1,4 +1,4 @@
-indexing
+note
 	description: "IMPLTYPEFLAGS flags"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -13,7 +13,7 @@ inherit
 
 feature -- Access
 
-	Impltypeflag_fdefault: INTEGER is
+	Impltypeflag_fdefault: INTEGER
 			-- Interface or dispinterface represents default for
 			-- source or sink
 		external
@@ -22,7 +22,7 @@ feature -- Access
 			"IMPLTYPEFLAG_FDEFAULT"
 		end
 		
-	Impltypeflag_fsource: INTEGER is
+	Impltypeflag_fsource: INTEGER
 			-- Member of coclass called rather than implemented
 		external
 			"C [macro <oaidl.h>]"
@@ -30,7 +30,7 @@ feature -- Access
 			"IMPLTYPEFLAG_FSOURCE"
 		end
 		
-	Impltypeflag_frestricted: INTEGER is
+	Impltypeflag_frestricted: INTEGER
 			-- Member should not be displayed or programmable by users
 		external
 			"C [macro <oaidl.h>]"
@@ -38,7 +38,7 @@ feature -- Access
 			"IMPLTYPEFLAG_FRESTRICTED"
 		end
 
-	Impltypeflag_fdefaultvtable: INTEGER is
+	Impltypeflag_fdefaultvtable: INTEGER
 			-- Sink receive events through the VTABLE.
 		external
 			"C [macro <oaidl.h>]"
@@ -48,31 +48,31 @@ feature -- Access
 		
 feature -- Status Report
 
-	is_fdefault (a_flag: INTEGER):BOOLEAN is
+	is_fdefault (a_flag: INTEGER):BOOLEAN
 			-- Is flag `Impltypeflag_fdefault'?
 		do
 			Result := binary_and (a_flag, Impltypeflag_fdefault) = Impltypeflag_fdefault
 		end
 
-	is_fsource (a_flag: INTEGER):BOOLEAN is
+	is_fsource (a_flag: INTEGER):BOOLEAN
 			-- Is flag `Impltypeflag_fsource'?
 		do
 			Result := binary_and (a_flag, Impltypeflag_fsource) = Impltypeflag_fsource
 		end
 
-	is_frestricted (a_flag: INTEGER):BOOLEAN is
+	is_frestricted (a_flag: INTEGER):BOOLEAN
 			-- Is flag `Impltypeflag_frestricted?
 		do
 			Result := binary_and (a_flag, Impltypeflag_frestricted) = Impltypeflag_frestricted
 		end
 
-	is_fdefaultvtable (a_flag: INTEGER):BOOLEAN is
+	is_fdefaultvtable (a_flag: INTEGER):BOOLEAN
 			-- Is flag `Impltypeflag_fdefaultvtable?
 		do
 			Result := binary_and (a_flag, Impltypeflag_fdefaultvtable) = Impltypeflag_fdefaultvtable
 		end
 
-	is_valid_impltypeflag (a_flag: INTEGER): BOOLEAN is
+	is_valid_impltypeflag (a_flag: INTEGER): BOOLEAN
 			-- Is `flag' a valid combination of impltypeflags?
 		do
 			Result := is_fdefault (a_flag) or
@@ -82,7 +82,7 @@ feature -- Status Report
 					(a_flag = 0)
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

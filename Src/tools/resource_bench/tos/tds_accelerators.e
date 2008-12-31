@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Accelerators epresentation in the tds"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Create accelerators
 		do
 			list_make
@@ -36,7 +36,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_current_accelerator (v: TDS_ACCELERATORS_ITEM) is
+	set_current_accelerator (v: TDS_ACCELERATORS_ITEM)
 			-- Assign `v' to `current_accelerator'.
 		require
 			v_not_void: v /= Void
@@ -46,30 +46,30 @@ feature -- Setting
 			current_accelerator_set: current_accelerator = v
 		end
 
-	insert_accelerator (v: TDS_ACCELERATORS_ITEM) is
+	insert_accelerator (v: TDS_ACCELERATORS_ITEM)
 		do
 			accelerator_list.extend (v)
 		end
 
 feature -- Code generation
 
-	generate_tree_view (a_tree_view: WEL_TREE_VIEW; a_parent: POINTER) is
+	generate_tree_view (a_tree_view: WEL_TREE_VIEW; a_parent: POINTER)
 		do
 		end
 
-	generate_wel_code is
+	generate_wel_code
 		do
 		end
 
-	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE) is
+	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE)
 		do
 		end
 
-	display is
+	display
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

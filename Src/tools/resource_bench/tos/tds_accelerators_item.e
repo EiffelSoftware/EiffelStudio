@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,27 +11,27 @@ class
 
 feature
 
-	set_event (v: STRING) is
+	set_event (v: STRING)
 			-- Assign 'v' to `event'.
 		do
 		end
 
-	set_id_value (v: STRING) is
+	set_id_value (v: STRING)
 			-- Assign `v' to `id_value'
 		do
 		end
 
-	set_type (v: STRING) is
+	set_type (v: STRING)
 			-- Assign 'v' to `type'.
 		do
 		end
 
-	insert_options (v: STRING) is
+	insert_options (v: STRING)
 			-- Assign 'v' to `options'.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

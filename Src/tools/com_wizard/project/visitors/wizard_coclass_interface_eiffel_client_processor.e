@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Processing interfaces for Eiffel client coclass."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -21,7 +21,7 @@ create
 
 feature -- Basic operations
 
-	generate_source_interface_features (a_interface: WIZARD_INTERFACE_DESCRIPTOR) is
+	generate_source_interface_features (a_interface: WIZARD_INTERFACE_DESCRIPTOR)
 			-- Generate source interface features.
 		local
 			l_visitor: WIZARD_EIFFEL_SERVER_VISITOR
@@ -32,14 +32,14 @@ feature -- Basic operations
 			create l_generator.generate (a_interface, coclass, eiffel_writer)
 		end
 
-	generate_functions_and_properties (a_interface: WIZARD_INTERFACE_DESCRIPTOR; a_inherit_clause: WIZARD_WRITER_INHERIT_CLAUSE) is
+	generate_functions_and_properties (a_interface: WIZARD_INTERFACE_DESCRIPTOR; a_inherit_clause: WIZARD_WRITER_INHERIT_CLAUSE)
 			-- Generate functions and properties for interface.
 		do
 			Eiffel_client_generator.initialize (coclass, a_interface, eiffel_writer, a_inherit_clause)
 			Eiffel_client_generator.generate_functions_and_properties (a_interface)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

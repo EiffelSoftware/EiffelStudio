@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Map Eiffel type to MIDL type"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize object.
 		do
 			create in_types.make (10)
@@ -95,7 +95,7 @@ feature -- Status report
 	inout_type: BOOLEAN
 			-- Is an [in, out] type?
 
-	supported_eiffel_type (l_type: STRING): BOOLEAN is
+	supported_eiffel_type (l_type: STRING): BOOLEAN
 			-- Whether Eiffel 'l_type' is supported?
 		require
 			non_void_type: l_type /= Void
@@ -114,7 +114,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	com_type (l_type: STRING): STRING is
+	com_type (l_type: STRING): STRING
 			-- Com type mapped to Eiffel 'l_type' type
 			-- Void if type not supported
 		require
@@ -151,7 +151,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	is_cell (l_type: STRING): BOOLEAN is
+	is_cell (l_type: STRING): BOOLEAN
 			-- Is CELL?
 		require
 			non_void_type: l_type /= Void
@@ -160,7 +160,7 @@ feature {NONE} -- Implementation
 			Result := l_type.substring (1, 4).is_equal (Cell_type)
 		end
 
-	is_array (l_type: STRING): BOOLEAN is
+	is_array (l_type: STRING): BOOLEAN
 			-- Is array?
 		require
 			non_void_type: l_type /= Void
@@ -169,7 +169,7 @@ feature {NONE} -- Implementation
 			Result := l_type.substring (1, 10).is_equal (Ecom_array_type)
 		end
 
-	com_array_type (l_type: STRING): STRING is
+	com_array_type (l_type: STRING): STRING
 			-- Com Safearray type equavalent of Eiffel 'l_type'
 		require
 			non_void_type: l_type /= Void
@@ -198,7 +198,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	inner_type (l_type: STRING): STRING is
+	inner_type (l_type: STRING): STRING
 			-- Inner type of CELL or ECOM_ARRAY
 		require
 			non_void_type: l_type /= Void
@@ -209,7 +209,7 @@ feature {NONE} -- Implementation
 										l_type.last_index_of ('%)', l_type.count) -1 )
 		end
 
-	com_cell_type (l_type: STRING): STRING is
+	com_cell_type (l_type: STRING): STRING
 			-- Com pointer type of Eiffel 'l_type'
 		require
 			non_void_type: l_type /= Void
@@ -245,7 +245,7 @@ feature {NONE} -- Implementation
 			inout_type := True
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Native interop routines and functions.
 	]"
@@ -12,7 +12,7 @@ class
 
 feature -- Native methods
 
-	frozen get_short_path_name (lpsz_long_path, lpsz_short_path: POINTER; cch_buffer: INTEGER): INTEGER is
+	frozen get_short_path_name (lpsz_long_path, lpsz_short_path: POINTER; cch_buffer: INTEGER): INTEGER
 			-- This function retrieves the handle to the specified child window's parent window.
 			--
 			-- `lpsz_long_path': Pointer to a null-terminated path string. The function retrieves the short form of this path
@@ -26,7 +26,7 @@ feature -- Native methods
 			"GetShortPathNameW"
 		end
 
-	frozen sizeof_tchar: INTEGER is
+	frozen sizeof_tchar: INTEGER
 			-- Size of a TCHAR in bytes.
 		external
 			"C macro use <windows.h>"
@@ -34,7 +34,7 @@ feature -- Native methods
 			"sizeof (TCHAR)"
 		end
 
-	frozen max_path: INTEGER is
+	frozen max_path: INTEGER
 			-- Maximum number of character allowed in a path
 		external
 			"C macro use <windows.h>"
@@ -42,7 +42,7 @@ feature -- Native methods
 			"MAX_PATH"
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

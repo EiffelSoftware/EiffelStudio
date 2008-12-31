@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (l_name, l_type: STRING) is
+	make (l_name, l_type: STRING)
 			-- Initialize object.
 		do
 			Precursor (l_name, l_type)
@@ -43,7 +43,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_flag (l_flag: INTEGER) is
+	set_flag (l_flag: INTEGER)
 			-- Set 'flag' to 'l_flag'.
 		require
 			valid_flag: is_valid_paramflag (l_flag)
@@ -55,7 +55,7 @@ feature -- Element change
 
 feature -- Output
 
-	code: STRING is
+	code: STRING
 			-- Code output
 		do
 			if is_paramflag_fin (flag) then
@@ -68,7 +68,7 @@ feature -- Output
 			Result.append (name)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

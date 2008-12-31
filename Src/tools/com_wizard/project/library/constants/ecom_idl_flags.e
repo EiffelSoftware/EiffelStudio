@@ -1,4 +1,4 @@
-indexing
+note
 	description: "COM IDLFLAGS flags"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -13,7 +13,7 @@ inherit
 	
 feature -- Access
 
-	Idlflag_none: INTEGER is
+	Idlflag_none: INTEGER
 			-- Whether the parameter passes or receives information is unspecified
 		external
 			"C [macro <oaidl.h>]"
@@ -21,7 +21,7 @@ feature -- Access
 			"IDLFLAG_NONE"
 		end
 
-	Idlflag_fin: INTEGER is
+	Idlflag_fin: INTEGER
 			-- Parameter passes information from the caller to the callee
 		external
 			"C [macro <oaidl.h>]"
@@ -29,7 +29,7 @@ feature -- Access
 			"IDLFLAG_FIN"
 		end
 
-	Idlflag_fout: INTEGER is
+	Idlflag_fout: INTEGER
 			--  Parameter returns information from the callee to the caller
 		external
 			"C [macro <oaidl.h>]"
@@ -37,7 +37,7 @@ feature -- Access
 			"IDLFLAG_FOUT"
 		end
 			
-	Idlflag_flcid: INTEGER is
+	Idlflag_flcid: INTEGER
 			-- Parameter is the LCID of a client application
 		external
 			"C [macro <oaidl.h>]"
@@ -45,7 +45,7 @@ feature -- Access
 			"IDLFLAG_FLCID"
 		end
 
-	Idlflag_fretval: INTEGER is
+	Idlflag_fretval: INTEGER
 			-- Parameter is the return value of the member
 		external
 			"C [macro <oaidl.h>]"
@@ -55,37 +55,37 @@ feature -- Access
 
 feature -- Status report
 
-	is_idlflag_none (flag: INTEGER): BOOLEAN is
+	is_idlflag_none (flag: INTEGER): BOOLEAN
 			-- Is flag IDLFLAG_NONE?
 		do
 			Result := flag = Idlflag_none
 		end
 
-	is_idlflag_fin (flag: INTEGER): BOOLEAN is
+	is_idlflag_fin (flag: INTEGER): BOOLEAN
 			-- Is `in' parameter?
 		do
 			Result := binary_and (flag, Idlflag_fin) = Idlflag_fin
 		end
 
-	is_idlflag_fout (flag: INTEGER): BOOLEAN is
+	is_idlflag_fout (flag: INTEGER): BOOLEAN
 			-- Is `out' parameter?
 		do
 			Result := binary_and (flag, Idlflag_fout) = Idlflag_fout
 		end
 
-	is_idlflag_flcid (flag: INTEGER): BOOLEAN is
+	is_idlflag_flcid (flag: INTEGER): BOOLEAN
 			-- Is `lcid' parameter?
 		do
 			Result := binary_and (flag, Idlflag_flcid) = Idlflag_flcid
 		end
 
-	is_idlflag_fretval (flag: INTEGER): BOOLEAN is
+	is_idlflag_fretval (flag: INTEGER): BOOLEAN
 			-- Is `retval' parameter?
 		do
 			Result := binary_and (flag, Idlflag_fretval) = Idlflag_fretval
 		end
 
-	is_valid_idlflag (flag: INTEGER): BOOLEAN is
+	is_valid_idlflag (flag: INTEGER): BOOLEAN
 			-- Is `flag' a valid combination of idlflags?
 		do
 			Result := is_idlflag_none (flag) or
@@ -95,7 +95,7 @@ feature -- Status report
 						is_idlflag_fretval (flag)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

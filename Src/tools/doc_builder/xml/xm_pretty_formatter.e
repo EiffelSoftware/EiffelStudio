@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Pretty formatter for XML, applying indenting."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Status Setting
 
-	format (a_string: STRING) is
+	format (a_string: STRING)
 			-- Format `a_string'
 		require
 			string_not_void: a_string /= Void
@@ -31,7 +31,7 @@ feature -- Status Setting
 
 feature -- Tag
 
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- Print start of start tag.
 		do
 			Elements.extend (a_local_part)
@@ -46,7 +46,7 @@ feature -- Tag
 			Precursor (a_namespace, a_prefix, a_local_part)
 		end
 
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- Print end tag.
 		do			
 			if prev_was_end and not in_ignore_element then
@@ -65,7 +65,7 @@ feature -- Tag
 			curr_has_content := True
 		end
 
-	on_content (a_content: STRING) is
+	on_content (a_content: STRING)
 			-- Text content.
 		local
 			l_content: STRING
@@ -88,7 +88,7 @@ feature -- Tag
 
 feature {NONE} -- Implementation
 
-	output_formatting_text is
+	output_formatting_text
 			-- Output the format characters based on current state
 		do
 			if Elements.count > 1 and not in_ignore_element then
@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 			-- Does current tag contain any content?  Content here denotes either text or elements
 			-- and therefore indicates if end tag should be <a_tag/> or </a_tag>
 
-	tab_string: STRING is
+	tab_string: STRING
 			-- Tab string
 		local
 			cnt: INTEGER
@@ -120,34 +120,34 @@ feature {NONE} -- Implementation
 			end
 		end		
 
-	new_line: STRING is
+	new_line: STRING
 			-- Newline character
 		once
 			create Result.make_empty
 			Result.append_character (Lf_char)
 		end	
 
-	elements: ARRAYED_STACK [STRING] is
+	elements: ARRAYED_STACK [STRING]
 			-- Elements
 		once
 			create Result.make (1)
 			Result.compare_objects
 		end		
 
-	ignore_stack: ARRAYED_STACK [STRING] is
+	ignore_stack: ARRAYED_STACK [STRING]
 			-- Ignore stack
 		once
 			create Result.make (1)
 			Result.compare_objects
 		end		
 		
-	in_ignore_element: BOOLEAN is
+	in_ignore_element: BOOLEAN
 			-- Should we be ignoring element?
 		do
 			Result := not ignore_stack.is_empty			
 		end
 		
-	ignorable_elements: ARRAYED_LIST [STRING] is
+	ignorable_elements: ARRAYED_LIST [STRING]
 			-- Element which can be ignored during formatting
 		once
 			create Result.make (1)
@@ -155,7 +155,7 @@ feature {NONE} -- Implementation
 			Result.extend ("code_block")
 		end		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

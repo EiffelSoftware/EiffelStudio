@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Interface for WiX fragment generator.
 	]"
@@ -12,7 +12,7 @@ deferred class
 
 feature -- Basic operations
 
-	generate (a_options: I_OPTIONS; a_stream: TEXT_WRITER) is
+	generate (a_options: I_OPTIONS; a_stream: TEXT_WRITER)
 			-- Generate fragment XML with options `a_options'
 		require
 			a_options_attached: a_options /= Void
@@ -21,7 +21,7 @@ feature -- Basic operations
 		deferred
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

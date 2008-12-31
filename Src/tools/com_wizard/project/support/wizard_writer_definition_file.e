@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Definition file writer"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize data.
 		do
 			create {ARRAYED_LIST [WIZARD_WRITER_DEFINITION_ENTRY]} entries.make (20)
@@ -30,7 +30,7 @@ feature -- Access
 	entries: LIST [WIZARD_WRITER_DEFINITION_ENTRY]
 			-- Entries to export
 
-	generated_code: STRING is
+	generated_code: STRING
 			-- Generated code
 		do
 			Result := "-- Export feature (s) of system : "
@@ -49,7 +49,7 @@ feature -- Access
 			end
 		end
 
-	can_generate: BOOLEAN is
+	can_generate: BOOLEAN
 			-- Can code be generated?
 		do
 			Result := system_name /= Void and not 
@@ -58,7 +58,7 @@ feature -- Access
 
 feature -- Element Change
 
-	set_system_name (a_name: like system_name) is
+	set_system_name (a_name: like system_name)
 			-- Set 'system_name' with 'a_name'
 		require	
 			non_void_name: a_name /= Void
@@ -69,7 +69,7 @@ feature -- Element Change
 			name_set: system_name.is_equal (a_name)
 		end
 
-	add_entry (an_entry: WIZARD_WRITER_DEFINITION_ENTRY) is
+	add_entry (an_entry: WIZARD_WRITER_DEFINITION_ENTRY)
 			-- Add `a_function' to functions.
 		require
 			non_void_entry: an_entry /= Void
@@ -83,7 +83,7 @@ feature -- Element Change
 invariant
 		non_void_entries: entries /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

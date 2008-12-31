@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Type generator"
 	legal: "See notice at end of class."
@@ -29,21 +29,21 @@ inherit
 
 feature -- Basic Operations
 
-	generate (a_descriptor: WIZARD_TYPE_DESCRIPTOR) is
+	generate (a_descriptor: WIZARD_TYPE_DESCRIPTOR)
 			-- Generated writer
 		require
 			non_void_descriptor: a_descriptor /= Void
 		deferred
 		end
 
-	create_file_name (a_file_name_factory: WIZARD_FILE_NAME_FACTORY) is
+	create_file_name (a_file_name_factory: WIZARD_FILE_NAME_FACTORY)
 			-- Get file name.
 		require
 			non_void_file_name_factory: a_file_name_factory /= Void
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

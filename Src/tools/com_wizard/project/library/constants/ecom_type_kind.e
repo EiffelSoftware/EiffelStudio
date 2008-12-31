@@ -1,4 +1,4 @@
-indexing
+note
 	description: "COM TYPEKIND constants"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -10,7 +10,7 @@ class
 
 feature 
 
-	Tkind_enum: INTEGER is
+	Tkind_enum: INTEGER
 			-- Set of enumerators
 		external
 			"C [macro <oaidl.h>]"
@@ -18,7 +18,7 @@ feature
 			"TKIND_ENUM"
 		end
 		
-	Tkind_record: INTEGER is
+	Tkind_record: INTEGER
 			-- Struct with no methods.
 		external
 			"C [macro <oaidl.h>]"
@@ -26,7 +26,7 @@ feature
 			"TKIND_RECORD"
 		end
 
-	Tkind_module: INTEGER is
+	Tkind_module: INTEGER
 			-- Module which can only have static functions and data
 		external
 			"C [macro <oaidl.h>]"
@@ -34,7 +34,7 @@ feature
 			"TKIND_MODULE"
 		end
 
-	Tkind_interface: INTEGER is
+	Tkind_interface: INTEGER
 			-- Type that has virtual functions, all of which are pure.
 		external
 			"C [macro <oaidl.h>]"
@@ -42,7 +42,7 @@ feature
 			"TKIND_INTERFACE"
 		end
 
-	Tkind_dispatch: INTEGER is
+	Tkind_dispatch: INTEGER
 			-- Set of methods and properties that are accessible
 			-- via IDispatch::Invoke.
 		external
@@ -51,7 +51,7 @@ feature
 			"TKIND_DISPATCH"
 		end
 
-	Tkind_coclass: INTEGER is
+	Tkind_coclass: INTEGER
 			-- Set of implemented component object interfaces.
 		external
 			"C [macro <oaidl.h>]"
@@ -59,7 +59,7 @@ feature
 			"TKIND_COCLASS"
 		end
 
-	Tkind_alias: INTEGER is
+	Tkind_alias: INTEGER
 			-- Type that is an alias for another type.
 		external
 			"C [macro <oaidl.h>]"
@@ -67,7 +67,7 @@ feature
 			"TKIND_ALIAS"
 		end
 
-	Tkind_union: INTEGER is
+	Tkind_union: INTEGER
 			-- Union, all of whose members have offset zero.
 		external
 			"C [macro <oaidl.h>]"
@@ -75,7 +75,7 @@ feature
 			"TKIND_UNION"
 		end
 
-	Tkind_max: INTEGER is
+	Tkind_max: INTEGER
 			-- End marker
 		external
 			"C [macro <oaidl.h>]"
@@ -83,7 +83,7 @@ feature
 			"TKIND_MAX"
 		end
 
-	is_valid_type_kind (kind: INTEGER): BOOLEAN is
+	is_valid_type_kind (kind: INTEGER): BOOLEAN
 			-- Is `kind' a valid type kind?
 		do
 			Result := kind = Tkind_enum or
@@ -97,7 +97,7 @@ feature
 			kind = Tkind_max
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

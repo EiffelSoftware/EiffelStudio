@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Result structure of ECOM_TYPE_INFO.find_name"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -13,7 +13,7 @@ create
 	
 feature -- Initialization
 
-	make (cnt: INTEGER) is
+	make (cnt: INTEGER)
 			-- Initialize attributes
 		do
 			create type_info.make (1, cnt)
@@ -34,19 +34,19 @@ feature -- Access
 			
 feature -- Element Change
 
-	put_member_ids (value, index: INTEGER) is
+	put_member_ids (value, index: INTEGER)
 			-- Set `item' of `member_ids' at `index' with `value'.
 		do
 			member_ids.put (value, index)
 		end
 		
-	put_type_info (value: ECOM_TYPE_INFO; index: INTEGER) is
+	put_type_info (value: ECOM_TYPE_INFO; index: INTEGER)
 			-- Set `item' of `type_info' at `index' with `value'.
 		do
 			type_info.put (value, index)
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

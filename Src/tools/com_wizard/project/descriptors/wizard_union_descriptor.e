@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Union descriptor"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE}-- Initialization
 
-	make (a_creator: WIZARD_UNION_DESCRIPTOR_CREATOR) is
+	make (a_creator: WIZARD_UNION_DESCRIPTOR_CREATOR)
 			-- Initialize `fields'
 			-- and `eiffel_class_name'
 		require
@@ -37,14 +37,14 @@ feature -- Access
 	size_of_instance: INTEGER
 			-- Size of instance of this type
 
-	creation_message: STRING is
+	creation_message: STRING
 			-- Creation message for wizard output
 		do
 		end
 
 feature -- Basic operations
 
-	set_fields (some_fields: LIST [WIZARD_RECORD_FIELD_DESCRIPTOR]) is
+	set_fields (some_fields: LIST [WIZARD_RECORD_FIELD_DESCRIPTOR])
 			-- Set `fields' with `some_fields'.
 		require
 			valid_fields: some_fields /= Void
@@ -54,7 +54,7 @@ feature -- Basic operations
 			fields_set: fields /= Void and fields = some_fields
 		end
 
-	set_size (a_size: INTEGER) is
+	set_size (a_size: INTEGER)
 			-- Set `size_of_instance' with `a_size'.
 		do
 			size_of_instance := a_size
@@ -62,7 +62,7 @@ feature -- Basic operations
 			size_set: size_of_instance = a_size
 		end
 
-	visit (a_visitor: WIZARD_TYPE_VISITOR) is
+	visit (a_visitor: WIZARD_TYPE_VISITOR)
 			-- Call back `a_visitor' with appropriate feature.
 		do
 			a_visitor.process_union (Current)
@@ -71,7 +71,7 @@ feature -- Basic operations
 invariant
 	valid_fields: fields /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

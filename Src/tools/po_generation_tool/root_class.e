@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "System's root class"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Creation procedure.
 		do
 			create file_names.make (5)
@@ -59,22 +59,22 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	file_suffix: STRING is ".e"
+	file_suffix: STRING = ".e"
 			-- Suffix for files which are parsed
 			-- This is the file suffix for Eiffel source files
 
-	default_output_name: STRING is "po_file.pot"
+	default_output_name: STRING = "po_file.pot"
 			-- File name of output file if no specific name is given
 			-- through commandline options
 
-	output_name_for_standard: STRING is "-"
+	output_name_for_standard: STRING = "-"
 			-- If this file name is given as a command line option
 			-- then the output is put on the standard output
 
 	po_file: PO_FILE
 			-- Po file generated
 
-	generate is
+	generate
 			-- Generate po files.
 			--
 			-- The input directories and input files will be parsed for localizable messages
@@ -124,7 +124,7 @@ feature {NONE} -- Implementation
 			write_to_file
 		end
 
-	generate_directory (a_dir: KL_DIRECTORY) is
+	generate_directory (a_dir: KL_DIRECTORY)
 			-- Generate messages from `a_dir'.
 			--
 			-- Read all files (recursively) in `a_dir' which macht `file_suffix' and parse
@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	generate_file (a_name, a_short_name: STRING) is
+	generate_file (a_name, a_short_name: STRING)
 			-- Generate messages from `a_file'.
 			--
 			-- The file is parsed for messages which will be added to `po_file'.
@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 			l_file.close
 		end
 
-	analyze_options is
+	analyze_options
 			-- Analyze options.
 		do
 			from
@@ -225,7 +225,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	analyze_one_option is
+	analyze_one_option
 			-- Analyze one option.
 		local
 			l_name: STRING
@@ -287,7 +287,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	analyze_files_n_directories: BOOLEAN is
+	analyze_files_n_directories: BOOLEAN
 			-- Validate input files and directories.
 		local
 			l_file_names: like file_names
@@ -349,7 +349,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	write_to_file is
+	write_to_file
 			-- Writes the `po_file' to `output_file_name'.
 		require
 			po_file_not_void: po_file /= Void
@@ -391,7 +391,7 @@ feature {NONE} -- Output
 			print_usage
 		end
 
-	print_file_not_exist (a_file: STRING) is
+	print_file_not_exist (a_file: STRING)
 			-- Print error that `a_file' does not exist.
 		require
 			a_file_not_void: a_file /= Void
@@ -399,7 +399,7 @@ feature {NONE} -- Output
 			io.put_string (a_file + ": file does not exist%N")
 		end
 
-	print_directory_not_exist (a_directory: STRING) is
+	print_directory_not_exist (a_directory: STRING)
 			-- Print error that `a_directory' does not exist.
 		require
 			a_directory_not_void: a_directory /= Void
@@ -407,7 +407,7 @@ feature {NONE} -- Output
 			io.put_string (a_directory + ": directory does not exist%N")
 		end
 
-	print_file_name_invalid (a_file: STRING) is
+	print_file_name_invalid (a_file: STRING)
 			-- Print error that `a_file' is invalid.
 		require
 			a_file_not_void: a_file /= Void
@@ -415,27 +415,27 @@ feature {NONE} -- Output
 			io.put_string (a_file + ": invalid%N")
 		end
 
-	print_invalid_output_file is
+	print_invalid_output_file
 			-- Print error that `output_file_name' is invalid.
 		do
 			io.put_string ("%"" + output_file_name + "%" is invalid.%N")
 			io.put_string ("File not generated.%N")
 		end
 
-	print_file_not_writable is
+	print_file_not_writable
 			-- Print error that `output_file_name' is not writable.
 		do
 			io.put_string ("%"" + output_file_name + "%" is not writable.%N")
 			io.put_string ("File not generated.%N")
 		end
 
-	print_file_generated is
+	print_file_generated
 			-- Print status message that `output_file_name' has been generated.
 		do
 			io.put_string ("%"" + output_file_name + "%" has been generated.%N")
 		end
 
-	print_analyze_file (a_file: STRING) is
+	print_analyze_file (a_file: STRING)
 			-- Print status message that file `a_file' is currently being analyzed.
 		require
 			a_file_not_void: a_file /= Void
@@ -445,7 +445,7 @@ feature {NONE} -- Output
 			io.put_new_line
 		end
 
-	print_usage is
+	print_usage
 			-- Print usage.
 		do
 			io.put_string ("Usage:%N%T")
@@ -464,7 +464,7 @@ feature {NONE} -- Output
 			)
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog for performaing validation tasks on projects."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	user_initialization is
+	user_initialization
 			-- called by `initialize'.
 			-- Any custom user initialization that
 			-- could not be performed in `initialize',
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			initialize_document_selector
 		end
 
-	initialize_document_selector is
+	initialize_document_selector
 			-- Initialize the document selector widget according to project
 			-- `root_directory' information from `preferences'.			
 		do			
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature -- Commands
 
-	process_links is
+	process_links
 			-- Process links according to options
 		local
 			l_manager: LINK_MANAGER			
@@ -68,7 +68,7 @@ feature -- Commands
 
 feature {NONE}  -- Events
 
-	link_radio_selected is
+	link_radio_selected
 			-- Radio was selected
 		do
 			if link_radio.is_selected then
@@ -80,20 +80,20 @@ feature {NONE}  -- Events
 
 feature {NONE} -- Implementation
 
-	apply is
+	apply
 			-- Apply
 		do
 			run
 		end
 		
-	okay is
+	okay
 			-- Okay
 		do
 			run
 			hide
 		end
 
-	run is
+	run
 			-- Run
 		do
 			register_checked_items
@@ -108,7 +108,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	register_checked_items is
+	register_checked_items
 			-- Register checked items for inclusion in processing
 		local
 --			l_checked: ARRAYED_LIST [EV_CHECKABLE_TREE_ITEM]
@@ -140,7 +140,7 @@ feature {NONE} -- Implementation
 	document_selector: CHECKABLE_DOCUMENT_SELECTOR;
 			-- Checkable document selector
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

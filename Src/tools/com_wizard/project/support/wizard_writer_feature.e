@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel class feature"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize data.
 		do
 			create {ARRAYED_LIST [STRING]} arguments.make (20)
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			create {ARRAYED_LIST [STRING]} local_variables.make (20)
 		end
 
-	make_constant (a_value: INTEGER; a_name, a_description: STRING) is
+	make_constant (a_value: INTEGER; a_name, a_description: STRING)
 			-- Make integer constant `a_name' with value `a_value' and
 			-- comment `a_description'.
 		do
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	generated_code: STRING is
+	generated_code: STRING
 			-- Generated code
 		do
 			Result := Tab.twin
@@ -150,7 +150,7 @@ feature -- Access
 			end
 		end
 
-	can_generate: BOOLEAN is
+	can_generate: BOOLEAN
 			-- Can code be generated?
 		do
 			Result := name /= Void and ((is_deferred or is_attribute) implies (body = Void)) and comment /= Void
@@ -201,7 +201,7 @@ feature -- Access
 
 feature -- Element Change
 
-	set_name (a_name: like name) is
+	set_name (a_name: like name)
 			-- Set `name' with `a_name'.
 		do
 			name := a_name.twin
@@ -209,7 +209,7 @@ feature -- Element Change
 			name_set: name.is_equal (a_name)
 		end
 
-	add_argument (a_argument: STRING) is
+	add_argument (a_argument: STRING)
 			-- Add `a_argument' to `arguments'.
 		require
 			non_void_argument: a_argument /= Void
@@ -222,7 +222,7 @@ feature -- Element Change
 			added: arguments.last = a_argument
 		end
 	
-	add_local_variable (a_variable: STRING) is
+	add_local_variable (a_variable: STRING)
 			-- Add `a_variable' to `local_variables'.
 		require
 			non_void_variable: a_variable /= Void
@@ -235,7 +235,7 @@ feature -- Element Change
 			added: local_variables.last = a_variable
 		end
 
-	set_result_type (a_result_type: like result_type) is
+	set_result_type (a_result_type: like result_type)
 			-- Set `result_type' with `a_result_type'.
 		require
 			non_void_result_type: a_result_type /= Void
@@ -247,7 +247,7 @@ feature -- Element Change
 			result_type_set: result_type.is_equal (a_result_type)
 		end
 	
-	add_precondition (a_precondition: WIZARD_WRITER_ASSERTION) is
+	add_precondition (a_precondition: WIZARD_WRITER_ASSERTION)
 			-- Add `a_precondition' to `preconditions'.
 		require
 			non_void_precondition: a_precondition /= Void
@@ -259,7 +259,7 @@ feature -- Element Change
 			precondition_set: preconditions.last = a_precondition
 		end
 	
-	add_postcondition (a_postcondition: WIZARD_WRITER_ASSERTION) is
+	add_postcondition (a_postcondition: WIZARD_WRITER_ASSERTION)
 			-- Add `a_postcondition' to `postconditions'.
 		require
 			non_void_postcondition: a_postcondition /= Void
@@ -271,7 +271,7 @@ feature -- Element Change
 			postcondition_set: postconditions.last = a_postcondition
 		end
 	
-	set_body (a_body: like body) is
+	set_body (a_body: like body)
 			-- Set `body' with `a_body'.
 		require
 			non_void_body: a_body /= Void
@@ -284,7 +284,7 @@ feature -- Element Change
 			body_set: body.is_equal (a_body)
 		end
 	
-	set_comment (a_comment: like comment) is
+	set_comment (a_comment: like comment)
 			-- Set `comment' with `a_comment'.
 		require
 			non_void_comment: a_comment /= Void
@@ -294,7 +294,7 @@ feature -- Element Change
 			comment_set: comment = a_comment
 		end
 
-	set_deferred is
+	set_deferred
 			-- Set `is_deferred' to `True'.
 		require
 			not_constant: not constant
@@ -306,7 +306,7 @@ feature -- Element Change
 			is_deferred: is_deferred
 		end
 	
-	set_effective is
+	set_effective
 			-- Set `is_deferred', `is_once' and `is_external' to False.
 		do
 			is_deferred := False
@@ -316,7 +316,7 @@ feature -- Element Change
 			effective: not is_deferred
 		end
 
-	set_once is
+	set_once
 			-- Set `is_once' to `True'.
 		require
 			not_constant: not constant
@@ -327,7 +327,7 @@ feature -- Element Change
 			is_once := True
 		end
 
-	set_external is
+	set_external
 			-- Set `is_external' to `True'.
 		require
 			not_constant: not constant
@@ -340,7 +340,7 @@ feature -- Element Change
 			external_set: is_external
 		end
 
-	set_attribute is
+	set_attribute
 			-- Set `is_attribute' to `True'.
 		require
 			not_constant: not constant
@@ -364,7 +364,7 @@ invariant
 										(is_external implies (not constant and not is_deferred and not is_once)) and
 										(is_once implies (not constant and not is_deferred and not is_external))
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

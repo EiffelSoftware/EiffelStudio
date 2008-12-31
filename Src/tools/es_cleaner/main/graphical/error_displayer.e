@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Graphical implementation of an error display used to display error information to the user.
 	]"
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_window: like window) is
+	make (a_window: like window)
 			-- Initialize error displayer using parent window `a_parent'
 		require
 			a_window_attached: a_window /= Void
@@ -36,7 +36,7 @@ feature {NONE} -- Access
 
 feature -- Basic operations
 
-	show (a_cateory: STRING; a_manager: MULTI_ERROR_MANAGER) is
+	show (a_cateory: STRING; a_manager: MULTI_ERROR_MANAGER)
 			-- Show errors using manager `a_manager'.
 		local
 			l_dialog: EV_ERROR_DIALOG
@@ -73,7 +73,7 @@ invariant
 	window_attached: window /= Void
 	not_window_is_destoryed: not window.is_destroyed
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

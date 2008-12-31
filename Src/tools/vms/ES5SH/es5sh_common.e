@@ -1,4 +1,4 @@
-indexing
+note
 	description: "common ancestor/utility for ES5SH"
 	name: "EIFFEL_SRC:[ES5SH]ES5SH_COMMON.E"
 	author: "David Schwartz"
@@ -13,16 +13,16 @@ class
 
 feature -- Access
 
-	pretty_name:	STRING is	"ES5SH"
-	pretty_version: STRING is	"es5sh X6.2-001"
-	default_date_time_format: STRING  is "[0]dd-mmm-yyyy [0]hh:[0]mi:[0]ss"
-	default_time_format: STRING is "[0]hh:[0]mi:[0]ss"
-	default_wrap_margin: INTEGER is 80
-	default_comment_prefix: STRING is "#--"
+	pretty_name:	STRING =	"ES5SH"
+	pretty_version: STRING =	"es5sh X6.2-001"
+	default_date_time_format: STRING  = "[0]dd-mmm-yyyy [0]hh:[0]mi:[0]ss"
+	default_time_format: STRING = "[0]hh:[0]mi:[0]ss"
+	default_wrap_margin: INTEGER = 80
+	default_comment_prefix: STRING = "#--"
 
 	symbol_eiffel:	STRING --is  "ISE_EIFFEL"  	
 			-- eiffel macro name: one of ISE_EIFFEL, EIFFEL5, EIFFEL4
-	symbol_platform: STRING is "ISE_PLATFORM"	-- platform macro name, was PLATFORM
+	symbol_platform: STRING = "ISE_PLATFORM"	-- platform macro name, was PLATFORM
 
 -- VMS logical names (environment variables)
 	value_eiffel: STRING
@@ -33,21 +33,21 @@ feature -- Access
 	value_platform: STRING
 		-- value of $ISE_PLATFORM
 
-	macro_platform:	STRING is	-- "$(ISE_PLATFORM)"
+	macro_platform:	STRING	-- "$(ISE_PLATFORM)"
 		once
 			Result := "$(" + symbol_platform + ")"
 		end
 
-	space_character: CHARACTER is ' '
-	tab_character: CHARACTER is '%T'
+	space_character: CHARACTER = ' '
+	tab_character: CHARACTER = '%T'
 
-	whitespace_characters : ARRAY[CHARACTER] is
+	whitespace_characters : ARRAY[CHARACTER]
 		once
 			Result := << ' ', '%T', '%N' , '%R'>>
 			Result.compare_objects
 		end
 
-	path_delimiters : ARRAY[CHARACTER] is	--STRING is ":[]<>/\"
+	path_delimiters : ARRAY[CHARACTER]	--STRING is ":[]<>/\"
 				-- The set of filespec delimiters on all platforms (VMS/Unix/Windows)
 				-- (nb. excludes VMS intra-path delimiter '.')
 		once
@@ -72,8 +72,8 @@ feature -- Access
 	generate_object_libraries: BOOLEAN
 		-- if True, generate object libraries (.olb); else generate object modules (.obj)
 		-- used for transitioning/testing from object library to concatenated object module generation
-	generate_object_libraries_default: BOOLEAN is True
-	generated_object_file_type: STRING is
+	generate_object_libraries_default: BOOLEAN = True
+	generated_object_file_type: STRING
 		once
 			if generate_object_libraries then
 				Result := ".olb"
@@ -84,21 +84,21 @@ feature -- Access
 
 
 	--execution_environment_: VMS_EXECUTION_ENVIRONMENT is (someday!)
-	Execution_environment_: ES5SH_EXECUTION_ENVIRONMENT is
+	Execution_environment_: ES5SH_EXECUTION_ENVIRONMENT
 		once create Result end
 
-	Operating_environment_: OPERATING_ENVIRONMENT is
+	Operating_environment_: OPERATING_ENVIRONMENT
 		once create Result end
 
-	Exceptions_: EXCEPTIONS is
+	Exceptions_: EXCEPTIONS
 		once create Result end
 
-	Arguments_: ARGUMENTS is
+	Arguments_: ARGUMENTS
 		once create Result end
 
 feature -- Configuration
 
-	configuration_item_once (a_key : STRING; a_default : STRING) : STRING is
+	configuration_item_once (a_key : STRING; a_default : STRING) : STRING
 			-- value of configuration option `a_key'.
 			-- If not defined, print warning message and define as `a_default' so the warning is issued only once.
 		require
@@ -122,7 +122,7 @@ feature -- Configuration
 			end
 		end; -- get_configuration_item_once
 
-	configuration_item (a_key : STRING; a_default : STRING) : STRING is
+	configuration_item (a_key : STRING; a_default : STRING) : STRING
 			-- Rvalue of configuration option `a_key'.
 		require
 			key_exists_nonblank: a_key /= Void and then not a_key.is_empty
@@ -138,7 +138,7 @@ feature -- Configuration
 
 feature -- String utility operations
 
-	remove_enclosing_quotes (a_str: STRING) is
+	remove_enclosing_quotes (a_str: STRING)
 			-- remove enclosing quotes, if any, from `a_str'
 		require
 			string_not_void: a_str /= Void
@@ -149,7 +149,7 @@ feature -- String utility operations
 			end
 		end
 
-	delimit_target_colon (a_line: STRING) is
+	delimit_target_colon (a_line: STRING)
 			-- insert spaces around the target (colon) delimiter of a target dependency specification ( target : dependents...)
 		require
 			line_nonblank: a_line /= Void and then not a_line.is_empty
@@ -175,7 +175,7 @@ feature -- String utility operations
 
 feature -- character classification
 
-	is_symbol_constituent (c : CHARACTER) : BOOLEAN is
+	is_symbol_constituent (c : CHARACTER) : BOOLEAN
 			-- is `c' a constituent of a symbol, in shell/makefile terms,
 			-- i.e. is it a digit, letter, or underscore?
 		do
@@ -183,13 +183,13 @@ feature -- character classification
 			Result :=  (c.is_alpha or c.is_digit or c = '_' or c = '.')
 		end; -- is_symbol_constituent
 
-	is_space_or_tab (c: CHARACTER): BOOLEAN is
+	is_space_or_tab (c: CHARACTER): BOOLEAN
 			-- is `c' a space or tab character?
 		do
 			Result := (c = space_character or else c = tab_character)
 		end
 
-	is_whitespace (c : CHARACTER) : BOOLEAN is
+	is_whitespace (c : CHARACTER) : BOOLEAN
 			-- is character 'c' a whitespace character?
 		local
 			-- alt	: CHARACTER is '%255'
@@ -203,7 +203,7 @@ feature -- primivite tokenization
 			-- words are whitespace delimited
 			-- tokens are either symbols or special characters
 
-	next_word_index (str : STRING; start_pos : INTEGER) : INTEGER is
+	next_word_index (str : STRING; start_pos : INTEGER) : INTEGER
 			-- Returns the starting index of the next word in 'str', 0 if no more.
 			-- start_pos is 0 to find the first word,
 			-- otherwise it is the position of the last character of the current word, or
@@ -234,7 +234,7 @@ feature -- primivite tokenization
 		end; -- next_word_index
 
 
-	end_word_index (str : STRING; start_pos : INTEGER) : INTEGER is
+	end_word_index (str : STRING; start_pos : INTEGER) : INTEGER
 			-- return the index of the last character of the word that starts at start_pos in 'str'
 			-- if start_pos is whitespace, returns start_pos -1
 			-- if word starts with a quote character, retuns the index of the closing quote; if none,
@@ -286,7 +286,7 @@ feature -- primivite tokenization
 
 
 
-	first_token (a_str: STRING) : STRING is
+	first_token (a_str: STRING) : STRING
 			-- the first token in `a_str'; may be empty but never void
 		require
 			str_exists: a_str /= Void
@@ -300,7 +300,7 @@ feature -- primivite tokenization
 			result_exists:  Result /= Void
 		end -- first_token
 
-	second_token (a_str, token_1 : STRING) : STRING is
+	second_token (a_str, token_1 : STRING) : STRING
 			-- the second token in `a_str', given the first
 		require
 			str_exists: a_str /= void
@@ -313,7 +313,7 @@ feature -- primivite tokenization
 			result_exists:  Result /= Void
 		end -- second_token
 
-	next_token (a_str : STRING; start_pos : INTEGER) : STRING is
+	next_token (a_str : STRING; start_pos : INTEGER) : STRING
 			-- the "next" token in `a_str' beginning after `start_pos'
 		require
 			str_exists:	a_str /= Void
@@ -356,13 +356,13 @@ feature -- primivite tokenization
 feature -- string utilities
 -- should be features of a class that inherits from STRING
 
-	is_nonblank (a_str: STRING) : BOOLEAN is
+	is_nonblank (a_str: STRING) : BOOLEAN
 			-- does `a_str' exist, and is it nonblank?
 		do
 			Result := a_str /= Void and then not is_blank (a_str)
 		end
 
-	is_blank (this : STRING) : BOOLEAN is
+	is_blank (this : STRING) : BOOLEAN
 			-- is `this' blank (all whitespace or empty)?
 		require
 			string_exists: this /= Void
@@ -385,7 +385,7 @@ feature -- string utilities
 			end
 		end; -- is_blank
 
-	first_index_of_any (this: STRING; set: ARRAY[CHARACTER]; start_pos: INTEGER) : INTEGER is
+	first_index_of_any (this: STRING; set: ARRAY[CHARACTER]; start_pos: INTEGER) : INTEGER
 			-- index of first character in 'set' that appears in 'this' at or after start_pos; 0 if none
 		require
 			this_exists:	this /= Void
@@ -406,7 +406,7 @@ feature -- string utilities
 			end
 		end
 
-	starts_with (this : STRING; other : STRING) : BOOLEAN is
+	starts_with (this : STRING; other : STRING) : BOOLEAN
 			-- Does 'this' begin with 'other'? if other is empty, always True.
 		require
 			this_exists:	this /= Void
@@ -416,7 +416,7 @@ feature -- string utilities
 			--Result := this.substring_index (other, 1) = 1
 		end; -- starts_with
 
-	starts_with_symbol (this : STRING; symbol: STRING) : BOOLEAN is
+	starts_with_symbol (this : STRING; symbol: STRING) : BOOLEAN
 			-- Does `this' begin with `symbol'? Symbol token is whitespace/non-alpha delimited.
 		require
 			this_exists: this /= Void
@@ -429,7 +429,7 @@ feature -- string utilities
 			end
 		end; -- starts_with_symbol
 
-	ends_with (this: STRING; other: STRING) : BOOLEAN is
+	ends_with (this: STRING; other: STRING) : BOOLEAN
 			-- Does this end with other? If other is empty, always true.
 		require
 			this_exists:	this  /= Void
@@ -442,7 +442,7 @@ feature -- string utilities
 				this.substring_index (other, this.count - other.count + 1) > 0
 		end; -- ends_with
 
-		replace_first (this, first, new: STRING) is
+		replace_first (this, first, new: STRING)
 						-- replace "first" at end of "this" with "new" ("new" may be empty)
 		require
 			this_exists: this /= Void
@@ -460,7 +460,7 @@ feature -- string utilities
 					end
 			end
 
-	replace_end (this, last, new: STRING) is
+	replace_end (this, last, new: STRING)
 			-- replace 'last' at end of 'this' with 'new' ('new' may be empty)
 		require
 			this_exists: this /= Void
@@ -478,7 +478,7 @@ feature -- string utilities
 			replacement_done: ends_with (this, new)
 		end; -- replace_end
 
-	trimmed (a_str: STRING): STRING is
+	trimmed (a_str: STRING): STRING
 			-- string with all leading and trailing whitespace removed
 		do
 			if a_str /= Void then
@@ -487,7 +487,7 @@ feature -- string utilities
 			end
 		end
 
-	reduce_whitespace (this : STRING; start_pos : INTEGER) is
+	reduce_whitespace (this : STRING; start_pos : INTEGER)
 			-- remove leading and trailing whitespace,
 			-- reduce all other whitespace characters to single space
 		require
@@ -519,56 +519,56 @@ feature -- string utilities
 
 feature -- Output
 
-	print_undefined_symbol_warning (a_sym: STRING) is
+	print_undefined_symbol_warning (a_sym: STRING)
 			-- print a warning that an undefined symbol referenced
 		do
 			print_makefile_warning ("undefined symbol referenced: " + a_sym)
 		end
 
-	print_error_message (msg: STRING) is
+	print_error_message (msg: STRING)
 		do
 			print_output_message ("Error: " + msg)
 		end; -- print_error_message
 
-	print_warning_message (msg: STRING) is
+	print_warning_message (msg: STRING)
 		do
 			print_output_message ("Warning: " + msg)
 		end; -- print_warning_message
 
-	print_makefile_warning (a_msg: STRING) is
+	print_makefile_warning (a_msg: STRING)
 		do
 			print_makefile_message ("Warning", a_msg)
 		end
 
-	print_makefile_error (a_msg: STRING) is
+	print_makefile_error (a_msg: STRING)
 		do
 			print_makefile_message ("Error", a_msg )
 		end
 
-	print_makefile_message (a_severity, a_msg: STRING) is
+	print_makefile_message (a_severity, a_msg: STRING)
 			-- print a message related to the current makefile, with line number
 		do
 			print_file_message (in_makefile, in_makefile.line_count, a_severity, a_msg + ":%N%T%"" + in_makefile.last_string + "%"%N")
 		end
 
-	print_file_message (a_file: ES5SH_TEXT_FILE; a_line_number: INTEGER; a_severity: STRING; a_msg: STRING) is
+	print_file_message (a_file: ES5SH_TEXT_FILE; a_line_number: INTEGER; a_severity: STRING; a_msg: STRING)
 			-- print a file-related message, with line number
 		do
 			print_output_message (a_severity + ": " + a_file.name + " line " + a_line_number.out + ": " + a_msg)
 		end; -- print_file_message
 
-	print_output_prefix: STRING is
+	print_output_prefix: STRING
 		once
 				Result := pretty_name
 		end
 
-	print_output_message (msg: STRING) is
+	print_output_message (msg: STRING)
 				-- write message to stdout, prefixed by facility (program) name
 		do
 			print (pretty_name + ": " + msg)
 		end; -- print_output_message
 
-	printable_value (a_val: STRING): STRING is
+	printable_value (a_val: STRING): STRING
 			-- printable value of string; "<Void>" if non-existent, "blank" if empty
 		do
 			if a_val = Void then
@@ -582,7 +582,7 @@ feature -- Output
 			result_nonblank: Result /= Void and then not Result.is_empty
 		end
 
-	print_usage is
+	print_usage
 			-- print Usage: message. Use pretty_name to avoid full VMS path in command_name.
 		once
 			print ("Usage: " + pretty_name + " [ <options> ] [ <path> ] %N" +
@@ -606,7 +606,7 @@ nb: -l and -o are mutually exclusive; the default is
 		end
 	end; -- print_usage
 
-	print_help is
+	print_help
 		local
 			l_pretty: STRING
 		once

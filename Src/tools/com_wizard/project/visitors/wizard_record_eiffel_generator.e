@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel record generator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ inherit
 
 feature -- Access
 
-	generate (a_descriptor: WIZARD_RECORD_DESCRIPTOR) is
+	generate (a_descriptor: WIZARD_RECORD_DESCRIPTOR)
 			-- Generate eiffel client for record.
 		local
 			a_macro_accesser_name, a_macro_setter_name: STRING
@@ -84,7 +84,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	make_feature: WIZARD_WRITER_FEATURE is
+	make_feature: WIZARD_WRITER_FEATURE
 			-- Creatio feature.
 		do
 			create Result.make
@@ -95,7 +95,7 @@ feature {NONE} -- Implementation
 			Result.set_comment ("Make.")
 		end
 
-	make_from_pointer_feature: WIZARD_WRITER_FEATURE is
+	make_from_pointer_feature: WIZARD_WRITER_FEATURE
 			-- Creatio feature.
 		do
 			create Result.make
@@ -107,7 +107,7 @@ feature {NONE} -- Implementation
 			Result.set_comment ("Make from pointer.")
 		end
 
-	external_size_name (record_name: STRING): STRING is
+	external_size_name (record_name: STRING): STRING
 			-- Name of external feature, returning size of structure.
 		require
 			non_void_name: record_name /= Void
@@ -124,7 +124,7 @@ feature {NONE} -- Implementation
 		end
 
 	access_feature (a_macro_accesser_name: STRING; 
-					a_field_descriptor: WIZARD_RECORD_FIELD_DESCRIPTOR) : WIZARD_WRITER_FEATURE is
+					a_field_descriptor: WIZARD_RECORD_FIELD_DESCRIPTOR) : WIZARD_WRITER_FEATURE
 			-- Access feature
 		require
 			non_void_accesser_name: a_macro_accesser_name /= Void
@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 		end
 
 	set_feature (a_macro_setter_name: STRING; 
-					a_field_descriptor: WIZARD_RECORD_FIELD_DESCRIPTOR) : WIZARD_WRITER_FEATURE is
+					a_field_descriptor: WIZARD_RECORD_FIELD_DESCRIPTOR) : WIZARD_WRITER_FEATURE
 			-- Set feature
 		require
 			non_void_setter_name: a_macro_setter_name /= Void
@@ -288,7 +288,7 @@ feature {NONE} -- Implementation
 		end
 
 	access_external_feature (a_macro_accesser_name, a_header_file_name, c_record_name: STRING;
-				a_field_descriptor: WIZARD_RECORD_FIELD_DESCRIPTOR): WIZARD_WRITER_FEATURE is
+				a_field_descriptor: WIZARD_RECORD_FIELD_DESCRIPTOR): WIZARD_WRITER_FEATURE
 			-- External access feature
 		require
 			non_void_macro_accesser_name: a_macro_accesser_name /= Void
@@ -344,7 +344,7 @@ feature {NONE} -- Implementation
 		end
 
 	set_external_feature (a_macro_setter_name, a_header_file_name, c_record_name: STRING;
-				a_field_descriptor: WIZARD_RECORD_FIELD_DESCRIPTOR): WIZARD_WRITER_FEATURE is
+				a_field_descriptor: WIZARD_RECORD_FIELD_DESCRIPTOR): WIZARD_WRITER_FEATURE
 			-- External set feature
 		require
 			non_void_macro_setter_name: a_macro_setter_name /= Void
@@ -437,7 +437,7 @@ feature {NONE} -- Implementation
 			non_void_writer_feature: Result /= Void
 		end
 
-	structure_size_feature (an_external_size_name: STRING): WIZARD_WRITER_FEATURE is
+	structure_size_feature (an_external_size_name: STRING): WIZARD_WRITER_FEATURE
 			-- Feature `structure-size'.
 		require
 			non_void_name: an_external_size_name /= Void
@@ -466,7 +466,7 @@ feature {NONE} -- Implementation
 		end
 
 	external_structure_size (an_external_size_name: STRING;
-				a_descriptor: WIZARD_RECORD_DESCRIPTOR): WIZARD_WRITER_FEATURE is
+				a_descriptor: WIZARD_RECORD_DESCRIPTOR): WIZARD_WRITER_FEATURE
 			-- External feature, describing structure size.
 		require
 			non_void_name: an_external_size_name /= Void
@@ -496,7 +496,7 @@ feature {NONE} -- Implementation
 			non_void_writer_feature: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

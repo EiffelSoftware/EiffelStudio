@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel deferred function generator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -18,7 +18,7 @@ create
 
 feature -- Basic operation
 
-	generate (a_descriptor: WIZARD_FUNCTION_DESCRIPTOR) is
+	generate (a_descriptor: WIZARD_FUNCTION_DESCRIPTOR)
 			-- Generate deferred function
 		local
 			tmp_arguments: STRING
@@ -60,7 +60,7 @@ feature -- Basic operation
 			feature_writer.set_deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

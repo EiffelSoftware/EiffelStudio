@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Observer (Observer pattern (Design Patterns, 293, Gamma et.al)))"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ deferred class
 
 feature -- Implementation
 
-	update is
+	update
 			-- Update
 		require
 			should_update: should_update
@@ -22,7 +22,7 @@ feature -- Access
 	should_update: BOOLEAN;
 			-- Should Current be updated in update notification?
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

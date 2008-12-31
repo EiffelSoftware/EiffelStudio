@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Creator of Union Descriptor"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ inherit
 
 feature -- Basic operations
 
-	create_descriptor (a_documentation: ECOM_DOCUMENTATION; a_type_info: ECOM_TYPE_INFO): WIZARD_UNION_DESCRIPTOR is
+	create_descriptor (a_documentation: ECOM_DOCUMENTATION; a_type_info: ECOM_TYPE_INFO): WIZARD_UNION_DESCRIPTOR
 			-- Initialize `fields'
 			-- and `eiffel_class_name'
 		require
@@ -60,7 +60,7 @@ feature -- Basic operations
 			non_void_class_name: eiffel_class_name /= Void
 		end
 
-	create_field_descriptors (a_type_info: ECOM_TYPE_INFO) is
+	create_field_descriptors (a_type_info: ECOM_TYPE_INFO)
 			-- Create field descriptors
 		require
 			valid_type_info: a_type_info /= Void
@@ -86,7 +86,7 @@ feature -- Basic operations
 					fields.count = a_type_info.type_attr.count_variables
 		end
 
-	initialize_descriptor (a_descriptor: WIZARD_UNION_DESCRIPTOR) is
+	initialize_descriptor (a_descriptor: WIZARD_UNION_DESCRIPTOR)
 				-- Initialize descriptor
 			require
 				valid_descriptor: a_descriptor /= Void
@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 	size_of_instance: INTEGER;
 			-- Size of instance of this type
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

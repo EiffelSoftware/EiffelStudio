@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Common data used both by the GUI and the business logic"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -10,19 +10,19 @@ class
 
 feature -- Access
 
-	environment: WIZARD_ENVIRONMENT is
+	environment: WIZARD_ENVIRONMENT
 			-- Data used to generate code
 		do
 			Result := Shared_environment_cell.item
 		end
 
-	message_output: WIZARD_MESSAGE_OUTPUT is
+	message_output: WIZARD_MESSAGE_OUTPUT
 			-- Shared message output.
 		do
 			Result := message_output_cell.item
 		end
 
-	progress_report: WIZARD_PROGRESS_REPORT is
+	progress_report: WIZARD_PROGRESS_REPORT
 			-- Shared wizard progress report.
 		do
 			Result := progress_report_cell.item
@@ -30,7 +30,7 @@ feature -- Access
 
 feature -- Element Change
 
-	set_shared_wizard_environment (an_environment: WIZARD_ENVIRONMENT) is
+	set_shared_wizard_environment (an_environment: WIZARD_ENVIRONMENT)
 			-- Set `environment' with `an_environment'.
 		require
 			non_void_environment: an_environment /= Void
@@ -40,7 +40,7 @@ feature -- Element Change
 			environment_set: environment = an_environment
 		end
 
-	set_message_output (a_window: like message_output) is
+	set_message_output (a_window: like message_output)
 			-- Set `message_output' with `a_window'.
 		require
 			non_void_window: a_window /= Void
@@ -50,7 +50,7 @@ feature -- Element Change
 			message_output_set: message_output = a_window
 		end
 
-	set_progress_report (a_progress_report: like progress_report) is
+	set_progress_report (a_progress_report: like progress_report)
 			-- Set `progress_report' with `a_progress_report'.
 		require
 			non_void_progress_report: a_progress_report /= Void
@@ -62,31 +62,31 @@ feature -- Element Change
 
 feature {NONE} -- Implementation
 
-	Shared_environment_cell: CELL [WIZARD_ENVIRONMENT] is
+	Shared_environment_cell: CELL [WIZARD_ENVIRONMENT]
 			-- Wizard environment shell
-		indexing
+		note
 			once_status: global
 		once
 			create Result.put (create {WIZARD_ENVIRONMENT}.make)
 		end
 
-	message_output_cell: CELL [WIZARD_MESSAGE_OUTPUT] is
+	message_output_cell: CELL [WIZARD_MESSAGE_OUTPUT]
 			-- Output window shell
-		indexing
+		note
 			once_status: global
 		once
 			create Result.put (Void)
 		end
 
-	progress_report_cell: CELL [WIZARD_PROGRESS_REPORT] is
+	progress_report_cell: CELL [WIZARD_PROGRESS_REPORT]
 			-- Progress report shell
-		indexing
+		note
 			once_status: global
 		once
 			create Result.put (Void)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

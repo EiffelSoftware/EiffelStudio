@@ -1,4 +1,4 @@
-indexing
+note
 	description: "CPP function generator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -21,7 +21,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	set_vtable_function_return_type is
+	set_vtable_function_return_type
 			-- Set return type of Vtable function.
 		local
 			visitor: WIZARD_DATA_TYPE_VISITOR
@@ -53,7 +53,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	vtable_signature: STRING is
+	vtable_signature: STRING
 			-- Set server signature
 		local
 			visitor: WIZARD_DATA_TYPE_VISITOR
@@ -98,12 +98,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_header_file (a_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR) is
+	add_header_file (a_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR)
 			-- Add header file to list of header files if needed.
 		do
 		end
 
-	add_ref_in_interface_pointer (a_name: STRING): STRING is
+	add_ref_in_interface_pointer (a_name: STRING): STRING
 			-- Add reference to interface pointer before passing it.
 		require
 			non_void_name: a_name /= Void
@@ -117,7 +117,7 @@ feature {NONE} -- Implementation
 			valid_add_ref: not Result.is_empty
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

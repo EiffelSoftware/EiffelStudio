@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A collection of formatting related functions for formatting report output strings.
 	]"
@@ -13,7 +13,7 @@ class
 
 feature -- Formatting
 
-	format_member (a_member: MEMBER_INFO; a_show_full_name: BOOLEAN): STRING is
+	format_member (a_member: MEMBER_INFO; a_show_full_name: BOOLEAN): STRING
 			-- Formats `a_member'
 			-- `a_show_full_name' will cause member fully qualified name to be generated.
 		require
@@ -63,7 +63,7 @@ feature -- Formatting
 			not_result_is_empty: not Result.is_empty
 		end
 
-	format_type (a_type: SYSTEM_TYPE; a_show_full_name: BOOLEAN): STRING is
+	format_type (a_type: SYSTEM_TYPE; a_show_full_name: BOOLEAN): STRING
 			-- Format `a_type'
 			-- `a_show_full_name' will cause member fully qualified name to be generated
 		require
@@ -79,7 +79,7 @@ feature -- Formatting
 			not_result_is_empty: not Result.is_empty
 		end
 
-	format_constructor (a_ctor: CONSTRUCTOR_INFO; a_show_full_name: BOOLEAN): STRING is
+	format_constructor (a_ctor: CONSTRUCTOR_INFO; a_show_full_name: BOOLEAN): STRING
 			-- Takes `a_constructor' and creates a readable string.
 			-- `a_show_full_name' will cause member fully qualified name to be generated.
 		require
@@ -124,7 +124,7 @@ feature -- Formatting
 			not_result_is_empty: not Result.is_empty
 		end
 
-	format_method (a_method: METHOD_INFO; a_show_full_name: BOOLEAN): STRING is
+	format_method (a_method: METHOD_INFO; a_show_full_name: BOOLEAN): STRING
 			-- Takes `a_method' and creates a readable string.
 			-- `a_show_full_name' will cause member fully qualified name to be generated.
 		require
@@ -177,7 +177,7 @@ feature -- Formatting
 			not_result_is_empty: not Result.is_empty
 		end
 
-	format_property (a_prop: PROPERTY_INFO; a_show_full_name: BOOLEAN): STRING is
+	format_property (a_prop: PROPERTY_INFO; a_show_full_name: BOOLEAN): STRING
 			-- Takes `a_prop' and creates a readable string.
 			-- `a_show_full_name' will cause member fully qualified name to be generated.
 		require
@@ -209,7 +209,7 @@ feature -- Formatting
 			not_result_is_empty: not Result.is_empty
 		end
 
-	format_event (a_event: EVENT_INFO; a_show_full_name: BOOLEAN): STRING is
+	format_event (a_event: EVENT_INFO; a_show_full_name: BOOLEAN): STRING
 			-- Takes `a_event' and creates a readable string.
 			-- `a_show_full_name' will cause member fully qualified name to be generated.
 		require
@@ -241,7 +241,7 @@ feature -- Formatting
 			not_result_is_empty: not Result.is_empty
 		end
 
-	format_field (a_field: FIELD_INFO; a_show_full_name: BOOLEAN): STRING is
+	format_field (a_field: FIELD_INFO; a_show_full_name: BOOLEAN): STRING
 			-- Takes `a_field' and creates a readable string.
 			-- `a_show_full_name' will cause member fully qualified name to be generated.
 		require
@@ -272,7 +272,7 @@ feature -- Formatting
 
 feature {NONE} -- Implementation
 
-	simple_type_name (a_type: SYSTEM_TYPE): SYSTEM_STRING is
+	simple_type_name (a_type: SYSTEM_TYPE): SYSTEM_STRING
 			-- Retrieves a simple type name for `a_type'
 		require
 			a_type_not_void: a_type /= Void
@@ -325,7 +325,7 @@ feature {NONE} -- Implementation
 			not_result_is_empty: Result.length > 0
 		end
 
-	simple_names: HASHTABLE is
+	simple_names: HASHTABLE
 			-- Simple names table
 			-- Key: Full type name
 			-- Value: Simple type name
@@ -353,7 +353,7 @@ feature {NONE} -- Implementation
 
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

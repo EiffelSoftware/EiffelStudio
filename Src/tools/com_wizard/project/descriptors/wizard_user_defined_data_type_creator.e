@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Creator of User Defined Type Descriptor"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 feature -- Basic operations
 
 	create_descriptor (a_type_info: ECOM_TYPE_INFO; a_type_desc: ECOM_TYPE_DESC;
-				a_system_descriptor: WIZARD_SYSTEM_DESCRIPTOR): WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR is
+				a_system_descriptor: WIZARD_SYSTEM_DESCRIPTOR): WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR
 		require
 			valid_type_desc: a_type_desc /= Void
 			valid_type_info: a_type_info /= Void
@@ -54,7 +54,7 @@ feature -- Basic operations
 					and Result.library_descriptor /= Void and Result.type = Vt_userdefined
 		end
 
-	initialize_descriptor (a_descriptor: WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR) is
+	initialize_descriptor (a_descriptor: WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR)
 			-- Initialize `a_descriptor' attributes
 		require
 			valid_descriptor: a_descriptor /= Void
@@ -73,7 +73,7 @@ feature {NONE} -- Implementation
 	library_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR;
 			-- Description of type library
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

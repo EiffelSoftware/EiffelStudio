@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Exports a generated report to a text file.	
 	]"
@@ -16,7 +16,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (a_report: like report; a_report_non_cls: like report_non_cls; a_report_all: like report_all) is
+	make (a_report: like report; a_report_non_cls: like report_non_cls; a_report_all: like report_all)
 			-- Create and initialize new report exporter.
 		require
 			a_report_not_void: a_report /= Void
@@ -45,7 +45,7 @@ feature -- Access
 	last_error: STRING
 			-- Last error message, if any
 
-	export_successful: BOOLEAN is
+	export_successful: BOOLEAN
 			-- Was export successful?
 		do
 			Result := last_error = Void
@@ -55,7 +55,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	export_report (a_file_name: STRING) is
+	export_report (a_file_name: STRING)
 			-- Export report to `a_file_name'
 		require
 			a_file_name_not_void: a_file_name /= Void
@@ -74,7 +74,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Processing
 
-	process_report (a_writer: XML_XML_TEXT_WRITER; a_report: like report) is
+	process_report (a_writer: XML_XML_TEXT_WRITER; a_report: like report)
 			-- Process `a_report'
 		require
 			a_writer_not_void: a_writer /= Void
@@ -96,7 +96,7 @@ feature {NONE} -- Processing
 			write_footer (a_writer, a_report)
 		end
 		
-	process_type (a_writer: XML_XML_TEXT_WRITER; a_report: EC_REPORT_TYPE) is
+	process_type (a_writer: XML_XML_TEXT_WRITER; a_report: EC_REPORT_TYPE)
 			-- 
 		require
 			a_writer_not_void: a_writer /= Void
@@ -161,7 +161,7 @@ feature {NONE} -- Processing
 			end
 		end
 		
-	process_members (a_writer: XML_XML_TEXT_WRITER; a_report: EC_REPORT_TYPE) is
+	process_members (a_writer: XML_XML_TEXT_WRITER; a_report: EC_REPORT_TYPE)
 			-- 
 		require
 			a_writer_not_void: a_writer /= Void
@@ -207,7 +207,7 @@ feature {NONE} -- Processing
 		
 feature {NONE} -- Output
 
-	write_header (a_writer: XML_XML_TEXT_WRITER; a_report: like report) is
+	write_header (a_writer: XML_XML_TEXT_WRITER; a_report: like report)
 			-- Writes header to `a_writer' for report `a_report'.
 		require
 			a_writer_not_void: a_writer /= Void
@@ -219,7 +219,7 @@ feature {NONE} -- Output
 			a_writer.write_attribute_string (assembly_attr, a_report.assembly.full_name)
 		end
 		
-	write_type_start (a_writer: XML_XML_TEXT_WRITER; a_type: EC_REPORT_TYPE) is
+	write_type_start (a_writer: XML_XML_TEXT_WRITER; a_type: EC_REPORT_TYPE)
 			-- Writes start of type `a_type' to `a_writer'.
 		require
 			a_writer_not_void: a_writer /= Void
@@ -271,7 +271,7 @@ feature {NONE} -- Output
 			a_writer.write_attribute_string (marked_attr, l_type.is_marked.out.as_lower)
 		end
 		
-	write_type_end (a_writer: XML_XML_TEXT_WRITER; a_type: EC_REPORT_TYPE) is
+	write_type_end (a_writer: XML_XML_TEXT_WRITER; a_type: EC_REPORT_TYPE)
 			-- Writes end of type `a_type' to `a_writer'.
 		require
 			a_writer_not_void: a_writer /= Void
@@ -280,7 +280,7 @@ feature {NONE} -- Output
 			a_writer.write_end_element
 		end
 		
-	write_member_start (a_writer: XML_XML_TEXT_WRITER; a_member: EC_REPORT_MEMBER) is
+	write_member_start (a_writer: XML_XML_TEXT_WRITER; a_member: EC_REPORT_MEMBER)
 			-- Writes start of member `a_type' to `a_writer'.
 		require
 			a_writer_not_void: a_writer /= Void
@@ -309,7 +309,7 @@ feature {NONE} -- Output
 			a_writer.write_attribute_string (marked_attr, l_member.is_marked.out.as_lower)
 		end
 		
-	write_member_end (a_writer: XML_XML_TEXT_WRITER; a_member: EC_REPORT_MEMBER) is
+	write_member_end (a_writer: XML_XML_TEXT_WRITER; a_member: EC_REPORT_MEMBER)
 			-- Writes end of member `a_member' to `a_writer'.
 		require
 			a_writer_not_void: a_writer /= Void
@@ -318,7 +318,7 @@ feature {NONE} -- Output
 			a_writer.write_end_element
 		end
 		
-	write_footer (a_writer: XML_XML_TEXT_WRITER; a_report: like report) is
+	write_footer (a_writer: XML_XML_TEXT_WRITER; a_report: like report)
 			-- Writes footer to `a_writer' for report `a_report'.
 		require
 			a_writer_not_void: a_writer /= Void
@@ -331,7 +331,7 @@ feature {NONE} -- Output
 		
 feature {NONE} -- Implementation
 
-	open_writer (a_file_name: STRING): XML_XML_TEXT_WRITER is
+	open_writer (a_file_name: STRING): XML_XML_TEXT_WRITER
 			-- Opens `a_file_name' for exporting `report'
 		require
 			a_file_name_not_void: a_file_name /= Void
@@ -352,7 +352,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 		
-	string_formatter: EC_STRING_FORMATTER is
+	string_formatter: EC_STRING_FORMATTER
 			-- STRING formatter
 		once
 			create Result
@@ -360,7 +360,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 		
-	report_formatter: EC_CHECK_REPORT_FORMATTER is
+	report_formatter: EC_CHECK_REPORT_FORMATTER
 			-- Report item formatter
 		once
 			create Result
@@ -368,21 +368,21 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 	
-	report_elm: SYSTEM_STRING is "CompliantReport"
-	assembly_attr: SYSTEM_STRING is "Assembly"
-	type_elm: SYSTEM_STRING is "Type"
-	member_elm: SYSTEM_STRING is "Member"
-	name_attr: SYSTEM_STRING is "Name"
-	eiffel_compliant_attr: SYSTEM_STRING is "EiffelCompliant"
-	non_eiffel_compliant_reason_attr: SYSTEM_STRING is "NonEiffelCompliantReason"
-	cls_compliant_attr: SYSTEM_STRING is "ClsCompliant"
-	non_cls_compliant_reason_attr: SYSTEM_STRING is "NonClsCompliantReason"
-	marked_attr: SYSTEM_STRING is "MarkedWithAttribute"
+	report_elm: SYSTEM_STRING = "CompliantReport"
+	assembly_attr: SYSTEM_STRING = "Assembly"
+	type_elm: SYSTEM_STRING = "Type"
+	member_elm: SYSTEM_STRING = "Member"
+	name_attr: SYSTEM_STRING = "Name"
+	eiffel_compliant_attr: SYSTEM_STRING = "EiffelCompliant"
+	non_eiffel_compliant_reason_attr: SYSTEM_STRING = "NonEiffelCompliantReason"
+	cls_compliant_attr: SYSTEM_STRING = "ClsCompliant"
+	non_cls_compliant_reason_attr: SYSTEM_STRING = "NonClsCompliantReason"
+	marked_attr: SYSTEM_STRING = "MarkedWithAttribute"
 		
 invariant
 	report_not_void: report /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

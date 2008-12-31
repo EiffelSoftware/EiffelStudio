@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Command line interface application entry point.
 	]"
@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Application entry point
 		local
 			l_parser: ARGUMENT_PARSER
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	start (a_parser: ARGUMENT_PARSER) is
+	start (a_parser: ARGUMENT_PARSER)
 			-- Application start
 		require
 			a_parser_attached: a_parser /= Void
@@ -90,7 +90,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	error_handler: MULTI_ERROR_MANAGER is
+	error_handler: MULTI_ERROR_MANAGER
 			-- Error handler for application
 		do
 			Result := internal_error_handler
@@ -105,7 +105,7 @@ feature -- Access
 
 feature {NONE} -- Basic operations
 
-	save_xml_document (a_doc: XM_DOCUMENT; a_file_name: STRING) is
+	save_xml_document (a_doc: XM_DOCUMENT; a_file_name: STRING)
 			-- Saves the XML document `a_doc' to the file `a_file_name'.
 		local
 			l_filter: XM_INDENT_PRETTY_PRINT_FILTER
@@ -145,7 +145,7 @@ feature {NONE} -- Internal implementation cache
 			-- Cached version of `error_handler'
 			-- Note: Do not use directly.
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

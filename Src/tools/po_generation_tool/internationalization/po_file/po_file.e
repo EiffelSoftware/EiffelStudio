@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 				This class represents a .po file.
 				.po files are collections of strings and (possibly) their localised translations for a given language.
@@ -24,7 +24,7 @@ create
 
 feature	{NONE} -- Initialization
 
-	make_empty is
+	make_empty
 			-- Makes a new, empty representation of a .po file
 		do
 				--create headers.
@@ -48,7 +48,7 @@ feature -- Access
 	headers: PO_FILE_HEADERS
 			-- Headers of po file
 
-	entry (msgid: STRING_GENERAL): PO_FILE_ENTRY is
+	entry (msgid: STRING_GENERAL): PO_FILE_ENTRY
 			-- File entry for `msgid'
 			--
 			-- `msgid': Message ID which identifies entry
@@ -64,7 +64,7 @@ feature -- Access
 
 feature -- Element change
 
-	add_entry (new: PO_FILE_ENTRY) is
+	add_entry (new: PO_FILE_ENTRY)
 			-- Adds entry `new' to .po file.
 			--
 			-- Note: a .po file should not contain more then one entry with a given msgid
@@ -79,7 +79,7 @@ feature -- Element change
 			entry_added: has_entry (new.msgid)
 		end
 
-	has_entry (msgid: STRING_GENERAL):BOOLEAN is
+	has_entry (msgid: STRING_GENERAL):BOOLEAN
 			-- Is an entry with message id `msgid' already in the .po file?
 			--
 			-- Note: msgid is a unique key for entries
@@ -94,7 +94,7 @@ feature -- Element change
 
 feature -- Output
 
-	to_string: STRING_32 is
+	to_string: STRING_32
 			-- Prints whole .po file as a string_32
 		do
 			create Result.make_empty
@@ -117,7 +117,7 @@ feature {NONE} --Implementation
 	entries: HASH_TABLE [PO_FILE_ENTRY, STRING_32];
 			-- Map of file entries identified by their message ID
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

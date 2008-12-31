@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Main window for this application"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Build the interface for this window.
 		do
 			Precursor {EV_TITLED_WINDOW}
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation, Close event
 
-	request_close_window is
+	request_close_window
 			-- The user wants to close the window
 		local
 			question_dialog: EV_CONFIRMATION_DIALOG
@@ -65,7 +65,7 @@ feature {NONE} -- Implementation
 	main_container: EV_VERTICAL_BOX
 			-- Main container (contains all widgets displayed in this window)
 
-	build_main_container is
+	build_main_container
 			-- Create and populate `main_container'.
 		require
 			main_container_not_yet_created: main_container = Void
@@ -118,7 +118,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Events
 
-	start_stop is
+	start_stop
 			-- Start or stop
 		do
 			if is_started then
@@ -146,12 +146,12 @@ feature {NONE} -- Events
 			end
 		end
 
-	find_and_destroy_debug_dialog is
+	find_and_destroy_debug_dialog
 		do
 			cwel_enum_windows_procedure (Current, $enum_windows_proc)
 		end
 
-	enum_windows_proc (hwnd: POINTER): BOOLEAN is
+	enum_windows_proc (hwnd: POINTER): BOOLEAN
 			-- Process `hwnd' when enumerating top windows.
 			-- Return True to continue enumerating, otherwise to stop.
 		require
@@ -180,7 +180,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	enum_children_windows_proc (hwnd: POINTER): BOOLEAN is
+	enum_children_windows_proc (hwnd: POINTER): BOOLEAN
 		require
 			last_button_not_void: last_button /= Void
 		local
@@ -210,13 +210,13 @@ feature {NONE} -- Events
 
 feature {NONE} -- Externals
 
-	cwel_enum_windows_procedure (cur_obj: like Current; callback: POINTER) is
+	cwel_enum_windows_procedure (cur_obj: like Current; callback: POINTER)
 			-- SDK EnumWindows
 		external
 			"C signature (EIF_OBJECT, EIF_POINTER) use %"wel_enum_child_windows.h%""
 		end
 
-	cwel_enum_child_windows_procedure (cur_obj: like Current; callback: POINTER; hwnd: POINTER) is
+	cwel_enum_child_windows_procedure (cur_obj: like Current; callback: POINTER; hwnd: POINTER)
 			-- SDK EnumChildWindows
 			-- (from WEL_COMPOSITE_WINDOW)
 			-- (export status {NONE})
@@ -224,7 +224,7 @@ feature {NONE} -- Externals
 			"C signature (EIF_OBJECT, EIF_POINTER, HWND) use %"wel_enum_child_windows.h%""
 		end
 
-	cwin_get_window_text (hwnd, str: POINTER; len: INTEGER): INTEGER is
+	cwin_get_window_text (hwnd, str: POINTER; len: INTEGER): INTEGER
 			-- SDK GetWindowText
 		external
 			"C [macro %"windows.h%"] (HWND, LPTSTR, int): EIF_INTEGER"
@@ -232,7 +232,7 @@ feature {NONE} -- Externals
 			"GetWindowText"
 		end
 
-	cwin_get_window_text_length (hwnd: POINTER): INTEGER is
+	cwin_get_window_text_length (hwnd: POINTER): INTEGER
 			-- SDK GetWindowTextLength
 		external
 			"C [macro %"windows.h%"] (HWND): EIF_INTEGER"
@@ -286,20 +286,20 @@ feature {NONE} -- Constants
 
 	stop_string: STRING = "Click to Stop"
 
-	Window_width: INTEGER is 300
+	Window_width: INTEGER = 300
 			-- Initial width for this window.
 
-	Window_height: INTEGER is 100
+	Window_height: INTEGER = 100
 			-- Initial height for this window.
 
 	default_interval: INTEGER = 5
 
-	default_title: STRING_32 is
+	default_title: STRING_32
 		once
 			create Result.make_from_string ("test.exe")
 		end
 
-	default_button: STRING_32 is
+	default_button: STRING_32
 		local
 			l_str: STRING_32
 		once
@@ -311,7 +311,7 @@ feature {NONE} -- Constants
 			Result := l_str
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

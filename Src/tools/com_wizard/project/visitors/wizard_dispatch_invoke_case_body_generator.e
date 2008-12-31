@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dispinterface invoke case body generator."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_func_desc: WIZARD_FUNCTION_DESCRIPTOR) is
+	make (a_func_desc: WIZARD_FUNCTION_DESCRIPTOR)
 			-- Initialize
 		require
 			non_void_descriptor: a_func_desc /= Void
@@ -56,13 +56,13 @@ feature -- Access
 
 feature -- Staus report.
 
-	is_dispatch_function: BOOLEAN is
+	is_dispatch_function: BOOLEAN
 			-- Is function described as dispatch function?
 		do
 			Result := func_desc.func_kind = func_dispatch
 		end
 
-	argument_count: INTEGER is
+	argument_count: INTEGER
 			-- Number of arguments.
 		local
 			cursor: CURSOR
@@ -83,19 +83,19 @@ feature -- Staus report.
 			end
 		end
 
-	has_arguments: BOOLEAN is
+	has_arguments: BOOLEAN
 			-- Does function have arguments?
 		do
 			Result := argument_count > 0
 		end
 
-	has_result: BOOLEAN is
+	has_result: BOOLEAN
 			-- Does routine have result?
 		do
 			Result := does_routine_have_result (func_desc)
 		end
 
-	result_type_visitor: WIZARD_DATA_TYPE_VISITOR is
+	result_type_visitor: WIZARD_DATA_TYPE_VISITOR
 			-- Return type visitor.
 		require
 			has_result: has_result
@@ -118,7 +118,7 @@ feature -- Staus report.
 			non_void_visitor: Result /= Void
 		end
 
-	return_hresult: BOOLEAN is
+	return_hresult: BOOLEAN
 			-- Does Vtable function return HRESULT?
 		do
 			Result := is_dispatch_function or
@@ -127,7 +127,7 @@ feature -- Staus report.
 
 feature -- Basic operations
 
-	release_interface_pointer_code (an_argument_name: STRING): STRING is
+	release_interface_pointer_code (an_argument_name: STRING): STRING
 			-- Code for release interface.
 		require
 			non_void_argument_name: an_argument_name /= Void
@@ -145,7 +145,7 @@ feature -- Basic operations
 			valid_code: not Result.is_empty
 		end
 
-	release_interface_pointer_pointer_code (an_argument_name: STRING): STRING is
+	release_interface_pointer_pointer_code (an_argument_name: STRING): STRING
 			-- Code for release interface.
 		require
 			non_void_argument_name: an_argument_name /= Void
@@ -166,7 +166,7 @@ feature -- Basic operations
 			valid_code: not Result.is_empty
 		end
 
-	process_arguments is
+	process_arguments
 			-- Process function arguments.
 		require
 			has_arguments: has_arguments
@@ -216,7 +216,7 @@ feature -- Basic operations
 			end
 		end
 
-	process_result (visitor: WIZARD_DATA_TYPE_VISITOR) is
+	process_result (visitor: WIZARD_DATA_TYPE_VISITOR)
 			-- Process function result.
 		require
 			non_void_visitor: visitor /= Void
@@ -287,7 +287,7 @@ feature -- Basic operations
 			local_buffer.append (Tab_tab)
 		end
 
-	call_vtable_function is
+	call_vtable_function
 			-- Generate call to Vtable function.
 		require
 			non_void_descriptor: func_desc /= Void
@@ -320,7 +320,7 @@ feature -- Basic operations
 			body.append (");%N%T%T%T%T")
 		end
 
-	function_case_body: STRING is
+	function_case_body: STRING
 			-- Case statement for function descriptor
 		require
 			non_void_descriptor: func_desc /= Void
@@ -367,7 +367,7 @@ feature -- Basic operations
 invariant
 	non_void_function_descriptor: func_desc /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

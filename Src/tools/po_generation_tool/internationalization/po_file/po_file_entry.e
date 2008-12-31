@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 				A representation of the parts common to all types of entry in a .po file - comments and msgid (original string in singular form)
 				When inheriting from this class, call initialize_datastructures in your creation procedure!
@@ -13,7 +13,7 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	make (a_msgid: STRING_GENERAL) is
+	make (a_msgid: STRING_GENERAL)
 			-- Initialize entry with `a_msgid' as message ID.
 			--
 			-- `a_msgid': Message ID for new entry
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Element change
 
-	set_msgid (a_msgid: STRING_GENERAL) is
+	set_msgid (a_msgid: STRING_GENERAL)
 			-- Set message ID of entry to `a_msgid'.
 		require
 			a_msgid_not_void: a_msgid /= Void
@@ -41,7 +41,7 @@ feature {NONE} -- Element change
 
 feature	-- Element change
 
-	add_user_comment (a_comment: STRING_GENERAL) is
+	add_user_comment (a_comment: STRING_GENERAL)
 			-- Add a user comment line (this will be wrapped onto several comment lines if it is too long)
 			-- these comments are intended to be used for communication between translators
 			--
@@ -66,7 +66,7 @@ feature	-- Element change
 			user_comments.append (lines)
 		end
 
-	add_reference_comment (a_comment: STRING_GENERAL) is
+	add_reference_comment (a_comment: STRING_GENERAL)
 			-- Add a reference comment line (this will be not be wrapped)
 			-- This should give the location of the string
 			--  ideally in FILENAME:linenumber form
@@ -84,7 +84,7 @@ feature	-- Element change
 			reference_comments.extend (temporary)
 		end
 
-	add_automatic_comment (a_comment: STRING_GENERAL) is
+	add_automatic_comment (a_comment: STRING_GENERAL)
 			-- Add a automatic comment line (this will be not be wrapped)
 			-- These comment lines will be preserved if this po file is used
 			-- as a template.
@@ -101,7 +101,7 @@ feature	-- Element change
 			automatic_comments.extend (temporary)
 		end
 
-	set_fuzzy (new: BOOLEAN) is
+	set_fuzzy (new: BOOLEAN)
 			-- Set `fuzzy' to `new'.
 		do
 			fuzzy := new
@@ -111,7 +111,7 @@ feature	-- Element change
 
 feature -- Access
 
-	msgid: STRING_32 is
+	msgid: STRING_32
 			-- Message ID of entry
 		do
 			Result := unbreak_line (msgid_lines)
@@ -125,7 +125,7 @@ feature -- Access
 
 feature	-- Output
 
-	to_string: STRING_32 is
+	to_string: STRING_32
 			-- Entry as a unicode string
 		do
 			create Result.make_empty
@@ -147,7 +147,7 @@ feature	-- Output
 
 feature {NONE} -- Implementation (formatting)
 
-	break_line (line: STRING_32): LINKED_LIST [STRING_32] is
+	break_line (line: STRING_32): LINKED_LIST [STRING_32]
 			-- Breaks a line into 78-character chunks and returns them in a list
 			--
 			-- NOTE: this will break in the middle of words.
@@ -199,7 +199,7 @@ feature {NONE} -- Implementation (formatting)
 			result_not_empty: not Result.is_empty
 		end
 
-	unbreak_line (list: LINEAR [STRING_GENERAL]): STRING_32 is
+	unbreak_line (list: LINEAR [STRING_GENERAL]): STRING_32
 			-- Undo effects of break_line.
 		require
 			list_not_void: list /= Void
@@ -217,7 +217,7 @@ feature {NONE} -- Implementation (formatting)
 			result_not_void: Result /= Void
 		end
 
-	prepare_headers (headers: LINKED_LIST [STRING_32]): STRING_32 is
+	prepare_headers (headers: LINKED_LIST [STRING_32]): STRING_32
 			-- Concatenate `headers' into one string.
 			-- Newlines are added between header lines.
 		require
@@ -237,7 +237,7 @@ feature {NONE} -- Implementation (formatting)
 			result_not_void: Result /= Void
 		end
 
-	prepare_string (key: STRING_32; string: LINKED_LIST [STRING_32]): STRING_32 is
+	prepare_string (key: STRING_32; string: LINKED_LIST [STRING_32]): STRING_32
 			-- Create output string for `string' and `key'.
 			--
 			-- If `string' does not fit on one line, the string is split over multiple lines.
@@ -287,7 +287,7 @@ feature  {NONE} -- Implementation (datastructures)
 	msgid_lines: LINKED_LIST[STRING_32]
 			-- List of message ID lines
 
-	initialize_datastructures is
+	initialize_datastructures
 			-- Initialize various lists.
 		do
 			create user_comments.make
@@ -301,7 +301,7 @@ feature  {NONE} -- Implementation (datastructures)
 			msgid_lines_not_void: msgid_lines /= Void
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

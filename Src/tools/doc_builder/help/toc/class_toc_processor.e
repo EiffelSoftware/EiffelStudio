@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Processor of code files for TOC inclusion"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 	
 feature -- Creation
 
-	make (a_parent: TABLE_OF_CONTENTS_NODE; a_file: PLAIN_TEXT_FILE) is
+	make (a_parent: TABLE_OF_CONTENTS_NODE; a_file: PLAIN_TEXT_FILE)
 			-- Process `a_file' and include in `a_parent' when done
 		require
 			parent_not_void: a_parent /= Void
@@ -48,7 +48,7 @@ feature {NONE} -- Implementation
 
 feature -- Process
 
-	process is
+	process
 			-- Process
 		do
 			if class_name /= Void then
@@ -56,7 +56,7 @@ feature -- Process
 			end
 		end	
 		
-	process_chart is
+	process_chart
 			-- Process chart
 		require
 			class_name_not_void: class_name /= Void
@@ -106,7 +106,7 @@ feature -- Process
 
 feature -- File
 
-	class_name: STRING is
+	class_name: STRING
 			-- Class name about which `code_file' contains information
 		local
 			l_name: STRING	
@@ -118,7 +118,7 @@ feature -- File
 			end
 		end		
 		
-	is_chart: BOOLEAN is
+	is_chart: BOOLEAN
 			-- Is file a chart view file?
 		local
 			l_name,
@@ -133,7 +133,7 @@ feature -- File
 	
 feature {NONE} -- Implementation
 
-	generated_anchors (a_file: PLAIN_TEXT_FILE): HASH_TABLE [STRING, STRING] is
+	generated_anchors (a_file: PLAIN_TEXT_FILE): HASH_TABLE [STRING, STRING]
 			-- Parse `a_file' and return hash of anchor names and links
 		require
 			file_not_void: a_file /= Void			
@@ -169,7 +169,7 @@ invariant
 	has_parent: parent /= Void
 	has_file : code_file /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

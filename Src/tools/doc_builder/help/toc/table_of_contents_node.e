@@ -1,4 +1,4 @@
-indexing
+note
 	description: "TOC node"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ create
 
 feature -- Creation
 
-	make (a_id: INTEGER; a_parent: like Current; a_url, a_title: STRING) is
+	make (a_id: INTEGER; a_parent: like Current; a_url, a_title: STRING)
 			-- New node
 		require
 			valid_id: a_id > 0
@@ -44,14 +44,14 @@ feature -- Creation
 			end
 		end	
 
-	make_root is
+	make_root
 			-- Make as root node
 		do
 		end			
 
 feature -- Retrieval
 
-	node_by_title_location (a_titles: ARRAY [STRING]): like Current is
+	node_by_title_location (a_titles: ARRAY [STRING]): like Current
 			-- Node at title location of `titles'.  Loop through elements
 			-- of Current and match title strings.  
 		require
@@ -93,7 +93,7 @@ feature -- Retrieval
 			end
 		end
 		
-	node_by_url (a_url: STRING): TABLE_OF_CONTENTS_NODE is
+	node_by_url (a_url: STRING): TABLE_OF_CONTENTS_NODE
 			-- Node matching `a_url'.
 		require
 			url_not_void: a_url /= Void
@@ -119,7 +119,7 @@ feature -- Retrieval
 		
 feature -- Element change
 
-	add_node (a_child: like Current) is
+	add_node (a_child: like Current)
 			-- Add child
 		require
 			node_not_void: a_child /= Void
@@ -133,7 +133,7 @@ feature -- Element change
 			has_child: children.has (a_child)
 		end		
 		
-	delete_node (a_id: INTEGER) is
+	delete_node (a_id: INTEGER)
 			-- Delete child with `a_id' from `children' if it exists
 		require
 			valid_id: a_id > 0
@@ -160,7 +160,7 @@ feature -- Element change
 			end
 		end
 		
-	move_nodes_to_parent is
+	move_nodes_to_parent
 			-- Move nodes of Current into parent
 		do
 			if parent /= Void and has_child then
@@ -176,7 +176,7 @@ feature -- Element change
 			end	
 		end			
 		
-	sort is
+	sort
 			-- Sort children
 		local
 			l_sorted_list: SORTED_TWO_WAY_LIST [like Current]
@@ -197,7 +197,7 @@ feature -- Element change
 			end	
 		end		
 		
-	flatten_ids (a_start_index: INTEGER): INTEGER is
+	flatten_ids (a_start_index: INTEGER): INTEGER
 			-- Flatten ids of all nodes.
 		local
 			l_node: TABLE_OF_CONTENTS_NODE
@@ -222,7 +222,7 @@ feature -- Element change
 		
 feature -- Query		
 	
-	is_index: BOOLEAN is
+	is_index: BOOLEAN
 			-- Is index node?
 		do
 			if url /= Void then
@@ -230,7 +230,7 @@ feature -- Query
 			end		
 		end
 		
-	url_is_file: BOOLEAN is
+	url_is_file: BOOLEAN
 			-- Is url a file reference?
 		local
 			l_file: PLAIN_TEXT_FILE
@@ -241,7 +241,7 @@ feature -- Query
 			end	
 		end		
 		
-	url_is_directory: BOOLEAN is
+	url_is_directory: BOOLEAN
 			-- Represent physical directory?
 		do
 			if url /= Void then
@@ -249,13 +249,13 @@ feature -- Query
 			end				
 		end			
 		
-	has_child: BOOLEAN is
+	has_child: BOOLEAN
 			-- Does Current have a child nodes?
 		do
 			Result := children /= Void and then not children.is_empty	
 		end		
 		
-	has_file: BOOLEAN is
+	has_file: BOOLEAN
 			-- Does element contain a child file node?  Not recursive.
 		local
 			l_el: like Current
@@ -276,7 +276,7 @@ feature -- Query
 			end				
 		end
 		
-	has_index: BOOLEAN is
+	has_index: BOOLEAN
 			-- Does element contain a child index node?
 		local
 			l_el: like Current
@@ -297,7 +297,7 @@ feature -- Query
 			end					
 		end	
 		
-	has_parent: BOOLEAN is
+	has_parent: BOOLEAN
 			-- Has parent?
 		do
 			Result := parent /= Void	
@@ -305,7 +305,7 @@ feature -- Query
 
 feature -- Status Setting
 	
-	set_id (a_id: INTEGER) is
+	set_id (a_id: INTEGER)
 			-- Set `id'
 		require
 			id_valid: a_id > 0
@@ -315,7 +315,7 @@ feature -- Status Setting
 			id_Set: id = a_id
 		end		
 	
-	set_url (a_url: STRING) is
+	set_url (a_url: STRING)
 			-- Set `url'
 		require
 			url_not_void: a_url /= Void
@@ -330,7 +330,7 @@ feature -- Status Setting
 			id_is_name: names_heap.item (url_id).is_equal (a_url)
 		end	
 		
-	set_title (a_title: STRING) is
+	set_title (a_title: STRING)
 			-- Set `title'
 			require
 		title_not_void: a_title /= Void
@@ -344,7 +344,7 @@ feature -- Status Setting
 			id_is_name: names_heap.item (title_id).is_equal (a_title)
 		end	
 
-	set_icon (a_icon_name: STRING) is
+	set_icon (a_icon_name: STRING)
 			-- Set custom icon
 		require
 			icon_not_void: a_icon_name /= Void
@@ -358,7 +358,7 @@ feature -- Status Setting
 			id_is_name: names_heap.item (icon_id).is_equal (a_icon_name)
 		end		
 
-	set_parent (a_parent: like Current) is
+	set_parent (a_parent: like Current)
 			-- Set parent
 		require
 			parent_not_void: a_parent /= Void
@@ -368,7 +368,7 @@ feature -- Status Setting
 			parent_set: parent = a_parent
 		end	
 
-	set_children (a_children: like children) is
+	set_children (a_children: like children)
 			-- Set children
 		do
 			children := a_children
@@ -385,25 +385,25 @@ feature -- Access
 	parent: like Current
 			-- Parent
 	
-	url: STRING is
+	url: STRING
 			-- Url attribute
 		do
 			Result := names_heap.item (url_id)
 		end
 			
-	title: STRING is
+	title: STRING
 			-- Title attribute
 		do
 			Result := names_heap.item (title_id)
 		end
 	
-	icon: STRING is
+	icon: STRING
 			-- Custom icon
 		do
 			Result := names_heap.item (icon_id)
 		end
 		
-	icon_pixmap: EV_PIXMAP is
+	icon_pixmap: EV_PIXMAP
 			-- Icon pixmap of icon
 		do
 			if icon /= Void then
@@ -420,7 +420,7 @@ feature -- Access
 	
 feature -- Convenience
 
-	files (recursive: BOOLEAN): ARRAYED_LIST [STRING] is
+	files (recursive: BOOLEAN): ARRAYED_LIST [STRING]
 			-- List of file names which `children' urls refer to.  If `recursive'
 			-- include childrens files.  Includes directory file names also.
 		local
@@ -448,7 +448,7 @@ feature -- Convenience
 			end
 		end		
 	
-	nodes (recursive: BOOLEAN): ARRAYED_LIST [TABLE_OF_CONTENTS_NODE] is
+	nodes (recursive: BOOLEAN): ARRAYED_LIST [TABLE_OF_CONTENTS_NODE]
 			-- List of nodes in Current.
 		local
 			l_node: like Current
@@ -470,7 +470,7 @@ feature -- Convenience
 			end			
 		end
 		
-	parent_children: like children is
+	parent_children: like children
 			-- List of children which are parents (i.e not files)
 		do			
 			create Result.make (1)
@@ -490,7 +490,7 @@ feature -- Convenience
 	
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	infix "<" (other: like Current): BOOLEAN
 			-- Is current object less than `other'?
 		do
 			Result := other.title > title
@@ -503,13 +503,13 @@ feature {TABLE_OF_CONTENTS, TABLE_OF_CONTENTS_NODE} -- Implementation
 	icon_id: INTEGER
 			-- Name Ids
 			
-	names_heap: NAMES_HEAP is
+	names_heap: NAMES_HEAP
 			-- Names heap
 		once
 			create Result.make			
 		end		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

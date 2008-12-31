@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Cpp vtable client function generator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -13,7 +13,7 @@ inherit
 
 feature -- Basic operations
 
-	generate (a_component: WIZARD_COMPONENT_DESCRIPTOR; a_interface_name, a_variable_name: STRING; a_function: WIZARD_FUNCTION_DESCRIPTOR) is
+	generate (a_component: WIZARD_COMPONENT_DESCRIPTOR; a_interface_name, a_variable_name: STRING; a_function: WIZARD_FUNCTION_DESCRIPTOR)
 			-- Generate function.
 		require
 			non_void_function: a_function /= Void
@@ -52,7 +52,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	set_client_result_type_and_signature is
+	set_client_result_type_and_signature
 			-- Set ccom client feature signature
 		require
 			non_void_func_desc: func_desc /= Void
@@ -73,7 +73,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	feature_body (a_interface_name, a_variable_name: STRING): STRING is
+	feature_body (a_interface_name, a_variable_name: STRING): STRING
 			-- Ccom client feature body
 		require
 			non_void_interface_name: a_interface_name /= Void
@@ -242,7 +242,7 @@ feature {NONE} -- Implementation
 			valid_feature_body: not Result.is_empty
 		end
 
-	free_memory_set_up (a_visitor: WIZARD_DATA_TYPE_VISITOR; a_name: STRING): STRING is
+	free_memory_set_up (a_visitor: WIZARD_DATA_TYPE_VISITOR; a_name: STRING): STRING
 			-- Free memory.
 		require
 			non_void_visitor: a_visitor /= Void
@@ -264,7 +264,7 @@ feature {NONE} -- Implementation
 			valid_free: not Result.is_empty
 		end
 
-	return_value_setup (a_visitor: WIZARD_DATA_TYPE_VISITOR; a_name: STRING): STRING is
+	return_value_setup (a_visitor: WIZARD_DATA_TYPE_VISITOR; a_name: STRING): STRING
 			-- Set up return value.
 		require
 			non_void_visitor: a_visitor /= Void
@@ -356,7 +356,7 @@ feature {NONE} -- Implementation
 		end
 
 	in_out_parameter_set_up (name: STRING; data_type: WIZARD_DATA_TYPE_DESCRIPTOR;
-					visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
+					visitor: WIZARD_DATA_TYPE_VISITOR): STRING
 			-- Code to set up "in/out" parameter
 			--	Arguments
 			-- `name' - argument name.
@@ -428,7 +428,7 @@ feature {NONE} -- Implementation
 			non_void_inout_parameter: Result /= Void
 		end
 
-	out_set_up (name: STRING; type: INTEGER; visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
+	out_set_up (name: STRING; type: INTEGER; visitor: WIZARD_DATA_TYPE_VISITOR): STRING
 			-- Code to set up "out" parameter
 			--	Arguments
 			-- `name' - argument name.
@@ -473,7 +473,7 @@ feature {NONE} -- Implementation
 			non_void_out_parameter: Result /= Void
 		end
 
-	retval_struct_pointer_set_up (visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
+	retval_struct_pointer_set_up (visitor: WIZARD_DATA_TYPE_VISITOR): STRING
 			-- Create Eiffel object
 		require
 			non_void_visitor: visitor /= Void
@@ -598,7 +598,7 @@ feature {NONE} -- Implementation
 			valid_retval: not Result.is_empty
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

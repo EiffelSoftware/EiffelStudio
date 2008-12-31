@@ -1,4 +1,4 @@
-indexing
+note
 	description: "MIDL component creator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize object.
 		do
 			succeed := False
@@ -26,14 +26,14 @@ feature -- Status report
 
 feature -- Basic operations
 
-	create_from_eiffel_class (coclass: EI_CLASS) is
+	create_from_eiffel_class (coclass: EI_CLASS)
 			-- Create from eiffel class.
 		require
 			non_void_coclass: coclass /= Void
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Coclass eiffel server generator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -22,7 +22,7 @@ inherit
 
 feature -- Basic operation
 
-	generate (a_coclass: WIZARD_COCLASS_DESCRIPTOR) is
+	generate (a_coclass: WIZARD_COCLASS_DESCRIPTOR)
 			-- Generate eiffel class for coclass.
 		local
 			l_description: STRING
@@ -56,7 +56,7 @@ feature -- Basic operation
 			eiffel_writer := Void
 		end
 
-	process_interfaces (a_coclass: WIZARD_COCLASS_DESCRIPTOR) is
+	process_interfaces (a_coclass: WIZARD_COCLASS_DESCRIPTOR)
 			-- Process coclass interfaces.
 		local
 			interface_processor: WIZARD_COCLASS_INTERFACE_EIFFEL_SERVER_IMPL_PROCESSOR 
@@ -66,14 +66,14 @@ feature -- Basic operation
 			dispatch_interface := interface_processor.dispatch_interface
 		end
 
-	add_creation is
+	add_creation
 			-- Add creation clause,.
 		do
 			eiffel_writer.add_creation_routine (Make_word)
 			eiffel_writer.add_creation_routine ("make_from_pointer")
 		end
 
-	add_default_features (a_component: WIZARD_COMPONENT_DESCRIPTOR) is
+	add_default_features (a_component: WIZARD_COMPONENT_DESCRIPTOR)
 			-- Add default features to coclass server. 
 			-- e.g. make, constructor etc.
 		do
@@ -87,14 +87,14 @@ feature -- Basic operation
 			eiffel_writer.add_feature (ccom_create_item_feature (a_component), Externals)
 		end
 
-	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY) is
+	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY)
 		do
 			a_factory.process_coclass_eiffel_server
 		end
 
 feature {NONE} -- Implementation
 
-	set_default_ancestors (a_writer: WIZARD_WRITER_EIFFEL_CLASS) is
+	set_default_ancestors (a_writer: WIZARD_WRITER_EIFFEL_CLASS)
 		local
 			l_writer: WIZARD_WRITER_INHERIT_CLAUSE
 		do
@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	ccom_create_item_feature (a_component: WIZARD_COMPONENT_DESCRIPTOR): WIZARD_WRITER_FEATURE is
+	ccom_create_item_feature (a_component: WIZARD_COMPONENT_DESCRIPTOR): WIZARD_WRITER_FEATURE
 			-- `create_item' feature.
 		local
 			l_body: STRING
@@ -151,7 +151,7 @@ feature {NONE} -- Implementation
 			non_void_feature_body: Result.body /= Void
 		end
 
-	make_feature_precursor: WIZARD_WRITER_FEATURE is
+	make_feature_precursor: WIZARD_WRITER_FEATURE
 			-- `make' feature.
 		local
 			l_body: STRING
@@ -173,7 +173,7 @@ feature {NONE} -- Implementation
 			non_void_feature_body: Result.body /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

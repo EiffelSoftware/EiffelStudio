@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Vision2 Widget containing Active X Web Browser control for web browsing."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 	
 feature -- Creation
 
-	make is 
+	make 
 			-- Make
 		do
 			default_create
@@ -36,7 +36,7 @@ feature -- Access
 
 feature {NONE} -- Initialization
 
-	user_initialization is
+	user_initialization
 			-- called by `initialize'.
 			-- Any custom user initialization that
 			-- could not be performed in `initialize',
@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 			load_url ((create {TEMPLATE_CONSTANTS}).empty_html_template_file_name)
 		end	
 
-	setup_browser is
+	setup_browser
 			-- Setup the browser
 		do
 			create browser_container
@@ -70,7 +70,7 @@ feature {NONE} -- Initialization
 
 feature -- Commands
 
-	load_url (a_url: STRING) is
+	load_url (a_url: STRING)
 			-- Load `a_url'
 		local
 			l_ptr: SYSTEM_OBJECT
@@ -83,7 +83,7 @@ feature -- Commands
 			end
 		end		
 	
-	refresh is
+	refresh
 			-- Reload the HTML based upon changes made to `document'.  If there is no
 			-- document then simply refresh the loaded url.
 		do
@@ -98,7 +98,7 @@ feature -- Commands
 	
 feature -- Status Setting
 
-	set_document (a_doc: DOCUMENT) is
+	set_document (a_doc: DOCUMENT)
 			-- Set `document'
 		require
 			doc_not_void: a_doc /= Void
@@ -128,7 +128,7 @@ feature -- Status Setting
 	
 feature {NONE} -- Status Setting
 
-	add_url (a_url: STRING) is
+	add_url (a_url: STRING)
 			-- Add url to list
 		require
 			url_not_void: a_url /= Void
@@ -147,7 +147,7 @@ feature {NONE} -- Status Setting
 	
 feature {NONE} -- Events
 		
-	address_key_pressed (key: EV_KEY) is
+	address_key_pressed (key: EV_KEY)
 			-- A key was pressed in the address bar
 		do
 			if key.code = {EV_KEY_CONSTANTS}.Key_enter then
@@ -158,7 +158,7 @@ feature {NONE} -- Events
 	
 feature {NONE} -- Implementation	
 
-	lookup_url (a_item: EV_LIST_ITEM) is
+	lookup_url (a_item: EV_LIST_ITEM)
 			-- Lookup url and load
 		local
 			l_url: STRING
@@ -169,20 +169,20 @@ feature {NONE} -- Implementation
 			end			
 		end		
 
-	internal_browser: AX_WEB_BROWSER is
+	internal_browser: AX_WEB_BROWSER
 			-- Web browser control
 		once
 			create Result.make
 		end
 
-	urls: ARRAYED_LIST [STRING] is
+	urls: ARRAYED_LIST [STRING]
 			-- Urls
 		once
 			create Result.make (10)
 			Result.compare_objects
 		end				
 
-	document_hash: HASH_TABLE [DIRECTORY, STRING] is
+	document_hash: HASH_TABLE [DIRECTORY, STRING]
 			-- Documents hashed by location of HTML or XML file and name
 		once
 			create Result.make (5)
@@ -192,13 +192,13 @@ feature {NONE} -- Implementation
 	document: DOCUMENT
 			-- Document
 
-	history_stack: ARRAYED_STACK [INTEGER] is
+	history_stack: ARRAYED_STACK [INTEGER]
 			-- History stack
 		once
 			create Result.make (1)	
 		end		
 
-	generated_document: STRING is
+	generated_document: STRING
 			-- Generated `document' content
 		require
 			document_known: document_hash.has (document.name)
@@ -216,7 +216,7 @@ feature {NONE} -- Implementation
 			has_result: Result /= Void
 		end		
 
-	update is
+	update
 			-- Update
 		local
 			l_consts: SHARED_OBJECTS
@@ -231,7 +231,7 @@ feature {NONE} -- Implementation
 	
 --	events: DOCUMENT_BROWSER_EVENTS
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

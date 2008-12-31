@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Allows persisting and retrieving combo content from and to registry"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	max_count: INTEGER is
+	max_count: INTEGER
 			-- Maximum number of items to be saved per combo box
 		do
 			if internal_max_count = Void then
@@ -32,7 +32,7 @@ feature -- Access
 
 feature -- Element Change
 
-	set_max_count (a_max_count: INTEGER) is
+	set_max_count (a_max_count: INTEGER)
 			-- Set `max_count' with `a_max_count'.
 		require
 			valid_max_count: a_max_count > 0
@@ -47,7 +47,7 @@ feature -- Element Change
 
 feature -- Basic Operations
 
-	initialize_combo (a_combo: EV_COMBO_BOX; a_name: STRING) is
+	initialize_combo (a_combo: EV_COMBO_BOX; a_name: STRING)
 			-- Fill `a_combo' with saved values with key `a_name' if any.
 			-- Will persist combo values in key with name `a_name'.
 		require
@@ -62,7 +62,7 @@ feature -- Basic Operations
 			end
 		end
 
-	add_combo_item (a_entry: STRING; a_combo: EV_COMBO_BOX) is
+	add_combo_item (a_entry: STRING; a_combo: EV_COMBO_BOX)
 			-- Add entry `a_entry' to combo box `a_combo' if not there already.
 			-- Persist combo box strings.
 		local
@@ -100,7 +100,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	fill_combo (a_combo: EV_COMBO_BOX; a_list: LIST [STRING]) is
+	fill_combo (a_combo: EV_COMBO_BOX; a_list: LIST [STRING])
 			-- Fill `a_combo' with strings in `a_list'.
 		require
 			non_void_combo: a_combo /= Void
@@ -127,10 +127,10 @@ feature {NONE} -- Private Access
 	internal_max_count: INTEGER_REF
 			-- Cell storing value for `max_count'
 
-	Default_max_combo_count: INTEGER is 10;
+	Default_max_combo_count: INTEGER = 10;
 			-- Maximum combo entries
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

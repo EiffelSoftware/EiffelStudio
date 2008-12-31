@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Graphical components that can be in a valid or invalid state"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Initialization
 
-	initialize_checker is
+	initialize_checker
 			-- Initialize instance.
 		do
 			create {ARRAYED_LIST [STRING]} errors.make (5)
@@ -27,7 +27,7 @@ feature -- Initialization
 
 feature -- Access
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is component in a valid state?
 		do
 			Result := errors.is_empty
@@ -36,7 +36,7 @@ feature -- Access
 	errors: LIST [STRING]
 			-- Errors caused by validity checking
 
-	validity_change_request_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	validity_change_request_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Callback routine called when validity state changes
 		do
 			if internal_validity_change_request_actions = Void then
@@ -47,7 +47,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	set_status (a_status: WIZARD_VALIDITY_STATUS) is
+	set_status (a_status: WIZARD_VALIDITY_STATUS)
 			-- Remove `a_status.error_message' from errors if present and not `a_status.is_error'.
 			-- Add it otherwise.
 		require
@@ -74,7 +74,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Helpers
 
-	is_valid_folder (a_folder: STRING): BOOLEAN is
+	is_valid_folder (a_folder: STRING): BOOLEAN
 			-- Is `a_folder' a valid folder?
 		require
 			non_void_path: a_folder /= Void
@@ -87,7 +87,7 @@ feature {NONE} -- Helpers
 			end
 		end
 
-	is_valid_file (a_file: STRING): BOOLEAN is
+	is_valid_file (a_file: STRING): BOOLEAN
 			-- Is `a_folder' a valid folder?
 		require
 			non_void_path: a_file /= Void
@@ -113,7 +113,7 @@ invariant
 	non_void_errors: errors /= Void
 	no_error_iff_is_valid: is_valid = errors.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

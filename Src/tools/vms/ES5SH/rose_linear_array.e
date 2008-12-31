@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Multiple purpose array which is linear, extendable, sortable and iterable"
 	attention: "[
 		You must have an EXCELLENT reason to modify this class, especially if:
@@ -27,7 +27,7 @@ create
 
 feature -- Access
 
-	infix "+" (a_other: LINEAR [G]): like Current is
+	infix "+" (a_other: LINEAR [G]): like Current
 			-- Union of 'Current' and 'a_other'
 		require
 			valid_other: a_other /= Void
@@ -41,7 +41,7 @@ feature -- Access
 			end
 		end
 
-	subset (a_indices: ARRAY [INTEGER]): like Current is
+	subset (a_indices: ARRAY [INTEGER]): like Current
 			-- Subset composed of items at 'a_indices' from this array
 		local
 			i, j, k: INTEGER
@@ -58,7 +58,7 @@ feature -- Access
 			end
 		end
 
-	values_intersect (a_linear: LINEAR [G]): BOOLEAN is
+	values_intersect (a_linear: LINEAR [G]): BOOLEAN
 		do
 			from a_linear.start until Result or else a_linear.off loop
 				Result := has_value (a_linear.item)
@@ -66,7 +66,7 @@ feature -- Access
 			end
 		end
 
-	references_intersect (a_linear: LINEAR [G]): BOOLEAN is
+	references_intersect (a_linear: LINEAR [G]): BOOLEAN
 		do
 			from a_linear.start until Result or else a_linear.off loop
 				Result := has_reference (a_linear.item)
@@ -74,7 +74,7 @@ feature -- Access
 			end
 		end
 
-	min_max (a_comparison: FUNCTION [ANY, TUPLE [G, G], BOOLEAN]): PAIR [G,G] is
+	min_max (a_comparison: FUNCTION [ANY, TUPLE [G, G], BOOLEAN]): PAIR [G,G]
 		do
 			if not is_empty then
 				from
@@ -94,7 +94,7 @@ feature -- Access
 			end
 		end
 
-	ordered_quotient (a_order : FUNCTION [ANY,TUPLE [G,G],BOOLEAN]; a_equivalent: FUNCTION [ANY,TUPLE [G,G],BOOLEAN]): ROSE_LINEAR_ARRAY [ROSE_LINEAR_ARRAY [G]] is
+	ordered_quotient (a_order : FUNCTION [ANY,TUPLE [G,G],BOOLEAN]; a_equivalent: FUNCTION [ANY,TUPLE [G,G],BOOLEAN]): ROSE_LINEAR_ARRAY [ROSE_LINEAR_ARRAY [G]]
 		local
 			l_array : ROSE_LINEAR_ARRAY [G]
 		do
@@ -103,7 +103,7 @@ feature -- Access
 			Result := l_array.quotient (a_equivalent)
 		end
 
-	quotient (a_equivalent: FUNCTION [ANY,TUPLE [G,G],BOOLEAN]): ROSE_LINEAR_ARRAY [ROSE_LINEAR_ARRAY [G]] is
+	quotient (a_equivalent: FUNCTION [ANY,TUPLE [G,G],BOOLEAN]): ROSE_LINEAR_ARRAY [ROSE_LINEAR_ARRAY [G]]
 		local
 			l_last: G
 			l_array: ROSE_LINEAR_ARRAY [G]
@@ -132,7 +132,7 @@ feature -- Basic operations
 
 	comparison: FUNCTION [ANY, TUPLE [G, G], BOOLEAN]
 
-	sort_by (a_comparison: FUNCTION [ANY, TUPLE [G, G], BOOLEAN]) is
+	sort_by (a_comparison: FUNCTION [ANY, TUPLE [G, G], BOOLEAN])
 			-- Sort this array using 'a_comparison'.
 		do
 			comparison := a_comparison
@@ -140,7 +140,7 @@ feature -- Basic operations
 			comparison := Void
 		end
 
-	sort_by_and_remember (a_routine: FUNCTION [ANY, TUPLE [G, G], BOOLEAN]) is
+	sort_by_and_remember (a_routine: FUNCTION [ANY, TUPLE [G, G], BOOLEAN])
 			-- Sort this array using 'a_comparison', and remember 'a_comparison' for further searching
 		require
 			need_comparison: a_routine /= Void or comparison /= Void
@@ -151,19 +151,19 @@ feature -- Basic operations
 			sort
 		end
 
-	binary_search (a_g: G) is
+	binary_search (a_g: G)
 		do
 			Precursor (a_g)
 			index := found_index
 		end
 
-	linear_search (a_g: G) is
+	linear_search (a_g: G)
 		do
 			Precursor (a_g)
 			index := found_index
 		end
 
-	merge_values (a_linear: LINEAR [G]) is
+	merge_values (a_linear: LINEAR [G])
 		do
 			from a_linear.start until a_linear.off loop
 				if not has_value (a_linear.item) then
@@ -173,7 +173,7 @@ feature -- Basic operations
 			end
 		end
 
-	merge_references (a_linear: LINEAR [G]) is
+	merge_references (a_linear: LINEAR [G])
 		do
 			from a_linear.start until a_linear.off loop
 				if not has_reference (a_linear.item) then
@@ -183,19 +183,19 @@ feature -- Basic operations
 			end
 		end
 
-	union_values (a_linear: LINEAR [G]): like Current is
+	union_values (a_linear: LINEAR [G]): like Current
 		do
 			Result := clone (Current)
 			Result.merge_values (a_linear)
 		end
 
-	union_references (a_linear: LINEAR [G]): like Current is
+	union_references (a_linear: LINEAR [G]): like Current
 		do
 			Result := clone (Current)
 			Result.merge_references (a_linear)
 		end
 
-	selected_items(a_ixs : ARRAY[INTEGER]) : like Current is
+	selected_items(a_ixs : ARRAY[INTEGER]) : like Current
 		local
 			i, l_ix : INTEGER
 		do
@@ -213,7 +213,7 @@ feature -- Basic operations
 
 feature {NONE} -- Comparison
 
-	less_than (a, b: G): BOOLEAN is
+	less_than (a, b: G): BOOLEAN
 		do
 			if a /= Void and b /= Void then
 				Result := comparison.item ([a,b])

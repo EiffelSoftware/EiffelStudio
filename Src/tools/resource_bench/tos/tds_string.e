@@ -1,4 +1,4 @@
-indexing
+note
 	description: "String item representation in the tds_stringtable"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 		do
 			create text_id
 		end
@@ -30,7 +30,7 @@ feature	-- Access
 
 feature -- Element change
 
-	set_id (a_id: STRING) is
+	set_id (a_id: STRING)
 			-- Set properly `a_id' to the current object.
 		require
 			a_id_exists: a_id /= Void and then a_id.count > 0
@@ -42,7 +42,7 @@ feature -- Element change
 			end
 		end
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING)
 			-- Set `text' to `a_text'.
 		require
 			a_text_exists: a_text /= Void and then a_text.count > 0
@@ -54,14 +54,14 @@ feature -- Element change
 
 feature -- Code generation
 
-	display is
+	display
 		do
 			text_id.display
 			io.putstring (" : ")
 			io.putstring (text)
 		end
 
-	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE) is
+	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE)
 			-- Generate `a_resource_file' from the tds memory structure.
 		require
 			a_resource_file_exists: a_resource_file.exists
@@ -71,7 +71,7 @@ feature -- Code generation
 			a_resource_file.putstring (text)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

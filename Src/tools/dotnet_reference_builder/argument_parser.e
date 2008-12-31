@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Application's argument parser.
 	]"
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize argument parser
 		do
 			make_parser (False, False)
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	assemblies: LIST [STRING] is
+	assemblies: LIST [STRING]
 			-- List of passed assemblies
 		once
 			Result := values
@@ -42,7 +42,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	include_paths: LIST [STRING] is
+	include_paths: LIST [STRING]
 			-- Specified list of lookup paths
 		once
 			Result := unique_options_values_of_name (include_switch, True)
@@ -50,7 +50,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	ecf_file: STRING is
+	ecf_file: STRING
 			-- Location of an *.ecf file to modify
 		require
 			modify_ecf_file: modify_ecf_file
@@ -60,7 +60,7 @@ feature -- Access
 			not_result_is_empty: Result /= Void implies not Result.is_empty
 		end
 
-	ecf_targets_file: LIST [STRING] is
+	ecf_targets_file: LIST [STRING]
 			-- Location of an *.ecf file to modify
 		require
 			modify_ecf_file: modify_ecf_file
@@ -72,13 +72,13 @@ feature -- Access
 
 feature -- Status report
 
-	use_assembly_locations: BOOLEAN is
+	use_assembly_locations: BOOLEAN
 			-- Indiciates if assembly paths should be used as lookup paths
 		once
 			Result := not has_option (do_not_use_assembly_paths_switch)
 		end
 
-	modify_ecf_file: BOOLEAN is
+	modify_ecf_file: BOOLEAN
 			-- Indicate if modification should be made to ecf file
 		once
 			Result := has_option (ecf_switch)
@@ -89,7 +89,7 @@ feature {NONE} -- Usage
 	name: STRING = ".NET Reference Builder"
 			-- Full name of application
 
-	version: !STRING is
+	version: !STRING
 			-- Version number of application
 		once
 			Result := (({SYSTEM_OBJECT})[Current]).get_type.assembly.get_name.version.to_string
@@ -124,7 +124,7 @@ feature {NONE} -- Constants
 	target_switch: STRING = "t";
 			-- Switches
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

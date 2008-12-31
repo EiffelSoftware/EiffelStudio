@@ -1,4 +1,4 @@
-indexing
+note
 	description: "TYPEDESC structure, contained within TYPEATTR structure"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_from_pointer (a_pointer: POINTER) is
+	make_from_pointer (a_pointer: POINTER)
 			-- Make from pointer.
 		do
 			make_by_pointer (a_pointer)
@@ -30,14 +30,14 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	var_type: INTEGER is
+	var_type: INTEGER
 			-- Type
 			-- See class ECOM_VAR_TYPE for Result values.
 		do
 			Result := c_typedesc_vartype (item)
 		end
 
-	type_desc: ECOM_TYPE_DESC is
+	type_desc: ECOM_TYPE_DESC
 			-- Nested TYPEDESC structure
 			-- that specifies safearray element type
 		require
@@ -46,7 +46,7 @@ feature -- Access
 			create Result.make_from_pointer (c_typedesc_typedesc (item))
 		end
 
-	array_desc: ECOM_ARRAY_DESC is
+	array_desc: ECOM_ARRAY_DESC
 			-- Nested ARRAYDESC structure
 		require
 			valid_type: is_carray (var_type)
@@ -59,7 +59,7 @@ feature -- Access
 			end
 		end
 
-	href_type: NATURAL_32 is
+	href_type: NATURAL_32
 			-- Handle to type description
 		require
 			valid_type: is_user_defined (var_type)
@@ -69,7 +69,7 @@ feature -- Access
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of TYPEDESC structure
 		do
 			Result := c_size_of_type_desc
@@ -77,42 +77,42 @@ feature -- Measurement
 
 feature {NONE} -- Externals
 
-	c_size_of_type_desc: INTEGER is
+	c_size_of_type_desc: INTEGER
 		external
 			"C [macro %"windows.h%"]"
 		alias
 			"sizeof(TYPEDESC)"
 		end
 
-	c_typedesc_vartype (a_ptr: POINTER): INTEGER is
+	c_typedesc_vartype (a_ptr: POINTER): INTEGER
 		external
 			"C inline use <windows.h>"
 		alias
 			"((TYPEDESC*)$a_ptr)->vt"
 		end
 
-	c_typedesc_typedesc (a_ptr: POINTER): POINTER is
+	c_typedesc_typedesc (a_ptr: POINTER): POINTER
 		external
 			"C inline use <windows.h>"
 		alias
 			"((TYPEDESC*)$a_ptr)->lptdesc"
 		end
 
-	c_typedesc_arraydesc (a_ptr: POINTER): POINTER is
+	c_typedesc_arraydesc (a_ptr: POINTER): POINTER
 		external
 			"C inline use <windows.h>"
 		alias
 			"((TYPEDESC*)$a_ptr)->lpadesc"
 		end
 
-	c_typedesc_href_type (a_ptr: POINTER): NATURAL_32 is
+	c_typedesc_href_type (a_ptr: POINTER): NATURAL_32
 		external
 			"C inline use <windows.h>"
 		alias
 			"((TYPEDESC*)$a_ptr)->hreftype"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

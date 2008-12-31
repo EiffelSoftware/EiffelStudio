@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Root class of EiffelCOM Wizard, process arguments and run accordingly."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -40,7 +40,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Run the program.
 		local
 			l_parser: ARGUMENT_PARSER
@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	start (a_parser: ARGUMENT_PARSER) is
+	start (a_parser: ARGUMENT_PARSER)
 			-- Launch application from command line
 		require
 			a_parser_attached: a_parser /= Void
@@ -137,7 +137,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	make_and_launch is
+	make_and_launch
 			-- Create `Current', build and display `main_window',
 			-- then launch the application.
 		do
@@ -148,7 +148,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	generate is
+	generate
 			-- Start generation according to settings stored in `environment'.
 		local
 			l_manager: WIZARD_MANAGER
@@ -164,13 +164,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	dummy_process (a_event: EV_THREAD_EVENT) is
+	dummy_process (a_event: EV_THREAD_EVENT)
 			-- Do nothing.
 		do
 
 		end
 
-	display_output (a_event: EV_THREAD_EVENT) is
+	display_output (a_event: EV_THREAD_EVENT)
 			-- Display output according to `a_event'.
 		require
 			non_void_event: a_event /= Void
@@ -213,7 +213,7 @@ feature {NONE} -- Private Access
 	main_window: WIZARD_MAIN_WINDOW
 		-- Main window of `Current'.
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

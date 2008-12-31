@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Compliance checker worker thread. It will, when started, examine and report to a printer
 		every member of an assembly and its compliance status.
@@ -38,7 +38,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (a_assembly: like assembly; a_printer: like printer) is
+	make (a_assembly: like assembly; a_printer: like printer)
 			-- Create an initialize a new checker worker thread.
 		require
 			a_assembly_not_void: a_assembly /= Void
@@ -58,7 +58,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	stop_checking is
+	stop_checking
 			-- Stops thread from continuing to check for compliance
 		require
 			not_already_stopping: not should_stop
@@ -70,7 +70,7 @@ feature -- Basic Operations
 		
 feature {NONE} -- Basic Operations
 
-	execute is
+	execute
 			-- Routine executed by new thread.
 		local		
 			l_types: NATIVE_ARRAY [SYSTEM_TYPE]
@@ -120,7 +120,7 @@ feature {NONE} -- Basic Operations
 		
 feature {NONE} -- Implementation
 
-	process_type (a_printer: like printer; a_type: SYSTEM_TYPE) is
+	process_type (a_printer: like printer; a_type: SYSTEM_TYPE)
 			-- Processes `a_type'
 		require
 			a_printer_not_void: a_printer /= Void
@@ -137,7 +137,7 @@ feature {NONE} -- Implementation
 			end
 		end
 	
-	process_members (a_printer: like printer; a_type: EC_CHECKED_TYPE) is
+	process_members (a_printer: like printer; a_type: EC_CHECKED_TYPE)
 			-- Process `a_type' members
 		require
 			a_printer_not_void: a_printer /= Void
@@ -224,7 +224,7 @@ feature {NONE} -- Implementation
 invariant
 	printer_not_void: printer /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

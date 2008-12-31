@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 				This class iterates over asts of classes, extracts the arguments to the translation functions from the i18n 
 				library, generates appropriate PO_ENTRYs for them and adds them to a PO_FILE.
@@ -47,7 +47,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_translate_feature (a: like translate_feature) is
+	set_translate_feature (a: like translate_feature)
 			-- Set translator function name to `a'.
 		require
 			a_not_void: a /= Void
@@ -57,7 +57,7 @@ feature -- Element change
 			a_set: a.is_equal (translate_feature)
 		end
 
-	set_translate_plural_feature (a: like translate_plural_feature) is
+	set_translate_plural_feature (a: like translate_plural_feature)
 			-- Set plural translator function name to `a'.
 		require
 			a_not_void: a /= Void
@@ -67,7 +67,7 @@ feature -- Element change
 			a_set: a.is_equal (translate_plural_feature)
 		end
 
-	set_feature_clause_name (a: like feature_clause_name) is
+	set_feature_clause_name (a: like feature_clause_name)
 			-- Set translator feature clause name to `a'.
 		require
 			a_not_void: a /= Void
@@ -77,7 +77,7 @@ feature -- Element change
 			a_set: a.is_equal (feature_clause_name)
 		end
 
-	set_po_file (po: PO_FILE) is
+	set_po_file (po: PO_FILE)
 			-- Set `po_file' to `po'.
 		require
 			po_not_void: po /= Void
@@ -87,7 +87,7 @@ feature -- Element change
 			po_file_set: po_file = po
 		end
 
-	set_source_file_name (a_str: STRING) is
+	set_source_file_name (a_str: STRING)
 			-- Set `source_file_name' to `a_str'.
 		require
 			a_str_not_void: a_str /= Void
@@ -97,7 +97,7 @@ feature -- Element change
 			source_file_name_set: source_file_name = a_str
 		end
 
-	set_source_text (a_file: STRING) is
+	set_source_text (a_file: STRING)
 			-- Set `source_text' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -114,7 +114,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Implementation
 
-	analyse_call (node: ACCESS_FEAT_AS) is
+	analyse_call (node: ACCESS_FEAT_AS)
 			-- Analyze if call which `node' represents is a call to a translate feature.
 			--
 			-- `node': AST node of a feature call which is analyzed
@@ -160,7 +160,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	analyse_feature_clause (node: FEATURE_CLAUSE_AS) is
+	analyse_feature_clause (node: FEATURE_CLAUSE_AS)
 			-- Analyze iif a feature clause is an internationalized feature clause.
 			--
 			-- `node': AST node of a feature clause which is analyzed
@@ -200,7 +200,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_access_id_as (l_as: ACCESS_ID_AS) is
+	process_access_id_as (l_as: ACCESS_ID_AS)
 			-- Process `l_as'.
 			--
 			-- `l_as': AST node representing an access on an identifier
@@ -210,7 +210,7 @@ feature {NONE} -- Implementation
 			safe_process (l_as.internal_parameters)
 		end
 
-	process_access_feat_as (l_as: ACCESS_FEAT_AS) is
+	process_access_feat_as (l_as: ACCESS_FEAT_AS)
 			-- Process `l_as'.
 			--
 			-- `l_as': AST node representing an access on a feature
@@ -250,13 +250,13 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	utf8: UC_UTF8_ROUTINES is
+	utf8: UC_UTF8_ROUTINES
 			-- UTF8 routines
 		once
 			create Result
 		end
 
-	utf8_string (a_string: STRING_32): STRING is
+	utf8_string (a_string: STRING_32): STRING
 			-- Convert `a_string' to UTF-8 encoding
 			-- This function also writes 5 and 6-bytes characters, which are not part of the UTF-8 standard
 		require
@@ -278,7 +278,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	current_line (a_pos: INTEGER; a_text: STRING): STRING is
+	current_line (a_pos: INTEGER; a_text: STRING): STRING
 			-- Line text at `a_pos'
 		require
 			a_text_not_void: a_text /= Void
@@ -299,7 +299,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	append_comments (a_as: LOCATION_AS; a_node: PO_FILE_ENTRY) is
+	append_comments (a_as: LOCATION_AS; a_node: PO_FILE_ENTRY)
 			-- Append comments to `a_node'.
 		require
 			a_as_not_void: a_as /= Void
@@ -320,7 +320,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	handle_special_chars (a_s: STRING_32) is
+	handle_special_chars (a_s: STRING_32)
 			-- Replace "%"" with "\%"".
 			-- Replace "\" with "\\".
 			-- Replace "%N" with "\n".
@@ -333,7 +333,7 @@ feature {NONE} -- Implementation
 			a_s.replace_substring_all ("%T", "\t")
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

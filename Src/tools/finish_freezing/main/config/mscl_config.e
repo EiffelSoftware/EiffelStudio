@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A Visual Studio VC compiler configuration.
 	]"
@@ -25,7 +25,7 @@ inherit
 
 feature {NONE} -- Initalization
 
-	make (a_key: like product_reg_path; a_use_32bit: like use_32bit; a_code: like code; a_desc: like description; a_version: like version; a_deprecated: like is_deprecated) is
+	make (a_key: like product_reg_path; a_use_32bit: like use_32bit; a_code: like code; a_desc: like description; a_version: like version; a_deprecated: like is_deprecated)
 			-- Initialize a config from a relative HKLM\SOFTWARE registry key `a_key'.
 		require
 			a_key_attached: a_key /= Void
@@ -47,7 +47,7 @@ feature {NONE} -- Initalization
 			is_deprecated_set: is_deprecated = a_deprecated
 		end
 
-	on_initialize is
+	on_initialize
 			-- Does actual initialization
 		local
 			l_file_name: like batch_file_name
@@ -76,7 +76,7 @@ feature {NONE} -- Initalization
 
 feature {NONE} -- Clean up
 
-	on_dispose is
+	on_dispose
 			-- Action to be executed just before garbage collection
 			-- reclaims an object.
 		do
@@ -85,7 +85,7 @@ feature {NONE} -- Clean up
 			end
 		end
 
-	reset_key is
+	reset_key
 			-- Reset `ionternal_reg_key'.
 		require
 			internal_reg_key_computed: internal_reg_key /= default_pointer
@@ -98,7 +98,7 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-	install_path: STRING is
+	install_path: STRING
 			-- Location of Visual Studio install base
 		local
 			l_value: WEL_REGISTRY_KEY_VALUE
@@ -126,7 +126,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	batch_file_name: STRING is
+	batch_file_name: STRING
 			-- Absolute path to an environment configuration batch script
 		require
 			exists: exists
@@ -136,7 +136,7 @@ feature {NONE} -- Access
 			not_result_is_empty: not Result.is_empty
 		end
 
-	batch_file_arguments: STRING is
+	batch_file_arguments: STRING
 			-- Arguments for `batch_file_name' execution
 		require
 			exists: exists
@@ -145,7 +145,7 @@ feature {NONE} -- Access
 			not_result_sis_empty: Result /= Void implies not Result.is_empty
 		end
 
-	batch_file_options: STRING is
+	batch_file_options: STRING
 			-- Option to the COMSPEC DOS prompt.
 		require
 			exists: exists
@@ -158,7 +158,7 @@ feature {NONE} -- Access
 	product_reg_path: STRING
 			-- Relative registry location
 
-	full_product_reg_path: STRING is
+	full_product_reg_path: STRING
 			-- Absolute product registry location
 		deferred
 		ensure
@@ -166,12 +166,12 @@ feature {NONE} -- Access
 			not_result_is_empty: not Result.is_empty
 		end
 
-	install_path_value_name: STRING is
+	install_path_value_name: STRING
 			-- Key value name for install location
 		deferred
 		end
 
-	registry: WEL_REGISTRY is
+	registry: WEL_REGISTRY
 			-- Access to registry
 		once
 			create Result
@@ -181,7 +181,7 @@ feature {NONE} -- Access
 
 feature -- Status report
 
-	exists: BOOLEAN is
+	exists: BOOLEAN
 			-- Indicates if the product exists
 		do
 			initialize
@@ -193,7 +193,7 @@ feature -- Status report
 
 feature {NONE} -- Basic operations
 
-	open_key is
+	open_key
 			-- Attempts to open the specified registery key
 		require
 			not_is_initialized: not is_initialized
@@ -211,7 +211,7 @@ feature {NONE} -- Internal implementation cache
 invariant
 	internal_reg_key_not_null: exists implies internal_reg_key /= default_pointer
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

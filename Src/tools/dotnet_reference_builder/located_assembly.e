@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Represents a located assembly and exposes a real code base path, not the
 		.NET determined code base, which can sometimes be the same as the GAC path.
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_asm: like assembly; a_path: like real_path) is
+	make (a_asm: like assembly; a_path: like real_path)
 			-- Initialize a new located assembly
 		require
 			a_asm_attached: a_asm /= Void
@@ -48,7 +48,7 @@ feature -- Access
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
@@ -60,7 +60,7 @@ invariant
 	real_path_attached: real_path /= Void
 	not_real_path_is_empty: not real_path.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Description of Type Library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -68,7 +68,7 @@ create
 
 feature -- Initialization
 
-	make (a_type_lib: ECOM_TYPE_LIB) is
+	make (a_type_lib: ECOM_TYPE_LIB)
 			-- Initialize `type_lib' with `a_type_lib'
 		require
 			non_void_type_lib: a_type_lib /= Void
@@ -144,7 +144,7 @@ feature -- Access
 	type_lib: ECOM_TYPE_LIB
 			-- Type Library.
 
-	Generation_title: STRING is "Parsing Type Library"
+	Generation_title: STRING = "Parsing Type Library"
 			-- Generation title.
 
 	complete: BOOLEAN
@@ -152,7 +152,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' describes same data type?
 		do
 			Result := guid.is_equal (other.guid)
@@ -160,7 +160,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	create_description is
+	create_description
 			-- Create Type Libarary description.
 		do
 			create description.make (100)
@@ -178,13 +178,13 @@ feature -- Basic operations
 			non_void_description: description /= Void
 		end
 
-	set_complete is
+	set_complete
 			-- Set `complete' to True
 		do
 			complete := True
 		end
 
-	add_descriptor (a_descriptor: WIZARD_TYPE_DESCRIPTOR; a_index: INTEGER) is
+	add_descriptor (a_descriptor: WIZARD_TYPE_DESCRIPTOR; a_index: INTEGER)
 			-- Add `a_descriptor' to 'descriptors'.
 		require
 			valid_index: a_index > 0 and a_index <= descriptors.count
@@ -195,7 +195,7 @@ feature -- Basic operations
 			added: descriptors.item (a_index) = a_descriptor
 		end
 
-	add_referee (a_data_descriptor: WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR; a_index: INTEGER) is
+	add_referee (a_data_descriptor: WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR; a_index: INTEGER)
 			-- Add `a_data_descriptor' to `referees'.
 		require
 			non_void_descriptor: a_data_descriptor /= Void
@@ -204,7 +204,7 @@ feature -- Basic operations
 			referees.item (a_index).force (a_data_descriptor)
 		end
 
-	generate  is
+	generate
 			-- Create `descriptors' array.
 		local
 			i: INTEGER
@@ -224,7 +224,7 @@ feature -- Basic operations
 			end
 		end
 
-	finalize_inherited_interfaces is
+	finalize_inherited_interfaces
 			-- Set references to inherited interfaces
 			-- Flatten interfaces
 		require
@@ -257,7 +257,7 @@ feature -- Basic operations
 			end
 		end
 
-	finalize_interface_features is
+	finalize_interface_features
 			-- Finalize interface_features.
 		require
 			complete: complete
@@ -287,7 +287,7 @@ feature -- Basic operations
 			end
 		end
 
-	finalize_names is
+	finalize_names
 			-- Remove name clashes in system.
 		require
 			complete: complete
@@ -340,7 +340,7 @@ feature -- Basic operations
 			end
 		end
 
-	finalize_aliases is
+	finalize_aliases
 			-- Remove anonymous aliases.
 		require
 			complete: complete
@@ -394,7 +394,7 @@ feature -- Basic operations
 			end
 		end
 
-	update_referees (a_index, a_new_index: INTEGER; a_new_lib: WIZARD_TYPE_LIBRARY_DESCRIPTOR) is
+	update_referees (a_index, a_new_index: INTEGER; a_new_lib: WIZARD_TYPE_LIBRARY_DESCRIPTOR)
 			-- Update referees of descriptor at `a_index' to use descriptor at `a_new_index'.
 			-- Also update referees type library to `a_new_lib'.
 		require
@@ -421,7 +421,7 @@ feature -- Basic operations
 			end
 		end
 
-	finalize_interface_feature_names is
+	finalize_interface_feature_names
 			-- Remove feature name clashes on interface level.
 		require
 			complete: complete
@@ -451,7 +451,7 @@ feature -- Basic operations
 			end
 		end
 
-	finalize_coclass_feature_names is
+	finalize_coclass_feature_names
 			-- Remove feature name clashes on coclass level.
 		require
 			complete: complete
@@ -481,7 +481,7 @@ feature -- Basic operations
 			end
 		end
 
-	create_implemented_interfaces is
+	create_implemented_interfaces
 			-- Create implemented interface descriptors.
 		require
 			complete: complete
@@ -517,14 +517,14 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	counter: INTEGER is
+	counter: INTEGER
 			-- Counter
 		do
 			Result := counter_impl.item
 			counter_impl.set_item (Result + 1)
 		end
 
-	counter_impl: INTEGER_REF is
+	counter_impl: INTEGER_REF
 			-- Global counter
 		once
 			create Result
@@ -534,7 +534,7 @@ feature {NONE} -- Implementation
 invariant
 	non_void_descriptors: descriptors /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

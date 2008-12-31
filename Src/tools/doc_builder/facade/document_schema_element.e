@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Schema element."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 	
 feature -- Facade
 
-	name: STRING is "No name"
+	name: STRING = "No name"
 			-- Element name
 	
 	annotation: STRING
@@ -21,12 +21,12 @@ feature -- Elements
 	children: ARRAYED_LIST [like Current]
 			-- Children elements
 	
-	type_children: ARRAYED_LIST [like Current] is
+	type_children: ARRAYED_LIST [like Current]
 			-- Children elements of Current as type
 		do
 		end	
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Aguments EiffelVision2 custom widgets with the ability to query their parent container window.
 	]"
@@ -20,14 +20,14 @@ inherit
 
 feature -- Access
 
-	parent: EV_CONTAINER is
+	parent: EV_CONTAINER
 			-- Parent container of `Current'
 		deferred
 		ensure
 			result_attached: Result /= Void
 		end
 
-	top_level_window: EV_WINDOW is
+	top_level_window: EV_WINDOW
 			-- Retrieve top level window
 		local
 			l_parent: EV_CONTAINER
@@ -44,7 +44,7 @@ feature -- Access
 			end
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

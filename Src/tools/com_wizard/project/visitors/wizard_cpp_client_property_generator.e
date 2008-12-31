@@ -1,4 +1,4 @@
-indexing
+note
 	description: "C client property generator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Implementation
 
-	generate (a_component: WIZARD_COMPONENT_DESCRIPTOR; a_property: WIZARD_PROPERTY_DESCRIPTOR; a_interface_name, a_variable_name: STRING; a_lcid: INTEGER) is
+	generate (a_component: WIZARD_COMPONENT_DESCRIPTOR; a_property: WIZARD_PROPERTY_DESCRIPTOR; a_interface_name, a_variable_name: STRING; a_lcid: INTEGER)
 			-- Generate C client access and setting features.
 		require
 			non_void_component: a_component /= Void
@@ -49,7 +49,7 @@ feature {NONE} -- Implementation
 
 	create_access_feature (a_component: WIZARD_COMPONENT_DESCRIPTOR; a_interface_name, a_variable_name: STRING;
 						a_lcid: INTEGER; a_property: WIZARD_PROPERTY_DESCRIPTOR;
-						a_visitor: WIZARD_DATA_TYPE_VISITOR) is
+						a_visitor: WIZARD_DATA_TYPE_VISITOR)
 			-- Create access feature.
 		require
 			non_void_component: a_component /= Void
@@ -87,7 +87,7 @@ feature {NONE} -- Implementation
 
 	create_set_feature (a_component: WIZARD_COMPONENT_DESCRIPTOR; a_interface_name, a_variable_name: STRING;
 						a_lcid: INTEGER; a_property: WIZARD_PROPERTY_DESCRIPTOR;
-						a_visitor: WIZARD_DATA_TYPE_VISITOR) is
+						a_visitor: WIZARD_DATA_TYPE_VISITOR)
 			-- -- Create set feature.
 		require
 			non_void_component: a_component /= Void
@@ -132,7 +132,7 @@ feature {NONE} -- Implementation
 			set_setting_body (a_interface_name, a_variable_name, a_lcid, a_property.member_id, a_visitor)
 		end
 
-	set_access_body (a_interface_name, a_variable_name: STRING; a_lcid, a_member_id: INTEGER; a_visitor: WIZARD_DATA_TYPE_VISITOR) is
+	set_access_body (a_interface_name, a_variable_name: STRING; a_lcid, a_member_id: INTEGER; a_visitor: WIZARD_DATA_TYPE_VISITOR)
 			-- Set access body
 		require
 			non_void_visitor: a_visitor /= Void
@@ -173,7 +173,7 @@ feature {NONE} -- Implementation
 			c_access_feature.set_body (l_body)
 		end
 
-	set_setting_body (a_interface_name, a_variable_name: STRING; a_lcid, a_member_id: INTEGER; a_visitor: WIZARD_DATA_TYPE_VISITOR) is
+	set_setting_body (a_interface_name, a_variable_name: STRING; a_lcid, a_member_id: INTEGER; a_visitor: WIZARD_DATA_TYPE_VISITOR)
 			--
 		require
 			non_void_visitor: a_visitor /= Void
@@ -287,7 +287,7 @@ feature {NONE} -- Implementation
 			c_setting_feature.set_body (l_body)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

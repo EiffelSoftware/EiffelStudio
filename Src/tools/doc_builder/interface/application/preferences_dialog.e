@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog for setting and viewing project preferences."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	user_initialization is
+	user_initialization
 			-- called by `initialize'.
 			-- Any custom user initialization that
 			-- could not be performed in `initialize',
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Commands
 
-	get_settings is
+	get_settings
 			-- Retrieve current settings for loaded project
 		do
 			name_text.set_text (Shared_project.name)
@@ -104,7 +104,7 @@ feature {NONE} -- Commands
 			create dir_tree.make_with_data (shared_project.root_directory, check_tree, shared_project.preferences.toc_folders)				
 		end
 
-	set_settings is
+	set_settings
 			-- Set chosen preferences
 		require
 			settings_valid: is_valid
@@ -155,7 +155,7 @@ feature {NONE} -- Commands
 			end
 		end		
 
-	show_error (error: STRING) is
+	show_error (error: STRING)
 			-- Show validation error
 		require
 			error_not_void: error /= Void
@@ -166,7 +166,7 @@ feature {NONE} -- Commands
 			error_dlg.show_modal_to_window (Current)
 		end
 
-	apply is
+	apply
 			-- Apply changes
 		do
 			if is_valid then
@@ -174,7 +174,7 @@ feature {NONE} -- Commands
 			end
 		end
 		
-	okay is
+	okay
 			-- Apply changes
 		do
 			if is_valid then
@@ -185,13 +185,13 @@ feature {NONE} -- Commands
 
 feature {NONE} -- Implementation
 	
-	project_preferences: DOCUMENT_PROJECT_PREFERENCES is
+	project_preferences: DOCUMENT_PROJECT_PREFERENCES
 			-- Project preferences
 		once
 			Result := Shared_project.preferences
 		end		
 	
-	browse_file (a_filter: STRING): STRING is
+	browse_file (a_filter: STRING): STRING
 			-- Attempt to load a file, return chosen file name
 		local
 			l_open_dialog: EV_FILE_OPEN_DIALOG
@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 	
 feature {NONE} -- Initialization
 
-	initialize_schema is
+	initialize_schema
 			-- Initialize Schema from `a_filename'
 		local
 			l_schema_file: STRING
@@ -228,7 +228,7 @@ feature {NONE} -- Initialization
 			end
 		end
 		
-	initialize_stylesheet is
+	initialize_stylesheet
 			-- Initialize Stylesheet from `a_filename'
 		local
 			l_stylesheet_file: STRING
@@ -242,7 +242,7 @@ feature {NONE} -- Initialization
 			end
 		end
 		
-	initialize_header is
+	initialize_header
 			-- Initialize header
 		local
 			l_header_file: STRING
@@ -254,7 +254,7 @@ feature {NONE} -- Initialization
 			end
 		end
 		
-	initialize_footer is
+	initialize_footer
 			-- Initialize footer
 		local
 			l_footer_file: STRING
@@ -268,7 +268,7 @@ feature {NONE} -- Initialization
 	
 feature {NONE} -- Query
 	
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Are details in Current Valid
 		local
 			l_file: PLAIN_TEXT_FILE
@@ -313,7 +313,7 @@ feature {NONE} -- Query
 			end
 		end
 		
-	populate_filter_list is
+	populate_filter_list
 			-- Retrieve filters
 		local
 			l_filters: HASH_TABLE [DOCUMENT_FILTER, STRING]
@@ -331,7 +331,7 @@ feature {NONE} -- Query
 			end
 		end
 
-	filter_selected is
+	filter_selected
 			-- A filter was selected
 		local
 			l_list_item: EV_LIST_ITEM
@@ -360,7 +360,7 @@ feature {NONE} -- Query
 			end
 		end		
 
-	add_filter is
+	add_filter
 			-- Add new output filter
 		local
 			l_description: STRING
@@ -375,7 +375,7 @@ feature {NONE} -- Query
 			end
 		end
 		
-	add_filter_tag is
+	add_filter_tag
 			-- Add new tag to output filter
 		local
 			l_tag: STRING
@@ -389,7 +389,7 @@ feature {NONE} -- Query
 			end			
 		end
 	
-	change_filter_color is
+	change_filter_color
 			-- Change the color of the selected filter
 		local
 			l_list_item: EV_LIST_ITEM
@@ -411,7 +411,7 @@ feature {NONE} -- Query
 			end
 		end
 		
-	set_check_button_value (a_button: EV_CHECK_BUTTON; a_flag: BOOLEAN) is
+	set_check_button_value (a_button: EV_CHECK_BUTTON; a_flag: BOOLEAN)
 			-- Set `a_button' to `a_flag'
 		do
 			if a_flag then
@@ -421,7 +421,7 @@ feature {NONE} -- Query
 			end
 		end		
 
-	selected_tree_directories: ARRAYED_LIST [STRING] is
+	selected_tree_directories: ARRAYED_LIST [STRING]
 			-- 
 		require
 			item_checked: not check_tree.checked_items.is_empty
@@ -444,7 +444,7 @@ feature {NONE} -- Query
 			end
 		end		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

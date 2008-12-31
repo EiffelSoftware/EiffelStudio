@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants for XSL transformation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,16 +10,16 @@ class
 
 feature -- Access
 
-	temp_xsl_in_filename: STRING is "temp_transform.xml"
+	temp_xsl_in_filename: STRING = "temp_transform.xml"
 			-- Temporary name of XML file to transform
 	
-	temp_xsl_out_filename: STRING is "temp_transform.html"	
+	temp_xsl_out_filename: STRING = "temp_transform.html"	
 			-- Temporary name of HTML file from most recent transform
 
-	add_custom_text: BOOLEAN is True;
+	add_custom_text: BOOLEAN = True;
 			-- Should any custom text be added XML BEFORE trasformation?
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

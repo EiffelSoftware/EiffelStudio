@@ -1,4 +1,4 @@
-indexing
+note
 	description: "HASH_TABLE of tests and their results for a given compilor version"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature -- Initialization
 
-	make (name: STRING) is
+	make (name: STRING)
 			-- Open an Output file for reading, select useful information
 			-- Build a Hash Table for tests : code, name, result.
 		local
@@ -43,7 +43,7 @@ feature -- Access
 
 feature -- Measurement
 
-	build_test_hash_table (f : PLAIN_TEXT_FILE) is
+	build_test_hash_table (f : PLAIN_TEXT_FILE)
 			-- Select useful information of file `f'
 			-- Store test's name and result with key `code'
 		local
@@ -89,7 +89,7 @@ feature -- Measurement
 
 feature
 
-	result_of (a_key: STRING) : STRING is
+	result_of (a_key: STRING) : STRING
 			-- Return item stored with key `akey'
 		do
 			if has (a_key) then
@@ -99,7 +99,7 @@ feature
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A full interface to expose configuration information to a cleaner.
 	]"
@@ -23,13 +23,13 @@ inherit
 
 feature -- Status report
 
-	can_any_processing_occur: BOOLEAN is
+	can_any_processing_occur: BOOLEAN
 			-- Indiciates if any processing can occur
 		do
 			Result := can_project_processing_occur or can_environment_processing_occur
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

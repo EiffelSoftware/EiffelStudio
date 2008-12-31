@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that provide access to constants loaded from files."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,13 +16,13 @@ inherit
 		
 feature -- Access
 
-	pixmap_directory: STRING is
+	pixmap_directory: STRING
 			-- `Result' is DIRECTORY constant named `pixmap_directory'.
 		once
 			Result := (create {APPLICATION_CONSTANTS}).icon_resources_directory
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

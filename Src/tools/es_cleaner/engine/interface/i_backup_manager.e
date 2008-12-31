@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		An interface for concrete backup manager implementations, used to backup and restore configuration data.
 	]"
@@ -12,7 +12,7 @@ deferred class
 
 feature -- Access
 
-	last_backup_date_stamp: INTEGER is
+	last_backup_date_stamp: INTEGER
 			-- Last back up date, in ticks
 		require
 			is_restore_data_available: is_restore_data_available
@@ -23,7 +23,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	backup (a_config: I_BACKUP_CONFIG) is
+	backup (a_config: I_BACKUP_CONFIG)
 			-- Backs up configuration files base on user settings.
 		require
 			a_config_attached: a_config /= Void
@@ -31,7 +31,7 @@ feature -- Basic operations
 		deferred
 		end
 
-	restore (a_config: I_BACKUP_CONFIG) is
+	restore (a_config: I_BACKUP_CONFIG)
 			-- Restores from a back up, if available, configuration files base on user settings.
 		require
 			a_config_attached: a_config /= Void
@@ -42,12 +42,12 @@ feature -- Basic operations
 
 feature -- Status report
 
-	is_restore_data_available: BOOLEAN is
+	is_restore_data_available: BOOLEAN
 			-- Determines if the any restore data is available
 		deferred
 		end
 
-	is_config_restore_data_available (a_config: I_BACKUP_CONFIG): BOOLEAN is
+	is_config_restore_data_available (a_config: I_BACKUP_CONFIG): BOOLEAN
 			-- Determines if the any restore data is available based on `a_config'
 		require
 			a_config_attached: a_config /= Void
@@ -55,7 +55,7 @@ feature -- Status report
 		deferred
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

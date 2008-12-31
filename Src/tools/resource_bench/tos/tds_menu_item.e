@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Menu item representation in the tds"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 		do
 			is_separator := false
 			create command_id
@@ -40,7 +40,7 @@ feature  -- Access
 
 feature -- Element change
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING)
 			-- Set `text' to `a_text'
 		require
 			a_text_exists: a_text /= Void and then a_text.count > 0
@@ -50,7 +50,7 @@ feature -- Element change
 			text_set: text.is_equal (a_text)
 		end
 
-	set_command_id (a_command_id: STRING) is
+	set_command_id (a_command_id: STRING)
 			-- Set `command_id' to `a_command_id'
 		require
 			a_command_id_exits: a_command_id /= Void and then a_command_id.count > 0
@@ -58,7 +58,7 @@ feature -- Element change
 			command_id.set_id (a_command_id)
 		end
 
-	insert_flags (a_flag: STRING) is
+	insert_flags (a_flag: STRING)
 			-- Insert `a_flag' into `flags'.
 		require
 			a_flag_exists: a_flag /= Void and then a_flag.count > 0
@@ -70,7 +70,7 @@ feature -- Element change
 			flags.extend (a_flag.twin)
 		end
 
-	set_separator is
+	set_separator
 			-- Make the menu item a separator item.
 		do
 			is_separator := true
@@ -78,7 +78,7 @@ feature -- Element change
 			is_separator_set: is_separator
 		end
 
-	set_popup_menu (a_menu: TDS_MENU)is
+	set_popup_menu (a_menu: TDS_MENU)
 			-- Set `popup_menu' to `a_menu'.
 		require
 			a_menu_not_void: a_menu /= Void
@@ -90,7 +90,7 @@ feature -- Element change
 
 feature -- Code generation
 
-	display is
+	display
 		do
 			if (not is_separator) then
 				if (text /= Void) and (popup_menu /= Void) then
@@ -127,7 +127,7 @@ feature -- Code generation
 			end
 		end
 
-	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE) is
+	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE)
 			-- Generate `a_resource_file' from the tds memory structure.
 		require
 			a_resource_file_exists: a_resource_file.exists
@@ -173,7 +173,7 @@ feature -- Code generation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

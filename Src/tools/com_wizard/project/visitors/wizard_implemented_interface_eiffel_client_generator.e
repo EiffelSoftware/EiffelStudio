@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented interface Eiffel client generator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -23,7 +23,7 @@ inherit
 
 feature -- Basic operations
 
-	generate (a_descriptor: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR) is
+	generate (a_descriptor: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR)
 			-- Generate 
 		local
 			a_class_name: STRING
@@ -77,14 +77,14 @@ feature -- Basic operations
 			eiffel_writer := Void
 		end
 
-	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY) is
+	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY)
 		do
 			a_factory.process_impl_interface_eiffel_client
 		end
 
 feature {NONE} -- Implementation
 
-	set_default_ancestors (an_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS) is
+	set_default_ancestors (an_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS)
 			-- Set default ancestors
 		local
 			tmp_writer: WIZARD_WRITER_INHERIT_CLAUSE
@@ -94,14 +94,14 @@ feature {NONE} -- Implementation
 			an_eiffel_writer.add_inherit_clause (tmp_writer)
 		end
 
-	add_creation is
+	add_creation
 			-- Add creation routines.
 		do
 			eiffel_writer.add_creation_routine (Make_from_other)
 			eiffel_writer.add_creation_routine (Make_from_pointer)
 		end
 
-	add_default_features (an_implemented_interface_descriptor: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR) is
+	add_default_features (an_implemented_interface_descriptor: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR)
 			-- Add default features,
 			-- e.g. make, constructor, destructor, delete wrapper etc.
 		local
@@ -128,7 +128,7 @@ feature {NONE} -- Implementation
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

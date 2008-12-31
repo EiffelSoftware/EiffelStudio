@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Strings for the Graphical User Interface"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -10,44 +10,44 @@ class
 
 feature -- Access
 
-	Button_ok_item: STRING is "OK"
+	Button_ok_item: STRING = "OK"
 			-- String for "OK" buttons.
 
-	Menu_file_item: STRING is "&File"
+	Menu_file_item: STRING = "&File"
 			-- String for menu "File"
 
-	Menu_file_new_item: STRING is "&New%TCtrl+N"
+	Menu_file_new_item: STRING = "&New%TCtrl+N"
 			-- String for menu "File/New"
 
-	Menu_file_open_item: STRING is "&Open...%TCtrl+O"
+	Menu_file_open_item: STRING = "&Open...%TCtrl+O"
 			-- String for menu "File/Open"
 
-	Menu_file_save_item: STRING is "&Save%TCtrl+S"
+	Menu_file_save_item: STRING = "&Save%TCtrl+S"
 			-- String for menu "File/Save"
 
-	Menu_file_saveas_item: STRING is "Save &As..."
+	Menu_file_saveas_item: STRING = "Save &As..."
 			-- String for menu "File/Save As"
 
-	Menu_file_close_item: STRING is "&Close"
+	Menu_file_close_item: STRING = "&Close"
 			-- String for menu "File/Close"
 
-	Menu_file_exit_item: STRING is "E&xit"
+	Menu_file_exit_item: STRING = "E&xit"
 			-- String for menu "File/Exit"
 
-	Menu_help_item: STRING is "&Help"
+	Menu_help_item: STRING = "&Help"
 			-- String for menu "Help"
 
-	Menu_help_contents_item: STRING is "&Contents and Index"
+	Menu_help_contents_item: STRING = "&Contents and Index"
 			-- String for menu "Help/Contents and Index"
 
-	Menu_help_about_item: STRING is "&About..."
+	Menu_help_about_item: STRING = "&About..."
 			-- String for menu "Help/About"
 
-	Label_confirm_close_window: STRING is "You are about to close this window.%NClick OK to proceed.";
+	Label_confirm_close_window: STRING = "You are about to close this window.%NClick OK to proceed.";
 			-- String for the confirmation dialog box that appears
 			-- when the user try to close the first window.
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

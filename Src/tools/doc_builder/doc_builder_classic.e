@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Project root class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 		
-	make_and_launch is
+	make_and_launch
 			-- Initialize and launch application
 		local
 			l_args: ARGUMENTS_PARSER
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			end		
 		end
 			
-	make_gui is	
+	make_gui	
 		local
 			retried: BOOLEAN
 		do
@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 			retry
 		end
 
-	prepare is
+	prepare
 			-- Prepare the interface window to be displayed.
 			-- Perform one call to first window in order to
 			-- avoid to violate the invariant of class EV_APPLICATION.
@@ -79,7 +79,7 @@ feature {NONE} -- Initialization
 	interface: DOC_BUILDER_WINDOW
 			-- Application window
 
-	initialize_temp_directories is
+	initialize_temp_directories
 			-- Initialize directory for storage of temporary information.  Currently this is a directory
 			-- on the root drive because help compilation for Microsoft Help 1.x fails in directories
 			-- with absolute path names of a certain size.  By placing in the root this reduces the overall
@@ -137,7 +137,7 @@ feature {NONE} -- Initialization
 			end
 		end	
 		
-	show_exception_dialog is
+	show_exception_dialog
 			-- Display an exception dialog containing details of last raised exception
 		local
 			l_dialog: EXCEPTION_DIALOG			
@@ -151,13 +151,13 @@ feature {NONE} -- Initialization
 			l_dialog.show_modal_to_window (interface)
 		end
 		
-	setup_preferences is
+	setup_preferences
 			-- Initialize preference library						
 		do
 			shared_preferences.initialize
 		end	
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

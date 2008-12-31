@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	create_from_eiffel_class (eiffel_class: EI_CLASS) is
+	create_from_eiffel_class (eiffel_class: EI_CLASS)
 			-- Generate MIDL interface from 'eiffel_class'.
 		local
 			str_buffer: STRING
@@ -41,7 +41,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	produce_interface_feature (l_features: HASH_TABLE[EI_FEATURE, STRING]) is
+	produce_interface_feature (l_features: HASH_TABLE[EI_FEATURE, STRING])
 			-- Produce features for interface from 'l_features'.
 		require
 			non_void_input: l_features /= Void
@@ -67,7 +67,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

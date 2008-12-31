@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Resource properties Window of the Resource Bench's main window"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -41,7 +41,7 @@ create
 
 feature
 
-	make_with_coordinates (a_parent: WEL_COMPOSITE_WINDOW; a_name: STRING; a_x, a_y, a_width, a_height: INTEGER) is
+	make_with_coordinates (a_parent: WEL_COMPOSITE_WINDOW; a_name: STRING; a_x, a_y, a_width, a_height: INTEGER)
 			-- Make the window as a child of `a_parent' and
 			-- `a_name' as a title.
 		do
@@ -58,7 +58,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_current_resource (a_resource: TDS_RESOURCE) is
+	set_current_resource (a_resource: TDS_RESOURCE)
 			-- Set `current_resource' to `a_resource'.
 		do
 			current_resource := a_resource
@@ -68,7 +68,7 @@ feature -- Element change
 
 feature -- Behavior
 
-	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- Paint the bitmap
 		local
 			bitmap: WEL_BITMAP
@@ -136,18 +136,18 @@ feature -- Behavior
 			end
 		end
 
-	class_background: WEL_LIGHT_GRAY_BRUSH is
+	class_background: WEL_LIGHT_GRAY_BRUSH
 			-- Standard window background color
 		once
 			create Result.make
 		end
 
-	ansi_font: WEL_ANSI_VARIABLE_FONT is
+	ansi_font: WEL_ANSI_VARIABLE_FONT
 		once
 			create Result.make
 		end
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 		once
 			Result := "Properties window"
 		end
@@ -157,13 +157,13 @@ feature {NONE} -- Implementation
 	parent_window: MAIN_WINDOW
 			-- Parent of the client.
 
-	error_message: STRING is
+	error_message: STRING
 			-- Error string message.
 		once
 			create Result.make (30)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

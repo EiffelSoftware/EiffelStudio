@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Project preferences."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature -- Initialization
 
-	make (a_project: DOCUMENT_PROJECT) is
+	make (a_project: DOCUMENT_PROJECT)
 			-- Create from project
 		require
 			project_not_void: a_project /= Void
@@ -33,7 +33,7 @@ feature -- Initialization
 			has_project: project /= Void
 		end
 
-	initialize is
+	initialize
 			-- Initialize with default values
 		do
 			process_includes := True
@@ -52,7 +52,7 @@ feature -- Initialization
 
 feature -- Access
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Are loaded preferences valid?
 		do
 			Result := project.name /= Void and project.root_directory /= Void 
@@ -60,7 +60,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	read is
+	read
 			-- Read preferences from file
 		do
 			document := deserialize_document (create {FILE_NAME}.make_from_string (project.file.name))
@@ -74,7 +74,7 @@ feature -- Basic operations
 			end			
 		end
 		
-	write is
+	write
 			-- Write preferences to disk
 		local
 			l_root, l_element: XM_ELEMENT
@@ -188,7 +188,7 @@ feature -- Basic operations
 			l_file.close
 		end
 		
-	write_filters (root: XM_ELEMENT) is
+	write_filters (root: XM_ELEMENT)
 			-- Write filter preferences to disk
 		local
 			l_element,
@@ -256,7 +256,7 @@ feature -- Basic operations
 			end
 		end
 		
-	write_toc_folders (root: XM_ELEMENT) is
+	write_toc_folders (root: XM_ELEMENT)
 			-- Write toc folder preferences to disk
 		local
 			l_element,
@@ -286,7 +286,7 @@ feature -- Basic operations
 			end
 		end	
 	
-	write_shortcuts (root: XM_ELEMENT) is
+	write_shortcuts (root: XM_ELEMENT)
 			-- Write shortcut preferences to disk
 		local
 			l_element,
@@ -359,7 +359,7 @@ feature -- Access
 	generate_dhtml_filter: BOOLEAN
 			-- Should DHTML filter combo be generated for web based outputting?
 	
-	toc_folders: ARRAYED_LIST [STRING] is
+	toc_folders: ARRAYED_LIST [STRING]
 			-- Toc folders
 		once
 			create Result.make (1)
@@ -368,7 +368,7 @@ feature -- Access
 	
 feature {PREFERENCES_DIALOG} -- Status Setting	
 	
-	set_header (a_name: STRING) is
+	set_header (a_name: STRING)
 			-- Set `header_name'
 		require
 			name_not_void: a_name /= Void
@@ -377,7 +377,7 @@ feature {PREFERENCES_DIALOG} -- Status Setting
 			header_name := a_name
 		end
 	
-	set_footer (a_name: STRING) is
+	set_footer (a_name: STRING)
 			-- Set `footer_name'
 		require
 			name_not_void: a_name /= Void
@@ -386,7 +386,7 @@ feature {PREFERENCES_DIALOG} -- Status Setting
 			footer_name := a_name
 		end	
 	
-	set_use_header_file (a_flag: BOOLEAN) is
+	set_use_header_file (a_flag: BOOLEAN)
 			-- Set `use_header_file'
 		do
 			use_header_file := a_flag
@@ -394,7 +394,7 @@ feature {PREFERENCES_DIALOG} -- Status Setting
 			flag_set: use_header_file = a_flag
 		end	
 		
-	set_use_footer_file (a_flag: BOOLEAN) is
+	set_use_footer_file (a_flag: BOOLEAN)
 			-- Set `use_footer_file'
 		do
 			use_footer_file := a_flag
@@ -402,7 +402,7 @@ feature {PREFERENCES_DIALOG} -- Status Setting
 			flag_set: use_footer_file = a_flag
 		end	
 	
-	set_override_file_header_declarations (a_flag: BOOLEAN) is
+	set_override_file_header_declarations (a_flag: BOOLEAN)
 			-- Set `override_file_header_declarations'
 		do
 			override_file_header_declarations := a_flag
@@ -410,7 +410,7 @@ feature {PREFERENCES_DIALOG} -- Status Setting
 			flag_set: override_file_header_declarations = a_flag
 		end	
 		
-	set_override_file_footer_declarations (a_flag: BOOLEAN) is
+	set_override_file_footer_declarations (a_flag: BOOLEAN)
 			-- Set `override_file_footer_declarations'
 		do
 			override_file_footer_declarations := a_flag
@@ -418,7 +418,7 @@ feature {PREFERENCES_DIALOG} -- Status Setting
 			flag_set: override_file_footer_declarations = a_flag
 		end		
 	
-	set_process_includes (a_flag: BOOLEAN) is
+	set_process_includes (a_flag: BOOLEAN)
 			-- Set if includes should be processed when converting documents
 		do
 			process_includes := a_flag
@@ -426,7 +426,7 @@ feature {PREFERENCES_DIALOG} -- Status Setting
 			flag_set: process_includes = a_flag
 		end	
 	
-	set_include_header (a_flag: BOOLEAN) is
+	set_include_header (a_flag: BOOLEAN)
 			-- Set if header should be including during conversion
 		do
 			process_header := a_flag
@@ -434,7 +434,7 @@ feature {PREFERENCES_DIALOG} -- Status Setting
 			flag_set: process_header = a_flag
 		end	
 		
-	set_include_footer (a_flag: BOOLEAN) is
+	set_include_footer (a_flag: BOOLEAN)
 			-- Set if footer should be included during conversion
 		do
 			process_footer := a_flag
@@ -442,7 +442,7 @@ feature {PREFERENCES_DIALOG} -- Status Setting
 			flag_set: process_footer = a_flag
 		end	
 	
-	set_include_html_stylesheet (a_flag: BOOLEAN) is
+	set_include_html_stylesheet (a_flag: BOOLEAN)
 			-- Set if HTML stylesheet should be included during conversion
 		do
 			process_html_stylesheet := a_flag
@@ -450,7 +450,7 @@ feature {PREFERENCES_DIALOG} -- Status Setting
 			flag_set: process_html_stylesheet = a_flag
 		end	
 		
-	set_include_nav_links (a_flag: BOOLEAN) is
+	set_include_nav_links (a_flag: BOOLEAN)
 			-- Set if naviaation links should be added to output
 		do
 			include_navigation_links := a_flag
@@ -458,7 +458,7 @@ feature {PREFERENCES_DIALOG} -- Status Setting
 			flag_set: include_navigation_links = a_flag
 		end	
 		
-	set_generate_dhtml_filter (a_flag: BOOLEAN) is
+	set_generate_dhtml_filter (a_flag: BOOLEAN)
 			-- Set if DHTML filter should be built for web based outputting
 		do
 			generate_dhtml_filter := a_flag
@@ -466,7 +466,7 @@ feature {PREFERENCES_DIALOG} -- Status Setting
 			flag_set: generate_dhtml_filter = a_flag
 		end	
 	
-	set_generate_feature_nodes (a_flag: BOOLEAN) is
+	set_generate_feature_nodes (a_flag: BOOLEAN)
 			-- Set if feature nodes should be generated into the toc
 		do
 			generate_feature_nodes := a_flag
@@ -474,7 +474,7 @@ feature {PREFERENCES_DIALOG} -- Status Setting
 			flag_set: generate_feature_nodes = a_flag
 		end	
 	
-	set_toc_folders (a_folder_list: ARRAYED_LIST [STRING]) is
+	set_toc_folders (a_folder_list: ARRAYED_LIST [STRING])
 			-- Add a toc folder
 		require
 			folder_not_void: a_folder_list /= Void
@@ -485,7 +485,7 @@ feature {PREFERENCES_DIALOG} -- Status Setting
 	
 feature {NONE} -- Implementation
 
-	process_element (e: XM_ELEMENT) is
+	process_element (e: XM_ELEMENT)
 			-- Read element `e'
 		require
 			e_not_void: e /= Void
@@ -686,7 +686,7 @@ feature {NONE} -- Implementation
 	document: XM_DOCUMENT
 			-- XML structure of `file'
 
-	file_extension: STRING is
+	file_extension: STRING
 			-- File extension
 		once
 			Result := "dpr"	
@@ -707,7 +707,7 @@ feature {NONE} -- Implementation
 	filter_flag: STRING
 			-- Last read flag for filter from file	
 
-	prompt_for_new_location (a_old_loc, context: STRING; is_file: BOOLEAN): STRING  is
+	prompt_for_new_location (a_old_loc, context: STRING; is_file: BOOLEAN): STRING
 			-- Prompt for new location
 		local
 			l_file_dialog: EV_FILE_OPEN_DIALOG
@@ -737,7 +737,7 @@ feature {NONE} -- Implementation
 			end
 		end	
 
-	unescaped_string (a_string: STRING): STRING is
+	unescaped_string (a_string: STRING): STRING
 			-- Un-escape string.
 		do
 			a_string.replace_substring_all ("&lt;", "<")
@@ -749,7 +749,7 @@ feature {NONE} -- Implementation
 
 	filter_color: EV_COLOR
 
-	interpreted_path_data (a_path: STRING): STRING is
+	interpreted_path_data (a_path: STRING): STRING
 			-- Process `a_path' data
 		local
 			l_interpreter: ENV_INTERP
@@ -772,7 +772,7 @@ feature {NONE} -- Implementation
 invariant
 	has_project: project /= Void
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

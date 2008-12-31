@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A widget to encapsulate environment configuration options.
 	]"
@@ -27,7 +27,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	user_initialization is
+	user_initialization
 			-- Called by `initialize'.
 			-- Any custom user initialization that
 			-- could not be performed in `initialize',
@@ -39,19 +39,19 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	process_environement_preferences: BOOLEAN is
+	process_environement_preferences: BOOLEAN
 			-- Indiciates if the environment preferences should be processed
 		do
 			Result := chk_preference.is_selected
 		end
 
-	process_environement_editing_layout: BOOLEAN is
+	process_environement_editing_layout: BOOLEAN
 			-- Indiciates if the environment editing layout should be processed
 		do
 			Result := chk_editing_layout.is_selected
 		end
 
-	process_environement_debug_layout: BOOLEAN is
+	process_environement_debug_layout: BOOLEAN
 			-- Indiciates if the environment debug layout should be processed
 		do
 			Result := chk_debug_layout.is_selected
@@ -65,19 +65,19 @@ feature -- Actions
 
 feature {NONE} -- Implementation
 
-	on_environment_preference_changed is
+	on_environment_preference_changed
 			-- Called by `select_actions' of `chk_preference'.
 		do
 			property_change_action.call ([])
 		end
 
-	on_environment_layout_changed is
+	on_environment_layout_changed
 			-- Called by `select_actions' of `chk_editing_layout'.
 		do
 			property_change_action.call ([])
 		end
 
-	on_environment_debug_changed is
+	on_environment_debug_changed
 			-- Called by `select_actions' of `chk_debug_layout'.
 		do
 			property_change_action.call ([])

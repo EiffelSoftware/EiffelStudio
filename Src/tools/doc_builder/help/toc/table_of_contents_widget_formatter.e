@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Converts a table of contents structure to a corresponding tree widget."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature -- Creation
 
-	make is
+	make
 			-- Create
 		do
 			create toc_widget.make
@@ -21,13 +21,13 @@ feature -- Creation
 
 feature -- Access
 
-	process_toc (a_toc: TABLE_OF_CONTENTS) is
+	process_toc (a_toc: TABLE_OF_CONTENTS)
 			-- Process `a_toc'			
 		do			
 			process_toc_node (a_toc, toc_widget)
 		end
 		
-	process_toc_node (a_node: TABLE_OF_CONTENTS_NODE; a_node_list: EV_TREE_NODE_LIST) is
+	process_toc_node (a_node: TABLE_OF_CONTENTS_NODE; a_node_list: EV_TREE_NODE_LIST)
 			-- Process `a_node', creating widget nodes into `a_node_list'
 		require
 			a_node /= Void
@@ -59,7 +59,7 @@ feature -- Access
 	toc_widget: TABLE_OF_CONTENTS_WIDGET;
 			-- Tree widget
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

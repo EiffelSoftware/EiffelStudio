@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Shared access to status report messages
 	]"
@@ -12,7 +12,7 @@ class
 
 feature -- Access
 
-	frozen status_messages: STATUS_MESSAGES is
+	frozen status_messages: STATUS_MESSAGES
 			-- Shared access to a single {STATUS_MESSAGES} instance
 		once
 			create Result
@@ -20,7 +20,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

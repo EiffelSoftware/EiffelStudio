@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Objects that map a networking path to a local drive (Dead version for Unix)"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_path: STRING) is
+	make (a_path: STRING)
 			-- Map the networking path `a_path' to a temporary path
 		do
 		end
@@ -27,12 +27,12 @@ feature -- Access
 		
 feature -- Removal
 	
-	destroy is
+	destroy
 			-- Unmap the network path
 		do
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

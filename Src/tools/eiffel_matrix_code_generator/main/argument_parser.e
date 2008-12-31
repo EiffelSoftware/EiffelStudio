@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Argument parser for pixmap matix code generator."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize argument parser
 		do
 			make_single_parser (False, True)
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	ini_file_option: ?STRING is
+	ini_file_option: ?STRING
 			-- Frame template file name option
 		require
 			is_successful: is_successful
@@ -40,7 +40,7 @@ feature -- Access
 			end
 		end
 
-	frame_file_option: ?ARGUMENT_OPTION is
+	frame_file_option: ?ARGUMENT_OPTION
 			-- Frame template file path option
 		require
 			is_successful: is_successful
@@ -49,7 +49,7 @@ feature -- Access
 			Result := option_of_name (frame_switch)
 		end
 
-	class_name_option: ?ARGUMENT_OPTION is
+	class_name_option: ?ARGUMENT_OPTION
 			-- Class name option
 		require
 			is_successful: is_successful
@@ -58,7 +58,7 @@ feature -- Access
 			Result := option_of_name (class_switch)
 		end
 
-	output_file_name_option: ?ARGUMENT_OPTION is
+	output_file_name_option: ?ARGUMENT_OPTION
 			-- Generated output file name option
 		require
 			is_successful: is_successful
@@ -67,7 +67,7 @@ feature -- Access
 			Result := option_of_name (output_switch)
 		end
 
-	slice_matrix: !STRING is
+	slice_matrix: !STRING
 			-- Location of PNG matix that needs to be sliced
 		require
 			is_successful: is_successful
@@ -79,7 +79,7 @@ feature -- Access
 			result_exists: (create {RAW_FILE}.make (Result)).exists
 		end
 
-	png_slices_locations: !STRING is
+	png_slices_locations: !STRING
 			-- Location of where to store PNG slices.
 		require
 			is_successful: is_successful
@@ -97,7 +97,7 @@ feature -- Access
 
 feature -- Status report
 
-	use_slice_mode: BOOLEAN is
+	use_slice_mode: BOOLEAN
 			-- Indicates if tool should be used in slicing mode (slices a matrix into icons)
 		require
 			is_successful: is_successful
@@ -159,7 +159,7 @@ feature {NONE} -- Option Names
 	pngs_switch: !STRING = "g|pngs"
 		-- Location where sliced pngs will be stored
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

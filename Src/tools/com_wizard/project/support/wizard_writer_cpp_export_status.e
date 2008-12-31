@@ -1,4 +1,4 @@
-indexing
+note
 	description: "C++ export status used in WIZARD_WRITER_CPP_CLASS"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -10,10 +10,10 @@ class
 
 feature -- Access
 
-	Public, Protected, Private: INTEGER is unique
+	Public, Protected, Private: INTEGER = unique
 			-- Status
 	
-	cpp_status_keywords: HASH_TABLE [STRING, INTEGER] is
+	cpp_status_keywords: HASH_TABLE [STRING, INTEGER]
 			-- Status keywords
 		once
 			create Result.make (10)
@@ -22,7 +22,7 @@ feature -- Access
 			Result.put (Private_title, Private)
 		end
 
-	is_valid_export_status (a_export_status: INTEGER): BOOLEAN is
+	is_valid_export_status (a_export_status: INTEGER): BOOLEAN
 			-- Is `a_export_status' a valid export status?
 		do
 			Result := a_export_status = Public or
@@ -32,20 +32,20 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	Protected_title: STRING is "protected"
+	Protected_title: STRING = "protected"
 			-- Protected export status
 	
-	Public_title: STRING is "public"
+	Public_title: STRING = "public"
 			-- Public exprot status
 
-	Private_title: STRING is "private"
+	Private_title: STRING = "private"
 			-- Private export status
 
 invariant
 
 	complete_cpp_status_keywords: cpp_status_keywords.has (Protected) and cpp_status_keywords.has (Public)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

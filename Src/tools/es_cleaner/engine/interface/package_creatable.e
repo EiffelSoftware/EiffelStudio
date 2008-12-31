@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Aguments a derived class with the ability to be instantiate using a {PACKAGE} specialized implementation.
 	]"
@@ -12,7 +12,7 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	make (a_package: like package) is
+	make (a_package: like package)
 			-- Initialize cleaner
 		require
 			a_package_attached: a_package /= Void
@@ -30,7 +30,7 @@ feature -- Access
 invariant
 	package_attached: package /= Void
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

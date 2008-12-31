@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Factory of Function descriptors"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -53,7 +53,7 @@ inherit
 
 feature -- Basic operations
 
-	create_descriptor (a_type_info: ECOM_TYPE_INFO; a_func_desc: ECOM_FUNC_DESC): WIZARD_FUNCTION_DESCRIPTOR is
+	create_descriptor (a_type_info: ECOM_TYPE_INFO; a_func_desc: ECOM_FUNC_DESC): WIZARD_FUNCTION_DESCRIPTOR
 			-- Initialize
 		require
 			valid_type_info: a_type_info /= Void
@@ -115,7 +115,7 @@ feature -- Basic operations
 			valid_reurn_type: return_type /= Void
 		end
 
-	create_arguments (some_names: ARRAY[STRING]; count: INTEGER; parameters: ARRAY [ECOM_ELEM_DESC]; a_type_info: ECOM_TYPE_INFO): LIST [WIZARD_PARAM_DESCRIPTOR] is
+	create_arguments (some_names: ARRAY[STRING]; count: INTEGER; parameters: ARRAY [ECOM_ELEM_DESC]; a_type_info: ECOM_TYPE_INFO): LIST [WIZARD_PARAM_DESCRIPTOR]
 			-- Create arguments
 		require
 			non_void_names: some_names /= Void
@@ -153,7 +153,7 @@ feature -- Basic operations
 			valid_arguments: Result /= Void and then Result.count = count
 		end
 
-	initialize_descriptor (a_descriptor: WIZARD_FUNCTION_DESCRIPTOR) is
+	initialize_descriptor (a_descriptor: WIZARD_FUNCTION_DESCRIPTOR)
 			-- Initialize descriptor fields
 		require
 			valid_descriptor: a_descriptor /= Void
@@ -174,7 +174,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	is_unknown_dispatch_function (a_info: ECOM_TYPE_INFO): BOOLEAN is
+	is_unknown_dispatch_function (a_info: ECOM_TYPE_INFO): BOOLEAN
 			-- Is function with type info `a_info' and func desc `a_func_desc' from IUnknown or IDispatch?
 		require
 			non_void_info: a_info /= Void
@@ -242,7 +242,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- External
 
-	size_of_pointer: INTEGER is
+	size_of_pointer: INTEGER
 			-- Size of pointer
 		external
 			"C [macro <eif_eiffel.h>]: EIF_INTEGER"
@@ -250,7 +250,7 @@ feature {NONE} -- External
 			"sizeof (int*)"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

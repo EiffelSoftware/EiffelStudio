@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Feature Generator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -38,7 +38,7 @@ inherit
 
 feature {NONE} -- Implementation
 
-	check_interface_pointer (a_interface_name, a_variable_name: STRING): STRING is
+	check_interface_pointer (a_interface_name, a_variable_name: STRING): STRING
 			-- Code for interface pointer checking
 		require
 			non_void_interface_name: a_interface_name /= Void
@@ -61,7 +61,7 @@ feature {NONE} -- Implementation
 			valid_result: not Result.is_empty
 		end
 
-	examine_parameter_error (variable_name: STRING): STRING is
+	examine_parameter_error (variable_name: STRING): STRING
 			-- Examine parameter error function
 		require
 			non_void_variable_name: variable_name /= Void
@@ -85,7 +85,7 @@ feature {NONE} -- Implementation
 			valid_result: not Result.is_empty
 		end
 
-	examine_hresult_with_pointer (variable_name: STRING; pointer_variables: LIST [STRING]): STRING is
+	examine_hresult_with_pointer (variable_name: STRING; pointer_variables: LIST [STRING]): STRING
 			-- Hresult examination function
 		require
 			non_void_name: variable_name /= Void
@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 			valid_result: not Result.is_empty
 		end
 
-	examine_hresult (variable_name: STRING): STRING is
+	examine_hresult (variable_name: STRING): STRING
 			-- Hresult examination function.
 		require
 			non_void_name: variable_name /= Void
@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 			valid_examine_hresult: not Result.is_empty
 		end
 
-	raise_com_error (variable_name: STRING): STRING is
+	raise_com_error (variable_name: STRING): STRING
 			-- Code for raising COM exception.
 		require
 			non_void_name: variable_name /= Void
@@ -145,14 +145,14 @@ feature {NONE} -- Implementation
 			valid_raise: not Result.is_empty
 		end
 
-	initialize_excepinfo: STRING is
+	initialize_excepinfo: STRING
 			-- Code to initialize excepinfo
 		do
 			create Result.make (400)
 			Result.append ("%Tmemset(&excepinfo, 0, sizeof(excepinfo));%N%T")
 		end
 
-	retval_return_value_set_up (visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
+	retval_return_value_set_up (visitor: WIZARD_DATA_TYPE_VISITOR): STRING
 			-- Code to set up return value
 		require
 			non_void_visitor: visitor /= Void
@@ -216,7 +216,7 @@ feature {NONE} -- Implementation
 			valid_retval: not Result.is_empty
 		end
 
-	retval_value_set_up (attribute_name: STRING): STRING is
+	retval_value_set_up (attribute_name: STRING): STRING
 			-- Set up code for return variable
 		require
 			non_void_name: attribute_name /= Void
@@ -230,7 +230,7 @@ feature {NONE} -- Implementation
 			valid_argument: not Result.is_empty
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Safe list of actions for multithreaded system."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize current
 		do
 			create mutex
@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	extend (an_action: ROUTINE [ANY, TUPLE]) is
+	extend (an_action: ROUTINE [ANY, TUPLE])
 			-- Extend `an_action' to `actions'.
 		require
 			an_action_not_void: an_action /= Void
@@ -32,7 +32,7 @@ feature -- Element change
 			mutex.unlock
 		end
 
-	removed_element: ROUTINE [ANY, TUPLE] is
+	removed_element: ROUTINE [ANY, TUPLE]
 			-- Remove and return last element from `actions', if any.
 			-- Otherwise do nothing and return Void.
 			--| Not following CQS principle since it would not be thread safe.
@@ -48,7 +48,7 @@ feature -- Element change
 
 feature -- Status report
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of elements in `actions'.
 		do
 			mutex.lock
@@ -70,7 +70,7 @@ invariant
 	mutex_not_void: mutex /= Void
 	actions_not_void: actions /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

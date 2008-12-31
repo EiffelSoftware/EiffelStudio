@@ -1,4 +1,4 @@
-indexing
+note
 	description: "XML formatter for DOCUMENTs."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Creation
 
-	make_with_document (a_document: DOCUMENT) is
+	make_with_document (a_document: DOCUMENT)
 			-- Make with `a_document'
 		require
 			document_not_void: a_document /= Void
@@ -48,13 +48,13 @@ feature -- Access
 			
 feature -- Status Setting
 
-	set_convert_to_relative (a_flag: BOOLEAN) is
+	set_convert_to_relative (a_flag: BOOLEAN)
 			-- Set `convert_to_relative'
 		do
 			convert_to_relative := a_flag	
 		end		
 		
-	set_update_data (a_old_link, a_new_link: STRING) is
+	set_update_data (a_old_link, a_new_link: STRING)
 			-- Convert `a_old_link' links to `a_new_link'
 		require
 			old_not_void: a_old_link /= void
@@ -67,7 +67,7 @@ feature -- Status Setting
 
 feature -- Tag
 
-	process_element (e: XM_ELEMENT) is
+	process_element (e: XM_ELEMENT)
 			-- Process element `e'.
 		do	
 			Precursor {XM_FORMATTER} (e)
@@ -81,7 +81,7 @@ feature -- Tag
 
 feature {NONE} -- Commands
 
-	extract_url_from_link (e: XM_ELEMENT) is
+	extract_url_from_link (e: XM_ELEMENT)
 			-- Extract url value from `e' if it exists
 		local
 			l_element: XM_ELEMENT
@@ -105,7 +105,7 @@ feature {NONE} -- Commands
 			end
 		end
 		
-	convert_link_to_relative (e: XM_ELEMENT) is
+	convert_link_to_relative (e: XM_ELEMENT)
 			-- Convert link in `e' to relative
 		local
 			l_element: XM_ELEMENT
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 	document: DOCUMENT
 			-- Document
 			
-	link_tag_names: ARRAYED_LIST [STRING] is
+	link_tag_names: ARRAYED_LIST [STRING]
 			-- List of tags which may contain link or image urls
 		once
 			create Result.make (3)
@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 	new_link: STRING;
 			-- Old and new links values for updating
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

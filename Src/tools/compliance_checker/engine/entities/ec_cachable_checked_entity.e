@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Implemented by checked entities that want to permit or vito placing themselves in a global cache.
 		Note: Creators on checked entities should pay attention to implementing entities and perform
@@ -18,13 +18,13 @@ inherit
 	
 feature -- Query
 
-	cache_checked_entity: BOOLEAN is
+	cache_checked_entity: BOOLEAN
 			-- Can `Current' be cached?	
 		once
 			Result := True
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

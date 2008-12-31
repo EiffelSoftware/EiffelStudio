@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel client function generator."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -20,7 +20,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	generate (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR; a_descriptor: WIZARD_FUNCTION_DESCRIPTOR) is
+	generate (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR; a_descriptor: WIZARD_FUNCTION_DESCRIPTOR)
 			-- Generate client feature
 		local
 			l_name, l_type: STRING
@@ -66,7 +66,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	external_client_body (class_name, header_file_name: STRING): STRING is
+	external_client_body (class_name, header_file_name: STRING): STRING
 			-- Coclass eiffel client external feature body
 		require
 			non_void_class_name: class_name /= Void
@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 			valid_body: not Result.is_empty
 		end
 
-	set_external_feature_result_type_and_arguments is
+	set_external_feature_result_type_and_arguments
 			-- Set l_arguments for external feature
 		local
  			l_arguments: LIST [WIZARD_PARAM_DESCRIPTOR]
@@ -197,7 +197,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	client_body (func_name: STRING): STRING is
+	client_body (func_name: STRING): STRING
 			-- Coclass client body
 		require
 			non_void_name: func_name /= Void
@@ -268,7 +268,7 @@ feature {NONE} -- Implementation
 			valid_body: not Result.is_empty
 		end
 
-	check_interface_item (an_argument_name: STRING): STRING is
+	check_interface_item (an_argument_name: STRING): STRING
 			-- Check item of interface with `an_argument_name'.
 		require
 			non_void_name: an_argument_name /= Void
@@ -291,7 +291,7 @@ feature {NONE} -- Implementation
 			valid_body: not Result.is_empty
 		end
 
-	argument_item_name (an_argument_name: STRING): STRING is
+	argument_item_name (an_argument_name: STRING): STRING
 			-- Argument item name.
 		require
 			non_void_name: an_argument_name /= Void
@@ -306,7 +306,7 @@ feature {NONE} -- Implementation
 			valid_name: not Result.is_empty
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

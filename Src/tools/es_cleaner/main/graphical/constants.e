@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Objects that provide access to constants loaded from files.
 			Perform and desired constant redefinitions in this class.

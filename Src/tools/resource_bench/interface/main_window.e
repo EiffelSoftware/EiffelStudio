@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Main window of Resource Bench"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -108,7 +108,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create the main window of resource bench.
 		do
 			make_top (Title)
@@ -153,10 +153,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	status_window_id: INTEGER is 128
+	status_window_id: INTEGER = 128
 			-- The status window id.
 
-	main_menu: WEL_MENU is
+	main_menu: WEL_MENU
 			-- The `main_menu' of the Resource Bench application.
 		once
 			create Result.make_by_id (Idr_menu)
@@ -189,7 +189,7 @@ feature -- Access
 	standard_index, rb_index: INTEGER
 			-- indexes for toolbars.
 
-	standard_toolbar_bitmaps: WEL_TOOL_BAR_BITMAP is
+	standard_toolbar_bitmaps: WEL_TOOL_BAR_BITMAP
 			-- Bitmap containing the small standard bitmaps
     			-- for the toolbar.
 		once
@@ -199,7 +199,7 @@ feature -- Access
 			result_exists: Result.exists
 		end
 
-   	toolbar_bitmaps: WEL_TOOL_BAR_BITMAP is
+   	toolbar_bitmaps: WEL_TOOL_BAR_BITMAP
 			-- Bitmap containing the small bitmaps
     			-- for the toolbar.
     		once
@@ -209,7 +209,7 @@ feature -- Access
 			result_exists: Result.exists
 		end
 
-    	toolbar_buttons: ARRAY [WEL_TOOL_BAR_BUTTON] is
+    	toolbar_buttons: ARRAY [WEL_TOOL_BAR_BUTTON]
     			-- Create the buttons for the toolbar
     		local
     			button: WEL_TOOL_BAR_BUTTON
@@ -241,7 +241,7 @@ feature -- Access
 
 feature -- Behavior
 
-	on_notify (a_control_id: INTEGER; info: WEL_NMHDR) is
+	on_notify (a_control_id: INTEGER; info: WEL_NMHDR)
 		local
 			tt1: WEL_TOOLTIP_TEXT 
 		do
@@ -252,14 +252,14 @@ feature -- Behavior
 			end
 		end
 
-	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 		do
 			if (properties_window = Void) or (properties_window /= Void and not properties_window.exists) then
 				paint_dc.rectangle (1, tool_bar.height + 1, client_rect.width, client_rect.height)
 			end
 		end
 
-    	on_size (a_size_type, a_width, a_height: INTEGER) is
+    	on_size (a_size_type, a_width, a_height: INTEGER)
     			-- Reposition windows in the main window.
     		do
     			if (a_size_type /= Size_minimized) then
@@ -291,7 +291,7 @@ feature -- Behavior
 			end
 		end
 
-	on_menu_command (a_menu_id: INTEGER) is
+	on_menu_command (a_menu_id: INTEGER)
 			-- Execute the command correpsonding to `menu_id'.
 		local
 			exit: BOOLEAN
@@ -401,26 +401,26 @@ feature -- Behavior
 			end
 		end
 
-	on_menu_select (menu_item: INTEGER; flags: INTEGER; a_menu: WEL_MENU) is
+	on_menu_select (menu_item: INTEGER; flags: INTEGER; a_menu: WEL_MENU)
 			-- Display a message in the status window corresponding
 			-- to the selected menu_item.
 		do
 			status_window.set_text_part (0, resource_string_id (menu_item))
 		end
 
-	on_accelerator_command (a_accelerator_id: INTEGER) is
+	on_accelerator_command (a_accelerator_id: INTEGER)
 			-- Perform the corresponding menu command with id `a_accelerator_id'.
 		do
 			on_menu_command (a_accelerator_id)
 		end
 
-	on_control_id_command (a_control_id: INTEGER) is
+	on_control_id_command (a_control_id: INTEGER)
 			-- Perform the corresponding menu command with id `a_control_id'.
 		do
 			on_menu_command (a_control_id)
 		end
 
-	on_set_cursor (a_hit_test: INTEGER) is
+	on_set_cursor (a_hit_test: INTEGER)
 			-- Set the cursor only in the client area.
 		do
 			if (cursor /= Void) then
@@ -432,7 +432,7 @@ feature -- Behavior
 
 feature {NONE} -- Implementation
 
-	open_file_dialog: WEL_OPEN_FILE_DIALOG is
+	open_file_dialog: WEL_OPEN_FILE_DIALOG
 			-- Display the standard open file dialog.
 		local
 			ofn: WEL_OFN_CONSTANTS
@@ -445,7 +445,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	save_resource_file_dialog: WEL_SAVE_FILE_DIALOG is
+	save_resource_file_dialog: WEL_SAVE_FILE_DIALOG
 			-- Display the standard save file dialog.
 		once
 			create Result.make
@@ -454,7 +454,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	save_project_file_dialog: WEL_SAVE_FILE_DIALOG is
+	save_project_file_dialog: WEL_SAVE_FILE_DIALOG
 			-- Display the standard save file dialog.
 		once
 			create Result.make
@@ -463,7 +463,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	closeable: BOOLEAN is
+	closeable: BOOLEAN
 			-- Show the standard dialog box.
 		local
 			msg_box: WEL_MSG_BOX
@@ -476,18 +476,18 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	class_icon: WEL_ICON is
+	class_icon: WEL_ICON
 			-- Window's icon.
 		once
 			create Result.make_by_id (1)
 		end
 
-	class_background: WEL_NULL_BRUSH is
+	class_background: WEL_NULL_BRUSH
 		once
 			create Result.make
 		end
 
-	do_analyze (a_parent: WEL_COMPOSITE_WINDOW; a_open_file: WEL_OPEN_FILE_DIALOG) is
+	do_analyze (a_parent: WEL_COMPOSITE_WINDOW; a_open_file: WEL_OPEN_FILE_DIALOG)
 			-- Analyze a resource script `a_filename'.
 		require
 			a_open_file_exists: a_open_file /= Void
@@ -553,7 +553,7 @@ feature {NONE} -- Implementation
 			cursor.set
 		end
 
-	do_open_project (a_parent: WEL_COMPOSITE_WINDOW; a_open_file: WEL_OPEN_FILE_DIALOG) is
+	do_open_project (a_parent: WEL_COMPOSITE_WINDOW; a_open_file: WEL_OPEN_FILE_DIALOG)
 		require
 			a_open_file_exists: a_open_file /= Void
 		local
@@ -584,7 +584,7 @@ feature {NONE} -- Implementation
 			interface.hide_all
 		end
 
-	do_save_project (a_filename: STRING) is
+	do_save_project (a_filename: STRING)
 		require
 			a_filename_exists: a_filename /= Void and then a_filename.count > 0
 		local
@@ -594,13 +594,13 @@ feature {NONE} -- Implementation
 			tds.store_tds (file)
 		end
 
-	do_exit is
+	do_exit
 			-- Exit to application.
 		do
 			destroy		
 		end
 
-	create_analyzer (a_parent: WEL_COMPOSITE_WINDOW) is
+	create_analyzer (a_parent: WEL_COMPOSITE_WINDOW)
 			-- Create the resource analyzer.
 		require
 			analyzer_void: analyzer = Void
@@ -629,7 +629,7 @@ feature {NONE} -- Implementation
 			analyzer_not_void: analyzer /= Void
 		end
 
-	create_tree_view_control (a_parent: WEL_COMPOSITE_WINDOW; a_filename: STRING) is
+	create_tree_view_control (a_parent: WEL_COMPOSITE_WINDOW; a_filename: STRING)
 			-- Create the tree view control corresponding to the analyzed resource script `filename'.
 		require
 			a_filename_exists: a_filename /= Void and then a_filename.count > 0
@@ -657,7 +657,7 @@ feature {NONE} -- Implementation
 			tree_view_exists: tree_view.exists
 		end
 
-	do_resource_file (a_filename: STRING) is
+	do_resource_file (a_filename: STRING)
 			-- Generate a resource file.
 		require
 			a_filename_exists: a_filename /= Void and then a_filename.count > 0
@@ -669,7 +669,7 @@ feature {NONE} -- Implementation
 			file.close		
 		end
 
-	do_about is
+	do_about
 			-- Display the about dialog.
 		local
 			about: DIALOG_ABOUT
@@ -677,7 +677,7 @@ feature {NONE} -- Implementation
 			create about.make (Current)
 		end
 
-	do_wel_code is
+	do_wel_code
 			-- Generate the wel code.
 		local
 			browse: DIALOG_BROWSE
@@ -685,7 +685,7 @@ feature {NONE} -- Implementation
 			create browse.make (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

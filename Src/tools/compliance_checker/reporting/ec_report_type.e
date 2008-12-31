@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A report entity for assembly types.
 	]"
@@ -31,7 +31,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (a_type: like type; a_parent: like parent) is
+	make (a_type: like type; a_parent: like parent)
 			-- Create an initialize a report for type `a_type'.
 		require
 			a_type_not_void: a_type /= Void
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 		
 feature -- Access
 
-	report: EC_REPORT is
+	report: EC_REPORT
 			-- Report member is associated with
 		do
 			Result := parent
@@ -59,7 +59,7 @@ feature -- Access
 	type: EC_CHECKED_TYPE
 			-- Type associated with report entity
 			
-	members: DYNAMIC_LIST [EC_REPORT_MEMBER] is
+	members: DYNAMIC_LIST [EC_REPORT_MEMBER]
 			-- List of checked report type members.
 		do
 			Result := internal_checked_members
@@ -69,7 +69,7 @@ feature -- Access
 	
 feature {EC_REPORT_BUILDER} -- Basic Operations
 
-	add_member_report (a_report: EC_REPORT_MEMBER) is
+	add_member_report (a_report: EC_REPORT_MEMBER)
 			-- Adds `a_report' to `members'
 		require
 			a_report_not_void: a_report /= Void
@@ -83,13 +83,13 @@ feature {EC_REPORT_BUILDER} -- Basic Operations
 		
 feature -- Comparison {COMPARABLE}
 
-	infix "<" (other: like Current): BOOLEAN is
+	infix "<" (other: like Current): BOOLEAN
 			-- Is current object less than `other'?
 		do
 			Result := {SYSTEM_STRING}.compare (type.type.full_name, other.type.type.full_name) < 0
 		end
 		
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
@@ -106,7 +106,7 @@ invariant
 	type_not_void: type /= Void
 	internal_checked_members_not_void: internal_checked_members /= Void
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

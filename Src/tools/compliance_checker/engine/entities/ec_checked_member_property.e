@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Checked entity that describes and examines an assembly type.
 	]"
@@ -29,7 +29,7 @@ feature -- Access {EC_CHECKED_MEMBER}
 			
 feature -- Access
 			
-	checked_property_type: EC_CHECKED_TYPE is
+	checked_property_type: EC_CHECKED_TYPE
 			-- `member' property type checked type.
 		do
 			Result := checked_type (member.property_type)
@@ -39,7 +39,7 @@ feature -- Access
 			
 feature {NONE} -- Basic Operations {EC_CHECKED_MEMBER}
 
-	check_extended_compliance is
+	check_extended_compliance
 			-- Checks entity's CLS-compliance.
 		local
 			l_member: like member
@@ -61,7 +61,7 @@ feature {NONE} -- Basic Operations {EC_CHECKED_MEMBER}
 			end
 		end
 
-	check_eiffel_compliance is
+	check_eiffel_compliance
 			-- Checks entity to see if it is Eiffel-compliant.
 		local
 			l_member: like member
@@ -80,7 +80,7 @@ feature {NONE} -- Basic Operations {EC_CHECKED_MEMBER}
 			end
 		end
 			
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

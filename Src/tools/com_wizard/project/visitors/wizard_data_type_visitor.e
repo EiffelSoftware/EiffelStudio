@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Wizard Data Type visitor"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -41,7 +41,7 @@ inherit
 
 feature -- Basic Operations
 
-	visit (a_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR) is
+	visit (a_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR)
 			-- visit `a_descriptor'
 		local
 			visited: BOOLEAN
@@ -91,7 +91,7 @@ feature -- Access
 	ce_mapper: WIZARD_WRITER_MAPPER_CLASS
 			-- Writer for generated Eiffel to C mappers class.
 
-	free_memory_function_writer: WIZARD_WRITER_C_FUNCTION is
+	free_memory_function_writer: WIZARD_WRITER_C_FUNCTION
 			-- Writer for generated function to free memory.
 		require
 			need_generate_free_memory: need_generate_free_memory
@@ -114,7 +114,7 @@ feature -- Access
 			non_void_ce_function_writer: Result /= Void
 		end
 
-	ce_function_writer: WIZARD_WRITER_C_FUNCTION is
+	ce_function_writer: WIZARD_WRITER_C_FUNCTION
 			-- Writer for generated C to Eiffel conversion function.
 		require
 			need_generate_ce: need_generate_ce
@@ -140,7 +140,7 @@ feature -- Access
 			non_void_ce_function_writer: Result /= Void
 		end
 
-	ec_function_writer: WIZARD_WRITER_C_FUNCTION is
+	ec_function_writer: WIZARD_WRITER_C_FUNCTION
 			-- Writer for generated Eiffel to C conversion function
 		require
 			need_generate_ec: need_generate_ec
@@ -286,7 +286,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_c_declaration_header_file_name (a_name: STRING) is
+	set_c_declaration_header_file_name (a_name: STRING)
 			-- Set `c_declaration_header_file_name' with `a_name'.
 		require
 			non_void_name: a_name /= Void
@@ -296,7 +296,7 @@ feature -- Element change
 			c_declaration_header_file_name_set: c_declaration_header_file_name = a_name
 		end
 
-	set_c_definition_header_file_name (a_name: STRING) is
+	set_c_definition_header_file_name (a_name: STRING)
 			-- Set `c_definition_header_file_name' with `a_name'.
 		require
 			non_void_name: a_name /= Void
@@ -306,7 +306,7 @@ feature -- Element change
 			c_definition_header_file_name_set: c_definition_header_file_name = a_name
 		end
 
-	set_c_post_type (a_name: STRING) is
+	set_c_post_type (a_name: STRING)
 			-- Set `c_post_type' with `a_name'.
 		require
 			valid_name: a_name /= Void
@@ -317,7 +317,7 @@ feature -- Element change
 					not a_name.is_empty implies c_post_type.is_equal (a_name)
 		end
 
-	set_c_type (a_name: STRING) is
+	set_c_type (a_name: STRING)
 			-- Set `c_type' with `a_name'.
 		require
 			valid_name: a_name /= Void
@@ -328,7 +328,7 @@ feature -- Element change
 					not a_name.is_empty implies c_type.is_equal (a_name)
 		end
 
-	set_cecil_type (a_name: STRING) is
+	set_cecil_type (a_name: STRING)
 			-- Set `cecil_type' with `a_name'.
 		require
 			valid_name: a_name /= Void
@@ -339,7 +339,7 @@ feature -- Element change
 					not a_name.is_empty implies cecil_type.is_equal (a_name)
 		end
 
-	set_eiffel_type (a_name: STRING) is
+	set_eiffel_type (a_name: STRING)
 			-- Set `eiffel_type' with `a_name'.
 		require
 			valid_name: a_name /= Void
@@ -350,7 +350,7 @@ feature -- Element change
 					not a_name.is_empty implies eiffel_type.is_equal (a_name)
 		end
 
-	set_ce_function_body (a_name: STRING) is
+	set_ce_function_body (a_name: STRING)
 			-- Set `ce_function_body' with `a_name'.
 		require
 			valid_name: a_name /= Void
@@ -361,7 +361,7 @@ feature -- Element change
 					not a_name.is_empty implies ce_function_body.is_equal (a_name)
 		end
 
-	set_ce_function_name (a_name: STRING) is
+	set_ce_function_name (a_name: STRING)
 			-- Set `ce_function_name' with `a_name'.
 		require
 			valid_name: a_name /= Void
@@ -372,7 +372,7 @@ feature -- Element change
 					not a_name.is_empty implies ce_function_name.is_equal (a_name)
 		end
 
-	set_ce_function_return_type (a_name: STRING) is
+	set_ce_function_return_type (a_name: STRING)
 			-- Set `ce_function_return_type' with `a_name'.
 		require
 			valid_name: a_name /= Void
@@ -383,7 +383,7 @@ feature -- Element change
 					not a_name.is_empty implies ce_function_return_type.is_equal (a_name)
 		end
 
-	set_ce_function_signature (a_name: STRING) is
+	set_ce_function_signature (a_name: STRING)
 			-- Set `ce_function_signature' with `a_name'.
 		require
 			valid_name: a_name /= Void
@@ -394,7 +394,7 @@ feature -- Element change
 					not a_name.is_empty implies ce_function_signature.is_equal (a_name)
 		end
 
-	set_ec_function_body (a_name: STRING) is
+	set_ec_function_body (a_name: STRING)
 			-- Set `ec_function_body' with `a_name'.
 		require
 			valid_name: a_name /= Void
@@ -405,7 +405,7 @@ feature -- Element change
 					not a_name.is_empty implies ec_function_body.is_equal (a_name)
 		end
 
-	set_ec_function_name (a_name: STRING) is
+	set_ec_function_name (a_name: STRING)
 			-- Set `ec_function_name' with `a_name'.
 		require
 			valid_name: a_name /= Void
@@ -416,7 +416,7 @@ feature -- Element change
 					not a_name.is_empty implies ec_function_name.is_equal (a_name)
 		end
 
-	set_ec_function_return_type (a_name: STRING) is
+	set_ec_function_return_type (a_name: STRING)
 			-- Set `ec_function_return_type' with `a_name'.
 		require
 			valid_name: a_name /= Void
@@ -427,7 +427,7 @@ feature -- Element change
 					not a_name.is_empty implies ec_function_return_type.is_equal (a_name)
 		end
 
-	set_ec_function_signature (a_name: STRING) is
+	set_ec_function_signature (a_name: STRING)
 			-- Set `ec_function_signature' with `a_name'.
 		require
 			valid_name: a_name /= Void
@@ -438,7 +438,7 @@ feature -- Element change
 					not a_name.is_empty implies ec_function_signature.is_equal (a_name)
 		end
 
-	set_free_memory_function_body (a_name: STRING) is
+	set_free_memory_function_body (a_name: STRING)
 			-- Set `free_memory_function_body' with `a_name'.
 		require
 			valid_name: a_name /= Void
@@ -449,7 +449,7 @@ feature -- Element change
 					not a_name.is_empty implies free_memory_function_body.is_equal (a_name)
 		end
 
-	set_free_memory_function_name (a_name: STRING) is
+	set_free_memory_function_name (a_name: STRING)
 			-- Set `free_memory_function_name' with `a_name'.
 		require
 			valid_name: a_name /= Void
@@ -460,7 +460,7 @@ feature -- Element change
 					not a_name.is_empty implies free_memory_function_name.is_equal (a_name)
 		end
 
-	set_free_memory_function_signature (a_name: STRING) is
+	set_free_memory_function_signature (a_name: STRING)
 			-- Set `free_memory_function_signature' with `a_name'.
 		require
 			valid_name: a_name /= Void
@@ -471,7 +471,7 @@ feature -- Element change
 					not a_name.is_empty implies free_memory_function_signature.is_equal (a_name)
 		end
 
-	set_array_basic_type (a_boolean: BOOLEAN) is
+	set_array_basic_type (a_boolean: BOOLEAN)
 			-- Set `is_array_basic_type' with `a_boolean'.
 		do
 			is_array_basic_type := a_boolean
@@ -479,7 +479,7 @@ feature -- Element change
 			valid_result: is_array_basic_type = a_boolean
 		end
 
-	set_basic_type (a_boolean: BOOLEAN) is
+	set_basic_type (a_boolean: BOOLEAN)
 			-- Set `is_basic_type' with `a_boolean'.
 		do
 			is_basic_type := a_boolean
@@ -487,7 +487,7 @@ feature -- Element change
 			valid_result: is_basic_type = a_boolean
 		end
 
-	set_pointed_type (a_boolean: BOOLEAN) is
+	set_pointed_type (a_boolean: BOOLEAN)
 			-- Set `is_pointed' with `a_boolean'.
 		do
 			is_pointed := a_boolean
@@ -495,7 +495,7 @@ feature -- Element change
 			valid_result: is_pointed = a_boolean
 		end
 
-	set_basic_type_ref (a_boolean: BOOLEAN) is
+	set_basic_type_ref (a_boolean: BOOLEAN)
 			-- Set `is_basic_type_ref' with `a_boolean'.
 		do
 			is_basic_type_ref := a_boolean
@@ -503,7 +503,7 @@ feature -- Element change
 			valid_result: is_basic_type_ref = a_boolean
 		end
 
-	set_interface (a_boolean: BOOLEAN) is
+	set_interface (a_boolean: BOOLEAN)
 			-- Set `is_interface' with `a_boolean'.
 		do
 			is_interface := a_boolean
@@ -511,7 +511,7 @@ feature -- Element change
 			valid_result: is_interface = a_boolean
 		end
 
-	set_interface_pointer (a_boolean: BOOLEAN) is
+	set_interface_pointer (a_boolean: BOOLEAN)
 			-- Set `is_interface_pointer' with `a_boolean'.
 		do
 			is_interface_pointer := a_boolean
@@ -519,7 +519,7 @@ feature -- Element change
 			valid_result: is_interface_pointer = a_boolean
 		end
 
-	set_interface_pointer_pointer (a_boolean: BOOLEAN) is
+	set_interface_pointer_pointer (a_boolean: BOOLEAN)
 			-- Set `is_interface_pointer_pointer' with `a_boolean'.
 		do
 			is_interface_pointer_pointer := a_boolean
@@ -527,7 +527,7 @@ feature -- Element change
 			valid_result: is_interface_pointer_pointer = a_boolean
 		end
 
-	set_coclass (a_boolean: BOOLEAN) is
+	set_coclass (a_boolean: BOOLEAN)
 			-- Set `is_coclass with `a_boolean'.
 		do
 			is_coclass := a_boolean
@@ -535,7 +535,7 @@ feature -- Element change
 			valid_result: is_coclass = a_boolean
 		end
 
-	set_coclass_pointer (a_boolean: BOOLEAN) is
+	set_coclass_pointer (a_boolean: BOOLEAN)
 			-- Set `is_coclass_pointer' with `a_boolean'.
 		do
 			is_coclass_pointer := a_boolean
@@ -543,7 +543,7 @@ feature -- Element change
 			valid_result: is_coclass_pointer = a_boolean
 		end
 
-	set_coclass_pointer_pointer (a_boolean: BOOLEAN) is
+	set_coclass_pointer_pointer (a_boolean: BOOLEAN)
 			-- Set `is_coclass_pointer_pointer' with `a_boolean'.
 		do
 			is_coclass_pointer_pointer := a_boolean
@@ -551,7 +551,7 @@ feature -- Element change
 			valid_result: is_coclass_pointer_pointer = a_boolean
 		end
 
-	set_structure (a_boolean: BOOLEAN) is
+	set_structure (a_boolean: BOOLEAN)
 			-- Set `is_structure' with `a_boolean'.
 		do
 			is_structure := a_boolean
@@ -559,7 +559,7 @@ feature -- Element change
 			valid_result: is_structure = a_boolean
 		end
 
-	set_structure_pointer (a_boolean: BOOLEAN) is
+	set_structure_pointer (a_boolean: BOOLEAN)
 			-- Set `is_structure_pointer' with `a_boolean'.
 		do
 			is_structure_pointer := a_boolean
@@ -567,7 +567,7 @@ feature -- Element change
 			valid_result: is_structure_pointer = a_boolean
 		end
 
-	set_enumeration (a_boolean: BOOLEAN) is
+	set_enumeration (a_boolean: BOOLEAN)
 			-- Set `is_enumeration' with `a_boolean'.
 		do
 			is_enumeration := a_boolean
@@ -575,7 +575,7 @@ feature -- Element change
 			valid_result: is_enumeration = a_boolean
 		end
 
-	set_need_generate_ce (a_boolean: BOOLEAN) is
+	set_need_generate_ce (a_boolean: BOOLEAN)
 			-- Set `need_generate_ce' with `a_boolean'.
 		do
 			need_generate_ce := a_boolean
@@ -583,7 +583,7 @@ feature -- Element change
 			valid_result: need_generate_ce = a_boolean
 		end
 
-	set_need_generate_ec (a_boolean: BOOLEAN) is
+	set_need_generate_ec (a_boolean: BOOLEAN)
 			-- Set `need_generate_ec' with `a_boolean'.
 		do
 			need_generate_ec := a_boolean
@@ -591,7 +591,7 @@ feature -- Element change
 			valid_result: need_generate_ec = a_boolean
 		end
 
-	set_need_generate_free_memory (a_boolean: BOOLEAN) is
+	set_need_generate_free_memory (a_boolean: BOOLEAN)
 			-- Set `need_generate_free_memory' with `a_boolean'.
 		do
 			need_generate_free_memory := a_boolean
@@ -599,7 +599,7 @@ feature -- Element change
 			valid_result: need_generate_free_memory = a_boolean
 		end
 
-	set_need_free_memory (a_boolean: BOOLEAN) is
+	set_need_free_memory (a_boolean: BOOLEAN)
 			-- Set `need_free_memory' with `a_boolean'.
 		do
 			need_free_memory := a_boolean
@@ -607,7 +607,7 @@ feature -- Element change
 			valid_result: need_free_memory = a_boolean
 		end
 
-	set_can_free (a_boolean: BOOLEAN) is
+	set_can_free (a_boolean: BOOLEAN)
 			-- Set `can_free' with `a_boolean'.
 		do
 			can_free := a_boolean
@@ -615,7 +615,7 @@ feature -- Element change
 			valid_result: can_free = a_boolean
 		end
 
-	set_vt_type (a_type: INTEGER) is
+	set_vt_type (a_type: INTEGER)
 			-- Set `vt_type' with `a_type'
 		do
 			vt_type := a_type
@@ -623,7 +623,7 @@ feature -- Element change
 			valid_vt_type: vt_type = a_type
 		end
 
-	set_writable (a_boolean: BOOLEAN) is
+	set_writable (a_boolean: BOOLEAN)
 			-- Set `writable' with `a_boolean'.
 		do
 			writable := a_boolean
@@ -633,7 +633,7 @@ feature -- Element change
 
 feature -- Processing
 
-	process_safearray_data_type (a_safearray_descriptor: WIZARD_SAFEARRAY_DATA_TYPE_DESCRIPTOR) is
+	process_safearray_data_type (a_safearray_descriptor: WIZARD_SAFEARRAY_DATA_TYPE_DESCRIPTOR)
 			-- Process SAFEARRAY
 		local
 			a_generator: WIZARD_SAFEARRAY_DATA_TYPE_GENERATOR
@@ -642,7 +642,7 @@ feature -- Processing
 			a_generator.process (a_safearray_descriptor, Current)
 		end
 
-	process_automation_data_type (an_automation_descriptor: WIZARD_AUTOMATION_DATA_TYPE_DESCRIPTOR) is
+	process_automation_data_type (an_automation_descriptor: WIZARD_AUTOMATION_DATA_TYPE_DESCRIPTOR)
 			-- Process Automation Data Type
 		local
 			a_generator: WIZARD_AUTOMATION_DATA_TYPE_GENERATOR
@@ -651,7 +651,7 @@ feature -- Processing
 			a_generator.process (an_automation_descriptor, Current)
 		end
 
-	process_array_data_type (an_array_descriptor: WIZARD_ARRAY_DATA_TYPE_DESCRIPTOR) is
+	process_array_data_type (an_array_descriptor: WIZARD_ARRAY_DATA_TYPE_DESCRIPTOR)
 			-- Process Array
 		local
 			a_generator: WIZARD_ARRAY_DATA_TYPE_GENERATOR
@@ -661,7 +661,7 @@ feature -- Processing
 			is_array_type := True
 		end
 
-	process_user_defined_data_type (a_user_defined_descriptor: WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR) is
+	process_user_defined_data_type (a_user_defined_descriptor: WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR)
 			-- Process User Defined Data Type
 		local
 			a_generator: WIZARD_USER_DEFINED_DATA_TYPE_GENERATOR
@@ -670,7 +670,7 @@ feature -- Processing
 			a_generator.process (a_user_defined_descriptor, Current)
 		end
 
-	process_pointed_data_type (a_pointed_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR) is
+	process_pointed_data_type (a_pointed_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR)
 			-- Process pointed Data Type
 		local
 			a_generator: WIZARD_POINTED_DATA_TYPE_GENERATOR
@@ -681,7 +681,7 @@ feature -- Processing
 
 feature -- Implementation
 
-	current_ec_mapper: like ec_mapper is
+	current_ec_mapper: like ec_mapper
 			-- Current shared ec mapper type name
 			-- New one is created each `Max_mapper_functions' functions are added to it.
 			-- All instances are stored in `Generated_ec_mappers'.
@@ -691,7 +691,7 @@ feature -- Implementation
 			non_void_mapper: Result /= Void
 		end
 
-	current_ce_mapper: like ce_mapper is
+	current_ce_mapper: like ce_mapper
 			-- Current shared ce mapper type name
 			-- New one is created each `Max_mapper_functions' functions are added to it.
 			-- All instances are stored in `Generated_ec_mappers'.
@@ -701,19 +701,19 @@ feature -- Implementation
 			non_void_mapper: Result /= Void
 		end
 
-	Current_ec_mapper_cell: CELL [WIZARD_WRITER_MAPPER_CLASS] is
+	Current_ec_mapper_cell: CELL [WIZARD_WRITER_MAPPER_CLASS]
 			-- Cell for `current_ec_mapper'
 		once
 			create Result.put (new_ec_mapper)
 		end
 
-	Current_ce_mapper_cell: CELL [WIZARD_WRITER_MAPPER_CLASS] is
+	Current_ce_mapper_cell: CELL [WIZARD_WRITER_MAPPER_CLASS]
 			-- Cell for `current_ce_mapper'
 		once
 			create Result.put (new_ce_mapper)
 		end
 
-	new_ec_mapper: WIZARD_WRITER_MAPPER_CLASS is
+	new_ec_mapper: WIZARD_WRITER_MAPPER_CLASS
 			-- Instantiate new `current_ec_mapper'.
 		do
 			create Result.make_ec
@@ -723,7 +723,7 @@ feature -- Implementation
 			valid_mapper: Result.is_ec
 		end
 
-	new_ce_mapper: WIZARD_WRITER_MAPPER_CLASS is
+	new_ce_mapper: WIZARD_WRITER_MAPPER_CLASS
 			-- Instantiate new `current_ce_mapper'.
 		do
 			create Result.make_ce
@@ -733,19 +733,19 @@ feature -- Implementation
 			valid_mapper: not Result.is_ec
 		end
 
-	create_ec_mapper is
+	create_ec_mapper
 			-- Instantiate new `current_ec_mapper'.
 		do
 			Current_ec_mapper_cell.replace (new_ec_mapper)
 		end
 
-	create_ce_mapper is
+	create_ce_mapper
 			-- Instantiate new `current_ec_mapper'.
 		do
 			Current_ce_mapper_cell.replace (new_ce_mapper)
 		end
 
-	Max_mapper_functions: INTEGER is 100
+	Max_mapper_functions: INTEGER = 100
 			-- Maximum number of functions in mapper classes
 
 invariant
@@ -801,7 +801,7 @@ invariant
 
 	valid_ce_mapper: ce_mapper /= Void implies not ce_mapper.is_ec
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

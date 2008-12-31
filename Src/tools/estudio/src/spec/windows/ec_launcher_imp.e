@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Ec launcher's implementation for windows."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature -- Access
 
-	error (m: STRING) is
+	error (m: STRING)
 			-- notify error message `m'
 		local
 			dlg: WEL_MSG_BOX
@@ -25,7 +25,7 @@ feature -- Access
 			dlg.error_message_box (Void, m, "estudio : error")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		General purpose persistance and retrieval for a loaded compliance project.
 	]"
@@ -19,7 +19,7 @@ inherit
 
 feature -- Basic Operations
 
-	load_project (a_path: STRING) is
+	load_project (a_path: STRING)
 			-- Loads project from `a_path'
 		local
 			l_file: RAW_FILE
@@ -36,7 +36,7 @@ feature -- Basic Operations
  			l_file.close			
 		end
 		
-	save_project (a_path: STRING) is
+	save_project (a_path: STRING)
 			-- Saves project to `a_path'
 		local
 			l_file: RAW_FILE
@@ -52,7 +52,7 @@ feature -- Basic Operations
 		
 feature {NONE} -- Implementation
 
-	sed_utilities: SED_STORABLE_FACILITIES is
+	sed_utilities: SED_STORABLE_FACILITIES
 			-- Storable utilities
 		once
 			create Result
@@ -60,7 +60,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

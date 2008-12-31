@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Convert a table of contents to a DHTML table of contents.  DHTML is a one-level toc control similar%
 		%to that found at http://msdn.microsoft.com."
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Access
 
-	text: STRING is
+	text: STRING
 			-- DHTML text
 		do			
 			Result := processed_text
@@ -28,7 +28,7 @@ feature -- Access
 		
 feature -- Processing
 
-	node_text (a_node: TABLE_OF_CONTENTS_NODE): STRING is
+	node_text (a_node: TABLE_OF_CONTENTS_NODE): STRING
 			-- Node text
 		local
 			l_url: STRING					
@@ -91,7 +91,7 @@ feature -- Processing
 
 feature {NONE} -- Implementation
 
-	parent_hierarchy_text (a_node: TABLE_OF_CONTENTS_NODE): STRING is
+	parent_hierarchy_text (a_node: TABLE_OF_CONTENTS_NODE): STRING
 			-- Hierarchy text
 		local
 			l_parent: like a_node
@@ -129,7 +129,7 @@ feature {NONE} -- Implementation
 			end
 		end		
 
-	spacer_html (cnt: INTEGER): STRING is
+	spacer_html (cnt: INTEGER): STRING
 			-- Spacer html
 		local
 			l_cnt: INTEGER
@@ -145,7 +145,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	number_of_parents (a_node: TABLE_OF_CONTENTS_NODE): INTEGER is
+	number_of_parents (a_node: TABLE_OF_CONTENTS_NODE): INTEGER
 			-- Number of parents that `a_node' has
 		do
 			if a_node /= Void and then a_node.has_parent then
@@ -154,7 +154,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	friendly_node_url (a_node: TABLE_OF_CONTENTS_NODE): STRING is
+	friendly_node_url (a_node: TABLE_OF_CONTENTS_NODE): STRING
 			-- Friendly node url for toc
 		local
 			l_url,
@@ -187,7 +187,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end	
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

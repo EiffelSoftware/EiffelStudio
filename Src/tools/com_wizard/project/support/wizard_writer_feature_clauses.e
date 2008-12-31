@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel class feature clauses used by WIZARD_CLASS_WRITER"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -18,23 +18,23 @@ inherit
 
 feature -- Access
 
-	Initialization: INTEGER is 1
+	Initialization: INTEGER = 1
 
-	Access: INTEGER is 2
+	Access: INTEGER = 2
 
-	Measurement: INTEGER is 3
+	Measurement: INTEGER = 3
 
-	Status_report: INTEGER is 4
+	Status_report: INTEGER = 4
 
-	Element_change: INTEGER is 5
+	Element_change: INTEGER = 5
 
-	Basic_operations: INTEGER is 6
+	Basic_operations: INTEGER = 6
 
-	Implementation: INTEGER is 7
+	Implementation: INTEGER = 7
 
-	Externals: INTEGER is 8
+	Externals: INTEGER = 8
 
-	feature_clauses: HASH_TABLE [STRING, INTEGER] is
+	feature_clauses: HASH_TABLE [STRING, INTEGER]
 			-- Feature clauses
 		once
 			create Result.make (10)
@@ -48,7 +48,7 @@ feature -- Access
 			Result.put (Externals_title, Externals)
 		end
 
-	is_valid_clause (a_clause: INTEGER): BOOLEAN is
+	is_valid_clause (a_clause: INTEGER): BOOLEAN
 			-- Is `a_clause' a valid feature clause?
 		do
 			Result := a_clause = Initialization or
@@ -63,9 +63,9 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	Externals_title: STRING is "Externals";
+	Externals_title: STRING = "Externals";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Error to indicate a configuration file could not be saved.
 	]"
@@ -21,7 +21,7 @@ feature {NONE} -- Access
 	dollar_description: STRING = "Unable to save configuration file."
 			-- Dollar encoded description. ${n} are replaced by array indicies.
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Type Library flags"
 	legal: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Access
 
-	Libflag_frestricted: INTEGER is
+	Libflag_frestricted: INTEGER
 			-- Type library is restricted, and should not 
 			-- be displayed to users.
 		external
@@ -23,7 +23,7 @@ feature -- Access
 			"LIBFLAG_FRESTRICTED"
 		end
 
-	Libflag_fcontrol: INTEGER is
+	Libflag_fcontrol: INTEGER
 			-- Type library describes controls, and should
 			-- not be displayed in type browsers intended 
 			-- for nonvisual objects. 
@@ -33,7 +33,7 @@ feature -- Access
 			"LIBFLAG_FCONTROL"
 		end
 
-	Libflag_fhidden: INTEGER is
+	Libflag_fhidden: INTEGER
 			-- Type library should not be displayed to users,
 			-- although its use is not restricted.
 		external
@@ -42,14 +42,14 @@ feature -- Access
 			"LIBFLAG_FHIDDEN"
 		end
 
-	Libflag_fhasdiskimage: INTEGER is
+	Libflag_fhasdiskimage: INTEGER
 		external
 			"C [macro <oaidl.h>]"
 		alias
 			"LIBFLAG_FHASDISKIMAGE"
 		end
 		
-	is_valid_lib_flag (flag: INTEGER): BOOLEAN is
+	is_valid_lib_flag (flag: INTEGER): BOOLEAN
 			-- Is `flag' a valid library flag?
 		do
 			Result := binary_and (Libflag_frestricted + Libflag_fcontrol
@@ -58,7 +58,7 @@ feature -- Access
 						= flag
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

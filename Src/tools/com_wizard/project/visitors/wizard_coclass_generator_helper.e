@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Coclass generator helper."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -10,7 +10,7 @@ class
 
 feature -- Basic operations
 
-	is_ancestor_of (an_interface, probable_ancestor: WIZARD_INTERFACE_DESCRIPTOR): BOOLEAN is
+	is_ancestor_of (an_interface, probable_ancestor: WIZARD_INTERFACE_DESCRIPTOR): BOOLEAN
 			-- Is `probable_ancestor' ancestor of `an_inteface'?
 		require
 			non_void_interface: an_interface /= Void
@@ -26,7 +26,7 @@ feature -- Basic operations
 		end
 
 	has_descendants_in_coclass (a_coclass: WIZARD_COCLASS_DESCRIPTOR;
-				an_interface: WIZARD_INTERFACE_DESCRIPTOR): BOOLEAN is
+				an_interface: WIZARD_INTERFACE_DESCRIPTOR): BOOLEAN
 			-- Does `an_interface' have descendants among intefaces of `a_coclass'?
 		require
 			non_void_coclass: a_coclass /= Void
@@ -50,7 +50,7 @@ feature -- Basic operations
 		end
 	
 	descendant_in_coclass (a_coclass: WIZARD_COCLASS_DESCRIPTOR;
-				an_interface: WIZARD_INTERFACE_DESCRIPTOR): WIZARD_INTERFACE_DESCRIPTOR is
+				an_interface: WIZARD_INTERFACE_DESCRIPTOR): WIZARD_INTERFACE_DESCRIPTOR
 			-- Descendant of `an_interface' in `a_coclass'.
 		require
 			non_void_coclass: a_coclass /= Void
@@ -80,7 +80,7 @@ feature -- Basic operations
 			non_void_descendant: Result /= Void
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -18,11 +18,11 @@ class
 inherit
 	LINKED_STACK [INTEGER]
 		export
-			{ANY} i_th
+			{ANY} i_th, valid_index
 		redefine
 			extend, force, put, remove
 		end
-	
+
 	JVM_CONSTANTS
 		export
 			{NONE} all
@@ -31,10 +31,10 @@ inherit
 		end
 
 create
-	make	
+	make
 
 feature
-			
+
 	extend (v: like item)
 			-- add item to stack
 		do
@@ -48,12 +48,12 @@ feature
 				print ("%Tstack_extend: " + count.out + ", " + jvm_count.out + "%N")
 			end
 		end
-			
+
 	force, put (v: like item)
 		do
 			extend (v)
 		end
-			
+
 	remove
 		do
 			jvm_count := jvm_count - jvm_type_to_stack_size (item)
@@ -62,10 +62,10 @@ feature
 				print ("%Tstack_remove: " + count.out + ", " + jvm_count.out + "%N")
 			end
 		end
-			
+
 	max_jvm_count: INTEGER
 			-- the maximum number of items since it's creation
-			
+
 	jvm_count: INTEGER;
 			-- this is the sum of the size of the elements currently in
 			-- the stack. So this value should reflect the number of

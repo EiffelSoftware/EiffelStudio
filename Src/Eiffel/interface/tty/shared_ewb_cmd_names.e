@@ -176,8 +176,6 @@ feature {NONE}
 
 	system_cmd_name: STRING = "system"
 
-	testing_cmd_name: STRING = "testing"
-
 	target_cmd_name: STRING = "target"
 
 	use_settings_cmd_name: STRING = "use_settings"

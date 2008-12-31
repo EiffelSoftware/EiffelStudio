@@ -619,7 +619,6 @@ feature -- Update
 			ewb_senders: EWB_SENDERS
 			ewb_callees: EWB_CALLEES
 			l_arg: STRING
-			auto_test_arguments: LINKED_LIST [STRING]
 		do
 			filter_name := ""
 			option := argument (current_option);

@@ -159,8 +159,6 @@ feature -- Element change
 
 	add_cluster (a_target: !CONF_TARGET; a_path: !STRING)
 			-- <Precursor>
-		local
-			l_cluster: like internal_added_cluster
 		do
 			internal_error := Void
 			internal_added_cluster := manager.last_added_cluster

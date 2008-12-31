@@ -73,6 +73,13 @@ feature -- Status setting
 			process.set_separate_console (False)
 			process.set_hidden (True)
 
+			process.redirect_output_to_agent (
+				agent (a_string: STRING)
+					do
+
+					end)
+			process.redirect_error_to_same_as_output
+
 			process.launch
 		end
 

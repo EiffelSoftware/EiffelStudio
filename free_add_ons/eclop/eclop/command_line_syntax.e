@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command line syntax."
 	copyright: "Copyright (c) 2003 Paul Cohen."
 	license: "Eiffel Forum License v2 (see license.txt)"
@@ -8,12 +8,12 @@ indexing
 	
 class COMMAND_LINE_SYNTAX
 	
-creation
+create
 	make
    
 feature {NONE} -- Initialization
 	
-	make (spec: ARRAY [STRING]) is
+	make (spec: ARRAY [STRING])
 			-- Specify a new command line syntax as specified by  
 			-- the specifications in `spec'. 
 		require
@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 	
 feature -- Access (Application output messages)
 	
-	program_usage (program_name: STRING): STRING is
+	program_usage (program_name: STRING): STRING
 			-- Program usage string for presenting to user.
 		require
 			program_name_not_void: program_name /= Void
@@ -120,7 +120,7 @@ feature -- Access (Application output messages)
 			end
 		end	
 	
-	program_help (program_name, usage, program_description: STRING): STRING is
+	program_help (program_name, usage, program_description: STRING): STRING
 			-- Program help string for presenting to user. The
 			-- `program_name' is mandatory. If no `usage' string is
 			-- supplied the value of `program_usage (program_name)'
@@ -232,7 +232,7 @@ feature {COMMAND_LINE_PARSER} -- Access
 	
 feature -- Status report
 	
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is this a valid specification? 
 		do
 			Result := invalid_specifications = Void
@@ -250,7 +250,7 @@ feature {NONE} -- Implementation
 	specifications: ARRAY [STRING]
 			-- The original specifications
 	
-	set_and_sort_specifications (spec: ARRAY [STRING]) is
+	set_and_sort_specifications (spec: ARRAY [STRING])
 			-- Set `specifications' to `spec' and sort the
 			-- individual specifications so that all mutual
 			-- exclusivity specifications are at the end. This
@@ -287,7 +287,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	is_option_specification (spec: STRING): BOOLEAN is
+	is_option_specification (spec: STRING): BOOLEAN
 			-- Is `spec' an option specification?
 		require
 			spec_not_void: spec /= Void
@@ -301,7 +301,7 @@ feature {NONE} -- Implementation
 			Result := (s @ 1 = '-')
 		end
 	
-	is_mutual_exclusivity_specification (spec: STRING): BOOLEAN is
+	is_mutual_exclusivity_specification (spec: STRING): BOOLEAN
 			-- Is `spec' an specification of mutual exclusivity?
 		require
 			spec_not_void: spec /= Void

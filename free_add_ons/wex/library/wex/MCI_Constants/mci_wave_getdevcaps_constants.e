@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Device Capabilities constants for the %
 		%waveaudio MCI device."
 	status: "See notice at end of class."
@@ -11,14 +11,14 @@ class
 
 feature -- Access
 
-	Mci_wave_getdevcaps_inputs: INTEGER is
+	Mci_wave_getdevcaps_inputs: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_WAVE_GETDEVCAPS_INPUTS"
 		end
 
-	Mci_wave_getdevcaps_outputs: INTEGER is
+	Mci_wave_getdevcaps_outputs: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias

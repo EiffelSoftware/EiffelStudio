@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants used with commands %
 		%for the digitalvideo MCI device."
 	author: "Robin van Ommeren"
@@ -10,49 +10,49 @@ class
 
 feature -- Access
 
-	Mci_dgv_open_nostatic: INTEGER is
+	Mci_dgv_open_nostatic: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_DGV_OPEN_NOSTATIC"
 		end
 
-	Mci_dgv_open_parent: INTEGER is
+	Mci_dgv_open_parent: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_DGV_OPEN_PARENT"
 		end
 
-	Mci_dgv_open_ws: INTEGER is
+	Mci_dgv_open_ws: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_DGV_OPEN_WS"
 		end
 
-	Mci_dgv_cue_input: INTEGER is
+	Mci_dgv_cue_input: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_DGV_CUE_INPUT"
 		end
 
-	Mci_dgv_cue_noshow: INTEGER is
+	Mci_dgv_cue_noshow: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_DGV_CUE_NOSHOW"
 		end
 
-	Mci_dgv_cue_output: INTEGER is
+	Mci_dgv_cue_output: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_DGV_CUE_OUTPUT"
 		end
 
-	Mci_dgv_window_hwnd: INTEGER is
+	Mci_dgv_window_hwnd: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias

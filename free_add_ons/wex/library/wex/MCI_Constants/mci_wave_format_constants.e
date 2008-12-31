@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants defining formats of the %
 		%waveaudio MCI device."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Access
 
-	Wave_format_pcm: INTEGER is
+	Wave_format_pcm: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias

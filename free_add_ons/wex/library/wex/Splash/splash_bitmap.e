@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Splash screen containing a bitmap"
 	author: "Robin van Ommeren"
 	date: "$Date$"
@@ -22,12 +22,12 @@ inherit
 			on_paint
 		end
 
-creation
+create
 	make
 
 feature -- Basic operations
 
-	set_bitmap (file_name: STRING) is
+	set_bitmap (file_name: STRING)
 			-- Set splashscreen
 		require
 			file_name_not_void: file_name /= Void
@@ -38,14 +38,14 @@ feature -- Basic operations
 			client_dc: WEL_CLIENT_DC
 			retried: BOOLEAN
 		do
-			if not retried then
-				!! a_file.make_open_read (file_name)
-				!! a_dib.make_by_file (a_file)
-				!! client_dc.make (Current)
+			if not retried then 
+				create a_file.make_open_read (file_name) 
+				create a_dib.make_by_file (a_file) 
+				create client_dc.make (Current)
 				client_dc.get
 				client_dc.select_palette (a_dib.palette)
-					client_dc.realize_palette
-				!! splash_bitmap.make_by_dib (client_dc, a_dib, Dib_rgb_colors)
+					client_dc.realize_palette 
+				create splash_bitmap.make_by_dib (client_dc, a_dib, Dib_rgb_colors)
 				splash_palette := a_dib.palette
 				client_dc.release
 				resize_to_bitmap
@@ -61,14 +61,14 @@ feature -- Basic operations
 			retry
 		end
 
-	resize_to_bitmap is
+	resize_to_bitmap
 		do
 			resize (splash_bitmap.width, splash_bitmap.height)
 		end
 
 feature -- Status report
 
-	valid: BOOLEAN is
+	valid: BOOLEAN
 			-- Can the splash be popped up?
 		do
 			Result := splash_bitmap /= Void and then
@@ -85,7 +85,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- Wm_paint message.
 			-- May be redefined to paint something on
 			-- the `paint_dc'. `invalid_rect' defines
@@ -97,14 +97,14 @@ feature {NONE} -- Implementation
 			paint_dc.draw_bitmap (splash_bitmap, 0, 0, splash_bitmap.width, splash_bitmap.height)
 		end
 
-	class_background: WEL_NULL_BRUSH is
+	class_background: WEL_NULL_BRUSH
 			-- We paint the entire foreground,
 			-- so windows need not to paint the background.
-		once
-			!! Result.make
+		once 
+			create Result.make
 		end
 
-	class_name: STRING is
+	class_name: STRING
 			-- Class name
 		once
 			Result := "SplashBitmapWindowWEX"

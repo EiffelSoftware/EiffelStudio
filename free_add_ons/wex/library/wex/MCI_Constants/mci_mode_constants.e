@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants used with the MCI_MODE command %
 		%for any MCI device."
 	status: "See notice at end of class."
@@ -11,49 +11,49 @@ class
 
 feature -- Access
 
-	Mci_mode_not_ready: INTEGER is
+	Mci_mode_not_ready: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_MODE_NOT_READY"
 		end
 
-	Mci_mode_pause: INTEGER is
+	Mci_mode_pause: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_MODE_PAUSE"
 		end
 
-	Mci_mode_play: INTEGER is
+	Mci_mode_play: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_MODE_PLAY"
 		end
 
-	Mci_mode_stop: INTEGER is
+	Mci_mode_stop: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_MODE_STOP"
 		end
 
-	Mci_mode_open: INTEGER is
+	Mci_mode_open: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_MODE_OPEN"
 		end
 
-	Mci_mode_record: INTEGER is
+	Mci_mode_record: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_MODE_RECORD"
 		end
 
-	Mci_mode_seek: INTEGER is
+	Mci_mode_seek: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias

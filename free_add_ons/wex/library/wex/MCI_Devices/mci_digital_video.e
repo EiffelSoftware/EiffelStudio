@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents the MCI digitalvideo device."
 	status: "See notice at end of class."
 	author: "Robin van Ommeren"
@@ -31,12 +31,12 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make
 
 feature -- Basic operations
 
-	realize_palette_as_background is
+	realize_palette_as_background
 			-- Realizes the palette as background into the
 			-- device context.
 			--| Your application should call
@@ -47,12 +47,12 @@ feature -- Basic operations
 			opened: opened
 		local
 			generic_parms: WEX_MCI_GENERIC_PARMS
-		do
-			!! generic_parms.make (parent)
+		do 
+			create generic_parms.make (parent)
 			realize_device (generic_parms, Mci_dgv_realize_bkgd)
 		end
 
-	realize_palette_normal is
+	realize_palette_normal
 			-- Realizes the palette normal into the device context.
 			--| Your application should call
 			--| `realize_palette_as_background' or
@@ -62,24 +62,24 @@ feature -- Basic operations
 			opened: opened
 		local
 			generic_parms: WEX_MCI_GENERIC_PARMS
-		do
-			!! generic_parms.make (parent)
+		do 
+			create generic_parms.make (parent)
 			realize_device (generic_parms, Mci_dgv_realize_norm)
 		end
 
-	cue_play_back is
+	cue_play_back
 			-- Cue video for play back.
 			--| After cueing the device starts with minimum delay.
 		require
 			opened: opened
 		local
 			generic_parms: WEX_MCI_GENERIC_PARMS
-		do
-			!! generic_parms.make (parent)
+		do 
+			create generic_parms.make (parent)
 			cue_device (generic_parms, Mci_dgv_cue_output)
 		end
 
-	seek_to (a_position: INTEGER) is
+	seek_to (a_position: INTEGER)
 			-- Position the video file at `position' in frames.
 		require
 			opened: opened
@@ -87,12 +87,12 @@ feature -- Basic operations
 			meaningful_position: a_position <= media_length
 		local
 			seek_parms: WEX_MCI_SEEK_PARMS
-		do
-			!! seek_parms.make (parent, position)
+		do 
+			create seek_parms.make (parent, position)
 			seek_device (seek_parms, Mci_to)
 		end
 
-	open (file: STRING) is
+	open (file: STRING)
 			-- Open a Mci device to play a video file.
 		require
 			not_opened: not opened
@@ -100,8 +100,8 @@ feature -- Basic operations
 			file_meaningful: not file.empty
 		local
 			open_parms: WEX_MCI_DGV_OPEN_PARMS
-		do
-			!! open_parms.make (parent, device_name)
+		do 
+			create open_parms.make (parent, device_name)
 			open_parms.set_open_style (Ws_child)
 			open_parms.set_element_name (file)
 			open_parms.set_parent_handle (parent.item)
@@ -110,7 +110,7 @@ feature -- Basic operations
 
 feature -- Status setting
 
-	set_window (window: WEL_COMPOSITE_WINDOW) is
+	set_window (window: WEL_COMPOSITE_WINDOW)
 			-- Set a window to the device for playback
 		require
 			opened: opened
@@ -119,15 +119,15 @@ feature -- Status setting
 		local
 			window_parms: WEX_MCI_DGV_WINDOW_PARMS
 		do
-			current_window := window
-			!! window_parms.make (parent)
+			current_window := window 
+			create window_parms.make (parent)
 			window_parms.set_display_window (window)
 			window_device (window_parms, Mci_dgv_window_hwnd)
 		end
 
 feature -- Status report
 
-	source_rectangle: WEL_RECT is
+	source_rectangle: WEL_RECT
 			-- Retrieve the dimensions used to display video and
 			-- images in the client area of the current window.
 			--| The returned rectangle is reformatted to
@@ -136,8 +136,8 @@ feature -- Status report
 			opened: opened
 		local
 			dgv_rect_parms: WEX_MCI_DGV_RECT_PARMS
-		do
-			!! dgv_rect_parms.make (parent)
+		do 
+			create dgv_rect_parms.make (parent)
 			where_device (dgv_rect_parms, Mci_dgv_where_source)
 			Result := dgv_rect_parms.rect
 		ensure
@@ -145,7 +145,7 @@ feature -- Status report
 			result_exists: Result.exists
 		end
 
-	maximum_source_rectangle: WEL_RECT is
+	maximum_source_rectangle: WEL_RECT
 			-- Retrieve the max dimensions used to display video
 			-- and images in the client area of the current window.
 			--| The returned rectangle is reformatted to
@@ -154,8 +154,8 @@ feature -- Status report
 			opened: opened
 		local
 			dgv_rect_parms: WEX_MCI_DGV_RECT_PARMS
-		do
-			!! dgv_rect_parms.make (parent)
+		do 
+			create dgv_rect_parms.make (parent)
 			where_device (dgv_rect_parms, Mci_dgv_where_source +
 				Mci_dgv_where_max)
 			Result := dgv_rect_parms.rect
@@ -164,7 +164,7 @@ feature -- Status report
 			result_exists: Result.exists
 		end
 
-	destination_rectangle: WEL_RECT is
+	destination_rectangle: WEL_RECT
 			-- Retrieve the dimensions used to display video
 			-- and images in the client area of the current window.
 			--| The returned rectangle is reformatted to
@@ -173,8 +173,8 @@ feature -- Status report
 			opened: opened
 		local
 			dgv_rect_parms: WEX_MCI_DGV_RECT_PARMS
-		do
-			!! dgv_rect_parms.make (parent)
+		do 
+			create dgv_rect_parms.make (parent)
 			where_device (dgv_rect_parms, Mci_dgv_where_destination)
 			Result := dgv_rect_parms.rect
 		ensure
@@ -182,7 +182,7 @@ feature -- Status report
 			result_exists: Result.exists
 		end
 
-	maximum_destination_rectangle: WEL_RECT is
+	maximum_destination_rectangle: WEL_RECT
 			-- Retrieve the dimensions used to display video
 			-- and images in the client area of the current window.
 			--| The returned rectangle is reformatted to
@@ -191,8 +191,8 @@ feature -- Status report
 			opened: opened
 		local
 			dgv_rect_parms: WEX_MCI_DGV_RECT_PARMS
-		do
-			!! dgv_rect_parms.make (parent)
+		do 
+			create dgv_rect_parms.make (parent)
 			where_device (dgv_rect_parms, Mci_dgv_where_destination
 				+ Mci_dgv_where_max)
 			Result := dgv_rect_parms.rect
@@ -201,7 +201,7 @@ feature -- Status report
 			result_exists: Result.exists
 		end
 
-	window_rectangle: WEL_RECT is
+	window_rectangle: WEL_RECT
 			-- Retrieve the dimensions of the display-window frame. 
 			--| The returned rectangle is reformatted to
 			--| a true Windows rectangle.
@@ -209,8 +209,8 @@ feature -- Status report
 			opened: opened
 		local
 			dgv_rect_parms: WEX_MCI_DGV_RECT_PARMS
-		do
-			!! dgv_rect_parms.make (parent)
+		do 
+			create dgv_rect_parms.make (parent)
 			where_device (dgv_rect_parms, Mci_dgv_where_window)
 			Result := dgv_rect_parms.rect
 		ensure
@@ -218,7 +218,7 @@ feature -- Status report
 			result_exists: Result.exists
 		end
 
-	maximum_window_rectangle: WEL_RECT is
+	maximum_window_rectangle: WEL_RECT
 			-- Retrieve the max dimensions of the
 			-- display-window frame.
 			--| The returned rectangle is reformatted to
@@ -227,8 +227,8 @@ feature -- Status report
 			opened: opened
 		local
 			dgv_rect_parms: WEX_MCI_DGV_RECT_PARMS
-		do
-			!! dgv_rect_parms.make (parent)
+		do 
+			create dgv_rect_parms.make (parent)
 			where_device (dgv_rect_parms, Mci_dgv_where_window +
 				Mci_dgv_where_max)
 			Result := dgv_rect_parms.rect
@@ -237,7 +237,7 @@ feature -- Status report
 			result_exists: Result.exists
 		end
 
-	frame_rectangle: WEL_RECT is
+	frame_rectangle: WEL_RECT
 			-- Retrieve the dimensions of the frame buffer into
 			-- which images from the video rectangle are scaled.
 			--| The returned rectangle is reformatted to
@@ -246,8 +246,8 @@ feature -- Status report
 			opened: opened
 		local
 			dgv_rect_parms: WEX_MCI_DGV_RECT_PARMS
-		do
-			!! dgv_rect_parms.make (parent)
+		do 
+			create dgv_rect_parms.make (parent)
 			where_device (dgv_rect_parms, Mci_dgv_where_frame)
 			Result := dgv_rect_parms.rect
 		ensure
@@ -255,7 +255,7 @@ feature -- Status report
 			result_exists: Result.exists
 		end
 
-	video_rectangle: WEL_RECT is
+	video_rectangle: WEL_RECT
 			-- Retrieve the dimensions of the rectangular region
 			-- cropped from the presentation source to fill the
 			-- frame rectangle in the frame buffer
@@ -265,8 +265,8 @@ feature -- Status report
 			opened: opened
 		local
 			dgv_rect_parms: WEX_MCI_DGV_RECT_PARMS
-		do
-			!! dgv_rect_parms.make (parent)
+		do 
+			create dgv_rect_parms.make (parent)
 			where_device (dgv_rect_parms, Mci_dgv_where_video)
 			Result := dgv_rect_parms.rect
 		ensure
@@ -276,7 +276,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	realize_device (parms: WEX_MCI_GENERIC_PARMS; realize_flags: INTEGER) is
+	realize_device (parms: WEX_MCI_GENERIC_PARMS; realize_flags: INTEGER)
 			-- Perform MCI_REALIZE command on device.
 		require
 			opened: opened
@@ -287,7 +287,7 @@ feature {NONE} -- Implementation
 				command_flags, parms)
 		end
 
-	window_device (parms: WEX_MCI_GENERIC_PARMS; window_flags: INTEGER) is
+	window_device (parms: WEX_MCI_GENERIC_PARMS; window_flags: INTEGER)
 			-- Assign a window to a device.
 		require
 			opened: opened
@@ -298,7 +298,7 @@ feature {NONE} -- Implementation
 				command_flags, parms)
 		end
 
-	where_device (parms: WEX_MCI_GENERIC_PARMS; where_flags: INTEGER) is
+	where_device (parms: WEX_MCI_GENERIC_PARMS; where_flags: INTEGER)
 			-- Assign a window to a device.
 		require
 			opened: opened
@@ -314,7 +314,7 @@ feature {NONE} -- Implementation
 			--| Prevents garbage collecting if user specified the
 			--| window as a local attribute.
 
-	device_name: STRING is
+	device_name: STRING
 			-- Device name
 		once
 			Result := "digitalvideo"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A parsed command line argument."
 	copyright: "Copyright (c) 2003 Paul Cohen."
 	license: "Eiffel Forum License v2 (see license.txt)"
@@ -8,12 +8,12 @@ indexing
 	
 class PARSED_COMMAND_LINE_ARGUMENT
    
-creation
+create
 	{COMMAND_LINE_PARSER} make
    
 feature {NONE} -- Initialization
 	
-	make (s: STRING; spec_opts: HASH_TABLE [OPTION_SPECIFICATION, STRING]) is
+	make (s: STRING; spec_opts: HASH_TABLE [OPTION_SPECIFICATION, STRING])
 			-- Create a new parsed command line argument from the
 			-- command line argument `s' and use the specified
 			-- options in `spec_opts' to check if option
@@ -36,7 +36,7 @@ feature {COMMAND_LINE_PARSER} -- Access
 	is_option_argument: BOOLEAN
 			-- Is this an option argument?
 	
-	has_option_names: BOOLEAN is
+	has_option_names: BOOLEAN
 			-- Does this command line argument contain option
 			-- name(s)? 
 		do	
@@ -50,7 +50,7 @@ feature {COMMAND_LINE_PARSER} -- Access
 			-- lists a synonym short name, the short name will be
 			-- returned.
 	
-	has_invalidly_grouped_option_names: BOOLEAN is
+	has_invalidly_grouped_option_names: BOOLEAN
 			-- Does this commandline ragument contain invalidly
 			-- grouped option names?
 		do
@@ -65,13 +65,13 @@ feature {COMMAND_LINE_PARSER} -- Access
 			-- b) is part of a group of short option names and
 			-- c) is not the first option name in the group.
 	
-	is_single_dash: BOOLEAN is
+	is_single_dash: BOOLEAN
 			-- Is this command line argument simply a single dash?
 		do
 			Result := argument.count = 1 and argument @ 1 = '-'
 		end
 	
-	has_option_arguments: BOOLEAN is
+	has_option_arguments: BOOLEAN
 			-- Does it have any option arguments?
 		do
 			Result := option_arguments /= Void and then option_arguments.count > 0
@@ -85,7 +85,7 @@ feature {NONE} -- Implementation
 	specified_options: HASH_TABLE [OPTION_SPECIFICATION, STRING]
 			-- Table of specified options hashed by option name
 	
-	parse is
+	parse
 			-- Parse.
 		do
 			if argument @ 1 = '-' then
@@ -108,7 +108,7 @@ feature {NONE} -- Implementation
 			end
 		end
 	
-	parse_short_option_names is
+	parse_short_option_names
 			-- Parse the short option names.
 		require
 			valid_argument: argument.count >= 2
@@ -159,7 +159,7 @@ feature {NONE} -- Implementation
 			end
 		end
 	
-	parse_long_option_name is
+	parse_long_option_name
 			-- Parse the long option name.
 		require
 			valid_argument: argument.count >= 2
@@ -183,7 +183,7 @@ feature {NONE} -- Implementation
 			option_names.extend (s)
 		end	
 	
-	synonym_short_name (s: STRING): STRING is
+	synonym_short_name (s: STRING): STRING
 			-- The synonym short name for the long option `s'. If no
 			-- synonym short name exists, `s' is returned.
 		require

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "WEX Framework Example - Resource IDs "
 	status: "See notice at end of class."
 	author: "Andreas Leitner"
@@ -10,10 +10,10 @@ class
 
 feature -- Access
 
-	Id_main_frame: INTEGER is 1
-	Cmd_flat_tool_bar: INTEGER is 101
-	Cmd_exit: INTEGER is 1007
-	Cmd_test: INTEGER is 102
+	Id_main_frame: INTEGER = 1
+	Cmd_flat_tool_bar: INTEGER = 101
+	Cmd_exit: INTEGER = 1007
+	Cmd_test: INTEGER = 102
 
 end -- class APPLICATION_IDS
 

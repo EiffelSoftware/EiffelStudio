@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract notions of a MCI device."
 	status: "See notice at end of class."
 	author: "Robin van Ommeren"
@@ -86,7 +86,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_parent: like parent) is
+	make (a_parent: like parent)
 			-- Set the parent for notifications.
 		do
 			parent := a_parent
@@ -94,40 +94,40 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 
-	seek_start is
+	seek_start
 			-- Position at beginning of the media / track.
 		require
 			opened: opened
 		local
 			seek_parms: WEX_MCI_SEEK_PARMS
-		do
-			!! seek_parms.make (parent, 0)
+		do 
+			create seek_parms.make (parent, 0)
 			seek_device (seek_parms, Mci_seek_to_start)
 		end
 
-	seek_end is
+	seek_end
 			-- Position at end of the media / track.
 		require
 			opened: opened
 		local
 			seek_parms: WEX_MCI_SEEK_PARMS
-		do
-			!! seek_parms.make (parent, 0)
+		do 
+			create seek_parms.make (parent, 0)
 			seek_device (seek_parms, Mci_seek_to_end)
 		end
 
-	close is
+	close
 			-- Close the device.
 		require
 			opened: opened
 		local
 			generic_parms: WEX_MCI_GENERIC_PARMS
-		do
-			!! generic_parms.make (parent)
+		do 
+			create generic_parms.make (parent)
 			close_device (generic_parms, 0)
 		end
 
-	play is
+	play
 			-- Play from current position to the
 			-- end of the media / track
 		require
@@ -135,34 +135,34 @@ feature -- Basic operations
 			can_play: can_play
 		local
 			play_parms: WEX_MCI_PLAY_PARMS
-		do
-			!! play_parms.make (parent, 0, 0)
+		do 
+			create play_parms.make (parent, 0, 0)
 			play_device (play_parms, 0)
 		end
 
-	stop is
+	stop
 			-- Stop playback or recording.
 		require
 			opened: opened
 		local
 			generic_parms: WEX_MCI_GENERIC_PARMS
-		do
-			!! generic_parms.make (parent)
+		do 
+			create generic_parms.make (parent)
 			stop_device (generic_parms, 0)
 		end
 
-	pause is
+	pause
 			-- Pause playback.
 		require
 			opened: opened
 		local
 			generic_parms: WEX_MCI_GENERIC_PARMS
-		do
-			!! generic_parms.make (parent)
+		do 
+			create generic_parms.make (parent)
 			pause_device (generic_parms, 0)
 		end
 
-	resume is
+	resume
 			-- Resume playback.
 			--| Although CD audio, MIDI sequencer, and videodisc
 			--| devices also recognize this command, the MCICDA,
@@ -172,85 +172,85 @@ feature -- Basic operations
 			opened: opened
 		local
 			generic_parms: WEX_MCI_GENERIC_PARMS
-		do
-			!! generic_parms.make (parent)
+		do 
+			create generic_parms.make (parent)
 			resume_device (generic_parms, 0)
 		end
 
-	disable_left_audio_channel is
+	disable_left_audio_channel
 			-- Silence the left audio channel.
 		require
 			opened: opened
 			has_audio: has_audio
 		local
 			set_parms: WEX_MCI_SET_PARMS
-		do
-			!! set_parms.make (parent)
+		do 
+			create set_parms.make (parent)
 			set_parms.set_audio_channel (Mci_set_audio_left)
 			set_device (set_parms, Mci_set_audio + Mci_set_off)
 		end
 
-	disable_right_audio_channel is
+	disable_right_audio_channel
 			-- Silence the right audio channel.
 		require
 			opened: opened
 			has_audio: has_audio
 		local
 			set_parms: WEX_MCI_SET_PARMS
-		do
-			!! set_parms.make (parent)
+		do 
+			create set_parms.make (parent)
 			set_parms.set_audio_channel (Mci_set_audio_right)
 			set_device (set_parms, Mci_set_audio + Mci_set_off)
 		end
 
-	enable_left_audio_channel is
+	enable_left_audio_channel
 			-- Enable the left audio channel.
 		require
 			opened: opened
 			has_audio: has_audio
 		local
 			set_parms: WEX_MCI_SET_PARMS
-		do
-			!! set_parms.make (parent)
+		do 
+			create set_parms.make (parent)
 			set_parms.set_audio_channel (Mci_set_audio_left)
 			set_device (set_parms, Mci_set_audio + Mci_set_on)
 		end
 
-	enable_right_audio_channel is
+	enable_right_audio_channel
 			-- Enable the right audio channel.
 		require
 			opened: opened
 			has_audio: has_audio
 		local
 			set_parms: WEX_MCI_SET_PARMS
-		do
-			!! set_parms.make (parent)
+		do 
+			create set_parms.make (parent)
 			set_parms.set_audio_channel (Mci_set_audio_right)
 			set_device (set_parms, Mci_set_audio + Mci_set_on)
 		end
 
-	disable_all_audio_channels is
+	disable_all_audio_channels
 			-- Disable left and right audio channel.
 		require
 			opened: opened
 			has_audio: has_audio
 		local
 			set_parms: WEX_MCI_SET_PARMS
-		do
-			!! set_parms.make (parent)
+		do 
+			create set_parms.make (parent)
 			set_parms.set_audio_channel (Mci_set_audio_all)
 			set_device (set_parms, Mci_set_audio + Mci_set_off)
 		end
 
-	enable_all_audio_channels is
+	enable_all_audio_channels
 			-- Enable left and right audio channel.
 		require
 			opened: opened
 			has_audio: has_audio
 		local
 			set_parms: WEX_MCI_SET_PARMS
-		do
-			!! set_parms.make (parent)
+		do 
+			create set_parms.make (parent)
 			set_parms.set_audio_channel (Mci_set_audio_all)
 			set_device (set_parms, Mci_set_audio + Mci_set_on)
 		end		
@@ -260,25 +260,25 @@ feature -- Status report
 	opened: BOOLEAN
 			-- Is the device opened?
 
-	device_id: INTEGER is
+	device_id: INTEGER
 			-- Identifier of opened device
 		do
 			Result := cwel_pointer_to_integer (item)
 		end
 
-	command_success: BOOLEAN is
+	command_success: BOOLEAN
 			-- Did the last command succeed?
 		do
 			Result := error = 0
 		end
 
-	last_error: STRING is
+	last_error: STRING
 			-- Text of last error occured.
 		local
 			a: ANY
 			success: BOOLEAN
-		do
-			!! Result.make (Maximum_error_buffer)
+		do 
+			create Result.make (Maximum_error_buffer)
 			Result.fill_blank
 			a := Result.to_c
 			success := cwin_mci_get_error_string (error, $a,
@@ -295,7 +295,7 @@ feature -- Status report
 	error: INTEGER
 			-- Identifier of last error.
 
-	compound_device: BOOLEAN is
+	compound_device: BOOLEAN
 			-- Is the device a compound device?
 		require
 			opened: opened
@@ -304,7 +304,7 @@ feature -- Status report
 				Mci_getdevcaps_compound_device) /= 0
 		end
 
-	animation_device: BOOLEAN is
+	animation_device: BOOLEAN
 			-- Is current device a animation device?
 		require
 			opened: opened
@@ -314,7 +314,7 @@ feature -- Status report
 				Mci_devtype_animation
 		end
 
-	cd_audio_device: BOOLEAN is
+	cd_audio_device: BOOLEAN
 			-- Is current device a CD audio device?
 		require
 			opened: opened
@@ -324,7 +324,7 @@ feature -- Status report
 				Mci_devtype_cd_audio
 		end
 
-	dat_device: BOOLEAN is
+	dat_device: BOOLEAN
 			-- Is current device a CD audio device?
 		require
 			opened: opened
@@ -333,7 +333,7 @@ feature -- Status report
 				Mci_getdevcaps_device_type) = Mci_devtype_dat
 		end
 
-	digital_video_device: BOOLEAN is
+	digital_video_device: BOOLEAN
 			-- Is current device a digital video device?
 		require
 			opened: opened
@@ -343,7 +343,7 @@ feature -- Status report
 				Mci_devtype_digital_video
 		end
 
-	other_device: BOOLEAN is
+	other_device: BOOLEAN
 			-- Is current device an other device?
 		require
 			opened: opened
@@ -352,7 +352,7 @@ feature -- Status report
 				Mci_getdevcaps_device_type) = Mci_devtype_other
 		end
 
-	overlay_device: BOOLEAN is
+	overlay_device: BOOLEAN
 			-- Is current device an overlay device?
 		require
 			opened: opened
@@ -362,7 +362,7 @@ feature -- Status report
 				Mci_devtype_overlay
 		end
 
-	scanner_device: BOOLEAN is
+	scanner_device: BOOLEAN
 			-- Is current device a scanner device?
 		require
 			opened: opened
@@ -372,7 +372,7 @@ feature -- Status report
 				Mci_devtype_scanner
 		end
 
-	sequencer_device: BOOLEAN is
+	sequencer_device: BOOLEAN
 			-- Is current device a sequencer device?
 		require
 			opened: opened
@@ -382,7 +382,7 @@ feature -- Status report
 				Mci_devtype_sequencer
 		end
 
-	vcr_device: BOOLEAN is
+	vcr_device: BOOLEAN
 			-- Is current device a vcr device?
 		require
 			opened: opened
@@ -391,7 +391,7 @@ feature -- Status report
 				Mci_getdevcaps_device_type) = Mci_devtype_vcr
 		end
 
-	video_disc_device: BOOLEAN is
+	video_disc_device: BOOLEAN
 			-- Is current device a digital video device?
 		require
 			opened: opened
@@ -401,7 +401,7 @@ feature -- Status report
 				Mci_devtype_videodisc
 		end
 
-	wave_audio_device: BOOLEAN is
+	wave_audio_device: BOOLEAN
 			-- Is current device a wave audio device?
 		require
 			opened: opened
@@ -411,7 +411,7 @@ feature -- Status report
 				Mci_devtype_waveform_audio
 		end
 
-	has_audio: BOOLEAN is
+	has_audio: BOOLEAN
 			-- Is this device using audio?
 		require
 			opened: opened
@@ -421,7 +421,7 @@ feature -- Status report
 				Mci_getdevcaps_has_audio) /= 0
 		end
 
-	has_video: BOOLEAN is
+	has_video: BOOLEAN
 			-- Is this device using video?
 		require
 			opened: opened
@@ -431,7 +431,7 @@ feature -- Status report
 				Mci_getdevcaps_has_video) /= 0
 		end
 
-	uses_files: BOOLEAN is
+	uses_files: BOOLEAN
 			-- Does this device need to use files?
 		require
 			opened: opened
@@ -440,7 +440,7 @@ feature -- Status report
 				Mci_getdevcaps_uses_files) /= 0
 		end
 
-	can_eject: BOOLEAN is
+	can_eject: BOOLEAN
 			-- Can this device eject it's media?
 		require
 			opened: opened
@@ -450,7 +450,7 @@ feature -- Status report
 				Mci_getdevcaps_can_eject) /= 0
 		end
 
-	can_play: BOOLEAN is
+	can_play: BOOLEAN
 			-- Can this device play it's media?
 			--| This implies the commands play and
 			--| stop are supported by this device.
@@ -462,7 +462,7 @@ feature -- Status report
 				Mci_getdevcaps_can_play) /= 0
 		end
 
-	can_record: BOOLEAN is
+	can_record: BOOLEAN
 			-- Can this device record using it's media?
 		require
 			opened: opened
@@ -472,7 +472,7 @@ feature -- Status report
 				Mci_getdevcaps_can_record) /= 0
 		end
 
-	can_save: BOOLEAN is
+	can_save: BOOLEAN
 			-- Can the device save it's media?
 		require
 			opened: opened
@@ -482,7 +482,7 @@ feature -- Status report
 				Mci_getdevcaps_can_save) /= 0
 		end
 
-	bytes_format: BOOLEAN is
+	bytes_format: BOOLEAN
 			-- Is the device using bytes as time format?
 		require
 			opened: opened
@@ -491,7 +491,7 @@ feature -- Status report
 				Mci_format_bytes
 		end
 
-	frames_format: BOOLEAN is
+	frames_format: BOOLEAN
 			-- Is the device using frames as time format?
 		require
 			opened: opened
@@ -500,7 +500,7 @@ feature -- Status report
 				Mci_format_frames
 		end
 
-	hms_format: BOOLEAN is
+	hms_format: BOOLEAN
 			-- Is the device using hms as time format?
 		require
 			opened: opened
@@ -509,7 +509,7 @@ feature -- Status report
 				Mci_format_hms
 		end
 
-	milliseconds_format: BOOLEAN is
+	milliseconds_format: BOOLEAN
 			-- Is the device using milliseconds as time format?
 		require
 			opened: opened
@@ -518,7 +518,7 @@ feature -- Status report
 				Mci_format_milliseconds
 		end
 
-	msf_format: BOOLEAN is
+	msf_format: BOOLEAN
 			-- Is the device using msf as time format?	
 		require
 			opened: opened
@@ -527,7 +527,7 @@ feature -- Status report
 				Mci_format_msf
 		end
 
-	samples_format: BOOLEAN is
+	samples_format: BOOLEAN
 			-- Is the device using samples as time format?
 		require
 			opened: opened
@@ -536,7 +536,7 @@ feature -- Status report
 				Mci_format_samples
 		end
 
-	tmsf_format: BOOLEAN is
+	tmsf_format: BOOLEAN
 			-- Is the device using tmsf as time format?
 		require
 			opened: opened
@@ -545,7 +545,7 @@ feature -- Status report
 				Mci_format_tmsf
 		end
 
-	track_number: INTEGER is
+	track_number: INTEGER
 			-- Current track number.
 			-- |MCI uses continuous track numbers.
 		require
@@ -556,7 +556,7 @@ feature -- Status report
 			positive_result: Result >= 0
 		end
 
-	number_of_tracks: INTEGER is
+	number_of_tracks: INTEGER
 			-- Total number of playable tracks.
 		require
 			opened: opened
@@ -564,7 +564,7 @@ feature -- Status report
 			Result := query_status_item (Mci_status_number_of_tracks)
 		end
 
-	position: INTEGER is
+	position: INTEGER
 			-- Current position.
 		require
 			opened: opened
@@ -575,7 +575,7 @@ feature -- Status report
 			positive_result: Result >= 0
 		end
 
-	media_length: INTEGER is
+	media_length: INTEGER
 			-- Total media length.
 		require
 			opened: opened
@@ -585,7 +585,7 @@ feature -- Status report
 			positive_result: Result >= 0
 		end
 
-	ready: BOOLEAN is
+	ready: BOOLEAN
 			-- Is the device ready?
 		require
 			opened: opened
@@ -593,7 +593,7 @@ feature -- Status report
 			Result := query_status_item (Mci_status_ready) /= 0
 		end
 
-	track_start (a_track: INTEGER): INTEGER is
+	track_start (a_track: INTEGER): INTEGER
 			-- The starting position of a track.
 		require
 			opened: opened
@@ -603,7 +603,7 @@ feature -- Status report
 			positive_result: Result >= 0
 		end
 
-	track_length (a_track: INTEGER): INTEGER is
+	track_length (a_track: INTEGER): INTEGER
 			-- The length of a track
 		require
 			opened: opened
@@ -613,14 +613,14 @@ feature -- Status report
 			positive_result: Result >= 0
 		end
 
-	start_position: INTEGER is
+	start_position: INTEGER
 			-- The starting position of the media.
 		require
 			opened: opened
 		local
 			status_parms: WEX_MCI_STATUS_PARMS
-		do
-			!! status_parms.make (parent, Mci_status_item +
+		do 
+			create status_parms.make (parent, Mci_status_item +
 				Mci_status_start)
 			status_device (status_parms, Mci_status_position)
 			Result := status_parms.query_result
@@ -628,7 +628,7 @@ feature -- Status report
 			positive_result: Result >= 0
 		end
 
-	paused: BOOLEAN is
+	paused: BOOLEAN
 			-- Is the device paused?
 		require
 			opened: opened
@@ -637,7 +637,7 @@ feature -- Status report
 				Mci_mode_pause
 		end
 
-	playing: BOOLEAN is
+	playing: BOOLEAN
 			-- Is the device playing?
 		require
 			opened: opened
@@ -646,7 +646,7 @@ feature -- Status report
 				Mci_mode_play
 		end
 
-	stopped: BOOLEAN is
+	stopped: BOOLEAN
 			-- Is the device stopped?
 		require
 			opened: opened
@@ -655,7 +655,7 @@ feature -- Status report
 				Mci_mode_stop
 		end
 
-	device_opened: BOOLEAN is
+	device_opened: BOOLEAN
 			-- Is the device physically opened?
 		require
 			opened: opened
@@ -664,7 +664,7 @@ feature -- Status report
 				Mci_mode_open
 		end
 
-	recording: BOOLEAN is
+	recording: BOOLEAN
 			-- Is the device recording?
 		require
 			opened: opened
@@ -673,7 +673,7 @@ feature -- Status report
 				Mci_mode_record
 		end
 
-	seeking: BOOLEAN is
+	seeking: BOOLEAN
 			-- Is the device seeking?
 		require
 			opened: opened
@@ -682,13 +682,13 @@ feature -- Status report
 				Mci_mode_seek
 		end
 
-	notify_enabled: BOOLEAN is
+	notify_enabled: BOOLEAN
 			-- Is notification enabled?
 		do
 			Result := flag_set (command_flags, Mci_notify)
 		end
 
-	wait_enabled: BOOLEAN is
+	wait_enabled: BOOLEAN
 			-- Is waiting for command completion enabled?
 		do
 			Result := flag_set (command_flags, Mci_wait)
@@ -704,7 +704,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_strict (flag: BOOLEAN) is
+	set_strict (flag: BOOLEAN)
 			-- If `flag' is set, an exception will be
 			-- raised when a command failes.
 			--| Assertion level needs to be `ensure' or `all'
@@ -716,25 +716,25 @@ feature -- Status setting
 			strict := flag
 		end
 
-	enable_wait is
+	enable_wait
 			-- Enable waiting for command completion.
 		do
 			command_flags := set_flag (command_flags, Mci_wait)
 		end
 
-	disable_wait is
+	disable_wait
 			-- Disable waiting for command completion.
 		do
 			command_flags := clear_flag (command_flags, Mci_wait)
 		end
 
-	enable_notify is
+	enable_notify
 			-- Enable notification to parent on command completion.
 		do
 			command_flags := set_flag (command_flags, Mci_notify)
 		end
 
-	disable_notify is
+	disable_notify
 			-- Disable notification to parent on command completion.
 		do
 			command_flags := clear_flag (command_flags, Mci_notify)
@@ -747,20 +747,20 @@ feature {NONE} -- Implementation
 
 	old_notify_flag: BOOLEAN
 
-	save_state is
+	save_state
 		do
 			old_notify_flag := notify_enabled
 			disable_notify
 		end
 
-	restore_state is
+	restore_state
 		do
 			if old_notify_flag then
 				enable_notify
 			end
 		end
 
-	status_device (parms: WEX_MCI_STATUS_PARMS; status_flags: INTEGER) is
+	status_device (parms: WEX_MCI_STATUS_PARMS; status_flags: INTEGER)
 			-- Query the status of an device.
 		require
 			opened: opened
@@ -772,7 +772,7 @@ feature {NONE} -- Implementation
 			restore_state
 		end
 
-	getdevcaps_device (parms: WEX_MCI_GENERIC_PARMS; devcaps_flags: INTEGER) is
+	getdevcaps_device (parms: WEX_MCI_GENERIC_PARMS; devcaps_flags: INTEGER)
 			-- Query a device about it's capabilities.
 		require
 			opened: opened
@@ -784,7 +784,7 @@ feature {NONE} -- Implementation
 			restore_state
 		end
 
-	set_device (parms: WEX_MCI_SET_PARMS; set_flags: INTEGER) is
+	set_device (parms: WEX_MCI_SET_PARMS; set_flags: INTEGER)
 			-- Apply settings to a device.
 		require
 			opened: opened
@@ -794,7 +794,7 @@ feature {NONE} -- Implementation
 			send_command (Mci_set, set_flags, parms)
 		end
 
-	cue_device (parms: WEX_MCI_GENERIC_PARMS; cue_flags: INTEGER) is
+	cue_device (parms: WEX_MCI_GENERIC_PARMS; cue_flags: INTEGER)
 			-- Cue a device for faster response on play or record.
 		require
 			opened: opened
@@ -804,7 +804,7 @@ feature {NONE} -- Implementation
 			send_command (Mci_cue, cue_flags, parms)
 		end
 
-	resume_device (parms: WEX_MCI_GENERIC_PARMS; resume_flags: INTEGER) is
+	resume_device (parms: WEX_MCI_GENERIC_PARMS; resume_flags: INTEGER)
 			-- Resume playing/recording on a device.
 		require
 			opened: opened
@@ -814,7 +814,7 @@ feature {NONE} -- Implementation
 			send_command (Mci_resume, resume_flags, parms)
 		end
 
-	pause_device (parms: WEX_MCI_GENERIC_PARMS; pause_flags: INTEGER) is
+	pause_device (parms: WEX_MCI_GENERIC_PARMS; pause_flags: INTEGER)
 			-- Pause a device.
 		require
 			opened: opened
@@ -824,7 +824,7 @@ feature {NONE} -- Implementation
 			send_command (Mci_pause, pause_flags, parms)
 		end
 
-	stop_device (parms: WEX_MCI_GENERIC_PARMS; stop_flags: INTEGER) is
+	stop_device (parms: WEX_MCI_GENERIC_PARMS; stop_flags: INTEGER)
 			-- Stop a device.
 		require
 			opened: opened
@@ -834,7 +834,7 @@ feature {NONE} -- Implementation
 			send_command (Mci_stop, stop_flags, parms)
 		end
 
-	seek_device (parms: WEX_MCI_SEEK_PARMS; seek_flags: INTEGER) is
+	seek_device (parms: WEX_MCI_SEEK_PARMS; seek_flags: INTEGER)
 			-- Seek a device.
 		require
 			opened: opened
@@ -844,7 +844,7 @@ feature {NONE} -- Implementation
 			send_command (Mci_seek, seek_flags, parms)
 		end
 
-	play_device (parms: WEX_MCI_PLAY_PARMS; play_flags: INTEGER) is
+	play_device (parms: WEX_MCI_PLAY_PARMS; play_flags: INTEGER)
 			-- Start playing on a device.
 		require
 			opened: opened
@@ -854,7 +854,7 @@ feature {NONE} -- Implementation
 			send_command (Mci_play, play_flags, parms)
 		end
 
-	record_device (parms: WEX_MCI_RECORD_PARMS; record_flags: INTEGER) is
+	record_device (parms: WEX_MCI_RECORD_PARMS; record_flags: INTEGER)
 			-- Start recording on a device.
 		require
 			opened: opened
@@ -864,7 +864,7 @@ feature {NONE} -- Implementation
 			send_command (Mci_record, record_flags, parms)
 		end
 
-	close_device (parms: WEX_MCI_GENERIC_PARMS; close_flags: INTEGER) is
+	close_device (parms: WEX_MCI_GENERIC_PARMS; close_flags: INTEGER)
 			-- Close the device.
 		require
 			opened: opened
@@ -888,7 +888,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	open_device (parms: WEX_MCI_OPEN_PARMS; open_flags: INTEGER) is
+	open_device (parms: WEX_MCI_OPEN_PARMS; open_flags: INTEGER)
 			-- Open an mci device with `parms'
 		require
 			parms_not_void: parms /= Void
@@ -912,7 +912,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	send_command (command, flags: INTEGER; parms: WEX_MCI_GENERIC_PARMS) is
+	send_command (command, flags: INTEGER; parms: WEX_MCI_GENERIC_PARMS)
 			-- Send a command to the device and
 			-- save the possible error.
 		require
@@ -926,7 +926,7 @@ feature {NONE} -- Implementation
 			strictness: strict implies raise_error_on_command_failure
 		end
 
-	query_track (a_track, a_item: INTEGER): INTEGER is
+	query_track (a_track, a_item: INTEGER): INTEGER
 			-- Query a device about `a_item' for a
 			-- specific track `a_track'.
 		require
@@ -935,8 +935,8 @@ feature {NONE} -- Implementation
 			a_track_large_enough: a_track >= 0
 		local
 			status_parms: WEX_MCI_STATUS_PARMS
-		do
-			!! status_parms.make (parent, a_item)
+		do 
+			create status_parms.make (parent, a_item)
 			status_parms.set_track (a_track)
 			status_device (status_parms, Mci_status_item + Mci_track)
 			if command_success then
@@ -944,45 +944,45 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	query_device_capability_item (a_item: INTEGER; a_cap: INTEGER): INTEGER is
+	query_device_capability_item (a_item: INTEGER; a_cap: INTEGER): INTEGER
 			-- Query the device capability `a_cap' about
 			-- an item `a_item'.
 		require
 			opened: opened
 		local
 			devcaps_parms: WEX_MCI_GETDEVCAPS_PARMS
-		do
-			!! devcaps_parms.make (parent)
+		do 
+			create devcaps_parms.make (parent)
 			devcaps_parms.set_devcap_item (a_cap)
 			getdevcaps_device (devcaps_parms, a_item)
 			Result := devcaps_parms.query_result
 		end			
 
-	query_device_capability (a_item: INTEGER): INTEGER is
+	query_device_capability (a_item: INTEGER): INTEGER
 			-- Query a device about the capability of `a_item'.
 		require
 			opened: opened
 		local
 			devcaps_parms: WEX_MCI_GETDEVCAPS_PARMS
-		do
-			!! devcaps_parms.make (parent)
+		do 
+			create devcaps_parms.make (parent)
 			getdevcaps_device (devcaps_parms, a_item)
 			Result := devcaps_parms.query_result
 		end
 
-	query_status_item (a_item: INTEGER): INTEGER is
+	query_status_item (a_item: INTEGER): INTEGER
 			-- Query a device's status concerning `a_item'.
 		require
 			opened: opened
 		local
 			status_parms: WEX_MCI_STATUS_PARMS
-		do
-			!! status_parms.make (parent, a_item)
+		do 
+			create status_parms.make (parent, a_item)
 			status_device (status_parms, Mci_status_item)
 			Result := status_parms.query_result
 		end
 
-	raise_error_on_command_failure: BOOLEAN is
+	raise_error_on_command_failure: BOOLEAN
 			-- Raise an exception if last command failed.
 		local
 			message_box_string: STRING
@@ -1000,18 +1000,18 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	device_name: STRING is
+	device_name: STRING
 			-- Name of device
 		deferred
 		end
 
-	Maximum_error_buffer: INTEGER is 128
+	Maximum_error_buffer: INTEGER = 128
 			-- Maximum buffer length of an error retrieved
 			-- by using `cwin_mci_get_error_string'.
 
 feature {NONE} -- Removal
 
-	destroy_item is
+	destroy_item
 			-- If the garbage collector needs to clean up an object
 			-- which holds a device which is still open, windows is
 			-- unable to free the device so the garbage collector
@@ -1025,7 +1025,7 @@ feature {NONE} -- Removal
 
 feature {NONE} -- Externals
 
-	cwin_mci_send_command_result (id, msg, command, wparam: INTEGER): INTEGER is
+	cwin_mci_send_command_result (id, msg, command, wparam: INTEGER): INTEGER
 			-- SDK mciSendCommand (with the result)
 		external
 			"C [macro <wex_mci.h>] (MCIDEVICEID, UINT, %
@@ -1034,7 +1034,7 @@ feature {NONE} -- Externals
 			"mciSendCommand"
 		end
 
-	cwin_mci_send_command (id, msg, command, wparam: INTEGER) is
+	cwin_mci_send_command (id, msg, command, wparam: INTEGER)
 			-- SDK mciSendCommand (without the result)
 		external
 			"C [macro <wex_mci.h>] (MCIDEVICEID, UINT, %
@@ -1043,7 +1043,7 @@ feature {NONE} -- Externals
 			"mciSendCommand"
 		end
 
-	cwin_mci_get_error_string (code: INTEGER; ptr: POINTER; l: INTEGER): BOOLEAN is
+	cwin_mci_get_error_string (code: INTEGER; ptr: POINTER; l: INTEGER): BOOLEAN
 		external
 			"C [macro <wex_mci.h>] (DWORD, LPTSTR, UINT): EIF_BOOLEAN"
 		alias

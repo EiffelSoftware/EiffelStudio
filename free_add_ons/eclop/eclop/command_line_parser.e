@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command line parser."
 	copyright: "Copyright (c) 2003 Paul Cohen."
 	license: "Eiffel Forum License v2 (see license.txt)"
@@ -14,12 +14,12 @@ inherit
 			{NONE} all
 		end
 		
-creation
+create
 	make
    
 feature {NONE} -- Initialization
 	
-	make (cls: COMMAND_LINE_SYNTAX) is
+	make (cls: COMMAND_LINE_SYNTAX)
 			-- Create a new command line parser using the syntax
 			-- `cls'. 
 		require
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 	
 feature -- Access 
 	
-	executable: STRING is
+	executable: STRING
 			-- The name of the current executable stripped of all
 			-- preceding directory names and separators
 		do
@@ -41,7 +41,7 @@ feature -- Access
 			Result.tail (Result.count - Result.last_index_of (directory_separator, Result.count))
 		end
 	
-	executable_without_suffix: STRING is
+	executable_without_suffix: STRING
 			-- The name of the current executable stripped of all
 			-- preceding directory names and separators and without
 			-- any eventual suffix like ".exe"
@@ -78,7 +78,7 @@ feature -- Access
 			-- read or write, as the case is, from standard input or
 			-- standard output respectively.
 	
-	invalid_options_found: BOOLEAN is
+	invalid_options_found: BOOLEAN
 			-- Where any invalid options found while parsing? 
 		do
 			Result := required_options_missing or 
@@ -148,7 +148,7 @@ feature -- Access
 			-- Where any invalidly grouped short options found when
 			-- parsing? 
 	
-	error_message: STRING is
+	error_message: STRING
 			-- An error message with information on errors
 			-- encountered when parsing
 		require
@@ -219,7 +219,7 @@ feature -- Access
 		
 feature -- Basic operations
 	
-	parse (args: ARRAY [STRING]) is 
+	parse (args: ARRAY [STRING]) 
 			-- Parse the `args'. 
 		require
 			args_not_void: args /= Void
@@ -248,7 +248,7 @@ feature -- Basic operations
 	
 feature -- Test & Debug
 	
-	pretty_print_of_valid_options: STRING is
+	pretty_print_of_valid_options: STRING
 			-- Pretty presentation of all information on the
 			-- most recently parsed (valid) options
 		local
@@ -293,7 +293,7 @@ feature -- Test & Debug
 	
 feature {NONE} -- Implementation (Basic operations)
 	
-	parse_command_line_arguments (args: ARRAY [STRING]) is 
+	parse_command_line_arguments (args: ARRAY [STRING]) 
 			-- Parse the command line arguments and create the lists
 			-- `parsed_arguments' and `operands'.
 		require
@@ -333,7 +333,7 @@ feature {NONE} -- Implementation (Basic operations)
 			new_operands: operands /= old operands
 		end
 	
-	parse_options is
+	parse_options
 			-- Iterate over `parsed_arguments' and create the list `parsed_options'.
 		require
 			parsed_arguments_not_void: parsed_arguments /= Void
@@ -424,13 +424,13 @@ feature {NONE} -- Implementation (Basic operations)
 			new_parsed_options: parsed_options /= old parsed_options
 		end
 	
-	is_option_argument (s: STRING): BOOLEAN is
+	is_option_argument (s: STRING): BOOLEAN
 			-- Is `s' a command line option argument?
 		do
 			Result := s @ 1 /= '-'
 		end
 	
-	validate_parsed_options is
+	validate_parsed_options
 			-- Validate the parsed options against the option
 			-- specifications.
 		require
@@ -595,7 +595,7 @@ feature {NONE} -- Implementation (Basic operations)
 			end
 		end
 	
-	update_valid_options (opt_name: STRING; po: PARSED_OPTION) is
+	update_valid_options (opt_name: STRING; po: PARSED_OPTION)
 			-- Update the table of valid options
 		require
 			opt_name_not_void: opt_name /= Void

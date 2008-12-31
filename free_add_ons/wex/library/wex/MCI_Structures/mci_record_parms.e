@@ -1,4 +1,4 @@
-indexing
+note
 	description: "The class represents the MCI_RECORD_PARMS structure."
 	status: "See notice at end of class."
 	author: "Robin van Ommeren"
@@ -16,13 +16,13 @@ inherit
 			structure_size
 		end
 
-creation
+create
 	make,
 	make_by_pointer
 
 feature {NONE} -- Initialization
 
-	make (a_parent: WEL_COMPOSITE_WINDOW; from_pos, to_pos: INTEGER) is
+	make (a_parent: WEL_COMPOSITE_WINDOW; from_pos, to_pos: INTEGER)
 			-- Create object and fill structure.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	record_start: INTEGER is
+	record_start: INTEGER
 			-- Position to start recording.
 		require
 			exists: exists
@@ -51,7 +51,7 @@ feature -- Status report
 			Result := cwex_mci_record_get_from (item)
 		end
 
-	record_end: INTEGER is
+	record_end: INTEGER
 			-- Position to end recording.
 		require
 			exists: exists
@@ -61,7 +61,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_record_start (start_pos: INTEGER) is
+	set_record_start (start_pos: INTEGER)
 			-- Set position to start recording from.
 		require
 			exists: exists
@@ -71,7 +71,7 @@ feature -- Status setting
 			record_start_position_set: record_start = start_pos
 		end
 
-	set_record_end (end_pos: INTEGER) is
+	set_record_end (end_pos: INTEGER)
 			-- Set position to end recording to.
 		require
 			exists: exists
@@ -83,7 +83,7 @@ feature -- Status setting
 
 feature {WEL_STRUCTURE}
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_mci_record_parms
@@ -91,29 +91,29 @@ feature {WEL_STRUCTURE}
 
 feature {NONE} -- Externals
 
-	c_size_of_mci_record_parms: INTEGER is
+	c_size_of_mci_record_parms: INTEGER
 		external
 			"C [macro <record.h>]"
 		alias
 			"sizeof (MCI_RECORD_PARMS)"
 		end
 
-	cwex_mci_record_set_from (ptr: POINTER; value: INTEGER) is
+	cwex_mci_record_set_from (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <record.h>]"
 		end
 
-	cwex_mci_record_set_to (ptr: POINTER; value: INTEGER) is
+	cwex_mci_record_set_to (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <record.h>]"
 		end
 
-	cwex_mci_record_get_from (ptr: POINTER): INTEGER is
+	cwex_mci_record_get_from (ptr: POINTER): INTEGER
 		external
 			"C [macro <record.h>]"
 		end
 
-	cwex_mci_record_get_to (ptr: POINTER): INTEGER is
+	cwex_mci_record_get_to (ptr: POINTER): INTEGER
 		external
 			"C [macro <record.h>]"
 		end

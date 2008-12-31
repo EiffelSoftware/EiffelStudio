@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents the MCI_GENERIC_PARMS structure."
 	status: "See notice at end of class."
 	author: "Robin van Ommeren"
@@ -14,13 +14,13 @@ inherit
 			make as structure_make
 		end
 
-creation
+create
 	make,
 	make_by_pointer
 
 feature {NONE} -- Initialization
 
-	make (a_parent: WEL_COMPOSITE_WINDOW) is
+	make (a_parent: WEL_COMPOSITE_WINDOW)
 			-- Create object and fill structure.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	call_back: INTEGER is
+	call_back: INTEGER
 			-- Window used for notifications.
 		require
 			exists: exists
@@ -46,7 +46,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_call_back (a_call_back: INTEGER) is
+	set_call_back (a_call_back: INTEGER)
 			-- Set window used for notifications.
 		require
 			exists: exists
@@ -58,7 +58,7 @@ feature -- Status setting
 
 feature {WEL_STRUCTURE}
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_mci_generic_parms
@@ -66,19 +66,19 @@ feature {WEL_STRUCTURE}
 
 feature {NONE} -- Externals
 
-	c_size_of_mci_generic_parms: INTEGER is
+	c_size_of_mci_generic_parms: INTEGER
 		external
 			"C [macro <generic.h>]"
 		alias
 			"sizeof (MCI_GENERIC_PARMS)"
 		end
 
-	cwex_mci_generic_set_callback (ptr: POINTER; value: INTEGER) is
+	cwex_mci_generic_set_callback (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <generic.h>]"
 		end
 
-	cwex_mci_generic_get_callback (ptr: POINTER): INTEGER is
+	cwex_mci_generic_get_callback (ptr: POINTER): INTEGER
 		external
 			"C [macro <generic.h>]"
 		end

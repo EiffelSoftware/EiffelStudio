@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants used for the MCI_SET command for %
 		% the waveaudio MCI device."
 	status: "See notice at end of class."
@@ -11,70 +11,70 @@ class
 
 feature -- Access
 
-	Mci_wave_input: INTEGER is
+	Mci_wave_input: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_WAVE_INPUT"
 		end
 
-	Mci_wave_output: INTEGER is
+	Mci_wave_output: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_WAVE_OUTPUT"
 		end
 
-	Mci_wave_set_anyinput: INTEGER is
+	Mci_wave_set_anyinput: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_WAVE_SET_ANYINPUT"
 		end
 
-	Mci_wave_set_anyoutput: INTEGER is
+	Mci_wave_set_anyoutput: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_WAVE_SET_ANYOUTPUT"
 		end
 
-	Mci_wave_set_formattag: INTEGER is
+	Mci_wave_set_formattag: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_WAVE_SET_FORMATTAG"
 		end
 
-	Mci_wave_set_avgbytespersec: INTEGER is
+	Mci_wave_set_avgbytespersec: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_WAVE_SET_AVGBYTESPERSEC"
 		end
 
-	Mci_wave_set_bitspersample: INTEGER is
+	Mci_wave_set_bitspersample: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_WAVE_SET_BITSPERSAMPLE"
 		end
 
-	Mci_wave_set_blockalign: INTEGER is
+	Mci_wave_set_blockalign: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_WAVE_SET_BLOCKALIGN"
 		end
 
-	Mci_wave_set_channels: INTEGER is
+	Mci_wave_set_channels: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_WAVE_SET_CHANNELS"
 		end
 
-	Mci_wave_set_samplespersec: INTEGER is
+	Mci_wave_set_samplespersec: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias

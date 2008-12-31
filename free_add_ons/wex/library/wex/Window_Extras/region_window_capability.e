@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Capability to transform the visible %
 		%part of a window into any valid region"
 	author: "Robin van Ommeren"
@@ -10,16 +10,16 @@ deferred class
 
 feature -- Access
 
-	window_region: WEL_REGION is
-		do
-			!! Result.make_empty
+	window_region: WEL_REGION
+		do 
+			create Result.make_empty
 			cwin_get_window_region (item, Result.item)
 		ensure
 			result_not_void: Result /= Void
 			result_exists: Result.exists
 		end
 
-	set_window_region (a_region: WEL_REGION; redraw_flag: BOOLEAN) is
+	set_window_region (a_region: WEL_REGION; redraw_flag: BOOLEAN)
 			-- Set `a_region' to be the region of the window.
 		require
 			a_region_not_void: a_region /= Void
@@ -32,7 +32,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	item: POINTER is
+	item: POINTER
 		deferred
 		end
 
@@ -43,14 +43,14 @@ feature {NONE} -- Implementation
 feature {NONE} -- External
 
 	cwin_set_window_region (window_handle: POINTER; region_handle: POINTER;
-			redraw_flag: BOOLEAN) is
+			redraw_flag: BOOLEAN)
 		external
 			"C [macro <windows.h>] (HWND, HRGN, BOOL)"
 		alias
 			"SetWindowRgn"
 		end
 
-	cwin_get_window_region (window_handle: POINTER; region_handle: POINTER) is
+	cwin_get_window_region (window_handle: POINTER; region_handle: POINTER)
 		external
 			"C [macro <windows.h>] (HWND, HRGN)"
 		alias

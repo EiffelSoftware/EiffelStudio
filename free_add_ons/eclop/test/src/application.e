@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Test program for ECLOP"
 	copyright: "Copyright (c) 2003 Paul Cohen."
 	license: "Eiffel Forum License v2 (see license.txt)"
@@ -21,12 +21,12 @@ inherit
 			print
 		end
 	
-creation
+create
 	make
 	
 feature {NONE} -- Initialization
 	
-	make is
+	make
 			-- Start the program.
 		local
 			test_results: LINKED_LIST [BOOLEAN]
@@ -98,7 +98,7 @@ feature {NONE} -- Initialization
 	
 feature -- Basic operations
 	
-	test_suite_1 (verbose: BOOLEAN): BOOLEAN is
+	test_suite_1 (verbose: BOOLEAN): BOOLEAN
 		local
 			spec: ARRAY [STRING]
 			args: ARRAY [STRING]
@@ -151,7 +151,7 @@ feature -- Basic operations
 			end
 		end
 	
-	test_suite_2 (verbose: BOOLEAN): BOOLEAN is
+	test_suite_2 (verbose: BOOLEAN): BOOLEAN
 		local
 			spec: ARRAY [STRING]
 			args: ARRAY [STRING]
@@ -196,7 +196,7 @@ feature -- Basic operations
 			end
 		end
 	
-	test_suite_3 (verbose: BOOLEAN): BOOLEAN is
+	test_suite_3 (verbose: BOOLEAN): BOOLEAN
 		local
 			spec: ARRAY [STRING]
 			args: ARRAY [STRING]
@@ -248,7 +248,7 @@ feature -- Basic operations
 			end
 		end
 	
-	test_suite_4 (verbose: BOOLEAN): BOOLEAN is
+	test_suite_4 (verbose: BOOLEAN): BOOLEAN
 		local
 			spec: ARRAY [STRING]
 			args: ARRAY [STRING]
@@ -300,7 +300,7 @@ feature -- Basic operations
 			end
 		end
 	
-	test_suite_5 (verbose: BOOLEAN): BOOLEAN is
+	test_suite_5 (verbose: BOOLEAN): BOOLEAN
 		local
 			spec: ARRAY [STRING]
 			args: ARRAY [STRING]
@@ -392,7 +392,7 @@ feature -- Basic operations
 			end
 		end
 	
-	test_suite_6 (verbose: BOOLEAN): BOOLEAN is
+	test_suite_6 (verbose: BOOLEAN): BOOLEAN
 		local
 			spec: ARRAY [STRING]
 			args: ARRAY [STRING]
@@ -447,7 +447,7 @@ feature -- Basic operations
 			end
 		end
 	
-	test_suite_7 (verbose: BOOLEAN): BOOLEAN is
+	test_suite_7 (verbose: BOOLEAN): BOOLEAN
 		local
 			spec: ARRAY [STRING]
 			args: ARRAY [STRING]
@@ -507,7 +507,7 @@ feature -- Basic operations
 			end
 		end
 	
-	test_suite_8 (verbose: BOOLEAN): BOOLEAN is
+	test_suite_8 (verbose: BOOLEAN): BOOLEAN
 		local
 			spec: ARRAY [STRING]
 			args: ARRAY [STRING]
@@ -555,7 +555,7 @@ feature -- Basic operations
 			end
 		end
 	
-	test_suite_9 (verbose: BOOLEAN): BOOLEAN is
+	test_suite_9 (verbose: BOOLEAN): BOOLEAN
 		local
 			spec: ARRAY [STRING]
 			args: ARRAY [STRING]
@@ -593,7 +593,7 @@ feature -- Basic operations
 			end
 		end
 			
-	test_suite_10 (verbose: BOOLEAN): BOOLEAN is
+	test_suite_10 (verbose: BOOLEAN): BOOLEAN
 		local
 			spec: ARRAY [STRING]
 			args: ARRAY [STRING]
@@ -628,7 +628,7 @@ feature -- Basic operations
 			end
 		end
 	
-	test_suite_11 (verbose: BOOLEAN): BOOLEAN is
+	test_suite_11 (verbose: BOOLEAN): BOOLEAN
 		local
 			spec: ARRAY [STRING]
 			args: ARRAY [STRING]
@@ -670,7 +670,7 @@ feature -- Basic operations
 			end
 		end
 	
-	test_suite_12 (verbose: BOOLEAN): BOOLEAN is
+	test_suite_12 (verbose: BOOLEAN): BOOLEAN
 		local
 			spec: ARRAY [STRING]
 			args: ARRAY [STRING]
@@ -722,7 +722,7 @@ feature -- Basic operations
 			end
 		end
 	
-	test_suite_13 (verbose: BOOLEAN): BOOLEAN is
+	test_suite_13 (verbose: BOOLEAN): BOOLEAN
 		local
 			spec: ARRAY [STRING]
 			args: ARRAY [STRING]
@@ -773,7 +773,7 @@ feature -- Basic operations
 			end
 		end
 	
-	test_suite_14 (verbose: BOOLEAN): BOOLEAN is
+	test_suite_14 (verbose: BOOLEAN): BOOLEAN
 		local
 			spec: ARRAY [STRING]
 			args: ARRAY [STRING]
@@ -843,7 +843,7 @@ feature -- Basic operations
 			end
 		end
 	
-	test_suite_15 (verbose: BOOLEAN): BOOLEAN is
+	test_suite_15 (verbose: BOOLEAN): BOOLEAN
 		local
 			spec: ARRAY [STRING]
 			args: ARRAY [STRING]
@@ -876,7 +876,7 @@ feature -- Basic operations
 			end
 		end
 	
-	test_suite_16 (verbose: BOOLEAN): BOOLEAN is
+	test_suite_16 (verbose: BOOLEAN): BOOLEAN
 		local
 			spec: ARRAY [STRING]
 			args: ARRAY [STRING]
@@ -966,7 +966,7 @@ feature -- Basic operations
 			end
 		end
 	
-	test_suite_17 (verbose: BOOLEAN): BOOLEAN is
+	test_suite_17 (verbose: BOOLEAN): BOOLEAN
 		local
 			spec: ARRAY [STRING]
 			args: ARRAY [STRING]
@@ -1018,7 +1018,7 @@ feature -- Basic operations
 			end
 		end
 	
-	test_suite_18 (verbose: BOOLEAN): BOOLEAN is
+	test_suite_18 (verbose: BOOLEAN): BOOLEAN
 			-- Test to verify bugfix (ECLOP 0.1.0) when having at
 			-- least one long option and at least one short option
 			-- with no synonym long option
@@ -1073,7 +1073,7 @@ create opts.make (1)
 	
 feature	{NONE} -- Basic operations (atomic operations)
 	
-	test_create_command_line_syntax (spec: ARRAY [STRING]; verbose: BOOLEAN): BOOLEAN is
+	test_create_command_line_syntax (spec: ARRAY [STRING]; verbose: BOOLEAN): BOOLEAN
 			-- Create a new `command_line_syntax'. Returns True if
 			-- succesful and False if not. 
 		require
@@ -1095,7 +1095,7 @@ feature	{NONE} -- Basic operations (atomic operations)
 			end
 		end
 	
-	test_validity_of_command_line_syntax (verbose: BOOLEAN): BOOLEAN is
+	test_validity_of_command_line_syntax (verbose: BOOLEAN): BOOLEAN
 			-- Test the validity of `command_line_syntax'. Returns
 			-- True if succesful and False if not.
 		do
@@ -1114,7 +1114,7 @@ feature	{NONE} -- Basic operations (atomic operations)
 			end
 		end
 	
-	test_create_command_line_parser (verbose: BOOLEAN): BOOLEAN is
+	test_create_command_line_parser (verbose: BOOLEAN): BOOLEAN
 			-- Create a new `command_line_parser'. Returns True if
 			-- succesful and False if not. 
 		require
@@ -1136,7 +1136,7 @@ feature	{NONE} -- Basic operations (atomic operations)
 			end
 		end
 	
-	test_command_line_parsing (args: ARRAY [STRING]; verbose: BOOLEAN): BOOLEAN is
+	test_command_line_parsing (args: ARRAY [STRING]; verbose: BOOLEAN): BOOLEAN
 			-- Test parsing the command line arguments `args'. 
 			-- Returns True if succesful and False if not.   
 		require
@@ -1156,7 +1156,7 @@ feature	{NONE} -- Basic operations (atomic operations)
 			end
 		end
 	
-	test_parsed_options (opts: HASH_TABLE [INTEGER, STRING]; verbose: BOOLEAN): BOOLEAN is
+	test_parsed_options (opts: HASH_TABLE [INTEGER, STRING]; verbose: BOOLEAN): BOOLEAN
 			-- Test that the option names in `opts' were parsed
 			-- correctly. `opts' is a table where the hash keys
 			-- areoption names and the items are the expected
@@ -1294,7 +1294,7 @@ feature	{NONE} -- Basic operations (atomic operations)
 			end
 		end
 	
-	test_option_has_arguments (opt: STRING; args: ARRAY [STRING]; verbose: BOOLEAN): BOOLEAN is
+	test_option_has_arguments (opt: STRING; args: ARRAY [STRING]; verbose: BOOLEAN): BOOLEAN
 			-- Test that the option named `opt' has the arguments
 			-- listed in `args'. Returns True if succesful and
 			-- False if not. 
@@ -1357,7 +1357,7 @@ feature	{NONE} -- Basic operations (atomic operations)
 			end
 		end
 		
-	test_for_single_dash (verbose: BOOLEAN): BOOLEAN is
+	test_for_single_dash (verbose: BOOLEAN): BOOLEAN
 			-- Test that a single dash has been parsed. Returns True
 			-- if succesful and False if not. 
 		require
@@ -1381,41 +1381,41 @@ feature {NONE} -- Implementation (Basic attributes)
 	
 	command_line_parser: COMMAND_LINE_PARSER
 	
-	dashed_line: STRING is "-------------"
+	dashed_line: STRING = "-------------"
 	
-	double_dashed_line: STRING is "===================="
+	double_dashed_line: STRING = "===================="
 
 feature {NONE} -- Implementation (Option states)
 	
-	Valid_option: INTEGER is 1
+	Valid_option: INTEGER = 1
 	
-	Valid_option_with_arguments: INTEGER is 2
+	Valid_option_with_arguments: INTEGER = 2
 	
-	Valid_option_without_arguments: INTEGER is 3
+	Valid_option_without_arguments: INTEGER = 3
 	
-	Not_valid_option: INTEGER is 4
+	Not_valid_option: INTEGER = 4
 	
-	Required_option_missing: INTEGER is 5
+	Required_option_missing: INTEGER = 5
 	
-	Option_argument_missing: INTEGER is 6
+	Option_argument_missing: INTEGER = 6
 	
-	Mutually_exclusive_option: INTEGER is 7
+	Mutually_exclusive_option: INTEGER = 7
 	
-	Ambigous_option: INTEGER is 8
+	Ambigous_option: INTEGER = 8
 	
-	Invalidly_grouped_option: INTEGER is 9
+	Invalidly_grouped_option: INTEGER = 9
 	
-	Operand: INTEGER is 10
+	Operand: INTEGER = 10
 	
 feature {NONE} -- Implementation (useful features)
 	
-	print_test_info is
+	print_test_info
 			-- Print some info about this program.
 		do
 			print ("This program tests ECLOP.%NECLOP is a POSIX/GNU compliant command line parser written in Eiffel.%N%N")
 		end
 	
-	print_command_line (args: ARRAY [STRING]) is
+	print_command_line (args: ARRAY [STRING])
 			-- Print the strings in `args' as if they constitute a
 			-- command line invokation of an executable. 
 		require
@@ -1435,7 +1435,7 @@ feature {NONE} -- Implementation (useful features)
 			print ("%N")
 		end
 	
-	print_specification (spec: ARRAY [STRING]) is
+	print_specification (spec: ARRAY [STRING])
 			-- Pretty print of the specification `spec'. 
 		require
 			spec_not_void: spec /= Void
@@ -1460,7 +1460,7 @@ feature {NONE} -- Implementation (useful features)
 			print (s)
 		end
 	
-	print_invalid_specifications (inv_spec: HASH_TABLE [STRING, STRING]) is
+	print_invalid_specifications (inv_spec: HASH_TABLE [STRING, STRING])
 			-- Pretty print of the invalid specifications `inv_spec'.
 		require
 			inv_spec_not_void: inv_spec /= Void
@@ -1480,7 +1480,7 @@ feature {NONE} -- Implementation (useful features)
 			print (s)
 		end
 	
-	print_test_failure (s: STRING) is
+	print_test_failure (s: STRING)
 			-- Print information about a test failure.
 		require
 			s_not_void: s /= Void
@@ -1493,17 +1493,17 @@ feature -- Implementation (Logging of output)
 	output_file: PLAIN_TEXT_FILE
 			-- The log file for all ouput
 	
-	open_log is
+	open_log
 		do
 			create output_file.make_open_write ("eclop_out.txt")
 		end
 	
-	close_log is
+	close_log
 		do
 			output_file.close
 		end
 	
-	print (s: STRING) is
+	print (s: STRING)
 			-- Print `s' to output and log.
 		do
 			output_file.put_string (s)

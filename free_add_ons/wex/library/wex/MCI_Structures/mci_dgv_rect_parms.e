@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents the MCI_DGV_RECT_PARMS structure."
 	status: "See notice at end of class."
 	author: "Robin van Ommeren"
@@ -16,13 +16,13 @@ inherit
 			structure_size
 		end
 
-creation
+create
 	make,
 	make_by_pointer
 
 feature {NONE} -- Initialization
 
-	make (a_parent: WEL_COMPOSITE_WINDOW) is
+	make (a_parent: WEL_COMPOSITE_WINDOW)
 			-- Create object and fill structure.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -38,19 +38,19 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	rect: WEL_RECT is
+	rect: WEL_RECT
 			-- Retrieved rectangle.
 		require
 			exists: exists
 		local
 			r: WEL_RECT
-		do
-			!! r.make_by_pointer (cwex_mci_dgv_rect_get_rect (item))
+		do 
+			create r.make_by_pointer (cwex_mci_dgv_rect_get_rect (item)) 
 
 			--| The `right' member of the retrieved rectangle
 			--| contains the width and the `bottom' member of the
 			--| retrieved rectangle contains the height.
-			!! Result.make (r.left, r.top, r.right + r.left,
+			create Result.make (r.left, r.top, r.right + r.left,
 				r.bottom + r.top)
 		ensure
 			result_not_void: Result /= Void
@@ -59,7 +59,7 @@ feature -- Status report
 
 feature {WEL_STRUCTURE}
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_mci_dgv_rect_parms
@@ -67,14 +67,14 @@ feature {WEL_STRUCTURE}
 
 feature {NONE} -- Externals
 
-	c_size_of_mci_dgv_rect_parms: INTEGER is
+	c_size_of_mci_dgv_rect_parms: INTEGER
 		external
 			"C [macro <dgv_rect.h>]"
 		alias
 			"sizeof (MCI_DGV_RECT_PARMS)"
 		end
 
-	cwex_mci_dgv_rect_get_rect (ptr: POINTER): POINTER is
+	cwex_mci_dgv_rect_get_rect (ptr: POINTER): POINTER
 		external
 			"C [macro <dgv_rect.h>]"
 		end

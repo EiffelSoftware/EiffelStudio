@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents the MCI sequencer device."
 	status: "See notice at end of class."
 	author: "Robin van Ommeren"
@@ -11,12 +11,12 @@ class
 inherit
 	WEX_MCI_DEVICE
 
-creation
+create
 	make
 
 feature -- Access
 
-	seek_to (a_position: INTEGER) is
+	seek_to (a_position: INTEGER)
 			-- Position the MIDI file at `position' in milliseconds.
 		require
 			opened: opened
@@ -24,12 +24,12 @@ feature -- Access
 			a_meaningful_position: a_position <= media_length
 		local
 			seek_parms: WEX_MCI_SEEK_PARMS
-		do
-			!! seek_parms.make (parent, a_position)
+		do 
+			create seek_parms.make (parent, a_position)
 			seek_device (seek_parms, Mci_to)
 		end
 
-	open (a_file: STRING) is
+	open (a_file: STRING)
 			-- Open a Mci device to play a MIDI file.
 		require
 			not_opened: not opened
@@ -37,8 +37,8 @@ feature -- Access
 			a_file_meaningful: not a_file.empty
 		local
 			open_parms: WEX_MCI_OPEN_PARMS
-		do
-			!! open_parms.make (parent, device_name)
+		do 
+			create open_parms.make (parent, device_name)
 			open_parms.set_element_name (a_file)
 			open_device (open_parms, Mci_open_element +
 				Mci_open_type)
@@ -46,7 +46,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	device_name: STRING is
+	device_name: STRING
 			-- Device name
 		once
 			Result := "sequencer"

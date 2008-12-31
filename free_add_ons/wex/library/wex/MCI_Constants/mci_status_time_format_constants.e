@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants used with MCI_STATUS command%
 		% to retrieve the format the MCI device is using."
 	status: "See notice at end of class."
@@ -11,49 +11,49 @@ class
 
 feature -- Access
 
-	Mci_format_bytes: INTEGER is
+	Mci_format_bytes: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_FORMAT_BYTES"
 		end
 
-	Mci_format_frames: INTEGER is
+	Mci_format_frames: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_FORMAT_FRAMES"
 		end
 
-	Mci_format_hms: INTEGER is
+	Mci_format_hms: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_FORMAT_HMS"
 		end
 
-	Mci_format_milliseconds: INTEGER is
+	Mci_format_milliseconds: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_FORMAT_MILLISECONDS"
 		end
 
-	Mci_format_msf: INTEGER is
+	Mci_format_msf: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_FORMAT_MSF"
 		end
 
-	Mci_format_samples: INTEGER is
+	Mci_format_samples: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_FORMAT_SAMPLES"
 		end
 
-	Mci_format_tmsf: INTEGER is
+	Mci_format_tmsf: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias

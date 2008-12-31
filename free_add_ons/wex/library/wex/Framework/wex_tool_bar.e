@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An enhanced toolbar with support for resource-files and flat style"
 	status: "See notice at end of class."
 	author: "Andreas Leitner"
@@ -20,10 +20,10 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make_by_menu_id
 feature --s that do not belong here
-		Tb_style_flat: INTEGER is
+		Tb_style_flat: INTEGER
 				-- should be in WEL_TB_STYLE_CONSTANTS
 			external
 				"C [macro <cctrl.h>]"
@@ -33,14 +33,14 @@ feature --s that do not belong here
 
 feature
 
-	make_by_menu_id (a_parent: WEL_WINDOW; tool_bar_id: INTEGER) is
+	make_by_menu_id (a_parent: WEL_WINDOW; tool_bar_id: INTEGER)
 			-- create a WEX_TOOL_BAR from a resource (specified by a resource id)
 		do
 			make (a_parent, -1)
 			load_tool_bar_by_id (tool_bar_id)
 		end
 
-	load_tool_bar_by_id (tool_bar_id: INTEGER) is
+	load_tool_bar_by_id (tool_bar_id: INTEGER)
 			-- deletes all current buttons and adds button as specified in the resource script 
 		require
 			exists: exists
@@ -51,8 +51,8 @@ feature
 			index: INTEGER
 			button_index: INTEGER
 		
-		do
-			!! tool_bar_data.make_by_id (tool_bar_id)
+		do 
+			create tool_bar_data.make_by_id (tool_bar_id)
 			delete_all_buttons
 
 			set_bitmap_size (tool_bar_data.width, tool_bar_data.height)
@@ -61,24 +61,24 @@ feature
 			until
 				index >= tool_bar_data.command_id_count
 			loop
-				if tool_bar_data.command_id_at (index) = 0 then
-					!! button.make_separator
-				else
-					!! button.make_button (button_index, tool_bar_data.command_id_at (index))
+				if tool_bar_data.command_id_at (index) = 0 then 
+					create button.make_separator
+				else 
+					create button.make_button (button_index, tool_bar_data.command_id_at (index))
 					button_index := button_index + 1
 				end
 				index := index + 1
 				add_buttons (<<button>>)
-			end
+			end 
 
 			-- TODO: propably bitmap needs to be reset instead of added?
-			!! bitmap.make (tool_bar_id)
+			create bitmap.make (tool_bar_id)
 			add_bitmaps (bitmap, 1)
 			
 			set_tool_tips		
 		end
 
-	set_flat_style (yes: BOOLEAN) is
+	set_flat_style (yes: BOOLEAN)
 			-- if `yes' = true the toolbar will appear flat
 		require
 			exists: exists
@@ -90,7 +90,7 @@ feature
 			end
 		end
 
-	set_tool_tips is
+	set_tool_tips
 			-- for each button it takes the resource string with the same id (command_id), takes the substring
 			-- that is after the first "%N", but only to an optional following second "%N" and sets it as 
 			-- tooltip for this button.
@@ -101,16 +101,16 @@ feature
 			a_tooltip: WEL_TOOLTIP
 			tool_info: WEL_TOOL_INFO			
 		
-		do
+		do 
 			-- Create a tooltip
-			!! a_tooltip.make (Current.parent, -1)
+			create a_tooltip.make (Current.parent, -1)
 
 			from
 				index := 0
 			until
 				index >= button_count
-			loop
-				!! tool_info.make
+			loop 
+				create tool_info.make
 				tool_info.set_window (Current)
 				tool_info.set_flags (Ttf_subclass)
 				tool_info.set_rect (button_rect (index))
@@ -122,7 +122,7 @@ feature
 			
 		end
 
-	get_tool_tip_text_by_id (index: INTEGER): STRING is
+	get_tool_tip_text_by_id (index: INTEGER): STRING
 			-- returns text between first and second "%N" of the specified resource string
 			-- if index is invalid the Result will be an empty string
 		require
@@ -146,14 +146,14 @@ feature
 					Result := a_text
 				end
 			end
-			if Result = Void then
-				!! Result.make (0)
+			if Result = Void then 
+				create Result.make (0)
 			end
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	get_button_text_by_id (index: INTEGER): STRING is
+	get_button_text_by_id (index: INTEGER): STRING
 			-- returns text after last "%N" of the specified resource string
 			-- currently not used, but may be used in future when the "button-text-style" is
 			-- supported.	
@@ -180,14 +180,14 @@ feature
 				end
 			end
 			
-			if Result = Void then
-				!! Result.make (0)
+			if Result = Void then 
+				create Result.make (0)
 			end
 		ensure
 			result_not_void: Result /= Void
 		end
 				
-	delete_all_buttons is
+	delete_all_buttons
 			-- Deletes all buttons
 		require
 			exists: exists

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command class that handles status window updates (when a menu is selected)"
 	status: "See notice at end of class."
 	author: "Andreas Leitner"
@@ -18,7 +18,7 @@ inherit
 
 feature
 
-	execute (argument: ANY) is
+	execute (argument: ANY)
 		local
 			mi: WEL_MENU_SELECT_MESSAGE
 		do
@@ -39,13 +39,13 @@ feature
 	
 feature {NONE}
 
-	get_status_window_text (string_id: INTEGER): STRING is
+	get_status_window_text (string_id: INTEGER): STRING
 		local
 			text: STRING
 		do
 			text := resource_string_id (string_id)
-			if text = Void then
-				!! text.make (0)
+			if text = Void then 
+				create text.make (0)
 			end
 			if text.count /= 0 then
 				text.head (text.index_of ('%N', 1) - 1)

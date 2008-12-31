@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants used with the MCI_STATUS command %
 		%for any MCI device."
 	status: "See notice at end of class."
@@ -11,70 +11,70 @@ class
 
 feature -- Access
 
-	Mci_status_item: INTEGER is
+	Mci_status_item: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_STATUS_ITEM"
 		end
 
-	Mci_status_current_track: INTEGER is
+	Mci_status_current_track: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_STATUS_CURRENT_TRACK"
 		end
 
-	Mci_status_length: INTEGER is
+	Mci_status_length: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_STATUS_LENGTH"
 		end
 
-	Mci_status_mode: INTEGER is
+	Mci_status_mode: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_STATUS_MODE"
 		end
 
-	Mci_status_number_of_tracks: INTEGER is
+	Mci_status_number_of_tracks: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_STATUS_NUMBER_OF_TRACKS"
 		end
 
-	Mci_status_position : INTEGER is
+	Mci_status_position : INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_STATUS_POSITION "
 		end
 
-	Mci_status_ready: INTEGER is
+	Mci_status_ready: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_STATUS_READY"
 		end
 
-	Mci_status_time_format: INTEGER is
+	Mci_status_time_format: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_STATUS_TIME_FORMAT"
 		end
 
-	Mci_status_start: INTEGER is
+	Mci_status_start: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_STATUS_START"
 		end
 
-	Mci_track: INTEGER is
+	Mci_track: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias

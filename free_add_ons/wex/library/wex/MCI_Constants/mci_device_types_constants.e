@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants defining each MCI device."
 	status: "See notice at end of class."
 	author: "Robin van Ommeren"
@@ -10,77 +10,77 @@ class
 
 feature -- Access
 
-	Mci_devtype_animation: INTEGER is
+	Mci_devtype_animation: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_DEVTYPE_ANIMATION"
 		end
 
-	Mci_devtype_cd_audio: INTEGER is
+	Mci_devtype_cd_audio: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_DEVTYPE_CD_AUDIO"
 		end
 
-	Mci_devtype_dat: INTEGER is
+	Mci_devtype_dat: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_DEVTYPE_DAT"
 		end
 
-	Mci_devtype_digital_video: INTEGER is
+	Mci_devtype_digital_video: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_DEVTYPE_DIGITAL_VIDEO"
 		end
 
-	Mci_devtype_other: INTEGER is
+	Mci_devtype_other: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_DEVTYPE_OTHER"
 		end
 
-	Mci_devtype_overlay: INTEGER is
+	Mci_devtype_overlay: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_DEVTYPE_OVERLAY"
 		end
 
-	Mci_devtype_scanner: INTEGER is
+	Mci_devtype_scanner: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_DEVTYPE_SCANNER"
 		end
 
-	Mci_devtype_sequencer: INTEGER is
+	Mci_devtype_sequencer: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_DEVTYPE_SEQUENCER"
 		end
 
-	Mci_devtype_vcr: INTEGER is
+	Mci_devtype_vcr: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_DEVTYPE_VCR"
 		end
 
-	Mci_devtype_videodisc: INTEGER is
+	Mci_devtype_videodisc: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_DEVTYPE_VIDEODISC"
 		end
 
-	Mci_devtype_waveform_audio: INTEGER is
+	Mci_devtype_waveform_audio: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants used with the MCI_SET command %
 		%for any MCI device."
 	status: "See notice at end of class."
@@ -11,70 +11,70 @@ class
 
 feature -- Access
 
-	Mci_set_door_closed: INTEGER is
+	Mci_set_door_closed: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_SET_DOOR_CLOSED"
 		end
 
-	Mci_set_door_open: INTEGER is
+	Mci_set_door_open: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_SET_DOOR_OPEN"
 		end
 
-	Mci_set_off: INTEGER is
+	Mci_set_off: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_SET_OFF"
 		end
 
-	Mci_set_on: INTEGER is
+	Mci_set_on: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_SET_ON"
 		end
 
-	Mci_set_audio: INTEGER is
+	Mci_set_audio: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_SET_AUDIO"
 		end
 
-	Mci_set_time_format: INTEGER is
+	Mci_set_time_format: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_SET_TIME_FORMAT"
 		end
 
-	Mci_set_video: INTEGER is
+	Mci_set_video: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_SET_VIDEO"
 		end
 
-	Mci_set_audio_all: INTEGER is
+	Mci_set_audio_all: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_SET_AUDIO_ALL"
 		end
 
-	Mci_set_audio_left: INTEGER is
+	Mci_set_audio_left: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_SET_AUDIO_LEFT"
 		end
 
-	Mci_set_audio_right: INTEGER is
+	Mci_set_audio_right: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias

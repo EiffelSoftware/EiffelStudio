@@ -1,4 +1,4 @@
-indexing
+note
 	description: "WEX Framework Example root-class"
 	status: "See notice at end of class."
 	author: "Andreas Leitner"
@@ -14,21 +14,21 @@ inherit
 			init_application
 		end
 
-creation
+create
 	make
 
 feature
 
-	main_window: MAIN_WINDOW is
+	main_window: MAIN_WINDOW
 			-- Create the application's main window
-		once
-			!! Result.make
+		once 
+			create Result.make
 		end
 
-	init_application is
+	init_application
 			-- Load the common controls dll and the rich edit dll.
-		do
-			!! common_controls_dll.make
+		do 
+			create common_controls_dll.make
 		end
 
 	common_controls_dll: WEL_COMMON_CONTROLS_DLL

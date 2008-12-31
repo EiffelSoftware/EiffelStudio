@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants used with the MCI_SEEK command %
 		%for any MCI device."
 	status: "See notice at end of class."
@@ -11,21 +11,21 @@ class
 
 feature -- Access
 
-	Mci_seek_to_end: INTEGER is
+	Mci_seek_to_end: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_SEEK_TO_END"
 		end
 
-	Mci_seek_to_start: INTEGER is
+	Mci_seek_to_start: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_SEEK_TO_START"
 		end
 
-	Mci_to: INTEGER is
+	Mci_to: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias

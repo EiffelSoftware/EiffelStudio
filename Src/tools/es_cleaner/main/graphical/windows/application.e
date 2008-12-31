@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A windows-specific package implementation for the graphical version of escln.
 	]"
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize package
 		local
 			l_app: EV_APPLICATION
@@ -48,7 +48,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Factory functions
 
-	create_main_window: EV_WINDOW is
+	create_main_window: EV_WINDOW
 			-- Creates and initialize the main application window
 		do
 			create {MAIN_WINDOW}Result
@@ -56,7 +56,7 @@ feature {NONE} -- Factory functions
 			result_attached: Result /= Void
 		end
 
-	create_path_provider: WINDOWS_PATH_PROVIDER is
+	create_path_provider: WINDOWS_PATH_PROVIDER
 			-- Create a path provider
 		do
 			create Result.make (Current)
@@ -69,7 +69,7 @@ feature {NONE} -- Factory functions
 			create Result.make (Current)
 		end
 
-	create_backup_manager: WINDOWS_BACKUP_MANAGER is
+	create_backup_manager: WINDOWS_BACKUP_MANAGER
 			-- Create a new configuration backup manager
 		do
 			create Result.make (Current)
@@ -84,7 +84,7 @@ feature {NONE} -- Factory functions
 invariant
 	main_window_attached: main_window /= Void
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

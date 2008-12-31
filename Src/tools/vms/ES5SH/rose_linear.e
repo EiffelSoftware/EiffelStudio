@@ -1,4 +1,4 @@
-indexing
+note
 	original_author: "Mark Howard"
 	description: "linear with count and index"
 	keywords: "linear,iterator,agent"
@@ -21,7 +21,7 @@ feature -- Access
 --			cursor_not_void: Result /= Void
 --		end
 
-	has_reference (a_value: G): BOOLEAN is
+	has_reference (a_value: G): BOOLEAN
 			-- Is 'a_value' referenced in this linear?
 		local
 			l_save_index: INTEGER
@@ -38,7 +38,7 @@ feature -- Access
 			go_i_th (l_save_index)
 		end
 
-	has_value (a_value: G): BOOLEAN is
+	has_value (a_value: G): BOOLEAN
 			-- Is 'a_value' present in this linear?
 			-- Warning: uses 'deep_equal' !
 		local
@@ -58,15 +58,15 @@ feature -- Access
 
 feature -- Basic operations
 
-	go_i_th (a_index: INTEGER) is
+	go_i_th (a_index: INTEGER)
 		deferred
 		end
 
-	index: INTEGER is
+	index: INTEGER
 		deferred
 		end
 
-	count: INTEGER is
+	count: INTEGER
 		deferred
 		end
 

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generator of dispinterface functions for client."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -24,7 +24,7 @@ feature -- Basic operations
 
 	generate (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR;
 				a_interface_name, a_variable_name, a_guid: STRING; a_lcid: INTEGER;
-				a_descriptor: WIZARD_FUNCTION_DESCRIPTOR) is
+				a_descriptor: WIZARD_FUNCTION_DESCRIPTOR)
 			-- Generate function.
 		require
 			non_void_descriptor: a_descriptor /= Void
@@ -75,7 +75,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Implementation
 
-	set_signature is
+	set_signature
 			-- Set ccom client feature signature
 		require
 			non_void_feature_writer: ccom_feature_writer /= Void
@@ -83,7 +83,7 @@ feature {NONE} -- Implementation
 			ccom_feature_writer.set_signature (cecil_signature (func_desc))
 		end
 
-	feature_body (a_interface_name, a_variable_name, a_guid: STRING; a_lcid: INTEGER; a_visitor: WIZARD_DATA_TYPE_VISITOR; a_invoke_kind: INTEGER): STRING is
+	feature_body (a_interface_name, a_variable_name, a_guid: STRING; a_lcid: INTEGER; a_visitor: WIZARD_DATA_TYPE_VISITOR; a_invoke_kind: INTEGER): STRING
 			-- Ccom client feature body for dispatch interface
 		require
 			non_void_interface_name: a_interface_name /= Void
@@ -219,7 +219,7 @@ feature {NONE} -- Implementation
 			Result.append (retval_return_value_set_up (a_visitor))
 		end
 
-	out_return_value_set_up (name: STRING; position: INTEGER; visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
+	out_return_value_set_up (name: STRING; position: INTEGER; visitor: WIZARD_DATA_TYPE_VISITOR): STRING
 			-- Code to set up return value for "out" parameter
 		require
 			non_void_visitor: visitor /= Void
@@ -264,7 +264,7 @@ feature {NONE} -- Implementation
 			Result.append (");")
 		end
 
-	out_parameter_set_up (name: STRING; position: INTEGER; visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
+	out_parameter_set_up (name: STRING; position: INTEGER; visitor: WIZARD_DATA_TYPE_VISITOR): STRING
 			-- Code to set up "out" parameter.
 		require
 			non_void_visitor: visitor /= Void
@@ -303,7 +303,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	inout_parameter_set_up (name: STRING; position: INTEGER; visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
+	inout_parameter_set_up (name: STRING; position: INTEGER; visitor: WIZARD_DATA_TYPE_VISITOR): STRING
 			-- Code to set up "in" parameter.
 		require
 			non_void_visitor: visitor /= Void
@@ -329,7 +329,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	in_parameter_set_up (name: STRING; position: INTEGER; visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
+	in_parameter_set_up (name: STRING; position: INTEGER; visitor: WIZARD_DATA_TYPE_VISITOR): STRING
 			-- Code to set up "in" parameter.
 		require
 			non_void_visitor: visitor /= Void
@@ -466,7 +466,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	out_value_set_up (position: INTEGER; attribute_name: STRING): STRING is
+	out_value_set_up (position: INTEGER; attribute_name: STRING): STRING
 			-- Set up code for argument variable
 		require
 			valid_position: position >= 0
@@ -480,7 +480,7 @@ feature {NONE} -- Implementation
 			Result.append (attribute_name)
 		end
 
-	argument_type_set_up (position, type: INTEGER): STRING is
+	argument_type_set_up (position, type: INTEGER): STRING
 			-- Code to set parameter type for dispatch function call
 		require
 			valid_position: position >= 0
@@ -496,7 +496,7 @@ feature {NONE} -- Implementation
 			valid_argument_type: not Result.is_empty
 		end
 
-	argument_value_set_up (position: INTEGER; attribute_name, value: STRING; visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
+	argument_value_set_up (position: INTEGER; attribute_name, value: STRING; visitor: WIZARD_DATA_TYPE_VISITOR): STRING
 			-- Code to set parameter value for dispatch function call
 		require
 			non_void_visitor: visitor /= Void
@@ -531,7 +531,7 @@ feature {NONE} -- Implementation
 			valid_argument_value: not Result.is_empty
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

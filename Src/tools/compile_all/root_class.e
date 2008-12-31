@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "System's root class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Creation procedure.
 		do
 				-- setup env
@@ -44,7 +44,7 @@ feature {NONE} -- Implementation
 	ignores: HASH_TABLE [SEARCH_TABLE [STRING], STRING]
 			-- Ignored files/targets.
 
-	start is
+	start
 			-- Starts application
 		require
 			arguments_attached: arguments /= Void
@@ -109,7 +109,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_directory (a_directory: STRING) is
+	process_directory (a_directory: STRING)
 			-- Process `a_directory'.
 		require
 			a_directory_ok: a_directory /= Void and then not a_directory.is_empty
@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_configuration (a_file: STRING) is
+	process_configuration (a_file: STRING)
 			-- Process configuration file `a_file'.
 		require
 			a_file_ok: a_file /= Void and then not a_file.is_empty
@@ -176,7 +176,7 @@ feature {NONE} -- Implementation
 			end
 	end
 
-	process_target (a_target: CONF_TARGET) is
+	process_target (a_target: CONF_TARGET)
 			-- Compile `a_target'.
 		require
 			a_target_ok: a_target /= Void
@@ -196,7 +196,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	parse (a_target: CONF_TARGET) is
+	parse (a_target: CONF_TARGET)
 			-- Only parse configuration system (incl. used libraries) of `a_target'.
 		require
 			a_target_not_void: a_target /= Void
@@ -238,7 +238,7 @@ feature {NONE} -- Implementation
 			io.new_line
 		end
 
-	compile (a_action: STRING; a_clean: BOOLEAN; a_target: CONF_TARGET) is
+	compile (a_action: STRING; a_clean: BOOLEAN; a_target: CONF_TARGET)
 			-- Compile `a_target' according to `a_action' clean before compilation if `a_clean'.
 		require
 			a_action_ok: a_action /= Void and then (a_action.is_equal ("melt") or
@@ -317,7 +317,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Error handling
 
-	display_error (a_message: STRING) is
+	display_error (a_message: STRING)
 			-- Process `a_message'.
 		require
 			a_message_ok: a_message /= Void and then not a_message.is_empty

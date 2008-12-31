@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Interface descriptor"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -49,7 +49,7 @@ create
 
 feature -- Initialization
 
-	make (a_creator: WIZARD_INTERFACE_DESCRIPTOR_CREATOR) is
+	make (a_creator: WIZARD_INTERFACE_DESCRIPTOR_CREATOR)
 			-- Initialize
 		require
 			valid_creator: a_creator /= Void
@@ -114,7 +114,7 @@ feature -- Access
 	type_library_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR
 			-- Type library descriptor
 
-	is_idispatch_heir: BOOLEAN is
+	is_idispatch_heir: BOOLEAN
 			-- Does interface inherit from IDispatch?
 		do
 			if inherited_interface /= Void then
@@ -124,7 +124,7 @@ feature -- Access
 			end
 		end
 
-	creation_message: STRING is
+	creation_message: STRING
 			-- Creation message for wizard output
 		local
 			l_description: STRING
@@ -195,7 +195,7 @@ feature -- Access
 	feature_c_names: LIST [STRING]
 			-- List of feature C names.
 
-	implemented_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR is
+	implemented_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR
 			-- Implemented interface descriptor.
 		do
 			if instance_implemented_interface /= Void then
@@ -209,7 +209,7 @@ feature -- Access
 			non_void_implemented_interface: Result /= Void
 		end
 
-	functions_item: WIZARD_FUNCTION_DESCRIPTOR is
+	functions_item: WIZARD_FUNCTION_DESCRIPTOR
 			-- Item for iteration.
 		require
 			non_void_functions: vtable_functions /= Void and dispatch_functions /= Void
@@ -224,7 +224,7 @@ feature -- Access
 			non_void_function: Result /= Void
 		end
 
-	functions_count: INTEGER is
+	functions_count: INTEGER
 			-- Function count.
 		local
 			vtable_count, dispatch_count: INTEGER
@@ -244,7 +244,7 @@ feature -- Access
 
 feature -- Element Change
 
-	set_c_declaration_header_file_name (a_name: STRING) is
+	set_c_declaration_header_file_name (a_name: STRING)
 			-- Set `c_declaration_header_file_name' with `a_name'.
 		require
 			non_void_name: a_name /= Void
@@ -254,7 +254,7 @@ feature -- Element Change
 			c_declaration_header_file_name_set: c_declaration_header_file_name = a_name
 		end
 
-	add_implementing_coclass (a_coclass: WIZARD_COCLASS_DESCRIPTOR) is
+	add_implementing_coclass (a_coclass: WIZARD_COCLASS_DESCRIPTOR)
 			-- Add `a_coclass' to `implementing_coclasses'.
 		require
 			non_void_coclass: a_coclass /= Void
@@ -266,7 +266,7 @@ feature -- Element Change
 			added: implementing_coclasses.has (a_coclass)
 		end
 
-	set_type_library (a_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR) is
+	set_type_library (a_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR)
 			-- Set `type_library_descriptor' with `a_descriptor'.
 		require
 			non_void_descriptor: a_descriptor /= Void
@@ -276,7 +276,7 @@ feature -- Element Change
 			valid_type_library: type_library_descriptor = a_descriptor
 		end
 
-	set_function_table (some_functions: LIST [WIZARD_FUNCTION_DESCRIPTOR]) is
+	set_function_table (some_functions: LIST [WIZARD_FUNCTION_DESCRIPTOR])
 			-- Set `function_table' with `some_functions'
 		require
 			valid_functions: some_functions /= Void
@@ -286,7 +286,7 @@ feature -- Element Change
 			valid_functions: function_table /= Void and function_table = some_functions
 		end
 
-	set_properties (some_properties: LIST [WIZARD_PROPERTY_DESCRIPTOR]) is
+	set_properties (some_properties: LIST [WIZARD_PROPERTY_DESCRIPTOR])
 			-- Set `properties' with `some_properties'
 		require
 			valid_properties: some_properties /= Void
@@ -296,7 +296,7 @@ feature -- Element Change
 			valid_properties: properties /= Void and properties = some_properties
 		end
 
-	set_inherited_interface (an_interface: WIZARD_INTERFACE_DESCRIPTOR) is
+	set_inherited_interface (an_interface: WIZARD_INTERFACE_DESCRIPTOR)
 			-- Set `inherited_interface' with `an_interface'
 		do
 			inherited_interface := an_interface
@@ -304,7 +304,7 @@ feature -- Element Change
 			interface_set: inherited_interface = an_interface
 		end
 
-	set_inherited_interface_descriptor (a_descriptor: WIZARD_INHERITED_INTERFACE_DESCRIPTOR) is
+	set_inherited_interface_descriptor (a_descriptor: WIZARD_INHERITED_INTERFACE_DESCRIPTOR)
 			-- Set `inherited_interface_descriptor' with `a_descriptor'
 		do
 			inherited_interface_descriptor := a_descriptor
@@ -312,7 +312,7 @@ feature -- Element Change
 			interface_set: inherited_interface_descriptor = a_descriptor
 		end
 
-	set_dual (a_dual_value: BOOLEAN) is
+	set_dual (a_dual_value: BOOLEAN)
 			-- Set `dual' with `a_dual_value'
 		do
 			dual := a_dual_value
@@ -320,7 +320,7 @@ feature -- Element Change
 			valid_dual: dual = a_dual_value
 		end
 
-	set_dispinterface (a_dispinterface_value: BOOLEAN) is
+	set_dispinterface (a_dispinterface_value: BOOLEAN)
 			-- Set `dispinterface' with `a_dispinterface_value'
 		do
 			dispinterface := a_dispinterface_value
@@ -328,7 +328,7 @@ feature -- Element Change
 			valid_dispinterface: dispinterface = a_dispinterface_value
 		end
 
-	set_dispinterface_descriptor (a_dispinterface_descriptor: WIZARD_INTERFACE_DESCRIPTOR) is
+	set_dispinterface_descriptor (a_dispinterface_descriptor: WIZARD_INTERFACE_DESCRIPTOR)
 			-- Set `dispinterface_descriptor' with `a_dispinterface_descriptor'
 		do
 			dispinterface_descriptor := a_dispinterface_descriptor
@@ -336,7 +336,7 @@ feature -- Element Change
 			interface_set: dispinterface_descriptor = a_dispinterface_descriptor
 		end
 
-	set_lcid (a_lcid: INTEGER) is
+	set_lcid (a_lcid: INTEGER)
 			-- Set `lcid' with `a_lcid'
 		do
 			lcid := a_lcid
@@ -344,7 +344,7 @@ feature -- Element Change
 			valid_lcid: lcid = a_lcid
 		end
 
-	set_vtbl_size (a_size: INTEGER) is
+	set_vtbl_size (a_size: INTEGER)
 			-- Set `vtbl_size' with `a_size'
 		do
 			vtbl_size := a_size
@@ -352,7 +352,7 @@ feature -- Element Change
 			valid_size: vtbl_size = a_size
 		end
 
-	set_flags (some_flags: INTEGER) is
+	set_flags (some_flags: INTEGER)
 			-- Set `flags' with `some_flags'
 		do
 			flags := some_flags
@@ -360,7 +360,7 @@ feature -- Element Change
 			valid_flags: flags = some_flags
 		end
 
-	set_is_iunknown (a_bool: BOOLEAN) is
+	set_is_iunknown (a_bool: BOOLEAN)
 			-- Set `is_iunknown' with `a_bool'.
 		do
 			is_iunknown := a_bool
@@ -368,7 +368,7 @@ feature -- Element Change
 			is_iunknown_set: is_iunknown = a_bool
 		end
 
-	set_is_idispatch (a_bool: BOOLEAN) is
+	set_is_idispatch (a_bool: BOOLEAN)
 			-- Set `is_idispatch' with `a_bool'.
 		do
 			is_idispatch := a_bool
@@ -378,7 +378,7 @@ feature -- Element Change
 
 feature -- Status Report
 
-	is_implementing_coclass (a_coclass: WIZARD_COCLASS_DESCRIPTOR): BOOLEAN is
+	is_implementing_coclass (a_coclass: WIZARD_COCLASS_DESCRIPTOR): BOOLEAN
 			-- Is `a_coclass' implementing interface?
 		require
 			non_void_coclass: a_coclass /= Void
@@ -386,7 +386,7 @@ feature -- Status Report
 			Result := implementing_coclasses.has (a_coclass)
 		end
 
-	dual_function (a_function: WIZARD_FUNCTION_DESCRIPTOR): WIZARD_FUNCTION_DESCRIPTOR is
+	dual_function (a_function: WIZARD_FUNCTION_DESCRIPTOR): WIZARD_FUNCTION_DESCRIPTOR
 			-- Dual function
 		local
 			l_cursor: CURSOR
@@ -411,7 +411,7 @@ feature -- Status Report
 			function_table.go_to (l_cursor)
 		end
 
-	has_function (a_function: WIZARD_FUNCTION_DESCRIPTOR): BOOLEAN is
+	has_function (a_function: WIZARD_FUNCTION_DESCRIPTOR): BOOLEAN
 			-- Does `function_table' or `function_table' of
 			-- `inherited_interface' have function `a_function'?
 		require
@@ -435,7 +435,7 @@ feature -- Status Report
 			function_table.go_to (cursor)
 		end
 
-	has_property (a_property: WIZARD_PROPERTY_DESCRIPTOR): BOOLEAN is
+	has_property (a_property: WIZARD_PROPERTY_DESCRIPTOR): BOOLEAN
 			-- Does interface have `a_property'?
 		require
 			non_void_property: a_property /= Void
@@ -456,7 +456,7 @@ feature -- Status Report
 			properties.go_to (cursor)
 		end
 
-	functions_after: BOOLEAN is
+	functions_after: BOOLEAN
 			-- Is after?
 		require
 			non_void_functions: vtable_functions /= Void and dispatch_functions /= Void
@@ -464,7 +464,7 @@ feature -- Status Report
 			Result := not in_vtable and dispatch_functions.after
 		end
 
-	functions_empty: BOOLEAN is
+	functions_empty: BOOLEAN
 			-- Are functions is_empty?
 		do
 			Result := (vtable_functions = Void or else vtable_functions.is_empty) and
@@ -473,7 +473,7 @@ feature -- Status Report
 
 feature -- Cursor movement
 
-	functions_start is
+	functions_start
 			-- Start for iteration.
 		require
 			non_void_functions: vtable_functions /= Void and dispatch_functions /= Void
@@ -487,7 +487,7 @@ feature -- Cursor movement
 			end
 		end
 
-	functions_forth is
+	functions_forth
 			-- Forth for iteration.
 		require
 			non_void_functions: vtable_functions /= Void and dispatch_functions /= Void
@@ -505,7 +505,7 @@ feature -- Cursor movement
 
 feature -- Miscellaneous
 
-	finalize_functions is
+	finalize_functions
 			-- Finalize interface functions.
 			-- Build `vtable_functions' and `dispatch_functions' lists from `function_table'.
 		local
@@ -560,7 +560,7 @@ feature -- Miscellaneous
 
 feature -- Basic operations
 
-	initialize_inherited_interface is
+	initialize_inherited_interface
 			-- Initialize inherited interface.
 		require
 			non_void_descriptor: inherited_interface_descriptor /= Void
@@ -570,7 +570,7 @@ feature -- Basic operations
 			non_void_inherited_interface: inherited_interface /= Void
 		end
 
-	disambiguate_interface_names is
+	disambiguate_interface_names
 			-- Disambiguate feature names.
 		require
 			not_disambiguated: not is_interface_disambiguated
@@ -629,7 +629,7 @@ feature -- Basic operations
 									not feature_eiffel_names.is_empty
 		end
 
-	disambiguate_coclass_names (a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
+	disambiguate_coclass_names (a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR)
 			-- Disambiguate coclass feature names.
 			--| For each feature we keep two tables:
 			--|  * One table is kept in the feature descriptor which contains new names
@@ -711,7 +711,7 @@ feature -- Basic operations
 			not_empty_feature_names: not functions_empty and not properties.is_empty implies not feature_c_names.is_empty
 		end
 
-	visit (a_visitor: WIZARD_TYPE_VISITOR) is
+	visit (a_visitor: WIZARD_TYPE_VISITOR)
 			-- Call back `a_visitor' with appropriate feature.
 		do
 			a_visitor.process_interface (Current)
@@ -725,14 +725,14 @@ feature {WIZARD_INTERFACE_DESCRIPTOR} -- Implementation
 	in_vtable: BOOLEAN
 			-- Cursor in vtable.
 
-	counter: INTEGER is
+	counter: INTEGER
 			-- Counter
 		do
 			Result := counter_impl.item
 			counter_impl.set_item (Result + 1)
 		end
 
-	counter_impl: INTEGER_REF is
+	counter_impl: INTEGER_REF
 			-- Global counter
 		once
 			create Result
@@ -742,7 +742,7 @@ feature {WIZARD_INTERFACE_DESCRIPTOR} -- Implementation
 	instance_implemented_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR
 			-- Implemented interface descriptor.
 
-	dispatch_access (a_function, a_dispatch_function: WIZARD_FUNCTION_DESCRIPTOR): BOOLEAN is
+	dispatch_access (a_function, a_dispatch_function: WIZARD_FUNCTION_DESCRIPTOR): BOOLEAN
 			-- Check Vtable description.
 		require
 			non_void_virtual_function: a_function /= Void
@@ -766,7 +766,7 @@ feature {WIZARD_INTERFACE_DESCRIPTOR} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

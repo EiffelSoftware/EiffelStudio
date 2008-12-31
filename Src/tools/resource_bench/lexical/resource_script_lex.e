@@ -1,4 +1,4 @@
-indexing
+note
         description: "Lexical interface class for the resource script language"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ inherit
 
 feature {NONE}
 
-	build (doc: INPUT) is
+	build (doc: INPUT)
 			-- Create lexical analyzer and set `doc'
 			-- to be the input document.
 		do
@@ -32,7 +32,7 @@ feature {NONE}
 			doc.set_lexical (analyzer)
 		end
 
-	obtain_analyzer is
+	obtain_analyzer
 			-- Create lexical analyzer for the resource sript language
 		do
 			error_list.do_not_display_message
@@ -43,7 +43,7 @@ feature {NONE}
 			set_separator_type (Blanks)
 		end
 
-	build_expressions is
+	build_expressions
 			-- Define regular expressions
 			-- for the resource sript language
 		do
@@ -85,7 +85,7 @@ feature {NONE}
 			put_expression (" %"EDITTEXT%" | %"COMBOBOX%" | %"LISTBOX%" ", Specific_control_statement, "Specific_control_statement")
 		end 				
 
-	identifier_string: STRING is
+	identifier_string: STRING
 			-- contain the regular expression of identifiers
 		once
 			create Result.make (150)
@@ -97,7 +97,7 @@ feature {NONE}
 			Result.append ("$Z")
 		end
 
-	attributes_string: STRING is
+	attributes_string: STRING
 			-- contain the list of the LOAD_AND_MEM_ATTRIBUTES
 		once
 			create Result.make (120)
@@ -107,7 +107,7 @@ feature {NONE}
 			Result.append ("%"DISCARDABLE%" | %"PURE%" | %"IMPURE%" ")
 		end
 
-	blank_string: STRING is
+	blank_string: STRING
 			-- contain the blank character of the language
 		once
 			create Result.make (120)
@@ -117,7 +117,7 @@ feature {NONE}
 			Result.append (" (%"/*%" -> %"*/%")")
 		end
 
-	build_keywords is
+	build_keywords
 			-- Define keywords (special symbols)
 			-- for the resource sript language
 		do
@@ -180,7 +180,7 @@ feature {NONE}
 			put_keyword (",", Ponctuation)
 		end
  
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

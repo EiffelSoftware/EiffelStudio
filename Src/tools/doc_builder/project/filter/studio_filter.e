@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Document content filter.  Filter DOCUMENTs based%
 		%on content tags, does not alter actual content structure."
 	legal: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 	
 feature -- Creation
 
-	make (a_description: STRING) is
+	make (a_description: STRING)
 				-- Create with description
 		require			
 			description_not_void: a_description /= Void
@@ -44,7 +44,7 @@ feature -- Creation
 			has_description: description /= Void
 		end
 
-	make_with_default_flag (a_output_flag, a_description: STRING) is
+	make_with_default_flag (a_output_flag, a_description: STRING)
 				-- Create with initial output flag and description
 		require			
 			flag_not_void: a_output_flag /= Void
@@ -79,7 +79,7 @@ feature -- Query
 
 feature -- Status Setting
 
-	add_output_flag (a_flag: STRING) is
+	add_output_flag (a_flag: STRING)
 			-- Add new output flag
 		require
 			flag_not_void: a_flag /= Void
@@ -90,7 +90,7 @@ feature -- Status Setting
 			end
 		end	
 		
-	set_color (a_color: EV_COLOR) is
+	set_color (a_color: EV_COLOR)
 			-- Set the display color
 		require
 			color_not_void: a_color /= Void
@@ -100,7 +100,7 @@ feature -- Status Setting
 			color_set: color = a_color
 		end		
 
-	enable_highlighting (a_flag: BOOLEAN) is
+	enable_highlighting (a_flag: BOOLEAN)
 			-- Set `highlighting_enabled'
 		do
 			highlighting_enabled := a_flag
@@ -108,7 +108,7 @@ feature -- Status Setting
 			highlighting_set: highlighting_enabled = a_flag
 		end
 	
-	set_primary_output_flag (a_flag: STRING) is
+	set_primary_output_flag (a_flag: STRING)
 			-- Set `primary_output_flag '
 		require
 			flag_not_void: a_flag /= Void
@@ -120,25 +120,25 @@ feature -- Status Setting
 
 feature -- Tag
 
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- Start of tag.
 		do
 			process_element (a_local_part, True)
 		end
 		
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- End of tag.
 		do			
 			process_element (a_local_part, False)
 		end	
 		
-	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
+	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
 			-- Attribute
 		do
 			process_attribute (a_local_part, a_value)
 		end
 		
-	on_content (a_content: STRING) is
+	on_content (a_content: STRING)
 			-- Forward content.
 		local
 			l_content: STRING
@@ -151,7 +151,7 @@ feature -- Tag
 
 feature -- Processing
 
-	process_element (e: STRING; is_start: BOOLEAN) is
+	process_element (e: STRING; is_start: BOOLEAN)
 			-- Process element `e'
 		require
 			e_not_void: e/= Void
@@ -179,7 +179,7 @@ feature -- Processing
 			end			
 		end
 
-	process_attribute (a_name, a_value: STRING) is
+	process_attribute (a_name, a_value: STRING)
 			-- Process attribute
 		require
 			name_not_void: a_name /= Void
@@ -208,7 +208,7 @@ feature -- Processing
 
 feature {NONE} -- Implementation
 
-	in_filterable_element: BOOLEAN is
+	in_filterable_element: BOOLEAN
 			-- Is current parsing inside a filterable element tag?
 		do
 			Result := filter_depth > 0
@@ -223,14 +223,14 @@ feature {NONE} -- Implementation
 	last: STRING
 			-- Last element name			
 
-	can_output_stack: ARRAYED_LIST [BOOLEAN] is
+	can_output_stack: ARRAYED_LIST [BOOLEAN]
 			-- Can current node be output stack
 		once
 			create Result.make (1)
 			Result.extend (True)
 		end
 
-	can_output: BOOLEAN is
+	can_output: BOOLEAN
 			-- Can current node be output?	
 		do
 			Result := can_output_stack.i_th (can_output_stack.count)
@@ -242,7 +242,7 @@ feature {NONE} -- Implementation
 	filter_depth: INTEGER
 			-- Depth of filtering
 
-	filterable_elements: ARRAYED_LIST [STRING] is
+	filterable_elements: ARRAYED_LIST [STRING]
 			-- Filterable element names
 		once
 			create Result.make (1)
@@ -250,7 +250,7 @@ feature {NONE} -- Implementation
 			Result.extend ("output")
 		end		
 
-	write_tag (e: STRING; is_start: BOOLEAN) is
+	write_tag (e: STRING; is_start: BOOLEAN)
 			-- Write tag
 		local
 			l_start_tag: STRING
@@ -268,7 +268,7 @@ invariant
 	has_description: description /= Void
 	has_color: color /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

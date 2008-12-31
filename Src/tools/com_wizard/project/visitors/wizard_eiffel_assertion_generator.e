@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Assertion generator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -39,7 +39,7 @@ feature -- Access
 feature -- Basic operation
 
 	generate_precondition (a_name: STRING; a_type: WIZARD_DATA_TYPE_DESCRIPTOR;
-					in_param, out_param: BOOLEAN) is
+					in_param, out_param: BOOLEAN)
 			-- Generate precondition.
 		require
 			non_void_descriptor: a_type /= Void
@@ -87,7 +87,7 @@ feature -- Basic operation
 		end
 
 	generate_postcondition (a_name: STRING; a_type: WIZARD_DATA_TYPE_DESCRIPTOR;
-					ret_val: BOOLEAN) is
+					ret_val: BOOLEAN)
 			-- Generate postcondition.
 		require
 			non_void_descriptor: a_type /= Void
@@ -115,7 +115,7 @@ feature -- Basic operation
 feature {NONE}
 
 	additional_precondition (a_name: STRING; a_type: WIZARD_DATA_TYPE_DESCRIPTOR;
-		a_visitor: WIZARD_DATA_TYPE_VISITOR; a_in_param, a_out_param: BOOLEAN): WIZARD_WRITER_ASSERTION is
+		a_visitor: WIZARD_DATA_TYPE_VISITOR; a_in_param, a_out_param: BOOLEAN): WIZARD_WRITER_ASSERTION
 			-- A writer
 		require
 			non_void_name: a_name /= Void
@@ -163,7 +163,7 @@ feature {NONE}
 		end
 
 	additional_postcondition (a_name: STRING; a_type: WIZARD_DATA_TYPE_DESCRIPTOR;
-		a_visitor: WIZARD_DATA_TYPE_VISITOR; ret_val: BOOLEAN): WIZARD_WRITER_ASSERTION is
+		a_visitor: WIZARD_DATA_TYPE_VISITOR; ret_val: BOOLEAN): WIZARD_WRITER_ASSERTION
 			-- A writer
 		require
 			non_void_name: a_name /= Void
@@ -242,7 +242,7 @@ feature {NONE}
 			end
 		end
 
-	is_pointed_pointer (a_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR): BOOLEAN is
+	is_pointed_pointer (a_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR): BOOLEAN
 			-- Does `a_descriptor' point to a pointer?
 		require
 			non_void_descriptor: a_descriptor /= Void
@@ -264,7 +264,7 @@ feature {NONE}
 			l_is_pointer := is_ptr (l_type) or is_void (l_type)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

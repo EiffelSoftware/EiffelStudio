@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Processing interfaces for coclass."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -28,7 +28,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	process_interfaces is
+	process_interfaces
 			-- Process interfaces.
 		require
 			non_void_interface_list: coclass.interface_descriptors /= Void
@@ -60,21 +60,21 @@ feature -- Basic operations
 			clean_up
 		end
 
-	generate_interface_features (an_interface: WIZARD_INTERFACE_DESCRIPTOR) is
+	generate_interface_features (an_interface: WIZARD_INTERFACE_DESCRIPTOR)
 			-- Generate interface features.
 		require
 			non_void_interface: an_interface /= Void
 		deferred
 		end
 
-	generate_source_interface_features (an_interface: WIZARD_INTERFACE_DESCRIPTOR) is
+	generate_source_interface_features (an_interface: WIZARD_INTERFACE_DESCRIPTOR)
 			-- Generate source interface features.
 		require
 			non_void_interface: an_interface /= Void
 		deferred
 		end
 
-	remove_from_system_interfaces (an_implemented_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR) is
+	remove_from_system_interfaces (an_implemented_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR)
 			-- Does `an_implemented_interface' need to be removed from `system_descriptor.interfaces'?
 		do
 			if system_descriptor.interfaces.has (an_implemented_interface) then
@@ -89,14 +89,14 @@ feature {NONE} -- Implementation
 	finished: BOOLEAN
 			-- Is processing finished?
 
-	clean_up is
+	clean_up
 			-- Clean up.
 		require
 			finished: finished
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

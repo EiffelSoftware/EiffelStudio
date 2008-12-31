@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Holds information on a performed parsed test."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -65,7 +65,7 @@ invariant
 	parser_id_attached: parser_id /= Void
 	not_parser_id_is_empty: not parser_id.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

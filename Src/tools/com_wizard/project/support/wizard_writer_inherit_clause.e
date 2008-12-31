@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Inherit clause used in WIZARD_WRITER_CLASS"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -16,7 +16,7 @@ create
 		
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize data.
 		do
 			create {ARRAYED_LIST [STRING]} sources.make (20)
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	generated_code: STRING is
+	generated_code: STRING
 			-- Generated code
 		do
 			Result := Tab.twin
@@ -150,7 +150,7 @@ feature -- Access
 			end
 		end
 	
-	can_generate: BOOLEAN is
+	can_generate: BOOLEAN
 			-- Can Eiffel code by generated
 		do
 			Result := name /= Void
@@ -179,7 +179,7 @@ feature -- Access
 
 feature -- Element Change
 
-	set_name (a_name: like name) is
+	set_name (a_name: like name)
 			-- Set `name' with `a_name'.
 		require	
 			non_void_name: a_name /= Void
@@ -190,7 +190,7 @@ feature -- Element Change
 			name_set: name.is_equal (a_name)
 		end
 		
-	add_rename (source, destination: STRING) is
+	add_rename (source, destination: STRING)
 			-- Add renaming clause with source `source' and destination `destination'.
 		require
 			non_void_source: source /= Void
@@ -203,7 +203,7 @@ feature -- Element Change
 			destinations.extend (destination)
 		end
 	
-	add_redefine (a_feature: STRING) is
+	add_redefine (a_feature: STRING)
 			-- Add redefine clause for feature `a_feature'.
 		require
 			non_void_feature: a_feature/= Void
@@ -214,7 +214,7 @@ feature -- Element Change
 			added: redefines.last = a_feature
 		end
 	
-	add_export (features: LIST [STRING]; a_class: STRING) is
+	add_export (features: LIST [STRING]; a_class: STRING)
 			-- Add export clause for features `features' exported to `class'.
 		require
 			non_void_features: features /= Void
@@ -228,7 +228,7 @@ feature -- Element Change
 			exports.extend (export_directive)
 		end
 	
-	add_undefine (a_feature: STRING) is
+	add_undefine (a_feature: STRING)
 			-- Add undefine clause for feature `a_feature'.
 		require
 			non_void_features: a_feature/= Void
@@ -239,7 +239,7 @@ feature -- Element Change
 			added: undefines.last.is_equal (a_feature)
 		end
 	
-	add_select_clause (a_feature: STRING) is
+	add_select_clause (a_feature: STRING)
 			-- Add select clause with feature `a_feature'.
 		require
 			non_void_features: a_feature/= Void
@@ -254,7 +254,7 @@ invariant
 	
 		valid_rename_clauses: sources.count = destinations.count
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Reads XML file to table of contents."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature -- Creation
 
-	make is
+	make
 			-- Create
 		do
 			create toc.make_empty
@@ -35,7 +35,7 @@ feature -- Creation
 
 feature -- Access
 
-	process_element (e: XM_ELEMENT) is
+	process_element (e: XM_ELEMENT)
 			-- Process `e'
 		local
 			l_node, l_parent: TABLE_OF_CONTENTS_NODE
@@ -85,7 +85,7 @@ feature -- Access
 	parent_stack: HASH_TABLE [TABLE_OF_CONTENTS_NODE, INTEGER];
 			-- Parent stack
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

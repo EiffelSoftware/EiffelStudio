@@ -1,4 +1,4 @@
-indexing
+note
 	description: "ICOMPARER implementation for sorting SYSTEM_TYPEs"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Comparison
 
-	compare (x, y: SYSTEM_OBJECT): INTEGER is
+	compare (x, y: SYSTEM_OBJECT): INTEGER
 			-- Compares `x' and `y'
 		local
 			l_x: SYSTEM_TYPE
@@ -27,7 +27,7 @@ feature -- Comparison
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

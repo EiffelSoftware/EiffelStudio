@@ -1,4 +1,4 @@
-indexing
+note
 	description: "COM constants and functions name"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,125 +11,125 @@ class
 
 feature -- COM constants/ function names
 
-	Failed: STRING is "FAILED"
+	Failed: STRING = "FAILED"
 
-	Hresult_code: STRING is "HRESULT_CODE"
+	Hresult_code: STRING = "HRESULT_CODE"
 
-	Hresult_facility: STRING is "HRESULT_FACILITY"
+	Hresult_facility: STRING = "HRESULT_FACILITY"
 
-	Appid: STRING is "AppID"
+	Appid: STRING = "AppID"
 
-	Prog_id: STRING is "ProgID"
+	Prog_id: STRING = "ProgID"
 
-	Current_version: STRING is "CurVer"
+	Current_version: STRING = "CurVer"
 
-	Version_independent_prog_id: STRING is "VersionIndependentProgID"
+	Version_independent_prog_id: STRING = "VersionIndependentProgID"
 
-	Unicode: STRING is "UNICODE"
+	Unicode: STRING = "UNICODE"
 
-	Inproc_server32: STRING is "InprocServer32"
+	Inproc_server32: STRING = "InprocServer32"
 
-	Local_server32: STRING is "LocalServer32"
+	Local_server32: STRING = "LocalServer32"
 
-	Hkey_class_root: STRING is "HKEY_CLASSES_ROOT"
+	Hkey_class_root: STRING = "HKEY_CLASSES_ROOT"
 
-	Class_factory: STRING is "IClassFactory"
+	Class_factory: STRING = "IClassFactory"
 
-	Inprocess_server: STRING is "CLSCTX_INPROC_SERVER"
+	Inprocess_server: STRING = "CLSCTX_INPROC_SERVER"
 
-	Remote_server: STRING is "CLSCTX_LOCAL_SERVER|CLSCTX_REMOTE_SERVER"
+	Remote_server: STRING = "CLSCTX_LOCAL_SERVER|CLSCTX_REMOTE_SERVER"
 
-	Coserverinfo: STRING is "COSERVERINFO"
+	Coserverinfo: STRING = "COSERVERINFO"
 
-	E_no_interface: STRING is "E_NOINTERFACE"
+	E_no_interface: STRING = "E_NOINTERFACE"
 
-	Class_e_noaggregation: STRING is "CLASS_E_NOAGGREGATION"
+	Class_e_noaggregation: STRING = "CLASS_E_NOAGGREGATION"
 
-	S_ok: STRING is "S_OK"
+	S_ok: STRING = "S_OK"
 
-	S_false: STRING is "S_FALSE"
+	S_false: STRING = "S_FALSE"
 
-	E_out_of_memory: STRING is "E_OUTOFMEMORY"
+	E_out_of_memory: STRING = "E_OUTOFMEMORY"
 
-	Ulong_std_method_imp: STRING is "STDMETHODIMP_(ULONG)"
+	Ulong_std_method_imp: STRING = "STDMETHODIMP_(ULONG)"
 
-	Std_method_imp: STRING is "STDMETHODIMP"
+	Std_method_imp: STRING = "STDMETHODIMP"
 
-	Type_lib_type: STRING is "ITypeLib *"
+	Type_lib_type: STRING = "ITypeLib *"
 
-	Type_lib_variable_name: STRING is "pTypeLib"
+	Type_lib_variable_name: STRING = "pTypeLib"
 
-	Olestr: STRING is "OLESTR"
+	Olestr: STRING = "OLESTR"
 
-	E_pointer: STRING is "E_POINTER"
+	E_pointer: STRING = "E_POINTER"
 
-	Tchar: STRING is "TCHAR *"
+	Tchar: STRING = "TCHAR *"
 
-	Tchar_type: STRING is "TCHAR"
+	Tchar_type: STRING = "TCHAR"
 
-	Automation_marshaler_guid: STRING is "{00020424-0000-0000-C000-000000000046}"
+	Automation_marshaler_guid: STRING = "{00020424-0000-0000-C000-000000000046}"
 
-	Class_e_class_not_available: STRING is "CLASS_E_CLASSNOTAVAILABLE"
+	Class_e_class_not_available: STRING = "CLASS_E_CLASSNOTAVAILABLE"
 
-	Register_server_option_a: STRING is "/REGSERVER"
+	Register_server_option_a: STRING = "/REGSERVER"
 
-	Register_server_option_b: STRING is "-REGSERVER"
+	Register_server_option_b: STRING = "-REGSERVER"
 
-	Unregister_server_option_a: STRING is "/UNREGSERVER"
+	Unregister_server_option_a: STRING = "/UNREGSERVER"
 
-	Unregister_server_option_b: STRING is "-UNREGSERVER"
+	Unregister_server_option_b: STRING = "-UNREGSERVER"
 
-	Embedding_option_a: STRING is "/EMBEDDING"
+	Embedding_option_a: STRING = "/EMBEDDING"
 
-	Embedding_option_b: STRING is "-EMBEDDING"
+	Embedding_option_b: STRING = "-EMBEDDING"
 
-	Std_api: STRING is "STDAPI"
+	Std_api: STRING = "STDAPI"
 
-	Clsctx_local_server: STRING is "CLSCTX_LOCAL_SERVER"
+	Clsctx_local_server: STRING = "CLSCTX_LOCAL_SERVER"
 
-	Regcls_multiple_use: STRING is "REGCLS_MULTIPLEUSE"
+	Regcls_multiple_use: STRING = "REGCLS_MULTIPLEUSE"
 
-	Regcls_single_use: STRING is "REGCLS_SINGLEUSE"
+	Regcls_single_use: STRING = "REGCLS_SINGLEUSE"
 
-	Tchar_creation_function: STRING is "__TEXT"
+	Tchar_creation_function: STRING = "__TEXT"
 
-	Interlocked_increment: STRING is "InterlockedIncrement"
+	Interlocked_increment: STRING = "InterlockedIncrement"
 
-	Interlocked_decrement: STRING is "InterlockedDecrement"
+	Interlocked_decrement: STRING = "InterlockedDecrement"
 
-	Get_message: STRING is "GetMessage"
+	Get_message: STRING = "GetMessage"
 
-	Dispatch_message: STRING is "DispatchMessage"
+	Dispatch_message: STRING = "DispatchMessage"
 
-	Co_task_mem_free: STRING is "CoTaskMemFree"
+	Co_task_mem_free: STRING = "CoTaskMemFree"
 
-	Co_task_mem_alloc: STRING is "CoTaskMemAlloc"
+	Co_task_mem_alloc: STRING = "CoTaskMemAlloc"
 
-	Get_module_file_name: STRING is "GetModuleFileName"
+	Get_module_file_name: STRING = "GetModuleFileName"
 
-	Dll_register_server: STRING is "DllRegisterServer"
+	Dll_register_server: STRING = "DllRegisterServer"
 
-	Dll_unregister_server: STRING is "DllUnregisterServer"
+	Dll_unregister_server: STRING = "DllUnregisterServer"
 
-	Dll_get_class_object: STRING is "DllGetClassObject"
+	Dll_get_class_object: STRING = "DllGetClassObject"
 
-	Dll_can_unload_now: STRING is "DllCanUnloadNow"
+	Dll_can_unload_now: STRING = "DllCanUnloadNow"
 
-	Co_initialize: STRING is "CoInitialize (0)"
+	Co_initialize: STRING = "CoInitialize (0)"
 
-	Succeeded: STRING is "SUCCEEDED"
+	Succeeded: STRING = "SUCCEEDED"
 
-	Co_register_class_object: STRING is "CoRegisterClassObject"
+	Co_register_class_object: STRING = "CoRegisterClassObject"
 
-	Co_revoke_class_object: STRING is "CoRevokeClassObject"
+	Co_revoke_class_object: STRING = "CoRevokeClassObject"
 
-	Proxy_stub_clsid_32: STRING is "ProxyStubClsid32"
+	Proxy_stub_clsid_32: STRING = "ProxyStubClsid32"
 
-	Type_library: STRING is "TypeLib"
+	Type_library: STRING = "TypeLib"
 
-	Num_methods: STRING is "NumMethods";
+	Num_methods: STRING = "NumMethods";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A unix-specific implementation of a backup manager, used to backup and restore configurations.
 	]"
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Access
 
-	path_provider: UNIX_PATH_PROVIDER is
+	path_provider: UNIX_PATH_PROVIDER
 			-- Access to Eiffel related paths
 		do
 			Result ?= package.path_provider
@@ -29,7 +29,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Access
 
-	backup_preferences_time_stamp: INTEGER_32 is
+	backup_preferences_time_stamp: INTEGER_32
 			-- Backup timestamp for preferences
 		do
 				--| TODO
@@ -38,14 +38,14 @@ feature {NONE} -- Access
 
 feature  -- Basic operations
 
-	backup_preferences is
+	backup_preferences
 			-- Backs up preferences configuration file(s)
 		do
 				--| TODO
 			check False end
 		end
 
-	restore_preferences is
+	restore_preferences
 			-- Restores from a back up the preferences configuration file(s).
 		do
 				--| TODO
@@ -54,14 +54,14 @@ feature  -- Basic operations
 
 feature -- Query
 
-	does_backup_preferences_exist: BOOLEAN is
+	does_backup_preferences_exist: BOOLEAN
 			-- Determines if the backed up preferences data exists
 		do
 				--| TODO
 			check False end
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

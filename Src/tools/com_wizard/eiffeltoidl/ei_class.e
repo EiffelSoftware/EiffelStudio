@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel class representation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (c_name: STRING) is
+	make (c_name: STRING)
 			-- Initialize and set 'name' to 'c_name'.
 		require
 			non_void_name: c_name /= Void
@@ -38,7 +38,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	set_name (c_name: STRING) is
+	set_name (c_name: STRING)
 			-- Set 'name' to 'c_name'.
 		require
 			valid_name: c_name /= Void and then not c_name.is_empty
@@ -48,7 +48,7 @@ feature -- Basic operations
 			name_set: name.is_equal (c_name)
 		end
 
-	set_description (desc: STRING) is
+	set_description (desc: STRING)
 			-- Set 'description' to 'desc'.
 		require
 			valid_description: desc /= Void and then not desc.is_empty
@@ -58,7 +58,7 @@ feature -- Basic operations
 			description_set: description.is_equal (desc)
 		end
 
-	add_feature (l_feature: EI_FEATURE) is
+	add_feature (l_feature: EI_FEATURE)
 			-- Add 'feature' to 'features'.
 		require
 			non_void_feature: l_feature /= Void
@@ -74,7 +74,7 @@ invariant
 	non_void_description: description /= Void
 	non_void_features: features /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

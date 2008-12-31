@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Task used for compiling IDL file from Eiffel class"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature -- Access
 
-	title: STRING is
+	title: STRING
 			-- Task title
 		do
 			if not environment.is_new_component or not environment.marshaller_generated then
@@ -23,7 +23,7 @@ feature -- Access
 			end
 		end
 
-	steps_count: INTEGER is
+	steps_count: INTEGER
 			-- Number of steps involved in task
 		do
 			if not environment.is_new_component or not environment.marshaller_generated then
@@ -35,7 +35,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	internal_execute is
+	internal_execute
 			-- Implementation of `execute'.
 		do
 			compiler.compile_idl
@@ -66,13 +66,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	compiler: WIZARD_COMPILER is
+	compiler: WIZARD_COMPILER
 			-- IDL/C compiler
 		once
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

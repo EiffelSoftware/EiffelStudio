@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Generator for generating an Eiffel class.
 	]"
@@ -15,7 +15,7 @@ inherit
 
 feature -- Basic operations
 
-	generate (a_params: APPLICATION_OPTIONS; a_stub: BOOLEAN): STRING is
+	generate (a_params: APPLICATION_OPTIONS; a_stub: BOOLEAN): STRING
 			-- Generates an Eiffel source file using the application parameters `a_params'
 		local
 			l_blob_gen: FEATURE_BLOB_GENERATOR
@@ -77,7 +77,7 @@ feature -- Basic operations
 			Result.append ("%N")
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

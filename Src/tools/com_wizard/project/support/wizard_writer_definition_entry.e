@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel class feature"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize data.
 		do
 			create root_class_name.make (100)
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	generated_code: STRING is
+	generated_code: STRING
 			-- Generated code
 		do
 			Result := root_class_name.twin
@@ -76,7 +76,7 @@ feature -- Access
 
 feature -- Status
 
-	can_generate: BOOLEAN is
+	can_generate: BOOLEAN
 			-- Can code be generated?
 		do
 			Result := root_class_name /= Void and not root_class_name.is_empty 
@@ -87,7 +87,7 @@ feature -- Status
 
 feature -- Element Change
 
-	set_root_class_name (a_name: like root_class_name) is
+	set_root_class_name (a_name: like root_class_name)
 			-- Set `root_class_name' with `a_name'.
 		require
 			non_void_name: a_name /= Void
@@ -98,7 +98,7 @@ feature -- Element Change
 			name_set: root_class_name.is_equal (a_name)
 		end
 
-	set_class_creation_feature_name (a_feature_name: like class_creation_feature_name) is
+	set_class_creation_feature_name (a_feature_name: like class_creation_feature_name)
 			-- Set 'class_creation_feature_name' with 'a_feature_name'.
 		require
 			non_void_name: a_feature_name /= Void
@@ -109,7 +109,7 @@ feature -- Element Change
 			name_set: class_creation_feature_name.is_equal (a_feature_name)
 		end
 
-	set_export_feature_name (a_feature_name: like export_feature_name) is
+	set_export_feature_name (a_feature_name: like export_feature_name)
 			-- Set 'export_feature_name' with 'a_feature_name'
 		require
 			non_void_name: a_feature_name /= Void
@@ -120,7 +120,7 @@ feature -- Element Change
 			name_set:export_feature_name.is_equal (a_feature_name)
 		end
 
-	set_feature_index (a_index: INTEGER) is
+	set_feature_index (a_index: INTEGER)
 			-- Set 'feature_index' with 'a_index'.
 		require
 			valid_index: a_index > 0
@@ -130,7 +130,7 @@ feature -- Element Change
 			index_set: feature_index = a_index
 		end
 
-	set_feature_alias (an_alias: like feature_alias) is
+	set_feature_alias (an_alias: like feature_alias)
 			-- Set 'feature_alias' with 'an_alias'
 		require
 			non_void_alias: an_alias /= Void
@@ -141,7 +141,7 @@ feature -- Element Change
 			alias_set: feature_alias.is_equal (an_alias)
 		end
 
-	set_call_type (a_call_type: like call_type) is
+	set_call_type (a_call_type: like call_type)
 			-- Set `call_type' with `a_call_type'.
 		require
 			non_void_call_type: a_call_type /= Void
@@ -151,7 +151,7 @@ feature -- Element Change
 			call_type_set: call_type.is_equal (a_call_type)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

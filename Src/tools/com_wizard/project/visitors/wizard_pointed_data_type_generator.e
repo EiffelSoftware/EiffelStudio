@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Wizard Pointed Data Type names generator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ inherit
 
 feature -- Basic operations
 
-	process (a_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR; a_visitor: WIZARD_DATA_TYPE_VISITOR) is
+	process (a_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR; a_visitor: WIZARD_DATA_TYPE_VISITOR)
 			-- Process Pointed Data Type
 		require
 			valid_descriptor: a_descriptor /= Void
@@ -337,7 +337,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	ce_function_body_record (a_class_name: STRING): STRING is
+	ce_function_body_record (a_class_name: STRING): STRING
 			-- C to Eiffel function body, if type is pointer to record.
 		require
 			valid_name: a_class_name /= Void and then not a_class_name.is_empty
@@ -350,7 +350,7 @@ feature {NONE} -- Implementation
 			valid_result: Result /= Void and then not Result.is_empty
 		end
  
-	ce_function_body_interface (a_class_name: STRING): STRING is
+	ce_function_body_interface (a_class_name: STRING): STRING
 			-- C to Eiffel function body, if type is pointer to interface.
 		require
 			valid_name: a_class_name /= Void and then not a_class_name.is_empty
@@ -363,7 +363,7 @@ feature {NONE} -- Implementation
 			valid_result: Result /= Void and then not Result.is_empty
 		end
 
-	ce_function_body_cell (a_c_type: STRING; a_visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
+	ce_function_body_cell (a_c_type: STRING; a_visitor: WIZARD_DATA_TYPE_VISITOR): STRING
 			-- C to Eiffel function body, for types pointed to all types 
 			-- other then records and interfaces.
 			--		Parameters
@@ -425,7 +425,7 @@ feature {NONE} -- Implementation
 			valid_result: not Result.is_empty
 		end
 
-	ec_function_body_cell (a_visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
+	ec_function_body_cell (a_visitor: WIZARD_DATA_TYPE_VISITOR): STRING
 			-- Eiffel to C function body for CELL type
 		require
 			non_void_visitor: a_visitor /= Void
@@ -481,7 +481,7 @@ feature {NONE} -- Implementation
 			valid_result: not Result.is_empty
 		end
 
-	ec_function_wrapper (eiffel_type_name, c_type_name: STRING; is_interface_wrapper: BOOLEAN): STRING is
+	ec_function_wrapper (eiffel_type_name, c_type_name: STRING; is_interface_wrapper: BOOLEAN): STRING
 			-- Eiffel to C function for wrappers.
 		require
 			non_void_eiffel_name: eiffel_type_name /= Void
@@ -510,7 +510,7 @@ feature {NONE} -- Implementation
 			valid_result: not Result.is_empty
 		end
 
-	addition_for_structure (eiffel_type_name: STRING): STRING is
+	addition_for_structure (eiffel_type_name: STRING): STRING
 			-- Addition for structure in EC function wrapper.
 		require
 			non_void_eiffel_type: eiffel_type_name /= Void
@@ -527,7 +527,7 @@ feature {NONE} -- Implementation
 			valid_addition: not Result.is_empty
 		end
 
-	addition_for_interface (c_type_name: STRING): STRING is
+	addition_for_interface (c_type_name: STRING): STRING
 			-- Addition for interface in EC function wrapper.
 		require
 			non_void_c_type: c_type_name /= Void
@@ -550,7 +550,7 @@ feature {NONE} -- Implementation
 			valid_addition: not Result.is_empty
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Splash displayer."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -35,13 +35,13 @@ create
 
 feature -- Access
 
-	make_with_text (s: STRING_GENERAL) is
+	make_with_text (s: STRING_GENERAL)
 		do
 			Precursor {SPLASH_DISPLAYER_I} (s)
 			default_create
 		end
 
-	initialize is
+	initialize
 		do
 			Precursor
 			create main_box
@@ -50,7 +50,7 @@ feature -- Access
 			main_box.extend (pixmap_box)
 		end
 
-	splash_pixmap: EV_PIXMAP is
+	splash_pixmap: EV_PIXMAP
 			-- background splash pixmaps.
 		local
 			pw, ph,
@@ -91,7 +91,7 @@ feature -- Access
 			end
 		end
 
-	splash_pixmap_with_text: EV_PIXMAP is
+	splash_pixmap_with_text: EV_PIXMAP
 			-- Splash pixmap with text.
 		local
 			pw, ph: INTEGER
@@ -125,7 +125,7 @@ feature -- Access
 			end
 		end
 
-	show is
+	show
 			-- Display the splash box
 		local
 			cell: EV_CELL
@@ -146,7 +146,7 @@ feature -- Access
 			end
 		end
 
-	center_splash is
+	center_splash
 		local
 			sc: EV_SCREEN
 			x,y,w,h: INTEGER
@@ -162,12 +162,12 @@ feature -- Access
 			set_position (x, y)
 		end
 
-	close is
+	close
 		do
 			destroy
 		end
 
-	exit is
+	exit
 		do
 			close
 			ev_application.destroy
@@ -175,7 +175,7 @@ feature -- Access
 
 feature -- Change
 
-	set_verbose_text (s: STRING_GENERAL) is
+	set_verbose_text (s: STRING_GENERAL)
 		local
 			l_size: TUPLE [w: INTEGER; h: INTEGER; lo: INTEGER_32; ro: INTEGER_32]
 		do
@@ -188,7 +188,7 @@ feature -- Change
 --			center_splash
 		end
 
-	build_verbose_panel is
+	build_verbose_panel
 		local
 			b: EV_VERTICAL_BOX
 			h: EV_HORIZONTAL_BOX
@@ -225,7 +225,7 @@ feature -- Change
 
 feature {NONE} -- Properties
 
-	Stock_colors: EV_STOCK_COLORS is
+	Stock_colors: EV_STOCK_COLORS
 		once
 			create Result
 		end
@@ -236,7 +236,7 @@ feature {NONE} -- Properties
 
 	verbose_panel: EV_LABEL;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

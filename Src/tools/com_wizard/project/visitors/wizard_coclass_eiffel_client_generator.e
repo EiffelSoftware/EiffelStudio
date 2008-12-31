@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Coclass eiffel client generator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	generate (a_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
+	generate (a_descriptor: WIZARD_COCLASS_DESCRIPTOR)
 			-- Generate eiffel class for coclass.
 		local
 			l_name: STRING
@@ -54,7 +54,7 @@ feature -- Access
 			eiffel_writer := Void
 		end
 
-	process_interfaces (a_coclass: WIZARD_COCLASS_DESCRIPTOR) is
+	process_interfaces (a_coclass: WIZARD_COCLASS_DESCRIPTOR)
 			-- Process coclass interfaces.
 		local
 			l_processor: WIZARD_COCLASS_INTERFACE_EIFFEL_CLIENT_PROCESSOR
@@ -66,7 +66,7 @@ feature -- Access
 
 feature --  Basic operation
 
-	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY) is
+	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY)
 			-- Create file name.
 		do
 			a_factory.process_coclass_eiffel_client
@@ -74,7 +74,7 @@ feature --  Basic operation
 
 feature {NONE} -- Implementation
 
-	set_default_ancestors (an_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS) is
+	set_default_ancestors (an_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS)
 			-- Set default ancestors
 		local
 			tmp_writer: WIZARD_WRITER_INHERIT_CLAUSE
@@ -85,7 +85,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	add_default_features (a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
+	add_default_features (a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR)
 			-- Add default features to coclass client. 
 			-- e.g. make, constructor, destructor, delete wrapper etc.
 		local
@@ -117,7 +117,7 @@ feature {NONE} -- Implementation
 
 		end
 
-	make_feature: WIZARD_WRITER_FEATURE is
+	make_feature: WIZARD_WRITER_FEATURE
 			-- `make' feature.
 		require
 			non_void_eiffel_writer: eiffel_writer /= Void
@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 			non_void_feature_body: Result.body /= Void
 		end
 
-	add_creation is
+	add_creation
 			-- Add creation routines.
 		do
 			if is_typeflag_fcancreate (coclass_descriptor.flags) then
@@ -151,7 +151,7 @@ feature {NONE} -- Implementation
 			eiffel_writer.add_creation_routine (Make_from_pointer)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

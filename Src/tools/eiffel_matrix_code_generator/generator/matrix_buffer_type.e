@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		State an scanner token lister will be in after a motion action.
 	]"
@@ -23,7 +23,7 @@ convert
 
 feature {NONE} -- Initialization
 
-	make_from_integer (i: INTEGER) is
+	make_from_integer (i: INTEGER)
 			-- Initializes instance from integer `i'.
 			--
 			-- `i': An {INTEGER} value corresponding to a member.
@@ -37,21 +37,21 @@ feature {NONE} -- Initialization
 
 feature -- Scanner States
 
-	implementation: INTEGER is 0x0
+	implementation: INTEGER = 0x0
 			-- Implementation buffer
 
-	access: INTEGER is 0x01
+	access: INTEGER = 0x01
 			-- Access buffer
 
 feature -- Access
 
-	min_member: INTEGER is
+	min_member: INTEGER
 			-- Minimum value member
 		do
 			Result := implementation
 		end
 
-	max_member: INTEGER is
+	max_member: INTEGER
 			-- Maximum value member
 		do
 			Result := access
@@ -59,7 +59,7 @@ feature -- Access
 
 feature -- HASHABLE Implementation
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		do
 			Result := value
@@ -67,7 +67,7 @@ feature -- HASHABLE Implementation
 
 feature -- Conversion
 
-	to_integer: INTEGER is
+	to_integer: INTEGER
 			-- Converts `Current' to an {INTEGER}
 		do
 			Result := value
@@ -77,7 +77,7 @@ feature -- Conversion
 
 feature -- Query
 
-	value_member (i: like value): BOOLEAN is
+	value_member (i: like value): BOOLEAN
 			-- Does `i' correspond to a value member?
 		do
 			Result := i = implementation or i = access
@@ -91,7 +91,7 @@ feature {NONE} -- Implementation
 invariant
 	value_is_value_member: value_member (value)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

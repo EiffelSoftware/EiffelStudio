@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Basic, common, implementation for a cleaner use to clean configuration data.
 	]"
@@ -17,7 +17,7 @@ inherit
 
 feature {NONE} -- Access
 
-	user_options_factory: USER_OPTIONS_FACTORY is
+	user_options_factory: USER_OPTIONS_FACTORY
 			-- Factory functions for retrieving user project information
 		once
 			create Result
@@ -25,7 +25,7 @@ feature {NONE} -- Access
 			result_attached: Result /= Void
 		end
 
-	error_handler: MULTI_ERROR_MANAGER is
+	error_handler: MULTI_ERROR_MANAGER
 			-- Access to error manager
 		do
 			Result := package.error_handler
@@ -33,7 +33,7 @@ feature {NONE} -- Access
 			result_attached: Result /= Void
 		end
 
-	path_provider: PATH_PROVIDER is
+	path_provider: PATH_PROVIDER
 			-- Access to Eiffel related paths
 		do
 			Result := package.path_provider
@@ -43,7 +43,7 @@ feature {NONE} -- Access
 
 feature -- Basic operation
 
-	clean_environment (a_config: I_CLEANING_CONFIG) is
+	clean_environment (a_config: I_CLEANING_CONFIG)
 			-- Cleans environment configuration files base on user settings.
 		do
 			if a_config.process_environement_debug_layout then
@@ -57,7 +57,7 @@ feature -- Basic operation
 			end
 		end
 
-	clean_project (a_config: I_CLEANING_CONFIG) is
+	clean_project (a_config: I_CLEANING_CONFIG)
 			-- Cleans project configuration files base on user settings.
 		local
 			l_options: USER_OPTIONS
@@ -103,7 +103,7 @@ feature -- Basic operation
 
 feature -- Basic operations
 
-	remove_file (a_file: STRING) is
+	remove_file (a_file: STRING)
 			-- Attempts to remove file `a_file'
 		local
 			l_file: RAW_FILE
@@ -122,12 +122,12 @@ feature -- Basic operations
 			retry
 		end
 
-	remove_preferences is
+	remove_preferences
 			-- Removes preferences from the windows registry
 		deferred
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

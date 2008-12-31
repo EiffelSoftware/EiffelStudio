@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented interface generator for C server"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -25,7 +25,7 @@ inherit
 
 feature -- Basic operations
 
-	generate (a_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR) is
+	generate (a_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR)
 			-- Generate C server for implemented interface.
 		local
 			l_interface: WIZARD_INTERFACE_DESCRIPTOR
@@ -74,13 +74,13 @@ feature -- Basic operations
 			cpp_class_writer := Void
 		end
 
-	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY) is
+	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY)
 			-- Create file name.
 		do
 			a_factory.process_coclass_c_server
 		end
 
-	default_dispinterface_name (a_interface: WIZARD_COMPONENT_DESCRIPTOR): STRING is
+	default_dispinterface_name (a_interface: WIZARD_COMPONENT_DESCRIPTOR): STRING
 			-- Name of default dispinterface.
 		local
 			l_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR
@@ -90,7 +90,7 @@ feature -- Basic operations
 			Result := l_interface.interface_descriptor.name
 		end
 
-	default_dispinterface (a_interface: WIZARD_COMPONENT_DESCRIPTOR): WIZARD_INTERFACE_DESCRIPTOR is
+	default_dispinterface (a_interface: WIZARD_COMPONENT_DESCRIPTOR): WIZARD_INTERFACE_DESCRIPTOR
 			-- Default dispinterface.
 		local
 			l_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR
@@ -102,13 +102,13 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	add_constructor (a_interface: WIZARD_COMPONENT_DESCRIPTOR) is
+	add_constructor (a_interface: WIZARD_COMPONENT_DESCRIPTOR)
 			-- Add constructor.
 		do
 
 		end
 
-	constructor (a_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR): WIZARD_WRITER_CPP_CONSTRUCTOR is
+	constructor (a_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR): WIZARD_WRITER_CPP_CONSTRUCTOR
 			-- Constructor.
 		require
 			non_void_descriptor: a_interface /= Void
@@ -131,7 +131,7 @@ feature {NONE} -- Implementation
 			non_void_constructor: Result /= Void
 		end
 
-	add_query_interface (a_interface: WIZARD_COMPONENT_DESCRIPTOR) is
+	add_query_interface (a_interface: WIZARD_COMPONENT_DESCRIPTOR)
 			-- Add function 'QueryInterface'
 		local
 			l_writer: WIZARD_WRITER_C_FUNCTION
@@ -173,7 +173,7 @@ feature {NONE} -- Implementation
 			cpp_class_writer.add_function (l_writer, Public)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

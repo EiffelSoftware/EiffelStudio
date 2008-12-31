@@ -1,4 +1,4 @@
-indexing
+note
 	description: "VARKIND contants"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -10,7 +10,7 @@ class
 
 feature 
 
-	Var_perinstance: INTEGER is
+	Var_perinstance: INTEGER
 			-- Variable is field or member of type
 			-- it exists at fixed offset within each instance of type.
 		external
@@ -19,7 +19,7 @@ feature
 			"VAR_PERINSTANCE"
 		end
 
-	Var_static: INTEGER is
+	Var_static: INTEGER
 			-- Only one instance of variable
 		external
 			"C [macro <oaidl.h>]"
@@ -27,7 +27,7 @@ feature
 			"VAR_STATIC"
 		end
 
-	Var_const: INTEGER is
+	Var_const: INTEGER
 			-- VARDESC describes symbolic constant
 			-- There is no memory associated with it.
 		external
@@ -36,7 +36,7 @@ feature
 			"VAR_CONST"
 		end
 
-	Var_dispatch: INTEGER is
+	Var_dispatch: INTEGER
 			-- Variable can only be accessed via feature
 			-- `invoke' of class EOLE_DISPATCH.
 		external
@@ -45,7 +45,7 @@ feature
 			"VAR_DISPATCH"
 		end
 
-	is_valid_var_kind (kind: INTEGER): BOOLEAN is
+	is_valid_var_kind (kind: INTEGER): BOOLEAN
 			-- Is `kind' a valid variable kind?
 		do
 			Result := kind = Var_perinstance or
@@ -54,7 +54,7 @@ feature
 			kind = Var_dispatch
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Intialization
 
-	make (l_name: STRING) is
+	make (l_name: STRING)
 			-- Initialize object.  Set 'name' to 'l_name'.
 		do
 			Precursor (l_name)
@@ -33,7 +33,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_coclass (c_class: EI_MIDL_COCLASS) is
+	set_coclass (c_class: EI_MIDL_COCLASS)
 			-- Set 'coclass' to 'c_class'.
 		require
 			non_void_coclass: c_class /= Void
@@ -45,7 +45,7 @@ feature -- Element change
 
 feature -- Output
 
-	code: STRING is
+	code: STRING
 			-- Library code
 		local
 			guid_str: STRING
@@ -92,7 +92,7 @@ feature -- Output
 			code_generated: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

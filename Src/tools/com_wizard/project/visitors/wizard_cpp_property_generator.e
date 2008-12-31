@@ -1,4 +1,4 @@
-indexing
+note
 	description: "C property generator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -30,7 +30,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	set_header_file (a_header_file: STRING) is
+	set_header_file (a_header_file: STRING)
 			-- Set `c_header_file' with `a_header_file'
 		require
 			non_void_header_file: a_header_file /= Void
@@ -39,7 +39,7 @@ feature {NONE} -- Implementation
 			c_header_file := a_header_file.twin
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

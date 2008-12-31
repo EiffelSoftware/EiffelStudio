@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Progress event raised by manager, handled by GUI"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_id: INTEGER; a_value: ANY) is
+	make (a_id: INTEGER; a_value: ANY)
 			-- Initialize instance.
 		require
 			valid_id: is_valid_progress_event_id (a_id)
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	value: INTEGER is
+	value: INTEGER
 			-- Associated value if any
 		local
 			l_ref: INTEGER_REF
@@ -45,7 +45,7 @@ feature -- Access
 			end
 		end
 
-	text_value: STRING is
+	text_value: STRING
 			-- Associated text value if any
 		do
 			Result ?= data
@@ -53,7 +53,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	severity_from_id (a_id: INTEGER): INTEGER is
+	severity_from_id (a_id: INTEGER): INTEGER
 			-- Event severity
 		do
 			if a_id = Finish then
@@ -66,7 +66,7 @@ feature {NONE} -- Implementation
 invariant
 	valid_id: is_valid_progress_event_id (id)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generate names for vartype constants"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -42,7 +42,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize tables
 		do
 			create c_names.make (20)
@@ -232,7 +232,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	c_name (a_var_type: INTEGER): STRING is
+	c_name (a_var_type: INTEGER): STRING
 			-- C name of constant `a_var_type'
 		require
 			valid_var_type: valid_var_type (a_var_type)
@@ -243,7 +243,7 @@ feature -- Access
 			valid_c_name: not Result.is_empty
 		end
 
-	eiffel_name (a_var_type: INTEGER): STRING is
+	eiffel_name (a_var_type: INTEGER): STRING
 			-- Eiffel name of constant `a_var_type'
 		require
 			valid_var_type: valid_var_type (a_var_type)
@@ -254,7 +254,7 @@ feature -- Access
 			valid_eiffel_name: not Result.is_empty
 		end
 
-	variant_field_name (a_visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
+	variant_field_name (a_visitor: WIZARD_DATA_TYPE_VISITOR): STRING
 			-- Name VARIANT field for constant `a_var_type'
 		require
 			valid_visitor: a_visitor /= Void
@@ -287,7 +287,7 @@ feature -- Access
 			end
 		end
 
-	ce_array_function_name (a_var_type: INTEGER): STRING is
+	ce_array_function_name (a_var_type: INTEGER): STRING
 			-- CE conversion function name of constant `a_var_type'
 		require
 			valid_var_type: valid_var_type (a_var_type)
@@ -298,7 +298,7 @@ feature -- Access
 			valid_c_name: not Result.is_empty
 		end
 
-	ec_array_function_name (a_var_type: INTEGER): STRING is
+	ec_array_function_name (a_var_type: INTEGER): STRING
 			-- EC conversion function name of constant `a_var_type'
 		require
 			valid_var_type: valid_var_type (a_var_type)
@@ -333,7 +333,7 @@ invariant
 	non_void_ce_array_function_names: ce_array_function_names /= Void
 	non_void_ec_array_function_names: ec_array_function_names /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

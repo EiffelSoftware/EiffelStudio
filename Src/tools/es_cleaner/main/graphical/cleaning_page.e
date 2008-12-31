@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A notebook tab page widget for cleaning related functions.
 	]"
@@ -26,7 +26,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	user_initialization is
+	user_initialization
 			-- Called by `initialize'.
 			-- Any custom user initialization that
 			-- could not be performed in `initialize',
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	project_location: STRING is
+	project_location: STRING
 			-- Location of the Eiffel project to clean.
 		do
 			Result := clean_project_panel.project_location
@@ -54,7 +54,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	siteable_entities: !ARRAYED_LIST [!SITE [PACKAGE]] is
+	siteable_entities: !ARRAYED_LIST [!SITE [PACKAGE]]
 			-- List of siteable entities to automatically site when `Current' is sited
 		do
 			Result := Precursor {SITE}
@@ -64,43 +64,43 @@ feature {NONE} -- Access
 
 feature -- Status report
 
-	process_environement_preferences: BOOLEAN is
+	process_environement_preferences: BOOLEAN
 			-- Indiciates if the environment preferences should be processed
 		do
 			Result := clean_environment_panel.process_environement_preferences
 		end
 
-	process_environement_editing_layout: BOOLEAN is
+	process_environement_editing_layout: BOOLEAN
 			-- Indiciates if the environment editing layout should be processed
 		do
 			Result := clean_environment_panel.process_environement_editing_layout
 		end
 
-	process_environement_debug_layout: BOOLEAN is
+	process_environement_debug_layout: BOOLEAN
 			-- Indiciates if the environment debug layout should be processed
 		do
 			Result := clean_environment_panel.process_environement_debug_layout
 		end
 
-	process_project: BOOLEAN is
+	process_project: BOOLEAN
 			-- Indiciates if an Eiffel project should be processed
 		do
 			Result := clean_project_panel.process_project
 		end
 
-	process_project_preferences: BOOLEAN is
+	process_project_preferences: BOOLEAN
 			-- Indiciates if the project preferences should be processed
 		do
 			Result := clean_project_panel.process_project_preferences
 		end
 
-	process_project_layout: BOOLEAN is
+	process_project_layout: BOOLEAN
 			-- Indiciates if the project layout should be processed
 		do
 			Result := clean_project_panel.process_project_layout
 		end
 
-	process_project_session: BOOLEAN is
+	process_project_session: BOOLEAN
 			-- Indiciates if the project session should be processed
 		do
 			Result := clean_project_panel.process_project_session
@@ -114,7 +114,7 @@ feature -- Actions
 
 feature {NONE} -- UI state setting
 
-	enable_cleaning_widgets is
+	enable_cleaning_widgets
 			-- Enabled cleaning widgets base on configuration state
 		do
 			if can_environment_processing_occur then
@@ -131,7 +131,7 @@ feature {NONE} -- UI state setting
 
 feature {NONE} -- Implementation
 
-	on_clean_environment_clicked is
+	on_clean_environment_clicked
 			-- Called by `select_actions' of `btn_clean_environment'.
 		do
 			if site /= Void then
@@ -139,7 +139,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_clean_project_clicked is
+	on_clean_project_clicked
 			-- Called by `select_actions' of `btn_clean_project'.
 		do
 			if site /= Void then

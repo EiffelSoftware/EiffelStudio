@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Com wizard layout"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,9 +16,9 @@ inherit
 
 feature -- Access
 
-	application_name: STRING is "com_wizard";
+	application_name: STRING = "com_wizard";
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

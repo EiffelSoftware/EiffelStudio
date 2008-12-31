@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Manager for documents."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature -- Creation
 
-	make is
+	make
 			-- Create manager
 		do
 			create documents.make (10)
@@ -32,7 +32,7 @@ feature -- Schema
 	schema: DOCUMENT_SCHEMA
 			-- The currently assigned schema	
 		
-	initialize_schema (schema_filename: STRING) is
+	initialize_schema (schema_filename: STRING)
 			-- Initialize `schema' with `a_filename'
 		require
 			schema_file_not_void: schema_filename /= Void
@@ -47,7 +47,7 @@ feature -- Schema
 			end
 		end
 		
-	set_schema (a_schema: DOCUMENT_SCHEMA) is
+	set_schema (a_schema: DOCUMENT_SCHEMA)
 			-- Set `schema' to 'a_name'
 		do
 			schema := a_schema
@@ -58,13 +58,13 @@ feature -- Schema
 			schema_set: schema = a_schema
 		end		
 		
-	has_schema: BOOLEAN is
+	has_schema: BOOLEAN
 			-- Is a valid schema loaded?
 		do
 			Result := schema /= Void	
 		end	
 		
-	remove_schema is
+	remove_schema
 			-- Remove schema
 		do
 			schema := Void	
@@ -75,13 +75,13 @@ feature -- HTML Stylesheet
 	stylesheet: PLAIN_TEXT_FILE
 			-- The currently assigned stylesheet	
 		
-	has_stylesheet: BOOLEAN is
+	has_stylesheet: BOOLEAN
 			-- Is a stylesheet loaded?
 		do
 			Result := stylesheet /= Void	
 		end	
 		
-	initialize_stylesheet (stylesheet_filename: STRING) is
+	initialize_stylesheet (stylesheet_filename: STRING)
 			-- Initialize `stylesheet' with `a_filename'
 		require
 			stylesheet_file_not_void: stylesheet_filename /= Void
@@ -90,7 +90,7 @@ feature -- HTML Stylesheet
 			create stylesheet.make (stylesheet_filename)
 		end	
 
-	remove_stylesheet is
+	remove_stylesheet
 			-- Remove stylesheet
 		do
 			stylesheet := Void	
@@ -98,7 +98,7 @@ feature -- HTML Stylesheet
 		
 feature -- Document Manipulation
 
-	create_document is
+	create_document
 			-- Create new document
 		local
 			document: DOCUMENT
@@ -107,7 +107,7 @@ feature -- Document Manipulation
 			add_document (document, True)
 		end		
 
-	open_document is
+	open_document
 			-- Called by `select_actions' of `open_xml_menu_item'.
 		local
 			l_open_dialog: EV_FILE_OPEN_DIALOG
@@ -119,7 +119,7 @@ feature -- Document Manipulation
 			end
 		end	
 
-	close_document is
+	close_document
 			-- 
 		local
 			l_dlg: EV_QUESTION_DIALOG
@@ -137,7 +137,7 @@ feature -- Document Manipulation
 			editor_panels.remove (l_doc_name)
 		end	
 
-	load_document_from_file (a_filename: STRING) is
+	load_document_from_file (a_filename: STRING)
 			-- Load a document with `a_filename'
 		require
 			filename_not_void: a_filename /= Void
@@ -165,7 +165,7 @@ feature -- Document Manipulation
 			end
 		end
 
-	load_text_document (a_filename: STRING) is
+	load_text_document (a_filename: STRING)
 			-- Load document as plain text file
 		require
 			no_forward_slash: not a_filename.has ('\')
@@ -186,21 +186,21 @@ feature -- Document Manipulation
 			end
 		end
 		
-	load_image_document (a_filename: STRING) is
+	load_image_document (a_filename: STRING)
 			-- Load image
 		local
 		do
 			--not implemented
 		end
 
-	save_document is
+	save_document
 			-- Called by `select_actions' of `save_xml_menu_item'.
 		do
 			current_document.set_text (current_editor.text)
 			current_document.save
 		end				
 		
-	save_all is
+	save_all
 			-- Save all opened documents
 		do
 --			from
@@ -216,7 +216,7 @@ feature -- Document Manipulation
 --			end
 		end		
 
-	current_editor: DOCUMENT_EDITOR is
+	current_editor: DOCUMENT_EDITOR
 			--
 		local
 			l_doc_name: STRING
@@ -229,7 +229,7 @@ feature -- Document Manipulation
 			end
 		end	
 
-	current_document: DOCUMENT is
+	current_document: DOCUMENT
 			-- Currently open document in notebook
 		local
 			l_doc_name: STRING
@@ -244,7 +244,7 @@ feature -- Document Manipulation
 
 feature {DOCUMENT_PROJECT, XML_TABLE_OF_CONTENTS, DOCUMENT_EDITOR, TABLE_OF_CONTENTS} -- Document Manipulation
 
-	add_document (a_doc: DOCUMENT; display: BOOLEAN) is
+	add_document (a_doc: DOCUMENT; display: BOOLEAN)
 			-- Add a document
 		require
 			a_doc_not_void: a_doc /= Void
@@ -272,7 +272,7 @@ feature {DOCUMENT_PROJECT, XML_TABLE_OF_CONTENTS, DOCUMENT_EDITOR, TABLE_OF_CONT
 			end			
 		end
 
-	remove_document (a_doc: DOCUMENT) is
+	remove_document (a_doc: DOCUMENT)
 			-- Remove document
 		require
 			a_doc_not_void: a_doc /= Void
@@ -288,7 +288,7 @@ feature {DOCUMENT_PROJECT, XML_TABLE_OF_CONTENTS, DOCUMENT_EDITOR, TABLE_OF_CONT
 	
 feature -- Access
 
-	notebook: EV_NOTEBOOK is
+	notebook: EV_NOTEBOOK
 			-- 
 		once
 			Result := application_window.editor_notebook
@@ -301,7 +301,7 @@ feature -- Access
 	editor_panels: HASH_TABLE [DOCUMENT_EDITOR, STRING]
 			-- Loaded document editor panels
 
-	synchronizer: DOCUMENT_SYNCHRONIZER is
+	synchronizer: DOCUMENT_SYNCHRONIZER
 			-- Used to synchronize documents between views
 		once
 			create Result		
@@ -309,14 +309,14 @@ feature -- Access
 
 feature -- Query
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code
 		do
 			Result := counter
 			counter := counter + 1
 		end
 		
-	document_by_name (a_name: STRING): DOCUMENT is
+	document_by_name (a_name: STRING): DOCUMENT
 			-- Retrieve document with 'a_name', Void otherwise?  
 		require
 			a_name_not_void: a_name /= Void
@@ -330,7 +330,7 @@ feature -- Query
 			end
 		end	
 
-	has_open_document: BOOLEAN is
+	has_open_document: BOOLEAN
 			-- 
 		do
 			Result := not notebook.is_empty
@@ -338,7 +338,7 @@ feature -- Query
 
 feature -- Status Setting	
 	
-	add_modified_document (a_doc: DOCUMENT) is
+	add_modified_document (a_doc: DOCUMENT)
 			-- Add `a_doc' to list of modifed documents
 		require
 			doc_not_void : a_doc /= Void
@@ -351,7 +351,7 @@ feature -- Status Setting
 
 feature -- Events
 
-	on_document_selected is
+	on_document_selected
 			-- Document was changed
 		do		
 			if has_open_document then
@@ -364,14 +364,14 @@ feature -- Events
 
 feature {NONE} -- Observer Pattern
 
-	update is
+	update
 			-- Update
 		do			
 		end		
 
 feature {NONE} -- Implementation
 
-	parent_window: DOC_BUILDER_WINDOW is
+	parent_window: DOC_BUILDER_WINDOW
 			-- Application window
 		once
 			Result := Application_window
@@ -386,7 +386,7 @@ feature {NONE} -- Implementation
 	modified_documents: ARRAYED_LIST [DOCUMENT]
 			-- List of documents which have been modified
 			
-	new_name: STRING is
+	new_name: STRING
 			-- Return a new and unique name for a new document
 		do
 			create Result.make_from_string ("Document " + counter.out)
@@ -398,7 +398,7 @@ feature {NONE} -- Implementation
 invariant
 	has_documents: documents /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

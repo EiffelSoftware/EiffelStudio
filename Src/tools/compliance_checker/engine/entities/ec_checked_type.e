@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_type: like type) is
+	make (a_type: like type)
 			-- Create an initialize CLS-compliant checked type.
 		require
 			a_type_not_void: a_type /= Void
@@ -52,9 +52,9 @@ feature -- Access
 
 feature -- Query
 
-	has_element_checked_type: BOOLEAN is
+	has_element_checked_type: BOOLEAN
 			-- Does checked type have an checked type element?
-		indexing
+		note
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		do
 			Result := element_checked_type /= Void
@@ -64,9 +64,9 @@ feature -- Query
 
 feature {NONE} -- Basic Operations {EC_CHECKED_ENTITY}
 
-	check_extended_compliance is
+	check_extended_compliance
 			-- Checks entity's CLS-compliance.
-		indexing
+		note
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		local
 			l_type: like type
@@ -111,9 +111,9 @@ feature {NONE} -- Basic Operations {EC_CHECKED_ENTITY}
 
 		end
 
-	check_eiffel_compliance is
+	check_eiffel_compliance
 			-- Checks entity to see if it is Eiffel-compliant.
-		indexing
+		note
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		local
 			l_compliant: BOOLEAN
@@ -165,7 +165,7 @@ feature {NONE} -- Basic Operations {EC_CHECKED_ENTITY}
 
 feature {NONE} -- Query {EC_CHECKED_ENTITY}
 
-	custom_attribute_provider: ICUSTOM_ATTRIBUTE_PROVIDER is
+	custom_attribute_provider: ICUSTOM_ATTRIBUTE_PROVIDER
 			-- Retrieve custom attribute provider for entity.
 		do
 			Result := type
@@ -175,7 +175,7 @@ invariant
 	type_not_void: type /= Void
 	element_checked_type_not_void: type.has_element_type implies element_checked_type /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

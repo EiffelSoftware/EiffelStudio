@@ -1,4 +1,4 @@
-indexing
+note
 	description: "INVOKEKIND constants"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -13,7 +13,7 @@ inherit
 
 feature -- Access
 
-	frozen Invoke_func: INTEGER is
+	frozen Invoke_func: INTEGER
 			-- Member is called using normal function invocation syntax
 		external
 			"C [macro <oaidl.h>]"
@@ -21,7 +21,7 @@ feature -- Access
 			"INVOKE_FUNC"
 		end
 		
-	frozen Invoke_propertyget: INTEGER is
+	frozen Invoke_propertyget: INTEGER
 			-- Function is invoked using normal property-access syntax
 		external
 			"C [macro <oaidl.h>]"
@@ -29,7 +29,7 @@ feature -- Access
 			"INVOKE_PROPERTYGET"
 		end
 		
-	frozen Invoke_propertyput: INTEGER is
+	frozen Invoke_propertyput: INTEGER
 			-- Function is invoked using a property value assignment syntax
 		external
 			"C [macro <oaidl.h>]"
@@ -37,7 +37,7 @@ feature -- Access
 			"INVOKE_PROPERTYPUT"
 		end	
 		
-	frozen Invoke_propertyputref: INTEGER is
+	frozen Invoke_propertyputref: INTEGER
 			-- Function is invoked using property reference assignment syntax
 		external
 			"C [macro <oaidl.h>]"
@@ -47,31 +47,31 @@ feature -- Access
 
 feature -- Status report
 
-	is_func (flag: INTEGER): BOOLEAN is
+	is_func (flag: INTEGER): BOOLEAN
 			-- Is normal function invocation syntax?
 		do
 			Result := binary_and (flag, Invoke_func) = Invoke_func
 		end
 
-	is_propertyget (flag: INTEGER): BOOLEAN is
+	is_propertyget (flag: INTEGER): BOOLEAN
 			-- Is normal property-access syntax?
 		do
 			Result := binary_and (flag, Invoke_propertyget) = Invoke_propertyget
 		end
 
-	is_propertyput (flag: INTEGER): BOOLEAN is
+	is_propertyput (flag: INTEGER): BOOLEAN
 			-- Is property value assignment syntax?
 		do
 			Result := binary_and (flag, Invoke_propertyput) = Invoke_propertyput
 		end
 
-	is_propertyputref (flag: INTEGER): BOOLEAN is
+	is_propertyputref (flag: INTEGER): BOOLEAN
 			-- Is property reference assignment syntax?
 		do
 			Result := binary_and (flag, Invoke_propertyputref) = Invoke_propertyputref
 		end
 
-	is_valid_invoke_kind (kind: INTEGER): BOOLEAN is
+	is_valid_invoke_kind (kind: INTEGER): BOOLEAN
 			-- Is `kind' a valid invoke kind?
 		do
 			Result := is_func (kind) or
@@ -80,7 +80,7 @@ feature -- Status report
 			is_propertyputref (kind)
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

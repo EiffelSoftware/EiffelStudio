@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Application argument parser
 	]"
@@ -275,7 +275,7 @@ feature -- Access
 
 feature {NONE} -- Post Processing
 
-	post_process_arguments is
+	post_process_arguments
 			-- A chance to evaluate all set arguments for validity can conformance.
 			-- Set an error if an switch or value does not adhear to any custom rules.
 		do
@@ -291,7 +291,7 @@ feature {NONE} -- Usage
 	name: STRING_8 = "Eiffel COM Wizard"
 			-- Full name of application
 
-	version: !STRING_8 is
+	version: !STRING_8
 			-- Version number of application
 		do
 			create Result.make (10)
@@ -306,7 +306,7 @@ feature {NONE} -- Usage
 			Result.append_integer (svn_revision \\ (9999 + 1))
 		end
 
-	svn_revision: INTEGER is
+	svn_revision: INTEGER
 			-- SVN revision that build the compiler.
 			-- We use `0000' because it is replaced by the actual svn revision number
 			-- when doing a delivery.
@@ -343,7 +343,7 @@ feature {NONE} -- Usage
 			result_attached: Result /= Void
 		end
 
-	switch_groups: ?ARRAYED_LIST [!ARGUMENT_GROUP] is
+	switch_groups: ?ARRAYED_LIST [!ARGUMENT_GROUP]
 			-- Valid switch grouping
 		once
 			create Result.make (0)
@@ -355,7 +355,7 @@ feature {NONE} -- Usage
 			result_attached: Result /= Void
 		end
 
-	switch_dependencies: ?HASH_TABLE [!ARRAY [!ARGUMENT_SWITCH], !ARGUMENT_SWITCH] is
+	switch_dependencies: ?HASH_TABLE [!ARRAY [!ARGUMENT_SWITCH], !ARGUMENT_SWITCH]
 			-- Switch appurtenances (dependencies)
 			-- Note: Switch appurtenances are implictly added to a group where a switch is present
 		once
@@ -391,7 +391,7 @@ invariant
 			(generate_for_client and not (add_to_eiffel_project or show_graphical_wizard or generate_for_server)) or
 			(generate_for_server and not (add_to_eiffel_project or show_graphical_wizard or generate_for_client))
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

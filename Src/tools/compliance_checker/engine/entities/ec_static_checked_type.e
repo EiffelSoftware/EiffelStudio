@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A static version of EC_CHECKED_TYPE, that is to say a version whos compliance is know or
 		is common knowledge to .NET framework.
@@ -23,7 +23,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (a_type: like type; a_is_compliant: like is_compliant; a_is_eiffel_compliant: like is_eiffel_compliant) is
+	make (a_type: like type; a_is_compliant: like is_compliant; a_is_eiffel_compliant: like is_eiffel_compliant)
 			-- Create an initialize CLS-compliant checked type.
 		do
 			make_checked_type (a_type)
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			end
 		end
 			
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

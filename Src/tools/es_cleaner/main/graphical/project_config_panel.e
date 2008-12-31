@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A widget to encapsulate project configuration options.
 	]"
@@ -32,7 +32,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	user_initialization is
+	user_initialization
 			-- Called by `initialize'.
 			-- Any custom user initialization that
 			-- could not be performed in `initialize',
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	project_location: STRING is
+	project_location: STRING
 			-- Location of the Eiffel project to clean.
 		do
 			Result := txt_project_path.text
@@ -53,25 +53,25 @@ feature -- Access
 
 feature -- Status report
 
-	process_project: BOOLEAN is
+	process_project: BOOLEAN
 			-- Indiciates if an Eiffel project should be processed
 		do
 			Result := chk_project.is_selected and has_valid_project_location
 		end
 
-	process_project_preferences: BOOLEAN is
+	process_project_preferences: BOOLEAN
 			-- Indiciates if the project preferences should be processed
 		do
 			Result := chk_project_preferences.is_selected
 		end
 
-	process_project_layout: BOOLEAN is
+	process_project_layout: BOOLEAN
 			-- Indiciates if the project layout should be processed
 		do
 			Result := chk_project_layout.is_selected
 		end
 
-	process_project_session: BOOLEAN is
+	process_project_session: BOOLEAN
 			-- Indiciates if the project session should be processed
 		do
 			Result := chk_project_session.is_selected
@@ -79,7 +79,7 @@ feature -- Status report
 
 feature {NONE} -- Status report
 
-	has_valid_project_location: BOOLEAN is
+	has_valid_project_location: BOOLEAN
 			-- Determines if the specified project location is valid
 		local
 			l_text: STRING
@@ -98,7 +98,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Basic operations
 
-	browse_for_project_location: STRING is
+	browse_for_project_location: STRING
 			-- Shows a file browse dialog so the user can locate an ECF
 		require
 			sited: site /= Void
@@ -125,14 +125,14 @@ feature -- Actions
 
 feature {NONE} -- UI state setting
 
-	refresh_panel is
+	refresh_panel
 			-- Refreshes panel based on current ui element state
 		do
 			enable_widgets
 			set_project_path_text_color
 		end
 
-	enable_widgets is
+	enable_widgets
 			-- Enables the project widgets based on current state
 		local
 			l_project: BOOLEAN
@@ -161,7 +161,7 @@ feature {NONE} -- UI state setting
 			end
 		end
 
-	set_project_path_text_color is
+	set_project_path_text_color
 			-- Sets the project path text color based on the project location
 		do
 			if not txt_project_path.is_sensitive or else has_valid_project_location then
@@ -174,21 +174,21 @@ feature {NONE} -- UI state setting
 
 feature {NONE} -- Implementation
 
-	on_project_changed is
+	on_project_changed
 			-- Called by `select_actions' of `chk_project'.
 		do
 			refresh_panel
 			property_change_action.call ([])
 		end
 
-	on_project_path_text_changed is
+	on_project_path_text_changed
 			-- Called by `change_actions' of `txt_project_path'.
 		do
 			refresh_panel
 			property_change_action.call ([])
 		end
 
-	on_project_browse_clicked is
+	on_project_browse_clicked
 			-- Called by `select_actions' of `btn_browse_project'.
 		local
 			l_text: STRING
@@ -199,19 +199,19 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_project_layout_changed is
+	on_project_layout_changed
 			-- Called by `select_actions' of `chk_project_layout'.
 		do
 			property_change_action.call ([])
 		end
 
-	on_project_preferences_changed is
+	on_project_preferences_changed
 			-- Called by `select_actions' of `chk_project_preferences'.
 		do
 			property_change_action.call ([])
 		end
 
-	on_project_session_changed is
+	on_project_session_changed
 			-- Called by `select_actions' of `chk_project_session'.
 		do
 			property_change_action.call ([])

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generator for types of Help Project."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 	
 feature -- Creation
 
-	make (help_project: HELP_PROJECT) is
+	make (help_project: HELP_PROJECT)
 			-- Make with `help_project'
 		require
 			project_not_void: help_project /= Void
@@ -32,7 +32,7 @@ feature -- Creation
 
 feature -- Generation
 
-	generate is
+	generate
 			-- Generate `help_project'
 		local
 			l_constants: APPLICATION_CONSTANTS
@@ -79,7 +79,7 @@ feature -- Generation
 			end
 		end		
 
-	generate_html_help (a_project: HTML_HELP_PROJECT) is
+	generate_html_help (a_project: HTML_HELP_PROJECT)
 			-- Generate help for HTML HELP 1.x from `project'
 		require
 			project_not_void: a_project /= Void
@@ -115,14 +115,14 @@ feature -- Generation
 			end
 		end
 		
-	generate_vsip_help (a_project: MSHELP_PROJECT) is
+	generate_vsip_help (a_project: MSHELP_PROJECT)
 			-- Generate help for MS HELP 2.0 for Visual Studio Integration
 			-- from `project'
 		do
 			a_project.generate
 		end
 
-	generate_web_help (a_project: WEB_HELP_PROJECT) is
+	generate_web_help (a_project: WEB_HELP_PROJECT)
 			-- Generate help for web
 		do
 			a_project.generate
@@ -133,7 +133,7 @@ feature {NONE} -- Implementation
 	project: HELP_PROJECT;
 			-- Project
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

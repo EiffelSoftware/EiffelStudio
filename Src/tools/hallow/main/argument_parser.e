@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Argument parser use to parse and expose user options.
 	]"
@@ -108,7 +108,7 @@ feature -- Access
 			end
 		end
 
-	frozen file_include_pattern: REGEX is
+	frozen file_include_pattern: REGEX
 			-- Pattern to use to include files
 		local
 			l_buffer: STRING
@@ -124,7 +124,7 @@ feature -- Access
 			create Result.make (l_buffer)
 		end
 
-	frozen file_excluded_pattern: REGEX is
+	frozen file_excluded_pattern: REGEX
 			-- Pattern to use to exclude files
 		local
 			l_buffer: STRING
@@ -140,7 +140,7 @@ feature -- Access
 			create Result.make (l_buffer)
 		end
 
-	frozen directory_include_pattern: REGEX is
+	frozen directory_include_pattern: REGEX
 			-- Pattern to use to include directories
 		local
 			l_buffer: STRING
@@ -156,7 +156,7 @@ feature -- Access
 			create Result.make (l_buffer)
 		end
 
-	frozen directory_excluded_pattern: REGEX is
+	frozen directory_excluded_pattern: REGEX
 			-- Pattern to use to exnclude directories
 		local
 			l_buffer: STRING
@@ -172,7 +172,7 @@ feature -- Access
 			create Result.make (l_buffer)
 		end
 
-	frozen use_exclude_pattern_priority: BOOLEAN is
+	frozen use_exclude_pattern_priority: BOOLEAN
 			-- Indicates if the exclude pattern should take priority over the include pattern
 		do
 			Result := has_option (exclude_pattern_priority_switch)
@@ -367,7 +367,7 @@ feature {NONE} -- Switch names
 	x64_switch: !STRING = "x64"
 	conditional_expression_switch: !STRING = "c"
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

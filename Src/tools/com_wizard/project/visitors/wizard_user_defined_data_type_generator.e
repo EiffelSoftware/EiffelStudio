@@ -1,4 +1,4 @@
-indexing
+note
 	description: "User defined data type generator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ inherit
 feature -- Basic operations
 
 	process (a_descriptor: WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR;
-					a_visitor: WIZARD_DATA_TYPE_VISITOR) is
+					a_visitor: WIZARD_DATA_TYPE_VISITOR)
 		require
 			valid_descriptor: a_descriptor /= Void
 			valid_visitor: a_visitor /= Void
@@ -49,7 +49,7 @@ feature -- Basic operations
 
 feature -- Processing
 
-	process_alias (alias_descriptor: WIZARD_ALIAS_DESCRIPTOR) is
+	process_alias (alias_descriptor: WIZARD_ALIAS_DESCRIPTOR)
 			-- process alias
 		local
 			a_type_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR
@@ -154,7 +154,7 @@ feature -- Processing
 			end
 		end
 
-	process_coclass (coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR ) is
+	process_coclass (coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR )
 			-- process coclass
 		local
 			l_interface: WIZARD_INTERFACE_DESCRIPTOR
@@ -214,7 +214,7 @@ feature -- Processing
 
 		end
 
-	process_implemented_interface (interface_descriptor: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR) is
+	process_implemented_interface (interface_descriptor: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR)
 			-- process interface
 		do
 			create c_type.make (100)
@@ -231,7 +231,7 @@ feature -- Processing
 			create ec_function_name.make (0)
 		end
 
-	process_interface (interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR) is
+	process_interface (interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR)
 			-- process interface
 		local
 			impl_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR
@@ -311,14 +311,14 @@ feature -- Processing
 			end
 		end
 
-	process_enum (enum_descriptor: WIZARD_ENUM_DESCRIPTOR) is
+	process_enum (enum_descriptor: WIZARD_ENUM_DESCRIPTOR)
 			-- process enumeration
 		do
 			Precursor {WIZARD_TYPE_VISITOR} (enum_descriptor)
 			enum_processing
 		end
 
-	process_record (record_descriptor: WIZARD_RECORD_DESCRIPTOR) is
+	process_record (record_descriptor: WIZARD_RECORD_DESCRIPTOR)
 			-- process structure
 		do
 			vt_type := Vt_record
@@ -383,7 +383,7 @@ feature {NONE} -- Implementation
 	local_counter: INTEGER
 			-- Counter value
 
-	enum_processing is
+	enum_processing
 			-- Enumeration processing.
 		do
 			c_type := "long"
@@ -395,7 +395,7 @@ feature {NONE} -- Implementation
 			is_enumeration := True
 		end
 
-	ce_function_body_record (a_class_name, a_c_type: STRING): STRING is
+	ce_function_body_record (a_class_name, a_c_type: STRING): STRING
 			-- ce function body for records
 		require
 			non_void_class_name: a_class_name /= Void
@@ -414,7 +414,7 @@ feature {NONE} -- Implementation
 			valid_body: not Result.is_empty
 		end
 
-	ce_function_body_interface (a_class_name: STRING): STRING is
+	ce_function_body_interface (a_class_name: STRING): STRING
 			-- ce function body for interfaces
 		require
 			non_void_class_name: a_class_name /= Void
@@ -429,7 +429,7 @@ feature {NONE} -- Implementation
 			valid_body: not Result.is_empty
 		end
 
-	ec_function_body_wrapper (a_class_name, a_c_type: STRING): STRING is
+	ec_function_body_wrapper (a_class_name, a_c_type: STRING): STRING
 			-- ec function body for wrappers.
 		require
 			non_void_class_name: a_class_name /= Void
@@ -451,7 +451,7 @@ feature {NONE} -- Implementation
 			valid_body: not Result.is_empty
 		end
 
-	ce_function_body_alias (a_class_name: STRING; a_visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
+	ce_function_body_alias (a_class_name: STRING; a_visitor: WIZARD_DATA_TYPE_VISITOR): STRING
 			-- ce function body for aliases
 		require
 			non_void_class_name: a_class_name /= Void
@@ -486,7 +486,7 @@ feature {NONE} -- Implementation
 			valid_body: not Result.is_empty
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Document link.  A url and (optionally) the name of the file in which it occurs.  The `url'%
 		%property could be in any format, relative, absolute or external.  Use functions to%
 		%convert between formats."
@@ -20,7 +20,7 @@ create
 
 feature -- Creation
 
-	make (a_filename, a_url: STRING) is
+	make (a_filename, a_url: STRING)
 			-- Make from `a_url'
 		require
 			url_not_void: a_url /= Void
@@ -40,7 +40,7 @@ feature -- Access
 	url: STRING
 			-- File URL as it appears in `filename'
 			
-	format_type: INTEGER is
+	format_type: INTEGER
 			-- The format of `url'
 		do
 			if relative_from_document then
@@ -52,7 +52,7 @@ feature -- Access
 			end	
 		end		
 			
-	relative_url: STRING is
+	relative_url: STRING
 			-- The relative value of `url' in relation to `filename'.
 		require
 			occurs_in_file: filename /= Void
@@ -148,7 +148,7 @@ feature -- Access
 			Result.replace_substring_all ("\", "/")
 		end		
 		
-	root_url: STRING is
+	root_url: STRING
 			-- The value of `url' in relation to root directory.
 		do
 			if relative_from_root then
@@ -159,7 +159,7 @@ feature -- Access
 			end
 		end	
 			
-	absolute_url: STRING is
+	absolute_url: STRING
 			-- Return the absolute directory path from `url'.
 			-- For example, given `./../../a_dir/a_file.html' url, where `file_name'
 			-- is `C:\my_projects\a_project\a_dir\b_dir\c_dir\d_dir\current_file.html'
@@ -250,7 +250,7 @@ feature -- Access
 			
 feature -- Commands
 
-	format (a_type: INTEGER): STRING is
+	format (a_type: INTEGER): STRING
 			-- Return `url' formatted according to `a_type'
 		require
 			valid_type: (a_type = document_relative) or (a_type = root_relative) or (a_type = absolute)
@@ -266,7 +266,7 @@ feature -- Commands
 			
 feature -- Status Setting
 
-	set_filename (a_filename: STRING) is
+	set_filename (a_filename: STRING)
 			-- Set `filename'
 		require
 			filename_not_void: a_filename /= Void
@@ -277,7 +277,7 @@ feature -- Status Setting
 			filename_set: filename = a_filename
 		end	
 		
-	set_url (a_url: STRING) is
+	set_url (a_url: STRING)
 			-- Set `url'
 		require
 			url_not_void: a_url /= Void
@@ -290,7 +290,7 @@ feature -- Status Setting
 			
 feature -- Query
 
-	matches (a_link: like Current): BOOLEAN is
+	matches (a_link: like Current): BOOLEAN
 			-- Does url in `a_link' match `url' in Current?  Match here means
 			-- the objects urls refer to the same physical location, NOT that the
 			-- `url' STRING values are equivalent.
@@ -311,7 +311,7 @@ feature -- Query
 			end
 		end
 
-	exists: BOOLEAN is
+	exists: BOOLEAN
 			-- Does `url' physically exists?  Use this function to determine bad links
 		local
 			l_file: RAW_FILE
@@ -336,7 +336,7 @@ feature -- Query
 			end
 		end		
 
-	external_link: BOOLEAN is
+	external_link: BOOLEAN
 			-- Is `url' a link to an external resource?
 		do
 			Result := 
@@ -349,7 +349,7 @@ feature -- Query
 
 feature {DOCUMENT_LINK} -- Query
 
-	relative_from_document: BOOLEAN is
+	relative_from_document: BOOLEAN
 			-- Is `url' relative to document from which it is referenced?
 		require
 			occurs_in_file: filename /= Void
@@ -374,7 +374,7 @@ feature {DOCUMENT_LINK} -- Query
 			end		
 		end		
 	
-	relative_from_root: BOOLEAN is
+	relative_from_root: BOOLEAN
 			-- Is `url' relative from project root?
 		local			
 			l_first_char: CHARACTER
@@ -391,7 +391,7 @@ feature {DOCUMENT_LINK} -- Query
 		
 feature {NONE} -- Implmentation
 
-	tidy is
+	tidy
 			-- Tidy `url'
 		do
 			url.prune_all_leading ('%N')
@@ -404,7 +404,7 @@ feature {NONE} -- Implmentation
 			end
 		end	
 
-	root_directory: STRING is
+	root_directory: STRING
 			-- Root
 		do
 			Result := Shared_project.root_directory
@@ -414,13 +414,13 @@ feature -- Implementation
 		
 	document_relative,
 	root_relative,
-	absolute: INTEGER is unique
+	absolute: INTEGER = unique
 		
 invariant
 	has_url: url /= Void
 	has_filename: filename /= Void
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

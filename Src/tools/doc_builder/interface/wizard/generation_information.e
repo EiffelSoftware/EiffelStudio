@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object to hold information for generation choices."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,7 +12,7 @@ feature -- Access
 
 	generated_file_location: DIRECTORY_NAME
 
-	Replicate_source_contents: BOOLEAN is True
+	Replicate_source_contents: BOOLEAN = True
 
 	is_html_convert: BOOLEAN
 
@@ -23,7 +23,7 @@ feature -- Access
 	is_generating: BOOLEAN
 			-- Is project currently being generated?
 	
-	filter_toc_hash: HASH_TABLE [STRING, STRING] is
+	filter_toc_hash: HASH_TABLE [STRING, STRING]
 			-- Hash of output filter by table of contents description
 		once
 			create Result.make (2)
@@ -32,13 +32,13 @@ feature -- Access
 	
 feature -- Status Setting
 
-	set_generating (a_flag: BOOLEAN) is
+	set_generating (a_flag: BOOLEAN)
 			-- Set if is currently generating
 		do
 			is_generating := a_flag	
 		end		
 
-	set_conversion_type (a_type: INTEGER) is
+	set_conversion_type (a_type: INTEGER)
 		do
 			inspect a_type
 			when to_html then 
@@ -56,20 +56,20 @@ feature -- Status Setting
 			end
 		end
 
-	set_generated_file_location (a_location: STRING) is
+	set_generated_file_location (a_location: STRING)
 		do
 			create generated_file_location.make_from_string (a_location)
 		end
 	
 feature {GENERATION_DIALOG} 
 
-	To_html: INTEGER is unique
+	To_html: INTEGER = unique
 			-- Was declared in GENERATION_INFORMATION as synonym of `to_help' and `to_html_to_help'.
 
-	To_help: INTEGER is unique
+	To_help: INTEGER = unique
 			-- Was declared in GENERATION_INFORMATION as synonym of `to_html' and `to_html_to_help'.
 
-	To_html_to_help: INTEGER is unique
+	To_html_to_help: INTEGER = unique
 			-- Was declared in GENERATION_INFORMATION as synonym of `to_html' and `to_help'.
 	
 invariant
@@ -78,7 +78,7 @@ invariant
 	help_conversion_exclusive: is_help_convert implies (not is_html_convert and not is_html_to_help_convert)
 	help_to_html_conversion_exclusive: is_html_to_help_convert implies (is_help_convert and is_html_convert)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

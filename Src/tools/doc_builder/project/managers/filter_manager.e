@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Manager for document filtering."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,14 +19,14 @@ create
 
 feature {DOCUMENT_PROJECT} -- Creation
 
-	make is
+	make
 			-- Create
 		do
 			create filters.make (2)
 			initialize
 		end		
 
-	initialize is
+	initialize
 			-- Load default filters
 		local
 			l_filter: OUTPUT_FILTER
@@ -44,7 +44,7 @@ feature -- Access
 	filters: HASH_TABLE [DOCUMENT_FILTER, STRING]
 			-- Loaded filters hashed by description
 
-	filtered_document (a_doc: DOCUMENT): FILTERED_DOCUMENT is
+	filtered_document (a_doc: DOCUMENT): FILTERED_DOCUMENT
 			-- Filtered document generated from `filter' and `a_doc'
 		do
 			create Result.make (a_doc, filter)
@@ -53,7 +53,7 @@ feature -- Access
 
 feature -- Status setting	
 		
-	set_filter (a_filter: DOCUMENT_FILTER) is
+	set_filter (a_filter: DOCUMENT_FILTER)
 			-- Set current filter to `a_filter'.
 		do
 			filter := a_filter
@@ -61,7 +61,7 @@ feature -- Status setting
 			filter_set: filter = a_filter
 		end		
 
-	add_filtered_document (a_doc: FILTERED_DOCUMENT) is
+	add_filtered_document (a_doc: FILTERED_DOCUMENT)
 			-- Add `a_doc' to `filtered_documents'
 		require
 			doc_not_void: a_doc /= Void
@@ -71,7 +71,7 @@ feature -- Status setting
 			end
 		end		
 
-	filter_by_description (a_desc: STRING): DOCUMENT_FILTER is
+	filter_by_description (a_desc: STRING): DOCUMENT_FILTER
 			-- Select filter to one matching `a_desc', if any
 		do
 			if filters.has (a_desc) then
@@ -79,7 +79,7 @@ feature -- Status setting
 			end
 		end
 
-	output_filter_by_primary_flag (a_flag: STRING): OUTPUT_FILTER is
+	output_filter_by_primary_flag (a_flag: STRING): OUTPUT_FILTER
 			-- Select filter to one matching `a_flag', if any
 		local
 			l_filter: OUTPUT_FILTER
@@ -103,7 +103,7 @@ feature -- Status setting
 
 feature {PREFERENCES_DIALOG, DOCUMENT_PROJECT_PREFERENCES} -- Status setting
 
-	add_filter (a_filter: OUTPUT_FILTER) is
+	add_filter (a_filter: OUTPUT_FILTER)
 			-- Add new filter
 		require
 			filter_not_void: a_filter /= Void
@@ -113,7 +113,7 @@ feature {PREFERENCES_DIALOG, DOCUMENT_PROJECT_PREFERENCES} -- Status setting
 
 feature -- Conversion
 
-	convert_to_html (a_doc: FILTERED_DOCUMENT): STRING is
+	convert_to_html (a_doc: FILTERED_DOCUMENT): STRING
 			-- Convert `a_doc' to HTML.  If unsuccessful return error string.
 		local
 			retried: BOOLEAN
@@ -151,14 +151,14 @@ feature {NONE} -- Implementation
 	unique_id: INTEGER
 			-- Identifier used for filters	
 
-	filtered_documents: HASH_TABLE [FILTERED_DOCUMENT, STRING] is
+	filtered_documents: HASH_TABLE [FILTERED_DOCUMENT, STRING]
 			-- Hash of filtered documents by file name
 		once
 			create Result.make (5)
 			Result.compare_objects
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

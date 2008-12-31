@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that assembles copyright information to an EIFFEL class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_file: STRING; a_copyright: STRING) is
+	make (a_file: STRING; a_copyright: STRING)
 			-- Init.
 		require
 			a_file_attached: a_file /= Void
@@ -74,7 +74,7 @@ feature -- Call back
 
 feature -- Basic operations
 
-	assemble is
+	assemble
 			-- Do assembling.
 		local
 			file_string: STRING
@@ -118,7 +118,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	check_file: BOOLEAN is
+	check_file: BOOLEAN
 			-- Check if the file is valid.
 		local
 			l_str: STRING
@@ -131,7 +131,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	eiffel_parser: EIFFEL_PARSER is
+	eiffel_parser: EIFFEL_PARSER
 			--
 		once
 			create Result.make_with_factory (create {AST_ROUNDTRIP_FACTORY})
@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 invariant
 		copyright_not_void: copyright /= Void
 		a_file_not_void: file /= Void
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

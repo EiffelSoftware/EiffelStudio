@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Table of contents in XML representation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -32,7 +32,7 @@ create
 
 feature -- Creation
 			
-	make_from_toc (a_toc: TABLE_OF_CONTENTS; a_filename: STRING) is
+	make_from_toc (a_toc: TABLE_OF_CONTENTS; a_filename: STRING)
 			-- Make from `a_toc' and save with a_filename
 		require
 			toc_not_void: a_toc /= Void
@@ -50,7 +50,7 @@ feature -- Creation
 
 feature {NONE} -- XML
 	
-	build (a_node: TABLE_OF_CONTENTS_NODE; a_parent: XM_ELEMENT) is
+	build (a_node: TABLE_OF_CONTENTS_NODE; a_parent: XM_ELEMENT)
 			-- Build XML for `a_node'
 		require
 			parent_not_void: a_parent /= Void
@@ -112,7 +112,7 @@ feature {NONE} -- XML
 			end
 		end		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

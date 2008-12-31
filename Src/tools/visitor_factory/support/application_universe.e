@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Easy access to the classes being processed, aka the universe."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_list: LIST [STRING]) is
+	make (a_list: LIST [STRING])
 			-- Initialize universe
 		require
 			a_list_not_void: a_list /= Void
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	has_class (a_name: STRING): BOOLEAN is
+	has_class (a_name: STRING): BOOLEAN
 			-- Is class present?
 		require
 			a_name_not_void: a_name /= Void
@@ -66,7 +66,7 @@ feature -- Access
 			Result := classes.has (a_name)
 		end
 
-	file_class_name (a_file_name: STRING): STRING is
+	file_class_name (a_file_name: STRING): STRING
 			-- Extracts class name from `a_file' if `a_file' exists and represents an Eiffel class.
 		require
 			a_file_name_attached: a_file_name /= Void
@@ -94,7 +94,7 @@ invariant
 	class_name_file_table_not_void: class_name_file_table /= Void
 	classes_not_void: classes /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

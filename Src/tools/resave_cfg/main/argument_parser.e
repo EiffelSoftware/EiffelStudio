@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 
 	]"
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize argument parser
 		do
 			make_multi_parser (False, False)
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	files: DS_BILINEAR [STRING] is
+	files: DS_BILINEAR [STRING]
 			-- List of files to resave
 		require
 			is_successful: is_successful
@@ -59,7 +59,7 @@ feature -- Access
 			reuslt_contains_attached_items: not Result.has (Void)
 		end
 
-	directories: DS_BILINEAR [STRING] is
+	directories: DS_BILINEAR [STRING]
 			-- List of directories to locate ecfs in
 		require
 			is_successful: is_successful
@@ -83,7 +83,7 @@ feature -- Access
 			reuslt_contains_attached_items: not Result.has (Void)
 		end
 
-	use_directory_recusion: BOOLEAN is
+	use_directory_recusion: BOOLEAN
 			-- Indicates if directories should be recursively scanned
 		require
 			is_successful: is_successful
@@ -116,7 +116,7 @@ feature {NONE} -- Usage
 
 feature {NONE} -- Switches
 
-	switches: !ARRAYED_LIST [!ARGUMENT_SWITCH] is
+	switches: !ARRAYED_LIST [!ARGUMENT_SWITCH]
 			-- Retrieve a list of switch used for a specific application
 		once
 			create Result.make (1)
@@ -125,7 +125,7 @@ feature {NONE} -- Switches
 
 	recursive_switch: STRING = "r"
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

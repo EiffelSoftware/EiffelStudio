@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Sortable_Array"
 	author: "David Stevens"
 	date: "$Date$"

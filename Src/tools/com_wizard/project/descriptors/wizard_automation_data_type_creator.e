@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Creator of Automation data type descriptor"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature -- Basic operations
 
-	create_descriptor (a_type_desc: ECOM_TYPE_DESC): WIZARD_AUTOMATION_DATA_TYPE_DESCRIPTOR is
+	create_descriptor (a_type_desc: ECOM_TYPE_DESC): WIZARD_AUTOMATION_DATA_TYPE_DESCRIPTOR
 			-- Create Automation Basic type descriptor
 		require
 			valid_type_desc: a_type_desc /= Void
@@ -28,7 +28,7 @@ feature -- Basic operations
 			valid_result: Result /= Void and then Result.type = a_type_desc.var_type
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

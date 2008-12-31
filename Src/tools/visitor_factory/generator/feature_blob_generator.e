@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Generator for generating a feature blob containing zero or more feature declarations.
 	]"
@@ -18,7 +18,7 @@ create {ICLASS_GENERATOR}
 
 feature -- Basic operations
 
-	generate (a_opts: APPLICATION_OPTIONS; a_stub: BOOLEAN): STRING is
+	generate (a_opts: APPLICATION_OPTIONS; a_stub: BOOLEAN): STRING
 			-- Generates an Eiffel source file using the application parameters `a_opts'
 		local
 			l_files: LIST [STRING]
@@ -35,7 +35,7 @@ feature -- Basic operations
 			l_files.go_to (l_cursor)
 		end
 
-	generate_query_features (a_opts: APPLICATION_OPTIONS; a_stub: BOOLEAN): STRING is
+	generate_query_features (a_opts: APPLICATION_OPTIONS; a_stub: BOOLEAN): STRING
 			-- Generates query features
 		do
 			create Result.make (128)
@@ -53,7 +53,7 @@ feature -- Basic operations
 			result_attached: Result /= Void
 		end
 
-	generate_redefines_list (a_opts: APPLICATION_OPTIONS; a_stub: BOOLEAN): STRING is
+	generate_redefines_list (a_opts: APPLICATION_OPTIONS; a_stub: BOOLEAN): STRING
 			-- Generates redefine features list
 		local
 			l_files: LIST [STRING]
@@ -90,7 +90,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	feature_for_file (a_file_name: STRING; a_opts: APPLICATION_OPTIONS; a_stub: BOOLEAN): STRING is
+	feature_for_file (a_file_name: STRING; a_opts: APPLICATION_OPTIONS; a_stub: BOOLEAN): STRING
 			-- Generates a feature for file `a_file_name' and makes it deferred or effective based on `a_stub'
 		require
 			a_file_name_attached: a_file_name /= Void
@@ -150,7 +150,7 @@ feature {NONE} -- Implementation
 			not_result_is_empty: Result /= Void implies not Result.is_empty
 		end
 
-	item_feature_name (a_item: STRING): STRING is
+	item_feature_name (a_item: STRING): STRING
 			-- Formats `a_item' for use as a feature name
 		require
 			a_item_attached: a_item /= Void
@@ -164,7 +164,7 @@ feature {NONE} -- Implementation
 			not_result_is_empty: not Result.is_empty
 		end
 
-	user_data_validation_function_name (a_opts: APPLICATION_OPTIONS): STRING is
+	user_data_validation_function_name (a_opts: APPLICATION_OPTIONS): STRING
 			-- Retrieves name of user data validation function
 		require
 			a_opts_attached: a_opts /= Void
@@ -179,7 +179,7 @@ feature {NONE} -- Implementation
 			not_result_is_empty: not Result.is_empty
 		end
 
-	frozen helpers: HELPERS is
+	frozen helpers: HELPERS
 			-- Shared access to helpers
 		once
 			create Result
@@ -191,7 +191,7 @@ feature {NONE} -- Constants
 
 	could_not_parse_file_comment: STRING = "-- Could not parse file: "
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

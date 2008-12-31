@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Represents a Windows registry key name/value pair.
 	]"
@@ -32,7 +32,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	supported_type_codes: HASH_TABLE [NATURAL, STRING] is
+	supported_type_codes: HASH_TABLE [NATURAL, STRING]
 			-- Supportted type codes
 		once
 			create Result.make (2)
@@ -61,7 +61,7 @@ feature -- Status report
 			end
 		end
 
-	is_supported: BOOLEAN is
+	is_supported: BOOLEAN
 			-- Indicates if type is supported
 		do
 			Result := value_type_code /= tc_unsupported
@@ -69,7 +69,7 @@ feature -- Status report
 
 feature -- Query
 
-	is_valid_value (a_value: like value): BOOLEAN is
+	is_valid_value (a_value: like value): BOOLEAN
 			-- Determines if `a_value' is a valid value.
 		do
 			Result := a_value /= Void and then not a_value.is_empty
@@ -77,7 +77,7 @@ feature -- Query
 
 feature {NONE} -- Query
 
-	type_code_for_string (a_tcs: STRING): NATURAL is
+	type_code_for_string (a_tcs: STRING): NATURAL
 			-- Retrieves a type code for string `a_tcs'
 		require
 			a_tcs_attached: a_tcs /= Void
@@ -93,7 +93,7 @@ feature {NONE} -- Query
 
 feature {NONE} -- Basic operations
 
-	split_value (a_value: STRING): TUPLE [value: STRING; type_code: NATURAL] is
+	split_value (a_value: STRING): TUPLE [value: STRING; type_code: NATURAL]
 			-- Splits value `a_value' into a corresponding value and type code.
 		require
 			a_value_attached: a_value /= Void
@@ -138,7 +138,7 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Process
 
-	process_ini_content (a_property: INI_PROPERTY) is
+	process_ini_content (a_property: INI_PROPERTY)
 			-- Processes the content of an INI property `a_property'
 		local
 			l_data: like split_value
@@ -172,7 +172,7 @@ invariant
 	not_name_is_empty: not name.is_empty
 	value_attached: value /= Void
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "C/C++ directive (e.g. #ifdef, #ifndef, #else, ...)"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_body: STRING) is
+	make (a_body: STRING)
 			-- Set `body' with `a_body'.
 		require
 			non_void_body: a_body /= Void
@@ -30,14 +30,14 @@ feature {NONE} -- Initialization
 			
 feature -- Access
 
-	generated_code: STRING is
+	generated_code: STRING
 			-- Generated code
 		do
 			Result := Sharp.twin
 			Result.append (body)
 		end
 
-	can_generate: BOOLEAN is
+	can_generate: BOOLEAN
 			-- Can code be generated?
 		do
 			Result := body /= Void
@@ -48,7 +48,7 @@ feature -- Access
 
 feature -- Element Change
 
-	set_body (a_body: like body) is
+	set_body (a_body: like body)
 			-- Set `body' with `a_body'.
 		require
 			non_void_body: a_body /= Void
@@ -60,7 +60,7 @@ feature -- Element Change
 			body_set: body.is_equal (a_body)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "xxx"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -41,7 +41,7 @@ create
 
 feature
 
-	action is
+	action
 		local
 			accelerators: TDS_ACCELERATORS
 			dialog: TDS_DIALOG
@@ -249,7 +249,7 @@ feature
 
 feature {NONE}
 
-	new_control (dialog: TDS_DIALOG; type: STRING) is
+	new_control (dialog: TDS_DIALOG; type: STRING)
 			-- Create a typed control.
 			-- Combobox, edittext and listbox controls are created by Specific_statement.
 		local
@@ -315,7 +315,7 @@ feature {NONE}
 			dialog.set_current_control (control)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Utility used to open registry files and construct {REG_FILE} instances.
 	]"
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Access
 
-	ini_reader: INI_DOCUMENT_READER is
+	ini_reader: INI_DOCUMENT_READER
 			-- Reader used to parse INI documents
 		once
 			create Result.make
@@ -28,7 +28,7 @@ feature {NONE} -- Access
 
 feature -- Conversion
 
-	load_reg_file (a_file_name: STRING): REG_FILE is
+	load_reg_file (a_file_name: STRING): REG_FILE
 			-- Load a registry from from a file `a_file_name'
 			-- Note: Unsuccessful loads will return Void.
 		require
@@ -73,7 +73,7 @@ feature -- Conversion
 			retry
 		end
 
-	load_reg_files (a_files: LINEAR [STRING]): HASH_TABLE [REG_FILE, STRING] is
+	load_reg_files (a_files: LINEAR [STRING]): HASH_TABLE [REG_FILE, STRING]
 			-- Load a collection of files from the file names in `a_files'. The
 			-- returned table contains all loaded reg files indexesd by their file name.
 			-- Note: For all reg files that cannot be parsed, the result's item, at the
@@ -100,7 +100,7 @@ feature -- Conversion
 			result_compares_objects: Result.object_comparison
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

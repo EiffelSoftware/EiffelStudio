@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Error message to indicate the output file could not be created on disk.
 	]"
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_file_name: like file_name) is
+	make (a_file_name: like file_name)
 			-- Initialize error using the file name `a_file_name'
 		require
 			a_file_name_attached: a_file_name /= Void
@@ -44,7 +44,7 @@ invariant
 	file_name_attached: file_name /= Void
 	not_file_name_is_empty: not file_name.is_empty
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

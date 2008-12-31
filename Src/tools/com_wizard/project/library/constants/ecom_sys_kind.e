@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "SYSKIND values"
 	legal: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Access
 
-	Sys_win16: INTEGER is
+	Sys_win16: INTEGER
 			-- Target operating system for the type 
 			-- library is 16-bit Windows systems.
 		external
@@ -20,7 +20,7 @@ feature -- Access
 			"SYS_WIN16"
 		end
 
-	Sys_win32: INTEGER is
+	Sys_win32: INTEGER
 			-- Target operating system for the type 
 			-- library is 32-bit Windows systems. 
 		external
@@ -29,7 +29,7 @@ feature -- Access
 			"SYS_WIN32"
 		end
 
-	Sys_mac: INTEGER is
+	Sys_mac: INTEGER
 			-- Target operating system for the type 
 			-- library is Apple Macintosh.
 		external
@@ -38,7 +38,7 @@ feature -- Access
 			"SYS_MAC"
 		end
 
-	is_valid_sys_kind (flag: INTEGER): BOOLEAN is
+	is_valid_sys_kind (flag: INTEGER): BOOLEAN
 			-- Is `flag' a valid SYSKIND value?
 		do
 			Result := flag = Sys_win16 or
@@ -46,7 +46,7 @@ feature -- Access
 						flag = Sys_mac
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

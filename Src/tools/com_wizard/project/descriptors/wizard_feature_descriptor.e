@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Feature descriptor"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -34,7 +34,7 @@ feature -- Access
 	interface_eiffel_name: STRING
 			-- Eiffel function name used in deferred interface
 
-	component_eiffel_name (a_component: WIZARD_COMPONENT_DESCRIPTOR): STRING is
+	component_eiffel_name (a_component: WIZARD_COMPONENT_DESCRIPTOR): STRING
 			-- Eiffel name in `a_component'
 		require
 			non_void_component: a_component /= Void
@@ -65,7 +65,7 @@ feature -- Access
 
 feature -- Status Report
 
-	is_renamed_in (a_component: WIZARD_COMPONENT_DESCRIPTOR): BOOLEAN is
+	is_renamed_in (a_component: WIZARD_COMPONENT_DESCRIPTOR): BOOLEAN
 			-- Is feature renamed in `a_component'?
 		require
 			non_void_component: a_component /= Void
@@ -76,7 +76,7 @@ feature -- Status Report
 		
 feature -- Transformation
 
-	disambiguate_coclass_names (a_interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR; a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
+	disambiguate_coclass_names (a_interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR; a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR)
 			-- Disambiguate names for coclass.
 		require
 			non_void_interface_descriptor: a_interface_descriptor /= Void
@@ -124,7 +124,7 @@ feature -- Transformation
 			a_interface_descriptor.feature_c_names.force (name.twin)
 		end
 
-	disambiguate_interface_names (a_interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR) is
+	disambiguate_interface_names (a_interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR)
 			-- Disambiguate names for interface.
 		require
 			non_void_interface: a_interface_descriptor /= Void
@@ -141,7 +141,7 @@ feature -- Transformation
 
 feature -- Basic operations
 
-	add_component_eiffel_name (a_eiffel_name: STRING; a_component: WIZARD_COMPONENT_DESCRIPTOR) is
+	add_component_eiffel_name (a_eiffel_name: STRING; a_component: WIZARD_COMPONENT_DESCRIPTOR)
 			-- Add `a_eiffel_name' to `components_eiffel_names' table
 			-- with key `a_coclass_name'
 		require
@@ -154,7 +154,7 @@ feature -- Basic operations
 			components_eiffel_names.extend (a_eiffel_name, a_component.name)
 		end
 
-	set_interface_eiffel_name (a_name: STRING) is
+	set_interface_eiffel_name (a_name: STRING)
 			-- Set `eiffel_name' with `a_name'.
 		require
 			valid_name: a_name /= Void and then not a_name.is_empty
@@ -164,7 +164,7 @@ feature -- Basic operations
 			valid_name: interface_eiffel_name /= Void and then not interface_eiffel_name.is_empty and interface_eiffel_name.is_equal (a_name)
 		end
 
-	set_name (a_name: STRING) is
+	set_name (a_name: STRING)
 			-- Set `name' with `a_name'.
 		require
 			valid_name: a_name /= Void and then not a_name.is_empty
@@ -174,7 +174,7 @@ feature -- Basic operations
 			valid_name: name /= Void and then not name.is_empty and name.is_equal (a_name)
 		end
 
-	set_from_iunknown_or_idispatch (a_value: BOOLEAN) is
+	set_from_iunknown_or_idispatch (a_value: BOOLEAN)
 			-- Set `from_iunknown_or_idispatch' with `a_value'
 		do
 			from_iunknown_or_idispatch := a_value
@@ -190,7 +190,7 @@ feature {NONE} -- Implementation
 			-- key: Coclass name, `name' in coclass_descriptor.
 
 
-	list_has_name (a_list: LIST [STRING]; a_name: STRING): BOOLEAN is
+	list_has_name (a_list: LIST [STRING]; a_name: STRING): BOOLEAN
 			-- Does `a_list' have `a_name' corresponding to `a_name'?
 		require
 			non_void_list: a_list /= Void
@@ -201,7 +201,7 @@ feature {NONE} -- Implementation
 			definition: Result = a_list.has (a_name)
 		end
 				
-	table_has_name (a_table: HASH_TABLE [ANY, STRING]; a_name: STRING): BOOLEAN is
+	table_has_name (a_table: HASH_TABLE [ANY, STRING]; a_name: STRING): BOOLEAN
 			-- Does `a_table' have `a_name' corresponding to `a_name'?
 		require
 			non_void_table: a_table /= Void
@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 			definition: Result = a_table.has (a_name)
 		end
 				
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

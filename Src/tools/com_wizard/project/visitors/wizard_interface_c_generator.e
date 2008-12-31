@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Interface c generator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -23,7 +23,7 @@ inherit
 
 feature -- Access
 
-	generate (a_descriptor: WIZARD_INTERFACE_DESCRIPTOR) is
+	generate (a_descriptor: WIZARD_INTERFACE_DESCRIPTOR)
 			-- Generate c writer.
 		local
 			l_func_generator: WIZARD_CPP_VIRTUAL_FUNCTION_GENERATOR
@@ -111,7 +111,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	add_type_definitions_and_include_files (func_generator: WIZARD_CPP_VIRTUAL_FUNCTION_GENERATOR) is
+	add_type_definitions_and_include_files (func_generator: WIZARD_CPP_VIRTUAL_FUNCTION_GENERATOR)
 			-- Add neccessary type definitions and include files.
 		require
 			non_void_function_generator: func_generator /= Void
@@ -152,7 +152,7 @@ feature {NONE} -- Implementation
 			end
 		end
 	
-	add_include_file (a_file: STRING) is
+	add_include_file (a_file: STRING)
 			-- Add include file.
 		require
 			non_void_file: a_file /= Void
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation
 			added: cpp_class_writer.import_files.has (a_file)
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

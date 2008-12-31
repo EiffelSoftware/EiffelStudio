@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Application to resave ECFs using the configuration library.
 	]"
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Application entry point
 		local
 			l_parser: ARGUMENT_PARSER
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Execution
 
-	start (a_options: ARGUMENT_PARSER) is
+	start (a_options: ARGUMENT_PARSER)
 			-- Starts application once all arguments have been parsed
 		require
 			a_options_attached: a_options /= Void
@@ -84,7 +84,7 @@ feature {NONE} -- Execution
 
 feature {NONE} -- Basic operations
 
-	resave_config (a_file_name: STRING) is
+	resave_config (a_file_name: STRING)
 			-- Loads and resaves `a_file_name' using the configuration system.
 		local
 			l_cfg: like load_config
@@ -111,7 +111,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	load_config (a_file_name: STRING): CONF_SYSTEM is
+	load_config (a_file_name: STRING): CONF_SYSTEM
 			-- Loads a configuration system from `a_file_name'
 		require
 			a_file_name_attached: a_file_name /= Void
@@ -141,7 +141,7 @@ feature {NONE} -- Basic operations
 			retry
 		end
 
-	save_config (a_cfg: CONF_SYSTEM; a_file_name: STRING): BOOLEAN is
+	save_config (a_cfg: CONF_SYSTEM; a_file_name: STRING): BOOLEAN
 			-- Saves the configuration system `a_cfg' to `a_file_name'
 		require
 			a_cfg_attached: a_cfg /= Void
@@ -181,7 +181,7 @@ feature {NONE} -- Basic operations
 			retry
 		end
 
-	scan_for_ecf_files (a_directories: DS_LINEAR [STRING]; a_recursive: BOOLEAN): DS_ARRAYED_LIST [STRING] is
+	scan_for_ecf_files (a_directories: DS_LINEAR [STRING]; a_recursive: BOOLEAN): DS_ARRAYED_LIST [STRING]
 			-- Scans directories in `a_directories' for ECF files
 		require
 			a_directories_attached: a_directories /= Void
@@ -237,7 +237,7 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Access
 
-	ecf_reader: CONF_LOAD is
+	ecf_reader: CONF_LOAD
 			-- Configuration loader
 		once
 			create Result.make (create {CONF_PARSE_FACTORY})
@@ -245,7 +245,7 @@ feature {NONE} -- Access
 			result_attached: Result /= Void
 		end
 
-	ecf_printer: CONF_PRINT_VISITOR is
+	ecf_printer: CONF_PRINT_VISITOR
 			-- Configuration printer
 		once
 			create Result.make
@@ -253,7 +253,7 @@ feature {NONE} -- Access
 			result_attached: Result /= Void
 		end
 
-	error_handler: MULTI_ERROR_MANAGER is
+	error_handler: MULTI_ERROR_MANAGER
 			-- Error handler
 		once
 			create Result.make
@@ -261,7 +261,7 @@ feature {NONE} -- Access
 			result_attached: Result /= Void
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

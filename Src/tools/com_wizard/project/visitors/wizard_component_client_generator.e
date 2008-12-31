@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Component client generator."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -10,32 +10,32 @@ class
 
 feature -- Access
 
-	ccom_last_error_code_name: STRING is "ccom_last_error_code"
+	ccom_last_error_code_name: STRING = "ccom_last_error_code"
 			-- Name of last error code external feature.
 
-	ccom_last_source_of_exception_name: STRING is "ccom_last_source_of_exception"
+	ccom_last_source_of_exception_name: STRING = "ccom_last_source_of_exception"
 			-- Name of last source of exception external feature.
 
-	ccom_last_error_description_name: STRING is "ccom_last_error_description"
+	ccom_last_error_description_name: STRING = "ccom_last_error_description"
 			-- Name of last error description external feature.
 
-	ccom_last_error_help_file_name: STRING is "ccom_last_error_help_file"
+	ccom_last_error_help_file_name: STRING = "ccom_last_error_help_file"
 			-- Name of last error help file external feature.
 
-	last_error_code_name: STRING is "last_error_code"
+	last_error_code_name: STRING = "last_error_code"
 			-- Name of last error code  feature.
 
-	last_source_of_exception_name: STRING is "last_source_of_exception"
+	last_source_of_exception_name: STRING = "last_source_of_exception"
 			-- Name of last source of exception  feature.
 
-	last_error_description_name: STRING is "last_error_description"
+	last_error_description_name: STRING = "last_error_description"
 			-- Name of last error description  feature.
 
-	last_error_help_file_name: STRING is "last_error_help_file";
+	last_error_help_file_name: STRING = "last_error_help_file";
 			-- Name of last error help file  feature.
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Feature names of class GENERAL and MEMORY"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -10,117 +10,117 @@ class
 
 feature -- Access
 
-	generated_type_routine: STRING is "generating_type"
+	generated_type_routine: STRING = "generating_type"
 
-	generator_routine: STRING is "generator"
+	generator_routine: STRING = "generator"
 
-	deep_equal_routine: STRING is "deep_equal"
+	deep_equal_routine: STRING = "deep_equal"
 
-	equal_routine: STRING is "equal"
+	equal_routine: STRING = "equal"
 
-	is_equal_routine: STRING is "is_equal"
+	is_equal_routine: STRING = "is_equal"
 
-	standard_equal_routine: STRING is "standard_equal"
+	standard_equal_routine: STRING = "standard_equal"
 
-	standard_is_equal_routine: STRING is "standard_is_equal"
+	standard_is_equal_routine: STRING = "standard_is_equal"
 
-	conforms_to_routine: STRING is "conforms_to"
+	conforms_to_routine: STRING = "conforms_to"
 
-	same_type_routine: STRING is "same_type"
+	same_type_routine: STRING = "same_type"
 
-	clone_routine: STRING is "clone"
+	clone_routine: STRING = "clone"
 
-	copy_routine: STRING is "copy"
+	copy_routine: STRING = "copy"
 
-	deep_clone_routine: STRING is "deep_clone"
+	deep_clone_routine: STRING = "deep_clone"
 
-	deep_copy_routine: STRING is "deep_copy"
+	deep_copy_routine: STRING = "deep_copy"
 
-	standard_clone_routine: STRING is "standard_clone"
+	standard_clone_routine: STRING = "standard_clone"
 
-	standard_copy_routine: STRING is "standard_copy"
+	standard_copy_routine: STRING = "standard_copy"
 
-	default_routine: STRING is "default"
+	default_routine: STRING = "default"
 
-	default_create_routine: STRING is " default_create"
+	default_create_routine: STRING = " default_create"
 
-	default_pointer_routine:STRING is "default_pointer"
+	default_pointer_routine:STRING = "default_pointer"
 
-	default_rescue_routine: STRING is "default_rescue"
+	default_rescue_routine: STRING = "default_rescue"
 
-	do_nothing_routine: STRING is "do_nothing"
+	do_nothing_routine: STRING = "do_nothing"
 
-	io_routine: STRING is "io"
+	io_routine: STRING = "io"
 
-	out_routine: STRING is "out"
+	out_routine: STRING = "out"
 
-	print_routine: STRING is "print"
+	print_routine: STRING = "print"
 
-	tagged_out_routine: STRING is "tagged_out"
+	tagged_out_routine: STRING = "tagged_out"
 
-	allocate_compact_routine: STRING is "allocate_compact"
+	allocate_compact_routine: STRING = "allocate_compact"
 
-	allocate_fast_routine: STRING is "allocate_fast"
+	allocate_fast_routine: STRING = "allocate_fast"
 
-	allocate_tiny_routine: STRING is "allocate_tiny"
+	allocate_tiny_routine: STRING = "allocate_tiny"
 
-	chunk_size_routine: STRING is "chunk_size"
+	chunk_size_routine: STRING = "chunk_size"
 
-	coalesce_period_routine: STRING is "coalesce_period"
+	coalesce_period_routine: STRING = "coalesce_period"
 
-	collect_routine: STRING is "collect"
+	collect_routine: STRING = "collect"
 
-	collecting_routine: STRING is "collecting"
+	collecting_routine: STRING = "collecting"
 
-	collection_off_routine: STRING is "collection_off"
+	collection_off_routine: STRING = "collection_off"
 
-	collection_on_routine: STRING is "collection_on"
+	collection_on_routine: STRING = "collection_on"
 
-	collection_period_routine: STRING is "collection_period"
+	collection_period_routine: STRING = "collection_period"
 
-	disable_time_accounting_routine: STRING is "disable_time_accounting"
+	disable_time_accounting_routine: STRING = "disable_time_accounting"
 
-	dispose_routine: STRING is "dispose"
+	dispose_routine: STRING = "dispose"
 
-	enable_time_accounting_routine: STRING is "enable_time_accounting"
+	enable_time_accounting_routine: STRING = "enable_time_accounting"
 
-	free_routine: STRING is "free"
+	free_routine: STRING = "free"
 
-	full_coalesce_routine: STRING is "full_coalesce"
+	full_coalesce_routine: STRING = "full_coalesce"
 
-	full_collect_routine: STRING is "full_collect"
+	full_collect_routine: STRING = "full_collect"
 
-	gc_monitoring_routine: STRING is "gc_monitoring"
+	gc_monitoring_routine: STRING = "gc_monitoring"
 
-	gc_statistics_routine: STRING is "gc_statistics"
+	gc_statistics_routine: STRING = "gc_statistics"
 
-	generation_object_limit_routine: STRING is "generation_object_limit"
+	generation_object_limit_routine: STRING = "generation_object_limit"
 
-	largest_coalesced_block_routine: STRING is "largest_coalesced_block"
+	largest_coalesced_block_routine: STRING = "largest_coalesced_block"
 
-	max_mem_routine: STRING is "max_mem"
+	max_mem_routine: STRING = "max_mem"
 
-	mem_free_routine: STRING is "mem_free"
+	mem_free_routine: STRING = "mem_free"
 
-	memory_statistics_routine: STRING is "memory_statistics"
+	memory_statistics_routine: STRING = "memory_statistics"
 
-	memory_threshold_routine: STRING is "memory_threshold"
+	memory_threshold_routine: STRING = "memory_threshold"
 
-	scavenge_zone_size_routine: STRING is "scavenge_zone_size"
+	scavenge_zone_size_routine: STRING = "scavenge_zone_size"
 
-	set_coalesce_period_routine: STRING is "set_coalesce_period"
+	set_coalesce_period_routine: STRING = "set_coalesce_period"
 
-	set_collection_period_routine: STRING is "set_collection_period"
+	set_collection_period_routine: STRING = "set_collection_period"
 
-	set_max_mem_routine: STRING is "set_max_mem"
+	set_max_mem_routine: STRING = "set_max_mem"
 
-	set_memory_threshold_routine: STRING is "set_memory_threshold"
+	set_memory_threshold_routine: STRING = "set_memory_threshold"
 
-	tenure_routine: STRING is "tenure"
+	tenure_routine: STRING = "tenure"
 
-	exists_routine: STRING is "exists";
+	exists_routine: STRING = "exists";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

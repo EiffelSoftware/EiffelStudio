@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generate C server code for property"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -13,7 +13,7 @@ inherit
 
 feature -- Basic operations
 
-	generate (a_component: WIZARD_COMPONENT_DESCRIPTOR; a_property: WIZARD_PROPERTY_DESCRIPTOR) is
+	generate (a_component: WIZARD_COMPONENT_DESCRIPTOR; a_property: WIZARD_PROPERTY_DESCRIPTOR)
 			-- Generate C server access and setting features.
 		require
 			non_void_component: a_component /= Void
@@ -72,7 +72,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	access_body (l_name: STRING; l_visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
+	access_body (l_name: STRING; l_visitor: WIZARD_DATA_TYPE_VISITOR): STRING
 			-- Access body code
 		require
 			non_void_name: l_name /= Void
@@ -108,7 +108,7 @@ feature {NONE} -- Implementation
 			Result.append ("return S_OK;")
 		end
 
-	setting_body (l_name: STRING; l_visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
+	setting_body (l_name: STRING; l_visitor: WIZARD_DATA_TYPE_VISITOR): STRING
 			-- Setting body code
 		require
 			non_void_name: l_name /= Void
@@ -125,7 +125,7 @@ feature {NONE} -- Implementation
 			Result.append ("return S_OK;")
 		end
 
-	set_variable (l_visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
+	set_variable (l_visitor: WIZARD_DATA_TYPE_VISITOR): STRING
 			-- Variables
 		require
 			non_void_visitor: l_visitor /= Void
@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 		end
 
-	cecil_function (function_name: STRING; l_visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
+	cecil_function (function_name: STRING; l_visitor: WIZARD_DATA_TYPE_VISITOR): STRING
 			-- Code to set up eif_function call
 		require
 			non_void_visitor: l_visitor /= Void
@@ -229,7 +229,7 @@ feature {NONE} -- Implementation
 			valid_function: not Result.is_empty
 		end
 
-	cecil_function_code (function_type, function_name, call_func_name: STRING): STRING is
+	cecil_function_code (function_type, function_name, call_func_name: STRING): STRING
 			-- Cecil code
 		require
 			non_void_type: function_type /= Void
@@ -252,7 +252,7 @@ feature {NONE} -- Implementation
 			valid_code: not Result.is_empty
 		end
 
-	cecil_procedure (function_name: STRING; l_visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
+	cecil_procedure (function_name: STRING; l_visitor: WIZARD_DATA_TYPE_VISITOR): STRING
 			-- Cecil procedure code
 		require
 			non_void_name: function_name /= Void
@@ -289,7 +289,7 @@ feature {NONE} -- Implementation
 			valid_procedure: not Result.is_empty
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

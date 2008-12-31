@@ -1,4 +1,4 @@
-indexing
+note
 	description: "FUNCFLAGS flags"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -13,7 +13,7 @@ inherit
 	
 feature -- Access
 
-	Funcflag_frestricted: INTEGER is
+	Funcflag_frestricted: INTEGER
 			-- Function should not be accessible from
 			-- This flag is intended for system-level functions or functions
 			-- that you do not want type browsers to display.
@@ -23,7 +23,7 @@ feature -- Access
 			"FUNCFLAG_FRESTRICTED"
 		end
 
-	Funcflag_fsource: INTEGER is
+	Funcflag_fsource: INTEGER
 			-- Function returns object that is source of events
 		external
 			"C [macro <oaidl.h>]"
@@ -31,7 +31,7 @@ feature -- Access
 			"FUNCFLAG_FSOURCE"
 		end
 
-	Funcflag_fbindable: INTEGER is
+	Funcflag_fbindable: INTEGER
 			-- Function that supports data binding
 		external
 			"C [macro <oaidl.h>]"
@@ -39,14 +39,14 @@ feature -- Access
 			"FUNCFLAG_FBINDABLE"
 		end
 
-	Funcflag_frequestedit: INTEGER is
+	Funcflag_frequestedit: INTEGER
 		external
 			"C [macro <oaidl.h>]"
 		alias
 			"FUNCFLAG_FREQUESTEDIT"
 		end
 
-	Funcflag_fdisplaybind: INTEGER is
+	Funcflag_fdisplaybind: INTEGER
 			-- Function that is displayed to user as bindable;
 			-- that is, FUNC_FBINDABLE must also be set.
 		external
@@ -55,7 +55,7 @@ feature -- Access
 			"FUNCFLAG_FDISPLAYBIND"
 		end
 
-	Funcflag_fdefaultbind: INTEGER is
+	Funcflag_fdefaultbind: INTEGER
 			-- Function that best represents object
 			-- Only one function in dispinterface may have this attribute.
 		external
@@ -64,7 +64,7 @@ feature -- Access
 			"FUNCFLAG_FDEFAULTBIND"
 		end
 
-	Funcflag_fhidden: INTEGER is
+	Funcflag_fhidden: INTEGER
 			-- Function should not be displayed to user, 
 			-- although it exists and is bindable.
 		external
@@ -73,7 +73,7 @@ feature -- Access
 			"FUNCFLAG_FHIDDEN"
 		end
 
-	Funcflag_fdefaultcollelem: INTEGER is
+	Funcflag_fdefaultcollelem: INTEGER
 			-- Permits optimization.
 		external
 			"C [macro <oaidl.h>]"
@@ -81,7 +81,7 @@ feature -- Access
 			"FUNCFLAG_FDEFAULTCOLLELEM"
 		end
 
-	Funcflag_fuidefault: INTEGER is
+	Funcflag_fuidefault: INTEGER
 			-- Type information member is default 
 			-- member for display in user interface. 
 		external
@@ -90,7 +90,7 @@ feature -- Access
 			"FUNCFLAG_FUIDEFAULT"
 		end
 
-	Funcflag_fnonbrowsable: INTEGER is
+	Funcflag_fnonbrowsable: INTEGER
 			-- Property appears in object browser, 
 			-- but not in properties browser
 		external
@@ -99,7 +99,7 @@ feature -- Access
 			"FUNCFLAG_FNONBROWSABLE"
 		end
 
-	Funcflag_freplaceable: INTEGER is
+	Funcflag_freplaceable: INTEGER
 			-- Tags interface as having default behaviors. 
 		external
 			"C [macro <oaidl.h>]"
@@ -107,7 +107,7 @@ feature -- Access
 			"FUNCFLAG_FREPLACEABLE"
 		end
 
-	Funcflag_fimmediatebind: INTEGER is
+	Funcflag_fimmediatebind: INTEGER
 			-- Mapped as individual bindable properties.
 		external
 			"C [macro <oaidl.h>]"
@@ -117,80 +117,80 @@ feature -- Access
 
 feature -- Status report
 
-	is_funcflag_frestricted (flag: INTEGER): BOOLEAN is
+	is_funcflag_frestricted (flag: INTEGER): BOOLEAN
 			-- Is flag FRESTRICTED?
 		do
 			Result := binary_and (flag, Funcflag_frestricted) = Funcflag_frestricted
 		end
 
-	is_funcflag_fsource (flag: INTEGER): BOOLEAN is
+	is_funcflag_fsource (flag: INTEGER): BOOLEAN
 			-- Is flag fsource?
 		do
 			Result := binary_and (flag, Funcflag_fsource) = Funcflag_fsource
 		end
 
-	is_funcflag_fbindable (flag: INTEGER): BOOLEAN is
+	is_funcflag_fbindable (flag: INTEGER): BOOLEAN
 			-- Is flag fbindable?
 		do
 			Result := binary_and (flag, Funcflag_fbindable) = Funcflag_fbindable
 		end
 
-	is_funcflag_frequestedit (flag: INTEGER): BOOLEAN is
+	is_funcflag_frequestedit (flag: INTEGER): BOOLEAN
 			-- Is flag frequestedit?
 		do
 			Result := binary_and (flag, Funcflag_frequestedit) = Funcflag_frequestedit
 		end
 
-	is_funcflag_fdisplaybind (flag: INTEGER): BOOLEAN is
+	is_funcflag_fdisplaybind (flag: INTEGER): BOOLEAN
 			-- Is flag fdisplaybind?
 		do
 			Result := binary_and (flag, Funcflag_fdisplaybind) = Funcflag_fdisplaybind
 		end
 
-	is_funcflag_fdefaultbind (flag: INTEGER): BOOLEAN is
+	is_funcflag_fdefaultbind (flag: INTEGER): BOOLEAN
 			-- Is flag fdefaultbind?
 		do
 			Result := binary_and (flag, Funcflag_fdefaultbind) = Funcflag_fdefaultbind
 		end
 
-	is_funcflag_fhidden (flag: INTEGER): BOOLEAN is
+	is_funcflag_fhidden (flag: INTEGER): BOOLEAN
 			-- Is flag fhidden?
 		do
 			Result := binary_and (flag, Funcflag_fhidden) = Funcflag_fhidden
 		end
 
-	is_funcflag_fdefaultcollelem (flag: INTEGER): BOOLEAN is
+	is_funcflag_fdefaultcollelem (flag: INTEGER): BOOLEAN
 			-- Is flag fdefaultcollelem?
 		do
 			Result := binary_and (flag, Funcflag_fdefaultcollelem) = Funcflag_fdefaultcollelem
 		end
 
-	is_funcflag_fuidefault (flag: INTEGER): BOOLEAN is
+	is_funcflag_fuidefault (flag: INTEGER): BOOLEAN
 			-- Is flag fuidefault?
 		do
 			Result := binary_and (flag, Funcflag_fuidefault) = Funcflag_fuidefault
 		end
 
-	is_funcflag_fnonbrowsable (flag: INTEGER): BOOLEAN is
+	is_funcflag_fnonbrowsable (flag: INTEGER): BOOLEAN
 			-- Is flag fnonbrowsable?
 		do
 			Result := binary_and (flag, Funcflag_fnonbrowsable) = Funcflag_fnonbrowsable
 		end
 
-	is_funcflag_freplaceable (flag: INTEGER): BOOLEAN is
+	is_funcflag_freplaceable (flag: INTEGER): BOOLEAN
 			-- Is flag freplaceable?
 		do
 			Result := binary_and (flag, Funcflag_freplaceable) = Funcflag_freplaceable
 		end
 
-	is_funcflag_fimmediatebind (flag: INTEGER): BOOLEAN is
+	is_funcflag_fimmediatebind (flag: INTEGER): BOOLEAN
 			-- Is flag fimmediatebind?
 		do
 			Result := binary_and (flag, Funcflag_fimmediatebind) = Funcflag_fimmediatebind
 		end
 
 
-	is_valid_funcflag (flag: INTEGER): BOOLEAN is
+	is_valid_funcflag (flag: INTEGER): BOOLEAN
 			-- Is `flag' a valid combination of funcflags?
 		do
 			Result := is_funcflag_frestricted (flag) or
@@ -207,7 +207,7 @@ feature -- Status report
 					is_funcflag_fimmediatebind (flag)
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

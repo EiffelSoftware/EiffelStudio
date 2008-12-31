@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented interface descriptor."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -31,7 +31,7 @@ create
 
 feature -- Initialization
 
-	make_from_interface (a_descriptor: WIZARD_INTERFACE_DESCRIPTOR) is
+	make_from_interface (a_descriptor: WIZARD_INTERFACE_DESCRIPTOR)
 			-- Initialize
 		require
 			non_void_descriptor: a_descriptor /= Void
@@ -57,7 +57,7 @@ feature -- Access
 	interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR
 			-- Interface descriptor.
 
-	creation_message: STRING is
+	creation_message: STRING
 			-- Creation message for wizard output
 		do
 			create Result.make (1024)
@@ -76,7 +76,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	disambiguate_argument_names is
+	disambiguate_argument_names
 			-- We need to make sure there are no clashes between argument
 			-- names and feature names because if we have interface IA with
 			-- feature `f (g: ANY)' and interface IB inherit IA with feature
@@ -120,7 +120,7 @@ feature -- Basic operations
 			end
 		end
 
-	set_source (a_boolean: BOOLEAN) is
+	set_source (a_boolean: BOOLEAN)
 			-- Set `source' with `a_boolean'.
 		do
 			source := a_boolean
@@ -128,13 +128,13 @@ feature -- Basic operations
 			source_set: source = a_boolean
 		end
 
-	visit (a_visitor: WIZARD_TYPE_VISITOR) is
+	visit (a_visitor: WIZARD_TYPE_VISITOR)
 			-- Call back `a_visitor' with appropriate feature.
 		do
 			a_visitor.process_implemented_interface (Current)
 		end
 
-	set_impl_names (is_client: BOOLEAN) is
+	set_impl_names (is_client: BOOLEAN)
 			-- Set implementation names.
 		do
 			c_type_name := impl_c_type_name (is_client)
@@ -143,7 +143,7 @@ feature -- Basic operations
 			c_definition_header_file_name := impl_c_definition_header_file_name (is_client)
 		end
 
-	impl_c_type_name (is_client: BOOLEAN): STRING is
+	impl_c_type_name (is_client: BOOLEAN): STRING
 			-- Implementation C type name.
 		require
 			non_void_name: name /= Void
@@ -155,7 +155,7 @@ feature -- Basic operations
 			valid_c_type_name: not Result.is_empty
 		end
 
-	impl_eiffel_class_name (is_client: BOOLEAN): STRING is
+	impl_eiffel_class_name (is_client: BOOLEAN): STRING
 			-- Implementation Eiffel class name.
 		require
 			non_void_name: name /= Void
@@ -168,7 +168,7 @@ feature -- Basic operations
 			valid_class_name: not Result.is_empty
 		end
 
-	impl_c_definition_header_file_name (is_client: BOOLEAN): STRING is
+	impl_c_definition_header_file_name (is_client: BOOLEAN): STRING
 			-- Implementation header file name.
 		require
 			non_void_name: name /= Void
@@ -180,7 +180,7 @@ feature -- Basic operations
 			valid_header: not Result.is_empty
 		end
 
-	impl_c_declaration_header_file_name (is_client: BOOLEAN): STRING is
+	impl_c_declaration_header_file_name (is_client: BOOLEAN): STRING
 			-- Implementation header file name.
 		require
 			non_void_name: name /= Void
@@ -194,7 +194,7 @@ feature -- Basic operations
 
 feature {NONE} -- implementation
 
-	impl_name (is_client: BOOLEAN): STRING is
+	impl_name (is_client: BOOLEAN): STRING
 			-- Implementation name.
 		require
 			non_void_name: name /= Void
@@ -214,7 +214,7 @@ feature {NONE} -- implementation
 invariant
 	non_void_interface: interface /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

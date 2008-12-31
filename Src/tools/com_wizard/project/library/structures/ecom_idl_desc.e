@@ -1,4 +1,4 @@
-indexing
+note
 	description: "COM IDLDESC structure"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_from_pointer (a_pointer: POINTER) is
+	make_from_pointer (a_pointer: POINTER)
 			-- Make from pointer.
 		do
 			make_by_pointer (a_pointer)
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	flags: INTEGER is
+	flags: INTEGER
 			-- Flags
 		do
 			Result := ccom_idldesc_flags (item)
@@ -39,7 +39,7 @@ feature -- Access
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of IDLDESC structure
 		do
 			Result := c_size_of_idl_desc
@@ -47,19 +47,19 @@ feature -- Measurement
 
 feature {NONE} -- Externals
 
-	c_size_of_idl_desc: INTEGER is
+	c_size_of_idl_desc: INTEGER
 		external 
 			"C [macro %"E_idldesc.h%"]"
 		alias
 			"sizeof(IDLDESC)"
 		end
 
-	ccom_idldesc_flags(a_ptr: POINTER): INTEGER is
+	ccom_idldesc_flags(a_ptr: POINTER): INTEGER
 		external
 			"C [macro %"E_idldesc.h%"]"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

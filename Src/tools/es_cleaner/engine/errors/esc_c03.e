@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Cleaning error indicating that an Eiffel project's user configuration data could not be read.
 	]"
@@ -20,7 +20,7 @@ feature {NONE} -- Implementation
 
 	dollar_description: STRING = "Could not retrieve the user data file for specified project '{1}'."
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

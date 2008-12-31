@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Factory of Property Descriptors"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -38,7 +38,7 @@ inherit
 
 feature -- Basic operations
 
-	create_descriptor (a_type_info: ECOM_TYPE_INFO; a_index: INTEGER): WIZARD_PROPERTY_DESCRIPTOR is
+	create_descriptor (a_type_info: ECOM_TYPE_INFO; a_index: INTEGER): WIZARD_PROPERTY_DESCRIPTOR
 			-- Initialize
 		require
 			valid_type_info: a_type_info /= Void
@@ -84,7 +84,7 @@ feature -- Basic operations
 			valid_data_type: data_type /= Void
 		end
 
-	initialize_descriptor (a_descriptor: WIZARD_PROPERTY_DESCRIPTOR) is
+	initialize_descriptor (a_descriptor: WIZARD_PROPERTY_DESCRIPTOR)
 			-- Initialize `a_descriptor' atributes.
 		require
 			valid_descriptor: a_descriptor /= Void
@@ -117,7 +117,7 @@ feature {NONE} -- Implementation
 	is_read_only: BOOLEAN;
 			-- Is property read only?
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

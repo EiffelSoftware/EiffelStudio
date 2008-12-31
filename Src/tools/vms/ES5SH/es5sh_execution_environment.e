@@ -1,4 +1,4 @@
-indexing
+note
 	description: "VMS-specific extension to EXECUTION_ENVIRONMENT for ES5SH"
 	author: "David Schwartz $"
 	Date: "$Date$"
@@ -12,7 +12,7 @@ inherit
 
 feature -- Access
 
-	get_native (k: STRING): STRING is
+	get_native (k: STRING): STRING
 			-- Value of `k' if it is an environment variable and has been set;
 			-- void otherwise.
 		require
@@ -34,7 +34,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	eif_getenv_native (k: POINTER): POINTER is
+	eif_getenv_native (k: POINTER): POINTER
 			-- Value of environment variable `k'
 
 -- VMS:

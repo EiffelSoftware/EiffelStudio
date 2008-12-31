@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Used to do actual class file generation and persist files to disk.
 	]"
@@ -25,7 +25,7 @@ inherit
 
 feature -- Generation
 
-	generate_files (a_opts: APPLICATION_OPTIONS) is
+	generate_files (a_opts: APPLICATION_OPTIONS)
 			-- Generates files for options `a_opts'.
 		require
 			a_opts_attached: a_opts /= Void
@@ -43,7 +43,7 @@ feature -- Generation
 			end
 		end
 
-	generate_file (a_opts: APPLICATION_OPTIONS; a_stub: BOOLEAN) is
+	generate_file (a_opts: APPLICATION_OPTIONS; a_stub: BOOLEAN)
 			-- Generates a single file for options `a_opts'. The type of file generated is dictated by `a_stub'. When False
 			-- an interface is generated, True a stub class is generated for the interface.
 		require
@@ -87,7 +87,7 @@ feature -- Generation
 			retry
 		end
 
-	generate_process_routines (a_opts: APPLICATION_OPTIONS) is
+	generate_process_routines (a_opts: APPLICATION_OPTIONS)
 			-- Generates `process' routines in files `a_opts.files'.
 		require
 			a_opts_attached: a_opts /= Void
@@ -131,7 +131,7 @@ feature {NONE} -- Implementation
 	visitor: AST_ADD_PROCESS_VISITOR
 			-- Processor for adding `process' routines to a class.
 
-	generate_process_routines_for (a_opts: APPLICATION_OPTIONS; a_file_name: STRING_8) is
+	generate_process_routines_for (a_opts: APPLICATION_OPTIONS; a_file_name: STRING_8)
 			-- Generate `process' routines for class in `a_file_name'.
 		require
 			a_opts_attached: a_opts /= Void
@@ -188,7 +188,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "C/C++ class function used in WIZARD_WRITER_C_CLASS and WIZARD_WRITER_CPP_CLASS"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -19,7 +19,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize data.
 		do
 		end
@@ -35,7 +35,7 @@ feature -- Access
 	comment: STRING
 			-- Function comment
 	
-	generated_header_file: STRING is
+	generated_header_file: STRING
 			-- Generated header file
 		do
 			create Result.make (100)
@@ -48,7 +48,7 @@ feature -- Access
 			Result.append (";%N")
 		end
 
-	can_generate: BOOLEAN is
+	can_generate: BOOLEAN
 			-- Can code be generated?
 		do
 			Result := name /= Void and then not name.is_empty and result_type /= Void and then not result_type.is_empty and comment /= Void
@@ -56,7 +56,7 @@ feature -- Access
 
 feature -- Element Change
 
-	set_name (a_name: like name) is
+	set_name (a_name: like name)
 			-- Set `name' with `a_name'.
 		require
 			non_void_name: a_name /= Void
@@ -67,7 +67,7 @@ feature -- Element Change
 			name_set: name.is_equal (a_name)
 		end
 	
-	set_result_type (a_result_type: like result_type) is
+	set_result_type (a_result_type: like result_type)
 			-- Set `result_type' with `a_result_type'.
 		require
 			non_void_result_type: a_result_type /= Void
@@ -78,7 +78,7 @@ feature -- Element Change
 			result_type_set: result_type.is_equal (a_result_type)
 		end
 	
-	set_comment (a_comment: like comment) is
+	set_comment (a_comment: like comment)
 			-- Set `comment' with `a_comment'.
 		require
 			non_void_comment: a_comment /= Void
@@ -88,7 +88,7 @@ feature -- Element Change
 			comment_set: comment.is_equal (a_comment)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

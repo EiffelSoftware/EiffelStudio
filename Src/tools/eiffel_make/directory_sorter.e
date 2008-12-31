@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Sorting algorithm for W_code and F_code directories. The C directories
 		appear first and then the E directories.
@@ -16,7 +16,7 @@ inherit
 
 feature -- Comparison
 
-	less_than (u, v: STRING): BOOLEAN is
+	less_than (u, v: STRING): BOOLEAN
 			-- Is `u' considered less than `v'?
 		do
 			if u.valid_index (1) and v.valid_index (1) then
@@ -38,7 +38,7 @@ feature -- Comparison
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

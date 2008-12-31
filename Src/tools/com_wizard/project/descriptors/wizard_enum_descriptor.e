@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Enumeration descriptor"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_creator: WIZARD_ENUM_DESCRIPTOR_CREATOR) is
+	make (a_creator: WIZARD_ENUM_DESCRIPTOR_CREATOR)
 			-- Initialize `elements'
 			-- and `eiffel_class_name'
 		require
@@ -41,7 +41,7 @@ feature -- Access
 	size_of_instance: NATURAL_32
 			-- Size of instance of this type
 
-	creation_message: STRING is
+	creation_message: STRING
 			-- Creation message for wizard output
 		local
 			l_element: WIZARD_ENUM_ELEMENT_DESCRIPTOR
@@ -75,7 +75,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	set_added is
+	set_added
 			-- Set `added' to `True'.
 		do
 			is_added := True
@@ -83,7 +83,7 @@ feature -- Basic Operations
 			added: is_added
 		end
 
-	set_elements (some_elements: LIST [WIZARD_ENUM_ELEMENT_DESCRIPTOR]) is
+	set_elements (some_elements: LIST [WIZARD_ENUM_ELEMENT_DESCRIPTOR])
 			--
 		require
 			valid_elements: some_elements /= Void
@@ -93,7 +93,7 @@ feature -- Basic Operations
 			valid_elements: elements /= Void and elements = some_elements
 		end
 
-	set_size (a_size: like size_of_instance) is
+	set_size (a_size: like size_of_instance)
 			-- Set `size_of_instance' with `a_size'.
 		do
 			size_of_instance := a_size
@@ -101,13 +101,13 @@ feature -- Basic Operations
 			valid_size: size_of_instance = a_size
 		end
 
-	visit (a_visitor: WIZARD_TYPE_VISITOR) is
+	visit (a_visitor: WIZARD_TYPE_VISITOR)
 			-- Call back `a_visitor' with appropriate feature.
 		do
 			a_visitor.process_enum (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

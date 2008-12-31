@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Structure's field description"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature -- Initialization
 
-	make (a_creator: WIZARD_RECORD_FIELD_DESCRIPTOR_FACTORY) is
+	make (a_creator: WIZARD_RECORD_FIELD_DESCRIPTOR_FACTORY)
 			-- Initialize
 		require
 			valid_creator: a_creator /= Void
@@ -49,7 +49,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	set_name (a_name: STRING) is
+	set_name (a_name: STRING)
 			-- Set `name' with `a_name'
 		require
 			non_void_name: a_name /= Void
@@ -60,7 +60,7 @@ feature -- Basic Operations
 			valid_name: name /= Void and then not name.is_empty and name.is_equal (a_name)
 		end
 
-	set_description (a_description: STRING) is
+	set_description (a_description: STRING)
 			-- Set `description' with `a_description'.
 		require
 			non_void_description: a_description /= Void
@@ -70,7 +70,7 @@ feature -- Basic Operations
 			description_set: description.is_equal (a_description)
 		end
 
-	set_data_type (a_data_type: WIZARD_DATA_TYPE_DESCRIPTOR) is
+	set_data_type (a_data_type: WIZARD_DATA_TYPE_DESCRIPTOR)
 			-- Set `data_type' with `a_data_type'.
 		require
 			valid_data_type: a_data_type /= Void
@@ -80,7 +80,7 @@ feature -- Basic Operations
 			valid_data_type: data_type /= Void and data_type = a_data_type
 		end
 
-	set_offset (an_offset: INTEGER) is
+	set_offset (an_offset: INTEGER)
 			-- Set `offset' with `an_offset'.
 		do
 			offset := an_offset
@@ -90,13 +90,13 @@ feature -- Basic Operations
 
 feature -- Comparison
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is current object less than `other'?
 		do
 			Result := offset < other.offset
 		end;
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

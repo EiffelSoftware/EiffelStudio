@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Finish freezing's argument parser"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	location: STRING is
+	location: STRING
 			-- Location specified by user, via command line
 		require
 			is_successful: is_successful
@@ -44,7 +44,7 @@ feature -- Access
 			not_result_is_empty: not Result.is_empty
 		end
 
-	generate_only: BOOLEAN is
+	generate_only: BOOLEAN
 			-- Indicates if only a make file should be generated
 		require
 			is_successful: is_successful
@@ -52,7 +52,7 @@ feature -- Access
 			Result := has_option (generate_only_switch)
 		end
 
-	force_32bit_code_generation: BOOLEAN is
+	force_32bit_code_generation: BOOLEAN
 			-- Indicates if 32 bit code should be generated
 		require
 			is_successful: is_successful
@@ -60,7 +60,7 @@ feature -- Access
 			Result := has_option (x86_switch)
 		end
 
-	max_processors: NATURAL_8 is
+	max_processors: NATURAL_8
 			-- Maximum number of processors to utilize
 		require
 			is_successful: is_successful
@@ -75,7 +75,7 @@ feature -- Access
 			result_positive: Result > 0
 		end
 
-	use_low_priority_mode: BOOLEAN is
+	use_low_priority_mode: BOOLEAN
 			-- Indicates if finish_freezing should execute in low priority mode.
 		require
 			is_successful: is_successful
@@ -83,7 +83,7 @@ feature -- Access
 			Result := has_option (low_priority_switch)
 		end
 
-	is_for_library: BOOLEAN is
+	is_for_library: BOOLEAN
 			-- Is `finish_freezing' launched to compile the C code for an Eiffel library?
 		require
 			is_successful: is_successful
@@ -93,7 +93,7 @@ feature -- Access
 
 feature -- Query
 
-	has_location: BOOLEAN is
+	has_location: BOOLEAN
 			-- Indicates if user specified a location
 		require
 			is_successful: is_successful
@@ -101,7 +101,7 @@ feature -- Query
 			Result := has_option (location_switch)
 		end
 
-	has_max_processors: BOOLEAN is
+	has_max_processors: BOOLEAN
 			-- Indicates if user specified a number of processors
 		require
 			is_successful: is_successful
@@ -123,7 +123,7 @@ feature {NONE} -- Usage
 			Result.append_integer ({EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version)
 		end
 
-	switches: !ARRAYED_LIST [!ARGUMENT_SWITCH] is
+	switches: !ARRAYED_LIST [!ARGUMENT_SWITCH]
 			-- <Precursor>
 		once
 			create Result.make (4)
@@ -149,7 +149,7 @@ feature {NONE} -- Switches
 	silent_switch: STRING = "silent";
 			-- Obsolete switch be kept for backward compatibility
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

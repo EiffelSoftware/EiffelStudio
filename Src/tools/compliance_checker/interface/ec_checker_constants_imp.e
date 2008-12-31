@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that provide access to constants loaded from files."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 	
 feature {NONE} -- Initialization
 
-	initialize_constants is
+	initialize_constants
 			-- Load all constants from file.
 		local
 			file: PLAIN_TEXT_FILE
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	icon_check_compliance: EV_PIXMAP is
+	icon_check_compliance: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -41,7 +41,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_settings: EV_PIXMAP is
+	icon_settings: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -51,7 +51,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_project: EV_PIXMAP is
+	icon_project: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -61,43 +61,43 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	button_cancel: STRING is
+	button_cancel: STRING
 			-- `Result' is STRING constant named `button_cancel'.
 		once
 			Result := "Cancel"
 		end
 
-	tooltip_cls_compliance: STRING is
+	tooltip_cls_compliance: STRING
 			-- `Result' is STRING constant named `tooltip_cls_compliance'.
 		once
 			Result := "Should non-CLS-compliant entities be shown in the report?"
 		end
 
-	button_remove: STRING is
+	button_remove: STRING
 			-- `Result' is STRING constant named `button_remove'.
 		once
 			Result := "Remove"
 		end
 
-	label_check: STRING is
+	label_check: STRING
 			-- `Result' is STRING constant named `label_check'.
 		once
 			Result := "Compliant"
 		end
 
-	tooltip_assembly_cannot_be_found: STRING is
+	tooltip_assembly_cannot_be_found: STRING
 			-- `Result' is STRING constant named `tooltip_assembly_cannot_be_found'.
 		once
 			Result := "The specified assembly cannot be found!"
 		end
 
-	label_assembly: STRING is
+	label_assembly: STRING
 			-- `Result' is STRING constant named `label_assembly'.
 		once
 			Result := "Assembly:"
 		end
 
-	icon_caution: EV_PIXMAP is
+	icon_caution: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -107,13 +107,13 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	tooltip_help: STRING is
+	tooltip_help: STRING
 			-- `Result' is STRING constant named `tooltip_help'.
 		once
 			Result := "Recieve help on using the compliance checker tool."
 		end
 
-	icon_export: EV_PIXMAP is
+	icon_export: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -123,7 +123,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_open: EV_PIXMAP is
+	icon_open: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -133,25 +133,25 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	box_border_width: INTEGER is 
+	box_border_width: INTEGER 
 			-- `Result' is INTEGER constant named box_border_width.
 		once
 			Result := 6
 		end
 
-	tooltip_open_assembly: STRING is
+	tooltip_open_assembly: STRING
 			-- `Result' is STRING constant named `tooltip_open_assembly'.
 		once
 			Result := "Browse for an assembly."
 		end
 
-	tab_output: STRING is
+	tab_output: STRING
 			-- `Result' is STRING constant named `tab_output'.
 		once
 			Result := "Compliance Checker "
 		end
 
-	icon_cross: EV_PIXMAP is
+	icon_cross: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -161,19 +161,19 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	label_caution: STRING is
+	label_caution: STRING
 			-- `Result' is STRING constant named `label_caution'.
 		once
 			Result := "Illegally compliant"
 		end
 
-	box_padding_width: INTEGER is 
+	box_padding_width: INTEGER 
 			-- `Result' is INTEGER constant named box_padding_width.
 		once
 			Result := 4
 		end
 
-	icon_blank: EV_PIXMAP is
+	icon_blank: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -183,55 +183,55 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	main_window_title: STRING is
+	main_window_title: STRING
 			-- `Result' is STRING constant named `main_window_title'.
 		once
 			Result := "Eiffel for .NET Compliance Checker"
 		end
 
-	tooltip_assembly: STRING is
+	tooltip_assembly: STRING
 			-- `Result' is STRING constant named `tooltip_assembly'.
 		once
 			Result := "Location of assembly to check for Eiffel-compliance."
 		end
 
-	file_dialog_open_project: STRING is
+	file_dialog_open_project: STRING
 			-- `Result' is STRING constant named `file_dialog_open_project'.
 		once
 			Result := "Please select a project to open"
 		end
 
-	button_okay: STRING is
+	button_okay: STRING
 			-- `Result' is STRING constant named `button_okay'.
 		once
 			Result := "Ok"
 		end
 
-	label_non_compliant: STRING is
+	label_non_compliant: STRING
 			-- `Result' is STRING constant named `label_non_compliant'.
 		once
 			Result := "Non-compliant assembly members"
 		end
 
-	pixmaps: STRING is
+	pixmaps: STRING
 			-- `Result' is DIRECTORY constant named `pixmaps'.
 		once
 			Result := "E:\tools\compliance_checker\resources"
 		end
 
-	tab_project: STRING is
+	tab_project: STRING
 			-- `Result' is STRING constant named `tab_project'.
 		once
 			Result := "Project Settings "
 		end
 
-	frame_report_generation: STRING is
+	frame_report_generation: STRING
 			-- `Result' is STRING constant named `frame_report_generation'.
 		once
 			Result := "Report generation"
 		end
 
-	icon_save: EV_PIXMAP is
+	icon_save: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -241,13 +241,13 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	tooltip_open: STRING is
+	tooltip_open: STRING
 			-- `Result' is STRING constant named `tooltip_open'.
 		once
 			Result := "Open an existing compliance checker project."
 		end
 
-	icon_help: EV_PIXMAP is
+	icon_help: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -257,13 +257,13 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	button_check: STRING is
+	button_check: STRING
 			-- `Result' is STRING constant named `button_check'.
 		once
 			Result := "Check"
 		end
 
-	icon_new: EV_PIXMAP is
+	icon_new: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -273,55 +273,55 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	error_unable_to_save_project: STRING is
+	error_unable_to_save_project: STRING
 			-- `Result' is STRING constant named `error_unable_to_save_project'.
 		once
 			Result := "Error: Unable to save project."
 		end
 
-	label_cross: STRING is
+	label_cross: STRING
 			-- `Result' is STRING constant named `label_cross'.
 		once
 			Result := "Not compliant"
 		end
 
-	button_height: INTEGER is 
+	button_height: INTEGER 
 			-- `Result' is INTEGER constant named button_height.
 		once
 			Result := 23
 		end
 
-	label_copyright: STRING is
+	label_copyright: STRING
 			-- `Result' is STRING constant named `label_copyright'.
 		once
 			Result := "(C)2005 Eiffel Software. All rights reserved."
 		end
 
-	label_progress: STRING is
+	label_progress: STRING
 			-- `Result' is STRING constant named `label_progress'.
 		once
 			Result := "Progress:"
 		end
 
-	tooltip_close: STRING is
+	tooltip_close: STRING
 			-- `Result' is STRING constant named `tooltip_close'.
 		once
 			Result := "Close application."
 		end
 
-	tooltip_progress: STRING is
+	tooltip_progress: STRING
 			-- `Result' is STRING constant named `tooltip_progress'.
 		once
 			Result := "Checking conformance progress."
 		end
 
-	label_legend: STRING is
+	label_legend: STRING
 			-- `Result' is STRING constant named `label_legend'.
 		once
 			Result := "Legend..."
 		end
 
-	icon_check: EV_PIXMAP is
+	icon_check: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -331,19 +331,19 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	button_export: STRING is
+	button_export: STRING
 			-- `Result' is STRING constant named `button_export'.
 		once
 			Result := "Export to File"
 		end
 
-	tooltip_save: STRING is
+	tooltip_save: STRING
 			-- `Result' is STRING constant named `tooltip_save'.
 		once
 			Result := "Save current compliance checker project."
 		end
 
-	icon_error: EV_PIXMAP is
+	icon_error: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -353,67 +353,67 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	tooltip_show_all: STRING is
+	tooltip_show_all: STRING
 			-- `Result' is STRING constant named `tooltip_show_all'.
 		once
 			Result := "Should generated report show all checked types?"
 		end
 
-	check_cls_compliance: STRING is
+	check_cls_compliance: STRING
 			-- `Result' is STRING constant named `check_cls_compliance'.
 		once
 			Result := "Show non-CLS-compliant"
 		end
 
-	frame_reference_paths: STRING is
+	frame_reference_paths: STRING
 			-- `Result' is STRING constant named `frame_reference_paths'.
 		once
 			Result := "Reference paths"
 		end
 
-	tooltip_check: STRING is
+	tooltip_check: STRING
 			-- `Result' is STRING constant named `tooltip_check'.
 		once
 			Result := "Perform Eiffel-compliance assembly checks"
 		end
 
-	button_close: STRING is
+	button_close: STRING
 			-- `Result' is STRING constant named `button_close'.
 		once
 			Result := "Close"
 		end
 
-	tooltip_new: STRING is
+	tooltip_new: STRING
 			-- `Result' is STRING constant named `tooltip_new'.
 		once
 			Result := "Create a new compliance checker project."
 		end
 
-	button_add: STRING is
+	button_add: STRING
 			-- `Result' is STRING constant named `button_add'.
 		once
 			Result := "Add"
 		end
 
-	button_recheck: STRING is
+	button_recheck: STRING
 			-- `Result' is STRING constant named `button_recheck'.
 		once
 			Result := "Recheck"
 		end
 
-	check_show_all: STRING is
+	check_show_all: STRING
 			-- `Result' is STRING constant named `check_show_all'.
 		once
 			Result := "Show all"
 		end
 
-	error_unable_to_retried_project: STRING is
+	error_unable_to_retried_project: STRING
 			-- `Result' is STRING constant named `error_unable_to_retried_project'.
 		once
 			Result := "Error: Unable to retrieve project."
 		end
 
-	file_dialog_save_project: STRING is
+	file_dialog_save_project: STRING
 			-- `Result' is STRING constant named `file_dialog_save_project'.
 		once
 			Result := "Please choose the file name and location to save the project to"
@@ -425,13 +425,13 @@ feature -- Access
 --| FIXME `constant_by_name' and `has_constant' `constants_initialized' are only required until the complete change to
 --| constants is complete. They are required for the pixmaps at the moment.
 
-	constants_initialized: BOOLEAN is
+	constants_initialized: BOOLEAN
 			-- Have constants been initialized from file?
 		do
 			Result := initialized_cell.item
 		end
 
-	string_constant_by_name (a_name: STRING): STRING is
+	string_constant_by_name (a_name: STRING): STRING
 			-- `Result' is STRING 
 		require
 			initialized: constants_initialized
@@ -443,7 +443,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 		
-	integer_constant_by_name (a_name: STRING): INTEGER is
+	integer_constant_by_name (a_name: STRING): INTEGER
 			-- `Result' is STRING 
 		require
 			initialized: constants_initialized
@@ -460,7 +460,7 @@ feature -- Access
 			Result := l_string.to_integer
 		end
 		
-	has_constant (a_name: STRING): BOOLEAN is
+	has_constant (a_name: STRING): BOOLEAN
 			-- Does constant `a_name' exist?
 		require
 			initialized: constants_initialized
@@ -471,26 +471,26 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	initialized_cell: CELL [BOOLEAN] is
+	initialized_cell: CELL [BOOLEAN]
 			-- A cell to hold whether the constants have been loaded.
 		once
 			create Result
 		end
 		
-	all_constants: HASH_TABLE [STRING, STRING] is
+	all_constants: HASH_TABLE [STRING, STRING]
 			-- All constants loaded from constants file.
 		once
 			create Result.make (4)
 		end
 		
-	file_name: STRING is "constants.txt"
+	file_name: STRING = "constants.txt"
 		-- File name from which constants must be loaded.
 		
-	String_constant: STRING is "STRING"
+	String_constant: STRING = "STRING"
 	
-	Integer_constant: STRING is "INTEGER"
+	Integer_constant: STRING = "INTEGER"
 		
-	parse_file_contents (content: STRING) is
+	parse_file_contents (content: STRING)
 			-- Parse contents of `content' into `all_constants'.
 		local
 			line_contents: STRING
@@ -520,7 +520,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	first_line (content: STRING): STRING is
+	first_line (content: STRING): STRING
 			-- `Result' is first line of `Content',
 			-- which will be stripped from `content'.
 		require
@@ -542,7 +542,7 @@ feature {NONE} -- Implementation
 			no_characters_lost: old content.count = Result.count + content.count
 		end
 
-	set_with_named_file (a_pixmap: EV_PIXMAP; a_file_name: STRING) is
+	set_with_named_file (a_pixmap: EV_PIXMAP; a_file_name: STRING)
 			-- Set image of `a_pixmap' from file, `a_file_name'.
 			-- If `a_file_name' does not exist, do nothing.
 		require
@@ -560,7 +560,7 @@ feature {NONE} -- Implementation
 invariant
 	all_constants_not_void: all_constants /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "XSL transformation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature	--Creation
 
-	make_from_xsl_file (a_filename: STRING) is
+	make_from_xsl_file (a_filename: STRING)
 			-- Make from existing `xsl' file
 		require
 			name_not_void: a_filename /= Void
@@ -66,7 +66,7 @@ feature	--Creation
 	
 feature -- Commands
 
-	transform_xml_text (xml_text: STRING) is
+	transform_xml_text (xml_text: STRING)
 			-- Transform `xml_text' according to selected filter
 		require
 			xml_not_void: xml_text /= Void
@@ -83,7 +83,7 @@ feature -- Access
 	document: XM_DOCUMENT
 			-- XML structure
 			
-	text: STRING is
+	text: STRING
 			-- Text of `document'
 		do
 			Result := document_text (document)	
@@ -97,7 +97,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_stylesheet (a_filename: STRING) is
+	set_stylesheet (a_filename: STRING)
 			-- Set stylesheet from `a_filename'
 		require
 			stylesheet_not_void: a_filename /= Void
@@ -105,13 +105,13 @@ feature -- Status setting
 			stylesheet := a_filename
 		end
 		
-	set_stylesheet_relative (a_flag: BOOLEAN) is
+	set_stylesheet_relative (a_flag: BOOLEAN)
 			-- Set `use_stylesheet_relative'
 		do
 			use_stylesheet_relative := a_flag	
 		end
 		
-	set_stylesheet_parents (no_parents: INTEGER) is
+	set_stylesheet_parents (no_parents: INTEGER)
 			-- Set number of parent to use for `stylesheet' relative path
 		require
 			using_relative: use_stylesheet_relative
@@ -122,7 +122,7 @@ feature -- Status setting
 		
 feature -- Query
 
-	is_valid_xml: BOOLEAN is
+	is_valid_xml: BOOLEAN
 			-- Is Current valid xml?
 		do
 			Result := document /= Void
@@ -131,7 +131,7 @@ feature -- Query
 	is_valid_xsl: BOOLEAN
 			-- Is Current a valid Xslt file
 
-	has_stylesheet: BOOLEAN is
+	has_stylesheet: BOOLEAN
 			-- Does current have stylesheet?
 		do
 			Result := stylesheet /= Void
@@ -155,7 +155,7 @@ feature {NONE} -- Implementation
 			-- List of xslt arguments to be processed by `internal_xsl'
 			-- at transform time	
 
-	transform (xml: STRING) is
+	transform (xml: STRING)
 			-- Apply transform for `xml' and put resulting transformation in 
 			-- `transformed_text'
 		require
@@ -198,7 +198,7 @@ feature {NONE} -- Implementation
 			temp_out_html.close
 		end
 	
-	build_arguments is
+	build_arguments
 			-- Build xsl arguments for next transform
 		local
 			retried: BOOLEAN
@@ -237,7 +237,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 		
-	stylesheet_relative: STRING is
+	stylesheet_relative: STRING
 			-- Value of `stylesheet' when `use_stylesheet_relative' is True
 			require
 				using_relative: use_stylesheet_relative
@@ -257,7 +257,7 @@ feature {NONE} -- Implementation
 				Result.append (short_name (stylesheet))
 			end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

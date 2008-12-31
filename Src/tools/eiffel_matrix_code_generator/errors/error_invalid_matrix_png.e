@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error to indicate that a specified PNG matrix file is not valid."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature -- Access
 
-	code: STRING is
+	code: STRING
 			-- Error code
 		once
 			Result := "LIV1"
@@ -27,14 +27,14 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	dollar_description: STRING is
+	dollar_description: STRING
 			-- Dollar encoded description. ${n} are replaced by array
 			-- indicies.
 		do
 			Result := "The specified matrix PNG file '{1}' cannot be loaded."
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

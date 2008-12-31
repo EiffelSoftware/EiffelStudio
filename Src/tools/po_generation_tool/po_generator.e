@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generates po entries from an compilable Eiffel class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature -- Initialize
 
-	make (a_file: like file; a_text: like text) is
+	make (a_file: like file; a_text: like text)
 			-- Initialize.
 			--
 			-- `a_file': File where parsed messages are added
@@ -36,7 +36,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_source_file_name (a_str: STRING) is
+	set_source_file_name (a_str: STRING)
 			-- Set `source_file_name' to `a_str'.
 		require
 			a_str_not_void: a_str /= Void
@@ -60,7 +60,7 @@ feature -- Access
 
 feature -- Generation
 
-	generate is
+	generate
 			-- Generate entries and write them into `file'.
 		require
 			source_file_name_set: source_file_name /= Void
@@ -93,7 +93,7 @@ feature -- Generation
 
 feature {NONE} -- Implementation
 
-	eiffel_parser: EIFFEL_PARSER is
+	eiffel_parser: EIFFEL_PARSER
 			-- Eiffel parser used to parse input text
 		once
 			create Result.make_with_factory (create {AST_ROUNDTRIP_FACTORY})
@@ -102,11 +102,11 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	name_of_translate: STRING is "translation"
+	name_of_translate: STRING = "translation"
 			-- Name of translate feature
 			-- Arguments from this feature are taken as translateable messages.
 
-	name_of_translate_plural: STRING is "plural_translation"
+	name_of_translate_plural: STRING = "plural_translation"
 			-- Name of translate feature for plurals
 			-- Arguments from this feature are taken as translateable plural messages.
 
@@ -116,7 +116,7 @@ invariant
 	text_not_void: text /= Void
 	file_not_void: file /= Void
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

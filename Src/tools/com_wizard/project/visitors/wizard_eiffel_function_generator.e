@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel function generator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -37,7 +37,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	set_feature_result_type_and_arguments is
+	set_feature_result_type_and_arguments
 			-- Set l_arguments
 		require
 			non_void_feature_writer: feature_writer /= Void
@@ -88,7 +88,7 @@ feature {NONE} -- Implementation
 
 		end
 
-	enumeration_comment (a_name: STRING; l_type: WIZARD_DATA_TYPE_DESCRIPTOR; a_visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
+	enumeration_comment (a_name: STRING; l_type: WIZARD_DATA_TYPE_DESCRIPTOR; a_visitor: WIZARD_DATA_TYPE_VISITOR): STRING
 			-- Add coments for enumeration types.
 		local
 			a_user_defined_descriptor: WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR
@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 		end
 
 	add_enumeration_comments (a_name: STRING; l_type: WIZARD_DATA_TYPE_DESCRIPTOR;
-				a_visitor: WIZARD_DATA_TYPE_VISITOR) is
+				a_visitor: WIZARD_DATA_TYPE_VISITOR)
 			-- Add coments for enumeration types.
 		local
 			l_comment: STRING
@@ -132,7 +132,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_feature_argument_comments is
+	add_feature_argument_comments
 			-- Add comments
 		local
 			l_comment: STRING
@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_feature_assertions is
+	set_feature_assertions
 			-- Set precondition.
 		local
 			l_arguments: LIST [WIZARD_PARAM_DESCRIPTOR]
@@ -234,7 +234,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

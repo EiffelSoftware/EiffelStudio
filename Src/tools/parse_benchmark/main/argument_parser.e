@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Argument parser for parser benchmark test application."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -139,7 +139,7 @@ feature -- Access
 
 feature {NONE} -- Basic Operations
 
-	execute_noop (a_agent: !PROCEDURE [ANY, TUPLE]) is
+	execute_noop (a_agent: !PROCEDURE [ANY, TUPLE])
 			-- <Precursor>
 		do
 			display_usage
@@ -163,7 +163,7 @@ feature {NONE} -- Switch names
 			-- Test related switches
 
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

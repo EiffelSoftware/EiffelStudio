@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Custom/efficient text control"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Access
 
-	line_count: INTEGER is
+	line_count: INTEGER
 			-- Line count in text
 		do
 			Result := implementation.line_count
@@ -28,7 +28,7 @@ feature -- Access
 			valid_count: Result >= 0
 		end
 
-	first_visible_line: INTEGER is
+	first_visible_line: INTEGER
 			-- Upper most visible line
 		do
 			Result := implementation.first_visible_line
@@ -36,7 +36,7 @@ feature -- Access
 			valid_indext: Result >= 0
 		end
 
-	visible_lines_count: INTEGER is
+	visible_lines_count: INTEGER
 			-- Number of visible lines
 		do
 			Result := implementation.visible_lines_count
@@ -46,7 +46,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING)
 			-- Set rich edit text with `a_text'
 		require
 			non_void_text: a_text /= Void
@@ -54,7 +54,7 @@ feature -- Basic Operations
 			implementation.set_text (a_text)
 		end
 
-	save (a_file_name: STRING) is
+	save (a_file_name: STRING)
 			-- Save content to `a_file_name'.
 		require
 			non_void_file_name: a_file_name /= Void
@@ -62,7 +62,7 @@ feature -- Basic Operations
 			implementation.save (a_file_name)
 		end
 
-	scroll_to_line (a_line: INTEGER) is
+	scroll_to_line (a_line: INTEGER)
 			-- Scroll to line `a_line'.
 		require
 			valid_line: a_line > 0
@@ -70,13 +70,13 @@ feature -- Basic Operations
 			implementation.scroll_to_line (a_line)
 		end
 
-	show_scroll_bars is
+	show_scroll_bars
 			-- Scroll to line `a_line'.
 		do
 			implementation.show_scroll_bars
 		end
 
-	hide_scroll_bars is
+	hide_scroll_bars
 			-- Scroll to line `a_line'.
 		do
 			implementation.hide_scroll_bars
@@ -90,13 +90,13 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- Create implementation of `Current'.
 		do
 			create implementation.make (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

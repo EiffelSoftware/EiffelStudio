@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Filterer of DOCUMENTs"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ inherit
 
 feature
 
-	make is
+	make
 			-- Create
 		do
 			clear
@@ -29,7 +29,7 @@ feature
 
 feature -- Access
 
-	output_string: STRING is
+	output_string: STRING
 			-- Output string after filter processing
 		once
 			create Result.make (100000)
@@ -40,13 +40,13 @@ feature -- Access
 
 feature -- Status Setting
 
-	clear is
+	clear
 			-- Clear Current
 		do
 			output_string.clear_all
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

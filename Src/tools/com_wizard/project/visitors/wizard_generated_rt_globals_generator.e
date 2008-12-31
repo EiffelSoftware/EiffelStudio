@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generator of generated run-time globals."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -26,7 +26,7 @@ create
 
 feature -- Basic operations
 
-	generate is
+	generate
 			-- Generate Generated Globals header file.
 		local
 			cpp_writer: WIZARD_WRITER_C_FILE
@@ -96,7 +96,7 @@ feature -- Basic operations
 			cpp_writer.save_header_file (shared_file_name_factory.last_created_header_file_name)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

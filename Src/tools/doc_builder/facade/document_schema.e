@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Document Schema."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 	
 feature -- Initialization
 	
-	make_from_schema_file (a_filename: STRING) is
+	make_from_schema_file (a_filename: STRING)
 			-- Make from 'a_filename'
 		do
 			name := a_filename
@@ -35,20 +35,20 @@ feature -- Access
 
 feature -- Query	
 
-	is_valid_xml: BOOLEAN is True
+	is_valid_xml: BOOLEAN = True
 			-- Is Current valid xml?
 
-	is_valid: BOOLEAN is True
+	is_valid: BOOLEAN = True
 			-- Is Current valid schema definition according to W3C?
 		
-	get_element_by_name (el_name: STRING): DOCUMENT_SCHEMA_ELEMENT is
+	get_element_by_name (el_name: STRING): DOCUMENT_SCHEMA_ELEMENT
 			-- Get a schema element with name `el_name', if exists.
 		require
 			el_name_not_void: el_name /= Void
 		do
 		end	
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

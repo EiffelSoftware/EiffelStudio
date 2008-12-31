@@ -1,4 +1,4 @@
-indexing
+note
 	description: "System Help Manager"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Commands
 
-	show_help is
+	show_help
 			-- Show help
 		do
 			show (url_prefix + default_page_url)			
@@ -18,7 +18,7 @@ feature -- Commands
 		
 feature -- Access
 
-	last_show_successful: BOOLEAN is
+	last_show_successful: BOOLEAN
 			-- Was last call to `show' successful?
 		do
 			Result := help_window_handle /= 0
@@ -29,19 +29,19 @@ feature {NONE} -- Implementation
 	help_window_handle: INTEGER
 			-- Handle to help window
 
-	show (a_chm_url: STRING) is
+	show (a_chm_url: STRING)
 			-- Display help page with url `a_chm_url'.
 		do
 			help_window_handle := cwin_html_help (default_pointer, (create {WEL_STRING}.make (a_chm_url)).item, Hh_display_topic, default_pointer)
 		end
 
-	url_prefix: STRING is 
+	url_prefix: STRING 
 			-- URL prefix for $EiffelGraphicalCompiler$ help files
 		once
 			Result := (create {APPLICATION_CONSTANTS}).documentation_directory.out + "\help.chm::"
 		end
 	
-	default_page_url: STRING is 
+	default_page_url: STRING 
 			-- URL default page when opening help
 		once
 			Result := "index.html"
@@ -49,7 +49,7 @@ feature {NONE} -- Implementation
 	
 feature {NONE} -- Externals
 
-	cwin_html_help (hwnd, pszFile: POINTER; command: INTEGER; data: POINTER): INTEGER is
+	cwin_html_help (hwnd, pszFile: POINTER; command: INTEGER; data: POINTER): INTEGER
 			-- Help Workshop `HtmlHelp' API.
 		external
 			"C [macro %"Htmlhelp.h%"] (HWND, LPCSTR, UINT, DWORD): EIF_INTEGER"
@@ -57,7 +57,7 @@ feature {NONE} -- Externals
 			"HtmlHelp"
 		end
 
-	Hh_display_topic: INTEGER is
+	Hh_display_topic: INTEGER
 			-- Help Workshop HH_DISPLAY_TOPIC constant
 		external
 			"C [macro %"Htmlhelp.h%"]: EIF_INTEGER"
@@ -65,7 +65,7 @@ feature {NONE} -- Externals
 			"HH_DISPLAY_TOPIC"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

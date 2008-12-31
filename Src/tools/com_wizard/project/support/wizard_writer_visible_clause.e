@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Visible clause writer"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -16,7 +16,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Initialize
 		do
 			create {ARRAYED_LIST [STRING]} exported_features.make (20)
@@ -24,7 +24,7 @@ feature -- Initialization
 
 feature -- Access
 
-	generated_code: STRING is
+	generated_code: STRING
 			-- Generated code
 		do
 			create Result.make (100)
@@ -51,7 +51,7 @@ feature -- Access
 			Result.append (";%N")
 		end
 
-	can_generate: BOOLEAN is
+	can_generate: BOOLEAN
 			-- Can code be generated?
 		do
 			Result := name /= Void and then not name.is_empty
@@ -66,7 +66,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_name (a_name: like name) is
+	set_name (a_name: like name)
 			-- Set `name' with `a_name'.
 		do
 			name := a_name.twin
@@ -74,7 +74,7 @@ feature -- Element change
 			name_set: name.is_equal (a_name)
 		end
 
-	add_feature (a_feature: STRING) is
+	add_feature (a_feature: STRING)
 			-- Add `a_feature to `exported_features'.
 		require
 			non_void_feature: a_feature /= Void
@@ -88,7 +88,7 @@ feature -- Element change
 invariant
 	non_void_features: exported_features /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

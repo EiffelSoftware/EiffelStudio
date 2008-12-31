@@ -1,4 +1,4 @@
-indexing
+note
 	description: "COM PARAMDESC structure"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_from_pointer (a_pointer: POINTER) is
+	make_from_pointer (a_pointer: POINTER)
 			-- Make from pointer.
 		do
 			make_by_pointer (a_pointer)
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_value: ECOM_PARAM_DESCEX is
+	default_value: ECOM_PARAM_DESCEX
 			--
 		require
 			has_fopt_and_fhasdefault (flags)
@@ -37,7 +37,7 @@ feature -- Access
 			create Result.make_from_pointer (ccom_paramdesc_default (item))
 		end
 
-	flags: INTEGER is
+	flags: INTEGER
 			-- Flags
 		do
 			Result := ccom_paramdesc_flags (item)
@@ -47,7 +47,7 @@ feature -- Access
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of PARAMDESC structure
 		do
 			Result := c_size_of_param_desc
@@ -55,24 +55,24 @@ feature -- Measurement
 
 feature {NONE} -- Externals
 
-	c_size_of_param_desc: INTEGER is
+	c_size_of_param_desc: INTEGER
 		external 
 			"C [macro %"E_paramdesc.h%"]"
 		alias
 			"sizeof(PARAMDESC)"
 		end
 
-	ccom_paramdesc_default (a_ptr: POINTER): POINTER is
+	ccom_paramdesc_default (a_ptr: POINTER): POINTER
 		external
 			"C [macro %"E_paramdesc.h%"]"
 		end
 
-	ccom_paramdesc_flags(a_ptr: POINTER): INTEGER is
+	ccom_paramdesc_flags(a_ptr: POINTER): INTEGER
 		external
 			"C [macro %"E_paramdesc.h%"]"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

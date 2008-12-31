@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Makefile generator."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -43,7 +43,7 @@ inherit
 
 feature -- Basic operations
 
-	generate (a_folder_name, a_library_name: STRING) is
+	generate (a_folder_name, a_library_name: STRING)
 			-- Generates `Makefile' in folder `a_folder_name'.
 		require
 			a_folder_name_attached: a_folder_name /= Void
@@ -90,7 +90,7 @@ feature -- Basic operations
 
 feature {NONE} -- Basic operations
 
-	make_file (a_file_list: LIST [STRING]; a_library_name, a_c_compiler: STRING; a_multi_threaded: BOOLEAN): STRING is
+	make_file (a_file_list: LIST [STRING]; a_library_name, a_c_compiler: STRING; a_multi_threaded: BOOLEAN): STRING
 			-- Makefile text.
 		require
 			a_file_list_attached: a_file_list /= Void
@@ -158,7 +158,7 @@ feature {NONE} -- Basic operations
 			valid_make_file: not Result.is_empty
 		end
 
-	save_file (a_content, a_file_name: STRING) is
+	save_file (a_content, a_file_name: STRING)
 			-- Save file with content `content' and file name `a_file_name'.
 		require
 			a_content_attached: a_content /= Void
@@ -208,7 +208,7 @@ feature {NONE} -- Query
 			not_result_is_empty: not Result.is_empty
 		end
 
-	lib_generation (a_library_name, a_obj_name, a_c_compiler: STRING): STRING is
+	lib_generation (a_library_name, a_obj_name, a_c_compiler: STRING): STRING
 			-- lib generation part of Makefile
 		require
 			a_library_name_attached: a_library_name /= Void
@@ -272,7 +272,7 @@ feature {NONE} -- Query
 			a_files_unmoved: a_files.cursor.is_equal (old a_files.cursor)
 		end
 
-	wobj_generation (a_files: LIST [STRING]): STRING is
+	wobj_generation (a_files: LIST [STRING]): STRING
 			-- String to generate wobj generation string.
 		require
 			a_files_attached: a_files /= Void
@@ -294,7 +294,7 @@ feature {NONE} -- Query
 			a_files_unmoved: a_files.cursor.is_equal (old a_files.cursor)
 		end
 
-	wobj_string (a_c_file_name: STRING): STRING is
+	wobj_string (a_c_file_name: STRING): STRING
 			-- String to generate wobj file.
 		require
 			a_c_file_name_attached: a_c_file_name /= Void
@@ -315,7 +315,7 @@ feature {NONE} -- Query
 			not_result_is_empty: not Result.is_empty
 		end
 
-	environment_set_string (a_compile: STRING): STRING is
+	environment_set_string (a_compile: STRING): STRING
 			-- Environment setting header
 		require
 			layout_defined: is_eiffel_layout_defined
@@ -341,7 +341,7 @@ feature {NONE} -- Constants
 	bcb_compiler: STRING = "bcb"
 			-- C compiler constants
 
-	makefile_macros_msc: STRING is
+	makefile_macros_msc: STRING =
 			-- Makefile macros for msc compiler
 		"CC = cl%N%
 		%OUTPUT_CMD = -Fo%N"
@@ -358,23 +358,23 @@ feature {NONE} -- Constants
 		%$(ISE_PLATFORM)\include%" -I%"%
 		%$(ISE_LIBRARY)\library\com\spec\windows\include%" "
 
-	msc_compiler_flags: STRING is
+	msc_compiler_flags: STRING =
 			-- Additional Borland C flags.
 			"-MT -W0 -Ox"
 
-	bcb_compiler_flags: STRING is
+	bcb_compiler_flags: STRING =
 			-- Additional Borland C flags.
 		"-w- -I%"%
 		%$(ISE_EIFFEL)\BCC55\include%" -L%"%
 		%$(ISE_EIFFEL)\BCC55\lib%""
 
-	workbench_prefix: STRING is "w";
+	workbench_prefix: STRING = "w";
 			-- Library workbench prefix
 
-	multi_threaded_suffix: STRING is "-mt";
+	multi_threaded_suffix: STRING = "-mt";
 			-- Multithreaded library name suffix
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

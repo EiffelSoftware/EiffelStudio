@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Wizard Automation Data Type names generator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Basic operations
 
-	process (an_automation_descriptor: WIZARD_AUTOMATION_DATA_TYPE_DESCRIPTOR; a_visitor: WIZARD_DATA_TYPE_VISITOR) is
+	process (an_automation_descriptor: WIZARD_AUTOMATION_DATA_TYPE_DESCRIPTOR; a_visitor: WIZARD_DATA_TYPE_VISITOR)
 			-- Process Automation Data Type
 		require
 			non_void_descriptor: an_automation_descriptor /= Void
@@ -156,7 +156,7 @@ feature -- Basic operations
 			set_visitor_atributes (a_visitor)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

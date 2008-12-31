@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Automatically initialize the C compiler"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialize
 
-	initialize (options: RESOURCE_TABLE; a_force_32bit: BOOLEAN) is
+	initialize (options: RESOURCE_TABLE; a_force_32bit: BOOLEAN)
 			-- Properly configure the C compiler.
 		require
 			options_not_void: options /= Void

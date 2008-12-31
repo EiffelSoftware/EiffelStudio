@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Objects that provide access to constants loaded from files.
 			Perform and desired constant redefinitions in this class.
@@ -19,46 +19,46 @@ inherit
 
 feature
 
-	copyright_text_directory: STRING is "texts"
+	copyright_text_directory: STRING = "texts"
 			-- Name of copyright texts directory.
 
-	current_directory: STRING is
+	current_directory: STRING
 			-- Current directory
 		once
 			Result := operating_environment.Current_directory_name_representation
 		end
 
-	separator: CHARACTER is
+	separator: CHARACTER
 			-- System seperator
 		once
 			Result := operating_environment.directory_separator
 		end
 
-	subfix: STRING is
+	subfix: STRING
 			-- Subfix of copyright texts file.
 		once
 			Result := ".cpr"
 		end
 
-	attaching_finished: STRING is
+	attaching_finished: STRING
 			-- Attaching finished.
 		once
 			Result := "Processing finished."
 		end
 
-	warning_missing_copyright_directory: STRING is
+	warning_missing_copyright_directory: STRING
 			-- Warning missing copyright directory
 		once
 			Result := "Copyright texts directory %"" + copyright_text_directory + "%" is missing at%N%"" + current_directory + "%" or its parents.%N"
 		end
 
-	warning_text_unsaved: STRING is
+	warning_text_unsaved: STRING
 			-- Warning text unsaved.
 		once
 			Result := "Text is unsaved.%NSave it now?"
 		end
 
-	instructions: STRING is
+	instructions: STRING
 			-- Instructions for the tool.
 		once
 			Result := "[
@@ -70,19 +70,19 @@ feature
 			]"
 		end
 
-	save_file_dialog_title: STRING is
+	save_file_dialog_title: STRING
 			-- Texts for save file dialog title.
 		once
 			Result := "Save As..."
 		end
 
-	choose_dirs_dialog_title: STRING is
+	choose_dirs_dialog_title: STRING
 			-- Texts for choose directories title.
 		once
 			Result := "Select directories to attach copyright infomation"
 		end
 
-	top_index_insert_strings: HASH_TABLE [STRING, STRING] is
+	top_index_insert_strings: HASH_TABLE [STRING, STRING]
 			-- Texts inserts to top index.
 		once
 			create Result.make (2)
@@ -90,7 +90,7 @@ feature
 			Result.put ("%"See notice at end of class.%"", "legal")
 		end
 
-	file_can_not_parse_string (a_file_path: STRING): STRING is
+	file_can_not_parse_string (a_file_path: STRING): STRING
 			--
 		require
 			a_file_path_attached: a_file_path /= Void
@@ -98,7 +98,7 @@ feature
 			Result := "Not processed because of failure of parsing. "
 		end
 
-	file_post_parsing_failed (a_file_path: STRING): STRING is
+	file_post_parsing_failed (a_file_path: STRING): STRING
 			--
 		require
 			a_file_path_attached: a_file_path /= Void
@@ -106,7 +106,7 @@ feature
 			Result := "File post parsing failed. "
 		end
 
-	top_index_inserted_string (a_file_path: STRING): STRING is
+	top_index_inserted_string (a_file_path: STRING): STRING
 			--
 		require
 			a_file_path_attached: a_file_path /= Void
@@ -114,7 +114,7 @@ feature
 			Result := "Top indexing was inserted. "
 		end
 
-	top_index_modified_string (a_file_path: STRING): STRING is
+	top_index_modified_string (a_file_path: STRING): STRING
 			--
 		require
 			a_file_path_attached: a_file_path /= Void
@@ -122,7 +122,7 @@ feature
 			Result := "Top indexing was modified. "
 		end
 
-	bottom_index_inserted_string (a_file_path: STRING): STRING is
+	bottom_index_inserted_string (a_file_path: STRING): STRING
 			--
 		require
 			a_file_path_attached: a_file_path /= Void
@@ -130,7 +130,7 @@ feature
 			Result := "Bottom indexing was inserted. "
 		end
 
-	bottom_index_replaced_string (a_file_path: STRING): STRING is
+	bottom_index_replaced_string (a_file_path: STRING): STRING
 			--
 		require
 			a_file_path_attached: a_file_path /= Void
@@ -138,7 +138,7 @@ feature
 			Result := "Bottom indexing was replaced. "
 		end
 
-	end_class_comments_removed_string (a_file_path: STRING): STRING is
+	end_class_comments_removed_string (a_file_path: STRING): STRING
 			--
 		require
 			a_file_path_attached: a_file_path /= Void
@@ -146,7 +146,7 @@ feature
 			Result := "Copyright information after the class was removed. "
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

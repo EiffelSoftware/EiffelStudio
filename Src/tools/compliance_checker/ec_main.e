@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		STA/MTA application entry point, required for .NET on Windows 2000.
 	]"
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Launch application in default thread apartment.
 		local
 			l_app: EC_APPLICATION
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			create l_app.make_and_launch
 		end
 
-	make_sta is
+	make_sta
 			-- Launch application in a STA.
 		local
 			l_thread: SYSTEM_THREAD
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 		
 feature {NONE} -- Implementation
 
-	add_arguments is
+	add_arguments
 			-- Add first argument as assembly file name and all others as reference paths
 		local
 			l_args: like arguments
@@ -72,7 +72,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	arguments: ARGUMENTS is
+	arguments: ARGUMENTS
 			-- Application arguments
 		once
 			create Result
@@ -80,7 +80,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

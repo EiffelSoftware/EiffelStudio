@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that generate component registration code"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,33 +20,33 @@ feature -- Access
 	c_writer: WIZARD_WRITER_C_FILE
 			-- Writer of C file.
 
-	ccom_dll_register_server_function: STRING is "ccom_dll_register_server_function"
+	ccom_dll_register_server_function: STRING = "ccom_dll_register_server_function"
 			-- Used for code generation.
 
-	ccom_dll_unregister_server_function: STRING is "ccom_dll_unregister_server_function"
+	ccom_dll_unregister_server_function: STRING = "ccom_dll_unregister_server_function"
 			-- Used for code generation.
 
-	ccom_dll_get_class_object_function: STRING is "ccom_dll_get_class_object_function"
+	ccom_dll_get_class_object_function: STRING = "ccom_dll_get_class_object_function"
 			-- Used for code generation.
 
-	ccom_dll_can_unload_now_function: STRING is "ccom_dll_can_unload_now_function"
+	ccom_dll_can_unload_now_function: STRING = "ccom_dll_can_unload_now_function"
 			-- Used for code generation.
 
-	Ccom_initialize_com_function: STRING is "ccom_initialize_com_function"
+	Ccom_initialize_com_function: STRING = "ccom_initialize_com_function"
 			-- Used for code generation.
 
-	Ccom_cleanup_com_function: STRING is "ccom_cleanup_com_function"
+	Ccom_cleanup_com_function: STRING = "ccom_cleanup_com_function"
 			-- Used for code generation.
 
-	Ccom_register_server_function: STRING is "ccom_register_server_function"
+	Ccom_register_server_function: STRING = "ccom_register_server_function"
 			-- Used for code generation.
 
-	Ccom_unregister_server_function: STRING is "ccom_unregister_server_function"
+	Ccom_unregister_server_function: STRING = "ccom_unregister_server_function"
 			-- Used for code generation.
 
 feature -- Basic operations
 
-	generate is
+	generate
 			-- Generate Registration code.
 		local
 			l_body: STRING
@@ -161,7 +161,7 @@ feature -- Basic operations
 			c_writer.save_header_file (Shared_file_name_factory.last_created_header_file_name)
 		end
 
-	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY) is
+	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY)
 			-- Create file name.
 		do
 			a_factory.process_registration_code
@@ -183,7 +183,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Implementation
 
-	ccom_initialize_com_feature: WIZARD_WRITER_C_FUNCTION is
+	ccom_initialize_com_feature: WIZARD_WRITER_C_FUNCTION
 			-- Administration function to register class object.
 			-- Only generated if is outproc server.
 		local
@@ -237,10 +237,10 @@ feature {NONE} -- Implementation
 			Result.set_body (l_body)
 		end
 
-	ccom_initialize_com_macro: STRING is "#define ccom_initialize_com (ccom_initialize_com_function())"
+	ccom_initialize_com_macro: STRING = "#define ccom_initialize_com (ccom_initialize_com_function())"
 			-- Macro for `ccom_initialize_com' function.
 
-	ccom_cleanup_com_feature: WIZARD_WRITER_C_FUNCTION is
+	ccom_cleanup_com_feature: WIZARD_WRITER_C_FUNCTION
 			-- Administration function to unregister class object.
 			-- Only generated if is outproc server.
 		local
@@ -271,10 +271,10 @@ feature {NONE} -- Implementation
 			Result.set_body (l_body)
 		end
 
-	ccom_cleanup_com_macro: STRING is "#define ccom_cleanup_com (ccom_cleanup_com_function())"
+	ccom_cleanup_com_macro: STRING = "#define ccom_cleanup_com (ccom_cleanup_com_function())"
 			-- Macro for `ccom_cleanup_com' function.
 
-	ccom_unregserver_feature: WIZARD_WRITER_C_FUNCTION is
+	ccom_unregserver_feature: WIZARD_WRITER_C_FUNCTION
 			-- Administration function to register or unregister server
 			-- Only generated if is outproc server
 		local
@@ -292,10 +292,10 @@ feature {NONE} -- Implementation
 			Result.set_body (l_body)
 		end
 
-	ccom_unregserver_macro: STRING is "#define ccom_unregister_server (ccom_unregister_server_function())"
+	ccom_unregserver_macro: STRING = "#define ccom_unregister_server (ccom_unregister_server_function())"
 			-- Macro for `ccom_unregister_server' function.
 
-	ccom_regserver_feature: WIZARD_WRITER_C_FUNCTION is
+	ccom_regserver_feature: WIZARD_WRITER_C_FUNCTION
 			-- Administration function to register or unregister server
 			-- Only generated if is outproc server
 		local
@@ -316,10 +316,10 @@ feature {NONE} -- Implementation
 			Result.set_body (l_body)
 		end
 
-	ccom_regserver_macro: STRING is "#define ccom_register_server (ccom_register_server_function())";
+	ccom_regserver_macro: STRING = "#define ccom_register_server (ccom_register_server_function())";
 			-- Macro for `ccom_register_server' function.
 
-	dll_get_class_object_feature: WIZARD_WRITER_C_FUNCTION is
+	dll_get_class_object_feature: WIZARD_WRITER_C_FUNCTION
 			-- DllGetClassObject code
 		local
 			l_body: STRING
@@ -360,7 +360,7 @@ feature {NONE} -- Implementation
 			Result.set_body (l_body)
 		end
 
-	exe_module_file_name_set_up: STRING is
+	exe_module_file_name_set_up: STRING
 			-- Code to set up module file name
 		once
 			create Result.make (200)
@@ -372,7 +372,7 @@ feature {NONE} -- Implementation
 			Result.append ("#endif")
 		end
 
-	dll_module_file_name_set_up: STRING is
+	dll_module_file_name_set_up: STRING
 			-- Code to set up module file name
 		once
 			create Result.make (200)
@@ -384,11 +384,11 @@ feature {NONE} -- Implementation
 			Result.append ("#endif")
 		end
 		
-	dll_get_class_object_macro: STRING is "#define ccom_dll_get_class_object(_arg1_, _arg2_, _arg3_) %
+	dll_get_class_object_macro: STRING = "#define ccom_dll_get_class_object(_arg1_, _arg2_, _arg3_) %
 											%(ccom_dll_get_class_object_function ((CLSID*)_arg1_, (IID*)_arg2_, (void**)_arg3_))"
 			-- Macro for `ccom_dll_get_class_object' function.
 
-	dll_register_server_feature: WIZARD_WRITER_C_FUNCTION is
+	dll_register_server_feature: WIZARD_WRITER_C_FUNCTION
 			-- DllRegisterServer
 		local
 			l_body: STRING
@@ -407,10 +407,10 @@ feature {NONE} -- Implementation
 			Result.set_body (l_body)
 		end
 
-	dll_register_server_macro: STRING is "#define ccom_dll_register_server (ccom_dll_register_server_function())"
+	dll_register_server_macro: STRING = "#define ccom_dll_register_server (ccom_dll_register_server_function())"
 			-- Macro for `ccom_dll_register_server' function.
 
-	dll_unregister_server_feature: WIZARD_WRITER_C_FUNCTION is
+	dll_unregister_server_feature: WIZARD_WRITER_C_FUNCTION
 			-- DllUnregisterServer
 		local
 			l_body: STRING
@@ -426,10 +426,10 @@ feature {NONE} -- Implementation
 			Result.set_body (l_body)
 		end
 
-	dll_unregister_server_macro: STRING is "#define ccom_dll_unregister_server (ccom_dll_unregister_server_function())";
+	dll_unregister_server_macro: STRING = "#define ccom_dll_unregister_server (ccom_dll_unregister_server_function())";
 			-- Macro for `ccom_dll_unregister_server' function.
 
-	dll_can_unload_now_feature: WIZARD_WRITER_C_FUNCTION is
+	dll_can_unload_now_feature: WIZARD_WRITER_C_FUNCTION
 			-- DllCanUnloadNow function
 		local
 			l_body: STRING
@@ -445,10 +445,10 @@ feature {NONE} -- Implementation
 			Result.set_body (l_body)
 		end
 
-	dll_can_unload_now_macro: STRING is "#define ccom_dll_can_unload_now (ccom_dll_can_unload_now_function())"
+	dll_can_unload_now_macro: STRING = "#define ccom_dll_can_unload_now (ccom_dll_can_unload_now_function())"
 			-- Macro for `ccom_dll_can_unload_now' function.
 
-	exe_lock_module_feature: WIZARD_WRITER_C_FUNCTION is
+	exe_lock_module_feature: WIZARD_WRITER_C_FUNCTION
 			-- Exe implementation of LockModule
 		do
 			create Result.make
@@ -460,7 +460,7 @@ feature {NONE} -- Implementation
 			Result.set_body ("%TCoAddRefServerProcess ();")
 		end
 
-	exe_unlock_module_feature: WIZARD_WRITER_C_FUNCTION is
+	exe_unlock_module_feature: WIZARD_WRITER_C_FUNCTION
 			-- Exe implementation of UnlockModule
 		do
 			create Result.make
@@ -471,7 +471,7 @@ feature {NONE} -- Implementation
 			Result.set_body ("%Tif (CoReleaseServerProcess () == 0)%N%T%TPostThreadMessage (threadID, WM_QUIT, 0, 0);")
 		end
 
-	dll_unlock_module_feature: WIZARD_WRITER_C_FUNCTION is
+	dll_unlock_module_feature: WIZARD_WRITER_C_FUNCTION
 			-- DLL implementation of UnlockModule
 		do
 			create Result.make
@@ -482,7 +482,7 @@ feature {NONE} -- Implementation
 			Result.set_body ("%TInterlockedDecrement (&lock_count);")
 		end
 
-	dll_lock_module_feature: WIZARD_WRITER_C_FUNCTION is
+	dll_lock_module_feature: WIZARD_WRITER_C_FUNCTION
 			-- DLL implementation of LockModule
 		do
 			create Result.make
@@ -493,7 +493,7 @@ feature {NONE} -- Implementation
 			Result.set_body ("%TInterlockedIncrement (&lock_count);")
 		end
 
-	unregister_feature: WIZARD_WRITER_C_FUNCTION is
+	unregister_feature: WIZARD_WRITER_C_FUNCTION
 			-- Code to unregister server/component
 		local
 			l_body: STRING
@@ -517,7 +517,7 @@ feature {NONE} -- Implementation
 			Result.set_body (l_body)
 		end
 
-	register_feature: WIZARD_WRITER_C_FUNCTION is
+	register_feature: WIZARD_WRITER_C_FUNCTION
 			-- Code to register server
 		local
 			l_body: STRING
@@ -556,10 +556,10 @@ feature {NONE} -- Implementation
 			Result.set_body (l_body)
 		end
 
-	entries_count: STRING is "const int com_entries_count = sizeof (reg_entries)/sizeof (*reg_entries);"
+	entries_count: STRING = "const int com_entries_count = sizeof (reg_entries)/sizeof (*reg_entries);"
 			-- Entries count
 
-	dll_specific_registry_entries: STRING is
+	dll_specific_registry_entries: STRING
 			-- Dll specific registry entries
 		require
 			non_void_guid: coclass_guid /= Void
@@ -577,7 +577,7 @@ feature {NONE} -- Implementation
 			Result.append (struct_creator (tchar_creator (l_entry), tchar_creator ("ThreadingModel"), tchar_creator ("Apartment"), "TRUE"))
 		end
 
-	application_specific_registry_entries: STRING is 
+	application_specific_registry_entries: STRING 
 			-- Application specific registry entries
 		require
 			non_void_guid: coclass_guid /= Void
@@ -624,7 +624,7 @@ feature {NONE} -- Implementation
 			Result.append (struct_creator (tchar_creator (l_string_one), tchar_creator ("AppID"), tchar_creator (coclass_guid), "TRUE"))
 		end
 
-	tchar_creator (value: STRING): STRING is
+	tchar_creator (value: STRING): STRING
 			-- Tchar creator __TEXT("value")
 		require
 			non_void_string: value /= Void
@@ -635,7 +635,7 @@ feature {NONE} -- Implementation
 			Result.append ("%")")
 		end
 
-	registry_entries_data: STRING is
+	registry_entries_data: STRING
 			-- Registry entries for both dll and application
 		local
 			l_string_one, l_string_two: STRING
@@ -740,7 +740,7 @@ feature {NONE} -- Implementation
 			Result.append ("%N};")
 		end
 
-	universal_marshaling_registration_code: STRING is
+	universal_marshaling_registration_code: STRING
 		require
 			non_void_descriptor: coclass_descriptor /= Void
 		local
@@ -758,7 +758,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	universal_marshaling_interface_registration_code (interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR): STRING is
+	universal_marshaling_interface_registration_code (interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR): STRING
 		require
 			non_void_descriptor: interface_descriptor /= Void
 		local
@@ -804,7 +804,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	standard_marshaling_registration_code: STRING is
+	standard_marshaling_registration_code: STRING
 			-- Registration code for standard marshalling
 		require
 			non_void_descriptor: coclass_descriptor /= Void
@@ -862,7 +862,7 @@ feature {NONE} -- Implementation
 			Result.append (struct_creator (tchar_creator (l_one), tchar_creator ("ThreadingModel"), tchar_creator ("Both"), "TRUE"))
 		end
 
-	standard_marshaling_interface_registration_code (interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR): STRING is
+	standard_marshaling_interface_registration_code (interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR): STRING
 			-- Registration code for interface
 		require
 			non_void_descriptor: interface_descriptor /= Void
@@ -908,7 +908,7 @@ feature {NONE} -- Implementation
 			end
 		end
 	
-	struct_creator (first_field, second_field, third_field, forth_field: STRING): STRING is
+	struct_creator (first_field, second_field, third_field, forth_field: STRING): STRING
 			-- Reg data struct creator
 		do
 			create Result.make (10000)
@@ -923,7 +923,7 @@ feature {NONE} -- Implementation
 			Result.append ("%N%T}")
 		end
 
-	reg_data_struct: STRING is
+	reg_data_struct: STRING
 			-- Structure code
 			-- Use add_other
 		once
@@ -935,13 +935,13 @@ feature {NONE} -- Implementation
 			Result.append ("BOOL pDelOnUnregister;%N};")
 		end
 
-	hInstance_set_up: STRING is
+	hInstance_set_up: STRING
 			-- Set up hInstance
 		once
 			Result := "RT_LNK HINSTANCE eif_hInstance;%N"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

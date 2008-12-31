@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class FINISH_FREEZING
@@ -21,7 +21,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Creation
 		local
 			l_parser: ARGUMENT_PARSER
@@ -34,7 +34,7 @@ feature -- Initialization
 			l_parser.execute (agent start (l_parser))
 		end
 
-	start (a_parser: ARGUMENT_PARSER) is
+	start (a_parser: ARGUMENT_PARSER)
 		require
 			a_parser_attached: a_parser /= Void
 		local
@@ -161,12 +161,12 @@ feature -- Access
 	translator: MAKEFILE_TRANSLATOR
 			-- used to translate Makefile.SH into Makefile
 
-	env: EXECUTION_ENVIRONMENT is
+	env: EXECUTION_ENVIRONMENT
 		once
 			create Result
 		end
 
-	c_compilation_error: BOOLEAN is
+	c_compilation_error: BOOLEAN
 			-- check if the c-compilation went ok
 		local
 			completed: PLAIN_TEXT_FILE
@@ -191,7 +191,7 @@ feature {NONE} -- Basic operations
 
 feature -- Implementation
 
-	read_options_in (a_options: RESOURCE_TABLE) is
+	read_options_in (a_options: RESOURCE_TABLE)
 			-- read options from config.eif
 		require
 			a_options_not_void: a_options /= Void
@@ -235,7 +235,7 @@ feature {NONE} -- Externals
 			"THREAD_PRIORITY_BELOW_NORMAL"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

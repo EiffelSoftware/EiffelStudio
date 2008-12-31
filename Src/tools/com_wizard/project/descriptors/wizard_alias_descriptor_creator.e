@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Creator of Alias Descriptor"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,7 +30,7 @@ inherit
 
 feature -- Basic operations
 
-	create_descriptor (a_documentation: ECOM_DOCUMENTATION; a_type_info: ECOM_TYPE_INFO): WIZARD_ALIAS_DESCRIPTOR is
+	create_descriptor (a_documentation: ECOM_DOCUMENTATION; a_type_info: ECOM_TYPE_INFO): WIZARD_ALIAS_DESCRIPTOR
 			-- Create descriptor.
 		require
 			valid_documentation: a_documentation /= Void and then
@@ -90,7 +90,7 @@ feature -- Basic operations
 			valid_descriptor: Result /= Void
 		end
 
-	initialize_descriptor (a_descriptor: WIZARD_ALIAS_DESCRIPTOR) is
+	initialize_descriptor (a_descriptor: WIZARD_ALIAS_DESCRIPTOR)
 				-- Initialize `a_descriptor' attributes
 			require
 				valid_descriptor: a_descriptor /= Void
@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 	type_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR;
 			-- Description of data type to which this type is alias
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

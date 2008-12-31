@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Structure descriptor"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE}-- Initialization
 
-	make (a_creator: WIZARD_RECORD_DESCRIPTOR_CREATOR) is
+	make (a_creator: WIZARD_RECORD_DESCRIPTOR_CREATOR)
 			-- Initialize `fields'
 			-- and `eiffel_class_name'
 		require
@@ -46,7 +46,7 @@ feature -- Access
 	is_union: BOOLEAN
 			-- Is union?
 
-	creation_message: STRING is
+	creation_message: STRING
 			-- Creation message used for wizard output
 		local
 			l_description: STRING
@@ -82,7 +82,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	set_fields (some_fields: SORTED_TWO_WAY_LIST [WIZARD_RECORD_FIELD_DESCRIPTOR]) is
+	set_fields (some_fields: SORTED_TWO_WAY_LIST [WIZARD_RECORD_FIELD_DESCRIPTOR])
 			-- Set `fields' with `some_fields'.
 		require
 			valid_fields: some_fields /= Void
@@ -92,7 +92,7 @@ feature -- Basic operations
 			valid_fields: fields /= Void and fields = some_fields
 		end
 
-	set_size (a_size: like size_of_instance) is
+	set_size (a_size: like size_of_instance)
 			-- Set `size_of_instance' with `a_size'.
 		do
 			size_of_instance := a_size
@@ -100,7 +100,7 @@ feature -- Basic operations
 			valid_size: size_of_instance = a_size
 		end
 
-	set_type_library (a_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR) is
+	set_type_library (a_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR)
 			-- Set `type_library_descriptor' with `a_descriptor'
 		require
 			non_void_descriptor: a_descriptor /= Void
@@ -110,7 +110,7 @@ feature -- Basic operations
 			valid_type_library: type_library_descriptor = a_descriptor
 		end
 
-	set_is_union (a_boolean: BOOLEAN) is
+	set_is_union (a_boolean: BOOLEAN)
 			-- Set `is_union' with `a_boolean'.
 		do
 			is_union := a_boolean
@@ -118,13 +118,13 @@ feature -- Basic operations
 			valid_is_union: is_union = a_boolean
 		end
 
-	visit (a_visitor: WIZARD_TYPE_VISITOR) is
+	visit (a_visitor: WIZARD_TYPE_VISITOR)
 			-- Call back `a_visitor' with appropriate feature.
 		do
 			a_visitor.process_record (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Source interface C client generator."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -26,7 +26,7 @@ create
 
 feature -- Initialization
 
-	generate (a_interface: WIZARD_INTERFACE_DESCRIPTOR; a_writer: WIZARD_WRITER_CPP_CLASS) is
+	generate (a_interface: WIZARD_INTERFACE_DESCRIPTOR; a_writer: WIZARD_WRITER_CPP_CLASS)
 			-- Generate connection points features.
 		do
 			a_writer.add_import (a_interface.c_definition_header_file_name)
@@ -37,7 +37,7 @@ feature -- Initialization
 
 feature -- Basic operations
 
-	enable_routine (a_interface: WIZARD_INTERFACE_DESCRIPTOR): WIZARD_WRITER_C_FUNCTION is
+	enable_routine (a_interface: WIZARD_INTERFACE_DESCRIPTOR): WIZARD_WRITER_C_FUNCTION
 			-- Enable call back routine.
 		require
 			non_void_interface: a_interface /= Void
@@ -63,7 +63,7 @@ feature -- Basic operations
 			valid_routine: Result.can_generate
 		end
 
-	enable_body (a_interface: WIZARD_INTERFACE_DESCRIPTOR): STRING is
+	enable_body (a_interface: WIZARD_INTERFACE_DESCRIPTOR): STRING
 			-- Body of enable call back routine.
 		require
 			non_void_interface: a_interface /= Void
@@ -119,7 +119,7 @@ feature -- Basic operations
 			valid_body: not Result.is_empty
 		end
 
-	disable_routine (a_interface: WIZARD_INTERFACE_DESCRIPTOR): WIZARD_WRITER_C_FUNCTION is
+	disable_routine (a_interface: WIZARD_INTERFACE_DESCRIPTOR): WIZARD_WRITER_C_FUNCTION
 			-- Disable call back routine.
 		require
 			non_void_interface: a_interface /= Void
@@ -137,7 +137,7 @@ feature -- Basic operations
 			valid_routine: Result.can_generate
 		end
 
-	disable_body (a_interface: WIZARD_INTERFACE_DESCRIPTOR): STRING is
+	disable_body (a_interface: WIZARD_INTERFACE_DESCRIPTOR): STRING
 			-- Body of disable call back routine.
 		require
 			non_void_interface: a_interface /= Void
@@ -189,7 +189,7 @@ feature -- Basic operations
 			valid_body: not Result.is_empty
 		end
 
-	cookie_member (a_interface: WIZARD_INTERFACE_DESCRIPTOR): WIZARD_WRITER_C_MEMBER is
+	cookie_member (a_interface: WIZARD_INTERFACE_DESCRIPTOR): WIZARD_WRITER_C_MEMBER
 			-- Call back interface cookie member.
 		require
 			non_void_interface: a_interface /= Void
@@ -206,7 +206,7 @@ feature -- Basic operations
 			valid_member: Result.can_generate
 		end
 
-	cookie_name (a_interface: WIZARD_INTERFACE_DESCRIPTOR):STRING is
+	cookie_name (a_interface: WIZARD_INTERFACE_DESCRIPTOR):STRING
 			-- Name of cookie member.
 		require
 			non_void_interface: a_interface /= Void
@@ -221,7 +221,7 @@ feature -- Basic operations
 			valid_name: not Result.is_empty
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

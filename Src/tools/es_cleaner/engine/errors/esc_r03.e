@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Restoration error indicating that a the configuration data could not be restored from a backup file.
 	]"
@@ -20,7 +20,7 @@ feature {NONE} -- Implementation
 
 	dollar_description: STRING = "Unable to restore configuration data from the backup file '{1}'."
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

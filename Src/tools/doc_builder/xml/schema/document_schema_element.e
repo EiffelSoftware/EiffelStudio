@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Schema element."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ create
 	
 feature -- Initialization
 
-	make_from_element (element: XML_XML_SCHEMA_ELEMENT; schema: DOCUMENT_SCHEMA) is
+	make_from_element (element: XML_XML_SCHEMA_ELEMENT; schema: DOCUMENT_SCHEMA)
 			-- Make from 'element'
 		require
 			element_not_void: element /= Void
@@ -28,7 +28,7 @@ feature -- Initialization
 			initialize (schema, element.schema_type)
 		end
 		
-	make_from_type (a_type: XML_XML_SCHEMA_TYPE; schema: DOCUMENT_SCHEMA) is
+	make_from_type (a_type: XML_XML_SCHEMA_TYPE; schema: DOCUMENT_SCHEMA)
 			-- Make from 'type'
 		require
 			type_not_void: a_type /= Void
@@ -41,7 +41,7 @@ feature -- Initialization
 			initialize (schema, a_type)
 		end
 		
-	initialize (schema: DOCUMENT_SCHEMA; a_type: XML_XML_SCHEMA_TYPE) is
+	initialize (schema: DOCUMENT_SCHEMA; a_type: XML_XML_SCHEMA_TYPE)
 			-- Initialization
 		require
 			schema_not_void: schema /= Void
@@ -59,13 +59,13 @@ feature -- Query
 	is_schema_type: BOOLEAN
 			-- Is Current a schema type?
 		
-	is_complex_particle: BOOLEAN is
+	is_complex_particle: BOOLEAN
 			-- Is Current a particle type (sequence, choice, all groupref, element, any)
 		do
 			Result := complex_type.particle /= Void
 		end
 	
-	is_group: BOOLEAN is
+	is_group: BOOLEAN
 			-- Is Current a group type (all, sequence, choice)
 		require
 			is_complex_particle
@@ -73,7 +73,7 @@ feature -- Query
 			Result := is_all or is_choice or is_sequence
 		end
 	
-	is_all: BOOLEAN is
+	is_all: BOOLEAN
 			-- An all particle?
 		require
 			is_complex_particle
@@ -84,7 +84,7 @@ feature -- Query
 			Result := l_all /= Void
 		end
 		
-	is_sequence: BOOLEAN is
+	is_sequence: BOOLEAN
 			-- An sequence particle?
 		require
 			is_complex_particle
@@ -95,7 +95,7 @@ feature -- Query
 			Result := l_sequence /= Void
 		end
 		
-	is_choice: BOOLEAN is
+	is_choice: BOOLEAN
 			-- An choice particle?
 		require
 			is_complex_particle
@@ -106,25 +106,25 @@ feature -- Query
 			Result := l_choice /= Void
 		end	
 			
-	is_type: BOOLEAN is
+	is_type: BOOLEAN
 			-- Is Current a complex OR simple type?
 		do
 			Result := is_complex_type or is_simple_type
 		end
 			
-	is_complex_type: BOOLEAN is
+	is_complex_type: BOOLEAN
 			-- Is current a complex type?
 		do
 			Result := complex_type /= Void
 		end
 		
-	is_simple_type: BOOLEAN is
+	is_simple_type: BOOLEAN
 			-- Is current a simple type?
 		do
 			Result := simple_type /= Void
 		end	
 	
-	has_complex_content_model: BOOLEAN is
+	has_complex_content_model: BOOLEAN
 			-- Does current, being a complex type, have a complex content model?
 		require
 			is_complex_type
@@ -135,7 +135,7 @@ feature -- Query
 			Result := model /= Void
 		end
 		
-	has_simple_content_model: BOOLEAN is
+	has_simple_content_model: BOOLEAN
 			-- Does current, being a complex type, have a simple content model?
 		require
 			is_simple_type
@@ -146,7 +146,7 @@ feature -- Query
 			Result := model /= Void
 		end
 		
-	derives_by_restriction: BOOLEAN is
+	derives_by_restriction: BOOLEAN
 			-- Does current derive by restriction?
 		require
 			is_complex_type
@@ -158,7 +158,7 @@ feature -- Query
 			Result := restriction_type /= Void
 		end
 	
-	derives_by_extension: BOOLEAN is
+	derives_by_extension: BOOLEAN
 			-- Does current derive by extension?
 		require
 			is_complex_type
@@ -170,7 +170,7 @@ feature -- Query
 			Result := extension_type /= Void
 		end
 	
-	group_base: XML_XML_SCHEMA_GROUP_BASE is
+	group_base: XML_XML_SCHEMA_GROUP_BASE
 			-- The group base of current (all, sequence or choice)
 		require
 			is_group
@@ -178,7 +178,7 @@ feature -- Query
 			Result ?= particle
 		end		
 	
-	child_element_by_name (el_name: STRING): DOCUMENT_SCHEMA_ELEMENT is
+	child_element_by_name (el_name: STRING): DOCUMENT_SCHEMA_ELEMENT
 			-- Get a schema element with name `el_name'.  It may be Current,
 			-- a child of Current, or Void
 		require
@@ -211,7 +211,7 @@ feature -- Access
 	annotation: STRING
 			-- Annotation string of Current, if any
 	
-	type_name: STRING is
+	type_name: STRING
 			-- Type name
 		local
 			l_type: XML_XML_SCHEMA_TYPE
@@ -240,7 +240,7 @@ feature -- Access
 			end
 		end
 
-	particle: XML_XML_SCHEMA_PARTICLE is
+	particle: XML_XML_SCHEMA_PARTICLE
 			-- Particle or Current
 		require
 			is_complex_type
@@ -249,7 +249,7 @@ feature -- Access
 			Result := complex_type.particle
 		end
 
-	type: XML_XML_SCHEMA_TYPE is
+	type: XML_XML_SCHEMA_TYPE
 			-- Type
 		do
 			if complex_type /= Void then
@@ -265,7 +265,7 @@ feature -- Access
 	simple_type: XML_XML_SCHEMA_SIMPLE_TYPE
 			-- Simple Type of Current
 	
-	complex_content_model: XML_XML_SCHEMA_COMPLEX_CONTENT is
+	complex_content_model: XML_XML_SCHEMA_COMPLEX_CONTENT
 			-- The complex content model of 'complex_type'
 		require
 			has_complex_content_model
@@ -273,7 +273,7 @@ feature -- Access
 			Result ?= complex_type.content_model
 		end
 	
-	simple_content_model: XML_XML_SCHEMA_SIMPLE_CONTENT is
+	simple_content_model: XML_XML_SCHEMA_SIMPLE_CONTENT
 			-- The simple content model of 'complex_type'
 		require
 			has_simple_content_model
@@ -281,7 +281,7 @@ feature -- Access
 			Result ?= complex_type.content_model
 		end
 		
-	restriction_content_model: XML_XML_SCHEMA_COMPLEX_CONTENT_RESTRICTION is
+	restriction_content_model: XML_XML_SCHEMA_COMPLEX_CONTENT_RESTRICTION
 			-- The restricted content model of 'complex_type'
 		require
 			derives_by_restriction
@@ -289,7 +289,7 @@ feature -- Access
 			Result ?= complex_content_model.content
 		end
 	
-	extension_content_model: XML_XML_SCHEMA_COMPLEX_CONTENT_EXTENSION is
+	extension_content_model: XML_XML_SCHEMA_COMPLEX_CONTENT_EXTENSION
 			-- The extended content model of 'complex_type'
 		require
 			derives_by_extension
@@ -302,7 +302,7 @@ feature -- Elements
 	children: ARRAYED_LIST [like Current]
 			-- Children elements
 	
-	type_children: ARRAYED_LIST [like Current] is
+	type_children: ARRAYED_LIST [like Current]
 			-- Children elements of Current as type
 		local
 			l_name: STRING
@@ -319,7 +319,7 @@ feature -- Elements
 	attributes: ARRAYED_LIST [DOCUMENT_SCHEMA_ATTRIBUTE]
 			-- Attributes
 	
-	xml: STRING is
+	xml: STRING
 			-- Xml of current element (includes required child
 			-- elements)
 		local
@@ -364,7 +364,7 @@ feature -- Elements
 			end	
 		end		
 	
-	attribute_xml: STRING is
+	attribute_xml: STRING
 			-- Xml for attribute values
 		do
 			create Result.make_empty
@@ -393,7 +393,7 @@ feature {DOCUMENT_SCHEMA} -- Implementation
 
 	schema_document: DOCUMENT_SCHEMA
 
-	parent_type_names: ARRAYED_LIST [STRING] is
+	parent_type_names: ARRAYED_LIST [STRING]
 			-- List of parent types names used for traversal
 		once
 			create Result.make (5)
@@ -402,7 +402,7 @@ feature {DOCUMENT_SCHEMA} -- Implementation
 
 feature -- Status Setting
 
-	add_attributes (atts: ARRAYED_LIST [DOCUMENT_SCHEMA_ATTRIBUTE]) is
+	add_attributes (atts: ARRAYED_LIST [DOCUMENT_SCHEMA_ATTRIBUTE])
 			-- Append `atts' to `attributes'
 		do
 			attributes.append (atts)
@@ -410,7 +410,7 @@ feature -- Status Setting
 
 feature -- Processing
 
-	process_attributes is
+	process_attributes
 			-- Process attributes of current
 		do
 			create attributes.make (5)
@@ -428,7 +428,7 @@ feature -- Processing
 
 feature {NONE} -- Processing
 
-	process_annotation is
+	process_annotation
 			-- Extract annotation from Current for help purposes
 		do
 			if internal_element /= Void then
@@ -445,7 +445,7 @@ feature {NONE} -- Processing
 			end
 		end		
 
-	process_children is
+	process_children
 			-- Process all children of Current
 		do
 			create children.make (5)
@@ -458,7 +458,7 @@ feature {NONE} -- Processing
 			end	
 		end		
 
-	process_as_complex_type is
+	process_as_complex_type
 			-- Process children from Current as complex type
 		do
 			if is_complex_particle then
@@ -468,7 +468,7 @@ feature {NONE} -- Processing
 			end	
 		end
 		
-	process_as_complex_particle is
+	process_as_complex_particle
 			-- Process children from Current as complex type with particle (all, sequence, choice)
 		local
 			cnt: INTEGER
@@ -491,7 +491,7 @@ feature {NONE} -- Processing
 			end		
 		end
 		
-	process_as_complex_content_model is
+	process_as_complex_content_model
 			-- Process current as complex type with complex content model
 		local
 			elem: DOCUMENT_SCHEMA_ELEMENT
@@ -505,7 +505,7 @@ feature {NONE} -- Processing
 			end
 		end
 		
-	process_as_schema_type is
+	process_as_schema_type
 			-- Process Current as a schema type (string, anyURI, user defined types)
 		local
 			elem: DOCUMENT_SCHEMA_ELEMENT
@@ -523,7 +523,7 @@ feature {NONE} -- Processing
 			end
 		end	
 
-	extract_attributes (attribute_collection: XML_XML_SCHEMA_OBJECT_COLLECTION) is
+	extract_attributes (attribute_collection: XML_XML_SCHEMA_OBJECT_COLLECTION)
 			-- Extract attributes from 'attribute_collection' and put in 'attributes'
 		local
 			dotnet_att: XML_XML_SCHEMA_ATTRIBUTE
@@ -545,7 +545,7 @@ feature {NONE} -- Processing
 			end
 		end
 	
-	extract_annotation (annotation_collection: XML_XML_SCHEMA_OBJECT_COLLECTION) is
+	extract_annotation (annotation_collection: XML_XML_SCHEMA_OBJECT_COLLECTION)
 			-- Extract attributes from 'attribute_collection' and put in 'attributes'
 		local
 			dotnet_ann: XML_XML_SCHEMA_DOCUMENTATION
@@ -569,7 +569,7 @@ feature {NONE} -- Processing
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

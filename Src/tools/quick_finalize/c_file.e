@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature
 
-	read_all (input_string: STRING) is
+	read_all (input_string: STRING)
 		require else
 			is_readable: file_readable
 		local
@@ -32,12 +32,12 @@ feature
 			input_string.set_count (l_status);
 		end
 
-	fread (l_string: POINTER; l_size: INTEGER; l_count: INTEGER; l_file: POINTER): INTEGER is
+	fread (l_string: POINTER; l_size: INTEGER; l_count: INTEGER; l_file: POINTER): INTEGER
 		external
 			"C [macro %"stdio.h%"] (void *, size_t, size_t, FILE *): EIF_INTEGER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

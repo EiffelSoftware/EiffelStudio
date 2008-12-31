@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Preprocessor of Resource Analyzer"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature	-- Initialization
 
-	make (a_output_file: PLAIN_TEXT_FILE) is
+	make (a_output_file: PLAIN_TEXT_FILE)
 		require
 			a_output_file_not_void: a_output_file /= Void
 			a_output_file_exists: a_output_file.exists
@@ -44,7 +44,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_output_file (a_output_file: PLAIN_TEXT_FILE) is
+	set_output_file (a_output_file: PLAIN_TEXT_FILE)
 			-- Set `output_file' to `a_output_file'.
 		require
 			a_output_file_not_void: a_output_file /= Void
@@ -58,7 +58,7 @@ feature -- Element change
 
 feature -- Basic operations
 
-	convert_definition (input_file: STRING) is
+	convert_definition (input_file: STRING)
 			-- Scans input_file for "#define id integer" and puts them in output_file
 		require
 			input_file_not_Void: input_file /= Void
@@ -120,7 +120,7 @@ feature -- Basic operations
 
 feature -- Status report
 
-	file_exists (filename: STRING): BOOLEAN is
+	file_exists (filename: STRING): BOOLEAN
 			-- Check if a file with filename exists
 		require
 			filename_not_void: filename /= Void
@@ -133,7 +133,7 @@ feature -- Status report
 
 feature -- Implementation
 
-	scan_directives (a_file: PLAIN_TEXT_FILE) is
+	scan_directives (a_file: PLAIN_TEXT_FILE)
 			-- Scan a precompile directive in `a_file' if any to come
 		require
 			a_file_not_void: a_file /= Void
@@ -256,7 +256,7 @@ feature -- Implementation
 			end
 		end
 
-	extract_name (a_name: STRING): STRING is
+	extract_name (a_name: STRING): STRING
 			-- Extract the contained name of `a_name'.
 		require
 			a_name_exists: a_name /= Void and then a_name.count > 0 
@@ -268,7 +268,7 @@ feature -- Implementation
 			Result_exists: Result /= Void and then Result.count = a_name.count - 2
 		end
 
-	make_path (a_name: STRING): STRING is
+	make_path (a_name: STRING): STRING
 			-- Create a path to the file `a_name'.
 		require
 			a_name_exists: a_name /= Void and then a_name.count > 0 
@@ -282,12 +282,12 @@ feature -- Implementation
 			Result_exists: Result /= Void and then Result.count > 0
 		end
 
-	display_error is
+	display_error
 		do
 		end
 
 
-	read_comment (a_file: PLAIN_TEXT_FILE) is
+	read_comment (a_file: PLAIN_TEXT_FILE)
 			-- Read comment.
 		require
 			a_file_not_void: a_file /= Void
@@ -323,7 +323,7 @@ feature -- Implementation
 	actual_path: LINKED_STACK [STRING]
 			-- Stack.
 
-	include_path: STRING is
+	include_path: STRING
 		local
 			env: EXECUTION_ENVIRONMENT
 		once
@@ -331,7 +331,7 @@ feature -- Implementation
 			Result := env.get ("INCLUDE").twin
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

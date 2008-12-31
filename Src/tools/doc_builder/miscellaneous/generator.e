@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generator which uses a progress bar for progress report."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature -- Status Setting
 
-	set_title (a_title: STRING) is
+	set_title (a_title: STRING)
 			-- Set title
 		require
 			title_not_void: a_title /= Void
@@ -24,7 +24,7 @@ feature -- Status Setting
 			description_set: description = a_title
 		end		
 
-	set_procedure (a_procedure: PROCEDURE [ANY, TUPLE]) is
+	set_procedure (a_procedure: PROCEDURE [ANY, TUPLE])
 			-- Set procedure
 		require
 			procedure_not_void: a_procedure /= Void
@@ -34,7 +34,7 @@ feature -- Status Setting
 			procedure_set : generation_routine = a_procedure
 		end		
 
-	set_graphical_mode (a_flag: BOOLEAN) is
+	set_graphical_mode (a_flag: BOOLEAN)
 			-- Set graphical mode
 		do
 			graphical_mode := a_flag
@@ -42,7 +42,7 @@ feature -- Status Setting
 			mode_set: graphical_mode = a_flag
 		end		
 
-	set_heading_text (a_text: STRING) is
+	set_heading_text (a_text: STRING)
 			-- Change the current heading text to indicate precise nature
 			-- of present generation specific task
 		require
@@ -53,7 +53,7 @@ feature -- Status Setting
 			text_set: heading_text.is_equal (a_text)
 		end	
 
-	set_status_text (a_text: STRING) is
+	set_status_text (a_text: STRING)
 			-- Change the current status text to indicate precise nature
 			-- of present generation specific task
 		require
@@ -64,7 +64,7 @@ feature -- Status Setting
 			text_set: status_task_text.is_equal (a_text)
 		end		
 
-	set_upper_range (a_value: INTEGER) is
+	set_upper_range (a_value: INTEGER)
 			-- Set top range value
 		require
 			valid_value: a_value > 0
@@ -74,7 +74,7 @@ feature -- Status Setting
 			value_set: upper_range_value = a_value
 		end		
 
-	set_update_timer (an_interval: INTEGER) is
+	set_update_timer (an_interval: INTEGER)
 			-- Set update timer.  Call `reset_timer' to prevent timer
 			-- from firing when done.
 		require
@@ -84,7 +84,7 @@ feature -- Status Setting
 			timer.actions.extend (agent update_progress_report)
 		end		
 
-	reset_timer is
+	reset_timer
 			-- Reset `timer'
 		do
 			if timer /= Void then
@@ -92,7 +92,7 @@ feature -- Status Setting
 			end
 		end		
 
-	suppress_progress_bar (a_flag: BOOLEAN) is
+	suppress_progress_bar (a_flag: BOOLEAN)
 			-- Suppress the progress bar
 		do
 			show_bar := not a_flag
@@ -102,21 +102,21 @@ feature -- Status Setting
 
 feature -- Commands
 
-	display is
+	display
 			-- Display graphical widgets
 		do
 			build_interface
 			progress_dialog.show_relative_to_window (Application_window)	
 		end	
 		
-	close is
+	close
 			-- Close
 		do
 			progress_dialog.hide	
 			reset_timer
 		end		
 
-	generate is
+	generate
 			-- Run `generation_routine'.  Output stored in `last_output_report'
 		require
 			has_description: description /= Void
@@ -135,7 +135,7 @@ feature -- Commands
 			generation_finished
 		end		
 
-	update_progress_report is
+	update_progress_report
 			-- Update progress report
 		local
 			l_stat_text,
@@ -200,7 +200,7 @@ feature {NONE} -- Access
 	status_task_text: STRING
 			-- Text to indicate generation specific task information		
 
-	lower_range_value: INTEGER is 1
+	lower_range_value: INTEGER = 1
 			-- Lower range value for progress status reporting
 			
 	upper_range_value: INTEGER
@@ -214,13 +214,13 @@ feature {NONE} -- Graphical Components
 	graphical_mode: BOOLEAN
 			-- Is Current in graphical mode? (default: true)
 
-	progress_dialog: PROGRESS_DIALOG is
+	progress_dialog: PROGRESS_DIALOG
 			-- Progress status display dialog
 		once
 			create Result
 		end
 
-	build_interface is
+	build_interface
 			-- Build graphical representation of Current
 		require
 			in_graphical_mode: graphical_mode
@@ -234,7 +234,7 @@ feature {NONE} -- Graphical Components
 			end			
 		end	
 
-	redraw is
+	redraw
 			-- Redraw Current
 		do
 			(create {EV_ENVIRONMENT}).application.process_events
@@ -251,7 +251,7 @@ feature {NONE} -- Implementation
 	start_time: TIME
 			-- Start time of generation	
 
-	generation_finished is
+	generation_finished
 			-- Call to `generation_routine' is complete
 		local
 			l_interval: INTERVAL [TIME]
@@ -263,7 +263,7 @@ feature {NONE} -- Implementation
 			end
 		end	
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

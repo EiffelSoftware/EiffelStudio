@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Reader of Eiffel XML contract code file."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature -- Creation
 
-	make is
+	make
 			-- Create
 		do
 			make_filter
@@ -36,19 +36,19 @@ feature -- Creation
 
 feature -- Tag
 
-	on_start_tag (a_namespace, a_prefix, a_local_part: STRING) is
+	on_start_tag (a_namespace, a_prefix, a_local_part: STRING)
 			-- Start tag
 		do
 			element_stack.extend (a_local_part)					
 		end
 	
-	on_end_tag (a_namespace, a_prefix, a_local_part: STRING) is
+	on_end_tag (a_namespace, a_prefix, a_local_part: STRING)
 			-- End tag
 		do							
 			Element_stack.remove
 		end	
 		
-	on_content (a_content: STRING) is
+	on_content (a_content: STRING)
 			-- Content
 		local
 			l_content,
@@ -83,7 +83,7 @@ feature -- Access
 
 feature {NONE} -- Tag
 		
-	current_tag: STRING is
+	current_tag: STRING
 			-- Current tag
 		do
 			Result := element_stack.item
@@ -97,13 +97,13 @@ feature {NONE} -- Implementation
 	element_stack: ARRAYED_STACK [STRING]
 			-- Stack of element names
 			
-	anchor: TUPLE [STRING, STRING] is
+	anchor: TUPLE [STRING, STRING]
 			-- Anchor [feature name/title, location/href]
 		once
 			Result := ["", ""]
 		end
 			
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

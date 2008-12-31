@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Window that show orignal image."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialization
 		do
 			Precursor {EV_TITLED_WINDOW}
@@ -44,7 +44,7 @@ feature -- Access
 
 feature -- Change element
 
-	update_size is
+	update_size
 			--
 		local
 			p: like pixmap
@@ -55,7 +55,7 @@ feature -- Change element
 			end
 		end
 
-	set_pixmap (a_pixmap: like pixmap) is
+	set_pixmap (a_pixmap: like pixmap)
 			--Set `pixmap' with `a_pixmap'.
 		require
 			a_pixmap_attached: a_pixmap /= Void
@@ -67,7 +67,7 @@ feature -- Change element
 
 feature {NONE} -- Implementation
 
-	on_expose (a_x: INTEGER_32; a_y: INTEGER_32; a_width: INTEGER_32; a_height: INTEGER_32) is
+	on_expose (a_x: INTEGER_32; a_y: INTEGER_32; a_width: INTEGER_32; a_height: INTEGER_32)
 			-- Handle `drawing_area' expose actions.
 		do
 			drawing_area.clear
@@ -76,13 +76,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	request_close_window is
+	request_close_window
 			-- When closing.
 		do
 			hide
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

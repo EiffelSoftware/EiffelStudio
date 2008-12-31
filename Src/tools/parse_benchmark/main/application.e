@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Performs tests on the built-in Eiffel parser."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Creation procedure.
 		local
 			l_parser: ARGUMENT_PARSER
@@ -22,7 +22,7 @@ feature -- Initialization
 			l_parser.execute (agent start (l_parser))
 		end
 
-	start (a_parser: ARGUMENT_PARSER) is
+	start (a_parser: ARGUMENT_PARSER)
 			-- Starts application
 		require
 			a_parser_attached: a_parser /= Void
@@ -299,7 +299,7 @@ feature {NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	directory_content (a_dir: STRING; a_recurse: BOOLEAN): ARRAYED_LIST [STRING] is
+	directory_content (a_dir: STRING; a_recurse: BOOLEAN): ARRAYED_LIST [STRING]
 			-- Retrieves list of directory contents, and if `a_recurse' then all
 			-- subdirectory contents too.
 		require
@@ -394,7 +394,7 @@ feature {NONE} -- Internal implementation cache
 			-- Cached version of `parser_id_max_len'
 			-- Note: Do not use directly!
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

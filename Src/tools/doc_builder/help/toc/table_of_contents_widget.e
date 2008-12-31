@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tree Widget representing a table of contents."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 	
 feature -- Initialization
 
-	make (a_toc: TABLE_OF_CONTENTS) is
+	make (a_toc: TABLE_OF_CONTENTS)
 			-- Create
 		require
 			toc_not_void: a_toc /= Void
@@ -32,7 +32,7 @@ feature -- Initialization
 			has_toc: toc /= Void
 		end
 
-	initialize is
+	initialize
 			-- Initialize
 		local
 			l_node: TABLE_OF_CONTENTS_NODE
@@ -64,7 +64,7 @@ feature -- Access
 		
 feature -- Status Setting
 
-	set_modified (a_flag: BOOLEAN) is
+	set_modified (a_flag: BOOLEAN)
 			-- Set `modified' to `a_flag'
 		do
 			modified := a_flag
@@ -72,7 +72,7 @@ feature -- Status Setting
 
 feature -- Element Change
 
-	add_node (a_node: TABLE_OF_CONTENTS_WIDGET_NODE) is
+	add_node (a_node: TABLE_OF_CONTENTS_WIDGET_NODE)
 			-- Add new heading node
 		require
 			node_not_void: a_node /= Void
@@ -105,7 +105,7 @@ feature -- Element Change
 			set_modified (True)
 		end		
 
-	remove_node is
+	remove_node
 			-- Removed selected node
 		require
 			has_selected_item: selected_item /= Void
@@ -120,7 +120,7 @@ feature -- Element Change
 			end						
 		end		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

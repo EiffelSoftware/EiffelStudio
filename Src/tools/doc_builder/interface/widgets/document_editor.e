@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Notebook Editor for multiple document editing.  Notebook holds widgets%
 		%of type DOCUMENT_WIDGET, a composite widget class for DOCUMENTs."
 	legal: "See notice at end of class."
@@ -46,7 +46,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			--
 		do
 			default_create
@@ -58,14 +58,14 @@ feature -- Initialization
 			editor_drawing_area.drop_actions.extend (agent pebble_dropped)
 		end
 
-	update_observers is
+	update_observers
 			-- Update observers of text editing
 		do
 			add_edition_observer (shared_web_browser)
 			add_edition_observer (application_window)
 		end
 
-	handle_extended_key (ev_key: EV_KEY) is
+	handle_extended_key (ev_key: EV_KEY)
  			-- Process the push on an extended key.
 		local
 			l_cursor: TEXT_CURSOR
@@ -84,7 +84,7 @@ feature -- Initialization
 			end
 		end
 
-	handle_extended_ctrled_key (ev_key: EV_KEY) is
+	handle_extended_ctrled_key (ev_key: EV_KEY)
  			-- Process the push on Ctrl + an extended key.
 		do
 			inspect
@@ -108,7 +108,7 @@ feature -- Initialization
 			end
 		end
 
-	initialize_editor_context is
+	initialize_editor_context
 			-- Here initialize editor contextual settings.  For example, set location of cursor
 			-- pixmaps.
 		do
@@ -118,7 +118,7 @@ feature -- Initialization
 
 feature -- Editing		
 
-	pretty_print_text is
+	pretty_print_text
 			-- Pretty XML format the current document
 		do
 			if current_document /= Void then
@@ -132,7 +132,7 @@ feature -- Editing
 			end
 		end
 
-	pretty_format_code_text is
+	pretty_format_code_text
 			-- Pretty format the selected text as Eiffel code
 		local
 			l_code_formatter: CODE_FORMATTER
@@ -145,7 +145,7 @@ feature -- Editing
 			end
 		end
 
-	reference_window: EV_WINDOW is
+	reference_window: EV_WINDOW
 			--
 		once
 			Result := application_window
@@ -153,13 +153,13 @@ feature -- Editing
 
 feature -- Commands
 
-	update_date (a_date: INTEGER) is
+	update_date (a_date: INTEGER)
 			--
 		do
 			date_of_file_when_loaded := a_date
 		end
 
-	validate_document is
+	validate_document
 			-- Validate current document to loaded schema
 		do
 			if Shared_document_manager.has_schema then
@@ -176,7 +176,7 @@ feature -- Commands
 			end
 		end
 
-	validate_document_links is
+	validate_document_links
 			-- Validate current document links/hrefs
 		local
 			l_has_error: BOOLEAN
@@ -214,7 +214,7 @@ feature -- Commands
 			end
 		end
 
-	open_search_dialog is
+	open_search_dialog
 			-- Open the search dialog for text searching
 		do
 			if Shared_document_manager.has_open_document then
@@ -222,7 +222,7 @@ feature -- Commands
 			end
 		end
 
-	tag_selection (a_tag: STRING) is
+	tag_selection (a_tag: STRING)
 			-- Enclose `selected_text' in XML `a_tag'.  Eg, `some_text'
 			-- becomes '<a_tag>some_text</a_tag>'.  If there is no selection
 			-- just insert '<a_tag></a_tag>'.		
@@ -255,7 +255,7 @@ feature -- Commands
 
 feature -- Query				
 
-	clipboard_empty: BOOLEAN is
+	clipboard_empty: BOOLEAN
 			-- Is clipboard empty?
 		do
 			Result := clipboard.text.is_empty
@@ -263,7 +263,7 @@ feature -- Query
 
 feature -- Access
 
-	current_document: DOCUMENT is
+	current_document: DOCUMENT
 			-- Currently open document
 		do
 				-- TODO: Remove, make all call direct to manager
@@ -272,7 +272,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	xml_class: DOCUMENT_CLASS is
+	xml_class: DOCUMENT_CLASS
 			--
 			-- (export status {NONE})
 		local
@@ -283,7 +283,7 @@ feature {NONE} -- Implementation
 			create Result.make ("xml", "xml", l_file_name.string)
 		end
 
-	java_class: DOCUMENT_CLASS is
+	java_class: DOCUMENT_CLASS
 			--
 			-- (export status {NONE})
 		local
@@ -294,7 +294,7 @@ feature {NONE} -- Implementation
 			create Result.make ("java", "java", l_file_name.string)
 		end
 
-	unescape_content (a_content: STRING): STRING is
+	unescape_content (a_content: STRING): STRING
 			-- Content unescaped.
 		do
 			Result := a_content.twin
@@ -304,7 +304,7 @@ feature {NONE} -- Implementation
 
 feature -- Cursors
 
-	cur_cut_selection: EV_POINTER_STYLE is
+	cur_cut_selection: EV_POINTER_STYLE
 			-- Editor cut cursor icon
 		local
 			l_filename: FILE_NAME
@@ -317,7 +317,7 @@ feature -- Cursors
 			create Result.make_with_pixmap (l_pixmap, l_pixmap.width // 2, l_pixmap.height // 2)
 		end
 
-	cur_copy_selection: EV_POINTER_STYLE is
+	cur_copy_selection: EV_POINTER_STYLE
 			-- Editor copy cursor icon
 		local
 			l_filename: FILE_NAME
@@ -333,7 +333,7 @@ feature -- Cursors
 
 feature {NONE} -- Events
 
-	on_mouse_button_up (x_pos, y_pos, button: INTEGER; unused1,unused2,unused3: DOUBLE; unused4,unused5:INTEGER) is
+	on_mouse_button_up (x_pos, y_pos, button: INTEGER; unused1,unused2,unused3: DOUBLE; unused4,unused5:INTEGER)
 			-- Process release of mouse buttons.
 		do
 			Precursor {EDITABLE_TEXT_PANEL} (x_pos, y_pos, button, unused1, unused2, unused3, unused4, unused5)
@@ -341,7 +341,7 @@ feature {NONE} -- Events
 			application_window.update_menus
 		end
 
-	pointer_pressed (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	pointer_pressed (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Pointer was pressed, catch right-click
 		do
 			if Shared_document_manager.has_schema then
@@ -352,7 +352,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	pointer_released is
+	pointer_released
 			-- Pointer was released
 		local
 			l_parent: STRING
@@ -365,7 +365,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	xml_parent: STRING is
+	xml_parent: STRING
 			-- Determine the parent XML text based on the current
 			-- cursor position
 		local
@@ -426,7 +426,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	sub_element_list (a_parent: STRING): SORTED_TWO_WAY_LIST [STRING] is
+	sub_element_list (a_parent: STRING): SORTED_TWO_WAY_LIST [STRING]
 			-- Alphabetically sorted list of sub elements of `a_parent'
 		local
 			schema_element: DOCUMENT_SCHEMA_ELEMENT
@@ -454,7 +454,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	pebble_dropped (a_url: STRING) is
+	pebble_dropped (a_url: STRING)
 			-- Pebble dropped on target
 		local
 			l_start_pos,
@@ -480,7 +480,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	build_tag_menu_popup is
+	build_tag_menu_popup
 			-- Build `tag_menu'
 		local
 			l_menu_item: EV_MENU_ITEM
@@ -513,7 +513,7 @@ feature {NONE} -- Events
 
 	tag_menu: EV_MENU
 
-	calculate_menu_popup_x_position: INTEGER is
+	calculate_menu_popup_x_position: INTEGER
 			-- Determine the x position to display the popup
 		local
 			tok: EDITOR_TOKEN
@@ -526,7 +526,7 @@ feature {NONE} -- Events
 			Result := tok.position + tok.get_substring_width (cursor.pos_in_token) + widget.screen_x + left_margin_width - offset
 		end
 
-	calculate_menu_popup_y_position: INTEGER is
+	calculate_menu_popup_y_position: INTEGER
 			-- Determine the y position to display the completion list
 		local
 			cursor: EDITOR_CURSOR
@@ -541,7 +541,7 @@ feature {NONE} -- Events
 			Result := Result + line_height + 5
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

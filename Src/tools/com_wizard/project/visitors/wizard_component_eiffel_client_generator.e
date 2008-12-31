@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Component Eiffel generator for client"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -31,7 +31,7 @@ feature {NONE} -- Implementation
 	ccom_create_feature_name: STRING
 			-- Name of external create feature.
 
-	make_from_pointer_feature: WIZARD_WRITER_FEATURE is
+	make_from_pointer_feature: WIZARD_WRITER_FEATURE
 			-- `make_from_pointer' function
 		local
 			l_body: STRING
@@ -54,7 +54,7 @@ feature {NONE} -- Implementation
 			non_void_feature_body: Result.body /= Void
 		end
 
-	create_coclass_from_pointer_feature (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR): WIZARD_WRITER_FEATURE is
+	create_coclass_from_pointer_feature (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR): WIZARD_WRITER_FEATURE
 			-- Set `ccom_create_[coclass_name]_from_pointer' external feature.
 			-- Call C++ constructor
 		require
@@ -87,7 +87,7 @@ feature {NONE} -- Implementation
 			non_void_feature_body: Result.body /= Void
 		end
 
-	delete_wrapper_feature: WIZARD_WRITER_FEATURE is
+	delete_wrapper_feature: WIZARD_WRITER_FEATURE
 			-- `delete_wrapper' feature.
 		local
 			l_body: STRING
@@ -109,7 +109,7 @@ feature {NONE} -- Implementation
 			non_void_feature_body: Result.body /= Void
 		end
 
-	delete_coclass_feature (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR): WIZARD_WRITER_FEATURE is
+	delete_coclass_feature (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR): WIZARD_WRITER_FEATURE
 			-- Set "ccom_delete_[coclass_name]" external feature
 			-- Call C++ destructor
 		require
@@ -140,7 +140,7 @@ feature {NONE} -- Implementation
 			non_void_feature_body: Result.body /= Void
 		end
 
-	create_coclass_feature (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR): WIZARD_WRITER_FEATURE is
+	create_coclass_feature (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR): WIZARD_WRITER_FEATURE
 			-- `create_coclass' external feature.
 		require
 			non_void_component_descriptor: a_component_descriptor /= Void
@@ -172,7 +172,7 @@ feature {NONE} -- Implementation
 			non_void_feature_body: Result.body /= Void
 		end
 
-	ccom_item_feature  (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR): WIZARD_WRITER_FEATURE is
+	ccom_item_feature  (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR): WIZARD_WRITER_FEATURE
 			-- `ccom_item' feature.
 		require
 			non_void_component_descriptor: a_component_descriptor /= Void
@@ -203,7 +203,7 @@ feature {NONE} -- Implementation
 			non_void_feature_body: Result.body /= Void
 		end
 
-	last_error_code_feature: WIZARD_WRITER_FEATURE is
+	last_error_code_feature: WIZARD_WRITER_FEATURE
 			-- `last_error_code' feature.
 		local
 			l_body: STRING
@@ -228,7 +228,7 @@ feature {NONE} -- Implementation
 			valid_feature_body: not Result.body.is_empty
 		end
 
-	last_source_of_exception_feature: WIZARD_WRITER_FEATURE is
+	last_source_of_exception_feature: WIZARD_WRITER_FEATURE
 			-- `last_source_of_exception' feature.
 		local
 			l_body: STRING
@@ -253,7 +253,7 @@ feature {NONE} -- Implementation
 			valid_feature_body: not Result.body.is_empty
 		end
 
-	last_error_description_feature: WIZARD_WRITER_FEATURE is
+	last_error_description_feature: WIZARD_WRITER_FEATURE
 			-- `last_error_description' feature.
 		local
 			l_body: STRING
@@ -278,7 +278,7 @@ feature {NONE} -- Implementation
 			valid_feature_body: not Result.body.is_empty
 		end
 
-	last_error_help_file_feature: WIZARD_WRITER_FEATURE is
+	last_error_help_file_feature: WIZARD_WRITER_FEATURE
 			-- `last_error_help_file' feature.
 		local
 			l_body: STRING
@@ -303,7 +303,7 @@ feature {NONE} -- Implementation
 			valid_feature_body: not Result.body.is_empty
 		end
 
-	ccom_last_error_code_feature  (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR): WIZARD_WRITER_FEATURE is
+	ccom_last_error_code_feature  (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR): WIZARD_WRITER_FEATURE
 			-- `ccom_last_error_code' feature.
 		require
 			non_void_component_descriptor: a_component_descriptor /= Void
@@ -334,7 +334,7 @@ feature {NONE} -- Implementation
 			non_void_feature_body: Result.body /= Void
 		end
 
-	ccom_last_source_of_exception_feature  (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR): WIZARD_WRITER_FEATURE is
+	ccom_last_source_of_exception_feature  (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR): WIZARD_WRITER_FEATURE
 			-- `ccom_last_error_code' feature.
 		require
 			non_void_component_descriptor: a_component_descriptor /= Void
@@ -366,7 +366,7 @@ feature {NONE} -- Implementation
 			non_void_feature_body: Result.body /= Void
 		end
 
-	ccom_last_error_description_feature  (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR): WIZARD_WRITER_FEATURE is
+	ccom_last_error_description_feature  (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR): WIZARD_WRITER_FEATURE
 			-- `ccom_last_error_description' feature.
 		require
 			non_void_component_descriptor: a_component_descriptor /= Void
@@ -397,7 +397,7 @@ feature {NONE} -- Implementation
 			non_void_feature_body: Result.body /= Void
 		end
 
-	ccom_last_error_help_file_feature  (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR): WIZARD_WRITER_FEATURE is
+	ccom_last_error_help_file_feature  (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR): WIZARD_WRITER_FEATURE
 			-- `ccom_last_error_help_file' feature.
 		require
 			non_void_component_descriptor: a_component_descriptor /= Void
@@ -428,7 +428,7 @@ feature {NONE} -- Implementation
 			non_void_feature_body: Result.body /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

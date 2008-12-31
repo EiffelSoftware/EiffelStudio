@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel effective function generator."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -14,7 +14,7 @@ inherit
 
 feature -- Basic operations
 
-	generate (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR; a_descriptor: WIZARD_FUNCTION_DESCRIPTOR) is
+	generate (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR; a_descriptor: WIZARD_FUNCTION_DESCRIPTOR)
 			-- Generate server feature signature.
 		require
 			non_void_component: a_component_descriptor /= Void
@@ -28,7 +28,7 @@ feature -- Basic operations
 			function_descriptor_set: not a_descriptor.is_renaming_clause implies func_desc /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

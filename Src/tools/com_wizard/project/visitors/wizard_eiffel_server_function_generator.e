@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel server function generator."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -23,7 +23,7 @@ create
 
 feature -- Basic operations
 
-	generate (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR; a_descriptor: WIZARD_FUNCTION_DESCRIPTOR) is
+	generate (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR; a_descriptor: WIZARD_FUNCTION_DESCRIPTOR)
 			-- Generate server feature.
 		do
 			if a_descriptor.is_renaming_clause then
@@ -57,7 +57,7 @@ feature -- Basic operations
 			end
 		end
 
-	generate_source (a_descriptor: WIZARD_FUNCTION_DESCRIPTOR) is
+	generate_source (a_descriptor: WIZARD_FUNCTION_DESCRIPTOR)
 			-- Generate feature for source interface.
 		local
 			body: STRING
@@ -81,7 +81,7 @@ feature -- Basic operations
 			feature_writer.set_effective
 		end
 
-	generate_on_hook (a_descriptor: WIZARD_FUNCTION_DESCRIPTOR) is
+	generate_on_hook (a_descriptor: WIZARD_FUNCTION_DESCRIPTOR)
 			-- "on_" hook feature.
 		do
 			func_desc := a_descriptor
@@ -97,7 +97,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	on_hook_feature_name (a_name: STRING): STRING is
+	on_hook_feature_name (a_name: STRING): STRING
 			-- Name of "on_" hook feature.
 		require
 			non_void_name: a_name /= Void
@@ -110,7 +110,7 @@ feature {NONE} -- Implementation
 			valid_name: not Result.is_empty
 		end
 	
-	on_hook_feature_arguments: STRING is
+	on_hook_feature_arguments: STRING
 			-- Arguments to call "on_" hook feature.
 		require
 			non_void_func_desc: func_desc /= Void
@@ -155,7 +155,7 @@ feature {NONE} -- Implementation
 				not Result.is_empty
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

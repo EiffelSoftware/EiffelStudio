@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Document browser interface layout."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ inherit
 
 feature {NONE}-- Initialization
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			Precursor
@@ -87,12 +87,12 @@ feature -- Access
 
 feature {NONE} -- Implementation
 	
-	user_initialization is
+	user_initialization
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

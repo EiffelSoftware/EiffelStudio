@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Processing interfaces for C coclass."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -26,7 +26,7 @@ inherit
 feature {NONE} -- Initialization
 
 	make (a_coclass: WIZARD_COCLASS_DESCRIPTOR; 
-				a_coclass_generator: WIZARD_COCLASS_C_GENERATOR) is
+				a_coclass_generator: WIZARD_COCLASS_C_GENERATOR)
 			-- Initialize
 		require
 			non_void_coclass: a_coclass /= Void
@@ -46,19 +46,19 @@ feature -- Access
 
 feature -- Basic operations
 
-	generate_interface_features (an_interface: WIZARD_INTERFACE_DESCRIPTOR) is
+	generate_interface_features (an_interface: WIZARD_INTERFACE_DESCRIPTOR)
 			-- Generate interface features.
 		deferred
 		end
 
-	generate_source_interface_features (an_interface: WIZARD_INTERFACE_DESCRIPTOR) is
+	generate_source_interface_features (an_interface: WIZARD_INTERFACE_DESCRIPTOR)
 			-- Generate source interface features.
 		deferred
 		end
 
 feature {NONE} -- Implementation
 
-	clean_up is
+	clean_up
 			-- Clean up.
 		do
 			coclass := Void
@@ -68,7 +68,7 @@ feature {NONE} -- Implementation
 invariant
 	non_void_coclass_generator: not finished implies coclass_generator /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

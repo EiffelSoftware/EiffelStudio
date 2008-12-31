@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Code generation manager."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_event_raiser: like event_raiser) is
+	make (a_event_raiser: like event_raiser)
 			-- Set `event_raiser' with `a_event_raiser'.
 		require
 			non_void_event_raiser: a_event_raiser /= Void
@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 
 feature -- Element Change
 
-	set_title (a_title: STRING) is
+	set_title (a_title: STRING)
 			-- Set `title' with `a_title'.
 		require
 			non_void_title: a_title /= Void
@@ -34,7 +34,7 @@ feature -- Element Change
 			event_raiser.call ([create {WIZARD_PROGRESS_EVENT}.make ({WIZARD_PROGRESS_EVENT_ID}.Title, a_title)])
 		end
 
-	set_range (a_range: INTEGER) is
+	set_range (a_range: INTEGER)
 			-- Set `range' with `a_range'.
 		require
 			valid_range: a_range >= 0
@@ -42,7 +42,7 @@ feature -- Element Change
 			event_raiser.call ([create {WIZARD_PROGRESS_EVENT}.make ({WIZARD_PROGRESS_EVENT_ID}.Set_range, a_range)])
 		end
 
-	step is
+	step
 			-- Increment progress.
 		do
 			event_raiser.call ([create {WIZARD_PROGRESS_EVENT}.make ({WIZARD_PROGRESS_EVENT_ID}.Step, Void)])
@@ -50,13 +50,13 @@ feature -- Element Change
 
 feature -- Basic Operations
 
-	start is
+	start
 			-- Start report (i.e. activate dialog).
 		do
 			event_raiser.call ([create {WIZARD_PROGRESS_EVENT}.make ({WIZARD_PROGRESS_EVENT_ID}.Start, Void)])
 		end
 
-	finish is
+	finish
 			-- Terminate report (i.e. terminate dialog)
 		do
 			event_raiser.call ([create {WIZARD_PROGRESS_EVENT}.make ({WIZARD_PROGRESS_EVENT_ID}.Finish, Void)])
@@ -67,7 +67,7 @@ feature {NONE} -- Implementation
 	event_raiser: ROUTINE [ANY, TUPLE [EV_THREAD_EVENT]];
 			-- Event raiser
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

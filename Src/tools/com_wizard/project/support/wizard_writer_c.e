@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Common ancestor for C and CPP file writers"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -37,7 +37,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	standard_include is
+	standard_include
 			-- Standart include files.
 		do
 			add_import (Eif_com_h)
@@ -46,7 +46,7 @@ feature -- Basic operations
 			add_import (Eif_macros_h)
 		end
 
-	header_protector (a_header_file_name: STRING): STRING is
+	header_protector (a_header_file_name: STRING): STRING
 			-- Protect multiple inclusion of same header file.
 		require
 			non_void_name: a_header_file_name /= Void
@@ -63,7 +63,7 @@ feature -- Basic operations
 			valid_protector: not Result.is_empty
 		end
 
-	add_global_variable (a_variable: WIZARD_WRITER_C_MEMBER) is
+	add_global_variable (a_variable: WIZARD_WRITER_C_MEMBER)
 			-- Add `a_varialbe' to `global_variables'.
 		require
 			non_void_variable: a_variable /= Void
@@ -73,7 +73,7 @@ feature -- Basic operations
 			added: global_variables.last = a_variable
 		end
 
-	set_header_file_name (a_header_file_name: like header_file_name) is
+	set_header_file_name (a_header_file_name: like header_file_name)
 			-- Set `header_file_name' with `a_header_file_name'.
 		require
 			non_void_header_file_name: a_header_file_name /= Void
@@ -83,7 +83,7 @@ feature -- Basic operations
 			header_file_name_set: header_file_name.is_equal (a_header_file_name)
 		end
 
-	add_import (an_import_file: STRING) is
+	add_import (an_import_file: STRING)
 			-- Add `an_import_file' to list of imported header files.
 		require
 			non_void_import_file: an_import_file /= Void
@@ -97,7 +97,7 @@ feature -- Basic operations
 			added: import_files.has (an_import_file)
 		end
 
-	add_other_forward (a_other: STRING) is
+	add_other_forward (a_other: STRING)
 			-- Add `a_other' to `others_forward'.
 		require
 			non_void_other: a_other /= Void
@@ -107,7 +107,7 @@ feature -- Basic operations
 			added: others_forward.last = a_other
 		end
 
-	add_other (a_other: STRING) is
+	add_other (a_other: STRING)
 			-- Add `a_other' to `others'.
 		require
 			non_void_other: a_other /= Void
@@ -117,7 +117,7 @@ feature -- Basic operations
 			added: others.last = a_other
 		end
 
-	add_other_source (a_other: STRING) is
+	add_other_source (a_other: STRING)
 			-- Add `a_other' to `others'.
 		require
 			non_void_other: a_other /= Void
@@ -127,7 +127,7 @@ feature -- Basic operations
 			added: others_source.last = a_other
 		end
 
-	add_import_after (an_import_file: STRING) is
+	add_import_after (an_import_file: STRING)
 			-- Add `an_import_file' to list of imported header files.
 		require
 			non_void_import_file: an_import_file /= Void
@@ -141,7 +141,7 @@ feature -- Basic operations
 			added: import_files_after.has (an_import_file)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Information on data to be generated"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize environment
 		do
 			is_in_process := True
@@ -108,7 +108,7 @@ feature -- Access
 	cleanup: BOOLEAN
 			-- Should destination folder be cleaned up prior to generation?
 
-	error_message: STRING is
+	error_message: STRING
 			-- Error message
 		require
 			has_error: abort and is_valid_error_code (error_code)
@@ -122,7 +122,7 @@ feature -- Access
 			non_void_message: Result /= Void
 		end
 
-	expanded_path (a_path: STRING): STRING is
+	expanded_path (a_path: STRING): STRING
 			-- Expand all environment variables in `a_path'.
 		require
 			non_void_path: a_path /= Void
@@ -171,7 +171,7 @@ feature -- Access
 	Source_ecf_file_name: STRING
 			-- Name of the configuration file of an existing project where we add a new component.
 
-	Ecf_file_name: STRING is
+	Ecf_file_name: STRING
 			-- Name of the configuration file.
 		require
 			non_void_project_name: project_name /= Void
@@ -183,7 +183,7 @@ feature -- Access
 			Result.append (".ecf")
 		end
 
-	Workbench_ace_file_name: STRING is
+	Workbench_ace_file_name: STRING
 			-- Ace file name
 		require
 			non_void_project_name: project_name /= Void
@@ -192,7 +192,7 @@ feature -- Access
 			Result.append (".workbench.ace")
 		end
 
-	Final_ace_file_name: STRING is
+	Final_ace_file_name: STRING
 			-- Ace file name
 		require
 			non_void_project_name: project_name /= Void
@@ -203,7 +203,7 @@ feature -- Access
 
 feature -- Element Change
 
-	set_is_eiffel_interface is
+	set_is_eiffel_interface
 			-- Set `is_eiffel_interface' with `True'.
 			-- Set `is_new_component' with `False'.
 			-- Set `is_client' with `False'.
@@ -218,7 +218,7 @@ feature -- Element Change
 			not_is_client: not is_client
 		end
 
-	set_is_new_component is
+	set_is_new_component
 			-- Set `is_eiffel_interface' with `False'.
 			-- Set `is_new_component' with `True'.
 			-- Set `is_client' with `False'.
@@ -232,7 +232,7 @@ feature -- Element Change
 			not_is_client: not is_client
 		end
 
-	set_is_client is
+	set_is_client
 			-- Set `is_eiffel_interface' with `False'.
 			-- Set `is_new_component' with `False'.
 			-- Set `is_client' with `True'.
@@ -246,7 +246,7 @@ feature -- Element Change
 			is_client: is_client
 		end
 
-	set_marshaller_generated (a_value: BOOLEAN) is
+	set_marshaller_generated (a_value: BOOLEAN)
 			-- Set `marshaller_generated' with `a_value'.
 		do
 			marshaller_generated := a_value
@@ -254,7 +254,7 @@ feature -- Element Change
 			marshaller_generated_set: marshaller_generated = a_value
 		end
 
-	set_is_in_process is
+	set_is_in_process
 			-- Set `is_in_process' with `True'.
 			-- Set `is_out_of_process' with `False'.
 		do
@@ -265,7 +265,7 @@ feature -- Element Change
 			is_out_of_process_set: not is_out_of_process
 		end
 
-	set_is_out_of_process is
+	set_is_out_of_process
 			-- Set `is_out_of_process' with `True'.
 			-- Set `is_in_process' with `False'.
 		do
@@ -276,7 +276,7 @@ feature -- Element Change
 			is_in_process_set: not is_in_process
 		end
 
-	set_eiffel_class_name (c_name: like eiffel_class_name) is
+	set_eiffel_class_name (c_name: like eiffel_class_name)
 			-- Set 'eiffel_class_name' to 'c_name'.
 		require
 			non_void_name: c_name /= Void
@@ -288,7 +288,7 @@ feature -- Element Change
 			name_set: eiffel_class_name /= Void and then not eiffel_class_name.is_empty
 		end
 
-	set_class_cluster_name (c_name: like class_cluster_name) is
+	set_class_cluster_name (c_name: like class_cluster_name)
 			-- Set 'class_cluster_name' to 'c_name'.
 		require
 			non_void_name: c_name /= Void
@@ -299,7 +299,7 @@ feature -- Element Change
 			name_set: class_cluster_name /= Void and then not class_cluster_name.is_empty
 		end
 
-	set_source_ecf_file_name (a_file: like source_ecf_file_name) is
+	set_source_ecf_file_name (a_file: like source_ecf_file_name)
 			-- Set `source_ecf_file_name' to `a_file'.
 		require
 			a_file_ok: a_file /= Void and then not a_file.is_empty
@@ -309,7 +309,7 @@ feature -- Element Change
 			source_ecf_file_name_set: source_ecf_file_name = a_file
 		end
 
-	set_eiffel_project_path (p_name: like eiffel_project_path) is
+	set_eiffel_project_path (p_name: like eiffel_project_path)
 			-- Set 'eiffel_project_name' to 'p_name'.
 		require
 			non_void_name: p_name /= Void
@@ -320,7 +320,7 @@ feature -- Element Change
 			name_set: eiffel_project_path.is_equal (expanded_path (p_name))
 		end
 
-	set_eiffel_target (p_name: like eiffel_target) is
+	set_eiffel_target (p_name: like eiffel_target)
 			-- Set 'eiffel_target' to 'p_name'.
 		require
 			non_void_name: p_name /= Void
@@ -332,7 +332,7 @@ feature -- Element Change
 		end
 
 
-	set_destination_folder (a_folder: like destination_folder) is
+	set_destination_folder (a_folder: like destination_folder)
 			-- Set `destination_folder' with `a_folder'.
 		require
 			non_void_folder: a_folder /= Void
@@ -345,7 +345,7 @@ feature -- Element Change
 			update_idl_file_name
 		end
 
-	set_project_name (a_name: like project_name) is
+	set_project_name (a_name: like project_name)
 			-- Set `project_name' with `a_name' and replace all non-alpha-numeric
 			-- characters with underscores.
 		require
@@ -376,7 +376,7 @@ feature -- Element Change
 			project_name_preserved: valid_characters (a_name) implies project_name = a_name
 		end
 
-	set_idl_file_name (a_idl_file_name: like idl_file_name) is
+	set_idl_file_name (a_idl_file_name: like idl_file_name)
 			-- Set `idl_file_name' with `a_idl_file_name'.
 		require
 			non_void_idl_file_name: a_idl_file_name /= Void
@@ -389,7 +389,7 @@ feature -- Element Change
 			idl: idl
 		end
 
-	set_proxy_stub_file_name (a_proxy_stub: like proxy_stub_file_name) is
+	set_proxy_stub_file_name (a_proxy_stub: like proxy_stub_file_name)
 			-- Set `proxy_stub_file_name' with `a_proxy_stub'.
 		require
 			non_void_proxy_stub: a_proxy_stub /= Void
@@ -400,7 +400,7 @@ feature -- Element Change
 			proxy_stub_file_name_set: proxy_stub_file_name.is_equal (expanded_path (a_proxy_stub))
 		end
 
-	set_type_library_file_name (a_type_library_file_name: like type_library_file_name) is
+	set_type_library_file_name (a_type_library_file_name: like type_library_file_name)
 			-- Set `type_library_file_name' with `a_type_library_file_name'.
 		require
 			non_void_type_library_file_name: a_type_library_file_name /= Void
@@ -411,7 +411,7 @@ feature -- Element Change
 			type_library_file_name_set: type_library_file_name.is_equal (expanded_path (a_type_library_file_name))
 		end
 
-	set_idl (a_boolean: BOOLEAN) is
+	set_idl (a_boolean: BOOLEAN)
 			-- Set `idl' with `a_boolean'.
 		do
 			idl := a_boolean
@@ -419,7 +419,7 @@ feature -- Element Change
 			idl_set: idl = a_boolean
 		end
 
-	set_abort (a_error_code: like error_code) is
+	set_abort (a_error_code: like error_code)
 			-- Set `abort' to `True'.
 			-- Set `error_code' with `a_error_code'.
 		do
@@ -440,7 +440,7 @@ feature -- Element Change
 			error_code_set: error_code = a_error_code
 		end
 
-	set_error_data (a_error_data: like error_data) is
+	set_error_data (a_error_data: like error_data)
 			-- Set `error_data' with `a_error_data'.
 		do
 			error_data := a_error_data
@@ -448,7 +448,7 @@ feature -- Element Change
 			error_data_set: error_data = a_error_data
 		end
 
-	set_no_abort is
+	set_no_abort
 			-- Set `abort' to `False'.
 		do
 			abort := False
@@ -456,7 +456,7 @@ feature -- Element Change
 			no_abort: not abort
 		end
 
-	set_compile_eiffel (a_boolean: like compile_eiffel) is
+	set_compile_eiffel (a_boolean: like compile_eiffel)
 			-- Set `compile_eiffel' to `a_boolean'.
 		do
 			compile_eiffel := a_boolean
@@ -464,7 +464,7 @@ feature -- Element Change
 			compile_eiffel_set: compile_eiffel = a_boolean
 		end
 
-	set_compile_c (a_boolean: like compile_c) is
+	set_compile_c (a_boolean: like compile_c)
 			-- Set `compile_c' to `a_boolean'.
 		do
 			compile_c := a_boolean
@@ -472,7 +472,7 @@ feature -- Element Change
 			compile_c_set: compile_c = a_boolean
 		end
 
-	set_backup (a_boolean: BOOLEAN) is
+	set_backup (a_boolean: BOOLEAN)
 			-- Set `backup' with `a_boolean'.
 		do
 			backup := a_boolean
@@ -480,7 +480,7 @@ feature -- Element Change
 			backup_set: backup = a_boolean
 		end
 
-	set_cleanup (a_boolean: BOOLEAN) is
+	set_cleanup (a_boolean: BOOLEAN)
 			-- Set `cleanup' with `a_boolean'.
 		do
 			cleanup := a_boolean
@@ -488,7 +488,7 @@ feature -- Element Change
 			cleanup_set: cleanup = a_boolean
 		end
 
-	add_abort_request_action (a_action: ROUTINE [ANY, TUPLE[]]) is
+	add_abort_request_action (a_action: ROUTINE [ANY, TUPLE[]])
 			-- Add `a_action' to `abort_request_actions'.
 		require
 			non_void_action: a_action /= Void
@@ -498,7 +498,7 @@ feature -- Element Change
 			abort_request_actions_mutex.unlock
 		end
 
-	remove_abort_request_action is
+	remove_abort_request_action
 			-- Remove last added action from `abort_request_actions'.
 		do
 			abort_request_actions_mutex.lock
@@ -507,7 +507,7 @@ feature -- Element Change
 			abort_request_actions_mutex.unlock
 		end
 
-	valid_characters (a_name: STRING): BOOLEAN is
+	valid_characters (a_name: STRING): BOOLEAN
 			-- Does `a_name' contain valid characters for a c++ identifier
 		require
 			initialized_name: a_name /= void
@@ -534,7 +534,7 @@ feature -- Element Change
 
 feature {NONE} -- Implementation
 
-	update_idl_file_name is
+	update_idl_file_name
 			-- Update `idl_file_name' according to `is_eiffel_interface', `destination_folder' and `eiffel_class_name'.
 		local
 			l_idl_file_name: STRING
@@ -559,7 +559,7 @@ invariant
 	valid_destination_folder: destination_folder /= Void implies (destination_folder.item (destination_folder.count) = Directory_separator)
 	valid_eiffel_compilation_choice: compile_eiffel implies compile_c
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

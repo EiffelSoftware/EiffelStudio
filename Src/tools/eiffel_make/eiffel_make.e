@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "[
 		Given a directory, call the make utility on all subdirectories if a `Makefile' exists
 		and without a `finished' file (which shows that compilation has already been done),
@@ -11,7 +11,6 @@ indexing
 		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	note: "Initial version automatically generated"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -32,7 +31,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Creation procedure.
 		do
 				-- By default initialize number of CPU to 1.
@@ -71,7 +70,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	parse_arguments is
+	parse_arguments
 			-- Parse arguments and report errors, if any.
 		local
 			l_nb_cpu, l_make, l_make_flags, l_target: STRING
@@ -176,7 +175,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	print_usage is
+	print_usage
 			-- Print usage.
 		local
 			i: INTEGER
@@ -202,7 +201,7 @@ feature {NONE} -- Implementation
 				%Default option for cpu is   : number of CPU on this machine,%N")
 		end
 
-	process is
+	process
 			-- Call make
 		require
 			target_not_void: target /= Void
@@ -299,7 +298,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_compilation is
+	process_compilation
 			-- Process all actions in `actions' until it is empty.
 		local
 			l_action: FUNCTION [ANY, TUPLE, BOOLEAN]
@@ -319,7 +318,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	compile_directory (a_dir: DIRECTORY_NAME; l_flags: LIST [STRING]): BOOLEAN is
+	compile_directory (a_dir: DIRECTORY_NAME; l_flags: LIST [STRING]): BOOLEAN
 			-- Compile in `a_dir'.
 		require
 			target_not_void: target /= Void
@@ -340,7 +339,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	insert_directory (a_dir: STRING) is
+	insert_directory (a_dir: STRING)
 			-- Insert processing of `a_dir' subdirectory of `target' into `actions'
 			-- if it has a `Makefile' and no `finished' file showing that it has not yet
 			-- been processed.
@@ -377,7 +376,7 @@ feature {NONE} -- Implementation
 
 		end
 
-	compute_number_of_cpu (a_result: TYPED_POINTER [INTEGER]) is
+	compute_number_of_cpu (a_result: TYPED_POINTER [INTEGER])
 			-- Number of CPUs.
 		external
 			"C inline use <windows.h>"
@@ -394,8 +393,8 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	makefile_name: STRING is "Makefile"
-	finished_name: STRING is "finished"
+	makefile_name: STRING = "Makefile"
+	finished_name: STRING = "finished"
 			-- Constants for file names.
 
 invariant
@@ -403,7 +402,7 @@ invariant
 	failed_actions_not_void: failed_actions /= Void
 	make_flags_not_void: make_flags /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

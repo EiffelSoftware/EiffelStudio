@@ -1,4 +1,4 @@
-indexing
+note
 	description: "File system management (file copy, deletion)."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Basic Operations
 
-	file_copy (a_source, a_destination: STRING) is
+	file_copy (a_source, a_destination: STRING)
 			-- Copy file `a_source' into `a_destination'.
 			-- Does nothing if `a_source' is not a file.
 		require
@@ -38,7 +38,7 @@ feature -- Basic Operations
 			retry
 		end
 
-	file_delete (a_file_name: STRING) is
+	file_delete (a_file_name: STRING)
 			-- Delete file `a_file_name'.
 			-- Do nothing if `a_file_name' not a valid file name.
 		require
@@ -59,7 +59,7 @@ feature -- Basic Operations
 			retry
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

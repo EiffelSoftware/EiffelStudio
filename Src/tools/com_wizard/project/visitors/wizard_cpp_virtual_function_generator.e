@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Cpp virtual function generator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -23,7 +23,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	generate (a_descriptor: WIZARD_FUNCTION_DESCRIPTOR) is
+	generate (a_descriptor: WIZARD_FUNCTION_DESCRIPTOR)
 			-- Generate pure virtual function
 		require
 			non_void_descriptor: a_descriptor /= Void
@@ -54,7 +54,7 @@ feature -- Basic operations
 			function_descriptor_exist: func_desc /= Void
 		end
 
-	generate_dual (a_descriptor: WIZARD_FUNCTION_DESCRIPTOR) is
+	generate_dual (a_descriptor: WIZARD_FUNCTION_DESCRIPTOR)
 			-- Generate pure virtual function
 		require
 			non_void_descriptor: a_descriptor /= Void
@@ -124,7 +124,7 @@ feature -- Basic operations
 			function_descriptor_exist: func_desc /= Void
 		end
 
-	add_header_file (a_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR) is
+	add_header_file (a_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR)
 			-- Add header file to list of header files if needed.
 		local
 			a_visitor: WIZARD_DATA_TYPE_VISITOR
@@ -152,7 +152,7 @@ feature -- Basic operations
 			end
 		end
 
-	forward_interface_declaration (a_name, a_namespace: STRING): STRING is
+	forward_interface_declaration (a_name, a_namespace: STRING): STRING
 			-- Forward declaration of interface.
 		local
 			interface_declaration: WIZARD_WRITER_FORWARD_CLASS_DECLARATION
@@ -161,7 +161,7 @@ feature -- Basic operations
 			Result := interface_declaration.generated_code
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Specialized configiration for versions of Microsoft's Visual Studio."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Access
 
-	batch_file_name: STRING is
+	batch_file_name: STRING
 			-- Absolute path to an environment configuration batch script
 		do
 			create Result.make (256)
@@ -28,7 +28,7 @@ feature {NONE} -- Access
 			end
 		end
 
-	full_product_reg_path: STRING is
+	full_product_reg_path: STRING
 			-- Absolute product registry location
 		do
 			create Result.make (256)
@@ -42,7 +42,7 @@ feature {NONE} -- Access
 	install_path_value_name: STRING = "ProductDir"
 			-- Key value name for install location
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

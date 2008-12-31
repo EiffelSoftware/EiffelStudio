@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Application-wide constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ inherit
 
 feature -- Directory Paths
 
-	application_root_directory: DIRECTORY_NAME is
+	application_root_directory: DIRECTORY_NAME
 			-- Root working directory for application
 		local
 			l_path: STRING
@@ -30,90 +30,90 @@ feature -- Directory Paths
 			end
 		end
 
-	resources_directory: DIRECTORY_NAME is
+	resources_directory: DIRECTORY_NAME
 			-- Directory holding all application resources
 		once
 			create Result.make_from_string (application_root_directory)
 			Result.extend ("resources")
 		end
 		
-	bin_directory: DIRECTORY_NAME is
+	bin_directory: DIRECTORY_NAME
 			-- Directory holding binaries
 		once
 			create Result.make_from_string (resources_directory)
 			Result.extend ("bin")
 		end
 
-	syntax_files_directory: DIRECTORY_NAME is
+	syntax_files_directory: DIRECTORY_NAME
 			-- Directory holding syntax files
 		once
 			create Result.make_from_string (resources_directory)
 			Result.extend ("syntax_definitions")
 		end
 
-	documentation_directory: DIRECTORY_NAME is
+	documentation_directory: DIRECTORY_NAME
 			-- Directory holding documentation
 		once
 			create Result.make_from_string (application_root_directory)
 			Result.extend ("documentation")
 		end
 
-	templates_path: DIRECTORY_NAME is
+	templates_path: DIRECTORY_NAME
 			-- Path to folder containing template files
 		once
 			create Result.make_from_string (resources_directory)
 			Result.extend ("templates")
 		end
 
-	icon_resources_directory: DIRECTORY_NAME is
+	icon_resources_directory: DIRECTORY_NAME
 			-- Directory holding all graphical icons
 		once
 			create Result.make_from_string (Resources_directory)
 			Result.extend ("icons")
 		end
 
-	cursor_resources_directory: DIRECTORY_NAME is
+	cursor_resources_directory: DIRECTORY_NAME
 			-- Directory holding all cursor
 		once
 			create Result.make_from_string (Resources_directory)
 			Result.extend ("cursors")
 		end
 		
-	parser_file_resources_directory: DIRECTORY_NAME is
+	parser_file_resources_directory: DIRECTORY_NAME
 			-- Directory holding all predefinde regular expression parser files
 		once
 			create Result.make_from_string (resources_directory)
 			Result.extend ("parsers")
 		end
 		
-	temporary_directory: DIRECTORY_NAME is
+	temporary_directory: DIRECTORY_NAME
 			-- Directory for temporary file generation
 		do
 			create Result.make_from_string (shared_preferences.tool_data.output_directory)
 		end
 		
-	temporary_html_directory: DIRECTORY_NAME is
+	temporary_html_directory: DIRECTORY_NAME
 			-- Directory location for temporary HTML
 		do
 			create Result.make_from_string (Temporary_directory)
 			Result.extend ("HTML")
 		end
 		
-	temporary_xml_directory: DIRECTORY_NAME is
+	temporary_xml_directory: DIRECTORY_NAME
 			-- Directory location for temporary XML
 		do
 			create Result.make_from_string (Temporary_directory)
 			Result.extend ("XML")
 		end
 		
-	temporary_help_directory: DIRECTORY_NAME is
+	temporary_help_directory: DIRECTORY_NAME
 			-- Directory location for temporary help files
 		do
 			create Result.make_from_string (Temporary_directory)
 			Result.extend ("Help")
 		end	
 		
-	script_output: PLAIN_TEXT_FILE is
+	script_output: PLAIN_TEXT_FILE
 			-- File containing output information regarding command prompt processing
 		local
 			l_filename: FILE_NAME
@@ -135,13 +135,13 @@ feature -- Display Constants
 	is_gui_mode: BOOLEAN
 			-- Is application in GUI or command prompt mode?
 
-	error_color: EV_COLOR is
+	error_color: EV_COLOR
 			-- Color for error messages
 		once
 			create Result.make_with_rgb (1.0, 0.0, 0.0)
 		end
 		
-	no_error_color: EV_COLOR is
+	no_error_color: EV_COLOR
 			-- Color for non-error messages
 		once
 			create Result.make_with_rgb (0.0, 0.0, 0.0)
@@ -158,7 +158,7 @@ feature -- Table of Contents Preferences
 	index_file_name: STRING
 			-- File name to use for index/root nodes
 			
-	code_directories: ARRAYED_LIST [STRING] is
+	code_directories: ARRAYED_LIST [STRING]
 			-- Directories containing code XML.  Output specific to output type.
 		local
 			l_project_root,
@@ -250,7 +250,7 @@ feature -- Table of Contents Preferences
 			Result.extend (l_code_dir.string)
 		end
 			
-	studio_libraries: ARRAYED_LIST [STRING] is
+	studio_libraries: ARRAYED_LIST [STRING]
 			-- Studio libraries
 		once
 			create Result.make (10)
@@ -270,7 +270,7 @@ feature -- Table of Contents Preferences
 			Result.extend ("preferences")
 		end
 	
-	envision_libraries: ARRAYED_LIST [STRING] is
+	envision_libraries: ARRAYED_LIST [STRING]
 			-- ENViSioN! libraries
 		once
 			create Result.make (10)
@@ -288,13 +288,13 @@ feature -- Table of Contents Preferences
 			
 feature -- Status Setting
 
-	set_gui_mode (a_mode: BOOLEAN) is
+	set_gui_mode (a_mode: BOOLEAN)
 			-- Set `is_gui_mode'
 		do
 			is_gui_mode := a_mode	
 		end	
 
-	set_index_file_name (a_name: STRING) is
+	set_index_file_name (a_name: STRING)
 			-- Set `index_file_name'
 		require
 			name_valid: a_name /= Void and then not a_name.is_empty
@@ -302,7 +302,7 @@ feature -- Status Setting
 			index_file_name := a_name
 		end		
 
-	set_auto_validation (flag: BOOLEAN) is
+	set_auto_validation (flag: BOOLEAN)
 			-- Should documents be auto validated?
 		do
 			auto_validation := flag
@@ -310,7 +310,7 @@ feature -- Status Setting
 			av_set: auto_validation = flag
 		end
 
-	set_tags_uppercase (flag: BOOLEAN) is
+	set_tags_uppercase (flag: BOOLEAN)
 			-- Should XML tags be in uppercase?
 		do
 			tags_uppercase := flag
@@ -318,13 +318,13 @@ feature -- Status Setting
 			tags_set: tags_uppercase = flag
 		end
 
-	add_code_directory (a_dir_name: STRING) is
+	add_code_directory (a_dir_name: STRING)
 			-- Add to `code_directories'
 		do
 			code_directories.extend (a_dir_name)	
 		end		
 
-	set_is_include_list (a_mode: BOOLEAN) is
+	set_is_include_list (a_mode: BOOLEAN)
 			-- Set `is_include_list'
 		do
 			is_include_list := a_mode	
@@ -337,7 +337,7 @@ feature -- Document
 
 feature -- Platform
 
-	set_mode (a_mode: STRING) is
+	set_mode (a_mode: STRING)
 			-- Set `mode'
 		require
 			mode_not_void: a_mode /= Void
@@ -351,7 +351,7 @@ feature -- Platform
 	mode: STRING
 			-- Platform mode
 
-	available_modes: ARRAYED_LIST [STRING] is
+	available_modes: ARRAYED_LIST [STRING]
 			-- Available platform modes
 		once
 			create Result.make (3)
@@ -362,7 +362,7 @@ feature -- Platform
 
 feature -- Access 
 
-	allowed_file_types: ARRAYED_LIST [STRING] is
+	allowed_file_types: ARRAYED_LIST [STRING]
 			-- List of recognized file types in application with appropriate icon identifier
 		once
 			create Result.make (9)
@@ -379,7 +379,7 @@ feature -- Access
 			Result.extend ("bmp")
 		end	
 
-	file_type_icons: HASH_TABLE [EV_PIXMAP, STRING] is
+	file_type_icons: HASH_TABLE [EV_PIXMAP, STRING]
 			-- Hash of recognized file types in application with appropriate icon identifier
 		local
 			l_graphical_constants: GRAPHICAL_CONSTANTS
@@ -400,7 +400,7 @@ feature -- Access
 
 	is_include_list: BOOLEAN;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

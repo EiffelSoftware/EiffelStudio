@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Type Info visitor"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,14 +16,14 @@ inherit
 
 feature -- Processing
 
-	process_alias (alias_descriptor: WIZARD_ALIAS_DESCRIPTOR) is
+	process_alias (alias_descriptor: WIZARD_ALIAS_DESCRIPTOR)
 			-- process alias
 			-- generate code for alias described in `alias_descriptor'
 		do
 			output_information (alias_descriptor)
 		end
 
-	process_coclass (coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR ) is
+	process_coclass (coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR )
 			-- process coclass
 			-- generate code for coclass described in `coclass_descriptor'
 			-- for every interface in `coclass_descriptor'
@@ -34,7 +34,7 @@ feature -- Processing
 			output_information (coclass_descriptor)
 		end
 
-	process_implemented_interface (interface_descriptor: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR) is
+	process_implemented_interface (interface_descriptor: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR)
 			-- process interface
 			-- generated class for interface
 			-- `inteface_descriptor' must provide information on
@@ -43,7 +43,7 @@ feature -- Processing
 			output_information (interface_descriptor)
 		end
 
-	process_interface (interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR) is
+	process_interface (interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR)
 			-- process interface
 			-- generated deffered class for interface
 			-- `inteface_descriptor' must provide information on
@@ -52,7 +52,7 @@ feature -- Processing
 			output_information (interface_descriptor)
 		end
 
-	process_enum (enum_descriptor: WIZARD_ENUM_DESCRIPTOR) is
+	process_enum (enum_descriptor: WIZARD_ENUM_DESCRIPTOR)
 			-- process enumeration
 			-- generate code for enumeration described by `enum_descriptor'
 			-- for every constant in `enum_descriptor'
@@ -62,7 +62,7 @@ feature -- Processing
 			output_information (enum_descriptor)
 		end
 
-	process_record (record_descriptor: WIZARD_RECORD_DESCRIPTOR) is
+	process_record (record_descriptor: WIZARD_RECORD_DESCRIPTOR)
 			-- process structure
 			-- generate code for structure described by `record_descriptor'
 			-- for every field in `record_descriptor'
@@ -82,7 +82,7 @@ feature -- Processing
 
 feature {NONE} -- Implementation
 
-	output_information (a_wizard_descriptor: WIZARD_DESCRIPTOR) is
+	output_information (a_wizard_descriptor: WIZARD_DESCRIPTOR)
 			-- Wizard output
 		local
 			a_message: STRING
@@ -97,12 +97,12 @@ feature {NONE} -- Implementation
 			message_output.add_message (a_message)
 		end
 
-	language: STRING is
+	language: STRING
 			-- Language currently generated (C or Eiffel)
 		deferred
 		end
 
-	module_type: STRING is
+	module_type: STRING
 			-- Module currently generated (Client or Server)
 		deferred
 		end
@@ -111,7 +111,7 @@ invariant
 	valid_language: language.is_equal (Eiffel) or language.is_equal (C)
 	valid_module_type: module_type.is_equal (Client) or module_type.is_equal (Server)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

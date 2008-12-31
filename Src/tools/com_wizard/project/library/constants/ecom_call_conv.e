@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Calling conventions constants"
 	legal: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Access
 	
-	Cc_fastcall: INTEGER is
+	Cc_fastcall: INTEGER
 			-- Fastcall calling convention (arguments to 
 			-- functions are to be passed in registers, when 
 			-- possible) 
@@ -22,7 +22,7 @@ feature -- Access
 			"CC_FASTCALL"
 		end
 
-	Cc_cdecl: INTEGER is
+	Cc_cdecl: INTEGER
 			-- C calling convention (caller pushes
 			-- parameters on stack, in reverse order,
 			-- caller cleans up stack)
@@ -32,7 +32,7 @@ feature -- Access
 			"CC_CDECL"
 		end
 
-	Cc_pascal: INTEGER is
+	Cc_pascal: INTEGER
 			-- Pascal calling convention (caller pushes
 			-- parameters on stack, in reverse order,
 			-- caller cleans up stack)
@@ -42,7 +42,7 @@ feature -- Access
 			"CC_PASCAL"
 		end
 	
-	Cc_macpascal: INTEGER is
+	Cc_macpascal: INTEGER
 			-- Mac Pascal calling convention 
 		external
 			"C [macro <oaidl.h>]"
@@ -50,7 +50,7 @@ feature -- Access
 			"CC_MACPASCAL"
 		end
 
-	Cc_stdcall: INTEGER is
+	Cc_stdcall: INTEGER
 			-- Stdcall calling convention (callee pushes
 			-- parameters on stack, in reverse order,
 			-- callee cleans up stack).
@@ -60,7 +60,7 @@ feature -- Access
 			"CC_STDCALL"
 		end
 
-	Cc_fpfastcall: INTEGER is
+	Cc_fpfastcall: INTEGER
 			-- Fpfastcall calling convention (
 		external
 			"C [macro <oaidl.h>]"
@@ -68,7 +68,7 @@ feature -- Access
 			"CC_FPFASTCALL"
 		end
 
-	Cc_syscall: INTEGER is
+	Cc_syscall: INTEGER
 			-- Syscall calling convention
 		external
 			"C [macro <oaidl.h>]"
@@ -76,7 +76,7 @@ feature -- Access
 			"CC_SYSCALL"
 		end
 
-	Cc_mpwcdecl: INTEGER is
+	Cc_mpwcdecl: INTEGER
 			-- Mpwcdecl calling convention 
 		external
 			"C [macro <oaidl.h>]"
@@ -84,7 +84,7 @@ feature -- Access
 			"CC_MPWCDECL"
 		end
 
-	Cc_mpwpascal: INTEGER is
+	Cc_mpwpascal: INTEGER
 			-- Mpwpascal calling convention 
 		external
 			"C [macro <oaidl.h>]"
@@ -92,7 +92,7 @@ feature -- Access
 			"CC_MPWPASCAL"
 		end
 
-	Cc_max: INTEGER is
+	Cc_max: INTEGER
 			-- Max calling convention 
 		external
 			"C [macro <oaidl.h>]"
@@ -102,7 +102,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_valid_callconv (cc: INTEGER): BOOLEAN is
+	is_valid_callconv (cc: INTEGER): BOOLEAN
 			-- Is `cc' a valid calling convention?
 		do
 			Result := cc = Cc_fastcall or 
@@ -117,7 +117,7 @@ feature -- Status report
 						cc = Cc_max
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

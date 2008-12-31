@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_options: like options; mapped_path: BOOLEAN; a_force_32bit: BOOLEAN; a_processor_count: NATURAL_8) is
+	make (a_options: like options; mapped_path: BOOLEAN; a_force_32bit: BOOLEAN; a_processor_count: NATURAL_8)
 			-- Initialize
 		require
 			a_options_not_void: a_options /= Void
@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 
 feature -- Quick compile
 
-	launch_quick_compilation is
+	launch_quick_compilation
 			-- Launch the `quick_finalize' program with the correct options.
 		local
 			quick_prg: STRING
@@ -144,14 +144,14 @@ feature -- Access
 
 feature -- Execution
 
-	translate is
+	translate
 			-- create Makefile from Makefile.SH and options
 		do
 			translate_makefile (True)
 			translate_sub_makefiles
 		end
 
-	run_make is
+	run_make
 			-- run the make utility on the generated Makefile
 		local
 			command: STRING
@@ -224,7 +224,7 @@ feature -- Execution
 
 feature {NONE} -- Translation
 
-	check_for_il is
+	check_for_il
 			-- Read content of first Ace file
 		do
 			open_files
@@ -237,7 +237,7 @@ feature {NONE} -- Translation
 			end
 		end
 
-	translate_makefile  (master: BOOLEAN) is
+	translate_makefile  (master: BOOLEAN)
 			-- translate the Makefile.SH in the current directory
 			-- 	master: is this the master makefile (i.e. the one in the F/W_code directory)?
 		do
@@ -279,7 +279,7 @@ feature {NONE} -- Translation
 			end
 		end
 
-	translate_sub_makefiles is
+	translate_sub_makefiles
 			-- Translate makefiles in subdirs from master makefile.
 		local
 			dir: STRING -- the directory we're working on
@@ -317,7 +317,7 @@ feature {NONE} -- Translation
 			end
 		end
 
-	translate_case is
+	translate_case
 			-- translate case section by ignoring it.
 		local
 			lastline: STRING
@@ -359,7 +359,7 @@ feature {NONE} -- Translation
 			read_next
 		end
 
-	translate_echo is
+	translate_echo
 			-- Translate echo section by ignoring it.
 		local
 			lastline: STRING
@@ -385,7 +385,7 @@ feature {NONE} -- Translation
 			read_next
 		end
 
-	translate_spit  (do_subst: BOOLEAN; endtag: STRING) is
+	translate_spit  (do_subst: BOOLEAN; endtag: STRING)
 			-- Translate spitshell section
 			-- 	do_subst: should substitutions be carried out?
 			--	endtag: up to where we should read.
@@ -441,7 +441,7 @@ feature {NONE} -- Translation
 			read_next
 		end
 
-	translate_master is
+	translate_master
 			-- Translate master Makefile.SH.
 		do
 			debug ("progress")
@@ -456,7 +456,7 @@ feature {NONE} -- Translation
 			end
 		end
 
-	translate_translate is
+	translate_translate
 			-- Translate.
 		local
 			lastline: STRING
@@ -518,7 +518,7 @@ feature {NONE} -- Translation
 			end
 		end
 
-	translate_externals is
+	translate_externals
 			-- Translate externals section.
 		local
 			lastline: STRING
@@ -573,7 +573,7 @@ feature {NONE} -- Translation
 			end
 		end
 
-	translate_application is
+	translate_application
 			-- Translate application section.
 		local
 			lastline: STRING
@@ -642,7 +642,7 @@ feature {NONE} -- Translation
 			end
 		end
 
-	translate_dependencies is
+	translate_dependencies
 			-- Translate dependencies section.
 		local
 			lastline: STRING
@@ -832,7 +832,7 @@ feature {NONE} -- Translation
 			makefile.put_new_line
 		end
 
-	translate_line_subst is
+	translate_line_subst
 			-- Translate a line requiring substitution.
 		local
 			lastline: STRING
@@ -893,7 +893,7 @@ feature {NONE} -- Translation
 			makefile.put_new_line
 		end
 
-	translate_line_change is
+	translate_line_change
 			-- Translate a line requiring changes.
 		local
 			lastline: STRING
@@ -1012,7 +1012,7 @@ feature {NONE} -- Translation
 			makefile.put_new_line
 		end
 
-	translate_appl is
+	translate_appl
 			-- Translate application generation code.
 		local
 			lastline: STRING
@@ -1083,7 +1083,7 @@ feature {NONE} -- Translation
 			end
 		end
 
-	translate_cecil_and_dll is
+	translate_cecil_and_dll
 			-- Translate cecil.
 		local
 			lastline, previous_line: STRING
@@ -1340,7 +1340,7 @@ feature {NONE} -- Translation
 
 feature {NONE}	-- substitutions
 
-	subst_eiffel (line: STRING) is
+	subst_eiffel (line: STRING)
 			-- Replace all occurrences of `Eiffel_dir' environment variable in `line'
 		do
 			debug ("subst")
@@ -1353,7 +1353,7 @@ feature {NONE}	-- substitutions
 			end
 		end
 
-	subst_objects_redirection (line: STRING) is
+	subst_objects_redirection (line: STRING)
 			-- Replace all occurences of $objects_redirection with list of objects
 		local
 			l_string, l_dir: STRING
@@ -1392,7 +1392,7 @@ feature {NONE}	-- substitutions
 			end
 		end
 
-	subst_platform (line: STRING) is
+	subst_platform (line: STRING)
 			-- Replace all occurrences of platform environment variable in `line'
 		do
 			debug ("subst")
@@ -1402,7 +1402,7 @@ feature {NONE}	-- substitutions
 			line.replace_substring_all ("$(ISE_PLATFORM)", get_replacement (once "ISE_PLATFORM"))
 		end
 
-	subst_compiler (line: STRING) is
+	subst_compiler (line: STRING)
 			-- Replace all occurrences of compiler environment variable in `line'
 		do
 			debug ("subst")
@@ -1414,7 +1414,7 @@ feature {NONE}	-- substitutions
 			end
 		end
 
-	subst_dir_sep  (line: STRING) is
+	subst_dir_sep  (line: STRING)
 			-- replace all occurrences of the directory separator in `line'
 		local
 			dir_sep: STRING
@@ -1431,7 +1431,7 @@ feature {NONE}	-- substitutions
 			end
 		end
 
-	subst_continuation  (line: STRING) is
+	subst_continuation  (line: STRING)
 			-- replace all occurrences of the line continuation character in `line'
 		do
 			debug ("subst")
@@ -1447,7 +1447,7 @@ feature {NONE}	-- substitutions
 			end
 		end
 
-	subst_intermediate (line: STRING) is
+	subst_intermediate (line: STRING)
 			-- replace all occurrences of ?obj#.obj with ?obj#.lib in `line' starting with "all"
 		local
 			start: INTEGER
@@ -1476,13 +1476,13 @@ feature {NONE}	-- substitutions
 
 feature {NONE} -- Implementation
 
-	env: EXECUTION_ENVIRONMENT is
+	env: EXECUTION_ENVIRONMENT
 			-- Execution environment
 		once
 			 create Result
 		end
 
-	search_and_replace (line: STRING) is
+	search_and_replace (line: STRING)
 			-- search words starting with $ and replace with option or env variable
 		local
 			wordstart: INTEGER
@@ -1546,7 +1546,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	get_word_to_replace (line: STRING; wordstart: INTEGER): STRING is
+	get_word_to_replace (line: STRING; wordstart: INTEGER): STRING
 			-- word on `line' starting with '$' after `wordstart'
 		local
 			wordend: INTEGER
@@ -1574,7 +1574,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	get_replacement (word: STRING): STRING is
+	get_replacement (word: STRING): STRING
 			-- find a replacement for `word' in options or environment
 		local
 			replacement: STRING
@@ -1600,7 +1600,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	read_next is
+	read_next
 			-- read the next line from Makefile.SH if possible
 		do
 			debug ("implementation")
@@ -1612,7 +1612,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	get_precompile_libs (line_to_search: STRING): STRING is
+	get_precompile_libs (line_to_search: STRING): STRING
 			-- look for precompiled libraries, also checks
 			-- if application uses multithreading mechanism
 		local
@@ -1689,7 +1689,7 @@ feature {NONE} -- Implementation
 			search_and_replace (Result)
 		end
 
-	open_files is
+	open_files
 			-- open the Makefile.SH and the Makefile to translate
 		local
 			out_file, retried: BOOLEAN
@@ -1718,7 +1718,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	close_files is
+	close_files
 			-- close the Makefile.SH and the Makefile
 		do
 			debug ("implementation")
@@ -1734,7 +1734,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	strip_parenthesis  (word: STRING) is
+	strip_parenthesis  (word: STRING)
 			-- remove enclosing parenthesis from word.
 		do
 			debug ("implementation")
@@ -1757,7 +1757,7 @@ feature {NONE} -- Implementation
 invariant
 	options_not_void: options /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

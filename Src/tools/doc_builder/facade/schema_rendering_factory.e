@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Schema widget rendering routines for particular kinds of schema information."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Element Rendering
 
-	element_tree_render (schema: DOCUMENT_SCHEMA; tree: EV_TREE) is
+	element_tree_render (schema: DOCUMENT_SCHEMA; tree: EV_TREE)
 			-- Render elements from `schema' in `tree'
 		require
 			schema_not_void: schema /= Void
@@ -18,7 +18,7 @@ feature -- Element Rendering
 		do
 		end
 
-	type_tree_render (schema: DOCUMENT_SCHEMA; tree: EV_TREE) is
+	type_tree_render (schema: DOCUMENT_SCHEMA; tree: EV_TREE)
 			-- Render types from `schema' in `tree'
 		require
 			schema_not_void: schema /= Void
@@ -26,7 +26,7 @@ feature -- Element Rendering
 		do
 		end
 
-	attribute_list_render (element: DOCUMENT_SCHEMA_ELEMENT; list: EV_MULTI_COLUMN_LIST) is
+	attribute_list_render (element: DOCUMENT_SCHEMA_ELEMENT; list: EV_MULTI_COLUMN_LIST)
 			-- Render attributes information from schema `element' in `list'
 		require
 			element_not_void: element /= Void
@@ -34,7 +34,7 @@ feature -- Element Rendering
 		do
 		end	
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

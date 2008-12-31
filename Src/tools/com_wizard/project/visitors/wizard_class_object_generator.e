@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that generate class object code for coclasses"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,7 +30,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	generate (a_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
+	generate (a_descriptor: WIZARD_COCLASS_DESCRIPTOR)
 			-- Generate class object.
 		local
 			l_name, l_header_file_name, l_header: STRING
@@ -105,7 +105,7 @@ feature -- Basic operations
 			cpp_class_writer.save_definition_header_file (Shared_file_name_factory.last_created_header_file_name)
 		end
 
-	create_file_name (a_file_name_factory: WIZARD_FILE_NAME_FACTORY) is
+	create_file_name (a_file_name_factory: WIZARD_FILE_NAME_FACTORY)
 			-- Get file name.
 		do
 			a_file_name_factory.process_class_object
@@ -113,14 +113,14 @@ feature -- Basic operations
 
 feature {NONE} -- Implementations
 
-	constructor: WIZARD_WRITER_CPP_CONSTRUCTOR is
+	constructor: WIZARD_WRITER_CPP_CONSTRUCTOR
 			--  Constructor of class factory
 		do
 			create Result.make
 			Result.set_body ("%TIsInitialized = 0;")
 		end
 
-	is_initialized_member: WIZARD_WRITER_C_MEMBER is
+	is_initialized_member: WIZARD_WRITER_C_MEMBER
 			-- is_initialized member.
 		do
 			create Result.make
@@ -130,7 +130,7 @@ feature {NONE} -- Implementations
 			Result.set_comment ("Is initialized?")
 		end
 
-	initialize_feature: WIZARD_WRITER_C_FUNCTION is
+	initialize_feature: WIZARD_WRITER_C_FUNCTION
 			-- Initialize feature.
 		local
 			l_body: STRING 
@@ -147,7 +147,7 @@ feature {NONE} -- Implementations
 			Result.set_body (l_body)
 		end
 
-	lock_server_feature: WIZARD_WRITER_C_FUNCTION is
+	lock_server_feature: WIZARD_WRITER_C_FUNCTION
 			-- LoackServer feature
 		do
 			create Result.make
@@ -158,7 +158,7 @@ feature {NONE} -- Implementations
 			Result.set_body ("%Tif (tmp_value)%N%T%TLockModule ();%N%Telse%N%T%TUnlockModule ();%N%Treturn S_OK;")
 		end
 
-	create_instance_feature: WIZARD_WRITER_C_FUNCTION is
+	create_instance_feature: WIZARD_WRITER_C_FUNCTION
 			-- CreateInstance of class factory
 		local
 			l_body: STRING
@@ -195,7 +195,7 @@ feature {NONE} -- Implementations
 			Result.set_body (l_body)
 		end
 
-	query_interface_feature: WIZARD_WRITER_C_FUNCTION is
+	query_interface_feature: WIZARD_WRITER_C_FUNCTION
 			-- QueryInterface of class factory
 		local
 			l_body: STRING
@@ -217,7 +217,7 @@ feature {NONE} -- Implementations
 			Result.set_body (l_body)
 		end
 
-	release_feature: WIZARD_WRITER_C_FUNCTION is
+	release_feature: WIZARD_WRITER_C_FUNCTION
 			-- Release of class factory
 		local
 			l_body: STRING
@@ -235,7 +235,7 @@ feature {NONE} -- Implementations
 			Result.set_body (l_body)
 		end
 
-	addref_feature: WIZARD_WRITER_C_FUNCTION is
+	addref_feature: WIZARD_WRITER_C_FUNCTION
 			-- Addref of class factory
 		local	
 			l_body: STRING
@@ -253,7 +253,7 @@ feature {NONE} -- Implementations
 			Result.set_body (l_body)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Pre processor of XML content.  Functions here are used to apply project-wide%
 		%settings into document content, e.g. process includes, headers, footers, external file references, etc."
 	legal: "See notice at end of class."
@@ -21,7 +21,7 @@ create {DOCUMENT_XML}
 	
 feature -- Creation
 	
-	make (a_xml: like internal_xml) is
+	make (a_xml: like internal_xml)
 			-- Create
 		require
 			xml_not_void: a_xml /= Void
@@ -33,7 +33,7 @@ feature -- Creation
 		
 feature -- Commands
 
-	process is
+	process
 			-- Process
 		do			
 			if preferences.process_html_stylesheet then
@@ -63,7 +63,7 @@ feature -- Commands
 
 feature {NONE} -- Processing
 
-	insert_content_div is
+	insert_content_div
 			-- Insert reference to content style which excludes header and footer
 		local
 			l_parent,			
@@ -99,7 +99,7 @@ feature {NONE} -- Processing
 			end	
 		end
 
-	insert_html_stylesheet_link is
+	insert_html_stylesheet_link
 			-- Insert reference to project or document HTML stylesheet file
 		local
 			l_path: STRING
@@ -120,7 +120,7 @@ feature {NONE} -- Processing
 			end	
 		end
 
-	insert_header is
+	insert_header
 			-- Insert header
 		local
 			l_header: DOCUMENT_HEADER
@@ -154,7 +154,7 @@ feature {NONE} -- Processing
 			end
 		end
 		
-	insert_footer is
+	insert_footer
 			-- Insert footer
 		local
 			l_footer: DOCUMENT_FOOTER
@@ -186,7 +186,7 @@ feature {NONE} -- Processing
 			end
 		end		
 		
-	insert_navigation_links is
+	insert_navigation_links
 			-- Insert project navigation links
 		local
 			l_toc: TABLE_OF_CONTENTS
@@ -290,7 +290,7 @@ feature {NONE} -- Processing
 			end
 		end		
 
-	insert_filter_script is
+	insert_filter_script
 			-- Insert filter script for web generated help project.
 			-- Note: this is required because Internet Explorer does not
 			-- support the captureEvents() JavaScript method and therefore
@@ -342,7 +342,7 @@ feature {NONE} -- Processing
 			end						
 		end		
 
-	insert_includes is
+	insert_includes
 			-- Find all includes directives and insert into document
 		do
 			-- TO DO
@@ -353,7 +353,7 @@ feature {NONE} -- Implementation
 	internal_xml: DOCUMENT_XML
 			-- XML
 
-	preferences: DOCUMENT_PROJECT_PREFERENCES is
+	preferences: DOCUMENT_PROJECT_PREFERENCES
 			-- Preferences
 		once
 			Result := shared_project.preferences	
@@ -363,7 +363,7 @@ feature {NONE} -- Implementation
 	footer_inserted: BOOLEAN	
 			-- Was header/footer inserted?
 		
-	relative_path_to_help_project (a_file: STRING): STRING is
+	relative_path_to_help_project (a_file: STRING): STRING
 			-- 
 		local
 			l_link: DOCUMENT_LINK
@@ -383,7 +383,7 @@ feature {NONE} -- Implementation
 invariant
 	has_content: internal_xml /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

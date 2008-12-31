@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shared system dialogs."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,97 +10,97 @@ class
 
 feature -- Access
 	
-	generation_dialog: GENERATION_DIALOG is
+	generation_dialog: GENERATION_DIALOG
 			-- Start dialog for generation wizard
 		do
 			create Result
 		end
 
-	template_dialog: TEMPLATE_DIALOG is
+	template_dialog: TEMPLATE_DIALOG
 			-- Dialog for page templates
 		once
 			create Result
 		end
 			
-	project_dialog: PROJECT_DIALOG is
+	project_dialog: PROJECT_DIALOG
 			-- Dialog for project creation
 		once
 			create Result
 		end
 			
-	about_dialog: ABOUT_DIALOG is
+	about_dialog: ABOUT_DIALOG
 			-- Dialog for system information
 		once
 			create Result
 		end
 			
-	preferences_dialog: PREFERENCES_DIALOG is
+	preferences_dialog: PREFERENCES_DIALOG
 			-- Dialog for application preferences
 		once
 			create result
 		end
 			
-	search_dialog: SEARCH_DIALOG is
+	search_dialog: SEARCH_DIALOG
 			-- Dialog for text searching
 		once
 			create Result
 		end
 			
-	error_dialog: ERROR_DIALOG is
+	error_dialog: ERROR_DIALOG
 			-- Dialog containing error information
 		once
 			create Result
 		end
 			
-	progress_dialog: PROGRESS_DIALOG is
+	progress_dialog: PROGRESS_DIALOG
 			-- Dialog for showing progress information
 		do
 			create Result
 		end
 			
-	expression_dialog: EXPRESSION_DIALOG is
+	expression_dialog: EXPRESSION_DIALOG
 			-- Dialog for regular expressions
 		once
 			create Result
 		end
 		
-	validator_tool: VALIDATOR_TOOL_DIALOG is
+	validator_tool: VALIDATOR_TOOL_DIALOG
 			-- Dialog for validation functions
 		once
 			create Result
 		end	
 			
-	new_toc_dialog: TOC_NEW_DIALOG is
+	new_toc_dialog: TOC_NEW_DIALOG
 			-- Dialog for new toc creation
 		once
 			create Result
 		end	
 		
-	toc_dialog: TOC_DIALOG is
+	toc_dialog: TOC_DIALOG
 			-- Dialog for toc properties
 		once
 			create Result
 		end	
 			
-	toc_merge_dialog: TOC_MERGE_DIALOG is
+	toc_merge_dialog: TOC_MERGE_DIALOG
 			-- Dialog for toc merging
 		once
 			create Result
 		end			
 			
-	character_dialog: CHARACTER_DIALOG is
+	character_dialog: CHARACTER_DIALOG
 			-- Dialog for special character codes
 		once
 			create Result
 		end			
 			
-	shortcut_dialog: SHORTCUTS_DIALOG is
+	shortcut_dialog: SHORTCUTS_DIALOG
 			-- Dialog for editor shortcuts
 		once
 			create Result
 		end			
 			
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Output notebook tab, can display messages, titles and errors"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -51,7 +51,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	user_initialization is
+	user_initialization
 			-- called by `initialize'.
 		do
 			create output_text
@@ -69,7 +69,7 @@ feature -- Access
 
 feature -- Element Settings
 
-	set_destination_folder (a_destination_folder: like destination_folder) is
+	set_destination_folder (a_destination_folder: like destination_folder)
 			-- Set `destination_folder' with `a_destination_folder'
 		do
 			destination_folder := a_destination_folder
@@ -77,13 +77,13 @@ feature -- Element Settings
 			destination_folder_set: destination_folder = a_destination_folder
 		end
 
-	enable_generate_button is
+	enable_generate_button
 			-- Enable sensitivity on `generate' button.
 		do
 			generate_button.enable_sensitive
 		end
 
-	disable_generate_button is
+	disable_generate_button
 			-- Disable sensitivity on `generate' button.
 		do
 			generate_button.disable_sensitive
@@ -91,14 +91,14 @@ feature -- Element Settings
 
 feature -- Basic Operations
 
-	clear is
+	clear
 			-- Clear output.
 		do
 			output_text.set_text ("")
 			internal_text.wipe_out
 		end
 
-	process_event (a_event: EV_THREAD_EVENT) is
+	process_event (a_event: EV_THREAD_EVENT)
 			-- Process event `a_event'.
 		require
 			non_void_event: a_event /= Void
@@ -181,13 +181,13 @@ feature -- Basic Operations
 
 feature {NONE} -- GUI Events Handling
 
-	on_exit is
+	on_exit
 			-- Called by `select_actions' of `exit_button'.
 		do
 			((create {EV_ENVIRONMENT}).application).destroy
 		end
 
-	on_stop is
+	on_stop
 			-- Called by `select_actions' of `stop_button'.
 		do
 			environment.set_abort (User_stop)
@@ -197,14 +197,14 @@ feature {NONE} -- GUI Events Handling
 			progress_bar.set_value (progress_bar.value_range.upper)
 		end
 
-	on_link_click (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	on_link_click (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Called by `pointer_button_press_actions' of `destination_path_label'.
 			-- Open destination folder.
 		do
 			(create {WEL_PROCESS_LAUNCHER}).spawn ("explorer.exe " + destination_folder, destination_folder)
 		end
 
-	on_open_eiffelstudio is
+	on_open_eiffelstudio
 			-- Called by `select_actions' of `open_eiffelstudio_button'.
 		local
 			l_folder, l_cmd: STRING
@@ -221,7 +221,7 @@ feature {NONE} -- GUI Events Handling
 			end
 		end
 
-	on_link_leave is
+	on_link_leave
 			-- Called by `pointer_leave_actions' of `destination_path_label'.
 			-- Reset `destination_path_label' format.
 		local
@@ -232,7 +232,7 @@ feature {NONE} -- GUI Events Handling
 			destination_path_label.set_font (l_font)
 		end
 
-	on_link_enter is
+	on_link_enter
 			-- Called by `pointer_enter_actions' of `destination_path_label'.
 			-- Set `destination_path_label' format to underline.
 		local
@@ -243,7 +243,7 @@ feature {NONE} -- GUI Events Handling
 			destination_path_label.set_font (l_font)
 		end
 
-	on_save is
+	on_save
 			-- Called by `select_actions' of `save_button'.
 			-- Save rich text content.
 		local
@@ -266,7 +266,7 @@ feature {NONE} -- GUI Events Handling
 			end
 		end
 
-	on_generate is
+	on_generate
 			-- Called by `select_actions' of `generate_button'.
 		local
 			l_window: WIZARD_MAIN_WINDOW
@@ -280,7 +280,7 @@ feature {NONE} -- GUI Events Handling
 
 feature {NONE} -- Implementation
 
-	add_title (a_title: STRING) is
+	add_title (a_title: STRING)
 			-- Append title `a_title' to content of `output_text'.
 		require
 			non_void_title: a_title /= Void
@@ -297,7 +297,7 @@ feature {NONE} -- Implementation
 			update_output
 		end
 
-	add_error (a_error: STRING) is
+	add_error (a_error: STRING)
 			-- Append error `a_error' to content of `output_text'.
 		require
 			non_void_error: a_error /= Void
@@ -308,7 +308,7 @@ feature {NONE} -- Implementation
 			update_output
 		end
 
-	add_warning (a_warning: STRING) is
+	add_warning (a_warning: STRING)
 			-- Append warning `a_warning' to content of `output_text'.
 		require
 			non_void_warning: a_warning /= Void
@@ -318,7 +318,7 @@ feature {NONE} -- Implementation
 			update_output
 		end
 
-	add_message (a_message: STRING) is
+	add_message (a_message: STRING)
 			-- Append message `a_message' to content of `output_text'.
 		require
 			non_void_message: a_message /= Void
@@ -328,7 +328,7 @@ feature {NONE} -- Implementation
 			update_output
 		end
 
-	add_text (a_text: STRING) is
+	add_text (a_text: STRING)
 			-- Append text `a_text' to content of `output_text'.
 		require
 			non_void_text: a_text /= Void
@@ -337,7 +337,7 @@ feature {NONE} -- Implementation
 			update_output
 		end
 
-	append_text (a_text: STRING) is
+	append_text (a_text: STRING)
 			-- Append `a_text' to `text', wrap lines of more than 1024 characters.
 		require
 			non_void_text: a_text /= Void
@@ -351,7 +351,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_output is
+	update_output
 			-- Append `a_text' to content of `output_text' using format `a_format'.
 		local
 			l_visible_lines, i, l_index: INTEGER
@@ -374,7 +374,7 @@ feature {NONE} -- Implementation
 			output_text.set_text (l_displayed_text)
 		end
 
-	set_output is
+	set_output
 			-- Set content of `output_text' with `text'
 		local
 			l_scroll: INTEGER
@@ -386,7 +386,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	eiffelstudio_command (a_folder: STRING): STRING is
+	eiffelstudio_command (a_folder: STRING): STRING
 			-- Launch EiffelBench with first project in `a_folder'
 		require
 			non_void_folder: a_folder /= Void
@@ -432,7 +432,7 @@ feature {NONE} -- Private Access
 	output_text: WIZARD_TEXT
 			-- Output text
 
-	default_parent: EV_INTERNAL_SILLY_WINDOW_IMP is
+	default_parent: EV_INTERNAL_SILLY_WINDOW_IMP
 			-- Default parent for creation of `rich_text'
 		once
 			create Result.make_top ("Output")
@@ -440,7 +440,7 @@ feature {NONE} -- Private Access
 			valid_parent: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

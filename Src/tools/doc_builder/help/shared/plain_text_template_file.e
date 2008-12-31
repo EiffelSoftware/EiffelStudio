@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Template file."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 	
 feature {NONE} -- Implementation
 
-	make (atemplate_filename: STRING) is
+	make (atemplate_filename: STRING)
 			-- create an instance of this object
 		require
 			template_file_exists: (create {PLAIN_TEXT_FILE}.make (atemplate_filename)).exists
@@ -25,7 +25,7 @@ feature {NONE} -- Implementation
 	
 feature -- Access
 
-	symbol_value (asymbol: STRING): STRING is
+	symbol_value (asymbol: STRING): STRING
 			-- retrieve a symbols value
 		require
 			symbol_exists: symbol_table.has (format_symbol (asymbol))
@@ -50,7 +50,7 @@ feature -- Access
 		
 feature -- Basic Operations
 
-	add_symbol (asymbol, avalue: STRING) is
+	add_symbol (asymbol, avalue: STRING)
 			-- add a new symbol 'asymbol' with the value 'avalue' to 'symbol_table'
 		require
 			non_void_symbol: asymbol /= Void
@@ -63,7 +63,7 @@ feature -- Basic Operations
 			symbol_added: symbol_table.has (format_symbol (asymbol))
 		end
 		
-	remove_symbol (asymbol: STRING) is
+	remove_symbol (asymbol: STRING)
 			-- remove the symbol 'asymbol' from 'symbol_table'
 		require
 			non_void_symbol: asymbol /= Void
@@ -75,7 +75,7 @@ feature -- Basic Operations
 			symbol_removed: not symbol_table.has (format_symbol (asymbol))
 		end
 		
-	save_file (afilename: STRING) is
+	save_file (afilename: STRING)
 			-- save a text file created from the template file
 		local
 			template: PLAIN_TEXT_FILE
@@ -107,7 +107,7 @@ feature -- Basic Operations
 		
 feature {NONE} -- Basic Operations
 		
-	pre_process_line (in: STRING; astart_pos: INTEGER) is
+	pre_process_line (in: STRING; astart_pos: INTEGER)
 			-- recieves a line from the template file and returns the result
 		require
 			non_void_in: in /= Void
@@ -132,7 +132,7 @@ feature {NONE} -- Basic Operations
 			end
 		end
 		
-	process_token (token: STRING; token_pos: INTEGER) is
+	process_token (token: STRING; token_pos: INTEGER)
 		local
 			unwrapped_token: STRING
 		do
@@ -148,7 +148,7 @@ feature {NONE} -- Basic Operations
 		
 feature -- Formatting
 
-	format_symbol (asymbol: STRING): STRING is
+	format_symbol (asymbol: STRING): STRING
 			-- format a symbol name
 		do
 			Result := asymbol.twin
@@ -158,7 +158,7 @@ feature -- Formatting
 	
 feature {NONE} -- Formatting
 
-	wrap_token (atoken: STRING): STRING is
+	wrap_token (atoken: STRING): STRING
 			-- format a token name into a template file token
 		require
 			non_void_token: atoken /= Void
@@ -173,7 +173,7 @@ feature {NONE} -- Formatting
 			non_empty_Result: not Result.is_empty
 		end
 		
-	unwrap_token (atoken: STRING): STRING is
+	unwrap_token (atoken: STRING): STRING
 			-- remove the leading and trailing characters from 'atoken'
 		require
 			non_void_token: atoken /= Void
@@ -187,7 +187,7 @@ feature {NONE} -- Formatting
 	
 feature -- Element Change
 
-	set_symbol_value (asymbol, avalue: STRING) is
+	set_symbol_value (asymbol, avalue: STRING)
 			-- set a symbol value
 		require
 			non_void_symbol: asymbol /= Void
@@ -200,7 +200,7 @@ feature -- Element Change
 			symbol_value_set: symbol_table.item (asymbol).is_equal (avalue)
 		end
 		
-	set_do_not_write (avalue: BOOLEAN) is
+	set_do_not_write (avalue: BOOLEAN)
 			-- set the write status of the output file
 		do
 			do_not_write := avalue
@@ -209,13 +209,13 @@ feature -- Element Change
 	
 feature {NONE} -- Implementation
 
-	start_token: STRING is "[!"
+	start_token: STRING = "[!"
 			-- Start token character(s)
 			
-	end_token: STRING is "]"
+	end_token: STRING = "]"
 			-- End token character(s)
 
-	token_commands: HASH_TABLE [PROCEDURE [ANY, TUPLE [STRING, STRING]], STRING] is
+	token_commands: HASH_TABLE [PROCEDURE [ANY, TUPLE [STRING, STRING]], STRING]
 			-- Hash table of [processing agent (source_line, token_name), token name]
 		do
 			create Result.make (1)
@@ -230,7 +230,7 @@ invariant
 	non_void_template_filename: template_filename /= Void
 	non_empty_template_filename: not template_filename.is_empty
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "New project creation dialog."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	user_initialization is
+	user_initialization
 			-- called by `initialize'.
 			-- Any custom user initialization that
 			-- could not be performed in `initialize',
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	browse_directories is
+	browse_directories
 			-- Browse Directories
 		local
 			l_directory_dialog: EV_DIRECTORY_DIALOG
@@ -45,7 +45,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	create_project is
+	create_project
 			-- Create new project
 		local
 			l_question_dialog: EV_MESSAGE_DIALOG
@@ -67,7 +67,7 @@ feature {NONE} -- Implementation
 			end			
 		end
 
-	set_path_field (a_location: STRING) is
+	set_path_field (a_location: STRING)
 			-- Set path field with directory path
 		do
 			path_field.set_text (a_location)	
@@ -78,7 +78,7 @@ feature {DOCUMENT_PROJECT} -- Implementation
 	valid: BOOLEAN;
 			-- Were options valid?
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

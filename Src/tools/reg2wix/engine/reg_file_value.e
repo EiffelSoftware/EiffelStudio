@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Represents a Windows registry key unnamed value (the default value.)
 	]"
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_property: INI_PROPERTY; a_handler: like error_handler) is
+	make (a_property: INI_PROPERTY; a_handler: like error_handler)
 			-- Initialize a new {REG_FILE_VALUE}
 		require
 			a_property_attached: a_property /= Void
@@ -57,7 +57,7 @@ feature -- Status report
 
 feature -- Query
 
-	is_valid_value (a_value: like value): BOOLEAN is
+	is_valid_value (a_value: like value): BOOLEAN
 			-- Determines if `a_value' is a valid value.
 		do
 			Result := True
@@ -65,7 +65,7 @@ feature -- Query
 
 feature {NONE} -- Basic operations
 
-	prune_quotes (a_value: STRING): STRING is
+	prune_quotes (a_value: STRING): STRING
 			-- Removes quotation marks from `a_value' and returns the result
 		require
 			a_value_attached: a_value /= Void
@@ -76,7 +76,7 @@ feature {NONE} -- Basic operations
 			Result.prune_all_trailing ('"')
 		end
 
-	unescape_value (a_value: STRING): STRING is
+	unescape_value (a_value: STRING): STRING
 			-- Unescapes the value `a_value'
 		require
 			a_value_attached: a_value /= Void
@@ -108,7 +108,7 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Process
 
-	process_ini_content (a_property: INI_PROPERTY) is
+	process_ini_content (a_property: INI_PROPERTY)
 			-- Processes the content of an INI property `a_property'
 		require
 			a_property_attached: a_property /= Void
@@ -126,7 +126,7 @@ invariant
 	not_value_is_empty: value /= Void implies not value.is_empty
 	value_is_valid_value: is_valid_value (value)
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

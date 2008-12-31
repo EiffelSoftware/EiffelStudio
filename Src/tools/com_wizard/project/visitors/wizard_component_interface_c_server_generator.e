@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Processing interface for C server component."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -13,7 +13,7 @@ inherit
 
 feature -- Basic operations
 
-	process_property (a_property: WIZARD_PROPERTY_DESCRIPTOR) is
+	process_property (a_property: WIZARD_PROPERTY_DESCRIPTOR)
 			-- Process property.
 		local
 			property_generator: WIZARD_CPP_SERVER_PROPERTY_GENERATOR
@@ -29,7 +29,7 @@ feature -- Basic operations
 		end
 
 
-	process_function (a_function: WIZARD_FUNCTION_DESCRIPTOR) is
+	process_function (a_function: WIZARD_FUNCTION_DESCRIPTOR)
 			-- Process function.
 		local
 			function_generator: WIZARD_CPP_SERVER_FUNCTION_GENERATOR
@@ -45,7 +45,7 @@ feature -- Basic operations
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "XML Schema Validator."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,19 +16,19 @@ create
 
 feature -- Access
 
-	is_valid: BOOLEAN is True
+	is_valid: BOOLEAN = True
 			-- Is validation successful?
 
 	error_report: ERROR_REPORT
     		-- Error
 		
-	validate_against_text (text, schema_filename: STRING) is
+	validate_against_text (text, schema_filename: STRING)
 			-- Validate 'text' against schema definition found in file 
 			-- with 'schema_filename'.
 		do  
 		end	
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

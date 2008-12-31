@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Feature"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (r_name: STRING) is
+	make (r_name: STRING)
 			-- Initialize object.  Set 'name' to 'r_name'.
 		require
 			non_void_name: r_name /= Void
@@ -56,7 +56,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_name (f_name: STRING) is
+	set_name (f_name: STRING)
 			-- Set 'name' to 'f_name'.
 		require
 			non_void_name: f_name /= Void
@@ -67,7 +67,7 @@ feature -- Element change
 			name_set: name.is_equal (f_name)
 		end
 
-	set_comment (new_comment: STRING) is
+	set_comment (new_comment: STRING)
 			-- Set 'comment' to 'new_comment'.
 		require
 			non_void_comment: new_comment /= Void
@@ -77,7 +77,7 @@ feature -- Element change
 			comment_set: comment.is_equal (new_comment)
 		end
 
-	set_result_type (new_result_type: STRING) is
+	set_result_type (new_result_type: STRING)
 			-- Set 'result_type' to 'new_result_type'.
 		require
 			non_void_type: new_result_type /= Void
@@ -88,7 +88,7 @@ feature -- Element change
 			result_type_set: result_type.is_equal (new_result_type)
 		end
 
-	add_parameter (para: EI_PARAMETER) is
+	add_parameter (para: EI_PARAMETER)
 			-- Add 'para' to 'parameters'.
 		require
 			non_void_parameter: para /= Void
@@ -102,7 +102,7 @@ invariant
 	valid_name: name /= Void and then not name.is_empty
 	non_void_comment: comment /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

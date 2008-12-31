@@ -1,4 +1,4 @@
-indexing
+note
 	description: "File name factory."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,7 +34,7 @@ feature -- Access
 	last_created_header_file_name: STRING
 			-- Last created header file name (for c files)
 
-	last_created_declaration_header_file_name: STRING is
+	last_created_declaration_header_file_name: STRING
 			-- Last created declaration header file name (for cpp files)
 		require
 			non_void_last_created_header_file_name: last_created_header_file_name /= Void
@@ -44,7 +44,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	create_file_name (a_generator: WIZARD_TYPE_GENERATOR; a_writer: WIZARD_WRITER) is
+	create_file_name (a_generator: WIZARD_TYPE_GENERATOR; a_writer: WIZARD_WRITER)
 			-- Create new file name according to `a_generator' and `a_writer'.
 		require
 			non_void_generator: a_generator /= Void
@@ -55,7 +55,7 @@ feature -- Basic operations
 			transient_writer := Void
 		end
 
-	create_registration_file_name (a_generator: WIZARD_REGISTRATION_GENERATOR; a_writer: WIZARD_WRITER) is
+	create_registration_file_name (a_generator: WIZARD_REGISTRATION_GENERATOR; a_writer: WIZARD_WRITER)
 			-- Create new file name according to `a_generator' and `a_writer'.
 		require
 			non_void_generator: a_generator /= Void
@@ -66,7 +66,7 @@ feature -- Basic operations
 			transient_writer := Void
 		end
 
-	create_c_alias_file_name (a_writer: WIZARD_WRITER_C_FILE) is
+	create_c_alias_file_name (a_writer: WIZARD_WRITER_C_FILE)
 			-- Create new file name according to `a_writer'.
 		require
 			non_void_writer: a_writer /= Void
@@ -76,7 +76,7 @@ feature -- Basic operations
 			transient_writer := Void
 		end
 
-	create_definition_file_name (a_generator: WIZARD_DEFINITION_FILE_GENERATOR; a_writer: WIZARD_WRITER) is
+	create_definition_file_name (a_generator: WIZARD_DEFINITION_FILE_GENERATOR; a_writer: WIZARD_WRITER)
 			-- Create filename for 'a_generator'
 		do
 			transient_writer := a_writer
@@ -84,7 +84,7 @@ feature -- Basic operations
 			transient_writer := Void
 		end
 
-	create_generated_mapper_file_name (a_writer: WIZARD_WRITER_C) is
+	create_generated_mapper_file_name (a_writer: WIZARD_WRITER_C)
 			-- File name for generated Eiffel to C structure mapper
 		do
 			transient_writer := a_writer
@@ -97,7 +97,7 @@ feature -- Basic operations
 			transient_writer := Void
 		end
 
-	create_source_inner_class_name (a_writer: WIZARD_WRITER_C) is
+	create_source_inner_class_name (a_writer: WIZARD_WRITER_C)
 			-- File name for inner class.
 		do
 			transient_writer := a_writer
@@ -110,43 +110,43 @@ feature -- Basic operations
 
 feature {WIZARD_TYPE_GENERATOR, WIZARD_REGISTRATION_GENERATOR} -- Visitor
 
-	process_alias_c_client is
+	process_alias_c_client
 			-- Create filename for `a_generator'.
 		do
 			process_c_common
 		end
 
-	process_alias_c_server is
+	process_alias_c_server
 			-- Create filename for `a_generator'.
 		do
 			process_c_common
 		end
 
-	process_alias_eiffel_client is
+	process_alias_eiffel_client
 			-- Create filename for `a_generator'.
 		do
 			process_eiffel_structure
 		end
 
-	process_alias_eiffel_server is
+	process_alias_eiffel_server
 			-- Create filename for `a_generator'.
 		do
 			process_eiffel_structure
 		end
 
-	process_coclass_c_client is
+	process_coclass_c_client
 			-- Create filename for `a_generator'.
 		do
 			process_c_client
 		end
 
-	process_coclass_c_server is
+	process_coclass_c_server
 			-- Create filename for `a_generator'.
 		do
 			process_c_server
 		end
 
-	process_coclass_eiffel_client is
+	process_coclass_eiffel_client
 			-- Create filename for `a_generator'.
 		do
 			create_directory_prefix (Client)
@@ -154,7 +154,7 @@ feature {WIZARD_TYPE_GENERATOR, WIZARD_REGISTRATION_GENERATOR} -- Visitor
 			process_eiffel
 		end
 
-	process_impl_interface_eiffel_client is
+	process_impl_interface_eiffel_client
 			-- Create filename for `a_generator'.
 		do
 			create_directory_prefix (Client)
@@ -162,7 +162,7 @@ feature {WIZARD_TYPE_GENERATOR, WIZARD_REGISTRATION_GENERATOR} -- Visitor
 			process_eiffel
 		end
 
-	process_coclass_eiffel_server is
+	process_coclass_eiffel_server
 			-- Create filename for `a_generator'.
 		do
 			create_directory_prefix (Server)
@@ -170,7 +170,7 @@ feature {WIZARD_TYPE_GENERATOR, WIZARD_REGISTRATION_GENERATOR} -- Visitor
 			process_eiffel
 		end
 
-	process_impl_interface_eiffel_server is
+	process_impl_interface_eiffel_server
 			-- Create filename for `a_generator'.
 		do
 			create_directory_prefix (Server)
@@ -178,85 +178,85 @@ feature {WIZARD_TYPE_GENERATOR, WIZARD_REGISTRATION_GENERATOR} -- Visitor
 			process_eiffel
 		end
 
-	process_enum_c_client is
+	process_enum_c_client
 			-- Create filename for `a_generator'.
 		do
 			process_c_common
 		end
 
-	process_enum_c_server is
+	process_enum_c_server
 			-- Create filename for `a_generator'.
 		do
 			process_c_common
 		end
 
-	process_enum_eiffel_client is
+	process_enum_eiffel_client
 			-- Create filename for `a_generator'.
 		do
 			process_eiffel_structure
 		end
 
-	process_enum_eiffel_server  is
+	process_enum_eiffel_server
 			-- Create filename for `a_generator'.
 		do
 			process_eiffel_structure
 		end
 
-	process_interface_c_client is
+	process_interface_c_client
 			-- Create filename for `a_generator'.
 		do
 			process_c_common
 		end
 
-	process_interface_c_server is
+	process_interface_c_server
 			-- Create filename for `a_generator'.
 		do
 			process_c_common
 		end
 
-	process_interface_eiffel_client is
+	process_interface_eiffel_client
 			-- Create filename for `a_generator'.
 		do
 			process_eiffel_interface
 		end
 
-	process_interface_eiffel_server is
+	process_interface_eiffel_server
 			-- Create filename for `a_generator'.
 		do
 			process_eiffel_interface
 		end
 
-	process_record_c_client is
+	process_record_c_client
 			-- Create filename for `a_generator'.
 		do
 			process_c_common
 		end
 
-	process_record_c_server is
+	process_record_c_server
 			-- Create filename for `a_generator'.
 		do
 			process_c_common
 		end
 
-	process_record_eiffel_client is
+	process_record_eiffel_client
 			-- Create filename for `a_generator'.
 		do
 			process_eiffel_structure
 		end
 
-	process_record_eiffel_server is
+	process_record_eiffel_server
 			-- Create filename for `a_generator'.
 		do
 			process_eiffel_structure
 		end
 
-	process_class_object is
+	process_class_object
 			-- Create filename for `a_generator'.
 		do
 			process_c_server
 		end
 
-	process_registration_code is
+	process_registration_code
 			-- Create filename for 'a_generator'
 		do
 			process_c_server
@@ -264,7 +264,7 @@ feature {WIZARD_TYPE_GENERATOR, WIZARD_REGISTRATION_GENERATOR} -- Visitor
 
 feature {NONE} -- Implementation
 
-	declaration_header_file_name (a_name: STRING): STRING is
+	declaration_header_file_name (a_name: STRING): STRING
 			-- Declaration header file name from definition header file name `a_name'
 		require
 			non_void_name: a_name /= Void
@@ -285,7 +285,7 @@ feature {NONE} -- Implementation
 			non_void_declaration_header_file_name: Result /= Void
 		end
 
-	process_c_common is
+	process_c_common
 			-- Set `last_created_file_name' with file name for `a_generator'.
 			-- Set `last_created_header_file_name' with header file name for `a_generator'.
 		require
@@ -295,7 +295,7 @@ feature {NONE} -- Implementation
 			process_c (False)
 		end
 
-	process_c_client  is
+	process_c_client
 			-- Set `last_created_file_name' with file name for `a_generator'.
 			-- Set `last_created_header_file_name' with header file name for `a_generator'.
 		require
@@ -305,7 +305,7 @@ feature {NONE} -- Implementation
 			process_c (True)
 		end
 
-	process_c_server  is
+	process_c_server
 			-- Set `last_created_file_name' with file name for `a_generator'.
 			-- Set `last_created_header_file_name' with header file name for `a_generator'.
 		require
@@ -315,7 +315,7 @@ feature {NONE} -- Implementation
 			process_c (True)
 		end
 
-	process_eiffel_interface is
+	process_eiffel_interface
 			-- Set `last_created_file_name' with file name for `a_generator'.
 			-- Set `last_created_header_file_name' with header file name for `a_generator'.
 		require
@@ -326,7 +326,7 @@ feature {NONE} -- Implementation
 			process_eiffel
 		end
 
-	process_eiffel_structure is
+	process_eiffel_structure
 			-- Set `last_created_file_name' with file name for `a_generator'.
 			-- Set `last_created_header_file_name' with header file name for `a_generator'.
 		require
@@ -337,7 +337,7 @@ feature {NONE} -- Implementation
 			process_eiffel
 		end
 
-	process_eiffel is
+	process_eiffel
 			-- Set `last_created_file_name' with file name for `a_generator'.
 			-- Set `last_created_header_file_name' with header file name for `a_generator'.
 		require
@@ -354,7 +354,7 @@ feature {NONE} -- Implementation
 			last_created_file_name.append (Eiffel_file_extension)
 		end
 
-	process_c (is_cpp: BOOLEAN) is
+	process_c (is_cpp: BOOLEAN)
 			-- Set `last_created_file_name' with file name for `a_generator'.
 			-- Set `last_created_header_file_name' with header file name for `a_generator'.
 		require
@@ -376,7 +376,7 @@ feature {NONE} -- Implementation
 			last_created_header_file_name.append (a_c_writer.header_file_name)
 		end
 
-	process_definition_file_writer is
+	process_definition_file_writer
 			-- Set 'last_created_file_name' with 'system_name'.def
 		require
 			non_void_writer: transient_writer /= Void
@@ -392,7 +392,7 @@ feature {NONE} -- Implementation
 			last_created_file_name.append (Definition_file_extension)
 		end
 
-	header_to_c_file_name (a_filename: STRING; is_cpp: BOOLEAN): STRING is
+	header_to_c_file_name (a_filename: STRING; is_cpp: BOOLEAN): STRING
 			-- Map header file name into C file name
 		require
 			non_void_file_name: a_filename /= Void
@@ -408,14 +408,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	create_directory_prefix (a_directory: STRING) is
+	create_directory_prefix (a_directory: STRING)
 			-- Prepend `last_created_file_name' with path to `a_directory'.
 		do
 			last_created_file_name := environment.destination_folder.twin
 			last_created_file_name.append (a_directory)
 		end
 
-	add_subdirectory (a_subdirectory: STRING) is
+	add_subdirectory (a_subdirectory: STRING)
 			-- Prepend `last_created_file_name' with path to `a_subdirectory'.
 		do
 			last_created_file_name.append_character (Directory_separator)
@@ -426,7 +426,7 @@ feature {NONE} -- Implementation
 			-- writer used to get filename.
 			-- Used during visitor callback.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

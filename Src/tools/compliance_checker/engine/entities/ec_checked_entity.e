@@ -1,4 +1,4 @@
-indexing
+note
 	description : "[
 		Abstact base implementation for compliance checked entities.
 		
@@ -28,9 +28,9 @@ inherit
 
 feature -- Access
 
-	is_compliant: like internal_is_compliant is
+	is_compliant: like internal_is_compliant
 			-- Is `assembly' CLS-compliant?
-		indexing
+		note
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		require
 			not_is_being_checked: has_been_checked or not is_being_checked
@@ -43,9 +43,9 @@ feature -- Access
 			not_is_being_checked: has_been_checked or not is_being_checked
 		end
 
-	is_eiffel_compliant: like internal_is_eiffel_compliant is
+	is_eiffel_compliant: like internal_is_eiffel_compliant
 			-- Is `assembly' Eiffel-compliant?
-		indexing
+		note
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		require
 			not_is_being_checked: has_been_checked or not is_being_checked
@@ -58,9 +58,9 @@ feature -- Access
 			not_is_being_checked: has_been_checked or not is_being_checked
 		end
 
-	is_marked: like internal_is_marked is
+	is_marked: like internal_is_marked
 			-- Is `assembly' marked with a `CLS_COMPLIANT_ATTRIBUTE'?
-		indexing
+		note
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		require
 			not_is_being_checked: has_been_checked or not is_being_checked
@@ -87,9 +87,9 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	non_compliant_reasons: EC_CHECKED_REASON_CONSTANTS is
+	non_compliant_reasons: EC_CHECKED_REASON_CONSTANTS
 			-- Checked reasons
-		indexing
+		note
 			once_status: global
 		once
 			create Result
@@ -99,9 +99,9 @@ feature {NONE} -- Access
 
 feature {NONE} -- Basic Operations
 
-	frozen check_compliance is
+	frozen check_compliance
 			-- Checks entity's CLS-compliance.
-		indexing
+		note
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		require
 			not_has_been_checked: not has_been_checked
@@ -125,18 +125,18 @@ feature {NONE} -- Basic Operations
 			eiffel_reason_set: not internal_is_eiffel_compliant implies non_eiffel_compliant_reason /= Void
 		end
 
-	check_extended_compliance is
+	check_extended_compliance
 			-- Aguments `check_compliance' compliance checking.
 			-- Decendents wanting to provide more checking should redefine this feature.
-		indexing
+		note
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		do
 			--| Do nothing...
 		end
 
-	check_eiffel_compliance is
+	check_eiffel_compliance
 			-- Checks entity to see if it is Eiffel-compliant.
-		indexing
+		note
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		do
 			internal_is_eiffel_compliant := True
@@ -144,16 +144,16 @@ feature {NONE} -- Basic Operations
 
 feature {NONE} -- Query
 
-	custom_attribute_provider: ICUSTOM_ATTRIBUTE_PROVIDER is
+	custom_attribute_provider: ICUSTOM_ATTRIBUTE_PROVIDER
 			-- Retrieve custom attribute provider for entity.
-		indexing
+		note
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		deferred
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	is_cls_member_name (a_member: MEMBER_INFO): BOOLEAN is
+	is_cls_member_name (a_member: MEMBER_INFO): BOOLEAN
 			-- Does `a_member' have a valid CLS-compliant name?
 		require
 			a_member_not_void: a_member /= Void
@@ -196,10 +196,10 @@ feature {NONE} -- Implementation
 			-- Is `assembly' marked with a `CLS_COMPLIANT_ATTRIBUTE'?
 			-- Note: Do not use directly, use `is_marked' instead.
 
-	examine_attributes (a_provider: ICUSTOM_ATTRIBUTE_PROVIDER) is
+	examine_attributes (a_provider: ICUSTOM_ATTRIBUTE_PROVIDER)
 			-- Examines `a_provider' custom attributes for System.ClsCompliant attribute.
 			-- State is set accordingly.
-		indexing
+		note
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		require
 			a_provider_not_void: a_provider /= Void
@@ -250,7 +250,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

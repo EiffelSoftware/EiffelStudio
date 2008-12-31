@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Concrete task that cannot be decomposed in other tasks."
 	date: "$Date$"
 	revision: "$Revision$"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Cpp client function generator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -18,7 +18,7 @@ inherit
 
 feature {NONE} -- Implementation
 
-	retval_struct_pointer_set_up (visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
+	retval_struct_pointer_set_up (visitor: WIZARD_DATA_TYPE_VISITOR): STRING
 			-- Create Eiffel object
 		do
 			create Result.make (1000)
@@ -144,13 +144,13 @@ feature {NONE} -- Implementation
 			Result.append (New_line_tab)
 		end
 
-	does_return_application_data: BOOLEAN is
+	does_return_application_data: BOOLEAN
 			-- Does function return application data?
 		do
 			Result := not func_desc.return_type.name.is_equal (Void_c_keyword) 
 		end
 
-	feature_body (interface_name: STRING): STRING is
+	feature_body (interface_name: STRING): STRING
 			-- Ccom client feature body
 		local
 			arguments: LIST [WIZARD_PARAM_DESCRIPTOR]
@@ -409,7 +409,7 @@ feature {NONE} -- Implementation
 			end
 		end  -- function
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

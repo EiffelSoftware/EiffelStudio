@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Fast parser that only recognizes the old constructs"
 	author: ""
 	date: "$Date$"
@@ -25,7 +25,7 @@ feature -- Access
 
 feature -- Status setting
 
-	reset is
+	reset
 		do
 			has_obsolete_constructs := False
 		ensure
@@ -34,12 +34,12 @@ feature -- Status setting
 
 feature -- Processing
 
-	new_creation_keyword_as (a_scn: EIFFEL_SCANNER): KEYWORD_AS is
+	new_creation_keyword_as (a_scn: EIFFEL_SCANNER): KEYWORD_AS
 		do
 			has_obsolete_constructs := True
 		end
 
-	new_keyword_as (a_code: INTEGER_32; a_scn: EIFFEL_SCANNER): KEYWORD_AS is
+	new_keyword_as (a_code: INTEGER_32; a_scn: EIFFEL_SCANNER): KEYWORD_AS
 			-- New KEYWORD_AS only for `feature' and `creation'.
 		do
 			if a_code = {EIFFEL_TOKENS}.te_feature then
@@ -47,17 +47,17 @@ feature -- Processing
 			end
 		end
 
-	new_static_access_as (c: TYPE_AS; f: ID_AS; p: PARAMETER_LIST_AS; f_as: KEYWORD_AS; d_as: SYMBOL_AS): STATIC_ACCESS_AS is
+	new_static_access_as (c: TYPE_AS; f: ID_AS; p: PARAMETER_LIST_AS; f_as: KEYWORD_AS; d_as: SYMBOL_AS): STATIC_ACCESS_AS
 		do
 			has_obsolete_constructs := has_obsolete_constructs or else f_as /= Void
 		end
 
-	new_bang_creation_as (tp: TYPE_AS; tg: ACCESS_AS; c: ACCESS_INV_AS; l_as, r_as: SYMBOL_AS): BANG_CREATION_AS is
+	new_bang_creation_as (tp: TYPE_AS; tg: ACCESS_AS; c: ACCESS_INV_AS; l_as, r_as: SYMBOL_AS): BANG_CREATION_AS
 		do
 			has_obsolete_constructs := True
 		end
 
-	new_bang_creation_expr_as (t: TYPE_AS; c: ACCESS_INV_AS; l_as, r_as: SYMBOL_AS): BANG_CREATION_EXPR_AS is
+	new_bang_creation_expr_as (t: TYPE_AS; c: ACCESS_INV_AS; l_as, r_as: SYMBOL_AS): BANG_CREATION_EXPR_AS
 		do
 			has_obsolete_constructs := True
 		end

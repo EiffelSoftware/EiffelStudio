@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Task used for creating wizard descriptors from type library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -38,10 +38,10 @@ inherit
 
 feature -- Access
 
-	title: STRING is "Analyzing type library"
+	title: STRING = "Analyzing type library"
 			-- Task title
 
-	steps_count: INTEGER is
+	steps_count: INTEGER
 			-- Number of steps involved in task	
 		local
 			l_file_name: STRING
@@ -65,7 +65,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	internal_execute is
+	internal_execute
 			-- Implementation of `execute'.
 			-- Use `step' `steps_count' times unless `stop' is called.
 		do
@@ -74,7 +74,7 @@ feature {NONE} -- Implementation
 			system_descriptor.generate (environment.type_library_file_name)
 		end
 
-	type_library_analysis_steps_count (a_type_library: ECOM_TYPE_LIB): INTEGER is
+	type_library_analysis_steps_count (a_type_library: ECOM_TYPE_LIB): INTEGER
 			-- Number of steps needed to analyze `a_type_desc' in `a_type_info'.
 		local
 			i, l_count: INTEGER
@@ -92,7 +92,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	type_info_analysis_steps_count (a_type_info: ECOM_TYPE_INFO): INTEGER is
+	type_info_analysis_steps_count (a_type_info: ECOM_TYPE_INFO): INTEGER
 			-- Number of steps needed to analyze `a_type_info'
 		local
 			l_type, i, l_count: INTEGER
@@ -139,7 +139,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	data_type_analysis_steps_count (a_type_info: ECOM_TYPE_INFO; a_type_desc: ECOM_TYPE_DESC) : INTEGER is
+	data_type_analysis_steps_count (a_type_info: ECOM_TYPE_INFO; a_type_desc: ECOM_TYPE_DESC) : INTEGER
 			-- Number of steps needed to analyze `a_type_desc' in `a_type_info'.
 		local
 			l_var_type: INTEGER
@@ -154,7 +154,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	referred_type_analysis_steps_count (a_type_info: ECOM_TYPE_INFO; a_handle: NATURAL_32): INTEGER is
+	referred_type_analysis_steps_count (a_type_info: ECOM_TYPE_INFO; a_handle: NATURAL_32): INTEGER
 			-- Number of steps needed to analyze type referred to by `a_handle' in `a_type_info'
 		require
 			non_void_void_type_info: a_type_info /= Void
@@ -170,7 +170,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	library_counted (a_guid: ECOM_GUID): BOOLEAN is
+	library_counted (a_guid: ECOM_GUID): BOOLEAN
 			-- Were steps for library with GUID `a_guid' already counted?
 		do
 			Result := library_guids.has (a_guid)
@@ -181,7 +181,7 @@ feature {NONE} -- Private Access
 	library_guids: ARRAYED_LIST [ECOM_GUID];
 			-- GUIDs of type libraries whose steps have already been counted
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

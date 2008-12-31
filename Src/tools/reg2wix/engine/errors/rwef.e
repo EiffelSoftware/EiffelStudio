@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Error message to indicate no registry files were loaded.
 	]"
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize error using the file name `a_file_name'
 		do
 		end
@@ -28,7 +28,7 @@ feature {NONE} -- Access
 	dollar_description: STRING = "No valid registry files were loaded."
 			-- Dollar encoded description. ${n} are replaced by array indicies.
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

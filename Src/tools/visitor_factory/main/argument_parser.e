@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Used to parse command line arguments of Eiffel Visitor Factory Tool.
 	]"
@@ -151,7 +151,7 @@ feature {NONE} -- Switch names
 	interface_switch: !STRING = "t|interface"
 	routines_switch: !STRING = "o|routines"
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

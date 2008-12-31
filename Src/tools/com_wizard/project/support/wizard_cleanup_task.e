@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Cleanup task, reset folder content before new generation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,16 +13,16 @@ inherit
 
 feature -- Access
 
-	title: STRING is "Cleaning up destination folder"
+	title: STRING = "Cleaning up destination folder"
 			-- Task title
 
-	steps_count: INTEGER is
+	steps_count: INTEGER
 			-- Number of steps involved in task
 		do
 			Result := 1
 		end
 
-	internal_execute is
+	internal_execute
 			-- Implementation of `execute'.
 			-- Use `step' `steps_count' times unless `stop' is called.
 		local
@@ -52,7 +52,7 @@ feature -- Access
 			retry
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

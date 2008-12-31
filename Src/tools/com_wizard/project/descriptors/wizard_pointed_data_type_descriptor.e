@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Description of pointer data type"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_creator: WIZARD_POINTED_DATA_TYPE_CREATOR) is
+	make (a_creator: WIZARD_POINTED_DATA_TYPE_CREATOR)
 			-- Initialize
 		require
 			valid_creator: a_creator /= Void
@@ -39,7 +39,7 @@ feature -- Access
 	pointed_data_type_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR
 			-- Description of array element type
 
-	visitor: WIZARD_DATA_TYPE_VISITOR is
+	visitor: WIZARD_DATA_TYPE_VISITOR
 			-- Data type visitor.
 		local
 			type_descriptor: WIZARD_TYPE_DESCRIPTOR
@@ -95,7 +95,7 @@ feature -- Access
 			end
 		end
 
-	interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR is
+	interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR
 			-- Interface descriptor.
 		require
 --			interface_type: visitor.is_interface_pointer or visitor.is_interface_pointer_pointer or
@@ -152,7 +152,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_equal_data_type (other: WIZARD_DATA_TYPE_DESCRIPTOR): BOOLEAN is
+	is_equal_data_type (other: WIZARD_DATA_TYPE_DESCRIPTOR): BOOLEAN
 			-- Is `other' describes same data type?
 		local
 			other_pointed: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
@@ -165,7 +165,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	set_pointed_descriptor (a_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR) is
+	set_pointed_descriptor (a_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR)
 			-- Set `pointed_data_type_descriptor'
 		require
 			valid_descriptor: a_descriptor /= Void
@@ -177,13 +177,13 @@ feature -- Basic operations
 
 feature -- Visitor
 
-	visit (a_visitor: WIZARD_DATA_VISITOR) is
+	visit (a_visitor: WIZARD_DATA_VISITOR)
 			-- Call back `a_visitor' with appropriate feature.
 		do
 			a_visitor.process_pointed_data_type (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

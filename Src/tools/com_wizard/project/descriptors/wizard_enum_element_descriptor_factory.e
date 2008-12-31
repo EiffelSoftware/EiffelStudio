@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Factory of Enumeration Element Descriptors"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ inherit
 feature -- Basic operations
 
 	create_descriptor (a_documentation: ECOM_DOCUMENTATION;
-					a_value: INTEGER): WIZARD_ENUM_ELEMENT_DESCRIPTOR is
+					a_value: INTEGER): WIZARD_ENUM_ELEMENT_DESCRIPTOR
 			-- Create description of element of enumerartion
 		require
 			valid_documentaion: a_documentation /= Void and then
@@ -41,7 +41,7 @@ feature -- Basic operations
 			valid_value: value = a_value
 		end
 
-	initialize_descriptor (a_descriptor: WIZARD_ENUM_ELEMENT_DESCRIPTOR) is
+	initialize_descriptor (a_descriptor: WIZARD_ENUM_ELEMENT_DESCRIPTOR)
 			-- Initialize `a_descriptor' fields
 		require
 			valid_descriptor: a_descriptor /= Void
@@ -62,7 +62,7 @@ feature {NONE} -- Implementation
 	description: STRING;
 			-- help string
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

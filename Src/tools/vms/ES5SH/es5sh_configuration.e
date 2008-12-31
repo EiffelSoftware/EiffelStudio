@@ -1,4 +1,4 @@
-indexing
+note
 	description: "configuration values from CONFIG.EIF"
 	author: "David Schwartz"
 	Date: "$Date$"
@@ -18,7 +18,7 @@ feature {NONE} -- Initialization
 		-- stupid hack to access es5sh common information
 		-- ***tbs*** refactor: remove attributes from ES5SH_COMMON...
 
-	make (a_file_name: FILE_NAME; a_common: ES5SH_COMMON ) is
+	make (a_file_name: FILE_NAME; a_common: ES5SH_COMMON )
 			-- Initialize configuration from `a_file_name' and `common'
 		require
 			file_name_exists_nonblank: a_file_name /= Void and then not a_file_name.is_empty
@@ -38,13 +38,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	file_name: STRING is
+	file_name: STRING
 			-- name of `configuration_file'
 		do
 			Result := configuration_file.name
 		end
 
-	has (a_key: STRING): BOOLEAN is
+	has (a_key: STRING): BOOLEAN
 			-- Is there an item with key `a_key'?
 		require
 			key_exists_nonblank: a_key /= Void and then not a_key.is_empty
@@ -52,14 +52,14 @@ feature -- Access
 			Result := table.has (a_key)
 		end
 
-	item (a_key: STRING): STRING is
+	item (a_key: STRING): STRING
 		require
 			key_exists_nonblank: a_key /= Void and then not a_key.is_empty
 		do
 			Result := table.item (a_key)
 		end
 
-	printable_item (a_key: STRING): STRING is
+	printable_item (a_key: STRING): STRING
 			-- item associated with `a_key', "undefined" if none exists
 		require
 			key_exists_nonblank: a_key /= Void and then not a_key.is_empty
@@ -96,27 +96,27 @@ feature -- Access
 --		end; -- get_configuration_option_once
 
 
-	found_item: STRING is
+	found_item: STRING
 		do
 			Result := table.found_item
 		end
 
-	found: BOOLEAN is
+	found: BOOLEAN
 		do
 			Result := table.found
 		end
 
-	not_found: BOOLEAN is
+	not_found: BOOLEAN
 		do
 			Result := table.not_found
 		end
 
-	inserted: BOOLEAN is
+	inserted: BOOLEAN
 		do
 			Result := table.inserted
 		end
 
-	replaced: BOOLEAN is
+	replaced: BOOLEAN
 		do
 			Result := table.replaced
 		end
@@ -134,9 +134,9 @@ feature -- Access
 			--	quote ':' in target : dependents rules,
 			--  use $(subst) to convert spaces to commas in library commands
 			-- otherwise generate Makefile for MMS/MMK
-	target_gnu_make_default: BOOLEAN is True
+	target_gnu_make_default: BOOLEAN = True
 
-	commandfile: STRING is
+	commandfile: STRING
 			-- String used to invoke a command procedure
 		once
 			Result := table.item ("commandfile")
@@ -147,7 +147,7 @@ feature -- Access
 			end
 		end
 
-	ignore_prefix: STRING is
+	ignore_prefix: STRING
 			-- prefix for commands that causes make/gmake/MMS/MMK to ignore errors
 		once
 			if target_gnu_make then
@@ -159,13 +159,13 @@ feature -- Access
 
 feature -- Basic operations
 
-		put (a_value, a_key: STRING) is
+		put (a_value, a_key: STRING)
 			obsolete "use force or replace"
 			do
 				force (a_value, a_key)
 			end
 
-		force (a_value, a_key: STRING) is
+		force (a_value, a_key: STRING)
 				-- insert `a_value' for `a_key' (replace if exists, insert otherwise)
 				-- same semantics as HASH_TABLE.force
 		require
@@ -174,7 +174,7 @@ feature -- Basic operations
 			table.force (a_value, a_key)
 		end
 
-	replace (a_value, a_key: STRING) is
+	replace (a_value, a_key: STRING)
 				-- replace 'a_value` for `a_key'
 				-- same semantics as HASH_TABLE.replace
 		require
@@ -192,7 +192,7 @@ feature {NONE} -- Implementation
 	table: HASH_TABLE [STRING, STRING]
 		-- table of value/key pairs
 
-	read_file is
+	read_file
 			-- read the configuration file, populate `table'
 		require
 			file_not_void: configuration_file /= Void
@@ -263,7 +263,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	post_process is
+	post_process
 			-- handle special case configuration items
 		local
 			l_val: STRING
@@ -403,7 +403,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	trim_nonblank_value (a_key: STRING) is
+	trim_nonblank_value (a_key: STRING)
 			-- if value for `a_key' is blank then remove it and print warning,
 			-- else if it is present the remove leading and trailing whitespace
 		local
@@ -421,7 +421,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	force_obsolete_targeted_option (a_key, a_target_gnu, a_target_mmk: STRING) is
+	force_obsolete_targeted_option (a_key, a_target_gnu, a_target_mmk: STRING)
 			-- force value for `a_key' : (if target_gnu_make then `a_target_gnu' else `a_target_mmk')
 		local
 			l_val: STRING
@@ -430,7 +430,7 @@ feature {NONE} -- Implementation
 			table.force (l_val, a_key)
 		end
 
-	obsolete_targeted_option_value (a_key, a_target_gnu, a_target_mmk: STRING) : STRING is
+	obsolete_targeted_option_value (a_key, a_target_gnu, a_target_mmk: STRING) : STRING
 			-- value for `a_key' : (if target_gnu_make then `a_target_gnu' else `a_target_mmk')
 		do
 			if target_gnu_make then
@@ -444,7 +444,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	print_configuration_warning (a_msg: STRING; a_line_number: INTEGER) is
+	print_configuration_warning (a_msg: STRING; a_line_number: INTEGER)
 			-- print configuration file related warning message with line number
 		do
 --			print_warning_message ("")
@@ -459,7 +459,7 @@ feature {NONE} -- Implementation
 
 feature -- test (options debugging)
 
-	dump_options (tag : STRING) is
+	dump_options (tag : STRING)
 				-- dump all options on standard output
 		local
 			i : INTEGER
@@ -487,7 +487,7 @@ feature -- test (options debugging)
 --			print (val);
 --		end; -- dump_option_value
 
-		dump_option (k : STRING) is
+		dump_option (k : STRING)
 			-- dump single named option, if it exists
 		local
 			l_val: STRING
@@ -500,7 +500,7 @@ feature -- test (options debugging)
 
 		end; -- dump_option
 
-	test_options (tag : STRING) is
+	test_options (tag : STRING)
 		do
 			print ("test_options: " + tag + "%N")
 			--dump_option ("commandfile")

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Registration code generator for out-of-process server."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -19,7 +19,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	generate is
+	generate
 			-- Generate Eiffel registration code for out-of-process server.
 		do
 			create eiffel_writer.make
@@ -51,43 +51,43 @@ feature -- Basic operations
 
 		end
 
-	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY) is
+	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY)
 		do
 			a_factory.process_coclass_eiffel_server
 		end
 
 feature {NONE} -- Implementation
 
-	description_message: STRING is 
+	description_message: STRING = 
 		"Objects of this class set the registry keys necessary for COM to access the component%%%N%T%T%T%T  %
 		% %%and activate a new instance of the component whenever COM asks for if.%%%N%T%T%T%T  %
 		% %%User may inherit from this class and redifine `main_window'."
 
-	default_show_cmd: STRING is "default_show_cmd"
+	default_show_cmd: STRING = "default_show_cmd"
 			-- Used for code generation.
 
-	Sw_shownormal: STRING is "Sw_shownormal"
+	Sw_shownormal: STRING = "Sw_shownormal"
 			-- Used for code generation.
 
-	Sw_hide: STRING is "Sw_hide"
+	Sw_hide: STRING = "Sw_hide"
 			-- Used for code generation.
 
-	Local_string_var: STRING is "local_string"
+	Local_string_var: STRING = "local_string"
 			-- Used for code generation.
 
-	Initialize_com: STRING is "initialize_com"
+	Initialize_com: STRING = "initialize_com"
 			-- Used for code generation.
 
-	Cleanup_com: STRING is "cleanup_com"
+	Cleanup_com: STRING = "cleanup_com"
 			-- Used for code generation.
 
-	Register_server: STRING is "register_server"
+	Register_server: STRING = "register_server"
 			-- Used for code generation.
 
-	Unregister_server: STRING is "unregister_server"
+	Unregister_server: STRING = "unregister_server"
 			-- Used for code generation.
 
-	set_default_ancestors (an_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS) is
+	set_default_ancestors (an_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS)
 			-- Set default ancestors.
 		local
 			tmp_writer: WIZARD_WRITER_INHERIT_CLAUSE
@@ -111,13 +111,13 @@ feature {NONE} -- Implementation
 			an_eiffel_writer.add_inherit_clause (tmp_writer)
 		end
 
-	add_creation is
+	add_creation
 			-- Add creation procedures.
 		do
 			eiffel_writer.add_creation_routine (Make_word)
 		end
 
-	make_feature: WIZARD_WRITER_FEATURE is
+	make_feature: WIZARD_WRITER_FEATURE
 			-- `make' feature
 		local
 			tmp_body: STRING
@@ -361,7 +361,7 @@ feature {NONE} -- Implementation
 			valid_writer: Result.can_generate
 		end
 
-	main_window_feature: WIZARD_WRITER_FEATURE is
+	main_window_feature: WIZARD_WRITER_FEATURE
 			-- Main Window.
 		local
 			tmp_body: STRING
@@ -392,7 +392,7 @@ feature {NONE} -- Implementation
 			valid_writer: Result.can_generate
 		end
 
-	default_show_command_feature: WIZARD_WRITER_FEATURE is
+	default_show_command_feature: WIZARD_WRITER_FEATURE
 			-- Default Show command.
 		local
 			tmp_comment, tmp_body: STRING
@@ -423,7 +423,7 @@ feature {NONE} -- Implementation
 			valid_writer: Result.can_generate
 		end
 
-	default_show_cmd_feature: WIZARD_WRITER_FEATURE is
+	default_show_cmd_feature: WIZARD_WRITER_FEATURE
 			-- Default Show command.
 		local
 			tmp_comment: STRING
@@ -444,7 +444,7 @@ feature {NONE} -- Implementation
 			valid_writer: Result.can_generate
 		end
 
-	initialize_com_feature: WIZARD_WRITER_FEATURE is
+	initialize_com_feature: WIZARD_WRITER_FEATURE
 			-- Initialize COM.
 		local
 			tmp_comment, tmp_body: STRING
@@ -466,7 +466,7 @@ feature {NONE} -- Implementation
 			valid_writer: Result.can_generate
 		end
 
-	cleanup_com_feature: WIZARD_WRITER_FEATURE is
+	cleanup_com_feature: WIZARD_WRITER_FEATURE
 			-- Clean up COM.
 		local
 			tmp_comment, tmp_body: STRING
@@ -488,7 +488,7 @@ feature {NONE} -- Implementation
 			valid_writer: Result.can_generate
 		end
 
-	register_server_feature: WIZARD_WRITER_FEATURE is
+	register_server_feature: WIZARD_WRITER_FEATURE
 			-- Register Server.
 		local
 			tmp_comment, tmp_body: STRING
@@ -510,7 +510,7 @@ feature {NONE} -- Implementation
 			valid_writer: Result.can_generate
 		end
 
-	unregister_server_feature: WIZARD_WRITER_FEATURE is
+	unregister_server_feature: WIZARD_WRITER_FEATURE
 			-- Clean up COM.
 		local
 			tmp_comment, tmp_body: STRING
@@ -532,7 +532,7 @@ feature {NONE} -- Implementation
 			valid_writer: Result.can_generate
 		end
 
-	ccom_initialize_com_feature: WIZARD_WRITER_FEATURE is
+	ccom_initialize_com_feature: WIZARD_WRITER_FEATURE
 			-- External Clean up COM feature.
 		local
 			tmp_body: STRING
@@ -562,7 +562,7 @@ feature {NONE} -- Implementation
 			valid_writer: Result.can_generate
 		end
 
-	ccom_cleanup_com_feature: WIZARD_WRITER_FEATURE is
+	ccom_cleanup_com_feature: WIZARD_WRITER_FEATURE
 			-- External Initialize COM feature.
 		local
 			tmp_body: STRING
@@ -592,7 +592,7 @@ feature {NONE} -- Implementation
 			valid_writer: Result.can_generate
 		end
 
-	ccom_register_server_feature: WIZARD_WRITER_FEATURE is
+	ccom_register_server_feature: WIZARD_WRITER_FEATURE
 			-- External Register server feature.
 		local
 			tmp_body: STRING
@@ -622,7 +622,7 @@ feature {NONE} -- Implementation
 			valid_writer: Result.can_generate
 		end
 
-	ccom_unregister_server_feature: WIZARD_WRITER_FEATURE is
+	ccom_unregister_server_feature: WIZARD_WRITER_FEATURE
 			-- External Unregister Server feature.
 		local
 			tmp_body: STRING
@@ -652,7 +652,7 @@ feature {NONE} -- Implementation
 			valid_writer: Result.can_generate
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

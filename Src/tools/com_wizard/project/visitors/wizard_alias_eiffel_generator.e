@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Alias Eiffel generator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -25,7 +25,7 @@ inherit
 
 feature -- Basic Operations
 
-	generate (alias_descriptor: WIZARD_ALIAS_DESCRIPTOR) is
+	generate (alias_descriptor: WIZARD_ALIAS_DESCRIPTOR)
 			-- process alias
 			-- generate code for alias described in `alias_descriptor'
 			-- derived class in Eiffel
@@ -54,7 +54,7 @@ feature -- Basic Operations
 
 feature -- Processing
 
-	process_safearray_data_type (a_safearray_descriptor: WIZARD_SAFEARRAY_DATA_TYPE_DESCRIPTOR) is
+	process_safearray_data_type (a_safearray_descriptor: WIZARD_SAFEARRAY_DATA_TYPE_DESCRIPTOR)
 			-- Process SAFEARRAY
 		local
 			inherit_clause: WIZARD_WRITER_INHERIT_CLAUSE
@@ -78,7 +78,7 @@ feature -- Processing
 			eiffel_writer.add_feature (writer_feature, Initialization)
 		end
 
-	process_automation_data_type (an_automation_descriptor: WIZARD_AUTOMATION_DATA_TYPE_DESCRIPTOR) is
+	process_automation_data_type (an_automation_descriptor: WIZARD_AUTOMATION_DATA_TYPE_DESCRIPTOR)
 			-- Process Automation Data Type
 		local
 			inherit_clause: WIZARD_WRITER_INHERIT_CLAUSE
@@ -125,7 +125,7 @@ feature -- Processing
 			end
 		end
 		
-	process_array_data_type (an_array_descriptor: WIZARD_ARRAY_DATA_TYPE_DESCRIPTOR) is
+	process_array_data_type (an_array_descriptor: WIZARD_ARRAY_DATA_TYPE_DESCRIPTOR)
 			-- Process Array
 		local
 			inherit_clause: WIZARD_WRITER_INHERIT_CLAUSE
@@ -156,7 +156,7 @@ feature -- Processing
 
 		end
 
-	process_user_defined_data_type (a_user_defined_descriptor: WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR) is
+	process_user_defined_data_type (a_user_defined_descriptor: WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR)
 			-- Process User Defined Data Type
 		local
 			inherit_clause: WIZARD_WRITER_INHERIT_CLAUSE
@@ -192,7 +192,7 @@ feature -- Processing
 			end
 		end
 
-	process_pointed_data_type (a_pointed_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR) is
+	process_pointed_data_type (a_pointed_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR)
 			-- Process pointed Data Type
 		local
 			inherit_clause: WIZARD_WRITER_INHERIT_CLAUSE
@@ -245,7 +245,7 @@ feature {NONE} -- Implementation
 	no_need_create_class: BOOLEAN
 			-- Is it true that we should not create Eiffel class?
 
-	create_from_ecom_array (an_eiffel_type: STRING): WIZARD_WRITER_FEATURE is
+	create_from_ecom_array (an_eiffel_type: STRING): WIZARD_WRITER_FEATURE
 			-- Creation procedure, make from ECOM_ARRAY
 		require
 			non_void_eiffel_type: an_eiffel_type /= Void
@@ -311,7 +311,7 @@ feature {NONE} -- Implementation
 			non_void_writer_feature: Result /= Void
 		end
 
-	create_from_array (an_eiffel_type: STRING): WIZARD_WRITER_FEATURE is
+	create_from_array (an_eiffel_type: STRING): WIZARD_WRITER_FEATURE
 			-- Creation procedure, make from ARRAY
 		require
 			non_void_eiffel_type: an_eiffel_type /= Void
@@ -350,7 +350,7 @@ feature {NONE} -- Implementation
 			non_void_writer_feature: Result /= Void
 		end
 
-	create_from_cell (an_eiffel_type: STRING): WIZARD_WRITER_FEATURE is
+	create_from_cell (an_eiffel_type: STRING): WIZARD_WRITER_FEATURE
 			-- Creation procedure, make from CELL
 		require
 			non_void_eiffel_type: an_eiffel_type /= Void
@@ -390,7 +390,7 @@ feature {NONE} -- Implementation
 			non_void_writer_feature: Result /= Void
 		end
 
-	create_from_basic_type_ref (an_eiffel_type: STRING): WIZARD_WRITER_FEATURE is
+	create_from_basic_type_ref (an_eiffel_type: STRING): WIZARD_WRITER_FEATURE
 			-- Creation procedure, make from CELL
 		require
 			non_void_eiffel_type: an_eiffel_type /= Void
@@ -431,7 +431,7 @@ feature {NONE} -- Implementation
 			non_void_writer_feature: Result /= Void
 		end
 
-	create_from_interface (an_eiffel_type: STRING): WIZARD_WRITER_FEATURE is
+	create_from_interface (an_eiffel_type: STRING): WIZARD_WRITER_FEATURE
 			-- Creation procedure, make from Interface
 		require
 			non_void_eiffel_type: an_eiffel_type /= Void
@@ -472,7 +472,7 @@ feature {NONE} -- Implementation
 			non_void_writer_feature: Result /= Void
 		end
 
-	create_from_structure (an_eiffel_type: STRING): WIZARD_WRITER_FEATURE is
+	create_from_structure (an_eiffel_type: STRING): WIZARD_WRITER_FEATURE
 			-- Creation procedure, make from Structure
 		require
 			non_void_eiffel_type: an_eiffel_type /= Void
@@ -518,7 +518,7 @@ feature {NONE} -- Implementation
 			non_void_writer_feature: Result /= Void
 		end
 
-	create_from_string (an_eiffel_type: STRING): WIZARD_WRITER_FEATURE is
+	create_from_string (an_eiffel_type: STRING): WIZARD_WRITER_FEATURE
 			-- Creation procedure, make from STRING
 		require
 			non_void_eiffel_type: an_eiffel_type /= Void
@@ -557,7 +557,7 @@ feature {NONE} -- Implementation
 			non_void_writer_feature: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

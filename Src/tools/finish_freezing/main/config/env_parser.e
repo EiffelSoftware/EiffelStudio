@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Used to evaluate environment configuration files that set environment variables."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_batch_file: like batch_file_name; a_args: like batch_arguments; a_options: like batch_options) is
+	make (a_batch_file: like batch_file_name; a_args: like batch_arguments; a_options: like batch_options)
 			-- Initialize parser from source batch file `a_batch_file'
 		require
 			a_batch_file_attached: a_batch_file /= Void
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	path: STRING is
+	path: STRING
 			-- PATH environment variable
 		do
 			Result := variable_for_name (path_var_name)
@@ -49,7 +49,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	include: STRING is
+	include: STRING
 			-- INCLUDE environment variable
 		do
 			Result := variable_for_name (include_var_name)
@@ -57,7 +57,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	lib: STRING is
+	lib: STRING
 			-- LIBS environment variable
 		do
 			Result := variable_for_name (lib_var_name)
@@ -86,7 +86,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Basic operations
 
-	variable_for_name (a_name: STRING): STRING is
+	variable_for_name (a_name: STRING): STRING
 			-- Retrieves varaible for name `a_name'
 		require
 			a_name_attached: a_name /= Void
@@ -100,7 +100,7 @@ feature {NONE} -- Basic operations
 			result_attached: Result /= Void
 		end
 
-	variables_via_evaluation: HASH_TABLE [STRING, STRING] is
+	variables_via_evaluation: HASH_TABLE [STRING, STRING]
 			-- Retrieves a list of name/value environment variable pairs from evaluating the current environment
 			-- Using a batch file provided by `vsvars_batch_file'
 		local
@@ -213,7 +213,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	parse_variable_name_value_pair (a_string: STRING): TUPLE [name: STRING; value: STRING] is
+	parse_variable_name_value_pair (a_string: STRING): TUPLE [name: STRING; value: STRING]
 			-- Given 'a_string' parse and extract the environment variable from it.
 		require
 			a_string_not_void: a_string /= Void
@@ -228,7 +228,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	batch_file_content (a_out: STRING): STRING is
+	batch_file_content (a_out: STRING): STRING
 			-- Generates content for a batch file, used to executed and extract env vars from.
 		require
 			a_out_attached: a_out /= Void
@@ -255,7 +255,7 @@ feature {NONE} -- Basic operations
 			not_result_is_empty: not Result.is_empty
 		end
 
-	applicable_variables: ARRAYED_LIST [STRING] is
+	applicable_variables: ARRAYED_LIST [STRING]
 			-- List of applicable variables
 		once
 			create Result.make (3)
@@ -283,7 +283,7 @@ feature {NONE} -- Basic operations
 			Result.append ("_espawn.tmp")
 		end
 
-	cmd_exe_file_name: STRING is
+	cmd_exe_file_name: STRING
 			-- File name of Command exe
 		local
 			l_system: STRING
@@ -355,7 +355,7 @@ invariant
 	batch_file_name_exists: (create {RAW_FILE}.make (batch_file_name)).exists
 	not_batch_arguments_is_empty: batch_arguments /= Void implies not batch_arguments.is_empty
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

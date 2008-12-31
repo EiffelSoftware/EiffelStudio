@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Creator of Enumeration Description"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ inherit
 
 feature -- Basic operations
 
-	create_descriptor (a_documentation: ECOM_DOCUMENTATION; a_type_info: ECOM_TYPE_INFO): WIZARD_ENUM_DESCRIPTOR is
+	create_descriptor (a_documentation: ECOM_DOCUMENTATION; a_type_info: ECOM_TYPE_INFO): WIZARD_ENUM_DESCRIPTOR
 			-- Initialize `elements'
 			-- and `eiffel_class_name'
 		require
@@ -74,7 +74,7 @@ feature -- Basic operations
 			non_void_class_name: eiffel_class_name /= Void
 		end
 
-	create_element_descriptors (a_type_info: ECOM_TYPE_INFO) is
+	create_element_descriptors (a_type_info: ECOM_TYPE_INFO)
 			-- Create element descriptors
 		local
 			i, element_count: INTEGER
@@ -119,7 +119,7 @@ feature -- Basic operations
 			non_void_elements: elements /= Void
 		end
 
-	initialize_descriptor (a_descriptor: WIZARD_ENUM_DESCRIPTOR) is
+	initialize_descriptor (a_descriptor: WIZARD_ENUM_DESCRIPTOR)
 				-- Initialize descriptor
 			require
 				valid_descriptor: a_descriptor /= Void
@@ -139,7 +139,7 @@ feature {NONE} -- Implementation
 	size_of_instance: NATURAL_32;
 			-- Size of instance of this type
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

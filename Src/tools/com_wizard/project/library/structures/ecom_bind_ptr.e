@@ -1,4 +1,4 @@
-indexing
+note
 	description: "BINDPTR structure"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_from_pointer (a_pointer: POINTER) is
+	make_from_pointer (a_pointer: POINTER)
 			-- Make from pointer.
 		do
 			make_by_pointer (a_pointer)
@@ -25,19 +25,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	func_desc: ECOM_FUNC_DESC is
+	func_desc: ECOM_FUNC_DESC
 			-- FUNCDESC structure
 		do
 			create Result.make_from_pointer (ccom_bindptr_funcdesc (item))
 		end
 
-	var_desc: ECOM_VAR_DESC is
+	var_desc: ECOM_VAR_DESC
 			-- VARDESC structure
 		do
 			create Result.make_from_pointer (ccom_bindptr_vardesc (item))
 		end
 
-	type_comp: ECOM_TYPE_COMP is
+	type_comp: ECOM_TYPE_COMP
 			-- ITypeComp interface
 		do
 			create Result.make_from_pointer (ccom_bindptr_itypecomp (item))
@@ -45,7 +45,7 @@ feature -- Access
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of BINDPTR structure
 		do
 			Result := c_size_of_bind_ptr
@@ -53,29 +53,29 @@ feature -- Measurement
 
 feature {NONE} -- Externals
 
-	c_size_of_bind_ptr: INTEGER is
+	c_size_of_bind_ptr: INTEGER
 		external 
 			"C [macro %"E_bindptr.h%"]"
 		alias
 			"sizeof(BINDPTR)"
 		end
 
-	ccom_bindptr_funcdesc (a_ptr: POINTER): POINTER is
+	ccom_bindptr_funcdesc (a_ptr: POINTER): POINTER
 		external
 			"C [macro %"E_bindptr.h%"](EIF_POINTER): EIF_POINTER"
 		end
 
-	ccom_bindptr_vardesc (a_ptr: POINTER): POINTER is
+	ccom_bindptr_vardesc (a_ptr: POINTER): POINTER
 		external
 			"C [macro %"E_bindptr.h%"](EIF_POINTER): EIF_POINTER"
 		end
 
-	ccom_bindptr_itypecomp (a_ptr: POINTER): POINTER is
+	ccom_bindptr_itypecomp (a_ptr: POINTER): POINTER
 		external
 			"C [macro %"E_bindptr.h%"](EIF_POINTER): EIF_POINTER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

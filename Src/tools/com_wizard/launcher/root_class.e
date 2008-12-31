@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "COM Wizard launcher, hides DOS console and launch COM wizard graphically"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Creation procedure.
 		local
 			l_process_launcher: WEL_PROCESS_LAUNCHER
@@ -32,7 +32,7 @@ feature -- Initialization
 			l_process_launcher.spawn (l_path, Void)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

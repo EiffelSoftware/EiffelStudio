@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Description of array data type"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_creator: WIZARD_ARRAY_DATA_TYPE_CREATOR) is
+	make (a_creator: WIZARD_ARRAY_DATA_TYPE_CREATOR)
 			-- Initialize
 		require
 			valid_creator: a_creator /= Void
@@ -37,7 +37,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_equal_data_type (other: WIZARD_DATA_TYPE_DESCRIPTOR): BOOLEAN is
+	is_equal_data_type (other: WIZARD_DATA_TYPE_DESCRIPTOR): BOOLEAN
 			-- Is `other' describes same data type?
 		local
 			other_array: WIZARD_ARRAY_DATA_TYPE_DESCRIPTOR
@@ -52,7 +52,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	set_element_descriptor (a_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR) is
+	set_element_descriptor (a_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR)
 			-- Set `array_element_descriptor' with `a_descriptor'
 		require
 			valid_descriptor: a_descriptor /= Void
@@ -62,7 +62,7 @@ feature -- Basic operations
 			element_descriptor_set: array_element_descriptor = a_descriptor
 		end
 
-	set_dimension_count (a_count: INTEGER) is
+	set_dimension_count (a_count: INTEGER)
 			-- Set `dimension_count' with `a_count'
 		require
 			valid_count: a_count /= 0
@@ -72,7 +72,7 @@ feature -- Basic operations
 			dimension_count_set: dimension_count = a_count
 		end
 
-	set_array_size (a_size: ARRAY[INTEGER]) is
+	set_array_size (a_size: ARRAY[INTEGER])
 			-- Set `array_size' with `a_size'
 		require
 			non_void_size: a_size /= Void
@@ -84,13 +84,13 @@ feature -- Basic operations
 
 feature -- Visitor
 
-	visit (a_visitor: WIZARD_DATA_VISITOR) is
+	visit (a_visitor: WIZARD_DATA_VISITOR)
 			-- Call back `a_visitor' with appropriate feature.
 		do
 			a_visitor.process_array_data_type (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Table of contents node in XML representation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -35,7 +35,7 @@ create
 
 feature -- Creation
 
-	make (a_id: INTEGER; a_parent: XM_ELEMENT; a_url, a_title: STRING; is_parent: BOOLEAN) is
+	make (a_id: INTEGER; a_parent: XM_ELEMENT; a_url, a_title: STRING; is_parent: BOOLEAN)
 			-- New node
 		require
 			valid_id: a_id > 0
@@ -64,7 +64,7 @@ feature -- Creation
 
 feature -- Retrieval
 
-	element_by_title_location (a_titles: ARRAY [STRING]): like Current is
+	element_by_title_location (a_titles: ARRAY [STRING]): like Current
 			-- Element at title location of `titles'.  Loop through elements
 			-- of Current and match title strings.  
 		require
@@ -110,7 +110,7 @@ feature -- Retrieval
 		
 feature -- Query		
 	
-	is_index: BOOLEAN is
+	is_index: BOOLEAN
 			-- Is index node?
 		local
 			l_att: XM_ATTRIBUTE
@@ -125,13 +125,13 @@ feature -- Query
 			end			
 		end
 		
-	is_file: BOOLEAN is
+	is_file: BOOLEAN
 			-- Represents existing file node?
 		do
 			Result := name.is_equal (File_string)	
 		end
 		
-	is_directory: BOOLEAN is
+	is_directory: BOOLEAN
 			-- Represent physcial directory?
 		do
 			if url /= Void then
@@ -139,13 +139,13 @@ feature -- Query
 			end				
 		end			
 		
-	has_child: BOOLEAN is
+	has_child: BOOLEAN
 			-- Does Current have a child file OR folder node?
 		do
 			Result := not elements.is_empty	
 		end		
 		
-	has_file: BOOLEAN is
+	has_file: BOOLEAN
 			-- Does element contain a child file node?
 		local
 			l_el: like Current
@@ -163,7 +163,7 @@ feature -- Query
 			end	
 		end
 		
-	has_index: BOOLEAN is
+	has_index: BOOLEAN
 			-- Does element contain a child index node?
 		local
 			l_el: like Current
@@ -181,7 +181,7 @@ feature -- Query
 			end	
 		end	
 
-	url_exists: BOOLEAN is
+	url_exists: BOOLEAN
 			-- Does `url' represent an existing file?
 		do
 			if url /= Void then
@@ -191,7 +191,7 @@ feature -- Query
 
 feature {XML_TABLE_OF_CONTENTS} -- Status Setting
 	
-	set_url (a_url: STRING) is
+	set_url (a_url: STRING)
 			-- Set `url'
 		require
 			url_not_void: a_url /= Void			
@@ -202,7 +202,7 @@ feature {XML_TABLE_OF_CONTENTS} -- Status Setting
 			url_set: url = a_url and attribute_by_name (Url_string).value.is_equal (a_url)
 		end
 		
-	set_title (a_title: STRING) is
+	set_title (a_title: STRING)
 			-- Set `title'
 		require
 			title_not_void: a_title /= Void			
@@ -226,13 +226,13 @@ feature -- Access
 	
 feature {NONE} -- Implementation
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash Code
 		do
 			Result := id	
 		end		
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

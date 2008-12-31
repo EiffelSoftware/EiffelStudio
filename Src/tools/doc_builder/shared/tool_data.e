@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {PREFERENCES} -- Initialization
 
-	make (a_preferences: PREFERENCES) is
+	make (a_preferences: PREFERENCES)
 			-- Create
 		require
 			preferences_not_void: a_preferences /= Void
@@ -31,7 +31,7 @@ feature {PREFERENCES} -- Initialization
 feature -- Access		
 
 
-	output_directory: STRING is
+	output_directory: STRING
 			--
 		do
 			Result := output_directory_preference.value
@@ -44,11 +44,11 @@ feature {NONE} -- Preferences
 
 feature {NONE} -- Preference Strings
 
-	output_directory_string: STRING is "general.output_directory"
+	output_directory_string: STRING = "general.output_directory"
 
 feature {NONE} -- Implementation
 		
-	initialize_preferences is
+	initialize_preferences
 			-- Initialize preference values.
 		local
 			l_manager: PREFERENCE_MANAGER		
@@ -65,7 +65,7 @@ feature {NONE} -- Implementation
 	preferences: PREFERENCES;
 			-- Preferences
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

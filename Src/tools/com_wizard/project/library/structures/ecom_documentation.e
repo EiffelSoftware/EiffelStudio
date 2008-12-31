@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Type Library Documentation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_doc_string: like doc_string; a_context_id: like context_id; a_help_file: like help_file) is
+	make (a_name: like name; a_doc_string: like doc_string; a_context_id: like context_id; a_help_file: like help_file)
 			-- Initialize instance
 		do
 			name := a_name
@@ -51,7 +51,7 @@ feature -- Access
 
 feature -- Element Settings
 
-	set_name (a_name: like name) is
+	set_name (a_name: like name)
 			-- Set `name' with `a_name'.
 		do
 			name := a_name
@@ -59,7 +59,7 @@ feature -- Element Settings
 			name_set: name = a_name
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

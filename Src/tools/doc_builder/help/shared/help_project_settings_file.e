@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Help Project settings/preferences."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature -- Creation
 
-	make (a_project: HELP_PROJECT) is
+	make (a_project: HELP_PROJECT)
 			-- New settings file for `a_project' and write to disk
 		require
 			project_not_void: a_project /= Void
@@ -36,7 +36,7 @@ feature -- Creation
 
 feature -- Access
 		
-	write is
+	write
 			-- Write settings fully, based upon data in `project'
 		local
 			document: XM_DOCUMENT
@@ -95,7 +95,7 @@ feature -- Access
 
 feature -- XML Routines
 
-	xm_document: XM_DOCUMENT is
+	xm_document: XM_DOCUMENT
 			-- Retrieve xml document associated to file
 			-- If deserialization fails, return Void.
 		local
@@ -115,7 +115,7 @@ feature {NONE} -- Implementation
 	project: HELP_PROJECT
 			-- Associated project
 			
-	file: PLAIN_TEXT_FILE is
+	file: PLAIN_TEXT_FILE
 			-- File
 		local
 			l_file_location: FILE_NAME
@@ -126,7 +126,7 @@ feature {NONE} -- Implementation
 			create Result.make (l_file_location.string)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

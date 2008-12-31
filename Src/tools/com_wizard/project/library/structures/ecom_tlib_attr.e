@@ -1,4 +1,4 @@
-indexing
+note
 	description: "COM TLIBATTR structure"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_from_pointer (a_pointer: POINTER) is
+	make_from_pointer (a_pointer: POINTER)
 			-- Make from pointer.
 		do
 			make_by_pointer (a_pointer)
@@ -34,19 +34,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	guid: ECOM_GUID is
+	guid: ECOM_GUID
 			-- Unique ID of the library
 		do
 			create Result.make_from_pointer (ccom_tlibattr_guid (item))
 		end
 
-	lcid: INTEGER is
+	lcid: INTEGER
 			-- Language/locale of the library.
 		do
 			Result := ccom_tlibattr_lcid (item)
 		end
 
-	SYS_kind: INTEGER is
+	SYS_kind: INTEGER
 			-- Target hardware platform
 			-- See class ECOM_SYS_KIND for possible return values.
 		do
@@ -55,7 +55,7 @@ feature -- Access
 			is_valid_sys_kind (Result)
 		end
 
-	flags: INTEGER is
+	flags: INTEGER
 			-- Library flags.
 			-- See class ECOM_LIB_FLAGS for possible return values.
 		do
@@ -64,13 +64,13 @@ feature -- Access
 			is_valid_lib_flag (Result)
 		end
 
-	major_version_number: INTEGER is
+	major_version_number: INTEGER
 			-- Major version number
 		do
 			Result := ccom_tlibattr_major_vernum (item)
 		end
 
-	minor_version_number: INTEGER is
+	minor_version_number: INTEGER
 			-- Minor version number
 		do
 			Result := ccom_tlibattr_minor_vernum (item)
@@ -78,7 +78,7 @@ feature -- Access
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of TLIBATTR structure
 		do
 			Result := c_size_of_tlib_attr 
@@ -86,45 +86,45 @@ feature -- Measurement
 
 feature {NONE} -- Externals
 
-	c_size_of_tlib_attr: INTEGER is
+	c_size_of_tlib_attr: INTEGER
 		external 
 			"C [macro %"E_tlib_attr.h%"]"
 		alias
 			"sizeof(TLIBATTR)"
 		end
 
-	ccom_tlibattr_guid (a_ptr: POINTER): POINTER is
+	ccom_tlibattr_guid (a_ptr: POINTER): POINTER
 		external
 			"C [macro %"E_tlib_attr.h%"](EIF_POINTER): EIF_POINTER"
 		end
 
-	ccom_tlibattr_lcid (a_ptr: POINTER): INTEGER is
+	ccom_tlibattr_lcid (a_ptr: POINTER): INTEGER
 		external
 			"C [macro %"E_tlib_attr.h%"](EIF_POINTER): EIF_INTEGER"
 		end
 
-	ccom_tlibattr_sys_kind (a_ptr: POINTER): INTEGER is
+	ccom_tlibattr_sys_kind (a_ptr: POINTER): INTEGER
 		external
 			"C [macro %"E_tlib_attr.h%"](EIF_POINTER): EIF_INTEGER"
 		end
 
-	ccom_tlibattr_tlib_flags (a_ptr: POINTER): INTEGER is
+	ccom_tlibattr_tlib_flags (a_ptr: POINTER): INTEGER
 		external
 			"C [macro %"E_tlib_attr.h%"](EIF_POINTER): EIF_INTEGER"
 		end
 
-	ccom_tlibattr_major_vernum (a_ptr: POINTER): INTEGER is
+	ccom_tlibattr_major_vernum (a_ptr: POINTER): INTEGER
 		external
 			"C [macro %"E_tlib_attr.h%"](EIF_POINTER): EIF_INTEGER"
 		end
 
-	ccom_tlibattr_minor_vernum (a_ptr: POINTER): INTEGER is
+	ccom_tlibattr_minor_vernum (a_ptr: POINTER): INTEGER
 		external
 			"C [macro %"E_tlib_attr.h%"](EIF_POINTER): EIF_INTEGER"
 		end
 
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

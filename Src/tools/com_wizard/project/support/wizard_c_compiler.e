@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -44,7 +44,7 @@ inherit
 
 feature -- Basic Operations
 
-	compile_folder (a_folder_name: STRING; a_multi_threaded: BOOLEAN) is
+	compile_folder (a_folder_name: STRING; a_multi_threaded: BOOLEAN)
 			-- Compiler C files in folder `a_folder_name'.
 			-- Report progress with `a_progress_report' if not void.
 		require
@@ -89,7 +89,7 @@ feature -- Basic Operations
 			l_directory.close
 		end
 
-	compile_file (a_file_name: STRING) is
+	compile_file (a_file_name: STRING)
 			-- Compile C file `a_file_name'.
 		require
 			non_void_file_name: a_file_name /= Void
@@ -115,17 +115,17 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	Lib_command: STRING is "Lib"
+	Lib_command: STRING = "Lib"
 			-- Link command
 
-	Lib_out_option: STRING is "/OUT:"
+	Lib_out_option: STRING = "/OUT:"
 			-- Lib out option
 
 	last_make_command: STRING
 			-- Input to compiler
 			-- Set by `generate_make_file'.
 
-	generate_command_line_file (content, a_file_name: STRING) is
+	generate_command_line_file (content, a_file_name: STRING)
 			-- Generate command line with content `content' and file name `a_file_name'.
 			-- Set `last_make_command' with argument to pass to compiler.
 		local
@@ -152,7 +152,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	C_compiler_command_line (a_file_name: STRING): STRING is
+	C_compiler_command_line (a_file_name: STRING): STRING
 			-- Cl command line used to compile Proxy Stub
 		do
 			Result := Common_c_compiler_options.twin
@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 			Result.append (a_file_name)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

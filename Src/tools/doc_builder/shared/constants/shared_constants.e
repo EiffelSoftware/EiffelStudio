@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Access to shared constant classes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,43 +10,43 @@ class
 
 feature -- Access
 
-	Application_constants: APPLICATION_CONSTANTS is
+	Application_constants: APPLICATION_CONSTANTS
 			-- Application wide constants
 		once
 			create Result			
 		end
 		
-	Graphical_constants: GRAPHICAL_CONSTANTS is
+	Graphical_constants: GRAPHICAL_CONSTANTS
 			-- Graphical constants
 		once
 			create Result			
 		end
 		
-	Message_constants: MESSAGE_CONSTANTS is
+	Message_constants: MESSAGE_CONSTANTS
 			-- Message string constants
 		once
 			create Result
 		end		
 		
-	Help_constants: HELP_SETTING_CONSTANTS is
+	Help_constants: HELP_SETTING_CONSTANTS
 			-- Help wide constants
 		once
 			create Result			
 		end
 		
-	Output_constants: OUTPUT_CONSTANTS is
+	Output_constants: OUTPUT_CONSTANTS
 			-- Output constants
 		once
 			create Result			
 		end
 
-	Transformation_constants: XSL_TRANSFORM_CONSTANTS is
+	Transformation_constants: XSL_TRANSFORM_CONSTANTS
 			-- Transform constants
 		once
 			create Result	
 		end		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

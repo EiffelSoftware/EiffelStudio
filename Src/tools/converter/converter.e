@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Converts input file to a `Makefile'"
@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (arguments: ARRAY [STRING]) is
+	make (arguments: ARRAY [STRING])
 			-- Converts input file to a `Makefile'.
 			-- Arguments: <input_file> [<output_file>].
 			-- The input_file is the name of file to be converted.
@@ -63,7 +63,7 @@ feature {NONE} -- Access
 	error: BOOLEAN
 			-- Did an error occur?
 
-	configure_file: RAW_FILE is
+	configure_file: RAW_FILE
 			-- Name of the configure file
 		local	
 			f_name: FILE_NAME
@@ -76,7 +76,7 @@ feature {NONE} -- Access
 	input_file: RAW_FILE
 			-- Name of the input file to be converted
 
-	Configure_name: STRING is "-configure";
+	Configure_name: STRING = "-configure";
 			-- Name of the configure option on the command line
 
 	configure_list: LINKED_LIST [CONFIGURE_VALUE]
@@ -85,7 +85,7 @@ feature {NONE} -- Access
 	output_file_name: STRING
 			-- Specified output name
 
-	makefile: RAW_FILE is
+	makefile: RAW_FILE
 			-- Makefile file
 		local	
 			f_name: FILE_NAME
@@ -100,7 +100,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Update
 
-	process_configure_file is
+	process_configure_file
 			-- Process file `configure_file' and fill `configure_list'.
 		require
 			valid_configure_file: configure_file /= Void and then
@@ -145,7 +145,7 @@ feature {NONE} -- Update
 			end
 		end;
 
-	convert_file is
+	convert_file
 			-- Convert file `input_file' using `option_list' to 
 			-- generate `Makefile' in the current working directory.
 		require
@@ -187,7 +187,7 @@ feature {NONE} -- Update
 			end
 		end;
 
-	analyze_configure_line (configure_line: STRING) is
+	analyze_configure_line (configure_line: STRING)
 			-- Analyze `configure_list' and extract the
 			-- configure values. Set `error' to true if
 			-- an error occurs.
@@ -244,7 +244,7 @@ feature {NONE} -- Update
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

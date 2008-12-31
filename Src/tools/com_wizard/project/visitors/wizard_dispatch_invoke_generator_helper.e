@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Invoke generator helper."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -48,7 +48,7 @@ inherit
 
 feature -- Access
 
-	excepinfo_setting: STRING is
+	excepinfo_setting: STRING
 			-- Fills EXCEPINFO `bstrDescription' and `bstrSource'
 		do
 			Result := "if (pExcepInfo != NULL)%N%
@@ -68,7 +68,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	add_ref_to_interface_variable (a_visitor: WIZARD_DATA_TYPE_VISITOR; a_variable_name: STRING): STRING is
+	add_ref_to_interface_variable (a_visitor: WIZARD_DATA_TYPE_VISITOR; a_variable_name: STRING): STRING
 			-- Add `AddRef' to interface.
 		require
 			non_void_visitor: a_visitor /= Void
@@ -100,7 +100,7 @@ feature -- Basic operations
 		end
 
 	interface_descriptor_c_type_name (a_data_type_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR;
-					a_visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
+					a_visitor: WIZARD_DATA_TYPE_VISITOR): STRING
 			-- Interface's name.
 		require
 			non_void_descriptor: a_data_type_descriptor /= Void
@@ -129,7 +129,7 @@ feature -- Basic operations
 			valid_name: not Result.is_empty
 		end
 
-	check_failer  (a_argument_count: INTEGER; a_additional_string, a_return_code: STRING): STRING is
+	check_failer  (a_argument_count: INTEGER; a_additional_string, a_return_code: STRING): STRING
 			-- Case statement for function descriptor
 		require
 			non_void_additional_string: a_additional_string /= Void
@@ -148,7 +148,7 @@ feature -- Basic operations
 		end
 
 	interface_descriptor_guid (a_data_type_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR;
-					a_visitor: WIZARD_DATA_TYPE_VISITOR): ECOM_GUID is
+					a_visitor: WIZARD_DATA_TYPE_VISITOR): ECOM_GUID
 			-- Interface's GUID.
 		require
 			non_void_descriptor: a_data_type_descriptor /= Void
@@ -176,7 +176,7 @@ feature -- Basic operations
 		end
 
 	get_interface_pointer (unknown_name, a_variable_name, a_variant_name, variant_field_name: STRING;
-					counter: INTEGER): STRING is
+					counter: INTEGER): STRING
 			-- Get intergace pointer from Variant.
 		require
 			non_void_unknown_name: unknown_name /= Void
@@ -212,7 +212,7 @@ feature -- Basic operations
 		end
 
 	get_interface_pointer_pointer (unknown_name, a_variable_name, a_variant_name, variant_field_name: STRING;
-					counter: INTEGER): STRING is
+					counter: INTEGER): STRING
 			-- Get intergace pointer from Variant.
 		require
 			non_void_unknown_name: unknown_name /= Void
@@ -250,7 +250,7 @@ feature -- Basic operations
 
 	get_argument_from_variant (a_data_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR;
 				a_variable_name, a_variant_name: STRING;
-				counter: INTEGER; a_argument_count: INTEGER): STRING is
+				counter: INTEGER; a_argument_count: INTEGER): STRING
 			-- Extract data from VARIANT structure.
 		require
 			non_void_data_descriptor: a_data_descriptor /= Void
@@ -365,7 +365,7 @@ feature -- Basic operations
 			valid_argument: not Result.is_empty
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

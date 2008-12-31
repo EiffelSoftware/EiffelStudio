@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Interface for WiX generation options.
 	]"
@@ -82,7 +82,7 @@ feature -- Access
 			result_positive: Result > 0
 		end
 
-	file_include_pattern: REGEX is
+	file_include_pattern: REGEX
 			-- Pattern to use to include files
 		require
 			can_read_options: can_read_options
@@ -92,7 +92,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	file_excluded_pattern: REGEX is
+	file_excluded_pattern: REGEX
 			-- Pattern to use to exclude files
 		require
 			can_read_options: can_read_options
@@ -102,7 +102,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	directory_include_pattern: REGEX is
+	directory_include_pattern: REGEX
 			-- Pattern to use to include directories
 		require
 			can_read_options: can_read_options
@@ -112,7 +112,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	directory_excluded_pattern: REGEX is
+	directory_excluded_pattern: REGEX
 			-- Pattern to use to exnclude directories
 		require
 			can_read_options: can_read_options
@@ -122,7 +122,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	use_exclude_pattern_priority: BOOLEAN is
+	use_exclude_pattern_priority: BOOLEAN
 			-- Indicates if the exclude pattern should take priority over the include pattern
 		require
 			can_read_options: can_read_options
@@ -256,7 +256,7 @@ feature -- Status report
 		deferred
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

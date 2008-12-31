@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Used in conjunction with `EC_CHECK_WORKER' to permit building of a compliance report
 		when worker proffers generated information.
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_assembly: ASSEMBLY) is
+	make (a_assembly: ASSEMBLY)
 			-- Create and initialize a new report builder
 		require
 			a_assembly_not_void: a_assembly /= Void
@@ -58,7 +58,7 @@ feature -- Action Subscriptions
 
 feature -- Access
 
-	should_continue: BOOLEAN is
+	should_continue: BOOLEAN
 			-- Should checking continue?
 		do
 			Result := True
@@ -66,45 +66,45 @@ feature -- Access
 
 feature -- Starting
 
-	notify_start is
+	notify_start
 			-- Called when checker is about to begin checking an assembly.
 		do
 			report.set_is_being_built (True)
 		end
 		
-	start_type (a_type: SYSTEM_TYPE) is
+	start_type (a_type: SYSTEM_TYPE)
 			-- Called when checker is about to begin checking type `a_type'.
 		do
 		end
 
-	start_constructor (a_ctor: CONSTRUCTOR_INFO) is
+	start_constructor (a_ctor: CONSTRUCTOR_INFO)
 			-- Called when checker is about to begin checking constructor `a_ctor'.
 		do
 		end
 		
-	start_method (a_method: METHOD_INFO) is
+	start_method (a_method: METHOD_INFO)
 			-- Called when checker is about to begin checking method `a_method'.
 		do
 		end
 		
-	start_property (a_property: PROPERTY_INFO) is
+	start_property (a_property: PROPERTY_INFO)
 			-- Called when checker is about to begin checking property `a_property'.
 		do
 		end	
 		
-	start_field (a_field: FIELD_INFO) is
+	start_field (a_field: FIELD_INFO)
 			-- Called when checker is about to begin checking field `a_field'.
 		do
 		end
 	
-	start_event (a_event: EVENT_INFO) is
+	start_event (a_event: EVENT_INFO)
 			-- Called when checker is about to begin checking ecent `a_event'.
 		do
 		end	
 
 feature -- Checked
 		
-	checked_type (a_type: EC_CHECKED_TYPE) is
+	checked_type (a_type: EC_CHECKED_TYPE)
 			-- Called when checker is about to begin checking type `a_type'
 		local
 			l_type: EC_REPORT_TYPE
@@ -116,7 +116,7 @@ feature -- Checked
 			last_report_type_not_void: last_report_type /= Void
 		end
 
-	checked_constructor (a_ctor: EC_CHECKED_MEMBER_CONSTRUCTOR) is
+	checked_constructor (a_ctor: EC_CHECKED_MEMBER_CONSTRUCTOR)
 			-- Called when checker is about to begin checking constructor `a_ctor'
 		local
 			l_member: EC_REPORT_MEMBER
@@ -127,7 +127,7 @@ feature -- Checked
 			l_type.add_member_report (l_member)
 		end
 		
-	checked_method (a_method: EC_CHECKED_MEMBER_METHOD) is
+	checked_method (a_method: EC_CHECKED_MEMBER_METHOD)
 			-- Called when checker is about to begin checking method `a_method'
 		local
 			l_member: EC_REPORT_MEMBER
@@ -138,7 +138,7 @@ feature -- Checked
 			l_type.add_member_report (l_member)
 		end
 
-	checked_property (a_property: EC_CHECKED_MEMBER) is
+	checked_property (a_property: EC_CHECKED_MEMBER)
 			-- Called when checker is about to begin checking property `a_property'
 		local
 			l_member: EC_REPORT_MEMBER
@@ -149,7 +149,7 @@ feature -- Checked
 			l_type.add_member_report (l_member)
 		end
 		
-	checked_field (a_field: EC_CHECKED_MEMBER_FIELD) is
+	checked_field (a_field: EC_CHECKED_MEMBER_FIELD)
 			-- Called when checker is about to begin checking field `a_field'
 		local
 			l_member: EC_REPORT_MEMBER
@@ -160,7 +160,7 @@ feature -- Checked
 			l_type.add_member_report (l_member)
 		end
 	
-	checked_event (a_event: EC_CHECKED_MEMBER) is
+	checked_event (a_event: EC_CHECKED_MEMBER)
 			-- Called when checker is about to begin checking event `a_event'
 		local
 			l_member: EC_REPORT_MEMBER
@@ -173,7 +173,7 @@ feature -- Checked
 		
 feature -- Endding
 
-	notify_end (a_complete: BOOLEAN) is
+	notify_end (a_complete: BOOLEAN)
 			-- Called when checker is finished.
 			-- `a_complete' indicates if report is a full complete report.
 		do
@@ -181,41 +181,41 @@ feature -- Endding
 			report_completed_actions.call ([a_complete])
 		end
 		
-	end_type is
+	end_type
 			-- Called when checker is finished checking last started checked type.
 		do
 			type_report_added_actions.call ([last_report_type])
 			last_report_type := Void
 		end
 		
-	end_constructor is
+	end_constructor
 			-- Called when checker is finished checking last started checked constructor.
 		do
 		end
 		
-	end_method is
+	end_method
 			-- Called when checker is finished checking last started checked method.
 		do
 		end
 		
-	end_property is
+	end_property
 			-- Called when checker is finished checking last started checked property.
 		do
 		end	
 		
-	end_field is
+	end_field
 			-- Called when checker is finished checking last started checked field.
 		do
 		end
 	
-	end_event is
+	end_event
 			-- Called when checker is about to begin checking event.
 		do
 		end	
 
 feature -- Percentage
 
-	notify_percentage_complete (a_percent: NATURAL_8) is
+	notify_percentage_complete (a_percent: NATURAL_8)
 			-- Called when percentage changes.
 		do
 			percentage_completed_changed_actions.call ([a_percent])
@@ -233,7 +233,7 @@ invariant
 	percentage_completed_changed_actions_not_void: percentage_completed_changed_actions /= Void
 	report_completed_actions_not_void: report_completed_actions /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

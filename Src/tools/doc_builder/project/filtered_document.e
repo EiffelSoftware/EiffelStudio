@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Filtered document."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature {FILTER_MANAGER} -- Creation
 
-	make (a_doc: DOCUMENT; a_filter: DOCUMENT_FILTER) is
+	make (a_doc: DOCUMENT; a_filter: DOCUMENT_FILTER)
 			-- Make from filter
 		require
 			filter_not_void: a_filter /= Void
@@ -60,7 +60,7 @@ feature {FILTER_MANAGER} -- Creation
 
 feature -- Access
 
-	title: STRING is
+	title: STRING
 			-- Title	
 		do		
 			if filter.description.is_equal (Output_constants.Studio_desc) then
@@ -75,7 +75,7 @@ feature -- Access
 			has_result: Result /= Void
 		end		
 
-	toc_location: STRING is
+	toc_location: STRING
 			-- TOC location
 		do
 			if filter.description.is_equal (Output_constants.Studio_desc) then
@@ -85,7 +85,7 @@ feature -- Access
 			end
 		end	
 
-	pseudo_name: STRING is
+	pseudo_name: STRING
 			-- Pseudo name used for alphabetical ordering
 		do
 			if filter.description.is_equal (Output_constants.Studio_desc) then
@@ -97,7 +97,7 @@ feature -- Access
 
 feature -- Status Setting
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING)
 			-- Set `text'
 		do
 			text := a_text		
@@ -105,7 +105,7 @@ feature -- Status Setting
 
 feature {NONE} -- Commands
 
-	filter_document is
+	filter_document
 			-- Filter Current and put filtered text into `text'
 		local
 			retried: BOOLEAN
@@ -137,7 +137,7 @@ feature {NONE} -- Implementation
 	filter: DOCUMENT_FILTER
 			-- Filter
 	
-	filter_text: STRING is
+	filter_text: STRING
 			-- Filter text
 		do
 			if True then
@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 			end
 		end
 			
-	filter_tag_value (tag_name: STRING): STRING is
+	filter_tag_value (tag_name: STRING): STRING
 			-- For filter `tag_name' retrieve tag content
 		local
 			l_element, l_toc_element: XM_ELEMENT
@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 			end			
 		end
 
-	output_constants: OUTPUT_CONSTANTS is
+	output_constants: OUTPUT_CONSTANTS
 			-- Output constants
 		once
 			Result := Shared_constants.Output_constants	
@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 invariant
 	has_filter: filter /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

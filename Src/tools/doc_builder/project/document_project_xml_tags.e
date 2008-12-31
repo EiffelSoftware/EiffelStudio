@@ -1,4 +1,4 @@
-indexing
+note
 	description: "XML tag constants for a project preferences file"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,67 +10,67 @@ class
 
 feature {DOCUMENT_PROJECT_PREFERENCES} -- Access
 
-	project_tag: STRING is "project"
+	project_tag: STRING = "project"
 	
-	project_name_tag: STRING is "project_name"
+	project_name_tag: STRING = "project_name"
 
-	root_directory_tag: STRING is "root_directory"
+	root_directory_tag: STRING = "root_directory"
 			
-	schema_file_tag: STRING is "schema"
+	schema_file_tag: STRING = "schema"
 		
-	html_stylesheet_file_tag: STRING is "html_css"
+	html_stylesheet_file_tag: STRING = "html_css"
 
-	header_file_tag: STRING is "header_file"
+	header_file_tag: STRING = "header_file"
 
-	header_file_override_tag: STRING is "header_override"
+	header_file_override_tag: STRING = "header_override"
 	
-	use_header_file_tag: STRING is "use_header_from_file"
+	use_header_file_tag: STRING = "use_header_from_file"
 	
-	footer_file_tag: STRING is "footer_file"
+	footer_file_tag: STRING = "footer_file"
 	
-	footer_file_override_tag: STRING is "footer_override"
+	footer_file_override_tag: STRING = "footer_override"
 
-	use_footer_file_tag: STRING is "use_footer_from_file"
+	use_footer_file_tag: STRING = "use_footer_from_file"
 
-	process_includes_tag: STRING is "process_includes"
+	process_includes_tag: STRING = "process_includes"
 	
-	process_header_tag: STRING is "process_header"
+	process_header_tag: STRING = "process_header"
 	
-	process_footer_tag: STRING is "process_footer"
+	process_footer_tag: STRING = "process_footer"
 	
-	process_html_stylesheet_tag: STRING is "process_html_stylesheet"
+	process_html_stylesheet_tag: STRING = "process_html_stylesheet"
 	
-	include_navigation_links_tag: STRING is "include_navigation_links"
+	include_navigation_links_tag: STRING = "include_navigation_links"
 	
-	generate_dhtml_filter_tag: STRING is "generate_dhtml_filter"
+	generate_dhtml_filter_tag: STRING = "generate_dhtml_filter"
 	
-	generate_feature_nodes_tag: STRING is "generate_feature_nodes"
+	generate_feature_nodes_tag: STRING = "generate_feature_nodes"
 	
-	output_filter_tag: STRING is "filter"
+	output_filter_tag: STRING = "filter"
 	
-	output_filter_description_tag: STRING is "filter_description"
+	output_filter_description_tag: STRING = "filter_description"
 	
-	output_filter_primary_flag_tag: STRING is "filter_primary_flag"
+	output_filter_primary_flag_tag: STRING = "filter_primary_flag"
 	
-	output_filter_highlight_red_tag: STRING is "filter_highlight_color_red"
+	output_filter_highlight_red_tag: STRING = "filter_highlight_color_red"
 	
-	output_filter_highlight_green_tag: STRING is "filter_highlight_color_green"
+	output_filter_highlight_green_tag: STRING = "filter_highlight_color_green"
 	
-	output_filter_highlight_blue_tag: STRING is "filter_highlight_color_blue"
+	output_filter_highlight_blue_tag: STRING = "filter_highlight_color_blue"
 	
-	output_filter_highlight_enabled_tag: STRING is "filter_highlight_on"
+	output_filter_highlight_enabled_tag: STRING = "filter_highlight_on"
 	
-	output_filter_tag_tag: STRING is "tag"
+	output_filter_tag_tag: STRING = "tag"
 	
-	shortcut_tag: STRING is "shortcut"
+	shortcut_tag: STRING = "shortcut"
 	
-	shortcut_key_tag: STRING is "shortcut_key"
+	shortcut_key_tag: STRING = "shortcut_key"
 	
-	shortcut_value_tag: STRING is "shortcut_value"
+	shortcut_value_tag: STRING = "shortcut_value"
 	
-	toc_folder_tag: STRING is "folder";
+	toc_folder_tag: STRING = "folder";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

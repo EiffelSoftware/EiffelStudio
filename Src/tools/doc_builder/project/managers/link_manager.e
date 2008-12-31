@@ -1,4 +1,4 @@
-indexing
+note
 	description: "URL Manager functions."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature -- Creation
 
-	make_with_documents (a_documents: ARRAYED_LIST [DOCUMENT]) is
+	make_with_documents (a_documents: ARRAYED_LIST [DOCUMENT])
 			-- Create with list
 		require
 			documents_not_void: a_documents /= Void
@@ -26,7 +26,7 @@ feature -- Creation
 
 feature -- Commands
 
-	check_links is
+	check_links
 			-- Check links in `documents'.  Put invalid links into `invalid_links'.
 		local
 			l_link: DOCUMENT_LINK
@@ -66,7 +66,7 @@ feature -- Commands
 			end					
 		end		
 
-	update_links (a_old, a_new: DOCUMENT_LINK) is
+	update_links (a_old, a_new: DOCUMENT_LINK)
 			-- Update `documents' so that all references to `a_old' are updated to `a_new'
 		require
 			old_not_void: a_old /= Void
@@ -90,7 +90,7 @@ feature -- Commands
 			end
 		end
 
-	set_links_relative is
+	set_links_relative
 			-- Set links in `documents' to relative links
 		local
 			l_doc: DOCUMENT
@@ -119,7 +119,7 @@ feature -- Commands
 
 feature -- Status Setting
 
-	add_document (a_doc: DOCUMENT) is
+	add_document (a_doc: DOCUMENT)
 			-- Add document to list
 		require
 			doc_not_void: a_doc /= Void
@@ -137,20 +137,20 @@ feature -- Access
 	documents: ARRAYED_LIST [DOCUMENT]
 			-- Documents
 
-	invalid_links: ARRAYED_LIST [DOCUMENT_LINK] is
+	invalid_links: ARRAYED_LIST [DOCUMENT_LINK]
 			-- Invalid links, determined by last call to `check_links'
 		once
 			create Result.make (1)
 		end
 		
-	invalid_files: ARRAYED_LIST [STRING] is
+	invalid_files: ARRAYED_LIST [STRING]
 			-- Files containing one or more invalid links
 		once
 			create Result.make (1)
 			Result.compare_objects
 		end	
 		
-	document_links (a_doc: DOCUMENT): ARRAYED_LIST [DOCUMENT_LINK] is
+	document_links (a_doc: DOCUMENT): ARRAYED_LIST [DOCUMENT_LINK]
 			-- Retrieved links from `a_doc', if any
 		require
 			document_not_void: a_doc /= Void
@@ -164,7 +164,7 @@ feature -- Access
 			has_result: Result /= Void
 		end
 
-	document_images (a_doc: DOCUMENT): ARRAYED_LIST [DOCUMENT_LINK] is
+	document_images (a_doc: DOCUMENT): ARRAYED_LIST [DOCUMENT_LINK]
 			-- Retrieved images from `a_doc', if any
 		require
 			document_not_void: a_doc /= Void
@@ -178,7 +178,7 @@ feature -- Access
 			has_result: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

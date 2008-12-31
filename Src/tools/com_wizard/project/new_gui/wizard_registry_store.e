@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Expose features to persist and retrieve data to and from registry"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,10 +10,10 @@ class
 
 feature -- Access
 
-	root_key: STRING is "hkey_current_user\software\ise\EiffelCOM Wizard\Settings\"
+	root_key: STRING = "hkey_current_user\software\ise\EiffelCOM Wizard\Settings\"
 			-- Root registry key were all settings are saved
 
-	saved_string (a_key: STRING): STRING is
+	saved_string (a_key: STRING): STRING
 			-- String value associated with `a_key'
 		require
 			non_void_key: a_key /= Void
@@ -31,7 +31,7 @@ feature -- Access
 			non_void_string: Result /= Void
 		end
 	
-	saved_integer (a_key: STRING): INTEGER is
+	saved_integer (a_key: STRING): INTEGER
 			-- Integer value associated with `a_key'
 		require
 			non_void_key: a_key /= Void
@@ -40,7 +40,7 @@ feature -- Access
 			Result := saved_string (a_key).to_integer
 		end
 	
-	saved_boolean (a_key: STRING): BOOLEAN is
+	saved_boolean (a_key: STRING): BOOLEAN
 			-- Boolean value associated with `a_key'
 		require
 			non_void_key: a_key /= Void
@@ -49,7 +49,7 @@ feature -- Access
 			Result := saved_string (a_key).to_boolean
 		end
 	
-	saved_list (a_key: STRING): LIST [STRING] is
+	saved_list (a_key: STRING): LIST [STRING]
 			-- List associated with key `a_key'
 		require
 			non_void_key: a_key /= Void
@@ -67,7 +67,7 @@ feature -- Access
 
 feature -- Status Report
 
-	is_saved_string (a_key: STRING): BOOLEAN is
+	is_saved_string (a_key: STRING): BOOLEAN
 			-- Is there a string value associated with `a_key'?
 		require
 			non_void_key: a_key /= Void
@@ -80,7 +80,7 @@ feature -- Status Report
 			Result := l_value /= Void and then l_value.type = l_value.reg_sz
 		end
 		
-	is_saved_integer (a_key: STRING): BOOLEAN is
+	is_saved_integer (a_key: STRING): BOOLEAN
 			-- Is there an integer value associated with `a_key'?
 		require
 			non_void_key: a_key /= Void
@@ -93,7 +93,7 @@ feature -- Status Report
 			Result := l_value /= Void and then l_value.type = l_value.reg_sz and then l_value.string_value.is_integer
 		end
 		
-	is_saved_boolean (a_key: STRING): BOOLEAN is
+	is_saved_boolean (a_key: STRING): BOOLEAN
 			-- Is there a boolean value associated with `a_key'?
 		require
 			non_void_key: a_key /= Void
@@ -106,7 +106,7 @@ feature -- Status Report
 			Result := l_value /= Void and then l_value.type = l_value.reg_sz and then l_value.string_value.is_boolean
 		end
 		
-	is_saved_list (a_key: STRING): BOOLEAN is
+	is_saved_list (a_key: STRING): BOOLEAN
 			-- Is there a list associated with `a_key'?
 		require
 			non_void_key: a_key /= Void
@@ -116,7 +116,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	save_string (a_value, a_key: STRING) is
+	save_string (a_value, a_key: STRING)
 			-- Persist value `a_value' associated with key `a_key'.
 			-- Override existing value associated with key `a_key' if any.
 		require
@@ -133,7 +133,7 @@ feature -- Basic Operations
 			saved: is_saved_string (a_key) and then saved_string (a_key).is_equal (a_value)
 		end
 		
-	save_integer (a_value: INTEGER; a_key: STRING) is
+	save_integer (a_value: INTEGER; a_key: STRING)
 			-- Persist value `a_value' associated with key `a_key'.
 			-- Override existing value associated with key `a_key' if any.
 		require
@@ -144,7 +144,7 @@ feature -- Basic Operations
 			saved: is_saved_integer (a_key) and then saved_integer (a_key) = a_value
 		end
 		
-	save_boolean (a_value: BOOLEAN; a_key: STRING) is
+	save_boolean (a_value: BOOLEAN; a_key: STRING)
 			-- Persist value `a_value' associated with key `a_key'.
 			-- Override existing value associated with key `a_key' if any.
 		require
@@ -155,7 +155,7 @@ feature -- Basic Operations
 			saved: is_saved_boolean (a_key) and then saved_boolean (a_key) = a_value
 		end
 		
-	save_list (a_list: LIST [STRING]; a_key: STRING) is
+	save_list (a_list: LIST [STRING]; a_key: STRING)
 			-- Persist list `a_list' associated with key `a_key'.
 			-- Override existing value associated with key `a_key' if any.
 		require
@@ -168,7 +168,7 @@ feature -- Basic Operations
 			saved: is_saved_list (a_key) and then saved_list (a_key).is_equal (a_list)
 		end
 
-	remove_entry (a_key: STRING) is
+	remove_entry (a_key: STRING)
 			-- Remove entry with key `a_key'.
 		require
 			non_void_key: a_key /= Void
@@ -181,7 +181,7 @@ feature -- Basic Operations
 		
 feature {NONE} -- Implementation
 
-	encoded_list (a_list: LIST [STRING]): STRING is
+	encoded_list (a_list: LIST [STRING]): STRING
 			-- One string encoded list `a_list'
 		require
 			non_void_list: a_list /= Void
@@ -204,7 +204,7 @@ feature {NONE} -- Implementation
 			non_void_encoded_list: Result /= Void
 		end
 	
-	decoded_list (a_encoded_list: STRING): LIST [STRING] is
+	decoded_list (a_encoded_list: STRING): LIST [STRING]
 			-- List from encoded string created with `encoded_list'
 		require
 			non_void_encoded_list: a_encoded_list /= Void
@@ -214,7 +214,7 @@ feature {NONE} -- Implementation
 			non_void_result: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

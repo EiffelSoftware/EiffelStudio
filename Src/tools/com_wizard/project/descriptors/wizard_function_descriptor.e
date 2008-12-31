@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Function Descriptor"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -62,7 +62,7 @@ create
 
 feature -- Initialization
 
-	make (a_creator: WIZARD_FUNCTION_DESCRIPTOR_FACTORY) is
+	make (a_creator: WIZARD_FUNCTION_DESCRIPTOR_FACTORY)
 			-- Initialize
 		require
 			valid_creator: a_creator /= Void
@@ -109,7 +109,7 @@ feature -- Access
 	return_type: WIZARD_DATA_TYPE_DESCRIPTOR
 			-- Function return type
 
-	to_string: STRING is
+	to_string: STRING
 			-- String representation used for output
 		do
 			create Result.make (100)
@@ -147,7 +147,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_equal_function (other: WIZARD_FUNCTION_DESCRIPTOR): BOOLEAN is
+	is_equal_function (other: WIZARD_FUNCTION_DESCRIPTOR): BOOLEAN
 			-- Is `other' same function?
 		require
 			non_void_other: other /= Void
@@ -174,7 +174,7 @@ feature -- Status report
 
 feature {WIZARD_FUNCTION_DESCRIPTOR_FACTORY} -- Basic operations
 
-	set_description (a_description: STRING) is
+	set_description (a_description: STRING)
 			-- Set `description' with `a_description'.
 		require
 			non_void_description: a_description /= Void
@@ -184,7 +184,7 @@ feature {WIZARD_FUNCTION_DESCRIPTOR_FACTORY} -- Basic operations
 			description_set: description.is_equal (a_description)
 		end
 
-	set_member_id (a_member_id: INTEGER) is
+	set_member_id (a_member_id: INTEGER)
 			-- Set `member_id' with `a_member_id'.
 		do
 			member_id := a_member_id
@@ -192,7 +192,7 @@ feature {WIZARD_FUNCTION_DESCRIPTOR_FACTORY} -- Basic operations
 			valid_member_id: member_id = a_member_id
 		end
 
-	set_vtbl_offset (an_offset: INTEGER) is
+	set_vtbl_offset (an_offset: INTEGER)
 			-- Set `vtbl_offset' with `an_offset'
 		do
 			vtbl_offset := an_offset
@@ -200,7 +200,7 @@ feature {WIZARD_FUNCTION_DESCRIPTOR_FACTORY} -- Basic operations
 			valid_offset: vtbl_offset = an_offset
 		end
 
-	set_func_kind (a_kind: INTEGER) is
+	set_func_kind (a_kind: INTEGER)
 			-- Set `func_kind' with `a_kind'.
 		require
 			valid_kind: is_valid_func_kind (a_kind)
@@ -210,7 +210,7 @@ feature {WIZARD_FUNCTION_DESCRIPTOR_FACTORY} -- Basic operations
 			valid_func_kind: is_valid_func_kind (func_kind) and func_kind = a_kind
 		end
 
-	set_invoke_kind (a_kind: INTEGER) is
+	set_invoke_kind (a_kind: INTEGER)
 			-- Set `invoke_kind' with `a_kind'.
 		require
 			valid_kind: is_valid_invoke_kind (a_kind)
@@ -220,7 +220,7 @@ feature {WIZARD_FUNCTION_DESCRIPTOR_FACTORY} -- Basic operations
 			valid_invoke_kind: is_valid_invoke_kind (invoke_kind) and invoke_kind = a_kind
 		end
 
-	set_call_conv (a_convention: INTEGER) is
+	set_call_conv (a_convention: INTEGER)
 			-- Set `call_conv' with `a_convention'.
 		require
 			valid_convention: is_valid_callconv (a_convention)
@@ -234,7 +234,7 @@ feature {WIZARD_INTERFACE_DESCRIPTOR} -- Element Settings
 
 feature -- Basic operations
 
-	set_argument_count (an_argument_count: INTEGER) is
+	set_argument_count (an_argument_count: INTEGER)
 			-- Set `argument_count' with `an_argument_count'.
 		do
 			argument_count := an_argument_count
@@ -242,7 +242,7 @@ feature -- Basic operations
 			valid_argument_count: argument_count = an_argument_count
 		end
 
-	set_arguments (some_arguments: LIST [WIZARD_PARAM_DESCRIPTOR]) is
+	set_arguments (some_arguments: LIST [WIZARD_PARAM_DESCRIPTOR])
 			-- Set `arguments' with `some_arguments'
 		require
 			valid_arguments: some_arguments /= Void
@@ -252,7 +252,7 @@ feature -- Basic operations
 			valid_arguments: arguments /= Void and arguments = some_arguments
 		end
 
-	set_return_type (a_data_type: WIZARD_DATA_TYPE_DESCRIPTOR) is
+	set_return_type (a_data_type: WIZARD_DATA_TYPE_DESCRIPTOR)
 			-- Set `return_type' with `a_data_type'.
 		require
 			valid_data_type: a_data_type /= Void
@@ -262,7 +262,7 @@ feature -- Basic operations
 			valid_return_type: return_type /= Void and return_type = a_data_type
 		end
 
-	set_dual (a_boolean: BOOLEAN) is
+	set_dual (a_boolean: BOOLEAN)
 			-- Set `dual' with `a_boolean'.
 		do
 			dual := a_boolean
@@ -272,13 +272,13 @@ feature -- Basic operations
 
 feature -- Comparison
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is current object less than `other'?
 		do
 			Result := vtbl_offset < other.vtbl_offset
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

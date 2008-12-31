@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Profile item, consists of a name and a list of values"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_value: like value) is
+	make (a_name: like name; a_value: like value)
 			-- Set `name' with `a_name' and `value' with `a_value'.
 		require
 			non_void_name: a_name /= Void
@@ -34,7 +34,7 @@ feature -- Access
 	value: STRING
 			-- Item value
 
-	linear_representation: LIST [STRING] is
+	linear_representation: LIST [STRING]
 			-- List composed of (name, value)
 		do
 			create {ARRAYED_LIST [STRING]} Result.make (2)
@@ -49,7 +49,7 @@ invariant
 	non_void_name: name /= Void
 	non_void_value: value /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

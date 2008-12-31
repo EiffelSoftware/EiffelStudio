@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Attempts to locate the best C configuration possible, respecting corrupt installations.
 	]"
@@ -216,7 +216,7 @@ feature {NONE} -- Basic operations
 			internal_c_configuration_error_detached: internal_c_configuration_error = Void
 		end
 
-	check_compiler_executable (a_config: !C_CONFIG) is
+	check_compiler_executable (a_config: !C_CONFIG)
 			-- Checks of a given file name in a canonicalized list of paths.
 			--
 			-- `a_config': A C configuration to use to locate the matching compiler'.
@@ -318,7 +318,7 @@ feature {NONE} -- Localization
 	e_no_compiler_1: !STRING = "$1 was found but is could not be configured, indicating some of its installation files have been moved or deleted. Please also check you have installed the $2 C/C++ compiler tools."
 	e_compiler_deprecated_1: !STRING = "The located Microsoft C/C++ compiler at '$1' has been deprecated and cannot be used. Please upgrade to one of the supported C/C++ compilers."
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

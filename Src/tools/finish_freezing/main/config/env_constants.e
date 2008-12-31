@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants used by {ENV_PARSER}"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -22,7 +22,7 @@ feature -- Access
 	ise_platform_var_name: STRING = "ISE_PLATFORM"
 			-- ISE_PLATFORM environment variable name
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generate code for a code element"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -48,21 +48,21 @@ inherit
 
 feature -- Access
 
-	generated_code: STRING is
+	generated_code: STRING
 			-- Generated code
 		require
 			ready: can_generate
 		deferred
 		end
 
-	can_generate: BOOLEAN is
+	can_generate: BOOLEAN
 			-- Can code be generated?
 		deferred
 		end
 
 feature -- Basic Operations
 
-	save_file (a_file_name: STRING) is
+	save_file (a_file_name: STRING)
 			-- Save generated code in `a_file_name'.
 		require
 			can_generate: can_generate
@@ -72,7 +72,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	save_content (a_file_name, a_content: STRING) is
+	save_content (a_file_name, a_content: STRING)
 			-- Save generated code in `a_file_name'.
 		require
 			can_generate: can_generate
@@ -109,7 +109,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	backup_file_name (a_file_name: STRING): STRING is
+	backup_file_name (a_file_name: STRING): STRING
 			-- `a_file_name' backup file name
 		local
 			a_index: INTEGER
@@ -122,7 +122,7 @@ feature {NONE} -- Implementation
 			Result.append (Backup_file_extension)
 		end
 
-	is_overwritable (a_file_name: STRING): BOOLEAN is
+	is_overwritable (a_file_name: STRING): BOOLEAN
 			-- Should file `a_file_name' be overwritten?
 		local
 			lower_case_implemented_coclass_extension: STRING
@@ -132,7 +132,7 @@ feature {NONE} -- Implementation
 			Result := not a_file_name.substring (a_file_name.count -implemented_coclass_extension.count - 1, a_file_name.count -2).is_equal (lower_case_implemented_coclass_extension)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

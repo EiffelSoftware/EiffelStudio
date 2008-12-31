@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Common application constants"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,49 +10,49 @@ class
 
 feature {NONE} -- Access
 
-	Filter_output_file_name: STRING is "com_filter.output"
+	Filter_output_file_name: STRING = "com_filter.output"
 
-	Return_value_variable_name: STRING is "return_value"
+	Return_value_variable_name: STRING = "return_value"
 
 feature -- Constants for input parser
 	
-	Feature_indicator: STRING is "#feature#"
+	Feature_indicator: STRING = "#feature#"
 
-	Description_indicator: STRING is "description:"
+	Description_indicator: STRING = "description:"
 
-	Type_indicator: STRING is "#type#"
+	Type_indicator: STRING = "#type#"
 
-	Comment_indicator: STRING is "#--#"
+	Comment_indicator: STRING = "#--#"
 
-	Class_header_indicator: STRING is "#class#"
+	Class_header_indicator: STRING = "#class#"
 
-	Infix_feature_indicator: STRING is "#infix#"
+	Infix_feature_indicator: STRING = "#infix#"
 
-	Prefix_feature_indicator: STRING is "#prefix#"
+	Prefix_feature_indicator: STRING = "#prefix#"
 
-	Constant_indicator: STRING is " is "
+	Constant_indicator: STRING = " is "
 
-	Current_type: STRING is "Current"
+	Current_type: STRING = "Current"
 
-	Like_word: STRING is "like"
+	Like_word: STRING = "like"
 
-	Empty_string: STRING is ""
+	Empty_string: STRING = ""
 
-	Colon_character: CHARACTER is ':'
+	Colon_character: CHARACTER = ':'
 
-	Space_character: CHARACTER is ' '
+	Space_character: CHARACTER = ' '
 
-	Open_parenthesis_char: CHARACTER is '('
+	Open_parenthesis_char: CHARACTER = '('
 
-	Close_parenthesis_char: CHARACTER is ')'
+	Close_parenthesis_char: CHARACTER = ')'
 
-	Comma_character: CHARACTER is ','
+	Comma_character: CHARACTER = ','
 
-	Semicolon_character: CHARACTER is ';'
+	Semicolon_character: CHARACTER = ';'
 
-	Double_quote_character: CHARACTER is '%"';
+	Double_quote_character: CHARACTER = '%"';
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Functions for general utility."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Copying
 
-	copy_directory (a_dir, target: DIRECTORY) is
+	copy_directory (a_dir, target: DIRECTORY)
 			-- Copy `a_dir' to `target' on disk including sub folders and files
 		require
 			directories_not_void: a_dir /= Void and target /= Void
@@ -90,7 +90,7 @@ feature -- Copying
 			io.read_character
 		end
 
-	copy_file (file, target: FILE) is
+	copy_file (file, target: FILE)
 			-- Copy contents of `file' to `target'
 		require
 			files_not_void: file /= Void and target /= Void
@@ -117,7 +117,7 @@ feature -- Copying
 			files_closed: file.is_closed and target.is_closed
 		end
 
-	copy_text_file (text_file, target: PLAIN_TEXT_FILE) is
+	copy_text_file (text_file, target: PLAIN_TEXT_FILE)
 			-- Copy contents of `text_file' to `target'
 		require
 			files_not_void: text_file /= Void and target /= Void
@@ -142,7 +142,7 @@ feature -- Copying
 
 feature -- Directory
 
-	directory_recursive_count (a_dir: DIRECTORY; path: STRING): INTEGER is
+	directory_recursive_count (a_dir: DIRECTORY; path: STRING): INTEGER
 			-- Number of children (files and sub-folders) of `a_dir'
 		local
 			sub_dir: DIRECTORY
@@ -171,7 +171,7 @@ feature -- Directory
 			end
 		end
 
-	directory_array (a_dir: STRING): ARRAY [STRING] is
+	directory_array (a_dir: STRING): ARRAY [STRING]
 			-- Directory `a_dir' broken down into array or directories.  For example
 			-- `C:\a_dir\b_dir' returns the array `<<"a_dir", "b_dir">>'.  If there is a
 			-- filename at the end of `a_dir' it is discarded.  To be sure last directory
@@ -220,7 +220,7 @@ feature -- Directory
 
 feature -- File
 
-	file_type (a_file: STRING): STRING is
+	file_type (a_file: STRING): STRING
 			-- Return file extension for `a_file', or else an empty string.
 		do
 			create Result.make_empty
@@ -232,7 +232,7 @@ feature -- File
 			end
 		end
 
-	file_no_extension (a_file: STRING): STRING is
+	file_no_extension (a_file: STRING): STRING
 			-- Return file name for `a_file' WITHOUT the extension
 		require
 			name_not_void: a_file /= Void
@@ -246,7 +246,7 @@ feature -- File
 			has_result: Result /= Void
 		end
 
-	short_name (a_name: STRING): STRING is
+	short_name (a_name: STRING): STRING
 			-- Short file/directory name (minus directory hierarchy) of `a_name'
 		require
 			name_not_void: a_name /= Void
@@ -264,7 +264,7 @@ feature -- File
 			has_result: Result /= Void
 		end
 
-	directory_no_file_name (a_path: STRING): STRING is
+	directory_no_file_name (a_path: STRING): STRING
 			-- The full directory path `a_path' WITHOUT the file name
 		require
 			path_not_void: a_path /= Void
@@ -282,7 +282,7 @@ feature -- File
 			has_result: Result /= Void
 		end
 
-	unique_name: STRING is
+	unique_name: STRING
 			-- Unique name
 		do
 			Result := (create {DATE_TIME}.make_now).out
@@ -295,7 +295,7 @@ feature -- File
 
 feature -- String
 
-	is_alpha_numeric_string (a_string: STRING): BOOLEAN is
+	is_alpha_numeric_string (a_string: STRING): BOOLEAN
 			-- Does `a_string' contain only alphanumeric characters?
 		require
 			string_not_not_void: a_string /= Void
@@ -315,7 +315,7 @@ feature -- String
 			end
 		end
 
-	tidied_string (a_string: STRING): STRING is
+	tidied_string (a_string: STRING): STRING
 			-- Tidy `a_string'
 		do
 			Result := a_string
@@ -327,7 +327,7 @@ feature -- String
 
 feature -- Document
 
-	temporary_html_location (a_name: STRING; with_name: BOOLEAN): STRING is
+	temporary_html_location (a_name: STRING; with_name: BOOLEAN): STRING
 			-- Temporary directory for location of `document' in HTML
 		require
 			document_not_void: a_name /= Void
@@ -353,7 +353,7 @@ feature -- Document
 			end
 		end
 
-	temporary_xml_location (a_name: STRING; with_name: BOOLEAN): STRING is
+	temporary_xml_location (a_name: STRING; with_name: BOOLEAN): STRING
 			-- Temporary directory for location of `document' in XML		
 		require
 			document_not_void: a_name /= Void
@@ -377,7 +377,7 @@ feature -- Document
 			end
 		end
 
-	temporary_help_location (a_name: STRING; with_name: BOOLEAN): STRING is
+	temporary_help_location (a_name: STRING; with_name: BOOLEAN): STRING
 			-- Temporary directory for location of `document' in Help project
 		require
 			document_not_void: a_name /= Void
@@ -405,7 +405,7 @@ feature -- Document
 			end
 		end
 
-	toc_friendly_url (a_url: STRING): STRING is
+	toc_friendly_url (a_url: STRING): STRING
 			-- TOC friendly url of `a_url'
 		require
 			url_not_void: a_url /= Void
@@ -425,7 +425,7 @@ feature -- Document
 			Result.replace_substring_all ("\", "/")
 		end
 
-	is_code_document (a_doc: DOCUMENT): BOOLEAN is
+	is_code_document (a_doc: DOCUMENT): BOOLEAN
 			-- Is `a_doc' a code document
 		local
 			l_name,
@@ -443,7 +443,7 @@ feature -- Document
 			end
 		end
 
-	stylesheet_path (a_file: STRING; rel: BOOLEAN): STRING is
+	stylesheet_path (a_file: STRING; rel: BOOLEAN): STRING
 			-- Path to stylesheet from `a_file'
 		local
 			l_name,
@@ -465,7 +465,7 @@ feature -- Document
 			end
 		end
 
-	copy_stylesheet (a_loc: STRING) is
+	copy_stylesheet (a_loc: STRING)
 			-- Copy stylesheet to `a_loc'
 		require
 			a_loc_not_void: a_loc /= Void
@@ -487,7 +487,7 @@ feature -- Document
 
 feature {NONE} -- Implementation
 
-	temporary_location (a_name: STRING; a_root: STRING): STRING is
+	temporary_location (a_name: STRING; a_root: STRING): STRING
 			-- Temporary location
 		require
 			doc_not_void: a_name /= Void
@@ -540,7 +540,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

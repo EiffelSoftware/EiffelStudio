@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Progress events IDs"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,24 +10,24 @@ class
 
 feature -- Access
 
-	Step: INTEGER is 1
+	Step: INTEGER = 1
 			-- Increment progress by one
 	
-	Set_range: INTEGER is 2
+	Set_range: INTEGER = 2
 			-- Set progress range
 	
-	Start: INTEGER is 4
+	Start: INTEGER = 4
 			-- Start progress update
 
-	Finish: INTEGER is 5
+	Finish: INTEGER = 5
 			-- Finish progress update
 
-	Title: INTEGER is 6
+	Title: INTEGER = 6
 			-- Set total progress title
 
 feature -- Status Report
 
-	is_valid_progress_event_id (a_id: INTEGER): BOOLEAN is
+	is_valid_progress_event_id (a_id: INTEGER): BOOLEAN
 			-- Is `a_id' a valid progress event id?
 		do
 			Result := a_id = Step or a_id = Set_range or
@@ -46,7 +46,7 @@ invariant
 	finish_is_valid: is_valid_progress_event_id (Finish)
 	title_is_valid: is_valid_progress_event_id (Title)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

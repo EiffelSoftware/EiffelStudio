@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Miscellaneous compiler options"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -13,19 +13,19 @@ inherit
 
 feature -- Access
 
-	Idl_compiler: STRING is "midl"
+	Idl_compiler: STRING = "midl"
 			-- IDL compiler command name.
 
-	C_compiler: STRING is "Cl"
+	C_compiler: STRING = "Cl"
 			-- C compiler command name.
 
-	Linker: STRING is "link"
+	Linker: STRING = "link"
 			-- Linker command name.
 
-	Common_linker_options:STRING is " /DLL /RELEASE %"/INCREMENTAL:NO%""
+	Common_linker_options:STRING = " /DLL /RELEASE %"/INCREMENTAL:NO%""
 			-- Linker options.
 
-	Common_c_compiler_options: STRING is
+	Common_c_compiler_options: STRING
 			-- C compiler options to compile Proxy/Stub.
 		once
 			Result := "/MT /W0 /Ox /D %"REGISTER_PROXY_DLL%" /D %"WIN32%" /D %"_WIN32_DCOM%" /D %"_WIN32_WINNT=0x0500%" /c /I..\include /I..\..\common\include /I%""
@@ -37,13 +37,13 @@ feature -- Access
 			Result.append ("\library\com\spec\windows\include%" ")
 		end
 
-	Common_idl_compiler_options: STRING is ""
+	Common_idl_compiler_options: STRING = ""
 			-- MIDL options.
 
-	Rpc_library: STRING is "%"kernel32.lib%" %"rpcndr.lib%" %"rpcns4.lib%" %"rpcrt4.lib%" %"uuid.lib%" %"oleaut32.lib%"";
+	Rpc_library: STRING = "%"kernel32.lib%" %"rpcndr.lib%" %"rpcns4.lib%" %"rpcrt4.lib%" %"uuid.lib%" %"oleaut32.lib%"";
 			-- RPC library to be linked with MIDL generated c files.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

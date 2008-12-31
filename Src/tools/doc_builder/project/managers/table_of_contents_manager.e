@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Manager for Table of Contents."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Creation
 
-	make is
+	make
 			-- Create 
 		do
 			create loaded_tocs.make (0)
@@ -30,7 +30,7 @@ feature -- Creation
 		
 feature -- TOC Management
 
-	new_toc (a_name: STRING) is
+	new_toc (a_name: STRING)
 			-- A new empty toc
 		do
 			create loaded_toc.make_empty
@@ -39,7 +39,7 @@ feature -- TOC Management
 			load_toc (loaded_toc.name)
 		end		
 
-	open_toc is
+	open_toc
 			-- Open toc from file
 		local
 			l_open_dialog: EV_FILE_OPEN_DIALOG
@@ -51,7 +51,7 @@ feature -- TOC Management
 			end
 		end		
 	
-	save_toc is
+	save_toc
 			-- Save loaded toc
 		do	
 			synchronize			
@@ -60,7 +60,7 @@ feature -- TOC Management
 			loaded_widgets.replace_key (loaded_toc.name, loaded_toc.old_name)
 		end		
 	
-	build_toc (a_name: STRING; a_dir: DIRECTORY) is
+	build_toc (a_name: STRING; a_dir: DIRECTORY)
 			-- Build toc from contents of `a_dir'
 		do
 			create loaded_toc.make_from_directory (a_dir)
@@ -69,7 +69,7 @@ feature -- TOC Management
 			load_toc (loaded_toc.name)
 		end	
 		
-	build_toc_sub_dirs (a_name: STRING; a_dir: DIRECTORY; include_dirs: ARRAYED_LIST [STRING]) is
+	build_toc_sub_dirs (a_name: STRING; a_dir: DIRECTORY; include_dirs: ARRAYED_LIST [STRING])
 			-- Build toc from contents of `a_dir'
 		do
 			create loaded_toc.make_from_directory_sub_dirs (a_dir, include_dirs)
@@ -78,7 +78,7 @@ feature -- TOC Management
 			load_toc (loaded_toc.name)
 		end	
 		
-	load_toc (a_name: STRING) is
+	load_toc (a_name: STRING)
 			-- Load a toc from `a_name'
 		require
 			filename_not_void: a_name /= Void
@@ -106,7 +106,7 @@ feature -- TOC Management
 			end
 		end		
 	
-	add_toc (a_toc: TABLE_OF_CONTENTS) is
+	add_toc (a_toc: TABLE_OF_CONTENTS)
 			-- Add toc
 		require
 			toc_not_void: a_toc /= Void
@@ -118,7 +118,7 @@ feature -- TOC Management
 			has_toc: loaded_tocs.has (a_toc.name)
 		end		
 	
-	merge_tocs (tocs: LIST [TABLE_OF_CONTENTS]; a_name: STRING) is
+	merge_tocs (tocs: LIST [TABLE_OF_CONTENTS]; a_name: STRING)
 			-- Merge `tocs' into new toc with `a_name'
 		require
 			tocs_not_void: tocs /= Void
@@ -146,7 +146,7 @@ feature -- TOC Management
 	
 feature -- Node 	
 		
-	new_node (is_heading: BOOLEAN) is
+	new_node (is_heading: BOOLEAN)
 			-- Add new node to `displayed_toc'
 		local
 			l_new_node: TABLE_OF_CONTENTS_WIDGET_NODE
@@ -155,7 +155,7 @@ feature -- Node
 			displayed_toc.add_node (l_new_node)
 		end		
 		
-	remove_node is
+	remove_node
 			-- Remove selected node in displayed toc
 		do
 			if displayed_toc.selected_item /= Void then
@@ -163,7 +163,7 @@ feature -- Node
 			end
 		end
 		
-	move_node (up: BOOLEAN) is
+	move_node (up: BOOLEAN)
 			-- 
 		local
 			l_item: TABLE_OF_CONTENTS_WIDGET_NODE
@@ -176,7 +176,7 @@ feature -- Node
 		
 feature -- Commands		
 		
-	sort_toc (a_filter: DOCUMENT_FILTER; index_root, empty_elements, no_index, sub_elements, alpha: BOOLEAN; a_desc: STRING) is
+	sort_toc (a_filter: DOCUMENT_FILTER; index_root, empty_elements, no_index, sub_elements, alpha: BOOLEAN; a_desc: STRING)
 			-- Sort `loaded toc'.  (A new sorted is created from the current toc)
 		do	
 			create loaded_toc.make_from_toc (loaded_toc)
@@ -199,7 +199,7 @@ feature -- Commands
 			load_toc (loaded_toc.name)
 		end		
 
-	synchronize is
+	synchronize
 			-- Synchronize loaded toc with widget
 		local
 			l_name: STRING
@@ -220,13 +220,13 @@ feature -- Access
 	loaded_toc: TABLE_OF_CONTENTS
 			-- Toc currently loaded (Void if none loaded)
 
-	displayed_tocs: ARRAY [STRING] is
+	displayed_tocs: ARRAY [STRING]
 			-- Return a list of all toc widgets names
 		do
 			Result := loaded_widgets.current_keys
 		end		
 
-	toc_by_name (a_name: STRING): TABLE_OF_CONTENTS is
+	toc_by_name (a_name: STRING): TABLE_OF_CONTENTS
 			-- Return toc by name
 		do
 			if loaded_tocs.has (a_name) then
@@ -236,7 +236,7 @@ feature -- Access
 
 feature -- Query
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is Current empty?
 		do
 			Result := loaded_tocs.is_empty	
@@ -244,7 +244,7 @@ feature -- Query
 
 feature {TABLE_OF_CONTENTS, TABLE_OF_CONTENTS} -- Query
 
-	next_toc_name: STRING is
+	next_toc_name: STRING
 			-- Next generated unique toc name
 		do
 			create Result.make_from_string ("TOC_" + counter.out)
@@ -259,7 +259,7 @@ feature {NONE} -- Implementation
 	loaded_widgets: HASH_TABLE [TABLE_OF_CONTENTS_WIDGET, STRING]
 			-- Loaded TOC tree widgets
 
-	parent_window: DOC_BUILDER_WINDOW is
+	parent_window: DOC_BUILDER_WINDOW
 			-- Parent window
 		once
 			Result := Application_window
@@ -271,7 +271,7 @@ feature {NONE} -- Implementation
 	displayed_toc: TABLE_OF_CONTENTS_WIDGET
 			-- Currently displayed toc widget
 	
-	display_toc is
+	display_toc
 			-- Display `loaded_toc' as widget
 		local
 			l_name: STRING
@@ -287,7 +287,7 @@ feature {NONE} -- Implementation
 			Parent_window.update
 		end		
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Validity errors by id"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,10 +12,10 @@ class
 feature -- Access
 
 	Eiffel_project, ecf_file, Eiffel_class, Eiffel_cluster, Eiffel_target,
-	Component_definition_file, Destination_folder, Project_name, End_id: INTEGER is unique
+	Component_definition_file, Destination_folder, Project_name, End_id: INTEGER = unique
 			-- ids
 
-	errors: ARRAY [STRING] is
+	errors: ARRAY [STRING]
 			-- Error messages
 		once
 			create Result.make (1, 10)
@@ -31,13 +31,13 @@ feature -- Access
 
 feature -- Status Report
 
-	is_valid_status_id (a_id: INTEGER): BOOLEAN is
+	is_valid_status_id (a_id: INTEGER): BOOLEAN
 			-- Is `a_id' a valid status id?
 		do
 			Result := a_id > 0 and a_id < End_id
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

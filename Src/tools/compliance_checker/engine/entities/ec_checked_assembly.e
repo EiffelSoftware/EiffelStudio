@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Checked entity that describes and examines an assembly.
 	]"
@@ -19,7 +19,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (a_assembly: like assembly) is
+	make (a_assembly: like assembly)
 			-- Create an initialize CLS-compliant checked assembly.
 		require
 			a_assembly_not_void: a_assembly /= Void
@@ -34,7 +34,7 @@ feature -- Access
 		
 feature {NONE} -- Query {EC_CHECKED_ENTITY}
 
-	custom_attribute_provider: ICUSTOM_ATTRIBUTE_PROVIDER is
+	custom_attribute_provider: ICUSTOM_ATTRIBUTE_PROVIDER
 			-- Retrieve custom attribute provider for entity.
 		do
 			Result := assembly
@@ -43,7 +43,7 @@ feature {NONE} -- Query {EC_CHECKED_ENTITY}
 invariant
 	assembly_not_void: assembly /= Void
 			
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

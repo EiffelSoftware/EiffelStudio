@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Creator of Coclass descriptor"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -32,7 +32,7 @@ inherit
 
 feature -- Basic operations
 
-	create_descriptor  (a_documentation: ECOM_DOCUMENTATION; a_type_info: ECOM_TYPE_INFO): WIZARD_COCLASS_DESCRIPTOR is
+	create_descriptor  (a_documentation: ECOM_DOCUMENTATION; a_type_info: ECOM_TYPE_INFO): WIZARD_COCLASS_DESCRIPTOR
 			-- Initialize descriptor
 		require
 			valid_type_info: a_type_info /= Void and then a_type_info.type_attr.type_kind = Tkind_coclass
@@ -101,7 +101,7 @@ feature -- Basic operations
 				(a_type_info.type_attr.count_implemented_types - number_unknown_interfaces)
 		end
 
-	create_interface_descriptors (a_type_info: ECOM_TYPE_INFO) is
+	create_interface_descriptors (a_type_info: ECOM_TYPE_INFO)
 			-- Create interface descriptors
 		require
 			valid_type_info: a_type_info /= void
@@ -186,7 +186,7 @@ feature -- Basic operations
 			non_void_default_interface: default_interface_descriptor /= Void
 		end
 
-	initialize_descriptor (a_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
+	initialize_descriptor (a_descriptor: WIZARD_COCLASS_DESCRIPTOR)
 				-- Initialize `a_descriptor' attributes.
 			require
 				valid_descriptor: a_descriptor /= Void
@@ -239,7 +239,7 @@ feature {NONE} -- Implementation
 	number_unknown_interfaces: INTEGER;
 			-- Number of IUnknown interfaces on Coclass.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

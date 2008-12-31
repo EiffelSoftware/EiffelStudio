@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Component C client generator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -37,7 +37,7 @@ feature -- Access
 			
 feature {NONE} -- Implementation
 
-	excepinfo_initialization: STRING is
+	excepinfo_initialization: STRING
 			-- EXCEPINFO structure initialization.
 		do
 			if dispatch_interface then
@@ -52,7 +52,7 @@ feature {NONE} -- Implementation
 			non_void_initialization: Result /= Void
 		end
 	
-	release_interface (a_variable_name: STRING): STRING is
+	release_interface (a_variable_name: STRING): STRING
 			-- Code to release interface pointer held by `a_variable_name'
 		require
 			non_void_name: a_variable_name /= Void
@@ -69,7 +69,7 @@ feature {NONE} -- Implementation
 			valid_release_interface: not Result.is_empty
 		end
 
-	add_default_function is
+	add_default_function
 			-- Add default function.
 		require
 			non_void_cpp_class_writer: cpp_class_writer /= Void
@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
 			cpp_class_writer.add_function (l_writer, Public)
 		end
 
-	ccom_last_error_code_function: WIZARD_WRITER_C_FUNCTION is
+	ccom_last_error_code_function: WIZARD_WRITER_C_FUNCTION
 			-- `ccom_last_error_code' function.
 		do
 			create Result.make
@@ -98,7 +98,7 @@ feature {NONE} -- Implementation
 			non_void_function_body: Result.body /= Void
 		end
 
-	ccom_last_source_of_exception_function: WIZARD_WRITER_C_FUNCTION is
+	ccom_last_source_of_exception_function: WIZARD_WRITER_C_FUNCTION
 			-- `ccom_last_source_of_exception' function.
 		do
 			create Result.make
@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 			non_void_function_body: Result.body /= Void
 		end
 
-	ccom_last_error_description_function: WIZARD_WRITER_C_FUNCTION is
+	ccom_last_error_description_function: WIZARD_WRITER_C_FUNCTION
 			-- `ccom_last_error_description' function.
 		do
 			create Result.make
@@ -126,7 +126,7 @@ feature {NONE} -- Implementation
 			non_void_function_body: Result.body /= Void
 		end
 
-	ccom_last_error_help_file_function: WIZARD_WRITER_C_FUNCTION is
+	ccom_last_error_help_file_function: WIZARD_WRITER_C_FUNCTION
 			-- `ccom_last_error_help_file' function.
 		do
 			create Result.make
@@ -140,10 +140,10 @@ feature {NONE} -- Implementation
 			non_void_function_body: Result.body /= Void
 		end
 
-	co_initialize_ex_function: STRING is "%Thr = CoInitializeEx (NULL, COINIT_APARTMENTTHREADED);%N";
+	co_initialize_ex_function: STRING = "%Thr = CoInitializeEx (NULL, COINIT_APARTMENTTHREADED);%N";
 			-- CoInitialize function call
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

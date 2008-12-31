@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Component Eiffel generator for server"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -21,7 +21,7 @@ inherit
 
 feature {NONE} -- Implementation
 
-	make_feature: WIZARD_WRITER_FEATURE is
+	make_feature: WIZARD_WRITER_FEATURE
 			-- `make' feature.
 		local
 			feature_body: STRING
@@ -41,7 +41,7 @@ feature {NONE} -- Implementation
 			non_void_feature_body: Result.body /= Void
 		end
 
-	make_from_pointer_feature:  WIZARD_WRITER_FEATURE is
+	make_from_pointer_feature:  WIZARD_WRITER_FEATURE
 			-- `make_from_pointer' feature.
 		local
 			feature_body: STRING
@@ -67,7 +67,7 @@ feature {NONE} -- Implementation
 			non_void_feature_body: Result.body /= Void
 		end
 
-	create_item_feature: WIZARD_WRITER_FEATURE is
+	create_item_feature: WIZARD_WRITER_FEATURE
 			-- `create_item' feature.
 		local
 			feature_body: STRING
@@ -88,7 +88,7 @@ feature {NONE} -- Implementation
 			non_void_feature_body: Result.body /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Represents a Windows registry file.
 	]"
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_doc: INI_DOCUMENT; a_handler: like error_handler) is
+	make (a_doc: INI_DOCUMENT; a_handler: like error_handler)
 			-- Initialize registry file using document `a_doc'.
 		require
 			a_doc_attached: a_doc /= Void
@@ -49,7 +49,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_source_file_name (a_file_name: like source_file_name) is
+	set_source_file_name (a_file_name: like source_file_name)
 			-- Set `source_file_name' with `a_file_name'
 		require
 			a_file_name_attached: a_file_name /= Void
@@ -64,13 +64,13 @@ feature -- Element change
 
 feature -- Status report
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Indicates if the file has not content
 		do
 			Result := keys.is_empty
 		end
 
-	has_source_file_name: BOOLEAN is
+	has_source_file_name: BOOLEAN
 			-- Indicate if a source file name is available
 		do
 			Result := source_file_name /= Void
@@ -78,7 +78,7 @@ feature -- Status report
 
 feature {NONE} -- Process
 
-	process_ini_content (a_doc: INI_DOCUMENT) is
+	process_ini_content (a_doc: INI_DOCUMENT)
 			-- Processes the content of an INI document `a_doc'
 		require
 			a_doc_attached: a_doc /= Void
@@ -99,7 +99,7 @@ invariant
 	source_file_name_attached: has_source_file_name implies source_file_name /= Void
 	not_source_file_name_is_empty: has_source_file_name implies not source_file_name.is_empty
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

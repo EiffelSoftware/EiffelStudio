@@ -1,4 +1,4 @@
-indexing
+note
 	description: "COM VARDESC structure"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_from_pointer (a_pointer: POINTER) is
+	make_from_pointer (a_pointer: POINTER)
 			-- Make from pointer.
 		do
 			make_by_pointer (a_pointer)
@@ -38,13 +38,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	member_id: INTEGER is
+	member_id: INTEGER
 			-- Member identifier
 		do
 			Result := ccom_vardesc_memid (item)
 		end
 
-	instance_offset: INTEGER is
+	instance_offset: INTEGER
 			-- Offset of this variable within instance
 			-- `varkind' must be `Var_perinstance'.
 		require
@@ -53,7 +53,7 @@ feature -- Access
 			Result := ccom_vardesc_offset (item)
 		end
 
-	constant_variant: ECOM_VARIANT is
+	constant_variant: ECOM_VARIANT
 			-- Value of the constant
 			-- `varkind' must be `Var_const'.
 		require
@@ -62,13 +62,13 @@ feature -- Access
 			create Result.make_from_pointer (ccom_vardesc_const_variant (item))
 		end
 
-	elem_desc: ECOM_ELEM_DESC is
+	elem_desc: ECOM_ELEM_DESC
 			-- Corresponding ELEMDESC structure
 		do
 			create Result.make_from_pointer (ccom_vardesc_elemdesc (item))
 		end
 
-	var_flags: INTEGER is
+	var_flags: INTEGER
 			-- Flags
 			-- See ECOM_VAR_FLAGS for returnvalue
 		do
@@ -77,7 +77,7 @@ feature -- Access
 			valid_varflags: is_valid_varflag (Result)
 		end
 
-	var_kind: INTEGER is
+	var_kind: INTEGER
 			-- Kind of variable
 			-- See ECOM_VAR_KIND for return value
 		do
@@ -96,7 +96,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_parent (a_parent: ECOM_TYPE_INFO) is
+	set_parent (a_parent: ECOM_TYPE_INFO)
 			-- Set `parent attribute.
 		do
 			parent := a_parent
@@ -105,7 +105,7 @@ feature -- Status setting
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of VARDESC structure
 		do
 			Result := c_size_of_var_desc
@@ -113,51 +113,51 @@ feature -- Measurement
 
 feature {NONE} -- Implementation
 
-	dispose is
+	dispose
 			-- `item' is freed by ECOM_TYPE_INFO.
 		do
 		end
 
 feature {NONE} -- Externals
 
-	c_size_of_var_desc: INTEGER is
+	c_size_of_var_desc: INTEGER
 		external 
 			"C [macro %"E_vardesc.h%"]"
 		alias
 			"sizeof(VARDESC)"
 		end
 
-	ccom_vardesc_memid (a_ptr: POINTER): INTEGER is
+	ccom_vardesc_memid (a_ptr: POINTER): INTEGER
 		external
 			"C [macro %"E_vardesc.h%"](EIF_POINTER): EIF_INTEGER"
 		end
 
-	ccom_vardesc_offset (a_ptr: POINTER): INTEGER is
+	ccom_vardesc_offset (a_ptr: POINTER): INTEGER
 		external
 			"C [macro %"E_vardesc.h%"](EIF_POINTER): EIF_INTEGER"
 		end
 
-	ccom_vardesc_const_variant (a_ptr: POINTER): POINTER is
+	ccom_vardesc_const_variant (a_ptr: POINTER): POINTER
 		external
 			"C [macro %"E_vardesc.h%"](EIF_POINTER): EIF_POINTER"
 		end
 
-	ccom_vardesc_elemdesc (a_ptr: POINTER): POINTER is
+	ccom_vardesc_elemdesc (a_ptr: POINTER): POINTER
 		external
 			"C [macro %"E_vardesc.h%"](EIF_POINTER): EIF_POINTER"
 		end
 
-	ccom_vardesc_var_flags (a_ptr: POINTER): INTEGER is
+	ccom_vardesc_var_flags (a_ptr: POINTER): INTEGER
 		external
 			"C [macro %"E_vardesc.h%"](EIF_POINTER): EIF_INTEGER"
 		end
 
-	ccom_vardesc_var_kind (a_ptr: POINTER): INTEGER is
+	ccom_vardesc_var_kind (a_ptr: POINTER): INTEGER
 		external
 			"C [macro %"E_vardesc.h%"](EIF_POINTER): EIF_INTEGER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Parser for command line arguments"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 	
 feature -- Creation
 
-	make is
+	make
 			-- Create with `args'
 		do
 			parse_arguments
@@ -29,7 +29,7 @@ feature -- Creation
 
 feature -- Access
 
-	process_arguments is
+	process_arguments
 			-- Process arguments.  Set `args_ok' and `argument_error' value accordingly.
 		local
 			l_project: PLAIN_TEXT_FILE
@@ -78,7 +78,7 @@ feature -- Access
 
 feature -- Commands
 
-	parse_arguments is
+	parse_arguments
 			-- Parse arguments.
 		local
 			count: INTEGER
@@ -143,7 +143,7 @@ feature -- Commands
 			end
 		end
 	
-	display_usage is
+	display_usage
 		do
 			io.putstring ("Usage: docbuilder [-h] [-g] [-gen /xml2html /html2help /xml2help] [-o /studio /envision /all] [-t /web /mshtml /vsip] project_file%N")
 			io.putstring ("	-h	Display this help message%N")
@@ -169,7 +169,7 @@ feature -- Commands
 			io.read_character
 		end
 		
-	launch_command_line is
+	launch_command_line
 			-- Launch application from command prompt
 		require
 			not_gui: not is_gui
@@ -315,7 +315,7 @@ feature -- Commands
 
 feature {NONE} -- Implementation
 			
-	output_file: PLAIN_TEXT_FILE is
+	output_file: PLAIN_TEXT_FILE
 			-- Output report file
 		once
 			Result :=  Shared_constants.Application_constants.Script_output
@@ -348,7 +348,7 @@ feature {NONE} -- Implementation
 	compile_html: BOOLEAN
 			-- Compile HTML Help after generation?
 
-	generate_code_html is
+	generate_code_html
 			-- Generate Eiffel code HTML
 		local
 			l_code_dir, 
@@ -407,13 +407,13 @@ feature {NONE} -- Implementation
 			end	
 		end	
 	
-	message_constants: MESSAGE_CONSTANTS is
+	message_constants: MESSAGE_CONSTANTS
 			-- Message constants
 		once
 			Result := Shared_constants.Message_constants
 		end	
 
-	report (a_message: STRING) is
+	report (a_message: STRING)
 			-- Report `a_message' to outputs
 		do
 			output_file.open_append
@@ -424,7 +424,7 @@ feature {NONE} -- Implementation
 			end
 		end		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

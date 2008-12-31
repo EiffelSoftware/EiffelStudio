@@ -1,4 +1,4 @@
-indexing
+note
 	description: "xxx"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,12 +15,12 @@ inherit
 
 feature 
 
-	construct_name: STRING is
+	construct_name: STRING
 		once
 			Result := "STANDARD_RESOURCE"
 		end
 
-	production: LINKED_LIST [CONSTRUCT] is
+	production: LINKED_LIST [CONSTRUCT]
 		local
 			nameID: IDENTIFIER
 			resource_type: RESOURCE_TYPE
@@ -35,7 +35,7 @@ feature
 			put (resource_type)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

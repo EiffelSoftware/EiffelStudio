@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants and routines for code XML readers"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,15 +10,15 @@ class
 	
 feature -- File related constants	
 	
-	link_prefix: STRING is "libraries"
+	link_prefix: STRING = "libraries"
 			-- Library root directory
 			
-	reference_dir: STRING is "reference"
+	reference_dir: STRING = "reference"
 			-- Reference directory name	
 	
 feature {CODE_XML_READER} -- Tag Constants
 
-	tags: ARRAYED_LIST [STRING] is
+	tags: ARRAYED_LIST [STRING]
 			-- Tags
 		once
 			create Result.make (15)
@@ -41,19 +41,19 @@ feature {CODE_XML_READER} -- Tag Constants
 			Result.extend ("comment")
 		end
 		
-	location_tag: STRING is "location"
+	location_tag: STRING = "location"
 	
-	include_tag: STRING is "include"
+	include_tag: STRING = "include"
 	
-	anchor_tag: STRING is "anchor"
+	anchor_tag: STRING = "anchor"
 	
-	feature_tag: STRING is "feature"
+	feature_tag: STRING = "feature"
 	
-	html_anchor_tag: STRING is "a"
+	html_anchor_tag: STRING = "a"
 	
-	html_space: STRING is "&nbsp;";
+	html_space: STRING = "&nbsp;";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

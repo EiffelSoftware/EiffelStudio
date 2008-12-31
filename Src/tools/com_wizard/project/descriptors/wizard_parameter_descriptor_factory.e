@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Factory of Parameter Descriptors"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -40,7 +40,7 @@ feature -- Basic operations
 
 	create_descriptor (a_name: STRING; a_type_info: ECOM_TYPE_INFO;
 				an_elem_desc: ECOM_ELEM_DESC; 
-				a_system_descriptor: WIZARD_SYSTEM_DESCRIPTOR): WIZARD_PARAM_DESCRIPTOR is
+				a_system_descriptor: WIZARD_SYSTEM_DESCRIPTOR): WIZARD_PARAM_DESCRIPTOR
 			-- Initialize
 		require
 			valid_name: a_name /= Void and then a_name.count /= 0
@@ -77,7 +77,7 @@ feature -- Basic operations
 			valid_type: type /= Void
 		end
 
-	initialize_descriptor (a_descriptor: WIZARD_PARAM_DESCRIPTOR) is
+	initialize_descriptor (a_descriptor: WIZARD_PARAM_DESCRIPTOR)
 			-- Initialize `a_descriptor' arguments.
 		require
 			valid_descriptor: a_descriptor /= Void
@@ -96,7 +96,7 @@ feature {NONE} -- Implementation
 	default_value: STRING
 			-- Default value.
 
-	description: STRING is
+	description: STRING
 			-- Type description
 		do
 			create Result.make (0)
@@ -114,7 +114,7 @@ feature {NONE} -- Implementation
 			-- Argument flags
 			-- See class ECOM_PARAM_FLAGS for values
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

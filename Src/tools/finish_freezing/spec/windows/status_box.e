@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Windows version of Status Box"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ create
 
 feature -- Initialization
 
-	make_fatal (msg: STRING) is
+	make_fatal (msg: STRING)
 			-- Show fatal error.
 		require
 			msg_not_void: msg /= Void
@@ -44,7 +44,7 @@ feature -- Initialization
 				Mb_iconerror | Mb_ok | Mb_topmost)
 		end
 
-	make (msg: STRING; error, c_error, config_error: BOOLEAN; mapped_path: BOOLEAN) is
+	make (msg: STRING; error, c_error, config_error: BOOLEAN; mapped_path: BOOLEAN)
 			-- show message as error or non-error message
 		require
 			has_error: error implies c_error or else config_error
@@ -99,11 +99,11 @@ feature -- Initialization
 
 feature {NONE} -- Implementation
 
-	Click_cancel_message: STRING is "%N%
+	Click_cancel_message: STRING = "%N%
 		%Click OK to terminate.%N%
 		%Click Cancel to open a command line console.%N"
 
-	append_c_error_msg (make_util, msg: STRING) is
+	append_c_error_msg (make_util, msg: STRING)
 			-- Append C-compilation error message to `msg'.
 		do
 			msg.append("C-compilation produced errors.%N")
@@ -114,14 +114,14 @@ feature {NONE} -- Implementation
 			msg.append("'%Nto see what went wrong.%N")
 		end
 
-	env: EXECUTION_ENVIRONMENT is
+	env: EXECUTION_ENVIRONMENT
 		once
 			create Result
 		end
 
 feature {NONE} -- Externals
 
-	cwin_message_box (hwnd, msg, title: POINTER; icon: INTEGER): INTEGER is
+	cwin_message_box (hwnd, msg, title: POINTER; icon: INTEGER): INTEGER
 			-- SDK MessageBox
 		external
 			"C [macro <windows.h>] (HWND, LPCTSTR, LPCTSTR, UINT): int"
@@ -129,7 +129,7 @@ feature {NONE} -- Externals
 			"MessageBox"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

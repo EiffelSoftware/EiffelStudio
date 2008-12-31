@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel enumeration generator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	generate (a_descriptor: WIZARD_ENUM_DESCRIPTOR) is
+	generate (a_descriptor: WIZARD_ENUM_DESCRIPTOR)
 			-- Generate eiffel client for enum.
 			-- for every constant in `enum_descriptor'
 				-- generate code for constant
@@ -46,7 +46,7 @@ feature -- Access
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

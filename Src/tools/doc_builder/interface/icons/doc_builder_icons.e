@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Icons for header control"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,24 +15,24 @@ inherit
 
 feature -- Icons
 
-	header_left_scroll_pixmap: EV_PIXMAP is
+	header_left_scroll_pixmap: EV_PIXMAP
 		once
 			Result := pixmap_file_content ("right_scroll_arrow")
 		end
 
-	header_right_scroll_pixmap: EV_PIXMAP is
+	header_right_scroll_pixmap: EV_PIXMAP
 		once
 			Result := pixmap_file_content ("left_scroll_arrow")
 		end
 		
-	header_close_current_document_pixmap: EV_PIXMAP is
+	header_close_current_document_pixmap: EV_PIXMAP
 		once
 			Result := pixmap_file_content ("icon_close_color")
 		end
 
 feature {NONE} -- Implementation
 
-	pixmap_file_content (fn: STRING): EV_PIXMAP is
+	pixmap_file_content (fn: STRING): EV_PIXMAP
 			-- Create a pixmap and initialize it with contents of file `fn'.ico or `fn'.xpm.
 		local
 			full_path: FILE_NAME
@@ -59,7 +59,7 @@ feature {NONE} -- Implementation
 		end
 		
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

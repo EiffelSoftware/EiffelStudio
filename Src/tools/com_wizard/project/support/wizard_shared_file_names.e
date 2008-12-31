@@ -1,4 +1,4 @@
-indexing
+note
 	description: "File names constants"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,28 +10,28 @@ class
 
 feature -- Access
 
-	Generated_iid_file_name: STRING is "$ecom_iid_temp.c"
+	Generated_iid_file_name: STRING = "$ecom_iid_temp.c"
 			-- Midl generated iid file name
 	
-	Generated_header_file_name: STRING is "$ecom_header_temp.h"
+	Generated_header_file_name: STRING = "$ecom_header_temp.h"
 			-- Midl generated header file name
 	
-	Generated_dlldata_file_name: STRING is "$ecom_data_temp.c"
+	Generated_dlldata_file_name: STRING = "$ecom_data_temp.c"
 			-- Midl generated dlldata file name
 
-	Generated_ps_file_name: STRING is "$ecom_ps_temp.c"
+	Generated_ps_file_name: STRING = "$ecom_ps_temp.c"
 			-- Midl generated proxy/stub file name
 
-	Def_file_name: STRING is "$ecom.def"
+	Def_file_name: STRING = "$ecom.def"
 			-- Path to definition file
 
-	Clib_name: STRING is "ecom"
+	Clib_name: STRING = "ecom"
 			-- Libray file name
 
-	Generated_files_file_name: STRING is "generated.txt";
+	Generated_files_file_name: STRING = "generated.txt";
 			-- File including list of generated files
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

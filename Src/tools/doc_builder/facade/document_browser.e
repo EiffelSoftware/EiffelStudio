@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Vision2 Widget containing Active X Web Browser control for web browsing."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature -- Creation
 
-	make is 
+	make 
 			-- Create 
 		do
 			default_create
@@ -31,17 +31,17 @@ feature -- Creation
 
 feature -- Statuse Setting
 
-	set_document (a_doc: DOCUMENT) is
+	set_document (a_doc: DOCUMENT)
 			-- Set `document'		
 		do			
 		end
 		
-	update is
+	update
 			-- Update
 		do			
 		end		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

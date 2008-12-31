@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Eiffel source code generator which generate a EV_PIXEL_BUFFER descendant class.
 					The class have all image pixel data and can be created directly without orignal
@@ -14,7 +14,7 @@ class
 
 feature -- Commands
 
-	build_c_external_data_code (a_pixel_buffer: EV_PIXEL_BUFFER): STRING is
+	build_c_external_data_code (a_pixel_buffer: EV_PIXEL_BUFFER): STRING
 			-- Builde C external features where we store all image raw data.
 			-- We use C char array to store image data. If we use C uint32 array, on Windows the
 			-- final compiled exe size will be 3 times bigger when using Microsoft C compiler.
@@ -98,7 +98,7 @@ feature -- Commands
 			end
 		end
 
-	build_colors_code: STRING is
+	build_colors_code: STRING
 			-- Build colors creating code.
 			-- Use array instead of tuple to store colors do create Result.make_empty
 		local
@@ -122,13 +122,13 @@ feature -- Commands
 			Result.append (tab (-1) + "end" + new_line)
 		end
 
-	build_draw_point_code (a_color: NATURAL_32): STRING is
+	build_draw_point_code (a_color: NATURAL_32): STRING
 			-- Build single color creating code.
 		do
 			Result := "0x" + a_color.to_hex_string
 		end
 
-	build_top_code (class_name: STRING): STRING is
+	build_top_code (class_name: STRING): STRING
 			-- Build code of the class before initialization code.
 		do
 			create Result.make_empty
@@ -147,7 +147,7 @@ feature -- Commands
 			Result.append (new_line)
 		end
 
-	build_initialization_code (a_width, a_height: INTEGER) : STRING is
+	build_initialization_code (a_width, a_height: INTEGER) : STRING
 			-- Build initialization code.
 		do
 			create Result.make_empty
@@ -163,7 +163,7 @@ feature -- Commands
 			Result.append (new_line)
 		end
 
-	build_fill_memory_code (a_colors: ARRAYED_LIST [ARRAYED_LIST [NATURAL_32]]; a_width, a_height: INTEGER): STRING is
+	build_fill_memory_code (a_colors: ARRAYED_LIST [ARRAYED_LIST [NATURAL_32]]; a_width, a_height: INTEGER): STRING
 			-- Build implementation code.
 		do
 			last_tab_indention := 0
@@ -189,7 +189,7 @@ feature -- Commands
 
 feature -- Helper featuers
 
-	new_line: STRING is
+	new_line: STRING
 			-- New line
 		do
 			create Result.make_from_string ("%N")
@@ -200,7 +200,7 @@ feature {NONE} -- Implementation
 	c_external_data_features_count: INTEGER
 			-- How many c_colors_X features generated?
 
-	c_external_data_offset: INTEGER is 400
+	c_external_data_offset: INTEGER = 400
 			-- Eiffel Language have manifest string limitation which is 32k.
 			-- We can't generated c external features as long as we want.
 			-- Hope the limitation can be removed in the future. (2007-Aug-22)
@@ -208,7 +208,7 @@ feature {NONE} -- Implementation
 	last_tab_indention: INTEGER
 			-- Last tab indention.
 
-	tab (a_add: INTEGER): STRING is
+	tab (a_add: INTEGER): STRING
 			-- `a_add' can be negative.
 		local
 			l_i: INTEGER
@@ -225,7 +225,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

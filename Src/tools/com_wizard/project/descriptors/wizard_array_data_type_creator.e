@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Creator of Array descriptor"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 feature -- Basic operations
 
 	create_descriptor (a_type_info: ECOM_TYPE_INFO; a_type_desc: ECOM_TYPE_DESC; 
-				a_system_description: WIZARD_SYSTEM_DESCRIPTOR): WIZARD_ARRAY_DATA_TYPE_DESCRIPTOR is
+				a_system_description: WIZARD_SYSTEM_DESCRIPTOR): WIZARD_ARRAY_DATA_TYPE_DESCRIPTOR
 			-- Create descriptor
 		require
 			valid_type_desc: a_type_desc /= Void
@@ -51,7 +51,7 @@ feature -- Basic operations
 			valid_array_size: array_size.count = dimension_count
 		end
 
-	initialize_descriptor (a_descriptor: WIZARD_ARRAY_DATA_TYPE_DESCRIPTOR) is
+	initialize_descriptor (a_descriptor: WIZARD_ARRAY_DATA_TYPE_DESCRIPTOR)
 			-- Initialize `a_descriptor' attributes
 		require
 			valid_descriptor: a_descriptor /= Void
@@ -73,7 +73,7 @@ feature {NONE} -- Implementation
 	array_size: ARRAY[INTEGER];
 			-- size of array in each dimmention
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

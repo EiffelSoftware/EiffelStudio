@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog for filtering and sorting table of contents structures."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	user_initialization is
+	user_initialization
 			-- called by `initialize'.
 			-- Any custom user initialization that
 			-- could not be performed in `initialize',
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	populate_filter_combo is
+	populate_filter_combo
 			-- Populate filter combo
 		local
 			l_filters: HASH_TABLE [DOCUMENT_FILTER, STRING]
@@ -56,7 +56,7 @@ feature {NONE} -- Implementation
 			end			
 		end
 
-	okay is
+	okay
 			-- Okay pressed
 		local
 			l_qdlg: EV_QUESTION_DIALOG
@@ -76,7 +76,7 @@ feature {NONE} -- Implementation
 			end
 		end		
 
-	sort_toc is
+	sort_toc
 			-- Sort new toc from selected options
 		local
 			l_filter: DOCUMENT_FILTER
@@ -94,7 +94,7 @@ feature {NONE} -- Implementation
 				description_text.text)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

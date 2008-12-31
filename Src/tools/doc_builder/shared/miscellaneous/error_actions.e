@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Miscellaneous actions applicable to error reports."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create {ERROR_REPORT}
 
 feature -- Actions
 
-	highlight_text_in_editor (a_line_no, a_line_pos: INTEGER) is
+	highlight_text_in_editor (a_line_no, a_line_pos: INTEGER)
 			-- Highlight error in editor
 		do
 			Shared_document_manager.current_editor.text_displayed.cursor.set_y_in_lines (a_line_no)
@@ -26,7 +26,7 @@ feature -- Actions
 			Shared_document_manager.current_editor.set_focus
 		end
 		
-	highlight_text_byte_in_editor (a_byte_pos: INTEGER) is
+	highlight_text_byte_in_editor (a_byte_pos: INTEGER)
 			-- Highlight error in editor based on byte position
 		do
 --			shared_document_editor.text_displayed.cursor.set_y_in_lines (a_line_no)
@@ -35,7 +35,7 @@ feature -- Actions
 --			shared_document_editor.set_focus
 		end
 
-	load_file_in_editor (a_filename: STRING) is
+	load_file_in_editor (a_filename: STRING)
 			-- Load file in editor
 		require
 			filename_not_void: a_filename /= Void
@@ -43,7 +43,7 @@ feature -- Actions
 			Shared_document_manager.load_document_from_file (a_filename)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

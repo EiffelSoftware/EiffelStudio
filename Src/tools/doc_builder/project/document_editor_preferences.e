@@ -1,4 +1,4 @@
-indexing
+note
 	description: "User editor preferences."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 	
 feature {DOCUMENT_EDITOR} -- Creation
 	
-	make (a_editor: like editor) is
+	make (a_editor: like editor)
 			-- Make
 		require
 			editor_not_void: a_editor /= Void
@@ -28,7 +28,7 @@ feature -- Access
 	font: EV_FONT
 			-- Font currently in use
 
-	word_wrap_on: BOOLEAN is
+	word_wrap_on: BOOLEAN
 			-- Is word wrapping on?
 		do
 			Result := editor.parent_window.wrap_menu_item.is_selected	
@@ -36,7 +36,7 @@ feature -- Access
 	
 feature -- Commands
 
-	load_font_dialog is
+	load_font_dialog
 			-- Loaf font selection dialog
 		local
 			l_dialog: EV_FONT_DIALOG	
@@ -60,7 +60,7 @@ feature {NONE} -- Implementation
 invariant
 	has_editor: editor /= void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

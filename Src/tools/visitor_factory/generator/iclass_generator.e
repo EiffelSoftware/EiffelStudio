@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Interface for generating Eiffel classes.
 	]"
@@ -12,7 +12,7 @@ deferred class
 
 feature -- Basic operations
 
-	generate (a_params: APPLICATION_OPTIONS; a_stub: BOOLEAN): STRING is
+	generate (a_params: APPLICATION_OPTIONS; a_stub: BOOLEAN): STRING
 			-- Generates an Eiffel source file using the application parameters `a_params'.
 			-- If `a_stub' a stub should be generated instead of an interface.
 		require
@@ -22,7 +22,7 @@ feature -- Basic operations
 			result_attached: Result /= Void
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

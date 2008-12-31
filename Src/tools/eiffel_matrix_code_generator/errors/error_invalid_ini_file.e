@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error to indicate that a specified ini file is not valid."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature -- Access
 
-	code: STRING is
+	code: STRING
 			-- Error code
 		once
 			Result := "EINI1"
@@ -27,14 +27,14 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	dollar_description: STRING is
+	dollar_description: STRING
 			-- Dollar encoded description. $x are replaced by array
 			-- indicies.
 		do
 			Result := "Specified ini file '{1}' does not contain a valid Eiffel pixmap matrix document."
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Splash displayer."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature
 
-	show is
+	show
 		local
 			sc: WEL_SCREEN_DC
 			bitmap: WEL_BITMAP
@@ -77,11 +77,11 @@ feature
 			end
 		end
 
-	close is
+	close
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

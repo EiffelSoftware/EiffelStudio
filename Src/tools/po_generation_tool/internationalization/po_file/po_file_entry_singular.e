@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					This is a .po file entry for a string that is only used in the singular.
 					The translated string is stored in msgstr.
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_msgid:STRING_GENERAL) is
+	make (a_msgid:STRING_GENERAL)
 			-- Initialize singular entry with `a_msgid' as message ID.
 			--
 			-- `a_msgid': Message ID for new entry
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	set_msgstr (a_msgstr: STRING_GENERAL) is
+	set_msgstr (a_msgstr: STRING_GENERAL)
 			-- Set translated value of entry to `a_msgstr'.
 			--
 			-- `a_msgstr': Translation corresponding to entry
@@ -52,7 +52,7 @@ feature -- Element change
 
 feature -- Access
 
-	msgstr: STRING_32 is
+	msgstr: STRING_32
 			-- Translation for the entry
 		do
 			Result := unbreak_line (msgid_lines)
@@ -62,7 +62,7 @@ feature -- Access
 
 feature -- Output
 
-	to_string: STRING_32 is
+	to_string: STRING_32
 			-- Entry as a unicode string
 		do
 			Result := Precursor
@@ -74,7 +74,7 @@ feature {NONE} -- Implementation
 
 	msgstr_lines: LINKED_LIST[STRING_32];
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

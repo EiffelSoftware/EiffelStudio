@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel code HTML filter.  Takes Eiffel generated XML library code file%
 		%and produces HTML."
 	legal: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature -- Creation	
 
-	make (a_target, a_src: DIRECTORY) is
+	make (a_target, a_src: DIRECTORY)
 			-- Create new filter and build HTML recursively into `a_target' based upon
 			-- xml in `a_src'
 		require
@@ -37,7 +37,7 @@ feature -- Creation
 
 feature -- Generation
 
-	generated_html (a_file: PLAIN_TEXT_FILE): STRING is
+	generated_html (a_file: PLAIN_TEXT_FILE): STRING
 			-- Generated HTML from `a_file'
 		require
 			file_not_void: a_file /= Void			
@@ -81,13 +81,13 @@ feature {NONE} -- Access
 
 feature {NONE} -- Commands
 
-	build_html is
+	build_html
 			-- Build HTML files
 		do
 			build_code (target_directory, src_directory)
 		end		
 
-	build_code (a_target, a_src: DIRECTORY) is
+	build_code (a_target, a_src: DIRECTORY)
 			-- Build code HTML
 		local
 			l_sub_dir, l_target: DIRECTORY
@@ -161,7 +161,7 @@ feature {NONE} -- Commands
 			a_src.close
 		end
 
-	xml_reader: CODE_XML_READER is
+	xml_reader: CODE_XML_READER
 			-- XML reader that we reuse over and over.
 		once
 			create Result.make_filter
@@ -171,7 +171,7 @@ feature {NONE} -- Commands
 		
 feature {NONE} -- Implementation
 		
-	filter_script (a_filename: STRING): STRING is
+	filter_script (a_filename: STRING): STRING
 			-- Javascript filter script
 		local
 			l_toc_script_name,
@@ -215,7 +215,7 @@ feature {NONE} -- Implementation
 			has_result: Result /= Void
 		end	
 		
-	relative_path_to_help_project (a_file: STRING): STRING is
+	relative_path_to_help_project (a_file: STRING): STRING
 			-- 
 		local
 			l_link: DOCUMENT_LINK
@@ -236,7 +236,7 @@ feature {NONE} -- Implementation
 			end
 		end		
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

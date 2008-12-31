@@ -1,4 +1,4 @@
-indexing
+note
 	description: "C server visitor"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -21,7 +21,7 @@ inherit
 
 feature -- Processing
 
-	process_alias (a_descriptor: WIZARD_ALIAS_DESCRIPTOR) is
+	process_alias (a_descriptor: WIZARD_ALIAS_DESCRIPTOR)
 			-- process alias
 			-- generate code for alias described in `alias_descriptor'
 		local
@@ -32,7 +32,7 @@ feature -- Processing
 			l_generator.generate (a_descriptor)
 		end
 
-	process_coclass (a_descriptor: WIZARD_COCLASS_DESCRIPTOR ) is
+	process_coclass (a_descriptor: WIZARD_COCLASS_DESCRIPTOR )
 			-- process coclass
 			-- generate code for coclass described in `coclass_descriptor'
 			-- for every interface in `coclass_descriptor'
@@ -47,7 +47,7 @@ feature -- Processing
 			l_generator.generate (a_descriptor)
 		end
 
-	process_implemented_interface (a_descriptor: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR) is
+	process_implemented_interface (a_descriptor: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR)
 			-- process interface
 			-- generated class for interface
 			-- `inteface_descriptor' must provide information on
@@ -64,7 +64,7 @@ feature -- Processing
 			end
 		end
 
-	process_interface (a_descriptor: WIZARD_INTERFACE_DESCRIPTOR) is
+	process_interface (a_descriptor: WIZARD_INTERFACE_DESCRIPTOR)
 			-- process interface
 			-- generated deffered class for interface
 			-- `inteface_descriptor' must provide information on
@@ -79,7 +79,7 @@ feature -- Processing
 			end
 		end
 
-	process_enum (a_descriptor: WIZARD_ENUM_DESCRIPTOR) is
+	process_enum (a_descriptor: WIZARD_ENUM_DESCRIPTOR)
 			-- process enumeration
 			-- generate code for enumeration described by `enum_descriptor'
 			-- for every constant in `enum_descriptor'
@@ -88,7 +88,7 @@ feature -- Processing
 			Precursor (a_descriptor)
 		end
 
-	process_record (a_descriptor: WIZARD_RECORD_DESCRIPTOR) is
+	process_record (a_descriptor: WIZARD_RECORD_DESCRIPTOR)
 			-- process structure
 			-- generate code for structure described by `record_descriptor'
 			-- for every field in `record_descriptor'
@@ -112,19 +112,19 @@ feature -- Processing
 
 feature {NONE} -- Implementation
 
-	language: STRING is
+	language: STRING
 			-- Lanuage currently generated
 		once
 			Result := C
 		end
 
-	Module_type: STRING is
+	Module_type: STRING
 			-- Module type currently generated
 		once
 			Result := Server
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Wizard writer constants"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -21,96 +21,96 @@ inherit
 
 feature -- CECIL function names/ Keywords
 
-	Eif_procedure_name: STRING is "eif_procedure"
+	Eif_procedure_name: STRING = "eif_procedure"
 
-	Eif_field: STRING is "eif_field"
+	Eif_field: STRING = "eif_field"
 
-	Eif_character_function_name: STRING is "eif_character_function"
+	Eif_character_function_name: STRING = "eif_character_function"
 
-	Eif_reference_function_name: STRING is "eif_reference_function"
+	Eif_reference_function_name: STRING = "eif_reference_function"
 
-	Eif_pointer_function_name: STRING is "eif_pointer_function"
+	Eif_pointer_function_name: STRING = "eif_pointer_function"
 
-	Eif_integer_function_name: STRING is "eif_integer_function"
+	Eif_integer_function_name: STRING = "eif_integer_function"
 
-	Eif_real_function_name: STRING is "eif_real_function"
+	Eif_real_function_name: STRING = "eif_real_function"
 
-	Eif_double_function_name: STRING is "eif_double_function"
+	Eif_double_function_name: STRING = "eif_double_function"
 
-	Eif_boolean_function_name: STRING is "eif_boolean_function"
+	Eif_boolean_function_name: STRING = "eif_boolean_function"
 
-	Eif_type_id_function_name: STRING is "eif_type_id"
+	Eif_type_id_function_name: STRING = "eif_type_id"
 
-	Eif_create: STRING is "eif_create"
+	Eif_create: STRING = "eif_create"
 
-	Eif_protect: STRING is "eif_protect"
+	Eif_protect: STRING = "eif_protect"
 
-	Eif_adopt: STRING is "eif_adopt"
+	Eif_adopt: STRING = "eif_adopt"
 
-	Eif_access: STRING is "eif_access"
+	Eif_access: STRING = "eif_access"
 
-	Eif_wean: STRING is "eif_wean"
+	Eif_wean: STRING = "eif_wean"
 
-	Eif_make_from_c: STRING is "eif_make_from_c"
+	Eif_make_from_c: STRING = "eif_make_from_c"
 
-	C_keyword: STRING is "C"
+	C_keyword: STRING = "C"
 
-	Macro: STRING is "macro"
+	Macro: STRING = "macro"
 
 feature -- Paths -- 11
 
-	Interfaces: STRING is "Interfaces"
+	Interfaces: STRING = "Interfaces"
 
-	Common: STRING is "Common"
+	Common: STRING = "Common"
 
-	Server: STRING is "Server"
+	Server: STRING = "Server"
 
-	Client: STRING is "Client"
+	Client: STRING = "Client"
 
-	Component: STRING is "Component"
+	Component: STRING = "Component"
 
-	Clib: STRING is "Clib"
+	Clib: STRING = "Clib"
 
-	Include: STRING is "Include"
+	Include: STRING = "Include"
 
-	Structures: STRING is "Structures"
+	Structures: STRING = "Structures"
 
-	Interface_proxy: STRING is "Interface_proxy"
+	Interface_proxy: STRING = "Interface_proxy"
 
-	Interface_stub: STRING is "Interface_stub"
+	Interface_stub: STRING = "Interface_stub"
 
-	Eiffel_file_extension: STRING is ".e"
+	Eiffel_file_extension: STRING = ".e"
 
-	Header_file_extension: STRING is ".h"
+	Header_file_extension: STRING = ".h"
 
-	C_file_extension: STRING is ".c"
+	C_file_extension: STRING = ".c"
 
-	Cpp_file_extension: STRING is ".cpp"
+	Cpp_file_extension: STRING = ".cpp"
 
-	Backup_file_extension: STRING is ".bac"
+	Backup_file_extension: STRING = ".bac"
 
-	Dll_file_extension: STRING is ".dll"
+	Dll_file_extension: STRING = ".dll"
 
-	Lib_file_extension: STRING is ".lib"
+	Lib_file_extension: STRING = ".lib"
 
-	Object_file_extension: STRING is ".obj"
+	Object_file_extension: STRING = ".obj"
 
-	Definition_file_extension: STRING is ".def"
+	Definition_file_extension: STRING = ".def"
 
 feature -- Commands -- 12
 	
-	Copy_command: STRING is "xcopy /C"
+	Copy_command: STRING = "xcopy /C"
 
-	Delete_command: STRING is "del"
+	Delete_command: STRING = "del"
 
 feature -- languages --13
 
-	C: STRING is "C"
+	C: STRING = "C"
 
-	Eiffel: STRING is "Eiffel";
+	Eiffel: STRING = "Eiffel";
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

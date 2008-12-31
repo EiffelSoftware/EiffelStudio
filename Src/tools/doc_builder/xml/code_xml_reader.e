@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Reader of Eiffel XML code file."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 
 feature -- Creation
 
-	make (a_file: PLAIN_TEXT_FILE) is
+	make (a_file: PLAIN_TEXT_FILE)
 			-- Create
 		require
 			file_not_void: a_file /= Void
@@ -38,7 +38,7 @@ feature -- Creation
 			file := a_file			
 		end
 
-	clear is
+	clear
 		do
 			Precursor {DOCUMENT_FILTER}
 			conc_content := Void
@@ -47,7 +47,7 @@ feature -- Creation
 
 feature -- Tag
 
-	on_start_tag (a_namespace, a_prefix, a_local_part: STRING) is
+	on_start_tag (a_namespace, a_prefix, a_local_part: STRING)
 			-- Start tag
 		do
 			if conc_content /= Void then
@@ -62,7 +62,7 @@ feature -- Tag
 			end			
 		end
 		
-	on_end_tag (a_namespace, a_prefix, a_local_part: STRING) is
+	on_end_tag (a_namespace, a_prefix, a_local_part: STRING)
 			-- End tag
 		do	
 			if conc_content /= Void then
@@ -73,7 +73,7 @@ feature -- Tag
 			location_replaced := False
 		end	
 		
-	on_content (a_content: STRING) is
+	on_content (a_content: STRING)
 			-- Content
 		local
 			l_start_pos,
@@ -110,13 +110,13 @@ feature -- Tag
 
 feature {NONE} -- Tag
 		
-	current_tag: STRING is
+	current_tag: STRING
 			-- Current tag
 		do
 			Result := element_stack.item
 		end
 		
-	process_tag (a_tag: STRING; is_start: BOOLEAN) is
+	process_tag (a_tag: STRING; is_start: BOOLEAN)
 			-- Process `a_tag'
 		require
 			tag_not_void: a_tag /= Void
@@ -148,14 +148,14 @@ feature {NONE} -- Implementation
 	file: PLAIN_TEXT_FILE
 			-- File from which XML is being read
 
-	element_stack: ARRAYED_STACK [STRING] is
+	element_stack: ARRAYED_STACK [STRING]
 			-- Stack of element names
 		once
 			create Result.make (2)
 			Result.compare_objects
 		end
 		
-	content_stack: ARRAYED_STACK [STRING] is
+	content_stack: ARRAYED_STACK [STRING]
 			-- Stack of element names
 		once
 			create Result.make (2)
@@ -170,7 +170,7 @@ feature {NONE} -- Implementation
 	
 	location_replaced: BOOLEAN
 	
-	write_style_tag (a_tag_name: STRING; is_start: BOOLEAN) is
+	write_style_tag (a_tag_name: STRING; is_start: BOOLEAN)
 			-- Write HTML style tag of `a_tag_name'
 		require
 			tag_not_void: a_tag_name /= Void
@@ -187,7 +187,7 @@ feature {NONE} -- Implementation
 			
 	location_done: BOOLEAN		
 			
-	parsed_url (a_url: STRING): STRING is
+	parsed_url (a_url: STRING): STRING
 			-- Parsed url
 		local
 			l_name: STRING
@@ -225,7 +225,7 @@ feature {NONE} -- Implementation
 			Result := l_name
 		end		
 		
-	write_content (remove: BOOLEAN) is
+	write_content (remove: BOOLEAN)
 			-- Write built content string,  Remove from stack after if `remove', otherwise 
 			-- clear for next batch of content.
 		local			
@@ -257,7 +257,7 @@ feature {NONE} -- Implementation
 		end
 		
 			
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

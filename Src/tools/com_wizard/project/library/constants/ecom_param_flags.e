@@ -1,4 +1,4 @@
-indexing
+note
 	description: "COM PARAMFLAGS flags"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -13,7 +13,7 @@ inherit
 	
 feature -- Access
 
-	Paramflag_none: INTEGER is
+	Paramflag_none: INTEGER
 			-- Whether the parameter passes or receives information is unspecified
 		external
 			"C [macro <oaidl.h>]"
@@ -21,7 +21,7 @@ feature -- Access
 			"PARAMFLAG_NONE"
 		end
 
-	Paramflag_fin: INTEGER is
+	Paramflag_fin: INTEGER
 			-- Parameter passes information from the caller to the callee
 		external
 			"C [macro <oaidl.h>]"
@@ -29,7 +29,7 @@ feature -- Access
 			"PARAMFLAG_FIN"
 		end
 
-	Paramflag_fout: INTEGER is
+	Paramflag_fout: INTEGER
 			--  Parameter returns information from the callee to the caller
 		external
 			"C [macro <oaidl.h>]"
@@ -37,7 +37,7 @@ feature -- Access
 			"PARAMFLAG_FOUT"
 		end
 			
-	Paramflag_flcid: INTEGER is
+	Paramflag_flcid: INTEGER
 			-- Parameter is the LCID of a client application
 		external
 			"C [macro <oaidl.h>]"
@@ -45,7 +45,7 @@ feature -- Access
 			"PARAMFLAG_FLCID"
 		end
 
-	Paramflag_fretval: INTEGER is
+	Paramflag_fretval: INTEGER
 			-- Parameter is the return value of the member
 		external
 			"C [macro <oaidl.h>]"
@@ -53,7 +53,7 @@ feature -- Access
 			"PARAMFLAG_FRETVAL"
 		end
 		
-	Paramflag_fopt: INTEGER is
+	Paramflag_fopt: INTEGER
 			-- Parameter is optional
 		external
 			"C [macro <oaidl.h>]"
@@ -61,7 +61,7 @@ feature -- Access
 			"PARAMFLAG_FOPT"
 		end
 			
-	Paramflag_fhasdefault: INTEGER is
+	Paramflag_fhasdefault: INTEGER
 			-- Parameter has default behaviors defined
 		external
 			"C [macro <oaidl.h>]"
@@ -71,56 +71,56 @@ feature -- Access
 
 feature -- Status report
 
-	has_fopt_and_fhasdefault (flag: INTEGER): BOOLEAN is
+	has_fopt_and_fhasdefault (flag: INTEGER): BOOLEAN
 			-- Does `flag' include `Paramflag_fopt' and
 			-- `Paramflag_fhasdefault'?
 		do
 			Result := is_paramflag_fopt (flag) and is_paramflag_fhasdefault (flag)
 		end
 
-	is_paramflag_none (flag: INTEGER): BOOLEAN is
+	is_paramflag_none (flag: INTEGER): BOOLEAN
 			-- Is flag PARAMFLAG_NONE?
 		do
 			Result := flag = Paramflag_none
 		end
 
-	is_paramflag_fin (flag: INTEGER): BOOLEAN is
+	is_paramflag_fin (flag: INTEGER): BOOLEAN
 			-- Is `in' parameter?
 		do
 			Result := binary_and (flag, Paramflag_fin) = Paramflag_fin
 		end
 
-	is_paramflag_fout (flag: INTEGER): BOOLEAN is
+	is_paramflag_fout (flag: INTEGER): BOOLEAN
 			-- Is `out' parameter?
 		do
 			Result := binary_and (flag, Paramflag_fout) = Paramflag_fout
 		end
 
-	is_paramflag_flcid (flag: INTEGER): BOOLEAN is
+	is_paramflag_flcid (flag: INTEGER): BOOLEAN
 			-- Is `lcid' parameter?
 		do
 			Result := binary_and (flag, Paramflag_flcid) = Paramflag_flcid
 		end
 
-	is_paramflag_fretval (flag: INTEGER): BOOLEAN is
+	is_paramflag_fretval (flag: INTEGER): BOOLEAN
 			-- Is `retval' parameter?
 		do
 			Result := binary_and (flag, Paramflag_fretval) = Paramflag_fretval
 		end
 
-	is_paramflag_fopt (flag: INTEGER): BOOLEAN is
+	is_paramflag_fopt (flag: INTEGER): BOOLEAN
 			-- Is `opt' parameter?
 		do
 			Result := binary_and (flag, Paramflag_fopt) = Paramflag_fopt
 		end
 
-	is_paramflag_fhasdefault (flag: INTEGER): BOOLEAN is
+	is_paramflag_fhasdefault (flag: INTEGER): BOOLEAN
 			-- Is `hasdefault' parameter?
 		do
 			Result := binary_and (flag, Paramflag_fhasdefault) = Paramflag_fhasdefault
 		end
 
-	is_valid_paramflag (flag: INTEGER): BOOLEAN is
+	is_valid_paramflag (flag: INTEGER): BOOLEAN
 			-- Is `flag' a valid combination of paramflags?
 		do
 			Result := is_paramflag_none (flag) or
@@ -132,7 +132,7 @@ feature -- Status report
 						is_paramflag_fhasdefault (flag) 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

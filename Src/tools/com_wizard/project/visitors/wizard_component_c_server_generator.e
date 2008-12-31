@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Component C server generator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -25,7 +25,7 @@ feature -- Access
 	dispatch_interface: BOOLEAN
 			-- Is coclass contained dispatch interface?
 
-	default_dispinterface (a_component: WIZARD_COMPONENT_DESCRIPTOR): WIZARD_INTERFACE_DESCRIPTOR is
+	default_dispinterface (a_component: WIZARD_COMPONENT_DESCRIPTOR): WIZARD_INTERFACE_DESCRIPTOR
 			-- Default dispinterface.
 		require
 			non_void_component: a_component /= Void
@@ -37,7 +37,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	generate (a_component: WIZARD_COMPONENT_DESCRIPTOR) is
+	generate (a_component: WIZARD_COMPONENT_DESCRIPTOR)
 			-- Generate C server for component.
 		local
 			member_writer: WIZARD_WRITER_C_MEMBER
@@ -76,7 +76,7 @@ feature -- Basic Operations
 			cpp_class_writer.add_member (member_writer, Private)
 		end
 
-	standard_functions (a_component: WIZARD_COMPONENT_DESCRIPTOR) is
+	standard_functions (a_component: WIZARD_COMPONENT_DESCRIPTOR)
 			-- Standard functions.
 		require
 			non_void_component: a_component /= Void
@@ -92,7 +92,7 @@ feature -- Basic Operations
 			add_query_interface (a_component)
 		end
 
-	dispatch_interface_features (a_component: WIZARD_COMPONENT_DESCRIPTOR) is
+	dispatch_interface_features (a_component: WIZARD_COMPONENT_DESCRIPTOR)
 			-- Dispatch interface features.
 		require
 			dispatch_interface: dispatch_interface
@@ -117,7 +117,7 @@ feature -- Basic Operations
 			dispatch_invoke_function (a_component)
 		end
 
-	constructor_addition (a_component: WIZARD_COMPONENT_DESCRIPTOR): STRING is
+	constructor_addition (a_component: WIZARD_COMPONENT_DESCRIPTOR): STRING
 			-- Constructor addition.
 		do
 			create Result.make (0)
@@ -125,7 +125,7 @@ feature -- Basic Operations
 			non_void_addition: Result /= Void
 		end
 
-	destructor_addition (a_component: WIZARD_COMPONENT_DESCRIPTOR): STRING is
+	destructor_addition (a_component: WIZARD_COMPONENT_DESCRIPTOR): STRING
 			-- Destructor addition.
 		do
 			create Result.make (0)
@@ -133,7 +133,7 @@ feature -- Basic Operations
 			non_void_addition: Result /= Void
 		end
 
-	constructor_from_object_body (a_component: WIZARD_COMPONENT_DESCRIPTOR): STRING is
+	constructor_from_object_body (a_component: WIZARD_COMPONENT_DESCRIPTOR): STRING
 			-- Body of constructor from Eiffel object.
 		do
 			create Result.make (500)
@@ -146,7 +146,7 @@ feature -- Basic Operations
 			Result.append (constructor_addition (a_component))
 		end
 
-	add_constructor_from_object (a_component: WIZARD_COMPONENT_DESCRIPTOR)is
+	add_constructor_from_object (a_component: WIZARD_COMPONENT_DESCRIPTOR)
 			-- Add constructor from Eiffel object.
 		local
 			l_writer: WIZARD_WRITER_CPP_CONSTRUCTOR
@@ -157,7 +157,7 @@ feature -- Basic Operations
 			cpp_class_writer.add_constructor (l_writer)
 		end
 
-	constructor_body (a_component: WIZARD_COMPONENT_DESCRIPTOR): STRING is
+	constructor_body (a_component: WIZARD_COMPONENT_DESCRIPTOR): STRING
 			-- Body of constructor.
 		do
 			create Result.make (1000)
@@ -176,12 +176,12 @@ feature -- Basic Operations
 			valid_body: not Result.is_empty
 		end
 
-	add_constructor (a_component: WIZARD_COMPONENT_DESCRIPTOR) is
+	add_constructor (a_component: WIZARD_COMPONENT_DESCRIPTOR)
 			-- Add constructor.
 		deferred
 		end
 
-	lock_module: STRING is
+	lock_module: STRING
 			-- "LockModule ();" line
 		do
 			create Result.make (0)
@@ -192,7 +192,7 @@ feature -- Basic Operations
 			non_void_result: Result /= Void
 		end
 
-	add_destructor (a_component: WIZARD_COMPONENT_DESCRIPTOR) is
+	add_destructor (a_component: WIZARD_COMPONENT_DESCRIPTOR)
 			-- Add destructor.
 		local
 			l_body: STRING
@@ -214,7 +214,7 @@ feature -- Basic Operations
 			cpp_class_writer.set_destructor (l_body)
 		end
 
-	unlock_module: STRING is
+	unlock_module: STRING
 			-- "UnlockModule ();" line.
 		do
 			create Result.make (0)
@@ -225,7 +225,7 @@ feature -- Basic Operations
 			non_void_result: Result /= Void
 		end
 
-	add_get_type_info_function (a_component: WIZARD_COMPONENT_DESCRIPTOR) is
+	add_get_type_info_function (a_component: WIZARD_COMPONENT_DESCRIPTOR)
 			-- Add GetTypeInfo function.
 		require
 			non_void_component: a_component /= Void
@@ -250,7 +250,7 @@ feature -- Basic Operations
 			cpp_class_writer.add_function (func_writer, Public)
 		end
 
-	add_get_type_info_count_function is
+	add_get_type_info_count_function
 			-- Add GetTypeInfoCount function.
 		local
 			func_writer: WIZARD_WRITER_C_FUNCTION
@@ -270,7 +270,7 @@ feature -- Basic Operations
 			cpp_class_writer.add_function (func_writer, Public)
 		end
 
-	add_get_ids_of_names_function (a_component: WIZARD_COMPONENT_DESCRIPTOR) is
+	add_get_ids_of_names_function (a_component: WIZARD_COMPONENT_DESCRIPTOR)
 			-- Add GetIDsOfNames function
 		require
 			non_void_coclass_descriptor: a_component /= Void
@@ -289,7 +289,7 @@ feature -- Basic Operations
 			cpp_class_writer.add_function (func_writer, Public)
 		end
 
-	dispatch_invoke_function (a_component: WIZARD_COMPONENT_DESCRIPTOR) is
+	dispatch_invoke_function (a_component: WIZARD_COMPONENT_DESCRIPTOR)
 			-- Add Invoke function for pure dispatch interface
 		require
 			non_void_component: a_component /= Void
@@ -343,7 +343,7 @@ feature -- Basic Operations
 			cpp_class_writer.add_function (func_writer, Public)
 		end
 
-	invoke_function_case_item (interface_desc: WIZARD_INTERFACE_DESCRIPTOR): STRING is
+	invoke_function_case_item (interface_desc: WIZARD_INTERFACE_DESCRIPTOR): STRING
 			-- Case statement for functions in interface
 		require
 			non_void_descriptor: interface_desc /= Void
@@ -427,7 +427,7 @@ feature -- Basic Operations
 			valid_result: (interface_desc.is_idispatch_heir and not interface_desc.functions_empty) implies not Result.is_empty
 		end
 
-	properties_case_body (prop_desc: WIZARD_PROPERTY_DESCRIPTOR): STRING is
+	properties_case_body (prop_desc: WIZARD_PROPERTY_DESCRIPTOR): STRING
 			-- Case for properties
 		require
 			non_void_property_descriptor: prop_desc /= Void
@@ -479,7 +479,7 @@ feature -- Basic Operations
 			end
 		end
 
-	propertyput_case (func_desc: WIZARD_FUNCTION_DESCRIPTOR): STRING is
+	propertyput_case (func_desc: WIZARD_FUNCTION_DESCRIPTOR): STRING
 			-- Function code for propertyput
 		require
 			non_void_descriptor: func_desc /= Void
@@ -489,7 +489,7 @@ feature -- Basic Operations
 			Result.append (function_case_body (func_desc))
 		end
 
-	propertyget_case (func_desc: WIZARD_FUNCTION_DESCRIPTOR): STRING is
+	propertyget_case (func_desc: WIZARD_FUNCTION_DESCRIPTOR): STRING
 			-- Case statement for function descriptor
 		require
 			non_void_descriptor: func_desc /= Void
@@ -499,7 +499,7 @@ feature -- Basic Operations
 			Result.append (function_case_body (func_desc))
 		end
 
-	function_case_body (func_desc: WIZARD_FUNCTION_DESCRIPTOR): STRING is
+	function_case_body (func_desc: WIZARD_FUNCTION_DESCRIPTOR): STRING
 			-- Case statement for function descriptor
 		require
 			non_void_descriptor: func_desc /= Void
@@ -513,7 +513,7 @@ feature -- Basic Operations
 			valid_body: Result /= Void
 		end
 
-	case_code (a_case_body: STRING; a_case_member_id: INTEGER): STRING is
+	case_code (a_case_body: STRING; a_case_member_id: INTEGER): STRING
 			-- Code for case statement.
 		require
 			non_void_body: a_case_body /= Void
@@ -531,7 +531,7 @@ feature -- Basic Operations
 			non_empty_code: not Result.is_empty
 		end
 
-	function_case (func_desc: WIZARD_FUNCTION_DESCRIPTOR): STRING is
+	function_case (func_desc: WIZARD_FUNCTION_DESCRIPTOR): STRING
 			-- Case statement for function descriptor
 		require
 			non_void_descriptor: func_desc /= Void
@@ -539,12 +539,12 @@ feature -- Basic Operations
 			Result := case_code (function_case_body (func_desc), func_desc.member_id)
 		end
 
-	add_query_interface (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR) is
+	add_query_interface (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR)
 			-- Add function 'QueryInterface'
 		deferred
 		end
 
-	add_addref_function is
+	add_addref_function
 			-- Add function 'AddRef()'.
 		local
 			func_writer: WIZARD_WRITER_C_FUNCTION
@@ -563,7 +563,7 @@ feature -- Basic Operations
 			cpp_class_writer.add_function (func_writer, Public)
 		end
 
-	check_type_info (a_component: WIZARD_COMPONENT_DESCRIPTOR): STRING is
+	check_type_info (a_component: WIZARD_COMPONENT_DESCRIPTOR): STRING
 			-- Code to check whether type info exist
 		require
 			non_void_component: a_component /= Void
@@ -603,7 +603,7 @@ feature -- Basic Operations
 			Result.append ("return tmp_hr;%N%T}%N%T")
 		end
 
-	add_release_function is
+	add_release_function
 			-- Add function 'Release()'. 
 		local
 			l_body: STRING
@@ -630,7 +630,7 @@ feature -- Basic Operations
 			cpp_class_writer.add_function (func_writer, Public)
 		end
 
-	case_body_in_query_interface (a_name, a_namespace, a_id: STRING): STRING is
+	case_body_in_query_interface (a_name, a_namespace, a_id: STRING): STRING
 			-- Case body in QueryInterface function implemenatation.
 		require
 			non_void_interface_name: a_name /= Void
@@ -655,14 +655,14 @@ feature -- Basic Operations
 			valid_body: not Result.is_empty
 		end
 
-	default_dispinterface_name (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR): STRING is
+	default_dispinterface_name (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR): STRING
 			-- Name of default dispinterface.
 		require
 			non_void_component_descriptor: a_component_descriptor /= Void
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

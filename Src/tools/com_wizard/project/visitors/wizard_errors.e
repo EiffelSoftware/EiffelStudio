@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error messages for EiffelCOM wizard."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,57 +10,57 @@ class
 
 feature -- Error Codes
 
-	User_stop: INTEGER is 1
+	User_stop: INTEGER = 1
 			-- User stopped generation
 
-	Exception_raised: INTEGER is 2
+	Exception_raised: INTEGER = 2
 			-- An exception was raised
 
-	Eiffel_compilation_error: INTEGER is 3
+	Eiffel_compilation_error: INTEGER = 3
 			-- Eiffel compilation error
 
-	Idl_generation_error: INTEGER is 4
+	Idl_generation_error: INTEGER = 4
 			-- IDL generation error
 
-	External_program_failed: INTEGER is 5
+	External_program_failed: INTEGER = 5
 			-- External program (C compiler) failed
 
-	Makefile_write_error: INTEGER is 6
+	Makefile_write_error: INTEGER = 6
 			-- Makefile could not be written to disk
 
-	File_write_error: INTEGER is 7
+	File_write_error: INTEGER = 7
 			-- File could not be written to disk
 
-	No_type_library: INTEGER is 8
+	No_type_library: INTEGER = 8
 			-- No type library
 
-	No_c_compiler: INTEGER is 9
+	No_c_compiler: INTEGER = 9
 			-- C compiler not found
 
-	Class_not_in_project: INTEGER is 10
+	Class_not_in_project: INTEGER = 10
 			-- Facade class not in Eiffel project
 
-	C_compilation_failed: INTEGER is 11
+	C_compilation_failed: INTEGER = 11
 			-- C compilation failed
 
-	Idl_compilation_failed: INTEGER is 12
+	Idl_compilation_failed: INTEGER = 12
 			-- IDL compilation failed
 
-	Link_failed: INTEGER is 13
+	Link_failed: INTEGER = 13
 			-- C link failed
 
-	Destination_folder_cleanup_error: INTEGER is 14
+	Destination_folder_cleanup_error: INTEGER = 14
 			-- Destination folder cleanup error
 
-	No_midl_compiler: INTEGER is 15
+	No_midl_compiler: INTEGER = 15
 			-- No MIDL compiler but using IDL
 
-	Initialization_error: INTEGER is 16
+	Initialization_error: INTEGER = 16
 			-- Could not create destination folder
 
 feature -- Access
 
-	error_title (a_error: INTEGER): STRING is
+	error_title (a_error: INTEGER): STRING
 			-- Error title associated with `a_error'
 		require
 			valid_error_code: is_valid_error_code (a_error)
@@ -72,7 +72,7 @@ feature -- Access
 
 feature -- Status Report
 
-	is_valid_error_code (a_error: INTEGER): BOOLEAN is
+	is_valid_error_code (a_error: INTEGER): BOOLEAN
 			-- Is `a_error' a valid error code?
 		do
 			Result := a_error >= 0 and a_error <= Error_table.count
@@ -80,7 +80,7 @@ feature -- Status Report
 
 feature {NONE} -- Implementation
 
-	Error_table: ARRAY [STRING] is
+	Error_table: ARRAY [STRING]
 			-- Error table
 		once
 			create Result.make (1, 16)
@@ -102,7 +102,7 @@ feature {NONE} -- Implementation
 			Result.put ("Could not create destination folder", Initialization_error)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Used to modify Eiffel Configuration Files (ECF) by the way of adding assemblies and modifying
 		existing assemblies.
@@ -17,7 +17,7 @@ create
 
 feature -- Basic Operations
 
-	modify (a_fn: STRING; a_targets: LIST [STRING]; a_assemblies: LIST [LOCATED_ASSEMBLY]) is
+	modify (a_fn: STRING; a_targets: LIST [STRING]; a_assemblies: LIST [LOCATED_ASSEMBLY])
 			-- Modifies `a_fn' by adding the assemblies in `a_assemblies' to the ECF targets `a_targets' (or all targets if empty).
 		require
 			a_fn_attached: a_fn /= Void
@@ -100,7 +100,7 @@ feature -- Access
 
 feature -- Status report
 
-	successful: BOOLEAN is
+	successful: BOOLEAN
 			-- Indicates if modification was successful
 		do
 			Result := errors = Void or else errors.is_empty
@@ -108,7 +108,7 @@ feature -- Status report
 
 feature {NONE} -- Modification implementation
 
-	add_assemblies (a_doc: XML_DOCUMENT; a_node: XML_ELEMENT; a_assemblies: LIST [LOCATED_ASSEMBLY]) is
+	add_assemblies (a_doc: XML_DOCUMENT; a_node: XML_ELEMENT; a_assemblies: LIST [LOCATED_ASSEMBLY])
 			-- Add assemblies `a_assemblies' to XML node `a_node'.
 		local
 			l_cursor: CURSOR
@@ -163,7 +163,7 @@ feature {NONE} -- Modification implementation
 
 feature -- Query
 
-	location_for_assembly (a_assembly: LOCATED_ASSEMBLY): STRING is
+	location_for_assembly (a_assembly: LOCATED_ASSEMBLY): STRING
 			-- Retrieve a formatted location for assembly `a_assembly'
 		require
 			a_assembly_attached: a_assembly /= Void
@@ -189,7 +189,7 @@ invariant
 	errors_attached: not successful implies errors /= Void
 	not_errors_is_empty: not successful implies not errors.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

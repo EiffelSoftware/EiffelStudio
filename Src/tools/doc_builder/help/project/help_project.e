@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Help project."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ inherit
 
 feature -- Initialization
 
-	make (a_loc: DIRECTORY; a_name: STRING; a_toc: TABLE_OF_CONTENTS) is
+	make (a_loc: DIRECTORY; a_name: STRING; a_toc: TABLE_OF_CONTENTS)
 			-- Create new help project in location `a_loc' with name `a_name'.
 			-- Build `table_of_contents' from contents of `a_toc'.
 		require
@@ -31,7 +31,7 @@ feature -- Initialization
 		
 feature -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize	
 		do
 			if not help_directory.exists then				
@@ -57,14 +57,14 @@ feature -- Access
 	settings: HELP_PROJECT_SETTINGS_FILE
 			-- File containing full project setting
 
-	project_file: PLAIN_TEXT_FILE is
+	project_file: PLAIN_TEXT_FILE
 			-- Saved project file
 		deferred
 		end
 	
 feature -- Status Setting
 
-	set_title (a_title: STRING) is
+	set_title (a_title: STRING)
 			-- Set `title'
 		do
 			title := a_title
@@ -72,50 +72,50 @@ feature -- Status Setting
 
 feature {HELP_GENERATOR} -- File
 
-	compiled_filename_extension: STRING is
+	compiled_filename_extension: STRING
 			-- Extension for created project
 		deferred
 		end
 
-	project_filename_extension: STRING is
+	project_filename_extension: STRING
 			-- Extension for created project
 		deferred
 		end
 
-	toc_filename_extension: STRING is
+	toc_filename_extension: STRING
 			-- Extension for table of contents
 		deferred
 		end
 
-	help_directory: DIRECTORY is
+	help_directory: DIRECTORY
 			-- Help directory
 		once
 --			create Result.make (Shared_constants.Application_constants.Temporary_help_directory)			
 			create Result.make (Shared_constants.Application_constants.Temporary_html_directory)			
 		end
 		
-	full_toc_text: STRING is
+	full_toc_text: STRING
 			-- Full text of TOC
 		deferred
 		end		
 
 feature -- Commands
 
-	build_table_of_contents is
+	build_table_of_contents
 			-- Build new `table_of contents' from `a_dir'
 		require
 			valid_toc: toc /= Void
 		deferred
 		end
 
-	generate is
+	generate
 			-- Generate
 		deferred			
 		end		
 	
 feature {HELP_PROJECT_SETTINGS_FILE} -- Implementation
 
-	project_file_name: FILE_NAME is
+	project_file_name: FILE_NAME
 			-- Name for generated project file
 		do
 			create Result.make_from_string (help_directory.name)
@@ -123,7 +123,7 @@ feature {HELP_PROJECT_SETTINGS_FILE} -- Implementation
 			Result.add_extension (project_filename_extension)	
 		end
 		
-	compiled_file_name: FILE_NAME is
+	compiled_file_name: FILE_NAME
 			-- Compiled file name
 		do
 			create Result.make_from_string (help_directory.name)
@@ -131,7 +131,7 @@ feature {HELP_PROJECT_SETTINGS_FILE} -- Implementation
 			Result.add_extension (compiled_filename_extension)	
 		end
 			
-	toc_file_name: FILE_NAME is
+	toc_file_name: FILE_NAME
 			-- Table of Contents file name
 		do
 			create Result.make_from_string (help_directory.name)
@@ -139,14 +139,14 @@ feature {HELP_PROJECT_SETTINGS_FILE} -- Implementation
 			Result.add_extension (toc_filename_extension)	
 		end
 
-	error_file_name: FILE_NAME is
+	error_file_name: FILE_NAME
 			-- Error/Log file
 		do
 			create Result.make_from_string (help_directory.name)
 			Result.extend ("log.txt")
 		end
 
-	image_file_types: ARRAYED_LIST [STRING] is
+	image_file_types: ARRAYED_LIST [STRING]
 			-- Image file types
 		once
 			create Result.make (4)
@@ -164,7 +164,7 @@ invariant
 	has_settings_file: settings /= Void
 	has_location: location /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

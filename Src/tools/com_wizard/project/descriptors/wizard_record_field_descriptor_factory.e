@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Factory of Structure Field Descriptors"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,7 +34,7 @@ inherit
 feature -- Basic operations
 
 	create_descriptor (a_type_info: ECOM_TYPE_INFO; a_index: INTEGER;
-				a_system_descriptor: WIZARD_SYSTEM_DESCRIPTOR): WIZARD_RECORD_FIELD_DESCRIPTOR is
+				a_system_descriptor: WIZARD_SYSTEM_DESCRIPTOR): WIZARD_RECORD_FIELD_DESCRIPTOR
 			-- Initialize
 		local
 			a_var_desc: ECOM_VAR_DESC
@@ -66,7 +66,7 @@ feature -- Basic operations
 			valid_data_type: data_type /= Void
 		end
 
-	initialize_descriptor (a_descriptor: WIZARD_RECORD_FIELD_DESCRIPTOR) is
+	initialize_descriptor (a_descriptor: WIZARD_RECORD_FIELD_DESCRIPTOR)
 			-- Initialize descriptor
 		require
 			valid_descriptor: a_descriptor /= Void
@@ -92,7 +92,7 @@ feature {NONE} -- Implementation
 	offset: INTEGER;
 			-- Offeset of field within structure
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

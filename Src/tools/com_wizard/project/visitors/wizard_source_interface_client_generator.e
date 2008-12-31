@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Source interface client generator."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -18,7 +18,7 @@ inherit
 
 feature -- Basic operations
 
-	enable_feature_name (an_interface: WIZARD_INTERFACE_DESCRIPTOR): STRING is
+	enable_feature_name (an_interface: WIZARD_INTERFACE_DESCRIPTOR): STRING
 			-- Name of enable call back feature.
 		require
 			non_void_interface: an_interface /= Void
@@ -33,7 +33,7 @@ feature -- Basic operations
 			valid_name: not Result.is_empty
 		end
 
-	disable_feature_name (an_interface: WIZARD_INTERFACE_DESCRIPTOR): STRING is
+	disable_feature_name (an_interface: WIZARD_INTERFACE_DESCRIPTOR): STRING
 			-- Name of disable call back feature.
 		require
 			non_void_interface: an_interface /= Void
@@ -49,7 +49,7 @@ feature -- Basic operations
 		end
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

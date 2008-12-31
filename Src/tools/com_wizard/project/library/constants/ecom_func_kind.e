@@ -1,4 +1,4 @@
-indexing
+note
 	description: "FUNCKIND constants"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	Func_purevirtual: INTEGER is
+	Func_purevirtual: INTEGER
 			-- Function is accessed via virtual function table
 			-- and takes implicit 'this' pointer.	
 			-- 1	
@@ -20,7 +20,7 @@ feature -- Access
 			"FUNC_PUREVIRTUAL"
 		end
 		
-	Func_virtual: INTEGER is
+	Func_virtual: INTEGER
 			-- Function is accessed same as PUREVIRTUAL,
 			-- except function has implementation.
 			-- 0
@@ -30,7 +30,7 @@ feature -- Access
 			"FUNC_VIRTUAL"
 		end
 		
-	Func_nonvirtual: INTEGER is
+	Func_nonvirtual: INTEGER
 			-- Function is accessed by static address and takes
 			-- implicit 'this' pointer.
 			-- 2	
@@ -40,7 +40,7 @@ feature -- Access
 			"FUNC_NONVIRTUAL"
 		end
 		
-	Func_static: INTEGER is
+	Func_static: INTEGER
 			-- Function is accessed by static address
 			-- and does not take implicit 'this' pointer.
 			-- 3
@@ -50,7 +50,7 @@ feature -- Access
 			"FUNC_STATIC"
 		end
 		
-	Func_dispatch: INTEGER is
+	Func_dispatch: INTEGER
 			-- Function can be accessed only via IDispatch.
 			-- 4
 		external
@@ -61,7 +61,7 @@ feature -- Access
 
 feature -- Status Report
 
-	to_string (kind: INTEGER): STRING is
+	to_string (kind: INTEGER): STRING
 			-- String representation.
 		do
 			if kind = Func_purevirtual then
@@ -79,7 +79,7 @@ feature -- Status Report
 
 feature -- Status setting
 		
-	is_valid_func_kind (kind: INTEGER): BOOLEAN is
+	is_valid_func_kind (kind: INTEGER): BOOLEAN
 			-- Is `kind' a valid function kind?
 		do
 			Result := kind = Func_purevirtual or
@@ -89,7 +89,7 @@ feature -- Status setting
 			kind = Func_dispatch
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

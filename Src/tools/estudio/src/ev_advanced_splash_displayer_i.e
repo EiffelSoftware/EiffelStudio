@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Advanced screen splash displayer, which have features like shadow and irregular shape."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,12 +13,12 @@ inherit
 
 feature -- Query
 
-	is_executable: BOOLEAN is
+	is_executable: BOOLEAN
 			-- If Current executable on Current Platform.
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

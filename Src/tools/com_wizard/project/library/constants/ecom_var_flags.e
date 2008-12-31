@@ -1,4 +1,4 @@
-indexing
+note
 	description: "VARFLAGS flags"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -13,7 +13,7 @@ inherit
 	
 feature -- Access
 
-	Varflag_freadonly: INTEGER is
+	Varflag_freadonly: INTEGER
 			-- Assignment to variable should not be allowed
 		external
 			"C [macro <oaidl.h>]"
@@ -21,7 +21,7 @@ feature -- Access
 			"VARFLAG_FREADONLY"
 		end
 
-	Varflag_fsource: INTEGER is
+	Varflag_fsource: INTEGER
 			-- Variable returns object that is source of events
 		external
 			"C [macro <oaidl.h>]"
@@ -29,7 +29,7 @@ feature -- Access
 			"VARFLAG_FSOURCE"
 		end
 
-	Varflag_fbindable: INTEGER is
+	Varflag_fbindable: INTEGER
 			-- Variable supports data binding
 		external
 			"C [macro <oaidl.h>]"
@@ -37,14 +37,14 @@ feature -- Access
 			"VARFLAG_FBINDABLE"
 		end
 
-	Varflag_frequestedit: INTEGER is
+	Varflag_frequestedit: INTEGER
 		external
 			"C [macro <oaidl.h>]"
 		alias
 			"VARFLAG_FREQUESTEDIT"
 		end
 
-	Varflag_fdisplaybind: INTEGER is
+	Varflag_fdisplaybind: INTEGER
 			-- Variable is displayed to user as bindable;
 			-- that is, VARFLAG_FBINDABLE must also be set.
 		external
@@ -53,7 +53,7 @@ feature -- Access
 			"VARFLAG_FDISPLAYBIND"
 		end
 
-	Varflag_fdefaultbind: INTEGER is
+	Varflag_fdefaultbind: INTEGER
 			-- Variable is single property that best represents
 			-- object. Only one variable in typeinfo may have this attibute.
 		external
@@ -62,7 +62,7 @@ feature -- Access
 			"VARFLAG_FDEFAULTBIND"
 		end
 
-	Varflag_fhidden: INTEGER is
+	Varflag_fhidden: INTEGER
 			-- Variable should not be displayed to user in browser,
 			-- though it exists and is bindable.
 		external
@@ -71,7 +71,7 @@ feature -- Access
 			"VARFLAG_FHIDDEN"
 		end
 
-	Varflag_frestricted: INTEGER is
+	Varflag_frestricted: INTEGER
 			-- Variable should not be displayed to user in browser,
 			-- though it exists and is bindable.
 		external
@@ -80,7 +80,7 @@ feature -- Access
 			"VARFLAG_FRESTRICTED"
 		end
 
-	Varflag_fdefaultcollelem: INTEGER is
+	Varflag_fdefaultcollelem: INTEGER
 			-- Permits optimization.
 		external
 			"C [macro <oaidl.h>]"
@@ -88,7 +88,7 @@ feature -- Access
 			"VARFLAG_FDEFAULTCOLLELEM"
 		end
 
-	Varflag_fuidefault: INTEGER is
+	Varflag_fuidefault: INTEGER
 			-- Variable  is default 
 			-- display in user interface. 
 		external
@@ -97,7 +97,7 @@ feature -- Access
 			"VARFLAG_FUIDEFAULT"
 		end
 
-	Varflag_fnonbrowsable: INTEGER is
+	Varflag_fnonbrowsable: INTEGER
 			-- Variable appears in object browser, 
 			-- but not in properties browser
 		external
@@ -106,7 +106,7 @@ feature -- Access
 			"VARFLAG_FNONBROWSABLE"
 		end
 
-	Varflag_freplaceable: INTEGER is
+	Varflag_freplaceable: INTEGER
 			-- Tags interface as having default behaviors. 
 		external
 			"C [macro <oaidl.h>]"
@@ -114,7 +114,7 @@ feature -- Access
 			"VARFLAG_FREPLACEABLE"
 		end
 
-	Varflag_fimmediatebind: INTEGER is
+	Varflag_fimmediatebind: INTEGER
 			-- Variable is mapped as individual bindable properties.
 		external
 			"C [macro <oaidl.h>]"
@@ -124,85 +124,85 @@ feature -- Access
 
 feature -- Status report
 
-	is_varflag_freadonly (flag: INTEGER): BOOLEAN is
+	is_varflag_freadonly (flag: INTEGER): BOOLEAN
 			-- Is flag FREADONLY?
 		do
 			Result := binary_and (flag, Varflag_freadonly) = Varflag_freadonly
 		end
 
-	is_varflag_frestricted (flag: INTEGER): BOOLEAN is
+	is_varflag_frestricted (flag: INTEGER): BOOLEAN
 			-- Is flag FRESTRICTED?
 		do
 			Result := binary_and (flag, Varflag_frestricted) = Varflag_frestricted
 		end
 
-	is_varflag_fsource (flag: INTEGER): BOOLEAN is
+	is_varflag_fsource (flag: INTEGER): BOOLEAN
 			-- Is flag fsource?
 		do
 			Result := binary_and (flag, Varflag_fsource) = Varflag_fsource
 		end
 
-	is_varflag_fbindable (flag: INTEGER): BOOLEAN is
+	is_varflag_fbindable (flag: INTEGER): BOOLEAN
 			-- Is flag fbindable?
 		do
 			Result := binary_and (flag, Varflag_fbindable) = Varflag_fbindable
 		end
 
-	is_varflag_frequestedit (flag: INTEGER): BOOLEAN is
+	is_varflag_frequestedit (flag: INTEGER): BOOLEAN
 			-- Is flag frequestedit?
 		do
 			Result := binary_and (flag, Varflag_frequestedit) = Varflag_frequestedit
 		end
 
-	is_varflag_fdisplaybind (flag: INTEGER): BOOLEAN is
+	is_varflag_fdisplaybind (flag: INTEGER): BOOLEAN
 			-- Is flag fdisplaybind?
 		do
 			Result := binary_and (flag, Varflag_fdisplaybind) = Varflag_fdisplaybind
 		end
 
-	is_varflag_fdefaultbind (flag: INTEGER): BOOLEAN is
+	is_varflag_fdefaultbind (flag: INTEGER): BOOLEAN
 			-- Is flag fdefaultbind?
 		do
 			Result := binary_and (flag, Varflag_fdefaultbind) = Varflag_fdefaultbind
 		end
 
-	is_varflag_fhidden (flag: INTEGER): BOOLEAN is
+	is_varflag_fhidden (flag: INTEGER): BOOLEAN
 			-- Is flag fhidden?
 		do
 			Result := binary_and (flag, Varflag_fhidden) = Varflag_fhidden
 		end
 
-	is_varflag_fdefaultcollelem (flag: INTEGER): BOOLEAN is
+	is_varflag_fdefaultcollelem (flag: INTEGER): BOOLEAN
 			-- Is flag fdefaultcollelem?
 		do
 			Result := binary_and (flag, Varflag_fdefaultcollelem) = Varflag_fdefaultcollelem
 		end
 
-	is_varflag_fuidefault (flag: INTEGER): BOOLEAN is
+	is_varflag_fuidefault (flag: INTEGER): BOOLEAN
 			-- Is flag fuidefault?
 		do
 			Result := binary_and (flag, Varflag_fuidefault) = Varflag_fuidefault
 		end
 
-	is_varflag_fnonbrowsable (flag: INTEGER): BOOLEAN is
+	is_varflag_fnonbrowsable (flag: INTEGER): BOOLEAN
 			-- Is flag fnonbrowsable?
 		do
 			Result := binary_and (flag, Varflag_fnonbrowsable) = Varflag_fnonbrowsable
 		end
 
-	is_varflag_freplaceable (flag: INTEGER): BOOLEAN is
+	is_varflag_freplaceable (flag: INTEGER): BOOLEAN
 			-- Is flag freplaceable?
 		do
 			Result := binary_and (flag, Varflag_freplaceable) = Varflag_freplaceable
 		end
 
-	is_varflag_fimmediatebind (flag: INTEGER): BOOLEAN is
+	is_varflag_fimmediatebind (flag: INTEGER): BOOLEAN
 			-- Is flag fimmediatebind?
 		do
 			Result := binary_and (flag, Varflag_fimmediatebind) = Varflag_fimmediatebind
 		end
 
-	is_valid_varflag (flag: INTEGER): BOOLEAN is
+	is_valid_varflag (flag: INTEGER): BOOLEAN
 			-- Is `flag' a valid combination of varflags?
 		do
 			Result := is_varflag_freadonly (flag) or
@@ -222,7 +222,7 @@ feature -- Status report
 					flag = 0
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

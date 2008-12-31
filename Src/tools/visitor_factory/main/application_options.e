@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Provides access to application specific options for use with initializing applications or processing data.
 	]"
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_params: IAPPLICATION_PARAMETERS) is
+	make (a_params: IAPPLICATION_PARAMETERS)
 			-- Initialize application options using application parameters `a_params'.
 		require
 			a_params_attached: a_params /= Void
@@ -102,7 +102,7 @@ feature -- Access
 
 feature -- Status report
 
-	use_user_data: BOOLEAN is
+	use_user_data: BOOLEAN
 			-- Indiciates if user data should be passed via a process feature call
 		once
 			Result := user_data_class_name /= Void
@@ -110,7 +110,7 @@ feature -- Status report
 
 feature {NONE} -- Query
 
-	has_eiffel_extension (a_file_name: !STRING): BOOLEAN is
+	has_eiffel_extension (a_file_name: !STRING): BOOLEAN
 			-- Determines if `a_file_name' has an Eiffel source file extension
 		require
 			not_a_file_name_is_empty: not a_file_name.is_empty
@@ -123,7 +123,7 @@ feature {NONE} -- Query
 
 feature {NONE} -- Implementation
 
-	calcuate_files (a_params: IAPPLICATION_PARAMETERS) is
+	calcuate_files (a_params: IAPPLICATION_PARAMETERS)
 			-- Calculates requested for generation by `a_params'
 		require
 			a_params_attached: a_params /= Void
@@ -167,7 +167,7 @@ feature {NONE} -- Implementation
 			files_attached: files /= Void
 		end
 
-	append_file_list (a_path: !STRING; a_list: !ARRAYED_LIST [!STRING]; a_recurse: BOOLEAN; a_expression: ?RX_PCRE_MATCHER) is
+	append_file_list (a_path: !STRING; a_list: !ARRAYED_LIST [!STRING]; a_recurse: BOOLEAN; a_expression: ?RX_PCRE_MATCHER)
 			-- Appends Eiffel source files located at or in `a_path' to `a_list'. If `a_path' happens to
 			-- be a directory and `a_recurse' is True then any subdirectories will also be scanned.
 			-- `a_expression' represents an excluded expression
@@ -226,7 +226,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	create_pattern_for_file_list (a_list: LIST [STRING]): RX_PCRE_MATCHER is
+	create_pattern_for_file_list (a_list: LIST [STRING]): RX_PCRE_MATCHER
 			-- Creates an regular expression pattern for list `a_list' and returns the result
 		require
 			a_list_attached: a_list /= Void
@@ -286,7 +286,7 @@ invariant
 	not_user_data_class_name_is_empty: user_data_class_name /= Void implies not user_data_class_name.is_empty
 
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Ec launcher's ."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Creation procedure.
 		do
 			is_splashing := True
@@ -51,14 +51,14 @@ feature -- Initialization
 			end
 		end
 
-	do_ec_launching is
+	do_ec_launching
 		require
 			is_environment_valid: is_environment_valid
 		do
 			launch_ec
 		end
 
-	launch_ec_with_action is
+	launch_ec_with_action
 			-- Launch ec with `ec_action'
 		require
 			is_environment_valid: is_environment_valid
@@ -71,7 +71,7 @@ feature -- Initialization
 
 feature -- Launching
 
-	display_usage (is_exiting: BOOLEAN) is
+	display_usage (is_exiting: BOOLEAN)
 			-- Display usage and exit if `is_exiting' is True
 		do
 			io.error.put_string ("Usage: estudio {estudio's parameters} {ec's parameters} %N")
@@ -97,7 +97,7 @@ feature -- Launching
 			end
 		end
 
-	launch_ec is
+	launch_ec
 			-- Launch ec process
 		require
 			is_environment_valid: is_environment_valid
@@ -138,7 +138,7 @@ feature -- Launching
 			retry
 		end
 
-	start_process (cmd: STRING; args: LIST [STRING]; dir: STRING) is
+	start_process (cmd: STRING; args: LIST [STRING]; dir: STRING)
 			-- Start process using command `cmd' and arguments `args'
 			-- in the working directory `dir'
 		require
@@ -205,7 +205,7 @@ feature -- Launching
 			end
 		end
 
-	exit_if_process_has_exited (p: PROCESS) is
+	exit_if_process_has_exited (p: PROCESS)
 		do
 			if not p.is_running or else p.has_exited then
 				is_waiting := False
@@ -215,13 +215,13 @@ feature -- Launching
 
 feature {NONE} -- Application exit
 
-	do_exit_launcher is
+	do_exit_launcher
 		do
 			is_waiting := False
 			exit_launcher
 		end
 
-	exit_launcher is
+	exit_launcher
 		require
 			is_not_waiting: not is_waiting
 		do
@@ -230,17 +230,17 @@ feature {NONE} -- Application exit
 
 feature -- Splash
 
-	splash_delay: INTEGER_32 is 3_000
+	splash_delay: INTEGER_32 = 3_000
 			-- 2 seconds seems ok
 
 	splasher: SPLASH_DISPLAYER_I
 
-	new_splasher (t: STRING_GENERAL): like splasher is
+	new_splasher (t: STRING_GENERAL): like splasher
 		do
 			create {NATIVE_SPLASH_DISPLAYER} Result.make_with_text (t)
 		end
 
-	display_splasher is
+	display_splasher
 			-- Display splash window (if available)
 		require
 			is_environment_valid: is_environment_valid
@@ -283,7 +283,7 @@ feature -- Splash
 			retry
 		end
 
-	close_splasher (delay: INTEGER_32) is
+	close_splasher (delay: INTEGER_32)
 			-- 'delay' has no sense in none graphical context
 		do
 			debug ("LAUNCHER")
@@ -310,7 +310,7 @@ feature -- Properties
 
 feature {NONE} -- Command sender
 
-	broadcast_command is
+	broadcast_command
 			-- Broadcast `direct_action' as command to EiffelStudio processes.
 			-- We broadcast `direct_action', so that EiffelStudios directly process command if possible.
 		require
@@ -323,7 +323,7 @@ feature {NONE} -- Command sender
 			end
 		end
 
-	send_command_to_launched_ec_and_exit is
+	send_command_to_launched_ec_and_exit
 			-- Send command to last launched ec and exit.
 			-- If trial exceeds the maximum times, exit.
 		require
@@ -394,19 +394,19 @@ feature -- Environment
 
 	cmdline_arguments_count: INTEGER
 
-	cmdline_remove_head (n: INTEGER) is
+	cmdline_remove_head (n: INTEGER)
 		do
 			cmdline_arguments_offset := cmdline_arguments_offset + n
 			cmdline_arguments_count := cmdline_arguments_count - n
 		end
 
-	get_cmdline_arguments is
+	get_cmdline_arguments
 		do
 			cmdline_arguments := Execution_environment.command_line
 			cmdline_arguments_count := cmdline_arguments.argument_count
 		end
 
-	cmdline_argument (i: INTEGER): STRING is
+	cmdline_argument (i: INTEGER): STRING
 		require
 			cmdline_arguments /= Void
 		do
@@ -415,7 +415,7 @@ feature -- Environment
 
 	ec_arguments: LIST [STRING]
 
-	get_parameters is
+	get_parameters
 		local
 			s: STRING
 		do
@@ -464,7 +464,7 @@ feature -- Environment
 			end
 		end
 
-	get_ec_arguments is
+	get_ec_arguments
 		require
 			is_environment_valid: is_environment_valid
 		local
@@ -546,7 +546,7 @@ feature -- Environment
 			end
 		end
 
-	get_environment_value (v: STRING; dft: STRING): STRING is
+	get_environment_value (v: STRING; dft: STRING): STRING
 		do
 			if argument_variables.has (v) then
 				Result := argument_variables.item (v)
@@ -558,7 +558,7 @@ feature -- Environment
 			end
 		end
 
-	get_environment is
+	get_environment
 			-- Get environment variables
 		require
 			cmdline_arguments_not_void: cmdline_arguments /= Void
@@ -566,7 +566,7 @@ feature -- Environment
 			eiffel_layout.check_environment_variable
 		end
 
-	check_environment is
+	check_environment
 			-- Check if the retrieved environment data are valid
 			-- If successful, is_environment_valid is set to True
 			-- else it is set to False
@@ -588,7 +588,7 @@ feature -- Environment
 
 feature {NONE} -- Events
 
-	on_output (s: STRING) is
+	on_output (s: STRING)
 		do
 			if splasher /= Void and s /= Void then
 				splasher.output_text (s)
@@ -597,29 +597,29 @@ feature {NONE} -- Events
 
 feature {NONE} -- Implementations
 
-	process_factory: PROCESS_FACTORY is
+	process_factory: PROCESS_FACTORY
 		once
 			create Result
 		end
 
-	implementation: EC_LAUNCHER_I is
+	implementation: EC_LAUNCHER_I
 		once
 			create {EC_LAUNCHER_IMP} Result
 		end
 
-	Execution_environment: EXECUTION_ENVIRONMENT is
+	Execution_environment: EXECUTION_ENVIRONMENT
 		once
 			create Result
 		end
 
-	ec_action_parser: EC_ACTION_PARSER is
+	ec_action_parser: EC_ACTION_PARSER
 		once
 			create Result
 		end
 
 feature {NONE} -- File system helpers
 
-	file_exists (fn: STRING): BOOLEAN is
+	file_exists (fn: STRING): BOOLEAN
 		local
 			f: RAW_FILE
 		do
@@ -627,7 +627,7 @@ feature {NONE} -- File system helpers
 			Result := f.exists
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Server implemented interface generator."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -20,7 +20,7 @@ inherit
 
 feature -- Basic operations
 
-	generate (a_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR) is
+	generate (a_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR)
 			-- Generate 
 		local
 			l_class_name: STRING
@@ -63,19 +63,19 @@ feature -- Basic operations
 			eiffel_writer := Void
 		end
 
-	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY) is
+	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY)
 		do
 			a_factory.process_impl_interface_eiffel_server
 		end
 
 feature {NONE} -- Implementation
 
-	add_creation is
+	add_creation
 			-- Add creation routines.
 		do
 		end
 
-	add_default_features (a_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR) is
+	add_default_features (a_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR)
 			-- Add default features,
 			-- e.g. make, constructor, destructor, delete wrapper etc.
 		do
@@ -83,7 +83,7 @@ feature {NONE} -- Implementation
 			eiffel_writer.add_feature (ccom_create_item_feature (a_interface), Externals)
 		end
 
-	set_default_ancestors (an_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS) is
+	set_default_ancestors (an_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS)
 			-- Set default ancestors
 		local
 			l_clause: WIZARD_WRITER_INHERIT_CLAUSE
@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 			an_eiffel_writer.add_inherit_clause (l_clause)
 		end
 
-	ccom_create_item_feature (a_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR): WIZARD_WRITER_FEATURE is
+	ccom_create_item_feature (a_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR): WIZARD_WRITER_FEATURE
 			-- `create_item' feature.
 		local
 			feature_body: STRING
@@ -129,7 +129,7 @@ feature {NONE} -- Implementation
 			non_void_feature_body: Result.body /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

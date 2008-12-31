@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature -- Access
 
-	make (root_directory: STRING; widget: EV_CHECKABLE_TREE) is
+	make (root_directory: STRING; widget: EV_CHECKABLE_TREE)
 			-- Make with `root_directory'
 		do
 			Precursor (root_directory, widget)
@@ -51,7 +51,7 @@ feature -- Access
 --			initialize (root, top_node)
 --		end			
 		
-	make_with_data (root_directory: STRING; widget: EV_CHECKABLE_TREE; checked_items_data: ARRAYED_LIST [STRING]) is
+	make_with_data (root_directory: STRING; widget: EV_CHECKABLE_TREE; checked_items_data: ARRAYED_LIST [STRING])
 			-- Make with `root_directory'
 		require
 			has_root: root_directory /= Void
@@ -103,7 +103,7 @@ feature -- Access
 --			end	
 --		end		
 
-	get_children (root_dir: DIRECTORY; root_node: EV_DYNAMIC_TREE_ITEM): ARRAYED_LIST [EV_TREE_NODE] is
+	get_children (root_dir: DIRECTORY; root_node: EV_DYNAMIC_TREE_ITEM): ARRAYED_LIST [EV_TREE_NODE]
 			-- Return child directory and file nodes list
 		local
 			node: EV_DYNAMIC_TREE_ITEM
@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 
 	checked_item_data: ARRAYED_LIST [STRING];
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

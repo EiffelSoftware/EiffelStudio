@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants for use by the code formatter."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	keywords: ARRAYED_LIST [STRING] is
+	keywords: ARRAYED_LIST [STRING]
 			-- Keywords
 		once
 			create Result.make (58)
@@ -74,7 +74,7 @@ feature -- Access
 			Result.extend ("xor")
 		end		
 	
-	symbols: ARRAYED_LIST [STRING] is
+	symbols: ARRAYED_LIST [STRING]
 			-- Symbols
 		once
 			create Result.make (19)
@@ -102,7 +102,7 @@ feature -- Access
 			Result.extend ("%%")
 		end
 	
-	format_tags: HASH_TABLE [STRING, STRING] is
+	format_tags: HASH_TABLE [STRING, STRING]
 			-- Code format tags
 		once
 			create Result.make (11)
@@ -120,18 +120,18 @@ feature -- Access
 			Result.extend ("<symbol>", "</symbol>")
 		end
 	
-	dot_char: CHARACTER is '.'
+	dot_char: CHARACTER = '.'
 			-- Dot call character
 			
-	newline_string: STRING is "%N"
+	newline_string: STRING = "%N"
 	
-	tab_string: STRING is "%T"
+	tab_string: STRING = "%T"
 	
-	space_string: STRING is " "
+	space_string: STRING = " "
 	
-	empty_string: STRING is "";
+	empty_string: STRING = "";
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

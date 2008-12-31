@@ -1,4 +1,4 @@
-indexing
+note
 	description: "List of existing tests"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Initialize
 		do
 			table_make(2)
@@ -27,7 +27,7 @@ feature -- Initialization
 
 feature
 
-	add_tests_from_compiler_results (cr : COMPILER_RESULTS) is
+	add_tests_from_compiler_results (cr : COMPILER_RESULTS)
 			-- add additional tests if not yet in list_test
 		local
 			l_key,name: STRING
@@ -49,7 +49,7 @@ feature
 		end
 
 feature
-	add_single_test (a_key, a_name : STRING) is
+	add_single_test (a_key, a_name : STRING)
 			-- add test if not present
 		do
 			if not has (a_key) then
@@ -57,7 +57,7 @@ feature
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

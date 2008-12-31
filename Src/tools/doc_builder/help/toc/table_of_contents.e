@@ -1,4 +1,4 @@
-indexing
+note
 	description: "TOC structure"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -37,14 +37,14 @@ create
 
 feature -- Creation
 			
-	make_empty is
+	make_empty
 			-- Make empty TOC
 		do
 			make_root
 			initialize
 		end		
 			
-	make_from_directory (a_directory: DIRECTORY) is
+	make_from_directory (a_directory: DIRECTORY)
 			-- Make with `a_directory' as top node.
 		require
 			has_root: a_directory /= Void
@@ -54,7 +54,7 @@ feature -- Creation
 			build_code_toc
 		end	
 		
-	make_from_directory_sub_dirs (a_directory: DIRECTORY; include_dirs: ARRAYED_LIST [STRING]) is
+	make_from_directory_sub_dirs (a_directory: DIRECTORY; include_dirs: ARRAYED_LIST [STRING])
 			-- Make with `a_directory' as top node.  During generation use only files in include dirs
 		require
 			has_root: a_directory /= Void
@@ -65,7 +65,7 @@ feature -- Creation
 			build_from_directory_sub_dirs (a_directory, include_dirs, Current)
 		end
 		
-	make_from_tree (a_tree: EV_TREE) is
+	make_from_tree (a_tree: EV_TREE)
 			-- Initialize based on structure of `a_toc'
 		do
 			make_empty
@@ -73,7 +73,7 @@ feature -- Creation
 			build_code_toc
 		end
 
-	make_from_toc (a_toc: like Current) is
+	make_from_toc (a_toc: like Current)
 			-- Make from existing toc
 		do
 			make_empty
@@ -82,7 +82,7 @@ feature -- Creation
 
 feature -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize
 		do			
 			set_filter (manager.shared_project.filter_manager.filter_by_description ("Unfiltered"))
@@ -98,7 +98,7 @@ feature -- Access
 	old_name: STRING
 			-- Old name of toc
 	
-	node_by_id (a_id: INTEGER): TABLE_OF_CONTENTS_NODE is
+	node_by_id (a_id: INTEGER): TABLE_OF_CONTENTS_NODE
 			-- Retrieve node with id `a_id', Void if no match found
 		require
 			valid_id: a_id > 0
@@ -111,49 +111,49 @@ feature -- Access
 
 feature -- Status Setting	
 	
-	set_name (a_name: STRING) is
+	set_name (a_name: STRING)
 			-- Set filename to `a_name'
 		do
 			name := a_name
 		end	
 	
-	set_persisted (a_flag: BOOLEAN) is
+	set_persisted (a_flag: BOOLEAN)
 			-- Set if persisted to disk
 		do
 			is_persisted := a_flag	
 		end
 
-	set_filter_empty_nodes (a_flag: BOOLEAN) is
+	set_filter_empty_nodes (a_flag: BOOLEAN)
 			-- Set `filter_empty_nodes'
 		do
 			filter_empty_nodes := a_flag
 		end
 	
-	set_filter_skipped_sub_nodes (a_flag: BOOLEAN) is
+	set_filter_skipped_sub_nodes (a_flag: BOOLEAN)
 			-- Set `filter_skipped_sub_nodes'
 		do
 			filter_skipped_sub_nodes := a_flag
 		end
 		
-	set_filter_nodes_no_index (a_flag: BOOLEAN) is
+	set_filter_nodes_no_index (a_flag: BOOLEAN)
 			-- Set `filter_nodes_no_index'
 		do
 			filter_nodes_no_index := a_flag
 		end
 	
-	set_filter_alphabetically (a_flag: BOOLEAN) is
+	set_filter_alphabetically (a_flag: BOOLEAN)
 			-- Set `order_alphabetically'
 		do
 			order_alphabetically := a_flag
 		end
 	
-	set_make_index_root (a_flag: BOOLEAN) is
+	set_make_index_root (a_flag: BOOLEAN)
 			-- Set `make_index_root'
 		do
 			make_root_from_index := a_flag
 		end
 
-	set_filter (a_filter: DOCUMENT_FILTER) is
+	set_filter (a_filter: DOCUMENT_FILTER)
 			-- Associated filter for sorting
 		require
 			filter_not_void: a_filter /= Void
@@ -170,7 +170,7 @@ feature -- Query
 
 feature -- Commands	
 
-	sort is
+	sort
 			-- Sort.  Sort according to the following sequence and rules:
 			--	1) Filters out nodes not applicable to output type.  If a node needs to be moved
 			--     it is filtered here and added back later in the correct location
@@ -189,7 +189,7 @@ feature -- Commands
 			remove_duplicate_nodes (Current)			
 		end		
 
-	reset is
+	reset
 			-- Reset
 		do
 			is_persisted := False
@@ -199,7 +199,7 @@ feature -- Commands
 			Code_nodes.clear_all
 		end			
 
-	flatten_ids is
+	flatten_ids
 			-- Flatten ids
 		do			
 			set_unique_id (flatten_node_ids (1))
@@ -207,7 +207,7 @@ feature -- Commands
 
 feature -- Storage
 
-	save is
+	save
 			-- Save Current to disk (XML format)
 		do
 			if not is_persisted then
@@ -219,7 +219,7 @@ feature -- Storage
 
 feature {NONE} -- Initialization
 
-	build_from_directory (root_dir: DIRECTORY; a_parent: TABLE_OF_CONTENTS_NODE) is
+	build_from_directory (root_dir: DIRECTORY; a_parent: TABLE_OF_CONTENTS_NODE)
 			-- Starting from `root_dir' build a TOC that contains nodes for
 			-- files recursively in `root_dir'. Resulting TOC is identical in structure to
 			-- `root_dir' and does not apply any filtering or sorting.
@@ -283,7 +283,7 @@ feature {NONE} -- Initialization
 			root_dir.close
 		end
 
-	build_from_directory_sub_dirs (root_dir: DIRECTORY; include_dirs: ARRAYED_LIST [STRING]; a_parent: TABLE_OF_CONTENTS_NODE) is
+	build_from_directory_sub_dirs (root_dir: DIRECTORY; include_dirs: ARRAYED_LIST [STRING]; a_parent: TABLE_OF_CONTENTS_NODE)
 			-- Starting from `root_dir' build a TOC that contains nodes for
 			-- files recursively from `root_dir' and which are in `include_dirs'.
 		require
@@ -346,7 +346,7 @@ feature {NONE} -- Initialization
 			root_dir.close
 		end
 
-	build_from_tree (a_tree: EV_TREE_NODE_LIST; a_parent: TABLE_OF_CONTENTS_NODE) is
+	build_from_tree (a_tree: EV_TREE_NODE_LIST; a_parent: TABLE_OF_CONTENTS_NODE)
 				-- Initialize based on structure of `a_tree'
 			local
 				l_item: TABLE_OF_CONTENTS_WIDGET_NODE
@@ -390,7 +390,7 @@ feature {NONE} -- Initialization
 				end								
 			end		
 			
-	build_from_node (a_node, a_parent: TABLE_OF_CONTENTS_NODE) is
+	build_from_node (a_node, a_parent: TABLE_OF_CONTENTS_NODE)
 				-- Initialize based on structure of `a_node'
 			local
 				l_node,
@@ -418,7 +418,7 @@ feature {NONE} -- Initialization
 				end								
 			end		
 
-	build_code_toc is
+	build_code_toc
 			-- Build in code sub-tocs
 		local
 			l_dir: DIRECTORY
@@ -438,7 +438,7 @@ feature {NONE} -- Initialization
 			end
 		end	
 
-	insert_code_toc (a_parent: TABLE_OF_CONTENTS_NODE; a_root: DIRECTORY) is
+	insert_code_toc (a_parent: TABLE_OF_CONTENTS_NODE; a_root: DIRECTORY)
 			-- Insert code toc representation of `a_root' into parent
 		local
 			l_file: PLAIN_TEXT_FILE
@@ -519,7 +519,7 @@ feature {NONE} -- Implementation
 	internal_nodes: HASH_TABLE [TABLE_OF_CONTENTS_NODE, INTEGER]
 			-- Hash of nodes with their ids
 
-	save_dialog is
+	save_dialog
 			-- Save Dialog
 		local
 			l_save_dialog: EV_FILE_SAVE_DIALOG
@@ -534,7 +534,7 @@ feature {NONE} -- Implementation
 			end	
 		end		
 
-	file_types: ARRAYED_LIST [STRING] is
+	file_types: ARRAYED_LIST [STRING]
 			-- List of file types allowed in HTML project
 		once
 			create Result.make (6)
@@ -544,21 +544,21 @@ feature {NONE} -- Implementation
 			Result.extend ("xml")
 		end
 
-	code_nodes: HASH_TABLE [TABLE_OF_CONTENTS_NODE, STRING] is
+	code_nodes: HASH_TABLE [TABLE_OF_CONTENTS_NODE, STRING]
 			-- Nodes which have code nodes in them
 		once
 			create Result.make (10)
 			Result.compare_objects
 		end		
 
-	sort_excluded: ARRAYED_LIST [INTEGER] is
+	sort_excluded: ARRAYED_LIST [INTEGER]
 			-- Nodes which should be excluded from any sorting or filtering (i.e code nodes)
 		once
 			create Result.make (10)
 			Result.compare_objects
 		end	
 
-	save_as_xml is
+	save_as_xml
 			-- Save Current as XML file		
 		local
 			l_xml: XML_TABLE_OF_CONTENTS
@@ -566,7 +566,7 @@ feature {NONE} -- Implementation
 			create l_xml.make_from_toc (Current, name)			 
 		end
 		
-	is_parent_dir_include_dir (a_dir: DIRECTORY; include_dirs: ARRAYED_LIST [STRING]): BOOLEAN is
+	is_parent_dir_include_dir (a_dir: DIRECTORY; include_dirs: ARRAYED_LIST [STRING]): BOOLEAN
 			-- Is a_dir a parent of, or equal to, any of include_dirs?
 		local
 			l_dir,
@@ -586,7 +586,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	file_in_dir (a_path: STRING; include_dirs: ARRAYED_LIST [STRING]): BOOLEAN is
+	file_in_dir (a_path: STRING; include_dirs: ARRAYED_LIST [STRING]): BOOLEAN
 			-- Is a_path equal to ora sub path of any of include_dirs?
 		local
 			path_count: INTEGER
@@ -621,7 +621,7 @@ feature {NONE} -- Sorting
 	make_root_from_index: BOOLEAN
 			-- Create root nodes automatically from index nodes?		
 
-	move_node (a_node, a_target: TABLE_OF_CONTENTS_NODE) is
+	move_node (a_node, a_target: TABLE_OF_CONTENTS_NODE)
 			-- Move `a_node' to `a_target'
 		require
 			node_not_void: a_node /= Void
@@ -635,14 +635,14 @@ feature {NONE} -- Sorting
 	move_nodes_list: HASH_TABLE [STRING, TABLE_OF_CONTENTS_NODE]
 			-- Nodes which need moving to new toc location
 
-	new_indexes: ARRAYED_LIST [INTEGER] is
+	new_indexes: ARRAYED_LIST [INTEGER]
 			-- Id of nodes which have been made into index nodes in current sorting
 			-- process.  Used to prevent bubble effect of index creation
 		once
 			create Result.make (2)
 		end		
 	
-	filter_nodes is
+	filter_nodes
 			-- Filter all nodes
 		local
 			l_node: TABLE_OF_CONTENTS_NODE
@@ -664,7 +664,7 @@ feature {NONE} -- Sorting
 			end
 		end		
 	
-	filter_node (a_node: TABLE_OF_CONTENTS_NODE): BOOLEAN is
+	filter_node (a_node: TABLE_OF_CONTENTS_NODE): BOOLEAN
 			-- Filter node based on output type.  Once filtered we can confidently call `sort_node'
 			-- to produce the expected sorting result.
 		local
@@ -714,7 +714,7 @@ feature {NONE} -- Sorting
 			end					
 		end		
 	
-	sort_node (a_node: TABLE_OF_CONTENTS_NODE) is
+	sort_node (a_node: TABLE_OF_CONTENTS_NODE)
 			-- Sort `a_node'
 		local
 			l_remove: BOOLEAN
@@ -782,7 +782,7 @@ feature {NONE} -- Sorting
 			end
 		end
 		
-	move_nodes is
+	move_nodes
 			-- Move nodes in `move_nodes_list' to appropriate location.
 			-- Note: This index sorting assumes that any index node which requires moving
 			-- will be moved to unique location in respect to other index nodes which need
@@ -849,7 +849,7 @@ feature {NONE} -- Sorting
 			end
 		end		
 		
-	move_node_to_location (new_location: STRING; src_node: TABLE_OF_CONTENTS_NODE) is
+	move_node_to_location (new_location: STRING; src_node: TABLE_OF_CONTENTS_NODE)
 			-- Move node `src_node' to toc defined `new_location'
 		local
 			l_location: STRING
@@ -875,11 +875,11 @@ feature {NONE} -- Sorting
 			end			
 		end		
 		
-	pseudo_overrides: BOOLEAN is True
+	pseudo_overrides: BOOLEAN = True
 			-- If pseudo name is present in document does it override filename/directory name
 			-- for alphabetical ordering?
 		
-	sort_node_alphabetically (a_node: TABLE_OF_CONTENTS_NODE) is
+	sort_node_alphabetically (a_node: TABLE_OF_CONTENTS_NODE)
 			-- Sort `a_node' sub nodes alphabetically
 		require
 			has_children: not a_node.children.is_empty
@@ -986,7 +986,7 @@ feature {NONE} -- Sorting
 			end
 		end		
 
-	make_index (a_node, a_index: TABLE_OF_CONTENTS_NODE) is
+	make_index (a_node, a_index: TABLE_OF_CONTENTS_NODE)
 			-- Make `a_node' index node from `a_index'
 		require
 			node_has_index: a_node.has_index
@@ -999,13 +999,13 @@ feature {NONE} -- Sorting
 			end
 		end
 
-	manager: TABLE_OF_CONTENTS_MANAGER is
+	manager: TABLE_OF_CONTENTS_MANAGER
 			-- Manager
 		once
 			Result := (create {SHARED_OBJECTS}).Shared_toc_manager	
 		end		
 
-	is_required_library_document (a_url: STRING): BOOLEAN is
+	is_required_library_document (a_url: STRING): BOOLEAN
 			-- Is url a required library file according to current filter?
 		local
 			l_filter: DOCUMENT_FILTER
@@ -1042,7 +1042,7 @@ feature {NONE} -- Sorting
 			end
 		end
 			
-	remove_duplicate_nodes (a_node: TABLE_OF_CONTENTS_NODE) is
+	remove_duplicate_nodes (a_node: TABLE_OF_CONTENTS_NODE)
 			-- Remove nodes occuring with the same id
 		local
 			l_ids,
@@ -1092,7 +1092,7 @@ invariant
 	has_name: name /= Void and then not	name.is_empty
 	has_filter: filter /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

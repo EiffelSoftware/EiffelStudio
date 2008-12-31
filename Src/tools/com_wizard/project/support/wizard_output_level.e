@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Wizard output levels"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,16 +10,16 @@ class
 
 feature -- Access
 
-	Output_all: INTEGER is unique
+	Output_all: INTEGER = unique
 			-- Output everything
 	
-	Output_warnings: INTEGER is unique
+	Output_warnings: INTEGER = unique
 			-- Output only warnings
 
-	Output_none: INTEGER is unique;
+	Output_none: INTEGER = unique;
 			-- Output nothing
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

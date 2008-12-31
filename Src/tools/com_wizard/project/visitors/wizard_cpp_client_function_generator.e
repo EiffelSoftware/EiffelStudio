@@ -1,4 +1,4 @@
-indexing
+note
 	description: "C++ client function generator."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -17,7 +17,7 @@ inherit
 
 feature -- Basic operations
 
-	cecil_signature (a_function: WIZARD_FUNCTION_DESCRIPTOR): STRING is
+	cecil_signature (a_function: WIZARD_FUNCTION_DESCRIPTOR): STRING
 			-- set result type and return signature of feature
 		require
 			non_void_feature_writer: ccom_feature_writer /= Void
@@ -86,7 +86,7 @@ feature -- Basic operations
 			valid_result: Result /= Void
 		end
 
-	set_return_type (a_visitor: WIZARD_DATA_TYPE_VISITOR) is
+	set_return_type (a_visitor: WIZARD_DATA_TYPE_VISITOR)
 			-- Set return type.
 		require
 			non_void_visitor: a_visitor /= Void
@@ -106,7 +106,7 @@ feature -- Basic operations
 			end
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

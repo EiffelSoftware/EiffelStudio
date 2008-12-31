@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A project."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 	
 feature -- Initialize
 
-	initialize is
+	initialize
 			-- Initialize project
 		require
 			has_preferences: preferences /= Void
@@ -41,7 +41,7 @@ feature -- Initialize
 			update
 		end		
 
-	initialize_document_selector is
+	initialize_document_selector
 			-- Initialize the document selector widget according to
 			-- `root_directory' information from `preferences'. Takes also
 			-- into account the output filter currently selected.
@@ -52,7 +52,7 @@ feature -- Initialize
 			create document_map.make (root_directory, application_window.document_selector)
 		end	
 
-	reset is
+	reset
 			-- Reset current
 		do
 			name := Void
@@ -75,14 +75,14 @@ feature -- Access
 	root_directory: STRING
 			-- Location of project root directory
 
-	full_name: FILE_NAME is
+	full_name: FILE_NAME
 			-- Full project name including directory
 		do
 			create Result.make_from_string (root_directory)
 			Result.extend (name)
 		end
 
-	documents: ARRAYED_LIST [DOCUMENT] is
+	documents: ARRAYED_LIST [DOCUMENT]
 			-- Get all project documents from disk		
 		do
 			progress_generator.set_title ("Retrieving Documents")
@@ -97,7 +97,7 @@ feature -- Access
 
 feature -- Commands
 
-	update is
+	update
 			-- Update
 		do
 			if Shared_constants.Application_constants.is_gui_mode then
@@ -109,7 +109,7 @@ feature -- Commands
 			end						
 		end
 
-	create_new is
+	create_new
 			-- Create a new project
 		do
 			Shared_dialogs.project_dialog.show_modal_to_window (Shared_dialogs.template_dialog)
@@ -122,7 +122,7 @@ feature -- Commands
 			end
 		end
 		
-	open is
+	open
 			-- Open an existing project
 		local
 			l_open_dialog: EV_FILE_OPEN_DIALOG
@@ -134,7 +134,7 @@ feature -- Commands
 			end		
 		end		
 
-	load_documents is
+	load_documents
 			-- Load all documents under root
 		do
 			shared_document_manager.documents.clear_all
@@ -143,7 +143,7 @@ feature -- Commands
 
 feature {VALIDATOR_TOOL_DIALOG, TOC_DIALOG} -- Validation
 
-	validate_files_xml is
+	validate_files_xml
 			-- Validate files in Current to XML.
 		do
 			invalid_files.wipe_out
@@ -154,7 +154,7 @@ feature {VALIDATOR_TOOL_DIALOG, TOC_DIALOG} -- Validation
 			end
 		end
 
-	validate_files is
+	validate_files
 			-- Validate files in Current to loaded schema.  Put invalid files
 			-- in `invalid_files' list.
 		do
@@ -164,7 +164,7 @@ feature {VALIDATOR_TOOL_DIALOG, TOC_DIALOG} -- Validation
 			shared_error_reporter.show
 		end
 
-	spell_check is
+	spell_check
 			-- Spell check all documents in the project
 		local
 			spell_checker: SPELL_CHECKER
@@ -175,7 +175,7 @@ feature {VALIDATOR_TOOL_DIALOG, TOC_DIALOG} -- Validation
 
 feature -- Links
 
-	update_links (a_old, a_new: DOCUMENT_LINK) is
+	update_links (a_old, a_new: DOCUMENT_LINK)
 			-- Update all document links to `a_old' to link to `a_new'
 		require
 			old_link_not_void: a_old /= Void
@@ -189,7 +189,7 @@ feature -- Links
 
 feature -- Status Setting	
 
-	set_name (a_name: STRING) is
+	set_name (a_name: STRING)
 			-- Set `name'
 		require
 			name_not_void: a_name /= Void
@@ -200,7 +200,7 @@ feature -- Status Setting
 			name_set: name = a_name
 		end
 
-	set_root_directory (a_name: STRING) is
+	set_root_directory (a_name: STRING)
 			-- Set `root_directory'
 		require
 			name_not_void: a_name /= Void
@@ -211,7 +211,7 @@ feature -- Status Setting
 			dir_set: root_directory = a_name
 		end
 
-	add_invalid_file (a_filename: STRING) is
+	add_invalid_file (a_filename: STRING)
 			-- Add `a_filename' to list of invalid files
 		require
 			filename_not_void: a_filename /= Void
@@ -223,7 +223,7 @@ feature -- Status Setting
 			files_changed := True
 		end		
 
-	remove_invalid_file (a_filename: STRING) is
+	remove_invalid_file (a_filename: STRING)
 			-- Remove `a_filename' from list of invalid files
 		require
 			filename_not_void: a_filename /= Void
@@ -235,7 +235,7 @@ feature -- Status Setting
 			files_changed := True
 		end
 
-	add_include_document (a_name: STRING) is
+	add_include_document (a_name: STRING)
 			-- Add `a_name' to list of files/directories to exclude
 		require
 			name_not_void: a_name /= Void
@@ -246,7 +246,7 @@ feature -- Status Setting
 			end	
 		end
 	
-	include_documents_list: ARRAYED_LIST [STRING] is
+	include_documents_list: ARRAYED_LIST [STRING]
 			-- List of file and directory names to include in document processing
 		once
 			create Result.make (1)
@@ -255,7 +255,7 @@ feature -- Status Setting
 
 feature -- Access
 			
-	filter_manager: FILTER_MANAGER	is
+	filter_manager: FILTER_MANAGER
 			-- Filter manager
 		once
 			create Result.make
@@ -267,14 +267,14 @@ feature -- Access
 	document_map: DOCUMENT_SELECTOR
 			-- Document selector	
 
-	has_invalid_files: BOOLEAN is
+	has_invalid_files: BOOLEAN
 			-- Has Current any invalid files
 		do
 			validate_files
 			Result := invalid_files.count > 0			
 		end		
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Valid project?
 		do
 			Result := preferences /= Void and then preferences.is_valid	
@@ -290,7 +290,7 @@ feature {NONE} -- Implementation
 	files_changed: BOOLEAN
 			-- Have files changed?
 
-	validate_against_schema is
+	validate_against_schema
 			-- Validate all files according to project schema.
 		local
 			l_documents: ARRAYED_LIST [DOCUMENT]
@@ -314,7 +314,7 @@ feature {NONE} -- Implementation
 			end
 		end	
 
-	validate_against_xml is
+	validate_against_xml
 			-- Validate all files for XML validity
 		local
 			l_documents: ARRAYED_LIST [DOCUMENT]
@@ -338,7 +338,7 @@ feature {NONE} -- Implementation
 			end
 		end	
 
-	build_error_report is
+	build_error_report
 			-- Build a new error report
 		local
 			l_error: ERROR
@@ -360,7 +360,7 @@ feature {NONE} -- Implementation
 			has_report: shared_error_reporter /= Void
 		end
 
-	can_build_toc: BOOLEAN is
+	can_build_toc: BOOLEAN
 			-- Can/should toc be built from Current?
 		local
 			l_constants: EV_DIALOG_CONSTANTS
@@ -392,7 +392,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Document Retrieval
 
-	retrieve_documents (a_dir: DIRECTORY) is
+	retrieve_documents (a_dir: DIRECTORY)
 			-- Retrieve all documents recursively in `a_dir'.  Only include those documents
 			-- listed in `include_documents_list'
 		require
@@ -446,7 +446,7 @@ feature {NONE} -- Document Retrieval
 
 feature {ARGUMENTS_PARSER} -- Retrieval
 
-	load (a_filename: STRING) is
+	load (a_filename: STRING)
 			-- Load from `a_filename'
 		do
 			reset
@@ -460,7 +460,7 @@ feature {ARGUMENTS_PARSER} -- Retrieval
 --			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

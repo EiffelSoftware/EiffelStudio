@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error reports with optional line number information and context action."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 	
 feature -- Status Setting	
 
-	set_error (a_error: ERROR) is
+	set_error (a_error: ERROR)
 			-- Set error
 		do
 			error := a_error
@@ -26,7 +26,7 @@ feature -- Access
 	error: ERROR
 			-- Error	
 		
-	actions: ERROR_ACTIONS is
+	actions: ERROR_ACTIONS
 			-- Available error response actions
 		once
 			create Result
@@ -34,13 +34,13 @@ feature -- Access
 
 feature -- Commands
 
-	clear is
+	clear
 			-- Clear
 		do
 			error := Void
 		end		
 
-	show is
+	show
 			-- Show error
 		do			
 			if shared_constants.Application_constants.is_gui_mode then
@@ -52,7 +52,7 @@ feature -- Commands
 
 feature {NONE} -- Commands
 
-	show_command_prompt is
+	show_command_prompt
 			-- Show error(s) on command prompt.
 		local
 			l_output_file: PLAIN_TEXT_FILE
@@ -67,7 +67,7 @@ feature {NONE} -- Commands
 			l_output_file.close
 		end		
 
-	show_as_message_dialog is
+	show_as_message_dialog
 			-- Show error in message dialog with OK button
 		do			
 			shared_dialogs.error_dialog.set_error (error, title)
@@ -76,9 +76,9 @@ feature {NONE} -- Commands
 
 feature {NONE} -- Implementation
 
-	title: STRING is "Report"
+	title: STRING = "Report"
 
-	window: EV_WINDOW is
+	window: EV_WINDOW
 			-- Window
 		once
 			Result := Application_window
@@ -87,7 +87,7 @@ feature {NONE} -- Implementation
 invariant
 	has_title: title /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

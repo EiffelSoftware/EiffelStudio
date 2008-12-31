@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,31 +25,31 @@ feature -- Access
 
 	class_name: STRING
 
-	set_class_name (s: STRING) is
+	set_class_name (s: STRING)
 		do
 			class_name := s
 		end
 
 	type: INTEGER
 
-	set_type (a_type: INTEGER) is
+	set_type (a_type: INTEGER)
 		do
 			type := a_type
 		end
 
-	make_options is
+	make_options
 		do
 			create options.make
 		end
 
-	make_load_and_mem_attributes is
+	make_load_and_mem_attributes
 		do
 			create load_and_mem_attributes.make
 		end
 
 	id: TDS_ID
 
-	set_id (s: STRING) is
+	set_id (s: STRING)
 		do
 			if id = Void then
 				create id
@@ -57,30 +57,30 @@ feature -- Access
 			id.set_id (s)
 		end
 
-	insert (v: TDS_RESOURCE) is
+	insert (v: TDS_RESOURCE)
 		do
 			extend (v)
 		end
 
-	set_tree_view_item (a_parent: POINTER) is
+	set_tree_view_item (a_parent: POINTER)
 		do
 			tree_view_item := a_parent
 		end
 
-	set_wel_code (value: BOOLEAN) is
+	set_wel_code (value: BOOLEAN)
 		do
 			is_wel_code_on := value
 		end
 
-	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE) is
+	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE)
 		deferred
 		end
 
-	generate_tree_view (a_tree_view: WEL_TREE_VIEW; a_parent: POINTER) is
+	generate_tree_view (a_tree_view: WEL_TREE_VIEW; a_parent: POINTER)
 		deferred
 		end
 
-	generate_wel_code is
+	generate_wel_code
 		deferred
 		end
 
@@ -90,7 +90,7 @@ feature -- Access
 
 	filename: STRING
 	
-	set_filename (s: STRING) is
+	set_filename (s: STRING)
 		require
 			s_not_void: s /= Void
 		do
@@ -103,11 +103,11 @@ feature -- Access
 			end
 		end
 
-	display is
+	display
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

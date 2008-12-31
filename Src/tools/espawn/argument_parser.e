@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Used to parser command-line arguments.
 	]"
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize parser
 		do
 			make_multi_parser (False, True)
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	commands: LINEAR [STRING] is
+	commands: LINEAR [STRING]
 			-- List of commands
 		require
 			is_successful: is_successful
@@ -43,7 +43,7 @@ feature -- Access
 			not_result_is_empty: not Result.is_empty
 		end
 
-	for_32bit: BOOLEAN is
+	for_32bit: BOOLEAN
 			-- Indiciates if tool should be run in a 32bit emulated enironment
 		require
 			is_successful: is_successful
@@ -53,7 +53,7 @@ feature -- Access
 			true_for_64bit: not {PLATFORM_CONSTANTS}.is_64_bits implies Result
 		end
 
-	specific_compiler_code: STRING is
+	specific_compiler_code: STRING
 			-- The user specified compiler code to use to establish an environment
 		require
 			is_successful: is_successful
@@ -65,7 +65,7 @@ feature -- Access
 			not_result_is_empty: not Result.is_empty
 		end
 
-	ignore_failures: BOOLEAN is
+	ignore_failures: BOOLEAN
 			-- Indicates if process execution failures should be ignored
 		require
 			is_successful: is_successful
@@ -73,7 +73,7 @@ feature -- Access
 			Result := has_option (ignore_switch)
 		end
 
-	manual: BOOLEAN is
+	manual: BOOLEAN
 			-- Inidicates if user wants to manually setup their environment
 		require
 			is_successful: is_successful
@@ -81,7 +81,7 @@ feature -- Access
 			Result := has_option (manual_switch)
 		end
 
-	asynchronous: BOOLEAN is
+	asynchronous: BOOLEAN
 			-- Inidicates if commands should be launched aynchronously
 		require
 			is_successful: is_successful
@@ -89,7 +89,7 @@ feature -- Access
 			Result := has_option (aync_switch)
 		end
 
-	max_processors: NATURAL_16 is
+	max_processors: NATURAL_16
 			-- Maximum number of processors to untilize
 		require
 			is_successful: is_successful
@@ -111,7 +111,7 @@ feature -- Access
 			result_positive: Result > 0
 		end
 
-	list_available_compilers: BOOLEAN is
+	list_available_compilers: BOOLEAN
 			-- Indicates if espawn should list the available compiler codes
 		require
 			is_successful: is_successful
@@ -121,7 +121,7 @@ feature -- Access
 
 feature -- Status report
 
-	use_specific_compiler: BOOLEAN is
+	use_specific_compiler: BOOLEAN
 			-- Inidicate if a specific compiler code should be used
 		require
 			is_successful: is_successful
@@ -152,7 +152,7 @@ feature {NONE} -- Usage
 	non_switched_argument_type: !STRING = "A command"
 			-- <Precursor>
 
-	switches: !ARRAYED_LIST [!ARGUMENT_SWITCH] is
+	switches: !ARRAYED_LIST [!ARGUMENT_SWITCH]
 			-- <Precursor>
 		once
 			create Result.make (1)
@@ -168,7 +168,7 @@ feature {NONE} -- Usage
 			Result.extend (create {ARGUMENT_SWITCH}.make (list_compilers_switch, "List available compiler codes.", False, False))
 		end
 
-	switch_groups: !ARRAYED_LIST [!ARGUMENT_GROUP] is
+	switch_groups: !ARRAYED_LIST [!ARGUMENT_GROUP]
 			-- Valid switch grouping
 		do
 			create Result.make (2)
@@ -188,7 +188,7 @@ feature {NONE} -- Switch names
 
 feature {NONE} -- Externals
 
-	resident_cpu_count: NATURAL_16 is
+	resident_cpu_count: NATURAL_16
 			-- Number of CPUs.
 		external
 			"C inline use <windows.h>"
@@ -203,7 +203,7 @@ feature {NONE} -- Externals
 			]"
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

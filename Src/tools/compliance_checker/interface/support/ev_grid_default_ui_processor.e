@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		EV_GRID support class to process default user interface interfactions, such as wheel mouse,
 		page up/down and expanding trees with left and right cursor keys.
@@ -38,7 +38,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_grid: EV_GRID) is
+	make (a_grid: EV_GRID)
 			-- Create and initialize a `EV_GRID' default user interface processor
 		require
 			a_grid_not_void: a_grid /= Void
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Agent Handlers
 
-	on_grid_mouse_wheel_recieved (a_grid: EV_GRID; a_delta: INTEGER) is
+	on_grid_mouse_wheel_recieved (a_grid: EV_GRID; a_delta: INTEGER)
 			-- Called when user scrolls `grid_output' using the mouse wheel
 		local
 			l_move_by: INTEGER
@@ -60,7 +60,7 @@ feature {NONE} -- Agent Handlers
 			a_grid.set_virtual_position (a_grid.virtual_x_position, (a_grid.virtual_y_position + (a_grid.row_height * l_move_by)).min (a_grid.maximum_virtual_y_position).max (0))
 		end
 
-	on_grid_key_released (a_grid: EV_GRID; a_key: EV_KEY) is
+	on_grid_key_released (a_grid: EV_GRID; a_key: EV_KEY)
 			-- Called when user releases a key when output gird has focus.
 		require
 			a_grid_not_void: a_grid /= Void
@@ -89,7 +89,7 @@ feature {NONE} -- Agent Handlers
 			end
 		end
 		
-	on_grid_key_pressed (a_grid: EV_GRID; a_key: EV_KEY) is
+	on_grid_key_pressed (a_grid: EV_GRID; a_key: EV_KEY)
 			-- Called when user presses a key when output gird has focus.
 		require
 			a_grid_not_void: a_grid /= Void
@@ -106,7 +106,7 @@ feature {NONE} -- Agent Handlers
 			end
 		end
 		
-	on_grid_row_selected (a_row: EV_GRID_ROW) is
+	on_grid_row_selected (a_row: EV_GRID_ROW)
 			-- Called when a grid row has been selected
 		require
 			a_row_not_void: a_row /= Void
@@ -116,7 +116,7 @@ feature {NONE} -- Agent Handlers
 		
 feature {NONE} -- Implementation
 
-	on_shift_selection_left (a_grid: EV_GRID) is
+	on_shift_selection_left (a_grid: EV_GRID)
 			-- Preform a left shift selection.
 		require
 			a_grid_not_void: a_grid /= Void
@@ -138,7 +138,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	on_shift_selection_right (a_grid: EV_GRID) is
+	on_shift_selection_right (a_grid: EV_GRID)
 			-- Preform a right shift selection.
 		require
 			a_grid_not_void: a_grid /= Void
@@ -160,7 +160,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_ctrl_home (a_grid: EV_GRID) is
+	on_ctrl_home (a_grid: EV_GRID)
 			-- Performed when a select all is selected (CTRL+HOME)
 		require
 			a_grid_not_void: a_grid /= Void
@@ -187,7 +187,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_ctrl_end (a_grid: EV_GRID) is
+	on_ctrl_end (a_grid: EV_GRID)
 			-- Performed when a select all is selected (CTRL+END)
 		require
 			a_grid_not_void: a_grid /= Void
@@ -219,7 +219,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_select_all (a_grid: EV_GRID) is
+	on_select_all (a_grid: EV_GRID)
 			-- Performed when a select all is selected (CTRL+A)
 		require
 			a_grid_not_void: a_grid /= Void
@@ -228,7 +228,7 @@ feature {NONE} -- Implementation
 			select_range (a_grid, 1, a_grid.row_count)
 		end
 		
-	on_page_up (a_grid: EV_GRID) is
+	on_page_up (a_grid: EV_GRID)
 			-- Perform a page up selection
 		require
 			a_grid_not_void: a_grid /= Void
@@ -249,7 +249,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_page_down (a_grid: EV_GRID) is
+	on_page_down (a_grid: EV_GRID)
 			-- Perform a page down selection
 		require
 			a_grid_not_void: a_grid /= Void
@@ -279,7 +279,7 @@ feature {NONE} -- Implementation
 			end
 		end
 			
-	select_range (a_grid: EV_GRID; a_start: INTEGER a_end: INTEGER) is
+	select_range (a_grid: EV_GRID; a_start: INTEGER a_end: INTEGER)
 			-- Selected a range of items from `a_start' to `a_end' in `a_grid'
 		require
 			a_grid_not_void: a_grid /= Void
@@ -318,7 +318,7 @@ feature {NONE} -- Implementation
 			range_selected: a_grid.selected_rows.count = (a_end - a_start) + 1
 		end
 		
-	deselect_all (a_grid: EV_GRID) is
+	deselect_all (a_grid: EV_GRID)
 			-- Deselects all items
 		require
 			a_grid_not_void: a_grid /= Void
@@ -349,7 +349,7 @@ feature {NONE} -- Implementation
 	last_selected_row: EV_GRID_ROW;
 			-- Last selected row
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

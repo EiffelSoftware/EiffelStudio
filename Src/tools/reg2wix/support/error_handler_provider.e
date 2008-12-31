@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Provides decending classes with access to a {MULTI_ERROR_MANAGER} instance.
 	]"
@@ -12,7 +12,7 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	make (a_handler: like error_handler) is
+	make (a_handler: like error_handler)
 			-- Initialize generator with error handler `a_handler'
 		require
 			a_handler_attached: a_handler /= Void
@@ -31,7 +31,7 @@ feature {NONE} -- Access
 invariant
 	error_handler_attached: error_handler /= Void
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

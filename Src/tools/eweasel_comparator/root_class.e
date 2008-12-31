@@ -1,4 +1,4 @@
-indexing
+note
 	description: "System's root class, compare different compiler versions' tests"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -17,7 +17,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 		local
 			index_output, index_tests: INTEGER
 			l_args: ANY
@@ -51,7 +51,7 @@ feature -- Initialization
 
 feature
 
-	sort is
+	sort
 			-- Handlecompiler versions and compare tests
 			-- Make result available in `output_file' file		
 		local
@@ -121,7 +121,7 @@ feature
 
 		end
 
-	non_interactive_execution is
+	non_interactive_execution
 			-- Set `output_file' and `array' from command line
 			-- `-output' for `output_file'
 			-- `-tests' for `array'
@@ -167,7 +167,7 @@ feature
 			end
 		end
 
-	interactive_execution is
+	interactive_execution
 			--  Set `output_file' and `array' from shell when `-loop' in command line.
 		local
 			index: INTEGER
@@ -202,13 +202,13 @@ feature
 		end
 
 
-	throw_usage is
+	throw_usage
 		do
 			io.putstring ("Usage:%N[[-output file_name] -tests file1 file2 ...][-full][-tab]")
 			io.putstring ("%N[-loop]%N")
 		end
 
-	same_elements (res : STRING; list : LINKED_LIST [STRING]): BOOLEAN is
+	same_elements (res : STRING; list : LINKED_LIST [STRING]): BOOLEAN
 		local
 			bool: BOOLEAN
 		do
@@ -239,18 +239,18 @@ feature --Access
 
 feature {NONE} -- Constants
 
-	First_column_count: INTEGER is 40
+	First_column_count: INTEGER = 40
 			-- Size in characters of first column.
 
-	Second_column_count: INTEGER is 14
+	Second_column_count: INTEGER = 14
 			-- Size in character of second column.
 
-	Result_column_count: INTEGER is 16
+	Result_column_count: INTEGER = 16
 			-- Size of column of results.
 
 feature {NONE} -- Implementation
 
-	formatted (s: STRING; n: INTEGER; with_tab: BOOLEAN): STRING is
+	formatted (s: STRING; n: INTEGER; with_tab: BOOLEAN): STRING
 			-- If `with_tab' add a tab character to the end of `s'.
 			-- Otherwise format `s' to that its count is not less than `n',
 			-- adding missing spaces if needed.
@@ -271,7 +271,7 @@ feature {NONE} -- Implementation
 			formatted_count_valid: not with_tab implies Result.count >= n
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

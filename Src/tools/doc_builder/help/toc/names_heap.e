@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Correspondance between names and integers.
 		The structure is very efficient for accessing from an integer
@@ -30,7 +30,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create new instance of NAMES_HEAP
 		do
 			top_index := 1
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 		
 feature -- Access
 
-	item (i: INTEGER): STRING is
+	item (i: INTEGER): STRING
 			-- Access `i'-th element.
 		require
 			valid_index: valid_index (i)
@@ -57,7 +57,7 @@ feature -- Access
 	found: BOOLEAN
 			-- Has last search been successful?
 
-	id_of (s: STRING): INTEGER is
+	id_of (s: STRING): INTEGER
 			-- Id of `s' if inserted, otherwise 0.
 		require
 			s_not_void: s /= Void
@@ -74,7 +74,7 @@ feature -- Access
 			valid_result: Result >= 0
 		end
 
-	has (s: STRING): BOOLEAN is
+	has (s: STRING): BOOLEAN
 			-- Does current have `s'.
 		require
 			s_not_void: s /= Void
@@ -86,13 +86,13 @@ feature -- Access
 
 feature -- Status report
 
-	valid_index (i: INTEGER): BOOLEAN is
+	valid_index (i: INTEGER): BOOLEAN
 			-- Is `i' within bounds?
 		do
 			Result := i >= 0 and then i < top_index
 		end
 
-	search (s: STRING) is
+	search (s: STRING)
 			-- Search for `s' in Current.
 		require
 			s_not_void: s /= Void
@@ -107,7 +107,7 @@ feature -- Status report
 
 feature -- Element Change
 
-	put (s: STRING) is
+	put (s: STRING)
 			-- Insert `s' in Current if not present,
 			-- otherwise does nothing.
 			-- In both cases, `found_item' is updated
@@ -142,7 +142,7 @@ feature {NONE} -- Implementation: access
 	top_index: INTEGER
 			-- Number of elements in Current
 	
-	Chunk: INTEGER is 500
+	Chunk: INTEGER = 500
 			-- Default chunk size.
 			
 invariant
@@ -151,7 +151,7 @@ invariant
 	top_index_positive: top_index >= 0
 	found_item_positive: found_item >= 0
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

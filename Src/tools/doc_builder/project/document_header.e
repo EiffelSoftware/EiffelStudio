@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Document header."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature -- Create
 
-	make_from_document_data (a_document: DOCUMENT) is
+	make_from_document_data (a_document: DOCUMENT)
 			-- Make new header based upon data in a_document
 		require
 			document_not_void: a_document /= Void
@@ -46,7 +46,7 @@ feature -- Create
 			generation_successful: not text.is_empty
 		end
 
-	file_text: STRING is
+	file_text: STRING
 			-- The text of the file
 		local
 			l_file: PLAIN_TEXT_FILE
@@ -57,7 +57,7 @@ feature -- Create
 			l_file.close
 		end		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

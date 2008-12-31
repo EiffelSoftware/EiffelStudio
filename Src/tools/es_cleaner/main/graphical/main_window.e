@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		The graphical application's primary top-level window.
 	]"
@@ -27,7 +27,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	user_initialization is
+	user_initialization
 			-- Called by `initialize'.
 			-- Any custom user initialization that
 			-- could not be performed in `initialize',
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	siteable_entities: !ARRAYED_LIST [!SITE [PACKAGE]] is
+	siteable_entities: !ARRAYED_LIST [!SITE [PACKAGE]]
 			-- List of siteable entities to automatically site when `Current' is sited
 		do
 			Result := Precursor {SITE}
@@ -60,7 +60,7 @@ feature {NONE} -- Access
 
 feature -- Status report
 
-	frozen use_workbench_settings: BOOLEAN is
+	frozen use_workbench_settings: BOOLEAN
 			-- Inidicates if workbench settings should be used
 		do
 			Result := cbx_mode.selected_item = workbench_mode_item
@@ -68,7 +68,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	on_mode_changed is
+	on_mode_changed
 			-- Called by `change_actions' of `cbx_mode'.
 		do
 			if site /= Void then
@@ -76,7 +76,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_close is
+	on_close
 			-- Called by `select_actions' of `btn_close'.
 		local
 			l_app: EV_APPLICATION
@@ -89,7 +89,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

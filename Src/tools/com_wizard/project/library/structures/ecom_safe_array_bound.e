@@ -1,4 +1,4 @@
-indexing
+note
 	description: "SAFEARRAYBOUND structure"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_from_pointer (a_pointer: POINTER) is
+	make_from_pointer (a_pointer: POINTER)
 			-- Make from pointer.
 		do
 			make_by_pointer (a_pointer)
@@ -25,13 +25,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	element_count: INTEGER is
+	element_count: INTEGER
 			-- Number of elements in dimension
 		do
 			Result := ccom_safearraybound_elements (item)
 		end
 
-	lower_bound: INTEGER is
+	lower_bound: INTEGER
 			-- Lower bound of dimension
 		do
 			Result := ccom_safearraybound_low_bound (item)
@@ -39,13 +39,13 @@ feature -- Access
 
 feature -- Element change
 
-	set_count (a_count: INTEGER) is
+	set_count (a_count: INTEGER)
 			-- Set number of elements
 		do
 			ccom_safearraybound_set_elements (item, a_count)
 		end
 
-	set_lower_bound (a_bound: INTEGER) is
+	set_lower_bound (a_bound: INTEGER)
 			-- Set lower bound
 		do
 			ccom_safearraybound_set_low_bound (item, a_bound)
@@ -53,7 +53,7 @@ feature -- Element change
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of SAFEARRAYBOUND structure
 		do
 			Result := c_size_of_safe_array_bound
@@ -61,34 +61,34 @@ feature -- Measurement
 
 feature {NONE} -- Externals
 
-	c_size_of_safe_array_bound: INTEGER is
+	c_size_of_safe_array_bound: INTEGER
 		external 
 			"C [macro %"E_safearraybound.h%"]"
 		alias
 			"sizeof(SAFEARRAYBOUND)"
 		end
 
-	ccom_safearraybound_elements (a_ptr: POINTER): INTEGER is
+	ccom_safearraybound_elements (a_ptr: POINTER): INTEGER
 		external
 			"C [macro %"E_safearraybound.h%"](EIF_POINTER): EIF_INTEGER"
 		end
 
-	ccom_safearraybound_low_bound (a_ptr: POINTER): INTEGER is
+	ccom_safearraybound_low_bound (a_ptr: POINTER): INTEGER
 		external
 			"C [macro %"E_safearraybound.h%"](EIF_POINTER): EIF_INTEGER"
 		end
 
-	ccom_safearraybound_set_elements (a_ptr: POINTER; a_int: INTEGER) is
+	ccom_safearraybound_set_elements (a_ptr: POINTER; a_int: INTEGER)
 		external
 			"C [macro %"E_safearraybound.h%"](EIF_POINTER, EIF_INTEGER)"
 		end
 
-	ccom_safearraybound_set_low_bound (a_ptr: POINTER; a_int: INTEGER) is
+	ccom_safearraybound_set_low_bound (a_ptr: POINTER; a_int: INTEGER)
 		external
 			"C [macro %"E_safearraybound.h%"](EIF_POINTER, EIF_INTEGER)"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_top_index_insert_strings: HASH_TABLE [STRING, STRING]; a_bottom_index_string: STRING) is
+	make (a_top_index_insert_strings: HASH_TABLE [STRING, STRING]; a_bottom_index_string: STRING)
 			-- Initialization
 		require
 			a_top_index_insert_string_attached: a_top_index_insert_strings /= Void
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature
 
-	process_class_as (l_as: CLASS_AS) is
+	process_class_as (l_as: CLASS_AS)
 		local
 			l_string: STRING
 			last_as: AST_EIFFEL
@@ -90,7 +90,7 @@ feature
 			end
 		end
 
-	process_eiffel_list (l_as: EIFFEL_LIST [AST_EIFFEL]) is
+	process_eiffel_list (l_as: EIFFEL_LIST [AST_EIFFEL])
 		local
 			i, l_count: INTEGER
 			l_index_as: INDEX_AS
@@ -167,7 +167,7 @@ feature {NONE} -- Implementation
 	index_clauses : ARRAYED_LIST [INDEX_AS]
 		-- Found index as in top index clause.
 
-	insert_top_copyright_info is
+	insert_top_copyright_info
 			--
 		local
 			replace_str: STRING
@@ -198,7 +198,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	search_index_as (l_key: STRING): INDEX_AS is
+	search_index_as (l_key: STRING): INDEX_AS
 			--
 		local
 			end_loop : BOOLEAN
@@ -217,13 +217,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	build_top_index: STRING is
+	build_top_index: STRING
 			--
 		do
 			Result := "indexing%N%T" + build_top_insert_string
 		end
 
-	build_top_insert_string: STRING is
+	build_top_insert_string: STRING
 			-- No tabs ahead, newline at the end.
 		do
 			create Result.make_empty
@@ -242,7 +242,7 @@ feature {NONE} -- Implementation
 			Result.keep_head (Result.count - 1)
 		end
 
-	add_semicolon_after_feature (a_feature: FEATURE_AS; a_end_as: KEYWORD_AS) is
+	add_semicolon_after_feature (a_feature: FEATURE_AS; a_end_as: KEYWORD_AS)
 			-- Add semicolon after feature, if there is none between end of `a_feature' and `a_end_as'.
 		local
 			l_semicolon_exists: BOOLEAN
@@ -254,7 +254,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_semicolon_token (a_leaf: LEAF_AS): BOOLEAN is
+	is_semicolon_token (a_leaf: LEAF_AS): BOOLEAN
 			-- Is `a_leaf' a semicolon token?
 		require
 			a_leaf_not_void: a_leaf /= Void
@@ -268,7 +268,7 @@ feature {NONE} -- Implementation
 invariant
 	invariant_clause: True -- Your invariant here
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

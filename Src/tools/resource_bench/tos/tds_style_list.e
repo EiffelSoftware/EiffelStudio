@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Style list representation in the tds"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature	-- Query
 
-	is_present (a_style: TDS_STYLE) : BOOLEAN is
+	is_present (a_style: TDS_STYLE) : BOOLEAN
 			-- Is `a_style' present in the TDS_STYLE_LIST?
 		require
 			a_style_not_void: a_style /= Void
@@ -37,7 +37,7 @@ feature	-- Query
 			Result := found
 		end
 
-	is_almost_present (a_style: TDS_STYLE) : BOOLEAN is
+	is_almost_present (a_style: TDS_STYLE) : BOOLEAN
 			-- Is a part of `a_style' present in the TDS_STYLE_LIST?
 		require
 			a_style_not_void: a_style /= Void
@@ -59,7 +59,7 @@ feature	-- Query
 
 feature -- Code generation
 
-	display is
+	display
 		do
 			from
 				start
@@ -73,7 +73,7 @@ feature -- Code generation
 			end
  		end
 
-	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE) is
+	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE)
 			-- Generate `a_resource_file' from the tds memory structure.
 		require
 			a_resource_file_exists: a_resource_file.exists
@@ -92,7 +92,7 @@ feature -- Code generation
 			end
  		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

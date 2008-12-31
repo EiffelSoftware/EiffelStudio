@@ -1,4 +1,4 @@
-indexing
+note
 	description: "COM CUSTDATA structure"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,13 +17,13 @@ create
 
 feature -- Access
 
-	count_items: INTEGER is
+	count_items: INTEGER
 			-- Number of CUSTDATAITEMs
 		do
 			Result := ccom_custdata_items (item)
 		end
 
-	cust_data_items: ARRAY [ECOM_CUST_DATA_ITEM] is
+	cust_data_items: ARRAY [ECOM_CUST_DATA_ITEM]
 			-- Array of custom data items
 		do
 			Result := ccom_custdata_array (item)
@@ -31,7 +31,7 @@ feature -- Access
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of CUSTDATA structure
 		do
 			Result := c_size_of_cust_data 
@@ -39,24 +39,24 @@ feature -- Measurement
 
 feature {NONE} -- Externals
 
-	c_size_of_cust_data: INTEGER is
+	c_size_of_cust_data: INTEGER
 		external 
 			"C [macro %"E_custdata.h%"]"
 		alias
 			"sizeof(CUSTDATA)"
 		end
 
-	ccom_custdata_items (a_ptr: POINTER): INTEGER is
+	ccom_custdata_items (a_ptr: POINTER): INTEGER
 		external
 			"C [macro %"E_custdata.h%"](EIF_POINTER): EIF_INTEGER"
 		end
 
-	ccom_custdata_array (a_ptr: POINTER): ARRAY [ECOM_CUST_DATA_ITEM] is
+	ccom_custdata_array (a_ptr: POINTER): ARRAY [ECOM_CUST_DATA_ITEM]
 		external
 			"C (EIF_POINTER): EIF_REFERENCE | %"E_custdata.h%""
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

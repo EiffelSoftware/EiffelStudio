@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Represents a Windows registry file registry key.
 	]"
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_section: INI_SECTION; a_handler: like error_handler) is
+	make (a_section: INI_SECTION; a_handler: like error_handler)
 			-- Initialize a new {REG_FILE_KEY} using an INI file section `a_section'
 		require
 			a_section_attached: a_section /= Void
@@ -52,7 +52,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Determines if the key is devoid of values
 		do
 			Result := not default_value.has_value and then named_values.is_empty
@@ -60,7 +60,7 @@ feature -- Status report
 
 feature {NONE} -- Process
 
-	process_ini_content (a_section: INI_SECTION) is
+	process_ini_content (a_section: INI_SECTION)
 			-- Processes the content of an INI document `a_doc'
 		require
 			a_section_attached: a_section /= Void
@@ -92,7 +92,7 @@ invariant
 	default_value_attached: default_value /= Void
 	internal_named_values_attached: internal_named_values /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

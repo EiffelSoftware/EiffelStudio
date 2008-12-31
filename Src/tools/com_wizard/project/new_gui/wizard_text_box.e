@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Common parents to all text boxes"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ inherit
 
 feature -- Initialization
 
-	setup (a_label: STRING; a_key: like key; a_text_processor: like text_processor; a_enter_processor: like enter_processor; a_select_processor: like select_processor) is
+	setup (a_label: STRING; a_key: like key; a_text_processor: like text_processor; a_enter_processor: like enter_processor; a_select_processor: like select_processor)
 			-- Set `text_processor' with `a_text_processor'.
 			-- Set `key' with `a_key'.
 			-- Set `label' with `a_label'.
@@ -64,7 +64,7 @@ feature -- Initialization
 			label_set: text_label.text.is_equal (a_label)
 		end
 
-	user_initialization is
+	user_initialization
 			-- Feature for custom initialization, called at end of `initialize'.
 		do
 			-- Initialize background color
@@ -73,19 +73,19 @@ feature -- Initialization
 
 feature -- Access
 
-	value: STRING is
+	value: STRING
 			-- Combo box selected entry
 		do
 			Result := text_combo.text
 		end
 
-	profile_item: WIZARD_PROFILE_ITEM is
+	profile_item: WIZARD_PROFILE_ITEM
 			-- Corresponding profile item
 		do
 			create Result.make (key, text_combo.text)
 		end
 
-	default_text: STRING is
+	default_text: STRING
 			-- Default text when combo is empty
 		do
 			if internal_default_text /= Void then
@@ -95,7 +95,7 @@ feature -- Access
 			end
 		end
 
-	save_on_return: BOOLEAN is
+	save_on_return: BOOLEAN
 			-- Should items be saved when `return' is hit?
 			-- True by default.
 		do
@@ -111,7 +111,7 @@ feature -- Status Report
 	excluded: BOOLEAN
 			-- Is widget excluded from profile?
 
-	is_default_selected: BOOLEAN is
+	is_default_selected: BOOLEAN
 			-- Is default item selected?
 		do
 			Result := text_combo.text.is_equal (default_text)
@@ -119,7 +119,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	save_combo_text is
+	save_combo_text
 			-- Save content to combo text as new combo entry.
 		local
 			l_text: STRING
@@ -130,13 +130,13 @@ feature -- Basic Operations
 			end
 		end
 
-	exclude_from_profile is
+	exclude_from_profile
 			-- Do not save settings in profile
 		do
 			excluded := True
 		end
 
-	remove_active_item is
+	remove_active_item
 			-- Remove selected item from list.
 		do
 			text_combo.start
@@ -144,7 +144,7 @@ feature -- Basic Operations
 			text_combo.set_text (text_combo.first.text)
 		end
 
-	initialize_focus is
+	initialize_focus
 			-- Give focus to combo.
 		do
 			text_combo.set_focus
@@ -152,7 +152,7 @@ feature -- Basic Operations
 
 feature -- Element Change
 
-	set_default_text (a_text: like default_text) is
+	set_default_text (a_text: like default_text)
 			-- Set `default_text' with `a_text'.
 		require
 			non_void_default_text: a_text /= Void
@@ -162,7 +162,7 @@ feature -- Element Change
 			default_text_set: default_text = a_text
 		end
 
-	set_save_on_return (a_value: like save_on_return) is
+	set_save_on_return (a_value: like save_on_return)
 			-- Set `save_on_return' with `a_value'.
 		do
 			if internal_save_on_return = Void then
@@ -175,7 +175,7 @@ feature -- Element Change
 
 feature {NONE} -- Events Handling
 
-	on_change is
+	on_change
 			-- Called by `change_actions' of `path_combo'.
 		local
 			l_status: WIZARD_VALIDITY_STATUS
@@ -200,7 +200,7 @@ feature {NONE} -- Events Handling
 			end
 		end
 
-	on_return is
+	on_return
 			-- Called by `return_actions' of `path_combo'.
 			-- Save text
 		do
@@ -212,7 +212,7 @@ feature {NONE} -- Events Handling
 			end
 		end
 
-	on_select is
+	on_select
 			-- Called by `select_actions' of `path_combo'.
 		do
 			if select_processor /= Void then
@@ -220,21 +220,21 @@ feature {NONE} -- Events Handling
 			end
 		end
 
-	on_mouse_enter is
+	on_mouse_enter
 			-- Called by `pointer_enter_actions' of `text_combo'.
 			-- Change background color to active background color.
 		do
 			text_combo.set_background_color (Active_background)
 		end
 
-	on_mouse_leave is
+	on_mouse_leave
 			-- Called by `pointer_enter_actions' of `text_combo'.
 			-- Change background color to inactive background color.
 		do
 			text_combo.set_background_color (Inactive_background)
 		end
 
-	on_profile_change is
+	on_profile_change
 			-- Active profile changed, update values accordingly.
 		do
 			Profile_manager.search_active_profile (key)
@@ -260,12 +260,12 @@ feature {NONE} -- Private Access
 	key: STRING
 			-- Key used to store and retrieve combo box items
 
-	text_combo: EV_COMBO_BOX is
+	text_combo: EV_COMBO_BOX
 			-- Text combo
 		deferred
 		end
 
-	text_label: EV_LABEL is
+	text_label: EV_LABEL
 			-- Caption label
 		deferred
 		end
@@ -280,7 +280,7 @@ feature {NONE} -- Private Access
 	internal_save_on_return: BOOLEAN_REF;
 			-- Cell for `save_on_return'
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

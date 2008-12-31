@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Observed (Subject on Observer pattern, (Design Patterns, 293, Gamma et.al))"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ feature -- Access
 
 feature -- Commands
 
-	attach (o: OBSERVER) is
+	attach (o: OBSERVER)
 			-- Attach observer `o'
 		require
 			observer_not_void: o /= Void
@@ -31,7 +31,7 @@ feature -- Commands
 			end			
 		end
 		
-	detach 	(o: OBSERVER) is
+	detach 	(o: OBSERVER)
 			-- Detach observer `o'
 		require
 			has_observer: has (o)
@@ -42,7 +42,7 @@ feature -- Commands
 		
 feature -- Query
 
-	has (o: OBSERVER): BOOLEAN is
+	has (o: OBSERVER): BOOLEAN
 			-- Is `o' an observer?
 		require
 			observer_not_void: o /= Void
@@ -51,7 +51,7 @@ feature -- Query
 			Result := observers.has (o)
 		end		
 
-	has_observers: BOOLEAN is
+	has_observers: BOOLEAN
 			-- Has any observers?
 		do			
 			Result := observers /= Void and not observers.is_empty	
@@ -59,7 +59,7 @@ feature -- Query
 
 feature {NONE} -- Implementation
 
-	notify_observers is
+	notify_observers
 			-- Notify observers of change
 		require
 			not_busy: not is_updating
@@ -80,7 +80,7 @@ feature {NONE} -- Implementation
 			is_updating := False
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

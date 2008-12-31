@@ -1,4 +1,4 @@
-indexing
+note
 	description: "HTML Generator.  Converts XML into HTML."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 	
 feature -- Initialization
 
-	make (a_file_list: ARRAYED_LIST [STRING]; a_path: DIRECTORY_NAME) is
+	make (a_file_list: ARRAYED_LIST [STRING]; a_path: DIRECTORY_NAME)
 			-- Make new generator with a file list and location `a_path'
 		require
 			a_list_exists: a_file_list /= Void
@@ -46,7 +46,7 @@ feature -- Access
 
 feature -- Generation
 
-	generate is
+	generate
 			-- Transform `files'
 		local
 			l_src,
@@ -67,7 +67,7 @@ feature -- Generation
 			end
 		end	
 
-	generate_file (a_doc: DOCUMENT; target: DIRECTORY) is
+	generate_file (a_doc: DOCUMENT; target: DIRECTORY)
 			-- Generate HTML file from `a_doc' in `target'.  Resulting file stored in `last_generated_file'
 		require
 			document_not_void: a_doc /= Void
@@ -84,7 +84,7 @@ feature -- Generation
 
 feature {NONE} -- Generation
 
-	generate_directory (a_dir, target: DIRECTORY) is
+	generate_directory (a_dir, target: DIRECTORY)
 			-- Take XML from `a_dir' and generate HTML in `target' for files in `files'
 		local
 			cnt, l_cnt: INTEGER
@@ -156,7 +156,7 @@ feature {NONE} -- Generation
 			a_dir.close
 		end
 
-	generate_from_xml (a_doc: DOCUMENT; target: DIRECTORY) is
+	generate_from_xml (a_doc: DOCUMENT; target: DIRECTORY)
 			-- Generate HTML from XML file
 		local
 			l_name, l_html: STRING
@@ -203,7 +203,7 @@ feature {NONE} -- Generation
 			retry
 		end
 
-	generate_from_html (a_doc: DOCUMENT; target: DIRECTORY) is
+	generate_from_html (a_doc: DOCUMENT; target: DIRECTORY)
 			-- Generate HTML from HTML file
 		local
 			l_filename: FILE_NAME
@@ -217,7 +217,7 @@ feature {NONE} -- Generation
 
 feature {NONE} -- Implementation
 
-	copy_images (a_doc: DOCUMENT) is
+	copy_images (a_doc: DOCUMENT)
 			-- Copy images referenced in `a_doc' so they are still visible from newly generated file.
 		local
 			l_link: DOCUMENT_LINK
@@ -249,7 +249,7 @@ feature {NONE} -- Implementation
 			end
 		end			
 
-	should_generate: BOOLEAN is
+	should_generate: BOOLEAN
 			-- Should generate files
 		local			
 --			l_question_dialog: EV_MESSAGE_DIALOG
@@ -272,7 +272,7 @@ feature {NONE} -- Implementation
 	dir_counter: INTEGER
 			-- Directory counter 
 		
-	excluded_directories: ARRAYED_LIST [STRING] is
+	excluded_directories: ARRAYED_LIST [STRING]
 			-- Directories to be excluded from generation
 		local
 			l_exclude: FILE_NAME
@@ -290,7 +290,7 @@ invariant
 	has_files: files /= Void
 	has_location: location /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

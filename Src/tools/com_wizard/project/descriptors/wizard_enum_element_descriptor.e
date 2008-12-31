@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Description of element of enumeration"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_creator: WIZARD_ENUM_ELEMENT_DESCRIPTOR_FACTORY) is
+	make (a_creator: WIZARD_ENUM_ELEMENT_DESCRIPTOR_FACTORY)
 			-- Initialize
 		require
 			valid_creator: a_creator /= Void
@@ -45,7 +45,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	set_name (a_name: STRING) is
+	set_name (a_name: STRING)
 			-- Set `name' with `a_name'.
 		require
 			valid_name: a_name /= Void and then not a_name.is_empty
@@ -55,7 +55,7 @@ feature -- Basic operations
 			valid_name: name /= Void and then not name.is_empty and name.is_equal (a_name)
 		end
 
-	set_value (a_value: INTEGER) is
+	set_value (a_value: INTEGER)
 			-- Set `value' with `a_value'.
 		do
 			value := a_value
@@ -63,7 +63,7 @@ feature -- Basic operations
 			valid_value: value = a_value
 		end
 
-	set_description (a_description: STRING) is
+	set_description (a_description: STRING)
 			-- Set `description' with `a_description'.
 		require
 			non_void_description: a_description /= Void
@@ -73,7 +73,7 @@ feature -- Basic operations
 			description_set: description = a_description
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

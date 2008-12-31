@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Lanucher that start ec executable."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -38,7 +38,7 @@ create
 
 feature {NONE} -- Creation
 
-	make is
+	make
 			-- Creation method
 		local
 			l_layout: EC_EIFFEL_LAYOUT
@@ -53,13 +53,13 @@ feature {NONE} -- Creation
 			end
 		end
 
-	do_ec_launching is
+	do_ec_launching
 			-- Do ec launching
 		do
 			post_launch_actions.extend_kamikaze (agent launch_ec)
 		end
 
-	do_exit_launcher is
+	do_exit_launcher
 			-- Do exit launcher
 		local
 			timeout: EV_TIMEOUT
@@ -70,21 +70,21 @@ feature {NONE} -- Creation
 			timeout.actions.extend_kamikaze (agent timeout.destroy)
 		end
 
-	launch_ec_with_action is
+	launch_ec_with_action
 			-- <Precursor>
 		do
 			Precursor
 			post_launch_actions.extend_kamikaze (agent send_command_to_launched_ec_and_exit)
 		end
 
-	exit_launcher is
+	exit_launcher
 			-- Exit launcher
 		do
 			Precursor
 			destroy
 		end
 
-	close_splasher (delay: INTEGER_32) is
+	close_splasher (delay: INTEGER_32)
 			-- Close splasher
 		local
 			timeout: EV_TIMEOUT
@@ -98,7 +98,7 @@ feature {NONE} -- Creation
 			end
 		end
 
-	new_splasher (t: STRING_GENERAL): SPLASH_DISPLAYER_I is
+	new_splasher (t: STRING_GENERAL): SPLASH_DISPLAYER_I
 			-- New splasher
 		local
 			l_advanced: EV_ADVANCED_SPLASH_DISPLAYER_I
@@ -111,7 +111,7 @@ feature {NONE} -- Creation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

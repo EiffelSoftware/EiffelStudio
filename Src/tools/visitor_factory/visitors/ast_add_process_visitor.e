@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Output the same class with the an added process routine."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -21,7 +21,7 @@ create
 
 feature -- Main Process
 
-	add_process_routine (a_opts: APPLICATION_OPTIONS; a_new_line: STRING) is
+	add_process_routine (a_opts: APPLICATION_OPTIONS; a_new_line: STRING)
 			-- Process `parsed_class' and add a `process' routine.
 		require
 			a_opts_not_void: a_opts /= Void
@@ -36,7 +36,7 @@ feature -- Main Process
 
 feature -- AST visiting
 
-	process_class_as (l_as: CLASS_AS) is
+	process_class_as (l_as: CLASS_AS)
 		local
 			s: STRING_AS
 		do
@@ -65,7 +65,7 @@ feature -- AST visiting
 			safe_process (l_as.end_keyword)
 		end
 
-	process_parent_as (l_as: PARENT_AS) is
+	process_parent_as (l_as: PARENT_AS)
 		local
 			l_has_redefine: BOOLEAN
 		do
@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
 
 	context: ROUNDTRIP_STRING_LIST_CONTEXT
 
-	generate_process_routine is
+	generate_process_routine
 		do
 			process_following_breaks
 			add_new_line_if_necessary
@@ -143,7 +143,7 @@ feature {NONE} -- Implementation
 			context.add_string (new_line)
 		end
 
-	process_following_breaks is
+	process_following_breaks
 			-- Process all breaks until a non-break is encountered.
 		local
 			i: INTEGER
@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 			last_index := i - 1
 		end
 
-	add_new_line_if_necessary is
+	add_new_line_if_necessary
 			-- Add a newline if previous is not an empty break line or if is not a break.
 		local
 			l_break_as: BREAK_AS
@@ -217,7 +217,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

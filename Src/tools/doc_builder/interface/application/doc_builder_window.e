@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Main application window."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -38,7 +38,7 @@ create
 
 feature {NONE} -- Initialization
 
-	user_initialization is
+	user_initialization
 			-- called by `initialize'.
 			-- Any custom user initialization that
 			-- could not be performed in `initialize',
@@ -141,7 +141,7 @@ feature {NONE} -- Initialization
 
 feature -- Commands
 
-	render_schema is
+	render_schema
 			-- Render interface according to loaded schema
 		require
 			schema_loaded: Shared_document_manager.has_schema
@@ -155,7 +155,7 @@ feature -- Commands
 
 feature -- Interface Events	
 		
-	show_hide_widget (a_widget: EV_WIDGET; show_flag: BOOLEAN) is	
+	show_hide_widget (a_widget: EV_WIDGET; show_flag: BOOLEAN)	
 			-- Show or hide widget according to `show_flag'
 		local
 			l_text: STRING
@@ -193,7 +193,7 @@ feature -- Interface Events
 			end
 		end
 		
-	toggle_view (a_item: EV_CHECK_MENU_ITEM) is
+	toggle_view (a_item: EV_CHECK_MENU_ITEM)
 			-- Toggle view
 		local
 			l_data: EV_WIDGET
@@ -202,7 +202,7 @@ feature -- Interface Events
 			show_hide_widget (l_data, a_item.is_selected)
 		end	
 
-	update_toolbar is
+	update_toolbar
 			-- Update the toolbar
 		local			
 			l_curr_doc: DOCUMENT
@@ -260,7 +260,7 @@ feature -- Interface Events
 			end					
 		end
 		
-	update_menus is
+	update_menus
 			-- Update the menus
 		local
 			l_curr_doc: DOCUMENT
@@ -310,7 +310,7 @@ feature -- Interface Events
 			end			
 		end
 		
-	update_toc_toolbar is
+	update_toc_toolbar
 			-- Update TOC toolbar
 		do
 			if shared_toc_manager.loaded_toc = Void then
@@ -338,7 +338,7 @@ feature -- Interface Events
 
 feature -- GUI Updating
 	
-	update is
+	update
 			-- Update interface
 		do
 			update_toolbar
@@ -347,7 +347,7 @@ feature -- GUI Updating
 			update_status_report (False, "")
 		end		
 	
-	update_sub_element_list (a_el_name: STRING; list: SORTED_TWO_WAY_LIST [STRING]) is
+	update_sub_element_list (a_el_name: STRING; list: SORTED_TWO_WAY_LIST [STRING])
 			-- Update the sub-element list display
 		require
 			name_not_void: a_el_name /= Void
@@ -374,7 +374,7 @@ feature -- GUI Updating
 			end			
 		end
 	
-	update_status_report (is_error: BOOLEAN; message: STRING) is
+	update_status_report (is_error: BOOLEAN; message: STRING)
 			-- Update status bar `report_label' with new `message'
 		require
 			message_not_void: message /= Void
@@ -390,7 +390,7 @@ feature -- GUI Updating
 			end
 		end				
 
-	update_output_filter is
+	update_output_filter
 			-- Update the output filter type
 		local
 			l_filter: OUTPUT_FILTER
@@ -404,7 +404,7 @@ feature -- GUI Updating
 			end
 		end	
 
-	update_output_combo is
+	update_output_combo
 			-- Update the output combo box
 		local
 			l_filters: HASH_TABLE [DOCUMENT_FILTER, STRING]
@@ -426,7 +426,7 @@ feature -- GUI Updating
 			update_output_filter
 		end
 
-	on_text_edited (directly_edited: BOOLEAN) is
+	on_text_edited (directly_edited: BOOLEAN)
 			-- Update `Current' when some text has been modified
 			-- if `directly_edited', the user has modified the text in the editor,
 			-- not via another tool or wizard
@@ -437,7 +437,7 @@ feature -- GUI Updating
 		end
 
 	on_text_fully_loaded,
-	on_cursor_moved is
+	on_cursor_moved
 			-- Update `Current' when the text has been completely loaded.
 			-- Observer must be registered as "edition_observer" for this feature to be called.
 		do		
@@ -450,7 +450,7 @@ feature -- GUI Updating
 			cursor_line_pos.set_text ("Byte: " + shared_document_manager.current_editor.text_displayed.cursor.pos_in_characters.out)	
 		end
 		
-	on_selection_finished is
+	on_selection_finished
 			-- Update `Current' when the text has been completely loaded.
 			-- Observer must be registered as "edition_observer" for this feature to be called.
 		do
@@ -460,7 +460,7 @@ feature -- GUI Updating
 		
 feature -- Status Setting
 
-	set_toc_widget (a_toc: TABLE_OF_CONTENTS_WIDGET) is
+	set_toc_widget (a_toc: TABLE_OF_CONTENTS_WIDGET)
 			-- Set the TOC widget
 		require
 			toc_not_void: a_toc /= Void
@@ -476,7 +476,7 @@ feature -- Status Setting
 			toc_status_report_label.set_text (a_toc.toc.name)
 		end
 
-	set_toc_node_widget (a_widget: EV_WIDGET) is
+	set_toc_node_widget (a_widget: EV_WIDGET)
 			-- Set widget for TOC node properties information
 		require
 			widget_not_void: a_widget /= Void
@@ -487,7 +487,7 @@ feature -- Status Setting
 
 feature {NONE} -- Implementation
 		
-	toggle_sensitivity (sensitive_item: EV_SENSITIVE; on: BOOLEAN)	is
+	toggle_sensitivity (sensitive_item: EV_SENSITIVE; on: BOOLEAN)
 			-- Toggle `sensitive_item' to `on'
 		require
 			item_valid: sensitive_item /= Void
@@ -503,7 +503,7 @@ feature {NONE} -- Implementation
 			end
 		end
 	
-	show_loaded_tocs is
+	show_loaded_tocs
 			-- Show a menu of all loaded tocs
 		local
 			l_menu: EV_MENU
@@ -532,7 +532,7 @@ feature {NONE} -- Implementation
 			l_menu.show_at (toc_list_button, 0, 0)
 		end	
 		
-	connect_item_actions (a_item: EV_TREE_NODE) is
+	connect_item_actions (a_item: EV_TREE_NODE)
 			-- 
 		local
 			element: DOCUMENT_SCHEMA_ELEMENT
@@ -552,7 +552,7 @@ feature {NONE} -- Implementation
 
 feature -- Accelerators
 
-	add_tag_accelerator (a_accelerator: EV_ACCELERATOR; a_tag_text: STRING) is
+	add_tag_accelerator (a_accelerator: EV_ACCELERATOR; a_tag_text: STRING)
 			-- Add an accelerator to Current
 		require
 			accelerator_not_void: a_accelerator /= Void
@@ -577,7 +577,7 @@ feature -- Accelerators
 
 	feature -- Shortcuts
 
-		tag_accelerators: HASH_TABLE [STRING, INTEGER] is
+		tag_accelerators: HASH_TABLE [STRING, INTEGER]
 				-- List of keyboard keys which are acceptable for tag accelerators
 				-- hashed by key code
 			local
@@ -618,49 +618,49 @@ feature -- Accelerators
 		
 feature {NONE} -- Dialog
 
-	open_template_dialog is
+	open_template_dialog
 			-- Template dialog for new projects
 		do
 			Shared_dialogs.template_dialog.show_modal_to_window (Current)
 		end
 		
-	open_settings_dialog is
+	open_settings_dialog
 			-- Template dialog for new projects
 		do
 			Shared_dialogs.preferences_dialog.show_modal_to_window (Current)
 		end
 		
-	open_generation_dialog is
+	open_generation_dialog
 			-- Template dialog for new projects
 		do
 			Shared_dialogs.generation_dialog.show_modal_to_window (Current)
 		end
 
-	open_expression_dialog is
+	open_expression_dialog
 			-- Regular Expression dialog for document text parsing
 		do
 			Shared_dialogs.expression_dialog.show_modal_to_window (Current)
 		end
 		
-	open_preferences_window is
+	open_preferences_window
 			-- Regular Expression dialog for document text parsing
 		do
 			Shared_preferences.show_preferences_window (Current)
 		end
 
-	open_character_dialog is
+	open_character_dialog
 			-- Special character dialog for XML and HTML
 		do
 			Shared_dialogs.character_dialog.show_relative_to_window (Current)
 		end
 
-	open_shortcuts_dialog is
+	open_shortcuts_dialog
 			-- Shortcut dialog
 		do
 			Shared_dialogs.shortcut_dialog.show_relative_to_window (Current)
 		end
 
-	open_document_properties_dialog is
+	open_document_properties_dialog
 			-- Properties dialog for currently loaded document
 		local
 			l_doc: DOCUMENT
@@ -675,31 +675,31 @@ feature {NONE} -- Dialog
 			end					
 		end
 		
-	open_validator_tool is
+	open_validator_tool
 			-- Properties dialog for currently loaded document
 		do
 			Shared_dialogs.validator_tool.show_modal_to_window (Current)
 		end
 
-	open_new_toc_dialog is
+	open_new_toc_dialog
 			-- Open dialog for new TOC creation
 		do
 			Shared_dialogs.new_toc_dialog.show_modal_to_window (Current)
 		end
 
-	open_toc_properties_dialog is
+	open_toc_properties_dialog
 			-- Open dialog for TOC properties
 		do
 			Shared_dialogs.toc_dialog.show_modal_to_window (Current)
 		end
 
-	open_toc_merge_dialog is
+	open_toc_merge_dialog
 			-- Open dialog for TOC merging
 		do
 			Shared_dialogs.toc_merge_dialog.show_modal_to_window (Current)
 		end
 
-	display_help is
+	display_help
 			-- Display help
 		do
 			shared_help_manager.show_help
@@ -709,7 +709,7 @@ feature {NONE} -- Dialog
 			end	
 		end		
 		
-	display_about is
+	display_about
 			-- Display about
 		local
 			l_about: ABOUT_DIALOG
@@ -718,7 +718,7 @@ feature {NONE} -- Dialog
 			l_about.show_modal_to_window (Current)
 		end		
 
-	close_application is
+	close_application
 			-- Close application
 		local
 			l_env: EV_ENVIRONMENT
@@ -730,7 +730,7 @@ feature {NONE} -- Dialog
 			l_env.application.destroy
 		end		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

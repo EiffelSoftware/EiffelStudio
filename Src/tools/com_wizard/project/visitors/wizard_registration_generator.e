@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Registration code generator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -33,42 +33,42 @@ inherit
 
 feature -- Access
 
-	generate is
+	generate
 			-- Generated Eiffel registration code.
 		deferred
 		end
 
-	ccom_dll_register_server: STRING is "ccom_dll_register_server"
+	ccom_dll_register_server: STRING = "ccom_dll_register_server"
 			-- Used for code generation.
 
-	ccom_dll_unregister_server: STRING is "ccom_dll_unregister_server"
+	ccom_dll_unregister_server: STRING = "ccom_dll_unregister_server"
 			-- Used for code generation.
 
-	ccom_dll_get_class_object: STRING is "ccom_dll_get_class_object"
+	ccom_dll_get_class_object: STRING = "ccom_dll_get_class_object"
 			-- Used for code generation.
 
-	ccom_dll_can_unload_now: STRING is "ccom_dll_can_unload_now"
+	ccom_dll_can_unload_now: STRING = "ccom_dll_can_unload_now"
 			-- Used for code generation.
 
-	Ccom_initialize_com: STRING is "ccom_initialize_com"
+	Ccom_initialize_com: STRING = "ccom_initialize_com"
 			-- Used for code generation.
 
-	Ccom_cleanup_com: STRING is "ccom_cleanup_com"
+	Ccom_cleanup_com: STRING = "ccom_cleanup_com"
 			-- Used for code generation.
 
-	Ccom_register_server: STRING is "ccom_register_server"
+	Ccom_register_server: STRING = "ccom_register_server"
 			-- Used for code generation.
 
-	Ccom_unregister_server: STRING is "ccom_unregister_server"
+	Ccom_unregister_server: STRING = "ccom_unregister_server"
 			-- Used for code generation.
 
 feature -- Basic operations
 
-	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY) is
+	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY)
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

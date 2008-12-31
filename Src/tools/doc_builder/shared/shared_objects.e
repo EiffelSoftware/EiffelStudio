@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shared Objects"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Once objects
 
-	Application_window: DOC_BUILDER_WINDOW is
+	Application_window: DOC_BUILDER_WINDOW
 			-- Root application window
 		once
 			if window_cell /= Void then
@@ -18,61 +18,61 @@ feature -- Once objects
 			end
 		end
 
-	Shared_error_reporter: ERROR_REPORT is
+	Shared_error_reporter: ERROR_REPORT
 			-- Shared reporter for various types of errors
 		once
 			create Result
 		end		
 
-	Shared_project: DOCUMENT_PROJECT is
+	Shared_project: DOCUMENT_PROJECT
 			-- Document Project
 		once
 			create Result
 		end
 
-	Shared_document_editor_commands: DOCUMENT_EDITOR_COMMANDS is
+	Shared_document_editor_commands: DOCUMENT_EDITOR_COMMANDS
 			-- Document Editor
 		once
 			create Result
 		end
 
-	Shared_search_control: SEARCH_CONTROL is
+	Shared_search_control: SEARCH_CONTROL
 			-- Editor search control
 		once
 			create Result.make
 		end
 
-	Shared_document_manager: DOCUMENT_MANAGER is
+	Shared_document_manager: DOCUMENT_MANAGER
 			-- Document Manager
 		once
 			create Result.make
 		end
 		
-	Shared_help_manager: HELP_MANAGER is
+	Shared_help_manager: HELP_MANAGER
 			-- Help Manager
 		once
 			create Result	
 		end		
 		
-	Shared_toc_manager: TABLE_OF_CONTENTS_MANAGER is
+	Shared_toc_manager: TABLE_OF_CONTENTS_MANAGER
 			-- Table of Content manage
 		once
 			create Result.make
 		end		
 		
-	Shared_web_browser: WEB_BROWSER_WIDGET is
+	Shared_web_browser: WEB_BROWSER_WIDGET
 			-- Object used for web browsing and XSLT output display
 		once
 			create Result.make
 		end		
 
-	Generation_data: GENERATION_INFORMATION is
+	Generation_data: GENERATION_INFORMATION
 			-- Generation data
 		once
 			create Result
 		end
 		
-	progress_generator: GENERATOR is
+	progress_generator: GENERATOR
 			-- Generator
 		once
 			create Result
@@ -82,19 +82,19 @@ feature -- Once objects
 
 feature -- Shared
 	
-	Shared_dialogs: SHARED_DIALOGS is
+	Shared_dialogs: SHARED_DIALOGS
 			-- System dialogs
 		once
 			create Result
 		end
 		
-	Shared_constants: SHARED_CONSTANTS is
+	Shared_constants: SHARED_CONSTANTS
 			-- Shared constants
 		once 
 			create Result
 		end
 
-	Shared_preferences: SHARED_PREFERENCES is
+	Shared_preferences: SHARED_PREFERENCES
 			-- System dialogs
 		once
 			create Result
@@ -102,7 +102,7 @@ feature -- Shared
 
 feature {NONE} -- Status Setting
 
-	set_root_window (window: DOC_BUILDER_WINDOW) is
+	set_root_window (window: DOC_BUILDER_WINDOW)
 			-- The main application window
 		do
 			window_cell.put (window)
@@ -110,13 +110,13 @@ feature {NONE} -- Status Setting
 			window_cell_set: window_cell.item = window
 		end
 		
-	window_cell: CELL [DOC_BUILDER_WINDOW] is
+	window_cell: CELL [DOC_BUILDER_WINDOW]
 			-- Window Container
 		once
 			create Result.put (Void)
 		end		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

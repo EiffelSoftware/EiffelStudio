@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Table of contents converter."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 	
 feature -- Creation
 
-	make (a_toc: TABLE_OF_CONTENTS) is	
+	make (a_toc: TABLE_OF_CONTENTS)	
 			-- Create
 		require
 			toc_not_void: a_toc /= Void
@@ -28,14 +28,14 @@ feature -- Access
 	toc: TABLE_OF_CONTENTS
 			-- Toc to convert
 			
-	text: STRING is
+	text: STRING
 			-- Text
 		deferred
 		end
 		
 feature -- Processing
 
-	processed_text: STRING is
+	processed_text: STRING
 			-- Text after processing `toc'
 		do
 			if toc.has_child then
@@ -51,7 +51,7 @@ feature -- Processing
 			end			
 		end
 
-	node_text (a_node: TABLE_OF_CONTENTS_NODE):STRING is
+	node_text (a_node: TABLE_OF_CONTENTS_NODE):STRING
 			-- Text for `a_node'
 		require
 			node_not_void: a_node /= Void
@@ -61,7 +61,7 @@ feature -- Processing
 invariant
 	has_toc: toc /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

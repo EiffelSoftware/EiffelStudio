@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A generator for creating Eiffel classes from a matrix INI file.
 	]"
@@ -29,7 +29,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Basic Operations
 
-	reset is
+	reset
 			-- Resets generator
 		do
 			Precursor {MATRIX_FILE_GENERATOR}
@@ -42,7 +42,7 @@ feature {NONE} -- Basic Operations
 
 feature -- Basic Operations
 
-	generate (a_doc: INI_DOCUMENT; a_output: STRING; a_matrix: EV_PIXMAP) is
+	generate (a_doc: INI_DOCUMENT; a_output: STRING; a_matrix: EV_PIXMAP)
 			-- Generates a matrix file.
 		require
 			a_output_attached: a_output /= Void
@@ -57,7 +57,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Icon generation
 
-	generate_icon (a_name: STRING; a_prefix: STRING; a_location: STRING; a_x, a_y, a_pw, a_ph: NATURAL; a_matrix: EV_PIXMAP) is
+	generate_icon (a_name: STRING; a_prefix: STRING; a_location: STRING; a_x, a_y, a_pw, a_ph: NATURAL; a_matrix: EV_PIXMAP)
 			-- Generates a single icon tile in `a_matrix'
 		require
 			a_name_attached: a_name /= Void
@@ -93,7 +93,7 @@ feature {NONE} -- Icon generation
 
 feature {NONE} -- Processing
 
-	process_literal_item (a_item: INI_LITERAL; a_x: NATURAL_32; a_y: NATURAL_32) is
+	process_literal_item (a_item: INI_LITERAL; a_x: NATURAL_32; a_y: NATURAL_32)
 			-- Processes a literal from an INI matrix file.
 		do
 			generate_icon (a_item.name, icon_prefix (a_item), png_location, a_x, a_y, pixel_width, pixel_height, matrix)
@@ -101,7 +101,7 @@ feature {NONE} -- Processing
 
 feature {NONE} -- Implementation
 
-	pixel_rectangle (a_x, a_y, a_pw, a_ph: NATURAL): EV_RECTANGLE is
+	pixel_rectangle (a_x, a_y, a_pw, a_ph: NATURAL): EV_RECTANGLE
 			-- Retrieves a pixmap from matrix coordinates `a_x', `a_y'	
 		require
 			a_x_positive: a_x > 0
@@ -124,13 +124,13 @@ feature {NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	rectangle: EV_RECTANGLE is
+	rectangle: EV_RECTANGLE
 			-- Reusable rectangle for `pixmap_from_constant'.
 		once
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

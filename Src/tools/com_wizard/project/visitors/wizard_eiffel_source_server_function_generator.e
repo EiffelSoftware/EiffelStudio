@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Source interface function generator for Eiffel server."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -26,7 +26,7 @@ create
 
 feature -- Initialization
 
-	generate (a_function: WIZARD_FUNCTION_DESCRIPTOR; a_coclass: WIZARD_COCLASS_DESCRIPTOR; table_name: STRING) is
+	generate (a_function: WIZARD_FUNCTION_DESCRIPTOR; a_coclass: WIZARD_COCLASS_DESCRIPTOR; table_name: STRING)
 			-- Initialize
 		require
 			non_void_function: a_function /= Void
@@ -74,7 +74,7 @@ feature -- Initialization
 
 feature -- Basic operations
 
-	body (a_function: WIZARD_FUNCTION_DESCRIPTOR; table_name: STRING): STRING is
+	body (a_function: WIZARD_FUNCTION_DESCRIPTOR; table_name: STRING): STRING
 			-- Function body.
 		require
 			non_void_function: a_function /= Void
@@ -100,7 +100,7 @@ feature -- Basic operations
 			valid_body: not Result.is_empty
 		end
 
-	function_call (a_function: WIZARD_FUNCTION_DESCRIPTOR): STRING is
+	function_call (a_function: WIZARD_FUNCTION_DESCRIPTOR): STRING
 			-- Call to interface function.
 		require
 			non_void_function: a_function /= Void
@@ -138,7 +138,7 @@ feature -- Basic operations
 			valid_call: not Result.is_empty
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

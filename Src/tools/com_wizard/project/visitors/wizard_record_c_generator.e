@@ -1,4 +1,4 @@
-indexing
+note
 	description: "C record generator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ feature -- Access
 	c_writer_impl: WIZARD_WRITER_C_FILE
 			-- Writer of C file.
 
-	generate (a_descriptor: WIZARD_RECORD_DESCRIPTOR) is
+	generate (a_descriptor: WIZARD_RECORD_DESCRIPTOR)
 			-- Generate c client for record.
 		local
 			l_struct_def, l_header, l_file_name: STRING
@@ -106,7 +106,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	add_pointed_structure_include (a_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR) is
+	add_pointed_structure_include (a_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR)
 			-- Add include file for pointed structure.
 		require
 			non_void_descriptor: a_descriptor /= Void
@@ -133,7 +133,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	forward_definition (a_descriptor: WIZARD_RECORD_DESCRIPTOR): STRING is
+	forward_definition (a_descriptor: WIZARD_RECORD_DESCRIPTOR): STRING
 			-- Forward definition.
 		require
 			non_void_descriptor: a_descriptor /= Void
@@ -182,7 +182,7 @@ feature {NONE} -- Implementation
 		end
 
 	access_macro (a_record_descriptor: WIZARD_RECORD_DESCRIPTOR;
-				a_field_descriptor: WIZARD_RECORD_FIELD_DESCRIPTOR): STRING is
+				a_field_descriptor: WIZARD_RECORD_FIELD_DESCRIPTOR): STRING
 			-- Access macro
 		require
 			non_void_record_descriptor: a_record_descriptor /= Void
@@ -254,7 +254,7 @@ feature {NONE} -- Implementation
 		end
 
 	set_macro (a_record_descriptor: WIZARD_RECORD_DESCRIPTOR;
-				a_field_descriptor: WIZARD_RECORD_FIELD_DESCRIPTOR): STRING is
+				a_field_descriptor: WIZARD_RECORD_FIELD_DESCRIPTOR): STRING
 			-- Set macro
 		require
 			non_void_record_descriptor: a_record_descriptor /= Void
@@ -384,7 +384,7 @@ feature {NONE} -- Implementation
 			valid_set_macro: not Result.is_empty
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

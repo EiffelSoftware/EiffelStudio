@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -52,25 +52,25 @@ feature -- Access
 
 feature -- Basic Operations
 
-	set_makefile_generated (a_boolean: BOOLEAN) is
+	set_makefile_generated (a_boolean: BOOLEAN)
 			-- Set `makefile_generated'.
 		do
 			makefile_generated := a_boolean
 		end
 
-	set_ace_file_generated (a_boolean: BOOLEAN) is
+	set_ace_file_generated (a_boolean: BOOLEAN)
 			-- Set `ace_file_generated'.
 		do
 			ace_file_generated := a_boolean
 		end
 
-	set_resource_file_generated (a_boolean: BOOLEAN) is
+	set_resource_file_generated (a_boolean: BOOLEAN)
 			-- Set `resource_file_generated'.
 		do
 			resource_file_generated := a_boolean
 		end
 
-	compile_idl is
+	compile_idl
 			-- Compile idl file pointed by `idl_file_name'.
 			-- Set `environment.type_library_file_name' with
 			-- resulting type library file name.
@@ -103,7 +103,7 @@ feature -- Basic Operations
 			end
 		end
 
-	compile_iid is
+	compile_iid
 			-- Compile iid C file.
 		do
 			if (create {RAW_FILE}.make (Generated_iid_file_name)).exists then
@@ -111,7 +111,7 @@ feature -- Basic Operations
 			end
 		end
 
-	compile_ps is
+	compile_ps
 			-- Compile proxy/stub C file.
 		do
 			if (create {RAW_FILE}.make (Generated_ps_file_name)).exists then
@@ -119,7 +119,7 @@ feature -- Basic Operations
 			end
 		end
 
-	compile_data is
+	compile_data
 			-- Compile dlldata C file.
 		do
 			if (create {RAW_FILE}.make (Generated_dlldata_file_name)).exists then
@@ -127,7 +127,7 @@ feature -- Basic Operations
 			end
 		end
 
-	link is
+	link
 			-- Create proxy/stub dll.
 		local
 			l_string: STRING
@@ -154,7 +154,7 @@ feature -- Basic Operations
 			end
 		end
 
-	component_empty (a_folder: STRING): BOOLEAN is
+	component_empty (a_folder: STRING): BOOLEAN
 			-- Check whether Component directory is is_empty.
 		require
 			non_void_folder: a_folder /= Void
@@ -172,7 +172,7 @@ feature -- Basic Operations
 			end
 		end
 
-	compile_eiffel (a_folder: STRING) is
+	compile_eiffel (a_folder: STRING)
 			-- Compile Eiffel code in `a_folder'.
 		require
 			non_void_folder: a_folder /= Void
@@ -197,7 +197,7 @@ feature -- Basic Operations
 			environment.remove_abort_request_action
 		end
 
-	check_finish_freezing_status (a_folder: STRING) is
+	check_finish_freezing_status (a_folder: STRING)
 			-- Check whether finish_freezing was successful.
 		require
 			non_void_folder: a_folder /= Void
@@ -239,7 +239,7 @@ feature -- Basic Operations
 			end
 		end
 
-	register_ps is
+	register_ps
 			-- Register generated proxy stub.
 		local
 			l_string: STRING
@@ -254,7 +254,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	proxy_stub_file_name: STRING is
+	proxy_stub_file_name: STRING
 			-- Proxy/Stub fil name
 		once
 			Result := environment.destination_folder.twin
@@ -262,7 +262,7 @@ feature {NONE} -- Implementation
 			Result.append ("_ps.dll")
 		end
 
-	generate_def_file is
+	generate_def_file
 			-- Generate standard COM def file in current folder.
 		local
 			l_file: PLAIN_TEXT_FILE
@@ -281,7 +281,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	Idl_compiler_command_line: STRING is
+	Idl_compiler_command_line: STRING
 			-- MIDL command line
 		local
 			l_dest: STRING
@@ -307,7 +307,7 @@ feature {NONE} -- Implementation
 			Result.append ("%"")
 		end
 
-	Linker_command_line: STRING is
+	Linker_command_line: STRING
 			-- Link command line
 		local
 			l_string: STRING
@@ -348,7 +348,7 @@ feature {NONE} -- Implementation
 			Result.append (Rpc_library)
 		end
 
-	precompile_command: STRING is
+	precompile_command: STRING
 			-- Eiffel compiler command line to precompile
 		do
 			create Result.make (100)
@@ -357,7 +357,7 @@ feature {NONE} -- Implementation
 			Result.append (environment.ecf_file_name)
 		end
 
-	eiffel_compile_command: STRING is
+	eiffel_compile_command: STRING
 			-- Eiffel compiler command line to freeze
 		do
 			create Result.make (100)
@@ -367,42 +367,42 @@ feature {NONE} -- Implementation
 			Result.append ("%"")
 		end
 
-	user_def_file_name: STRING is
+	user_def_file_name: STRING
 			-- ".def" file name used for DLL compilation
 		do
 			Result := environment.project_name.twin
 			Result.append (Def_file_extension)
 		end
 
-	Def_file_extension: STRING is ".def"
+	Def_file_extension: STRING = ".def"
 			-- DLL definition file extension
 
-	Executable_extension: STRING is ".exe"
+	Executable_extension: STRING = ".exe"
 			-- Executable file extension
 
-	Eiffel_project_extension: STRING is ".epr"
+	Eiffel_project_extension: STRING = ".epr"
 			-- Eiffel project extension
 
-	Precompile_name: STRING is "precomp.epr"
+	Precompile_name: STRING = "precomp.epr"
 			-- Precompilation project name
 
-	Finish_freezing_command: STRING is
+	Finish_freezing_command: STRING
 			-- Finish freezing command line
 		do
 			create Result.make (100)
 			Result.append (eiffel_layout.Freeze_command_name+" -silent")
 		end
 
-	Eifgen: STRING is "EIFGENs"
+	Eifgen: STRING = "EIFGENs"
 			-- Eifgen folder name
 
-	W_code: STRING is "W_code"
+	W_code: STRING = "W_code"
 			-- W_code folder name
 
-	Driver_executable: STRING is "driver.exe"
+	Driver_executable: STRING = "driver.exe"
 			-- Precompilation driver executable
 
-	Shared_library_option: STRING is
+	Shared_library_option: STRING
 			-- Dll definition file for Ace file
 		do
 			Result := "default%N%Tshared_library_definition (%""
@@ -410,16 +410,16 @@ feature {NONE} -- Implementation
 			Result.append ("%")")
 		end
 
-	Stdcall: STRING is "__stdcall"
+	Stdcall: STRING = "__stdcall"
 			-- Dll function calling convention
 
-	Call_type: STRING is "call_type"
+	Call_type: STRING = "call_type"
 			-- DLL Defintion type call_type option
 
-	Visible: STRING is "visible";
+	Visible: STRING = "visible";
 			-- Lace `visible' keyword
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

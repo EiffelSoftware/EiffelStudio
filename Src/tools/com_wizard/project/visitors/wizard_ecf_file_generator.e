@@ -1,4 +1,4 @@
-indexing
+note
 	description: "ECF configuration file generator."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -30,7 +30,7 @@ inherit
 
 feature -- Basic Operations
 
-	generate (a_dummy: STRING) is
+	generate (a_dummy: STRING)
 			-- Generate configuration file.
 		local
 			a_text: STRING
@@ -40,7 +40,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	generate_configuration is
+	generate_configuration
 			-- Generate a configuration file according to the current environment.
 		local
 			l_name: STRING
@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 			l_system.store
 		end
 
-	add_visible (a_visible: CONF_VISIBLE; a_classes: LIST [WIZARD_WRITER_VISIBLE_CLAUSE]) is
+	add_visible (a_visible: CONF_VISIBLE; a_classes: LIST [WIZARD_WRITER_VISIBLE_CLAUSE])
 			-- Add `a_classes' to the list of visible classes in `a_visible'.
 		require
 			a_visible_not_void: a_visible /= Void
@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_libs (a_target: CONF_TARGET; a_folder: STRING; a_multi_threaded: BOOLEAN) is
+	add_libs (a_target: CONF_TARGET; a_folder: STRING; a_multi_threaded: BOOLEAN)
 			-- Add libraries of `a_folder' to `a_target'.
 		require
 			a_target_not_void: a_target /= Void
@@ -220,7 +220,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	new_system (a_name: STRING): CONF_SYSTEM is
+	new_system (a_name: STRING): CONF_SYSTEM
 			-- Create a new configuration system with `a_name'.
 			-- If we are building from an eiffel interface, use the old project as source.
 		local
@@ -241,7 +241,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	user_def_file_name: STRING is
+	user_def_file_name: STRING
 			-- ".def" file name used for DLL compilation
 		do
 			create Result.make (100)
@@ -249,7 +249,7 @@ feature {NONE} -- Implementation
 			Result.append (Def_file_extension)
 		end
 
-	is_empty_clib_folder (a_folder: STRING): BOOLEAN is
+	is_empty_clib_folder (a_folder: STRING): BOOLEAN
 			-- Is folder `a_folder' is_empty?
 		local
 			l_directory: DIRECTORY
@@ -261,7 +261,7 @@ feature {NONE} -- Implementation
 			Result := l_directory.is_empty
 		end
 
-	quote_path (a_path: STRING): STRING is
+	quote_path (a_path: STRING): STRING
 			-- Added quotations marks around path `a_path' and returns the new result
 		require
 			a_path_attached: a_path /= Void
@@ -278,12 +278,12 @@ feature {NONE} -- Implementation
 			result_ends_with_quote: Result.item (Result.count) = '%"'
 		end
 
-	Def_file_extension: STRING is ".def"
+	Def_file_extension: STRING = ".def"
 			-- DLL definition file extension
 
 feature {NONE} -- Onces
 
-	conf_factory: CONF_PARSE_FACTORY is
+	conf_factory: CONF_PARSE_FACTORY
 			-- Configuration factory.
 		once
 			create Result
@@ -291,7 +291,7 @@ feature {NONE} -- Onces
 			result_not_void: Result /= Void
 		end
 
-	conf_constants: CONF_CONSTANTS is
+	conf_constants: CONF_CONSTANTS
 			-- Configuration constants.
 		once
 			create Result
@@ -299,7 +299,7 @@ feature {NONE} -- Onces
 			result_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants for Table of Contents."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,24 +10,24 @@ class
 
 feature -- HTML Help 1.x
 
-	html_help_header: STRING is "<HTML>%N<HEAD>%N</HEAD><BODY>%N"
+	html_help_header: STRING = "<HTML>%N<HEAD>%N</HEAD><BODY>%N"
 
-	html_help_footer: STRING is "</UL></BODY></HTML>"
+	html_help_footer: STRING = "</UL></BODY></HTML>"
 	
-	icon_type_text: STRING is "<OBJECT type=%"text/site properties%"><param name=%"Window Styles%" value=%"0x800025%"></OBJECT>"
+	icon_type_text: STRING = "<OBJECT type=%"text/site properties%"><param name=%"Window Styles%" value=%"0x800025%"></OBJECT>"
 			-- Uses folders instead of books
 	
 feature -- File	
 	
-	default_url: STRING is "index.xml"
+	default_url: STRING = "index.xml"
 			-- Url identifier to be used for folder nodes (i.e "index.xml"), if any
 			
-	xml_extension: STRING is "xml"
+	xml_extension: STRING = "xml"
 			-- XML extension
 			
 feature -- Pixmaps
 
-	folder_closed_icon: EV_PIXMAP is
+	folder_closed_icon: EV_PIXMAP
 			-- Icon for Closing
 		local
 			l_file: FILE_NAME
@@ -38,7 +38,7 @@ feature -- Pixmaps
 			Result.set_with_named_file (l_file.string)
 		end
 		
-	folder_open_icon: EV_PIXMAP is
+	folder_open_icon: EV_PIXMAP
 			-- Icon for Opening
 		local
 			l_file: FILE_NAME
@@ -49,7 +49,7 @@ feature -- Pixmaps
 			Result.set_with_named_file (l_file.string)
 		end
 		
-	file_icon: EV_PIXMAP is
+	file_icon: EV_PIXMAP
 			-- File icon
 		local
 			l_file: FILE_NAME
@@ -62,37 +62,37 @@ feature -- Pixmaps
 			
 feature -- XML tags			
 			
-	id_string: STRING is "id"
+	id_string: STRING = "id"
 			
-	title_string: STRING is "title"
+	title_string: STRING = "title"
 	
-	url_string: STRING is "url"
+	url_string: STRING = "url"
 	
-	icon_string: STRING is "icon"
+	icon_string: STRING = "icon"
 	
-	topic_string: STRING is "topic"
+	topic_string: STRING = "topic"
 	
-	heading_string: STRING is "heading"
+	heading_string: STRING = "heading"
 	
-	root_string: STRING is "table_of_contents"
+	root_string: STRING = "table_of_contents"
 
 feature -- Id generation
 
-	unique_id: TUPLE [INTEGER] is
+	unique_id: TUPLE [INTEGER]
 			-- Unique node id, starts at 1
 		once
 			create Result
 			Result.put_integer (1, 1)
 		end
 
-	next_id: INTEGER is
+	next_id: INTEGER
 			-- Next unique id
 		do
 			Result := unique_id.integer_item (1) + 1
 			set_unique_id (Result)
 		end
 		
-	set_unique_id (a_id: INTEGER) is
+	set_unique_id (a_id: INTEGER)
 			-- Set the unique id
 		do
 			unique_id.put_integer (a_id, 1)
@@ -100,13 +100,13 @@ feature -- Id generation
 		
 feature {NONE} -- Implementation		
 		
-	Constants: APPLICATION_CONSTANTS is
+	Constants: APPLICATION_CONSTANTS
 			-- Constants
 		once
 			create Result
 		end		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

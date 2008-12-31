@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Component"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -24,7 +24,7 @@ feature -- Access
 
 feature -- Element Change
 
-	set_c_declaration_header_file_name (a_name: STRING) is
+	set_c_declaration_header_file_name (a_name: STRING)
 			-- Set `c_declaration_header_file_name' with `a_name'.
 		require
 			non_void_name: a_name /= Void
@@ -34,7 +34,7 @@ feature -- Element Change
 			c_declaration_header_file_name_set: c_declaration_header_file_name = a_name
 		end
 		
-	set_type_library (a_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR) is
+	set_type_library (a_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR)
 			-- Set `type_library_descriptor' with `a_descriptor'.
 		require
 			non_void_descriptor: a_descriptor /= Void
@@ -44,7 +44,7 @@ feature -- Element Change
 			valid_type_library: type_library_descriptor = a_descriptor
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

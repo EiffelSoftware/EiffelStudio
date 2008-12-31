@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Convert path string formats to DOS 8.3 length filename conventions."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,11 +13,11 @@ feature -- Access
 	eiffel_dir: STRING
 			-- EIFFEL installation environment variable
 
-	Max_path_length: INTEGER is 1024
+	Max_path_length: INTEGER = 1024
 			-- Maximum path length (in characters)
 			--| Windows limit.
 
-	short_path (long_path: STRING): STRING is
+	short_path (long_path: STRING): STRING
 			-- Short path name corresponding to `long_path'.
 		require
 			non_void_long_path: long_path /= Void
@@ -41,7 +41,7 @@ feature -- Access
 
 feature {NONE} -- Externals
 
-	convert_path (a1, a2: POINTER; sz: INTEGER): INTEGER is
+	convert_path (a1, a2: POINTER; sz: INTEGER): INTEGER
 			-- Convert a long path name to a short path name.
 		external
 			"C signature (LPCTSTR, LPTSTR, DWORD): DWORD use <windows.h>"
@@ -49,7 +49,7 @@ feature {NONE} -- Externals
 			"GetShortPathName"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

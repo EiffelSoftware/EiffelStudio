@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Record generator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature {NONE} -- Implementation
 
-	impl_header_file_name (a_header_file_name: STRING): STRING is
+	impl_header_file_name (a_header_file_name: STRING): STRING
 			-- Name of implementation header file.
 		require
 			non_void_header_file_name: a_header_file_name /= Void
@@ -30,7 +30,7 @@ feature {NONE} -- Implementation
 		end
 
 	macro_accesser_name (record_name: STRING; 
-				field_descriptor: WIZARD_RECORD_FIELD_DESCRIPTOR): STRING is
+				field_descriptor: WIZARD_RECORD_FIELD_DESCRIPTOR): STRING
 			-- Name of accesser function.
 		require
 			non_void_record_name: record_name /= Void
@@ -52,7 +52,7 @@ feature {NONE} -- Implementation
 		end
 
 	macro_setter_name (record_name: STRING; 
-				field_descriptor: WIZARD_RECORD_FIELD_DESCRIPTOR): STRING is
+				field_descriptor: WIZARD_RECORD_FIELD_DESCRIPTOR): STRING
 			-- Name of setter function.
 		require
 			non_void_record_name: record_name /= Void
@@ -73,7 +73,7 @@ feature {NONE} -- Implementation
 			valid_accesser_name: not Result.is_empty
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

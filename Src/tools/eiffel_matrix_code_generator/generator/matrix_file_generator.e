@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A base matrix configuration INI file processor.
 	]"
@@ -23,7 +23,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize `Current'.
 		do
 			make_error_manager
@@ -124,7 +124,7 @@ feature {NONE} -- Query
 		
 feature -- Basic Operations
 
-	process (a_doc: INI_DOCUMENT; a_post_validate: PROCEDURE [ANY, TUPLE]; a_post_process: PROCEDURE [ANY, TUPLE]) is
+	process (a_doc: INI_DOCUMENT; a_post_validate: PROCEDURE [ANY, TUPLE]; a_post_process: PROCEDURE [ANY, TUPLE])
 			-- Processes INI document `a_doc' and executes `a_post_validate' to do other initalization once the basics have been validated
 			-- and `a_post_validate' on post processing
 		require
@@ -155,7 +155,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Basic Operations
 
-	reset is
+	reset
 			-- Resets generator
 		do
 			width := 0
@@ -402,7 +402,7 @@ feature {NONE} -- Constants: Property Names
 invariant
 	not_suffix_is_empty: suffix /= Void implies not suffix.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

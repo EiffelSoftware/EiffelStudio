@@ -1,4 +1,4 @@
-indexing
+note
 	description: "xxx"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,13 +15,13 @@ inherit
 
 feature 
 
-	construct_name: STRING is
+	construct_name: STRING
 		once
 			Result := "BLOCK_INFO"
 		end
 
 
-	production: LINKED_LIST [CONSTRUCT] is
+	production: LINKED_LIST [CONSTRUCT]
 		local
 			string_block_info: STRING_BLOCK_INFO
 			variable_block_info: VARIABLE_BLOCK_INFO
@@ -36,7 +36,7 @@ feature
 			put (variable_block_info)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

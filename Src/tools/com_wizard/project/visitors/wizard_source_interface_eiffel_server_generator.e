@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -22,7 +22,7 @@ create
 feature -- Initialization
 
 	generate (an_interface: WIZARD_INTERFACE_DESCRIPTOR; a_coclass: WIZARD_COCLASS_DESCRIPTOR;
-				an_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS) is
+				an_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS)
 			-- Initialize
 		do
 			an_eiffel_writer.add_feature (cookie_generator_feature (an_interface), Access)
@@ -36,7 +36,7 @@ feature -- Initialization
 
 feature -- Basic operations
 
-	cookie_generator_feature (an_interface: WIZARD_INTERFACE_DESCRIPTOR): WIZARD_WRITER_FEATURE is
+	cookie_generator_feature (an_interface: WIZARD_INTERFACE_DESCRIPTOR): WIZARD_WRITER_FEATURE
 			-- Cookie generator feature.
 		require
 			non_void_interface: an_interface /= Void
@@ -60,7 +60,7 @@ feature -- Basic operations
 			valid_feature: Result.can_generate
 		end
 
-	cookie_generator_name (an_interface: WIZARD_INTERFACE_DESCRIPTOR): STRING is
+	cookie_generator_name (an_interface: WIZARD_INTERFACE_DESCRIPTOR): STRING
 			-- Name of cookie generator feature.
 		require
 			non_void_interface: an_interface /= Void
@@ -75,7 +75,7 @@ feature -- Basic operations
 			valid_feature: not Result.is_empty
 		end
 		
-	interface_table_feature (an_interface: WIZARD_INTERFACE_DESCRIPTOR): WIZARD_WRITER_FEATURE is
+	interface_table_feature (an_interface: WIZARD_INTERFACE_DESCRIPTOR): WIZARD_WRITER_FEATURE
 			-- Interface table feature.
 		require
 			non_void_interface: an_interface /= Void
@@ -104,7 +104,7 @@ feature -- Basic operations
 			valid_feature: Result.can_generate
 		end
 
-	interface_table_name (an_interface: WIZARD_INTERFACE_DESCRIPTOR): STRING is
+	interface_table_name (an_interface: WIZARD_INTERFACE_DESCRIPTOR): STRING
 			-- Name of cookie generator feature.
 		require
 			non_void_interface: an_interface /= Void
@@ -119,7 +119,7 @@ feature -- Basic operations
 			valid_feature: not Result.is_empty
 		end
 
-	has_feature (an_interface: WIZARD_INTERFACE_DESCRIPTOR): WIZARD_WRITER_FEATURE is
+	has_feature (an_interface: WIZARD_INTERFACE_DESCRIPTOR): WIZARD_WRITER_FEATURE
 			-- Has call-back feature.
 		require
 			non_void_interface: an_interface /= Void
@@ -146,7 +146,7 @@ feature -- Basic operations
 			valid_feature: Result.can_generate
 		end
 		
-	add_feature (an_interface: WIZARD_INTERFACE_DESCRIPTOR): WIZARD_WRITER_FEATURE is
+	add_feature (an_interface: WIZARD_INTERFACE_DESCRIPTOR): WIZARD_WRITER_FEATURE
 			-- Add call-back feature.
 		require
 			non_void_interface: an_interface /= Void
@@ -210,7 +210,7 @@ feature -- Basic operations
 			valid_feature: Result.can_generate
 		end
 
-	remove_feature (an_interface: WIZARD_INTERFACE_DESCRIPTOR): WIZARD_WRITER_FEATURE is
+	remove_feature (an_interface: WIZARD_INTERFACE_DESCRIPTOR): WIZARD_WRITER_FEATURE
 			-- Remove call-back feature.
 		require
 			non_void_interface: an_interface /= Void
@@ -257,7 +257,7 @@ feature -- Basic operations
 			valid_feature: Result.can_generate
 		end
 
-	add_interface_features (a_interface: WIZARD_INTERFACE_DESCRIPTOR; a_coclass: WIZARD_COCLASS_DESCRIPTOR; a_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS) is
+	add_interface_features (a_interface: WIZARD_INTERFACE_DESCRIPTOR; a_coclass: WIZARD_COCLASS_DESCRIPTOR; a_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS)
 			-- Add source interface features to coclass.
 		require
 			non_void_interface: a_interface /= Void
@@ -283,7 +283,7 @@ feature -- Basic operations
 			end
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

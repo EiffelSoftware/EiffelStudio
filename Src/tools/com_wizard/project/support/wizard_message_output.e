@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Process warnings and errors."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_event_raiser: like event_raiser) is
+	make (a_event_raiser: like event_raiser)
 			-- Set `event_raiser' to `a_event_raiser.
 		require
 			non_void_event_raiser: a_event_raiser /= Void
@@ -38,31 +38,31 @@ feature -- Access
 
 feature -- Basic operations
 
-	add_title (reason: STRING) is
+	add_title (reason: STRING)
 			-- Display title.
 		do
 			event_raiser.call ([create {WIZARD_OUTPUT_EVENT}.make ({WIZARD_OUTPUT_EVENT_ID}.Display_title, reason)])
 		end
 
-	add_message (reason: STRING) is
+	add_message (reason: STRING)
 			-- Display message `reason' from `origin'.
 		do
 			event_raiser.call ([create {WIZARD_OUTPUT_EVENT}.make ({WIZARD_OUTPUT_EVENT_ID}.Display_message, reason)])
 		end
 
-	add_text (reason: STRING) is
+	add_text (reason: STRING)
 			-- Display text `reason' from `origin'.
 		do
 			event_raiser.call ([create {WIZARD_OUTPUT_EVENT}.make ({WIZARD_OUTPUT_EVENT_ID}.Display_text, reason)])
 		end
 
-	add_warning (reason: STRING) is
+	add_warning (reason: STRING)
 			-- Display warning.
 		do
 			event_raiser.call ([create {WIZARD_OUTPUT_EVENT}.make ({WIZARD_OUTPUT_EVENT_ID}.Display_warning, reason)])
 		end
 
-	display_error is
+	display_error
 			-- Display current error.
 		do
 			if environment.abort and environment.is_valid_error_code (environment.error_code) then
@@ -70,7 +70,7 @@ feature -- Basic operations
 			end
 		end
 
-	clear is
+	clear
 			-- Clear output.
 		do
 			event_raiser.call ([create {WIZARD_OUTPUT_EVENT}.make ({WIZARD_OUTPUT_EVENT_ID}.Clear, Void)])
@@ -79,7 +79,7 @@ feature -- Basic operations
 invariant
 	non_void_event_raiser: event_raiser /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Converts a table of contents file to a corresponding HTML Help 1.x table of contents."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature -- Access
 
-	html_help_text: STRING is
+	html_help_text: STRING
 			-- HTML Help 1.x text
 		do
 			create Result.make_empty
@@ -32,7 +32,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	node_text (a_node: TABLE_OF_CONTENTS_NODE): STRING is
+	node_text (a_node: TABLE_OF_CONTENTS_NODE): STRING
 			-- Node text
 		local
 			l_url, l_name, l_anchor: STRING
@@ -91,7 +91,7 @@ feature {NONE} -- Implementation
 			end
 		end	
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Type descriptor"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -61,7 +61,7 @@ feature -- Access
 	description: STRING
 			-- Type description
 
-	creation_message: STRING is
+	creation_message: STRING
 			-- Creation message for wizard output
 		deferred
 		end
@@ -81,7 +81,7 @@ feature -- Access
 	is_idispatch: BOOLEAN
 			-- Does this descriptor correspond to interface IDispatch?
 	
-	is_well_known_interface: BOOLEAN is
+	is_well_known_interface: BOOLEAN
 			-- Does this descriptor correspond to a well known interface?
 		do
 			Result := is_iunknown or is_idispatch or (guid /= Void and then guid.is_equal (Itypeinfo_guid))
@@ -89,7 +89,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	set_name (a_name: STRING) is
+	set_name (a_name: STRING)
 			-- Set `name' with `a_name'
 		require
 			valid_name: a_name /= Void and then not a_name.is_empty
@@ -99,7 +99,7 @@ feature -- Basic Operations
 			valid_name: name /= Void and name.is_equal (a_name)
 		end
 
-	set_description (a_description: STRING) is
+	set_description (a_description: STRING)
 			-- Set `description' with `a_description'
 		require
 			non_void_description: a_description /= Void
@@ -109,7 +109,7 @@ feature -- Basic Operations
 			description_set: description.is_equal (a_description)
 		end
 
-	set_eiffel_class_name (a_name: STRING) is
+	set_eiffel_class_name (a_name: STRING)
 			-- Set `eiffel_class_name' with `a_name'
 		require
 			valid_name: a_name /= Void and then not a_name.is_empty
@@ -120,7 +120,7 @@ feature -- Basic Operations
 						and eiffel_class_name.is_equal (a_name)
 		end
 
-	set_c_header_file_name (a_name: STRING) is
+	set_c_header_file_name (a_name: STRING)
 			-- Set `c_header_file_name' with `a_name'
 		require
 			non_void_name: a_name /= Void
@@ -131,7 +131,7 @@ feature -- Basic Operations
 			valid_c_header_file_name: c_header_file_name.is_equal (a_name)
 		end
 
-	set_c_type_name (a_name: STRING) is
+	set_c_type_name (a_name: STRING)
 			-- Set `c_type_name' with `a_name' and initialize variable_name
 		require
 			non_void_name: a_name /= Void
@@ -142,7 +142,7 @@ feature -- Basic Operations
 			valid_c_type_name: c_type_name.is_equal (a_name)
 		end
 
-	set_namespace (a_namespace : STRING) is
+	set_namespace (a_namespace : STRING)
 			-- Set `namespace' with `a_namespace'.
 		require
 			non_void_namespace: a_namespace /= Void
@@ -153,7 +153,7 @@ feature -- Basic Operations
 			valid_namespace: namespace .is_equal (a_namespace )
 		end
 
-	set_type_kind (a_kind: INTEGER) is
+	set_type_kind (a_kind: INTEGER)
 			-- Set `type_kind' with `a_kind'
 		require
 			valid_kind: is_valid_type_kind (a_kind)
@@ -163,7 +163,7 @@ feature -- Basic Operations
 			valid_type_kind: is_valid_type_kind (type_kind) and type_kind = a_kind
 		end
 
-	set_guid (a_guid: ECOM_GUID) is
+	set_guid (a_guid: ECOM_GUID)
 			-- Set `guid' with `a_guid'.
 		require
 			non_void_guid: a_guid /= Void
@@ -174,19 +174,19 @@ feature -- Basic Operations
 			valid_guid: guid = a_guid
 		end
 
-	set_data_type_visitor (a_data_visitor: WIZARD_DATA_TYPE_VISITOR) is
+	set_data_type_visitor (a_data_visitor: WIZARD_DATA_TYPE_VISITOR)
 			-- Set `data_type_visitor' with `a_data_visitor'
 		do
 			data_type_visitor := a_data_visitor
 		end
 
-	set_pointed_data_type_visitor (a_data_visitor: WIZARD_DATA_TYPE_VISITOR) is
+	set_pointed_data_type_visitor (a_data_visitor: WIZARD_DATA_TYPE_VISITOR)
 			-- Set `data_type_visitor' with `a_data_visitor'
 		do
 			pointed_data_type_visitor := a_data_visitor
 		end
 
-	set_pointed_pointed_data_type_visitor (a_data_visitor: WIZARD_DATA_TYPE_VISITOR) is
+	set_pointed_pointed_data_type_visitor (a_data_visitor: WIZARD_DATA_TYPE_VISITOR)
 			-- Set `data_type_visitor' with `a_data_visitor'
 		do
 			pointed_pointed_data_type_visitor := a_data_visitor
@@ -194,14 +194,14 @@ feature -- Basic Operations
 
 feature -- Visitor
 
-	visit (a_visitor: WIZARD_TYPE_VISITOR) is
+	visit (a_visitor: WIZARD_TYPE_VISITOR)
 			-- Call back `a_visitor' with appropriate feature.
 		require
 			non_void_visitor: a_visitor /= Void
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

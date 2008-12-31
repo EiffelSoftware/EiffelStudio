@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A provider used to proffer common file and directory locations, shared between platforms, to any client.
 	]"
@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_package: like package) is
+	make (a_package: like package)
 			-- Initialize cleaner
 		require
 			a_package_attached: a_package /= Void
@@ -32,7 +32,7 @@ feature -- Access
 
 feature -- Access
 
-	docking_data_location: PATH_NAME is
+	docking_data_location: PATH_NAME
 			-- Location of docking data
 		local
 			l_ev: EIFFEL_ENV
@@ -44,7 +44,7 @@ feature -- Access
 			not_result_is_empty: not Result.is_empty
 		end
 
-	docking_editing_layout_file: FILE_NAME is
+	docking_editing_layout_file: FILE_NAME
 			-- Docking layout file
 		do
 			create Result.make_from_string (docking_data_location)
@@ -54,7 +54,7 @@ feature -- Access
 			not_result_is_empty: not Result.is_empty
 		end
 
-	docking_debug_layout_file: FILE_NAME is
+	docking_debug_layout_file: FILE_NAME
 			-- Docking layout file
 		do
 			create Result.make_from_string (docking_data_location)
@@ -66,7 +66,7 @@ feature -- Access
 
 feature -- Query
 
-	project_layout_path (a_location: STRING): FILE_NAME is
+	project_layout_path (a_location: STRING): FILE_NAME
 			-- Retrieve location of project layout file
 		require
 			a_location_attached: a_location /= Void
@@ -79,7 +79,7 @@ feature -- Query
 			not_result_is_empty: not Result.is_empty
 		end
 
-	project_preferences_path (a_location: STRING): FILE_NAME is
+	project_preferences_path (a_location: STRING): FILE_NAME
 			-- Retrieve location of project preferences file
 		require
 			a_location_attached: a_location /= Void
@@ -92,7 +92,7 @@ feature -- Query
 			not_result_is_empty: not Result.is_empty
 		end
 
-	project_session_path (a_location: STRING): FILE_NAME is
+	project_session_path (a_location: STRING): FILE_NAME
 			-- Retrieve location of project session file
 		require
 			a_location_attached: a_location /= Void
@@ -108,7 +108,7 @@ feature -- Query
 invariant
 	package_attached: package /= Void
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

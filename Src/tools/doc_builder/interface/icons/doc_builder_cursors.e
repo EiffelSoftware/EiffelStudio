@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Icons for drag and drop in editor."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,14 +15,14 @@ inherit
 
 feature -- Cursor
 
-	cur_cut_selection: EV_POINTER_STYLE is
+	cur_cut_selection: EV_POINTER_STYLE
 		once
 			Result := cursor_file_content ("cut_selection")
 			Result.set_x_hotspot (0)
 			Result.set_y_hotspot (0)
 		end
 
-	cur_copy_selection: EV_POINTER_STYLE is
+	cur_copy_selection: EV_POINTER_STYLE
 		once
 			Result := cursor_file_content ("copy_selection")
 			Result.set_x_hotspot (0)
@@ -31,7 +31,7 @@ feature -- Cursor
 
 feature {NONE} -- Implementation
 
-	cursor_file_content (fn: STRING): EV_POINTER_STYLE is
+	cursor_file_content (fn: STRING): EV_POINTER_STYLE
 			-- Load the cursor contained in file `fn'.ico or `fn'.xpm, depending on the platform.
 		local
 			full_path: FILE_NAME
@@ -59,7 +59,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

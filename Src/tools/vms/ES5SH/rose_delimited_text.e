@@ -1,4 +1,4 @@
-indexing
+note
 	description: "string seen as array separated by a delimiter character"
 	author: "Cammie Howard"
 	date: "$Date$"
@@ -19,7 +19,7 @@ create
 
 feature 
 
-	make (a_text: STRING; a_delimiter: CHARACTER) is
+	make (a_text: STRING; a_delimiter: CHARACTER)
 		do
 			make_empty
 			text := clone(a_text)
@@ -29,32 +29,32 @@ feature
 			parse
 		end
 
-	make_ignoring_repeats (a_text : STRING; a_delimiter : CHARACTER) is
+	make_ignoring_repeats (a_text : STRING; a_delimiter : CHARACTER)
 		do
 			repeated_delimiters_ignored := true
 			make (a_text,a_delimiter)
 		end
 
-	make_ignoring_quotes (a_text : STRING; a_delimiter : CHARACTER) is
+	make_ignoring_quotes (a_text : STRING; a_delimiter : CHARACTER)
 		do
 			ignore_quotes := true
 			make (a_text, a_delimiter)
 		end
 
-	make_removing_quotes (a_text : STRING; a_delimiter : CHARACTER) is
+	make_removing_quotes (a_text : STRING; a_delimiter : CHARACTER)
 		do
 			remove_quotes := true
 			make (a_text, a_delimiter)
 		end
 
-	make_removing_spaces (a_text : STRING; a_delimiter : CHARACTER) is
+	make_removing_spaces (a_text : STRING; a_delimiter : CHARACTER)
 		do
 			remove_spaces := true
 			make (a_text, a_delimiter)
 		end
 
 
-	parse is
+	parse
 		--
 		--	This should correctly handle the following cases:
 		--
@@ -96,7 +96,7 @@ feature
 			end
 		end
 
-	prune_token (a_token: STRING): STRING is
+	prune_token (a_token: STRING): STRING
 			-- apply pruning to token
 		do
 			if (remove_quotes) then
@@ -120,17 +120,17 @@ feature
 	ignore_quotes : BOOLEAN
 	remove_spaces : BOOLEAN
 
-	ignore_spaces is
+	ignore_spaces
 		do
 			remove_spaces := true
 		end
 
-	ignore_repeated_delimiters is
+	ignore_repeated_delimiters
 		do
 			repeated_delimiters_ignored := true
 		end
 
-	count_repeated_delimiters is
+	count_repeated_delimiters
 		do
 			repeated_delimiters_ignored := false
 		end

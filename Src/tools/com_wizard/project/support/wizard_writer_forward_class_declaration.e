@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Forward class declaration."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature -- Initialization
 
-	make (a_name, a_namespace: STRING; is_abstract: BOOLEAN) is
+	make (a_name, a_namespace: STRING; is_abstract: BOOLEAN)
 			-- Initialization.
 		require
 			non_void_name: a_name /= Void
@@ -42,7 +42,7 @@ feature -- Access
 	
 feature -- Basic operations
 
-	generated_code: STRING is
+	generated_code: STRING
 			-- Generated code
 		local
 			class_protector: STRING
@@ -93,7 +93,7 @@ invariant
 	non_void_name: name /= Void
 	valid_name: not name.is_empty 
 			
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

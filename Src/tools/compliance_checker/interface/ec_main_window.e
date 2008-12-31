@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Main application window for Eiffel/CLS compliance checker.
 	]"
@@ -34,7 +34,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	user_initialization is
+	user_initialization
 			-- Called by `initialize'.
 			-- Any custom user initialization that
 			-- could not be performed in `initialize',
@@ -90,7 +90,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Agent Handlers
 
-	on_close is
+	on_close
 			-- Called when user requests to close application
 		local
 			l_close: BOOLEAN
@@ -110,7 +110,7 @@ feature {NONE} -- Agent Handlers
 			end
 		end
 
-	on_new_project is
+	on_new_project
 			-- Called when user wants to create a new project.
 		local
 			l_can_create: BOOLEAN
@@ -129,7 +129,7 @@ feature {NONE} -- Agent Handlers
 			end
 		end
 
-	on_open_project is
+	on_open_project
 			-- Called when user want to open a new project.
 		local
 			l_ofd: EV_FILE_OPEN_DIALOG
@@ -161,7 +161,7 @@ feature {NONE} -- Agent Handlers
 			retry
 		end
 
-	on_save_project is
+	on_save_project
 			-- Called when user wants to save an open project.
 		local
 			l_sfd: EV_FILE_SAVE_DIALOG
@@ -201,7 +201,7 @@ feature {NONE} -- Agent Handlers
 			retry
 		end
 
-	on_check_project is
+	on_check_project
 			-- Called when user selects check toolbar button
 		require
 			nb_main_not_void: nb_main /= Void
@@ -214,7 +214,7 @@ feature {NONE} -- Agent Handlers
 			vbox_output.btn_start_checking.select_actions.call ([])
 		end
 
-	on_show_help is
+	on_show_help
 			-- Called when user selects help toolbar button
 		local
 			l_process: SYSTEM_DLL_PROCESS
@@ -237,7 +237,7 @@ feature {NONE} -- Agent Handlers
 			retry
 		end
 
-	on_back_button_selected (a_rotate: BOOLEAN) is
+	on_back_button_selected (a_rotate: BOOLEAN)
 			-- Called when `back_button' is selected
 		require
 			select_tab_not_first: not a_rotate implies nb_main.selected_item_index > 1
@@ -252,7 +252,7 @@ feature {NONE} -- Agent Handlers
 			end
 		end
 
-	on_next_button_selected (a_rotate: BOOLEAN) is
+	on_next_button_selected (a_rotate: BOOLEAN)
 			-- Called when `next_button' is selected
 		require
 			select_tab_not_last: not a_rotate implies nb_main.selected_item_index < nb_main.count
@@ -267,7 +267,7 @@ feature {NONE} -- Agent Handlers
 			end
 		end
 
-	on_navigate_forward is
+	on_navigate_forward
 			-- Handles the Ctrl+Tab accelerator actions
 		require
 			nb_main_not_void: nb_main /= Void
@@ -275,7 +275,7 @@ feature {NONE} -- Agent Handlers
 			on_next_button_selected (True)
 		end
 
-	on_navigate_backward is
+	on_navigate_backward
 			-- Handles the Ctrl+Shift+Tab accelerator actions
 		require
 			nb_main_not_void: nb_main /= Void
@@ -285,13 +285,13 @@ feature {NONE} -- Agent Handlers
 
 feature {NONE} -- Implementation
 
-	is_help_available: BOOLEAN is
+	is_help_available: BOOLEAN
 			-- Is compiled help available?
 		do
 			Result := (create {RAW_FILE}.make (help_file)).exists
 		end
 
-	query_clean_project: BOOLEAN is
+	query_clean_project: BOOLEAN
 			-- Queries project state to see if a project can be cleaned?
 		local
 			l_warning: EV_WARNING_DIALOG
@@ -310,10 +310,10 @@ feature {NONE} -- Implementation
 	sticky_project_file_name: STRING
 			-- Sticky project file name
 
-	project_file_name_extension: STRING is ".ecmp";
+	project_file_name_extension: STRING = ".ecmp";
 			-- Project file name extension
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

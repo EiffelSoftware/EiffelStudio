@@ -1,4 +1,4 @@
-indexing
+note
 	description: "COM FUNCDESC structure"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -39,7 +39,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_from_pointer (a_pointer: POINTER) is
+	make_from_pointer (a_pointer: POINTER)
 			-- Make from pointer.
 		do
 			make_by_pointer (a_pointer)
@@ -47,19 +47,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	member_id: INTEGER is
+	member_id: INTEGER
 			-- Function member ID
 		do
 			Result := ccom_funcdesc_memberid (item)
 		end
 
-	valid_scodes_count: INTEGER is
+	valid_scodes_count: INTEGER
 			-- Count of permitted return values
 		do
 			Result := ccom_funcdesc_scode_count (item)
 		end
 
-	valid_scodes: ARRAY [INTEGER] is
+	valid_scodes: ARRAY [INTEGER]
 			-- Valid Scodes
 		local 
 			i, temp: INTEGER
@@ -76,13 +76,13 @@ feature -- Access
 			end
 		end
 
-	total_param_count: INTEGER is
+	total_param_count: INTEGER
 			-- Count of total number of parameters
 		do
 			Result := ccom_funcdesc_param_count (item)
 		end
 
-	optional_param_count: INTEGER is
+	optional_param_count: INTEGER
 			-- Count of optional parameters
 			-- Value of "0" specifies that no optional 
 			-- arguments is supported
@@ -95,7 +95,7 @@ feature -- Access
 			Result := ccom_funcdesc_opt_param_count (item)
 		end
 
-	parameters: ARRAY [ECOM_ELEM_DESC] is
+	parameters: ARRAY [ECOM_ELEM_DESC]
 			-- Parameters
 		local
 			i: INTEGER
@@ -113,7 +113,7 @@ feature -- Access
 			end
 		end
 
-	func_kind: INTEGER is
+	func_kind: INTEGER
 			-- Kind of function 
 			-- See class ECOM_FUNC_KIND for return values
 		do
@@ -122,7 +122,7 @@ feature -- Access
 			is_valid_func_kind (Result)
 		end
 
-	invoke_kind: INTEGER is
+	invoke_kind: INTEGER
 			-- Invokation kind
 			-- See class ECOM_INVOKE_KIND for return values
 		do
@@ -131,7 +131,7 @@ feature -- Access
 			is_valid_invoke_kind (Result)
 		end
 
-	call_conv: INTEGER is
+	call_conv: INTEGER
 			-- Function's calling convention
 		do
 			Result := ccom_funcdesc_callconv (item)
@@ -139,7 +139,7 @@ feature -- Access
 			is_valid_callconv (Result)
 		end
 
-	vtbl_offset: INTEGER is
+	vtbl_offset: INTEGER
 			-- Offset in VTBL when `func_kind' is Func_virtual
 		require
 --			valid_func_kind: func_kind = Func_virtual or func_kind = Func_purevirtual
@@ -147,13 +147,13 @@ feature -- Access
 			Result := ccom_funcdesc_vtbl_offset (item)
 		end
 
-	return_type: ECOM_ELEM_DESC is
+	return_type: ECOM_ELEM_DESC
 			-- Return type
 		do
 			create Result.make_from_pointer (ccom_funcdesc_return_type (item))
 		end
 
-	func_flags: INTEGER IS
+	func_flags: INTEGER
 			-- Associated flags
 			-- See class ECOM_FUNC_FLAGS for return values
 		do
@@ -172,7 +172,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_parent (a_parent: ECOM_TYPE_INFO) is
+	set_parent (a_parent: ECOM_TYPE_INFO)
 			-- Set `parent attribute.
 		do
 			parent := a_parent
@@ -181,7 +181,7 @@ feature -- Status setting
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of 	FUNCDESCEX structure
 		do
 			Result := c_size_of_func_desc
@@ -189,81 +189,81 @@ feature -- Measurement
 
 feature {NONE} -- Implementation
 
-	dispose is
+	dispose
 			-- `item' is freed by ECOM_TYPE_INFO.
 		do
 		end
 
 feature {NONE} -- Externals
 
-	c_size_of_func_desc: INTEGER is
+	c_size_of_func_desc: INTEGER
 		external 
 			"C [macro %"E_funcdesc.h%"]"
 		alias
 			"sizeof(FUNCDESC)"
 		end
 
-	ccom_funcdesc_memberid (a_ptr: POINTER): INTEGER is
+	ccom_funcdesc_memberid (a_ptr: POINTER): INTEGER
 		external 
 			"C [macro %"E_funcdesc.h%"]"
 		end
 
-	ccom_funcdesc_funckind (a_ptr: POINTER): INTEGER is
+	ccom_funcdesc_funckind (a_ptr: POINTER): INTEGER
 		external 
 			"C [macro %"E_funcdesc.h%"]"
 		end
 
-	ccom_funcdesc_invokekind (a_ptr: POINTER): INTEGER is
+	ccom_funcdesc_invokekind (a_ptr: POINTER): INTEGER
 		external 
 			"C [macro %"E_funcdesc.h%"]"
 		end
 
-	ccom_funcdesc_callconv (a_ptr: POINTER): INTEGER is
+	ccom_funcdesc_callconv (a_ptr: POINTER): INTEGER
 		external 
 			"C [macro %"E_funcdesc.h%"]"
 		end
 
-	ccom_funcdesc_param_count (a_ptr: POINTER): INTEGER is
+	ccom_funcdesc_param_count (a_ptr: POINTER): INTEGER
 		external 
 			"C [macro %"E_funcdesc.h%"]"
 		end
 
-	ccom_funcdesc_opt_param_count (a_ptr: POINTER): INTEGER is
+	ccom_funcdesc_opt_param_count (a_ptr: POINTER): INTEGER
 		external 
 			"C [macro %"E_funcdesc.h%"]"
 		end
 
-	ccom_funcdesc_vtbl_offset (a_ptr: POINTER): INTEGER is
+	ccom_funcdesc_vtbl_offset (a_ptr: POINTER): INTEGER
 		external 
 			"C [macro %"E_funcdesc.h%"]"
 		end
 
-	ccom_funcdesc_scode_count (a_ptr: POINTER): INTEGER is
+	ccom_funcdesc_scode_count (a_ptr: POINTER): INTEGER
 		external 
 			"C [macro %"E_funcdesc.h%"]"
 		end
 
-	ccom_funcdesc_scode_i (a_ptr: POINTER; i: INTEGER): INTEGER is
+	ccom_funcdesc_scode_i (a_ptr: POINTER; i: INTEGER): INTEGER
 		external 
 			"C [macro %"E_funcdesc.h%"]"
 		end
 
-	ccom_funcdesc_parameter_i (a_ptr: POINTER; i: INTEGER): POINTER is
+	ccom_funcdesc_parameter_i (a_ptr: POINTER; i: INTEGER): POINTER
 		external 
 			"C [macro %"E_funcdesc.h%"]"
 		end
 
-	ccom_funcdesc_return_type (a_ptr: POINTER): POINTER is
+	ccom_funcdesc_return_type (a_ptr: POINTER): POINTER
 		external 
 			"C [macro %"E_funcdesc.h%"]"
 		end
 
-	ccom_funcdesc_func_flags (a_ptr: POINTER): INTEGER is
+	ccom_funcdesc_func_flags (a_ptr: POINTER): INTEGER
 		external 
 			"C [macro %"E_funcdesc.h%"]"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

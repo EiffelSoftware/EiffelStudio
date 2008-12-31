@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Manages C compiler configurations so clients can access the appropriate configuration with ease"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -13,7 +13,7 @@ create
 
 feature -- Initialization
 
-	make (a_for_32bit: like for_32bit) is
+	make (a_for_32bit: like for_32bit)
 			-- Initializes configuration manager given `for_32bit'
 		do
 			for_32bit := a_for_32bit
@@ -119,7 +119,7 @@ feature -- Access
 			result_consistent: Result = ordered_configs
 		end
 
-	applicable_config_codes: !LIST [!STRING] is
+	applicable_config_codes: !LIST [!STRING]
 			-- List of available and applicable configuration codes
 		local
 			l_list: !ARRAYED_LIST [!STRING]
@@ -185,7 +185,7 @@ feature -- Access
 
 feature -- Status report
 
-	has_applicable_config: BOOLEAN is
+	has_applicable_config: BOOLEAN
 			-- Determines if a compatible C compiler was found on the user's machine
 		local
 			l_configs: like configs
@@ -207,7 +207,7 @@ feature -- Status report
 			configs_unmoved: configs.cursor.is_equal (old configs.cursor)
 		end
 
-	best_configuration: ?C_CONFIG is
+	best_configuration: ?C_CONFIG
 			-- Retrieve's the best C compiler configuration given the state of a user's system
 		require
 			has_applicable_config: has_applicable_config
@@ -231,7 +231,7 @@ feature -- Status report
 			result_attached: Result /= Void
 		end
 
-	config_from_code (a_code: STRING; a_applicable_only: BOOLEAN): ?C_CONFIG is
+	config_from_code (a_code: STRING; a_applicable_only: BOOLEAN): ?C_CONFIG
 			-- Retrieves a config from the code `a_code'. If `a_applicable_only' is set to True
 			-- the located configuration must exists in order to return a result
 		require
@@ -262,7 +262,7 @@ feature -- Status report
 
 feature {NONE} -- Access
 
-	create_configs (a_use_32bit: BOOLEAN): !ARRAYED_LIST [!C_CONFIG] is
+	create_configs (a_use_32bit: BOOLEAN): !ARRAYED_LIST [!C_CONFIG]
 			-- Visual Studio configuration for x64/x86 platforms.
 			--|Be sure to place deprecated configurations after all valid configurations!
 		require
@@ -324,7 +324,7 @@ feature {NONE} -- Internal implementation cache
 			-- Cached version of `applicable_configs'
 			-- Note: Do not use directly
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

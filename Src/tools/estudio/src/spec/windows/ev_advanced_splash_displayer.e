@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Advance splash displayer for Windows platform."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,14 +18,14 @@ create
 
 feature{NONE} -- Initlization
 
-	make is
+	make
 			-- Creation method.
 		do
 		end
 
 feature -- Command
 
-	show is
+	show
 			-- Redefine
 		local
 			l_pixel_buffer: EV_PIXEL_BUFFER
@@ -41,7 +41,7 @@ feature -- Command
 			layered_window.show
 		end
 
-	close is
+	close
 			-- Redefine
 		do
 			layered_window.clear
@@ -73,7 +73,7 @@ feature{NONE} -- Implementation
 	layered_window: SD_FEEDBACK_INDICATOR
 			-- Windows which show the splash
 
-	image_file_name: FILE_NAME is
+	image_file_name: FILE_NAME
 			-- Image file name.
 		do
 			create Result.make_from_string (eiffel_layout.bitmaps_path)
@@ -81,7 +81,7 @@ feature{NONE} -- Implementation
 			Result.set_file_name ("splash_shadow.png")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "REGKIND constants"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	Regkind_default: INTEGER is
+	Regkind_default: INTEGER
 			-- Default register behavior
 		external
 			"C [macro <oleauto.h>]"
@@ -18,7 +18,7 @@ feature -- Access
 			"REGKIND_DEFAULT"
 		end
 
-	Rgkind_register: INTEGER is
+	Rgkind_register: INTEGER
 			-- Registered type
 		external
 			"C [macro <oleauto.h>]"
@@ -26,7 +26,7 @@ feature -- Access
 			"REGKIND_REGISTER"
 		end
 
- 	Rgkind_none: INTEGER is
+ 	Rgkind_none: INTEGER
 			-- Not registered type
 		external
 			"C [macro <oleauto.h>]"
@@ -34,7 +34,7 @@ feature -- Access
 			"REGKIND_NONE"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

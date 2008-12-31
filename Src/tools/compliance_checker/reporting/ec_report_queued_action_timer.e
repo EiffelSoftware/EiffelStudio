@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A thread-safe action queue to process actions from a queue in a syncronious manner.
 		
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create an initialize a new idle action timer
 		do
 			create mutex_guard.make
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Disposing
 
-	dispose is
+	dispose
 			-- Action to be executed just before garbage collection
 			-- reclaims an object.
 			-- Effect it in descendants to perform specific dispose
@@ -55,7 +55,7 @@ feature -- Disposing
 
 feature -- Extending
 
-	extend (a_action: PROCEDURE [ANY, TUPLE]) is
+	extend (a_action: PROCEDURE [ANY, TUPLE])
 			-- Extend action queue with `a_action'
 		require
 			a_action_attached: a_action /= Void
@@ -70,7 +70,7 @@ feature -- Extending
 
 feature {NONE} -- Basic Operations
 
-	suspend is
+	suspend
 			-- Suspend timer actions
 		require
 			action_timer_resumed: action_timer.interval = interval
@@ -83,7 +83,7 @@ feature {NONE} -- Basic Operations
 			action_timer_paused: action_timer.interval = 0
 		end
 
-	resume is
+	resume
 			-- Resume timer actions
 		require
 			action_timer_paused: action_timer.interval = 0
@@ -98,7 +98,7 @@ feature {NONE} -- Basic Operations
 
 feature {NONE} -- Action Processing
 
-	on_tick is
+	on_tick
 			-- Called when timer ticks
 		do
 			lock_access
@@ -118,13 +118,13 @@ feature {NONE} -- Action Processing
 
 feature {NONE} -- Implementation
 
-	lock_access is
+	lock_access
 			-- Locks access
 		do
 			mutex_guard.lock
 		end
 
-	unlock_access is
+	unlock_access
 			-- Unlocks access
 		do
 			mutex_guard.unlock
@@ -136,7 +136,7 @@ feature {NONE} -- Implementation
 	action_timer: EV_TIMEOUT
 			-- Idle action timer.
 
-	interval: INTEGER is 20
+	interval: INTEGER = 20
 			-- Timer interval.
 
 	mutex_guard: MUTEX
@@ -147,7 +147,7 @@ invariant
 	action_timer_attached: action_timer /= Void
 	mutex_guard_attached: mutex_guard /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

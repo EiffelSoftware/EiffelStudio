@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Helper functions for source interface generation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -19,7 +19,7 @@ inherit
 feature -- Basic operations
 
 	connection_point_inner_class_name (an_interface: WIZARD_INTERFACE_DESCRIPTOR;
-				a_coclass_writer: WIZARD_WRITER_CPP_CLASS): STRING is
+				a_coclass_writer: WIZARD_WRITER_CPP_CLASS): STRING
 			-- Name of inner class.
 		require
 			non_void_interface: an_interface /= Void
@@ -36,7 +36,7 @@ feature -- Basic operations
 		end
 
 	connection_point_attrubute_name (an_interface: WIZARD_INTERFACE_DESCRIPTOR;
-				a_coclass_writer: WIZARD_WRITER_CPP_CLASS): STRING is
+				a_coclass_writer: WIZARD_WRITER_CPP_CLASS): STRING
 			-- Name of connection point attribute.
 		require
 			non_void_interface: an_interface /= Void
@@ -49,7 +49,7 @@ feature -- Basic operations
 			valid_name: not Result.is_empty
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

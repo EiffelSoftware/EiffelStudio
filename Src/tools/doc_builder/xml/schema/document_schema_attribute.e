@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Document Schema attribute."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature -- Creation
 
-	make (a_name: STRING; a_parent: DOCUMENT_SCHEMA_ELEMENT) is
+	make (a_name: STRING; a_parent: DOCUMENT_SCHEMA_ELEMENT)
 			-- Make with 'a_name' and 'a_parent'
 		require
 			parent_not_void: a_parent /= Void
@@ -25,7 +25,7 @@ feature -- Creation
 	
 feature -- Status Setting
 
-	set_use (a_use: XML_XML_SCHEMA_USE) is
+	set_use (a_use: XML_XML_SCHEMA_USE)
 			-- Set `use' value
 --		require
 --			use_not_void: a_use /= Void
@@ -33,7 +33,7 @@ feature -- Status Setting
 			use := a_use
 		end	
 		
-	set_default_value (a_default_value: STRING) is
+	set_default_value (a_default_value: STRING)
 			-- Set `default value'
 		require
 			value_not_void: a_default_value /= Void
@@ -52,19 +52,19 @@ feature -- Access
 	default_value: STRING
 			-- Default value
 			
-	required: BOOLEAN is
+	required: BOOLEAN
 			-- Required?
 		do
 			Result := use.to_integer = {XML_XML_SCHEMA_USE}.required.to_integer
 		end		
 	
-	prohibited: BOOLEAN is
+	prohibited: BOOLEAN
 			-- Prohibited?
 		do
 			Result := use.to_integer = {XML_XML_SCHEMA_USE}.prohibited.to_integer
 		end
 
-	optional: BOOLEAN is
+	optional: BOOLEAN
 			-- Optional?
 		do
 			Result := use.to_integer = {XML_XML_SCHEMA_USE}.optional.to_integer
@@ -75,7 +75,7 @@ feature {NONE} -- Implementation
 	use: XML_XML_SCHEMA_USE;
 			-- Usage
 			
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

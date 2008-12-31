@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Text box containing file path with corresponding browse button"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,7 +30,7 @@ inherit
 
 feature -- Initialization
 
-	setup (a_label, a_key: STRING; a_path_validator: like path_validator; a_file_extensions: like file_extensions; a_title: like title) is
+	setup (a_label, a_key: STRING; a_path_validator: like path_validator; a_file_extensions: like file_extensions; a_title: like title)
 			-- Initialize instance.
 		require
 			non_void_label: a_label /= Void
@@ -53,7 +53,7 @@ feature -- Initialization
 
 feature {NONE} -- Events Handling
 
-	on_browse is
+	on_browse
 			-- Called by `select_actions' of `path_button'.
 			-- Browse for file.
 		local
@@ -73,14 +73,14 @@ feature {NONE} -- Events Handling
 
 feature -- Basic Operations
 
-	enable_sensitive is
+	enable_sensitive
 			-- Trigger validation
 		do
 			Precursor {WIZARD_FILE_PATH_BOX_IMP}
 			on_change
 		end
 		
-	disable_sensitive is
+	disable_sensitive
 			-- Trigger validation
 		do
 			Precursor {WIZARD_FILE_PATH_BOX_IMP}
@@ -95,7 +95,7 @@ feature {NONE} -- Private Access
 	title: STRING;
 			-- File open dialog title
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

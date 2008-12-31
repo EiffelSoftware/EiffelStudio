@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Processing interfaces for C client coclass."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -21,7 +21,7 @@ create
 
 feature -- Basic operations
 
-	generate_interface_features (a_interface: WIZARD_INTERFACE_DESCRIPTOR) is
+	generate_interface_features (a_interface: WIZARD_INTERFACE_DESCRIPTOR)
 			-- Generate interface features.
 		do
 			if not a_interface.is_iunknown and not a_interface.is_idispatch then
@@ -46,7 +46,7 @@ feature -- Basic operations
 			end
 		end
 
-	generate_source_interface_features (a_interface: WIZARD_INTERFACE_DESCRIPTOR) is
+	generate_source_interface_features (a_interface: WIZARD_INTERFACE_DESCRIPTOR)
 			-- Generate source interface features.
 		local
 			c_client_visitor: WIZARD_C_CLIENT_VISITOR
@@ -57,7 +57,7 @@ feature -- Basic operations
 			create source_generator.generate (a_interface, coclass_generator.cpp_class_writer)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

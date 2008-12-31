@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Application root."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Creation procedure.
 		local
 			l_parser: ARGUMENT_PARSER
@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 			l_parser.execute (agent start (l_parser))
 		end
 
-	start (a_parser: ARGUMENT_PARSER) is
+	start (a_parser: ARGUMENT_PARSER)
 			-- Starts application after all command-line arguments have been validated.
 		require
 			a_parser_attached: a_parser /= Void
@@ -139,7 +139,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Basic Operations
 
-	open_ini_document (a_file_name: STRING): INI_DOCUMENT is
+	open_ini_document (a_file_name: STRING): INI_DOCUMENT
 			-- Attempts to open `a_file_name' as an INI document.
 		require
 			a_file_name_attached: a_file_name /= Void
@@ -169,7 +169,7 @@ feature {NONE} -- Basic Operations
 			retry
 		end
 
-	open_frame_file (a_file_name: STRING): STRING is
+	open_frame_file (a_file_name: STRING): STRING
 			-- Attempts to open frame file `a_file_name' and returns it's content
 		require
 			a_file_name_attached: a_file_name /= Void
@@ -217,13 +217,13 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	frame_file: STRING is "matrix.e.frame"
+	frame_file: STRING = "matrix.e.frame"
 			-- File name of frame file
 
-	frame_folder: STRING is "frames";
+	frame_folder: STRING = "frames";
 			-- Sub folder where frame files are located
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

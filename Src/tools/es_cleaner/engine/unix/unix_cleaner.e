@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A unix-specific implementation of a configuration cleaner, used to erase configuration data.
 	]"
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Access
 
-	path_provider: UNIX_PATH_PROVIDER is
+	path_provider: UNIX_PATH_PROVIDER
 			-- Access to Eiffel related paths
 		do
 			Result ?= package.path_provider
@@ -29,14 +29,14 @@ feature {NONE} -- Access
 
 feature {NONE} -- Basic operations
 
-	remove_preferences is
+	remove_preferences
 			-- Removes preferences from the windows registry
 		do
 				--| TODO
 			check False end
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

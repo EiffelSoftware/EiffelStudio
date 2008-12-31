@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Simple formatter of Eiffel code text.  Converts Eiffel code text into%
 		%corresponding XML tagged eiffel code text."
 	legal: "See notice at end of class."
@@ -22,7 +22,7 @@ feature -- Access
 			
 feature -- Commands
 	
-	format (a_text: STRING) is
+	format (a_text: STRING)
 			-- Format `a_text'.  Result put into `text'
 		require
 			text_not_void: a_text /= Void
@@ -55,7 +55,7 @@ feature -- Commands
 			has_text: text /= Void
 		end
 
-	format_line (a_line: STRING) is
+	format_line (a_line: STRING)
 			-- Format `a_line', put result into `last_formatted_line'
 		local
 			l_last_char: CHARACTER
@@ -121,7 +121,7 @@ feature -- Commands
 
 feature {NONE} -- Implementation
 		
-	prepare_for_formatting (a_text: STRING) is
+	prepare_for_formatting (a_text: STRING)
 			-- Prepare `a_text' for formatting
 		do
 			from
@@ -139,7 +139,7 @@ feature {NONE} -- Implementation
 			end
 		end		
 		
-	format_all_feature_names (a_line: STRING) is
+	format_all_feature_names (a_line: STRING)
 			-- Format all recognized feature names
 		local
 			l_index,
@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	format_all_symbols (a_line: STRING)	is
+	format_all_symbols (a_line: STRING)
 			-- Format all recognized code symbols
 		do
 			from
@@ -229,7 +229,7 @@ feature {NONE} -- Implementation
 			a_line.remove_tail (1)
 		end
 		
-	format_all_keywords (a_line: STRING) is
+	format_all_keywords (a_line: STRING)
 			-- Format all recognized code keywords
 		do
 			from
@@ -252,7 +252,7 @@ feature {NONE} -- Implementation
 			a_line.remove_tail (1)
 		end
 		
-	format_class_names (a_line: STRING) is
+	format_class_names (a_line: STRING)
 			-- Format all recognized class names
 		local
 			l_index,
@@ -286,13 +286,13 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Query
 
-	is_valid_feature_char (a_char: CHARACTER): BOOLEAN is
+	is_valid_feature_char (a_char: CHARACTER): BOOLEAN
 			-- Is `a_char' acceptable in a feature name (or class name)?
 		do
 			Result := a_char.is_alpha or a_char.is_digit or a_char = '_'
 		end
 
-	is_comment (a_line: STRING): BOOLEAN is
+	is_comment (a_line: STRING): BOOLEAN
 			-- Is `a_line' a comment?
 		do
 			a_line.prune_all_leading (newline_string.item (1))
@@ -303,7 +303,7 @@ feature {NONE} -- Query
 			end
 		end	
 		
-	is_uppercase (a_string: STRING): BOOLEAN is
+	is_uppercase (a_string: STRING): BOOLEAN
 			-- Are all alpha characters in `a_string' uppercase?
 		local
 			l_index: INTEGER
@@ -322,7 +322,7 @@ feature {NONE} -- Query
 			end
 		end	
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

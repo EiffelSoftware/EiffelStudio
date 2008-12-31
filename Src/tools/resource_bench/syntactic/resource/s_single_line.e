@@ -1,4 +1,4 @@
-indexing
+note
 	description: "xxx"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,12 +16,12 @@ inherit
 
 feature 
 
-	construct_name: STRING is
+	construct_name: STRING
 		once
 			Result := "SINGLE_LINE"
 		end
 
-	production: LINKED_LIST [CONSTRUCT] is
+	production: LINKED_LIST [CONSTRUCT]
 		local
 			anicursor: ANICURSOR_RESOURCE
 			aniicon: ANIICON_RESOURCE
@@ -56,7 +56,7 @@ feature
 			put (messagetable)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

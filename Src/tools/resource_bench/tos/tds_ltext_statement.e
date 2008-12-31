@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Ltext statement representation in the tds"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature -- Initialization
 
-	finish_control_setup is
+	finish_control_setup
 		do
 			set_variable_name ("left_text")
 			set_wel_class_name ("WEL_STATIC")
@@ -33,7 +33,7 @@ feature -- Initialization
 
 feature -- Code Generation
 
-	display is
+	display
 		do
 			from 
 				start
@@ -73,7 +73,7 @@ feature -- Code Generation
 			end
 		end
 
-	generate_resource_file (resource_file: PLAIN_TEXT_FILE) is
+	generate_resource_file (resource_file: PLAIN_TEXT_FILE)
 			-- generate the resource script file from the tds memory structure
 		do
 			from 
@@ -115,7 +115,7 @@ feature -- Code Generation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

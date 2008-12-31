@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Text field with color validation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ inherit
 
 feature -- Access
 
-	focus_lost_actions: LIST [ROUTINE [ANY, TUPLE[]]] is
+	focus_lost_actions: LIST [ROUTINE [ANY, TUPLE[]]]
 			-- Focus lost actions
 		do
 			if internal_focus_lost_actions = Void then
@@ -39,7 +39,7 @@ feature -- Access
 
 feature {NONE} -- Event Handling
 
-	on_mouse_leave is
+	on_mouse_leave
 			-- Call actions then precursor
 		do
 			if internal_focus_lost_actions /= Void then
@@ -59,7 +59,7 @@ feature {NONE} -- Implementation
 		internal_focus_lost_actions: LIST [ROUTINE [ANY, TUPLE[]]];
 			-- Focus lost actions cache
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

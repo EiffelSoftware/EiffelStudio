@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shared Generators."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -23,7 +23,7 @@ inherit
 
 feature -- Access
 
-	Ecom_generated_rt_globals_header_file_name: STRING is
+	Ecom_generated_rt_globals_header_file_name: STRING
 			-- C++ class header file contains information that all generated class require
 			-- e.g. global variables, system header files etc.
 		once
@@ -34,31 +34,31 @@ feature -- Access
 			Result.append (".h")
 		end
 
-	Generated_ec_mappers: LIST [WIZARD_WRITER_MAPPER_CLASS] is
+	Generated_ec_mappers: LIST [WIZARD_WRITER_MAPPER_CLASS]
 			-- C++ classes holding generated Eiffel to C mappers
 		once
 			create {ARRAYED_LIST [WIZARD_WRITER_MAPPER_CLASS]} Result.make (5)
 		end
 
-	Generated_ce_mappers: LIST [WIZARD_WRITER_MAPPER_CLASS] is
+	Generated_ce_mappers: LIST [WIZARD_WRITER_MAPPER_CLASS]
 			-- C++ classes holding generated C to Eiffel mappers
 		once
 			create {ARRAYED_LIST [WIZARD_WRITER_MAPPER_CLASS]} Result.make (5)
 		end
 
-	Alias_c_writer: WIZARD_WRITER_C_FILE is
+	Alias_c_writer: WIZARD_WRITER_C_FILE
 			-- Shared alias C writer.
 		do
 			Result := Alias_c_writer_cell.item
 		end
 
-	set_alias_c_writer (a_writer: WIZARD_WRITER_C_FILE) is
+	set_alias_c_writer (a_writer: WIZARD_WRITER_C_FILE)
 			-- Set `Alias_c_writer).
 		do
 			Alias_c_writer_cell.put (a_writer)
 		end
 
-	create_alias_c_writer is
+	create_alias_c_writer
 			--
 		local
 			a_writer: WIZARD_WRITER_C_FILE
@@ -71,13 +71,13 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	Alias_c_writer_cell: CELL [WIZARD_WRITER_C_FILE] is
+	Alias_c_writer_cell: CELL [WIZARD_WRITER_C_FILE]
 			-- C writer of Alias.
 		once
 			create Result.put (Void)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

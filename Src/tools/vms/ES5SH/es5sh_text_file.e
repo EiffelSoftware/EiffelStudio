@@ -1,7 +1,7 @@
-indexing
+note
 	description: "Enhanced PLAIN_TEXT_FILE"
 	author: "David Schwartz, VMS diehard"
-	note: "[
+	details: "[
 		This class, written for ES5SH, provides enhancements to Eiffelbase PLAIN_TEXT_FILE.
 		1. it removes the spurious <CR> characters left in (some) lines by the runtime on VMS
 		2. it counts input lines
@@ -27,27 +27,27 @@ create
 
 feature -- Initialization
 
-	open_read is
+	open_read
 		do
 			Precursor
 			initialize
 		end
-	open_write is
+	open_write
 		do
 			Precursor
 			initialize
 		end
-	open_append is
+	open_append
 		do
 			Precursor
 			initialize
 		end
-	open_read_write is
+	open_read_write
 		do
 			Precursor
 			initialize
 		end
-	open_read_append is
+	open_read_append
 		do
 			Precursor
 			initialize
@@ -62,7 +62,7 @@ feature -- Access
 
 feature -- Input
 
-	read_line is
+	read_line
 		-- Read a string until new line or end of file.
 		-- Count number of lines read in `line_count'
 		-- Remove spurious trailing carriage return and output warning message
@@ -75,13 +75,13 @@ feature -- Input
 			end
 		end
 
-	readline is
+	readline
 			-- synonym for read_line; must be separate to call Precursor
 		do  read_line  end
 
 feature -- Output
 
-	put_string (s: STRING) is
+	put_string (s: STRING)
 			-- save `s' as last_string_output and write to file
 		do
 			last_string_output := s.twin
@@ -89,11 +89,11 @@ feature -- Output
 			line_count := line_count + last_string_output.occurrences ('%N')
 		end
 
-	putstring (s: STRING) is
+	putstring (s: STRING)
 			-- synonym for put_string; must be distinct from put_string to use Precursor
 		do  put_string (s)  end
 
-	put_new_line is
+	put_new_line
 			-- save newline as last_string_output and write to file
 		do
 			last_string_output := "%N"
@@ -101,19 +101,19 @@ feature -- Output
 			line_count := line_count + 1
 		end
 
-	new_line is
+	new_line
 			-- synonym for put_new_line
 		do  put_new_line  end
 
 feature {NONE} -- Implementation
 
-	initialize is
+	initialize
 		do
 			line_count := 0
 			last_string_output := Void
 		end
 
-	print_spurious_message (a_line: STRING) is
+	print_spurious_message (a_line: STRING)
 		once
 			debug ("spurious_cr_message")
 				print (generating_type + ": spurious <cr> eliminated from line #" + line_count.out + ": " + a_line + "%N")

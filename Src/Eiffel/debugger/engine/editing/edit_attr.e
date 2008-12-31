@@ -16,9 +16,9 @@ create
 
 feature -- Initialisation / Creation
 
-	set_stone(obj_stone: OBJECT_STONE)
+	set_stone(a_address: DBG_ADDRESS)
 		do
-			object := obj_stone
+			object_address := a_address
 		end
 
 feature {NONE} -- Implementation of deferred features
@@ -30,7 +30,7 @@ feature {NONE} -- Implementation of deferred features
 			io.put_string("----------------------------%N")
 
 			set_default_sp_bounds
-			create obj.make (object.object_address,	sp_lower, sp_upper)
+			obj := debugger_manager.object_manager.debugged_object (object_address, sp_lower, sp_upper)
 			item_list := obj.attributes
 			is_special := obj.is_special
 			set_sp_capacity (obj.max_capacity)
@@ -39,7 +39,7 @@ feature {NONE} -- Implementation of deferred features
 	generic_modify_item
 			-- Send the first part of the 'modify-local' request.
 		do
-			send_rqst_3(Rqst_modify_attr, item.item_number, 0, hex_to_integer (object.object_address))
+			send_rqst_3(Rqst_modify_attr, item.item_number, 0, object_address.as_pointer)
 		end
 
 	update_display
@@ -49,20 +49,20 @@ feature {NONE} -- Implementation of deferred features
 			retry_clause: BOOLEAN
 		do
 			if not retry_clause then
-					-- update the object tool form of the Project tool
-				project_tool.update_object_tool
+--					-- update the object tool form of the Project tool
+--				project_tool.update_object_tool
 
-					-- update all the other object tools
-				project_tool.window_manager.object_win_mgr.update
+--					-- update all the other object tools
+--				project_tool.window_manager.object_win_mgr.update
 
-				status.reload_call_stack
-				call_stack_elem := status.current_stack_element
-				if call_stack_elem /= Void then
-					Project_tool.display_exception_stack
-				end
+				status.reload_current_call_stack
+				call_stack_elem := status.current_call_stack_element
+--				if call_stack_elem /= Void then
+--					Project_tool.display_exception_stack
+--				end
 			else -- retry_clause, something went wrong
-				if Application.is_running then
-					Application.process_termination;
+				if debugger_manager.application.is_running then
+					debugger_manager.application.process_termination;
 				end
 			end
 		rescue
@@ -76,10 +76,9 @@ feature {NONE} -- Implementation of deferred features
 
 feature {NONE} -- Private variables
 
-	object			: OBJECT_STONE
+	object_address: DBG_ADDRESS
 	obj				: DEBUGGED_OBJECT
 	is_special		: BOOLEAN
-	stone			: CLASSC_STONE
 
 feature {NONE} -- Implementation
 
@@ -110,7 +109,7 @@ feature {NONE} -- Implementation
 		do
 			sp_capacity := 0
 			sp_lower := 0
-			sp_upper := Application.displayed_string_size
+			sp_upper := debugger_manager.displayed_string_size
 		end
 
 note

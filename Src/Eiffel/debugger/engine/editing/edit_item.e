@@ -9,17 +9,17 @@ deferred class
 	EDIT_ITEM
 
 inherit
---	SHARED_APPLICATION_EXECUTION
+	SHARED_DEBUGGER_MANAGER
 	IPC_SHARED
 	DEBUG_EXT
-	BEURK_HEXER
+	HEXADECIMAL_STRING_CONVERTER
 
 feature {EDIT_ITEM} -- Private attributes
 
 	status: APPLICATION_STATUS
 		-- Current application's status.
 
-	item_list: LIST[ABSTRACT_DEBUG_VALUE]
+	item_list: DS_LIST [ABSTRACT_DEBUG_VALUE]
 		-- list of all known items (locals, arguments, object attributes, ...).
 
 	item: ABSTRACT_DEBUG_VALUE
@@ -41,13 +41,13 @@ feature -- Commands
 	work
 		do
 				-- initialize attributes
-			status := Application.status
+			status := debugger_manager.application.status
 			item_list := Void
 			item := Void
 			item_name := Void
 			waiting_for_object := False
 
-			if Application.is_running and then status /= Void and then status.is_stopped then
+			if debugger_manager.application.is_running and then status /= Void and then status.is_stopped then
 					-- start the modification
 				start_feature
 
@@ -58,9 +58,9 @@ feature -- Commands
 					until
 						item_list.after
 					loop
-						io.put_string(item_list.item.name+": ")
-						if item_list.item.dynamic_class /= Void then
-							io.put_string(item_list.item.dynamic_class.name_in_upper+"%N")
+						io.put_string(item_list.item_for_iteration.name+": ")
+						if item_list.item_for_iteration.dynamic_class /= Void then
+							io.put_string(item_list.item_for_iteration.dynamic_class.name_in_upper+"%N")
 						else
 							io.put_string("NONE%N")
 						end
@@ -70,14 +70,14 @@ feature -- Commands
 						-- ask for the name of the item to edit
 					io.put_string("Enter the name of the item you want to edit: ")
 					io.readline
-					item_name := clone(io.last_string)
+					item_name := io.last_string.twin
 
 						-- search the item by name
 					from
 						item_list.start
 					until
 						item_list.after or
-						item_list.item.name.is_equal(item_name)
+						item_list.item_for_iteration.name.is_equal(item_name)
 					loop
 						item_list.forth
 					end
@@ -88,7 +88,7 @@ feature -- Commands
 					else
 						io.put_string("item found...%N")
 							-- item found...
-						item := item_list.item
+						item := item_list.item_for_iteration
 					end
 				end
 
@@ -102,7 +102,7 @@ feature -- Commands
 			end
 		end
 
-	go_on(new_value: OBJECT_STONE)
+	go_on(new_value: DBG_ADDRESS)
 			-- Set `dest_stone' to `new_value': Record the
 			-- object that will be used as new value when
 			-- modifying the item.
@@ -112,7 +112,7 @@ feature -- Commands
 			modified := True
 			waiting_for_object := False
 			generic_modify_item
-			send_ref_value(hex_to_integer(new_value.object_address))
+			send_ref_value (new_value.as_pointer)
 			receive_ack
 
 			update_display
@@ -192,7 +192,7 @@ feature {NONE} -- Implementation
 			elseif type_ptr /= Void then -- Pointer
 				io.put_string("Enter an hexadecimal POINTER value: ")
 				io.readline
-				value_ptr := default_pointer + hex_to_integer(io.last_string)
+				value_ptr := default_pointer + hex_to_integer_32 (io.last_string)
 				generic_modify_item
 				send_ptr_value(value_ptr)
 				receive_ack
@@ -201,7 +201,7 @@ feature {NONE} -- Implementation
 				-- this is a String
 				io.put_string("Enter a STRING: ")
 				io.readline
-				value_string := clone(io.last_string)
+				value_string := io.last_string.twin
 				generic_modify_item
 				value_string_c := value_string.to_c
 				send_string_value($value_string_c)
@@ -246,6 +246,28 @@ feature {EDIT_ITEM} -- Deferred features
 	update_display
 			-- update windows which content may be out-of-date.
 		deferred
+		end
+
+feature {NONE} -- Implementation: to be implemented
+
+	send_integer_value (a_value: INTEGER)
+		do
+
+		end
+
+	send_real_value (a_value: REAL)
+		do
+
+		end
+
+	send_double_value (a_value: DOUBLE)
+		do
+
+		end
+
+	send_char_value (a_value: CHARACTER)
+		do
+
 		end
 
 note

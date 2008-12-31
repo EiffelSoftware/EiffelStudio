@@ -201,7 +201,7 @@ feature -- Basic operations
 			-- 'LIKE' predicates are implemented by both Oracle and ODBC with '%' and '_' wild
 			-- card characters.
 			-- Case sensitiveness can only be specified for Oracle. ODBC set case sensitiveness
-			-- directly on database columns. 
+			-- directly on database columns.
 		local
 			q: STRING
 			attr, val: STRING
@@ -412,7 +412,7 @@ feature -- Update
 			end
 		rescue
 			rescued := True
-			retry		
+			retry
 		end
 
 feature -- Creation
@@ -443,9 +443,9 @@ feature -- Creation
 					Result := integer_ref.item + 1
 				elseif real_ref /= Void then
 					Result := real_ref.item + 1
-				elseif type_code = table_descr.Double_type or type_code = table_descr.real_type then						
+				elseif type_code = table_descr.Double_type or type_code = table_descr.real_type then
 					Result := 1.0
-				elseif type_code = table_descr.Integer_type then					
+				elseif type_code = table_descr.Integer_type then
 					Result := 1
 				else
 					has_error := True
@@ -479,9 +479,9 @@ feature -- Deletion
 		local
 			table_descr: DB_TABLE_DESCRIPTION
 		do
-			table_descr := an_obj.table_description			
+			table_descr := an_obj.table_description
 			delete_item_with_description (table_descr)
-		end 
+		end
 
 	delete_tablerow (an_obj: DB_TABLE)
 			-- Delete `an_obj' in the database,
@@ -491,7 +491,7 @@ feature -- Deletion
 			table_descr: DB_TABLE_DESCRIPTION
 			ind, fkey, item: INTEGER
 			deletion_fkey_value: ANY
-			to_delete_tables: ARRAY [INTEGER] 
+			to_delete_tables: ARRAY [INTEGER]
 			del_fkey_from_table: HASH_TABLE [INTEGER, INTEGER]
 		do
 			table_descr := an_obj.table_description
@@ -509,7 +509,7 @@ feature -- Deletion
 				ind := ind + 1
 			end
 			delete_item_with_description (table_descr)
-		end 
+		end
 
 feature -- Commitment
 
@@ -536,7 +536,7 @@ feature {NONE} -- Update implementation
 			until
 				i > name_list.count
 			loop
-				updater.set_map_name (table_descr.attribute (i), name_list.i_th (i))
+				updater.set_map_name (table_descr.attribute_value (i), name_list.i_th (i))
 				i := i + 1
 			end
 		end
@@ -569,8 +569,8 @@ feature {NONE} -- Update implementation
 			loop
 					-- Do not insert the table primary key into the insert statement, this produces and sql error
 				l_do_append := l_has_id and then parameter_list.index /= td.id_code
-				if l_do_append then			
-					Result.append (attribute_list.item + " = :" + parameter_list.item)					
+				if l_do_append then
+					Result.append (attribute_list.item + " = :" + parameter_list.item)
 				end
 				parameter_list.forth
 				attribute_list.forth
@@ -620,7 +620,7 @@ feature {NONE} -- Creation implementation
 					error_message.append (No_repository)
 				end
 			else
-				database_manager.insert_with_repository (an_obj, rep)				
+				database_manager.insert_with_repository (an_obj, rep)
 				if database_manager.has_error then
 					has_error := True
 					error_message := Creation_failed + database_manager.error_message
@@ -677,7 +677,7 @@ feature {NONE} -- Deletion implementation
 				has_error := True
 				error_message := Deletion_failed + database_manager.error_message
 			end
-		end 
+		end
 
 	load_and_delete_tablerows (table_code, fkey_code: INTEGER; fkey_value: ANY)
 			-- Load and delete rows of table with `tablecode' where foreign key with `fkey_code'
@@ -771,10 +771,10 @@ feature {NONE} -- SQL query construction
 	Space: STRING = " "
 			-- Space separator in SQL queries.
 
-	to_lower (attribute: STRING): STRING
-			-- Oracle SQL representation of the value in lower case for `attribute'.
+	to_lower (a_attribute: STRING): STRING
+			-- Oracle SQL representation of the value in lower case for `a_attribute'.
 		do
-			Result := "lower (" + attribute + ")"
+			Result := "lower (" + a_attribute + ")"
 		end
 
 	Like_predicate: STRING = "like"

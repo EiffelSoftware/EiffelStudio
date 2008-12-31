@@ -10,7 +10,7 @@ deferred class
 
 inherit
 	DB_TABLES_ACCESS_USE
-	
+
 feature -- Initialization
 
 	make
@@ -71,12 +71,12 @@ feature -- Access (table description)
 			-- List of tables depending on this one and their
 			-- foreign key for this table.
 			-- Deletion on this table may imply deletions on
-			-- depending tables. 
+			-- depending tables.
 		deferred
 		end
 
 	to_create_fkey_from_table: HASH_TABLE [INTEGER, INTEGER]
-			-- List of associated necessary tables and the  
+			-- List of associated necessary tables and the
 			-- linking foreign keys.
 			-- Creation on this table may imply creations on
 			-- associated necessary tables.
@@ -94,12 +94,12 @@ feature -- Access (table description)
 			--| 1 in general.
 		deferred
 		end
-		
+
 	identity_column: INTEGER
 			-- Column ID for IDENTITY column of table (0 if there is no IDENTITY column, default)
 		do
 			Result := 0
-		end		
+		end
 
 	No_id: INTEGER = 0
 			-- `Id_code' value when no ID exists or ID constraint is not
@@ -116,12 +116,12 @@ feature -- Access (table description)
 	Double_type: INTEGER = 6;
 
 	String_type: INTEGER = 20;
-	
+
 	Date_time_type: INTEGER = 21;
 
 feature -- Access (table row values)
 
-	attribute (code: INTEGER): ANY
+	attribute_value (code: INTEGER): ANY
 			-- Value of attribute with `code'.
 		require
 			valid_code: valid (code)
@@ -135,7 +135,7 @@ feature -- Access (table row values)
 		local
 			r_any: ANY
 		do
-			r_any := attribute (code)
+			r_any := attribute_value (code)
 			if r_any /= Void then
 				Result := r_any.out
 			else
@@ -148,7 +148,7 @@ feature -- Access (table row values)
 	id: ANY
 			-- Table row ID.
 		do
-			Result := attribute (Id_code)
+			Result := attribute_value (Id_code)
 		end
 
 	printable_id: STRING
@@ -159,14 +159,14 @@ feature -- Access (table row values)
 
 	attribute_list: ARRAYED_LIST [ANY]
 			-- Table row attribute values.
-		do			
+		do
 			create Result.make (Attribute_number)
 			from
 				attribute_code_list.start
 			until
 				attribute_code_list.after
 			loop
-				Result.extend (attribute (attribute_code_list.item))
+				Result.extend (attribute_value (attribute_code_list.item))
 				attribute_code_list.forth
 			end
 		ensure
@@ -200,7 +200,7 @@ feature -- Access (table row values)
 			until
 				list.after
 			loop
-				Result.extend (attribute (list.item))
+				Result.extend (attribute_value (list.item))
 				list.forth
 			end
 		ensure
@@ -228,7 +228,7 @@ feature -- Access (table row values)
 	mapped_list (action: FUNCTION [ANY, TUPLE [STRING], STRING]): ARRAYED_LIST [STRING]
 			-- Feature list mapped with `action'.
 			-- This can be useful to create tags or parameter names.
-		do			
+		do
 			create Result.make (Attribute_number)
 			from
 				description_list.start
@@ -238,7 +238,7 @@ feature -- Access (table row values)
 				action.call ([description_list.item.twin])
 				Result.extend (action.last_result)
 				description_list.forth
-			end		
+			end
 		end
 
 feature -- Status report

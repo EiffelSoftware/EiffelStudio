@@ -91,7 +91,7 @@ feature -- Basic operations
 			if behavior_type = Id_selection and attribute_code = 0 then
 				attribute_code := db_table.table_description.id_code
 			end
-			last_criterion_value := db_table.table_description.attribute (attribute_code)
+			last_criterion_value := db_table.table_description.attribute_value (attribute_code)
 			read
 		end
 
@@ -160,12 +160,12 @@ feature {NONE} -- Implementation
 			-- Last criterion value for database selections set
 			-- from `read_from_tablerow'. ANY must represent one of the possible
 			-- table row types.
-	
+
 	attribute_code: INTEGER;
 			-- Code of attribute containing the criterion value to match
 			-- for a database selection.
 	--|||		-- Code of the table ID attribute if behavior is ID selection.
-	
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

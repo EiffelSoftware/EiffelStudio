@@ -35,7 +35,7 @@ feature -- Access
 	attribute_code: INTEGER
 			-- Code of the represented attribute in the
 			-- database table.
-	
+
 	table_description: DB_TABLE_DESCRIPTION
 			-- Description of the database table containing
 			-- the represented attribute.
@@ -67,7 +67,7 @@ feature -- Status report
 		do
 			Result := graphical_value_set and then table_description /= Void
 		end
-		
+
 	is_activated: BOOLEAN
 			-- Is component activated?
 
@@ -117,15 +117,15 @@ feature -- Status report
 		-- Is the attribute a date only value?
 
 	use_redirection: BOOLEAN
-			-- Is the display a redirection from the attribute? 
+			-- Is the display a redirection from the attribute?
 		do
 			Result := redirector /= Void
 		end
-	
+
 	has_changed: BOOLEAN
 			-- Has the user changed the field content?
 
-	is_cleared: BOOLEAN 
+	is_cleared: BOOLEAN
 			-- Has the field been cleared?
 
 	graphical_title_set: BOOLEAN
@@ -469,7 +469,7 @@ feature {DV_COMPONENT} -- Basic operations
 		end
 
 	refresh (table_row: DB_TABLE_DESCRIPTION)
-			-- set `text' with value of attribute 
+			-- set `text' with value of attribute
 			-- with code `attribute_code' of `table_row'.
 		require
 			is_activated: is_activated
@@ -479,7 +479,7 @@ feature {DV_COMPONENT} -- Basic operations
 				set_datetime (table_row)
 			else
 				if redirector /= Void then
-					set_text (redirector.redirected_value (table_row.attribute (attribute_code)))
+					set_text (redirector.redirected_value (table_row.attribute_value (attribute_code)))
 				else
 					set_text (table_row.printable_attribute (attribute_code))
 				end
@@ -507,7 +507,7 @@ feature {NONE} -- Implementation
 		local
 			dt: DATE_TIME
 		do
-			dt ?= table_row.attribute (attribute_code)
+			dt ?= table_row.attribute_value (attribute_code)
 			if dt /= Void then
 				if is_date then
 					set_text (dt.date.out)
@@ -527,7 +527,7 @@ feature {NONE} -- Implementation
 
 	type_code: INTEGER
 			-- Represented field type code.
-	
+
 	type_name: STRING;
 			-- Represented field type name.
 

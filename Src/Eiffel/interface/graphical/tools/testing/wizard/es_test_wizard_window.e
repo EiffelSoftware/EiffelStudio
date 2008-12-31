@@ -67,6 +67,16 @@ feature {NONE} -- Access
 	development_window: EB_DEVELOPMENT_WINDOW
 			-- Window `Current' is attached to.
 
+	current_window: !EV_WINDOW
+			-- <Precursor>
+		local
+			l_window: EV_WINDOW
+		do
+			l_window := development_window.window
+			check l_window /= Void end
+			Result := l_window
+		end
+
 	pixmap_factory: EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
 			-- Pixmap factory
 		once

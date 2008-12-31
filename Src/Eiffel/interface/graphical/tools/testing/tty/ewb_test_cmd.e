@@ -10,7 +10,7 @@ deferred class
 inherit
 	EWB_CMD
 
-	ES_SHARED_TEST_SERVICE
+	SHARED_TEST_SERVICE
 
 feature -- Basic operations
 
@@ -64,18 +64,22 @@ feature {NONE} -- Basic operations
 			test_suite_available: test_suite.is_service_available
 		local
 			l_service: TEST_SUITE_S
+			l_total, l_failing, l_passing, l_unresolved: NATURAL
 		do
 			l_service := test_suite.service
+			l_total := l_service.count_executed
+			l_passing := l_service.count_passing
+			l_failing := l_service.count_failing
+			l_unresolved := l_total - l_passing - l_failing
 			print_string ("%N")
 			print_string (l_service.tests.count.out)
 			print_string (" tests (")
-			print_string (l_service.count_executed.out)
+			print_string (l_total.out)
 			print_string (" executed, ")
-			print_string (l_service.count_passing.out)
-			print_string (" passing, ")
-			print_string (l_service.count_failing.out)
-			print_string (" failing)")
-			print_string (")%N%N")
+			print_string (l_failing.out)
+			print_string (" failing, ")
+			print_string (l_unresolved.out)
+			print_string (" unresolved)%N%N")
 		end
 
 	print_multiple_string (a_string: STRING_GENERAL; a_count: INTEGER)

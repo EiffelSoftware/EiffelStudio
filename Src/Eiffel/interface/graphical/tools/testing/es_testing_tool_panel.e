@@ -235,6 +235,16 @@ feature {NONE} -- Access
 			create Result
 		end
 
+	current_window: !EV_WINDOW
+			-- <Precursor>
+		local
+			l_window: EV_WINDOW
+		do
+			l_window := develop_window.window
+			check l_window /= Void end
+			Result := l_window
+		end
+
 feature {NONE} -- Access: widgets
 
 	view_box: !EV_COMBO_BOX
@@ -672,32 +682,12 @@ feature {NONE} -- Events: test execution
 			l_test_suite: TEST_SUITE_S
 			l_conf: TEST_EXECUTOR_CONF
 		do
-			l_test_suite := test_suite.service
-			if test_suite.is_service_available then
-				if l_test_suite.processor_registrar.is_valid_type (a_type, l_test_suite) then
-					l_executor := l_test_suite.executor (a_type)
-					if l_executor.is_ready then
-						if a_list /= Void then
-							create l_conf.make_with_tests (a_list)
-						else
-							create l_conf.make
-						end
-						l_conf.set_sorter_prefix (tree_view.tag_prefix)
-						if l_executor.is_valid_configuration (l_conf) then
-							l_test_suite.launch_processor (l_executor, l_conf, False)
-						else
-							show_error_prompt (e_invalid_test_list, [])
-						end
-					else
-						show_error_prompt (e_executor_already_running, [])
-
-					end
-				else
-					show_error_prompt (e_executor_unavailable, [])
-				end
+			if a_list /= Void then
+				create l_conf.make_with_tests (a_list)
 			else
-				show_error_prompt (e_test_suite_unavailable, [])
+				create l_conf.make
 			end
+			launch_processor (a_type, l_conf, False)
 		end
 
 	on_stop
@@ -882,14 +872,6 @@ feature {NONE} -- Events: notebook
 			end
 		end
 
-feature {NONE} -- Implementation
-
-	show_error_prompt (a_message: !STRING; a_tokens: !TUPLE)
-			-- Show error prompt with `a_message'.
-		do
-			prompts.show_error_prompt (locale_formatter.formatted_translation (a_message, a_tokens), develop_window.window, Void)
-		end
-
 feature {NONE} -- Factory
 
 	create_widget: !EV_VERTICAL_BOX
@@ -1059,10 +1041,6 @@ feature {NONE} -- Internationalization
 
 	q_add_library: !STRING = "The testing library has not been added yet. Would you like EiffelStudio to add the library and recompile before launching the test wizard?"
 
-	e_invalid_test_list: !STRING = "Selected tests can not be executed. Make sure none of the selected tests are currently being tested."
-	e_executor_already_running: !STRING = "Executor is already running tests."
-	e_executor_unavailable: !STRING = "Executor is not available"
-	e_test_suite_unavailable: !STRING = "Test suite service is not available"
 	e_project_not_compiled: !STRING = "Please compile the project first"
 
 feature {NONE} -- Constants

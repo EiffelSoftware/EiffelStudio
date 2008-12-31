@@ -130,27 +130,23 @@ feature {NONE} -- Events: widgets
 	on_run
 			-- Called when `run_button' is selected
 		local
-			l_test_suite: !TEST_SUITE_S
-			l_conf: !TEST_EXECUTOR_CONF
-			l_list: !DS_LINEAR [!TEST_I]
+			l_conf: TEST_EXECUTOR_CONF
+			l_list: ?DS_LINEAR [!TEST_I]
 		do
-			if executor.is_interface_usable and test_suite.is_service_available then
-				l_test_suite := test_suite.service
-				if executor.are_tests_available then
-					if not grid.selected_items.is_empty then
-						l_list := grid.selected_items
-					else
-						l_list := executor.active_tests
-					end
-					if l_list.count = l_test_suite.tests.count then
-						create l_conf.make
-					else
-						create l_conf.make_with_tests (l_list)
-					end
-					if executor.is_ready and executor.is_valid_configuration (l_conf) then
-						l_test_suite.launch_processor (executor, l_conf, False)
-					end
-				end
+			if not grid.selected_items.is_empty then
+				l_list := grid.selected_items
+			elseif executor.are_tests_available then
+				l_list := executor.active_tests
+			end
+			if l_list = Void or else (test_suite.is_service_available and then test_suite.service.tests.count = l_list.count) then
+				create l_conf.make
+			else
+				create l_conf.make_with_tests (l_list)
+			end
+			if debug_executor_type.attempt (executor) /= Void then
+				launch_processor (debug_executor_type, l_conf, False)
+			else
+				launch_processor (background_executor_type, l_conf, False)
 			end
 		end
 

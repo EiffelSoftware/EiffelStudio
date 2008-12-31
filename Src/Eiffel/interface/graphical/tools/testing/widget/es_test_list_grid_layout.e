@@ -18,10 +18,7 @@ inherit
 			populate_header
 		end
 
-	ES_SHARED_TEST_SERVICE
-		export
-			{NONE} all
-		end
+	SHARED_TEST_SERVICE
 
 	EV_STOCK_COLORS
 		export

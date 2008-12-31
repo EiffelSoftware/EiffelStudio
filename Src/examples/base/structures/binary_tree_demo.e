@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Demo class for binary trees."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Creation
 
-	make is
+	make
 			-- Initialize and execute demonstration
 		do
 			create driver.make
@@ -43,7 +43,7 @@ feature -- Attributes
 
 feature -- Implementation
 
-	cycle is
+	cycle
 		local
 			new_command: INTEGER
 		do
@@ -64,7 +64,7 @@ feature -- Implementation
 			driver.exit
 		end
 
-	tree_trace (t: BINARY_TREE [INTEGER]; i: INTEGER) is
+	tree_trace (t: BINARY_TREE [INTEGER]; i: INTEGER)
 			-- Display t, indented by i positions
 		require
 			tree_not_void: t /= Void
@@ -97,7 +97,7 @@ feature -- Implementation
 			end
 		end
 
-	fill_menu is
+	fill_menu
 			-- Fill the menu with the available commands.
 		do
 			driver.add_entry ("AL (Add Left): Add a left child", "Add a sub-tree on the left of the current node")
@@ -131,7 +131,7 @@ feature -- Implementation
 			driver.complete_menu
 		end
 
-	execute (new_command: INTEGER) is
+	execute (new_command: INTEGER)
 			-- Execute command corresponding to user's request.
 		require else 
 			valid_command: new_command >= child_put_left and new_command <= quit
@@ -203,7 +203,7 @@ feature -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A Demo for figures."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 
 feature -- Access
 
-	figure: EV_FIGURE is
+	figure: EV_FIGURE
 			-- Current figure associated tothe item.
 		deferred
 		end
@@ -25,7 +25,7 @@ feature -- Access
 
 feature {DEMO_ITEM} -- Execution commands
 
-	execute (arg: EV_ARGUMENT; ev_data: EV_EVENT_DATA) is
+	execute (arg: EV_ARGUMENT; ev_data: EV_EVENT_DATA)
 			-- When we select the item, we launch the
 			-- window and the options. The previous demo
 			-- get a Void parent
@@ -34,7 +34,7 @@ feature {DEMO_ITEM} -- Execution commands
 			demo_window.set_figure (figure)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that lets user select a line style."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 		
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a LINE_STYLE_CHOOSER
 		local
 			l_item: EV_LIST_ITEM
@@ -72,7 +72,7 @@ feature {NONE} -- Initialization
 		
 feature -- Access
 
-	line_width: INTEGER is
+	line_width: INTEGER
 			-- Selected line width.
 		local
 			item_data: TUPLE [INTEGER, BOOLEAN]
@@ -81,7 +81,7 @@ feature -- Access
 			Result := item_data.integer_item (1)
 		end
 
-	is_dashed_line_style: BOOLEAN is
+	is_dashed_line_style: BOOLEAN
 			-- Is dashed line style selected?
 		local
 			item_data: TUPLE [INTEGER, BOOLEAN]
@@ -90,7 +90,7 @@ feature -- Access
 			Result := item_data.boolean_item (2)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

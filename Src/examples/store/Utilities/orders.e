@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class ORDERS 
@@ -8,7 +8,7 @@ create
 
 feature 
 
-	make (id, customer_id: INTEGER) is
+	make (id, customer_id: INTEGER)
 		do
 			orderid := id
 			custid := customer_id
@@ -16,7 +16,7 @@ feature
 
 	orderid, custid: INTEGER;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

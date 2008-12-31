@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that synchronizes all the threads when exiting."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	exit_mutex: MUTEX is
+	exit_mutex: MUTEX
 			-- Lock synchronizing creation and destruction
 			-- of EiffelThreads.
 		once
@@ -19,7 +19,7 @@ feature -- Access
 			exit_mutex_not_void: exit_mutex /= Void
 		end
 
-	demos_list: LINKED_LIST [DEMO_WIN] is
+	demos_list: LINKED_LIST [DEMO_WIN]
 			-- Record all demo windows running a thread.
 			-- Access needs to be protected using `exit_mutex'.
 		once
@@ -28,7 +28,7 @@ feature -- Access
 			demos_list_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

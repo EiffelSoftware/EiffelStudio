@@ -1,4 +1,4 @@
-indexing
+note
 	visual_name: "View"
 
 class COMMAND1
@@ -17,7 +17,7 @@ create
 
 feature  -- Initialization
 
-	make (arg1: SCROLLED_T) is
+	make (arg1: SCROLLED_T)
 		do
 			argument1 := arg1
 			Precursor {BUILD_OPEN} (arg1)
@@ -25,7 +25,7 @@ feature  -- Initialization
 
 feature  -- Command
 
-	execute is
+	execute
 			-- Switch to file viewing.
 		do
 			if not asked_for_name then
@@ -44,11 +44,11 @@ feature  -- Command
 
 feature  -- Access
 
-	view_label: STRING is "view"
+	view_label: STRING = "view"
 	
 	argument1: SCROLLED_T;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

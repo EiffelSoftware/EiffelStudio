@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -6,13 +6,13 @@ class
 
 feature
 
-	Dummy: INTEGER is 0
-	Special: INTEGER is 1
-	Simple_identifier: INTEGER is 2
-	Integer_constant: INTEGER is 3
-	Blanks: INTEGER is 4;
+	Dummy: INTEGER = 0
+	Special: INTEGER = 1
+	Simple_identifier: INTEGER = 2
+	Integer_constant: INTEGER = 3
+	Blanks: INTEGER = 4;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

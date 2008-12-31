@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Pixmaps, Multi-Column List & Trees..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Initialization
 
-	prepare is
+	prepare
 			-- Initialize world.
 		local
 			button_container: EV_HORIZONTAL_BOX
@@ -122,7 +122,7 @@ feature -- Initialization
 			first_window.extend(my_container)
 		end
 
-	first_window: EV_TITLED_WINDOW is
+	first_window: EV_TITLED_WINDOW
 			-- The window with the drawable area.
 		once
 			create Result
@@ -130,7 +130,7 @@ feature -- Initialization
 			Result.set_size (500, 500)
 		end
 
-	add_pixmap_button_pushed is
+	add_pixmap_button_pushed
 		do
 			mcrow1.set_pixmap (my_icon)
 			tvitem1.set_pixmap (my_icon)
@@ -143,7 +143,7 @@ feature -- Initialization
 			size_pixmap_button.enable_sensitive
 		end	
 
-	remove_pixmap_button_pushed is
+	remove_pixmap_button_pushed
 		do
 			mcrow1.remove_pixmap
 			mcrow2.remove_pixmap
@@ -155,21 +155,21 @@ feature -- Initialization
 			size_pixmap_button.disable_sensitive
 		end	
 
-	large_pixmap_button_pushed is
+	large_pixmap_button_pushed
 		do
 			my_mclist.set_pixmaps_size (32, 32)
 			my_tree.set_pixmaps_size (32, 32)
 			size_pixmap_button.set_value (32)
 		end	
 
-	small_pixmap_button_pushed is
+	small_pixmap_button_pushed
 		do
 			my_mclist.set_pixmaps_size (16, 16)
 			my_tree.set_pixmaps_size (16, 16)
 			size_pixmap_button.set_value (16)
 		end	
 
-	size_pixmap_button_pushed is
+	size_pixmap_button_pushed
 		local
 			pix_size: INTEGER
 		do
@@ -205,7 +205,7 @@ feature {NONE} -- Graphical interface
 
 feature -- Process Vision2 events
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

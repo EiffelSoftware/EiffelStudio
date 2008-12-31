@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"The demo that goes with the button demo"
 	legal: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make (par: EV_CONTAINER)
 			-- Create the demo in `par'.
 			-- We create the box first without parent because it
 			-- is faster.
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			add_toggle_button_commands (radio_b, event_window, "Toggle button")
 		end
 
-	set_tabs is
+	set_tabs
 			-- Set the tabs for the action window.
 		do
 			set_primitive_tabs
@@ -59,7 +59,7 @@ feature -- Access
 
 	radio_b: EV_RADIO_BUTTON;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

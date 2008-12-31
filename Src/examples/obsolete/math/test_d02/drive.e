@@ -1,4 +1,4 @@
-indexing
+note
 	description: " Test routines for d02"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -22,7 +22,7 @@ create
 
 feature -- Initialization
 
-	make (args: ARRAY [STRING]) is
+	make (args: ARRAY [STRING])
 			-- Test of various routines from d02.
 		do
 			print ("Machine precision is ");
@@ -43,7 +43,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	test_rhs is
+	test_rhs
 			-- Test the functions. 
 		local
 			d2: DOUBLE;
@@ -91,7 +91,7 @@ feature -- Basic operations
 			print_nl ("");
 		end;
 
-	test_adams is
+	test_adams
 			-- Check out ODE Solver.
 			-- See example in section 8.3 of NAG Manual d02cjc.
 		local
@@ -124,7 +124,7 @@ feature -- Basic operations
 			print_nl ("");
 		end;
 
-	test_stiff1 is
+	test_stiff1
 			-- Check out Stiff ODE Solver.
 			-- See example in section 8.3 of NAG Manual d02cjc.
 		local
@@ -159,7 +159,7 @@ feature -- Basic operations
 			print_nl ("");
 		end;
 
-	test_stiff2 is
+	test_stiff2
 			-- Check out Stiff ODE Solver on a stiff problem.
 			-- See example in NAG Manual d02ejc.
 		local
@@ -197,7 +197,7 @@ feature -- Basic operations
 			print_nl ("");
 		end;
 
-	test_rk_range is
+	test_rk_range
 			-- Check out Range_RK_ODE Solver.
 			-- See example in section 8.3 of NAG Manual d02cjc.
 		local
@@ -225,7 +225,7 @@ feature -- Basic operations
 			print_nl ("");
 		end;
 
-	test_rk_one_step is
+	test_rk_one_step
 			-- Check out Range_RK_ODE Solver.
 			-- See example in section 8.3 of NAG Manual d02cjc.
 		local
@@ -267,7 +267,7 @@ feature -- Basic operations
 			print_nl ("");
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

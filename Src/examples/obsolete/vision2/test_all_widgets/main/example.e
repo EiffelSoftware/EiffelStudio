@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"Root class of Test all widgets application."
 	legal: "See notice at end of class."
@@ -18,14 +18,14 @@ create
 
 feature -- Access
 
-	first_window: MAIN_WINDOW is
+	first_window: MAIN_WINDOW
 			-- Main window of the example
 		once
 			create Result.make_top_level 
 			Result.show
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

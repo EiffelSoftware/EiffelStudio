@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog box to change different color of the DATE_TIME_PICKER control."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_dtp: WINFORMS_DATE_TIME_PICKER) is
+	make (a_dtp: WINFORMS_DATE_TIME_PICKER)
 			-- Call `initialize_components'.
 		require
 			non_void_a_dtp: a_dtp /= Void
@@ -58,7 +58,7 @@ feature -- Access
 
 feature -- Implementation
 
-	initialize_components is
+	initialize_components
 			-- Initialize all window components.
 		local
 			l_point: DRAWING_POINT
@@ -255,7 +255,7 @@ feature -- Implementation
 
 feature {NONE} -- Implementation
 
-	dispose_boolean (a_disposing: BOOLEAN) is
+	dispose_boolean (a_disposing: BOOLEAN)
 			-- method called when form is disposed.
 		local
 			retried: BOOLEAN
@@ -271,7 +271,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	synchronize_panel_colors is
+	synchronize_panel_colors
 			-- Synchronize panel control.
         do
 			pnl_fore_color.set_back_color (dtp.calendar_fore_color)
@@ -281,7 +281,7 @@ feature {NONE} -- Implementation
 			pnl_trailing_fore_color.set_back_color (dtp.calendar_trailing_fore_color)
 		end
 
-	on_btn_fore_color_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+	on_btn_fore_color_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS)
 			-- feature performed whent `btn_fore_color' is clicked.
 		require
 			non_void_sender: sender /= Void
@@ -297,7 +297,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_btn_month_background_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+	on_btn_month_background_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS)
 			-- feature performed whent `btn_month_background' is clicked.
 		require
 			non_void_sender: sender /= Void
@@ -313,7 +313,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_btn_title_back_color_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+	on_btn_title_back_color_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS)
 			-- feature performed whent `btn_title_back_color' is clicked.
 		require
 			non_void_sender: sender /= Void
@@ -329,7 +329,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_btn_title_fore_color_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+	on_btn_title_fore_color_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS)
 			-- feature performed whent `btn_title_fore_color' is clicked.
 		require
 			non_void_sender: sender /= Void
@@ -345,7 +345,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_btn_trailing_fore_color_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+	on_btn_trailing_fore_color_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS)
 			-- feature performed whent `btn_trailing_fore_color' is clicked.
 		require
 			non_void_sender: sender /= Void
@@ -382,7 +382,7 @@ invariant
 	non_void_label_4: label_4 /= Void
 	non_void_label_5: label_5 /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

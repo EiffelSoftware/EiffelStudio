@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"MAIN_WINDOW, main window for the application. Belongs to EiffelVision example 'hello world'."
 	legal: "See notice at end of class."
@@ -35,7 +35,7 @@ feature --Access
 
 feature -- Initialization
 
-	make_top_level is
+	make_top_level
 			-- Create the main window.
 		local
 			notebook: EV_NOTEBOOK
@@ -112,7 +112,7 @@ feature -- Features needed for the status bar of the window.
 
 feature -- Menu Features
 
-	fill_menu is
+	fill_menu
 		local
 			menu: EV_MENU
 			menu_item: EV_MENU_ITEM
@@ -137,14 +137,14 @@ feature -- Menu Features
 
 feature --
 
-	show_action_window (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	show_action_window (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Show the action window if enabled.
 		do
 		end
 
 feature -- Tree features
 
-	fill_tree is
+	fill_tree
 		local
 			-- Sub tree item.
 			kernel, properties: EV_TREE_ITEM
@@ -325,7 +325,7 @@ feature -- Tree features
 			create printd.make_with_title (dialog, "ev_print_dialog", "print_window")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

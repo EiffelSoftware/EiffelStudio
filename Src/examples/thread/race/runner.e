@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class 
@@ -11,7 +11,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (io_m: MUTEX; i: INTEGER; n: INTEGER) is
+	make (io_m: MUTEX; i: INTEGER; n: INTEGER)
 		require
 			io_m_not_void: io_m /= Void
 			valid_i: i > 0
@@ -29,7 +29,7 @@ feature {NONE} -- Implementation
 
 	id, nb_loop: INTEGER
 
-	execute is
+	execute
 		local
 			i, cpt: INTEGER
 		do
@@ -56,7 +56,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

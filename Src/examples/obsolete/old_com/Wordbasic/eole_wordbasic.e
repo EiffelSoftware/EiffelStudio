@@ -1,13 +1,16 @@
-indexing
-	description: "OLE WordBasic automation client"
-	legal: "See notice at end of class.";
-	note: "Some feature names (in the Element change category) %
-			%do not follow Eiffel conventions, but follow Word Basic %
-			%conventions instead. For example `file_new_default' would %
-			%normally be called `create_default_file' but corresponds %
-			%to WordBasic's `FileNewDefault' function.";
-	status: "See notice at end of class.";
-	date: "$Date$";
+note
+	description: "[
+		OLE WordBasic automation client
+
+		Note: Some feature names (in the Element change category)
+			do not follow Eiffel conventions, but follow Word Basic
+			conventions instead. For example `file_new_default' would
+			normally be called `create_default_file' but corresponds
+			to WordBasic's `FileNewDefault' function.
+		]"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
+	date: "$Date$"
 	revision: "$Revision$"
 
 class
@@ -33,7 +36,7 @@ inherit
 
 feature -- Access
 
-	class_id: STRING is 
+	class_id: STRING 
 			-- Class identifier of WordBasic
 		once
 			Result := "{000209FE-0000-0000-C000-000000000046}"
@@ -41,7 +44,7 @@ feature -- Access
 
 feature -- Element change
 
-	file_new_default is
+	file_new_default
 			-- Create new file from default template.
 		do
 			dispparams.init
@@ -50,7 +53,7 @@ feature -- Element change
 			check_result
 		end
 		
-	file_save is
+	file_save
 			-- Save active document.
 		do
 			dispparams.init
@@ -59,7 +62,7 @@ feature -- Element change
 			check_result
 		end
 
-	file_open (filename: FILE_NAME) is
+	file_open (filename: FILE_NAME)
 			-- Open a document
 		local
 			variantarg: EOLE_VARIANT
@@ -76,7 +79,7 @@ feature -- Element change
 			check_result
 		end
 		
-	file_exit is
+	file_exit
 			-- Ask whether to save changes before exiting.
 		do
 			dispparams.init
@@ -85,7 +88,7 @@ feature -- Element change
 			check_result
 		end
 
-	insert (text: STRING) is
+	insert (text: STRING)
 			-- Insert `text' at insertion point.
 		local
 			variantarg: EOLE_VARIANT
@@ -102,7 +105,7 @@ feature -- Element change
 			check_result
 		end
 
-	center_para is
+	center_para
 			-- Center selected paragraphs.
 		do
 			dispparams.init
@@ -111,7 +114,7 @@ feature -- Element change
 			check_result
 		end
 
-	left_para is
+	left_para
 			-- Left-align selected paragraphs.
 		do
 			dispparams.init
@@ -120,7 +123,7 @@ feature -- Element change
 			check_result
 		end
 
-	right_para is
+	right_para
 			-- Right-align selected paragraphs.
 		do
 			dispparams.init
@@ -129,7 +132,7 @@ feature -- Element change
 			check_result
 		end
 
-	line_up (count: INTEGER) is
+	line_up (count: INTEGER)
 			-- Move insertion point up by `count' lines.
 			-- (If `count' is negative, move down by -`count'.)
 		local
@@ -146,7 +149,7 @@ feature -- Element change
 			check_result
 		end
 
-	line_down (count: INTEGER) is
+	line_down (count: INTEGER)
 			-- Move insertion point down by `count' lines.
 			-- (If `count' is negative, move up by -`count'.)
 
@@ -164,7 +167,7 @@ feature -- Element change
 			check_result
 		end
 
-	bold is
+	bold
 			-- Turn selection to boldface.
 		do
 			dispparams.init
@@ -173,7 +176,7 @@ feature -- Element change
 			check_result
 		end
 
-	italic is
+	italic
 			-- Turn selection to italics.
 		do
 			dispparams.init
@@ -182,7 +185,7 @@ feature -- Element change
 			check_result
 		end
 
-	underline is
+	underline
 			-- Underline selection.
 		do
 			dispparams.init
@@ -191,7 +194,7 @@ feature -- Element change
 			check_result
 		end
 
-	border_line_style (style: INTEGER) is
+	border_line_style (style: INTEGER)
 			-- Make `style' the line style to be used for subsequent calls
 			-- to `border_top'.
 		local
@@ -207,7 +210,7 @@ feature -- Element change
 			check_result
 		end
 
-	border_top is
+	border_top
 			-- Draw a border at the top of current
 			-- paragraph, table cell or graphic.
 			-- Use `border_line_style'.
@@ -218,7 +221,7 @@ feature -- Element change
 			check_result
 		end
 
-	tools_spelling is
+	tools_spelling
 			-- Check spelling in the current selection or,
 			-- if there isn't a selection from insertion point
 			-- to end of document.
@@ -229,7 +232,7 @@ feature -- Element change
 			check_result
 		end
 
-	tools_grammar is
+	tools_grammar
 			-- Display Grammar dialog box and begin 
 			-- checking grammar in active document.
 		do
@@ -239,7 +242,7 @@ feature -- Element change
 			check_result
 		end
 
-	app_show is
+	app_show
 			-- Display application window.
 		local
 			variantarg: EOLE_VARIANT
@@ -257,7 +260,7 @@ feature -- Element change
 			check_result
 		end
 
-	app_hide is
+	app_hide
 			-- Hide application window.
 		local
 			variantarg: EOLE_VARIANT
@@ -274,7 +277,7 @@ feature -- Element change
 			check_result
 		end
 		
-	count_windows: INTEGER is
+	count_windows: INTEGER
 			-- Count of active windows
 		do
 			dispparams.init
@@ -285,7 +288,7 @@ feature -- Element change
 			Result := function_result.integer2
 		end
 		
-	get_id (func: STRING): INTEGER is
+	get_id (func: STRING): INTEGER
 			-- Get the dispatch identifier of `func'
 		local
 			a: ARRAY [STRING]
@@ -295,7 +298,7 @@ feature -- Element change
 			Result := dispatch.get_IDs_of_names (a).item (1)
 		end
 	
-	error_description: STRING is
+	error_description: STRING
 			-- Last error description
 		do
 			if function_exception.is_attached and function_exception.error_code /= S_ok then
@@ -305,7 +308,7 @@ feature -- Element change
 			end
 		end
 		
-	error_code: INTEGER is
+	error_code: INTEGER
 			-- Last error code
 		do
 			Result := function_exception.error_code
@@ -313,7 +316,7 @@ feature -- Element change
 		
 feature {NONE} -- Implementation
 
-	check_result is
+	check_result
 			-- Check result of last routine and display
 			-- a message box if there was an error.
 		local
@@ -334,7 +337,7 @@ feature {NONE} -- Implementation
 			end
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

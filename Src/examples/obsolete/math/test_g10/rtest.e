@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A small test for MEDIAN_SMOOTHED_ARRAY"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -18,7 +18,7 @@ create
 
 feature -- Initialization
 
-	make(args: ARRAY [STRING]) is
+	make(args: ARRAY [STRING])
 			-- Test g10
 		do
 			test_auto_correlation
@@ -26,7 +26,7 @@ feature -- Initialization
 
 feature -- Basic operations
 
-	expect (predicted, actual: DOUBLE) is
+	expect (predicted, actual: DOUBLE)
 			-- print a value with it's expected value
 		do
 			print(predicted);
@@ -35,7 +35,7 @@ feature -- Basic operations
 			print_nl ("");
 		end;
 
-	test_auto_correlation is
+	test_auto_correlation
 		local
 			a: MEDIAN_SMOOTHED_ARRAY;
 			x: ARRAY [DOUBLE];
@@ -84,7 +84,7 @@ feature -- Basic operations
 			end;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

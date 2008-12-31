@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Test of dialogs."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,12 +17,12 @@ create
 
 feature -- Initialization
 
-	prepare is
+	prepare
 		do
 			test_dialogs
 		end
 
-	test_dialogs is
+	test_dialogs
 		local
 			but: EV_BUTTON
 		do
@@ -36,7 +36,7 @@ feature -- Initialization
 	fdlg: EV_FILE_SAVE_DIALOG
 	odlg: EV_FILE_OPEN_DIALOG
 
-	on_click is
+	on_click
 		do
 			fdlg.set_filter ("*.e")
 			fdlg.show_modal
@@ -54,7 +54,7 @@ feature -- Initialization
 			end
 		end
 
-	first_window: EV_TITLED_WINDOW is
+	first_window: EV_TITLED_WINDOW
 		once
 			create Result
 			Result.set_title ("Main window")
@@ -62,7 +62,7 @@ feature -- Initialization
 			Result.set_size (300, 300)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

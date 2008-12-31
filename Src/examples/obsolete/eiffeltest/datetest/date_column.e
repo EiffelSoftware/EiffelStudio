@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Table column storing date strings"
 	legal: "See notice at end of class."
@@ -19,13 +19,13 @@ feature {NONE} -- Implementation
 	test_case: VALIDITY_TEST
 			-- Test case to be injected
 
-	inject_data (s: STRING) is
+	inject_data (s: STRING)
 			-- Inject `s' into `test_case'
 		do
 			test_case.set_date_string (s)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

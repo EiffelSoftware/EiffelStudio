@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel-MATISSE Binding: Example for the SQL interface"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -16,7 +16,7 @@ create
 	make
 	
 feature
-	make is
+	make
 		do
 			if arg_number /= 3 then
 				print_usage
@@ -33,21 +33,21 @@ feature
 			end
 		end
 	
-	print_usage is
+	print_usage
 		do
 			print("Usage:%N")
 			print("	Specify arguments <hostname> and <database_name>%N")
 			print("	Right-click on the Run button and type your host name and database name in this order%N")
 		end
 	
-	print_ending_message is
+	print_ending_message
 		do
 			print("You can see the SQL statements which are used to answer %N")
 			print("the preceding questinos in the class EXAMPLE_SQL%N")
 		end
 feature
 
-	load_presidents(filename: STRING) is
+	load_presidents(filename: STRING)
 		do
 			mt_appl.connect
 				-- connect to the database
@@ -59,7 +59,7 @@ feature
 				-- commit the transaction
 		end
 
-	load_president_info(filename: STRING) is
+	load_president_info(filename: STRING)
 		local
 			data_file: PLAIN_TEXT_FILE
 			a_line: STRING
@@ -128,7 +128,7 @@ feature
 			end
 		end
 	
-	start_quiz(query_list: LINKED_LIST[ARRAY[STRING]]; label: STRING) is
+	start_quiz(query_list: LINKED_LIST[ARRAY[STRING]]; label: STRING)
 		local
 			quiz: ARRAY[STRING]
 			sql_statement: MT_SQL_STATEMENT
@@ -172,7 +172,7 @@ feature
 
 feature {NONE}
 
-	get_presidency_from_number(number: INTEGER) : PRESIDENCY is
+	get_presidency_from_number(number: INTEGER) : PRESIDENCY
 		local
 			statement: STRING
 			query: MT_SQL_STATEMENT
@@ -196,7 +196,7 @@ feature {NONE}
 			print(statement)
 		end
 	
-	get_person_from_name(full_name: STRING): PERSON is
+	get_person_from_name(full_name: STRING): PERSON
 		local
 			first_name, last_name: STRING
 			middle_initial: CHARACTER
@@ -229,7 +229,7 @@ feature {NONE}
 		end
 	
 	
-	first_name_out_of_full_name(full_name: STRING) : STRING is
+	first_name_out_of_full_name(full_name: STRING) : STRING
 		local
 			index: INTEGER
 		do
@@ -237,7 +237,7 @@ feature {NONE}
 			Result := full_name.substring(1, index - 1)
 		end
 	
-	middle_initial_out_of_full_name(full_name: STRING) : CHARACTER is
+	middle_initial_out_of_full_name(full_name: STRING) : CHARACTER
 		local
 			position1, position2: INTEGER
 		do
@@ -248,7 +248,7 @@ feature {NONE}
 			end
 		end
 	
-	last_name_out_of_full_name(full_name: STRING) : STRING is
+	last_name_out_of_full_name(full_name: STRING) : STRING
 		local
 			position1, position2: INTEGER
 		do
@@ -261,7 +261,7 @@ feature {NONE}
 			end
 		end
 	
-	start_year_from_duty(president_duty: STRING) : INTEGER is
+	start_year_from_duty(president_duty: STRING) : INTEGER
 		-- president_duty's format is something like "1944-1955"
 		local
 			year_string: STRING
@@ -272,7 +272,7 @@ feature {NONE}
 			Result := year_string.to_integer
 		end
 	
-	end_year_from_duty(president_duty: STRING) : INTEGER is
+	end_year_from_duty(president_duty: STRING) : INTEGER
 		-- president_duty's format is something like "1944-1955"
 		local
 			year_string: STRING
@@ -284,7 +284,7 @@ feature {NONE}
 		end
 
 feature
-	query_list_very_easy : LINKED_LIST[ARRAY[STRING]] is
+	query_list_very_easy : LINKED_LIST[ARRAY[STRING]]
 		once
 			create Result.make
 			Result.extend(
@@ -302,7 +302,7 @@ feature
 	 	     		  "SELECT is_in_charge_of.* FROM Person WHERE EP_INCLUDE('Jacqueline', spouse.first_name)">>)
 		end
 
-	query_list_easy:  LINKED_LIST[ARRAY[STRING]] is
+	query_list_easy:  LINKED_LIST[ARRAY[STRING]]
 		once
 			create Result.make
 			Result.extend(
@@ -319,7 +319,7 @@ feature
 				  "SELECT * FROM Presidency WHERE (ending_year - starting_year) > 8">>)
 		end
 	
-	query_list_difficult:  LINKED_LIST[ARRAY[STRING]] is
+	query_list_difficult:  LINKED_LIST[ARRAY[STRING]]
 		once
 			create Result.make
 			Result.extend(
@@ -344,7 +344,7 @@ feature
 
 	mt_appl: MATISSE_APPL;
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

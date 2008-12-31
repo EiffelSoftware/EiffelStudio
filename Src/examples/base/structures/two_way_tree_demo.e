@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class 
@@ -15,7 +15,7 @@ create
 
 feature -- Creation
 
-	make is
+	make
 			-- Initialize and execute demonstration
 		do
 			create driver.make
@@ -40,7 +40,7 @@ feature -- Attributes
 
 feature -- Routines
 
-	cycle is
+	cycle
 			-- Basic user interaction process.
 		local
 			new_command: INTEGER
@@ -63,7 +63,7 @@ feature -- Routines
 			driver.exit
 		end
 
-	tree_trace (t: TWO_WAY_TREE [INTEGER]; i: INTEGER) is
+	tree_trace (t: TWO_WAY_TREE [INTEGER]; i: INTEGER)
 			-- Display t, indented by i positions
 		require
 			tree_not_void: t /= Void
@@ -105,7 +105,7 @@ feature -- Routines
 			t.child_go_to (c)
 		end
 
-	fill_menu is
+	fill_menu
 			-- Fill the menu with available commands.
 		do
 			driver.add_entry ("IL (Insert at Left): Insert new child at left of cursor position",  "Change value of child to the left of child cursor position")
@@ -143,7 +143,7 @@ feature -- Routines
 			driver.complete_menu
 		end
 
-	execute (new_command: INTEGER) is
+	execute (new_command: INTEGER)
 			-- Execute command corresponding to user's request.
 		require else
 			valid_command: new_command >= put_left and new_command <= quit
@@ -241,7 +241,7 @@ feature -- Routines
 			end
 		end 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

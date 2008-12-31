@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A non-stiff set of ODEs (d02cjc example)"
 	legal: "See notice at end of class.";	
 	status: "See notice at end of class.";
@@ -21,7 +21,7 @@ inherit
 
 feature -- Basic operations
 
-	rhs (x: DOUBLE; y: ARRAY [DOUBLE]): ARRAY [DOUBLE] is
+	rhs (x: DOUBLE; y: ARRAY [DOUBLE]): ARRAY [DOUBLE]
 		do
 			create Result.make(1, 3);
 			Result.put (tangent (y @ 3), 
@@ -34,17 +34,17 @@ feature -- Basic operations
 				 3);
 		end;	
 
-	g (x: DOUBLE; y: ARRAY [DOUBLE]): DOUBLE is
+	g (x: DOUBLE; y: ARRAY [DOUBLE]): DOUBLE
 		do
 			Result := y @ 1
 		end;
 
-	jacobian (x: DOUBLE; y: ARRAY [DOUBLE]): BASIC_MATRIX is
+	jacobian (x: DOUBLE; y: ARRAY [DOUBLE]): BASIC_MATRIX
 			-- None available.
 		do
 		end;
 
-	output (x: DOUBLE; y: ARRAY [DOUBLE]) is
+	output (x: DOUBLE; y: ARRAY [DOUBLE])
 		do
 			print (x);
 			print ('%T');
@@ -56,7 +56,7 @@ feature -- Basic operations
 			print ('%N');
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

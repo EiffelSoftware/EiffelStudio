@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Viewport example."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE}-- Initialization
 
-	make_and_launch is
+	make_and_launch
 			-- Create `Current' and launch.
 		do
 			default_create
@@ -26,7 +26,7 @@ feature {NONE}-- Initialization
 		
 feature {NONE} -- Implementation
 
-	prepare is
+	prepare
 			-- Pack `first_window'.
 		local
 			range: INTEGER_INTERVAL
@@ -66,19 +66,19 @@ feature {NONE} -- Implementation
 			first_window.show
 		end
 
-	on_spin_button_x_changed (new_value: INTEGER) is
+	on_spin_button_x_changed (new_value: INTEGER)
 			-- Horizontal value changed.
 		do
 			viewport.set_x_offset (new_value)
 		end
 
-	on_spin_button_y_changed (new_value: INTEGER) is
+	on_spin_button_y_changed (new_value: INTEGER)
 			-- Vertical value changed.
 		do
 			viewport.set_y_offset (new_value)
 		end
 
-	first_window: EV_TITLED_WINDOW is
+	first_window: EV_TITLED_WINDOW
 			-- Window containing viewport and scrollable area.
 		once
 			create Result.make_with_title ("Viewport example")
@@ -90,7 +90,7 @@ feature {NONE} -- Implementation
 	viewport: EV_VIEWPORT;
 			-- EV_VIEWPORT to be demonstrated in test.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make (par: EV_CONTAINER)
 			-- Create the tab and initialise objects.
 		local
 			cmd1,cmd2: EV_ROUTINE_COMMAND
@@ -38,7 +38,7 @@ feature -- Initialization
 
 feature -- Access
 
-	name:STRING is
+	name:STRING
 			-- Returns the name of the tab.
 		do
 			Result:="Text Field"
@@ -52,7 +52,7 @@ feature -- Access
 
 feature -- Execution Feature
 
-	set_maximum_text_length (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	set_maximum_text_length (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Set the maximum text length allowed.
 		do
 			if f1.get_text.is_integer and
@@ -61,13 +61,13 @@ feature -- Execution Feature
 			end
 		end
 
-	get_maximum_text_length (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	get_maximum_text_length (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Get the maximum text length allowed.
 		do
 			f1.set_text(current_widget.get_maximum_text_length.out)
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

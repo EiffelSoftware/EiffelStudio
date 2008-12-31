@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class LABEL_ACTIONS_WINDOW
@@ -26,7 +26,7 @@ feature
 	set_left_b,
 	set_text_b: ACTION_WINDOW_BUTTON
 
-	set_other_widgets is
+	set_other_widgets
 		do
 			set_size (330, 430)
 			create set_font_b.associate (Current, b_set_font, "Set font", 20, 300)
@@ -36,7 +36,7 @@ feature
 			create set_text_b.associate (Current, b_set_text, "Set text", 180, 380)
 		end
 
-	descendant_actions(arg: INTEGER_REF) is
+	descendant_actions(arg: INTEGER_REF)
 		local
 			widget: LABEL
 			color: COLOR
@@ -104,7 +104,7 @@ feature
 			end
 		end
 
-	set_other_widgets_insensitive is
+	set_other_widgets_insensitive
 		do
 			set_font_b.set_insensitive
 			set_fg_b.set_insensitive
@@ -113,7 +113,7 @@ feature
 			set_text_b.set_insensitive
 		end
 
-	set_other_widgets_sensitive is
+	set_other_widgets_sensitive
 		do
 			set_font_b.set_sensitive
 			set_fg_b.set_sensitive
@@ -122,7 +122,7 @@ feature
 			set_text_b.set_sensitive
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

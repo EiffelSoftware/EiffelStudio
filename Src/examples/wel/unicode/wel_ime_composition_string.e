@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Initialization
 
-	make (a_input_context: POINTER) is
+	make (a_input_context: POINTER)
 			-- Create object with 'a_input_context' input context
 		do
 			input_context := a_input_context
@@ -32,7 +32,7 @@ feature -- Initialization
 
 feature -- Access
 
-	string: STRING_32 is
+	string: STRING_32
 			-- Composition string
 		local
 			buffer: POINTER
@@ -49,7 +49,7 @@ feature -- Access
 
 feature -- Status Setting
 
-	set_comp_string (a_string: STRING_GENERAL) is
+	set_comp_string (a_string: STRING_GENERAL)
 			-- Set the composition to 'a_string'
 		require
 			string_not_void: a_string /= Void
@@ -65,7 +65,7 @@ feature -- Status Setting
 
 feature -- Status Report
 
-	candidate_list_count: INTEGER is
+	candidate_list_count: INTEGER
 			-- The size of the candidate list
 		local
 			nb, count: INTEGER
@@ -84,7 +84,7 @@ feature -- Implementation
 
 feature {NONE} -- Externals
 
-	cwel_imm_get_composition_string (a_input_locale: POINTER; type: INTEGER; buffer: POINTER; bytes: INTEGER): INTEGER is
+	cwel_imm_get_composition_string (a_input_locale: POINTER; type: INTEGER; buffer: POINTER; bytes: INTEGER): INTEGER
 			-- Get Composition string information into 'buffer' according to 'type'
 		external
 			"dllwin imm32.dll signature (HIMC, DWORD, LPVOID, DWORD): LONG use <windows.h>"
@@ -92,7 +92,7 @@ feature {NONE} -- Externals
 			"ImmGetCompositionStringW"
 		end
 
-	cwel_imm_set_composition_string (a_input_context: POINTER; type: INTEGER; compbuffer: POINTER; cb: INTEGER; readbuffer: POINTER; rb: INTEGER): BOOLEAN is
+	cwel_imm_set_composition_string (a_input_context: POINTER; type: INTEGER; compbuffer: POINTER; cb: INTEGER; readbuffer: POINTER; rb: INTEGER): BOOLEAN
 			-- Set Composition string information into '****buffer' according to 'type'
 		external
 			"dllwin imm32.dll signature (HIMC, DWORD, LPVOID, DWORD, LPVOID, DWORD): BOOL use <windows.h>"
@@ -100,7 +100,7 @@ feature {NONE} -- Externals
 			"ImmSetCompositionStringW"
 		end
 
-	cwel_imm_get_candidate_list_count (a_input_context: POINTER; count: INTEGER): INTEGER is
+	cwel_imm_get_candidate_list_count (a_input_context: POINTER; count: INTEGER): INTEGER
 			-- Get the size of the candidate for 'string'
 		external
 			"dllwin imm32.dll signature (HIMC, LPDWORD): DWORD use <windows.h>"
@@ -108,7 +108,7 @@ feature {NONE} -- Externals
 			"ImmGetCandidateListCountW"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

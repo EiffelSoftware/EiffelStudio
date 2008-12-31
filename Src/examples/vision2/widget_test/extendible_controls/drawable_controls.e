@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that create controls to extend a certain widget type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_control (a_drawable: EV_DRAWABLE; editor: GB_OBJECT_EDITOR) is
+	make_with_control (a_drawable: EV_DRAWABLE; editor: GB_OBJECT_EDITOR)
 			-- Create `Current'.
 		local
 			pixmap: EV_PIXMAP
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			object_editor := editor
 		end
 		
-	initialize is
+	initialize
 			-- Initialize `Current' and build interface.
 		local
 			horizontal_box: EV_HORIZONTAL_BOX
@@ -165,7 +165,7 @@ feature {NONE} -- Initialization
 		
 feature {NONE} -- Implementation
 		
-	perform_drawing (x, y: INTEGER) is
+	perform_drawing (x, y: INTEGER)
 			-- A button press has been received by `drawable', so draw appropriate
 			-- figure.
 		do
@@ -208,7 +208,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	parent_argument_holder (a_radio_button: EV_RADIO_BUTTON) is
+	parent_argument_holder (a_radio_button: EV_RADIO_BUTTON)
 			-- Ensure `argument_holder' is parented in the same parent as `a_radio_button',
 			-- at the following position. Also perform adjustment of all labels, so they have the same width:
 		local
@@ -226,7 +226,7 @@ feature {NONE} -- Implementation
 			parent_window (Current).unlock_update
 		end
 		
-	update_labels_minimum_width (vertical_box: EV_VERTICAL_BOX )is
+	update_labels_minimum_width (vertical_box: EV_VERTICAL_BOX )
 			-- Update all labels parented at the second level in `box'.
 		local
 			label_width: INTEGER
@@ -264,7 +264,7 @@ feature {NONE} -- Implementation
 			end	
 		end
 		
-	unparent_argument_holder is
+	unparent_argument_holder
 			-- Ensure `argument' holder is not parented and
 			-- remove all items.
 		do
@@ -275,7 +275,7 @@ feature {NONE} -- Implementation
 			argument_holder.wipe_out
 		end
 		
-	setup_draw_pixmap is
+	setup_draw_pixmap
 			-- initialize controls for drawing pixmaps.
 		do
 			unparent_argument_holder
@@ -283,7 +283,7 @@ feature {NONE} -- Implementation
 		end
 		
 
-	setup_draw_point is
+	setup_draw_point
 			-- Initialize controls for drawing points.
 		do
 			unparent_argument_holder
@@ -291,7 +291,7 @@ feature {NONE} -- Implementation
 		end
 		
 		
-	setup_draw_text is
+	setup_draw_text
 			-- Initialize controls for drawing text.
 		do
 			unparent_argument_holder
@@ -299,7 +299,7 @@ feature {NONE} -- Implementation
 			parent_argument_holder (text_radio_button)
 		end
 		
-	setup_draw_text_top_left is
+	setup_draw_text_top_left
 			-- Initialize controls for drawing text top left.
 		do
 			unparent_argument_holder
@@ -307,7 +307,7 @@ feature {NONE} -- Implementation
 			parent_argument_holder (text_top_left_radio_button)
 		end
 		
-	setup_draw_segment is
+	setup_draw_segment
 			-- Initialize controls for drawing segments.
 		do
 			unparent_argument_holder
@@ -316,7 +316,7 @@ feature {NONE} -- Implementation
 			parent_argument_holder (segment_radio_button)
 		end
 		
-	setup_draw_straight_line is
+	setup_draw_straight_line
 			-- Initialize controls for drawing lines.
 		do
 			unparent_argument_holder
@@ -325,7 +325,7 @@ feature {NONE} -- Implementation
 			parent_argument_holder (straight_line_radio_button)
 		end
 		
-	setup_draw_arc is
+	setup_draw_arc
 			-- Initialize controls for drawing arcs.
 		do
 			unparent_argument_holder
@@ -336,7 +336,7 @@ feature {NONE} -- Implementation
 			parent_argument_holder (draw_arc_radio_button)
 		end
 		
-	setup_draw_rectangle is
+	setup_draw_rectangle
 			-- Initialize controls for drawing rectangles.
 		do
 			unparent_argument_holder
@@ -346,7 +346,7 @@ feature {NONE} -- Implementation
 			parent_argument_holder (draw_rectangle_radio_button)
 		end
 		
-	setup_draw_ellipse is
+	setup_draw_ellipse
 			-- Initialize controls for drawing ellipses.
 		do
 			unparent_argument_holder
@@ -357,7 +357,7 @@ feature {NONE} -- Implementation
 		end
 		
 		
-	setup_draw_pie_slice is
+	setup_draw_pie_slice
 			-- Initialize controls for drawing pie slices.
 		do	
 			unparent_argument_holder
@@ -369,41 +369,41 @@ feature {NONE} -- Implementation
 			parent_argument_holder (draw_pie_slice_radio_button)
 		end
 
-	text_entry: EV_TEXT_FIELD is
+	text_entry: EV_TEXT_FIELD
 			-- Once acces to a text field for inputting STRING values.
 		once
 			create Result.make_with_text ("Sample Text")
 		end
 		
-	integer1: EV_TEXT_FIELD is
+	integer1: EV_TEXT_FIELD
 			-- Once access to a text field for inputting INTEGER values.
 		once
 			create Result.make_with_text (default_integer_value.out)
 			Result.change_actions.extend (agent validate_integer (Result))
 		end
 		
-	integer2: EV_TEXT_FIELD is
+	integer2: EV_TEXT_FIELD
 			-- Once access to a text field for inputting INTEGER values.
 		once
 			create Result.make_with_text (default_integer_value.out)
 			Result.change_actions.extend (agent validate_integer (Result))
 		end
 		
-	real1: EV_TEXT_FIELD is
+	real1: EV_TEXT_FIELD
 			-- Once access to a text field for inputting REAL values.
 		once
 			create Result.make_with_text (default_real_value.out)
 			Result.change_actions.extend (agent validate_real (Result))
 		end
 		
-	real2: EV_TEXT_FIELD is
+	real2: EV_TEXT_FIELD
 			-- Once access to a text field for inputting REAL values.
 		once
 			create Result.make_with_text (default_real_value.out)
 			Result.change_actions.extend (agent validate_real (Result))
 		end
 
-	filled_check_button: EV_CHECK_BUTTON is
+	filled_check_button: EV_CHECK_BUTTON
 			-- Once access to a check button control filled status.
 		once
 			create Result.make_with_text ("Height adjustment")
@@ -412,7 +412,7 @@ feature {NONE} -- Implementation
 			Result.remove_text
 		end
 		
-	tiled_check_button: EV_CHECK_BUTTON is
+	tiled_check_button: EV_CHECK_BUTTON
 			-- Once access to a check button control filled status
 			-- for drawing operations.
 		once
@@ -422,7 +422,7 @@ feature {NONE} -- Implementation
 			Result.remove_text
 		end
 		
-	fields_valid: BOOLEAN is
+	fields_valid: BOOLEAN
 			-- Are all input fields holding valid information?
 		do
 			Result := True
@@ -440,19 +440,19 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	red: EV_COLOR is
+	red: EV_COLOR
 			-- Once access to red EV_COLOR.
 		once
 			Result := (create {EV_STOCK_COLORS}).red
 		end
 		
-	black: EV_COLOR is
+	black: EV_COLOR
 			-- Once access to black EV_COLOR.
 		once
 			Result := (create {EV_STOCK_COLORS}).black
 		end
 		
-	validate_real (text_field: EV_TEXT_FIELD) is
+	validate_real (text_field: EV_TEXT_FIELD)
 			--
 		do
 			if text_field.text.is_real then
@@ -462,7 +462,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	validate_integer (text_field: EV_TEXT_FIELD) is
+	validate_integer (text_field: EV_TEXT_FIELD)
 			--
 		do
 			if text_field.text.is_integer then
@@ -472,7 +472,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	select_bad_field is
+	select_bad_field
 			--
 		do
 			if not integer1.text.is_integer then
@@ -492,7 +492,7 @@ feature {NONE} -- Implementation
 	
 feature -- Status report
 
-	help: STRING is
+	help: STRING
 			-- Instructions on how to use the control.
 		once
 			Result := "Select a drawing operation and click on the drawable control.%NThe drawing will occur at the clicked position.%NIf an operation requires further arguments, these will be available below the selected operation."
@@ -500,7 +500,7 @@ feature -- Status report
 
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 			-- (export status {NONE})
 		do
@@ -509,7 +509,7 @@ feature {NONE} -- Contract support
 
 feature {NONE} -- Implementation
 
-	show_help is
+	show_help
 			-- Display help for `Current'.
 		local
 			information_dialog: EV_INFORMATION_DIALOG
@@ -518,14 +518,14 @@ feature {NONE} -- Implementation
 			information_dialog.show_modal_to_window (parent_window (Current))
 		end
 		
-	update_line_width is
+	update_line_width
 			-- Update width of line used on `drawable' to value of `line_width'.
 		do
 			drawable.set_line_width (line_width.value)
 		end
 		
 
-	update_tiled_status is
+	update_tiled_status
 			-- Update `drawable' to use tiling dependent on state
 			-- of `tiled_check_button'.
 		do
@@ -536,7 +536,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	update_tiled_button is
+	update_tiled_button
 			-- Update status of `tiled_check_button' to reflect usability, dependent
 			-- on state of `filled_check_button'.
 		do
@@ -547,7 +547,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_text_entry_with_label (a_text: STRING) is
+	add_text_entry_with_label (a_text: STRING)
 			-- Add `text_entry' and label marked `a_text'
 			-- to `argument_holder'.
 		local
@@ -568,7 +568,7 @@ feature {NONE} -- Implementation
 			argument_holder.extend (horizontal_box)
 		end
 		
-	add_integer_entry_with_label (a_text: STRING; entry_number: INTEGER) is
+	add_integer_entry_with_label (a_text: STRING; entry_number: INTEGER)
 			-- Add an integer entry field based on `entry_number' and label marked `a_text'
 			-- to `argument_holder'.
 		local
@@ -597,7 +597,7 @@ feature {NONE} -- Implementation
 			argument_holder.extend (horizontal_box)
 		end
 		
-	add_real_entry_with_label (a_text: STRING; entry_number: INTEGER) is
+	add_real_entry_with_label (a_text: STRING; entry_number: INTEGER)
 			-- Add a real entry field based on `entry_number' and label marked `a_text'
 			-- to `argument_holder'.
 		local
@@ -626,7 +626,7 @@ feature {NONE} -- Implementation
 			argument_holder.extend (horizontal_box)
 		end
 		
-	add_fill_button is
+	add_fill_button
 			-- Add `filled_check_button' to `argument_holder',
 			-- at first position.
 		local
@@ -683,11 +683,11 @@ feature {NONE} -- Implementation
 		-- An object editor currently holding `current_type'. This
 		-- must be updated to account for any changes.
 		
-	default_integer_value: INTEGER is 100
+	default_integer_value: INTEGER = 100
 	
-	default_real_value: REAL is 3.0
+	default_real_value: REAL = 3.0
 	
-	test_pixmap: EV_PIXMAP is
+	test_pixmap: EV_PIXMAP
 			-- Pixmap for drawing operations.
 		once
 			Result := numbered_pixmap (1)
@@ -696,7 +696,7 @@ feature {NONE} -- Implementation
 invariant
 	drawable_not_void: drawable /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 	"BOX_ACTIONS_WINDOW, base class for all actions windows.%
 	% Belongs to EiffelVision example test_all_widgets."
@@ -22,7 +22,7 @@ create
 
 feature -- Status setting
         
-	set_widgets is
+	set_widgets
 			-- Create the widgets inside the window
 		local
 			set_h_c: SET_HOMOGENEOUS_COMMAND
@@ -53,7 +53,7 @@ feature -- Status setting
 			spacing_entry.add_activate_command (set_spacing_c, a2)
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

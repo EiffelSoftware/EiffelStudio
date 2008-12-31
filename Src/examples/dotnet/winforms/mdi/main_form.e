@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Multi Documents sample."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Entry point.
 		local
 			res: SYSTEM_OBJECT
@@ -84,7 +84,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	initialize_component is
+	initialize_component
 			-- Initialize all components of window.
 		local
 			l_size: DRAWING_SIZE
@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	dispose_boolean (a_disposing: BOOLEAN) is
+	dispose_boolean (a_disposing: BOOLEAN)
 			-- Method called when form is disposed.
 		local
 			retried: BOOLEAN
@@ -135,7 +135,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	add_document is
+	add_document
 			-- Add a document.
 		local
 			doc: DOCUMENT
@@ -146,7 +146,7 @@ feature {NONE} -- Implementation
 			doc.show
 		end
 
-	on_file_add_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
+	on_file_add_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS)
 			-- File->Add Menu item handler.
 		require
 			non_void_sender: sender /= Void
@@ -155,7 +155,7 @@ feature {NONE} -- Implementation
 			add_document
 		end
 
-	on_file_exit_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
+	on_file_exit_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS)
 			-- File->Exit Menu item handler.
 		require
 			non_void_sender: sender /= Void
@@ -164,7 +164,7 @@ feature {NONE} -- Implementation
 			close
 		end
 
-	on_MDI_child_activated (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
+	on_MDI_child_activated (sender: SYSTEM_OBJECT args: EVENT_ARGS)
 			-- One of the MDI Child windows has been activated.
 		require
 			non_void_sender: sender /= Void
@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_window_cascade_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
+	on_window_cascade_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS)
 			-- Window->Cascade Menu item handler.
 		require
 			non_void_sender: sender /= Void
@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 			layout_mdi ({WINFORMS_MDI_LAYOUT}.cascade)
 		end
 
-	on_window_tile_h_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
+	on_window_tile_h_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS)
 			-- Window->Tile Horizontally Menu item handler.
 		require
 			non_void_sender: sender /= Void
@@ -195,7 +195,7 @@ feature {NONE} -- Implementation
 			layout_mdi ({WINFORMS_MDI_LAYOUT}.tile_horizontal)
 		end
 
-	on_window_tile_v_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
+	on_window_tile_v_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS)
 			-- Window->Tile Vertically Menu item handler.
 		require
 			non_void_sender: sender /= Void
@@ -209,7 +209,7 @@ invariant
 	non_void_main_menu: main_menu /= Void
 	non_void_status_bar: status_bar /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

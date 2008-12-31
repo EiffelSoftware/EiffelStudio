@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -10,14 +10,14 @@ create
 	make
 
 feature
-	make is
+	make
 		do
 			io.putstring ("Hello%N")
 			testdesc
 			io.read_line
 		end
 
-	testdesc is
+	testdesc
 		local
 			dll: DLL_32
 			routine: DLL_32_ROUTINE
@@ -69,7 +69,7 @@ feature
 			io.new_line
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

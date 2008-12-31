@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tester of Eigensystem class"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -17,7 +17,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 -- Run current test.
 		do
 			print ("%N ***************************************** %N");
@@ -43,7 +43,7 @@ feature -- Initialization
 
 feature -- Basic operations
 
-	test_real_non_symmetric is
+	test_real_non_symmetric
 			--	
 		do
 			-- PART I: NAG tests f02afc, f02agc
@@ -147,7 +147,7 @@ feature -- Basic operations
 			print_nl ("");
 		end;
 
-	test_real_symmetric is
+	test_real_symmetric
 			-- Test the real symmetric case.		
 		do
 			-- PART I: NAG tests f02aac, f02abc
@@ -242,7 +242,7 @@ feature -- Basic operations
 			print_nl ("");
 		end;
 
-	test_complex_symmetric is
+	test_complex_symmetric
 			-- Test the complex symmetric case.
 		do
 			-- PART I: NAG tests f02awc, f02axc
@@ -300,7 +300,7 @@ feature -- Access
 	values: BASIC_VECTOR;;
 			-- Copy of eigenvalues
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

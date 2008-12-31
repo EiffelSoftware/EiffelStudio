@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class SCROLLBAR_ACTIONS_WINDOW
@@ -28,7 +28,7 @@ feature
 	set_value_b,
 	value_b: ACTION_WINDOW_BUTTON
 
-	set_other_widgets is
+	set_other_widgets
 		do
 			set_size (330, 470)
 			create move_action_b.associate (Current, b_move_action, "Move action", 20, 300)
@@ -42,7 +42,7 @@ feature
 			val_ch_act:=False
 		end
 
-	finish is
+	finish
 		do
 			if move_action then
 				md.popdown
@@ -64,7 +64,7 @@ feature
 	move_action,
 	val_ch_act: BOOLEAN
 
-	descendant_actions(arg: INTEGER_REF) is
+	descendant_actions(arg: INTEGER_REF)
 		local
 			widget: SCROLLBAR
 		do
@@ -187,7 +187,7 @@ feature
 			end
 		end
 
-	set_other_widgets_insensitive is
+	set_other_widgets_insensitive
 		do
 			move_action_b.set_insensitive
 			val_ch_act_b.set_insensitive
@@ -198,7 +198,7 @@ feature
 			value_b.set_insensitive
 		end
 
-	set_other_widgets_sensitive is
+	set_other_widgets_sensitive
 		do
 			move_action_b.set_sensitive
 			val_ch_act_b.set_sensitive
@@ -209,7 +209,7 @@ feature
 			value_b.set_sensitive
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

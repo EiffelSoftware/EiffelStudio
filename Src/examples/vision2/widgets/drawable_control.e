@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Controls used to modify objects of type EV_DRAWABLE"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE}-- Initialization
 
-	make (box: EV_BOX; a_drawable: EV_DRAWABLE; output: EV_TEXT) is
+	make (box: EV_BOX; a_drawable: EV_DRAWABLE; output: EV_TEXT)
 			-- Create controls to manipulate `a_drawable', parented in `box' and
 			-- displaying output in `output'.
 		do
@@ -93,63 +93,63 @@ feature {NONE}-- Initialization
 
 feature {NONE} -- Implementation
 
-	draw_text is
+	draw_text
 			-- Draw a text on `drawable'.
 		do
 			drawable.draw_text (x_pos, y_pos, "Text")
 			move_coordinates
 		end
 		
-	draw_point is
+	draw_point
 			-- Draw a point on `drawable'.
 		do
 			drawable.draw_point (x_pos, y_pos)
 			move_coordinates
 		end
 		
-	draw_segment is
+	draw_segment
 			-- Draw a segment on `drawable'.
 		do
 			drawable.draw_segment (x_pos, y_pos, 0, 0)
 			move_coordinates
 		end
 		
-	draw_straight_line is
+	draw_straight_line
 			-- Draw a straight line on `drawable'.
 		do
 			drawable.draw_straight_line (x_pos, y_pos, 0, 0)
 			move_coordinates
 		end
 		
-	draw_pixmap is
+	draw_pixmap
 			-- Draw a pixmap on `drawable'.
 		do
 			drawable.draw_pixmap (x_pos, y_pos, pixmap)
 			move_coordinates
 		end
 		
-	draw_arc is
+	draw_arc
 			-- Draw an arc on `drawable'.
 		do
 			drawable.draw_arc (x_pos, y_pos, 100, 100, 0, 4)
 			move_coordinates
 		end
 		
-	draw_rectangle is
+	draw_rectangle
 			-- Draw a rectangle on `drawable'.
 		do
 			drawable.draw_rectangle (x_pos, y_pos, 80, 80)
 			move_coordinates
 		end
 		
-	draw_ellipse is
+	draw_ellipse
 			-- Draw an ellipse on `drawable'.
 		do
 			drawable.draw_ellipse (x_pos, y_pos, 80, 50)
 			move_coordinates
 		end
 		
-	draw_polyline is
+	draw_polyline
 			-- Draw a polyline on `drawable'.
 		local
 			coor: EV_COORDINATE
@@ -170,28 +170,28 @@ feature {NONE} -- Implementation
 			move_coordinates
 		end
 		
-	draw_pie_slice is
+	draw_pie_slice
 			-- Draw a pie slice on `drawable'.
 		do
 			drawable.draw_pie_slice (x_pos, y_pos, 100, 100, 0, 4)
 			move_coordinates
 		end	
 		
-	fill_rectangle is
+	fill_rectangle
 			-- Fill a rectangle on `drawable'.
 		do
 			drawable.fill_rectangle (x_pos, y_pos, 80, 80)
 			move_coordinates
 		end
 		
-	fill_ellipse is
+	fill_ellipse
 			-- Fill an ellipse on `drawable'.
 		do
 			drawable.fill_ellipse (x_pos, y_pos, 80, 50)
 			move_coordinates
 		end
 		
-	fill_polygon is
+	fill_polygon
 			-- Fill a polygon on `drawable'.
 		local
 			coor: EV_COORDINATE
@@ -212,14 +212,14 @@ feature {NONE} -- Implementation
 			move_coordinates
 		end
 		
-	fill_pie_slice is
+	fill_pie_slice
 			-- Fill a pie slice on `drawable'.
 		do
 			drawable.fill_pie_slice (x_pos, y_pos, 100, 100, 0, 4)
 			move_coordinates
 		end	
 
-	toggle_line_style is
+	toggle_line_style
 			-- Update the line style used for drawings.
 		do
 			if drawable.dashed_line_style then
@@ -231,13 +231,13 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	set_line_width (value: INTEGER) is
+	set_line_width (value: INTEGER)
 			-- Assign `value' to the line width of `drawable'.
 		do
 			drawable.set_line_width (value)
 		end
 		
-	move_coordinates is
+	move_coordinates
 			-- Update coordinates for drawing location.
 		do
 			x_pos := x_pos + xvel
@@ -265,7 +265,7 @@ feature {NONE} -- Implementation
 	label: EV_LABEL
 	range: INTEGER_INTERVAL;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

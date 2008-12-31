@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Builds an attribute editor for modification of objects of type EV_PIXMAPABLE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,10 +27,10 @@ feature -- Access
 	ev_type: EV_PIXMAPABLE
 		-- Vision2 type represented by `Current'.
 
-	type: STRING is "EV_PIXMAPABLE"
+	type: STRING = "EV_PIXMAPABLE"
 		-- String representation of object_type modifyable by `Current'.
 
-	attribute_editor: GB_OBJECT_EDITOR_ITEM is
+	attribute_editor: GB_OBJECT_EDITOR_ITEM
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
 		local
@@ -58,7 +58,7 @@ feature -- Access
 			update_attribute_editor
 		end
 
-	update_attribute_editor is
+	update_attribute_editor
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
 			local
@@ -88,13 +88,13 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	initialize_agents is
+	initialize_agents
 			-- Initialize `validate_agents' and `execution_agents' to
 			-- contain all agents required for modification of `Current.
 		do
 		end
 
-	modify_pixmap is
+	modify_pixmap
 			-- Display a dialog allowing user input for
 			-- selected pixmap.
 		local
@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_pixmap_to_pixmap_container (pixmap: EV_PIXMAP) is
+	add_pixmap_to_pixmap_container (pixmap: EV_PIXMAP)
 			-- Add `pixmap' to `pixmap_container'.
 		local
 			x_ratio, y_ratio: REAL
@@ -185,18 +185,18 @@ feature {NONE} -- Implementation
 		-- Is either "Select" or "Remove"
 		-- depending on current context.
 
-	pixmap_path_string: STRING is "Pixmap_path"
+	pixmap_path_string: STRING = "Pixmap_path"
 
-	Remove_string: STRING is "Remove"
+	Remove_string: STRING = "Remove"
 		-- String on `modify_button' when able to remove pixmap.
 
-	Remove_tooltip: STRING is "Remove pixmap"
+	Remove_tooltip: STRING = "Remove pixmap"
 		-- Tooltip on `modify_button' when able to remove pixmap.
 
-	Select_tooltip: STRING is "Select pixmap";
+	Select_tooltip: STRING = "Select pixmap";
 		-- Tooltip on `modify_button' when able to remove pixmap.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

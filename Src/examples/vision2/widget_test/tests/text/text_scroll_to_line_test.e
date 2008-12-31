@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that test EV_TEXT."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 		
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create `Current' and initialize test in `widget'.
 		local
 			vertical_box: EV_VERTICAL_BOX
@@ -65,13 +65,13 @@ feature {NONE} -- Implementation
 	text: EV_TEXT
 		-- Widget that test is to be performed on.
 	
-	scroll_to_line (a_line: INTEGER) is
+	scroll_to_line (a_line: INTEGER)
 			-- Scroll to line `a_line' in `text'.
 		do
 			text.scroll_to_line (a_line)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

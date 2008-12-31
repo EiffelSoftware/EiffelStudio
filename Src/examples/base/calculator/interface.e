@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class 
@@ -15,7 +15,7 @@ feature
 	help_message: STRING
 		-- Help message.
 
-	set_interface (k, m: STRING; c: STATE) is
+	set_interface (k, m: STRING; c: STATE)
 			-- Fill out key with `k', command with `c' and message with `m'.
 		do
 			operator_key := k
@@ -27,7 +27,7 @@ feature
 			help_message = m
 		end; -- set_interface
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

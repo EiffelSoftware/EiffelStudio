@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Member Dispatch Identifiers accessed by %
 					%`get_IDs_of_names' of class EOLE_DISPATCH"
 	legal: "See notice at end of class.";
@@ -10,47 +10,47 @@ class EOLE_WORDBASIC_DISPID
 
 feature 
 
-	FileNewDefault_DispID: INTEGER is 301
+	FileNewDefault_DispID: INTEGER = 301
 
-	FileSave_DispID: INTEGER is 83
+	FileSave_DispID: INTEGER = 83
 
-	FileOpen_DispID: INTEGER is 80
+	FileOpen_DispID: INTEGER = 80
 	
-	FileExit_DispID: INTEGER is 32930
+	FileExit_DispID: INTEGER = 32930
 
-	Insert_DispID: INTEGER is 32786
+	Insert_DispID: INTEGER = 32786
 
-	CenterPara_DispID: INTEGER is 32851
+	CenterPara_DispID: INTEGER = 32851
 
-	RightPara_DispID: INTEGER is 32853
+	RightPara_DispID: INTEGER = 32853
 
-	LeftPara_DispID: INTEGER is 32852
+	LeftPara_DispID: INTEGER = 32852
 
-	LineUp_DispID:INTEGER is 49160
+	LineUp_DispID:INTEGER = 49160
 
-	LineDown_DispID: INTEGER is 49161
+	LineDown_DispID: INTEGER = 49161
 
-	Bold_DispID: INTEGER is 32840
+	Bold_DispID: INTEGER = 32840
 
-	Italic_DispID: INTEGER is 32841
+	Italic_DispID: INTEGER = 32841
 
-	Underline_DispID: INTEGER is 32846
+	Underline_DispID: INTEGER = 32846
 
-	BorderLineStyle_DispID: INTEGER is 33083
+	BorderLineStyle_DispID: INTEGER = 33083
 
-	BorderTop_DispID: INTEGER is 49188
+	BorderTop_DispID: INTEGER = 49188
 
-	ToolsSpelling_DispID: INTEGER is 191
+	ToolsSpelling_DispID: INTEGER = 191
 
-	ToolsGrammar_DispID: INTEGER is 193
+	ToolsGrammar_DispID: INTEGER = 193
 	
-	CountWindows_dispid: INTEGER is 32826
+	CountWindows_dispid: INTEGER = 32826
 
-	AppShow_DispID: INTEGER is 33057
+	AppShow_DispID: INTEGER = 33057
 
-	AppHide_DispID: INTEGER is 33034;
+	AppHide_DispID: INTEGER = 33034;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

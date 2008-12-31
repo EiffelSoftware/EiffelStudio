@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract class for commands that draws figures in a window."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_in (a_client: like client_window; a_mutex: like display_mutex) is
+	make_in (a_client: like client_window; a_mutex: like display_mutex)
 		require
 			a_client_not_void: a_client /= Void
 			a_mutex_not_void: a_mutex /= Void
@@ -46,7 +46,7 @@ feature -- Threads
 
 feature -- Threads
 
-	execute is
+	execute
 			-- Draw rectangles, until window closed.
 		local
 			l_msg: WEL_MSG
@@ -63,7 +63,7 @@ feature -- Threads
 			end
 		end
 
-	is_thread_continue: BOOLEAN is
+	is_thread_continue: BOOLEAN
 			-- Must the thread continue?
 		do
 			mutex_continue.lock
@@ -71,7 +71,7 @@ feature -- Threads
 			mutex_continue.unlock
 		end
 
-	stop is
+	stop
 			-- Tell the thread to stop.
 		do
 			mutex_continue.lock
@@ -81,7 +81,7 @@ feature -- Threads
 
 feature -- Basic operations
 
-	draw (t_parent: CLIENT_WINDOW) is
+	draw (t_parent: CLIENT_WINDOW)
 			-- Routine executed by new thread.
 		require
 			t_parent_not_void: t_parent /= Void
@@ -90,7 +90,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	std_colors: ARRAY [WEL_COLOR_REF] is
+	std_colors: ARRAY [WEL_COLOR_REF]
 		once
 			Result := <<
 				grey,
@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	random: RANDOM is
+	random: RANDOM
 			-- Initialize a randon number
 		once
 			create Result.make
@@ -122,7 +122,7 @@ feature {NONE} -- Implementation
 			result_not_void : Result /= Void
 		end
 
-	next_number (range: INTEGER): INTEGER is
+	next_number (range: INTEGER): INTEGER
 			-- Random number between 1 and `range'
 			--| Side effect function.
 		do
@@ -136,7 +136,7 @@ feature {NONE} -- Implementation
 			valid_result_inf: Result > 0
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

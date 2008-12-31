@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Parenthesized expressions: "(" SUM ")"
@@ -22,12 +22,12 @@ create
 
 feature 
 
-	construct_name: STRING is
+	construct_name: STRING
 		once
 			Result := "NESTED"
 		end; -- construct_name
 
-	production: LINKED_LIST [CONSTRUCT] is
+	production: LINKED_LIST [CONSTRUCT]
 		local
 			expression: SUM
 		once
@@ -40,14 +40,14 @@ feature
 			keyword (")")
 		end -- production
 
-	post_action is
+	post_action
 		do       
 			child_start
 			child_forth
 			child.post_action
 		end -- post_action
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

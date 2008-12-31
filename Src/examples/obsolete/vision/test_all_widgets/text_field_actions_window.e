@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class TEXT_FIELD_ACTIONS_WINDOW
@@ -30,7 +30,7 @@ feature
 
 	activate_b: ACTION_WINDOW_TOGGLE_B
 
-	set_other_widgets is
+	set_other_widgets
 		do
 			set_size (330, 470)
 			create activate_b.associate (Current, b_activate, "Activate", 20, 300)
@@ -46,7 +46,7 @@ feature
 
 	activate_action: BOOLEAN
 
-	finish is
+	finish
 		do
 			if activate_action then
 				md.remove_ok_action (Current, m_activate)
@@ -64,7 +64,7 @@ feature
 	position1,
 	position2: INTEGER
 
-	descendant_actions(arg: INTEGER_REF) is
+	descendant_actions(arg: INTEGER_REF)
 		local
 			widget: TEXT_FIELD
 		do
@@ -224,7 +224,7 @@ feature
 			end
 		end
 
-	set_other_widgets_insensitive is
+	set_other_widgets_insensitive
 		do
 			activate_b.set_insensitive
 			set_max_size_b.set_insensitive
@@ -236,7 +236,7 @@ feature
 			set_text_b.set_insensitive
 		end
 
-	set_other_widgets_sensitive is
+	set_other_widgets_sensitive
 		do
 			activate_b.set_sensitive
 			set_max_size_b.set_sensitive
@@ -248,7 +248,7 @@ feature
 			set_text_b.set_sensitive
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

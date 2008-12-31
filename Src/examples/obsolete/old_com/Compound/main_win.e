@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Main window for compound file viewer"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class."
@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create main window.
 		do
 			make_top (Title, main_menu.popup_menu (1), 1000)
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	on_menu_command (menu_id: INTEGER) is
+	on_menu_command (menu_id: INTEGER)
 			-- Process menu commands.
 		local
 			child: CHILD_WINDOW
@@ -72,7 +72,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	open_file_dialog: WEL_OPEN_FILE_DIALOG is
+	open_file_dialog: WEL_OPEN_FILE_DIALOG
 			-- Dialog to open compound files.
 		once
 			create Result.make
@@ -83,7 +83,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	main_menu: WEL_MENU is
+	main_menu: WEL_MENU
 			-- Main window's menu
 		once
 			create Result.make_by_id (Id_menu_application)
@@ -91,19 +91,19 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	class_icon: WEL_ICON is
+	class_icon: WEL_ICON
 			-- Main window's icon
 		once
 			create Result.make_by_id (Id_ico_application)
 		end
 
-	Title: STRING is "Compound files viewer"
+	Title: STRING = "Compound files viewer"
 			-- Main window's title
 
 	ole_dispatcher: EOLE_CALL_DISPATCHER;
 			-- EiffelCOM dispatcher
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

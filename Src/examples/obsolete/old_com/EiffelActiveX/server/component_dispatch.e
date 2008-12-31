@@ -1,8 +1,7 @@
-indexing
-	description: "Custom implementation of IDispatch interface"
+note
+	description: "Custom implementation of IDispatch interface. Meant to be implemented by user."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	note: "Meant to be implemanted by user"
 	author: "Marina Nudelman"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,7 +23,7 @@ create
 
 feature {EOLE_CALL_DISPATCHER} -- Callback
 
-	on_invoke (dispid, flags: INTEGER; params: EOLE_DISPPARAMS; a_res: EOLE_VARIANT; exception: EOLE_EXCEPINFO) is
+	on_invoke (dispid, flags: INTEGER; params: EOLE_DISPPARAMS; a_res: EOLE_VARIANT; exception: EOLE_EXCEPINFO)
 			-- Invoke method or property with `dispid' and arguments 
 			-- `params' according to `flags'. See EOLE_METHOD_FLAGS for 
 			-- possible `flags' values. Result is stored in 
@@ -48,7 +47,7 @@ feature {EOLE_CALL_DISPATCHER} -- Callback
 			end
 		end
 
-	on_get_ids_of_names (names: ARRAY [STRING]): ARRAY [INTEGER] is
+	on_get_ids_of_names (names: ARRAY [STRING]): ARRAY [INTEGER]
 			-- Maps `names' to their 'dispids'. First element
 			-- in arrays correspond to member name, others
 			-- to parameter names.
@@ -64,7 +63,7 @@ feature {EOLE_CALL_DISPATCHER} -- Callback
 
 invariant
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

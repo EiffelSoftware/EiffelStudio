@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Initialization
 
-	make(par: EV_CONTAINER) is
+	make(par: EV_CONTAINER)
 			-- Create the tab and initalise the objects.
 		local
 			cmd1,cmd2: EV_ROUTINE_COMMAND
@@ -38,7 +38,7 @@ feature -- Initialization
 
 feature -- Access
 
-	name:STRING is
+	name:STRING
 			-- Returns the name of the tab.
 		do
 			Result:="Item Holder"
@@ -54,13 +54,13 @@ feature -- Access
 
 feature -- Execution Feature
 
-	count (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	count (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Display `Count' objects held.
 		do
 			f1.set_text (current_widget.count.out)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

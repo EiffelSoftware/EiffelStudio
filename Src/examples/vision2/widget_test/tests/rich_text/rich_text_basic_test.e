@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that test EV_RICH_TEXT."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 		
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create `Current' and initialize test in `widget'.
 		local
 			counter: INTEGER
@@ -46,10 +46,10 @@ feature {NONE} -- Implementation
 	rich_text: EV_RICH_TEXT
 		-- Widget that test is to be performed on.
 		
-	sample_text: STRING is "Rich Text%N";
+	sample_text: STRING = "Rich Text%N";
 		-- Sample text for testing.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

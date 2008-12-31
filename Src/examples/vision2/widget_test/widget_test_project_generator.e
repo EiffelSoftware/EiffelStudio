@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that generate stand alone widget tests which
 			may be compiled by a user.
@@ -22,7 +22,7 @@ inherit
 
 feature -- Access
 
-	generate_project (directory: DIRECTORY; test_class_name: STRING; widget_type: STRING) is
+	generate_project (directory: DIRECTORY; test_class_name: STRING; widget_type: STRING)
 			-- Generate project based on `test_class_name'.
 		local
 			project_name, test_name: STRING
@@ -38,7 +38,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	generate_ace_file (project_name: STRING) is
+	generate_ace_file (project_name: STRING)
 			-- Generate an ace file for a project named
 			-- `project_name'.
 		local
@@ -66,7 +66,7 @@ feature {NONE} -- Implementation
 			ace_template_file.close
 		end
 
-	generate_application_file (test_name: STRING) is
+	generate_application_file (test_name: STRING)
 			-- Generate an application file for thsi project.
 		local
 			application_template_file: PLAIN_TEXT_FILE
@@ -91,7 +91,7 @@ feature {NONE} -- Implementation
 			application_template_file.close
 		end
 
-	generate_common_test is
+	generate_common_test
 			-- Generate the common test file.
 		local
 			common_template_file: PLAIN_TEXT_FILE
@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 			common_template_file.close
 		end
 
-	generate_test_file (test_name, widget_type: STRING) is
+	generate_test_file (test_name, widget_type: STRING)
 			-- generate the file containing the test.
 		local
 			test_template_file: PLAIN_TEXT_FILE
@@ -144,7 +144,7 @@ feature {NONE} -- Implementation
 			test_template_file.close
 		end
 
-	copy_required_pixmaps (class_text: STRING) is
+	copy_required_pixmaps (class_text: STRING)
 			-- Copy pixmaps required by `class_text' as defined in the class header.
 		local
 			index_of_pixmaps_required, current_image_number: INTEGER
@@ -198,7 +198,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	add_generated_string (a_class_text, new, tag: STRING) is
+	add_generated_string (a_class_text, new, tag: STRING)
 			-- Replace `tag' in `class_text' with `new'.
 			-- If `new' is Void then add "".
 		require
@@ -216,7 +216,7 @@ feature {NONE} -- Implementation
 	current_generation_directory: DIRECTORY;
 		-- Directory in which to perform generation
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

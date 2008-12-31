@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Print SQL requests to create the relationnal model."
@@ -15,7 +15,7 @@ create
 
 feature
 
-	make (tables: LINKED_LIST [SQL_TABLE]; output: FILE) is
+	make (tables: LINKED_LIST [SQL_TABLE]; output: FILE)
 			-- Print `tables' on `output'.
 		require
 			tables_not_void: tables /= Void;
@@ -34,7 +34,7 @@ feature
 			tables_is_after: tables.after
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

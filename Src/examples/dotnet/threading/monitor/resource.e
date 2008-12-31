@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class simulating a resource."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature -- Implementation
 
-	access_resource (thread_num: INTEGER) is
+	access_resource (thread_num: INTEGER)
 			-- Access to resource.
 		do
 			{MONITOR}.enter (Current)	-- Lock access to resource.
@@ -27,7 +27,7 @@ feature -- Implementation
 			{MONITOR}.exit (Current)	-- Unlock access to resource.
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

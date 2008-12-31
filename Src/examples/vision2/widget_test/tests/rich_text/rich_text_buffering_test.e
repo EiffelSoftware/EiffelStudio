@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that test `buffered_append' of EV_RICH_TEXT."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 		
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create `Current' and initialize test in `widget'.
 		local
 			vertical_box: EV_VERTICAL_BOX
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 		
 feature {NONE} -- Implementation
 
-	perform_buffering is
+	perform_buffering
 			-- Buffer two versions of `text_input.text' into `rich_text, one black and
 			-- the other red with bold enabled. Buffer each of these texts 1000 times.
 		local
@@ -80,7 +80,7 @@ feature {NONE} -- Implementation
 	text_input: EV_TEXT_FIELD;
 		-- Text field to input text for buffing.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

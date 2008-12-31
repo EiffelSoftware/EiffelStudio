@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make (par: EV_CONTAINER)
 			-- Create the tab and initialise objects.
 		local
 			cmd1,cmd2: EV_ROUTINE_COMMAND
@@ -48,7 +48,7 @@ feature -- Initialization
 			set_child_position (b2, 2, 1, 3, 2)
 		end
 
-	name:STRING is
+	name:STRING
 			-- Returns the name of the tab
 		do
 			Result:="Range"
@@ -59,25 +59,25 @@ feature -- Initialization
 feature -- Access
 
 	
-	set_leap (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	set_leap (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Is the mode of the progress bar continuous?
 		do
 			current_widget.set_leap(f1.get_text.to_integer)
 		end
 
-	get_leap (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	get_leap (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Return the leap value of the range gauge
 		do
 			f1.set_text(current_widget.leap.out)
 		end
 
-	leap_forward(arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	leap_forward(arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Increase the leap value of the range gauge.
 		do
 			current_widget.leap_forward
 		end
 
-	leap_backward (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	leap_backward (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Decrease the leap value of the range gauge.
 		do
 			current_widget.leap_backward
@@ -87,7 +87,7 @@ feature -- Access
 
 	b1,b2: EV_BUTTON
 	f1: TEXT_FEATURE_MODIFIER;
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that provide access to constants loaded from files."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,14 +16,14 @@ inherit
 
 feature -- Access
 
-	rich_text_example_root: STRING is
+	rich_text_example_root: STRING
 			-- Root directory for rich text example. As all pixmaps
 			-- are in root directory, we use "." for current directory.
 		do
 			Result := "."
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

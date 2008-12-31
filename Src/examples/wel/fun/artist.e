@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parent: WEL_COMPOSITE_WINDOW) is
+	make (a_parent: WEL_COMPOSITE_WINDOW)
 		do
 			make_child (a_parent, "Artist")
 			resize (300, 300)
@@ -44,7 +44,7 @@ feature {NONE} -- Implementation
 
 	dc: WEL_CLIENT_DC
 
-	sqr_3_2: REAL is 0.86602540
+	sqr_3_2: REAL = 0.86602540
 		-- sqrt (3) / 2
 
 	x_bak, y_bak: INTEGER
@@ -56,7 +56,7 @@ feature {NONE} -- Implementation
 	button_down: BOOLEAN
 		-- Is the mouse button down?
 
-	on_size (size_type, a_width, a_height: INTEGER) is
+	on_size (size_type, a_width, a_height: INTEGER)
 			-- The window has been resized
 		do
 			mid_width := a_width // 2
@@ -65,19 +65,19 @@ feature {NONE} -- Implementation
 			y_bak := mid_height
 		end
 
-	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
+	on_left_button_down (keys, x_pos, y_pos: INTEGER)
 			-- The button has been pressed down.
 		do
 			button_down := True
 		end
 
-	on_left_button_up (keys, x_pos, y_pos: INTEGER) is
+	on_left_button_up (keys, x_pos, y_pos: INTEGER)
 			-- The button has been released.
 		do
 			button_down := False
 		end
 
-	on_mouse_move (keys, x_pos, y_pos: INTEGER) is
+	on_mouse_move (keys, x_pos, y_pos: INTEGER)
 			-- The mouse has been moved.
 		do
 			dc.get
@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	draw (x_pos, y_pos: INTEGER; color: WEL_COLOR_REF) is
+	draw (x_pos, y_pos: INTEGER; color: WEL_COLOR_REF)
 			-- Draw the 16 points
 		local
 			xx, yy, dx, dy: INTEGER
@@ -120,7 +120,7 @@ feature {NONE} -- Implementation
 			dc.set_pixel (mid_width - yy, mid_height - xx, color)
 		end
 
-	colors: ARRAY [WEL_COLOR_REF] is
+	colors: ARRAY [WEL_COLOR_REF]
 			-- Array of standard colors
 		once
 			Result := <<
@@ -144,30 +144,30 @@ feature {NONE} -- Implementation
 			resut_not_void: Result /= Void
 		end
 
-	class_background: WEL_BLACK_BRUSH is
+	class_background: WEL_BLACK_BRUSH
 			-- Black background
 		once
 			create Result.make
 		end
 
-	class_icon: WEL_ICON is
+	class_icon: WEL_ICON
 			-- Window's icon
 		once
 			create Result.make_by_id (Id_ico_artist)
 		end
 
-	class_cursor: WEL_CURSOR is
+	class_cursor: WEL_CURSOR
 			-- No cursor
 		once
 			create Result.make_by_id (Id_cur_invisible)
 		end
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 		once
 			Result := "GDI Artist"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

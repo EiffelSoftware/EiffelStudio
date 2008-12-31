@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class SCROLL_LIST_ACTIONS_WINDOW
@@ -31,7 +31,7 @@ feature
 	selected_pos_b,
 	set_visible_item_count_b: ACTION_WINDOW_BUTTON
 
-	set_other_widgets is
+	set_other_widgets
 		do
 			set_size (330, 550)
 			create start_b.associate (Current, b_start, "Start", 20, 300)
@@ -47,7 +47,7 @@ feature
 			create set_visible_item_count_b.associate (Current, b_set_visible_item_count, "Set visibl it count", 20, 500)
 		end
 
-	descendant_actions(arg: INTEGER_REF) is
+	descendant_actions(arg: INTEGER_REF)
 		local
 			widget: SCROLLABLE_LIST
 			elem: SCROLLABLE_LIST_STRING_ELEMENT
@@ -147,7 +147,7 @@ feature
 			end
 		end
 
-	set_other_widgets_insensitive is
+	set_other_widgets_insensitive
 		do
 			start_b.set_insensitive
 			finish_b.set_insensitive
@@ -161,7 +161,7 @@ feature
 			selected_pos_b.set_insensitive
 		end
 
-	set_other_widgets_sensitive is
+	set_other_widgets_sensitive
 		do
 			start_b.set_sensitive
 			finish_b.set_sensitive
@@ -175,7 +175,7 @@ feature
 			selected_pos_b.set_sensitive
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

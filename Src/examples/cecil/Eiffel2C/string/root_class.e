@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -9,7 +9,7 @@ create
 
 feature -- Initialization
 
-	make is 
+	make 
 		local
 			c_str: ANY
 		do
@@ -27,12 +27,12 @@ feature {NONE} -- Access
 
 feature -- External
 
-	c_printf (ptr: POINTER) is
+	c_printf (ptr: POINTER)
 		external
 			"C | %"fext.h%""
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

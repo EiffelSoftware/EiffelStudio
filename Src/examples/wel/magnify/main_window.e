@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -43,7 +43,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Make the window.
 		do
 			zoom := 4
@@ -57,13 +57,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	cx_zoomed: INTEGER is
+	cx_zoomed: INTEGER
 			-- X coordinate on screen
 		do 
 			Result := (client_rect.right // zoom) + 1
 		end
 
-	cy_zoomed: INTEGER is
+	cy_zoomed: INTEGER
 			-- Y coordinate on screen
 		do 
 			Result := (client_rect.bottom // zoom) + 1
@@ -75,7 +75,7 @@ feature -- Access
 	zoom: INTEGER
 			-- Zoom factor (4 by default)
 
-	palette: WEL_PALETTE is
+	palette: WEL_PALETTE
 			-- Physical palette to grab images on the screen
 		local
 			log_palette: WEL_LOG_PALETTE
@@ -96,13 +96,13 @@ feature -- Access
 
 feature -- Messages
 
-	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- Zoom in rectangle on screen.
 		do
 			zoom_in
 		end
 
-	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
+	on_left_button_down (keys, x_pos, y_pos: INTEGER)
 			-- Draw zoom rectangle and paint window.
 		do
 			zoom_point.set_x_y (x_pos, y_pos)
@@ -119,7 +119,7 @@ feature -- Messages
 			is_tracking := True
 		end
 
-	on_left_button_up (keys, x_pos, y_pos: INTEGER) is
+	on_left_button_up (keys, x_pos, y_pos: INTEGER)
 			-- Stop grabbing.
 		do
 			if is_tracking then
@@ -129,7 +129,7 @@ feature -- Messages
 			end
 		end
 
-	on_mouse_move (keys, x_pos, y_pos: INTEGER) is
+	on_mouse_move (keys, x_pos, y_pos: INTEGER)
 			-- Repaint window with new region.
 		do
 			if is_tracking then
@@ -147,7 +147,7 @@ feature -- Messages
 			end
 		end
 
-	on_menu_command (id_menu: INTEGER) is
+	on_menu_command (id_menu: INTEGER)
 			-- Process the command identified by `id_menu'.
 		do
 			if id_menu = Cmd_exit then
@@ -174,7 +174,7 @@ feature -- Messages
 			end
 		end
 
-	on_key_down (virtual_key, key_data: INTEGER) is
+	on_key_down (virtual_key, key_data: INTEGER)
 			-- Wm_keydown message.
 		do
 			if virtual_key = Vk_add then
@@ -186,7 +186,7 @@ feature -- Messages
 			end
 		end
 
-	on_timer (timer_id: INTEGER) is
+	on_timer (timer_id: INTEGER)
 			-- Refresh the window.
 		do
 			zoom_in
@@ -202,7 +202,7 @@ feature -- Status Report
 
 feature {NONE} -- Implementation
 
-	bound (x_arg, min, max: INTEGER): INTEGER is
+	bound (x_arg, min, max: INTEGER): INTEGER
 			-- Adjust coordinates so that it stand in screen bounds.
 		do
 			if x_arg < min then
@@ -214,7 +214,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	zoom_in is
+	zoom_in
 			-- Stretch screen region in rectangle.
 		local
 			screen_dc: WEL_SCREEN_DC
@@ -240,7 +240,7 @@ feature {NONE} -- Implementation
 			dc.release
 		end
 
-	draw_zoom_rect is
+	draw_zoom_rect
 			-- Draw rectangle with inverted borders.
 		local
 			a_rect: WEL_RECT
@@ -269,7 +269,7 @@ feature {NONE} -- Implementation
 			sdc.release
 		end
 	
-	increase_zoom is
+	increase_zoom
 			-- Add 1 to current zoom value.
 		do
 			if zoom < Max_zoom then
@@ -281,7 +281,7 @@ feature {NONE} -- Implementation
 				zoom = old zoom + 1
 		end
 
-	decrease_zoom is
+	decrease_zoom
 			-- Subtract 1 to current zoom value.
 		do
 			if zoom > Min_zoom then
@@ -293,16 +293,16 @@ feature {NONE} -- Implementation
 				zoom = old zoom - 1
 		end
 
-	Windows_95: INTEGER is 768
+	Windows_95: INTEGER = 768
 			-- Windows version
 
-	Max_zoom: INTEGER is 32
+	Max_zoom: INTEGER = 32
 			-- Maximum zoom value
 
-	Min_zoom: INTEGER is 1
+	Min_zoom: INTEGER = 1
 			-- Minimum zoom value
 
-	about_box: WEL_MODAL_DIALOG is
+	about_box: WEL_MODAL_DIALOG
 			-- About dialog box
 		once
 			create Result.make_by_id (Current, About_dlg_id)
@@ -310,7 +310,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	quick_reference: WEL_MODAL_DIALOG is
+	quick_reference: WEL_MODAL_DIALOG
 			-- Quick reference dialog box
 		once
 			create Result.make_by_id (Current, Quickref_dlg_id)
@@ -318,7 +318,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	main_menu: WEL_MENU is
+	main_menu: WEL_MENU
 			-- Window's menu
 		once
 			create Result.make_by_id (Id_main_menu)
@@ -326,19 +326,19 @@ feature {NONE} -- Implementation
 			menu_not_void: Result /= Void
 		end
 
-	class_icon: WEL_ICON is
+	class_icon: WEL_ICON
 			-- Window's icon
 		once
 			create Result.make_by_id (Id_ico_application)
 		end
 
-	Title: STRING is "WEL Magnify"
+	Title: STRING = "WEL Magnify"
 			-- Window's title
 
 invariant
 	zoom_in_bounds: Min_zoom <= zoom and zoom <= Max_zoom
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

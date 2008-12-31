@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class PERSON_REF2
@@ -23,14 +23,14 @@ create
 
 feature {ANY} 
 
-    make (arg_name : STRING) is
+    make (arg_name : STRING)
     require
         name_not_void : arg_name /= Void
     do
         name := arg_name
     end
 
-    default_actions : SAMPLE_TRAVERSAL_ACTION2 is
+    default_actions : SAMPLE_TRAVERSAL_ACTION2
     once
         create Result
     end
@@ -39,7 +39,7 @@ feature {ANY}
 
     name : STRING;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

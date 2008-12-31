@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Demo for equilateral triangles."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Access
 
-	figure: EV_EQUILATERAL_TRIANGLE is
+	figure: EV_EQUILATERAL_TRIANGLE
 		local
 			pt: EV_POINT
 			angle: EV_ANGLE
@@ -31,7 +31,7 @@ feature -- Access
 			Result.set_orientation (angle)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

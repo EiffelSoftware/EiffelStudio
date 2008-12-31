@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -12,14 +12,14 @@ feature {NONE}
 
 feature
 
-	associated_operator: HASH_TABLE [INTERFACE, STRING] is
+	associated_operator: HASH_TABLE [INTERFACE, STRING]
 			-- Hash-table of operations with name and help messages.
 		once
 				-- Hash-tables are resizable anyway.
 			create Result.make (10)
 		end
 
-	enter_operator (k, m: STRING; c: STATE) is
+	enter_operator (k, m: STRING; c: STATE)
 			-- Enter a command `c' associated with a key `k'
 			-- and an help message `m'.
 		do
@@ -30,7 +30,7 @@ feature
 
 feature {NONE}
 
-	help_start is
+	help_start
 			-- Start printing available operations.
 		do
 			io.putstring ("Allowable operations are: %N")
@@ -38,18 +38,18 @@ feature {NONE}
 			index := 1
 		end;
 
-	help_next is
+	help_next
 		do
 			index := index + 1
 		end
 
-	help_over: BOOLEAN is
+	help_over: BOOLEAN
 			-- Is the number of available operations reviewed exhausted?
 		do
 			Result := index = keys.count + 1
 		end
 
-	help_action is
+	help_action
 			-- Print out a information on an allowable operation.
 		local
 			one_key: STRING
@@ -65,7 +65,7 @@ feature {NONE}
 			io.new_line
 		end
 
-	keys_messages is
+	keys_messages
 		do
 			from
 				help_start
@@ -77,7 +77,7 @@ feature {NONE}
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

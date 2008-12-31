@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tester of Orthogonal Transformer Minimizer class"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -18,7 +18,7 @@ create
 	
 feature -- Initialization
 
-	make is
+	make
 			-- test case real and complex
 		do
 			print ("%N ********************************%N");
@@ -42,7 +42,7 @@ feature -- Initialization
 
 feature -- Basic operations
 
-	test_real is
+	test_real
 		do
 			create system.make_real_from_array (
 				<<2.0, 2.5, 2.5,
@@ -116,7 +116,7 @@ feature -- Basic operations
 
 		end;
 	
-	test_complex is
+	test_complex
 			-- case of complex system
 		do
 			create system.make_complex_from_array (
@@ -200,7 +200,7 @@ feature -- Access
 			-- Right hand side of A|x>= |vector>
 			-- (Seeking |x>)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

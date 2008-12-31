@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"DYNAMIC_TABLE_DEMO_WINDOW, demo window to test the%
 		% dynamic table widget. Belongs to EiffelVision example%
@@ -24,7 +24,7 @@ create
 
 feature -- Access
 
-	main_widget: EV_DYNAMIC_TABLE is
+	main_widget: EV_DYNAMIC_TABLE
 			-- The main widget of the demo
 		once
 			create Result.make (Current)
@@ -38,7 +38,7 @@ feature -- Access
 
 feature -- Status setting
 	
-	set_widgets is
+	set_widgets
 			-- Set the widgets in the demo windows.
 		do
 			create button.make_with_text (main_widget, "Element 1")
@@ -54,7 +54,7 @@ feature -- Status setting
 			create button.make_with_text (main_widget, "Element 11")
 		end
 	
-	set_values is
+	set_values
 			-- Set the values on the widgets of the window.
 		do
 			set_title ("Dynamic table demo")
@@ -63,7 +63,7 @@ feature -- Status setting
 			main_widget.set_column_spacing (5)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

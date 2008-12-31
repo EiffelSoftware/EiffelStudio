@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"SET_MIN_SIZE_COMMAND, sets the minimum size of widget.%
 		% Belongs to EiffelVision example."
@@ -16,13 +16,13 @@ inherit
 
 feature -- Command execution
 
-	execute (arg: EV_ARGUMENT3[EV_WIDGET, EV_TEXT_FIELD, EV_TEXT_FIELD]; data: EV_EVENT_DATA) is
+	execute (arg: EV_ARGUMENT3[EV_WIDGET, EV_TEXT_FIELD, EV_TEXT_FIELD]; data: EV_EVENT_DATA)
 		do
 			arg.first.set_minimum_size (arg.second.text.to_integer,
 						 arg.third.text.to_integer)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make (par: EV_CONTAINER)
 			-- Create the tab and initialise objects.
 		local
 			cmd1, cmd2: EV_ROUTINE_COMMAND
@@ -42,7 +42,7 @@ feature -- Initialization
 
 feature -- Access
 
-	name:STRING is
+	name:STRING
 			-- Returns the name of the tab
 		do
 			Result:="Container"
@@ -56,19 +56,19 @@ feature -- Access
 
 feature -- Execution feature
 
-	get_client_width (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	get_client_width (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Get the width of the client
 		do
 			f1.set_text(current_widget.client_width.out)
 		end
 
-	get_client_height (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	get_client_height (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Get the height of the client
 		do
 			f2.set_text(current_widget.client_height.out)
 		end
 
-	get_managed (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	get_managed (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Is the client managed?
 		do
 			if current_widget.managed then
@@ -78,7 +78,7 @@ feature -- Execution feature
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

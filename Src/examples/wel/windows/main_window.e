@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		local
 			on_off: ON_OFF_CONTROL
 			static: WEL_STATIC
@@ -48,7 +48,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	on_menu_command (menu_id: INTEGER) is
+	on_menu_command (menu_id: INTEGER)
 		local
 			popup: WEL_POPUP_WINDOW
 			static: WEL_STATIC
@@ -85,13 +85,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	class_icon: WEL_ICON is
+	class_icon: WEL_ICON
 			-- Window's icon
 		once
 			create Result.make_by_id (Id_ico_application)
 		end
 
-	main_menu: WEL_MENU is
+	main_menu: WEL_MENU
 			-- Window's menu
 		once
 			create Result.make_by_id (Id_main_menu)
@@ -99,10 +99,10 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	Title: STRING is "WEL Windows";
+	Title: STRING = "WEL Windows";
 			-- Window's title
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

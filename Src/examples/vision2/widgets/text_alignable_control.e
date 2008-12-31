@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Controls used to modify objects of type EV_TEXT_ALIGNABLE"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (box: EV_BOX; text_alignable: EV_TEXT_ALIGNABLE; output: EV_TEXT) is
+	make (box: EV_BOX; text_alignable: EV_TEXT_ALIGNABLE; output: EV_TEXT)
 			-- Create controls to manipulate `text_alignable', parented in `box' and
 			-- displaying output in `output'.
 		do
@@ -42,7 +42,7 @@ feature {NONE} -- Implementation
 	vertical_box: EV_VERTICAL_BOX
 	button: EV_BUTTON;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

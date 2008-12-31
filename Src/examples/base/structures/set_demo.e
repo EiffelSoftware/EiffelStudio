@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Demo class for sets. %
 		% MLS to demo LINKED_SET"
@@ -19,7 +19,7 @@ create
 
 feature -- Creation
 
-	make is
+	make
 			-- Initialize and execute demonstration
 		do
 			create driver.make
@@ -45,7 +45,7 @@ feature -- Attributes
 
 feature -- Routines
 
-	cycle is
+	cycle
 			-- Basic user interaction process.
 		local
 			new_command: INTEGER
@@ -69,7 +69,7 @@ feature -- Routines
 			driver.exit 
 		end  -- cycle
 
-	sets_trace is
+	sets_trace
 			-- Display the 3 sets.
 		do
 			driver.putstring ("a:") 
@@ -80,7 +80,7 @@ feature -- Routines
 			c.display 
 		end  
 
-	fill_menu is
+	fill_menu
 			-- Fill the menu with the available commands.
 		do
 			driver.add_entry ("PU (PUt): Insert item in set", "Put item in the set") 
@@ -112,7 +112,7 @@ feature -- Routines
 			driver.complete_menu
 			end 
 
-	execute (new_command: INTEGER) is
+	execute (new_command: INTEGER)
 			-- Execute command corresponding of user's request.
 		require else
 			valid_command: new_command >= put and new_command <= quit
@@ -199,7 +199,7 @@ feature -- Routines
 			end  
 		end  
 
-	get_set: like a is
+	get_set: like a
 		local
 			s: STRING
 		do
@@ -215,7 +215,7 @@ feature -- Routines
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Nested queries example."
 	legal: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature
 
-	process_row is
+	process_row
 		local
 			my_action: ACTION_2_I
 			new_selection: DB_SELECTION
@@ -46,13 +46,13 @@ feature
 			end
 		end
 
-	select_string: STRING is
+	select_string: STRING
 		once
 			Result := 
 			"select name from syscolumns where id = :table_id"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

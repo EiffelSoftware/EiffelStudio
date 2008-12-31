@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that demonstrate how to use drawable grid items.
 		]"
@@ -23,7 +23,7 @@ inherit
 		
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create `Current' and initialize test in `widget'.
 		local
 			counter: INTEGER
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			widget := grid
 		end
 		
-	add_tree_items (parent_row: EV_GRID_ROW; child_count: INTEGER) is
+	add_tree_items (parent_row: EV_GRID_ROW; child_count: INTEGER)
 			-- Add `child_count' subrows to `row' of `parent_item'.
 		local
 			counter: INTEGER
@@ -78,7 +78,7 @@ feature {NONE} -- Initialization
 		
 feature {NONE} -- Implementation
 
-	subrow_count: INTEGER is 16
+	subrow_count: INTEGER = 16
 		-- Number of "Thread" subrows to be used in this example.
 
 	grid: EV_GRID
@@ -87,7 +87,7 @@ feature {NONE} -- Implementation
 	compute_timer: EV_TIMEOUT
 		-- A timer used to trigger the recalculation of the progrss bars.
 		
-	redraw_item (drawable: EV_DRAWABLE; drawable_item: EV_GRID_DRAWABLE_ITEM) is
+	redraw_item (drawable: EV_DRAWABLE; drawable_item: EV_GRID_DRAWABLE_ITEM)
 			-- Redraw `drawable_item' into `drawable' by looking up the current progress
 			-- for that item and displaying it as as status bar.
 		local
@@ -137,7 +137,7 @@ feature {NONE} -- Implementation
 			end			
 		end
 		
-	update_progress is
+	update_progress
 			-- Update progress of all status bars and force
 			-- each item to redraw.
 		local
@@ -170,20 +170,20 @@ feature {NONE} -- Implementation
 	all_progress_speed: ARRAYED_LIST [DOUBLE]
 		-- All progress speeds in order.
 	
-	light_green: EV_COLOR is
+	light_green: EV_COLOR
 			-- Color light green.
 		once
 			create Result.make_with_8_bit_rgb (230, 255, 230)
 		end
 		
-	stock_colors: EV_STOCK_COLORS is
+	stock_colors: EV_STOCK_COLORS
 			-- Once access to EiffelVision2 stock colors
 			-- (from GRID_ACCESSOR)
 		once
 			create Result
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

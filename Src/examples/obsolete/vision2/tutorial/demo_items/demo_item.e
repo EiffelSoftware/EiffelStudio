@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Class Demo item, ancestor of all the items of the tree.%
 		% This items have the memory of the system."
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_title (par:EV_TREE_ITEM_HOLDER; classs, example: STRING) is
+	make_with_title (par:EV_TREE_ITEM_HOLDER; classs, example: STRING)
 			-- Create the item and the demo that
 			-- goes with it.
 		do
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			example_name := example
 		end
 
-	create_demo is
+	create_demo
 			-- Create the demo_window.
 		do
 			if demo_window = Void then
@@ -48,7 +48,7 @@ feature -- Access
 	demo_window: G
 		-- Demo window associated to the item
 
-	action_button: EV_BUTTON is
+	action_button: EV_BUTTON
 			-- An action button to display the action window.
 		local
 			cmd: EV_ROUTINE_COMMAND
@@ -60,7 +60,7 @@ feature -- Access
 			Result.add_click_command (cmd, Void)
 		end
 
-	event_button: EV_BUTTON is
+	event_button: EV_BUTTON
 			-- An event button to display the event window.
 		local
 			cmd: EV_ROUTINE_COMMAND
@@ -70,13 +70,13 @@ feature -- Access
 			Result.add_click_command (cmd, Void)
 		end
 	
-	demo_page: EV_VERTICAL_BOX is
+	demo_page: EV_VERTICAL_BOX
 			-- A HOLDER for the demo of the widget.
 		once
 			create Result.make (Void)
 		end
 
-	text_page: EV_RICH_TEXT is
+	text_page: EV_RICH_TEXT
 			-- The documentation about the widget
 		local
 			color: EV_BASIC_COLORS
@@ -87,7 +87,7 @@ feature -- Access
 			Result.set_background_color (color.white)
 		end
 
-	class_page: EV_RICH_TEXT is
+	class_page: EV_RICH_TEXT
 			-- The class text of the widget (short_form)
 		local
 			color: EV_BASIC_COLORS
@@ -98,7 +98,7 @@ feature -- Access
 			Result.set_background_color (color.white)
 		end
 
-	example_page: EV_RICH_TEXT is
+	example_page: EV_RICH_TEXT
 			-- The class text of the current demo window
 		local
 			color: EV_BASIC_COLORS
@@ -109,7 +109,7 @@ feature -- Access
 			Result.set_background_color (color.white)
 		end
 
-	current_demo: CELL [DEMO_WINDOW] is
+	current_demo: CELL [DEMO_WINDOW]
 			-- Demo currently in action
 		once
 			create Result.put (Void)
@@ -117,7 +117,7 @@ feature -- Access
 
 feature -- Basic operation
 
-	display_text (window: EV_RICH_TEXT; path: STRING) is
+	display_text (window: EV_RICH_TEXT; path: STRING)
 			-- reads text information from file for use in text area
 		local
 			file: PLAIN_TEXT_FILE
@@ -137,7 +137,7 @@ feature -- Basic operation
 			end
 		end
 
-	display_rtf_text (window: EV_RICH_TEXT; path: STRING) is
+	display_rtf_text (window: EV_RICH_TEXT; path: STRING)
 			-- reads text information from file for use in text area
 		local
 			str: STRING
@@ -162,7 +162,7 @@ feature -- Basic operation
 
 feature {DEMO_ITEM} -- Execution commands
 
-	execute (arg: EV_ARGUMENT; ev_data: EV_EVENT_DATA) is
+	execute (arg: EV_ARGUMENT; ev_data: EV_EVENT_DATA)
 			-- When we select the item, we launch the
 			-- window and the options. The previous demo
 			-- get a Void parent
@@ -218,19 +218,19 @@ feature {DEMO_ITEM} -- Execution commands
 			display_text (text_page, documentation_file)
 		end
  
-	action_activate (arg: EV_ARGUMENT; ev_data: EV_EVENT_DATA) is
+	action_activate (arg: EV_ARGUMENT; ev_data: EV_EVENT_DATA)
 			-- Activate feature of the button
 		do
 			current_demo.item.show_action_window
 		end
 
-	event_activate (arg: EV_ARGUMENT; ev_data: EV_EVENT_DATA) is
+	event_activate (arg: EV_ARGUMENT; ev_data: EV_EVENT_DATA)
 			-- Activate feature of the button.
 		do
 			current_demo.item.show_event_window
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Make the main window.
 		do
 			make_top ("My application")
@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
+	on_left_button_down (keys, x_pos, y_pos: INTEGER)
 			-- Display a message box when the user presses the
 			-- the left mouse button.
 		local
@@ -35,7 +35,7 @@ feature {NONE} -- Implementation
 				%mouse button.", "Message received")
 		end
 
-	closeable: BOOLEAN is
+	closeable: BOOLEAN
 			-- Does the user want to quit?
 		local
 			msg_box: WEL_MSG_BOX
@@ -46,7 +46,7 @@ feature {NONE} -- Implementation
 			Result := msg_box.message_box_result = Idyes
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Main window of server"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -27,7 +27,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Make the main window
 		do
 			make_top ("Analyzer Server")
@@ -46,7 +46,7 @@ feature -- Access
 	values: LINKED_LIST [STRING]
 			-- Values associated to `descriptions'
 			
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Creation style
 		once
 			Result := Ws_overlapped + Ws_ex_clientedge
@@ -54,7 +54,7 @@ feature -- Access
 	
 feature -- Element Change
 
-	add_line (description: STRING; value: INTEGER) is
+	add_line (description: STRING; value: INTEGER)
 			-- Add line into window's text
 		local
 			string_value: STRING
@@ -66,7 +66,7 @@ feature -- Element Change
 			invalidate
 		end
 		
-	paint_window (paint_dc: WEL_PAINT_DC) is
+	paint_window (paint_dc: WEL_PAINT_DC)
 			-- Repaint window
 		local
 			index: INTEGER
@@ -102,25 +102,25 @@ feature -- Element Change
 			
 feature {NONE} -- Implementation
 
-	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- Redraw text
 		do
 			paint_window (paint_dc)
 		end
 
-	class_background: WEL_WHITE_BRUSH is
+	class_background: WEL_WHITE_BRUSH
 			-- White background
 		once
 			create Result.make
 		end
 
-	class_icon: WEL_ICON is
+	class_icon: WEL_ICON
 			-- Window's icon
 		once
 			create Result.make_by_id (1)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

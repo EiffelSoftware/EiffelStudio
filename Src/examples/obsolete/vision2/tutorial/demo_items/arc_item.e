@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Demo for arcs."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Access
 
-	figure: EV_ARC is
+	figure: EV_ARC
 		local
 			pt: EV_POINT
 			angle1, angle2, angle3: EV_ANGLE
@@ -36,7 +36,7 @@ feature -- Access
 			Result.set_orientation (angle3)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

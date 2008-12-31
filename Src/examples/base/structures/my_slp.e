@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Demo class for SLP_QUEUE %
 		% Only one feature added: display"
@@ -18,7 +18,7 @@ create
 
 feature -- Creation
 
-	make is
+	make
 		do
 			io.set_error_default
 			lpq_make
@@ -26,7 +26,7 @@ feature -- Creation
 
 feature -- Routine
 
-	display is
+	display
 		do
 			from
 				start
@@ -39,7 +39,7 @@ feature -- Routine
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

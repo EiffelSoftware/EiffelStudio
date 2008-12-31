@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Simple calculator for date"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 		local
 			j: INTEGER
 			test, key, c: CHARACTER
@@ -67,7 +67,7 @@ feature -- Initialization
 			print ("bye !")
 		end
 
-	initialize_command is
+	initialize_command
 		do
 			create command_table.make (0)
 			create add_day
@@ -92,7 +92,7 @@ feature -- Access
 	add_week: ADD_WEEK
 	set_date: SET_DATE;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

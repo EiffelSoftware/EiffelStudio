@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Main window for this application"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Build the interface for this window.
 		do
 			Precursor {EV_TITLED_WINDOW}
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 			set_size (Window_width, Window_height)
 		end
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is the window in its default state
 			-- (as stated in `initialize')
 		do
@@ -72,7 +72,7 @@ feature {NONE} -- Menu Implementation
 	help_menu: EV_MENU
 			-- "Help" menu for this window (contains About...)
 
-	build_standard_menu_bar is
+	build_standard_menu_bar
 			-- Create and populate `standard_menu_bar'.
 		require
 			menu_bar_not_yet_created: standard_menu_bar = Void 
@@ -90,7 +90,7 @@ feature {NONE} -- Menu Implementation
 				not standard_menu_bar.is_empty
 		end
 
-	build_file_menu is
+	build_file_menu
 			-- Create and populate `file_menu'.
 		require
 			file_menu_not_yet_created: file_menu = Void
@@ -135,7 +135,7 @@ feature {NONE} -- ToolBar Implementation
 	standard_toolbar: EV_TOOL_BAR
 			-- Standard toolbar for this window
 
-	build_standard_toolbar is
+	build_standard_toolbar
 			-- Create and populate the standard toolbar.
 		require
 			toolbar_not_yet_created: standard_toolbar = Void
@@ -175,7 +175,7 @@ feature {NONE} -- ToolBar Implementation
 
 feature {NONE} -- Implementation, Close event
 
-	request_close_window is
+	request_close_window
 			-- The user wants to close the window
 		local
 			question_dialog: EV_CONFIRMATION_DIALOG
@@ -197,7 +197,7 @@ feature {NONE} -- Implementation
 	main_container: EV_VERTICAL_BOX
 			-- Main container (contains all widgets displayed in this window)
 
-	build_main_container is
+	build_main_container
 			-- Create and populate `main_container'.
 		require
 			main_container_not_yet_created: main_container = Void
@@ -208,39 +208,39 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation / Constants
 
-	Window_title: STRING is "egraph"
+	Window_title: STRING = "egraph"
 			-- Title of the window.
 
-	Window_width: INTEGER is 800
+	Window_width: INTEGER = 800
 			-- Initial width for this window.
 
-	Window_height: INTEGER is 600
+	Window_height: INTEGER = 600
 			-- Initial height for this window.
 			
 feature {NONE} -- Actions
 
-	on_new is
+	on_new
 			-- New was selected.
 		deferred
 		end
 		
-	on_save is
+	on_save
 			-- Save was selected.
 		deferred
 		end
 		
-	on_open is
+	on_open
 			-- Open was selected.
 		deferred
 		end
 		
-	on_save_as is
+	on_save_as
 			-- SaveAs was selected.
 		deferred
 		end
 		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

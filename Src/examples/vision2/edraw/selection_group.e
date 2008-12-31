@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that contains a selected item."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_selected_item (a_selected_item: like selected_item) is
+	set_selected_item (a_selected_item: like selected_item)
 			-- Set `selected_item' to `a_selected_item'.
 		require
 			a_selected_item_not_Void: a_selected_item /= Void
@@ -34,7 +34,7 @@ feature -- Element change
 		
 feature {NONE} -- Implementation
 
-	select_item is
+	select_item
 			-- Add the graphics indicating that `handle' is selected.
 		local
 			bbox: EV_RECTANGLE
@@ -49,7 +49,7 @@ feature {NONE} -- Implementation
 			first_not_moved: first = old first
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

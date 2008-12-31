@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -35,7 +35,7 @@ feature {NONE}
 
 feature
 
-	make is
+	make
 		local
 			tmp_string: STRING
 		do
@@ -79,7 +79,7 @@ feature
 
 feature {NONE}
 
-	make_selection is
+	make_selection
 		local
 			author: STRING
 			price: REAL
@@ -140,7 +140,7 @@ feature {NONE}
 			end
 		end
 
-	execute is
+	execute
 		do
 			base_selection.object_convert (book)
 			base_selection.cursor_to_object
@@ -150,15 +150,15 @@ feature {NONE}
 
 feature {NONE}
 
-	Select_text: STRING is
+	Select_text: STRING =
 		"select * from DB_BOOK where author = :author or price = :price or year = :pub_date"
 
-	Table_name: STRING is
+	Table_name: STRING =
 		"DB_BOOK"
 
-	Proc_name: STRING is "DB_BOOK_PROC";
+	Proc_name: STRING = "DB_BOOK_PROC";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

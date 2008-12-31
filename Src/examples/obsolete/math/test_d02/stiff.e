@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Stiff system, d02ejc example"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -19,13 +19,13 @@ class EXAMPLE_STIFF_ODE inherit
 
 feature -- Status report
 
-	c1: DOUBLE is 10000.0;
+	c1: DOUBLE = 10000.0;
 
-	c2: DOUBLE is 3.0e7;
+	c2: DOUBLE = 3.0e7;
 
 feature -- Basic operations
 
-	rhs (x: DOUBLE; y: ARRAY [DOUBLE]): ARRAY [DOUBLE] is
+	rhs (x: DOUBLE; y: ARRAY [DOUBLE]): ARRAY [DOUBLE]
 		local
 			y1, y2, y3: DOUBLE;
 		do
@@ -40,12 +40,12 @@ feature -- Basic operations
 			Result.put (c2 * y2 * y2, 3);
 		end;	
 
-	g (x: DOUBLE; y: ARRAY [DOUBLE]): DOUBLE is
+	g (x: DOUBLE; y: ARRAY [DOUBLE]): DOUBLE
 		do
 			Result := (y @ 1) - 0.9
 		end;
 
-	jacobian (x: DOUBLE; y: ARRAY [DOUBLE]): BASIC_MATRIX is
+	jacobian (x: DOUBLE; y: ARRAY [DOUBLE]): BASIC_MATRIX
 		local
 			y1, y2, y3: DOUBLE;
 		do
@@ -64,7 +64,7 @@ feature -- Basic operations
 			Result.put_grid_real (0.0,3,3);
 		end;
 
-	output (x: DOUBLE; y: ARRAY [DOUBLE]) is
+	output (x: DOUBLE; y: ARRAY [DOUBLE])
 		do
 			print (x);
 			print ('%T');
@@ -76,7 +76,7 @@ feature -- Basic operations
 			print ('%N');
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

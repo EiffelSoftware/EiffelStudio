@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"ERROR_DIALOG_COMMAND class of the test_all_widget%
 		% example."
@@ -15,14 +15,14 @@ inherit
 
 feature -- Command execution
 
-	execute (arg: EV_ARGUMENT1[EV_WINDOW]; data: EV_EVENT_DATA) is
+	execute (arg: EV_ARGUMENT1[EV_WINDOW]; data: EV_EVENT_DATA)
 		local
 			dialog: EV_ERROR_DIALOG
 		do
 			create dialog.make_default (arg.first, "Error box", "This is an error message!")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

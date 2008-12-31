@@ -1,4 +1,4 @@
-indexing
+note
 	desription: "Demo class for sorted sets. %
 		% Just change the types of a, b and c to %
 		% apply to other implementations of sets. %
@@ -20,7 +20,7 @@ create
 
 feature -- Creation
 
-	make is
+	make
 			-- Initialize and execute demonstration
 		do
 			create driver.make
@@ -42,7 +42,7 @@ feature -- Attributes
 
 feature -- Routines
 
-	cycle is
+	cycle
 			-- Basic user interaction process.
 		local
 			new_command: INTEGER
@@ -66,7 +66,7 @@ feature -- Routines
 			driver.exit
 		end
 
-	sets_trace is
+	sets_trace
 			-- Display the 3 sets.
 		do
 			driver.putstring ("a:")
@@ -80,7 +80,7 @@ feature -- Routines
 			driver.new_line
 		end 
 
-	fill_menu is
+	fill_menu
 			-- Fill the menu with the available commands.
 		do
 			driver.add_entry ("PU (PUt): Insert item in set", "Put item in the set")
@@ -114,7 +114,7 @@ feature -- Routines
 			driver.complete_menu
 		end
 
-	execute (new_command: INTEGER) is
+	execute (new_command: INTEGER)
 			-- Execute command corresponding to user's request.
 		require else
 			valid_command: new_command >= put and new_command <= quit
@@ -212,7 +212,7 @@ feature -- Routines
 			end 
 		end 
 
-	get_set: like a is
+	get_set: like a
 		local
 			s: STRING
 		do
@@ -228,12 +228,12 @@ feature -- Routines
 			end
 		end
 
-	get_el: INTEGER is
+	get_el: INTEGER
 		do
 			Result := driver.get_integer ("element")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

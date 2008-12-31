@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Test class for G05"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ feature
 	size: INTEGER;
 			-- an integer for setting with command args.
 
-	expect (predicted, actual: DOUBLE) is
+	expect (predicted, actual: DOUBLE)
 			-- Print a value with it's expected value.
 		do
 			print(predicted);
@@ -33,7 +33,7 @@ feature
 			print_nl ("");
 		end;
 
-	make (args: ARRAY [STRING]) is
+	make (args: ARRAY [STRING])
 			-- Test g05
 		do
 			size := 1000;
@@ -53,7 +53,7 @@ feature
 			test_arma;
 		end;
 
-	test_statistician is
+	test_statistician
 			-- Test the functions in STATISTICIAN
 		do
 			print(statistics(<<1., 2. ,3., 3.1, 3.25, 4., 5.>>));
@@ -80,7 +80,7 @@ feature
 			expect(.670, gamma_lower_tail_deviate(0.428, 7.5, .1, 0.0));
 		end;
 
-	test_gamma is
+	test_gamma
 			-- Compare distribution with generator
 		local
 			nd: GAMMA_DISTRIBUTION;
@@ -109,7 +109,7 @@ feature
 			print("%N");
 		end;
 
-	test_chi_squared is
+	test_chi_squared
 			-- Compare distribution with generator
 		local
 			nd: CHI_SQUARED_DISTRIBUTION;
@@ -138,7 +138,7 @@ feature
 			print("%N");
 		end;
 
-	test_students_t is
+	test_students_t
 			-- Compare distribution with generator
 		local
 			nd: STUDENTS_T_DISTRIBUTION;
@@ -167,7 +167,7 @@ feature
 			print("%N");
 		end;
 
-	test_normal is
+	test_normal
 			-- Compare distribution with generator
 		local
 			nd: NORMAL_DISTRIBUTION;
@@ -196,7 +196,7 @@ feature
 			print("%N");
 		end;
 
-	test_distributions is
+	test_distributions
 			-- Test the distribution functions.
 		local
 			t: STUDENTS_T_DISTRIBUTION;
@@ -279,7 +279,7 @@ feature
 
 		end;
 		
-	test_simple_generators is
+	test_simple_generators
 			-- Test the random number generators.
 		local
 			d1: CONTINUOUS_UNIFORM_GENERATOR;
@@ -420,28 +420,28 @@ feature
 			nexti(d12);
 		end;
 
-	next (d: NAG_RANDOM_NUMBER_GENERATOR[DOUBLE]) is
+	next (d: NAG_RANDOM_NUMBER_GENERATOR[DOUBLE])
 		do
 			print(d.item)
 			print_nl ("");
 			d.forth
 		end;
 		
-	nexti (d: NAG_RANDOM_NUMBER_GENERATOR[INTEGER]) is
+	nexti (d: NAG_RANDOM_NUMBER_GENERATOR[INTEGER])
 		do
 			print(d.item)
 			print_nl ("");
 			d.forth
 		end;
 		
-	nextv (d: NAG_RANDOM_NUMBER_GENERATOR[ARRAY [DOUBLE]]) is
+	nextv (d: NAG_RANDOM_NUMBER_GENERATOR[ARRAY [DOUBLE]])
 		do
 			print(d.item.tagged_out)
 			print_nl ("");
 			d.forth
 		end;
 		
-	test_vector_generators is
+	test_vector_generators
 			-- Test example from g05ezc
 		local
 			x: ARRAY [DOUBLE];
@@ -465,7 +465,7 @@ feature
 			nextv (z);
 		end;
 
-	test_dealer is
+	test_dealer
 		local
 			d: DEALER;
 			j: ARRAY [INTEGER];
@@ -487,7 +487,7 @@ feature
 			print(d.dealt.tagged_out);
 		end;
 
-	test_shuffler is
+	test_shuffler
 		local
 			d: SHUFFLER;
 			j: ARRAY [INTEGER];
@@ -500,7 +500,7 @@ feature
 			print(d.permuted.tagged_out);
 		end;
 			
-	test_arma is
+	test_arma
 		local
 			x: ARMA_TIME_SERIES_GENERATOR;
 			phi: ARRAY [DOUBLE];
@@ -528,7 +528,7 @@ feature
 			print(x.sample.tagged_out);
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -18,7 +18,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Make the main window
 		local
 			frame: WEL_GROUP_BOX
@@ -68,13 +68,13 @@ feature -- Access
 
 feature -- Element change
 
-	set_frgnd_ctlcolor (a_color: WEL_COLOR_REF) is
+	set_frgnd_ctlcolor (a_color: WEL_COLOR_REF)
 			-- Make `a_color' the new `frgnd_ctlcolor'.
 		do
 			frgnd_ctlcolor := a_color
 		end
 
-	set_bkgnd_ctlcolor (a_color: WEL_COLOR_REF) is
+	set_bkgnd_ctlcolor (a_color: WEL_COLOR_REF)
 			-- Make `a_color' the new `bkgnd_ctlcolor'.
 		do
 			bkgnd_ctlcolor := a_color
@@ -82,7 +82,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	on_color_control (control: WEL_COLOR_CONTROL; paint_dc: WEL_PAINT_DC) is
+	on_color_control (control: WEL_COLOR_CONTROL; paint_dc: WEL_PAINT_DC)
 			-- Wm_ctlcolorstatic, Wm_ctlcoloredit, Wm_ctlcolorlistbox
 			-- and Wm_ctlcolorscrollbar messages.
 			-- To change its default colors, the color-control `control'
@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 			disable_default_processing
 		end
 
-	closeable: BOOLEAN is
+	closeable: BOOLEAN
 		local
 			msg_box: WEL_MSG_BOX
 		do
@@ -109,13 +109,13 @@ feature {NONE} -- Implementation
 			Result := msg_box.message_box_result = Idyes
 		end
 
-	background_brush: WEL_BRUSH is
+	background_brush: WEL_BRUSH
 			-- background color
 		do
 			create Result.make_by_sys_color (Color_btnface + 1)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

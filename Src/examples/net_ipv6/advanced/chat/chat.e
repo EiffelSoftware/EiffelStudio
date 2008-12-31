@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Server root-class for the advanced example."
@@ -25,7 +25,7 @@ create
 
 feature
 
-	close is
+	close
 		do
 		end
 
@@ -37,7 +37,7 @@ feature
 
 	poll: MEDIUM_POLLER
 
-	make_chat (argv: ARRAY [STRING]) is
+	make_chat (argv: ARRAY [STRING])
 		do
 			if argv.count /= 2 then
 				io.error.putstring ("Usage: ")
@@ -70,7 +70,7 @@ feature
 			cleanup
 		end
 
-	process_message is
+	process_message
 		local
 			stop: BOOLEAN
 				-- When we receive a message tagged "over", we remove connections
@@ -116,7 +116,7 @@ feature
 			end
 		end
 
-	broadcast is
+	broadcast
 		local
 			client_name: STRING
 		do
@@ -133,7 +133,7 @@ feature
 			end
 		end
 
-	receive is
+	receive
 		do
 			in.accept
 			outflow ?= in.accepted
@@ -146,7 +146,7 @@ feature
 			poll.execute (max_to_poll, 15000)
 		end
 
-	initialize_for_polling is
+	initialize_for_polling
 		do
 			from
 				connections.start
@@ -158,7 +158,7 @@ feature
 			end
 		end
 
-	new_client is
+	new_client
 		local
 			new_connection: CONNECTION
 		do
@@ -170,7 +170,7 @@ feature
 			poll.put_read_command (new_connection)
 		end
 
-	send_already_connected is
+	send_already_connected
 		do
 			create message_out.make_message
 			if connections.count > 0 then
@@ -191,7 +191,7 @@ feature
 			message_out.independent_store (outflow)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

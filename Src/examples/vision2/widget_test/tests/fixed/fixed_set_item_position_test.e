@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that demonstrate `set_item_position'%
 		%and `set_item_size' of EV_FIXED."
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 		
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create `Current' and initialize test in `widget'.
 		local
 			button1, button2: EV_BUTTON
@@ -53,7 +53,7 @@ feature {NONE} -- Implementation
 		-- Widget that test is to be performed on.
 	
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

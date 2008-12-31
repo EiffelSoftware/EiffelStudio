@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that perform no function in the tour, but must be included so that the
 		classes from EiffelBuild compile.
@@ -11,7 +11,7 @@ indexing
 class
 	GB_INTERNAL_COMPONENTS
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

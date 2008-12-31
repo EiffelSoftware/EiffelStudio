@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class STARTER create
@@ -12,7 +12,7 @@ feature
     my_array: ARRAY [INTEGER];
 	my_integer: INTEGER;
 
-	make is
+	make
 			-- Create a list, a string, an array, and stop.
 		do
 			make_a_list (first_value, second_value, third_value);
@@ -22,7 +22,7 @@ feature
 			nothing
 		end;
 
-	nothing is
+	nothing
 			-- Put a stop point on this routine to get  `make' to stop
 			-- after calling `make_a_list' and `make_an_array',
 			-- so that you can explore `my_list', its dependent
@@ -30,7 +30,7 @@ feature
 		do
 		end;
 
-	make_a_list (first, second, third: REAL) is
+	make_a_list (first, second, third: REAL)
 			-- Create  `my_list' with the three values given.
 		do
 			create my_list.make;
@@ -39,13 +39,13 @@ feature
 			my_list.extend (third)
 		end;
 
-	make_a_string is
+	make_a_string
 			-- Assign to `my_string' the value of a constant string.
 		do
 			my_string := "MY MESSAGE"
 		end;
 
-	make_an_array is
+	make_an_array
 				-- Create `my_array' with known values
 				-- (integer part of i/2 for each index i).
 			
@@ -63,25 +63,25 @@ feature
 				end
 			end;
 
-	first_value: REAL is
+	first_value: REAL
 					-- A  value to be computed once: -6.5 (will be used)
 			once
 				Result := -6.5
 			end;
 
-	second_value: REAL is
+	second_value: REAL
 					-- A value to be computed once:  0.0 (will be used)
 			once
 				Result := 0.0
 			end;
 
-	third_value: REAL is
+	third_value: REAL
 					-- A value to be computed once: 3.5 (will be used)
 			once
 				Result := 3.5
 			end;
 
-	fourth_value: REAL is
+	fourth_value: REAL
 					-- A value to be computed once: 1.0 (will not be used)
 			once
 				Result := 1.0
@@ -89,7 +89,7 @@ feature
 
 	my_subobject: expanded OTHER;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"The demo that goes with the button demo"
 	legal: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make (par: EV_CONTAINER)
 			-- Create the demo in `par'.
 		local
 			cmd: EV_ROUTINE_COMMAND
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			add_paint_command (cmd, Void)
 		end
 
-	set_tabs is
+	set_tabs
 			-- Set the tabs for the action window.
 		do
 			set_primitive_tabs
@@ -53,18 +53,18 @@ feature -- Access
 
 feature -- Execution Features
 
-	resize_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	resize_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- When the drawing area is resized, inform the user in `event window'.
 		do
 			event_window.display ("Drawing area resized.")
 		end
 
-	paint_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	paint_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- When the drawing area is redrawn, inform the user in `event window'.	
 		do
 			event_window.display ("Drawing area redrawn.")
 		end
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

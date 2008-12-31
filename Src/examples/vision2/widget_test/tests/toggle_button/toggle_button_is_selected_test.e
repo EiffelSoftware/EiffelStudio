@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that demonstrate `select_actions'%
 		%of EV_TOGGLE_BUTTON."
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 		
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create `Current' and initialize test in `widget'.
 		do
 			create toggle_button.make_with_text ("Not Selected")
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 		
-	set_button_text is
+	set_button_text
 			-- Update `text' of `toggle_button'.
 		do
 			if toggle_button.is_selected then
@@ -41,7 +41,7 @@ feature {NONE} -- Implementation
 	toggle_button: EV_TOGGLE_BUTTON;
 		-- Widget that test is to be performed on.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

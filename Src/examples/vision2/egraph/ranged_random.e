@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Pseudo random number in a range."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_default is
+	make_default
 		local
 			t: TIME
 		do
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	next_item_in_range (a_min: INTEGER; a_max: INTEGER): INTEGER is
+	next_item_in_range (a_min: INTEGER; a_max: INTEGER): INTEGER
 		local
 			l_double: DOUBLE
 		do
@@ -36,7 +36,7 @@ feature -- Access
 			Result := l_double.rounded
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make (par: EV_CONTAINER)
 			-- Create the tab and initialise objects
 		local
 			cmd1,cmd2: EV_ROUTINE_COMMAND
@@ -79,7 +79,7 @@ feature -- Initialization
 
 feature -- element change
 
-	set_current_widget (wid: EV_WIDGET) is
+	set_current_widget (wid: EV_WIDGET)
 			-- Make `wid' the new widget.
 		do
 			Precursor {ANY_TAB} (wid)
@@ -98,7 +98,7 @@ feature -- element change
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- Returns the name of the tab.
 		do
 			Result:="Widget"
@@ -115,43 +115,43 @@ feature -- Access
 
 feature -- Execution feature
 
-	get_xcoor (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	get_xcoor (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 		-- Returns the x coor of the demo
 		do
 			f1.set_text(current_widget.x.out)
 		end
 
-	get_ycoor (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	get_ycoor (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Returns the y coor of the demo
 		do
 			f2.set_text(current_widget.y.out)
 		end
 
-	get_width (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	get_width (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Returns the width of the demo
 		do
 			f3.set_text(current_widget.width.out)
 		end
 
-	get_height (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	get_height (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Returns the height of the demo
 		do
 			f4.set_text(current_widget.height.out)
 		end
 
-	get_min_width (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	get_min_width (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Returns the minimum width of the demo
 		do
 			f5.set_text(current_widget.minimum_width.out)
 		end
 
-	get_min_height (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	get_min_height (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Returns the minimum height of the demo
 		do
 			f6.set_text(current_widget.minimum_height.out)
 		end
 
-	set_xcoor (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	set_xcoor (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Sets the x position of the demo
 		do
 			if f1.get_text.is_integer then
@@ -159,7 +159,7 @@ feature -- Execution feature
 			end
 		end
 
-	set_ycoor (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	set_ycoor (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Sets the y position of the demo
 		do
 			if f2.get_text.is_integer then
@@ -167,7 +167,7 @@ feature -- Execution feature
 			end
 		end
 
-	set_width_val (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	set_width_val (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Sets the width of the demo
 		do
 			if f3.get_text.is_integer then
@@ -175,7 +175,7 @@ feature -- Execution feature
 			end
 		end
 
-	set_height_val (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	set_height_val (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Sets the height of the demo
 		do
 			if f4.get_text.is_integer then
@@ -183,7 +183,7 @@ feature -- Execution feature
 			end
 		end
 
-	set_min_width (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	set_min_width (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Sets the minimum width of the demo
 		do
 			if f5.get_text.is_integer then
@@ -191,7 +191,7 @@ feature -- Execution feature
 			end
 		end
 
-	set_min_height (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	set_min_height (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Sets the minimum height of the demo
 		do
 			if f6.get_text.is_integer then
@@ -199,7 +199,7 @@ feature -- Execution feature
 			end
 		end
 
-	back_color (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	back_color (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Set background color.
 		local
 			current_color: EV_COLOR
@@ -216,7 +216,7 @@ feature -- Execution feature
 			end
 		end
 
-	fore_color (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	fore_color (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Set foreground color.
 		local
 			current_color: EV_COLOR
@@ -233,7 +233,7 @@ feature -- Execution feature
 			end
 		end
 
-	hide_show (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	hide_show (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- toggle `current_widget' between hidden and shown.
 		do
 			if current_widget.shown then
@@ -244,7 +244,7 @@ feature -- Execution feature
 				b1.set_text ("Hide")
 			end
 		end
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that demonstrate adjustment of%
 		%`padding_width' for EV_HORIZONTAL_BOX"
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 		
 feature {NONE} -- Implementation
 
-	default_create is
+	default_create
 			-- Create `Current' and initialize test in `widget'.
 		do
 			create horizontal_box
@@ -36,7 +36,7 @@ feature {NONE} -- Implementation
 			widget := horizontal_box
 		end
 		
-	adjust_padding (adjustment: INTEGER) is
+	adjust_padding (adjustment: INTEGER)
 			-- Adjust `padding_width' of `horizontal_box'
 			-- by `adjustment'. Update controls accordingly.
 		require
@@ -62,7 +62,7 @@ feature {NONE} -- Implementation
 		
 feature {NONE} -- Implementation
 
-	maximum_padding: INTEGER is 40
+	maximum_padding: INTEGER = 40
 		-- Maximum padding width allowed for test.
 
 	horizontal_box: EV_HORIZONTAL_BOX
@@ -74,7 +74,7 @@ feature {NONE} -- Implementation
 	increase_padding_button, decrease_padding_button: EV_BUTTON;
 		-- Buttons used to change padding balue.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that manipulate objects of type EV_FIXED"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 	
 	GB_COMMON_EDITOR
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

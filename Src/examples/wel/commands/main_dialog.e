@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create the main dialog and the commands.
 		local
 			c1: SHOW_MOVE_INFORMATION
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 
-	on_control_id_command (control_id: INTEGER) is
+	on_control_id_command (control_id: INTEGER)
 			-- Process the check mark and the button.
 		do
 			if control_id = Idc_checkbox then
@@ -57,7 +57,7 @@ feature -- Basic operations
 			end
 		end
 
-	setup_dialog is
+	setup_dialog
 			-- Enable the commands.
 		do
 			check_box.set_checked
@@ -74,7 +74,7 @@ feature -- Access
 			
 feature {NONE} -- Implementation
 
-	on_ok is
+	on_ok
 			-- Button OK has been pressed (marked "Cancel").
 		do
 			remove_commands
@@ -82,14 +82,14 @@ feature {NONE} -- Implementation
 		end
 		
 	
-	on_cancel is
+	on_cancel
 			-- Current has been cancelled.
 		do
 			remove_commands
 			Precursor {WEL_MAIN_DIALOG}
 		end
 		
-	remove_commands is
+	remove_commands
 			-- Unconnect all commands from `Current'.
 		do
 			remove_command (Wm_move)
@@ -98,7 +98,7 @@ feature {NONE} -- Implementation
 		end
 		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

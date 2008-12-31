@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class 
@@ -6,14 +6,14 @@ class
 
 feature -- Access
 
-	Idr_menu1_constant: INTEGER is 101
-	Idnative_constant: INTEGER is 40007
-	Idshapehalf_constant: INTEGER is 40003
-	Idsoftkeyboard_constant: INTEGER is 40001
-	Idshapefull_constant: INTEGER is 40004
-	Idalphanumeric_constant: INTEGER is 40008;
+	Idr_menu1_constant: INTEGER = 101
+	Idnative_constant: INTEGER = 40007
+	Idshapehalf_constant: INTEGER = 40003
+	Idsoftkeyboard_constant: INTEGER = 40001
+	Idshapefull_constant: INTEGER = 40004
+	Idalphanumeric_constant: INTEGER = 40008;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

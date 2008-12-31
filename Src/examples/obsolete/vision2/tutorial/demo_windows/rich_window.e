@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"The demo that goes with the button demo"
 	legal: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make (par: EV_CONTAINER)
 			-- Create the demo in `par'.
 		local
 			color: EV_COLOR
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 			set_parent (par)
 		end
 
-	set_tabs is
+	set_tabs
 			-- Set the tabs for the action window.
 		local
 			cmd: EV_ROUTINE_COMMAND
@@ -75,7 +75,7 @@ feature -- Access
 
 feature -- Basic operation
 
-	make_format: EV_TEXT_FORMAT is
+	make_format: EV_TEXT_FORMAT
 			-- Create a text format.
 		local
 			s, e: ARRAYED_LIST [INTEGER]
@@ -103,7 +103,7 @@ feature -- Basic operation
 feature -- Command execution
 
 	
-	execute (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	execute (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Executed when the mouse button is released.
 		local
 			ft: EV_FONT
@@ -119,7 +119,7 @@ feature -- Command execution
 			set_character_format (format)
 		end
 	
-	insert_text_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	insert_text_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 		local
 			ev: EV_INSERT_TEXT_EVENT_DATA
 			temp_string: STRING
@@ -133,27 +133,27 @@ feature -- Command execution
 			event_window.displayi (temp_string)
 		end
 
-	delete_text_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	delete_text_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- When text is to be deleted then inform the user in `event_window'.
 		do
 			event_window.display ("Delete text command in rich edit.")
 		end
 
-	delete_right_character_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	delete_right_character_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- When the right charcter is to be deleted then inform the user
 			-- in `event_window'.
 		do
 			event_window.display ("Delete right character command in rich edit.")
 		end
 	
-	undo_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	undo_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- When an undo command is to be performed then inform the user
 			-- in `event_window'.
 		do
 			event_window.display ("Undo command in rich edit.")
 		end
 
-	redo_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	redo_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- When a redo command is to be performed then inform the user
 			-- in `event_window'
 		do
@@ -162,7 +162,7 @@ feature -- Command execution
 
 	
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Main menu and context menu sample."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Entry point.
 		local
 			res: SYSTEM_OBJECT
@@ -151,7 +151,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	initialize_component is
+	initialize_component
 			-- Initialize window components.
 		local
 			l_size: DRAWING_SIZE
@@ -191,7 +191,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	font_sizes (a_size: STRING): DOUBLE is
+	font_sizes (a_size: STRING): DOUBLE
 			--  Comment out this structure to view menus.cs in the WinForms Designer.
 			--  Remember not to edit the menus in the designer. It will conflict
 			--  with the hand-written menu code. Remember to uncomment this
@@ -206,13 +206,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	file_exit_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
+	file_exit_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS)
 			-- File->Exit Menu item handler
 		do
 			close
 		end
 
-	file_open_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
+	file_open_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS)
 			-- File->Open Menu item handler
 		local
 			res: WINFORMS_DIALOG_RESULT
@@ -220,7 +220,7 @@ feature {NONE} -- Implementation
 			res := {WINFORMS_MESSAGE_BOX}.show ("And why would this open a file?")
 		end
 
-	format_font_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
+	format_font_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS)
 			-- Format->Font Menu item handler
 		local
 			mi_clicked: WINFORMS_MENU_ITEM
@@ -250,7 +250,7 @@ feature {NONE} -- Implementation
 			label_1.set_font (create {DRAWING_FONT}.make (current_font_family, font_size))
 		end
 
-	format_size_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
+	format_size_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS)
 			-- Format->Size Menu item handler
 		local
 			mi_clicked: WINFORMS_MENU_ITEM
@@ -298,7 +298,7 @@ invariant
 	non_void_mmi_medium: mmi_medium /= Void
 	non_void_mmi_large: mmi_large /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

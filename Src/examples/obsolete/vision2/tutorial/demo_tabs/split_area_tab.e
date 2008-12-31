@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make (par: EV_CONTAINER)
 			-- Create the tab and initialise objects
 		local
 			cmd1, cmd2: EV_ROUTINE_COMMAND
@@ -44,7 +44,7 @@ feature -- Initialization
 
 feature -- Access
 
-	name:STRING is
+	name:STRING
 			-- Returns the name of the tab
 		do
 			Result:="Split Area"
@@ -58,7 +58,7 @@ feature -- Access
 
 feature -- Execution feature  
 
-	set_split_position (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	set_split_position (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Set the position of the split in the demo
 		do
 			if f1.get_text.is_integer then
@@ -66,25 +66,25 @@ feature -- Execution feature
 			end
 		end
 
-	get_split_position (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	get_split_position (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Get the position of the split in the demo
 		do
 			f1.set_text(current_widget.position.out)
 		end
 
-	get_minimum_position (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	get_minimum_position (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Get the minimum position of the split in the demo
 		do
 			--f2.set_text(current_widget.minimum_position.out)
 		end
 
-	get_maximum_position (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	get_maximum_position (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Get the maximum position of the split in the demo
 		do
 			--f3.set_text(current_widget.maximum_position.out)
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

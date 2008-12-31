@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Specific tab for window demonstration."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make (par: EV_CONTAINER)
 			-- Create the tab and initialise objects
 		local
 			cmd: EV_ROUTINE_COMMAND
@@ -45,7 +45,7 @@ feature -- Initialization
 
 feature -- Access
 
-	name:STRING is
+	name:STRING
 			-- Returns the name of the tab
 		do
 			Result:="Window"
@@ -62,13 +62,13 @@ feature -- Access
 
 feature -- Execution feature
 	
-	get_icon_name (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	get_icon_name (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Get the icon name of the window
 		do
 			f1.set_text(current_widget.icon_name)
 		end
 
-	raise_window (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	raise_window (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Get the icon name of the window
 		do
 			inspect f2.combo.selected_item.index
@@ -80,7 +80,7 @@ feature -- Execution feature
 			end
 		end
 
-	minimize_window (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	minimize_window (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Get the icon name of the window
 		local
 			str: STRING
@@ -95,7 +95,7 @@ feature -- Execution feature
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

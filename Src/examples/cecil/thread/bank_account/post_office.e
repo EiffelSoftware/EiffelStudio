@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object, which posts the bank account report."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature	-- Initialization
 
-	make (ptr: POINTER; p: BOOLEAN_REF) is
+	make (ptr: POINTER; p: BOOLEAN_REF)
 		do
 			continue := True
 			info := ptr
@@ -30,7 +30,7 @@ feature	-- Access
 
 feature -- Display
 
-	post is
+	post
 		local
 			res: STRING
 		do
@@ -45,12 +45,12 @@ feature -- Display
 
 feature	{NONE} -- Externals
 
-	c_post (ptr: POINTER) is
+	c_post (ptr: POINTER)
 		external
 			"C | %"fext.h%""
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

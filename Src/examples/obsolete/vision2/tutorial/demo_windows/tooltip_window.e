@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"The demo that goes with the button demo"
 	legal: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make (par: EV_CONTAINER)
 			-- Create the demo in `par'.
 		local
 			frame: EV_FRAME
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			tooltip.enable
 		end
 
-	set_tabs is
+	set_tabs
 			-- Set the tabs for the action window.
 		do
 			create tab_list.make
@@ -55,11 +55,11 @@ feature -- Access
 
 feature -- Execution Feature
 
-	execute (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	execute (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

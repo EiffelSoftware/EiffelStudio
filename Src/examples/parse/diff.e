@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Difference expressions: PRODUCT "-" PRODUCT "-" ... "-" PRODUCT
@@ -23,15 +23,15 @@ create
 
 feature 
 
-	construct_name: STRING is "DIFF"
+	construct_name: STRING = "DIFF"
 
 feature {NONE}
 
-	separator: STRING is "-"
+	separator: STRING = "-"
 
 feature
 
-	production: LINKED_LIST [CONSTRUCT] is
+	production: LINKED_LIST [CONSTRUCT]
 		local
 			base: PRODUCT
 		once
@@ -41,7 +41,7 @@ feature
 			put (base)
 		end -- production
 
-	post_action is
+	post_action
 		local
 			int_value: INTEGER
 		do
@@ -62,7 +62,7 @@ feature
 			info.set_child_value (int_value)
 		end -- post_action
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

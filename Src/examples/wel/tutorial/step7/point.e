@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -9,7 +9,7 @@ create
 
 feature -- Initialization
 
-	make (a_x, a_y: INTEGER) is
+	make (a_x, a_y: INTEGER)
 			-- Make a point with `a_x' and `a_y'.
 		do
 			x := a_x
@@ -27,7 +27,7 @@ feature -- Access
 	y: INTEGER;
 			-- y position
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

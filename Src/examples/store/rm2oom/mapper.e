@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class MAPPER
@@ -13,7 +13,7 @@ create
 
 feature
 
-	make is
+	make
 		local
 			repository: DB_REPOSITORY
 			session_control: DB_CONTROL
@@ -91,7 +91,7 @@ feature
 			end
 		end -- make
 
-	generate_class (repository: DB_REPOSITORY) is
+	generate_class (repository: DB_REPOSITORY)
 			-- Generate class from `repository'.
 		local
 			fi: PLAIN_TEXT_FILE
@@ -113,13 +113,13 @@ feature
 			retry
 		end
 
-	Eiffelclass_extension: STRING is "e"
+	Eiffelclass_extension: STRING = "e"
 			-- Extension for an Eiffel class.
 
 	path_name: STRING;
 			-- Class generation path name.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Command executed by the polling server when the socket%
@@ -26,7 +26,7 @@ feature
 
 	active_medium: NETWORK_DATAGRAM_SOCKET
 
-	execute (arg: ANY) is
+	execute (arg: ANY)
 		local
 			sen_pack: DATAGRAM_PACKET
 			i: INTEGER
@@ -41,7 +41,7 @@ feature
 			active_medium.send (sen_pack, 0)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

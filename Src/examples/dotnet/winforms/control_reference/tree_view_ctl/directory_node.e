@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of a directory."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_from_text (a_text: STRING) is
+	make_from_text (a_text: STRING)
 			-- Set `text' with `a_text'.
 		require
 			non_void_text: a_text /= Void
@@ -36,7 +36,7 @@ feature -- Access
 
 feature -- Status Setting
 
-	set_sub_directories_added (a_bool: BOOLEAN) is
+	set_sub_directories_added (a_bool: BOOLEAN)
 			-- set `sub_directories_added' with `a_bool'.
 		do
 			sub_directories_added := a_bool
@@ -44,7 +44,7 @@ feature -- Status Setting
 			sub_directories_added_set: sub_directories_added = a_bool
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

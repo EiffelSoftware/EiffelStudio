@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that demonstrate EV_CELL used for padding%
 		%in an EV_VERTICAL_BOX."
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 		
 feature {NONE} -- Initialization 
 
-	default_create is
+	default_create
 			-- Create `Current' and initialize test in `widget'.
 		local
 			vertical_box: EV_VERTICAL_BOX
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			widget := vertical_box
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

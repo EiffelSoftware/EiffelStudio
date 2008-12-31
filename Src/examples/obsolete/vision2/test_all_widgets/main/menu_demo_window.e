@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"MENU_DEMO_WINDOW, demo window to test menu widget.%
 		% Belongs to EiffelVision example."
@@ -26,7 +26,7 @@ create
 
 feature -- Access
 
-	main_widget: EV_OPTION_BUTTON is
+	main_widget: EV_OPTION_BUTTON
 			-- The main widget of the demo
 		once
 			create Result.make (Current)
@@ -45,7 +45,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_widgets is
+	set_widgets
 			-- Set the widgets in the demo windows.
 		do
 			create menu.make_with_text (main_widget, "Menu")
@@ -85,7 +85,7 @@ feature -- Status setting
 	
 feature -- Status setting
 	
-	set_values is
+	set_values
 			-- Set the values on the widgets of the window.
 		do
 			set_title ("Menu demo")
@@ -93,14 +93,14 @@ feature -- Status setting
 
 feature -- Command execution
 
-	execute (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	execute (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Execute command called when the event occurs.
 		do
 			destroy
 			effective_button.toggle
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

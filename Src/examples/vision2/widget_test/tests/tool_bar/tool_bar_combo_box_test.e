@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that simulate an EV_COMBO_BOX in an EV_TOOL_BAR"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 		
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create `Current' and initialize test in `widget'.
 		local
 			counter: INTEGER
@@ -66,7 +66,7 @@ feature {NONE} -- Implementation
 	combo_box: EV_COMBO_BOX;
 		-- Combo box used between `left_bar' and `right_bar'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

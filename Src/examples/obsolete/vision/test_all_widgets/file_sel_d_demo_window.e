@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class FILE_SEL_D_DEMO_WINDOW
@@ -18,27 +18,27 @@ create
 
 feature
 
-	main_widget: WIDGET is
+	main_widget: WIDGET
 		do
 			Result:=Current
 		end
 
-	make(a_name: STRING; a_parent: COMPOSITE) is
+	make(a_name: STRING; a_parent: COMPOSITE)
 		do
 			file_sel_d_make (a_name, a_parent)
 			allow_resize
 			set_widgets
 		end
 
-	set_widgets is
+	set_widgets
 		do
 		end
 
-	work (arg: INTEGER_REF) is
+	work (arg: INTEGER_REF)
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

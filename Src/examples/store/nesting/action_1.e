@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Nested queries example."
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ feature
 
 	selection: DB_SELECTION
 
-	make (sel: DB_SELECTION) is
+	make (sel: DB_SELECTION)
 		require
 			sel_not_void: sel /= Void
 		do
@@ -26,22 +26,22 @@ feature
 			selection = sel
 		end
         
-	execute is
+	execute
 		do
 			process_row
 		end
 
-	process_row is
+	process_row
 		deferred
 		end
 
-	select_string: STRING is
+	select_string: STRING
 		deferred
 		ensure
 			result_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

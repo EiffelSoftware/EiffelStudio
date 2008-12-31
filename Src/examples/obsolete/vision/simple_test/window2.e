@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class WINDOW2
@@ -23,7 +23,7 @@ feature
 
 	bulletin: BULLETIN;
 
-	make (a_name: STRING; a_screen: SCREEN) is
+	make (a_name: STRING; a_screen: SCREEN)
 		do
 			top_shell_make (a_name, a_screen);
 			create bulletin.make ("Bulletin", Current);
@@ -34,7 +34,7 @@ feature
 			set_callbacks;
 		end;
 
-	set_values is
+	set_values
 		local
 			a_color: COLOR
 		do
@@ -43,7 +43,7 @@ feature
 			text_area.set_background_color (a_color);
 		end;
 
-	set_positions is
+	set_positions
 			-- Set positions and sizes of `text_area' and
 			-- `text_field' in the bulletin.
 		do
@@ -53,7 +53,7 @@ feature
 			text_label.set_x_y (20, 160);
 		end;
 
-	set_callbacks is
+	set_callbacks
 		local
 			Nothing: ANY
 		do
@@ -62,7 +62,7 @@ feature
 
 	counter: INTEGER;
 
-	execute (argument: ANY) is
+	execute (argument: ANY)
 		local
 			temp: STRING
 		do
@@ -73,7 +73,7 @@ feature
 			text_label.set_text (temp)
 		end;
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

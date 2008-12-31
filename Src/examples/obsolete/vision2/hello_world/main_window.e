@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"MAIN_WINDOW class of the hello world example."
 	legal: "See notice at end of class."
@@ -26,7 +26,7 @@ feature --Access
 
 feature -- Initialization
 	
-	make_top_level is
+	make_top_level
 			-- Creation of the window.
 		do
 			Precursor {EV_WINDOW}
@@ -37,13 +37,13 @@ feature -- Initialization
 	
 feature -- Status setting
 	
-	set_values is
+	set_values
 			-- Set the values on the widgets.
 		do
 			button.set_text ("Hello World")
 		end
 
-	set_commands is
+	set_commands
 			-- Set the commands on the widgets.
 		local
 			cmd: HELLO_COMMAND
@@ -64,7 +64,7 @@ feature -- Status setting
 			button.add_accelerator_command (accelerator, cmd, arg)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

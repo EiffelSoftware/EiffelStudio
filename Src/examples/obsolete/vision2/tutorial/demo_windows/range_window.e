@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"The demo that goes with the range demo"
 	legal: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make (par: EV_CONTAINER)
 			-- Create the demo in 'par'.
 			-- We create the table first without parent as it
 			-- is faster.
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			set_parent (par)
 		end
 
-	set_tabs is
+	set_tabs
 			-- Set the tabs for the action window.
 		do
 			set_gauge_tabs
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			create action_window.make(Current,tab_list)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

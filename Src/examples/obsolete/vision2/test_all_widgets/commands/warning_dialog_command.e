@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"WARNING_DIALOG_COMMAND, launch a question dialog.%
 		% Belongs to EiffelVision example."
@@ -15,14 +15,14 @@ inherit
 
 feature -- Command execution
 
-	execute (arg: EV_ARGUMENT1[EV_WINDOW]; data: EV_EVENT_DATA) is
+	execute (arg: EV_ARGUMENT1[EV_WINDOW]; data: EV_EVENT_DATA)
 		local
 			dialog: EV_WARNING_DIALOG
 		do
 			create dialog.make_default(arg.first, "Warning box", "Be carefull?")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

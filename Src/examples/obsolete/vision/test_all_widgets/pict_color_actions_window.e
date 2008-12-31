@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class PICT_COLOR_ACTIONS_WINDOW
@@ -20,13 +20,13 @@ feature
 
 	set_pixmap_b: ACTION_WINDOW_BUTTON
 
-	set_other_widgets is
+	set_other_widgets
 	do
 			set_size (330, 350)
 			create set_pixmap_b.associate (Current, b_set_pixmap, "Set pixmap", 20, 300);
 		end;
 
-	descendant_actions(arg: INTEGER_REF) is
+	descendant_actions(arg: INTEGER_REF)
 		local
 			widget: PICT_COLOR_B
 			pixmap: PIXMAP
@@ -56,17 +56,17 @@ feature
 			end
 		end;
 
-	set_other_widgets_insensitive is
+	set_other_widgets_insensitive
 		do
 			set_pixmap_b.set_insensitive
 		end
 
-	set_other_widgets_sensitive is
+	set_other_widgets_sensitive
 		do
 			set_pixmap_b.set_sensitive
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

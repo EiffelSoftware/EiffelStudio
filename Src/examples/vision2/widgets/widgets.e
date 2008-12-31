@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"Vision2 widget test application"
 	legal: "See notice at end of class."
@@ -21,7 +21,7 @@ feature -- Initialization
 	main_window: MAIN_WINDOW
 		-- The window used in `Current'.
 
-	start is
+	start
 			-- Create the application, set up `main_window'
 			-- and then launch the application.
 		do
@@ -30,7 +30,7 @@ feature -- Initialization
 			launch
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

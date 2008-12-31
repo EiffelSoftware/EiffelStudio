@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Simple variables
@@ -23,17 +23,17 @@ create
 
 feature {NONE}
 
-	construct_name: STRING is
+	construct_name: STRING
 		once
 			Result := "SIMPLE_VAR"
 		end -- construct_name
 
-	action is
+	action
 		do
 			info.set_child_value (info.int_value (token.string_value))
 		end -- action
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

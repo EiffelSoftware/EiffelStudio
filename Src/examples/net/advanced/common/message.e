@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Message transmitted in the advanced example."
@@ -32,30 +32,30 @@ feature
 
 	client_name: STRING
 
-	make_message is
+	make_message
 		do
 			make
 			extend ("-> ")
 		end
 
-	set_client_name (s: STRING) is
+	set_client_name (s: STRING)
 		require
 			s_not_void: s /= Void
 		do
 			client_name := s.twin
 		end
 
-	set_over (flag: BOOLEAN) is
+	set_over (flag: BOOLEAN)
 		do
 			over := flag
 		end
 
-	set_new (flag: BOOLEAN) is
+	set_new (flag: BOOLEAN)
 		do
 			new := flag
 		end
 
-	print_message is
+	print_message
 		-- Prints the contents of the message to standard output
 		do
 
@@ -70,7 +70,7 @@ feature
 		end
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

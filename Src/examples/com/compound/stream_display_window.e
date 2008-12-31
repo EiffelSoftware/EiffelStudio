@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Window that displays the content of a stream"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (str: ECOM_STREAM) is
+	make (str: ECOM_STREAM)
 			-- Display `stream' content.
 		require
 			non_void_stream: str /= Void
@@ -35,7 +35,7 @@ feature -- Access
 	stream: ECOM_STREAM
 			-- Displayed stream
 
-	Title: STRING is
+	Title: STRING
 			-- Window title
 		do
 			Result := stream.name
@@ -43,7 +43,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	setup_edit is
+	setup_edit
 			-- Rich edit initialization.
 		local
 			retried: BOOLEAN
@@ -78,7 +78,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Message Processing
 
-	on_size (size_type, a_width, a_height: INTEGER) is
+	on_size (size_type, a_width, a_height: INTEGER)
 			-- Wm_size message
 			-- See class WEL_SIZE_CONSTANTS for `size_type' value
 		do
@@ -91,16 +91,16 @@ feature {NONE} -- Implementation
 	rich_edit: WEL_RICH_EDIT
 			-- Rich edit used to display stream content
 
-	Rich_edit_id: INTEGER is -1
+	Rich_edit_id: INTEGER = -1
 			-- Rich edit id
 
-	Buffer_size: INTEGER is 10
+	Buffer_size: INTEGER = 10
 			-- Size of buffer used to read stream
 
 invariant
 	non_void_stream: stream /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

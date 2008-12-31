@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Test of dialogs."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_and_launch is
+	make_and_launch
 			-- Create `Current', initialize and launch.
 		do
 			default_create
@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 			launch
 		end
 
-	build_interface is
+	build_interface
 			-- Build GUI interface.
 		local
 			menu_bar: EV_MENU_BAR
@@ -65,37 +65,37 @@ feature {NONE} -- Initialization
 			first_window.show
 		end
 		
-		Color_dialog: EV_COLOR_DIALOG is
+		Color_dialog: EV_COLOR_DIALOG
 				-- 	EV_COLOR_DIALOG for test.
 			once
 				create Result	
 			end
 			
-		Directory_dialog: EV_DIRECTORY_DIALOG is
+		Directory_dialog: EV_DIRECTORY_DIALOG
 				-- 	EV_DIRECTORY_DIALOG for test.
 			once
 				create Result	
 			end
 			
-		File_open_dialog: EV_FILE_OPEN_DIALOG is
+		File_open_dialog: EV_FILE_OPEN_DIALOG
 				-- 	EV_FILE_OPEN_DIALOG for test.
 			once
 				create Result	
 			end
 			
-		File_save_dialog: EV_FILE_SAVE_DIALOG is
+		File_save_dialog: EV_FILE_SAVE_DIALOG
 				-- 	EV_FILE_SAVE_DIALOG for test.
 			once
 				create Result	
 			end
 			
-		Font_dialog: EV_FONT_DIALOG is
+		Font_dialog: EV_FONT_DIALOG
 				-- 	EV_FONT_DIALOG for test.
 			once
 				create Result	
 			end
 			
-		Print_dialog: EV_PRINT_DIALOG is
+		Print_dialog: EV_PRINT_DIALOG
 				-- 	EV_PRINT_DIALOG for test.
 			once
 				create Result	
@@ -103,7 +103,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	first_window: EV_TITLED_WINDOW is
+	first_window: EV_TITLED_WINDOW
 			-- The window for the sample.
 		once
 			create Result
@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
 			Result.set_size (300, 300)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

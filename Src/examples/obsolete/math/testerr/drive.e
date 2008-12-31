@@ -1,5 +1,5 @@
 -- test routine for interface to chapter d01
-indexing
+note
 	description: " Test routines for d01"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature -- The main program
 
-	make (args: ARRAY [STRING]) is
+	make (args: ARRAY [STRING])
 			-- test of various routines from d01
 		do
 			nag_error_history.remember_errors(6);
@@ -62,7 +62,7 @@ feature -- The main program
 			print(nag_error_history)
 		end;
 	
-	nag_try is
+	nag_try
 			-- Call nag_check, recover and continue.
 		local
 			idid: INTEGER
@@ -76,14 +76,14 @@ feature -- The main program
 		end;
 
 
-	nag_error: FAKE_NAG_ERROR is
+	nag_error: FAKE_NAG_ERROR
 		once
 			create Result;
 			Result.enable_error_recovery;
 			Result.disable_error_printing
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

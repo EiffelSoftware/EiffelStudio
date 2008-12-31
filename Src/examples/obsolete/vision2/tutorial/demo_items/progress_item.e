@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"A Demo for progress-bars."
 	legal: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (par:EV_TREE_ITEM_HOLDER) is
+	make (par:EV_TREE_ITEM_HOLDER)
 			-- Create the item and the demo that
 			-- goes with it.
 		do
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			set_class_path("ev_progress_bar")
 		end
 
-	create_demo is
+	create_demo
 			-- Create the demo_window.
 		do
 			create demo_window.make (demo_page)
@@ -40,7 +40,7 @@ feature -- Access
 
 	demo_window: PROGRESS_WINDOW;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

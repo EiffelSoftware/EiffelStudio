@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -15,14 +15,14 @@ create
 
 feature
 
-	main_window: MAIN_WINDOW is
+	main_window: MAIN_WINDOW
 			-- Create the application's main window
 		once
 			enable_idle_action
 			create Result.make
 		end
 
-	idle_action is
+	idle_action
 			-- The message queue is empty.
 			-- Execute the rectangle_demo if it exists.
 		do
@@ -32,7 +32,7 @@ feature
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

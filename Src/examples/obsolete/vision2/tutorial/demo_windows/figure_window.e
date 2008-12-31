@@ -1,4 +1,4 @@
-indexing
+note
 	description: "The demo that goes with the figure demo."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make (par: EV_CONTAINER)
 			-- Create the demo in `par'.
 		local
 			cmd: EV_ROUTINE_COMMAND
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 			set_background_color (color)
 		end
 
-	set_tabs is
+	set_tabs
 			-- Set the tabs for the action window.
 		do
 		end
@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 
 feature -- Status setting
 
-	set_figure (f: EV_FIGURE) is
+	set_figure (f: EV_FIGURE)
 			-- Set current figure.
 		require
 			valid_figure: f /= Void
@@ -85,7 +85,7 @@ feature -- Access
 
 feature -- Execute command
 
-	execute_expose (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	execute_expose (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 		local
 			pt1, pt2, pt3: EV_COORDINATES
 			color: EV_COLOR
@@ -94,7 +94,7 @@ feature -- Execute command
 			figure.draw
 		end
 
-	execute_press (arg: EV_ARGUMENT; data: EV_BUTTON_EVENT_DATA) is
+	execute_press (arg: EV_ARGUMENT; data: EV_BUTTON_EVENT_DATA)
 		local
 			pt: EV_POINT
 		do
@@ -105,7 +105,7 @@ feature -- Execute command
 			end
 		end
 
-	execute_motion (arg: EV_ARGUMENT; data: EV_MOTION_EVENT_DATA) is
+	execute_motion (arg: EV_ARGUMENT; data: EV_MOTION_EVENT_DATA)
 			-- Increase the angle
 		local
 			pt: EV_POINT
@@ -120,13 +120,13 @@ feature -- Execute command
 			end
 		end
 
-	execute_release (arg: EV_ARGUMENT; data: EV_BUTTON_EVENT_DATA) is
+	execute_release (arg: EV_ARGUMENT; data: EV_BUTTON_EVENT_DATA)
 		do
 			button_click := False
 			figure.draw
 		end
 
-	execute_right_click (arg: EV_ARGUMENT; data: EV_BUTTON_EVENT_DATA) is
+	execute_right_click (arg: EV_ARGUMENT; data: EV_BUTTON_EVENT_DATA)
 		local
 			pt: EV_POINT
 			ang: EV_ANGLE
@@ -143,7 +143,7 @@ feature {NONE} -- Implementation
 	button_click: BOOLEAN;
 			-- Is the button clicked on the figure ?
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

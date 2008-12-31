@@ -1,8 +1,8 @@
-indexing
+note
 	description:	"String Manipulator component client, for simpliciy business and GUI codes are in the same class"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	note:			"STRING_MANIPULATOR_CLIENT_MAIN_DIALOG class created by Resource Bench."
+	generator:	"STRING_MANIPULATOR_CLIENT_MAIN_DIALOG class created by Resource Bench."
 
 class
 	STRING_MANIPULATOR_CLIENT_MAIN_DIALOG
@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create dialog.
 		do
 			make_by_id (String_manipulator_client_dialog_box_constant)
@@ -54,7 +54,7 @@ feature -- Access
 
 feature -- Behavior
 
-	setup_dialog is
+	setup_dialog
 			-- Create component proxy
 		local
 			retried: BOOLEAN
@@ -71,7 +71,7 @@ feature -- Behavior
 			retry
 		end
 
-	notify (control: WEL_CONTROL; notify_code: INTEGER) is
+	notify (control: WEL_CONTROL; notify_code: INTEGER)
 			-- Process button activation
 		local
 			retried: BOOLEAN
@@ -143,10 +143,10 @@ feature -- GUI elements
 
 feature {NONE} -- Implementation
 
-	Initial_string_value: STRING is "Initial value"
+	Initial_string_value: STRING = "Initial value"
 			-- Initial string value
 
-	error_message (an_exception_code: INTEGER): STRING is
+	error_message (an_exception_code: INTEGER): STRING
 			-- Error message for exception `an_exception_code'.
 		do
 			Result := "Error "
@@ -155,10 +155,10 @@ feature {NONE} -- Implementation
 			Result.append (original_tag_name)
 		end
 
-	Error_message_title: STRING is "Component Call Failure";
+	Error_message_title: STRING = "Component Call Failure";
 			-- Error message box title
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

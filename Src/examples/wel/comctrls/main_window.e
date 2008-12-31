@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -51,7 +51,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		local
 			bitmap_index1, bitmap_index2: INTEGER
 		do
@@ -155,7 +155,7 @@ feature -- Access
 
 	char_format: WEL_CHARACTER_FORMAT
 
-	background_brush: WEL_BRUSH is
+	background_brush: WEL_BRUSH
 			-- Dialog boxes background color is the same than
 			-- button color.
 		do
@@ -164,7 +164,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	on_notify (control_id: INTEGER; info: WEL_NMHDR) is
+	on_notify (control_id: INTEGER; info: WEL_NMHDR)
 			-- Draw the tooltips.
 		local
 			tt: WEL_TOOLTIP_TEXT
@@ -176,12 +176,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_control_id_command (control_id: INTEGER) is
+	on_control_id_command (control_id: INTEGER)
 		do
 			on_menu_command (control_id)
 		end
 
-	on_menu_command (menu_id: INTEGER) is
+	on_menu_command (menu_id: INTEGER)
 			-- Execute the command identified by `menu_id'.
 		local
 			i: INTEGER
@@ -220,7 +220,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_menu_select (menu_item: INTEGER; flags: INTEGER; a_menu: WEL_MENU) is
+	on_menu_select (menu_item: INTEGER; flags: INTEGER; a_menu: WEL_MENU)
 			-- Display a message in the status window corresponding
 			-- to the selected menu_item.
 		do
@@ -228,7 +228,7 @@ feature {NONE} -- Implementation
 				resource_string_id (menu_item))
 		end
 
-	on_size (size_type: INTEGER; a_width: INTEGER; a_height: INTEGER) is
+	on_size (size_type: INTEGER; a_width: INTEGER; a_height: INTEGER)
 			-- Reposition the status window and the tool bar when
 			-- the window has been resized.
 		do
@@ -240,13 +240,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	class_icon: WEL_ICON is
+	class_icon: WEL_ICON
 			-- Window's icon
 		once
 			create Result.make_by_id (Id_ico_application)
 		end
 
-	main_menu: WEL_MENU is
+	main_menu: WEL_MENU
 			-- Window's menu
 		once
 			create Result.make_by_id (Id_main_menu)
@@ -254,10 +254,10 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	Title: STRING is "WEL Common controls";
+	Title: STRING = "WEL Common controls";
 			-- Window's title
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		" A class that gives all the paths needed in the%
 		% tutorial."
@@ -20,7 +20,7 @@ feature -- Access
 	
 feature -- Basic operation
 
-	documentation_file: STRING is
+	documentation_file: STRING
 			-- Return the full name of the documentation file.
 		do
 
@@ -33,7 +33,7 @@ feature -- Basic operation
 
 		end
 
-	class_file: STRING  is
+	class_file: STRING
 			-- Return the full name of the new class file.
 		do
 			Result := clone (library_path)
@@ -45,7 +45,7 @@ feature -- Basic operation
 
 		end
 
-	example_file: STRING is
+	example_file: STRING
 			-- sets example path string
 		do
 			Result := clone (example_path)
@@ -58,7 +58,7 @@ feature -- Basic operation
 
 feature {NONE} -- Implementation
 
-	library_path : STRING is
+	library_path : STRING
 			-- directory of all vision2 library short-form interfaces
 		local
 			env: EXECUTION_ENVIRONMENT
@@ -72,7 +72,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	example_path: STRING is
+	example_path: STRING
 			-- path of example class text.
 		local
 			env: EXECUTION_ENVIRONMENT
@@ -87,7 +87,7 @@ feature {NONE} -- Implementation
 			Result.append ("tutorial")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

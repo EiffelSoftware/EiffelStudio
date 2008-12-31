@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Summary description for Form1."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- No description available.
 		local
 			l_recent: RECENT
@@ -79,7 +79,7 @@ feature {NONE} -- Access
 		
 feature {NONE} -- Basic Operations
 		
-	initialize_component is
+	initialize_component
 			-- 
 		local
 			l_auto_complete1: AUTO_COMPLETE
@@ -565,7 +565,7 @@ feature {NONE} -- Basic Operations
 	
 feature {FORM1} -- Basic Operations
 
-	dispose_boolean (a_disposing: BOOLEAN) is
+	dispose_boolean (a_disposing: BOOLEAN)
 			-- Clean up any resources being used
 		do
 			if a_disposing then
@@ -579,7 +579,7 @@ feature {FORM1} -- Basic Operations
 		
 feature {NONE} -- Event Handlers
 		
-	auto_complete_manager_delete (sender: SYSTEM_OBJECT; e: DELETE_EVENT_ARGS) is
+	auto_complete_manager_delete (sender: SYSTEM_OBJECT; e: DELETE_EVENT_ARGS)
 			-- No description available.
 		local
 			source: ARRAY_LIST
@@ -601,7 +601,7 @@ feature {NONE} -- Event Handlers
 			end
 		end
 
-	btn_close_click (sender: SYSTEM_OBJECT; e: EVENT_ARGS) is
+	btn_close_click (sender: SYSTEM_OBJECT; e: EVENT_ARGS)
 			-- No description available.
 		do
 			close
@@ -609,7 +609,7 @@ feature {NONE} -- Event Handlers
 		
 feature {NONE} -- Implementation
 	
-	read_data: ILIST is
+	read_data: ILIST
 			-- No description available.
 		local
 			l_lines: ARRAY_LIST
@@ -647,7 +647,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

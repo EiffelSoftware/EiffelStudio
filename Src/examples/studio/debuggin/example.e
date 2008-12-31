@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class EXAMPLE create
@@ -9,13 +9,13 @@ feature
 
 	base_object: OBJECT;
 
-	make is
+	make
 		do
 			create base_object; 
 			base_object.operate
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class BOOK 
@@ -16,7 +16,7 @@ create
 
 feature 
 
-	make is
+	make
 		do
 			create title.make (10)
 			create author.make (10)
@@ -30,7 +30,7 @@ feature
 
 	still_published: BOOLEAN
 
-	set_references (b, a : STRING) is
+	set_references (b, a : STRING)
 			-- Set `author' with `a', and `title' with `b'.
 		require
 			arguments_exist: not (a = Void) and not (b = Void)
@@ -42,7 +42,7 @@ feature
 			title = b
 		end
 
-	set_quantity (a : INTEGER ) is
+	set_quantity (a : INTEGER )
 			-- Set `quantity' with `a'.
 		do
 			quantity := a
@@ -50,7 +50,7 @@ feature
 			quantity  = a
 		end
 
-	set_still_published (a : BOOLEAN ) is
+	set_still_published (a : BOOLEAN )
 			-- Set `still_published' with `a'.
 		do
 			still_published := a
@@ -58,7 +58,7 @@ feature
 			still_published = a
 		end
 
-	set_price (a: REAL) is
+	set_price (a: REAL)
 			-- Set `price' with `a'.
 		do
 			price := a
@@ -66,7 +66,7 @@ feature
 			price = a
 		end
 
-	out: STRING is 
+	out: STRING 
 			-- Print book.
 		do
 			create Result.make (0)
@@ -82,7 +82,7 @@ feature
 			Result.append  ("%N")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

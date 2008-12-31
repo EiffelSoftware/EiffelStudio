@@ -1,8 +1,7 @@
-indexing
-	description: "Objects that ..."
+note
+	description: "Should be implemented by user"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	note: "Should be implemented by user"
 	author: "Marina Nudelman"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -12,9 +11,9 @@ class
 
 feature -- Access
 
-	Dispid_sum: INTEGER is 1;
+	Dispid_sum: INTEGER = 1;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

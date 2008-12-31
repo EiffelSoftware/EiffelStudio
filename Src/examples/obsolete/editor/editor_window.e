@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A basic text editor."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ inherit
 
 feature -- Access
 
-	initialize_preferences is
+	initialize_preferences
 			-- Initialize the preferences
 		local
 			l_editor_data: EDITOR_DATA
@@ -44,7 +44,7 @@ feature -- Access
 
 feature {NONE} -- Initialization
 
-	user_initialization is
+	user_initialization
 			-- called by `initialize'.
 			-- Any custom user initialization that
 			-- could not be performed in `initialize',
@@ -74,7 +74,7 @@ feature {NONE} -- Initialization
 			text_panel.horizontal_scrollbar.change_actions.extend (agent on_horizontal_scroll)
 		end
 
-	add_header is
+	add_header
 			--
 		do
 			create header.make_with_panel (text_panel)
@@ -85,7 +85,7 @@ feature {NONE} -- Initialization
 
 	header: TEXT_PANEL_HEADER
 
-	test_drawing is
+	test_drawing
 			--
 		local
 			cnt: INTEGER
@@ -107,7 +107,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Preference information	
 
-	show_preferences_window is
+	show_preferences_window
 	        -- Display available preferences
 	   	do
 	   		if preference_window = Void or else preference_window.is_destroyed then
@@ -119,7 +119,7 @@ feature {NONE} -- Preference information
 			end
 	   	end
 
-	system_preferences_location: FILE_NAME is
+	system_preferences_location: FILE_NAME
 			-- System preferences location
 		do
 			create Result.make_from_string ("")
@@ -132,14 +132,14 @@ feature {NONE} -- Preference information
 
 feature {NONE} -- Events
 
-	on_document_change is
+	on_document_change
 			-- Document was changed in header
 		do
 			text_panel.text_displayed.add_cursor_observer (Current)
 			text_panel.text_displayed.add_selection_observer (Current)
 		end
 
-	toggle_editable is
+	toggle_editable
 	        -- Toggle if editor panel is user editable
 		do
 			if text_panel.is_editable then
@@ -149,7 +149,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	toggle_show_line_numbers is
+	toggle_show_line_numbers
 	        -- Toggle line number display
 		do
 			if text_panel.line_numbers_enabled then
@@ -161,13 +161,13 @@ feature {NONE} -- Events
 			end
 		end
 
-	toggle_invisible_symbols is
+	toggle_invisible_symbols
 	        -- Toggle invisible panel symbols (new lines, tabs, etc)
 		do
 			text_panel.toggle_view_invisible_symbols
 		end
 
-	goto_line is
+	goto_line
 			--
 		do
 			text_panel.set_first_line_displayed (goto_line_text.text.to_integer, False)
@@ -175,13 +175,13 @@ feature {NONE} -- Events
 			text_panel.set_focus
 		end
 
-	select_chars is
+	select_chars
 			--
 		do
 
 		end
 
-	select_lines is
+	select_lines
 			--
 		do
 			text_panel.select_lines (select_line_start_text.text.to_integer, select_line_end_text.text.to_integer)
@@ -191,7 +191,7 @@ feature {NONE} -- Events
 
 feature {NONE} -- Implementation
 
-	open_document is
+	open_document
 			-- Open document from disk
 		local
 			l_open_dialog: EV_FILE_OPEN_DIALOG
@@ -203,14 +203,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	 text_panel: GENERIC_EDITOR is
+	 text_panel: GENERIC_EDITOR
 	        -- Editor.
 	 	once
 	 	    create Result
 			--register_documents (Result)			
 	 	end
 
-	 register_documents (a_panel: TEXT_PANEL) is
+	 register_documents (a_panel: TEXT_PANEL)
 	 		-- Register syntax definition files for particular document types
 	 	do
 	 		if eiffel_class /= Void then
@@ -224,7 +224,7 @@ feature {NONE} -- Implementation
 	 	   	end
 	 	end
 
-	 eiffel_class: DOCUMENT_CLASS is
+	 eiffel_class: DOCUMENT_CLASS
 	         -- Eiffel syntax definition
 	   	once
 	   		if eiffel_syntax_file_location /= Void then
@@ -232,7 +232,7 @@ feature {NONE} -- Implementation
 	   	   	end
 	   	end
 
-	 xml_class: DOCUMENT_CLASS is
+	 xml_class: DOCUMENT_CLASS
 	         -- XML syntax definition     	
 	   	once
 	   		if xml_syntax_file_location /= Void then
@@ -240,7 +240,7 @@ feature {NONE} -- Implementation
 		   	end
 	   	end
 
-	 java_class: DOCUMENT_CLASS is
+	 java_class: DOCUMENT_CLASS
 	         -- Java syntax definition      	
 	   	once
 	   		if java_syntax_file_location /= Void then
@@ -248,7 +248,7 @@ feature {NONE} -- Implementation
 		  	end
 	   	end
 
-	eiffel_syntax_file_location: STRING is
+	eiffel_syntax_file_location: STRING
 			-- Location to find file containing syntax definition for Eiffel files.  Redefine this if necessary to point to the right file.
 		local
 			l_exec: EXECUTION_ENVIRONMENT
@@ -265,7 +265,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	xml_syntax_file_location: STRING is
+	xml_syntax_file_location: STRING
 			-- Location to find file containing syntax definition for XML files.  Redefine this if necessary to point to the right file.
 		local
 			l_exec: EXECUTION_ENVIRONMENT
@@ -282,7 +282,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	java_syntax_file_location: STRING is
+	java_syntax_file_location: STRING
 			-- Location to find file containing syntax definition for Java files.  Redefine this if necessary to point to the right file.
 		local
 			l_exec: EXECUTION_ENVIRONMENT
@@ -301,7 +301,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Observation
 
-	on_cursor_moved is
+	on_cursor_moved
 			-- Cursor was moved
 		local
 			line: EDITOR_LINE
@@ -381,7 +381,7 @@ feature {NONE} -- Observation
 			select_line_end_text.value_range.resize_exactly (1, l_line_count)
 		end
 
-	on_vertical_scroll (vscroll_pos: INTEGER) is
+	on_vertical_scroll (vscroll_pos: INTEGER)
  			-- Process vertical scroll event. `vertical_scrollbar.value' has changed.
  		do
  			first_line_displayed_label.set_text (text_panel.first_line_displayed.out)
@@ -391,12 +391,12 @@ feature {NONE} -- Observation
  			viewport_offset_label.set_text (text_panel.editor_viewport.y_offset.out)
  		end
 
- 	on_horizontal_scroll (hscroll_pos: INTEGER) is
+ 	on_horizontal_scroll (hscroll_pos: INTEGER)
  			-- Process vertical scroll event. `vertical_scrollbar.value' has changed.
  		do
 		end
 
-	close_window is
+	close_window
 			-- The user wants to close the window
 		do
 				-- Destroy the window
@@ -405,7 +405,7 @@ feature {NONE} -- Observation
 		end
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

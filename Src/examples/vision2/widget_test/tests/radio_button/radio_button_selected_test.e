@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that demonstrate `select_actions'%
 		%of EV_RADIO_BUTTON."
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 		
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create `Current' and initialize test in `widget'.
 		local
 			radio_button: EV_RADIO_BUTTON
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 		
-	update_button_text (radio_button: EV_RADIO_BUTTON) is
+	update_button_text (radio_button: EV_RADIO_BUTTON)
 			-- Update `text' of radio_buttons to reflect `radio_button'
 			-- becoming selected.
 		local
@@ -63,13 +63,13 @@ feature {NONE} -- Implementation
 	vertical_box: EV_VERTICAL_BOX
 		-- Box used to hold radio buttons for test.
 	
-	selected_text: STRING is "Selected radio button"
+	selected_text: STRING = "Selected radio button"
 		-- Manifest string constant displayed in selected radio buttons.
 	
-	non_selected_text: STRING is "Radio button";
+	non_selected_text: STRING = "Radio button";
 		-- String constant displayed in unselected radio buttons.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

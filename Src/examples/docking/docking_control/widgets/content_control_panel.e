@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control panel which hold sub widgets to control the target docking content."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_manager: SD_DOCKING_MANAGER; a_window: like window) is
+	make (a_manager: SD_DOCKING_MANAGER; a_window: like window)
 			-- Set `docking_manager' with `a_manager'.
 		require
 			a_manager_not_void: a_manager /= Void
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Building panels
 
-	build_panels is
+	build_panels
 			-- Build attribute setting panel.
 		do
 			create general_panel.make (docking_manager, window)
@@ -66,13 +66,13 @@ feature -- Access
 
 feature -- Creation
 
-	build_docking_tool_content is
+	build_docking_tool_content
 			-- Build docking tool.
 		do
 			general_panel.build_docking_tool_content
 		end
 
-	build_docking_editor_content is
+	build_docking_editor_content
 			-- Build docking editor
 		do
 			general_panel.build_docking_editor_content
@@ -80,7 +80,7 @@ feature -- Creation
 
 feature -- Element change
 
-	content_focused (a_content: SD_CONTENT) is
+	content_focused (a_content: SD_CONTENT)
 			-- Content focused
 		require
 			a_content_not_void: a_content /= Void
@@ -89,7 +89,7 @@ feature -- Element change
 			transform_panel.content_focused (a_content)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

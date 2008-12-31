@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that show drawing capabilities of EV_GRID. Double click control items to change
 		settings.
@@ -19,7 +19,7 @@ inherit
 		
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create `Current' and initialize test in `widget'.
 		local
 			combo_item: EV_GRID_COMBO_ITEM
@@ -79,14 +79,14 @@ feature {NONE} -- Implementation
 	grid: EV_GRID
 		-- Widget that test is to be performed on.
 		
-	stock_colors: EV_STOCK_COLORS is
+	stock_colors: EV_STOCK_COLORS
 			-- Once access to EiffelVision2 stock colors
 			-- (from GRID_ACCESSOR)
 		once
 			create Result
 		end
 		
-	add_items (columns, rows: INTEGER) is
+	add_items (columns, rows: INTEGER)
 			-- Add items to `grid' occupying `columns' columns
 			-- and `rows.
 		local
@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	fill_texture_combo (window: EV_POPUP_WINDOW; combo: EV_GRID_COMBO_ITEM) is
+	fill_texture_combo (window: EV_POPUP_WINDOW; combo: EV_GRID_COMBO_ITEM)
 			-- Fill `combo' with items  for selecting the texture style.
 		require
 			window_not_void: window /= Void
@@ -135,7 +135,7 @@ feature {NONE} -- Implementation
 			combo.combo_box.select_actions.resume
 		end
 
-	fill_scroll_combo (window: EV_POPUP_WINDOW; combo: EV_GRID_COMBO_ITEM) is
+	fill_scroll_combo (window: EV_POPUP_WINDOW; combo: EV_GRID_COMBO_ITEM)
 			-- Fill `combo' with items  for selecting the texture scrolling style.
 		require
 			window_not_void: window /= Void
@@ -155,7 +155,7 @@ feature {NONE} -- Implementation
 			combo.combo_box.select_actions.resume
 		end
 
-	combo_texture_item_selected (a_combo_box: EV_COMBO_BOX) is
+	combo_texture_item_selected (a_combo_box: EV_COMBO_BOX)
 			-- An item has been selected from `a_combo_box' signifying
 			-- the texturing to be applied. Update internal
 			-- values to reflect this.
@@ -181,7 +181,7 @@ feature {NONE} -- Implementation
 			grid.redraw
 		end
 		
-	combo_scroll_item_selected (a_combo_box: EV_COMBO_BOX) is
+	combo_scroll_item_selected (a_combo_box: EV_COMBO_BOX)
 			-- An item has been selected from `a_combo_box' signifying
 			-- the texture scroll style to be applied. Update internal
 			-- values to reflect this.
@@ -206,7 +206,7 @@ feature {NONE} -- Implementation
 			grid.redraw
 		end
 		
-	reset_combo_text (s: STRING; combo_item: EV_GRID_COMBO_ITEM) is
+	reset_combo_text (s: STRING; combo_item: EV_GRID_COMBO_ITEM)
 			-- Restore text of `combo_item' to `s' + selected item text of `combo_item'.
 		require
 			s_not_void: s /= Void
@@ -215,7 +215,7 @@ feature {NONE} -- Implementation
 			combo_item.set_text (s + combo_item.combo_box.selected_item.text)
 		end
 		
-	draw_texture (drawable: EV_DRAWABLE; grid_item: EV_GRID_ITEM; a_column_index, a_row_index: INTEGER) is
+	draw_texture (drawable: EV_DRAWABLE; grid_item: EV_GRID_ITEM; a_column_index, a_row_index: INTEGER)
 			-- Draw applied texture for item `grid_item' onto `drawable'.
 		require
 			drawable_not_void: drawable /= Void
@@ -255,7 +255,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	internal_draw_texture (drawable: EV_DRAWABLE; texture_x, texture_y, a_width, a_height: INTEGER) is
+	internal_draw_texture (drawable: EV_DRAWABLE; texture_x, texture_y, a_width, a_height: INTEGER)
 			-- Draw `marble' texture onto `drawable' offset by `texture_x' and `texture_y' with
 			-- dimensions of `a_width' and `a_height'.
 		require
@@ -289,7 +289,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	draw_borders (drawable: EV_DRAWABLE; grid_item: EV_GRID_ITEM; a_column_index, a_row_index: INTEGER) is
+	draw_borders (drawable: EV_DRAWABLE; grid_item: EV_GRID_ITEM; a_column_index, a_row_index: INTEGER)
 			-- Draw a border around cells 1,1 and 2,1 with a width of `border_width'.
 		require
 			drawable_not_void: drawable /= Void
@@ -313,10 +313,10 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	border_width: INTEGER is 1
+	border_width: INTEGER = 1
 		-- Wdith of borders around control items.
 		
-	draw_background (drawable: EV_DRAWABLE; a_virtual_x, a_virtual_y, a_width, a_height: INTEGER) is
+	draw_background (drawable: EV_DRAWABLE; a_virtual_x, a_virtual_y, a_width, a_height: INTEGER)
 			-- Draw `marble' texture onto `drawable' offset by `texture_x' and `texture_y' with
 			-- dimensions of `a_width' and `a_height'.
 		require
@@ -351,25 +351,25 @@ feature {NONE} -- Implementation
 	texture_style: INTEGER
 		-- Applied texture style.
 	
-	texture_width: INTEGER is
+	texture_width: INTEGER
 			-- Width of marble texture.
 		once
 			Result := marble.width
 		end
 
-	texture_height: INTEGER is
+	texture_height: INTEGER
 			-- Height of marble texture.
 		once
 			Result := marble.height
 		end
 	
-	marble: EV_PIXMAP is
+	marble: EV_PIXMAP
 			-- Once access to a marble textured pixmap.
 		once
 			Result := numbered_pixmap (3)
 		end
 		
-	grid_pressed (an_x, a_y, a_button: INTEGER; grid_item: EV_GRID_ITEM) is
+	grid_pressed (an_x, a_y, a_button: INTEGER; grid_item: EV_GRID_ITEM)
 			-- Respond to a button press in the grid. If the left button is
 			-- pressed on the combo item, activate that item.
 		do
@@ -380,7 +380,7 @@ feature {NONE} -- Implementation
 			end
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

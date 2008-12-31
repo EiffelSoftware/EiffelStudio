@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -12,7 +12,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (no_cards: INTEGER) is
+	make (no_cards: INTEGER)
 			-- Set the number of cards and create the game.
 		require
 			minimum_amount_of_cards: no_cards > 0
@@ -49,7 +49,7 @@ feature -- Status report
 
 feature -- Element change
 
-	move_card: BOOLEAN is
+	move_card: BOOLEAN
 			-- Can the active card be moved from
 			-- source to destination?
 			-- Result is True on movement.
@@ -67,13 +67,13 @@ feature -- Element change
 
 feature -- Access
 
-	goal_state_reached: BOOLEAN is
+	goal_state_reached: BOOLEAN
 			-- Is the game in the goal_state?
 		do
 			Result := game.goal_state
 		end
 
-	initialize_the_cards is
+	initialize_the_cards
 			-- Initialize each card in the game, by 
 			-- setting its coordinates.
 		local
@@ -132,7 +132,7 @@ feature -- Access
 			end
 		end
 
-	select_source (x_pos, y_pos: INTEGER) is
+	select_source (x_pos, y_pos: INTEGER)
 		local
 			i: INTEGER
 		do
@@ -164,7 +164,7 @@ feature -- Access
 			end
 		end
 
-	select_destination (x_pos, y_pos: INTEGER) is	
+	select_destination (x_pos, y_pos: INTEGER)	
 		local
 			i: INTEGER
 		do
@@ -194,7 +194,7 @@ feature -- Access
 			end
 		end
 
-	reset_move_status is
+	reset_move_status
 			-- Resets the move status
 		require
 			source_is_selected: source_selected
@@ -207,7 +207,7 @@ feature -- Access
 			no_source: not source_selected
 		end
 
-	reset_source is
+	reset_source
 			-- Resets the source of the move status
 		require
 			source_is_selected: source_selected
@@ -220,7 +220,7 @@ feature -- Access
 			no_source: not source_selected
 		end
 
-	reset_destination is
+	reset_destination
 			-- Resets the destination of the move status
 		require
 			destination_is_selected: destination_selected
@@ -231,7 +231,7 @@ feature -- Access
 			no_destination: not destination_selected
 		end
 
-	select_empty_column: BOOLEAN is
+	select_empty_column: BOOLEAN
 			-- Selects an empty column if available
 		require
 			no_destination: not destination_selected
@@ -254,7 +254,7 @@ feature -- Access
 			destination_selected_on_result: Result implies destination_selected
 		end
 
-	select_empty_xcell is
+	select_empty_xcell
 			-- Selects an empty xcell if available
 		require
 			no_destination: not destination_selected			
@@ -274,7 +274,7 @@ feature -- Access
 			end
 		end
 
-	select_destination_home_cell is
+	select_destination_home_cell
 			-- Select the home_cell corresponding
 			-- to the kind of the card
 		require
@@ -287,7 +287,7 @@ feature -- Access
 			selected_a_destination: destination_selected
 		end
 
-	cards_in_drawing_order: LINKED_LIST [INTEGER] is
+	cards_in_drawing_order: LINKED_LIST [INTEGER]
 			-- A LINKED_LIST of the card numbers in drawing order,
 			-- so the cards will overlap correctly when drawn.
 		local
@@ -326,13 +326,13 @@ feature -- Access
 			end
 		end
 
-	deal_game is
+	deal_game
 			-- Deal the game.
 		do
 			game.deal_game
 		end
 		
-	shuffle_the_cards (game_number: INTEGER) is
+	shuffle_the_cards (game_number: INTEGER)
 			-- Shuffle the cards with `game_number'
 		require
 			game_number_greater_than: game_number > 0
@@ -341,7 +341,7 @@ feature -- Access
 			game.shuffle_the_cards (game_number)
 		end
 
-	the_cards: ARRAY [CARD] is
+	the_cards: ARRAY [CARD]
 			-- The cards in the game
 		do
 			Result := game.the_cards
@@ -361,7 +361,7 @@ feature {NONE} -- Implementation
 	last_xcell_found: INTEGER
 			-- The last "xcell" found on a search for an empty column.
 	
-	middle_of_cells: INTEGER is
+	middle_of_cells: INTEGER
 			-- Compute the x_position between the
 			-- xcells and the home_cells.
 		require
@@ -371,7 +371,7 @@ feature {NONE} -- Implementation
 				active_card.card_image.width // 2
 		end
 
-	setup_a_card (a_card_number, x_position, y_position: INTEGER) is
+	setup_a_card (a_card_number, x_position, y_position: INTEGER)
 		require
 			a_card_number_greater_than: a_card_number > Card_offset
 			a_card_number_smaller_than_equal: a_card_number <= number_of_cards + Card_offset
@@ -384,12 +384,12 @@ feature {NONE} -- Implementation
 		end
 
 
-	one_from_top_in_column (a_column: INTEGER): INTEGER is
+	one_from_top_in_column (a_column: INTEGER): INTEGER
 		do
 			Result := game.one_from_top_in_column (a_column)
 		end
 
-	top_of_column (a_card: CARD): BOOLEAN is
+	top_of_column (a_card: CARD): BOOLEAN
 			-- Is `a_card' top of a column?
 		local
 			i: INTEGER
@@ -411,7 +411,7 @@ feature {NONE} -- Implementation
 			Result := is_top
 		end
 
-	card_in_xcell (a_card: CARD):BOOLEAN is
+	card_in_xcell (a_card: CARD):BOOLEAN
 			-- Is a_card in a xcell?
 		require
 			no_destination: not destination_selected
@@ -435,7 +435,7 @@ invariant
 
 	game_not_void: game /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

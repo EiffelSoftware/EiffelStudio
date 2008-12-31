@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that demonstrate `disable_item_expand'%
 		%for EV_VERTICAL_BOX"
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 		
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create `Current' and initialize test in `widget'.
 		local
 			counter: INTEGER
@@ -43,7 +43,7 @@ feature {NONE} -- Implementation
 	vertical_box: EV_VERTICAL_BOX
 		-- Widget that test is to be performed on.
 	
-	update_button (button: EV_BUTTON) is
+	update_button (button: EV_BUTTON)
 			-- Toggle expanded status of `button' in
 			-- `vertical_box'.
 		do
@@ -56,7 +56,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Server root-class for the same_mach example."
@@ -24,7 +24,7 @@ feature
 
 	soc1, soc2: NETWORK_STREAM_SOCKET
 
-	make (argv: ARRAY [STRING]) is
+	make (argv: ARRAY [STRING])
 			-- Accept communication with client and exchange messages
 		local
 			count: INTEGER
@@ -50,7 +50,7 @@ feature
 			soc1.cleanup
 		end
 
-	process is
+	process
 			-- Receive a message, extend it, and send it back.
 		local
 			our_new_list: OUR_MESSAGE
@@ -72,7 +72,7 @@ feature
 			soc2.close
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

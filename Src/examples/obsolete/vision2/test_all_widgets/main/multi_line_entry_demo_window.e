@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"TEXT_AREA_DEMO_WINDOW, demo window to test multi line%
 		% text area widget. Belongs to EiffelVision example."
@@ -24,7 +24,7 @@ create
 
 feature -- Access
 
-	main_widget: EV_TEXT is
+	main_widget: EV_TEXT
 			-- The main widget of the demo
 		once
 			create Result.make (Current)
@@ -33,19 +33,19 @@ feature -- Access
 
 feature -- Status setting
 	
-	set_widgets is
+	set_widgets
 			-- Set the widgets in the demo windows.
 		do
 		end
 	
-	set_values is
+	set_values
 			-- Set the values on the widgets of the window.
 		do
 			set_title ("Text area demo")
 			main_widget.append_text ("edit me")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

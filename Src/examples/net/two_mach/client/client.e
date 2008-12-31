@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Client root-class for the two_mach example."
@@ -24,7 +24,7 @@ feature
 
 	soc1: NETWORK_STREAM_SOCKET
 
-	make (argv: ARRAY [STRING]) is
+	make (argv: ARRAY [STRING])
 			-- Establish communication with server, and exchange messages.
 		do
 			if argv.count /= 3 then
@@ -41,7 +41,7 @@ feature
 			soc1.cleanup
 		end
 
-	process is
+	process
 			-- Build a message to server, receive answer, build
 			-- modified message from that answer, and print it.
 		local
@@ -74,7 +74,7 @@ feature
 			io.new_line
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

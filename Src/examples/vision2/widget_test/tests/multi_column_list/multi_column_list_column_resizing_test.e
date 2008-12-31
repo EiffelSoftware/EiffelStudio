@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that test EV_MULTI_COLUMN_LIST."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 		
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create `Current' and initialize test in `widget'.
 		local
 			multi_column_list_row: EV_MULTI_COLUMN_LIST_ROW
@@ -39,7 +39,7 @@ feature {NONE} -- Implementation
 	multi_column_list: EV_MULTI_COLUMN_LIST
 		-- Widget that test is to be performed on.
 	
-	update_width_information (column_number: INTEGER) is
+	update_width_information (column_number: INTEGER)
 			-- Update the text of the first row in `column_number' to
 			-- the width of the column `column_number'.
 		local
@@ -50,7 +50,7 @@ feature {NONE} -- Implementation
 			row.replace (multi_column_list.column_width (column_number).out)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

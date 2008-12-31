@@ -1,4 +1,4 @@
-indexing
+note
 	description: "My button with ability to show explanation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -20,7 +20,7 @@ create
 
 feature
 
-	make (a_name: STRING; a_parent: COMPOSITE)is
+	make (a_name: STRING; a_parent: COMPOSITE)
 		do	
 			-- initialize like PUSH_P
 			push_b_make (a_name, a_parent)
@@ -34,7 +34,7 @@ feature
 			-- add_activate_action ...
 		end;
 
-	focus_label: FOCUS_LABEL_I is
+	focus_label: FOCUS_LABEL_I
 		-- has to be redefined, so that it returns correct toolkit initializer
 		-- to which object belongs for every instance of this class
 		local
@@ -47,7 +47,7 @@ feature
 			Result := ti.label
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

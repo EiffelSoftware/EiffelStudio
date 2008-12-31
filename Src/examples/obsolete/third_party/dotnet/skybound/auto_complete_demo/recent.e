@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Reads lists of recently accessed programs and URLs from the current user's
 		profile in the system registry.
@@ -16,7 +16,7 @@ inherit
 
 feature -- Query
 
-	frozen typed_urls: NATIVE_ARRAY [SYSTEM_STRING] is
+	frozen typed_urls: NATIVE_ARRAY [SYSTEM_STRING]
 			-- Returns a string array containing the names of the URLs typed into the
 			-- Internet Explorer address bar.
 		local
@@ -47,7 +47,7 @@ feature -- Query
 			result_not_void: Result /= Void
 		end
 		
-	frozen run_mru: NATIVE_ARRAY [SYSTEM_STRING] is
+	frozen run_mru: NATIVE_ARRAY [SYSTEM_STRING]
 			-- Returns a string array containing the programs that have been run using
 			-- the Start Menu Run dialog.
 		local
@@ -92,7 +92,7 @@ feature -- Query
 			result_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

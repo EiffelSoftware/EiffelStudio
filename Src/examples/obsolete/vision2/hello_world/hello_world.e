@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"%"Hello world%" application."
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Initialization
 
-	prepare is
+	prepare
 			-- Set up `first_window'.
 		local
 			b: EV_BUTTON
@@ -29,7 +29,7 @@ feature -- Initialization
 
 feature -- Actions
 
-	on_button_select is
+	on_button_select
 			-- Output text that a button has been pressed.
 		do
 			io.put_string ("Button pressed%N")
@@ -37,13 +37,13 @@ feature -- Actions
 
 feature -- Access
 
-	first_window: MAIN_WINDOW is
+	first_window: MAIN_WINDOW
 			-- Main window of the example
 		once
 			create Result
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

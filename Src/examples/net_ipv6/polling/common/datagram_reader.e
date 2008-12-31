@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Command executed by both the polling client and the polling%
@@ -26,7 +26,7 @@ feature
 
 	active_medium: NETWORK_DATAGRAM_SOCKET
 
-	execute (arg: ANY) is
+	execute (arg: ANY)
 		local
 			rec_pack: PACKET
 			datagram: DATAGRAM_PACKET
@@ -43,7 +43,7 @@ feature
 			io.new_line
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

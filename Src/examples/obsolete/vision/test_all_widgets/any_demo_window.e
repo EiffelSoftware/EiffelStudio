@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 deferred class ANY_DEMO_WINDOW
@@ -12,19 +12,19 @@ inherit
 
 feature
 
-	main_widget: WIDGET is
+	main_widget: WIDGET
 		deferred
 		end
 
-	set_widgets is
+	set_widgets
 		deferred
 		end
 
-	work (arg: ANY) is
+	work (arg: ANY)
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

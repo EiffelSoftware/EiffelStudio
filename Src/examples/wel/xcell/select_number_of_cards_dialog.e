@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parent: WEL_COMPOSITE_WINDOW) is
+	make (a_parent: WEL_COMPOSITE_WINDOW)
 			-- Create the dialog
 		do
 			make_by_id (a_parent, Select_cards_dlg_id)
@@ -39,14 +39,14 @@ feature {NONE} -- Implementation
 	number_edit: WEL_SINGLE_LINE_EDIT
 			-- Edit control to input the number of cards
 
-	setup_dialog is
+	setup_dialog
 			-- Setup the dialog before
 			-- it is activated
 		do
 			number_edit.set_text (no_cards.out)
 		end
 
-	on_ok is
+	on_ok
 			-- Ok button is pressed
 		local
 			msg_box: WEL_MSG_BOX
@@ -70,7 +70,7 @@ feature {NONE} -- Implementation
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

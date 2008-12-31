@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A debuggable NAG_ERROR"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,9 +11,9 @@ class FAKE_NAG_ERROR inherit
 		end;
 
 feature
-	failed: BOOLEAN is True;
+	failed: BOOLEAN = True;
 
-	set (m: STRING; j, k: INTEGER) is
+	set (m: STRING; j, k: INTEGER)
 			-- set the error fields.
 		do
 			last_error_message := deep_clone(m);
@@ -25,7 +25,7 @@ feature
 	last_error_code: INTEGER;
 	last_error_aux: INTEGER;;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

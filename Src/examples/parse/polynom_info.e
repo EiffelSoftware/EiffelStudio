@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Information storage for the Polynomial language
@@ -11,7 +11,7 @@ create
 
 feature 
 
-	make is
+	make
 		do
 			create id_table.make;
 			create id_value.make
@@ -31,12 +31,12 @@ feature {NONE}
 
 feature 
 
-	set_child_value (i: INTEGER) is
+	set_child_value (i: INTEGER)
 		do
 			child_value := i
 		end
 
-	cons_id_table (s: STRING) is
+	cons_id_table (s: STRING)
 			-- Fill the id_table with the identifiers found
 			-- in the declarations list.
 		do
@@ -46,7 +46,7 @@ feature
 			end
 		end
 
-	print_id_table is
+	print_id_table
 		do
 			io.putstring ("id_table:%N")
 			if not id_table.is_empty then
@@ -63,7 +63,7 @@ feature
 			end
 		end
 
-	set_value is
+	set_value
 		do
 			if not id_table.is_empty then
 				io.putstring ("Enter the integer values (9999 to end):")
@@ -85,7 +85,7 @@ feature
 			end
 		end
 
-	int_value (s: STRING): INTEGER is
+	int_value (s: STRING): INTEGER
 		do
 			id_table.start
 			id_table.compare_objects
@@ -101,7 +101,7 @@ feature
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

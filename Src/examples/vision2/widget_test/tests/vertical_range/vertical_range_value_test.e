@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that test EV_VERTICAL_RANGE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 		
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create `Current' and initialize test in `widget'.
 		local
 			vertical_box: EV_VERTICAL_BOX
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 		
 feature {NONE} -- Implementation
 
-	display_value (value: INTEGER) is
+	display_value (value: INTEGER)
 			-- Display `value' on `label'.
 		do
 			label.set_text ("value : " + value.out)
@@ -49,7 +49,7 @@ feature {NONE} -- Implementation
 	range: EV_VERTICAL_RANGE;
 		-- Widget that test is to be performed on.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

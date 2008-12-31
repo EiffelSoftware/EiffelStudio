@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that put money in shared bank account"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,12 +21,12 @@ create
 
 feature -- Execution
 	
-	deposit (m: INTEGER) is
+	deposit (m: INTEGER)
 		do
 			c_make_transaction (m, c_account, thread_id)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

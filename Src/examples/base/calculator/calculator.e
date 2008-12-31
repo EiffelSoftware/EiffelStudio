@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -12,7 +12,7 @@ create
 
 feature -- creation
 
-	make is
+	make
 		do
 			io.putstring ("%N*********************************%N")
 			io.putstring ("Calculator in reverse Polish form%N")
@@ -49,7 +49,7 @@ feature {NONE}  -- Attributes
 
 feature {NONE} -- Implementation
 
-	session is
+	session
 			-- The main loop.
 		do
 			from
@@ -62,7 +62,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	start is
+	start
 			-- Start session
 		do
 			help_state.do_one_state
@@ -71,7 +71,7 @@ feature {NONE} -- Implementation
 			current_state.is_equal (qst)
 		end
 
-	over: BOOLEAN is
+	over: BOOLEAN
 			-- Is session over?
 		do
 			Result := current_state /= Void and then
@@ -79,13 +79,13 @@ feature {NONE} -- Implementation
 				current_state.is_equal (quit_state)
 		end
 
-	action is
+	action
 			-- Do something.
 		do
 			current_state.do_one_state
 		end
 
-	next is
+	next
 			-- Get next state.
 		local
 			current_interface: INTERFACE
@@ -99,7 +99,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	initialize is
+	initialize
 			-- Build operator states.
 		do
 			create qst
@@ -120,7 +120,7 @@ feature {NONE} -- Implementation
 			enter_operator ("?", "Help.", help_state)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

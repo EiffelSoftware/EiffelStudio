@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Root class for Basic Winforms demo."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Initialize
 		local
 			point: DRAWING_POINT
@@ -63,7 +63,7 @@ feature -- Access
 	
 feature -- Actions
 
-	on_close (sender: SYSTEM_OBJECT; event_args: EVENT_ARGS) is
+	on_close (sender: SYSTEM_OBJECT; event_args: EVENT_ARGS)
 			-- Close current application.
 		local
 			res: WINFORMS_DIALOG_RESULT
@@ -76,7 +76,7 @@ invariant
 	label_not_void: label /= Void
 	button_not_void: button /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"Main window class of the test event example."
 	legal: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Initialization
 	
-	make_top_level is
+	make_top_level
 			-- Creation of the window.
 		local
 			cmd: COMMAND
@@ -46,7 +46,7 @@ feature -- Initialization
 			create_focus_frame (box, cmd, color)
 		end
 
-	set_window_events (cmd: EV_COMMAND) is
+	set_window_events (cmd: EV_COMMAND)
 				-- Create a frame for the expose event.
 		local
 			arg: EV_ARGUMENT1 [STRING]
@@ -57,7 +57,7 @@ feature -- Initialization
 			add_resize_command (cmd, arg)
 		end
 
-	create_button_frame (par: EV_CONTAINER; cmd: EV_COMMAND; color: EV_COLOR) is
+	create_button_frame (par: EV_CONTAINER; cmd: EV_COMMAND; color: EV_COLOR)
 				-- Create a frame for the expose event.
 		local
 			frame: EV_FRAME
@@ -85,7 +85,7 @@ feature -- Initialization
 			button.add_double_click_command (1, cmd, arg)
 		end
 
-	create_motion_frame (par: EV_CONTAINER; cmd: EV_COMMAND; color: EV_COLOR) is
+	create_motion_frame (par: EV_CONTAINER; cmd: EV_COMMAND; color: EV_COLOR)
 				-- Create a frame for the expose event.
 		local
 			frame: EV_FRAME
@@ -113,7 +113,7 @@ feature -- Initialization
 			button.add_leave_notify_command (cmd, arg)
 		end
 
-	create_key_frame (par: EV_CONTAINER; cmd: EV_COMMAND; color: EV_COLOR) is
+	create_key_frame (par: EV_CONTAINER; cmd: EV_COMMAND; color: EV_COLOR)
 				-- Create a frame for the expose event.
 		local
 			frame: EV_FRAME
@@ -136,7 +136,7 @@ feature -- Initialization
 			button.add_key_release_command (cmd, arg)
 		end
 
-	create_focus_frame (par: EV_CONTAINER; cmd: EV_COMMAND; color: EV_COLOR) is
+	create_focus_frame (par: EV_CONTAINER; cmd: EV_COMMAND; color: EV_COLOR)
 				-- Create a frame for the expose event.
 		local
 			frame: EV_FRAME
@@ -159,7 +159,7 @@ feature -- Initialization
 			button.add_lose_focus_command (cmd, arg)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

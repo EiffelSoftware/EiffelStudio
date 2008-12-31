@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Root class of the example"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -16,7 +16,7 @@ create
 
 feature
 
-	make is
+	make
 		do
 			init_windowing;
 			main_window.realize;
@@ -24,7 +24,7 @@ feature
 				-- Event loop
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

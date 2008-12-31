@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Initialization
 
-	make (par: EV_TABLE; top, left: INTEGER; title: STRING; cmd1: EV_COMMAND; cmd2: EV_COMMAND) is
+	make (par: EV_TABLE; top, left: INTEGER; title: STRING; cmd1: EV_COMMAND; cmd2: EV_COMMAND)
 			-- Create combo_box betwwen the label and the button.
 		require
 			valid_title: title /= Void
@@ -38,7 +38,7 @@ feature -- Access
 
 feature -- Element change
 
-	add_item (txt: STRING; cmd: EV_INTERNAL_COMMAND) is
+	add_item (txt: STRING; cmd: EV_INTERNAL_COMMAND)
 			-- Add an item and set the command on it.
 		local
 			item: EV_LIST_ITEM
@@ -49,7 +49,7 @@ feature -- Element change
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

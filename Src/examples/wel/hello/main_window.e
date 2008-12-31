@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -16,7 +16,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Make the main window
 		do
 			make_top ("WEL Hello")
@@ -24,20 +24,20 @@ feature -- Initialization
 
 feature {NONE} -- Implementation
 
-	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- Draw a centered text
 		do
 			paint_dc.draw_centered_text ("Hello, World!",
 				client_rect)
 		end
 
-	class_background: WEL_WHITE_BRUSH is
+	class_background: WEL_WHITE_BRUSH
 			-- White background
 		once
 			create Result.make
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

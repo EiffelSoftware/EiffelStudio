@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class MSG_WINDOW
@@ -19,7 +19,7 @@ create
 
 feature
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	make (a_name: STRING; a_parent: COMPOSITE)
 			-- Create interface.
 		do
 			message_d_make (a_name, a_parent);
@@ -27,7 +27,7 @@ feature
 			set_callbacks
 		end;
 
-	set_values is
+	set_values
 			-- Set values (resources).
 		do
 			hide_cancel_button;
@@ -35,7 +35,7 @@ feature
 			set_message ("This is a message");
 		end;
 
-	set_callbacks is
+	set_callbacks
 			-- Associate a command (in this
 			-- case Current) with the OK button.
 		local
@@ -44,13 +44,13 @@ feature
 			add_ok_action (Current, Nothing);
 		end;
 
-	execute (argument: ANY) is
+	execute (argument: ANY)
 			-- Action: popdown the window
 		do
 			popdown
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

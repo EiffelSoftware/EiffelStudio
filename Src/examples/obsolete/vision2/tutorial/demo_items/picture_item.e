@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Demo for pictures."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (par: EV_TREE_ITEM_HOLDER) is
+	make (par: EV_TREE_ITEM_HOLDER)
 			-- Create the item and the demo that
 			-- goes with it.
 		do
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	figure: EV_PICTURE is
+	figure: EV_PICTURE
 		local
 			pict: EV_PIXMAP
 		do
@@ -35,7 +35,7 @@ feature -- Access
 			Result.set_pixmap (pict)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

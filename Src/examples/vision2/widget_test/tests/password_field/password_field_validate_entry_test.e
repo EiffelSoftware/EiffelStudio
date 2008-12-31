@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that test EV_PASSWORD_FIELD."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 		
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create `Current' and initialize test in `widget'.
 		local
 			vertical_box: EV_VERTICAL_BOX
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			widget := vertical_box
 		end
 		
-	validate_password_field is
+	validate_password_field
 			-- Check password is correct, and perform necessary
 			-- processing.
 		do
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			end
 		end
 		
-	set_label_text is
+	set_label_text
 			-- Display password prompt on `prompt_label' with the
 			-- number of times a correct password has been entered.
 		do
@@ -62,7 +62,7 @@ feature {NONE} -- Implementation
 	prompt_label: EV_LABEL;
 		-- Label to show information on about passwords entered.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

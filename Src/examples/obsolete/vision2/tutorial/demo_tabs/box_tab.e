@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make (par: EV_CONTAINER)
 			-- Create the tab and initialise objects
 		local
 			cmd1,cmd2: EV_ROUTINE_COMMAND
@@ -51,7 +51,7 @@ feature -- Initialization
 
 feature -- Access
 
-	name:STRING is
+	name:STRING
 			-- Returns the name of the tab
 		do
 			Result:="Box"
@@ -71,7 +71,7 @@ feature -- Access
 
 feature -- Execution feature  
 
-	set_homogeneous_value (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	set_homogeneous_value (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Make the box homogeneous.
 		do
 			if f1.combo.selected then
@@ -83,7 +83,7 @@ feature -- Execution feature
 			end
 		end
 
-	get_homogeneous_value (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	get_homogeneous_value (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Return the homogeneous value of the box.
 		do
 			if current_widget.is_homogeneous then
@@ -93,7 +93,7 @@ feature -- Execution feature
 			end
 		end
 
-	set_border_width_val (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	set_border_width_val (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Set the border width of the demo
 		do
 			if f2.get_text.is_integer and f2.get_text.to_integer >= 0  then
@@ -101,7 +101,7 @@ feature -- Execution feature
 			end
 		end
 
-	set_spacing_val (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	set_spacing_val (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Set the spacing of the demo
 		do
 			if f3.get_text.is_integer and f3.get_text.to_integer >= 0 then
@@ -109,19 +109,19 @@ feature -- Execution feature
 			end
 		end
 
-	get_border_width_val (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	get_border_width_val (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Get the border width of the demo
 		do
 			f2.set_text (current_widget.border_width.out)
 		end
 
-	get_spacing_val (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	get_spacing_val (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Get the spacing of the demo
 		do
 			f3.set_text (current_widget.spacing.out)
 		end	
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

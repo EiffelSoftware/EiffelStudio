@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Root class for Ado Overview 3.
 
@@ -10,13 +10,12 @@ indexing
 		The format of the returned DataReader object is different from a recordset.
 		For example, you might use the DataReader to show the results of a search list 
 		in a web page. 
+
+		Note: Translated from Microsoft .NET Framework SDK samples from location
+			FrameworkSDK\Samples\QuickStart\howto\samples\adoplus\adooverview3
 		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	note: "[
-		Translated from Microsoft .NET Framework SDK samples from location
-		FrameworkSDK\Samples\QuickStart\howto\samples\adoplus\adooverview3
-		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -31,7 +30,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 		local
 			ok, retried: BOOLEAN
 		do
@@ -93,7 +92,7 @@ feature -- Access
 	command : DATA_SQL_COMMAND;
 			-- ADO.NET SQL command object
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

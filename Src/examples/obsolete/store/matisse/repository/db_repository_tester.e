@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class DB_REPOSITORY_TESTER 
@@ -9,7 +9,7 @@ create
 
 feature
 
-	make is
+	make
 	do
 		integer_value := 15
 		real_value := -0.5
@@ -28,7 +28,7 @@ feature
 
 	character_value : CHARACTER;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

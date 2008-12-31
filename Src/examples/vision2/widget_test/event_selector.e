@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that allow events to be selected on or off for a widget."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make_with_list_and_handler (a_list: EV_CHECKABLE_LIST; a_string_handler: ORDERED_STRING_HANDLER) is
+	make_with_list_and_handler (a_list: EV_CHECKABLE_LIST; a_string_handler: ORDERED_STRING_HANDLER)
 			-- Create `Current' with `a_list' into which all action sequence items
 			-- will be inserted, and `an_output', into which all output will be displayed.
 		require
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature -- Status setting
 
-		rebuild (widget: EV_WIDGET) is
+		rebuild (widget: EV_WIDGET)
 				-- Rebuild `Current' for `widget'.
 			require
 				widget_not_void: widget /= Void
@@ -79,7 +79,7 @@ feature -- Status setting
 				end
 			end
 
-		item_checked (list_item: EV_LIST_ITEM) is
+		item_checked (list_item: EV_LIST_ITEM)
 				-- `list_item' has been checked, so respond
 				-- by executing `check_event' of `list_item'.
 			require
@@ -94,7 +94,7 @@ feature -- Status setting
 				event_list_item.check_event.call ([])
 			end
 			
-		item_unchecked (list_item: EV_LIST_ITEM) is
+		item_unchecked (list_item: EV_LIST_ITEM)
 				-- `list_item' has been unchecked, so respond
 				-- by executing `uncheck_event' of `list_item'.
 			require
@@ -120,7 +120,7 @@ feature {NONE} -- Implementation
 invariant
 	list_not_void: list /= Void
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

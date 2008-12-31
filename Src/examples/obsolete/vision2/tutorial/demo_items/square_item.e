@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Demo for squares."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Access
 
-	figure: EV_SQUARE is
+	figure: EV_SQUARE
 		local
 			pt: EV_POINT
 		do
@@ -28,7 +28,7 @@ feature -- Access
 			Result.set_size_of_side (60)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

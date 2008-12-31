@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Test for TRANSPORTATION_PROBLEM_SOLVER (h03abc)"
 	legal: "See notice at end of class.";	
 	status: "See notice at end of class.";
@@ -20,7 +20,7 @@ feature -- Initialization
 
 	tested: TRANSPORTATION_PROBLEM_SOLVER;
 
-	make is
+	make
 			-- Test h03abc interface
 		local
 			cost: BASIC_MATRIX;
@@ -61,7 +61,7 @@ feature -- Initialization
 			print ("%N");
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

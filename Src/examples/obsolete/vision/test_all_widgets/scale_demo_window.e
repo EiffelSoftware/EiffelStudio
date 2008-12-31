@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class SCALE_DEMO_WINDOW
@@ -13,12 +13,12 @@ create
 
 feature
 
-	main_widget: WIDGET is
+	main_widget: WIDGET
 		once
 			create {SCALE} Result.make ("Scale", Current)
 		end
 
-	set_widgets is
+	set_widgets
 		local
 			scale: SCALE
 		do
@@ -29,11 +29,11 @@ feature
 			scale.set_size (100, 35)
 		end
 
-	work (arg: INTEGER_REF) is
+	work (arg: INTEGER_REF)
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

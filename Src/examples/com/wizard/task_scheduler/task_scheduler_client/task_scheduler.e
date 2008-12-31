@@ -1,8 +1,7 @@
-indexing
+note
 	description: "Task Scheduler"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
-	note: "Initial version automatically generated"
 
 class
 	TASK_SCHEDULER
@@ -16,14 +15,14 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Create Task Scheduler.
 		do
 			create_task_scheduler
 			run
 		end
 			
-	run is
+	run
 			-- Run task Scheduler.
 		local
 			a_clsid_ctask, a_iid_itask: ECOM_GUID
@@ -80,10 +79,10 @@ feature -- Initialization
 
 feature -- Access
 
-	clsid_ctask: STRING is "{148BD520-A2AB-11CE-B11F-00AA00530503}"
+	clsid_ctask: STRING = "{148BD520-A2AB-11CE-B11F-00AA00530503}"
 			-- Class ID of CTask coclass.
 
-	iid_itask: STRING is "{148BD524-A2AB-11CE-B11F-00AA00530503}"
+	iid_itask: STRING = "{148BD524-A2AB-11CE-B11F-00AA00530503}"
 			-- Interface ID of ITask interface.
 	
 	task_scheduler: CTASK_SCHEDULER_PROXY
@@ -92,7 +91,7 @@ feature -- Access
 	a_task: CTASK_PROXY
 			-- Task.
 
-	task_comment: STRING is
+	task_comment: STRING
 			-- Task Comment.
 		require
 			non_void_task: a_task /= Void
@@ -113,7 +112,7 @@ feature -- Access
 			retry
 		end
 
-	task_account_info: STRING is
+	task_account_info: STRING
 			-- Task Account information.
 		require
 			non_void_task: a_task /= Void
@@ -136,7 +135,7 @@ feature -- Access
 		
 feature -- Basic Operations
 
-	create_task_scheduler is
+	create_task_scheduler
 			-- Create task scheduler proxy.
 		local
 			retried: BOOLEAN
@@ -151,7 +150,7 @@ feature -- Basic Operations
 			retry
 		end
 	
-	create_new_task (a_task_name: STRING) is
+	create_new_task (a_task_name: STRING)
 			-- Create New Task.
 		require
 			non_void_task_scheduler: task_scheduler /= Void
@@ -186,7 +185,7 @@ feature -- Basic Operations
 			retry
 		end
 		
-	save_task is
+	save_task
 			-- Save task.
 		require
 			non_void_task: a_task /= Void
@@ -203,7 +202,7 @@ feature -- Basic Operations
 			retry
 		end
 
-	edit_task is
+	edit_task
 			-- Edit task.
 		require
 			non_void_task: a_task /= Void
@@ -222,7 +221,7 @@ feature -- Basic Operations
 		
 feature {NONE} -- Implementation
 
-	menu is
+	menu
 			-- Menu.
 		do
 			io.put_new_line
@@ -242,7 +241,7 @@ feature {NONE} -- Implementation
 			io.put_new_line
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "STRING_MANIPULATOR Implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ create
 
 feature {NONE}  -- Initialization
 
-	make is
+	make
 			-- Creation
 		do
 			create local_string.make (0)
@@ -19,7 +19,7 @@ feature {NONE}  -- Initialization
 												
 feature -- Access
 
-	string: STRING is
+	string: STRING
 			-- Manipulated string
 		require
 			exists: string_exists
@@ -29,7 +29,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	set_string (arg_1: STRING) is
+	set_string (arg_1: STRING)
 			-- Set manipulated string with `arg_1'.
 		do
 			local_string := arg_1
@@ -37,7 +37,7 @@ feature -- Basic Operations
 			string_set: local_string = arg_1
 		end
 
-	replace_substring (arg_1: STRING; arg_2: INTEGER; arg_3: INTEGER) is
+	replace_substring (arg_1: STRING; arg_2: INTEGER; arg_3: INTEGER)
 			-- Copy the characters of `arg_1' to positions `arg_2' .. `arg_3'.
 		require
 			exists: string_exists
@@ -45,7 +45,7 @@ feature -- Basic Operations
 			local_string.replace_substring (arg_1, arg_2, arg_3)
 		end
 
-	prune_all (arg_1: CHARACTER) is
+	prune_all (arg_1: CHARACTER)
 			-- Remove all occurrences of `arg_1'.
 		require
 			exists: string_exists
@@ -57,7 +57,7 @@ feature -- Basic Operations
 
 feature -- Status report
 
-	string_exists: BOOLEAN is
+	string_exists: BOOLEAN
 			-- String exists.
 		do
 			Result := local_string /= Void
@@ -67,7 +67,7 @@ feature {NONE} -- Implementation
 
 	local_string: STRING;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "NUMBER_DIALOG class created by Resource Bench."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parent: WEL_COMPOSITE_WINDOW) is
+	make (a_parent: WEL_COMPOSITE_WINDOW)
 			-- Create dialog.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Behavior
 
-	on_ok is
+	on_ok
 			-- Action to be executed when user clicks OK:
 			-- store integer entry into `number'.
 		do
@@ -54,7 +54,7 @@ feature -- Access
 	number: INTEGER;
 			-- Number entered by user
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that demonstrate simple use of%
 		%`border_width' for EV_VERTICAL_BOX"
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 		
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create `Current' and initialize test in `widget'.
 		do
 			create vertical_box
@@ -43,7 +43,7 @@ feature {NONE} -- Implementation
 	increase_padding_button, decrease_padding_button: EV_BUTTON;
 		-- Buttons used to alter padding.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

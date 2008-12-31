@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class 
@@ -14,13 +14,13 @@ inherit
 
 feature -- Basic operations
 
-	f1 (x: DOUBLE): DOUBLE is
+	f1 (x: DOUBLE): DOUBLE
 			-- Thrice as good
 		do
 			Result := 3.0 * x
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

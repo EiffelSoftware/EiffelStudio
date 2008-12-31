@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"An abstract representation of a SQL column."
@@ -21,7 +21,7 @@ feature
 	type: STRING;
 			-- Column type.
 
-	make (a_name, a_type: STRING) is
+	make (a_name, a_type: STRING)
 			-- Make a new column named `a_name' of type `a_type'.
 		require
 			a_name_not_void: a_name /= Void;
@@ -34,7 +34,7 @@ feature
 			type = a_type
 		end;
 
-	print_result (output: FILE) is
+	print_result (output: FILE)
 			-- Print result on `output'.
 		require
 			output_not_void: output /= Void
@@ -49,7 +49,7 @@ invariant
 	name_not_void: name /= Void;
 	type_not_void: type /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

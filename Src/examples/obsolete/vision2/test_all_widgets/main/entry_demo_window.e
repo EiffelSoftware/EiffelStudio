@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"TEXT_FIELD_DEMO_WINDOW, demo window to test%
 		% text_field widget. Belongs to EiffelVision example."
@@ -24,7 +24,7 @@ create
 
 feature -- Access
 
-	main_widget: EV_VERTICAL_BOX is
+	main_widget: EV_VERTICAL_BOX
 			-- The main widget of the demo
 		once
 			create Result.make (Current)
@@ -38,7 +38,7 @@ feature -- Access
 
 feature -- Status setting
 	
-	set_widgets is
+	set_widgets
 			-- Set the widgets in the demo windows.
 		local
 			frame: EV_FRAME
@@ -49,13 +49,13 @@ feature -- Status setting
 			create passwordfield.make_with_text (frame, "Me too")
 		end
 	
-	set_values is
+	set_values
 			-- Set the values on the widgets of the window.
 		do
 			set_title ("Text field demo")
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Controls used to manipulate objects of type EV_WIDGET"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (box: EV_BOX; widget: EV_WIDGET; an_output_device: EV_TEXT;) is
+	make (box: EV_BOX; widget: EV_WIDGET; an_output_device: EV_TEXT;)
 			-- Set up controls for `widget'. In this case, there are no controls,
 			-- but we must link the widget events to `widget'.
 		do
@@ -33,43 +33,43 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	widget_motion (a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	widget_motion (a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- A pointer motion event has occurred on the test widget. Output details.
 		do
 			output.append_text ("Pointer motion event occurred at X : " + a_x.out + " Y : " + a_y.out + "%N")
 		end
 
-	widget_button_press (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	widget_button_press (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- A pointer button press event has occurred on the test widget. Output details.
 		do
 			output.append_text ("Pointer button press event occurred%NButton " + a_button.out + " at X : " + a_x.out + " Y : " + a_y.out + "%N")
 		end
 
-	widget_double_press (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	widget_double_press (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- A pointer double press event has occurred on the test widget. Output details.
 		do
 			output.append_text ("Pointer button double press event occurred%NButton " + a_button.out + " at X : " + a_x.out + " Y : " + a_y.out + "%N")
 		end
 
-	widget_button_release (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	widget_button_release (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- A pointer button release event has occurred on the test widget. Output details.
 		do
 			output.append_text ("Pointer button release event occurred%NButton " + a_button.out + " at X : " + a_x.out + " Y : " + a_y.out + "%N")
 		end
 
-	key_press (a_key: EV_KEY) is
+	key_press (a_key: EV_KEY)
 			-- A key press event has occurred on the test widget. Output details.
 		do
 			output.append_text ("Key press event occurred. Key : " + a_key.out + "%N")
 		end
 
-	key_release (a_key: EV_KEY) is
+	key_release (a_key: EV_KEY)
 			-- A key release event has occurred on the test widget. Output details.
 		do
 			output.append_text ("Key release event occurred. Key : " + a_key.out + "%N")
 		end
 
-	key_press_string (s: STRING_32) is
+	key_press_string (s: STRING_32)
 			-- A key press string event has occurred on the test widget. Output details.
 		do
 			if s.is_equal ("%R") then
@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 	output: EV_TEXT;
 		-- The current output control.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

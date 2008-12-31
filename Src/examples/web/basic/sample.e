@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class which returns the name the user entered, in upper case."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature -- Access
 
-	Debug_mode: BOOLEAN is True
+	Debug_mode: BOOLEAN = True
 			-- Should exception trace be displayed in case a crash occurs?
 
 	return_message: HTML_PAGE
@@ -24,7 +24,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	execute is
+	execute
 			-- Perform form entries processing, and send back the answer
 			-- to the browser.
 		do
@@ -43,7 +43,7 @@ feature -- Basic Operations
 			io.error.putstring ("crash in `compute' from DOWNLOAD_INTERACTION%N")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

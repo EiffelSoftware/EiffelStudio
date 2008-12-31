@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Progress bar example."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Entry point.
 			-- Call `initialize_components'.
 		do
@@ -65,7 +65,7 @@ feature -- Access
 
 feature -- Implementation
 
-	initialize_components is
+	initialize_components
 			-- Initialize all componants of the form.
 		local
 			l_array: NATIVE_ARRAY [SYSTEM_STRING]
@@ -208,7 +208,7 @@ feature -- Implementation
 
 feature {NONE} -- Implementation
 
-	dispose_boolean (a_disposing: BOOLEAN) is
+	dispose_boolean (a_disposing: BOOLEAN)
 			-- method called when form is disposed.
 		do
 			if timed_progress /= Void then
@@ -225,7 +225,7 @@ feature {NONE} -- Implementation
 			Precursor {WINFORMS_FORM}(a_disposing)
 		end
 
-	on_load (e: EVENT_ARGS) is
+	on_load (e: EVENT_ARGS)
 			-- Feature performed when form is loaded.
 		do
 				-- Spin off a new thread to update the ProgressBar control
@@ -234,7 +234,7 @@ feature {NONE} -- Implementation
 			timed_progress.start
 		end
 
-	update_progress is
+	update_progress
 			-- This code executes on the Windows.Forms thread.
 		local
 			min: INTEGER
@@ -257,7 +257,7 @@ feature {NONE} -- Implementation
 			lbl_completed.set_text (completed.out + "%%")
 		end
 
-	timed_progress_proc is
+	timed_progress_proc
 			-- This function runs in the timed_progress thread and updates the
 			-- ProgressBar on the form.
 		local
@@ -281,7 +281,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	get_sleep_time: INTEGER is
+	get_sleep_time: INTEGER
 			-- Property controlling the progress of the progress bar - used by the background thread
 		do
 			{MONITOR}.enter (Current)
@@ -289,7 +289,7 @@ feature {NONE} -- Implementation
 			{MONITOR}.exit (Current)
 		end
 
-	set_sleep_time (a_value: INTEGER) is
+	set_sleep_time (a_value: INTEGER)
 			-- Property controlling the progress of the progress bar - used by the background thread
 		require
 			positive_value: a_value > 0
@@ -301,7 +301,7 @@ feature {NONE} -- Implementation
 			i_sleep_time_set: i_sleep_time = a_value
 		end
 
-	on_sldr_speed_scroll (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+	on_sldr_speed_scroll (sender: SYSTEM_OBJECT; args: EVENT_ARGS)
 			-- Feature performed when speed scroll is moved.
 		require
 			non_void_sender: sender /= Void
@@ -317,7 +317,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_cmb_step_selected_index_changed (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+	on_cmb_step_selected_index_changed (sender: SYSTEM_OBJECT; args: EVENT_ARGS)
 			-- Feature performed when step selected change.
 		require
 			non_void_sender: sender /= Void
@@ -355,7 +355,7 @@ invariant
 	non_void_lbl_completed: lbl_completed /= Void
 	non_void_grp_behavior: grp_behavior /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		do
 			make_top (Title, main_menu.popup_menu (1), 1000)
 			set_menu (main_menu)
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	on_menu_command (menu_id: INTEGER) is
+	on_menu_command (menu_id: INTEGER)
 		local
 			child: CHILD_WINDOW
 		do
@@ -62,7 +62,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	open_file_dialog: WEL_OPEN_FILE_DIALOG is
+	open_file_dialog: WEL_OPEN_FILE_DIALOG
 		local
 			ofn: WEL_OFN_CONSTANTS
 		once
@@ -75,7 +75,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	main_menu: WEL_MENU is
+	main_menu: WEL_MENU
 			-- Window's menu
 		once
 				-- create the menu from the resource file.
@@ -84,15 +84,15 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	class_icon: WEL_ICON is
+	class_icon: WEL_ICON
 		once
 			create Result.make_by_id (Id_ico_application)
 		end
 
-	Title: STRING is "WEL Bitmap Viewer"
+	Title: STRING = "WEL Bitmap Viewer"
 			-- Window's title
 
-	All_children: LINKED_LIST [WEL_MDI_CHILD_WINDOW] is
+	All_children: LINKED_LIST [WEL_MDI_CHILD_WINDOW]
 			-- A list of all the child windows to avoid the strong
 			-- possibility that they will be garbage collected.
 		once
@@ -101,7 +101,7 @@ feature {NONE} -- Implementation
 
 feature {CHILD_WINDOW} -- Implementation
 
-	remove_child_reference (a_child: WEL_MDI_CHILD_WINDOW) is
+	remove_child_reference (a_child: WEL_MDI_CHILD_WINDOW)
 			-- Remove `a_child' from `All_children'.
 		local
 			found: BOOLEAN
@@ -122,7 +122,7 @@ feature {CHILD_WINDOW} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

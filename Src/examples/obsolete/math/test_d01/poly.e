@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class 
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Register f1 in function table.
 		do
 			register_function ("f1", $f1)
@@ -26,13 +26,13 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 
-	f1 (x: DOUBLE): DOUBLE is
+	f1 (x: DOUBLE): DOUBLE
 			-- Twice as good
 		do
 			Result := 2.0 * x
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

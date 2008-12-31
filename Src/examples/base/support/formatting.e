@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class FORMATTING
@@ -11,7 +11,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 		do
 			get_number
 			format_integer_demo
@@ -19,7 +19,7 @@ feature -- Initialization
 			format_double_demo
 		end
 
-	format_integer_demo is
+	format_integer_demo
 		local
 			i : INTEGER
 			fi : FORMAT_INTEGER
@@ -130,7 +130,7 @@ feature -- Initialization
 			io.new_line
 		end
 
-	format_double_demo is
+	format_double_demo
 		local
 			d : DOUBLE
 			fd : FORMAT_DOUBLE
@@ -188,7 +188,7 @@ feature -- Initialization
 
 feature -- Input
 
-	get_number is
+	get_number
 		do
 			io.putstring ("Enter a number between 1 and 100: ")
 			
@@ -206,14 +206,14 @@ feature -- Input
 
 feature -- Implementation
 
-	random : RANDOM is
+	random : RANDOM
 		once
 			create Result.make
 		end
 
 	item: INTEGER;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

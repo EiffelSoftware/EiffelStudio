@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that test an EV_VIEWPORT by allowing%
 		% you to adjust the offset."
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 		
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create `Current' and initialize test in `widget'.
 		local
 			vertical_box: EV_VERTICAL_BOX
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 		
-	modify_offset is
+	modify_offset
 			-- Move `viewport' up and left 10 pixels in
 			-- relation to `button'.
 		do
@@ -54,7 +54,7 @@ feature {NONE} -- Implementation
 	test_button, reset_button: EV_BUTTON;
 		-- Buttons used to test and reset state of `viewport'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

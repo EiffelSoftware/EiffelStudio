@@ -1,4 +1,4 @@
-indexing
+note
 	description: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		local
 			prefer_ipv4_stack: BOOLEAN
 			server_thread: SERVER_THREAD
@@ -47,44 +47,44 @@ feature {NONE} -- Initialization
 
 feature -- Implementation
 
-	allow_overwrite (address: INET_ADDRESS): BOOLEAN is
+	allow_overwrite (address: INET_ADDRESS): BOOLEAN
 		do
 			Result := True
 		end
 
-	allow_write (address: INET_ADDRESS): BOOLEAN is
+	allow_write (address: INET_ADDRESS): BOOLEAN
 		do
 			Result := True
 		end
 
-	allow_read (address: INET_ADDRESS): BOOLEAN is
+	allow_read (address: INET_ADDRESS): BOOLEAN
 		do
 			Result := True
 		end
 
-	retransmit_count (address: INET_ADDRESS): NATURAL is
+	retransmit_count (address: INET_ADDRESS): NATURAL
 		do
 			Result := 5
 		end
 
-	timeout (address: INET_ADDRESS): NATURAL is
+	timeout (address: INET_ADDRESS): NATURAL
 		do
 			Result := 5000
 		end
 
 
-	log_message_by_source (a_source: STRING; a_level: INTEGER; a_message: STRING) is
+	log_message_by_source (a_source: STRING; a_level: INTEGER; a_message: STRING)
 		do
 			io.put_string (a_source + "[" + a_level.out + "] " + a_message)
 			io.put_new_line
 		end
 
-	base_path (an_address: INET_ADDRESS): STRING is
+	base_path (an_address: INET_ADDRESS): STRING
 		do
 			Result := "."
 		end
 
-	tftp_message (e: TFTP_EVENT) is
+	tftp_message (e: TFTP_EVENT)
 		do
 			inspect e.id
 			when {TFTP_EVENT}.request_complete then
@@ -103,12 +103,12 @@ feature -- Implementation
 			end
 		end
 
-	sent_data (data_length: INTEGER) is
+	sent_data (data_length: INTEGER)
 		do
 				io.put_string ("sent data, lenght = " + data_length.out +"%N")
 		end
 
-	received_data (data_length: INTEGER) is
+	received_data (data_length: INTEGER)
 		do
 				io.put_string ("received data, lenght = " + data_length.out +"%N")
 		end

@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"SCROLLABLE_AREA_DEMO_WINDOW, demo window to test%
 		% scrollable area widget. Belongs to EiffelVision example."
@@ -24,7 +24,7 @@ create
 
 feature -- Access
 
-	main_widget: EV_SCROLLABLE_AREA is
+	main_widget: EV_SCROLLABLE_AREA
 			-- The main widget of the demo
 		once
 			create Result.make (Current)
@@ -33,7 +33,7 @@ feature -- Access
 
 feature -- Status setting
 	
-	set_widgets is
+	set_widgets
 			-- Set the widgets in the demo windows.
 		local
 			ta: EV_TEXT
@@ -41,13 +41,13 @@ feature -- Status setting
 			create ta.make (main_widget)
 		end
 	
-	set_values is
+	set_values
 			-- Set the values on the widgets of the window.
 		do
 			set_title ("Scrollable area demo")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

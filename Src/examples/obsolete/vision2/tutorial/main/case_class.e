@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		" A class to include all the classes of vision%
 		% in the system."
@@ -29,7 +29,7 @@ feature -- Access
 	o: EV_HORIZONTAL_SCROLL_BAR_IMP
 	p: EV_VERTICAL_SCROLL_BAR_IMP;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

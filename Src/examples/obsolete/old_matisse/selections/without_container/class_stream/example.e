@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class EXAMPLE
@@ -18,7 +18,7 @@ create
 
 feature {NONE}
 
-	make is
+	make
 		-- Prints various information
 	do
 		-- 1/ Choose host name and database name. Adjust wait and priority so that it suits your needs.
@@ -47,7 +47,7 @@ feature {NONE}
 
 feature -- Status Setting
 
-	actions is
+	actions
 		-- Database actions
 	local 
 		i: INTEGER
@@ -74,7 +74,7 @@ feature {NONE} -- Implementation
 	query : DB_PROC
 	one_action : CONTROL_ACTION;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

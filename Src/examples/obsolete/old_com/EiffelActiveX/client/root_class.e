@@ -1,8 +1,7 @@
-indexing
+note
 	description: "System's root class"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
-	note: "Initial version automatically generated"
 
 class
 	ROOT_CLASS
@@ -27,7 +26,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Output a welcome message.
 		local
 			int1, int2: INTEGER
@@ -57,7 +56,7 @@ feature {NONE}-- Implementation
 
 	client: CLIENT;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

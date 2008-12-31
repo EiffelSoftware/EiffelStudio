@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Builds an attribute editor for modification of objects of type EV_FONTABLE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,10 +25,10 @@ feature -- Access
 	ev_type: EV_FONTABLE
 		-- Vision2 type represented by `Current'.
 
-	type: STRING is "EV_FONTABLE"
+	type: STRING = "EV_FONTABLE"
 		-- String representation of object_type modifyable by `Current'.
 
-	attribute_editor: GB_OBJECT_EDITOR_ITEM is
+	attribute_editor: GB_OBJECT_EDITOR_ITEM
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
 		local
@@ -52,7 +52,7 @@ feature -- Access
 			update_attribute_editor
 		end
 
-	update_attribute_editor is
+	update_attribute_editor
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
 		do
@@ -62,14 +62,14 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	initialize_agents is
+	initialize_agents
 			-- Initialize `validate_agents' and `execution_agents' to
 			-- contain all agents required for modification of `Current.
 		do
 			-- Nothing to do here.
 		end
 
-	show_dialog is
+	show_dialog
 			-- Display font dialog for user input, and
 			-- set font of `objects' to match result.
 		do
@@ -81,7 +81,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	reset_font is
+	reset_font
 			-- Reset font of `object' in `Current' to default.
 		local
 			fontable: EV_FONTABLE
@@ -96,13 +96,13 @@ feature {NONE} -- Implementation
 
 -- Constants for XML
 
-	family_string: STRING is "Family"
-	weight_string: STRING is "Weight"
-	shape_string: STRING is "Shape"
-	height_string: STRING is "Height"
-	preferred_family_string: STRING is "Preferred_family";
+	family_string: STRING = "Family"
+	weight_string: STRING = "Weight"
+	shape_string: STRING = "Shape"
+	height_string: STRING = "Height"
+	preferred_family_string: STRING = "Preferred_family";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

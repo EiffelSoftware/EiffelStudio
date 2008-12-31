@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Translate an Eiffel type to a SQL type."
 	legal: "See notice at end of class.";
@@ -15,7 +15,7 @@ class TRANSLATE inherit
 
 feature
 
-	to_sql (some: ANY): STRING is
+	to_sql (some: ANY): STRING
 			-- Convert `some' type on a SQL type.
 		require
 			some_not_void: some /= Void
@@ -41,7 +41,7 @@ feature
 			result_not_void: Result /= Void
 		end;
 
-	is_simple_type (some: ANY): BOOLEAN is
+	is_simple_type (some: ANY): BOOLEAN
 			-- `some' is a simple type?
 		require
 			some_not_void: some /= Void
@@ -65,7 +65,7 @@ feature
 			is_date (some))
 		end;
 			
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

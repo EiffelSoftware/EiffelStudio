@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that lets user manipulate a figure."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (a_figure: like figure) is
+	make (a_figure: like figure)
 			-- Create a MANIPULATION_HANDLER manipulating `a_figure'.
 		require
 			a_figure_not_void: a_figure /= Void
@@ -98,7 +98,7 @@ feature {NONE} -- Implementation
 	angle_indicator: EV_MODEL_PIE_SLICE
 			-- Figure showing the rotation angle.
 
-	build_scale_y_handle is
+	build_scale_y_handle
 			-- Build `scale_y_handle'.
 		local
 			polygone: EV_MODEL_POLYGON
@@ -110,7 +110,7 @@ feature {NONE} -- Implementation
 			scale_y_handle.extend (polygone)
 		end
 
-	build_scale_x_handle is
+	build_scale_x_handle
 			-- Build `scale_x_handle'.
 		local
 			polygone: EV_MODEL_POLYGON
@@ -120,7 +120,7 @@ feature {NONE} -- Implementation
 			scale_x_handle.extend (polygone)
 		end
 
-	build_scale_handle is
+	build_scale_handle
 			-- Build `scale_handle'.
 		local
 			polygone: EV_MODEL_POLYGON
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 			scale_handle.extend (polygone)
 		end	
 
-	new_arrow: EV_MODEL_POLYGON is
+	new_arrow: EV_MODEL_POLYGON
 			-- Build a scale arrow
 		do
 			create Result
@@ -153,7 +153,7 @@ feature {NONE} -- Implementation
 			Result.set_i_th_point_position (7, 5, -5)	
 		end
 		
-	build_rotation_handle is
+	build_rotation_handle
 			-- Build `rotation_handle'.
 		local
 			pie: EV_MODEL_PIE_SLICE
@@ -209,7 +209,7 @@ feature {NONE} -- Implementation
 			rotation_handle.extend (line)
 		end
 
-	build_move_handle is
+	build_move_handle
 			-- Build `move_handle'.
 		local
 			move_arrow: EV_MODEL_POLYGON
@@ -220,7 +220,7 @@ feature {NONE} -- Implementation
 			move_handle.extend (move_arrow)
 		end
 		
-	new_move_arrow: EV_MODEL_POLYGON is
+	new_move_arrow: EV_MODEL_POLYGON
 			-- Build a move to all directions arrow.
 		do
 			create Result
@@ -254,7 +254,7 @@ feature {NONE} -- Implementation
 			Result.set_i_th_point_position (24, 10, -5)	
 		end
 		
-	build_center_handle is
+	build_center_handle
 			-- Build `center_handle'.
 		local
 			circl: EV_MODEL_ELLIPSE
@@ -286,7 +286,7 @@ feature {NONE} -- Implementation interaction
 	do_move: BOOLEAN
 			-- Is move mode?
 
-	on_start_scale_x (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+	on_start_scale_x (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- Start scaling to x.
 		do
 			if button = 1 and then world.capture_figure = Void then
@@ -297,7 +297,7 @@ feature {NONE} -- Implementation interaction
 			end
 		end
 		
-	on_scale_x (ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+	on_scale_x (ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- Scale to x.
 		local
 			dist: INTEGER
@@ -311,7 +311,7 @@ feature {NONE} -- Implementation interaction
 			end
 		end
 		
-	on_end_scale_x (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+	on_end_scale_x (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- End scale to x.
 		do
 			if do_scale_x then
@@ -320,7 +320,7 @@ feature {NONE} -- Implementation interaction
 			end
 		end
 
-	on_start_scale_y (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+	on_start_scale_y (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- Start scaling to y.
 		do
 			if button = 1 and then world.capture_figure = Void then
@@ -331,7 +331,7 @@ feature {NONE} -- Implementation interaction
 			end
 		end
 		
-	on_scale_y (ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+	on_scale_y (ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- Scale to y.
 		local
 			dist: INTEGER
@@ -345,7 +345,7 @@ feature {NONE} -- Implementation interaction
 			end
 		end
 		
-	on_end_scale_y (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+	on_end_scale_y (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- End scale to y.
 		do
 			if do_scale_y then
@@ -354,7 +354,7 @@ feature {NONE} -- Implementation interaction
 			end
 		end
 	
-	on_start_scale (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+	on_start_scale (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- Start scale to x and y.
 		do
 			if button = 1 and then world.capture_figure = Void then
@@ -366,7 +366,7 @@ feature {NONE} -- Implementation interaction
 			end
 		end
 	
-	on_end_scale (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+	on_end_scale (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- End scale to x and y.
 		do
 			if do_scale_y and do_scale_x then
@@ -376,7 +376,7 @@ feature {NONE} -- Implementation interaction
 			end
 		end		
 
-	on_start_rotating (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+	on_start_rotating (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- Start rotation.
 		do
 			if button = 1 and then world.capture_figure = Void then
@@ -387,7 +387,7 @@ feature {NONE} -- Implementation interaction
 			end
 		end
 		
-	on_rotating (ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+	on_rotating (ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- Rotate.
 		local
 			new_angle: DOUBLE
@@ -409,7 +409,7 @@ feature {NONE} -- Implementation interaction
 			end
 		end
 		
-	on_end_rotating (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+	on_end_rotating (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- End rotation.
 		do
 			if do_rotate then
@@ -418,7 +418,7 @@ feature {NONE} -- Implementation interaction
 			end
 		end
 
-	on_start_move (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+	on_start_move (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- Start moving.
 		do
 			if button = 1 and then world.capture_figure = Void then
@@ -429,7 +429,7 @@ feature {NONE} -- Implementation interaction
 			end
 		end
 		
-	on_move (ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+	on_move (ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- Move.
 		local
 			nx, ny: INTEGER
@@ -445,7 +445,7 @@ feature {NONE} -- Implementation interaction
 			end
 		end
 		
-	on_end_move (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+	on_end_move (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- End moving.
 		do
 			if do_move then
@@ -454,7 +454,7 @@ feature {NONE} -- Implementation interaction
 			end
 		end
 		
-	snapped_x (ax: INTEGER): INTEGER is
+	snapped_x (ax: INTEGER): INTEGER
 			-- Nearest point on horizontal grid to `ax'.
 		do
 			if ax \\ world.grid_x < world.grid_x // 2 then
@@ -464,7 +464,7 @@ feature {NONE} -- Implementation interaction
 			end
 		end
 
-	snapped_y (ay: INTEGER): INTEGER is
+	snapped_y (ay: INTEGER): INTEGER
 			-- Nearest point on vertical grid to `ay'.
 		do			
 			if ay \\ world.grid_y < world.grid_y // 2 then
@@ -474,13 +474,13 @@ feature {NONE} -- Implementation interaction
 			end
 		end
 		
-	on_recenter_center (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+	on_recenter_center (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- Set `center_handle' to center of `figure'.
 		do
 			center_handle.set_x_y (point_x, point_y)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Constants used in the PAINTBRUSH application"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,31 +11,31 @@ class
 
 feature -- Access
 
-	Interface_names: PAINTBRUSH_INTERFACE_NAMES is
+	Interface_names: PAINTBRUSH_INTERFACE_NAMES
 			-- String constants used in the application
 		once
 			create Result
 		end
 		
-	Layout_constants: EV_LAYOUT_CONSTANTS is
+	Layout_constants: EV_LAYOUT_CONSTANTS
 			-- Constant for default size for padding, border, buttons.
 		once
 			create Result
 		end
 		
-	Drawable_constants: EV_DRAWABLE_CONSTANTS is
+	Drawable_constants: EV_DRAWABLE_CONSTANTS
 			-- Drawable constants
 		once
 			create Result
 		end
 
-	Font_constants: EV_FONT_CONSTANTS is
+	Font_constants: EV_FONT_CONSTANTS
 			-- Font constants
 		once
 			create Result
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

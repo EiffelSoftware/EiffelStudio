@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Simple way of sending an email."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Initialize
 		local
 			l_smtp_protocol: SMTP_PROTOCOL
@@ -55,7 +55,7 @@ feature -- Initialization
 			l_smtp_protocol.close_protocol
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Nested queries example."
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ feature
 
 	selection: DB_SELECTION
 
-	make is
+	make
 		local
 			tmp_string: STRING
 			my_action: ACTION_1_I
@@ -58,13 +58,13 @@ feature
 			end
 		end
 
-	select_string: STRING is
+	select_string: STRING
 		deferred
 		ensure
 			result_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

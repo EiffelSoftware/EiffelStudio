@@ -1,4 +1,4 @@
-indexing
+note
 
         date: "$Date$";
         revision: "$Revision$";
@@ -16,7 +16,7 @@ feature
 
 	c_name: STRING
 
-	make (no: like c_no; name: like c_name) is
+	make (no: like c_no; name: like c_name)
 		require
 			name_not_void: name /= Void
 		do
@@ -27,7 +27,7 @@ feature
 			c_name = name
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

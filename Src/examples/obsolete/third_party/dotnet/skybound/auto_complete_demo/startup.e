@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Applcation entry point for Skybound AutoComplete example"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,13 +17,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Launch application in default thread apartment.
 		do
 			{WINFORMS_APPLICATION}.run_form (create {FORM1})
 		end
 
-	make_sta is
+	make_sta
 			-- Launch application in a STA.
 		local
 			l_thread: SYSTEM_THREAD
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			l_thread.join
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

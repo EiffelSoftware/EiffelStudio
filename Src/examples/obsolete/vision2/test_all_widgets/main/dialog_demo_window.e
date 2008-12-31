@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 	"DIALOG_DEMO_WINDOW, demo window to test the common dialogs%
 	% Belongs to EiffelVision example."
@@ -23,7 +23,7 @@ create
 
 feature -- Access
 
-	main_widget: EV_DYNAMIC_TABLE is
+	main_widget: EV_DYNAMIC_TABLE
 			-- The main widget of the demo
 		once
 			create Result.make (Current)
@@ -37,7 +37,7 @@ feature -- Access
 
 feature -- Status setting
 	
-	set_widgets is
+	set_widgets
 			-- Set the widgets in the demo windows.
 		local
 			info_cmd: MESSAGE_DIALOG_COMMAND
@@ -61,7 +61,7 @@ feature -- Status setting
 			button.add_click_command (warning_cmd, arg)
 		end
 		
-	set_values is
+	set_values
 			-- Set the values on the widgets of the window.
 		do
 			set_title ("Dialogs demo")
@@ -71,7 +71,7 @@ feature -- Status setting
 			main_widget.set_finite_dimension (3)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

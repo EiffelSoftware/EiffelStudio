@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Initialization
 
-	make(par: EV_CONTAINER) is
+	make(par: EV_CONTAINER)
 			-- Create the tab and initalise the objects.
 		local
 			cmd1,cmd2: EV_ROUTINE_COMMAND
@@ -46,7 +46,7 @@ feature -- Initialization
 
 feature -- Access
 
-	name:STRING is
+	name:STRING
 			-- Returns the name of the tab.
 		do
 			Result:="Text"
@@ -65,7 +65,7 @@ feature -- Access
 
 feature -- Execution Feature
 
-	search (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	search (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Search for the text. Return the position
 			-- of the text if found, otherwise returns void.
 		local
@@ -81,13 +81,13 @@ feature -- Execution Feature
 			end
 		end
 
-	put_new_line (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	put_new_line (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Go to the beginning of the following line.
 		do
 			current_widget.put_new_line
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that test EV_GRID."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 		
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create `Current' and initialize test in `widget'.
 		local
 			grid_label_item: EV_GRID_LABEL_ITEM
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			widget := grid
 		end
 		
-	add_tree_items (parent_row: EV_GRID_ROW; child_count: INTEGER) is
+	add_tree_items (parent_row: EV_GRID_ROW; child_count: INTEGER)
 			-- Add `child_count' subrows to `row' of `parent_item'.
 		local
 			counter: INTEGER
@@ -61,7 +61,7 @@ feature {NONE} -- Implementation
 	grid: EV_GRID;
 		-- Widget that test is to be performed on.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

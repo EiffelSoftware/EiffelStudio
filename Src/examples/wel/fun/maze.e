@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		do
 			make_top ("Maze")
 			resize (450, 450)
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- implementation
 
-	run_demo is
+	run_demo
 		local
 			dc: WEL_CLIENT_DC
 			max_x, max_y: INTEGER
@@ -81,16 +81,16 @@ feature {NONE} -- implementation
 
 feature {NONE} -- Implementation
 
-	color_max: INTEGER is 16
+	color_max: INTEGER = 16
 		-- Number of colors used
 
-	step: INTEGER is 10
+	step: INTEGER = 10
 		-- Lenght in pixels before changing direction
 
-	demo_duration: INTEGER is 10_000
+	demo_duration: INTEGER = 10_000
 		-- Duration of the demo in milliseconds
 
-	pens: ARRAY [WEL_PEN] is
+	pens: ARRAY [WEL_PEN]
 		once
 			Result := <<
 				white_pen,
@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 			resut_not_void: Result /= Void
 		end
 
-	random: RANDOM is
+	random: RANDOM
 			-- Initialize a randon number
 		once
 			create Result.make
@@ -122,7 +122,7 @@ feature {NONE} -- Implementation
 			result_not_void : Result /= Void
 		end
 
-	next_number (range: INTEGER): INTEGER is
+	next_number (range: INTEGER): INTEGER
 			-- Random number between 1 and `range'
 			--| Side effect function.
 		do
@@ -133,7 +133,7 @@ feature {NONE} -- Implementation
 			valid_result_sup: Result <= range
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

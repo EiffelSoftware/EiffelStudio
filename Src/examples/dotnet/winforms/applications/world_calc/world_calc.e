@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Really simple calculator. Demonstrates how to reuse a .NET type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			--| Call `initialize_components'.
 			-- Entry point.
 		do
@@ -50,7 +50,7 @@ feature -- Access
 
 feature -- Implementation
 
-	initialize_components is
+	initialize_components
 			-- Initialize all components of window.
 		local
 			l_size: DRAWING_SIZE
@@ -218,7 +218,7 @@ feature -- Implementation
 
 feature -- Implementation
 
-	dispose_boolean (a_disposing: BOOLEAN) is
+	dispose_boolean (a_disposing: BOOLEAN)
 			-- method called when form is disposed.
 		local
 			retried: BOOLEAN
@@ -234,13 +234,13 @@ feature -- Implementation
 			retry
 		end
 
-	on_btn_clear_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
+	on_btn_clear_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS)
 			-- Feature performed when button `btn_clear' is clicked.
 		do
 			 txt_formula.set_text ("")
 		end
 
-	on_btn_numbers_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
+	on_btn_numbers_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS)
 			-- Feature performed when button `btn_numbers' is clicked.
 		local
 			btn: WINFORMS_BUTTON
@@ -255,7 +255,7 @@ feature -- Implementation
 			txt_formula.set_text (l_text)
 		end
 
-	on_btn_op_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
+	on_btn_op_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS)
 			-- Feature performed when button `btn_op' is clicked.
 		local
 			btn: WINFORMS_BUTTON
@@ -272,7 +272,7 @@ feature -- Implementation
 			txt_formula.set_text (l_text)
 		end
 
-	on_btn_equals_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
+	on_btn_equals_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS)
 			-- Feature performed when button `btn_equal' is clicked.
 		local
 			my_parse: PARSER_PARSER
@@ -300,7 +300,7 @@ feature -- Implementation
 			retry
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	visual_name: "Modify"
 
 class COMMAND3
@@ -11,22 +11,22 @@ create
 
 feature  -- Initialization
 
-	make is
+	make
 		do
 		end
 
 feature  -- Access
 
-	modify_label: STRING is "modify"
+	modify_label: STRING = "modify"
 
 feature  -- Command
 
-	execute is
+	execute
 		do
 			set_transition_label (modify_label)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

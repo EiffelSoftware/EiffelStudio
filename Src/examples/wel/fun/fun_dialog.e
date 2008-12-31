@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parent: WEL_COMPOSITE_WINDOW) is
+	make (a_parent: WEL_COMPOSITE_WINDOW)
 			-- Make a funny dialog
 		do
 			make_by_id (a_parent, Id_dialog)
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			direction_y := Inc_y
 		end
 
-	setup_dialog is
+	setup_dialog
 		do
 			set_cursor_position_absolute (window_rect.x + ok_button.x -
 				sensibility, window_rect.y + ok_button.y)
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature
 
-	movement_x (x_pos, xb: INTEGER): BOOLEAN is
+	movement_x (x_pos, xb: INTEGER): BOOLEAN
 			-- Do we still need to move the button
 			-- on the horizontal axis?
 		local
@@ -57,7 +57,7 @@ feature
 			end
 		end
 
-	movement_y (y_pos, yb: INTEGER): BOOLEAN is
+	movement_y (y_pos, yb: INTEGER): BOOLEAN
 			-- Do we still need to move the button
 			-- on the vertical axis?
 		local
@@ -70,7 +70,7 @@ feature
 			end
 		end
 
-	on_mouse_move (keys, x_pos, y_pos: INTEGER) is
+	on_mouse_move (keys, x_pos, y_pos: INTEGER)
 			-- The mouse has been moved
 		local
 			xb, yb, x_max, y_max: INTEGER
@@ -112,7 +112,7 @@ feature
 			end
 		end
 
-	on_ok is
+	on_ok
 			-- The ok button is pressed
 		local
 			msg_box: WEL_MSG_BOX
@@ -131,23 +131,23 @@ feature -- Access
 	move_number: INTEGER
 			-- How many movements until we quit
 
-	Max_move: INTEGER is 200
+	Max_move: INTEGER = 200
 			-- Maximum moves before leaving
 
-	Sensibility: INTEGER is 20
+	Sensibility: INTEGER = 20
 			-- Minimal distance from the mouse accepted
 			-- before moving the button
 
-	X_min: INTEGER is 5
+	X_min: INTEGER = 5
 			-- Minimum x coordinate for the button
 
-	Y_min: INTEGER is 130
+	Y_min: INTEGER = 130
 			-- Minimum y coordinate for the button
 
-	Inc_x: INTEGER is 3
+	Inc_x: INTEGER = 3
 			-- Step of deplacement for the button on horizontal axis
 
-	Inc_y: INTEGER is 3
+	Inc_y: INTEGER = 3
 			-- Step of deplacement for the button on vertical axis
 
 	direction_x: INTEGER
@@ -158,7 +158,7 @@ feature -- Access
 
 	ok_button: WEL_PUSH_BUTTON;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

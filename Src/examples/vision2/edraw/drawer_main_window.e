@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that is the main window for the Eiffel Draw example."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Implementation
 
-	build_main_container is
+	build_main_container
 			-- Create and populate `main_container'.
 		local
 			hbox: EV_HORIZONTAL_BOX
@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
 	
 feature {NONE} -- ToolBar Implementation
 
-	build_standard_toolbar is
+	build_standard_toolbar
 			-- Create and populate the standard toolbar.
 		local
 			toolbar_button: EV_TOOL_BAR_BUTTON
@@ -206,7 +206,7 @@ feature {NONE} -- ToolBar Implementation
 	radio_buttons: HASH_TABLE [EV_TOOL_BAR_RADIO_BUTTON, STRING]
 			-- All radio buttons to draw or manipulate figures.
 
-	add_radio_button (name: STRING) is
+	add_radio_button (name: STRING)
 			-- Add a radio button to `radio_buttons' with `name'
 		require
 			radio_buttons_exitst: radio_buttons /= Void
@@ -225,7 +225,7 @@ feature {NONE} -- ToolBar Implementation
 			added: old radio_buttons.count + 1 = radio_buttons.count
 		end
 
-	on_radio_button_select is 
+	on_radio_button_select 
 			-- Called after a radio button in `radio_buttons' was selected.
 		do
 			standard_status_label.set_text ("")
@@ -250,7 +250,7 @@ feature {NONE} -- ToolBar Implementation
 	grid_enabled: EV_TOOL_BAR_TOGGLE_BUTTON
 			-- Grid enable button.
 	
-	on_grid_enable_select is
+	on_grid_enable_select
 			-- Grid enabled was pressed.
 		do
 			if is_grid_enabled then
@@ -265,7 +265,7 @@ feature {NONE} -- ToolBar Implementation
 	grid_visible: EV_TOOL_BAR_TOGGLE_BUTTON
 			-- Grid visible button.
 	
-	on_grid_visible_select is
+	on_grid_visible_select
 			-- Grid visible was pressed.
 		do
 			if is_grid_visible then
@@ -279,13 +279,13 @@ feature {NONE} -- ToolBar Implementation
 
 feature {NONE} -- Menu Implementation
 
-	build_extended_menu_bar is
+	build_extended_menu_bar
 			-- Build menus other then file and help.
 		do
 			standard_menu_bar.extend (edit_menu)
 		end
 		
-	edit_menu: EV_MENU is
+	edit_menu: EV_MENU
 			-- Build edit menu.
 		local
 			menu_item: EV_MENU_ITEM
@@ -315,19 +315,19 @@ feature {NONE} -- Menu Implementation
 
 feature {NONE} -- Application state
 
-	is_grid_enabled: BOOLEAN is
+	is_grid_enabled: BOOLEAN
 			-- Is snapp to grid enabled?
 		do
 			Result := grid_enabled.is_selected
 		end
 	
-	is_grid_visible: BOOLEAN is
+	is_grid_visible: BOOLEAN
 			-- Is grid visible?
 		do
 			Result := grid_visible.is_selected
 		end
 		
-	is_select_mode: BOOLEAN is
+	is_select_mode: BOOLEAN
 			-- Is current mode select?
 		do
 			Result := radio_buttons.item ("select").is_selected
@@ -335,7 +335,7 @@ feature {NONE} -- Application state
 
 feature {NONE} -- Order and group change
 		
-	on_group is
+	on_group
 			-- Group button was pressed.
 		do
 			standard_status_label.set_text ("")
@@ -351,7 +351,7 @@ feature {NONE} -- Order and group change
 			end
 		end
 		
-	on_ungroup is
+	on_ungroup
 			-- Ungroup button was pressed.
 		do
 			standard_status_label.set_text ("")
@@ -367,7 +367,7 @@ feature {NONE} -- Order and group change
 			end
 		end
 		
-	on_tofront is
+	on_tofront
 			-- tofront button was pressed.
 		do
 			standard_status_label.set_text ("")
@@ -383,7 +383,7 @@ feature {NONE} -- Order and group change
 			end
 		end
 		
-	on_toback is
+	on_toback
 			-- toback button was pressed.
 		do
 			standard_status_label.set_text ("")
@@ -404,7 +404,7 @@ feature {NONE} -- Color
 	bg_color_chooser: COLOR_CHOOSER
 			-- Color chooser for background color.
 			
-	bg_color_changed is
+	bg_color_changed
 			-- Background color was changed to `color'
 		local
 			color: EV_COLOR
@@ -426,7 +426,7 @@ feature {NONE} -- Color
 	fg_color_chooser: COLOR_CHOOSER
 			-- Color chooser for forground color.
 			
-	fg_color_changed is
+	fg_color_changed
 			-- Forground color was changed to `color'
 		local
 			color: EV_COLOR
@@ -449,7 +449,7 @@ feature {NONE} -- Line Style
 	line_style_chooser: LINE_STYLE_CHOOSER
 			-- The box to choose the line style from.
 		
-	line_style_selected is
+	line_style_selected
 			-- A line style was selected
 		do
 			line_width := line_style_chooser.line_width
@@ -482,7 +482,7 @@ feature {NONE} -- Line Style
 
 feature {NONE} -- File menu Events 
 
-	on_save_as is
+	on_save_as
 			-- Save as was selected.
 		local
 			dialog: EV_FILE_SAVE_DIALOG
@@ -527,7 +527,7 @@ feature {NONE} -- File menu Events
 	last_file_type: INTEGER
 			-- 1 png, 2 ps
 			
-	on_save is
+	on_save
 			-- Save using last_file_name or call save_as if last_file_name is void.
 		do
 			if last_file_name = Void then
@@ -537,7 +537,7 @@ feature {NONE} -- File menu Events
 			end
 		end
 		
-	save (file: FILE_NAME; type: INTEGER) is
+	save (file: FILE_NAME; type: INTEGER)
 			-- Save `buffer' to `file'.
 			-- type = 1 -> png
 			-- type = 2 -> ps
@@ -576,7 +576,7 @@ feature {NONE} -- File menu Events
 			end
 		end
 		
-	on_new is
+	on_new
 			-- New was selected.
 		do
 			world.wipe_out
@@ -585,7 +585,7 @@ feature {NONE} -- File menu Events
 		
 feature {NONE} -- Edit menu events
 
-	on_select_all is
+	on_select_all
 			-- Select all figures.
 		do
 			world.select_all
@@ -593,7 +593,7 @@ feature {NONE} -- Edit menu events
 			projector.project
 		end
 		
-	on_deselect_all is
+	on_deselect_all
 			-- Deselect all figures.
 		do
 			world.deselect_all
@@ -601,7 +601,7 @@ feature {NONE} -- Edit menu events
 			projector.project
 		end
 		
-	on_delete_selected is
+	on_delete_selected
 			-- Delete all selected figures.
 		do
 			world.delete_selected
@@ -609,7 +609,7 @@ feature {NONE} -- Edit menu events
 			projector.project
 		end
 		
-	on_invert_selection is
+	on_invert_selection
 			-- Invert the selection.
 		do
 			world.invert_selection
@@ -619,7 +619,7 @@ feature {NONE} -- Edit menu events
 		
 feature {NONE} -- Implementation
 
-	set_bg_color (figure: EV_MODEL) is
+	set_bg_color (figure: EV_MODEL)
 			-- Set background color.
 		local
 			group: EV_MODEL_GROUP
@@ -647,7 +647,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	set_fg_color (figure: EV_MODEL) is
+	set_fg_color (figure: EV_MODEL)
 			-- Set foreground color.
 		local
 			group: EV_MODEL_GROUP
@@ -671,7 +671,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	set_line_style (figure: EV_MODEL) is
+	set_line_style (figure: EV_MODEL)
 			-- Set line width, is_dashed and color for all figures in figure.
 		local
 			group: EV_MODEL_GROUP
@@ -700,7 +700,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	snapped_x (ax: INTEGER): INTEGER is
+	snapped_x (ax: INTEGER): INTEGER
 			-- Nearest point on horizontal grid to `ax'.
 		do
 			if ax \\ world.grid_x < world.grid_x // 2 then
@@ -710,7 +710,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	snapped_y (ay: INTEGER): INTEGER is
+	snapped_y (ay: INTEGER): INTEGER
 			-- Nearest point on vertical grid to `ay'.
 		do			
 			if ay \\ world.grid_y < world.grid_y // 2 then
@@ -724,7 +724,7 @@ feature {NONE} -- Implementation print
 
 	print_dialog: EV_PRINT_DIALOG
 
-	on_print is
+	on_print
 			-- Print was selected.
 		do
 			create print_dialog.make_with_title ("Print")
@@ -734,7 +734,7 @@ feature {NONE} -- Implementation print
 		
 		end
 		
-	do_print is
+	do_print
 			-- Print
 		local
 			pc: EV_PRINT_CONTEXT
@@ -761,17 +761,17 @@ feature {NONE} -- Implementation print
 		
 feature {NONE} -- Text constants
 
-	select_a_figure_text: STRING is "Select a figure first."
-	select_only_one_figure_text: STRING is "Select only one figure."
-	select_more_then_one_figure_text: STRING is "Select more then one figure."
-	press_two_times_return: STRING is "To end text enter mode press two times return."
-	menu_edit: STRING is "&Edit"
-	menu_edit_select_all: STRING is "&Select all"
-	menu_edit_deselect_all: STRING is "&Deselect all"
-	menu_edit_invert_selection: STRING is "&Invert selection"
-	menu_edit_delete_selected: STRING is "Del&ete selected";
+	select_a_figure_text: STRING = "Select a figure first."
+	select_only_one_figure_text: STRING = "Select only one figure."
+	select_more_then_one_figure_text: STRING = "Select more then one figure."
+	press_two_times_return: STRING = "To end text enter mode press two times return."
+	menu_edit: STRING = "&Edit"
+	menu_edit_select_all: STRING = "&Select all"
+	menu_edit_deselect_all: STRING = "&Deselect all"
+	menu_edit_invert_selection: STRING = "&Invert selection"
+	menu_edit_delete_selected: STRING = "Del&ete selected";
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

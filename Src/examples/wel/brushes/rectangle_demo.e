@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		do
 			make_top ("Rectangles demo")
 			resize (500, 400)
@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 
-	draw is
+	draw
 		local
 			dc: WEL_CLIENT_DC
 			r_left, r_top, r_right, r_bottom: INTEGER
@@ -48,7 +48,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	std_colors: ARRAY [WEL_COLOR_REF] is
+	std_colors: ARRAY [WEL_COLOR_REF]
 		once
 			Result := <<
 				grey,
@@ -71,7 +71,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	random: RANDOM is
+	random: RANDOM
 			-- Initialize a randon number
 		once
 			create Result.make
@@ -80,7 +80,7 @@ feature {NONE} -- Implementation
 			result_not_void : Result /= Void
 		end
 
-	next_number (range: INTEGER): INTEGER is
+	next_number (range: INTEGER): INTEGER
 			-- Random number between 1 and `range'
 			--| Side effect function.
 		do
@@ -91,7 +91,7 @@ feature {NONE} -- Implementation
 			valid_result_sup: Result <= range
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

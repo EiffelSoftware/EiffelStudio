@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that display events executed on a list."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 	
 feature -- Initialization
 
-	add_list_commands (w: EV_ANY; e: EVENT_WINDOW; name: STRING) is
+	add_list_commands (w: EV_ANY; e: EVENT_WINDOW; name: STRING)
 			-- Initialize commands for buttons
 		local
 			cmd: EV_ROUTINE_COMMAND
@@ -34,7 +34,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	select_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	select_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- When `list' is clicked then inform user in `list_e_window'
 		local
 			temp_string: STRING
@@ -45,7 +45,7 @@ feature -- Basic operations
 		end
 
 
-	unselect_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	unselect_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- When `list' is clicked then inform user in `list_e_window'
 		local
 			temp_string: STRING
@@ -55,7 +55,7 @@ feature -- Basic operations
 			list_e_window.display (temp_string)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"The demo that goes with the button demo"
 	legal: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make (par: EV_CONTAINER)
 			-- Create the demo in `par'.
 		local
 			cmd: EV_ROUTINE_COMMAND
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			set_parent (par)
 		end
 
-	set_tabs is
+	set_tabs
 			-- Set the tabs for the action window
 		do
 		end
@@ -49,7 +49,7 @@ feature -- Access
 
 feature -- Execution features
 
-	execute1 (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	execute1 (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Executed when we press the first button
 		local
 			cmd: EV_ROUTINE_COMMAND
@@ -83,7 +83,7 @@ feature -- Execution features
 		end
 
 
-	hide_dialog (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	hide_dialog (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Executed when the window is closed.
 		do
 			current_widget.hide
@@ -91,7 +91,7 @@ feature -- Execution features
 
 feature {NONE} -- Implementation
 
-	set_parent (par: EV_CONTAINER) is
+	set_parent (par: EV_CONTAINER)
 			-- Make `par' the new parent of the widget.
 			-- `par' can be Void then the parent is the screen.
 		do
@@ -101,7 +101,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

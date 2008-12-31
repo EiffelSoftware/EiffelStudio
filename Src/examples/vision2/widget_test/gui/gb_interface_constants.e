@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Objects that provide access to constants loaded from files.
 			Perform and desired constant redefinitions in this class.
@@ -17,7 +17,7 @@ class
 inherit
 	GB_INTERFACE_CONSTANTS_IMP
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

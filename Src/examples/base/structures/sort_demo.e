@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class SORT_DEMO
@@ -20,7 +20,7 @@ feature
 
 	l: SORTED_TWO_WAY_LIST [INTEGER]
 
-	make is
+	make
 		do
 			create l.make
 			create driver.make
@@ -29,7 +29,7 @@ feature
 			cycle
 		end 
 
-	cycle is
+	cycle
 			-- Basic user interaction process.
 		local
 			command: INTEGER
@@ -48,7 +48,7 @@ feature
 			driver.exit
 		end 
 
-	fill_menu is
+	fill_menu
 			-- Fill menu items with text.
 		do
 			driver.add_entry ("PU (PUt): Insert item and move cursor to it", "put item, move cursor under it")
@@ -76,12 +76,12 @@ feature
 			driver.complete_menu
 		end 
 
-	get_comparable: INTEGER is
+	get_comparable: INTEGER
 		do
 			Result :=  (driver.get_integer ("item"))
 		end
 
-	execute (new_command: INTEGER) is
+	execute (new_command: INTEGER)
 			-- Execute operation corresponding to the user's command.
 		local
 			comp: INTEGER
@@ -126,17 +126,17 @@ feature
 			end
 		end 
 
-	space is
+	space
 		do
 			driver.putstring (" ")
 		end 
 
-	put_comp is
+	put_comp
 		do
 			driver.putint (l.item)
 		end
 
-	trace is
+	trace
 				-- Ouput the state of the sorted list
 		local
 			position : INTEGER
@@ -175,7 +175,7 @@ feature
 			driver.end_result
 		end 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

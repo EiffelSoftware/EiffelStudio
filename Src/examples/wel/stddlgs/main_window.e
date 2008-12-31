@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create the main window.
 		do
 			txt := "Windows Eiffel Library"
@@ -48,7 +48,7 @@ feature {NONE} -- Implementation
 	printer_dc: WEL_PRINTER_DC
 			-- Printer dc used to print
 
-	on_menu_command (menu_id: INTEGER) is
+	on_menu_command (menu_id: INTEGER)
 			-- Create the appropriate dialog.
 		local
 			rect: WEL_RECT
@@ -117,14 +117,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- Paint the text with the selected font and the
 			-- selected color.
 		do
 			draw (paint_dc, client_rect)
 		end
 
-	draw (dc: WEL_DC; rect: WEL_RECT) is
+	draw (dc: WEL_DC; rect: WEL_RECT)
 			-- Paint the text with the selected font and the
 			-- selected color.
 		do
@@ -138,7 +138,7 @@ feature {NONE} -- Implementation
 			dc.draw_centered_text (txt, rect)
 		end
 
-	choose_file: WEL_OPEN_FILE_DIALOG is
+	choose_file: WEL_OPEN_FILE_DIALOG
 			-- Dialog box to choose a file.
 		once
 			create Result.make
@@ -146,7 +146,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	choose_font: WEL_CHOOSE_FONT_DIALOG is
+	choose_font: WEL_CHOOSE_FONT_DIALOG
 			-- Dialog box to choose a text font.
 		once
 			create Result.make
@@ -154,7 +154,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	choose_color: WEL_CHOOSE_COLOR_DIALOG is
+	choose_color: WEL_CHOOSE_COLOR_DIALOG
 			-- Dialog box to choose a text color.
 		once
 			create Result.make
@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	choose_folder: WEL_CHOOSE_FOLDER_DIALOG is
+	choose_folder: WEL_CHOOSE_FOLDER_DIALOG
 			-- Dialog box to choose a directory.
 		once
 			create Result.make
@@ -171,7 +171,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	print_dialog: WEL_PRINT_DIALOG is
+	print_dialog: WEL_PRINT_DIALOG
 			-- Dialog box to setup the print job.
 		once
 			create Result.make
@@ -179,13 +179,13 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	class_icon: WEL_ICON is
+	class_icon: WEL_ICON
 			-- Window's icon
 		once
 			create Result.make_by_id (Id_ico_application)
 		end
 
-	main_menu: WEL_MENU is
+	main_menu: WEL_MENU
 			-- Window's menu
 		once
 			create Result.make_by_id (Id_main_menu)
@@ -193,10 +193,10 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	Title: STRING is "WEL Standard Dialogs";
+	Title: STRING = "WEL Standard Dialogs";
 			-- Window's title
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

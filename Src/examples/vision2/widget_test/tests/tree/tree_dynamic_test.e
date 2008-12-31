@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that test EV_DYNAMIC_TREE_ITEM."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 		
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create `Current' and initialize test in `widget'.
 		local
 			tree_item: EV_DYNAMIC_TREE_ITEM
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 		
 feature {NONE} -- Implementation
 
-	create_children (item: EV_DYNAMIC_TREE_ITEM): ARRAYED_LIST [EV_TREE_NODE] is
+	create_children (item: EV_DYNAMIC_TREE_ITEM): ARRAYED_LIST [EV_TREE_NODE]
 			-- Create new children for `item'. The depth of `item'
 			-- in `tree' determines how many children are contained.
 		local
@@ -57,13 +57,13 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	depth_of_item (item: EV_DYNAMIC_TREE_ITEM): INTEGER is
+	depth_of_item (item: EV_DYNAMIC_TREE_ITEM): INTEGER
 			-- `Result' is depth of `item' in top level parent tree.
 		do
 			Result := recursive_depth (item, 1)
 		end
 	
-	recursive_depth (item: EV_DYNAMIC_TREE_ITEM; depth: INTEGER): INTEGER is
+	recursive_depth (item: EV_DYNAMIC_TREE_ITEM; depth: INTEGER): INTEGER
 			-- If `item' has parent, increase `depth' and call
 			-- recursive, otherwise `Result' is set to depth.
 		local
@@ -80,7 +80,7 @@ feature {NONE} -- Implementation
 	tree: EV_TREE;
 		-- Widget that test is to be performed on.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

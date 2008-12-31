@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "[
 						cURL http post example Eiffel version. 
 						For original C version, please see:
@@ -20,7 +20,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Run application.
 		local
 			l_result: INTEGER
@@ -49,7 +49,7 @@ feature -- Initialization
 
 feature {NONE} -- Implementation
 
-	curl_easy: CURL_EASY_EXTERNALS is
+	curl_easy: CURL_EASY_EXTERNALS
 			-- cURL easy externals
 		once
 			create Result
@@ -58,7 +58,7 @@ feature {NONE} -- Implementation
 	curl_handle: POINTER;
 			-- cURL handle
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

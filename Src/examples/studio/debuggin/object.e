@@ -1,11 +1,11 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class OBJECT feature
 
 	other: OBJECT;  some_value: INTEGER;
 
-	operate is
+	operate
 			-- Do some operations.
 		do
 			create other;
@@ -13,7 +13,7 @@ class OBJECT feature
 			bad_routine;
 		end;
 
-	good_routine (n: INTEGER) is
+	good_routine (n: INTEGER)
             -- Set the value of `some_value' to `n'
 			-- and perform `n' loop iterations.
         require
@@ -28,14 +28,14 @@ class OBJECT feature
             end
         end;	
 
-	bad_routine is
+	bad_routine
 			-- Produce an exception (call with void target).
 		local
 			void_reference: OBJECT;
 		do
 			void_reference.good_routine (0)
 		end
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

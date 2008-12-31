@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that demonstrate `string_size' of EV_FONT on an EV_PIXMAP."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ inherit
 		
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create `Current' and initialize test in `widget'.
 		local
 			vertical_box: EV_VERTICAL_BOX
@@ -72,7 +72,7 @@ feature {NONE} -- Initialization
 		
 feature {NONE} -- Implementation
 
-	select_font is
+	select_font
 			-- Display a font dialog for font selection, and update the displayed font
 			-- to that selected.
 		local
@@ -89,7 +89,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	update_bounds_display is
+	update_bounds_display
 			-- Update displayed bounds.
 		local
 			string_info: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]
@@ -136,7 +136,7 @@ feature {NONE} -- Implementation
 			projector.project
 		end
 		
-	clear_bounds_figures is
+	clear_bounds_figures
 			-- Clear all figures displaying bounds from `move_handle'.
 		do
 			pixmap.clear
@@ -151,7 +151,7 @@ feature {NONE} -- Implementation
 			move_handle_only_contains_text: move_handle.count = 1
 		end
 	
-	text_changed is
+	text_changed
 			-- Text to be displayed has been changed.
 		do
 			figure_text.set_text (text_input.text)
@@ -197,10 +197,10 @@ feature {NONE} -- Implementation
 	string_width, string_height, string_left_offset, string_right_offset: EV_FIGURE_TEXT
 		-- Figures to display textual representations of bounding offsets.
 	
-	figure_offset: INTEGER is 100;
+	figure_offset: INTEGER = 100;
 		-- Offset of figure text from move handle.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

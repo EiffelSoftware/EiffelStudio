@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Test of EV_GAUGE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_and_launch is
+	make_and_launch
 			-- Create `Current', set up controls and launch.
 		do
 			default_create
@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 			launch
 		end
 
-	test_gauges is
+	test_gauges
 			-- Initialize controls and display `first_window'.
 		local
 			vb: EV_VERTICAL_BOX
@@ -74,7 +74,7 @@ feature {NONE} -- Initialization
 
 feature -- Implementation
 
-	on_min_change (value: INTEGER) is
+	on_min_change (value: INTEGER)
 			-- Adjust minimums of controls.
 		do
 			val_field.value_range.adapt (min_field.value |..| val_field.value_range.upper)
@@ -83,7 +83,7 @@ feature -- Implementation
 			hr.value_range.adapt (min_field.value |..| hr.value_range.upper)
 		end
 
-	on_max_change (value: INTEGER) is
+	on_max_change (value: INTEGER)
 			-- Adjust maximums of controls.
 		do
 			val_field.value_range.adapt (val_field.value_range.lower |..| max_field.value)
@@ -92,7 +92,7 @@ feature -- Implementation
 			hr.value_range.adapt (hr.value_range.lower |..| max_field.value)
 		end
 
-	on_sb_change (value: INTEGER) is
+	on_sb_change (value: INTEGER)
 			-- Value of `sb' changed so update other controls.
 		do
 			max_field.value_range.adapt (sb.value |..| max_field.value_range.upper)
@@ -102,7 +102,7 @@ feature -- Implementation
 			hr.set_value (sb.value)
 		end
 
-	on_hr_change (value: INTEGER) is
+	on_hr_change (value: INTEGER)
 			-- Value of `hr' changed so update other controls.
 		do
 			max_field.value_range.adapt (hr.value |..| max_field.value_range.upper)
@@ -112,7 +112,7 @@ feature -- Implementation
 			sb.set_value (hr.value)
 		end
 
-	on_val_change (value: INTEGER) is
+	on_val_change (value: INTEGER)
 			-- Value of `val_field' changed so update other controls.
 		do
 			max_field.value_range.adapt (val_field.value |..| max_field.value_range.upper)
@@ -122,7 +122,7 @@ feature -- Implementation
 			hr.set_value (val_field.value)
 		end
 
-	first_window: EV_TITLED_WINDOW is
+	first_window: EV_TITLED_WINDOW
 			-- Window for this sample.
 		once
 			create Result
@@ -142,7 +142,7 @@ feature -- Implementation
 	hr: EV_HORIZONTAL_RANGE;
 		-- Horizontal range for test.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

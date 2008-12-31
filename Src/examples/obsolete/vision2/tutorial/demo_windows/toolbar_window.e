@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"The demo that goes with the tool bar demo"
 	legal: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make (par: EV_CONTAINER)
 			-- Create the demo in `par'.
 		local
 			sep: EV_HORIZONTAL_SEPARATOR
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			set_parent (par)
 		end
 
-	set_tabs is
+	set_tabs
 			-- Set the tabs for the action window.
 		do
 			set_primitive_tabs
@@ -58,13 +58,13 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Basic operations
 
-	pixmap (name:STRING): EV_PIXMAP is
+	pixmap (name:STRING): EV_PIXMAP
 				-- A pixmap.
 		do
 			create Result.make_from_file (pixmap_path (name))
 		end
 
-	add_button (tool: EV_TOOL_BAR; text, name: STRING; enabled: BOOLEAN) is
+	add_button (tool: EV_TOOL_BAR; text, name: STRING; enabled: BOOLEAN)
 			-- Add a button with `text' and `name' to `tool'.
 		local
 			tool_button: EV_TOOL_BAR_BUTTON
@@ -81,7 +81,7 @@ feature {NONE} -- Basic operations
 			tool_button.set_insensitive (enabled)
 		end
 
-	add_toggle (tool: EV_TOOL_BAR; text, name: STRING; enabled: BOOLEAN) is
+	add_toggle (tool: EV_TOOL_BAR; text, name: STRING; enabled: BOOLEAN)
 			-- Add a button with `text' and `name' to `tool'.
 		local
 			tool_button: EV_TOOL_BAR_TOGGLE_BUTTON
@@ -92,7 +92,7 @@ feature {NONE} -- Basic operations
 			tool_button.set_insensitive (enabled)
 		end
 
-	add_radio (tool: EV_TOOL_BAR; text, name: STRING; enabled: BOOLEAN) is
+	add_radio (tool: EV_TOOL_BAR; text, name: STRING; enabled: BOOLEAN)
 			-- Add a button with `text' and `name' to `tool'.
 		local
 			tool_button: EV_TOOL_BAR_RADIO_BUTTON
@@ -105,7 +105,7 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Implementation
 
-	create_first_bar (par: EV_VERTICAL_BOX) is
+	create_first_bar (par: EV_VERTICAL_BOX)
 			-- Create the first tool-bar of ebench.
 		local
 			hbox: EV_HORIZONTAL_BOX
@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 			add_button (tool, "", "qupdate", True)
 		end
 
-	create_second_bar (par: EV_VERTICAL_BOX) is
+	create_second_bar (par: EV_VERTICAL_BOX)
 			-- Create the first tool-bar of ebench.
 		local
 			hbox: EV_HORIZONTAL_BOX
@@ -184,7 +184,7 @@ feature {NONE} -- Implementation
 			add_button (tool, "", "dbgrun", True)
 		end
 
-	create_third_tool_bar (par: EV_VERTICAL_BOX) is
+	create_third_tool_bar (par: EV_VERTICAL_BOX)
 			-- Create the first tool-bar of ebench.
 		local
 			hbox: EV_HORIZONTAL_BOX
@@ -251,7 +251,7 @@ feature {NONE} -- Implementation
 			field.set_editable (False)
 		end
 
-	create_forth_tool_bar (par: EV_VERTICAL_BOX) is
+	create_forth_tool_bar (par: EV_VERTICAL_BOX)
 			-- Create the first tool-bar of ebench.
 		local
 			hbox: EV_HORIZONTAL_BOX
@@ -275,7 +275,7 @@ feature {NONE} -- Implementation
 			add_button (tool, "", "histfort", True)
 		end
 
-	create_splits (par: EV_VERTICAL_BOX) is
+	create_splits (par: EV_VERTICAL_BOX)
 			-- Create the first tool-bar of ebench.
 		local
 			hsplit: EV_VERTICAL_SPLIT_AREA
@@ -323,13 +323,13 @@ feature -- Access
 
 feature -- Command execution
 
-	execute (arg: EV_ARGUMENT1 [STRING]; data: EV_EVENT_DATA) is
+	execute (arg: EV_ARGUMENT1 [STRING]; data: EV_EVENT_DATA)
 			-- Executed when the mouse button is released.
 		do
 			io.put_string (arg.first)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

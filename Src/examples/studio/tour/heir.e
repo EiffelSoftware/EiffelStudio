@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class HEIR inherit
@@ -10,7 +10,7 @@ class HEIR inherit
 
 feature
 
-	display is
+	display
 			-- Output message saying where we are.
 		do
 			io.putstring ("In class HEIR")
@@ -23,21 +23,21 @@ feature
 			io.new_line
 		end
 
-	display_routine is 
+	display_routine 
 			-- Output simple message.
 		do 
 			io.putstring ("Calling a routine of class HEIR")
 			io.new_line 
 		end
 
-	a_string: STRING is 
+	a_string: STRING 
 			-- Simple text string
 		do 
 			create Result.make (0)
 			Result.append ("Showing an attribute of class HEIR")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

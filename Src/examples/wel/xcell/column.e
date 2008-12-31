@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -12,7 +12,7 @@ create
 
 feature -- Access
 
-	remove_top is
+	remove_top
 			-- Remove the top of the column.
 		require
 			not_empty: not is_empty
@@ -23,7 +23,7 @@ feature -- Access
 			new_count: old count = count + 1
 		end
 
-	the_top: G is
+	the_top: G
 			-- The top of the column
 		require
 			not_empty: not is_empty
@@ -34,7 +34,7 @@ feature -- Access
 			same_count: old count = count
 		end
 
-	add (a_item: G) is
+	add (a_item: G)
 			-- Add 'a_item' to the column,
 			-- 'a_item' becomes the top
 		require
@@ -45,7 +45,7 @@ feature -- Access
 			new_count: count = old count + 1
 		end
 
-	one_from_top: G is
+	one_from_top: G
 			-- The item under the top of the column
 		do
 			if count > 1 then
@@ -57,7 +57,7 @@ feature -- Access
 			result_is_valid: count > 1 implies Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

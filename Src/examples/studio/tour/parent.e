@@ -1,9 +1,9 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class PARENT feature
 
-	display is
+	display
 			-- Display basic information.
 		do
 			io.put_string ("THIS IS SOME ADDED TEXT")
@@ -15,14 +15,14 @@ class PARENT feature
 			first_message
 		end
 
-	first_message is
+	first_message
 			-- Display a simple message.
 		do
 			io.putstring ("Message number 1")
 			io.new_line; io.new_line
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

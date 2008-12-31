@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that demonstrate EV_PIXMAP."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 		
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create `Current' and initialize test in `widget'.
 		local
 			vertical_box: EV_VERTICAL_BOX
@@ -43,7 +43,7 @@ feature {NONE} -- Implementation
 	pixmap: EV_PIXMAP
 		-- Widget that test is to be performed on.
 	
-	draw_rectangle (an_x, a_y, a_button: INTEGER) is
+	draw_rectangle (an_x, a_y, a_button: INTEGER)
 			-- Draw a rectangle on `pixmap' at position 
 			-- (`an_x', `a_y') if left button pressed,
 			-- otherwise if right button pressed,
@@ -57,7 +57,7 @@ feature {NONE} -- Implementation
 		end
 		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

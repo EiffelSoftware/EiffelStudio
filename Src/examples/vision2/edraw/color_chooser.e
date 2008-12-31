@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that lets user select a color."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make_with_text (a_text: STRING) is
+	make_with_text (a_text: STRING)
 			-- create a COLOR_CHOOSER showing `a_text' on the frame.
 		local
 			v_box: EV_VERTICAL_BOX
@@ -101,7 +101,7 @@ feature -- Access
 		
 feature -- Element change
 
-	set_color (a_color: EV_COLOR) is
+	set_color (a_color: EV_COLOR)
 			-- Set `color' to `a_color'
 		do
 			color := a_color
@@ -123,7 +123,7 @@ feature -- Status
 			
 feature -- Status settings
 
-	disable_none_color_selectable is
+	disable_none_color_selectable
 			-- Set `none_color_selectable' to `False'.
 		do
 			none_color_selectable := False
@@ -132,7 +132,7 @@ feature -- Status settings
 			set: none_color_selectable = False
 		end
 		
-	enable_none_color_selectable is
+	enable_none_color_selectable
 			-- Set `none_color_selectable' to `True'.
 		do
 			none_color_selectable := True
@@ -143,7 +143,7 @@ feature -- Status settings
 	
 feature {NONE} -- Implementation
 
-	choose_color is
+	choose_color
 			-- choose button was clicked
 		local
 			dialog: EV_COLOR_DIALOG
@@ -154,7 +154,7 @@ feature {NONE} -- Implementation
 			set_color (dialog.color)
 		end
 
-	top_window: EV_WINDOW is
+	top_window: EV_WINDOW
 			-- The applications window `Current' is part of.
 		local
 			cur: EV_CONTAINER
@@ -173,10 +173,10 @@ feature {NONE} -- Implementation
 	button_array: ARRAY [EV_TOGGLE_BUTTON]
 			-- All the toggle buttons
 	
-	button_size: INTEGER is 20
+	button_size: INTEGER = 20
 			-- The size of the colored pixmaps on the buttons
 			
-	on_button_select (button_nr: INTEGER) is
+	on_button_select (button_nr: INTEGER)
 			-- Button with `button_nr' in `button_array' was selected.
 		local
 			i: INTEGER
@@ -199,7 +199,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	get_color (nr: INTEGER): EV_COLOR is
+	get_color (nr: INTEGER): EV_COLOR
 			-- Return color for button with number `nr'.
 		require
 			nr_valid: nr > 0 and nr <= 10
@@ -228,7 +228,7 @@ feature {NONE} -- Implementation
 	last_choosen_color: EV_COLOR;
 			-- Last color selected over color dialog by user.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

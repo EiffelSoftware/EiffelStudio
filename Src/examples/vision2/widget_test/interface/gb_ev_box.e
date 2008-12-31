@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that provide access to an attribute editor for EV_BOX objects."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 	
 feature {NONE} -- Implementation
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

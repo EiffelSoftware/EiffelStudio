@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that may be extended into an EVENT_LIST."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ feature -- access
 
 feature -- Status setting
 
-	set_accept (an_agent: PROCEDURE [ANY, TUPLE []]) is
+	set_accept (an_agent: PROCEDURE [ANY, TUPLE []])
 			-- Assign `an_agent' to `check_event'.
 		do
 			check_event := an_agent
@@ -33,7 +33,7 @@ feature -- Status setting
 			event_set: check_event = an_agent
 		end
 		
-	set_deny (an_agent: PROCEDURE [ANY, TUPLE []]) is
+	set_deny (an_agent: PROCEDURE [ANY, TUPLE []])
 			-- Assign `an_agent' to `uncheck_event'.
 		do
 			uncheck_event := an_agent
@@ -41,7 +41,7 @@ feature -- Status setting
 			event_set: uncheck_event = an_agent
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

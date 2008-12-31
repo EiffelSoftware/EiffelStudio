@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"Root class of EiffelVision Tutorial Application."
 	legal: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature -- Access
 
-	first_window: MAIN_WINDOW is
+	first_window: MAIN_WINDOW
 			-- Main window of the example
 		once
 			create Result.make_top_level 
@@ -31,7 +31,7 @@ feature -- Access
 
 feature -- Application initialization
 
-	initialize is
+	initialize
 			-- Redefine this feature to initialize your application,
 			-- set your splash screen pixmap, add your global accelerators.
 		local
@@ -41,7 +41,7 @@ feature -- Application initialization
 			splash_pixmap (pix)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

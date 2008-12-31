@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tester of FOURIER_TRANSFORMER class"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -18,7 +18,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Test Fourier Transformer class
 		local
 			test_nr: INTEGER;
@@ -263,7 +263,7 @@ feature -- Access
 	vector_copy: BASIC_VECTOR;;
 			-- auxiliary vector
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

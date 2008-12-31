@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that test EV_MULTI_COLUMN_LIST."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 		
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create `Current' and initialize test in `widget'.
 		local
 			multi_column_list_row: EV_MULTI_COLUMN_LIST_ROW
@@ -58,7 +58,7 @@ feature {NONE} -- Implementation
 	multiple_selection_button: EV_CHECK_BUTTON
 		-- Check button to signify if multiple selection is enabled.
 	
-	adjust_selection is
+	adjust_selection
 			-- Toggle selection of `multi_column_list' between 
 			-- single and multiple based on state of
 			-- `multiple_selection_button'.
@@ -70,7 +70,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	update_selection_on_row (row: EV_MULTI_COLUMN_LIST_ROW) is
+	update_selection_on_row (row: EV_MULTI_COLUMN_LIST_ROW)
 			-- Display selected state of `row' within `row'.
 		require
 			row_not_void: row /= Void
@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Controls used to modify objects of type EV_TEX_COMPONENT"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (box: EV_BOX; a_text_component: EV_TEXT_COMPONENT; output: EV_TEXT;) is
+	make (box: EV_BOX; a_text_component: EV_TEXT_COMPONENT; output: EV_TEXT;)
 			-- Create controls to manipulate `a_text_component', parented in `box' and
 			-- displaying output in `output'.
 		do
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			box.extend (Current)
 		end
 		
-	append_text is
+	append_text
 			-- Append text of `append_text_field' to `text_component'.
 		do
 			if append_text_field.text /= Void then
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 			end
 		end
 		
- 	prepend_text is
+ 	prepend_text
 			-- Prepend text of `prepend_text_field' to `text_component'.
 		do
 			if prepend_text_field.text /= Void then
@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	text_component_set_text is
+	text_component_set_text
 			-- Assign text of `text_field' to `text_component'.
 		do
 			if text_field.text = Void then
@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
 	text_field, append_text_field, prepend_text_field: EV_TEXT_FIELD
 	text_component: EV_TEXT_COMPONENT;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

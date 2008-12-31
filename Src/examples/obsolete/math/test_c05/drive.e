@@ -1,5 +1,5 @@
 -- test routine for interface to chapter d01
-indexing
+note
 	description: " Test routines for d01"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -17,7 +17,7 @@ create
 
 feature -- The main program
 
-	make (args: ARRAY [STRING]) is
+	make (args: ARRAY [STRING])
 			-- test of various routines from d01
 		do
 			test_root;
@@ -30,7 +30,7 @@ feature -- Test of c05adc, root finder
 	testf: TEST_CLASS;
 			-- A class that contains feature f1 such that f1(1.5)=0.
 
-	test_root is
+	test_root
 			-- test zero in an interval
 		local
 			gr: FUNCTION_ROOT_FINDER;
@@ -51,7 +51,7 @@ feature -- Test of c05adc, root finder
 			print_nl ("");
 		end;
 
-	test_sys is
+	test_sys
 			-- test zero of non-linear system with and without Jacobian
 		local
 			gr: NONLINEAR_SYSTEM_SOLVER;
@@ -93,7 +93,7 @@ feature -- Test of c05adc, root finder
 			print_nl ("");
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that create extendible controls for EV_MULTI_COLUMN_LIST"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,12 +24,12 @@ feature -- Access
 
 feature -- Status report
 
-	help: STRING is "Select %"Extend%", to add a new row to the list with column texts matching `text' of the text field, separated by commas.%NFor example, a `text' of %"one,two,thee,four%" will add a row with four columns%NSelecting %"Wipe_out%" will clear the list." 
+	help: STRING = "Select %"Extend%", to add a new row to the list with column texts matching `text' of the text field, separated by commas.%NFor example, a `text' of %"one,two,thee,four%" will add a row with four columns%NSelecting %"Wipe_out%" will clear the list." 
 			-- Instructions on how to use the control.
 
 feature -- Status setting
 
-	extend_item is
+	extend_item
 			-- Add a new item to `current_type'.
 		local
 			row: EV_MULTI_COLUMN_LIST_ROW
@@ -64,7 +64,7 @@ feature -- Status setting
 			current_type.extend (row)
 		end
 		
-	wipe_out_item is
+	wipe_out_item
 			-- call `wipe_out' on `Current_type'.
 		do
 			current_type.wipe_out
@@ -73,10 +73,10 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	initial_text: STRING is "Column1,Column2,Column3";
+	initial_text: STRING = "Column1,Column2,Column3";
 			-- Initial text for new items.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

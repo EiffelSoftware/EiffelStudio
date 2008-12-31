@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Child window of frame window containing an OLE compound file"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -72,7 +72,7 @@ create
 
 feature -- Initialization
 
-	make (p: WEL_MDI_FRAME_WINDOW; name: STRING) is
+	make (p: WEL_MDI_FRAME_WINDOW; name: STRING)
 			-- Create MDI child window with parent `p' and
 			-- title `name', then build associated tree view.
 		local
@@ -116,7 +116,7 @@ feature -- Initialization
 			end
 		end
 	
-	new_tvitem (stor: ECOM_STORAGE; stream_name: STRING): WEL_TREE_VIEW_ITEM is
+	new_tvitem (stor: ECOM_STORAGE; stream_name: STRING): WEL_TREE_VIEW_ITEM
 			-- New tree view item referencing stream `stream_name' in storage `stor'
 		do
 			tvitem_table.put ([stor, stream_name], tvitem_table_count)
@@ -126,7 +126,7 @@ feature -- Initialization
 			tvitem_table_count := tvitem_table_count + 1
 		end
 
-	create_tree_view (p: POINTER; stor: ECOM_STORAGE) is
+	create_tree_view (p: POINTER; stor: ECOM_STORAGE)
 			-- Recursively create tree view with parent `p'
 			-- and associated compound file `stor'
 			-- `elements' is used for efficiency.
@@ -173,7 +173,7 @@ feature -- Access
 
 feature -- Message Processing
 
-	on_size (size_type, w, h: INTEGER) is
+	on_size (size_type, w, h: INTEGER)
 			-- Resize tree view to width `w'and height `h'.
 			-- `size_type' indicates form of resizing.
 		do
@@ -188,7 +188,7 @@ feature -- Message Processing
 			end
 		end
 
-	 on_window_pos_changed (window_pos: WEL_WINDOW_POS) is
+	 on_window_pos_changed (window_pos: WEL_WINDOW_POS)
 			-- Move tree view to `window_pos'and resize accordingly.
 		do
 			if tree_view /= Void and then tree_view.exists then
@@ -197,7 +197,7 @@ feature -- Message Processing
 			end
 		end
 
-	on_notify (control_id: INTEGER; info: WEL_NMHDR) is
+	on_notify (control_id: INTEGER; info: WEL_NMHDR)
 			-- Notifications processing
 		local
 			stor: ECOM_STORAGE
@@ -234,7 +234,7 @@ feature {NONE} -- Implementation
 			-- Table of streams identified by their contening storage and name
 			-- Index kept in tree view item for later retrieval in `on_notify'
 
-	stgty_string (stgty_constant: INTEGER): STRING is
+	stgty_string (stgty_constant: INTEGER): STRING
 			-- String value of ECOM_STGTY constants
 		do
 			if stgty_constant = STGTY_LOCKBYTES then
@@ -246,22 +246,22 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	class_icon: WEL_ICON is
+	class_icon: WEL_ICON
 			-- Window's icon
 		once
 			create Result.make_by_id (Id_ico_child_window)
 		end
 
-	Tree_view_id: INTEGER is 0
+	Tree_view_id: INTEGER = 0
 			-- Tree view control id
 
 	tvitem_table_count: INTEGER
 			-- Next free index in `tvitem_table'
 
-	Root_item_title: STRING is "Root";
+	Root_item_title: STRING = "Root";
 			-- Root storage displayed name
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

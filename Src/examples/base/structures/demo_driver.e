@@ -1,4 +1,4 @@
-indexing
+note
 
 	date: "$Date$";
 	revision: "$Revision$";
@@ -14,7 +14,7 @@ create
 
 feature -- Creation
 
-	make is
+	make
 			-- Create arrays to store menus. 
 		do
 			create menu_entry.make (1, Max_Number_of_Entries)
@@ -26,10 +26,10 @@ feature -- Creation
 
 feature -- Constant attributes
 
-	Max_height_of_menu_column: INTEGER is 10 
-	Max_Number_of_Entries: INTEGER is 40 
-	Max_Length_of_an_Entry: INTEGER is 75 
-	Max_Length_of_a_tag: INTEGER is 2 
+	Max_height_of_menu_column: INTEGER = 10 
+	Max_Number_of_Entries: INTEGER = 40 
+	Max_Length_of_an_Entry: INTEGER = 75 
+	Max_Length_of_a_tag: INTEGER = 2 
 
 feature -- Other attributes
 
@@ -46,7 +46,7 @@ feature -- Other attributes
 
 feature -- Output
 
-	putstring (s: STRING) is
+	putstring (s: STRING)
 			-- Write `s' at end of default output.
 		require
 			string_not_void: s /= void
@@ -54,19 +54,19 @@ feature -- Output
 			io.put_string (s)
 		end
 		
-	new_line is
+	new_line
 			-- Write line feed at end of default output.
 		do
 			io.new_line
 		end
 		
-	putint (i: INTEGER) is
+	putint (i: INTEGER)
 			-- Write `i' at end of default output.
 		do
 			io.put_integer (i)
 		end
 		
-	putbool (b: BOOLEAN) is
+	putbool (b: BOOLEAN)
 			-- Write `b' at end of default output.
 		do
 			io.put_boolean (b)
@@ -74,12 +74,12 @@ feature -- Output
 
 feature -- Routines
 
-	exit is
+	exit
 			-- Null action in this class.
 		do
 		end
 
-	new_menu (new_comment: STRING) is
+	new_menu (new_comment: STRING)
 			-- Create a new menu with new_comment as banner.
 		do
 			comment := new_comment
@@ -90,7 +90,7 @@ feature -- Routines
 			menu_size := 0
 		end
 
-	add_entry (entry: STRING ; help: STRING) is
+	add_entry (entry: STRING ; help: STRING)
 			-- Add an entry to the menu; assign its index to last_entry.
 			-- The first argument is the name of the entry. If it
 			-- contains upper case letters, they will be used as
@@ -113,7 +113,7 @@ feature -- Routines
 			last_entry := menu_size
 		end
 
-	get_tag (entry: STRING): STRING is
+	get_tag (entry: STRING): STRING
 			-- Tag of entry, i.e. upper case letters
 		local
 			length: INTEGER 
@@ -135,7 +135,7 @@ feature -- Routines
 			end
 		end
 
-	print_menu is
+	print_menu
 			-- Print menu.
 		local
 			i: INTEGER 
@@ -164,7 +164,7 @@ feature -- Routines
 			io.new_line
 		end
 
-	print_entry (n: INTEGER) is
+	print_entry (n: INTEGER)
 			-- Print `n'-th menu item. 
 		local
 			i, length: INTEGER
@@ -182,7 +182,7 @@ feature -- Routines
 			end
 		end
 
-	complete_menu is
+	complete_menu
 			-- Add help command to menu
 		do
 			menu_size := menu_size + 1 
@@ -191,7 +191,7 @@ feature -- Routines
 			menu_tag.put ("?", menu_size) 
 		end
 
-	get_choice: INTEGER is
+	get_choice: INTEGER
 			-- Once the menu has been completely defined using
 			-- new_menu and add_menu routines, get_choice gets
 			-- the user input. The result is the number of
@@ -210,13 +210,13 @@ feature -- Routines
 			Result := choice
 		end
 
-	bell is
+	bell
 			-- Ring the bell.
 		do
 			io.putstring ("%/007/")
 		end
 
-	build_line is
+	build_line
 			-- Make a line with `-' characters.
 		local
 			i: INTEGER
@@ -231,7 +231,7 @@ feature -- Routines
 			end
 		end
 
-	show_help is
+	show_help
 			-- Display a help message.
 		do
 			io.putstring (menu_entry.item (choice))
@@ -240,7 +240,7 @@ feature -- Routines
 			io.new_line
 		end
 
-	get_string (what_is_it: STRING): STRING is
+	get_string (what_is_it: STRING): STRING
 			-- Get a user string input for stdin. 
 			-- 'what_is_it' is the name of the requested value. 
 		do
@@ -251,13 +251,13 @@ feature -- Routines
 			Result := io.laststring
 		end
 
-	get_integer (what_is_it: STRING): INTEGER is
+	get_integer (what_is_it: STRING): INTEGER
 			-- Same as get_string but reads an integer.
 		do
 			Result := get_string (what_is_it).to_integer
 		end
 
-	signal_error (message: STRING) is
+	signal_error (message: STRING)
 			-- Display the error message in the top of the monitoring
 			-- screen and ring a bell.
 		do
@@ -270,7 +270,7 @@ feature -- Routines
 			end
 		end
 
-	read_choice: INTEGER is
+	read_choice: INTEGER
 			-- Menu item corresponding to user's input
 		local
 			recognized_entry, number_char_read, i: INTEGER
@@ -335,17 +335,17 @@ feature -- Routines
 			Result := recognized_entry
 		end
 
-	start_result is
+	start_result
 			-- No default action.
 		do
 		end 
 
-	end_result is
+	end_result
 			-- No default action.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,0 +1,51 @@
+remtrace Should be called by `make_exes.btm'
+
+remtrace Create tools directory for your platform.
+safe_md %STUDIO_DIR\tools
+safe_md %STUDIO_DIR\tools\spec
+safe_md %STUDIO_DIR\tools\spec\%ISE_PLATFORM
+safe_md %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
+
+remtrace Recompile syntax_updater
+cdd %EIFFEL_SRC\tools\syntax_updater
+clean_project
+finalize syntax_updater.ecf
+cleanup_eiffel syntax_updater syntax_updater.exe
+iff not exist syntax_updater.exe then
+	remtrace Could not finalize a new syntax_updater
+	CANCEL
+endiff
+move syntax_updater.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
+
+remtrace Recompile espawn
+cdd %EIFFEL_SRC\tools\espawn
+clean_project
+finalize espawn.ecf
+cleanup_eiffel espawn espawn.exe
+iff not exist espawn.exe then
+	remtrace Could not finalize a new espawn
+	CANCEL
+endiff
+move espawn.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
+
+remtrace Recompile compile_all
+cdd %EIFFEL_SRC\tools\compile_all
+clean_project
+finalize compile_all.ecf
+cleanup_eiffel compile_all compile_all.exe
+iff not exist compile_all.exe then
+	remtrace Could not finalize a new compile_all
+	CANCEL
+endiff
+move compile_all.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
+
+remtrace Recompile eiffel_image_embedder
+cdd %EIFFEL_SRC\tools\eiffel_image_embedder
+clean_project
+finalize eimgemb.ecf
+cleanup_eiffel eiffel_image_embedder eimgemb.exe
+iff not exist eimgemb.exe then
+	remtrace Could not finalize a new eiffel_image_embedder
+	CANCEL
+endiff
+move eimgemb.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin

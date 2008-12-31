@@ -312,6 +312,10 @@ move eweasel.exe %STUDIO_DIR\eweasel\spec\%ISE_PLATFORM\bin
 set EWEASEL=%OLD_EWEASEL
 set OLD_EWEASEL=
 
+remtrace Compiling Eiffel Software tools
+cdd %INIT_DIR
+call make_tools.btm
+
 remtrace Compiling Gobo tools
 safe_md %STUDIO_DIR\library\gobo\spec
 safe_md %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM

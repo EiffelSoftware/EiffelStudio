@@ -123,19 +123,6 @@ feature -- Initialization
 			system_menu_not_void: Result /= Void
 		end
 
-	testing_menu: EWB_MENU
-			-- Testing menu options
-		once
-			create Result.make (1, 4)
-			Result.set_parent (Main_menu)
-			Result.add_entry (create {EWB_AUTO_TEST})
-			Result.add_entry (create {EWB_AUTO_TEST})
-			Result.add_entry (create {EWB_AUTO_TEST})
-			Result.add_entry (create {EWB_AUTO_TEST})
-		ensure
-			result_not_void: Result /= Void
-		end
-
 	profile_menu: EWB_MENU
 			-- Profile menu options.
 		once

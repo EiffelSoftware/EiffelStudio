@@ -188,8 +188,6 @@ feature {NONE}
 
 	system_help: STRING_GENERAL do Result := locale.translation ("Config and cluster details") end
 
-	testing_help: STRING_GENERAL do Result := locale.translation ("manage and run tests") end
-
 	text_help: STRING_GENERAL do Result := locale.translation ("show the text of a class") end
 
 	target_help: STRING_GENERAL do Result := locale.translation ("specify the target") end

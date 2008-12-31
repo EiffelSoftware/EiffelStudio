@@ -141,8 +141,6 @@ feature
 
 	System_abb: CHARACTER = 's'
 
-	testing_abb: CHARACTER = 't'
-
 	Text_abb: CHARACTER = 't'
 
 	Total_sec_abb: CHARACTER = 't'

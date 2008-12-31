@@ -83,7 +83,7 @@ feature {EC_REPORT_BUILDER} -- Basic Operations
 		
 feature -- Comparison {COMPARABLE}
 
-	infix "<" (other: like Current): BOOLEAN
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is current object less than `other'?
 		do
 			Result := {SYSTEM_STRING}.compare (type.type.full_name, other.type.type.full_name) < 0

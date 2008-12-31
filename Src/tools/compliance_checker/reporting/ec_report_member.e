@@ -60,7 +60,7 @@ feature -- Access
 	
 feature -- Comparison {COMPARABLE}
 
-	infix "<" (other: like Current): BOOLEAN
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is current object less than `other'?
 		do
 			Result := {SYSTEM_STRING}.compare (member.member.name, other.member.member.name) < 0

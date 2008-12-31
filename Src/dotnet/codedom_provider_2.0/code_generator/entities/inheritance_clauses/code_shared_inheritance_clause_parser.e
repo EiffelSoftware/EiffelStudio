@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Shared instance of {CODE_INHERITANCE_CLAUSE_PARSER}"
 	legal: "See notice at end of class."
@@ -11,13 +11,13 @@ class
 
 feature -- Access
 
-	Inheritance_clause_parser: CODE_INHERITANCE_CLAUSE_PARSER is
+	Inheritance_clause_parser: CODE_INHERITANCE_CLAUSE_PARSER
 			-- Shared instance
 		once
 			create Result.make
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

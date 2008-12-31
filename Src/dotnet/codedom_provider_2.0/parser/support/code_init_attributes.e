@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"Generic class to parse the AST tree."
 	legal: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 	
 feature {NONE} -- Creation
 
-	make is
+	make
 			-- Create and initialize `Current'
 		do
 			clear_cast_expressions
@@ -26,23 +26,23 @@ feature {NONE} -- Creation
 
 feature {AST_YACC} -- Initialization
 
-	process_custom_attribute_as (l_as: CUSTOM_ATTRIBUTE_AS) is
+	process_custom_attribute_as (l_as: CUSTOM_ATTRIBUTE_AS)
 		do
 		end
 
-	process_id_as (l_as: ID_AS) is
+	process_id_as (l_as: ID_AS)
 		do
 		end
 
-	process_integer_as (l_as: INTEGER_AS) is
+	process_integer_as (l_as: INTEGER_AS)
 		do
 		end
 
-	process_static_access_as (l_as: STATIC_ACCESS_AS) is
+	process_static_access_as (l_as: STATIC_ACCESS_AS)
 		do
 		end
 
-	process_feature_clause_as (l_as: FEATURE_CLAUSE_AS) is
+	process_feature_clause_as (l_as: FEATURE_CLAUSE_AS)
 		local
 			l_features: EIFFEL_LIST [FEATURE_AS]
 		do
@@ -59,263 +59,263 @@ feature {AST_YACC} -- Initialization
 			end
 		end
 
-	process_unique_as (l_as: UNIQUE_AS) is
+	process_unique_as (l_as: UNIQUE_AS)
 		do
 		end
 
-	process_tuple_as (l_as: TUPLE_AS) is
+	process_tuple_as (l_as: TUPLE_AS)
 		do
 		end
 
-	process_real_as (l_as: REAL_AS) is
+	process_real_as (l_as: REAL_AS)
 		do
 		end
 
-	process_bool_as (l_as: BOOL_AS) is
+	process_bool_as (l_as: BOOL_AS)
 		do
 		end
 
-	process_bit_const_as (l_as: BIT_CONST_AS) is
+	process_bit_const_as (l_as: BIT_CONST_AS)
 		do
 		end
 
-	process_array_as (l_as: ARRAY_AS) is
+	process_array_as (l_as: ARRAY_AS)
 		do
 		end
 
-	process_eiffel_list (l_as: EIFFEL_LIST [AST_EIFFEL]) is
+	process_eiffel_list (l_as: EIFFEL_LIST [AST_EIFFEL])
 		do
 		end
 
-	process_char_as (l_as: CHAR_AS) is
+	process_char_as (l_as: CHAR_AS)
 		do
 		end
 
-	process_string_as (l_as: STRING_AS) is
+	process_string_as (l_as: STRING_AS)
 		do
 		end
 
-	process_verbatim_string_as (l_as: VERBATIM_STRING_AS) is
+	process_verbatim_string_as (l_as: VERBATIM_STRING_AS)
 		do
 		end
 
-	process_body_as (l_as: BODY_AS) is
+	process_body_as (l_as: BODY_AS)
 		do
 		end
 
-	process_result_as (l_as: RESULT_AS) is
+	process_result_as (l_as: RESULT_AS)
 		do
 		end
 
-	process_current_as (l_as: CURRENT_AS) is
+	process_current_as (l_as: CURRENT_AS)
 		do
 		end
 
-	process_access_feat_as (l_as: ACCESS_FEAT_AS) is
+	process_access_feat_as (l_as: ACCESS_FEAT_AS)
 		do
 		end
 
-	process_feature_name_alias_as (l_as: FEATURE_NAME_ALIAS_AS) is
+	process_feature_name_alias_as (l_as: FEATURE_NAME_ALIAS_AS)
 		do
 		end
 
-	process_access_inv_as (l_as: ACCESS_INV_AS) is
+	process_access_inv_as (l_as: ACCESS_INV_AS)
 		do
 		end
 
-	process_access_id_as (l_as: ACCESS_ID_AS) is
+	process_access_id_as (l_as: ACCESS_ID_AS)
 		do
 		end
 
-	process_access_assert_as (l_as: ACCESS_ASSERT_AS) is
+	process_access_assert_as (l_as: ACCESS_ASSERT_AS)
 		do
 		end
 
-	process_precursor_as (l_as: PRECURSOR_AS) is
+	process_precursor_as (l_as: PRECURSOR_AS)
 		do
 		end
 
-	process_nested_expr_as (l_as: NESTED_EXPR_AS) is
+	process_nested_expr_as (l_as: NESTED_EXPR_AS)
 		do
 		end
 
-	process_nested_as (l_as: NESTED_AS) is
+	process_nested_as (l_as: NESTED_AS)
 		do
 		end
 
-	process_creation_expr_as (l_as: CREATION_EXPR_AS) is
+	process_creation_expr_as (l_as: CREATION_EXPR_AS)
 		do
 		end
 
-	process_routine_as (l_as: ROUTINE_AS) is
+	process_routine_as (l_as: ROUTINE_AS)
 		do
 		end
 
-	process_constant_as (l_as: CONSTANT_AS) is
+	process_constant_as (l_as: CONSTANT_AS)
 		do
 		end
 
-	process_indexing_clause_as (l_as: INDEXING_CLAUSE_AS) is
+	process_indexing_clause_as (l_as: INDEXING_CLAUSE_AS)
 		do
 		end
 
-	process_operand_as (l_as: OPERAND_AS) is
+	process_operand_as (l_as: OPERAND_AS)
 		do
 		end
 
-	process_tagged_as (l_as: TAGGED_AS) is
+	process_tagged_as (l_as: TAGGED_AS)
 		do
 		end
 
-	process_variant_as (l_as: VARIANT_AS) is
+	process_variant_as (l_as: VARIANT_AS)
 		do
 		end
 
-	process_un_strip_as (l_as: UN_STRIP_AS) is
+	process_un_strip_as (l_as: UN_STRIP_AS)
 		do
 		end
 
-	process_paran_as (l_as: PARAN_AS) is
+	process_paran_as (l_as: PARAN_AS)
 		do
 		end
 
-	process_expr_call_as (l_as: EXPR_CALL_AS) is
+	process_expr_call_as (l_as: EXPR_CALL_AS)
 		do
 		end
 
-	process_expr_address_as (l_as: EXPR_ADDRESS_AS) is
+	process_expr_address_as (l_as: EXPR_ADDRESS_AS)
 		do
 		end
 
-	process_address_result_as (l_as: ADDRESS_RESULT_AS) is
+	process_address_result_as (l_as: ADDRESS_RESULT_AS)
 		do
 		end
 
-	process_address_current_as (l_as: ADDRESS_CURRENT_AS) is
+	process_address_current_as (l_as: ADDRESS_CURRENT_AS)
 		do
 		end
 
-	process_address_as (l_as: ADDRESS_AS) is
+	process_address_as (l_as: ADDRESS_AS)
 		do
 		end
 
-	process_routine_creation_as (l_as: ROUTINE_CREATION_AS) is
+	process_routine_creation_as (l_as: ROUTINE_CREATION_AS)
 		do
 		end
 
-	process_assigner_call_as (l_as: ASSIGNER_CALL_AS) is
+	process_assigner_call_as (l_as: ASSIGNER_CALL_AS)
 		do
 		end
 
-	process_type_expr_as (l_as: TYPE_EXPR_AS) is
+	process_type_expr_as (l_as: TYPE_EXPR_AS)
 		do
 		end
 
-	process_un_free_as (l_as: UN_FREE_AS) is
+	process_un_free_as (l_as: UN_FREE_AS)
 		do
 		end
 
-	process_un_minus_as (l_as: UN_MINUS_AS) is
+	process_un_minus_as (l_as: UN_MINUS_AS)
 		do
 		end
 
-	process_un_not_as (l_as: UN_NOT_AS) is
+	process_un_not_as (l_as: UN_NOT_AS)
 		do
 		end
 
-	process_un_old_as (l_as: UN_OLD_AS) is
+	process_un_old_as (l_as: UN_OLD_AS)
 		do
 		end
 
-	process_un_plus_as (l_as: UN_PLUS_AS) is
+	process_un_plus_as (l_as: UN_PLUS_AS)
 		do
 		end
 
-	process_bin_and_then_as (l_as: BIN_AND_THEN_AS) is
+	process_bin_and_then_as (l_as: BIN_AND_THEN_AS)
 		do
 		end
 
-	process_bin_free_as (l_as: BIN_FREE_AS) is
+	process_bin_free_as (l_as: BIN_FREE_AS)
 		do
 		end
 
-	process_bin_implies_as (l_as: BIN_IMPLIES_AS) is
+	process_bin_implies_as (l_as: BIN_IMPLIES_AS)
 		do
 		end
 
-	process_bin_or_as (l_as: BIN_OR_AS) is
+	process_bin_or_as (l_as: BIN_OR_AS)
 		do
 		end
 
-	process_bin_or_else_as (l_as: BIN_OR_ELSE_AS) is
+	process_bin_or_else_as (l_as: BIN_OR_ELSE_AS)
 		do
 		end
 
-	process_bin_xor_as (l_as: BIN_XOR_AS) is
+	process_bin_xor_as (l_as: BIN_XOR_AS)
 		do
 		end
 
-	process_bin_ge_as (l_as: BIN_GE_AS) is
+	process_bin_ge_as (l_as: BIN_GE_AS)
 		do
 		end
 
-	process_bin_gt_as (l_as: BIN_GT_AS) is
+	process_bin_gt_as (l_as: BIN_GT_AS)
 		do
 		end
 
-	process_bin_le_as (l_as: BIN_LE_AS) is
+	process_bin_le_as (l_as: BIN_LE_AS)
 		do
 		end
 
-	process_bin_lt_as (l_as: BIN_LT_AS) is
+	process_bin_lt_as (l_as: BIN_LT_AS)
 		do
 		end
 
-	process_bin_div_as (l_as: BIN_DIV_AS) is
+	process_bin_div_as (l_as: BIN_DIV_AS)
 		do
 		end
 
-	process_bin_minus_as (l_as: BIN_MINUS_AS) is
+	process_bin_minus_as (l_as: BIN_MINUS_AS)
 		do
 		end
 
-	process_bin_mod_as (l_as: BIN_MOD_AS) is
+	process_bin_mod_as (l_as: BIN_MOD_AS)
 		do
 		end
 
-	process_bin_plus_as (l_as: BIN_PLUS_AS) is
+	process_bin_plus_as (l_as: BIN_PLUS_AS)
 		do
 		end
 
-	process_bin_power_as (l_as: BIN_POWER_AS) is
+	process_bin_power_as (l_as: BIN_POWER_AS)
 		do
 		end
 
-	process_bin_slash_as (l_as: BIN_SLASH_AS) is
+	process_bin_slash_as (l_as: BIN_SLASH_AS)
 		do
 		end
 
-	process_bin_star_as (l_as: BIN_STAR_AS) is
+	process_bin_star_as (l_as: BIN_STAR_AS)
 		do
 		end
 
-	process_bin_and_as (l_as: BIN_AND_AS) is
+	process_bin_and_as (l_as: BIN_AND_AS)
 		do
 		end
 
-	process_bin_eq_as (l_as: BIN_EQ_AS) is
+	process_bin_eq_as (l_as: BIN_EQ_AS)
 		do
 		end
 
-	process_bin_ne_as (l_as: bin_ne_as) is
+	process_bin_ne_as (l_as: bin_ne_as)
 		do
 		end
 
-	process_external_lang_as (l_as: EXTERNAL_LANG_AS) is
+	process_external_lang_as (l_as: EXTERNAL_LANG_AS)
 		do
 		end
 
-	process_feature_as (l_as: FEATURE_AS) is
+	process_feature_as (l_as: FEATURE_AS)
 		local
 			l_converter: CODE_TYPE_CONVERTER_EIFFEL_TO_DOTNET
 		do
@@ -325,83 +325,83 @@ feature {AST_YACC} -- Initialization
 			end
 		end
 
-	process_infix_prefix_as (l_as: INFIX_PREFIX_AS) is
+	process_infix_prefix_as (l_as: INFIX_PREFIX_AS)
 		do
 		end
 
-	process_feat_name_id_as (l_as: FEAT_NAME_ID_AS) is
+	process_feat_name_id_as (l_as: FEAT_NAME_ID_AS)
 		do
 		end
 
-	process_feature_list_as (l_as: FEATURE_LIST_AS) is
+	process_feature_list_as (l_as: FEATURE_LIST_AS)
 		do
 		end
 
-	process_all_as (l_as: ALL_AS) is
+	process_all_as (l_as: ALL_AS)
 		do
 		end
 
-	process_assign_as (l_as: ASSIGN_AS) is
+	process_assign_as (l_as: ASSIGN_AS)
 		do
 		end
 
-	process_reverse_as (l_as: REVERSE_AS) is
+	process_reverse_as (l_as: REVERSE_AS)
 		do
 		end
 
-	process_check_as (l_as: CHECK_AS) is
+	process_check_as (l_as: CHECK_AS)
 		do
 		end
 
-	process_creation_as (l_as: CREATION_AS) is
+	process_creation_as (l_as: CREATION_AS)
 		do
 		end
 
-	process_debug_as (l_as: DEBUG_AS) is
+	process_debug_as (l_as: DEBUG_AS)
 		do
 		end
 
-	process_if_as (l_as: IF_AS) is
+	process_if_as (l_as: IF_AS)
 		do
 		end
 
-	process_inspect_as (l_as: INSPECT_AS) is
+	process_inspect_as (l_as: INSPECT_AS)
 		do
 		end
 
-	process_instr_call_as (l_as: INSTR_CALL_AS) is
+	process_instr_call_as (l_as: INSTR_CALL_AS)
 		do
 		end
 
-	process_loop_as (l_as: LOOP_AS) is
+	process_loop_as (l_as: LOOP_AS)
 		do
 		end
 
-	process_retry_as (l_as: RETRY_AS) is
+	process_retry_as (l_as: RETRY_AS)
 		do
 		end
 
-	process_external_as (l_as: EXTERNAL_AS) is
+	process_external_as (l_as: EXTERNAL_AS)
 		do
 		end
 
-	process_deferred_as (l_as: DEFERRED_AS) is
+	process_deferred_as (l_as: DEFERRED_AS)
 		do
 		end
 
-	process_do_as (l_as: DO_AS) is
+	process_do_as (l_as: DO_AS)
 		do
 		end
 
-	process_once_as (l_as: ONCE_AS) is
+	process_once_as (l_as: ONCE_AS)
 		do
 		end
 
-	process_type_dec_as (l_as: TYPE_DEC_AS) is
+	process_type_dec_as (l_as: TYPE_DEC_AS)
 		do
 		end
 
-	process_class_as (l_as: CLASS_AS) is
+	process_class_as (l_as: CLASS_AS)
 		local
 			l_features: EIFFEL_LIST [FEATURE_CLAUSE_AS]
 			l_parents: EIFFEL_LIST [PARENT_AS]
@@ -431,247 +431,247 @@ feature {AST_YACC} -- Initialization
 			end
 		end
 
-	process_parent_as (l_as: PARENT_AS) is
+	process_parent_as (l_as: PARENT_AS)
 		do
 		end
 
-	process_like_id_as (l_as: LIKE_ID_AS) is
+	process_like_id_as (l_as: LIKE_ID_AS)
 		do
 		end
 
-	process_like_cur_as (l_as: LIKE_CUR_AS) is
+	process_like_cur_as (l_as: LIKE_CUR_AS)
 		do
 		end
 
-	process_formal_as (l_as: FORMAL_AS) is
+	process_formal_as (l_as: FORMAL_AS)
 		do
 		end
 
-	process_formal_dec_as (l_as: FORMAL_DEC_AS) is
+	process_formal_dec_as (l_as: FORMAL_DEC_AS)
 		do
 		end
 
-	process_class_type_as (l_as: CLASS_TYPE_AS) is
+	process_class_type_as (l_as: CLASS_TYPE_AS)
 		do
 		end
 
-	process_none_type_as (l_as: NONE_TYPE_AS) is
+	process_none_type_as (l_as: NONE_TYPE_AS)
 		do
 		end
 
-	process_bits_as (l_as: BITS_AS) is
+	process_bits_as (l_as: BITS_AS)
 		do
 		end
 
-	process_bits_symbol_as (l_as: BITS_SYMBOL_AS) is
+	process_bits_symbol_as (l_as: BITS_SYMBOL_AS)
 		do
 		end
 
-	process_suppliers_as (l_as: SUPPLIERS_AS) is
+	process_suppliers_as (l_as: SUPPLIERS_AS)
 		do
 		end
 
-	process_rename_as (l_as: RENAME_AS) is
+	process_rename_as (l_as: RENAME_AS)
 		do
 		end
 
-	process_invariant_as (l_as: INVARIANT_AS) is
+	process_invariant_as (l_as: INVARIANT_AS)
 		do
 		end
 
-	process_interval_as (l_as: INTERVAL_AS) is
+	process_interval_as (l_as: INTERVAL_AS)
 		do
 		end
 
-	process_index_as (l_as: INDEX_AS) is
+	process_index_as (l_as: INDEX_AS)
 		do
 		end
 
-	process_export_item_as (l_as: EXPORT_ITEM_AS) is
+	process_export_item_as (l_as: EXPORT_ITEM_AS)
 		do
 		end
 
-	process_elseif_as (l_as: ELSIF_AS) is
+	process_elseif_as (l_as: ELSIF_AS)
 		do
 		end
 
-	process_create_as (l_as: CREATE_AS) is
+	process_create_as (l_as: CREATE_AS)
 		do
 		end
 
-	process_client_as (l_as: CLIENT_AS) is
+	process_client_as (l_as: CLIENT_AS)
 		do
 		end
 
-	process_case_as (l_as: CASE_AS) is
+	process_case_as (l_as: CASE_AS)
 		do
 		end
 
-	process_assert_list_as (l_as: ASSERT_LIST_AS) is
+	process_assert_list_as (l_as: ASSERT_LIST_AS)
 		do
 		end
 
-	process_ensure_as (l_as: ENSURE_AS) is
+	process_ensure_as (l_as: ENSURE_AS)
 		do
 		end
 
-	process_ensure_then_as (l_as: ENSURE_THEN_AS) is
+	process_ensure_then_as (l_as: ENSURE_THEN_AS)
 		do
 		end
 
-	process_require_as (l_as: REQUIRE_AS) is
+	process_require_as (l_as: REQUIRE_AS)
 		do
 		end
 
-	process_require_else_as (l_as: REQUIRE_ELSE_AS) is
+	process_require_else_as (l_as: REQUIRE_ELSE_AS)
 		do
 		end
 
-	process_convert_feat_as (l_as: CONVERT_FEAT_AS) is
+	process_convert_feat_as (l_as: CONVERT_FEAT_AS)
 		do
 		end
 
-	process_internal_as (l_as: INTERNAL_AS) is
+	process_internal_as (l_as: INTERNAL_AS)
 		do
 		end
 
-	process_expr_addresse_as (l_as: EXPR_ADDRESS_AS) is
+	process_expr_addresse_as (l_as: EXPR_ADDRESS_AS)
 		do
 		end
 
-	process_void_as (l_as: VOID_AS) is
+	process_void_as (l_as: VOID_AS)
 		do
 		end
 
-	process_bracket_as (l_as: BRACKET_AS) is
+	process_bracket_as (l_as: BRACKET_AS)
 		do
 		end
 
-	process_type_list_as (l_as: TYPE_LIST_AS) is
+	process_type_list_as (l_as: TYPE_LIST_AS)
 		do
 		end
 
-	process_none_id_as (l_as: NONE_ID_AS) is
+	process_none_id_as (l_as: NONE_ID_AS)
 		do
 		end
 
-	process_typed_char_as (l_as: TYPED_CHAR_AS) is
+	process_typed_char_as (l_as: TYPED_CHAR_AS)
 		do
 		end
 
-	process_agent_routine_creation_as (l_as: AGENT_ROUTINE_CREATION_AS) is
+	process_agent_routine_creation_as (l_as: AGENT_ROUTINE_CREATION_AS)
 		do
 		end
 
-	process_tilda_routine_creation_as (l_as: TILDA_ROUTINE_CREATION_AS) is
+	process_tilda_routine_creation_as (l_as: TILDA_ROUTINE_CREATION_AS)
 		do
 		end
 
-	process_create_creation_as (l_as: CREATE_CREATION_AS) is
+	process_create_creation_as (l_as: CREATE_CREATION_AS)
 		do
 		end
 
-	process_bang_creation_as (l_as: BANG_CREATION_AS) is
+	process_bang_creation_as (l_as: BANG_CREATION_AS)
 		do
 		end
 
-	process_create_creation_expr_as (l_as: CREATE_CREATION_EXPR_AS) is
+	process_create_creation_expr_as (l_as: CREATE_CREATION_EXPR_AS)
 		do
 		end
 
-	process_bang_creation_expr_as (l_as: BANG_CREATION_EXPR_AS) is
+	process_bang_creation_expr_as (l_as: BANG_CREATION_EXPR_AS)
 		do
 		end
 
-	process_keyword_as (l_as: KEYWORD_AS) is
+	process_keyword_as (l_as: KEYWORD_AS)
 		do
 		end
 
-	process_symbol_as (l_as: SYMBOL_AS) is
+	process_symbol_as (l_as: SYMBOL_AS)
 		do
 		end
 
-	process_break_as (l_as: BREAK_AS) is
+	process_break_as (l_as: BREAK_AS)
 		do
 		end
 
-	process_leaf_stub_as (l_as: LEAF_STUB_AS) is
+	process_leaf_stub_as (l_as: LEAF_STUB_AS)
 		do
 		end
 
-	process_symbol_stub_as (l_as: SYMBOL_STUB_AS) is
+	process_symbol_stub_as (l_as: SYMBOL_STUB_AS)
 		do
 		end
 
-	process_export_clause_as (l_as: EXPORT_CLAUSE_AS) is
+	process_export_clause_as (l_as: EXPORT_CLAUSE_AS)
 		do
 		end
 
-	process_undefine_clause_as (l_as: UNDEFINE_CLAUSE_AS) is
+	process_undefine_clause_as (l_as: UNDEFINE_CLAUSE_AS)
 		do
 		end
 
-	process_redefine_clause_as (l_as: REDEFINE_CLAUSE_AS) is
+	process_redefine_clause_as (l_as: REDEFINE_CLAUSE_AS)
 		do
 		end
 
-	process_rename_clause_as (l_as: RENAME_CLAUSE_AS) is
+	process_rename_clause_as (l_as: RENAME_CLAUSE_AS)
 		do
 		end
 
-	process_select_clause_as (l_as: SELECT_CLAUSE_AS) is
+	process_select_clause_as (l_as: SELECT_CLAUSE_AS)
 		do
 		end
 
-	process_formal_generic_list_as (l_as: FORMAL_GENERIC_LIST_AS) is
+	process_formal_generic_list_as (l_as: FORMAL_GENERIC_LIST_AS)
 		do
 		end
 
-	process_parent_list_as (l_as: PARENT_LIST_AS) is
+	process_parent_list_as (l_as: PARENT_LIST_AS)
 		do
 		end
 
-	process_local_dec_list_as (l_as: LOCAL_DEC_LIST_AS) is
+	process_local_dec_list_as (l_as: LOCAL_DEC_LIST_AS)
 		do
 		end
 
-	process_formal_argu_dec_list_as (l_as: FORMAL_ARGU_DEC_LIST_AS) is
+	process_formal_argu_dec_list_as (l_as: FORMAL_ARGU_DEC_LIST_AS)
 		do
 		end
 
-	process_debug_key_list_as (l_as: DEBUG_KEY_LIST_AS) is
+	process_debug_key_list_as (l_as: DEBUG_KEY_LIST_AS)
 		do
 		end
 
-	process_parameter_list_as (l_as: PARAMETER_LIST_AS) is
+	process_parameter_list_as (l_as: PARAMETER_LIST_AS)
 		do
 		end
 
-	process_convert_feat_list_as (l_as: CONVERT_FEAT_LIST_AS) is
+	process_convert_feat_list_as (l_as: CONVERT_FEAT_LIST_AS)
 		do
 		end
 
-	process_class_list_as (l_as: CLASS_LIST_AS) is
+	process_class_list_as (l_as: CLASS_LIST_AS)
 		do
 		end
 
-	process_delayed_actual_list_as (l_as: DELAYED_ACTUAL_LIST_AS) is
+	process_delayed_actual_list_as (l_as: DELAYED_ACTUAL_LIST_AS)
 		do
 		end
 
-	process_named_tuple_type_as (l_as: NAMED_TUPLE_TYPE_AS) is
+	process_named_tuple_type_as (l_as: NAMED_TUPLE_TYPE_AS)
 		do
 		end
 
-	process_type_dec_list_as (l_as: TYPE_DEC_LIST_AS) is
+	process_type_dec_list_as (l_as: TYPE_DEC_LIST_AS)
 		do
 		end
 
-	process_inline_agent_creation_as (l_as: INLINE_AGENT_CREATION_AS) is
+	process_inline_agent_creation_as (l_as: INLINE_AGENT_CREATION_AS)
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

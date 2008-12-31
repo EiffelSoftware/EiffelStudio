@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Source code generator for event reference expression"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_event_name: like event_name; a_target: like target) is
+	make (a_event_name: like event_name; a_target: like target)
 			-- Creation routine
 		require
 			non_void_name: a_event_name /= Void
@@ -42,7 +42,7 @@ feature -- Access
 	target: CODE_EXPRESSION
 			-- Target object
 			
-	code: STRING is
+	code: STRING
 			-- | Result := "`target object'.[`event_name']"
 			-- In fact the `event_name' will be generate in the CODE_ATTACH_EVENT_STATEMENT or in the CODE_REMOVE_EVENT_STATEMENT
 			-- Eiffel code of event reference expression
@@ -58,7 +58,7 @@ feature -- Access
 		
 feature -- Status Report
 
-	type: CODE_TYPE_REFERENCE is
+	type: CODE_TYPE_REFERENCE
 			-- Type
 		do
 			Result := None_type_reference
@@ -69,7 +69,7 @@ invariant
 	non_void_event_name: event_name /= Void
 	non_void_target: target /= Void
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel representation of a CodeDom snippet statement"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_value: like value) is
+	make (a_value: like value)
 		require
 			non_void_value: a_value /= Void
 		do
@@ -30,7 +30,7 @@ feature -- Access
 	value: STRING
 			-- Literal code block of the snippet
 
-	code: STRING is
+	code: STRING
 			-- | Result := "`value'"
 			-- Eiffel code of snippet statement
 		do
@@ -40,13 +40,13 @@ feature -- Access
 			Result.append ("%N")
 		end
 	
-	need_dummy: BOOLEAN is
+	need_dummy: BOOLEAN
 			-- Does statement require dummy local variable?
 		do
 			Result := False
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

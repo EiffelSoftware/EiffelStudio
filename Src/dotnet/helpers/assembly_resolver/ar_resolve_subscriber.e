@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A subscriber for use with subscribing/unsubscribing to AppDomain.ResolveAssembly events,
 		called when the existing CLR assembly loading policy fails.
@@ -17,7 +17,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize instance.
 		do
 			create subscriptions.make
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 	
 feature -- Access
 
-	subscribed_domains: LIST [APP_DOMAIN] is
+	subscribed_domains: LIST [APP_DOMAIN]
 			-- List of subscribed domains.
 		local
 			l_res: ARRAYED_LIST [APP_DOMAIN]
@@ -48,7 +48,7 @@ feature -- Access
 			matched_subscriptions_count: subscriptions.count = Result.count
 		end
 		
-	has_subscription (a_domain: APP_DOMAIN): BOOLEAN is
+	has_subscription (a_domain: APP_DOMAIN): BOOLEAN
 			-- Does `a_domain' already have a subscription?
 		require
 			a_domain_not_void: a_domain /= Void
@@ -56,7 +56,7 @@ feature -- Access
 			Result := subscription (a_domain) /= Void
 		end
 		
-	subscription (a_domain: APP_DOMAIN): AR_SUBSCRIPTION is
+	subscription (a_domain: APP_DOMAIN): AR_SUBSCRIPTION
 			-- Retrieve subscription for `a_domain'.
 		require
 			a_domain_not_void: a_domain /= Void
@@ -80,7 +80,7 @@ feature -- Access
 
 feature -- Subscribe
 
-	subscribe (a_domain: APP_DOMAIN; a_resolver: AR_RESOLVER) is
+	subscribe (a_domain: APP_DOMAIN; a_resolver: AR_RESOLVER)
 			-- Subscribes `a_resolver' to `a_domain's resolver event.
 		require
 			a_domain_not_void: a_domain /= Void
@@ -101,7 +101,7 @@ feature -- Subscribe
 			end
 		end
 		
-	unsubscribe (a_domain: APP_DOMAIN; a_resolver: AR_RESOLVER) is
+	unsubscribe (a_domain: APP_DOMAIN; a_resolver: AR_RESOLVER)
 			-- Unsubscribes `a_resolver' from `a_domain's resolver event.
 		require
 			a_domain_not_void: a_domain /= Void
@@ -112,7 +112,7 @@ feature -- Subscribe
 		
 feature {NONE} -- Implementation
 
-	unsubscribe_for_unload (a_sender: SYSTEM_OBJECT; a_args: EVENT_ARGS) is
+	unsubscribe_for_unload (a_sender: SYSTEM_OBJECT; a_args: EVENT_ARGS)
 			-- Event handler for APP_DOMAIN.unload event.
 		require
 			a_sender_not_void: a_sender /= Void
@@ -132,7 +132,7 @@ feature {NONE} -- Implementation
 invariant
 	subscriptions_not_void: subscriptions /= Void
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

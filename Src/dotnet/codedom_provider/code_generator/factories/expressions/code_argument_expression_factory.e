@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Code generator for argument expressions"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 
-	generate_argument_reference_expression (a_source: SYSTEM_DLL_CODE_ARGUMENT_REFERENCE_EXPRESSION) is
+	generate_argument_reference_expression (a_source: SYSTEM_DLL_CODE_ARGUMENT_REFERENCE_EXPRESSION)
 			-- Generate Eiffel code from `a_source'.
 		require
 			non_void_source: a_source /= Void
@@ -57,7 +57,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			non_void_last_expression: last_expression /= Void
 		end			
 
-	generate_parameter_declaration_expression (a_source: SYSTEM_DLL_CODE_PARAMETER_DECLARATION_EXPRESSION) is
+	generate_parameter_declaration_expression (a_source: SYSTEM_DLL_CODE_PARAMETER_DECLARATION_EXPRESSION)
 			-- Generate Eiffel code from `a_source'.
 		require
 			non_void_source: a_source /= Void
@@ -80,7 +80,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			non_void_last_expression: last_expression /= Void
 		end			
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

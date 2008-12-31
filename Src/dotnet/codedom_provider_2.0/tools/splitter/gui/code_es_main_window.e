@@ -1,4 +1,4 @@
-indexing
+note
 	description: "eSplitter main window"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -36,14 +36,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize registry settings
 		do
 			saved_make
 			default_create
 		end
 		
-	user_initialization is
+	user_initialization
 			-- called by `initialize'.
 			-- Any custom user initialization that
 			-- could not be performed in `initialize',
@@ -71,13 +71,13 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Events Handling
 
-	on_folder_change is
+	on_folder_change
 			-- Check if `generate' button should be enabled.
 		do
 			check_can_generate
 		end
 		
-	on_browse_folder is
+	on_browse_folder
 			-- Browse for folder containing Eiffel multi-class files.
 		local
 			l_dialog: EV_DIRECTORY_DIALOG
@@ -95,31 +95,31 @@ feature {NONE} -- Events Handling
 			end
 		end
 	
-	on_regexp_change is
+	on_regexp_change
 			-- Check if `generate' button should be enabled.
 		do
 			check_can_generate
 		end		
 	
-	on_select_no_destination is
+	on_select_no_destination
 			-- Disable destination combo box.
 		do
 			destination_folder_box.disable_sensitive
 		end
 
-	on_select_destination is
+	on_select_destination
 			-- Enable destination combo box.
 		do
 			destination_folder_box.enable_sensitive
 		end
 
-	on_destination_folder_change is
+	on_destination_folder_change
 			-- Check if `generate' buttin should be enabled.
 		do
 			check_can_generate
 		end
 	
-	on_browse_destination_folder is
+	on_browse_destination_folder
 			-- Browse for destination folder.
 		local
 			l_dialog: EV_DIRECTORY_DIALOG
@@ -137,7 +137,7 @@ feature {NONE} -- Events Handling
 			end
 		end
 	
-	on_generate is
+	on_generate
 			-- Generate Eiffel source files.
 		local
 			l_dest, l_folder: STRING
@@ -173,7 +173,7 @@ feature {NONE} -- Events Handling
 			end
 		end
 
-	on_open_folder is
+	on_open_folder
 			-- Explore destination folder.
 		local
 			l_dir: STRING
@@ -189,13 +189,13 @@ feature {NONE} -- Events Handling
 			end
 		end
 
-	on_help is
+	on_help
 			-- Called by `select_actions' of `help_menu_item'.
 		do
 			(create {EV_ENVIRONMENT}).application.display_help_for_widget (Current)
 		end
 
-	on_about is
+	on_about
 			-- Called by `select_actions' of `about_menu_item'.
 		local
 			l_about_dialog: CODE_ES_ABOUT_DIALOG
@@ -204,7 +204,7 @@ feature {NONE} -- Events Handling
 			l_about_dialog.show_modal_to_window (Current)
 		end
 
-	on_exit is
+	on_exit
 			-- Called by `select_actions' of `exit_menu_item'.
 		do
 			save_x_pos (x_position)
@@ -216,7 +216,7 @@ feature {NONE} -- Events Handling
 
 feature {NONE} -- Implementation
 
-	check_can_generate is
+	check_can_generate
 			-- Are settings OK for generation?
 		local
 			l_text: STRING
@@ -248,7 +248,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_event (a_event: EV_THREAD_EVENT) is
+	process_event (a_event: EV_THREAD_EVENT)
 			-- Display events in output text field.
 		require
 			non_void_event: a_event /= Void
@@ -272,7 +272,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	display_info (a_title, a_message: STRING) is
+	display_info (a_title, a_message: STRING)
 			-- Display informational text with title `a_title' and content `a_message'.
 		require
 			non_void_title: a_title /= Void
@@ -285,7 +285,7 @@ feature {NONE} -- Implementation
 			output_text.flush_buffer_to (output_text.text_length + 1, output_text.text_length + 1)
 		end
 		
-	display_warning (a_title, a_message: STRING) is
+	display_warning (a_title, a_message: STRING)
 			-- Display warning with title `a_title' and content `a_message'.
 		require
 			non_void_title: a_title /= Void
@@ -298,7 +298,7 @@ feature {NONE} -- Implementation
 			output_text.flush_buffer_to (output_text.text_length + 1, output_text.text_length + 1)
 		end
 		
-	display_error (a_title, a_message: STRING) is
+	display_error (a_title, a_message: STRING)
 			-- Display error with title `a_title' and content `a_message'.
 		require
 			non_void_title: a_title /= Void
@@ -312,55 +312,55 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Private Access
 
-	Red: EV_COLOR is
+	Red: EV_COLOR
 			-- Red
 		once
 			Result := (create {EV_STOCK_COLORS}).Red
 		end
 		
-	Blue: EV_COLOR is
+	Blue: EV_COLOR
 			-- Blue
 		once
 			Result := (create {EV_STOCK_COLORS}).Blue
 		end
 
-	Black: EV_COLOR is
+	Black: EV_COLOR
 			-- Black
 		once
 			Result := (create {EV_STOCK_COLORS}).Black
 		end
 
-	White: EV_COLOR is
+	White: EV_COLOR
 			-- White
 		once
 			Result := (create {EV_STOCK_COLORS}).White
 		end
 
-	Message_font: EV_FONT is
+	Message_font: EV_FONT
 			-- Font used to diplay information and warning messages
 		once
 			create Result.make_with_values (family_sans, weight_regular, shape_regular, 10)
 		end
 		
-	Error_font: EV_FONT is
+	Error_font: EV_FONT
 			-- Font used to diplay error messages
 		once
 			create Result.make_with_values (family_sans, weight_bold, shape_regular, 10)
 		end
 		
-	Information_format: EV_CHARACTER_FORMAT is
+	Information_format: EV_CHARACTER_FORMAT
 			-- Format used to display information messages
 		once
 			create Result.make_with_font_and_color (Message_font, Black, White)
 		end
 		
-	Warning_format: EV_CHARACTER_FORMAT is
+	Warning_format: EV_CHARACTER_FORMAT
 			-- Format used to display warning messages
 		once
 			create Result.make_with_font_and_color (Message_font, Blue, White)
 		end
 		
-	Error_format: EV_CHARACTER_FORMAT is
+	Error_format: EV_CHARACTER_FORMAT
 			-- Format used to display error messages
 		once
 			create Result.make_with_font_and_color (Error_font, Red, White)
@@ -372,7 +372,7 @@ feature {NONE} -- Private Access
 	is_select_during_set_strings: BOOLEAN;
 			-- Was `combo_box.select' called as part of `combo_box.set_strings' execution?
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

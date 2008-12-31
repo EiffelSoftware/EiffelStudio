@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Serialize Codedom passed as argument to be reused in tests"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature -- Basic Operations
 
-	serialize (a_graph: SYSTEM_OBJECT) is
+	serialize (a_graph: SYSTEM_OBJECT)
 			-- Serialize object graph `a_graph'.
 		require
 			non_void_graph: a_graph /= Void
@@ -52,7 +52,7 @@ feature -- Basic Operations
 			l_stream.close
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

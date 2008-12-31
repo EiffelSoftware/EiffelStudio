@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel representation of a CodeDom comment statement"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_comment: like comment) is
+	make (a_comment: like comment)
 			-- Initialize `comment'.
 		require
 			non_void_comment: a_comment /= Void
@@ -31,7 +31,7 @@ feature -- Access
 	comment: CODE_COMMENT
 			-- Comment
 
-	code: STRING is
+	code: STRING
 			-- | Result := "`comment'"
 			-- Eiffel code of comment statement
 		do
@@ -42,7 +42,7 @@ feature -- Access
 			Result.append (comment.code)
 		end
 
-	need_dummy: BOOLEAN is
+	need_dummy: BOOLEAN
 			-- Does statement require dummy local variable?
 		do
 			Result := False
@@ -51,7 +51,7 @@ feature -- Access
 invariant
 	non_void_comment: comment /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

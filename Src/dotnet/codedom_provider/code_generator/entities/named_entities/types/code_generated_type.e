@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel type whose source code is to be generated"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_type: CODE_TYPE_REFERENCE) is
+	make (a_type: CODE_TYPE_REFERENCE)
 			-- | Call Precursor {CODE_TYPE}
 			-- Initialize attributes
 		do
@@ -81,7 +81,7 @@ feature -- Access
 			-- Value: feature
 			-- Key: feature name
 	
-	all_features: HASH_TABLE [CODE_FEATURE, STRING] is
+	all_features: HASH_TABLE [CODE_FEATURE, STRING]
 			-- Features including creation routines
 		local
 			l_features, l_creation_routines: HASH_TABLE [CODE_FEATURE, STRING]
@@ -107,7 +107,7 @@ feature -- Access
 			end
 		end
 		
-	parent (a_name: STRING): CODE_PARENT is
+	parent (a_name: STRING): CODE_PARENT
 			-- Parent with full Eiffel name `a_name' if any
 		require
 			non_void_name: a_name /= Void
@@ -121,7 +121,7 @@ feature -- Access
 	snippet_inherit_clause: STRING
 			-- Snippet inherit clause
 
-	code: STRING is
+	code: STRING
 			-- | Call `header', `body' and `footer' successively.
 			-- Eiffel code of type
 		local
@@ -140,7 +140,7 @@ feature -- Access
 
 feature -- Element Settings
 
-	add_indexing_clause (a_clause: CODE_INDEXING_CLAUSE) is
+	add_indexing_clause (a_clause: CODE_INDEXING_CLAUSE)
 			-- Add `a_clause' to `indexing_clauses'.
 		require
 			non_void_indexing_clause: a_clause /= Void
@@ -150,7 +150,7 @@ feature -- Element Settings
 			a_clause_added: indexing_clauses.has (a_clause)
 		end
 
-	add_parent (a_parent: CODE_PARENT) is
+	add_parent (a_parent: CODE_PARENT)
 			-- Add `a_parent' to `parents'.
 		require
 			non_void_parent: a_parent /= Void
@@ -160,7 +160,7 @@ feature -- Element Settings
 			parent_added: parents.has (a_parent.type.eiffel_name)
 		end
 		
-	add_feature (a_feature: CODE_FEATURE) is
+	add_feature (a_feature: CODE_FEATURE)
 			-- Add `a_feature' to `features'.
 		require
 			non_void_feature: a_feature /= Void
@@ -181,7 +181,7 @@ feature -- Element Settings
 			dotnet_feature_added: dotnet_features.has (a_feature.name)
 		end
 
-	add_implementation_feature (a_feature: CODE_TRY_CATCH_IMPLEMENTATION_FEATURE) is
+	add_implementation_feature (a_feature: CODE_TRY_CATCH_IMPLEMENTATION_FEATURE)
 			-- Add `a_feature' to `implementation_features'.
 		require
 			non_void_feature: a_feature /= Void
@@ -191,7 +191,7 @@ feature -- Element Settings
 			feature_added: features.has (a_feature.name)
 		end
 
-	add_creation_routine (a_creation_routine: CODE_CREATION_ROUTINE) is
+	add_creation_routine (a_creation_routine: CODE_CREATION_ROUTINE)
 			-- Add `a_creation_routine' to `creation_routines'.
 		require
 			non_void_creation_routine: a_creation_routine /= Void
@@ -204,7 +204,7 @@ feature -- Element Settings
 			creation_routine_added: creation_routines.has (a_creation_routine.eiffel_name)
 		end
 
-	add_undefine_clause (a_parent: CODE_TYPE_REFERENCE; a_routine: CODE_MEMBER_REFERENCE) is
+	add_undefine_clause (a_parent: CODE_TYPE_REFERENCE; a_routine: CODE_MEMBER_REFERENCE)
 			-- Add undefine clause for parent `a_dotnet_parent_name' and feature `a_feature_name'.
 		require
 			non_void_parent: a_parent /= Void
@@ -220,7 +220,7 @@ feature -- Element Settings
 			end			
 		end
 		
-	add_redefine_clause (a_parent: CODE_TYPE_REFERENCE; a_routine: CODE_MEMBER_REFERENCE) is
+	add_redefine_clause (a_parent: CODE_TYPE_REFERENCE; a_routine: CODE_MEMBER_REFERENCE)
 			-- Add redefine clause for parent `a_parent' and feature `a_routine'.
 		require
 			non_void_parent: a_parent /= Void
@@ -236,7 +236,7 @@ feature -- Element Settings
 			end			
 		end
 	
-	add_rename_clause (a_parent: CODE_TYPE_REFERENCE; a_routine: CODE_MEMBER_REFERENCE; a_new_name: STRING) is
+	add_rename_clause (a_parent: CODE_TYPE_REFERENCE; a_routine: CODE_MEMBER_REFERENCE; a_new_name: STRING)
 			-- Add rename clause for parent `a_parent' and feature `a_routine' renamed as `a_new_name'.
 		require
 			non_void_parent: a_parent /= Void
@@ -253,7 +253,7 @@ feature -- Element Settings
 			end			
 		end
 	
-	set_snippet_inherit_clause (a_text: STRING) is
+	set_snippet_inherit_clause (a_text: STRING)
 			-- Set `snippet_inherit_clause' with `a_text'.
 		require
 			non_void_text: a_text /= Void
@@ -265,7 +265,7 @@ feature -- Element Settings
 	
 feature -- Code generation
 
-	header: STRING is
+	header: STRING
 			-- | Call `indexing_clauses', `parents' and `creation_routines_declaration' if any.
 
 			-- Eiffel code of type header (from indexing clause to creation routine declaration)
@@ -296,7 +296,7 @@ feature -- Code generation
 			header_generated: Result /= Void and not Result.is_empty
 		end
 
-	indexing_clause: STRING is
+	indexing_clause: STRING
 			-- | Loop on `indexing_clauses': call `indexing_clause' for each item.
 
 			-- Indexing clauses code (include `indexing' keyword)
@@ -325,7 +325,7 @@ feature -- Code generation
 			a_clause_generated: Result /= Void and Result.count > 0
 		end
 	
-	class_declaration: STRING is 
+	class_declaration: STRING 
 			-- Class declaration (including class name and qualifiers like deferred, expanded or frozen)
 		require
 			is_in_code_generation: current_state = Code_generation
@@ -339,7 +339,7 @@ feature -- Code generation
 			not_empty_class_declaration: Result.count > 0
 		end
 		
-	inheritance_clause: STRING is 
+	inheritance_clause: STRING 
 			-- | loop on parents, then loop on feature_clause of parent
 
 			-- Parents code (include `inherit' keyword, parent names and associated inheritance clauses)
@@ -398,7 +398,7 @@ feature -- Code generation
 				parents_generated: Result /= Void and not Result.is_empty
 			end
 									
-		creation_clause: STRING is 
+		creation_clause: STRING 
 				-- Code of creation clause
 			require
 				is_in_code_generation: current_state = Code_generation
@@ -428,7 +428,7 @@ feature -- Code generation
 				end			
 			end
 	
-		body: STRING is
+		body: STRING
 				-- Eiffel code of type body
 			require
 				is_in_code_generation: current_state = Code_generation
@@ -455,7 +455,7 @@ feature -- Code generation
 				body_generated: Result /= Void
 			end
 	
-		features_code (a_features: HASH_TABLE [CODE_FEATURE, STRING]): STRING is 
+		features_code (a_features: HASH_TABLE [CODE_FEATURE, STRING]): STRING 
 				-- Code corresponding to features `a_features'
 			require
 				non_void_features: a_features /= Void
@@ -489,7 +489,7 @@ feature -- Code generation
 				end
 			end
 			
-		footer: STRING is
+		footer: STRING
 				-- | Call `invariants'.
 	
 				-- Eiffel code of type footer (from `invariant' keyword to end of type)
@@ -503,7 +503,7 @@ feature -- Code generation
 				footer_generated: Result /= Void and then not Result.is_empty
 			end
 	
-		features_per_clauses (a_features: HASH_TABLE [CODE_FEATURE, STRING]): HASH_TABLE [LIST [CODE_FEATURE], STRING] is
+		features_per_clauses (a_features: HASH_TABLE [CODE_FEATURE, STRING]): HASH_TABLE [LIST [CODE_FEATURE], STRING]
 				-- Features ordered per feature clause
 			require
 				non_void_features: a_features /= Void
@@ -533,7 +533,7 @@ feature -- Code generation
 	
 	feature -- Comparison
 	
-		is_equal (other: CODE_GENERATED_TYPE): BOOLEAN is
+		is_equal (other: CODE_GENERATED_TYPE): BOOLEAN
 				-- Is `other' attached to an object considered
 				-- equal to current object?
 				-- We consider that CodeDom has the same limitation as C# where
@@ -549,7 +549,7 @@ feature -- Code generation
 		non_void_features: features /= Void
 		non_void_dotnet_features: dotnet_features /= Void
 	
-	indexing
+	note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

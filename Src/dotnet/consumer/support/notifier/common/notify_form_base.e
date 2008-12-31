@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Base implementation for a form used to host a notification icon."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,13 +18,13 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize form.
 		do
 			initialize_component
 		end
 
-	initialize_component is
+	initialize_component
 			-- Initialize form controls
 		local
 			l_rm: RESOURCE_MANAGER
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Clean Up
 
-	dispose_boolean (a_disposing: BOOLEAN) is
+	dispose_boolean (a_disposing: BOOLEAN)
 			-- Called when for has closed
 		do
 			Precursor {WINFORMS_FORM} (a_disposing)
@@ -69,7 +69,7 @@ feature {NONE} -- Clean Up
 
 feature -- Status Setting
 
-	notify_consume (a_message: NOTIFY_MESSAGE) is
+	notify_consume (a_message: NOTIFY_MESSAGE)
 			-- Notifies user of a consume.
 		require
 			a_message_attached: a_message /= Void
@@ -79,7 +79,7 @@ feature -- Status Setting
 			last_notification_set: last_notification = old notify_string
 		end
 
-	notify_info (a_message: SYSTEM_STRING) is
+	notify_info (a_message: SYSTEM_STRING)
 			-- Notifier user of an event
 		require
 			a_message_attached: a_message /= Void
@@ -95,7 +95,7 @@ feature -- Status Setting
 			last_notification_set: last_notification = old notify_string
 		end
 
-	restore_last_notification is
+	restore_last_notification
 			-- Restores last message
 		do
 			if last_notification /= Void then
@@ -105,7 +105,7 @@ feature -- Status Setting
 			end
 		end
 
-	clear_notification is
+	clear_notification
 			-- Clears last notification message.
 		do
 			notify_string := "No current jobs to process."
@@ -124,7 +124,7 @@ feature -- Access
 
 feature -- Events
 
-	on_idle (a_sender: SYSTEM_OBJECT; a_args: EVENT_ARGS) is
+	on_idle (a_sender: SYSTEM_OBJECT; a_args: EVENT_ARGS)
 			-- Processes application idle events.
 		do
 			if notify_icon /= Void then
@@ -134,10 +134,10 @@ feature -- Events
 
 feature {NONE} -- Constants
 
-	tray_icon_resource_name: SYSTEM_STRING is "tray_icon"
+	tray_icon_resource_name: SYSTEM_STRING = "tray_icon"
 			-- Tray icon resource name
 
-	resource_name: SYSTEM_STRING is "consumer"
+	resource_name: SYSTEM_STRING = "consumer"
 			-- Consumer resources name
 
 feature {NONE} -- Implementation
@@ -145,7 +145,7 @@ feature {NONE} -- Implementation
 	last_notification: SYSTEM_STRING;
 			-- Last set notification
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Assignment types"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,21 +10,21 @@ class
 
 feature -- Access
 
-	Default_assignment: INTEGER is 1
+	Default_assignment: INTEGER = 1
 			-- Assignment target is neither a field nor a property
 	
-	Property_assignment: INTEGER is 2
+	Property_assignment: INTEGER = 2
 			-- Assignment target is a property
 	
-	Field_assignment: INTEGER is 3
+	Field_assignment: INTEGER = 3
 			-- Assignment target is a field
 
-	Array_assignment: INTEGER is 4
+	Array_assignment: INTEGER = 4
 			-- Assignment target is an array element
 
 feature -- Status Report
 
-	is_valid_assignment_type (a_value: INTEGER): BOOLEAN is
+	is_valid_assignment_type (a_value: INTEGER): BOOLEAN
 			-- Is `a_value' a valid assignment type?
 		do
 			Result := a_value = Default_assignment or a_value = Property_assignment or a_value = Field_assignment or a_value = Array_assignment
@@ -38,7 +38,7 @@ invariant
 	field_assignment_is_valid: is_valid_assignment_type (Field_assignment)
 	array_assignment_is_valid: is_valid_assignment_type (Array_assignment)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A collection of notifier functions, that can be used with the MDC_BALLOON_MSG environment variable."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,24 +10,24 @@ class
 
 feature {NONE} -- Contants
 
-	namespace_delimiter: CHARACTER is ':'
+	namespace_delimiter: CHARACTER = ':'
 			-- Message function namespace delimiter
 
-	module_namespace: SYSTEM_STRING is "module"
-	assembly_namespace: SYSTEM_STRING is "assembly"
-	consume_namespace: SYSTEM_STRING is "consume"
+	module_namespace: SYSTEM_STRING = "module"
+	assembly_namespace: SYSTEM_STRING = "assembly"
+	consume_namespace: SYSTEM_STRING = "consume"
 			-- Function namespaces
 
-	name_function: SYSTEM_STRING is "name"
-	version_function: SYSTEM_STRING is "version"
-	culture_function: SYSTEM_STRING is "culture"
-	key_function: SYSTEM_STRING is "key"
-	full_name_function: SYSTEM_STRING is "full_name"
-	path_function: SYSTEM_STRING is "path"
-	clr_function: SYSTEM_STRING is "clr"
-	reason_function: SYSTEM_STRING is "reason"
-	cache_id_function: SYSTEM_STRING is "cache_id"
-	cache_path_function: SYSTEM_STRING is "cache_path"
+	name_function: SYSTEM_STRING = "name"
+	version_function: SYSTEM_STRING = "version"
+	culture_function: SYSTEM_STRING = "culture"
+	key_function: SYSTEM_STRING = "key"
+	full_name_function: SYSTEM_STRING = "full_name"
+	path_function: SYSTEM_STRING = "path"
+	clr_function: SYSTEM_STRING = "clr"
+	reason_function: SYSTEM_STRING = "reason"
+	cache_id_function: SYSTEM_STRING = "cache_id"
+	cache_path_function: SYSTEM_STRING = "cache_path"
 			-- Function names
 
 feature {NONE} -- Implementation
@@ -35,7 +35,7 @@ feature {NONE} -- Implementation
 	message_functions: HASH_TABLE [STRING, STRING]
 			-- Message functions
 
-	functions: LIST [SYSTEM_STRING] is
+	functions: LIST [SYSTEM_STRING]
 			-- List of message functions
 		local
 			l_result: ARRAYED_LIST [SYSTEM_STRING]
@@ -68,7 +68,7 @@ feature {NONE} -- Implementation
 			result_compares_objects: Result.object_comparison
 		end
 
-	new_function (a_ns: SYSTEM_STRING; a_name: SYSTEM_STRING): SYSTEM_STRING is
+	new_function (a_ns: SYSTEM_STRING; a_name: SYSTEM_STRING): SYSTEM_STRING
 			-- Generates a qualified function name from namespace `a_ns' and a
 			-- function name `a_name'.
 		require
@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
 			result_split_count_is_two: Result.split (<<namespace_delimiter>>).count = 2
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

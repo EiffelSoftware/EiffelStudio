@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Analyze codedom provider dll"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,7 +30,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	analyze (a_codedom_provider: STRING) is
+	analyze (a_codedom_provider: STRING)
 			-- Analyze `a_codedom_provider' and initialized internal data accordingly.
 		require
 			non_void_provider: a_codedom_provider /= Void
@@ -87,7 +87,7 @@ invariant
 	codedom_provider_if_successful: analysis_successful implies codedom_provider /= Void
 	language_extension_if_successful: analysis_successful implies language_extension /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

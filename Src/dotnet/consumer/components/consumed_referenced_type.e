@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Type referenced by other types (as parent or interface) to be persisted to XML"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; id: INTEGER) is
+	make (a_name: STRING; id: INTEGER)
 			-- Set `name' with `a_name'.
 			-- Set `assembly_id' with `id'.
 		require
@@ -30,19 +30,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- .NET type name
 		do
 			Result := n
 		end
 
-	assembly_id: INTEGER is
+	assembly_id: INTEGER
 			-- Assembly containing type
 		do
 			Result := i
 		end
 
-	is_by_ref: BOOLEAN is
+	is_by_ref: BOOLEAN
 			-- Is current type a byref one?
 		do
 			Result := n.item (n.count) = '&'
@@ -50,7 +50,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_is_by_ref is
+	set_is_by_ref
 			-- Set `is_byref'.
 		do
 			n.append_character ('&')
@@ -68,7 +68,7 @@ feature {NONE} -- Access
 
 feature -- Comparison
 
-	same_as (other: CONSUMED_REFERENCED_TYPE): BOOLEAN is
+	same_as (other: CONSUMED_REFERENCED_TYPE): BOOLEAN
 			-- Only compare referenced types from same assembly as ids may change for other assemblies!
 		do
 			Result := other.assembly_id = assembly_id and other.name.is_equal (name) and
@@ -80,7 +80,7 @@ invariant
 	valid_name: not name.is_empty
 	valid_assembly_id: assembly_id > 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

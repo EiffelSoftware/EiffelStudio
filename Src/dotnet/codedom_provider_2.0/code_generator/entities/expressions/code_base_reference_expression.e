@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Source code generator for base reference (precursor) expression"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,14 +21,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Creation routine
 		do
 		end
 		
 feature -- Access
 
-	code: STRING is
+	code: STRING
 			-- | Result C# := "base"
 			-- Eiffel code of base reference expression
 			-- Don't generate anything, generation is done in {CODE_ROUTINE_REFERENCE_EXPRESSION}
@@ -37,7 +37,7 @@ feature -- Access
 
 feature -- Element Settings
 
-	set_type (a_type: like type) is
+	set_type (a_type: like type)
 			-- Set `type' with `a_type'
 		require
 			attached_type: a_type /= Void
@@ -49,7 +49,7 @@ feature -- Element Settings
 
 feature -- Status Report
 
-	type: CODE_TYPE_REFERENCE is
+	type: CODE_TYPE_REFERENCE
 			-- Type
 		do
 			if internal_type = Void then
@@ -64,7 +64,7 @@ feature {NONE} -- Implementation
 	internal_type: CODE_TYPE_REFERENCE;
 			-- Cache for `type'
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

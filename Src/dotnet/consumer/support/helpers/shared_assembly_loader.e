@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shared access to an assembly loader."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	assembly_loader: ASSEMBLY_LOADER is
+	assembly_loader: ASSEMBLY_LOADER
 			-- Shared access to assembly loader
 		once
 			create Result
@@ -20,13 +20,13 @@ feature -- Access
 
 feature -- Query
 
-	is_mscorlib (a_assembly: ASSEMBLY): BOOLEAN is
+	is_mscorlib (a_assembly: ASSEMBLY): BOOLEAN
 			-- Determines if assembly `a_assembly' is mscorlib
 		do
 			Result := a_assembly = ({SYSTEM_OBJECT}).to_cil.assembly
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

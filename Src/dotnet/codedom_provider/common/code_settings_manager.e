@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Persist and retrieve settings by name%
 					%For now settings consist of strictly positive integer or strings.%
 					%A value of 0 or Void means that the setting hasn't been initialized"
@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_path: STRING) is
+	make (a_path: STRING)
 			-- Set `registry_path' with `a_path'.
 		require
 			non_void_path: a_path /= Void
@@ -31,7 +31,7 @@ feature -- Access
 	registry_path: STRING
 			-- Path to registry settings
 
-	setting (a_name: STRING): INTEGER is
+	setting (a_name: STRING): INTEGER
 			-- Integer value stored under `a_name' in `registry_path' registry hive
 			-- 0 if none
 		require
@@ -55,7 +55,7 @@ feature -- Access
 			(not Default_values.found implies Result = 0))
 		end
 
-	text_setting (a_name: STRING): STRING is
+	text_setting (a_name: STRING): STRING
 			-- String value stored under `a_name' in `registry_path' registry hive
 			-- Empty string if none
 		require
@@ -83,13 +83,13 @@ feature -- Access
 			non_void_setting: Result /= Void
 		end
 
-	Default_values: HASH_TABLE [INTEGER, STRING] is
+	Default_values: HASH_TABLE [INTEGER, STRING]
 			-- Default values if none were found in registry
 		once
 			create Result.make (16)
 		end
 
-	Default_text_values: HASH_TABLE [STRING, STRING] is
+	Default_text_values: HASH_TABLE [STRING, STRING]
 			-- Default text values if none were found in registry
 		once
 			create Result.make (16)
@@ -97,7 +97,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	set_setting (a_name: STRING; a_value: INTEGER) is
+	set_setting (a_name: STRING; a_value: INTEGER)
 			-- Set value stored under `a_name' in `registry_path' registry hive
 		require
 			non_void_name: a_name /= Void
@@ -113,7 +113,7 @@ feature -- Basic Operations
 			value_set: setting (a_name) = a_value
 		end
 
-	set_text_setting (a_name: STRING; a_value: STRING) is
+	set_text_setting (a_name: STRING; a_value: STRING)
 			-- Set value stored under `a_name' in `registry_path' registry hive
 		require
 			non_void_name: a_name /= Void
@@ -133,7 +133,7 @@ feature -- Basic Operations
 invariant
 	non_void_registry_path: registry_path /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

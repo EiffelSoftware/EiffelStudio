@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Type flags"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,13 +10,13 @@ class
 
 feature -- Access
 
-	Is_class: INTEGER is 0
-	Is_interface: INTEGER is 1
-	Is_enum: INTEGER is 2
-	Is_delegate: INTEGER is 3
-	Is_value_type: INTEGER is 4;
+	Is_class: INTEGER = 0
+	Is_interface: INTEGER = 1
+	Is_enum: INTEGER = 2
+	Is_delegate: INTEGER = 3
+	Is_value_type: INTEGER = 4;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

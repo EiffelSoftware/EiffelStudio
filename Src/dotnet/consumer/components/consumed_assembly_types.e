@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Table of consumed types for a given assembly"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_count: INTEGER) is
+	make (a_count: INTEGER)
 			-- Create name arrays.
 		require
 			a_count_non_negative: a_count >= 0
@@ -45,7 +45,7 @@ feature -- Access
 	count: INTEGER
 			-- Number of types.
 
-	namespaces: ARRAY [STRING] is
+	namespaces: ARRAY [STRING]
 			-- Namespaces
 		local
 			i, l_index, namespace_count, l_count: INTEGER
@@ -90,7 +90,7 @@ feature -- Access
 			-- We compare by object to satisfy assertions.
 		end
 	
-	namespace_types (namespace_name: STRING): ARRAY [INTEGER] is
+	namespace_types (namespace_name: STRING): ARRAY [INTEGER]
 			-- Indices of types that belong to namespace `namespace_name'.
 		require
 			non_void_name: namespace_name /= Void 
@@ -130,7 +130,7 @@ feature -- Access
 		
 feature -- Element Settings	
 
-	put (dn, en: STRING; int, enum, dele, val: BOOLEAN; a_pos: INTEGER) is
+	put (dn, en: STRING; int, enum, dele, val: BOOLEAN; a_pos: INTEGER)
 			-- Add type with Eiffel name `en' and .NET name `dn'.
 			-- type is interface if `int' is true, enum if `enum'
 			-- is true, delegate if `dele' is true, deferred if
@@ -180,7 +180,7 @@ invariant
 	count_non_negative: count >= 0
 	valid_index: 0 <= index and index <= count
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Assembly description to be persisted in XML"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (id, fn, n, v, c, k, loc, gp: STRING; a_in_gac: BOOLEAN) is
+	make (id, fn, n, v, c, k, loc, gp: STRING; a_in_gac: BOOLEAN)
 			-- Set `unique_id' with `id'
 			-- Set `folder_name' with 'fn'
 			-- Set `name' with `n'.
@@ -106,7 +106,7 @@ feature -- Access
 	has_info_only: BOOLEAN
 			-- Indicates if only assembly info has been consumed (no types)
 
-	out: STRING is
+	out: STRING
 			-- New string containing terse printable representation
 			-- of current object
 			-- Eg: "A, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
@@ -125,7 +125,7 @@ feature -- Access
 
 feature -- Status Setting
 
-	set_is_consumed (a_consumed: BOOLEAN; a_only_info: BOOLEAN) is
+	set_is_consumed (a_consumed: BOOLEAN; a_only_info: BOOLEAN)
 			-- Sets `is_consumed' to `a_consumed'
 		do
 			is_consumed := a_consumed
@@ -139,7 +139,7 @@ feature -- Status Setting
 			not_has_info_only: (not a_consumed implies not has_info_only) or a_consumed implies has_info_only = a_only_info
 		end
 
-	set_location (a_location: STRING) is
+	set_location (a_location: STRING)
 			-- Set `location' with `a_location'
 		require
 			non_void_location: a_location /= Void
@@ -150,7 +150,7 @@ feature -- Status Setting
 			location_set: location = a_location.as_lower
 		end
 
-	set_gac_path (a_gac_path: STRING) is
+	set_gac_path (a_gac_path: STRING)
 			-- Set `gac_path' with `a_gac_path'
 		require
 			non_void_gac_path: a_gac_path /= Void
@@ -161,7 +161,7 @@ feature -- Status Setting
 			gac_path_set: gac_path = a_gac_path.as_lower
 		end
 
-	set_is_in_gac (a_in_gac: BOOLEAN) is
+	set_is_in_gac (a_in_gac: BOOLEAN)
 			-- Sets `is_in_gac' to `a_in_gac'
 		do
 			is_in_gac := a_in_gac
@@ -169,7 +169,7 @@ feature -- Status Setting
 			is_in_gac_set: is_in_gac = a_in_gac
 		end
 
-	set_version (a_ver: like version) is
+	set_version (a_ver: like version)
 			-- Sets `version' with `a_ver'
 		require
 			a_ver_not_void: a_ver /= Void
@@ -180,7 +180,7 @@ feature -- Status Setting
 			version_set: version = a_ver
 		end
 
-	set_culture (a_culture: like culture) is
+	set_culture (a_culture: like culture)
 			-- Sets `culture' with `a_culture'
 		require
 			a_culture_not_void: a_culture /= Void
@@ -191,7 +191,7 @@ feature -- Status Setting
 			culture_set: culture = a_culture
 		end
 
-	set_key (a_key: like key) is
+	set_key (a_key: like key)
 			-- Sets `key' with `a_key'
 		require
 			a_key_not_void: a_key /= Void
@@ -203,14 +203,14 @@ feature -- Status Setting
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
 			Result := has_same_path (other.gac_path) or else has_same_path (other.location)
 		end
 
-	is_assembly_info_equal (other: like Current): BOOLEAN is
+	is_assembly_info_equal (other: like Current): BOOLEAN
 			-- Is `other' basic assembly information (name, version, culture and public key token)
 			-- equal to current instance?
 		require
@@ -220,7 +220,7 @@ feature -- Comparison
 						culture.is_equal (other.culture) and then key.is_equal (other.key)
 		end
 
-	has_same_path (a_path: STRING): BOOLEAN is
+	has_same_path (a_path: STRING): BOOLEAN
 			-- does current instance have a path that equals `a_path'
 		require
 			non_void_path: a_path /= Void
@@ -237,7 +237,7 @@ feature -- Comparison
 			end
 		end
 
-	has_same_ready_formatted_path (a_path: STRING): BOOLEAN is
+	has_same_ready_formatted_path (a_path: STRING): BOOLEAN
 			-- does current instance have a path that equals `a_path'.
 			-- This is an optimized version of `has_same_path' that assumes `a_path' has already
 			-- been converted to lower case
@@ -255,7 +255,7 @@ feature -- Comparison
 			end
 		end
 
-	has_same_gac_information (a_name: like name; a_version: like version; a_culture: like culture; a_key: like key): BOOLEAN is
+	has_same_gac_information (a_name: like name; a_version: like version; a_culture: like culture; a_key: like key): BOOLEAN
 			-- does current instance have same gac information (and it is in the gac)
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -273,7 +273,7 @@ feature -- Comparison
 
 feature {NONE} -- Constants
 
-	neutral_culture: STRING is "neutral"
+	neutral_culture: STRING = "neutral"
 			-- Neutral culture name.
 
 invariant
@@ -291,7 +291,7 @@ invariant
 	non_void_folder_name: folder_name /= Void
 	valid_folder_name: not folder_name.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

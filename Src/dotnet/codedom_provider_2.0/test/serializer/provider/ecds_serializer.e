@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Serialize codedom tree to specified destination"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_dest_dir, a_file_title: STRING) is
+	make (a_dest_dir, a_file_title: STRING)
 			-- Set `destination_directory' with `a_dest_dir' and `file_title' with `a_file_title'.
 		require
 			non_void_destination_directory: a_dest_dir /= Void
@@ -61,14 +61,14 @@ feature -- Access
 
 feature -- Basic Operation
 
-	serialize is
+	serialize
 			-- Serialize codedom tree.
 		deferred
 		end
 
 feature {NONE} -- Implementation
 
-	wait_for_file is
+	wait_for_file
 			-- Wait for serialized codedom tree file creation.
 		local
 			l_watcher: SYSTEM_DLL_FILE_SYSTEM_WATCHER
@@ -96,7 +96,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	file_extension: STRING is
+	file_extension: STRING
 			-- Serialized codedom tree file extension
 		deferred
 		ensure
@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 			valid_extension: not Result.is_empty and then Result.item (1) = '.'
 		end
 
-	time_out: INTEGER is 180
+	time_out: INTEGER = 180
 			-- Alloted time for creation of serialized file
 
 invariant
@@ -116,7 +116,7 @@ invariant
 	file_name_if_successful: last_serialization_successful implies file_name /= Void and then not file_name.is_empty
 	error_message_if_failed: not last_serialization_successful implies last_error_message /= Void and then not last_error_message.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

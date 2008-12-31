@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Ace file to be written on disk"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize instance.
 		do
 			create {ARRAYED_LIST [CODE_ACE_CLUSTER]} clusters.make (10)
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	content: STRING is
+	content: STRING
 			-- Ace file content
 		do
 			create Result.make (4096)
@@ -138,7 +138,7 @@ feature -- Access
 
 feature -- Status Report
 
-	is_ready: BOOLEAN is
+	is_ready: BOOLEAN
 			-- 	Is ace file ready to be generated?
 		do
 			Result := system_name /= Void and root_class_name /= Void and target_clr_version /= Void
@@ -146,7 +146,7 @@ feature -- Status Report
 
 feature -- Element Settings
 
-	set_system_name (a_name: like system_name) is
+	set_system_name (a_name: like system_name)
 			-- Set `system_name' with `a_name'.
 		require
 			non_void_name: a_name /= Void
@@ -156,7 +156,7 @@ feature -- Element Settings
 			system_name_set: system_name = a_name
 		end
 	
-	set_root_class_name (a_name: like root_class_name) is
+	set_root_class_name (a_name: like root_class_name)
 			-- Set `root_class_name' with `a_name'.
 		require
 			non_void_name: a_name /= Void
@@ -166,7 +166,7 @@ feature -- Element Settings
 			root_class_name_set: root_class_name = a_name
 		end
 	
-	set_root_creation_routine_name (a_name: like root_creation_routine_name) is
+	set_root_creation_routine_name (a_name: like root_creation_routine_name)
 			-- Set `root_creation_routine_name' with `a_name'.
 		require
 			non_void_name: a_name /= Void
@@ -176,7 +176,7 @@ feature -- Element Settings
 			root_creation_routine_name_set: root_creation_routine_name = a_name
 		end
 	
-	set_console_application (a_bool: BOOLEAN) is
+	set_console_application (a_bool: BOOLEAN)
 			-- Set `is_console_application_set' with `a_bool'.
 		do
 			is_console_application := a_bool
@@ -184,7 +184,7 @@ feature -- Element Settings
 			is_console_application_set: is_console_application = a_bool
 		end
 		
-	set_target_clr_version (a_target: like target_clr_version) is
+	set_target_clr_version (a_target: like target_clr_version)
 			-- Set `target_clr_version' with `a_target'.
 		require
 			non_void_target: a_target /= Void
@@ -194,7 +194,7 @@ feature -- Element Settings
 			target_clr_version_set: target_clr_version = a_target
 		end
 	
-	set_metadata_cache_path (a_path: like metadata_cache_path) is
+	set_metadata_cache_path (a_path: like metadata_cache_path)
 			-- Set `metadata_cache_path' with `a_path'.
 		require
 			non_void_path: a_path /= Void
@@ -204,7 +204,7 @@ feature -- Element Settings
 			metadata_cache_path_set: metadata_cache_path = a_path
 		end
 	
-	add_cluster (a_cluster: CODE_ACE_CLUSTER) is
+	add_cluster (a_cluster: CODE_ACE_CLUSTER)
 			-- Add `a_cluster' to `clusters'.
 		require
 			non_void_cluster: a_cluster /= Void
@@ -214,7 +214,7 @@ feature -- Element Settings
 			added: clusters.has (a_cluster)
 		end
 	
-	add_assembly (a_assembly: CODE_ACE_ASSEMBLY) is
+	add_assembly (a_assembly: CODE_ACE_ASSEMBLY)
 			-- Add `a_assembly' to `assemblies'.
 		require
 			non_void_assembly: a_assembly /= Void
@@ -224,7 +224,7 @@ feature -- Element Settings
 			added: assemblies.has (a_assembly)
 		end
 	
-	set_generate_debug_info (a_bool: BOOLEAN) is
+	set_generate_debug_info (a_bool: BOOLEAN)
 			-- Set `generate_debug_info' with `a_bool'.
 		do
 			generate_debug_info := a_bool
@@ -232,7 +232,7 @@ feature -- Element Settings
 			generate_debug_info_set: generate_debug_info = a_bool
 		end
 	
-	set_precompile (a_precompile: STRING) is
+	set_precompile (a_precompile: STRING)
 			-- Set `precompile' with `a_precompile'.
 		do
 			precompile := a_precompile
@@ -242,7 +242,7 @@ feature -- Element Settings
 
 feature -- Basic Operations
 
-	write (a_file_name: STRING) is
+	write (a_file_name: STRING)
 			-- Write ace file to `a_file_name'.
 		require
 			non_void_file_name: a_file_name /= Void
@@ -263,7 +263,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	Directory_separator: CHARACTER is
+	Directory_separator: CHARACTER
 			-- Directory separator
 		once
 			Result := (create {OPERATING_ENVIRONMENT}).Directory_separator
@@ -274,7 +274,7 @@ invariant
 	non_void_assemblies: assemblies /= Void
 	is_ready_definition: is_ready = (system_name /= Void and root_class_name /= Void and target_clr_version /= Void)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

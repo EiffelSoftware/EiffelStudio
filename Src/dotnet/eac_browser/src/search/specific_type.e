@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Find features names in EAC
 				]"
@@ -15,7 +15,7 @@ create
 
 feature -- Initialization
 
-	make (an_assembly: CONSUMED_ASSEMBLY; a_type: CONSUMED_TYPE) is
+	make (an_assembly: CONSUMED_ASSEMBLY; a_type: CONSUMED_TYPE)
 			-- initialize type and assembly.
 		require
 			non_void_an_assembly: an_assembly /= Void
@@ -40,7 +40,7 @@ invariant
 	non_void_assembly: assembly /= Void
 	non_void_type: type /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

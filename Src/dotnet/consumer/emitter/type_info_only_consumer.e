@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A type consumer used to consume only the basic type information."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature -- Initialization
 
-	make (t: SYSTEM_TYPE; en: STRING) is
+	make (t: SYSTEM_TYPE; en: STRING)
 			-- Initialize type consumer for type `t' with eiffel name `en'.
 		local
 			dotnet_name: STRING
@@ -48,7 +48,7 @@ feature -- Initialization
 			internal_referenced_type := referenced_type_from_type (t)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

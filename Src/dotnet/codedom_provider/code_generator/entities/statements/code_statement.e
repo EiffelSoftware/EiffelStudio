@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Common ancestor to all Eiffel representations of CodeDom statement"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,14 +13,14 @@ inherit
 
 feature -- Access
 
-	need_dummy: BOOLEAN is
+	need_dummy: BOOLEAN
 			-- Does statement requires dummy local variable?
 		require
 			in_code_generation: current_state = Code_generation
 		deferred
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

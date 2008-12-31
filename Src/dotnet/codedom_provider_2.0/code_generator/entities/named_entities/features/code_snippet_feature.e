@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Eiffel type member code snippet"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_eiffel_name: like eiffel_name; a_value: like value) is
+	make (a_eiffel_name: like eiffel_name; a_value: like value)
 			-- Initialize `value' with `a_value'.
 		do
 			set_feature_kind ("Snippet Features")
@@ -38,7 +38,7 @@ feature -- Access
 	value: STRING
 			-- Literal code block of the snippet
 
-	code: STRING is
+	code: STRING
 			-- Eiffel code of snippet feature
 		do
 			create Result.make (value.count + 250)
@@ -52,7 +52,7 @@ feature -- Access
 invariant
 	non_void_value: value /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

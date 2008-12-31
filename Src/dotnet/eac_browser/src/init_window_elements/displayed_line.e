@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Print in lines the eiffel type with all its eiffel features corresponding to the given dotnet type name."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialiaze `entities'.
 		do
 			create entities.make
@@ -37,7 +37,7 @@ feature -- Access
 
 feature -- Status Setting
 
-	set_selected (a_bool: BOOLEAN) is
+	set_selected (a_bool: BOOLEAN)
 			-- set `selected' wit `a_bool'.
 		do
 			selected := a_bool
@@ -45,7 +45,7 @@ feature -- Status Setting
 			selected_set: selected = a_bool
 		end
 		
-	set_path_icon (a_path: STRING) is
+	set_path_icon (a_path: STRING)
 			-- Set `path_icon' with `a_path'.
 		do
 			path_icon := a_path
@@ -56,7 +56,7 @@ feature -- Status Setting
 
 feature -- Basic Operation
 
-	clear is
+	clear
 			-- wipe out `entities'.
 		do
 			entities.wipe_out
@@ -64,7 +64,7 @@ feature -- Basic Operation
 			entities_empty: entities.count = 0
 		end
 
-	number_characters: INTEGER is
+	number_characters: INTEGER
 			-- number of characters of line.
 		local
 			initial_cursor: CURSOR
@@ -81,7 +81,7 @@ feature -- Basic Operation
 			entities.go_to (initial_cursor)
 		end
 		
-	number_pixels: INTEGER is
+	number_pixels: INTEGER
 			-- number of pixels of line.
 		local
 			initial_cursor: CURSOR
@@ -103,7 +103,7 @@ invariant
 	non_void_entities: entities /= Void
 	non_void_path_icon: path_icon /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

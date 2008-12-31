@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize settings manager.
 		do
 			manager_make (Serializer_hive_path)
@@ -32,43 +32,43 @@ feature {NONE} -- Initialization
 		
 feature -- Access
 
-	start_destination_folder_path: STRING is
+	start_destination_folder_path: STRING
 			-- Destination folder default path
 		do
 			Result := text_setting (Start_destination_folder_path_key)
 		end
 
-	wsdl_start_directory: STRING is
+	wsdl_start_directory: STRING
 			-- WSDL file start directory
 		do
 			Result := text_setting (Wsdl_start_directory_key)
 		end
 
-	last_file_title: STRING is
+	last_file_title: STRING
 			-- Last serialized codedom tree file title
 		do
 			Result := text_setting (Last_file_title_key)
 		end
 
-	last_wsdl_url: STRING is
+	last_wsdl_url: STRING
 			-- Last WSDL URL
 		do
 			Result := text_setting (Last_wsdl_url_key)
 		end
 
-	last_aspnet_url: STRING is
+	last_aspnet_url: STRING
 			-- Last ASP.NET URL
 		do
 			Result := text_setting (Last_aspnet_url_key)
 		end
 
-	saved_x: INTEGER is
+	saved_x: INTEGER
 			-- Saved starting x
 		do
 			Result := setting (X_key)
 		end
 		
-	saved_y: INTEGER is
+	saved_y: INTEGER
 			-- Saved starting y
 		do
 			Result := setting (Y_key)
@@ -76,7 +76,7 @@ feature -- Access
 		
 feature -- Basic Implementation
 
-	set_start_destination_folder_path (a_path: STRING) is
+	set_start_destination_folder_path (a_path: STRING)
 			-- Set `start_destination_folder_path' with `a_path'.
 		require
 			non_void_path: a_path /= Void
@@ -85,7 +85,7 @@ feature -- Basic Implementation
 			set_text_setting (Start_destination_folder_path_key, a_path)
 		end
 		
-	set_wsdl_start_directory (a_path: STRING) is
+	set_wsdl_start_directory (a_path: STRING)
 			-- Set `wsdl_start_directory' with `a_path'.
 		require
 			non_void_path: a_path /= Void
@@ -94,7 +94,7 @@ feature -- Basic Implementation
 			set_text_setting (Wsdl_start_directory_key, a_path)
 		end
 		
-	set_last_file_title (a_title: STRING) is
+	set_last_file_title (a_title: STRING)
 			-- Set `last_file_title' with `a_title'.
 		require
 			non_void_title: a_title /= Void
@@ -103,7 +103,7 @@ feature -- Basic Implementation
 			set_text_setting (Last_file_title_key, a_title)
 		end
 	
-	set_last_wsdl_url (a_url: STRING) is
+	set_last_wsdl_url (a_url: STRING)
 			-- Set `last_wsdl_url' with `a_url'.
 		require
 			non_void_url: a_url /= Void
@@ -112,7 +112,7 @@ feature -- Basic Implementation
 			set_text_setting (Last_wsdl_url_key, a_url)
 		end
 
-	set_last_aspnet_url (a_url: STRING) is
+	set_last_aspnet_url (a_url: STRING)
 			-- Set `last_aspnet_url' with `a_url'.
 		require
 			non_void_url: a_url /= Void
@@ -121,7 +121,7 @@ feature -- Basic Implementation
 			set_text_setting (Last_aspnet_url_key, a_url)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

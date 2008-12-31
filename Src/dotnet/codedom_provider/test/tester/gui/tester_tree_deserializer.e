@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Deserialize codedom trees"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ inherit
 
 feature -- Access
 
-	compile_unit_from_file (a_path: STRING): SYSTEM_DLL_CODE_COMPILE_UNIT is
+	compile_unit_from_file (a_path: STRING): SYSTEM_DLL_CODE_COMPILE_UNIT
 			-- De-serialized tree at `a_path' if any
 		require
 			non_void_path: a_path /= Void
@@ -41,7 +41,7 @@ feature -- Access
 			retry
 		end
 		
-	namespace_from_file (a_path: STRING): SYSTEM_DLL_CODE_NAMESPACE is
+	namespace_from_file (a_path: STRING): SYSTEM_DLL_CODE_NAMESPACE
 			-- De-serialized tree at `a_path' if any
 		require
 			non_void_path: a_path /= Void
@@ -67,7 +67,7 @@ feature -- Access
 			retry
 		end
 		
-	type_from_file (a_path: STRING): SYSTEM_DLL_CODE_TYPE_DECLARATION is
+	type_from_file (a_path: STRING): SYSTEM_DLL_CODE_TYPE_DECLARATION
 			-- De-serialized tree at `a_path' if any
 		require
 			non_void_path: a_path /= Void
@@ -93,7 +93,7 @@ feature -- Access
 			retry
 		end
 		
-	expression_from_file (a_path: STRING): SYSTEM_DLL_CODE_EXPRESSION is
+	expression_from_file (a_path: STRING): SYSTEM_DLL_CODE_EXPRESSION
 			-- De-serialized tree at `a_path' if any
 		require
 			non_void_path: a_path /= Void
@@ -119,7 +119,7 @@ feature -- Access
 			retry
 		end
 		
-	statement_from_file (a_path: STRING): SYSTEM_DLL_CODE_STATEMENT is
+	statement_from_file (a_path: STRING): SYSTEM_DLL_CODE_STATEMENT
 			-- De-serialized tree at `a_path' if any
 		require
 			non_void_path: a_path /= Void
@@ -145,7 +145,7 @@ feature -- Access
 			retry
 		end
 	
-	codedom_type_from_file (a_path: STRING): INTEGER is
+	codedom_type_from_file (a_path: STRING): INTEGER
 			-- Type of codedom tree stored in `a_path' if any, 0 otherwise.
 		require
 			non_void_path: a_path /= Void
@@ -192,7 +192,7 @@ feature -- Access
 			retry
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

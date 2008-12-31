@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "This class stores statements and expressions codedom trees and associate them%
 					%with a unique identifier. That identifier is written to the output so that%
 					%if a compile unit codedom tree later on uses a snipet that contains the%
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize store.
 		do
 			create statements_store.make (10)
@@ -41,7 +41,7 @@ feature -- Access
 
 feature -- Status Report
 
-	is_valid_id (a_string: STRING): BOOLEAN is
+	is_valid_id (a_string: STRING): BOOLEAN
 			-- Is `a_string' a valid partial tree id?
 		do
 			a_string.left_adjust
@@ -57,7 +57,7 @@ feature -- Status Report
 	
 feature -- Basic Operations
 
-	search (a_id: STRING) is
+	search (a_id: STRING)
 			-- Search statement or expression with id `a_id'.
 			-- Set `found_statement', `found_expression', `statement_found' and `expression_found' accordingly.
 		require
@@ -79,7 +79,7 @@ feature -- Basic Operations
 			end
 		end
 
-	search_statement (a_id: STRING) is
+	search_statement (a_id: STRING)
 			-- Search statement with id `a_id'.
 			-- Set `found_statement' and `statement_found' accordingly.
 		require
@@ -91,7 +91,7 @@ feature -- Basic Operations
 			found_statement := statements_store.found_item
 		end
 
-	search_expression (a_id: STRING) is
+	search_expression (a_id: STRING)
 			-- Search expression with id `a_id'.
 			-- Set `expression_found' and `found_expression' accordingly.
 		require
@@ -103,7 +103,7 @@ feature -- Basic Operations
 			found_expression := expressions_store.found_item
 		end
 
-	put_statement (a_statement: SYSTEM_DLL_CODE_STATEMENT) is
+	put_statement (a_statement: SYSTEM_DLL_CODE_STATEMENT)
 			-- Store tree `a_statement' and initialize `tree_id' with new unique id
 		require
 			attached_statement: a_statement /= Void
@@ -112,7 +112,7 @@ feature -- Basic Operations
 			statements_store.put (a_statement, tree_id)
 		end
 	
-	put_expression (a_expression: SYSTEM_DLL_CODE_EXPRESSION) is
+	put_expression (a_expression: SYSTEM_DLL_CODE_EXPRESSION)
 			-- Store tree `a_expression' and initialize `tree_id' with new unique id
 		require
 			attached_expression: a_expression /= Void
@@ -135,7 +135,7 @@ invariant
 	statement_if_found: statement_found implies found_statement /= Void
 	expression_if_found: expression_found implies found_expression /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

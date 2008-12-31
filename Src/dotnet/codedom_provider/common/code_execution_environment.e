@@ -1,4 +1,4 @@
-indexing
+note
 	description: ".NET environment information"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	Clr_version: STRING is
+	Clr_version: STRING
 			-- Folder name containing microsoft .NET assemblies corresponding
 			-- to loaded .NET runtime.
 			-- (i.e. "v1.0.3705" or "v1.1.4322" or...)
@@ -20,7 +20,7 @@ feature -- Access
 			exist: Result /= Void
 		end
 
-	Framework_path: STRING is
+	Framework_path: STRING
 			-- Path to .NET framework
 			-- (i.e. "C:\Windows\microsoft.net\framework\v1.1.4322")
 		do
@@ -29,7 +29,7 @@ feature -- Access
 			exist: Result /= Void
 		end
 
-	Machine_config_path: STRING is
+	Machine_config_path: STRING
 			-- Path to `machine.config' .NET configuration file
 		once
 			Result := Framework_path + "CONFIG\machine.config"
@@ -37,7 +37,7 @@ feature -- Access
 			exist: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel representation of a CodeDom variable declaration statement"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_variable: CODE_VARIABLE_REFERENCE; a_init_expression: CODE_EXPRESSION) is
+	make (a_variable: CODE_VARIABLE_REFERENCE; a_init_expression: CODE_EXPRESSION)
 			-- Initialize `variable'.
 		require
 			non_void_variable: a_variable /= Void
@@ -36,7 +36,7 @@ feature -- Access
 	init_expression: CODE_EXPRESSION
 			-- Initialization expression
 
-	need_dummy: BOOLEAN is
+	need_dummy: BOOLEAN
 			-- Does statement require dummy local variable?
 		do
 			Result := False
@@ -44,7 +44,7 @@ feature -- Access
 
 feature -- Code generation
 
-	code: STRING is
+	code: STRING
 			-- Result := "`name' := `init_expression'"
 			-- OR Result := "Result := `init_expression'" if expression is `CODE_CAST_EXPRESSION'.
 			-- OR Result := "" if no `init_expression' = Void
@@ -72,7 +72,7 @@ feature -- Code generation
 invariant
 	non_void_variable: variable /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

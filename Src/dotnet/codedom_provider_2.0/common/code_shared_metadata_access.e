@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shared access to Eiffel metadata"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature -- Access
 
-	cache_manager: CACHE_MANAGER is
+	cache_manager: CACHE_MANAGER
 			-- Access to Eiffel assemblies cache
 		once
 			if metadata_cache /= Void and then not metadata_cache.is_empty then
@@ -26,13 +26,13 @@ feature -- Access
 			end
 		end
 
-	cache_reflection: CACHE_REFLECTION is
+	cache_reflection: CACHE_REFLECTION
 			-- Access to Eiffel Assemblies Cache
 		once
 			Result := cache_manager.cache_reader
 		end
 		
-	cache_writer: CACHE_WRITER is
+	cache_writer: CACHE_WRITER
 			-- Access to Eiffel Assemblies Cache
 		once
 			Result := cache_manager.cache_writer
@@ -41,7 +41,7 @@ feature -- Access
 				-- new temporary assemblies that are consumed all the times.
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

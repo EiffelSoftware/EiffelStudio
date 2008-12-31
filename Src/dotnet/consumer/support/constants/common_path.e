@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Path used both by conumser and assembly manager"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,16 +10,16 @@ class
 
 feature -- Access
 
-	Classes_file_name: STRING is "classes.info"
+	Classes_file_name: STRING = "classes.info"
 			-- Path to XML files from assembly directory
 
-	Assembly_types_file_name: STRING is "types.info"
+	Assembly_types_file_name: STRING = "types.info"
 			-- File which lists all types in assembly
 
-	Assembly_mapping_file_name: STRING is "referenced_assemblies.info";
+	Assembly_mapping_file_name: STRING = "referenced_assemblies.info";
 			-- File which lists referenced assemblies with corresponding ids
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

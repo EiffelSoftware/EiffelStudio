@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Source code generator for assignment attempt"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_target: like target; a_expression: like expression) is
+	make (a_target: like target; a_expression: like expression)
 			-- Initialize `expression' and `target_object'.
 		require
 			non_void_target: a_target /= Void
@@ -37,7 +37,7 @@ feature -- Access
 	target: STRING
 			-- Recipient of assignment attempt
 			
-	code: STRING is
+	code: STRING
 			-- | Result := " `target_object' ?= `expression_to_cast'"
 			-- Eiffel code of cast expression
 		do
@@ -49,7 +49,7 @@ feature -- Access
 			Result.append_character ('%N')
 		end
 	
-	need_dummy: BOOLEAN is
+	need_dummy: BOOLEAN
 			-- Does statement require dummy local variable?
 		do
 			Result := False
@@ -59,7 +59,7 @@ invariant
 	non_void_target: target /= Void
 	non_void_expression: expression /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

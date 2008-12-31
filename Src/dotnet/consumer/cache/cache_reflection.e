@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Provide reflection mechanisms to inspect EAC"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create {EMITTER}
 
 feature -- Redefined
 
-	consumed_type (t: SYSTEM_TYPE): CONSUMED_TYPE is
+	consumed_type (t: SYSTEM_TYPE): CONSUMED_TYPE
 			-- Consumed type corresponding to `t'.
 		local
 			l_cache: like types_cache
@@ -37,7 +37,7 @@ feature -- Redefined
 			end
 		end
 
-	assembly_types (a_assembly: CONSUMED_ASSEMBLY): CONSUMED_ASSEMBLY_TYPES is
+	assembly_types (a_assembly: CONSUMED_ASSEMBLY): CONSUMED_ASSEMBLY_TYPES
 			-- Assembly information from EAC
 		local
 			l_cache: like assembly_types_cache
@@ -56,7 +56,7 @@ feature -- Redefined
 
 feature -- Initialization
 
-	initialize_cache (a_path: STRING) is
+	initialize_cache (a_path: STRING)
 			-- initialize cache with a binary file containing
 			-- specifics consumed types.
 		require
@@ -90,7 +90,7 @@ feature -- Initialization
 
 feature -- Access
 
-	type_name (t: SYSTEM_TYPE): STRING is
+	type_name (t: SYSTEM_TYPE): STRING
 			-- Eiffel name of .NET type `t'.
 		local
 			ct: CONSUMED_TYPE
@@ -103,7 +103,7 @@ feature -- Access
 			end
 		end
 
-	feature_name (t: SYSTEM_TYPE; dotnet_name: STRING; args: NATIVE_ARRAY [SYSTEM_TYPE]): STRING is
+	feature_name (t: SYSTEM_TYPE; dotnet_name: STRING; args: NATIVE_ARRAY [SYSTEM_TYPE]): STRING
 			-- Eiffel name of .NET function `dotnet_name' from type `t' with arguments `args'.
 		require
 			non_void_type: t /= Void
@@ -273,7 +273,7 @@ feature -- Access
 			end
 		end
 
- 	assembly_mapping_array (a_assembly: CONSUMED_ASSEMBLY): ARRAY [CONSUMED_ASSEMBLY] is
+ 	assembly_mapping_array (a_assembly: CONSUMED_ASSEMBLY): ARRAY [CONSUMED_ASSEMBLY]
  			-- Assembly mapping for assembly `a_assembly'.
  		require
  			non_void_assembly: a_assembly /= Void
@@ -291,7 +291,7 @@ feature -- Access
 			end
   		end
 
-	entity (entities_list: LIST [CONSUMED_ENTITY]; args: NATIVE_ARRAY [SYSTEM_TYPE]): CONSUMED_ENTITY is
+	entity (entities_list: LIST [CONSUMED_ENTITY]; args: NATIVE_ARRAY [SYSTEM_TYPE]): CONSUMED_ENTITY
 			-- return `consumed_entity' corresponding to parameters.
 			-- `entities_list' is given by `entities'.
 		require
@@ -332,7 +332,7 @@ feature -- Access
 			end
 		end
 
-	entities (t: SYSTEM_TYPE; dotnet_feature_name: STRING): LIST [CONSUMED_ENTITY] is
+	entities (t: SYSTEM_TYPE; dotnet_feature_name: STRING): LIST [CONSUMED_ENTITY]
 			-- Return list of Eiffel Eiffel entities associated to `dotnet_feature_name'.
 		require
 			non_void_t: t /= Void
@@ -422,13 +422,13 @@ feature -- Access
 
 feature -- Implementation
 
-	types_cache: CACHE [CONSUMED_TYPE, STRING] is
+	types_cache: CACHE [CONSUMED_TYPE, STRING]
 			-- Cache for loaded types
 		once
 			create Result.make (Max_cache_items)
 		end
 
-	assembly_types_cache: CACHE [CONSUMED_ASSEMBLY_TYPES, STRING] is
+	assembly_types_cache: CACHE [CONSUMED_ASSEMBLY_TYPES, STRING]
 			-- Cache of assembly types
 		once
 			create Result.make (15)
@@ -436,18 +436,18 @@ feature -- Implementation
 
 feature {NONE} -- Implementation
 
-	constructor_name: STRING is ".ctor"
+	constructor_name: STRING = ".ctor"
 
-	assemblies_mappings_cache: CACHE [ARRAY [CONSUMED_ASSEMBLY], STRING] is
+	assemblies_mappings_cache: CACHE [ARRAY [CONSUMED_ASSEMBLY], STRING]
 			-- Cache for assemblies ids mappings
 		once
 			create Result.make (max_cache_items)
 		end
 
-	max_cache_items: INTEGER is 40;
+	max_cache_items: INTEGER = 40;
 			-- Maximum number of types stored in local cache
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

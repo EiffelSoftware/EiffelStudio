@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Graphical codedom tree"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -35,7 +35,7 @@ create
 
 feature {NON} -- Initialization
 
-	make is
+	make
 			-- Initialize tree from `Store'.
 		do
 			default_create
@@ -44,42 +44,42 @@ feature {NON} -- Initialization
 
 feature -- Access
 
-	Compile_units_node: EV_TREE_NODE is
+	Compile_units_node: EV_TREE_NODE
 			-- Compile units root tree node
 		once
 			create {EV_TREE_ITEM} Result.make_with_text ("Compile units")
 			Result.set_pixmap (create {TESTER_TREE_ICON}.make_compile_unit)
 		end
 
-	Namespaces_node: EV_TREE_NODE is
+	Namespaces_node: EV_TREE_NODE
 			-- Namespaces root tree node
 		once
 			create {EV_TREE_ITEM} Result.make_with_text ("Namespaces")
 			Result.set_pixmap (create {TESTER_TREE_ICON}.make_namespace)
 		end
 
-	Types_node: EV_TREE_NODE is
+	Types_node: EV_TREE_NODE
 			-- Types root tree node
 		once
 			create {EV_TREE_ITEM} Result.make_with_text ("Types")
 			Result.set_pixmap (create {TESTER_TREE_ICON}.make_type)
 		end
 
-	Expressions_node: EV_TREE_NODE is
+	Expressions_node: EV_TREE_NODE
 			-- Expressions root tree node
 		once
 			create {EV_TREE_ITEM} Result.make_with_text ("Expressions")
 			Result.set_pixmap (create {TESTER_TREE_ICON}.make_expression)
 		end
 
-	Statements_node: EV_TREE_NODE is
+	Statements_node: EV_TREE_NODE
 			-- Statements root tree node
 		once
 			create {EV_TREE_ITEM} Result.make_with_text ("Statements")
 			Result.set_pixmap (create {TESTER_TREE_ICON}.make_statement)
 		end
 
-	compile_unit_node (a_path: STRING; a_compile_unit: SYSTEM_DLL_CODE_COMPILE_UNIT; a_index: INTEGER): EV_DYNAMIC_TREE_ITEM is
+	compile_unit_node (a_path: STRING; a_compile_unit: SYSTEM_DLL_CODE_COMPILE_UNIT; a_index: INTEGER): EV_DYNAMIC_TREE_ITEM
 			-- Namespace node for compile unit `a_compile_unit'.
 		require
 			non_void_path: a_path /= Void
@@ -92,7 +92,7 @@ feature -- Access
 			Result.set_data (a_compile_unit)
 		end
 
-	compile_unit_namespaces_nodes (a_path: STRING; a_compile_unit: SYSTEM_DLL_CODE_COMPILE_UNIT): LIST [EV_TREE_NODE] is
+	compile_unit_namespaces_nodes (a_path: STRING; a_compile_unit: SYSTEM_DLL_CODE_COMPILE_UNIT): LIST [EV_TREE_NODE]
 			-- Namespace node for compile unit `a_compile_unit'.
 		require
 			non_void_compile_unit: a_compile_unit /= Void
@@ -123,7 +123,7 @@ feature -- Access
 			end
 		end
 
-	namespace_node (a_path: STRING; a_namespace: SYSTEM_DLL_CODE_NAMESPACE): EV_DYNAMIC_TREE_ITEM is
+	namespace_node (a_path: STRING; a_namespace: SYSTEM_DLL_CODE_NAMESPACE): EV_DYNAMIC_TREE_ITEM
 			-- Namespace node for namespace `a_namespace'.
 		require
 			non_void_path: a_path /= Void
@@ -136,7 +136,7 @@ feature -- Access
 			Result.set_data (a_namespace)
 		end
 
-	namespace_types_nodes (a_path: STRING; a_namespace: SYSTEM_DLL_CODE_NAMESPACE): LIST [EV_TREE_NODE] is
+	namespace_types_nodes (a_path: STRING; a_namespace: SYSTEM_DLL_CODE_NAMESPACE): LIST [EV_TREE_NODE]
 			-- Types node for namespace `a_namespace'.
 		require
 			non_void_namespace: a_namespace /= Void
@@ -156,7 +156,7 @@ feature -- Access
 			end
 		end
 
-	type_node (a_path: STRING; a_type: SYSTEM_DLL_CODE_TYPE_DECLARATION): EV_DYNAMIC_TREE_ITEM is
+	type_node (a_path: STRING; a_type: SYSTEM_DLL_CODE_TYPE_DECLARATION): EV_DYNAMIC_TREE_ITEM
 			-- Type node for type `a_type'.
 		require
 			non_void_path: a_path /= Void
@@ -169,7 +169,7 @@ feature -- Access
 			Result.set_data (a_type)
 		end
 
-	type_members_nodes (a_path: STRING; a_type: SYSTEM_DLL_CODE_TYPE_DECLARATION): LIST [EV_TREE_NODE] is
+	type_members_nodes (a_path: STRING; a_type: SYSTEM_DLL_CODE_TYPE_DECLARATION): LIST [EV_TREE_NODE]
 			-- Types node for type `a_type'.
 		require
 			non_void_type: a_type /= Void
@@ -213,7 +213,7 @@ feature -- Access
 			end
 		end
 
-	custom_attribute_node (a_path: STRING; a_attribute: SYSTEM_DLL_CODE_ATTRIBUTE_DECLARATION): EV_DYNAMIC_TREE_ITEM is
+	custom_attribute_node (a_path: STRING; a_attribute: SYSTEM_DLL_CODE_ATTRIBUTE_DECLARATION): EV_DYNAMIC_TREE_ITEM
 			-- Type node for type `a_type'.
 		require
 			non_void_path: a_path /= Void
@@ -226,7 +226,7 @@ feature -- Access
 			Result.set_data (a_attribute)
 		end
 
-	line_pragma_node (a_path: STRING; a_pragma: SYSTEM_DLL_CODE_LINE_PRAGMA): EV_TREE_ITEM is
+	line_pragma_node (a_path: STRING; a_pragma: SYSTEM_DLL_CODE_LINE_PRAGMA): EV_TREE_ITEM
 			-- Type node for type `a_type'.
 		require
 			non_void_path: a_path /= Void
@@ -238,7 +238,7 @@ feature -- Access
 			Result.set_data (a_pragma)
 		end
 
-	method_node (a_path: STRING; a_member: SYSTEM_DLL_CODE_MEMBER_METHOD): EV_DYNAMIC_TREE_ITEM is
+	method_node (a_path: STRING; a_member: SYSTEM_DLL_CODE_MEMBER_METHOD): EV_DYNAMIC_TREE_ITEM
 			-- Type node for type `a_type'.
 		require
 			non_void_path: a_path /= Void
@@ -251,7 +251,7 @@ feature -- Access
 			Result.set_data (a_member)
 		end
 
-	property_node (a_path: STRING; a_member: SYSTEM_DLL_CODE_MEMBER_PROPERTY): EV_DYNAMIC_TREE_ITEM is
+	property_node (a_path: STRING; a_member: SYSTEM_DLL_CODE_MEMBER_PROPERTY): EV_DYNAMIC_TREE_ITEM
 			-- Type node for type `a_type'.
 		require
 			non_void_path: a_path /= Void
@@ -264,7 +264,7 @@ feature -- Access
 			Result.set_data (a_member)
 		end
 
-	member_node (a_path: STRING; a_member: SYSTEM_DLL_CODE_TYPE_MEMBER): EV_DYNAMIC_TREE_ITEM is
+	member_node (a_path: STRING; a_member: SYSTEM_DLL_CODE_TYPE_MEMBER): EV_DYNAMIC_TREE_ITEM
 			-- Type node for type `a_type'.
 		require
 			non_void_path: a_path /= Void
@@ -277,7 +277,7 @@ feature -- Access
 			Result.set_data (a_member)
 		end
 
-	custom_attribute_argument_node (a_path: STRING; a_argument: SYSTEM_DLL_CODE_ATTRIBUTE_ARGUMENT): EV_DYNAMIC_TREE_ITEM is
+	custom_attribute_argument_node (a_path: STRING; a_argument: SYSTEM_DLL_CODE_ATTRIBUTE_ARGUMENT): EV_DYNAMIC_TREE_ITEM
 			-- Custom attribute argument node
 		require
 			non_void_argument: a_argument /= Void
@@ -290,7 +290,7 @@ feature -- Access
 			Result.set_data (a_argument)
 		end
 
-	statement_node (a_path: STRING; a_statement: SYSTEM_DLL_CODE_STATEMENT): EV_DYNAMIC_TREE_ITEM is
+	statement_node (a_path: STRING; a_statement: SYSTEM_DLL_CODE_STATEMENT): EV_DYNAMIC_TREE_ITEM
 			-- Statement node
 		require
 			non_void_statement: a_statement /= Void
@@ -306,7 +306,7 @@ feature -- Access
 			Result.set_data (a_statement)
 		end
 
-	expression_node (a_path: STRING; a_expression: SYSTEM_DLL_CODE_EXPRESSION): EV_DYNAMIC_TREE_ITEM is
+	expression_node (a_path: STRING; a_expression: SYSTEM_DLL_CODE_EXPRESSION): EV_DYNAMIC_TREE_ITEM
 			-- Expression node
 		require
 			non_void_expression: a_expression /= Void
@@ -322,7 +322,7 @@ feature -- Access
 			Result.set_data (a_expression)
 		end
 
-	custom_attribute_arguments_nodes (a_path: STRING;  a_arguments: SYSTEM_DLL_CODE_ATTRIBUTE_ARGUMENT_COLLECTION): LIST [EV_TREE_NODE] is
+	custom_attribute_arguments_nodes (a_path: STRING;  a_arguments: SYSTEM_DLL_CODE_ATTRIBUTE_ARGUMENT_COLLECTION): LIST [EV_TREE_NODE]
 			-- Arguments nodes for custom attribute.
 		require
 			non_void_argumentss: a_arguments /= Void
@@ -340,7 +340,7 @@ feature -- Access
 			end
 		end
 
-	method_nodes (a_path: STRING; a_member: SYSTEM_DLL_CODE_MEMBER_METHOD): LIST [EV_TREE_NODE] is
+	method_nodes (a_path: STRING; a_member: SYSTEM_DLL_CODE_MEMBER_METHOD): LIST [EV_TREE_NODE]
 			-- Nodes for method `a_member'
 		local
 			l_attributes: SYSTEM_DLL_CODE_ATTRIBUTE_DECLARATION_COLLECTION
@@ -361,7 +361,7 @@ feature -- Access
 			Result.append (statements_nodes (a_path, l_statements))
 		end
 
-	statements_nodes (a_path: STRING; a_statements: SYSTEM_DLL_CODE_STATEMENT_COLLECTION): LIST [EV_TREE_NODE] is
+	statements_nodes (a_path: STRING; a_statements: SYSTEM_DLL_CODE_STATEMENT_COLLECTION): LIST [EV_TREE_NODE]
 			-- Statements nodes for method `a_method'.
 		require
 			non_void_statements: a_statements /= Void
@@ -379,7 +379,7 @@ feature -- Access
 			end
 		end
 
-	expressions_nodes (a_path: STRING; a_expressions: SYSTEM_DLL_CODE_EXPRESSION_COLLECTION): LIST [EV_TREE_NODE] is
+	expressions_nodes (a_path: STRING; a_expressions: SYSTEM_DLL_CODE_EXPRESSION_COLLECTION): LIST [EV_TREE_NODE]
 			-- Statements nodes for method `a_method'.
 		require
 			non_void_expressions: a_expressions /= Void
@@ -397,7 +397,7 @@ feature -- Access
 			end
 		end
 
-	property_statements_nodes (a_path: STRING; a_property: SYSTEM_DLL_CODE_MEMBER_PROPERTY): LIST [EV_TREE_NODE] is
+	property_statements_nodes (a_path: STRING; a_property: SYSTEM_DLL_CODE_MEMBER_PROPERTY): LIST [EV_TREE_NODE]
 			-- Statements nodes for method `a_method'.
 		require
 			non_void_property: a_property /= Void
@@ -434,7 +434,7 @@ feature -- Access
 			end
 		end
 
-	member_nodes (a_path: STRING; a_member: SYSTEM_DLL_CODE_TYPE_MEMBER): LIST [EV_TREE_NODE] is
+	member_nodes (a_path: STRING; a_member: SYSTEM_DLL_CODE_TYPE_MEMBER): LIST [EV_TREE_NODE]
 			-- Statements nodes for member `a_member'.
 		require
 			non_void_member: a_member /= Void
@@ -447,7 +447,7 @@ feature -- Access
 			end
 		end
 
-	statement_expressions_node (a_path: STRING; a_statement: SYSTEM_DLL_CODE_STATEMENT): LIST [EV_TREE_NODE] is
+	statement_expressions_node (a_path: STRING; a_statement: SYSTEM_DLL_CODE_STATEMENT): LIST [EV_TREE_NODE]
 			-- Statement title
 		require
 			non_void_statement: a_statement /= Void
@@ -541,7 +541,7 @@ feature -- Access
 			end
 		end
 
-	assign_statement_nodes (a_path: STRING; a_assign_statement: SYSTEM_DLL_CODE_ASSIGN_STATEMENT): LIST [EV_TREE_NODE] is
+	assign_statement_nodes (a_path: STRING; a_assign_statement: SYSTEM_DLL_CODE_ASSIGN_STATEMENT): LIST [EV_TREE_NODE]
 			-- Nodes for assign statement `a_assign_statement'
 		require
 			non_void_path: a_path /= Void
@@ -572,7 +572,7 @@ feature -- Access
 			Result.extend (l_node)
 		end
 
-	attach_event_statement_nodes (a_path: STRING; a_attach_event_statement: SYSTEM_DLL_CODE_ATTACH_EVENT_STATEMENT): LIST [EV_TREE_NODE] is
+	attach_event_statement_nodes (a_path: STRING; a_attach_event_statement: SYSTEM_DLL_CODE_ATTACH_EVENT_STATEMENT): LIST [EV_TREE_NODE]
 			-- Nodes for statement `attach_event_statement'
 		require
 			non_void_path: a_path /= Void
@@ -603,7 +603,7 @@ feature -- Access
 			Result.extend (l_node)
 		end
 
-	comment_statement_nodes (a_path: STRING; a_comment_statement: SYSTEM_DLL_CODE_COMMENT_STATEMENT): LIST [EV_TREE_NODE] is
+	comment_statement_nodes (a_path: STRING; a_comment_statement: SYSTEM_DLL_CODE_COMMENT_STATEMENT): LIST [EV_TREE_NODE]
 			-- Nodes for statement `a_comment_statement'
 		require
 			non_void_path: a_path /= Void
@@ -635,7 +635,7 @@ feature -- Access
 			Result.extend (l_node)
 		end
 
-	condition_statement_nodes (a_path: STRING; a_condition_statement: SYSTEM_DLL_CODE_CONDITION_STATEMENT): LIST [EV_TREE_NODE] is
+	condition_statement_nodes (a_path: STRING; a_condition_statement: SYSTEM_DLL_CODE_CONDITION_STATEMENT): LIST [EV_TREE_NODE]
 			-- Nodes for statement `a_condition_statement'
 		require
 			non_void_path: a_path /= Void
@@ -672,7 +672,7 @@ feature -- Access
 			end
 		end
 
-	expression_statement_nodes (a_path: STRING; a_expression_statement: SYSTEM_DLL_CODE_EXPRESSION_STATEMENT): LIST [EV_TREE_NODE] is
+	expression_statement_nodes (a_path: STRING; a_expression_statement: SYSTEM_DLL_CODE_EXPRESSION_STATEMENT): LIST [EV_TREE_NODE]
 			-- Nodes for statement `a_expression_statement'
 		require
 			non_void_path: a_path /= Void
@@ -692,7 +692,7 @@ feature -- Access
 			end
 		end
 
-	goto_statement_nodes (a_path: STRING; a_goto_statement: SYSTEM_DLL_CODE_GOTO_STATEMENT): LIST [EV_TREE_NODE] is
+	goto_statement_nodes (a_path: STRING; a_goto_statement: SYSTEM_DLL_CODE_GOTO_STATEMENT): LIST [EV_TREE_NODE]
 			-- Nodes for statement `a_goto_statement'
 		require
 			non_void_path: a_path /= Void
@@ -719,7 +719,7 @@ feature -- Access
 			Result.extend (l_node)
 		end
 
-	iteration_statement_nodes (a_path: STRING; a_iteration_statement: SYSTEM_DLL_CODE_ITERATION_STATEMENT): LIST [EV_TREE_NODE] is
+	iteration_statement_nodes (a_path: STRING; a_iteration_statement: SYSTEM_DLL_CODE_ITERATION_STATEMENT): LIST [EV_TREE_NODE]
 			-- Nodes for statement `a_iteration_statement'
 		require
 			non_void_path: a_path /= Void
@@ -766,7 +766,7 @@ feature -- Access
 			Result.extend (l_node)
 		end
 
-	labeled_statement_nodes (a_path: STRING; a_labeled_statement: SYSTEM_DLL_CODE_LABELED_STATEMENT): LIST [EV_TREE_NODE] is
+	labeled_statement_nodes (a_path: STRING; a_labeled_statement: SYSTEM_DLL_CODE_LABELED_STATEMENT): LIST [EV_TREE_NODE]
 			-- Nodes for statement `a_labeled_statement'
 		require
 			non_void_path: a_path /= Void
@@ -801,7 +801,7 @@ feature -- Access
 			end
 		end
 
-	method_return_statement_nodes (a_path: STRING; a_method_return_statement: SYSTEM_DLL_CODE_METHOD_RETURN_STATEMENT): LIST [EV_TREE_NODE] is
+	method_return_statement_nodes (a_path: STRING; a_method_return_statement: SYSTEM_DLL_CODE_METHOD_RETURN_STATEMENT): LIST [EV_TREE_NODE]
 			-- Nodes for statement `a_method_return_statement'
 		require
 			non_void_path: a_path /= Void
@@ -821,7 +821,7 @@ feature -- Access
 			end
 		end
 
-	remove_event_statement_nodes (a_path: STRING; a_remove_event_statement: SYSTEM_DLL_CODE_REMOVE_EVENT_STATEMENT): LIST [EV_TREE_NODE] is
+	remove_event_statement_nodes (a_path: STRING; a_remove_event_statement: SYSTEM_DLL_CODE_REMOVE_EVENT_STATEMENT): LIST [EV_TREE_NODE]
 			-- Nodes for statement `a_remove_event_statement'
 		require
 			non_void_path: a_path /= Void
@@ -852,7 +852,7 @@ feature -- Access
 			Result.extend (l_node)
 		end
 
-	snippet_statement_nodes (a_path: STRING; a_snippet_statement: SYSTEM_DLL_CODE_SNIPPET_STATEMENT): LIST [EV_TREE_NODE] is
+	snippet_statement_nodes (a_path: STRING; a_snippet_statement: SYSTEM_DLL_CODE_SNIPPET_STATEMENT): LIST [EV_TREE_NODE]
 			-- Nodes for statement `a_snippet_statement'
 		require
 			non_void_path: a_path /= Void
@@ -883,7 +883,7 @@ feature -- Access
 			Result.extend (l_node)
 		end
 
-	throw_statement_nodes (a_path: STRING; a_throw_statement: SYSTEM_DLL_CODE_THROW_EXCEPTION_STATEMENT): LIST [EV_TREE_NODE] is
+	throw_statement_nodes (a_path: STRING; a_throw_statement: SYSTEM_DLL_CODE_THROW_EXCEPTION_STATEMENT): LIST [EV_TREE_NODE]
 			-- Nodes for statement `a_assign_statement'
 		require
 			non_void_path: a_path /= Void
@@ -903,7 +903,7 @@ feature -- Access
 			end
 		end
 
-	try_statement_nodes (a_path: STRING; a_try_statement: SYSTEM_DLL_CODE_TRY_CATCH_FINALLY_STATEMENT): LIST [EV_TREE_NODE] is
+	try_statement_nodes (a_path: STRING; a_try_statement: SYSTEM_DLL_CODE_TRY_CATCH_FINALLY_STATEMENT): LIST [EV_TREE_NODE]
 			-- Nodes for statement `a_try_statement'
 		require
 			non_void_path: a_path /= Void
@@ -940,7 +940,7 @@ feature -- Access
 			end
 		end
 
-	variable_declaration_statement_nodes (a_path: STRING; a_variable_declaration_statement: SYSTEM_DLL_CODE_VARIABLE_DECLARATION_STATEMENT): LIST [EV_TREE_NODE] is
+	variable_declaration_statement_nodes (a_path: STRING; a_variable_declaration_statement: SYSTEM_DLL_CODE_VARIABLE_DECLARATION_STATEMENT): LIST [EV_TREE_NODE]
 			-- Nodes for statement `a_variable_declaration_statement'
 		require
 			non_void_path: a_path /= Void
@@ -986,7 +986,7 @@ feature -- Access
 			end
 		end
 
-	catch_clauses_nodes (a_path: STRING; a_catch_clauses: SYSTEM_DLL_CODE_CATCH_CLAUSE_COLLECTION): LIST [EV_TREE_NODE] is
+	catch_clauses_nodes (a_path: STRING; a_catch_clauses: SYSTEM_DLL_CODE_CATCH_CLAUSE_COLLECTION): LIST [EV_TREE_NODE]
 			-- Catch clauses nodes
 		require
 			non_void_catch_clauses: a_catch_clauses /= Void
@@ -1004,7 +1004,7 @@ feature -- Access
 			end
 		end
 
-	catch_clause_node (a_path: STRING; a_catch_clause: SYSTEM_DLL_CODE_CATCH_CLAUSE): EV_TREE_ITEM is
+	catch_clause_node (a_path: STRING; a_catch_clause: SYSTEM_DLL_CODE_CATCH_CLAUSE): EV_TREE_ITEM
 			-- Catch clause node
 		local
 			l_node: EV_TREE_ITEM
@@ -1044,7 +1044,7 @@ feature -- Access
 			end
 		end
 
-	expression_nodes (a_path: STRING; a_expression: SYSTEM_DLL_CODE_EXPRESSION): LIST [EV_TREE_NODE] is
+	expression_nodes (a_path: STRING; a_expression: SYSTEM_DLL_CODE_EXPRESSION): LIST [EV_TREE_NODE]
 			-- Statement title
 		require
 			non_void_expression: a_expression /= Void
@@ -1195,7 +1195,7 @@ feature -- Access
 			end
 		end
 
-	argument_expression_nodes (a_path: STRING; a_argument_expression: SYSTEM_DLL_CODE_ARGUMENT_REFERENCE_EXPRESSION): LIST [EV_TREE_NODE] is
+	argument_expression_nodes (a_path: STRING; a_argument_expression: SYSTEM_DLL_CODE_ARGUMENT_REFERENCE_EXPRESSION): LIST [EV_TREE_NODE]
 			-- Nodes for expression `a_argument_expression'
 		require
 			non_void_argument_expression: a_argument_expression /= Void
@@ -1218,7 +1218,7 @@ feature -- Access
 			non_void_nodes: Result /= Void
 		end
 
-	array_create_expression_nodes (a_path: STRING; a_array_create_expression: SYSTEM_DLL_CODE_ARRAY_CREATE_EXPRESSION): LIST [EV_TREE_NODE] is
+	array_create_expression_nodes (a_path: STRING; a_array_create_expression: SYSTEM_DLL_CODE_ARRAY_CREATE_EXPRESSION): LIST [EV_TREE_NODE]
 			-- Nodes for expression `a_array_create_expression'
 		require
 			non_void_array_create_expression: a_array_create_expression /= Void
@@ -1271,7 +1271,7 @@ feature -- Access
 			non_void_nodes: Result /= Void
 		end
 
-	array_indexer_expression_nodes (a_path: STRING; a_array_indexer_expression: SYSTEM_DLL_CODE_ARRAY_INDEXER_EXPRESSION): LIST [EV_TREE_NODE] is
+	array_indexer_expression_nodes (a_path: STRING; a_array_indexer_expression: SYSTEM_DLL_CODE_ARRAY_INDEXER_EXPRESSION): LIST [EV_TREE_NODE]
 			-- Nodes for expression `a_array_indexer_expression'
 		require
 			non_void_array_indexer_expression: a_array_indexer_expression /= Void
@@ -1306,7 +1306,7 @@ feature -- Access
 			non_void_nodes: Result /= Void
 		end
 
-	base_expression_nodes (a_path: STRING; a_base_expression: SYSTEM_DLL_CODE_BASE_REFERENCE_EXPRESSION): LIST [EV_TREE_NODE] is
+	base_expression_nodes (a_path: STRING; a_base_expression: SYSTEM_DLL_CODE_BASE_REFERENCE_EXPRESSION): LIST [EV_TREE_NODE]
 			-- Nodes for expression `a_base_expression'
 		require
 			non_void_base_expression: a_base_expression /= Void
@@ -1324,7 +1324,7 @@ feature -- Access
 			non_void_nodes: Result /= Void
 		end
 
-	binary_operator_expression_nodes (a_path: STRING; a_binary_operator_expression: SYSTEM_DLL_CODE_BINARY_OPERATOR_EXPRESSION): LIST [EV_TREE_NODE] is
+	binary_operator_expression_nodes (a_path: STRING; a_binary_operator_expression: SYSTEM_DLL_CODE_BINARY_OPERATOR_EXPRESSION): LIST [EV_TREE_NODE]
 			-- Nodes for expression `a_binary_operator_expression'
 		require
 			non_void_binary_operator_expression: a_binary_operator_expression /= Void
@@ -1408,7 +1408,7 @@ feature -- Access
 			non_void_nodes: Result /= Void
 		end
 
-	cast_expression_nodes (a_path: STRING; a_cast_expression: SYSTEM_DLL_CODE_CAST_EXPRESSION): LIST [EV_TREE_NODE] is
+	cast_expression_nodes (a_path: STRING; a_cast_expression: SYSTEM_DLL_CODE_CAST_EXPRESSION): LIST [EV_TREE_NODE]
 			-- Nodes for expression `a_cast_expression'
 		require
 			non_void_cast_expression: a_cast_expression /= Void
@@ -1444,7 +1444,7 @@ feature -- Access
 			non_void_nodes: Result /= Void
 		end
 
-	delegate_create_expression_nodes (a_path: STRING; a_delegate_create_expression: SYSTEM_DLL_CODE_DELEGATE_CREATE_EXPRESSION): LIST [EV_TREE_NODE] is
+	delegate_create_expression_nodes (a_path: STRING; a_delegate_create_expression: SYSTEM_DLL_CODE_DELEGATE_CREATE_EXPRESSION): LIST [EV_TREE_NODE]
 			-- Nodes for expression `a_delegate_create_expression'
 		require
 			non_void_delegate_create_expression: a_delegate_create_expression /= Void
@@ -1492,7 +1492,7 @@ feature -- Access
 			non_void_nodes: Result /= Void
 		end
 
-	delegate_invoke_expression_nodes (a_path: STRING; a_delegate_invoke_expression: SYSTEM_DLL_CODE_DELEGATE_INVOKE_EXPRESSION): LIST [EV_TREE_NODE] is
+	delegate_invoke_expression_nodes (a_path: STRING; a_delegate_invoke_expression: SYSTEM_DLL_CODE_DELEGATE_INVOKE_EXPRESSION): LIST [EV_TREE_NODE]
 			-- Nodes for expression `a_delegate_invoke_expression'
 		require
 			non_void_delegate_invoke_expression: a_delegate_invoke_expression /= Void
@@ -1527,7 +1527,7 @@ feature -- Access
 			non_void_nodes: Result /= Void
 		end
 
-	direction_expression_nodes (a_path: STRING; a_direction_expression: SYSTEM_DLL_CODE_DIRECTION_EXPRESSION): LIST [EV_TREE_NODE] is
+	direction_expression_nodes (a_path: STRING; a_direction_expression: SYSTEM_DLL_CODE_DIRECTION_EXPRESSION): LIST [EV_TREE_NODE]
 			-- Nodes for expression `a_direction_expression'
 		require
 			non_void_direction_expression: a_direction_expression /= Void
@@ -1568,7 +1568,7 @@ feature -- Access
 			non_void_nodes: Result /= Void
 		end
 
-	event_expression_nodes (a_path: STRING; a_event_expression: SYSTEM_DLL_CODE_EVENT_REFERENCE_EXPRESSION): LIST [EV_TREE_NODE] is
+	event_expression_nodes (a_path: STRING; a_event_expression: SYSTEM_DLL_CODE_EVENT_REFERENCE_EXPRESSION): LIST [EV_TREE_NODE]
 			-- Nodes for expression `a_event_expression'
 		require
 			non_void_event_expression: a_event_expression /= Void
@@ -1604,7 +1604,7 @@ feature -- Access
 			non_void_nodes: Result /= Void
 		end
 
-	field_expression_nodes (a_path: STRING; a_field_expression: SYSTEM_DLL_CODE_FIELD_REFERENCE_EXPRESSION): LIST [EV_TREE_NODE] is
+	field_expression_nodes (a_path: STRING; a_field_expression: SYSTEM_DLL_CODE_FIELD_REFERENCE_EXPRESSION): LIST [EV_TREE_NODE]
 			-- Nodes for expression `a_field_expression'
 		require
 			non_void_field_expression: a_field_expression /= Void
@@ -1640,7 +1640,7 @@ feature -- Access
 			non_void_nodes: Result /= Void
 		end
 
-	indexer_expression_nodes (a_path: STRING; a_indexer_expression: SYSTEM_DLL_CODE_INDEXER_EXPRESSION): LIST [EV_TREE_NODE] is
+	indexer_expression_nodes (a_path: STRING; a_indexer_expression: SYSTEM_DLL_CODE_INDEXER_EXPRESSION): LIST [EV_TREE_NODE]
 			-- Nodes for expression `a_indexer_expression'
 		require
 			non_void_indexer_expression: a_indexer_expression /= Void
@@ -1675,7 +1675,7 @@ feature -- Access
 			non_void_nodes: Result /= Void
 		end
 
-	method_invoke_expression_nodes (a_path: STRING; a_method_invoke_expression: SYSTEM_DLL_CODE_METHOD_INVOKE_EXPRESSION): LIST [EV_TREE_NODE] is
+	method_invoke_expression_nodes (a_path: STRING; a_method_invoke_expression: SYSTEM_DLL_CODE_METHOD_INVOKE_EXPRESSION): LIST [EV_TREE_NODE]
 			-- Nodes for expression `a_method_invoke_expression'
 		require
 			non_void_method_invoke_expression: a_method_invoke_expression /= Void
@@ -1710,7 +1710,7 @@ feature -- Access
 			non_void_nodes: Result /= Void
 		end
 
-	method_reference_expression_nodes (a_path: STRING; a_method_reference_expression: SYSTEM_DLL_CODE_METHOD_REFERENCE_EXPRESSION): LIST [EV_TREE_NODE] is
+	method_reference_expression_nodes (a_path: STRING; a_method_reference_expression: SYSTEM_DLL_CODE_METHOD_REFERENCE_EXPRESSION): LIST [EV_TREE_NODE]
 			-- Nodes for expression `a_method_reference_expression'
 		require
 			non_void_method_reference_expression: a_method_reference_expression /= Void
@@ -1746,7 +1746,7 @@ feature -- Access
 			non_void_nodes: Result /= Void
 		end
 
-	object_create_expression_nodes (a_path: STRING; a_object_create_expression: SYSTEM_DLL_CODE_OBJECT_CREATE_EXPRESSION): LIST [EV_TREE_NODE] is
+	object_create_expression_nodes (a_path: STRING; a_object_create_expression: SYSTEM_DLL_CODE_OBJECT_CREATE_EXPRESSION): LIST [EV_TREE_NODE]
 			-- Nodes for expression `a_object_create_expression'
 		require
 			non_void_object_create_expression: a_object_create_expression /= Void
@@ -1782,7 +1782,7 @@ feature -- Access
 			non_void_nodes: Result /= Void
 		end
 
-	parameter_declaration_expression_nodes (a_path: STRING; a_parameter_declaration_expression: SYSTEM_DLL_CODE_PARAMETER_DECLARATION_EXPRESSION): LIST [EV_TREE_NODE] is
+	parameter_declaration_expression_nodes (a_path: STRING; a_parameter_declaration_expression: SYSTEM_DLL_CODE_PARAMETER_DECLARATION_EXPRESSION): LIST [EV_TREE_NODE]
 			-- Nodes for expression `a_parameter_declaration_expression'
 		require
 			non_void_parameter_declaration_expression: a_parameter_declaration_expression /= Void
@@ -1845,7 +1845,7 @@ feature -- Access
 			non_void_nodes: Result /= Void
 		end
 
-	primitive_expression_nodes (a_path: STRING; a_primitive_expression: SYSTEM_DLL_CODE_PRIMITIVE_EXPRESSION): LIST [EV_TREE_NODE] is
+	primitive_expression_nodes (a_path: STRING; a_primitive_expression: SYSTEM_DLL_CODE_PRIMITIVE_EXPRESSION): LIST [EV_TREE_NODE]
 			-- Nodes for expression `a_primitive_expression'
 		require
 			non_void_primitive_expression: a_primitive_expression /= Void
@@ -1870,7 +1870,7 @@ feature -- Access
 			non_void_nodes: Result /= Void
 		end
 
-	property_reference_expression (a_path: STRING; a_property_reference_expression: SYSTEM_DLL_CODE_PROPERTY_REFERENCE_EXPRESSION): LIST [EV_TREE_NODE] is
+	property_reference_expression (a_path: STRING; a_property_reference_expression: SYSTEM_DLL_CODE_PROPERTY_REFERENCE_EXPRESSION): LIST [EV_TREE_NODE]
 			-- Nodes for expression `a_property_reference_expression'
 		require
 			non_void_property_reference_expression: a_property_reference_expression /= Void
@@ -1906,7 +1906,7 @@ feature -- Access
 			non_void_nodes: Result /= Void
 		end
 
-	property_set_value_reference_expression_nodes (a_path: STRING; a_property_set_value_reference_expression: SYSTEM_DLL_CODE_PROPERTY_SET_VALUE_REFERENCE_EXPRESSION): LIST [EV_TREE_NODE] is
+	property_set_value_reference_expression_nodes (a_path: STRING; a_property_set_value_reference_expression: SYSTEM_DLL_CODE_PROPERTY_SET_VALUE_REFERENCE_EXPRESSION): LIST [EV_TREE_NODE]
 			-- Nodes for expression `a_property_set_value_reference_expression'
 		require
 			non_void_property_set_value_reference_expression: a_property_set_value_reference_expression /= Void
@@ -1926,7 +1926,7 @@ feature -- Access
 			non_void_nodes: Result /= Void
 		end
 
-	snippet_expression_nodes (a_path: STRING; a_snippet_expression: SYSTEM_DLL_CODE_SNIPPET_EXPRESSION): LIST [EV_TREE_NODE] is
+	snippet_expression_nodes (a_path: STRING; a_snippet_expression: SYSTEM_DLL_CODE_SNIPPET_EXPRESSION): LIST [EV_TREE_NODE]
 			-- Nodes for expression `a_snippet_expression'
 		require
 			non_void_snippet_expression: a_snippet_expression /= Void
@@ -1951,7 +1951,7 @@ feature -- Access
 			non_void_nodes: Result /= Void
 		end
 
-	this_expression_nodes (a_path: STRING; a_this_expression: SYSTEM_DLL_CODE_THIS_REFERENCE_EXPRESSION): LIST [EV_TREE_NODE] is
+	this_expression_nodes (a_path: STRING; a_this_expression: SYSTEM_DLL_CODE_THIS_REFERENCE_EXPRESSION): LIST [EV_TREE_NODE]
 			-- Nodes for expression `a_this_expression'
 		require
 			non_void_this_expression: a_this_expression /= Void
@@ -1971,7 +1971,7 @@ feature -- Access
 			non_void_nodes: Result /= Void
 		end
 
-	type_of_expression_nodes (a_path: STRING; a_type_of_expression: SYSTEM_DLL_CODE_TYPE_OF_EXPRESSION): LIST [EV_TREE_NODE] is
+	type_of_expression_nodes (a_path: STRING; a_type_of_expression: SYSTEM_DLL_CODE_TYPE_OF_EXPRESSION): LIST [EV_TREE_NODE]
 			-- Nodes for expression `a_type_of_expression'
 		require
 			non_void_type_of_expression: a_type_of_expression /= Void
@@ -1995,7 +1995,7 @@ feature -- Access
 			non_void_nodes: Result /= Void
 		end
 
-	type_reference_expression_nodes (a_path: STRING; a_type_reference_expression: SYSTEM_DLL_CODE_TYPE_REFERENCE_EXPRESSION): LIST [EV_TREE_NODE] is
+	type_reference_expression_nodes (a_path: STRING; a_type_reference_expression: SYSTEM_DLL_CODE_TYPE_REFERENCE_EXPRESSION): LIST [EV_TREE_NODE]
 			-- Nodes for expression `a_type_reference_expression'
 		require
 			non_void_type_reference_expression: a_type_reference_expression /= Void
@@ -2019,7 +2019,7 @@ feature -- Access
 			non_void_nodes: Result /= Void
 		end
 
-	variable_reference_expression_nodes (a_path: STRING; a_variable_reference_expression: SYSTEM_DLL_CODE_VARIABLE_REFERENCE_EXPRESSION): LIST [EV_TREE_NODE] is
+	variable_reference_expression_nodes (a_path: STRING; a_variable_reference_expression: SYSTEM_DLL_CODE_VARIABLE_REFERENCE_EXPRESSION): LIST [EV_TREE_NODE]
 			-- Nodes for expression `a_variable_reference_expression'
 		require
 			non_void_variable_reference_expression: a_variable_reference_expression /= Void
@@ -2044,7 +2044,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	update is
+	update
 			-- Update codedoms tree.
 		local
 			l_node: EV_TREE_ITEM
@@ -2140,7 +2140,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	quick_sort (a_collection: SYSTEM_DLL_CODE_TYPE_MEMBER_COLLECTION) is
+	quick_sort (a_collection: SYSTEM_DLL_CODE_TYPE_MEMBER_COLLECTION)
 			-- Set `collection' with `a_collection'.
 		require
 			non_void_collection: a_collection /= Void
@@ -2223,7 +2223,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

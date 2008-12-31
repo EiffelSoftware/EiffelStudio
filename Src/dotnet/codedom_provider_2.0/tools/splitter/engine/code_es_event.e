@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Event that occured during file splitting"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Implementation
 
-	make (a_message, a_title: STRING; a_severity: INTEGER) is
+	make (a_message, a_title: STRING; a_severity: INTEGER)
 			-- Initialize instance.
 		require
 			non_void_message: a_message /= Void
@@ -43,7 +43,7 @@ feature -- Access
 	title: STRING;
 			-- Event title
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

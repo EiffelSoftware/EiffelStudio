@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shared instance of CODE_TYPE_REFERENCE_FACTORY"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,13 +10,13 @@ class
 
 feature -- Access
 
-	Type_reference_factory: CODE_TYPE_REFERENCE_FACTORY is
+	Type_reference_factory: CODE_TYPE_REFERENCE_FACTORY
 			-- Type reference factory
 		once
 			create Result
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

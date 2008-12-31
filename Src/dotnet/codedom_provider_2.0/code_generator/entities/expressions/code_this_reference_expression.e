@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Source code generator for this reference expressions"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_type: like current_type) is
+	make (a_type: like current_type)
 			-- Creation routine
 		require
 			non_void_type: a_type /= Void
@@ -36,7 +36,7 @@ feature -- Access
 	current_type: CODE_GENERATED_TYPE
 			-- Type including this expression
 
-	code: STRING is
+	code: STRING
 			-- | Result := "Current"
 			-- Eiffel code of this reference expression
 		do
@@ -45,7 +45,7 @@ feature -- Access
 		
 feature -- Status Report
 
-	type: CODE_TYPE_REFERENCE is
+	type: CODE_TYPE_REFERENCE
 			-- Type
 		do
 			Result := Type_reference_factory.type_reference_from_code (current_type)
@@ -54,7 +54,7 @@ feature -- Status Report
 invariant
 	non_void_current_type: current_type /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

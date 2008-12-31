@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Support for CodeDOM Visitor."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -8,7 +8,7 @@ class
 
 feature -- Access
 
-	Type_attributes: HASH_TABLE [STRING, STRING] is
+	Type_attributes: HASH_TABLE [STRING, STRING]
 			-- Retrieve all attributes of current type.
 		once
 			create Result.make (100)
@@ -16,7 +16,7 @@ feature -- Access
 			non_void_type_attributes: Result /= Void
 		end
 
-	Variables: HASH_TABLE [STRING, STRING] is
+	Variables: HASH_TABLE [STRING, STRING]
 			-- Retrieve all parameters and local variable of current feature.
 			-- Plus Result and Current.
 		once
@@ -25,7 +25,7 @@ feature -- Access
 			non_void_variables: Result /= Void
 		end
 
-	cast_expressions: HASHTABLE is
+	cast_expressions: HASHTABLE
 			-- cast expressions
 			-- key: local variable name
 			-- contains: SYSTEM_CODE_CAST_EXPRESSION
@@ -37,7 +37,7 @@ feature -- Access
 
 feature -- Status Repport
 
-	is_attribute (a_name: STRING): BOOLEAN is
+	is_attribute (a_name: STRING): BOOLEAN
 			-- Is `a_name' attribute of current type?
 		require
 			valid_a_name: a_name /= Void and then not a_name.is_empty
@@ -45,7 +45,7 @@ feature -- Status Repport
 			Result := Type_attributes.has (a_name.as_lower)
 		end
 
-	is_variable (a_name: STRING): BOOLEAN is
+	is_variable (a_name: STRING): BOOLEAN
 			-- Is `a_name' variable of current feature?
 		require
 			valid_a_name: a_name /= Void and then not a_name.is_empty
@@ -53,7 +53,7 @@ feature -- Status Repport
 			Result := Variables.has (a_name.as_lower)
 		end
 
-	is_cast_expression (a_name: STRING): BOOLEAN is
+	is_cast_expression (a_name: STRING): BOOLEAN
 			-- Is `a_name' contained in `cast_expression'.
 		require
 			valid_a_name: a_name /= Void and then not a_name.is_empty
@@ -63,7 +63,7 @@ feature -- Status Repport
 
 feature -- Attributes - parameters - local variables
 
-	add_attribute (an_attribute, attribute_dotnet_type: STRING) is
+	add_attribute (an_attribute, attribute_dotnet_type: STRING)
 			-- add `an_attribute' to `type_attributes'.
 		require
 			non_void_an_attribute: an_attribute /= Void
@@ -76,7 +76,7 @@ feature -- Attributes - parameters - local variables
 			an_attribute_added: type_attributes.has (an_attribute)
 		end
 
-	add_variable (a_variable, variable_eiffel_type: STRING) is
+	add_variable (a_variable, variable_eiffel_type: STRING)
 			-- add `an_variable' to `type_variables'.
 		require
 			non_void_a_variable: a_variable /= Void
@@ -89,7 +89,7 @@ feature -- Attributes - parameters - local variables
 			a_variable_added: Variables.has (a_variable)
 		end
 
-	clear_variables is
+	clear_variables
 			-- Clear all variables except Current.
 		local
 			l_current_type: STRING
@@ -99,19 +99,19 @@ feature -- Attributes - parameters - local variables
 			add_variable ("Current", l_current_type)
 		end
 
-	clear_cast_expressions is
+	clear_cast_expressions
 			-- Clear all cast expressions.
 		do
 			Cast_expressions.clear
 		end
 		
-	clear_type_attributes is
+	clear_type_attributes
 			-- Clear all type attributes.
 		do
 			Type_attributes.clear_all
 		end	
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

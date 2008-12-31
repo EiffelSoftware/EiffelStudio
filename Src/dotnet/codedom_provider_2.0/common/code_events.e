@@ -1,4 +1,4 @@
-indexing
+note
 	description: "List of possible events that might occur during CodeDom manipulation%
 					%includes error, warnings and informational messages."
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 
 feature -- Access
 
-	event_name (an_id: INTEGER): STRING is
+	event_name (an_id: INTEGER): STRING
 			-- Name of event with id `an_id'.
 		require
 			valid_id: is_event_id (an_id)
@@ -27,7 +27,7 @@ feature -- Access
 			has_name: Result /= Void
 		end
 
-	event_source (an_id: INTEGER): STRING is
+	event_source (an_id: INTEGER): STRING
 			-- Source of event with id `an_id'
 		require
 			valid_id: is_event_id (an_id)
@@ -37,7 +37,7 @@ feature -- Access
 			has_source: Result /= Void
 		end
 
-	event_message (an_id: INTEGER): STRING is
+	event_message (an_id: INTEGER): STRING
 			-- Message for event with id `an_id'
 		require
 			valid_id: is_event_id (an_id)
@@ -47,7 +47,7 @@ feature -- Access
 			has_message: Result /= Void
 		end
 	
-	event_severity (an_id: INTEGER): INTEGER is
+	event_severity (an_id: INTEGER): INTEGER
 			-- Severity of event with id `an_id'
 		require
 			valid_id: is_event_id (an_id)
@@ -55,7 +55,7 @@ feature -- Access
 			Result := events.item (an_id).integer_item (4)
 		end
 
-	event_message_marker (an_index: INTEGER): STRING is
+	event_message_marker (an_index: INTEGER): STRING
 			-- Message marker at index `an_index'
 		require
 			valid_index: an_index > 0
@@ -68,18 +68,18 @@ feature -- Access
 			non_void_marker: Result /= Void
 		end
 
-	Error, Warning, Information: INTEGER is unique
+	Error, Warning, Information: INTEGER = unique
 			-- Events severity values
 
 feature -- Status Report
 
-	is_event_id (an_id: INTEGER): BOOLEAN is
+	is_event_id (an_id: INTEGER): BOOLEAN
 			-- Is `an_id' a valid event id?
 		do
 			Result := events.has (an_id)
 		end
 
-	is_valid_context (an_id: INTEGER; a_context: TUPLE): BOOLEAN is
+	is_valid_context (an_id: INTEGER; a_context: TUPLE): BOOLEAN
 			-- Is `a_context' valid for event with id `an_id'?
 		require
 			valid_id: is_event_id (an_id)
@@ -88,7 +88,7 @@ feature -- Status Report
 			Result := event_arguments_count (an_id) = a_context.count
 		end
 
-	event_arguments_count (an_id: INTEGER): INTEGER is
+	event_arguments_count (an_id: INTEGER): INTEGER
 			-- Number of contextual arguments required for event with id `an_id'
 		require
 			valid_id: is_event_id (an_id)
@@ -106,7 +106,7 @@ feature -- Status Report
 		
 feature {NONE} -- Implementation
 
-	events: HASH_TABLE [TUPLE [STRING, STRING, STRING, INTEGER], INTEGER] is
+	events: HASH_TABLE [TUPLE [STRING, STRING, STRING, INTEGER], INTEGER]
 			-- List of events
 			--| Item is tuple of name, source, message and severity
 			--| Key is event id
@@ -321,7 +321,7 @@ feature {NONE} -- Implementation
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

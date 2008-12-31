@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Precompiler: takes care of precompiling ace files and maintains%
 						%precompiled libraries cache."
 	legal: "See notice at end of class."
@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_ace_file_name, a_directory: STRING) is
+	make (a_ace_file_name, a_directory: STRING)
 			-- Initialize instance.
 		require
 			non_void_ace_file_name: a_ace_file_name /= Void
@@ -73,7 +73,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	precompile is
+	precompile
 			-- Try precompiling or recover cached precompile
 			-- Set `successful' and `precompile_path'.
 		local
@@ -240,7 +240,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	safe_directory_delete (a_dir: STRING) is
+	safe_directory_delete (a_dir: STRING)
 			-- Delete directory `a_dir'.
 			-- Do not throw exception on error.
 		require
@@ -261,7 +261,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	safe_assembly_load (a_path: STRING) is
+	safe_assembly_load (a_path: STRING)
 			-- Try loading assembly located at `a_path' into `precompile_assembly'.
 			-- Do nothing if `a_path' does not represent a path to an assembly.
 		require
@@ -286,7 +286,7 @@ invariant
 	non_void_precompile_path_iff_successful: successful = (precompile_path /= Void)
 	non_void_precompile_files_iff_successful: successful = (precompile_files /= Void)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

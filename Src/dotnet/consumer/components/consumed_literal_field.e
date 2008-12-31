@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Literal fields as seen in Eiffel"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 
 	make (en, dn: STRING; rt: CONSUMED_REFERENCED_TYPE; static, pub: BOOLEAN;
 			val: STRING; a_type: CONSUMED_REFERENCED_TYPE)
-		is
+		
 			-- Initialize field.
 		require
 			non_void_eiffel_name: en /= Void
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	value: STRING is
+	value: STRING
 			-- Literal value
 		do
 			Result := v
@@ -56,7 +56,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_literal: BOOLEAN is True
+	is_literal: BOOLEAN = True
 			-- Current is literal.
 
 feature {NONE} -- Access
@@ -67,7 +67,7 @@ feature {NONE} -- Access
 invariant
 	is_static: is_static
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

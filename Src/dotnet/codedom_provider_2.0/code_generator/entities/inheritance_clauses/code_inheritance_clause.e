@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Common ancestor to all Eiffel inheritance clauses"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_routine: like routine; a_parent: like parent) is
+	make (a_routine: like routine; a_parent: like parent)
 			-- Set `routine' with `a_routine' and `parent' with `a_parent'.
 		require
 			non_void_routine: a_routine /= Void
@@ -34,12 +34,12 @@ feature	-- Access
 	parent: CODE_TYPE_REFERENCE
 			-- Clause target type
 		
-	keyword: STRING is
+	keyword: STRING
 			-- Associated Eiffel keyword
 		deferred
 		end
 
-	code: STRING is
+	code: STRING
 			-- Generated line in inheritance clause
 		do
 			Result := routine.eiffel_name
@@ -49,7 +49,7 @@ invariant
 	non_void_parent: parent /= Void
 	non_void_routine: routine /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Global cache settings"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature -- Access
 
-	cache_lock_id: SYSTEM_STRING is
+	cache_lock_id: SYSTEM_STRING
 			-- id used to lock cache.
 			-- Note: This has to be unique per user since accessing a Mutex created by
 			-- a different user causes a security exception. This means that concurrent
@@ -30,7 +30,7 @@ feature -- Access
 			not_result_is_empty: Result.length > 0
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

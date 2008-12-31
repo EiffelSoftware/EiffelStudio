@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Generate Eiffel code from a given CodeDom tree"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ inherit
 
 feature {CODE_GENERATOR, CODE_FACTORY, CODE_ARGUMENTS_FACTORY} -- Basic Operations
 
-	generate_compile_unit_from_dom (a_compile_unit: SYSTEM_DLL_CODE_COMPILE_UNIT) is
+	generate_compile_unit_from_dom (a_compile_unit: SYSTEM_DLL_CODE_COMPILE_UNIT)
 			-- Call `generate_code_dom_compile_unit'.
 		require
 			non_void_compile_unit: a_compile_unit /= Void
@@ -36,7 +36,7 @@ feature {CODE_GENERATOR, CODE_FACTORY, CODE_ARGUMENTS_FACTORY} -- Basic Operatio
 			end
 		end
 
-	generate_namespace_from_dom (a_namespace: SYSTEM_DLL_CODE_NAMESPACE) is
+	generate_namespace_from_dom (a_namespace: SYSTEM_DLL_CODE_NAMESPACE)
 			-- Call `generate_code_dom_namespace'.
 		require
 			non_void_namespace: a_namespace /= Void
@@ -45,7 +45,7 @@ feature {CODE_GENERATOR, CODE_FACTORY, CODE_ARGUMENTS_FACTORY} -- Basic Operatio
 			Eiffel_factory.generate_namespace (a_namespace)
 		end
 
-	generate_type_from_dom (a_type: SYSTEM_DLL_CODE_TYPE_DECLARATION) is
+	generate_type_from_dom (a_type: SYSTEM_DLL_CODE_TYPE_DECLARATION)
 			-- Call `generate_code_dom_type'.
 		require
 			non_void_type: a_type /= Void
@@ -60,7 +60,7 @@ feature {CODE_GENERATOR, CODE_FACTORY, CODE_ARGUMENTS_FACTORY} -- Basic Operatio
 			end
 		end
 		
-	generate_member_from_dom (a_member: SYSTEM_DLL_CODE_TYPE_MEMBER) is
+	generate_member_from_dom (a_member: SYSTEM_DLL_CODE_TYPE_MEMBER)
 			-- Call `generate_code_dom_member'.
 		require
 			non_void_member: a_member /= Void
@@ -121,7 +121,7 @@ feature {CODE_GENERATOR, CODE_FACTORY, CODE_ARGUMENTS_FACTORY} -- Basic Operatio
 			end
 		end
 		
-	generate_statement_from_dom (a_statement: SYSTEM_DLL_CODE_STATEMENT) is
+	generate_statement_from_dom (a_statement: SYSTEM_DLL_CODE_STATEMENT)
 			-- Call `generate_code_dom_statement'.
 		require
 			non_void_statement: a_statement /= Void
@@ -137,7 +137,7 @@ feature {CODE_GENERATOR, CODE_FACTORY, CODE_ARGUMENTS_FACTORY} -- Basic Operatio
 			l_agent.call ([a_statement])
 		end
 		
-	generate_expression_from_dom (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
+	generate_expression_from_dom (an_expression: SYSTEM_DLL_CODE_EXPRESSION)
 			-- Call `generate_code_dom_expression'.
 		require
 			non_void_expression: an_expression /= Void
@@ -153,7 +153,7 @@ feature {CODE_GENERATOR, CODE_FACTORY, CODE_ARGUMENTS_FACTORY} -- Basic Operatio
 			l_agent.call ([an_expression])
 		end
 		
-	generate_custom_attribute_declaration (an_argument: SYSTEM_DLL_CODE_ATTRIBUTE_DECLARATION) is
+	generate_custom_attribute_declaration (an_argument: SYSTEM_DLL_CODE_ATTRIBUTE_DECLARATION)
 			-- Call `initialize_custom_attribute_declaration'.
 		require
 			non_void_an_argument: an_argument /= Void
@@ -162,7 +162,7 @@ feature {CODE_GENERATOR, CODE_FACTORY, CODE_ARGUMENTS_FACTORY} -- Basic Operatio
 			Custom_attribute_factory.initialize_custom_attribute_declaration (an_argument)
 		end
 
-	generate_custom_attribute_argument (an_argument: SYSTEM_DLL_CODE_ATTRIBUTE_ARGUMENT) is
+	generate_custom_attribute_argument (an_argument: SYSTEM_DLL_CODE_ATTRIBUTE_ARGUMENT)
 			-- Call `initialize_custom_attribute_argument'.
 		require
 			non_void_an_argument: an_argument /= Void
@@ -173,7 +173,7 @@ feature {CODE_GENERATOR, CODE_FACTORY, CODE_ARGUMENTS_FACTORY} -- Basic Operatio
 
 feature {NONE} -- Agent tables.
 
-	statements_table: HASHTABLE is
+	statements_table: HASHTABLE
 			-- key : Code DOM element Type.
 			-- value : agent.
 		once
@@ -193,7 +193,7 @@ feature {NONE} -- Agent tables.
 			non_void_expressions_table: Result /= Void
 		end
 
-	expressions_table: HASHTABLE is
+	expressions_table: HASHTABLE
 			-- key : Code DOM element Type.
 			-- value : agent.
 		once
@@ -228,7 +228,7 @@ feature {NONE} -- Agent tables.
 
 feature {NONE} -- Statements agents.
 
-	generate_assign_statement (a_statement: SYSTEM_DLL_CODE_STATEMENT) is
+	generate_assign_statement (a_statement: SYSTEM_DLL_CODE_STATEMENT)
 			-- Agent.
 		local
 			assign_statement: SYSTEM_DLL_CODE_ASSIGN_STATEMENT
@@ -240,7 +240,7 @@ feature {NONE} -- Statements agents.
 			Statement_factory.generate_assign_statement (assign_statement)
 		end
 
-	generate_attach_event_statement (a_statement: SYSTEM_DLL_CODE_STATEMENT) is
+	generate_attach_event_statement (a_statement: SYSTEM_DLL_CODE_STATEMENT)
 			-- Agent.
 		local
 			attach_event_statement: SYSTEM_DLL_CODE_ATTACH_EVENT_STATEMENT
@@ -252,7 +252,7 @@ feature {NONE} -- Statements agents.
 			Event_statement_factory.generate_attach_event_statement (attach_event_statement)
 		end
 
-	generate_comment_statement (a_statement: SYSTEM_DLL_CODE_STATEMENT) is
+	generate_comment_statement (a_statement: SYSTEM_DLL_CODE_STATEMENT)
 			-- Agent.
 		local
 			comment_statement: SYSTEM_DLL_CODE_COMMENT_STATEMENT
@@ -264,7 +264,7 @@ feature {NONE} -- Statements agents.
 			Statement_factory.generate_comment_statement (comment_statement)
 		end
 
-	generate_condition_statement (a_statement: SYSTEM_DLL_CODE_STATEMENT) is
+	generate_condition_statement (a_statement: SYSTEM_DLL_CODE_STATEMENT)
 			-- Agent.
 		local
 			condition_statement: SYSTEM_DLL_CODE_CONDITION_STATEMENT
@@ -276,7 +276,7 @@ feature {NONE} -- Statements agents.
 			Statement_factory.generate_condition_statement (condition_statement)
 		end
 
-	generate_expression_statement (a_statement: SYSTEM_DLL_CODE_STATEMENT) is
+	generate_expression_statement (a_statement: SYSTEM_DLL_CODE_STATEMENT)
 			-- Agent.
 		local
 			expression_statement: SYSTEM_DLL_CODE_EXPRESSION_STATEMENT
@@ -288,7 +288,7 @@ feature {NONE} -- Statements agents.
 			Statement_factory.generate_expression_statement (expression_statement)
 		end
 
-	generate_iteration_statement (a_statement: SYSTEM_DLL_CODE_STATEMENT) is
+	generate_iteration_statement (a_statement: SYSTEM_DLL_CODE_STATEMENT)
 			-- Agent.
 		local
 			iteration_statement: SYSTEM_DLL_CODE_ITERATION_STATEMENT
@@ -300,7 +300,7 @@ feature {NONE} -- Statements agents.
 			Statement_factory.generate_iteration_statement (iteration_statement)
 		end
 
-	generate_method_return_statement (a_statement: SYSTEM_DLL_CODE_STATEMENT) is
+	generate_method_return_statement (a_statement: SYSTEM_DLL_CODE_STATEMENT)
 			-- Agent.
 		local
 			method_return_statement: SYSTEM_DLL_CODE_METHOD_RETURN_STATEMENT
@@ -312,7 +312,7 @@ feature {NONE} -- Statements agents.
 			Statement_factory.generate_routine_return_statement (method_return_statement)
 		end
 
-	generate_remove_event_statement (a_statement: SYSTEM_DLL_CODE_STATEMENT) is
+	generate_remove_event_statement (a_statement: SYSTEM_DLL_CODE_STATEMENT)
 			-- Agent.
 		local
 			remove_event_statement: SYSTEM_DLL_CODE_REMOVE_EVENT_STATEMENT
@@ -324,7 +324,7 @@ feature {NONE} -- Statements agents.
 			Event_statement_factory.generate_remove_event_statement (remove_event_statement)
 		end
 
-	generate_snippet_statement (a_statement: SYSTEM_DLL_CODE_STATEMENT) is
+	generate_snippet_statement (a_statement: SYSTEM_DLL_CODE_STATEMENT)
 			-- Agent.
 		local
 			snippet_statement: SYSTEM_DLL_CODE_SNIPPET_STATEMENT
@@ -336,7 +336,7 @@ feature {NONE} -- Statements agents.
 			Statement_factory.generate_snippet_statement (snippet_statement)
 		end
 
-	generate_try_catch_statement (a_statement: SYSTEM_DLL_CODE_STATEMENT) is
+	generate_try_catch_statement (a_statement: SYSTEM_DLL_CODE_STATEMENT)
 			-- Agent.
 		local
 			try_catch_statement: SYSTEM_DLL_CODE_TRY_CATCH_FINALLY_STATEMENT
@@ -348,7 +348,7 @@ feature {NONE} -- Statements agents.
 			Exception_statement_factory.generate_try_catch_finally_statement (try_catch_statement)
 		end
 
-	generate_variable_declaration_statement (a_statement: SYSTEM_DLL_CODE_STATEMENT) is
+	generate_variable_declaration_statement (a_statement: SYSTEM_DLL_CODE_STATEMENT)
 			-- Agent.
 		local
 			variable_declaration_statement: SYSTEM_DLL_CODE_VARIABLE_DECLARATION_STATEMENT
@@ -362,7 +362,7 @@ feature {NONE} -- Statements agents.
 
 feature {NONE} -- Expression agents.
 
-	generate_argument_reference_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
+	generate_argument_reference_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION)
 			-- Agent.
 		local
 			argument_reference_expression: SYSTEM_DLL_CODE_ARGUMENT_REFERENCE_EXPRESSION
@@ -374,7 +374,7 @@ feature {NONE} -- Expression agents.
 			Argument_expression_factory.generate_argument_reference_expression (argument_reference_expression)
 		end
 
-	generate_array_create_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
+	generate_array_create_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION)
 			-- Agent.
 		local
 			array_create_expression: SYSTEM_DLL_CODE_ARRAY_CREATE_EXPRESSION
@@ -386,7 +386,7 @@ feature {NONE} -- Expression agents.
 			Array_expression_factory.generate_array_create_expression (array_create_expression)
 		end
 
-	generate_array_indexer_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
+	generate_array_indexer_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION)
 			-- Agent.
 		local
 			array_indexer_expression: SYSTEM_DLL_CODE_ARRAY_INDEXER_EXPRESSION
@@ -398,7 +398,7 @@ feature {NONE} -- Expression agents.
 			Array_expression_factory.generate_array_indexer_expression (array_indexer_expression)
 		end
 
-	generate_base_reference_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
+	generate_base_reference_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION)
 			-- Agent.
 		local
 			base_reference_expression: SYSTEM_DLL_CODE_BASE_REFERENCE_EXPRESSION
@@ -410,7 +410,7 @@ feature {NONE} -- Expression agents.
 			Property_expression_factory.generate_base_reference_expression (base_reference_expression)
 		end
 
-	generate_binary_operator_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
+	generate_binary_operator_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION)
 			-- Agent.
 		local
 			binary_operator_expression: SYSTEM_DLL_CODE_BINARY_OPERATOR_EXPRESSION
@@ -422,7 +422,7 @@ feature {NONE} -- Expression agents.
 			Expression_factory.generate_binary_operator_expression (binary_operator_expression)
 		end
 
-	generate_cast_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
+	generate_cast_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION)
 			-- Agent.
 		local
 			cast_expression: SYSTEM_DLL_CODE_CAST_EXPRESSION
@@ -434,7 +434,7 @@ feature {NONE} -- Expression agents.
 			Expression_factory.generate_cast_expression (cast_expression)
 		end
 
-	generate_default_value_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
+	generate_default_value_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION)
 			-- Agent.
 		local
 			default_value_expression: SYSTEM_DLL_CODE_DEFAULT_VALUE_EXPRESSION
@@ -446,7 +446,7 @@ feature {NONE} -- Expression agents.
 			Expression_factory.generate_default_value_expression (default_value_expression)
 		end
 
-	generate_delegate_create_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
+	generate_delegate_create_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION)
 			-- Agent.
 		local
 			delegate_create_expression: SYSTEM_DLL_CODE_DELEGATE_CREATE_EXPRESSION
@@ -458,7 +458,7 @@ feature {NONE} -- Expression agents.
 			Delegate_expression_factory.generate_delegate_create_expression (delegate_create_expression)
 		end
 
-	generate_delegate_invoke_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
+	generate_delegate_invoke_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION)
 			-- Agent.
 		local
 			delegate_invoke_expression: SYSTEM_DLL_CODE_DELEGATE_INVOKE_EXPRESSION
@@ -470,7 +470,7 @@ feature {NONE} -- Expression agents.
 			Delegate_expression_factory.generate_delegate_invoke_expression (delegate_invoke_expression)
 		end
 
-	generate_event_reference_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
+	generate_event_reference_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION)
 			-- Agent.
 		local
 			event_reference_expression: SYSTEM_DLL_CODE_EVENT_REFERENCE_EXPRESSION
@@ -482,7 +482,7 @@ feature {NONE} -- Expression agents.
 			Expression_factory.generate_event_reference_expression (event_reference_expression)
 		end
 
-	generate_field_reference_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
+	generate_field_reference_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION)
 			-- Agent.
 		local
 			field_reference_expression: SYSTEM_DLL_CODE_FIELD_REFERENCE_EXPRESSION
@@ -494,7 +494,7 @@ feature {NONE} -- Expression agents.
 			Expression_factory.generate_attribute_reference_expression (field_reference_expression)
 		end
 
-	generate_indexer_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
+	generate_indexer_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION)
 			-- Agent.
 		local
 			indexer_expression: SYSTEM_DLL_CODE_INDEXER_EXPRESSION
@@ -506,7 +506,7 @@ feature {NONE} -- Expression agents.
 			Expression_factory.generate_indexer_expression (indexer_expression)
 		end
 
-	generate_method_invoke_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
+	generate_method_invoke_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION)
 			-- Agent.
 		local
 			method_invoke_expression: SYSTEM_DLL_CODE_METHOD_INVOKE_EXPRESSION
@@ -518,7 +518,7 @@ feature {NONE} -- Expression agents.
 			Routine_expression_factory.generate_routine_invoke_expression (method_invoke_expression)
 		end
 
-	generate_method_reference_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
+	generate_method_reference_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION)
 			-- Agent.
 		local
 			method_reference_expression: SYSTEM_DLL_CODE_METHOD_REFERENCE_EXPRESSION
@@ -530,7 +530,7 @@ feature {NONE} -- Expression agents.
 			Routine_expression_factory.generate_routine_reference_expression (method_reference_expression)
 		end
 
-	generate_object_create_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
+	generate_object_create_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION)
 			-- Agent.
 		local
 			object_create_expression: SYSTEM_DLL_CODE_OBJECT_CREATE_EXPRESSION
@@ -542,7 +542,7 @@ feature {NONE} -- Expression agents.
 			Expression_factory.generate_object_create_expression (object_create_expression)
 		end
 
-	generate_parameter_declaration_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
+	generate_parameter_declaration_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION)
 			-- Agent.
 		local
 			parameter_declaration_expression: SYSTEM_DLL_CODE_PARAMETER_DECLARATION_EXPRESSION
@@ -554,7 +554,7 @@ feature {NONE} -- Expression agents.
 			Argument_expression_factory.generate_parameter_declaration_expression (parameter_declaration_expression)
 		end
 
-	generate_primitive_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
+	generate_primitive_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION)
 			-- Agent.
 		local
 			primitive_expression: SYSTEM_DLL_CODE_PRIMITIVE_EXPRESSION
@@ -566,7 +566,7 @@ feature {NONE} -- Expression agents.
 			Expression_factory.generate_primitive_expression (primitive_expression)
 		end
 
-	generate_property_set_value_reference_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
+	generate_property_set_value_reference_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION)
 			-- Agent.
 		local
 			property_set_value_reference_expression: SYSTEM_DLL_CODE_PROPERTY_SET_VALUE_REFERENCE_EXPRESSION
@@ -578,7 +578,7 @@ feature {NONE} -- Expression agents.
 			Property_expression_factory.generate_property_set_value_reference_expression (property_set_value_reference_expression)
 		end
 
-	generate_snippet_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
+	generate_snippet_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION)
 			-- Agent.
 		local
 			snippet_expression: SYSTEM_DLL_CODE_SNIPPET_EXPRESSION
@@ -590,7 +590,7 @@ feature {NONE} -- Expression agents.
 			Expression_factory.generate_snippet_expression (snippet_expression)
 		end
 
-	generate_this_reference_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
+	generate_this_reference_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION)
 			-- Agent.
 		local
 			this_reference_expression: SYSTEM_DLL_CODE_THIS_REFERENCE_EXPRESSION
@@ -602,7 +602,7 @@ feature {NONE} -- Expression agents.
 			Expression_factory.generate_this_reference_expression (this_reference_expression)
 		end
 
-	generate_type_of_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
+	generate_type_of_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION)
 			-- Agent.
 		local
 			type_of_expression: SYSTEM_DLL_CODE_TYPE_OF_EXPRESSION
@@ -614,7 +614,7 @@ feature {NONE} -- Expression agents.
 			Expression_factory.generate_type_of_expression (type_of_expression)
 		end
 
-	generate_type_reference_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
+	generate_type_reference_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION)
 			-- Agent.
 		local
 			type_reference_expression: SYSTEM_DLL_CODE_TYPE_REFERENCE_EXPRESSION
@@ -626,7 +626,7 @@ feature {NONE} -- Expression agents.
 			Expression_factory.generate_type_reference_expression (type_reference_expression)
 		end
 
-	generate_variable_reference_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
+	generate_variable_reference_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION)
 			-- Agent.
 		local
 			variable_reference_expression: SYSTEM_DLL_CODE_VARIABLE_REFERENCE_EXPRESSION
@@ -638,7 +638,7 @@ feature {NONE} -- Expression agents.
 			Expression_factory.generate_variable_reference_expression (variable_reference_expression)
 		end
 
-	generate_property_reference_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
+	generate_property_reference_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION)
 			-- Agent.
 		local
 			property_reference_expression: SYSTEM_DLL_CODE_PROPERTY_REFERENCE_EXPRESSION
@@ -650,7 +650,7 @@ feature {NONE} -- Expression agents.
 			Property_expression_factory.generate_property_reference_expression (property_reference_expression)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Popup"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Populate the dialog box.
 		local
 			main_horizontal_box: EV_HORIZONTAL_BOX
@@ -97,7 +97,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	message: STRING is
+	message: STRING
 			-- Message displayed in the dialog box.
 		do
 			Result := message_label.text
@@ -105,7 +105,7 @@ feature -- Access
 
 feature -- Element change
 	
-	set_message (a_message: STRING) is
+	set_message (a_message: STRING)
 		do
 			message_label.set_text (a_message)
 		end
@@ -124,13 +124,13 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation / Constants
 
-	Default_title: STRING is "Class not found"
+	Default_title: STRING = "Class not found"
 			-- Default title for the dialog window.
 
-	Default_message: STRING is
+	Default_message: STRING =
 		"Class not found in Eiffel Assembly Cache.";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

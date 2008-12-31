@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Root class of Eiffel Codedom Provider dll
 			COM visible.
@@ -33,14 +33,14 @@ create
 
 feature -- Access
 
-	file_extension: SYSTEM_STRING is
+	file_extension: SYSTEM_STRING
 			-- Get the file name extension to use when creating source code files.
 			-- Files passed to codeDomGenerator.
 		once
 			Result := "es"
 		end
 
-	language_options: SYSTEM_DLL_LANGUAGE_OPTIONS is
+	language_options: SYSTEM_DLL_LANGUAGE_OPTIONS
 			-- Get a language features identifier.
 		once
 			Result := {SYSTEM_DLL_LANGUAGE_OPTIONS}.Case_insensitive
@@ -48,14 +48,14 @@ feature -- Access
 		
 feature -- Basic Operations
 
-	create_generator: CODE_GENERATOR is
+	create_generator: CODE_GENERATOR
 			-- Create an instance of the Eiffel for .NET code code_generator.
 		do
 			load_assemblies
 			create Result
 		end
 
-	create_generator_text_writer (output: SYSTEM_DLL_INDENTED_TEXT_WRITER): CODE_GENERATOR is
+	create_generator_text_writer (output: SYSTEM_DLL_INDENTED_TEXT_WRITER): CODE_GENERATOR
 			-- Create a new code code_generator using the specified text writer `output'.
 		require else
 			non_void_output: output /= Void		
@@ -66,7 +66,7 @@ feature -- Basic Operations
 			non_void_result: Result /= Void
 		end
 
-	create_generator_string (file_name: SYSTEM_STRING): CODE_GENERATOR is
+	create_generator_string (file_name: SYSTEM_STRING): CODE_GENERATOR
 			-- Create a new code generator using the specified `file_name' for output.
 		require else
 			non_void_file_name: file_name /= Void
@@ -78,7 +78,7 @@ feature -- Basic Operations
 			non_void_result: Result /= Void
 		end
 
-	create_compiler: CODE_COMPILER is
+	create_compiler: CODE_COMPILER
 			-- Create an instance of the Eiffel for .NET code compiler.
 		do
 			load_assemblies
@@ -87,7 +87,7 @@ feature -- Basic Operations
 			non_void_result: Result /= Void
 		end
 
-	create_parser: CODE_PARSER is
+	create_parser: CODE_PARSER
 			-- Create a new code parser.
 		do
 			load_assemblies
@@ -96,14 +96,14 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	installer: CODE_INSTALLER is
+	installer: CODE_INSTALLER
 			-- Installer
 			--| Referenced here so that it is in system
 		do
 			create Result
 		end
 
-	load_assemblies is
+	load_assemblies
 			-- Force loading of base, cache browser and codedom in internal
 			-- to workaround .NET bug where an assembly might not be returned
 			-- by {APP_DOMAIN}.GetAssemblies
@@ -124,7 +124,7 @@ feature {NONE} -- Implementation
 			l_int.load_eiffel_types_from_assembly (l_object.get_type.assembly)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

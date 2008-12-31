@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Compilation contextual infomation shared between consumer and compiler"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ feature -- Access
 
 feature -- Element Settings
 
-	set_root_class_name (a_name: like root_class_name) is
+	set_root_class_name (a_name: like root_class_name)
 			-- Set `root_class_name' with `a_name'.
 		require
 			non_void_name: a_name /= Void
@@ -32,7 +32,7 @@ feature -- Element Settings
 			root_class_name_set: root_class_name = a_name
 		end
 		
-	set_root_creation_routine_name (a_name: like root_creation_routine_name) is
+	set_root_creation_routine_name (a_name: like root_creation_routine_name)
 			-- Set `root_class_name' with `a_name'.
 		require
 			non_void_name: a_name /= Void
@@ -43,7 +43,7 @@ feature -- Element Settings
 			root_creation_routine_name_set: root_creation_routine_name = a_name
 		end
 	
-	set_precompile_file (a_file: like precompile_file) is
+	set_precompile_file (a_file: like precompile_file)
 			-- Set `precompile_file' with `a_file'.
 		do
 			precompile_file := a_file
@@ -51,7 +51,7 @@ feature -- Element Settings
 			precompile_file_set: precompile_file = a_file
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

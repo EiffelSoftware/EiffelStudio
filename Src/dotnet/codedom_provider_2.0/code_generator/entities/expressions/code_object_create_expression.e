@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Source code generator for creation expressions"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_target_type: CODE_TYPE_REFERENCE; a_arguments: LIST [CODE_EXPRESSION]) is
+	make (a_target_type: CODE_TYPE_REFERENCE; a_arguments: LIST [CODE_EXPRESSION])
 			-- Initialize `type', `arguments'.
 		require
 			non_void_target_type: a_target_type /= Void
@@ -39,7 +39,7 @@ feature -- Access
 	target: STRING
 			-- Creation target
 
-	code: STRING is
+	code: STRING
 			-- | Result := "create {`type'}.`creation_routine' [(`arguments', ...)]" if target = Void
 			-- | Result := "create {`type'} `target'.`creation_routine' [(`arguments', ...)]" otherwise
 			-- Eiffel code of object create expression
@@ -86,7 +86,7 @@ feature -- Access
 		
 feature -- Status Report
 
-	type: CODE_TYPE_REFERENCE is
+	type: CODE_TYPE_REFERENCE
 			-- Type
 		do
 			Result := target_type
@@ -94,7 +94,7 @@ feature -- Status Report
 
 feature {CODE_ASSIGN_STATEMENT, CODE_METHOD_RETURN_STATEMENT} -- Element Settings
 
-	set_target (a_target: like target) is
+	set_target (a_target: like target)
 			-- Set `target' with `a_target'.
 		require
 			non_void_target: a_target /= Void
@@ -107,7 +107,7 @@ feature {CODE_ASSIGN_STATEMENT, CODE_METHOD_RETURN_STATEMENT} -- Element Setting
 invariant
 	non_void_type: target_type /= Void 
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

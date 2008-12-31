@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog box with a progress bar showing the progression of the deserialization"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			Precursor --{EV_DIALOG}
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 		
 feature -- Status Setting
 
-	set_progress_bar (value: INTEGER) is
+	set_progress_bar (value: INTEGER)
 			-- Set `l_progress_bar' with `value'.
 		require 
 			correct_value: value >= 0 and value <= 100
@@ -53,7 +53,7 @@ feature -- Status Setting
 		
 feature {NONE} -- Implementation
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			-- Re-implement if you wish to enable checking
@@ -65,13 +65,13 @@ feature {NONE} -- Implementation
 	l_label_1: EV_LABEL
 	l_progress_bar: EV_HORIZONTAL_PROGRESS_BAR
 	
-	Dialog_width: INTEGER is 300
+	Dialog_width: INTEGER = 300
 			-- width of the dialog box
 
-	Dialog_height: INTEGER is 80;
+	Dialog_height: INTEGER = 80;
 			-- height of the dialog box
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Store and retrieve codedom trees locations"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	load is
+	load
 			-- Load locations and initialize instance accordingly.
 		local
 			l_paths: STRING
@@ -198,7 +198,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	store is
+	store
 			-- Persist all locations to disk.
 		local
 			l_paths: STRING
@@ -280,7 +280,7 @@ feature -- Basic Operations
 			end
 		end
 	
-	add (a_path: STRING) is
+	add (a_path: STRING)
 			-- Add serialized tree at `a_path'.
 		require
 			non_void_path: a_path /= Void
@@ -314,7 +314,7 @@ feature -- Basic Operations
 			added_if_statement: {SYSTEM_FILE}.exists (a_path) and then codedom_type_from_file (a_path) = Codedom_statement_type implies statements_paths.has (a_path)
 		end
 	
-	remove (a_path: STRING) is
+	remove (a_path: STRING)
 			-- Remove serialized tree at `a_path' if in tree.
 			-- Otherwise do nothing.
 		require
@@ -343,7 +343,7 @@ feature -- Basic Operations
 			removed_if_statement: statements_paths /= Void implies ((old statements_paths).has (a_path) implies not statements_paths.has (a_path))
 		end
 
-	add_compile_unit (a_path: STRING) is
+	add_compile_unit (a_path: STRING)
 			-- Extend `compile_units' with tree serialized at `a_path'.
 		require
 			non_void_path: a_path /= Void
@@ -364,7 +364,7 @@ feature -- Basic Operations
 			added: compile_units_paths.has (a_path)
 		end
 		
-	add_namespace (a_path: STRING) is
+	add_namespace (a_path: STRING)
 			-- Extend `namespaces' with tree serialized at `a_path'.
 		require
 			non_void_path: a_path /= Void
@@ -385,7 +385,7 @@ feature -- Basic Operations
 			added: namespaces_paths.has (a_path)
 		end
 		
-	add_type (a_path: STRING) is
+	add_type (a_path: STRING)
 			-- Extend `types' with tree serialized at `a_path'.
 		require
 			non_void_path: a_path /= Void
@@ -406,7 +406,7 @@ feature -- Basic Operations
 			added: types_paths.has (a_path)
 		end
 		
-	add_expression (a_path: STRING) is
+	add_expression (a_path: STRING)
 			-- Extend `expressions' with tree serialized at `a_path'.
 		require
 			non_void_path: a_path /= Void
@@ -427,7 +427,7 @@ feature -- Basic Operations
 			added: expressions_paths.has (a_path)
 		end
 		
-	add_statement (a_path: STRING) is
+	add_statement (a_path: STRING)
 			-- Extend `statements' with tree serialized at `a_path'.
 		require
 			non_void_path: a_path /= Void
@@ -450,22 +450,22 @@ feature -- Basic Operations
 
 feature {NONE} -- Private access
 
-	Location_separator: CHARACTER is ';'
+	Location_separator: CHARACTER = ';'
 			-- Location separator in regsitry key value
 	
-	Compile_units_key: STRING is "CompileUnits"
+	Compile_units_key: STRING = "CompileUnits"
 			-- Registry key containing locations of compile units
 			
-	Namespaces_key: STRING is "Namespaces"
+	Namespaces_key: STRING = "Namespaces"
 			-- Registry key containing locations of namespaces
 			
-	Types_key: STRING is "Types"
+	Types_key: STRING = "Types"
 			-- Registry key containing locations of types
 			
-	Expressions_key: STRING is "Expressions"
+	Expressions_key: STRING = "Expressions"
 			-- Registry key containing locations of expressions
 			
-	Statements_key: STRING is "Statements"
+	Statements_key: STRING = "Statements"
 			-- Registry key containing locations of statements
 
 invariant
@@ -485,7 +485,7 @@ invariant
 							(statements /= Void implies statements.count = statements_paths.count) and
 							(statements /= Void implies not statements.is_empty)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

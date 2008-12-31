@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Source code generator for delegate creation expression"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_delegate_type: like delegate_type; a_method: like method; a_target: like target) is
+	make (a_delegate_type: like delegate_type; a_method: like method; a_target: like target)
 			-- Initialize `delegate_type', `method_name' and `target'.
 		require
 			non_void_delegate_type: a_delegate_type /= Void
@@ -43,7 +43,7 @@ feature -- Access
 	method: STRING
 			-- method name
 	
-	code: STRING is
+	code: STRING
 			-- | Result := "create {`delegate_type'}.constructor_name (`target_object.expression', $`method_name')"
 			-- Eiffel code of delegate create expression
 		local
@@ -73,7 +73,7 @@ feature -- Access
 		
 feature -- Status Report
 
-	type: CODE_TYPE_REFERENCE is
+	type: CODE_TYPE_REFERENCE
 			-- Type
 		do
 			Result := delegate_type
@@ -84,7 +84,7 @@ invariant
 	non_void_delegate_type: delegate_type /= Void
 	non_void_target: target /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Path used by eac browser."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	Eiffel_path: STRING is
+	Eiffel_path: STRING
 			-- Path to Eiffel installation.
 		local   
 			retried: BOOLEAN
@@ -52,7 +52,7 @@ feature -- Access
 			retry   
 		end
 
-	dotnet_framework_path: STRING is
+	dotnet_framework_path: STRING
 		-- Path to .NET Framework.
 		local
 			p: POINTER
@@ -72,21 +72,21 @@ feature -- Access
 	
 feature {NONE} -- Implementation
 
-	Info_path: STRING is "info.xml"
+	Info_path: STRING = "info.xml"
 			-- Path to EAC info file relative to `Eac_path'.
 		
-	Ise_eiffel_key: STRING is "ISE_EIFFEL"
+	Ise_eiffel_key: STRING = "ISE_EIFFEL"
 			-- Environment variable $ISE_EIFFEL.
 
-	Eac_path: STRING is "dotnet\assemblies\"
+	Eac_path: STRING = "dotnet\assemblies\"
 			-- EAC path relative to $ISE_EIFFEL.
 
-	Assembly_original_types_file_name: STRING is "original_types.xml"
+	Assembly_original_types_file_name: STRING = "original_types.xml"
 			-- Original file of types which lists all types in assembly.
 	
 	
 	
-	get_core_system_directory (path: POINTER; buf_size: INTEGER; filled_length: POINTER): INTEGER is
+	get_core_system_directory (path: POINTER; buf_size: INTEGER; filled_length: POINTER): INTEGER
 			-- Initializes a wide character `path' of size `buf_size' characters
 			-- with path to .NET Framework SDK location. Number of characters set in `path'
 			-- is given by `filled_length'.
@@ -96,7 +96,7 @@ feature {NONE} -- Implementation
 			"GetCORSystemDirectory"
 		end
 	
-	wcstombs (dest, source: POINTER; count: INTEGER): INTEGER is
+	wcstombs (dest, source: POINTER; count: INTEGER): INTEGER
 		-- Convert a sequence of `count' of wide characters `source' to a 
 		-- corresponding sequence of multibyte characters `dest'.
 		external
@@ -105,7 +105,7 @@ feature {NONE} -- Implementation
 			"wcstombs"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

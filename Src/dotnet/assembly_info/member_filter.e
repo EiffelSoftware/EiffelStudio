@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -17,7 +17,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Initialization.
 		do
 			create xml_members.make (10000)
@@ -38,7 +38,7 @@ feature -- Access
 
 feature -- Update
 
-	set_offset (an_offset: like offset) is
+	set_offset (an_offset: like offset)
 			-- Set `offset' to `an_offset'.
 		require
 			an_offset_ok: an_offset >= 0
@@ -61,7 +61,7 @@ feature {NONE} -- Access
 
 feature -- Tag
 
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- Add tag to list of tags.
 			-- If <member> then set position of tag.
 		local
@@ -80,7 +80,7 @@ feature -- Tag
 			Precursor {XM_CALLBACKS_FILTER} (a_namespace, a_prefix, a_local_part)
 		end
 
-	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
+	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
 			-- if `current_tag' is <member> then retrieve name of member.
 		local
 			l_name: STRING
@@ -104,7 +104,7 @@ feature -- Tag
 			Precursor {XM_CALLBACKS_FILTER} (a_namespace, a_prefix, a_local_part, a_value)
 		end
 
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- If </member> then retrieve size of in bytes of tag.
 			-- Add `current_xml_member' to `xml_members'.
 		local
@@ -131,7 +131,7 @@ feature -- Stautus Setting
 	parser: XM_EIFFEL_PARSER
 			-- Eiffel parser.
 
-	set_parser (a_parser: like parser) is
+	set_parser (a_parser: like parser)
 			-- Set `parser' with `a_parser'.
 		require
 			non_void_parser: a_parser /= Void
@@ -145,7 +145,7 @@ invariant
 	non_void_xml_members: xml_members /= Void
 	non_void_current_tag: current_tag /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ inherit
 
 feature -- Access
 
-	Startup_assemblies: LIST [STRING] is
+	Startup_assemblies: LIST [STRING]
 			-- Assemblies to be in list by default
 		once
 			create {ARRAYED_LIST [STRING]} Result.make (20)
@@ -49,7 +49,7 @@ feature -- Access
 			lowercase: Result.for_all (agent is_lower)
 		end
 
-	is_lower (a_string: STRING): BOOLEAN is
+	is_lower (a_string: STRING): BOOLEAN
 			-- Is `a_string' lower case?
 		do
 			Result := a_string.as_lower.is_equal (a_string)
@@ -57,7 +57,7 @@ feature -- Access
 		
 feature -- Status Report
 
-	is_startup_assembly (a_path: STRING): BOOLEAN is
+	is_startup_assembly (a_path: STRING): BOOLEAN
 			-- Is assembly with location `a_path' in `Startup_assemblies' list?
 		local
 			l_framework_path: STRING
@@ -79,7 +79,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	load_assemblies is
+	load_assemblies
 			-- Retrieve referenced assemblies list persisted with `save_assemblie'.
 		local
 			l_key: REGISTRY_KEY
@@ -117,7 +117,7 @@ feature -- Basic Operations
 			retry
 		end
 		
-	save_assemblies is
+	save_assemblies
 			-- Persist referenced assemblies list.
 		local
 			l_assemblies: STRING
@@ -153,7 +153,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	load_default_assemblies is
+	load_default_assemblies
 			-- Load assemblies in `Startup_assemblies' list.
 		do
 			from
@@ -168,10 +168,10 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Private Access
 
-	Separator: CHARACTER is ';';
+	Separator: CHARACTER = ';';
 			-- Separator between two paths in saved information
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

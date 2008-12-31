@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Transaction corresponding to change in Eiffel Codedom Provider configuration"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ deferred class
 
 feature -- Initialization
 
-	make (a_path: STRING; a_configuration: ECDM_CONFIGURATION; a_manager: ECDM_MANAGER) is
+	make (a_path: STRING; a_configuration: ECDM_CONFIGURATION; a_manager: ECDM_MANAGER)
 			-- Set `application_path' with `a_path'
 			-- Set `configuration' with `a_configuration'.
 			-- Set `manager' with `a_manager'.
@@ -42,7 +42,7 @@ feature -- Access
 
 feature -- Basic Operation
 
-	commit is
+	commit
 			-- Commit transaction.
 		deferred
 		end
@@ -52,7 +52,7 @@ invariant
 	non_void_configuration: configuration /= Void
 	non_void_manager: manager /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

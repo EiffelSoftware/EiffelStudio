@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Matches Eiffel and .NET type names.
 				]"
@@ -39,7 +39,7 @@ feature -- Access
 	found_type: CODE_GENERATED_TYPE
 			-- Last type found with `search'
 
-	Generated_types: HASH_TABLE [CODE_GENERATED_TYPE, STRING] is
+	Generated_types: HASH_TABLE [CODE_GENERATED_TYPE, STRING]
 			-- Types declared in Codedom tree
 			-- Value: `CODE_GENERATED_TYPE'
 			-- Key: .NET full type name
@@ -52,7 +52,7 @@ feature -- Access
 
 feature -- Status Repport
 
-	is_generated (a_type: CODE_TYPE_REFERENCE): BOOLEAN is
+	is_generated (a_type: CODE_TYPE_REFERENCE): BOOLEAN
 			-- Is type `a_type_name' declared in Codedom tree?
 		require
 			non_void_type: a_type /= Void
@@ -65,7 +65,7 @@ feature -- Status Repport
 
 feature -- Basics Operations
 
-	search (a_type: CODE_TYPE_REFERENCE) is
+	search (a_type: CODE_TYPE_REFERENCE)
 			-- Search for type `a_type' in cache.
 			-- Set `found', and `found_type' accordingly.
 		require
@@ -80,7 +80,7 @@ feature -- Basics Operations
 
 feature -- Element Settings
 
-	add_generated_type (a_type: CODE_GENERATED_TYPE) is
+	add_generated_type (a_type: CODE_GENERATED_TYPE)
 			-- Add `a_type' to generated types cache.
 		require
 			non_void_generated_type: a_type /= Void
@@ -94,7 +94,7 @@ feature -- Element Settings
 			generated_types_set: generated_types.has (a_type.name)
 		end
 
-	reset is
+	reset
 			-- Reset content of `Generated_types'.
 		do
 			Generated_types.clear_all
@@ -104,7 +104,7 @@ invariant
 	non_void_types: Generated_types /= Void
 	found_type_if_found: found implies found_type /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

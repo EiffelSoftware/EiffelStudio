@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Path to access icon"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature -- Implementation
 
-	Path_icon_eac: STRING is
+	Path_icon_eac: STRING
 			-- Path of eac icon.
 		once
 			Result := Eiffel_path + eac_resource + "icon_eac.ico"
@@ -22,7 +22,7 @@ feature -- Implementation
 			non_void_result: Result /= Void
 		end
 
-	Path_icon_assembly: STRING is
+	Path_icon_assembly: STRING
 			-- Path of assembly icon.
 		once
 			Result := Eiffel_path + eac_resource + "icon_assembly.ico"
@@ -30,7 +30,7 @@ feature -- Implementation
 			non_void_result: Result /= Void
 		end
 
-	Path_icon_namespace: STRING is
+	Path_icon_namespace: STRING
 			-- Path of namespace icon.
 		once
 			Result := Eiffel_path + eac_resource + "icon_namespace.ico"
@@ -38,7 +38,7 @@ feature -- Implementation
 			non_void_result: Result /= Void
 		end
 
-	Path_icon_constructor: STRING is
+	Path_icon_constructor: STRING
 			-- Path of constructor icon.
 		once
 			Result := Eiffel_path + eac_resource + "icon_constructor.ico"
@@ -46,7 +46,7 @@ feature -- Implementation
 			non_void_result: Result /= Void
 		end
 
-	Path_icon_inherited_features: STRING is
+	Path_icon_inherited_features: STRING
 			-- Path of inherited features icon.
 		once
 			Result := Eiffel_path + eac_resource + "icon_inherited_features.ico"
@@ -54,7 +54,7 @@ feature -- Implementation
 			non_void_result: Result /= Void
 		end
 	
-	Path_icon_all_features: STRING is
+	Path_icon_all_features: STRING
 			-- Path of inherited features icon.
 		once
 			Result := Eiffel_path + eac_resource + "icon_all_features.ico"
@@ -62,7 +62,7 @@ feature -- Implementation
 			non_void_result: Result /= Void
 		end
 	
-	Path_icon_ancestors: STRING is
+	Path_icon_ancestors: STRING
 			-- Path of inherited features icon.
 		once
 			Result := Eiffel_path + eac_resource + "icon_ancestors.ico"
@@ -72,7 +72,7 @@ feature -- Implementation
 
 feature -- Class Icon
 
-	Path_icon_class: STRING is
+	Path_icon_class: STRING
 			-- Path of class icon.
 		once
 			Result := Eiffel_path + eac_resource + "icon_class.ico"
@@ -80,7 +80,7 @@ feature -- Class Icon
 			non_void_result: Result /= Void
 		end
 		
-	Path_icon_interface_class: STRING is
+	Path_icon_interface_class: STRING
 			-- Path of interface class icon.
 		once
 			Result := Eiffel_path + eac_resource + "icon_interface_class.ico"
@@ -88,7 +88,7 @@ feature -- Class Icon
 			non_void_result: Result /= Void
 		end
 
-	Path_icon_delegate_class: STRING is
+	Path_icon_delegate_class: STRING
 			-- Path of delegate class icon.
 		once
 			Result := Eiffel_path + eac_resource + "icon_delegate_class.ico"
@@ -96,7 +96,7 @@ feature -- Class Icon
 			non_void_result: Result /= Void
 		end
 
-	Path_icon_enum_class: STRING is
+	Path_icon_enum_class: STRING
 			-- Path of enum class icon.
 		once
 			Result := Eiffel_path + eac_resource + "icon_enum_class.ico"
@@ -104,7 +104,7 @@ feature -- Class Icon
 			non_void_result: Result /= Void
 		end
 
-	Path_icon_value_type_class: STRING is
+	Path_icon_value_type_class: STRING
 			-- Path of value type class icon.
 		once
 			Result := Eiffel_path + eac_resource + "icon_value_type_class.ico"
@@ -115,7 +115,7 @@ feature -- Class Icon
 
 feature -- Eiffel Icon
 
-	Path_eiffel_feature: STRING is
+	Path_eiffel_feature: STRING
 			-- Path of eiffel feature icon.
 		once
 			Result := Eiffel_path + eac_resource + "icon_eiffel_feature.ico"
@@ -126,7 +126,7 @@ feature -- Eiffel Icon
 
 feature -- Public Icons
 
-	Path_icon_public_attribute: STRING is
+	Path_icon_public_attribute: STRING
 			-- Path of attribute icon.
 		once
 			Result := Eiffel_path + eac_resource + "icon_public_attribute.ico"
@@ -134,7 +134,7 @@ feature -- Public Icons
 			non_void_result: Result /= Void
 		end
 
-	Path_icon_public_procedure: STRING is
+	Path_icon_public_procedure: STRING
 			-- Path of procedure icon.
 		once
 			Result := Eiffel_path + eac_resource + "icon_public_feature.ico"
@@ -142,7 +142,7 @@ feature -- Public Icons
 			non_void_result: Result /= Void
 		end
 			
-	Path_icon_public_function: STRING is
+	Path_icon_public_function: STRING
 			-- Path of function icon.
 		once
 			Result := Eiffel_path + eac_resource + "icon_public_feature.ico"
@@ -150,7 +150,7 @@ feature -- Public Icons
 			non_void_result: Result /= Void
 		end
 
-	Path_icon_public_property: STRING is
+	Path_icon_public_property: STRING
 			-- Path of property icon.
 		once
 			Result := Eiffel_path + eac_resource + "icon_public_property.ico"
@@ -158,7 +158,7 @@ feature -- Public Icons
 			non_void_result: Result /= Void
 		end
 
-	Path_icon_public_constant: STRING is
+	Path_icon_public_constant: STRING
 			-- Path of property icon.
 		once
 			Result := Eiffel_path + eac_resource + "icon_public_constant.ico"
@@ -166,7 +166,7 @@ feature -- Public Icons
 			non_void_result: Result /= Void
 		end
 			
-	Path_icon_public_event: STRING is
+	Path_icon_public_event: STRING
 			-- Path of property icon.
 		once
 			Result := Eiffel_path + eac_resource + "icon_public_event.ico"
@@ -176,7 +176,7 @@ feature -- Public Icons
 
 feature -- Private Icons
 
-	Path_icon_private_attribute: STRING is
+	Path_icon_private_attribute: STRING
 			-- Path of attribute icon.
 		once
 			Result := Eiffel_path + eac_resource + "icon_private_attribute.ico"
@@ -184,7 +184,7 @@ feature -- Private Icons
 			non_void_result: Result /= Void
 		end
 
-	Path_icon_private_procedure: STRING is
+	Path_icon_private_procedure: STRING
 			-- Path of procedure icon.
 		once
 			Result := Eiffel_path + eac_resource + "icon_private_feature.ico"
@@ -192,7 +192,7 @@ feature -- Private Icons
 			non_void_result: Result /= Void
 		end
 			
-	Path_icon_private_function: STRING is
+	Path_icon_private_function: STRING
 			-- Path of function icon.
 		once
 			Result := Eiffel_path + eac_resource + "icon_private_feature.ico"
@@ -200,7 +200,7 @@ feature -- Private Icons
 			non_void_result: Result /= Void
 		end
 
-	Path_icon_private_property: STRING is
+	Path_icon_private_property: STRING
 			-- Path of property icon.
 		once
 			Result := Eiffel_path + eac_resource + "icon_private_property.ico"
@@ -208,7 +208,7 @@ feature -- Private Icons
 			non_void_result: Result /= Void
 		end
 
-	Path_icon_private_constant: STRING is
+	Path_icon_private_constant: STRING
 			-- Path of property icon.
 		once
 			Result := Eiffel_path + eac_resource + "icon_private_constant.ico"
@@ -216,7 +216,7 @@ feature -- Private Icons
 			non_void_result: Result /= Void
 		end
 			
-	Path_icon_private_event: STRING is
+	Path_icon_private_event: STRING
 			-- Path of property icon.
 		once
 			Result := Eiffel_path + eac_resource + "icon_private_event.ico"
@@ -226,7 +226,7 @@ feature -- Private Icons
 
 feature -- Protected Icons
 
-	Path_icon_protected_attribute: STRING is
+	Path_icon_protected_attribute: STRING
 			-- Path of attribute icon.
 		once
 			Result := Eiffel_path + eac_resource + "icon_protected_attribute.ico"
@@ -234,7 +234,7 @@ feature -- Protected Icons
 			non_void_result: Result /= Void
 		end
 		
-	Path_icon_protected_procedure: STRING is
+	Path_icon_protected_procedure: STRING
 			-- Path of procedure icon.
 		once
 			Result := Eiffel_path + eac_resource + "icon_protected_feature.ico"
@@ -242,7 +242,7 @@ feature -- Protected Icons
 			non_void_result: Result /= Void
 		end
 			
-	Path_icon_protected_function: STRING is
+	Path_icon_protected_function: STRING
 			-- Path of function icon.
 		once
 			Result := Eiffel_path + eac_resource + "icon_protected_feature.ico"
@@ -250,7 +250,7 @@ feature -- Protected Icons
 			non_void_result: Result /= Void
 		end
 
-	Path_icon_protected_property: STRING is
+	Path_icon_protected_property: STRING
 			-- Path of property icon.
 		once
 			Result := Eiffel_path + eac_resource + "icon_protected_property.ico"
@@ -258,7 +258,7 @@ feature -- Protected Icons
 			non_void_result: Result /= Void
 		end
 
-	Path_icon_protected_constant: STRING is
+	Path_icon_protected_constant: STRING
 			-- Path of property icon.
 		once
 			Result := Eiffel_path + eac_resource + "icon_protected_constant.ico"
@@ -266,7 +266,7 @@ feature -- Protected Icons
 			non_void_result: Result /= Void
 		end
 			
-	Path_icon_protected_event: STRING is
+	Path_icon_protected_event: STRING
 			-- Path of property icon.
 		once
 			Result := Eiffel_path + eac_resource + "icon_protected_event.ico"
@@ -277,7 +277,7 @@ feature -- Protected Icons
 		
 feature {NONE} -- Implementation
 
-	load_icon (a_path: STRING): EV_PIXMAP is
+	load_icon (a_path: STRING): EV_PIXMAP
 			-- load icon from `a_path'.
 		require
 			non_void_a_path: a_path /= Void
@@ -296,13 +296,13 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	eac_resource: STRING is "studio\spec\windows\bin\eac_ico\"
+	eac_resource: STRING = "studio\spec\windows\bin\eac_ico\"
 			-- path to access eac resource under Eiffel.
 
-	Ise_eiffel_key: STRING is "ISE_EIFFEL"
+	Ise_eiffel_key: STRING = "ISE_EIFFEL"
 			-- Environment variable $ISE_EIFFEL.
 
-	Eiffel_path: STRING is
+	Eiffel_path: STRING
 			-- Path to Eiffel installation.
 		local   
 			retried: BOOLEAN
@@ -345,7 +345,7 @@ feature {NONE} -- Implementation
 		end
 		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

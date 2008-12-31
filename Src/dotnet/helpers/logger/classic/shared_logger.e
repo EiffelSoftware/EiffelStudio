@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shared instance of logger, classic version only provides dummy implementation for now"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,29 +10,29 @@ class
 
 feature -- Access
 
-	Log_source: STRING is "Eiffel Metadata Consumer"
+	Log_source: STRING = "Eiffel Metadata Consumer"
 			-- Windows event log source
 
-	Log_name: STRING is "Application"
+	Log_name: STRING = "Application"
 			-- Name of log where to log events
 
 feature -- Status Report
 
-	source_ready: BOOLEAN is
+	source_ready: BOOLEAN
 			-- Is log source initialized?
 		do
 		end
 
 feature -- Basic Operations
 
-	log_last_exception is
+	log_last_exception
 			-- Log last exception to Windows event log.
 		require
 			source_ready: source_ready
 		do
 		end
 
-	log_message (a_message: STRING) is
+	log_message (a_message: STRING)
 			-- Log `a_message' to Windows event log.
 		require
 			source_ready: source_ready
@@ -40,12 +40,12 @@ feature -- Basic Operations
 		do
 		end
 
-	create_source is
+	create_source
 			-- Create event source if not already created.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

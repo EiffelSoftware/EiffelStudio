@@ -1,4 +1,4 @@
-indexing
+note
 	description: "AST feature name Visitor."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,22 +11,22 @@ inherit
 	
 feature {AST_YACC} -- Implementation
 
-	process_infix_prefix_as (l_as: INFIX_PREFIX_AS) is
+	process_infix_prefix_as (l_as: INFIX_PREFIX_AS)
 			-- Process `l_as'.
 		do
 		end
 
-	process_feat_name_id_as (l_as: FEAT_NAME_ID_AS) is
+	process_feat_name_id_as (l_as: FEAT_NAME_ID_AS)
 			-- Process `l_as'.
 		do
 		end
 
-	process_convert_feat_as (l_as: CONVERT_FEAT_AS) is
+	process_convert_feat_as (l_as: CONVERT_FEAT_AS)
 			-- Process `l_as'.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

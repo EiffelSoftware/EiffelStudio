@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generated class parents collection"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -35,7 +35,7 @@ feature -- Access
 
 feature -- Status Report
 
-	has_feature (a_name: STRING): BOOLEAN is
+	has_feature (a_name: STRING): BOOLEAN
 			-- Does collection has a feature with Eiffel name `a_name'?
 		require
 			non_void_name: a_name /= Void
@@ -84,7 +84,7 @@ feature -- Status Report
 
 feature {NONE} -- Implementation
 
-	dotnet_hierarchy_has_feature (a_name: STRING; a_type: SYSTEM_TYPE): BOOLEAN is
+	dotnet_hierarchy_has_feature (a_name: STRING; a_type: SYSTEM_TYPE): BOOLEAN
 			-- Do `a_type' or any base type of `a_type' have a feature with Eiffel name `a_name'?
 			--| We don't actually need to search parents as representation of .NET type in metadata is flat
 		local
@@ -103,7 +103,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

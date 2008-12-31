@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel representation of CodeDom assign statement"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_target, a_source: CODE_EXPRESSION; a_assignment_type: INTEGER) is
+	make (a_target, a_source: CODE_EXPRESSION; a_assignment_type: INTEGER)
 			-- Initialize `target', `source' and `is_property_assignment'.
 		require
 			non_void_source: a_source /= Void
@@ -48,7 +48,7 @@ feature -- Access
 	assignment_type: INTEGER
 			-- See class {CODE_ASSIGNMENT_TYPES} for possible values
 
-	code: STRING is
+	code: STRING
 			-- | Result := "`target' := `source'"
 			-- | OR		:= "`target'(`source')" if `is_property_assignement'.
 			-- | OR		:= "`source.expression'" if `source' is `CODE_OBJECT_CREATE_EXPRESSION' or `CODE_ARRAY_CREATE_EXPRESSION'.
@@ -97,7 +97,7 @@ feature -- Access
 			Result.append_character ('%N')
 		end
 
-	need_dummy: BOOLEAN is
+	need_dummy: BOOLEAN
 			-- Does statement require dummy local variable?
 		do
 			Result := False
@@ -106,7 +106,7 @@ feature -- Access
 invariant
 	valid_assignment_type: is_valid_assignment_type (assignment_type)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

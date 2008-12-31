@@ -1,4 +1,4 @@
-indexing
+note
 	description: ".NET method argument"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (dn, en: STRING; ct: CONSUMED_REFERENCED_TYPE) is
+	make (dn, en: STRING; ct: CONSUMED_REFERENCED_TYPE)
 			-- Set `dotnet_name' with `dn'.
 			-- Set `eiffel_name' with `en'.
 			-- Set `type' with `ct'.
@@ -41,19 +41,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	dotnet_name: STRING is
+	dotnet_name: STRING
 			-- .NET name
 		do
 			Result := d
 		end
 
-	eiffel_name: STRING is
+	eiffel_name: STRING
 			-- Eiffel name
 		do
 			Result := e
 		end
 
-	type: CONSUMED_REFERENCED_TYPE is
+	type: CONSUMED_REFERENCED_TYPE
 			-- Variable type
 		do
 			Result := t
@@ -72,7 +72,7 @@ feature {NONE} -- Access
 
 feature {CONSUMED_ARGUMENT} -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 			-- Only compare arguments from same assembly as types are identified per assembly!
@@ -88,7 +88,7 @@ invariant
 	valid_eiffel_name: not eiffel_name.is_empty
 	non_void_type: type /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

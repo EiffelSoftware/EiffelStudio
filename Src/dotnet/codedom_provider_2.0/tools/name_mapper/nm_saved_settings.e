@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Graphical settings for Name Mapper"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize `registry_path'.
 		do
 			settings_make (Saved_settings_key)
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 		
 feature -- Access
 
-	saved_types: LIST [STRING] is
+	saved_types: LIST [STRING]
 			-- List of saved types for input types combo
 		do
 			Result := saved_list (Types_key)
@@ -44,10 +44,10 @@ feature -- Access
 
 feature {NONE} -- Private Access
 
-	Types_key: STRING is "types_key";
+	Types_key: STRING = "types_key";
 			-- Types key name
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Simplistic interface for client assemblies"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -36,7 +36,7 @@ create
 
 feature {NONE}-- Initialization
 
-	make is
+	make
 			-- create an instance of CACHE_MANAGER
 		do
 			if notifier = Void then
@@ -50,7 +50,7 @@ feature {NONE}-- Initialization
 			create cache_reader
 		end
 
-	make_with_path (a_path: STRING) is
+	make_with_path (a_path: STRING)
 			-- create instance of CACHE_MANAGER with ISE_EIFFEL path set to `a_path'
 		require
 			non_void_path: a_path /= Void
@@ -63,7 +63,7 @@ feature {NONE}-- Initialization
 
 feature -- Clean Up
 
-	unload is
+	unload
 			-- Unloads all loaded assemblies and releases any
 			-- resources. This is not a dispose so and cleaned up
 			-- resources should be able to be resurected.
@@ -86,7 +86,7 @@ feature -- Access
 
 feature -- Basic Oprtations
 
-	consume_assembly (a_name, a_version, a_culture, a_key: STRING; a_info_only: BOOLEAN) is
+	consume_assembly (a_name, a_version, a_culture, a_key: STRING; a_info_only: BOOLEAN)
 			-- consume an assembly using it's display name parts.
 			-- "`a_name', Version=`a_version', Culture=`a_culture', PublicKeyToken=`a_key'"
 		require
@@ -114,7 +114,7 @@ feature -- Basic Oprtations
 			successful: is_successful
 		end
 
-	consume_assembly_from_path (a_path: STRING; a_info_only: BOOLEAN; a_references: STRING) is
+	consume_assembly_from_path (a_path: STRING; a_info_only: BOOLEAN; a_references: STRING)
 			-- Consume assembly located `a_path'
 		require
 			non_void_path: a_path /= Void
@@ -174,7 +174,7 @@ feature -- Basic Oprtations
 			successful: is_successful
 		end
 
-	relative_folder_name (a_name, a_version, a_culture, a_key: STRING): STRING is
+	relative_folder_name (a_name, a_version, a_culture, a_key: STRING): STRING
 			-- returns the relative path to an assembly using at least `a_name'
 		require
 			non_void_name: a_name /= Void
@@ -189,7 +189,7 @@ feature -- Basic Oprtations
 			end
 		end
 
-	relative_folder_name_from_path (a_path: STRING): STRING is
+	relative_folder_name_from_path (a_path: STRING): STRING
 			-- Relative path to consumed assembly metadata given `a_path'
 		require
 			non_void_path: a_path /= Void
@@ -215,7 +215,7 @@ feature -- Basic Oprtations
 			end
 		end
 
-	assembly_info_from_path (a_path: STRING): CONSUMED_ASSEMBLY is
+	assembly_info_from_path (a_path: STRING): CONSUMED_ASSEMBLY
 			-- retrieve a local assembly's information.
 			-- If assembly has already been consumed then function will
 			-- return found matching CONSUMED_ASSEMBLY.
@@ -229,7 +229,7 @@ feature -- Basic Oprtations
 			Result := cache_writer.consumed_assembly_from_path (a_path)
 		end
 
-	assembly_info (a_name: STRING; a_version: STRING; a_culture: STRING; a_key: STRING): CONSUMED_ASSEMBLY is
+	assembly_info (a_name: STRING; a_version: STRING; a_culture: STRING; a_key: STRING): CONSUMED_ASSEMBLY
 			-- retrieve a assembly's information.
 			-- If assembly has already been consumed then function will
 			-- return found matching CONSUMED_ASSEMBLY.
@@ -250,7 +250,7 @@ feature -- Basic Oprtations
 
 feature {NONE} -- Basic Operations
 
-	fully_quantified_name (a_name, a_version, a_culture, a_key: STRING): STRING is
+	fully_quantified_name (a_name, a_version, a_culture, a_key: STRING): STRING
 			-- returns "`a_name', Version=`a_version', Culture=`a_culture', PublicKeyToken=`a_key'"
 		require
 			non_void_name: a_name /= Void
@@ -288,7 +288,7 @@ invariant
 	cache_writer_not_void: cache_writer /= Void
 	cache_reader_not_void: cache_reader /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Common parent to source code generators for expressions"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature -- Status Repport
 
-	type: CODE_TYPE_REFERENCE is
+	type: CODE_TYPE_REFERENCE
 			-- Type of expression
 		require
 			is_in_code_generation: current_state = Code_generation
@@ -22,7 +22,7 @@ feature -- Status Repport
 			non_void_type: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Keys that hold graphical settings saved in between sessions."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,61 +11,61 @@ class
 
 feature -- Access
 
-	Tester_hive_path: STRING is "Software\ISE\Eiffel Codedom Provider\Tester"
+	Tester_hive_path: STRING = "Software\ISE\Eiffel Codedom Provider\Tester"
 
-	Codedom_provider_key: STRING is "CodedomProvider"
+	Codedom_provider_key: STRING = "CodedomProvider"
 
-	Generated_file_folder_key: STRING is "GeneratedFileFolder"
+	Generated_file_folder_key: STRING = "GeneratedFileFolder"
 	
-	Generated_filename_key: STRING is "GeneratedFilename"
+	Generated_filename_key: STRING = "GeneratedFilename"
 
-	Saved_serialized_folder_key: STRING is "SavedSerializedFileFolder"
+	Saved_serialized_folder_key: STRING = "SavedSerializedFileFolder"
 
-	X_key: STRING is "X"
+	X_key: STRING = "X"
 
-	Y_key: STRING is "Y"
+	Y_key: STRING = "Y"
 
-	Width_key: STRING is "Width"
+	Width_key: STRING = "Width"
 			
-	Height_key: STRING is "Height"
+	Height_key: STRING = "Height"
 
-	Saved_filename_key: STRING is "SavedFilenameKey"
+	Saved_filename_key: STRING = "SavedFilenameKey"
 
-	Blank_lines_key: STRING is "BlankLines"
+	Blank_lines_key: STRING = "BlankLines"
 	
-	Else_at_closing_key: STRING is "ElseAtClosing"
+	Else_at_closing_key: STRING = "ElseAtClosing"
 
-	Identifier_key: STRING is "Identifier"
+	Identifier_key: STRING = "Identifier"
 
-	Type_key: STRING is "Type"
+	Type_key: STRING = "Type"
 
-	Indent_string_key: STRING is "IndentString"
+	Indent_string_key: STRING = "IndentString"
 
-	Source_filename_key: STRING is "SourceFilename"
+	Source_filename_key: STRING = "SourceFilename"
 
-	Source_key: STRING is "Source"
+	Source_key: STRING = "Source"
 
-	Generate_executable_key: STRING is "GenerateExecutable"
+	Generate_executable_key: STRING = "GenerateExecutable"
 
-	Generate_in_memory_key: STRING is "GenerateInMemory"
+	Generate_in_memory_key: STRING = "GenerateInMemory"
 	
-	Include_debug_key: STRING is "IncludeDebug"
+	Include_debug_key: STRING = "IncludeDebug"
 	
-	Compiler_options_key: STRING is "CompilerOptions"
+	Compiler_options_key: STRING = "CompilerOptions"
 
-	Main_class_key: STRING is "MainClass"
+	Main_class_key: STRING = "MainClass"
 
-	Output_assembly_key: STRING is "OutputAssembly"
+	Output_assembly_key: STRING = "OutputAssembly"
 
-	Resource_key: STRING is "Resource"
+	Resource_key: STRING = "Resource"
 
-	Referenced_assemblies_key: STRING is "ReferencedAssemblies"
+	Referenced_assemblies_key: STRING = "ReferencedAssemblies"
 
-	Parsed_file_key: STRING is "ParsedFile"
+	Parsed_file_key: STRING = "ParsedFile"
 
-	Serialized_filename_key: STRING is "SerializedFilename";
+	Serialized_filename_key: STRING = "SerializedFilename";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

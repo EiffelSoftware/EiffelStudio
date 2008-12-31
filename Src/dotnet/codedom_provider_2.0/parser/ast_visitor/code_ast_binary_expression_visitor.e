@@ -1,4 +1,4 @@
-indexing
+note
 	description: "AST binary expression Visitor."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature {AST_YACC} -- Implementation
 
-	process_bin_and_then_as (l_as: BIN_AND_THEN_AS) is
+	process_bin_and_then_as (l_as: BIN_AND_THEN_AS)
 			-- Process `l_as'.
 		local
 			l_snippet_expression: SYSTEM_DLL_CODE_SNIPPET_EXPRESSION
@@ -24,13 +24,13 @@ feature {AST_YACC} -- Implementation
 			set_last_element_created (l_snippet_expression)
 		end
 
-	process_bin_free_as (l_as: BIN_FREE_AS) is
+	process_bin_free_as (l_as: BIN_FREE_AS)
 			-- Process `l_as'
 		do
 			process_binary_operator_expression (l_as)
 		end
 
-	process_bin_implies_as (l_as: BIN_IMPLIES_AS) is
+	process_bin_implies_as (l_as: BIN_IMPLIES_AS)
 			-- Process `l_as'.
 		local
 			l_snippet_expression: SYSTEM_DLL_CODE_SNIPPET_EXPRESSION
@@ -41,13 +41,13 @@ feature {AST_YACC} -- Implementation
 			set_last_element_created (l_snippet_expression)
 		end
 
-	process_bin_or_as (l_as: BIN_OR_AS) is
+	process_bin_or_as (l_as: BIN_OR_AS)
 			-- Process `l_as'.
 		do
 			process_binary_operator_expression (l_as)
 		end
 
-	process_bin_or_else_as (l_as: BIN_OR_ELSE_AS) is
+	process_bin_or_else_as (l_as: BIN_OR_ELSE_AS)
 			-- Process `l_as'.
 		local
 			l_snippet_expression: SYSTEM_DLL_CODE_SNIPPET_EXPRESSION
@@ -58,7 +58,7 @@ feature {AST_YACC} -- Implementation
 			set_last_element_created (l_snippet_expression)
 		end
 
-	process_bin_xor_as (l_as: BIN_XOR_AS) is
+	process_bin_xor_as (l_as: BIN_XOR_AS)
 			-- Process `l_as'.
 		local
 			l_snippet_expression: SYSTEM_DLL_CODE_SNIPPET_EXPRESSION
@@ -69,7 +69,7 @@ feature {AST_YACC} -- Implementation
 			set_last_element_created (l_snippet_expression)
 		end
 
-	process_bin_ge_as (l_as: BIN_GE_AS) is
+	process_bin_ge_as (l_as: BIN_GE_AS)
 			-- Process `l_as'.
 		local
 			l_snippet_expression: SYSTEM_DLL_CODE_SNIPPET_EXPRESSION
@@ -80,7 +80,7 @@ feature {AST_YACC} -- Implementation
 			set_last_element_created (l_snippet_expression)
 		end
 
-	process_bin_gt_as (l_as: BIN_GT_AS) is
+	process_bin_gt_as (l_as: BIN_GT_AS)
 			-- Process `l_as'.
 		local
 			l_snippet_expression: SYSTEM_DLL_CODE_SNIPPET_EXPRESSION
@@ -91,7 +91,7 @@ feature {AST_YACC} -- Implementation
 			set_last_element_created (l_snippet_expression)
 		end
 
-	process_bin_le_as (l_as: BIN_LE_AS) is
+	process_bin_le_as (l_as: BIN_LE_AS)
 			-- Process `l_as'.
 		local
 			l_snippet_expression: SYSTEM_DLL_CODE_SNIPPET_EXPRESSION
@@ -102,7 +102,7 @@ feature {AST_YACC} -- Implementation
 			set_last_element_created (l_snippet_expression)
 		end
 
-	process_bin_lt_as (l_as: BIN_LT_AS) is
+	process_bin_lt_as (l_as: BIN_LT_AS)
 			-- Process `l_as'.
 		local
 			l_snippet_expression: SYSTEM_DLL_CODE_SNIPPET_EXPRESSION
@@ -113,7 +113,7 @@ feature {AST_YACC} -- Implementation
 			set_last_element_created (l_snippet_expression)
 		end
 
-	process_bin_div_as (l_as: BIN_DIV_AS) is
+	process_bin_div_as (l_as: BIN_DIV_AS)
 			-- Process `l_as'.
 		local
 			l_snippet_expression: SYSTEM_DLL_CODE_SNIPPET_EXPRESSION
@@ -124,7 +124,7 @@ feature {AST_YACC} -- Implementation
 			set_last_element_created (l_snippet_expression)
 		end
 
-	process_bin_minus_as (l_as: BIN_MINUS_AS) is
+	process_bin_minus_as (l_as: BIN_MINUS_AS)
 			-- Process `l_as'.
 		local
 			l_snippet_expression: SYSTEM_DLL_CODE_SNIPPET_EXPRESSION
@@ -135,7 +135,7 @@ feature {AST_YACC} -- Implementation
 			set_last_element_created (l_snippet_expression)
 		end
 
-	process_bin_mod_as (l_as: BIN_MOD_AS) is
+	process_bin_mod_as (l_as: BIN_MOD_AS)
 			-- Process `l_as'.
 		local
 			l_snippet_expression: SYSTEM_DLL_CODE_SNIPPET_EXPRESSION
@@ -146,7 +146,7 @@ feature {AST_YACC} -- Implementation
 			set_last_element_created (l_snippet_expression)
 		end
 
-	process_bin_plus_as (l_as: BIN_PLUS_AS) is
+	process_bin_plus_as (l_as: BIN_PLUS_AS)
 			-- Process `l_as'.
 		local
 			l_snippet_expression: SYSTEM_DLL_CODE_SNIPPET_EXPRESSION
@@ -157,7 +157,7 @@ feature {AST_YACC} -- Implementation
 			set_last_element_created (l_snippet_expression)
 		end
 
-	process_bin_power_as (l_as: BIN_POWER_AS) is
+	process_bin_power_as (l_as: BIN_POWER_AS)
 			-- Process `l_as'.
 		local
 			l_snippet_expression: SYSTEM_DLL_CODE_SNIPPET_EXPRESSION
@@ -168,7 +168,7 @@ feature {AST_YACC} -- Implementation
 			set_last_element_created (l_snippet_expression)
 		end
 
-	process_bin_slash_as (l_as: BIN_SLASH_AS) is
+	process_bin_slash_as (l_as: BIN_SLASH_AS)
 			-- Process `l_as'.
 		local
 			l_snippet_expression: SYSTEM_DLL_CODE_SNIPPET_EXPRESSION
@@ -179,7 +179,7 @@ feature {AST_YACC} -- Implementation
 			set_last_element_created (l_snippet_expression)
 		end
 
-	process_bin_star_as (l_as: BIN_STAR_AS) is
+	process_bin_star_as (l_as: BIN_STAR_AS)
 			-- Process `l_as'.
 		local
 			l_snippet_expression: SYSTEM_DLL_CODE_SNIPPET_EXPRESSION
@@ -190,13 +190,13 @@ feature {AST_YACC} -- Implementation
 			set_last_element_created (l_snippet_expression)
 		end
 
-	process_bin_and_as (l_as: BIN_AND_AS) is
+	process_bin_and_as (l_as: BIN_AND_AS)
 			-- Process `l_as'.
 		do
 			process_binary_operator_expression (l_as)
 		end
 
-	process_bin_eq_as (l_as: BIN_EQ_AS) is
+	process_bin_eq_as (l_as: BIN_EQ_AS)
 			-- Process `l_as'.
 		local
 			l_snippet_expression: SYSTEM_DLL_CODE_SNIPPET_EXPRESSION
@@ -207,7 +207,7 @@ feature {AST_YACC} -- Implementation
 			set_last_element_created (l_snippet_expression)
 		end
 
-	process_bin_ne_as (l_as: bin_ne_as) is
+	process_bin_ne_as (l_as: bin_ne_as)
 			-- Process `l_as'.
 		local
 			l_snippet_expression: SYSTEM_DLL_CODE_SNIPPET_EXPRESSION
@@ -220,7 +220,7 @@ feature {AST_YACC} -- Implementation
 		
 feature {NONE} -- Implementation
 
-	process_binary_operator_expression (l_as: BINARY_AS) is
+	process_binary_operator_expression (l_as: BINARY_AS)
 			-- Process `l_as'
 		local
 			l_binary_operator_expression: SYSTEM_DLL_CODE_BINARY_OPERATOR_EXPRESSION
@@ -244,7 +244,7 @@ feature {NONE} -- Implementation
 			set_last_element_created (l_binary_operator_expression)
 		end		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

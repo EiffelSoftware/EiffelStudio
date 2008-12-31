@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Common ancestor to Eiffel routine for both ASP and VS implementations"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_name, a_eiffel_name: STRING) is
+	make (a_name, a_eiffel_name: STRING)
 			-- Initialize instance.
 		do
 			Precursor {CODE_FEATURE}  (a_name, a_eiffel_name)
@@ -68,7 +68,7 @@ feature -- Access
 	last_cast_variable: STRING
 			-- Last cast variable name
 
-	code: STRING is
+	code: STRING
 			-- | result := "`export_clauses'	
 			-- |				`signature' is
 			-- |						`comment'
@@ -125,7 +125,7 @@ feature -- Access
 
 feature {CODE_FACTORY} -- Status Setting
 
-	set_deferred (a_value: like is_deferred) is
+	set_deferred (a_value: like is_deferred)
 			-- Set `is_deferred' with `a_value'.
 		require
 			in_code_analysis: current_state = Code_analysis
@@ -135,7 +135,7 @@ feature {CODE_FACTORY} -- Status Setting
 			is_deferred_set: is_deferred = a_value
 		end
 
-	set_redefined (a_value: like is_redefined) is
+	set_redefined (a_value: like is_redefined)
 			-- Set `is_redefined' with `a_value'.
 		require
 			in_code_analysis: current_state = Code_analysis
@@ -145,7 +145,7 @@ feature {CODE_FACTORY} -- Status Setting
 			is_redefined_set: is_redefined = a_value
 		end
 
-	set_arguments (a_arguments: LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]) is
+	set_arguments (a_arguments: LIST [CODE_PARAMETER_DECLARATION_EXPRESSION])
 			-- Set `arguments' with `a_argument'.
 		require
 			non_void_arguments: a_arguments /= Void
@@ -156,7 +156,7 @@ feature {CODE_FACTORY} -- Status Setting
 			arguments_set: arguments = a_arguments
 		end
 
-	add_local (a_local_variable: CODE_VARIABLE) is
+	add_local (a_local_variable: CODE_VARIABLE)
 			-- Add `a_local_variable' to `locals'.
 		require
 			non_void_local_variable: a_local_variable /= Void
@@ -167,7 +167,7 @@ feature {CODE_FACTORY} -- Status Setting
 			local_variable_added: locals.has (a_local_variable)
 		end
 
-	add_snippet_local (a_local_variable: CODE_SNIPPET_VARIABLE) is
+	add_snippet_local (a_local_variable: CODE_SNIPPET_VARIABLE)
 			-- Add `a_local_variable' to `snippet_locals'.
 		require
 			non_void_local_variable: a_local_variable /= Void
@@ -177,7 +177,7 @@ feature {CODE_FACTORY} -- Status Setting
 			local_variable_added: snippet_locals.has (a_local_variable)
 		end
 
-	add_cast_local (a_expression: CODE_EXPRESSION; a_type: CODE_TYPE_REFERENCE) is
+	add_cast_local (a_expression: CODE_EXPRESSION; a_type: CODE_TYPE_REFERENCE)
 			-- Add local variable for cast expression with type `a_type'.
 		require
 			non_void_type: a_type /= Void
@@ -190,7 +190,7 @@ feature {CODE_FACTORY} -- Status Setting
 			local_added: cast_locals.item (last_cast_variable) = a_type
 		end
 	
-	add_statement (a_statement: CODE_STATEMENT) is
+	add_statement (a_statement: CODE_STATEMENT)
 			-- Add `a_statement' to `statements'.
 		require
 			non_void_statement: a_statement /= Void
@@ -203,7 +203,7 @@ feature {CODE_FACTORY} -- Status Setting
 
 feature {NONE} -- Implementation
 
-	signature: STRING is
+	signature: STRING
 			-- | Result := "[defered] [frozen] `routine_name'[(`argument',...)]"
 			-- Routine signature (without `is' keyword)
 		require
@@ -243,7 +243,7 @@ feature {NONE} -- Implementation
 			signature_generated: Result /= Void and not Result.is_empty
 		end
 
-	locals_code: STRING is
+	locals_code: STRING
 			-- | Result := "	[local
 			-- |					var: SYSTEM_TYPE....]
 		require
@@ -344,7 +344,7 @@ feature {NONE} -- Implementation
 			locals_generated: Result /= Void
 		end
 
-	body: STRING is
+	body: STRING
 			-- | Result := "	[local
 			-- |					var: SYSTEM_TYPE....]
 			-- |				[do,once,deffered]
@@ -367,7 +367,7 @@ feature {NONE} -- Implementation
 			body_generated: Result /= Void and not Result.is_empty
 		end
 
-	cast_variable_name: STRING is
+	cast_variable_name: STRING
 			-- Unique cast variable name
 		do
 			Result := "l_cast_result_"
@@ -375,7 +375,7 @@ feature {NONE} -- Implementation
 			Result.append (cast_variable_count.out)
 		end
 	
-	cast_variable_count: INTEGER_REF is
+	cast_variable_count: INTEGER_REF
 			-- Cast variable counter
 		once
 			create Result
@@ -383,7 +383,7 @@ feature {NONE} -- Implementation
 		
 feature {NONE} -- Specific implementation
 
-	constructor_call: STRING is
+	constructor_call: STRING
 			-- Call to constructor, only generate for non designer code generation
 		require
 			in_code_generation: current_state = Code_generation
@@ -398,7 +398,7 @@ invariant
 	non_void_snippet_locals: snippet_locals /= Void
 	non_void_statements: statements /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

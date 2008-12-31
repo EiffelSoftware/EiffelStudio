@@ -1,4 +1,4 @@
-indexing
+note
 	description: "AST feature set Visitor."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,17 +11,17 @@ inherit
 	
 feature {AST_YACC} -- Implementation
 
-	process_feature_list_as (l_as: FEATURE_LIST_AS) is
+	process_feature_list_as (l_as: FEATURE_LIST_AS)
 			-- Process `l_as'.
 		do
 		end
 
-	process_all_as (l_as: ALL_AS) is
+	process_all_as (l_as: ALL_AS)
 			-- Process `l_as'.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

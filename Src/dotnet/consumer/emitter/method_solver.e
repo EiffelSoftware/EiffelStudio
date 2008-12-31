@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Method to be consumed in Eiffel, intermediate structure used to solve overloading"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (meth: METHOD_INFO; get_property: BOOLEAN) is
+	make (meth: METHOD_INFO; get_property: BOOLEAN)
 			-- Set `internal_method' with `meth'.
 		require
 			non_void_method: meth /= Void
@@ -61,13 +61,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	dotnet_name: STRING is
+	dotnet_name: STRING
 			-- .NET name
 		do
 			create Result.make_from_cil (internal_method.name)
 		end
 
-	starting_resolution_name: STRING is
+	starting_resolution_name: STRING
 			-- .NET Name used to perform overloading resolution
 		do
 			Result := internal_start_name
@@ -111,7 +111,7 @@ feature -- Access
 	is_conversion_operator: BOOLEAN
 			-- Is Current a conversion operator?
 
-	is_com_interface_member: BOOLEAN is
+	is_com_interface_member: BOOLEAN
 			-- Is member from a COM interface	
 		local
 			l_source_type: SYSTEM_TYPE
@@ -120,7 +120,7 @@ feature -- Access
 			Result := l_source_type.is_interface and l_source_type.is_import
 		end
 
-	com_member_suffix: STRING is
+	com_member_suffix: STRING
 			-- A COM member's suffix
 		require
 			is_com_interface_member: is_com_interface_member
@@ -161,7 +161,7 @@ feature -- Access
 
 feature -- Element Settings
 
-	set_eiffel_name (name: like eiffel_name) is
+	set_eiffel_name (name: like eiffel_name)
 			-- Set `eiffel_name' with `name'.
 		require
 			non_void_name: name /= Void
@@ -173,7 +173,7 @@ feature -- Element Settings
 
 feature -- Comparison
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is current object less than `other'?
 		do
 			if arguments.count = other.arguments.count then
@@ -191,7 +191,7 @@ feature {METHOD_SOLVER, OVERLOAD_SOLVER} -- Implementation
 
 feature {NONE} -- Implementation
 
-	suffix_table: HASHTABLE is
+	suffix_table: HASHTABLE
 			--
 		once
 			create Result.make (100)
@@ -204,21 +204,21 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	Void_type: SYSTEM_TYPE is
+	Void_type: SYSTEM_TYPE
 			-- Void .NET type
 		once
 			Result := {SYSTEM_TYPE}.get_type_string (("System.Void").to_cil)
 		end
 
-	op_implicit: SYSTEM_STRING is "op_Explicit"
-	op_explicit: SYSTEM_STRING is "op_Implicit"
+	op_implicit: SYSTEM_STRING = "op_Explicit"
+	op_explicit: SYSTEM_STRING = "op_Implicit"
 			-- Special routine for conversion.
 
-	from_conversion_name: STRING is "from_"
-	to_conversion_name: STRING is "to_";
+	from_conversion_name: STRING = "from_"
+	to_conversion_name: STRING = "to_";
 			-- Generated name corresponding to `op_xx'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Find features names in EAC
 				]"
@@ -15,7 +15,7 @@ inherit
 	
 feature -- Access
 
-	find_eiffel_type_name (an_eiffel_type_name: STRING): LINKED_LIST [SPECIFIC_TYPE] is
+	find_eiffel_type_name (an_eiffel_type_name: STRING): LINKED_LIST [SPECIFIC_TYPE]
 			-- Return the list of `full_dotnet_type_name' corresponding to `an_eiffel_type_name'.
 		require
 			non_void_eiffel_type_name: an_eiffel_type_name /= Void
@@ -44,7 +44,7 @@ feature -- Access
 			non_void_result: Result /= Void
 		end
 
-	find_eiffel_type_name_in_assembly (an_assembly: CONSUMED_ASSEMBLY; an_eiffel_type_name: STRING): SPECIFIC_TYPE is
+	find_eiffel_type_name_in_assembly (an_assembly: CONSUMED_ASSEMBLY; an_eiffel_type_name: STRING): SPECIFIC_TYPE
 			-- Return the `full_dotnet_type_name' corresponding to `an_eiffel_type_name'.
 		require
 			non_void_assembly: an_assembly /= Void
@@ -76,7 +76,7 @@ feature -- Access
 		end
 
 
-	find_eiffel_feature_name_in_assembly (an_assembly: CONSUMED_ASSEMBLY; an_eiffel_feature_name: STRING): STRING is
+	find_eiffel_feature_name_in_assembly (an_assembly: CONSUMED_ASSEMBLY; an_eiffel_feature_name: STRING): STRING
 			-- Return the `dotnet_feature_name' corresponding to `an_eiffel_feature_name'.
 		require
 			non_void_assembly: an_assembly /= Void
@@ -108,7 +108,7 @@ feature -- Access
 			end
 		end
 
-	find_eiffel_feature_name_in_type (an_assembly: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING; an_eiffel_feature_name: STRING): STRING is
+	find_eiffel_feature_name_in_type (an_assembly: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING; an_eiffel_feature_name: STRING): STRING
 			-- Return the `dotnet_feature_name' corresponding to `an_eiffel_feature_name'.
 		require
 			non_void_assembly: an_assembly /= Void
@@ -154,7 +154,7 @@ feature -- Access
 
 feature {NONE} --Implementation
 
-	search_in_array (array: ARRAY [CONSUMED_MEMBER]; an_eiffel_feature_name: STRING): STRING is
+	search_in_array (array: ARRAY [CONSUMED_MEMBER]; an_eiffel_feature_name: STRING): STRING
 			-- search `an_eiffel_feature_name' in `array'.
 		require
 			non_void_array: array /= Void
@@ -177,7 +177,7 @@ feature {NONE} --Implementation
 
 feature -- Name
 
-	eiffel_type_name (an_assembly: CONSUMED_ASSEMBLY; a_full_dotnet_type_name: STRING): STRING is
+	eiffel_type_name (an_assembly: CONSUMED_ASSEMBLY; a_full_dotnet_type_name: STRING): STRING
 			-- Return the `eiffel_type_name' corresponding to `a_dotnet_type_name'.
 			-- | Check if `a_full_dotnet_type_name' is in `types'. If not call `search_eiffel_type_name'.
 		require
@@ -194,7 +194,7 @@ feature -- Name
 			non_void_result: Result /= Void
 		end
 	
-	search_eiffel_type_name (an_assembly: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING): STRING is
+	search_eiffel_type_name (an_assembly: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING): STRING
 			-- Return the `eiffel_type_name' corresponding to `a_dotnet_type_name'.
 		require
 			non_void_an_assembly: an_assembly /= Void
@@ -246,7 +246,7 @@ feature -- Name
 		end
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

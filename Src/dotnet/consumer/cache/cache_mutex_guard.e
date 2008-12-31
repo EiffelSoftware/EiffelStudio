@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Mutex base lock to prevent mutlitple processes from concurrent access to IO sensitive functions."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature -- Basic Operation
 
-	lock is
+	lock
 			-- lock cache
 		do
 			internal_count.set_item (count + 1)
@@ -36,7 +36,7 @@ feature -- Basic Operation
 			is_locked: is_locked
 		end
 
-	unlock is
+	unlock
 			-- lock cache
 		require
 			count_positive: count > 0
@@ -52,7 +52,7 @@ feature -- Basic Operation
 
 feature -- Access
 
-	count: INTEGER is
+	count: INTEGER
 			-- number of locks
 		do
 			Result := internal_count.item
@@ -60,7 +60,7 @@ feature -- Access
 			count_positive: count >= 0
 		end
 
-	is_locked: BOOLEAN is
+	is_locked: BOOLEAN
 			-- is cache locked?
 		do
 			Result := count > 0
@@ -71,7 +71,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_notifier (a_notifier: like notifier) is
+	set_notifier (a_notifier: like notifier)
 			-- Set `notifier' to `a_notifier'.
 		do
 			notifier := a_notifier
@@ -81,7 +81,7 @@ feature -- Element change
 
 feature -- DISPOSABLE
 
-	dispose is
+	dispose
 			-- clean up
 		do
 			check
@@ -92,7 +92,7 @@ feature -- DISPOSABLE
 
 feature {NONE} -- Implementation
 
-	perform_locking is
+	perform_locking
 			-- performs locking
 		local
 			l_wait: BOOLEAN
@@ -110,7 +110,7 @@ feature {NONE} -- Implementation
 			is_locked: is_locked
 		end
 
-	perform_unlocking is
+	perform_unlocking
 			-- performs locking
 		do
 			guard.release_mutex
@@ -118,7 +118,7 @@ feature {NONE} -- Implementation
 			not_locked: not is_locked
 		end
 
-	guard: SYSTEM_MUTEX is
+	guard: SYSTEM_MUTEX
 			-- guard implementation
 		once
 			create Result.make (False, "Global\" + create {STRING}.make_from_cil (cache_lock_id))
@@ -127,13 +127,13 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	internal_count: INTEGER_REF is
+	internal_count: INTEGER_REF
 			-- internal count
 		once
 			create Result
 		end
 
-	setup_mutex (a_mutex: SYSTEM_MUTEX) is
+	setup_mutex (a_mutex: SYSTEM_MUTEX)
 			-- Setup `a_mutex' to be shared among various users of a machine.
 		require
 			a_mutex_not_void: a_mutex /= Void
@@ -163,7 +163,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

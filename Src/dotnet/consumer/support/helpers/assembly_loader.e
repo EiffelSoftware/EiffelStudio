@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A utility class for loading assemblies"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ inherit
 
 feature -- Cleanup
 
-	release_cached_data is
+	release_cached_data
 			-- Releases all cached data
 		local
 			l_dom: APP_DOMAIN
@@ -56,7 +56,7 @@ feature -- Cleanup
 
 feature {ASSEMBLY_LOADER} -- Access
 
-	my_domain: APP_DOMAIN is
+	my_domain: APP_DOMAIN
 			-- Retrieves domain in which loader is running in
 		do
 			Result := {APP_DOMAIN}.current_domain
@@ -71,7 +71,7 @@ feature {NONE} -- Access
 
 feature -- Element change
 
-	set_resolver (a_resolver: like resolver) is
+	set_resolver (a_resolver: like resolver)
 			-- Sets `resolver' with `a_resolver'
 		do
 			resolver := a_resolver
@@ -81,7 +81,7 @@ feature -- Element change
 
 feature -- Basic operations
 
-	load_from (a_path: SYSTEM_STRING): ASSEMBLY is
+	load_from (a_path: SYSTEM_STRING): ASSEMBLY
 			-- Attempts to load an assembly from `a_path'
 		require
 			a_path_attached: a_path /= Void
@@ -109,7 +109,7 @@ feature -- Basic operations
 			retry
 		end
 
-	load_from_full_name (a_name: SYSTEM_STRING): ASSEMBLY is
+	load_from_full_name (a_name: SYSTEM_STRING): ASSEMBLY
 			-- Attempts to load an assembly from  a full name `a_name'
 		require
 			a_name_attached: a_name /= Void
@@ -129,7 +129,7 @@ feature -- Basic operations
 			retry
 		end
 
-	load (a_name: ASSEMBLY_NAME): ASSEMBLY is
+	load (a_name: ASSEMBLY_NAME): ASSEMBLY
 			-- Attempts to load assembly `a_name' and returns the result. If no assembly could be found then
 			-- Void will be returned
 		require
@@ -174,7 +174,7 @@ feature -- Basic operations
 			retry
 		end
 
-	load_from_gac_or_path (a_path: SYSTEM_STRING): ASSEMBLY is
+	load_from_gac_or_path (a_path: SYSTEM_STRING): ASSEMBLY
 			-- Attempts to load an assembly `a_path' from the GAC. Failure to find an assembly in the GAC will
 			-- load the assembly from the specified path.
 		require
@@ -198,7 +198,7 @@ feature -- Basic operations
 
 feature -- Domain
 
-	gac_loader: ASSEMBLY_LOADER is
+	gac_loader: ASSEMBLY_LOADER
 			-- Loader used to load GAC only assemblies
 		local
 			l_type: SYSTEM_TYPE
@@ -230,7 +230,7 @@ feature -- Domain
 			internal_gac_loader_set: internal_gac_loader = Result
 		end
 
-	on_gac_domain_unloaded (a_sender: SYSTEM_OBJECT; a_args: EVENT_ARGS) is
+	on_gac_domain_unloaded (a_sender: SYSTEM_OBJECT; a_args: EVENT_ARGS)
 			-- Called when GAC specific domain is being unloaded
 		do
 			release_cached_data
@@ -242,7 +242,7 @@ feature -- Domain
 
 feature -- Lifetime services
 
-	initialize_lifetime_service: SYSTEM_OBJECT is
+	initialize_lifetime_service: SYSTEM_OBJECT
 			-- Obtains a lifetime service object to control the lifetime policy for this instance
 		local
 			l_lease: ILEASE
@@ -258,7 +258,7 @@ feature -- Lifetime services
 
 feature {NONE} -- Lifetime service sponsorship
 
-	renewal (a_lease: ILEASE): TIME_SPAN is
+	renewal (a_lease: ILEASE): TIME_SPAN
 			-- Renews lease.
 		do
 			Result := {TIME_SPAN}.from_days (1)
@@ -268,7 +268,7 @@ feature {NONE} -- Lifetime service sponsorship
 
 feature {NONE} -- Implementation
 
-	loaded_assemblies: HASHTABLE is
+	loaded_assemblies: HASHTABLE
 			-- Table of loaded assemblies
 		local
 			l_comparer: CONSUMER_STRING_COMPARER
@@ -293,7 +293,7 @@ feature {ASSEMBLY_LOADER} -- Implementation
 	gac_domain_name: SYSTEM_STRING = "ASSEMBLY_LOADER (GAC)"
 			-- Friendly name given to GAC domain.
 
-	new_gac_domain_unload_delelgate: EVENT_HANDLER is
+	new_gac_domain_unload_delelgate: EVENT_HANDLER
 			-- Creates a new event handler to ensure generated code is verifiable.
 		require
 			requested_in_gac_domain: {APP_DOMAIN}.current_domain.friendly_name.equals (gac_domain_name)
@@ -303,7 +303,7 @@ feature {ASSEMBLY_LOADER} -- Implementation
 			result_attached: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "References to standard .NET types"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,37 +16,37 @@ inherit
 
 feature -- Access
 
-	None_type_reference: CODE_TYPE_REFERENCE is
+	None_type_reference: CODE_TYPE_REFERENCE
 			-- Reference to NONE
 		once
 			Result := Type_reference_factory.type_reference_from_type ({SYSTEM_TYPE}.get_type ("System.Void"))
 		end
 
-	Object_type_reference: CODE_TYPE_REFERENCE is
+	Object_type_reference: CODE_TYPE_REFERENCE
 			-- Reference to NONE
 		once
 			Result := Type_reference_factory.type_reference_from_type ({SYSTEM_TYPE}.get_type ("System.Object"))
 		end
 
-	Boolean_type_reference: CODE_TYPE_REFERENCE is
+	Boolean_type_reference: CODE_TYPE_REFERENCE
 			-- Reference to BOOLEAN
 		once
 			Result := Type_reference_factory.type_reference_from_type ({SYSTEM_TYPE}.get_type ("System.Boolean"))
 		end
 
-	Double_type_reference: CODE_TYPE_REFERENCE is
+	Double_type_reference: CODE_TYPE_REFERENCE
 			-- Reference to System.Double
 		once
 			Result := Type_reference_factory.type_reference_from_type ({SYSTEM_TYPE}.get_type ("System.Double"))
 		end
 
-	Type_type_reference: CODE_TYPE_REFERENCE is
+	Type_type_reference: CODE_TYPE_REFERENCE
 			-- Reference to SYSTEM_TYPE
 		once
 			Result := Type_reference_factory.type_reference_from_type ({SYSTEM_TYPE}.get_type ("System.Type"))
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Logging levels, 0 means no logging, 1 means error only, 2 errors and warnings and 3 everything"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,27 +10,27 @@ class
 
 feature -- Access
 
-	No_log: INTEGER is 0
+	No_log: INTEGER = 0
 			-- No logging
 	
-	Default_log: INTEGER is 1
+	Default_log: INTEGER = 1
 			-- Default logging level, logs errors only
 	
-	Warning_log: INTEGER is 2
+	Warning_log: INTEGER = 2
 			-- Logs errors and warnings
 	
-	Full_log: INTEGER is 3
+	Full_log: INTEGER = 3
 			-- Logs everything
 
 feature -- Status report
 
-	is_valid_log_level (a_level: INTEGER): BOOLEAN is
+	is_valid_log_level (a_level: INTEGER): BOOLEAN
 			-- Is `a_level' a valid log level?
 		do
 			Result := a_level = No_log or a_level = Default_log or a_level = Warning_log or a_level = Full_log
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

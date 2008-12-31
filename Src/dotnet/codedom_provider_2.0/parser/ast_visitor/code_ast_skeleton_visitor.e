@@ -1,4 +1,4 @@
-indexing
+note
 	description: "AST skeleton Visitor."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 	
 feature {AST_YACC} -- Implementation
 
-	process_class_as (l_as: CLASS_AS) is
+	process_class_as (l_as: CLASS_AS)
 			-- Process `l_as'.
 			-- | Create CODE_COMPILE_UNIT in which is a CODE_NAMESPACE
 			-- | in which is a CODE_TYPE_DECLARATION.
@@ -52,17 +52,17 @@ feature {AST_YACC} -- Implementation
 			set_last_element_created (l_code_compile_unit)
 		end
 
-	process_create_as (l_as: CREATE_AS) is
+	process_create_as (l_as: CREATE_AS)
 			-- Process `l_as'.
 		do
 		end
 
-	process_indexing_clause_as (l_as: INDEXING_CLAUSE_AS) is
+	process_indexing_clause_as (l_as: INDEXING_CLAUSE_AS)
 			-- Process `l_as'.
 		do
 		end
 
-	process_feature_as (l_as: FEATURE_AS) is
+	process_feature_as (l_as: FEATURE_AS)
 			-- Process `l_as'.
 			-- | create a CODE_MEMBER_FIELD or a CODE_MEMBER_METHOD
 			-- | Add positions of member in user_data for reemission of code.
@@ -80,7 +80,7 @@ feature {AST_YACC} -- Implementation
 			end			
 		end
 
-	process_feature_clause_as (l_as: FEATURE_CLAUSE_AS) is
+	process_feature_clause_as (l_as: FEATURE_CLAUSE_AS)
 			-- Process `l_as'.
 		local
 			l_member: SYSTEM_DLL_CODE_TYPE_MEMBER
@@ -107,12 +107,12 @@ feature {AST_YACC} -- Implementation
 			end
 		end
 
-	process_external_lang_as (l_as: EXTERNAL_LANG_AS) is
+	process_external_lang_as (l_as: EXTERNAL_LANG_AS)
 			-- Process `l_as'.
 		do
 		end
 
-	process_type_dec_as (l_as: TYPE_DEC_AS) is
+	process_type_dec_as (l_as: TYPE_DEC_AS)
 			-- Process `l_as'.
 			-- Can be a parameter or a local variable.
 		local
@@ -148,47 +148,47 @@ feature {AST_YACC} -- Implementation
 			add_variable (l_as.item_name (1), dotnet_type_name (l_as.type.dump))
 		end
 
-	process_parent_as (l_as: PARENT_AS) is
+	process_parent_as (l_as: PARENT_AS)
 			-- Process `l_as'.
 		do
 		end
 
-	process_like_cur_as (l_as: LIKE_CUR_AS) is
+	process_like_cur_as (l_as: LIKE_CUR_AS)
 			-- Process `l_as'.
 		do
 		end
 
-	process_suppliers_as (l_as: SUPPLIERS_AS) is
+	process_suppliers_as (l_as: SUPPLIERS_AS)
 			-- Process `l_as'.
 		do
 		end
 
-	process_rename_as (l_as: RENAME_AS) is
+	process_rename_as (l_as: RENAME_AS)
 			-- Process `l_as'.
 		do
 		end
 
-	process_invariant_as (l_as: INVARIANT_AS) is
+	process_invariant_as (l_as: INVARIANT_AS)
 			-- Process `l_as'.
 		do
 		end
 
-	process_interval_as (l_as: INTERVAL_AS) is
+	process_interval_as (l_as: INTERVAL_AS)
 			-- Process `l_as'.
 		do
 		end
 
-	process_index_as (l_as: INDEX_AS) is
+	process_index_as (l_as: INDEX_AS)
 			-- Process `l_as'.
 		do
 		end
 
-	process_export_item_as (l_as: EXPORT_ITEM_AS) is
+	process_export_item_as (l_as: EXPORT_ITEM_AS)
 			-- Process `l_as'.
 		do
 		end
 
-	process_elseif_as (l_as: ELSIF_AS) is
+	process_elseif_as (l_as: ELSIF_AS)
 			-- Process `l_as'.
 		local
 			l_condition_statement: SYSTEM_DLL_CODE_CONDITION_STATEMENT
@@ -211,49 +211,22 @@ feature {AST_YACC} -- Implementation
 			set_last_element_created (l_condition_statement)
 		end
 
-	process_client_as (l_as: CLIENT_AS) is
+	process_client_as (l_as: CLIENT_AS)
 			-- Process `l_as'.
 		do
 		end
 
-	process_case_as (l_as: CASE_AS) is
+	process_case_as (l_as: CASE_AS)
 			-- Process `l_as'.
 		do
 		end
 
-	process_assert_list_as (l_as: ASSERT_LIST_AS) is
+	process_assert_list_as (l_as: ASSERT_LIST_AS)
 			-- Process `l_as'.
 		do
 		end
 
-	process_ensure_as (l_as: ENSURE_AS) is
-			-- Process `l_as'.
-		local
-			l_current_routine: SYSTEM_DLL_CODE_MEMBER_METHOD
-			l_statement: SYSTEM_DLL_CODE_STATEMENT
-		do
-			l_current_routine ?= current_element
-			check
-				non_void_l_current_routine: l_current_routine /= Void
-			end
-			if l_as.assertions /= Void then
-				from
-					l_as.assertions.start
-				until
-					l_as.assertions.after
-				loop
-					l_as.assertions.item.process (Visitor)
-					l_statement ?= last_element_created
-					check
-						non_void_l_statement: l_statement /= Void
-					end
-					added := l_current_routine.statements.add_code_statement (l_statement)
-					l_as.assertions.forth
-				end
-			end
-		end
-
-	process_ensure_then_as (l_as: ENSURE_THEN_AS) is
+	process_ensure_as (l_as: ENSURE_AS)
 			-- Process `l_as'.
 		local
 			l_current_routine: SYSTEM_DLL_CODE_MEMBER_METHOD
@@ -280,7 +253,7 @@ feature {AST_YACC} -- Implementation
 			end
 		end
 
-	process_require_as (l_as: REQUIRE_AS) is
+	process_ensure_then_as (l_as: ENSURE_THEN_AS)
 			-- Process `l_as'.
 		local
 			l_current_routine: SYSTEM_DLL_CODE_MEMBER_METHOD
@@ -307,7 +280,7 @@ feature {AST_YACC} -- Implementation
 			end
 		end
 
-	process_require_else_as (l_as: REQUIRE_ELSE_AS) is
+	process_require_as (l_as: REQUIRE_AS)
 			-- Process `l_as'.
 		local
 			l_current_routine: SYSTEM_DLL_CODE_MEMBER_METHOD
@@ -334,7 +307,34 @@ feature {AST_YACC} -- Implementation
 			end
 		end
 
-	process_body_as (l_as: BODY_AS) is
+	process_require_else_as (l_as: REQUIRE_ELSE_AS)
+			-- Process `l_as'.
+		local
+			l_current_routine: SYSTEM_DLL_CODE_MEMBER_METHOD
+			l_statement: SYSTEM_DLL_CODE_STATEMENT
+		do
+			l_current_routine ?= current_element
+			check
+				non_void_l_current_routine: l_current_routine /= Void
+			end
+			if l_as.assertions /= Void then
+				from
+					l_as.assertions.start
+				until
+					l_as.assertions.after
+				loop
+					l_as.assertions.item.process (Visitor)
+					l_statement ?= last_element_created
+					check
+						non_void_l_statement: l_statement /= Void
+					end
+					added := l_current_routine.statements.add_code_statement (l_statement)
+					l_as.assertions.forth
+				end
+			end
+		end
+
+	process_body_as (l_as: BODY_AS)
 			-- Process `l_as'.
 		do
 			l_as.content.process (Visitor)
@@ -342,7 +342,7 @@ feature {AST_YACC} -- Implementation
 
 feature {NONE} -- CodeDom object initialization
 
-	initialize_type_declaration (a_class: CLASS_AS; a_type_declaration: SYSTEM_DLL_CODE_TYPE_DECLARATION) is
+	initialize_type_declaration (a_class: CLASS_AS; a_type_declaration: SYSTEM_DLL_CODE_TYPE_DECLARATION)
 			-- Initialize `a_type_declaration' with `a_class'.
 		require
 			non_void_a_class: a_class /= Void
@@ -440,7 +440,7 @@ feature {NONE} -- CodeDom object initialization
 			a_type_declaration.set_is_interface (a_class.is_deferred)
 		end
 
-	initialize_parent_clauses (a_parent: PARENT_AS): STRING is
+	initialize_parent_clauses (a_parent: PARENT_AS): STRING
 			-- return string defining parent clauses.
 		require
 			non_void_a_parent: a_parent /= Void
@@ -473,7 +473,7 @@ feature {NONE} -- CodeDom object initialization
 			end
 		end
 
-	initialize_member_field (an_attribute: FEATURE_AS): SYSTEM_DLL_CODE_MEMBER_FIELD is
+	initialize_member_field (an_attribute: FEATURE_AS): SYSTEM_DLL_CODE_MEMBER_FIELD
 			-- Return the CODE_MEMBER_FIELD corresponding to `an_attribute'.
 		require
 			non_void_an_attribute: an_attribute /= Void
@@ -524,7 +524,7 @@ feature {NONE} -- CodeDom object initialization
 			Result.user_data.add (End_position, an_attribute.location.end_position)
 		end
 
-	initialize_member_feature (a_feature: FEATURE_AS): SYSTEM_DLL_CODE_MEMBER_METHOD is
+	initialize_member_feature (a_feature: FEATURE_AS): SYSTEM_DLL_CODE_MEMBER_METHOD
 			-- Return the CODE_MEMBER_METHOD corresponding to `a_feature'.
 		require
 			non_void_a_feature: a_feature /= Void
@@ -604,7 +604,7 @@ feature {NONE} -- CodeDom object initialization
 			Result.user_data.add (End_position, a_feature.location.end_position)
 		end
 
-	initialize_clients_member (a_client: CLIENT_AS): STRING is
+	initialize_clients_member (a_client: CLIENT_AS): STRING
 			-- Initialize client of `a_member'.
 		local
 			l_first_client: BOOLEAN
@@ -634,16 +634,16 @@ feature {NONE} -- CodeDom object initialization
 
 feature {NONE} -- Implementation
 
-	Initialize_component_dotnet_name: STRING is "InitializeComponent"
+	Initialize_component_dotnet_name: STRING = "InitializeComponent"
 			-- Parser does keep case.
 			
-	Initialize_component_eiffel_name: STRING is "initialize_component"
+	Initialize_component_eiffel_name: STRING = "initialize_component"
 			-- Parser does keep case.
 
-	Constructor_name: STRING is ".ctor";
+	Constructor_name: STRING = ".ctor";
 			-- Dotnet constructor name.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

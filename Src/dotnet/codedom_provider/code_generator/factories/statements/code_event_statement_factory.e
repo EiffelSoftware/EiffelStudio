@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Code generator for event statements"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 
-	generate_attach_event_statement (a_source: SYSTEM_DLL_CODE_ATTACH_EVENT_STATEMENT) is
+	generate_attach_event_statement (a_source: SYSTEM_DLL_CODE_ATTACH_EVENT_STATEMENT)
 			-- | Create instance of `CODE_ATTACH_EVENT_STATEMENT'.
 			-- | And initialize this instance with `a_source' -> Call `initialize_attach_event_statement'
 			-- | Set `last_statement'.
@@ -33,7 +33,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			non_void_last_statement: last_statement /= Void
 		end
 
-	generate_remove_event_statement (a_source: SYSTEM_DLL_CODE_REMOVE_EVENT_STATEMENT) is
+	generate_remove_event_statement (a_source: SYSTEM_DLL_CODE_REMOVE_EVENT_STATEMENT)
 			-- | Create instance of `CODE_REMOVE_EVENT_STATEMENT'.
 			-- | And initialize this instance with `a_source' -> Call `initialize_remove_event_statement'
 			-- | Set `last_statement'.
@@ -53,7 +53,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			non_void_last_statement: last_statement /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

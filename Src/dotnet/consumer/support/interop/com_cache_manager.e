@@ -1,4 +1,4 @@
-indexing
+note
 	description: "COM interface for metadata consumer"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -35,7 +35,7 @@ feature -- Access
 
 feature -- Basic Exportations
 
-	initialize is
+	initialize
 			-- initialize the object using default path to EAC
 		local
 			l_sub: AR_RESOLVE_SUBSCRIBER
@@ -53,7 +53,7 @@ feature -- Basic Exportations
 			{APP_DOMAIN}.current_domain.add_domain_unload (create {EVENT_HANDLER}.make (Current, $on_unload_top_level_domain))
 		end
 
-	initialize_with_path (a_path: SYSTEM_STRING) is
+	initialize_with_path (a_path: SYSTEM_STRING)
 			-- initialize object with path to specific EAC and initializes it if not already done.
 		local
 			cr: CACHE_READER
@@ -71,7 +71,7 @@ feature -- Basic Exportations
 			is_initialized := True
 		end
 
-	unload is
+	unload
 			-- unloads initialized app domain and cache releated objects to preserve resources
 		local
 			l_impl: MARSHAL_CACHE_MANAGER
@@ -89,7 +89,7 @@ feature -- Basic Exportations
 			end
 		end
 
-	consume_assembly (a_name, a_version, a_culture, a_key: SYSTEM_STRING; a_info_only: BOOLEAN) is
+	consume_assembly (a_name, a_version, a_culture, a_key: SYSTEM_STRING; a_info_only: BOOLEAN)
 			-- consume an assembly using it's display name parts.
 			-- "`a_name', Version=`a_version', Culture=`a_culture', PublicKeyToken=`a_key'"
 		local
@@ -100,7 +100,7 @@ feature -- Basic Exportations
 			update_current (l_impl)
 		end
 
-	consume_assembly_from_path (a_path: SYSTEM_STRING; a_info_only: BOOLEAN; a_references: SYSTEM_STRING) is
+	consume_assembly_from_path (a_path: SYSTEM_STRING; a_info_only: BOOLEAN; a_references: SYSTEM_STRING)
 			-- Consume assembly located `a_path'
 		local
 			l_impl: MARSHAL_CACHE_MANAGER
@@ -112,7 +112,7 @@ feature -- Basic Exportations
 
 feature {NONE} -- Event Handlers
 
-	on_unload_top_level_domain (a_sender: SYSTEM_OBJECT; a_args: EVENT_ARGS) is
+	on_unload_top_level_domain (a_sender: SYSTEM_OBJECT; a_args: EVENT_ARGS)
 			-- Called when top level domain is unloaded.
 		do
 				-- Exits notifier
@@ -121,7 +121,7 @@ feature {NONE} -- Event Handlers
 
 feature {NONE} -- Lifetime Service Sponsorship
 
-	renewal (lease: ILEASE): TIME_SPAN is
+	renewal (lease: ILEASE): TIME_SPAN
 			-- Renews lease.
 		do
 			Result := {TIME_SPAN}.from_days (1)
@@ -131,9 +131,9 @@ feature {NONE} -- Lifetime Service Sponsorship
 
 feature {NONE} -- Implementation
 
-	update_current (a_impl: MARSHAL_CACHE_MANAGER) is
+	update_current (a_impl: MARSHAL_CACHE_MANAGER)
 			-- Update Current with `a_impl'.
-		indexing
+		note
 			metadata: create {COM_VISIBLE_ATTRIBUTE}.make (False) end
 		require
 			a_impl_not_void: a_impl /= Void
@@ -142,7 +142,7 @@ feature {NONE} -- Implementation
 			last_error_message := a_impl.last_error_message
 		end
 
-	new_marshalled_cache_manager: MARSHAL_CACHE_MANAGER is
+	new_marshalled_cache_manager: MARSHAL_CACHE_MANAGER
 			-- New instance of {MARSHAL_CACHE_MANAGER} created in `a_app_domain'.
 		local
 			retried_count: INTEGER
@@ -161,9 +161,9 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	new_marshalled_cache_manager_object: OBJECT_HANDLE is
+	new_marshalled_cache_manager_object: OBJECT_HANDLE
 			-- New instance of {MARSHAL_CACHE_MANAGER} created in `a_app_domain'.
-		indexing
+		note
 			metadata: create {COM_VISIBLE_ATTRIBUTE}.make (False) end
 		local
 			l_inst_obj_handle: OBJECT_HANDLE
@@ -236,23 +236,26 @@ feature {NONE} -- Implementation
 
 	eac_path: SYSTEM_STRING
 			-- Location of EAC `Eiffel Assembly Cache'
-		indexing
+		note
 			metadata: create {COM_VISIBLE_ATTRIBUTE}.make (False) end
+		attribute
 		end
 
 	internal_marshalled_cache_manager: OBJECT_HANDLE
 			-- internal marshalled cache manager
-		indexing
+		note
 			metadata: create {COM_VISIBLE_ATTRIBUTE}.make (False) end
+		attribute
 		end
 
 	app_domain: APP_DOMAIN
 			-- app domain consumption is run in
-		indexing
+		note
 			metadata: create {COM_VISIBLE_ATTRIBUTE}.make (False) end
+		attribute
 		end
 
-	e_fail_code: INTEGER is
+	e_fail_code: INTEGER
 			--
 		external
 			"C [ macro %"winerror.h%"] : HRESULT"
@@ -260,7 +263,7 @@ feature {NONE} -- Implementation
 			"E_FAIL"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

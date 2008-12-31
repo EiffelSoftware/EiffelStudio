@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Shared data for Eiffel code_generator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,16 +10,16 @@ class
 
 feature -- Constants
 
-	Eiffel_file_extension: STRING is "e"
+	Eiffel_file_extension: STRING = "e"
 			-- Eiffel file extension.
 			
-	Cast_expr_local: STRING is "l_cast_exp_"
+	Cast_expr_local: STRING = "l_cast_exp_"
 			-- Constant for assignment attempt local variable name
 
-	Return_var_name: STRING is "l_res";
+	Return_var_name: STRING = "l_res";
 			-- Constant for dummy function calls return values
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

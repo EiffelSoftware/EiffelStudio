@@ -1,4 +1,4 @@
-indexing
+note
 	description: "AST expression Visitor."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,12 +13,12 @@ inherit
 	
 feature {AST_YACC} -- Implementation
 
-	process_operand_as (l_as: OPERAND_AS) is
+	process_operand_as (l_as: OPERAND_AS)
 			-- Process `l_as'.
 		do
 		end
 
-	process_tagged_as (l_as: TAGGED_AS) is
+	process_tagged_as (l_as: TAGGED_AS)
 			-- Process `l_as'.
 		local
 			l_statement: SYSTEM_DLL_CODE_EXPRESSION_STATEMENT
@@ -34,43 +34,43 @@ feature {AST_YACC} -- Implementation
 			set_last_element_created (l_statement)
 		end
 
-	process_variant_as (l_as: VARIANT_AS) is
+	process_variant_as (l_as: VARIANT_AS)
 			-- Process `l_as'.
 		do
 		end
 
-	process_un_strip_as (l_as: UN_STRIP_AS) is
+	process_un_strip_as (l_as: UN_STRIP_AS)
 			-- Process `l_as'.
 		do
 		end
 
-	process_paran_as (l_as: PARAN_AS) is
+	process_paran_as (l_as: PARAN_AS)
 			-- Process `l_as'.
 		do
 		end
 
-	process_expr_call_as (l_as: EXPR_CALL_AS) is
+	process_expr_call_as (l_as: EXPR_CALL_AS)
 			-- Process `l_as'.
 		do
 			l_as.call.process (Visitor)
 		end
 
-	process_expr_address_as (l_as: EXPR_ADDRESS_AS) is
+	process_expr_address_as (l_as: EXPR_ADDRESS_AS)
 			-- Process `l_as'.
 		do
 		end
 
-	process_address_result_as (l_as: ADDRESS_RESULT_AS) is
+	process_address_result_as (l_as: ADDRESS_RESULT_AS)
 			-- Process `l_as'.
 		do
 		end
 
-	process_address_current_as (l_as: ADDRESS_CURRENT_AS) is
+	process_address_current_as (l_as: ADDRESS_CURRENT_AS)
 			-- Process `l_as'.
 		do
 		end
 
-	process_address_as (l_as: ADDRESS_AS) is
+	process_address_as (l_as: ADDRESS_AS)
 			-- Process `l_as'.
 		local
 			l_delegate_create_expression: SYSTEM_DLL_CODE_DELEGATE_CREATE_EXPRESSION
@@ -87,12 +87,12 @@ feature {AST_YACC} -- Implementation
 			end
 		end
 
-	process_routine_creation_as (l_as: ROUTINE_CREATION_AS) is
+	process_routine_creation_as (l_as: ROUTINE_CREATION_AS)
 			-- Process `l_as'.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

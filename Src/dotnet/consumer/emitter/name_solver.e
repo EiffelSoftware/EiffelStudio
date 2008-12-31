@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generate unique names"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature -- Access
 
-	unique_feature_name (name: STRING): STRING is
+	unique_feature_name (name: STRING): STRING
 			-- Unique feature name for .NET method `name'
 		require
 			non_void_name: name /= Void
@@ -44,7 +44,7 @@ feature -- Access
 	reserved_names: HASH_TABLE [STRING, STRING]
 			-- Reserved names for overload solving
 
-	ub_operator_names: HASH_TABLE [STRING, STRING] is
+	ub_operator_names: HASH_TABLE [STRING, STRING]
 			-- Operator names for mapping prefixes and infixes.
 			-- Information in this table should also correspond
 		local
@@ -79,7 +79,7 @@ feature -- Access
 
 feature {TYPE_CONSUMER} -- Element Settings
 
-	set_reserved_names (names: like reserved_names) is
+	set_reserved_names (names: like reserved_names)
 			-- Set `reserved_names' with `names' .
 		require
 			non_void_names: names /= Void
@@ -90,7 +90,7 @@ feature {TYPE_CONSUMER} -- Element Settings
 			set: reserved_names = names
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

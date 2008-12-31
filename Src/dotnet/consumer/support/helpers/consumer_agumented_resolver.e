@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		An agumented assembly resolver to support consumer's ability to consume assemblies with dependencies
 		in disparate locations.
@@ -37,7 +37,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_paths: LIST [STRING]) is
+	make (a_paths: LIST [STRING])
 			-- Initialize instance
 		require
 			a_paths_attached: a_paths /= Void
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			common_initialization (a_paths)
 		end
 
-	make_with_name (a_paths: LIST [STRING]; a_name: like friendly_name) is
+	make_with_name (a_paths: LIST [STRING]; a_name: like friendly_name)
 			-- Initialize instance and set `friendly_name' with `a_name'
 		require
 			a_paths_attached: a_paths /= Void
@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 			friendly_name_set: friendly_name = a_name
 		end
 
-	common_initialization (a_paths: LIST [STRING]) is
+	common_initialization (a_paths: LIST [STRING])
 			-- Additional initialization.
 		require
 			a_paths_attached: a_paths /= Void
@@ -94,7 +94,7 @@ feature {NONE} -- Initialization
 
 feature -- Resolution
 
-	resolve_by_name (a_domain: APP_DOMAIN; a_name: STRING; a_version: STRING; a_culture: STRING; a_key: STRING): STRING is
+	resolve_by_name (a_domain: APP_DOMAIN; a_name: STRING; a_version: STRING; a_culture: STRING; a_key: STRING): STRING
 			-- Resolve an assembly in app domain `a_domain' where name of assembly comprises of assembly name `a_name'
 			-- and optionally version `a_version', culture `a_culture' and public key token `a_key'
 		local
@@ -128,13 +128,13 @@ feature -- Resolution
 
 feature {NONE} -- Implementation
 
-	load_assembly (a_path: STRING): ASSEMBLY is
+	load_assembly (a_path: STRING): ASSEMBLY
 			-- Attempts to load assembly from `a_path'
 		do
 			Result := assembly_loader.load_from (a_path)
 		end
 
-	get_assembly_name (a_path: STRING): ASSEMBLY_NAME is
+	get_assembly_name (a_path: STRING): ASSEMBLY_NAME
 			-- Retrieve an assembly name from `a_path'
 		do
 			Result := names_table.item (a_path)
@@ -159,7 +159,7 @@ invariant
 	names_table_not_void: names_table /= Void
 	names_table_compares_objects: names_table.object_comparison
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

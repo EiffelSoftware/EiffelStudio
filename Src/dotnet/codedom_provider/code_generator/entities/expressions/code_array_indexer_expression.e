@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Source code generator for array indexer expression"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_target: CODE_EXPRESSION; a_indices: LIST [CODE_EXPRESSION]) is
+	make (a_target: CODE_EXPRESSION; a_indices: LIST [CODE_EXPRESSION])
 			-- Initialize `target_object' and `indices'.
 		require
 			non_void_target: a_target /= Void
@@ -42,7 +42,7 @@ feature -- Access
 	indices: LIST [CODE_EXPRESSION]
 			-- Array indexer indices
 
-	code: STRING is
+	code: STRING
 			-- | Result := "`target_object'.item (`indices')"
 			-- Eiffel code of array indexer expression
 		do
@@ -67,7 +67,7 @@ feature -- Access
 		
 feature -- Status Report
 		
-	type: CODE_TYPE_REFERENCE is
+	type: CODE_TYPE_REFERENCE
 			-- Type
 		local
 			l_type: SYSTEM_TYPE
@@ -84,7 +84,7 @@ invariant
 	non_void_indices: indices /= Void
 	non_void_target: target /= Void
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

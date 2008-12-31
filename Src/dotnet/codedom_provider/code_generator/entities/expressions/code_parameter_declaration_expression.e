@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Source code generator for argument declaration expressions"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_variable: CODE_VARIABLE_REFERENCE; a_direction: INTEGER) is
+	make (a_variable: CODE_VARIABLE_REFERENCE; a_direction: INTEGER)
 			-- Initialize `variable'.
 		require
 			non_void_variable: a_variable /= Void
@@ -39,7 +39,7 @@ feature -- Access
 	direction: INTEGER
 			-- Argument direction
 
-	code: STRING is
+	code: STRING
 			-- | Result := "`name': `SYSTEM_TYPE'"
 			-- | or Result := "`name': TYPED_POINTER [`SYSTEM_TYPE']" if direction is out or inout
 			-- Eiffel code of argument declaration expression
@@ -61,7 +61,7 @@ feature -- Access
 		
 feature -- Status Report
 
-	type: CODE_TYPE_REFERENCE is
+	type: CODE_TYPE_REFERENCE
 			-- Type
 		do
 			Result := variable.type
@@ -71,7 +71,7 @@ invariant
 	non_void_variable: variable /= Void
 	valid_direction: is_valid_direction (direction)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

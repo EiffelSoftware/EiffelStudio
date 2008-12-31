@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Mapping between referenced assemblies and ids"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (assembly_ids: LINKED_LIST [CONSUMED_ASSEMBLY]) is
+	make (assembly_ids: LINKED_LIST [CONSUMED_ASSEMBLY])
 			-- Set `assemblies' with `assembly_ids'.
 		require
 			non_void_ids: assembly_ids /= Void
@@ -42,7 +42,7 @@ feature -- Access
 invariant
 	attached_assemblies: assemblies /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

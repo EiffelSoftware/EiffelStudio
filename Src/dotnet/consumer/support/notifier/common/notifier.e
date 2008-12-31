@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A notifier to informing users what assemblies are being consumed"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize notifier
 		local
 			l_thread: SYSTEM_THREAD
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			not_application_thread_is_current_thread: application_thread /= {SYSTEM_THREAD}.current_thread
 		end
 
-	on_init is
+	on_init
 			-- Initialize worker application thread.
 		local
 			l_context: WINFORMS_APPLICATION_CONTEXT
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 
 feature -- Clean Up
 
-	dispose is
+	dispose
 			-- Disposes of notifier
 		do
 			check
@@ -83,7 +83,7 @@ feature -- Status Report
 
 feature -- Status Setting
 
-	notify_consume (a_message: NOTIFY_MESSAGE) is
+	notify_consume (a_message: NOTIFY_MESSAGE)
 			-- Notifies user of a consume
 		require
 			notify_form_attached: notify_form /= Void
@@ -93,7 +93,7 @@ feature -- Status Setting
 			notify_form.notify_consume (a_message)
 		end
 
-	notify_info (a_message: STRING) is
+	notify_info (a_message: STRING)
 			-- Notifier user of an event
 		require
 			a_message_attached: a_message /= Void
@@ -102,13 +102,13 @@ feature -- Status Setting
 			notify_form.notify_info (a_message)
 		end
 
-	restore_last_notification is
+	restore_last_notification
 			-- Restores last message
 		do
 			notify_form.restore_last_notification
 		end
 
-	clear_notification is
+	clear_notification
 			-- Clears last notification message.
 		require
 			notify_form_attached: notify_form /= Void
@@ -128,7 +128,7 @@ feature -- Implementation
 invariant
 	notify_form_attached: not is_zombie implies notify_form /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Parse file given in make and extract informations"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Initialization
 
-	make (a_version: STRING) is
+	make (a_version: STRING)
 		do
 			create xml_file_path.make_empty
 			runtime_version := a_version
@@ -25,7 +25,7 @@ feature -- Initialization
 			non_void_xml_file_path: xml_file_path /= Void
 		end
 
-	initialize (an_assembly_name: STRING) is
+	initialize (an_assembly_name: STRING)
 			-- Set `xml_file' with `an_xml_file' and create an instance of MEMBER_FILTER.
 		require
 			non_void_an_assembly_name: an_assembly_name /= Void
@@ -85,7 +85,7 @@ feature {NONE} -- Access
 	initialized: BOOLEAN
 			-- Did Current initialize correctly?
 
-	member_parser_table: HASH_TABLE [MEMBER_FILTER, STRING] is
+	member_parser_table: HASH_TABLE [MEMBER_FILTER, STRING]
 			-- Caching member_parser already calculated.
 		once
 			create Result.make (20)
@@ -104,7 +104,7 @@ feature {NONE} -- Access
 
 feature -- Basic Operations
 
-	find_type (assembly_type_name: STRING; a_full_dotnet_type: STRING): MEMBER_INFORMATION is
+	find_type (assembly_type_name: STRING; a_full_dotnet_type: STRING): MEMBER_INFORMATION
 			-- Find comments relative to `a_full_dotnet_type'.
 		require
 			non_void_assembly_type_name: assembly_type_name /= Void
@@ -130,7 +130,7 @@ feature -- Basic Operations
 			end
 		end
 
-	find_feature (assembly_type_name: STRING; a_full_dotnet_type: STRING; a_member_signature: STRING): MEMBER_INFORMATION is
+	find_feature (assembly_type_name: STRING; a_full_dotnet_type: STRING; a_member_signature: STRING): MEMBER_INFORMATION
 			-- Find comments of feature of `a_full_dotnet_type' corresponding to `a_feature_signature'.
 			-- Constructor signature: #ctor[(TYPE,TYPE,...)]
 			-- Feature signature: feature_name[(TYPE,TYPE,...)]
@@ -168,7 +168,7 @@ feature -- Basic Operations
 			retry
 		end
 
-	path_to_assembly_doc (an_assembly_name: STRING): STRING is
+	path_to_assembly_doc (an_assembly_name: STRING): STRING
 			-- Path to assembly XML file
 		require
 			non_void_an_assembly_name: an_assembly_name /= Void
@@ -184,7 +184,7 @@ feature -- Basic Operations
 			non_void_result: Result /= Void
 		end
 
-	path_to_assembly_dll (an_assembly_name: STRING): STRING is
+	path_to_assembly_dll (an_assembly_name: STRING): STRING
 			-- Path to assembly
 		require
 			non_void_an_assembly_name: an_assembly_name /= Void
@@ -202,7 +202,7 @@ feature -- Basic Operations
 
 feature -- Status Setting
 
-	is_valid_dotnet_signature (a_feature_signature: STRING): BOOLEAN is
+	is_valid_dotnet_signature (a_feature_signature: STRING): BOOLEAN
 			-- Is `a_feature_signature' correct?
 		require
 			non_void_a_feature_signature: a_feature_signature /= Void
@@ -233,7 +233,7 @@ feature -- Status Setting
 
 feature {NONE} -- Status Setting
 
-	is_valid_feature_name (a_feature_name: STRING): BOOLEAN is
+	is_valid_feature_name (a_feature_name: STRING): BOOLEAN
 			-- Is `a_feature_name' valid?
 		require
 			non_void_a_feature_name: a_feature_name /= Void
@@ -246,7 +246,7 @@ feature {NONE} -- Status Setting
 			end
 		end
 
-	is_valid_parameters (parameters: STRING): BOOLEAN is
+	is_valid_parameters (parameters: STRING): BOOLEAN
 			-- Is `parameters' has a valid format?
 			--| Rules : if empty return True.
 			--|			else
@@ -271,7 +271,7 @@ feature {NONE} -- Status Setting
 
 feature {NONE} -- Implementation
 
-	find_member (a_full_dotnet_type: STRING; a_member_signature: STRING): MEMBER_INFORMATION is
+	find_member (a_full_dotnet_type: STRING; a_member_signature: STRING): MEMBER_INFORMATION
 			-- Find comments of feature of `a_full_dotnet_type' corresponding to `a_member_signature'.
 		require
 			non_void_a_full_dotnet_type: a_full_dotnet_type /= Void
@@ -325,7 +325,7 @@ feature {NONE} -- Implementation
 invariant
 	non_void_xml_file_path: xml_file_path /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

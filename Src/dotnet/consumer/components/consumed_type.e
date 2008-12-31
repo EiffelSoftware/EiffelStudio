@@ -1,4 +1,4 @@
-indexing
+note
 	description: ".NET type as needed by the Eiffel compiler"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ feature {NONE} -- Implementation
 	make (dn, en: STRING;
 			is_inter, is_abstract, is_sealed, is_value_type, is_enumerator: BOOLEAN;
 			par: like parent;
-			inter: like interfaces) is
+			inter: like interfaces)
 			-- Initialize instance.
 		require
 			non_void_dotnet_name: dn /= Void
@@ -81,7 +81,7 @@ feature -- Access
 	events: ARRAYED_LIST [CONSUMED_EVENT]
 			-- Events
 
-	procedures: ARRAYED_LIST [CONSUMED_PROCEDURE] is
+	procedures: ARRAYED_LIST [CONSUMED_PROCEDURE]
 			-- All procedures in type.
 			-- ie: immediate and inherited procedures, but also procedures associated
 			-- to a property or an event.
@@ -155,7 +155,7 @@ feature -- Access
 			end
 		end
 
-	functions: ARRAYED_LIST [CONSUMED_FUNCTION] is
+	functions: ARRAYED_LIST [CONSUMED_FUNCTION]
 			-- All functions in type.
 			-- ie: immediate and inherited functions, but also functions associated
 			-- to a property or an event.
@@ -204,31 +204,31 @@ feature {NONE} -- Internal vales
 
 feature -- Status Setting
 
-	is_interface: BOOLEAN is
+	is_interface: BOOLEAN
 			-- Is .NET type an interface?
 		do
 			Result := internal_flags & Is_interface_mask = Is_interface_mask
 		end
 
-	is_deferred: BOOLEAN is
+	is_deferred: BOOLEAN
 			-- Is .NET type abstract?
 		do
 			Result := internal_flags & Is_deferred_mask = Is_deferred_mask
 		end
 
-	is_enum: BOOLEAN is
+	is_enum: BOOLEAN
 			-- Is .NET type an enum?
 		do
 			Result := internal_flags & Is_enum_mask = Is_enum_mask
 		end
 
-	is_frozen: BOOLEAN is
+	is_frozen: BOOLEAN
 			-- Is .NET type sealed?
 		do
 			Result := internal_flags & Is_frozen_mask = Is_frozen_mask
 		end
 
-	is_expanded: BOOLEAN is
+	is_expanded: BOOLEAN
 			-- Is .NET type a value type?
 		do
 			Result := internal_flags & Is_expanded_mask = Is_expanded_mask
@@ -236,7 +236,7 @@ feature -- Status Setting
 
 feature -- Element settings
 
-	set_fields (fi: like fields) is
+	set_fields (fi: like fields)
 			-- set `fields' with `fi'.
 		require
 			non_void_fields: fi /= Void
@@ -246,7 +246,7 @@ feature -- Element settings
 			fields_set: fields = fi
 		end
 
-	set_procedures (meth: like procedures) is
+	set_procedures (meth: like procedures)
 			-- set `procedures' with `meth'.
 		require
 			non_void_procedures: meth /= Void
@@ -256,7 +256,7 @@ feature -- Element settings
 			internal_procedures_set: internal_procedures = meth
 		end
 
-	set_functions (func: like functions) is
+	set_functions (func: like functions)
 			-- set `functions' with `meth'.
 		require
 			non_void_functions: func /= Void
@@ -266,7 +266,7 @@ feature -- Element settings
 			internal_functions_set: internal_functions = func
 		end
 
-	set_properties (prop: like properties) is
+	set_properties (prop: like properties)
 			-- Set `properties' with `prop'.
 		require
 			non_void_properties: prop /= Void
@@ -276,7 +276,7 @@ feature -- Element settings
 			properties_set: properties = prop
 		end
 
-	set_events (ev: like events) is
+	set_events (ev: like events)
 			-- Set `events' with `ev'.
 		require
 			non_void_events: ev /= Void
@@ -286,7 +286,7 @@ feature -- Element settings
 			events_set: events = ev
 		end
 
-	set_constructors (cons: like constructors) is
+	set_constructors (cons: like constructors)
 			-- set `constructors' with `cons'.
 		require
 			non_void_constructors: cons /= Void
@@ -298,7 +298,7 @@ feature -- Element settings
 
 feature -- Functions used for easy browsing of data from ConsumerWrapper.
 
-	associated_reference_type: CONSUMED_REFERENCED_TYPE is
+	associated_reference_type: CONSUMED_REFERENCED_TYPE
 			-- Reference type of `Current'.
 		do
 			if internal_associated_reference_type = Void then
@@ -308,7 +308,7 @@ feature -- Functions used for easy browsing of data from ConsumerWrapper.
 			Result := internal_associated_reference_type
 		end
 
-	consumed_constructors: ARRAYED_LIST [CONSUMED_ENTITY] is
+	consumed_constructors: ARRAYED_LIST [CONSUMED_ENTITY]
 			-- All constructors implemented by type/
 		require
 			constructors_not_void: constructors /= Void
@@ -319,7 +319,7 @@ feature -- Functions used for easy browsing of data from ConsumerWrapper.
 			end
 		end
 
-	entities: ARRAYED_LIST [CONSUMED_ENTITY] is
+	entities: ARRAYED_LIST [CONSUMED_ENTITY]
 			-- All fields, procedures, functions, properties and events immediately
 			-- implemented by type.
 		do
@@ -329,13 +329,13 @@ feature -- Functions used for easy browsing of data from ConsumerWrapper.
 			result_not_void: Result /= Void
 		end
 
-	inherited_entities: ARRAYED_LIST [CONSUMED_ENTITY] is
+	inherited_entities: ARRAYED_LIST [CONSUMED_ENTITY]
 			-- All fields, procedures, functions, properties and events inherited by type.
 		do
 			Result := consumed_type_entities (False)
 		end
 
-	flat_entities: ARRAYED_LIST [CONSUMED_ENTITY] is
+	flat_entities: ARRAYED_LIST [CONSUMED_ENTITY]
 			-- All fields, procedures, functions, properties and events
 			-- implemented/inherited by type.
 		do
@@ -343,7 +343,7 @@ feature -- Functions used for easy browsing of data from ConsumerWrapper.
 			Result.append (consumed_type_entities (False))
 		end
 
-	ancestors: ARRAYED_LIST [CONSUMED_REFERENCED_TYPE] is
+	ancestors: ARRAYED_LIST [CONSUMED_REFERENCED_TYPE]
 			-- All interfaces and base classes implemented/inherited by `Current'.
 		do
 			create Result.make (0)
@@ -362,7 +362,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Internal
 
-	consumed_type_entities (a_immediate: BOOLEAN): ARRAYED_LIST [CONSUMED_ENTITY] is
+	consumed_type_entities (a_immediate: BOOLEAN): ARRAYED_LIST [CONSUMED_ENTITY]
 			-- All fields, procedures, functions, properties and events implemented by type.
 			-- If `a_immediate' then return immediate features, else return inherited.
 		local
@@ -406,7 +406,7 @@ feature {NONE} -- Internal
 
 	consumed_a_type_entities (
 			a_features: ARRAYED_LIST [CONSUMED_ENTITY]; a_immediate: BOOLEAN; a_result: like consumed_type_entities)
-		is
+		
 			-- All fields, procedures, functions, properties and events implemented by type.
 			-- If `a_immediate' then return immediate features, else return inherited.
 		require
@@ -436,11 +436,11 @@ feature {NONE} -- Internal
 	internal_flags: INTEGER
 			-- Store status of current type.
 
-	is_deferred_mask: INTEGER is 1
-	is_enum_mask: INTEGER is 2
-	is_expanded_mask: INTEGER is 4
-	is_frozen_mask: INTEGER is 8
-	is_interface_mask: INTEGER is 16
+	is_deferred_mask: INTEGER = 1
+	is_enum_mask: INTEGER = 2
+	is_expanded_mask: INTEGER = 4
+	is_frozen_mask: INTEGER = 8
+	is_interface_mask: INTEGER = 16
 			-- Different mask.
 
 invariant
@@ -449,7 +449,7 @@ invariant
 	non_void_dotnet_name: dotnet_name /= Void
 	valid_dotnet_name: not dotnet_name.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

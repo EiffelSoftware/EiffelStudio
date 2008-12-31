@@ -1,4 +1,4 @@
-indexing
+note
 	description: "AST unary expression Visitor."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,32 +11,32 @@ inherit
 	
 feature {AST_YACC} -- Implementation
 
-	process_un_free_as (l_as: UN_FREE_AS) is
+	process_un_free_as (l_as: UN_FREE_AS)
 			-- Process `l_as'.
 		do
 		end
 
-	process_un_minus_as (l_as: UN_MINUS_AS) is
+	process_un_minus_as (l_as: UN_MINUS_AS)
 			-- Process `l_as'.
 		do
 		end
 
-	process_un_not_as (l_as: UN_NOT_AS) is
+	process_un_not_as (l_as: UN_NOT_AS)
 			-- Process `l_as'.
 		do
 		end
 
-	process_un_old_as (l_as: UN_OLD_AS) is
+	process_un_old_as (l_as: UN_OLD_AS)
 			-- Process `l_as'.
 		do
 		end
 
-	process_un_plus_as (l_as: UN_PLUS_AS) is
+	process_un_plus_as (l_as: UN_PLUS_AS)
 			-- Process `l_as'.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

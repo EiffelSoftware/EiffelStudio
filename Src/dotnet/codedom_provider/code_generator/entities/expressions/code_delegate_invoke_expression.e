@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Source code generator for delegate invoke expression"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_target: CODE_EXPRESSION; a_arguments: LIST [CODE_EXPRESSION]) is
+	make (a_target: CODE_EXPRESSION; a_arguments: LIST [CODE_EXPRESSION])
 			-- Initialize instance.
 		do
 			arguments := a_arguments
@@ -34,7 +34,7 @@ feature -- Access
 	target: CODE_EXPRESSION
 			-- Target object
 			
-	code: STRING is
+	code: STRING
 			-- | Result := `target_object' (`arguments', ...)
 			-- Eiffel code of delegate invoke expression
 			-- NOT SUPPORTED YET !!!
@@ -62,7 +62,7 @@ feature -- Access
 		
 feature -- Status Report
 	
-	type: CODE_TYPE_REFERENCE is
+	type: CODE_TYPE_REFERENCE
 			-- Type
 		do
 			Result := target.type
@@ -72,7 +72,7 @@ invariant
 	non_void_arguments: arguments /= Void
 	non_void_target: target /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

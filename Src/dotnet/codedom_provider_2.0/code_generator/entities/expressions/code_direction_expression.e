@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Source code generator for direction expression"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_expression: like expression; a_is_byref: like is_byref) is
+	make (a_expression: like expression; a_is_byref: like is_byref)
 			-- Initialize instance.
 		require
 			non_void_expression: a_expression /= Void
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	code: STRING is
+	code: STRING
 			-- | Result := "$expression" if is_byref
 			-- | Result := "expression" otherwise
 			-- Eiffel code of direction expression
@@ -52,7 +52,7 @@ feature -- Access
 			end
 		end
 
-	type: CODE_TYPE_REFERENCE is
+	type: CODE_TYPE_REFERENCE
 			-- Type of expression
 		do
 			if is_byref then
@@ -72,7 +72,7 @@ feature -- Access
 invariant
 	non_void_expression: expression /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

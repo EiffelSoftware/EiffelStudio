@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Temporary files location"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	temp_files: SYSTEM_DLL_TEMP_FILE_COLLECTION is
+	temp_files: SYSTEM_DLL_TEMP_FILE_COLLECTION
 			-- Temporary files collection
 		do
 			Result := internal_temp_files.item
@@ -20,7 +20,7 @@ feature -- Access
 
 feature -- Element Settings
 
-	set_temp_files (a_temp_files: like temp_files) is
+	set_temp_files (a_temp_files: like temp_files)
 			-- Set `temp_files' with `a_temp_files'.
 		require
 			non_void_temp_files: a_temp_files /= Void
@@ -28,7 +28,7 @@ feature -- Element Settings
 			internal_temp_files.replace (a_temp_files)
 		end
 
-	reset_temp_files is
+	reset_temp_files
 			-- Reset temporary files collection.
 		do
 			internal_temp_files.replace (create {SYSTEM_DLL_TEMP_FILE_COLLECTION}.make)
@@ -38,13 +38,13 @@ feature -- Element Settings
 		
 feature {NONE} -- Implementation
 
-	internal_temp_files: CELL [SYSTEM_DLL_TEMP_FILE_COLLECTION] is
+	internal_temp_files: CELL [SYSTEM_DLL_TEMP_FILE_COLLECTION]
 			-- Internal once
 		once
 			create Result.put (create {SYSTEM_DLL_TEMP_FILE_COLLECTION}.make)
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

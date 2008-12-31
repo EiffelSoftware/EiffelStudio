@@ -1,4 +1,4 @@
-indexing
+note
 	description:	"Skeleton for inheritance clause parser"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize parser.
 		do
 			make_parser
@@ -42,7 +42,7 @@ feature -- Access
 
 feature -- Element Settings
 
-	set_error_handler (a_handler: like error_handler) is
+	set_error_handler (a_handler: like error_handler)
 			-- Set `error_handler' with `a_handler'.
 		require
 			non_void_handler: a_handler /= Void
@@ -54,7 +54,7 @@ feature -- Element Settings
 		
 feature -- Basic Operations
 
-	parse (a_clause: STRING) is
+	parse (a_clause: STRING)
 			-- Parse inheritance clause text from `a_clause'.
 			-- Make result available in `root_node'.
 		local
@@ -75,7 +75,7 @@ feature -- Basic Operations
 			retry
 		end
 
-	report_error (a_message: STRING) is
+	report_error (a_message: STRING)
 				-- Log error if settings requires logging
 		do
 			if error_handler /= Void then
@@ -85,16 +85,16 @@ feature -- Basic Operations
 
 feature -- Private Access
 
-	Initial_parent_list_size: INTEGER is 4
+	Initial_parent_list_size: INTEGER = 4
 				-- Size of `parents' list when initially created
 
-	Initial_clause_list_size: INTEGER is 4
+	Initial_clause_list_size: INTEGER = 4
 				-- Size of inheritance clauses lists when initially created
 
-	Initial_feature_list_size: INTEGER is 4;
+	Initial_feature_list_size: INTEGER = 4;
 				-- Size of export clause feature list when initially created
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

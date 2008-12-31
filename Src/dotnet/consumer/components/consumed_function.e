@@ -1,4 +1,4 @@
-indexing
+note
 	description: ".NET function as seen in Eiffel"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 	make (en, dn, den: STRING; args: like arguments; ret: like return_type;
 			froz, static, defer, inf, pref, pub, ns, virt, poe: BOOLEAN;
 			a_type: CONSUMED_REFERENCED_TYPE)
-		is
+		
 			-- Initialize consumed method.
 		require
 			non_void_eiffel_name: en /= Void
@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	return_type: CONSUMED_REFERENCED_TYPE is
+	return_type: CONSUMED_REFERENCED_TYPE
 			-- Function return type
 		do
 			Result := r
@@ -73,19 +73,19 @@ feature -- Access
 
 feature -- Status report
 
-	is_infix: BOOLEAN is
+	is_infix: BOOLEAN
 			-- Is function an infix feature?
 		do
 			Result := f & {FEATURE_ATTRIBUTE}.Is_infix = {FEATURE_ATTRIBUTE}.Is_infix
 		end
 
-	is_prefix: BOOLEAN is
+	is_prefix: BOOLEAN
 			-- Is function a prefix feature?
 		do
 			Result := f & {FEATURE_ATTRIBUTE}.Is_prefix = {FEATURE_ATTRIBUTE}.Is_prefix
 		end
 
-	has_return_value: BOOLEAN is True
+	has_return_value: BOOLEAN = True
 			-- A function always return a value.
 
 feature {NONE} -- Access
@@ -96,7 +96,7 @@ feature {NONE} -- Access
 invariant
 	non_void_return_type: return_type /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

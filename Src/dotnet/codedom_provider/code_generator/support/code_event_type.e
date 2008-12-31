@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent the different kind of event methods."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -8,16 +8,16 @@ class
 
 feature -- Access
 
-	Adder: INTEGER is 1
+	Adder: INTEGER = 1
 			-- Method to add an event handler
 	
-	Remover: INTEGER is 2
+	Remover: INTEGER = 2
 			-- Method to remove an event handler
 	
-	Raiser: INTEGER is 3
+	Raiser: INTEGER = 3
 			-- Method to raise an event
 
-	method_prefix (a_kind: INTEGER): STRING is
+	method_prefix (a_kind: INTEGER): STRING
 			-- Prefix for event methods of kind `a_kind'
 		require
 			valid_event_method_kind (a_kind)
@@ -27,7 +27,7 @@ feature -- Access
 		
 feature {NONE} -- Implementation
 
-	Event_methods_prefixes: ARRAY [STRING] is
+	Event_methods_prefixes: ARRAY [STRING]
 			-- Event methods prefixes
 		once
 			Result := <<"add_", "remove_", "raise_">>
@@ -35,13 +35,13 @@ feature {NONE} -- Implementation
 		
 feature -- Status Repport
 
-	valid_event_method_kind (a_kind: INTEGER): BOOLEAN is
+	valid_event_method_kind (a_kind: INTEGER): BOOLEAN
 			-- Is `a_kind' a valid event method kind?
 		do
 			Result := (a_kind >= Adder) and (a_kind <= Raiser)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

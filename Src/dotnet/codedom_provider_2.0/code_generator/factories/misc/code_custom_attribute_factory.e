@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Code generator for custom attributes"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 		
-	initialize_custom_attribute_declaration (a_source: SYSTEM_DLL_CODE_ATTRIBUTE_DECLARATION) is
+	initialize_custom_attribute_declaration (a_source: SYSTEM_DLL_CODE_ATTRIBUTE_DECLARATION)
 			-- | Create an instance of `CODE_ATTRIBUTE_DECLARATION'
 			-- | Initialize this instance with `a_source'
 			-- | Set `last_custom_attribute_declaration'
@@ -43,7 +43,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			set_last_custom_attribute_declaration (create {CODE_ATTRIBUTE_DECLARATION}.make (l_type, l_code_arguments))
 		end
 
-	initialize_custom_attribute_argument (a_source: SYSTEM_DLL_CODE_ATTRIBUTE_ARGUMENT) is
+	initialize_custom_attribute_argument (a_source: SYSTEM_DLL_CODE_ATTRIBUTE_ARGUMENT)
 			-- | Create an instance of `CODE_ATTRIBUTE_ARGUMENT'
 			-- | Initialize this instance with `a_source'
 			-- | Set `last_custom_attribute_argument'
@@ -58,7 +58,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			set_last_custom_attribute_argument (l_argument)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

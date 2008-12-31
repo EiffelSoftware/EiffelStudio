@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Keep session parameter."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,13 +11,13 @@ class
 
 feature -- Access
 
-	current_assembly: CONSUMED_ASSEMBLY is
+	current_assembly: CONSUMED_ASSEMBLY
 			-- Current assembly.
 		do
 			Result := internal_current_assembly.item
 		end
 
-	current_type: CONSUMED_TYPE is
+	current_type: CONSUMED_TYPE
 			-- Current type.
 		do
 			Result := internal_current_type.item
@@ -26,7 +26,7 @@ feature -- Access
 
 feature -- Status Setting
 
-	set_current_assembly (an_assembly: CONSUMED_ASSEMBLY) is
+	set_current_assembly (an_assembly: CONSUMED_ASSEMBLY)
 			-- Put `an_assembly' in `internal_current_assembly'.
 			-- Set `current_type' to void.
 		require
@@ -39,7 +39,7 @@ feature -- Status Setting
 			current_type_void: current_type = Void
 		end
 
-	set_current_type (an_type: CONSUMED_TYPE) is
+	set_current_type (an_type: CONSUMED_TYPE)
 			-- Put `an_type' in `internal_current_type'.
 		require
 			non_void_an_type: an_type /= Void
@@ -52,7 +52,7 @@ feature -- Status Setting
 
 feature {NONE} -- Implementation
 	
-	internal_current_assembly: CELL [CONSUMED_ASSEMBLY] is
+	internal_current_assembly: CELL [CONSUMED_ASSEMBLY]
 			-- Internal representation of `current_assembly'.
 		once
 			Create Result.put (Void)
@@ -60,7 +60,7 @@ feature {NONE} -- Implementation
 			non_void_result: Result /= Void
 		end
 		
-	internal_current_type: CELL [CONSUMED_TYPE] is
+	internal_current_type: CELL [CONSUMED_TYPE]
 			-- Internal representation of `current_type'.
 		once
 			Create Result.put (Void)
@@ -69,7 +69,7 @@ feature {NONE} -- Implementation
 		end
 		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

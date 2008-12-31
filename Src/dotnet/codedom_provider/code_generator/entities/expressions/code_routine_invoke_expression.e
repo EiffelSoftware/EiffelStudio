@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Source code generator for method invocation expressions"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_routine: like routine; a_arguments: like arguments) is
+	make (a_routine: like routine; a_arguments: like arguments)
 			-- Initialize `routine' and `arguments'.
 		require
 			non_void_routine: a_routine /= Void
@@ -36,7 +36,7 @@ feature -- Access
 	arguments: LIST [CODE_EXPRESSION] 
 			-- Routine arguments
 			
-	code: STRING is
+	code: STRING
 			-- | Result := "`routine'[ (`arguments',...)]"
 			-- Eiffel code of routine invoke expression
 		local
@@ -74,7 +74,7 @@ feature -- Access
 		
 feature -- Status Report
 
-	type: CODE_TYPE_REFERENCE is
+	type: CODE_TYPE_REFERENCE
 			-- Type
 		do
 			Result := routine.type
@@ -83,7 +83,7 @@ feature -- Status Report
 invariant
 	non_void_routine: routine /= Void
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

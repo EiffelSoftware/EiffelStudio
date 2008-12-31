@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Eiffel attribute"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature -- Access
 
-	code: STRING is
+	code: STRING
 			-- | call 'generated_attribute' then 'generated_comments'
 			-- | Result := "feature [{exports,...}] -- feature_type
 			-- |				[frozen] `attribute_name': `type'
@@ -45,7 +45,7 @@ feature -- Access
 			Result.append_character ('%N')
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

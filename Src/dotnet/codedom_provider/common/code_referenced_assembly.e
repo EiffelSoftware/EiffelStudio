@@ -1,4 +1,4 @@
-indexing
+note
 	description:	"Codedom referenced assembly."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 		
 feature {NONE} -- Initialization
 
-	make (an_assembly: ASSEMBLY) is
+	make (an_assembly: ASSEMBLY)
 			-- Initialization.
 			-- Set `assembly' with `an_assembly'.
 		require
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			assembly_set: assembly = an_assembly
 		end
 
-	make_with_prefix (an_assembly: ASSEMBLY; a_prefix: STRING) is
+	make_with_prefix (an_assembly: ASSEMBLY; a_prefix: STRING)
 			-- Initialization.
 			-- Set `assembly' with `an_assembly'.
 			-- Set `assembly_prefix' with `a_prefix'.
@@ -66,7 +66,7 @@ feature -- Access
 	assembly: ASSEMBLY
 			-- actual assembly.
 
-	cluster_name: STRING is
+	cluster_name: STRING
 			-- Cluster name for assembly
 		do
 			Result := assembly.to_string
@@ -78,7 +78,7 @@ invariant
 	non_void_assembly_prefix: assembly_prefix /= Void
 	non_void_assembly: assembly /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

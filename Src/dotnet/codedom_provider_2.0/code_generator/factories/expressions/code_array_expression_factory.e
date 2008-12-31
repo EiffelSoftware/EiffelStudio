@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Code generator for array expressions"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 
-	generate_array_create_expression (a_source: SYSTEM_DLL_CODE_ARRAY_CREATE_EXPRESSION) is
+	generate_array_create_expression (a_source: SYSTEM_DLL_CODE_ARRAY_CREATE_EXPRESSION)
 			-- | Create instance of `CODE_ARRAY_CREATE_EXPRESSION'.
 			-- | And initialize this instance with `a_source' -> Call `initialise_array_create_expression'
 			-- | Set `last_expression'.
@@ -52,7 +52,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			non_void_last_expression: last_expression /= Void
 		end		
 
-	generate_array_indexer_expression (a_source: SYSTEM_DLL_CODE_ARRAY_INDEXER_EXPRESSION) is
+	generate_array_indexer_expression (a_source: SYSTEM_DLL_CODE_ARRAY_INDEXER_EXPRESSION)
 			-- | Create instance of `CODE_ARRAY_INDEXER_EXPRESSION'.
 			-- | And initialize this instance with `a_source' -> Call `initialise_array_indexer_expression'
 			-- | Set `last_expression'.
@@ -90,7 +90,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

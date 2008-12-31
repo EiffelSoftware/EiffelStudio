@@ -1,4 +1,4 @@
-indexing
+note
 	description: "COM interface for supported metadata consumer"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ deferred class
 
 feature -- Initialization
 
-	initialize is
+	initialize
 			-- initialize the object using default path to EAC
 		require
 			not_already_initialized: not is_initialized
@@ -22,7 +22,7 @@ feature -- Initialization
 			current_initialized: is_initialized
 		end
 
-	initialize_with_path (a_path: SYSTEM_STRING) is
+	initialize_with_path (a_path: SYSTEM_STRING)
 			-- initialize object with path to specific EAC and initializes it if not already done.
 		require
 			not_already_initialized: not is_initialized
@@ -36,31 +36,31 @@ feature -- Initialization
 
 feature -- Uninitialization
 
-	unload is
+	unload
 			-- unloads initialized app domain and cache releated objects to preserve resources
 		deferred
 		end
 
 feature -- Access
 
-	is_successful: BOOLEAN is
+	is_successful: BOOLEAN
 			-- Was the consuming successful?
 		deferred
 		end
 
-	is_initialized: BOOLEAN is
+	is_initialized: BOOLEAN
 			-- has COM object been initialized?
 		deferred
 		end
 
-	last_error_message: SYSTEM_STRING is
+	last_error_message: SYSTEM_STRING
 			-- Last error message
 		deferred
 		end
 
 feature -- Basic Operations
 
-	consume_assembly (a_name, a_version, a_culture, a_key: SYSTEM_STRING; a_info_only: BOOLEAN) is
+	consume_assembly (a_name, a_version, a_culture, a_key: SYSTEM_STRING; a_info_only: BOOLEAN)
 			-- consume an assembly using it's display name parts.
 			-- "`a_name', Version=`a_version', Culture=`a_culture', PublicKeyToken=`a_key'"
 		require
@@ -70,7 +70,7 @@ feature -- Basic Operations
 		deferred
 		end
 
-	consume_assembly_from_path (a_path: SYSTEM_STRING; a_info_only: BOOLEAN; a_references: SYSTEM_STRING) is
+	consume_assembly_from_path (a_path: SYSTEM_STRING; a_info_only: BOOLEAN; a_references: SYSTEM_STRING)
 			-- Consume assembly located `a_path'
 		require
 			current_initialized: is_initialized
@@ -81,14 +81,14 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	eac_path: SYSTEM_STRING is
+	eac_path: SYSTEM_STRING
 			-- Location of EAC `Eiffel Assembly Cache'
-		indexing
+		note
 			metadata: create {COM_VISIBLE_ATTRIBUTE}.make (False) end
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

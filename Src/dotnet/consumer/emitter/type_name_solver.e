@@ -1,4 +1,4 @@
-indexing
+note
 	description: ".NET type name to be mapped to an Eiffel class name"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (t: SYSTEM_TYPE) is
+	make (t: SYSTEM_TYPE)
 			-- Initialize from .NET type `t'.
 		require
 			non_void_type: t /= Void
@@ -34,7 +34,7 @@ feature -- Access
 	weight: INTEGER
 			-- Weight used to compare instances
 
-	dot_array: NATIVE_ARRAY [CHARACTER] is
+	dot_array: NATIVE_ARRAY [CHARACTER]
 			-- <<.>>
 		once
 			create Result.make (1)
@@ -49,7 +49,7 @@ feature -- Access
 
 feature -- Element Settings
 
-	set_eiffel_name (name: like eiffel_name) is
+	set_eiffel_name (name: like eiffel_name)
 			-- Set `eiffel_name' with `name'.
 		require
 			non_void_name: name /= Void
@@ -62,7 +62,7 @@ feature -- Element Settings
 
 feature -- Comparison
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is current object less than `other'?
 		do
 			Result := weight < other.weight
@@ -73,7 +73,7 @@ feature {TYPE_NAME_SOLVER, ASSEMBLY_CONSUMER} -- Implementation
 	internal_type: SYSTEM_TYPE;
 			-- Type whose name is consumed
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

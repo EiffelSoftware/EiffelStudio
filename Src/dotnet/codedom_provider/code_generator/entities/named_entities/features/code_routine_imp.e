@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Eiffel representation of a routine for non-VS CodeDOM provider"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Specific implementation
 
-	constructor_call: STRING is
+	constructor_call: STRING
 			-- Add constructor
 		do
 			create Result.make_empty
@@ -30,14 +30,14 @@ feature {NONE} -- Specific implementation
 
 feature {NONE} -- Implementation
 
-	Ctor_eiffel_name: STRING is
+	Ctor_eiffel_name: STRING
 				-- Eiffel name for `.ctor'
 			once
 				Result := Name_formatter.valid_variable_name (".ctor")
 				Result.append_character ('%N')
 			end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

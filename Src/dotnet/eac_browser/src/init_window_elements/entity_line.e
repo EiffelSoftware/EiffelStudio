@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Entity corresponding to an element of a displayed line."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Initialize `image' and `font' with default value.
 		do
 			create image.make_empty
@@ -27,7 +27,7 @@ feature -- Initialization
 			non_void_font: font /= Void
 		end
 		
-	make_with_image_and_color (an_image: STRING; a_foreground_color: EV_COLOR) is
+	make_with_image_and_color (an_image: STRING; a_foreground_color: EV_COLOR)
 			-- Initialiaze `image' and `foreground_color'.
 		require
 			non_void_an_image: an_image /= Void
@@ -42,7 +42,7 @@ feature -- Initialization
 			non_void_font: font /= Void
 		end
 
-	make_with_image_and_color_and_font (an_image: STRING; a_foreground_color: EV_COLOR; a_font: EV_FONT) is
+	make_with_image_and_color_and_font (an_image: STRING; a_foreground_color: EV_COLOR; a_font: EV_FONT)
 			-- Initialiaze `image' and `foreground_color' and `font'.
 		require
 			non_void_an_image: an_image /= Void
@@ -74,7 +74,7 @@ feature -- Access
 			
 feature -- Status Setting
 
-	set_data (a_data: like data) is
+	set_data (a_data: like data)
 			-- Set `data' with `a_data'.
 		do
 			data := a_data
@@ -87,7 +87,7 @@ invariant
 	non_void_foreground_color: foreground_color /= Void
 	non_void_font: font /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

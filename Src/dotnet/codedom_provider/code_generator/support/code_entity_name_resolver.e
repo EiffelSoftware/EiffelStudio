@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Resolve types, features, local variables and arguments names%
 					%Codedom does not guarentee unicity of entity names but Eiffel requires it."
 	legal: "See notice at end of class."
@@ -13,7 +13,7 @@ class
 inherit
 	CODE_TYPE_CACHE
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

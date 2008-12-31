@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Print in output the eiffel type with all its eiffel features corresponding to the given dotnet type name."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parent_window: MAIN_WINDOW_IMP) is
+	make (a_parent_window: MAIN_WINDOW_IMP)
 			-- Initialiaze attributes with `a_parent_window'.
 		require
 			non_void_a_parent_window: a_parent_window /= Void
@@ -43,7 +43,7 @@ feature -- Access
 		
 feature -- Basic Operations
 
-	print_type (assembly_of_dotnet_type: CONSUMED_ASSEMBLY; a_full_dotnet_type_name: STRING) is
+	print_type (assembly_of_dotnet_type: CONSUMED_ASSEMBLY; a_full_dotnet_type_name: STRING)
 			-- Set `assembly_of_type' with `assembly_of_dotnet_type' 
 			-- Set `dotnet_type_name' with `a_full_dotnet_type_name'
 			-- Display in `output' features corresponding to `a_type_name'.
@@ -55,7 +55,7 @@ feature -- Basic Operations
 			display (assembly_of_dotnet_type, a_full_dotnet_type_name)
 		end
 
-	print_type_imediat_features (assembly_of_dotnet_type: CONSUMED_ASSEMBLY; a_full_dotnet_type_name: STRING) is
+	print_type_imediat_features (assembly_of_dotnet_type: CONSUMED_ASSEMBLY; a_full_dotnet_type_name: STRING)
 			-- Set `assembly_of_type' with `assembly_of_dotnet_type' 
 			-- Set `dotnet_type_name' with `a_full_dotnet_type_name'
 			-- Display in `output' features corresponding to `a_type_name'.
@@ -129,7 +129,7 @@ feature -- Basic Operations
 			right_tree.append (classify_tree_nodes (l_events))
 		end
 
-	print_type_inherited_features (assembly_of_dotnet_type: CONSUMED_ASSEMBLY; a_full_dotnet_type_name: STRING) is
+	print_type_inherited_features (assembly_of_dotnet_type: CONSUMED_ASSEMBLY; a_full_dotnet_type_name: STRING)
 			-- Set `assembly_of_type' with `assembly_of_dotnet_type' 
 			-- Set `dotnet_type_name' with `a_full_dotnet_type_name'
 			-- Display in `output' features corresponding to `a_type_name'.
@@ -182,7 +182,7 @@ feature -- Basic Operations
 			right_tree.append (classify_tree_nodes (l_inherited_features))				
 		end
 
-	print_constructors (assembly_of_dotnet_type: CONSUMED_ASSEMBLY; a_full_dotnet_type_name: STRING) is
+	print_constructors (assembly_of_dotnet_type: CONSUMED_ASSEMBLY; a_full_dotnet_type_name: STRING)
 			-- Set `assembly_of_type' with `assembly_of_dotnet_type' 
 			-- Set `dotnet_type_name' with `a_full_dotnet_type_name'
 			-- Display in `output' features corresponding to `a_type_name'.
@@ -224,7 +224,7 @@ feature -- Basic Operations
 			end
 		end
 
-	print_all_features (assembly_of_dotnet_type: CONSUMED_ASSEMBLY; a_full_dotnet_type_name: STRING) is
+	print_all_features (assembly_of_dotnet_type: CONSUMED_ASSEMBLY; a_full_dotnet_type_name: STRING)
 			-- Set `assembly_of_type' with `assembly_of_dotnet_type' 
 			-- Set `dotnet_type_name' with `a_full_dotnet_type_name'
 			-- Display in `output' features corresponding to `a_type_name'.
@@ -321,7 +321,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	display (an_assembly: CONSUMED_ASSEMBLY; a_full_dotnet_type_name: STRING) is
+	display (an_assembly: CONSUMED_ASSEMBLY; a_full_dotnet_type_name: STRING)
 			-- add feature contained in `a_dotnet_type_name' to `right_tree'.
 			-- add double click action on each type_item to be editable.
 		require
@@ -468,7 +468,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	initialize_tree_item_constructor (a_member: CONSUMED_CONSTRUCTOR; a_full_dotnet_type_name: STRING): EV_COMPARABLE_TREE_ITEM is
+	initialize_tree_item_constructor (a_member: CONSUMED_CONSTRUCTOR; a_full_dotnet_type_name: STRING): EV_COMPARABLE_TREE_ITEM
 			-- init a_tree_item_type.
 		require
 			non_void_a_member: a_member /= Void
@@ -494,7 +494,7 @@ feature {NONE} -- Implementation
 			non_void_result: Result /= Void		
 		end
 
-	initialize_tree_item_feature (a_member: CONSUMED_MEMBER; a_full_dotnet_type_name: STRING): EV_COMPARABLE_TREE_ITEM is
+	initialize_tree_item_feature (a_member: CONSUMED_MEMBER; a_full_dotnet_type_name: STRING): EV_COMPARABLE_TREE_ITEM
 			-- init a_tree_item_type.
 		require
 			non_void_a_member: a_member /= Void
@@ -560,7 +560,7 @@ feature {NONE} -- Implementation
 			non_void_result: Result /= Void		
 		end
 
-	initialize_tree_item_property (a_property: CONSUMED_PROPERTY; a_full_dotnet_type_name: STRING): EV_COMPARABLE_TREE_ITEM is
+	initialize_tree_item_property (a_property: CONSUMED_PROPERTY; a_full_dotnet_type_name: STRING): EV_COMPARABLE_TREE_ITEM
 			-- init a_tree_item_type.
 		require
 			non_void_a_property: a_property /= Void
@@ -611,7 +611,7 @@ feature {NONE} -- Implementation
 			non_void_result: Result /= Void		
 		end
 
-	initialize_tree_item_event (an_event: CONSUMED_EVENT; a_full_dotnet_type_name: STRING): EV_COMPARABLE_TREE_ITEM is
+	initialize_tree_item_event (an_event: CONSUMED_EVENT; a_full_dotnet_type_name: STRING): EV_COMPARABLE_TREE_ITEM
 			-- init a_tree_item_type.
 		require
 			non_void_an_event: an_event /= Void
@@ -671,7 +671,7 @@ feature {NONE} -- Implementation
 			non_void_result: Result /= Void		
 		end
 
-	classify_tree_nodes (nodes: LINKED_LIST [EV_COMPARABLE_TREE_ITEM]): LINKED_LIST [EV_COMPARABLE_TREE_ITEM] is
+	classify_tree_nodes (nodes: LINKED_LIST [EV_COMPARABLE_TREE_ITEM]): LINKED_LIST [EV_COMPARABLE_TREE_ITEM]
 			-- Classify `nodes'.
 		require
 			non_void_nodes: nodes /= Void
@@ -711,7 +711,7 @@ invariant
 	non_void_parent_window: parent_window /= Void
 	non_void_right_tree: right_tree /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

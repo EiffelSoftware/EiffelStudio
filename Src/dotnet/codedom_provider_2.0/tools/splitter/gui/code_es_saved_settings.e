@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Graphical settings for eSplitter"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize `registry_path'.
 		do
 			settings_make (Saved_settings_key)
@@ -34,31 +34,31 @@ feature {NONE} -- Initialization
 		
 feature -- Access
 
-	saved_process_subfolders: BOOLEAN is
+	saved_process_subfolders: BOOLEAN
 			-- Should subfolders be scanned?
 		do
 			Result := saved_boolean (Process_subfolders_key)
 		end
 
-	saved_has_destination: BOOLEAN is
+	saved_has_destination: BOOLEAN
 			-- Should generated source files be created in destination folder?
 		do
 			Result := saved_boolean (Has_destination_key)
 		end
 
-	saved_folders: LIST [STRING] is
+	saved_folders: LIST [STRING]
 			-- List of saved values for folders combo
 		do
 			Result := saved_list (Folders_key)
 		end
 
-	saved_destination_folders: LIST [STRING] is
+	saved_destination_folders: LIST [STRING]
 			-- List of saved values for destination folders combo
 		do
 			Result := saved_list (Destination_folders_key)
 		end
 
-	saved_regexps: LIST [STRING] is
+	saved_regexps: LIST [STRING]
 			-- List of saved values for regular expression combo
 		do
 			Result := saved_list (Regexps_key)
@@ -66,7 +66,7 @@ feature -- Access
 
 feature -- Element Settings
 
-	save_folders (a_folders: LIST [STRING]) is
+	save_folders (a_folders: LIST [STRING])
 			-- Set folders paths.
 		require
 			non_void_folders: a_folders /= Void
@@ -74,7 +74,7 @@ feature -- Element Settings
 			save_list (Folders_key, a_folders)
 		end
 
-	save_destination_folders (a_folders: LIST [STRING]) is
+	save_destination_folders (a_folders: LIST [STRING])
 			-- Set folders paths.
 		require
 			non_void_folders: a_folders /= Void
@@ -82,7 +82,7 @@ feature -- Element Settings
 			save_list (Destination_folders_key, a_folders)
 		end
 
-	save_regexps (a_regexps: LIST [STRING]) is
+	save_regexps (a_regexps: LIST [STRING])
 			-- Set regular expressions.
 		require
 			non_void_regexpss: a_regexps /= Void
@@ -90,13 +90,13 @@ feature -- Element Settings
 			save_list (Regexps_key, a_regexps)
 		end
 
-	save_process_subfolders (a_value: BOOLEAN) is
+	save_process_subfolders (a_value: BOOLEAN)
 			-- Set `process subfolders' checkable button state.
 		do
 			save_boolean (Process_subfolders_key, a_value)
 		end
 
-	save_has_destination (a_value: BOOLEAN) is
+	save_has_destination (a_value: BOOLEAN)
 			-- Set `saved_has_destination' with `a_value'.
 		do
 			save_boolean (Has_destination_key, a_value)
@@ -104,22 +104,22 @@ feature -- Element Settings
 
 feature {NONE} -- Private Access
 
-	Folders_key: STRING is "folders_key"
+	Folders_key: STRING = "folders_key"
 			-- Folders paths key name
 
-	Destination_folders_key: STRING is "destination_folders_key"
+	Destination_folders_key: STRING = "destination_folders_key"
 			-- Folders paths key name
 
-	Regexps_key: STRING is "regexps_key"
+	Regexps_key: STRING = "regexps_key"
 			-- Regular expressions key name
 
-	Process_subfolders_key: STRING is "process_subfolders"
+	Process_subfolders_key: STRING = "process_subfolders"
 			-- Process subfolders key name
 
-	Has_destination_key: STRING is "has_destination_key";
+	Has_destination_key: STRING = "has_destination_key";
 			-- Has destination key
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

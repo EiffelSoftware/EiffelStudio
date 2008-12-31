@@ -1,4 +1,4 @@
-indexing
+note
 	description: ".NET version specific assembly loader"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature {NONE}
 
-	dotnet_load (a_name: SYSTEM_STRING): ASSEMBLY is
+	dotnet_load (a_name: SYSTEM_STRING): ASSEMBLY
 			-- Attempts to load from a full assembly name `a_name'
 		require
 			a_name_attached: a_name /= Void
@@ -34,7 +34,7 @@ feature {NONE}
 			end
 		end
 
-	dotnet_load_from (a_path: SYSTEM_STRING): ASSEMBLY is
+	dotnet_load_from (a_path: SYSTEM_STRING): ASSEMBLY
 			-- Attempts to load from a full path `a_path'
 		require
 			a_path_attached: a_path /= Void
@@ -58,7 +58,7 @@ feature {NONE}
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

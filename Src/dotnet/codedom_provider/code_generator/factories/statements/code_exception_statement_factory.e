@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Code generator for exception statements"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 
-	generate_try_catch_finally_statement (a_source: SYSTEM_DLL_CODE_TRY_CATCH_FINALLY_STATEMENT) is
+	generate_try_catch_finally_statement (a_source: SYSTEM_DLL_CODE_TRY_CATCH_FINALLY_STATEMENT)
 			-- | Create instance of `CODE_TRY_CATCH_FINALLY_STATEMENT'.
 			-- | And iniatilize this instance with `a_source'
 			-- | Set `last_statement'.
@@ -54,7 +54,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 
 feature {NONE} -- Implementation
 
-	implementation_feature_name: STRING is
+	implementation_feature_name: STRING
 			-- Implementation feature name
 		local
 			l_features: HASH_TABLE [CODE_FEATURE, STRING]
@@ -86,7 +86,7 @@ feature {NONE} -- Implementation
 			non_void_feature_name: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

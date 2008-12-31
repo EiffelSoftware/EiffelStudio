@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Show HTML Help 1.0 help content"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Basic Operations
 
-	show (a_help_context: CODE_HELP_CONTEXT) is
+	show (a_help_context: CODE_HELP_CONTEXT)
 			-- Show help with context `a_help_context'.
 		do
 			if not a_help_context.is_empty then
@@ -30,13 +30,13 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	parent: WINFORMS_CONTROL is
+	parent: WINFORMS_CONTROL
 			-- Dummy windows form control used to parent the Help dialog
 		once
 			create Result.make_from_text ("")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

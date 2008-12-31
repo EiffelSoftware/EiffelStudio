@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Generate XML from given .NET assembly.
 					The XML can be used to consume the types
@@ -41,7 +41,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_writer: CACHE_WRITER) is
+	make (a_writer: CACHE_WRITER)
 			-- create new assembly consumer
 		require
 			non_void_writer: a_writer /= Void
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operations
 
-	consume (ass: ASSEMBLY; a_loader: ASSEMBLY_LOADER; a_info_only: BOOLEAN) is
+	consume (ass: ASSEMBLY; a_loader: ASSEMBLY_LOADER; a_info_only: BOOLEAN)
 			-- Consumes assembly `ass' into EAC.
 		require
 			non_void_assembly: ass /= Void
@@ -84,7 +84,7 @@ feature -- Basic Operations
 
 feature -- Access
 
-	file_name (i: INTEGER): STRING is
+	file_name (i: INTEGER): STRING
 			-- File name where `type' will be serialized.
 		require
 			i_is_positive: i > 0
@@ -102,7 +102,7 @@ feature -- Access
 
 feature -- Element Settings
 
-	set_destination_path (path: STRING) is
+	set_destination_path (path: STRING)
 			-- Set `destination_path' with `path'.
 		require
 			non_void_path: path /= Void
@@ -115,7 +115,7 @@ feature -- Element Settings
 
 feature {NONE} -- Implementation
 
-	fetch_module_types (a_mod: MODULE): NATIVE_ARRAY [SYSTEM_TYPE] is
+	fetch_module_types (a_mod: MODULE): NATIVE_ARRAY [SYSTEM_TYPE]
 			-- Retrieves a module's types, respecting that a security exception
 			-- may prevent retrieval.
 		local
@@ -136,7 +136,7 @@ feature {NONE} -- Implementation
 	last_index: INTEGER
 			-- Last index where has been added a referened assembly.
 
-	build_referenced_assemblies (ass: ASSEMBLY; a_loader: ASSEMBLY_LOADER) is
+	build_referenced_assemblies (ass: ASSEMBLY; a_loader: ASSEMBLY_LOADER)
 			-- build referenced assemblies.
 		require
 			non_void_assembly: ass /= Void
@@ -174,7 +174,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	prepare_consumed_types (ass: ASSEMBLY; a_info_only: BOOLEAN) is
+	prepare_consumed_types (ass: ASSEMBLY; a_info_only: BOOLEAN)
 			-- Build `consumed_types'.
 		require
 			non_void_assembly: ass /= Void
@@ -302,7 +302,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	serialize_consumed_types (a_info_only: BOOLEAN) is
+	serialize_consumed_types (a_info_only: BOOLEAN)
 			-- Build `consumed_types'.
 		local
 			type_consumer: TYPE_CONSUMER
@@ -394,7 +394,7 @@ feature {NONE} -- Implementation
 			serializer.serialize (mapping, destination_path + Assembly_mapping_file_name, False)
 		end
 
-	create_consumed_assembly_folders is
+	create_consumed_assembly_folders
 			-- creates consumed assembly folders
 		require
 			non_void_destination_path: destination_path /= Void
@@ -414,7 +414,7 @@ feature {NONE} -- Implementation
 	assembly_ids: LINKED_LIST [CONSUMED_ASSEMBLY]
 			-- Assembly ids
 
-	is_base_type (a_type_name: STRING): BOOLEAN is
+	is_base_type (a_type_name: STRING): BOOLEAN
 			-- is `a_type_name' a base type?
 		require
 			non_void_a_type_name: a_type_name /= Void
@@ -425,19 +425,19 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	empty_tuple: TUPLE is
+	empty_tuple: TUPLE
 			-- Empty tuple to avoid too many TUPLE creation which can be slow.
 		once
 			create Result
 		end
 
-	string_tuple: TUPLE [STRING] is
+	string_tuple: TUPLE [STRING]
 			-- Tuple that contain only a string object.
 		once
 			create Result
 		end
 
-	base_types: ARRAY [STRING] is
+	base_types: ARRAY [STRING]
 			-- base types.
 		once
 			create Result.make (1, 15)
@@ -459,7 +459,7 @@ feature {NONE} -- Constants
 			Result.compare_objects
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

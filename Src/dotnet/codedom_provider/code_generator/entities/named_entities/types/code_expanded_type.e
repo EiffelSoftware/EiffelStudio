@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel expanded type"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Code Generation
 
-	class_declaration: STRING is 
+	class_declaration: STRING 
 			-- Class declaration (including class name and qualifiers like deferred, expanded or frozen)
 		do
 			create Result.make (120)
@@ -28,7 +28,7 @@ feature {NONE} -- Code Generation
 			Result.append_character ('%N')
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: ".NET nested type as needed by the Eiffel compiler"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 
 	make (dn, en: STRING; is_inter, is_abstract, is_sealed, is_value_type, is_enumerator: BOOLEAN;
 			par: like parent; inter: like interfaces; a_type: like enclosing_type)
-		is
+		
 			-- Initialize instance.
 		require
 			non_void_dotnet_name: dn /= Void
@@ -54,7 +54,7 @@ feature -- Access
 invariant
 	enclosing_type_not_void: enclosing_type /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

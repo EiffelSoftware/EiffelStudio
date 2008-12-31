@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Parents of an Eiffel class with corresponding inheritance clauses"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 	
 feature -- Initialization
 
-	make (a_type: like type) is
+	make (a_type: like type)
 			-- Set `type' with `a_type'
 		require
 			non_void_type: a_type /= Void
@@ -49,7 +49,7 @@ feature	-- Access
 	snippet_parent: CODE_SNIPPET_PARENT
 			-- Corresponding snippet parent
 
-	code: STRING is
+	code: STRING
 			-- | Result := "`name' [`inheritace_clauses']"
 		local
 			l_has_snippet, l_has_clause: BOOLEAN
@@ -99,7 +99,7 @@ feature	-- Access
 		
 feature -- Status Setting Inheritance Clauses
 
-	add_undefine_clause (a_clause: CODE_UNDEFINE_CLAUSE) is
+	add_undefine_clause (a_clause: CODE_UNDEFINE_CLAUSE)
 			-- Add `a_clause' to `undefine_clauses' for parent `a_parent'.
 		require
 			non_void_inheritance_clause: a_clause /= Void
@@ -109,7 +109,7 @@ feature -- Status Setting Inheritance Clauses
 			undefine_clause_added: undefine_clauses.has (a_clause)
 		end
 
-	add_redefine_clause (a_clause: CODE_REDEFINE_CLAUSE) is
+	add_redefine_clause (a_clause: CODE_REDEFINE_CLAUSE)
 			-- Add `a_clause' to `redefine_clauses' for parent `a_parent'.
 		require
 			non_void_inheritance_clause: a_clause /= Void
@@ -119,7 +119,7 @@ feature -- Status Setting Inheritance Clauses
 			redefine_clause_added: redefine_clauses.has (a_clause)
 		end
 
-	add_rename_clause (a_clause: CODE_RENAME_CLAUSE) is
+	add_rename_clause (a_clause: CODE_RENAME_CLAUSE)
 			-- Add `a_clause' to `rename_clauses' for parent `a_parent'.
 		require
 			non_void_inheritance_clause: a_clause /= Void
@@ -129,7 +129,7 @@ feature -- Status Setting Inheritance Clauses
 			rename_clause_added: rename_clauses.has (a_clause)
 		end
 
-	set_snippet_parent (a_parent: CODE_SNIPPET_PARENT) is
+	set_snippet_parent (a_parent: CODE_SNIPPET_PARENT)
 			-- Set `snippet_parent' with `a_parent'.
 		require
 			non_void_parent: a_parent /= Void
@@ -142,7 +142,7 @@ feature -- Status Setting Inheritance Clauses
 		
 feature {NONE} -- Implementation
 	
-	clauses_code (a_list: LIST [CODE_INHERITANCE_CLAUSE]; a_generate_keyword: BOOLEAN): STRING is
+	clauses_code (a_list: LIST [CODE_INHERITANCE_CLAUSE]; a_generate_keyword: BOOLEAN): STRING
 			-- Code for `a_list'
 			-- Includes inheritance clause keyword iff `a_generate_keyword'
 		require
@@ -182,7 +182,7 @@ invariant
 	non_void_redefine_clauses: redefine_clauses /= Void
 	non_void_rename_clauses: rename_clauses /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

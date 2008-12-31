@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Source code generator for attribute reference"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_attribute: like attribute; a_target: like target) is
+	make (a_attribute: like attribute; a_target: like target)
 			-- Initialize instance.
 		require
 			non_void_attribute: a_attribute /= Void
@@ -50,7 +50,7 @@ feature -- Access
 	is_set_reference: BOOLEAN
 			-- get or set reference?
 	
-	is_in_current: BOOLEAN is
+	is_in_current: BOOLEAN
 			-- Is field in type currently generated?
 		local
 			l_this_expression: CODE_THIS_REFERENCE_EXPRESSION
@@ -64,7 +64,7 @@ feature -- Access
 			end
 		end
 
-	code: STRING is
+	code: STRING
 			-- | Result := "feature {`target'}.`attribut_name'"
 			-- | OR		:= "`attribut_name'" if `target_object.name' is_equal "Current" or "current_namespace.current_class"
 			-- | OR     := `set_attribute_name' if `is_set_reference' and not `target_object.name' is_equal "Current" or "current_namespace.current_class"
@@ -103,7 +103,7 @@ feature -- Access
 
 feature -- Status Report
 
-	type: CODE_TYPE_REFERENCE is
+	type: CODE_TYPE_REFERENCE
 			-- Type
 		do
 			if member /= Void then
@@ -115,7 +115,7 @@ feature -- Status Report
 
 feature {CODE_STATEMENT_FACTORY} -- Element Settings
 
-	set_is_set_reference (a_is_set_reference: like is_set_reference) is
+	set_is_set_reference (a_is_set_reference: like is_set_reference)
 			-- Set `is_set_reference' with `a_is_set_reference'.
 		do
 			is_set_reference := a_is_set_reference
@@ -125,7 +125,7 @@ feature {CODE_STATEMENT_FACTORY} -- Element Settings
 
 feature {NONE} -- Implementation
 
-	member: CODE_MEMBER_REFERENCE is
+	member: CODE_MEMBER_REFERENCE
 			-- Corresponding member
 		do
 			if not member_searched then
@@ -138,7 +138,7 @@ feature {NONE} -- Implementation
 			Result := internal_member
 		end
 	
-	setter: CODE_MEMBER_REFERENCE is
+	setter: CODE_MEMBER_REFERENCE
 			-- Corresponding member setter
 		do
 			if not setter_searched then
@@ -167,7 +167,7 @@ invariant
 	non_void_attribute: attribute /= Void
 	non_void_target: target /= Void
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

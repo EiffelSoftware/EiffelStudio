@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Path to EiffelCodeDomProvider components"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ inherit
 
 feature -- Access
 
-	Codedom_installation_path: STRING is
+	Codedom_installation_path: STRING
 			-- Path to installed CodeDom provider
 		local
 			l_key: REGISTRY_KEY
@@ -50,7 +50,7 @@ feature -- Access
 			no_ending_directory_separator: Result /= Void implies Result.item (Result.count) /= Directory_separator
 		end
 
-	Default_metadata_cache_path: STRING is
+	Default_metadata_cache_path: STRING
 			-- Default path to Eiffel metadata cache
 		once
 			if Codedom_installation_path /= Void then
@@ -62,7 +62,7 @@ feature -- Access
 			do_not_end_with_directory_separator: Result /= Void implies Result.item (Result.count) /= Directory_separator
 		end
 
-	Default_compiler_metadata_cache_path: STRING is
+	Default_compiler_metadata_cache_path: STRING
 			-- Default path to Compiler metadata cache
 		once
 			if Codedom_installation_path /= Void then
@@ -74,7 +74,7 @@ feature -- Access
 			do_not_end_with_directory_separator: Result /= Void implies Result.item (Result.count) /= Directory_separator
 		end
 
-	Default_precompile_cache: STRING is
+	Default_precompile_cache: STRING
 			-- Default path to precompiled libraries
 		once
 			if Codedom_installation_path /= Void then
@@ -86,7 +86,7 @@ feature -- Access
 			do_not_end_with_directory_separator: Result /= Void implies Result.item (Result.count) /= Directory_separator
 		end
 
-	Default_precompile_ace_file: STRING is
+	Default_precompile_ace_file: STRING
 			-- Default path to precompile ace file
 		once
 			if Codedom_installation_path /= Void then
@@ -102,7 +102,7 @@ feature -- Access
 			do_not_end_with_directory_separator: Result /= Void implies Result.item (Result.count) /= Directory_separator
 		end
 
-	Default_configs_directory: STRING is
+	Default_configs_directory: STRING
 			-- Path to configs directory used by default if config file path is not specified in registry
 		local
 			l_install_dir: STRING
@@ -123,7 +123,7 @@ feature -- Access
 			end
 		end
 		
-	Default_config_file_path: STRING is
+	Default_config_file_path: STRING
 			-- Default path to config file if not overwritten in Registry settings
 		once
 			Result := Default_configs_directory
@@ -133,7 +133,7 @@ feature -- Access
 			end
 		end
 	
-	Compiler_path: STRING is
+	Compiler_path: STRING
 			-- Path to compiler
 		local
 			l_key: REGISTRY_KEY
@@ -164,7 +164,7 @@ feature -- Access
 			no_ending_directory_separator: Result /= Void implies Result.item (Result.count) /= Directory_separator
 		end
 
-	Documentation_path: STRING is
+	Documentation_path: STRING
 			-- Path to documentation file
 		once
 			create Result.make (Codedom_installation_path.count + 1 + 13 + 1 + Documentation_file_name.count)
@@ -175,10 +175,10 @@ feature -- Access
 			Result.append (Documentation_file_name)
 		end
 
-	Documentation_file_name: STRING is "Eiffel for ASP.NET.chm";
+	Documentation_file_name: STRING = "Eiffel for ASP.NET.chm";
 			-- Documentation chm file name
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

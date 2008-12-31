@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Print in output the comments corresponding to a_member."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_text_area: EV_TEXT) is
+	make (a_text_area: EV_TEXT)
 			-- Initialiaze attributes with `a_parent_window'.
 		require
 			non_void_a_text_area: a_text_area /= Void
@@ -31,7 +31,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	display_assembly_information (an_assembly: CONSUMED_ASSEMBLY) is
+	display_assembly_information (an_assembly: CONSUMED_ASSEMBLY)
 			-- display in `comments_area' the informations corresponding to `an_assembly'.
 		require
 			non_void_an_assembly: an_assembly /= Void
@@ -41,7 +41,7 @@ feature -- Basic Operations
 			comments_area.disable_edit
 		end
 
-	display_namespace_information (a_namespace_name: STRING) is
+	display_namespace_information (a_namespace_name: STRING)
 			-- display in `comments_area' the informations corresponding to `a_full_dotnet_type_name'.
 		require
 			non_void_a_namespace_name: a_namespace_name /= Void
@@ -52,7 +52,7 @@ feature -- Basic Operations
 			comments_area.disable_edit
 		end
 
-	display_type_information (an_assembly: CONSUMED_ASSEMBLY; a_full_dotnet_type_name: STRING) is
+	display_type_information (an_assembly: CONSUMED_ASSEMBLY; a_full_dotnet_type_name: STRING)
 			-- display in `comments_area' the informations corresponding to `a_full_dotnet_type_name'.
 		require
 			non_void_an_assembly: an_assembly /= Void
@@ -71,7 +71,7 @@ feature -- Basic Operations
 			end
 		end
 
-	display_feature_information (an_assembly: CONSUMED_ASSEMBLY; a_member: CONSUMED_MEMBER; a_full_dotnet_type_name: STRING) is
+	display_feature_information (an_assembly: CONSUMED_ASSEMBLY; a_member: CONSUMED_MEMBER; a_full_dotnet_type_name: STRING)
 			-- display in `comments_area' the informations corresponding to `a_member'.
 		require
 			non_void_an_assembly: an_assembly /= Void
@@ -113,7 +113,7 @@ feature -- Basic Operations
 			end
 		end
 
-	display_constructor_information (an_assembly: CONSUMED_ASSEMBLY; a_constructor: CONSUMED_CONSTRUCTOR; a_full_dotnet_type_name: STRING) is
+	display_constructor_information (an_assembly: CONSUMED_ASSEMBLY; a_constructor: CONSUMED_CONSTRUCTOR; a_full_dotnet_type_name: STRING)
 			-- display in `comments_area' the informations corresponding to `a_constructor'.
 		require
 			non_void_an_assembly: an_assembly /= Void
@@ -135,7 +135,7 @@ feature -- Basic Operations
 			end
 		end
 
-	display_property_information (an_assembly: CONSUMED_ASSEMBLY; a_property: CONSUMED_PROPERTY; a_full_dotnet_type_name: STRING) is
+	display_property_information (an_assembly: CONSUMED_ASSEMBLY; a_property: CONSUMED_PROPERTY; a_full_dotnet_type_name: STRING)
 			-- display in `comments_area' the informations corresponding to `a_property'.
 		require
 			non_void_an_assembly: an_assembly /= Void
@@ -164,7 +164,7 @@ feature -- Basic Operations
 			end
 		end
 
-	display_event_information (an_assembly: CONSUMED_ASSEMBLY; an_event: CONSUMED_EVENT; a_full_dotnet_type_name: STRING) is
+	display_event_information (an_assembly: CONSUMED_ASSEMBLY; an_event: CONSUMED_EVENT; a_full_dotnet_type_name: STRING)
 			-- display in `comments_area' the informations corresponding to `an_event'.
 		require
 			non_void_an_assembly: an_assembly /= Void
@@ -195,7 +195,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Basic Operations
 
-	display (a_member: MEMBER_INFORMATION) is
+	display (a_member: MEMBER_INFORMATION)
 			-- Display in `comments_area' the informations of `a_member'.
 		do
 			comments_area.enable_edit
@@ -222,7 +222,7 @@ feature {NONE} -- Basic Operations
 			comments_area.disable_edit
 		end
 		
-	clear_comments is
+	clear_comments
 			-- Clear `comment_area'.
 		do
 			comments_area.enable_edit
@@ -230,7 +230,7 @@ feature {NONE} -- Basic Operations
 			comments_area.disable_edit
 		end
 		
-	immediate_type_feature (an_assembly: CONSUMED_ASSEMBLY; a_member: CONSUMED_ENTITY; a_full_dotnet_type: STRING): TUPLE [CONSUMED_ASSEMBLY, STRING] is
+	immediate_type_feature (an_assembly: CONSUMED_ASSEMBLY; a_member: CONSUMED_ENTITY; a_full_dotnet_type: STRING): TUPLE [CONSUMED_ASSEMBLY, STRING]
 			-- Return the `full_dotnet_type' where `a_member' is declared.
 		require
 			non_void_an_assembly: an_assembly /= Void
@@ -301,7 +301,7 @@ feature {NONE} -- Basic Operations
 invariant
 	non_void_comments_area: comments_area /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

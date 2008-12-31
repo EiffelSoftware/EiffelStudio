@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Example usage for default assembly resolver, making use of tracing
 		provided by resolver.
@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Entry point.
 		local
 			l_resolver: AR_RESOLVER
@@ -59,19 +59,19 @@ feature {NONE} -- Initialization
 
 feature {SYSTEM_DLL_TRACE_LISTENER} -- {SYSTEM_DLL_TRACE_LISTENER} Trace Output
 
-	write (message: SYSTEM_STRING) is
+	write (message: SYSTEM_STRING)
 			-- Write `message'
 		do
 			{SYSTEM_CONSOLE}.write (message)
 		end
 		
-	write_line (message: SYSTEM_STRING) is
+	write_line (message: SYSTEM_STRING)
 			-- Write `message'
 		do
 			{SYSTEM_CONSOLE}.write_line (message)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

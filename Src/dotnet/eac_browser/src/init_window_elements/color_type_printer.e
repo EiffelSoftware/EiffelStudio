@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Print in output the eiffel type with all its eiffel features corresponding to the given dotnet type name."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_output: EV_PIXMAP; a_vertical_scroll_bar: EV_VERTICAL_SCROLL_BAR; a_horizontal_scroll_bar: EV_HORIZONTAL_SCROLL_BAR) is
+	make (an_output: EV_PIXMAP; a_vertical_scroll_bar: EV_VERTICAL_SCROLL_BAR; a_horizontal_scroll_bar: EV_HORIZONTAL_SCROLL_BAR)
 			-- Initialiaze `output' with `an_output'.
 		require
 			non_void_an_output: an_output /= Void
@@ -61,7 +61,7 @@ feature -- Access
 	
 feature -- Basic Operations
 
-	print_type (assembly_of_dotnet_type: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING) is
+	print_type (assembly_of_dotnet_type: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING)
 			-- Set `assembly_of_type' with `assembly_of_dotnet_type' 
 			-- Set `dotnet_type_name' with `a_dotnet_type_name'
 			-- Display in `output' features corresponding to `a_type_name'.
@@ -80,7 +80,7 @@ feature -- Basic Operations
 			feature_selected_set: feature_selected /= void and feature_selected.is_empty
 		end
 
-	print_type_with_feature_selected (assembly_of_dotnet_type: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING; an_eiffel_feature_name: STRING) is
+	print_type_with_feature_selected (assembly_of_dotnet_type: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING; an_eiffel_feature_name: STRING)
 			-- set `assembly_of_type' with `assembly_of_dotnet_type' 
 			-- set `dotnet_type_name' with `a_dotnet_type_name'
 			-- Display in `output' features corresponding to `a_type_name'.
@@ -101,7 +101,7 @@ feature -- Basic Operations
 			feature_selected_set: feature_selected = an_eiffel_feature_name implies feature_selected.is_empty
 		end
 
-	refresh is
+	refresh
 			-- Display in `output' the dotnet_type corresponding to `dotnet_type_name'.
 		require
 		do
@@ -112,7 +112,7 @@ feature -- Basic Operations
 	
 feature {NONE} -- Implementation
 
-	internal_print_type is
+	internal_print_type
 			-- Print in `output' features corresponding to `dotnet_type_name'.
 		local
 			ct: CONSUMED_TYPE
@@ -135,7 +135,7 @@ feature {NONE} -- Implementation
 
 		end
 
-	print_procedures (array: ARRAY [CONSUMED_PROCEDURE]) is
+	print_procedures (array: ARRAY [CONSUMED_PROCEDURE])
 			-- Return all signatures procedures contained in `array'.
 		local
 			i: INTEGER
@@ -169,7 +169,7 @@ feature {NONE} -- Implementation
 			new_line
 		end
 
-	print_feature (a_feature: CONSUMED_MEMBER) is
+	print_feature (a_feature: CONSUMED_MEMBER)
 			-- Return feature's siganture without its returned_type contained in `a_feature'.
 		require
 			non_void_feature: a_feature /= Void
@@ -272,7 +272,7 @@ feature {NONE} -- Implementation
 --			end
 		end
 		
-	print_constructors (array: ARRAY [CONSUMED_CONSTRUCTOR]) is
+	print_constructors (array: ARRAY [CONSUMED_CONSTRUCTOR])
 			-- Return all signatures constructors contained in `array'.
 		local
 			i, j: INTEGER
@@ -373,7 +373,7 @@ feature {NONE} -- Implementation
 			new_line
 		end
 
-	print_functions (array: ARRAY [CONSUMED_FUNCTION]) is
+	print_functions (array: ARRAY [CONSUMED_FUNCTION])
 			-- Return all signatures functions contained in `array'.
 		local
 			i: INTEGER
@@ -452,7 +452,7 @@ feature {NONE} -- Implementation
 			new_line
 		end
 
-	print_attributes (array: ARRAY [CONSUMED_FIELD]) is
+	print_attributes (array: ARRAY [CONSUMED_FIELD])
 			-- Return all signatures attributes contained in `array'.
 		local
 			i: INTEGER
@@ -561,7 +561,7 @@ feature {NONE} -- Implementation
 			new_line
 		end
 
-	eiffel_type_name (a_dotnet_type_name: STRING): STRING is
+	eiffel_type_name (a_dotnet_type_name: STRING): STRING
 			-- Return the `eiffel_type_name' corresponding to `a_dotnet_type_name'.
 		require
 			non_void_a_dotnet_type_name: a_dotnet_type_name /= Void
@@ -576,7 +576,7 @@ feature {NONE} -- Implementation
 			non_void_result: Result /= Void
 		end
 	
-	search_eiffel_type_name (a_dotnet_type_name: STRING): STRING is
+	search_eiffel_type_name (a_dotnet_type_name: STRING): STRING
 			-- Return the `eiffel_type_name' corresponding to `a_dotnet_type_name'.
 		require
 			non_void_a_dotnet_type_name: a_dotnet_type_name /= Void
@@ -639,7 +639,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Scroolbar Setting
 
-	set_vertical_scrool_bar (ct: CONSUMED_TYPE) is
+	set_vertical_scrool_bar (ct: CONSUMED_TYPE)
 			-- set vertical_bar.
 		require
 			non_void_consumed_type: ct /= Void
@@ -663,7 +663,7 @@ feature {NONE} -- Scroolbar Setting
 		
 feature {NONE} -- Implementation
 
-	title_color: EV_COLOR is
+	title_color: EV_COLOR
 			-- foreground color of titles (attributes, procedures, creation routines, functions).
 		once
 			create Result.make_with_8_bit_rgb (0, 0, 255) 
@@ -671,7 +671,7 @@ feature {NONE} -- Implementation
 			result_set: Result /= Void
 		end
 
-	type_color: EV_COLOR is
+	type_color: EV_COLOR
 			-- foreground color of types.
 		once
 			create Result.make_with_8_bit_rgb (125, 125, 0) 
@@ -679,7 +679,7 @@ feature {NONE} -- Implementation
 			result_set: Result /= Void
 		end
 
-	eiffel_feature_color: EV_COLOR is
+	eiffel_feature_color: EV_COLOR
 			-- foreground color of eiffel features name.
 		once
 			create Result.make_with_8_bit_rgb (0, 125, 0) 
@@ -687,7 +687,7 @@ feature {NONE} -- Implementation
 			result_set: Result /= Void
 		end
 		
-	dotnet_feature_color: EV_COLOR is
+	dotnet_feature_color: EV_COLOR
 			-- foreground color of dotnet features name.
 		once
 			create Result.make_with_8_bit_rgb (170, 0, 0) 
@@ -695,7 +695,7 @@ feature {NONE} -- Implementation
 			result_set: Result /= Void
 		end
 
-	argument_color: EV_COLOR is
+	argument_color: EV_COLOR
 			-- foreground color of arguments.
 		once
 			create Result.make_with_8_bit_rgb (0, 125, 0) 
@@ -703,7 +703,7 @@ feature {NONE} -- Implementation
 			result_set: Result /= Void
 		end
 
-	text_color: EV_COLOR is
+	text_color: EV_COLOR
 			-- foreground color of text.
 		once
 			create Result.make_with_8_bit_rgb (0, 0, 0) 
@@ -711,7 +711,7 @@ feature {NONE} -- Implementation
 			result_set: Result /= Void
 		end
 
-	constant_color: EV_COLOR is
+	constant_color: EV_COLOR
 			-- foreground color of constants.
 		once
 			create Result.make_with_8_bit_rgb (110, 0, 100) 
@@ -719,7 +719,7 @@ feature {NONE} -- Implementation
 			result_set: Result /= Void
 		end
 
-	selected_feature_color: EV_COLOR is
+	selected_feature_color: EV_COLOR
 			-- background color of the selected feature.
 		once
 			create Result.make_with_8_bit_rgb (195, 195, 195) 
@@ -727,7 +727,7 @@ feature {NONE} -- Implementation
 			result_set: Result /= Void
 		end
 		
-	non_selected_feature_color: EV_COLOR is
+	non_selected_feature_color: EV_COLOR
 			-- background color of non selected features.
 		once
 			create Result.make_with_8_bit_rgb (255, 255, 255) 
@@ -743,13 +743,13 @@ feature {NONE} -- Implementation
 --			Result := output.font.height
 --		end
 
-	Nb_pixel_line: INTEGER is
+	Nb_pixel_line: INTEGER
 			-- number of pixel for a ligne.
 		once
 			Result := output.font.height + 4
 		end
 			
-	Nb_pixel_decal_h_scroll: INTEGER is 12
+	Nb_pixel_decal_h_scroll: INTEGER = 12
 			-- number of pixel for a step of horizontal scroll.
 
 	current_line: INTEGER
@@ -758,7 +758,7 @@ feature {NONE} -- Implementation
 	current_character: INTEGER
 			-- current character.
 			
-	new_line is
+	new_line
 			-- increment `current_ligne' with `nb_pixel_police'.
 		do
 			current_line := current_line + nb_pixel_line
@@ -768,10 +768,10 @@ feature {NONE} -- Implementation
 			current_line_set: current_line = Old current_line + nb_pixel_line
 		end
 		
-	Tabulation: STRING is "      "
+	Tabulation: STRING = "      "
 			-- representation of a tabulation in spaces.
 	
-	Eiffel_name_tabulation: INTEGER is 120
+	Eiffel_name_tabulation: INTEGER = 120
 			-- space in pixel where appear eiffel_name.
 			
 	titi: DISPLAY_TYPE_FACTORY
@@ -782,7 +782,7 @@ invariant
 --	non_void_a_vertical_scroll_bar: vertical_scroll_bar /= Void
 --	non_void_a_horizontal_scroll_bar: horizontal_scroll_bar /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

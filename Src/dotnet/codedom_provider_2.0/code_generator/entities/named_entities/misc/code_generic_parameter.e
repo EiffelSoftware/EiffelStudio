@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generic paramter"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name) is
+	make (a_name: like name)
 			-- Set `name' with `a_name', initialize instance.
 		require
 			attached_name: a_name /= Void
@@ -35,7 +35,7 @@ feature -- Access
 
 feature -- Element Settings
 
-	set_creation_constraint (a_bool: BOOLEAN) is
+	set_creation_constraint (a_bool: BOOLEAN)
 			-- Set `has_creation_constraint' with `a_bool'.
 		do
 			has_creation_constraint := a_bool
@@ -43,7 +43,7 @@ feature -- Element Settings
 			has_creation_constraint = a_bool
 		end
 
-	add_constraint (a_constraint: CODE_TYPE_REFERENCE) is
+	add_constraint (a_constraint: CODE_TYPE_REFERENCE)
 			-- Add `a_constraint' to `constraints'.
 		require
 			attached_contraint: a_constraint /= Void
@@ -55,7 +55,7 @@ feature -- Element Settings
 
 feature -- Code generation
 
-	code: STRING is
+	code: STRING
 			-- Eiffel code of the entity
 		do
 			create Result.make (128)
@@ -85,7 +85,7 @@ feature -- Code generation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

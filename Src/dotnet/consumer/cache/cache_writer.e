@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Allows for adding/removing assemblies from the EAC"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -55,7 +55,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- New instance of Current for runtime version `a_clr_version'.
 		do
 			create cache_reader
@@ -63,14 +63,14 @@ feature {NONE} -- Initialization
 
 feature -- Clean Up
 
-	dispose is
+	dispose
 			-- Clean up used resources.
 		do
 		end
 
 feature -- Basic Operations
 
-	add_assembly (a_path: STRING; a_info_only: BOOLEAN) is
+	add_assembly (a_path: STRING; a_info_only: BOOLEAN)
 			-- Add assembly at `a_path' and its dependencies into cache.
 		require
 			non_void_path: a_path /= Void
@@ -84,7 +84,7 @@ feature -- Basic Operations
 			add_assembly_ex (a_path, a_info_only, Void, l_processed)
 		end
 
-	add_assembly_ex (a_path: STRING; a_info_only: BOOLEAN; a_other_assemblies: LIST [STRING]; a_processed: ARRAYED_LIST [STRING]) is
+	add_assembly_ex (a_path: STRING; a_info_only: BOOLEAN; a_other_assemblies: LIST [STRING]; a_processed: ARRAYED_LIST [STRING])
 			-- Add assembly at `a_path' and its dependencies into cache.
 		require
 			non_void_path: a_path /= Void
@@ -322,7 +322,7 @@ feature -- Basic Operations
 			end
 		end
 
-	unconsume_assembly (a_path: STRING) is
+	unconsume_assembly (a_path: STRING)
 			-- Unconsumes assembly at `a_path'. This means all consumed metadata in removed
 			-- and the consumed assembly entry is_consumed attribute is set to false.
 			-- Note: Does not update any assembly reference mappings. Call `update_client_assembly_mapppings' to
@@ -379,7 +379,7 @@ feature -- Basic Operations
 			end
 		end
 
-	remove_recursive_assembly (a_path: STRING) is
+	remove_recursive_assembly (a_path: STRING)
 			-- Remove assembly identified by `a_path' and its clients from cache.
 		require
 			non_void_path: a_path /= Void
@@ -422,7 +422,7 @@ feature -- Basic Operations
 			end
 		end
 
-	clean_cache is
+	clean_cache
 			-- cleans up cache and removes all incomplete consumed assembly metadata
 		local
 			l_cache_folder: DIRECTORY
@@ -477,7 +477,7 @@ feature -- Basic Operations
 			end
 		end
 
-	compact_cache_info is
+	compact_cache_info
 			-- comapcts cache info by removing all CONSUMED_ASSEMBLYs that are marked as being unconsumed
 		local
 			l_info: CACHE_INFO
@@ -519,7 +519,7 @@ feature -- Basic Operations
 			end
 		end
 
-	consumed_assembly_from_path (a_path: STRING): CONSUMED_ASSEMBLY is
+	consumed_assembly_from_path (a_path: STRING): CONSUMED_ASSEMBLY
 			-- retrieve a consumed assembly for `a_path' and store in cache info for retrieval
 		require
 			non_void_path: a_path /= Void
@@ -557,7 +557,7 @@ feature -- Basic Operations
 			end
 		end
 
-	update_info (a_info: CACHE_INFO) is
+	update_info (a_info: CACHE_INFO)
 			-- Update EAC information file with `info'.
 		require
 			non_void_info: a_info /= Void
@@ -590,7 +590,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation	
 
-	remove_assembly_internal (a_path: STRING) is
+	remove_assembly_internal (a_path: STRING)
 			-- Remove assembly identified by `a_path' and its clients from cache.
 		require
 			non_void_path: a_path /= Void
@@ -630,7 +630,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	create_consumed_assembly_from_path (a_id: STRING; a_path: STRING): CONSUMED_ASSEMBLY is
+	create_consumed_assembly_from_path (a_id: STRING; a_path: STRING): CONSUMED_ASSEMBLY
 			-- Creates a new CONSUMED_ASSEMBLY
 		require
 			non_void_id: a_id /= Void
@@ -671,7 +671,7 @@ feature {NONE} -- Implementation
 			non_void_result: Result /= Void
 		end
 
-	update_assembly_mappings (a_assembly: CONSUMED_ASSEMBLY) is
+	update_assembly_mappings (a_assembly: CONSUMED_ASSEMBLY)
 			-- updates serialized assembly mappings and sets consumed status based on contents of EAC.
 		require
 			non_void_assembly: a_assembly /= Void
@@ -719,7 +719,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_client_assembly_mappings (a_assembly: CONSUMED_ASSEMBLY) is
+	update_client_assembly_mappings (a_assembly: CONSUMED_ASSEMBLY)
 			-- updates serialized assembly mappings or all clients of `a_assembly' and sets consumed status based on contents of EAC.
 		require
 			non_void_assembly: a_assembly /= Void
@@ -759,7 +759,7 @@ feature {NONE} -- Implementation
 	cache_reader: CACHE_READER
 			-- associated cache reader
 
- 	culture_from_info (a_info: CULTURE_INFO): STRING is
+ 	culture_from_info (a_info: CULTURE_INFO): STRING
  			-- Returns culture string from `a_info'
  		require
  			a_info_not_void: a_info /= Void
@@ -773,10 +773,10 @@ feature {NONE} -- Implementation
 			not_result_is_empty: not Result.is_empty
  		end
 
-	neutral_culture: STRING is "neutral"
+	neutral_culture: STRING = "neutral"
 			-- neutral culture
 
- 	public_key_token_from_array (a_array: NATIVE_ARRAY [NATURAL_8]): STRING is
+ 	public_key_token_from_array (a_array: NATIVE_ARRAY [NATURAL_8]): STRING
  			-- Returns culture string from `a_info'
  		do
 			if a_array = Void or else a_array.length = 0 then
@@ -789,12 +789,12 @@ feature {NONE} -- Implementation
 			not_result_is_empty: not Result.is_empty
  		end
 
-	null_public_key_token: STRING is "null"
+	null_public_key_token: STRING = "null"
 			-- Null public key tokens
 
 feature {NONE} -- Notification
 
-	notifier: NOTIFIER is
+	notifier: NOTIFIER
 			-- Windows ballon tip notifier
 		do
 			Result := guard.notifier
@@ -805,7 +805,7 @@ feature {NONE} -- Notification
 invariant
 	non_void_cache_reader: cache_reader /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

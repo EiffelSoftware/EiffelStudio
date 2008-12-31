@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Graphical settings for Eiffel Codedom Provider Manager"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Intialization
 
-	make is
+	make
 			-- Initialize settings location.
 		do
 			settings_make (Saved_settings_key)
@@ -38,37 +38,37 @@ feature {NONE} -- Intialization
 
 feature -- Access
 
-	saved_show_text: BOOLEAN is
+	saved_show_text: BOOLEAN
 			-- Should toolbar buttons text be shown?
 		do
 			Result := saved_boolean (Show_text_key)
 		end
 
-	saved_show_tooltip: BOOLEAN is
+	saved_show_tooltip: BOOLEAN
 			-- Should toolbar buttons tooltips be shown?
 		do
 			Result := saved_boolean (Show_tooltip_key)
 		end
 
-	saved_precompile_ace_files: LIST [STRING] is
+	saved_precompile_ace_files: LIST [STRING]
 			-- List of saved values for precompile ace file combo
 		do
 			Result := saved_list (Precompile_ace_files)
 		end
 
-	saved_metadata_cache_paths: LIST [STRING] is
+	saved_metadata_cache_paths: LIST [STRING]
 			-- List of saved values for metadata cache combo
 		do
 			Result := saved_list (Metadata_cache_paths)
 		end
 
-	saved_compiler_metadata_cache_paths: LIST [STRING] is
+	saved_compiler_metadata_cache_paths: LIST [STRING]
 			-- List of saved values for compiler metadata cache combo
 		do
 			Result := saved_list (Compiler_metadata_cache_paths)
 		end
 
-	saved_precompile_cache_paths: LIST [STRING] is
+	saved_precompile_cache_paths: LIST [STRING]
 			-- List of saved values for metadata cache combo
 		do
 			Result := saved_list (Precompile_cache_paths)
@@ -76,13 +76,13 @@ feature -- Access
 
 feature -- Element settings
 
-	save_show_text (a_value: BOOLEAN) is
+	save_show_text (a_value: BOOLEAN)
 			-- Set `show text' checkable menu item state.
 		do
 			save_boolean (Show_text_key, a_value)
 		end
 
-	save_show_tooltip (a_value: BOOLEAN) is
+	save_show_tooltip (a_value: BOOLEAN)
 			-- Set `show tooltip' checkable menu item state.
 		do
 			save_boolean (Show_tooltip_key, a_value)
@@ -90,25 +90,25 @@ feature -- Element settings
 
 feature {NONE} -- Private Access
 
-	Show_text_key: STRING is "show_text"
+	Show_text_key: STRING = "show_text"
 			-- Show text menu item
 
-	Show_tooltip_key: STRING is "show_tooltip"
+	Show_tooltip_key: STRING = "show_tooltip"
 			-- Show tooltip menu item
 
-	Precompile_ace_files: STRING is "precompile_ace_files"
+	Precompile_ace_files: STRING = "precompile_ace_files"
 			-- Precompiled paths
 
-	Metadata_cache_paths: STRING is "metadata_cache_paths"
+	Metadata_cache_paths: STRING = "metadata_cache_paths"
 			-- Metadata Cache paths
 
-	Compiler_metadata_cache_paths: STRING is "compiler_metadata_cache_paths"
+	Compiler_metadata_cache_paths: STRING = "compiler_metadata_cache_paths"
 			-- Compiler Metadata Cache paths
 
-	Precompile_cache_paths: STRING is "precompile_cache_paths";
+	Precompile_cache_paths: STRING = "precompile_cache_paths";
 			-- Precompile Cache paths
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

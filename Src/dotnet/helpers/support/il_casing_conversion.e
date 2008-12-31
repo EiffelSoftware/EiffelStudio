@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Perform conversion of Eiffel name to whichever format is specified in Ace file.
 
@@ -15,11 +15,11 @@ class
 
 feature -- Naming convention
 
-	lower_case: INTEGER is 1
-	upper_case: INTEGER is 2
+	lower_case: INTEGER = 1
+	upper_case: INTEGER = 2
 			-- Conversion type for `pascal_casing'.
 
-	pascal_casing (is_dotnet_name: BOOLEAN; name: STRING; type: INTEGER): STRING is
+	pascal_casing (is_dotnet_name: BOOLEAN; name: STRING; type: INTEGER): STRING
 			-- Convert `name' using PascalCasing convention.
 			-- If `type' is `upper_case' and if default is to use
 			-- Eiffel convention, result is upper case.
@@ -66,7 +66,7 @@ feature -- Naming convention
 			result_not_void: Result /= Void
 		end
 
-	camel_casing (is_dotnet_name: BOOLEAN; name: STRING): STRING is
+	camel_casing (is_dotnet_name: BOOLEAN; name: STRING): STRING
 			-- Convert `name' using camelCasing convention.
 			--| Used only for attributes in implementation classes.
 		require
@@ -109,7 +109,7 @@ feature -- Naming convention
 			result_not_void: Result /= Void
 		end
 
-	namespace_casing (is_dotnet_name: BOOLEAN; name: STRING): STRING is
+	namespace_casing (is_dotnet_name: BOOLEAN; name: STRING): STRING
 			-- Convert `name' using PascalCasing convention
 			-- on namesapce. Different from `pascal_casing'
 			-- as we convert a character in upper after a
@@ -151,7 +151,7 @@ feature -- Naming convention
 			result_not_void: Result /= Void
 		end
 
-	type_name (a_namespace, a_prefix, a_name: STRING; is_dotnet_naming: BOOLEAN): STRING is
+	type_name (a_namespace, a_prefix, a_name: STRING; is_dotnet_naming: BOOLEAN): STRING
 			-- Name of type `a_name' with prefix `a_prefix' in namespace `a_namespce' that follows
 			-- CIL naming rules according to `is_dotnet_naming'.
 		require
@@ -173,7 +173,7 @@ feature -- Naming convention
 			Result.append_string (pascal_casing (is_dotnet_naming, a_name, upper_case))
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

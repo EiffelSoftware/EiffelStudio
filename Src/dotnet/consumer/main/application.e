@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Emitter (consumer) application entry point for command-line execution."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Application entry point
 		local
 			l_parser: ARGUMENT_PARSER
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	start (a_parser: ARGUMENT_PARSER) is
+	start (a_parser: ARGUMENT_PARSER)
 			-- Starts application
 		local
 			l_manager: CACHE_MANAGER
@@ -162,7 +162,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Output
 
-	display_cache_content (a_manager: CACHE_MANAGER; a_verbose: BOOLEAN) is
+	display_cache_content (a_manager: CACHE_MANAGER; a_verbose: BOOLEAN)
 			-- Displays a list of content for a manager `a_maanger'
 		require
 			a_manager_attached: a_manager /= Void
@@ -326,7 +326,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	display_status (a_msg: STRING) is
+	display_status (a_msg: STRING)
 			-- Displays a status message
 		require
 			a_msg_attached: a_msg /= Void
@@ -338,7 +338,7 @@ feature {NONE} -- Output
 			l_writer.new_line
 		end
 
-	display_error (a_msg: STRING) is
+	display_error (a_msg: STRING)
 			-- Displays a status error message
 		require
 			a_msg_attached: a_msg /= Void
@@ -350,19 +350,19 @@ feature {NONE} -- Output
 			l_writer.new_line
 		end
 
-	writer: IO_MEDIUM is
+	writer: IO_MEDIUM
 			-- Writer used to display verbose information
 		once
 			Result := io.output
 		end
 
-	error_writer: IO_MEDIUM is
+	error_writer: IO_MEDIUM
 			-- Writer used to display verbose error information
 		once
 			Result := io.error
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

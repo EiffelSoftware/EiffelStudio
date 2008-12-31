@@ -1,4 +1,4 @@
-indexing
+note
 	description:	"Codedom referenced assemblies."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ inherit
 
 feature -- Access
 
-	Referenced_assemblies: CODE_REFERENCES_LIST is
+	Referenced_assemblies: CODE_REFERENCES_LIST
 			-- List of assemblies used by codeDOM
 		once
 			create Result.make (16)
@@ -29,7 +29,7 @@ feature -- Access
 			non_void_result: Result /= Void
 		end		
 
-	Default_assemblies: ARRAY [STRING] is
+	Default_assemblies: ARRAY [STRING]
 			-- Default assemblies added with `add_default_assemblies'
 		once
 			Result := <<"mscorlib.dll", "system.dll", "system.xml.dll">>
@@ -37,7 +37,7 @@ feature -- Access
 	
 feature -- Status Setting
 
-	add_default_assemblies is
+	add_default_assemblies
 			-- Add mscorlib, system and system.xml if not already in list.
 		local
 			i, l_count: INTEGER
@@ -57,7 +57,7 @@ feature -- Status Setting
 			end
 		end
 		
-	reset is
+	reset
 			-- Reset content of `Referenced_assemblies'.
 		do
 			Referenced_assemblies.wipe_out
@@ -68,7 +68,7 @@ invariant
 	non_void_default_assemblies: Default_assemblies /= Void
 	non_void_referenced_assemblies: Referenced_assemblies /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

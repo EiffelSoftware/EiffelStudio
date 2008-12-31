@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Add new reference dialog."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	user_initialization is
+	user_initialization
 			-- called by `initialize'.
 			-- Any custom user initialization that
 			-- could not be performed in `initialize',
@@ -32,7 +32,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 	
-	on_location_change is
+	on_location_change
 			-- Called by `change_actions' of `reference_location_combo'.
 			-- Check if `Add' button should be enabled
 		do
@@ -43,7 +43,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_browse is
+	on_browse
 			-- Called by `select_actions' of `browse_button'.
 			-- Open file browse dialog and add selected assembly.
 		local
@@ -59,7 +59,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_add is
+	on_add
 			-- Called by `select_actions' of `add_button'.
 		do
 			assembly := reference_location_combo.text
@@ -67,13 +67,13 @@ feature {NONE} -- Implementation
 			destroy
 		end
 
-	on_cancel is
+	on_cancel
 			-- Called by `select_actions' of `cancel_button'.
 		do
 			destroy
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

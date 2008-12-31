@@ -1,4 +1,4 @@
-indexing
+note
 	description: "AST atomic Visitor."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature {AST_YACC} -- Implementation
 
-	process_custom_attribute_as (l_as: CUSTOM_ATTRIBUTE_AS) is
+	process_custom_attribute_as (l_as: CUSTOM_ATTRIBUTE_AS)
 			-- Process `l_as'.
 		local
 			l_custom_attribute: SYSTEM_DLL_CODE_ATTRIBUTE_DECLARATION
@@ -40,12 +40,12 @@ feature {AST_YACC} -- Implementation
 			set_last_custom_attribute (l_custom_attribute)
 		end
 
-	process_id_as (l_as: ID_AS) is
+	process_id_as (l_as: ID_AS)
 			-- Process `l_as'.
 		do
 		end
 
-	process_integer_constant_as (l_as: INTEGER_AS) is
+	process_integer_constant_as (l_as: INTEGER_AS)
 			-- Process `l_as'.
 		local
 			l_snippet_expression: SYSTEM_DLL_CODE_PRIMITIVE_EXPRESSION
@@ -57,7 +57,7 @@ feature {AST_YACC} -- Implementation
 			set_last_element_created (l_snippet_expression)
 		end
 
-	process_static_access_as (l_as: STATIC_ACCESS_AS) is
+	process_static_access_as (l_as: STATIC_ACCESS_AS)
 			-- Process `l_as'.
 		local
 			l_property_reference_expression: SYSTEM_DLL_CODE_PROPERTY_REFERENCE_EXPRESSION
@@ -113,12 +113,12 @@ feature {AST_YACC} -- Implementation
 			end
 		end
 
-	process_unique_as (l_as: UNIQUE_AS) is
+	process_unique_as (l_as: UNIQUE_AS)
 			-- Process `l_as'.
 		do
 		end
 
-	process_tuple_as (l_as: TUPLE_AS) is
+	process_tuple_as (l_as: TUPLE_AS)
 			-- Process `l_as'.
 		local
 			l_array_creation_expression: SYSTEM_DLL_CODE_ARRAY_CREATE_EXPRESSION
@@ -150,7 +150,7 @@ feature {AST_YACC} -- Implementation
 			set_last_element_created (l_array_creation_expression)
 		end
 
-	process_real_as (l_as: REAL_AS) is
+	process_real_as (l_as: REAL_AS)
 			-- Process `l_as'.
 		local
 			l_snippet_expression: SYSTEM_DLL_CODE_PRIMITIVE_EXPRESSION
@@ -160,7 +160,7 @@ feature {AST_YACC} -- Implementation
 			set_last_element_created (l_snippet_expression)
 		end
 
-	process_bool_as (l_as: BOOL_AS) is
+	process_bool_as (l_as: BOOL_AS)
 			-- Process `l_as'.
 		local
 			l_snippet_expression: SYSTEM_DLL_CODE_PRIMITIVE_EXPRESSION
@@ -170,22 +170,22 @@ feature {AST_YACC} -- Implementation
 			set_last_element_created (l_snippet_expression)
 		end
 
-	process_bit_const_as (l_as: BIT_CONST_AS) is
+	process_bit_const_as (l_as: BIT_CONST_AS)
 			-- Process `l_as'.
 		do
 		end
 
-	process_array_as (l_as: ARRAY_AS) is
+	process_array_as (l_as: ARRAY_AS)
 			-- Process `l_as'.
 		do
 		end
 
-	process_char_as (l_as: CHAR_AS) is
+	process_char_as (l_as: CHAR_AS)
 			-- Process `l_as'.
 		do
 		end
 
-	process_string_as (l_as: STRING_AS) is
+	process_string_as (l_as: STRING_AS)
 			-- Process `l_as'.
 		local
 			l_snippet_expression: SYSTEM_DLL_CODE_PRIMITIVE_EXPRESSION
@@ -195,12 +195,12 @@ feature {AST_YACC} -- Implementation
 			set_last_element_created (l_snippet_expression)
 		end
 
-	process_verbatim_string_as (l_as: VERBATIM_STRING_AS) is
+	process_verbatim_string_as (l_as: VERBATIM_STRING_AS)
 			-- Process `l_as'.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

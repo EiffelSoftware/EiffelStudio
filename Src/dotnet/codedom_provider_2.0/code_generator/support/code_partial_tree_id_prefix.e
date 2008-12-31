@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Unique id prefix for codedom statement or expression."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,16 +11,16 @@ class
 
 feature -- Access
 
-	Statement_prefix: STRING is "`ST:"
+	Statement_prefix: STRING = "`ST:"
 			-- Prefix for statement ID
 
-	Expression_prefix: STRING is "`EX:"
+	Expression_prefix: STRING = "`EX:"
 			-- Prefix for expression ID
 
 
 feature -- Status Report
 
-	is_valid_id_prefix (a_prefix: STRING): BOOLEAN is
+	is_valid_id_prefix (a_prefix: STRING): BOOLEAN
 			-- Is `a_prefix' a valid ID prefix?
 		do
 			if a_prefix /= Void then
@@ -28,7 +28,7 @@ feature -- Status Report
 			end
 		end
 	
-	is_valid_uuid (a_string: STRING): BOOLEAN is
+	is_valid_uuid (a_string: STRING): BOOLEAN
 			-- Is `a_string' a valid uuid?
 		require
 			a_string_not_void: a_string /= Void
@@ -58,7 +58,7 @@ invariant
 	valid_statement_prefix: is_valid_id_prefix (Statement_prefix)
 	valid_expression_prefix: is_valid_id_prefix (Expression_prefix)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

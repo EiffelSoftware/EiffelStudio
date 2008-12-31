@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "EV_TREE_ITEM with comparaison on feature text"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,13 +24,13 @@ create
 
 feature -- Implementation
 	
-	infix "<" (other: like Current): BOOLEAN is
+	infix "<" (other: like Current): BOOLEAN
 			-- Is current object less than `other'?
 		do
 			Result := text < other.text
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

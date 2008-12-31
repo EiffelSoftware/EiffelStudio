@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tag flags"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,53 +10,53 @@ class
 
 feature -- Access
 
-	doc: INTEGER is 0
-	assembly: INTEGER is 1
-	name: INTEGER is 2
-	members: INTEGER is 3
-	member: INTEGER is 4
-	summary: INTEGER is 5
-	param: INTEGER is 6
-	returns: INTEGER is 7
-	para: INTEGER is 8
-	see: INTEGER is 9
-	param_ref: INTEGER is 10
-	unknow: INTEGER is 15
+	doc: INTEGER = 0
+	assembly: INTEGER = 1
+	name: INTEGER = 2
+	members: INTEGER = 3
+	member: INTEGER = 4
+	summary: INTEGER = 5
+	param: INTEGER = 6
+	returns: INTEGER = 7
+	para: INTEGER = 8
+	see: INTEGER = 9
+	param_ref: INTEGER = 10
+	unknow: INTEGER = 15
 
 		-- Elements
-	doc_str: STRING is "doc"
-	assembly_str: STRING is "assembly"
-	members_str: STRING is "members"
-	member_str: STRING is "member"
+	doc_str: STRING = "doc"
+	assembly_str: STRING = "assembly"
+	members_str: STRING = "members"
+	member_str: STRING = "member"
 
-	c_str: STRING is "c"
-	code_str: STRING is "code"
-	example_str: STRING is "example"
-	exception_str: STRING is "exception"
-	include_str: STRING is "include"
-	list_str: STRING is "list"
-	param_str: STRING is "param"
-	para_str: STRING is "para"
-	param_ref_str: STRING is "paramref"
-	permission_str: STRING is "permission"
-	ipermission_str: STRING is "ipermission"
-	remarks_str: STRING is "remarks"
-	returns_str: STRING is "returns"
-	see_str: STRING is "see"
-	see_also_str: STRING is "seealso"
-	summary_str: STRING is "summary"
-	value_str: STRING is "value"
+	c_str: STRING = "c"
+	code_str: STRING = "code"
+	example_str: STRING = "example"
+	exception_str: STRING = "exception"
+	include_str: STRING = "include"
+	list_str: STRING = "list"
+	param_str: STRING = "param"
+	para_str: STRING = "para"
+	param_ref_str: STRING = "paramref"
+	permission_str: STRING = "permission"
+	ipermission_str: STRING = "ipermission"
+	remarks_str: STRING = "remarks"
+	returns_str: STRING = "returns"
+	see_str: STRING = "see"
+	see_also_str: STRING = "seealso"
+	summary_str: STRING = "summary"
+	value_str: STRING = "value"
 
 		-- Attributes
-	name_str: STRING is "name"
-	class_str: STRING is "class"
-	cref_str: STRING is "cref"
-	file_str: STRING is "file"
-	path_str: STRING is "path"
-	type_str: STRING is "type"
-	lang_str: STRING is "langword";
+	name_str: STRING = "name"
+	class_str: STRING = "class"
+	cref_str: STRING = "cref"
+	file_str: STRING = "file"
+	path_str: STRING = "path"
+	type_str: STRING = "type"
+	lang_str: STRING = "langword";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

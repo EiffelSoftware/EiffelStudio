@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -20,7 +20,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Initialization.
 		do
 			create a_member.make
@@ -50,11 +50,11 @@ feature {NONE} -- Access
 	current_tag: ARRAYED_LIST [STRING]
 			-- Balises XML opened.
 
-	paragraphe_tag: STRING is "<PARA>"
+	paragraphe_tag: STRING = "<PARA>"
 
 feature
 
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- called whenever the parser findes a start element
 		local
 			retried: BOOLEAN
@@ -67,7 +67,7 @@ feature
 			retry
 		end
 
-	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
+	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
 		local
 			l_name: STRING
 			retried: BOOLEAN
@@ -148,7 +148,7 @@ feature
 			retry
 		end
 
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- called whenever the parser findes an end element
 		local
 			l_str: STRING
@@ -183,7 +183,7 @@ feature
 
 feature -- Content
 
-	on_content (a_content: STRING) is
+	on_content (a_content: STRING)
 			-- called whenever the parser findes character data
 		local
 			retried: BOOLEAN
@@ -208,7 +208,7 @@ feature -- Content
 
 feature -- Basic Operation
 
-	format_comment (a_comment: STRING): STRING is
+	format_comment (a_comment: STRING): STRING
 			-- format `a_comment'.
 		require
 			non_void_a_comment: a_comment /= Void
@@ -226,7 +226,7 @@ feature -- Basic Operation
 
 feature {NONE} -- Formatter
 
-	name_formatter: NAME_FORMATTER is
+	name_formatter: NAME_FORMATTER
 			-- Used to format argument names
 		once
 			create Result
@@ -238,7 +238,7 @@ invariant
 	non_void_current_comment: current_comment /= Void
 	non_void_current_tag: current_tag /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

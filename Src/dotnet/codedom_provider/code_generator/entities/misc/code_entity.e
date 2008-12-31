@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel entity, has some source code associated to it"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ inherit
 
 feature -- Access
 
-	code: STRING is
+	code: STRING
 			-- Eiffel code of the entity
 		require
 			is_in_code_generation: current_state = Code_generation
@@ -37,7 +37,7 @@ feature -- Access
 invariant
 	is_at_least_in_code_analysis: current_state >= Code_analysis
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "File copy and other file related operations"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ feature -- Status Report
 	last_copy_successful: BOOLEAN
 			--	Was last call to `copy_file' successful?
 
-	has_extension (a_file_name, a_extension: STRING): BOOLEAN is
+	has_extension (a_file_name, a_extension: STRING): BOOLEAN
 			-- Does `a_file_name' has extension `a_extension'?
 		require
 			non_void_file_name: a_file_name /= Void
@@ -42,7 +42,7 @@ feature -- Status Report
 		
 feature -- Basic Operations
 
-	copy_file (a_source, a_dest: STRING) is
+	copy_file (a_source, a_dest: STRING)
 			-- Copy file `a_source' into `a_dest'.
 		require
 			non_void_source: a_source /= Void
@@ -77,7 +77,7 @@ feature -- Basic Operations
 			retry
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Code generator for type methods and properties"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -33,7 +33,7 @@ inherit
 
 feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 
-	generate_routine (a_source: SYSTEM_DLL_CODE_MEMBER_METHOD) is
+	generate_routine (a_source: SYSTEM_DLL_CODE_MEMBER_METHOD)
 			-- Generate Eiffel code from `a_source'.
 		require
 			non_void_source: a_source /= Void
@@ -76,7 +76,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			non_void_last_feature: last_feature /= Void
 		end
 
-	generate_creation_routine (a_source: SYSTEM_DLL_CODE_CONSTRUCTOR) is
+	generate_creation_routine (a_source: SYSTEM_DLL_CODE_CONSTRUCTOR)
 			-- Generate Eiffel code from `a_source'.
 			-- | Create instance of `CODE_CREATION_ROUTINE'.
 			-- | Set `current_feature'.
@@ -121,7 +121,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			non_void_last_feature: last_feature /= Void
 		end
 
-	generate_root_procedure (a_source: SYSTEM_DLL_CODE_ENTRY_POINT_METHOD) is
+	generate_root_procedure (a_source: SYSTEM_DLL_CODE_ENTRY_POINT_METHOD)
 			-- Generate Eiffel code from `a_source'.
 			-- | Create instance of `CODE_ROOT_PROCEDURE'.
 			-- | Set `current_feature'.
@@ -163,7 +163,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			non_void_last_feature: last_feature /= Void
 		end
 
-	generate_property (a_source: SYSTEM_DLL_CODE_MEMBER_PROPERTY) is
+	generate_property (a_source: SYSTEM_DLL_CODE_MEMBER_PROPERTY)
 			-- | Create instance of `CODE_PROPERTY_ROUTINE' if has a get property.
 			-- | Create instance of `CODE_PROPERTY_ROUTINE' if has a set property.
 			-- | For each instance : Set `current_feature'.
@@ -253,7 +253,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 
 feature {NONE} -- Routine Initialization
 
-	initialize_property_getter (a_source: SYSTEM_DLL_CODE_MEMBER_PROPERTY) is
+	initialize_property_getter (a_source: SYSTEM_DLL_CODE_MEMBER_PROPERTY)
 			-- Set `a_property_getter' according to `a_source'.
 		require
 			non_void_source: a_source /= Void
@@ -285,7 +285,7 @@ feature {NONE} -- Routine Initialization
 			end
 		end
 
-	initialize_property_setter (a_source: SYSTEM_DLL_CODE_MEMBER_PROPERTY) is
+	initialize_property_setter (a_source: SYSTEM_DLL_CODE_MEMBER_PROPERTY)
 			-- Set `a_property_setter' according to `a_source'.
 		require
 			non_void_source: a_source /= Void
@@ -317,7 +317,7 @@ feature {NONE} -- Routine Initialization
 			end
 		end
 
-	initialize_routine (a_source: SYSTEM_DLL_CODE_MEMBER_METHOD) is
+	initialize_routine (a_source: SYSTEM_DLL_CODE_MEMBER_METHOD)
 			-- Generate Eiffel code from `a_source'.
 			-- | set name of `a_routine'
 			-- | Set `implemented_type' with `current_type'
@@ -362,7 +362,7 @@ feature {NONE} -- Routine Initialization
 
 feature {NONE} -- Implementation
 
-	initialize_statements (a_statements: SYSTEM_DLL_CODE_STATEMENT_COLLECTION) is
+	initialize_statements (a_statements: SYSTEM_DLL_CODE_STATEMENT_COLLECTION)
 			-- | Call in loop `generate_statement_from_dom'.
 			-- Generate feature statements from `a_source'.
 			-- Take into account local variables.
@@ -404,7 +404,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	initialize_locals (a_statements: LIST [SYSTEM_DLL_CODE_VARIABLE_DECLARATION_STATEMENT]) is
+	initialize_locals (a_statements: LIST [SYSTEM_DLL_CODE_VARIABLE_DECLARATION_STATEMENT])
 			-- Add local variables declared in code
 		require
 			non_void_statements: a_statements /= Void
@@ -425,7 +425,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	code_arguments (a_arguments: SYSTEM_DLL_CODE_PARAMETER_DECLARATION_EXPRESSION_COLLECTION): LIST [CODE_PARAMETER_DECLARATION_EXPRESSION] is
+	code_arguments (a_arguments: SYSTEM_DLL_CODE_PARAMETER_DECLARATION_EXPRESSION_COLLECTION): LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]
 			-- Add arguments in `a_arguments' to `current_routine'.
 		local
 			i, l_count: INTEGER
@@ -456,7 +456,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

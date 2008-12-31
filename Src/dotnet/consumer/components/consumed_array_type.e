@@ -1,4 +1,4 @@
-indexing
+note
 	description: ".NET arrays as seen in Eiffel"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; id: INTEGER; t: like element_type) is
+	make (a_name: STRING; id: INTEGER; t: like element_type)
 			-- Initialize Current with type name `a_name' defined in assembly `id'
 			-- where elements are of type `t'.
 		require
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	element_type: CONSUMED_REFERENCED_TYPE is
+	element_type: CONSUMED_REFERENCED_TYPE
 			-- Type of array element.
 		do
 			Result := e
@@ -52,7 +52,7 @@ feature {NONE} -- Access
 invariant
 	element_type_not_void: element_type /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

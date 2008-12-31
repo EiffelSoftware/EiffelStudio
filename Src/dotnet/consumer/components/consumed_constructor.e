@@ -1,4 +1,4 @@
-indexing
+note
 	description: ".NET type constructor as seen in Eiffel"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (en: STRING; args: like arguments; pub: BOOLEAN; a_type: CONSUMED_REFERENCED_TYPE) is
+	make (en: STRING; args: like arguments; pub: BOOLEAN; a_type: CONSUMED_REFERENCED_TYPE)
 			-- Initialize consumed constructor.
 		require
 			non_void_eiffel_name: en /= Void
@@ -45,33 +45,33 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	arguments: ARRAY [CONSUMED_ARGUMENT] is
+	arguments: ARRAY [CONSUMED_ARGUMENT]
 			-- Constructor arguments
 		do
 			Result := a
 		end
 
-	is_public: BOOLEAN is
+	is_public: BOOLEAN
 			-- Is constructor public?
 		do
 			Result := p
 		end
 
-	is_frozen: BOOLEAN is True
+	is_frozen: BOOLEAN = True
 			-- A constructor cannot be redefined.
 
-	is_constructor: BOOLEAN is True
+	is_constructor: BOOLEAN = True
 			-- A constructor is a constructor.
 
-	dotnet_name: STRING is ".ctor"
+	dotnet_name: STRING = ".ctor"
 			-- Name of a .NET constructor.
 
-	dotnet_eiffel_name: STRING is "make"
+	dotnet_eiffel_name: STRING = "make"
 			-- Eiffelized name of .NET constructor.
 
 feature -- Status report
 
-	has_arguments: BOOLEAN is
+	has_arguments: BOOLEAN
 			-- Does current have arguments?
 		do
 			Result := arguments /= Void and then arguments.count /= 0
@@ -79,7 +79,7 @@ feature -- Status report
 
 feature -- Settings
 
-	set_is_public (pub: like is_public) is
+	set_is_public (pub: like is_public)
 			-- Set `is_public' with `pub'.
 		do
 			p := pub
@@ -95,7 +95,7 @@ feature {NONE} -- Access
 	p: like is_public;
 			-- Internal data for `is_public'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

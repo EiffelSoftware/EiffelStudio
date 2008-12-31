@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Backup files into directory given in configuration file"
 	
 class
@@ -12,7 +12,7 @@ inherit
 
 feature -- Access
 
-	backup_enabled: BOOLEAN is
+	backup_enabled: BOOLEAN
 			-- Is backup option enabled?
 		do
 			Result := backup_folder /= Void
@@ -25,7 +25,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	backup_content (a_content, a_backup_file_name: STRING) is
+	backup_content (a_content, a_backup_file_name: STRING)
 			-- Save `a_content' in `a_backup_file_name' in folder `backup_folder'.
 			-- Append smallest unique integer to `a_backup_file_name' if file with same name already exists.
 			-- Do nothing is `backup_folder' is Void.
@@ -50,7 +50,7 @@ feature -- Basic Operations
 			retry
 		end
 
-	backup_file (a_file: FILE) is
+	backup_file (a_file: FILE)
 			-- Backup `a_file' in backup folder.
 			-- Append smallest unique integer to `a_file' name if file with same name already exists.
 		require
@@ -81,7 +81,7 @@ feature -- Basic Operations
 			retry
 		end
 
-	backup_file_from_path (a_path: STRING) is
+	backup_file_from_path (a_path: STRING)
 			-- Backup file located at `a_path' in backup folder.
 			-- Append smallest unique integer to `a_file' name if file with same name already exists.
 		require
@@ -92,7 +92,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	unique_file_name (a_file_name, a_path: STRING): STRING is
+	unique_file_name (a_file_name, a_path: STRING): STRING
 			-- File name based on `a_file_name' for a file that does not exist in `a_path'
 		require
 			attached_file_name: a_file_name /= Void
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

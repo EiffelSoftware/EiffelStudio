@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Graphical settings saved between sessions"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize settings manager.
 		do
 			manager_make (Tester_hive_path)
@@ -36,34 +36,34 @@ feature {NONE} -- Initialization
 		
 feature -- Access
 
-	saved_blank_lines: BOOLEAN is
+	saved_blank_lines: BOOLEAN
 		do
 			Result := setting (Blank_lines_key) = 1
 		end
 
-	saved_else_at_closing: BOOLEAN is
+	saved_else_at_closing: BOOLEAN
 		do
 			Result := setting (Else_at_closing_key) = 1
 		end
 
-	saved_generate_executable: BOOLEAN is
+	saved_generate_executable: BOOLEAN
 		do
 			Result := setting (Generate_executable_key) = 1
 		end
 
-	saved_generate_in_memory: BOOLEAN is
+	saved_generate_in_memory: BOOLEAN
 		do
 			Result := setting (Generate_in_memory_key) = 1
 		end
 
-	saved_include_debug: BOOLEAN is
+	saved_include_debug: BOOLEAN
 		do
 			Result := setting (Include_debug_key) = 1
 		end
 
 feature -- Basic Implementation
 
-	set_saved_blank_lines (a_blank_lines: BOOLEAN) is
+	set_saved_blank_lines (a_blank_lines: BOOLEAN)
 			-- Set `saved_blank_lines' with `a_blank_lines'.
 		do
 			if a_blank_lines then
@@ -75,7 +75,7 @@ feature -- Basic Implementation
 			set: saved_blank_lines = a_blank_lines
 		end
 
-	set_saved_else_at_closing (a_else_at_closing: BOOLEAN) is
+	set_saved_else_at_closing (a_else_at_closing: BOOLEAN)
 			-- Set `saved_else_at_closing' with `a_else_at_closing'.
 		do
 			if a_else_at_closing then
@@ -87,7 +87,7 @@ feature -- Basic Implementation
 			set: saved_else_at_closing = a_else_at_closing
 		end
 
-	set_saved_generate_executable (a_generate_executable: BOOLEAN) is
+	set_saved_generate_executable (a_generate_executable: BOOLEAN)
 			-- Set `saved_generate_executable' with `a_generate_executable'.
 		do
 			if a_generate_executable then
@@ -99,7 +99,7 @@ feature -- Basic Implementation
 			set: saved_generate_executable = a_generate_executable
 		end
 
-	set_saved_generate_in_memory (a_generate_in_memory: BOOLEAN) is
+	set_saved_generate_in_memory (a_generate_in_memory: BOOLEAN)
 			-- Set `saved_generate_in_memory' with `a_generate_in_memory'.
 		do
 			if a_generate_in_memory then
@@ -111,7 +111,7 @@ feature -- Basic Implementation
 			set: saved_generate_in_memory = a_generate_in_memory
 		end
 
-	set_saved_include_debug (a_include_debug: BOOLEAN) is
+	set_saved_include_debug (a_include_debug: BOOLEAN)
 			-- Set `saved_include_debug' with `a_include_debug'.
 		do
 			if a_include_debug then
@@ -123,7 +123,7 @@ feature -- Basic Implementation
 			set: saved_include_debug = a_include_debug
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

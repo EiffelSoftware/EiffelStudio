@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Member reference in CodeDom, need to distinguish from `CODE_MEMBER' because:%
 					% * Does not have code associated to it%
 					% * Corresponding CODE_MEMBER might not be initialized yet"
@@ -44,7 +44,7 @@ create {CODE_EIFFEL_METADATA_PROVIDER, CODE_TYPE_REFERENCE}
 
 feature {NONE} -- Initialization
 
-	make (a_dotnet_name: like name; a_implementing_type: like implementing_type; a_is_redefined: like is_redefined) is
+	make (a_dotnet_name: like name; a_implementing_type: like implementing_type; a_is_redefined: like is_redefined)
 			-- Initialize instance.
 		require
 			non_void_name: a_dotnet_name /= Void
@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 			is_redefined_set: is_redefined = a_is_redefined
 		end
 
-	make_external (a_dotnet_name, a_eiffel_name: like name; a_arguments: like arguments; a_implementing_type: like implementing_type) is
+	make_external (a_dotnet_name, a_eiffel_name: like name; a_arguments: like arguments; a_implementing_type: like implementing_type)
 			-- Initialize instance.
 		require
 			non_void_name: a_dotnet_name /= Void
@@ -99,7 +99,7 @@ feature -- Access
 	arguments: LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]
 			-- Routine arguments
 
-	parent: CODE_MEMBER_REFERENCE is
+	parent: CODE_MEMBER_REFERENCE
 			-- Parent feature
 			-- Log error if not found.
 		require
@@ -117,7 +117,7 @@ feature -- Access
 			Result := internal_parent
 		end
 
-	overloaded_eiffel_name: STRING is
+	overloaded_eiffel_name: STRING
 			-- Overloaded eiffel name
 		require
 			is_external: not Resolver.is_generated (implementing_type)
@@ -133,7 +133,7 @@ feature -- Access
 			end
 		end
 
-	eiffel_name: STRING is
+	eiffel_name: STRING
 			-- Eiffel name
 		require
 			initialized: is_initialized
@@ -165,7 +165,7 @@ feature -- Access
 			non_void_eiffel_name: Result /= Void
 		end
 
-	result_type: CODE_TYPE_REFERENCE is
+	result_type: CODE_TYPE_REFERENCE
 			-- Return type if any
 			-- This should be called after the feature has been added to the
 			-- generated type if not an external routine.
@@ -206,7 +206,7 @@ feature -- Access
 
 feature -- Status Report
 
-	has_arguments (a_arguments: LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]): BOOLEAN is
+	has_arguments (a_arguments: LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]): BOOLEAN
 			-- Does member have arguments `a_arguments'?
 		require
 			initialized: is_initialized
@@ -239,7 +239,7 @@ feature -- Status Report
 
 feature -- Element Settings
 
-	add_argument (a_argument: CODE_PARAMETER_DECLARATION_EXPRESSION) is
+	add_argument (a_argument: CODE_PARAMETER_DECLARATION_EXPRESSION)
 			-- Add `a_argument' to list of arguments
 		require
 			not_initialized: not is_initialized
@@ -253,7 +253,7 @@ feature -- Element Settings
 			argument_added: arguments.has (a_argument)
 		end
 
-	set_arguments (a_arguments: LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]) is
+	set_arguments (a_arguments: LIST [CODE_PARAMETER_DECLARATION_EXPRESSION])
 			-- Set `arguments' with `a_arguments'.
 		require
 			not_initialized: not is_initialized
@@ -263,7 +263,7 @@ feature -- Element Settings
 			arguments_set: arguments = a_arguments
 		end
 
-	set_initialized is
+	set_initialized
 			-- Set `is_initialized' to True.
 		require
 			not_initialized: not is_initialized
@@ -275,7 +275,7 @@ feature -- Element Settings
 
 feature {NONE} -- Implementation
 
-	parent_in_type (a_type: CODE_TYPE_REFERENCE): CODE_MEMBER_REFERENCE is
+	parent_in_type (a_type: CODE_TYPE_REFERENCE): CODE_MEMBER_REFERENCE
 			-- Parent in type `a_type'
 			--| Do not use `eiffel_name' as `eiffel_name' uses `parent_in_type'.
 		require
@@ -347,7 +347,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	parent_in_dotnet_type (a_type: SYSTEM_TYPE): CODE_MEMBER_REFERENCE is
+	parent_in_dotnet_type (a_type: SYSTEM_TYPE): CODE_MEMBER_REFERENCE
 			-- Parent feature in `a_type' and parents of `a_type'
 		require
 			non_void_type: a_type /= Void
@@ -393,7 +393,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	parent_feature_from_dotnet_type (a_type: SYSTEM_TYPE): CODE_MEMBER_REFERENCE is
+	parent_feature_from_dotnet_type (a_type: SYSTEM_TYPE): CODE_MEMBER_REFERENCE
 			-- Feature with same .NET name and same arguments as `Current' in `a_type' if any
 		require
 			non_void_type: a_type /= Void
@@ -418,7 +418,7 @@ feature {NONE} -- Implementation
 			valid_parent_feature: Result /= Void implies Result.name.is_equal (name) and has_arguments (Result.arguments)
 		end
 
-	same_arguments (a_feature: CODE_FEATURE): BOOLEAN is
+	same_arguments (a_feature: CODE_FEATURE): BOOLEAN
 			-- Does `a_feature' have same arguments as `Current'?
 		require
 			non_void_feature: a_feature /= Void
@@ -438,7 +438,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	native_arguments: NATIVE_ARRAY [SYSTEM_TYPE] is
+	native_arguments: NATIVE_ARRAY [SYSTEM_TYPE]
 			-- Arguments types
 		require
 			is_dotnet: not Resolver.is_generated (implementing_type)
@@ -478,7 +478,7 @@ invariant
 	non_void_name: name /= Void
 	non_void_implementing_type: implementing_type /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

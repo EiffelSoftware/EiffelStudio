@@ -1,4 +1,4 @@
-indexing
+note
 	description: "CodeDOM Visitor."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		do
 			clear_cast_expressions
 			clear_variables
@@ -34,27 +34,27 @@ feature {NONE} -- Initialization
 
 feature {AST_YACC} -- Initialization
 
-	process_internal_as (l_as: INTERNAL_AS) is
+	process_internal_as (l_as: INTERNAL_AS)
 		do
 		end
 
-	process_delayed_access_feat_as (l_as: DELAYED_ACCESS_FEAT_AS) is
+	process_delayed_access_feat_as (l_as: DELAYED_ACCESS_FEAT_AS)
 		do
 		end
 
-	process_expr_addresse_as (l_as: EXPR_ADDRESS_AS) is
+	process_expr_addresse_as (l_as: EXPR_ADDRESS_AS)
 		do
 		end
 
-	process_use_list_as (l_as: USE_LIST_AS) is
+	process_use_list_as (l_as: USE_LIST_AS)
 		do
 		end
 
-	process_void_as (l_as: VOID_AS) is
+	process_void_as (l_as: VOID_AS)
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

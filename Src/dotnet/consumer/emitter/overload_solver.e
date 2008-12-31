@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Solve overloading for a given .NET type"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize solver
 		do
 			create method_table.make (20)
@@ -38,7 +38,7 @@ feature {NONE} -- Access
 	eiffel_names: HASH_TABLE [HASH_TABLE [STRING, STRING], STRING]
 			-- give hash_table of eiffel names for a dotnet type name.
 
-	key_args (args: NATIVE_ARRAY [PARAMETER_INFO]; return_type: SYSTEM_TYPE; declared_type: SYSTEM_TYPE): STRING is
+	key_args (args: NATIVE_ARRAY [PARAMETER_INFO]; return_type: SYSTEM_TYPE; declared_type: SYSTEM_TYPE): STRING
 			-- return signature corresponding to args.
 		local
 			i: INTEGER
@@ -65,7 +65,7 @@ feature {NONE} -- Access
 
 feature	-- Access
 
-	unique_eiffel_name (a_dotnet_name: SYSTEM_STRING; args: NATIVE_ARRAY [PARAMETER_INFO]; return_type: SYSTEM_TYPE; declaring_type: SYSTEM_TYPE): STRING is
+	unique_eiffel_name (a_dotnet_name: SYSTEM_STRING; args: NATIVE_ARRAY [PARAMETER_INFO]; return_type: SYSTEM_TYPE; declaring_type: SYSTEM_TYPE): STRING
 		require
 			non_void_a_dotnet_name: a_dotnet_name /= Void
 			non_void_args: args /= Void
@@ -75,7 +75,7 @@ feature	-- Access
 
 feature -- Basic Operations
 
-	solve is
+	solve
 			-- Initialize `procedures' and `functions'.
 			-- Can only be called once.
 		require
@@ -189,7 +189,7 @@ feature -- Basic Operations
 			solved: solved
 		end
 
-	is_unique_signature (method: METHOD_SOLVER; method_list: LIST [METHOD_SOLVER]; index: INTEGER): BOOLEAN is
+	is_unique_signature (method: METHOD_SOLVER; method_list: LIST [METHOD_SOLVER]; index: INTEGER): BOOLEAN
 			-- Are parameter types starting from index `index' in `method' unique in `method_list'?
 		require
 			non_void_method: method /= Void
@@ -248,7 +248,7 @@ feature -- Status Report
 
 feature -- Element Settings
 
-	add_method (meth: METHOD_INFO) is
+	add_method (meth: METHOD_INFO)
 			-- Include `meth' in overload solving process.
 			-- Remove `get_' for properties getters.
 		require
@@ -257,7 +257,7 @@ feature -- Element Settings
 			internal_add_method (meth, False)
 		end
 
-	add_property (property: PROPERTY_INFO) is
+	add_property (property: PROPERTY_INFO)
 			-- Include `meth' in overload solving process.
 			-- Remove `get_' for properties getters.
 		require
@@ -279,7 +279,7 @@ feature -- Element Settings
 			end
 		end
 
-	add_event (event: EVENT_INFO) is
+	add_event (event: EVENT_INFO)
 			-- Include `meth' in overload solving process.
 			-- Remove `get_' for properties getters.
 		require
@@ -309,7 +309,7 @@ feature -- Element Settings
 
 feature {NONE} -- Internal Statur Setting	
 
-	internal_add_method (meth: METHOD_INFO; get_property: BOOLEAN) is
+	internal_add_method (meth: METHOD_INFO; get_property: BOOLEAN)
 			-- Include `meth' in overload solving process.
 			-- Remove `get_' for properties getters.
 		require
@@ -342,10 +342,10 @@ feature {NONE} -- Implementation
 	method_table: HASH_TABLE [SORTED_TWO_WAY_LIST [METHOD_SOLVER], STRING]
 			-- Table of methods
 
-	get_prefix: SYSTEM_STRING is "get_";
+	get_prefix: SYSTEM_STRING = "get_";
 			-- Get property prefix
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

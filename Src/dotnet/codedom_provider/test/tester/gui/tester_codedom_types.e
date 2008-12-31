@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Codedom trees types constants"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,48 +10,48 @@ class
 
 feature -- Access
 
-	Codedom_compile_unit_type: INTEGER is 1
+	Codedom_compile_unit_type: INTEGER = 1
 			-- Compile unit tree
 
-	Codedom_namespace_type: INTEGER is 2
+	Codedom_namespace_type: INTEGER = 2
 			-- Namespace tree
 
-	Codedom_type_type: INTEGER is 3
+	Codedom_type_type: INTEGER = 3
 			-- Type tree
 
-	Codedom_expression_type: INTEGER is 4
+	Codedom_expression_type: INTEGER = 4
 			-- Expression tree
 
-	Codedom_statement_type: INTEGER is 5
+	Codedom_statement_type: INTEGER = 5
 			-- Statement tree
 
-	Codedom_method_type: INTEGER is 6
+	Codedom_method_type: INTEGER = 6
 			-- Method tree node
 	
-	Codedom_property_type: INTEGER is 7
+	Codedom_property_type: INTEGER = 7
 			-- Property tree node
 	
-	Codedom_event_type: INTEGER is 8
+	Codedom_event_type: INTEGER = 8
 			-- Event tree node
 	
-	Codedom_field_type: INTEGER is 9
+	Codedom_field_type: INTEGER = 9
 			-- Field tree node
 
-	Codedom_snippet_member_type: INTEGER is 10
+	Codedom_snippet_member_type: INTEGER = 10
 			-- Member snippet tree node
 
-	Codedom_type_reference_type: INTEGER is 11
+	Codedom_type_reference_type: INTEGER = 11
 			-- Type reference tree node
 
-	Codedom_comment_type: INTEGER is 12
+	Codedom_comment_type: INTEGER = 12
 			-- Comment tree node
 
-	Codedom_import_type: INTEGER is 13
+	Codedom_import_type: INTEGER = 13
 			-- Namespace import tree node
 
 feature -- Status Report
 
-	is_valid_codedom_type (a_type: INTEGER): BOOLEAN is
+	is_valid_codedom_type (a_type: INTEGER): BOOLEAN
 			-- Is `a_type' a valid codedom type?
 		do
 			Result := a_type = Codedom_compile_unit_type or a_type = Codedom_namespace_type or
@@ -63,7 +63,7 @@ feature -- Status Report
 				a_type = Codedom_import_type
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Source code generator for property reference expressions"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_getter: like property_name; a_target: like target) is
+	make (a_getter: like property_name; a_target: like target)
 			-- Initialize instance
 		require
 			non_void_getter: a_getter /= Void
@@ -55,7 +55,7 @@ feature -- Access
 	is_set_reference: BOOLEAN
 			-- get or set reference?
 			
-	code: STRING is
+	code: STRING
 			-- | Result := "[`target_object'.]set_`property_name'" if `is_set_reference' else
 			-- | OR		:= "[`target_object'.]`property_name'"
 			-- | OR		:= "feature {`target_object'}.set/get_`property_name'" if typeof `target_object' is CODE_TYPE_REFERENCE_EXPRESSION
@@ -88,7 +88,7 @@ feature -- Access
 		
 feature -- Status Report
 
-	type: CODE_TYPE_REFERENCE is
+	type: CODE_TYPE_REFERENCE
 			-- Type
 		do
 			if is_set_reference then
@@ -100,7 +100,7 @@ feature -- Status Report
 
 feature {CODE_STATEMENT_FACTORY} -- Element Settings
 
-	set_is_set_reference (a_is_set_reference: like is_set_reference) is
+	set_is_set_reference (a_is_set_reference: like is_set_reference)
 			-- Set `is_set_reference' with `a_is_set_reference'.
 		do
 			is_set_reference := a_is_set_reference
@@ -110,7 +110,7 @@ feature {CODE_STATEMENT_FACTORY} -- Element Settings
 
 feature {NONE} -- Implementation
 
-	property_type: CODE_TYPE_REFERENCE is
+	property_type: CODE_TYPE_REFERENCE
 			-- Type of property
 		do
 			if internal_property_type = Void and property_accesser /= Void then
@@ -123,7 +123,7 @@ feature {NONE} -- Implementation
 			Result := internal_property_type
 		end
 		
-	property_accesser: CODE_MEMBER_REFERENCE is
+	property_accesser: CODE_MEMBER_REFERENCE
 			-- Property getter
 		local
 			l_name: STRING
@@ -160,7 +160,7 @@ invariant
 	non_void_property_name: property_name /= Void
 	non_void_target: target /= Void
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

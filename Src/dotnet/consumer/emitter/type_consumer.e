@@ -1,4 +1,4 @@
-indexing
+note
 	description: "{CONSUMED_TYPE} factory"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -36,7 +36,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (t: SYSTEM_TYPE; en: STRING) is
+	make (t: SYSTEM_TYPE; en: STRING)
 			-- Initialize type consumer for type `t' with eiffel name `en'.
 		require
 			non_void_type: t /= Void
@@ -169,7 +169,7 @@ feature -- Status Report
 
 feature -- Basic Operation
 
-	initialize is
+	initialize
 			-- Initialize `consumed_type.functions', `consumed_type.procedures',
 			-- `consumed_type.fields', `consumed_type.constructors',
 			-- `consumed_type.properties' and `consumed_type.events'.
@@ -349,7 +349,7 @@ feature -- Basic Operation
 			retry
 		end
 
-	initialize_overload_solver is
+	initialize_overload_solver
 			-- Initialize overload solver.
 			-- Add all methods (properties, events, procedures and functions) in overload_solver.
 		local
@@ -426,7 +426,7 @@ feature -- Basic Operation
 
 feature {NONE} -- Implementation
 
-	consumed_field (info: FIELD_INFO): CONSUMED_FIELD is
+	consumed_field (info: FIELD_INFO): CONSUMED_FIELD
 			-- Eiffel attribute from `info'.
 		require
 			non_void_field_info: info /= Void
@@ -491,7 +491,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	consumed_procedure (info: METHOD_INFO; property_or_event: BOOLEAN): CONSUMED_PROCEDURE is
+	consumed_procedure (info: METHOD_INFO; property_or_event: BOOLEAN): CONSUMED_PROCEDURE
 			-- Consumed procedure.
 		require
 			non_void_info: info /= Void
@@ -521,7 +521,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	consumed_function (info: METHOD_INFO; property_or_event: BOOLEAN): CONSUMED_FUNCTION is
+	consumed_function (info: METHOD_INFO; property_or_event: BOOLEAN): CONSUMED_FUNCTION
 			-- Consumed function.
 		require
 			non_void_info: info /= Void
@@ -554,7 +554,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	consumed_property (info: PROPERTY_INFO): CONSUMED_PROPERTY is
+	consumed_property (info: PROPERTY_INFO): CONSUMED_PROPERTY
 			-- Process property `info'.
 		require
 			non_void_property_info: info /= Void
@@ -591,7 +591,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	consumed_event (info: EVENT_INFO): CONSUMED_EVENT is
+	consumed_event (info: EVENT_INFO): CONSUMED_EVENT
 			-- Process event `info'.
 		require
 			non_void_event_info: info /= Void
@@ -627,7 +627,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	consumed_parent (a_type: SYSTEM_TYPE): SYSTEM_TYPE is
+	consumed_parent (a_type: SYSTEM_TYPE): SYSTEM_TYPE
 			-- Retrieves a consume parent of `a_type'.
 		require
 			a_type_attached: a_type /= Void
@@ -646,7 +646,7 @@ feature {NONE} -- Implementation
 
 	solved_constructors (
 			tc: SORTED_TWO_WAY_LIST [CONSTRUCTOR_SOLVER]): ARRAYED_LIST [CONSUMED_CONSTRUCTOR]
-		is
+		
 			-- Initialize `constructors' from `tc'.
 		require
 			non_void_constructors: tc /= Void
@@ -763,13 +763,13 @@ feature {NONE} -- Implementation
 --	Argument_prefix: STRING is "arg_"
 --			-- Argument names prefix
 
-	Constructor_overload_resolution: INTEGER is 3
+	Constructor_overload_resolution: INTEGER = 3
 			-- Number of arguments in a constructor for which we always expand
 			-- their name definition.
 
-	Creation_routine_name: STRING is "make"
-	Complete_creation_routine_name_prefix: STRING is "make_from_"
-	Partial_creation_routine_name_prefix: STRING is "make_with_"
+	Creation_routine_name: STRING = "make"
+	Complete_creation_routine_name_prefix: STRING = "make_from_"
+	Partial_creation_routine_name_prefix: STRING = "make_with_"
 			-- Creation routine name prefix
 
 
@@ -779,7 +779,7 @@ feature {NONE} -- Status Setting.
 	properties_and_events: HASHTABLE --[METHOD_INFO, SYSTEM_STRING]
 			-- List of properties and events.
 
-	key_args (args: NATIVE_ARRAY [PARAMETER_INFO]): SYSTEM_STRING is
+	key_args (args: NATIVE_ARRAY [PARAMETER_INFO]): SYSTEM_STRING
 			-- return signature corresponding to args.
 		local
 			i: INTEGER
@@ -800,7 +800,7 @@ feature {NONE} -- Status Setting.
 		end
 
 
-	add_property (info: PROPERTY_INFO) is
+	add_property (info: PROPERTY_INFO)
 			-- add property.
 		require
 			non_void_info: info /= Void
@@ -821,7 +821,7 @@ feature {NONE} -- Status Setting.
 			end
 		end
 
-	add_event (info:EVENT_INFO) is
+	add_event (info:EVENT_INFO)
 			-- Add event.
 		require
 			non_void_info: info /= Void
@@ -843,7 +843,7 @@ feature {NONE} -- Status Setting.
 			end
 		end
 
-	add_properties_or_events (info: METHOD_INFO) is
+	add_properties_or_events (info: METHOD_INFO)
 			-- Add info to `properties_and_events'.
 		require
 			non_void_info: info /= Void
@@ -863,7 +863,7 @@ feature {NONE} -- Status Setting.
 --			info_added: is_consumed_method (info) implies properties_and_events.contains_key (info.name + key_args (info.get_parameters))
 		end
 
-	is_property_or_event (info: METHOD_INFO): BOOLEAN is
+	is_property_or_event (info: METHOD_INFO): BOOLEAN
 			-- Is `internal_method' a property or event related feature?
 		require
 			non_void_info: info /= Void
@@ -886,7 +886,7 @@ feature {NONE} -- Status Setting.
 			end
 		end
 
-	is_infix (info: METHOD_INFO): BOOLEAN is
+	is_infix (info: METHOD_INFO): BOOLEAN
 			-- Is function an infix function?
 		require
 			is_function: is_function (info)
@@ -900,7 +900,7 @@ feature {NONE} -- Status Setting.
 						not info.name.equals (Op_explicit)
 		end
 
-	is_prefix (info: METHOD_INFO): BOOLEAN is
+	is_prefix (info: METHOD_INFO): BOOLEAN
 			-- Is function a prefix function?
 		require
 			is_function: is_function (info)
@@ -914,27 +914,27 @@ feature {NONE} -- Status Setting.
 						not info.name.equals (Op_explicit)
 		end
 
-	is_function (info: METHOD_INFO): BOOLEAN is
+	is_function (info: METHOD_INFO): BOOLEAN
 			-- Is method a function?
 		do
 			Result := not info.return_type.equals_type (Void_type)
 		end
 
-	Void_type: SYSTEM_TYPE is
+	Void_type: SYSTEM_TYPE
 			-- Void .NET type
 		once
 			Result := {SYSTEM_TYPE}.get_type_string (("System.Void").to_cil)
 		end
 
-	Operator_name_prefix: SYSTEM_STRING is "op_"
-	Op_implicit: SYSTEM_STRING is "op_implicit"
-	Op_explicit: SYSTEM_STRING is "op_Explicit"
+	Operator_name_prefix: SYSTEM_STRING = "op_"
+	Op_implicit: SYSTEM_STRING = "op_implicit"
+	Op_explicit: SYSTEM_STRING = "op_Explicit"
 			-- Special prefix for .NET operators
 
 
 feature {NONE} -- Added features of System.Object to Interfaces
 
-	update_interface_members (t: SYSTEM_TYPE) is
+	update_interface_members (t: SYSTEM_TYPE)
 			-- Updates members of interface to present a flat list of members and to include members of System.Object.
 		local
 			l_members: NATIVE_ARRAY [MEMBER_INFO]
@@ -1014,7 +1014,7 @@ feature {NONE} -- Added features of System.Object to Interfaces
 --			end
 		end
 
-	internal_update_interface_members (t: SYSTEM_TYPE; processed: HASHTABLE) is
+	internal_update_interface_members (t: SYSTEM_TYPE; processed: HASHTABLE)
 			-- Update `internal_methods', `internal_properties' and `internal_events' and recursively explores parent interface
 			-- if not already in `processed'.
 		local
@@ -1071,7 +1071,7 @@ feature {NONE} -- Added features of System.Object to Interfaces
 			end
 		end
 
-	object_methods: HASH_TABLE [METHOD_INFO, STRING] is
+	object_methods: HASH_TABLE [METHOD_INFO, STRING]
 			-- List of members of System.Object.
 		local
 			l_type: SYSTEM_TYPE
@@ -1098,7 +1098,7 @@ feature {NONE} -- Added features of System.Object to Interfaces
 			object_methods: Result /= Void
 		end
 
-	object_static_methods: NATIVE_ARRAY [METHOD_INFO] is
+	object_static_methods: NATIVE_ARRAY [METHOD_INFO]
 			-- List of members of System.Object static methods
 		local
 			l_type: SYSTEM_TYPE
@@ -1109,7 +1109,7 @@ feature {NONE} -- Added features of System.Object to Interfaces
 			object_methods: Result /= Void
 		end
 
-	object_key_name (a_method: METHOD_INFO): STRING is
+	object_key_name (a_method: METHOD_INFO): STRING
 			-- Retrieves a key for use with `object_methods' given method `a_method'
 		require
 			a_method_attached: a_method /= Void
@@ -1235,10 +1235,10 @@ feature {NONE} -- Filtering
 
 feature {NONE} -- Added features for ENUM types.
 
-	Additional_enum_features: INTEGER is 3
+	Additional_enum_features: INTEGER = 3
 			-- Number of additional features for enum types.
 
-	infix_and_feature (a_enum_type: CONSUMED_REFERENCED_TYPE): CONSUMED_FUNCTION is
+	infix_and_feature (a_enum_type: CONSUMED_REFERENCED_TYPE): CONSUMED_FUNCTION
 			-- Create instance of CONSUMED_FUNCTION for `&' in enum type `t'.
 		require
 			a_enum_type_not_void: a_enum_type /= Void
@@ -1262,7 +1262,7 @@ feature {NONE} -- Added features for ENUM types.
 			Result.set_is_artificially_added (True)
 		end
 
-	infix_or_feature (a_enum_type: CONSUMED_REFERENCED_TYPE): CONSUMED_FUNCTION is
+	infix_or_feature (a_enum_type: CONSUMED_REFERENCED_TYPE): CONSUMED_FUNCTION
 			-- Create instance of CONSUMED_FUNCTION for `|' in enum type `t'.
 		require
 			a_enum_type_not_void: a_enum_type /= Void
@@ -1286,7 +1286,7 @@ feature {NONE} -- Added features for ENUM types.
 			Result.set_is_artificially_added (True)
 		end
 
-	from_integer_feature (a_enum_type: CONSUMED_REFERENCED_TYPE; a_underlying_enum_type: CONSUMED_REFERENCED_TYPE): CONSUMED_FUNCTION is
+	from_integer_feature (a_enum_type: CONSUMED_REFERENCED_TYPE; a_underlying_enum_type: CONSUMED_REFERENCED_TYPE): CONSUMED_FUNCTION
 			-- Create instance of CONSUMED_FUNCTION for`from_integer' in enum type `t'.
 		require
 			a_enum_type_not_void: a_enum_type /= Void
@@ -1310,7 +1310,7 @@ feature {NONE} -- Added features for ENUM types.
 			Result.set_is_artificially_added (True)
 		end
 
-	to_integer_feature (a_enum_type: CONSUMED_REFERENCED_TYPE; a_underlying_enum_type: CONSUMED_REFERENCED_TYPE): CONSUMED_FUNCTION is
+	to_integer_feature (a_enum_type: CONSUMED_REFERENCED_TYPE; a_underlying_enum_type: CONSUMED_REFERENCED_TYPE): CONSUMED_FUNCTION
 			-- Create instance of CONSUMED_FUNCTION for`to_integer' in enum type `t'.
 		require
 			a_enum_type_not_void: a_enum_type /= Void
@@ -1332,7 +1332,7 @@ feature {NONE} -- Added features for ENUM types.
 			Result.set_is_artificially_added (True)
 		end
 
-	attribute_setter_feature (a_field: FIELD_INFO; a_field_name: STRING): CONSUMED_PROCEDURE is
+	attribute_setter_feature (a_field: FIELD_INFO; a_field_name: STRING): CONSUMED_PROCEDURE
 			-- attribute setter feature.
 		require
 			non_void_field: a_field /= Void
@@ -1350,7 +1350,7 @@ feature {NONE} -- Added features for ENUM types.
 												a_field.is_static)
 		end
 
-	integer_type: CONSUMED_REFERENCED_TYPE is
+	integer_type: CONSUMED_REFERENCED_TYPE
 			-- Referenced type of `System.Int32'.
 		do
 			Result := referenced_type_from_type ({SYSTEM_TYPE}.get_type_string (("System.Int32").to_cil))
@@ -1358,7 +1358,7 @@ feature {NONE} -- Added features for ENUM types.
 			integer_type_not_void: integer_type /= Void
 		end
 
-	literal_field_value (val: SYSTEM_OBJECT): STRING is
+	literal_field_value (val: SYSTEM_OBJECT): STRING
 			-- Convert `val' into a STRING representation.
 		require
 			val_not_void: val /= Void
@@ -1377,7 +1377,7 @@ feature {NONE} -- Added features for ENUM types.
 			end
 		end
 
-	bytes_to_string (a: NATIVE_ARRAY [NATURAL_8]): STRING is
+	bytes_to_string (a: NATIVE_ARRAY [NATURAL_8]): STRING
 			-- Convert `a' into an hexadecimal string.
 		require
 			non_void_array: a /= Void
@@ -1402,19 +1402,19 @@ feature {NONE} -- Added features for ENUM types.
 			converted: Result /= Void and then not Result.is_empty
 		end
 
-	Double_type: SYSTEM_TYPE is
+	Double_type: SYSTEM_TYPE
 			-- typeof (double)
 		once
 			Result := {SYSTEM_TYPE}.get_type_string (("System.Double").to_cil)
 		end
 
-	Real_type: SYSTEM_TYPE is
+	Real_type: SYSTEM_TYPE
 			-- typeof (float)
 		once
 			Result := {SYSTEM_TYPE}.get_type_string (("System.Single").to_cil)
 		end
 
-	enum_type: SYSTEM_TYPE is
+	enum_type: SYSTEM_TYPE
 			-- typeof (System.Enum)
 		once
 			Result := {ENUM}
@@ -1422,7 +1422,7 @@ feature {NONE} -- Added features for ENUM types.
 			result_attached: Result /= Void
 		end
 
-	value_type_type: SYSTEM_TYPE is
+	value_type_type: SYSTEM_TYPE
 			-- typeof (System.ValueType)
 		once
 			Result := {VALUE_TYPE}
@@ -1430,7 +1430,7 @@ feature {NONE} -- Added features for ENUM types.
 			result_attached: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

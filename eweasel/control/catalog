@@ -2047,7 +2047,8 @@ test	catcall-checking-conformance	conform003 tcf pass conformance
 test	tuple-conformance-broken	conform004 tcf pass conformance
 test	reverse-assignment-on-attached-target-broken	conform005 tcf pass conformance
 test	manifest-tuple-type-conformance	conform006 tcf pass conformance
-
+test	attached-agent-procedure-conformance	conform007 tcf fail conformance attached_types
+ 
 -- .NET specific test
 if DOTNET test expanded-object-conversion	dotnet001	tcf pass dotnet
 test tuple-insertions-assertions		dotnet002	tcf pass dotnet tuple

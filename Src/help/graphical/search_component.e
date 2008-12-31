@@ -1,4 +1,4 @@
-indexing
+note
 	description: "The 'Search' tab in the notebook"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ create
 
 feature -- Initialization
 
-	make(vw: VIEWER_WINDOW) is
+	make(vw: VIEWER_WINDOW)
 			-- Initialize on 'vw'.
 		require
 			not_void: vw /= Void
@@ -45,7 +45,7 @@ feature -- Initialization
 
 feature -- Actions
 
-	item_selected(args: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	item_selected(args: EV_ARGUMENT; data: EV_EVENT_DATA)
 		require
 			selected: search_list.selected
 		local
@@ -55,7 +55,7 @@ feature -- Actions
 			viewer.set_selected_topic(elem.topic)
 		end
 
-	key_pressed(args: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	key_pressed(args: EV_ARGUMENT; data: EV_EVENT_DATA)
 		require
 			key_pressed: data /= Void
 		local
@@ -98,7 +98,7 @@ invariant
 	SEARCH_COMPONENT_possible: search_list /= Void and search_edit /= Void and
 								enter_key>=0 and viewer /=Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

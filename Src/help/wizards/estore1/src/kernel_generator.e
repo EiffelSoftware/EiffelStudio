@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generate FL Kernel accordingly with DB Tables."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Initialize
 		local
 			b: BOOLEAN
@@ -43,7 +43,7 @@ feature -- Initialization
 
 feature -- Processing
 
-	generate_classes is
+	generate_classes
 			-- Generate classes corresponding to the database tables.
 		local
 			li: LINKED_LIST[CLASS_NAME]
@@ -63,7 +63,7 @@ feature -- Processing
 			end
 		end
 
-	generate_class(s: STRING) is
+	generate_class(s: STRING)
 			-- Generate class according to class whose name is 's'.
 		require
 			s /= Void
@@ -87,14 +87,14 @@ feature -- Processing
 			f.close
 		end
 
-	generate_basic_facade is
+	generate_basic_facade
 			-- Generate basic facade.
 		do
 			generate_repositories	
 			load_other_classes		
 		end
 
-	generate_repositories is
+	generate_repositories
 			-- Generate 'repositories' relative to the 
 			-- user database.
 		local
@@ -129,7 +129,7 @@ feature -- Processing
 			f.close
 		end
 
-	load_other_classes is
+	load_other_classes
 			-- Load remaining classes
 		local
 			f1,f_name: FILE_NAME
@@ -146,7 +146,7 @@ feature -- Processing
 			end
 		end
 
-	copy_class(name: STRING) is
+	copy_class(name: STRING)
 			-- Copy Class whose name is 'name'.
 		require
 			name /= Void
@@ -171,7 +171,7 @@ feature -- Processing
 			fi.close
 		end
 
-	generate_example is
+	generate_example
 			-- Generate example of use.
 		local
 			f1,f_name: FILE_NAME
@@ -209,7 +209,7 @@ feature -- Processing
 
 feature -- Output
 
-	notify_user(s: STRING) is
+	notify_user(s: STRING)
 			-- Output
 		require
 			not_void: s /= Void
@@ -223,22 +223,22 @@ feature -- Implementation
 	repositories: LINKED_LIST[DB_REPOSITORY]
 		-- Repositories relative to Current DB.
 
-	path: STRING is "d:\tmp\att2"
+	path: STRING = "d:\tmp\att2"
 
-	resource_path: STRING is "d:\wizards\resources"
+	resource_path: STRING = "d:\wizards\resources"
 
-	basic_facade: BOOLEAN is TRUE
+	basic_facade: BOOLEAN = TRUE
 
-	example: BOOLEAN is TRUE
+	example: BOOLEAN = TRUE
 
-	username: STRING is "manus@CLIENTSAP"
+	username: STRING = "manus@CLIENTSAP"
 
-	password: STRING is "manus"
+	password: STRING = "manus"
 
 invariant
 	path_exists: path /= Void
 	repositories_exist: repositories /= Void
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

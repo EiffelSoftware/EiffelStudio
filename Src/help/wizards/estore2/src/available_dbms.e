@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Specific information for the Oracle wizard."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,21 +11,21 @@ class
 
 feature {WIZARD_PROJECT_SHARED} -- Access
 
-	is_valid_code (code: INTEGER): BOOLEAN is
+	is_valid_code (code: INTEGER): BOOLEAN
 			-- Is `code' a valid DBMS code?
 		do
 			Result := code = Oracle_code or else code = Odbc_code
 		end
 
-	Oracle_code: INTEGER is 1
+	Oracle_code: INTEGER = 1
 			-- Code for Oracle DBMS.
 
-	Odbc_code: INTEGER is 2
+	Odbc_code: INTEGER = 2
 			-- Code for ODBC DBMS.
 
 	handle_b: EV_RADIO_BUTTON
 
-	db_manager_list: ARRAYED_LIST [DATABASE_MANAGER [DATABASE]] is
+	db_manager_list: ARRAYED_LIST [DATABASE_MANAGER [DATABASE]]
 			-- List of database managers for every DBMS.
 		once
 			create Result.make (2)
@@ -35,7 +35,7 @@ feature {WIZARD_PROJECT_SHARED} -- Access
 			exists: Result /= Void
 		end
 
-	db_display_name_list: ARRAYED_LIST [STRING] is
+	db_display_name_list: ARRAYED_LIST [STRING]
 			-- List of DBMS display names.
 		once
 			create Result.make (2)
@@ -48,7 +48,7 @@ feature {WIZARD_PROJECT_SHARED} -- Access
 invariant
 	same_count: db_manager_list.count = db_display_name_list.count
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Template for the last state of a wizard"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature -- Basic Operations
 
-	proceed_with_current_info is
+	proceed_with_current_info
 		local
 			ace_location: FILE_NAME
 		do
@@ -42,7 +42,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	display_state_text is
+	display_state_text
 			-- Display message text relative to current state.
 		do
 			title.set_text (Interface_names.t_Final_state)
@@ -50,18 +50,18 @@ feature {NONE} -- Implementation
 					wizard_information.project_name, wizard_information.project_location))
 		end
 
-	final_message: STRING is
+	final_message: STRING
 		do
 		end
 
-	pixmap_icon_location: FILE_NAME is
+	pixmap_icon_location: FILE_NAME
 			-- Icon for the Eiffel Store Wizard
 		once
 			create Result.make_from_string ("eiffel_wizard_icon")
 			Result.add_extension (pixmap_extension)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

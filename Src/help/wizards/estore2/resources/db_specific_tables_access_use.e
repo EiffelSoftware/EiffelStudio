@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Access to the class DB_SPECIFIC_TABLES_ACCESS"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ deferred class
 
 feature -- Status report
 
-	is_valid_code (code: INTEGER): BOOLEAN is
+	is_valid_code (code: INTEGER): BOOLEAN
 			-- Does `code' represents a database table?
 		do
 			Result := tables.is_valid (code)
@@ -19,7 +19,7 @@ feature -- Status report
 
 feature {NONE} -- Access
 
-	tables: DB_SPECIFIC_TABLES_ACCESS is
+	tables: DB_SPECIFIC_TABLES_ACCESS
 			-- Description of database tables
 			-- handled by the project.
 		once
@@ -28,7 +28,7 @@ feature {NONE} -- Access
 			result_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

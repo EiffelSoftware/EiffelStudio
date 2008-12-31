@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Error: Unable to reach the com component."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,14 +20,14 @@ create
 
 feature {NONE} -- Implementation
 
-	make (an_info: like wizard_information) is
+	make (an_info: like wizard_information)
 			-- Set `help_filename' with `h_filename'.
 		do
 			set_help_filename (h_filename)
 			Precursor {BENCH_WIZARD_ERROR_STATE_WINDOW} (an_info)
 		end
 
-	build is
+	build
 		do
 			Precursor {BENCH_WIZARD_ERROR_STATE_WINDOW}
 			First_window.disable_back_button
@@ -35,31 +35,31 @@ feature {NONE} -- Implementation
 
 feature -- Access
 
-	h_filename: STRING is "index.html"
+	h_filename: STRING = "index.html"
 			-- Path to HTML help filename
 
 feature -- basic Operations
 
-	display_state_text is
+	display_state_text
 		do
 			title.set_text (interface_names.t_Wizard_instalation_error)
 			message.set_text (interface_names.m_Wizard_instalation_error)
 		end
 
-	final_message: STRING is
+	final_message: STRING
 		do
 		end
 
 feature {WIZARD_STATE_WINDOW}
 
-	pixmap_icon_location: FILE_NAME is
+	pixmap_icon_location: FILE_NAME
 			-- Icon for the Eiffel Wizard
 		once
 			create Result.make_from_string (Wizard_icon_name)
 			Result.add_extension (pixmap_extension)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog representation in the tds"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 		do
 			list_make
 			set_wel_code (true)
@@ -30,7 +30,7 @@ feature -- Initialization
 			set_inherited_class ("WEL_MODAL_DIALOG")
 		end
 
-	make_control_statement is
+	make_control_statement
 		do
 			create statement_list.make (10)
 		end
@@ -64,7 +64,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_current_control (a_control: TDS_CONTROL_STATEMENT) is
+	set_current_control (a_control: TDS_CONTROL_STATEMENT)
 			-- Set `current_control' to `a_control'.
 		require
 			a_control_not_void: a_control /= Void
@@ -74,7 +74,7 @@ feature -- Element change
 			current_control_set: current_control = a_control
 		end
 
-	set_x (a_x: INTEGER) is
+	set_x (a_x: INTEGER)
 			-- Set `x' to `a_x'.
 		do
 			x := a_x
@@ -82,7 +82,7 @@ feature -- Element change
 			x_set: x = a_x
 		end
 
-	set_y (a_y: INTEGER) is
+	set_y (a_y: INTEGER)
 			-- Set `y' to `a_y'.
 		do
 			y := a_y
@@ -90,7 +90,7 @@ feature -- Element change
 			y_set: y = a_y
 		end
 
-	set_width (a_width: INTEGER) is
+	set_width (a_width: INTEGER)
 			-- Set `width' to `a_width'.
 		do
 			width := a_width
@@ -98,7 +98,7 @@ feature -- Element change
 			width_set: width = a_width
 		end
 
-	set_height (a_height: INTEGER) is
+	set_height (a_height: INTEGER)
 			-- Set `height' to `a_height'.
 		do
 			height := a_height
@@ -106,7 +106,7 @@ feature -- Element change
 			height_set: height = a_height
 		end
 
-	set_inherited_class (a_class_name: STRING) is
+	set_inherited_class (a_class_name: STRING)
 			-- Set `inherited_class' to `a_class_name'.
 		require
 			a_class_name_not_void: a_class_name /= Void
@@ -117,7 +117,7 @@ feature -- Element change
 			inherited_class_set: inherited_class.is_equal (a_class_name)
 		end
 
-	add_feature (a_feature_name: STRING) is
+	add_feature (a_feature_name: STRING)
 			-- Add a feature to 'redefined_features'.
 		require
 			a_feature_name_not_void: a_feature_name /= Void
@@ -133,7 +133,7 @@ feature -- Element change
 			end
 		end
 
-	remove_feature (a_feature_name: STRING) is
+	remove_feature (a_feature_name: STRING)
 			-- Add a feature to 'redefined_features'.
 		require
 			a_feature_name_not_void: a_feature_name /= Void
@@ -146,7 +146,7 @@ feature -- Element change
 			end
 		end
 
-	insert_control (a_control: TDS_CONTROL_STATEMENT) is
+	insert_control (a_control: TDS_CONTROL_STATEMENT)
 			-- If a TDS_CONTROL_STATEMENT structure exists insert `a_control'
 			-- else create the TDS_CONTROL_STATEMENT structure
 		require
@@ -165,7 +165,7 @@ feature -- Element change
 
 feature -- Code generation
 
-	display is
+	display
 			-- Display the tds.
 		do
 			from 
@@ -216,7 +216,7 @@ feature -- Code generation
 			end
 		end
 
-	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE) is
+	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE)
 			-- Generate `a_resource_file' from the tds memory structure.
 		do
 			a_resource_file.putstring ("%N////////////////////////////////////////////////////////////////%N")
@@ -271,7 +271,7 @@ feature -- Code generation
 			end
 		end
 
-	generate_tree_view (a_tree_view: EV_TREE_ITEM) is
+	generate_tree_view (a_tree_view: EV_TREE_ITEM)
 			-- Generate `a_tree_view' control from the tds memory structure.
 		local
 			tv_item: EV_TREE_ITEM
@@ -291,7 +291,7 @@ feature -- Code generation
 			end 
 		end
 
-	generate_wel_code is
+	generate_wel_code
 			-- Generate the eiffel code.
 		local
 			text_file: PLAIN_TEXT_FILE
@@ -451,7 +451,7 @@ feature -- Code generation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

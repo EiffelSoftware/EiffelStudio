@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generates the search database."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,13 +15,13 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Initialize.
 		do
 			create keys.make(0)
 		end
 
-	create_from_topic(topic: E_TOPIC) is
+	create_from_topic(topic: E_TOPIC)
 			-- Create the database from (the root-) topic.
 		require
 			not_void: topic /= Void
@@ -39,7 +39,7 @@ feature -- Initialization
 			end
 		end
 
-	process_topic(topic: E_TOPIC) is
+	process_topic(topic: E_TOPIC)
 			-- Look through a topic for important tags.
 		require
 			not_void: topic /= Void
@@ -72,7 +72,7 @@ feature -- Initialization
 			end
 		end
 
-	process_text(text, topic_id:STRING) is
+	process_text(text, topic_id:STRING)
 			-- Add every word of a sentence to the database.
 		require
 			possible: text /= Void and then topic_id /= Void and then not topic_id.empty 
@@ -99,7 +99,7 @@ feature -- Initialization
 			end
 		end
 
-	add_keyword(word, topic_id:STRING) is
+	add_keyword(word, topic_id:STRING)
 			-- Add a topic to a certain keyword.
 			-- Adds the word if if was not already there.
 		require
@@ -119,7 +119,7 @@ feature -- Initialization
 
 feature -- Status report
 
-	get_topics(word:STRING):SORTED_TWO_WAY_LIST[STRING] is
+	get_topics(word:STRING):SORTED_TWO_WAY_LIST[STRING]
 			-- Get sorted list of topics for keyword 'word'.
 		require
 			not_void: word /= Void
@@ -143,7 +143,7 @@ feature -- Implementation
 invariant
 	keys_not_void: keys /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

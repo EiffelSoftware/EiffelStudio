@@ -1,8 +1,8 @@
-indexing
+note
 	description	: "Application (root class)"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	note		: "Initial version automatically generated"
+	generator: "Initial version automatically generated"
 
 class
 	APPLICATION
@@ -15,7 +15,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Creation procedure.
 		do
 			create ev_application
@@ -36,7 +36,7 @@ feature -- Initialization
 
 feature -- Basic operations
 
-	destroy is
+	destroy
 			-- Kills the graphic application.
 		do
 			ev_application.destroy
@@ -52,14 +52,14 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	connect is
+	connect
 			-- Connect to the database.
 		do
 			db_manager.set_connection_information (Username, Password, Data_source)
 			db_manager.establish_connection
 		end
 
-	setup_display_components_db_objects is
+	setup_display_components_db_objects
 			-- Sets the database manager and table access objects
 			-- used by the display components.
 		local
@@ -72,7 +72,7 @@ feature {NONE} -- Implementation
 			default_dc.set_database_handler (db_manager)
 		end
 
-	setup_boxes is
+	setup_boxes
 			-- Set up boxes.
 		local
 			box: DV_VERTICAL_BOX
@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 			box.set_default_padding (Padding)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

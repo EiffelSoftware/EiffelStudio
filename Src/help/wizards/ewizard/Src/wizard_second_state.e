@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Second step of the wizard"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature -- Basic Operation
 
-	build is 
+	build 
 			-- Build entries.
 		local
 			hbox: EV_HORIZONTAL_BOX
@@ -71,7 +71,7 @@ feature -- Basic Operation
 			set_updatable_entries(<<number_state.change_actions>>)
 		end
 
-	fill_number_state is
+	fill_number_state
 		local
 			i: INTEGER
 			list_item: EV_LIST_ITEM
@@ -98,13 +98,13 @@ feature -- Basic Operation
 			end
 		end
 
-	proceed_with_current_info is 
+	proceed_with_current_info 
 		do
 			Precursor
 			proceed_with_new_state(create {WIZARD_FINAL_STATE}.make (wizard_information))
 		end
 
-	update_state_information is
+	update_state_information
 			-- Check User Entries
 		local
 			num: INTEGER
@@ -116,7 +116,7 @@ feature -- Basic Operation
 
 feature {NONE} -- Implementation
 
-	display_state_text is
+	display_state_text
 			-- Display message text relative to current state.
 		do
 			title.set_text (Interface_names.t_Second_state)
@@ -127,7 +127,7 @@ feature {NONE} -- Implementation
 	number_state: EV_COMBO_BOX;
 			-- Text field to enter the number of states
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

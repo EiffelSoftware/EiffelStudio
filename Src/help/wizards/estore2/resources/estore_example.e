@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generated Example of Database Interactions"
 
 class
@@ -15,7 +15,7 @@ create
 
 feature -- Initialization
 
-	initialize (username, password, data_source: STRING) is
+	initialize (username, password, data_source: STRING)
 			-- Run the example
 		require
 			not_void: username /= Void and password /= Void and data_source /= Void

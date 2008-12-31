@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Initial State"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ feature -- Access
 
 feature -- basic Operations
 
-	proceed_with_current_info is
+	proceed_with_current_info
 		do
 			Precursor
 			if (eiffel_layout.eiffel_platform /= Void and eiffel_layout.eiffel_install /= Void) or else eiffel_layout.is_unix_layout then
@@ -38,20 +38,20 @@ feature -- basic Operations
 			end
 		end
 
-	display_state_text is
+	display_state_text
 		do
 			title.set_text (interface_names.t_welcome_to_the_wizard)
 			message.set_text (interface_names.m_wizard_introduction)
 		end
 
-	pixmap_icon_location: FILE_NAME is
+	pixmap_icon_location: FILE_NAME
 			-- Icon for the Eiffel Precompile Wizard
 		once
 			create Result.make_from_string ("eiffel_wizard_icon")
 			Result.add_extension (pixmap_extension)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

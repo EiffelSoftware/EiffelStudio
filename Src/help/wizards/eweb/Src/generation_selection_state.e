@@ -1,4 +1,4 @@
-indexing
+note
 	description: "The user selects which generation he would like to see performed."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature -- basic Operations
 
-	build is 
+	build 
 			-- Build entries.
 		local
 			v1: EV_VERTICAL_BOX
@@ -38,14 +38,14 @@ feature -- basic Operations
 				set_updatable_entries(<<new_project_b.select_actions, existing_project_b.select_actions>>)
 		end
 
-	proceed_with_current_info is 
+	proceed_with_current_info 
 			-- Proceed, load the next state.
 		do
 			Precursor
 			proceed_with_new_state(Create {DIRECTORY_SELECTION_STATE}.make(wizard_information))
 		end
 
-	update_state_information is
+	update_state_information
 			-- Check User Entries
 		do
 			if new_project_b.is_selected then
@@ -58,14 +58,14 @@ feature -- Implementation
 
 	new_project_b, existing_project_b: EV_RADIO_BUTTON
 
-	display_state_text is
+	display_state_text
 		do
 			message.set_text ("The wizard can either build a project from scratch or%N%
 						%help you to add classes to an existing project. ")
 			title.set_text ("Generation Type")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

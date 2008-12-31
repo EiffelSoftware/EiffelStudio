@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Table Selection page."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,13 +21,13 @@ create
 
 feature -- basic Operations
 
-	display is 
+	display 
 			-- Display user entries
 		do
 			build
 		end
 
-	build is
+	build
 			-- Build interface 
 		local
 			h1: EV_HORIZONTAL_BOX
@@ -65,7 +65,7 @@ feature -- basic Operations
 			fill_lists
 		end
 
-	fill_lists is
+	fill_lists
 			-- Fill the list with table names.
 		local
 			it: EV_LIST_ITEM
@@ -82,26 +82,26 @@ feature -- basic Operations
 			end
 		end
 
-	unselect_item(it: EV_LIST_ITEM) is
+	unselect_item(it: EV_LIST_ITEM)
 		do
 			selected_items.prune(it)
 			unselected_items.extend(it)
 		end
 
-	select_item(it: EV_LIST_ITEM) is
+	select_item(it: EV_LIST_ITEM)
 		do
 			unselected_items.prune(it)
 			selected_items.extend(it)
 		end
 
-	proceed_with_current_info is 
+	proceed_with_current_info 
 			-- Process user entries
 		do 
 			precursor
 			proceed_with_new_state(Create {DB_GENERATION_TYPE}.make(wizard_information))
 		end
 
-	update_state_information is
+	update_state_information
 			-- Check user entries
 		local
 			li: LINKED_LIST[CLASS_NAME]
@@ -125,10 +125,10 @@ feature -- Implementation
 
 	selected_items, unselected_items: EV_LIST
 
-	pixmap_location: STRING is "essai.bmp";
+	pixmap_location: STRING = "essai.bmp";
 			-- Pixmap location
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

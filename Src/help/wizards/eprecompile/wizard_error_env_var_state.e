@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature -- Access
 
-	final_message: STRING_GENERAL is
+	final_message: STRING_GENERAL
 		local
 			l_str: STRING_32
 		do
@@ -36,7 +36,7 @@ feature -- Access
 			Result := l_str
 		end
 
-	pixmap_icon_location: FILE_NAME is
+	pixmap_icon_location: FILE_NAME
 			-- Icon for the Eiffel Precompile Wizard.
 		once
 			create Result.make_from_string ("eiffel_wizard_icon")
@@ -45,13 +45,13 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	display_state_text is
+	display_state_text
 		do
 			title.set_text (interface_names.t_variables_error)
 			message.set_text (final_message)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

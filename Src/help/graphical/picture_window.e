@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Window for displaying pictures."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ create
 
 feature -- Initialization
 
-	make_empty(par:EV_WINDOW) is
+	make_empty(par:EV_WINDOW)
 			-- Initialize
 		local
 			v: EV_VERTICAL_BOX
@@ -29,7 +29,7 @@ feature -- Initialization
 			show
 		end
 
-	set_picture(name, caption:STRING) is
+	set_picture(name, caption:STRING)
 		do
 			create pixmap.make_from_file(name)
 			img_area.set_pixmap(pixmap)
@@ -42,7 +42,7 @@ feature -- Initialization
 
 	pixmap: EV_PIXMAP;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

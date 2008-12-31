@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Interface between the analyzer and the application through dialog boxes"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -11,7 +11,7 @@ class
 
 feature
 
-	dialog_message: DIALOG_MESSAGE is
+	dialog_message: DIALOG_MESSAGE
 			-- Create an intro dialog boxe
 		require	
 --			parent_not_void: dialog_parent /= Void
@@ -21,7 +21,7 @@ feature
 			dialog_message_exists: Result.exists
 		end
 
-	dialog_error: DIALOG_ERROR is
+	dialog_error: DIALOG_ERROR
 			-- Create a error dialog boxe
 		require	
 --			parent_not_void: dialog_parent /= Void
@@ -36,20 +36,20 @@ feature -- Access
 	dialog_parent: WEL_COMPOSITE_WINDOW
 			-- Parent of the dialog.
 
-	std_out: INTEGER is 1
+	std_out: INTEGER = 1
 			-- Constant for the standard output
 
-	std_error: INTEGER is 2
+	std_error: INTEGER = 2
 			-- Constant for the error output
 
-	interface: INTERFACE_MANAGER is
+	interface: INTERFACE_MANAGER
 		once
 			create Result
 		end
 
 feature -- Element change
 
-	set_dialog_parent (a_parent: WEL_COMPOSITE_WINDOW) is
+	set_dialog_parent (a_parent: WEL_COMPOSITE_WINDOW)
 			-- Set `parent_dialog' to `a_parent'.
 		require
 --			a_parent_not_void: a_parent /= Void
@@ -59,7 +59,7 @@ feature -- Element change
 --			parent_set: dialog_parent = a_parent
 		end
 
-	display_text (output: INTEGER ; a_string: STRING) is
+	display_text (output: INTEGER ; a_string: STRING)
 			-- Display `a_string' in the `output'.
 		require
 			a_string_not_void: a_string /= Void
@@ -75,26 +75,26 @@ feature -- Element change
 			end
 		end
 	
-	hide_message is
+	hide_message
 			-- Hide the message dialog box.
 		do
 			dialog_message.hide
 		end
 
-	hide_error is
+	hide_error
 			-- Hide the error dialog box.
 		do
 			dialog_error.hide
 		end
 
-	hide_all is
+	hide_all
 			-- Hide all the dialog boxes.
 		do
 			hide_message
 			hide_error
 		end
 
-	do_terminate is
+	do_terminate
 			-- Close the dialog box
 		do
 			if (dialog_message /= Void) then
@@ -106,12 +106,12 @@ feature -- Element change
 			end
 		end
 
-	l_of_include_file: LINKED_LIST [STRING] is
+	l_of_include_file: LINKED_LIST [STRING]
 		once
 			create Result.make
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

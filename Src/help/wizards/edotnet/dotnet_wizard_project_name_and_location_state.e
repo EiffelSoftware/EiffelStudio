@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Second state of the dotnet wizard"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_info: like wizard_information) is
+	make (an_info: like wizard_information)
 			-- Set `help_filename' with `h_filename'.
 		do
 			set_help_filename (h_filename)
@@ -26,10 +26,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	h_filename: STRING is "help/wizards/edotnet/docs/reference/10_project_name_and_location/index.html";
+	h_filename: STRING = "help/wizards/edotnet/docs/reference/10_project_name_and_location/index.html";
 			-- Path to HTML help file
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

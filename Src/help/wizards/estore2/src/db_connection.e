@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Ask the user the data needed to connect a Database"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature -- basic Operations
 
-	build is 
+	build 
 			-- Build entries.
 		local
 			lab: EV_LABEL
@@ -76,7 +76,7 @@ feature -- basic Operations
 									password.change_actions>>)
 		end
 
-	fill_dbms_cbox is
+	fill_dbms_cbox
 			-- Set values of `dbms_cbox'.
 		require
 			not_void: dbms_cbox /= Void
@@ -101,7 +101,7 @@ feature -- basic Operations
 			dbms_cbox.select_actions.extend (agent update_fields)
 		end
 
-	proceed_with_current_info is 
+	proceed_with_current_info 
 			-- Process user entries
 		require else
 			user_typed_something: entries_changed
@@ -141,7 +141,7 @@ feature -- basic Operations
 			retry
 		end
 
-	update_state_information is
+	update_state_information
 			-- Check user entries
 		local
 			integer_value: INTEGER_REF
@@ -156,13 +156,13 @@ feature -- basic Operations
 			Precursor			
 		end
 
-	display_state_text is
+	display_state_text
 		do
 			title.set_text ("STEP 1: CONNECTION TO YOUR DATABASE")
 			message.set_text ("Select first a DBMS.%N%NEnter then the Username, Password and Database Source%NIn order to connect to the database you are going to use with EiffelStore ")
 		end
 
-	update_fields is
+	update_fields
 			-- Update fields according to new DBMS selected.
 		local
 			integer_value: INTEGER_REF
@@ -191,13 +191,13 @@ feature -- Implementation
 	dbms_cbox: EV_COMBO_BOX
 		-- Combo-box to select a DBMS.
 
-	Label_size: INTEGER is 10
+	Label_size: INTEGER = 10
 		-- Label size for connection data text fields.
 	
-	Capacity: INTEGER is 20;
+	Capacity: INTEGER = 20;
 		-- Capacity for connection data text fields.
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

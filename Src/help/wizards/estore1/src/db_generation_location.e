@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Page which deals with the different location entries."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,13 +22,13 @@ create
 
 feature -- basic Operations
 
-	display is 
+	display 
 			-- Display user entries
 		do
 			build
 		end
 
-	build is 
+	build 
 			-- Build user entries.
 		local
 			browse1_b,browse2_b: EV_BUTTON
@@ -62,7 +62,7 @@ feature -- basic Operations
 									project_location.change_actions>>)
 		end
 
-	proceed_with_current_info is 
+	proceed_with_current_info 
 			-- Process user entries
 		local
 			next_step: DB_FINISH
@@ -79,14 +79,14 @@ feature -- basic Operations
 			end
 		end
 
-	update_state_information is
+	update_state_information
 			-- Check user entries
 		do
 			wizard_information.set_locations(location.text,project_location.text)
 			precursor
 		end
 
-	browse(is_for_project: BOOLEAN) is
+	browse(is_for_project: BOOLEAN)
 			-- Launch a computer directory Browser.
 		local
 			dir_selector: EV_DIRECTORY_DIALOG	
@@ -96,7 +96,7 @@ feature -- basic Operations
 			dir_selector.show_modal
 		end
 
-	directory_selected (dir_selector: EV_DIRECTORY_DIALOG; is_for_project: BOOLEAN) is
+	directory_selected (dir_selector: EV_DIRECTORY_DIALOG; is_for_project: BOOLEAN)
 			-- The user selected a directory from the browser. 
 			-- It updates the text fields accordingly.
 		require
@@ -113,10 +113,10 @@ feature -- Implementation
 
 	location,project_location: WIZARD_SMART_TEXT_FIELD
 
-	pixmap_location: STRING is "essai.bmp";
+	pixmap_location: STRING = "essai.bmp";
 			-- Pixmap location
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

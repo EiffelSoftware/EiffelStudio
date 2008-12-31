@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Options representation in the tds"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Code generation
 
-	display is
+	display
 		do
 			io.putstring ("%NOptions : ")
 
@@ -34,7 +34,7 @@ feature -- Code generation
 			io.new_line
 		end
 
-	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE) is
+	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE)
 			-- Generate `a_resource_file' from the tds memory structure.
 		require
 			a_resource_file_exists: a_resource_file.exists
@@ -58,62 +58,62 @@ feature -- Access
 
 feature -- Setting
 
-	set_characteristic (v: STRING) is
+	set_characteristic (v: STRING)
 			-- Assign `v' to `characteristic'.
 		do
 		end
 
-	set_language (v: STRING) is
+	set_language (v: STRING)
 			-- Assign `v' to `language'
 		do
 		end
 
-	set_version (v: STRING) is
+	set_version (v: STRING)
 			-- Assign `v' to `version'
 		do
 		end
 
-	set_caption (v: STRING) is
+	set_caption (v: STRING)
 			-- Assign `v' to `caption'
 		do
 		end
 
-	set_class (v: STRING) is
+	set_class (v: STRING)
 			-- Assign `v' to `class'
 		do
 		end
 
-	set_menu (v: STRING) is
+	set_menu (v: STRING)
 			-- Assign `v' to `menu'
 		do
 		end
 
-	set_style (s: TDS_STYLE) is
+	set_style (s: TDS_STYLE)
 			-- Assign `v' to `style'
 		do
 		end
 
-	set_font_size (s: INTEGER) is
+	set_font_size (s: INTEGER)
 			-- Assign `v' to `font_size'
 		do
 		end
 
-	set_font_type (v: STRING) is
+	set_font_type (v: STRING)
 			-- Assign `v' to `font_type'
 		do
 		end
 
-	set_font_weight (v: INTEGER) is
+	set_font_weight (v: INTEGER)
 			-- Assign `v' to `weight'
 		do
 		end
 
-	set_font_italic (b: BOOLEAN) is
+	set_font_italic (b: BOOLEAN)
 			-- Assign `v' to `font_italic'
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

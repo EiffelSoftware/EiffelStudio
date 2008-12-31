@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class which encapsulates the information for one resource."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature -- Initialization
 	
-	make(root_resource: XML_NODE; r: XML_STRUCTURE[XML_UNIT_RESOURCE]) is
+	make(root_resource: XML_NODE; r: XML_STRUCTURE[XML_UNIT_RESOURCE])
 			-- initialization
 		require
 			not_void: root_resource /= Void and r /= Void
@@ -44,7 +44,7 @@ feature -- Initialization
 			end
 		end
 
-	process_unit_specific(node: XML_ELEMENT) is
+	process_unit_specific(node: XML_ELEMENT)
 			-- Process the content of the node.
 			-- Should be redefine in heirs.
 		require
@@ -68,7 +68,7 @@ feature -- Implementation
 invariant
 	XML_UNIT_RESOURCE_not_void: structure /= Void and name/=Void and value/=Void
 	XML_UNIT_RESOURCE_consistency: not name.empty
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

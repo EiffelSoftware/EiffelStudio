@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class for processing resource script file"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- create the resource file analyzer
 		local
 			the_file: PLAIN_TEXT_FILE
@@ -37,7 +37,7 @@ feature -- Initialization
 			build (resource_script_file.document)
 		end
 
-	retrieve_grammar (a_file: RAW_FILE) is
+	retrieve_grammar (a_file: RAW_FILE)
 			-- retrieve the grammar structure from the file `a_file'
 		require
 			a_file_exists: a_file.exists
@@ -74,7 +74,7 @@ feature -- Access
 
 feature
 
-	check_recursion is
+	check_recursion
 			-- check for left-recursion in the resource grammar
 		local
 			t_b: BOOLEAN
@@ -94,7 +94,7 @@ feature
 			end
 		end
 
-	parsing (a_filename: STRING) is
+	parsing (a_filename: STRING)
 			-- parse the resource file `a_filename'
 		require
 			a_filename_exists: a_filename /= Void and then a_filename.count > 0
@@ -118,7 +118,7 @@ feature
 			collection_on
 		end
 
-	store_grammar (a_file: RAW_FILE) is
+	store_grammar (a_file: RAW_FILE)
 			-- store the grammar structure into the file `a_file'
 		require
 			a_file_not_void: a_file /= Void
@@ -138,7 +138,7 @@ feature
 			basic_store (a_file)
 		end
 
-	regenerate is
+	regenerate
 			-- regenerate the analyzer in order to make a new analyze
 		do
 			resource_script_file.deep_copy (rsf_copy)
@@ -148,7 +148,7 @@ feature
 			resource_script_file.production.standard_copy (production)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

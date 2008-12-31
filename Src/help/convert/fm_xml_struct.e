@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that convert the XML structure used by framemaker%
 		%into a big XML-help-document-string."
 	legal: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature -- Initialization
 
-	make (tree: XML_ELEMENT; source: STRING) is
+	make (tree: XML_ELEMENT; source: STRING)
 			-- Take FM tree and convert it to help-tree
 		require
 			tree_is_root: tree /= Void and then tree.is_root
@@ -40,7 +40,7 @@ feature -- Initialization
 			end
 		end
 
-	generate_links_list (tree: XML_ELEMENT) is
+	generate_links_list (tree: XML_ELEMENT)
 		local
 			tree_cursor: DS_BILINKED_LIST_CURSOR [XML_NODE]
 			tree_elem: XML_ELEMENT
@@ -76,7 +76,7 @@ feature -- Initialization
 			end
 		end
 
-	process_tree(tree:XML_ELEMENT) is
+	process_tree(tree:XML_ELEMENT)
 		local
 			tree_cursor: DS_BILINKED_LIST_CURSOR [XML_NODE]
 			tree_elem: XML_ELEMENT
@@ -144,7 +144,7 @@ feature -- Initialization
 			end
 		end
 
-	change_level(new_level:INTEGER) is
+	change_level(new_level:INTEGER)
 		do
 		--	io.putstring(last_tag+": ")
 		--	io.putstring(cur_level.out +" -> "+ new_level.out+"%N")
@@ -171,7 +171,7 @@ feature -- Initialization
 			insert_position := 0
 		end
 
-	process_header(tree: XML_ELEMENT) is
+	process_header(tree: XML_ELEMENT)
 		local
 			tree_cursor: DS_BILINKED_LIST_CURSOR [XML_NODE]
 			text_tree: XML_TEXT
@@ -217,7 +217,7 @@ feature -- Initialization
 			xml_string.append (leading_tabs + "  " + get_start_tag (head_tag, "") + head + get_end_tag (head_tag) + "%N")
 		end
 
-	process_body (tree: XML_ELEMENT) is
+	process_body (tree: XML_ELEMENT)
 		local
 			tree_cursor: DS_BILINKED_LIST_CURSOR [XML_NODE]
 			text_tree: XML_TEXT
@@ -274,14 +274,14 @@ feature -- Initialization
 			end
 		end
 
-	process_string (s: STRING): STRING is
+	process_string (s: STRING): STRING
 		do
 			Result := clone (s)
 			remove_excess_whitespace (Result)
 			format_for_xml (Result)
 		end
 
-	append_help_start_tag (tag: STRING) is
+	append_help_start_tag (tag: STRING)
 			-- appends the help-equiv. to FM `tag' and sets last_help_tag.
 		do
 			if tag.is_equal ("bold") then
@@ -320,7 +320,7 @@ feature -- Initialization
 			end
 		end
 
-	get_header_level (header: STRING): INTEGER is
+	get_header_level (header: STRING): INTEGER
 		do
 			if header.is_equal("chapter") then
 				Result := 1
@@ -331,7 +331,7 @@ feature -- Initialization
 			end
 		end
 
-	get_fm_tag (tag: STRING): STRING is
+	get_fm_tag (tag: STRING): STRING
 			-- Returns a string without the first three characters.
 		require
 			tag /= Void
@@ -344,7 +344,7 @@ feature -- Initialization
 			end
 		end
 
-	is_header (tag_name: STRING): BOOLEAN is
+	is_header (tag_name: STRING): BOOLEAN
 		require
 			tag_name_not_void: tag_name /= Void
 		do
@@ -353,7 +353,7 @@ feature -- Initialization
 				tag_name.is_equal("sec3")
 		end
 
-	is_body (tag_name: STRING): BOOLEAN is
+	is_body (tag_name: STRING): BOOLEAN
 		require
 			tag_name_not_void: tag_name /= Void
 		do
@@ -362,7 +362,7 @@ feature -- Initialization
 				tag_name.is_equal("small")
 		end
 
-	is_list_item (tag_name: STRING): BOOLEAN is
+	is_list_item (tag_name: STRING): BOOLEAN
 			-- Determines whether `tag_name' is a list-item-tag.
 		require
 			tag_name_not_void: tag_name /= Void
@@ -372,13 +372,13 @@ feature -- Initialization
 				--or else tag_name.is_equal ("TABLE")
 		end
 
-	leading_tabs: STRING is
+	leading_tabs: STRING
 		do
 			create Result.make(cur_level*2)
 			Result.fill_character(' ')	
 		end
 
-	generate_unique_id: STRING is
+	generate_unique_id: STRING
 		do
 			Result := source_file + "-" + base_id.out
 			base_id := base_id + 1
@@ -417,7 +417,7 @@ feature -- Initialization
 	links_list: HASH_TABLE [STRING, STRING];
 			-- The resp. topic link to a link inside a paragraph. [topic, paragraph]
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Initial State"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Implementation
 
-	make (an_info: like wizard_information) is
+	make (an_info: like wizard_information)
 			-- Set `help_filename' with `h_filename'.
 		do
 			set_help_filename (h_filename)
@@ -32,32 +32,32 @@ feature {NONE} -- Implementation
 
 feature -- Access
 
-	h_filename: STRING is "help/wizards/edotnet/docs/reference/01_welcome/index.html"
+	h_filename: STRING = "help/wizards/edotnet/docs/reference/01_welcome/index.html"
 			-- Path to HTML help file
 
 feature -- basic Operations
 
-	proceed_with_current_info is
+	proceed_with_current_info
 		do
 			Precursor
 			proceed_with_new_state(Create {DOTNET_WIZARD_PROJECT_NAME_AND_LOCATION_STATE}.make(wizard_information))
 		end
 
-	display_state_text is
+	display_state_text
 			-- Dispay the text for the current state.
 		do
 			title.set_text (Interface_names.m_Welcome_title)
 			message.set_text (Interface_names.m_Welcome_message)
 		end
 
-	pixmap_icon_location: FILE_NAME is
+	pixmap_icon_location: FILE_NAME
 			-- Icon for the Eiffel Dotnet Wizard.
 		once
 			 create Result.make_from_string (Wizard_icon_name)
 			 Result.add_extension (pixmap_extension)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

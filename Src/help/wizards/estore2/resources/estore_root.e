@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generated Root Class by The EiffelStore Wizard"
 
 class
@@ -9,7 +9,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Initialize
 		local
 			li: ARRAYED_LIST [<FL1>]
@@ -39,13 +39,13 @@ feature -- Access
 	estore_example: ESTORE_EXAMPLE
 		-- Example reference
 
-	username: STRING is "<FL4>"
+	username: STRING = "<FL4>"
 		-- Database username.
 
-	password: STRING is "<FL5>"
+	password: STRING = "<FL5>"
 		-- Database password.
 
-	data_source: STRING is "<FL6>"
+	data_source: STRING = "<FL6>"
 		-- Database data source.
 
-end -- Class ESTORE_ROOT
+end

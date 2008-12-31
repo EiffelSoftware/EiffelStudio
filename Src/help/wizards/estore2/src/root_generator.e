@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generate Root Class"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ create
 
 feature -- Initialization
 
-	make (ex: EXAMPLE_GENERATOR;s,t,u,v: STRING) is
+	make (ex: EXAMPLE_GENERATOR;s,t,u,v: STRING)
 		require
 			ex /= Void and s /= Void
 		do
@@ -41,7 +41,7 @@ feature -- Implementation
 invariant
 	example /= Void
 	result_string /= Void
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,23 +20,23 @@ create
 
 feature -- Basic Operations
 
-	proceed_with_current_info is
+	proceed_with_current_info
 		do
 		end
 
 feature -- Access
 
-	display_state_text is
+	display_state_text
 		do
 			title.set_text ("Final Step")
 			message.set_text ("Last step")
 		end
 
-	final_message: STRING is
+	final_message: STRING
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

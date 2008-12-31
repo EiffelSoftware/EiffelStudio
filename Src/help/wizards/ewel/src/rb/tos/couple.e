@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Couple representation of a define clause"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature -- Initialization
 
-	make (a_name, a_value: STRING) is
+	make (a_name, a_value: STRING)
 		require
 			a_name_exists: a_name /= Void and then a_name.count > 0
 			a_value_not_void: a_value /= Void
@@ -36,7 +36,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_name (a_name: STRING) is
+	set_name (a_name: STRING)
 			-- Set `name_id' to `a_name'.
 		require
 			a_name_exists: a_name /= Void and then a_name.count > 0
@@ -46,7 +46,7 @@ feature -- Element change
 			name_set: name.is_equal (a_name)
 		end
 	
-	set_value (a_value: STRING) is
+	set_value (a_value: STRING)
 			-- Set `value' to `a_value'.
 		require
 			a_value_not_void: a_value /= Void
@@ -56,7 +56,7 @@ feature -- Element change
 			value_set: value.is_equal (a_value)
 		end
         
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

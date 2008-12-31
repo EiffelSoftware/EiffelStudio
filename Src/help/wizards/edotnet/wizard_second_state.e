@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Page in which the user choose to create an EXE or a DLL"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Implementation
 
-	make (an_info: like wizard_information) is
+	make (an_info: like wizard_information)
 			-- Set `help_filename' with `h_filename'.
 		do
 			set_help_filename (h_filename)
@@ -31,12 +31,12 @@ feature {NONE} -- Implementation
 
 feature -- Access
 
-	h_filename: STRING is "help/wizards/edotnet/docs/reference/20_application_type_and_project_settings/index.html"
+	h_filename: STRING = "help/wizards/edotnet/docs/reference/20_application_type_and_project_settings/index.html"
 			-- Path to HTML help file
 
 feature -- Basic Operation
 
-	build is
+	build
 			-- Build entries.
 		local
 			l_horiz_box: EV_HORIZONTAL_BOX
@@ -171,7 +171,7 @@ feature -- Basic Operation
 				>>)
 		end
 
-	proceed_with_current_info is
+	proceed_with_current_info
 		local
 			root_class_name_text: STRING
 			next_window: WIZARD_STATE_WINDOW
@@ -221,7 +221,7 @@ feature -- Basic Operation
 			retry
 		end
 
-	update_state_information is
+	update_state_information
 			-- Check User Entries
 		do
 			wizard_information.set_generate_dll (rb_project_type_dll.is_selected)
@@ -242,7 +242,7 @@ feature -- Basic Operation
 
 feature {NONE} -- Implementation
 
-	display_state_text is
+	display_state_text
 		do
 			title.set_text (interface_names.t_Second_state)
 			subtitle.set_text (interface_names.l_second_Subtitle_text)
@@ -258,7 +258,7 @@ feature {NONE} -- Implementation
 	root_class_name: WIZARD_SMART_TEXT_FIELD
 	creation_routine_name: WIZARD_SMART_TEXT_FIELD
 
-	is_valid_identifier (a_name: STRING): BOOLEAN is
+	is_valid_identifier (a_name: STRING): BOOLEAN
 			-- Is `a_name' a valid Eiffel identifier?
 		require
 			non_void_name: a_name /= Void
@@ -285,7 +285,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_change_root_class_name is
+	on_change_root_class_name
 			-- Action performed when the user changes the root class name of the application
 		local
 			lower_case_root_class_name: STRING
@@ -302,7 +302,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_change_generation_type is
+	on_change_generation_type
 			-- action performed when user changes generation type of application
 		do
 			if rb_project_type_exe.is_selected then
@@ -312,7 +312,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_change_clr_version_combo is
+	on_change_clr_version_combo
 			-- Action to perform when user changes the CLR version check button
 		do
 			if clr_version_check.is_selected then
@@ -342,7 +342,7 @@ feature {NONE} -- Constants
 	clr_version_cb: EV_COMBO_BOX;
 			-- Clr versions selection combo box
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

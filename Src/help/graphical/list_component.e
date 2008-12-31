@@ -1,4 +1,4 @@
-indexing
+note
 	description: "The 'Index' tab in the notebook."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,7 +12,7 @@ create
 
 feature -- Initialization
 
-	make(vw: VIEWER_WINDOW) is
+	make(vw: VIEWER_WINDOW)
 			-- Initialize on 'vw.
 		require
 			not_void: vw /= Void
@@ -41,7 +41,7 @@ feature -- Initialization
 
 feature -- Actions
 
-	item_selected(args: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	item_selected(args: EV_ARGUMENT; data: EV_EVENT_DATA)
 		require
 			selected: list.selected
 		local
@@ -54,12 +54,12 @@ feature -- Actions
 			end
 		end
 
-	edit_changed(args: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	edit_changed(args: EV_ARGUMENT; data: EV_EVENT_DATA)
 		do
 			viewer.list_jump_to_topic(list_edit.text)
 		end
 
-	key_pressed(args: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	key_pressed(args: EV_ARGUMENT; data: EV_EVENT_DATA)
 		require
 			key_pressed: data /= Void
 		local
@@ -73,7 +73,7 @@ feature -- Actions
 			end
 		end
 
-	set_busy_jumping(b:BOOLEAN) is
+	set_busy_jumping(b:BOOLEAN)
 		do
 			busy_jumping := b
 		end
@@ -99,7 +99,7 @@ feature -- Implementation
 invariant
 	LIST_COMPONENT_exist: list /= Void and list_edit /= Void and viewer /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "This class is inherited by all the application"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ inherit
 
 feature -- Shared variables
 
-	callback_content: STRING is
+	callback_content: STRING
 			-- Content of the filename used as callback.
 		local
 			file: PLAIN_TEXT_FILE
@@ -40,7 +40,7 @@ feature -- Shared variables
 			end
 		end
 
-	callback_filename: STRING is
+	callback_filename: STRING
 			-- Filename used as callback.
 		once
 			Result := separate_word_option_value ("callback")
@@ -51,7 +51,7 @@ feature -- Shared variables
 			Result_void_or_not_empty: Result = Void or else not Result.is_empty
 		end
 
-	write_bench_notification_cancel is
+	write_bench_notification_cancel
 			-- Write onto the file given as argument that the wizard has been aborded.
 		local
 			file: PLAIN_TEXT_FILE
@@ -74,7 +74,7 @@ feature -- Shared variables
 			retry
 		end
 
-	write_bench_notification_ok (wizard_information: BENCH_WIZARD_INFORMATION) is
+	write_bench_notification_ok (wizard_information: BENCH_WIZARD_INFORMATION)
 			-- Write onto the file given as argument the project ace file, directory, ...
 			-- found in `information'.
 		local
@@ -105,7 +105,7 @@ feature -- Shared variables
 			retry
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

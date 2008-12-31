@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Project Shared variables"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,11 +11,11 @@ class
 
 feature -- Access
 
-	odbc: STRING is "odbc"
+	odbc: STRING = "odbc"
 
-	oracle: STRING is "oracle"
+	oracle: STRING = "oracle"
 
-	db_manager: DATABASE_MANAGER[DATABASE] is
+	db_manager: DATABASE_MANAGER[DATABASE]
 			-- Database manager. Allows to perform
 			-- connection, deconnection, request and 
 			-- query execution.
@@ -31,19 +31,19 @@ feature -- Access
 			exists: Result /= Void
 		end
 
-	is_oracle: BOOLEAN is
+	is_oracle: BOOLEAN
 		do
 			Result := (database_type.is_equal(oracle))
 		end
 
-	is_odbc: BOOLEAN is
+	is_odbc: BOOLEAN
 		do
 			Result := (database_type.is_equal(odbc))
 		end
 
 feature -- Settings
 
-	set_database(s: STRING) is
+	set_database(s: STRING)
 		require
 			supported: s /= Void and then (s.is_equal(odbc) or s.is_equal(oracle))
 		do
@@ -53,14 +53,14 @@ feature -- Settings
 
 feature {NONE} -- Implementation
 
-	database_type: STRING is
+	database_type: STRING
 			-- Database type.
 		once
 			Create Result.make(10)
 			Result.append(odbc)
 		end
 		
-	db_manager_oracle: DATABASE_MANAGER[ORACLE] is
+	db_manager_oracle: DATABASE_MANAGER[ORACLE]
 			-- Database manager. Allows to perform
 			-- connection, deconnection, request and 
 			-- query execution.
@@ -80,7 +80,7 @@ feature {NONE} -- Implementation
 --			exists: Result /= Void
 --		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

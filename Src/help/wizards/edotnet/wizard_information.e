@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "All information about the wizard ... This class is inherited in each state "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature  -- Initialization
 
-	make is
+	make
 			-- Assign default values
 		do
 			Precursor
@@ -31,19 +31,19 @@ feature  -- Initialization
 
 feature -- Setting
 
-	set_icon_location (new_value: STRING) is
+	set_icon_location (new_value: STRING)
 			-- Set `icon_location' to `new_value'
 		do
 			icon_location := new_value
 		end
 		
-	set_generate_dll (new_value: BOOLEAN) is
+	set_generate_dll (new_value: BOOLEAN)
 			-- Set `generate_dll' to `new_value'
 		do
 			generate_dll := new_value
 		end
 
-	set_root_class_name (a_name: like root_class_name) is
+	set_root_class_name (a_name: like root_class_name)
 			-- Set `root_class_name' with `a_name'.
 		local
 			upper_case_name: STRING
@@ -53,7 +53,7 @@ feature -- Setting
 			root_class_name := upper_case_name
 		end
 
-	set_creation_routine_name (a_name: like creation_routine_name) is
+	set_creation_routine_name (a_name: like creation_routine_name)
 			-- Set `creation_routine_name' with `a_name'.
 		do
 			creation_routine_name := a_name
@@ -61,7 +61,7 @@ feature -- Setting
 			creation_routine_name_set: creation_routine_name = a_name
 		end
 
-	set_console_application (a_bool: like console_application) is
+	set_console_application (a_bool: like console_application)
 			-- Set `console_application' with `a_bool'.
 		do
 			console_application := a_bool
@@ -69,7 +69,7 @@ feature -- Setting
 			console_application_set: console_application = a_bool
 		end
 		
-	set_clr_version (a_version: like clr_version) is
+	set_clr_version (a_version: like clr_version)
 			-- set `clr_version' with `a_version'
 		require
 			non_void_version: a_version /= Void
@@ -80,7 +80,7 @@ feature -- Setting
 			clr_version_set: equal (clr_version, a_version)
 		end
 
-	set_is_most_recent_clr_version (a_flag: BOOLEAN) is
+	set_is_most_recent_clr_version (a_flag: BOOLEAN)
 			-- Set `is_most_recent_clr_version' to `a_flag'
 		do
 			is_most_recent_clr_version := a_flag
@@ -103,7 +103,7 @@ feature -- Access
 	creation_routine_name: STRING
 			-- Name of the creation routine of the root class
 
-	application_type: STRING is
+	application_type: STRING
 			-- "dll" if `generate_dll' is set, "exe" otherwise
 		do
 			if generate_dll then
@@ -122,7 +122,7 @@ feature -- Access
 	clr_version: STRING
 			-- version of clr to target
 			
-	is_valid_clr_version (a_version: STRING): BOOLEAN is
+	is_valid_clr_version (a_version: STRING): BOOLEAN
 			-- is `a_version' a valid clr version?
 		require
 			non_void_version: a_version /= Void
@@ -130,32 +130,32 @@ feature -- Access
 			Result := not a_version.is_empty and then a_version.is_equal (clr_version_10) or a_version.is_equal (clr_version_11)
 		end
 		
-	clr_version_10: STRING is "v1.0.3705"
+	clr_version_10: STRING = "v1.0.3705"
 			-- version 1.0 of CLR
 			
-	clr_version_11: STRING is "v1.1.4322"
+	clr_version_11: STRING = "v1.1.4322"
 			-- version 1.1 of CLR
 
 feature {NONE} -- Implementation
 
-	Default_project_name: STRING is "my_dotnet_application"
+	Default_project_name: STRING = "my_dotnet_application"
 			-- Default project name
 
 feature {NONE} -- Constants
 
-	Icon_relative_filename: STRING is "\eiffel.ico"
+	Icon_relative_filename: STRING = "\eiffel.ico"
 			-- Filename of `eiffel.ico' relatively to `icon_location'
 
-	Default_root_class_name: STRING is "APPLICATION"
+	Default_root_class_name: STRING = "APPLICATION"
 			-- Default root class name
 
-	Default_creation_routine_name: STRING is "make"
+	Default_creation_routine_name: STRING = "make"
 			-- Default creation routine name
 
-	Dll_type: STRING is "dll"
+	Dll_type: STRING = "dll"
 			-- DLL type
 
-	Exe_type: STRING is "exe"
+	Exe_type: STRING = "exe"
 			-- EXE type
 
 invariant
@@ -164,7 +164,7 @@ invariant
 	non_void_clr_version: clr_version /= Void
 	valid_clr_version: is_valid_clr_version (clr_version)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

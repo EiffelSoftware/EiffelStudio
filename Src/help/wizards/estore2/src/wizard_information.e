@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Collected Information by the wizard."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create {WIZARD_WINDOW}
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize Current with Default Values
 		do
 			new_project := True
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature {WIZARD_STATE_WINDOW} -- Settings
 
-	set_database_info (s1, s2, s3: STRING; dbms_selected: INTEGER) is
+	set_database_info (s1, s2, s3: STRING; dbms_selected: INTEGER)
 			-- Set the database information.
 		require
 			--
@@ -56,56 +56,56 @@ feature {WIZARD_STATE_WINDOW} -- Settings
 			dbms_code := dbms_selected
 		end
 
-	set_generation_type (b: BOOLEAN) is
+	set_generation_type (b: BOOLEAN)
 			-- Set generation type information.
 		do
 			new_project := b			
 		end
 
-	set_table_list (li: ARRAYED_LIST [CLASS_NAME]) is
+	set_table_list (li: ARRAYED_LIST [CLASS_NAME])
 			-- Set table to be generated.
 		do
 			table_list := li
 		end
 
-	set_unselected_table_list (li: ARRAYED_LIST [CLASS_NAME]) is
+	set_unselected_table_list (li: ARRAYED_LIST [CLASS_NAME])
 			-- Table not to be generated
 		do
 			unselected_table_list := li
 		end
 
-	set_location (loc: STRING) is
+	set_location (loc: STRING)
 			-- Set the location corresponding to 
 			-- the generation.
 		do
 			location := loc
 		end
 
-	set_generate_all_table (b: BOOLEAN) is
+	set_generate_all_table (b: BOOLEAN)
 		do
 			generate_every_table := b
 		end
 
-	set_project_name (proj: STRING) is
+	set_project_name (proj: STRING)
 			-- Set the project Name.
 		do
 			project_name := proj
 		end
 
-	set_compile_project (b: BOOLEAN) is
+	set_compile_project (b: BOOLEAN)
 			-- Set whether the user want to compile project or not.
 		do
 			compile_project := b
 		end
 
-	set_precompiled_base (b: BOOLEAN) is
+	set_precompiled_base (b: BOOLEAN)
 			-- Set whether the user want to use 
 			-- the precompiled base library or not.
 		do
 			precompiled_base := b
 		end
 
-	set_vision_example (b: BOOLEAN) is
+	set_vision_example (b: BOOLEAN)
 			-- Set whether the user want to create 
 			-- the Vision2 example.
 		do
@@ -159,7 +159,7 @@ invariant
 			      and location /= Void 
 				  and table_list /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

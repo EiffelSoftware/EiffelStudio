@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Object to generate a project."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature -- Basic Operations
 
-	generate_code is
+	generate_code
 			-- Generate the code for a new vision2-application project
 		local
 			map_list: LINKED_LIST [TUPLE [STRING, STRING]]
@@ -108,7 +108,7 @@ feature -- Basic Operations
 			from_template_to_project (wizard_resources_path, Ace_template_filename, project_location, project_name_lowercase + Config_extension, map_list)
 		end
 
-	tuple_from_file_content (an_index: STRING; a_content_file: STRING): TUPLE [STRING, STRING] is
+	tuple_from_file_content (an_index: STRING; a_content_file: STRING): TUPLE [STRING, STRING]
 		local
 			file_content: STRING
 			file: RAW_FILE
@@ -130,7 +130,7 @@ feature -- Basic Operations
 			file.close
 		end
 
-	empty_tuple (an_index: STRING): TUPLE [STRING, STRING] is
+	empty_tuple (an_index: STRING): TUPLE [STRING, STRING]
 		do
 			create Result
 			Result.put (an_index, 1)
@@ -139,43 +139,43 @@ feature -- Basic Operations
 
 feature {NONE} -- Constants
 
-	Application_type_template: STRING is "${FL_APPLICATION_TYPE}"
+	Application_type_template: STRING = "${FL_APPLICATION_TYPE}"
 			-- String to be replaced by the chosen application type
 
-	Root_class_name_template: STRING is "${FL_ROOT_CLASS_NAME}"
+	Root_class_name_template: STRING = "${FL_ROOT_CLASS_NAME}"
 			-- String to be replaced by the chosen root class name
 
-	Creation_routine_name_template: STRING is "${FL_CREATION_ROUTINE_NAME}"
+	Creation_routine_name_template: STRING = "${FL_CREATION_ROUTINE_NAME}"
 			-- String to be replaced by the chosen creation routine name
 
-	Console_application: STRING is "${FL_CONSOLE_APPLICATION}"
+	Console_application: STRING = "${FL_CONSOLE_APPLICATION}"
 			-- String to be replaced by yes or no.
 
-	clr_version_template: STRING is "${FL_CLR_VERSION}"
+	clr_version_template: STRING = "${FL_CLR_VERSION}"
 			-- String to be replaced by the chosen version of CLR
 
-	all_classes_template: STRING is "${FL_ALL_CLASSES}"
+	all_classes_template: STRING = "${FL_ALL_CLASSES}"
 			-- String to be replaced if NONE is root class.
 
-	Config_extension: STRING is ".ecf"
+	Config_extension: STRING = ".ecf"
 			-- Ace files extension
 
-	Eiffel_extension: STRING is ".e"
+	Eiffel_extension: STRING = ".e"
 			-- Eiffel classes extension
 
-	Ace_template_filename: STRING is "template_config.ecf"
+	Ace_template_filename: STRING = "template_config.ecf"
 			-- Filename of the Ace file template used to automatically generate Ace files for .NET applications
 
-	Application_template_filename: STRING is "template_application.e"
+	Application_template_filename: STRING = "template_application.e"
 			-- Filename of the template used to automatically generate a root class for .NET applications
 
-	None_class: STRING is "none"
+	None_class: STRING = "none"
 			-- `NONE' class
 
-	Comma: STRING is ",";
+	Comma: STRING = ",";
 			-- Comma
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Page in which the user choose where he wants to generate the sources."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature -- Basic Operation
 
-	build is
+	build
 			-- Build entries.
 		do
 			create icon_location.make (Current)
@@ -41,13 +41,13 @@ feature -- Basic Operation
 			set_updatable_entries(<<icon_location.change_actions>>)
 		end
 
-	proceed_with_current_info is
+	proceed_with_current_info
 		do
 			Precursor
 			proceed_with_new_state(Create {WIZARD_FINAL_STATE}.make(wizard_information))
 		end
 
-	update_state_information is
+	update_state_information
 			-- Check User Entries
 		local
 			icon_path: FILE_NAME
@@ -66,7 +66,7 @@ feature -- Basic Operation
 
 feature {NONE} -- Implementation
 
-	display_state_text is
+	display_state_text
 		do
 			title.set_text (interface_names.t_project_icon)
 			subtitle.set_text (interface_names.t_choose_icon_subtitle)
@@ -76,7 +76,7 @@ feature {NONE} -- Implementation
 	icon_location: WIZARD_SMART_TEXT_FIELD;
 			-- Label and Textfield for the icon location.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

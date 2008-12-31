@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"A resource as it appears in the resource files."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Setting
 
-	set_value (new_value: STRING) is
+	set_value (new_value: STRING)
 			-- Set `value' to `new_value'.
 		require
 			new_value_not_void: new_value /= Void;
@@ -30,7 +30,7 @@ feature -- Access
 			-- Name of the resource as it appears to the left
 			-- of the colona in the resource file
 
-	visual_name: STRING is
+	visual_name: STRING
 			-- Visual name of the resource as it appears to the left
 			-- of the colon in the preference tool
 		do
@@ -39,27 +39,27 @@ feature -- Access
 			Result.put (Result.item (1).upper, 1)
 		end;
 
-	value: STRING is
+	value: STRING
 			-- Value of the resource as it appears to the right
 			-- of the colon
 		deferred
 		end;
 
-	is_valid (a_value: STRING): BOOLEAN is
+	is_valid (a_value: STRING): BOOLEAN
 			-- Is `a_value' valid for use in Current?
 		deferred
 		end;
 
-	has_changed: BOOLEAN is
+	has_changed: BOOLEAN
 			-- Has the resource changed from the default value?
 		deferred
 		end;
 
-	get_value: ANY is deferred end
+	get_value: ANY deferred end
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	infix "<" (other: like Current): BOOLEAN
 			-- Is Current less than `other'?
 			--| By default this is based on `name'.
 		do
@@ -68,7 +68,7 @@ feature -- Comparison
 
 feature -- Update
 
-	update_with (other: like Current) is
+	update_with (other: like Current)
 			-- Update Current with the value of `other'
 		require
 			same_name: name.is_equal (other.name)
@@ -81,7 +81,7 @@ invariant
 	valid_name: name /= Void and then not name.empty;
 	value_not_void: value /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Toolbar representation in the tds"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature	-- initialization
 
-	make is
+	make
 		do
 			list_make
 			create button_list.make
@@ -41,7 +41,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_width (a_width: INTEGER) is
+	set_width (a_width: INTEGER)
 			-- Set `width' to `a_width'.
 		do
 			width := a_width
@@ -49,7 +49,7 @@ feature -- Element change
 			width_set: width = a_width
 		end
 
-	set_height (a_height: INTEGER) is
+	set_height (a_height: INTEGER)
 			-- Set `height' to `a_height'.
 		do
 			height := a_height
@@ -57,7 +57,7 @@ feature -- Element change
 			height_set: height = a_height
 		end
 
-	insert_button (a_button: TDS_ID) is
+	insert_button (a_button: TDS_ID)
 			-- Insert `a_button' in the `button_list'
 			-- If `a_button' is Void, we considere that it's a separator.
 		do
@@ -68,7 +68,7 @@ feature -- Element change
 
 feature -- Code generation
 
-	display is                     
+	display                     
 		local
 			toolbar: TDS_TOOLBAR
 		do
@@ -119,7 +119,7 @@ feature -- Code generation
 			end
 		end
 
-	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE) is
+	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE)
 			-- Generate `a_resource_file' from the tds memory structure.
 		local
 			toolbar: TDS_TOOLBAR
@@ -176,7 +176,7 @@ feature -- Code generation
 			end
 		end
 
-	generate_tree_view (a_tree_view: EV_TREE_ITEM) is
+	generate_tree_view (a_tree_view: EV_TREE_ITEM)
 			-- Generate `a_tree_view' control from the tds memory structure.
 		local
 			tvis: WEL_TREE_VIEW_INSERT_STRUCT
@@ -205,12 +205,12 @@ feature -- Code generation
 -- 			end 
 		end
 
-	generate_wel_code is
+	generate_wel_code
 			-- Generate the eiffel code.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

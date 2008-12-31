@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Class which is launching the application."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_and_launch is
+	make_and_launch
 			-- Initialize and launch application
 		local
 			retried: BOOLEAN
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			retry
 		end
 
-	prepare is
+	prepare
 			-- Prepare the first window to be displayed.
 		local
 			icon_pixmap: EV_PIXMAP
@@ -70,7 +70,7 @@ feature {NONE} -- Initialization
 			retry
 		end
 
-	setup_locale is
+	setup_locale
 			-- Setup locale
 		local
 			l_manager: I18N_LOCALE_MANAGER
@@ -85,7 +85,7 @@ feature {NONE} -- Initialization
 			locale_cell.put (l_locale)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

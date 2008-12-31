@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Provide global functionality to all objects."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,28 +12,28 @@ inherit
 
 feature -- Access
 
-	structure: E_DOCUMENT is 
+	structure: E_DOCUMENT 
 			-- The help topic tree.
 		do
 			Result := onces.main_structure
 		end
 
-	main_window: VIEWER_WINDOW is
+	main_window: VIEWER_WINDOW
 		do
 			Result := onces.main_window
 		end
 
-	set_main_window(vw:VIEWER_WINDOW) is
+	set_main_window(vw:VIEWER_WINDOW)
 		do
 			onces.set_main_window(vw)
 		end
 
-	set_main_structure(ms:E_DOCUMENT) is
+	set_main_structure(ms:E_DOCUMENT)
 		do
 			onces.set_main_structure(ms)
 		end
 
-	warning(title, message:STRING; par:EV_CONTAINER) is
+	warning(title, message:STRING; par:EV_CONTAINER)
 		local
 			win: EV_WARNING_DIALOG
 		do
@@ -41,7 +41,7 @@ feature -- Access
 			win.show
 		end
 
-	is_xml_file(fn: STRING):BOOLEAN is
+	is_xml_file(fn: STRING):BOOLEAN
 		local
 			s: STRING
 		do
@@ -51,7 +51,7 @@ feature -- Access
 			Result := s.is_equal(".XML")
 		end
 
-	transform_relative_path (path, file: STRING) is
+	transform_relative_path (path, file: STRING)
 			-- Prepend `file' the path of `path'.
 		require
 			path_exists: path /= Void
@@ -64,7 +64,7 @@ feature -- Access
 			file.prepend (path.substring (1, path.last_index_of (sep, path.count)))
 		end
 
-	parse_xml_file (file_name: FILE_NAME): XML_ELEMENT is
+	parse_xml_file (file_name: FILE_NAME): XML_ELEMENT
 			-- Creates a xml-tree-structure from `file_name'.
 			-- Wil be Void if an error of any kind occurs.
 		require
@@ -98,12 +98,12 @@ feature -- Access
 
 feature {NONE}
 
-	onces: ONCES is
+	onces: ONCES
 		once
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

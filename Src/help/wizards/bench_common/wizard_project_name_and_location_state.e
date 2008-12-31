@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Second state of the wizard wizard"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature -- Basic Operation
 
-	build is 
+	build 
 			-- Build entries.
 		do
 			create project_name.make (Current)
@@ -64,7 +64,7 @@ feature -- Basic Operation
 				to_compile_b.select_actions>>)
 		end
 
-	proceed_with_current_info is 
+	proceed_with_current_info 
 		local
 			next_window: WIZARD_STATE_WINDOW
 			rescued: BOOLEAN
@@ -106,7 +106,7 @@ feature -- Basic Operation
 			retry
 		end
 
-	update_state_information is
+	update_state_information
 			-- Check User Entries
 		local
 			a_project_location: DIRECTORY_NAME
@@ -120,7 +120,7 @@ feature -- Basic Operation
 
 feature {NONE} -- Implementation
 
-	on_change_name is
+	on_change_name
 			-- The user has changed the project name, update the project location
 		local
 			curr_project_location: STRING
@@ -140,7 +140,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	validate_directory_string (a_directory: STRING): DIRECTORY_NAME is
+	validate_directory_string (a_directory: STRING): DIRECTORY_NAME
 			-- Validate the directory `a_directory' and return the
 			-- validated version of `a_directory'.
 		local
@@ -160,7 +160,7 @@ feature {NONE} -- Implementation
 			valid_Result: Result /= Void
 		end
 
-	is_project_name_valid (a_project_name: STRING): BOOLEAN is
+	is_project_name_valid (a_project_name: STRING): BOOLEAN
 			-- Is `a_project_name' valid as project name?
 		local
 			curr_index: INTEGER
@@ -187,7 +187,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	display_state_text is
+	display_state_text
 			-- Display message text relative to current state.
 		do
 			title.set_text (Bench_interface_names.t_Project_name_and_location_state)
@@ -204,7 +204,7 @@ feature {NONE} -- Implementation
 	to_compile_b: EV_CHECK_BUTTON;
 			-- Should compilation be launched?.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

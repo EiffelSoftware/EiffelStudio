@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Help topic class. A topic can either contain text or subtopics."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Initialization
 
-	make(new_id, new_head:STRING; new_location:FILE_NAME) is
+	make(new_id, new_head:STRING; new_location:FILE_NAME)
 			-- Not used.
 		require
 			id_not_empty: (new_id /= Void) and then (not new_id.empty)
@@ -37,7 +37,7 @@ feature -- Initialization
 			location = new_location
 		end
 
-	make_from_xml_tree (node: XML_ELEMENT; path: FILE_NAME) is
+	make_from_xml_tree (node: XML_ELEMENT; path: FILE_NAME)
 			-- Create this topic from XML-tree.
 		require
 			node_exists: node /= Void
@@ -131,7 +131,7 @@ feature -- Initialization
 			end
 		end
 
-	get_topic_node_from_file (fn: STRING): XML_ELEMENT is
+	get_topic_node_from_file (fn: STRING): XML_ELEMENT
 			-- Open file `fn' and return the first topic in it.
 		local
 			file_name: FILE_NAME
@@ -146,7 +146,7 @@ feature -- Initialization
 
 feature -- Basic operations
 
-	infix "<" (other: like Current): BOOLEAN is
+	infix "<" (other: like Current): BOOLEAN
 			-- Is current object less than `other'? (comparable)
 			-- We use the id in uppercase to compare.
 		local
@@ -161,7 +161,7 @@ feature -- Basic operations
 
 feature -- Miscellaneous
 
-	find_first_node_with_tag(tag_name:STRING; node:XML_ELEMENT):XML_ELEMENT is
+	find_first_node_with_tag(tag_name:STRING; node:XML_ELEMENT):XML_ELEMENT
 			-- Search this node for a node with tag_name.
 		require
 			not_void: tag_name /= Void and node /= VOid
@@ -189,7 +189,7 @@ feature -- Miscellaneous
 
 feature -- State setting
 
-	add_topic(new_topic:E_TOPIC) is
+	add_topic(new_topic:E_TOPIC)
 			-- Add a subtopic to the end of the subtopics list.
 		require
 			topic_not_void: new_topic /= Void
@@ -198,7 +198,7 @@ feature -- State setting
 			subtopics.extend(new_topic)
 		end
 
-	add_paragraph(new_par:E_TEXT) is
+	add_paragraph(new_par:E_TEXT)
 			-- Add a paragraph to the end of the paragraph list.
 		require
 			new_par_not_void: new_par /= Void
@@ -209,13 +209,13 @@ feature -- State setting
 
 feature -- Status report
 
-	contains_text:BOOLEAN is
+	contains_text:BOOLEAN
 			-- Is this a topic with text?
 		do
 			Result := paragraphs /= Void
 		end
 
-	contains_subtopics:BOOLEAN is
+	contains_subtopics:BOOLEAN
 			-- Is this a topic with subtopics?
 		do
 			Result := subtopics /= Void
@@ -223,7 +223,7 @@ feature -- Status report
 
 feature -- Implementation
 
-	create_tree_item(parent:EV_TREE_ITEM_HOLDER) is
+	create_tree_item(parent:EV_TREE_ITEM_HOLDER)
 			-- Make a TOPIC_TREE_ITEM.
 		local
 			item: TOPIC_TREE_ITEM
@@ -241,7 +241,7 @@ feature -- Implementation
 			end
 		end
 
-	add_to_list(list: SORTED_TWO_WAY_LIST[E_TOPIC]) is
+	add_to_list(list: SORTED_TWO_WAY_LIST[E_TOPIC])
 			-- Make sorted list.
 		require
 			not_void: list /= Void
@@ -259,7 +259,7 @@ feature -- Implementation
 			end
 		end
 
-	add_to_in_order_list(list: LINKED_LIST[E_TOPIC]) is
+	add_to_in_order_list(list: LINKED_LIST[E_TOPIC])
 			-- Make in-order list of text-topics.
 		require
 			not_void: list /= VOid
@@ -279,7 +279,7 @@ feature -- Implementation
 			end
 		end
 
-	add_to_hash_table(ht: HASH_TABLE[E_TOPIC,STRING]) is
+	add_to_hash_table(ht: HASH_TABLE[E_TOPIC,STRING])
 			-- Make hashtable.
 		require
 			ht /= Void
@@ -299,7 +299,7 @@ feature -- Implementation
 
 feature {VIEWER_WINDOW} -- Display
 
-	display (area: E_TOPIC_DISPLAY) is
+	display (area: E_TOPIC_DISPLAY)
 			-- Show this topic in a quick, buffered way.
 		require
 			area_exists: area /= Void
@@ -307,7 +307,7 @@ feature {VIEWER_WINDOW} -- Display
 			area.display_topic (Current)
 		end
 
-	display_old(area: E_TOPIC_DISPLAY) is
+	display_old(area: E_TOPIC_DISPLAY)
 			-- Output the text (if any) on 'area'.
 		require
 			not_void: area /= Void
@@ -370,7 +370,7 @@ invariant
 	must_have_head: (head /= Void) and then (not head.empty)
 	not_topics_and_text: not (contains_text and contains_subtopics)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

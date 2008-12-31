@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that redefine ACTION to store Eiffel objects converted %
 		% from database in a list."
 	legal: "See notice at end of class."
@@ -29,7 +29,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_valid_values (a_valid_values: LIST [H]) is
+	set_valid_values (a_valid_values: LIST [H])
 			-- Assign `a_valid_values' to `valid_values'.
 		require
 			not_void: a_valid_values /= Void
@@ -40,7 +40,7 @@ feature -- Element change
 			valid_values_assigned: valid_values = a_valid_values
 		end
 
-	set_extract_function (a_extract_function: FUNCTION [ANY, TUPLE [G], H]) is
+	set_extract_function (a_extract_function: FUNCTION [ANY, TUPLE [G], H])
 			-- Assign `a_extract_function' to `extract_function'.
 		require
 			not_void: a_extract_function /= Void
@@ -52,7 +52,7 @@ feature -- Element change
 
 feature -- Actions
 
-	execute is
+	execute
 			-- Update item with current
 			-- selected item in the container.
 		do
@@ -62,7 +62,7 @@ feature -- Actions
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

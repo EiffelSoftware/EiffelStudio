@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "This class is inherited by all the application"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,13 +13,13 @@ inherit
 
 feature {NONE} -- Constants
 
-	Interface_names: INTERFACE_NAMES is
+	Interface_names: INTERFACE_NAMES
 			-- Interface names for buttons, label, ...
 		once
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

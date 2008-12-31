@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a rich text attribute."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,20 +14,20 @@ create
 
 feature -- Initialization
 
-	make (startp, endp: INTEGER) is
+	make (startp, endp: INTEGER)
 			-- Create with `startp' and `endp'.
 		do
 			start_pos := startp
 			end_pos := endp
 		end
 
-	set_format (cf: EV_CHARACTER_FORMAT) is
+	set_format (cf: EV_CHARACTER_FORMAT)
 			-- Set `format' to `cf'.
 		do
 			format := cf
 		end
 
-	apply (rt: EV_RICH_TEXT) is
+	apply (rt: EV_RICH_TEXT)
 			-- Sets the attribute on the specified position to `rt'.
 		require
 			rt_exists: rt /= Void
@@ -41,7 +41,7 @@ feature -- Access
 
 	format: EV_CHARACTER_FORMAT;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

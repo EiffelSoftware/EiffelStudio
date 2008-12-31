@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Initial State"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,13 +19,13 @@ create
 
 feature -- basic Operations
 
-	proceed_with_current_info is 
+	proceed_with_current_info 
 		do
 			Precursor
 			proceed_with_new_state(Create {GENERATION_SELECTION_STATE}.make(wizard_information))
 		end
 
-	display_state_text is
+	display_state_text
 		do
 			title.set_text ("Eiffel Web wizard")
 			message.set_text ("Welcome.%NThis wizard will help you to build your first Eiffel Web %N Application.")
@@ -39,7 +39,7 @@ feature -- Implementation
 
 --	title: STRING is "Eiffel Web wizard"
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

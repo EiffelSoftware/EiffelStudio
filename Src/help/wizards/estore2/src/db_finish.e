@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Last page, the trace of the operation is displayed."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature -- basic Operations
 
-	proceed_with_current_info is
+	proceed_with_current_info
 			-- Process user entries
 		do
 			build_finish
@@ -40,7 +40,7 @@ feature -- basic Operations
 				--
 		end
 
-	display_state_text is
+	display_state_text
 		do
 			if wizard_information.new_project then
 				if wizard_information.compile_project then
@@ -60,16 +60,16 @@ feature -- basic Operations
 			end
 		end
 
-	final_message: STRING is "All files have been successfully Generated !!!"
+	final_message: STRING = "All files have been successfully Generated !!!"
 
-	pixmap_icon_location: FILE_NAME is
+	pixmap_icon_location: FILE_NAME
 			--
 		do
 			create Result.make_from_string ("eiffel_wizard_icon")
 			Result.add_extension (pixmap_extension)
 		end
 
-	build_finish is
+	build_finish
 			-- Build user entries.
 		do
 			choice_box.wipe_out
@@ -90,7 +90,7 @@ feature -- basic Operations
 			choice_box.show
 		end
 
-	launch_operations is
+	launch_operations
 			-- Generate the classes and the example. Modified by Cedric R.
 		local
 			li: ARRAYED_LIST [CLASS_NAME]
@@ -182,7 +182,7 @@ feature -- basic Operations
 
 feature {NONE} -- Processing
 
-	setup_directory is
+	setup_directory
 			-- Setup directory to create the project.
 			-- Delete EIFGEN directory and *.epr files.
 		local
@@ -208,7 +208,7 @@ feature {NONE} -- Processing
 			retry
 		end
 
-	add_error (mess: STRING) is
+	add_error (mess: STRING)
 			-- Inform the user of a problem that occurred
 			-- during operations.
 		require
@@ -223,7 +223,7 @@ feature {NONE} -- Processing
 	warning_list: ARRAYED_LIST [STRING]
 			-- Warning messages list.
 
-	send_errors is
+	send_errors
 			-- Sends a report on the errors occurred to the user.
 		local
 			dialog: EV_WARNING_DIALOG
@@ -244,7 +244,7 @@ feature {NONE} -- Processing
 			end
 		end
 
-	initialize_table_constraints_generator is
+	initialize_table_constraints_generator
 			-- Initialize `table_constraints_generator'.
 		local
 			li: ARRAYED_LIST [CLASS_NAME]
@@ -267,7 +267,7 @@ feature {NONE} -- Processing
 			table_constraints_generator.set_scope_tables (scope_tables)
 		end
 
-	generate_access_class is
+	generate_access_class
 			-- Generate class enabling to access database table class descriptions.
 		local
 			access_class_generator: DB_ACCESS_CLASS_GENERATOR
@@ -289,7 +289,7 @@ feature {NONE} -- Processing
 			end
 		end
 
-	generate_class (rep: DB_REPOSITORY; class_number: INTEGER; generation_type: INTEGER) is
+	generate_class (rep: DB_REPOSITORY; class_number: INTEGER; generation_type: INTEGER)
 			-- Generate class according to class whose name is `s'.
 		require
 			repository_not_void: rep /= Void
@@ -329,14 +329,14 @@ feature {NONE} -- Processing
 			end
 		end
 
-	normalize (s: STRING) is
+	normalize (s: STRING)
 		do
 			if s.has ('$') then
 				s.replace_substring_all ("$", "")
 			end
 		end
 
-	generate_repositories is
+	generate_repositories
 			-- Generate 'repositories' relative to the
 			-- user database.
 		require
@@ -382,7 +382,7 @@ feature {NONE} -- Processing
 			retry
 		end
 
-	load_management_classes is
+	load_management_classes
 			-- Load classes to use EiffelStore. Modified by Cedric R.
 		do
 			if not wizard_information.vision_example then
@@ -395,7 +395,7 @@ feature {NONE} -- Processing
 			end
 		end
 
-	load_example_classes is
+	load_example_classes
 			-- Load example classes including system's root class
 		do
 			if wizard_information.vision_example then
@@ -411,7 +411,7 @@ feature {NONE} -- Processing
 			end
 		end
 
-	copy_db_shared is
+	copy_db_shared
 		local
 			f1,f_name: FILE_NAME
 			fi: PLAIN_TEXT_FILE
@@ -447,7 +447,7 @@ feature {NONE} -- Processing
 			retry
 		end
 
-	copy_class (name: STRING) is
+	copy_class (name: STRING)
 			-- Copy Class whose name is 'name'.
 		require
 			name /= Void
@@ -480,7 +480,7 @@ feature {NONE} -- Processing
 			retry
 		end
 
-	copy_ace (name: STRING; path_root_class: STRING) is
+	copy_ace (name: STRING; path_root_class: STRING)
 			-- Copy Class whose name is 'name'.
 		require
 			name /= Void
@@ -520,7 +520,7 @@ feature {NONE} -- Processing
 			retry
 		end
 
-	generate_ace_file is
+	generate_ace_file
 			-- Generate the selected Ace File. Modified by Cedric R
 		do
 			notify_user ("Generating Ace File...")
@@ -541,7 +541,7 @@ feature {NONE} -- Processing
 			end
 		end
 
-	generate_example is
+	generate_example
 			-- Generate the simple example of use.
 		local
 			f1,f_name: FILE_NAME
@@ -588,7 +588,7 @@ feature {NONE} -- Processing
 			retry
 		end
 
-	generate_db_interface_class is
+	generate_db_interface_class
 			-- Generate the interface class enabling the graphic HCI to access data from the database.
 		local
 			f1,f_name: FILE_NAME
@@ -620,7 +620,7 @@ feature {NONE} -- Processing
 			retry
 		end
 
-	replace_interface_tags (s: STRING) is
+	replace_interface_tags (s: STRING)
 			-- Replace the tags to match the user's given information (in MY_DB_INFO). Added by Cedric R.
 		local
 				-- Useful to map combo box creation.
@@ -638,7 +638,7 @@ feature {NONE} -- Processing
 			replace_db_connection_tags (s)
 		end
 
-	replace_db_connection_tags (s: STRING) is
+	replace_db_connection_tags (s: STRING)
 			-- Replace the tags to match the user's given information. Added by Cedric R.
 			-- Works on 'db_connection' class.
 		do
@@ -655,15 +655,15 @@ feature {NONE} -- Implementation
 	to_compile: BOOLEAN
 		-- Is the project to be compiled ?
 
-	Template_db_table_name: STRING is "template_db_table.e"
+	Template_db_table_name: STRING = "template_db_table.e"
 		-- Name of the resource template for the class storing information
 		-- on a table row (of a specific database table).
 
-	Template_db_table_descr_name: STRING is "template_db_table_descr.e"
+	Template_db_table_descr_name: STRING = "template_db_table_descr.e"
 		-- Name of the resource template for the class containing information
 		-- on a specific database table.
 
-	Template_db_table_access_name: STRING is "db_specific_tables_access.e"
+	Template_db_table_access_name: STRING = "db_specific_tables_access.e"
 		-- Name of the resource template for the class enabling access
 		-- to database table descriptions.
 
@@ -675,33 +675,33 @@ feature {NONE} -- Implementation
 		-- Content of the resource template for the class containing information
 		-- on a specific database table.
 
-	Db_table_suffix: STRING is ".e"
+	Db_table_suffix: STRING = ".e"
 		-- Suffix for the class storing information
 		-- on a table row (of a specific database table).
 
-	Db_table_descr_suffix: STRING is "_description.e"
+	Db_table_descr_suffix: STRING = "_description.e"
 		-- Suffix for the class containing information
 		-- on a specific database table.
 
-	Class_number_tag: STRING is "<CI>"
+	Class_number_tag: STRING = "<CI>"
 		-- Tag representing class number.
 
-	Id_code_tag: STRING is "<IC>"
+	Id_code_tag: STRING = "<IC>"
 		-- Tag representing ID code.
 
-	To_create_htable_tag: STRING is "<CH>"
+	To_create_htable_tag: STRING = "<CH>"
 		-- Tag representing content of hash table enabling
 		-- to create table rows.
 
-	To_delete_htable_tag: STRING is "<DH>"
+	To_delete_htable_tag: STRING = "<DH>"
 		-- Tag representing content of hash table enabling
 		-- to delete table rows.
 
-	Container_type: INTEGER is 1
+	Container_type: INTEGER = 1
 		-- Type of generation for `generate_class':
 		-- class to generate carries values of corresponding database table rows.
 
-	Description_type: INTEGER is 2
+	Description_type: INTEGER = 2
 		-- Type of generation for `generate_class':
 		-- class to generate carries description and access features of
 		-- corresponding database table.
@@ -712,7 +712,7 @@ feature {NONE} -- Implementation
 	table_constraints_generator: TABLE_CONSTRAINTS_GENERATOR
 		-- Generates specific table constraints description.
 
-	retrieve_resource_file_content (file_name: STRING): STRING is
+	retrieve_resource_file_content (file_name: STRING): STRING
 			-- Return content of resource file named `file_name'.
 		require
 			not_void: file_name /= Void
@@ -744,7 +744,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	generate_file (file_name, file_content: STRING) is
+	generate_file (file_name, file_content: STRING)
 			-- Generate `file_name' at location indicated by the
 			-- user. Fill file with `file_content'.
 		local
@@ -772,7 +772,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	copy_file (name, extension, destination: STRING) is
+	copy_file (name, extension, destination: STRING)
 			-- Copy resource class whose name is `name' and `extension'
 			-- to `destination'.
 		require
@@ -806,7 +806,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

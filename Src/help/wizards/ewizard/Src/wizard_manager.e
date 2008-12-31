@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Class which is launching the application."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,19 +26,19 @@ create
 
 feature -- Initialization
 
-	Wizard_title: STRING_GENERAL is
+	Wizard_title: STRING_GENERAL
 			-- Window title for this wizard.
 		once
 			Result := interface_names.t_new_wizard_application_wizard
 		end
 
-	wizard_factory: BENCH_WIZARD_FACTORY is
+	wizard_factory: BENCH_WIZARD_FACTORY
 			--
 		once
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

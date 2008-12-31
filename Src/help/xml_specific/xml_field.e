@@ -1,4 +1,4 @@
-indexing
+note
 	description: "XML Field"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Initialization
 
-	make (n: STRING) is
+	make (n: STRING)
 			-- Initialize
 		do
 			name:= n
@@ -32,14 +32,14 @@ feature -- Access
 
 feature --Managment
 
-	add_heir (c: XML_COMPOSITE) is
+	add_heir (c: XML_COMPOSITE)
 		do
 			heir.extend (c)
 		end
 
 invariant
 	XML_FIELD_not_void: heir /= Void and name /= Void
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

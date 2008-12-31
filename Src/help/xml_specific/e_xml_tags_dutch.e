@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent the help-format XML tags in Dutch."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,37 +11,37 @@ class
 
 feature -- Miscellaneous
 
-	get_start_tag (name, attr: STRING): STRING is
+	get_start_tag (name, attr: STRING): STRING
 			-- A XML-start-tag with `name' and attributes `attr'.
 		do
 			Result := "<" + name + attr + ">"
 		end
 
-	get_end_tag (name: STRING): STRING is
+	get_end_tag (name: STRING): STRING
 			-- A XML-end-tag with `name'.
 		do
 			Result := "</" + name + ">"
 		end
 
-	get_single_tag (name: STRING): STRING is
+	get_single_tag (name: STRING): STRING
 			-- A stand-alone XML tag with `name'.
 		do
 			Result := "<" + name + "/>"
 		end
 
-	get_line_break: STRING is
+	get_line_break: STRING
 			-- Get stand-alone line-break tag.
 		do
 			Result := get_single_tag (line_break_tag)
 		end
 
-	get_attr (name, value: STRING): STRING is
+	get_attr (name, value: STRING): STRING
 			-- Attribute `name' with `value'.
 		do
 			Result := " " + name + "=%"" + value + "%""
 		end
 
-	remove_excess_whitespace (s: STRING) is
+	remove_excess_whitespace (s: STRING)
 			-- Reduces all occurences of returns, tabs and spaces with 1 space.
 		do
 			s.replace_substring_all ("%N", " ")
@@ -49,7 +49,7 @@ feature -- Miscellaneous
 			s.replace_substring_all ("  ", " ")
 		end
 
-	format_for_xml (s: STRING) is
+	format_for_xml (s: STRING)
 			-- Converts special characters into special tags.
 		do
 			s.replace_substring_all (chconv (226).out + chconv (128).out + chconv (156).out, "&quot;")
@@ -63,115 +63,115 @@ feature -- Miscellaneous
 
 feature -- Constants
 
-	eiffel_document_tag: STRING is
+	eiffel_document_tag: STRING
 			-- The document-start-tag.
 		once
 			Result := "EIFFEL_DOCUMENT"
 		end
 
-	topic_tag: STRING is
+	topic_tag: STRING
 			-- The topic-tag. Has 2 attributes: location and id.
 		once
 			Result := "ONDERWERP"
 		end
 
-	topic_location_attr: STRING is
+	topic_location_attr: STRING
 			-- The location attribute of topic.
 		once
 			Result := "LOCATIE"
 		end
 
-	topic_id_attr: STRING is
+	topic_id_attr: STRING
 			-- The location attribute of topic.
 		once
 			Result := "ID"
 		end
 
-	text_tag: STRING is
+	text_tag: STRING
 			-- The paragraph tag.
 		once
 			Result := "TEKST"
 		end
 
-	head_tag: STRING is
+	head_tag: STRING
 			-- The topic-title tag.
 		once
 			Result := "TITEL"
 		end
 
-	font_tag: STRING is
+	font_tag: STRING
 			-- The font properties tag. Has 3 attributes: color, name and size.
 		once
 			Result := "LETTER"
 		end
 
-	font_color_attr: STRING is
+	font_color_attr: STRING
 			-- The color attribute of font.
 		once
 			Result := "KLEUR"
 		end
 
-	font_name_attr: STRING is
+	font_name_attr: STRING
 			-- The name attribute of font.
 		once
 			Result := "NAAM"
 		end
 
-	font_size_attr: STRING is
+	font_size_attr: STRING
 			-- The size attribute of font.
 		once
 			Result := "GROOTTE"
 		end
 
-	line_break_tag: STRING is
+	line_break_tag: STRING
 			-- The line-break tag. Recommended use: single tag.
 		once
 			Result := "REGELEINDE"
 		end
 
-	anchor_tag: STRING is
+	anchor_tag: STRING
 			-- The anchor tag. Has 1 attribute: topic_id.
 		once
 			Result := "ANKER"
 		end
 
-	anchor_topic_id_attr: STRING is
+	anchor_topic_id_attr: STRING
 			-- The topic_id attribute of anchor.
 		once
 			Result := "ONDERWERP_ID"
 		end
 
-	list_item_tag: STRING is
+	list_item_tag: STRING
 			-- The bulleted list-item tag.
 		once
 			Result := "LIJSTONDERDEEL"
 		end
 
-	list_tag: STRING is
+	list_tag: STRING
 			-- The unnumbered list tag.
 		once
 			Result := "LIJST"
 		end
 
-	bold_tag: STRING is
+	bold_tag: STRING
 			-- The bold-tag.
 		once
 			Result := "VET"
 		end
 
-	italics_tag: STRING is
+	italics_tag: STRING
 			-- The italics-tag.
 		once
 			Result := "CURSIEF"
 		end
 
-	underlined_tag: STRING is
+	underlined_tag: STRING
 			-- The underlined-tag.
 		once
 			Result := "ONDERSTREEPT"
 		end
 
-	keyword_tag: STRING is
+	keyword_tag: STRING
 			-- The keyword-tag. Words between keyword tags are added to the index.
 		once
 			Result := "TREFWOORD"
@@ -179,7 +179,7 @@ feature -- Constants
 
 feature {NONE} -- Implementation
 
-	chconv (i: INTEGER): CHARACTER is
+	chconv (i: INTEGER): CHARACTER
 			-- Character associated with integer value `i'
 			--! FIXME <Vincent 10/19/99>
 			--! I had to copy this since it is not exported from CHARACTER_REF.
@@ -187,7 +187,7 @@ feature {NONE} -- Implementation
 			"C [macro %"eif_misc.h%"]"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Gets called when the timer event happens."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Initialization
 
-	make(vw:VIEWER_WINDOW; data_file: STRING) is
+	make(vw:VIEWER_WINDOW; data_file: STRING)
 			-- Initialize
 		require
 			not_void: vw /= Void and data_file /= Void
@@ -46,7 +46,7 @@ feature -- Initialization
 
 feature -- Actions
 
-	execute (args: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	execute (args: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Gets called when the timer event occurs.
 		local
 			temp: INTEGER
@@ -91,7 +91,7 @@ feature -- Implementation
 invariant
 	E_TIMER_COMMAND_not_void: viewer /= Void and file /= Void and counter >=0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

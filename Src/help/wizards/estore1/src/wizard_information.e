@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Collected Information by the wizard."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create {WIZARD_WINDOW}
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize Current with Default Values
 		do
 			username := ""
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature {WIZARD_STATE_WINDOW} -- Settings
 
-	set_database_info(s1,s2,s3: STRING;oracle_selected: BOOLEAN) is
+	set_database_info(s1,s2,s3: STRING;oracle_selected: BOOLEAN)
 			-- Set the database information.
 		do
 			username := s1
@@ -38,20 +38,20 @@ feature {WIZARD_STATE_WINDOW} -- Settings
 			is_oracle := oracle_selected
 		end
 
-	set_generation_type(b1,b2: BOOLEAN) is
+	set_generation_type(b1,b2: BOOLEAN)
 			-- Set generation type information.
 		do
 			generate_facade := b1
 			new_project := b2			
 		end
 
-	set_table_list(li: LINKED_LIST[CLASS_NAME]) is
+	set_table_list(li: LINKED_LIST[CLASS_NAME])
 			-- Set table to be generated.
 		do
 			table_list := li
 		end
 
-	set_locations (loc,proj: STRING) is
+	set_locations (loc,proj: STRING)
 			-- Set the locations corresponding to 
 			-- the generation(s).
 		do
@@ -59,7 +59,7 @@ feature {WIZARD_STATE_WINDOW} -- Settings
 			project_location := proj
 		end
 
-	set_generate_all_table(b: BOOLEAN) is
+	set_generate_all_table(b: BOOLEAN)
 		do
 			generate_every_table := b
 		end
@@ -104,7 +104,7 @@ invariant
 			      and location /= Void 
 				  and project_location /= Void
 				  and table_list /= Void
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

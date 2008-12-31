@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Client Window of the Resource Bench's main window"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Access
 
-	make (w_window: WIZARD_STATE_WINDOW) is
+	make (w_window: WIZARD_STATE_WINDOW)
 		do
 			create properties_dialog.make (Void, w_window)
 		end
@@ -33,7 +33,7 @@ feature -- Access
 
 feature -- Behavior
 
-	on_notify (a_control_id: INTEGER; info: WEL_NMHDR) is
+	on_notify (a_control_id: INTEGER; info: WEL_NMHDR)
 		local
 			tt2: WEL_NM_TREE_VIEW
 		do
@@ -57,7 +57,7 @@ feature -- Element Change
 --			properties_window_set: properties_window = a_window
 --		end
 
-	set_current_resource (a_resource: TDS_RESOURCE) is
+	set_current_resource (a_resource: TDS_RESOURCE)
 			-- Set `current_resource' to `a_resource'.
 		do
 			current_resource := a_resource
@@ -65,12 +65,12 @@ feature -- Element Change
 			current_resource_set: current_resource = a_resource
 		end
 
-	set_new_resource (a_resource: TDS_RESOURCE) is
+	set_new_resource (a_resource: TDS_RESOURCE)
 		do
 			new_resource := a_resource
 		end
 
-	set_last_change is
+	set_last_change
 			-- Set last changes to the tds after a graphical modification.
 --		require
 --			properties_window_exists: properties_window.exists
@@ -85,16 +85,16 @@ feature -- Element Change
 
 feature -- Implementation
 
-	default_ex_style: INTEGER is 768
+	default_ex_style: INTEGER = 768
 			-- Default_style.
 
-	class_name: STRING is
+	class_name: STRING
 		once
 			create result.make (20)
 			result := "Client window"
 		end
 
-	class_background: WEL_NULL_BRUSH is
+	class_background: WEL_NULL_BRUSH
 		once
 			create Result.make
 		end
@@ -102,7 +102,7 @@ feature -- Implementation
 	new_resource: TDS_RESOURCE
 			-- The new selected resource in the tree view control.
 
-	change_and_display is
+	change_and_display
 			-- Take all informations and put the new ones.
 		require
 --			properties_window_exists: properties_window.exists
@@ -131,7 +131,7 @@ feature -- Implementation
 --			properties_window.invalidate
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

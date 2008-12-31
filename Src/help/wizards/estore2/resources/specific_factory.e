@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that can easily create display objects."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature -- Settings
 
-	add_controls (table_component: DV_TABLE_COMPONENT; cont: DV_BOX) is
+	add_controls (table_component: DV_TABLE_COMPONENT; cont: DV_BOX)
 			-- Add standard controls to `table_component', create associated buttons and
 			-- add them to `cont'.
 		local
@@ -39,7 +39,7 @@ feature -- Settings
 			table_component.set_deleting_control (button)
 		end
 
-	add_creator (table_comp: DV_TABLE_COMPONENT; button: DV_BUTTON) is
+	add_creator (table_comp: DV_TABLE_COMPONENT; button: DV_BUTTON)
 			-- Set a creator component to `table_comp'.
 		local
 			db_creator: DV_CHOICE_CREATOR
@@ -64,7 +64,7 @@ feature -- Settings
 			table_comp.set_db_creator (db_creator)
 		end
 
-	add_display_searcher (table_component: DV_TABLE_COMPONENT; cont: EV_CONTAINER) is
+	add_display_searcher (table_component: DV_TABLE_COMPONENT; cont: EV_CONTAINER)
 			-- Add a graphical searcher to `table_component' and add its display
 			-- to `cont'.
 		local
@@ -106,7 +106,7 @@ feature -- Access
 	first_cbox: DV_COMBO_BOX;
 			-- First combo box created through `add_display_searcher'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

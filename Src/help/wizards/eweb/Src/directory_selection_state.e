@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Page in which the user choose where he wants to generate the sources."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature -- Basic Operation
 
-	build is 
+	build 
 			-- Build entries.
 		local
 			browse_b: EV_BUTTON
@@ -46,7 +46,7 @@ feature -- Basic Operation
 			set_updatable_entries(<<browse_b.select_actions, location.change_actions>>)
 		end
 
-	proceed_with_current_info is 
+	proceed_with_current_info 
 		local
 			dir: DIRECTORY
 		do
@@ -63,14 +63,14 @@ feature -- Basic Operation
 			end			
 		end
 
-	update_state_information is
+	update_state_information
 			-- Check User Entries
 		do
 			wizard_information.set_project_location (location.text)
 			Precursor
 		end
 
-	browse is
+	browse
 			-- Launch a computer directory Browser.
 		local
 			dir_selector: EV_DIRECTORY_DIALOG	
@@ -80,7 +80,7 @@ feature -- Basic Operation
 			dir_selector.show_modal
 		end
 
-	directory_selected (dir_selector: EV_DIRECTORY_DIALOG) is
+	directory_selected (dir_selector: EV_DIRECTORY_DIALOG)
 			-- The user selected a directory from the browser. 
 			-- It updates the text fields accordingly.
 		require
@@ -94,7 +94,7 @@ feature {NONE} -- Implementation
 
 	location: WIZARD_SMART_TEXT_FIELD
 
-	display_state_text is
+	display_state_text
 		do
 			if wizard_information.is_new_project then
 				title.set_text ("Building new project ...")
@@ -105,7 +105,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

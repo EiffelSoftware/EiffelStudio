@@ -1,4 +1,4 @@
-indexing
+note
 	description: "To provide global access to main window."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -9,12 +9,12 @@ class
 	
 feature -- State Setting
 
-	set_main_window(vw: VIEWER_WINDOW) is
+	set_main_window(vw: VIEWER_WINDOW)
 		do
 			main_window := vw
 		end
 
-	set_main_structure(ms: E_DOCUMENT) is
+	set_main_structure(ms: E_DOCUMENT)
 		do
 			main_structure := ms
 		end
@@ -25,7 +25,7 @@ feature -- Access
 
 	main_structure: E_DOCUMENT;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

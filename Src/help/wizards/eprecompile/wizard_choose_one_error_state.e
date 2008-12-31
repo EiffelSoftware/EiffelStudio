@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Error state when the user has not choosen to precompile at least one library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature -- Basic Operations
 
-	proceed_with_current_info is
+	proceed_with_current_info
 		do
 			first_window.disable_next_button
 			Precursor
@@ -30,27 +30,27 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	display_state_text is
+	display_state_text
 		do
 			title.set_text (interface_names.t_wizard_error)
 			message.set_text (interface_names.m_you_must_choose_library)
 		end
 
-	final_message: STRING_GENERAL is
+	final_message: STRING_GENERAL
 		do
 			Result := interface_names.l_bye
 		end
 
 feature -- Access
 
-	pixmap_icon_location: FILE_NAME is
+	pixmap_icon_location: FILE_NAME
 			-- Icon for the Eiffel Precompile Wizard.
 		once
 			create Result.make_from_string ("eiffel_wizard_icon")
 			Result.add_extension (pixmap_extension)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

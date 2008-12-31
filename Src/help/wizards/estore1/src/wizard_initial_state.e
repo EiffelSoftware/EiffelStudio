@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Ask the user the data needed to connect a Database"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,13 +21,13 @@ create
 
 feature -- basic Operations
 
-	display is 
+	display 
 			-- Display user entries
 		do
 			build
 		end
 
-	build is 
+	build 
 			-- Build entries.
 		local
 			h1: EV_HORIZONTAL_BOX
@@ -69,7 +69,7 @@ feature -- basic Operations
 									password.change_actions>>)
 		end
 
-	proceed_with_current_info is 
+	proceed_with_current_info 
 			-- Process user entries
 		require else
 			user_typed_something: entries_changed
@@ -102,7 +102,7 @@ feature -- basic Operations
 			retry
 		end
 
-	update_state_information is
+	update_state_information
 			-- Check user entries
 		do
 			wizard_information.set_database_info(username.text,
@@ -110,7 +110,7 @@ feature -- basic Operations
 			precursor			
 		end
 
-	set_handle_insensitive(b: BOOLEAN) is
+	set_handle_insensitive(b: BOOLEAN)
 			-- Set Handle description insensitive.
 		require
 			handle_field_exists: db_name /= Void
@@ -132,14 +132,14 @@ feature -- Implementation
 	oracle_b,odbc_b: EV_RADIO_BUTTON
 		-- Database Type selection thanks to radio buttons.
 
-	pixmap_location: FILE_NAME is
+	pixmap_location: FILE_NAME
 			-- Pixmap location
 		once
 			create Result.make_from_string ("essai")
 			Result.add_extension ("bmp")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

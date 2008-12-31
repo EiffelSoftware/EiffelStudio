@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Class which is launching the application."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -35,7 +35,7 @@ create
 
 feature -- Initialization
 
-	prepare is
+	prepare
 			-- Prepare the first window to be displayed.
 		local
 			l_layout: WIZARD_EIFFEL_LAYOUT
@@ -49,20 +49,20 @@ feature -- Initialization
 			Precursor
 		end
 
-	Wizard_title: STRING_GENERAL is
+	Wizard_title: STRING_GENERAL
 			-- Window title for this wizard.
 		once
 			Result := interface_names.t_precompilation_wizard
 		end
 
-	wizard_factory: PRECOMPILE_WIZARD_FACTORY is
+	wizard_factory: PRECOMPILE_WIZARD_FACTORY
 		once
 			create Result
 		end
 
 feature {NONE} -- Implementation
 
-	setup_locale is
+	setup_locale
 			-- Setup locale
 		local
 			l_manager: I18N_LOCALE_MANAGER
@@ -77,7 +77,7 @@ feature {NONE} -- Implementation
 			locale_cell.put (l_locale)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

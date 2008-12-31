@@ -1,4 +1,4 @@
-indexing
+note
 	description: "resource ID representation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -33,7 +33,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_number_id (a_id: INTEGER) is
+	set_number_id (a_id: INTEGER)
 			-- Set `number_id' to `a_id'.
 		do
 			number_id := a_id
@@ -45,7 +45,7 @@ feature -- Element change
 			has_number_set: has_number
 		end
 
-	set_name_id (a_id: STRING) is
+	set_name_id (a_id: STRING)
 			-- Set `name_id' to `a_id'.
 		require
 			a_id_exists: a_id /= Void and then a_id.count > 0
@@ -58,7 +58,7 @@ feature -- Element change
 			is_number_set: not is_number
 		end
 
-	set_id (a_id: STRING) is
+	set_id (a_id: STRING)
 			-- Set properly `a_id' to the current object.
 		require
 			a_id_exists: a_id /= Void and then a_id.count > 0
@@ -72,7 +72,7 @@ feature -- Element change
 
 feature -- Conversion
 
-	to_constant_style: STRING is
+	to_constant_style: STRING
 			-- Convert the `name_id' to a eiffel constant format if exists (ie like "Constant")
 			-- Otherwise put the `number_id'.
 		local
@@ -95,7 +95,7 @@ feature -- Conversion
 			end
 		end
 
-	to_variable_style: STRING is
+	to_variable_style: STRING
 			-- Convert the `name_id' to a eiffel variable format (ie like "variable").
 		require
 			name_id_exists: name_id /= Void and then name_id.count > 0
@@ -104,7 +104,7 @@ feature -- Conversion
 			Result.to_lower
 		end
 
-	to_class_style (a_standard_class_name: STRING): STRING is
+	to_class_style (a_standard_class_name: STRING): STRING
 			-- Convert the `name_id' or `number_id' to a eiffel class format (ie like "CLASS").
 		require
 			a_standard_class_name_exists: a_standard_class_name /= Void and then a_standard_class_name.count > 0
@@ -129,7 +129,7 @@ feature -- Conversion
 
 feature -- Code generation
 
-	display is
+	display
 		do
 			if (is_number) then
 				io.putint (number_id)
@@ -138,7 +138,7 @@ feature -- Code generation
 			end
 		end
 
-	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE) is
+	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE)
 			-- Generate `a_resource_file' from the tds memory structure.
 		require
 			a_resource_file_exists: a_resource_file.exists
@@ -150,7 +150,7 @@ feature -- Code generation
 			end
 		end
 
-	generate_tree_view (a_tree_view: EV_TREE_ITEM) is -- ; on_tree_item_selection: PROCEDURE [ANY, TUPLE]) is
+	generate_tree_view (a_tree_view: EV_TREE_ITEM) -- ; on_tree_item_selection: PROCEDURE [ANY, TUPLE]) is
 			-- Generate `a_tree_view' control from the tds memory structure.
 		require
 			a_tree_view_not_void: a_tree_view /= Void
@@ -175,7 +175,7 @@ feature -- Code generation
 --			res:= tds.access_view_item (cur_item)
 --		end
 
-	generate_wel_code (a_text_file: PLAIN_TEXT_FILE) is
+	generate_wel_code (a_text_file: PLAIN_TEXT_FILE)
 			-- Generate the eiffel code in `a_text_file'
 		require
 			a_text_file_exists: a_text_file.exists
@@ -191,7 +191,7 @@ feature -- Code generation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

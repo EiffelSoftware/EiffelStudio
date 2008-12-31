@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Final state of the wizard."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature -- Basic Operations
 
-	proceed_with_current_info is
+	proceed_with_current_info
 		do
 			project_generator.generate_code
 			write_bench_notification_ok (wizard_information)
@@ -37,7 +37,7 @@ feature -- Basic Operations
 
 feature -- Access
 
-	display_state_text is
+	display_state_text
 		do
 			title.set_text (interface_names.t_completing_wizard)
 			message.set_text (
@@ -48,20 +48,20 @@ feature -- Access
 			)
 		end
 
-	final_message: STRING is
+	final_message: STRING
 		do
 		end
 
 feature {NONE} -- Implementation
 
-	pixmap_icon_location: FILE_NAME is
+	pixmap_icon_location: FILE_NAME
 			-- Icon for the Eiffel Wel Wizard
 		once
 			create Result.make_from_string ("eiffel_wizard_icon")
 			Result.add_extension (pixmap_extension)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Template for the last state of a wizard for EiffelStudio"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	cancel is
+	cancel
 			-- User	has pressed the cancel button
 		do
 			write_bench_notification_cancel
@@ -32,13 +32,13 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	project_generator: WIZARD_PROJECT_GENERATOR is
+	project_generator: WIZARD_PROJECT_GENERATOR
 			-- Project generator
 		once
 			create Result.make (wizard_information)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

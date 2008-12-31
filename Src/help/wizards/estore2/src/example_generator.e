@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Repository Example."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
  
 feature -- Initialization
 
-	make (li: ARRAYED_LIST [DB_REPOSITORY]) is
+	make (li: ARRAYED_LIST [DB_REPOSITORY])
 		require
 			li_exists: li /= Void
 		local
@@ -62,7 +62,7 @@ feature -- Initialization
 			Result_string.append("%Nend -- Class ESTORE_EXAMPLE")
 		end
 
-	generate_simple_select(qu: TUPLE[STRING,STRING,STRING]) is
+	generate_simple_select(qu: TUPLE[STRING,STRING,STRING])
 			-- Generate a 'select' query, thanks to tuple 'qu'.
 		require
 			tuple_exists: qu /= Void
@@ -127,7 +127,7 @@ invariant
 	result_string /= Void
 	repositories /= Void
 	a_repository_name /= Void and a_request_name /= Void and a_request /= Void
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+none
 	description: "Thanks form Processing"
 	author: "pascalf"
 	date: "$Date$"
@@ -18,13 +18,13 @@ creation
 
 feature -- Basic Operations
 
-	check_fields is
+	check_fields
 			-- Check that the users entered valid entries
 		do
-			entries_checked := TRUE
+			entries_checked := True
 		end
 
-	load_resources is
+	load_resources
 			-- Load xml source.
 		local
 			fi: PLAIN_TEXT_FILE
@@ -32,7 +32,7 @@ feature -- Basic Operations
 			cgi_handler.text_field_value("contactname")
 		end	
 	
-	process is
+	process
 			-- Terminate the sale process.
 		local
 			s: STRING
@@ -40,13 +40,13 @@ feature -- Basic Operations
 
 		end
 
-	reply_browser is
+	reply_browser
 			-- Re-direct the browser to the 'index' page.
 		do
-			response_header.generate_http_redirection(cgi_handler.text_field_value("index"), FALSE)
+			response_header.generate_http_redirection(cgi_handler.text_field_value("index"), False)
 			response_header.send_to_browser
 		end
 			
 feature -- Implementation
 
-end -- class THANKS
+end

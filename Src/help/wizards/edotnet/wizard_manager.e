@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Class which is launching the application."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,24 +26,24 @@ create
 
 feature -- Initialization
 
-	prepare is
+	prepare
 			-- Prepare window.
 		do
 			Precursor {BENCH_WIZARD_MANAGER}
 		end
 
-	Wizard_title: STRING_GENERAL is
+	Wizard_title: STRING_GENERAL
 			-- Window title for this wizard.
 		once
 			Result := Interface_names.t_Wizard_title
 		end
 
-	wizard_factory: BENCH_WIZARD_FACTORY is
+	wizard_factory: BENCH_WIZARD_FACTORY
 		once
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

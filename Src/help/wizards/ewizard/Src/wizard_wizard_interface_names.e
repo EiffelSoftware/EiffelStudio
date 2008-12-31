@@ -1,4 +1,4 @@
-indexing
+note
 	description: "All string constants used in the Wizard wizard"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,26 +13,26 @@ inherit
 
 feature -- Title
 
-	t_Initial_state: STRING_GENERAL is
+	t_Initial_state: STRING_GENERAL
 		do Result := locale.translation ("Welcome to the New Wizard%NApplication Wizard") end
 
-	t_Final_state: STRING_GENERAL is do Result := locale.translation ("Completing the New Wizard %NApplication Wizard") end
+	t_Final_state: STRING_GENERAL do Result := locale.translation ("Completing the New Wizard %NApplication Wizard") end
 
-	t_Second_state: STRING_GENERAL is do Result := locale.translation ("Number of States") end
+	t_Second_state: STRING_GENERAL do Result := locale.translation ("Number of States") end
 
-	st_Second_state: STRING_GENERAL is do Result := locale.translation ("You can choose the number of states your wizard will have.") end
+	st_Second_state: STRING_GENERAL do Result := locale.translation ("You can choose the number of states your wizard will have.") end
 
-	t_new_wizard_application_wizard: STRING_GENERAL is do Result := locale.translation ("New Wizard Application Wizard") end
+	t_new_wizard_application_wizard: STRING_GENERAL do Result := locale.translation ("New Wizard Application Wizard") end
 
 feature -- Label
 
-	l_Number_of_state1: STRING_GENERAL is do Result := locale.translation ("Generate a wizard with ") end
+	l_Number_of_state1: STRING_GENERAL do Result := locale.translation ("Generate a wizard with ") end
 
-	l_Number_of_state2: STRING_GENERAL is do Result := locale.translation (" states.") end
+	l_Number_of_state2: STRING_GENERAL do Result := locale.translation (" states.") end
 
 feature -- Message
 
-	m_Final_state (compile_project: BOOLEAN; project_name: STRING_GENERAL; project_location: STRING_GENERAL): STRING_GENERAL is
+	m_Final_state (compile_project: BOOLEAN; project_name: STRING_GENERAL; project_location: STRING_GENERAL): STRING_GENERAL
 		local
 			word: STRING_32
 		do
@@ -51,7 +51,7 @@ feature -- Message
 			end
 		end
 
-	m_Initial_state: STRING_GENERAL is
+	m_Initial_state: STRING_GENERAL
 		do Result := locale.translation ("Using this wizard you can create a Wizard application%N%
 		%%N%
 		%You will have to choose how many states should be in%N%
@@ -62,9 +62,9 @@ feature -- Message
 		%%N%
 		%To continue, click Next.") end
 
-	m_Second_state: STRING_GENERAL is do Result := locale.translation ("The number of states is limited to 10.") end;
+	m_Second_state: STRING_GENERAL do Result := locale.translation ("The number of states is limited to 10.") end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

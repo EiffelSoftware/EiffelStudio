@@ -1,4 +1,4 @@
-indexing
+note
 	description: "One paragraph of marked-up text"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ create
 
 feature -- Initialization
 
-	make_from_xml_tree (node: XML_ELEMENT) is
+	make_from_xml_tree (node: XML_ELEMENT)
 			-- Initialize
 		require
 			not_void: node /= Void
@@ -27,7 +27,7 @@ feature -- Initialization
 			create_list(node, empty)
 		end
 
-	create_list(node:XML_ELEMENT; cur_part:E_TEXT_PART) is
+	create_list(node:XML_ELEMENT; cur_part:E_TEXT_PART)
 			-- Recursively build the list.
 		require
 			node_exists: node /= Void
@@ -115,7 +115,7 @@ feature -- Initialization
 			end
 		end
 
-	get_line_break_indent (depth: INTEGER): E_TEXT_PART is
+	get_line_break_indent (depth: INTEGER): E_TEXT_PART
 		do
 			create Result.make_empty
 			Result.set_list_depth (depth)
@@ -125,7 +125,7 @@ feature -- Initialization
 
 feature -- Display
 
-	display(area: E_TOPIC_DISPLAY) is
+	display(area: E_TOPIC_DISPLAY)
 			-- Output un-marked-up text on 'area'.
 		require
 			not_void: area /= Void
@@ -148,7 +148,7 @@ feature -- Access
 invariant
 	text_exists: text_parts /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

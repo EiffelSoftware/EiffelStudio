@@ -1,4 +1,4 @@
-indexing
+note
 	description: "xxx"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,12 +15,12 @@ inherit
 
 feature 
 
-	construct_name: STRING is
+	construct_name: STRING
 		once
 			Result := "EVEN_MORE_POPUP_EX"
 		end
 
-	production: LINKED_LIST [CONSTRUCT] is
+	production: LINKED_LIST [CONSTRUCT]
 		local
 			type: TYPE_EXPRESSION
 			state_and_helpId: STATE_AND_HELPID_EXPRESSIONS
@@ -35,7 +35,7 @@ feature
 			put (state_and_helpId)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

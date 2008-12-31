@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature -- Basic Operation
 
-	build is 
+	build 
 			-- Build entries.
 		local
 			browse_b: EV_BUTTON
@@ -47,7 +47,7 @@ feature -- Basic Operation
 			set_updatable_entries(<<browse_b.press_actions, location.change_actions>>)
 		end
 
-	proceed_with_current_info is 
+	proceed_with_current_info 
 		local
 			dir: DIRECTORY
 		do
@@ -64,14 +64,14 @@ feature -- Basic Operation
 			end			
 		end
 
-	update_state_information is
+	update_state_information
 			-- Check User Entries
 		do
 			wizard_information.set_project_location (location.text)
 			Precursor
 		end
 
-	browse is
+	browse
 			-- Launch a computer directory Browser.
 		local
 			dir_selector: EV_DIRECTORY_DIALOG	
@@ -81,7 +81,7 @@ feature -- Basic Operation
 			dir_selector.show_modal
 		end
 
-	directory_selected (dir_selector: EV_DIRECTORY_DIALOG) is
+	directory_selected (dir_selector: EV_DIRECTORY_DIALOG)
 			-- The user selected a directory from the browser. 
 			-- It updates the text fields accordingly.
 		require
@@ -95,13 +95,13 @@ feature {NONE} -- Implementation
 
 	location: WIZARD_SMART_TEXT_FIELD
 
-	pixmap_location: STRING is "small_essai.bmp"
+	pixmap_location: STRING = "small_essai.bmp"
 
-	title: STRING is "Building new project ..."
+	title: STRING = "Building new project ..."
 
-	message: STRING is "Please choose the directory in which you want %Nto have your Eiffel sources.";
+	message: STRING = "Please choose the directory in which you want %Nto have your Eiffel sources.";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

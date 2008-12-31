@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class which initiates the connection."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Script Execution 
 		local
 			script: SCRIPT
@@ -52,10 +52,10 @@ feature -- Execution
 
 feature -- Access
 
-	debug_mode: BOOLEAN is TRUE;
+	debug_mode: BOOLEAN = TRUE;
 		-- Is Current Application being currently debugged?
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

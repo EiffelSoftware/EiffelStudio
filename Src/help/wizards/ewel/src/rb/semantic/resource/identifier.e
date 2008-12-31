@@ -1,4 +1,4 @@
-indexing
+note
 	description: "xxx"
 	product: "Resource Bench"
 	date: "$Date$"
@@ -32,7 +32,7 @@ create
 
 feature
 
-	action is
+	action
 		local
 			accelerators: TDS_ACCELERATORS
 			dialog: TDS_DIALOG
@@ -240,7 +240,7 @@ feature
 
 feature {NONE}
 
-	new_control (dialog: TDS_DIALOG; type: STRING) is
+	new_control (dialog: TDS_DIALOG; type: STRING)
 			-- Create a typed control.
 			-- Combobox, edittext and listbox controls are created by Specific_statement.
 		local

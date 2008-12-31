@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Dialog properties window of Resource Bench"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature -- Initialization
 
-	make (a_dialog: TDS_DIALOG; w_window: WIZARD_STATE_WINDOW) is
+	make (a_dialog: TDS_DIALOG; w_window: WIZARD_STATE_WINDOW)
 			-- Create the dialog.
 		require
 --			a_dialog_not_void: a_dialog /= Void
@@ -131,7 +131,7 @@ feature -- Initialization
 			current_dialog_set: current_dialog = a_dialog
 		end
 
-	default_process_message (msg, wparam, lparam: INTEGER) is
+	default_process_message (msg, wparam, lparam: INTEGER)
 		local
 			tt1: WEL_TOOLTIP_TEXT 
 		do
@@ -145,12 +145,12 @@ feature -- Initialization
 --			end
 		end
 
-	setup_dialog is
+	setup_dialog
 		do
 			get_dialog_properties
 		end
 
-	on_select_check_code is
+	on_select_check_code
 		do
 			if check_code_generation.is_selected  then
 				enable_all_controls
@@ -159,7 +159,7 @@ feature -- Initialization
 			end
 		end
 
-	notify (control: WEL_CONTROL; notify_code: INTEGER) is
+	notify (control: WEL_CONTROL; notify_code: INTEGER)
 		do
 --			if control = check_code_generation then
 --				if check_code_generation.is_selected  then
@@ -170,7 +170,7 @@ feature -- Initialization
 --			end
 		end
 
-	set_current_dialog (d: TDS_DIALOG) is
+	set_current_dialog (d: TDS_DIALOG)
 		do
 			current_dialog:= d
 		end
@@ -205,7 +205,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_dialog_properties (a_dialog: TDS_DIALOG) is
+	set_dialog_properties (a_dialog: TDS_DIALOG)
 		local
 			selected_list: DYNAMIC_LIST [EV_LIST_ITEM]
 			control_list: TDS_CONTROL_STATEMENT
@@ -314,7 +314,7 @@ feature -- Element change
 			end
 		end
 
-	get_dialog_properties is
+	get_dialog_properties
 		local
 			control_name: STRING
 			control_list: TDS_CONTROL_STATEMENT
@@ -439,7 +439,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	check_list_entry (list: DYNAMIC_LIST [EV_LIST_ITEM]; i: INTEGER): BOOLEAN is
+	check_list_entry (list: DYNAMIC_LIST [EV_LIST_ITEM]; i: INTEGER): BOOLEAN
 		local
 			f_end: BOOLEAN
 			s_data: STRING
@@ -460,7 +460,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	enable_all_controls is
+	enable_all_controls
 		do
 			control_selection_list.enable_sensitive
 			dialog_class_name.enable_sensitive
@@ -479,7 +479,7 @@ feature {NONE} -- Implementation
 			idc_on_no.enable_sensitive
 		end
 
-	disable_all_controls is
+	disable_all_controls
 		do
 			control_selection_list.disable_sensitive
 			dialog_class_name.disable_sensitive
@@ -498,7 +498,7 @@ feature {NONE} -- Implementation
 			idc_on_no.disable_sensitive
 		end
 
-	clear_all is
+	clear_all
 		do
 			check_code_generation.disable_select
 			control_selection_list.wipe_out
@@ -523,7 +523,7 @@ feature {NONE} -- Implementation
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

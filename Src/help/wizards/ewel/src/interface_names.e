@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Names for buttons, labels, ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,23 +13,23 @@ inherit
 
 feature -- Labels names
 
-	l_frame_application: STRING_GENERAL is do Result := locale.translation ("Frame application") end
-	l_dialog_application: STRING_GENERAL is do Result := locale.translation ("Dialog application") end
-	l_project_icon: STRING_GENERAL is do Result := locale.translation ("Project icon") end
+	l_frame_application: STRING_GENERAL do Result := locale.translation ("Frame application") end
+	l_dialog_application: STRING_GENERAL do Result := locale.translation ("Dialog application") end
+	l_project_icon: STRING_GENERAL do Result := locale.translation ("Project icon") end
 
 feature -- Title
 
-	t_new_wel_wizard: STRING_GENERAL is	do Result := locale.translation ("New WEL Application Wizard") end
-	t_welcome_to_the_wizard: STRING_GENERAL is	do Result := locale.translation ("Welcome to the New WEL%NApplication Wizard") end
-	t_completing_wizard: STRING_GENERAL is	do Result := locale.translation ("Completing the New WEL%NApplication Wizard") end
-	t_wel_app_type: STRING_GENERAL is do Result := locale.translation ("WEL Application Type") end
-	t_choose_type_subtitle: STRING_GENERAL is do Result := locale.translation ("You can choose the type of your application between%N a Frame-based or a Dialog based window") end
-	t_project_icon: STRING_GENERAL is do Result := locale.translation ("Project icon") end
-	t_choose_icon_subtitle: STRING_GENERAL is do Result := locale.translation ("Choose an icon for you project.") end
+	t_new_wel_wizard: STRING_GENERAL	do Result := locale.translation ("New WEL Application Wizard") end
+	t_welcome_to_the_wizard: STRING_GENERAL	do Result := locale.translation ("Welcome to the New WEL%NApplication Wizard") end
+	t_completing_wizard: STRING_GENERAL	do Result := locale.translation ("Completing the New WEL%NApplication Wizard") end
+	t_wel_app_type: STRING_GENERAL do Result := locale.translation ("WEL Application Type") end
+	t_choose_type_subtitle: STRING_GENERAL do Result := locale.translation ("You can choose the type of your application between%N a Frame-based or a Dialog based window") end
+	t_project_icon: STRING_GENERAL do Result := locale.translation ("Project icon") end
+	t_choose_icon_subtitle: STRING_GENERAL do Result := locale.translation ("Choose an icon for you project.") end
 
 feature -- Message
 
-	m_you_have_specified_the_following_setting (a_project_name, a_project_location: STRING_GENERAL): STRING_GENERAL is
+	m_you_have_specified_the_following_setting (a_project_name, a_project_location: STRING_GENERAL): STRING_GENERAL
 		do
 			Result := locale.formatted_string (locale.translation (
 			"You have specified the following settings:%N%
@@ -39,7 +39,7 @@ feature -- Message
 			), [a_project_name, a_project_location])
 		end
 
-	m_click_finish_to (a_compile: BOOLEAN): STRING_GENERAL is
+	m_click_finish_to (a_compile: BOOLEAN): STRING_GENERAL
 		do
 			if a_compile then
 				Result := locale.translation ("Click Finish to generate and compile this project")
@@ -48,7 +48,7 @@ feature -- Message
 			end
 		end
 
-	m_wizard_introduction: STRING_GENERAL is
+	m_wizard_introduction: STRING_GENERAL
 		do
 			Result := locale.translation (
 				"Using this wizard you can create a Windows application%N%
@@ -58,7 +58,7 @@ feature -- Message
 				%To continue, click Next.")
 		end
 
-	m_a_frame_based_application: STRING_GENERAL is
+	m_a_frame_based_application: STRING_GENERAL
 		do
 			Result := locale.translation (
 				"A Frame-Based Application uses a main window, or %"frame%", which can have %
@@ -68,14 +68,14 @@ feature -- Message
 				%")
 		end
 
-	m_choose_icon: STRING_GENERAL is
+	m_choose_icon: STRING_GENERAL
 		do
 			Result := locale.translation (
 				"You have chosen to build a Frame-Based Application.%N%
 				%You can provide an icon or use the default icon")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

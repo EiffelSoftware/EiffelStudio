@@ -211,7 +211,7 @@
 		<cluster name="interface" location="$EIFFEL_SRC\Eiffel\interface\" recursive="true">
 			<file_rule>
 				<exclude>/lite$</exclude>
-				<exclude>/tty$</exclude>
+				<exclude>^/tty$</exclude>
 				<exclude>/preferences$</exclude>
 				<exclude>/ewb_case_storage\.e$</exclude>
 				<exclude>/overrides$</exclude>

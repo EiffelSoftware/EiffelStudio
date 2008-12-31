@@ -44,7 +44,7 @@ feature -- Properties
 
 	abbreviation: CHARACTER
 		do
-			Result := 'e'
+			Result := 'a'
 		end
 
 feature -- Execution

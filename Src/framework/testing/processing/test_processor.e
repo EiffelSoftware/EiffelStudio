@@ -153,7 +153,8 @@ feature {TEST_SUITE_S} -- Events
 			-- <Precursor>
 		do
 			if tests.has (a_item) then
-				test_changed_event.publish ([Current, a_item])
+					-- Note: replace `as_attached' with Current when compiler treats Current as attached
+				test_changed_event.publish ([as_attached, a_item.as_attached])
 			end
 		end
 

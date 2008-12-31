@@ -83,7 +83,8 @@ feature {NONE} -- Status setting
 			-- <Precursor>
 		do
 			internal_created_tests.wipe_out
-			tests_reset_event.publish ([Current])
+				-- Note: replace `as_attached' with Current when compiler treats Current as attached
+			tests_reset_event.publish ([as_attached])
 			is_finished := False
 			configuration := a_conf
 			class_name_counter := 1
@@ -221,7 +222,8 @@ feature {NONE} -- Events
 		do
 			if is_adding_tests then
 				internal_created_tests.force_last (a_item)
-				test_added_event.publish ([Current, a_item])
+					-- Note: replace `as_attached' with Current when compiler treats Current as attached
+				test_added_event.publish ([as_attached, a_item.as_attached])
 			end
 		end
 
@@ -231,7 +233,8 @@ feature {NONE} -- Events
 			internal_created_tests.search (a_item)
 			if internal_created_tests.found then
 				internal_created_tests.remove_found_item
-				test_removed_event.publish ([Current, a_item])
+					-- Note: replace `as_attached' with Current when compiler treats Current as attached
+				test_removed_event.publish ([as_attached, a_item.as_attached])
 			end
 		end
 

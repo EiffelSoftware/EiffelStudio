@@ -5,7 +5,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class CHARACTER_ARRAY 
+class CHARACTER_ARRAY
 
 create
 	make
@@ -32,6 +32,15 @@ feature {CHARACTER_ARRAY} -- Access
 
 	area: SPECIAL [CHARACTER]
 			-- Storage for byte code.
+
+feature -- Access
+
+	item (i: INTEGER): CHARACTER
+		require
+			valid_index: i >= 1 and i <= count
+		do
+			Result := area.item (i - 1)
+		end
 
 feature -- Store
 

@@ -299,7 +299,7 @@ feature {NONE} -- Memory Management
 			Precursor
 		end
 
-feature {EB_COMMAND, EB_SEARCH_PERFORMER, EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_MENU_BUILDER} -- Edition Operations on text
+feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_MENU_BUILDER} -- Edition Operations on text
 
 	comment_selection
 			-- Comment selected lines if possible.

@@ -373,7 +373,7 @@ feature {NONE} -- Events
 								Result := [False, locale_formatter.translation (e_unable_to_check_compiled_classes)]
 							end
 						else
-							Result := [False, locale_formatter.translation (e_test_suite_not_available)]
+							Result := [False, locale_formatter.translation (e_service_not_available)]
 						end
 					else
 						Result := [False, locale_formatter.formatted_translation (e_no_valid_type_name, [l_types])]

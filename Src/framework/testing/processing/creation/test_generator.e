@@ -97,7 +97,7 @@ feature {NONE} -- Access
 	source_writer: !TEST_GENERATED_SOURCE_WRITER
 			-- Source writer used for creating test classes
 
-	class_names: DS_LIST [!STRING_8]
+	class_names: DS_LIST [STRING_8]
 			-- <Precursor>
 
 feature -- Status report
@@ -384,7 +384,7 @@ feature {NONE} -- Interpreter generation
 			l_file: KL_TEXT_OUTPUT_FILE
 			l_file_name: FILE_NAME
 			l_source_writer: TEST_INTERPRETER_SOURCE_WRITER
-			l_types: DS_LINEAR [!STRING]
+			l_types: like class_names
 			l_system: SYSTEM_I
 		do
 			l_system := system

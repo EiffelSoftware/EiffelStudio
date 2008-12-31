@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Structure which receives the data contained in a XML file."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature -- Initialization
 
-	make(pars: XML_TREE_PARSER) is
+	make(pars: XML_TREE_PARSER)
 			-- Initialize
 		require
 			parser_exists: pars /= Void
@@ -29,7 +29,7 @@ feature -- Initialization
 			parser_set: parser = pars
 		end
 
-	initialize_structure is
+	initialize_structure
 			-- Initialize Current.
 		do
 			categories.wipe_out
@@ -37,7 +37,7 @@ feature -- Initialization
 			table.clear_all
 		end
 
-	create_structure is
+	create_structure
 			-- Create structure from the extraction of the parser.
 		local
 			category: RESOURCE_CATEGORY
@@ -105,7 +105,7 @@ feature -- Initialization
 
 feature -- Settings
 
-	set_title(s: STRING) is
+	set_title(s: STRING)
 			-- Give a title to Current.
 		require
 			not_void: s/= VOid
@@ -113,7 +113,7 @@ feature -- Settings
 			title := clone(s)
 		end
 
-	set_error(s: STRING) is
+	set_error(s: STRING)
 			-- Add an error message to 'error_message'.
 		require
 			not_void: s/= Void
@@ -124,7 +124,7 @@ feature -- Settings
 
 feature -- Access
 
-	has_category(s: STRING): BOOLEAN is
+	has_category(s: STRING): BOOLEAN
 			-- Does Current has category pointed by 's'.
 		require
 			not_void: s /= Void
@@ -132,7 +132,7 @@ feature -- Access
 			Result := (find_category_with_name(s,categories) /= Void)
 		end
 
-	find_category_with_name(s: STRING;l: LINKED_LIST [RESOURCE_CATEGORY]): RESOURCE_CATEGORY is
+	find_category_with_name(s: STRING;l: LINKED_LIST [RESOURCE_CATEGORY]): RESOURCE_CATEGORY
 			-- Find the category corresponding to 's'.
 			-- return Void if not found.
 		require
@@ -191,7 +191,7 @@ invariant
 	RESOURCE_STRUCTURE_categories_exists: categories /= Void
 	RESOURCE_STRUCUTRE_error_exists: error_message /= Void
 	RESOURCE_STRUCTURE_table_exists: table /= Void
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

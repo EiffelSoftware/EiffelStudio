@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Initial State"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,13 +19,13 @@ create
 
 feature -- basic Operations
 
-	proceed_with_current_info is 
+	proceed_with_current_info 
 		do
 			Precursor {WIZARD_INITIAL_STATE_WINDOW}
 			proceed_with_new_state(Create {DB_CONNECTION}.make(wizard_information))
 		end
 
-	display_state_text is
+	display_state_text
 		do
 			title.set_text ("THE EIFFELSTORE WIZARD")
 			message.set_text ("This wizard will help you to build your first EiffelStore Application.%
@@ -34,13 +34,13 @@ feature -- basic Operations
 								%%N%NThen, you will be able to use the generated classes to build your own%NProject.")
 		end
 
-	pixmap_icon_location: FILE_NAME is
+	pixmap_icon_location: FILE_NAME
 		do
 			create Result.make_from_string ("eiffel_wizard_icon")
 			Result.add_extension (pixmap_extension)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

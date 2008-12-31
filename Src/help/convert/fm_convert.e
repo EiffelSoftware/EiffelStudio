@@ -1,4 +1,4 @@
-indexing
+note
 	description:"Converter for FrameMaker 5.5.6 XML format to help-XML format"
 	author:"Vincent Brendel"
 
@@ -13,7 +13,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Convert first argument (FM .XML) to 2nd (help .XML)
 		local
 			struct: FM_XML_STRUCT
@@ -29,7 +29,7 @@ feature -- Initialization
 			write_file(target_file, struct.xml_string)
 		end
 
-	parse(file_name:FILE_NAME) is
+	parse(file_name:FILE_NAME)
 		require
 			file_name_not_void: file_name /= Void
 		local
@@ -49,7 +49,7 @@ feature -- Initialization
 			end
 		end
 
-	write_file(file_name:FILE_NAME; s:STRING) is
+	write_file(file_name:FILE_NAME; s:STRING)
 		local
 			file: RAW_FILE
 		do
@@ -61,7 +61,7 @@ feature -- Initialization
 
 	parser: XML_TREE_PARSER	
 
-	process_command_line is
+	process_command_line
 			-- Read the command line for help file and topic.
 		local
 			n: INTEGER

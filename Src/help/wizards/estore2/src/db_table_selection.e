@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Table Selection page."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature -- basic Operations
 
-	build is
+	build
 			-- Build interface 
 		local
 			h1: EV_HORIZONTAL_BOX
@@ -107,7 +107,7 @@ feature -- basic Operations
 			fill_lists
 		end
 
-	fill_lists is
+	fill_lists
 			-- Fill the list with table names.
 		local
 			it: EV_LIST_ITEM
@@ -134,7 +134,7 @@ feature -- basic Operations
 			end
 		end
 
-	add_all_items is
+	add_all_items
 			-- Add all the item from unselected_items to selected_items
 		local
 			it: EV_LIST_ITEM
@@ -154,7 +154,7 @@ feature -- basic Operations
 			unselected_items.is_empty
 		end
 
-	add_items is
+	add_items
 		local
 			currently_selected_items: DYNAMIC_LIST [EV_LIST_ITEM]
 			it: EV_LIST_ITEM
@@ -173,7 +173,7 @@ feature -- basic Operations
 			add_b.disable_sensitive
 		end
 
-	remove_all_items is
+	remove_all_items
 			-- Remove all the item from selected_items to unselected_items
 		local
 			it: EV_LIST_ITEM
@@ -193,7 +193,7 @@ feature -- basic Operations
 			selected_items.is_empty
 		end
 
-	remove_items is
+	remove_items
 		local
 			currently_selected_items: DYNAMIC_LIST [EV_LIST_ITEM]
 			it: EV_LIST_ITEM
@@ -212,24 +212,24 @@ feature -- basic Operations
 			remove_b.disable_sensitive
 		end
 
-	enable_add_b is
+	enable_add_b
 		do
 			add_b.enable_sensitive
 		end
 
-	enable_remove_b is
+	enable_remove_b
 		do
 			remove_b.disable_sensitive
 		end
 
-	proceed_with_current_info is 
+	proceed_with_current_info 
 			-- Process user entries
 		do 
 			precursor
 			proceed_with_new_state (create {DB_GENERATION_TYPE}.make(wizard_information))
 		end
 
-	update_state_information is
+	update_state_information
 			-- Check user entries
 		local
 			li: ARRAYED_LIST [CLASS_NAME]
@@ -260,7 +260,7 @@ feature -- basic Operations
 			precursor
 		end
 
-	display_state_text is
+	display_state_text
 		do
 			title.set_text ("STEP 2 BIS: TABLE SELECTION")
 			message.set_text (" Please select which tables you wish to be%
@@ -273,13 +273,13 @@ feature -- Implementation
 
 	remove_b, add_b, remove_all_b, add_all_b: EV_BUTTON
 
-	Button_width: INTEGER is 25
+	Button_width: INTEGER = 25
 			-- Standard button width.
 			
-	Button_height: INTEGER is 23;
+	Button_height: INTEGER = 23;
 			-- Standard button height.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

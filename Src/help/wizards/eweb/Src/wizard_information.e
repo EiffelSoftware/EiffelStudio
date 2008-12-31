@@ -1,4 +1,4 @@
-indexing
+note
 	description: "All information about the wizard ... "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 	make
 
 feature {WIZARD_WINDOW} -- Initialization
-	make is
+	make
 		do
 			Create list_of_html_pages.make
 			generation_location:= ""
@@ -22,7 +22,7 @@ feature {WIZARD_WINDOW} -- Initialization
 
 feature -- Setting
 
-	set_project_location (a_loc: STRING) is
+	set_project_location (a_loc: STRING)
 		require
 			not_void: a_loc /= Void
 		do
@@ -31,7 +31,7 @@ feature -- Setting
 			set: project_location = a_loc
 		end
 
-	set_generation_location (a_location: STRING) is
+	set_generation_location (a_location: STRING)
 		require
 			not_void: a_location /= Void
 		do
@@ -40,14 +40,14 @@ feature -- Setting
 			set: generation_location = a_location
 		end
 
-	set_new_project is
+	set_new_project
 		do
 			is_new_project := TRUE
 		ensure
 			is_new_project
 		end
 
-	set_files(li: LINKED_LIST[STRING]) is
+	set_files(li: LINKED_LIST[STRING])
 		require
 			list_exists: li /= Void
 		do
@@ -66,7 +66,7 @@ feature -- Access
 
 	list_of_html_pages: LINKED_LIST [STRING];
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

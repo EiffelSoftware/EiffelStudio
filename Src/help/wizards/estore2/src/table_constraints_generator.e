@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that generate table constraints."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature -- Initialization
 
-	make (code: INTEGER) is
+	make (code: INTEGER)
 			-- Initialize.
 		do
 			dbms_code := code
@@ -35,14 +35,14 @@ feature -- Initialization
 
 feature -- Status report
 
-	repository_set: BOOLEAN is
+	repository_set: BOOLEAN
 			-- Has a repository, i.e. a table description
 			-- been set?
 		do
 			Result := table_name /= Void
 		end
 
-	scope_tables_set: BOOLEAN is
+	scope_tables_set: BOOLEAN
 			-- Are scope tables set?
 		do
 			Result := db_subset_selection.valid_values /= Void
@@ -53,7 +53,7 @@ feature -- Status report
 
 feature -- Access
 
-	id_name: STRING is
+	id_name: STRING
 			-- Table primary key attribute name.
 		require
 			generated: generated
@@ -79,7 +79,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	to_create_htable: STRING is
+	to_create_htable: STRING
 			-- Definition of hash table representing the
 			-- list of associated necessary tables and the
 			-- linking foreign keys.
@@ -91,7 +91,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	to_delete_htable: STRING is
+	to_delete_htable: STRING
 			-- Definition of hash table representing the
 			-- list of tables depending on this one and their
 			-- foreign key for this table.
@@ -105,7 +105,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	set_repository (rep: DB_REPOSITORY) is
+	set_repository (rep: DB_REPOSITORY)
 			-- Set `rep' as repository to use to
 			-- generate table constraints.
 		require
@@ -118,7 +118,7 @@ feature -- Basic operations
 			not_generated: not generated
 		end
 
-	set_scope_tables (s_scope_tables: ARRAYED_LIST [STRING]) is
+	set_scope_tables (s_scope_tables: ARRAYED_LIST [STRING])
 			-- Set `rep_list' table names as tables seen by the table which
 			-- constraints will be generated.
 		require
@@ -129,7 +129,7 @@ feature -- Basic operations
 			scope_tables_set: scope_tables_set
 		end
 
-	generate is
+	generate
 			-- Generate table constraints description using
 			-- repository.
 		require
@@ -155,7 +155,7 @@ feature {NONE} -- Implementation
 	scope_tables: ARRAYED_LIST [STRING]
 			-- Names of tables seen by the table.
 
-	constraint_information (constraint_id: STRING): USER_CONS_COLUMNS is
+	constraint_information (constraint_id: STRING): USER_CONS_COLUMNS
 			-- Constraint information of constraint with `constraint_id'.
 			-- Returns `Void' if attribute concerned is not unique.
 		local
@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 			coherent: Result /= Void implies constraint_id.is_equal (Result.constraint_name)
 		end
 
-	constraints_from_type_and_table (c_type, table: STRING): ARRAYED_LIST [USER_CONSTRAINTS] is
+	constraints_from_type_and_table (c_type, table: STRING): ARRAYED_LIST [USER_CONSTRAINTS]
 			-- Constraint list matching `type' and `table'.
 		do
 			db_subset_selection.set_query (select_with_type_and_table (c_type, table))
@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 			Result := db_subset_selection.database_result_list
 		end
 
-	constraints_from_foreign_key_ref (ref_constraint_name: STRING): ARRAYED_LIST [USER_CONSTRAINTS] is
+	constraints_from_foreign_key_ref (ref_constraint_name: STRING): ARRAYED_LIST [USER_CONSTRAINTS]
 			-- List of constraints referencing `ref_constraint_name'.
 		do
 			db_subset_selection.set_query (select_with_ref_constraint_name (ref_constraint_name))
@@ -194,7 +194,7 @@ feature {NONE} -- Implementation
 			Result := db_subset_selection.database_result_list
 		end
 
-	select_with_constraint_name (cons_name: STRING): STRING is
+	select_with_constraint_name (cons_name: STRING): STRING
 			-- Select query on table USER_CONS_COLUMNS qualified
 			-- by 'constraint_name'.
 		do
@@ -202,7 +202,7 @@ feature {NONE} -- Implementation
 					+ cons_name + "'"
 		end
 
-	select_with_type_and_table (c_type, table: STRING): STRING is
+	select_with_type_and_table (c_type, table: STRING): STRING
 			-- Select query on table USER_CONSTRAINTS qualified
 			-- by 'constraint_type' and 'table_name'.
 		do
@@ -210,7 +210,7 @@ feature {NONE} -- Implementation
 					+ table + "' and constraint_type = '" + c_type + "'"
 		end
 
-	select_with_ref_constraint_name (r_cons_name: STRING): STRING is
+	select_with_ref_constraint_name (r_cons_name: STRING): STRING
 			-- Select query on table USER_CONSTRAINTS qualified
 			-- by 'r_constraint_name'.
 		do
@@ -218,10 +218,10 @@ feature {NONE} -- Implementation
 					+ r_cons_name + "'"
 		end
 
-	Oracle_fkey_type: STRING is "R"
+	Oracle_fkey_type: STRING = "R"
 			-- Oracle type for a foreign key.
 
-	Oracle_pkey_type: STRING is "P"
+	Oracle_pkey_type: STRING = "P"
 			-- Oracle type for a primary key.
 
 	id_constraint: USER_CONS_COLUMNS
@@ -236,7 +236,7 @@ feature {NONE} -- Implementation
 	to_delete_ht: STRING
 			-- `to_delete_htable' implementation.
 
-	generate_to_create_ht is
+	generate_to_create_ht
 			-- Generate description of `to_create_htable'.
 		local
 			cons_list: ARRAYED_LIST [USER_CONSTRAINTS]
@@ -294,7 +294,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	generate_id_name is
+	generate_id_name
 			-- Generate `id_name'.
 		local
 			cons_list: ARRAYED_LIST [USER_CONSTRAINTS]
@@ -325,7 +325,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	generate_to_delete_ht is
+	generate_to_delete_ht
 			-- Generate description of `to_delete_htable'.
 		local
 			cons_list: ARRAYED_LIST [USER_CONSTRAINTS]
@@ -396,10 +396,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	No_id: STRING is "No_id"
+	No_id: STRING = "No_id"
 			-- No ID value.
 
-	to_initcap (string: STRING) is
+	to_initcap (string: STRING)
 			-- Change lower case `string' to `string' with initial capital character.
 		require
 			not_void: string /= void
@@ -414,7 +414,7 @@ feature {NONE} -- Implementation
 	db_subset_selection: DB_SUBSET_SELECTION [USER_CONSTRAINTS, STRING]
 			-- Tool to carry out database selection with a criterion constraint.
 
-	table_name_from_user_constraints (uc: USER_CONSTRAINTS): STRING is
+	table_name_from_user_constraints (uc: USER_CONSTRAINTS): STRING
 			-- Extracts table name frmo user constraints.
 		do
 			Result := uc.table_name
@@ -424,7 +424,7 @@ feature {NONE} -- Implementation
 invariant
 	db_subset_selection_created: db_subset_selection /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class which is used to retrieve objects."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Creation
 	
-	make (s: like selection;an_item: G) is
+	make (s: like selection;an_item: G)
 			-- Initialize
 		require
 			not_void: s /= Void and an_item /= Void
@@ -34,7 +34,7 @@ feature -- Creation
 
 feature -- Actions
 
-	execute is
+	execute
 			-- Update item with current
 			-- selected item in the container.
 		do
@@ -53,7 +53,7 @@ feature -- Access
 	list: LINKED_LIST [ G ];
 		-- Result List.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

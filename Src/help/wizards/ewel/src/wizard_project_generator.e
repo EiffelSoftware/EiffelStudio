@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Object to generate a project."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Basic Operations
 
-	generate_code is
+	generate_code
 			-- Generate code for the project.
 		do
 			if wizard_information.dialog_application then
@@ -29,7 +29,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	generate_code_for_dialog is
+	generate_code_for_dialog
 			-- Generate the code for a new dialog-application project
 		local
 			map_list: LINKED_LIST [TUPLE [STRING, STRING]]
@@ -76,7 +76,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	generate_code_for_frame is
+	generate_code_for_frame
 			-- Generate the code for a new frame-application project
 		local
 			map_list: LINKED_LIST [TUPLE [STRING, STRING]]
@@ -118,7 +118,7 @@ feature {NONE} -- Implementation
 			wizard_information.set_ace_location (project_location+"\"+project_name_lowercase+".ecf")
 		end
 
-	copy_icon is
+	copy_icon
 			-- Copy the icon
 		local
 			fi: RAW_FILE
@@ -137,7 +137,7 @@ feature {NONE} -- Implementation
 			fi.close
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

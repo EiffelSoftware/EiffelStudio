@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Information storage for the Resource script language"
 	product: "Resource Bench"
 	date: "$Date$"
@@ -29,7 +29,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- create the `tds'
 		do
 			table_make (10)
@@ -42,7 +42,7 @@ feature -- Access
 	version: STRING
 			-- Version of Resource Bench.
 			
-	constant_extension: STRING is "_constant"
+	constant_extension: STRING = "_constant"
 			-- Constant string append to a constant name.
 
 	last_token: STRING
@@ -63,7 +63,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_token (a_token: STRING) is
+	set_token (a_token: STRING)
 			-- Set `last_token' to `a_token'.
 		require
 			a_token_exists: a_token /= Void and then a_token.count > 0
@@ -73,7 +73,7 @@ feature -- Element change
 			last_token_set: last_token.is_equal (a_token)
 		end
 
-	set_current_resource (a_resource: TDS_RESOURCE) is
+	set_current_resource (a_resource: TDS_RESOURCE)
 			-- Set `current_resource' to `a_resource'.
 		require
 			a_resource_not_void: a_resource /= Void
@@ -83,7 +83,7 @@ feature -- Element change
 			current_resource_set: current_resource = a_resource
 		end
 
-	set_identifier_type (an_identifier: INTEGER) is
+	set_identifier_type (an_identifier: INTEGER)
 			-- Set `identifier_type' to `an_identifier'.
 		do
 			identifier_type := an_identifier
@@ -91,7 +91,7 @@ feature -- Element change
 			identifier_type_set: identifier_type = an_identifier
 		end
 
-	set_style (a_style: TDS_STYLE) is
+	set_style (a_style: TDS_STYLE)
 			-- Set `last_style' to `a_style'.
 		require
 			a_style_not_void: a_style /= Void
@@ -103,7 +103,7 @@ feature -- Element change
 
 feature -- Error Managment
 
-	error (a_message: STRING) is
+	error (a_message: STRING)
 			-- Display `a_message' error during the parsing.
 		require
 			a_message_exists: a_message /= Void and then a_message.count > 0
@@ -114,7 +114,7 @@ feature -- Error Managment
 
 feature
 
-	to_integer (an_identifier: STRING) : INTEGER is
+	to_integer (an_identifier: STRING) : INTEGER
 			-- Convert `an_identifier' which can be a string or a integer string
 			-- into a integer value.
 		require
@@ -129,7 +129,7 @@ feature
 			end
 		end
 
-	insert_resource (a_resource: TDS_RESOURCE) is
+	insert_resource (a_resource: TDS_RESOURCE)
 			-- If a TDS_RESOURCE structure exists insert `a_resource'
 			-- else create the TDS_RESOURCE structure.
 		require
@@ -153,7 +153,7 @@ feature
 
 feature -- Code generation
 
-	display is
+	display
 			-- Display the tds.
 		do
 			from
@@ -166,7 +166,7 @@ feature -- Code generation
 			end
 		end
 
-	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE) is
+	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE)
 			-- Generate `a_resource_file' from the tds memory structure.
 		require
 			a_resource_file_exists: a_resource_file.exists
@@ -194,7 +194,7 @@ feature -- Code generation
 			a_resource_file.putstring ("%N")
 		end
 
-	generate_include_file is
+	generate_include_file
 			-- Generate the include file which contains the definition of constants.
 		local
 			include_file: PLAIN_TEXT_FILE
@@ -251,7 +251,7 @@ feature -- Code generation
 --			end
 --		end
 
-	generate_tree_view (a_tree_view: EV_TREE_ITEM) is
+	generate_tree_view (a_tree_view: EV_TREE_ITEM)
 			-- Generate `a_tree_view' control from the tds memory structure.
 		require
 			a_tree_view_not_void: a_tree_view /= Void
@@ -273,7 +273,7 @@ feature -- Code generation
 			end
 		end
 
-	access_tree_view_item (a_tree_view_item: EV_TREE_NODE): TDS_RESOURCE is
+	access_tree_view_item (a_tree_view_item: EV_TREE_NODE): TDS_RESOURCE
 			-- Give the associated object to `a_tree_view_item'.
 		local
 			resource_type: TDS_RESOURCE
@@ -358,7 +358,7 @@ feature -- Code generation
 --			end
 --		end
 
-	generate_wel_code is
+	generate_wel_code
 			-- Generate the eiffel code.
 		local
 			text_file: PLAIN_TEXT_FILE
@@ -413,7 +413,7 @@ feature -- Code generation
 
 feature -- Save and restore a tds
 
-	store_tds (a_file: RAW_FILE) is
+	store_tds (a_file: RAW_FILE)
 			-- store the `tds' structure into the file `a_file'.
 		require
 			a_file_exists: a_file.exists
@@ -421,7 +421,7 @@ feature -- Save and restore a tds
 			independent_store (a_file)
 		end
 
-	retrieve_tds (a_file: RAW_FILE) is
+	retrieve_tds (a_file: RAW_FILE)
 			-- retrieve the `tds' structure from the file `a_file'.
 		require
 			a_file_exists: a_file.exists
@@ -434,7 +434,7 @@ feature -- Save and restore a tds
 
 feature {NONE}
 
-	string_to_constant_form (a_string: STRING): STRING is
+	string_to_constant_form (a_string: STRING): STRING
 		require
 			a_string_exists: a_string /= Void and then a_string.count > 0
 		local

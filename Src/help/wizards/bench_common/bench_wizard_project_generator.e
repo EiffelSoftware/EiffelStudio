@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Object to generate a project."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_wizard_information: WIZARD_INFORMATION) is
+	make (a_wizard_information: WIZARD_INFORMATION)
 			-- Initialize the project generator with information `a_wizard_information'.
 		do
 			wizard_information := a_wizard_information
@@ -25,14 +25,14 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operations
 
-	generate_code is
+	generate_code
 			-- Generate code for the project.
 		deferred
 		end
 
 feature {NONE} -- Implementation
 
-	copy_file (name, extension, destination: STRING) is
+	copy_file (name, extension, destination: STRING)
 			-- Copy Class whose name is 'name'
 		require
 			name /= Void
@@ -57,7 +57,7 @@ feature {NONE} -- Implementation
 			fi.close
 		end
 
-	from_template_to_project (template_path, template_name, resource_path, resource_name: STRING; map_list: LINKED_LIST [TUPLE [STRING, STRING]]) is
+	from_template_to_project (template_path, template_name, resource_path, resource_name: STRING; map_list: LINKED_LIST [TUPLE [STRING, STRING]])
 			-- Take a template_name (name of the file) and its template_path
 			-- Then change the FL Tag with strings according to the map_list
 			-- Copy the modified template in a new file resource_name in the resource_path.
@@ -96,7 +96,7 @@ feature {NONE} -- Implementation
 			fi.close
 		end
 
-	add_common_parameters (map_list: LINKED_LIST [TUPLE [STRING, STRING]]) is
+	add_common_parameters (map_list: LINKED_LIST [TUPLE [STRING, STRING]])
 			-- Add the common parameters to the replacement pattern.
 		local
 			current_time: DATE_TIME
@@ -155,7 +155,7 @@ feature {NONE} -- Implementation / private attributes
 	wizard_information: WIZARD_INFORMATION;
 			-- Information about the project to generate.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

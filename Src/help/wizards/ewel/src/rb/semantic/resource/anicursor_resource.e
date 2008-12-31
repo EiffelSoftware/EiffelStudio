@@ -1,4 +1,4 @@
-indexing
+note
 	description: "xxx"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature 
 
-	pre_action is
+	pre_action
 		local
 			anicursor: TDS_ANICURSOR
 
@@ -34,7 +34,7 @@ feature
 			tds.set_current_resource (anicursor)
 		end
 
-	post_action is
+	post_action
 		local
 			anicursor: TDS_ANICURSOR
 		do
@@ -42,7 +42,7 @@ feature
 			anicursor.set_filename (tds.last_token)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generation Options page"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature -- basic Operations
 
-	build is 
+	build 
 			-- Build Page entries.
 		do 
 			create generate_all_tables.make_with_text ("Generate All tables/views")
@@ -46,7 +46,7 @@ feature -- basic Operations
 									generate_specific_tables.select_actions>>)
 		end
 
-	proceed_with_current_info is 
+	proceed_with_current_info 
 			-- Process user entries
 		do
 			precursor
@@ -57,7 +57,7 @@ feature -- basic Operations
 			end
 		end
 
-	update_state_information is
+	update_state_information
 			-- Check user entries
 		local
 			cl_name: CLASS_NAME
@@ -82,7 +82,7 @@ feature -- basic Operations
 			precursor
 		end
 
-	display_state_text is
+	display_state_text
 		do
 			title.set_text ("STEP 2: TABLE SELECTION")
 			message.set_text ("%NChoose if you want to automatically generate all the tables of your database%
@@ -102,7 +102,7 @@ feature -- Implementation
 	unselected_table_list: ARRAYED_LIST [CLASS_NAME];
 		-- List of unselected tables.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

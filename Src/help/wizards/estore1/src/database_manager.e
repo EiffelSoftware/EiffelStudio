@@ -1,4 +1,4 @@
-indexing
+note
 	description: "All the usefull feature to manage your Database"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ inherit
 
 feature -- Connections
 
- 	log_and_connect (a_name, a_psswd,datasource: STRING) is
+ 	log_and_connect (a_name, a_psswd,datasource: STRING)
  			-- Try to connect the database using ODBC
  			-- As a data source 'data_source', a username 'a_name', 
  			-- a password 'a_psswd'
@@ -34,7 +34,7 @@ feature -- Connections
 			try_to_connect 
 		end
  		 
- 	try_to_connect is
+ 	try_to_connect
  			-- Establish Connection
  		do
  			-- Initialization of the Relational Database:
@@ -54,13 +54,13 @@ feature -- Connections
  			not_void: session_control /= Void
  		end
 
-	connected: BOOLEAN is 
+	connected: BOOLEAN 
 			-- Is a connection established ?
 		do
 			Result := (session_control /= Void and then session_control.is_connected)
 		end
  
- 	disconnect is
+ 	disconnect
 			-- Disconnect from the Database
 		require
 			is_connected: session_control.is_connected
@@ -70,7 +70,7 @@ feature -- Connections
  
  feature -- Loadings
  
- 	load_list_from_select(s: STRING;an_obj: ANY): LINKED_LIST[like an_obj] is
+ 	load_list_from_select(s: STRING;an_obj: ANY): LINKED_LIST[like an_obj]
  			-- Load list of objects whose type are the same as 'an_obj',
  			-- Using the Sql Query 's'
 			-- The Result is a list of 'an_obj' 
@@ -100,7 +100,7 @@ feature -- Connections
 			Result_exists: Result /= Void
   		end
  
- 	execute_query(a_query: STRING) is
+ 	execute_query(a_query: STRING)
  			-- Execute the query 'a_query' to the Database.
 			-- The query should change persitant object as there are no Results.
  		require
@@ -118,7 +118,7 @@ feature -- Connections
   		end
  
  
- 	Insert_row(an_obj: ANY;rep: DB_REPOSITORY) is
+ 	Insert_row(an_obj: ANY;rep: DB_REPOSITORY)
  			-- Insert Into the Database a new row of type 'an_obj'
 			-- Using the repository 'rep'
 			-- The repositories of every table are once function defined
@@ -141,7 +141,7 @@ feature -- Implementation
 	session_control: DB_CONTROL;
 		-- Session Control
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

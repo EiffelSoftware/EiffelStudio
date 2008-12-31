@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Main window for the help tool."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Initialization
 
-	make_viewer(caller: VIEWER) is
+	make_viewer(caller: VIEWER)
 			-- Initialize.
 		local
 			err: BOOLEAN
@@ -40,7 +40,7 @@ feature -- Initialization
 
 feature {NONE} -- Initialization
 
-	build is
+	build
 			-- Create widgets.
 		local
 			left,right: EV_VERTICAL_BOX
@@ -75,7 +75,7 @@ feature {NONE} -- Initialization
 			enable_disable
 		end
 
-	fill_tool_bar is
+	fill_tool_bar
 			-- Make the toolbar.
 		local
 			com: EV_ROUTINE_COMMAND
@@ -98,7 +98,7 @@ feature {NONE} -- Initialization
 			next_button.add_select_command(com, arg)
 		end
 
-	fill_menu is
+	fill_menu
 			-- Fill the menu.
 		local
 			itt: EV_MENU
@@ -125,7 +125,7 @@ feature {NONE} -- Initialization
 			add_menu_item(itt, "About Help")
 		end
 
-	add_menu_item(itt:EV_MENU; text:STRING) is
+	add_menu_item(itt:EV_MENU; text:STRING)
 			-- Create menu item with event.
 		require
 			possible: (itt /= Void and text/= Void) and then not text.empty
@@ -141,7 +141,7 @@ feature {NONE} -- Initialization
 
 feature -- Actions
 
-	menu_item_selected(args:EV_ARGUMENT; data:EV_EVENT_DATA) is
+	menu_item_selected(args:EV_ARGUMENT; data:EV_EVENT_DATA)
 			-- Called when a menu item is selected.
 		local
 			arg: EV_ARGUMENT1[STRING]
@@ -182,7 +182,7 @@ feature -- Actions
 
 feature -- Status setting
 
-	update_inspector is
+	update_inspector
 			-- Update the search database.
 		do
 			create inspector.make
@@ -190,7 +190,7 @@ feature -- Status setting
 			inspector.store_by_name("search.dat")
 		end
 
-	load_inspector is
+	load_inspector
 			-- Load the inspector if possible, or recreate it.
 		do
 			create inspector.make
@@ -201,7 +201,7 @@ feature -- Status setting
 			end
 		end
 
-	update is
+	update
 			-- Call when the root-file changed.
 		local
 			doc: E_DOCUMENT
@@ -240,7 +240,7 @@ feature -- Status setting
 			retry
 		end
 
-	set_selected_topic_by_id(id:STRING) is
+	set_selected_topic_by_id(id:STRING)
 			-- Change the currently displayed topic.
 		require
 			id_possible: id /= Void and then not id.empty
@@ -256,7 +256,7 @@ feature -- Status setting
 			end
 		end
 
-	list_jump_to_topic(start_with:STRING) is
+	list_jump_to_topic(start_with:STRING)
 			-- Show topics from the one starting with '...'.
 		require
 			possible: start_with /= Void
@@ -266,7 +266,7 @@ feature -- Status setting
 			list_component.set_busy_jumping(false)
 		end
 
-	set_selected_topic(topic: E_TOPIC) is
+	set_selected_topic(topic: E_TOPIC)
 			-- Change the currently displayed topic.
 		require
 			topic_not_void: topic /= Void
@@ -286,7 +286,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	open_help_file is
+	open_help_file
 		local
 			open_win: EV_FILE_OPEN_DIALOG
 			names, patterns: ARRAY[STRING]
@@ -303,7 +303,7 @@ feature {NONE} -- Implementation
 			viewer.set_help_file(open_win.file)
 		end
 
-	update_selected_in_tabs is
+	update_selected_in_tabs
 			-- Update selected_item in Tree, Index and Search.
 		local
 			tti: TOPIC_TREE_ITEM
@@ -327,7 +327,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_to_history(topic:E_TOPIC) is
+	add_to_history(topic:E_TOPIC)
 		require
 			topic_not_void: topic /= Void
 		do
@@ -337,7 +337,7 @@ feature {NONE} -- Implementation
 			enable_disable
 		end
 
-	go_back is
+	go_back
 			-- Go back in history.
 		require
 			can_go_back: not view_history.empty
@@ -350,7 +350,7 @@ feature {NONE} -- Implementation
 			enable_disable
 		end
 
-	go_forth is
+	go_forth
 			-- Go forth in history.
 		require
 			can_go_forth: not view_future.empty
@@ -363,7 +363,7 @@ feature {NONE} -- Implementation
 			enable_disable
 		end
 
-	go_next is
+	go_next
 			-- Go to the next topic in the tree.
 		require
 			can_go_down: structure.has_next_in_order(selected_topic)
@@ -371,7 +371,7 @@ feature {NONE} -- Implementation
 			set_selected_topic(structure.find_next_topic(selected_topic))
 		end
 
-	go_previous is
+	go_previous
 			-- Go to the previous topic in the tree.
 		require
 			can_go_up: structure.has_previous_in_order(selected_topic)
@@ -379,7 +379,7 @@ feature {NONE} -- Implementation
 			set_selected_topic(structure.find_previous_topic(selected_topic))
 		end
 
-	enable_disable is
+	enable_disable
 		do
 			forth_button.set_insensitive(view_future.empty)
 		--	forth_item.set_insensitive(view_future.empty)
@@ -450,7 +450,7 @@ invariant
 --	updated_previous_button: previous_button.is_insensitive = not structure.has_next_in_order(selected_topic)
 --	updated_next_button: next_button.is_insensitive = not structure.has_previous_in_order(selected_topic)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

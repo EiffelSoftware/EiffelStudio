@@ -1,4 +1,4 @@
-indexing
+note
 	description: "The 'Tree' tab in the notebook."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,7 +12,7 @@ create
 
 feature -- Initialization
 
-	make(vw: VIEWER_WINDOW) is
+	make(vw: VIEWER_WINDOW)
 			-- Initialize on 'vw'.
 		require
 			not_void: vw /= Void
@@ -30,7 +30,7 @@ feature -- Initialization
 
 feature -- Actions
 
-	item_selected (args: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	item_selected (args: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Called when the selected item changes in the tree.
 		require
 			selected: tree.selected
@@ -54,7 +54,7 @@ feature -- Implementation
 invariant
 	TREE_COMPONENT_possible: tree /= Void and viewer /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Structure which receives data contained in a xml document."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Building
 
-	make(pars: XML_TREE_PARSER) is
+	make(pars: XML_TREE_PARSER)
 			-- Initialize
 		require
 			parser_exists: pars /= Void
@@ -26,14 +26,14 @@ feature -- Building
 			parser_set: parser = parser
 		end
 
-	initialize_structure is 
+	initialize_structure 
 			-- Initialize Current.
 		do
 			categories.wipe_out
 			error_message := Void
 		end
 
-	create_structure is
+	create_structure
 			-- Create structure from the extraction of the parser.
 		local
 			category: RESOURCE_CATEGORY[G] 
@@ -95,7 +95,7 @@ feature -- Building
 
 feature -- Settings
 
-	set_title(s: STRING) is
+	set_title(s: STRING)
 			-- Give a title to Current.
 		require
 			not_void: s/= VOid
@@ -103,7 +103,7 @@ feature -- Settings
 			title := clone(s)
 		end
 
-	set_error(s: STRING) is
+	set_error(s: STRING)
 			-- Add an error message to 'error_message'.
 		require
 			not_void: s/= Void
@@ -131,7 +131,7 @@ invariant
 	RESOURCE_STRUCTURE_parser_exists: parser /= Void
 	RESOURCE_STRUCTURE_categories_exists: categories /= Void
 	RESOURCE_STRUCUTRE_error_exists: error_message /= Void
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

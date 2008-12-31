@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class which encapsulates the information relative to a resource category."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature -- Initialization
 
-	make(doc: XML_ELEMENT;struc: RESOURCE_STRUCTURE) is 
+	make(doc: XML_ELEMENT;struc: RESOURCE_STRUCTURE) 
 			-- Initialization
 		local
 			l1,l2: LINKED_LIST [XML_COMPOSITE]
@@ -78,7 +78,7 @@ invariant
 	not_void: resources /= Void and categories /= Void
 	consistent: (not resources.empty implies categories.empty) and
 				(not categories.empty implies resources.empty)  
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

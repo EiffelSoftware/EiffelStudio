@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Display for help-topics. Based on EV_RICH_TEXT."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make (par: EV_CONTAINER)
 			-- Initialize.
 		local
 			com: EV_ROUTINE_COMMAND
@@ -36,7 +36,7 @@ feature -- Initialization
 			add_button_press_command(1, com, Void)
 		end
 
-	init_head_format is
+	init_head_format
 			-- Initialize the font attributes for topic titles.
 		local
 			font: EV_FONT
@@ -54,7 +54,7 @@ feature -- Initialization
 
 feature -- Actions
 
-	link_clicked(args: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	link_clicked(args: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Check if there is a link on this position.
 		require
 			link_clicked: data /= Void
@@ -71,7 +71,7 @@ feature -- Actions
 
 feature -- Status setting
 
-	reset_text_format is
+	reset_text_format
 			-- Reset the font attributes for the body of the text.
 		local
 			font: EV_FONT
@@ -86,7 +86,7 @@ feature -- Status setting
 			--text_format.set_color(color)
 		end
 
-	add_hyperlink (first, last: INTEGER; link: STRING) is
+	add_hyperlink (first, last: INTEGER; link: STRING)
 			-- Set a new hyperlink.
 		require
 			valid_first: first >= 0
@@ -99,7 +99,7 @@ feature -- Status setting
 			hyperlinks.extend (new_link)
 		end
 
-	remove_all_hyperlinks is
+	remove_all_hyperlinks
 			-- Remove the hyperlinks.
 		do
 			hyperlinks.wipe_out
@@ -107,7 +107,7 @@ feature -- Status setting
 
 feature -- Implementation
 
-	get_link_from_position(ax, ay: INTEGER): E_TOPIC_LINK is
+	get_link_from_position(ax, ay: INTEGER): E_TOPIC_LINK
 		require
 			possible: ax >=0 and ay >=0
 		local
@@ -130,12 +130,12 @@ feature -- Implementation
 
 feature -- Display
 
-	get_bullet_list_item_str: STRING is
+	get_bullet_list_item_str: STRING
 		do
 			Result := "- "
 		end
 
-	get_line_break_str (indent: INTEGER): STRING is
+	get_line_break_str (indent: INTEGER): STRING
 			-- Get string with line-break and spaces.
 		require
 			valid_indent: indent >= 0
@@ -153,7 +153,7 @@ feature -- Display
 			end
 		end
 
-	display_topic (topic: E_TOPIC) is
+	display_topic (topic: E_TOPIC)
 			-- Displays a topic using a buffer.
 			-- Try to make this a bit faster please.
 		require
@@ -260,7 +260,7 @@ feature -- Not used
 
 --! These features are not used anymore. The display speed was too slow.
 
-	append_hyperlinked_text(txt, link:STRING) is
+	append_hyperlinked_text(txt, link:STRING)
 			-- Append Hyperlink.
 		require
 			not_void: txt /= Void and link /= Void
@@ -273,24 +273,24 @@ feature -- Not used
 
 		end
 
-	set_head_format is
+	set_head_format
 			-- Set head format.
 		do
 			set_character_format(head_format)
 		end
 
-	clear is
+	clear
 		do
 			set_text("")
 			remove_all_hyperlinks
 		end
 
-	bullet_list_item is
+	bullet_list_item
 		do
 			append_text(get_bullet_list_item_str)
 		end
 
-	line_break(indent:INTEGER) is
+	line_break(indent:INTEGER)
 			-- Insert a Carriage Return.
 		require
 			possible: indent >=0
@@ -315,7 +315,7 @@ feature -- Implementation
 invariant
 	E_TOPIC_DISPLAY_not_void: hyperlinks /= Void and text_format /= Void and head_format /= VOid
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

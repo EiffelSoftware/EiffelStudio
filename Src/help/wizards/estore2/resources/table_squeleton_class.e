@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Use this squeleton to modify the generated class tables%
 				  %Set the anchor to True and the code between the tags will%
 				  %be inserted in the class tables%
@@ -33,14 +33,14 @@ feature -- Access
 	
 feature -- Initialization
 
-	make is
+	make
 		do
 			myid:= ""
 		end
 
 feature -- Settings
 
-	set_myid (a_myid: ANY) is
+	set_myid (a_myid: ANY)
 			--Set the value of myid
 		require
 			value_exists: a_myid /= Void
@@ -52,7 +52,7 @@ feature -- Settings
 
 feature -- Output
 
-	out: STRING is
+	out: STRING
 		do
 			Result := ""
 			Result.append (myid.out + "%N")
@@ -61,10 +61,10 @@ feature -- Output
 <FL_ANCHOR_END=NO>
 feature -- my_feature
 
-	my_action is
+	my_action
 		do
 			action
 		end
 </FL_ANCHOR_END>
 
-end -- class DB_ACTION
+end

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "The class that represents the help-topic structure"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ feature -- Initialization
 			-- Have the properties of this class been initialized?
 			-- This is to have invariants in this class.
 
-	make_from_xml_tree (node :XML_ELEMENT; path: FILE_NAME) is
+	make_from_xml_tree (node :XML_ELEMENT; path: FILE_NAME)
 			-- Create the the document tree structure from XML-tree.
 		require
 			node_not_void: node /= Void
@@ -51,7 +51,7 @@ feature -- Initialization
 			initialized := True
 		end
 
-	make_from_file_name (file_name: FILE_NAME) is
+	make_from_file_name (file_name: FILE_NAME)
 			-- Create this topic from a file.
 		require
 			file_name_not_void: file_name /= Void
@@ -64,7 +64,7 @@ feature -- Initialization
 			end
 		end
 
-	initialize_sorted_list is
+	initialize_sorted_list
 			-- Puts all topics in a sorted list.
 		do
 			create all_topics.make
@@ -72,14 +72,14 @@ feature -- Initialization
 			all_topics.sort
 		end
 
-	initialize_in_order_list is
+	initialize_in_order_list
 			-- Puts all text-topics in a list.
 		do
 			create topics_in_order.make
 			topic.add_to_in_order_list(topics_in_order)
 		end
 
-	initialize_hash_table is
+	initialize_hash_table
 			-- Puts all topics in a hashtable with ID as key.
 		do
 			create topic_lookup.make(0)
@@ -88,7 +88,7 @@ feature -- Initialization
 
 feature -- Miscellaneous
 
-	create_tree(tree:EV_TREE) is
+	create_tree(tree:EV_TREE)
 			-- Fills the tree with the document structure.
 		require
 			initialized
@@ -96,7 +96,7 @@ feature -- Miscellaneous
 			topic.create_tree_item(tree)
 		end
 
-	show_first_topic(list:EV_LIST; start_with:STRING) is
+	show_first_topic(list:EV_LIST; start_with:STRING)
 			-- Highlight the first topic that starts with the string in the text-field.
 		require
 			initialized
@@ -128,7 +128,7 @@ feature -- Miscellaneous
 			end
 		end
 
-	get_topic_by_id(id:STRING):E_TOPIC is
+	get_topic_by_id(id:STRING):E_TOPIC
 			-- Use lookup table to get the topic by id.
 		require
 			id_valid: id /= Void and then not id.empty
@@ -138,7 +138,7 @@ feature -- Miscellaneous
 			end
 		end
 
-	find_next_topic(top:E_TOPIC):E_TOPIC is
+	find_next_topic(top:E_TOPIC):E_TOPIC
 			-- Return the next topic with text in-order.
 		require
 			has_next_in_order(top)
@@ -157,7 +157,7 @@ feature -- Miscellaneous
 			end
 		end
 
-	find_previous_topic(top:E_TOPIC):E_TOPIC is
+	find_previous_topic(top:E_TOPIC):E_TOPIC
 			-- Return the previous topic with text in-order.
 		require
 			has_previous_in_order(top)
@@ -177,7 +177,7 @@ feature -- Miscellaneous
 			end
 		end
 
-	has_previous_in_order(top:E_TOPIC):BOOLEAN is
+	has_previous_in_order(top:E_TOPIC):BOOLEAN
 			-- Returns whether it is possible to go up in-order.
 			-- If top does not contain text it is not possible to go up.
 		do
@@ -186,7 +186,7 @@ feature -- Miscellaneous
 			end
 		end
 
-	has_next_in_order(top:E_TOPIC):BOOLEAN is
+	has_next_in_order(top:E_TOPIC):BOOLEAN
 			-- Returns whether it is possible to go down in-order.
 			-- If top does not contain text it is not possible to go down.
 		do
@@ -197,7 +197,7 @@ feature -- Miscellaneous
 
 feature -- Currently not used.
 
-	create_sorted_indexes(list: EV_LIST) is
+	create_sorted_indexes(list: EV_LIST)
 			-- This is to put all topics in the list.
 		local
 			li: TOPIC_LIST_ITEM
@@ -230,7 +230,7 @@ invariant
 	must_contain_topic: initialized implies topic /= Void
 	sorted_list_exists: initialized implies all_topics /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

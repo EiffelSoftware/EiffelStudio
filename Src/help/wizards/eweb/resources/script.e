@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Base Script"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ inherit
 
 feature {CGI_HANDLER} -- Initialize
 
-	make(cgi_h: CGI_HANDLER) is
+	make(cgi_h: CGI_HANDLER)
 			-- Initialize script with caller 'cgi_h'.
 			-- Also perform check if the form is recognized.
 		require
@@ -35,7 +35,7 @@ feature {CGI_HANDLER} -- Initialize
 	
 feature {CGI_HANDLER} -- Basic Operations
 
-	check_fields is
+	check_fields
 			-- Check if the user correctly filled out
 			-- the different entry fields. 
 		require
@@ -45,13 +45,13 @@ feature {CGI_HANDLER} -- Basic Operations
 			entries_checked
 		end
 
-	load_resources is
+	load_resources
 			-- Load resources, if any needed.
 		do
 
 		end
 
-	process is
+	process
 			-- Process user entries.
 			-- Return a message to the calling browser.
 		require
@@ -59,14 +59,14 @@ feature {CGI_HANDLER} -- Basic Operations
 		deferred
 		end
 
-	prepare_reply is
+	prepare_reply
 			-- Prepare response that is going to be sent
 			-- to the browser.
 		do
 		
 		end
 
-	reply_browser is
+	reply_browser
 			-- Answer the browser
 		require
 			not response_header.is_sent
@@ -87,7 +87,7 @@ feature {SCRIPT} -- Common Operations
 --			xml_generation /= Void
 --		end
 
-	check_field_required (field_name,message:STRING) is
+	check_field_required (field_name,message:STRING)
 			-- Check that the user has entered at least one character within the 
 			-- text field whose name is 'field_name'.
 		require
@@ -103,7 +103,7 @@ feature -- Access
 	entries_checked: BOOLEAN
 		-- Are user entries checked ?
 
-	random_file_name: STRING is
+	random_file_name: STRING
 			-- Return a file name, which is going to
 			-- be unique.
 		local
@@ -118,7 +118,7 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
-	form_data: HASH_TABLE[LINKED_LIST[STRING],STRING] is	
+	form_data: HASH_TABLE[LINKED_LIST[STRING],STRING]	
 			-- Data extracted from the html page.			
 		once
 			Result := cgi_handler.form_data
@@ -139,18 +139,18 @@ feature  -- Access
 
 feature {NONE} -- Resources
 
-	tmp_path: STRING is "/london/www/pages/eiffel/webforms"
+	tmp_path: STRING = "/london/www/pages/eiffel/webforms"
 		-- Path where all the templates may be found.
 
 --	xml_path: STRING is "/london/tmp"
 		-- Path from which is extracted and written XML files.
 		
-	resource_path: STRING is "/london/www/cgi/bin/auto"
+	resource_path: STRING = "/london/www/cgi/bin/auto"
 		-- Path from which resources are extracted.
 			
 invariant
 	cgi_handler /= Void	 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

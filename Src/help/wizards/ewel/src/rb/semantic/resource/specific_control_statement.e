@@ -1,4 +1,4 @@
-indexing
+note
 	description: "xxx"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature 
 
-	action is
+	action
 		local
 			dialog: TDS_DIALOG
 			control: TDS_CONTROL_STATEMENT
@@ -50,7 +50,7 @@ feature
 			tds.set_identifier_type (Control_id)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

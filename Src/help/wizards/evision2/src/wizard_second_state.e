@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Page in which the user choose..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature -- Basic Operation
 
-	build is
+	build
 			-- Build entries.
 		local
 			radio_box: EV_VERTICAL_BOX
@@ -91,7 +91,7 @@ feature -- Basic Operation
 			add_about_dialog.select_actions.extend (agent change_preview)
 		end
 
-	change_preview is
+	change_preview
 			-- Change the pixmap used to preview the application.
 		local
 			fn: FILE_NAME
@@ -119,13 +119,13 @@ feature -- Basic Operation
 			preview_pixmap.set_with_named_file (fn)
 		end
 
-	proceed_with_current_info is
+	proceed_with_current_info
 		do
 			Precursor
 			proceed_with_new_state (create {WIZARD_FINAL_STATE}.make(wizard_information))
 		end
 
-	update_state_information is
+	update_state_information
 			-- Check User Entries
 		do
 			wizard_information.set_has_menu_bar (add_menu_bar.is_selected)
@@ -138,7 +138,7 @@ feature -- Basic Operation
 
 feature {NONE} -- Implementation
 
-	display_state_text is
+	display_state_text
 		do
 			title.set_text (interface_names.t_vision2_application_appearance)
 			subtitle.set_text (interface_names.t_subtitle)
@@ -163,7 +163,7 @@ feature {NONE} -- Implementation
 	preview_pixmap: EV_PIXMAP;
 			-- Pixmap used to preview the application.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

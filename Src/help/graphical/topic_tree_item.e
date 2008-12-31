@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A list item with a topic object."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Initialization
 
-	make_item(li: EV_LIST; top: E_TOPIC) is
+	make_item(li: EV_LIST; top: E_TOPIC)
 			-- Initialize with parent 'li'.
 		require
 			not_void: li /= Void and then top /= Void and then top.id/=Void
@@ -37,7 +37,7 @@ feature -- Access
 invariant
 	TOPIC_LIST_ITEM_topic_exists: topic /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

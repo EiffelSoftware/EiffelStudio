@@ -1,4 +1,4 @@
-indexing
+note
 	description:"Viewer"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Initialization
 
-	initialize is
+	initialize
 			-- Process command line & Update viewer-window.
 		local
 			file: RAW_FILE
@@ -36,7 +36,7 @@ feature -- Initialization
 			--install_timer
 		end
 
-	install_timer is
+	install_timer
 			-- Creation of the Timer.
 		local
 			com: E_TIMER_COMMAND
@@ -45,7 +45,7 @@ feature -- Initialization
 			create timer.make(2000, com, Void)
 		end
 
-	process_command_line is
+	process_command_line
 			-- Read the command line for help file and topic.
 		local
 			n: INTEGER
@@ -80,7 +80,7 @@ feature -- Initialization
 
 feature -- State Setting
 
-	set_help_file(s:STRING) is
+	set_help_file(s:STRING)
 		require
 			not_void: s /= Void
 			string_is_xml_file: is_xml_file(s)
@@ -91,7 +91,7 @@ feature -- State Setting
 
 feature -- Implementation
 
-	default_file: FILE_NAME is
+	default_file: FILE_NAME
 			-- The default root-file.
 		do
 			create Result.make_from_string("help.xml")
@@ -108,7 +108,7 @@ feature -- Access
 	topic_id: STRING
 			-- The topic to be diplayed. Root topic if Void.
 
-	first_window: VIEWER_WINDOW is
+	first_window: VIEWER_WINDOW
 			-- The main window.
 		once
 			create Result.make_viewer(Current)
@@ -118,7 +118,7 @@ feature -- Access
 invariant
 	VIEWER_consistent: topic_id /= Void implies not topic_id.empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

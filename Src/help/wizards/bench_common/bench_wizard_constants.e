@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "All constants used in wizards for new projects for EiffelStudio"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,13 +10,13 @@ class
 
 feature -- Initialization
 
-	Bench_interface_names: BENCH_WIZARD_INTERFACE_NAMES is
+	Bench_interface_names: BENCH_WIZARD_INTERFACE_NAMES
 			-- All string constants used in Bench wizard constants
 		once
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

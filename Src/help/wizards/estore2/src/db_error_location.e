@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Initialization
 
-	build is
+	build
 		do
 			Precursor
 			first_window.set_final_state ("Abort")
@@ -30,27 +30,27 @@ feature -- Initialization
 
 feature -- basic Operations
 
-	display_state_text is
+	display_state_text
 		do
 			title.set_text ("LOCATION ERROR")
 			message.set_text ("%TThe Directory provided doesn't exist.%
 								%%N%NChoose another folder or use the Browse button")
 		end
 
-	final_message: STRING is
+	final_message: STRING
 		do
 		end
 
 feature {WIZARD_STATE_WINDOW}
 
-	pixmap_icon_location: FILE_NAME is
+	pixmap_icon_location: FILE_NAME
 			--
 		do	
 			create Result.make_from_string ("eiffel_wizard_icon")
 			Result.add_extension (pixmap_extension)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

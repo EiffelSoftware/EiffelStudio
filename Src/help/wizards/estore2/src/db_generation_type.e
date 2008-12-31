@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generation Type Page"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature -- basic Operations
 
-	build is 
+	build 
 			-- Build user entries.
 		local
 			hbox : EV_HORIZONTAL_BOX
@@ -80,14 +80,14 @@ feature -- basic Operations
 									simple_example_b.select_actions>>)
 		end
 
-	proceed_with_current_info is 
+	proceed_with_current_info 
 			-- Process user entries
 		do 
 			precursor
 			proceed_with_new_state(create {DB_GENERATION_LOCATION}.make(wizard_information))
 		end
 
-	update_state_information is
+	update_state_information
 			-- Check user entries
 		do
 			wizard_information.set_generation_type (new_project_b.is_selected)
@@ -95,7 +95,7 @@ feature -- basic Operations
 			precursor
 		end
 
-	change_entries is
+	change_entries
 			-- The user pressed a button.
 		do
 			precursor
@@ -108,7 +108,7 @@ feature -- basic Operations
 			end
 		end
 
-	display_state_text is
+	display_state_text
 		do
 			title.set_text ("STEP 3: TYPE OF GENERATION")
 			message.set_text ("%NYou need to select if you want to use an existing project or not.")
@@ -127,7 +127,7 @@ feature -- Implementation
 	vision_example_b, simple_example_b: EV_RADIO_BUTTON;
 		-- Coupled radio buttons to choose which example to generate (when new project selected).
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

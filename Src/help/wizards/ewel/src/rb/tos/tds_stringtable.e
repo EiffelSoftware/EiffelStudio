@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Stringtable representation in the tds"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature	-- initialization
 
-	make is
+	make
 		do
 			list_make
 			create strings_list.make
@@ -37,7 +37,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_current_string (a_string: TDS_STRING) is
+	set_current_string (a_string: TDS_STRING)
 			-- Set `current_string' to `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -48,7 +48,7 @@ feature -- Element change
 		end
 
 	
-	insert_string (a_string: TDS_STRING) is
+	insert_string (a_string: TDS_STRING)
 			-- Insert `a_string' into `strings_list'
 		require
 			a_string_not_void: a_string /= Void
@@ -60,7 +60,7 @@ feature -- Element change
 
 feature -- Code generation
 
-	display is
+	display
 		local
 			stringtable: TDS_STRINGTABLE
 		do
@@ -101,7 +101,7 @@ feature -- Code generation
 			end
 		end
 
-	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE) is
+	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE)
 			-- Generate `a_resource_file' from the tds memory structure.
 		local
 			stringtable: TDS_STRINGTABLE
@@ -150,7 +150,7 @@ feature -- Code generation
 			end
 		end
 
-	generate_tree_view (a_tree_view: EV_TREE_ITEM) is
+	generate_tree_view (a_tree_view: EV_TREE_ITEM)
 			-- Generate `a_tree_view' control from the tds memory structure.
 		local
 			tvis: WEL_TREE_VIEW_INSERT_STRUCT
@@ -177,12 +177,12 @@ feature -- Code generation
 --			set_tree_view_item (a_tree_view.last_item)
 		end
 
-	generate_wel_code is
+	generate_wel_code
 			-- Generate the eiffel code.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

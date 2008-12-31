@@ -1,4 +1,4 @@
-indexing
+note
 	description: "xxx"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,14 +11,14 @@ class
 
 feature -- Access
 
-	has_error: BOOLEAN is
+	has_error: BOOLEAN
 		do
 			Result := has_error_cell.item
 		end
 
 feature -- Element change
 
-	set_has_error (a_value: BOOLEAN) is
+	set_has_error (a_value: BOOLEAN)
 		do
 			has_error_cell.put (a_value)
 		ensure
@@ -27,14 +27,14 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	has_error_cell: CELL [BOOLEAN] is
+	has_error_cell: CELL [BOOLEAN]
 		once
 			create Result.put (False)
 		ensure
 			result_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

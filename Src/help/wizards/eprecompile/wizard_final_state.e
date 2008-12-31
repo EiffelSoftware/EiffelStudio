@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Final state for the precompilation wizard"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -38,7 +38,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	build_finish is
+	build_finish
 			-- Build user entries.
 		local
 			cell: EV_CELL
@@ -85,7 +85,7 @@ feature -- Basic Operations
 		end
 
 
-	proceed_with_current_info is
+	proceed_with_current_info
 		local
 			mess: EV_INFORMATION_DIALOG
 		do
@@ -105,19 +105,19 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	display_state_text is
+	display_state_text
 		do
 			title.set_text (interface_names.t_launch_precompilations)
 			message.set_text (interface_names.m_precompilation_will_be_launch)
 		end
 
-	final_message: STRING_GENERAL is
+	final_message: STRING_GENERAL
 			-- final message for the last message dialog at the end of all the precompilations
 		do
 			Result:= interface_names.m_precompilation_done
 		end
 
-	launch_precompilations is
+	launch_precompilations
 			-- Launch all the choosen precompilations
 		local
 			current_it: EV_MULTI_COLUMN_LIST_ROW
@@ -158,7 +158,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	precompile (lib_name, lib_ace: STRING; lib_compiled: BOOLEAN) is
+	precompile (lib_name, lib_ace: STRING; lib_compiled: BOOLEAN)
 			-- Launch the precompilation for the library 'lib_name'
 			-- Using the ace file 'lib_ace'
 			-- If the library is already compiled, in 'lib_compiled' then
@@ -228,7 +228,7 @@ feature {NONE} -- Implementation
 			n_lib_done := n_lib_done + 1
 		end
 
-	find_time (progress_file_path: FILE_NAME): INTEGER is
+	find_time (progress_file_path: FILE_NAME): INTEGER
 			-- Check the progress file to determine the current progress of the precompilation
 			-- The function will check the project file in the directory 'project_path'
 		require
@@ -273,7 +273,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	degree_from_output (a_output_string: STRING): INTEGER is
+	degree_from_output (a_output_string: STRING): INTEGER
 			-- Return a degree between 6 and 0 if everything went ok,
 			-- -1 otherwise.
 		local
@@ -301,7 +301,7 @@ feature {NONE} -- Implementation
 			Result_valid: (Result <= 6 and Result >= 0) or (Result = -1)
 		end
 
-	percentage_from_output (a_output_string: STRING): INTEGER is
+	percentage_from_output (a_output_string: STRING): INTEGER
 			-- Return a percentage between 100 and 0 if everything went ok,
 			-- -1 otherwise.
 		local
@@ -323,14 +323,14 @@ feature {NONE} -- Implementation
 
 feature -- Access
 
-	pixmap_icon_location: FILE_NAME is
+	pixmap_icon_location: FILE_NAME
 			-- Icon for the Eiffel Precompile Wizard.
 		once
 			create Result.make_from_string ("eiffel_wizard_icon")
 			Result.add_extension (pixmap_extension)
 		end
 
-	Progress_filename: STRING is "progress.eif"
+	Progress_filename: STRING = "progress.eif"
 
 	progress_text_2: EV_LABEL
 			-- 2nd progress text (For each library)
@@ -347,7 +347,7 @@ feature -- Access
 	compt: INTEGER;
 			-- Used to test .. unuseful if the progress file is used
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

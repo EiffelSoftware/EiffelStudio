@@ -1,4 +1,4 @@
-indexing
+note
 	description: "xxx"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,18 +18,18 @@ inherit
 
 feature 
 
-	make is
+	make
 		do
 			old_make
 			set_optional
 		end
 
-	construct_name: STRING is
+	construct_name: STRING
 		once
 			Result := "MORE_POPUP_EX_STATEMENT"
 		end
 
-	production: LINKED_LIST [CONSTRUCT] is
+	production: LINKED_LIST [CONSTRUCT]
 		local
 			id: ID_EXPRESSION
 			more: EVEN_MORE_POPUP_EX
@@ -44,7 +44,7 @@ feature
 			put (more)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Final state of the wizard."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Implementation
 
-	make (an_info: like wizard_information) is
+	make (an_info: like wizard_information)
 			-- Set `help_filename' with `h_filename'.
 		do
 			set_help_filename (h_filename)
@@ -33,7 +33,7 @@ feature {NONE} -- Implementation
 
 feature -- Basic Operations
 
-	build is
+	build
 			-- Special display box for the first and the last state
 		do
 			create message_text_field
@@ -42,7 +42,7 @@ feature -- Basic Operations
 			Precursor
 		end
 
-	proceed_with_current_info is
+	proceed_with_current_info
 		do
 			project_generator.generate_code
 			write_bench_notification_ok (wizard_information)
@@ -51,7 +51,7 @@ feature -- Basic Operations
 
 feature -- Access
 
-	display_state_text is
+	display_state_text
 			-- Display message text relative to current state.
 		do
 			title.set_text (Interface_names.m_Final_title)
@@ -59,7 +59,7 @@ feature -- Access
 			message.set_text (interface_names.m_final_state_message (wizard_information.compile_project))
 		end
 
-	final_message: STRING_GENERAL is
+	final_message: STRING_GENERAL
 		do
 		end
 
@@ -76,7 +76,7 @@ feature {NONE} -- Implementation
 	message_text: STRING
 			-- Final message
 
-	fill_message_and_title_box (message_and_title_box: EV_VERTICAL_BOX) is
+	fill_message_and_title_box (message_and_title_box: EV_VERTICAL_BOX)
 			-- Fill `message_and_title_box' with needed widgets.
 		do
 			message_and_title_box.extend (message_text_field) -- Expandable item
@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
 			message_and_title_box.disable_item_expand (message)
 		end
 
-	pixmap_icon_location: FILE_NAME is
+	pixmap_icon_location: FILE_NAME
 			-- Icon for the Eiffel Dotnet Wizard.
 		once
 			 create Result.make_from_string (Wizard_icon_name)
@@ -93,10 +93,10 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	h_filename: STRING is "help/wizards/edotnet/docs/reference/40_settings_summary/index.html"
+	h_filename: STRING = "help/wizards/edotnet/docs/reference/40_settings_summary/index.html"
 			-- Path to HTML help file
 
-	Common_message: STRING_32 is
+	Common_message: STRING_32
 			-- Message to the user (no matter if there are selected assemblies)
 		local
 			creation_routine_name,
@@ -141,10 +141,10 @@ feature {NONE} -- Constants
 			not_empty_message: not Result.is_empty
 		end
 
-	Space: STRING is " ";
+	Space: STRING = " ";
 			-- Space
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class which encapsulates primary key information for a table recieved from ODBS SqlPrimaryKeys() function."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Initialize.
 		do
 			create table_cat.make (10)
@@ -38,7 +38,7 @@ feature -- Implementation
 	
 	pk_name: STRING;
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

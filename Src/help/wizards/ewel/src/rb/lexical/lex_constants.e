@@ -1,4 +1,4 @@
-indexing
+note
         description: "Lexical constants that define the token type"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,9 +17,9 @@ feature -- Constants
 	Begin_block, End_block, Or_op, And_op,
 	Equal_op, Not_equal, Lt, Gt, Le, Ge,
 	Add, Minus_op, Mult, Div, Unary_Not,
-	Nothing: INTEGER is unique;
+	Nothing: INTEGER = unique;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

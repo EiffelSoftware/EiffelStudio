@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Root class of Resource Bench"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 		local
 			retried: BOOLEAN
 		do
@@ -43,19 +43,19 @@ feature -- Initialization
 
 feature
 
-	main_window: MAIN_WINDOW is
+	main_window: MAIN_WINDOW
 			-- Create the application's main window
 		once
 			create Result.make
 		end
 
-	accelerators: WEL_ACCELERATORS is
+	accelerators: WEL_ACCELERATORS
 			-- Create the application's accelerator
 		once
 			create Result.make_by_id (Idr_accelerator)
 		end
 
-	init_application is
+	init_application
 			-- Load the common controls dll
 		do
 			create common_controls_dll.make
@@ -63,7 +63,7 @@ feature
 
 	common_controls_dll: WEL_COMMON_CONTROLS_DLL;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

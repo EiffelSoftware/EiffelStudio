@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Semantic information for constructs of the resource script language"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Access
 
-	tds: TABLE_OF_SYMBOLS_STRUCTURE is
+	tds: TABLE_OF_SYMBOLS_STRUCTURE
 			-- Informations about the analyzed resource script file.
 		do
 			Result := tds_cell.item
@@ -19,7 +19,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_tds (a_tds: TABLE_OF_SYMBOLS_STRUCTURE) is
+	set_tds (a_tds: TABLE_OF_SYMBOLS_STRUCTURE)
 			-- Set the current `tds' to `a_tds'.
 		require
 			tds_not_void: a_tds /= Void
@@ -29,7 +29,7 @@ feature -- Element change
 			tds_set: tds = a_tds
 		end
 
-	erase_tds is
+	erase_tds
 			-- Remove the element of `tds_cell'.
 		do
 			tds_cell.put (Void)
@@ -37,7 +37,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	tds_cell: CELL [TABLE_OF_SYMBOLS_STRUCTURE] is
+	tds_cell: CELL [TABLE_OF_SYMBOLS_STRUCTURE]
 			-- The current `tds'.
 		once
 			create Result.put (Void)
@@ -46,7 +46,7 @@ feature {NONE} -- Implementation
 		end
 
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

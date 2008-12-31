@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Description of class <CN:U>"
 	author: "EiffelStore Wizard"
 	date: "$Date$"
@@ -21,29 +21,29 @@ create
 
 feature -- Access
 
-	Table_name: STRING is "<CN:U>"
+	Table_name: STRING = "<CN:U>"
 
-	Table_code: INTEGER is <CI>
+	Table_code: INTEGER = <CI>
 
-	Attribute_number: INTEGER is <ACNT>
+	Attribute_number: INTEGER = <ACNT>
 			-- Number of attributes in the table.
 
-	Id_code: INTEGER is
+	Id_code: INTEGER
 			-- Table ID attribute code.
 		do
 			Result := <IC>
 		end
 
-<A:A:A>	<AN:I>: INTEGER is <IT>
+<A:A:A>	<AN:I>: INTEGER = <IT>
 
-</A>	attribute_code_list: ARRAYED_LIST [INTEGER] is
+</A>	attribute_code_list: ARRAYED_LIST [INTEGER]
 			-- Feature code list
 		once
 			create Result.make (Attribute_number)
 <A:A:A>			Result.extend (<AN:I>)
 </A>		end
 
-	description_list: ARRAYED_LIST [STRING] is
+	description_list: ARRAYED_LIST [STRING]
 			-- Feature name list. Can be interpreted as a list
 			-- or a hash-table.
 		once
@@ -51,7 +51,7 @@ feature -- Access
 <A:A:A>			Result.extend ("<AN:I>")
 </A>		end
 
-	type_list: ARRAYED_LIST [INTEGER] is
+	type_list: ARRAYED_LIST [INTEGER]
 			-- Feature type list. Can be interpreted as a list
 			-- or a hash-table.
 		once
@@ -59,7 +59,7 @@ feature -- Access
 <A:A:A>			Result.extend (<TN:I>_type)
 </A>		end
 
-	to_delete_fkey_from_table: HASH_TABLE [INTEGER, INTEGER] is
+	to_delete_fkey_from_table: HASH_TABLE [INTEGER, INTEGER]
 			-- List of tables depending on this one and their
 			-- foreign key for this table.
 			-- Deletion on this table may imply deletions on
@@ -71,7 +71,7 @@ feature -- Access
 		once
 			<DH>		end
 
-	to_create_fkey_from_table: HASH_TABLE [INTEGER, INTEGER] is
+	to_create_fkey_from_table: HASH_TABLE [INTEGER, INTEGER]
 			-- List of associated necessary tables and the  
 			-- linking foreign keys.
 			-- Creation on this table may imply creations on
@@ -83,7 +83,7 @@ feature -- Access
 		once
 			<CH>		end
 
-	attribute (i: INTEGER): ANY is
+	attribute (i: INTEGER): ANY
 			-- Get feature value of feature whose code is 'i'.
 		do
 			inspect i
@@ -92,7 +92,7 @@ feature -- Access
 </A>			end
 		end
 
-	set_attribute (i: INTEGER; value: ANY) is
+	set_attribute (i: INTEGER; value: ANY)
 			-- Set feature value of feature whose code is `i' to `value'.
 			-- `value' must be of type STRING, INTEGER, BOOLEAN, CHARACTER,
 			-- DOUBLE or DATE_TIME. References are made automatically from
@@ -145,7 +145,7 @@ feature -- Access
 
 feature {<CN:U>} -- Basic operations
 
-	set_<CN:L> (a_<CN:L>: <CN:U>) is
+	set_<CN:L> (a_<CN:L>: <CN:U>)
 			-- Associate the description to a piece of <CN:L>.
 		require
 			not_void: a_<CN:L> /= Void
@@ -160,4 +160,4 @@ feature {NONE} -- Implementation
 	<CN:L>: <CN:U>
 			-- Piece of <CN:L> associated with the description	
 
-end -- class <CN:U>_DESCRIPTION
+end

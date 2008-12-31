@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Root Class"
 
 class
@@ -9,8 +9,8 @@ Creation
 
 feature -- Initialization
 
-	make is
-		-- Initialize
+	make
+			-- Initialize
 		local
 			li: LINKED_LIST[<FL1>]
 			s1,s2: STRING
@@ -33,4 +33,4 @@ feature -- Access
 	estore_example: ESTORE_EXAMPLE
 		-- Example reference
 
-end -- Class ESTORE_ROOT
+end

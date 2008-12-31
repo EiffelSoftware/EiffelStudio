@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Window that lets the user edit a database %
 			%table content."
 	legal: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature -- Initialization
 
-	make_with_table_code (code: INTEGER) is
+	make_with_table_code (code: INTEGER)
 			-- Create window to edit content of database table
 			-- with `code'.
 		require
@@ -30,7 +30,7 @@ feature -- Initialization
 			close_request_actions.extend (agent destroy)
 		end
 
-	set_initial_focus is
+	set_initial_focus
 			-- Set initial focus to the search frame first combo-box.
 		do
 			focusable_cbox.set_focus
@@ -38,7 +38,7 @@ feature -- Initialization
 
 feature {NONE} -- Implementation
 
-	create_window_content is
+	create_window_content
 			-- Add widgets to the window.
 		local
 			navigation_bar: DV_HORIZONTAL_BOX
@@ -79,7 +79,7 @@ feature {NONE} -- Implementation
 			table_component.activate
 		end
 
-	add_fields (fields_component: DV_TABLEROW_FIELDS; cont: DV_BOX) is
+	add_fields (fields_component: DV_TABLEROW_FIELDS; cont: DV_BOX)
 			-- Create fields layout.
 		local
 			hbox: DV_HORIZONTAL_BOX
@@ -117,7 +117,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	sqrt (i: INTEGER): INTEGER is
+	sqrt (i: INTEGER): INTEGER
 			-- Square root of `i' (ceiling).
 		local
 			math: DOUBLE_MATH
@@ -132,7 +132,7 @@ feature {NONE} -- Implementation
 	focusable_cbox: DV_COMBO_BOX;
 			-- Combo box receiving focus.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

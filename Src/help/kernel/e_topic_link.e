@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A hyperlink to a topic on a E_TOPIC_DISPLAY"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,7 +12,7 @@ create
 
 feature -- Initialization
 
-	make(f, l: INTEGER; id: STRING) is
+	make(f, l: INTEGER; id: STRING)
 			-- Initialize
 		require
 			positive: f>= 0 
@@ -30,7 +30,7 @@ feature -- Initialization
 
 feature -- Basic operations
 
-	is_in_region(pos: INTEGER): BOOLEAN is
+	is_in_region(pos: INTEGER): BOOLEAN
 			-- Returns whether pos is in this link.
 		require
 			positive: pos >=0
@@ -50,7 +50,7 @@ invariant
 	E_TOPIC_LINK_consistent: first <= last and first >= 0
 	E_TOPIC_LINK_exists: topic_id /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

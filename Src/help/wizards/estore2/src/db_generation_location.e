@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Page which deals with the different location entries."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature -- basic Operations
 
-	build is 
+	build 
 			-- Build user entries.
 		local
 			browse1_b: EV_BUTTON
@@ -84,7 +84,7 @@ feature -- basic Operations
 									to_precompiled_base_b.select_actions>>)
 		end
 
-	proceed_with_current_info is 
+	proceed_with_current_info 
 			-- Process user entries.
 		local
 			dir: DIRECTORY
@@ -104,7 +104,7 @@ feature -- basic Operations
 			end
 		end
 
-	update_state_information is
+	update_state_information
 			-- Check user entries.
 		do
 			wizard_information.set_location(location.text)
@@ -113,7 +113,7 @@ feature -- basic Operations
 			precursor
 		end
 
-	display_state_text is
+	display_state_text
 		do
 			title.set_text ("STEP 4: CHOOSE PROJECT DIRECTORY")
 			if wizard_information.new_project then
@@ -127,7 +127,7 @@ feature -- basic Operations
 		end
 
 
-	browse is
+	browse
 			-- Launch a computer directory Browser.
 		local
 			dir_selector: EV_DIRECTORY_DIALOG	
@@ -137,7 +137,7 @@ feature -- basic Operations
 			dir_selector.show_modal_to_window (first_window)
 		end
 
-	directory_selected (dir_selector: EV_DIRECTORY_DIALOG) is
+	directory_selected (dir_selector: EV_DIRECTORY_DIALOG)
 			-- The user selected a directory from the browser. 
 			-- It updates the text fields accordingly.
 		require
@@ -154,7 +154,7 @@ feature -- Implementation
 	to_compile_b, to_precompiled_base_b : EV_CHECK_BUTTON;
 		-- To choose to compile the project, to use the precompiled base library
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

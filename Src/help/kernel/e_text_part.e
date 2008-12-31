@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A part of topic-text with same attributes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,12 +13,12 @@ create
 
 feature -- Initialization
 
-	make_empty is
+	make_empty
 			-- Create as standard text.
 		do
 		end
 
-	make_from_other(other:E_TEXT_PART) is
+	make_from_other(other:E_TEXT_PART)
 			-- Copy.
 		require
 			not_void: other /= Void
@@ -39,7 +39,7 @@ feature -- Initialization
 
 feature -- Display
 
-	display(area: E_TOPIC_DISPLAY) is
+	display(area: E_TOPIC_DISPLAY)
 			-- Output marked-up text on 'area'.
 		require
 			area /= Void
@@ -83,7 +83,7 @@ feature -- Display
 			area.reset_text_format
 		end
 
-	get_character_format: EV_CHARACTER_FORMAT is
+	get_character_format: EV_CHARACTER_FORMAT
 		do
 			create Result.make
 			Result.set_bold(bold)
@@ -106,7 +106,7 @@ feature -- Display
 			end
 		end
 
-	needs_character_format: BOOLEAN is
+	needs_character_format: BOOLEAN
 		do
 			Result := bold or else italic or else underline or else
 				font_name /= Void or else font_size > 0 or else
@@ -115,47 +115,47 @@ feature -- Display
 
 feature -- Element change
 
-	set_text(txt:STRING) is
+	set_text(txt:STRING)
 		do
 			text := txt
 		end
 
-	set_bold(b:BOOLEAN) is
+	set_bold(b:BOOLEAN)
 		do
 			bold := b
 		end
 
-	set_italic(b:BOOLEAN) is
+	set_italic(b:BOOLEAN)
 		do
 			italic := b
 		end
 
-	set_underline(b:BOOLEAN) is
+	set_underline(b:BOOLEAN)
 		do
 			underline := b
 		end
 
-	set_font_name(s: STRING) is
+	set_font_name(s: STRING)
 		do
 			font_name := s
 		end
 
-	set_font_size(i: INTEGER) is
+	set_font_size(i: INTEGER)
 		do
 			font_size := i
 		end
 
-	set_font_color(c: EV_COLOR) is
+	set_font_color(c: EV_COLOR)
 		do
 			font_color := c
 		end
 
-	set_font_color_rgb(r,g,b:INTEGER) is
+	set_font_color_rgb(r,g,b:INTEGER)
 		do
 			create font_color.make_rgb(r,g,b)
 		end
 
-	set_font_color_by_string(s:STRING) is
+	set_font_color_by_string(s:STRING)
 		do
 			if s.is_equal("red") then
 				create font_color.make_rgb(255,0,0)
@@ -176,27 +176,27 @@ feature -- Element change
 			end
 		end
 
-	set_list_depth(i:INTEGER) is
+	set_list_depth(i:INTEGER)
 		do
 			list_depth := i
 		end
 
-	set_line_break(b:BOOLEAN) is
+	set_line_break(b:BOOLEAN)
 		do
 			line_break := b
 		end
 
-	set_bullet(b:BOOLEAN) is
+	set_bullet(b:BOOLEAN)
 		do
 			bullet := b
 		end
 
-	set_hyperlink(s:STRING) is
+	set_hyperlink(s:STRING)
 		do
 			hyperlink := s
 		end
 
-	set_important(b:BOOLEAN) is
+	set_important(b:BOOLEAN)
 		do
 			important := b
 		end
@@ -239,7 +239,7 @@ invariant
 	valid_font_size: font_size >= 0
 	hyperlink_not_empty: hyperlink /= Void implies not hyperlink.empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

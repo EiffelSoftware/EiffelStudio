@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Page in which the user choose between a dialog and frame based application."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature -- Basic Operation
 
-	build is
+	build
 			-- Build entries.
 		local
 			radio_box: EV_VERTICAL_BOX
@@ -65,7 +65,7 @@ feature -- Basic Operation
 			dialog_application.select_actions.extend (agent change_preview)
 		end
 
-	change_preview is
+	change_preview
 			-- Change the pixmap used to preview the application.
 		do
 			if dialog_application.is_selected then
@@ -75,7 +75,7 @@ feature -- Basic Operation
 			end
 		end
 
-	proceed_with_current_info is
+	proceed_with_current_info
 		do
 			Precursor
 			if dialog_application.is_selected then
@@ -85,7 +85,7 @@ feature -- Basic Operation
 			end
 		end
 
-	update_state_information is
+	update_state_information
 			-- Check User Entries
 		do
 			wizard_information.set_dialog_application (dialog_application.is_selected)
@@ -95,7 +95,7 @@ feature -- Basic Operation
 
 feature {NONE} -- Implementation
 
-	display_state_text is
+	display_state_text
 		do
 			title.set_text (interface_names.t_wel_app_type)
 			subtitle.set_text (interface_names.t_choose_type_subtitle)
@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	Preview_dialog_pixmap: FILE_NAME is
+	Preview_dialog_pixmap: FILE_NAME
 			-- Filename for the pixmap representing a dialog-based application
 		once
 			create Result.make_from_string (wizard_pixmaps_path)
@@ -112,7 +112,7 @@ feature {NONE} -- Constants
 			Result.add_extension (pixmap_extension)
 		end
 
-	Preview_frame_pixmap: FILE_NAME is
+	Preview_frame_pixmap: FILE_NAME
 			-- Filename for the pixmap representing a frame-based application
 		once
 			create Result.make_from_string (wizard_pixmaps_path)
@@ -134,7 +134,7 @@ feature {NONE} -- Vision2 layout
 	preview_pixmap: EV_PIXMAP;
 			-- Pixmap used to preview the application.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

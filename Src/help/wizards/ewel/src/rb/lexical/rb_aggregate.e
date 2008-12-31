@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Constructs whose specimens are obtained %
 		%by concatenating specimens of constructs %
@@ -26,7 +26,7 @@ inherit
 
 feature {NONE} -- Implementation
 
-	raise_syntax_error (s: STRING) is
+	raise_syntax_error (s: STRING)
 			-- Print error message s.
 		local
 			s2 : STRING
@@ -51,7 +51,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

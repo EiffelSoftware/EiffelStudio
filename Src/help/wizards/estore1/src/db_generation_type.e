@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generation Type Page"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,13 +22,13 @@ create
 
 feature -- basic Operations
 
-	display is 
+	display 
 			-- Display user entries
 		do
 			build
 		end
 
-	build is 
+	build 
 			-- Build user entries.
 		do 
 			Create generate_facade_b.make_with_text("Generate Facade")
@@ -65,14 +65,14 @@ feature -- basic Operations
 									example_b.press_actions>>)
 		end
 
-	proceed_with_current_info is 
+	proceed_with_current_info 
 			-- Process user entries
 		do 
 			precursor
 			proceed_with_new_state(Create {DB_GENERATION_LOCATION}.make(wizard_information))
 		end
 
-	update_state_information is
+	update_state_information
 			-- Check user entries
 		do
 			wizard_information.set_generation_type(generate_facade_b.is_selected,
@@ -80,7 +80,7 @@ feature -- basic Operations
 			precursor
 		end
 
-	change_entries is
+	change_entries
 			-- The user pressed a button.
 		do
 			precursor
@@ -100,11 +100,11 @@ feature -- Implementation
 
 	new_project_b,current_project_b: EV_RADIO_BUTTON
 
-	pixmap_location: STRING is "essai.bmp";
+	pixmap_location: STRING = "essai.bmp";
 			-- Pixmap location
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

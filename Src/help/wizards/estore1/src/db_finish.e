@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Last page, the trace of the operation is displayed."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,14 +30,14 @@ feature -- Initialization
 
 feature -- basic Operations
 
-	display is 
+	display 
 			-- Display user entries
 		do
 			build
 			launch_operations
 		end
 
-	build is 
+	build 
 			-- Build user entries.
 		local
 			h1: EV_HORIZONTAL_BOX
@@ -58,7 +58,7 @@ feature -- basic Operations
 			main_box.extend(Create {EV_HORIZONTAL_BOX})
 		end
 
-	launch_operations is
+	launch_operations
 		local
 			li: LINKED_LIST[CLASS_NAME]
 		do
@@ -91,7 +91,7 @@ feature -- basic Operations
 			progress_text.set_text(" ")
 		end
 
-	proceed_with_current_info is 
+	proceed_with_current_info 
 			-- Process user entries
 		do 
 			precursor
@@ -99,7 +99,7 @@ feature -- basic Operations
 
 feature -- Processing
 
-	generate_class(s: STRING) is
+	generate_class(s: STRING)
 			-- Generate class according to class whose name is 's'.
 		require
 			s /= Void
@@ -125,14 +125,14 @@ feature -- Processing
 			f.close
 		end
 
-	generate_basic_facade is
+	generate_basic_facade
 			-- Generate basic facade.
 		do
 			generate_repositories	
 			load_other_classes		
 		end
 
-	generate_repositories is
+	generate_repositories
 			-- Generate 'repositories' relative to the 
 			-- user database.
 		local
@@ -168,7 +168,7 @@ feature -- Processing
 			f.close
 		end
 
-	load_other_classes is
+	load_other_classes
 			-- Load remaining classes
 		local
 			f1,f_name: FILE_NAME
@@ -189,7 +189,7 @@ feature -- Processing
 			end
 		end
 
-	copy_database_manager is
+	copy_database_manager
 		local
 			f1,f_name: FILE_NAME
 			fi: PLAIN_TEXT_FILE
@@ -218,7 +218,7 @@ feature -- Processing
 		end
 
 
-	copy_class(name: STRING) is
+	copy_class(name: STRING)
 			-- Copy Class whose name is 'name'.
 		require
 			name /= Void
@@ -243,7 +243,7 @@ feature -- Processing
 			fi.close
 		end
 
-	copy_ace(name: STRING; path_root_class: STRING) is
+	copy_ace(name: STRING; path_root_class: STRING)
 			-- Copy Class whose name is 'name'.
 		require
 			name /= Void
@@ -270,7 +270,7 @@ feature -- Processing
 			fi.close
 		end
 
-	generate_ace_file is
+	generate_ace_file
 			-- Generate the selected Ace File
 		local
 			f_name: FILE_NAME
@@ -284,7 +284,7 @@ feature -- Processing
 			end
 		end
 
-	generate_example is
+	generate_example
 			-- Generate example of use.
 		local
 			f1,f_name: FILE_NAME
@@ -325,7 +325,7 @@ feature -- Processing
 
 feature -- Output
 
-	notify_user(s: STRING) is
+	notify_user(s: STRING)
 			-- Output
 		require
 			not_void: s /= Void
@@ -348,10 +348,10 @@ feature -- Implementation
 
 	total,iteration: INTEGER
 
-	pixmap_location: STRING is "essai.bmp";
+	pixmap_location: STRING = "essai.bmp";
 		-- Pixmap location
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

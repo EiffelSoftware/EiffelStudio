@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Style representation in the tds"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ create
 	
 feature -- Initialization
 
-	make is
+	make
 		do
 			activate := true
 		end
@@ -31,7 +31,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_desactivate is
+	set_desactivate
 			-- Set `activate' to false
 		do
 			activate := false
@@ -39,7 +39,7 @@ feature -- Element change
 			activate_set: not activate
 		end
 
-	set_style (a_style: STRING) is
+	set_style (a_style: STRING)
 			-- Set `a_style' to `style'.
 		require
 			a_style_exists: a_style /= Void and then a_style.count > 0
@@ -51,7 +51,7 @@ feature -- Element change
 
 feature -- Query
 
-	is_style_equal (a_style: TDS_STYLE) : BOOLEAN is
+	is_style_equal (a_style: TDS_STYLE) : BOOLEAN
 			-- Is `a_style' equal to `style'?
 		require
 			a_style_not_void: a_style /= Void
@@ -61,7 +61,7 @@ feature -- Query
 			Result_not_void: Result /= Void
 		end
 	
-	is_style_almost_equal (a_style: TDS_STYLE) : BOOLEAN is
+	is_style_almost_equal (a_style: TDS_STYLE) : BOOLEAN
 			-- Is a part of `a_style' contained by `style'?
 		require
 			a_style_not_void: a_style /= Void
@@ -73,7 +73,7 @@ feature -- Query
 
 feature -- Code generation
 
-	display is
+	display
 		do
 			if (not activate) then
 				io.putstring ("not ")
@@ -82,7 +82,7 @@ feature -- Code generation
 			io.putstring (style)
 		end
 
-	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE) is
+	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE)
 			-- Generate `a_resource_file' from the tds memory structure.
 		require
 			a_resource_file_exists: a_resource_file.exists
@@ -94,7 +94,7 @@ feature -- Code generation
 			a_resource_file.putstring (style)
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

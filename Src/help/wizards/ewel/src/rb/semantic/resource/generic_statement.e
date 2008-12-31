@@ -1,4 +1,4 @@
-indexing
+note
 	description: "xxx"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 
 feature 
 
-	pre_action is
+	pre_action
 		local
 			generic: TDS_GENERIC_STATEMENT
 			dialog: TDS_DIALOG
@@ -42,7 +42,7 @@ feature
 			tds.set_identifier_type (Generic_control_text)
 		end
 
-	post_action is
+	post_action
 		local
 			dialog: TDS_DIALOG
 			a_control: TDS_CONTROL_STATEMENT
@@ -61,7 +61,7 @@ feature {NONE}
 	control: TDS_CONTROL_STATEMENT
 			-- Copy of the generic control.
 
-	get_control (a_control: TDS_CONTROL_STATEMENT) : TDS_CONTROL_STATEMENT is
+	get_control (a_control: TDS_CONTROL_STATEMENT) : TDS_CONTROL_STATEMENT
 		local
 			style: TDS_STYLE
 		do
@@ -173,13 +173,13 @@ feature {NONE}
 			Result := control
 		end
 
-	finished: BOOLEAN is
+	finished: BOOLEAN
 			-- Test if `control' is not Void.
 		do	
 			Result := control /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

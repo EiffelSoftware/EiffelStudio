@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Page in which the user choose where he wants to generate the sources."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ feature -- Access
 
 feature -- Basic Operation
 
-	build is
+	build
 			-- Build interface
 		local
 			h1: EV_HORIZONTAL_BOX
@@ -136,7 +136,7 @@ feature -- Basic Operation
 
 		end
 
-	proceed_with_current_info is
+	proceed_with_current_info
 		do
 			Precursor
 			if to_precompile_libraries.is_empty then
@@ -146,7 +146,7 @@ feature -- Basic Operation
 			end
 		end
 
-	update_state_information is
+	update_state_information
 			-- Check User Entries
 			-- Update the two lists of precompilable and to_precompile libraries
 			-- If no item have been selected, we fill an empty list
@@ -193,7 +193,7 @@ feature -- Basic Operation
 
 feature {NONE} -- Tools
 
-	fill_lists is
+	fill_lists
 			-- Fill the EV_MULTI_COLUMN_LIST for all the compilable libraries
 			-- To determine the compilable libraries, we check the $ISE_EIFFEL directory
 			-- This function fill the library from *scratch*
@@ -235,7 +235,7 @@ feature {NONE} -- Tools
 			end
 		end
 
-	fill_ev_list_items (path_lib: STRING; ace_name: STRING): EV_MULTI_COLUMN_LIST_ROW is
+	fill_ev_list_items (path_lib: STRING; ace_name: STRING): EV_MULTI_COLUMN_LIST_ROW
 			-- retrun an ev_multi_column_list_item with the name of the system for text
 			-- and the path of the ace file for data.
 			-- 'dir/lib' is the directory where the ace file should be
@@ -285,7 +285,7 @@ feature {NONE} -- Tools
 			end
 		end
 
-	fill_lists_from_previous_state is
+	fill_lists_from_previous_state
 			-- Fill the "To precompile" and "precompilable"
 			-- MULTI_COLUMN_LISTs when the user has previously
 			-- choose its library to precompile.
@@ -295,7 +295,7 @@ feature {NONE} -- Tools
 			fill_list_from_previous_state (precompilable_libraries, wizard_information.l_precompilable)
 		end
 
-	fill_list_from_previous_state (a_mc_list: EV_MULTI_COLUMN_LIST; a_list: DYNAMIC_LIST [EV_MULTI_COLUMN_LIST_ROW]) is
+	fill_list_from_previous_state (a_mc_list: EV_MULTI_COLUMN_LIST; a_list: DYNAMIC_LIST [EV_MULTI_COLUMN_LIST_ROW])
 			-- Fill `a_mc_list' with `a_list' when the user has previously
 			-- choose its library to precompile.
 			-- Can occur only if the user has pushed the Back button
@@ -314,7 +314,7 @@ feature {NONE} -- Tools
 			end
 		end
 
-	add_all_items is
+	add_all_items
 			-- Add all the item from precompilable_libraries to to_precompile_libraries
 		local
 			it: EV_MULTI_COLUMN_LIST_ROW
@@ -334,7 +334,7 @@ feature {NONE} -- Tools
 			precompilable_libraries.is_empty
 		end
 
-	add_items is
+	add_items
 		local
 			currently_selected_items: DYNAMIC_LIST [EV_MULTI_COLUMN_LIST_ROW]
 			it: EV_MULTI_COLUMN_LIST_ROW
@@ -353,7 +353,7 @@ feature {NONE} -- Tools
 			add_b.disable_sensitive
 		end
 
-	remove_all_items is
+	remove_all_items
 			-- Remove all the item from to_precompile_libraries to precompilable_libraries
 		local
 			it: EV_MULTI_COLUMN_LIST_ROW
@@ -373,7 +373,7 @@ feature {NONE} -- Tools
 			to_precompile_libraries.is_empty
 		end
 
-	remove_items is
+	remove_items
 		local
 			currently_selected_items: DYNAMIC_LIST [EV_MULTI_COLUMN_LIST_ROW]
 			it: EV_MULTI_COLUMN_LIST_ROW
@@ -392,7 +392,7 @@ feature {NONE} -- Tools
 			remove_b.disable_sensitive
 		end
 
-	enable_add_b (it: EV_MULTI_COLUMN_LIST_ROW) is
+	enable_add_b (it: EV_MULTI_COLUMN_LIST_ROW)
 		do
 			if precompilable_libraries.selected_item = Void then
 				add_b.disable_sensitive
@@ -401,7 +401,7 @@ feature {NONE} -- Tools
 			end
 		end
 
-	enable_remove_b (it: EV_MULTI_COLUMN_LIST_ROW) is
+	enable_remove_b (it: EV_MULTI_COLUMN_LIST_ROW)
 		do
 			if to_precompile_libraries.selected_item = Void then
 				remove_b.disable_sensitive
@@ -410,7 +410,7 @@ feature {NONE} -- Tools
 			end
 		end
 
-	browse is
+	browse
 			-- Launch a computer file Browser.
 		local
 			file_open_dialog: EV_FILE_OPEN_DIALOG
@@ -448,7 +448,7 @@ feature {NONE} -- Tools
 			end
 		end
 
-	is_row_already_present (a_mc_list: EV_MULTI_COLUMN_LIST; a_row: EV_MULTI_COLUMN_LIST_ROW): BOOLEAN is
+	is_row_already_present (a_mc_list: EV_MULTI_COLUMN_LIST; a_row: EV_MULTI_COLUMN_LIST_ROW): BOOLEAN
 			-- Is the row `a_row' represent the same row as a row found in `a_mc_list'?
 		local
 			cur_row: EV_MULTI_COLUMN_LIST_ROW
@@ -488,7 +488,7 @@ feature {NONE} -- Tools
 
 feature {NONE} -- Implementation
 
-	display_state_text is
+	display_state_text
 		do
 			title.set_text (interface_names.t_choose_libraries)
 			subtitle.set_text (interface_names.t_choose_libraries_subtitle)
@@ -509,7 +509,7 @@ feature {NONE} -- Implementation
 	add_your_own_b: EV_BUTTON;
 			-- button to let the user add his own library
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

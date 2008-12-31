@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generation Options page"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,13 +26,13 @@ create
 
 feature -- basic Operations
 
-	display is 
+	display 
 			-- Display user entries
 		do
 			build
 		end
 
-	build is 
+	build 
 			-- Build Page entries.
 		do 
 			Create generate_all_tables.make_with_text("Generate All tables/views")
@@ -51,7 +51,7 @@ feature -- basic Operations
 									generate_specific_tables.press_actions>>)
 		end
 
-	proceed_with_current_info is 
+	proceed_with_current_info 
 			-- Process user entries
 		do
 			precursor
@@ -62,7 +62,7 @@ feature -- basic Operations
 			end
 		end
 
-	update_state_information is
+	update_state_information
 			-- Check user entries
 		local
 			cl_name: CLASS_NAME
@@ -90,10 +90,10 @@ feature -- Implementation
 	table_list: LINKED_LIST[CLASS_NAME]
 		-- List of all the system tables.
 
-	pixmap_location: STRING is "essai2.bmp";
+	pixmap_location: STRING = "essai2.bmp";
 			-- Pixmap location
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

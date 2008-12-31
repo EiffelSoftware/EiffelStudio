@@ -1,4 +1,4 @@
-indexing
+note
 	description: "xxx"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,17 +27,17 @@ create
 
 feature 
 
-	pre_action is
+	pre_action
 		do  
 			tds.set_identifier_type (Option_font_size)
 		end
 
-	post_action is
+	post_action
 		do  
 			tds.set_identifier_type (Normal)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

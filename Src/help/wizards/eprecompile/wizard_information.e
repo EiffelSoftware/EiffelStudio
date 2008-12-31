@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "All information about the wizard ... This class is inherited in each state "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize.
 		do
 		end
@@ -35,22 +35,22 @@ feature -- Access
 
 feature -- Element change
 
-	set_location (s: STRING) is
+	set_location (s: STRING)
 		do
 			location:= s
 		end
 
-	set_l_to_precompile (l: LINKED_LIST [EV_MULTI_COLUMN_LIST_ROW]) is
+	set_l_to_precompile (l: LINKED_LIST [EV_MULTI_COLUMN_LIST_ROW])
 		do
 			l_to_precompile:= l
 		end
 
-	set_l_precompilable (l: LINKED_LIST [EV_MULTI_COLUMN_LIST_ROW]) is
+	set_l_precompilable (l: LINKED_LIST [EV_MULTI_COLUMN_LIST_ROW])
 		do
 			l_precompilable:= l
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

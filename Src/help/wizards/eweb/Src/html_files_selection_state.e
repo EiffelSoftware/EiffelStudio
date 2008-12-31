@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Page which allows the user to select the files he wants%
 				  % to deal with."
 	legal: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature -- Basic Operation
 
-	build is 
+	build 
 			-- Build entries.
 		local
 			h1: EV_HORIZONTAL_BOX
@@ -49,7 +49,7 @@ feature -- Basic Operation
 			list_exists: selected_files /= Void
 		end
 
-	remove_selected_files is
+	remove_selected_files
 			-- Remove selected files.
 		require
 			list_exists: selected_files /= Void
@@ -67,7 +67,7 @@ feature -- Basic Operation
 			end
 		end
 
-	reset is 
+	reset 
 			-- Remove the files the user selected so far.
 		require
 			list_exists: selected_files /= Void
@@ -77,7 +77,7 @@ feature -- Basic Operation
 			wiped_out: selected_files.count=0
 		end
 
-	popup_selector(dialog: EV_STANDARD_DIALOG) is
+	popup_selector(dialog: EV_STANDARD_DIALOG)
 			-- Popup dialog 'dialog' in order to select file(s).
 		do
 			dialog.ok_actions.extend(agent add_files(dialog))
@@ -85,7 +85,7 @@ feature -- Basic Operation
 			dialog.ok_actions.wipe_out
 		end
 
-	add_files(dialog: EV_STANDARD_DIALOG) is
+	add_files(dialog: EV_STANDARD_DIALOG)
 			-- If dialog 'dialog' is a directory dialog,
 			-- then add the HTML files it contains to the list.
 			-- If not, then it means that 'dialog' is 
@@ -148,7 +148,7 @@ feature -- Basic Operation
 			end
 		end
 	
-	update_state_information is
+	update_state_information
 			-- Check User Entries
 		require else
 			selected_files /= Void
@@ -170,7 +170,7 @@ feature -- Basic Operation
 			wizard_information.set_files(li)
 		end
 
-	proceed_with_current_info is 
+	proceed_with_current_info 
 			-- Proceed, go to next state.
 		do
 			Precursor
@@ -184,14 +184,14 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	display_state_text is
+	display_state_text
 		do
 			title.set_text ("HTML Forms selection")
 			message.set_text ("Please select the HTML files you wish to add%N%
 						%to your repository.")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

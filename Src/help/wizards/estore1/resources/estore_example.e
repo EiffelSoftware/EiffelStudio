@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Example of Database Interactions"
 	author: "pascalf"
 	date: "$Date$"
@@ -12,12 +12,12 @@ inherit
 
 	REPOSITORIES
 
-Creation
+create
 	initialize
 
 feature -- Initialization
 
-	initialize(username,password,data_source: STRING) is
+	initialize(username,password,data_source: STRING)
 			-- Run the example
 		require
 			not_void: username /= Void and password /= Void and data_source /= Void
@@ -28,14 +28,14 @@ feature -- Initialization
 				db_manager.log_and_connect(username,password,data_source)
 				b:= db_manager.session_control.is_connected 
 				if b then
-					initialized := TRUE
+					initialized := True
 				end
 			end
 			if not b then
 				io.put_string("Connection Failed.%NPLease Check UserName and Password")
 			end
 		rescue
-			b := TRUE
+			b := True
  			retry
 		end
 

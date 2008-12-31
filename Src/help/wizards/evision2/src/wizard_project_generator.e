@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Object to generate a project."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Basic Operations
 
-	generate_code is
+	generate_code
 			-- Generate the code for a new vision2-application project
 		local
 			map_list: LINKED_LIST [TUPLE [STRING, STRING]]
@@ -93,7 +93,7 @@ feature -- Basic Operations
 			end
 		end
 
-	tuple_from_file_content (an_index: STRING; a_content_file: STRING): TUPLE [STRING, STRING] is
+	tuple_from_file_content (an_index: STRING; a_content_file: STRING): TUPLE [STRING, STRING]
 		local
 			file_content: STRING
 			file: RAW_FILE
@@ -115,14 +115,14 @@ feature -- Basic Operations
 			file.close
 		end
 
-	empty_tuple (an_index: STRING): TUPLE [STRING, STRING] is
+	empty_tuple (an_index: STRING): TUPLE [STRING, STRING]
 		do
 			create Result
 			Result.put (an_index, 1)
 			Result.put ("", 2)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

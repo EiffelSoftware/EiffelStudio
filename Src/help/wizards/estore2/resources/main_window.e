@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Main window: lets the user choose %
 			%which database table to edit."
 	legal: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature -- Initialization
 
-	make_from_application (appl: APPLICATION) is
+	make_from_application (appl: APPLICATION)
 			-- Initialize.
 		require
 			not_void: appl /= Void
@@ -29,7 +29,7 @@ feature -- Initialization
 			create table_window_list.make (10)
 		end
 
-	set_initial_focus is
+	set_initial_focus
 			-- Set initial focus to the table selection combo-box.
 		do
 			table_selection_cbox.set_focus
@@ -37,7 +37,7 @@ feature -- Initialization
 
 feature {NONE} -- Implementation
 
-	create_window_content is
+	create_window_content
 			-- Add window content.
 		local
 			vbox: DV_VERTICAL_BOX
@@ -60,7 +60,7 @@ feature {NONE} -- Implementation
 			vbox.extend (button)
 		end
 
-	fill_cbox is
+	fill_cbox
 			-- Fill `table_selection_cbox' with database table names.
 		require
 			not_void: table_selection_cbox /= Void
@@ -78,7 +78,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	popup_table_window is
+	popup_table_window
 			-- Pop up a window to edit content of database table selected in
 			-- `table_selection_cbox'.
 		local
@@ -97,7 +97,7 @@ feature {NONE} -- Implementation
 			-- Table window list. To avoid problems linked to 
 			-- the use of a lv.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

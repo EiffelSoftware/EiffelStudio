@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants used by resource"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,41 +11,41 @@ class
 
 feature
 
-	R_generic: INTEGER is 1
-	R_auto3state: INTEGER is 2
-	R_autocheckbox: INTEGER is 3
-	R_autoradiobutton: INTEGER is 4
-	R_checkbox: INTEGER is 5
-	R_combobox: INTEGER is 6
-	R_ctext: INTEGER is 7
-	R_defpushbutton: INTEGER is 8
-	R_edittext: INTEGER is 9
-	R_groupbox: INTEGER is 10
-	R_icon: INTEGER is 11
-	R_listbox: INTEGER is 12
-	R_ltext: INTEGER is 13
-	R_pushbox: INTEGER is 14
-	R_pushbutton: INTEGER is 15
-	R_radiobutton: INTEGER is 16
-	R_rtext: INTEGER is 17
-	R_scrollbar: INTEGER is 18
-	R_state3: INTEGER is 19
-	R_treeview: INTEGER is 20
-	R_progressbar: INTEGER is 21
-	R_statusbar: INTEGER is 22
-	R_trackbar: INTEGER is 23
+	R_generic: INTEGER = 1
+	R_auto3state: INTEGER = 2
+	R_autocheckbox: INTEGER = 3
+	R_autoradiobutton: INTEGER = 4
+	R_checkbox: INTEGER = 5
+	R_combobox: INTEGER = 6
+	R_ctext: INTEGER = 7
+	R_defpushbutton: INTEGER = 8
+	R_edittext: INTEGER = 9
+	R_groupbox: INTEGER = 10
+	R_icon: INTEGER = 11
+	R_listbox: INTEGER = 12
+	R_ltext: INTEGER = 13
+	R_pushbox: INTEGER = 14
+	R_pushbutton: INTEGER = 15
+	R_radiobutton: INTEGER = 16
+	R_rtext: INTEGER = 17
+	R_scrollbar: INTEGER = 18
+	R_state3: INTEGER = 19
+	R_treeview: INTEGER = 20
+	R_progressbar: INTEGER = 21
+	R_statusbar: INTEGER = 22
+	R_trackbar: INTEGER = 23
 
-	R_cursor: INTEGER is 24
-	R_menu: INTEGER is 25
-	R_font: INTEGER is 26
-	R_toolbar: INTEGER is 27
-	R_stringtable: INTEGER is 28
-	R_dialog: INTEGER is 29
-	R_anicursor: INTEGER is 30
-	R_aniicon: INTEGER is 31
-	R_bitmap: INTEGER is 32;
+	R_cursor: INTEGER = 24
+	R_menu: INTEGER = 25
+	R_font: INTEGER = 26
+	R_toolbar: INTEGER = 27
+	R_stringtable: INTEGER = 28
+	R_dialog: INTEGER = 29
+	R_anicursor: INTEGER = 30
+	R_aniicon: INTEGER = 31
+	R_bitmap: INTEGER = 32;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

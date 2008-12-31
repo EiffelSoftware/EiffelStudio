@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Wizard state: Error in the project name"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,27 +22,27 @@ create
 
 feature -- basic Operations
 
-	display_state_text is
+	display_state_text
 			-- Display message text relative to current state.
 		do
 			title.set_text (Bench_interface_names.t_Project_name_error_state)
 			message.set_text (Bench_interface_names.m_Project_name_error_state)
 		end
 
-	final_message: STRING is
+	final_message: STRING
 		do
 		end
 
 feature {WIZARD_STATE_WINDOW}
 
-	pixmap_icon_location: FILE_NAME is
+	pixmap_icon_location: FILE_NAME
 			-- Icon for the Eiffel Wel Wizard
 		once
 			create Result.make_from_string ("eiffel_wizard_icon")
 			Result.add_extension (pixmap_extension)
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

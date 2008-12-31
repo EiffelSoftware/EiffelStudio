@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Object to generate a project."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature -- Basic Operations
 
-	generate_code is
+	generate_code
 			-- Generate code for the project.
 		local
 			dir: DIRECTORY
@@ -146,7 +146,7 @@ feature -- Basic Operations
 			copy_file ("eiffel_wizard", 		pixmap_extension, pixmap_location)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

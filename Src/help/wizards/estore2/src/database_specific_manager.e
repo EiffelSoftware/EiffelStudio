@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that enable specific database management."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature -- Initialization
 
-	make (dbm: DATABASE_MANAGER [DATABASE]) is
+	make (dbm: DATABASE_MANAGER [DATABASE])
 			-- Set `dbm' to manage database
 			-- selections.
 		require
@@ -42,13 +42,13 @@ feature -- Access
 
 feature -- Status report
 
-	is_ok: BOOLEAN is
+	is_ok: BOOLEAN
 			-- Has last database transaction been successful?
 		do
 			Result := database_manager.session_control.is_ok
 		end
 
-	error_message: STRING is
+	error_message: STRING
 			-- Error message is last database transaction has not been successful.
 		do
 			Result := database_manager.session_control.error_message
@@ -56,7 +56,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_object (a_object: G) is
+	set_object (a_object: G)
 			-- Assign `a_object' to `object'.
 		require
 			not_void: a_object /= Void
@@ -66,7 +66,7 @@ feature -- Element change
 			object_assigned: object = a_object
 		end
 
-	set_extract_function (a_extract_function: FUNCTION [ANY, TUPLE [G], H]) is
+	set_extract_function (a_extract_function: FUNCTION [ANY, TUPLE [G], H])
 			-- Assign `a_extract_function' to `extract_function'.
 		require
 			not_void: a_extract_function /= Void
@@ -76,7 +76,7 @@ feature -- Element change
 			extract_function_assigned: extract_function = a_extract_function
 		end
 
-	set_valid_values (a_valid_values: LIST [H]) is
+	set_valid_values (a_valid_values: LIST [H])
 			-- Assign `a_valid_values' to `valid_values'.
 		require
 			not_void: a_valid_values /= Void
@@ -86,7 +86,7 @@ feature -- Element change
 			valid_values_assigned: valid_values = a_valid_values
 		end
 
-	set_query (a_query: STRING) is
+	set_query (a_query: STRING)
 			-- Assign `a_query' to `query'.
 		require
 			not_void: a_query /= Void
@@ -98,7 +98,7 @@ feature -- Element change
 
 feature -- Basic operations
 
-	load_result is
+	load_result
 			-- Load result from SQL `query' from the database.
 		require
 			query_assigned: query /= Void
@@ -144,7 +144,7 @@ feature {NONE} -- Implementation
 invariant
 	database_manager_assigned: database_manager /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

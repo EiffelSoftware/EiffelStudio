@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Menu representation in the tds"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Create a new menu resource in the tds
 			-- and create the associated `items_list'.
 		do
@@ -29,7 +29,7 @@ feature -- Initialization
 			set_type (R_menu)
 		end
 
-	make_current_menu is
+	make_current_menu
 		do
 			create current_menu.make
 		end
@@ -51,7 +51,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_current_item (a_item: TDS_MENU_ITEM) is
+	set_current_item (a_item: TDS_MENU_ITEM)
 			-- Set `current_item' to `a_item'.
 		require
 			a_item_not_void: a_item /= Void
@@ -61,7 +61,7 @@ feature -- Element change
 			current_item_set: current_item = a_item
 		end
 
-	set_is_popup (a_value: BOOLEAN) is
+	set_is_popup (a_value: BOOLEAN)
 			-- Set `is_popup' to `a_value'.
 		do
 			is_popup := a_value
@@ -69,7 +69,7 @@ feature -- Element change
 			is_popup_set: is_popup = a_value
 		end
 
-	insert_item (a_menu_item: TDS_MENU_ITEM) is
+	insert_item (a_menu_item: TDS_MENU_ITEM)
 			-- Insert `a_menu_item' in the menu.
 		require
 			a_menu_item_not_void: a_menu_item /= Void
@@ -81,7 +81,7 @@ feature -- Element change
 
 feature -- Code generation
 
-	display is
+	display
 			-- Display the tds.
 		local
 			menu: TDS_MENU
@@ -124,7 +124,7 @@ feature -- Code generation
 			end
 		end
 
-	display_popup is
+	display_popup
 		do
 			if (items_list /= Void) then
 				from 
@@ -140,7 +140,7 @@ feature -- Code generation
 			end
 		end
 
-	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE) is
+	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE)
 			-- Generate `a_resource_file' from the tds memory structure.
 		local
 			menu: TDS_MENU
@@ -191,7 +191,7 @@ feature -- Code generation
 			end			
 		end
 
-	generate_resource_file_popup (a_resource_file: PLAIN_TEXT_FILE) is
+	generate_resource_file_popup (a_resource_file: PLAIN_TEXT_FILE)
 			-- Generate `a_resource_file' from the tds memory structure.
 		require
 			a_resource_file_exists: a_resource_file.exists
@@ -209,7 +209,7 @@ feature -- Code generation
 			end
 		end
 
-	generate_tree_view (a_tree_view: EV_TREE_ITEM) is
+	generate_tree_view (a_tree_view: EV_TREE_ITEM)
 			-- Generate `a_tree_view' control from the tds memory structure.
 		local
 			tvis: WEL_TREE_VIEW_INSERT_STRUCT
@@ -238,12 +238,12 @@ feature -- Code generation
 			end 
 		end
 
-	generate_wel_code is
+	generate_wel_code
 			-- Generate the eiffel code.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

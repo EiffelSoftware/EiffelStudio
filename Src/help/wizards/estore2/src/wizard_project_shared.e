@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Project Shared variables"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Access
 
-	is_oracle (code: INTEGER): BOOLEAN is
+	is_oracle (code: INTEGER): BOOLEAN
 			-- Is selected DBMS Oracle?
 		require
 			is_valid_code: Available_dbms.is_valid_code (code)
@@ -19,7 +19,7 @@ feature -- Access
 			Result := code = Available_dbms.Oracle_code
 		end
 
-	is_odbc (code: INTEGER): BOOLEAN is
+	is_odbc (code: INTEGER): BOOLEAN
 			-- Is selected DBMS ODBC?
 		require
 			is_valid_code: Available_dbms.is_valid_code (code)
@@ -27,7 +27,7 @@ feature -- Access
 			Result := code = Available_dbms.Odbc_code
 		end
 
-	db_manager (code: INTEGER): DATABASE_MANAGER [DATABASE] is
+	db_manager (code: INTEGER): DATABASE_MANAGER [DATABASE]
 			-- Database manager, responsible for interactions
 			-- with the database.
 		require
@@ -38,7 +38,7 @@ feature -- Access
 			exists: Result /= Void
 		end
 
-	db_display_name (code: INTEGER): STRING is
+	db_display_name (code: INTEGER): STRING
 			-- DBMS display name.
 		require
 			is_valid_code: Available_dbms.is_valid_code (code)
@@ -48,7 +48,7 @@ feature -- Access
 			exists: Result /= Void
 		end
 
-	handle_name (code: INTEGER): STRING is
+	handle_name (code: INTEGER): STRING
 			-- DBMS handle name.
 		require
 			is_valid_code: Available_dbms.is_valid_code (code)
@@ -58,7 +58,7 @@ feature -- Access
 			exists: Result /= Void
 		end
 
-	Available_dbms: AVAILABLE_DBMS is
+	Available_dbms: AVAILABLE_DBMS
 			-- Available DBMS information.
 		once
 			create Result
@@ -66,7 +66,7 @@ feature -- Access
 			exists: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

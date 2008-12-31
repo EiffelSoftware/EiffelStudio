@@ -52,7 +52,7 @@ feature {NONE} -- Access
 
 feature -- Basic operations
 
-	write_class (a_file: !KI_TEXT_OUTPUT_STREAM; a_type_list: !DS_LINEAR [!STRING]; a_system: !SYSTEM_I)
+	write_class (a_file: !KI_TEXT_OUTPUT_STREAM; a_type_list: !DS_LINEAR [STRING]; a_system: !SYSTEM_I)
 			-- Print root class refering to types in `a_type_list'
 		require
 			a_file_open_write: a_file.is_open_write
@@ -83,7 +83,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	put_anchor_routine (a_types: !DS_LINEAR [!STRING])
+	put_anchor_routine (a_types: !DS_LINEAR [STRING])
 			--
 		require
 			stream_valid: is_writing
@@ -91,7 +91,7 @@ feature {NONE} -- Implementation
 			root_class_attached: root_class /= Void
 			root_feature_attached: root_feature /= Void
 		local
-			l_type: !STRING
+			l_type: STRING
 		do
 			stream.indent
 			stream.put_line ("type_anchors")
@@ -126,9 +126,10 @@ feature {NONE} -- Implementation
 			stream.put_line ("")
 		end
 
-	put_type_assignment (a_type: !STRING)
+	put_type_assignment (a_type: STRING)
 			-- Print valid assignment for `a_type'.
 		require
+			a_type_not_void: a_type /= Void
 			root_group_attached: root_group /= Void
 			root_class_attached: root_class /= Void
 			root_feature_attached: root_feature /= Void
@@ -204,4 +205,35 @@ feature {NONE} -- Implementation
 			end
 		end
 
+note
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			 Eiffel Software
+			 5949 Hollister Ave., Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
 end

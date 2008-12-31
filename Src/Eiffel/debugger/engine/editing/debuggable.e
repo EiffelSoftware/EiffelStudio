@@ -93,7 +93,7 @@ feature -- Tracing
 				i := 1;
 				io.put_string ("Byte code breakpoints:%N");
 			until
-				i > byte_code.size
+				i > byte_code.count
 			loop
 				if byte_code.item (i) = '%/066/' then
 					io.put_string ("Breakpoint, offset: ");

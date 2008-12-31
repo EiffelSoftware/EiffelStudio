@@ -15,13 +15,13 @@ feature {NONE} -- Implementation of deferred features
 	generic_modify_item
 			-- send the first part of the 'modify-local' request
 		do
-			send_rqst_3(Rqst_modify_local, Application.current_execution_stack_number, item_type, item.item_number)
+			send_rqst_3_integer (Rqst_modify_local, debugger_manager.application.current_execution_stack_number, item_type, item.item_number)
 		end
-	
+
 	start_feature
 			-- What to do to initialize the modification of an item.
 		do
-			stack := Application.status.current_stack_element
+			stack ?= debugger_manager.application.status.current_call_stack_element
 			has_result := stack.routine.is_function
 
 			-- FIXME ARNAUD -- To do: a beautiful interface...
@@ -44,9 +44,9 @@ feature {NONE} -- Implementation of deferred features
 				-- set the place where we should search the name of the item
 			inspect item_type
 				when Dlt_argument then
-					item_list := stack.arguments
+--					item_list := stack.arguments
 				when Dlt_localvar then
-					item_list := stack.locals
+--					item_list := stack.locals
 				else
 					item_list := Void
 			end
@@ -64,14 +64,14 @@ feature {NONE} -- Implementation of deferred features
 			retry_clause: BOOLEAN
 		do
 			if not retry_clause then
-				status.reload_call_stack
-				call_stack_elem := status.current_stack_element
-				if call_stack_elem /= Void then
-					Project_tool.display_exception_stack
-				end
+				status.reload_current_call_stack
+				call_stack_elem := status.current_call_stack_element
+--				if call_stack_elem /= Void then
+--					Project_tool.display_exception_stack
+--				end
 			else -- retry_clause, something went wrong
-				if Application.is_running then
-					Application.process_termination
+				if debugger_manager.application.is_running then
+					debugger_manager.application.process_termination
 				end
 			end
 		rescue
@@ -85,7 +85,7 @@ feature {NONE} -- Implementation of deferred features
 
 feature {NONE} -- Private variables
 
-	stack: CALL_STACK_ELEMENT
+	stack: EIFFEL_CALL_STACK_ELEMENT
 		-- Current call stack element being displayed.
 
 	has_result: BOOLEAN

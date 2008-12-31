@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Unique id for codedom statement or expression."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,21 +30,21 @@ create
 
 feature {NONE} -- Initialization
 
-	make_statement is
+	make_statement
 			-- Initialize new statement id.
 		do
 			is_statement_id := True
 			id := {GUID}.new_guid.to_string (("D").to_cil)
 		end
 
-	make_expression is
+	make_expression
 			-- Initialize new expression id.
 		do
 			is_expression_id := True
 			id := {GUID}.new_guid.to_string (("D").to_cil)
 		end
 
-	make_from_string (a_string: STRING) is
+	make_from_string (a_string: STRING)
 			-- Initialize instance from string `a_string'.
 			-- `a_string' should be the result of a call to `out' on a CODE_PARTIAL_TREE_ID instance.
 		require
@@ -75,7 +75,7 @@ feature -- Status Report
 	
 feature -- Access
 
-	out: STRING is
+	out: STRING
 			-- Generate key as string
 		do
 			create Result.make (40)
@@ -87,7 +87,7 @@ feature -- Access
 			Result.append (id)
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code
 		do
 			if internal_hash_code = 0 then
@@ -98,7 +98,7 @@ feature -- Access
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
@@ -117,7 +117,7 @@ invariant
 	attached_id: id /= Void
 	statement_xor_expression: is_statement_id xor is_expression_id
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

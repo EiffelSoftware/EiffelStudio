@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A notifier icon message for consumption."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_ca: like assembly; a_path: like assembly_path; a_reason: like reason; a_cache: like cache_path) is
+	make (a_ca: like assembly; a_path: like assembly_path; a_reason: like reason; a_cache: like cache_path)
 			--
 		require
 			a_ca_attached: a_ca /= Void
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			set_cache_path: cache_path = a_cache
 		end
 
-	initialize_message_template is
+	initialize_message_template
 			-- Initializes `message_template'.
 		local
 			l_value: SYSTEM_STRING
@@ -74,7 +74,7 @@ feature -- Access
 	cache_path: SYSTEM_STRING
 			-- Path to Eiffel Assembly Cache
 
-	message: SYSTEM_STRING is
+	message: SYSTEM_STRING
 			-- Full notify message
 		local
 			l_functions: like functions
@@ -126,7 +126,7 @@ feature -- Access
 
 feature {NONE} -- Evaluation
 
-	evaluate_function (a_name: SYSTEM_STRING): SYSTEM_STRING is
+	evaluate_function (a_name: SYSTEM_STRING): SYSTEM_STRING
 			-- Evaluates function with the name `a_name'
 		require
 			a_name_attached: a_name /= Void
@@ -198,10 +198,10 @@ feature {NONE} -- Evaluation
 
 feature {NONE} -- Constants
 
-	message_variable: SYSTEM_STRING is "MDC_BALLOON_MSG"
+	message_variable: SYSTEM_STRING = "MDC_BALLOON_MSG"
 			-- Notify message environment variable
 
-	default_message: SYSTEM_STRING is "Consuming assembly '${assembly:name}, Version=${assembly:version}'.%N%NCLR Version: ${module:clr}%NReason: ${consume:reason}%NAssembly:${assembly:path}%N%NID: ${consume:cache_id}"
+	default_message: SYSTEM_STRING = "Consuming assembly '${assembly:name}, Version=${assembly:version}'.%N%NCLR Version: ${module:clr}%NReason: ${consume:reason}%NAssembly:${assembly:path}%N%NID: ${consume:cache_id}"
 			-- Default notify message
 
 feature {NONE} -- Implementation
@@ -209,7 +209,7 @@ feature {NONE} -- Implementation
 	message_template: SYSTEM_STRING
 			-- Message template
 
-	current_assembly: ASSEMBLY is
+	current_assembly: ASSEMBLY
 			-- Executing assembly
 		once
 			Result := ({like Current}).to_cil.assembly
@@ -217,7 +217,7 @@ feature {NONE} -- Implementation
 			Result_attached: Result /= Void
 		end
 
-	current_assembly_name: ASSEMBLY_NAME is
+	current_assembly_name: ASSEMBLY_NAME
 			-- Name of executing assembly
 		once
 			Result := current_assembly.get_name
@@ -225,7 +225,7 @@ feature {NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	variable_pattern: SYSTEM_DLL_REGEX is
+	variable_pattern: SYSTEM_DLL_REGEX
 			-- Inline variable pattern regualr expression
 		once
 			create Result.make ("\$\{([a-zA-z]+\:[a-zA-z]+)\}")
@@ -243,7 +243,7 @@ invariant
 	message_template_attached: message_template /= Void
 	not_message_template_is_empty: message_template.length > 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

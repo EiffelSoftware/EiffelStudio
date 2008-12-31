@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A switch for specifying assemblies."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,13 +19,13 @@ create
 
 feature -- Access
 
-	value_validator: !ARGUMENT_ASSEMBLY_VALIDATOR is
+	value_validator: !ARGUMENT_ASSEMBLY_VALIDATOR
 			-- Retrieves an validator used to check current switch value
 		once
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

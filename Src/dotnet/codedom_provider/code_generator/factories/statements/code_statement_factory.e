@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Code generator for statements"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 
-	generate_assign_statement (a_source: SYSTEM_DLL_CODE_ASSIGN_STATEMENT) is
+	generate_assign_statement (a_source: SYSTEM_DLL_CODE_ASSIGN_STATEMENT)
 			-- Initialize `last_statement' with `a_source'.
 		require
 			non_void_source: a_source /= Void
@@ -56,7 +56,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			end
 		end
 
-	generate_comment_statement (a_source: SYSTEM_DLL_CODE_COMMENT_STATEMENT) is
+	generate_comment_statement (a_source: SYSTEM_DLL_CODE_COMMENT_STATEMENT)
 			-- Initialize `last_statement' with `a_source'.
 		require
 			non_void_source: a_source /= Void
@@ -69,7 +69,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			end
 		end
 
-	generate_condition_statement (a_source: SYSTEM_DLL_CODE_CONDITION_STATEMENT) is
+	generate_condition_statement (a_source: SYSTEM_DLL_CODE_CONDITION_STATEMENT)
 			-- Initialize `last_statement' with `a_source'.
 		require
 			non_void_source: a_source /= Void
@@ -86,7 +86,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			end
 		end
 
-	generate_expression_statement (a_source: SYSTEM_DLL_CODE_EXPRESSION_STATEMENT) is
+	generate_expression_statement (a_source: SYSTEM_DLL_CODE_EXPRESSION_STATEMENT)
 			-- Initialize `last_statement' with `a_source'.
 		require
 			non_void_source: a_source /= Void
@@ -100,7 +100,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			end
 		end
 
-	generate_iteration_statement (a_source: SYSTEM_DLL_CODE_ITERATION_STATEMENT) is
+	generate_iteration_statement (a_source: SYSTEM_DLL_CODE_ITERATION_STATEMENT)
 			-- Initialize `last_statement' with `a_source'.
 		require
 			non_void_source: a_source /= Void
@@ -124,7 +124,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			end
 		end
 
-	generate_routine_return_statement (a_source: SYSTEM_DLL_CODE_METHOD_RETURN_STATEMENT) is
+	generate_routine_return_statement (a_source: SYSTEM_DLL_CODE_METHOD_RETURN_STATEMENT)
 			-- Initialize `last_statement' with `a_source'.
 		require
 			non_void_source: a_source /= Void
@@ -138,7 +138,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			end
 		end
 
-	generate_snippet_statement (a_source: SYSTEM_DLL_CODE_SNIPPET_STATEMENT) is
+	generate_snippet_statement (a_source: SYSTEM_DLL_CODE_SNIPPET_STATEMENT)
 			-- Initialize `last_statement' with `a_source'.
 		require
 			non_void_source: a_source /= Void
@@ -168,7 +168,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			non_void_last_statement: last_statement /= Void
 		end
 
-	generate_variable_declaration_statement (a_source: SYSTEM_DLL_CODE_VARIABLE_DECLARATION_STATEMENT) is
+	generate_variable_declaration_statement (a_source: SYSTEM_DLL_CODE_VARIABLE_DECLARATION_STATEMENT)
 			-- Initialize `last_statement' with `a_source'.
 		require
 			non_void_source: a_source /= Void
@@ -188,7 +188,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 				
 feature {NONE} -- Implementation
 
-	initialize_local_variables (a_snippet_value: STRING) is
+	initialize_local_variables (a_snippet_value: STRING)
 			-- Add variables declared in `a_snippet_vallue' to local variables of `current_feature'.
 		require
 			non_void_snippet_value: a_snippet_value /= Void
@@ -234,7 +234,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	statements_from_collection (a_collection: SYSTEM_DLL_CODE_STATEMENT_COLLECTION): LIST [CODE_STATEMENT] is
+	statements_from_collection (a_collection: SYSTEM_DLL_CODE_STATEMENT_COLLECTION): LIST [CODE_STATEMENT]
 			-- Convert `a_collection' into a list of {CODE_STATEMENT} instances
 		local
 			i, l_count: INTEGER
@@ -253,7 +253,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

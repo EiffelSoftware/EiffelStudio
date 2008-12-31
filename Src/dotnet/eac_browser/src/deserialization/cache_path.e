@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Path to various EAC files"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Access
 
-	relative_assembly_path (an_assembly: CONSUMED_ASSEMBLY): STRING is
+	relative_assembly_path (an_assembly: CONSUMED_ASSEMBLY): STRING
 			-- Path to folder containing `an_assembly' types relative to `Eac_path'.
 			-- Always return a value even if `an_assembly' in not in EAC.
 		require
@@ -43,7 +43,7 @@ feature -- Access
 			ends_with_directory_separator: Result.item (Result.count) = (create {OPERATING_ENVIRONMENT}).Directory_separator
 		end
 	
-	absolute_assembly_path (an_assembly: CONSUMED_ASSEMBLY): STRING is
+	absolute_assembly_path (an_assembly: CONSUMED_ASSEMBLY): STRING
 			-- Absolute path to folder containing `an_assembly' types.
 			-- Always return a value even if `an_assembly' in not in EAC.
 		require
@@ -61,7 +61,7 @@ feature -- Access
 			ends_with_directory_separator: Result.item (Result.count) = (create {OPERATING_ENVIRONMENT}).Directory_separator
 		end
 
-	relative_type_path (assembly_relative_path: STRING; a_dotnet_type_name: STRING): STRING is
+	relative_type_path (assembly_relative_path: STRING; a_dotnet_type_name: STRING): STRING
 			-- Path to file describing `t' relative to `Eac_path'.
 		require
 			non_void_a_dotnet_type_name: a_dotnet_type_name /= Void
@@ -78,7 +78,7 @@ feature -- Access
 			non_void_result: Result /= Void
 		end
 
-	absolute_type_path (assembly_relative_path: STRING; a_dotnet_type_name: STRING): STRING is
+	absolute_type_path (assembly_relative_path: STRING; a_dotnet_type_name: STRING): STRING
 			-- Path to file describing `a_dotnet_type_name' relative to `Eac_path'.
 			-- Return Void if `a_dotnet_type_name' is not in EAC.
 		require
@@ -102,7 +102,7 @@ feature -- Access
 			valid_path: Result /= Void implies (create {RAW_FILE}.make (Result)).exists
 		end
 
-	absolute_referenced_assemblies_path (an_assembly: CONSUMED_ASSEMBLY): STRING is
+	absolute_referenced_assemblies_path (an_assembly: CONSUMED_ASSEMBLY): STRING
 			-- Path to file describing `a_dotnet_type_name' relative to `Eac_path'
 			-- Return Void if `an_assembly' is not in EAC.
 		require
@@ -126,7 +126,7 @@ feature -- Access
 
 feature -- Access
 
-	absolute_info_assembly_path (an_assembly: CONSUMED_ASSEMBLY): STRING is
+	absolute_info_assembly_path (an_assembly: CONSUMED_ASSEMBLY): STRING
 			-- Path to file describing `a_dotnet_type_name' relative to `Eac_path'.
 			-- Return Void if `an_assembly' is not in EAC.
 		require
@@ -156,7 +156,7 @@ feature -- Access
 			valid_path: Result /= Void implies (create {RAW_FILE}.make (Result)).exists
 		end
 		
-	absolute_info_assemblies_path: STRING is
+	absolute_info_assemblies_path: STRING
 			-- Absolute path to EAC assemblies file info.
 		once
 			create Result.make (Eiffel_path.count + Eac_path.count + Info_path.count)
@@ -172,7 +172,7 @@ feature -- Access
 		end
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

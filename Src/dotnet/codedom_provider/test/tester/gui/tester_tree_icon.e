@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Codedom tree icon"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_member: SYSTEM_DLL_CODE_TYPE_MEMBER) is
+	make (a_member: SYSTEM_DLL_CODE_TYPE_MEMBER)
 			-- Initialize icon from `a_member'.
 		require
 			non_void_member: a_member /= Void
@@ -44,63 +44,63 @@ feature {NONE} -- Initialization
 			make_from_index (image_index)
 		end
 
-	make_compile_unit is
+	make_compile_unit
 			-- Initialize icon for compile unit
 		do
 			default_create
 			make_from_index (Compile_unit_icon)
 		end
 	
-	make_namespace is
+	make_namespace
 			-- Initialize icon for namespace
 		do
 			default_create
 			make_from_index (Namespace_icon)
 		end
 	
-	make_type is
+	make_type
 			-- Initialize icon for type
 		do
 			default_create
 			make_from_index (Class_group)
 		end
 	
-	make_expression is
+	make_expression
 			-- Initialize icon for expression
 		do
 			default_create
 			make_from_index (Expression_icon)
 		end
 	
-	make_statement is
+	make_statement
 			-- Initialize icon for statement
 		do
 			default_create
 			make_from_index (Statement_icon)
 		end
 
-	make_variable is
+	make_variable
 			-- Initialize icon for variable
 		do
 			default_create
 			make_from_index (Variable_icon)
 		end
 
-	make_argument is
+	make_argument
 			-- Initialize icon for argument
 		do
 			default_create
 			make_from_index (Argument_icon)
 		end
 
-	make_primitive is
+	make_primitive
 			-- Initialize icon for primitive
 		do
 			default_create
 			make_from_index (Primitive_icon)
 		end
 
-	make_error is
+	make_error
 			-- Initialize icon for statement
 		do
 			default_create
@@ -109,15 +109,15 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	Icon_width: INTEGER is 16
+	Icon_width: INTEGER = 16
 			-- Icons width
 	
-	Icon_height: INTEGER is 16
+	Icon_height: INTEGER = 16
 			-- Icons height
 
 feature {NONE} -- Implementation
 
-	make_from_index (a_index: INTEGER) is
+	make_from_index (a_index: INTEGER)
 			-- Initialize icon from index in `icons_pixmap'.
 		require
 			valid_index: a_index >= 0 and a_index <= (icons_pixmap.width // Icon_width)
@@ -128,7 +128,7 @@ feature {NONE} -- Implementation
 		
 feature {NONE} -- Private Access
 
-	icons_pixmap: EV_PIXMAP is
+	icons_pixmap: EV_PIXMAP
 			-- Pixmap with all icons
 		local
 			l_retried: BOOLEAN
@@ -144,7 +144,7 @@ feature {NONE} -- Private Access
 			retry
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

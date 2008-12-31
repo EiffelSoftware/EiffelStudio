@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EAC information - serialized"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	assemblies: ARRAY [CONSUMED_ASSEMBLY] is
+	assemblies: ARRAY [CONSUMED_ASSEMBLY]
 			-- Array of assemblies in EAC
 		do
 			Result := internal_assemblies
@@ -27,7 +27,7 @@ feature -- Status report
 	is_dirty: BOOLEAN
 			-- Is info ditry?
 
-	has_assembly (ass: CONSUMED_ASSEMBLY): BOOLEAN is
+	has_assembly (ass: CONSUMED_ASSEMBLY): BOOLEAN
 			-- Does `assemblies' contain `ass'?
 		do
 			if ass = Void then
@@ -43,7 +43,7 @@ feature -- Status report
 
 feature -- Element Settings
 
-	add_assembly (ass: CONSUMED_ASSEMBLY) is
+	add_assembly (ass: CONSUMED_ASSEMBLY)
 			-- Add `ass' to `assemblies'.
 		require
 			non_void_assembly: ass /= Void
@@ -58,7 +58,7 @@ feature -- Element Settings
 			is_dirty: is_dirty
 		end
 
-	update_assembly (a_assembly: CONSUMED_ASSEMBLY) is
+	update_assembly (a_assembly: CONSUMED_ASSEMBLY)
 			-- Updates `a_assembly' in `assemblies'
 		require
 			non_void_assembly: a_assembly /= Void
@@ -85,7 +85,7 @@ feature -- Element Settings
 			end
 		end
 
-	remove_assembly (ass: CONSUMED_ASSEMBLY) is
+	remove_assembly (ass: CONSUMED_ASSEMBLY)
 			-- Remove `ass' from `assemblies'.
 		require
 			non_void_assembly: ass /= Void
@@ -119,7 +119,7 @@ feature -- Element Settings
 			removed: not has_assembly (ass)
 		end
 
-	set_is_dirty (a_dirty: BOOLEAN) is
+	set_is_dirty (a_dirty: BOOLEAN)
 			-- Sets `is_dirty' with `a_dirty'
 		do
 			is_dirty := a_dirty
@@ -135,7 +135,7 @@ feature {NONE} -- Implementation
 invariant
 	non_void_assemblies: assemblies /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

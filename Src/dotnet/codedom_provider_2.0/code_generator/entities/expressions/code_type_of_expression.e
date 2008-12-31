@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Source code generator for type of expressions"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_target: like target) is
+	make (a_target: like target)
 			-- Creation routine
 		require
 			non_void_target: a_target /= Void
@@ -41,7 +41,7 @@ feature -- Access
 	target: CODE_TYPE_REFERENCE
 			-- Type of expression target
 			
-	code: STRING is
+	code: STRING
 			-- | Result := "{TYPE_NAME}"
 			-- | Result C# := "typeof(`type_name')"
 			-- Eiffel code of `type of' expression
@@ -54,7 +54,7 @@ feature -- Access
 		
 feature -- Status Report
 
-	type: CODE_TYPE_REFERENCE is
+	type: CODE_TYPE_REFERENCE
 			-- Type
 		do
 			Result := Type_type_reference
@@ -63,7 +63,7 @@ feature -- Status Report
 invariant
 	non_void_target: target /= Void
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

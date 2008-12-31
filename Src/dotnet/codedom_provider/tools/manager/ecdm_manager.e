@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Configuration files manager"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Initialize configurations path.
 		do
 			create registry_settings
@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 		
 feature -- Access
 
-	applications (a_configuration: ECDM_CONFIGURATION): LIST [STRING] is
+	applications (a_configuration: ECDM_CONFIGURATION): LIST [STRING]
 			-- List of applications configured with `a_configuration'.
 		require
 			non_void_configuration: a_configuration /= Void
@@ -50,7 +50,7 @@ feature -- Access
 			end
 		end
 		
-	configuration (a_app_path: STRING): ECDM_CONFIGURATION is
+	configuration (a_app_path: STRING): ECDM_CONFIGURATION
 			-- Configuration for application `a_app_path' if any.
 		require
 			non_void_app_path: a_app_path /= Void
@@ -63,7 +63,7 @@ feature -- Access
 			end
 		end
 
-	all_configurations: LIST [ECDM_CONFIGURATION] is
+	all_configurations: LIST [ECDM_CONFIGURATION]
 			-- All registered configurations
 		local
 			l_configs: LIST [STRING]
@@ -82,7 +82,7 @@ feature -- Access
 			end
 		end
 		
-	Default_configuration: ECDM_CONFIGURATION is
+	Default_configuration: ECDM_CONFIGURATION
 			-- Default configuration
 		local
 			l_path: STRING
@@ -97,7 +97,7 @@ feature -- Access
 		
 feature -- Factory
 
-	new_configuration (a_config_folder, a_config_name, a_app_path: STRING): ECDM_CONFIGURATION is
+	new_configuration (a_config_folder, a_config_name, a_app_path: STRING): ECDM_CONFIGURATION
 			-- New configuration `a_config_name' in folder `a_config_folder' for application `a_app_path'.
 		require
 			non_void_config_name: a_config_name /= Void
@@ -116,7 +116,7 @@ feature -- Factory
 
 feature -- Status Report
 
-	is_registered (a_app_path: STRING): BOOLEAN is
+	is_registered (a_app_path: STRING): BOOLEAN
 			-- Is application `a_app_path' already configured?
 		do
 			Result := registry_settings.is_registered (a_app_path)
@@ -124,7 +124,7 @@ feature -- Status Report
 		
 feature -- Basic Operations
 
-	register (a_app_path: STRING; a_configuration: ECDM_CONFIGURATION) is
+	register (a_app_path: STRING; a_configuration: ECDM_CONFIGURATION)
 			-- Configure application `a_app_path' with `a_configuration'.
 		require
 			non_void_app_path: a_app_path /= Void
@@ -135,7 +135,7 @@ feature -- Basic Operations
 			end
 		end
 	
-	replace_configuration (a_app_path: STRING; a_configuration: ECDM_CONFIGURATION) is
+	replace_configuration (a_app_path: STRING; a_configuration: ECDM_CONFIGURATION)
 			-- Change configuration file for application `a_app_path' to `a_configuration'.
 		require
 			non_void_app_path: a_app_path /= Void
@@ -146,7 +146,7 @@ feature -- Basic Operations
 			end
 		end
 	
-	delete_configuration (a_configuration: ECDM_CONFIGURATION) is
+	delete_configuration (a_configuration: ECDM_CONFIGURATION)
 			-- Delete configuration `a_configuration'.
 			-- Reset configured applications so they used default configuration.
 		require
@@ -170,7 +170,7 @@ feature -- Basic Operations
 			end
 		end
 
-	register_default_configuration (a_config_path: STRING) is
+	register_default_configuration (a_config_path: STRING)
 			-- Register default configuration to use `a_config_path'.
 		require
 			non_void_config_path: a_config_path /= Void
@@ -178,13 +178,13 @@ feature -- Basic Operations
 			registry_settings.register_default_configuration (a_config_path)
 		end
 		
-	delete_default_configuration is
+	delete_default_configuration
 			-- Remove default configuration settings.
 		do
 			registry_settings.unregister_default_configuration
 		end		
 
-	delete_application (a_app_path: STRING) is
+	delete_application (a_app_path: STRING)
 			-- Remove configuration information for application `a_app_path'
 		require
 			non_void_app_path: a_app_path /= Void
@@ -196,7 +196,7 @@ feature -- Basic Operations
 	
 feature -- Transactions
 
-	add_application_to_register (an_app: STRING; a_configuration: ECDM_CONFIGURATION) is
+	add_application_to_register (an_app: STRING; a_configuration: ECDM_CONFIGURATION)
 			-- Add `an_app' to list of applications to register when `commit' is called.
 		require
 			non_void_app: an_app /= Void
@@ -207,7 +207,7 @@ feature -- Transactions
 			registration_added: transactions.count = old transactions.count + 1
 		end
 		
-	add_application_to_delete (an_app: STRING; a_configuration: ECDM_CONFIGURATION) is
+	add_application_to_delete (an_app: STRING; a_configuration: ECDM_CONFIGURATION)
 			-- Add `an_app' to list of applications to register when `commit' is called.
 		require
 			non_void_app: an_app /= Void
@@ -218,7 +218,7 @@ feature -- Transactions
 			registration_added: transactions.count = old transactions.count + 1
 		end
 	
-	commit is
+	commit
 			-- Commit all registrations and unregistrations
 		do
 			from
@@ -232,7 +232,7 @@ feature -- Transactions
 			transactions.wipe_out
 		end
 	
-	roll_back is
+	roll_back
 			-- Reset pending transactions.
 		do
 			transactions.wipe_out
@@ -249,7 +249,7 @@ feature {NONE} -- Implementation
 invariant
 	non_void_registry_settings: registry_settings /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

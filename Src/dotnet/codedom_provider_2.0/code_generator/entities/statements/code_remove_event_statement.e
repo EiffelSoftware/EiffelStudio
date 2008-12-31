@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel representation of a CodeDom remove event statement"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_event: like removed_event; a_listener: like listener) is
+	make (a_event: like removed_event; a_listener: like listener)
 			-- Creation routine
 		require
 			non_void_event: a_event /= Void
@@ -38,7 +38,7 @@ feature -- Access
 	listener: CODE_EXPRESSION
 			-- event listener
 
-	code: STRING is
+	code: STRING
 			-- | Result := "`removed_event' (`listener')"
 			-- Eiffel code of remove event statement
 		do
@@ -57,7 +57,7 @@ feature -- Access
 			Result.append (Line_return)
 		end
 
-	need_dummy: BOOLEAN is
+	need_dummy: BOOLEAN
 			-- Does statement require dummy local variable?
 		do
 			Result := False
@@ -65,7 +65,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	remover_eiffel_name: STRING is
+	remover_eiffel_name: STRING
 			-- Eiffel name of adder method
 		require
 			is_in_code_generation: current_state = Code_generation
@@ -82,7 +82,7 @@ invariant
 	non_void_removed_event: removed_event /= Void
 	non_void_listener: listener /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

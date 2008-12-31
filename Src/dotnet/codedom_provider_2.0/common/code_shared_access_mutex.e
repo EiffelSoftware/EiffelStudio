@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Mutex used to synchronize access to CodeDom.%
 						%There should be only one access at a given time because using the EAC%
 						%is not thread safe."
@@ -12,15 +12,15 @@ class
 
 feature -- Access
 
-	Access_mutex: SYSTEM_MUTEX is
+	Access_mutex: SYSTEM_MUTEX
 			-- .NET mutex used to synchronize codedom access
-		indexing
+		note
 			once_status: "global"
 		once
 			create Result.make (False)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

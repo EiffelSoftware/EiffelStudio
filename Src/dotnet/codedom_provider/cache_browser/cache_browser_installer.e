@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Build EAC upon installation and deletes it upon uninstallation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ inherit
 
 feature -- Basic Operations
 
-	install (saved_state: IDICTIONARY) is
+	install (saved_state: IDICTIONARY)
 			-- Redefine `install' feature.
 		local
 			l_cache_manager: CACHE_MANAGER
@@ -47,7 +47,7 @@ feature -- Basic Operations
 			end
 		end
 	
-	uninstall (saved_state: IDICTIONARY) is
+	uninstall (saved_state: IDICTIONARY)
 			-- Redefine `install' feature.
 		local
 			l_directory: DIRECTORY
@@ -61,19 +61,19 @@ feature -- Basic Operations
 			end
 		end
 	
-	commit (saved_state: IDICTIONARY) is
+	commit (saved_state: IDICTIONARY)
 			-- Redefine `commit' feature.
 		do
 			Precursor {CONFIG_INSTALL_INSTALLER}(saved_state)
 		end
 	
-	rollback (saved_state: IDICTIONARY) is
+	rollback (saved_state: IDICTIONARY)
 			-- Redefine `rollback' feature.
 		do
 			Precursor {CONFIG_INSTALL_INSTALLER}(saved_state)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

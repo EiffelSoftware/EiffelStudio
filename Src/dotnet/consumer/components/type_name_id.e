@@ -1,4 +1,4 @@
-indexing
+note
 	description: "ID associated to a type CONSUMED_..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -8,7 +8,7 @@ class
 
 feature {NONE} -- Implementation
 
-	types: ARRAY [STRING] is
+	types: ARRAY [STRING]
 			-- types to be serialized.
 		once
 			create Result.make (1, 20)
@@ -36,7 +36,7 @@ feature {NONE} -- Implementation
 			non_void_types: Result /= Void
 		end
 
-	type_from_id (an_id: INTEGER): STRING is
+	type_from_id (an_id: INTEGER): STRING
 			-- Type associated to `an_id'.
 		require
 			valid_id: Types.valid_index (an_id)
@@ -47,7 +47,7 @@ feature {NONE} -- Implementation
 			not_empty_type: not Result.is_empty
 		end
 
-	id_from_type (a_type: STRING): INTEGER is
+	id_from_type (a_type: STRING): INTEGER
 			-- ID associated to `a_type'.
 		require
 			non_void_type: a_type /= Void
@@ -58,7 +58,7 @@ feature {NONE} -- Implementation
 			positive_id: Result > 0
 		end
 
-	internal_id_type: HASH_TABLE [INTEGER, STRING] is
+	internal_id_type: HASH_TABLE [INTEGER, STRING]
 		local
 			i: INTEGER
 		once
@@ -75,7 +75,7 @@ feature {NONE} -- Implementation
 			non_void_internal_id_type: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

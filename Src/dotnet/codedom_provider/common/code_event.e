@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Events happening during CodeDom manipulation, can be error, warning or informational"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_id: INTEGER; a_context: like context) is
+	make (an_id: INTEGER; a_context: like context)
 			-- Create error event with name `an_id' and context `a_context'.
 		require
 			valid_id: events.has (an_id)
@@ -40,19 +40,19 @@ feature -- Access
 
 feature -- Status Report
 
-	is_error: BOOLEAN is
+	is_error: BOOLEAN
 			-- Is event an error?
 		do
 			Result := event_severity (id) = Error
 		end
 	
-	is_warning: BOOLEAN is
+	is_warning: BOOLEAN
 			-- Is event a warning?
 		do
 			Result := event_severity (id) = Warning
 		end
 		
-	message: STRING is
+	message: STRING
 			-- Message associated with event
 		local
 			i, l_index: INTEGER
@@ -103,7 +103,7 @@ invariant
 	valid_context: is_valid_context (id, context)
 	error_or_warning: (is_error implies not is_warning) and (is_warning implies not is_error)
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

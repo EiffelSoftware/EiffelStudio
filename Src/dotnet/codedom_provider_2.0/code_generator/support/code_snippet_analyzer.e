@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Parses a code snippet"
 	author: ""
 	date: "$Date$"
@@ -20,7 +20,7 @@ inherit
 
 feature -- Basic Operations
 
-	parse (a_snippet: STRING) is
+	parse (a_snippet: STRING)
 			-- Parse `a_snippet' and set queries accordingly.
 		require
 			attached_snippet: a_snippet /= Void
@@ -96,7 +96,7 @@ feature -- Access
 invariant
 	valid_indexing_clause: (indexing_clauses /= Void) = is_indexing_clause
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

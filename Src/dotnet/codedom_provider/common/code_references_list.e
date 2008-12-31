@@ -1,4 +1,4 @@
-indexing
+note
 	description:	"List of assembly references, can be completed so that all references are listed."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature -- Access
 
-	assembly_from_file (a_file_name: STRING): ASSEMBLY is
+	assembly_from_file (a_file_name: STRING): ASSEMBLY
 			-- Load assembly at location `a_file_name'.
 			-- `a_file_name' can be relative to framework path (e.g. `System.dll')
 		require
@@ -50,7 +50,7 @@ feature -- Access
 			retry
 		end
 	
-	assembly_from_name (a_name: ASSEMBLY_NAME): ASSEMBLY is
+	assembly_from_name (a_name: ASSEMBLY_NAME): ASSEMBLY
 			-- Load assembly with name `a_name'.
 		require
 			non_void_name: a_name /= Void
@@ -71,7 +71,7 @@ feature -- Status Report
 	assembly_added: BOOLEAN
 			-- Was last call to `extend_file' successful?
 
-	has_file (a_file_name: STRING): BOOLEAN is
+	has_file (a_file_name: STRING): BOOLEAN
 			-- Do referenced assemblies have assembly with path `a_file_name'?
 		require
 			non_void_file_name: a_file_name /= Void
@@ -86,7 +86,7 @@ feature -- Status Report
 			cusor_unchanged: index = old index
 		end
 		
-	has_name (a_name: ASSEMBLY_NAME): BOOLEAN is
+	has_name (a_name: ASSEMBLY_NAME): BOOLEAN
 			-- Do referenced assemblies have assembly with name `a_name'?
 		local
 			l_old_cursor: CURSOR
@@ -109,7 +109,7 @@ feature -- Status Report
 		
 feature -- Status Setting
 
-	extend_file_with_prefix (a_file_name, a_prefix: STRING) is
+	extend_file_with_prefix (a_file_name, a_prefix: STRING)
 			-- Add assembly with file name `a_file_name' and prefix `a_prefix' if found.
 			-- Set `assembly_added' accordingly.
 		require
@@ -129,7 +129,7 @@ feature -- Status Setting
 			added: assembly_added implies count = old count + 1
 		end
 
-	extend_file (a_file_name: STRING) is
+	extend_file (a_file_name: STRING)
 			-- Add assembly with file name `a_file_name' if found.
 			-- Set `assembly_added' accordingly.
 		require
@@ -148,7 +148,7 @@ feature -- Status Setting
 			added: assembly_added implies count = old count + 1
 		end
 
-	extend_name (a_name: ASSEMBLY_NAME) is
+	extend_name (a_name: ASSEMBLY_NAME)
 			-- Add assembly with  name `a_name' if found.
 			-- Set `assembly_added' accordingly.
 		require
@@ -167,7 +167,7 @@ feature -- Status Setting
 			added: assembly_added implies count = old count + 1
 		end
 
-	remove_name (a_name: ASSEMBLY_NAME) is
+	remove_name (a_name: ASSEMBLY_NAME)
 			-- Remove assembly with name `a_name'.
 		require
 			non_void_name: a_name /= Void
@@ -191,7 +191,7 @@ feature -- Status Setting
 
 feature -- Basic Operations
 
-	complete is
+	complete
 			-- Complete `Referenced_assemblies' with all assembly references
 		local
 			l_assembly: ASSEMBLY
@@ -247,7 +247,7 @@ feature -- Basic Operations
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

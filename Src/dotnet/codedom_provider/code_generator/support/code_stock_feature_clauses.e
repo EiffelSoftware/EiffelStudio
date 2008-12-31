@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Standard feature clauses title"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,31 +10,31 @@ class
 
 feature -- Access
 	
-	Initialization: STRING is "Initialization"
+	Initialization: STRING = "Initialization"
 			-- Initialization feature clause comment.
 
-	Access: STRING is "Access"
+	Access: STRING = "Access"
 			-- Access feature clause comment.
 
-	Status_report: STRING is "Status Report"
+	Status_report: STRING = "Status Report"
 			-- Status report feature clause comment.
 
-	Status_setting: STRING is "Status Setting"
+	Status_setting: STRING = "Status Setting"
 			-- Status setting feature clause comment.
 
-	Basic_operations: STRING is "Basic Operations"
+	Basic_operations: STRING = "Basic Operations"
 			-- Basic operations feature clause comment.
 
-	Implementation: STRING is "Implementation"
+	Implementation: STRING = "Implementation"
 			-- Implementation feature clause comment.
 			
-	Get_property_string: STRING is "Get property"
+	Get_property_string: STRING = "Get property"
 			-- Get property feature clause comment.
 		
-	Set_property_string: STRING is "Set property";
+	Set_property_string: STRING = "Set property";
 			-- Set property feature clause comment.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

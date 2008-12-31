@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generic graphical settings class%
 						%Can be used to persist graphical settings accross sessions."
 	legal: "See notice at end of class."
@@ -15,31 +15,31 @@ inherit
 
 feature -- Access
 
-	saved_x_pos: INTEGER is
+	saved_x_pos: INTEGER
 			-- Starting window x position
 		do
 			Result := setting (X_pos_key)
 		end
 
-	saved_y_pos: INTEGER is
+	saved_y_pos: INTEGER
 			-- Starting window y position
 		do
 			Result := setting (Y_pos_key)
 		end
 
-	saved_width: INTEGER is
+	saved_width: INTEGER
 			-- Starting window width
 		do
 			Result := setting (Width_key)
 		end
 
-	saved_height: INTEGER is
+	saved_height: INTEGER
 			-- Starting window height
 		do
 			Result := setting (Height_key)
 		end
 
-	saved_boolean (a_name: STRING): BOOLEAN is
+	saved_boolean (a_name: STRING): BOOLEAN
 			-- Saved boolean value with name `a_name'
 			-- False if not saved value with name `a_name'
 		require
@@ -51,7 +51,7 @@ feature -- Access
 			Result := l_value = True_value
 		end
 
-	saved_list (a_name: STRING): LIST [STRING] is
+	saved_list (a_name: STRING): LIST [STRING]
 			-- List of saved values with key `a_name' if any
 		require
 			non_void_name: a_name /= Void
@@ -66,31 +66,31 @@ feature -- Access
 
 feature -- Basic Operation
 
-	save_x_pos (a_value: INTEGER) is
+	save_x_pos (a_value: INTEGER)
 			-- Set starting window x position.
 		do
 			set_setting (X_pos_key, a_value)
 		end
 
-	save_y_pos (a_value: INTEGER) is
+	save_y_pos (a_value: INTEGER)
 			-- Set starting window y position.
 		do
 			set_setting (Y_pos_key, a_value)
 		end
 
-	save_width (a_value: INTEGER) is
+	save_width (a_value: INTEGER)
 			-- Set starting window width.
 		do
 			set_setting (Width_key, a_value)
 		end
 
-	save_height (a_value: INTEGER) is
+	save_height (a_value: INTEGER)
 			-- Set starting window height.
 		do
 			set_setting (Height_key, a_value)
 		end
 
-	save_boolean (a_name: STRING; a_boolean: BOOLEAN) is
+	save_boolean (a_name: STRING; a_boolean: BOOLEAN)
 			-- Save boolean value `a_boolean' with name `a_name'.
 		do
 			if a_boolean then
@@ -100,7 +100,7 @@ feature -- Basic Operation
 			end
 		end
 		
-	save_list (a_name: STRING; a_list: LIST [STRING]) is
+	save_list (a_name: STRING; a_list: LIST [STRING])
 			-- Save `a_list' using key `a_name'.
 		require
 			non_void_list: a_list /= Void
@@ -108,7 +108,7 @@ feature -- Basic Operation
 			set_text_setting (a_name, encoded_list (a_list))
 		end
 
-	fill_combo (a_combo: EV_COMBO_BOX; a_list: LIST [STRING]) is
+	fill_combo (a_combo: EV_COMBO_BOX; a_list: LIST [STRING])
 			-- Fill `a_combo' with strings in `a_list'.
 		require
 			non_void_combo: a_combo /= Void
@@ -128,7 +128,7 @@ feature -- Basic Operation
 			end
 		end
 		
-	initialize_combo (a_combo: EV_COMBO_BOX; a_name: STRING) is
+	initialize_combo (a_combo: EV_COMBO_BOX; a_name: STRING)
 			-- Fill `a_combo' with saved values with key `a_name' if any.
 			-- Will persist combo values in key with name `a_name'.
 		require
@@ -143,7 +143,7 @@ feature -- Basic Operation
 			end
 		end
 
-	add_entry_to_combo_and_save (a_entry: STRING; a_combo: EV_COMBO_BOX) is
+	add_entry_to_combo_and_save (a_entry: STRING; a_combo: EV_COMBO_BOX)
 			-- Add entry `a_entry' to combo box `a_combo' if not there already.
 			-- Persist combo box strings.
 			-- Warning: this may cause the combo box select event to be triggered.
@@ -184,7 +184,7 @@ feature -- Basic Operation
 
 feature {NONE} -- Implementation
 
-	encoded_list (a_list: LIST [STRING]): STRING is
+	encoded_list (a_list: LIST [STRING]): STRING
 			-- One string encoded list `a_list'
 		require
 			non_void_list: a_list /= Void
@@ -207,7 +207,7 @@ feature {NONE} -- Implementation
 			non_void_encoded_list: Result /= Void
 		end
 	
-	decoded_list (a_encoded_list: STRING): LIST [STRING] is
+	decoded_list (a_encoded_list: STRING): LIST [STRING]
 			-- List from encoded string created with `encoded_list'
 		require
 			non_void_encoded_list: a_encoded_list /= Void
@@ -219,28 +219,28 @@ feature {NONE} -- Implementation
 		
 feature {NONE} -- Private Access
 
-	X_pos_key: STRING is "x_pos"
+	X_pos_key: STRING = "x_pos"
 			-- X pos key name
 
-	Y_pos_key: STRING is "y_pos"
+	Y_pos_key: STRING = "y_pos"
 			-- Y pos key name
 
-	Height_key: STRING is "height"
+	Height_key: STRING = "height"
 			-- Height key name
 
-	Width_key: STRING is "width"
+	Width_key: STRING = "width"
 			-- Width key name
 
-	Max_combo_count: INTEGER is 10
+	Max_combo_count: INTEGER = 10
 			-- Maximum folders count in combo box
 
-	True_value: INTEGER is 2
+	True_value: INTEGER = 2
 			-- Number used to encode boolean `True' value
 	
-	False_value: INTEGER is 1;
+	False_value: INTEGER = 1;
 			-- Number used to encode boolean `False' value
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

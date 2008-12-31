@@ -1,4 +1,4 @@
-indexing
+note
 	description: "COM visible class representing an assemblies information"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,9 +30,9 @@ create
 
 feature {NONE} -- Initialization
 
-	make (ass: CONSUMED_ASSEMBLY) is
+	make (ass: CONSUMED_ASSEMBLY)
 			-- create an instance
-		indexing
+		note
 			metadata: create {COM_VISIBLE_ATTRIBUTE}.make (False) end
 		require
 			non_void_assembly: ass /= Void
@@ -44,25 +44,25 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: SYSTEM_STRING is
+	name: SYSTEM_STRING
 			-- assembly name
 		do
 			Result := impl.name.to_cil
 		end
 
-	version: SYSTEM_STRING is
+	version: SYSTEM_STRING
 			-- assembly version
 		do
 			Result := impl.version.to_cil
 		end
 
-	culture: SYSTEM_STRING is
+	culture: SYSTEM_STRING
 			-- assembly culture
 		do
 			Result := impl.culture.to_cil
 		end
 
-	public_key_token: SYSTEM_STRING is
+	public_key_token: SYSTEM_STRING
 			-- assembly public key token
 		do
 			if impl.key /= Void then
@@ -72,7 +72,7 @@ feature -- Access
 			end
 		end
 
-	is_in_gac: BOOLEAN is
+	is_in_gac: BOOLEAN
 			-- Is assembly currently is GAC
 		local
 			l_assembly: ASSEMBLY
@@ -87,19 +87,19 @@ feature -- Access
 			end
 		end
 
-	is_consumed: BOOLEAN is
+	is_consumed: BOOLEAN
 			-- has assembly been consumed?
 		do
 			Result := impl.is_consumed
 		end
 
-	consumed_folder_name: SYSTEM_STRING is
+	consumed_folder_name: SYSTEM_STRING
 			-- name of folder where assembly was consumed to
 		do
 			Result := impl.folder_name
 		end
 
-	code_base: SYSTEM_STRING is
+	code_base: SYSTEM_STRING
 			-- Assembly code base location
 		do
 			Result := impl.location
@@ -109,14 +109,15 @@ feature {NONE} -- Implementation
 
 	impl: CONSUMED_ASSEMBLY
 			-- Implementation object.
-		indexing
+		note
 			metadata: create {COM_VISIBLE_ATTRIBUTE}.make (False) end
+		attribute
 		end
 
 invariant
 	non_void_impl: impl /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Support for CodeDOM Visitor."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ inherit
 
 feature --{CODEDOM_VISITOR} -- Implementation
 
-	fill_collection (eiffel_list: EIFFEL_LIST [AST_EIFFEL]; dotnet_list: ILIST) is
+	fill_collection (eiffel_list: EIFFEL_LIST [AST_EIFFEL]; dotnet_list: ILIST)
 			-- fill `dotnet_list' with `eiffel_list'.
 		require
 			non_void_eiffel_list: eiffel_list /= Void
@@ -29,7 +29,7 @@ feature --{CODEDOM_VISITOR} -- Implementation
 			dotnet_list_set: dotnet_list.count = eiffel_list.count
 		end
 
-	line_pragma (line_number: INTEGER): SYSTEM_DLL_CODE_LINE_PRAGMA is
+	line_pragma (line_number: INTEGER): SYSTEM_DLL_CODE_LINE_PRAGMA
 			-- generate line pragma for `an_as'.
 		require
 			valid_line_number: line_number > 0
@@ -39,7 +39,7 @@ feature --{CODEDOM_VISITOR} -- Implementation
 			non_void_line_pragma: Result /= Void
 		end
 
-	visitor: CODE_CODEDOM_VISITOR is
+	visitor: CODE_CODEDOM_VISITOR
 			-- visitor
 		once
 			create Result.make
@@ -47,7 +47,7 @@ feature --{CODEDOM_VISITOR} -- Implementation
 			non_void_visitor: Result /= Void
 		end
 
-	last_element_created: SYSTEM_DLL_CODE_OBJECT is
+	last_element_created: SYSTEM_DLL_CODE_OBJECT
 			-- Retrieve last element generated.
 		do
 			Result := internal_last_element_created.item (0)
@@ -55,7 +55,7 @@ feature --{CODEDOM_VISITOR} -- Implementation
 			non_void_last_created_element: Result /= Void
 		end
 	
-	last_custom_attribute: SYSTEM_DLL_CODE_ATTRIBUTE_DECLARATION is
+	last_custom_attribute: SYSTEM_DLL_CODE_ATTRIBUTE_DECLARATION
 			-- Retrieve last custom attribute generated.
 		do
 			Result := Internal_last_custom_attribute.item (0)
@@ -63,7 +63,7 @@ feature --{CODEDOM_VISITOR} -- Implementation
 			non_void_last_custom_attribute: Result /= Void
 		end
 
-	current_type: SYSTEM_DLL_CODE_TYPE_DECLARATION is
+	current_type: SYSTEM_DLL_CODE_TYPE_DECLARATION
 			-- Retrieve last custom attribute generated.
 		do
 			Result := Internal_current_type.item (0)
@@ -71,7 +71,7 @@ feature --{CODEDOM_VISITOR} -- Implementation
 			non_void_current_type: Result /= Void
 		end
 
-	current_element: SYSTEM_OBJECT is
+	current_element: SYSTEM_OBJECT
 			-- Retrieve current element.
 			-- | Not a SYSTEM_DLL_CODE_OBJECT, because of collections.
 		do
@@ -85,7 +85,7 @@ feature --{CODEDOM_VISITOR} -- Implementation
 
 feature -- Basic Operations
 
-	pop_current_element (a_current_element: SYSTEM_OBJECT) is
+	pop_current_element (a_current_element: SYSTEM_OBJECT)
 			-- Depile current element.
 		require
 			correct_pop: a_current_element.equals (current_element)
@@ -100,7 +100,7 @@ feature -- Basic Operations
 
 feature -- Status Setting
 
-	set_last_element_created (an_element: SYSTEM_DLL_CODE_OBJECT) is
+	set_last_element_created (an_element: SYSTEM_DLL_CODE_OBJECT)
 			-- Set `last_element_created' with `an_element'.
 		require
 			non_void_an_element: an_element /= Void
@@ -110,7 +110,7 @@ feature -- Status Setting
 			last_element_created_set: last_element_created = an_element
 		end	
 
-	set_current_element (an_element: SYSTEM_OBJECT) is
+	set_current_element (an_element: SYSTEM_OBJECT)
 			-- Set `current_element' with `an_element'.
 		require
 			non_void_an_element: an_element /= Void
@@ -120,7 +120,7 @@ feature -- Status Setting
 			current_element_set: current_element = an_element
 		end
 		
-	set_current_type (a_type: SYSTEM_DLL_CODE_TYPE_DECLARATION) is
+	set_current_type (a_type: SYSTEM_DLL_CODE_TYPE_DECLARATION)
 			-- Set `current_type' with `an_element'.
 		require
 			non_void_type: a_type /= Void
@@ -130,7 +130,7 @@ feature -- Status Setting
 			current_type_set: current_type = a_type
 		end	
 
-	set_last_custom_attribute (a_ca: SYSTEM_DLL_CODE_ATTRIBUTE_DECLARATION) is
+	set_last_custom_attribute (a_ca: SYSTEM_DLL_CODE_ATTRIBUTE_DECLARATION)
 			-- Set `last_custom_attribute' with `a_ca'.
 		require
 			non_void_a_ca: a_ca /= Void
@@ -152,7 +152,7 @@ feature -- Status Setting
 
 feature {NONE} -- Implementation
 
-	internal_last_element_created: NATIVE_ARRAY [SYSTEM_DLL_CODE_OBJECT] is
+	internal_last_element_created: NATIVE_ARRAY [SYSTEM_DLL_CODE_OBJECT]
 			-- internal representation of `last_element_created'.
 		once
 			create Result.make (1)
@@ -160,7 +160,7 @@ feature {NONE} -- Implementation
 			non_void_internal_last_element_created: Result /= Void
 		end
 
-	internal_current_element: SYSTEM_STACK is
+	internal_current_element: SYSTEM_STACK
 			-- internal representation of `current_element'.
 		once
 			create Result.make
@@ -168,7 +168,7 @@ feature {NONE} -- Implementation
 			non_void_internal_current_element: Result /= Void
 		end
 
-	internal_last_custom_attribute: NATIVE_ARRAY [SYSTEM_DLL_CODE_ATTRIBUTE_DECLARATION] is
+	internal_last_custom_attribute: NATIVE_ARRAY [SYSTEM_DLL_CODE_ATTRIBUTE_DECLARATION]
 			-- internal representation of `last_custom_attribute'.
 		once
 			create Result.make (1)
@@ -176,7 +176,7 @@ feature {NONE} -- Implementation
 			non_void_internal_last_custom_attribute: Result /= Void
 		end
 		
-	internal_current_type: NATIVE_ARRAY [SYSTEM_DLL_CODE_TYPE_DECLARATION] is
+	internal_current_type: NATIVE_ARRAY [SYSTEM_DLL_CODE_TYPE_DECLARATION]
 			-- internal representation of `current_type'.
 		once
 			create Result.make (1)
@@ -195,7 +195,7 @@ feature {NONE} -- Implementation
 	added: INTEGER;
 			-- dummy variable used when apply a add function and return an INTEGER.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Agents used for callbacks during processing"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ feature -- Access
 
 feature -- Element settings
 
-	set_status_querier (querier: like status_querier) is
+	set_status_querier (querier: like status_querier)
 			-- Set `status_querier' with `querier'.
 		require
 			non_void_querier: querier /= Void
@@ -28,7 +28,7 @@ feature -- Element settings
 			status_querier_set: status_querier = querier
 		end
 		
-	set_status_printer (printer: like status_printer) is
+	set_status_printer (printer: like status_printer)
 			-- Set `status_printer' with `printer'.
 		require
 			non_void_printer: printer /= Void
@@ -38,7 +38,7 @@ feature -- Element settings
 			status_printer_set: status_printer = printer
 		end
 		
-	set_error_printer (printer: like error_printer) is
+	set_error_printer (printer: like error_printer)
 			-- Set `status_querier' with `printer'.
 		require
 			non_void_printer: printer /= Void
@@ -48,7 +48,7 @@ feature -- Element settings
 			error_printer_set: error_printer = printer
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

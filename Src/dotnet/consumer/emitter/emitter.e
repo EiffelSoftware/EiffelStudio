@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Emitter's root class"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -40,13 +40,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Creation procedure.
 		do
 			complete_initialization
 		end
 
-	complete_initialization is
+	complete_initialization
 			-- Completes initialization of instance given it current state
 		require
 			non_void_clr_version: clr_version /= Void
@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	add_assembly_to_eac (a_path: STRING) is
+	add_assembly_to_eac (a_path: STRING)
 			-- Consume assembly `a_path' and put results in EAC
 		require
 			non_void_path: a_path /= Void
@@ -76,7 +76,7 @@ feature {NONE} -- Implementation
 			cache_writer.clean_cache
 		end
 
-	remove_assembly_from_eac (a_path: STRING) is
+	remove_assembly_from_eac (a_path: STRING)
 			-- Remove assembly `a_path' from EAC
 		require
 			non_void_path: a_path /= Void
@@ -102,7 +102,7 @@ invariant
 	non_void_cache_writer: cache_writer /= Void
 	non_void_cache_reader: cache_reader /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

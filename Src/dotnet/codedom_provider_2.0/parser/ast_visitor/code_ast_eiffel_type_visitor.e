@@ -1,4 +1,4 @@
-indexing
+note
 	description: "AST Eiffel type Visitor."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,49 +13,49 @@ inherit
 
 feature {AST_YACC} -- Implementation
 
-	process_class_type_as (l_as: CLASS_TYPE_AS) is
+	process_class_type_as (l_as: CLASS_TYPE_AS)
 			-- Process `l_as'.
 		do
 			-- Do nothing.
 		end
 
-	process_formal_as (l_as: FORMAL_AS) is
+	process_formal_as (l_as: FORMAL_AS)
 			-- Process `l_as'.
 		do
 			-- Do nothing.
 		end
 
-	process_formal_dec_as (l_as: FORMAL_DEC_AS) is
+	process_formal_dec_as (l_as: FORMAL_DEC_AS)
 			-- Process `l_as'.
 		do
 			-- Do nothing.
 		end
 
-	process_like_id_as (l_as: LIKE_ID_AS) is
+	process_like_id_as (l_as: LIKE_ID_AS)
 			-- Process `l_as'.
 		do
 			-- Do nothing.
 		end
 
-	process_bits_as (l_as: BITS_AS) is
+	process_bits_as (l_as: BITS_AS)
 			-- Process `l_as'.
 		do
 			-- Do nothing.
 		end
 
-	process_bits_symbol_as (l_as: BITS_SYMBOL_AS) is
+	process_bits_symbol_as (l_as: BITS_SYMBOL_AS)
 			-- Process `l_as'.
 		do
 			-- Do nothing.
 		end
 
-	process_none_type_as (l_as: NONE_TYPE_AS) is
+	process_none_type_as (l_as: NONE_TYPE_AS)
 			-- Process `l_as'.
 		do
 			-- Do nothing.
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

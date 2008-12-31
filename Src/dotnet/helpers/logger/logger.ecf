@@ -10,7 +10,7 @@
 		<root all_classes="true" />
 		
 		<setting name="msil_generation" value="True"/>
-		<option namespace="EiffelSoftware.Helpers"/>
+		<option syntax_level="1" namespace="EiffelSoftware.Helpers"/>
 
 		<file_rule>
 			<exclude>/.svn$</exclude>

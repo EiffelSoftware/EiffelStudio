@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		The simplest assembly resolver that will look for dependent assemblies
 		in application/library base folder. Other folders will also be examined
@@ -19,13 +19,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize instance
 		do
 			common_initialization
 		end
 
-	make_with_name (a_name: like friendly_name) is
+	make_with_name (a_name: like friendly_name)
 			-- Initialize instance and set `friendly_name' with `a_name'
 		require
 			a_name_not_void: a_name /= Void
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			friendly_name_set: friendly_name = a_name
 		end
 
-	common_initialization is
+	common_initialization
 			-- Additional initialization.
 		do
 			create internal_resolve_paths.make (1)
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	resolve_paths: LIST [STRING] is
+	resolve_paths: LIST [STRING]
 			-- List of paths where a potential assembly dependency requiring resolution could be
 		do
 			Result := internal_resolve_paths
@@ -67,7 +67,7 @@ feature {AR_SUBSCRIPTION} -- Access
 
 feature {NONE} -- Resolution
 
-	resolve (a_sender: SYSTEM_OBJECT; a_args: RESOLVE_EVENT_ARGS): ASSEMBLY is
+	resolve (a_sender: SYSTEM_OBJECT; a_args: RESOLVE_EVENT_ARGS): ASSEMBLY
 			-- Event handler for System.AppDomain.AssemblyResolve event
 		require
 			a_send_not_void: a_sender /= Void
@@ -91,7 +91,7 @@ feature {NONE} -- Resolution
 
 feature -- Resolution
 
-	resolve_by_assembly_name (a_domain: APP_DOMAIN; a_name: ASSEMBLY_NAME): STRING is
+	resolve_by_assembly_name (a_domain: APP_DOMAIN; a_name: ASSEMBLY_NAME): STRING
 			-- Resolve an assembly in app domain `a_domain' where name of assembly comprises of `a_name'
 		require
 			a_domain_not_void: a_domain /= Void
@@ -109,7 +109,7 @@ feature -- Resolution
 			not_result_is_empty: Result /= Void implies not Result.is_empty
 		end
 
-	resolve_by_name (a_domain: APP_DOMAIN; a_name: STRING; a_version: STRING; a_culture: STRING; a_key: STRING): STRING is
+	resolve_by_name (a_domain: APP_DOMAIN; a_name: STRING; a_version: STRING; a_culture: STRING; a_key: STRING): STRING
 			-- Resolve an assembly in app domain `a_domain' where name of assembly comprises of assembly name `a_name'
 			-- and optionally version `a_version', culture `a_culture' and public key token `a_key', and return file name
 		require
@@ -184,7 +184,7 @@ feature -- Resolution
 			not_result_is_empty: Result /= Void implies not Result.is_empty
 		end
 
-	resolve_assembly_by_name (a_domain: APP_DOMAIN; a_name: STRING; a_version: STRING; a_culture: STRING; a_key: STRING): ASSEMBLY is
+	resolve_assembly_by_name (a_domain: APP_DOMAIN; a_name: STRING; a_version: STRING; a_culture: STRING; a_key: STRING): ASSEMBLY
 			-- Resolve an assembly in app domain `a_domain' where name of assembly comprises of assembly name `a_name'
 			-- and optionally version `a_version', culture `a_culture' and public key token `a_key'
 			--
@@ -207,7 +207,7 @@ feature -- Resolution
 
 feature -- Query
 
-	does_name_match (a_asm_name: ASSEMBLY_NAME; a_name: STRING; a_version: STRING; a_culture: STRING; a_key: STRING): BOOLEAN is
+	does_name_match (a_asm_name: ASSEMBLY_NAME; a_name: STRING; a_version: STRING; a_culture: STRING; a_key: STRING): BOOLEAN
 			-- Does `a_asm_name' match `a_name', `a_version', `a_culture' and `a_key'
 		require
 			a_asm_name_not_void: a_asm_name /= Void
@@ -234,7 +234,7 @@ feature -- Query
 			end
 		end
 
-	is_near_version_match (a_version: STRING; a_match_version: STRING): BOOLEAN is
+	is_near_version_match (a_version: STRING; a_match_version: STRING): BOOLEAN
 			-- Is `a_match_version' a near enough match for `a_version'?
 		require
 			a_version_attached: a_version /= Void
@@ -283,7 +283,7 @@ feature -- Query
 
 feature -- Extending
 
-	add_resolve_path (a_path: STRING) is
+	add_resolve_path (a_path: STRING)
 			-- Adds `a_path' to list `resolve_paths'
 		require
 			a_path_not_void: a_path /= Void
@@ -295,7 +295,7 @@ feature -- Extending
 			a_path_added: resolve_paths.has (normalize_path (a_path))
 		end
 
-	add_resolve_path_from_file_name (a_file_name: STRING) is
+	add_resolve_path_from_file_name (a_file_name: STRING)
 			-- Adds `a_file_name' location to list `resolve_paths'
 		require
 			a_file_name_not_void: a_file_name /= Void
@@ -308,7 +308,7 @@ feature -- Extending
 
 feature -- Removal
 
-	remove_resolve_path (a_path: STRING) is
+	remove_resolve_path (a_path: STRING)
 			-- Removes `a_path' to list `'resolve_paths'
 		require
 			a_path_not_void: a_path /= Void
@@ -323,7 +323,7 @@ feature -- Removal
 			a_path_remove: not resolve_paths.has (normalize_path (a_path))
 		end
 
-	remove_resolve_path_from_file_name (a_file_name: STRING) is
+	remove_resolve_path_from_file_name (a_file_name: STRING)
 			-- Removes `a_file_name' location to list `'resolve_paths'
 		require
 			a_file_name_not_void: a_file_name /= Void
@@ -339,7 +339,7 @@ feature -- Removal
 
 feature -- Formatting
 
-	normalize_path (a_path: STRING): STRING is
+	normalize_path (a_path: STRING): STRING
 			-- Normalize `a_path' by converting to lower-case and removing all duplicate directory
 			-- separators.
 		require
@@ -389,7 +389,7 @@ feature -- Formatting
 
 feature {NONE} -- Implementation
 
-	resolver_path_from_file_name (a_file_name: STRING): STRING is
+	resolver_path_from_file_name (a_file_name: STRING): STRING
 			-- Retrieves path where `a_file_name' resides
 		require
 			non_void_file_name: a_file_name /= Void
@@ -421,7 +421,7 @@ feature {NONE} -- Implementation
 			not_result_is_empty: not Result.is_empty
 		end
 
-	split_assembly_name (a_full_name: STRING): LIST [STRING] is
+	split_assembly_name (a_full_name: STRING): LIST [STRING]
 			-- Splits `a_full_name' into a 4 part list
 			-- @ 1: Assembly Name
 			-- @ 2: Version
@@ -500,7 +500,7 @@ feature {NONE} -- Implementation
 			not_item_1_is_empty: not (Result @ 1).is_empty
 		end
 
-	load_assembly (a_path: STRING): ASSEMBLY is
+	load_assembly (a_path: STRING): ASSEMBLY
 			-- Attempts to load assembly from `a_path'
 		require
 			a_path_not_void: a_path /= Void
@@ -521,7 +521,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	get_assembly_name (a_path: STRING): ASSEMBLY_NAME is
+	get_assembly_name (a_path: STRING): ASSEMBLY_NAME
 			-- Retrieve an assembly name from `a_path'
 		require
 			a_path_not_void: a_path /= Void
@@ -538,7 +538,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	encoded_key (a_key: NATIVE_ARRAY [NATURAL_8]): STRING is
+	encoded_key (a_key: NATIVE_ARRAY [NATURAL_8]): STRING
 			-- Printable representation of `a_key'
 		require
 			a_key_not_void: a_key /= Void
@@ -559,7 +559,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	add_current_assembly_path is
+	add_current_assembly_path
 			-- Adds `Cuurent's contained assembly path to `resolver_paths'
 		local
 			l_file: FILE_INFO
@@ -573,7 +573,7 @@ feature {NONE} -- Implementation
 	internal_resolve_paths: ARRAYED_LIST [STRING]
 			-- List of resolver paths to be used when attempting to resolve a dependency.
 
-	assembly_extensions: LIST [STRING] is
+	assembly_extensions: LIST [STRING]
 			-- List of possible assembly extensions
 		local
 			l_res: ARRAYED_LIST [STRING]
@@ -592,7 +592,7 @@ invariant
 	internal_resolve_paths_compares_objects: internal_resolve_paths.object_comparison
 	resolve_event_handler_not_void: resolve_event_handler /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

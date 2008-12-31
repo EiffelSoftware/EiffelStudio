@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel representation of a CodeDom snippet compile unit"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_source: SYSTEM_DLL_CODE_SNIPPET_COMPILE_UNIT) is
+	make (a_source: SYSTEM_DLL_CODE_SNIPPET_COMPILE_UNIT)
 			-- Initialize `namespaces'.
 		require
 			non_void_source: a_source /= Void
@@ -48,7 +48,7 @@ feature -- Access
 	line_pragma: CODE_LINE_PRAGMA
 			-- Line pragma
 
-	code: STRING is
+	code: STRING
 			-- Eiffel code of snippet compile unit
 		do
 			create Result.make (value.count)
@@ -62,7 +62,7 @@ feature -- Access
 invariant
 	non_void_value: value /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel compiler generated file hierarchy information"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	default_f_code_path (a_project_path: STRING): STRING is
+	default_f_code_path (a_project_path: STRING): STRING
 			-- Path to F_Code directory of system using target `Target_name'.
 		require
 			attached_project_path: a_project_path /= Void
@@ -20,7 +20,7 @@ feature -- Access
 			attached_path: Result /= Void
 		end
 
-	f_code_path (a_project_path, a_config_path: STRING): STRING is
+	f_code_path (a_project_path, a_config_path: STRING): STRING
 			-- Path to F_Code folder of library target of system using configuration file `a_config_path'.
 			-- `Void' if configuration file cannot be read.
 		require
@@ -35,7 +35,7 @@ feature -- Access
 			end
 		end
 
-	library_target (a_config_path: STRING): STRING is
+	library_target (a_config_path: STRING): STRING
 			-- Library target name from `a_config_path'
 			-- `Void' if configuration file cannot be read or if there is no library target.
 		require
@@ -50,12 +50,12 @@ feature -- Access
             end
         end
 
-	Target_name: STRING is "default";
+	Target_name: STRING = "default";
 			-- Target used for compilations
 
 feature {NONE} -- Implementation
 
-	internal_f_code_path (a_project_path, a_target: STRING): STRING is
+	internal_f_code_path (a_project_path, a_target: STRING): STRING
 			-- Path to F_Code directory of project at `a_project_path' using target `a_target_name'.
 		require
 			attached_project_path: a_project_path /= Void

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Type reference in CodeDom, need to distinguish from `CODE_TYPE' because:%
 					% * Can be an array (a CODE_GENERATED_TYPE cannot be an array)%
 					% * Does not have code associated to it"
@@ -56,7 +56,7 @@ create {CODE_TYPE_REFERENCE_FACTORY}
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING) is
+	make (a_name: STRING)
 			-- Initialize instance.
 		require
 			non_void_name: a_name /= Void
@@ -73,13 +73,13 @@ feature -- Access
 	name: STRING
 			-- .NET simple name
 	
-	namespace: STRING is
+	namespace: STRING
 			-- .NET namespace
 		do
 			Result := name.substring (1, name.last_index_of ('.', name.count) - 1)
 		end
 	
-	eiffel_name: STRING is
+	eiffel_name: STRING
 			-- Eiffel name
 		local
 			l_element_type_name: STRING
@@ -114,7 +114,7 @@ feature -- Access
 			non_void_eiffel_name: Result /= Void
 		end
 
-	dotnet_type: SYSTEM_TYPE is
+	dotnet_type: SYSTEM_TYPE
 			-- Corresponding .NET type instance if any
 			-- Log error if not found.
 		require
@@ -150,7 +150,7 @@ feature -- Access
 			search_done: search_for_type = False
 		end
 	
-	element_type: CODE_TYPE_REFERENCE is
+	element_type: CODE_TYPE_REFERENCE
 			-- Reference to type of array elements if any
 		require
 			non_generated_type: not Resolver.is_generated (Current)
@@ -173,7 +173,7 @@ feature -- Access
 			search_done: search_for_element_type = False
 		end
 
-	member_from_code (a_feature: CODE_FEATURE): CODE_MEMBER_REFERENCE is
+	member_from_code (a_feature: CODE_FEATURE): CODE_MEMBER_REFERENCE
 			-- Reference to generated member `a_feature'.
 		local
 			l_routine: CODE_ROUTINE
@@ -186,7 +186,7 @@ feature -- Access
 			Result := member (a_feature.name, l_code_arguments)
 		end
 		
-	member (a_name: STRING; a_arguments: LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]): CODE_MEMBER_REFERENCE is
+	member (a_name: STRING; a_arguments: LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]): CODE_MEMBER_REFERENCE
 			-- Reference to member with .NET name `a_name', arguments `a_arguments' and `is_redefined' with `a_is_redefined'.
 		require
 			non_void_name: a_name /= void
@@ -239,7 +239,7 @@ feature -- Access
 			end
 		end
 
-	member_from_name (a_name: STRING): CODE_MEMBER_REFERENCE is
+	member_from_name (a_name: STRING): CODE_MEMBER_REFERENCE
 			-- Member with name `a_name'
 			-- Log warning if multiple matches found.
 		require
@@ -277,7 +277,7 @@ feature -- Access
 			end
 		end
 	
-	members: LIST [LIST [CODE_MEMBER_REFERENCE]] is
+	members: LIST [LIST [CODE_MEMBER_REFERENCE]]
 			-- All members of dotnet type
 			-- Ordered by .NET name
 		require
@@ -316,7 +316,7 @@ feature -- Status Report
 			-- Is instance initialized?
 			--| Useful for invariant coding
 
-	has_member (a_name: STRING; a_arguments: LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]): BOOLEAN is
+	has_member (a_name: STRING; a_arguments: LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]): BOOLEAN
 			-- Does `members_cache' contain member with name `a_name' and arguments `a_arguments'?
 		local
 			l_features: LIST [CODE_MEMBER_REFERENCE]
@@ -337,7 +337,7 @@ feature -- Status Report
 
 feature -- Element Settings 
 
-	set_initialized (a_value: like initialized) is
+	set_initialized (a_value: like initialized)
 			-- Set `initialized' to `a_value'.
 		do
 			initialized := a_value
@@ -345,7 +345,7 @@ feature -- Element Settings
 			initialized_set: initialized = a_value
 		end
 
-	set_custom_attribute_type is
+	set_custom_attribute_type
 			-- Set `is_custom_attribute_type' to `True'.
 		do
 			is_custom_attribute_type := True
@@ -355,7 +355,7 @@ feature -- Element Settings
 
 feature -- Comparison
 
-	is_equal (a_other: CODE_TYPE_REFERENCE): BOOLEAN is
+	is_equal (a_other: CODE_TYPE_REFERENCE): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
@@ -366,7 +366,7 @@ feature -- Comparison
 
 feature {CODE_TYPE_REFERENCE_FACTORY} -- Elements Settings
 
-	set_eiffel_name (a_eiffel_name: like eiffel_name) is
+	set_eiffel_name (a_eiffel_name: like eiffel_name)
 			-- Set `eiffel_name' with `a_eiffel_name'.
 		require
 			non_void_eiffel_name: a_eiffel_name /= Void
@@ -376,7 +376,7 @@ feature {CODE_TYPE_REFERENCE_FACTORY} -- Elements Settings
 			name_set: eiffel_name = a_eiffel_name
 		end
 	
-	set_dotnet_type (a_type: like dotnet_type) is
+	set_dotnet_type (a_type: like dotnet_type)
 			-- Set `dotnet_type' with `a_type'.
 		require
 			non_void_type: a_type /= Void
@@ -386,7 +386,7 @@ feature {CODE_TYPE_REFERENCE_FACTORY} -- Elements Settings
 			type_set: dotnet_type = a_type
 		end
 		
-	set_element_type (a_element_type: like element_type) is
+	set_element_type (a_element_type: like element_type)
 			-- Set `element_type' with `a_element_type'.
 		require
 			non_void_element_type: a_element_type /= Void
@@ -396,7 +396,7 @@ feature {CODE_TYPE_REFERENCE_FACTORY} -- Elements Settings
 			element_type_set: element_type = a_element_type
 		end
 
-	set_search_for_type (a_search_for_type: like search_for_type) is
+	set_search_for_type (a_search_for_type: like search_for_type)
 			-- Set `search_for_type' with `a_search_for_type'.
 		do
 			search_for_type := a_search_for_type
@@ -404,7 +404,7 @@ feature {CODE_TYPE_REFERENCE_FACTORY} -- Elements Settings
 			search_for_type_set: search_for_type = a_search_for_type
 		end
 	
-	set_search_for_element_type (a_search_for_element_type: like search_for_element_type) is
+	set_search_for_element_type (a_search_for_element_type: like search_for_element_type)
 			-- Set `search_for_element_type' with `a_search_for_element_type'.
 		do
 			search_for_element_type := a_search_for_element_type
@@ -414,7 +414,7 @@ feature {CODE_TYPE_REFERENCE_FACTORY} -- Elements Settings
 
 feature {CODE_TYPE_REFERENCE_FACTORY, CODE_STOCK_TYPE_REFERENCES} -- Elements Settings
 
-	add_member (a_member: CODE_MEMBER_REFERENCE) is
+	add_member (a_member: CODE_MEMBER_REFERENCE)
 			-- Add `a_member' to members cache.
 		require
 			non_void_member: a_member /= Void
@@ -433,7 +433,7 @@ feature {CODE_TYPE_REFERENCE_FACTORY, CODE_STOCK_TYPE_REFERENCES} -- Elements Se
 
 feature {NONE} -- Implementation
 
-	dotnet_member (a_name: STRING; a_arguments: LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]): CODE_MEMBER_REFERENCE is
+	dotnet_member (a_name: STRING; a_arguments: LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]): CODE_MEMBER_REFERENCE
 			-- Member with name `a_name' and arguments `a_arguments'
 		require
 			is_external: not Resolver.is_generated (Current)
@@ -483,7 +483,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	dotnet_member_from_name (a_name: STRING): CODE_MEMBER_REFERENCE is
+	dotnet_member_from_name (a_name: STRING): CODE_MEMBER_REFERENCE
 			-- Reference to .NET member with .NET name `a_name'
 		require
 			non_void_name: a_name /= void
@@ -509,7 +509,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	overloaded_member_from_name (a_name: STRING): CODE_MEMBER_REFERENCE is
+	overloaded_member_from_name (a_name: STRING): CODE_MEMBER_REFERENCE
 			-- Reference to .NET member with .NET name `a_name'
 			-- Overloaded name if member is overloaded
 		require
@@ -572,7 +572,7 @@ invariant
 	no_element_type_search_if_found: initialized implies (element_type /= Void implies search_for_element_type = False)
 	void_element_type_if_search_type: initialized implies (search_for_element_type implies element_type = Void)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

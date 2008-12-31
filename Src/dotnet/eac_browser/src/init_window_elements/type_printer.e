@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Print in output the eiffel type with all its eiffelfeatures corresponding to given dotnet type name."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_output: EV_TEXT) is
+	make (an_output: EV_TEXT)
 			-- Initialiaze `output' with `an_output'.
 		require
 			non_void_an_output: an_output /= Void
@@ -48,7 +48,7 @@ feature -- Access
 			
 feature -- Basic Operations
 
-	print_type (assembly_of_dotnet_type: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING; an_eiffel_feature_name: STRING) is
+	print_type (assembly_of_dotnet_type: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING; an_eiffel_feature_name: STRING)
 			-- Set `assembly_of_type' with `assembly_of_dotnet_type' 
 			-- Set `dotnet_type_name' with `a_dotnet_type_name'
 			-- Print in `output' features corresponding to `a_type_name'.
@@ -83,7 +83,7 @@ feature -- Basic Operations
 	
 feature {NONE} -- Implementation
 
-	internal_print_type is
+	internal_print_type
 			-- Print in `output' features corresponding to `dotnet_type_name'.
 		local
 			ct: CONSUMED_TYPE
@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 			output.scroll_to_line (1)
 		end
 
-	print_procedures (array: ARRAY [CONSUMED_MEMBER]): STRING is
+	print_procedures (array: ARRAY [CONSUMED_MEMBER]): STRING
 			-- Return all signatures procedures contained in `array'.
 		local
 			i: INTEGER
@@ -138,7 +138,7 @@ feature {NONE} -- Implementation
 			Result.append ("%N")
 		end
 
-	print_feature (a_feature: CONSUMED_MEMBER): STRING is
+	print_feature (a_feature: CONSUMED_MEMBER): STRING
 			-- Return feature's siganture without its returned_type contained in `a_feature'.
 		require
 			non_void_feature: a_feature /= Void
@@ -182,7 +182,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	print_constructors (array: ARRAY [CONSUMED_CONSTRUCTOR]): STRING is
+	print_constructors (array: ARRAY [CONSUMED_CONSTRUCTOR]): STRING
 			-- Return all signatures constructors contained in `array'.
 		local
 			i, j: INTEGER
@@ -236,7 +236,7 @@ feature {NONE} -- Implementation
 			Result.append ("%N")
 		end
 
-	print_functions (array: ARRAY [CONSUMED_FUNCTION]): STRING is
+	print_functions (array: ARRAY [CONSUMED_FUNCTION]): STRING
 			-- Return all signatures functions contained in `array'.
 		local
 			i: INTEGER
@@ -288,7 +288,7 @@ feature {NONE} -- Implementation
 			Result.append ("%N")
 		end
 
-	print_attributes (array: ARRAY [CONSUMED_FIELD]): STRING is
+	print_attributes (array: ARRAY [CONSUMED_FIELD]): STRING
 			-- Return all signatures attributes contained in `array'.
 		local
 			i: INTEGER
@@ -426,7 +426,7 @@ feature {NONE} -- Implementation
 		
 feature {NONE} -- Implementation
 
-	title_color: EV_COLOR is
+	title_color: EV_COLOR
 			-- foreground color of titles (attributes, procedures, creation routines, functions).
 		once
 			create Result.make_with_8_bit_rgb (0, 0, 255) 
@@ -434,7 +434,7 @@ feature {NONE} -- Implementation
 			result_set: Result /= Void
 		end
 
-	type_color: EV_COLOR is
+	type_color: EV_COLOR
 			-- foreground color of types.
 		once
 			create Result.make_with_8_bit_rgb (125, 125, 0) 
@@ -442,7 +442,7 @@ feature {NONE} -- Implementation
 			result_set: Result /= Void
 		end
 
-	feature_color: EV_COLOR is
+	feature_color: EV_COLOR
 			-- foreground color of features.
 		once
 			create Result.make_with_8_bit_rgb (0, 255, 0) 
@@ -450,7 +450,7 @@ feature {NONE} -- Implementation
 			result_set: Result /= Void
 		end
 		
-	attribute_color: EV_COLOR is
+	attribute_color: EV_COLOR
 			-- foreground color of attributes.
 		once
 			create Result.make_with_8_bit_rgb (0, 125, 125) 
@@ -462,7 +462,7 @@ invariant
 	non_void_output: output /= Void
 	non_void_feature_selected: feature_selected /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

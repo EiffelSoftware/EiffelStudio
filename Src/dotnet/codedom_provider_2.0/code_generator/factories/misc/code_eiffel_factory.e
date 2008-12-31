@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Code generator for compile units and namespaces"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ inherit
 
 feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 
-	generate_compile_unit (a_source: SYSTEM_DLL_CODE_COMPILE_UNIT) is
+	generate_compile_unit (a_source: SYSTEM_DLL_CODE_COMPILE_UNIT)
 			-- | Create an instance of `CODE_COMPILE_UNIT'.
 			-- | Initialize this instance with `a_source'
 			-- | Set `last_compile_unit'.
@@ -78,7 +78,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			non_void_compile_unit: last_compile_unit /= Void
 		end
 
-	generate_snippet_compile_unit (a_source: SYSTEM_DLL_CODE_SNIPPET_COMPILE_UNIT) is
+	generate_snippet_compile_unit (a_source: SYSTEM_DLL_CODE_SNIPPET_COMPILE_UNIT)
 			-- | Create an instance of `CODE_SNIPPET_COMPILE_UNIT'.
 			-- | Initialize this instance with `a_source'
 			-- | Set `last_compile_unit'.
@@ -92,7 +92,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			non_void_compile_unit: last_compile_unit /= Void
 		end
 
-	generate_namespace (a_source: SYSTEM_DLL_CODE_NAMESPACE) is
+	generate_namespace (a_source: SYSTEM_DLL_CODE_NAMESPACE)
 			-- | Create instance of `CODE_NAMESPACE'.
 			-- | Set `current_namespace' with `a_namespace'
 			-- | Initialize this instance with `a_source'
@@ -234,7 +234,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			non_void_compile_unit_implies_not_empty_namespaces_list: last_compile_unit /= Void implies last_compile_unit.namespaces.count > 0
 		end
 
-	rename_counter: INTEGER is
+	rename_counter: INTEGER
 			-- Counter starting at 2 and automatically incremented after each query
 		do
 			if rename_counter_cell = Void then
@@ -247,7 +247,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 	rename_counter_cell: INTEGER_REF;
 			-- Cell for counter
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

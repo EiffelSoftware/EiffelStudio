@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shared instances during analysis phase"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	current_context: STRING is
+	current_context: STRING
 			-- Current context, includes routine and type names if any
 		require
 			in_code_analysis: current_state = Code_analysis
@@ -63,7 +63,7 @@ feature -- Access
 			non_void_context: Result /= Void
 		end
 		
-	current_namespace: CODE_NAMESPACE is
+	current_namespace: CODE_NAMESPACE
 			-- Type currently examined.
 		require
 			in_code_analysis: current_state = Code_analysis
@@ -71,7 +71,7 @@ feature -- Access
 			Result := internal_current_namespace.item
 		end
 
-	current_type: CODE_GENERATED_TYPE is
+	current_type: CODE_GENERATED_TYPE
 			-- Type currently examined.
 		require
 			in_code_analysis: current_state = Code_analysis
@@ -79,7 +79,7 @@ feature -- Access
 			Result := internal_current_type.item
 		end
 
-	current_feature: CODE_FEATURE is
+	current_feature: CODE_FEATURE
 			-- Feature currently examined.
 		require
 			in_code_analysis: current_state = Code_analysis
@@ -87,7 +87,7 @@ feature -- Access
 			Result := internal_current_feature.item
 		end
 
-	current_routine: CODE_ROUTINE is
+	current_routine: CODE_ROUTINE
 			-- Routine currently examined.
 		require
 			in_code_analysis: current_state = Code_analysis
@@ -103,55 +103,55 @@ feature -- Access
 			end
 		end
 
-	last_compile_unit: CODE_COMPILE_UNIT is
+	last_compile_unit: CODE_COMPILE_UNIT
 			-- Compile unit lastly examined.
 		do
 			Result := internal_last_compile_unit.item
 		end
 
-	last_namespace: CODE_NAMESPACE is
+	last_namespace: CODE_NAMESPACE
 			-- Namespace lastly examined.
 		do
 			Result := internal_last_namespace.item
 		end
 
-	last_type: CODE_GENERATED_TYPE is
+	last_type: CODE_GENERATED_TYPE
 			-- Type lastly examined.
 		do
 			Result := internal_last_type.item
 		end
 
-	last_feature: CODE_FEATURE is
+	last_feature: CODE_FEATURE
 			-- Routine lastly examined.
 		do
 			Result := internal_last_feature.item
 		end
 
-	last_statement: CODE_STATEMENT is
+	last_statement: CODE_STATEMENT
 			-- Statement lastly examined.
 		do
 			Result := internal_last_statement.item
 		end
 
-	last_expression: CODE_EXPRESSION is
+	last_expression: CODE_EXPRESSION
 			-- Expression lastly examined.
 		do
 			Result := internal_last_expression.item
 		end
 
-	last_catch_clause: CODE_CATCH_CLAUSE is
+	last_catch_clause: CODE_CATCH_CLAUSE
 			-- Catch clause lastly examined.
 		do
 			Result := internal_last_catch_clause.item
 		end
 
-	last_custom_attribute_declaration: CODE_ATTRIBUTE_DECLARATION is
+	last_custom_attribute_declaration: CODE_ATTRIBUTE_DECLARATION
 			-- Return last_custom_attribute_declaration.
 		do
 			Result := internal_last_custom_attribute_declaration.item
 		end
 
-	last_custom_attribute_argument: CODE_ATTRIBUTE_ARGUMENT is
+	last_custom_attribute_argument: CODE_ATTRIBUTE_ARGUMENT
 			-- Return last_custom_attribute_argument.
 		do
 			Result := internal_last_custom_attribute_argument.item
@@ -159,7 +159,7 @@ feature -- Access
 
 feature {NONE} -- Status Setting
 
-	set_current_namespace (a_namespace: like current_namespace) is
+	set_current_namespace (a_namespace: like current_namespace)
 			-- Set `current_namespace' with `a_namespace'.
 		require
 			in_code_analysis: current_state = Code_analysis
@@ -169,7 +169,7 @@ feature {NONE} -- Status Setting
 			current_namespace_set: current_namespace = a_namespace
 		end
 
-	set_current_type (a_type: like current_type) is
+	set_current_type (a_type: like current_type)
 			-- Set `current_type' with `a_type'.
 		require
 			in_code_analysis: current_state = Code_analysis
@@ -179,7 +179,7 @@ feature {NONE} -- Status Setting
 			current_type_set: current_type = a_type
 		end
 
-	set_current_feature (a_feature: like current_feature) is
+	set_current_feature (a_feature: like current_feature)
 			-- Set `current_feature' with `a_feature'.
 		require
 			in_code_analysis: current_state = Code_analysis
@@ -189,7 +189,7 @@ feature {NONE} -- Status Setting
 			current_feature_set: current_feature = a_feature
 		end
 
-	set_last_compile_unit (a_compile_unit: like last_compile_unit) is
+	set_last_compile_unit (a_compile_unit: like last_compile_unit)
 			-- Set `last_compile_unit' with `a_compile_unit'.
 		require
 			non_void_compile_unit: a_compile_unit /= Void
@@ -200,7 +200,7 @@ feature {NONE} -- Status Setting
 			last_compile_unit_set: last_compile_unit = a_compile_unit
 		end
 
-	set_last_namespace (a_namespace: like last_namespace) is
+	set_last_namespace (a_namespace: like last_namespace)
 			-- Set `last_namespace' with `a_namespace'.
 		require
 			non_void_namespace: a_namespace /= Void
@@ -211,7 +211,7 @@ feature {NONE} -- Status Setting
 			last_namespace_set: last_namespace = a_namespace
 		end
 
-	set_last_type (a_type: like last_type) is
+	set_last_type (a_type: like last_type)
 			-- Set `last_type' with `a_type'.
 		require
 			non_void_type: a_type /= Void
@@ -222,7 +222,7 @@ feature {NONE} -- Status Setting
 			last_type_set: last_type = a_type
 		end
 
-	set_last_feature (a_feature: like last_feature) is
+	set_last_feature (a_feature: like last_feature)
 			-- Set `last_feature' with `a_feature'.
 		require
 			non_void_routine: a_feature /= Void
@@ -233,7 +233,7 @@ feature {NONE} -- Status Setting
 			last_feature_set: last_feature = a_feature
 		end
 
-	set_last_statement (a_statement: like last_statement) is
+	set_last_statement (a_statement: like last_statement)
 			-- Set `last_statement' with `a_statement'.
 		require
 			non_void_statement: a_statement /= Void
@@ -244,7 +244,7 @@ feature {NONE} -- Status Setting
 			last_statement_set: last_statement = a_statement
 		end
 
-	set_last_expression (an_expression: like last_expression) is
+	set_last_expression (an_expression: like last_expression)
 			-- Set `last_expression' with `an_expression'.
 		require
 			non_void_expression: an_expression /= Void
@@ -255,7 +255,7 @@ feature {NONE} -- Status Setting
 			last_expression_set: last_expression = an_expression
 		end
 
-	set_last_catch_clause (a_catch_clause: like last_catch_clause) is
+	set_last_catch_clause (a_catch_clause: like last_catch_clause)
 			-- Set `last_catch_clause' with `a_catch_clause'.
 		require
 			non_void_catch_clause: a_catch_clause /= Void
@@ -266,7 +266,7 @@ feature {NONE} -- Status Setting
 			last_catch_clause_set: last_catch_clause = a_catch_clause
 		end
 
-	set_last_custom_attribute_declaration (a_custom_attribute_declaration: like last_custom_attribute_declaration) is
+	set_last_custom_attribute_declaration (a_custom_attribute_declaration: like last_custom_attribute_declaration)
 			-- Set `custom_attribute_declaration' with `a_custom_attribute_declaration'.
 		require
 			non_void_a_custom_attribute_declaration: a_custom_attribute_declaration /= Void
@@ -277,7 +277,7 @@ feature {NONE} -- Status Setting
 			custom_attribute_declaration_set: last_custom_attribute_declaration = a_custom_attribute_declaration
 		end
 
-	set_last_custom_attribute_argument (a_custom_attribute_argument: like last_custom_attribute_argument) is
+	set_last_custom_attribute_argument (a_custom_attribute_argument: like last_custom_attribute_argument)
 			-- Set `custom_attribute_argument' with `a_custom_attribute'.
 		require
 			non_void_a_custom_attribute_argument: a_custom_attribute_argument /= Void
@@ -290,7 +290,7 @@ feature {NONE} -- Status Setting
 
 feature {NONE} -- Private Access
 
-	code_dom_generator: CODE_CONSUMER_FACTORY is
+	code_dom_generator: CODE_CONSUMER_FACTORY
 			-- Instance of a CODE_CONSUMER_FACTORY.
 		once
 			create Result
@@ -300,7 +300,7 @@ feature {NONE} -- Private Access
 
 feature {NONE} -- Implementation
 
-	internal_current_namespace: CELL [CODE_NAMESPACE] is
+	internal_current_namespace: CELL [CODE_NAMESPACE]
 			-- Internal representation of `current_namespace'.
 		once
 			create Result.put (Void)
@@ -308,7 +308,7 @@ feature {NONE} -- Implementation
 			cell_created: Result /= Void
 		end
 
-	internal_current_type: CELL [CODE_GENERATED_TYPE] is
+	internal_current_type: CELL [CODE_GENERATED_TYPE]
 			-- Internal representation of `current_type'.
 		once
 			create Result.put (Void)
@@ -316,7 +316,7 @@ feature {NONE} -- Implementation
 			cell_created: Result /= Void
 		end
 
-	internal_current_feature: CELL [CODE_FEATURE] is
+	internal_current_feature: CELL [CODE_FEATURE]
 			-- Internal representation of `current_feature'.
 		once
 			create Result.put (Void)
@@ -324,7 +324,7 @@ feature {NONE} -- Implementation
 			cell_created: Result /= Void
 		end
 
-	internal_last_compile_unit: CELL [CODE_COMPILE_UNIT] is
+	internal_last_compile_unit: CELL [CODE_COMPILE_UNIT]
 			-- Internal representation of `last_compile_unit'.
 		once
 			create Result.put (Void)
@@ -332,7 +332,7 @@ feature {NONE} -- Implementation
 			cell_created: Result /= Void
 		end
 
-	internal_last_namespace: CELL [CODE_NAMESPACE] is
+	internal_last_namespace: CELL [CODE_NAMESPACE]
 			-- Internal representation of `last_namespace'.
 		once
 			create Result.put (Void)
@@ -340,7 +340,7 @@ feature {NONE} -- Implementation
 			cell_created: Result /= Void
 		end
 
-	internal_last_type: CELL [CODE_GENERATED_TYPE] is
+	internal_last_type: CELL [CODE_GENERATED_TYPE]
 			-- Internal representation of `last_type'.
 		once
 			create Result.put (Void)
@@ -348,7 +348,7 @@ feature {NONE} -- Implementation
 			cell_created: Result /= Void
 		end
 
-	internal_last_feature: CELL [CODE_FEATURE] is
+	internal_last_feature: CELL [CODE_FEATURE]
 			-- Internal representation of `last_feature'.
 		once
 			create Result.put (Void)
@@ -356,7 +356,7 @@ feature {NONE} -- Implementation
 			cell_created: Result /= Void
 		end
 
-	internal_last_statement: CELL [CODE_STATEMENT] is
+	internal_last_statement: CELL [CODE_STATEMENT]
 			-- Internal representation of `last_statement'.
 		once
 			create Result.put (Void)
@@ -364,7 +364,7 @@ feature {NONE} -- Implementation
 			cell_created: Result /= Void
 		end
 
-	internal_last_expression: CELL [CODE_EXPRESSION] is
+	internal_last_expression: CELL [CODE_EXPRESSION]
 			-- Internal representation of `last_expression'.
 		once
 			create Result.put (Void)
@@ -372,7 +372,7 @@ feature {NONE} -- Implementation
 			cell_created: Result /= Void
 		end
 
-	internal_last_catch_clause: CELL [CODE_CATCH_CLAUSE] is
+	internal_last_catch_clause: CELL [CODE_CATCH_CLAUSE]
 			-- Internal representation of `last_catch_clause'.
 		once
 			create Result.put (Void)
@@ -380,7 +380,7 @@ feature {NONE} -- Implementation
 			cell_created: Result /= Void
 		end
 
-	internal_last_custom_attribute_declaration: CELL [CODE_ATTRIBUTE_DECLARATION] is
+	internal_last_custom_attribute_declaration: CELL [CODE_ATTRIBUTE_DECLARATION]
 			-- Internal representation of `last_custom_attribute_declaration'.
 		once
 			create Result.put (Void)
@@ -388,7 +388,7 @@ feature {NONE} -- Implementation
 			cell_created: Result /= Void
 		end
 
-	internal_last_custom_attribute_argument: CELL [CODE_ATTRIBUTE_ARGUMENT] is
+	internal_last_custom_attribute_argument: CELL [CODE_ATTRIBUTE_ARGUMENT]
 			-- Internal representation of `last_custom_attribute_argument'.
 		once
 			create Result.put (Void)
@@ -396,7 +396,7 @@ feature {NONE} -- Implementation
 			cell_created: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generic cache implementation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (c: INTEGER) is
+	make (c: INTEGER)
 			-- Set `capacity' with `c'.
 		require
 			valid_capacity: c > 0
@@ -33,7 +33,7 @@ feature -- Access
 	count: INTEGER
 		-- Number of elements in cache
 
-	found_item: ?G is
+	found_item: ?G
 			-- Last found item
 		do
 			Result := internal_table.found_item
@@ -41,7 +41,7 @@ feature -- Access
 		
 feature -- Status Report
 
-	found: BOOLEAN is
+	found: BOOLEAN
 			-- Was last search successful?
 		do
 			Result := internal_table.found
@@ -49,7 +49,7 @@ feature -- Status Report
 
 feature -- Element Settings
 
-	put (g: G; h: H) is
+	put (g: G; h: H)
 			-- Add item `g' to cache with key `h'.
 		require
 			non_void_item: g /= Void
@@ -67,7 +67,7 @@ feature -- Element Settings
 		
 feature -- Basic Operations
 
-	search (h: H) is
+	search (h: H)
 			-- Search for `h' in cache.
 			-- Set `found' to True if found.
 			-- Set `found_item' with found item if any.
@@ -91,7 +91,7 @@ invariant
 	count_not_greater_than_capacity: internal_table.count <= capacity
 	valid_history_count: history.count <= capacity
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

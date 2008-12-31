@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					
 				]"
@@ -13,7 +13,7 @@ class
 
 feature -- Access
 	
-	assemblies_informations: HASH_TABLE [ASSEMBLY_INFORMATION, STRING] is
+	assemblies_informations: HASH_TABLE [ASSEMBLY_INFORMATION, STRING]
 			-- Comments related to an assembly. The key is the {CONSUMED_ASSEMBLY}.out field.
 		once
 			create Result.make (10)
@@ -21,7 +21,7 @@ feature -- Access
 			assemblies_informations_set: Result /= Void
 		end
 	
-	assemblies: LINKED_LIST [CONSUMED_ASSEMBLY] is
+	assemblies: LINKED_LIST [CONSUMED_ASSEMBLY]
 			-- linked list of all assemblies contained in EAC. Is initialize during construction of widget tree.
 		once
 			create Result.make
@@ -29,7 +29,7 @@ feature -- Access
 			assemblies_set: Result /= Void
 		end
 
-	types: HASH_TABLE [STRING, STRING] is
+	types: HASH_TABLE [STRING, STRING]
 			-- hash table with key: dotnet_type_name and value: eiffel_type_name
 		once
 			create Result.make (10000)
@@ -37,7 +37,7 @@ feature -- Access
 			non_void_result: Result /= Void
 		end
 
-	consumed_types: HASH_TABLE [CONSUMED_TYPE, STRING] is
+	consumed_types: HASH_TABLE [CONSUMED_TYPE, STRING]
 			-- hash table with key: a_file_name and value: a_consumed_type
 		once
 			create Result.make (20)
@@ -45,7 +45,7 @@ feature -- Access
 			non_void_result: Result /= Void
 		end
 
-	deserialize_information_assembly (an_assembly: CONSUMED_ASSEMBLY) is
+	deserialize_information_assembly (an_assembly: CONSUMED_ASSEMBLY)
 			-- Deserialize informations of `an_assembly' and store it in `assemblies_informations'.
 			-- It would be interesting to launch this process in a Thread.
 --		local
@@ -67,7 +67,7 @@ feature -- Access
 		end
 		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

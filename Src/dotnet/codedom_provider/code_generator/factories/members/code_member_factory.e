@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Code generator for type members"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 	
 feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 
-	generate_event (a_source: SYSTEM_DLL_CODE_MEMBER_EVENT) is
+	generate_event (a_source: SYSTEM_DLL_CODE_MEMBER_EVENT)
 			-- Generate Eiffel code from `a_source'.
 		require
 			non_void_source: a_source /= Void
@@ -26,7 +26,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			Event_manager.raise_event ({CODE_EVENTS_IDS}.Not_implemented, ["member event"])
 		end		
 	
-	generate_attribute (a_source: SYSTEM_DLL_CODE_MEMBER_FIELD) is
+	generate_attribute (a_source: SYSTEM_DLL_CODE_MEMBER_FIELD)
 			-- | Create instance of `CODE_ATTRIBUTE'.
 			-- | And initialize this instance with `a_source' -> call `initialize_attribute'
 			-- | Set `last_feature'.
@@ -70,7 +70,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			non_void_last_feature: last_feature /= Void
 		end
 
-	generate_snippet_feature (a_source: SYSTEM_DLL_CODE_SNIPPET_TYPE_MEMBER) is
+	generate_snippet_feature (a_source: SYSTEM_DLL_CODE_SNIPPET_TYPE_MEMBER)
 			-- | Create instance of `CODE_SNIPPET_FEATURE'.
 			-- | And initialize this instance with `a_source' -> call `initialize_attribute'
 			-- | Set `last_feature'.
@@ -165,7 +165,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 
 feature {NONE} -- Components initialization.
 
-	initialize_comments (a_comments: SYSTEM_DLL_CODE_COMMENT_STATEMENT_COLLECTION) is
+	initialize_comments (a_comments: SYSTEM_DLL_CODE_COMMENT_STATEMENT_COLLECTION)
 			-- | Call in loop `generate_statement_from_dom'.
 
 			-- Generate feature comments from `a_source'.
@@ -192,7 +192,7 @@ feature {NONE} -- Components initialization.
 			end
 		end
 
-	initialize_member_status (status_attributes: SYSTEM_DLL_MEMBER_ATTRIBUTES) is
+	initialize_member_status (status_attributes: SYSTEM_DLL_MEMBER_ATTRIBUTES)
 			-- Initialize current feature with `status_attribute'.
 		require
 			non_void_feature: current_feature /= Void
@@ -235,7 +235,7 @@ feature {NONE} -- Components initialization.
 			end
 		end
 
-	initialize_custom_attributes (a_custom_attributes: SYSTEM_DLL_CODE_ATTRIBUTE_DECLARATION_COLLECTION) is
+	initialize_custom_attributes (a_custom_attributes: SYSTEM_DLL_CODE_ATTRIBUTE_DECLARATION_COLLECTION)
 			-- Initialize custom attributes of current feature.
 		require
 			non_void_custom_attributes: a_custom_attributes /= Void
@@ -255,7 +255,7 @@ feature {NONE} -- Components initialization.
 
 feature {NONE} -- Implementation
 
-	clean_up_text (a_text: STRING) is
+	clean_up_text (a_text: STRING)
 			-- Cleanup `a_text' by removing leading spaces and
 			-- replacing all tabs and newline characters with
 			-- spaces.
@@ -270,7 +270,7 @@ feature {NONE} -- Implementation
 			cleaned: not a_text.has ('%T') and not a_text.has ('%R') and not a_text.has ('%N')
 		end
 
-	context (a_feature: CODE_FEATURE): STRING is
+	context (a_feature: CODE_FEATURE): STRING
 			-- Contextual information for `a_feature'
 		do
 			if current_type /= Void and a_feature.name /= Void then
@@ -284,7 +284,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

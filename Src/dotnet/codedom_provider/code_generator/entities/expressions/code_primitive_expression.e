@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Source code generator for primitive expressions"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_value: like value) is
+	make (a_value: like value)
 			-- Initialize `value'.
 		do
 			value := a_value
@@ -34,7 +34,7 @@ feature -- Access
 	value: SYSTEM_OBJECT
 			-- Object to represent
 			
-	code: STRING is
+	code: STRING
 			-- | Result := "`value'" 
 			-- | OR		:= "("`value'").to_cil" if value is SYSTEM_STRING
 			-- Eiffel code of primitive expression
@@ -81,7 +81,7 @@ feature -- Access
 		
 feature -- Status Report
 
-	type: CODE_TYPE_REFERENCE is
+	type: CODE_TYPE_REFERENCE
 			-- Type
 		do
 			Result := Type_reference_factory.type_reference_from_type (value.get_type)
@@ -90,7 +90,7 @@ feature -- Status Report
 invariant
 	non_void_value: value /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

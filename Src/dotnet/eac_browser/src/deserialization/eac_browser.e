@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					
 				]"
@@ -28,7 +28,7 @@ feature -- Access
 	dotnet_type: STRING
 			-- dotnet type name
 
-	consumed_type (an_assembly: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING): CONSUMED_TYPE is
+	consumed_type (an_assembly: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING): CONSUMED_TYPE
 			-- Consumed type corresponding to `a_file_name'.
 		require
 			non_void_an_assembly: an_assembly /= Void
@@ -49,7 +49,7 @@ feature -- Access
 			non_void_consumed_type: Result /= Void
 		end
 
-	consumed_assembly (an_assembly: CONSUMED_ASSEMBLY): CONSUMED_ASSEMBLY_TYPES is
+	consumed_assembly (an_assembly: CONSUMED_ASSEMBLY): CONSUMED_ASSEMBLY_TYPES
 			-- Consumed type corresponding to `a_file_name'.
 		require
 			non_void_an_assembly: an_assembly /= Void
@@ -64,7 +64,7 @@ feature -- Access
 			non_void_consumed_type: Result /= Void
 		end
 		
-	referenced_assemblies (an_assembly: CONSUMED_ASSEMBLY): CONSUMED_ASSEMBLY_MAPPING is
+	referenced_assemblies (an_assembly: CONSUMED_ASSEMBLY): CONSUMED_ASSEMBLY_MAPPING
 			-- Consumed type corresponding to `a_file_name'.
 		require
 			non_void_an_assembly: an_assembly /= Void
@@ -79,7 +79,7 @@ feature -- Access
 			non_void_consumed_type: Result /= Void
 		end
 
-	referenced_assembly (an_assembly: CONSUMED_ASSEMBLY; assembly_id: INTEGER): CONSUMED_ASSEMBLY is
+	referenced_assembly (an_assembly: CONSUMED_ASSEMBLY; assembly_id: INTEGER): CONSUMED_ASSEMBLY
 			-- Consumed type corresponding to `a_file_name'.
 		require
 			non_void_an_assembly: an_assembly /= Void
@@ -92,7 +92,7 @@ feature -- Access
 			Result := l_cam.assemblies.item (assembly_id)
 		end
 
-	info: CACHE_INFO is
+	info: CACHE_INFO
 			-- Assembly information from EAC
 		local
 			des: EIFFEL_XML_DESERIALIZER
@@ -105,7 +105,7 @@ feature -- Access
 			non_void_info: Result /= Void
 		end
 
-	find_consumed_type (an_assembly: CONSUMED_ASSEMBLY; a_referenced_type: CONSUMED_REFERENCED_TYPE): SPECIFIC_TYPE is
+	find_consumed_type (an_assembly: CONSUMED_ASSEMBLY; a_referenced_type: CONSUMED_REFERENCED_TYPE): SPECIFIC_TYPE
 			-- return `CONSUMED_TYPE' associated to `a_referenced_type'.
 		require
 			non_void_an_assembly: an_assembly /= Void
@@ -130,7 +130,7 @@ feature -- Access
 			create Result.make (l_assembly_of_referenced_type, l_referenced_consumed_type)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

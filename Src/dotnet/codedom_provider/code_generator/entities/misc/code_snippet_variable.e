@@ -1,11 +1,14 @@
-indexing
-	description: "Variable reference with resolved Eiffel name and Eiffel type name"
+note
+	description: "[
+		Variable reference with resolved Eiffel name and Eiffel type name.
+
+		Note: Instances of this class are used for code snippets, any other variable reference
+			should use instances of CODE_VARIABLE_REFERENCE
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	note: "Instances of this class are used for code snippets, any other variable reference%
-			%should use instances of CODE_VARIABLE_REFERENCE"
 
 class
 	CODE_SNIPPET_VARIABLE
@@ -18,7 +21,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (a_eiffel_name, a_eiffel_type_name: STRING) is
+	make (a_eiffel_name, a_eiffel_type_name: STRING)
 			-- Set `eiffel_name' with `a_eiffel_name' and `eiffel_type_name' with `a_eiffel_type_name'.
 		require
 			non_void_eiffel_name: a_eiffel_name /= Void
@@ -39,7 +42,7 @@ feature -- Access
 	eiffel_type_name: STRING
 			-- Eiffel variable type name
 
-	code: STRING is
+	code: STRING
 			-- Local declaration
 		do
 			create Result.make (200)
@@ -53,7 +56,7 @@ invariant
 	non_void_eiffel_name: eiffel_name /= Void
 	non_void_eiffel_type_name: eiffel_type_name /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

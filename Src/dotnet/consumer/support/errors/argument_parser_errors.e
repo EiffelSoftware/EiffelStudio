@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Errors that may occur during command line parsing"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,39 +13,39 @@ inherit
 
 feature -- Access
 
-	Error_category: INTEGER_8 is 0x03
+	Error_category: INTEGER_8 = 0x03
 			-- Error category
 
-	Invalid_switch: INTEGER is 0x03000001
+	Invalid_switch: INTEGER = 0x03000001
 			-- Invalid switch in command line
 			-- Error context is invalid switch.
 
-	Invalid_destination_path: INTEGER is 0x03000002
+	Invalid_destination_path: INTEGER = 0x03000002
 			-- Non existent destination path
 			-- Error context is invalid path.
 
-	Invalid_target_path: INTEGER is 0x03000003
+	Invalid_target_path: INTEGER = 0x03000003
 			-- Non existent target assembly path
 			-- Error context is invalid path.
 
-	No_target: INTEGER is 0x03000004
+	No_target: INTEGER = 0x03000004
 			-- No target assembly specified
 
-	Invalid_assembly: INTEGER is 0x03000007
+	Invalid_assembly: INTEGER = 0x03000007
 			-- Specified file is not a valid .NET assembly	
 
-	Version_should_be_specified: INTEGER is 0x03000012
+	Version_should_be_specified: INTEGER = 0x03000012
 			-- Version of the CLR runtime needs to be specified
 			
-	invalid_version_specified: INTEGER is 0x03000013
+	invalid_version_specified: INTEGER = 0x03000013
 			-- Specified CLR version number is invalid
 			
-	no_operation: INTEGER is 0x03000014
+	no_operation: INTEGER = 0x03000014
 			-- No operation to perform
 
 feature {NONE} -- Implementation
 
-	error_message_table: HASH_TABLE [STRING, INTEGER] is
+	error_message_table: HASH_TABLE [STRING, INTEGER]
 			-- Table of correspondance between error codes and error messages
 		once
 			create Result.make (10)
@@ -60,7 +60,7 @@ feature {NONE} -- Implementation
 			Result.put ("No operation specified.", no_operation)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

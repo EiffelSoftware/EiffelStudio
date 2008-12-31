@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Retrieve or create {CODE_TYPE_REFERENCE} from various inputs.%
 					%Will resolve array types, arrays with different element types must have a different name."
 	legal: "See notice at end of class."
@@ -30,7 +30,7 @@ create
 
 feature -- Access
 
-	is_registered (a_type: CODE_TYPE_REFERENCE): BOOLEAN is
+	is_registered (a_type: CODE_TYPE_REFERENCE): BOOLEAN
 			-- Is `a_type' in cache?
 		do
 			Result := type_references_cache.has (a_type.name)
@@ -38,7 +38,7 @@ feature -- Access
 		
 feature -- Basic Operations
 
-	register (a_type: CODE_TYPE_REFERENCE) is
+	register (a_type: CODE_TYPE_REFERENCE)
 			-- Add `a_type' to cache.
 		require
 			non_void_type: a_type /= Void
@@ -49,7 +49,7 @@ feature -- Basic Operations
 			registered: is_registered (a_type)
 		end
 	
-	reset_cache is
+	reset_cache
 			-- Reset content of `type_references_cache'.
 		do
 			type_references_cache.clear_all
@@ -57,7 +57,7 @@ feature -- Basic Operations
 
 feature -- Factory
 
-	type_reference_from_reference (a_type_reference: SYSTEM_DLL_CODE_TYPE_REFERENCE): CODE_TYPE_REFERENCE is
+	type_reference_from_reference (a_type_reference: SYSTEM_DLL_CODE_TYPE_REFERENCE): CODE_TYPE_REFERENCE
 			-- Initialize instance.
 		require
 			non_type_reference: a_type_reference /= Void
@@ -78,7 +78,7 @@ feature -- Factory
 			non_void_type_reference: Result /= Void
 		end
 
-	type_reference_from_declaration (a_declaration: SYSTEM_DLL_CODE_TYPE_DECLARATION; a_namespace: STRING): CODE_TYPE_REFERENCE is
+	type_reference_from_declaration (a_declaration: SYSTEM_DLL_CODE_TYPE_DECLARATION; a_namespace: STRING): CODE_TYPE_REFERENCE
 			-- Initialize instance.
 		require
 			non_void_declaration: a_declaration /= Void
@@ -105,7 +105,7 @@ feature -- Factory
 			non_void_type_reference: Result /= Void
 		end
 
-	type_reference_from_code (a_code_type: CODE_GENERATED_TYPE): CODE_TYPE_REFERENCE is
+	type_reference_from_code (a_code_type: CODE_GENERATED_TYPE): CODE_TYPE_REFERENCE
 			-- Initialize instance from `a_code_type'.
 		require
 			non_void_code_type: a_code_type /= Void
@@ -115,7 +115,7 @@ feature -- Factory
 			non_void_type_reference: Result /= Void
 		end
 	
-	type_reference_from_name (a_name: STRING): CODE_TYPE_REFERENCE is
+	type_reference_from_name (a_name: STRING): CODE_TYPE_REFERENCE
 			-- Initialize instance from .NET full name.
 		require
 			non_void_name: a_name /= Void
@@ -125,7 +125,7 @@ feature -- Factory
 			non_void_type_reference: Result /= Void
 		end
 	
-	type_reference_from_type (a_type: SYSTEM_TYPE): CODE_TYPE_REFERENCE is
+	type_reference_from_type (a_type: SYSTEM_TYPE): CODE_TYPE_REFERENCE
 			-- Initialize instance from `a_type'.
 		require
 			non_void_type: a_type /= Void
@@ -144,7 +144,7 @@ feature -- Factory
 
 feature -- Access
 
-	type_reference_name (a_type_reference: SYSTEM_DLL_CODE_TYPE_REFERENCE): STRING is
+	type_reference_name (a_type_reference: SYSTEM_DLL_CODE_TYPE_REFERENCE): STRING
 			-- Unique name for `a_type_reference'
 		require
 			non_void_type_reference: a_type_reference /= Void
@@ -159,7 +159,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	type_reference (a_name: STRING; a_eiffel_name: STRING; a_type: SYSTEM_TYPE; a_element_type: CODE_TYPE_REFERENCE; a_search_for_type, a_search_for_element_type, a_is_initialized: BOOLEAN): CODE_TYPE_REFERENCE is
+	type_reference (a_name: STRING; a_eiffel_name: STRING; a_type: SYSTEM_TYPE; a_element_type: CODE_TYPE_REFERENCE; a_search_for_type, a_search_for_element_type, a_is_initialized: BOOLEAN): CODE_TYPE_REFERENCE
 			-- Type reference with .NET name `a_name'
 		require
 			non_void_name: a_name /= Void
@@ -185,7 +185,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	add_members (a_declaration: SYSTEM_DLL_CODE_TYPE_DECLARATION; a_type: CODE_TYPE_REFERENCE) is
+	add_members (a_declaration: SYSTEM_DLL_CODE_TYPE_DECLARATION; a_type: CODE_TYPE_REFERENCE)
 			-- Add members of `a_declaration' and its parents to `a_type'.
 		require
 			non_void_declaration: a_declaration /= Void
@@ -259,7 +259,7 @@ feature {NONE} -- Implementation
 		
 feature {NONE} -- Private Access
 
-	type_references_cache: HASH_TABLE [CODE_TYPE_REFERENCE, STRING] is
+	type_references_cache: HASH_TABLE [CODE_TYPE_REFERENCE, STRING]
 			-- Cache for code type references
 		once
 			create Result.make (256)
@@ -268,7 +268,7 @@ feature {NONE} -- Private Access
 invariant
 	non_void_cache: type_references_cache /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

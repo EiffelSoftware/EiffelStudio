@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Codedom Provider registry key entries"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,25 +10,25 @@ class
 
 feature -- Access
 
-	Configurations_key: STRING is 
+	Configurations_key: STRING 
 			-- Key holding configuration path values
 		once
 			Result := "Software\ISE\Eiffel Codedom Provider\" + Version + "\Configurations"
 		end
 	
-	Applications_key: STRING is
+	Applications_key: STRING
 			-- Key holding process guids
 		once
 			Result := "Software\ISE\Eiffel Codedom Provider\" + Version + "\Applications"
 		end
 			
-	Setup_key: STRING is
+	Setup_key: STRING
 			-- Key holding installation path value
 		once
 			Result := "Software\ISE\Eiffel Codedom Provider\" + Version + "\Setup"
 		end
 	
-	Compiler_key: STRING is
+	Compiler_key: STRING
 			-- Key holding compiler values
 		once
 			Result := "Software\ISE\Eiffel57\"
@@ -36,37 +36,37 @@ feature -- Access
 			Result.keep_head (Result.count - 4)
 		end
 
-	Precompile_ace_files_key: STRING is
+	Precompile_ace_files_key: STRING
 			-- Key holding precompiled libraries ace file names
 		once
 			Result := "Software\ISE\Eiffel Codedom Provider\" + Version + "\Precompile\Ace Files"
 		end
 
-	Precompile_folders_key: STRING is
+	Precompile_folders_key: STRING
 			-- Key holding precompiled libraries paths
 		once
 			Result := "Software\ISE\Eiffel Codedom Provider\" + Version + "\Precompile\Folders"
 		end
 
-	Installation_dir_value: STRING is "InstallDir"
+	Installation_dir_value: STRING = "InstallDir"
 			-- Name of string value that holds installation path
 			-- This value is found under the setup key
 
-	Ise_eiffel_value: STRING is "ISE_EIFFEL"
+	Ise_eiffel_value: STRING = "ISE_EIFFEL"
 			-- Name of string value that holds ISE_EIFFEL environment variable
 			-- This value is found under the compiler key
 
-	Ise_platform_value: STRING is "ISE_PLATFORM"
+	Ise_platform_value: STRING = "ISE_PLATFORM"
 			-- Name of string value that holds ISE_PLATFORM environment variable
 			-- This value is found under the compiler key
 
-	Compiler_file_name: STRING is "ecdpc.exe"
+	Compiler_file_name: STRING = "ecdpc.exe"
 			-- Compiler file name
 
-	Version: STRING is "5.7";
+	Version: STRING = "5.7";
 			-- Version number, change when different set of registry keys are needed.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

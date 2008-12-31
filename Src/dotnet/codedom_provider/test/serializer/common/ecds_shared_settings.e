@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shared settings between serializer gui and provider%
 			%Used to pass location of serialized file."
 	legal: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Access
 
-	serialized_tree_location: STRING is
+	serialized_tree_location: STRING
 			-- Serialized codedom tree location if any
 		local
 			l_key: REGISTRY_KEY
@@ -28,7 +28,7 @@ feature -- Access
 
 feature -- Element Settings
 
-	set_serialized_tree_location (a_location: STRING) is
+	set_serialized_tree_location (a_location: STRING)
 			-- Set `serialized_tree_location' with `a_location'.
 		require
 			non_void_location: a_location /= Void
@@ -46,19 +46,19 @@ feature -- Element Settings
 
 feature {NONE} -- Implementation
 
-	Temp_key: STRING is "SOFTWARE\ISE\Eiffel Codedom Provider\Temp"
+	Temp_key: STRING = "SOFTWARE\ISE\Eiffel Codedom Provider\Temp"
 			-- Key to temporary values
 	
-	Serialized_path_key: STRING is "serialized_path"
+	Serialized_path_key: STRING = "serialized_path"
 			-- Key which holds path to serialized codedom tree
 
-	Directory_separator: CHARACTER is
+	Directory_separator: CHARACTER
 			-- Platform directory separator
 		once
 			Result := (create {OPERATING_ENVIRONMENT}).Directory_separator
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

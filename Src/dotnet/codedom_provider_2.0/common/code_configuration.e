@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Configuration settings, read from config file
 					File content should look like:
@@ -37,14 +37,15 @@ indexing
 							<backup_folder></backup_folder>
 						</debug>
 					</configuration>
-					]"
+
+		Note: Class ECDM_CONFIGURATION from the Eiffel Codedom Provider Manager application
+			inherits from this class. Any changes made to the schema of the configuration
+			file needs to be propagated to ECDM_CONFIGURATION.
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	note: "Class ECDM_CONFIGURATION from the Eiffel Codedom Provider Manager application%
-			%inherits from this class. Any changes made to the schema of the configuration%
-			%file needs to be propagated to ECDM_CONFIGURATION."
 
 class
 	CODE_CONFIGURATION
@@ -75,7 +76,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	reload is
+	reload
 			-- Try reading settings from config file, use default values if
 			-- config file is not found or reading fails.
 		local
@@ -89,14 +90,14 @@ feature {NONE} -- Initialization
 	
 feature -- Access
 
-	fail_on_error: BOOLEAN is
+	fail_on_error: BOOLEAN
 			-- Should CodeDom stop on error?
 			-- Useful for debugging
 		do
 			Result := config_values.item ("fail_on_error").to_boolean
 		end
 
-	log_level: INTEGER is
+	log_level: INTEGER
 			-- Log level
 			-- See class CODE_EVENT_LOG_LEVEL for possible values
 		do
@@ -105,7 +106,7 @@ feature -- Access
 			valid_level: is_valid_log_level (Result)
 		end
 
-	log_source_name: STRING is
+	log_source_name: STRING
 			-- Log source name
 		do
 			Result := config_values.item ("log_source_name")
@@ -113,7 +114,7 @@ feature -- Access
 			non_void_log_source_name: Result /= Void
 		end
 
-	log_server_name: STRING is
+	log_server_name: STRING
 			-- Log server name
 		do
 			Result := config_values.item ("log_server_name")
@@ -121,7 +122,7 @@ feature -- Access
 			non_void_log_server_name: Result /= Void
 		end
 	
-	log_name: STRING is
+	log_name: STRING
 			-- Log name
 		do
 			Result := config_values.item ("log_name")
@@ -129,37 +130,37 @@ feature -- Access
 			non_void_log_name: Result /= Void
 		end
 
-	precompile_ace_file: STRING is
+	precompile_ace_file: STRING
 			-- Precompile path if any
 		do
 			Result := config_values.item ("precompile_ace_file")
 		end
 
-	metadata_cache: STRING is
+	metadata_cache: STRING
 			-- Path to EAC if any
 		do
 			Result := config_values.item ("metadata_cache")
 		end
 
-	compiler_metadata_cache: STRING is
+	compiler_metadata_cache: STRING
 			-- Path to EAC if any
 		do
 			Result := config_values.item ("compiler_metadata_cache")
 		end
 
-	precompile_cache: STRING is
+	precompile_cache: STRING
 			-- Path to precompiled libraries if any
 		do
 			Result := config_values.item ("precompile_cache")
 		end
 
-	default_root_class: STRING is
+	default_root_class: STRING
 			-- Default root class name
 		do
 			Result := config_values.item ("default_root_class")
 		end
 
-	override_assemblies: HASH_TABLE [CODE_REFERENCED_ASSEMBLY, STRING] is
+	override_assemblies: HASH_TABLE [CODE_REFERENCED_ASSEMBLY, STRING]
 			-- Override assemblies indexed by full name
 		local
 			l_list: LIST [STRING]
@@ -189,14 +190,14 @@ feature -- Access
 			end
 		end
 
-	prefixed_assemblies: LIST [STRING] is
+	prefixed_assemblies: LIST [STRING]
 			-- Assemblies with associated prefixes
 		do
 			create {ARRAYED_LIST [STRING]} Result.make_from_array (prefixes.current_keys)
 			Result.compare_objects
 		end
 
-	assembly_prefix (a_file_name: STRING): STRING is
+	assembly_prefix (a_file_name: STRING): STRING
 			-- Prefix associated with assembly located at `a_file_name'.
 			-- Empty string if none.
 		do
@@ -206,7 +207,7 @@ feature -- Access
 			end
 		end
 		
-	Default_prefixes: HASH_TABLE [STRING, STRING] is
+	Default_prefixes: HASH_TABLE [STRING, STRING]
 			-- Default prefixes that should not be modified
 		once
 			create Result.make (4)
@@ -222,13 +223,13 @@ feature -- Access
 			Result.extend ("WEB_", "system.web.ui.mobilecontrols.adapters.dll")
 		end
 		
-	generate_pragmas: BOOLEAN is
+	generate_pragmas: BOOLEAN
 			-- Should line pragmas be generated?
 		do
 			Result := config_values.item ("generate_pragmas").to_boolean
 		end
 
-	backup_folder: STRING is
+	backup_folder: STRING
 			-- If not Void then the codedom will generate a copy of all the files in that folder.
 		do
 			Result := config_values.item ("backup_folder")
@@ -241,7 +242,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	load (a_config_file: STRING) is
+	load (a_config_file: STRING)
 			-- Load configuration file `a_config_file'.
 		require
 			non_void_config_file: a_config_file /= Void
@@ -286,7 +287,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	config_values: HASH_TABLE [STRING, STRING] is
+	config_values: HASH_TABLE [STRING, STRING]
 			-- Configuration values
 		do
 			if internal_config_values = Void then
@@ -296,7 +297,7 @@ feature {NONE} -- Implementation
 			Result := internal_config_values
 		end
 
-	prefixes: HASH_TABLE [STRING, STRING] is
+	prefixes: HASH_TABLE [STRING, STRING]
 			-- Configuration prefixes
 		do
 			if internal_prefixes = Void then
@@ -306,7 +307,7 @@ feature {NONE} -- Implementation
 			Result := internal_prefixes
 		end
 
-	initialize_default_values is
+	initialize_default_values
 			-- Initialize fields to default values.
 		do
 			create internal_config_values.make (7)
@@ -332,7 +333,7 @@ feature {NONE} -- Implementation
 			internal_config_values.extend ("True", "generate_pragmas")
 		end
 		
-	initialize_prefixes is
+	initialize_prefixes
 			-- Initialize prefixes to default values.
 		do
 			create internal_prefixes.make (10)
@@ -346,7 +347,7 @@ feature {NONE} -- Implementation
 			end
 		end
 	
-	safely_loaded_assembly (a_path: STRING): ASSEMBLY is
+	safely_loaded_assembly (a_path: STRING): ASSEMBLY
 			-- Load assembly at path `a_path'.
 			-- Void if file does not exist or does not correspond to an assembly
 		require	
@@ -376,7 +377,7 @@ invariant
 	has_log_server_name: log_server_name /= Void
 	has_log_name: log_name /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

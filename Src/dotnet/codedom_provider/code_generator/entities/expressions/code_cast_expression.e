@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Source code generator for cast expression"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_target_type: like target_type; a_source: like source) is
+	make (a_target_type: like target_type; a_source: like source)
 			-- Initialize `target_type'.
 		require
 			non_void_target_type: a_target_type /= Void
@@ -37,7 +37,7 @@ feature -- Access
 	target_type: CODE_TYPE_REFERENCE
 			-- Type of cast target
 			
-	code: STRING is
+	code: STRING
 			-- | Result := " ?= `expression_to_cast'"
 			-- Eiffel code of cast expression
 		do
@@ -46,7 +46,7 @@ feature -- Access
 		
 feature -- Status Report
 		
-	type: CODE_TYPE_REFERENCE is
+	type: CODE_TYPE_REFERENCE
 			-- Type
 		do
 			Result := target_type
@@ -56,7 +56,7 @@ invariant
 	non_void_target_type: target_type /= Void
 	non_void_source: source /= Void
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Source code generator for method reference expressions"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_routine: like routine; a_target: like target) is
+	make (a_routine: like routine; a_target: like target)
 			-- Initialize instance.
 		require
 			non_void_routine: a_routine /= Void
@@ -47,7 +47,7 @@ feature -- Access
 	target: CODE_EXPRESSION
 			-- Target expression
 			
-	code: STRING is
+	code: STRING
 			-- | Result := "`target_object'.`routine_name'"
 			-- | OR		:= "`routine_name'" if `target_object.name' is_equal "Current" or "current_type.name"
 			-- | OR		:= "feature {`target_object'}.`routine_name'" if typeof `target_object' is CODE_TYPE_REFERENCE_EXPRESSION.
@@ -80,7 +80,7 @@ feature -- Access
 		
 feature -- Status Report
 
-	type: CODE_TYPE_REFERENCE is
+	type: CODE_TYPE_REFERENCE
 			-- Type
 		do
 			if member /= Void then
@@ -93,7 +93,7 @@ feature -- Status Report
 		
 feature {NONE} -- Implementation
 
-	member: CODE_MEMBER_REFERENCE is
+	member: CODE_MEMBER_REFERENCE
 			-- Corresponding member
 		require
 			in_generation: current_state = Code_generation
@@ -118,7 +118,7 @@ invariant
 	non_void_routine: routine /= Void
 	non_void_target: target /= Void
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

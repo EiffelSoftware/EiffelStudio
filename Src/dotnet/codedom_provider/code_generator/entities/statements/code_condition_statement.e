@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel representation of a CodeDom condition statement"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_condition: like condition; a_true_statements: like true_statements; a_false_statements: like false_statements) is
+	make (a_condition: like condition; a_true_statements: like true_statements; a_false_statements: like false_statements)
 			-- Initialize `condition', `true_statements' and `false_statements'.
 		require
 			non_void_condition: a_condition /= Void
@@ -41,7 +41,7 @@ feature -- Access
 	false_statements: LIST [CODE_STATEMENT]
 			-- False statements
 			
-	code: STRING is
+	code: STRING
 			-- | Result := "if `condition' then 
 			-- |				`true_statements'
 			-- |		  [	else
@@ -86,7 +86,7 @@ feature -- Access
 			Result.append ("end%N")
 		end
 		
-	need_dummy: BOOLEAN is
+	need_dummy: BOOLEAN
 			-- Does statement require dummy local variable?
 		do
 			if true_statements /= Void then
@@ -114,7 +114,7 @@ feature -- Access
 invariant
 	non_void_condition: condition /= Void
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

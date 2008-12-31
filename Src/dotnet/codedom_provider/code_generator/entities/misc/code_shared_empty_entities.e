@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Empty entities used when CodeDom tree is corrupted"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,26 +21,26 @@ inherit
 
 feature -- Access
 
-	Empty_snippet_feature: CODE_SNIPPET_FEATURE is
+	Empty_snippet_feature: CODE_SNIPPET_FEATURE
 			-- Empty snippet feature
 		once
 			create Result.make ("empty_", "empty_ is do end%N")
 		end
 
-	Empty_attribute: CODE_ATTRIBUTE is
+	Empty_attribute: CODE_ATTRIBUTE
 			-- Empty attribute
 		once
 			create Result.make ("empty_", "empty_")
 			Result.set_result_type (Empty_type_reference)
 		end
 
-	Empty_routine: CODE_ROUTINE is
+	Empty_routine: CODE_ROUTINE
 			-- Empty routine
 		once
 			create {CODE_ROUTINE_IMP} Result.make ("empty_", "empty_")
 		end
 
-	Empty_type_reference: CODE_TYPE_REFERENCE is
+	Empty_type_reference: CODE_TYPE_REFERENCE
 			-- Empty type reference
 		local
 			l_member_reference: CODE_MEMBER_REFERENCE
@@ -51,19 +51,19 @@ feature -- Access
 			Result.add_member (l_member_reference)
 		end
 		
-	Empty_member_reference: CODE_MEMBER_REFERENCE is
+	Empty_member_reference: CODE_MEMBER_REFERENCE
 			-- Empty member reference
 		once
 			Result := Empty_type_reference.member ("empty_", Void)
 		end
 	
-	Empty_expression: CODE_EXPRESSION is
+	Empty_expression: CODE_EXPRESSION
 			-- Empty expression
 		once
 			create {CODE_PRIMITIVE_EXPRESSION} Result.make (("").to_cil)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

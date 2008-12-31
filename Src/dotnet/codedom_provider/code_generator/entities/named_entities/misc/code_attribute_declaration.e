@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Custom attribute declaration"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_type: like type; a_arguments: like arguments) is
+	make (a_type: like type; a_arguments: like arguments)
 			-- Initialization
 		require
 			non_void_type: a_type /= Void
@@ -36,7 +36,7 @@ feature -- Access
 	type: CODE_TYPE_REFERENCE
 			-- Type of created custom attribute
 			
-	code: STRING is
+	code: STRING
 			-- | Result := "create {`name'}.constructor_name [('arguments')] [[`arguments']] end"
 			-- Eiffel syntax of custom attribute.
 		local
@@ -94,7 +94,7 @@ invariant
 	non_void_arguments: arguments /= Void
 	non_void_type: type /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

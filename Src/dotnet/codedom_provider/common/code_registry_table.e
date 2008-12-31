@@ -1,15 +1,18 @@
-indexing
-	description: "Table of value/key pairs persisted in the Windows registry%
-						% Allows for multiple keys to be associated with the same value%
-						% Two registry hives will be created:%
-						%  * The key hive associates keys with a unique ID%
-						%  * The value hive associates values with the unique ID corresponding to the matching key"
+note
+	description: "[
+		Table of value/key pairs persisted in the Windows registry
+		Allows for multiple keys to be associated with the same value
+		Two registry hives will be created:
+		 * The key hive associates keys with a unique ID
+		 * The value hive associates values with the unique ID corresponding to the matching key
+
+		Note: Some features of this class may raise exceptions if user doesn't have access rights
+				to the corresponding registry hive.
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	note: "Some features of this class may raise exceptions if user doesn't have access rights%
-				%to the corresponding registry hive."
 class
 	CODE_REGISTRY_TABLE
 
@@ -18,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_value_hive, a_key_hive: STRING) is
+	make (a_value_hive, a_key_hive: STRING)
 			-- Set `value_hive' and `key_hive'.
 			-- These are paths under `HKCU'/`HKLM' where values and keys will be stored.
 			-- E.g. 'Software\ISE\Eiffel CodeDom Provider\5.6\Configurations' and 'Software\ISE\Eiffel CodeDom Provider\5.6\Applications'
@@ -35,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item (a_key: STRING): STRING is
+	item (a_key: STRING): STRING
 			-- Value associated with key `a_key'
 		require
 			non_void_key: a_key /= Void
@@ -59,7 +62,7 @@ feature -- Access
 			non_void_result_iff_has_key: has (a_key) = (Result /= Void)
 		end
 
-	current_keys: LIST [STRING] is
+	current_keys: LIST [STRING]
 			-- All registered keys
 		local
 			l_key: REGISTRY_KEY
@@ -84,7 +87,7 @@ feature -- Access
 			end			
 		end
 		
-	linear_representation: LIST [STRING] is
+	linear_representation: LIST [STRING]
 			-- All registered values
 		local
 			l_key: REGISTRY_KEY
@@ -120,7 +123,7 @@ feature -- Access
 
 feature -- Status Report
 
-	has (a_key: STRING): BOOLEAN is
+	has (a_key: STRING): BOOLEAN
 			-- Does key hive has entry `a_key'?
 		require
 			non_void_key: a_key /= Void
@@ -130,7 +133,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	put (a_value, a_key: STRING) is
+	put (a_value, a_key: STRING)
 			-- Add value `a_value' associated with key `a_key'.
 		require
 			non_void_value: a_value /= Void
@@ -150,7 +153,7 @@ feature -- Basic Operations
 			replace (a_value, a_key)
 		end
 	
-	replace (a_value, a_key: STRING) is
+	replace (a_value, a_key: STRING)
 			-- Change value associated with key `a_key' to `a_value'.
 		require
 			non_void_value: a_value /= Void
@@ -169,7 +172,7 @@ feature -- Basic Operations
 			l_key.close
 		end
 	
-	remove (a_key: STRING) is
+	remove (a_key: STRING)
 			-- Remove value associated with key `a_key'.
 		require
 			non_void_key: a_key /= Void
@@ -193,7 +196,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	guid_from_key (a_key: STRING): STRING is
+	guid_from_key (a_key: STRING): STRING
 			-- GUID associated with key `a_key'
 		require
 			non_void_key: a_key /= Void
@@ -223,7 +226,7 @@ feature {NONE} -- Implementation
 			non_void_guid_if_has_key: has (a_key) implies Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

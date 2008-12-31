@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel representation of a CodeDom snippet compile unit"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_value: like value) is
+	make (a_value: like value)
 			-- Initialize `namespaces'.
 		require
 			non_void_value: a_value /= Void
@@ -37,7 +37,7 @@ feature -- Access
 	value: STRING
 			-- Literal code block of the snippet
 
-	code: STRING is
+	code: STRING
 			-- Eiffel code of snippet compile unit
 		do
 			Result := value.twin
@@ -46,7 +46,7 @@ feature -- Access
 invariant
 	non_void_value: value /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

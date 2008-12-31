@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel cluster, used to initialize ace file"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_path: like path) is
+	make (a_name: like name; a_path: like path)
 			-- Initialize instance
 		require
 			non_void_name: a_name /= Void
@@ -48,7 +48,7 @@ feature -- Access
 	namespace: STRING
 			-- Cluster namespace
 
-	code: STRING is
+	code: STRING
 			-- Cluster LACE code
 		do
 			create Result.make (512)
@@ -101,7 +101,7 @@ feature -- Access
 		
 feature -- Element Settings
 
-	add_visible_clause (a_name: STRING) is
+	add_visible_clause (a_name: STRING)
 			-- Add `a_name' to `visible_clauses'.
 		require
 			non_void_name: a_name /= Void
@@ -111,7 +111,7 @@ feature -- Element Settings
 			added: visible_clauses.has (a_name)
 		end
 		
-	add_exclude_clause (a_name: STRING) is
+	add_exclude_clause (a_name: STRING)
 			-- Add `a_name' to `exclude_clauses'.
 		require
 			non_void_name: a_name /= Void
@@ -121,7 +121,7 @@ feature -- Element Settings
 			added: exclude_clauses.has (a_name)
 		end
 	
-	set_is_library is
+	set_is_library
 			-- Set `is_library' to `True'.
 		do
 			is_library := True
@@ -129,7 +129,7 @@ feature -- Element Settings
 			is_library: is_library
 		end
 	
-	set_namespace (a_namespace: like namespace) is
+	set_namespace (a_namespace: like namespace)
 			-- Set `namespace' with `a_namespace'.
 		do
 			namespace := a_namespace
@@ -140,7 +140,7 @@ feature -- Element Settings
 invariant
 	non_void_path: path /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

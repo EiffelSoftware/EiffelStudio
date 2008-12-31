@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Code generator for delegate expressions"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 
-	generate_delegate_create_expression (a_source: SYSTEM_DLL_CODE_DELEGATE_CREATE_EXPRESSION) is
+	generate_delegate_create_expression (a_source: SYSTEM_DLL_CODE_DELEGATE_CREATE_EXPRESSION)
 			-- | Check `last_type' is not Void else raise an exception.
 			-- | Create instance of `CODE_DELEGATE_CREATE_EXPRESSION'.
 			-- | Set `last_expression'.
@@ -45,7 +45,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			non_void_last_expression: last_expression /= Void
 		end
 
-	generate_delegate_invoke_expression (a_source: SYSTEM_DLL_CODE_DELEGATE_INVOKE_EXPRESSION) is
+	generate_delegate_invoke_expression (a_source: SYSTEM_DLL_CODE_DELEGATE_INVOKE_EXPRESSION)
 			-- | Check `last_type' is not Void else raise an exception.
 			-- | Create instance of `CODE_DELEGATE_INVOKE_EXPRESSION'.
 			-- | And initialize this instance with `a_source' -> Call `initialise_delegate_invoke_expression'
@@ -69,7 +69,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			non_void_last_expression: last_expression /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

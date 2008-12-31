@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "About dialog box"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Populate the dialog box.
 		local
 			main_horizontal_box: EV_HORIZONTAL_BOX
@@ -102,7 +102,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	message: STRING is
+	message: STRING
 			-- Message displayed in the dialog box.
 		do
 			Result := message_label.text
@@ -110,7 +110,7 @@ feature -- Access
 
 feature -- Element change
 	
-	set_message (a_message: STRING) is
+	set_message (a_message: STRING)
 		do
 			message_label.set_text (a_message)
 		end
@@ -129,16 +129,16 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation / Constants
 
-	Default_title: STRING is "About Dialog"
+	Default_title: STRING = "About Dialog"
 			-- Default title for the dialog window.
 
-	Default_message: STRING is
+	Default_message: STRING =
 		"Eiffel Assembly Cache Browser%N%
 		%Version 1.0%N%
 		%%N%
 		%Copyright (C) 2002 Interactive Software Engineering, Inc.";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

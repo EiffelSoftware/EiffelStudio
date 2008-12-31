@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	author: ""
 	date: "$Date$"
@@ -9,7 +9,7 @@ class
 
 feature -- Factory Functions
 
-	new_cache_info (a_path: STRING): CACHE_INFO is
+	new_cache_info (a_path: STRING): CACHE_INFO
 			-- Creates an initialize a {CACHE_INFO}.
 			-- To ensure correct initialization `'a_path's directory will be created,
 			-- as will the cache file `a_path'

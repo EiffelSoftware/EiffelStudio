@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog box that appire when the user want to edit a feature in the edit_area"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			Precursor {EV_WINDOW}
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Basic Operations
 
-	feature_name_changed is
+	feature_name_changed
 			-- feature name changed and validated.
 			-- Call emitter to validate the change.
 		local
@@ -46,7 +46,7 @@ feature {NONE} -- Basic Operations
 
 feature -- Status Setting
 
-	set_feature (a_feature_name: STRING) is
+	set_feature (a_feature_name: STRING)
 			-- Set `l_feature' with `a_feature_name'.
 		require
 			non_void_a_feature_name: a_feature_name /= Void
@@ -63,7 +63,7 @@ feature -- Status Setting
 
 feature -- Basic Operations
 
-	focus is
+	focus
 			-- Set focus on `l_feature'.
 			-- Add agent on `focus_out_actions' to destroy window.
 		do
@@ -74,7 +74,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			-- Re-implement if you wish to enable checking
@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
 	
 	l_feature: EV_TEXT_FIELD
 	
-	on_key_pressed (a_key: EV_KEY) is
+	on_key_pressed (a_key: EV_KEY)
 			-- prossed a_key.
 		require
 			non_void_a_key: a_key /= Void
@@ -103,7 +103,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

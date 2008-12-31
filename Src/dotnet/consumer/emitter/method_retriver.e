@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Retrive methods associated to a property or an event."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature -- Implementation
 
-	property_getter (prop: PROPERTY_INFO): METHOD_INFO is
+	property_getter (prop: PROPERTY_INFO): METHOD_INFO
 			-- Get `getter' of `prop' if it exists.
 		local
 			retried: BOOLEAN
@@ -32,7 +32,7 @@ feature -- Implementation
 			retry
 		end
 
-	property_setter (prop: PROPERTY_INFO): METHOD_INFO is
+	property_setter (prop: PROPERTY_INFO): METHOD_INFO
 			-- Get `setter' of `prop' if it exists.
 		local
 			retried: BOOLEAN
@@ -48,7 +48,7 @@ feature -- Implementation
 			retry
 		end
 
-	event_adder (event: EVENT_INFO): METHOD_INFO is
+	event_adder (event: EVENT_INFO): METHOD_INFO
 			-- Get `adder' of `event' if it exists.
 		local
 			retried: BOOLEAN
@@ -64,7 +64,7 @@ feature -- Implementation
 			retry
 		end
 
-	event_remover (event: EVENT_INFO): METHOD_INFO is
+	event_remover (event: EVENT_INFO): METHOD_INFO
 			-- Get `remover' of `event' if it exists.
 		local
 			retried: BOOLEAN
@@ -80,7 +80,7 @@ feature -- Implementation
 			retry
 		end
 
-	event_raiser (event: EVENT_INFO): METHOD_INFO is
+	event_raiser (event: EVENT_INFO): METHOD_INFO
 			-- Get `raiser' of `event' if it exists.
 		local
 			retried: BOOLEAN
@@ -96,7 +96,7 @@ feature -- Implementation
 			retry
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

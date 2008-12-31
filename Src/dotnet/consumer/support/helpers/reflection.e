@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Helper functions using .NET reflection"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Status Report
 
-	is_consumed_type (t: SYSTEM_TYPE): BOOLEAN is
+	is_consumed_type (t: SYSTEM_TYPE): BOOLEAN
 			-- Is `t' a public CLS compliant type?
 		do
 			if is_eiffel_compliant_type (t) then
@@ -31,7 +31,7 @@ feature -- Status Report
 			end
 		end
 
-	is_consumed_method (m: METHOD_BASE): BOOLEAN is
+	is_consumed_method (m: METHOD_BASE): BOOLEAN
 			-- Is `m' a public/family CLS compliant method?
 		require
 			m_not_void: m /= Void
@@ -42,7 +42,7 @@ feature -- Status Report
 			end
 		end
 
-	is_consumed_field (f: FIELD_INFO): BOOLEAN is
+	is_consumed_field (f: FIELD_INFO): BOOLEAN
 			-- Is `f' a public/family CLS compliant field?
 		require
 			f_not_void: f /= Void
@@ -57,7 +57,7 @@ feature -- Status Report
 			end
 		end
 
-	is_valid_literal_field (f: FIELD_INFO): BOOLEAN is
+	is_valid_literal_field (f: FIELD_INFO): BOOLEAN
 			-- Is `f' a valid literal field?
 		require
 			f_not_void: f /= Void
@@ -66,7 +66,7 @@ feature -- Status Report
 			Result := field_value (f) /= Void
 		end
 
-	is_cls_generic_type (a_type: SYSTEM_TYPE): BOOLEAN is
+	is_cls_generic_type (a_type: SYSTEM_TYPE): BOOLEAN
 			--
 		local
 			l_name: SYSTEM_STRING
@@ -78,7 +78,7 @@ feature -- Status Report
 			Result := l_name = Void or else l_name.index_of ('`') >= 0
 		end
 
-	is_eiffel_compliant_type (a_type: SYSTEM_TYPE): BOOLEAN is
+	is_eiffel_compliant_type (a_type: SYSTEM_TYPE): BOOLEAN
 			-- is `a_type' Eiffel-compliant
 		require
 			a_type_not_void: a_type /= Void
@@ -89,7 +89,7 @@ feature -- Status Report
 			Result := l_type.is_eiffel_compliant
 		end
 
-	is_eiffel_compliant_member (member: MEMBER_INFO): BOOLEAN is
+	is_eiffel_compliant_member (member: MEMBER_INFO): BOOLEAN
 			-- 	Is `member' Eiffel-compliant?
 		local
 			l_type: SYSTEM_TYPE
@@ -102,13 +102,13 @@ feature -- Status Report
 			end
 		end
 
-	is_public_field (a_field: FIELD_INFO): BOOLEAN is
+	is_public_field (a_field: FIELD_INFO): BOOLEAN
 			-- Is `a_field' public and static?
 		do
 			Result := a_field.is_public and not a_field.is_literal
 		end
 
-	is_init_only_field (a_field: FIELD_INFO): BOOLEAN is
+	is_init_only_field (a_field: FIELD_INFO): BOOLEAN
 			-- Is `a_field' a initonly field?
 		do
 			Result := a_field.is_init_only
@@ -116,7 +116,7 @@ feature -- Status Report
 
 feature {NONE} -- Implementation
 
-	is_visible_type (a_type: SYSTEM_TYPE): BOOLEAN is
+	is_visible_type (a_type: SYSTEM_TYPE): BOOLEAN
 			-- Determines if type `a_type' is really visible, which is require on 2.0 to test if types are really public!
 		require
 			a_type_attached: a_type /= Void
@@ -132,7 +132,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_visible_function: METHOD_INFO is
+	is_visible_function: METHOD_INFO
 			-- get_IsVisible function from System.Type
 		local
 			l_type: SYSTEM_TYPE
@@ -143,7 +143,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

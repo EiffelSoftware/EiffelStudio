@@ -1,4 +1,4 @@
- indexing
+ note
 	description: "Splitter, will generate Eiffel class files from Eiffel multi-class files."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_folder, a_regexp, a_destination_folder: STRING; a_process_subfolders: BOOLEAN) is
+	make (a_folder, a_regexp, a_destination_folder: STRING; a_process_subfolders: BOOLEAN)
 			-- Initialize instance.
 		require
 			non_void_folder: a_folder /= Void
@@ -63,7 +63,7 @@ feature -- Access
 	event_handler: ROUTINE [ANY, TUPLE [EV_THREAD_EVENT]]
 			-- Event handler
 
-	file_count: INTEGER is
+	file_count: INTEGER
 			-- Number of created files
 		do
 			Result := generated_files.count
@@ -71,7 +71,7 @@ feature -- Access
 
 feature -- Basic Operation
 
-	split_files (a_event_handler: like event_handler) is
+	split_files (a_event_handler: like event_handler)
 			-- Scan `folder' and its subfolders if `process_subfolders' for files
 			-- matching `regexp' and generate corresponding Eiffel class files in
 			-- `destination_folder' if not Void or in current folder otherwise.
@@ -112,7 +112,7 @@ feature -- Basic Operation
 
 feature {NONE} -- Implementation
 
-	split_files_in_folder (a_folder: STRING) is
+	split_files_in_folder (a_folder: STRING)
 			-- Split files in folder `a_folder' and subfolder if `process_subfolders'.
 		require
 			non_void_folder: a_folder /= Void
@@ -169,7 +169,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 	
-	split_file (a_file_path: STRING) is
+	split_file (a_file_path: STRING)
 			-- Split file at path `a_file'.
 		require
 			non_void_path: a_file_path /= Void
@@ -236,7 +236,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 	
-	write_class (a_class_text, a_directory: STRING) is
+	write_class (a_class_text, a_directory: STRING)
 			-- Write Eiffel class with content `a_class_text'.
 		require
 			non_void_class_text: a_class_text /= Void
@@ -283,7 +283,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 		
-	raise_event (a_event: EV_THREAD_EVENT) is
+	raise_event (a_event: EV_THREAD_EVENT)
 			-- Call event handler.
 		require
 			non_void_event: a_event /= Void
@@ -305,7 +305,7 @@ invariant
 	non_void_regexp: regexp /= Void
 	non_void_parser: parser /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

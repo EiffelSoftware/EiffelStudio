@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Special features of eiffel enum type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -9,27 +9,27 @@ class
 
 feature -- Implementation
 	
-	from_integer_signature: STRING is "from_integer(System.Int32)"
+	from_integer_signature: STRING = "from_integer(System.Int32)"
 			-- signature of feature from_integer.
 
-	to_integer_signature: STRING is "to_integer"
+	to_integer_signature: STRING = "to_integer"
 			-- signature of feature to_integer.
 
-	or_signature: STRING is "|(System.AttributeTargets)"
+	or_signature: STRING = "|(System.AttributeTargets)"
 			-- signature of feature infix"|".
 
 	
-	from_integer_comment: STRING is "from_integer"
+	from_integer_comment: STRING = "from_integer"
 			-- Comment for feature from_integer.
 
-	to_integer_comment: STRING is "to_integer"
+	to_integer_comment: STRING = "to_integer"
 			-- Comment for feature to_integer.
 
-	or_comment: STRING is "|(System.AttributeTargets";
+	or_comment: STRING = "|(System.AttributeTargets";
 			-- Comment for feature infix"|".
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

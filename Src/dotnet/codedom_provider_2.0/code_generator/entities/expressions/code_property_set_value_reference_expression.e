@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Eiffel representation of a CodeDom property set value reference expression"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_property_type: CODE_TYPE_REFERENCE) is
+	make (a_property_type: CODE_TYPE_REFERENCE)
 			-- Creation routine
 		require
 			non_void_property_type: a_property_type /= Void
@@ -31,7 +31,7 @@ feature -- Access
 	property_type: CODE_TYPE_REFERENCE
 			-- Associated property type
 
-	code: STRING is
+	code: STRING
 			-- | Result C# := "value"
 			-- Eiffel code of property set value reference expression
 		do
@@ -40,7 +40,7 @@ feature -- Access
 		
 feature -- Status Report
 	
-	type: CODE_TYPE_REFERENCE is
+	type: CODE_TYPE_REFERENCE
 			-- Type
 		do
 			Result := property_type
@@ -49,7 +49,7 @@ feature -- Status Report
 invariant
 	non_void_property_type: property_type /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

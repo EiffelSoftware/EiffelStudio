@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -9,7 +9,7 @@ create
 	
 feature -- Initialization
 	
-	make is
+	make
 			-- Initialization
 		do
 			create name.make_empty
@@ -28,7 +28,7 @@ feature -- Access
 
 feature -- Status Setting
 
-	set_name (a_name: like name) is
+	set_name (a_name: like name)
 			-- Set `name' with `a_name'.
 		require
 			non_void_a_name: a_name /= Void
@@ -38,7 +38,7 @@ feature -- Status Setting
 			name_set: name = a_name
 		end
 
-	set_description (a_description: like description) is
+	set_description (a_description: like description)
 			-- Set `description' with `a_description'.
 		require
 			non_void_a_description: a_description /= Void
@@ -53,7 +53,7 @@ invariant
 	non_void_name: name /= Void
 	non_void_description: description /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

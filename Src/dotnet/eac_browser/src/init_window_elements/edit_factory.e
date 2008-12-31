@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Print in output the eiffel type with all its eiffelfeatures corresponding to given dotnet type name."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature {NONE} -- Initialization
 
- 	make (a_window: MAIN_WINDOW_IMP) is
+ 	make (a_window: MAIN_WINDOW_IMP)
  			-- Initialize `parent_window' and `tree'.
  		require
  			non_void_a_window: a_window /= Void
@@ -31,7 +31,7 @@ feature {NONE}	-- Access
 
 feature -- Access
 
-	edit_info_assemblies is
+	edit_info_assemblies
 			-- print info of all assemblies in `assemblies'.
 		local
 			l_row: EV_MULTI_COLUMN_LIST_ROW
@@ -74,7 +74,7 @@ feature -- Access
 			parent_window.assemblies.align_text_right (4)
 		end		
 
-	edit_info_assembly (an_assembly: CONSUMED_ASSEMBLY) is
+	edit_info_assembly (an_assembly: CONSUMED_ASSEMBLY)
 			-- print info of all assemblies and select assembly corresponding to `an_assembly'.
 		require
 			non_void_an_assembly: an_assembly /= Void
@@ -101,7 +101,7 @@ feature -- Access
 			parent_window.edit_comments_area.disable_edit
 		end
 
-	edit_result_search_eiffel_type_name (dotnet_types: LINKED_LIST [SPECIFIC_TYPE]) is
+	edit_result_search_eiffel_type_name (dotnet_types: LINKED_LIST [SPECIFIC_TYPE])
 			-- Print in `l_text_1' the features corresponding to `a_dotnet_type_name'.
 		require
 			non_void_dotnet_types: dotnet_types /= Void
@@ -150,7 +150,7 @@ feature -- Access
 
 feature -- Color edit
 
-	internal_color_output: CELL [DISPLAY_TYPE] is		
+	internal_color_output: CELL [DISPLAY_TYPE]		
 			-- Type to diplay.
 		once
 			create Result.put (Void)
@@ -158,7 +158,7 @@ feature -- Color edit
 			non_void_result: Result /= Void
 		end
 
-	color_edit_type (an_assembly: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING) is
+	color_edit_type (an_assembly: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING)
 			-- Display in `color_edit_comments_area' the features corresponding to `a_dotnet_type_name'.
 		require
 			non_void_an_assembly: an_assembly /= Void
@@ -170,7 +170,7 @@ feature -- Color edit
 			color_edit_type_with_feature_selected (an_assembly, a_dotnet_type_name, "")
 		end
 
-	color_edit_type_with_feature_selected (an_assembly: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING; an_eiffel_feature_name: STRING) is
+	color_edit_type_with_feature_selected (an_assembly: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING; an_eiffel_feature_name: STRING)
 			-- Display in `color_edit_comments_area' the features corresponding to `a_dotnet_type_name'.
 		require
 			non_void_an_assembly: an_assembly /= Void
@@ -188,7 +188,7 @@ feature -- Color edit
 			internal_color_output.put (output)
 		end
 		
-	color_refresh_type is
+	color_refresh_type
 			-- Refresh type displayed in `color_edit_comments_area'.
 		local
 			output: DISPLAY_TYPE
@@ -201,7 +201,7 @@ feature -- Color edit
 		
 feature -- Tree Edit
 
-	display_tree_type (an_assembly: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING) is
+	display_tree_type (an_assembly: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING)
 			-- display type in a tree.
 		require
 			non_void_an_assembly: an_assembly /= Void
@@ -217,7 +217,7 @@ feature -- Tree Edit
 			tree_display.print_type (an_assembly, a_dotnet_type_name)
 		end
 	
-	display_imediat_features (an_assembly: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING) is
+	display_imediat_features (an_assembly: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING)
 			-- display type in a tree.
 		require
 			non_void_an_assembly: an_assembly /= Void
@@ -232,7 +232,7 @@ feature -- Tree Edit
 			tree_display.print_type (an_assembly, a_dotnet_type_name)
 		end
 
-	display_inherited_features (an_assembly: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING) is
+	display_inherited_features (an_assembly: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING)
 			-- display type in a tree.
 		require
 			non_void_an_assembly: an_assembly /= Void
@@ -247,7 +247,7 @@ feature -- Tree Edit
 			tree_display.print_type_inherited_features (an_assembly, a_dotnet_type_name)
 		end
 
-	display_tree_constructors (an_assembly: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING) is
+	display_tree_constructors (an_assembly: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING)
 			-- display type in a tree.
 		require
 			non_void_an_assembly: an_assembly /= Void
@@ -262,7 +262,7 @@ feature -- Tree Edit
 			tree_display.print_constructors (an_assembly, a_dotnet_type_name)
 		end
 		
-	display_tree_all_features (an_assembly: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING) is
+	display_tree_all_features (an_assembly: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING)
 			-- display type in a tree.
 		require
 			non_void_an_assembly: an_assembly /= Void
@@ -280,7 +280,7 @@ feature -- Tree Edit
 invariant
 	non_void_parent_window: parent_window /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

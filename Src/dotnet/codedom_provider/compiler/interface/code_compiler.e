@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Eiffel compiler CodeDom interface implementation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,7 +34,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	compile_assembly_from_source (a_options: SYSTEM_DLL_COMPILER_PARAMETERS; a_source: SYSTEM_STRING): SYSTEM_DLL_COMPILER_RESULTS is
+	compile_assembly_from_source (a_options: SYSTEM_DLL_COMPILER_PARAMETERS; a_source: SYSTEM_STRING): SYSTEM_DLL_COMPILER_RESULTS
 			-- Compile assembly from string `a_source' using compiler options `a_options'.
 		require else
 			non_void_options: a_options /= Void
@@ -64,7 +64,7 @@ feature -- Basic Operations
 			Event_manager.process_exception
 		end
 
-	compile_assembly_from_source_batch (a_options: SYSTEM_DLL_COMPILER_PARAMETERS; a_sources: NATIVE_ARRAY [SYSTEM_STRING]): SYSTEM_DLL_COMPILER_RESULTS is
+	compile_assembly_from_source_batch (a_options: SYSTEM_DLL_COMPILER_PARAMETERS; a_sources: NATIVE_ARRAY [SYSTEM_STRING]): SYSTEM_DLL_COMPILER_RESULTS
 			-- Compile assembly from strings in array `a_sources' using compiler options `a_options'.
 		require else
 			non_void_options: a_options /= Void
@@ -102,7 +102,7 @@ feature -- Basic Operations
 			Event_manager.process_exception
 		end
 
-	compile_assembly_from_file (a_options: SYSTEM_DLL_COMPILER_PARAMETERS; a_file_name: SYSTEM_STRING): SYSTEM_DLL_COMPILER_RESULTS is
+	compile_assembly_from_file (a_options: SYSTEM_DLL_COMPILER_PARAMETERS; a_file_name: SYSTEM_STRING): SYSTEM_DLL_COMPILER_RESULTS
 			-- Compile assembly from file `a_file_name' using compiler options `a_options'.
 		require else
 			non_void_options: a_options /= Void
@@ -135,7 +135,7 @@ feature -- Basic Operations
 			Event_manager.process_exception
 		end
 
-	compile_assembly_from_file_batch (a_options: SYSTEM_DLL_COMPILER_PARAMETERS; a_file_names: NATIVE_ARRAY [SYSTEM_STRING]): SYSTEM_DLL_COMPILER_RESULTS is
+	compile_assembly_from_file_batch (a_options: SYSTEM_DLL_COMPILER_PARAMETERS; a_file_names: NATIVE_ARRAY [SYSTEM_STRING]): SYSTEM_DLL_COMPILER_RESULTS
 			-- Compiles an assembly based on the specified `a_options' and `file_names'.
 		require else
 			non_void_options: a_options /= Void
@@ -182,7 +182,7 @@ feature -- Basic Operations
 			Event_manager.process_exception
 		end
 
-	compile_assembly_from_dom (a_options: SYSTEM_DLL_COMPILER_PARAMETERS; a_compilation_unit: SYSTEM_DLL_CODE_COMPILE_UNIT): SYSTEM_DLL_COMPILER_RESULTS is
+	compile_assembly_from_dom (a_options: SYSTEM_DLL_COMPILER_PARAMETERS; a_compilation_unit: SYSTEM_DLL_CODE_COMPILE_UNIT): SYSTEM_DLL_COMPILER_RESULTS
 			-- Creates an assembly based on the specified `a_options' and `a_compilation_unit' (the text to compile).
 		require else
 			non_void_options: a_options /= Void
@@ -216,7 +216,7 @@ feature -- Basic Operations
 			end
 		end
 
-	compile_assembly_from_dom_batch (a_options: SYSTEM_DLL_COMPILER_PARAMETERS; a_compilation_units: NATIVE_ARRAY [SYSTEM_DLL_CODE_COMPILE_UNIT]): SYSTEM_DLL_COMPILER_RESULTS is
+	compile_assembly_from_dom_batch (a_options: SYSTEM_DLL_COMPILER_PARAMETERS; a_compilation_units: NATIVE_ARRAY [SYSTEM_DLL_CODE_COMPILE_UNIT]): SYSTEM_DLL_COMPILER_RESULTS
 			-- Compiles an assembly based on the specified a_options.
 		require else
 			non_void_options: a_options /= Void
@@ -263,7 +263,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 		
-	initialize (a_options: SYSTEM_DLL_COMPILER_PARAMETERS) is
+	initialize (a_options: SYSTEM_DLL_COMPILER_PARAMETERS)
 			-- Initialize compilation settings from `a_options'.
 		require
 			non_void_options: a_options /= Void
@@ -521,7 +521,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 	
-	compile is
+	compile
 			-- Compile all `.e' files in directory `compilation_directory'.
 			-- Put resulting dlls and pdb in `system_path' folder.
 		require
@@ -578,7 +578,7 @@ feature {NONE} -- Implementation
 			non_void_results: last_compilation_results /= Void
 		end
 		
-	check_compilation_result is
+	check_compilation_result
 			-- Check that assembly was created.
 			-- Set native compiler result and compiled assembly accordingly.
 		local
@@ -654,7 +654,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 		
-	cleanup is
+	cleanup
 			-- Cleanup compiler generated temporary files (EIFGEN directory and .epr file)
 		local
 			l_dir: DIRECTORY
@@ -693,7 +693,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 		
-	read_output is
+	read_output
 			-- Read output from `output_stream'.
 			-- Set result in `compiler_output'.
 		require
@@ -702,7 +702,7 @@ feature {NONE} -- Implementation
 			compiler_output := output_stream.read_to_end
 		end
 		
-	read_error is
+	read_error
 			-- Read output from `error_stream'.
 			-- Set result in `compiler_error'.
 		require
@@ -713,7 +713,7 @@ feature {NONE} -- Implementation
 	
 feature {NONE} -- Private access
 
-	Code_generator_options: SYSTEM_DLL_CODE_GENERATOR_OPTIONS is
+	Code_generator_options: SYSTEM_DLL_CODE_GENERATOR_OPTIONS
 			-- Options used by code generator to generate
 			-- code to be compiled from Codedom compile unit
 		once
@@ -738,7 +738,7 @@ feature {NONE} -- Private access
 	ace_file_path: STRING
 			-- Path to generated ace file
 
-	ace_file_name: STRING is
+	ace_file_name: STRING
 			-- Ace file name
 		local
 			l_index: INTEGER
@@ -764,7 +764,7 @@ feature {NONE} -- Private access
 	precompile_files: LIST [STRING];
 			-- Filename of dlls generated by precompilation (including path)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

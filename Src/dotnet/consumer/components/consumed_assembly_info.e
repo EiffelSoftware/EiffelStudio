@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Information associated to a consumed assembly"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (ass: CONSUMED_ASSEMBLY; assembly_location, assembly_directory: STRING; f: INTEGER)is
+	make (ass: CONSUMED_ASSEMBLY; assembly_location, assembly_directory: STRING; f: INTEGER)
 			-- Initialization
 		require
 			non_void_ass: ass /= Void
@@ -53,7 +53,7 @@ invariant
 	non_void_directory: directory /= Void
 	not_empty_directory: not directory.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

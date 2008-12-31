@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Registry settings used by Eiffel Codedom Compiler for precompiler"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	directory (a_ace_file_name: STRING): STRING is
+	directory (a_ace_file_name: STRING): STRING
 			-- Precompile directory for precompile with file name `a_ace_file_name'
 			-- Note: this feature does not guarentee the existence of the actual directory
 		require
@@ -37,7 +37,7 @@ feature -- Access
 
 feature -- Status Report
 
-	has_directory (a_ace_file_name: STRING): BOOLEAN is
+	has_directory (a_ace_file_name: STRING): BOOLEAN
 			-- Does precompile with ace file `a_ace_file_name' have associated directory?
 		require
 			non_void_ace_file_name: a_ace_file_name /= Void
@@ -55,7 +55,7 @@ feature -- Status Report
 		
 feature -- Basic Operation
 
-	add_precompile (a_ace_file_name, a_directory: STRING) is
+	add_precompile (a_ace_file_name, a_directory: STRING)
 			-- Add precompile with ace file `a_ace_file_name' to be compiled in `a_directory'.
 		require
 			non_void_ace_file_name: a_ace_file_name /= Void
@@ -73,7 +73,7 @@ feature -- Basic Operation
 			retry
 		end
 
-	change_precompile_directory (a_ace_file_name, a_directory: STRING) is
+	change_precompile_directory (a_ace_file_name, a_directory: STRING)
 			-- Change directory to `a_directory' for precompile with ace file name `a_ace_file_name'.
 		require
 			non_void_ace_file_name: a_ace_file_name /= Void
@@ -90,7 +90,7 @@ feature -- Basic Operation
 			retry
 		end
 	
-	remove_precompile (a_ace_file_name: STRING) is
+	remove_precompile (a_ace_file_name: STRING)
 			-- Remove settings for precompile with ace file `a_ace_file_name'.
 		require
 			non_void_ace_file_name: a_ace_file_name /= Void
@@ -109,13 +109,13 @@ feature -- Basic Operation
 
 feature {NONE} -- Private Access
 
-	Config_table: CODE_REGISTRY_TABLE is
+	Config_table: CODE_REGISTRY_TABLE
 			-- Table holding precompile ace files path and directories
 		once
 			create Result.make (Precompile_folders_key, Precompile_ace_files_key)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

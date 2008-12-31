@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Trivial Eiffel compiler output parser"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 		do
 			create error_code.make_empty
 			create error_text.make_empty
@@ -50,7 +50,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	parse (a_compiler_output: STRING) is
+	parse (a_compiler_output: STRING)
 			-- Parse `a_compiler_outpur' and set attribute of class.
 		require
 			non_void_a_compiler_output: a_compiler_output /= Void
@@ -113,7 +113,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	Successful_compilation_keyword: STRING is 
+	Successful_compilation_keyword: STRING 
 			-- Message displayed at the end of a successfull compilation.
 		once
 			Result := "System recompiled."--%NYou must now run %"finish_freezing.exe%" in:"
@@ -122,22 +122,22 @@ feature {NONE} -- Implementation
 			not_empty_successful_compilation: not Result.is_empty
 		end
 
-	Error_code_keyword: STRING is "Error code:"
+	Error_code_keyword: STRING = "Error code:"
 			-- Error code message
 
-	Error_line_keyword: STRING is "Line:"
+	Error_line_keyword: STRING = "Line:"
 			-- Error line keyword.
 
-	Error_text_keyword: STRING is "Type error:"
+	Error_text_keyword: STRING = "Type error:"
 			-- Type error keyword.
 			
-	Error_text_keyword_2: STRING is "Error:"
+	Error_text_keyword_2: STRING = "Error:"
 			-- Type error keyword.
 			
-	Syntax_error_keyword: STRING is "Syntax error at line"
+	Syntax_error_keyword: STRING = "Syntax error at line"
 			-- Syntax error keyword.
 	
-	What_to_do_keyWord: STRING is "Type error:"
+	What_to_do_keyWord: STRING = "Type error:"
 			-- What to do keyword.
 
 
@@ -146,7 +146,7 @@ invariant
 	non_void_error_text: error_text /= Void
 	non_void_what_to_do_text: what_to_do_text /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

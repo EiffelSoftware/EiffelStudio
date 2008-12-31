@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Source code generator for base reference (precursor) expression"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,14 +21,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Creation routine
 		do
 		end
 		
 feature -- Access
 
-	code: STRING is
+	code: STRING
 			-- | Result C# := "base"
 			-- Eiffel code of base reference expression
 			-- NOT SUPPORTED YET !!!
@@ -38,14 +38,14 @@ feature -- Access
 		
 feature -- Status Report
 
-	type: CODE_TYPE_REFERENCE is
+	type: CODE_TYPE_REFERENCE
 			-- Type
 		do
 			Event_manager.raise_event ({CODE_EVENTS_IDS}.not_supported, ["base reference expression"])
 			Result := None_type_reference
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

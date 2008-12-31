@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Associate error code with error messages"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ deferred class
 
 feature -- Access
 
-	error_category: INTEGER_8 is
+	error_category: INTEGER_8
 			-- Error category, should be unique in every class
 		deferred
 		end
@@ -21,7 +21,7 @@ feature -- Access
 	last_error_context: STRING
 			-- Additional information on last error
 
-	error_message: STRING is
+	error_message: STRING
 			-- Error message for `last_error'
 		do
 			Result := error_message_table.item (last_error).twin
@@ -30,18 +30,18 @@ feature -- Access
 			end
 		end
 
-	No_error: INTEGER is 0
+	No_error: INTEGER = 0
 			-- No error occured
 
 feature -- Status Report
 
-	successful: BOOLEAN is
+	successful: BOOLEAN
 			-- Was last operation succesful?
 		do
 			Result := last_error = No_error
 		end
 
-	is_valid_error_code (code: INTEGER): BOOLEAN is
+	is_valid_error_code (code: INTEGER): BOOLEAN
 			-- Is `code' a valid error code?
 		do
 			if code & 0xFF000000 = error_category then
@@ -53,7 +53,7 @@ feature -- Status Report
 
 feature -- Status setting
 
-	set_error (a_code: like last_error; a_context: like last_error_context)	is
+	set_error (a_code: like last_error; a_context: like last_error_context)
 			-- Set `last_error' with `a_code'.
 			-- Set `last_error_context' with `a_context'.
 		require
@@ -68,7 +68,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	error_message_table: HASH_TABLE [STRING, INTEGER] is
+	error_message_table: HASH_TABLE [STRING, INTEGER]
 			-- Error messages keyed by error codes
 		deferred
 		end
@@ -80,7 +80,7 @@ invariant
 	no_error_message_if_successful: successful implies error_message = Void
 	no_context_if_successful: successful implies last_error_context = Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

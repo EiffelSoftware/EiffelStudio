@@ -1,4 +1,4 @@
-indexing
+note
 	description: "AST instruction Visitor."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 	
 feature {AST_YACC} -- Implementation
 
-	process_assign_as (l_as: ASSIGN_AS) is
+	process_assign_as (l_as: ASSIGN_AS)
 			-- Process `l_as'.
 		local
 			l_variable_declaration_statement: SYSTEM_DLL_CODE_VARIABLE_DECLARATION_STATEMENT
@@ -53,7 +53,7 @@ feature {AST_YACC} -- Implementation
 			end
 		end
 
-	process_reverse_as (l_as: REVERSE_AS) is
+	process_reverse_as (l_as: REVERSE_AS)
 			-- Process `l_as'.
 		local
 			l_cast_expression: SYSTEM_DLL_CODE_CAST_EXPRESSION
@@ -76,12 +76,12 @@ feature {AST_YACC} -- Implementation
 			set_last_element_created (Void)
 		end
 
-	process_check_as (l_as: CHECK_AS) is
+	process_check_as (l_as: CHECK_AS)
 			-- Process `l_as'.
 		do
 		end
 
-	process_creation_as (l_as: CREATION_AS) is
+	process_creation_as (l_as: CREATION_AS)
 			-- Process `l_as'.
 		local
 			l_assign_statement: SYSTEM_DLL_CODE_ASSIGN_STATEMENT
@@ -128,13 +128,13 @@ feature {AST_YACC} -- Implementation
 			set_last_element_created (l_assign_statement)
 		end
 
-	process_debug_as (l_as: DEBUG_AS) is
+	process_debug_as (l_as: DEBUG_AS)
 			-- Process `l_as'.
 		local
 		do
 		end
 
-	process_if_as (l_as: IF_AS) is
+	process_if_as (l_as: IF_AS)
 			-- Process `l_as'.
 		local
 			l_condition_statement: SYSTEM_DLL_CODE_CONDITION_STATEMENT
@@ -202,35 +202,35 @@ feature {AST_YACC} -- Implementation
 			set_last_element_created (l_condition_statement)
 		end
 
-	process_inspect_as (l_as: INSPECT_AS) is
+	process_inspect_as (l_as: INSPECT_AS)
 			-- Process `l_as'.
 		do
 		end
 
-	process_instr_call_as (l_as: INSTR_CALL_AS) is
+	process_instr_call_as (l_as: INSTR_CALL_AS)
 			-- Process `l_as'.
 		do
 			l_as.call.process (Visitor)
 		end
 
-	process_loop_as (l_as: LOOP_AS) is
+	process_loop_as (l_as: LOOP_AS)
 			-- Process `l_as'.
 		do
 		end
 
-	process_retry_as (l_as: RETRY_AS) is
+	process_retry_as (l_as: RETRY_AS)
 			-- Process `l_as'.
 		do
 		end
 
 feature {NONE} -- Implementation
 
-	valid_elsif_statement (l_condition_statement: SYSTEM_DLL_CODE_CONDITION_STATEMENT): BOOLEAN is
+	valid_elsif_statement (l_condition_statement: SYSTEM_DLL_CODE_CONDITION_STATEMENT): BOOLEAN
 			-- Is `l_condition_statement' a valid elsif statement?
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

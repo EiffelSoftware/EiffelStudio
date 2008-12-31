@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Shared instances of code factories"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,91 +10,91 @@ class
 
 feature -- Access
 
-	Eiffel_factory: CODE_EIFFEL_FACTORY is
+	Eiffel_factory: CODE_EIFFEL_FACTORY
 			-- Factory for compile units and namespaces
 		once
 			create Result
 		end
 	
-	Type_factory: CODE_TYPE_FACTORY is
+	Type_factory: CODE_TYPE_FACTORY
 			-- Factory for types
 		once
 			create Result
 		end
 	
-	Member_factory: CODE_MEMBER_FACTORY is
+	Member_factory: CODE_MEMBER_FACTORY
 			-- Factory for type members
 		once
 			create Result
 		end
 
-	Routine_factory: CODE_ROUTINE_FACTORY is
+	Routine_factory: CODE_ROUTINE_FACTORY
 			-- Factory for type routines
 		once
 			create Result
 		end
 
-	Custom_attribute_factory: CODE_CUSTOM_ATTRIBUTE_FACTORY is
+	Custom_attribute_factory: CODE_CUSTOM_ATTRIBUTE_FACTORY
 			-- Factory for custom attributes
 		once
 			create Result
 		end
 
-	Statement_factory: CODE_STATEMENT_FACTORY is
+	Statement_factory: CODE_STATEMENT_FACTORY
 			-- Factory for statements
 		once
 			create Result
 		end
 
-	Event_statement_factory: CODE_EVENT_STATEMENT_FACTORY is
+	Event_statement_factory: CODE_EVENT_STATEMENT_FACTORY
 			-- Factory for event related statements
 		once
 			create Result
 		end
 
-	Exception_statement_factory: CODE_EXCEPTION_STATEMENT_FACTORY is
+	Exception_statement_factory: CODE_EXCEPTION_STATEMENT_FACTORY
 			-- Factory for exception statements
 		once
 			create Result
 		end
 
-	Argument_expression_factory: CODE_ARGUMENT_EXPRESSION_FACTORY is
+	Argument_expression_factory: CODE_ARGUMENT_EXPRESSION_FACTORY
 			-- Factory for argument expressions
 		once
 			create Result
 		end
 
-	Array_expression_factory: CODE_ARRAY_EXPRESSION_FACTORY is
+	Array_expression_factory: CODE_ARRAY_EXPRESSION_FACTORY
 			-- Factory for array expressions
 		once
 			create Result
 		end
 
-	Property_expression_factory: CODE_PROPERTY_EXPRESSION_FACTORY is
+	Property_expression_factory: CODE_PROPERTY_EXPRESSION_FACTORY
 			-- Factory for property expressions
 		once
 			create Result
 		end
 	
-	Expression_factory: CODE_EXPRESSION_FACTORY is
+	Expression_factory: CODE_EXPRESSION_FACTORY
 			-- Factory for expressions
 		once
 			create Result
 		end
 
-	Delegate_expression_factory: CODE_DELEGATE_EXPRESSION_FACTORY is
+	Delegate_expression_factory: CODE_DELEGATE_EXPRESSION_FACTORY
 			-- Factory for delegate expressions
 		once
 			create Result
 		end
 	
-	Routine_expression_factory: CODE_ROUTINE_EXPRESSION_FACTORY is
+	Routine_expression_factory: CODE_ROUTINE_EXPRESSION_FACTORY
 			-- Factory for routine expressions
 		once
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

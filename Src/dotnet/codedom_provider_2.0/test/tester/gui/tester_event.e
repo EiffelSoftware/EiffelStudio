@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Event, to be outputed. Either a message or an error."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_message: STRING; a_is_error: BOOLEAN) is
+	make (a_message: STRING; a_is_error: BOOLEAN)
 			-- Initialize instance.
 		require
 			non_void_message: a_message /= Void
@@ -33,7 +33,7 @@ feature -- Access
 	message: STRING;
 			-- Event message
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

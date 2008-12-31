@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
- make (a_name: like name; a_routine: like routine; a_catch_clauses: like catch_clauses; a_try_statements: like try_statements; a_finally_statements: like finally_statements) is
+ make (a_name: like name; a_routine: like routine; a_catch_clauses: like catch_clauses; a_try_statements: like try_statements; a_finally_statements: like finally_statements)
  		-- Initialize instance.
  	require
  		non_void_name: a_name /= Void
@@ -50,7 +50,7 @@ feature -- Access
 	finally_statements: LIST [CODE_STATEMENT]
 			-- Finally statements
 
-	code: STRING is
+	code: STRING
 			-- Generate implementation feature that actually implements the try/catch paradigm.
 		local
 			l_arguments: LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]
@@ -161,7 +161,7 @@ invariant
 	non_void_name: name /= Void
 	non_void_routine: routine /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "AST call Visitor."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature {AST_YACC} -- Implementation
 
-	process_result_as (l_as: RESULT_AS) is
+	process_result_as (l_as: RESULT_AS)
 			-- Process `l_as'.
 		local
 			l_local_expression: SYSTEM_DLL_CODE_SNIPPET_EXPRESSION
@@ -23,7 +23,7 @@ feature {AST_YACC} -- Implementation
 			set_last_element_created (l_local_expression)
 		end
 
-	process_current_as (l_as: CURRENT_AS) is
+	process_current_as (l_as: CURRENT_AS)
 			-- Process `l_as'.
 		local
 			l_current_expression: SYSTEM_DLL_CODE_THIS_REFERENCE_EXPRESSION
@@ -39,7 +39,7 @@ feature {AST_YACC} -- Implementation
 			end
 		end
 
-	process_access_feat_as (l_as: ACCESS_FEAT_AS) is
+	process_access_feat_as (l_as: ACCESS_FEAT_AS)
 			-- Process `l_as'.
 		local
 			l_method_invoke_expression: SYSTEM_DLL_CODE_METHOD_INVOKE_EXPRESSION
@@ -214,7 +214,7 @@ feature {AST_YACC} -- Implementation
 			end
 		end
 
-	process_access_inv_as (l_as: ACCESS_INV_AS) is
+	process_access_inv_as (l_as: ACCESS_INV_AS)
 			-- Process `l_as'.
 		local
 			l_delegate_expression: SYSTEM_DLL_CODE_DELEGATE_CREATE_EXPRESSION
@@ -250,7 +250,7 @@ feature {AST_YACC} -- Implementation
 			end
 		end
 
-	process_access_id_as (l_as: ACCESS_ID_AS) is
+	process_access_id_as (l_as: ACCESS_ID_AS)
 			-- Process `l_as'.
 		local
 			l_cast_expression: SYSTEM_DLL_CODE_CAST_EXPRESSION
@@ -408,17 +408,17 @@ feature {AST_YACC} -- Implementation
 			end
 		end
 
-	process_access_assert_as (l_as: ACCESS_ASSERT_AS) is
+	process_access_assert_as (l_as: ACCESS_ASSERT_AS)
 			-- Process `l_as'.
 		do
 		end
 
-	process_precursor_as (l_as: PRECURSOR_AS) is
+	process_precursor_as (l_as: PRECURSOR_AS)
 			-- Process `l_as'.
 		do
 		end
 
-	process_nested_expr_as (l_as: NESTED_EXPR_AS) is
+	process_nested_expr_as (l_as: NESTED_EXPR_AS)
 			-- Process `l_as'.
 		local
 			l_expression: SYSTEM_DLL_CODE_EXPRESSION
@@ -433,7 +433,7 @@ feature {AST_YACC} -- Implementation
 			pop_current_element (l_expression)
 		end
 
-	process_nested_as (l_as: NESTED_AS) is
+	process_nested_as (l_as: NESTED_AS)
 			-- Process `l_as'.
 		local
 			l_method_invoke_expression: SYSTEM_DLL_CODE_METHOD_INVOKE_EXPRESSION
@@ -460,7 +460,7 @@ feature {AST_YACC} -- Implementation
 			end
 		end
 
-	process_creation_expr_as (l_as: CREATION_EXPR_AS) is
+	process_creation_expr_as (l_as: CREATION_EXPR_AS)
 			-- Process `l_as'.
 		local
 			l_delegate_expression: SYSTEM_DLL_CODE_DELEGATE_CREATE_EXPRESSION
@@ -486,7 +486,7 @@ feature {AST_YACC} -- Implementation
 
 feature -- Implementation
 
-	is_create_array_initialization_call (l_as: ACCESS_AS): BOOLEAN is
+	is_create_array_initialization_call (l_as: ACCESS_AS): BOOLEAN
 			-- is `l_as' references a feature of an array initialization?
 		require
 			non_void_l_as: l_as /= Void
@@ -515,7 +515,7 @@ feature -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

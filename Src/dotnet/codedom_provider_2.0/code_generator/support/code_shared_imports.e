@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shared imports, used to resolve external types."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature -- Access
 
-	imports: LIST [STRING] is
+	imports: LIST [STRING]
 			-- Imports
 		do
 			Result := imports_cell.item
@@ -34,7 +34,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	search_attribute_type (a_name: STRING) is
+	search_attribute_type (a_name: STRING)
 			-- Search for custom attribute type `a_name'.
 			-- Set `found_type' and `found' accordingly.
 		require
@@ -46,7 +46,7 @@ feature -- Basic Operations
 			end
 		end
 		
-	search_type (a_name: STRING) is
+	search_type (a_name: STRING)
 			-- Search for external type with simple name `a_name' in loaded assemblies and referenced assemblies.
 			-- Set `found_type' and `found' accordingly.
 		require
@@ -88,7 +88,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	imports_cell: CELL [LIST [STRING]] is
+	imports_cell: CELL [LIST [STRING]]
 			-- Imports cell
 		local
 			l_list: ARRAYED_LIST [STRING]
@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 			attached_cell: Result /= Void
 		end
 
-	search_type_with_fullname (a_name: STRING) is
+	search_type_with_fullname (a_name: STRING)
 			-- Search for external type with full name `a_name' in loaded assemblies and referenced assemblies.
 		local
 			l_type: SYSTEM_TYPE
@@ -123,7 +123,7 @@ feature {NONE} -- Implementation
 invariant
 	attached_imports: imports /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

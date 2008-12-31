@@ -1,4 +1,4 @@
-indexing
+note
 	description: ".NET properties"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (dn: STRING; pub, stat: BOOLEAN; decl_type: CONSUMED_REFERENCED_TYPE; cp_getter: CONSUMED_FUNCTION; cp_setter: CONSUMED_PROCEDURE) is
+	make (dn: STRING; pub, stat: BOOLEAN; decl_type: CONSUMED_REFERENCED_TYPE; cp_getter: CONSUMED_FUNCTION; cp_setter: CONSUMED_PROCEDURE)
 			-- Initialize event.
 		require
 			non_void_dotnet_name: dn /= Void
@@ -57,25 +57,25 @@ feature {NONE} -- Initialization
 	
 feature -- ConsumerWrapper functions
 
-	is_property: BOOLEAN is
+	is_property: BOOLEAN
 			-- Is `Current' a .Net Property.
 		do
 			Result := True
 		end
 		
-	is_property_or_event: BOOLEAN is
+	is_property_or_event: BOOLEAN
 			-- Is 'Current' a .NET Property or Event?
 		do
 			Result := True
 		end
 		
-	is_public: BOOLEAN is
+	is_public: BOOLEAN
 			-- Is `Current' public.
 		do
 			Result := p
 		end
 			
-	is_static: BOOLEAN is
+	is_static: BOOLEAN
 			-- Is `Current' static.
 		do
 			Result := t
@@ -83,7 +83,7 @@ feature -- ConsumerWrapper functions
 
 feature -- Access
 
-	eiffelized_consumed_entities: ARRAYED_LIST [CONSUMED_ENTITY] is
+	eiffelized_consumed_entities: ARRAYED_LIST [CONSUMED_ENTITY]
 			-- List of eiffelized Consumed Entities relative to `Current'.
 		do
 			create Result.make (0)
@@ -95,13 +95,13 @@ feature -- Access
 			end
 		end
 
-	getter: CONSUMED_FUNCTION is
+	getter: CONSUMED_FUNCTION
 			-- Property getter function
 		do
 			Result := g
 		end
 	
-	setter: CONSUMED_PROCEDURE is
+	setter: CONSUMED_PROCEDURE
 			-- Property setter procedure
 		do
 			Result := s
@@ -121,7 +121,7 @@ feature {NONE} -- Access
 	t: like is_static;
 			-- Internal data for `is_static'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

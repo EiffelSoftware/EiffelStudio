@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Line pragma"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_pragma: SYSTEM_DLL_CODE_LINE_PRAGMA) is
+	make (a_pragma: SYSTEM_DLL_CODE_LINE_PRAGMA)
 			-- Initialize with `a_pragma'.
 		require
 			attached_pragma: a_pragma /= Void
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	code: STRING is
+	code: STRING
 			-- Eiffel code of the entity
 		do
 			if generate_pragmas then
@@ -53,7 +53,7 @@ feature {NONE} -- Implementation
 	pragma: SYSTEM_DLL_CODE_LINE_PRAGMA;
 			-- Pragam
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

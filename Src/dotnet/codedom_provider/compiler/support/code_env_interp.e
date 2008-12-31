@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Evaluate and replace environment variables in strings"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ inherit
 
 feature {NONE} -- Implementation
 
-	variable_value (a_name: STRING): STRING is
+	variable_value (a_name: STRING): STRING
 			-- Value of variable `a_name'
 		do
 			if a_name.as_lower.is_equal ("ise_codedom") then
@@ -31,7 +31,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

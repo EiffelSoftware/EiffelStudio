@@ -1,4 +1,4 @@
-indexing
+note
 	description: "ASP.NET codedom tree serializer"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_dest_dir, a_file_title, a_url: STRING) is
+	make (a_dest_dir, a_file_title, a_url: STRING)
 			-- Initialize instance.
 		require
 			non_void_destination_directory: a_dest_dir /= Void
@@ -44,7 +44,7 @@ feature -- Access
 
 feature -- Basic Operation
 
-	serialize is
+	serialize
 			-- Serialize codedom tree.
 		local
 			l_process: SYSTEM_DLL_PROCESS
@@ -72,7 +72,7 @@ feature -- Basic Operation
 
 feature {NONE} -- Implementation
 
-	change_provider is
+	change_provider
 			-- Replace codedom provider with serializer's provider
 			-- and save previous provider information.
 		local
@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 			provider_changed: provider_changed
 		end
 
-	restore_provider is
+	restore_provider
 			-- Restore previous provider information
 		require
 			provider_changed: provider_changed
@@ -116,20 +116,20 @@ feature {NONE} -- Implementation
 	saved_extension: STRING
 			-- Saved Eiffel language file extension
 
-	No_provider: STRING is ""
+	No_provider: STRING = ""
 			-- No provider was previously associated with Eiffel
 
-	Eiffel_language: STRING is "Eiffel"
+	Eiffel_language: STRING = "Eiffel"
 			-- Eiffel language name
 
-	file_extension: STRING is ".ecda"
+	file_extension: STRING = ".ecda"
 			-- Serialized codedom tree extension
 
 invariant
 	valid_saved_provider: provider_changed implies saved_provider /= Void
 	valid_saved_extension: provider_changed implies saved_extension /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

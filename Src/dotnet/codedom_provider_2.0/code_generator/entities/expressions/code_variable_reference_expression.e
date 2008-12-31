@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Source code generator for variable reference expressions"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_variable: like variable) is
+	make (a_variable: like variable)
 			-- Initialize `variable_name' with empty string.
 		require
 			non_void_variable: a_variable /= Void
@@ -31,7 +31,7 @@ feature -- Access
 	variable: CODE_VARIABLE_REFERENCE
 			-- Name of variable to reference
 
-	code: STRING is
+	code: STRING
 			-- | Result := "`variable_name'"
 			-- Eiffel code of variable reference expression
 		do
@@ -40,7 +40,7 @@ feature -- Access
 		
 feature -- Status Report
 
-	type: CODE_TYPE_REFERENCE is
+	type: CODE_TYPE_REFERENCE
 			-- Type
 		do
 			Result := variable.type
@@ -49,7 +49,7 @@ feature -- Status Report
 invariant
 	non_void_variable: variable /= Void
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

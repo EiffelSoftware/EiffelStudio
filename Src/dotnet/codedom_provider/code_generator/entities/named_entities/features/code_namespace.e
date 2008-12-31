@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Eiffel representation of a namespace"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name) is
+	make (a_name: like name)
 			-- | Call Precursor {CODE_NAMED_ENTITY}
 			-- | Initialize `imports' and `types'.
 
@@ -45,7 +45,7 @@ feature -- Access
 	types: LIST [CODE_GENERATED_TYPE]
 			-- Namespace types
 
-	code: STRING is
+	code: STRING
 			-- | Loop on `types': call `type.code' on each item.
 			-- Eiffel code for a namespace
 		local
@@ -68,7 +68,7 @@ feature -- Access
 
 feature {CODE_EIFFEL_FACTORY} -- Basic Operations
 
-	add_import (an_import: STRING) is
+	add_import (an_import: STRING)
 			-- Add `an_import' to `imports'.
 		require
 			non_void_import: an_import /= Void
@@ -81,7 +81,7 @@ feature {CODE_EIFFEL_FACTORY} -- Basic Operations
 			an_import_added: imports.has (an_import)
 		end
 
-	add_type (a_type: CODE_GENERATED_TYPE) is
+	add_type (a_type: CODE_GENERATED_TYPE)
 			-- Add `a_type' to `types'.
 		require
 			non_void_type: a_type /= Void
@@ -98,7 +98,7 @@ invariant
 	non_void_imports: imports /= Void
 	non_void_types: types /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

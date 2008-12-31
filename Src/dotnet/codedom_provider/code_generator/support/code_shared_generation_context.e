@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Contextual generation information, include currently generated namespace, type, method etc..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,13 +18,13 @@ inherit
 
 feature -- Access
 
-	new_line: BOOLEAN is
+	new_line: BOOLEAN
 			-- is it a new line?
 		do 
 			Result := New_line_cell.item
 		end
 
-	tabulation_string: STRING is
+	tabulation_string: STRING
 			-- String used for indentation
 		do 
 			Result := Tabulation_string_cell.item
@@ -32,25 +32,25 @@ feature -- Access
 			non_void_tabulation_string: Result /= Void
 		end
 
-	blank_lines_between_members: BOOLEAN is
+	blank_lines_between_members: BOOLEAN
 			-- Should features be separated with blank lines?
 		do
 			Result := Blank_lines_between_members_cell.item			
 		end
 		
-	else_on_closing: BOOLEAN is
+	else_on_closing: BOOLEAN
 			-- Should all if's be followed by a 'else' instruction?
 		do
 			Result := Else_on_closing_cell.item			
 		end
 	
-	indent_string: STRING is
+	indent_string: STRING
 			-- Indentation string
 		do
 			Result := Indent_string_cell.item
 		end
 
-	current_generated_type: CODE_GENERATED_TYPE is
+	current_generated_type: CODE_GENERATED_TYPE
 			-- Type currently generated
 		do
 			Result := current_generated_type_cell.item
@@ -58,7 +58,7 @@ feature -- Access
 
 feature -- Status Report
 
-	is_current_generated_type (a_type: CODE_TYPE_REFERENCE): BOOLEAN is
+	is_current_generated_type (a_type: CODE_TYPE_REFERENCE): BOOLEAN
 			-- Is `a_type' same as currently generated type?
 		require
 			non_void_type: a_type /= Void
@@ -70,7 +70,7 @@ feature -- Status Report
 		
 feature {NONE} -- Status Setting
 
-	set_blank_lines_between_members (a_value: like blank_lines_between_members) is
+	set_blank_lines_between_members (a_value: like blank_lines_between_members)
 			-- Set `blank_lines_between_members' with `a_value'.
 		do
 			Blank_lines_between_members_cell.set_item (a_value)
@@ -78,7 +78,7 @@ feature {NONE} -- Status Setting
 			blank_lines_between_members_set: blank_lines_between_members.is_equal (a_value)
 		end
 		
-	set_else_on_closing (a_value: like else_on_closing) is
+	set_else_on_closing (a_value: like else_on_closing)
 			-- Set `else_on_closing' with `a_value'.
 		do
 			Else_on_closing_cell.set_item (a_value)
@@ -86,7 +86,7 @@ feature {NONE} -- Status Setting
 			else_on_closing_set: else_on_closing.is_equal (a_value)
 		end
 		
-	set_indent_string (a_value: like indent_string) is
+	set_indent_string (a_value: like indent_string)
 			-- Set `indent_string' with `a_value'.
 		require
 			non_void_indent_string: a_value /= Void
@@ -96,7 +96,7 @@ feature {NONE} -- Status Setting
 			indent_string_set: indent_string.is_equal (a_value)
 		end
 
-	set_current_generated_type (a_value: like current_generated_type) is
+	set_current_generated_type (a_value: like current_generated_type)
 			-- Set `current_generated_type' with `a_value'.
 		do
 			current_generated_type_cell.put (a_value)
@@ -104,7 +104,7 @@ feature {NONE} -- Status Setting
 			current_generated_type_set: current_generated_type = a_value
 		end
 
-	set_new_line (a_bool: like new_line) is
+	set_new_line (a_bool: like new_line)
 			-- Set `new_line' with `a_bool'.
 		do
 			New_line_cell.set_item (a_bool)
@@ -112,7 +112,7 @@ feature {NONE} -- Status Setting
 			new_line_set: new_line = a_bool
 		end
 
-	increase_tabulation is
+	increase_tabulation
 			-- add a tabulation to `indent_string'.
 		local
 			l_indent: STRING
@@ -125,7 +125,7 @@ feature {NONE} -- Status Setting
 			indent_set: indent_string.is_equal (old indent_string + Tabulation_string)
 		end
 
-	decrease_tabulation is
+	decrease_tabulation
 			-- Substract last character (a tabulation) from `indent_string'.
 		require
 			at_least_one_indent: indent_string.count > 0
@@ -137,7 +137,7 @@ feature {NONE} -- Status Setting
 
 feature {NONE} -- Implementation
 
-	Blank_lines_between_members_cell: BOOLEAN_REF is
+	Blank_lines_between_members_cell: BOOLEAN_REF
 			-- Shell for `blank_lines_between_members'
 		once
 			create Result
@@ -146,7 +146,7 @@ feature {NONE} -- Implementation
 			cell_created: Result /= Void
 		end
 		
-	Else_on_closing_cell: BOOLEAN_REF is
+	Else_on_closing_cell: BOOLEAN_REF
 			-- Shell for `else_on_closing'
 		once
 			create Result
@@ -154,7 +154,7 @@ feature {NONE} -- Implementation
 			cell_created: Result /= Void
 		end
 		
-	Tabulation_string_cell: CELL [STRING] is
+	Tabulation_string_cell: CELL [STRING]
 			-- Shell for `tabulation_string'
 		once
 			create Result.put ("%T")
@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 			cell_created: Result /= Void
 		end
 
-	New_line_cell: BOOLEAN_REF is
+	New_line_cell: BOOLEAN_REF
 			-- Shell for `new_line'
 		once
 			create Result
@@ -170,7 +170,7 @@ feature {NONE} -- Implementation
 			cell_created: Result /= Void
 		end
 
-	Indent_string_cell: CELL [STRING] is
+	Indent_string_cell: CELL [STRING]
 		-- Shell for `indent_string'
 		once
 			create Result.put ("")
@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 			cell_created: Result /= Void
 		end
 
-	current_generated_type_cell: CELL [CODE_GENERATED_TYPE] is
+	current_generated_type_cell: CELL [CODE_GENERATED_TYPE]
 		-- Shell for `current_generated_type'
 		once
 			create Result.put (Void)
@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 			cell_created: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

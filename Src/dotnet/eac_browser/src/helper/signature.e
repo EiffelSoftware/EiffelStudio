@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Print in output the eiffel type with all its eiffelfeatures corresponding to given dotnet type name."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,19 +11,19 @@ class
 
 feature {NONE} -- Implementation
 	
-	finder: FINDER is
+	finder: FINDER
 		once
 			Create Result
 		ensure
 			non_void_result: Result /= Void
 		end
 		
-	Native_array: STRING is "NATIVE_ARRAY"
+	Native_array: STRING = "NATIVE_ARRAY"
 		
 
 feature -- Implementation
 
-	signature_member (a_member: CONSUMED_MEMBER): STRING is
+	signature_member (a_member: CONSUMED_MEMBER): STRING
 			-- return signature of `a_member'.
 		require
 			non_void_a_member: a_member /= Void
@@ -72,7 +72,7 @@ feature -- Implementation
 			non_void_result: Result /= Void
 		end
 	
-	signature_constructor (a_constructor: CONSUMED_CONSTRUCTOR): STRING is
+	signature_constructor (a_constructor: CONSUMED_CONSTRUCTOR): STRING
 			-- return signature of `a_member'.
 		require
 			non_void_a_constructor: a_constructor /= Void
@@ -104,7 +104,7 @@ feature -- Implementation
 		end
 
 
-	eiffel_signature_member (assembly_member: CONSUMED_ASSEMBLY; a_member: CONSUMED_MEMBER): STRING is
+	eiffel_signature_member (assembly_member: CONSUMED_ASSEMBLY; a_member: CONSUMED_MEMBER): STRING
 			-- return the eiffel signature of `a_member'.
 		require
 			non_void_assembly_member: assembly_member /= Void
@@ -186,7 +186,7 @@ feature -- Implementation
 			non_void_result: Result /= Void
 		end
 
-	eiffel_signature_constructor (assembly_constructor: CONSUMED_ASSEMBLY; a_constructor: CONSUMED_CONSTRUCTOR): STRING is
+	eiffel_signature_constructor (assembly_constructor: CONSUMED_ASSEMBLY; a_constructor: CONSUMED_CONSTRUCTOR): STRING
 			-- return signature of `a_member'.
 		require
 			non_void_assembly_constructor: assembly_constructor /= Void
@@ -235,7 +235,7 @@ feature -- Implementation
 		
 feature -- Xml Documentation
 
-	xml_signature_member (a_member: CONSUMED_MEMBER; a_full_dotnet_type_name: STRING): STRING is
+	xml_signature_member (a_member: CONSUMED_MEMBER; a_full_dotnet_type_name: STRING): STRING
 			-- Return the xml signature of `a_type'.
 		require
 			non_void_a_member: a_member /= Void
@@ -271,7 +271,7 @@ feature -- Xml Documentation
 			non_void_result: Result /= Void
 		end
 	
-	xml_signature_constructor (a_constructor: CONSUMED_CONSTRUCTOR; a_full_dotnet_type_name: STRING): STRING is
+	xml_signature_constructor (a_constructor: CONSUMED_CONSTRUCTOR; a_full_dotnet_type_name: STRING): STRING
 			-- Return the xml signature of `a_type'.
 		require
 			non_void_a_constructor: a_constructor /= Void
@@ -308,7 +308,7 @@ feature -- Xml Documentation
 		
 		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

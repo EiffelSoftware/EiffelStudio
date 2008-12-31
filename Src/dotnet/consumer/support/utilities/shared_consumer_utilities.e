@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Some common utility functions used by the consumer and the compiler."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Formatting
 
-	format_path (a_path: STRING): STRING is
+	format_path (a_path: STRING): STRING
 			-- Formats `a_path' to produce a comparable path.
 		require
 			a_path_not_void: a_path /= Void
@@ -30,7 +30,7 @@ feature -- Formatting
 			result_still_unc_path: a_path.count > 2 implies (a_path.substring (1, 2).is_equal ("\\") implies Result.substring (1, 2).is_equal ("\\"))
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

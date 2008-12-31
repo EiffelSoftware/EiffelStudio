@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		An assembly resolver subscription item.
 		]"
@@ -16,7 +16,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (a_domain: like app_domain; a_resolver: AR_RESOLVER) is
+	make (a_domain: like app_domain; a_resolver: AR_RESOLVER)
 			-- Initialize subscription for `app_domain' by subscribing `a_resolver'
 			-- to its resolver event
 		require
@@ -37,7 +37,7 @@ feature -- Access
 	app_domain: APP_DOMAIN
 			-- App Domain `assembly_resolver' is subscribed to
 			
-	assembly_resolvers: LIST [AR_RESOLVER] is
+	assembly_resolvers: LIST [AR_RESOLVER]
 			-- List of resolvers `app_domain' has subscribed to it
 		do
 			Result := internal_assembly_resolvers
@@ -48,7 +48,7 @@ feature -- Access
 		
 feature -- Extentions
 
-	add_resolver (a_resolver: AR_RESOLVER) is
+	add_resolver (a_resolver: AR_RESOLVER)
 			-- Add `a_resolver' to list of `assembly_resolvers'
 		require
 			a_resolver_not_void: a_resolver /= Void
@@ -63,7 +63,7 @@ feature -- Extentions
 		
 feature -- Removal
 
-	remove_resolver (a_resolver: AR_RESOLVER) is
+	remove_resolver (a_resolver: AR_RESOLVER)
 			-- Removes `a_resolver' from list of `assembly_resolvers'
 		require
 			a_resolver_not_void: a_resolver /= Void
@@ -86,7 +86,7 @@ invariant
 	internal_assembly_resolvers_not_void: internal_assembly_resolvers /= Void
 	not_internal_assembly_resolvers_is_empty: not internal_assembly_resolvers.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

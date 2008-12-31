@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Common ancestor to all snippet inheritance clauses"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	make (a_routine_name: like routine_name) is
+	make (a_routine_name: like routine_name)
 			-- Set `routine_name' with `a_routine_name'
 		require
 			non_void_routine_name: a_routine_name /= Void
@@ -28,7 +28,7 @@ feature	-- Access
 invariant
 	non_void_routine_name: routine_name /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

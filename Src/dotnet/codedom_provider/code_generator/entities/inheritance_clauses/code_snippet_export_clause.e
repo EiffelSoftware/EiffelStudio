@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Snippet inheritance export clause"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_routine_name: STRING; a_type_list: LIST [STRING]) is
+	make (a_routine_name: STRING; a_type_list: LIST [STRING])
 			-- Set `routine_name' with `a_routine_name' and `type_list' with `a_type_list'.
 		require
 			non_void_routine_name: a_routine_name /= Void
@@ -37,7 +37,7 @@ feature -- Access
 	type_list: LIST [STRING];
 				-- Types to which feature with eiffel name `feature_name' is exported
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

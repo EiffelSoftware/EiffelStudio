@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Read content of Eiffel Assembly Cache"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 
 feature -- Access
 
-	assemblies: ARRAY [CONSUMED_ASSEMBLY] is
+	assemblies: ARRAY [CONSUMED_ASSEMBLY]
 			-- Returns all assemblies registered in EAC.
 			-- Note: Unconsumed assemblies will be returned also.
 		do
@@ -37,7 +37,7 @@ feature -- Access
 			end
 		end
 
-	consumed_assemblies: ARRAY [CONSUMED_ASSEMBLY] is
+	consumed_assemblies: ARRAY [CONSUMED_ASSEMBLY]
 			-- Returns all completed consumed assemblies
 		local
 			l_assemblies: ARRAYED_LIST [CONSUMED_ASSEMBLY]
@@ -65,7 +65,7 @@ feature -- Access
 			end
 		end
 
-	consumed_assembly_from_path (a_path: STRING): CONSUMED_ASSEMBLY is
+	consumed_assembly_from_path (a_path: STRING): CONSUMED_ASSEMBLY
 			-- Find a consumed assembly in cache that matches `a_path'.
 		require
 			non_void_path: a_path /= Void
@@ -94,7 +94,7 @@ feature -- Access
 			end
 		end
 
-	assembly_types (a_assembly: CONSUMED_ASSEMBLY): CONSUMED_ASSEMBLY_TYPES is
+	assembly_types (a_assembly: CONSUMED_ASSEMBLY): CONSUMED_ASSEMBLY_TYPES
 			-- Assembly information from EAC
 		require
 			non_void_assembly: a_assembly /= Void
@@ -109,7 +109,7 @@ feature -- Access
 			non_void_info: Result /= Void
 		end
 
-	consumed_type_from_dotnet_type_name (a_assembly: CONSUMED_ASSEMBLY; a_type: STRING): CONSUMED_TYPE is
+	consumed_type_from_dotnet_type_name (a_assembly: CONSUMED_ASSEMBLY; a_type: STRING): CONSUMED_TYPE
 			-- Type information from type `type' contained in `ca'
 		require
 			a_assembly_not_void: a_assembly /= Void
@@ -132,7 +132,7 @@ feature -- Access
 			non_void_result: Result /= Void
 		end
 
-	consumed_type_from_consumed_referenced_type (a_assembly: CONSUMED_ASSEMBLY; a_crt: CONSUMED_REFERENCED_TYPE): CONSUMED_TYPE is
+	consumed_type_from_consumed_referenced_type (a_assembly: CONSUMED_ASSEMBLY; a_crt: CONSUMED_REFERENCED_TYPE): CONSUMED_TYPE
 			-- Type information from consumed referenced type `crt'.
 		require
 			non_void_assembly: a_assembly /= Void
@@ -156,7 +156,7 @@ feature -- Access
 			non_void_info: Result /= Void
 		end
 
-	assembly_mapping_from_consumed_assembly (a_assembly: CONSUMED_ASSEMBLY): CONSUMED_ASSEMBLY_MAPPING is
+	assembly_mapping_from_consumed_assembly (a_assembly: CONSUMED_ASSEMBLY): CONSUMED_ASSEMBLY_MAPPING
 			-- Assembly information from EAC for `a_assembly'.
 		require
 			non_void_assembly: a_assembly /= Void
@@ -171,7 +171,7 @@ feature -- Access
 			non_void_info: Result /= Void
 		end
 
-	consumed_type (a_type: SYSTEM_TYPE): CONSUMED_TYPE is
+	consumed_type (a_type: SYSTEM_TYPE): CONSUMED_TYPE
 			-- Consumed type corresponding to `a_type'.
 		require
 			a_type_not_void: a_type /= Void
@@ -194,7 +194,7 @@ feature -- Access
 			non_void_consumed_type: Result /= Void
 		end
 
-	client_assemblies (a_assembly: CONSUMED_ASSEMBLY): ARRAY [CONSUMED_ASSEMBLY] is
+	client_assemblies (a_assembly: CONSUMED_ASSEMBLY): ARRAY [CONSUMED_ASSEMBLY]
 			-- List of assemblies in EAC depending on `a_assembly'.
 		require
 			non_void_assembly: a_assembly /= Void
@@ -224,13 +224,13 @@ feature -- Access
 
 feature -- Status Report
 
-	is_initialized: BOOLEAN is
+	is_initialized: BOOLEAN
 			-- Is EAC correctly installed?
 		do
 			Result := (create {RAW_FILE}.make (Absolute_info_path)).exists
 		end
 
-	is_assembly_in_cache (a_path: STRING; a_consumed: BOOLEAN): BOOLEAN is
+	is_assembly_in_cache (a_path: STRING; a_consumed: BOOLEAN): BOOLEAN
 			-- Is `a_path' in cache and if `a_consumed' has it been consumed
 		require
 			non_void_path: a_path /= Void
@@ -242,7 +242,7 @@ feature -- Status Report
 			Result := l_ca /= Void and (not a_consumed or l_ca.is_consumed)
 		end
 
-	is_type_in_cache (a_type: SYSTEM_TYPE): BOOLEAN is
+	is_type_in_cache (a_type: SYSTEM_TYPE): BOOLEAN
 			-- Is `a_type' in EAC?
 		require
 			non_void_type: a_type /= Void
@@ -263,7 +263,7 @@ feature -- Status Report
 			end
 		end
 
-	is_assembly_stale (a_path: STRING): BOOLEAN is
+	is_assembly_stale (a_path: STRING): BOOLEAN
 			-- Is assembly `a_path' out of date
 			-- Returns false if assembly has not already been consumed.
 		require
@@ -313,7 +313,7 @@ feature -- Status Report
 
 feature {CACHE_WRITER} -- Implementation
 
-	info: CACHE_INFO is
+	info: CACHE_INFO
 			-- Information on EAC content
 		require
 			non_void_clr_version: clr_version /= Void
@@ -362,7 +362,7 @@ feature {CACHE_WRITER} -- Implementation
 
 feature -- Reset
 
-	reset_info is
+	reset_info
 			-- Causes `info' to be reevaluated.
 			-- WARNING: Use this with caution. `reset_info' should not be called
 			-- when in the middle of a batch operation.
@@ -374,13 +374,13 @@ feature -- Reset
 
 feature {NONE} -- Implementation
 
-	internal_info: CELL [CACHE_INFO] is
+	internal_info: CELL [CACHE_INFO]
 			-- cache `info'
 		once
 			create Result
 		end
 
-	type_position_from_type (a_type: SYSTEM_TYPE): INTEGER is
+	type_position_from_type (a_type: SYSTEM_TYPE): INTEGER
 			-- retrieve type position from `a_type' in `a_assembly'.
 			-- `-1' if not found.
 		require
@@ -398,7 +398,7 @@ feature {NONE} -- Implementation
 			valid_result: Result =-1 or Result >= 0
 		end
 
-	type_position_from_type_name (a_assembly: CONSUMED_ASSEMBLY; a_type: STRING): INTEGER is
+	type_position_from_type_name (a_assembly: CONSUMED_ASSEMBLY; a_type: STRING): INTEGER
 			-- retrieve type position from `a_type' in `a_assembly'.
 			-- `-1' if not found.
 		require
@@ -430,7 +430,7 @@ feature {NONE} -- Implementation
 			valid_result: Result =-1 or Result >= 0
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

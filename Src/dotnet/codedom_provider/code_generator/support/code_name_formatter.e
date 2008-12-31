@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Name formatter, checks for unicity of Eiffel type names"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Initialize instance
 		do
 			create generated_names.make (100)
@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 		
 feature -- Access
 
-	full_formatted_type_name (name: STRING): STRING is
+	full_formatted_type_name (name: STRING): STRING
 			-- Format .NET type name `name' to Eiffel class name.
 			-- Ensure result is unique since last call to `reset'.
 		local
@@ -59,7 +59,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	reset is
+	reset
 			-- Reset generated names list.
 		do
 			generated_names.clear_all
@@ -70,7 +70,7 @@ feature {NONE} -- Implementation
 	generated_names: HASH_TABLE [STRING, STRING];
 			-- Generated Eiffel type names
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

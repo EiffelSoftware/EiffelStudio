@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Print in output the eiffel type with all its eiffel features corresponding to the given dotnet type name."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parent_window: MAIN_WINDOW_IMP) is
+	make (a_parent_window: MAIN_WINDOW_IMP)
 			-- Initialiaze attributes with `a_parent_window'.
 		require
 			non_void_a_parent_window: a_parent_window /= Void
@@ -63,7 +63,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	print_type (assembly_of_dotnet_type: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING) is
+	print_type (assembly_of_dotnet_type: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING)
 			-- Set `assembly_of_type' with `assembly_of_dotnet_type' 
 			-- Set `dotnet_type_name' with `a_dotnet_type_name'
 			-- Display in `output' features corresponding to `a_type_name'.
@@ -86,7 +86,7 @@ feature -- Basic Operations
 			feature_selected_set: feature_selected /= void and feature_selected.is_empty
 		end
 
-	refresh is
+	refresh
 			-- Display in `output' the dotnet_type corresponding to `factory_display'.
 		require
 		do
@@ -97,7 +97,7 @@ feature -- Basic Operations
 
 feature -- Status Setting
 
-	set_feature_selected (an_eiffel_feature_name: STRING) is
+	set_feature_selected (an_eiffel_feature_name: STRING)
 			-- Set `feature_selected' with `an_eiffel_feature_name'.
 		require
 			non_void_an_eiffel_feature_name: an_eiffel_feature_name /= Void
@@ -110,7 +110,7 @@ feature -- Status Setting
 	
 feature {NONE} -- Implementation
 
-	load_display_type (assembly_of_dotnet_type: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING) is
+	load_display_type (assembly_of_dotnet_type: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING)
 			-- Print in `output' features corresponding to `dotnet_type_name'.
 		require
 			non_void_assembly_of_dotnet_type: assembly_of_dotnet_type /= Void
@@ -128,7 +128,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	display is
+	display
 			-- display in `output' features previouly loaded in `factory_display'.
 		require
 			non_void_factory_display: factory_display /= Void
@@ -207,7 +207,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Scroolbar Setting
 	
-	pick_action (a_x, a_y: INTEGER): SPECIFIC_TYPE is
+	pick_action (a_x, a_y: INTEGER): SPECIFIC_TYPE
 			-- action performed for a pick action in `output'.
 		local
 			current_x_position, current_y_position: INTEGER
@@ -258,7 +258,7 @@ feature {NONE} -- Scroolbar Setting
 			end
 		end
 
-	drop_action (a_type: SPECIFIC_TYPE) is
+	drop_action (a_type: SPECIFIC_TYPE)
 			-- action performed when object is droped in output.
 		local
 			tree: TREE_FACTORY
@@ -271,7 +271,7 @@ feature {NONE} -- Scroolbar Setting
 			tree.expand_type (a_type.assembly, a_type.type)
 		end
 
-	edit_action (a_x, a_y, c: INTEGER; d, e, f: DOUBLE; g, h: INTEGER) is 
+	edit_action (a_x, a_y, c: INTEGER; d, e, f: DOUBLE; g, h: INTEGER) 
 			-- action performed when double clicking.
 		local
 			current_x_position, current_y_position: INTEGER
@@ -332,7 +332,7 @@ feature {NONE} -- Scroolbar Setting
 			end
 		end
 
-	select_line_action (a_x, a_y, c: INTEGER; d, e, f: DOUBLE; g, h: INTEGER) is 
+	select_line_action (a_x, a_y, c: INTEGER; d, e, f: DOUBLE; g, h: INTEGER) 
 			-- action performed when double clicking.
 			-- | loop on all lines and set selected to False except for the selected line.
 		local
@@ -391,7 +391,7 @@ feature {NONE} -- Scroolbar Setting
 		end
 
 
-	set_scroll_bares is
+	set_scroll_bares
 			-- set scroll bares.
 		local
 			nb_line, max_index_range: INTEGER
@@ -410,16 +410,16 @@ feature {NONE} -- Scroolbar Setting
 		
 feature {NONE} -- Implementation
 
-	Nb_pixel_line: INTEGER is
+	Nb_pixel_line: INTEGER
 			-- number of pixel for a ligne.
 		once
 			Result := output.font.height + 4
 		end
 			
-	Nb_pixel_decal_h_scroll: INTEGER is 12
+	Nb_pixel_decal_h_scroll: INTEGER = 12
 			-- number of pixel for a step of horizontal scroll.
 
-	first_line_to_display: INTEGER is
+	first_line_to_display: INTEGER
 			-- first line in `factory_display' to display.
 		do
 			if vertical_scroll_bar.value_range.upper = 0 then
@@ -429,7 +429,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	nb_line_to_display: INTEGER is
+	nb_line_to_display: INTEGER
 			-- number of line in `factory_display' to display.
 		do
 			Result := (output.height / Nb_pixel_line).truncated_to_integer + 1
@@ -442,7 +442,7 @@ invariant
 	non_void_a_vertical_scroll_bar: vertical_scroll_bar /= Void
 	non_void_a_horizontal_scroll_bar: horizontal_scroll_bar /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

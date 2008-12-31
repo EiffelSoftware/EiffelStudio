@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shared instance of {CODE_EIFFEL_METADATA_PROVIDER}"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,13 +10,13 @@ class
 
 feature -- Access
 
-	Metadata_provider: CODE_EIFFEL_METADATA_PROVIDER is
+	Metadata_provider: CODE_EIFFEL_METADATA_PROVIDER
 			-- Eiffel metadata provider
 		once
 			create Result
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

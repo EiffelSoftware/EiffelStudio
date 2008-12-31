@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Code generator for routine expressions"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 
-	generate_routine_invoke_expression (a_source: SYSTEM_DLL_CODE_METHOD_INVOKE_EXPRESSION) is
+	generate_routine_invoke_expression (a_source: SYSTEM_DLL_CODE_METHOD_INVOKE_EXPRESSION)
 			-- | Check `last_type' is not Void else raise an exception.
 			-- | Create instance of `CODE_ROUTINE_INVOKE_EXPRESSION'.
 			-- | And initialize this instance with `a_source' -> Call `initialize_routine_invoke_expression'
@@ -42,7 +42,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			non_void_last_expression: last_expression /= Void
 		end
 
-	generate_routine_reference_expression (a_source: SYSTEM_DLL_CODE_METHOD_REFERENCE_EXPRESSION) is
+	generate_routine_reference_expression (a_source: SYSTEM_DLL_CODE_METHOD_REFERENCE_EXPRESSION)
 			-- | Check `last_type' is not Void else raise an exception.
 			-- | Create instance of `CODE_ROUTINE_REFERENCE_EXPRESSION'.
 			-- | And initialize this instance with `a_source' -> Call `initialize_routine_reference_expression'
@@ -65,7 +65,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			non_void_last_expression: last_expression /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Shared assembly dependency resolver subscriber.
 		]"
@@ -13,7 +13,7 @@ class
 	
 feature -- Access
 
-	resolve_subscriber: AR_RESOLVE_SUBSCRIBER is
+	resolve_subscriber: AR_RESOLVE_SUBSCRIBER
 			-- Singleton access to a `AR_RESOLVE_SUBSCRIBER'
 		once
 			create Result.make
@@ -21,7 +21,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

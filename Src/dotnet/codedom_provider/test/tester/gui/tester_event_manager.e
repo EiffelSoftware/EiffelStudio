@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tester event manager"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Initialization
 
-	set_output_displayer (a_displayer: like output_displayer) is
+	set_output_displayer (a_displayer: like output_displayer)
 			-- Set `output_displayer' with `a_displayer'
 		do
 			output_displayer := a_displayer
@@ -25,7 +25,7 @@ feature -- Access
 
 feature -- Basic Operation
 
-	raise_event (a_event: TESTER_EVENT) is
+	raise_event (a_event: TESTER_EVENT)
 			-- Raise `a_event', display appropriate output by calling `output_displayer'.
 		require
 			non_void_event: a_event /= Void
@@ -40,7 +40,7 @@ feature -- Basic Operation
 
 feature {NONE} -- Private Access
 
-	message_header: STRING is
+	message_header: STRING
 			-- Message header
 		local
 			l_now: STRING
@@ -52,7 +52,7 @@ feature {NONE} -- Private Access
 			Result.append_character ('%N')
 		end
 	
-	error_header: STRING is
+	error_header: STRING
 			-- Error header
 		local
 			l_header: STRING
@@ -63,7 +63,7 @@ feature {NONE} -- Private Access
 			Result.append ("** ERROR **%N")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Variable reference in CodeDom"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_type, a_declaring_type: CODE_TYPE_REFERENCE) is
+	make (a_name: STRING; a_type, a_declaring_type: CODE_TYPE_REFERENCE)
 			-- Initialize instance.
 		require
 			non_void_name: a_name /= Void
@@ -55,7 +55,7 @@ feature -- Access
 	declaring_type: CODE_TYPE_REFERENCE
 			-- Type containing routine using this variable
 	
-	eiffel_name: STRING is
+	eiffel_name: STRING
 			-- Eiffel name
 		require
 			in_code_generation: current_state = Code_generation
@@ -113,7 +113,7 @@ invariant
 	non_void_declaring_type: declaring_type /= Void
 	non_void_eiffel_name: eiffel_name /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

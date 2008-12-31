@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Last type printed in output"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ class
 
 feature -- Access
 
-	factory_display: DISPLAY_TYPE_FACTORY is 
+	factory_display: DISPLAY_TYPE_FACTORY 
 			-- type currently displayed.
 		do
 			Result := internal_factory_display.item
@@ -29,7 +29,7 @@ feature -- Access
 
 feature -- Status Setting
 	
-	set_factory_display (a_factory_display: DISPLAY_TYPE_FACTORY) is
+	set_factory_display (a_factory_display: DISPLAY_TYPE_FACTORY)
 			-- put `a_factory_display' in `internal_factory_display'.
 		require
 			non_void_a_factory_display: a_factory_display /= Void
@@ -42,7 +42,7 @@ feature -- Status Setting
 
 feature {NONE} -- Initialization
 
-	internal_factory_display: CELL [DISPLAY_TYPE_FACTORY] is
+	internal_factory_display: CELL [DISPLAY_TYPE_FACTORY]
 			-- Internal representation of `factory_display'.
 		once
 			create Result.put (Void)
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 		
 invariant
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

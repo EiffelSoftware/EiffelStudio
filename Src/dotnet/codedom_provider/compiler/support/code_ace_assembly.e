@@ -1,4 +1,4 @@
-indexing
+note
 	description: "ACE assembly declaration"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_path: like path; a_prefix: like assembly_prefix) is
+	make (a_name: like name; a_path: like path; a_prefix: like assembly_prefix)
 			-- Initialize instance
 		require
 			non_void_name: a_name /= Void
@@ -39,7 +39,7 @@ feature -- Access
 	path: STRING
 			-- Assembly path
 
-	code: STRING is
+	code: STRING
 			-- LACE code
 		do
 			create Result.make (256)
@@ -58,7 +58,7 @@ feature -- Access
 invariant
 	non_void_path: path /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "New configuration dialog"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_manager: ECDM_MANAGER) is
+	make (a_manager: ECDM_MANAGER)
 			-- Set `manager' with `a_manager'.
 		require
 			non_void_manager: a_manager /= Void
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			manager_set: manager = a_manager
 		end
 		
-	user_initialization is
+	user_initialization
 			-- called by `initialize'.
 			-- Any custom user initialization that
 			-- could not be performed in `initialize',
@@ -47,13 +47,13 @@ feature -- Access
 
 feature {NONE} -- Events
 
-	on_name_change is
+	on_name_change
 			-- Called by `change_actions' of `config_name_text_field'.
 		do
 			check_ok
 		end
 		
-	on_browse_for_folder is
+	on_browse_for_folder
 			-- Called by `select_actions' of `browse_button'.
 		local
 			l_open_dialog: EV_DIRECTORY_DIALOG
@@ -64,7 +64,7 @@ feature {NONE} -- Events
 			check_ok			
 		end
 	
-	on_application_select is
+	on_application_select
 			-- Called by `select_actions' of `applications_list'.
 		do
 			if not remove_button.is_sensitive then
@@ -72,7 +72,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_application_deselect is
+	on_application_deselect
 			-- Called by `deselect_actions' of `applications_list'.
 		do
 			if applications_list.selected_items.is_empty then
@@ -80,7 +80,7 @@ feature {NONE} -- Events
 			end
 		end
 	
-	on_add is
+	on_add
 			-- Called by `select_actions' of `add_button'.
 		local
 			l_app: STRING
@@ -114,7 +114,7 @@ feature {NONE} -- Events
 			end
 		end
 		
-	on_remove is
+	on_remove
 			-- Called by `select_actions' of `remove_button'.
 		local
 			l_apps: LIST [EV_LIST_ITEM]
@@ -131,7 +131,7 @@ feature {NONE} -- Events
 			check_ok
 		end
 		
-	on_ok is
+	on_ok
 			-- Called by `select_actions' of `ok_button'.
 		local
 			l_dialog: EV_MESSAGE_DIALOG
@@ -168,7 +168,7 @@ feature {NONE} -- Events
 			end
 		end
 	
-	on_cancel is
+	on_cancel
 			-- Called by `select_actions' of `cancel_button'.
 		do
 			destroy
@@ -176,7 +176,7 @@ feature {NONE} -- Events
 
 feature {NONE} -- Implementation
 
-	check_ok is
+	check_ok
 			-- Set OK button sensitivity according to dialog content.
 		local
 			l_enable_sensitive: BOOLEAN
@@ -208,7 +208,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_configuration (a_configuration: like configuration) is
+	set_configuration (a_configuration: like configuration)
 			-- Set `configuration' with `a_configuration'.
 		do
 			configuration := a_configuration
@@ -216,7 +216,7 @@ feature {NONE} -- Implementation
 			set: configuration = a_configuration
 		end
 	
-	display_error (a_message: STRING) is
+	display_error (a_message: STRING)
 			-- Display error message `a_message' in error dialog.
 		require
 			non_void_message: a_message /= Void
@@ -233,7 +233,7 @@ feature {NONE} -- Implementation
 invariant
 	non_void_manager: manager /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

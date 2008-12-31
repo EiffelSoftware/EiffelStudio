@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Variable used in code, could be argument or local variable."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_variable: CODE_VARIABLE_REFERENCE) is
+	make (a_variable: CODE_VARIABLE_REFERENCE)
 			-- Initialize instance with arguments.
 		require
 			non_void_variable: a_variable /= Void
@@ -34,13 +34,13 @@ feature -- Access
 	variable: CODE_VARIABLE_REFERENCE
 			-- Corresponding variable reference
 		
-	code: STRING is
+	code: STRING
 			-- Type source code
 		do
 			Result := variable.eiffel_name
 		end
 
-	declaration_code: STRING is
+	declaration_code: STRING
 			-- Result := "name: SYSTEM_TYPE"
 		do
 			create Result.make (100)
@@ -53,7 +53,7 @@ feature -- Access
 
 feature -- Comparison
 
-	is_equal (other: CODE_VARIABLE): BOOLEAN is
+	is_equal (other: CODE_VARIABLE): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
@@ -63,7 +63,7 @@ feature -- Comparison
 invariant
 	non_void_variable: variable /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

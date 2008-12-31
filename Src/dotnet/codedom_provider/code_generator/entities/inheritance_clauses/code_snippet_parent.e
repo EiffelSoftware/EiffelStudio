@@ -1,12 +1,15 @@
-indexing
-	description: "Parents of an Eiffel class with corresponding inheritance clauses as declared in snippet code"
+note
+	description: "[
+		Parents of an Eiffel class with corresponding inheritance clauses as declared in snippet code.
+
+		Note: We cannot use CODE_PARENT for snippets because it relies on CODE_TYPE_REFERENCE instances
+			to identify parent clauses and in snippets we only have the Eiffel name of the type not the
+			.NET name which is required to initialize an instance of CODE_TYPE_REFERENCE.
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	note: "We cannot use CODE_PARENT for snippets because it relies on CODE_TYPE_REFERENCE instances%
-				%to identify parent clauses and in snippets we only have the Eiffel name of the type not the%
-				%.NET name which is required to initialize an instance of CODE_TYPE_REFERENCE."
 
 class
 	CODE_SNIPPET_PARENT
@@ -20,7 +23,7 @@ create
 feature -- Initialization
 
 	make (a_type, a_generics: STRING; a_renames: like renames; a_exports: like exports;
-			a_undefines: like undefines; a_redefines: like redefines; a_selects: like selects) is
+			a_undefines: like undefines; a_redefines: like redefines; a_selects: like selects)
 			-- Set `type' with `a_type'
 		require
 			non_void_type: a_type /= Void
@@ -59,7 +62,7 @@ feature	-- Access
 	selects: LIST [CODE_SNIPPET_SELECT_CLAUSE]
 			-- Select inheritance clauses
 
-	code: STRING is
+	code: STRING
 			-- Code
 		do
 			create Result.make (1024)
@@ -77,7 +80,7 @@ feature	-- Access
 			Result.append ("%N")
 		end
 	
-	renames_code: STRING is
+	renames_code: STRING
 			-- Code for rename clauses
 		local
 			l_rename: CODE_SNIPPET_RENAME_CLAUSE
@@ -112,7 +115,7 @@ feature	-- Access
 		end
 		
 
-	exports_code: STRING is
+	exports_code: STRING
 			-- Code for exports clauses
 		local
 			l_export: CODE_SNIPPET_EXPORT_CLAUSE
@@ -152,7 +155,7 @@ feature	-- Access
 			attached_code: Result /= Void
 		end
 		
-	undefines_code: STRING is
+	undefines_code: STRING
 			-- Code for undefine clauses
 		do
 			Result := generic_code (undefines, "undefine")			
@@ -160,7 +163,7 @@ feature	-- Access
 			attached_code: Result /= Void
 		end
 	
-	redefines_code: STRING is
+	redefines_code: STRING
 			-- Code for redefine clauses
 		do
 			Result := generic_code (redefines, "redefine")			
@@ -168,7 +171,7 @@ feature	-- Access
 			attached_code: Result /= Void
 		end
 	
-	selects_code: STRING is
+	selects_code: STRING
 			-- Code for select clauses
 		do
 			Result := generic_code (selects, "select")			
@@ -178,7 +181,7 @@ feature	-- Access
 
 feature -- Status Report
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Are all clauses empty?
 		do
 			Result := renames = Void and exports = Void and undefines = Void and 
@@ -187,7 +190,7 @@ feature -- Status Report
 		
 feature {NONE} -- Implementation
 
-	generic_code (a_clauses: LIST [CODE_SNIPPET_INHERITANCE_CLAUSE]; a_keyword: STRING): STRING is
+	generic_code (a_clauses: LIST [CODE_SNIPPET_INHERITANCE_CLAUSE]; a_keyword: STRING): STRING
 			-- Generic inheritance clause code
 		require
 			non_void_keyword: a_keyword /= Void
@@ -224,7 +227,7 @@ invariant
 	non_empty_redefines_if_not_void: redefines /= Void implies not redefines.is_empty
 	non_empty_selects_if_not_void: selects /= Void implies not selects.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

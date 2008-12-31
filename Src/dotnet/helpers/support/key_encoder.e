@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Provide formatting of assembly public key tokens"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -8,7 +8,7 @@ class
 
 feature -- Access
 
-	encoded_key (a_key: NATIVE_ARRAY [NATURAL_8]): STRING is
+	encoded_key (a_key: NATIVE_ARRAY [NATURAL_8]): STRING
 			-- Printable representation of `a_key'
 		require
 			a_key_not_void: a_key /= Void
@@ -31,7 +31,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

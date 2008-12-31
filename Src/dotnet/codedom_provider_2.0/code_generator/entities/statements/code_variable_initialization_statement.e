@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Initialize generated local variable whose type is expanded and generated for use in default value expression"
 	date: "$$"
 	revision: "$$"
@@ -14,7 +14,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_variable: STRING) is
+	make (a_variable: STRING)
 			-- Initialize `variable'.
 		require
 			non_void_variable: a_variable /= Void
@@ -29,7 +29,7 @@ feature -- Access
 	variable: STRING
 			-- Variable
 
-	need_dummy: BOOLEAN is
+	need_dummy: BOOLEAN
 			-- Does statement require dummy local variable?
 		do
 			Result := False
@@ -37,7 +37,7 @@ feature -- Access
 
 feature -- Code generation
 
-	code: STRING is
+	code: STRING
 			-- Result := "create `variable'"
 			-- Eiffel code of variable initialization statement
 		do

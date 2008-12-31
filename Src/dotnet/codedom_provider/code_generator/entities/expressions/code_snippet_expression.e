@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Source code generator for snippet expressions"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_value: STRING) is
+	make (a_value: STRING)
 			-- Initialize `value' with `a_value'.
 		require
 			non_void_value: a_value /= Void
@@ -37,7 +37,7 @@ feature -- Access
 	value: STRING
 			-- Literal code block of the snippet
 
-	code: STRING is
+	code: STRING
 			-- Eiffel code of snippet expression
 		do
 			Result := value
@@ -45,7 +45,7 @@ feature -- Access
 		
 feature -- Status Report
 
-	type: CODE_TYPE_REFERENCE is
+	type: CODE_TYPE_REFERENCE
 			-- Type
 		do
 			Result := None_type_reference
@@ -55,7 +55,7 @@ feature -- Status Report
 invariant
 	non_void_value: value /= Void
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

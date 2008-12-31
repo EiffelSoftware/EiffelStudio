@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command line splitter utility."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Process arguments and execute corresponding
 			-- actions.
 		local
@@ -75,7 +75,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	split_files is
+	split_files
 			-- Split multi-class Eiffel files into Eiffel source files according to settings.
 		require
 			non_void_folder: folder /= Void
@@ -90,7 +90,7 @@ feature {NONE} -- Implementation
 			l_splitter.split_files (agent display_event)
 		end
 
-	display_event (a_event: CODE_ES_EVENT) is
+	display_event (a_event: CODE_ES_EVENT)
 			-- Display event on console.
 		require
 			non_void_event: a_event /= Void
@@ -115,13 +115,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	print_version_info is
+	print_version_info
 			-- Print version information.
 		do
 			print ("eSplitter v1.0.1402%NCopyright(c) Eiffel Software, All rights reserved.%N%N")
 		end
 
-	option_specifications: ARRAY [STRING] is
+	option_specifications: ARRAY [STRING]
 			-- The recognized options of this program
 		once
 			Result := <<"-v,--version#Version information.",
@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 	exe_name: STRING;
 			-- Name of this executable
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

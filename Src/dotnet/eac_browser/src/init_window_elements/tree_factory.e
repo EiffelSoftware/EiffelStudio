@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Print in output the eiffel type with all its eiffelfeatures corresponding to given dotnet type name."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 	
 feature {NONE} -- Initialization
 
- 	make (a_window: MAIN_WINDOW_IMP) is
+ 	make (a_window: MAIN_WINDOW_IMP)
  			-- Initialize `parent_window'.
  		require
  			non_void_a_window: a_window /= Void
@@ -36,17 +36,17 @@ feature {NONE} -- Initialization
 	parent_window: MAIN_WINDOW_IMP
 			-- current window.
 			
-	edit: EDIT_FACTORY is
+	edit: EDIT_FACTORY
 			-- edtion area.
 		once
 			create Result.make (parent_window)
 		end
 		
-	Fictive_element: STRING is "fictive_element"
+	Fictive_element: STRING = "fictive_element"
 
 feature {MAIN_WINDOW} -- Initialization tree
 
-	initialize is
+	initialize
 			-- Add widgets to `widget_tree'.
 		local
 			tree_item, tree_item1: EV_COMPARABLE_TREE_ITEM
@@ -90,7 +90,7 @@ feature {MAIN_WINDOW} -- Initialization tree
 
 feature {NONE} -- Add element to tree
 
-	add_namespaces_branches (an_assembly: CONSUMED_ASSEMBLY; tree_item_parent: EV_TREE_ITEM) is
+	add_namespaces_branches (an_assembly: CONSUMED_ASSEMBLY; tree_item_parent: EV_TREE_ITEM)
 			-- initialize widget_tree if not allready done.
 			-- Add classes in cache.
 			-- add click action on each assembly_item to see its informations in `edit_area'.
@@ -146,7 +146,7 @@ feature {NONE} -- Add element to tree
 --			edit.edit_info_assembly (an_assembly)
 		end		
 
-	add_types_branches (an_assembly: CONSUMED_ASSEMBLY; a_tree_item_namespace: EV_TREE_ITEM; a_namespace_name: STRING; cat: CONSUMED_ASSEMBLY_TYPES) is
+	add_types_branches (an_assembly: CONSUMED_ASSEMBLY; a_tree_item_namespace: EV_TREE_ITEM; a_namespace_name: STRING; cat: CONSUMED_ASSEMBLY_TYPES)
 			-- add type contained in `tree' to `tree_item_parent'.
 			-- add click action on each type_item to see its contain in edit_area.
 			-- add expand action on each type_item to see its features in the tree.
@@ -322,7 +322,7 @@ feature {NONE} -- Add element to tree
 --			a_tree_item_namespace.append (classify_types (a_types_list))
 --		end
 		
-	add_features_branches (an_assembly: CONSUMED_ASSEMBLY; tree_item_parent: EV_TREE_ITEM; full_dotnet_type_name: STRING) is
+	add_features_branches (an_assembly: CONSUMED_ASSEMBLY; tree_item_parent: EV_TREE_ITEM; full_dotnet_type_name: STRING)
 			-- add feature contained in `a_dotnet_type_name' to `tree_item_parent'.
 			-- add double click action on each type_item to be editable.
 		require
@@ -408,7 +408,7 @@ feature {NONE} -- Add element to tree
 		end
 
 
-	add_choise_type (an_assembly: CONSUMED_ASSEMBLY; tree_item_parent: EV_TREE_ITEM; full_dotnet_type_name: STRING) is
+	add_choise_type (an_assembly: CONSUMED_ASSEMBLY; tree_item_parent: EV_TREE_ITEM; full_dotnet_type_name: STRING)
 			-- add feature contained in `a_dotnet_type_name' to `tree_item_parent'.
 		local
 			l_ico: EV_PIXMAP
@@ -471,7 +471,7 @@ feature {NONE} -- Add element to tree
 		end
 
 
-	add_ancestors_branches (an_assembly: CONSUMED_ASSEMBLY; tree_item_parent: EV_TREE_ITEM; ancestors: ARRAYED_LIST [CONSUMED_REFERENCED_TYPE]) is
+	add_ancestors_branches (an_assembly: CONSUMED_ASSEMBLY; tree_item_parent: EV_TREE_ITEM; ancestors: ARRAYED_LIST [CONSUMED_REFERENCED_TYPE])
 			-- add feature contained in `a_dotnet_type_name' to `tree_item_parent'.
 		local
 			i: INTEGER
@@ -526,7 +526,7 @@ feature {NONE} -- Add element to tree
 
 feature {NONE} -- Classify
 
-	classify_assemblies (assemblies_list: LINKED_LIST [EV_COMPARABLE_TREE_ITEM]): LINKED_LIST [EV_COMPARABLE_TREE_ITEM] is
+	classify_assemblies (assemblies_list: LINKED_LIST [EV_COMPARABLE_TREE_ITEM]): LINKED_LIST [EV_COMPARABLE_TREE_ITEM]
 			-- Classify `assemblies_list'.
 		require
 			non_void_assemblies_list: assemblies_list /= Void
@@ -569,7 +569,7 @@ feature {NONE} -- Classify
 			same_number_assemblies: assemblies_list.count = Result.count
 		end
 
-	classify_namespaces (namespaces: LINKED_LIST [EV_COMPARABLE_TREE_ITEM]): LINKED_LIST [EV_COMPARABLE_TREE_ITEM] is
+	classify_namespaces (namespaces: LINKED_LIST [EV_COMPARABLE_TREE_ITEM]): LINKED_LIST [EV_COMPARABLE_TREE_ITEM]
 			-- Classify `namespaces'.
 		require
 			non_void_namespaces: namespaces /= Void
@@ -605,7 +605,7 @@ feature {NONE} -- Classify
 			same_number_namespaces: namespaces.count = Result.count
 		end
 
-	classify_types (types_list: LINKED_LIST [EV_COMPARABLE_TREE_ITEM]): LINKED_LIST [EV_COMPARABLE_TREE_ITEM] is
+	classify_types (types_list: LINKED_LIST [EV_COMPARABLE_TREE_ITEM]): LINKED_LIST [EV_COMPARABLE_TREE_ITEM]
 			-- Classify `types_list'.
 		require
 			non_void_types_list: types_list /= Void
@@ -641,7 +641,7 @@ feature {NONE} -- Classify
 			same_number_types: types_list.count = Result.count
 		end
 		
-	classify_tree_nodes (nodes: LINKED_LIST [EV_COMPARABLE_TREE_ITEM]): LINKED_LIST [EV_COMPARABLE_TREE_ITEM] is
+	classify_tree_nodes (nodes: LINKED_LIST [EV_COMPARABLE_TREE_ITEM]): LINKED_LIST [EV_COMPARABLE_TREE_ITEM]
 			-- Classify `nodes'.
 		require
 			non_void_nodes: nodes /= Void
@@ -680,7 +680,7 @@ feature {NONE} -- Classify
 
 feature {NONE} -- Initialization of tree elements
 
-	initialize_tree_item_assembly (an_assembly: CONSUMED_ASSEMBLY): EV_COMPARABLE_TREE_ITEM is
+	initialize_tree_item_assembly (an_assembly: CONSUMED_ASSEMBLY): EV_COMPARABLE_TREE_ITEM
 			-- init a_tree_item_assembly.
 		require
 			non_void_an_assembly: an_assembly /= Void
@@ -711,7 +711,7 @@ feature {NONE} -- Initialization of tree elements
 			non_void_result: Result /= Void		
 		end
 
-	initialize_tree_item_namespace (a_namespace_name: STRING): EV_COMPARABLE_TREE_ITEM is
+	initialize_tree_item_namespace (a_namespace_name: STRING): EV_COMPARABLE_TREE_ITEM
 			-- init a_tree_item_namespace.
 		require
 			non_void_a_namespace_name: a_namespace_name /= Void
@@ -733,7 +733,7 @@ feature {NONE} -- Initialization of tree elements
 		end
 
 
-	initialize_tree_item_type (an_assembly: CONSUMED_ASSEMBLY; full_dotnet_type_name: STRING; eiffel_type_name: STRING; flag: INTEGER): EV_COMPARABLE_TREE_ITEM is
+	initialize_tree_item_type (an_assembly: CONSUMED_ASSEMBLY; full_dotnet_type_name: STRING; eiffel_type_name: STRING; flag: INTEGER): EV_COMPARABLE_TREE_ITEM
 			-- init a_tree_item_type.
 			-- flag corresponding to the type of the type (class, interface or delegate).
 		require
@@ -791,7 +791,7 @@ feature {NONE} -- Initialization of tree elements
 			non_void_result: Result /= Void		
 		end
 		
-	initialize_tree_item_feature (an_assembly: CONSUMED_ASSEMBLY; full_dotnet_type_name: STRING; eiffel_feature_name: STRING; icon_path: STRING): EV_COMPARABLE_TREE_ITEM is
+	initialize_tree_item_feature (an_assembly: CONSUMED_ASSEMBLY; full_dotnet_type_name: STRING; eiffel_feature_name: STRING; icon_path: STRING): EV_COMPARABLE_TREE_ITEM
 			-- init a_tree_item_type.
 		require
 			non_void_an_assembly: an_assembly /= Void
@@ -824,7 +824,7 @@ feature {NONE} -- Initialization of tree elements
 
 feature {NONE} -- Edit
 
-	edit_feature (a, b, c: INTEGER; d, e, f: DOUBLE; g, h: INTEGER; an_assembly: CONSUMED_ASSEMBLY; eiffel_feature_item: EV_COMPARABLE_TREE_ITEM) is
+	edit_feature (a, b, c: INTEGER; d, e, f: DOUBLE; g, h: INTEGER; an_assembly: CONSUMED_ASSEMBLY; eiffel_feature_item: EV_COMPARABLE_TREE_ITEM)
 			--
 		require
 			non_void_an_assembly: an_assembly /= Void
@@ -842,7 +842,7 @@ feature {NONE} -- Edit
 --			edit_box.focus_out_actions.extend (agent edit_box.destroy)
 		end
 
-	on_key_pressed (a_key: EV_KEY) is
+	on_key_pressed (a_key: EV_KEY)
 			-- feature performed when the focus is in tree and a key is pressed.
 		local
 			key_constant: EV_KEY_CONSTANTS
@@ -883,7 +883,7 @@ feature {NONE} -- Edit
 			end
 		end
 		
-	assembly_node_selected (an_assembly: CONSUMED_ASSEMBLY) is
+	assembly_node_selected (an_assembly: CONSUMED_ASSEMBLY)
 			-- Feature performed when assembly_node is selected.
 		require
 			non_an_assembly: an_assembly /= Void
@@ -896,7 +896,7 @@ feature {NONE} -- Edit
 	
 feature -- Action
 
-	expand_assembly (an_assembly: CONSUMED_ASSEMBLY) is
+	expand_assembly (an_assembly: CONSUMED_ASSEMBLY)
 			--
 		require
 			non_void_an_assembly: an_assembly /= Void
@@ -911,7 +911,7 @@ feature -- Action
 			end
 		end
 
-	expand_type (an_assembly: CONSUMED_ASSEMBLY; a_type: CONSUMED_TYPE) is
+	expand_type (an_assembly: CONSUMED_ASSEMBLY; a_type: CONSUMED_TYPE)
 			--
 		require
 			non_void_an_assembly: an_assembly /= Void
@@ -940,7 +940,7 @@ feature -- Action
 invariant
 	non_void_current_window: parent_window /= Void
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

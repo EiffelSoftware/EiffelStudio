@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generation states"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,18 +10,18 @@ class
 
 feature -- Access
 
-	Initial_state: INTEGER is 0
+	Initial_state: INTEGER = 0
 			-- Default state
 
-	Code_analysis: INTEGER is 1
+	Code_analysis: INTEGER = 1
 			-- Codedom analysis, build CODE_* instances
 
-	Code_generation: INTEGER is 2
+	Code_generation: INTEGER = 2
 			-- Code generation, executing `code'
 
 feature -- Status report
 
-	current_state: INTEGER is
+	current_state: INTEGER
 			-- Current generation state, see {CODE_SHARED_GENERATION_STATES} for possible values
 		do
 			Result := internal_current_state.item
@@ -29,7 +29,7 @@ feature -- Status report
 			valid_state: is_valid_generation_state (Result)
 		end
 
-	is_valid_generation_state (a_state: INTEGER): BOOLEAN is
+	is_valid_generation_state (a_state: INTEGER): BOOLEAN
 			-- Is `a_state' a valid_generation state?
 		do
 			Result := a_state = Initial_state or a_state = Code_analysis or a_state = Code_generation
@@ -39,7 +39,7 @@ feature -- Status report
 
 feature -- Status Setting
 
-	set_current_state (a_state: like current_state) is
+	set_current_state (a_state: like current_state)
 			-- Set `current_state' with `a_state'.
 		require
 			valid_state: is_valid_generation_state (a_state)
@@ -51,7 +51,7 @@ feature -- Status Setting
 
 feature {NONE} -- Implementation
 
-	internal_current_state: INTEGER_REF is
+	internal_current_state: INTEGER_REF
 			-- Internal representation of `current_state'.
 		once
 			create Result
@@ -66,7 +66,7 @@ invariant
 	code_generation_is_valid_state: is_valid_generation_state (Code_generation)
 	valid_state: is_valid_generation_state (current_state)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

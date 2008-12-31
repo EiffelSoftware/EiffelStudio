@@ -1,11 +1,9 @@
-indexing
+note
 	description: "Application configuration file for Eiffel Codedom Provider"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-
-	note: "Queries `default_root_class' and `precompile_ace_file' can return `Void'."
 
 class
 	ECDM_CONFIGURATION
@@ -25,7 +23,7 @@ create
 
 feature -- Initialization
 
-	make_empty (a_config_folder, a_config_name: STRING) is
+	make_empty (a_config_folder, a_config_name: STRING)
 			-- Create default configuration file in `a_config_file'.
 		require
 			non_void_config_folder: a_config_folder /= Void
@@ -38,7 +36,7 @@ feature -- Initialization
 			save
 		end
 
-	load (a_config_file: STRING) is
+	load (a_config_file: STRING)
 			-- Load configuration file `a_config_file'.
 			-- Set `name' and `folder'.
 		local
@@ -66,7 +64,7 @@ feature -- Initialization
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
@@ -81,7 +79,7 @@ feature -- Access
 	name: STRING
 			-- Configuration name
 
-	path: STRING is
+	path: STRING
 			-- Configuration file full path
 		do
 			create Result.make (folder.count + name.count + Configuration_file_extension.count + 1)
@@ -94,12 +92,12 @@ feature -- Access
 	last_save_successful: BOOLEAN
 			-- Was last call to `save' successful?
 
-	Configuration_file_extension: STRING is ".ecd"
+	Configuration_file_extension: STRING = ".ecd"
 			-- Configuration files extension
 
 feature -- Basic Operations
 
-	save is
+	save
 			-- Save to file at `path'.
 			-- Overwrite if already exist.
 		local
@@ -185,7 +183,7 @@ feature -- Basic Operations
 
 feature -- Element Settings
 
-	set_folder (a_config_folder: STRING) is
+	set_folder (a_config_folder: STRING)
 			-- Set `folder' with `a_config_folder'.
 		require
 			non_void_configuration_folder: a_config_folder /= Void
@@ -196,7 +194,7 @@ feature -- Element Settings
 			configuration_folder_set: folder = a_config_folder
 		end
 
-	set_name (a_config_name: STRING) is
+	set_name (a_config_name: STRING)
 			-- Set `name' with `a_config_name'.
 		require
 			non_void_configuration_name: a_config_name /= Void
@@ -206,20 +204,20 @@ feature -- Element Settings
 			configuration_name_set: name = a_config_name
 		end
 
-	set_fail_on_error (a_value: BOOLEAN) is
+	set_fail_on_error (a_value: BOOLEAN)
 			-- Set `fail_on_error' with `a_value'.
 		do
 			config_values.force (a_value.out, "fail_on_error")
 		end
 
-	set_log_level (a_value: INTEGER) is
+	set_log_level (a_value: INTEGER)
 			-- Set `log_level' with `a_value'.
 			-- See class CODE_EVENT_LOG_LEVEL for possible values
 		do
 			config_values.force (a_value.out, "log_level")
 		end
 
-	set_log_source_name (a_value: STRING) is
+	set_log_source_name (a_value: STRING)
 			-- set `log_source_name' with `a_value'.
 		require
 			non_void_source: a_value /= Void
@@ -227,7 +225,7 @@ feature -- Element Settings
 			config_values.force (a_value, "log_source_name")
 		end
 
-	set_log_server_name (a_value: STRING) is
+	set_log_server_name (a_value: STRING)
 			-- Set `log_server_name' with `a_value'.
 		require
 			non_void_name: a_value /= Void
@@ -235,7 +233,7 @@ feature -- Element Settings
 			config_values.force (a_value, "log_server_name")
 		end
 
-	set_log_name (a_value: STRING) is
+	set_log_name (a_value: STRING)
 			-- Set `log_name' with `a_value'.
 		require
 			non_void_name: a_value /= Void
@@ -243,31 +241,31 @@ feature -- Element Settings
 			config_values.force (a_value, "log_name")
 		end
 
-	set_precompile_ace_file (a_value: STRING) is
+	set_precompile_ace_file (a_value: STRING)
 			-- Set `precompile_ace_file' with `a_value'.
 		do
 			config_values.force (a_value, "precompile_ace_file")
 		end
 
-	set_precompile_cache (a_value: STRING) is
+	set_precompile_cache (a_value: STRING)
 			-- Set `precompile_cache' with `a_value'.
 		do
 			config_values.force (a_value, "precompile_cache")
 		end
 
-	set_metadata_cache (a_value: STRING) is
+	set_metadata_cache (a_value: STRING)
 			-- Set `metadata_cache' with `a_value'.
 		do
 			config_values.force (a_value, "metadata_cache")
 		end
 
-	set_compiler_metadata_cache (a_value: STRING) is
+	set_compiler_metadata_cache (a_value: STRING)
 			-- Set `compiler_metadata_cache' with `a_value'.
 		do
 			config_values.force (a_value, "compiler_metadata_cache")
 		end
 
-	set_default_root_class (a_value: STRING) is
+	set_default_root_class (a_value: STRING)
 			-- set `default_root_class' with `a_value'.
 		require
 			non_void_root_class: a_value /= Void
@@ -275,7 +273,7 @@ feature -- Element Settings
 			config_values.force (a_value, "default_root_class")
 		end
 
-	add_prefix (a_assembly, a_prefix: STRING) is
+	add_prefix (a_assembly, a_prefix: STRING)
 			-- Add `a_assembly' to list of prefixed assemblies with prefix `a_prefix'.
 		require
 			non_void_assembly: a_assembly /= Void
@@ -286,7 +284,7 @@ feature -- Element Settings
 			added: prefixes.has (a_assembly) and then assembly_prefix (a_assembly).is_equal (a_prefix)
 		end
 
-	remove_prefix (a_assembly: STRING) is
+	remove_prefix (a_assembly: STRING)
 			-- Remove `a_assembly' from list of prefixed assemblies.
 		require
 			non_void_assembly: a_assembly /= Void
@@ -304,7 +302,7 @@ invariant
 	non_void_log_server_name: log_server_name /= Void
 	non_void_log_name: log_name /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

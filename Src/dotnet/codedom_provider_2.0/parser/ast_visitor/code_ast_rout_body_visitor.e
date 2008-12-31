@@ -1,4 +1,4 @@
-indexing
+note
 	description: "AST rout body Visitor."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,17 +12,17 @@ inherit
 	
 feature {AST_YACC} -- Implementation
 
-	process_external_as (l_as: EXTERNAL_AS) is
+	process_external_as (l_as: EXTERNAL_AS)
 			-- Process `l_as'.
 		do
 		end
 
-	process_deferred_as (l_as: DEFERRED_AS) is
+	process_deferred_as (l_as: DEFERRED_AS)
 			-- Process `l_as'.
 		do
 		end
 
-	process_do_as (l_as: DO_AS) is
+	process_do_as (l_as: DO_AS)
 			-- Process `l_as'.
 		local
 			l_current_routine: SYSTEM_DLL_CODE_MEMBER_METHOD
@@ -43,7 +43,7 @@ feature {AST_YACC} -- Implementation
 			end
 		end
 
-	process_once_as (l_as: ONCE_AS) is
+	process_once_as (l_as: ONCE_AS)
 			-- Process `l_as'.
 		local
 			l_current_routine: SYSTEM_DLL_CODE_MEMBER_METHOD
@@ -66,7 +66,7 @@ feature {AST_YACC} -- Implementation
 
 feature {NONE} -- Implementation
 
-	analyse_statement (a_current_routine: SYSTEM_DLL_CODE_MEMBER_METHOD; a_statement: INSTRUCTION_AS) is
+	analyse_statement (a_current_routine: SYSTEM_DLL_CODE_MEMBER_METHOD; a_statement: INSTRUCTION_AS)
 			-- analyse statement.
 		require
 			non_void_a_current_routine: a_current_routine /= Void
@@ -95,7 +95,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

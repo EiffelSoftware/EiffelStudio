@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel representation of CodeDOM compile unit"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_namespaces: like namespaces) is
+	make (a_namespaces: like namespaces)
 			-- Initialize `namespaces'
 		require
 			non_void_namespaces: a_namespaces /= Void
@@ -31,7 +31,7 @@ feature -- Access
 	namespaces: LIST [CODE_NAMESPACE]
 			-- Namespaces in the compile unit
 
-	code: STRING is
+	code: STRING
 			-- | Loop on `namespaces'
 			-- | Call `code' on each item.
 
@@ -56,7 +56,7 @@ feature -- Access
 invariant
 	non_void_namespaces: namespaces /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

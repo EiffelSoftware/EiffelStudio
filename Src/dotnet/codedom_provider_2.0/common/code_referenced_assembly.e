@@ -1,4 +1,4 @@
-indexing
+note
 	description:	"Codedom referenced assembly."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 		
 feature {NONE} -- Initialization
 
-	make (an_assembly: ASSEMBLY) is
+	make (an_assembly: ASSEMBLY)
 			-- Initialization.
 			-- Set `assembly' with `an_assembly'.
 		require
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 			assembly_set: assembly = an_assembly
 		end
 
-	make_with_prefix (an_assembly: ASSEMBLY; a_prefix: STRING) is
+	make_with_prefix (an_assembly: ASSEMBLY; a_prefix: STRING)
 			-- Initialization.
 			-- Set `assembly' with `an_assembly'.
 			-- Set `assembly_prefix' with `a_prefix'.
@@ -81,7 +81,7 @@ feature -- Access
 	assembly: ASSEMBLY
 			-- actual assembly.
 
-	cluster_name: STRING is
+	cluster_name: STRING
 			-- Cluster name for assembly
 		do
 			Result := assembly.get_name.name
@@ -94,7 +94,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	new_prefix: STRING is
+	new_prefix: STRING
 			-- Creation procedure.
 		local
 			a, b, c: INTEGER
@@ -112,13 +112,13 @@ feature {NONE} -- Implementation
 			Result.append_character ('_')
 		end
 
-	counter: INTEGER_REF is
+	counter: INTEGER_REF
 			-- Counter
 		once
 			create Result
 		end
 
-	generated_prefixes: HASH_TABLE [STRING, STRING] is
+	generated_prefixes: HASH_TABLE [STRING, STRING]
 			-- Cache for generated prefixes
 		once
 			create Result.make (10)
@@ -128,7 +128,7 @@ invariant
 	non_void_assembly_prefix: assembly_prefix /= Void
 	non_void_assembly: assembly /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: ".NET type member as seen by Eiffel"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (en, dn: STRING; pub: BOOLEAN; a_type: CONSUMED_REFERENCED_TYPE) is
+	make (en, dn: STRING; pub: BOOLEAN; a_type: CONSUMED_REFERENCED_TYPE)
 			-- Initialize with `en', `dn' and `pub'.
 		require
 			non_void_eiffel_name: en /= Void
@@ -40,57 +40,57 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_public: BOOLEAN is
+	is_public: BOOLEAN
 			-- Is current member public?
 		do
 			Result := f & {FEATURE_ATTRIBUTE}.Is_public = {FEATURE_ATTRIBUTE}.Is_public
 		end
 
-	is_frozen: BOOLEAN is
+	is_frozen: BOOLEAN
 			-- Is feature frozen?
 		do
 			Result := f & {FEATURE_ATTRIBUTE}.Is_frozen = {FEATURE_ATTRIBUTE}.Is_frozen
 		end
 
-	is_static: BOOLEAN is
+	is_static: BOOLEAN
 			-- Is .NET member static?
 		do
 			Result := f & {FEATURE_ATTRIBUTE}.Is_static ={FEATURE_ATTRIBUTE}.Is_static
 		end
 
-	is_deferred: BOOLEAN is
+	is_deferred: BOOLEAN
 			-- Is feature deferred?
 		do
 			Result := f & {FEATURE_ATTRIBUTE}.Is_deferred = {FEATURE_ATTRIBUTE}.Is_deferred
 		end
 
-	is_artificially_added: BOOLEAN is
+	is_artificially_added: BOOLEAN
 			-- Is feature artificially added?
 		do
 			Result := f & {FEATURE_ATTRIBUTE}.Is_artificially_added =
 				{FEATURE_ATTRIBUTE}.Is_artificially_added
 		end
 	
-	is_property_or_event: BOOLEAN is
+	is_property_or_event: BOOLEAN
 			-- Is feature property or event related?
 		do
 			Result := f & {FEATURE_ATTRIBUTE}.Is_property_or_event =
 				{FEATURE_ATTRIBUTE}.Is_property_or_event
 		end
 		
-	is_new_slot: BOOLEAN is
+	is_new_slot: BOOLEAN
 			-- Is current marked with `new_slot' flag?
 		do
 			Result := f & {FEATURE_ATTRIBUTE}.Is_newslot = {FEATURE_ATTRIBUTE}.Is_newslot
 		end
 
-	is_virtual: BOOLEAN is
+	is_virtual: BOOLEAN
 			-- Is feature virtual?
 		do
 			Result := f & {FEATURE_ATTRIBUTE}.Is_virtual = {FEATURE_ATTRIBUTE}.Is_virtual
 		end
 
-	is_attribute_setter: BOOLEAN is
+	is_attribute_setter: BOOLEAN
 			-- Is feature an setter of an attribute of current class?
 		do
 			Result := f & {FEATURE_ATTRIBUTE}.Is_attribute_setter = 
@@ -99,7 +99,7 @@ feature -- Status report
 
 feature -- Settings
 
-	set_is_public (pub: like is_public) is
+	set_is_public (pub: like is_public)
 			-- Set `is_public' with `pub'.
 		do
 			if pub then
@@ -109,7 +109,7 @@ feature -- Settings
 			end
 		end
 
-	set_is_artificially_added (val: like is_artificially_added) is
+	set_is_artificially_added (val: like is_artificially_added)
 			-- Set `is_artificially_added' with `val'.
 		do
 			if val then
@@ -130,7 +130,7 @@ invariant
 	non_void_dotnet_name: dotnet_name /= Void
 	valid_dotnet_name: not dotnet_name.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

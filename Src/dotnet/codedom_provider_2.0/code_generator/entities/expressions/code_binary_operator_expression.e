@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Source code generator for binary operator expression"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_left_operand, a_right_operand: like left_operand; a_operator: like operator) is
+	make (a_left_operand, a_right_operand: like left_operand; a_operator: like operator)
 			-- Initialize `left_operand', `right_operand' and `operator'.
 		require
 			non_void_left_operand: a_left_operand /= Void
@@ -47,7 +47,7 @@ feature -- Access
 	right_operand: CODE_EXPRESSION
 			-- Expression on the right of `operator'
 			
-	code: STRING is
+	code: STRING
 			-- | Result := "`left_operand' operator `right_operand'"
 			-- Eiffel code of binary operator expression
 		do
@@ -61,7 +61,7 @@ feature -- Access
 		
 feature -- Status Report
 
-	type: CODE_TYPE_REFERENCE is
+	type: CODE_TYPE_REFERENCE
 			-- Type
 		do
 			if operator = {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.add then
@@ -103,7 +103,7 @@ feature -- Status Report
 
 feature -- Implementation
 
-	operator_code: STRING is
+	operator_code: STRING
 			-- | Result := "`operator'"
 			-- generate corresponding operator (+, -, =, /, ...)
 		do
@@ -149,7 +149,7 @@ feature -- Implementation
 
 invariant
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Possible output tags used be output dialog"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,19 +10,19 @@ class
 
 feature -- Access
 
-	Start_opening_tag: CHARACTER is '<'
+	Start_opening_tag: CHARACTER = '<'
 			-- Start opening tag
 	
-	End_opening_tag: CHARACTER is '>'
+	End_opening_tag: CHARACTER = '>'
 			-- End opening tag
 	
-	Start_closing_tag: CHARACTER is '<'
+	Start_closing_tag: CHARACTER = '<'
 			-- Start opening tag
 	
-	End_closing_tag: STRING is "/>"
+	End_closing_tag: STRING = "/>"
 			-- End opening tag
 	
-	opening_tag (a_tag: STRING): STRING is
+	opening_tag (a_tag: STRING): STRING
 			-- Opening tag for tag value `a_tag'
 		require
 			non_void_tag: a_tag /= Void
@@ -37,7 +37,7 @@ feature -- Access
 			definition: Result.is_equal (Start_opening_tag.out + a_tag + End_opening_tag.out)
 		end
 
-	closing_tag (a_tag: STRING): STRING is
+	closing_tag (a_tag: STRING): STRING
 			-- Closing tag for tag value `a_tag'
 		require
 			non_void_tag: a_tag /= Void
@@ -52,14 +52,14 @@ feature -- Access
 			definition: Result.is_equal (Start_closing_tag.out + a_tag + End_closing_tag)
 		end
 
-	Error_tag: STRING is "error"
+	Error_tag: STRING = "error"
 			-- Error tag
 	
-	Header_tag: STRING is "header"
+	Header_tag: STRING = "header"
 			-- Header tag
 	
 
-	Output_tags: HASH_TABLE [EV_CHARACTER_FORMAT, STRING] is
+	Output_tags: HASH_TABLE [EV_CHARACTER_FORMAT, STRING]
 			-- Output tags with associated format
 		local
 			l_format: EV_CHARACTER_FORMAT
@@ -84,13 +84,13 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	Normal_format: EV_CHARACTER_FORMAT is
+	Normal_format: EV_CHARACTER_FORMAT
 			-- Default format
 		once
 			create Result.make_with_font (Normal_font)
 		end
 	
-	Normal_font: EV_FONT is
+	Normal_font: EV_FONT
 			-- Default font
 		once
 			create Result
@@ -104,7 +104,7 @@ invariant
 	non_void_normal_font: Normal_font /= Void
 	non_void_normal_format: Normal_format /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

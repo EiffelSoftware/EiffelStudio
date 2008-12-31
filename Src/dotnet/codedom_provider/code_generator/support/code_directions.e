@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Argument direction support (in, out, inout)"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,10 +10,10 @@ class
 
 feature -- Access
 
-	in_argument, out_argument, inout_argument: INTEGER is unique
+	in_argument, out_argument, inout_argument: INTEGER = unique
 			-- Constants
 
-	direction_from_dom (a_direction: SYSTEM_DLL_FIELD_DIRECTION): INTEGER is
+	direction_from_dom (a_direction: SYSTEM_DLL_FIELD_DIRECTION): INTEGER
 			-- Value corresponding to `a_direction'
 		do
 			if a_direction = {SYSTEM_DLL_FIELD_DIRECTION}.In then
@@ -34,13 +34,13 @@ feature -- Access
 
 feature -- Status Report
 
-	is_valid_direction (a_direction: INTEGER): BOOLEAN is
+	is_valid_direction (a_direction: INTEGER): BOOLEAN
 			-- Is `a_direction' a valid direction constant?
 		do
 			Result := a_direction = in_argument or a_direction = out_argument or a_direction = inout_argument
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

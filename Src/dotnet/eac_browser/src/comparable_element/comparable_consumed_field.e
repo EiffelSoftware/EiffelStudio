@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "COMPARABLE_CONSUMED_FIELD with comparaison on feature dotnet_name"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -39,7 +39,7 @@ feature -- Access
 	
 feature -- Initialization
 	
-	make_with_consumed_field (a_consumed_field: CONSUMED_FIELD) is
+	make_with_consumed_field (a_consumed_field: CONSUMED_FIELD)
 		require
 			non_void_a_consumed_field: a_consumed_field /= Void
 		do
@@ -60,13 +60,13 @@ feature -- Initialization
 
 feature -- Implementation
 	
-	infix "<" (other: like Current): BOOLEAN is
+	infix "<" (other: like Current): BOOLEAN
 			-- Is current object less than `other'?
 		do
 			Result := dotnet_name < other.dotnet_name
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

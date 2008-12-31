@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Common ancestor to all Eiffel named entity"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ feature -- Access
 
 feature -- Status Setting
 
-	set_name (a_name: like name) is
+	set_name (a_name: like name)
 			-- Set `name' with `a_name'.
 		require
 			non_void_name: a_name /= Void
@@ -28,7 +28,7 @@ feature -- Status Setting
 			name_set: name = a_name
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

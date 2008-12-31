@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Search for class information from .NET name"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize instance.
 		do
 			create type_reference_factory
@@ -24,7 +24,7 @@ feature -- Access
 	searching: BOOLEAN
 			-- Are we currently searching for a type?
 
-	found: BOOLEAN is
+	found: BOOLEAN
 			-- Was last called to `search' successful?
 		do
 			Attribute_access_mutex.lock
@@ -32,7 +32,7 @@ feature -- Access
 			Attribute_access_mutex.unlock
 		end
 
-	eiffel_name: STRING is
+	eiffel_name: STRING
 			-- Eiffel name of .NET type whose name was given to `search'.
 		do
 			Attribute_access_mutex.lock
@@ -40,7 +40,7 @@ feature -- Access
 			Attribute_access_mutex.unlock
 		end
 
-	members_mapping: HASH_TABLE [STRING, STRING] is
+	members_mapping: HASH_TABLE [STRING, STRING]
 			-- Table of member names mapping
 			-- Indexed by .NET member names
 		do
@@ -49,7 +49,7 @@ feature -- Access
 			Attribute_access_mutex.unlock
 		end
 
-	dotnet_member_names: LIST [STRING] is
+	dotnet_member_names: LIST [STRING]
 			-- Sorted list of current .NET member names
 		do
 			Attribute_access_mutex.lock
@@ -59,7 +59,7 @@ feature -- Access
 
 feature -- Basic Operation
 
-	search (a_dotnet_type_name: STRING) is
+	search (a_dotnet_type_name: STRING)
 			-- Spawn worker thread and run `internal_search'.
 		require
 			non_void_dotnet_type_name: a_dotnet_type_name /= Void
@@ -72,7 +72,7 @@ feature -- Basic Operation
 			searching := False
 		end
 
-	internal_search (a_dotnet_type_name: STRING) is
+	internal_search (a_dotnet_type_name: STRING)
 			-- Search information for .NET type with name `a_dotnet_type_name'.
 		require
 			non_void_dotnet_type_name: a_dotnet_type_name /= Void
@@ -130,7 +130,7 @@ feature {NONE} -- Private Access
 	worker_thread: WORKER_THREAD
 			-- Worker thread
 
-	Thread_abort_exception_type: SYSTEM_TYPE is
+	Thread_abort_exception_type: SYSTEM_TYPE
 			-- Type of .NET type ThreadAbortException
 		once
 			Result := {SYSTEM_TYPE}.get_type_string ("ThreadAbortException")
@@ -152,7 +152,7 @@ feature {NONE} -- Private Access
 			-- Cache for `dotnet_member_names', must be accessed through
 			-- Attribute_access_mutex
 		
-	Attribute_access_mutex: MUTEX is
+	Attribute_access_mutex: MUTEX
 			-- Mutex to access public attribute
 		once
 			create Result
@@ -161,13 +161,13 @@ feature {NONE} -- Private Access
 	type_reference_factory: CODE_TYPE_REFERENCE_FACTORY
 			-- Type reference factory
 
-	Quick_sorter: DS_QUICK_SORTER [STRING] is
+	Quick_sorter: DS_QUICK_SORTER [STRING]
 			-- Quick sorter
 		once
 			create Result.make (create {KL_COMPARABLE_COMPARATOR [STRING]}.make)
 		end
 	
-	Environment: EV_ENVIRONMENT is
+	Environment: EV_ENVIRONMENT
 			-- Vision2 environment
 		once
 			create Result
@@ -176,7 +176,7 @@ feature {NONE} -- Private Access
 invariant
 	non_void_type_factory: type_reference_factory /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

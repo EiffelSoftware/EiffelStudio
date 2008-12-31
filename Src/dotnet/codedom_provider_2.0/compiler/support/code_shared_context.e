@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shared context between consumer and compiler"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,13 +10,13 @@ class
 
 feature -- Access
 
-	Compilation_context: CODE_COMPILATION_CONTEXT is
+	Compilation_context: CODE_COMPILATION_CONTEXT
 			-- Compilation context initialized by consumer
 		once
 			create Result
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

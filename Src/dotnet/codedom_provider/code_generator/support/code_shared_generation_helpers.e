@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shared objects used in Eiffel Codedom code generator%
 					%Provide access to features, variables and types caches%
 					%as well as name resolvers."
@@ -12,7 +12,7 @@ class
 
 feature -- Access
 
-	Resolver: CODE_ENTITY_NAME_RESOLVER is
+	Resolver: CODE_ENTITY_NAME_RESOLVER
 			-- Name resolvers and caches access
 		once
 			create Result
@@ -20,7 +20,7 @@ feature -- Access
 			exists: Result /= Void
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

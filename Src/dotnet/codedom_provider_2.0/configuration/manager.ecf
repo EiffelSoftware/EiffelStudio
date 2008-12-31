@@ -10,6 +10,7 @@
 		</description>
 		
 		<root feature="make_and_launch" class="ECDM_APPLICATION"/>
+		<option syntax_level="1"/>
 		<version major="5" minor="7" release="426" build="0"/>
 		
 		<setting name="cls_compliant" value="true"/>

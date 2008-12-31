@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Print in lines the eiffel type with all its eiffel features corresponding to the given dotnet type name."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Initialization
 
-	make (a_type: SPECIFIC_TYPE) is
+	make (a_type: SPECIFIC_TYPE)
 			-- Initialiaze `type' with `a_type'.
 			-- Initialize alse `lines' and `feature_selected'.
 		require
@@ -37,7 +37,7 @@ feature -- Initialization
 			non_void_feature_selected: feature_selected /= Void
 		end
 
-	make_with_selected_feature  (a_type: SPECIFIC_TYPE; a_selected_feature_name: STRING) is
+	make_with_selected_feature  (a_type: SPECIFIC_TYPE; a_selected_feature_name: STRING)
 			-- Initialiaze `lines' with `an_output'.
 		require
 			non_void_a_type: a_type /= Void
@@ -73,7 +73,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	internal_print_type is
+	internal_print_type
 			-- Print in `lines' features corresponding to `dotnet_type_name'.
 		do
 			if type /= Void then
@@ -88,7 +88,7 @@ feature {NONE} -- Implementation
 
 		end
 	
-	print_header is
+	print_header
 			-- header.
 		local
 			l_entity: ENTITY_LINE
@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 		end
 		
 
-	print_procedures (array: ARRAY [CONSUMED_PROCEDURE]) is
+	print_procedures (array: ARRAY [CONSUMED_PROCEDURE])
 			-- Store signatures procedures contained in `array'.
 		local
 			i: INTEGER
@@ -172,7 +172,7 @@ feature {NONE} -- Implementation
 			new_line
 		end
 
-	print_feature (a_feature: CONSUMED_MEMBER) is
+	print_feature (a_feature: CONSUMED_MEMBER)
 			-- Store feature's siganture without its returned_type contained in `a_feature'.
 		require
 			non_void_feature: a_feature /= Void
@@ -249,7 +249,7 @@ feature {NONE} -- Implementation
 			end
 		end
 	
-	print_constructors (array: ARRAY [CONSUMED_CONSTRUCTOR]) is
+	print_constructors (array: ARRAY [CONSUMED_CONSTRUCTOR])
 			-- Store all signatures constructors contained in `array'.
 		local
 			i, j: INTEGER
@@ -343,7 +343,7 @@ feature {NONE} -- Implementation
 			new_line
 		end
 
-	print_functions (array: ARRAY [CONSUMED_FUNCTION]) is
+	print_functions (array: ARRAY [CONSUMED_FUNCTION])
 			-- Store all signatures functions contained in `array'.
 		local
 			i: INTEGER
@@ -434,7 +434,7 @@ feature {NONE} -- Implementation
 			new_line
 		end
 
-	print_properties (array: ARRAY [CONSUMED_PROPERTY]) is
+	print_properties (array: ARRAY [CONSUMED_PROPERTY])
 			-- Store all signatures properties contained in `array'.
 		local
 			i: INTEGER
@@ -531,7 +531,7 @@ feature {NONE} -- Implementation
 			new_line
 		end
 
-	print_events (array: ARRAY [CONSUMED_EVENT]) is
+	print_events (array: ARRAY [CONSUMED_EVENT])
 			-- Store all signatures events contained in `array'.
 		local
 			i: INTEGER
@@ -631,7 +631,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	print_attributes (array: ARRAY [CONSUMED_FIELD]) is
+	print_attributes (array: ARRAY [CONSUMED_FIELD])
 			-- Store all signatures attributes contained in `array'.
 		local
 			i: INTEGER
@@ -727,20 +727,20 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	new_line is
+	new_line
 			-- put l_line in lines
 		do
 			lines.extend (l_line)
 			create l_line.make
 		end
 		
-	Tabulation: STRING is "      "
+	Tabulation: STRING = "      "
 			-- representation of a tabulation in spaces.
 	
-	Max_pixel_per_line: INTEGER is 400
+	Max_pixel_per_line: INTEGER = 400
 			-- Number max of char per line.
 	
-	New_line_indent: STRING is "                                                            "
+	New_line_indent: STRING = "                                                            "
 			-- indent when new line but still the same signature.
 
 invariant
@@ -748,7 +748,7 @@ invariant
 	non_void_lines: lines /= Void
 	non_void_feature_selected: feature_selected /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

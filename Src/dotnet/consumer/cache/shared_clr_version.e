@@ -1,4 +1,4 @@
-indexing
+note
 	description : "Shared access to executing CLR version"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Access
 
-	clr_version: STRING is
+	clr_version: STRING
 			-- Executing version of CLR, for use with consumer folder.
 		local
 			l_ver: VERSION
@@ -30,7 +30,7 @@ feature -- Access
 			result_has_initial_v: Result.item (1) = 'v' -- This holds true for al f/w to date
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

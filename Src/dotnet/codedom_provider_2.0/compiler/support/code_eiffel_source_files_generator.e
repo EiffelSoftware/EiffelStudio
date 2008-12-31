@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Split given string into Eiffel source files"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,7 +34,7 @@ create
 
 feature -- Initialization
 
-	make (a_dir: STRING) is
+	make (a_dir: STRING)
 			-- Set `destination_directory' with `a_dir'.
 		require
 			non_void_directory: a_dir /= Void
@@ -77,12 +77,12 @@ feature -- Access
 	destination_directory: DIRECTORY
 			-- Path to directory where generated Eiffel files should be written
 
-	Eiffel_source_file: STRING is "generated.e"
+	Eiffel_source_file: STRING = "generated.e"
 			-- Generated Eiffel source file name prefix
 
 feature -- Basic Operation
 
-	generate (a_content: STRING) is
+	generate (a_content: STRING)
 			-- Split `a_content' and write corresponding Eiffel source files.
 		require
 			non_void_content: a_content /= Void
@@ -103,7 +103,7 @@ feature -- Basic Operation
 
 feature {NONE} -- Implementation
 
-	try_delete (a_file: RAW_FILE) is
+	try_delete (a_file: RAW_FILE)
 			-- Try to delete `a_file', don't throw an exception if not possible.
 		require
 			attached_file: a_file /= Void
@@ -120,7 +120,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	write_file (a_content: STRING) is
+	write_file (a_content: STRING)
 			-- Write `a_content' into file `a_file_name' in `destination_directory'.
 		require
 			attached_content: a_content /= Void
@@ -139,7 +139,7 @@ feature {NONE} -- Implementation
 			Backup.backup_file (l_source)
 		end
 		
-	unique_file_name: STRING is
+	unique_file_name: STRING
 			-- Unique file name for directory `destination_directory'
 		local
 			i: INTEGER
@@ -171,7 +171,7 @@ feature {NONE} -- Implementation
 	last_index_suffix: INTEGER;
 			-- Last suffix used in `unique_file_name'
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

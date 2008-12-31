@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Indexing clause tags handled in a special way by the codedom generator"
 
 class
@@ -13,15 +13,15 @@ inherit
 
 feature -- Access
 
-	precompiled_tag: STRING is "precompile_definition_file"
+	precompiled_tag: STRING = "precompile_definition_file"
 			-- Tag defining path to precompiled library
 		
-	namespace_tag: STRING is "namespace"
+	namespace_tag: STRING = "namespace"
 			-- Tag defining namespace in which type should be generated
 
 feature -- Basic Operations
 
-	process_tag (a_tag, a_value: STRING) is
+	process_tag (a_tag, a_value: STRING)
 			-- Process tag `a_tag'
 		do
 			special_tag_handlers.search (a_tag)
@@ -32,7 +32,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	special_tag_handlers: HASH_TABLE [PROCEDURE [ANY, TUPLE [STRING]], STRING] is
+	special_tag_handlers: HASH_TABLE [PROCEDURE [ANY, TUPLE [STRING]], STRING]
 			-- Tag handlers
 		once
 			create Result.make (2)
@@ -41,13 +41,13 @@ feature {NONE} -- Implementation
 			Result.extend (agent process_namespace_tag, namespace_tag)
 		end
 
-	process_precompiled_tag (a_value: STRING) is
+	process_precompiled_tag (a_value: STRING)
 			-- Process precompiled library tag
 		do
 			Compilation_context.set_precompile_file (a_value)
 		end
 
-	process_namespace_tag (a_value: STRING) is
+	process_namespace_tag (a_value: STRING)
 			-- Process precompiled library tag
 		do
 			Compilation_context.set_namespace (a_value)

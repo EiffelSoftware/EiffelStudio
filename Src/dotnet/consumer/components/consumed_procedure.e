@@ -1,4 +1,4 @@
-indexing
+note
 	description: ".NET method as seen by Eiffel"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 
 	make (en, dn, den: STRING; args: like arguments; froz, static, defer, pub, ns, virt, poe: BOOLEAN;
 			a_type: CONSUMED_REFERENCED_TYPE)
-		is
+		
 			-- Initialize consumed method.
 		require
 			non_void_eiffel_name: en /= Void
@@ -73,7 +73,7 @@ feature {NONE} -- Initialization
 			declared_type_set: declared_type = a_type
 		end
 
-	make_attribute_setter (en, dn: STRING; arg: CONSUMED_ARGUMENT; a_type: CONSUMED_REFERENCED_TYPE; a_is_static: BOOLEAN) is
+	make_attribute_setter (en, dn: STRING; arg: CONSUMED_ARGUMENT; a_type: CONSUMED_REFERENCED_TYPE; a_is_static: BOOLEAN)
 			-- Initialize consumed method.
 		require
 			non_void_eiffel_name: en /= Void
@@ -107,13 +107,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	arguments: ARRAY [CONSUMED_ARGUMENT] is
+	arguments: ARRAY [CONSUMED_ARGUMENT]
 			-- Feature arguments
 		do
 			Result := a
 		end
 
-	dotnet_eiffel_name: STRING is
+	dotnet_eiffel_name: STRING
 			-- Eiffel entity name without overloading resolved.
 		do
 			if q = Void then
@@ -126,7 +126,7 @@ feature -- Access
 
 feature -- Status report
 
-	has_arguments: BOOLEAN is
+	has_arguments: BOOLEAN
 			-- Does current have arguments?
 		do
 			Result := arguments /= Void and then arguments.count /= 0
@@ -140,7 +140,7 @@ feature {NONE} -- Access
 	q: like dotnet_eiffel_name;
 			-- Internal data for `dotnet_eiffel_name'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

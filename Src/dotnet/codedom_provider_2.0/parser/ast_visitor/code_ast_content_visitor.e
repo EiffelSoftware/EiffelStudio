@@ -1,4 +1,4 @@
-indexing
+note
 	description: "AST content Visitor."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature {AST_YACC} -- Implementation
 
-	process_routine_as (l_as: ROUTINE_AS) is
+	process_routine_as (l_as: ROUTINE_AS)
 			-- Process `l_as'.
 		local
 			l_current_routine: SYSTEM_DLL_CODE_MEMBER_METHOD
@@ -55,14 +55,14 @@ feature {AST_YACC} -- Implementation
 			l_as.routine_body.process (Visitor)
 		end
 
-	process_constant_as (l_as: CONSTANT_AS) is
+	process_constant_as (l_as: CONSTANT_AS)
 			-- Process `l_as'.
 		do
 			-- Do nothing.
 			-- Work done in {AST_SKELETON_VISITOR}.`initialize_member_field'.
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

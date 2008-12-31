@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Analyze codedom member attributes to infer icon index and description"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -33,7 +33,7 @@ feature -- Access
 
 feature -- Basic Operation
 
-	analyze (a_object: ANY) is
+	analyze (a_object: ANY)
 			-- Analyze `a_object'.
 			-- Set `image_index' and `description' accordingly.
 		require
@@ -239,7 +239,7 @@ feature -- Basic Operation
 
 feature {NONE} -- Implementation
 
-	analyze_offset (a_member: SYSTEM_DLL_CODE_TYPE_MEMBER) is
+	analyze_offset (a_member: SYSTEM_DLL_CODE_TYPE_MEMBER)
 			-- Analyze offset in icon group and offset description of `a_member'.
 			-- Set `icon_offset', `icon_static_offset', `offset_description' and `static_offset_description'
 			-- accordingly.
@@ -297,7 +297,7 @@ feature {NONE} -- Private Access
 	static_offset_description: STRING;
 			-- last analyzed static offset description
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

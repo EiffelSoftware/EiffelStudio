@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Keys used to store initialization values"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,31 +10,31 @@ class
 
 feature -- Access
 
-	Serializer_hive_path: STRING is "Software\ISE\Eiffel Codedom Provider\Serializer"
+	Serializer_hive_path: STRING = "Software\ISE\Eiffel Codedom Provider\Serializer"
 			-- Key containing serializer information
 
-	Start_destination_folder_path_key: STRING is "StartDestinationFolder"
+	Start_destination_folder_path_key: STRING = "StartDestinationFolder"
 			-- Key containing default destination folder
 
-	Wsdl_start_directory_key: STRING is "WSDLStartDirectory"
+	Wsdl_start_directory_key: STRING = "WSDLStartDirectory"
 			-- Key containing default WSDL file folder
 
-	Last_file_title_key: STRING is "LastFileTitle"
+	Last_file_title_key: STRING = "LastFileTitle"
 			-- Key containing last serialized file title
 
-	Last_wsdl_url_key: STRING is "LastWSDLURL"
+	Last_wsdl_url_key: STRING = "LastWSDLURL"
 			-- Last wsdl URL
 
-	Last_aspnet_url_key: STRING is "LastASPNETURL"
+	Last_aspnet_url_key: STRING = "LastASPNETURL"
 			-- Last ASP.NET URL
 
-	X_key: STRING is "StartingX"
+	X_key: STRING = "StartingX"
 			-- Key containing default x
 
-	Y_key: STRING is "StartingY";
+	Y_key: STRING = "StartingY";
 			-- Key containing default y
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

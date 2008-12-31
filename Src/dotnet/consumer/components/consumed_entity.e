@@ -1,4 +1,4 @@
-indexing
+note
 	description: ".NET entity (member or constructor) as seen by Eiffel"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (en: STRING; pub: BOOLEAN; a_type: CONSUMED_REFERENCED_TYPE) is
+	make (en: STRING; pub: BOOLEAN; a_type: CONSUMED_REFERENCED_TYPE)
 			-- Initialize `Current' with `en', `pub' written in `a_type'.
 		require
 			eiffel_name_not_void: en /= Void
@@ -31,13 +31,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	eiffel_name: STRING is
+	eiffel_name: STRING
 			-- Eiffel entity name
 		do
 			Result := e
 		end
 
-	dotnet_eiffel_name: STRING is
+	dotnet_eiffel_name: STRING
 			-- Eiffel entity name without overloading resolved.
 		do
 			Result := q
@@ -45,7 +45,7 @@ feature -- Access
 			dotnet_eiffel_name_not_void: Result /= Void
 		end
 
-	dotnet_name: STRING is
+	dotnet_name: STRING
 			-- Dotnet name of entity
 		do
 			Result := n
@@ -53,82 +53,82 @@ feature -- Access
 			dotnet_name_not_void: Result /= Void
 		end
 
-	declared_type: CONSUMED_REFERENCED_TYPE is
+	declared_type: CONSUMED_REFERENCED_TYPE
 			-- Type in which feature is written/declared.
 		do
 			Result := d
 		end
 
-	arguments: ARRAY [CONSUMED_ARGUMENT] is
+	arguments: ARRAY [CONSUMED_ARGUMENT]
 			-- Arguments if any.
 		do
 		ensure
 			arguments_not_void: has_arguments implies Result /= Void
 		end
 
-	return_type: CONSUMED_REFERENCED_TYPE is
+	return_type: CONSUMED_REFERENCED_TYPE
 			-- Return type if any.
 		do
 		end
 
-	is_frozen: BOOLEAN is
+	is_frozen: BOOLEAN
 			-- Is .NET definition frozen?
 		do
 		end
 
-	is_public: BOOLEAN is
+	is_public: BOOLEAN
 			-- Is .NET entity public?
 		do
 		end
 
-	is_literal: BOOLEAN is
+	is_literal: BOOLEAN
 			-- Is .NET entity a static literal?
 		do
 		end
 
-	is_init_only: BOOLEAN is
+	is_init_only: BOOLEAN
 			-- Is .NET field a constant?
 		do
 		end
 
-	is_artificially_added: BOOLEAN is
+	is_artificially_added: BOOLEAN
 			-- Is Current artificially added?
 		do
 		end
 
-	is_property_or_event: BOOLEAN is
+	is_property_or_event: BOOLEAN
 			-- Is entity an event or property related feature?
 		do
 		end
 
-	is_new_slot: BOOLEAN is
+	is_new_slot: BOOLEAN
 			-- Is entity marked with `newslot' flag in metadata?
 		do
 		end
 
-	is_virtual: BOOLEAN is
+	is_virtual: BOOLEAN
 			-- Is entity marked with `virtual' flag in metadata?
 		do
 		end
 
-	is_infix: BOOLEAN is
+	is_infix: BOOLEAN
 			-- Is function an infix feature?
 		do
 		end
 
-	is_prefix: BOOLEAN is
+	is_prefix: BOOLEAN
 			-- Is function a prefix feature?
 		do
 		end
 
-	is_constructor: BOOLEAN is
+	is_constructor: BOOLEAN
 			-- Is constructor feature?
 		do
 		end
 
 feature -- Comparison
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is current object less than `other'?
 		do
 			Result := eiffel_name < other.eiffel_name
@@ -136,34 +136,34 @@ feature -- Comparison
 
 feature -- ConsumerWrapper functions
 
-	is_method: BOOLEAN is
+	is_method: BOOLEAN
 			-- Is entity a .Net method?
 		do
 			Result := not is_property and then not is_field and then not is_event and then not is_constant
 		end
 
-	is_field: BOOLEAN is
+	is_field: BOOLEAN
 			-- Is entity a .Net field?
 		do
 		end
 
-	is_property: BOOLEAN is
+	is_property: BOOLEAN
 			-- Is entity a .Net property?
 		do
 		end
 
-	is_event: BOOLEAN is
+	is_event: BOOLEAN
 			-- Is entity a .Net event?
 		do
 		end
 
-	is_constant: BOOLEAN is
+	is_constant: BOOLEAN
 			-- Is entity a .Net method?
 		do
 			Result := is_literal or is_init_only
 		end
 
-	eiffelized_consumed_entities: ARRAYED_LIST [CONSUMED_ENTITY] is
+	eiffelized_consumed_entities: ARRAYED_LIST [CONSUMED_ENTITY]
 			-- List of Eiffel mapped Consumed Entities relative to `Current'.
 			-- For CONSUMED_PROPERTY this would be `setter' and `getter'
 			-- FIXME IEK Temporary solution until better design is implemented.
@@ -174,32 +174,32 @@ feature -- ConsumerWrapper functions
 
 feature -- Status report
 
-	has_arguments: BOOLEAN is
+	has_arguments: BOOLEAN
 			-- Does current entity have argments?
 		do
 		end
 
-	has_return_value: BOOLEAN is
+	has_return_value: BOOLEAN
 			-- Does current entity returns a value?
 		do
 		end
 
-	is_static: BOOLEAN is
+	is_static: BOOLEAN
 			-- Is current entity static?
 		do
 		end
 
-	is_attribute: BOOLEAN is
+	is_attribute: BOOLEAN
 			-- Is current entity an attribute?
 		do
 		end
 
-	is_deferred: BOOLEAN is
+	is_deferred: BOOLEAN
 			-- Is current entity abstract?
 		do
 		end
 
-	is_access_type: BOOLEAN is
+	is_access_type: BOOLEAN
 			-- Is current entity an 'Access' type?
 		do
 			if
@@ -210,7 +210,7 @@ feature -- Status report
 			end
 		end
 
-	is_status_setting_type: BOOLEAN is
+	is_status_setting_type: BOOLEAN
 			-- Is current entity a 'Status Setting' type?
 		do
 			if
@@ -221,7 +221,7 @@ feature -- Status report
 			end
 		end
 
-	is_query_type: BOOLEAN is
+	is_query_type: BOOLEAN
 			-- Is current entity a 'Status Setting' type?
 		do
 			if has_return_value and then not is_access_type then
@@ -229,19 +229,19 @@ feature -- Status report
 			end
 		end
 
-	is_command_type: BOOLEAN is
+	is_command_type: BOOLEAN
 			-- Is current entity a 'Status Setting' type?
 		do
 			Result := not has_return_value and then not is_status_setting_type
 		end
 
-	is_event_type: BOOLEAN is
+	is_event_type: BOOLEAN
 			-- Is current entity a 'Status Setting' type?
 		do
 			Result := is_event
 		end
 
-	is_hidden_type: BOOLEAN is
+	is_hidden_type: BOOLEAN
 			-- Is current entity a 'Status Setting' type?
 		do
 			Result := not is_public
@@ -249,7 +249,7 @@ feature -- Status report
 
 feature -- Settings
 
-	set_is_public (pub: like is_public) is
+	set_is_public (pub: like is_public)
 			-- Set `is_public' with `pub'.
 		do
 		ensure
@@ -261,7 +261,7 @@ feature {NONE} -- Access
 	n: like dotnet_name
 			-- Internal data for `dotnet_name'.
 
-	q: like dotnet_eiffel_name is
+	q: like dotnet_eiffel_name
 			-- Internal data for `dotnet_eiffel_name'.
 		do
 			Result := e
@@ -278,7 +278,7 @@ invariant
 	valid_eiffel_name: not eiffel_name.is_empty
 	declared_type_not_void: declared_type /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

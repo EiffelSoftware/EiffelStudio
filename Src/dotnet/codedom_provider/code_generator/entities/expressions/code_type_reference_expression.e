@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Source code generator for type reference expressions"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_referenced_type: CODE_TYPE_REFERENCE) is
+	make (a_referenced_type: CODE_TYPE_REFERENCE)
 			-- Initialize `referenced_type'.
 		require
 			non_void_referenced_type: a_referenced_type /= Void
@@ -31,7 +31,7 @@ feature -- Access
 	referenced_type: CODE_TYPE_REFERENCE
 			-- Type which is referred to
 
-	code: STRING is
+	code: STRING
 			-- | Result := "`referred_type'"
 			-- Eiffel code of type reference expression
 		do
@@ -40,7 +40,7 @@ feature -- Access
 		
 feature -- Status Report
 
-	type: CODE_TYPE_REFERENCE is
+	type: CODE_TYPE_REFERENCE
 			-- Type
 		do
 			Result := referenced_type
@@ -49,7 +49,7 @@ feature -- Status Report
 invariant
 	non_void_referenced_type: referenced_type /= Void
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

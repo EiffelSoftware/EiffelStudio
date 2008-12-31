@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Assembly ids mapping"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,13 +10,13 @@ class
 
 feature -- Access
 
-	assembly_mapping: HASH_TABLE [INTEGER, STRING] is
+	assembly_mapping: HASH_TABLE [INTEGER, STRING]
 			-- Assembly id keyed by assembly full name
 		do
 			Result := assembly_mapping_cell.item
 		end
 
-	referenced_type_from_type (t: SYSTEM_TYPE): CONSUMED_REFERENCED_TYPE is
+	referenced_type_from_type (t: SYSTEM_TYPE): CONSUMED_REFERENCED_TYPE
 			-- Consumed type from `t'
 		require
 			non_void_type: t /= Void
@@ -46,7 +46,7 @@ feature -- Access
 		
 feature -- Basic Operations
 
-	reset_assembly_mapping is
+	reset_assembly_mapping
 			-- Reset assembly mapping
 		do
 			assembly_mapping_cell.put (create {HASH_TABLE [INTEGER, STRING]}.make (20))
@@ -54,12 +54,12 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	assembly_mapping_cell: CELL [HASH_TABLE [INTEGER, STRING]] is
+	assembly_mapping_cell: CELL [HASH_TABLE [INTEGER, STRING]]
 		once
 			create Result.put (create {HASH_TABLE [INTEGER, STRING]}.make (20))
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

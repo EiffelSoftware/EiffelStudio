@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Converts Eiffel specific data into dotnet data."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ inherit
 
 feature -- Implementation
 
-	Eiffel_base_types: HASH_TABLE [STRING, STRING] is
+	Eiffel_base_types: HASH_TABLE [STRING, STRING]
 			-- Eiffel base types.
 		once
 			create Result.make (8)
@@ -39,13 +39,13 @@ feature -- Implementation
 			Result.put ("System.Boolean", "BOOLEAN")
 		end
 
-	Known_eiffel_types: HASH_TABLE [STRING, STRING] is
+	Known_eiffel_types: HASH_TABLE [STRING, STRING]
 			-- Eiffel base types.
 		once
 			create Result.make (40)
 		end
 
-	is_array_type (an_eiffel_type_name: STRING): BOOLEAN is
+	is_array_type (an_eiffel_type_name: STRING): BOOLEAN
 			-- Is `an_eiffel_type_name' array type?
 		require
 			non_void_an_eiffel_type_name: an_eiffel_type_name /= Void
@@ -56,7 +56,7 @@ feature -- Implementation
 			end
 		end
 
-	dotnet_type_name (an_eiffel_type_name: STRING): STRING is
+	dotnet_type_name (an_eiffel_type_name: STRING): STRING
 			-- Convert `an_eiffel_type_name' into its corresponding dotnet type name.
 		require
 			non_void_an_eiffel_type_name: an_eiffel_type_name /= Void
@@ -125,7 +125,7 @@ feature -- Implementation
 			not_empty_result: not Result.is_empty
 		end
 
-	dotnet_type (an_attribute: STRING): STRING is
+	dotnet_type (an_attribute: STRING): STRING
 			-- dotnet type associated to a name.
 		require
 			non_void_an_attribute: an_attribute /= Void
@@ -144,7 +144,7 @@ feature -- Implementation
 			non_void_dotnet_type: Result /= Void
 		end
 
-	dotnet_type_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION): STRING is
+	dotnet_type_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION): STRING
 			-- 
 		local
 			l_attribute: SYSTEM_DLL_CODE_FIELD_REFERENCE_EXPRESSION
@@ -215,7 +215,7 @@ feature -- Implementation
 			end
 		end
 
-	dotnet_feature_name (an_eiffel_feature_name: STRING; dotnet_type_target_feature: STRING): STRING is
+	dotnet_feature_name (an_eiffel_feature_name: STRING; dotnet_type_target_feature: STRING): STRING
 			-- Retrieve the `dotnet_feature_name' associated to `an_eiffel_feature_name'.
 		require
 			non_void_an_eiffel_feature_name: an_eiffel_feature_name /= Void
@@ -317,7 +317,7 @@ feature -- Implementation
 			not_empty_dotnet_feature_name: not Result.is_empty
 		end
 
-	consumed_type (a_dotnet_type_name: STRING): CONSUMED_TYPE is
+	consumed_type (a_dotnet_type_name: STRING): CONSUMED_TYPE
 			-- Retrieve consumed_type associated to `a_dotnet_type_name'.
 		require
 			valid_a_dotnet_type_name: a_dotnet_type_name /= Void and then not a_dotnet_type_name.is_empty
@@ -348,7 +348,7 @@ feature -- Implementation
 			non_void_consumed_type: Result /= Void
 		end
 
-	consumed_type_from_dotnet_type_name (ca: CONSUMED_ASSEMBLY; dotnet_type_target_feature: STRING): CONSUMED_TYPE is
+	consumed_type_from_dotnet_type_name (ca: CONSUMED_ASSEMBLY; dotnet_type_target_feature: STRING): CONSUMED_TYPE
 			-- 
 		do
 			Result := cache_reflection.consumed_type_from_dotnet_type_name (ca, dotnet_type_target_feature)
@@ -356,7 +356,7 @@ feature -- Implementation
 
 feature -- Status Setting
 
-	is_property_setter (an_eiffel_name: STRING; a_dotnet_type_name: STRING): BOOLEAN is
+	is_property_setter (an_eiffel_name: STRING; a_dotnet_type_name: STRING): BOOLEAN
 			-- Is `an_eiffel_name' name of an property setter member?
 		require
 			valid_eiffel_name: an_eiffel_name /= Void and then not an_eiffel_name.is_empty
@@ -385,7 +385,7 @@ feature -- Status Setting
 			end
 		end
 
-	is_property_getter (an_eiffel_name: STRING; a_dotnet_type_name: STRING): BOOLEAN is
+	is_property_getter (an_eiffel_name: STRING; a_dotnet_type_name: STRING): BOOLEAN
 			-- Is `an_eiffel_name' name of a property setter member?
 		require
 			valid_eiffel_name: an_eiffel_name /= Void and then not an_eiffel_name.is_empty
@@ -414,7 +414,7 @@ feature -- Status Setting
 			end
 		end
 
-	is_event_adder (an_eiffel_name: STRING; a_dotnet_type_name: STRING): BOOLEAN is
+	is_event_adder (an_eiffel_name: STRING; a_dotnet_type_name: STRING): BOOLEAN
 			-- Is `an_eiffel_name' name of an event adder member?
 		require
 			valid_eiffel_name: an_eiffel_name /= Void and then not an_eiffel_name.is_empty
@@ -443,7 +443,7 @@ feature -- Status Setting
 			end
 		end
 		
-	is_field (an_eiffel_name: STRING; a_dotnet_type_name: STRING): BOOLEAN is
+	is_field (an_eiffel_name: STRING; a_dotnet_type_name: STRING): BOOLEAN
 			-- Is `an_eiffel_name' name of field?
 		require
 			valid_eiffel_name: an_eiffel_name /= Void and then not an_eiffel_name.is_empty
@@ -472,7 +472,7 @@ feature -- Status Setting
 			end
 		end
 
-	is_constructor (an_eiffel_name: STRING): BOOLEAN is
+	is_constructor (an_eiffel_name: STRING): BOOLEAN
 			-- Is `an_eiffel_name' constructor of current class?
 		require
 			valid_eiffel_name: an_eiffel_name /= Void and then not an_eiffel_name.is_empty
@@ -494,12 +494,12 @@ feature -- Status Setting
 
 feature {NONE} -- HACK
 
-	Parent: STRING is "System.Windows.Forms.Form"
+	Parent: STRING = "System.Windows.Forms.Form"
 			-- I suppose that parent is a Form.
 
 feature {NONE} -- Implementation - Cache
 
-	Constructors: LINKED_LIST [STRING] is
+	Constructors: LINKED_LIST [STRING]
 			-- List of constructors.
 		once
 			create Result.make
@@ -507,7 +507,7 @@ feature {NONE} -- Implementation - Cache
 			non_void_constructors: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

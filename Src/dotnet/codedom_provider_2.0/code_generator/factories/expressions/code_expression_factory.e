@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Code generator for expressions"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ inherit
 
 feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 
-	generate_base_reference_expression (a_source: SYSTEM_DLL_CODE_BASE_REFERENCE_EXPRESSION) is
+	generate_base_reference_expression (a_source: SYSTEM_DLL_CODE_BASE_REFERENCE_EXPRESSION)
 			-- Generate Eiffel code from `a_source'.
 		require
 			non_void_source: a_source /= Void
@@ -36,7 +36,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			non_void_last_expression: last_expression /= Void
 		end		
 
-	generate_binary_operator_expression (a_source: SYSTEM_DLL_CODE_BINARY_OPERATOR_EXPRESSION) is
+	generate_binary_operator_expression (a_source: SYSTEM_DLL_CODE_BINARY_OPERATOR_EXPRESSION)
 			-- Generate Eiffel code from `a_source'.
 		require
 			non_void_source: a_source /= Void
@@ -65,7 +65,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			non_void_last_expression: last_expression /= Void
 		end	
 
-	generate_cast_expression (a_source: SYSTEM_DLL_CODE_CAST_EXPRESSION) is
+	generate_cast_expression (a_source: SYSTEM_DLL_CODE_CAST_EXPRESSION)
 			-- Generate Eiffel code from `a_source'.
 		require
 			non_void_source: a_source /= Void
@@ -82,7 +82,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			non_void_last_expression: last_expression /= Void
 		end
 
-	generate_default_value_expression (a_source: SYSTEM_DLL_CODE_DEFAULT_VALUE_EXPRESSION) is
+	generate_default_value_expression (a_source: SYSTEM_DLL_CODE_DEFAULT_VALUE_EXPRESSION)
 			-- Generate Eiffel code from `a_source'.
 		require
 			non_void_source: a_source /= Void
@@ -106,7 +106,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			non_void_last_expression: last_expression /= Void
 		end
 
-	generate_direction_expression (a_source: SYSTEM_DLL_CODE_DIRECTION_EXPRESSION) is
+	generate_direction_expression (a_source: SYSTEM_DLL_CODE_DIRECTION_EXPRESSION)
 			-- Generate Eiffel code from `a_source'.
 		require
 			non_void_source: a_source /= Void
@@ -120,7 +120,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			non_void_last_expression: last_expression /= Void
 		end
 
-	generate_event_reference_expression (a_source: SYSTEM_DLL_CODE_EVENT_REFERENCE_EXPRESSION) is
+	generate_event_reference_expression (a_source: SYSTEM_DLL_CODE_EVENT_REFERENCE_EXPRESSION)
 			-- Generate Eiffel code from `a_source'.
 		require
 			non_void_source: a_source /= Void
@@ -131,7 +131,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			non_void_last_expression: last_expression /= Void
 		end
 
-	generate_attribute_reference_expression (a_source: SYSTEM_DLL_CODE_FIELD_REFERENCE_EXPRESSION) is
+	generate_attribute_reference_expression (a_source: SYSTEM_DLL_CODE_FIELD_REFERENCE_EXPRESSION)
 			-- Generate Eiffel code from `a_source'.
 		require
 			non_void_source: a_source /= Void
@@ -150,7 +150,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			non_void_last_expression: last_expression /= Void
 		end		
 
-	generate_indexer_expression (a_source: SYSTEM_DLL_CODE_INDEXER_EXPRESSION) is
+	generate_indexer_expression (a_source: SYSTEM_DLL_CODE_INDEXER_EXPRESSION)
 			-- Generate Eiffel code from `a_source'.
 		require
 			non_void_source: a_source /= Void
@@ -169,7 +169,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			non_void_last_expression: last_expression /= Void
 		end	
 
-	generate_object_create_expression (a_source: SYSTEM_DLL_CODE_OBJECT_CREATE_EXPRESSION) is
+	generate_object_create_expression (a_source: SYSTEM_DLL_CODE_OBJECT_CREATE_EXPRESSION)
 			-- Generate Eiffel code from `a_source'.
 		require
 			non_void_source: a_source /= Void
@@ -185,7 +185,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			end
 		end	
 
-	generate_primitive_expression (a_source: SYSTEM_DLL_CODE_PRIMITIVE_EXPRESSION) is
+	generate_primitive_expression (a_source: SYSTEM_DLL_CODE_PRIMITIVE_EXPRESSION)
 			-- Generate Eiffel code from `a_source'.
 		require
 			non_void_source: a_source /= Void
@@ -195,7 +195,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			non_void_last_expression: last_expression /= Void
 		end		
 
-	generate_snippet_expression (a_source: SYSTEM_DLL_CODE_SNIPPET_EXPRESSION) is
+	generate_snippet_expression (a_source: SYSTEM_DLL_CODE_SNIPPET_EXPRESSION)
 			-- Generate Eiffel code from `a_source'.
 		require
 			non_void_source: a_source /= Void
@@ -223,7 +223,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			non_void_last_expression: last_expression /= Void
 		end		
 
-	generate_this_reference_expression (a_source: SYSTEM_DLL_CODE_THIS_REFERENCE_EXPRESSION) is
+	generate_this_reference_expression (a_source: SYSTEM_DLL_CODE_THIS_REFERENCE_EXPRESSION)
 			-- Generate Eiffel code from `a_source'.
 		require
 			non_void_source: a_source /= Void
@@ -240,7 +240,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			non_void_last_expression: last_expression /= Void
 		end	
 
-	generate_type_of_expression (a_source: SYSTEM_DLL_CODE_TYPE_OF_EXPRESSION) is
+	generate_type_of_expression (a_source: SYSTEM_DLL_CODE_TYPE_OF_EXPRESSION)
 			-- Generate Eiffel code from `a_source'.
 		require
 			non_void_source: a_source /= Void
@@ -250,7 +250,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			non_void_last_expression: last_expression /= Void
 		end
 
-	generate_type_reference_expression (a_source: SYSTEM_DLL_CODE_TYPE_REFERENCE_EXPRESSION) is
+	generate_type_reference_expression (a_source: SYSTEM_DLL_CODE_TYPE_REFERENCE_EXPRESSION)
 			-- Generate Eiffel code from `a_source'.
 		require
 			non_void_source: a_source /= Void
@@ -260,7 +260,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			non_void_last_expression: last_expression /= Void
 		end
 
-	generate_variable_reference_expression (a_source: SYSTEM_DLL_CODE_VARIABLE_REFERENCE_EXPRESSION) is
+	generate_variable_reference_expression (a_source: SYSTEM_DLL_CODE_VARIABLE_REFERENCE_EXPRESSION)
 			-- Generate Eiffel code from `a_source'.
 		require
 			non_void_source: a_source /= Void
@@ -319,7 +319,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 
 feature {NONE} -- Implementation
 
-	expressions_from_collection (a_collection: SYSTEM_DLL_CODE_EXPRESSION_COLLECTION): LIST [CODE_EXPRESSION] is
+	expressions_from_collection (a_collection: SYSTEM_DLL_CODE_EXPRESSION_COLLECTION): LIST [CODE_EXPRESSION]
 			-- Convert `a_collection' into a list of {CODE_EXPRESSION} instances
 		local
 			i, l_count: INTEGER
@@ -344,7 +344,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

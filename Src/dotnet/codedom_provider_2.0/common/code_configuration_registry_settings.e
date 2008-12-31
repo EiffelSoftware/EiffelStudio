@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Registry settings used by Eiffel Codedom Compiler for configurations"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	current_process_config_path: STRING is
+	current_process_config_path: STRING
 			-- Path to configuration file for this process if any
 			-- otherwise default path to configuration file
 			-- Note: this feature does not guarentee the existence of the actual file
@@ -40,7 +40,7 @@ feature -- Access
 			retry
 		end
 		
-	application_config_path (a_file_name: STRING): STRING is
+	application_config_path (a_file_name: STRING): STRING
 			-- Path to configuration file associated with process `a_file_name' if any
 			-- otherwise default path to configuration file
 			-- Note: this feature does not guarentee the existence of the actual file
@@ -61,7 +61,7 @@ feature -- Access
 			retry
 		end
 
-	registered_applications: LIST [STRING] is
+	registered_applications: LIST [STRING]
 			-- List of registered applications
 		local
 			l_retried: BOOLEAN
@@ -75,7 +75,7 @@ feature -- Access
 			retry
 		end
 	
-	registered_configurations: LIST [STRING] is
+	registered_configurations: LIST [STRING]
 			-- List of registered configurations
 		local
 			l_retried: BOOLEAN
@@ -99,7 +99,7 @@ feature -- Access
 			retry
 		end
 
-	default_config_file_path: STRING is
+	default_config_file_path: STRING
 			-- Path to default configuration file
 		local
 			l_key: REGISTRY_KEY
@@ -127,7 +127,7 @@ feature -- Access
 
 feature -- Status Report
 
-	is_registered (a_file_name: STRING): BOOLEAN is
+	is_registered (a_file_name: STRING): BOOLEAN
 			-- Is application with file name `a_file_name' registered?
 		require
 			non_void_file_name: a_file_name /= Void
@@ -145,7 +145,7 @@ feature -- Status Report
 		
 feature -- Basic Operation
 
-	register (a_file_name, a_config_path: STRING) is
+	register (a_file_name, a_config_path: STRING)
 			-- Register process `a_file_name' to use configuration file `a_config_path'.
 		require
 			non_void_file_name: a_file_name /= Void
@@ -163,7 +163,7 @@ feature -- Basic Operation
 			retry
 		end
 	
-	change_application_config_path (a_file_name, a_config_path: STRING) is
+	change_application_config_path (a_file_name, a_config_path: STRING)
 			-- Change registered process configuration path
 		require
 			non_void_file_name: a_file_name /= Void
@@ -181,7 +181,7 @@ feature -- Basic Operation
 			retry
 		end
 
-	remove_application (a_file_name: STRING) is
+	remove_application (a_file_name: STRING)
 			-- Remove registry information related to application `a_file_name'
 			--| Used by Eiffel Codedom Provider Manager
 		require
@@ -199,7 +199,7 @@ feature -- Basic Operation
 			retry
 		end
 
-	register_default_configuration (a_config_path: STRING) is
+	register_default_configuration (a_config_path: STRING)
 			-- Register default configuration to use `a_config_path'.
 		require
 			non_void_config_path: a_config_path /= Void
@@ -221,7 +221,7 @@ feature -- Basic Operation
 			retry
 		end
 	
-	unregister_default_configuration is
+	unregister_default_configuration
 			-- Register default configuration to use `a_config_path'.
 		local
 			l_key: REGISTRY_KEY
@@ -242,13 +242,13 @@ feature -- Basic Operation
 
 feature {NONE} -- Private Access
 
-	Config_table: CODE_REGISTRY_TABLE is
+	Config_table: CODE_REGISTRY_TABLE
 			-- Table holding configuration files path and applications
 		once
 			create Result.make (Configurations_key, Applications_key)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

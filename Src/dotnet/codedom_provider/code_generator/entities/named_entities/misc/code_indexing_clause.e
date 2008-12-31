@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel indexing clause"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Call Precursor {CODE_NAMED_ENTITY}
 		do
 			default_create
@@ -39,7 +39,7 @@ feature -- Access
 	custom_attributes: LIST [CODE_ATTRIBUTE_DECLARATION]
 			-- List of custom attributes.
 
-	code: STRING is
+	code: STRING
 			-- Eiffel code of indexing clause
 		do
 			create Result.make (120)
@@ -52,7 +52,7 @@ feature -- Access
 
 feature -- Status Setting
 
-	set_text (a_text: like text) is
+	set_text (a_text: like text)
 			-- Set `text' with `a_text'.
 		require
 			non_void_text: a_text /= Void
@@ -63,7 +63,7 @@ feature -- Status Setting
 			text_set: text = a_text
 		end
 
-	add_custom_attribute (a_custom_attribute: CODE_ATTRIBUTE_DECLARATION) is
+	add_custom_attribute (a_custom_attribute: CODE_ATTRIBUTE_DECLARATION)
 			-- Add `a_custom_attribute' to `custom_attributes.
 		require
 			non_void_a_custom_attribute: a_custom_attribute /= Void
@@ -76,7 +76,7 @@ feature -- Status Setting
 
 feature {NONE} -- Implementation
 
-	custom_attributes_code: STRING is
+	custom_attributes_code: STRING
 			-- generate indexing, custom attributes.
 		require
 			is_in_code_generation: current_state = Code_generation
@@ -108,7 +108,7 @@ invariant
 	non_void_text: text /= Void
 	non_void_custom_attribute: custom_attributes /= Void
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

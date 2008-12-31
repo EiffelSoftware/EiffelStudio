@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Code generator for types"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 
-	generate_type (a_source: SYSTEM_DLL_CODE_TYPE_DECLARATION) is
+	generate_type (a_source: SYSTEM_DLL_CODE_TYPE_DECLARATION)
 			-- | Check whether `a_source' is expanded or deferred
 			-- | to create instance of `CODE_GENERATED_TYPE' or `EXPANDED_TYPE' or `DEFERRED_TYPE'.
 			-- | Initialize the CODE_TYPE instance with `a_source' -> Call `Initialize_type'
@@ -55,7 +55,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 
 feature {NONE} -- Type generation
 
-	initialize_parents (a_source: SYSTEM_DLL_CODE_TYPE_DECLARATION) is
+	initialize_parents (a_source: SYSTEM_DLL_CODE_TYPE_DECLARATION)
 			-- Generate type parents from `a_source'.
 		require
 			non_void_source: a_source /= Void
@@ -96,7 +96,7 @@ feature {NONE} -- Type generation
 			end
 		end
 
-	initialize_features (a_source: SYSTEM_DLL_CODE_TYPE_DECLARATION) is
+	initialize_features (a_source: SYSTEM_DLL_CODE_TYPE_DECLARATION)
 			-- | Call in loop `generate_member_from_dom'.
 
 			-- Generate type features from `a_source'.
@@ -122,7 +122,7 @@ feature {NONE} -- Type generation
 			end
 		end
 
-	initialize_indexing_clause (a_source: SYSTEM_DLL_CODE_TYPE_DECLARATION) is
+	initialize_indexing_clause (a_source: SYSTEM_DLL_CODE_TYPE_DECLARATION)
 			-- Initialize indexing clause of `current_type' with info of `a_source'.
 		require
 			non_void_a_source: a_source /= Void
@@ -174,7 +174,7 @@ feature {NONE} -- Type generation
 			current_type.add_indexing_clause (l_indexing_clause)
 		end
 
-	initialize_generic_parameters (a_source: SYSTEM_DLL_CODE_TYPE_DECLARATION) is
+	initialize_generic_parameters (a_source: SYSTEM_DLL_CODE_TYPE_DECLARATION)
 			-- Initialize generic parameters of `current_type' with info of `a_source'.
 		require
 			attached_source: a_source /= Void
@@ -214,7 +214,7 @@ feature {NONE} -- Type generation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

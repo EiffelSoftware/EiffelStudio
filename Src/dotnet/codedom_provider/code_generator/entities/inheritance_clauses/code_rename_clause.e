@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel rename inheritance clause"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_routine: like routine; a_parent: like parent; a_new_name: like target_name) is
+	make (a_routine: like routine; a_parent: like parent; a_new_name: like target_name)
 			-- Set `routine' with `a_routine', `parent' with `a_parent' and `target_name' with `a_new_name'.
 		require
 			non_void_routine: a_routine /= Void
@@ -38,13 +38,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	keyword: STRING is "rename"
+	keyword: STRING = "rename"
 			-- Associated Eiffel keyword
 
 	target_name: STRING
 			-- Name of rename clause target
 
-	code: STRING is
+	code: STRING
 			-- Generated line in inheritance clause
 		do
 			check
@@ -58,7 +58,7 @@ feature -- Access
 
 feature -- Element Settings
 
-	set_target_name (a_name: STRING) is
+	set_target_name (a_name: STRING)
 			-- Set `target_name' with `a_name'.
 		require
 			non_void_name: a_name /= Void
@@ -69,7 +69,7 @@ feature -- Element Settings
 			name_set: target_name = a_name
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

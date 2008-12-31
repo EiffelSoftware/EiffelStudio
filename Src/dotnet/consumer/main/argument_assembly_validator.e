@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A command line switch file validator that checks if an assembly exists and can be loaded."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ inherit
 
 feature -- Validation
 
-	validate_value (a_value: !STRING) is
+	validate_value (a_value: !STRING)
 			-- Validates option value against any defined rules.
 			-- `is_option_valid' will be set upon completion.
 		do
@@ -31,7 +31,7 @@ feature -- Validation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

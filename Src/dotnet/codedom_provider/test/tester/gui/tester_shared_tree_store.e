@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shared instance of {TESTER_TREE_STORE}"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,13 +10,13 @@ class
 
 feature -- Access
 
-	Store: TESTER_TREE_STORE is
+	Store: TESTER_TREE_STORE
 			-- Store
 		once
 			create Result.load
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

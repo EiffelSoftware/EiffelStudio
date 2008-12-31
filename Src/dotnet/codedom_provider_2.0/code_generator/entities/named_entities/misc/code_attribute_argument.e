@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Attribute argument of a custom attribute"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_value: like value; a_name: like name; a_type: like type) is
+	make (a_value: like value; a_name: like name; a_type: like type)
 			-- Initialize instance.
 		require
 			non_void_value: a_value /= Void
@@ -47,7 +47,7 @@ feature -- Access
 	type: CODE_TYPE_REFERENCE
 			-- Type of the custom attribute.
 			
-	code: STRING is
+	code: STRING
 			-- | Result := "`value'"	 if name.is_empty
 			-- | OR
 			-- | Result := "["`name'", `value']"
@@ -65,7 +65,7 @@ feature -- Access
 			end
 		end
 
-	argument_code: STRING is
+	argument_code: STRING
 			-- | Result := "`value'" always
 		do
 			Result := value.code
@@ -75,7 +75,7 @@ invariant
 	non_void_value: value /= Void
 	non_void_type: type /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

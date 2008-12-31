@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EAC information - serialized"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initalization
 
-	make is
+	make
 			-- Initialize `assemblies'.
 		local
 		do
@@ -27,7 +27,7 @@ feature -- Access
 
 feature {CACHE_WRITER} -- Element Settings
 	
-	add_assembly (ass: CONSUMED_ASSEMBLY) is
+	add_assembly (ass: CONSUMED_ASSEMBLY)
 			-- Add `ass' to `assemblies'.
 		require
 			non_void_assembly: ass /= Void
@@ -36,7 +36,7 @@ feature {CACHE_WRITER} -- Element Settings
 			assemblies.force (ass, assemblies.count + 1)
 		end
 
-	remove_assembly (ass: CONSUMED_ASSEMBLY) is
+	remove_assembly (ass: CONSUMED_ASSEMBLY)
 			-- Remove `ass' from `assemblies'.
 		require
 			non_void_assembly: ass /= Void
@@ -63,7 +63,7 @@ feature {CACHE_WRITER} -- Element Settings
 			removed: not assemblies.has (ass)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

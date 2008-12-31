@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Source code generator for array creation expression"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_type: CODE_TYPE_REFERENCE; a_size: INTEGER; a_size_expression: CODE_EXPRESSION; a_initializers: LIST [CODE_EXPRESSION]) is
+	make (a_type: CODE_TYPE_REFERENCE; a_size: INTEGER; a_size_expression: CODE_EXPRESSION; a_initializers: LIST [CODE_EXPRESSION])
 			-- Initialize `initializers'.
 		require
 			non_void_type: a_type /= Void
@@ -52,7 +52,7 @@ feature -- Access
 
 feature -- Code Generation
 
-	code: STRING is
+	code: STRING
 			-- Eiffel code for array creation expression
 			-- | 	Result := "create `target'.make (1, `size_expression')" if size_expression /= Void and target /= Void
 			-- | OR
@@ -104,7 +104,7 @@ feature -- Code Generation
 		
 feature -- Status Report
 
-	type: CODE_TYPE_REFERENCE is
+	type: CODE_TYPE_REFERENCE
 			-- Type
 		do
 			Result := array_type
@@ -112,7 +112,7 @@ feature -- Status Report
 	
 feature {CODE_ASSIGN_STATEMENT} -- Element Settings
 
-	set_target (a_target: like target) is
+	set_target (a_target: like target)
 			-- Set `target' with `a_target'.
 		require
 			non_void_target: a_target /= Void
@@ -127,7 +127,7 @@ invariant
 	one_and_only_one_info: size_expression /= Void xor size > 0 xor initializers /= Void
 	size_if_target: target /= Void implies (size > 0 or size_expression /= Void)
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

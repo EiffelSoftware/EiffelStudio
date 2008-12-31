@@ -1,4 +1,4 @@
-indexing
+note
 	description: "String comparer used in for comparing elements in a case-specified manner."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_ignore_case: BOOLEAN) is
+	make (a_ignore_case: BOOLEAN)
 			-- Initialize a comparer that will or will not ignore case based on `a_ignore_case'
 		do
 			is_case_insensitive := a_ignore_case
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 
 feature -- Query
 
-	compare (a_x: SYSTEM_OBJECT; a_y: SYSTEM_OBJECT): INTEGER is
+	compare (a_x: SYSTEM_OBJECT; a_y: SYSTEM_OBJECT): INTEGER
 			-- Compares the specified objects.
 		local
 			l_x, l_y: SYSTEM_STRING
@@ -46,7 +46,7 @@ feature -- Query
 			end
 		end
 
-	get_hash_code_object (a_obj: SYSTEM_OBJECT): INTEGER_32 is
+	get_hash_code_object (a_obj: SYSTEM_OBJECT): INTEGER_32
 			-- Returns a hash code for the specified object.
 		local
 			l_s: SYSTEM_STRING
@@ -66,7 +66,7 @@ feature -- Status report
 	is_case_insensitive: BOOLEAN
 			-- Indicates if case should be ignored when compaing items
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

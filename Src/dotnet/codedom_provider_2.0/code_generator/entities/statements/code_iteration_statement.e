@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel representation of a CodeDom iteration statement"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_init_statement: like init_statement; a_test_expression: like test_expression;
-		a_loop_statements: like loop_statements; a_increment_statement: like increment_statement) is
+		a_loop_statements: like loop_statements; a_increment_statement: like increment_statement)
 			-- Initialize `init_statement', `test_expression', `loop_statements', `increment_statement'.
 		require
 			non_void_test_expression: a_test_expression /= Void
@@ -47,7 +47,7 @@ feature -- Access
 	increment_statement: CODE_STATEMENT
 			-- Increment statement
 
-	code: STRING is
+	code: STRING
 			-- | Result := "from `init_statement' until `test_expression' loop `loop_statements' `increment_statement' end
 			-- Eiffel code of iteration statement
 		do
@@ -94,7 +94,7 @@ feature -- Access
 			Result.append (Line_return)
 		end
 
-	need_dummy: BOOLEAN is
+	need_dummy: BOOLEAN
 			-- Does statement require dummy local variable?
 		do
 			Result := init_statement.need_dummy
@@ -111,7 +111,7 @@ feature -- Access
 invariant
 	non_void_test_expression: test_expression /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

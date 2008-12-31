@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Source code generator for indexer expressions"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_target: like target; a_indices: like indices) is
+	make (a_target: like target; a_indices: like indices)
 			-- Initialize `target_object' and `indices'.
 		do
 			indices := a_indices
@@ -39,7 +39,7 @@ feature -- Access
 	indices: LIST [CODE_EXPRESSION]
 			-- Linked_list indexer indices
 		
-	code: STRING is
+	code: STRING
 			-- | Result := "`target_object'.item (`indices', ...)".
 			-- Eiffel code of indexer expression
 		do
@@ -63,7 +63,7 @@ feature -- Access
 		
 feature -- Status Report
 
-	type: CODE_TYPE_REFERENCE is
+	type: CODE_TYPE_REFERENCE
 			-- Type
 		local
 			l_type: SYSTEM_TYPE
@@ -123,7 +123,7 @@ feature -- Status Report
 invariant
 	non_void_indices: indices /= Void
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

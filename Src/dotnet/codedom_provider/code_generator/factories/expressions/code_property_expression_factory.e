@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Code generator for property expressions"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 
-	generate_property_reference_expression (a_source: SYSTEM_DLL_CODE_PROPERTY_REFERENCE_EXPRESSION) is
+	generate_property_reference_expression (a_source: SYSTEM_DLL_CODE_PROPERTY_REFERENCE_EXPRESSION)
 			-- | Check `last_type' is not Void else raise an exception.
 			-- | Create instance of `CODE_PROPERTY_REFERENCE_EXPRESSION'.
 			-- | And initialize this instance with `a_source' -> Call `initialize_'
@@ -37,7 +37,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			non_void_last_expression: last_expression /= Void
 		end
 
-	generate_property_set_value_reference_expression (a_source: SYSTEM_DLL_CODE_PROPERTY_SET_VALUE_REFERENCE_EXPRESSION) is
+	generate_property_set_value_reference_expression (a_source: SYSTEM_DLL_CODE_PROPERTY_SET_VALUE_REFERENCE_EXPRESSION)
 			-- | Create instance of `CODE_PROPERTY_SET_VALUE_REFERENCE_EXPRESSION'.
 			-- | And initialize this instance with `a_source' -> Call `initialize_'
 			-- | Set `last_expression'.
@@ -55,7 +55,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			non_void_last_expression: last_expression /= Void
 		end	
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

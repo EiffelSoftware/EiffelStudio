@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implementation of ICodeParser"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature -- Interface
 
-	parse (code_stream: TEXT_READER): SYSTEM_DLL_CODE_COMPILE_UNIT is
+	parse (code_stream: TEXT_READER): SYSTEM_DLL_CODE_COMPILE_UNIT
 			-- implementation of parse feature.
 		local
 --			l_eiffel_parser: EIFFEL_PARSER
@@ -61,7 +61,7 @@ feature -- Interface
 		-- Result of the last valid compile unit generated.
 		-- If parsing of Eiffel code fails we return the last compile unit.
 
-	initialize_attributes (a_class_as: CLASS_AS) is
+	initialize_attributes (a_class_as: CLASS_AS)
 			-- Parse tree and initialize attributes.
 		require
 		--	non_void_a_class_as: a_class_as /= Void
@@ -72,7 +72,7 @@ feature -- Interface
 			a_class_as.process (l_init_attributes)
 		end
 
-	initialize_referenced_assemblies is
+	initialize_referenced_assemblies
 			-- | Initialize Referenced_assemblies
 			-- FIXME Raphael: this should not be here it's VS specific
 		local
@@ -105,7 +105,7 @@ feature -- Interface
 --			(create {TYPE_CONVERTER}).initialize_emitter_from_referenced_assemblies (l_referenced_assemblies)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

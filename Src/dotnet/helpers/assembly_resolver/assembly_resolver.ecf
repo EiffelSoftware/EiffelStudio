@@ -1,31 +1,22 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" 
-		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
-		name="class_merger"
-		uuid="1F40DEB7-308B-49ED-8E56-FFC087224B1C"
-		library_target="assembly_resolver">
-
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="class_merger" uuid="1F40DEB7-308B-49ED-8E56-FFC087224B1C" library_target="assembly_resolver">
 	<target name="assembly_resolver">
 		<file_rule>
 			<exclude>/.svn$</exclude>
 		</file_rule>
-
-		<option namespace="EiffelSoftware.Helpers">
-			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+		<option syntax_level="1" namespace="EiffelSoftware.Helpers">
+			<assertions precondition="true"/>
 		</option>
-
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
-
 		<assembly name="mscorlib" location="${ISE_DOTNET_FRAMEWORK}\mscorlib.dll"/>
 		<assembly name="system" location="${ISE_DOTNET_FRAMEWORK}\system.dll" prefix="SYSTEM_DLL_"/>
-
-		<cluster name="assembly_resolver" location="." recursive="true">
-			<condition><dotnet value="True"/></condition>
+		<cluster name="assembly_resolver" location=".\" recursive="true">
+			<condition>
+				<dotnet value="true"/>
+			</condition>
 			<file_rule>
 				<exclude>/example$</exclude>
 			</file_rule>
 		</cluster>
 	</target>
-	
 </system>

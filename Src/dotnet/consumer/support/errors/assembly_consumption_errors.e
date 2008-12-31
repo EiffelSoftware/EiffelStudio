@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Errors that can occur during assembly consumption"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,22 +13,22 @@ inherit
 
 feature -- Access
 
-	Error_category: INTEGER_8 is 0x04
+	Error_category: INTEGER_8 = 0x04
 			-- Error category
 
-	Serialization_error: INTEGER is 0x04000001
+	Serialization_error: INTEGER = 0x04000001
 			-- Error occured during serialization
 
-	Assembly_not_found_error: INTEGER is 0x04000002
+	Assembly_not_found_error: INTEGER = 0x04000002
 			-- Assembly not found
 
-	Type_initialization_error: INTEGER is 0x04000003
+	Type_initialization_error: INTEGER = 0x04000003
 			-- Type initialization error
 
 
 feature {NONE} -- Implementation
 
-	error_message_table: HASH_TABLE [STRING, INTEGER] is
+	error_message_table: HASH_TABLE [STRING, INTEGER]
 			-- Error messages
 		once
 			create Result.make (3)
@@ -37,7 +37,7 @@ feature {NONE} -- Implementation
 			Result.put ("Could not serialize type.%NThis is usually due to an implementation problem in one of its features, or a missing resource.", Type_initialization_error)
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

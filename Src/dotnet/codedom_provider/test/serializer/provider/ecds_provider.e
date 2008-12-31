@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Pseudo codedom provider used to serialize codedom trees
 		]"
@@ -22,14 +22,14 @@ create
 
 feature -- Access
 
-	file_extension: SYSTEM_STRING is
+	file_extension: SYSTEM_STRING
 			-- Get the file name extension to use when creating source code files.
 			-- Files passed to codeDomGenerator.
 		once
 			Result := ".es"
 		end
 
-	language_options: SYSTEM_DLL_LANGUAGE_OPTIONS is
+	language_options: SYSTEM_DLL_LANGUAGE_OPTIONS
 			-- Get a language features identifier.
 		once
 			Result := {SYSTEM_DLL_LANGUAGE_OPTIONS}.case_insensitive
@@ -37,19 +37,19 @@ feature -- Access
 		
 feature -- Basic Operations
 
-	create_generator: ECDS_CODE_GENERATOR is
+	create_generator: ECDS_CODE_GENERATOR
 			-- Create an instance of the Eiffel for .NET code code_generator.
 		do
 			create Result
 		end
 
-	create_compiler: ECDS_CODE_COMPILER is
+	create_compiler: ECDS_CODE_COMPILER
 			-- Create an instance of the Eiffel for .NET code compiler.
 		do
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

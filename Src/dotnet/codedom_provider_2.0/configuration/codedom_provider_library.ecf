@@ -16,7 +16,7 @@
 			<exclude>/\.svn$</exclude>
 		</file_rule>
 
-		<option>
+		<option syntax_level="1">
 			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
 		</option>
 

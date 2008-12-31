@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generate Eiffel arguments from .NET arguments"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 
 feature -- Access
 
-	arguments (info: METHOD_BASE): ARRAY [CONSUMED_ARGUMENT] is
+	arguments (info: METHOD_BASE): ARRAY [CONSUMED_ARGUMENT]
 			-- Argument of `info'
 		require
 			non_void_method: info /= Void
@@ -56,7 +56,7 @@ feature -- Access
 			non_void_arguments: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

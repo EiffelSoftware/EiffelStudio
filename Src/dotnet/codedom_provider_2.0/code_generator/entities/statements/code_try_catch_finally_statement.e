@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel representation of a CodeDom try catch finally statement"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_routine: like routine; a_name: like implementation_feature_name) is
+	make (a_routine: like routine; a_name: like implementation_feature_name)
 			-- Initialize instance.
 		require
 			non_void_routine: a_routine /= Void
@@ -42,7 +42,7 @@ feature -- Access
 	implementation_feature_name: STRING
 			-- Implementation feature name
 
-	code: STRING is
+	code: STRING
 			-- Eiffel code of try catch finally statement
 			-- | Insert new routine with following code and calls routine:
 			-- | 		local
@@ -100,7 +100,7 @@ feature -- Access
 			end
 		end
 
-	need_dummy: BOOLEAN is
+	need_dummy: BOOLEAN
 			-- Does statement require dummy local variable?
 		do
 			Result := False
@@ -110,7 +110,7 @@ invariant
 	non_void_routine: routine /= Void
 	non_void_implementation_feature_name: implementation_feature_name /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

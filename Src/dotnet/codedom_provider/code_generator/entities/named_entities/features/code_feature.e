@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Eiffel feature"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_name, a_eiffel_name: STRING) is
+	make (a_name, a_eiffel_name: STRING)
 			-- Initialize lists.
 		require
 			non_void_name: a_name /= Void
@@ -68,7 +68,7 @@ feature -- Access
 
 feature -- Element Settings
 
-	set_eiffel_name (a_name: like eiffel_name) is
+	set_eiffel_name (a_name: like eiffel_name)
 			-- Set `eiffel_name' with `a_name'
 		require
 			non_void_name: a_name /= Void
@@ -79,7 +79,7 @@ feature -- Element Settings
 			eiffel_name_set: eiffel_name = a_name
 		end
 		
-	set_result_type (a_type: like result_type) is
+	set_result_type (a_type: like result_type)
 			-- Set `result_type' with `a_type'
 		require
 			non_void_type: a_type /= Void
@@ -90,7 +90,7 @@ feature -- Element Settings
 			result_type_set: result_type = a_type
 		end
 
-	set_feature_kind (a_kind: like feature_kind) is
+	set_feature_kind (a_kind: like feature_kind)
 			-- Set `feature_kind' with `a_kind'.
 		require
 			non_void_kind: a_kind /= Void
@@ -101,7 +101,7 @@ feature -- Element Settings
 			feature_kind_set: feature_kind = a_kind
 		end
 
-	set_frozen (a_value: like is_frozen) is
+	set_frozen (a_value: like is_frozen)
 			-- Set `is_frozen' with `a_value'.
 		require
 			in_code_analysis: current_state = Code_analysis
@@ -111,7 +111,7 @@ feature -- Element Settings
 			is_frozen_set: is_frozen = a_value
 		end
 
-	set_constant (a_value: like is_constant) is
+	set_constant (a_value: like is_constant)
 			-- Set `is_constant' with `a_value'.
 		require
 			in_code_analysis: current_state = Code_analysis
@@ -121,7 +121,7 @@ feature -- Element Settings
 			is_constant_set: is_constant = a_value
 		end
 		
-	set_overloaded (a_value: like is_overloaded) is
+	set_overloaded (a_value: like is_overloaded)
 			-- Set `is_overloaded' with `a_value'.
 		require
 			in_code_analysis: current_state = Code_analysis
@@ -131,7 +131,7 @@ feature -- Element Settings
 			is_overloaded_set: is_overloaded = a_value
 		end
 
-	set_once_routine (a_value: like is_once_routine) is
+	set_once_routine (a_value: like is_once_routine)
 			-- Set `is_once_routine' with `a_value'.
 		require
 			in_code_analysis: current_state = Code_analysis
@@ -141,7 +141,7 @@ feature -- Element Settings
 			is_once_routine_set: is_once_routine = a_value
 		end
 		
-	add_feature_clause (a_clause: CODE_TYPE_REFERENCE) is
+	add_feature_clause (a_clause: CODE_TYPE_REFERENCE)
 			-- Add `a_clause' to `feature_clauses'.
 		require
 			non_void_clause: a_clause /= Void
@@ -152,7 +152,7 @@ feature -- Element Settings
 			feature_clauses_set: feature_clauses.has (a_clause)
 		end
 
-	add_comment (a_comment: CODE_COMMENT) is
+	add_comment (a_comment: CODE_COMMENT)
 			-- Add `a_comment' to `comments'.
 		require
 			non_void_comment: a_comment /= Void
@@ -165,7 +165,7 @@ feature -- Element Settings
 			comment_added: comments.has (a_comment)
 		end
 
-	add_custom_attribute (a_custom_attribute: CODE_ATTRIBUTE_DECLARATION) is
+	add_custom_attribute (a_custom_attribute: CODE_ATTRIBUTE_DECLARATION)
 			-- Add `a_custom_attribute' to `custom_attributes.
 		require
 			non_void_a_custom_attribute: a_custom_attribute /= Void
@@ -178,7 +178,7 @@ feature -- Element Settings
 		
 feature {CODE_GENERATED_TYPE} -- Code Generation
 
-	feature_clause: STRING is
+	feature_clause: STRING
 			-- | loop on feature_clause
 			-- | Result := "feature [{features_clause, ...}] -- `type_feature'"
 
@@ -215,7 +215,7 @@ feature {CODE_GENERATED_TYPE} -- Code Generation
 			valid_feature_clause: Result.substring_index ("feature", 1) = 1
 		end
 
-	indexing_clause: STRING is
+	indexing_clause: STRING
 			-- generate indexing, custom attributes.
 		require
 			in_code_generation: current_state = Code_generation
@@ -247,7 +247,7 @@ feature {CODE_GENERATED_TYPE} -- Code Generation
 			non_void_result: Result /= Void
 		end
 
-	comments_code: STRING is
+	comments_code: STRING
 			-- Feature comments
 		require
 			in_code_generation: current_state = Code_generation
@@ -279,7 +279,7 @@ invariant
 	non_void_feature_clauses: feature_clauses /= Void
 	non_void_eiffel_name: eiffel_name /= Void
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

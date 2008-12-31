@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel representation of a CodeDom expression statement"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_expression: CODE_EXPRESSION) is
+	make (a_expression: CODE_EXPRESSION)
 			-- Initialize `expression'.
 		require
 			non_void_expression: a_expression /= Void
@@ -36,7 +36,7 @@ feature -- Access
 	expression: CODE_EXPRESSION
 			-- Expression
 
-	code: STRING is
+	code: STRING
 			-- | Result := "`expression'"
 			-- | OR		:= "res := `expression'" if typeof `expression' is CODE_ROUTINE_INVOKE_EXPRESSION
 			-- Eiffel code of expression statement
@@ -53,7 +53,7 @@ feature -- Access
 			Result.append (Line_return)
 		end
 
-	need_dummy: BOOLEAN is
+	need_dummy: BOOLEAN
 			-- Does statement require dummy local variable?
 		local
 			l_method_invoke_expression: CODE_ROUTINE_INVOKE_EXPRESSION
@@ -67,7 +67,7 @@ feature -- Access
 invariant
 	non_void_expression: expression /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

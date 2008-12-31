@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Serialize WSDL codedom tree"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_dest_dir, a_file_title, a_wsdl_path: STRING; a_server_code: BOOLEAN) is
+	make (a_dest_dir, a_file_title, a_wsdl_path: STRING; a_server_code: BOOLEAN)
 			-- Initialize instance.
 		require
 			non_void_destination_directory: a_dest_dir /= Void
@@ -55,7 +55,7 @@ feature -- Access
 
 feature -- Basic Operation
 
-	serialize is
+	serialize
 			-- Serialize codedom tree.
 		local
 			l_key: REGISTRY_KEY
@@ -110,7 +110,7 @@ feature -- Basic Operation
 			end
 		end
 
-	wsdl_arguments: STRING is
+	wsdl_arguments: STRING
 			-- Arguments to be passed to `wsdl.exe'
 		do
 			Result := "/language:%"" + (create {ECDS_PROVIDER}).get_type.assembly_qualified_name
@@ -125,10 +125,10 @@ feature -- Basic Operation
 			non_void_arguments: Result /= Void
 		end
 
-	File_extension: STRING is ".ecdw";
+	File_extension: STRING = ".ecdw";
 			-- Serialized codedom tree file extension
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

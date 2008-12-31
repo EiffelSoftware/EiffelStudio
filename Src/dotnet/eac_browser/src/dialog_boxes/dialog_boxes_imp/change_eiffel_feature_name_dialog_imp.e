@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog box to change an eiffel feature name"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			Precursor {EV_DIALOG}
@@ -99,7 +99,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			-- Re-implement if you wish to enable checking
@@ -115,53 +115,53 @@ feature {NONE} -- Implementation
 	new_eiffel_feature_name: EV_TEXT_FIELD
 	ok_btn, cancel_btn: EV_BUTTON
 	
-	user_initialization is
+	user_initialization
 			-- Called by `select_actions' of `execute'.
 		deferred
 		end
 
-	on_change_assembly is
+	on_change_assembly
 			-- Called by `change_actions' of `assemblies_combo'.
 		deferred
 		end
 	
-	on_change_type is
+	on_change_type
 			-- Called by `change_actions' of `types_combo'.
 		deferred
 		end
 	
-	on_change_select_dotnet_feature is
+	on_change_select_dotnet_feature
 			-- Called by `select_actions' of `dotnet_features_combo'.
 		deferred
 		end
 	
-	on_change_dotnet_feature is
+	on_change_dotnet_feature
 			-- Called by `change_actions' of `dotnet_features_combo'.
 		deferred
 		end
 	
-	on_change_select_eiffel_feature is
+	on_change_select_eiffel_feature
 			-- Called by `select_actions' of `eiffel_features_combo'.
 		deferred
 		end
 	
-	on_change_eiffel_feature is
+	on_change_eiffel_feature
 			-- Called by `change_actions' of `eiffel_features_combo'.
 		deferred
 		end
 	
-	on_ok_btn is
+	on_ok_btn
 			-- Called by `select_actions' of `ok_btn'.
 		deferred
 		end
 	
-	on_cancel_btn is
+	on_cancel_btn
 			-- Called by `select_actions' of `cancel_btn'.
 		deferred
 		end
 	
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

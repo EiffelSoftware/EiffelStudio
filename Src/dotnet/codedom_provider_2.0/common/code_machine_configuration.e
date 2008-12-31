@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Machine configuration file manipulation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Load configuration file and initialize attributes accordingly.
 		local
 			l_retried: BOOLEAN
@@ -51,7 +51,7 @@ feature -- Access
 	initialized: BOOLEAN
 			-- Was machine configuration correctly loaded?
 
-	language_provider (a_language: STRING): STRING is
+	language_provider (a_language: STRING): STRING
 			-- Language provider type fully qualified name for `a_language' if any
 		local
 			l_node: XML_XML_NODE
@@ -62,7 +62,7 @@ feature -- Access
 			end
 		end
 		
-	language_extension (a_language: STRING): STRING is
+	language_extension (a_language: STRING): STRING
 			-- Language file extension for `a_language' if any
 		local
 			l_node: XML_XML_NODE
@@ -73,7 +73,7 @@ feature -- Access
 			end
 		end
 	
-	languages: LIST [STRING] is
+	languages: LIST [STRING]
 			-- List of languages in configuration file
 		local
 			l_compilers: XML_XML_NODE_LIST
@@ -97,7 +97,7 @@ feature -- Access
 		
 feature -- Basic Operations
 
-	add_compiler_entry (a_language, a_extension, a_provider: STRING) is
+	add_compiler_entry (a_language, a_extension, a_provider: STRING)
 			-- Add provider `a_provider' associated with language `a_language'
 			-- and file extension `a_extension' to list of codedom providers.
 		require
@@ -127,7 +127,7 @@ feature -- Basic Operations
 			machine_config.save_string (Machine_config_path)
 		end
 		
-	remove_compiler_entry (a_language: STRING) is
+	remove_compiler_entry (a_language: STRING)
 			-- Remove `a_language' codedom provider from list if present
 			-- otherwise do nothing.
 		local
@@ -149,14 +149,14 @@ feature {NONE} -- Implementation
 	machine_config: SYSTEM_DLL_CONFIG_XML_DOCUMENT
 			-- Machine configuration file content
 
-	Machine_config_path: STRING is
+	Machine_config_path: STRING
 			-- Path to "machine.config" configuration file
 		once
 			Result := {RUNTIME_ENVIRONMENT}.get_runtime_directory 
 			Result.append ("\CONFIG\machine.config")
 		end
 
-	language_node (a_language: STRING): XML_XML_NODE is
+	language_node (a_language: STRING): XML_XML_NODE
 			-- XML node in machine configuration file corresponding to language `a_language' if any
 		local
 			l_compilers: XML_XML_NODE_LIST
@@ -183,7 +183,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

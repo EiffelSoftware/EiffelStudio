@@ -1,4 +1,4 @@
-indexing
+note
 	description: "COM visible class representing an assemblies information"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ deferred class
 		
 feature -- Access
 
-	name: SYSTEM_STRING is
+	name: SYSTEM_STRING
 			-- assembly name
 		deferred
 		ensure
@@ -21,7 +21,7 @@ feature -- Access
 			not_result_is_empty: Result.length > 0
 		end
 		
-	version: SYSTEM_STRING is
+	version: SYSTEM_STRING
 			-- assembly version
 		deferred
 		ensure
@@ -29,7 +29,7 @@ feature -- Access
 			not_result_is_empty: Result.length > 0
 		end
 		
-	culture: SYSTEM_STRING is
+	culture: SYSTEM_STRING
 			-- assembly culture
 		deferred
 		ensure
@@ -37,24 +37,24 @@ feature -- Access
 			not_result_is_empty: Result.length > 0
 		end
 		
-	public_key_token: SYSTEM_STRING is
+	public_key_token: SYSTEM_STRING
 			-- assembly public key token
 		deferred
 		ensure
 			non_void_result: Result /= Void
 		end
 		
-	is_in_gac: BOOLEAN is
+	is_in_gac: BOOLEAN
 			-- Is assembly currently is GAC
 		deferred
 		end
 		
-	is_consumed: BOOLEAN is
+	is_consumed: BOOLEAN
 			-- has assembly been consumed?
 		deferred
 		end
 		
-	consumed_folder_name: SYSTEM_STRING is
+	consumed_folder_name: SYSTEM_STRING
 			-- name of folder where assembly was consumed to
 		deferred
 		ensure
@@ -62,7 +62,7 @@ feature -- Access
 			not_result_is_empty: Result.length > 0
 		end
 		
-	code_base: SYSTEM_STRING is
+	code_base: SYSTEM_STRING
 			-- Assembly code base location
 		deferred
 		ensure
@@ -70,7 +70,7 @@ feature -- Access
 			not_result_is_empty: Result.length > 0
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

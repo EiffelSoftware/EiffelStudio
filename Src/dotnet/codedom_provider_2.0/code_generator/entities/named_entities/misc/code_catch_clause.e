@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel representation of a catch clause"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (a_variable: CODE_VARIABLE_REFERENCE; a_statements: like statements) is
+	make (a_variable: CODE_VARIABLE_REFERENCE; a_statements: like statements)
 			-- Initialize instance.
 		require
 			non_void_variable: a_variable /= Void
@@ -37,7 +37,7 @@ feature -- Access
 	statements: LIST [CODE_STATEMENT]
 			-- Catch statements
 			
-	code: STRING is
+	code: STRING
 			-- Eiffel code of catch clause
 		do
 			create Result.make (120)
@@ -72,7 +72,7 @@ invariant
 	non_void_variable: variable /= Void
 	non_void_statements: statements /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

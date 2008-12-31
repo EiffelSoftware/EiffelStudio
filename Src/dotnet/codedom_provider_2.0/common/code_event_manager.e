@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Event manager, used to raise and handle errors, warnings and informational events"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature -- Basic Operations
 
-	raise_event (an_id: INTEGER; a_context: TUPLE) is
+	raise_event (an_id: INTEGER; a_context: TUPLE)
 			-- Raises event with id `an_id' and given context.
 			-- Actual behavior is dictated by configuration file.
 		local
@@ -48,7 +48,7 @@ feature -- Basic Operations
 			end
 		end
 
-	process_exception is
+	process_exception
 			-- Log last raised exception or stop execution
 			-- depending on configuration.
 		do
@@ -61,7 +61,7 @@ feature {NONE} -- Implementation
 			-- Is logging source ready?
 			-- i.e. do we have access rights to log?
 
-	log (an_event: CODE_EVENT) is
+	log (an_event: CODE_EVENT)
 			-- Log `an_event' to windows event log
 		require
 			non_void_event: an_event /= Void
@@ -87,7 +87,7 @@ feature {NONE} -- Implementation
 			end
 		end
 	
-	check_source is
+	check_source
 			-- Create event source if not already created.
 		local
 			l_retried: BOOLEAN
@@ -103,7 +103,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that provide access to constants loaded from files."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 	
 feature {NONE} -- Initialization
 
-	initialize_constants is
+	initialize_constants
 			-- Load all constants from file.
 		local
 			file: PLAIN_TEXT_FILE
@@ -31,19 +31,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	no_logging: STRING is
+	no_logging: STRING
 			-- `Result' is STRING constant named `no_logging'.
 		once
 			Result := "Log nothing"
 		end
 
-	new_button_tooltip: STRING is
+	new_button_tooltip: STRING
 			-- `Result' is STRING constant named `new_button_tooltip'.
 		once
 			Result := "Create new configuration"
 		end
 
-	revert_png: EV_PIXMAP is
+	revert_png: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -53,19 +53,19 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	delete_button_tooltip: STRING is
+	delete_button_tooltip: STRING
 			-- `Result' is STRING constant named `delete_button_tooltip'.
 		once
 			Result := "Delete selected configuration"
 		end
 
-	new_button_text: STRING is
+	new_button_text: STRING
 			-- `Result' is STRING constant named `new_button_text'.
 		once
 			Result := "New"
 		end
 
-	application_png: EV_PIXMAP is
+	application_png: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -75,7 +75,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	save_png: EV_PIXMAP is
+	save_png: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -85,49 +85,49 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	save_button_text: STRING is
+	save_button_text: STRING
 			-- `Result' is STRING constant named `save_button_text'.
 		once
 			Result := "Save"
 		end
 
-	all_logging: STRING is
+	all_logging: STRING
 			-- `Result' is STRING constant named `all_logging'.
 		once
 			Result := "Log everything"
 		end
 
-	icons_directory: STRING is
+	icons_directory: STRING
 			-- `Result' is DIRECTORY constant named `icons_directory'.
 		once
 			Result := "E:\Sources\dotnet\codedom_provider\manager\icons"
 		end
 
-	revert_button_tooltip: STRING is
+	revert_button_tooltip: STRING
 			-- `Result' is STRING constant named `revert_button_tooltip'.
 		once
 			Result := "Cancel all changes done to selected configuration and reload settings from file"
 		end
 
-	properties_button_tooltip: STRING is
+	properties_button_tooltip: STRING
 			-- `Result' is STRING constant named `properties_button_tooltip'.
 		once
 			Result := "Display properties of selected configuration"
 		end
 
-	error_logging: STRING is
+	error_logging: STRING
 			-- `Result' is STRING constant named `error_logging'.
 		once
 			Result := "Log errors"
 		end
 
-	warning_logging: STRING is
+	warning_logging: STRING
 			-- `Result' is STRING constant named `warning_logging'.
 		once
 			Result := "Log errors and warnings"
 		end
 
-	configuration_png: EV_PIXMAP is
+	configuration_png: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -137,37 +137,37 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	help_button_tooltip: STRING is
+	help_button_tooltip: STRING
 			-- `Result' is STRING constant named `help_button_tooltip'.
 		once
 			Result := "Display Eiffel Codedom Provider Configuration Manager help topics"
 		end
 
-	help_button_text: STRING is
+	help_button_text: STRING
 			-- `Result' is STRING constant named `help_button_text'.
 		once
 			Result := "Help"
 		end
 
-	properties_button_text: STRING is
+	properties_button_text: STRING
 			-- `Result' is STRING constant named `properties_button_text'.
 		once
 			Result := "Properties"
 		end
 
-	delete_button_text: STRING is
+	delete_button_text: STRING
 			-- `Result' is STRING constant named `delete_button_text'.
 		once
 			Result := "Delete"
 		end
 
-	save_button_tooltip: STRING is
+	save_button_tooltip: STRING
 			-- `Result' is STRING constant named `save_button_tooltip'.
 		once
 			Result := "Save changes to selected configuration"
 		end
 
-	info_png: EV_PIXMAP is
+	info_png: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -177,13 +177,13 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	product_version: STRING is
+	product_version: STRING
 			-- `Result' is STRING constant named `product_version'.
 		once
 			Result := "1.0.0130"
 		end
 
-	new_wizard_png: EV_PIXMAP is
+	new_wizard_png: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -193,13 +193,13 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	revert_button_text: STRING is
+	revert_button_text: STRING
 			-- `Result' is STRING constant named `revert_button_text'.
 		once
 			Result := "Revert"
 		end
 
-	help_png: EV_PIXMAP is
+	help_png: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -209,7 +209,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	configuration_properties_png: EV_PIXMAP is
+	configuration_properties_png: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -219,13 +219,13 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	product_title: STRING is
+	product_title: STRING
 			-- `Result' is STRING constant named `product_title'.
 		once
 			Result := "Eiffel Codedom Provider Manager"
 		end
 
-	new_png: EV_PIXMAP is
+	new_png: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -235,7 +235,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	delete_png: EV_PIXMAP is
+	delete_png: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -245,7 +245,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	eiffel_software_png: EV_PIXMAP is
+	eiffel_software_png: EV_PIXMAP
 		local
 			a_file_name: FILE_NAME
 		once
@@ -261,13 +261,13 @@ feature -- Access
 --| FIXME `constant_by_name' and `has_constant' `constants_initialized' are only required until the complete change to
 --| constants is complete. They are required for the pixmaps at the moment.
 
-	constants_initialized: BOOLEAN is
+	constants_initialized: BOOLEAN
 			-- Have constants been initialized from file?
 		do
 			Result := initialized_cell.item
 		end
 
-	string_constant_by_name (a_name: STRING): STRING is
+	string_constant_by_name (a_name: STRING): STRING
 			-- `Result' is STRING 
 		require
 			initialized: constants_initialized
@@ -279,7 +279,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 		
-	integer_constant_by_name (a_name: STRING): INTEGER is
+	integer_constant_by_name (a_name: STRING): INTEGER
 			-- `Result' is STRING 
 		require
 			initialized: constants_initialized
@@ -296,7 +296,7 @@ feature -- Access
 			Result := l_string.to_integer
 		end
 		
-	has_constant (a_name: STRING): BOOLEAN is
+	has_constant (a_name: STRING): BOOLEAN
 			-- Does constant `a_name' exist?
 		require
 			initialized: constants_initialized
@@ -307,26 +307,26 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	initialized_cell: CELL [BOOLEAN] is
+	initialized_cell: CELL [BOOLEAN]
 			-- A cell to hold whether the constants have been loaded.
 		once
 			create Result
 		end
 		
-	all_constants: HASH_TABLE [STRING, STRING] is
+	all_constants: HASH_TABLE [STRING, STRING]
 			-- All constants loaded from constants file.
 		once
 			create Result.make (4)
 		end
 		
-	file_name: STRING is "constants.txt"
+	file_name: STRING = "constants.txt"
 		-- File name from which constants must be loaded.
 		
-	String_constant: STRING is "STRING"
+	String_constant: STRING = "STRING"
 	
-	Integer_constant: STRING is "INTEGER"
+	Integer_constant: STRING = "INTEGER"
 		
-	parse_file_contents (content: STRING) is
+	parse_file_contents (content: STRING)
 			-- Parse contents of `content' into `all_constants'.
 		local
 			line_contents: STRING
@@ -356,7 +356,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	first_line (content: STRING): STRING is
+	first_line (content: STRING): STRING
 			-- `Result' is first line of `Content',
 			-- which will be stripped from `content'.
 		require
@@ -378,7 +378,7 @@ feature {NONE} -- Implementation
 			no_characters_lost: old content.count = Result.count + content.count
 		end
 
-	set_with_named_file (a_pixmap: EV_PIXMAP; a_file_name: STRING) is
+	set_with_named_file (a_pixmap: EV_PIXMAP; a_file_name: STRING)
 			-- Set image of `a_pixmap' from file, `a_file_name'.
 			-- If `a_file_name' does not exist, do nothing.
 		require
@@ -396,7 +396,7 @@ feature {NONE} -- Implementation
 invariant
 	all_constants_not_void: all_constants /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

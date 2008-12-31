@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Source code generator for argument reference expression"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_argument: like argument) is
+	make (a_argument: like argument)
 			-- Initialize `argument' with empty string.
 		require
 			non_void_argument: a_argument /= Void
@@ -31,7 +31,7 @@ feature -- Access
 	argument: CODE_VARIABLE_REFERENCE
 			-- Argument name
 	
-	code: STRING is
+	code: STRING
 			-- | Result := `argument_name'
 			-- Eiffel code of argument reference expression
 		do
@@ -40,7 +40,7 @@ feature -- Access
 		
 feature -- Status Report
 
-	type: CODE_TYPE_REFERENCE is
+	type: CODE_TYPE_REFERENCE
 			-- Type
 		do
 			Result := argument.type
@@ -49,7 +49,7 @@ feature -- Status Report
 invariant
 	non_void_argument: argument /= Void
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

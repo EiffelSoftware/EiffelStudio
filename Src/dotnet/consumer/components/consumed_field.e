@@ -1,4 +1,4 @@
-indexing
+note
 	description: ".NET field as seen by Eiffel"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 
 	make (en, dn: STRING; rt: CONSUMED_REFERENCED_TYPE; static, pub, init_only: BOOLEAN;
 			a_type: CONSUMED_REFERENCED_TYPE)
-		is
+		
 			-- Initialize field.
 		require
 			non_void_eiffel_name: en /= Void
@@ -52,13 +52,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	return_type: CONSUMED_REFERENCED_TYPE is
+	return_type: CONSUMED_REFERENCED_TYPE
 			-- Field type
 		do
 			Result := r
 		end
 
-	setter: CONSUMED_PROCEDURE assign set_setter is
+	setter: CONSUMED_PROCEDURE assign set_setter
 			-- Setter procedure
 		do
 			Result := s
@@ -66,25 +66,25 @@ feature -- Access
 
 feature -- Status report
 
-	is_attribute: BOOLEAN is True
+	is_attribute: BOOLEAN = True
 			-- Current is an attribute.
 
-	has_return_value: BOOLEAN is True
+	has_return_value: BOOLEAN = True
 			-- An attribute always return a value.
 
-	is_init_only: BOOLEAN is
+	is_init_only: BOOLEAN
 			-- Is field a constant?
 		do
 			Result := f & {FEATURE_ATTRIBUTE}.Is_init_only = {FEATURE_ATTRIBUTE}.Is_init_only
 		end
 
-	is_field: BOOLEAN is
+	is_field: BOOLEAN
 			-- Is field?
 		do
 			Result := True
 		end
 
-	is_virtual: BOOLEAN is
+	is_virtual: BOOLEAN
 			-- Is field virtual?
 			-- Yes, if it is not a static field.
 		do
@@ -95,7 +95,7 @@ feature -- Status report
 
 feature -- Element Change
 
-	set_setter (a_setter: like setter) is
+	set_setter (a_setter: like setter)
 			-- Sets `setter' with `a_setter'.
 		require
 			a_setter_attached: a_setter /= Void
@@ -115,7 +115,7 @@ feature {NONE} -- Access
 	s: like setter;
 			-- Fields setter.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

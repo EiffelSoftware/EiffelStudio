@@ -15,7 +15,6 @@ class
 inherit
 	EB_CUSTOM_WIDGETTED_EDITOR
 		export
-			{EB_COMPLETION_CHOICE_WINDOW} unwanted_characters
 			{EB_ROUTINE_FLAT_FORMATTER} invalidate_line
 		redefine
 			make,

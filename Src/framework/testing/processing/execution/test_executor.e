@@ -187,7 +187,8 @@ feature {NONE} -- Basic functionality
 
 			create test_map.make (l_list.count)
 			if l_old_map /= Void then
-				tests_reset_event.publish ([Current])
+					-- Note: replace `as_attached' with Current when compiler treats Current as attached
+				tests_reset_event.publish ([as_attached])
 				l_old_map := Void
 			end
 
@@ -200,7 +201,8 @@ feature {NONE} -- Basic functionality
 				l_count := l_count + 1
 				test_suite.set_test_queued (l_cursor.item, Current)
 				test_map.force_last (l_cursor.item, l_count)
-				test_added_event.publish ([Current, l_cursor.item])
+					-- Note: replace `as_attached' with Current when compiler treats Current as attached
+				test_added_event.publish ([as_attached, l_cursor.item.as_attached])
 				l_cursor.forth
 			end
 			create assigner.make (l_count)
@@ -525,7 +527,8 @@ feature {NONE} -- Basic functionality
 					end
 					if a_remove then
 						test_map.remove (test_map.key_for_iteration)
-						test_removed_event.publish ([Current, a_test])
+							-- Note: replace `as_attached' with Current when compiler treats Current as attached
+						test_removed_event.publish ([as_attached, a_test.as_attached])
 					end
 					test_map.go_after
 				else

@@ -15,7 +15,7 @@ deferred class
 	ES_TOOL_MINI_ICONS_PROVIDER_I [G -> ES_TOOL_PIXMAPS create make end, T -> ES_TOOL [EB_TOOL]]
 
 inherit
-	ES_TOOL_PROVIDER_I [T]
+	ES_TOOL_PROVIDER_I
 
 feature {NONE} -- Access
 

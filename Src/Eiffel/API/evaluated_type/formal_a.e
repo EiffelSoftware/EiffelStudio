@@ -435,7 +435,7 @@ feature {COMPILER_EXPORTER} -- Type checking
 				-- derivation of A as none is possible.
 		end
 
-feature {COMPILER_EXPORTER}
+feature -- Access
 
 	has_formal_generic: BOOLEAN = True
 			-- Does the current actual type have formal generic type ?

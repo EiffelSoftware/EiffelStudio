@@ -39,6 +39,9 @@ inherit
 create
 	make
 
+create {SELECTION_LIST}
+	make_sublist
+
 feature -- Selection
 
 	process_selection (parents: PARENT_LIST; old_t, new_t: FEATURE_TABLE)

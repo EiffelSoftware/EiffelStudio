@@ -819,7 +819,7 @@ feature {TYPE_A} -- Helpers
 			end
 		end
 
-feature {COMPILER_EXPORTER} -- Primitives
+feature -- Primitives
 
 	generate_error_from_creation_constraint_list (a_context_class: CLASS_C; a_context_feature: FEATURE_I; a_location_as: LOCATION_AS)
 			-- Generated a VTCG7 error if there are any constraint errors.

@@ -11,7 +11,7 @@ feature
 		end
 			
 	detached_tuple_1: TUPLE [a: ?STRING; b: ?ANY]
-	attached_tuple_1: !TUPLE [a: !STRING; a: !ANY]
+	attached_tuple_1: !TUPLE [a: !STRING; b: !ANY]
 
 	detached_tuple_2: TUPLE [?STRING, ?ANY] -- doesn't work
 	attached_tuple_2: !TUPLE [!STRING, ANY] -- doesn't work

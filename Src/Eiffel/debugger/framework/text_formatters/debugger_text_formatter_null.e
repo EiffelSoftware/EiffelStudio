@@ -57,7 +57,7 @@ feature -- Call stack
 		do
 		end
 
-	append_debugger_information (dbg: DEBUGGER_MANAGER; st: TEXT_FORMATTER)
+	append_debugger_information (dbg: DEBUGGER_MANAGER; param: DEBUGGER_EXECUTION_PARAMETERS; st: TEXT_FORMATTER)
 			-- Display information about debugger
 		do
 		end

@@ -10,51 +10,51 @@ note
 deferred class
 	EDITOR_DOCUMENTS_TABLE_EVENT_OBSERVER
 
-inherit
-	EVENT_OBSERVER_I
+--inherit
+--	EVENT_OBSERVER_I
 
-feature {EDITOR_DOCUMENTS_TABLE_S} -- Event handlers
+--feature {EDITOR_DOCUMENTS_TABLE_S} -- Event handlers
 
-	on_document_opened (a_document: EDITOR_DOCUMENT_I)
-			-- Events called when a document is opened in the editor.
-		require
-			is_interface_usable: is_interface_usable
-			a_document_attached: a_document /= Void
-			a_document_is_interface_usable: a_document.is_interface_usable
-		do
-		end
+--	on_document_opened (a_document: EDITOR_DOCUMENT_I)
+--			-- Events called when a document is opened in the editor.
+--		require
+--			is_interface_usable: is_interface_usable
+--			a_document_attached: a_document /= Void
+--			a_document_is_interface_usable: a_document.is_interface_usable
+--		do
+--		end
 
-	on_document_closed (a_document: EDITOR_DOCUMENT_I)
-			-- Events called when a document is closed in the editor.
-		require
-			is_interface_usable: is_interface_usable
-			a_document_attached: a_document /= Void
-			a_document_is_interface_usable: a_document.is_interface_usable
-		do
-		end
+--	on_document_closed (a_document: EDITOR_DOCUMENT_I)
+--			-- Events called when a document is closed in the editor.
+--		require
+--			is_interface_usable: is_interface_usable
+--			a_document_attached: a_document /= Void
+--			a_document_is_interface_usable: a_document.is_interface_usable
+--		do
+--		end
 
-	on_document_activated (a_document: EDITOR_DOCUMENT_I)
-			-- Events called when a document is switched to in the editor.
-		require
-			is_interface_usable: is_interface_usable
-			a_document_attached: a_document /= Void
-			a_document_is_interface_usable: a_document.is_interface_usable
-		do
-		end
+--	on_document_activated (a_document: EDITOR_DOCUMENT_I)
+--			-- Events called when a document is switched to in the editor.
+--		require
+--			is_interface_usable: is_interface_usable
+--			a_document_attached: a_document /= Void
+--			a_document_is_interface_usable: a_document.is_interface_usable
+--		do
+--		end
 
-	on_document_deactivated (a_document: EDITOR_DOCUMENT_I)
-			-- Events called when a document is switched from in the editor.
-		require
-			is_interface_usable: is_interface_usable
-			a_document_attached: a_document /= Void
-			a_document_is_interface_usable: a_document.is_interface_usable
-		do
-		end
+--	on_document_deactivated (a_document: EDITOR_DOCUMENT_I)
+--			-- Events called when a document is switched from in the editor.
+--		require
+--			is_interface_usable: is_interface_usable
+--			a_document_attached: a_document /= Void
+--			a_document_is_interface_usable: a_document.is_interface_usable
+--		do
+--		end
 
-;note
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+note
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -65,19 +65,19 @@ feature {EDITOR_DOCUMENTS_TABLE_S} -- Event handlers
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

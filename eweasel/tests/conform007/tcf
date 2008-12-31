@@ -1,0 +1,10 @@
+test_name	 attached-agent-procedure-conformance
+test_description Compiling a system using void-safe and attached by default options should ensure that an agent conforms for PROCEDURE [ANY, TUPLE] (all attached).
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result  ok
+
+test_end

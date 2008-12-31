@@ -145,6 +145,7 @@ feature {NONE} -- Implementation
 			outfile: KL_BINARY_OUTPUT_FILE
 			count, nb: INTEGER
 			l_text: STRING
+			l_generate_output: BOOLEAN
 		do
 			if file_name.substring (file_name.count - 1, file_name.count).is_case_insensitive_equal (".e") then
 				create file.make (file_name)
@@ -191,9 +192,18 @@ feature {NONE} -- Implementation
 								if {l_syntax2: SYNTAX_ERROR} error_handler.error_list.last then
 									io.error.put_string (" (" + l_syntax2.line.out + ", " + l_syntax2.column.out + ")" + l_syntax2.error_message)
 								end
+								if has_option (force_switch) then
+									l_generate_output := True
+									io.error.put_string (" (converted)")
+								else
+									l_generate_output := False
+								end
 								io.error.put_new_line
 								error_handler.wipe_out
 							else
+								l_generate_output := True
+							end
+							if l_generate_output then
 								create outfile.make (file_name)
 								outfile.open_write
 								if outfile.is_open_write then
@@ -271,12 +281,15 @@ feature {NONE} -- Arguments processing
 	non_switched_argument_type: STRING = "Directory"
 	verbose_switch: STRING = "v|verbose"
 	verbose_switch_description: STRING = "Verbose output of processing"
+	force_switch: STRING = "f|force"
+	force_switch_description: STRING = "Force generation of syntactically incorrect classes"
 			-- Our arguments
 
 	switches: !ARRAYED_LIST [!ARGUMENT_SWITCH]
 		once
 			create Result.make (1)
 			Result.extend (create {ARGUMENT_SWITCH}.make (verbose_switch, verbose_switch_description, True, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (force_switch, force_switch_description, True, False))
 		end
 
 invariant

@@ -11,6 +11,8 @@ frozen class
 	AUT_PROCESS_CONTROLLER
 
 inherit
+	ANY
+
 	THREAD
 		rename
 			sleep as thread_sleep,

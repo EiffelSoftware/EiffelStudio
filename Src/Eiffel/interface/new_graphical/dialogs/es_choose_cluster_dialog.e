@@ -56,9 +56,6 @@ feature {NONE} -- Redefine
 
 	prepare (a_context_menu_factory: EB_CONTEXT_MENU_FACTORY; a_container: EV_VERTICAL_BOX)
 			-- <Precursor>
-		local
-			controls_box: EV_VERTICAL_BOX
-			l_layouts: EV_LAYOUT_CONSTANTS
 		do
 			ui_builder.prepare (a_context_menu_factory, a_container)
 			cluster_name_entry := ui_builder.cluster_name_entry
@@ -116,7 +113,7 @@ note
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

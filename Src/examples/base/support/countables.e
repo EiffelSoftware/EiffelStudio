@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Demonstration of PRIMES, RANDOM, FIBONACCI"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 		do
 			prime_demo
 			random_demo
@@ -23,7 +23,7 @@ feature -- Initialization
 
 	c : COUNTABLE [INTEGER]
 
-	prime_demo is
+	prime_demo
 		do
 			io.putstring ("%NPrime Demo%N")
 			create {PRIMES} c
@@ -31,7 +31,7 @@ feature -- Initialization
 			has_test
 		end
 
-	random_demo is
+	random_demo
 		local
 			r: RANDOM
 		do 
@@ -49,7 +49,7 @@ feature -- Initialization
 			has_test
 		end
 
-	fibonacci_demo is
+	fibonacci_demo
 		do
 			io.putstring ("%NFibonacci Demo%N")
 			create {FIBONACCI} c
@@ -59,7 +59,7 @@ feature -- Initialization
 
 feature -- Output
 
-	display_first_ten is
+	display_first_ten
 		local
 			i : INTEGER
 		do
@@ -77,7 +77,7 @@ feature -- Output
 			end
 		end
 	
-	has_test is
+	has_test
 		local
 			i : INTEGER
 		do
@@ -96,7 +96,7 @@ feature -- Output
 		end
 				
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

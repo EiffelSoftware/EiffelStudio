@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create the main dialog.
 		do
 			make_by_id (Main_dialog)
@@ -63,7 +63,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	notify (control: WEL_CONTROL; notify_code: INTEGER) is
+	notify (control: WEL_CONTROL; notify_code: INTEGER)
 			-- Set the text font with the new font selected
 			-- by the user.
 		local
@@ -80,7 +80,7 @@ feature -- Basic operations
 			end
 		end
 
-	on_control_id_command (control_id: INTEGER) is
+	on_control_id_command (control_id: INTEGER)
 			-- Destroy application when Close button is pushed.
 		do
 			if control_id = Idc_close_button then
@@ -88,7 +88,7 @@ feature -- Basic operations
 			end
 		end
 
-	setup_dialog is
+	setup_dialog
 			-- Fill the list box with the fonts.
 		local		
 			dc: WEL_CLIENT_DC
@@ -99,7 +99,7 @@ feature -- Basic operations
 			dc.release
 		end
 
-	action (elf: WEL_ENUM_LOG_FONT; tm: WEL_TEXT_METRIC; font_type: INTEGER) is
+	action (elf: WEL_ENUM_LOG_FONT; tm: WEL_TEXT_METRIC; font_type: INTEGER)
 			-- Called for each font found.
 		do
 			if font_type = Truetype_fonttype then
@@ -107,14 +107,14 @@ feature -- Basic operations
 			end
 		end
 
-	dispose is
+	dispose
 			-- Called when the main dialog is destroyed.
 		do
 			Precursor {WEL_FONT_FAMILY_ENUMERATOR}
 			Precursor {WEL_MAIN_DIALOG}
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

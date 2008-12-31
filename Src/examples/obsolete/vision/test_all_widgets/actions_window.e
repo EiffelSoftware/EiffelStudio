@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class ACTIONS_WINDOW
@@ -39,7 +39,7 @@ feature
 	pointer_motion_b,
 	button_motion_b: ACTION_WINDOW_TOGGLE_B
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	make (a_name: STRING; a_parent: COMPOSITE)
 		do
 			form_d_make (a_name, a_parent)
 			set_widgets
@@ -47,7 +47,7 @@ feature
 			prompt_type:=0
 		end
 
-	set_widgets is
+	set_widgets
 		do
 			create exit_b.associate (Current, b_exit, "Exit", 100, 20)
 			create button_press_b.associate (Current, b_button_press, "Button press", 20, 60)
@@ -64,12 +64,12 @@ feature
 			set_other_widgets
 		end
 
-	set_other_widgets is
+	set_other_widgets
 		do
 			set_size (330, 310)
 		end
 
-	finish is
+	finish
 		do
 		end
 
@@ -85,7 +85,7 @@ feature
 	new_height,
 	prompt_type: INTEGER
 
-	work (arg: INTEGER_REF) is
+	work (arg: INTEGER_REF)
 		local
 			widget: WIDGET
 			color: COLOR
@@ -268,13 +268,13 @@ feature
 			end
 		end -- work
 	
-	descendant_actions(arg: INTEGER_REF) is
+	descendant_actions(arg: INTEGER_REF)
 			-- the actions that belong to one particular widget
 			-- (to be redefined when necessary)
 		do
 		end;
 
-	set_widgets_insensitive is
+	set_widgets_insensitive
 		do
 			widgets_insensitive:=False
 			destroy_b.set_insensitive
@@ -290,11 +290,11 @@ feature
 			set_other_widgets_insensitive
 		end
 
-	set_other_widgets_insensitive is
+	set_other_widgets_insensitive
 		do
 		end
 
-	set_widgets_sensitive is
+	set_widgets_sensitive
 		do
 			widgets_insensitive:=False
 			destroy_b.set_sensitive
@@ -310,11 +310,11 @@ feature
 			set_other_widgets_sensitive
 		end
 
-	set_other_widgets_sensitive is
+	set_other_widgets_sensitive
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

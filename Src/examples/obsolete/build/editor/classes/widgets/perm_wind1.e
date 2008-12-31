@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Permanent window: Editor."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -23,7 +23,7 @@ create
 
 feature  -- Creation
 
-	make (a_name: STRING; a_parent: SCREEN) is
+	make (a_name: STRING; a_parent: SCREEN)
 		do
 			 Precursor (a_name, a_parent)
 			create scrolled_text1.make ("Scrolled_text1", Current)
@@ -35,7 +35,7 @@ feature  -- Creation
 			set_values
 		end
 
-	set_values is
+	set_values
 		do
 			set_title ("Editor")
 			scrolled_text1.set_font_name ("Arial,16,400,,default,dontcare,default,0,0,0,default,default,default")
@@ -77,7 +77,7 @@ feature  -- Creation
 			set_colors
 		end
 
-	set_colors is
+	set_colors
 		local
 			a_color: COLOR
 			a_pixmap: PIXMAP
@@ -114,13 +114,13 @@ feature  -- Attributes
 
 feature  -- Realization
 
-	realize is
+	realize
 		do
 			set_callbacks
 			 Precursor
 		end
 
-	set_callbacks is
+	set_callbacks
 		do
 			set_scrolled_text1_callbacks
 			set_push_b1_callbacks
@@ -130,7 +130,7 @@ feature  -- Realization
 			set_push_b5_callbacks
 		end
 
-	set_scrolled_text1_callbacks is
+	set_scrolled_text1_callbacks
 		local
 			com1: COMMAND3
 			meta_command: META_COMMAND
@@ -141,7 +141,7 @@ feature  -- Realization
 			perm_wind1.scrolled_text1.add_modify_action (meta_command, void)
 		end
 
-	set_push_b1_callbacks is
+	set_push_b1_callbacks
 		local
 			com1: COMMAND1
 			com2: COMMAND1
@@ -155,7 +155,7 @@ feature  -- Realization
 			perm_wind1.push_b1.add_activate_action (meta_command, void)
 		end
 
-	set_push_b2_callbacks is
+	set_push_b2_callbacks
 		local
 			com1: COMMAND4
 			meta_command: META_COMMAND
@@ -166,7 +166,7 @@ feature  -- Realization
 			perm_wind1.push_b2.add_activate_action (meta_command, void)
 		end
 
-	set_push_b3_callbacks is
+	set_push_b3_callbacks
 		local
 			com1: BUILD_OPEN
 			com2: BUILD_OPEN
@@ -180,7 +180,7 @@ feature  -- Realization
 			perm_wind1.push_b3.add_activate_action (meta_command, void)
 		end
 
-	set_push_b4_callbacks is
+	set_push_b4_callbacks
 		local
 			com1: BUILD_SAVE
 			meta_command: META_COMMAND
@@ -191,7 +191,7 @@ feature  -- Realization
 			perm_wind1.push_b4.add_activate_action (meta_command, void)
 		end
 
-	set_push_b5_callbacks is
+	set_push_b5_callbacks
 		local
 			com1: COMMAND2
 			com2: COMMAND2
@@ -208,7 +208,7 @@ feature  -- Realization
 			perm_wind1.push_b5.add_activate_action (meta_command, void)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

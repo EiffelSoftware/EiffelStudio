@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"The demo that goes with the button demo"
 	legal: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make (par: EV_CONTAINER)
 			-- Create the demo in `par'.
 		do
 			Precursor {EV_OPTION_BUTTON} (par)
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			set_parent(par)
 		end
 
-	set_tabs is
+	set_tabs
 			-- Set the tabs for the action window.
 		do
 			set_primitive_tabs
@@ -69,7 +69,7 @@ feature -- Access
 	menu_item3: EV_RADIO_MENU_ITEM
 	menu_item4: EV_RADIO_MENU_ITEM;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

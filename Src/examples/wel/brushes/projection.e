@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -12,7 +12,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_x (a_x: INTEGER) is
+	set_x (a_x: INTEGER)
 			-- Set `x' with `a_x'
 		do
 			x := a_x
@@ -20,7 +20,7 @@ feature -- Element change
 			x_set: x = a_x
 		end
 
-	set_y (a_y: INTEGER) is
+	set_y (a_y: INTEGER)
 			-- Set `y' with `a_y'
 		do
 			y := a_y
@@ -28,7 +28,7 @@ feature -- Element change
 			y_set: y = a_y
 		end
 
-	set_xr (a_xr: REAL) is
+	set_xr (a_xr: REAL)
 			-- Set `xr' with `a_xr'
 		do
 			xr := a_xr
@@ -36,7 +36,7 @@ feature -- Element change
 			xr_set: xr = a_xr
 		end
 
-	set_yr (a_yr: REAL) is
+	set_yr (a_yr: REAL)
 			-- Set `yr' with `a_yr'
 		do
 			yr := a_yr
@@ -44,7 +44,7 @@ feature -- Element change
 			yr_set: yr = a_yr
 		end
 
-	set_zr (a_zr: REAL) is
+	set_zr (a_zr: REAL)
 			-- Set `zr' with `a_zr'
 		do
 			zr := a_zr
@@ -52,7 +52,7 @@ feature -- Element change
 			zr_set: zr = a_zr
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

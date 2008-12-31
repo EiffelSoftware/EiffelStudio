@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (number: INTEGER) is
+	make (number: INTEGER)
 			-- Make the card identified by `number'.
 		require
 			number_greater_than_Card_offset: number > Card_offset
@@ -59,7 +59,7 @@ feature -- Access
 	y_position: INTEGER
 			-- y_position of the card in the client-area
 
-	width: INTEGER is
+	width: INTEGER
 			-- The width of the card
 		do
 			Result := card_image.width
@@ -67,7 +67,7 @@ feature -- Access
 			positive_result: Result >= 0
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- The height of the card
 		do
 			Result := card_image.height
@@ -75,7 +75,7 @@ feature -- Access
 			positive_result: Result >= 0
 		end
 
-	set_offset_y (a_y: INTEGER) is
+	set_offset_y (a_y: INTEGER)
 			-- Set the `offset_y' to `a_y'
 		do
 			offset_y := a_y
@@ -83,7 +83,7 @@ feature -- Access
 			offset_y_is_set: offset_y = a_y
 		end
 
-	set_offset_x (a_x: INTEGER) is
+	set_offset_x (a_x: INTEGER)
 			-- Set the `offset_x' to `a_x'
 		do
 			offset_x := a_x
@@ -91,7 +91,7 @@ feature -- Access
 			offset_x_is_set: offset_x = a_x
 		end
 	
-	set_x (a_x: INTEGER) is
+	set_x (a_x: INTEGER)
 			-- Set the `x_position' to `a_y'
 		do
 			x_position := a_x
@@ -99,7 +99,7 @@ feature -- Access
 			x_position_set: x_position = a_x
 		end
 
-	set_y (a_y: INTEGER) is
+	set_y (a_y: INTEGER)
 			-- Set the `y_position' to `a_y'
 		do
 			y_position := a_y
@@ -107,7 +107,7 @@ feature -- Access
 			y_position_set: y_position = a_y
 		end
 
-	includes_point (x_pos, y_pos: INTEGER): BOOLEAN is
+	includes_point (x_pos, y_pos: INTEGER): BOOLEAN
 			-- Does the point defined by
 			-- (x_pos, y_pos) is inside the image?
 		do
@@ -117,7 +117,7 @@ feature -- Access
 				and y_pos < y_position + card_image.height
 		end
 
-	overlapped_with (a_card: CARD): BOOLEAN is
+	overlapped_with (a_card: CARD): BOOLEAN
 			-- Does 'a_card' overlap my image more than 50% horizontally?
 		require
 			a_card_not_void: a_card /= Void
@@ -133,7 +133,7 @@ invariant
 	card_image_exists: card_image.exists
 	card_number_set: card_number /= 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

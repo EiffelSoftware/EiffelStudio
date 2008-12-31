@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class TEXT_ACTIONS_WINDOW
@@ -30,7 +30,7 @@ feature
 
 	modify_b: ACTION_WINDOW_TOGGLE_B
 
-	set_other_widgets is
+	set_other_widgets
 		do
 			set_size (330, 470)
 			create modify_b.associate (Current, b_modify, "Modify", 20, 300)
@@ -46,7 +46,7 @@ feature
 
 	modify_action: BOOLEAN
 
-	finish is
+	finish
 		do
 			if modify_action then
 				md.remove_ok_action (Current, m_modify)
@@ -63,7 +63,7 @@ feature
 	first,
 	last: INTEGER
 
-	descendant_actions(arg: INTEGER_REF) is
+	descendant_actions(arg: INTEGER_REF)
 		local
 			widget: TEXT
 		do
@@ -191,7 +191,7 @@ feature
 			end
 		end
 
-	set_other_widgets_insensitive is
+	set_other_widgets_insensitive
 		do
 			modify_b.set_insensitive
 			sel_begin_b.set_insensitive
@@ -203,7 +203,7 @@ feature
 			set_sel_b.set_insensitive
 		end
 
-	set_other_widgets_sensitive is
+	set_other_widgets_sensitive
 		do
 			modify_b.set_sensitive
 			sel_begin_b.set_sensitive
@@ -215,7 +215,7 @@ feature
 			set_sel_b.set_sensitive
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

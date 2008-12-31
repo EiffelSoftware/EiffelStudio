@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make (par: EV_CONTAINER)
 			-- Create the tab and initialise objects
 		local
 			cmd1,cmd2: EV_ROUTINE_COMMAND
@@ -85,7 +85,7 @@ feature -- Initialization
 
 feature -- Access
 
-	name:STRING is
+	name:STRING
 			-- Returns the name of the tab
 		do
 			Result:="Text Component"
@@ -102,7 +102,7 @@ feature -- Access
 
 feature -- Execution feature  
 
-	set_text (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	set_text (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Set the text of the component
 		do
 		if current_widget.is_editable then
@@ -110,13 +110,13 @@ feature -- Execution feature
 		end
 		end
 
-	get_text (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	get_text (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Get the text of the component
 		do
 			f1.set_text (current_widget.text)
 		end
 
-	copy_text (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	copy_text (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- If text is selected then copy it.
 		do
 			if current_widget.has_selection then
@@ -124,7 +124,7 @@ feature -- Execution feature
 			end
 		end
 
-	cut_text (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	cut_text (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- If text is selected then cut it.
 		do
 			if current_widget.has_selection and
@@ -133,7 +133,7 @@ feature -- Execution feature
 			end
 		end
 
-	delete_text (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	delete_text (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- If text is selected then delete it.
 		do
 			if current_widget.has_selection and
@@ -142,7 +142,7 @@ feature -- Execution feature
 			end
 		end
 
-	paste_text (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	paste_text (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- If text is held then paste it.
 		do
 			if current_widget.is_editable then
@@ -150,13 +150,13 @@ feature -- Execution feature
 			end
 		end
 
-	select_all (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	select_all (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Select all of the text.
 		do
 			current_widget.select_all
 		end
 	
-	deselect_all (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	deselect_all (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Deselect all of the text.
 		do
 			if current_widget.has_selection then
@@ -164,54 +164,54 @@ feature -- Execution feature
 			end
 		end
 
-	select_region (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	select_region (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Select a region of the text.
 		do
 		end
 
-	append_text (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	append_text (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Append text into the text component.
 		do
 		end
 	
-	prepend_text (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	prepend_text (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Preprend text into the text component.
 		do
 		end
 
-	insert_text (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	insert_text (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Insert text into the text component
 		do
 		end
 
-	set_editable (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	set_editable (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Set the text component to read-write.
 		do
 			current_widget.set_editable (True)
 		end
 	
-	set_not_editable (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	set_not_editable (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Set the text component to read only.
 		do
 			current_widget.set_editable (False)
 		end
 
-	selection_start (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	selection_start (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Return the index of the first character selected.
 		do
 		end
 
-	selection_end (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	selection_end (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Return the index of the last character selected.
 		do
 		end
 
-	position (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	position (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Return the current position of the caret.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

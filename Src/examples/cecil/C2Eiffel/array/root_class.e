@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -6,7 +6,7 @@ class
 create
 	make
 feature -- Initialization
-	make is
+	make
 		do
 			io.put_string ("Test for CECIL%N");
 		end
@@ -14,7 +14,7 @@ feature -- Initialization
 feature -- Cecil generation
 
 	dymmy_my_array: MY_ARRAY [INTEGER];
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

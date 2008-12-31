@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tester of Inverter class"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -18,7 +18,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- tests 			
 		do
 			print ("%N ***************************************** %N");
@@ -53,7 +53,7 @@ feature -- Initialization
 
 feature -- Basic operations
 		
-	test_real_general is
+	test_real_general
 			-- NAG tests f03afc and f04ajc
 		do
 			create matrix.make_real_from_array (
@@ -100,7 +100,7 @@ feature -- Basic operations
 			print (matrix * inverter.inverse);
 		end;
 
-	test_real_symmetric is
+	test_real_symmetric
 			--f04aec
 		do
 			create matrix.make_real_from_array (
@@ -173,7 +173,7 @@ feature -- Basic operations
 			print (matrix * inverter.inverse);		
 		end;
 
-	test_complex_general is
+	test_complex_general
 			-- f03ahc, f04akc
 		do
 		
@@ -246,7 +246,7 @@ feature -- Basic operations
 			print (matrix * inverter.inverse);	
 		end;
 
-	test_complex_symmetric is
+	test_complex_symmetric
 			--  NAG tests f01bnc and f04awc 
 		do	
  			print ("%N ---------------- %N");
@@ -313,7 +313,7 @@ feature -- Access
 	right_hand: BASIC_MATRIX;;
 			-- right-hand side vector or matrix
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

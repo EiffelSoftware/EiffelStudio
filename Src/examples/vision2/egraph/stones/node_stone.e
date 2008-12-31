@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Stone transporting an EG_NODE"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (a_node: like node) is
+	make (a_node: like node)
 			-- Make a NODE_STONE transporting `a_node'.
 		require
 			a_node_not_void: a_node /= Void
@@ -29,7 +29,7 @@ feature -- Access
 	node: EG_NODE;
 			-- The node transported.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

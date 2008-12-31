@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class MENU_DEMO_WINDOW
@@ -32,12 +32,12 @@ feature
 	menu_entry313: MENU_B
 
 
-	main_widget: WIDGET is
+	main_widget: WIDGET
 		once
 			create {BAR} Result.make ("Bar", Current)
 		end
 
-	set_widgets is
+	set_widgets
 		local
 			bar: BAR
 			ok_com: MESSAGE_OK_COMMAND
@@ -98,7 +98,7 @@ feature
 
 	message_box: MESSAGE_D
 
-	work (arg: INTEGER_REF) is
+	work (arg: INTEGER_REF)
 		do
 			inspect
 				arg.item
@@ -135,7 +135,7 @@ feature
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

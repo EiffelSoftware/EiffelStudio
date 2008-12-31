@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class OPT_PULL_DEMO_WINDOW
@@ -18,12 +18,12 @@ feature
 	menu_entry3: MENU_B
 	menu_entry4: MENU_B
 
-	main_widget: WIDGET is
+	main_widget: WIDGET
 		once
 			create {OPT_PULL} Result.make ("Opt_pull", Current)
 		end
 
-	set_widgets is
+	set_widgets
 		local
 			opt_pull: OPT_PULL
 		do
@@ -42,11 +42,11 @@ feature
 			menu_entry4.set_text ("Menu_entry4")
 		end
 
-	work (arg: INTEGER_REF) is
+	work (arg: INTEGER_REF)
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

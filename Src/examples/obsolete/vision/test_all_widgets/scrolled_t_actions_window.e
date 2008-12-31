@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class SCROLLED_T_ACTIONS_WINDOW
@@ -24,7 +24,7 @@ feature
 	set_read_only_b,
 	set_editable_b: ACTION_WINDOW_BUTTON
 
-	set_other_widgets is
+	set_other_widgets
 		do
 			set_size (330, 390)
 			create sel_active_b.associate (Current, b_sel_active, "Sel active", 20, 300)
@@ -33,7 +33,7 @@ feature
 			create set_editable_b.associate (Current, b_set_editable, "Set editable", 180, 340)
 		end
 
-	descendant_actions(arg: INTEGER_REF) is
+	descendant_actions(arg: INTEGER_REF)
 		local
 			widget: SCROLLED_T
 		do
@@ -77,7 +77,7 @@ feature
 			end
 		end
 
-	set_other_widgets_insensitive is
+	set_other_widgets_insensitive
 		do
 			sel_active_b.set_insensitive
 			is_read_only_b.set_insensitive
@@ -85,7 +85,7 @@ feature
 			set_editable_b.set_insensitive
 		end
 
-	set_other_widgets_sensitive is
+	set_other_widgets_sensitive
 		do
 			sel_active_b.set_sensitive
 			is_read_only_b.set_sensitive
@@ -93,7 +93,7 @@ feature
 			set_editable_b.set_sensitive
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
 	
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize new instance
 		do
 			value := 1
@@ -46,7 +46,7 @@ feature {NONE} -- Access
 invariant
 	value_is_positive: value > 0
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software/Microsoft Corporation. All rights reserved."
 	license: "[
 			This file is part of the Microsoft .NET Framework SDK Code Samples.

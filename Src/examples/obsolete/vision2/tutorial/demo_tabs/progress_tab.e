@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make (par: EV_CONTAINER)
 			-- Create the tab and initialise objects.
 		local
 			cmd1,cmd2: EV_ROUTINE_COMMAND
@@ -62,26 +62,26 @@ feature -- Initialization
 
 feature -- Access
 	
-	name:STRING is
+	name:STRING
 			-- Returns the name of the tab
 		do
 			Result:="Progress"
 		end
 
 
-	set_level (arg:EV_ARGUMENT; data: EV_EVENT_DATA) is
+	set_level (arg:EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Set the level of the progress bar
 		do
 			current_widget.set_percentage(f1.get_text.to_integer)
 		end
 
-	get_level (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	get_level (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Get the level of the progress bar
 		do
 			f1.set_text(current_widget.value.out)
 		end
 
-	get_mode (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	get_mode (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Is the mode of the progress bar continuous?
 		do
 			if current_widget.is_continuous then
@@ -91,13 +91,13 @@ feature -- Access
 			end
 		end
 
-	set_continuous (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	set_continuous (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Set the mode of the progress bar to continuous.
 		do
 			current_widget.set_continuous
 		end
 
-	set_segmented (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	set_segmented (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Set the mode of the progress bar to segmented.
 		do
 			current_widget.set_segmented
@@ -114,7 +114,7 @@ feature -- Access
 	f1,f2: TEXT_FEATURE_MODIFIER
 	b1,b2: EV_BUTTON;	
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

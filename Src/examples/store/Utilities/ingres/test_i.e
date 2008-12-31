@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Nested queries example."
 	legal: "See notice at end of class.";
@@ -19,12 +19,12 @@ create
 
 feature
 
-	select_string: STRING is
+	select_string: STRING
 		once
 			Result := "select table_name, table_owner from iitables"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

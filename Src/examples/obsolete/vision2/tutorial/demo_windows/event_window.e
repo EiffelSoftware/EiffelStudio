@@ -1,4 +1,4 @@
-indexing
+note
 	description: "The window that allows the user to perform actions"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature -- Initialization
 
-	make(current_widget:EV_ANY;) is
+	make(current_widget:EV_ANY;)
 			-- Initialize
 		local
 			count: INTEGER
@@ -55,7 +55,7 @@ feature -- Initialization
 			add_close_command (cmd, arg)
 		end
 
-	display (new_text: STRING) is
+	display (new_text: STRING)
 			-- Adds a new text to `list' 
 		local
 			new_item: EV_LIST_ITEM	
@@ -64,7 +64,7 @@ feature -- Initialization
 			list.select_item (list.count)
 		end
 
-	displayi (new_text: STRING) is
+	displayi (new_text: STRING)
 			-- Adds a new indented text to `list'
 		local
 			new_item: EV_LIST_ITEM
@@ -78,12 +78,12 @@ feature -- Initialization
 
 feature -- Execution features
 
-	my_function (arg: EV_ARGUMENT1 [INTEGER]; data: EV_EVENT_DATA) is
+	my_function (arg: EV_ARGUMENT1 [INTEGER]; data: EV_EVENT_DATA)
 		do
 			hide
 		end
 
-	toggle_motion_tracking (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	toggle_motion_tracking (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Toggle `motion_tracking_on'
 		do
 			motion_tracking_on := not motion_tracking_on
@@ -94,7 +94,7 @@ feature -- Execution features
 			end
 		end
 
-	clear_events (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	clear_events (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Clear `list'
 		do
 			list.clear_items
@@ -110,7 +110,7 @@ feature -- Access
 	b2: EV_BUTTON;
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

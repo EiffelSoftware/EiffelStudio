@@ -1,10 +1,12 @@
-indexing
-	description: 
-		"DEMO_WINDOW class, base class for all demo windows.%
-		% Belongs to EiffelVision example test_all_widgets."
+note
+	description: "[
+		DEMO_WINDOW class, base class for all demo windows.
+		Belongs to EiffelVision example test_all_widgets.
+
+		Note: A demo window is an empty window, features must be redefine to have a full window.
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	note: "A demo window is an empty window, features must be redefine to have a full window."
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,7 +25,7 @@ create
 
 feature -- Initialization
 	
-	make (par: MAIN_WINDOW) is
+	make (par: MAIN_WINDOW)
 		do
 			the_parent := par
 			Precursor {EV_WINDOW} (the_parent)
@@ -33,7 +35,7 @@ feature -- Initialization
 	
 feature -- Access
 
-	main_widget: EV_WIDGET is
+	main_widget: EV_WIDGET
 			-- The main widget of the demo
 		do
 		end
@@ -50,19 +52,19 @@ feature -- Access
 
 feature -- Status setting
         
-	set_widgets is
+	set_widgets
 			-- Set the widgets in the demo windows.
 			-- Need to be redefine.
 		do
 		end
 	
-	set_values is
+	set_values
 			-- Set the values on the widgets of the window.
 			-- Need to be redefine.
  		do
  		end
 
-	set_effective_button (but: EV_TOGGLE_BUTTON) is
+	set_effective_button (but: EV_TOGGLE_BUTTON)
 			-- Make `but' the new `effective_button'.
 		do
 			effective_button := but
@@ -70,7 +72,7 @@ feature -- Status setting
 
 feature -- Show the window
 	
-	activate (win: MAIN_WINDOW) is
+	activate (win: MAIN_WINDOW)
 		local
 			arg1: EV_ARGUMENT1[DEMO_WINDOW]
 		do
@@ -82,7 +84,7 @@ feature -- Show the window
 			show
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

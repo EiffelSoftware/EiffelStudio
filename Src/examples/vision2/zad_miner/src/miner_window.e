@@ -1,4 +1,4 @@
-indexing
+note
 	description: "The main window of the application"
 	author: "Jocelyn FIAT"
 	version: "1.2"
@@ -21,7 +21,7 @@ create
 
 feature -- Initialization
 
-	initialize_with (nx,ny:INTEGER; trans: BOOLEAN) is
+	initialize_with (nx,ny:INTEGER; trans: BOOLEAN)
 		do
 			set_transparent (trans)
 			nb_x := nx
@@ -35,7 +35,7 @@ feature -- Initialization
 	new_menu_item: EV_MENU_ITEM
 	end_menu_item: EV_MENU_ITEM
 	debug_menu_item: EV_CHECK_MENU_ITEM
-	init_menu is
+	init_menu
 		local
 			mbar: EV_MENU_BAR
 			menu: EV_MENU
@@ -74,7 +74,7 @@ feature -- Initialization
 			menu_item.select_actions.extend (agent show_about_action)
 		end
 	
-	init_window is
+	init_window
 			-- Initialize the window.
 		local
 			game_frame:EV_FRAME
@@ -115,7 +115,7 @@ feature -- Initialization
 
 feature -- About box
 
-	about_dlg: EV_TITLED_WINDOW is
+	about_dlg: EV_TITLED_WINDOW
 			-- About box
 		local
 			pixbox: EV_FRAME
@@ -192,14 +192,14 @@ feature -- About box
 					%")
 		end
 
-	show_about_box is
+	show_about_box
 		do
 			about_dlg.set_size (390,160)
 			about_dlg.restore
 			about_dlg.show
 		end
 
-	hide_about_box is
+	hide_about_box
 		do
 			about_dlg.hide
 		end
@@ -224,7 +224,7 @@ feature -- Mines and Field
 			-- command time
 			-- objet to manage the timer...
 
-	random:RANDOM is
+	random:RANDOM
 			-- Initialize a randon number
 		local
 			time: TIME
@@ -238,7 +238,7 @@ feature -- Mines and Field
 		end
 
 
-	mines: ARRAY2[MINER_BUTTON] is
+	mines: ARRAY2[MINER_BUTTON]
 			-- Table of mine buttons
 			-- created once.
 		once
@@ -246,7 +246,7 @@ feature -- Mines and Field
 			create_mine_field
 		end
 
-	create_game_zone (ev:EV_CONTAINER; h_max,v_max:INTEGER) is
+	create_game_zone (ev:EV_CONTAINER; h_max,v_max:INTEGER)
 			-- Create the game zone.
 		local
 			game_box:EV_VERTICAL_BOX
@@ -285,7 +285,7 @@ feature -- Mines and Field
 
 feature -- Game info
 
-	label: EV_LABEL is
+	label: EV_LABEL
 			-- Label widget to display various information
 		once
 			create Result.make_with_text ("Label")
@@ -294,7 +294,7 @@ feature -- Game info
 			Result.align_text_center
 		end
 
-	label_time: EV_LABEL is
+	label_time: EV_LABEL
 			-- Label widget to display the time
 		once
 			create Result.make_with_text ("Label Time")
@@ -304,12 +304,12 @@ feature -- Game info
 			Result.align_text_center
 		end
 
-	set_label_text (txt: STRING) is
+	set_label_text (txt: STRING)
 		do
 			label.set_text (txt)
 		end
 
-	set_label_time_text (txt: STRING) is
+	set_label_time_text (txt: STRING)
 		do
 			label_time.set_text (txt)
 		end
@@ -319,7 +319,7 @@ feature -- Game level
 	level: INTEGER
 			-- Internal value for the level
 
-	set_level (val: INTEGER) is
+	set_level (val: INTEGER)
 			-- Set the level of the game.
 		do
 			level := val
@@ -333,7 +333,7 @@ feature -- Game level
 
 feature -- Game status
 
-	new_game is
+	new_game
 			-- Start a new game.
 		do
 			set_game_over (False)
@@ -341,14 +341,14 @@ feature -- Game status
 			set_label_text (start_message)
 		end
 
-	win_game is
+	win_game
 			-- End the game with success.
 		do
 			set_game_over (True)
 			set_label_text ("%NBRAVO")
 		end
 
-	end_game is
+	end_game
 			-- End the game.
 		do
 			set_game_over (True)
@@ -357,7 +357,7 @@ feature -- Game status
 			set_label_time_text ("NEW GAME ?")
 		end
 
-	set_game_over (val: BOOLEAN) is
+	set_game_over (val: BOOLEAN)
 			-- Set the game Over.
 		do
 			game_over := val
@@ -373,7 +373,7 @@ feature -- Game status
 		end
 
 
-	mine_nb (i,j: INTEGER): INTEGER is
+	mine_nb (i,j: INTEGER): INTEGER
 			-- Mine with coordonates (i,j)
 		local
 			nb: INTEGER
@@ -390,7 +390,7 @@ feature -- Game status
 			Result := nb
 		end
 
-	show_button (i,j: INTEGER) is
+	show_button (i,j: INTEGER)
 			-- Show the button reality.
 			-- flag, mine, or free
 		require
@@ -440,7 +440,7 @@ feature -- Game status
 			end
 		end
 
-	create_mine_field is
+	create_mine_field
 			-- create the field of mines.
 		local
 			i,j:INTEGER
@@ -470,7 +470,7 @@ feature -- Game status
 			end
 		end
 
-	reset_mine_field is
+	reset_mine_field
 			-- Reset the field of mines.
 			-- (random generation of mine)
 		local
@@ -511,7 +511,7 @@ feature -- Game status
 	nb_marked: INTEGER
 			-- number of marked mines
 
-	show_mine_field is
+	show_mine_field
 			-- Discover and show the whole field.
 		local
 			i,j:INTEGER
@@ -533,13 +533,13 @@ feature -- Game status
 			end
 		end
 
-	mine_todo: INTEGER is
+	mine_todo: INTEGER
 			-- Number of mine to discover
 		do 
 			Result :=nb_x * nb_y - nb_mine - nb_marked
 		end
 
-	create_control_zone (ev: EV_CONTAINER) is
+	create_control_zone (ev: EV_CONTAINER)
 			-- Create the control box.
 		local
 			control_zone_label: EV_VERTICAL_BOX
@@ -585,7 +585,7 @@ feature -- Game status
 
 	
 
-	start_message:STRING is
+	start_message:STRING
 			-- First message of the game
 		do
 			Result := "%NGOOD LUCK (";
@@ -608,33 +608,33 @@ feature -- Game status
 
 feature -- command action
 
-	show_about_action is
+	show_about_action
 		do
 			show_about_box
 		end
 
-	hide_about_action is
+	hide_about_action
 		do
 			hide_about_box
 		end
 
-	new_game_action is
+	new_game_action
 		do
 			new_game
 		end
 
-	end_game_action is
+	end_game_action
 		do
 			end_game
 		end
 
-	set_debuggable is
+	set_debuggable
 			-- Toggle debugging allowed.
 		do
 			is_debuggable := True
 		end
 
-	toggle_debug_action (z_key: EV_KEY) is
+	toggle_debug_action (z_key: EV_KEY)
 			-- Toggle debugging action.
 		do
 			debugging := not debugging
@@ -645,14 +645,14 @@ feature -- command action
 			end
 		end
 
-	change_level_action (arg: INTEGER) is
+	change_level_action (arg: INTEGER)
 			-- Change the level.
 		do
 			set_level (level - arg)
 			new_game
 		end
 
-	restart_action is
+	restart_action
 			-- Restart the game or End it.
 		do
 			if game_over then
@@ -667,7 +667,7 @@ feature -- command action
 					z_button: INTEGER;
 					z_x_tilt, z_y_tilt: DOUBLE;
 					z_pressure: DOUBLE;
-					z_screen_x, z_screen_y: INTEGER) is
+					z_screen_x, z_screen_y: INTEGER)
 			-- Show_button callback
 		do
 			if z_button = 1 then
@@ -683,7 +683,7 @@ feature -- command action
 					z_button: INTEGER;
 					z_x_tilt, z_y_tilt: DOUBLE;
 					z_pressure: DOUBLE;
-					z_screen_x, z_screen_y: INTEGER) is
+					z_screen_x, z_screen_y: INTEGER)
 			-- Automatic click on the possible safe mines around.
 		local
 			i,j: INTEGER

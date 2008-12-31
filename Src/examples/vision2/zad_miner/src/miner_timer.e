@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object representing the timer"
 	author: "Jocelyn FIAT"
 	version: "1.2"
@@ -13,7 +13,7 @@ create
 
 feature -- Initialization
 
-	make (label_time: EV_LABEL) is
+	make (label_time: EV_LABEL)
 			-- Creation routine
 		do
 			default_create
@@ -22,17 +22,17 @@ feature -- Initialization
 			change := False
 		end
 
-	reset is
+	reset
 		do
 			time := 0
 		end
 
-	stop is
+	stop
 		do
 			change := False
 		end
 
-	start is
+	start
 		do
 			change := True
 			reset
@@ -46,7 +46,7 @@ feature -- Initialization
 
 feature -- Implementation
 
-	execute (arg: INTEGER) is
+	execute (arg: INTEGER)
 		local
 			delai: INTEGER_REF
 			t_text: STRING

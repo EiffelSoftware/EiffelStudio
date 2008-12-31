@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants used by the miner"
 	author: "Jocelyn FIAT"
 	version: "1.2"
@@ -10,113 +10,113 @@ class
 
 feature -- Level
 
-	Level_default: INTEGER is 4
-	Level_min: INTEGER is 2
-	Level_max: INTEGER is 6
+	Level_default: INTEGER = 4
+	Level_min: INTEGER = 2
+	Level_max: INTEGER = 6
 
 feature -- rows and columns
 
-	X_max: INTEGER is 40
-	Y_max: INTEGER is 40
+	X_max: INTEGER = 40
+	Y_max: INTEGER = 40
 
 feature -- pixmap size
 
-	X_size: INTEGER is 13
-	Y_size: INTEGER is 13
+	X_size: INTEGER = 13
+	Y_size: INTEGER = 13
 
-	restart_x_size: INTEGER is 36
-	restart_y_size: INTEGER is 36
+	restart_x_size: INTEGER = 36
+	restart_y_size: INTEGER = 36
 
 feature -- colors
 
 	transparent: BOOLEAN
 			-- Does the pixmap have transparent background ?
 	
-	set_transparent (val: like transparent) is
+	set_transparent (val: like transparent)
 		do
 			transparent := val
 		end
 
-	colors: EV_STOCK_COLORS is
+	colors: EV_STOCK_COLORS
 		once
 			create Result
 		end
 
-	bg_color: EV_COLOR is
+	bg_color: EV_COLOR
 		once
 			Result := colors.black
 		end
-	fg_color: EV_COLOR is
+	fg_color: EV_COLOR
 		once
 			Result := colors.yellow
 		end
-	fg_time_color: EV_COLOR is
+	fg_time_color: EV_COLOR
 		once
 			Result := colors.green
 		end
 
-	fg_button_color: EV_COLOR is
+	fg_button_color: EV_COLOR
 		once
 			create Result
 			Result.set_rgb_with_8_bit (0,0,160)
 		end
-	bg_button_color: EV_COLOR is
+	bg_button_color: EV_COLOR
 		once
 			create Result
 			Result.set_rgb_with_8_bit (255,255,255)
 		end
 
-	fg_restart_button_color: EV_COLOR is
+	fg_restart_button_color: EV_COLOR
 		once
 			create Result
 			Result.set_rgb_with_8_bit (255,255,255)
 		end
-	bg_restart_button_color: EV_COLOR is
+	bg_restart_button_color: EV_COLOR
 		once
 			create Result
 			Result.set_rgb_with_8_bit (128,0,0)
 		end
-	fg_level_button: EV_COLOR is
+	fg_level_button: EV_COLOR
 		once
 			create Result
 			Result.set_rgb_with_8_bit (255,255,0)
 		end
-	bg_level_button: EV_COLOR is
+	bg_level_button: EV_COLOR
 		once
 			create Result
 			Result.set_rgb_with_8_bit (0,0,0)
 		end
-	fg_boum_button_color: EV_COLOR is
+	fg_boum_button_color: EV_COLOR
 		once
 			create Result
 			Result.set_rgb_with_8_bit (255,0,0)
 		end
-	bg_boum_button_color: EV_COLOR is
+	bg_boum_button_color: EV_COLOR
 		once
 			create Result
 			Result.set_rgb_with_8_bit (0,0,0)
 		end
-	fg_mark_nok_button: EV_COLOR is
+	fg_mark_nok_button: EV_COLOR
 		once
 			create Result
 			Result.set_rgb_with_8_bit (255,255,0)
 		end
-	fg_mark_button_color: EV_COLOR is
+	fg_mark_button_color: EV_COLOR
 		once
 			create Result
 			Result.set_rgb_with_8_bit (255,255,255)
 		end
-	bg_mark_button_color: EV_COLOR is
+	bg_mark_button_color: EV_COLOR
 		once
 			create Result
 			Result.set_rgb_with_8_bit (0,0,0)
 		end
-	fg_first_button_color: EV_COLOR is
+	fg_first_button_color: EV_COLOR
 		once
 			create Result
 			Result.set_rgb_with_8_bit (0,128,205)
 		end
-	bg_first_button_color: EV_COLOR is
+	bg_first_button_color: EV_COLOR
 		once
 			create Result
 			Result.set_rgb_with_8_bit (0,64,128)
@@ -124,7 +124,7 @@ feature -- colors
 
 feature -- pixmap
 
-	pix_about: EV_PIXMAP is
+	pix_about: EV_PIXMAP
 		local
 			pix: EV_PIXMAP
 		once
@@ -159,7 +159,7 @@ feature -- pixmap
 			Result := pix
 		end
 
-	pix_restart: EV_PIXMAP is
+	pix_restart: EV_PIXMAP
 		local
 			coord1: EV_COORDINATE
 			coord2: EV_COORDINATE
@@ -203,7 +203,7 @@ feature -- pixmap
 
 		end
 
-	pix_levelup: EV_PIXMAP is
+	pix_levelup: EV_PIXMAP
 		local
 			coord1: EV_COORDINATE
 			coord2: EV_COORDINATE
@@ -219,7 +219,7 @@ feature -- pixmap
  			create coord3.set (9,8)
 			Result.fill_polygon (<<coord1,coord2,coord3>>)
 		end
-	pix_leveldown: EV_PIXMAP is
+	pix_leveldown: EV_PIXMAP
 		local
 			coord1: EV_COORDINATE
 			coord2: EV_COORDINATE
@@ -235,7 +235,7 @@ feature -- pixmap
  			create coord3.set (9,5)
 			Result.fill_polygon (<<coord1,coord2,coord3>>)
 		end
-	pix_boum: EV_PIXMAP is
+	pix_boum: EV_PIXMAP
 		once
 			create Result.make_with_size (X_size,Y_size)
   			Result.set_foreground_color (fg_boum_button_color)
@@ -250,7 +250,7 @@ feature -- pixmap
  			Result.draw_segment (9,2, 2,10)
 		end
 
-	pix_mark_nok: EV_PIXMAP is
+	pix_mark_nok: EV_PIXMAP
 		once
 			create Result.make_with_size (X_size,Y_size)
   			Result.set_foreground_color (fg_mark_nok_button)
@@ -264,7 +264,7 @@ feature -- pixmap
 
  			Result.draw_segment (3,6, 9,6)
 		end
-	pix_mark: EV_PIXMAP is
+	pix_mark: EV_PIXMAP
 		once
 			create Result.make_with_size (X_size,Y_size)
   			Result.set_foreground_color (fg_mark_button_color)
@@ -279,7 +279,7 @@ feature -- pixmap
  			Result.draw_segment (3,6, 9,6)
 		end
 
-	pix_first: EV_PIXMAP is
+	pix_first: EV_PIXMAP
 		once
 			create Result.make_with_size (X_size,Y_size)
   			Result.set_foreground_color (fg_first_button_color)
@@ -292,7 +292,7 @@ feature -- pixmap
 			Result.draw_ellipse (10,10, 2,2)
 		end
 
-	pix_b (s: STRING): EV_PIXMAP is
+	pix_b (s: STRING): EV_PIXMAP
 		do
 			create Result.make_with_size (X_size,Y_size)
   			Result.set_foreground_color (fg_button_color)
@@ -303,7 +303,7 @@ feature -- pixmap
 			Result.draw_text (X_size // 2 - 1 ,Y_size - 2 , s)
 		end
 
-	pix_but: ARRAY [EV_PIXMAP] is
+	pix_but: ARRAY [EV_PIXMAP]
 			-- Table of button pixmap from 0 to 8
 		local
 			i: INTEGER

@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		local
 			label: WEL_STATIC
 		do
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	background_brush: WEL_BRUSH is
+	background_brush: WEL_BRUSH
 			-- Dialog boxes background color is the same than
 			-- button color.
 		do
@@ -43,7 +43,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	closeable: BOOLEAN is
+	closeable: BOOLEAN
 			-- When the user can close the window?
 		local
 			msg_box: WEL_MSG_BOX
@@ -58,7 +58,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_menu_command (menu_id: INTEGER) is
+	on_menu_command (menu_id: INTEGER)
 			-- `menu_id' has been selected
 		local
 				msg_box: WEL_MSG_BOX
@@ -88,7 +88,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_right_button_down (keys, x_pos, y_pos: INTEGER) is
+	on_right_button_down (keys, x_pos, y_pos: INTEGER)
 			-- Right button pressed
 		local
 			point: WEL_POINT
@@ -98,7 +98,7 @@ feature {NONE} -- Implementation
 			track.show_track (point.x, point.y, Current)
 		end
 
-	main_menu: WEL_MENU is
+	main_menu: WEL_MENU
 			-- The main menu
 		once
 			create Result.make
@@ -107,7 +107,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	file_menu: WEL_MENU is
+	file_menu: WEL_MENU
 			-- The file menu
 		once
 			create Result.make
@@ -122,7 +122,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	track: WEL_MENU is
+	track: WEL_MENU
 			-- The track menu
 		once
 			create Result.make_track			
@@ -131,19 +131,19 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	class_icon: WEL_ICON is
+	class_icon: WEL_ICON
 			-- Window's icon
 		once
 			create Result.make_by_id (1)
 		end
 
 	Open_id, Save_id, Delete_id,
-		Confirmation_id, Exit_id: INTEGER is unique
+		Confirmation_id, Exit_id: INTEGER = unique
 
-	Title: STRING is "WEL Menus";
+	Title: STRING = "WEL Menus";
 			-- Window's title
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

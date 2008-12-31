@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that display documentation for Vision2 classes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_text (a_text: EV_RICH_TEXT) is
+	make_with_text (a_text: EV_RICH_TEXT)
 			-- Create `Current' and and assign `a_text' to `text'.
 		require
 			a_text_not_void: a_text /= Void
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 
 feature -- Status setting
 
-	update_for_type_change (widget: EV_WIDGET) is
+	update_for_type_change (widget: EV_WIDGET)
 			-- Update documentation for type matching `widget'.
 		do
 			if real_update_for_type_change_agent = Void then
@@ -47,7 +47,7 @@ feature -- Status setting
 
 	real_update_for_type_change_agent: PROCEDURE [DOCUMENTATION_DISPLAY, TUPLE ]
 
-	real_update_for_type_change is
+	real_update_for_type_change
 			-- Actually perform the update of the text.
 		local
 			file_name: STRING
@@ -74,7 +74,7 @@ feature -- Status setting
 			update_text_size
 		end
 
-	update_text_size is
+	update_text_size
 			-- adjust font size of `flat_short_display' by `value'.
 		local
 			font: EV_FONT
@@ -106,7 +106,7 @@ feature {NONE} -- Implementation
 invariant
 	text_not_void: text /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -10,7 +10,7 @@ feature -- Initialization
 
 	o1, o2: OBJECT
 			-- Dummy objects for testing
-	make is 
+	make 
 			-- Give o1 to C and try to forget it from Eiffel side.
 		local
 			l_mem: MEMORY
@@ -48,30 +48,30 @@ feature -- Initialization
 
 feature	-- Externals
 
-	give_to_c_by_pointer (p: POINTER) is
+	give_to_c_by_pointer (p: POINTER)
 			-- Reference Eiffel object pointed by `p' from C.
 		external
 			"C | %"fext.h%""
 		end
-	give_to_c (o: ANY) is
+	give_to_c (o: ANY)
 			-- Reference `o' from C.
 		external
 			"C | %"fext.h%""
 		end
 	
-	forget_from_c is
+	forget_from_c
 			-- Release reference to `o' from C.
 		external
 			"C | %"fext.h%""
 		end
 	
-	reference_from_c: ANY is
+	reference_from_c: ANY
 			-- Return the Eiffel object given to C.
 		external
 			"C | %"fext.h%""
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

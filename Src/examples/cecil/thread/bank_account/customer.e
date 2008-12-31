@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract representation of a customer."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature	-- Initialization
 	
-	make (ptr: POINTER; m: MUTEX; p: BOOLEAN_REF) is
+	make (ptr: POINTER; m: MUTEX; p: BOOLEAN_REF)
 		do
 			mutex := m
 			c_account := ptr
@@ -24,7 +24,7 @@ feature	-- Initialization
 
 feature -- Execution
 	
-	execute is
+	execute
 		do
 			from 
 			until
@@ -42,7 +42,7 @@ feature -- Execution
 
 feature -- Deferred
 
-	make_transaction (n: INTEGER) is
+	make_transaction (n: INTEGER)
 			deferred
 		end
 
@@ -60,24 +60,24 @@ feature {NONE} -- Access
 	
 feature {NONE}	-- Status
 	
-	continue: BOOLEAN is
+	continue: BOOLEAN
 		do
 			Result := finished.item = False
 		end
 
 feature	{NONE} -- Externals
 
-	c_make_transaction (m: INTEGER; ptr, tid: POINTER) is
+	c_make_transaction (m: INTEGER; ptr, tid: POINTER)
 		external
 			"C"
 		end
 
 feature {NONE} -- Implementation
 
-	random: RANDOM is
+	random: RANDOM
 			-- Initialize a random number
 			-- No synchronization needed as created when holding `mutex'.
-		indexing
+		note
 			once_status: global
 		once
 			create Result.make
@@ -86,7 +86,7 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	next_amount (range: INTEGER): INTEGER is
+	next_amount (range: INTEGER): INTEGER
 			-- Random number between 1 and `range'
 			-- | Side effect function.
 		do
@@ -101,7 +101,7 @@ feature {NONE} -- Implementation
 			valid_result_inf: Result > 0
 		end			
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

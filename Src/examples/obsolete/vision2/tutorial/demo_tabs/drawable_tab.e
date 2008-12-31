@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make (par: EV_CONTAINER)
 			-- Create tab and initalise it's objects.
 		local
 			cmd1,cmd2: EV_ROUTINE_COMMAND
@@ -127,7 +127,7 @@ feature -- Initialization
 
 feature -- Access
 
-	name:STRING is
+	name:STRING
 			-- Returns `name'.
 		do
 			Result:="Drawable"
@@ -161,34 +161,34 @@ feature -- Access
 		-- Array of points to be used for polyline and polyfill.
 feature -- Execution Feature
 
-	point_setup is
+	point_setup
 			-- Set up `text_labels' for a point item.
 		do
 			enable_text_boxes (2)
 			set_comments ("X", "Y", "" , "", "", "", "", "")
 		end
 
-	text_setup is
+	text_setup
 			-- Set up `text_labels' for a text item.
 		do
 			enable_text_boxes (3)
 			set_comments ("X", "Y", "Text", "", "", "", "", "")
 		end
 
-	segment_setup is
+	segment_setup
 			-- Set up `text_labels' for a segment item.
 		do
 			enable_text_boxes (4)
 			set_comments ("X1", "Y1", "X2", "Y2", "", "", "", "")
 		end
 
-	straight_line_setup is
+	straight_line_setup
 			-- Set up `text_labels' for a stright line item.
 		do
 			segment_setup
 		end
 
-	poly_line_setup is
+	poly_line_setup
 			-- Set up `text_labels' for a poly line.
 		do
 			enable_text_boxes (6)
@@ -202,34 +202,34 @@ feature -- Execution Feature
 			text_labels.item (8).hide
 		end
 
-	rectangle_setup is
+	rectangle_setup
 			-- Set up `text_labels' for a rectangle.
 		do
 			enable_text_boxes (5)
 			set_comments ("X", "Y", "Height", "Width", "Orientation", "", "", "")
 		end
 
-	arc_setup is
+	arc_setup
 			-- Set up `text_labels' for an arc.
 		do
 			enable_text_boxes (8)
 			set_comments ("X", "Y", "Great Radius", "Small Radius", "Start Angle", "Aperture", "Orientation", "Style")
 		end
 	
-	ellipse_setup is
+	ellipse_setup
 			-- Set up `text_labels' for an ellipse.
 		do
 			enable_text_boxes (5)
 			set_comments ("X", "Y", "Great Radius", "Small Radius", "Orientation", "", "", "")
 		end
 
-	pixmap_setup is
+	pixmap_setup
 			-- Set up `text_labels' for a pixmap.
 		do
 			point_setup
 		end
 
-	draw_point is
+	draw_point
 			-- Validate `text_fields' and draw a point.
 		local
 			coor: EV_COORDINATES
@@ -242,7 +242,7 @@ feature -- Execution Feature
 			end
 		end
 	
-	draw_text is
+	draw_text
 			-- Validate `text_fields' and draw a text.
 		local
 			coor: EV_COORDINATES
@@ -255,7 +255,7 @@ feature -- Execution Feature
 			end
 		end
 
-	draw_segment is
+	draw_segment
 			-- Validate `text_fields' and draw a segment.
 		local
 			coor1, coor2: EV_COORDINATES
@@ -270,7 +270,7 @@ feature -- Execution Feature
 			end
 		end
 
-	draw_straight_line is
+	draw_straight_line
 			-- Validate `text_fields' and draw a straight line.
 		local
 			coor1, coor2: EV_COORDINATES
@@ -285,7 +285,7 @@ feature -- Execution Feature
 			end
 		end
 
-	draw_poly_line (filled: BOOLEAN) is
+	draw_poly_line (filled: BOOLEAN)
 			-- Validate `text_fields' and draw a poly line.
 		do
 			if points.count >=1 then
@@ -297,7 +297,7 @@ feature -- Execution Feature
 			end
 		end
 
-	draw_rectangle (filled: BOOLEAN) is
+	draw_rectangle (filled: BOOLEAN)
 			-- Validate `text_fields' and draw a rectangle.
 		local
 			coor: EV_COORDINATES
@@ -322,7 +322,7 @@ feature -- Execution Feature
 			end
 		end
 
-	clear_rectangle is
+	clear_rectangle
 			-- Validate `text_fields' and clear a rectangle.
 		local
 			s1, s2, s3, s4, s5: STRING
@@ -337,7 +337,7 @@ feature -- Execution Feature
 			end
 		end
 
-	draw_arc (filled: BOOLEAN) is
+	draw_arc (filled: BOOLEAN)
 			-- Validate `text_fields' and draw arc.
 		local
 			coor: EV_COORDINATES
@@ -368,7 +368,7 @@ feature -- Execution Feature
 			end
 		end
 
-	draw_ellipse (filled: BOOLEAN)is
+	draw_ellipse (filled: BOOLEAN)
 			-- Validate `text_fields' and draw ellipse.
 		local
 			coor: EV_COORDINATES
@@ -393,7 +393,7 @@ feature -- Execution Feature
 			end
 		end	
 
-	draw_pixmap is
+	draw_pixmap
 			-- Validate `text_fields' and draw a pixmap.
 		local
 			coor: EV_COORDINATES
@@ -408,7 +408,7 @@ feature -- Execution Feature
 			end
 		end
 
-	set_comments (s1, s2, s3, s4, s5, s6, s7, s8: STRING) is
+	set_comments (s1, s2, s3, s4, s5, s6, s7, s8: STRING)
 			-- Set `text_labels' for each `text_field'.
 		do
 			text_labels.item(1).set_text(s1)
@@ -421,7 +421,7 @@ feature -- Execution Feature
 			text_labels.item(8).set_text(s8)
 		end
 
-	enable_text_boxes (count: INTEGER) is
+	enable_text_boxes (count: INTEGER)
 			-- Enable `count' `text_fields'.
 			-- Disable remaining.
 		require
@@ -449,7 +449,7 @@ feature -- Execution Feature
 			end
 		end
 
-	extend_list (current_coordinate: EV_COORDINATES) is
+	extend_list (current_coordinate: EV_COORDINATES)
 			-- update `list1'.
 		local
 			temp_string: STRING
@@ -462,7 +462,7 @@ feature -- Execution Feature
 			create i1.make_with_text (list2, temp_string)
 		end
 
-	draw_item (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	draw_item (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Draw selected item in `list1'.
 		do
 			inspect list1.selected_item.index
@@ -483,7 +483,7 @@ feature -- Execution Feature
 			end
 		end
 
-	select_drawing_item (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	select_drawing_item (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Select current item from `list1'.
 		do
 			inspect list1.selected_item.index
@@ -511,7 +511,7 @@ feature -- Execution Feature
 			end
 		end
 
-	set_line_width (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	set_line_width (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Set current line width.
 		do
 			if f3.get_text.is_integer and f3.get_text.to_integer >0 then
@@ -519,13 +519,13 @@ feature -- Execution Feature
 			end
 		end
 
-	get_line_width (arg: EV_ARGUMENT; data: EV_EVENT_DATA) IS
+	get_line_width (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Current line width.
 		do
 			f3.set_text (current_widget.line_width.out)
 		end
 
-	set_logical_mode (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	set_logical_mode (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Set logical drawing mode.
 		do
 			if f4.get_text.is_integer and f4.get_text.to_integer >= 0 and
@@ -534,13 +534,13 @@ feature -- Execution Feature
 			end
 		end
 
-	get_logical_mode (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	get_logical_mode (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Logical drawing mode.
 		do
 			f4.set_text (current_widget.logical_mode.out)
 		end
 
-	drawable (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	drawable (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Is current demo drawable?
 		do
 			if current_widget.is_drawable then
@@ -550,20 +550,20 @@ feature -- Execution Feature
 			end
 		end
 
-	clear_list (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	clear_list (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Clear `list2' and reset `points'.
 		do
 			create points.make (1,0)
 			list2.clear_items
 		end
 
-	clear (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	clear (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Clear drawing area.
 		do
 			current_widget.clear
 		end
 	
-	add_to_list (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	add_to_list (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Add displayed points to `list2'.
 		local
 			p1,p2,p3: EV_COORDINATES	
@@ -591,7 +591,7 @@ feature -- Execution Feature
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

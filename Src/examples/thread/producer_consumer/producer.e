@@ -1,4 +1,4 @@
-indexing
+note
     description: ""
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -16,7 +16,7 @@ create
 
 feature	-- Initialization
 
-	make (buf: PC_BUFFER; i: INTEGER; finish: BOOLEAN_REF) is
+	make (buf: PC_BUFFER; i: INTEGER; finish: BOOLEAN_REF)
 			-- Initialize parameters, set proxies,  and launch thread.
 		do
 			finished:= finish
@@ -43,7 +43,7 @@ feature	{NONE} -- Private access
 
 feature -- Thread execution
 
-	execute is
+	execute
 			-- Put an element into the buffer until user asks for exiting.
 		do
 			from
@@ -60,7 +60,7 @@ feature -- Thread execution
 			buffer.monitor.unlock
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

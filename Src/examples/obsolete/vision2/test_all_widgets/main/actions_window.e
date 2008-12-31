@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"ACTIONS_WINDOW, base class for all actions windows.%
 		% Belongs to EiffelVision example test_all_widgets."
@@ -19,7 +19,7 @@ create
 
 feature -- Access
 	
-	Default_string_length: INTEGER is 5;
+	Default_string_length: INTEGER = 5;
 	
 	table: EV_TABLE
 		-- A table to organise the widgets
@@ -29,7 +29,7 @@ feature -- Access
 
 feature -- Initialization
 	
-	make_with_main_widget (par: EV_WINDOW; main_widget: EV_WIDGET) is
+	make_with_main_widget (par: EV_WINDOW; main_widget: EV_WIDGET)
 			-- Create the action windows
 		do
 			make (par)
@@ -40,7 +40,7 @@ feature -- Initialization
 	
 feature -- Status setting
         
-	set_widgets is
+	set_widgets
 			-- Create the widgets inside the window
 		local
 			show_button, hide_button, get_size_b, set_size_b: EV_BUTTON
@@ -113,13 +113,13 @@ feature -- Status setting
 			table.set_child_position (set_size_b, 7, 3, 8, 4)
 		end
 	
-	set_values is
+	set_values
 			-- Set the values on the widgets.
  		do
 			set_title ("Control widget behavior")
  		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -12,7 +12,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (no_cards: INTEGER) is
+	make (no_cards: INTEGER)
 			-- Create the columns, cells and the cards
 		require
 			maximum_number_of_cards: no_cards < 53
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	legal_candidate: BOOLEAN is
+	legal_candidate: BOOLEAN
 			-- Are the current settings for destination
 			-- and source legal to make a move?
 		do
@@ -106,7 +106,7 @@ feature -- Status report
 			end
 		end
 
-	goal_state: BOOLEAN is
+	goal_state: BOOLEAN
 			-- Is the game in the goal_state?
 		local
 			i: INTEGER
@@ -142,13 +142,13 @@ feature -- Access
 			-- The change which is to be made if there
 			-- is a `legal_candidate'
 
-	card_in_xcell (a_card:CARD; a_xcell: INTEGER): BOOLEAN is
+	card_in_xcell (a_card:CARD; a_xcell: INTEGER): BOOLEAN
 			-- Is `a_card' in xcell `a_xcell'?
 		do
 			Result := xcells.entry (a_xcell) = a_card.card_number
 		end
 
-	top_of_column (a_card: CARD; a_column: INTEGER): BOOLEAN is
+	top_of_column (a_card: CARD; a_column: INTEGER): BOOLEAN
 			-- Is `a_card' top of column `a_column'
 		require
 			valid_column_less: a_column <= Number_of_columns
@@ -158,7 +158,7 @@ feature -- Access
 				Result := ((columns @ a_column).the_top) = a_card.card_number
 		end
 
-	card_from_xcell (cell_number: INTEGER): INTEGER is
+	card_from_xcell (cell_number: INTEGER): INTEGER
 			-- The card from xcell `cell_number'
 		require
 			valid_cell_less: cell_number <= Number_of_cells
@@ -167,7 +167,7 @@ feature -- Access
 			Result := xcells.entry (cell_number)
 		end
 
-	card_from_home_cell (cell_number: INTEGER): INTEGER is
+	card_from_home_cell (cell_number: INTEGER): INTEGER
 			-- The card from home_cell `cell_number'
 		require
 			valid_cell_less: cell_number <= Number_of_cells
@@ -176,7 +176,7 @@ feature -- Access
 			Result := home_cells.entry (cell_number)
 		end
 
-	card_from_top_of_column (column_number: INTEGER): INTEGER is
+	card_from_top_of_column (column_number: INTEGER): INTEGER
 			-- The card from top of column `column_number'
 		require
 			valid_column_less: column_number <= Number_of_columns
@@ -186,7 +186,7 @@ feature -- Access
 			Result := (columns @ column_number).the_top
 		end
 
-	xcell_empty (cell_number: INTEGER): BOOLEAN is
+	xcell_empty (cell_number: INTEGER): BOOLEAN
 			-- Is the xcell corresponding to `cell_number' empty?
 		require
 			valid_cell_less: cell_number <= Number_of_cells
@@ -195,7 +195,7 @@ feature -- Access
 			Result := xcells.entry (cell_number) = 0
 		end
 
-	home_cell_empty (cell_number: INTEGER): BOOLEAN is
+	home_cell_empty (cell_number: INTEGER): BOOLEAN
 			-- Is the home_cell corresponding to `cell_number' empty?
 		require
 			valid_cell_less: cell_number <= Number_of_cells
@@ -204,7 +204,7 @@ feature -- Access
 			Result := home_cells.entry (cell_number) <= Card_offset
 		end
 
-	column_empty (column_number: INTEGER): BOOLEAN is
+	column_empty (column_number: INTEGER): BOOLEAN
 			-- Is the column corresponding to `column_number' empty?
 		require
 			valid_column_less: column_number <= Number_of_columns
@@ -213,7 +213,7 @@ feature -- Access
 			Result := (columns @ column_number).is_empty
 		end
 
-	one_from_top_in_column (a_column: INTEGER): INTEGER is
+	one_from_top_in_column (a_column: INTEGER): INTEGER
 			-- The card number which is one from the top
 			-- in the column corresponding to `a_column'
 		require
@@ -223,7 +223,7 @@ feature -- Access
 			Result := (columns @ a_column).one_from_top
 		end
 
-	column_from (column_number: INTEGER): LINKED_LIST [INTEGER] is
+	column_from (column_number: INTEGER): LINKED_LIST [INTEGER]
 			-- A linear representation of the column
 			-- corresponding to `column_number'
 		require
@@ -237,7 +237,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_go_from (move_from: INTEGER) is
+	set_go_from (move_from: INTEGER)
 			-- Set the source of the movement to be made.
 		do
 			go_from := move_from
@@ -245,13 +245,13 @@ feature -- Element change
 			go_from_is_set: go_from = move_from
 		end
 
-	set_go_to (to: INTEGER) is
+	set_go_to (to: INTEGER)
 			-- Set the destination of the movement to be made.
 		do
 			go_to := to
 		end
 
-	deal_game is
+	deal_game
 			-- Deal the game
 		local
 			column_number: INTEGER
@@ -271,7 +271,7 @@ feature -- Element change
 			end
 		end
 
-	shuffle_the_cards (game_number: INTEGER) is
+	shuffle_the_cards (game_number: INTEGER)
 			-- Shuffle the cards in the game with `game_number' as seed.
 		require
 			game_number_greater_than_zero: game_number > 0
@@ -303,13 +303,13 @@ feature -- Element change
 			the_card_numbers := temp_cards
 		end
 
-	remove_top_from_column (column_number: INTEGER) is
+	remove_top_from_column (column_number: INTEGER)
 			-- Remove the top card number from column `column_number'
 		do
 			columns.entry (column_number).remove_top
 		end
 
-	change_state is
+	change_state
 			-- Changes the state 
 		require
 			legal_argument: state_change /= 0 and state_change < 6
@@ -370,7 +370,7 @@ feature -- Element change
 
 feature {NONE} -- Element change
 
-	empty_xcell (cell_number: INTEGER) is
+	empty_xcell (cell_number: INTEGER)
 		require
 			valid_cell_less: cell_number <= Number_of_cells
 			valid_cell_greater: cell_number > 0
@@ -378,7 +378,7 @@ feature {NONE} -- Element change
 			xcells.force (0, cell_number)
 		end
 
-	empty_home_cell (cell_number: INTEGER) is
+	empty_home_cell (cell_number: INTEGER)
 		require
 			valid_cell_less: cell_number <= Number_of_cells
 			valid_cell_greater: cell_number > 0
@@ -386,7 +386,7 @@ feature {NONE} -- Element change
 			home_cells.force (0, cell_number)
 		end
 
-	insert_in_xcell (cell_number: INTEGER; a_card_number: INTEGER) is
+	insert_in_xcell (cell_number: INTEGER; a_card_number: INTEGER)
 		require
 			valid_cell_less: cell_number <= Number_of_cells
 			valid_cell_greater: cell_number > 0
@@ -396,7 +396,7 @@ feature {NONE} -- Element change
 			xcells.force (a_card_number, cell_number)
 		end
 
-	insert_in_home_cell (cell_number: INTEGER; a_card_number: INTEGER) is
+	insert_in_home_cell (cell_number: INTEGER; a_card_number: INTEGER)
 		require
 			valid_cell_less: cell_number <= Number_of_cells
 			valid_cell_greater: cell_number > 0
@@ -406,7 +406,7 @@ feature {NONE} -- Element change
 			home_cells.force (a_card_number, cell_number)
 		end
 
-	add_to_column (column_number: INTEGER; a_card_number: INTEGER) is
+	add_to_column (column_number: INTEGER; a_card_number: INTEGER)
 			-- Add `a_card_number' to a column
 		require
 			valid_column_less: column_number <= Number_of_columns
@@ -437,7 +437,7 @@ feature {NONE} -- Implementation
 			-- Card numbers present in the game.
 			-- Used for dealing and shuffling the cards.
 
-	card_from (i: INTEGER):INTEGER is
+	card_from (i: INTEGER):INTEGER
 			-- Retrieve card_number identified
 			-- by source or destination.
 		require
@@ -456,7 +456,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	column (i: INTEGER): INTEGER is
+	column (i: INTEGER): INTEGER
 			-- Compute column number identified
 			-- by source or destination.			
 		require
@@ -466,7 +466,7 @@ feature {NONE} -- Implementation
 			Result := i - column_offset
 		end
 
-	xcell (i: INTEGER): INTEGER is
+	xcell (i: INTEGER): INTEGER
 			-- Compute xcell number identified
 			-- by source or destination.			
 		require
@@ -476,7 +476,7 @@ feature {NONE} -- Implementation
 			Result := i - xcell_offset
 		end
 
-	home_cell (i: INTEGER): INTEGER is
+	home_cell (i: INTEGER): INTEGER
 			-- Compute home_cell number identified
 			-- by source or destination.
 		require
@@ -486,7 +486,7 @@ feature {NONE} -- Implementation
 			Result := i - home_cell_offset
 		end
 
-	create_the_cards is
+	create_the_cards
 			-- Create the cards in the game.
 		require
 			less_or_equal_maximum_number_of_cards: number_of_cards <= Maximum_number_of_cards
@@ -507,7 +507,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	kind (a_card_number: INTEGER): INTEGER is
+	kind (a_card_number: INTEGER): INTEGER
 			-- The kind of the card
 		require
 			card_number_greater_than: a_card_number > Card_offset
@@ -516,7 +516,7 @@ feature {NONE} -- Implementation
 			Result := a_card_number // 4
 		end
 
-	same_kind (a_card_number1, a_card_number2: INTEGER): BOOLEAN is
+	same_kind (a_card_number1, a_card_number2: INTEGER): BOOLEAN
 			-- Are the cards idetified by `a_card_number1'
 			-- and `a_card_number' of the same kind?
 		require
@@ -526,7 +526,7 @@ feature {NONE} -- Implementation
 			Result := (a_card_number1 \\ 4 = a_card_number2 \\ 4)
 		end
 
-	color_difference (a_card_number1, a_card_number2: INTEGER): BOOLEAN is
+	color_difference (a_card_number1, a_card_number2: INTEGER): BOOLEAN
 			-- Is there color difference beween the cards identified
 			-- with `a_card_number1' and `a_card_number2'?
 		require
@@ -536,7 +536,7 @@ feature {NONE} -- Implementation
 			Result := ((a_card_number1 + a_card_number2) \\ 2 /= 0)
 		end
 
-	difference (a_card_number1, a_card_number2: INTEGER): INTEGER is
+	difference (a_card_number1, a_card_number2: INTEGER): INTEGER
 			-- What is the difference in value of 
 			-- `a_card_number2' and `a_card_number1'
 		require
@@ -546,7 +546,7 @@ feature {NONE} -- Implementation
 			Result := (a_card_number2 // 4 - a_card_number1 // 4)
 		end
 
-	legal_from_xcell_or_column_To_Home:BOOLEAN is
+	legal_from_xcell_or_column_To_Home:BOOLEAN
 			-- Is it legal to move from a xcell
 			-- to a column with current source and
 			-- destination?
@@ -555,7 +555,7 @@ feature {NONE} -- Implementation
 				and same_kind (card_from (go_from), card_from (go_to))
 		end
 	
-	legal_from_column_to_xcell: BOOLEAN is
+	legal_from_column_to_xcell: BOOLEAN
 			-- Is it legal to move from a column
 			-- to a xcell with current source and
 			-- destination?
@@ -564,7 +564,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	legal_from_xcell_or_column_to_column: BOOLEAN is
+	legal_from_xcell_or_column_to_column: BOOLEAN
 			-- Is it legal to move from a column
 			-- to a column with current source and
 			-- destination?
@@ -575,7 +575,7 @@ feature {NONE} -- Implementation
 				or (card_from (go_from) /= 0 and card_from (go_to) = 0)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

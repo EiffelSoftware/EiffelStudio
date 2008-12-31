@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make (par: EV_CONTAINER)
 			-- Create the tab and initialise objects.
 		local
 			cmd1, cmd2: EV_ROUTINE_COMMAND
@@ -59,7 +59,7 @@ feature -- Initialization
 
 feature -- Access
 
-	name:STRING is
+	name:STRING
 			-- Returns the name of the tab
 		do
 			Result:="Scrollable"
@@ -73,7 +73,7 @@ feature -- Access
 
 feature -- Execution feature
 
-	set_horizontal_value(arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	set_horizontal_value(arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Set the horizontal value of the scroll bar (%).
 		do
 			if f1.get_text.is_integer 
@@ -83,13 +83,13 @@ feature -- Execution feature
 			end
 		end
 
-	get_horizontal_value(arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	get_horizontal_value(arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Get the horizontal value of the scroll bar.
 		do
 			f1.set_text(current_widget.horizontal_value.out)
 		end
 
-	set_vertical_value(arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	set_vertical_value(arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Set the vertical value of the scroll bar (%).
 		do
 			if f2.get_text.is_integer 
@@ -99,13 +99,13 @@ feature -- Execution feature
 			end
 		end
 
-	get_vertical_value(arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	get_vertical_value(arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Get the vertical value of the scroll bar.
 		do
 			f2.set_text(current_widget.vertical_value.out)
 		end
 
-	set_horizontal_step(arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	set_horizontal_step(arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Set the step of the horizontal scroll bar.
 		do
 			if f3.get_text.is_integer then
@@ -113,13 +113,13 @@ feature -- Execution feature
 			end
 		end
 
-	get_horizontal_step(arg: EV_ARGUMENT; data: EV_EVENT_DATA) is 
+	get_horizontal_step(arg: EV_ARGUMENT; data: EV_EVENT_DATA) 
 			-- Get the step of the horizontal scroll bar.
 		do
 			f3.set_text(current_widget.horizontal_step.out)
 		end
 
-	set_vertical_step(arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	set_vertical_step(arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Set the step of the vertical scroll bar.
 		do
 			if f4.get_text.is_integer then
@@ -127,13 +127,13 @@ feature -- Execution feature
 			end
 		end
 
-	get_vertical_step(arg: EV_ARGUMENT; data: EV_EVENT_DATA) is 
+	get_vertical_step(arg: EV_ARGUMENT; data: EV_EVENT_DATA) 
 			-- Get the step of the vertical scroll bar.
 		do
 			f4.set_text(current_widget.vertical_step.out)
 		end
 	
-	set_horizontal_leap(arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	set_horizontal_leap(arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Set the leap of the horizontal scroll bar.
 		do
 			if f5.get_text.is_integer then
@@ -141,13 +141,13 @@ feature -- Execution feature
 			end
 		end
 
-	get_horizontal_leap(arg: EV_ARGUMENT; data: EV_EVENT_DATA) is 
+	get_horizontal_leap(arg: EV_ARGUMENT; data: EV_EVENT_DATA) 
 			-- Get the leap of the horizontal scroll bar.
 		do
 			f5.set_text(current_widget.horizontal_leap.out)
 		end
 
-	set_vertical_leap(arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	set_vertical_leap(arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Set the leap of the vertical scroll bar.
 		do
 			if f6.get_text.is_integer then
@@ -155,13 +155,13 @@ feature -- Execution feature
 			end
 		end
 
-	get_vertical_leap(arg: EV_ARGUMENT; data: EV_EVENT_DATA) is 
+	get_vertical_leap(arg: EV_ARGUMENT; data: EV_EVENT_DATA) 
 			-- Get the leap of the vertical scroll bar.
 		do
 			f6.set_text(current_widget.vertical_leap.out)
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

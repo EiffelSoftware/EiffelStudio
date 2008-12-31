@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class TESTROOT create
@@ -10,7 +10,7 @@ feature
 	o1, o2: PARENT
 			-- Examples of attributes
 
-	make is
+	make
 			-- Output messages tracing what's going on.
 		do
 			display_demonstration_message
@@ -20,7 +20,7 @@ feature
 			o2.display
 		end
 
-	display_demonstration_message is
+	display_demonstration_message
 			-- Output a welcoming message.
 		do
 			io.put_new_line
@@ -33,7 +33,7 @@ feature
 		-- at the beginning of the next line:
 	-- inv: INVALID;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

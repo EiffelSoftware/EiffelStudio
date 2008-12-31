@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that provide information concerning all%
 		%types to be used in examples."
 	legal: "See notice at end of class."
@@ -15,7 +15,7 @@ inherit
 	
 feature -- Basic operation
 		
-	supported_types: ARRAYED_LIST [STRING] is
+	supported_types: ARRAYED_LIST [STRING]
 			-- All Vision2 types supported by the system.
 		local
 			cell: EV_CELL
@@ -106,7 +106,7 @@ feature -- Basic operation
 			Result.extend ("gb_ev_pixmap")
 		end
 		
-	extendible_types: ARRAYED_LIST [STRING] is
+	extendible_types: ARRAYED_LIST [STRING]
 			-- All Vision2 widgets that may be extended into
 			-- instances of EV_CONTAINER.
 		once
@@ -123,7 +123,7 @@ feature -- Basic operation
 		end
 		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "System's root class"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -14,7 +14,7 @@ create
 
 feature -- Creation
 
-	make is
+	make
 		local
 			class_test: JAVA_CLASS
 			instance_of_class_test: JAVA_OBJECT
@@ -72,7 +72,7 @@ feature -- Creation
 			jni.destroy_vm
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

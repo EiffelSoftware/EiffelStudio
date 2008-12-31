@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Automation server"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -16,20 +16,20 @@ create
 
 feature -- Access
 
-	main_window: MAIN_WINDOW is
+	main_window: MAIN_WINDOW
 			-- Server main window
 		once
 			create Result.make
 		end
 		
-	dispatch_interface: ANALYZER_DISPATCH is
+	dispatch_interface: ANALYZER_DISPATCH
 		local
 			ref_counter: INTEGER
 		once
 			create Result.make (Current)
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

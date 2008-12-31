@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -37,7 +37,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		do
 			make_top (Title)
 			resize (800, 680)
@@ -144,7 +144,7 @@ feature -- Access
 	ime_conversion_text, ime_conversion_text_info,
 	change_char_format_text: DISPLAY_TEXT
 	
-	main_menu: WEL_MENU is
+	main_menu: WEL_MENU
 			-- Windows main menu created from resource
 		once
 			create Result.make_by_id (Idr_menu1_constant)
@@ -152,7 +152,7 @@ feature -- Access
 		
 feature {NONE} -- Implementation
 
-	on_menu_command (menu_id: INTEGER) is
+	on_menu_command (menu_id: INTEGER)
 			-- Perform menu command actions
 		local
 			conv_mode, wel_const: INTEGER
@@ -193,7 +193,7 @@ feature {NONE} -- Implementation
 			refresh
 		end
 		
-	notify (control: WEL_CONTROL; notify_code: INTEGER) is
+	notify (control: WEL_CONTROL; notify_code: INTEGER)
 			-- Notification loop
 		local
 			tmp_str: STRING_32
@@ -230,7 +230,7 @@ feature {NONE} -- Implementation
 			end
 		end	
 		
-	class_background: WEL_BRUSH is
+	class_background: WEL_BRUSH
 			-- Standard window background color used to create the
 			-- window class.
 			-- Can be redefined to return a user-defined brush.
@@ -238,13 +238,13 @@ feature {NONE} -- Implementation
 			create Result.make_by_sys_color (Color_btnface + 1)
 		end
 
-	Title: STRING_32 is 
+	Title: STRING_32 
 			-- Window's title
 		do
 			create Result.make_from_string ("Unicode Example")
 		end
 	
-	init_display is
+	init_display
 			-- Initialise display
 		do
 			init_fonts_list
@@ -253,7 +253,7 @@ feature {NONE} -- Implementation
 			init_controls	
 		end
 		
-	init_menu is
+	init_menu
 			-- Initialize the main menu
 		do
 			if imm.has_ime (imm.input_locale) then	
@@ -272,7 +272,7 @@ feature {NONE} -- Implementation
 			
 		end
 	
-	init_controls is
+	init_controls
 			-- Initialize controls
 		do
 			init_menu
@@ -288,7 +288,7 @@ feature {NONE} -- Implementation
 			multi_selection_list_box.insert_string_at ("Multiple Selection List Box", 1)
 		end
 
-	init_locale_list is
+	init_locale_list
 			-- Add the available input locales to the list
 		local
 			cnt, langid: INTEGER
@@ -312,7 +312,7 @@ feature {NONE} -- Implementation
 			avail_input_locales_combo.select_item (0)
 		end
 
-	init_fonts_list is
+	init_fonts_list
 			-- Add some font types to the list box
 		do
 			font_list.add_string("MS Shell Dlg")
@@ -325,7 +325,7 @@ feature {NONE} -- Implementation
 			font_list.select_item (0)
 		end
 	
-	init_tree_view is
+	init_tree_view
 			-- Initialise tree view control
 		local
 			handle, root_h: POINTER
@@ -368,7 +368,7 @@ feature {NONE} -- Implementation
 			tree_view.select_item (tree_view_item1)
 		end
 	
-	change_controls (str: STRING_32) is
+	change_controls (str: STRING_32)
 			-- Change the controls text to that of rich edit
 		local
 			tvitem: WEL_TREE_VIEW_ITEM
@@ -391,7 +391,7 @@ feature {NONE} -- Implementation
 			tree_view.set_tree_item (tvitem)			
 		end
 		
-	change_font (new_font: WEL_LOG_FONT) is
+	change_font (new_font: WEL_LOG_FONT)
 			-- Change the font used by the application controls to 'new_font'
 		local
 			char_format: WEL_CHARACTER_FORMAT
@@ -408,7 +408,7 @@ feature {NONE} -- Implementation
 			setup_ime_display
 		end	
 	
-	setup_ime_display is
+	setup_ime_display
 			-- Initialise the display for the IME display information
 		local
 			has_ime: BOOLEAN
@@ -466,7 +466,7 @@ feature {NONE} -- Implementation
 				tree_view.set_font (wel_font)
 		end
 		
-	ime_properties: STRING_32 is
+	ime_properties: STRING_32
 			-- Parse the properties of the current IME into string format
 		local
 			tmp_prop: INTEGER
@@ -506,7 +506,7 @@ feature {NONE} -- Implementation
 			create Result.make_from_string (tmp_string) 
 		end		
 		
-	ime_conversion_status: STRING_32 is
+	ime_conversion_status: STRING_32
 			-- Parse the properties of the current IME conversion mode into string format
 		local
 			tmp_string: STRING_32
@@ -584,7 +584,7 @@ feature {NONE} -- Implementation
 			create 	Result.make_from_string (tmp_string)
 		end
 		
-	refresh is
+	refresh
 			-- Refresh display
 		do
 			imm.switch_input_locale (input_locale)
@@ -592,7 +592,7 @@ feature {NONE} -- Implementation
 			init_menu
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

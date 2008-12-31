@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -41,7 +41,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		do
 			make_top ("3D Demo")
 			resize (400, 300)
@@ -56,7 +56,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	go is
+	go
 		do
 			create win_dc.make (Current)
 			win_dc.get
@@ -71,9 +71,9 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	Max_color: INTEGER is 200
+	Max_color: INTEGER = 200
 
-	Virtual_dcs_count: INTEGER is 20
+	Virtual_dcs_count: INTEGER = 20
 
 	palette: WEL_PALETTE
 
@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 
 	pens: ARRAY [WEL_PEN]
 
-	run_demo is
+	run_demo
 		local
 			x_min, x_max, y_min, y_max, z_min, z_max: REAL
 			ang, rap: REAL
@@ -147,7 +147,7 @@ feature {NONE} -- Implementation
 			ready := True
 		end
 
-	initialize_demo is 
+	initialize_demo 
 		local
 			log_pal: WEL_LOG_PALETTE
 			pal_entry: WEL_PALETTE_ENTRY
@@ -209,7 +209,7 @@ feature {NONE} -- Implementation
 		end
 
 	surface (nx, ny: INTEGER; x_min, x_max, y_min, y_max,
-			z_min, z_max, ang, rap: REAL) is
+			z_min, z_max, ang, rap: REAL)
 			-- Draw the surface on the compatible dc
 		local
 			coord: ARRAY [PROJECTION]
@@ -351,7 +351,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	compute_angle (x1, y1, z1, x2, y2, z2, x3, y3, z3: REAL): REAL is
+	compute_angle (x1, y1, z1, x2, y2, z2, x3, y3, z3: REAL): REAL
 			-- Compute the angle between the surface and the light
 		local
 			loc_p1, loc_p2, loc_p3, loc_q1, loc_q2, loc_q3: REAL
@@ -376,13 +376,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	evaluate (a_x, a_y: REAL): REAL is
+	evaluate (a_x, a_y: REAL): REAL
 			-- Evaluate the function at `a_x', `a_y' point
 		do
 			Result :=  sine (sqrt (a_x * a_x + a_y * a_y) - phase )
 		end
 
-	fill (a_poly_coord: ARRAY [INTEGER]; color: INTEGER) is
+	fill (a_poly_coord: ARRAY [INTEGER]; color: INTEGER)
 			-- Fill the polygon defined by `a_poly_coord'
 			-- using `color'
 		require
@@ -393,13 +393,13 @@ feature {NONE} -- Implementation
 			(virtual_dcs @ dec).polygon (a_poly_coord)
 		end
 
-	White_brush : WEL_WHITE_BRUSH is
+	White_brush : WEL_WHITE_BRUSH
 		once
 			create Result.make
 		end
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

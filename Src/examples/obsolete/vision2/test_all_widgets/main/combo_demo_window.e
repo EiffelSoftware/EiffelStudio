@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"COMBO_DEMO_WINDOW, demo window to test combo widget.%
 		% Belongs to EiffelVision example."
@@ -24,7 +24,7 @@ create
 
 feature -- Access
 
-	main_widget: EV_COMBO_BOX is
+	main_widget: EV_COMBO_BOX
 			-- The main widget of the demo
 		once
 			create Result.make (Current)
@@ -35,7 +35,7 @@ feature -- Access
 
 feature -- Status setting
 	
-	set_widgets is
+	set_widgets
 			-- Set the widgets in the demo windows.
 		do
 			create item1.make_with_text (main_widget, "item1")
@@ -44,13 +44,13 @@ feature -- Status setting
 			main_widget.set_text ("edit me")
 		end
 	
-	set_values is
+	set_values
 			-- Set the values on the widgets of the window.
 		do
 			set_title ("Combo box demo")
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

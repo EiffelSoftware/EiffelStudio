@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Evaluator to check if stack is empty"
 	legal: "See notice at end of class."
@@ -18,7 +18,7 @@ class EMPTY_STACK_EVALUATOR inherit
 
 feature -- Status report
 
-	empty: BOOLEAN is
+	empty: BOOLEAN
 			-- Is stack empty?
 		do
 			Result := test_step.stack.empty
@@ -29,7 +29,7 @@ feature {NONE} -- Implementation
 	test_step: POP_STEP;
 			-- Callback to test step
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

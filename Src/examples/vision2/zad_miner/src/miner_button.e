@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object which representing a square"
 	author: "Jocelyn FIAT"
 	version: "1.2"
@@ -22,7 +22,7 @@ create
 
 feature -- Initialization
 
-	init_mine is
+	init_mine
 		local
 -- 			flag_it:EV_ROUTINE_COMMAND
 		do
@@ -32,14 +32,14 @@ feature -- Initialization
 			pointer_button_press_actions.extend (agent put_a_flag_action)
 		end
 
-	flagcode:INTEGER is
+	flagcode:INTEGER
 		do
 			if is_flagged then
 				Result := 1
 			end
 		end
 
-	code:INTEGER is
+	code:INTEGER
 		do
 			if is_trapped then
 				Result := 1
@@ -49,7 +49,7 @@ feature -- Initialization
 	is_flagged:BOOLEAN
 	is_shown:BOOLEAN
 
-	reset is
+	reset
 		do
 			is_trapped := False
 			is_flagged := False
@@ -57,7 +57,7 @@ feature -- Initialization
 			set_pixmap (pix_first)
 		end
 
-	discover_it is
+	discover_it
 		do
 			if is_flagged and not is_trapped then
  				set_pixmap (pix_mark_nok)
@@ -68,7 +68,7 @@ feature -- Initialization
 			end
 		end
 
-	show_it is
+	show_it
 		do
 			is_shown := True
  			if is_trapped then
@@ -83,21 +83,21 @@ feature -- Initialization
 							z_x, z_y: INTEGER; z_button: INTEGER;
 							z_x_tilt, z_y_tilt: DOUBLE; z_pressure: DOUBLE;
 							z_screen_x, z_screen_y: INTEGER
-						) is
+						)
 		do
 			if z_button = 3 then
 				put_a_flag
 			end
 		end
 
-	put_a_flag is
+	put_a_flag
 		do
 			if not is_shown then
 				set_flag (not is_flagged)
 			end
 		end
 
-	set_flag (val:BOOLEAN) is
+	set_flag (val:BOOLEAN)
 		do
 			is_flagged := val
 			if val then
@@ -107,7 +107,7 @@ feature -- Initialization
 			end
 		end
 
-	set_trapped(val:BOOLEAN) is
+	set_trapped(val:BOOLEAN)
 		do
 			is_trapped := val
 		end

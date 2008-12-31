@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that test an EV_SCROLLABLE_AREA with an `item'%
 		%contained that is larger than its current size."
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 		
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create `Current' and initialize test in `widget'.
 		do
 			create scrollable_area
@@ -42,7 +42,7 @@ feature {NONE} -- Implementation
 		-- A drawing area to be inserted inside `scrollable_area'
 		-- for this test.
 		
-	update_drawing (x, y, width, height: INTEGER) is
+	update_drawing (x, y, width, height: INTEGER)
 			-- Draw rectangles filling `drawing_area'
 			-- using `all_stock_colors'.
 		local
@@ -67,7 +67,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

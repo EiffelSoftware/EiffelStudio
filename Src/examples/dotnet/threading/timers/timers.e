@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Launch a timer that executes a feature every 2 seconds until
 					user press enter to finish the program execution.
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Launch the timer and wait for the user to press enter to finish the execution."
 		local
 			timer: TIMER
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 		end
 
 
-	check_status (a_state: SYSTEM_OBJECT) is
+	check_status (a_state: SYSTEM_OBJECT)
 			-- The callback method's signature MUST match that of a TIMER_CALLBACK 
 			-- delegate (it takes an SYSTEM_OBJECT parameter and returns void)
 		do
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			-- ...
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

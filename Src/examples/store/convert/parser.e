@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -16,7 +16,7 @@ create
 
 feature
 
-	make is
+	make
 		do
 			create descriptor.make;
 			create book.make;
@@ -33,7 +33,7 @@ feature {NONE}
 
 	converter1, converter2: CONVERTER;
 
-	execute is
+	execute
 		local
 			i:INTEGER
 		do
@@ -89,7 +89,7 @@ feature {NONE}
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

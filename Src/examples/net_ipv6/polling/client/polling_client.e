@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Client root-class for the polling example."
@@ -16,7 +16,7 @@ create
 
 feature
 
-	make (argv: ARRAY [STRING]) is
+	make (argv: ARRAY [STRING])
 		local
 			soc: NETWORK_DATAGRAM_SOCKET
 			ps: MEDIUM_POLLER
@@ -45,7 +45,7 @@ feature
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

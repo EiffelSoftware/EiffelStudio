@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Automation client of server Analyzer"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -33,7 +33,7 @@ inherit
 
 feature -- Access
 
-	class_id: STRING is 
+	class_id: STRING 
 			-- Class identifier of Analyzer server
 		once
 			Result := Analyzer_clsid
@@ -41,7 +41,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_text (txt: STRING) is
+	set_text (txt: STRING)
 			-- Update text in server
 		local
 			arg: EOLE_VARIANT
@@ -58,7 +58,7 @@ feature -- Element change
 			check_result
 		end
 		
-	text: STRING is
+	text: STRING
 			-- Text in server
 		do
 			dispparams.init
@@ -69,7 +69,7 @@ feature -- Element change
 			Result := function_result.bstr.to_string
 		end
 			
-	word_count: INTEGER is
+	word_count: INTEGER
 			-- Word count in server text
 		do
 			dispparams.init
@@ -80,7 +80,7 @@ feature -- Element change
 			Result := function_result.integer2
 		end
 	
-	line_count: INTEGER is
+	line_count: INTEGER
 			-- Line count in server text
 		do
 			dispparams.init
@@ -91,7 +91,7 @@ feature -- Element change
 			Result := function_result.integer2
 		end
 		
-	sentence_count: INTEGER is
+	sentence_count: INTEGER
 			-- Sentence count in server text
 		do
 			dispparams.init
@@ -102,7 +102,7 @@ feature -- Element change
 			Result := function_result.integer2
 		end
 	
-	occurrences (txt: STRING): INTEGER is
+	occurrences (txt: STRING): INTEGER
 			-- Number of occurrences of `txt' in server text
 		local
 			arg: EOLE_VARIANT
@@ -121,7 +121,7 @@ feature -- Element change
 			Result := function_result.integer2
 		end
 
-	show is
+	show
 			-- Show server window.
 		do
 			dispparams.init
@@ -130,7 +130,7 @@ feature -- Element change
 			check_result
 		end
 
-	hide is
+	hide
 			-- Hide server window.
 		do
 			dispparams.init
@@ -139,7 +139,7 @@ feature -- Element change
 			check_result
 		end
 		
-	terminate_server is
+	terminate_server
 			-- End server.
 		do
 			dispparams.init
@@ -150,7 +150,7 @@ feature -- Element change
 		
 feature {NONE} -- Implementation
 
-	check_result is
+	check_result
 			-- Check result of last routine and display
 			-- a message box if there was an error.
 		local
@@ -171,7 +171,7 @@ feature {NONE} -- Implementation
 			end
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

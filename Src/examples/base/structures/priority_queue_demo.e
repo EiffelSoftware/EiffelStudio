@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Demo class for priority queues. %
 		% MY_SLP to demo SLP_QUEUE"
@@ -20,7 +20,7 @@ create
 feature -- Creation
 
 
-	make is
+	make
 			-- Initialize and execute demonstration
 		do
 			create driver.make
@@ -42,7 +42,7 @@ feature -- Attributes
 
 feature -- Routines
 
-	cycle is
+	cycle
 			-- Basic interaction loop
 		local
 			new_command: INTEGER
@@ -66,7 +66,7 @@ feature -- Routines
 			driver.exit
 		end
 
-	queue_trace is
+	queue_trace
 			-- Display the queue.
 		do
 			driver.putstring ("a: ")
@@ -74,7 +74,7 @@ feature -- Routines
 			driver.new_line
 		end;
 
-	fill_menu is
+	fill_menu
 			-- Fill the menu with the available commands.
 		do
 			driver.add_entry ("PU (PUt): Insert a new item", "Insert a new item in the queue")
@@ -96,7 +96,7 @@ feature -- Routines
 			driver.complete_menu
 		end
 
-	execute (new_command: INTEGER) is
+	execute (new_command: INTEGER)
 			-- Execute command corresponding to user's request.
 		require else
 			valid_command: new_command >= put and new_command <= quit
@@ -127,12 +127,12 @@ feature -- Routines
 			end
 		end
 
-	get_el: INTEGER is
+	get_el: INTEGER
 		do
 			Result := driver.get_integer ("which value")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Demo class for linked sets. %
 		% Only one routine to display the set is added %
@@ -17,7 +17,7 @@ create
 
 feature
 
-	display is
+	display
 		do
 			io.set_error_default
 			from
@@ -32,7 +32,7 @@ feature
 			io.putchar ('%N')
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

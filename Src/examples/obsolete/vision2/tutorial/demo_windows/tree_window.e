@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"The demo that goes with the button demo"
 	legal: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make (par: EV_CONTAINER)
 			-- Create the demo in `par'.
 		local
 			cmd: EV_ROUTINE_COMMAND
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			add_unselect_command (cmd, Void)
 		end
 
-	set_tabs is
+	set_tabs
 			-- Set the tabs for the action window.
 		do
 			set_primitive_tabs
@@ -76,7 +76,7 @@ feature -- Access
 			-- a tree item that moves.
 feature -- Basic operation
 
-	create_item (par: EV_TREE_ITEM_HOLDER; txt: STRING): EV_TREE_ITEM is
+	create_item (par: EV_TREE_ITEM_HOLDER; txt: STRING): EV_TREE_ITEM
 				-- Create an item with pick and drop facilities.
 		local
 			type: EV_PND_TYPE
@@ -92,7 +92,7 @@ feature -- Basic operation
 
 feature -- Execution features
 
-	execute1 (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	execute1 (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Execution for an item
 		local
 			item: EV_TREE_ITEM
@@ -107,20 +107,20 @@ feature -- Execution features
 			end
 		end
 
-	select_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	select_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- If a selection is about to be performed then
 			-- inform the user in `event_window'.
 		do
 			event_window.display ("Select command in tree.")
 		end
-	unselect_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	unselect_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- If an unselect command is about to be performed then
 			-- inform the user in `event_window'.
 		do
 			event_window.display ("Unselect command in tree.")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

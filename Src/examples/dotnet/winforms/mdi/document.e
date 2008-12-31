@@ -1,4 +1,4 @@
-indexing
+note
 	description: "MDI Document"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_name (doc_name: SYSTEM_STRING) is
+	make_with_name (doc_name: SYSTEM_STRING)
 			--| Call `initialize_component'.
 			--| Set parameters of form.
 			-- Initialization routine.
@@ -143,7 +143,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	initialize_component is
+	initialize_component
 			-- Initialize all components of form.
 		local
 			l_size: DRAWING_SIZE
@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	dispose_boolean (a_disposing: BOOLEAN) is
+	dispose_boolean (a_disposing: BOOLEAN)
 			-- method called when form is disposed.
 		local
 			retried: BOOLEAN
@@ -194,7 +194,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	font_sizes (a_size: STRING): DOUBLE is
+	font_sizes (a_size: STRING): DOUBLE
 			-- Return size correspondind to `a_size'.
 		require
 			non_void_a_size: a_size /= Void
@@ -210,7 +210,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_load_document_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
+	on_load_document_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS)
 			-- File->Load Document Menu item handler.
 		require
 			non_void_sender: sender /= Void
@@ -221,7 +221,7 @@ feature {NONE} -- Implementation
 			res := {WINFORMS_MESSAGE_BOX}.show (text)
 		end
 
-	on_format_font_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
+	on_format_font_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS)
 			-- Format->Font Menu item handler.
 		require
 			non_void_sender: sender /= Void
@@ -246,7 +246,7 @@ feature {NONE} -- Implementation
 			rich_text_box.set_font (create {DRAWING_FONT}.make (current_font_family, font_size))
 		end
 
-	on_format_size_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
+	on_format_size_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS)
 			-- Format->Size Menu item handler.
 		require
 			non_void_sender: sender /= Void
@@ -282,7 +282,7 @@ invariant
 	non_void_serif_font_family: serif_font_family /= Void
 	non_void_rich_text_box: rich_text_box /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

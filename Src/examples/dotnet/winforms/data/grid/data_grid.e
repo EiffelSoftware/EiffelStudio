@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Root class for Winforms Data Grid demo."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Initialize
 		local
 			handler: EVENT_HANDLER
@@ -79,14 +79,14 @@ feature -- Access
 
 feature -- Actions
 
-	populate_grid (sender: SYSTEM_OBJECT; event_args: EVENT_ARGS) is
+	populate_grid (sender: SYSTEM_OBJECT; event_args: EVENT_ARGS)
 			-- Populate data grid from DB.
 		do
 			do_populate
 			data_grid.set_data_binding(data_set, "Suppliers")
 		end
 
-	on_resize (sender: SYSTEM_OBJECT; event_args: EVENT_ARGS) is
+	on_resize (sender: SYSTEM_OBJECT; event_args: EVENT_ARGS)
 			-- Close current application.
 		do
 			set_geometry (data_grid, 0, 0, main_window.width-20, main_window.height-70, Void)
@@ -97,7 +97,7 @@ feature {NONE} -- Implementation
 	data_set: DATA_DATA_SET
 			-- ADO.NET data set
 
-	do_populate is
+	do_populate
 			-- Populate grid.
 		local
 			northwind_connection: DATA_SQL_CONNECTION
@@ -161,7 +161,7 @@ feature {NONE} -- Implementation
 			data_set.relations.add (data_relation)
 		end
 
-	set_geometry (a_control: WINFORMS_CONTROL; a_x, a_y, a_w, a_h: INTEGER; a_text: STRING) is
+	set_geometry (a_control: WINFORMS_CONTROL; a_x, a_y, a_w, a_h: INTEGER; a_text: STRING)
 			-- Initialize main window's geometry
 		local
 			l_point: DRAWING_POINT
@@ -180,7 +180,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

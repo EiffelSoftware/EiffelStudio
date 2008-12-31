@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Client root-class for the same_mach example."
@@ -22,7 +22,7 @@ feature
 
 	soc1: UNIX_STREAM_SOCKET
 
-	make is
+	make
 			-- Establish communication with server, and exchange messages.
 		do
 			create soc1.make_client ("/tmp/here")
@@ -33,7 +33,7 @@ feature
 			soc1.cleanup
 		end
 
-	process is
+	process
 			-- Build a message to server, receive answer, build
 			-- modified message from that answer, and print it.
 		local
@@ -57,7 +57,7 @@ feature
 			io.new_line
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

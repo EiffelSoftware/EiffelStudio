@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that allows to draw figures by click and move."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -35,7 +35,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			Precursor {EV_MODEL_WORLD_CELL}
@@ -50,61 +50,61 @@ feature -- Status report
 			-- Currents drawing mode name.
 			-- line, rect, parallelogram, ...
 
-	is_grid_enabled: BOOLEAN is
+	is_grid_enabled: BOOLEAN
 			-- Is snapp to grid enabled?
 		do
 			Result := world.grid_enabled
 		end
 	
-	is_grid_visible: BOOLEAN is
+	is_grid_visible: BOOLEAN
 			-- Is grid visible?
 		do
 			Result := world.grid_visible
 		end
 
-	is_line_draw_mode: BOOLEAN is
+	is_line_draw_mode: BOOLEAN
 			-- Is current mode line draw mode?
 		 do
 		 	Result := mode_name.is_equal ("line")
 		 end
 			
-	is_rect_draw_mode: BOOLEAN is
+	is_rect_draw_mode: BOOLEAN
 			-- Is current mode rectangle draw mode?
 		do
 			Result := mode_name.is_equal ("rect")
 		end
 		
-	is_parallelogram_draw_mode: BOOLEAN is
+	is_parallelogram_draw_mode: BOOLEAN
 			-- Is current mode parallelogram draw mode?
 		do
 			Result := mode_name.is_equal ("parallelogram")
 		end
 		
-	is_polygone_draw_mode: BOOLEAN is
+	is_polygone_draw_mode: BOOLEAN
 			-- Is current mode polygone draw mode?
 		do
 			Result := mode_name.is_equal ("polygon")
 		end
 		
-	is_polyline_draw_mode: BOOLEAN is
+	is_polyline_draw_mode: BOOLEAN
 			-- Is current mode polyline draw mode?
 		do
 			Result := mode_name.is_equal ("polyline")
 		end
 		
-	is_ellipse_draw_mode: BOOLEAN is
+	is_ellipse_draw_mode: BOOLEAN
 			-- Is current ode ellipse draw mode?
 		do
 			Result := mode_name.is_equal ("ellipse")
 		end
 		
-	is_dot_draw_mode: BOOLEAN is
+	is_dot_draw_mode: BOOLEAN
 			-- Is current mode dot draw mode?
 		do
 			Result := mode_name.is_equal ("dot")
 		end
 		
-	is_text_draw_mode: BOOLEAN is
+	is_text_draw_mode: BOOLEAN
 			-- Is current mode text draw mode?
 		do
 			Result := mode_name.is_equal ("text")
@@ -113,7 +113,7 @@ feature -- Status report
 	is_text_input_mode: BOOLEAN
 			-- Is current in text input mode
 			
-	is_arc_draw_mode: BOOLEAN is
+	is_arc_draw_mode: BOOLEAN
 			-- Is current in arc draw mode?
 		do
 			Result := mode_name.is_equal ("arc")
@@ -125,7 +125,7 @@ feature -- Status report
 	is_arc_set_aperture_mode: BOOLEAN
 			-- Is current in arc set aperture mode?
 			
-	is_pie_draw_mode: BOOLEAN is
+	is_pie_draw_mode: BOOLEAN
 			-- Is current in pie draw mode?
 		do
 			Result := mode_name.is_equal ("pie")
@@ -137,7 +137,7 @@ feature -- Status report
 	is_pie_set_aperture_mode: BOOLEAN
 			-- Is current in pie set aperture mode?
 			
-	is_equilateral_draw_mode: BOOLEAN is
+	is_equilateral_draw_mode: BOOLEAN
 			-- Is current mode equilateral_draw_mode?
 		do
 			Result := mode_name.is_equal ("equilateral")
@@ -146,13 +146,13 @@ feature -- Status report
 	is_equilateral_side_count_select_mode: BOOLEAN
 			-- Is equilateral side count select mode?
 			
-	is_picture_draw_mode: BOOLEAN is
+	is_picture_draw_mode: BOOLEAN
 			-- Is current mode picture draw mode?
 		do
 			Result := mode_name.is_equal ("picture")
 		end
 		
-	is_rounded_rectangle_mode: BOOLEAN is
+	is_rounded_rectangle_mode: BOOLEAN
 			-- Is current mode rounded rectangle draw mode?
 		do
 			Result := mode_name.is_equal ("rounded_rect")
@@ -161,7 +161,7 @@ feature -- Status report
 	is_rounded_rectangle_select_radius_mode: BOOLEAN
 			-- Is current mode rounded rectangle selcet radius mode?
 			
-	is_rounded_parallelogram_mode: BOOLEAN is
+	is_rounded_parallelogram_mode: BOOLEAN
 			-- Is current mode rounded parallelogram draw mode?
 		do
 			Result := mode_name.is_equal ("rounded_parallelogram")
@@ -170,7 +170,7 @@ feature -- Status report
 	is_rounded_parallelogram_select_radius_mode: BOOLEAN
 			-- Is current mode rounded parallelogram draw mode?
 			
-	is_star_draw_mode: BOOLEAN is
+	is_star_draw_mode: BOOLEAN
 			-- Is current mode star draw mode?
 		do
 			Result := mode_name.is_equal ("star")
@@ -195,7 +195,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_new_figure_foreground_color (a_foreground_color: like new_figure_foreground_color) is
+	set_new_figure_foreground_color (a_foreground_color: like new_figure_foreground_color)
 			-- Set `new_figure_foreground_color' to `a_foreground_color'.
 		require
 			a_foreground_color_exists: a_foreground_color /= Void
@@ -205,7 +205,7 @@ feature -- Element change
 			set: new_figure_foreground_color = a_foreground_color
 		end
 		
-	set_new_figure_line_width (a_line_width: like new_figure_line_width) is
+	set_new_figure_line_width (a_line_width: like new_figure_line_width)
 			-- Set `new_figure_line_width' to `a_line_width'.
 		require
 			positive: a_line_width >= 0
@@ -215,7 +215,7 @@ feature -- Element change
 			set: new_figure_line_width = a_line_width
 		end
 		
-	new_figure_enable_dashed_line_style is
+	new_figure_enable_dashed_line_style
 			-- Set `new_figure_is_dashed_line_style' to True.
 		do
 			new_figure_is_dashed_line_style := True
@@ -223,7 +223,7 @@ feature -- Element change
 			set: new_figure_is_dashed_line_style
 		end
 		
-	new_figure_disable_dashed_line_style is
+	new_figure_disable_dashed_line_style
 			-- Set `new_figure_is_dashed_line_style' to False.
 		do
 			new_figure_is_dashed_line_style := False
@@ -231,7 +231,7 @@ feature -- Element change
 			set: not new_figure_is_dashed_line_style
 		end
 		
-	set_new_figure_background_color (a_background_color: like new_figure_background_color) is
+	set_new_figure_background_color (a_background_color: like new_figure_background_color)
 			-- Set `new_figure_background_color' to `a_background_color'.
 		do
 			new_figure_background_color := a_background_color
@@ -241,7 +241,7 @@ feature -- Element change
 
 feature -- Status setting
 
-	set_drawing_mode (a_mode_name: STRING) is
+	set_drawing_mode (a_mode_name: STRING)
 			-- Set `mode_name' to `a_mode_name'.
 		require
 			a_mode_name_not_void: a_mode_name /= Void
@@ -253,7 +253,7 @@ feature -- Status setting
 		
 feature -- Element change
 
-	stop_drawing is
+	stop_drawing
 			-- Force `Current' to stop drawing new created figure.
 		do
 			new_line := Void
@@ -279,7 +279,7 @@ feature -- Element change
 		
 feature {NONE} -- Implementation
 
-	state_forth (ax, ay: INTEGER) is
+	state_forth (ax, ay: INTEGER)
 			-- Button was pressed at `ax' `ay' make a transition
 			-- in drawing state machine. 
 		local
@@ -468,7 +468,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	end_draw is
+	end_draw
 			-- End drawing reached.
 		do
 			is_scroll := False
@@ -476,7 +476,7 @@ feature {NONE} -- Implementation
 			current_figure := Void
 		end
 		
-	start_drawing (a_figure: EV_MODEL) is
+	start_drawing (a_figure: EV_MODEL)
 			-- Start drawing `a_figure'.
 		require
 			a_figure /= Void
@@ -490,7 +490,7 @@ feature {NONE} -- Implementation
 	current_figure: EV_MODEL
 			-- Figure that is currently build by user.
 	
-	on_pointer_button_press_on_drawing_area (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	on_pointer_button_press_on_drawing_area (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- A button was pressed on the drawable.
 		local
 			
@@ -552,7 +552,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	user_text_input (keystring: STRING_32) is
+	user_text_input (keystring: STRING_32)
 			-- User made a text input
 		local
 			i: INTEGER
@@ -595,7 +595,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	on_point_double_press_on_area (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	on_point_double_press_on_area (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- User double pressed on drawing area.
 		do
 			if new_polygone /= Void then
@@ -605,7 +605,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_pointer_button_move_on_drawing_area (x, y: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	on_pointer_button_move_on_drawing_area (x, y: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Pointer moves over drawable.
 		local
 			new_angle, start_angle: DOUBLE
@@ -713,7 +713,7 @@ feature {NONE} -- Implementation
 			Precursor {EV_MODEL_WORLD_CELL} (x, y, x_tilt, y_tilt, pressure, a_screen_x, a_screen_y)
 		end
 		
-	on_pointer_button_release_on_drawing_area (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; ascreen_x, ascreen_y: INTEGER) is
+	on_pointer_button_release_on_drawing_area (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; ascreen_x, ascreen_y: INTEGER)
 			-- Pointer button was released over `drawing_area'.
 		do
 			if is_selected_scroll then
@@ -744,7 +744,7 @@ feature {NONE} -- Implementation
 	new_star: EV_MODEL_STAR
 			-- Figure currently creating (if any not void)	
 			
-	snapped_x (ax: INTEGER): INTEGER is
+	snapped_x (ax: INTEGER): INTEGER
 			-- Nearest point on horizontal grid to `ax'.
 		do
 			if ax \\ world.grid_x < world.grid_x // 2 then
@@ -754,7 +754,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	snapped_y (ay: INTEGER): INTEGER is
+	snapped_y (ay: INTEGER): INTEGER
 			-- Nearest point on vertical grid to `ay'.
 		do			
 			if ay \\ world.grid_y < world.grid_y // 2 then
@@ -764,7 +764,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	window: EV_WINDOW is
+	window: EV_WINDOW
 			-- Window `Current' is part of.
 		local
 			cur: EV_CONTAINER
@@ -779,7 +779,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Store and retrieve keys."
 	legal: "See notice at end of class.";
@@ -30,7 +30,7 @@ create
 
 feature
 
-	reference_key (table: ANY): ANY is
+	reference_key (table: ANY): ANY
 			-- What is the object refered by unique 
 			-- attribute associated with `table'.
 		require
@@ -55,7 +55,7 @@ feature
 			found: Result /= Void
 		end;
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

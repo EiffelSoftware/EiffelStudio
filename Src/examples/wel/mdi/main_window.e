@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		do
 			make_top (Title, main_menu.popup_menu (1), 1000)
 			set_menu (main_menu)
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	on_menu_command (menu_id: INTEGER) is
+	on_menu_command (menu_id: INTEGER)
 		local
 			child: WEL_MDI_CHILD_WINDOW
 			s: STRING
@@ -63,22 +63,22 @@ feature {NONE} -- Implementation
 
 	child_no: INTEGER
 
-	main_menu: WEL_MENU is
+	main_menu: WEL_MENU
 		once
 			create Result.make_by_id (Id_menu_application)
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	class_icon: WEL_ICON is
+	class_icon: WEL_ICON
 		once
 			create Result.make_by_id (Id_ico_application)
 		end
 
-	Title: STRING is "WEL Multiple Document Interface";
+	Title: STRING = "WEL Multiple Document Interface";
 			-- Window's title
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

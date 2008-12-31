@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"The demo that goes with the button demo"
 	legal: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make (par: EV_CONTAINER)
 			-- Create the demo in `par'.
 			-- First, we put a Void parent because it is faster
 		do
@@ -32,12 +32,12 @@ feature {NONE} -- Initialization
 			set_child_position (button, 0, 0, 1, 1)
 			create button.make_with_text (Current, "KO")
 			set_child_position (button, 1, 0, 3, 1)
-			create note.make (Current)
-			create button.make_with_text (note, "Press me")
-			note.append_page (button, "Page 1")
-			create button.make_with_text (note, "Me too")
-			note.append_page (button, "Page 2")
-			set_child_position (note, 1, 1, 3, 5)
+			create notebook.make (Current)
+			create button.make_with_text (notebook, "Press me")
+			notebook.append_page (button, "Page 1")
+			create button.make_with_text (notebook, "Me too")
+			notebook.append_page (button, "Page 2")
+			set_child_position (notebook, 1, 1, 3, 5)
 			create text.make (Current)
 			set_child_position (text, 0, 1, 1, 5)
 
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 			set_parent (par)
 		end
 
-	set_tabs is
+	set_tabs
 			-- Set the tabs for the action window.
 		do
 			set_container_tabs
@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 	
 feature -- Execution
 
-	remove_row is
+	remove_row
 			-- Removes three of the buttons
 		local
 			counter:INTEGER
@@ -76,13 +76,13 @@ feature -- Execution
 			end 
 		end
 
-	remove_button is
+	remove_button
 			-- Removes all of the added buttons
 		do
 			button_list.wipe_out
 		end
 
-	add_to_list(current_button:EV_BUTTON) is
+	add_to_list(current_button:EV_BUTTON)
 			-- Adds the created button to the list of created buttons
 		do
 			button_list.extend(current_button)
@@ -91,7 +91,7 @@ feature -- Execution
 
 feature -- Access
 
-	note: EV_NOTEBOOK
+	notebook: EV_NOTEBOOK
 		-- A notebook for the demo
 
 	text: EV_TEXT_FIELD
@@ -103,7 +103,7 @@ feature -- Access
 	button_list:LINKED_LIST[EV_BUTTON];
 		-- A list to hold all the buttons that are added to the table
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

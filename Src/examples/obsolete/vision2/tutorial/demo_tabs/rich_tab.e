@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make (par: EV_CONTAINER)
 			-- Create the tab and initialise objects.
 		local
 			cmd1,cmd2: EV_ROUTINE_COMMAND
@@ -72,7 +72,7 @@ feature -- Initialization
 			set_parent(par)
 		end
 
-	name:STRING is
+	name:STRING
 			-- Returns the name of the tab.
 		do
 			Result:="Rich Text"
@@ -82,7 +82,7 @@ feature -- Initialization
 feature -- Access
 
 	
-	set_font_style (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	set_font_style (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Sets the font style of the selected font.
 		local
 			new_format: EV_CHARACTER_FORMAT
@@ -103,7 +103,7 @@ feature -- Access
 			end
 		end
 
-	get_font_style (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	get_font_style (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Returns the font style of current selected text.
 		do
 			if current_widget.has_selection then
@@ -117,7 +117,7 @@ feature -- Access
 			end
 		end
 
-	set_font_color (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	set_font_color (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Sets the color of the selected text.
 		local
 			new_format: EV_CHARACTER_FORMAT
@@ -138,12 +138,12 @@ feature -- Access
 			end		
 		end
 
-	get_font_color (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	get_font_color (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Returns the color of the selected text.
 		do
 		end
 
-	set_font (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	set_font (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Sets the font of the selected text.
 		local
 			new_format: EV_CHARACTER_FORMAT
@@ -166,12 +166,12 @@ feature -- Access
 			end
 		end
 
-	get_font (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	get_font (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Displays the font name of the selected text.
 		do
 		end
 
-	set_font_size (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	set_font_size (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Sets the font size of the selected text.
 		local
 			new_format: EV_CHARACTER_FORMAT
@@ -186,22 +186,22 @@ feature -- Access
 			end	
 		end
 
-	get_font_size (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	get_font_size (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Displays the font size of the selected text.
 		do
 		end
 
-	set_line_number (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	set_line_number (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 		-- Sets the line number in the rich edit primitive.
 		do
 		end
 
-	get_line_number (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	get_line_number (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Returns the current line number on which the cursor is set to.
 		do
 		end
 
-	remove_text (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	remove_text (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Removes selected text
 		do
 			if current_widget.has_selection then
@@ -225,7 +225,7 @@ feature -- Access
 		-- combo box option for font
 
 	b1: EV_BUTTON;
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

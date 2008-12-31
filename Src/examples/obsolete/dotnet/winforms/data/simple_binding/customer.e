@@ -1,4 +1,4 @@
-indexing
+note
 	description:"Representation of a customer."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_data (an_id: like id; a_title: like title; a_first_name: like first_name; a_last_name: like last_name; an_address: like address; a_date_of_birth: like date_of_birth) is
+	make_with_data (an_id: like id; a_title: like title; a_first_name: like first_name; a_last_name: like last_name; an_address: like address; a_date_of_birth: like date_of_birth)
 		require
 			non_void_an_id: an_id /= Void
 			non_empty_an_id: not an_id.is_empty
@@ -56,7 +56,7 @@ feature -- Access
 
 feature -- Status Setting
 
-	set_id (an_id: like id) is
+	set_id (an_id: like id)
 			-- Set `id' with `an_id'.
 		require
 			non_void_an_id: an_id /= Void
@@ -67,7 +67,7 @@ feature -- Status Setting
 			id_set: id = an_id
 		end
 		
-	set_title (a_title: like title) is
+	set_title (a_title: like title)
 			-- Set `title' with `a_title'.
 		require
 			non_void_a_title: a_title /= Void
@@ -78,7 +78,7 @@ feature -- Status Setting
 			title_set: title = a_title
 		end
 		
-	set_first_name (a_first_name: like first_name) is
+	set_first_name (a_first_name: like first_name)
 			-- Set `first_name' with `a_first_name'.
 		require
 			non_void_a_first_name: a_first_name /= Void
@@ -89,7 +89,7 @@ feature -- Status Setting
 			first_name_set: first_name = a_first_name
 		end
 		
-	set_last_name (a_last_name: like last_name) is
+	set_last_name (a_last_name: like last_name)
 			-- Set `last_name' with `a_last_name'.
 		require
 			non_void_a_last_name: a_last_name /= Void
@@ -100,7 +100,7 @@ feature -- Status Setting
 			last_name_set: last_name = a_last_name
 		end
 		
-	set_address (an_address: like address) is
+	set_address (an_address: like address)
 			-- Set `address' with `an_address'.
 		require
 			non_void_an_address: an_address /= Void
@@ -111,7 +111,7 @@ feature -- Status Setting
 			address_set: address = an_address
 		end
 		
-	set_date_of_birth (a_date_of_birth: like date_of_birth) is
+	set_date_of_birth (a_date_of_birth: like date_of_birth)
 			-- Set `date_of_birth' with `a_date_of_birth'.
 		do
 			date_of_birth := a_date_of_birth
@@ -124,7 +124,7 @@ invariant
 	non_void_address: address /= Void
 	non_void_date_of_birth: date_of_birth /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

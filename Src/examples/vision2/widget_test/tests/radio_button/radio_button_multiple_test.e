@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that demonstrate multiple instances of%
 		%EV_RADIO_BUTTON in the same EV_CONTAINER."
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 		
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create `Current' and initialize test in `widget'.
 		local
 			radio_button: EV_RADIO_BUTTON
@@ -42,7 +42,7 @@ feature {NONE} -- Implementation
 	vertical_box: EV_VERTICAL_BOX;
 		-- Widget used to hold test radio buttons.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

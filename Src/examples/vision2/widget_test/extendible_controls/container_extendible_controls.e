@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that create extendible controls for EV_CONTAINER"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -36,12 +36,12 @@ feature -- Access
 
 feature -- Status report
 
-	help: STRING is "Select %"Extend%", to add a new item to the container, corresponding to the selected type in combo box.%NNote that if the current container is full, no widget will be added.%NSelecting %"Wipe_out%" will clear the container."
+	help: STRING = "Select %"Extend%", to add a new item to the container, corresponding to the selected type in combo box.%NNote that if the current container is full, no widget will be added.%NSelecting %"Wipe_out%" will clear the container."
 			-- Instructions on how to use the control.
 
 feature -- Status setting
 
-	extend_item is
+	extend_item
 			-- Add a new item to `current_type'.
 		local
 			textable: EV_TEXTABLE
@@ -63,7 +63,7 @@ feature -- Status setting
 			end
 		end
 
-	wipe_out_item is
+	wipe_out_item
 			-- call `wipe_out' on `Current_type'.
 		local
 			notebook: EV_NOTEBOOK
@@ -82,10 +82,10 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	initial_text: STRING is "";
+	initial_text: STRING = "";
 			-- Initial text for new items.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

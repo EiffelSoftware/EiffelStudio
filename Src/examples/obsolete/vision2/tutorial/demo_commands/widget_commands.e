@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that display all events executed on a widget."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Initialization
 
-	add_widget_commands (w: EV_ANY; e: EVENT_WINDOW; name: STRING) is
+	add_widget_commands (w: EV_ANY; e: EVENT_WINDOW; name: STRING)
 			-- Initialize commands for widgets.
 		local
 			cmd: EV_ROUTINE_COMMAND
@@ -58,7 +58,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	button1_pressed_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	button1_pressed_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- When mouse button one is pressed, inform user in `widget_e_window'
 		local
 			temp_string: STRING
@@ -69,7 +69,7 @@ feature -- Basic operations
 			widget_e_window.display (temp_string)
 		end
 
-	button2_pressed_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	button2_pressed_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- When mouse button two is pressed, inform user in `widget_e_window'
 		local
 			temp_string: STRING
@@ -81,7 +81,7 @@ feature -- Basic operations
 		end
 
 
-	button3_pressed_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	button3_pressed_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- When mouse button three is pressed, inform user in `widget_e_window'
 		local
 			temp_string: STRING
@@ -93,7 +93,7 @@ feature -- Basic operations
 		end
 
 
-	button1_release_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	button1_release_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- When mouse button one is released, inform user in `widget_e_window'
 		local
 			temp_string: STRING
@@ -105,7 +105,7 @@ feature -- Basic operations
 		end
 
 
-	button2_release_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	button2_release_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- When mouse button two is released, inform user in `widget_e_window'
 		local
 			temp_string: STRING
@@ -117,7 +117,7 @@ feature -- Basic operations
 		end
 
 
-	button3_release_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	button3_release_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- When mouse button three is released, inform user in `widget_e_window'
 		local
 			temp_string: STRING
@@ -129,7 +129,7 @@ feature -- Basic operations
 		end
 
 
-	button1_double_clicked_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	button1_double_clicked_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- When mouse button one is double_clicked, inform user in `widget_e_window'
 		local
 			temp_string: STRING
@@ -141,7 +141,7 @@ feature -- Basic operations
 		end
 
 
-	button2_double_clicked_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	button2_double_clicked_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- When mouse button two is double clicked, inform user in `widget_e_window'
 		local
 			temp_string: STRING
@@ -153,7 +153,7 @@ feature -- Basic operations
 		end
 
 
-	button3_double_clicked_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	button3_double_clicked_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- When mouse button three is double clicked, inform user in `widget_e_window'
 		local
 			temp_string: STRING
@@ -165,7 +165,7 @@ feature -- Basic operations
 		end
 
 
-	motion_notify_command (arg: EV_ARGUMENT; data:EV_EVENT_DATA) is
+	motion_notify_command (arg: EV_ARGUMENT; data:EV_EVENT_DATA)
 			-- When mouse is moved, inform user in `widget_e_window'
 		local
 			ev: EV_MOTION_EVENT_DATA
@@ -185,7 +185,7 @@ feature -- Basic operations
 			end
 		end
 
-	key_press_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	key_press_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- When a key is pressed, inform user in `event window'
 		local
 			ev: EV_KEY_EVENT_DATA
@@ -199,7 +199,7 @@ feature -- Basic operations
 			widget_e_window.displayi (ev.keycode.out)
 		end
 
-	key_release_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	key_release_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- When a key is released, inform user in `event window'
 		local
 			ev: EV_KEY_EVENT_DATA
@@ -213,7 +213,7 @@ feature -- Basic operations
 			widget_e_window.displayi (ev.keycode.out)
 		end
 
-	enter_notify_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	enter_notify_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- When the cursor enters `widget' then inform the user in `event window'
 		local
 			temp_string: STRING
@@ -224,7 +224,7 @@ feature -- Basic operations
 			widget_e_window.display (temp_string)
 		end
 
-	leave_notify_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	leave_notify_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- When the cursor leaves `widget' then inform the user in `event window'
 		local
 			temp_string: STRING
@@ -236,7 +236,7 @@ feature -- Basic operations
 		end
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

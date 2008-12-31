@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This is the usage pattern of the figure cluster."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature -- Initialization
 
-	prepare is
+	prepare
 			-- Initialize world.
 		local
 			pos: EV_RELATIVE_POINT
@@ -113,7 +113,7 @@ feature -- Initialization
 			projector.device.draw_figure_line (line)
 		end
 
-	first_window: EV_TITLED_WINDOW is
+	first_window: EV_TITLED_WINDOW
 			-- The window with the drawable area.
 		once
 			create Result
@@ -121,17 +121,17 @@ feature -- Initialization
 			Result.set_size (300, 300)
 		end
 
-	on_click (x, y, z: INTEGER; s,w,e:DOUBLE; sx,sy:INTEGER) is
+	on_click (x, y, z: INTEGER; s,w,e:DOUBLE; sx,sy:INTEGER)
 		do
 		end
 
-	on_repaint (x, y, w, h: INTEGER) is
+	on_repaint (x, y, w, h: INTEGER)
 			-- Do the projection
 		do
 			projector.project
 		end
 
-	on_mouse_move (x, y: INTEGER; s,w,e:DOUBLE; sx,sy:INTEGER) is
+	on_mouse_move (x, y: INTEGER; s,w,e:DOUBLE; sx,sy:INTEGER)
 			-- Mouse moved on world. Do something funny.
 		do
 			controlled_position.set_x (x)
@@ -144,7 +144,7 @@ feature -- Initialization
 			projector.project
 		end
 
-	display_text (str: STRING) is
+	display_text (str: STRING)
 			-- Write `str' to standard output. Used for event testing.
 		do
 			io.put_string (str)
@@ -152,7 +152,7 @@ feature -- Initialization
 
 	line_x_pos: INTEGER
 
-	line_positioner (pos: EV_RELATIVE_POINT) is
+	line_positioner (pos: EV_RELATIVE_POINT)
 			-- Position one point of the line.
 		do
 			pos.set_x_abs (line_x_pos + 10)
@@ -188,7 +188,7 @@ feature -- Access
 	projector: EV_STANDARD_PROJECTION;
 			-- The "link" between the world and the drawing area.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

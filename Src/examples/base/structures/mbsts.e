@@ -1,4 +1,4 @@
-indexing
+note
 
 	desciption: "Demo class for trees implemented as binary search trees %
 		%  Only one routine to display the set is added %
@@ -15,7 +15,7 @@ create
 
 feature
 
-	display is
+	display
 		do
 			io.set_error_default
 			if not left_child /= Void then
@@ -30,7 +30,7 @@ feature
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

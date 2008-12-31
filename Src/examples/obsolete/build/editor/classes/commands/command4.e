@@ -1,4 +1,4 @@
-indexing
+note
 	visual_name: "Back"
 
 class COMMAND4
@@ -12,7 +12,7 @@ create
 
 feature  -- Initialization
 
-	make (arg1: SCROLLED_T) is
+	make (arg1: SCROLLED_T)
 		do
 			argument1 := arg1
 		end
@@ -21,11 +21,11 @@ feature  -- Access
 
 	argument1: SCROLLED_T
 
-	back_label: STRING is "back"
+	back_label: STRING = "back"
 
 feature  -- Command
 
-	execute is
+	execute
 			-- Restore saved text and prepare to switch back
 			-- to earlier state.
 		do
@@ -34,7 +34,7 @@ feature  -- Command
 			set_transition_label (back_label)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

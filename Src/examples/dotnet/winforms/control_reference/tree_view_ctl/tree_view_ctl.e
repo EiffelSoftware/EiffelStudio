@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tree view example."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- | Call `initialize_components' then `fill_directory_tree'.
 			-- Entry point.
 		do
@@ -65,7 +65,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	initialize_components is
+	initialize_components
 			-- Initialize graphical components
 		local
 			l_array: NATIVE_ARRAY [SYSTEM_STRING]
@@ -302,7 +302,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	dispose_boolean (a_disposing: BOOLEAN) is
+	dispose_boolean (a_disposing: BOOLEAN)
 			-- method called when form is disposed.
 		do
 			if a_disposing then
@@ -314,7 +314,7 @@ feature {NONE} -- Implementation
 			Precursor {WINFORMS_FORM}(a_disposing)
 		end
 
-	loaded_bitmap (a_bitmap_name: STRING): DRAWING_BITMAP is
+	loaded_bitmap (a_bitmap_name: STRING): DRAWING_BITMAP
 			-- Load bitmap corresponding to `a_bitmap_name'.
 		require
 			non_void_a_bitmap_name: a_bitmap_name /= Void
@@ -330,7 +330,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	add_directories (node: WINFORMS_TREE_NODE) is
+	add_directories (node: WINFORMS_TREE_NODE)
 			-- For a given root directory (or drive), add the directories to the
 			-- directory_tree.
 		local
@@ -361,7 +361,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	add_sub_directories(node: DIRECTORY_NODE) is
+	add_sub_directories(node: DIRECTORY_NODE)
 			-- For a given node, add the sub-directories for node's children in the
 			-- directory_tree.
 		local
@@ -378,7 +378,7 @@ feature {NONE} -- Implementation
 			node.set_sub_directories_added (True)
 		end
 
-	directory_tree_after_select(source: SYSTEM_OBJECT; e: WINFORMS_TREE_VIEW_EVENT_ARGS) is
+	directory_tree_after_select(source: SYSTEM_OBJECT; e: WINFORMS_TREE_VIEW_EVENT_ARGS)
 			-- Event handler for the afterSelect event on the directory_tree. Change the
 			-- title bar to show the path of the selected directoryNode.
 		local
@@ -389,7 +389,7 @@ feature {NONE} -- Implementation
 			set_text (l_text)
 		end
 
-	directory_tree_before_expand (source: SYSTEM_OBJECT; e: WINFORMS_TREE_VIEW_CANCEL_EVENT_ARGS) is
+	directory_tree_before_expand (source: SYSTEM_OBJECT; e: WINFORMS_TREE_VIEW_CANCEL_EVENT_ARGS)
 			-- Event handler for the beforeExpand event on the directory_tree. If the
 			-- node is not already expanded, expand it.
 		local
@@ -404,7 +404,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	fill_directory_tree is
+	fill_directory_tree
 			-- For initializing the directory_tree upon creation of the TreeViewCtl form.
 		local
 			i: INTEGER
@@ -436,7 +436,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	path_from_node (node: WINFORMS_TREE_NODE): SYSTEM_STRING is
+	path_from_node (node: WINFORMS_TREE_NODE): SYSTEM_STRING
 			-- Returns the directory path of the node.
 		do
 			if node.parent = Void then
@@ -446,7 +446,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	check_box1_add_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+	check_box1_add_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS)
 			-- Event to be performed when 'sorted' list is clicked.
 		local
 			i: INTEGER
@@ -461,7 +461,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	image_list_combo_box_selected_index_changed (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+	image_list_combo_box_selected_index_changed (sender: SYSTEM_OBJECT; args: EVENT_ARGS)
 			-- Event to be performed when combo box index changes
 		local
 			index: INTEGER
@@ -476,50 +476,50 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	check_box_2_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+	check_box_2_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS)
 			-- Event to enable hot tracking
 		do
 			directory_tree.set_hot_tracking (check_box_2.checked)
 		end
 
-	check_box_3_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+	check_box_3_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS)
 			-- Event to enable showing of lines in tree
 		do
 			directory_tree.set_show_lines (check_box_3.checked)
 		end
 
-	check_box_4_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+	check_box_4_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS)
 			-- Event to enable showinf or root drive lines in tree
 		do
 			directory_tree.set_show_root_lines (check_box_4.checked)
 		end
 
-	check_box_5_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+	check_box_5_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS)
 			-- Event to enable showing of plus/minus in tree
 		do
 			directory_tree.set_show_plus_minus (check_box_5.checked)
 		end
 
-	check_box_6_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+	check_box_6_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS)
 			-- Event to enable check boxes in tree
 		do
 			directory_tree.set_check_boxes (check_box_6.checked)
 		end
 
-	check_box_7_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+	check_box_7_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS)
 			-- Event to disable showing of selection when tree loses focus
 		do
 			directory_tree.set_hide_selection (check_box_7.checked)
 		end
 
-	indent_up_down_value_changed (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+	indent_up_down_value_changed (sender: SYSTEM_OBJECT; args: EVENT_ARGS)
 			-- Event when indent is changed
 		do
 			directory_tree.set_indent (
 				{DECIMAL}.to_integer_32 (indent_up_down.value))
 		end
 
-	Drive_fixed: INTEGER is 3
+	Drive_fixed: INTEGER = 3
 			-- Value of a fixed, non removable disk drive.
 
 invariant
@@ -541,7 +541,7 @@ invariant
 	non_void_image_list_combo_box: image_list_combo_box /= Void
 	non_void_grp_tree_view: grp_tree_view /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

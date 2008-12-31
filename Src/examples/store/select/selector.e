@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -33,7 +33,7 @@ feature {NONE}
 
 feature
 
-	make is
+	make
 		do
 			io.putstring ("Database user authentication:%N")
 			perform_login
@@ -87,7 +87,7 @@ feature
 
 feature {NONE}
 
-	perform_login is
+	perform_login
 		local
 			tmp_string: STRING
 		do
@@ -108,7 +108,7 @@ feature {NONE}
 			login (tmp_string, io.laststring)
 		end
 
-	load_data is
+	load_data
 			-- Create table in database with same structure as 'book'
 			-- and load data from file 'data.sql'.
 		do
@@ -136,7 +136,7 @@ feature {NONE}
 			session_control.commit
 		end
 
-	make_selection is
+	make_selection
 			-- Select books whose author's name match
 			-- a specific name.
 			-- The name must be written in upper-case letters, and
@@ -186,7 +186,7 @@ feature {NONE}
 			end
 		end
 
-	execute is
+	execute
 			-- This method is also  used by the class RDB_SELECTION, and is executed after each
 			-- iteration step of 'load_result', it provides some facilities to control, manage, and/or
 			-- display data resulting of a query.
@@ -201,19 +201,19 @@ feature {NONE}
 
 feature {NONE}
 
-	Select_author: STRING is
+	Select_author: STRING =
 		"select * from DB_BOOK where author = :author_name"
 
-	Table_name: STRING is
+	Table_name: STRING =
 		"DB_BOOK"
 
-	Data_file_name: STRING is
+	Data_file_name: STRING
 		once
 			create Result.make_from_string ("data.sql.")
 			Result.append (db_spec.database_handle_name.as_lower)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

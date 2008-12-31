@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"MAIN_WINDOW class of the test_all_widget example."
 	legal: "See notice at end of class."
@@ -31,7 +31,7 @@ feature --Access
 
 feature -- Initialization
 	
-	make_top_level is
+	make_top_level
 			-- Create the main window and the demo windows.
 		local
 			b: MAIN_WINDOW_BUTTON
@@ -101,7 +101,7 @@ feature -- Initialization
 
 feature -- Command execution
 	
-	execute (arg: EV_ARGUMENT1[DEMO_WINDOW]; data: EV_EVENT_DATA) is
+	execute (arg: EV_ARGUMENT1[DEMO_WINDOW]; data: EV_EVENT_DATA)
 			-- called when actions window is deleted.
 		do
  			arg.first.effective_button.set_state (False)
@@ -114,7 +114,7 @@ feature -- Command execution
 		
 feature -- Status setting
 	
-	set_values is
+	set_values
 			-- Set the values on the widgets
 		do
 			set_title ("Test all widgets")
@@ -122,7 +122,7 @@ feature -- Status setting
 
 feature -- Basic operation
 
-	pixname (a_name: STRING): STRING is
+	pixname (a_name: STRING): STRING
 			-- Return the complete path of the given pixmap : root/../pixmaps/name
 		do
 --			Result := get ("$ISE_EIFFEL")
@@ -132,7 +132,7 @@ feature -- Basic operation
 			Result.append (".bmp")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

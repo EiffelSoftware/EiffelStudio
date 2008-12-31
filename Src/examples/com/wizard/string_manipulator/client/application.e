@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 --indexing 
@@ -15,13 +15,13 @@ create
 
 feature -- Access
 
-	main_window: STRING_MANIPULATOR_CLIENT_MAIN_DIALOG is
+	main_window: STRING_MANIPULATOR_CLIENT_MAIN_DIALOG
 			-- Client main window
 		once
 			create Result.make
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

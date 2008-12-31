@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel encapsulation of C++ class MyString"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ create
 
 feature -- Initialization
 
-	make  (a_string: STRING) is
+	make  (a_string: STRING)
 			-- Create Eiffel and C++ objects.
 		local
 			l_str: C_STRING
@@ -26,7 +26,7 @@ feature -- Initialization
 
 feature -- Removal
 
-	dispose is
+	dispose
 			-- Delete C++ object.
 		do
 			cpp_delete (item)
@@ -34,7 +34,7 @@ feature -- Removal
 
 feature  -- Access
 
-	value: STRING is
+	value: STRING
 			-- Call C++ counterpart.
 		local
 			loc_ptr: POINTER
@@ -46,7 +46,7 @@ feature  -- Access
 			end
 		end
 
-	length: INTEGER is
+	length: INTEGER
 			-- Call C++ counterpart.
 		do
 			Result := cpp_length (item)
@@ -54,19 +54,19 @@ feature  -- Access
 
 feature {NONE} -- Externals
 
-	cpp_new (a_string: POINTER): POINTER is 
+	cpp_new (a_string: POINTER): POINTER 
 			-- Call single constructor of C++ class.
 		external
 			"C++ creator MyString signature (char *) use %"mystring.h%""
 		end
 
-	cpp_delete (a_cpp_object: POINTER) is
+	cpp_delete (a_cpp_object: POINTER)
 			-- Call C++ destructor on C++ object.
 		external
 			"C++ delete MyString use %"mystring.h%""
 		end
 
-	cpp_value (a_cpp_object: POINTER): POINTER is
+	cpp_value (a_cpp_object: POINTER): POINTER
 			-- Value of C++ data member.
 		external
 			"C++ MyString signature : EIF_POINTER use %"mystring.h%""
@@ -74,7 +74,7 @@ feature {NONE} -- Externals
 			"Value"
 		end
 
-	cpp_length (a_cpp_object: POINTER): INTEGER is
+	cpp_length (a_cpp_object: POINTER): INTEGER
 			-- Value of C++ data member.
 		external
 			"C++ MyString signature : EIF_INTEGER use %"mystring.h%""
@@ -86,7 +86,7 @@ feature {NONE} -- Implementation
 
 	item: POINTER;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

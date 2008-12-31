@@ -1,4 +1,4 @@
-indexing
+note
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
 	dotnet_constructor:
@@ -17,8 +17,9 @@ feature -- Properties
 
 	arg1: SYSTEM_STRING assign set_arg1
 			-- Left hand argument
-		indexing
+		note
 			property: auto
+		attribute
 		end
 
 	set_arg1 (a_arg1: like arg1) is
@@ -31,8 +32,9 @@ feature -- Properties
 
 	operator: CHARACTER assign set_operator
 			-- Operator
-		indexing
+		note
 			property: auto
+		attribute
 		end
 
 	set_operator (a_operator: like operator) is
@@ -45,8 +47,9 @@ feature -- Properties
 
 	arg2: SYSTEM_STRING assign set_arg2
 			-- Right hand argument
-		indexing
+		note
 			property: auto
+		attribute
 		end
 
 	set_arg2 (a_arg2: like arg2) is
@@ -57,7 +60,7 @@ feature -- Properties
 			arg2_assigned: arg2 = a_arg2
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software/Microsoft Corporation. All rights reserved."
 	license: "[
 			This file is part of the Microsoft .NET Framework SDK Code Samples.

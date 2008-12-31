@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Example of a lexical analyzer based on the Eiffel syntax.
@@ -26,7 +26,7 @@ create
 
 feature 
 
-	make is
+	make
 			-- Create a lexical analyser for Eiffel if none,
 			-- then use it to analyze the file of name
 			-- `file_name'.
@@ -46,7 +46,7 @@ feature
 			end
 		end -- make
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

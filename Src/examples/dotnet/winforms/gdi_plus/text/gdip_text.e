@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Draw text in a form, using different fonts and brushes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- | Initialize all brushes and fonts used in form.
 			-- | Call `initialize_component'.
 			-- Entry point.
@@ -81,7 +81,7 @@ feature -- Access
 	title_font, text_font, japanese_font: DRAWING_FONT
 			-- Font
 			
-	flowed_text_1: SYSTEM_STRING is
+	flowed_text_1: SYSTEM_STRING
 			-- A text to draw.
 		once
 			Result := "[
@@ -102,7 +102,7 @@ So the boys'll know that I died standing up.
 			non_void_result: Result /= Void
 		end
 	
-	flowed_text_2: SYSTEM_STRING is 
+	flowed_text_2: SYSTEM_STRING 
 			-- A text to draw.
 		once
 			Result := "[
@@ -119,7 +119,7 @@ come tell me what i'm after
 			non_void_result: Result /= Void
 		end
 	
-	japanese_text: SYSTEM_STRING is
+	japanese_text: SYSTEM_STRING
 			-- A japanese text to draw.
 		local
 			l_japanese_string: NATIVE_ARRAY [CHARACTER]
@@ -149,7 +149,7 @@ come tell me what i'm after
 
 feature {NONE} -- Implementation
 
-	dispose_boolean (a_disposing: BOOLEAN) is
+	dispose_boolean (a_disposing: BOOLEAN)
 			-- method called when form is disposed.
 		local
 			retried: BOOLEAN
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	on_paint (e: WINFORMS_PAINT_EVENT_ARGS) is
+	on_paint (e: WINFORMS_PAINT_EVENT_ARGS)
 			-- Feature performed when form is painted.
 		local
 			graph: DRAWING_GRAPHICS
@@ -225,7 +225,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	initialize_component is
+	initialize_component
 			-- Initialize window components.
 		local
 			l_size: DRAWING_SIZE
@@ -236,7 +236,7 @@ feature {NONE} -- Implementation
 			set_text ("GDI+ Text Samples")
 		end
 
-	set_up_japanese_text is
+	set_up_japanese_text
 			-- Set up japanese text.
 		local
 			retried: BOOLEAN
@@ -268,7 +268,7 @@ invariant
 	non_void_text_font: text_font /= Void
 	non_void_title_shadow_brush: title_shadow_brush /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

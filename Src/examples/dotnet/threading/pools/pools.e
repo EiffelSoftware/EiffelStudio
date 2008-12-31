@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Launch an asynchrone thread %
 					keep performing its own operations while the thread is also performing operations
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Entry point
 		local
 			l_async_operation_done: AUTO_RESET_EVENT
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operation
 
-	async_operation (a_state: SYSTEM_OBJECT) is
+	async_operation (a_state: SYSTEM_OBJECT)
 			-- The callback method's signature MUST match that of a WAIT_CALLBACK 
 			-- delegate (it takes an SYSTEM_OBJECT parameter and returns void)
 		local
@@ -60,7 +60,7 @@ feature -- Basic Operation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

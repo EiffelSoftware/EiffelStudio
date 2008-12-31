@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Lines of the form VARIABLES ":" SUM
@@ -26,12 +26,12 @@ create
 
 feature 
 
-	construct_name: STRING is
+	construct_name: STRING
 		once
 			Result := "LINE"
 		end -- construct_name
 
-	production: LINKED_LIST [CONSTRUCT] is
+	production: LINKED_LIST [CONSTRUCT]
 		local
 			var: VARIABLES
 			sum: SUM
@@ -45,7 +45,7 @@ feature
 			put (sum)
 		end -- production
 
-	post_action is
+	post_action
 		do
 			child_start
 			child.post_action
@@ -62,7 +62,7 @@ feature
 			end
 		end -- post_action
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

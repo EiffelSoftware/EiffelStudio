@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class 
@@ -13,20 +13,20 @@ feature
 
 	driver : DEMO_DRIVER
 	
-	fill_menu is
+	fill_menu
 		do
 		end -- fill_menu
 
-	execute (new_command: INTEGER) is
+	execute (new_command: INTEGER)
 			-- Execute command corresponding to user's request.
 		do
 		end -- execute
 
-	cycle is
+	cycle
 		do
 		end -- cycle
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 	"MC_LIST_DEMO_WINDOW, demo window to test the multi%
 	% column list widget. Belongs to EiffelVision example."
@@ -24,7 +24,7 @@ create
 
 feature -- Access
 
-	main_widget: EV_MULTI_COLUMN_LIST is
+	main_widget: EV_MULTI_COLUMN_LIST
 			-- The main widget of the demo
 		once
 			create Result.make_with_text (Current, <<"colonne 1",
@@ -43,7 +43,7 @@ feature -- Access
 
 feature -- Status setting
 	
-	set_widgets is
+	set_widgets
 			-- Set the widgets in the demo windows.
 		do
 			create row.make_with_text (main_widget, <<"This", "is", "a", "row", "item">>)
@@ -57,7 +57,7 @@ feature -- Status setting
 			row.set_selected (True)
 		end
 	
-	set_values is
+	set_values
 			-- Set the values on the widgets of the window.
 		local
 			cols: INTEGER
@@ -69,7 +69,7 @@ feature -- Status setting
 			set_title (tmpstr)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

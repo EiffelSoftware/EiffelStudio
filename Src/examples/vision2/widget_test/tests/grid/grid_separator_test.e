@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that test EV_GRID."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 		
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create `Current' and initialize test in `widget'.
 		do
 			create grid
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			widget := grid
 		end
 		
-	add_items (columns, rows: INTEGER) is
+	add_items (columns, rows: INTEGER)
 			-- Add items to `grid' occupying `columns' columns
 			-- and `rows' rows with differing font heights.
 		local
@@ -60,7 +60,7 @@ feature {NONE} -- Implementation
 	grid: EV_GRID;
 		-- Widget that test is to be performed on.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

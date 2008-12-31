@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class RELATIONSHIPS_VIEWER
@@ -12,7 +12,7 @@ create
 
 feature {NONE}
 
-	make is
+	make
 		-- Prints various information
 	do
 	
@@ -42,7 +42,7 @@ feature {NONE}
 
 feature -- Status Setting
 
-	actions is
+	actions
 		-- Database actions
 	local 
         a_name : STRING
@@ -59,7 +59,7 @@ feature -- Status Setting
 		io.new_line
 	end -- actions
 
-	inspect_relationships(one_object : MT_OBJECT;depth : INTEGER) is
+	inspect_relationships(one_object : MT_OBJECT;depth : INTEGER)
 	require
 		one_object /= Void and depth >= 0
 	local
@@ -95,7 +95,7 @@ feature -- Status Setting
 		end
 	end
 	
-	inspect_inverse_relationships(one_object : MT_OBJECT;depth : INTEGER) is
+	inspect_inverse_relationships(one_object : MT_OBJECT;depth : INTEGER)
     require
         one_object /= Void and depth >= 0
     local
@@ -131,12 +131,12 @@ feature -- Status Setting
         end
     end
 
-	relationship_class : MT_CLASS is 
+	relationship_class : MT_CLASS 
 	once
 		create Result.make("Mt Relationship")
 	end -- relationship_class
 
-	put_tabs(depth:INTEGER) is
+	put_tabs(depth:INTEGER)
 	require
 		depths_positive : depth >= 0 and original_depth >= depth
 	local i:INTEGER
@@ -155,7 +155,7 @@ feature {NONE} -- Implementation
 invariant
 
 	original_depth_positive : original_depth >= 0
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

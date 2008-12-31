@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make (par: EV_CONTAINER)
 			-- Create the tab and initialise objects.
 		local
 			cmd1, cmd2: EV_ROUTINE_COMMAND
@@ -55,7 +55,7 @@ feature -- Initialization
 
 feature -- Access
 
-	name:STRING is
+	name:STRING
 			-- Returns the name of the tab
 		do
 			Result:="Notebook"
@@ -72,7 +72,7 @@ feature -- Access
 
 feature -- Execution feature
 
-	set_cp (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	set_cp (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Set the current page of the notebook
 		do
 			if f1.get_text.is_integer and f1.get_text.to_integer>0
@@ -81,19 +81,19 @@ feature -- Execution feature
 			end
 		end
 
-	get_cp (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	get_cp (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Get the current page of the notebook
 		do
 			f1.set_text(current_widget.current_page.out)	
 		end
 
-	get_count (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	get_count (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Get the number of pages in the notebook
 		do
 			f2.set_text(current_widget.count.out)
 		end
 
-	add_page (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	add_page (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Adds a new page to the notebook
 		local
 			temp_string: STRING
@@ -105,7 +105,7 @@ feature -- Execution feature
 			current_widget.append_page(new_page,temp_string)
 		end
 
-	move_tabs (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	move_tabs (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Moves the position of the notebooks tabs
 		do
 			inspect current_widget.tab_position
@@ -116,7 +116,7 @@ feature -- Execution feature
 		end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

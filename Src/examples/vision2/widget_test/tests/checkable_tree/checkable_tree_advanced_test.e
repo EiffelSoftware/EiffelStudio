@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that test EV_CHECKABLE_TREE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 		
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create `Current' and initialize test in `widget'.
 		local 
 			l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 	output: EV_TEXT
 		-- Widget used to display all output.
 	
-	check_selected_item is
+	check_selected_item
 			-- Check selected item within `test_tree'.
 		do
 			if test_tree.selected_item /= Void then
@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	uncheck_selected_item is
+	uncheck_selected_item
 			-- Uncheck selected item within `test_tree'.
 		do
 			if test_tree.selected_item /= Void then
@@ -157,7 +157,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_item_checked is
+	is_item_checked
 			-- Called by `select_actions' of `l_ev_button_3'.
 		do
 			if test_tree.selected_item /= Void then
@@ -169,7 +169,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	display_checked_items is
+	display_checked_items
 			-- Display all checked items of `test_tree' within `output'.
 		local
 			items: DYNAMIC_LIST [EV_TREE_NODE]
@@ -190,19 +190,19 @@ feature {NONE} -- Implementation
 			output.append_text ("%N")
 		end
 		
-	item_checked (an_item: EV_TREE_ITEM) is
+	item_checked (an_item: EV_TREE_ITEM)
 			-- Display notification in `output' that `an_item' has been checked.
 		do
 			output.append_text (an_item.text + " Checked%N")
 		end
 		
-	item_unchecked (an_item: EV_TREE_ITEM) is
+	item_unchecked (an_item: EV_TREE_ITEM)
 			-- Display notification in `output' that `an_item' has been unchecked.
 		do
 			output.append_text (an_item.text + " UnChecked%N")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

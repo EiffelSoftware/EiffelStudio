@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Viewport example."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Initialization
 
-	prepare is
+	prepare
 			-- Pack `first_window'.
 		local
 			vsa: EV_VERTICAL_SPLIT_AREA
@@ -40,13 +40,13 @@ feature -- Initialization
 			hsa3.extend (create {EV_BUTTON}.make_with_text ("Button5"))
 		end
 
-	first_window: EV_TITLED_WINDOW is
+	first_window: EV_TITLED_WINDOW
 			-- Window containing split areas.
 		once
 			create Result.make_with_title ("Split area example")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

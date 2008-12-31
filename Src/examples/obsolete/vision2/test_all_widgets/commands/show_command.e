@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"SHOW_COMMAND, shows a widget. Belongs to EiffelVision%
 		% example."
@@ -16,12 +16,12 @@ inherit
 
 feature -- Command execution
 
-	execute (arg: EV_ARGUMENT1[EV_WIDGET]; data: EV_EVENT_DATA) is
+	execute (arg: EV_ARGUMENT1[EV_WIDGET]; data: EV_EVENT_DATA)
 		do
 			arg.first.show
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

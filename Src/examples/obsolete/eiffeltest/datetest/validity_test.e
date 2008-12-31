@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Test for DATE.date_valid_default"
 	legal: "See notice at end of class."
@@ -22,11 +22,11 @@ create
 
 feature -- Access
 
-	Name: STRING is "Validity test"
+	Name: STRING = "Validity test"
 
 feature -- Status setting
 
-	set_date_string (s: STRING) is
+	set_date_string (s: STRING)
 			-- Set date string to `s'.
 		require
 			non_empty_string: s /= Void and then not s.empty
@@ -38,7 +38,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	do_test is
+	do_test
 			-- Execute test.
 		local
 			d: DATE
@@ -55,7 +55,7 @@ feature {NONE} -- Implementation
 	date_string: STRING;
 			-- String representation of date
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

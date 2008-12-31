@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -17,7 +17,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_width (a_width: INTEGER) is
+	set_width (a_width: INTEGER)
 			-- Set `width' with `a_width'.
 		require
 			positive_width: a_width >= 0
@@ -27,7 +27,7 @@ feature -- Element change
 			width_set: width = a_width
 		end
 
-	add (x, y: INTEGER) is
+	add (x, y: INTEGER)
 			-- Add a point specified by `x' and `y'.
 		local
 			p: POINT
@@ -39,7 +39,7 @@ feature -- Element change
 invariant
 	positive_width: width >= 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

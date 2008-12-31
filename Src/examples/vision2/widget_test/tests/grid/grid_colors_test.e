@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that test EV_GRID."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 		
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create `Current' and initialize test in `widget'.
 		local
 			i: INTEGER
@@ -77,32 +77,32 @@ feature {NONE} -- Implementation
 	grid: EV_GRID
 		-- Widget that test is to be performed on.
 		
-	stock_colors: EV_STOCK_COLORS is
+	stock_colors: EV_STOCK_COLORS
 			-- Once access to EiffelVision2 stock colors
 			-- (from GRID_ACCESSOR)
 		once
 			create Result
 		end
 		
-	light_red: EV_COLOR is
+	light_red: EV_COLOR
 			-- Color light red.
 		once
 			create Result.make_with_8_bit_rgb (255, 230, 230)
 		end
 
-	light_blue: EV_COLOR is
+	light_blue: EV_COLOR
 			-- Color light blue.
 		once
 			create Result.make_with_8_bit_rgb (230, 230, 255)
 		end
 
-	light_green: EV_COLOR is
+	light_green: EV_COLOR
 			-- Color light green.
 		once
 			create Result.make_with_8_bit_rgb (230, 255, 230)
 		end
 		
-	add_items (columns, rows: INTEGER) is
+	add_items (columns, rows: INTEGER)
 			-- Add items to `grid' occupying `columns' columns
 			-- and `rows.
 		local
@@ -127,7 +127,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

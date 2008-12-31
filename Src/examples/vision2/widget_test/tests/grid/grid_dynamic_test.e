@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that test the dynamic capabilities of EV_GRID.
 		This prevents all grid items from being created until
@@ -20,7 +20,7 @@ inherit
 		
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create `Current' and initialize test in `widget'.
 		do
 			create grid
@@ -38,7 +38,7 @@ feature {NONE} -- Implementation
 	grid: EV_GRID
 		-- Widget that test is to be performed on.
 		
-	compute_item (column_index, row_index: INTEGER): EV_GRID_ITEM is
+	compute_item (column_index, row_index: INTEGER): EV_GRID_ITEM
 			-- `grid' has been scrolled so an item at `column_index'
 			-- `row_index' is visible. Compute and return this item.
 		do
@@ -46,7 +46,7 @@ feature {NONE} -- Implementation
 		end
 		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

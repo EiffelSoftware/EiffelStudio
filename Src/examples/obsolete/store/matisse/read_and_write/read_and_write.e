@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class READ_AND_WRITE
@@ -12,7 +12,7 @@ create
 
 feature {NONE}
 
-	make is
+	make
 		-- Prints various information
 	do
 		-- 1/ Choose host name and database name. Adjust wait and priority so that it suits your needs.
@@ -41,7 +41,7 @@ feature {NONE}
 
 feature -- Status Setting
 
-	actions is
+	actions
 		-- Database actions
 	do
         create mc.make("Employee")
@@ -59,7 +59,7 @@ feature -- Status Setting
 
 	end -- actions
 
-	read_object is
+	read_object
 	do
             -- Integer
         create one_attribute.make("Integer value") aninteger ?= one_attribute.value(mo) io.putstring("%TInteger : ") io.putstring(aninteger.out) io.new_line 
@@ -97,7 +97,7 @@ feature -- Status Setting
         from i:=aas.lower until i=aas.upper+1 loop io.putstring(aas.item(i)) io.putstring(",") i:=i+1 end io.new_line
 	end -- read_object
 
-	write_object is
+	write_object
 	do
 		-- Change integer
         create one_attribute.make("Integer value") 
@@ -173,7 +173,7 @@ feature {NONE} -- Implementation
 	ms : DB_SELECTION
 	mp : DB_PROC;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

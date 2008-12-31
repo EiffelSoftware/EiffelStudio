@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that demonstrate an EV_FIXED%
 		%with a background_pixmap"
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 		
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create `Current' and initialize test in `widget'.
 		local
 			counter: INTEGER
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	background_pixmap: EV_PIXMAP is
+	background_pixmap: EV_PIXMAP
 			-- Image used for background of `fixed'.
 		do
 			create Result
@@ -58,13 +58,13 @@ feature {NONE} -- Implementation
 			Result.fill_ellipse (5, 5, 30, 30)
 		end
 		
-	widget_dimension: INTEGER is 60
+	widget_dimension: INTEGER = 60
 		-- Dimension used for `width' and `height' of widgets in `fixed'.
 		
-	fixed_dimension: INTEGER is 300
+	fixed_dimension: INTEGER = 300
 		-- Dimension to be used as `minimum_width' and `minimum_height' of `fixed'.
 		
-	widgets_fitting: INTEGER is
+	widgets_fitting: INTEGER
 		-- Result is `fixed_dimension' divided by `widget_dimnsion'.
 		once
 			Result := fixed_dimension // widget_dimension	
@@ -73,7 +73,7 @@ feature {NONE} -- Implementation
 	fixed: EV_FIXED;
 		-- Widget that test is to be performed on.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

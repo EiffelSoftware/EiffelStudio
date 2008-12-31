@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Integer constants, as used for polynomials
@@ -22,12 +22,12 @@ create
 
 feature {NONE}
 
-	action is
+	action
 		do
 			info.set_child_value (token.string_value.to_integer)
 		end -- action
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

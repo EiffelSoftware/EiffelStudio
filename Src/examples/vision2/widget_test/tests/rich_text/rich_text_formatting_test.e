@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that show basic character formatting of EV_RICH_TEXT."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 		
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create `Current' and initialize test in `widget'.
 		local
 			vertical_box: EV_VERTICAL_BOX
@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 		
 feature {NONE} -- Implementation
 		
-	selection_changed is
+	selection_changed
 			-- Update control buttons based on current selection in `rich_text'.
 		local
 			formatting: EV_CHARACTER_FORMAT_RANGE_INFORMATION
@@ -102,7 +102,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	caret_moved (new_position: INTEGER) is
+	caret_moved (new_position: INTEGER)
 			-- Update control buttons based on `new_position' of caret.
 		local
 			character_format: EV_CHARACTER_FORMAT
@@ -128,7 +128,7 @@ feature {NONE} -- Implementation
 			resume_events
 		end
 
-	font_selected is
+	font_selected
 			-- Update current font based on selected item in `font_selection'.
 		local
 			character_format: EV_CHARACTER_FORMAT
@@ -157,7 +157,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	modify_bold is
+	modify_bold
 			-- Update current bold formatting based on state of `bold_button'.
 		local
 			character_format: EV_CHARACTER_FORMAT
@@ -187,7 +187,7 @@ feature {NONE} -- Implementation
 			rich_text.set_focus
 		end
 		
-	modify_italic is
+	modify_italic
 			-- Update current italic formatting based on state of `italic_button'.
 		local
 			character_format: EV_CHARACTER_FORMAT
@@ -217,7 +217,7 @@ feature {NONE} -- Implementation
 			rich_text.set_focus
 		end
 		
-	block_events is
+	block_events
 			-- Block events for control widgets.
 		do
 			bold_button.select_actions.block
@@ -225,7 +225,7 @@ feature {NONE} -- Implementation
 			font_selection.select_actions.block
 		end
 		
-	resume_events is
+	resume_events
 			-- Resume events for control widgets.
 		do
 			bold_button.select_actions.resume
@@ -233,7 +233,7 @@ feature {NONE} -- Implementation
 			font_selection.select_actions.resume
 		end
 
-	default_font: EV_FONT is
+	default_font: EV_FONT
 			-- Default font used.
 		local
 			environment: EV_ENVIRONMENT
@@ -263,7 +263,7 @@ feature {NONE} -- Implementation
 	font_names: HASH_TABLE [INTEGER, STRING_32];
 		-- Quick look up to retrieve font index in `font_selection'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

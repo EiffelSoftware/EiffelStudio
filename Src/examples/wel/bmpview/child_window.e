@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -29,7 +29,7 @@ create
 
 feature -- Initialization
 
-	make (a_parent: WEL_MDI_FRAME_WINDOW; a_name: STRING) is
+	make (a_parent: WEL_MDI_FRAME_WINDOW; a_name: STRING)
 		local
 			file: RAW_FILE
 			dc: WEL_CLIENT_DC
@@ -52,14 +52,14 @@ feature -- Access
 
 feature -- Basic operations
 
-	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- Paint the bitmap
 		do
 			paint_dc.draw_bitmap (bitmap, 0, 0,
 				bitmap.width, bitmap.height)
 		end
 		
-	on_destroy is
+	on_destroy
 			-- Notify `parent' that `Current' is being destroyed.
 		local
 			main_window: MAIN_WINDOW
@@ -74,13 +74,13 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	class_icon: WEL_ICON is
+	class_icon: WEL_ICON
 			-- Window's icon
 		once
 			create Result.make_by_id (Id_ico_child_window)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

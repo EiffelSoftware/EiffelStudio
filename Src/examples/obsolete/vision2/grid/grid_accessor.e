@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that provide access to a shared EV_GRID"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,32 +19,32 @@ inherit
 
 feature -- Access
 
-	grid: EV_GRID is
+	grid: EV_GRID
 			-- Once access to EV_GRID.
 		once
 			create Result
 		end
 		
-	main_window: MAIN_WINDOW is
+	main_window: MAIN_WINDOW
 			-- Once access to MAIN_WINDOW
 		once
 			create Result
 		end
 		
-	profile_cell: CELL [BOOLEAN] is
+	profile_cell: CELL [BOOLEAN]
 			--
 		once
 			create Result
 		end
 		
-	status_bar: EV_LABEL is
+	status_bar: EV_LABEL
 			--
 		once
 			create Result
 			Result.align_text_left
 		end
 		
-	set_status_message (a_message: STRING) is
+	set_status_message (a_message: STRING)
 			--
 		local
 			timer: EV_TIMEOUT
@@ -58,32 +58,32 @@ feature -- Access
 			timer_cell.replace (timer)
 		end
 		
-	timer_cell: CELL [EV_TIMEOUT] is
+	timer_cell: CELL [EV_TIMEOUT]
 		once
 			create Result
 		end
 		
 
-	profile: BOOLEAN is
+	profile: BOOLEAN
 			--
 		do
 			Result := profile_cell.item
 		end
 		
 	
-	enable_profile is
+	enable_profile
 			--
 		do
 			profile_cell.put (True)
 		end
 		
-	disable_profile is
+	disable_profile
 			-- 
 		do
 			profile_cell.put (False)
 		end
 
-	image1: EV_PIXMAP is
+	image1: EV_PIXMAP
 			--
 		local
 			f_name: FILE_NAME
@@ -94,7 +94,7 @@ feature -- Access
 			Result.set_with_named_file (f_name.out)
 		end
 
-	image2: EV_PIXMAP is
+	image2: EV_PIXMAP
 			--
 		local
 			f_name: FILE_NAME
@@ -105,7 +105,7 @@ feature -- Access
 			Result.set_with_named_file (f_name.out)
 		end
 
-	image3: EV_PIXMAP is
+	image3: EV_PIXMAP
 			--
 		local
 			f_name: FILE_NAME
@@ -116,7 +116,7 @@ feature -- Access
 			Result.set_with_named_file (f_name.out)
 		end
 
-	image4: EV_PIXMAP is
+	image4: EV_PIXMAP
 			--
 		local
 			f_name: FILE_NAME
@@ -127,7 +127,7 @@ feature -- Access
 			Result.set_with_named_file (f_name.out)
 		end
 
-	image5: EV_PIXMAP is
+	image5: EV_PIXMAP
 			--
 		local
 			f_name: FILE_NAME
@@ -138,7 +138,7 @@ feature -- Access
 			Result.set_with_named_file (f_name.out)
 		end
 
-	marble: EV_PIXMAP is
+	marble: EV_PIXMAP
 			--
 		local
 			f_name: FILE_NAME
@@ -149,7 +149,7 @@ feature -- Access
 			Result.set_with_named_file (f_name.out)
 		end
 
-	add_color_to_combo (a_color: EV_COLOR; a_combo: EV_COMBO_BOX) is
+	add_color_to_combo (a_color: EV_COLOR; a_combo: EV_COMBO_BOX)
 			-- Add `a_color' to `background_color_combo'.
 		require
 			a_color_not_void: a_color /= Void
@@ -172,7 +172,7 @@ feature -- Access
 			count_increased: a_combo.count = old a_combo.count + 1
 		end
 
-	add_default_colors_to_combo (a_combo: EV_COMBO_BOX) is
+	add_default_colors_to_combo (a_combo: EV_COMBO_BOX)
 			-- Add a set of default colors to `a_combo'.
 		require
 			a_combo_not_void: a_combo /= Void
@@ -193,7 +193,7 @@ feature -- Access
 			add_color_to_combo ((create {EV_STOCK_COLORS}).blue, a_combo)
 		end
 
-	add_default_pixmaps_to_combo (a_combo: EV_COMBO_BOX) is
+	add_default_pixmaps_to_combo (a_combo: EV_COMBO_BOX)
 			-- Add a set of default pixmaps to `a_combo'.
 		require
 			a_combo_not_void: a_combo /= Void
@@ -224,7 +224,7 @@ feature -- Access
 			a_combo.extend (list_item)
 		end
 
-	select_pixmap_from_combo (a_combo: EV_COMBO_BOX; a_pixmap: EV_PIXMAP) is
+	select_pixmap_from_combo (a_combo: EV_COMBO_BOX; a_pixmap: EV_PIXMAP)
 			-- Select the item in `a_combo' which has a pixmap matching `a_pixmap'.
 		do
 			a_combo.select_actions.block
@@ -244,7 +244,7 @@ feature -- Access
 			a_combo.select_actions.resume
 		end
 
-	select_color_from_combo (a_combo: EV_COMBO_BOX; a_color: EV_COLOR) is
+	select_color_from_combo (a_combo: EV_COMBO_BOX; a_color: EV_COLOR)
 			-- Select the item in `a_combo' which has data matching `a_color'.
 		local
 			l_color: EV_COLOR
@@ -269,32 +269,32 @@ feature -- Access
 			a_combo.select_actions.resume
 		end
 
-	stock_colors: EV_STOCK_COLORS is
+	stock_colors: EV_STOCK_COLORS
 			-- Once access to EiffelVision2 stock colors
 		once
 			create Result
 		end
 		
 
-	light_red: EV_COLOR is
+	light_red: EV_COLOR
 			-- Color light red.
 		once
 			create Result.make_with_8_bit_rgb (255, 230, 230)
 		end
 
-	light_blue: EV_COLOR is
+	light_blue: EV_COLOR
 			-- Color light blue.
 		once
 			create Result.make_with_8_bit_rgb (230, 230, 255)
 		end
 
-	light_green: EV_COLOR is
+	light_green: EV_COLOR
 			-- Color light green.
 		once
 			create Result.make_with_8_bit_rgb (230, 255, 230)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

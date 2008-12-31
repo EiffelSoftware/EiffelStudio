@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "About Dialog, displaying general information."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create current.
 		local
 			eiffel_image: EV_PIXMAP
@@ -113,14 +113,14 @@ feature {NONE} -- Initialization
 
 feature -- Constant strings
 
-	t_Copyright_info: STRING is
+	t_Copyright_info: STRING
 		once
 			Result := 
 				"Copyright (C) 1985-2000 Interactive Software Engineering Inc.%N%
 				%All right reserved"
 		end
 
-	t_info: STRING is
+	t_info: STRING
 		once
 			create Result.make (500)
 			Result.append (
@@ -134,7 +134,7 @@ feature -- Constant strings
 			)
 		end
 
-	t_borland: STRING is
+	t_borland: STRING
 			-- Text for Borland.
 		once
 			create Result.make (256)
@@ -145,7 +145,7 @@ feature -- Constant strings
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

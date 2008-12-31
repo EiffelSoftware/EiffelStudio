@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Accessor facility for stacks"
 	legal: "See notice at end of class."
@@ -18,13 +18,13 @@ class STACK_ACCESSOR [G] inherit
 
 feature -- Access
 
-	stack: STACK [G] is
+	stack: STACK [G]
 			-- Stack accessor
 		do
 			Result ?= Precursor
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

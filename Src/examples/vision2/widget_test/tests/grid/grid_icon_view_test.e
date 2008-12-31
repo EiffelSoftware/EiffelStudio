@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that demonstrate how to set up an EV_GRID in an item view
 		layout.
@@ -19,7 +19,7 @@ inherit
 		
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create `Current' and initialize test in `widget'.
 		local
 			a_x, a_y: INTEGER
@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 			widget := grid
 		end
 
-	icon_item_layout (an_item: EV_GRID_LABEL_ITEM; layout: EV_GRID_LABEL_ITEM_LAYOUT) is
+	icon_item_layout (an_item: EV_GRID_LABEL_ITEM; layout: EV_GRID_LABEL_ITEM_LAYOUT)
 			-- `an_item' is being redrawn by the grid, so fill in `layout' to specify
 			-- the exact positioning of both the text and pixmap. This lets us set then
 			-- in the icon style layout.
@@ -84,7 +84,7 @@ feature {NONE} -- Initialization
 			layout.set_text_y (layout.pixmap_y + an_item.pixmap.height + an_item.spacing)
 		end
 
-	move_items is
+	move_items
 			-- Respond to the resizing of the grid, by updating the positions
 			-- of all items contained so that they always occupy the total width.
 			-- This may not be visible in the example, as the width of the grid is
@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 	grid: EV_GRID;
 		-- Widget that test is to be performed on.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

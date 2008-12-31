@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Example demonstrating the fake events "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Initialization
 
-	prepare is
+	prepare
 			-- Initialization.
 		local
 			timer: EV_TIMEOUT
@@ -28,7 +28,7 @@ feature -- Initialization
 			timer.set_interval (200)
 		end
 
-	first_window: EV_TITLED_WINDOW is
+	first_window: EV_TITLED_WINDOW
 			-- The window with the drawable area.
 		once
 			create Result
@@ -41,7 +41,7 @@ feature {NONE} -- Implementation
 	ev_screen: EV_SCREEN
 			-- Object representing the screen.
 
-	on_timer is
+	on_timer
 			-- Wm_timer message.
 		do
 			inspect led_state
@@ -81,31 +81,31 @@ feature {NONE} -- Implementation
 	
 feature {NONE} -- Constants
 
-	Key_constants: EV_KEY_CONSTANTS is
+	Key_constants: EV_KEY_CONSTANTS
 			-- Available keys.
 		once
 			create Result
 		end
 
-	Key_num_lock: EV_KEY is
+	Key_num_lock: EV_KEY
 			-- NumLock key.
 		once
 			create Result.make_with_code (Key_constants.Key_num_lock)
 		end
 
-	Key_caps_lock: EV_KEY is
+	Key_caps_lock: EV_KEY
 			-- CapsLock key.
 		once
 			create Result.make_with_code (Key_constants.Key_caps_lock)
 		end
 
-	Key_scroll_lock: EV_KEY is
+	Key_scroll_lock: EV_KEY
 			-- ScroollLock key.
 		once
 			create Result.make_with_code (Key_constants.Key_scroll_lock)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

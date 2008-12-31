@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"DESTROY_COMMAND class for the test all widgets example."
 	legal: "See notice at end of class."
@@ -15,13 +15,13 @@ inherit
 
 feature -- Command execution
 
-	execute (arg: EV_ARGUMENT1[EV_WIDGET]; data: EV_EVENT_DATA) is
+	execute (arg: EV_ARGUMENT1[EV_WIDGET]; data: EV_EVENT_DATA)
 			-- Execute command called when the event occurs.
 		do
 			arg.first.destroy
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

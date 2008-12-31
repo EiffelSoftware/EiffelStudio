@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Example windows and once routines"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -15,20 +15,20 @@ inherit
 
 feature
 
-	a_screen: SCREEN is
+	a_screen: SCREEN
 			-- Screen associated with
 			-- program
 		once
 			create Result.make ("");
 		end;
 
-	init_toolkit: TOOLKIT_IMP is
+	init_toolkit: TOOLKIT_IMP
 			-- Toolkit for current platform
 		once
 			create Result.make ("");
 		end;
 
-	init_windowing is
+	init_windowing
 			-- Initialize the toolkit.
 			-- (force call to once routines).
 		do
@@ -36,13 +36,13 @@ feature
 			if (toolkit = Void) then end;
 		end;
 
-	main_window: MAIN_WINDOW is
+	main_window: MAIN_WINDOW
 			-- Main window of the demo
 		once
 			create Result.make ("Focusables demo", a_screen)
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

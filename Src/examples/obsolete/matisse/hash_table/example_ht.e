@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel-MATISSE Binding: Example for HASH_TABLE"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -18,7 +18,7 @@ create
 	make
 	
 feature
-	make is
+	make
 		do
 			if arg_number /= 3 then
 				print_usage
@@ -34,7 +34,7 @@ feature
 			end
 		end
 	
-	print_usage is
+	print_usage
 		do
 			print("Usage:%N")
 			print("	Specify arguments <hostname> and <database_name>%N")
@@ -43,7 +43,7 @@ feature
 	
 feature
 
-	load_zip_code is
+	load_zip_code
 		local
 			a_zip: ZIP_CODE
 			the_table: ZIP_CODE_TABLE
@@ -93,7 +93,7 @@ feature
 		end
 		
 
-	read_zip_code is
+	read_zip_code
 		local
 			a_zip: ZIP_CODE
 			the_table: ZIP_CODE_TABLE
@@ -135,7 +135,7 @@ feature
 
 	mt_appl: MATISSE_APPL;
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

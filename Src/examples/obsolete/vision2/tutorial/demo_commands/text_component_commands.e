@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that display events exectued on text components."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 	
 feature -- Initialization
 
-	add_text_component_commands (w: EV_ANY; e: EVENT_WINDOW; name: STRING) is
+	add_text_component_commands (w: EV_ANY; e: EVENT_WINDOW; name: STRING)
 			-- Initialize commands for buttons
 		local
 			cmd: EV_ROUTINE_COMMAND
@@ -32,7 +32,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	change_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	change_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- When `button' text is changed then inform user in `text_component_e_window'
 		local
 			temp_string: STRING
@@ -42,7 +42,7 @@ feature -- Basic operations
 			text_component_e_window.display (temp_string)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

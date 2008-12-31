@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Simple program demonstrating the use of cursors."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature -- Initialization
 
-	make_and_launch is
+	make_and_launch
 			-- Create and launch.
 		do
 			default_create
@@ -24,7 +24,7 @@ feature -- Initialization
 			launch
 		end
 
-	prepare is
+	prepare
 			-- Initialize world.
 		local
 			an_item: EV_MULTI_COLUMN_LIST_ROW
@@ -162,7 +162,7 @@ feature -- Initialization
 			first_window.show
 		end
 
-	first_window: EV_TITLED_WINDOW is
+	first_window: EV_TITLED_WINDOW
 			-- The window with the drawable area.
 		once
 			create Result
@@ -185,13 +185,13 @@ feature {NONE} -- Graphical interface
 
 feature {NONE} -- Implementation
 
-	on_exit is
+	on_exit
 			-- Quit the program
 		do
 			destroy
 		end
 
-	on_apply is
+	on_apply
 		local
 			mc_row: EV_MULTI_COLUMN_LIST_ROW
 			cursor_text: STRING
@@ -252,30 +252,30 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	Default_pixmaps: EV_STOCK_PIXMAPS is
+	Default_pixmaps: EV_STOCK_PIXMAPS
 		once
 			Create Result
 		end
 
 feature {NONE} -- Cursor Strings
 
-	Busy_cursor_string			: STRING is "Busy"
-	Standard_cursor_string		: STRING is "Standard"
-	Crosshair_cursor_string		: STRING is "Crosshair"
-	Help_cursor_string			: STRING is "Help"
-	Ibeam_cursor_string			: STRING is "Ibeam"
-	No_cursor_string			: STRING is "No"
-	Sizeall_cursor_string		: STRING is "Sizeall"
-	Sizens_cursor_string		: STRING is "Sizens"
-	Sizewe_cursor_string		: STRING is "Sizewe"
-	Uparrow_cursor_string		: STRING is "Uparrow"
-	Wait_cursor_string			: STRING is "Wait"
-	Question_pixmap_string		: STRING is "Question"
-	Warning_pixmap_string		: STRING is "Warning"
-	Information_pixmap_string	: STRING is "Information"
-	Error_pixmap_string			: STRING is "Error";
+	Busy_cursor_string			: STRING = "Busy"
+	Standard_cursor_string		: STRING = "Standard"
+	Crosshair_cursor_string		: STRING = "Crosshair"
+	Help_cursor_string			: STRING = "Help"
+	Ibeam_cursor_string			: STRING = "Ibeam"
+	No_cursor_string			: STRING = "No"
+	Sizeall_cursor_string		: STRING = "Sizeall"
+	Sizens_cursor_string		: STRING = "Sizens"
+	Sizewe_cursor_string		: STRING = "Sizewe"
+	Uparrow_cursor_string		: STRING = "Uparrow"
+	Wait_cursor_string			: STRING = "Wait"
+	Question_pixmap_string		: STRING = "Question"
+	Warning_pixmap_string		: STRING = "Warning"
+	Information_pixmap_string	: STRING = "Information"
+	Error_pixmap_string			: STRING = "Error";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Demo for text figures."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Access
 
-	figure: EV_TEXT_FIGURE is
+	figure: EV_TEXT_FIGURE
 		local
 			pt: EV_POINT
 		do
@@ -27,7 +27,7 @@ feature -- Access
 			Result.set_text ("This is a try")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

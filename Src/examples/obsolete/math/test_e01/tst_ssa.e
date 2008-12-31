@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tester of Surface Spline Approximator class"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -20,7 +20,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Test of SURFACE_SPLINE_APPROXIMATOR		
 		local
 		
@@ -103,7 +103,7 @@ feature -- Access
 			-- Formatter of printouts
 
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

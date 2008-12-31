@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel-MATISSE Binding: Example for HASH_TABLE"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -10,13 +10,13 @@ class
 
 feature
 
-	Zip_Standard: INTEGER is 1
-	Zip_Unique: INTEGER is 2
-	Zip_Military: INTEGER is 3
+	Zip_Standard: INTEGER = 1
+	Zip_Unique: INTEGER = 2
+	Zip_Military: INTEGER = 3
 	
 feature {NONE} -- Implementation
 
-	zip_type_string(a_type: INTEGER) : STRING is
+	zip_type_string(a_type: INTEGER) : STRING
 		do
 			inspect a_type
 			when Zip_Standard then Result := "Standard"
@@ -27,7 +27,7 @@ feature {NONE} -- Implementation
 			end
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

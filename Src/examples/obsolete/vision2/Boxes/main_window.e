@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 	"WINDOW1, main window for the application. Belongs to EiffelVision example."
 	legal: "See notice at end of class."
@@ -29,7 +29,7 @@ feature --Access
 
 feature -- Initialization
 	
-	make_top_level is
+	make_top_level
 			-- Only one child allowed in the Current window
 		do
 			Precursor
@@ -60,7 +60,7 @@ feature -- Initialization
 	
 feature -- Status setting
 	
-	set_one (par: EV_CONTAINER) is
+	set_one (par: EV_CONTAINER)
 			-- Create four button
 		do
 			create but.make_with_text (par, "Hello World")
@@ -69,7 +69,7 @@ feature -- Status setting
 			create but.make_with_text (par, "Hola el mundo")
 		end
 
-	set_two (par: EV_CONTAINER) is
+	set_two (par: EV_CONTAINER)
 			-- Create four button
 		do
 			create but.make_with_text (par, "Hello World")
@@ -79,7 +79,7 @@ feature -- Status setting
 		end
 
 
-	set_three (par: EV_CONTAINER) is
+	set_three (par: EV_CONTAINER)
 		do
 			create lab.make_with_text (par, "Hy my friend")
 			create lab.make_with_text (par, "Salut mon pote")
@@ -87,7 +87,7 @@ feature -- Status setting
 			create lab.make_with_text (par, "Hola amigo")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

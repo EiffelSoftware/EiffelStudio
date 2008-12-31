@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -62,7 +62,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create the main_window, the virtual DC,
 			-- the backgound DC and set the menu.
 		local
@@ -108,7 +108,7 @@ feature {NONE} -- Implementation
 	game_manager: GAME_MANAGER
 			-- Manages the state of the game
 
-	on_menu_command (id_menu: INTEGER) is
+	on_menu_command (id_menu: INTEGER)
 			-- Process the command identified by `id_menu'
 		do
 			if id_menu = Cmd_exit then
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	change_cursor_to_wait is
+	change_cursor_to_wait
 			-- Change the cursor to a waiting cursor image
 		local
 			cursor: WEL_CURSOR
@@ -174,7 +174,7 @@ feature {NONE} -- Implementation
 			cursor.set
 		end
 
-	change_cursor_to_default is
+	change_cursor_to_default
 			-- Change the cursor to the default cursor
 		local
 			cursor: WEL_CURSOR
@@ -183,7 +183,7 @@ feature {NONE} -- Implementation
 			cursor.set
 		end
 
-	resize_to_start_window is
+	resize_to_start_window
 			-- Resize the window to the size of start-window size
 		do
 			resize (start_bitmap.width + 2 * window_border_width + White_offset,
@@ -191,27 +191,27 @@ feature {NONE} -- Implementation
 				+ title_bar_height + menu_bar_height)
 		end
 
-	on_accelerator_command (accelerator_id: INTEGER) is
+	on_accelerator_command (accelerator_id: INTEGER)
 			-- Perform the corresponding menu command
 		do
 			on_menu_command (accelerator_id)
 		end
 
-	redraw_move (source_is_column: BOOLEAN) is
+	redraw_move (source_is_column: BOOLEAN)
 			-- Redraw an entire move
 		do
 			redraw_before_move (game_manager.source_is_column)
 			redraw_after_move
 		end
 
-	copy_card_area (destination_dc, source_dc: WEL_DC; a_card: CARD) is
+	copy_card_area (destination_dc, source_dc: WEL_DC; a_card: CARD)
 			-- Copy an entire card area from `source_dc' to `destination_dc'
 		do
 			destination_dc.bit_blt (a_card.x_position, a_card.y_position, a_card.width, a_card.height,
 					source_dc, a_card.x_position, a_card.y_position, Srccopy)
 		end
 
-	redraw_before_move (source_is_column: BOOLEAN) is
+	redraw_before_move (source_is_column: BOOLEAN)
 			-- Redraw when card is selected
 		local
 			card_p: CARD
@@ -235,7 +235,7 @@ feature {NONE} -- Implementation
 
 		end
 
-	redraw_after_move is
+	redraw_after_move
 			-- Redraw when move is made
 		do
 			copy_card_area (client_dc, virtual_dc, active_card)
@@ -244,7 +244,7 @@ feature {NONE} -- Implementation
 			draw_card (active_card, virtual_dc)
 		end
 			
-	on_right_button_down (keys, x_pos, y_pos: INTEGER) is
+	on_right_button_down (keys, x_pos, y_pos: INTEGER)
 		do
 			-- If the user clicked on a card with the right mouse
 			-- button, the selected card will be move to respectively
@@ -287,7 +287,7 @@ feature {NONE} -- Implementation
 			end
 		end
 				
-	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
+	on_left_button_down (keys, x_pos, y_pos: INTEGER)
 			-- If the user clicked on a card with the left mouse
 			-- button, the selected card will become the `active_card',
 			-- and the offset to the mouse pointer is computed.
@@ -307,7 +307,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_left_button_up (keys, x_pos, y_pos: INTEGER) is
+	on_left_button_up (keys, x_pos, y_pos: INTEGER)
 			-- If the user releases the left mouse button,
 			-- the destination is selected and the move is
 			-- made if possible.
@@ -337,7 +337,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_mouse_move (keys, x_pos, y_pos: INTEGER) is
+	on_mouse_move (keys, x_pos, y_pos: INTEGER)
 			-- The invalidated rectangles are computed and
 			-- copied from the virtual DC
 		local
@@ -391,7 +391,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	end_sequence is
+	end_sequence
 			-- The user has finished a game, a bitmap is tiled 
 			-- in the client-area
 		local
@@ -418,7 +418,7 @@ feature {NONE} -- Implementation
 			end
 		end
 	
-	draw_background_virtual is
+	draw_background_virtual
 			-- Setup the background on the virtual and the
 			-- background DC
 		local
@@ -476,7 +476,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	draw_card (a_card: CARD; a_dc: WEL_DC) is
+	draw_card (a_card: CARD; a_dc: WEL_DC)
 			-- Draw `a_card' on `a_dc'
 		require
 			a_card_not_void: a_card /= Void
@@ -487,7 +487,7 @@ feature {NONE} -- Implementation
 				a_card.y_position, a_card.width, a_card.height)
 		end
 
-	the_cards: ARRAY [CARD] is
+	the_cards: ARRAY [CARD]
 			-- The cards in the game
 		do
 			Result := game_manager.the_cards
@@ -495,7 +495,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	draw_cards is
+	draw_cards
 			-- Draw all the cards in the game on the virtual DC
 		local
 			cards_in_drawing_order: LINKED_LIST [INTEGER]
@@ -511,7 +511,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- When game has started, copy the invalidated rectangle
 			-- from the virtual_dc.
 			-- Otherwise center and redraw the starting bitmap
@@ -528,14 +528,14 @@ feature {NONE} -- Implementation
 
 feature -- Implementation
 
-	previous_card: CARD is
+	previous_card: CARD
 			-- The previous card in the columnn of the active card.
 			-- This is necessary for efficient redrawing.
 		do
 			Result := game_manager.previous_card
 		end
 
-	active_card: CARD is
+	active_card: CARD
 			-- The card which is currently selected or moving.
 		do
 			Result := game_manager.active_card
@@ -543,7 +543,7 @@ feature -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	main_menu: WEL_MENU is
+	main_menu: WEL_MENU
 			-- The menu of the game
 		once
 			create Result.make_by_id (Game_menu_id)
@@ -551,13 +551,13 @@ feature -- Implementation
 			menu_not_void: Result /= Void
 		end
 
-	class_background: WEL_NULL_BRUSH is
+	class_background: WEL_NULL_BRUSH
 			-- Transparent window background
 		once
 			create Result.make
 		end
 
-	end_bitmap: WEL_BITMAP is
+	end_bitmap: WEL_BITMAP
 			-- Creates the `end_bitmap'
 		once
 			create Result.make_by_id (End_bitmap_id)
@@ -565,7 +565,7 @@ feature -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	start_bitmap: WEL_BITMAP is
+	start_bitmap: WEL_BITMAP
 			-- Creates the `start_bitmap'
 		once
 			create Result.make_by_id (Start_bitmap_id)
@@ -573,13 +573,13 @@ feature -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	class_icon: WEL_ICON is
+	class_icon: WEL_ICON
 			-- Creates the `class_icon'
 		once
 			create Result.make_by_id (Xcell_icon)
 		end
 
-	select_number_of_cards_dialog: SELECT_NUMBER_OF_CARDS_DIALOG is
+	select_number_of_cards_dialog: SELECT_NUMBER_OF_CARDS_DIALOG
 			-- Creates the `select_number_of_cards_dialog'
 		once
 			create Result.make (Current)
@@ -587,7 +587,7 @@ feature -- Implementation
 			dialog_not_void: Result /= Void
 		end
 
-	select_game_number_dialog: SELECT_GAME_NUMBER_DIALOG is
+	select_game_number_dialog: SELECT_GAME_NUMBER_DIALOG
 			-- Creates the `select_game_number_dialog'
 		once
 			create Result.make (Current)
@@ -595,7 +595,7 @@ feature -- Implementation
 			dialog_not_void: Result /= Void
 		end
 
-	about_box: WEL_MODAL_DIALOG is
+	about_box: WEL_MODAL_DIALOG
 			-- Creates the `about_box'
 		once
 			create Result.make_by_id (Current, About_dialog_id)
@@ -603,7 +603,7 @@ feature -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	how_to_play_box: WEL_MODAL_DIALOG is
+	how_to_play_box: WEL_MODAL_DIALOG
 			-- Creates the `how_to_play_box'
 		once
 			create Result.make_by_id (Current, How_to_play_dialog)
@@ -611,7 +611,7 @@ feature -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	scr_height: INTEGER is
+	scr_height: INTEGER
 			-- The maximum height of the client area.
 		once
 			Result := full_screen_client_area_height
@@ -619,7 +619,7 @@ feature -- Implementation
 			positive_height: scr_height /= 0
 		end
 	
-	scr_width: INTEGER is
+	scr_width: INTEGER
 			-- The maximum width of the client area
 		once
 			Result := full_screen_client_area_width
@@ -634,7 +634,7 @@ invariant
 	virtual_dc_not_void: exists implies virtual_dc /= Void
 	virtual_dc_exists: exists implies virtual_dc.exists
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

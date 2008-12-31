@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Child window of frame window containing an OLE compound file"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -54,7 +54,7 @@ create
 
 feature -- Initialization
 
-	make (p: WEL_MDI_FRAME_WINDOW; name: STRING) is
+	make (p: WEL_MDI_FRAME_WINDOW; name: STRING)
 			-- Create MDI child window with parent `p' and
 			-- title `name', then build associated tree view.
 		local
@@ -90,7 +90,7 @@ feature -- Initialization
 			end
 		end
 	
-	create_tree_view (p: INTEGER; stor: EOLE_STORAGE) is
+	create_tree_view (p: INTEGER; stor: EOLE_STORAGE)
 			-- Recursively create tree view with parent `p'
 			-- and associated compound file `stor'
 			-- `elements' is used for efficiency.
@@ -138,7 +138,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	on_size (size_type, w, h: INTEGER) is
+	on_size (size_type, w, h: INTEGER)
 			-- Resize tree view to width `w'and height `h'.
 			-- `size_type' indicates form of resizing.
 		do
@@ -151,7 +151,7 @@ feature -- Basic operations
 			end
 		end
 
-	 on_window_pos_changed (window_pos: WEL_WINDOW_POS) is
+	 on_window_pos_changed (window_pos: WEL_WINDOW_POS)
 			-- Move tree view to `window_pos'and resize accordingly.
 		do
 			tree_view.move_and_resize (0, 0, window_pos.width - 8,
@@ -160,7 +160,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	stgty_string (stgty_constant: INTEGER): STRING is
+	stgty_string (stgty_constant: INTEGER): STRING
 			-- String value of EOLE_STGTY constants
 		do
 			if stgty_constant = STGTY_LOCKBYTES then
@@ -172,13 +172,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	class_icon: WEL_ICON is
+	class_icon: WEL_ICON
 			-- Window's icon
 		once
 			create Result.make_by_id (Id_ico_child_window)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

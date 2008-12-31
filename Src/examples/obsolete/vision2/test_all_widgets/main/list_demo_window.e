@@ -1,4 +1,4 @@
-indexing
+note
 	description: "LIST_DEMO_WINDOW, demo window to test the list %
 			%widget. Belongs to EiffelVision example test_all_widgets."
 	legal: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature -- Access
 
-	main_widget: EV_LIST is
+	main_widget: EV_LIST
 			-- The main widget of the demo
 		once
 			create Result.make (Current)
@@ -36,7 +36,7 @@ feature -- Access
 
 feature -- Status setting
         
-	set_widgets is
+	set_widgets
 			-- Set the widgets in the demo windows.
 		local
 			pixmap: EV_PIXMAP
@@ -52,7 +52,7 @@ feature -- Status setting
 			item3.set_text ("item3")
        	end
 	
-	set_values is
+	set_values
 			-- Set the values on the widgets of the window.
 		local
 			item: EV_LIST_ITEM
@@ -62,7 +62,7 @@ feature -- Status setting
 			item := main_widget.selected_item
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

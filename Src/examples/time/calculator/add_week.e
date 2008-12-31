@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -9,7 +9,7 @@ inherit
 
 feature -- Access
 
-    execute (d: DATE): DATE is
+    execute (d: DATE): DATE
             -- Add `i' weeks to the date `d'
         do
             Result := d;
@@ -18,12 +18,12 @@ feature -- Access
             Result.day_add (io.lastint * d.days_in_week)
         end;
 
-    display_help: STRING is
+    display_help: STRING
         do
             Result := "Enter the amount of weeks to add: "
         end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

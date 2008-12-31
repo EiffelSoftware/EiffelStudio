@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that demonstrate EV_HEADER"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 		
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create `Current' and initialize test in `widget'.
 		local
 			counter: INTEGER
@@ -48,19 +48,19 @@ feature {NONE} -- Initialization
 			widget := vertical_box
 		end
 		
-	header_item_started_resizing (a_header_item: EV_HEADER_ITEM) is
+	header_item_started_resizing (a_header_item: EV_HEADER_ITEM)
 			-- A header item has started resizing in `Current'.
 		do
 			output.append_text ("Header item " + header.index_of (a_header_item, 1).out + " start resizing%N")	
 		end
 		
-	header_item_resizing (a_header_item: EV_HEADER_ITEM) is
+	header_item_resizing (a_header_item: EV_HEADER_ITEM)
 			-- A header item is being resized in `Current'.
 		do
 			output.append_text ("Header item " + header.index_of (a_header_item, 1).out + " resizing to width : " + a_header_item.width.out + "%N")
 		end
 		
-	header_item_ended_resizing (a_header_item: EV_HEADER_ITEM) is
+	header_item_ended_resizing (a_header_item: EV_HEADER_ITEM)
 			-- A header item has ended resizing in `Current'.
 		do
 			output.append_text ("Header item " + header.index_of (a_header_item, 1).out + " end resizing%N")
@@ -74,7 +74,7 @@ feature {NONE} -- Implementation
 	header: EV_HEADER;
 		-- Widget that test is to be performed on.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

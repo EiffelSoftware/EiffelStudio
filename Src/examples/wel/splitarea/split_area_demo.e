@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Example demonstrating WEL_SPLIT_AREA"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		local
 			char_format: WEL_CHARACTER_FORMAT
 		do
@@ -67,24 +67,24 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	background_brush: WEL_BRUSH is
+	background_brush: WEL_BRUSH
 			-- Dialog boxes background color is the same than
 			-- button color.
 		do
 			create Result.make_by_sys_color (Color_btnface + 1)
 		end
 
-	on_size (size_type: INTEGER; a_width: INTEGER; a_height: INTEGER) is
+	on_size (size_type: INTEGER; a_width: INTEGER; a_height: INTEGER)
 			-- Wm_size message handle
 		do
 				-- Reposition & Resize the split area
 			split_area.move_and_resize (0, 0, a_width, a_height, True)
 		end
 
-	Title: STRING is "WEL SplitArea Example (c) ISE 2000-2001";
+	Title: STRING = "WEL SplitArea Example (c) ISE 2000-2001";
 			-- Window's title
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that test EV_GRID, using `ensure_expandable' to
 		create a dynamic tree.
@@ -19,7 +19,7 @@ inherit
 		
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create `Current' and initialize test in `widget'.
 		local
 			grid_label_item: EV_GRID_LABEL_ITEM
@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 			widget := grid
 		end
 		
-	row_expanded (parent_row: EV_GRID_ROW) is
+	row_expanded (parent_row: EV_GRID_ROW)
 			-- Add `3' subrows to `parent_row'.
 		local
 			counter: INTEGER
@@ -99,7 +99,7 @@ feature {NONE} -- Implementation
 	pixmaps: ARRAYED_LIST [EV_PIXMAP];
 		-- Pixmaps for addition to items.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

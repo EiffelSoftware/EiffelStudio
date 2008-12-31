@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class MT_REFERENCE 
@@ -15,14 +15,14 @@ inherit
 
 feature
 
-	set(i:INTEGER) is
+	set(i:INTEGER)
 		-- Fill object's fields
 	do
 		a:=i
 		create one_array.make(1,2)
 	end -- set
 
-    set2 is
+    set2
     do
         a:=0
         one_string := Void
@@ -37,7 +37,7 @@ feature
 		lls := Void
     end -- set
 
-	set_ref(one_ref : MT_REFERENCE) is
+	set_ref(one_ref : MT_REFERENCE)
 	do
 		a_ref := one_ref 	
 		if one_array/= Void then 
@@ -64,7 +64,7 @@ feature
 	llr : LINKED_LIST[REAL]
 	lls : LINKED_LIST[STRING];
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

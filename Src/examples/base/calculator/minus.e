@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class 
@@ -9,7 +9,7 @@ inherit
 
 feature 
 	
-	operation is 
+	operation 
 			-- Subtract top element of stack with register.
 		do 
 			register := operand_stack.item - register
@@ -17,7 +17,7 @@ feature
 			register = operand_stack.item - old register 
 		end;
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

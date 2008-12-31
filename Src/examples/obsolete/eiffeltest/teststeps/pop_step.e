@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Pop operation on stack"
 	legal: "See notice at end of class."
@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create step.
 		do
 			Precursor
@@ -38,17 +38,17 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	Name: STRING is "POP"
+	Name: STRING = "POP"
 
 feature -- Basic operations
 
-	do_test is
+	do_test
 			-- Do test action.
 		do
 			stack.remove
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

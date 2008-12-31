@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tester of interpolation/approximation classes"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -15,7 +15,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- tests of interpolation/approximation classes			
 		local
 			c_hermite: CURVE_HERMITE_INTERPOLATOR_TEST;
@@ -35,7 +35,7 @@ feature -- Initialization
 			create s_scat_approxim.make
 		end;
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

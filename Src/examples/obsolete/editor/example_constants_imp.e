@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that provide access to constants loaded from files."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 	
 feature {NONE} -- Initialization
 
-	initialize_constants is
+	initialize_constants
 			-- Load all constants from file.
 		local
 			file: PLAIN_TEXT_FILE
@@ -36,13 +36,13 @@ feature -- Access
 --| FIXME `constant_by_name' and `has_constant' `constants_initialized' are only required until the complete change to
 --| constants is complete. They are required for the pixmaps at the moment.
 
-	constants_initialized: BOOLEAN is
+	constants_initialized: BOOLEAN
 			-- Have constants been initialized from file?
 		do
 			Result := initialized_cell.item
 		end
 
-	string_constant_by_name (a_name: STRING): STRING is
+	string_constant_by_name (a_name: STRING): STRING
 			-- `Result' is STRING 
 		require
 			initialized: constants_initialized
@@ -54,7 +54,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 		
-	integer_constant_by_name (a_name: STRING): INTEGER is
+	integer_constant_by_name (a_name: STRING): INTEGER
 			-- `Result' is STRING 
 		require
 			initialized: constants_initialized
@@ -71,7 +71,7 @@ feature -- Access
 			Result := l_string.to_integer
 		end
 		
-	has_constant (a_name: STRING): BOOLEAN is
+	has_constant (a_name: STRING): BOOLEAN
 			-- Does constant `a_name' exist?
 		require
 			initialized: constants_initialized
@@ -82,26 +82,26 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	initialized_cell: CELL [BOOLEAN] is
+	initialized_cell: CELL [BOOLEAN]
 			-- A cell to hold whether the constants have been loaded.
 		once
 			create Result
 		end
 		
-	all_constants: HASH_TABLE [STRING, STRING] is
+	all_constants: HASH_TABLE [STRING, STRING]
 			-- All constants loaded from constants file.
 		once
 			create Result.make (4)
 		end
 		
-	file_name: STRING is "constants.txt"
+	file_name: STRING = "constants.txt"
 		-- File name from which constants must be loaded.
 		
-	String_constant: STRING is "STRING"
+	String_constant: STRING = "STRING"
 	
-	Integer_constant: STRING is "INTEGER"
+	Integer_constant: STRING = "INTEGER"
 		
-	parse_file_contents (content: STRING) is
+	parse_file_contents (content: STRING)
 			-- Parse contents of `content' into `all_constants'.
 		local
 			line_contents: STRING
@@ -131,7 +131,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	first_line (content: STRING): STRING is
+	first_line (content: STRING): STRING
 			-- `Result' is first line of `Content',
 			-- which will be stripped from `content'.
 		require
@@ -153,7 +153,7 @@ feature {NONE} -- Implementation
 			no_characters_lost: old content.count = Result.count + content.count
 		end
 
-	set_with_named_file (a_pixmap: EV_PIXMAP; a_file_name: STRING) is
+	set_with_named_file (a_pixmap: EV_PIXMAP; a_file_name: STRING)
 			-- Set image of `a_pixmap' from file, `a_file_name'.
 			-- If `a_file_name' does not exist, do nothing.
 		require
@@ -171,7 +171,7 @@ feature {NONE} -- Implementation
 invariant
 	all_constants_not_void: all_constants /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

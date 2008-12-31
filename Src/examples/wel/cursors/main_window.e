@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Make the main window
 		do
 			create cursor.make_by_predefined_id (Idc_arrow)
@@ -48,7 +48,7 @@ feature -- Access
 
 feature {NONE} -- Behaviors
 
-	on_menu_command (id_menu: INTEGER) is
+	on_menu_command (id_menu: INTEGER)
 		do
 			inspect
 				id_menu
@@ -77,7 +77,7 @@ feature {NONE} -- Behaviors
 			end
 		end
 
-	on_set_cursor (hit_test: INTEGER) is
+	on_set_cursor (hit_test: INTEGER)
 			-- Set the cursor only in the client area.
 		do
 			if hit_test = Htclient then
@@ -88,23 +88,23 @@ feature {NONE} -- Behaviors
 
 feature {NONE} -- Implementation
 
-	class_icon: WEL_ICON is
+	class_icon: WEL_ICON
 			-- Window's icon
 		once
 			create Result.make_by_id (Id_ico_application)
 		end
 
-	main_menu: WEL_MENU is
+	main_menu: WEL_MENU
 		once
 			create Result.make_by_id (Id_menu_application)
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	Title: STRING is "WEL Cursors";
+	Title: STRING = "WEL Cursors";
 			-- Window's title
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "WEL Horizontal Split area"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_parent: WEL_WINDOW; a_name: STRING;
-			a_x, a_y, a_width, a_height, a_pos: INTEGER) is
+			a_x, a_y, a_width, a_height, a_pos: INTEGER)
 			-- Make a split area with `a_pos' as splitter position.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -59,7 +59,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_splitter_position (a_pos: INTEGER) is
+	set_splitter_position (a_pos: INTEGER)
 			-- Set the width of the splitter (or also
 			-- the width of the left part of the split area)
 		require
@@ -70,7 +70,7 @@ feature -- Element change
 			position_set: splitter_position = a_pos
 		end
 
-	set_left_control (a_control: WEL_WINDOW) is
+	set_left_control (a_control: WEL_WINDOW)
 			-- Put `a_control' in the left part of the split area
 		do
 			left_control := a_control
@@ -78,7 +78,7 @@ feature -- Element change
 			left_control.move_and_resize (0, 0, splitter_position, height, True)
 		end
 
-	set_right_control (a_control: WEL_WINDOW) is
+	set_right_control (a_control: WEL_WINDOW)
 			-- Put `a_control' in the right part of the split area
 		do
 			right_control := a_control
@@ -88,7 +88,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	separator_width: INTEGER is 3
+	separator_width: INTEGER = 3
 			-- Width of the splitter.
 
 	splitter_position: INTEGER
@@ -97,7 +97,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Windows message handling
 
-	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
+	on_left_button_down (keys, x_pos, y_pos: INTEGER)
 			-- Wm_lbuttondown message handling
 		do
 				-- Start to move the splitter. We capture
@@ -109,7 +109,7 @@ feature {NONE} -- Windows message handling
 			end
 		end
 
-	on_left_button_up (keys, x_pos, y_pos: INTEGER) is
+	on_left_button_up (keys, x_pos, y_pos: INTEGER)
 			-- Wm_lbuttondown message handling
 		do
 				-- Stop to move the splitter.
@@ -118,7 +118,7 @@ feature {NONE} -- Windows message handling
 			end
 		end
 
-	on_mouse_move (keys, x_pos, y_pos: INTEGER) is
+	on_mouse_move (keys, x_pos, y_pos: INTEGER)
 			-- Wm_mousemove message
 			-- See class WEL_MK_CONSTANTS for `keys' value
 		do
@@ -135,7 +135,7 @@ feature {NONE} -- Windows message handling
 			end
 		end
 
-	on_size (size_type, a_width, a_height: INTEGER) is
+	on_size (size_type, a_width, a_height: INTEGER)
 			-- Wm_size message
 			-- See class WEL_SIZE_CONSTANTS for `size_type' value
 		do
@@ -166,7 +166,7 @@ feature {NONE} -- Windows message handling
 			end
 		end
 
-	on_wm_paint (wparam: POINTER) is
+	on_wm_paint (wparam: POINTER)
 			-- Wm_paint message handling
 			-- A WEL_DC and WEL_PAINT_STRUCT are created and
 			-- passed to the `on_paint' routine.
@@ -183,7 +183,7 @@ feature {NONE} -- Windows message handling
 			paint_dc.release
 		end
 
-	default_process_message (msg: INTEGER; wparam, lparam: POINTER) is
+	default_process_message (msg: INTEGER; wparam, lparam: POINTER)
 			-- Process `msg' which has not been processed by
 			-- `process_message'.
 		do
@@ -194,7 +194,7 @@ feature {NONE} -- Windows message handling
 
 feature -- Standard window class values
 
-	class_icon: WEL_ICON is
+	class_icon: WEL_ICON
 			-- Standard application icon used to create the
 			-- window class.
 			-- Can be redefined to return a user-defined icon.
@@ -205,7 +205,7 @@ feature -- Standard window class values
 			result_exists: Result.exists
 		end
 
-	class_cursor: WEL_CURSOR is
+	class_cursor: WEL_CURSOR
 			-- Standard arrow cursor used to create the window
 			-- class.
 			-- Can be redefined to return a user-defined cursor.
@@ -216,7 +216,7 @@ feature -- Standard window class values
 			result_exists: Result.exists
 		end
 
-	class_background: WEL_BRUSH is
+	class_background: WEL_BRUSH
 			-- Standard window background color used to create the
 			-- window class.
 			-- Can be redefined to return a user-defined brush.
@@ -224,7 +224,7 @@ feature -- Standard window class values
 			create Result.make_by_sys_color (Wel_color_constants.Color_btnface + 1)
 		end
 
-	class_style: INTEGER is
+	class_style: INTEGER
 			-- Standard style used to create the window class.
 			-- Can be redefined to return a user-defined style.
 		once
@@ -234,7 +234,7 @@ feature -- Standard window class values
 				Wel_cs_constants.Cs_dblclks
 		end
 
-	class_menu_name: STRING is
+	class_menu_name: STRING
 			-- Window's menu used to create the window class.
 			-- Can be redefined to return a user-defined menu.
 			-- (None by default).
@@ -244,14 +244,14 @@ feature -- Standard window class values
 			result_not_void: Result /= Void
 		end
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Window class name used to create the window class.
 			-- Can be redefined to return a user-defined class name.
 		once
 			Result := "WELSplitAreaClass"
 		end
 
-	class_window_procedure: POINTER is
+	class_window_procedure: POINTER
 			-- Standard window procedure
 		once
 			Result := cwel_window_procedure_address
@@ -261,7 +261,7 @@ feature -- Standard window class values
 
 feature {NONE} -- Implementation
 
-	register_class is
+	register_class
 			-- Register the window class if the class is not already registered.
 			-- The routines `class_style', `class_window_procedure',
 			-- `class_icon', `class_cursor', `class_background', and
@@ -282,7 +282,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style used to create the control
 		once
 			Result := Ws_visible + Ws_child + Ws_clipchildren
@@ -290,25 +290,25 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	Wel_idi_constants: WEL_IDI_CONSTANTS is
+	Wel_idi_constants: WEL_IDI_CONSTANTS
 			-- Default Icons constants
 		once
 			create Result
 		end
 
-	Wel_idc_constants: WEL_IDC_CONSTANTS is
+	Wel_idc_constants: WEL_IDC_CONSTANTS
 			-- Default Cursors constants
 		once
 			create Result
 		end
 
-	Wel_color_constants: WEL_COLOR_CONSTANTS is
+	Wel_color_constants: WEL_COLOR_CONSTANTS
 			-- System color constants
 		once
 			create Result
 		end
 
-	Wel_cs_constants: WEL_CS_CONSTANTS is
+	Wel_cs_constants: WEL_CS_CONSTANTS
 			-- Class style constants.
 		once
 			create Result
@@ -318,7 +318,7 @@ invariant
 	valid_splitter_position: exists implies
 		(splitter_position >= 0 and splitter_position <= width)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

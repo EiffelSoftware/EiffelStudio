@@ -1,4 +1,4 @@
-indexing
+note
 	description: "MATISSE-Eiffel Binding: Example of Composite Object"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -18,7 +18,7 @@ create
 	make
 	
 feature
-	make is
+	make
 		do
 			if arg_number /= 3 then
 				print_usage
@@ -35,7 +35,7 @@ feature
 			end
 		end
 	
-	print_usage is
+	print_usage
 		do
 			print("Usage:%N")
 			print("	Specify arguments <hostname> and <database_name>%N")
@@ -44,7 +44,7 @@ feature
 
 feature
 
-	lock_composite_object is
+	lock_composite_object
 		local
 			entry: MT_ENTRYPOINT
 			obj: DOCUMENT
@@ -83,7 +83,7 @@ feature
 			retry
 		end
 
-	read_unlocked_object is
+	read_unlocked_object
 		local
 			entry: MT_ENTRYPOINT
 			obj: SECTION
@@ -96,7 +96,7 @@ feature
 			print("done.%N")
 		end
 
-	read_locked_object is
+	read_locked_object
 		local
 			entry: MT_ENTRYPOINT
 			obj: SECTION
@@ -115,7 +115,7 @@ feature
 			retry
 		end
 		
-	delete_composite_object is
+	delete_composite_object
 		local
 			entry: MT_ENTRYPOINT
 			a_class: MT_CLASS
@@ -206,7 +206,7 @@ feature
 
 feature {NONE} -- Implementation
 
-	create_data is
+	create_data
 		local
 			a_class: MT_CLASS
 			doc: DOCUMENT
@@ -294,12 +294,12 @@ feature {NONE} -- Implementation
 		end
 
 feature
-	Document_name : STRING is "Document Bar"
+	Document_name : STRING = "Document Bar"
 
 feature
 	mt_appl: MATISSE_APPL;		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

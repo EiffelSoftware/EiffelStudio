@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Accelerator example."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature -- Initialization
 
-	make_and_launch is
+	make_and_launch
 			-- Create `Current' and launch application.
 		do
 			default_create
@@ -24,7 +24,7 @@ feature -- Initialization
 			launch
 		end
 
-	test_accelerators is
+	test_accelerators
 			-- Associate an accelerator to `first_window'.
 		local
 			accelerator: EV_ACCELERATOR
@@ -56,14 +56,14 @@ feature -- Initialization
 		
 feature {NONE} -- Implementation
 
-	first_window: EV_TITLED_WINDOW is
+	first_window: EV_TITLED_WINDOW
 			-- `Result' is main window of example.
 		once
 			create Result
 			Result.set_title ("Accelerator - Press Ctrl Q to exit.")
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

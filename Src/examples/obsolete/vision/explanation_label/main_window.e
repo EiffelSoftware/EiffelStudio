@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Main window of the example"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -34,7 +34,7 @@ create
 
 feature
 
-	make (a_name: STRING; a_s: SCREEN) is
+	make (a_name: STRING; a_s: SCREEN)
 		do
 				--initialize as make
 			base_make (a_name, a_s)
@@ -55,7 +55,7 @@ feature
 			
 		end
 	
-	realize is
+	realize
 		do
 			if not(realized) then
 					--realize as base
@@ -65,7 +65,7 @@ feature
 			end
 		end
 
-	execute (arg: ANY) is
+	execute (arg: ANY)
 		do
 			if not (second_window.realized) then
 				second_window.realize
@@ -77,7 +77,7 @@ feature
 			end
 		end
 
-	second_window: MY_TOP is
+	second_window: MY_TOP
 			-- Another window of the demo
 		once
 			create Result.make ("Second window", screen)
@@ -88,9 +88,9 @@ feature
 	push1, push2: FOCUSABLE_B
 		-- focusable buttons
 
-	ShowSecond, HideSecond: INTEGER is unique;
+	ShowSecond, HideSecond: INTEGER = unique;
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

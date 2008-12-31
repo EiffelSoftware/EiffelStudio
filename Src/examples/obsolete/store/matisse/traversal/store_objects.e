@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 Class STORE_OBJECTS 
@@ -10,7 +10,7 @@ create {ANY} -- Creation procedure
 feature {NONE} -- Initialization
 
 
-	make is
+	make
 		--
 	do
 		-- Create people and their relationships
@@ -41,7 +41,7 @@ feature {NONE} -- Implementation
     p1,p2,p3,p4 : PERSON_REF
 	f: RAW_FILE;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that allow modification of attributes. For%
 		% insertion into a GB_OBJECT_EDITOR."
 	legal: "See notice at end of class."
@@ -20,14 +20,14 @@ feature {NONE} -- Initialization
 
 	components: GB_INTERNAL_COMPONENTS
 
-	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS)
 			--
 		do
 			components := a_components
 			default_create
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

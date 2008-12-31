@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"Query dialog used in the tutorial."
 	legal: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (par: EV_WINDOW; a_title, question: STRING) is
+	make (par: EV_WINDOW; a_title, question: STRING)
 			-- Create an empty menu.
 		local
 			label: EV_LABEL
@@ -52,7 +52,7 @@ feature -- Access
 
 feature -- Command execute
 
-	ok_execute (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	ok_execute (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Executed when OK button is pressed
 		local
 			error: EV_ERROR_DIALOG
@@ -65,13 +65,13 @@ feature -- Command execute
 			end
 		end
 
-	cancel_execute (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	cancel_execute (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Executed when Cancel button is pressed
 		do
 			hide
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Initialize
 		do
 			-- Your instructions here
@@ -71,7 +71,7 @@ feature {NONE} -- Implementation
 invariant
 	invariant_clause: -- Your invariant here
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

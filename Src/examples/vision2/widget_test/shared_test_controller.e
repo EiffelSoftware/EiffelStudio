@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that provide once access to a TEST_CONTROLLER"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Access
 
-	test_controller: TEST_CONTROLLER is
+	test_controller: TEST_CONTROLLER
 			-- Once access to TEST_CONTROLLER object.
 		once
 			create Result
@@ -21,7 +21,7 @@ invariant
 	test_controller_not_void: test_controller /= Void
 	test_controller_consistent: test_controller = test_controller
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: " Test transformationmultiple regression suite."
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -13,13 +13,13 @@ class TEST_SYSTEM inherit
 		end;
 feature -- Access
 
-	has_jacobian: BOOLEAN is True;
+	has_jacobian: BOOLEAN = True;
 	
-	n: INTEGER is 9;
+	n: INTEGER = 9;
 
-	m: INTEGER is 9;
+	m: INTEGER = 9;
 
-	value (x: ARRAY [DOUBLE]): ARRAY [DOUBLE] is
+	value (x: ARRAY [DOUBLE]): ARRAY [DOUBLE]
 		local
 			y: DOUBLE;
 			j: INTEGER;
@@ -38,7 +38,7 @@ feature -- Access
 			Result.put (y, 9);
 		end;
 
-	jacobian (x: ARRAY [DOUBLE]): BASIC_MATRIX is
+	jacobian (x: ARRAY [DOUBLE]): BASIC_MATRIX
 		local
 			i: INTEGER;
 		do
@@ -55,7 +55,7 @@ feature -- Access
 			end;
 		end;		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

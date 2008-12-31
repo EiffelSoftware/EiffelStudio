@@ -1,4 +1,4 @@
-indexing
+note
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
 
@@ -189,7 +189,7 @@ feature {NONE} -- Constants
 	counter_name: SYSTEM_STRING = "CounterPerSecond"
 	instance_name: SYSTEM_STRING = "_Total";
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software/Microsoft Corporation. All rights reserved."
 	license: "[
 			This file is part of the Microsoft .NET Framework SDK Code Samples.

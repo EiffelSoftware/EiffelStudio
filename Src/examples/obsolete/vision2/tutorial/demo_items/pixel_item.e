@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A Demo for points."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,12 +17,12 @@ create
 
 feature -- Access
 
-	figure: EV_PIXEL is
+	figure: EV_PIXEL
 		do
 			create Result.set (150, 150)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

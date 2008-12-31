@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A small test for Special Functions"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -18,7 +18,7 @@ create
 	make
 
 feature
-	make is
+	make
 			-- See if things compile, anyway.
 		do
 			print(tanh(0.5));
@@ -38,7 +38,7 @@ feature
 			print( "<-- q(2.,3.) should be 0.1991%N");
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

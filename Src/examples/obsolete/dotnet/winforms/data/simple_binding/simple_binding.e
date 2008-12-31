@@ -1,4 +1,4 @@
-indexing
+note
 	description:"Simple binding example."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		local
 			dob_binding: WINFORMS_BINDING
 			return: WINFORMS_BINDING
@@ -88,7 +88,7 @@ feature -- Access
 	panel_vcr_control: WINFORMS_PANEL
 			--System.Windows.Forms.Panel 
 
-	cust_list: CUSTOMER_LIST is
+	cust_list: CUSTOMER_LIST
 			-- Customer list
 		once
 			create Result
@@ -99,7 +99,7 @@ feature -- Access
 
 feature -- Implementation
 
-	initialize_components is
+	initialize_components
 			-- Initialize windows components.
 		do
 			create components.make
@@ -266,7 +266,7 @@ feature -- Implementation
 
 feature {NONE} -- Implementation
 
-	dispose_boolean (a_disposing: BOOLEAN) is
+	dispose_boolean (a_disposing: BOOLEAN)
 			-- method called when form is disposed.
 		local
 			retried: BOOLEAN
@@ -282,7 +282,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	text_box_dob_format_date (sender: SYSTEM_OBJECT; e: WINFORMS_CONVERT_EVENT_ARGS) is
+	text_box_dob_format_date (sender: SYSTEM_OBJECT; e: WINFORMS_CONVERT_EVENT_ARGS)
 			-- Format the Date Field in long date form for display in the TextBox.
 		local
 			l_string: SYSTEM_STRING
@@ -295,7 +295,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	text_box_dob_parse_date (sender: SYSTEM_OBJECT; e: WINFORMS_CONVERT_EVENT_ARGS) is
+	text_box_dob_parse_date (sender: SYSTEM_OBJECT; e: WINFORMS_CONVERT_EVENT_ARGS)
 			-- Parse the textbox contents and turn them back into a date.
 		local
 			rescued: BOOLEAN
@@ -314,21 +314,21 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	button_move_first_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+	button_move_first_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS)
 			-- When the MoveFirst button is clicked set the position for the CustomersList
 			-- to the first record
 		do
 			binding_context.item (cust_list).set_position (0)
 		end
 
-	button_move_last_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+	button_move_last_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS)
 			-- When the MoveLast button is clicked set the position for the CustomersList
 			-- to the last record
 		do
 			binding_context.item (cust_list).set_position (cust_list.count - 1)
 		end
 
-	button_move_next_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+	button_move_next_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS)
 			-- When the MoveNext button is clicked increment the position for the CustomersList
 		do
 			if binding_context.item (cust_list).position < cust_list.count - 1 then
@@ -336,7 +336,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	button_move_prev_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+	button_move_prev_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS)
 			-- When the MovePrev button is clicked decrement the position for the CustomersList
 		do
 			if binding_context.item (cust_list).position > 0 then
@@ -344,7 +344,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	customers_position_changed (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+	customers_position_changed (sender: SYSTEM_OBJECT; args: EVENT_ARGS)
 			-- Position has changed - update the DATA VCR panel
 		do
 			text_box_position.set_text ({SYSTEM_STRING}.Format(
@@ -353,7 +353,7 @@ feature {NONE} -- Implementation
 				cust_list.count))
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

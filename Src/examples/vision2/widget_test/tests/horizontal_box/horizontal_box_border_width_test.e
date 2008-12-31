@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that demonstrate simple use of%
 		%`border_width' for EV_HORIZONTAL_BOX"
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 		
 feature {NONE} -- Implementation
 
-	default_create is
+	default_create
 			-- Create `Current' and initialize test in `widget'.
 		do
 			create horizontal_box
@@ -37,7 +37,7 @@ feature {NONE} -- Implementation
 	horizontal_box: EV_HORIZONTAL_BOX;
 		-- Widget that test is to be performed on.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

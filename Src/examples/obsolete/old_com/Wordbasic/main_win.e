@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Main window for Wordbasic client"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class."
@@ -37,7 +37,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize OLE and create `wordbasic'.
 		local
 			error_message: STRING
@@ -77,7 +77,7 @@ feature -- Access
 		
 feature {NONE} -- Implementation
 
-	on_menu_command (menu_id: INTEGER) is
+	on_menu_command (menu_id: INTEGER)
 			-- Execute command identified by `menu_id'.
 		local
 			loc: INTEGER
@@ -170,14 +170,14 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	on_destroy is
+	on_destroy
 			-- Unitialize OLE before destroying window.
 		do
 			wordbasic.file_exit
 			wordbasic.terminate
 		end
 
-	enter_text: STRING is
+	enter_text: STRING
 			-- Text entered by user
 		local
 			dialog: TEXT_DIALOG
@@ -187,7 +187,7 @@ feature {NONE} -- Implementation
 			Result := dialog.user_text
 		end
 
-	enter_number: INTEGER is
+	enter_number: INTEGER
 			-- Number entered by user
 		local
 			dialog: NUMBER_DIALOG
@@ -197,13 +197,13 @@ feature {NONE} -- Implementation
 			Result := dialog.number
 		end
 
-	class_icon: WEL_ICON is
+	class_icon: WEL_ICON
 			-- Window's icon
 		once
 			create Result.make_by_id (Id_ico_application)
 		end
 
-	main_menu: WEL_MENU is
+	main_menu: WEL_MENU
 			-- Window's menu
 		once
 			create Result.make_by_id (Id_main_menu)
@@ -211,10 +211,10 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	Title: STRING is "Wordbasic client";
+	Title: STRING = "Wordbasic client";
 			-- Window's title
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
 
@@ -15,7 +15,7 @@ feature -- Basic operations
 			not_result_is_void_or_empty: not {SYSTEM_STRING}.is_null_or_empty (Result)
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software/Microsoft Corporation. All rights reserved."
 	license: "[
 			This file is part of the Microsoft .NET Framework SDK Code Samples.

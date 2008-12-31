@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Client window where drawing will be performed"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,14 +22,14 @@ create
 
 feature -- Redefine features
 
-	on_wm_close is
+	on_wm_close
 			-- Wm_close message.
 			-- If `closeable' is False further processing is halted.
 		do
 			set_default_processing (closeable)
 		end
 
-	class_background: WEL_GRAY_BRUSH is
+	class_background: WEL_GRAY_BRUSH
 			-- Standard window background color
 		once
 			create Result.make
@@ -37,19 +37,19 @@ feature -- Redefine features
 
 feature {NONE} -- Implementation
 
-	default_ex_style: INTEGER is
+	default_ex_style: INTEGER
 			-- Style of Client Window.
 		do
 			Result := Ws_ex_overlappedwindow
 		end
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Name of window class.
 		once
 			Result := "Client Window"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Display a dialog box containing a %"Hello Windows Forms world%" message."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			--| Call `initialize_components'.
 			-- Entry point.
 		do
@@ -42,7 +42,7 @@ feature -- Access
 
 feature -- Implementation
 
-	initialize_components is
+	initialize_components
 			-- Initialize all window components.
 		do
 			create components.make
@@ -87,7 +87,7 @@ feature -- Implementation
 
 feature {NONE} -- Implementation
 
-	dispose_boolean (a_disposing: BOOLEAN) is
+	dispose_boolean (a_disposing: BOOLEAN)
 			-- method called when form is disposed.
 		local
 			res: WINFORMS_DIALOG_RESULT
@@ -102,7 +102,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	on_my_button_clicked (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+	on_my_button_clicked (sender: SYSTEM_OBJECT; args: EVENT_ARGS)
 			-- feature performed when my_button is clicked.
 		local
 			msg: STRING
@@ -119,7 +119,7 @@ invariant
 	non_void_my_button: my_button /= Void
 	non_void_my_text_box: my_text_box /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

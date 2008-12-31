@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Tester of Curve Spline Approximator classes"
 	legal: "See notice at end of class."; 
 	status: "See notice at end of class."; 
@@ -20,7 +20,7 @@ create
  
 feature -- Initialization 
 
-	make is
+	make
 			-- Test curve spline approximator routines
 		do
 			create form.make (13, 4);
@@ -38,7 +38,7 @@ feature -- Initialization
 			test_knotted_curve_spline_approximator (0.5);
 		end;
 
-	test_curve_spline_approximator is 
+	test_curve_spline_approximator 
 			-- Test of CURVE_SPLINE_APPROXIMATOR
 		local		 
 			x1: BASIC_VECTOR;
@@ -114,7 +114,7 @@ feature -- Initialization
 			print_nl ("End of tests for CURVE_SPLINE_APPROXIMATOR class.");			 
 		end; 
 
-	test_knotted_curve_spline_approximator (s: DOUBLE) is 
+	test_knotted_curve_spline_approximator (s: DOUBLE) 
 			-- Test of KNOTTED_CURVE_SPLINE_APPROXIMATOR,
 			-- comparing against test of smoothness `s' using CURVE_SPLINE_APPROXIMATOR
 		local		 
@@ -160,7 +160,7 @@ feature -- Access
  	w: BASIC_VECTOR;;
  			-- The weights
 		 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

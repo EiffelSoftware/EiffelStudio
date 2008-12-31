@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Window in which ovals are drawn."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature -- Implementation
 	
-	launch_demo is
+	launch_demo
 		do
 			create oval_demo_cmd.make_in (client_window, display_mutex)
 			oval_demo_cmd.launch
@@ -28,11 +28,11 @@ feature -- Implementation
 	oval_demo_cmd: OVAL_DEMO_CMD
 			-- To draw ovals.
 
-	title: STRING is "Ovals";
+	title: STRING = "Ovals";
 			-- Title of the window.
 		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

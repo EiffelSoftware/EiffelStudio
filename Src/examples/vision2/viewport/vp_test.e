@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Viewport example."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ feature -- Initialization
 	vp: EV_VIEWPORT
 			-- Example object.
 
-	prepare is
+	prepare
 			-- Pack `first_window'.
 		local
 			vb: EV_VERTICAL_BOX
@@ -56,7 +56,7 @@ feature -- Initialization
 			first_window.resize_actions.extend (agent on_geometry)
 		end
 
-	on_geometry (x, y, w, h: INTEGER) is
+	on_geometry (x, y, w, h: INTEGER)
 			-- Window resized.
 		do
 			sb_x.set_value (0)
@@ -65,25 +65,25 @@ feature -- Initialization
 			sb_y.set_maximum ((vp.item_height - vp.client_height).max (0))
 		end
 
-	on_sb_x_changed is
+	on_sb_x_changed
 			-- Horizontal value changed.
 		do
 			vp.set_x_offset (sb_x.value)
 		end
 
-	on_sb_y_changed is
+	on_sb_y_changed
 			-- Vertical value changed.
 		do
 			vp.set_y_offset (sb_y.value)
 		end
 
-	first_window: EV_TITLED_WINDOW is
+	first_window: EV_TITLED_WINDOW
 			-- Window containing viewport and scrollable area.
 		once
 			create Result.make_with_title ("Viewport example")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

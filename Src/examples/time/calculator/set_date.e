@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -9,7 +9,7 @@ inherit
 
 feature -- Access
 
-    execute (d: DATE): DATE is
+    execute (d: DATE): DATE
             -- Date choosen par user
 		local
 			year, month, day: INTEGER
@@ -28,12 +28,12 @@ feature -- Access
 			Result.make (year, month, day);
         end;
 
-    display_help: STRING is
+    display_help: STRING
         do
             Result := "Enter new year then new month and new day"
         end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

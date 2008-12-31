@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Example on how to use the class WEL_DISK_SPACE"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,7 +12,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Main Initialization routine.
 		local
 			drive: CHARACTER -- Current drive checked.
@@ -37,13 +37,13 @@ feature -- Initialization
 			end
 		end
 
-	disk_space: WEL_DISK_SPACE is
+	disk_space: WEL_DISK_SPACE
 			-- Object use to query disk space.
 		once
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

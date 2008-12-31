@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tester of Surface Spline Interpolator class"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -20,7 +20,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Test of  SCATTERED_SURFACE_SPLINE_APPROXIMATOR		
 		local
 			x, y, x1, y1, f, w: BASIC_VECTOR;
@@ -83,7 +83,7 @@ feature -- Access
 	approximator: SCATTERED_SURFACE_SPLINE_APPROXIMATOR;;
 			-- Object tested
 			
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

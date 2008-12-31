@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Builds an attribute editor for modification of objects of type EV_COLORIZABLE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,10 +27,10 @@ feature -- Access
 	ev_type: EV_COLORIZABLE
 		-- Vision2 type represented by `Current'.
 
-	type: STRING is "EV_COLORIZABLE"
+	type: STRING = "EV_COLORIZABLE"
 		-- String representation of object_type modifyable by `Current'.
 
-	attribute_editor: GB_OBJECT_EDITOR_ITEM is
+	attribute_editor: GB_OBJECT_EDITOR_ITEM
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
 		local
@@ -129,7 +129,7 @@ feature -- Access
 			align_labels_left (Result)
 		end
 
-		update_attribute_editor is
+		update_attribute_editor
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
 		do
@@ -139,7 +139,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	accept_foreground_color_stone (stone: GB_COLOR_STONE) is
+	accept_foreground_color_stone (stone: GB_COLOR_STONE)
 			-- Set foreground color, based on settings of `stone'.
 		require
 			stone_not_void: stone /= Void
@@ -147,7 +147,7 @@ feature {NONE} -- Implementation
 			actually_set_foreground_color (stone.color)
 		end
 
-	accept_background_color_stone (stone: GB_COLOR_STONE) is
+	accept_background_color_stone (stone: GB_COLOR_STONE)
 			-- Set background color, based on settings of `stone'.
 		require
 			stone_not_void: stone /= Void
@@ -155,19 +155,19 @@ feature {NONE} -- Implementation
 			actually_set_background_color (stone.color)
 		end
 
-	initialize_agents is
+	initialize_agents
 			-- Initialize `validate_agents' and `execution_agents' to
 			-- contain all agents required for modification of `Current.
 		do
 			-- Nothing to perform here.
 		end
 
-	default_object_by_type (a_type: STRING): EV_ANY is
+	default_object_by_type (a_type: STRING): EV_ANY
 			-- `Result' is a default object that corresponds to `a_type'.
 		deferred
 		end
 
-	retrieve_color (label: EV_DRAWING_AREA; is_foreground: BOOLEAN): GB_COLOR_STONE is
+	retrieve_color (label: EV_DRAWING_AREA; is_foreground: BOOLEAN): GB_COLOR_STONE
 			-- `Result' is color for pick and drop, retrieved
 			-- from `background_color' of `label'.
 		do
@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	restore_background_color is
+	restore_background_color
 			-- Restore `background_color' of objects to originals.
 		local
 			colorizable: EV_COLORIZABLE
@@ -191,7 +191,7 @@ feature {NONE} -- Implementation
 			update_background_display
 		end
 
-	restore_foreground_color is
+	restore_foreground_color
 			-- Restore `foreground_color' of objects to originals.
 		local
 			colorizable: EV_COLORIZABLE
@@ -204,7 +204,7 @@ feature {NONE} -- Implementation
 			update_foreground_display
 		end
 
-	update_background_color is
+	update_background_color
 			-- Update `background_color' of objects through an EV_COLOR_DIALOG.
 		do
 			color_dialog.set_color (background_color)
@@ -214,7 +214,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	actually_set_background_color (color: EV_COLOR) is
+	actually_set_background_color (color: EV_COLOR)
 			-- Actually update the background colors.
 		local
 			p: PROCEDURE [EV_ANY, TUPLE]
@@ -234,21 +234,21 @@ feature {NONE} -- Implementation
 			update_background_display
 		end
 
-	update_background_display is
+	update_background_display
 			-- Update area displaying the background color of the EV_COLORIZABLE.
 		do
 			b_area.set_background_color (first.background_color)
 			b_area.clear
 		end
 
-	update_foreground_display is
+	update_foreground_display
 			-- Update area displaying the background color of the EV_COLORIZABLE.
 		do
 			f_area.set_background_color (first.foreground_color)
 			f_area.clear
 		end
 
-	update_foreground_color is
+	update_foreground_color
 			-- Update `foreground_color' of objects through an EV_COLOR_DIALOG.
 		do
 			color_dialog.set_color (foreground_color)
@@ -258,7 +258,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	actually_set_foreground_color (color: EV_COLOR) is
+	actually_set_foreground_color (color: EV_COLOR)
 			-- Actually update the foreground colors.
 		local
 			p: PROCEDURE [EV_ANY, TUPLE]
@@ -270,7 +270,7 @@ feature {NONE} -- Implementation
 			update_foreground_display
 		end
 
-	build_string_from_color (color: EV_COLOR): STRING is
+	build_string_from_color (color: EV_COLOR): STRING
 			-- `Result' is string representation of `color'.
 		require
 			color_not_void: color /= Void
@@ -290,7 +290,7 @@ feature {NONE} -- Implementation
 			Result.append_string (color.blue_8_bit.out)
 		end
 
-	build_color_from_string (a_string: STRING): EV_COLOR is
+	build_color_from_string (a_string: STRING): EV_COLOR
 			-- `Result' is an EV_COLOR built from contents of `a_string'.
 		require
 			string_correct_length: a_string.count = 9
@@ -305,7 +305,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	add_leading_zeros (count: INTEGER): STRING is
+	add_leading_zeros (count: INTEGER): STRING
 			-- `Result' is `a_string' with `count' '0's added.
 		require
 			count_ok: count > 0 and count <= 2
@@ -333,7 +333,7 @@ feature {NONE} -- Implementation
 
 	color_dialog: EV_COLOR_DIALOG;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

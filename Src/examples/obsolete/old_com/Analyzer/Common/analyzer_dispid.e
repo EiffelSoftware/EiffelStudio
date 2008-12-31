@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Analyzer dipatch identifiers"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -10,23 +10,23 @@ class
 
 feature -- Access
 
-	Dispid_text: INTEGER is 1
+	Dispid_text: INTEGER = 1
 
-	Dispid_word_count: INTEGER is 2
+	Dispid_word_count: INTEGER = 2
 	
-	Dispid_line_count: INTEGER is 3
+	Dispid_line_count: INTEGER = 3
 		
-	Dispid_sentence_count: INTEGER is 4
+	Dispid_sentence_count: INTEGER = 4
 	
-	Dispid_occurrences: INTEGER is 5
+	Dispid_occurrences: INTEGER = 5
 		
-	Dispid_terminate: INTEGER is 6
+	Dispid_terminate: INTEGER = 6
 	
-	Dispid_show: INTEGER is 7
+	Dispid_show: INTEGER = 7
 	
-	Dispid_hide: INTEGER is 8;
+	Dispid_hide: INTEGER = 8;
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

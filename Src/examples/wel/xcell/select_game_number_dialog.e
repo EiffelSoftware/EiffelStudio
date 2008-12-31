@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parent: WEL_COMPOSITE_WINDOW) is
+	make (a_parent: WEL_COMPOSITE_WINDOW)
 			-- Creates the dialog
 		require
 			a_parent_not_void: a_parent /= Void
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	set_game_number (a_game_number: INTEGER) is
+	set_game_number (a_game_number: INTEGER)
 			-- Set the 'game_number' to `a_game_number'
 		do
 			game_number := a_game_number
@@ -48,14 +48,14 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	setup_dialog is
+	setup_dialog
 			-- Setup the dialog before
 			-- it is activated
 		do
 			number_edit.set_text (game_number.out)
 		end
 
-	on_ok is
+	on_ok
 			-- Ok button is pressed
 		local
 			msg_box: WEL_MSG_BOX
@@ -78,7 +78,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

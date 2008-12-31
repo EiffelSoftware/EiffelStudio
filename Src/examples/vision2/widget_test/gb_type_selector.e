@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that allow you to select a widget type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 			-- Fill with supported Widgets.
 		local
@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	widget_type_selected is
+	widget_type_selected
 			-- Set type of widget to test to match the text
 			-- of `selected_item'.
 		local
@@ -88,7 +88,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	pixmap_by_type (a_type: STRING): EV_PIXMAP is
+	pixmap_by_type (a_type: STRING): EV_PIXMAP
 			-- Retrieve a pixmap based on name `a_type', in
 			-- the correct format for the current platform.
 			-- PNG for Unix and ICO for windows.
@@ -112,14 +112,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	containers: ARRAY [STRING] is
+	containers: ARRAY [STRING]
 		once
 			Result := <<"EV_CELL", "EV_FIXED", "EV_FRAME", "EV_HORIZONTAL_BOX",
 				"EV_HORIZONTAL_SPLIT_AREA", "EV_NOTEBOOK", "EV_SCROLLABLE_AREA",
 				"EV_TABLE", "EV_VERTICAL_BOX", "EV_VERTICAL_SPLIT_AREA", "EV_VIEWPORT">>
 		end
 
-	primitives: ARRAY [STRING] is
+	primitives: ARRAY [STRING]
 		once
 			Result := <<"EV_BUTTON", "EV_CHECK_BUTTON", "EV_CHECKABLE_LIST", "EV_CHECKABLE_TREE", "EV_COMBO_BOX", "EV_DRAWING_AREA", "EV_GRID", "EV_HEADER",
 				"EV_HORIZONTAL_PROGRESS_BAR", "EV_HORIZONTAL_RANGE", "EV_HORIZONTAL_SCROLL_BAR",
@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 				>>
 		end
 
-	add_tree_items (list: ARRAY [STRING]; tree_item: EV_TREE_ITEM) is
+	add_tree_items (list: ARRAY [STRING]; tree_item: EV_TREE_ITEM)
 			-- Add items corresponding to contents of `list' to `tree_item'.
 		local
 			counter: INTEGER
@@ -152,7 +152,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	strip_leading_ev (tree_item: EV_TREE_ITEM) is
+	strip_leading_ev (tree_item: EV_TREE_ITEM)
 			-- If `tree_item' starts with "EV_", strip
 			-- this.
 		require
@@ -163,13 +163,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in default state?
 		do
 			Result := True
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

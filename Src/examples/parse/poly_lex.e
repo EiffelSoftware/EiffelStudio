@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Lexical interface class for the Polynomial language
@@ -16,7 +16,7 @@ inherit
 
 feature {NONE}
 
-	obtain_analyzer is
+	obtain_analyzer
 			-- Create lexical analyzer for the Polynomial language
 		do
 			ignore_case
@@ -26,7 +26,7 @@ feature {NONE}
 			set_separator_type (Blanks)
 		end -- obtain_analyzer
 
-	build_expressions is
+	build_expressions
 			-- Define regular expressions
 			-- for the Polynomial language
 		do
@@ -36,7 +36,7 @@ feature {NONE}
 			put_expression ("+('\t'|'\n'|' ')", Blanks, "Blanks")
 		end -- build_expressions
 
-	special_expression: STRING is
+	special_expression: STRING
 			-- Regular expression describing `Special'
 		once
 			create Result.make (80)
@@ -45,7 +45,7 @@ feature {NONE}
 			Result.append ("'['|']'|'|'|'{'|'}'|%"->%"|%":=%"")
 		end -- special_expression
 
-	build_keywords is
+	build_keywords
 			-- Define keywords (special symbols)
 			-- for the Polynomial language
 		do
@@ -58,7 +58,7 @@ feature {NONE}
 			put_keyword ("*", Special)
 		end -- build_keywords
  
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

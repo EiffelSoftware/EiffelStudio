@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class WINDOW1
@@ -25,7 +25,7 @@ feature
 			-- Form: widget which manages relative
 			-- positions of children widgets.
 
-	make (a_name: STRING; a_s: SCREEN) is
+	make (a_name: STRING; a_s: SCREEN)
 		do
 			base_make (a_name, a_s);
 			create form.make ("Form", Current);
@@ -36,13 +36,13 @@ feature
 			set_callbacks;
 		end;
 
-	set_values is
+	set_values
 		do
 			button1.set_text ("Popup message");
 			button2.set_text ("Create window");
 		end;
 
-	set_attachments is
+	set_attachments
 			-- Perform relative attachments
 			-- of the push button in the form.
 		do
@@ -55,7 +55,7 @@ feature
 			form.attach_top_widget (button1, button2, 5);
 		end;
 
-	set_callbacks is
+	set_callbacks
 		local
 			popup_command: POPUP_COMMAND;
 			realize_command: REALIZE_COMMAND;
@@ -66,7 +66,7 @@ feature
 			button2.add_activate_action (realize_command, other_window);
 		end;
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

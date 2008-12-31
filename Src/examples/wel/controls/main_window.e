@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Make the main window
 		do
 			make_top (Title)
@@ -70,7 +70,7 @@ feature -- Access
 
 	vertical_scroll_bar: BOOLEAN
 
-	background_brush: WEL_BRUSH is
+	background_brush: WEL_BRUSH
 			-- Dialog boxes background color is the same than
 			-- button color.
 		do
@@ -80,20 +80,20 @@ feature -- Access
 feature {NONE} -- Implementation
 
 	on_vertical_scroll_control (scroll_code, position: INTEGER;
-			bar: WEL_SCROLL_BAR) is
+			bar: WEL_SCROLL_BAR)
 		do
 			bar.on_scroll (scroll_code, position)
 			static.set_text (bar.position.out)
 		end
 
 	on_horizontal_scroll_control (scroll_code, position: INTEGER;
-			bar: WEL_SCROLL_BAR) is
+			bar: WEL_SCROLL_BAR)
 		do
 			bar.on_scroll (scroll_code, position)
 			static.set_text (bar.position.out)
 		end
 
-	on_menu_command (menu_id: INTEGER) is
+	on_menu_command (menu_id: INTEGER)
 		do
 			inspect
 				menu_id
@@ -191,12 +191,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_accelerator_command (accelerator_id: INTEGER) is
+	on_accelerator_command (accelerator_id: INTEGER)
 		do
 			on_menu_command (accelerator_id)
 		end
 
-	closeable: BOOLEAN is
+	closeable: BOOLEAN
 		local
 			msg_box: WEL_MSG_BOX
 		do
@@ -205,70 +205,70 @@ feature {NONE} -- Implementation
 			Result := msg_box.message_box_result = Idyes
 		end
 
-	text_info: STRING is
+	text_info: STRING
 		once
 			create Result.make (20)
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	main_menu: WEL_MENU is
+	main_menu: WEL_MENU
 		once
 			create Result.make_by_id (Id_menu_application)
 			menu_start
 		end
 
-	list_box_menu: WEL_MENU is
+	list_box_menu: WEL_MENU
 		once
 			Result := main_menu.popup_menu (0)
 		end
 
-	list_box_mul_menu: WEL_MENU is
+	list_box_mul_menu: WEL_MENU
 		once
 			Result := main_menu.popup_menu (1)
 		end
 
-	combo_box_menu: WEL_MENU is
+	combo_box_menu: WEL_MENU
 		once
 			Result := main_menu.popup_menu (2)
 		end
 
-	edit_menu: WEL_MENU is
+	edit_menu: WEL_MENU
 		once
 			Result := main_menu.popup_menu (3)
 		end
 
-	multi_edit_menu: WEL_MENU is
+	multi_edit_menu: WEL_MENU
 		once
 			Result := main_menu.popup_menu (4)
 		end
 
-	button_menu: WEL_MENU is
+	button_menu: WEL_MENU
 		once
 			Result := main_menu.popup_menu (5)
 		end
 
-	scroll_bar_menu: WEL_MENU is
+	scroll_bar_menu: WEL_MENU
 		once
 			Result := main_menu.popup_menu (6)
 		end
 
-	radio_menu: WEL_MENU is
+	radio_menu: WEL_MENU
 		once
 			Result := main_menu.popup_menu (7)
 		end
 
-	check_menu: WEL_MENU is
+	check_menu: WEL_MENU
 		once
 			Result := main_menu.popup_menu (8)
 		end
 
-	scroll_bar_sub_menu: WEL_MENU is
+	scroll_bar_sub_menu: WEL_MENU
 		once
 			Result := scroll_bar_menu.popup_menu (0)
 		end
 
-	menu_start is
+	menu_start
 		do
 			list_box_menu.disable_item (Cmd_list_box_delete)
 			list_box_menu.disable_item (Cmd_list_box_add_item)
@@ -305,7 +305,7 @@ feature {NONE} -- Implementation
 			check_menu.disable_item (Cmd_check_state)
 		end
 
-	menu_list_box_create is
+	menu_list_box_create
 		do
 			list_box_item_num := 0
 			create list_box.make (Current, 10, 100, 100, 200, -1)
@@ -317,7 +317,7 @@ feature {NONE} -- Implementation
 			list_box_menu.enable_item (Cmd_list_box_count_item)
 		end
 
-	menu_list_box_delete is
+	menu_list_box_delete
 		do
 			list_box.destroy
 			list_box_menu.enable_item (Cmd_list_box_create)
@@ -327,7 +327,7 @@ feature {NONE} -- Implementation
 			list_box_menu.disable_item (Cmd_list_box_current_item)
 		end
 
-	menu_list_box_add_item is
+	menu_list_box_add_item
 		do
 			list_box_menu.enable_item (Cmd_list_box_current_item)
 			text_info.wipe_out
@@ -337,7 +337,7 @@ feature {NONE} -- Implementation
 			list_box_item_num := list_box_item_num + 1
 		end
 
-	menu_list_box_count_item is
+	menu_list_box_count_item
 		local
 			msg_box: WEL_MSG_BOX
 		do
@@ -352,7 +352,7 @@ feature {NONE} -- Implementation
 			msg_box.information_message_box (Current, text_info, "Count item")
 		end
 
-	menu_list_box_current_item is
+	menu_list_box_current_item
 		local
 			msg_box: WEL_MSG_BOX
 		do
@@ -368,7 +368,7 @@ feature {NONE} -- Implementation
 			msg_box.information_message_box (Current, text_info, "Current item")
 		end
 
-	menu_mul_create is
+	menu_mul_create
 		do
 			list_box_mul_item_num := 0
 			create list_box_mul.make (Current, 116, 100, 100, 200, -1)
@@ -381,7 +381,7 @@ feature {NONE} -- Implementation
 			list_box_mul_menu.enable_item (Cmd_mul_count_selected_item)
 		end
 
-	menu_mul_delete is
+	menu_mul_delete
 		do
 			list_box_mul.destroy
 			list_box_mul_menu.enable_item (Cmd_mul_create)
@@ -392,7 +392,7 @@ feature {NONE} -- Implementation
 			list_box_mul_menu.disable_item (Cmd_mul_current_item)
 		end
 
-	menu_mul_add_item is
+	menu_mul_add_item
 		do
 			list_box_mul_menu.enable_item (Cmd_mul_current_item)
 			text_info.wipe_out
@@ -402,7 +402,7 @@ feature {NONE} -- Implementation
 			list_box_mul_item_num := list_box_mul_item_num + 1
 		end
 
-	menu_mul_count_item is
+	menu_mul_count_item
 		local
 			msg_box: WEL_MSG_BOX
 		do
@@ -417,7 +417,7 @@ feature {NONE} -- Implementation
 			msg_box.information_message_box (Current, text_info, "Count item")
 		end
 
-	menu_mul_count_selected_item is
+	menu_mul_count_selected_item
 		local
 			msg_box: WEL_MSG_BOX
 			selected_items: ARRAY [INTEGER]
@@ -448,7 +448,7 @@ feature {NONE} -- Implementation
 			msg_box.information_message_box (Current, text_info, "Count item")
 		end
 
-	menu_mul_current_item is
+	menu_mul_current_item
 		local
 			i: INTEGER
 			array_items: ARRAY [STRING_32]
@@ -481,7 +481,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	menu_combo_box_create is
+	menu_combo_box_create
 		do
 			combo_box_item_num := 0
 			create combo_box.make (Current, 115, 20, 102, 90, -1)
@@ -495,7 +495,7 @@ feature {NONE} -- Implementation
 			combo_box_menu.enable_item (Cmd_combo_box_hide_list)
 		end
 
-	menu_combo_box_delete is
+	menu_combo_box_delete
 		do
 			combo_box.hide_list
 			combo_box.destroy
@@ -508,7 +508,7 @@ feature {NONE} -- Implementation
 			combo_box_menu.disable_item (Cmd_combo_box_hide_list)
 		end
 
-	menu_combo_box_add_item is
+	menu_combo_box_add_item
 		do
 			combo_box_menu.enable_item (Cmd_combo_box_current_item)
 			text_info.wipe_out
@@ -518,7 +518,7 @@ feature {NONE} -- Implementation
 			combo_box_item_num := combo_box_item_num + 1
 		end
 
-	menu_combo_box_count_item is
+	menu_combo_box_count_item
 		local
 			msg_box: WEL_MSG_BOX
 		do
@@ -533,7 +533,7 @@ feature {NONE} -- Implementation
 			msg_box.information_message_box (Current, text_info, "Count item")
 		end
 
-	menu_combo_box_current_item is
+	menu_combo_box_current_item
 		local
 			msg_box: WEL_MSG_BOX
 		do
@@ -549,17 +549,17 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	menu_combo_show_list is
+	menu_combo_show_list
 		do
 			combo_box.show_list
 		end
 
-	menu_combo_hide_list is
+	menu_combo_hide_list
 		do
 			combo_box.hide_list
 		end
 
-	menu_button_create is
+	menu_button_create
 		do
 			create button.make (Current, "Button", 10, 20, 100, 50, -1)
 			button.set_font(gui_font)
@@ -572,7 +572,7 @@ feature {NONE} -- Implementation
 			button_menu.check_item (Cmd_button_enable)
 		end
 
-	menu_button_delete is
+	menu_button_delete
 		do
 			button.destroy
 			button_menu.disable_item (Cmd_button_delete)
@@ -583,21 +583,21 @@ feature {NONE} -- Implementation
 			button_menu.uncheck_item (Cmd_button_disable)
 		end
 
-	menu_button_enable is
+	menu_button_enable
 		do
 			button.enable
 			button_menu.check_item (Cmd_button_enable)
 			button_menu.uncheck_item (Cmd_button_disable)
 		end
 
-	menu_button_disable is
+	menu_button_disable
 		do
 			button.disable
 			button_menu.uncheck_item (Cmd_button_enable)
 			button_menu.check_item (Cmd_button_disable)
 		end
 
-	menu_edit_create is
+	menu_edit_create
 		do
 			create edit.make (Current, "Edit", 250,
 				100, 100, 22, -1)
@@ -610,7 +610,7 @@ feature {NONE} -- Implementation
 			edit_menu.enable_item (Cmd_edit_current_text)
 		end
 
-	menu_edit_delete is
+	menu_edit_delete
 		do
 			edit.destroy
 			edit_menu.enable_item (Cmd_edit_create)
@@ -621,17 +621,17 @@ feature {NONE} -- Implementation
 			edit_menu.disable_item (Cmd_edit_current_text)
 		end
 
-	menu_edit_set_text is
+	menu_edit_set_text
 		do
 			edit.set_text ("New text")
 		end
 
-	menu_edit_clear_text is
+	menu_edit_clear_text
 		do
 			edit.clear
 		end
 
-	menu_edit_text_length is
+	menu_edit_text_length
 		local
 			msg_box: WEL_MSG_BOX
 		do
@@ -642,7 +642,7 @@ feature {NONE} -- Implementation
 			msg_box.information_message_box (Current, text_info, "Text length")
 		end
 
-	menu_edit_current_text is
+	menu_edit_current_text
 		local
 			msg_box: WEL_MSG_BOX
 		do
@@ -650,7 +650,7 @@ feature {NONE} -- Implementation
 			msg_box.information_message_box (Current, edit.text, "Current text")
 		end
 
-	menu_multi_edit_create is
+	menu_multi_edit_create
 		do
 			create multi_edit.make (Current, "Multiple line edit", 250,
 				20, 300, 70, -1)
@@ -663,7 +663,7 @@ feature {NONE} -- Implementation
 			multi_edit_menu.enable_item (Cmd_multi_edit_current_text)
 		end
 
-	menu_multi_edit_delete is
+	menu_multi_edit_delete
 		do
 			multi_edit.destroy
 			multi_edit_menu.enable_item (Cmd_multi_edit_create)
@@ -674,17 +674,17 @@ feature {NONE} -- Implementation
 			multi_edit_menu.disable_item (Cmd_multi_edit_current_text)
 		end
 
-	menu_multi_edit_set_text is
+	menu_multi_edit_set_text
 		do
 			multi_edit.set_text ("New text")
 		end
 
-	menu_multi_edit_clear_text is
+	menu_multi_edit_clear_text
 		do
 			multi_edit.clear
 		end
 
-	menu_multi_edit_text_length is
+	menu_multi_edit_text_length
 		local
 			msg_box: WEL_MSG_BOX
 		do
@@ -695,7 +695,7 @@ feature {NONE} -- Implementation
 			msg_box.information_message_box (Current, text_info, "Text length")
 		end
 
-	menu_multi_edit_current_text is
+	menu_multi_edit_current_text
 		local
 			msg_box: WEL_MSG_BOX
 		do
@@ -703,7 +703,7 @@ feature {NONE} -- Implementation
 			msg_box.information_message_box (Current, multi_edit.text, "Current text")
 		end
 
-	menu_scroll_bar_create is
+	menu_scroll_bar_create
 		do
 			create static.make (Current, "static", 250, 270,
 				30, 20, -1)
@@ -725,7 +725,7 @@ feature {NONE} -- Implementation
 			static.set_text (text_info)
 		end
 
-	menu_scroll_bar_delete is
+	menu_scroll_bar_delete
 		do
 			static.destroy
 			scroll_bar.destroy
@@ -734,19 +734,19 @@ feature {NONE} -- Implementation
 			scroll_bar_sub_menu.enable_item (Cmd_scroll_bar_set_horizontal)
 		end
 
-	menu_scroll_bar_set_vertical is
+	menu_scroll_bar_set_vertical
 		do
 			vertical_scroll_bar := True
 			menu_scroll_bar_create
 		end
 
-	menu_scroll_bar_set_horizontal is
+	menu_scroll_bar_set_horizontal
 		do
 			vertical_scroll_bar := False
 			menu_scroll_bar_create
 		end
 
-	menu_radio_create is
+	menu_radio_create
 		do
 			create group1.make (Current, "Group box", 380, 90, 85, 70, -1)
 			group1.set_font(gui_font)
@@ -759,7 +759,7 @@ feature {NONE} -- Implementation
 			radio_menu.disable_item (Cmd_radio_create)
 		end
 
-	menu_radio_delete is
+	menu_radio_delete
 		do
 			radio1.destroy
 			radio2.destroy
@@ -769,7 +769,7 @@ feature {NONE} -- Implementation
 			radio_menu.enable_item (Cmd_radio_create)
 		end
 
-	menu_radio_state is
+	menu_radio_state
 		local
 			msg_box: WEL_MSG_BOX
 		do
@@ -792,7 +792,7 @@ feature {NONE} -- Implementation
 			msg_box.information_message_box (Current, text_info, "State")
 		end
 
-	menu_check_create is
+	menu_check_create
 		do
 			create group2.make (Current, "Group box", 380, 180, 85, 70, -1)
 			group2.set_font(gui_font)
@@ -805,7 +805,7 @@ feature {NONE} -- Implementation
 			check_menu.disable_item (Cmd_check_create)
 		end
 
-	menu_check_delete is
+	menu_check_delete
 		do
 			bcheck1.destroy
 			bcheck2.destroy
@@ -815,7 +815,7 @@ feature {NONE} -- Implementation
 			check_menu.enable_item (Cmd_check_create)
 		end
 
-	menu_check_state is
+	menu_check_state
 		local
 			msg_box: WEL_MSG_BOX
 		do
@@ -838,10 +838,10 @@ feature {NONE} -- Implementation
 			msg_box.information_message_box (Current, text_info, "State")
 		end
 
-	Title: STRING is "WEL Controls";
+	Title: STRING = "WEL Controls";
 			-- Window's title
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

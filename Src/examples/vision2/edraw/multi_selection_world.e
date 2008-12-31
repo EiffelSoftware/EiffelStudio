@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EV_MODEL_WORLD with ability to select and deselect figures."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create an empty MULTI_SELECTION_WORLD
 		do
 			Precursor {EV_MODEL_WORLD}
@@ -44,7 +44,7 @@ feature -- Access
 			
 feature -- Status Settings
 
-	enable_selection is
+	enable_selection
 			-- Set `is_selection_enabled' to True.
 		do
 			is_selection_enabled := True
@@ -52,7 +52,7 @@ feature -- Status Settings
 			set: is_selection_enabled
 		end
 		
-	disable_selection is
+	disable_selection
 			-- Set `is_selection_enabled' to False.
 		do
 			is_selection_enabled := False
@@ -63,7 +63,7 @@ feature -- Status Settings
 
 feature -- Element change
 
-	select_figure (figure: EV_MODEL) is
+	select_figure (figure: EV_MODEL)
 			-- Add `figure' to `selected_figures'
 		require
 			figure_exists: figure /= Void
@@ -81,7 +81,7 @@ feature -- Element change
 			added: old selected_figures.count + 1 = selected_figures.count
 		end
 		
-	deselect_figure (figure: EV_MODEL) is
+	deselect_figure (figure: EV_MODEL)
 			-- Remove `figure' from `selected_figures'.
 		require
 			figure_exists: figure /= Void
@@ -102,7 +102,7 @@ feature -- Element change
 		end
 		
 
-	select_all is
+	select_all
 			-- Select all figures.
 		local
 			sg: SELECTION_GROUP
@@ -132,7 +132,7 @@ feature -- Element change
 			end
 		end
 		
-	deselect_all is
+	deselect_all
 			-- Deselect all figures.
 		local
 			sg: SELECTION_GROUP
@@ -151,7 +151,7 @@ feature -- Element change
 			selected_figures.wipe_out
 		end
 		
-	delete_selected is
+	delete_selected
 			-- Delete all selected figures.
 		local
 			sg: SELECTION_GROUP
@@ -171,7 +171,7 @@ feature -- Element change
 			selected_figures.wipe_out
 		end
 		
-	invert_selection is
+	invert_selection
 			-- Invert the selection.
 		local
 			figures_to_select: ARRAYED_LIST [EV_MODEL]
@@ -202,7 +202,7 @@ feature -- Element change
 			end
 		end
 		
-	group_selection is
+	group_selection
 			-- Group selected figures.
 		require
 			more_then_one: selected_figures.count > 1
@@ -225,7 +225,7 @@ feature -- Element change
 			select_figure (new_group)
 		end
 		
-	ungroup_selection is
+	ungroup_selection
 			-- Ungroup selected figures.
 		require
 			one_selected: selected_figures.count = 1
@@ -252,14 +252,14 @@ feature -- Element change
 		
 feature {NONE} -- Implementation
 
-	new_selection_group: SELECTION_GROUP is
+	new_selection_group: SELECTION_GROUP
 			-- Return instance of a SELECTION_GROUP, redefine if you
 			-- need your on selection group.
 		do
 			create Result
 		end
 
-	on_pointer_pressed (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	on_pointer_pressed (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- User pressed on `world'.
 		local
 			top_fig: EV_MODEL
@@ -274,7 +274,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	top_figure_at (ax, ay: INTEGER; a_group: EV_MODEL_GROUP): EV_MODEL is
+	top_figure_at (ax, ay: INTEGER; a_group: EV_MODEL_GROUP): EV_MODEL
 			-- Return top figure at (`ax', `ay') in `a_group' if any.
 		require
 			a_group_not_void: a_group /= Void
@@ -301,7 +301,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_select_figure (figure: EV_MODEL; ax, ay: INTEGER) is
+	on_select_figure (figure: EV_MODEL; ax, ay: INTEGER)
 			-- User pressed on `figure'.
 		require
 			a_figure_exist: figure /= Void
@@ -329,7 +329,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	root_figure (a_figure: EV_MODEL): EV_MODEL is
+	root_figure (a_figure: EV_MODEL): EV_MODEL
 			-- Root group containing `a_figure' but not `Current'.
 		require
 			a_figure_not_void: a_figure /= Void
@@ -341,7 +341,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Customized dialog for showing preferences.  This dialog show preferences on the left side as a pixmap and
 			then the child prefences to the right in separate frames for a nicer look.
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_parent (a_preferences: like preferences; a_parent_window: like parent_window) is
+	make_with_parent (a_preferences: like preferences; a_parent_window: like parent_window)
 				-- Initialize
 		do
 			make (a_preferences)
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			show
 		end
 
-	user_initialization is
+	user_initialization
 			-- called by `initialize'.
 			-- Any custom user initialization that
 			-- could not be performed in `initialize',
@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 			p.disable_item_expand (but_import)
 		end
 
-	export_preferences is
+	export_preferences
 		local
 			dlg: EV_FILE_SAVE_DIALOG
 			s: STRING_32
@@ -74,7 +74,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	import_preferences is
+	import_preferences
 		local
 			dlg: EV_FILE_OPEN_DIALOG
 			s: STRING_32
@@ -98,7 +98,7 @@ feature -- Access
 
 feature -- Change
 
-	set_parent_window (p: like parent_window) is
+	set_parent_window (p: like parent_window)
 			-- Set `parent_window'
 		do
 			parent_window := p
@@ -108,7 +108,7 @@ feature {NONE} -- Implementation
 
 	grid: EV_GRID
 
-	fill_list is
+	fill_list
 			-- Fill Left pixmaps list.
 		local
 			l_pref_hash: HASH_TABLE [EV_PIXMAP, STRING]
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	fill_container (parent_preference: STRING) is
+	fill_container (parent_preference: STRING)
 			-- Show parent preferences.
 		require
 			parent_not_void: parent_preference /= Void
@@ -196,7 +196,7 @@ feature {NONE} -- Implementation
 			grid.refresh_now
 		end
 
-	show_preference_in_container (a_preference: PREFERENCE; a_row_index: INTEGER) is
+	show_preference_in_container (a_preference: PREFERENCE; a_row_index: INTEGER)
 				-- Show selected list preference in main container.
 		require
 			preference_not_void: a_preference /= Void
@@ -238,7 +238,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Events
 
-	on_close is
+	on_close
 			-- Close button has been pushed: apply the changes then close
 			-- the Preferences Window.
 		do
@@ -246,14 +246,14 @@ feature {NONE} -- Events
 			destroy
 		end
 
-	on_cancel is
+	on_cancel
 			-- Cancel button has been pushed: retrieve previous preference values to cancel those which
 			-- were just modified.
 		do
 			destroy
 		end
 
-	on_restore is
+	on_restore
 			-- Restore all preferences
 		local
 			l_confirmation_dialog: EV_CONFIRMATION_DIALOG
@@ -275,10 +275,10 @@ feature {NONE} -- Private Attributes
 	selected_preference_name: STRING
 			-- Selected preference
 
-	padding_width: INTEGER is 3;
+	padding_width: INTEGER = 3;
 			-- Column padding width
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

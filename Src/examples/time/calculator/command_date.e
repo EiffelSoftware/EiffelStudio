@@ -1,4 +1,4 @@
-indexing
+note
     description: "notion of command to be executed by the calculator"
 	legal: "See notice at end of class."
     status: "See notice at end of class."
@@ -11,7 +11,7 @@ deferred class
 
 feature
 
-	execute (d: DATE): DATE is
+	execute (d: DATE): DATE
 		require
 			d_exists: d /= Void		 
 		deferred
@@ -19,13 +19,13 @@ feature
 			result_exists: Result /= Void
 		end;
 
-	display_help: STRING is
+	display_help: STRING
 		deferred
 		ensure
 			result_exists: Result /= Void
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

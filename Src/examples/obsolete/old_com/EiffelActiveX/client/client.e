@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,11 +24,11 @@ inherit
 
 feature -- Access
 
-	class_id: STRING is "{2DB76EC0-9672-11D2-B961-00403392AC95}"
+	class_id: STRING = "{2DB76EC0-9672-11D2-B961-00403392AC95}"
 
 feature -- Basic operations
 
-	sum (arg1, arg2: INTEGER): INTEGER is
+	sum (arg1, arg2: INTEGER): INTEGER
 		local
 			d_arg1, d_arg2: EOLE_VARIANT
 		do
@@ -54,7 +54,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	check_result is
+	check_result
 			-- Check result of last routine and display
 			-- a message box if there was an error.
 		local
@@ -78,7 +78,7 @@ feature {NONE} -- Implementation
 invariant
 	invariant_clause: -- Your invariant here
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

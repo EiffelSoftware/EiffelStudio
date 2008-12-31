@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class DRAW_B_DEMO_WINDOW
@@ -13,12 +13,12 @@ create
 
 feature
 
-	main_widget: WIDGET is
+	main_widget: WIDGET
 		once
 			create {DRAW_B} Result.make ("Draw_b", Current)
 		end
 
-	set_widgets is
+	set_widgets
 		local
 			draw_b: DRAW_B
 		do
@@ -29,7 +29,7 @@ feature
 			draw_b.add_expose_action (Current, Void)
 		end
 
-	work (arg: INTEGER_REF) is
+	work (arg: INTEGER_REF)
 		local
 			draw_b: DRAW_B
 			circle1, circle2, circle3, circle4: CIRCLE
@@ -96,7 +96,7 @@ feature
 			circle4.draw
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

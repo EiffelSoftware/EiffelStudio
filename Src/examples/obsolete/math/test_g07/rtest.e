@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Test class for G05"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ create
 	make
 
 feature
-	make is
+	make
 			-- Test g07
 		local
 			ms: MEDIAN_STATISTICS;
@@ -32,7 +32,7 @@ feature
 			print(ms.tagged_out);
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

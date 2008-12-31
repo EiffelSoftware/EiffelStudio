@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parent: WEL_COMPOSITE_WINDOW) is
+	make (a_parent: WEL_COMPOSITE_WINDOW)
 		do
 			make_by_id (a_parent, Id_dialog_pizza)
 			create size.make_by_id (Current,
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 				Id_static_price)
 		end
 
-	setup_dialog is
+	setup_dialog
 		do
 			static_price.set_text ("$0")
 			listbox_items.add_string ("Bacon")
@@ -75,7 +75,7 @@ feature {NONE} -- Initialization
 			radio_for_here.set_checked
 		end
 
-	notify (control: WEL_CONTROL; notify_code: INTEGER) is
+	notify (control: WEL_CONTROL; notify_code: INTEGER)
 		do
 			if control = listbox_items then
 				items_selected := listbox_items.count_selected_items
@@ -97,7 +97,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	update_price is
+	update_price
 		local
 			price: REAL
 		do
@@ -118,7 +118,7 @@ feature {NONE} -- Implementation
 
 feature
 
-	on_ok is
+	on_ok
 		local
 			i: INTEGER
 			sel_string: ARRAY [STRING_32]
@@ -153,7 +153,7 @@ feature
 			terminate (Idok)
 		end
 
-	text_info: STRING is
+	text_info: STRING
 		once
 			create Result.make (200)
 		ensure
@@ -175,7 +175,7 @@ feature -- Access
 
 	static_price: WEL_STATIC;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

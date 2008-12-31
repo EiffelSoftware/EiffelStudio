@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Display text with a special color"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature
 	
-	background_color: WEL_COLOR_REF is
+	background_color: WEL_COLOR_REF
 			-- Background color used for the background of the
 			-- control
 			-- Can be redefined by the user
@@ -28,7 +28,7 @@ feature
 			create Result.make 
 		end
 			
-	foreground_color: WEL_COLOR_REF is
+	foreground_color: WEL_COLOR_REF
 			-- Foreground color used for the background of the
 			-- control
 			-- Can be redefined by the user
@@ -36,7 +36,7 @@ feature
 			create Result.make
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

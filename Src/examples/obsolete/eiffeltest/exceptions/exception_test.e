@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Test demonstrating how to assert an exception"
 	legal: "See notice at end of class."
@@ -17,11 +17,11 @@ create
 
 feature -- Access
 
-	Name: STRING is "Exception test"
+	Name: STRING = "Exception test"
 
 feature -- Basic operations
 
-	do_test is
+	do_test
 			-- Do test action.
 		local
 			s: LINKED_STACK [INTEGER]
@@ -33,7 +33,7 @@ feature -- Basic operations
 			s.remove
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

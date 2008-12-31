@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that provide attributes for all examples."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,7 +30,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	numbered_pixmap (a_number: INTEGER): EV_PIXMAP is
+	numbered_pixmap (a_number: INTEGER): EV_PIXMAP
 			-- `Result' is pixmap named "image" + a_number.out.
 		local
 			filename: FILE_NAME
@@ -57,7 +57,7 @@ feature {NONE} -- Implementation
 invariant
 	widget_not_void: Widget /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

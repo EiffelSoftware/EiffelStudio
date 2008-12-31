@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 Class STORE_OBJECTS 
@@ -12,7 +12,7 @@ create {ANY} -- Creation procedure
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		-- Prints various information
 	do
 		-- 1/ Choose host name and database name. Adjust wait and priority so that it suits your needs.
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 	end -- make
 
 
-	actions is
+	actions
 		--
 	local
 		mode,tid : INTEGER
@@ -79,13 +79,13 @@ feature {NONE} -- Initialization
 		stop_point
 	end -- make
 
-	stop_point is 
+	stop_point 
 	do
 	end
 
-	cany : MT_CLASS is once create Result.make("ANY") end -- cany
+	cany : MT_CLASS once create Result.make("ANY") end -- cany
 
-	cidf_table : MT_CLASS is once create Result.make("IDF_TABLE") end -- cany
+	cidf_table : MT_CLASS once create Result.make("IDF_TABLE") end -- cany
 
 feature {NONE} -- Implementation
 
@@ -95,7 +95,7 @@ feature {NONE} -- Implementation
 	session : DB_CONTROL;
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

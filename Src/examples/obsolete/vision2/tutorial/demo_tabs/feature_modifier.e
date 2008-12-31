@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ deferred class
 
 feature -- Initialization
 
-	initialize (par: EV_TABLE; top, left: INTEGER; title: STRING; cmd: EV_COMMAND) is
+	initialize (par: EV_TABLE; top, left: INTEGER; title: STRING; cmd: EV_COMMAND)
 			-- Create the label and the text.
 		require
 			valid_title: title /= Void
@@ -27,7 +27,7 @@ feature -- Access
 
 feature -- Status setting
 
-	disable_button is
+	disable_button
 			-- Disable the button
 		do
 			button.set_insensitive (True)
@@ -35,7 +35,7 @@ feature -- Status setting
 
 feature {NONE} -- Basic operation
 
-	create_button (par: EV_TABLE; top, left: INTEGER; cmd: EV_COMMAND) is
+	create_button (par: EV_TABLE; top, left: INTEGER; cmd: EV_COMMAND)
 			-- Create the button.
 		do
 			create button.make_with_text (par, "Fetch Value")
@@ -48,7 +48,7 @@ feature {NONE} -- Basic operation
 			button.set_vertical_resize (False)
 		end
 
-	create_label (par: EV_TABLE; top, left: INTEGER; title: STRING) is
+	create_label (par: EV_TABLE; top, left: INTEGER; title: STRING)
 			-- Create the label.
 		local
 			label: EV_LABEL
@@ -59,7 +59,7 @@ feature {NONE} -- Basic operation
 			label.set_horizontal_resize (False)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that test EV_TREE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 		
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create `Current' and initialize test in `widget'.
 		do
 			
@@ -36,7 +36,7 @@ feature {NONE} -- Implementation
 	expand_button, collapse_button: EV_BUTTON
 			-- Buttons for controlling expanding/collapsing `tree'.
 	
-	build_tree is
+	build_tree
 			-- Fill `tree' with tree items.
 		local
 			root_item: EV_TREE_ITEM
@@ -47,7 +47,7 @@ feature {NONE} -- Implementation
 			add_items (root_item, 4)
 		end
 		
-	add_items (item: EV_TREE_ITEM; count: INTEGER) is
+	add_items (item: EV_TREE_ITEM; count: INTEGER)
 			-- Add `count' items to `item'.
 		local
 			counter: INTEGER
@@ -70,7 +70,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

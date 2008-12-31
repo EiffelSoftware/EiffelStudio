@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A basic editor"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Initialization		
 
-	initialize_editor_context is
+	initialize_editor_context
 			-- Here initialize editor contextual settings.  For example, set location of cursor
 			-- pixmaps.
 		do
@@ -26,7 +26,7 @@ feature -- Initialization
 			set_icons (create {SAMPLE_EDITOR_ICONS})
 		end
 
-	icons_path, cursor_path: DIRECTORY_NAME is
+	icons_path, cursor_path: DIRECTORY_NAME
 			-- Paths
 		local
 			l_env: EXECUTION_ENVIRONMENT
@@ -36,13 +36,13 @@ feature -- Initialization
 			Result.extend ("bitmaps")
 		end
 
-	reference_window: EV_WINDOW is
+	reference_window: EV_WINDOW
 			-- Reference window
 		once
 			create Result
 		end
 
-	handle_extended_ctrled_key (ev_key: EV_KEY) is
+	handle_extended_ctrled_key (ev_key: EV_KEY)
  			-- Process the push on Ctrl + an extended key.
 		do
 			inspect
@@ -55,7 +55,7 @@ feature -- Initialization
 			end
 		end
 
-	save_current_document is
+	save_current_document
 			-- Save the document currently loaded
 		local
 			l_save_dialog: EV_FILE_SAVE_DIALOG
@@ -67,7 +67,7 @@ feature -- Initialization
 			end
 		end
 
-	write_to_disk (a_filename: STRING) is
+	write_to_disk (a_filename: STRING)
 			-- Write Current text to disk
 		local
 			file: PLAIN_TEXT_FILE
@@ -81,7 +81,7 @@ feature -- Initialization
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

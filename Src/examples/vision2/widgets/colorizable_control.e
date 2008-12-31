@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Controls used to modify objects of type EV_COLORIZABLE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (box: EV_BOX; colorizable: EV_COLORIZABLE; output: EV_TEXT) is
+	make (box: EV_BOX; colorizable: EV_COLORIZABLE; output: EV_TEXT)
 			-- Create controls to manipulate `colorizable', parented in `box' and
 			-- displaying output in `output'.
 		do
@@ -61,13 +61,13 @@ feature {NONE} -- Initialization
 		
 feature {NONE} -- Implementation
 		
-	reset_colors (colorizable: EV_COLORIZABLE) is
+	reset_colors (colorizable: EV_COLORIZABLE)
 			-- Rest colors and spin buttons.
 		do
 			colorizable.set_default_colors
 		end
 		
-	colorizable_set_background (colorizable: EV_COLORIZABLE) is
+	colorizable_set_background (colorizable: EV_COLORIZABLE)
 			-- Set the background color of `colorizable'.
 		local
 			color: EV_COLOR
@@ -76,7 +76,7 @@ feature {NONE} -- Implementation
 			colorizable.set_background_color (color)
 		end
 		
-	colorizable_set_foreground (colorizable: EV_COLORIZABLE) is
+	colorizable_set_foreground (colorizable: EV_COLORIZABLE)
 			-- Set the foreground color of `colorizable'.
 		local
 			color: EV_COLOR
@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 	button: EV_BUTTON
 	fspinr, fsping, fspinb, bspinr, bspinb, bsping: EV_SPIN_BUTTON;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

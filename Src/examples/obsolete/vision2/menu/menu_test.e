@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Test of scrollable_area."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ feature -- Initialization
 
 	pix: EV_PIXMAP
 
-	prepare is
+	prepare
 		do
 			create bar
 			first_window.set_menu_bar (bar)
@@ -116,7 +116,7 @@ feature -- Initialization
 			io.put_string (test_radio_grouping.out + "%N")
 		end
 
-	test_radio_grouping: BOOLEAN is
+	test_radio_grouping: BOOLEAN
 			-- Is radio grouping working correctly?
 		local
 			hb: EV_HORIZONTAL_BOX
@@ -169,12 +169,12 @@ feature -- Initialization
 	sd: EV_FILE_OPEN_DIALOG
 	si: EV_INFORMATION_DIALOG
 
-	on_ok is
+	on_ok
 		do
 			si.show_modal
 		end
 
-	on_exit is
+	on_exit
 		local
 			q: EV_QUESTION_DIALOG
 		do
@@ -186,24 +186,24 @@ feature -- Initialization
 			end
 		end
 
-	on_radio_test (arb: EV_RADIO_BUTTON) is
+	on_radio_test (arb: EV_RADIO_BUTTON)
 		do
 			io.put_string ("Me: " + arb.text + "%N")
 			io.put_string ("Sel: " + arb.selected_peer.text + "%N")
 		end
 
-	annoy is
+	annoy
 		do
 			sd.show_modal
 		end
 
-	first_window: EV_TITLED_WINDOW is
+	first_window: EV_TITLED_WINDOW
 		once
 			create Result
 			Result.set_title ("Main window")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class 
@@ -18,7 +18,7 @@ create
 	
 feature -- Initialization
 	
-	make (par: EV_CONTAINER) is
+	make (par: EV_CONTAINER)
                         -- Create a text field with, `par' as
                         -- parent
 		do
@@ -30,7 +30,7 @@ feature -- Initialization
 			set_minimum_width (50)
 		end
 	
-	make_with_label (par: EV_CONTAINER; name: STRING) is
+	make_with_label (par: EV_CONTAINER; name: STRING)
 			-- create a text field with name
 		do
 			make (par)
@@ -43,7 +43,7 @@ feature -- Access
 	label: EV_LABEL
 	box: EV_HORIZONTAL_BOX;
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

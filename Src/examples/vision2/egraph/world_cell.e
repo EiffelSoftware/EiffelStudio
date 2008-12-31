@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that is a EV_MODEL_WORLD_CELL using an EG_PROJECTOR to display an EG_FIGURE_WORLD."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ feature -- Access
 	world: EG_FIGURE_WORLD;
 			-- World `Current' displays.
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

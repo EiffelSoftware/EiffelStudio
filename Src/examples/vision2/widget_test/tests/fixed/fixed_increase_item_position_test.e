@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that demonstrate an EV_FIXED%
 		%being enlarged as a result of the positions of its items."
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 		
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create `Current' and initialize test in `widget'.
 		do
 			create fixed
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 		
-	move_button (a_button: EV_BUTTON; x, y: INTEGER) is
+	move_button (a_button: EV_BUTTON; x, y: INTEGER)
 			-- Move `a_button' by `x' and `y' within `fixed'.
 		require
 			fixed_has_button: fixed.has (a_button)
@@ -54,7 +54,7 @@ feature {NONE} -- Implementation
 	move_right, move_down, move_diagonal: EV_BUTTON;
 		-- Widgets placed in `fixed' that show its operation.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "LISTVIEW class of the WEL example : List_view."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -51,7 +51,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_parent: WEL_WINDOW; a_x, a_y, a_width, a_height,
-				an_id: INTEGER) is
+				an_id: INTEGER)
 			-- Create the tree and some items in it.
 		local
  			column: WEL_LIST_VIEW_COLUMN
@@ -186,19 +186,19 @@ feature -- Access
 
 feature -- Element change
 
-	set_item_output (static: WEL_STATIC) is
+	set_item_output (static: WEL_STATIC)
 			-- Make `static' the new output.
 		do
 			item_output := static
 		end
 
-	set_mess_output (list: WEL_SINGLE_SELECTION_LIST_BOX) is
+	set_mess_output (list: WEL_SINGLE_SELECTION_LIST_BOX)
 			-- Make `static' the new output.
 		do
 			mess_output := list
 		end
 
-	add_mess_output (str: STRING) is
+	add_mess_output (str: STRING)
 			-- Add a message to the output.
 		do
 			if mess_output /= Void then
@@ -209,51 +209,51 @@ feature -- Element change
 
 feature -- Notifications
 
-	on_lvn_begindrag (info: WEL_NM_LIST_VIEW) is
+	on_lvn_begindrag (info: WEL_NM_LIST_VIEW)
 			-- A drag-and-drop operation involving the left mouse
 			-- button is being initiated.
 		do
 			add_mess_output ("Begin dragging")
 		end
 
-	on_lvn_beginlabeledit (info: WEL_LIST_VIEW_ITEM) is
+	on_lvn_beginlabeledit (info: WEL_LIST_VIEW_ITEM)
 			-- A label editing for an item has started.
 		do
 			add_mess_output ("Begin editing label")
 		end
 
-	on_lvn_beginrdrag (info: WEL_NM_LIST_VIEW) is
+	on_lvn_beginrdrag (info: WEL_NM_LIST_VIEW)
 			-- A drag-and-drop operation involving the right mouse
 			-- button is being initiated.
 		do
 			add_mess_output ("Begin right dragging")
 		end
 
-	on_lvn_columnclick (info: WEL_NM_LIST_VIEW) is
+	on_lvn_columnclick (info: WEL_NM_LIST_VIEW)
 			-- A column was tapped.
 		do
 			add_mess_output ("Column clicked")
 		end
 
-	on_lvn_deleteallitems (info: WEL_NM_LIST_VIEW) is
+	on_lvn_deleteallitems (info: WEL_NM_LIST_VIEW)
 			-- All the items were deleted.
 		do
 			add_mess_output ("All items deleted")
 		end
 
-	on_lvn_deleteitem (info: WEL_NM_LIST_VIEW) is
+	on_lvn_deleteitem (info: WEL_NM_LIST_VIEW)
 			-- An item was deleted.
 		do
 			add_mess_output ("One item deleted")
 		end
 
-	on_lvn_endlabeledit (info: WEL_LIST_VIEW_ITEM) is
+	on_lvn_endlabeledit (info: WEL_LIST_VIEW_ITEM)
 			-- A label editing for an item has ended.
 		do
 			add_mess_output ("End editing label")
 		end
 
-	on_lvn_getdispinfo (info: WEL_LIST_VIEW_ITEM) is
+	on_lvn_getdispinfo (info: WEL_LIST_VIEW_ITEM)
 			-- It is a request for the parent window to
 			-- provide information needed to display or
 			-- sort a list view item.
@@ -261,13 +261,13 @@ feature -- Notifications
 			add_mess_output ("Get disp info")
 		end
 
-	on_lvn_insertitem (info: WEL_NM_LIST_VIEW) is
+	on_lvn_insertitem (info: WEL_NM_LIST_VIEW)
 			-- A new item was inserted.
 		do
 			add_mess_output ("Insert item")
 		end
 
-	on_lvn_itemchanged (info: WEL_NM_LIST_VIEW) is
+	on_lvn_itemchanged (info: WEL_NM_LIST_VIEW)
 			-- An item has changed.
 		local
 			lvitem: WEL_LIST_VIEW_ITEM
@@ -280,41 +280,41 @@ feature -- Notifications
 			end
 		end
 
-	on_lvn_itemchanging (info: WEL_NM_LIST_VIEW) is
+	on_lvn_itemchanging (info: WEL_NM_LIST_VIEW)
 			-- An item is changing
 		do
 			add_mess_output ("Item changing")
 		end
 
-	on_lvn_keydown (virtual_key: INTEGER) is
+	on_lvn_keydown (virtual_key: INTEGER)
 			-- A key has been pressed.
 		do
 			add_mess_output ("Key pressed :")
 			item_output.set_text (virtual_key.out)
 		end
 
-	on_lvn_setdispinfo (info: WEL_LIST_VIEW_ITEM) is
+	on_lvn_setdispinfo (info: WEL_LIST_VIEW_ITEM)
 			-- The list must update the information it maintains
 			-- for an item.
 		do
 			add_mess_output ("Set disp info")
 		end
 
-	on_left_button_up (keys, x_pos, y_pos: INTEGER) is
+	on_left_button_up (keys, x_pos, y_pos: INTEGER)
 			-- Wm_lbuttonup message
 			-- See class WEL_MK_CONSTANTS for `keys' value
 		do
 			add_mess_output ("Left button up")
 		end
 
-	on_left_button_double_click (keys, x_pos, y_pos: INTEGER) is
+	on_left_button_double_click (keys, x_pos, y_pos: INTEGER)
 			-- Wm_lbuttonup message
 			-- See class WEL_MK_CONSTANTS for `keys' value
 		do
 			add_mess_output ("Left button double click")
 		end
 
-	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
+	on_left_button_down (keys, x_pos, y_pos: INTEGER)
 			-- Wm_lbuttonup message
 			-- See class WEL_MK_CONSTANTS for `keys' value
 		do
@@ -326,7 +326,7 @@ feature -- Changing the style
 	current_type: INTEGER
 			-- Current style of the list.
 
-	change_style is
+	change_style
 			-- Change the style of the listview.
 		local
 			value: INTEGER
@@ -352,15 +352,15 @@ feature -- Changing the style
 
 feature {NONE} -- Private Constants
 
-	Small_image_width, Small_image_height : INTEGER is 16
+	Small_image_width, Small_image_height : INTEGER = 16
 		-- Size of small icons, as displayed in the list view, the
 		-- details view and the small icon view
 	
-	Large_image_width, Large_image_height : INTEGER is 32;
+	Large_image_width, Large_image_height : INTEGER = 32;
 		-- Size of large icons, as displayed in the large
 		-- icon view
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

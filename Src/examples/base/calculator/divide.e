@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class 
@@ -9,13 +9,13 @@ inherit
 
 feature 
 	
-	operation is 
+	operation 
 			-- Divide top element of stack with register.
 		do 
 			register := operand_stack.item / register
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

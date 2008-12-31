@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Single threaded echo server."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		local
 			port: INTEGER
 			prefer_ipv4_stack: BOOLEAN
@@ -66,7 +66,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	perform_accept_serve_loop (socket: NETWORK_STREAM_SOCKET) is
+	perform_accept_serve_loop (socket: NETWORK_STREAM_SOCKET)
 		require
 			valid_socket: socket /= Void and then socket.is_bound
 		local
@@ -91,7 +91,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	perform_client_communication (socket: NETWORK_STREAM_SOCKET) is
+	perform_client_communication (socket: NETWORK_STREAM_SOCKET)
 		require
 			socket_attached: socket /= Void
 			socket_valid: socket.is_open_read and then socket.is_open_write
@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 			io.put_new_line
 		end
 
-	receive_message_and_send_replay (client_socket: NETWORK_STREAM_SOCKET): BOOLEAN is
+	receive_message_and_send_replay (client_socket: NETWORK_STREAM_SOCKET): BOOLEAN
 		require
 			socket_attached: client_socket /= Void
 			socket_valid: client_socket.is_open_read and then client_socket.is_open_write
@@ -140,7 +140,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	send_reply (client_socket: NETWORK_STREAM_SOCKET; message: STRING) is
+	send_reply (client_socket: NETWORK_STREAM_SOCKET; message: STRING)
 		require
 			socket_attached: client_socket /= Void
 			socket_valid: client_socket.is_open_write

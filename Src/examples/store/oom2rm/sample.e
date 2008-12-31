@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
 	date: "$Date$";
@@ -14,7 +14,7 @@ create
 
 feature
 
-	model: HUMAN is
+	model: HUMAN
 		local
 			date: DATE_TIME;
 			country: COUNTRY
@@ -24,13 +24,13 @@ feature
 			create Result.make (1, "Gustave", date, <<country>>);
 		end;
 
-	register_keys is
+	register_keys
 		do
 			register_key ("h_no", "HUMAN");
 			register_key ("c_no", "COUNTRY")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

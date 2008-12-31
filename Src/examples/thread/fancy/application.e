@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Application root class which creates first window and launch the event loop."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature -- Access
 
-	main_window: MAIN_WINDOW is
+	main_window: MAIN_WINDOW
 			-- Create the application's main window
 		once
 			create Result.make
@@ -27,7 +27,7 @@ feature -- Access
 
 feature -- Initialization
 
-	init_application is
+	init_application
 			-- Load the common controls dll
 		do
 			create common_controls_dll.make
@@ -35,7 +35,7 @@ feature -- Initialization
 
 	common_controls_dll: WEL_COMMON_CONTROLS_DLL;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

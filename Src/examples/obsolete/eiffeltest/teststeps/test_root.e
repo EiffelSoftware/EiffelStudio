@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Root class for validity test"
 	legal: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (argv: ARRAY [STRING]) is
+	make (argv: ARRAY [STRING])
 			-- Create test.
 		local
 			log: SCREEN_LOG
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			drv.evaluate
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

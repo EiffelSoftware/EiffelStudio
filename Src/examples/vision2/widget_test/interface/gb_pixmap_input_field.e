@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that allow user input of a pixmap value."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -66,7 +66,7 @@ feature {NONE} -- Initialization
 		a_validate_agent: FUNCTION [ANY, TUPLE [EV_PIXMAP, STRING_GENERAL], BOOLEAN];
 		a_pixmap_agent: FUNCTION [ANY, TUPLE [], EV_PIXMAP];
 		a_pixmap_path_agent: FUNCTION [ANY, TUPLE [], STRING_GENERAL];
-		a_components: GB_INTERNAL_COMPONENTS) is
+		a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' with `gb_ev_any' as the client of `Current', we need this to call `update_atribute_editors'.
 			-- Build widget structure into `a_parent'. Use `label_text' as the text of the label next to the text field for entry.
 			-- `an_execution_agent' is to execute the setting of the attribute.
@@ -114,7 +114,7 @@ feature {NONE} -- Initialization
 
 feature {GB_EV_EDITOR_CONSTRUCTOR} -- Implementation
 
-	update_constant_display (a_value: EV_PIXMAP) is
+	update_constant_display (a_value: EV_PIXMAP)
 			-- Update widgets and display based on state of current constant selected.
 		local
 			has_pixmap: BOOLEAN
@@ -145,7 +145,7 @@ feature {GB_EV_EDITOR_CONSTRUCTOR} -- Implementation
 			end
 		end
 
-	hide_frame is
+	hide_frame
 			-- Ensure no frame is applied to `Current' and remove border from top level box.
 		local
 			container: EV_CONTAINER
@@ -163,7 +163,7 @@ feature {GB_EV_EDITOR_CONSTRUCTOR} -- Implementation
 
 feature {NONE} -- Implementation
 
-	call_default_create (any: ANY) is
+	call_default_create (any: ANY)
 			-- Call `default_create' and assign `any' to `internal_gb_ev_any'.
 		require
 			gb_ev_any_not_void: any /= Void
@@ -175,12 +175,12 @@ feature {NONE} -- Implementation
 		-- Is either "Select" or "Remove"
 		-- depending on current context.
 
-	pixmap_path_string: STRING is "Pixmap_path"
+	pixmap_path_string: STRING = "Pixmap_path"
 
-	Remove_tooltip: STRING is "Remove pixmap"
+	Remove_tooltip: STRING = "Remove pixmap"
 		-- Tooltip on `modify_button' when able to remove pixmap.
 
-	Select_tooltip: STRING is "Select pixmap"
+	Select_tooltip: STRING = "Select pixmap"
 		-- Tooltip on `modify_button' when able to remove pixmap.
 
 	pixmap_container: EV_CELL
@@ -202,7 +202,7 @@ feature {NONE} -- Implementation
 	horizontal_box: EV_HORIZONTAL_BOX
 		-- Main horizontal box used in construction of `Current'.
 
-	add_pixmap_to_pixmap_container (pixmap: EV_PIXMAP) is
+	add_pixmap_to_pixmap_container (pixmap: EV_PIXMAP)
 			-- Add `pixmap' to `pixmap_container'.
 		local
 			x_ratio, y_ratio: REAL
@@ -254,7 +254,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	modify_pixmap is
+	modify_pixmap
 			-- Display a dialog allowing user input for
 			-- selected pixmap.
 		local
@@ -297,46 +297,46 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	execute_agent (new_value: EV_PIXMAP; new_path: STRING_GENERAL) is
+	execute_agent (new_value: EV_PIXMAP; new_path: STRING_GENERAL)
 			-- call `execution_agent'. `new_value' may be Void
 			-- in the case where we must remove the pixmap.
 		do
 			execution_agent.call ([new_value, new_path])
 		end
 
-	update_editors is
+	update_editors
 			-- Update all editors. Nothing to perform here, as required by EiffelBuild classes.
 		do
 		end
 
 	filler_label: EV_CELL
 
-	environment: EV_ENVIRONMENT is
+	environment: EV_ENVIRONMENT
 			-- Once access to instance of EV_ENVIRONMENT.
 		once
 			create Result
 		end
 
-	minimum_width_of_object_editor: INTEGER is 165
+	minimum_width_of_object_editor: INTEGER = 165
 
-	remove_button_text: STRING is "Remove"
+	remove_button_text: STRING = "Remove"
 
-	select_button_text: STRING is "Select"
+	select_button_text: STRING = "Select"
 
-	set_with_named_file_tooltip: STRING is "Set pixmap image with named file"
+	set_with_named_file_tooltip: STRING = "Set pixmap image with named file"
 
-	pixmap_missing_string: STRING is "Error - named pixmap missing."
+	pixmap_missing_string: STRING = "Error - named pixmap missing."
 
-	clear_text: STRING is "Clear"
+	clear_text: STRING = "Clear"
 
-	clear_tooltip: STRING is "Clear pixmap image"
+	clear_tooltip: STRING = "Clear pixmap image"
 
-	object_editor_padding_width: INTEGER is 3
+	object_editor_padding_width: INTEGER = 3
 
 invariant
 	invariant_clause: True -- Your invariant here
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

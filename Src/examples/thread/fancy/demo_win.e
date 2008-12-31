@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Ancestor to windows that draw figures."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ inherit
 	
 feature {NONE} -- Initialization
 
-	make (a_mutex: like display_mutex) is
+	make (a_mutex: like display_mutex)
 		require
 			a_mutex_not_void: a_mutex /= Void
 		do
@@ -42,15 +42,15 @@ feature {NONE} -- Initialization
 
 feature	-- Deferred
 
-	launch_demo is
+	launch_demo
 		deferred
 		end
 
-	fig_demo_cmd: DEMO_CMD is
+	fig_demo_cmd: DEMO_CMD
 		deferred
 		end
 	
-	title: STRING is
+	title: STRING
 			-- Title of the window.
 		deferred
 		end
@@ -66,13 +66,13 @@ feature -- Access
 
 feature -- Threads
 
-    stop_demo is
+    stop_demo
 			-- Tell the thread to stop.
 		do
 		    fig_demo_cmd.stop
 		end
 
-    join_demo is
+    join_demo
 			-- Wait for the end of the thread
 		do
 		     fig_demo_cmd.join
@@ -80,7 +80,7 @@ feature -- Threads
 
 feature -- Redefined features
 
-	on_size (a_size_type, a_width, a_height: INTEGER) is
+	on_size (a_size_type, a_width, a_height: INTEGER)
 			-- Reposition windows in the main window.
 		do
 			if (a_size_type /= Size_minimized) then
@@ -91,20 +91,20 @@ feature -- Redefined features
 			end
 		end
 
-	on_wm_close is
+	on_wm_close
 			-- Wm_close message.
 			-- If `closeable' is False further processing is halted.
 		do
 			set_default_processing (closeable)
 		end
 
-	class_background: WEL_LIGHT_GRAY_BRUSH is
+	class_background: WEL_LIGHT_GRAY_BRUSH
 			-- Standard window background color
 		once
 			create  Result.make
 		end
 
-	closeable: BOOLEAN is
+	closeable: BOOLEAN
 			-- Stop and join the thread, then return true.
 		do
 			exit_mutex.lock
@@ -115,7 +115,7 @@ feature -- Redefined features
 			Result := True
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

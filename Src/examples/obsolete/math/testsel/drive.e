@@ -1,4 +1,4 @@
-indexing
+note
 	description: " Test selected data class, matrix printing"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -22,13 +22,13 @@ feature -- Initialization
 	tested: SELECTABLE_DATA;
 			-- data set for testing
 
-	number_of_variables: INTEGER is 8;
+	number_of_variables: INTEGER = 8;
 			-- number of columns in the matrix
 
-	number_of_observations: INTEGER is 10;
+	number_of_observations: INTEGER = 10;
 			-- number of rows in the matrix
 
-	make is
+	make
 			-- Test of SELECTABLE_DATA
 		local
 			i, j: INTEGER
@@ -80,7 +80,7 @@ feature -- Initialization
 			print_nl (c);
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

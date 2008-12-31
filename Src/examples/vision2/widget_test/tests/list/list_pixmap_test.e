@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that test EV_LIST."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 		
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create `Current' and initialize test in `widget'.
 		local
 			list_item: EV_LIST_ITEM
@@ -53,13 +53,13 @@ feature {NONE} -- Implementation
 	list: EV_LIST
 		-- Widget that test is to be performed on.
 	
-	select_pixmap is
+	select_pixmap
 			-- Set `selected_pixmap' to `selected_item' of `list'.
 		do
 			list.selected_item.set_pixmap (numbered_pixmap (2))
 		end
 
-	reset is
+	reset
 			-- Reset items in `list' to display `unselected_pixmap'.
 		do
 			from
@@ -73,7 +73,7 @@ feature {NONE} -- Implementation
 		end
 		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

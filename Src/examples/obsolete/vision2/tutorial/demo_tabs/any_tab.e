@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tab used in the action window."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make (par: EV_CONTAINER)
 			-- Create the tab and initialise objects
 		do
 			Precursor {EV_TABLE} (par)
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- Title of the current tab. 
 		deferred
 		end
@@ -36,13 +36,13 @@ feature -- Access
 
 feature -- Element change
 
-	set_current_widget (wid: like current_widget) is
+	set_current_widget (wid: like current_widget)
 			-- Make `wid' the new widget.
 		do
 			current_widget ?= wid
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Launcher"
 	author: "Jocelyn FIAT"
 	version: "1.2"
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_and_launch is
+	make_and_launch
 			-- Initialize and launch application
 		do
 			default_create
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			launch
 		end
 
-	prepare is
+	prepare
 			-- Prepare the first window to be displayed.
 			-- Perform one call to first window in order to
 			-- avoid to violate the invariant of class EV_APPLICATION.
@@ -71,13 +71,13 @@ feature {NONE} -- Implementation
 	first_window: MINER_WINDOW
 			-- Main window.
 	
-	end_application is
+	end_application
 			-- End the current application.
 		do
 			(create {EV_ENVIRONMENT}).application.destroy
 		end
 
-	get_opt_value (car: CHARACTER): INTEGER is
+	get_opt_value (car: CHARACTER): INTEGER
 			-- Get integer optional value for `car'.
 		local
 			s: STRING

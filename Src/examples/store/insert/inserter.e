@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -24,7 +24,7 @@ feature {NONE}
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		local
 			-- The object that we will use is a book
 			book: BOOK2
@@ -87,7 +87,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	init is
+	init
 			-- Init session.
 		do
 			io.putstring ("Database user authentication:%N")
@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 			not (base_store = Void)
 		end
 
-	perform_login is
+	perform_login
 		local
 			tmp_string: STRING
 		do
@@ -133,7 +133,7 @@ feature {NONE} -- Implementation
 			login (tmp_string, io.laststring)
 		end
 
-	table_exists (table: STRING): BOOLEAN is
+	table_exists (table: STRING): BOOLEAN
 			-- Does table `table' exist in the database?
 		require
 			connected: session_control.is_connected
@@ -148,10 +148,10 @@ feature {NONE} -- Implementation
 
 feature {NONE}
 
-        Table_name: STRING is
+        Table_name: STRING =
                 "DB_BOOK";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

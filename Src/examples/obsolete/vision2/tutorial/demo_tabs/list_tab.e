@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Initialization
 
-	make(par: EV_CONTAINER) is
+	make(par: EV_CONTAINER)
 			-- Create the tab and initalise the objects.
 		local
 			cmd1,cmd2: EV_ROUTINE_COMMAND
@@ -69,7 +69,7 @@ feature -- Initialization
 
 feature -- Access
 
-	name:STRING is
+	name:STRING
 			-- Returns the name of the tab.
 		do
 			Result:="List"
@@ -88,13 +88,13 @@ feature -- Access
 
 feature -- Execution Feature
 
-	e_rows (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	e_rows (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Return the number of rows in the list.
 		do
 			f1.set_text(current_widget.count.out)	
 		end
 
-	selected_items (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	selected_items (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Return the selected items.
 		local
 			item_list: LINKED_LIST[EV_LIST_ITEM]
@@ -116,7 +116,7 @@ feature -- Execution Feature
 			f3.set_text (output_string)
 		end
 
-	selected (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	selected (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Return the selected item.
 			-- Does not work in multiple selection mode.
 		do
@@ -125,7 +125,7 @@ feature -- Execution Feature
 			end
 		end
 
-	get_item (arg: EV_ARGUMENT; data:  EV_EVENT_DATA) is
+	get_item (arg: EV_ARGUMENT; data:  EV_EVENT_DATA)
 			-- Returns an element of the list.
 		do
 			if f4.get_text.is_integer and f4.get_text.to_integer >=0 
@@ -134,7 +134,7 @@ feature -- Execution Feature
 			end
 		end
 
-	select_item (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	select_item (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Selects an element of the list.
 		do
 			if f5.get_text.is_integer and f5.get_text.to_integer >= 0 
@@ -143,7 +143,7 @@ feature -- Execution Feature
 			end
 		end
 
-	deselect_item (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	deselect_item (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Deselect and item in the list.
 		do
 			if f6.get_text.is_integer and f6.get_text.to_integer >0
@@ -152,13 +152,13 @@ feature -- Execution Feature
 			end
 		end
 
-	clear_selection (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	clear_selection (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Clears the selection.
 		do
 			current_widget.clear_selection	
 		end
 
-	toggle_selection_type (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	toggle_selection_type (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Toggles the selection type between single and multiple.
 		do
 			if current_widget.is_multiple_selection then
@@ -170,13 +170,13 @@ feature -- Execution Feature
 			end
 		end
 
-	clear_items (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	clear_items (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Clears the list.
 		do
 			current_widget.clear_items
 		end
 
-	add_item (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	add_item (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Adds an item to the list.
 		local
 			new_item :EV_LIST_ITEM
@@ -187,7 +187,7 @@ feature -- Execution Feature
 			create new_item.make_with_text (current_widget, text_string)
 			
 		end
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

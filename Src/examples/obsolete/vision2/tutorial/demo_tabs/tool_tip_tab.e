@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Initialization
 
-	make(par: EV_CONTAINER) is
+	make(par: EV_CONTAINER)
 		-- Create the tab and initalise the objects.
 			local
 				cmd1, cmd2: EV_ROUTINE_COMMAND			
@@ -70,7 +70,7 @@ feature -- Initialization
 
 feature -- Access
 
-	name:STRING is
+	name:STRING
 			-- Returns the name of the tab.
 		do
 			Result:="Tool Tip"
@@ -93,7 +93,7 @@ feature -- Access
 
 feature -- Execution Features
 
-	set_colors is
+	set_colors
 			-- Set initial colors and select from `f3.combo'.
 		local
 			current_color: EV_COLOR
@@ -106,7 +106,7 @@ feature -- Execution Features
 			current_widget.set_background_color(current_color)
 		end
 
-	set_delay (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	set_delay (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Set delay of `current widget'.
 		do
 			if f1.get_text.is_integer and f1.get_text.to_integer >= 0 then
@@ -114,13 +114,13 @@ feature -- Execution Features
 			end
 		end
 	
-	delay (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	delay (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- delay of `current widget'.
 		do
 			f1.set_text (current_widget.delay.out)
 		end
 
-	set_tforeground_color (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	set_tforeground_color (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Set foreground color of `current_widget'.
 		local
 			current_color: EV_COLOR
@@ -131,7 +131,7 @@ feature -- Execution Features
 			end
 		end
 
-	set_tbackground_color (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	set_tbackground_color (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Set background color of `current_widget'.
 		local
 			current_color: EV_COLOR
@@ -142,7 +142,7 @@ feature -- Execution Features
 			end
 		end
 
-	enable (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	enable (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Enable `current_widget'.
 		do
 			current_widget.enable
@@ -150,7 +150,7 @@ feature -- Execution Features
 			b2.set_insensitive (False)
 		end
 
-	disable (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	disable (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Disable `current_widget'
 		do
 			current_widget.disable
@@ -161,7 +161,7 @@ feature -- Execution Features
 
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

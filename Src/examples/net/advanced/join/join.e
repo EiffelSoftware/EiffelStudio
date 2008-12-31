@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Client root-class for the advanced example."
@@ -23,7 +23,7 @@ create
 
 feature
 
-	make_join (argv: ARRAY [STRING]) is
+	make_join (argv: ARRAY [STRING])
 		do
 			if argv.count /= 3 then
 				io.error.putstring ("Usage: ")
@@ -58,7 +58,7 @@ feature
 
 feature {NONE} -- Implementation
 
-	send_name_to_server is
+	send_name_to_server
 		do
 			create message_out.make_message
 			message_out.set_client_name (client_name)
@@ -67,7 +67,7 @@ feature {NONE} -- Implementation
 			send (message_out)
 		end
 
-	processing is
+	processing
 		do
 			from
 				over := False
@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 			cleanup
 		end
 
-	scan_from_std_input is
+	scan_from_std_input
 		local
 			temp: STRING
 		do
@@ -104,14 +104,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	check_name is
+	check_name
 		do
 			io.putstring ("Enter your name : ")
 			io.readline
 			client_name := io.laststring.twin
 		end
 
-	scan_from_server is
+	scan_from_server
 		do
 			connection.initialize
 			poll.execute (max_to_poll, 15000)
@@ -136,7 +136,7 @@ feature {NONE} -- Implementation
 
 	max_to_poll: INTEGER;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

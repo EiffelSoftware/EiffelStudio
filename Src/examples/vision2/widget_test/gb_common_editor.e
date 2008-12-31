@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that provide common features for object editors."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,25 +14,25 @@ inherit
 
 feature -- Access
 
-	attribute_editor: GB_OBJECT_EDITOR_ITEM is
+	attribute_editor: GB_OBJECT_EDITOR_ITEM
 			-- A control which allows modification of items within
 			-- `objects' of type `type'.
 		deferred
 		end
 
-	type: STRING is
+	type: STRING
 			-- String representation of object_type modifyable by `Current'.
 		deferred
 		end
 		
-	ev_type: EV_ANY is
+	ev_type: EV_ANY
 		-- Vision2 type represented by `Current'.
 		-- Only used with `like' in descendents.
 		-- Always `Void'.
 		deferred
 		end
 		
-	first: like ev_type is
+	first: like ev_type
 			-- First entry in `objects'. This corresponds to
 			-- the display component.
 		require
@@ -43,7 +43,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 		
-	parent_window (widget: EV_WIDGET): EV_WINDOW is
+	parent_window (widget: EV_WIDGET): EV_WINDOW
 			-- `Result' is window parent of `widget'.
 			-- `Void' if none.
 		local
@@ -59,7 +59,7 @@ feature -- Access
 			end	
 		end
 		
-	parent_dialog (widget: EV_WIDGET): EV_DIALOG is
+	parent_dialog (widget: EV_WIDGET): EV_DIALOG
 			-- `Result' is dialog parent of `widget'.
 			-- `Void' if none.
 		local
@@ -78,7 +78,7 @@ feature -- Access
 	parent_editor: EV_VERTICAL_BOX
 			-- Object editor containing `Current'.
 			
-	set_parent_editor (parent: EV_VERTICAL_BOX) is
+	set_parent_editor (parent: EV_VERTICAL_BOX)
 			-- Assign `parent' to `parent_editor'.
 		require
 			parent_not_void: parent /= Void
@@ -95,7 +95,7 @@ feature -- Access
 		-- Modifications must be made to all items
 		-- identically.
 		
-	set_main_object (an_object: like ev_type) is
+	set_main_object (an_object: like ev_type)
 			-- Add `object' to `objects'.
 		require
 			object_not_void: an_object /= Void
@@ -106,7 +106,7 @@ feature -- Access
 			objects.extend (an_object)
 		end
 
-	set_object (an_object: GB_OBJECT) is
+	set_object (an_object: GB_OBJECT)
 			--
 		deferred
 		end
@@ -114,7 +114,7 @@ feature -- Access
 
 feature -- Status setting
 
-	align_labels_left (b: EV_BOX) is
+	align_labels_left (b: EV_BOX)
 			-- For every item in `b' of type EV_LABEL, align the test left.
 		require
 			box_not_void: b /= Void
@@ -134,7 +134,7 @@ feature -- Status setting
 			end
 		end
 	
-	disable_all_items (b: EV_BOX) is
+	disable_all_items (b: EV_BOX)
 			-- Call `disable_item_expand' on all items in `b'.
 		require
 			box_not_void: b /= Void
@@ -149,7 +149,7 @@ feature -- Status setting
 			end
 		end
 		
-	named_list_item_from_object (container: EV_CONTAINER): EV_LIST_ITEM is
+	named_list_item_from_object (container: EV_CONTAINER): EV_LIST_ITEM
 			-- `Result' is list item with text matching class name of `container'.
 		require
 			container_not_void: container /= Void
@@ -164,7 +164,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	for_all_objects (p: Procedure [EV_ANY, TUPLE]) is
+	for_all_objects (p: Procedure [EV_ANY, TUPLE])
 			-- Call `p' on every item in `objects'.
 		do
 			from
@@ -177,7 +177,7 @@ feature -- Basic operations
 			end
 		end
 
-	for_first_object (p: Procedure [EV_ANY, TUPLE]) is
+	for_first_object (p: Procedure [EV_ANY, TUPLE])
 			-- Call `p' on the first_item in `objects'.
 		do
 			objects.start
@@ -190,34 +190,34 @@ feature {NONE} -- Implementation
 		-- are available as the object editor classes from Build, will call them, as they
 		-- are required by Build. For this widget test, they do not need to perform anything.
 		
-	update_editors is
+	update_editors
 			-- Short version for calling everywhere.
 		do
 		end
 		
-	initialize_attribute_editor (editor: GB_OBJECT_EDITOR_ITEM) is
+	initialize_attribute_editor (editor: GB_OBJECT_EDITOR_ITEM)
 			-- Initialize `editor'.
 		do
 		end
 		
 		
-	enable_project_modified is
+	enable_project_modified
 			-- Call enable_project_modified on `system_status' and
 			-- update commands to reflect this.
 		do
 		end
 		
-	new_object_editor (an_object: GB_OBJECT) is
+	new_object_editor (an_object: GB_OBJECT)
 			-- Generate a new object editor containing `object'.
 		do
 		end
 		
-	set_default_icon_pixmap (dialog: EV_DIALOG) is
+	set_default_icon_pixmap (dialog: EV_DIALOG)
 			-- Set the default icon pixmap to `dialog'.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

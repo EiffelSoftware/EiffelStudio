@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that demonstrate z order in EV_FIXED."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 		
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create `Current' and initialize test in `widget'.
 		do
 			create fixed
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 		
 feature {NONE} -- Implementation
 
-	set_item_positions is
+	set_item_positions
 			-- Position buttons within `fixed'.
 		do
 			fixed.set_item_position (button1, 0, 0)
@@ -49,7 +49,7 @@ feature {NONE} -- Implementation
 		end
 		
 
-	raise_button  (a_button: EV_BUTTON) is
+	raise_button  (a_button: EV_BUTTON)
 			-- Ensure `a_button' is displayed topmost.
 			-- Note that it must be removed and inserted to the
 			-- last position within `fixed', as the z order of
@@ -67,7 +67,7 @@ feature {NONE} -- Implementation
 	button1, button2, button3: EV_BUTTON;
 		-- Widgets used to show the operation of `fixed'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -28,7 +28,7 @@ feature {NONE}
 
 feature
 
-	make is
+	make
 		local
 			tmp_string: STRING
 		do
@@ -66,7 +66,7 @@ feature
 
 feature {NONE}
 
-	make_change_ing is
+	make_change_ing
 		local
 			author: STRING
 			price: REAL
@@ -121,13 +121,13 @@ feature {NONE}
 
 feature {NONE}
 
-	Select_text: STRING is "update DB_BOOK set price = new_price, year = new_date where author = new_author"
+	Select_text: STRING = "update DB_BOOK set price = new_price, year = new_date where author = new_author"
 
-	Table_name: STRING is "DB_BOOK"
+	Table_name: STRING = "DB_BOOK"
 
-	Proc_name: STRING is "DB_BOOK_PROCEDURE";
+	Proc_name: STRING = "DB_BOOK_PROCEDURE";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make (par: EV_CONTAINER)
 			-- Create the tab and initialise objects.
 		local
 			cmd1,cmd2: EV_ROUTINE_COMMAND
@@ -57,7 +57,7 @@ feature -- Initialization
 
 feature -- Access
 	
-	name:STRING is
+	name:STRING
 			-- Returns the name of the tab
 		do
 			Result:="Table"
@@ -74,19 +74,19 @@ feature -- Access
 
 feature -- Execution feature
 
-	get_columns (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	get_columns (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Return the number of columns in the table.
 		do
 			f2.set_text(current_widget.columns.out)
 		end			
 
-	get_rows (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	get_rows (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Return the number of rows in the table.
 		do
 			f1.set_text(current_widget.rows.out)
 		end
 
-	aset_row_spacing (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	aset_row_spacing (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Set the row spacing between two table objects.
 		do
 			if f3.get_text.is_integer then
@@ -94,13 +94,13 @@ feature -- Execution feature
 			end
 		end
 
-	get_row_spacing (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	get_row_spacing (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Get the row spacing between two table objects.
 		do
 			f3.set_text(current_widget.row_spacing.out)
 		end
 
-	aset_column_spacing (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	aset_column_spacing (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Set the column spacing between two table objects.
 		do
 			if f4.get_text.is_integer then
@@ -108,13 +108,13 @@ feature -- Execution feature
 			end
 		end
 
-	get_column_spacing (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	get_column_spacing (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Get the column spacing between two table objects.
 		do
 			f4.set_text(current_widget.column_spacing.out)
 		end
 
-	add_buttons (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	add_buttons (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Add buttons to the table
 		local
 			counter,temp_column: INTEGER
@@ -141,7 +141,7 @@ feature -- Execution feature
 			end
 		end
 
-	reset_table (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	reset_table (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Resets the table back to its original form
 		local
 			temp_table:TABLE_WINDOW
@@ -156,7 +156,7 @@ feature -- Execution feature
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

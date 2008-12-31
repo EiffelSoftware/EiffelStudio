@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Traverse the OO model and save it in tables %
@@ -32,7 +32,7 @@ feature
 	keys: KEYS
 			-- Keys description.
 	
-	make (model: ANY; a_tables: like tables; a_keys: like keys) is
+	make (model: ANY; a_tables: like tables; a_keys: like keys)
 			-- Create object.
 		require
 			model_not_void: model /= Void;
@@ -47,7 +47,7 @@ feature
 			keys_not_void: keys = a_keys
 		end;
 
-	traversal (object: ANY) is
+	traversal (object: ANY)
 			-- System traversal.
 		require else
 			object_not_void: object /= Void
@@ -83,7 +83,7 @@ feature
 			end;
 		end;
 	
-	reference_obj_action (object: ANY; name: STRING; table: SQL_TABLE) is
+	reference_obj_action (object: ANY; name: STRING; table: SQL_TABLE)
 			-- Action for a reference type.
 		require
 			object_not_void: object /= Void;
@@ -109,7 +109,7 @@ feature
 				table.count = old table.count + 1
 		end;
 
-	simple_obj_action (object: ANY; name: STRING; table: SQL_TABLE) is
+	simple_obj_action (object: ANY; name: STRING; table: SQL_TABLE)
 			-- Action for simple type.
 		require
 			object_not_void: object /= Void;
@@ -124,7 +124,7 @@ feature
 			table_extended: table.count = old table.count + 1
 		end;
 	
-	list_obj_action (no_field: INTEGER; object: ANY; table: SQL_TABLE) is
+	list_obj_action (no_field: INTEGER; object: ANY; table: SQL_TABLE)
 			-- Action for a list type.
 		require
 			object_not_void: object /= Void;
@@ -157,7 +157,7 @@ feature
 
 feature {NONE}
 
-	table_exists (name: STRING): BOOLEAN is
+	table_exists (name: STRING): BOOLEAN
 		require
 			name_not_void: name /= Void
 		do
@@ -176,7 +176,7 @@ invariant
 	tables_not_void: tables /= Void;
 	keys: keys /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

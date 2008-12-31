@@ -1,4 +1,4 @@
-indexing
+note
     description: "This is a copy of STRING_EX from ISE.  Token-handling version of STRING. NOTE: cannot have empty fields."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,19 +19,19 @@ class STRING_TOKEN
 	make
 
    feature -- Initialisation
-	make( n:INTEGER ) is
+	make( n:INTEGER )
 		do
 			string_make(n)
 			delimiter := ','
 		end
 
-	set_delimiter( a_delimiter: CHARACTER ) is
+	set_delimiter( a_delimiter: CHARACTER )
 		do
 			delimiter := a_delimiter
 		end		
 
    feature -- Iteration
-	token_start is
+	token_start
 	    require
 		Not_empty: count > 0
 	    do
@@ -42,7 +42,7 @@ class STRING_TOKEN
 		end
 	end
 
-	token_forth is
+	token_forth
 		require
 			Not_off: not token_off
 		do 
@@ -56,12 +56,12 @@ class STRING_TOKEN
 			end
 		end
 
-	token_off : BOOLEAN is
+	token_off : BOOLEAN
 		do 
 			Result := 	idx1 > count
 		end
 
-	token_item : STRING is
+	token_item : STRING
 		require
 			Not_off: not token_off
 		do
@@ -73,14 +73,14 @@ class STRING_TOKEN
 			end
 		end
 
-	token_count : INTEGER is
+	token_count : INTEGER
 	        -- return the number of tokens found
 		do 
 			Result := occurrences(delimiter) + 1
 		end
 
    feature -- Status setting
-	use_whitespace_parsing is
+	use_whitespace_parsing
 	        -- set up string so that any whitespace (TABs, SPCs) will be treated
 	        -- as a single delimiter between tokens not containing whitespace chars
 	    require
@@ -121,7 +121,7 @@ class STRING_TOKEN
 	delimiter: CHARACTER
 	idx1, idx2 : INTEGER;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

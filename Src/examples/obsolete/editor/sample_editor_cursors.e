@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Cursors for current application"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -11,7 +11,7 @@ inherit
 
 feature -- Cursors
 
-	cur_cut_selection: EV_POINTER_STYLE is
+	cur_cut_selection: EV_POINTER_STYLE
 			-- Editor cut cursor icon
 		local
 			l_env: EXECUTION_ENVIRONMENT
@@ -32,7 +32,7 @@ feature -- Cursors
 			end
 		end
 
-	cur_copy_selection: EV_POINTER_STYLE is
+	cur_copy_selection: EV_POINTER_STYLE
 			-- Editor copy cursor icon
 		local
 			l_env: EXECUTION_ENVIRONMENT

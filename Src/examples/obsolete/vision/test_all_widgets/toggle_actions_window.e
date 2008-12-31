@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class TOGGLE_ACTIONS_WINDOW
@@ -30,7 +30,7 @@ feature
 	activate_b,
 	value_changed_b: ACTION_WINDOW_TOGGLE_B
 
-	set_other_widgets is
+	set_other_widgets
 		do
 			set_size (330, 470)
 			create set_font_b.associate (Current, b_set_font, "Set font", 20, 300)
@@ -48,7 +48,7 @@ feature
 	value_changed,
 	activate_action: BOOLEAN
 
-	finish is
+	finish
 	local
 		widget: TOGGLE_B
 	do
@@ -71,7 +71,7 @@ feature
 		end
 	end
 
-	descendant_actions(arg: INTEGER_REF) is
+	descendant_actions(arg: INTEGER_REF)
 		local
 			widget: TOGGLE_B
 			color: COLOR
@@ -200,7 +200,7 @@ feature
 			end
 		end
 
-	set_other_widgets_insensitive is
+	set_other_widgets_insensitive
 		do
 			set_font_b.set_insensitive
 			set_fg_b.set_insensitive
@@ -212,7 +212,7 @@ feature
 			state_b.set_insensitive
 		end
 
-	set_other_widgets_sensitive is
+	set_other_widgets_sensitive
 		do
 			set_font_b.set_sensitive
 			set_fg_b.set_sensitive
@@ -224,7 +224,7 @@ feature
 			state_b.set_sensitive
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

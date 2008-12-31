@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (par: EV_TREE_ITEM_HOLDER) is
+	make (par: EV_TREE_ITEM_HOLDER)
 			-- Create the item and the demo that
 			-- goes with it.
 		do
@@ -30,14 +30,14 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	create_demo is
+	create_demo
 	do
 		create demo_window.make (demo_page)
 	end
 
 	demo_window : TEST_WINDOW;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

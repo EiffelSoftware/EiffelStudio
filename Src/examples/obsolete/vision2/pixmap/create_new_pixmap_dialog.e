@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Dialog that let the user create a new pixmap"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize the dialog
 		do
 			internal_desired_background_color := (create {EV_STOCK_COLORS}).White
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	desired_background_color: EV_COLOR is
+	desired_background_color: EV_COLOR
 			-- Currently selected color for the background of the new image
 		require
 			ok_selected: ok_selected
@@ -50,7 +50,7 @@ feature -- Access
 			Result := internal_desired_background_color
 		end
 
-	desired_width: INTEGER is
+	desired_width: INTEGER
 			-- Width for the new image
 		require
 			ok_selected: ok_selected
@@ -58,7 +58,7 @@ feature -- Access
 			Result := internal_desired_width
 		end
 
-	desired_height: INTEGER is
+	desired_height: INTEGER
 			-- Height for the new image
 		require
 			ok_selected: ok_selected
@@ -71,7 +71,7 @@ feature -- Access
 
 feature -- Operations
 
-	show_modal_to_window (a_window: EV_WINDOW) is
+	show_modal_to_window (a_window: EV_WINDOW)
 			-- Show and wait until `Current' is closed.
 			-- `Current' is shown modal with respect to `a_window'.
 		do
@@ -81,7 +81,7 @@ feature -- Operations
 
 feature {NONE} -- Implementation
 
-	build_interface is
+	build_interface
 			-- Create the interface for this dialog
 		local
 			width_label: EV_LABEL
@@ -183,14 +183,14 @@ feature {NONE} -- Implementation
 			set_default_cancel_button (cancel_button)
 		end
 
-	update_preview_pixmap is
+	update_preview_pixmap
 			-- Update the preview of the desired background color
 		do
 			preview_pixmap.set_background_color (internal_desired_background_color)
 			preview_pixmap.clear
 		end
 
-	change_background_color is
+	change_background_color
 			-- Let the user change the background color
 		local
 			std_color_dialog: EV_COLOR_DIALOG
@@ -208,7 +208,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	check_width_textfield_for_integer is
+	check_width_textfield_for_integer
 			-- Check that the text field `width_textfield' hold an integer value,
 			-- if so commit the new value, otherwise reset it to `desired_width'
 		require
@@ -223,7 +223,7 @@ feature {NONE} -- Implementation
 			width_textfield_is_positive: width_textfield.text.to_integer > 0
 		end
 
-	check_height_textfield_for_integer is
+	check_height_textfield_for_integer
 			-- Check that the text field `height_textfield' hold an integer value,
 			-- if so commit the new value, otherwise reset it to `desired_height'
 		require
@@ -238,7 +238,7 @@ feature {NONE} -- Implementation
 			height_textfield_is_positive: height_textfield.text.to_integer > 0
 		end
 
-	check_textfield_for_integer (a_textfield: EV_TEXT_FIELD; default_value: INTEGER) is
+	check_textfield_for_integer (a_textfield: EV_TEXT_FIELD; default_value: INTEGER)
 			-- Check that the text field `a_textfield' hold an integer value,
 			-- otherwise reset it to `default_value'
 		require
@@ -260,7 +260,7 @@ feature {NONE} -- Implementation
 			a_textfield_is_positive: a_textfield.text.to_integer > 0
 		end
 
-	 on_ok is
+	 on_ok
 			-- Select `ok' and destroy the dialog
 		do
 			ok_selected := True
@@ -285,7 +285,7 @@ feature {NONE} -- Implementation
 	internal_desired_height: INTEGER;
 			-- Height for the new image
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

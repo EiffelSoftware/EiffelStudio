@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Main window class of the WEL example : Header_Control."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		do
 			make_top (Title)
 			resize (400, 240)
@@ -63,29 +63,29 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	class_icon: WEL_ICON is
+	class_icon: WEL_ICON
 			-- Window's icon
 		once
 			create Result.make_by_id (Id_ico_application)
 		end
 
-	Title: STRING is "WEL Header Control"
+	Title: STRING = "WEL Header Control"
 			-- Window's title
 
-	class_background: WEL_BRUSH is
+	class_background: WEL_BRUSH
 			-- background color
 		once
 			create Result.make_by_sys_color (Color_background)
 		end
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- The window do not redraw the children.
 		once
 			Result := Precursor {WEL_FRAME_WINDOW}
 				+ Ws_clipchildren + Ws_clipsiblings
 		end
 
-   	on_size (size_type, a_width, a_height: INTEGER) is
+   	on_size (size_type, a_width, a_height: INTEGER)
    			-- Wm_size message
    		do
 			if header_control /= Void then
@@ -96,7 +96,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

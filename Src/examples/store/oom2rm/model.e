@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Describe an OO model and the keys for each classes."
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -9,7 +9,7 @@ deferred class MODEL
 
 feature -- Initialization
 
-	make is
+	make
 			-- Traverse, convert and print the model.
 		local
 			model_traversal: MODEL_TRAVERSAL;
@@ -24,21 +24,21 @@ feature -- Initialization
 
 feature -- *To define*
 
-	model: ANY is
+	model: ANY
 			-- Root object of the model.
 		deferred
 		ensure
 			result_not_void: Result /= Void
 		end;
 
-	register_keys is
+	register_keys
 			-- Register all keys (multiple call to register_key)
 		deferred
 		end;
 
 feature
 
-	keys: KEYS is
+	keys: KEYS
 			-- Keys of the model.
 		once
 			create Result.make (30);
@@ -47,7 +47,7 @@ feature
 			keys_not_empty: not Result.is_empty
 		end;
 
-	output: FILE is
+	output: FILE
 			-- Where to print the result?
 		once
 			Result := io.output
@@ -55,7 +55,7 @@ feature
 			result_not_void: Result /= Void
 		end;
 
-	register_key (field_name, table_name: STRING) is
+	register_key (field_name, table_name: STRING)
 			-- Register `field_name' key for
 			-- the table `table_name'.
 		require
@@ -69,7 +69,7 @@ feature
 			key_registered: keys.has (table_name)
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

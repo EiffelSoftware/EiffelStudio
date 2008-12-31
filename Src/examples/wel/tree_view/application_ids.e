@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Ressource constants"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -8,14 +8,14 @@ class
 
 feature -- Access
 
-	Id_ico_application		: INTEGER is 1
+	Id_ico_application		: INTEGER = 1
 
-	Idb_folder_normal		: INTEGER is 401
-	Idb_folder_selected		: INTEGER is 402
-	Idb_document_normal		: INTEGER is 403
-	Idb_document_selected	: INTEGER is 404;
+	Idb_folder_normal		: INTEGER = 401
+	Idb_folder_selected		: INTEGER = 402
+	Idb_document_normal		: INTEGER = 403
+	Idb_document_selected	: INTEGER = 404;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Main window for this application"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Build the interface for this window.
 		do
 			Precursor {EV_TITLED_WINDOW}
@@ -61,14 +61,14 @@ feature {NONE} -- Initialization
 			set_size (Window_width, Window_height)
 		end
 
-	setup_docking_attributes is
+	setup_docking_attributes
 			-- Setup docking attributes.
 		do
 				-- Build the Docking Manager.
 			create docking_manager.make (docking_container, Current)
 		end
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is the window in its default state
 			-- (as stated in `initialize')
 		do
@@ -87,19 +87,19 @@ feature -- Access
 
 feature {NONE} -- Implemetation, Docking management
 
-	build_docking_editor_contents is
+	build_docking_editor_contents
 			-- Build editor contents.
 		do
 			content_control_panel.build_docking_editor_content
 		end
 
-	build_docking_tool_contents is
+	build_docking_tool_contents
 			-- Build tool contents.
 		do
 			content_control_panel.build_docking_tool_content
 		end
 
-	build_content_control_panel is
+	build_content_control_panel
 			-- Build center control panel.
 		local
 			l_dialog: EV_DIALOG
@@ -116,7 +116,7 @@ feature {NONE} -- Implemetation, Docking management
 
 feature {NONE} -- Implementation, Close event
 
-	request_close_window is
+	request_close_window
 			-- The user wants to close the window
 		local
 			question_dialog: EV_CONFIRMATION_DIALOG
@@ -143,7 +143,7 @@ feature {NONE} -- Implementation
 	docking_container: EV_VERTICAL_BOX
 			-- Container managed by docking manager.
 
-	build_containers is
+	build_containers
 			-- Create `main_container' and `docking_container'.
 		require
 			main_container_not_yet_created: main_container = Void
@@ -162,16 +162,16 @@ feature {NONE} -- Implementation / Constants
 			create Result
 		end
 
-	Window_title: STRING is "Docking Control"
+	Window_title: STRING = "Docking Control"
 			-- Title of the window.
 
-	Window_width: INTEGER is 800
+	Window_width: INTEGER = 800
 			-- Initial width for this window.
 
-	Window_height: INTEGER is 600;
+	Window_height: INTEGER = 600;
 			-- Initial height for this window.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

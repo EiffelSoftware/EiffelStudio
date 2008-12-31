@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "TREEVIEW class of the WEL example : Tree_view."
 	legal: "See notice at end of class."
 	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parent: WEL_WINDOW; a_x, a_y, a_width, a_height, an_id: INTEGER) is
+	make (a_parent: WEL_WINDOW; a_x, a_y, a_width, a_height, an_id: INTEGER)
 			-- Create the tree and some items in it.
 		local
 			tvis1, tvis2, tvis3			: WEL_TREE_VIEW_INSERT_STRUCT
@@ -186,19 +186,19 @@ feature -- Access
 
 feature -- Element change
 
-	set_item_output (static: WEL_STATIC) is
+	set_item_output (static: WEL_STATIC)
 			-- Make `static' the new output.
 		do
 			item_output := static
 		end
 
-	set_mess_output (list: WEL_SINGLE_SELECTION_LIST_BOX) is
+	set_mess_output (list: WEL_SINGLE_SELECTION_LIST_BOX)
 			-- Make `static' the new output.
 		do
 			mess_output := list
 		end
 
-	add_mess_output (str: STRING) is
+	add_mess_output (str: STRING)
 			-- Add a message to the output.
 		do
 			mess_output.add_string (str)
@@ -207,60 +207,60 @@ feature -- Element change
 
 feature -- Notifications
 
-	on_tvn_begindrag (info: WEL_NM_TREE_VIEW) is
+	on_tvn_begindrag (info: WEL_NM_TREE_VIEW)
 			-- A drag-and-drop operation involving the left mouse
 			-- button is being initiated.
 		do
 			add_mess_output ("Begin dragging")
 		end
 
-	on_tvn_beginlabeledit (info: WEL_TREE_VIEW_ITEM) is
+	on_tvn_beginlabeledit (info: WEL_TREE_VIEW_ITEM)
 			-- A label editing for an item has started.
 		do
 			add_mess_output ("Begin label editing")
 		end
 
-	on_tvn_beginrdrag (info: WEL_NM_TREE_VIEW) is
+	on_tvn_beginrdrag (info: WEL_NM_TREE_VIEW)
 			-- A drag-and-drop operation involving the right mouse
 			-- button is being initiated.
 		do
 			add_mess_output ("Begin right dragging")
 		end
 
-	on_tvn_deleteitem (info: WEL_NM_TREE_VIEW) is
+	on_tvn_deleteitem (info: WEL_NM_TREE_VIEW)
 			-- An item has been deleted.
 		do
 			add_mess_output ("Item has been deleting")
 		end
 
-	on_tvn_endlabeledit (info: WEL_TREE_VIEW_ITEM) is
+	on_tvn_endlabeledit (info: WEL_TREE_VIEW_ITEM)
 			-- A label editing for an item has ended.
 		do
 			add_mess_output ("End label editing")
 		end
 
-	on_tvn_getdispinfo (info: WEL_TREE_VIEW_ITEM) is
+	on_tvn_getdispinfo (info: WEL_TREE_VIEW_ITEM)
 			-- The parent window must provide information needed
 			-- to display or sort an item.
 		do
 			add_mess_output ("Get dispinfo")
 		end
 
-	on_tvn_itemexpanded (info: WEL_NM_TREE_VIEW) is
+	on_tvn_itemexpanded (info: WEL_NM_TREE_VIEW)
 			-- a parent item's list of child items has expanded
 			-- or collapsed.
 		do
 			add_mess_output ("Item expanded")
 		end
 
-	on_tvn_itemexpanding (info: WEL_NM_TREE_VIEW) is
+	on_tvn_itemexpanding (info: WEL_NM_TREE_VIEW)
 			-- a parent item's list of child items is about to
 			-- expand or collapse.
 		do
 			add_mess_output ("Item expanding")
 		end
 
-	on_tvn_keydown (virtual_key: INTEGER) is
+	on_tvn_keydown (virtual_key: INTEGER)
 			-- The user pressed a key and the tree-view control 
 			-- has the input focus.
 		do
@@ -268,7 +268,7 @@ feature -- Notifications
 			item_output.set_text (virtual_key.out)
 		end
 
-	on_tvn_selchanged (info: WEL_NM_TREE_VIEW) is
+	on_tvn_selchanged (info: WEL_NM_TREE_VIEW)
 			-- Selection has changed from one item to another.
 		local
 			tree_item: WEL_TREE_VIEW_ITEM
@@ -280,21 +280,21 @@ feature -- Notifications
 			end
 		end
 
-	on_tvn_selchanging (info: WEL_NM_TREE_VIEW) is
+	on_tvn_selchanging (info: WEL_NM_TREE_VIEW)
 			-- Selection is about to change from one item to
 			-- another.
 		do
 			add_mess_output ("Selection changing")
 		end
 
-	on_tvn_setdispinfo (info: WEL_TREE_VIEW_ITEM) is
+	on_tvn_setdispinfo (info: WEL_TREE_VIEW_ITEM)
 			-- The parent window must update the informations
 			-- it maintains about an item.
 		do
 			add_mess_output ("Set dispinfo")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

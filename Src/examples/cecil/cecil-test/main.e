@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 
@@ -10,7 +10,7 @@ create
 
 feature
 
-	make is
+	make
 		local
 			a:ANY
 		do
@@ -24,11 +24,11 @@ feature
 			test_precond;
 		end;
 
-	nop is do end; 
+	nop do end; 
 
 feature
 
-	test_memory is
+	test_memory
 		local
 			s: STRING
 			n: INTEGER
@@ -43,13 +43,13 @@ feature
 
 feature
 
-	test_argument (s: STRING; a: ANY; d: DOUBLE; i: INTEGER) is
+	test_argument (s: STRING; a: ANY; d: DOUBLE; i: INTEGER)
 		do
 		end
 
 feature
 
-	test_linked_list is
+	test_linked_list
 		do
 			create linked_list.make;
 
@@ -76,7 +76,7 @@ feature
 
 feature
 
-	test_void is
+	test_void
 		local
 			s: STRING
 		do
@@ -90,20 +90,20 @@ feature
 
 feature
 
-	test_precond is
+	test_precond
 		require
 			prec
 		do
 		end;
 
-	prec: BOOLEAN is
+	prec: BOOLEAN
 		do
 			io.put_string ("Testing precondition...")
 			io.put_string ("By default it is true%N")
 			Result := True
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

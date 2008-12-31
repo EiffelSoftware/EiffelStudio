@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that allow user input of an string value."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -39,7 +39,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (any: ANY; a_parent: EV_CONTAINER; a_type, label_text, tooltip: STRING; an_execution_agent: PROCEDURE [ANY, TUPLE [STRING]]; a_validate_agent: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]; multiple_line_text_entry: BOOLEAN; components: GB_INTERNAL_COMPONENTS) is
+	make (any: ANY; a_parent: EV_CONTAINER; a_type, label_text, tooltip: STRING; an_execution_agent: PROCEDURE [ANY, TUPLE [STRING]]; a_validate_agent: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]; multiple_line_text_entry: BOOLEAN; components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' with `gb_ev_any' as the client of `Current', we need this to call `update_atribute_editors'.
 			-- Build widget structure into `a_parent'. Use `label_text' as the text of the label next to the text field for entry.
 			-- `an_execution_agent' is to execute the setting of the attribute.
@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING)
 			-- Assign `a_text' to text of `text_field'. As the setting is external,
 			-- we must block the change actions of `text_entry' so that we do not
 			-- get infinite recursion.
@@ -88,7 +88,7 @@ feature -- Basic operations
 	has_multiple_line_entry: BOOLEAN
 		-- Does `Current' permit the entering of multiple lines of text?
 
-	hide_label is
+	hide_label
 			-- Ensure that label is hidden.
 		do
 			label.parent.prune_all (label)
@@ -96,7 +96,7 @@ feature -- Basic operations
 
 feature -- Access
 
-	text: STRING is
+	text: STRING
 			-- `Result' is text of `text_field'.
 		do
 			Result := text_entry.text
@@ -106,7 +106,7 @@ feature -- Access
 
 feature {GB_EV_EDITOR_CONSTRUCTOR}
 
-	update_constant_display (a_value: STRING) is
+	update_constant_display (a_value: STRING)
 			-- Update displayed constant to `a_value'.
 		do
 			text_entry.change_actions.block
@@ -135,7 +135,7 @@ feature {NONE} -- Implementation
 	object: GB_OBJECT
 		-- Object referenced by `Current'.
 
-	execute_agent (new_value: STRING) is
+	execute_agent (new_value: STRING)
 			-- call `execution_agent'.
 		require
 			new_value_not_void: new_value /= Void
@@ -143,12 +143,12 @@ feature {NONE} -- Implementation
 			execution_agent.call ([new_value])
 		end
 
-	update_editors is
+	update_editors
 			-- Short version for calling everywhere.
 		do
 		end
 
-	set_initial is
+	set_initial
 			-- Assign text of text field to `value_on_entry'.
 		require
 			text_entry_not_void: text_entry /= Void
@@ -156,7 +156,7 @@ feature {NONE} -- Implementation
 			value_on_entry := text_entry.text
 		end
 
-	process is
+	process
 			-- Validate information in `text_field' and execute `execute_agent'
 			-- if valid. If not valid, then restore previous value to `text_field'.
 		do
@@ -168,7 +168,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	call_default_create (any: ANY) is
+	call_default_create (any: ANY)
 			-- Call `default_create' and assign `any' to `internal_gb_ev_any'.
 		require
 			gb_ev_any_not_void: any /= Void
@@ -176,7 +176,7 @@ feature {NONE} -- Implementation
 			default_create
 		end
 
-	add_label (label_text, tooltip: STRING) is
+	add_label (label_text, tooltip: STRING)
 			-- Add a label to `Current' with `text' `label_text' and
 			-- tooltip `tooltip'.
 		require
@@ -189,7 +189,7 @@ feature {NONE} -- Implementation
 			label.align_text_left
 		end
 
-	setup_text_field (a_parent: EV_CONTAINER; tooltip: STRING; an_execution_agent: PROCEDURE [ANY, TUPLE [STRING]]; a_validate_agent: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]) is
+	setup_text_field (a_parent: EV_CONTAINER; tooltip: STRING; an_execution_agent: PROCEDURE [ANY, TUPLE [STRING]]; a_validate_agent: FUNCTION [ANY, TUPLE [STRING], BOOLEAN])
 			-- Initialize text field for entry.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -228,7 +228,7 @@ feature {NONE} -- Implementation
 			entry_widget.focus_out_actions.extend (agent process)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

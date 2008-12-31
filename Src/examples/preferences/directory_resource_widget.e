@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Default widget for viewing and editing color preferences."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 		
 feature -- Access
 
-	graphical_type: STRING is
+	graphical_type: STRING
 			-- Graphical type identifier.
 		do
 			Result := "DIRECTORY"
@@ -35,7 +35,7 @@ feature -- Access
 
 	change_item_widget: EV_GRID_DRAWABLE_ITEM
 	
-	show is
+	show
 			-- 
 		do
 			show_change_item_widget
@@ -43,7 +43,7 @@ feature -- Access
 
 feature {PREFERENCE_VIEW} -- Commands
 
-	change is
+	change
 			-- Change the value.
 		require
 			preference_exists: preference /= Void
@@ -56,7 +56,7 @@ feature {PREFERENCE_VIEW} -- Commands
 		
 feature {NONE} -- Commands
 
-	update_changes is
+	update_changes
 			-- Update the changes made in `change_item_widget' to `preference'.		
 		local
 			directory: STRING
@@ -69,7 +69,7 @@ feature {NONE} -- Commands
 			Precursor {PREFERENCE_WIDGET}
 		end
 		
-	update_preference is
+	update_preference
 			-- 
 		do
 			if last_selected_value /= Void then
@@ -79,7 +79,7 @@ feature {NONE} -- Commands
 
 feature {NONE} -- Implementation
 
-	build_change_item_widget is
+	build_change_item_widget
 			-- Create and setup `change_item_widget'.
 		do
 			create change_item_widget
@@ -88,7 +88,7 @@ feature {NONE} -- Implementation
 			change_item_widget.pointer_double_press_actions.force_extend (agent show_change_item_widget)
 		end
 
-	show_change_item_widget is
+	show_change_item_widget
 			-- 
 		do
 			change
@@ -97,7 +97,7 @@ feature {NONE} -- Implementation
 			end
 		end		
 
-	on_directory_item_exposed (area: EV_DRAWABLE) is
+	on_directory_item_exposed (area: EV_DRAWABLE)
 			-- Expose part of directory preference value item.
 		do
 			if change_item_widget.row.is_selected then				
@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 	directory_tool: EV_DIRECTORY_DIALOG;
 			-- Directory dialog from which we can select a color.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

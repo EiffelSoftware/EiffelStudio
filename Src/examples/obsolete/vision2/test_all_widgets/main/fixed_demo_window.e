@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"FIXED_DEMO_WINDOW, demo window to test fixed widget.%
 		% Belongs to EiffelVision example."
@@ -26,7 +26,7 @@ create
 
 feature -- Access
 
-	main_widget: EV_FIXED is
+	main_widget: EV_FIXED
 			-- The main widget of the demo
 		once
 			create Result.make (Current)
@@ -38,7 +38,7 @@ feature -- Access
 
 feature -- Status setting
 	
-	set_widgets is
+	set_widgets
 			-- Set the widgets in the demo windows.
 		do
 			create button1.make (main_widget)
@@ -47,7 +47,7 @@ feature -- Status setting
 	
 feature -- Status setting
 	
-	set_values is
+	set_values
 			-- Set the values on the widgets of the window.
 		do
 			set_title ("Fixed demo")
@@ -60,13 +60,13 @@ feature -- Status setting
 
 feature -- Command execution
 
-	execute (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	execute (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Executed when we press the first button
 		do
 			button2.set_x_y (button2.x + 10, button2.y + 10)
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

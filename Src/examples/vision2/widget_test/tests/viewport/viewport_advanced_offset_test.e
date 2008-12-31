@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that test an EV_VIEWPORT by allowing%
 		% you to adjust the offset."
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 		
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create `Current' and initialize test in `widget'.
 		local
 			vertical_box: EV_VERTICAL_BOX
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			widget := vertical_box
 		end
 		
-	modify_offset (x, y: INTEGER) is
+	modify_offset (x, y: INTEGER)
 			-- Assign an offset to `viewport' based on `x' and `y'.
 		do
 			viewport.set_offset ((x * 6 - small_image_width).max (0).min (image_width - 300),
@@ -55,34 +55,34 @@ feature {NONE} -- Implementation
 	viewport: EV_VIEWPORT
 		-- Widget that test is to be performed on.
 	
-	image_width: INTEGER is 900
-	image_height: INTEGER is 600
+	image_width: INTEGER = 900
+	image_height: INTEGER = 600
 	
-	half_image_width: INTEGER is
+	half_image_width: INTEGER
 			-- Half `image_width'.		
 		do
 			Result := image_width // 2	
 		end
 
-	half_image_height: INTEGER is
+	half_image_height: INTEGER
 			-- Half `image_height'.
 		do
 			Result := image_width // 2
 		end
 		
-	small_image_width: INTEGER is
+	small_image_width: INTEGER
 			-- Once sixth `image_width'.
 		do
 			Result := 900 // 6
 		end
 		
-	small_image_height: INTEGER is
+	small_image_height: INTEGER
 			-- Once sixth `image_height'.
 		do
 			Result := 600 // 6
 		end
 	
-	build_images is
+	build_images
 			-- `Result' is image used for test. The way
 			-- in which this is generated is not important, but the
 			-- fact that it generates an interesting image is.
@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 	small_image, large_image: EV_PIXMAP;
 		-- Images for test.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

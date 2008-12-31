@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that provide facilities for searching an EV_TEXT"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make_with_ev_text (a_text: EV_TEXT) is
+	make_with_ev_text (a_text: EV_TEXT)
 			-- Create `Current' and assign `a_text' to `text_control'.
 		require
 			a_text_not_void: a_text /= Void
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	associate_text_entry (text_entry: EV_TEXT_FIELD) is
+	associate_text_entry (text_entry: EV_TEXT_FIELD)
 			-- Mark `text_entry' as associated text input field
 			-- for searching.
 		require
@@ -41,7 +41,7 @@ feature -- Access
 
 feature -- Status setting
 
-	enable_case_matching is
+	enable_case_matching
 			-- Ensure `case_matching is `True'
 		do
 			case_matching := True
@@ -50,7 +50,7 @@ feature -- Status setting
 			case_matching_on: case_matching
 		end
 		
-	disable_case_matching is
+	disable_case_matching
 			-- Ensure `case_matching is `False'
 		do
 			case_matching := False
@@ -61,7 +61,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	search (a_string: STRING) is
+	search (a_string: STRING)
 			-- Search for `a_string' in `text' of `text_control'
 			-- and highlight if found.
 		local
@@ -102,7 +102,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	update_text_entry_for_change is
+	update_text_entry_for_change
 			-- If `internal_text_entry' /= Void then update color.
 		do
 			if internal_text_entry /= Void then
@@ -125,7 +125,7 @@ feature {NONE} -- Implementation
 		-- text field used for inputting search strings.
 		-- External to `Currrent' and may be Void if not associated.
 		
-	return_pressed_so_search is
+	return_pressed_so_search
 			-- Return has been pressed in `internal_text_entry', so
 			-- perform a search
 		do
@@ -133,7 +133,7 @@ feature {NONE} -- Implementation
 		end
 		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

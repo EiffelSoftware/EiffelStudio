@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Variable lists
@@ -22,18 +22,18 @@ create
 
 feature 
 
-	construct_name: STRING is
+	construct_name: STRING
 		once
 			Result := "VARIABLES"
 		end -- construct_name
 
 feature {NONE}
 
-	separator: STRING is ";"
+	separator: STRING = ";"
 
 feature 
 
-	production: LINKED_LIST [IDENTIFIER] is
+	production: LINKED_LIST [IDENTIFIER]
 		local
 			base: VAR
 		once
@@ -43,7 +43,7 @@ feature
 			put (base)
 		end; -- production
 
-	post_action is
+	post_action
 		do
 			if not no_components then
 				from
@@ -57,7 +57,7 @@ feature
 			end
 		end -- post_action
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

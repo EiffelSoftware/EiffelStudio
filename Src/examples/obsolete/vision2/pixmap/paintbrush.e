@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Simple drawing program."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature -- Access
 
-	make_and_launch is
+	make_and_launch
 		do
 			default_create
 			prepare
@@ -34,7 +34,7 @@ feature -- Access
 
 feature -- Initialization
 
-	prepare is
+	prepare
 			-- Initialize world.
 		local
 			a_menu_bar: EV_MENU_BAR
@@ -97,7 +97,7 @@ feature -- Initialization
 			my_pixmap.disable_sensitive
 		end
 
-	add_toolbar_button (a_toolbar: EV_TOOL_BAR; pixmap_name: STRING; command: PROCEDURE [ANY, TUPLE]) is
+	add_toolbar_button (a_toolbar: EV_TOOL_BAR; pixmap_name: STRING; command: PROCEDURE [ANY, TUPLE])
 			-- Add a button to the toolbar `a_toolbar' with the pixmap `pixmap_name' and the action
 			-- `command'.
 		local
@@ -112,7 +112,7 @@ feature -- Initialization
 			a_toolbar.extend (a_toolbar_button)
 		end
 
-	first_window: EV_TITLED_WINDOW is
+	first_window: EV_TITLED_WINDOW
 			-- The window with the drawable area.
 		once
 			create Result
@@ -133,7 +133,7 @@ feature {NONE} -- Graphical interface
 
 feature -- Process Vision2 events
 
-	new_bitmap is
+	new_bitmap
 			-- create a new blank pixmap
 		do
 				-- remove the old pixmap
@@ -143,7 +143,7 @@ feature -- Process Vision2 events
 			create my_pixmap
 		end
 
-	on_file_open is
+	on_file_open
 			-- Feature executed when the user select file/load
 			-- in the menu. Open the dialog box and let the
 			-- user choose its file to load.
@@ -155,7 +155,7 @@ feature -- Process Vision2 events
 			ofd.show_modal_to_window (first_window)
 		end
 
-	on_file_new is
+	on_file_new
 			-- Feature executed when the user select file/new
 			-- in the menu.
 		local
@@ -170,13 +170,13 @@ feature -- Process Vision2 events
 			end
 		end
 
-	on_file_save is
+	on_file_save
 			-- Feature executed when the user select file/close
 			-- in the menu.
 		do
 		end
 
-	on_file_exit is
+	on_file_exit
 			-- Feature executed when the user select file/exit
 			-- in the menu.
 		do
@@ -190,7 +190,7 @@ feature -- Process Vision2 events
 
 feature {NONE} -- Load/Save File handling
 
-	effective_load_file (file_d: EV_FILE_OPEN_DIALOG) is
+	effective_load_file (file_d: EV_FILE_OPEN_DIALOG)
 			-- Actions performed when the user click on the
 			-- "OK" button of the FileOpenDialog box.
 		do
@@ -204,7 +204,7 @@ feature {NONE} -- Initialisations and File status
 	file_name: STRING;
 			-- Name of the current displayed pixmap.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

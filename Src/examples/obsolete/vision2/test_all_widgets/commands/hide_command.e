@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"HIDE_COMMAND, hides a widget. Belongs to EiffelVision%
 		% example."
@@ -16,12 +16,12 @@ inherit
 
 feature -- Command execution
 
-	execute (argument: EV_ARGUMENT1[EV_WIDGET]; data: EV_EVENT_DATA) is
+	execute (argument: EV_ARGUMENT1[EV_WIDGET]; data: EV_EVENT_DATA)
 		do
 			argument.first.hide
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

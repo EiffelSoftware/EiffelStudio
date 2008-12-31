@@ -1,4 +1,4 @@
-indexing
+note
 	description: "The main window for the vision2 widget test."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize `Current' to set up tests.
 		local
 			environment: EV_ENVIRONMENT
@@ -78,14 +78,14 @@ feature {NONE} -- Initialization
 			show
 		end
 		
-		show_about_dialog is
+		show_about_dialog
 				-- Create and display the about dialog.
 			do
 				create about_dialog.make
 				about_dialog.show_modal_to_window (Current)
 			end
 			
-	initialize_widget_tree is
+	initialize_widget_tree
 			-- Add widgets to `widget_tree'.
 		local
 			tree_item, tree_item1, tree_item2: EV_TREE_ITEM
@@ -167,7 +167,7 @@ feature {NONE} -- Initialization
 			end
 		end
 		
-	test_widget (widget: EV_WIDGET) is
+	test_widget (widget: EV_WIDGET)
 			-- Initialize tests for `widget'.
 		do
 				-- Remove previous testable widget
@@ -253,7 +253,7 @@ feature {NONE} -- Initialization
 		
 feature {NONE} -- Implementation
 		
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 			-- Currently do not care about this check, so we
 			-- are turning it off.
@@ -375,9 +375,9 @@ feature {NONE} -- Implementation
 	text_alignable_control: TEXT_ALIGNABLE_CONTROL
 
 		-- Default width of the scrollable area.
-	Scrollable_area_width: INTEGER is 220;
+	Scrollable_area_width: INTEGER = 220;
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

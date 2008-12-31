@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class 
@@ -6,10 +6,10 @@ class
 
 feature -- Access
 
-	Idc_static_constant: INTEGER is 1
-	Idd_dialog1_constant: INTEGER is 101;
+	Idc_static_constant: INTEGER = 1
+	Idd_dialog1_constant: INTEGER = 101;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

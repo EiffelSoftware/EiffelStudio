@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -19,13 +19,13 @@ create
 
 feature {NONE}
 
-	Stringlength: INTEGER is 80
+	Stringlength: INTEGER = 80
 
 	base_selection: DB_SELECTION
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Start SQL_MONITOR
 		local
 			session_control: DB_CONTROL
@@ -120,7 +120,7 @@ feature {NONE} -- Initialization
 
 feature {NONE}
 
-	manage_errors_and_warnings (session_control: DB_CONTROL) is
+	manage_errors_and_warnings (session_control: DB_CONTROL)
 			-- Manage errors and warnings that may have
 			-- occurred during last operation.
 		do
@@ -137,19 +137,19 @@ feature {NONE}
 			end
 		end
 
-	read_order is
+	read_order
 			-- Get statement from standard input
 		do
 			io.putstring ("SQL> ")
 			io.readline
 		end
 
-	seq_string: SEQ_STRING is
+	seq_string: SEQ_STRING
 		once
 			create Result.make (Stringlength)
 		end
 	
-	is_select_statement(st: STRING): BOOLEAN is
+	is_select_statement(st: STRING): BOOLEAN
 			-- Is 'st' a select statement?
 		require
 			st_not_void: st /= Void
@@ -175,7 +175,7 @@ feature {NONE}
 			end
 		end
 
-	init is
+	init
 			-- This method is used by the class DB_SELECTION, and is executed after the first
 			-- iteration step of 'load_result', it provides some facilities to control, manage, and/or
 			-- display data resulting of a query.
@@ -198,7 +198,7 @@ feature {NONE}
 			io.new_line
 		end
 
-	execute is
+	execute
 			-- This method is also  used by the class DB_SELECTION, and is executed after each
 			-- iteration step of 'load_result', it provides some facilities to control, manage, and/or
 			-- display data resulting of a query.
@@ -244,7 +244,7 @@ feature {NONE}
 			io.new_line
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

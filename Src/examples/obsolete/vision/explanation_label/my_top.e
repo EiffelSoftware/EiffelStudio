@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Second window of the example"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -31,7 +31,7 @@ create
 
 feature -- Initialization
 
-	make (a_name: STRING; a_s: SCREEN) is
+	make (a_name: STRING; a_s: SCREEN)
 		do
 				--initiliaze as top shell
 			top_make (a_name, a_s)
@@ -52,7 +52,7 @@ feature -- Initialization
 
 		end		
 	
-	realize is
+	realize
 		do
 			if not(realized) then
 					--realize as top shell
@@ -69,7 +69,7 @@ feature -- Properties
 	p1, p2, p3: FOCUSABLE_B;
 		-- some focusables
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

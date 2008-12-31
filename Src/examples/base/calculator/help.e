@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class 
@@ -13,17 +13,17 @@ inherit
 
 feature 
 	
-	do_one_state is
+	do_one_state
 			-- Print help header.
 		do
 			keys_messages
 		end
 
-	operation is 
+	operation 
 		do 
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

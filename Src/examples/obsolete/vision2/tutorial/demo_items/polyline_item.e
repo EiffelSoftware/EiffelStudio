@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Demo for polylines."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Access
 
-	figure: EV_POLYLINE is
+	figure: EV_POLYLINE
 		local
 			pt1, pt2, pt3: EV_PIXEL
 		do
@@ -31,7 +31,7 @@ feature -- Access
 			Result.add (pt3)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

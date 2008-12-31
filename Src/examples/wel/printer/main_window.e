@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		do
 			make_top (Title)
 			set_menu (main_menu)
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	on_menu_command (menu_id: INTEGER) is
+	on_menu_command (menu_id: INTEGER)
 		local
 			rect: WEL_RECT
 			print_dialog: WEL_PRINT_DIALOG
@@ -66,12 +66,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 		do
 			draw (paint_dc, client_rect)
 		end
 
-	draw (a_dc: WEL_DC; a_rect: WEL_RECT) is
+	draw (a_dc: WEL_DC; a_rect: WEL_RECT)
 			-- Draw the figures on the dc
 		do
 			a_dc.rectangle (0, 0, a_rect.width, a_rect.height)
@@ -83,13 +83,13 @@ feature {NONE} -- Implementation
 			a_dc.draw_centered_text ("Hello, Printer!", a_rect)
 		end
 
-	class_icon: WEL_ICON is
+	class_icon: WEL_ICON
 			-- Window's icon
 		once
 			create Result.make_by_id (Id_ico_application)
 		end
 
-	main_menu: WEL_MENU is
+	main_menu: WEL_MENU
 			-- Window's menu
 		once
 			create Result.make_by_id (Id_main_menu)
@@ -97,10 +97,10 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	Title: STRING is "WEL Print";
+	Title: STRING = "WEL Print";
 			-- Window's title
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

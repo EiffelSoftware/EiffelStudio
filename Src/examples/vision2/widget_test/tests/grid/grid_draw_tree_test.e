@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that test EV_GRID tree functionality. Press and hold the left mouse button
 		on any item in the tree and drag the mouse to draw a subrow tree structure which is
@@ -21,7 +21,7 @@ inherit
 		
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create `Current' and initialize test in `widget'.
 		local
 			grid_label_item: EV_GRID_LABEL_ITEM
@@ -60,7 +60,7 @@ feature {NONE} -- Implementation
 	max_set: INTEGER
 		-- Total number of new rows drawn.
 		
-	draw_tree_item_press (an_x, a_y, button: INTEGER; an_item: EV_GRID_ITEM) is
+	draw_tree_item_press (an_x, a_y, button: INTEGER; an_item: EV_GRID_ITEM)
 			-- A mouse button has been pressed on `grid' so if it is the left mouse
 			-- button and the press started on an item, start the motion recording.
 		do
@@ -75,7 +75,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	draw_tree_item_release (an_x, a_y, button: INTEGER; an_item: EV_GRID_ITEM) is
+	draw_tree_item_release (an_x, a_y, button: INTEGER; an_item: EV_GRID_ITEM)
 			-- A mouse button has been released on `grid' so calculate and
 			-- add all the new tree items that have been drawn.
 		local
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	draw_tree_item_motion (an_x, a_y: INTEGER; an_item: EV_GRID_ITEM) is
+	draw_tree_item_motion (an_x, a_y: INTEGER; an_item: EV_GRID_ITEM)
 			-- A mouse motion has occured in `grid' so recored the
 			-- positions into `offsets' ready for item building.
 		local
@@ -184,7 +184,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	clear_all_rows_except_first is
+	clear_all_rows_except_first
 			-- Remove all rows from `grid' except the first.
 		local
 			i: INTEGER
@@ -199,7 +199,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

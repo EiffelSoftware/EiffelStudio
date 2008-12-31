@@ -1,4 +1,4 @@
-indexing
+note
 description: 
 		"LABEL_DEMO_WINDOW, demo window to test label widget.%
 		% Belongs to EiffelVision example test_all_widgets."
@@ -24,7 +24,7 @@ create
 
 feature -- Access
 
-	main_widget: EV_LABEL is
+	main_widget: EV_LABEL
 			-- Main widget of the window
 		once
 			create Result.make (Current)
@@ -34,19 +34,19 @@ feature -- Access
 	
 feature -- Status setting
         
-	set_widgets is
+	set_widgets
 			-- Set the widgets in the demo windows.
 		do
 		end
 	
-	set_values is
+	set_values
 			-- Set the values on the widgets of the window.
 		do
 			main_widget.set_text ("Label")
 			set_title ("Label demo")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

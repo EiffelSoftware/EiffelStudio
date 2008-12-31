@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Analyzer class identifier"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -10,9 +10,9 @@ class
 
 feature -- Access
 
-	Analyzer_clsid: STRING is "{4E0EE810-891B-11d1-831F-00A02469D020}";
+	Analyzer_clsid: STRING = "{4E0EE810-891B-11d1-831F-00A02469D020}";
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

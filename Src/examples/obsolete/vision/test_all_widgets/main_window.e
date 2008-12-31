@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- The main-window
@@ -35,7 +35,7 @@ feature
 	message_d_b, error_d_b, question_d_b, info_d_b, working_d_b,
 	warning_d_b, file_sel_d_b: MAIN_WINDOW_BUTTON;
 
-	make(a_name: STRING; a_s: SCREEN) is
+	make(a_name: STRING; a_s: SCREEN)
 	do
 		current_demo:=no_demo
 		base_make (a_name, a_s);
@@ -79,7 +79,7 @@ feature
 
 	current_demo: INTEGER;
 
-	work (arg: INTEGER_REF) is
+	work (arg: INTEGER_REF)
 	do
 		if arg.item = b_exit then	-- exit application
 			exit
@@ -257,7 +257,7 @@ feature
 		end
 	end -- work
 
-	finish is
+	finish
 	local
 		dialog: DIALOG
 	do
@@ -361,7 +361,7 @@ feature
 		end
 	end; -- finish
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

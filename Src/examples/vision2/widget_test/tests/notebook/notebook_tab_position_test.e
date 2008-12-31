@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that demonstrate tab positioning within an EV_NOTEBOOK"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 		
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create `Current' and initialize test in `widget'.
 		local
 			item_counter: INTEGER
@@ -56,14 +56,14 @@ feature {NONE} -- Initialization
 	
 feature {NONE} -- Implementation
 
-	item_texts: ARRAY [STRING] is
+	item_texts: ARRAY [STRING]
 			-- Access to all strings for combo box entries.
 		once
 			create Result.make (1, 4)
 			Result := <<"Tab_position_top", "Tab_position_bottom", "Tab_position_left", "Tab_position_right">>
 		end
 		
-	tab_position_constants: ARRAY [INTEGER] is
+	tab_position_constants: ARRAY [INTEGER]
 			-- Tab position constants, matching `item_texts'.
 		once
 			create Result.make (1, 4)
@@ -76,7 +76,7 @@ feature {NONE} -- Implementation
 	notebook: EV_NOTEBOOK;
 		-- Widget that test is to be performed on.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

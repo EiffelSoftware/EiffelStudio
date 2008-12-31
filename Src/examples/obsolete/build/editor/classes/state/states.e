@@ -1,24 +1,24 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class STATES
 
 feature 
 
-	exit_from_application: INTEGER is -2
+	exit_from_application: INTEGER = -2
 
-	return_to_previous: INTEGER is -1
+	return_to_previous: INTEGER = -1
 
-	basic: INTEGER is 1
+	basic: INTEGER = 1
 			-- BASIC
 
-	editing: INTEGER is 2
+	editing: INTEGER = 2
 			-- Editing
 
-	viewing: INTEGER is 3;
+	viewing: INTEGER = 3;
 			-- Viewing
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

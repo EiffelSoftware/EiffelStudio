@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that shows node name within an ellipse."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create an EG_SIMPLE_NODE.
 		do
 			Precursor {EG_SIMPLE_NODE}
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 		
 feature -- Access
 
-	xml_node_name: STRING is
+	xml_node_name: STRING
 			-- Name of `xml_element'.
 		do
 			Result := "ELLIPSE_NODE"
@@ -46,7 +46,7 @@ feature -- Access
 	
 feature -- Element change
 
-	update is
+	update
 			-- Some properties may have changed.
 		do
 			if is_label_shown then
@@ -57,19 +57,19 @@ feature -- Element change
 	
 feature {NONE} -- Implementation
 
-	color: EV_COLOR is
+	color: EV_COLOR
 			-- color of figure.
 		once
 			create Result.make_with_rgb (0,0,1)
 		end
 		
-	figure_size: INTEGER is
+	figure_size: INTEGER
 			-- Size of figure in pixel.
 		do
 			Result := 30
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Test of tests."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature -- Initialization
 
-	prepare is
+	prepare
 		local
 			vb: EV_VERTICAL_BOX
 			hb: EV_HORIZONTAL_BOX
@@ -68,34 +68,34 @@ feature -- Initialization
 		vb.extend (ob)
 	end
 
-	on_key_press (k: EV_KEY) is
+	on_key_press (k: EV_KEY)
 		do
 			io.put_string ("Press: " + k.out + "%N")
 		end
 
-	on_key_release (k: EV_KEY) is
+	on_key_release (k: EV_KEY)
 		do
 			io.put_string ("Release: " + k.out + "%N")
 		end
 
-	prepend_button (a_box: EV_BOX; a_text: STRING) is
+	prepend_button (a_box: EV_BOX; a_text: STRING)
 		do
 			a_box.put_front (create {EV_BUTTON}.make_with_text (a_text))
 			a_box.put_front (create {EV_BUTTON}.make_with_text (a_text))
 		end
 
-	append_button (a_box: EV_BOX; a_text: STRING) is
+	append_button (a_box: EV_BOX; a_text: STRING)
 		do
 			a_box.extend (create {EV_BUTTON}.make_with_text (a_text))
 			a_box.extend (create {EV_BUTTON}.make_with_text (a_text))
 		end
 
-	first_window: EV_TITLED_WINDOW is
+	first_window: EV_TITLED_WINDOW
 		once
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

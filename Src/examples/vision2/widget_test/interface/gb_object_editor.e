@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Vision2 tour version of GB_OBJECT_EDITOR%
 		%necessary for compilation and building purposes."
 	legal: "See notice at end of class."
@@ -49,7 +49,7 @@ inherit
 		
 feature -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		local
 			tool_bar: EV_TOOL_BAR
@@ -98,11 +98,11 @@ feature -- Initialization
 			register_type_change_agent (agent set_type (?))
 		end
 		
-	is_in_default_state: BOOLEAN is True
+	is_in_default_state: BOOLEAN = True
 
 feature -- Status setting
 
-	set_type (a_widget: EV_WIDGET) is
+	set_type (a_widget: EV_WIDGET)
 			-- Assign `an_object' to `object'.
 			-- Set up `Current' to modify `object'.
 		do
@@ -112,9 +112,9 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 		
-	Minimum_width_of_object_editor: INTEGER is 160
+	Minimum_width_of_object_editor: INTEGER = 160
 
-	construct_editor (widget: EV_WIDGET) is
+	construct_editor (widget: EV_WIDGET)
 			-- Build `Current'. Build all attribute editors and populate,
 			-- to represent `object'.
 		local
@@ -233,7 +233,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	update_scroll_bar is
+	update_scroll_bar
 			-- Show/hide the scroll bar as appropriate. Modify the
 			-- range of the scroll bar as needed.
 		local
@@ -295,7 +295,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	show_scroll_bar_again (a_timeout: EV_TIMEOUT) is
+	show_scroll_bar_again (a_timeout: EV_TIMEOUT)
 			-- Call show on `scroll_bar' and destroy `a_timeout'.
 			-- This is needed, as there is a Vision2 resizing bug on Windows
 			-- which stops teh scroll bar being displayed when it is first shown, as you
@@ -308,7 +308,7 @@ feature {NONE} -- Implementation
 		end
 		
 		
-	scroll_bar_changed (value: INTEGER) is
+	scroll_bar_changed (value: INTEGER)
 			-- Set the offset of the controls to `Value'
 			-- within the viewport.
 		do
@@ -339,7 +339,7 @@ feature {NONE} -- Implementation
 	control_holder: EV_VERTICAL_BOX;
 		-- Holds the controls, and is placed in the scrollable area.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

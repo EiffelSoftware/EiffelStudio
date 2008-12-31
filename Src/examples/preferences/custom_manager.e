@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Custom manager which can create custom preferences (in this case a DIRECTORY_RESOURCE)."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature -- Access
 
-	new_directory_preference_value (a_name: STRING; a_value: DIRECTORY_NAME): DIRECTORY_RESOURCE is
+	new_directory_preference_value (a_name: STRING; a_value: DIRECTORY_NAME): DIRECTORY_RESOURCE
 			-- Add a new directory path preference with name `a_name' and `a_value'.
 		require
 			name_valid: a_name /= Void and not a_name.is_empty
@@ -34,7 +34,7 @@ feature -- Access
 			preference_added: preferences.has_preference (namespace + "." + a_name)
 		end		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

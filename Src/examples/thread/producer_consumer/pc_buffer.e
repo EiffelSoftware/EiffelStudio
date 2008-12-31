@@ -1,5 +1,5 @@
 
-indexing
+note
     description: ""
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -37,7 +37,7 @@ feature
 	data: ARRAY [INTEGER]
 			-- Physical buffer of elements.
 
-	make (size, i: INTEGER; finish: BOOLEAN_REF) is
+	make (size, i: INTEGER; finish: BOOLEAN_REF)
 			-- Initialize customizable parameters
 			-- and internal structures.
 		do
@@ -51,7 +51,7 @@ feature
 			create data.make (0,buffer_size)
 		end
 
-	get (id: INTEGER) is
+	get (id: INTEGER)
 			-- Get an element from the buffer.	
 			-- Note that we have to `wait' in a loop
 			-- because the condition may have changed when
@@ -84,7 +84,7 @@ feature
 				monitor.unlock
 		end
 
-	put (d: INTEGER; id: INTEGER) is
+	put (d: INTEGER; id: INTEGER)
 			-- Put an element in the buffer.
 			-- `wait' is nested in a loop for the same reason as
 			-- above.
@@ -114,7 +114,7 @@ feature
 				monitor.unlock
 			end
 
-	check_display is
+	check_display
 			-- Check whether we display the buffer for the
 			-- current operation and in the latter case ask
 			-- for exiting.
@@ -136,7 +136,7 @@ feature
 			end
 		end
 
-	display is
+	display
 			-- Display buffer.
 		local
 			i: INTEGER
@@ -155,7 +155,7 @@ feature
 			end
 			io.put_string ("***********************%N")
 		end
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

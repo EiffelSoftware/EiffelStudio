@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Simple drawing program."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ create
 
 feature -- Initialization
 
-	prepare is
+	prepare
 			-- Initialize world.
 		local
 			a_color: EV_COLOR
@@ -67,7 +67,7 @@ feature -- Initialization
 			da_paint.expose_actions.extend (agent on_paint)
 		end
 
-	first_window: EV_TITLED_WINDOW is
+	first_window: EV_TITLED_WINDOW
 			-- The window with the drawable area.
 		once
 			create Result
@@ -91,12 +91,12 @@ feature {NONE} -- Graphical interface
 
 feature {NONE} -- Implementation
 	
-	on_paint(x, y, width, height: INTEGER) is
+	on_paint(x, y, width, height: INTEGER)
 		do
 			draw (da_paint, Dominant_blue)
 		end
 
-	on_idle_action is
+	on_idle_action
 		do
 			draw (da_direct, Dominant_red)
 
@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 			da_paint.flush
 		end
 
-	draw (da: EV_DRAWING_AREA; dominant_color: INTEGER) is
+	draw (da: EV_DRAWING_AREA; dominant_color: INTEGER)
 		local
 			random_int: INTEGER
 			drawing_primitive: PROCEDURE[DA_TEST,TUPLE]
@@ -120,7 +120,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Drawing Operations
 
-	draw_polyline (da: EV_DRAWING_AREA) is
+	draw_polyline (da: EV_DRAWING_AREA)
 		local
 			i: INTEGER
 			ev_coord: EV_COORDINATES
@@ -149,7 +149,7 @@ feature {NONE} -- Drawing Operations
 			end
 		end
 
-	draw_text (da: EV_DRAWING_AREA) is
+	draw_text (da: EV_DRAWING_AREA)
 		local
 			a_font: EV_FONT
 		do
@@ -166,14 +166,14 @@ feature {NONE} -- Drawing Operations
 				)
 		end
 
-	draw_point (da: EV_DRAWING_AREA) is
+	draw_point (da: EV_DRAWING_AREA)
 		do
 			da.draw_point (
 				get_random_x(da), get_random_y(da)
 				)
 		end
 
-	draw_pixmap (da: EV_DRAWING_AREA) is
+	draw_pixmap (da: EV_DRAWING_AREA)
 		local
 			is_segment: BOOLEAN
 		do
@@ -184,7 +184,7 @@ feature {NONE} -- Drawing Operations
 				)
 		end
 
-	draw_line (da: EV_DRAWING_AREA) is
+	draw_line (da: EV_DRAWING_AREA)
 		local
 			is_segment: BOOLEAN
 		do
@@ -203,7 +203,7 @@ feature {NONE} -- Drawing Operations
 			end
 		end
 
-	draw_ellipse (da: EV_DRAWING_AREA) is
+	draw_ellipse (da: EV_DRAWING_AREA)
 		local
 			filled: BOOLEAN
 		do
@@ -222,7 +222,7 @@ feature {NONE} -- Drawing Operations
 			end
 		end
 
-	draw_arc (da: EV_DRAWING_AREA) is
+	draw_arc (da: EV_DRAWING_AREA)
 		local
 			filled: BOOLEAN
 			poly_closed: BOOLEAN
@@ -253,7 +253,7 @@ feature {NONE} -- Drawing Operations
 			end
 		end
 
-	draw_rectangle (da: EV_DRAWING_AREA) is
+	draw_rectangle (da: EV_DRAWING_AREA)
 		local
 			filled: BOOLEAN
 			x1, x2, y1, y2: INTEGER
@@ -275,7 +275,7 @@ feature {NONE} -- Random Drawing
 
 	drawing_operations: ARRAY [PROCEDURE[DA_TEST,TUPLE]]
 	
-	initialize_drawing_operations is
+	initialize_drawing_operations
 		do
 			create drawing_operations.make (0, Number_drawing_operations)
 			drawing_operations.put (agent draw_polyline, 0)
@@ -289,7 +289,7 @@ feature {NONE} -- Random Drawing
 
 feature {NONE} -- Random Implementation
 
-	get_random_color(dominant_color: INTEGER): EV_COLOR is
+	get_random_color(dominant_color: INTEGER): EV_COLOR
 		local
 			random_real: REAL
 			dark: BOOLEAN
@@ -329,41 +329,41 @@ feature {NONE} -- Random Implementation
 			end
 		end
 
-	get_random_x (da: EV_DRAWING_AREA): INTEGER is
+	get_random_x (da: EV_DRAWING_AREA): INTEGER
 		do
 			Result := (get_random_real * da.width).floor
 		end
 
-	get_random_y (da: EV_DRAWING_AREA): INTEGER is
+	get_random_y (da: EV_DRAWING_AREA): INTEGER
 		do
 			Result := (get_random_real * da.height).floor
 		end
 
-	random: RANDOM is
+	random: RANDOM
 		once
 			create Result.make
 		end
 
 	random_index: INTEGER
 
-	get_random_real: REAL is
+	get_random_real: REAL
 		do
 			random_index := random_index + 1
 			Result := random.real_i_th (random_index)
 		end
 
-	get_random_int (max_int: INTEGER): INTEGER is
+	get_random_int (max_int: INTEGER): INTEGER
 		do
 			Result := (get_random_real * max_int).floor
 		end
 
 feature {NONE} -- Constants
 
-	Number_drawing_operations: INTEGER is 7
+	Number_drawing_operations: INTEGER = 7
 	
-	Dominant_red, Dominant_blue, Dominant_green: INTEGER is unique;
+	Dominant_red, Dominant_blue, Dominant_green: INTEGER = unique;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

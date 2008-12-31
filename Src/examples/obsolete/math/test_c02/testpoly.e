@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Test routines for c02"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -18,7 +18,7 @@ create
 
 feature -- The main program
 
-	make (args: ARRAY [STRING]) is
+	make (args: ARRAY [STRING])
 			-- test of various routines from d01
 		local
 			zz: POLYNOMIAL_ROOT_FINDER;
@@ -42,7 +42,7 @@ feature -- The main program
 			print ("Compare to c02agc example.%N");	
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

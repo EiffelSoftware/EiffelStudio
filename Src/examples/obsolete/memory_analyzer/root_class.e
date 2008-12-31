@@ -1,11 +1,10 @@
-indexing
+note
 	description	: "[
 					System's root class. Demonstrate how to use Memory Analyzer library.
 					Before use, you should include Gobo, Graph, Vision2, Wel or Gtk, Time, Structure library.
 																						]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	note		: "Initial version automatically generated"
 
 class
 	ROOT_CLASS
@@ -18,7 +17,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Creation procedure.
 		local
 			l_env: EXECUTION_ENVIRONMENT
@@ -44,7 +43,7 @@ feature -- Initialization
 
 feature {NONE} -- Implementation
 
-	handle_close_window is
+	handle_close_window
 			-- Handle close window.
 		do
 			ma_window.destroy
@@ -54,7 +53,7 @@ feature {NONE} -- Implementation
 	ma_window: MA_WINDOW; 
 			-- Window of Memory Analyzer.
 			
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

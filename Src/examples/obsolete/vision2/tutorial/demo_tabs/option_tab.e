@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make (par: EV_CONTAINER)
 			-- Create the tab and initialise objects
 		local
 			cmd2: EV_ROUTINE_COMMAND
@@ -40,7 +40,7 @@ feature -- Initialization
 
 feature -- Access
 
-	name:STRING is
+	name:STRING
 			-- Returns the name of the tab
 		do
 			Result:="Option Button"
@@ -49,7 +49,7 @@ feature -- Access
 
 feature -- Execution feature  
 
-	selected_item (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	selected_item (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Returns the currently selected_item.
 		do
 			if current_widget.selected_item /=Void then
@@ -57,7 +57,7 @@ feature -- Execution feature
 			end
 		end
 
-	child_menu (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	child_menu (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Returns the menu which is affected to the option button.
 		do
 			f2.set_text(current_widget.text)
@@ -68,7 +68,7 @@ feature -- Access
 	current_widget: EV_OPTION_BUTTON
 	f1,f2: TEXT_FEATURE_MODIFIER	
 	b1: EV_BUTTON;
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

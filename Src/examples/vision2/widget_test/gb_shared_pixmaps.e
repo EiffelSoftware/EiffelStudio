@@ -1,4 +1,4 @@
-indexing
+note
 	description:	"[
 		Objects that provide access to information regarding pixmap location.
 		This is only required for compilation purposes for the files copied from
@@ -20,13 +20,13 @@ inherit
 
 feature -- Access
 
-	png_location: STRING is
+	png_location: STRING
 			-- PNG location of images. Not used in the tour, but required
 			-- for compilation of the CONSTANTS file.
 		do
 		end
 		
-	icon_build_window: ARRAY [EV_PIXMAP] is
+	icon_build_window: ARRAY [EV_PIXMAP]
 			-- Used in the tour, but only by the pixmap and table
 			-- children positioners, and not actually visible.
 		do
@@ -35,7 +35,7 @@ feature -- Access
 		end
 		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

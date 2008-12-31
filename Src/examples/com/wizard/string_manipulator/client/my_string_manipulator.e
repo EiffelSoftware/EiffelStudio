@@ -1,4 +1,4 @@
-indexing
+note
 	description: "String Manipulator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature
 
-	my_replace_substring (s: STRING; start_pos: INTEGER; end_pos: INTEGER) is
+	my_replace_substring (s: STRING; start_pos: INTEGER; end_pos: INTEGER)
 			-- Replace substring with preconditions.
 		require
 			start_pos <= end_pos and start_pos > 0
@@ -24,7 +24,7 @@ feature
 			replace_substring (s, start_pos, end_pos)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

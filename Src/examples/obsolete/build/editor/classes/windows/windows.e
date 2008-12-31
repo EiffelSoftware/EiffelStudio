@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class WINDOWS
@@ -11,17 +11,17 @@ inherit
 
 feature 
 
-	application_screen: SCREEN is
+	application_screen: SCREEN
 		once
 			create Result.make ("")
 		end
 
-	init_toolkit: TOOLKIT_IMP is
+	init_toolkit: TOOLKIT_IMP
 		once
 			create Result.make ("")
 		end
 
-	init_windowing is
+	init_windowing
 		do
 			if (init_toolkit = void) then
 			end
@@ -31,12 +31,12 @@ feature
 			iterate
 		end
 
-	perm_wind1: PERM_WIND1 is
+	perm_wind1: PERM_WIND1
 		once
 			create Result.make ("Perm_wind1", application_screen)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

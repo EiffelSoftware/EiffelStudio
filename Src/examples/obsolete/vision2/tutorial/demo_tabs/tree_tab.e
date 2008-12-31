@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Initialization
 
-	make(par: EV_CONTAINER) is
+	make(par: EV_CONTAINER)
 			-- Create the tab and initalise the objects.
 		local
 			cmd1,cmd2: EV_ROUTINE_COMMAND
@@ -47,7 +47,7 @@ feature -- Initialization
 			set_parent (par)			
 			end
 
-	set_tree is
+	set_tree
 			-- Initialize the tree with a root
 		do
 			if tree_items = Void then
@@ -62,7 +62,7 @@ feature -- Initialization
 
 feature -- Access
 
-	name:STRING is
+	name:STRING
 			-- Returns the name of the tab.
 		do
 			Result:="Tree"
@@ -94,7 +94,7 @@ feature -- Access
 feature -- Execution Feature
 
 	
-	add_item (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	add_item (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Adds an item to the tree
 		local
 			temp_holder: EV_TREE_ITEM_HOLDER
@@ -122,7 +122,7 @@ feature -- Execution Feature
 			end
 		end
 
-	remove_tree (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	remove_tree (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Removes the whole tree except for the root.
 		do
 			tree_items.wipe_out
@@ -132,7 +132,7 @@ feature -- Execution Feature
 			--tree_items.extend(e1)
 		end
 
-	selected_item (arg : EV_ARGUMENT; data: EV_EVENT_DATA) is
+	selected_item (arg : EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Displays the selected item.
 		do
 			if current_widget.selected then
@@ -140,7 +140,7 @@ feature -- Execution Feature
 			end
 		end
 
-	selected (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	selected (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Is an item selected.
 		do
 			if current_widget.selected then
@@ -150,7 +150,7 @@ feature -- Execution Feature
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

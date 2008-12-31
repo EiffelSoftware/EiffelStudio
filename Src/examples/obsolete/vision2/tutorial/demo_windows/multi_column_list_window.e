@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"The demo that goes with the button demo"
 	legal: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make (par: EV_CONTAINER)
 			-- Create the demo window in `par'.
 		local
 			type: EV_PND_TYPE
@@ -66,7 +66,7 @@ feature {NONE} -- Initialization
 			add_widget_commands (Current, event_window, "multi column list")
 		end
 
-	set_tabs is
+	set_tabs
 			-- Set the tabs for the action window.
 		do
 			set_primitive_tabs
@@ -81,19 +81,19 @@ feature -- Access
 
 feature -- Execution Feature
 
-	select_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	select_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- When a row is selected, inform user in `event_window'.
 		do
 			event_window.display ("Row selected in multi column list.")
 		end
 
-	unselect_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	unselect_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- When a row is unselected, inform user in `event_window'.
 		do
 			event_window.display ("Row unselected in multi column list.")
 		end
 
-	column_click_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	column_click_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- When a column is clicked, inform user in `event_window'.
 		do
 			event_window.display ("Column clicked in multi column list.")
@@ -101,7 +101,7 @@ feature -- Execution Feature
 
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

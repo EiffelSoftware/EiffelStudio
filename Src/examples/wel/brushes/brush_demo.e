@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		do
 			make_top ("Brush demo")
 			resize (350, 300)
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- Fill some rectangles using different brushes.
 		local
 			row, column: INTEGER
@@ -65,10 +65,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	Separation: INTEGER is 5
+	Separation: INTEGER = 5
 			-- Space beetween two rectangles
 
-	std_colors: ARRAY [WEL_COLOR_REF] is
+	std_colors: ARRAY [WEL_COLOR_REF]
 		once
 			Result := <<
 				grey,
@@ -83,7 +83,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	std_hatch_styles: ARRAY [INTEGER] is
+	std_hatch_styles: ARRAY [INTEGER]
 		once
 			Result := <<
 				Hs_horizontal,
@@ -96,7 +96,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	brushes: ARRAY2 [WEL_BRUSH] is
+	brushes: ARRAY2 [WEL_BRUSH]
 		local
 			brush: WEL_BRUSH
 			row, column: INTEGER
@@ -125,7 +125,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

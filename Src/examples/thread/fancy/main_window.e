@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Main window of fancy application, which contains two subwindows. One draws rectangles, the %
 		%other one draws ovals."
 	legal: "See notice at end of class."
@@ -48,7 +48,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create the main window of resource bench.
 		do
 			make_top ("Fancy")
@@ -72,7 +72,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialization of the different clients.
 		do
 				-- Create client_windows for each thread.
@@ -100,7 +100,7 @@ feature {NONE} -- Thread
 
 feature {NONE} -- Behavior
 
-	on_size (a_size_type, a_width, a_height: INTEGER) is
+	on_size (a_size_type, a_width, a_height: INTEGER)
 			-- Reposition windows in the main window.
 		do
 			if (a_size_type /= Size_minimized) then
@@ -118,7 +118,7 @@ feature {NONE} -- Behavior
 			end
 		end
 
-	on_menu_command (a_menu_id: INTEGER) is
+	on_menu_command (a_menu_id: INTEGER)
 			-- Execute the command correpsonding to `menu_id'.
 		require else
 			about_box_not_void: about_box /= Void
@@ -143,26 +143,26 @@ feature {NONE} -- Behavior
 			end
 		end
 
-	on_menu_select (menu_item: INTEGER; flags: INTEGER; a_menu: WEL_MENU) is
+	on_menu_select (menu_item: INTEGER; flags: INTEGER; a_menu: WEL_MENU)
 			-- Display a message in the status window corresponding
 			-- to the selected menu_item.
 		do
 			status_window.set_text_part (0, resource_string_id (menu_item))
 		end
 
-	on_accelerator_command (a_accelerator_id: INTEGER) is
+	on_accelerator_command (a_accelerator_id: INTEGER)
 			-- Perform the corresponding menu command with id `a_accelerator_id'.
 		do
 			on_menu_command (a_accelerator_id)
 		end
 
-	on_control_id_command (a_control_id: INTEGER) is
+	on_control_id_command (a_control_id: INTEGER)
 			-- Perform the corresponding menu command with id `a_control_id'.
 		do
 			on_menu_command (a_control_id)
 		end
 
-	on_wm_close is
+	on_wm_close
 			-- Wm_close message.
 			-- If `closeable' is False further processing is halted.
 		do
@@ -171,10 +171,10 @@ feature {NONE} -- Behavior
 
 feature {NONE} -- Implementation: access
 
-	status_window_id: INTEGER is 128
+	status_window_id: INTEGER = 128
 			-- The status window id.
 
-	main_menu: WEL_MENU is
+	main_menu: WEL_MENU
 			-- The `main_menu' of the Resource Bench application.
 		once
 			create Result.make_by_id (Idr_menu)
@@ -191,7 +191,7 @@ feature {NONE} -- Implementation: access
 	status_window: WEL_STATUS_WINDOW
 			-- Status window of main window.
 
-	class_background: WEL_LIGHT_GRAY_BRUSH is
+	class_background: WEL_LIGHT_GRAY_BRUSH
 			-- Standard window background color
 		once
 			create Result.make
@@ -199,7 +199,7 @@ feature {NONE} -- Implementation: access
 
 feature {NONE} -- Implementation
 
-	stop_all_threads is
+	stop_all_threads
 			-- Tell the threads to stop, and wait for their end.
 		do
 			exit_mutex.lock
@@ -219,7 +219,7 @@ feature {NONE} -- Implementation
 			exit_mutex.unlock
 		end
 
-	closeable: BOOLEAN is
+	closeable: BOOLEAN
 			-- Show the standard dialog box.
 		do
 			msg_box.question_message_box (Current, "Do you want to exit?", "Exit")
@@ -231,14 +231,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	msg_box: WEL_MSG_BOX is
+	msg_box: WEL_MSG_BOX
 		once
 			create Result.make
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	about_box: WEL_MODAL_DIALOG is
+	about_box: WEL_MODAL_DIALOG
 			-- About dialog box
 		once
 			create Result.make_by_id (Current, Idr_about)
@@ -246,7 +246,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	do_exit (a_parent: WEL_COMPOSITE_WINDOW) is
+	do_exit (a_parent: WEL_COMPOSITE_WINDOW)
 			-- Exit to application.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -254,7 +254,7 @@ feature {NONE} -- Implementation
 			a_parent.destroy
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

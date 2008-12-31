@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Client side for processing echo."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		local
 			host: STRING
 			port: INTEGER
@@ -91,7 +91,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} --Implementation
 
-	send_message_and_receive_reply (message: STRING) is
+	send_message_and_receive_reply (message: STRING)
 		require
 			valid_socket: nss /= Void and then nss.is_open_read and then nss.is_open_write
 			valid_message: message /= Void and then not message.is_empty
@@ -100,7 +100,7 @@ feature {NONE} --Implementation
 			receive_reply
 		end
 
-	send_message (message: STRING) is
+	send_message (message: STRING)
 		require
 			valid_socket: nss /= Void and then nss.is_open_write
 			valid_message: message /= Void and then not message.is_empty
@@ -108,7 +108,7 @@ feature {NONE} --Implementation
 			nss.put_string (message + "%N")
 		end
 
-	receive_reply is
+	receive_reply
 		require
 			valid_socket: nss /= Void and then nss.is_open_read
 		do

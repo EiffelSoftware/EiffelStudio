@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class 
@@ -12,7 +12,7 @@ create
 
 feature -- Creation
 
-	make is
+	make
 		do
 			io.set_error_default
 			
@@ -41,11 +41,11 @@ feature -- Attributes
 
 	saved_demo_file: RAW_FILE
 
-	saved_file_name: STRING is "demo.S"
+	saved_file_name: STRING = "demo.S"
 
 feature -- Routines
 
-	one_demo is
+	one_demo
 			-- Execute a new session, possibly from a previously saved one.
 			-- Then store it if requested.
 		local
@@ -84,7 +84,7 @@ feature -- Routines
 			end
 		end
 
-	session is
+	session
 			-- Execute one or more demo sessions.
 		local
 			over: BOOLEAN
@@ -102,7 +102,7 @@ feature -- Routines
 			end
 		end
 
-	print_menu is
+	print_menu
 			-- Display all possible choices.
 		do
 			io.putstring ("	1: Sorted lists.")
@@ -124,7 +124,7 @@ feature -- Routines
 			io.putstring ("Please choose demo number: ")
 		end
 
-	new_demo is
+	new_demo
 				-- Set up a new demo session.
 		local
 			choice: INTEGER
@@ -161,7 +161,7 @@ feature -- Routines
 			end
 		end 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

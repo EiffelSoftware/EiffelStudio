@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"Command class of the test events example. Is executed when an%
 	   % event happens."
@@ -16,7 +16,7 @@ inherit
 
 feature -- Command execution
 	
-	execute (arg: EV_ARGUMENT1 [STRING]; data: EV_EVENT_DATA) is
+	execute (arg: EV_ARGUMENT1 [STRING]; data: EV_EVENT_DATA)
 			-- Execute command called when the event occurs.
 		local
 			str: STRING
@@ -31,7 +31,7 @@ feature -- Command execution
 			io.put_new_line
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

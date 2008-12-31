@@ -1,4 +1,4 @@
-indexing
+note
 	description: "System's root class"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -12,7 +12,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Output a welcome message.
 			--| (Automatically generated.)
 		do
@@ -23,7 +23,7 @@ feature -- Access
 
 	string_manipulator: STRING_MANIPULATOR;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

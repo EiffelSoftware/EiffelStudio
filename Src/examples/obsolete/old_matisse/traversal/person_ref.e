@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class PERSON_REF
@@ -25,7 +25,7 @@ create
 
 feature {ANY} 
 
-    make (arg_last_name,arg_first_name : STRING; arg_age : INTEGER; arg_job : STRING) is
+    make (arg_last_name,arg_first_name : STRING; arg_age : INTEGER; arg_job : STRING)
     require
         last_name_not_void : arg_last_name /= Void
         first_name_not_void : arg_first_name /= Void
@@ -40,18 +40,18 @@ feature {ANY}
 		create one_ref2.make("Joseph")
     end
 
-	set_friends(arg_friend1,arg_friend2 :PERSON_REF) is
+	set_friends(arg_friend1,arg_friend2 :PERSON_REF)
 	do
 		friend1 := arg_friend1 friend2 := arg_friend2   
 		friends.force(arg_friend1) friends.forth friends.force(arg_friend2)
 	end
 
-	out : STRING is
+	out : STRING
 	do
 		create Result.make(0);
 	end 
 
-	default_actions : SAMPLE_TRAVERSAL_ACTION is
+	default_actions : SAMPLE_TRAVERSAL_ACTION
 	once
 		create Result
 	end
@@ -67,7 +67,7 @@ feature {ANY}
 	friends :   LINKED_LIST[PERSON_REF]
 	one_ref2 : PERSON_REF2;
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

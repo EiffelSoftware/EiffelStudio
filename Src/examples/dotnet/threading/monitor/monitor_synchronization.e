@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Monitor example root class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Main entry point.
 		local
 			 counter: INTEGER
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	res: RESOURCE is
+	res: RESOURCE
 			-- resource
 		once
 			create Result
@@ -57,7 +57,7 @@ feature -- Access
 	num_operations: INTEGER
 			-- number of access to the resource.
 
-	async_operations: AUTO_RESET_EVENT is
+	async_operations: AUTO_RESET_EVENT
 			-- Notifies a waiting thread that an event has occurred
 		once
 			create Result.make (False)
@@ -67,7 +67,7 @@ feature -- Access
 
 feature -- Basic Operation
 
-	update_resource (a_state: SYSTEM_OBJECT) is
+	update_resource (a_state: SYSTEM_OBJECT)
 			-- The callback method's signature MUST match that of a TIMER_CALLBACK 
 			-- delegate (it takes an SYSTEM_OBJECT parameter and returns void)
 		local
@@ -81,7 +81,7 @@ feature -- Basic Operation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

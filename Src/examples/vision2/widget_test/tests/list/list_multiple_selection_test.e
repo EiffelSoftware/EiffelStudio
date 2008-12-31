@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that test EV_LIST."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 		
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create `Current' and initialize test in `widget'.
 		local
 			list_item: EV_LIST_ITEM
@@ -57,7 +57,7 @@ feature {NONE} -- Implementation
 		-- Check button used to signify if multiple selection is
 		-- enabled or not
 	
-	adjust_selection is
+	adjust_selection
 			-- Toggle selection of `list' between single and
 			-- multiple based on state of
 			-- `multiple_selection_button'.
@@ -69,7 +69,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	update_selection_on_item (item: EV_LIST_ITEM) is
+	update_selection_on_item (item: EV_LIST_ITEM)
 			-- Update `text' of `item' to reflects its selection
 			-- state.
 		require
@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

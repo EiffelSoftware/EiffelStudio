@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "String constants used in the application"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,17 +11,17 @@ class
 
 feature -- Access
 
-	Width: STRING is "Width: "
-	Height: STRING is "Height: "
-	Image_dimensions: STRING is "Image dimensions"
-	Image_characteristics: STRING is "Image characteristics"
-	Ok: STRING is "OK"
-	Cancel: STRING is "Cancel"
-	Background_color: STRING is "Background color: "
-	Change: STRING is "Change"
-	New_image: STRING is "New Image";
+	Width: STRING = "Width: "
+	Height: STRING = "Height: "
+	Image_dimensions: STRING = "Image dimensions"
+	Image_characteristics: STRING = "Image characteristics"
+	Ok: STRING = "OK"
+	Cancel: STRING = "Cancel"
+	Background_color: STRING = "Background color: "
+	Change: STRING = "Change"
+	New_image: STRING = "New Image";
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A class for the tutorial example that%
 			%gives a path for the bitmaps."
 	legal: "See notice at end of class."
@@ -11,7 +11,7 @@ deferred class
 
 feature -- Access
 
-	pixmap_path (name: STRING): STRING is
+	pixmap_path (name: STRING): STRING
 			-- Return the full name of the given pixmap of EiffelBench.
 		local
 			env: EXECUTION_ENVIRONMENT
@@ -32,7 +32,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	pixmap_extension: STRING is
+	pixmap_extension: STRING
 		local
 			platform: EV_TOOLKIT
 		once
@@ -44,7 +44,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

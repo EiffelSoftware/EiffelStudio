@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Analyzer client main window"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -61,7 +61,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize Automation and client window.
 		local
 			bitmap_index1, bitmap_index2: INTEGER
@@ -179,7 +179,7 @@ feature -- Access
 			
 feature {NONE} -- Implementation
 
-	enter_text: STRING is
+	enter_text: STRING
 			-- Text entered by user
 		local
 			dialog: TEXT_DIALOG
@@ -189,7 +189,7 @@ feature {NONE} -- Implementation
 			Result := dialog.user_text
 		end
 		
-	default_process_message (msg, wparam, lparam: INTEGER) is
+	default_process_message (msg, wparam, lparam: INTEGER)
 			-- Draw the tooltips.
 		local
 			tt: WEL_TOOLTIP_TEXT
@@ -203,7 +203,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_menu_command (menu_id: INTEGER) is
+	on_menu_command (menu_id: INTEGER)
 			-- Execute the command identified by `menu_id'.
 		local
 			file: RAW_FILE
@@ -370,12 +370,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_control_id_command (control_id: INTEGER) is
+	on_control_id_command (control_id: INTEGER)
 		do
 			on_menu_command (control_id)
 		end
 
-	on_size (size_type: INTEGER; a_width: INTEGER; a_height: INTEGER) is
+	on_size (size_type: INTEGER; a_width: INTEGER; a_height: INTEGER)
 			-- Reposition the status window and the tool bar when
 			-- the window has been resized.
 		do
@@ -387,14 +387,14 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	on_destroy is
+	on_destroy
 			-- End server first.
 		do
 			analyzer.terminate_server
 			analyzer.terminate
 		end
 		
-	choose_color: WEL_CHOOSE_COLOR_DIALOG is
+	choose_color: WEL_CHOOSE_COLOR_DIALOG
 			-- Dialog box to choose a text color.
 		once
 			create Result.make
@@ -402,7 +402,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	choose_font: WEL_CHOOSE_FONT_DIALOG is
+	choose_font: WEL_CHOOSE_FONT_DIALOG
 			-- Dialog box to choose a text font.
 		once
 			create Result.make
@@ -410,7 +410,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	open_file_dialog: WEL_OPEN_FILE_DIALOG is
+	open_file_dialog: WEL_OPEN_FILE_DIALOG
 			-- Dialog box to open a file.
 		local
 			ofn: WEL_OFN_CONSTANTS
@@ -426,7 +426,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	save_file_dialog: WEL_SAVE_FILE_DIALOG is
+	save_file_dialog: WEL_SAVE_FILE_DIALOG
 			-- Dialog box to save a file.
 		once
 			create Result.make
@@ -438,7 +438,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	print_dialog: WEL_PRINT_DIALOG is
+	print_dialog: WEL_PRINT_DIALOG
 			-- Dialog box to select the printer.
 		once
 			create Result.make
@@ -446,7 +446,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	set_window_title is
+	set_window_title
 			-- Set the window's title with `file_name'.
 		local
 			s: STRING
@@ -461,13 +461,13 @@ feature {NONE} -- Implementation
 			set_text (s)
 		end
 
-	class_icon: WEL_ICON is
+	class_icon: WEL_ICON
 			-- Window's icon
 		once
 			create Result.make_by_id (Id_ico_application)
 		end
 
-	main_menu: WEL_MENU is
+	main_menu: WEL_MENU
 			-- Window's menu
 		once
 			create Result.make_by_id (Id_main_menu)
@@ -475,10 +475,10 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	Title: STRING is "Analyzer Client";
+	Title: STRING = "Analyzer Client";
 			-- Window's title
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

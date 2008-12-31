@@ -1,4 +1,4 @@
-indexing
+note
 
         date: "$Date$";
         revision: "$Revision$";
@@ -31,7 +31,7 @@ feature
 	h_country: ARRAY [COUNTRY]
 
 	make (no: like h_no; name: like h_name;
-		birthday: like h_birthday; country: like h_country) is
+		birthday: like h_birthday; country: like h_country)
 		require
 			name_not_void: name /= Void;
 			birthday_not_void: birthday /= Void;
@@ -48,7 +48,7 @@ feature
 			h_country = country
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

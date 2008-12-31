@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class ACTION_WINDOW_BUTTON
@@ -17,7 +17,7 @@ feature
 
 	association: ACTIONS_WINDOW
 
-	associate (who: ACTIONS_WINDOW; number: INTEGER_REF; name: STRING; a_x, a_y: INTEGER) is
+	associate (who: ACTIONS_WINDOW; number: INTEGER_REF; name: STRING; a_x, a_y: INTEGER)
 		do
 			association := who
 			attach_to_widget("exit", association)
@@ -28,7 +28,7 @@ feature
 			set_x_y (a_x, a_y)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

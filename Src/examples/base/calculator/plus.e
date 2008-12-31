@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class 
@@ -9,7 +9,7 @@ inherit
 
 feature 
 	
-	operation is 
+	operation 
 			-- Add register with top element of stack.
 		do 
 			register := register + operand_stack.item
@@ -17,7 +17,7 @@ feature
 			register = old register + operand_stack.item
 		end; 
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

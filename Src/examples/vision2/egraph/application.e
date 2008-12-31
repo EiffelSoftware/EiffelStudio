@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Root class for this application."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_and_launch is
+	make_and_launch
 			-- Initialize and launch application
 		do
 			default_create
@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			launch
 		end
 
-	prepare is
+	prepare
 			-- Prepare the first window to be displayed.
 			-- Perform one call to first window in order to
 			-- avoid to violate the invariant of class EV_APPLICATION.
@@ -44,7 +44,7 @@ feature {NONE} -- Implementation
 	first_window: GRAPH_MAIN_WINDOW;
 			-- Main window.
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

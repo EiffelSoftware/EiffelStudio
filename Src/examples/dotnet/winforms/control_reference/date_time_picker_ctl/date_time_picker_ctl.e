@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Date time picker sample.
 		Show how to use and how to configure the DATE_TIME_PICKER control.
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Entry point.
 			-- Call `initialize_components'
 		do
@@ -70,7 +70,7 @@ feature -- Access
 	error_max, error_min: WINFORMS_ERROR_PROVIDER
 			-- System.Windows.Forms.ErrorProvider
 			
-	format_choice_array: NATIVE_ARRAY [SYSTEM_STRING] is
+	format_choice_array: NATIVE_ARRAY [SYSTEM_STRING]
 			-- Choisses of format.
 		once
 			create Result.make (4)
@@ -84,7 +84,7 @@ feature -- Access
 
 feature -- Implementation
 
-	initialize_components is
+	initialize_components
 			--
 		do
 			create components.make
@@ -265,7 +265,7 @@ feature -- Implementation
 
 feature {NONE} -- Implementation
 
-	dispose_boolean (a_disposing: BOOLEAN) is
+	dispose_boolean (a_disposing: BOOLEAN)
 			-- method called when form is disposed.
 		local
 			retried: BOOLEAN
@@ -281,7 +281,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	on_btn_change_font_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+	on_btn_change_font_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS)
 			-- feature performed when `btn_change_font' is clicked.
 		require
 			non_void_sender: sender /= Void
@@ -295,7 +295,7 @@ feature {NONE} -- Implementation
 			date_time_picker.set_font (new_font)
 		end
 
-	on_btn_change_color_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is   
+	on_btn_change_color_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS)   
 			-- feature performed when `btn_change_color' is clicked.   
 		require
 			non_void_sender: sender /= Void
@@ -308,7 +308,7 @@ feature {NONE} -- Implementation
 			dummy := dlg.show_dialog
 		end 
 
-	on_dtp_min_date_value_changed (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+	on_dtp_min_date_value_changed (sender: SYSTEM_OBJECT; args: EVENT_ARGS)
 			-- feature performed when `dtp_min_date_value' is changed.
 		require
 			non_void_sender: sender /= Void
@@ -323,7 +323,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_dtp_max_date_value_changed (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+	on_dtp_max_date_value_changed (sender: SYSTEM_OBJECT; args: EVENT_ARGS)
 			-- feature performed when `dtp_max_date_value' is changed.
 		require
 			non_void_sender: sender /= Void
@@ -338,7 +338,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_cmb_format_selected_index_changed (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+	on_cmb_format_selected_index_changed (sender: SYSTEM_OBJECT; args: EVENT_ARGS)
 			-- feature performed when `cmd_format' is changed.
 		require
 			non_void_sender: sender /= Void
@@ -364,7 +364,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_chk_show_up_down_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+	on_chk_show_up_down_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS)
        		-- feature performed when `chk_show_up_down' is changed.
 		require
 			non_void_sender: sender /= Void
@@ -394,7 +394,7 @@ invariant
 	non_void_dtp_max_date: dtp_max_date /= Void
 	non_void_chk_show_up_down: chk_show_up_down /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

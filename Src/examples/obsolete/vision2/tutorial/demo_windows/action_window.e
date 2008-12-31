@@ -1,4 +1,4 @@
-indexing
+note
 	description: "The window that allows the user to perform actions"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature -- Initialization
 
-	make(current_widget:EV_ANY; tabs:LINKED_LIST[ANY_TAB]) is
+	make(current_widget:EV_ANY; tabs:LINKED_LIST[ANY_TAB])
 			-- Initialize
 		local
 			count: INTEGER
@@ -60,7 +60,7 @@ feature -- Initialization
 
 feature -- Execution features
 
-	my_function (arg: EV_ARGUMENT1 [INTEGER]; data: EV_EVENT_DATA) is
+	my_function (arg: EV_ARGUMENT1 [INTEGER]; data: EV_EVENT_DATA)
 		do
 			hide
 		end
@@ -72,7 +72,7 @@ feature -- Access
 	widget_tab:WIDGET_TAB
 	box_tab:BOX_TAB;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make (par: EV_CONTAINER)
 			-- Create the tab and initialise objects
 		local
 			cmd1,cmd2: EV_ROUTINE_COMMAND
@@ -65,7 +65,7 @@ feature -- Initialization
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- Returns the name of the tab.
 		do
 			Result:="Multi Column List"
@@ -83,19 +83,19 @@ feature -- Access
 feature -- Execution Feature
 
 
-	get_rows (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	get_rows (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Returns the number of rows in the list.
 		do
 			f1.set_text (current_widget.count.out)
 		end
 
-	get_columns (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	get_columns (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Returns the number of columns in the list.
 		do
 			f2.set_text (current_widget.columns.out)
 		end
 
-	multiple_or_single (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	multiple_or_single (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Toggles the selection mode between single and multiple.
 		do
 			if current_widget.is_multiple_selection then
@@ -108,13 +108,13 @@ feature -- Execution Feature
 			end
 		end
 
-	clear_selection (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	clear_selection (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Clears the current selection.
 		do
 			current_widget.clear_selection
 		end
 
-	toggle_title_row (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	toggle_title_row (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Toggles the title row between hidden and shown.
 		do
 			if current_widget.title_shown then
@@ -126,7 +126,7 @@ feature -- Execution Feature
 			end
 		end
 
-	set_left_alignment (arg: EV_ARGUMENT; data: EV_eVENT_DATA) is
+	set_left_alignment (arg: EV_ARGUMENT; data: EV_eVENT_DATA)
 			-- Sets the alignment of the indexed row
 			-- to left aligned.
 		do
@@ -138,7 +138,7 @@ feature -- Execution Feature
 			end
 		end
 
-	set_center_alignment (arg: EV_ARGUMENT; data: EV_eVENT_DATA) is
+	set_center_alignment (arg: EV_ARGUMENT; data: EV_eVENT_DATA)
 			-- Sets the alignment of the indexed row
 			-- to center aligned.
 		do
@@ -151,7 +151,7 @@ feature -- Execution Feature
 		end
 
 
-	set_right_alignment (arg: EV_ARGUMENT; data: EV_eVENT_DATA) is
+	set_right_alignment (arg: EV_ARGUMENT; data: EV_eVENT_DATA)
 			-- Sets the alignment of the indexed row
 			-- to right aligned.
 		do
@@ -163,7 +163,7 @@ feature -- Execution Feature
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

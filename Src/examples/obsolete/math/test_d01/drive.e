@@ -1,4 +1,4 @@
-indexing
+note
 	description: " Test routines for d01"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,12 +31,12 @@ feature -- Status report
 
 	goof: INTEGER;
 
-	verbose: BOOLEAN is True;
+	verbose: BOOLEAN = True;
 		-- Make this False for a quieter test.
 
-	epsilon: DOUBLE is .01;
+	epsilon: DOUBLE = .01;
 
-	r (name: STRING; d1, d2: DOUBLE) is
+	r (name: STRING; d1, d2: DOUBLE)
 			-- test results
 		require
 			d1 /= 0.
@@ -53,7 +53,7 @@ feature -- Status report
 
 feature -- Initialization
 
-	make is
+	make
 			-- test of various routines from d01
 		do
 			create testf;
@@ -84,7 +84,7 @@ feature -- Initialization
 
 feature -- Basic operations
 
-	test_gl is
+	test_gl
 			-- test for Gauss Legendre Integrator
 		local
 			gl_integrator: FINITE_FIXED_INTEGRATOR;
@@ -114,7 +114,7 @@ feature -- Basic operations
 			if verbose then print ("testgl done.%N") end;
 		end;
 
-	test_gm is
+	test_gm
 			-- test of discrete integration
 		local
 			i: INTEGER;
@@ -142,7 +142,7 @@ feature -- Basic operations
 		end;
 
 
-	test_gg is
+	test_gg
 			-- test for Gauss Laguerre Integrator
 		local			
 			gg_integrator: SEMI_INFINITE_FIXED_INTEGRATOR;
@@ -158,7 +158,7 @@ feature -- Basic operations
 			if verbose then print ("test_gg done.%N") end;
 		end;
 
-	test_gr is
+	test_gr
 			-- test for Gauss Rational Integrator
 		local
 			gr_integrator: RATIONAL_SEMI_INFINITE_FIXED_INTEGRATOR;
@@ -175,7 +175,7 @@ feature -- Basic operations
 			if verbose then print ("test_gr done.%N") end;
 		end;
 
-	test_gh is
+	test_gh
 			-- test for Gauss HERMITE Integrator
 		local
 			gh_integrator: INFINITE_FIXED_INTEGRATOR;
@@ -193,7 +193,7 @@ feature -- Basic operations
 			if verbose then print ("test_gh done.%N") end
 		end;
 
-	test_ajc is
+	test_ajc
 			-- test for adaptive integrator on a finite interval.
 		local
 		 	ajc_integrator: FINITE_ADAPTIVE_INTEGRATOR;
@@ -228,7 +228,7 @@ feature -- Basic operations
 			if verbose then print("test_ajc done.%N") end
 		end;
 
-	test_akc is
+	test_akc
 			-- test for oscillating integrator on a finite interval.
 		local
 		 	akc_integrator: FINITE_ADAPTIVE_INTEGRATOR;
@@ -244,7 +244,7 @@ feature -- Basic operations
 			if verbose then print("test_akc done.%N") end
 		end;
 
-	test_alc is
+	test_alc
 			-- test for breakpoints integrator on a finite interval.
 		local
 		 	alc_integrator: FINITE_ADAPTIVE_INTEGRATOR;
@@ -260,7 +260,7 @@ feature -- Basic operations
 			if verbose then print("test_akc done.%N") end
 		end;
 
-	test_amc is
+	test_amc
 			-- test for SEMI_INFINITE adaptive Integrator
 		local
 		 	amc_integrator: SEMI_INFINITE_ADAPTIVE_INTEGRATOR;
@@ -298,7 +298,7 @@ feature -- Basic operations
 		end;
 
 
-	test_amc2 is
+	test_amc2
 			-- Test for adaptive integration on infinite region.
 		local		
 			amc2_integrator: INFINITE_ADAPTIVE_INTEGRATOR;
@@ -332,7 +332,7 @@ feature -- Basic operations
 			if verbose then print("test_amc2 done.%N") end;
 		end;
 
-	test_asc is
+	test_asc
 			-- test for SEMI_INFINITE adaptive trig-weighted Integrator
 		local
 		 	asc_integrator: TRIG_WEIGHTED_SEMI_INFINITE_ADAPTIVE_INTEGRATOR;
@@ -377,7 +377,7 @@ feature -- Basic operations
 			if verbose then print("test_asc done.%N") end;
 		end;
 
-	test_anc is
+	test_anc
 			-- test for trig weighted integrator on a finite interval.
 		local
 		 	anc_integrator: FINITE_ADAPTIVE_INTEGRATOR;
@@ -393,7 +393,7 @@ feature -- Basic operations
 			if verbose then print("test_anc done.%N") end;
 		end;
 
-	test_apc is
+	test_apc
 			-- test for algebraic-weighted integrator on a finite interval.
 		local
 		 	apc_integrator: FINITE_ADAPTIVE_INTEGRATOR;
@@ -417,7 +417,7 @@ feature -- Basic operations
 			if verbose then print("test_apc done.%N") end;
 		end;
 
-	test_aqc is
+	test_aqc
 			-- test for Cauchy-weighted integrator on a finite interval.
 		local
 		 	aqc_integrator: FINITE_ADAPTIVE_INTEGRATOR;
@@ -433,7 +433,7 @@ feature -- Basic operations
 			if verbose then print("test_aqc done.%N") end;
 		end;
 
- 	test_fcc is
+ 	test_fcc
 			-- test for d01ffc adaptive multi-integrator.
 		local
 			a, b: ARRAY [DOUBLE]; -- integration limits.
@@ -467,7 +467,7 @@ feature -- Basic operations
 			if verbose then print("test_fcc done.%N") end;
 		end;
 
-	test_gbc is
+	test_gbc
 			-- test for d01gbc adaptive multi-integrator.
 		local
 			a, b: ARRAY [DOUBLE]; -- integration limits.
@@ -503,7 +503,7 @@ feature -- Basic operations
 			end;
 		end;
 
-	test_gbc_continuation is
+	test_gbc_continuation
 			-- Test of hot start monte carlo
 		local
 			a, b: ARRAY [DOUBLE]; -- integration limits.
@@ -561,7 +561,7 @@ feature -- Basic operations
 			nag_disable_error_printing
 		end;
 
-	test_poly is
+	test_poly
 			-- polymorphism test
 		local
 			gl_integrator: FINITE_FIXED_INTEGRATOR;
@@ -593,7 +593,7 @@ feature -- Basic operations
 			if verbose then print("test_poly done.%N") end;
 		end;
 
-	test_gen is
+	test_gen
 			-- test for adaptive integrator on a finite interval.
 		local
 		 	gen_integrator: GENERAL_ADAPTIVE_INTEGRATOR;
@@ -638,7 +638,7 @@ feature -- Basic operations
 			if verbose then print("test_gen done.%N") end
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

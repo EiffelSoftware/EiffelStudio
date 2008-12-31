@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"Main window button for the application.%
 		% Belongs to EiffelVision example."
@@ -21,7 +21,7 @@ create
 	
 feature {NONE} --Initialization
 	
-	make_button (main_w: MAIN_WINDOW; button_name, pixmap_file_name: STRING; cmd: DEMO_WINDOW) is
+	make_button (main_w: MAIN_WINDOW; button_name, pixmap_file_name: STRING; cmd: DEMO_WINDOW)
 		local
 			p: EV_PIXMAP
 			arg: EV_ARGUMENT1 [MAIN_WINDOW]
@@ -45,7 +45,7 @@ feature -- Access
 
 feature -- Command execution
 
-	execute (arg: EV_ARGUMENT1[MAIN_WINDOW]; data: EV_EVENT_DATA) is
+	execute (arg: EV_ARGUMENT1[MAIN_WINDOW]; data: EV_EVENT_DATA)
 			-- Executed when the button is pressed.
 		do
 			if state then
@@ -53,7 +53,7 @@ feature -- Command execution
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

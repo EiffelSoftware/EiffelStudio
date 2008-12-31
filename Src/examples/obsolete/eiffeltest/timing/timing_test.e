@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Test demonstrating how to assert an execution timing"
 	legal: "See notice at end of class."
@@ -17,11 +17,11 @@ create
 
 feature -- Access
 
-	Name: STRING is "Timing test"
+	Name: STRING = "Timing test"
 
 feature -- Basic operations
 
-	do_test is
+	do_test
 			-- Do test action.
 		local
 			s: LINKED_STACK [INTEGER]
@@ -39,10 +39,10 @@ feature -- Basic operations
 
 feature {NONE} -- Constants
 
-	Repetitions: INTEGER is 100000;
+	Repetitions: INTEGER = 100000;
 			-- Number of repetitions
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

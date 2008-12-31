@@ -1,4 +1,4 @@
-indexing
+note
 	description: "IDispatch interface"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -26,7 +26,7 @@ create
 				
 feature -- Initialization
 
-	make (serv: EOLE_LOCAL_AUTOMATION_SERVER) is
+	make (serv: EOLE_LOCAL_AUTOMATION_SERVER)
 			-- Initialize OLE interface and associated 
 			-- server.
 		do
@@ -53,7 +53,7 @@ feature -- Access
 				
 feature {EOLE_CALL_DISPATCHER} -- Callback
 
-	on_invoke (dispid, flags: INTEGER; params: EOLE_DISPPARAMS; res: EOLE_VARIANT; exception: EOLE_EXCEPINFO) is
+	on_invoke (dispid, flags: INTEGER; params: EOLE_DISPPARAMS; res: EOLE_VARIANT; exception: EOLE_EXCEPINFO)
 			-- Invoke method or property with `dispid' and arguments 
 			-- `params' according to `flags'. Result is stored in 
 			-- `res' and exception (if any) in `exception'.
@@ -112,7 +112,7 @@ feature {EOLE_CALL_DISPATCHER} -- Callback
 	
 feature {NONE} -- Implementation
 				
-	occurrences (txt: STRING): INTEGER is
+	occurrences (txt: STRING): INTEGER
 			-- Number of ocuurences of `txt' in `text'.
 		local
 			pos: INTEGER
@@ -133,7 +133,7 @@ feature {NONE} -- Implementation
 			end
 		end
 			
-	update_statistics is
+	update_statistics
 			-- Update `word_count', `line_count' and `sentence_count'
 		local
 			index: INTEGER
@@ -172,7 +172,7 @@ feature {NONE} -- Implementation
 			end
 		end
 				
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

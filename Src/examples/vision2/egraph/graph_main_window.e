@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Main window for the Eiffel Graph example"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	build_main_container is
+	build_main_container
 			-- Create and populate `main_container'.
 		local
 			vbox: EV_VERTICAL_BOX
@@ -89,7 +89,7 @@ feature {NONE} -- Initialization
 			main_container.extend (hbox)
 		end
 		
-	build_extended_menu_bar is
+	build_extended_menu_bar
 			-- Add menu item new node.
 		local
 			toolbar_item: EV_TOOL_BAR_BUTTON
@@ -150,7 +150,7 @@ feature {NONE} -- Initialization
 			standard_toolbar.extend (toolbar_item)
 		end
 		
-	build_statistic is
+	build_statistic
 			-- Populate `statistic_frame'.
 		require
 			statistic_frame_not_void: statistic_frame /= Void
@@ -263,7 +263,7 @@ feature {NONE} -- Implementation
 			
 feature {NONE} -- Add nodes
 
-	add_node (ax, ay: INTEGER) is
+	add_node (ax, ay: INTEGER)
 			-- Add a new node to `graph' position it at (`ax', `ay') in `world'.
 		local
 			new_node: EG_NODE
@@ -302,7 +302,7 @@ feature {NONE} -- Add nodes
 			physics_layout.reset
 		end
 		
-	add_link (n1, n2: EG_LINKABLE) is
+	add_link (n1, n2: EG_LINKABLE)
 			-- Add a link to `graph' connecting `n1' with `n2'.
 		require
 			n1_not_void: n1 /= Void
@@ -320,7 +320,7 @@ feature {NONE} -- Add nodes
 			simple_link.set_arrow_size (4)
 		end
 
-	add_random_nodes (nb: INTEGER) is
+	add_random_nodes (nb: INTEGER)
 			-- Add `nb' nodes to the graph.
 		local
 			i: INTEGER
@@ -366,7 +366,7 @@ feature {NONE} -- Add nodes
 			iterations := 0
 		end
 		
-	random: RANGED_RANDOM is
+	random: RANGED_RANDOM
 		once
 			create Result.make
 		end
@@ -376,7 +376,7 @@ feature {NONE} -- Animation
 	timer: EV_TIMEOUT
 			-- Timer for `on_time_out'.
 	
-	on_time_out is
+	on_time_out
 			-- Timeout: layout physics and calculate time for statistics.
 		local
 			l_cpu: INTEGER
@@ -414,7 +414,7 @@ feature {NONE} -- Animation
 		
 feature {NONE} -- Pick and drop new node
 
-	explain is
+	explain
 			-- Explain how the new node button works.
 		local
 			dialog: EV_INFORMATION_DIALOG
@@ -423,7 +423,7 @@ feature {NONE} -- Pick and drop new node
 			dialog.show_modal_to_window (Current)
 		end
 
-	drop_new_node (stone: NEW_NODE_STONE) is
+	drop_new_node (stone: NEW_NODE_STONE)
 			-- A new node stone was droped on `Current'.
 		local
 			drop_x, drop_y: INTEGER
@@ -435,7 +435,7 @@ feature {NONE} -- Pick and drop new node
 			iterations := 0
 		end
 	
-	on_link_drop (a_stone: NODE_STONE; a_node: EG_NODE) is
+	on_link_drop (a_stone: NODE_STONE; a_node: EG_NODE)
 			-- `a_stone' was droped on `a_node'.
 		local
 			other: EG_NODE
@@ -448,7 +448,7 @@ feature {NONE} -- Pick and drop new node
 			end
 		end
 		
-	on_small_move (ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; ascreen_x, ascreen_y: INTEGER) is
+	on_small_move (ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; ascreen_x, ascreen_y: INTEGER)
 			-- A small figure node was moved.
 		do
 			if physics_layout.is_stopped then
@@ -462,7 +462,7 @@ feature {NONE} -- Statistic
 	statistic_frame: EV_FRAME
 			-- Frame showing the statistic informations.
 
-	update_statistic is
+	update_statistic
 			-- Update `statistic_frame'.
 		do
 			node_label.set_text (node_counter.out)	
@@ -482,13 +482,13 @@ feature {NONE} -- Statistic
 		end
 		
 	draw_count, physics_count: INTEGER
-	max_count: INTEGER is 10
+	max_count: INTEGER = 10
 	draw_time, physics_time: INTEGER
 	link_label, node_label, draw_label, physics_label, iteration_label, theta_label: EV_LABEL
 	iterations: INTEGER
 	theta_selector: EV_HORIZONTAL_RANGE
 	
-	on_theta_change (a_value: INTEGER) is
+	on_theta_change (a_value: INTEGER)
 			-- User changed theta.
 		do
 			physics_layout.set_theta (a_value)
@@ -497,7 +497,7 @@ feature {NONE} -- Statistic
 	
 feature {NONE} -- Save/retrive
 
-	on_save is
+	on_save
 			-- User selected save.
 		do
 			if last_file_name = Void then
@@ -507,7 +507,7 @@ feature {NONE} -- Save/retrive
 			end
 		end
 
-	on_save_as is
+	on_save_as
 			-- Save as was selected.
 		local
 			dialog: EV_FILE_SAVE_DIALOG
@@ -536,7 +536,7 @@ feature {NONE} -- Save/retrive
 	last_file_name: STRING
 			-- last used file name.
 		
-	save (file_name: STRING) is
+	save (file_name: STRING)
 			-- Save `buffer' to `file'.
 		require
 			file_name_exists: file_name /= Void
@@ -547,7 +547,7 @@ feature {NONE} -- Save/retrive
 			world.store (ptf)
 		end
 		
-	on_open is
+	on_open
 			-- User selected open.
 		local
 			dialog: EV_FILE_OPEN_DIALOG
@@ -584,7 +584,7 @@ feature {NONE} -- Save/retrive
 			end
 		end
 		
-	load (file_name: STRING) is
+	load (file_name: STRING)
 			-- Load file with `file_name'.
 		require
 			file_name_exists: file_name /= Void
@@ -601,7 +601,7 @@ feature {NONE} -- Save/retrive
 
 feature {NONE} -- New
 
-	on_new is
+	on_new
 			-- New was selected by user.
 		do
 			last_file_name := Void
@@ -613,7 +613,7 @@ feature {NONE} -- New
 		
 feature {NONE} -- Layouts
 
-	layout_circle is
+	layout_circle
 			-- Layout nodes in `world' in a circle.
 		do
 			circle_layout.set_center (model_cell.width // 2, model_cell.height // 2)
@@ -621,7 +621,7 @@ feature {NONE} -- Layouts
 			circle_layout.layout
 		end
 		
-	layout_grid is
+	layout_grid
 			-- Layout nodes in `world' in a grid.
 		local
 			math: DOUBLE_MATH
@@ -637,19 +637,19 @@ feature {NONE} -- Layouts
 
 feature {NONE} -- Implementation
 
-	time: C_DATE is
+	time: C_DATE
 			-- Time to messure the speed.
 		once
 			create Result
 		end
 
-	cpu_ticks: INTEGER is
+	cpu_ticks: INTEGER
 		do
 			time.update
 			Result := time.millisecond_now + time.second_now * 1000 + time.minute_now * 60000
 		end
 		
-	accept_node: EV_CURSOR is
+	accept_node: EV_CURSOR
 		local
 			pix: EV_PIXMAP
 		once
@@ -658,7 +658,7 @@ feature {NONE} -- Implementation
 			create Result.make_with_pixmap (pix, 8, 8)
 		end
 		
-	deny_node: EV_CURSOR is
+	deny_node: EV_CURSOR
 		local
 			pix: EV_PIXMAP
 		once
@@ -667,7 +667,7 @@ feature {NONE} -- Implementation
 			create Result.make_with_pixmap (pix, 8, 8)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

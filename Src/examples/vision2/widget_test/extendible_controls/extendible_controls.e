@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that create controls to extend a certain widget type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_with_text_control (an_any_item: like current_type; editor: GB_OBJECT_EDITOR) is
+	make_with_text_control (an_any_item: like current_type; editor: GB_OBJECT_EDITOR)
 			-- Create `Current' with an EV_TEXT for input.
 		do
 			default_create
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			object_editor := editor
 		end
 		
-	make_with_combo_control (an_any_item: like current_type; editor: GB_OBJECT_EDITOR; types: ARRAY [STRING];) is
+	make_with_combo_control (an_any_item: like current_type; editor: GB_OBJECT_EDITOR; types: ARRAY [STRING];)
 			-- Create `Current' with a combo box for input, corresponding to `types'.
 		local
 			list_item: EV_LIST_ITEM
@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 		end
 		
 		
-	initialize is
+	initialize
 			-- Initialize `Current' and build interface.
 		local
 			horizontal_box: EV_HORIZONTAL_BOX
@@ -90,7 +90,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	help: STRING is
+	help: STRING
 			-- Instructions on how to use the control.
 		deferred
 		end
@@ -98,19 +98,19 @@ feature -- Status report
 
 feature -- Status setting
 
-	extend_item is
+	extend_item
 			-- Add a new item to `any_item'.
 		deferred
 		end
 		
-	wipe_out_item is
+	wipe_out_item
 			-- Wipe_out `any_item'.
 		deferred
 		end
 
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 			-- (export status {NONE})
 		do
@@ -119,12 +119,12 @@ feature {NONE} -- Contract support
 
 feature {NONE} -- Implementation
 
-	initial_text: STRING is
+	initial_text: STRING
 			-- Initial text for new items.
 		deferred
 		end
 
-	show_help is
+	show_help
 			-- Display help for `Current'.
 		local
 			information_dialog: EV_INFORMATION_DIALOG
@@ -133,7 +133,7 @@ feature {NONE} -- Implementation
 			information_dialog.show_modal_to_window (parent_window (Current))
 		end
 		
-	update_extend_button is
+	update_extend_button
 			-- Update `extend_button' based on current state of `text_control'.
 		do
 			if text_control.text.is_empty then
@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 invariant
 	current_type_not_void: current_type /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

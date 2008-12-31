@@ -1,4 +1,4 @@
-indexing
+note
 	visual_name: "Quit"
 
 class COMMAND2
@@ -11,22 +11,22 @@ create
 
 feature  -- Initialization
 
-	make is
+	make
 		do
 		end
 
 feature  -- Access
 
-	quit_label: STRING is "quit"
+	quit_label: STRING = "quit"
 
 feature  -- Command
 
-	execute is
+	execute
 		do
 			set_transition_label (quit_label)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

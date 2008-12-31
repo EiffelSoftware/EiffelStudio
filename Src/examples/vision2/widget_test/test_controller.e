@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that control the tests."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Create `Current' and assign `a_text_control' to
 			-- `text_control'.
 		do
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Status setting
 
-	set_class_output (a_text_control: EV_TEXT) is
+	set_class_output (a_text_control: EV_TEXT)
 			-- Assign `a_text_control' to `class_text_output'.
 		require
 			text_control_not_void: a_text_control /= Void
@@ -53,7 +53,7 @@ feature -- Status setting
 		end
 
 
-	update_for_type_change (a_widget: EV_WIDGET) is
+	update_for_type_change (a_widget: EV_WIDGET)
 			-- Test widget has changed to `a_widget', so
 			-- update displayed tests accordingly.
 		require
@@ -78,7 +78,7 @@ feature -- Status setting
 
 feature -- Access
 
-	selected_test_name: STRING is
+	selected_test_name: STRING
 			-- `Result' is name of currently selected test.
 		do
 			Result := (class_names @ test_notebook.selected_item_index).twin
@@ -87,7 +87,7 @@ feature -- Access
 
 feature {GENERATION_DIALOG} -- Basic operations
 
-	generate_current_test (directory: DIRECTORY) is
+	generate_current_test (directory: DIRECTORY)
 			-- Generate a stand alone test that may be compiled, based on
 			-- the selected test in `test_notebook'.
 		do
@@ -97,7 +97,7 @@ feature {GENERATION_DIALOG} -- Basic operations
 
 feature {NONE} -- Implementation
 
-	build_interface is
+	build_interface
 			-- Add constructed notebook to intface.
 		do
 			wipe_out
@@ -107,7 +107,7 @@ feature {NONE} -- Implementation
 			notebook_parented: test_notebook.parent = Current
 		end
 
-	hide_interface is
+	hide_interface
 			-- Hide tests displayed in `Current', and replace with an empty cell.
 		local
 			cell: EV_CELL
@@ -118,7 +118,7 @@ feature {NONE} -- Implementation
 			extend (cell)
 		end
 
-	build_tests is
+	build_tests
 			-- Construct current tests based on all items
 			-- contained in `class_names'.
 		local
@@ -179,7 +179,7 @@ feature {NONE} -- Implementation
 			notebook_count_correct: test_notebook.count = class_names.count
 		end
 
-	test_name_from_class (a_class_name: STRING): STRING is
+	test_name_from_class (a_class_name: STRING): STRING
 			-- `Result' is `a_class_name' with Vision2 type stripped from front,
 			-- "test" removed from the front, and all "_" replaced with " ". The first
 			-- letter is also converted to uppercase.
@@ -201,7 +201,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	update_displayed_test is
+	update_displayed_test
 			-- Assign class text for test correpsonding to
 			-- currently selected notebook item to `text_control'.
 		local
@@ -211,7 +211,7 @@ feature {NONE} -- Implementation
 			class_text_output.set_text (retrieved_text)
 		end
 
-	store_text (filename: STRING; directory: DIRECTORY) is
+	store_text (filename: STRING; directory: DIRECTORY)
 			-- For a filename `filename' in the directory `directory'
 			-- load the file, read the contents, and place in `class_texts'
 			-- and `class_names'.
@@ -235,7 +235,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	retrieve_texts (a_type: STRING) is
+	retrieve_texts (a_type: STRING)
 			-- Retrieve all test class files, and
 			-- store them in `class_texts'.
 		do
@@ -252,7 +252,7 @@ feature {NONE} -- Implementation
 	real_load_texts_agent: PROCEDURE [TEST_CONTROLLER, TUPLE]
 	type_to_retrieve: STRING
 
-	real_load_texts is
+	real_load_texts
 			-- Actually perform the loading of the file.
 		local
 			directory: DIRECTORY
@@ -312,19 +312,19 @@ feature {NONE} -- Implementation
 	class_text_output: EV_TEXT
 		-- An EV_TEXT to display all test class texts.
 
-	test_generator: WIDGET_TEST_PROJECT_GENERATOR is
+	test_generator: WIDGET_TEST_PROJECT_GENERATOR
 			-- Once access to a project generator.
 		once
 			create Result
 		end
 
-	is_in_default_state: BOOLEAN is True
+	is_in_default_state: BOOLEAN = True
 		-- Is `Current' in its default state?
 
 invariant
 	test_notebook_not_void: test_notebook /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

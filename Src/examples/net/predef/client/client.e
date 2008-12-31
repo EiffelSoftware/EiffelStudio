@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Client root-class for the predef example."
@@ -27,7 +27,7 @@ feature
 
 	received: OUR_MESSAGE -- Type redefinition
 
-	make_client (argv: ARRAY [STRING]) is
+	make_client (argv: ARRAY [STRING])
 			-- Build list, send it, receive modified list, and print it.
 		do
 			if argv.count /= 3 then
@@ -46,7 +46,7 @@ feature
 			cleanup
 		end
 
-	build_list is
+	build_list
 			-- Build list of strings `our_list' for transmission to server.
 		do
 			create our_list.make
@@ -56,7 +56,7 @@ feature
 			our_list.extend ("test.")
 		end
 
-	process_received is
+	process_received
 			-- Print the contents of received in sequence.
 		do
 			if received = Void then
@@ -70,7 +70,7 @@ feature
 			io.new_line
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

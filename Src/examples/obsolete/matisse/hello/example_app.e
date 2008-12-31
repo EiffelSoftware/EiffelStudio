@@ -1,4 +1,4 @@
-indexing
+note
 	description: ""
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -18,7 +18,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 		do
 			if arg_number /= 3 then
 				print_usage
@@ -125,7 +125,7 @@ feature -- Initialization
 			end
 		end
 
-	print_usage is
+	print_usage
 		do
 			print("Usage:%N")
 			print("	Specify arguments <hostname> and <database_name>%N")
@@ -134,7 +134,7 @@ feature -- Initialization
 
 feature
 
-	read_file_and_store_objects is
+	read_file_and_store_objects
 		-- Read text file which is created by read_from_bookst_and_file_out.
 		-- Create instances of PUBLISHER, AUTHOR
 		-- and BOOK. Then store them in a database
@@ -245,7 +245,7 @@ feature
 
 feature -- Programs in the document
 
-	find_and_print_books_from_title(a_title: STRING) is
+	find_and_print_books_from_title(a_title: STRING)
 		-- Use entry-point
 		-- section 3.2.1
 		local
@@ -266,7 +266,7 @@ feature -- Programs in the document
 			end
 		end
 
-	find_and_print_books_using_index(start_v, end_v: STRING) is
+	find_and_print_books_using_index(start_v, end_v: STRING)
 		-- Section 3.2.2
 		local
 			an_index: MT_INDEX
@@ -291,7 +291,7 @@ feature -- Programs in the document
 			index_stream.close
 	end
 
-	print_all_instances_of_class(a_class_name: STRING) is
+	print_all_instances_of_class(a_class_name: STRING)
 		-- Section 3.2.3
 		local
 			a_class: MT_CLASS
@@ -313,7 +313,7 @@ feature -- Programs in the document
 			end
 		end
 		
-	print_all_instances_by_stream(a_class_name: STRING) is
+	print_all_instances_by_stream(a_class_name: STRING)
 		-- Use stream to print all instances of a class
 		-- Section 3.2.3
 		local
@@ -362,7 +362,7 @@ feature -- Programs in the document
 -- 			end
 -- 		end
 	
-	print_properites_of_book_using_mt_get_functions(book_title: STRING) is
+	print_properites_of_book_using_mt_get_functions(book_title: STRING)
 		-- Example of mt_get_* functions
 		local
 			a_book: BOOK
@@ -385,7 +385,7 @@ feature -- Programs in the document
 			end
 		end		
 
-	print_all_authors_of_book_transparent(book_title: STRING) is
+	print_all_authors_of_book_transparent(book_title: STRING)
 		-- This verson uses get_written_by instead of stream.
 		-- Section 3.6
 		local
@@ -458,7 +458,7 @@ feature -- Programs in the document
 -- 			end
 -- 		end
 
-	remove_price_of_book(book_title: STRING) is
+	remove_price_of_book(book_title: STRING)
 		-- Remove the value of attribute 'price'
 		-- Section 4.2
 		local
@@ -473,7 +473,7 @@ feature -- Programs in the document
 			end
 		end
 	
-	delete_book(book_title: STRING) is
+	delete_book(book_title: STRING)
 		-- Section 4.3
 		local
 			ep: MT_ENTRYPOINT
@@ -525,7 +525,7 @@ feature
 -- 			end
 -- 		end
 	
-	print_publisher_and_authors_of_book_transparent(book_title: STRING) is
+	print_publisher_and_authors_of_book_transparent(book_title: STRING)
 		-- Use get_* functions, that is transparent loading
 		local
 			a_book: BOOK
@@ -556,7 +556,7 @@ feature {NONE}
 
 	appl : MATISSE_APPL;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

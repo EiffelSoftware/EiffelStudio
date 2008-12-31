@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that debit money from %
 	% a shared bank account"
 	legal: "See notice at end of class."
@@ -24,13 +24,13 @@ create
 feature -- Execution
 
 
-	withdraw (m: INTEGER) is
+	withdraw (m: INTEGER)
 		do
 			c_make_transaction (-m, c_account)
 		end
 
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

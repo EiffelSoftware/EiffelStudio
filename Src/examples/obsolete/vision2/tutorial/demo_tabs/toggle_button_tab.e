@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make (par: EV_CONTAINER)
 			-- Create the tab and initialise objects
 		local
 			cmd1,cmd2: EV_ROUTINE_COMMAND
@@ -50,7 +50,7 @@ feature -- Initialization
 
 feature -- Access
 
-	name:STRING is
+	name:STRING
 			-- Returns the name of the tab
 		do
 			Result:="Toggle Button"
@@ -59,7 +59,7 @@ feature -- Access
 
 feature -- Execution feature  
 
-	get_state_val (arg: EV_ARGUMENT; data: EV_EVENT_DATA) IS
+	get_state_val (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Get the state of the toggle button.
 		do
 			if current_widget.state then
@@ -70,7 +70,7 @@ feature -- Execution feature
 
 		end
 	
-	set_state_val (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	set_state_val (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Get the state of the toggle button.
 		do
 			-- We test if there is a selected item
@@ -84,7 +84,7 @@ feature -- Execution feature
 			end					
 		end
 
-	toggle_button (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	toggle_button (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Toggle the state of the button.
 		do
 			current_widget.toggle
@@ -97,7 +97,7 @@ feature -- Access
 
 	iTrue, iFalse: EV_LIST_ITEM;
 			-- 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

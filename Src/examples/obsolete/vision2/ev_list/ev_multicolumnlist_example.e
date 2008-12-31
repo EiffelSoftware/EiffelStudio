@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Simple drawing program."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Initialization
 
-	prepare is
+	prepare
 			-- Initialize world.
 		local
 			an_item: EV_MULTI_COLUMN_LIST_ROW
@@ -87,7 +87,7 @@ feature -- Initialization
 
 		end
 
-	first_window: EV_TITLED_WINDOW is
+	first_window: EV_TITLED_WINDOW
 			-- The window with the drawable area.
 		once
 			create Result
@@ -110,18 +110,18 @@ feature {NONE} -- Graphical interface
 
 feature {NONE} -- Implementation
 	
-	exit_application is
+	exit_application
 			-- Quit the program
 		do
 			first_window.destroy
 		end
 
-	test is
+	test
 		do
 			io.putstring ("pas de chance%N")
 		end
 
-	toto (a_x, a_y: INTEGER; a_x_tilt, a_y_title, a_pressure: DOUBLE; a_sx, a_sy: INTEGER) is
+	toto (a_x, a_y: INTEGER; a_x_tilt, a_y_title, a_pressure: DOUBLE; a_sx, a_sy: INTEGER)
 			-- Display the selected items
 		local
 			label_string: STRING
@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 			label_string.append ("Mouse Move !!")
 		end
 
-	report_selected (an_item: EV_MULTI_COLUMN_LIST_ROW) is
+	report_selected (an_item: EV_MULTI_COLUMN_LIST_ROW)
 			-- Display the selected items
 		local
 			selected_items: LINEAR [EV_MULTI_COLUMN_LIST_ROW]
@@ -159,7 +159,7 @@ feature {NONE} -- Implementation
 			my_label.set_text(label_string)
 		end
 
-	get_selected_items is
+	get_selected_items
 			-- Display the selected items
 		local
 			selected_items: LINEAR [EV_MULTI_COLUMN_LIST_ROW]
@@ -196,7 +196,7 @@ feature {NONE} -- Implementation
 			messagebox.show_modal
 		end
 
-	select_all_items is
+	select_all_items
 			-- Select all items
 		do
 			from
@@ -209,24 +209,24 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	enable_multiple_selection is
+	enable_multiple_selection
 			-- Enable multiple selection 
 		do
 			my_list.enable_multiple_selection
 		end
 
-	disable_multiple_selection is
+	disable_multiple_selection
 			-- Disable multiple selection 
 		do
 			my_list.disable_multiple_selection
 		end
 
-	Default_pixmaps: EV_DEFAULT_PIXMAPS is
+	Default_pixmaps: EV_DEFAULT_PIXMAPS
 		once
 			Create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

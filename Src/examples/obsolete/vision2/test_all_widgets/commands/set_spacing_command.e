@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"SET_SPACING_COMMAND, sets the minimum size of widget.%
 		% Belongs to EiffelVision example."
@@ -16,12 +16,12 @@ inherit
 
 feature -- Command execution
 
-	execute (arg: EV_ARGUMENT2[EV_BOX, EV_TEXT_FIELD]; data: EV_EVENT_DATA) is
+	execute (arg: EV_ARGUMENT2[EV_BOX, EV_TEXT_FIELD]; data: EV_EVENT_DATA)
 		do
 			arg.first.set_spacing (arg.second.text.to_integer)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

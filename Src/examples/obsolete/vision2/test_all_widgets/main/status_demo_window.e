@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		" STATUS_DEMO_WINDOW, demo window to test a status bar%
 		% widget. Belongs to EiffelVision example."
@@ -25,7 +25,7 @@ create
 
 feature -- Access
 
-	main_widget: EV_FIXED is
+	main_widget: EV_FIXED
 			-- The main widget of the demo
 		once
 			create Result.make (Current)
@@ -36,7 +36,7 @@ feature -- Access
 
 feature -- Status setting
 	
-	set_widgets is
+	set_widgets
 			-- Set the widgets in the demo windows.
 		local
 			sbi: EV_STATUS_BAR_ITEM
@@ -57,7 +57,7 @@ feature -- Status setting
 			create menu.make_with_text (sb, "&Seconde")
 		end
 	
-	set_values is
+	set_values
 			-- Set the values on the widgets of the window.
 		do
 			set_title ("Status bar demo")
@@ -65,7 +65,7 @@ feature -- Status setting
 
 feature -- Show the window
 	
-	activate (win: MAIN_WINDOW) is
+	activate (win: MAIN_WINDOW)
 		local
 			arg1: EV_ARGUMENT1[DEMO_WINDOW]
 		do
@@ -75,7 +75,7 @@ feature -- Show the window
 			add_close_command (win, arg1)
 	end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

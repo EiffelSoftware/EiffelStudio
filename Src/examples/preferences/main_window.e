@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Main window for this application"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 
 feature -- Preference Testing
 
-	initialize_basic_preferences is
+	initialize_basic_preferences
 			-- Initialize preferences using standard manager, factory and preference types.
 		local
 				-- Standard
@@ -68,7 +68,7 @@ feature -- Preference Testing
 --			basic_preferences.export_to_storage (create {PREFERENCES_STORAGE_XML}.make_with_location ("backup.conf"), False)
 		end
 
-	initialize_custom_preferences is
+	initialize_custom_preferences
 			-- Initialize preferences using a custom manager (CUSTOM_MANAGER), which can create, in addition to the standard
 			-- preference types the custom type DIRECTORY_RESOURCE.
 		local
@@ -103,7 +103,7 @@ feature {NONE} -- Initialization
 
 	custom_preferences: PREFERENCES
 
-	initialize is
+	initialize
 			-- Build the interface for this window.
 		do
 			Precursor {EV_TITLED_WINDOW}
@@ -122,7 +122,7 @@ feature {NONE} -- Initialization
 			set_size (Window_width, Window_height)
 		end
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is the window in its default state
 			-- (as stated in `initialize')
 		do
@@ -133,7 +133,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation, Close event
 
-	request_close_window is
+	request_close_window
 			-- The user wants to close the window
 		local
 			question_dialog: EV_CONFIRMATION_DIALOG
@@ -157,7 +157,7 @@ feature {NONE} -- Implementation
 	main_container: EV_VERTICAL_BOX
 			-- Main container (contains all widgets displayed in this window)
 
-	build_main_container is
+	build_main_container
 			-- Create and populate `main_container'.
 		require
 			main_container_not_yet_created: main_container = Void
@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 			main_container_created: main_container /= Void
 		end
 
-	show_standard_preference_window is
+	show_standard_preference_window
 			-- Show preference window basic view
 		do
 			initialize_basic_preferences
@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 			preference_window.show
 		end
 
-	show_custom_preference_window is
+	show_custom_preference_window
 			-- Show preference window customized view
 		do
 			initialize_custom_preferences
@@ -196,16 +196,16 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation / Constants
 
-	Window_title: STRING is "EiffelPreference Example"
+	Window_title: STRING = "EiffelPreference Example"
 			-- Title of the window.
 
-	Window_width: INTEGER is 100
+	Window_width: INTEGER = 100
 			-- Initial width for this window.
 
-	Window_height: INTEGER is 100;
+	Window_height: INTEGER = 100;
 			-- Initial height for this window.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

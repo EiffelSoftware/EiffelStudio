@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make (par: EV_CONTAINER)
 			-- Create the tab and initialise objects.
 		local
 			cmd1,cmd2: EV_ROUTINE_COMMAND
@@ -33,7 +33,7 @@ feature -- Initialization
 			
 		end
 
-	name:STRING is
+	name:STRING
 			-- Returns the name of the tab
 		do
 			Result:="Spin Button"
@@ -44,14 +44,14 @@ feature -- Initialization
 feature -- Access
 
 	
-	set_step (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	set_step (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Sets the step of the spin button
 		do
 		--	current_widget.set_step(f1.get_text.to_integer)
 			f1.set_text("Inapplicable")
 		end
 
-	get_step (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	get_step (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Returns the step of the spin button
 		do
 			f1.set_text(current_widget.step.out)
@@ -60,7 +60,7 @@ feature -- Access
 
 	f1: TEXT_FEATURE_MODIFIER;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

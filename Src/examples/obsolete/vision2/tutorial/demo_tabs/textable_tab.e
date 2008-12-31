@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make (par: EV_CONTAINER)
 			-- Create the tab and initialise objects
 		local
 			cmd1,cmd2: EV_ROUTINE_COMMAND
@@ -57,7 +57,7 @@ feature -- Initialization
 
 feature -- Access
 
-	name:STRING is
+	name:STRING
 			-- Returns the name of the tab
 		do
 			Result:="Textable"
@@ -66,31 +66,31 @@ feature -- Access
 
 feature -- Execution feature  
 
-	get_text_val (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	get_text_val (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Sets the text of the demo.
 		do
 			f1.set_text(current_widget.text)
 		end
 
-	set_text_val (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	set_text_val (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Gets the text of the demo.
 		do
 			current_widget.set_text(f1.get_text)
 		end
 
-	center_alignment (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	center_alignment (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Sets the text to center alignment
 		do
 			current_widget.set_center_alignment
 		end
 
-	right_alignment (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	right_alignment (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Sets the text to right alignment
 		do
 			current_widget.set_right_alignment
 		end
 
-	left_alignment (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	left_alignment (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 			-- Sets the text to left alignment
 		do
 			current_widget.set_left_alignment
@@ -101,7 +101,7 @@ feature -- Access
 	current_widget: EV_TEXTABLE
 	f1: TEXT_FEATURE_MODIFIER	
 	b1,b2,b3: EV_BUTTON;
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

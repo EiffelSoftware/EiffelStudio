@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 deferred class 
@@ -9,7 +9,7 @@ feature {NONE}
 	register: REAL
 			-- Temporary register used in classes
 
-	operand_stack: LINKED_STACK [REAL] is
+	operand_stack: LINKED_STACK [REAL]
 			-- Stack of operands.
 		once
 			create Result.make
@@ -17,13 +17,13 @@ feature {NONE}
 
 feature 
 	
-	next_choice: STRING is
+	next_choice: STRING
 			-- Last user's choice.
 		do
 			Result := io.laststring
 		end
 	
-	do_one_state is 
+	do_one_state 
 			-- Perform operation associated with the current state 
 			-- and display result.
 		do 
@@ -33,7 +33,7 @@ feature
 
 feature {NONE}
 	
-	display is 
+	display 
 			-- Display the content of the accumulator.
 		do 
 			io.new_line
@@ -44,7 +44,7 @@ feature {NONE}
 
 feature 	
 
-	read is 
+	read 
 			-- Read next operation. 
 		do 
 			io.new_line
@@ -55,7 +55,7 @@ feature
  
 feature {NONE}	
 
-	process is 
+	process 
 			-- Process user's answer.
 		do 
 			if operand_stack.count > 1 then
@@ -71,12 +71,12 @@ feature {NONE}
 
 feature 
 	
-	operation is
+	operation
 			-- Effective register operation.
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An empty class to ensures files from Build compile."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ feature
 	
 	object: EV_ANY
 	
-	set_object (an_object: EV_ANY) is
+	set_object (an_object: EV_ANY)
 			--
 		do
 			object := an_object
@@ -33,19 +33,19 @@ feature
 	
 	actual_ev_any_from_display_object: EV_ANY
 	
-	enable_expanded_in_box is
+	enable_expanded_in_box
 			--
 		do
 		end
 		
-	disable_expanded_in_box is
+	disable_expanded_in_box
 			--
 		do
 		end
 		
 	children: ARRAYED_LIST [GB_OBJECT];
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

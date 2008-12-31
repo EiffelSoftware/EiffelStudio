@@ -1,4 +1,4 @@
-indexing
+note
 	description: "BUTTONS_DEMO_WINDOW, demo window to test all kinds %
 			%of buttons. Belongs to EiffelVision example test_all_widgets."
 	legal: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature -- Access
 
-	main_widget: EV_VERTICAL_BOX is
+	main_widget: EV_VERTICAL_BOX
 			-- The main widget of the demo
 		once
 			create Result.make (Current)
@@ -43,7 +43,7 @@ feature -- Access
 
 feature -- Status setting
         
-	set_widgets is
+	set_widgets
 			-- Set the widgets in the demo windows.
 		do
 			main_widget.set_homogeneous (False)
@@ -63,7 +63,7 @@ feature -- Status setting
 			create radio3_b.make_with_text (box, "Radio 3")
        	end
 
-	set_values is
+	set_values
 			-- Set the values on the widgets of the window.
 		do
 			set_title ("All buttons demo")
@@ -71,12 +71,12 @@ feature -- Status setting
 
 feature -- Color
 
-	blue: EV_COLOR is
+	blue: EV_COLOR
 		do
 			create Result.make_rgb (0, 0, 255)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -4,7 +4,7 @@ feature {NONE} -- ToolBar Implementation
 	standard_toolbar: EV_TOOL_BAR
 			-- Standard toolbar for this window
 
-	build_standard_toolbar is
+	build_standard_toolbar
 			-- Create and populate the standard toolbar.
 		require
 			toolbar_not_yet_created: standard_toolbar = Void

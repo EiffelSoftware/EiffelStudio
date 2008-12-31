@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Wizard starting point."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,13 +17,13 @@ create
 
 feature -- Initialization
 
-	Wizard_title: STRING is
+	Wizard_title: STRING
 			-- Window title for this wizard.
 		once
 			Result := "New ${FL_WIZARD_NAME} Application Wizard"
 		end
 
-	wizard_factory: APPLICATION_FACTORY is
+	wizard_factory: APPLICATION_FACTORY
 		once
 			create Result
 		end

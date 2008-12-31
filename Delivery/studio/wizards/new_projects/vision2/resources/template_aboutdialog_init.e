@@ -1,7 +1,7 @@
 
 feature {NONE} -- About Dialog Implementation
 
-	on_about is
+	on_about
 			-- Display the About dialog.
 		local
 			about_dialog: ABOUT_DIALOG

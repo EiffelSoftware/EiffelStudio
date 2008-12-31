@@ -1,15 +1,17 @@
-indexing
-	description: "Can format Eiffel for ASP.NET page into colored HTML."
-	note:	"The page should user lower case for all tags and include: %
-					%- <title>...</title: for `page_title' to be initialized properly%
-					%- indexing description: %"...%": for `page_description' to be initialized properly"
+note
+	description: "[
+		Can format Eiffel for ASP.NET page into colored HTML.
+		Note: The page should user lower case for all tags and include:
+				- <title>...</title: for `page_title' to be initialized properly
+				- indexing description: "...": for `page_description' to be initialized properly
+		]"
 
 class
 	EFA_PARSER
 
 feature -- Basic Operation(s)
 
-	parse (a_file_path: STRING) is
+	parse (a_file_path: STRING)
 			-- Parse content of Eiffel for ASP.NET file `a_file_path'.
 			-- Set `formatted_html', `page_title' and `page_description' accordingly.
 		local
@@ -38,7 +40,7 @@ feature -- Basic Operation(s)
 					loop
 						if l_in_tag then
 							if is_end_tag (l_source, i) then
-								l_in_tag := false
+								l_in_tag := False
 								l_tag.append_character (l_source.item (i))
 								internal_formatted_html.append (formatted_tag (l_tag))
 								if l_tag.is_equal ("&lt;script runat=&quot;server&quot;&gt;") then
@@ -94,7 +96,7 @@ feature -- Status Report
 
 feature -- Access
 		
-	formatted_html: STRING is
+	formatted_html: STRING
 			-- HTML page representing source code
 		require
 			parsed: parse_successful
@@ -102,7 +104,7 @@ feature -- Access
 			Result := internal_formatted_html
 		end
 
-	page_title: STRING is
+	page_title: STRING
 			-- Last parsed page title
 		require
 			parsed: parse_successful
@@ -110,7 +112,7 @@ feature -- Access
 			Result := internal_page_title
 		end
 
-	page_description: STRING is
+	page_description: STRING
 			-- Last parsed page description
 		require
 			parsed: parse_successful
@@ -123,10 +125,10 @@ feature {NONE} -- Implementation
 	internal_formatted_html, internal_page_title, internal_page_description: STRING
 			-- Parse results
 
-	is_end_tag (a_source: STRING; a_index: INTEGER): BOOLEAN is
+	is_end_tag (a_source: STRING; a_index: INTEGER): BOOLEAN
 			-- Is character at index `a_index' in `a_source' closing html tag?
 		require
-			attached_source: a_source /= void
+			attached_source: a_source /= Void
 			valid_index: a_index > 0 and a_index <= a_source.count
 		do
 			if a_index > 3 then
@@ -137,10 +139,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_start_tag (a_source: STRING; a_index: INTEGER): BOOLEAN is
+	is_start_tag (a_source: STRING; a_index: INTEGER): BOOLEAN
 			-- Is character at index `a_index' in `a_source' opening html tag?
 		require
-			attached_source: a_source /= void
+			attached_source: a_source /= Void
 			valid_index: a_index > 0 and a_index <= a_source.count
 		do
 			if a_index > 3 then
@@ -151,11 +153,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	formatted_tag (a_tag: STRING): STRING is
+	formatted_tag (a_tag: STRING): STRING
 			-- Use `Html_formats' to format tag.
 			-- `a_tag' can be of the form '!doctype' or '/table' or 'br /' or 'a href=...'
 		require
-			attached_tag: a_tag /= void
+			attached_tag: a_tag /= Void
 			valid_tag: a_tag.substring (1, 4).is_equal ("&lt;") and 
 					a_tag.substring (a_tag.count - 3, a_tag.count).is_equal ("&gt;")
 		local
@@ -198,7 +200,7 @@ feature {NONE} -- Implementation
 							end
 							l_tag.wipe_out -- Remove "quot" from tag content
 						elseif not c.is_alpha_numeric and c /= '!' and c /= '-' then
-							l_in_tag := false
+							l_in_tag := False
 							Html_formats.search (l_tag)
 							if Html_formats.found then
 								Result.append (Html_formats.found_item)
@@ -232,7 +234,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_quote_start (a_tag: STRING; a_index: INTEGER): BOOLEAN is
+	is_quote_start (a_tag: STRING; a_index: INTEGER): BOOLEAN
 			-- Does character at index `a_index' in `a_tag' correspond to start of HTML quote?
 		require
 			attached_tag: a_tag /= Void
@@ -249,10 +251,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	eiffel_format (a_source: STRING): STRING is
+	eiffel_format (a_source: STRING): STRING
 			-- HTML code with added css styles to HTML encoded Eiffel source `a_source'
 		require
-			attached_source: a_source /= void
+			attached_source: a_source /= Void
 		local
 			l_in_word, l_found: BOOLEAN
 			i, j, l_count, l_index: INTEGER
@@ -341,15 +343,15 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 		ensure
-			attached_code: Result /= void
+			attached_code: Result /= Void
 		end
 
-	subtext (a_source, a_start_tag, a_end_tag: STRING): STRING is
+	subtext (a_source, a_start_tag, a_end_tag: STRING): STRING
 			-- Text in `a_source' in between `a_start_tag' and `a_end_tag'
 		require
-			attached_source: a_source /= void
-			attached_start_tag: a_start_tag /= void
-			attached_end_tag: a_end_tag /= void
+			attached_source: a_source /= Void
+			attached_start_tag: a_start_tag /= Void
+			attached_end_tag: a_end_tag /= Void
 		local
 			l_index, l_index_2: integer
 		do
@@ -360,14 +362,14 @@ feature {NONE} -- Implementation
 					Result := a_source.substring (l_index + a_start_tag.count, l_index_2 - 1)
 				end
 			end
-			if Result = void then
+			if Result = Void then
 				Result := ""
 			end
 		ensure
-			attached_text: Result /= void
+			attached_text: Result /= Void
 		end
 
-	Eiffel_formats: HASH_TABLE [STRING, STRING] is
+	Eiffel_formats: HASH_TABLE [STRING, STRING]
 			-- Eiffel keywords and corresponding formatting
 		once
 			create Result.make (66)
@@ -444,7 +446,7 @@ feature {NONE} -- Implementation
 			Result.put ("<span class=%"eiffel_3%">Void</span>", "Void")
 		end
 	
-	Html_formats: HASH_TABLE [STRING, STRING] is
+	Html_formats: HASH_TABLE [STRING, STRING]
 			-- HTML keywords and corresponding formatting
 		once
 			create Result.make (224)

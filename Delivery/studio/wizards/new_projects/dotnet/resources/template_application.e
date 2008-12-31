@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Project root class"
 	
 class
@@ -9,7 +9,7 @@ create
 
 feature {NONE} -- Initialization
 
-	${FL_CREATION_ROUTINE_NAME} is
+	${FL_CREATION_ROUTINE_NAME}
 			-- Run application.
 		do
 			-- Write your code here.

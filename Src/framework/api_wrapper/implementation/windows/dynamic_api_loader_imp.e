@@ -29,8 +29,8 @@ feature -- Basic operations
 	load_library (a_name: ?STRING_GENERAL; a_version: ?STRING_GENERAL): POINTER
 			-- <Precursor>
 		local
-			l_fn: !FILE_NAME
-			l_dll_fn: !FILE_NAME
+			l_fn: FILE_NAME
+			l_dll_fn: FILE_NAME
 		do
 			if a_version = Void then
 				create l_fn.make_from_string (a_name.as_string_8)

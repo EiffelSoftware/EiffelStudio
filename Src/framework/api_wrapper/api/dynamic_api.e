@@ -26,7 +26,7 @@ feature {NONE} -- Initialize
 	make
 			-- Initialize the dynamic module by attempting to load it.
 		do
-			module_handle := load_library (module_name)
+			module_handle := load_library (module_name, minimum_version)
 			if module_handle /= default_pointer then
 				initialize
 			end
@@ -138,7 +138,7 @@ feature {NONE} -- Basic operations
 			Result := api_loader.load_library (a_name, a_version)
 		end
 
-feature {DYNAMIC_SHARED_API} -- Externals
+feature {SHARED_DYNAMIC_API} -- Externals
 
 	module_handle: POINTER
 			-- Initialized module handle

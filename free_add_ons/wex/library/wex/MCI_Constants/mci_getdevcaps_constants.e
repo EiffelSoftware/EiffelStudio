@@ -1,4 +1,4 @@
-indexing
+note
 	description: "General Device Capabilities constants"
 	status: "See notice at end of class."
 	author: "Robin van Ommeren"
@@ -10,70 +10,70 @@ class
 
 feature -- Access
 
-	Mci_getdevcaps_compound_device: INTEGER is
+	Mci_getdevcaps_compound_device: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_GETDEVCAPS_COMPOUND_DEVICE"
 		end
 
-	Mci_getdevcaps_device_type: INTEGER is
+	Mci_getdevcaps_device_type: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_GETDEVCAPS_DEVICE_TYPE"
 		end
 
-	Mci_getdevcaps_has_audio: INTEGER is
+	Mci_getdevcaps_has_audio: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_GETDEVCAPS_HAS_AUDIO"
 		end
 
-	Mci_getdevcaps_has_video: INTEGER is
+	Mci_getdevcaps_has_video: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_GETDEVCAPS_HAS_VIDEO"
 		end
 
-	Mci_getdevcaps_item: INTEGER is
+	Mci_getdevcaps_item: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_GETDEVCAPS_ITEM"
 		end
 
-	Mci_getdevcaps_can_eject: INTEGER is
+	Mci_getdevcaps_can_eject: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_GETDEVCAPS_CAN_EJECT"
 		end
 
-	Mci_getdevcaps_can_play: INTEGER is
+	Mci_getdevcaps_can_play: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_GETDEVCAPS_CAN_PLAY"
 		end
 
-	Mci_getdevcaps_can_record: INTEGER is
+	Mci_getdevcaps_can_record: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_GETDEVCAPS_CAN_RECORD"
 		end
 
-	Mci_getdevcaps_can_save: INTEGER is
+	Mci_getdevcaps_can_save: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_GETDEVCAPS_CAN_SAVE"
 		end
 
-	Mci_getdevcaps_uses_files: INTEGER is
+	Mci_getdevcaps_uses_files: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias

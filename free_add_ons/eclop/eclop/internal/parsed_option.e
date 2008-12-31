@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Parsed option."
 	copyright: "Copyright (c) 2003 Paul Cohen."
 	license: "Eiffel Forum License v2 (see license.txt)"
@@ -8,12 +8,12 @@ indexing
 	
 class PARSED_OPTION
    
-creation
+create
 	{COMMAND_LINE_PARSER} make
    
 feature {NONE} -- Initialization
 	
-	make (s: STRING; args: LIST [STRING]) is
+	make (s: STRING; args: LIST [STRING])
 			-- Create a new parsed option with the name `s'
 			-- and arguments `args'. `args' may be Void. If `s'
 			-- equals "-" the name is not set but `is_single_dash'
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
       
 feature {COMMAND_LINE_PARSER} -- Access
 	
-	has_name: BOOLEAN is
+	has_name: BOOLEAN
 			-- Does this option have a name?
 		do
 			Result := name /= Void
@@ -47,7 +47,7 @@ feature {COMMAND_LINE_PARSER} -- Access
 	is_single_dash: BOOLEAN
 			-- Is single dash
 	
-	has_arguments: BOOLEAN is
+	has_arguments: BOOLEAN
 			-- Does this option have any arguments?
 		do
 			Result := arguments /= Void and then arguments.count > 0 
@@ -61,7 +61,7 @@ feature {COMMAND_LINE_PARSER} -- Access
 	
 feature {COMMAND_LINE_PARSER} -- Status setting
 	
-	add_argument (arg: STRING) is
+	add_argument (arg: STRING)
 			-- Add the argument `arg'.
 		require
 			arg_not_void: arg /= Void
@@ -73,7 +73,7 @@ feature {COMMAND_LINE_PARSER} -- Status setting
 			arguments.extend (arg)
 		end
 	
-	set_invalidly_grouped is
+	set_invalidly_grouped
 			-- Set invalidly_grouped.
 		do
 			is_invalidly_grouped := True

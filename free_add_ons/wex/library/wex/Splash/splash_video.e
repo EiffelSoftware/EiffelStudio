@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Splash containing a video."
 	author: "Robin van Ommeren"
 	date: "$Date$"
@@ -24,12 +24,12 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make
 
 feature -- Basic operations
 
-	set_video (a_file_name: STRING) is
+	set_video (a_file_name: STRING)
 		require
 			a_file_name_not_void: a_file_name /= Void
 			a_file_name_meaningful: not a_file_name.empty
@@ -47,7 +47,7 @@ feature -- Basic operations
 			end
 		end
 
-	pop_up is
+	pop_up
 			-- Popup the splash window.
 		do
 			if popped_up then
@@ -59,7 +59,7 @@ feature -- Basic operations
 			video_device.disable_notify
 		end
 
-	pop_down is
+	pop_down
 			-- popdown the splash window.
 		do
 			window_pop_down
@@ -68,7 +68,7 @@ feature -- Basic operations
 
 feature -- Status report
 
-	valid: BOOLEAN is
+	valid: BOOLEAN
 			-- Can the video window pop up?
 		do
 			Result := video_device.opened
@@ -76,7 +76,7 @@ feature -- Status report
 
 feature {NONE} -- Behavior
 
-	default_process_message (a_msg, wparam, lparam: INTEGER) is
+	default_process_message (a_msg, wparam, lparam: INTEGER)
 		do
 			if a_msg = Mm_mcinotify then
 				pop_down
@@ -86,7 +86,7 @@ feature {NONE} -- Behavior
 
 feature {NONE} -- implementation
 
-	stop_and_close_video_device is
+	stop_and_close_video_device
 		do
 			if video_device.opened then
 				if video_device.playing then
@@ -98,28 +98,28 @@ feature {NONE} -- implementation
 			not_valid: not valid
 		end
 
-	video_window: WEX_CONTROL_WINDOW_NO_BACKGROUND is
-		once
-			!! Result.make(Current, "SplashVideoSubWindowRWC")
+	video_window: WEX_CONTROL_WINDOW_NO_BACKGROUND
+		once 
+			create Result.make(Current, "SplashVideoSubWindowRWC")
 		end
 
-	on_query_new_palette is
+	on_query_new_palette
 			-- Adjust the palette on the video if palette
 			-- is changing.
 		do
 			video_device.realize_palette_as_background
 		end
 
-	class_name: STRING is
+	class_name: STRING
 			-- Class name
 		once
 			Result := "SplashVideoWindowRWC"
 		end
 
-	video_device: WEX_MCI_DIGITAL_VIDEO is
+	video_device: WEX_MCI_DIGITAL_VIDEO
 			-- device to play an AVI
-		once
-			!! Result.make (Current)
+		once 
+			create Result.make (Current)
 			Result.set_strict (True)
 		end
 

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants used for notification on command completion %
 		%for any MCI device."
 	status: "See notice at end of class."
@@ -11,28 +11,28 @@ class
 
 feature -- Access
 
-	Mci_notify_aborted: INTEGER is
+	Mci_notify_aborted: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_NOTIFY_ABORTED"
 		end
 
-	Mci_notify_failure: INTEGER is
+	Mci_notify_failure: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_NOTIFY_FAILURE"
 		end
 
-	Mci_notify_successful: INTEGER is
+	Mci_notify_successful: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_NOTIFY_SUCCESSFUL"
 		end
 
-	Mci_notify_superseded: INTEGER is
+	Mci_notify_superseded: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias

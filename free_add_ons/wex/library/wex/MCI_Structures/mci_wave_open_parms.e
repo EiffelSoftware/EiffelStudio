@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents the MCI_WAVE_OPEN_PARMS structure."
 	status: "See notice at end of class."
 	author: "Robin van Ommeren"
@@ -16,13 +16,13 @@ inherit
 			structure_size
 		end
 
-creation
+create
 	make,
 	make_by_pointer
 
 feature -- Initialization
 
-	make (a_parent: WEL_COMPOSITE_WINDOW; a_device: STRING) is
+	make (a_parent: WEL_COMPOSITE_WINDOW; a_device: STRING)
 			-- Create object and fill structure.
 		require
 			a_device_not_void: a_device /= Void
@@ -40,7 +40,7 @@ feature -- Initialization
 
 feature -- Status report
 
-	buffer_size: INTEGER is
+	buffer_size: INTEGER
 			-- Buffer size
 		require
 			exists: exists
@@ -50,7 +50,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_buffer_size (size: INTEGER) is
+	set_buffer_size (size: INTEGER)
 			-- Set buffer size in seconds.
 		require
 			exists: exists
@@ -63,7 +63,7 @@ feature -- Status setting
 
 feature {WEL_STRUCTURE}
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_mci_wave_open_parms
@@ -71,19 +71,19 @@ feature {WEL_STRUCTURE}
 
 feature {NONE} -- Externals
 
-	c_size_of_mci_wave_open_parms: INTEGER is
+	c_size_of_mci_wave_open_parms: INTEGER
 		external
 			"C [macro <wave_open.h>]"
 		alias
 			"sizeof (MCI_WAVE_OPEN_PARMS)"
 		end
 
-	cwex_mci_wave_open_set_buffer_seconds (ptr: POINTER; value: INTEGER) is
+	cwex_mci_wave_open_set_buffer_seconds (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <wave_open.h>]"
 		end
 
-	cwex_mci_wave_open_get_buffer_seconds (ptr: POINTER): INTEGER is
+	cwex_mci_wave_open_get_buffer_seconds (ptr: POINTER): INTEGER
 		external
 			"C [macro <wave_open.h>]"
 		end

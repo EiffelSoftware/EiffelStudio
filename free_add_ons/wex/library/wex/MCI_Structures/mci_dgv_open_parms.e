@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents the MCI_DGV_OPEN_PARMS structure."
 	status: "See notice at end of class."
 	author: "Robin van Ommeren"
@@ -16,13 +16,13 @@ inherit
 			structure_size
 		end
 
-creation
+create
 	make,
 	make_by_pointer
 
 feature -- Initialization
 
-	make (a_parent: WEL_COMPOSITE_WINDOW; a_device: STRING) is
+	make (a_parent: WEL_COMPOSITE_WINDOW; a_device: STRING)
 			-- Create object and fill structure.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -40,7 +40,7 @@ feature -- Initialization
 
 feature -- Status_report
 
-	open_style: INTEGER is
+	open_style: INTEGER
 			-- Style to open.
 		require
 			exists: exists
@@ -48,7 +48,7 @@ feature -- Status_report
 			Result := cwex_mci_dgv_open_get_dw_style (item)
 		end
 
-	parent_handle: POINTER is
+	parent_handle: POINTER
 			-- Handle of parent
 		require
 			exists: exists
@@ -58,7 +58,7 @@ feature -- Status_report
 
 feature -- Status setting
 
-	set_open_style (a_value: INTEGER) is
+	set_open_style (a_value: INTEGER)
 			-- Set style to open.
 		require
 			exists: exists
@@ -68,7 +68,7 @@ feature -- Status setting
 			open_style_set: open_style = a_value
 		end
 
-	set_parent_handle (a_value: POINTER) is
+	set_parent_handle (a_value: POINTER)
 			-- Set handle of parent.
 		require
 			exists: exists
@@ -80,7 +80,7 @@ feature -- Status setting
 
 feature {WEL_STRUCTURE}
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_mci_dgv_open
@@ -88,35 +88,35 @@ feature {WEL_STRUCTURE}
 
 feature {NONE} -- Externals
 
-	c_size_of_mci_dgv_open: INTEGER is
+	c_size_of_mci_dgv_open: INTEGER
 		external
 			"C [macro <dgv_open.h>]"
 		alias
 			"sizeof (MCI_DGV_OPEN_PARMS)"
 		end
 
-	cwex_mci_dgv_open_get_dw_style (ptr: POINTER) : INTEGER is
+	cwex_mci_dgv_open_get_dw_style (ptr: POINTER) : INTEGER
 		external
 			"C [macro <dgv_open.h>]"
 		alias
 			"cwex_mci_dgv_open_get_dw_style"
 		end
 
-	cwex_mci_dgv_open_get_hwnd_parent (ptr: POINTER) : POINTER is
+	cwex_mci_dgv_open_get_hwnd_parent (ptr: POINTER) : POINTER
 		external
 			"C [macro <dgv_open.h>]"
 		alias
 			"cwex_mci_dgv_open_get_hwnd_parent"
 		end
 
-	cwex_mci_dgv_open_set_dw_style (ptr: POINTER; a_value: INTEGER) is
+	cwex_mci_dgv_open_set_dw_style (ptr: POINTER; a_value: INTEGER)
 		external
 			"c[macro <dgv_open.h>]"
 		alias
 			"cwex_mci_dgv_open_set_dw_style"
 		end
 
-	cwex_mci_dgv_open_set_hwnd_parent (ptr: POINTER; a_value: POINTER) is
+	cwex_mci_dgv_open_set_hwnd_parent (ptr: POINTER; a_value: POINTER)
 		external
 			"c[macro <dgv_open.h>]"
 		alias

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents the cdaudio MCI device."
 	status: "See notice at end of class."
 	author: "Robin van Ommeren"
@@ -26,12 +26,12 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make
 
 feature -- Access
 
-	media_present: BOOLEAN is
+	media_present: BOOLEAN
 			-- Is there a CD in the drive?
 		require
 			opened: opened
@@ -39,7 +39,7 @@ feature -- Access
 			Result := query_status_item (Mci_status_media_present) /= 0
 		end
 
-	is_audio_track (track: INTEGER): BOOLEAN is
+	is_audio_track (track: INTEGER): BOOLEAN
 			-- Is `track' an audio track?
 		require
 			opened: opened
@@ -48,7 +48,7 @@ feature -- Access
 				Mci_cda_track_audio
 		end
 
-	seek_to (a_position: INTEGER) is
+	seek_to (a_position: INTEGER)
 			-- Position current track at `to'.
 		require
 			opened: opened
@@ -56,47 +56,47 @@ feature -- Access
 			a_valid_position: a_position <= number_of_tracks
 		local
 			seek_parms: WEX_MCI_SEEK_PARMS
-		do
-			!! seek_parms.make (parent, a_position)
+		do 
+			create seek_parms.make (parent, a_position)
 			seek_device (seek_parms, Mci_to)
 		end
 
-	open is
+	open
 			-- Open the cdaudio device.
 		require
 			not_opened: not opened
 		local
 			open_parms: WEX_MCI_OPEN_PARMS
-		do
-			!! open_parms.make (parent, device_name)
+		do 
+			create open_parms.make (parent, device_name)
 			open_device (open_parms, Mci_open_type)
 		end
 
-	open_shared is
+	open_shared
 			-- Open the cdaudio device shared.
 		local
 			open_parms: WEX_MCI_OPEN_PARMS
-		do
-			!! open_parms.make (parent, device_name)
+		do 
+			create open_parms.make (parent, device_name)
 			open_device (open_parms, Mci_open_type +
 				Mci_open_shareable)
 		end
 
-	set_format_tmsf is
+	set_format_tmsf
 			-- Set time format to tracks/minutes/seconds/frames.
 		require
 			opened: opened
 		local
 			set_parms: WEX_MCI_SET_PARMS
-		do
-			!! set_parms.make (parent)
+		do 
+			create set_parms.make (parent)
 			set_parms.set_time_format (Mci_format_tmsf)
 			set_device (set_parms, Mci_set_time_format)
 		ensure
 			tmsf_format: tmsf_format
 		end
 
-	play_track (track: INTEGER) is
+	play_track (track: INTEGER)
 			-- Start playback of track `track'.
 		require
 			opened: opened
@@ -109,8 +109,8 @@ feature -- Access
 			to_pos: INTEGER
 		do
 			from_pos := cwin_mci_make_tmsf (track, 0, 0, 0)
-			to_pos := cwin_mci_make_tmsf (track + 1, 0, 0, 0)
-			!! play_parms.make (parent, from_pos, to_pos)
+			to_pos := cwin_mci_make_tmsf (track + 1, 0, 0, 0) 
+			create play_parms.make (parent, from_pos, to_pos)
 			if not (track = number_of_tracks) then
 				play_device (play_parms, Mci_from + Mci_to)
 			else
@@ -118,7 +118,7 @@ feature -- Access
 			end
 		end
 
-	play_track_continue (track: INTEGER) is
+	play_track_continue (track: INTEGER)
 			-- Start playback of track `track' and play any
 			-- tracks after `track'.
 		require
@@ -130,14 +130,14 @@ feature -- Access
 			play_parms: WEX_MCI_PLAY_PARMS
 			from_pos: INTEGER
 		do
-			from_pos := cwin_mci_make_tmsf (track, 0, 0, 0)
-			!! play_parms.make (parent, from_pos, 0)
+			from_pos := cwin_mci_make_tmsf (track, 0, 0, 0) 
+			create play_parms.make (parent, from_pos, 0)
 			play_device (play_parms, Mci_from)
 		end
 
 feature {NONE} -- Implementation
 
-	device_name: STRING is
+	device_name: STRING
 			-- Device name
 		once
 			Result := "cdaudio"

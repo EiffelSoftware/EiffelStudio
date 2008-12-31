@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents the MCI_SET_PARMS structure."
 	status: "See notice at end of class."
 	author: "Robin van Ommeren"
@@ -16,13 +16,13 @@ inherit
 			structure_size
 		end
 
-creation
+create
 	make,
 	make_by_pointer
 
 feature {NONE} -- Initialization
 
-	make (a_parent: WEL_COMPOSITE_WINDOW) is
+	make (a_parent: WEL_COMPOSITE_WINDOW)
 			-- Create object and fill structure.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	time_format: INTEGER is
+	time_format: INTEGER
 			-- Time format.
 		require
 			exists: exists
@@ -46,7 +46,7 @@ feature -- Status report
 			Result := cwex_mci_set_get_time_format (item)
 		end
 
-	audio_channel: INTEGER is
+	audio_channel: INTEGER
 			-- Audio channel.
 		require
 			exists: exists
@@ -56,7 +56,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_time_format (format: INTEGER) is
+	set_time_format (format: INTEGER)
 			-- Set time format.
 		require
 			exists: exists
@@ -66,7 +66,7 @@ feature -- Status setting
 			time_format_set: time_format = format
 		end
 
-	set_audio_channel (channel: INTEGER) is
+	set_audio_channel (channel: INTEGER)
 			-- Set audio channel.
 		require
 			exists: exists
@@ -78,7 +78,7 @@ feature -- Status setting
 
 feature {WEL_STRUCTURE}
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_mci_set_parms
@@ -86,29 +86,29 @@ feature {WEL_STRUCTURE}
 
 feature {NONE} -- Externals
 
-	c_size_of_mci_set_parms: INTEGER is
+	c_size_of_mci_set_parms: INTEGER
 		external
 			"C [macro <set.h>]"
 		alias
 			"sizeof (MCI_SET_PARMS)"
 		end
 
-	cwex_mci_set_set_time_format (ptr: POINTER; value: INTEGER) is
+	cwex_mci_set_set_time_format (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <set.h>]"
 		end
 
-	cwex_mci_set_set_audio (ptr: POINTER; value: INTEGER) is
+	cwex_mci_set_set_audio (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <set.h>]"
 		end
 
-	cwex_mci_set_get_time_format (ptr: POINTER): INTEGER is
+	cwex_mci_set_get_time_format (ptr: POINTER): INTEGER
 		external
 			"C [macro <set.h>]"
 		end
 
-	cwex_mci_set_get_audio (ptr: POINTER): INTEGER is
+	cwex_mci_set_get_audio (ptr: POINTER): INTEGER
 		external
 			"C [macro <set.h>]"
 		end

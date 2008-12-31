@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants used with the MCI_WHERE command %
 		%for the digitalaudio MCI device."
 	status: "See notice at end of class."
@@ -11,42 +11,42 @@ class
 
 feature -- Access
 
-	Mci_dgv_where_destination: INTEGER is
+	Mci_dgv_where_destination: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_DGV_WHERE_DESTINATION"
 		end
 
-	Mci_dgv_where_frame: INTEGER is
+	Mci_dgv_where_frame: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_DGV_WHERE_FRAME"
 		end
 
-	Mci_dgv_where_max: INTEGER is
+	Mci_dgv_where_max: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_DGV_WHERE_MAX"
 		end
 
-	Mci_dgv_where_source: INTEGER is
+	Mci_dgv_where_source: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_DGV_WHERE_SOURCE"
 		end
 
-	Mci_dgv_where_video: INTEGER is
+	Mci_dgv_where_video: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_DGV_WHERE_VIDEO"
 		end
 
-	Mci_dgv_where_window: INTEGER is
+	Mci_dgv_where_window: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants used with the MCI_SAVE command %
 		%for any MCI device capable of this command."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Access
 
-	Mci_save_file: INTEGER is
+	Mci_save_file: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias

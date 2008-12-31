@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants used for notification"
 	status: "See notice at end of class."
 	author: "Robin van Ommeren"
@@ -10,28 +10,28 @@ class
 
 feature -- Access
 
-	Mm_mcinotify: INTEGER is
+	Mm_mcinotify: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MM_MCINOTIFY"
 		end
 
-	Mm_mcisignal: INTEGER is
+	Mm_mcisignal: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MM_MCISIGNAL"
 		end
 
-	Mm_mixm_line_change: INTEGER is
+	Mm_mixm_line_change: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MM_MIXM_LINE_CHANGE"
 		end
 
-	Mm_mixm_control_change: INTEGER is
+	Mm_mixm_control_change: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias

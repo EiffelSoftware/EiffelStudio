@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents the MCI_WAVE_SET_PARMS structure."
 	status: "See notice at end of class."
 	author: "Robin van Ommeren"
@@ -16,13 +16,13 @@ inherit
 			structure_size
 		end
 
-creation
+create
 	make,
 	make_by_pointer
 
 feature {NONE} -- Initialization
 
-	make (a_parent: WEL_COMPOSITE_WINDOW) is
+	make (a_parent: WEL_COMPOSITE_WINDOW)
 		require
 			a_parent_not_void: a_parent /= Void
 			a_parent_exists: a_parent.exists
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-        input_channel: INTEGER is
+        input_channel: INTEGER
                         -- Input channel
                 require
                         exists: exists
@@ -45,7 +45,7 @@ feature -- Status report
                         Result := cwex_mci_wave_get_input (item)
                 end
 
-        output_device: INTEGER is
+        output_device: INTEGER
                         -- Output device to use
                         --| Only usefull if more than one device
 			--| is installed on system.
@@ -55,7 +55,7 @@ feature -- Status report
                         Result := cwex_mci_wave_get_output (item)
                 end
 
-        format_tag: INTEGER is
+        format_tag: INTEGER
                         -- Format used.
                 require
                         exists: exists
@@ -63,7 +63,7 @@ feature -- Status report
                         Result := cwex_mci_wave_get_format_tag (item)
                 end
 
-        channels: INTEGER is
+        channels: INTEGER
                         -- Channels to use, 1 for mono 2 for stereo
                 require
                         exists: exists
@@ -71,7 +71,7 @@ feature -- Status report
                         Result := cwex_mci_wave_get_channels (item)
                 end
 
-        samples_per_second: INTEGER is
+        samples_per_second: INTEGER
                         -- Samples per seconds to use for recording.
                 require
                         exists: exists
@@ -79,7 +79,7 @@ feature -- Status report
                         Result := cwex_mci_wave_get_samples_per_second (item)
                 end
 
-        bytes_per_second: INTEGER is
+        bytes_per_second: INTEGER
                         -- Bytes per seconds to use for recording.
                 require
                         exists: exists
@@ -87,7 +87,7 @@ feature -- Status report
                         Result := cwex_mci_wave_get_bytes_per_second (item)
                 end
 
-        block_alignment: INTEGER is
+        block_alignment: INTEGER
                         -- Block align
                 require
                         exists: exists
@@ -95,7 +95,7 @@ feature -- Status report
                         Result := cwex_mci_wave_get_block_align (item)
                 end
 
-        bits_per_sample: INTEGER is
+        bits_per_sample: INTEGER
                         -- Bits per sample to use for recording.
                 require
                         exists: exists
@@ -105,7 +105,7 @@ feature -- Status report
 
 feature -- Status setting
 
-        set_input_channel (channel: INTEGER) is
+        set_input_channel (channel: INTEGER)
                         -- Set input channel to use.
                 require
                         exists: exists
@@ -115,7 +115,7 @@ feature -- Status setting
                         channel_set: channel = input_channel
                 end
 
-        set_output_device (device: INTEGER) is
+        set_output_device (device: INTEGER)
                         -- Set output device to use.
                 require
                         exists: exists
@@ -125,7 +125,7 @@ feature -- Status setting
                         device_set: device = output_device
                 end
 
-        set_format_tag (tag: INTEGER) is
+        set_format_tag (tag: INTEGER)
                         -- Set format to use.
                 require
                         exists: exists
@@ -135,7 +135,7 @@ feature -- Status setting
                         tag_set: format_tag = tag
                 end
 
-        set_channels (number: INTEGER) is
+        set_channels (number: INTEGER)
                         -- Set number of channels to use.
                 require
                         exists: exists
@@ -147,7 +147,7 @@ feature -- Status setting
                         channels_set: channels = number
                 end
 
-        set_samples_per_second (number: INTEGER) is
+        set_samples_per_second (number: INTEGER)
                         -- Set a number of samples per second.
                 require
                         exists: exists
@@ -157,7 +157,7 @@ feature -- Status setting
                         samples_per_second_set: samples_per_second = number
                 end
 
-        set_bytes_per_second (number: INTEGER) is
+        set_bytes_per_second (number: INTEGER)
                         -- Set a number of bytes per second
                 require
                         exists: exists
@@ -167,7 +167,7 @@ feature -- Status setting
                         bytes_per_second_set: bytes_per_second = number
                 end
 
-        set_block_alignment (number: INTEGER) is
+        set_block_alignment (number: INTEGER)
                         -- Set alignment to `number'
                 require
                         exists: exists
@@ -177,7 +177,7 @@ feature -- Status setting
                         block_alignment_set: block_alignment = number
                 end
 
-        set_bits_per_sample (number: INTEGER) is
+        set_bits_per_sample (number: INTEGER)
                         -- Set number of bits per sample
                 require
                         exists: exists
@@ -189,7 +189,7 @@ feature -- Status setting
 
 feature {WEL_STRUCTURE}
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_mci_wave_set_parms
@@ -197,89 +197,89 @@ feature {WEL_STRUCTURE}
 
 feature {NONE} -- Externals
 
-	c_size_of_mci_wave_set_parms: INTEGER is
+	c_size_of_mci_wave_set_parms: INTEGER
 		external
 			"C [macro <wave_set.h>]"
 		alias
 			"sizeof (MCI_WAVE_SET_PARMS)"
 		end
 
-        cwex_mci_wave_set_input (p: POINTER; value: INTEGER) is
+        cwex_mci_wave_set_input (p: POINTER; value: INTEGER)
 		external
 			"C [macro <wave_set.h>]"
 		end
 
-        cwex_mci_wave_set_output (p: POINTER; value: INTEGER) is
+        cwex_mci_wave_set_output (p: POINTER; value: INTEGER)
 		external
 			"C [macro <wave_set.h>]"
 		end
 
-        cwex_mci_wave_set_format_tag (p: POINTER; value: INTEGER) is
+        cwex_mci_wave_set_format_tag (p: POINTER; value: INTEGER)
 		external
 			"C [macro <wave_set.h>]"
 		end
 
-        cwex_mci_wave_set_channels (p: POINTER; value: INTEGER) is
+        cwex_mci_wave_set_channels (p: POINTER; value: INTEGER)
 		external
 			"C [macro <wave_set.h>]"
 		end
 
-        cwex_mci_wave_set_samples_per_second (p: POINTER; value: INTEGER) is
+        cwex_mci_wave_set_samples_per_second (p: POINTER; value: INTEGER)
 		external
 			"C [macro <wave_set.h>]"
 		end
 
-        cwex_mci_wave_set_bytes_per_second (p: POINTER; value: INTEGER) is
+        cwex_mci_wave_set_bytes_per_second (p: POINTER; value: INTEGER)
 		external
 			"C [macro <wave_set.h>]"
 		end
 
-        cwex_mci_wave_set_block_align (p: POINTER; value: INTEGER) is
+        cwex_mci_wave_set_block_align (p: POINTER; value: INTEGER)
 		external
 			"C [macro <wave_set.h>]"
 		end
 
-        cwex_mci_wave_set_bits_per_sample (p: POINTER; value: INTEGER) is
+        cwex_mci_wave_set_bits_per_sample (p: POINTER; value: INTEGER)
 		external
 			"C [macro <wave_set.h>]"
 		end
 
-        cwex_mci_wave_get_input (p: POINTER): INTEGER is
+        cwex_mci_wave_get_input (p: POINTER): INTEGER
 		external
 			"C [macro <wave_set.h>]"
 		end
 
-        cwex_mci_wave_get_output (p: POINTER): INTEGER is
+        cwex_mci_wave_get_output (p: POINTER): INTEGER
 		external
 			"C [macro <wave_set.h>]"
 		end
 
-        cwex_mci_wave_get_format_tag (p: POINTER): INTEGER is
+        cwex_mci_wave_get_format_tag (p: POINTER): INTEGER
 		external
 			"C [macro <wave_set.h>]"
 		end
 
-        cwex_mci_wave_get_channels (p: POINTER): INTEGER is
+        cwex_mci_wave_get_channels (p: POINTER): INTEGER
 		external
 			"C [macro <wave_set.h>]"
 		end
 
-        cwex_mci_wave_get_samples_per_second (p: POINTER): INTEGER is
+        cwex_mci_wave_get_samples_per_second (p: POINTER): INTEGER
 		external
 			"C [macro <wave_set.h>]"
 		end
 
-        cwex_mci_wave_get_bytes_per_second (p: POINTER): INTEGER is
+        cwex_mci_wave_get_bytes_per_second (p: POINTER): INTEGER
 		external
 			"C [macro <wave_set.h>]"
 		end
 
-        cwex_mci_wave_get_block_align (p: POINTER): INTEGER is
+        cwex_mci_wave_get_block_align (p: POINTER): INTEGER
 		external
 			"C [macro <wave_set.h>]"
 		end
 
-        cwex_mci_wave_get_bits_per_sample (p: POINTER): INTEGER is
+        cwex_mci_wave_get_bits_per_sample (p: POINTER): INTEGER
 		external
 			"C [macro <wave_set.h>]"
 		end

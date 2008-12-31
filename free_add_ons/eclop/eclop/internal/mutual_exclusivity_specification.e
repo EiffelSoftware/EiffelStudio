@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Specification of a set of mutually exclusive command line options."
 	copyright: "Copyright (c) 2003 Paul Cohen."
 	license: "Eiffel Forum License v2 (see license.txt)"
@@ -8,12 +8,12 @@ indexing
 	
 class MUTUAL_EXCLUSIVITY_SPECIFICATION
 	
-creation	
+create	
 	 {COMMAND_LINE_SYNTAX} make
 	
 feature {NONE} -- Initialization
 	
-	make (spec: STRING; opts: HASH_TABLE [OPTION_SPECIFICATION, STRING]) is
+	make (spec: STRING; opts: HASH_TABLE [OPTION_SPECIFICATION, STRING])
 			-- Create a new specification from the textual
 			-- specification `spec'. Modify the option
 			-- specifications in `opts' as appropriate!
@@ -50,7 +50,7 @@ feature {NONE} -- Implementation
 			-- the mutual exclusivity specification hashed by
 			-- option name
 		
-	parse is
+	parse
 			--  Parse the textual `specification'.
 		require
 			specification_not_void: specification /= Void
@@ -79,7 +79,7 @@ feature {NONE} -- Implementation
 			end
 		end
 	
-	parse_options (opt_names: LIST [STRING]) is
+	parse_options (opt_names: LIST [STRING])
 			-- Parse the list of option names in `opt_names'.
 		require
 			opt_names_not_void: opt_names /= Void
@@ -136,7 +136,7 @@ feature {NONE} -- Implementation
 			end
 		end
 	
-	set_mutual_exclusivity (opt_names: LIST [STRING]) is
+	set_mutual_exclusivity (opt_names: LIST [STRING])
 			-- Update each appropriate option specification in
 			-- `specified_options' with inormation on which options
 			-- it is mutually exclusive based on `opt_names'.
@@ -163,7 +163,7 @@ feature {NONE} -- Implementation
 			end
 		end
 	
-	is_valid_option_name_syntax (s: STRING): BOOLEAN is
+	is_valid_option_name_syntax (s: STRING): BOOLEAN
 			-- Is `s' a valid option name?
 		require
 			valid_s: s /= Void and then s.count > 0
@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 			end
 		end
 	
-	is_alpha_numerical_string (s: STRING): BOOLEAN is
+	is_alpha_numerical_string (s: STRING): BOOLEAN
 			-- Is `s' an alphanumerical string?
 		require
 			s_not_void: s /= Void
@@ -204,7 +204,7 @@ feature {NONE} -- Implementation
 			end
 		end
 	
-	is_alpha_numericalhyphen_string (s: STRING): BOOLEAN is
+	is_alpha_numericalhyphen_string (s: STRING): BOOLEAN
 			-- Does `s' only contain an alphanumerical or '-'
 			-- characters? 
 		require

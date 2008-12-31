@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents the MCI_PLAY_PARMS structure."
 	status: "See notice at end of class."
 	author: "Robin van Ommeren"
@@ -16,13 +16,13 @@ inherit
 			structure_size
 		end
 
-creation
+create
 	make,
 	make_by_pointer
 
 feature {NONE} -- Initialization
 
-	make (a_parent: WEL_COMPOSITE_WINDOW; a_play_from, a_play_to: INTEGER) is
+	make (a_parent: WEL_COMPOSITE_WINDOW; a_play_from, a_play_to: INTEGER)
 			-- Make object and fill structure.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	play_from: INTEGER is
+	play_from: INTEGER
 			-- Postion to play from.
 		require
 			exists: exists
@@ -52,7 +52,7 @@ feature -- Status report
 			positive_result: Result >= 0
 		end
 
-	play_to: INTEGER is
+	play_to: INTEGER
 			-- Position to play to.
 		require
 			exists: exists
@@ -64,7 +64,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_play_from (a_play_from: INTEGER) is
+	set_play_from (a_play_from: INTEGER)
 			-- Set postion to play from.
 		require
 			exists: exists
@@ -75,7 +75,7 @@ feature -- Status setting
 			play_from_set: play_from = a_play_from
 		end
 
-	set_play_to (a_play_to: INTEGER) is
+	set_play_to (a_play_to: INTEGER)
 			-- Set position to play to.
 		require
 			exists: exists
@@ -88,7 +88,7 @@ feature -- Status setting
 		
 feature {WEL_STRUCTURE}
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_mci_play_parms
@@ -96,30 +96,30 @@ feature {WEL_STRUCTURE}
 
 feature {NONE} -- Externals
 
-	c_size_of_mci_play_parms: INTEGER is
+	c_size_of_mci_play_parms: INTEGER
 		external
 			"C [macro <play.h>]"
 		alias
 			"sizeof (MCI_PLAY_PARMS)"
 		end
 
-	cwex_mci_play_set_from (p: POINTER; value: INTEGER) is
+	cwex_mci_play_set_from (p: POINTER; value: INTEGER)
 		external
 			"C [macro <play.h>]"
 		end
 
-	cwex_mci_play_set_to (p: POINTER; value: INTEGER) is
+	cwex_mci_play_set_to (p: POINTER; value: INTEGER)
 		external
 			"C [macro <play.h>]"
 		end
 
 
-	cwex_mci_play_get_from (p: POINTER): INTEGER is
+	cwex_mci_play_get_from (p: POINTER): INTEGER
 		external
 			"C [macro <play.h>]"
 		end
 
-	cwex_mci_play_get_to (p: POINTER): INTEGER is
+	cwex_mci_play_get_to (p: POINTER): INTEGER
 		external
 			"C [macro <play.h>]"
 		end

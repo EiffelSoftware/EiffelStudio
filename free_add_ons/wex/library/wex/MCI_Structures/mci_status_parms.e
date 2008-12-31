@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents the MCI_STATUS_PARMS structure."
 	status: "See notice at end of class."
 	author: "Robin van Ommeren"
@@ -16,13 +16,13 @@ inherit
 			structure_size
 		end
 
-creation
+create
 	make,
 	make_by_pointer
 
 feature {NONE} -- Initialization
 
-	make (a_parent: WEL_COMPOSITE_WINDOW; a_status_item: INTEGER) is
+	make (a_parent: WEL_COMPOSITE_WINDOW; a_status_item: INTEGER)
 		require
 			a_parent_not_void: a_parent /= Void
 			a_parent_exists: a_parent.exists
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	query_result: INTEGER is
+	query_result: INTEGER
 			-- Result of query.
 		require
 			exists: exists
@@ -46,7 +46,7 @@ feature -- Status report
 			Result := cwex_mci_status_get_result (item)
 		end
 
-	status_item: INTEGER is
+	status_item: INTEGER
 			-- Item to query about.
 		require
 			exists: exists
@@ -54,7 +54,7 @@ feature -- Status report
 			Result := cwex_mci_status_get_status (item)
 		end
 
-	track: INTEGER is
+	track: INTEGER
 			-- Track to query about.
 		require
 			exists: exists
@@ -64,7 +64,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_status_item (value: INTEGER) is
+	set_status_item (value: INTEGER)
 			-- Set item to query about.
 		require
 			exists: exists
@@ -74,7 +74,7 @@ feature -- Status setting
 			track_set: status_item = value
 		end
 
-	set_track (value: INTEGER) is
+	set_track (value: INTEGER)
 			-- Set track to query about.
 		require
 			exists: exists
@@ -86,7 +86,7 @@ feature -- Status setting
 
 feature {WEL_STRUCTURE}
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_mci_status_parms
@@ -94,34 +94,34 @@ feature {WEL_STRUCTURE}
 
 feature {NONE} -- Externals
 
-	c_size_of_mci_status_parms: INTEGER is
+	c_size_of_mci_status_parms: INTEGER
 		external
 			"C [macro <status.h>]"
 		alias
 			"sizeof (MCI_STATUS_PARMS)"
 		end
 
-	cwex_mci_status_set_status (ptr: POINTER; value: INTEGER) is
+	cwex_mci_status_set_status (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <status.h>]"
 		end
 
-	cwex_mci_status_set_track (ptr: POINTER; value: INTEGER) is
+	cwex_mci_status_set_track (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <status.h>]"
 		end
 
-	cwex_mci_status_get_result (ptr: POINTER): INTEGER is
+	cwex_mci_status_get_result (ptr: POINTER): INTEGER
 		external
 			"C [macro <status.h>]"
 		end
 
-	cwex_mci_status_get_status (ptr: POINTER): INTEGER is
+	cwex_mci_status_get_status (ptr: POINTER): INTEGER
 		external
 			"C [macro <status.h>]"
 		end
 
-	cwex_mci_status_get_track (ptr: POINTER): INTEGER is
+	cwex_mci_status_get_track (ptr: POINTER): INTEGER
 		external
 			"C [macro <status.h>]"
 		end

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants used with the MCI_FORMAT command %
 		%for any MCI device."
 	status: "See notice at end of class."
@@ -11,77 +11,77 @@ class
 
 feature -- Access
 
-	Mci_format_bytes: INTEGER is
+	Mci_format_bytes: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_FORMAT_BYTES"
 		end
 
-	Mci_format_frames: INTEGER is
+	Mci_format_frames: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_FORMAT_FRAMES"
 		end
 
-	Mci_format_hms: INTEGER is
+	Mci_format_hms: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_FORMAT_HMS"
 		end
 
-	Mci_format_milliseconds: INTEGER is
+	Mci_format_milliseconds: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_FORMAT_MILLISECONDS"
 		end
 
-	Mci_format_msf: INTEGER is
+	Mci_format_msf: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_FORMAT_MSF"
 		end
 
-	Mci_format_samples: INTEGER is
+	Mci_format_samples: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_FORMAT_SAMPLES"
 		end
 
-	Mci_format_smpte_24: INTEGER is
+	Mci_format_smpte_24: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_FORMAT_SMPTE_24"
 		end
 
-	Mci_format_smpte_25: INTEGER is
+	Mci_format_smpte_25: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_FORMAT_SMPTE_25"
 		end
 
-	Mci_format_smpte_30: INTEGER is
+	Mci_format_smpte_30: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_FORMAT_SMPTE_30"
 		end
 
-	Mci_format_smpte_30drop: INTEGER is
+	Mci_format_smpte_30drop: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_FORMAT_SMPTE_30DROP"
 		end
 
-	Mci_format_tmsf: INTEGER is
+	Mci_format_tmsf: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias

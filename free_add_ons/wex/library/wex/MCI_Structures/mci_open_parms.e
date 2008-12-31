@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents the MCI_OPEN_PARMS structure."
 	status: "See notice at end of class."
 	author: "Robin van Ommeren"
@@ -16,13 +16,13 @@ inherit
 			structure_size
 		end
 
-creation
+create
 	make,
 	make_by_pointer
 
 feature -- Initialization
 
-	make (a_parent: WEL_COMPOSITE_WINDOW; a_device: STRING) is
+	make (a_parent: WEL_COMPOSITE_WINDOW; a_device: STRING)
 		require
 			a_parent_not_void: a_parent /= Void
 			a_parent_exists: a_parent.exists
@@ -40,7 +40,7 @@ feature -- Initialization
 
 feature -- Status report
 
-	device_id: INTEGER is
+	device_id: INTEGER
 			-- Id of the openend device.
 		require
 			exists: exists
@@ -50,7 +50,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_device_type (type: STRING) is
+	set_device_type (type: STRING)
 		require
 			exists: exists
 			type_not_void: type /= Void
@@ -62,7 +62,7 @@ feature -- Status setting
 			cwex_mci_open_set_device_type (item, $a)
 		end
 
-	set_element_name (element: STRING) is
+	set_element_name (element: STRING)
 			-- Set the filename to be opened.
 		require
 			exists: exists
@@ -75,7 +75,7 @@ feature -- Status setting
 			cwex_mci_open_set_element_name (item, $a)
 		end
 
-	set_alias (a_alias: STRING) is
+	set_alias (a_alias: STRING)
 			-- Set the filename to be opened.
 		require
 			exists: exists
@@ -90,7 +90,7 @@ feature -- Status setting
 
 feature {WEL_STRUCTURE}
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_mci_open_parms
@@ -98,29 +98,29 @@ feature {WEL_STRUCTURE}
 
 feature {NONE} -- Externals
 
-	c_size_of_mci_open_parms: INTEGER is
+	c_size_of_mci_open_parms: INTEGER
 		external
 			"C [macro <open.h>]"
 		alias
 			"sizeof (MCI_OPEN_PARMS)"
 		end
 
-	cwex_mci_open_set_device_type (ptr, value: POINTER) is
+	cwex_mci_open_set_device_type (ptr, value: POINTER)
 		external
 			"C [macro <open.h>]"
 		end
 
-	cwex_mci_open_set_element_name (ptr, value: POINTER) is
+	cwex_mci_open_set_element_name (ptr, value: POINTER)
 		external
 			"C [macro <open.h>]"
 		end
 
-	cwex_mci_open_set_alias (ptr, value: POINTER) is
+	cwex_mci_open_set_alias (ptr, value: POINTER)
 		external
 			"C [macro <open.h>]"
 		end
 
-	cwex_mci_open_get_device (ptr: POINTER): INTEGER is
+	cwex_mci_open_get_device (ptr: POINTER): INTEGER
 		external
 			"C [macro <open.h>]"
 		end

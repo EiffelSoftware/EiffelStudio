@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants used with any MCI device"
 	status: "See notice at end of class."
 	author: "Robin van Ommeren"
@@ -10,259 +10,259 @@ class
 
 feature -- Access
 
-	Mci_from: INTEGER is
+	Mci_from: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_FROM"
 		end
 
-	Mci_notify: INTEGER is
+	Mci_notify: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_NOTIFY"
 		end
 
-	Mci_wait: INTEGER is
+	Mci_wait: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_WAIT"
 		end
 
-	Mci_open_shareable: INTEGER is
+	Mci_open_shareable: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_OPEN_SHAREABLE"
 		end
 
-	Mci_open_element: INTEGER is
+	Mci_open_element: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_OPEN_ELEMENT"
 		end
 
-	Mci_open_type: INTEGER is
+	Mci_open_type: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_OPEN_TYPE"
 		end
 
-	Mci_break: INTEGER is
+	Mci_break: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_BREAK"
 		end
 
-	Mci_escape: INTEGER is
+	Mci_escape: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_ESCAPE"
 		end
 
-	Mci_set: INTEGER is
+	Mci_set: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_SET"
 		end
 
-	Mci_spin: INTEGER is
+	Mci_spin: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_SPIN"
 		end
 
-	Mci_freeze: INTEGER is
+	Mci_freeze: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_FREEZE"
 		end
 
-	Mci_load: INTEGER is
+	Mci_load: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_LOAD"
 		end
 
-	Mci_pause: INTEGER is
+	Mci_pause: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_PAUSE"
 		end
 
-	Mci_play: INTEGER is
+	Mci_play: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_PLAY"
 		end
 
-	Mci_resume: INTEGER is
+	Mci_resume: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_RESUME"
 		end
 
-	Mci_stop: INTEGER is
+	Mci_stop: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_STOP"
 		end
 
-	Mci_unfreeze: INTEGER is
+	Mci_unfreeze: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_UNFREEZE"
 		end
 
-	Mci_cue: INTEGER is
+	Mci_cue: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_CUE"
 		end
 
-	Mci_seek: INTEGER is
+	Mci_seek: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_SEEK"
 		end
 
-	Mci_step: INTEGER is
+	Mci_step: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_STEP"
 		end
 
-	Mci_copy: INTEGER is
+	Mci_copy: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_COPY"
 		end
 
-	Mci_cut: INTEGER is
+	Mci_cut: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_CUT"
 		end
 
-	Mci_delete: INTEGER is
+	Mci_delete: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_DELETE"
 		end
 
-	Mci_paste: INTEGER is
+	Mci_paste: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_PASTE"
 		end
 
-	Mci_close: INTEGER is
+	Mci_close: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_CLOSE"
 		end
 
-	Mci_open: INTEGER is
+	Mci_open: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_OPEN"
 		end
 
-	Mci_realize: INTEGER is
+	Mci_realize: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_REALIZE"
 		end
 
-	Mci_update: INTEGER is
+	Mci_update: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_UPDATE"
 		end
 
-	Mci_getdevcaps: INTEGER is
+	Mci_getdevcaps: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_GETDEVCAPS"
 		end
 
-	Mci_info: INTEGER is
+	Mci_info: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_INFO"
 		end
 
-	Mci_status: INTEGER is
+	Mci_status: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_STATUS"
 		end
 
-	Mci_sysinfo: INTEGER is
+	Mci_sysinfo: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_SYSINFO"
 		end
 
-	Mci_record: INTEGER is
+	Mci_record: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_RECORD"
 		end
 
-	Mci_save: INTEGER is
+	Mci_save: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_SAVE"
 		end
 
-	Mci_put: INTEGER is
+	Mci_put: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_PUT"
 		end
 
-	Mci_where: INTEGER is
+	Mci_where: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_WHERE"
 		end
 
-	Mci_window: INTEGER is
+	Mci_window: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias

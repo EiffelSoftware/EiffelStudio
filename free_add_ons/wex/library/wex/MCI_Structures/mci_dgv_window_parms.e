@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents the MCI_DGV_WINDOW_PARMS structure."
 	status: "See notice at end of class."
 	author: "Robin van Ommeren"
@@ -16,13 +16,13 @@ inherit
 			structure_size
 		end
 
-creation
+create
 	make,
 	make_by_pointer
 
 feature {NONE} -- Initialization
 
-	make (a_parent: WEL_COMPOSITE_WINDOW) is
+	make (a_parent: WEL_COMPOSITE_WINDOW)
 			-- Create object and fill structure.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature -- Status setting
 
-	set_display_window (a_display_window: WEL_COMPOSITE_WINDOW) is
+	set_display_window (a_display_window: WEL_COMPOSITE_WINDOW)
 			-- Set the window for display.
 		require
 			exists: exists
@@ -49,7 +49,7 @@ feature -- Status setting
 				cwel_pointer_to_integer (a_display_window.item))
 		end
 
-	set_display_style (a_style: INTEGER) is
+	set_display_style (a_style: INTEGER)
 			-- Set the style of display.
 		require
 			exists: exists
@@ -57,7 +57,7 @@ feature -- Status setting
 			cwex_mci_dgv_window_set_display_style (item, a_style)
 		end
 
-	set_caption (a_caption: STRING) is
+	set_caption (a_caption: STRING)
 			-- Set the caption for the display window.
 		require
 			exists: exists
@@ -71,7 +71,7 @@ feature -- Status setting
 
 feature {WEL_STRUCTURE}
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_mci_dgv_window_parms
@@ -79,29 +79,29 @@ feature {WEL_STRUCTURE}
 
 feature {NONE} -- Externals
 
-	c_size_of_mci_dgv_window_parms: INTEGER is
+	c_size_of_mci_dgv_window_parms: INTEGER
 		external
 			"C [macro <dgv_win.h>]"
 		alias
 			"sizeof (MCI_DGV_WINDOW_PARMS)"
 		end
 
-	cwex_mci_dgv_window_set_display_window (ptr: POINTER; value: INTEGER) is
+	cwex_mci_dgv_window_set_display_window (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <dgv_win.h>]"
 		end
 
-	cwex_mci_dgv_window_set_display_style (ptr: POINTER; value: INTEGER) is
+	cwex_mci_dgv_window_set_display_style (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <dgv_win.h>]"
 		end
 
-	cwex_mci_dgv_window_set_caption (ptr: POINTER; value: POINTER) is
+	cwex_mci_dgv_window_set_caption (ptr: POINTER; value: POINTER)
 		external
 			"C [macro <dgv_win.h>]"
 		end
 
-	cwex_mci_dgv_window_get_display_window (ptr: POINTER): INTEGER is
+	cwex_mci_dgv_window_get_display_window (ptr: POINTER): INTEGER
 		external
 			"C [macro <dgv_win.h>]"
 		end

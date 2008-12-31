@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents the MCI_SEEK_PARMS structure."
 	status: "See notice at end of class."
 	author: "Robin van Ommeren"
@@ -16,13 +16,13 @@ inherit
 			structure_size
 		end
 
-creation
+create
 	make,
 	make_by_pointer
 
 feature {NONE} -- Initialization
 
-	make (a_parent: WEL_COMPOSITE_WINDOW; to_pos: INTEGER) is
+	make (a_parent: WEL_COMPOSITE_WINDOW; to_pos: INTEGER)
 			-- Create object and fill structure.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	position: INTEGER is
+	position: INTEGER
 			-- Position to seek to.
 		require
 			exists: exists
@@ -50,7 +50,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_position (pos: INTEGER) is
+	set_position (pos: INTEGER)
 			-- Set position to seek to.
 		require
 			exists: exists
@@ -62,7 +62,7 @@ feature -- Status setting
 
 feature {WEL_STRUCTURE}
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_mci_seek_parms
@@ -70,19 +70,19 @@ feature {WEL_STRUCTURE}
 
 feature {NONE} -- Externals
 
-	c_size_of_mci_seek_parms: INTEGER is
+	c_size_of_mci_seek_parms: INTEGER
 		external
 			"C [macro <seek.h>]"
 		alias
 			"sizeof (MCI_SEEK_PARMS)"
 		end
 
-	cwex_mci_seek_set_to (ptr: POINTER; value: INTEGER) is
+	cwex_mci_seek_set_to (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <seek.h>]"
 		end
 
-	cwex_mci_seek_get_to (ptr: POINTER): INTEGER is
+	cwex_mci_seek_get_to (ptr: POINTER): INTEGER
 		external
 			"C [macro <seek.h>]"
 		end

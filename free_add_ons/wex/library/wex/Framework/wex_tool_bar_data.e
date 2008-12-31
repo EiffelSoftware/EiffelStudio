@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Helper class for WEX_TOOL_BAR, to parse the user-defined-resource-type TOOLBAR"
 	status: "See notice at end of class."
 	author: "Andreas Leitner"
@@ -7,11 +7,11 @@ indexing
 class WEX_TOOL_BAR_DATA
 inherit
 	WEL_RESOURCE
-creation
+create
 	make_by_id, make_by_name
 feature -- Access
 
-	version: INTEGER is
+	version: INTEGER
 		require
 			exists: exists
 		local
@@ -20,27 +20,27 @@ feature -- Access
 			Result := cwex_tool_bar_data_version (item)
 		end	
 
-	width: INTEGER is
+	width: INTEGER
 		require
 			exists: exists
 		do
 			Result := cwex_tool_bar_data_width (item)
 		end	
 
-	height: INTEGER is
+	height: INTEGER
 		require
 			exists: exists
 		do
 			Result := cwex_tool_bar_data_height (item)
 		end	
-	command_id_count: INTEGER is
+	command_id_count: INTEGER
 		require
 			exists: exists
 		do
 			Result := cwex_tool_bar_data_item_count (item)
 		end
 	
-	command_id_at (index: INTEGER): INTEGER is
+	command_id_at (index: INTEGER): INTEGER
 		require
 			exists: exists
 			index_large_enough: index >= 0
@@ -50,18 +50,18 @@ feature -- Access
 		end
 
 feature {NONE}
-	load_item (hinstance, a_id: POINTER) is
+	load_item (hinstance, a_id: POINTER)
 		do
 			item := cwin_lock_resource (cwin_load_resource (hinstance, 
 									cwin_find_resource (hinstance, a_id, cwin_make_int_resource (241))))
 		end
- destroy_item is
+ destroy_item
 			-- Destroy icon.
 		do
 			item := default_pointer
 		end
 
-	cwin_load_resource (hinstance: POINTER; a_id: POINTER): POINTER is
+	cwin_load_resource (hinstance: POINTER; a_id: POINTER): POINTER
 				-- SDK LoadIcon
 			external
 				"C [macro <wel.h>] (HMODULE, HRSRC): EIF_POINTER"
@@ -69,14 +69,14 @@ feature {NONE}
 				"LoadResource"
 			end;
 	
-	cwin_find_resource (hmodule, lpname, lptype: POINTER): POINTER is
+	cwin_find_resource (hmodule, lpname, lptype: POINTER): POINTER
 				-- SDK LoadIcon
 			external
 				"C [macro <wel.h>] (HMODULE, LPCSTR, LPCSTR): EIF_POINTER"
 			alias 
 				"FindResource"
 			end;
-	cwin_lock_resource (hresdata: POINTER): POINTER is
+	cwin_lock_resource (hresdata: POINTER): POINTER
 				-- SDK LoadIcon
 			external
 				"C [macro <wel.h>] (HGLOBAL): EIF_POINTER"
@@ -84,23 +84,23 @@ feature {NONE}
 				"LockResource"
 			end;
 	
-	cwex_tool_bar_data_version (a_item: POINTER): INTEGER is
+	cwex_tool_bar_data_version (a_item: POINTER): INTEGER
 			external
 				"C"
 			end;
-	cwex_tool_bar_data_width (a_item: POINTER): INTEGER is
+	cwex_tool_bar_data_width (a_item: POINTER): INTEGER
 			external
 				"C"
 			end;
-	cwex_tool_bar_data_height (a_item: POINTER): INTEGER is
+	cwex_tool_bar_data_height (a_item: POINTER): INTEGER
 			external
 				"C"
 			end;
-	cwex_tool_bar_data_item_count (a_item: POINTER): INTEGER is
+	cwex_tool_bar_data_item_count (a_item: POINTER): INTEGER
 			external
 				"C"
 			end;
-	cwex_tool_bar_data_items (a_item: POINTER; index: INTEGER): INTEGER is
+	cwex_tool_bar_data_items (a_item: POINTER; index: INTEGER): INTEGER
 			external
 				"C"
 			end;

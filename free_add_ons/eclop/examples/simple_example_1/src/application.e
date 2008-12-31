@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Simple example program for ECLOP"
 	copyright: "Copyright (c) 2003 Paul Cohen."
 	license: "Eiffel Forum License v2 (see license.txt)"
@@ -8,12 +8,12 @@ indexing
 	
 class APPLICATION
 	
-creation
+create
 	make
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Run the program.
 		local
 			cls: COMMAND_LINE_SYNTAX
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 	
 feature {NONE} -- Implementation
 
-	print_version_info is 
+	print_version_info 
 			-- Print version information.
 		local
 			s: STRING
@@ -52,7 +52,7 @@ feature {NONE} -- Implementation
 			print (s)
 		end
 	
-	operate_on_files is 
+	operate_on_files 
 			-- Main body of program. Operates on `file_names'. 
 		do
 			from
@@ -66,7 +66,7 @@ feature {NONE} -- Implementation
 			end
 		end
 	
-	option_specifications: ARRAY [STRING] is
+	option_specifications: ARRAY [STRING]
 			-- The recognized options of this program
 		once
 			Result := <<"-v,--version#Version information.",

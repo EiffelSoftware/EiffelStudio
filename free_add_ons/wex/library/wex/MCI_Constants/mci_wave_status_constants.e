@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants used with the MCI_STATUS command %
 		%for the waveaudio MCI device."
 	status: "See notice at end of class."
@@ -11,42 +11,42 @@ class
 
 feature -- Access
 
-	Mci_wave_status_avgbytespersec: INTEGER is
+	Mci_wave_status_avgbytespersec: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_WAVE_STATUS_AVGBYTESPERSEC"
 		end
 
-	Mci_wave_status_bitspersample: INTEGER is
+	Mci_wave_status_bitspersample: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_WAVE_STATUS_BITSPERSAMPLE"
 		end
 
-	Mci_wave_status_blockalign: INTEGER is
+	Mci_wave_status_blockalign: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_WAVE_STATUS_BLOCKALIGN"
 		end
 
-	Mci_wave_status_channels: INTEGER is
+	Mci_wave_status_channels: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_WAVE_STATUS_CHANNELS"
 		end
 
-	Mci_wave_status_level: INTEGER is
+	Mci_wave_status_level: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_WAVE_STATUS_LEVEL"
 		end
 
-	Mci_wave_status_samplespersec: INTEGER is
+	Mci_wave_status_samplespersec: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias

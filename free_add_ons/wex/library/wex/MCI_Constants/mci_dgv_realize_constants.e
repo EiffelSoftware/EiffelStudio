@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants used with the MCI_REALIZE command %
 		%for the digitalaudio MCI device."
 	status: "See notice at end of class."
@@ -11,14 +11,14 @@ class
 
 feature -- Access
 
-	Mci_dgv_realize_bkgd: INTEGER is
+	Mci_dgv_realize_bkgd: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_DGV_REALIZE_BKGD"
 		end
 
-	Mci_dgv_realize_norm: INTEGER is
+	Mci_dgv_realize_norm: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "WEX Framework Example Main Window"
 	status: "See notice at end of class."
 	author: "Andreas Leitner"
@@ -20,7 +20,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -29,10 +29,10 @@ feature {NONE} -- Implementation
 
 feature {COMMAND_CMD}
 		
-	command_cmd: CUSTOM_COMMAND_CMD is
+	command_cmd: CUSTOM_COMMAND_CMD
 			-- redefine this feature to customize menu and toolbar commands
-		once
-			!! Result
+		once 
+			create Result
 		end
 
 end -- class MAIN_WINDOW

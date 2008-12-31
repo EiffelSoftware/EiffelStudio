@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Specification of a command line option."
 	copyright: "Copyright (c) 2003 Paul Cohen."
 	license: "Eiffel Forum License v2 (see license.txt)"
@@ -11,12 +11,12 @@ class OPTION_SPECIFICATION
 inherit
 	COMPARABLE
 	
-creation
+create
 	{COMMAND_LINE_SYNTAX} make
    
 feature {NONE} -- Initialization
 	
-	make (spec: STRING) is
+	make (spec: STRING)
 			-- Create a new option specification from the textual
 			-- specification `spec'. 
 		require
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
       
 feature {COMMAND_LINE_PARSER, COMMAND_LINE_SYNTAX, OPTION_SPECIFICATION, PARSED_COMMAND_LINE_ARGUMENT} -- Access
 	
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is this specification valid?
 		do
 			Result := (invalid_reason = Void)
@@ -46,7 +46,7 @@ feature {COMMAND_LINE_PARSER, COMMAND_LINE_SYNTAX, OPTION_SPECIFICATION, PARSED_
 	specification: STRING
 			-- The textual form of the specification
 	
-	matches_name (s: STRING): BOOLEAN is
+	matches_name (s: STRING): BOOLEAN
 			-- Does `s' match either the short_name' or the `long_name'?
 		require
 			s_not_void: s /= Void
@@ -63,7 +63,7 @@ feature {COMMAND_LINE_PARSER, COMMAND_LINE_SYNTAX, OPTION_SPECIFICATION, PARSED_
 			end
 		end
 	
-	has_abbreviation (s: STRING): BOOLEAN is
+	has_abbreviation (s: STRING): BOOLEAN
 			-- Can the option name be abbreviated with `s'?
 		require
 			s_not_void: s /= Void
@@ -77,7 +77,7 @@ feature {COMMAND_LINE_PARSER, COMMAND_LINE_SYNTAX, OPTION_SPECIFICATION, PARSED_
 			end
 		end
 		
-	name: STRING is
+	name: STRING
 			-- Short name if it exists, otherwise the long name
 		do
 			if has_short_name then
@@ -87,7 +87,7 @@ feature {COMMAND_LINE_PARSER, COMMAND_LINE_SYNTAX, OPTION_SPECIFICATION, PARSED_
 			end
 		end
 	
-	has_short_name: BOOLEAN is
+	has_short_name: BOOLEAN
 			-- Does this option have a short name?
 		do
 			Result := short_name /= Void
@@ -96,7 +96,7 @@ feature {COMMAND_LINE_PARSER, COMMAND_LINE_SYNTAX, OPTION_SPECIFICATION, PARSED_
 	short_name: STRING
 			-- The short name
 	
-	has_long_name: BOOLEAN is
+	has_long_name: BOOLEAN
 			-- Does this option have a long name?
 		do
 			Result := long_name /= Void
@@ -114,7 +114,7 @@ feature {COMMAND_LINE_PARSER, COMMAND_LINE_SYNTAX, OPTION_SPECIFICATION, PARSED_
 	has_required_argument: BOOLEAN
 			-- Does it take a required argument(s)?
 	
-	has_argument_name: BOOLEAN is
+	has_argument_name: BOOLEAN
 			-- Does it have an option argument name?
 		do
 			Result := (argument_name /= Void)
@@ -123,7 +123,7 @@ feature {COMMAND_LINE_PARSER, COMMAND_LINE_SYNTAX, OPTION_SPECIFICATION, PARSED_
 	argument_name: STRING
 			-- The name of the option argument
 	
-	has_description: BOOLEAN is
+	has_description: BOOLEAN
 			-- Is there a description?
 		do
 			Result := description /= Void
@@ -132,13 +132,13 @@ feature {COMMAND_LINE_PARSER, COMMAND_LINE_SYNTAX, OPTION_SPECIFICATION, PARSED_
 	description: STRING
 			-- Description
 	
-	is_mutually_exclusive: BOOLEAN is
+	is_mutually_exclusive: BOOLEAN
 			-- Is this an mutually exclusive option?
 		do
 			Result := exclusive_options /= Void
 		end
 	
-	is_exclusive_with (od_name: STRING): BOOLEAN is
+	is_exclusive_with (od_name: STRING): BOOLEAN
 			-- Is this option exclusive with the option named
 			-- `od_name'? 
 		require
@@ -157,7 +157,7 @@ feature {COMMAND_LINE_PARSER, COMMAND_LINE_SYNTAX, OPTION_SPECIFICATION, PARSED_
 		
 feature {MUTUAL_EXCLUSIVITY_SPECIFICATION, OPTION_SPECIFICATION}-- Status setting	
 	
-	set_mutually_exclusive_with (os: like current) is
+	set_mutually_exclusive_with (os: like current)
 			-- Make this option mutually exclusive with `os'.
 		require
 			os_not_void: os /= Void
@@ -173,7 +173,7 @@ feature {MUTUAL_EXCLUSIVITY_SPECIFICATION, OPTION_SPECIFICATION}-- Status settin
 	
 feature -- Comparison
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 		local
 			s1, s2: STRING
 		do
@@ -200,7 +200,7 @@ feature {NONE} -- Implementation
 			-- List of options with which this option is mutually
 			-- exclusive 
 	
-	parse is
+	parse
 			--  Parse the textual `specification'.
 		require
 			specification_not_void: specification /= Void
@@ -239,7 +239,7 @@ feature {NONE} -- Implementation
 			end
 		end
 	
-	parse_names_part (s: STRING) is
+	parse_names_part (s: STRING)
 			-- Parse the names part `s'.
 		require
 			s_not_void: s /= Void 
@@ -264,7 +264,7 @@ feature {NONE} -- Implementation
 			end
 		end
 	
-	parse_name (s: STRING; pos: INTEGER) is
+	parse_name (s: STRING; pos: INTEGER)
 			-- Parse the name `s'. `pos' denotes the starting index
 			-- of the name in the textual specification. It is used
 			-- for error messages.
@@ -312,7 +312,7 @@ feature {NONE} -- Implementation
 			end
 		end
 	
-	old_parse_rules_part (s: STRING; pos: INTEGER) is
+	old_parse_rules_part (s: STRING; pos: INTEGER)
 			-- Parse the rule `s'. `pos' denotes the starting index
 			-- of the name in the textual specification. It is used
 			-- for error messages.
@@ -339,7 +339,7 @@ feature {NONE} -- Implementation
 			end
 		end	
 	
-	parse_rules_part (s: STRING; pos: INTEGER) is
+	parse_rules_part (s: STRING; pos: INTEGER)
 			-- Parse the rule `s'. `pos' denotes the starting index
 			-- of the name in the textual specification. It is used
 			-- for error messages.
@@ -379,7 +379,7 @@ feature {NONE} -- Implementation
 			end
 		end	
 	
-	parse_argument_name (s: STRING; i, pos: INTEGER) is
+	parse_argument_name (s: STRING; i, pos: INTEGER)
 			-- Parse the argument name from `s' beginning at
 			-- `i'. `pos' denotes the starting index of the name in
 			-- the textual specification. It is used for error
@@ -408,7 +408,7 @@ feature {NONE} -- Implementation
 	
 feature {NONE} -- Implementation (Utility)
 	
-	first_occurance_of (char_set, s: STRING; start: INTEGER): INTEGER is
+	first_occurance_of (char_set, s: STRING; start: INTEGER): INTEGER
 			-- The position in `s' where the first occurance of any
 			-- character in `char_set' is found. Scanning begins at
 			-- position `start' in `s'. Returns 0 if no occurance
@@ -436,7 +436,7 @@ feature {NONE} -- Implementation (Utility)
 			non_negative_result: Result >= 0
 		end
 	
-	index_of_non_alphanumerichyphen_character (s: STRING): INTEGER is
+	index_of_non_alphanumerichyphen_character (s: STRING): INTEGER
 			-- Index of first non-alphanumeric or non-hyphen
 			-- character in `s'. Returns 0 if none found.
 		local

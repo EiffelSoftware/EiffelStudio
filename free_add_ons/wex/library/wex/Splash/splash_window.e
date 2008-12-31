@@ -1,4 +1,4 @@
-indexing
+note
 	description: "General notions of a splash."
 	author: "Robin van Ommeren"
 	date: "$Date$"
@@ -29,19 +29,19 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		do
 			make_top("")
 		end
 
 feature -- Basic operations
 
-	exclusive_activate (milli_seconds: INTEGER) is
+	exclusive_activate (milli_seconds: INTEGER)
 			-- Activate splash window for `milli_seconds'.
 			-- "Do not return control" to the application.
 		do
@@ -59,7 +59,7 @@ feature -- Basic operations
 			end
 		end
 
-	activate (milli_seconds: INTEGER) is
+	activate (milli_seconds: INTEGER)
 			-- Activate splash window for `milli_seconds'.
 			-- Return control to the application.
 		require
@@ -71,7 +71,7 @@ feature -- Basic operations
 			is_popped_up: popped_up
 		end
 
-	center_on_screen is
+	center_on_screen
 		local
 			splash_x: INTEGER
 			splash_y: INTEGER
@@ -81,7 +81,7 @@ feature -- Basic operations
 			move (splash_x, splash_y)
 		end
 
-	pop_up is
+	pop_up
 			-- Pop up the splash window.
 		require
 			valid: valid
@@ -93,7 +93,7 @@ feature -- Basic operations
 			popped_up: popped_up
 		end
 
-	pop_down is
+	pop_down
 			-- pop down the splash window.
 		do
 			hide
@@ -107,7 +107,7 @@ feature -- Status report
 	popped_up: BOOLEAN
 			-- Is the splash window popped up?
 
-	valid: BOOLEAN is
+	valid: BOOLEAN
 			-- Can the splash be popped up?
 		do
 			Result := exists
@@ -115,7 +115,7 @@ feature -- Status report
 		
 feature {NONE} -- Behavior
 
-	on_timer (timer_id: INTEGER) is
+	on_timer (timer_id: INTEGER)
 			-- Wm_timer message.
 			-- A Wm_timer has been received from `timer_id'
 		do
@@ -127,35 +127,35 @@ feature {NONE} -- Behavior
 
 feature {NONE} -- Implementation
 
-	splash_timer_id: INTEGER is unique
+	splash_timer_id: INTEGER = unique
 			-- Id for timer
 
-	msg: WEL_MSG is
+	msg: WEL_MSG
 			-- Wel message
-		once
-			!! Result.make
+		once 
+			create Result.make
 		end
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Popup window style (no title bar)
 		once
 			Result := Ws_popupwindow
 		end
 
-	default_ex_style: INTEGER is
+	default_ex_style: INTEGER
 			-- Tool window style (not in taskbar)
 		once
 			Result := Ws_ex_toolwindow 
 		end
 
-	Ws_ex_toolwindow: INTEGER is
+	Ws_ex_toolwindow: INTEGER
 		external
 			"C [macro <windows.h>]"
 		alias
 			"WS_EX_TOOLWINDOW"
 		end
 
-	class_name: STRING is
+	class_name: STRING
 			-- Class name
 		once
 			Result := "SplashWindowWEX"

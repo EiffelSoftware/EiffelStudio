@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command class that handles both menu-commands and toolbar-commands"
 	status: "See notice at end of class."
 	author: "Andreas Leitner"
@@ -13,7 +13,7 @@ inherit
 
 feature
 
-	execute (argument: ANY) is
+	execute (argument: ANY)
 		local
 			mi: WEL_COMMAND_MESSAGE
 		do
@@ -31,19 +31,19 @@ feature
 			end
 		end
 
-	check_command (command_id: INTEGER) is
+	check_command (command_id: INTEGER)
 		do
 			main_window.main_menu.check_item (command_id)
 			main_window.tool_bar.check_button (command_id)
 		end
 
-	uncheck_command (command_id: INTEGER) is
+	uncheck_command (command_id: INTEGER)
 		do
 			main_window.main_menu.uncheck_item (command_id)
 			main_window.tool_bar.uncheck_button (command_id)
 		end
 
-	is_command_checked (command_id: INTEGER): BOOLEAN is
+	is_command_checked (command_id: INTEGER): BOOLEAN
 		do
 			check
 				menu_and_tool_bar_consistent: main_window.main_menu.item_checked (command_id) = main_window.tool_bar.button_checked (command_id)
@@ -56,7 +56,7 @@ feature {NONE}
 
 	main_window: WEX_MAIN_WINDOW
 	
-	execute_messages (command_id: INTEGER) is
+	execute_messages (command_id: INTEGER)
 			-- redefine this routine and place your custom message handling routiens there
 		do
 		end

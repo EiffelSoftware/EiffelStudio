@@ -4,15 +4,15 @@ class
 inherit
 	WEL_APPLICATION
 
-creation
+create
 	make
 
 feature
 
-        main_window: MAIN_WINDOW is
+        main_window: MAIN_WINDOW
 			-- Create the application's main window
-		once
-                        !! Result.make
+		once 
+                        create Result.make
 		end
 
 end -- class APPLICATION

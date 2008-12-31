@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Child window without a background brush"
 	author: "Robin van Ommeren"
 	date: "$Date$"
@@ -14,19 +14,19 @@ inherit
 			class_background
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Implementation
 
-	class_name: STRING is
+	class_name: STRING
 		once
 			Result := "ControlWindowNoBackgroundWEX"
 		end
 
-	class_background: WEL_NULL_BRUSH is
-		once
-			!! Result.make
+	class_background: WEL_NULL_BRUSH
+		once 
+			create Result.make
 		end
 
 end -- class WEX_CONTROL_WINDOW_NO_BACKGROUND

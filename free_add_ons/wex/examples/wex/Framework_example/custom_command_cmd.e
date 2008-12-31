@@ -1,4 +1,4 @@
-indexing
+note
 	description: "WEX Framework Example Menu and Toolbar Commands"
 	status: "See notice at end of class."
 	author: "Andreas Leitner"
@@ -21,7 +21,7 @@ inherit
 	
 feature {NONE}
 
-	execute_messages (command_id: INTEGER) is
+	execute_messages (command_id: INTEGER)
 		do
 			inspect
 				command_id
@@ -33,7 +33,7 @@ feature {NONE}
 			end
 		end
 
-	toggle_flat_tool_bar_style is
+	toggle_flat_tool_bar_style
 		do
 			if is_command_checked (Cmd_flat_tool_bar) then
 				uncheck_command (Cmd_flat_tool_bar)
@@ -44,14 +44,14 @@ feature {NONE}
 			main_window.tool_bar.invalidate
 		end
 
-	execute_test is
+	execute_test
 		do
 			msg_box.information_message_box (main_window, "This is a test (:", "WEX Framework Sample Application")
 		end
 		
-	msg_box: WEL_MSG_BOX is 
-		once
-			!! Result.make
+	msg_box: WEL_MSG_BOX 
+		once 
+			create Result.make
 		end
 
 end -- class CUSTOM_COMMAND_CMD

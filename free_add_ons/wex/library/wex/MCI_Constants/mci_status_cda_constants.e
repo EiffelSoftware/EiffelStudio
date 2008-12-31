@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants used with the MCI_STATUS command %
 		%for the cd audio device."
 	status: "See notice at end of class."
@@ -11,28 +11,28 @@ class
 
 feature -- Access
 
-	Mci_status_media_present: INTEGER is
+	Mci_status_media_present: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_STATUS_MEDIA_PRESENT"
 		end
 
-	Mci_cda_status_type_track: INTEGER is
+	Mci_cda_status_type_track: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_CDA_STATUS_TYPE_TRACK"
 		end
 
-	Mci_cda_track_other: INTEGER is
+	Mci_cda_track_other: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias
 			"MCI_CDA_TRACK_OTHER"
 		end
 
-	Mci_cda_track_audio: INTEGER is
+	Mci_cda_track_audio: INTEGER
 		external
 			"C [macro <wex_mci.h>]"
 		alias

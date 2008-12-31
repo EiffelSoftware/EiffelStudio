@@ -21,15 +21,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: ?like api_feature_name)
+	make (a_name: like api_feature_name)
 			-- Initializes a API unavailable exception with an API function or variable name.
 			--
 			-- `a_name': An API function or variable name.
 		require
-			a_name_attached: a_name /= Void
 			not_a_name_is_empty: not a_name.is_empty
 		do
-			api_feature_name ?= a_name
+			api_feature_name := a_name
 			set_message (once "dynamic feature unavailable")
 		ensure
 			api_feature_name_set: api_feature_name = a_name

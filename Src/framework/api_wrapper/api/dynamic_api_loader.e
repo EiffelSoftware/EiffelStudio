@@ -55,7 +55,7 @@ feature -- Query
 		do
 			Result := api_pointer (a_hnd, a_api_name)
 			if Result = default_pointer then
-				create l_exception.make (a_api_name.as_string_8)
+				create l_exception.make (a_api_name.as_string_8.as_attached)
 				l_exception.raise
 			end
 		ensure

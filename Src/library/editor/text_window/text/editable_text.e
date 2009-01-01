@@ -213,7 +213,7 @@ feature -- Basic Operations
 	uncomment_selection
 			-- Uncomment all lines included in the selection with the string `--'.
 		local
-			ln: EDITOR_LINE
+			ln: like first_line
 			end_loop, cursor_start: BOOLEAN
 			l_comment_token: EDITOR_TOKEN_COMMENT
 			start_pos, end_pos, start_line, end_line: INTEGER
@@ -278,10 +278,10 @@ feature -- Basic Operations
 			end
 			if cursor_start then
 				create cursor.make_from_character_pos (start_pos, start_line, Current)
-				set_selection_cursor (create {EDITOR_CURSOR}.make_from_character_pos (end_pos, end_line, Current))
+				set_selection_cursor (create {like cursor}.make_from_character_pos (end_pos, end_line, Current))
 			else
 				create cursor.make_from_character_pos (end_pos, end_line, Current)
-				set_selection_cursor (create {EDITOR_CURSOR}.make_from_character_pos (start_pos, start_line, Current))
+				set_selection_cursor (create {like cursor}.make_from_character_pos (start_pos, start_line, Current))
 			end
 			if has_selection then
 				enable_selection

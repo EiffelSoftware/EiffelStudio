@@ -18,6 +18,7 @@ inherit
 	SELECTABLE_TEXT_PANEL
 		redefine
 			text_displayed,
+			cursor_type,
 			user_initialization,
 			handle_extended_key,
 			handle_extended_ctrled_key,
@@ -215,6 +216,11 @@ feature -- Access
 
 	text_displayed: EDITABLE_TEXT
 			-- Text displayed in the editor.
+
+	cursor_type: EDITOR_CURSOR
+			-- <Precursor>
+		do
+		end
 
 feature -- Process Vision2 events
 

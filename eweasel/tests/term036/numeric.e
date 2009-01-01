@@ -1,9 +1,6 @@
 indexing
-
 	description:
 		"Objects to which numerical operations are applicable"
-
-	note: "The model is that of a commutative ring."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"

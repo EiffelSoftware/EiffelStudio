@@ -1,6 +1,5 @@
 indexing
 	description: "System's root class"
-	note: "Initial version automatically generated"
 --	assembly_metadata: create {DEBUGGABLE_ATTRIBUTE}.make (True, True) end
 
 class

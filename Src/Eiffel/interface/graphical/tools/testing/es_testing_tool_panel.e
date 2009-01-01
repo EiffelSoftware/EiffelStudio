@@ -678,8 +678,6 @@ feature {NONE} -- Events: test execution
 			-- Try to run all tests in a given list through the background executor. If of some reason
 			-- the tests can not be executed, show an error message.
 		local
-			l_executor: TEST_EXECUTOR_I
-			l_test_suite: TEST_SUITE_S
 			l_conf: TEST_EXECUTOR_CONF
 		do
 			if a_list /= Void then
@@ -874,7 +872,7 @@ feature {NONE} -- Events: notebook
 
 feature {NONE} -- Factory
 
-	create_widget: !EV_VERTICAL_BOX
+	create_widget: EV_VERTICAL_BOX
 			-- <Precursor>
 		do
 			create Result

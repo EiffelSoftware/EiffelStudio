@@ -1,6 +1,6 @@
 note
 	description: "Facility routines to check the validity of TIMEs"
-	legal: "See notice at end of class." 
+	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -34,7 +34,7 @@ feature -- Preconditions
 			code: DATE_TIME_CODE_STRING
 		do
 			create code.make (code_string)
-			Result := code.precise_time and code.correspond (s) and then 
+			Result := code.precise_time and code.correspond (s) and then
 				code.is_time (s)
 		end
 
@@ -52,10 +52,10 @@ feature -- Preconditions
 			compact_time := l_c_t
 			Result := (h >= 0 and h < Hours_in_day and
 				m >= 0 and m < Minutes_in_hour and
-				s >= 0 and s < Seconds_in_minute)	
+				s >= 0 and s < Seconds_in_minute)
 		end
 
-	is_correct_time (h, m: INTEGER; s: DOUBLE; 
+	is_correct_time (h, m: INTEGER; s: DOUBLE;
 					 twelve_hour_scale: BOOLEAN): BOOLEAN
 			-- Is time represented by `h', `m', `code', and `s' correct?
 			-- `twelve_hour_scale' specifies if the hour range is 1 - 12
@@ -71,18 +71,18 @@ feature -- Preconditions
 				min_hour := 0
 				max_hour := Hours_in_day - 1
 			end
-			
-			Result := h >= min_hour and h <= max_hour and then 
-				m >= 0 and m < Minutes_in_hour and then s >= 0 and 
+
+			Result := h >= min_hour and h <= max_hour and then
+				m >= 0 and m < Minutes_in_hour and then s >= 0 and
 				s < Seconds_in_minute
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

@@ -31,7 +31,7 @@ feature -- Access
 		require
 			index_in_range: 1 <= i and i <= last
 		do
-			create Result.make_by_date_time (date_set.item (i), 
+			create Result.make_by_date_time (date_set.item (i),
 				time_set.item (i))
 		end
 
@@ -42,7 +42,7 @@ feature -- Element change
 
 	put (dt: DATE_TIME)
 			-- insert `dt' as last item.
-		require 
+		require
 			exists: dt /= Void
 		do
 			last := last + 1
@@ -66,11 +66,11 @@ invariant
 	last2: last = time_set.last
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

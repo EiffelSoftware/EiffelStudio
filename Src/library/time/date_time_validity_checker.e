@@ -18,7 +18,7 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	ANY
 
 feature -- Preconditions
@@ -64,16 +64,16 @@ feature -- Preconditions
 			-- `twelve_hour_scale' specifies if the hour range is 1 - 12
 			-- (if True) or 0 - 23 (if False).
 		do
-			Result := is_correct_date (y, mo, d) and 
+			Result := is_correct_date (y, mo, d) and
 				is_correct_time (h, mi, s, twelve_hour_scale)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

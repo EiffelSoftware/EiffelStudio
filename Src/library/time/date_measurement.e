@@ -20,7 +20,7 @@ feature -- Access
 			-- Number of monthes associated with current object
 		deferred
 		end
-	 
+
 	year: INTEGER
 			-- Number of years associated with current object
 		deferred
@@ -63,7 +63,7 @@ feature -- Element change
 		ensure
 			month_set: month = m
 		end
-	
+
 	set_year (y: INTEGER)
 			-- Set `year' to `y'.
 		require
@@ -84,11 +84,11 @@ feature -- Status Report
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

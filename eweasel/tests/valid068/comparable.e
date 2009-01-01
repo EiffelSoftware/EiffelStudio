@@ -3,10 +3,6 @@ indexing
 	description:
 		"Objects that may be compared according to a total order relation"
 
-	note:
-		"The basic operation is `<' (less than); others are defined %
-		%in terms of this operation and `is_equal'."
-
 	status: "See notice at end of class"
 	names: comparable, comparison;
 	date: "$Date$"

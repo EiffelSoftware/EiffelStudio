@@ -3,11 +3,6 @@ indexing
 		Objects representing delayed calls to a function,
 		with some arguments possibly still open.
 		]"
-	note: "[
-		Features are the same as those of ROUTINE,
-		with `apply' made effective, and the addition
-		of `last_result' and `item'.
-		]"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"

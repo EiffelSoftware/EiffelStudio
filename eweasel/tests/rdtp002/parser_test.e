@@ -1,6 +1,5 @@
 indexing
 	description	: "System's root class"
-	note		: "Initial version automatically generated"
 
 class
 	PARSER_TEST

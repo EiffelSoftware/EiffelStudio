@@ -1,6 +1,6 @@
 note
 	description: "Parser facility for dates and times"
-	legal: "See notice at end of class." 
+	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -10,7 +10,7 @@ class DATE_TIME_PARSER inherit
 	DATE_TIME_VALIDITY_CHECKER
 		rename
 			year as checker_year, month as checker_month,
-			day as checker_day, hour as checker_hour, minute as checker_minute, 
+			day as checker_day, hour as checker_hour, minute as checker_minute,
 			fine_second as checker_fine_second
 		export
 			{NONE} all
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 		ensure
 			code_set: code = c
 		end
-		
+
 feature -- Access
 
 	source_string: STRING
@@ -104,10 +104,10 @@ feature -- Status report
 	is_set_up: BOOLEAN
 			-- Has parser been set up completely?
 		do
-			Result := (days /= Void) and (months /= Void) and 
+			Result := (days /= Void) and (months /= Void) and
 				(source_string /= Void and then not source_string.is_empty)
 		end
-		
+
 	is_date: BOOLEAN
 			-- Does `source_string' contain a DATE?
 		require
@@ -210,9 +210,9 @@ feature -- Basic operations
 			pos1 := 1
 			pos2 := 1
 			has_seps := has_separators (s)
-			from 
+			from
 				i := 1
-			until 
+			until
 				pos1 > s.count
 			loop
 				if has_seps then
@@ -234,7 +234,7 @@ feature -- Basic operations
 						day_text_val := substrg
 					when 4 then
 						year_val := substrg.to_integer
-					when 5 then 
+					when 5 then
 						if base_century < 0 then
 							-- A negative value in `base_century' indicates
 							-- that this value has been calculated
@@ -242,7 +242,7 @@ feature -- Basic operations
 							-- have to substract it, because it is
 							-- negative.
 							year_val := substrg.to_integer - base_century
-							
+
 							-- We need a smart century correction
 							-- eventually.
 							if year_val - l_year_now > 50 then
@@ -259,7 +259,7 @@ feature -- Basic operations
 					when 8 then
 						from
 							j := 1
-						until 
+						until
 							j > 12
 						loop
 							if months.item (j).is_equal (substrg) then
@@ -288,12 +288,12 @@ feature -- Basic operations
 					when 23 then
 						l_is_pm_computed := True
 						l_is_pm := s.as_upper.is_equal ("PM")
-					when 12, 13 then 
+					when 12, 13 then
 						minute_val := substrg.to_integer
 					when 14, 15 then
 						second_val := substrg.to_integer
 					when 16 then
-						fine_second_val := substrg.to_double / 
+						fine_second_val := substrg.to_double /
 							(10 ^ (substrg.count))
 					end
 					if has_seps then
@@ -346,26 +346,26 @@ feature {NONE} -- Implementation
 
 	months: ARRAY [STRING]
 			-- Names of months
-			
+
 	days: ARRAY [STRING]
 			-- Names of days	
 
 	base_century: INTEGER
 			-- Base century, used when interpreting 2-digit year
 			-- specifications
-			
+
 invariant
 
 	valid_value_definition: is_value_valid =
 			(parsed and then (is_date or is_time or is_date_time))
 	valid_value_implies_parsing: is_value_valid implies parsed
-	
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

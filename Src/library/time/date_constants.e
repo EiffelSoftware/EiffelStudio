@@ -8,7 +8,7 @@ note
 
 class
 	DATE_CONSTANTS
-	
+
 inherit
 	TIME_UTILITY
 		export
@@ -21,28 +21,28 @@ feature -- Access
 				-- Number of days in a week
 
 	Max_weeks_in_year: INTEGER = 53
-				-- Maximun number of weeks in a year 
- 
+				-- Maximun number of weeks in a year
+
 	Months_in_year: INTEGER = 12
 				-- Number of months in year
-	
+
 	Days_in_leap_year: INTEGER = 366
-				-- Number of days in a leap year 
+				-- Number of days in a leap year
 
 	Days_in_non_leap_year: INTEGER = 365
 				-- Number of days in a non-leap year
 
-	days_in_i_th_month (i, y: INTEGER): INTEGER 
-			-- Number of days in the `i' th month at year `y' 
-		require 
-			i_large_enough: i >= 1; 
-			i_small_enough: i <= Months_in_year 
-		do 
-			Result := Days_in_months @ i; 
+	days_in_i_th_month (i, y: INTEGER): INTEGER
+			-- Number of days in the `i' th month at year `y'
+		require
+			i_large_enough: i >= 1;
+			i_small_enough: i <= Months_in_year
+		do
+			Result := Days_in_months @ i;
 			if i = 2 and then is_leap_year (y) then
-				Result := Result + 1 
-			end 
-		end; 
+				Result := Result + 1
+			end
+		end;
 
 	date_default_format_string: STRING
 			-- Default output format for dates
@@ -76,23 +76,23 @@ feature -- Access
 
 feature -- Status report
 
-	i_th_leap_year (i: INTEGER): BOOLEAN 
+	i_th_leap_year (i: INTEGER): BOOLEAN
 		obsolete "Use `is_leap_year' instead."
-			-- Is the `i'-th year a leap year? 
-		do 
+			-- Is the `i'-th year a leap year?
+		do
 			Result := is_leap_year (i)
 		end
 
-	is_leap_year (y: INTEGER): BOOLEAN 
-			-- Is year `y' a leap year? 
-		do 
-			Result := (mod (y, 4) = 0) and ((mod (y, 100) /= 0) or 
-				(mod (y, 400) = 0)) 
+	is_leap_year (y: INTEGER): BOOLEAN
+			-- Is year `y' a leap year?
+		do
+			Result := (mod (y, 4) = 0) and ((mod (y, 100) /= 0) or
+				(mod (y, 400) = 0))
 		end
 
 feature {NONE} -- Implementation
 
-	Days_in_months: ARRAY [INTEGER] 
+	Days_in_months: ARRAY [INTEGER]
 			-- Array containing number of days for each month of
 			-- a non-leap year.
 		once
@@ -103,11 +103,11 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

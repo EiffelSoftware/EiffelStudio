@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			is_utc := False
 			update
 		end
-		
+
 	make_utc
 			-- Create an instance of C_DATE holding UTC values.
 		do
@@ -59,14 +59,14 @@ feature -- Update
 				l_tm := localtime (l_time)
 			end
 			create internal_item.make_from_pointer (l_tm, tm_structure_size)
-			
+
 			l_milli := get_millitm (l_timeb)
 			if l_milli < 0 or l_milli > 999 then
 				millisecond_now := 0
 			else
 				millisecond_now := l_milli
 			end
-			
+
 			l_timeb.memory_free
 			l_time.memory_free
 		end
@@ -88,7 +88,7 @@ feature -- Status
 		ensure
 			month_valid: Result >= 1 and Result <= 12
 		end
-		
+
 	day_now: INTEGER
 			-- Current day at creation time or after last call to `update'.
 		do
@@ -96,7 +96,7 @@ feature -- Status
 		ensure
 			day_valid: Result >= 1 and Result <= 31
 		end
-		
+
 	hour_now: INTEGER
 			-- Current hour at creation time or after last call to `update'.
 		do
@@ -104,7 +104,7 @@ feature -- Status
 		ensure
 			hour_valid: Result >= 0 and Result <= 23
 		end
-		
+
 	minute_now: INTEGER
 			-- Current minute at creation time or after last call to `update'.
 		do
@@ -112,7 +112,7 @@ feature -- Status
 		ensure
 			minute_valid: Result >= 0 and Result <= 59
 		end
-		
+
 	second_now: INTEGER
 			-- Current second at creation time or after last call to `update'.
 		do
@@ -124,7 +124,7 @@ feature -- Status
 		ensure
 			second_valid: Result >= 0 and Result <= 59
 		end
-		
+
 	millisecond_now: INTEGER
 			-- Current millisecond at creation time or after last call to `update'.
 
@@ -137,14 +137,14 @@ feature {NONE} -- Externals
 		end
 
 feature {NONE} -- `struct timeb' encapsulation
-		
+
 	timeb_structure_size: INTEGER
 			-- Size of `struct timeb'.
 		external
 			"C macro use <sys/timeb.h>"
 		alias
 			"sizeof(struct timeb)"
-		end	
+		end
 
 	time_t_structure_size: INTEGER
 			-- Size of `struct timeb'.
@@ -161,7 +161,7 @@ feature {NONE} -- `struct timeb' encapsulation
 		alias
 			"sizeof(struct tm)"
 		end
-		
+
 	get_millitm (p: POINTER): INTEGER
 			-- Get `p->millitm'.
 		external
@@ -175,12 +175,12 @@ feature {NONE} -- `struct timeb' encapsulation
 		alias
 			"*(time_t *) $t = (((struct timeb *)$p)->time);"
 		end
-		
+
 feature {NONE} -- `struct tm' encapsulation
 
 	internal_item: MANAGED_POINTER
 			-- Pointer to `struct tm' area.
-	
+
 	localtime (t: POINTER): POINTER
 			-- Pointer to `struct tm' area.
 		external
@@ -188,7 +188,7 @@ feature {NONE} -- `struct tm' encapsulation
 		alias
 			"localtime ((time_t *) $t)"
 		end
-		
+
 	gmtime (t: POINTER): POINTER
 			-- Pointer to `struct tm' area in UTC.
 		external
@@ -196,7 +196,7 @@ feature {NONE} -- `struct tm' encapsulation
 		alias
 			"gmtime ((time_t *) $t)"
 		end
-		
+
 	get_tm_year (p: POINTER): INTEGER
 			-- Get `p->tm_year', number of years since 1900.
 		external
@@ -208,7 +208,7 @@ feature {NONE} -- `struct tm' encapsulation
 		external
 			"C struct struct tm access tm_mon use <time.h>"
 		end
-		
+
 	get_tm_mday (p: POINTER): INTEGER
 			-- Get `p->tm_mday'.
 		external
@@ -220,25 +220,25 @@ feature {NONE} -- `struct tm' encapsulation
 		external
 			"C struct struct tm access tm_hour use <time.h>"
 		end
-	
+
 	get_tm_min (p: POINTER): INTEGER
 			-- Get `p->tm_min'.
 		external
 			"C struct struct tm access tm_min use <time.h>"
 		end
-	
+
 	get_tm_sec (p: POINTER): INTEGER
 			-- Get `p->tm_sec'.
 		external
 			"C struct struct tm access tm_sec use <time.h>"
-		end	
-		
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

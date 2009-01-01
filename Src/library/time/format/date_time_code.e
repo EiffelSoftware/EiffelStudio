@@ -14,7 +14,7 @@ create
 	make
 
 feature -- Creation
-	
+
 	make (v: STRING)
 			-- Create code.
 		require
@@ -44,16 +44,16 @@ feature -- Change
 				value_min := 1
 				is_text := False
 				is_numeric := True
-				type := 1	
+				type := 1
 			elseif is_day0 (value) then
 				count_max := 2
 				count_min := 2
 				name := "day-numeric-on-2-digits"
 				value_max := 31
-				value_min := 1	
+				value_min := 1
 				is_text := False
 				is_numeric := True
-				type := 2			
+				type := 2
 			elseif is_day_text (value) then
 				count_max := 3
 				count_min := 3
@@ -268,18 +268,18 @@ feature -- Attributes
 
 feature -- Status report
 
-	is_text: BOOLEAN 
+	is_text: BOOLEAN
 			-- Has the code a string value?
 
 	is_numeric: BOOLEAN;
 			-- Has the code a numeric value?
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

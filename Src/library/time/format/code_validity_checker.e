@@ -1,11 +1,11 @@
 note
 	description: "Facility routines to check the validity of a DATE_TIME_CODE"
-	legal: "See notice at end of class." 
+	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	CODE_VALIDITY_CHECKER
 
 feature -- Preconditions
@@ -61,7 +61,7 @@ feature -- Preconditions
 		end
 
 	is_year4 (s: STRING): BOOLEAN
-			-- Is the code a year-numeric 
+			-- Is the code a year-numeric
 			-- On 4 figures?
 		require
 			s_exists: s /= Void
@@ -73,7 +73,7 @@ feature -- Preconditions
 
 
 	is_year2 (s: STRING): BOOLEAN
-			-- Is the code a year-numeric 
+			-- Is the code a year-numeric
 			-- On 2 figures?
 		require
 			s_exists: s /= Void
@@ -207,7 +207,7 @@ feature -- Preconditions
 
 
 	is_fractional_second (s: STRING): BOOLEAN
-			-- Is the code a fractional-second 
+			-- Is the code a fractional-second
 			-- With precision to n figures?
 		require
 			s_exists: s /= Void
@@ -318,11 +318,11 @@ feature -- Preconditions
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

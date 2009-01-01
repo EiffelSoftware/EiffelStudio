@@ -19,7 +19,7 @@ create
 	make
 
 feature -- Initialization
-	
+
 	make (n: INTEGER)
 			-- Create set for `n' dates.
 		require
@@ -46,7 +46,7 @@ feature -- Element change
 
 	put (d: DATE)
 			-- insert `d' as last item.
-		require 
+		require
 			exists: d /= Void
 		do
 			last := last + 1
@@ -54,18 +54,18 @@ feature -- Element change
 		ensure
 			inserted: equal (item (last), d)
 		end
-		
+
 invariant
-	
+
 	last_non_negative: last >= 0
 	last_small_enough: last <= count
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

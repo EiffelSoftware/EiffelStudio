@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2008-11-27 12:54+0800\n"
+"PO-Revision-Date: 2009-01-01 11:42+0800\n"
 "Last-Translator: Eiffel Software\n"
 "Language-Team: Eiffel Software and others\n"
 "MIME-Version: 1.0\n"
@@ -14651,7 +14651,7 @@ msgstr "运行未就绪"
 #. Source code: l_existing_layout_names: STRING_32 is do Result := locale.translation ("Existing Layouts:") end
 #: interface_names.e:1962
 msgid "Existing Layouts:"
-msgstr "正在退出布局："
+msgstr "已经存在的布局："
 
 #. Source code: st_exit_eiffelstudio: STRING_32 is		do Result := locale.translation ("Exit EiffelStudio") end
 #: interface_names.e:2387

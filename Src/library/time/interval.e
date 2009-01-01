@@ -68,10 +68,10 @@ feature -- Access
 feature -- Measurement
 
 	duration: DURATION
-		-- Length of the interval
-	do
-		Result := end_bound.duration - start_bound.duration
-	end
+			-- Length of the interval
+		do
+			Result := end_bound.duration - start_bound.duration
+		end
 
 feature -- Comparison
 

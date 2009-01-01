@@ -44,6 +44,11 @@ inherit
 			default_create, is_equal, copy
 		end
 
+	EV_SHARED_APPLICATION
+		undefine
+			default_create, is_equal, copy
+		end
+
 create
 	make_with_window
 
@@ -160,6 +165,10 @@ feature {NONE} -- Initialization
 
 				--| Force compilation
 			create l_menu_item.make_with_text_and_action ("Force Compilation On All Open", agent on_force_compile_all_classes)
+			a_menu.extend (l_menu_item)
+
+				--| Save all classes though the editor in current project
+			create l_menu_item.make_with_text_and_action ("Save All Classes In The Project Through The Editor", agent on_resave_all_classes)
 			a_menu.extend (l_menu_item)
 		end
 
@@ -464,10 +473,81 @@ feature {NONE} -- Actions
 			end
 		end
 
+	on_resave_all_classes
+			-- Resave all classes in current project through the editor,
+			-- excluding classes in libraries.
+			-- This applies all automatic behaviors enabled though the preferences in the editor to classes.
+			-- Trailing space removing, copyright info, for example.
+		local
+			l_window: ?EB_DEVELOPMENT_WINDOW
+			l_target: ?CONF_TARGET
+			l_clusters: HASH_TABLE [CONF_CLUSTER, STRING_8]
+			l_classes_in_cluster: PROCEDURE [ANY, TUPLE [CONF_CLUSTER]]
+			l_stone: ?STONE
+		do
+			l_window := window_manager.last_focused_development_window
 
+			if l_window /= Void and then l_window.eiffel_project.initialized then
+				l_stone := l_window.stone
+				l_target := l_window.eiffel_universe.target
+				check l_target_not_void: l_target /= Void end
+
+				l_classes_in_cluster :=
+				agent (a_cluster: ?CONF_CLUSTER; a_window: EB_DEVELOPMENT_WINDOW)
+					local
+						l_classes: HASH_TABLE [CONF_CLASS, STRING_8]
+						l_class_stone: CLASSI_STONE
+						l_editor: EB_SMART_EDITOR
+						l_click_tool: BOOLEAN
+					do
+						check a_cluster_not_void: a_cluster /= Void end
+						l_classes := a_cluster.classes
+						if l_classes /= Void then
+							from
+								l_classes.start
+							until
+								l_classes.after
+							loop
+								if {lt_class: CLASS_I}l_classes.item_for_iteration then
+									create l_class_stone.make (lt_class)
+									a_window.set_stone (l_class_stone)
+									l_editor := a_window.editors_manager.current_editor
+									if l_editor /= Void then
+										l_click_tool := l_editor.text_displayed.click_tool_enabled
+										l_editor.text_displayed.disable_click_tool
+											-- Need to process the idle actions until text is full loaded.
+										from
+										until
+											not l_editor.text_displayed.text_being_processed
+										loop
+											ev_application.process_events
+										end
+										if l_editor.is_editable then
+											l_editor.set_changed (True)
+											a_window.save_cmd.execute
+										end
+										if l_click_tool then
+											l_editor.text_displayed.enable_click_tool
+										end
+									end
+								end
+								l_classes.forth
+							end
+						end
+					end (?, l_window.as_attached)
+
+				l_clusters := l_target.clusters
+				l_clusters.linear_representation.do_all (l_classes_in_cluster)
+				l_clusters := l_target.overrides
+				l_clusters.linear_representation.do_all (l_classes_in_cluster)
+				if l_stone /= Void then
+					l_window.set_stone (l_stone)
+				end
+			end
+		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

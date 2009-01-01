@@ -144,7 +144,6 @@ if [ $runtimes = all ]; then
 else
 	cd run-time; make $2 
 	cd ..
-
 fi
 
 echo quick_configure terminated.

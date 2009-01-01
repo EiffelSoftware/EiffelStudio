@@ -88,10 +88,20 @@ feature -- Setting
 
 	set_browser_displayer (a_displayer: like displayer)
 			-- Set `a_displayer' with `a_displayer'.
+		require
+			a_displayer_not_void: a_displayer /= Void
 		do
 			displayer := a_displayer
-			check displayer.browser /= Void end
-			browser := displayer.browser
+			if {l_browser: like browser} displayer.browser then
+				browser := l_browser
+			else
+					-- Clearly we should not go there, but the code is badely designed here.
+					-- For some reasons there is only one kind of displayer which only know
+					-- about one type of browser, i.e. EB_CLASS_BROWSER_GRID_VIEW [ANY].
+				check
+					invalid_type: False
+				end
+			end
 		end
 
 feature{NONE} -- Implementation
@@ -125,4 +135,35 @@ feature{NONE} -- Implementation
 			end
 		end
 
+note
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			 Eiffel Software
+			 5949 Hollister Ave., Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
 end

@@ -5,7 +5,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	UNIX_PIPE_FACTORY
 
 inherit
@@ -14,10 +14,10 @@ inherit
 			{UNIX_PIPE_FACTORY} unix_pipe
 		end
 
-create 
+create
 	default_create
 
-feature 
+feature
 
 	new_unnamed_pipe: UNIX_UNNAMED_PIPE
 			-- Create a new unamed pipe.
@@ -29,17 +29,16 @@ feature
 		ensure
 			pipe_created: Result /= Void
 		end
-	
+
 note
-	library:   "EiffelProcess: Manipulation of processes with IO redirection."
-	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			Eiffel Software
-			356 Storke Road, Goleta, CA 93117 USA
-			Telephone 805-685-1006, Fax 805-685-6869
-			Website http://www.eiffel.com
-			Customer support http://support.eiffel.com
+			 Eiffel Software
+			 5949 Hollister Ave., Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
 		]"
 
 

@@ -22,7 +22,7 @@ feature {NONE} -- Implementation
 			-- Set time interval which this timer will be triggered with `a_sleep_time'.
 			-- Unit of `a_sleep_time' is milliseconds.
 		require
-			thread_capable: {PLATFORM}.is_thread_capable			
+			thread_capable: {PLATFORM}.is_thread_capable
 			interval_positive: a_sleep_time > 0
 		do
 			sleep_time := a_sleep_time
@@ -100,14 +100,13 @@ invariant
 	mutex_not_void: mutex /= Void
 
 note
-	library:   "EiffelProcess: Manipulation of processes with IO redirection."
-	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			Eiffel Software
-			356 Storke Road, Goleta, CA 93117 USA
-			Telephone 805-685-1006, Fax 805-685-6869
-			Website http://www.eiffel.com
-			Customer support http://support.eiffel.com
+			 Eiffel Software
+			 5949 Hollister Ave., Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
 		]"
 end

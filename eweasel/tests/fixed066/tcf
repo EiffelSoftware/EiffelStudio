@@ -11,22 +11,22 @@ test_description Change the type of an argumentless function from BOOLEAN to INT
 
 copy_sub 	 Ace $TEST Ace
 copy_raw 	 test.e  $CLUSTER test.e
-define		 ATTRIBUTE "attribute: BOOLEAN is do end"
+define		 ATTRIBUTE "attribute_field: BOOLEAN is do end"
 copy_sub 	 test1.e  $CLUSTER test1.e
 compile_melted
 compile_result 	 ok
 
-define		 ATTRIBUTE "attribute: INTEGER is do end"
+define		 ATTRIBUTE "attribute_field: INTEGER is do end"
 copy_sub 	 test1.e  $CLUSTER test1.e
 compile_melted
 compile_result 	 validity_error TEST VWBE
 
-define		 ATTRIBUTE "attribute: INTEGER is external "C" end"
+define		 ATTRIBUTE "attribute_field: INTEGER is external "C" end"
 copy_sub 	 test1.e  $CLUSTER test1.e
 resume_compile
 compile_result 	 validity_error TEST VWBE
 
-define		 ATTRIBUTE "attribute: BOOLEAN is external "C" end"
+define		 ATTRIBUTE "attribute_field: BOOLEAN is external "C" end"
 copy_sub 	 test1.e  $CLUSTER test1.e
 resume_compile
 compile_result 	 ok

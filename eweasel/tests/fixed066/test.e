@@ -16,7 +16,7 @@ feature
 		do
 			from
 			until 
-				a.attribute
+				a.attribute_field
 			loop
 				print ("hi");
 			end

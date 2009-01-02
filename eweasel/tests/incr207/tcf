@@ -7,7 +7,7 @@
 -- This is a test control file
 
 test_name 	 chg-indexing-tag-to-attribute
-test_description After initial compilation, the tag in an indexing clause is changed from "weasel" to "attribute".  This introduces a VEEN error but the compiler does not detect it.
+test_description After initial compilation, the tag in an indexing clause is changed from "weasel" to "attribute_field".  This introduces a VEEN error but the compiler does not detect it.
 
 define TAG "weasel"
 copy_sub 	Ace $TEST Ace
@@ -16,7 +16,7 @@ copy_raw 	test2.e $CLUSTER test2.e
 compile_melted
 compile_result 	ok
 
-define TAG "attribute"
+define TAG "attribute_field"
 copy_sub 	test.e $CLUSTER test.e
 compile_melted
 if DOTNET compile_result 	validity_error TEST VEEN

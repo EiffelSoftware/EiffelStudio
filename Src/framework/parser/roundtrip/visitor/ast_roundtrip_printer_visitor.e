@@ -38,7 +38,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_ctxt: ROUNDTRIP_CONTEXT)
+	make (a_ctxt: like context)
 			-- Initialize and set `context' with `a_ctxt'.
 		require
 			a_ctxt_not_void: a_ctxt /= Void
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 
 feature -- Context setting
 
-	set_context (a_ctxt: ROUNDTRIP_CONTEXT)
+	set_context (a_ctxt: like context)
 			-- Set `context' with `a_ctxt'.
 		require
 			a_ctxt_not_void: a_ctxt /= Void
@@ -211,7 +211,7 @@ invariant
 	context_not_void: context /= Void
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

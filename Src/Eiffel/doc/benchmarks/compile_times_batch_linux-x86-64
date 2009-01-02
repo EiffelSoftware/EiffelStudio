@@ -1,5 +1,11 @@
 Ubuntu Server 8.04 (2 Intel Xeon Quad Core E5420  @ 2.50GHz with 6MB cache)
 
+6.4
+===
+
+6.4.7.6402 non-RTEA, non-multithreaded (exe size: 14430600 bytes):
+92.910u 5.840s 1:39.16 99.5% 0+0k 8+892376io 0pf+0w
+
 6.3
 ===
 

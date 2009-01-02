@@ -228,7 +228,7 @@ feature -- Properties
 	watch_id: INTEGER
 			-- Watch's identifier
 
-feature {EB_DEBUGGER_MANAGER} -- Closing
+feature -- Closing
 
 	close
 		local

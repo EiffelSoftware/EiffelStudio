@@ -13,9 +13,6 @@ class
 
 inherit
 	INI_NODE_VISITOR
-		export
-			{NONE} all
-		end
 
 create
 	make

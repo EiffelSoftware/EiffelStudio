@@ -9,6 +9,8 @@ deferred class
 	INI_SCANNER_STATE
 
 inherit
+	ANY
+
 	INI_SHARED_SCANNER_STATE_POOL
 		export
 			{NONE} all

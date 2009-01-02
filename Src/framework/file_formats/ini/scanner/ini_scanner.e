@@ -15,6 +15,8 @@ class
 	INI_SCANNER
 
 inherit
+	ANY
+
 	INI_SHARED_SCANNER_STATE_POOL
 		export
 			{NONE} all

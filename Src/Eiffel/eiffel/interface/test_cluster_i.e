@@ -35,7 +35,7 @@ feature -- Access
 	parent_cluster: CLUSTER_I
 			-- <Precursor>
 
-	sub_clusters: ARRAYED_LIST [CLUSTER_I]
+	sub_clusters: ARRAYED_LIST [TEST_CLUSTER_I]
 			-- <Precursor>
 
 end

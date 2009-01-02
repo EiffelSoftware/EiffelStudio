@@ -15,8 +15,7 @@ inherit
 			parent as parent_cluster,
 			children as sub_clusters
 		redefine
-			parent_cluster,
-			sub_clusters
+			parent_cluster
 		end
 
 	CLUSTER_I
@@ -25,8 +24,7 @@ inherit
 			is_group_equivalent,
 			is_override
 		redefine
-			parent_cluster,
-			sub_clusters
+			parent_cluster
 		end
 
 create
@@ -38,8 +36,7 @@ feature -- Attributes
 			-- Parent cluster of Current cluster
 			-- (Void implies it is a top level cluster)
 
-	sub_clusters: ARRAYED_LIST [CLUSTER_I];
-			-- List of sub clusters for Current cluster
+invariant
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

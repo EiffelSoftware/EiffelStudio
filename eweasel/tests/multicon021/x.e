@@ -15,4 +15,8 @@ inherit
 				is_equal, copy, out
 			end
 		TEST1[X]
+
+create {X}
+	make
+
 end

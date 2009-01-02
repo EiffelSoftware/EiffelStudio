@@ -7,6 +7,9 @@
 class TEST1 [G -> {NUMERIC, COMPARABLE}] 
 inherit
 	LINKED_LIST[COMPARABLE]
+create
+	make
+
 convert
 	to_linked_list: {TEST1[G]}
 feature

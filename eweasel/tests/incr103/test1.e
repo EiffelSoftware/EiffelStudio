@@ -11,6 +11,6 @@ feature
 			$CREATION_INST;
 		end
 	
-	attribute: TEST;
+	attribute_field: TEST;
 
 end

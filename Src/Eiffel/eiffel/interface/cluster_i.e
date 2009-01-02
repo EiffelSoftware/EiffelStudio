@@ -15,8 +15,7 @@ inherit
 			parent as parent_cluster,
 			children as sub_clusters
 		redefine
-			parent_cluster,
-			sub_clusters
+			parent_cluster
 		end
 
 	SHARED_ERROR_HANDLER
@@ -41,9 +40,6 @@ feature -- Attributes
 	parent_cluster: CLUSTER_I
 			-- Parent cluster of Current cluster
 			-- (Void implies it is a top level cluster)
-
-	sub_clusters: ARRAYED_LIST [CLUSTER_I]
-			-- List of sub clusters for Current cluster
 
 feature -- Access
 

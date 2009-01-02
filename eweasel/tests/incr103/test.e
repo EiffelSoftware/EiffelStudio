@@ -9,7 +9,7 @@ class TEST
 inherit
 	TEST1
 		redefine
-			attribute, default_create
+			attribute_field, default_create
 		end
 		
 creation
@@ -20,6 +20,6 @@ feature
 			try;
 		end
 	
-	attribute: like Current;
+	attribute_field: like Current;
 	
 end

@@ -15,6 +15,7 @@ feature
 			-- if Eiffel compiler is run
 		once
 			create {ARRAYED_LIST [STRING]} Result.make (2)
+			Result.extend ("-verbose")
 			Result.extend ("-finalize")
 			Result.extend ("-keep")
 		end;

@@ -11,7 +11,7 @@ creation
 feature
 	make is
 		do
-			!!attribute;
+			!!attribute_field;
 		end;
 
 	weasel is
@@ -20,10 +20,10 @@ feature
 
 	is_valid: BOOLEAN is
 		do
-			Result := attribute.valid;
+			Result := attribute_field.valid;
 		end
 
-	attribute: TEST1;
+	attribute_field: TEST1;
 	
 invariant
 	always_valid: is_valid;

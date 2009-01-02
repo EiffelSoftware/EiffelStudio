@@ -13,12 +13,12 @@ feature
 			set_real_value (13.245);
         	end
 
-	attribute: REAL;
+	attribute_field: REAL;
 
 	set_real_value (v: REAL) is
 		do
-			attribute := v;
-			if attribute /= v then
+			attribute_field := v;
+			if attribute_field /= v then
 				io.put_string ("Disaster: assignment or comparison doesn't work%N");
 			end
 		end

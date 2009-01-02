@@ -7,4 +7,8 @@ class X
 
 inherit
 		LINKED_LIST[X]
+
+create
+	make
+
 end

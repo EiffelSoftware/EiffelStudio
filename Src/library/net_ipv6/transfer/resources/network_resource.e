@@ -211,8 +211,9 @@ feature -- Input
 
 feature -- Constants
 
-	Read_only, Write_only: INTEGER = unique
-			-- Constants determinint the transfer direction for `check_socket'
+	Read_only: INTEGER = 1
+	Write_only: INTEGER = 2
+			-- Constants determining the transfer direction for `check_socket'
 
 feature {DATA_RESOURCE} -- Implementation
 
@@ -238,13 +239,13 @@ feature {NONE} -- Implementation
 		require
 			no_error: not error
 			socket_exists: s /= Void
-			defined_mode: Read_only <= transfer_mode and
-						transfer_mode <= Write_only
-		local
-			m: BOOLEAN
+			defined_mode: Read_only = transfer_mode or transfer_mode = Write_only
 		do
-			m := (transfer_mode = Read_only)
-			if not s.ready_for_reading then
+			if transfer_mode = read_only then
+				if not s.ready_for_reading then
+					error_code := Connection_timeout
+				end
+			elseif not s.ready_for_writing then
 				error_code := Connection_timeout
 			end
 		end
@@ -260,8 +261,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class NETWORK_RESOURCE
-

@@ -34,7 +34,7 @@ feature -- Access
 
 				-- Put in version
 			l_segs[7] := l_segs[7] & 0x0f | 0x40
-				-- {ut in variant
+				-- Put in variant
 			l_segs[9] := l_segs[9] & 0x3f | 0x80
 
 			create Result.make_from_array (l_segs)

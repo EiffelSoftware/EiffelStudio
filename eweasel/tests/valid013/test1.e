@@ -12,15 +12,15 @@ feature
 			x: TEST1;
 		do
 			!!x;
-			x.set_attribute (Current);
-			attribute := x;
+			x.set_attribute_field (Current);
+			attribute_field := x;
 		end;
 
-	attribute: like Current;
+	attribute_field: like Current;
 	
-	set_attribute (arg: like Current) is
+	set_attribute_field (arg: like Current) is
 		do
-			attribute := arg;
+			attribute_field := arg;
 		end
 	
 

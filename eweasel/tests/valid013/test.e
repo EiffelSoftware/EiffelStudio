@@ -6,7 +6,7 @@
 
 	-- To reproduce the error:
 	-- Compile classes as is.  Es3 does not complain about the
-	-- assignment `attribute := x' in feature `test_me' which
+	-- assignment `attribute_field := x' in feature `test_me' which
 	-- becomes invalid in TEST.
 	-- Finish_freezing.  Execute `test'.
 
@@ -22,7 +22,7 @@ feature
 		do
 			test_me;
 			io.putstring ("Getting ready to call turkey...%N");
-			attribute.turkey;
+			attribute_field.turkey;
 			io.putstring ("Nope, did not die%N");
 		end;
 

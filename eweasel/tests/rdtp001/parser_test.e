@@ -97,7 +97,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	parse_eiffel_class (a_parser: EIFFEL_PARSER; a_buffer: STRING)
+	parse_eiffel_class (a_parser: STANDALONE_EIFFEL_PARSER; a_buffer: STRING)
 			-- Using a parser, parse our code using different parser mode, to ensure that we can
 			-- indeed convert any kind of Eiffel classes.
 		require
@@ -109,15 +109,15 @@ feature {NONE} -- Implementation
 			a_parser.set_is_attribute_keyword (False)
 			a_parser.set_is_note_keyword (False)
 			a_parser.parse_from_string (a_buffer)
-			if error_handler.has_error then
-				error_handler.wipe_out
+			if a_parser.error_handler.has_error then
+				a_parser.error_handler.wipe_out
 					-- There was an error, let's try to see if the code is already using `note'.
 				a_parser.set_is_indexing_keyword (True)
 				a_parser.set_is_note_keyword (True)
 				a_parser.set_is_attribute_keyword (False)
 				a_parser.parse_from_string (a_buffer)
-				if error_handler.has_error then
-					error_handler.wipe_out
+				if a_parser.error_handler.has_error then
+					a_parser.error_handler.wipe_out
 						-- Still an error, let's try to see if the code is already using `attribute'.
 					a_parser.set_is_indexing_keyword (True)
 					a_parser.set_is_note_keyword (True)

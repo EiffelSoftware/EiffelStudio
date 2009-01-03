@@ -27,10 +27,7 @@ feature {NONE} -- Creation
 
 	default_create
 		do
-			create syntax_level
-			syntax_level.count := syntax_level_count
-				-- Set default value.
-			syntax_level.item := syntax_level_transitional
+			create syntax_level.make (syntax_level_transitional, syntax_level_count)
 		end
 
 feature -- Status
@@ -612,7 +609,7 @@ invariant
 	syntax_level_count_set: syntax_level.count = syntax_level_count
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

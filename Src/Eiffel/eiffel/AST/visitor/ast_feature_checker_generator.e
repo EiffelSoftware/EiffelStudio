@@ -1067,7 +1067,7 @@ feature -- Implementation
 	process_call (
 			a_type, a_precursor_type: TYPE_A; a_name: ID_AS; a_feature: FEATURE_I;
 			a_params: EIFFEL_LIST [EXPR_AS]; is_static, is_agent, is_qualified, is_precursor: BOOLEAN)
-		
+
 			-- Process call to `a_name' in context of `a_type' with `a_params' if ANY.
 			-- If `is_static' it is a static call.
 			--
@@ -2381,9 +2381,9 @@ feature -- Implementation
 						l_result.forth
 							-- We inherited this feature. Adapt it's type. DELETEME and the commented code below
 						l_feature_type := last_type -- l_feature.type.instantiation_in (l_last_type, l_last_class_id).actual_type
-						if 	l_last_feature_type /= Void and then l_last_feature_type.same_as (l_feature_type) then
-							-- Ok, the two features have still the same return type.
-						else
+						if 	l_last_feature_type = Void then
+							l_last_feature_type := l_feature_type
+						elseif not l_last_feature_type.same_as (l_feature_type) then
 								-- The two features have redefined their return type differently.
 								-- We don't allow this: Add an error, but continue checking as this only an additional
 								-- check and does not break anything else.
@@ -5469,7 +5469,7 @@ feature -- Implementation
 			l_needs_byte_node: BOOLEAN
 			l_actual_creation_type: TYPE_A
 			l_type_set: TYPE_SET_A
-			l_constraint_type: TYPE_A
+			l_constraint_type, l_last_type: TYPE_A
 			l_deferred_classes: LINKED_LIST[CLASS_C]
 			l_is_multi_constraint_case: BOOLEAN
 			l_is_deferred: BOOLEAN
@@ -5678,10 +5678,17 @@ feature -- Implementation
 									l_creation_type := l_result_item.cl_type.type
 									l_creation_class := l_creation_type.associated_class
 									last_calls_target_type := l_creation_type
+										-- Store `last_type' as it will be reset by call to `process_call' to the type
+										-- of the procedure, that is to say Void and thus will cause an incorrect VKCN(3) error
+										-- to be reported.
+									l_last_type := last_type
 										-- Type check the call
 									process_call (last_type, Void, l_call.feature_name, l_feature, l_call.parameters, False, False, False, False)
 										-- Even though this code is very similar to the one in `process_access_feat_as' we do not
-										-- need to adapt last_type as this is a creation procedure without a result.
+										-- need to adapt last_type as this is a creation procedure without a result, but we still
+										-- need to restore it.
+									last_type := l_last_type
+									l_result.forth
 								end
 									-- Martins 3/29/2007
 									-- After the loop we simply continue with whatever feature was last found.
@@ -7724,7 +7731,7 @@ feature {NONE} -- Implementation: overloading
 	overloaded_feature (
 			a_type: TYPE_A; a_last_class: CLASS_C; a_arg_types: ARRAY [TYPE_A];
 			a_feature_name: ID_AS; is_static_access: BOOLEAN): FEATURE_I
-		
+
 			-- Find overloaded feature that could match Current. The rules are taken from
 			-- C# ECMA specification "14.4.2 Overload Resolution".
 		require
@@ -7786,7 +7793,7 @@ feature {NONE} -- Implementation: overloading
 	applicable_overloaded_features
 			(a_features: LIST [FEATURE_I]; a_type: TYPE_A; a_arg_types: ARRAY [TYPE_A]; last_id: INTEGER;
 			is_static_access: BOOLEAN): LIST [FEATURE_I]
-		
+
 			-- Use C# ECMA specification 14.4.2.1 to find list of matching features in
 			-- `a_features' that matches given arguments.
 			-- That is to say it keeps features that have the same number of parameters,
@@ -7884,7 +7891,7 @@ feature {NONE} -- Implementation: overloading
 	best_overloaded_features
 			(a_features: LIST [FEATURE_I]; a_type: TYPE_A; a_arg_types: ARRAY [TYPE_A];
 			last_id: INTEGER): LIST [FEATURE_I]
-		
+
 			-- Use C# ECMA specification 14.4.2.2 and 14.4.2.3 to find list of best matching
 			-- features in `a_features' that matches given arguments.
 		require
@@ -7964,7 +7971,7 @@ feature {NONE} -- Implementation: overloading
 	better_feature (
 			a_feat1, a_feat2: FEATURE_I; a_type: TYPE_A; a_arg_types: ARRAY [TYPE_A];
 			last_id: INTEGER): FEATURE_I
-		
+
 			-- If `a_feat1' is better for overloading that `a_feat2', returns `a_feat1',
 			-- if `a_feat2' is better for overloading than `a_feat1', returns `a_feat2',
 			-- otherwise returns Void.
@@ -8087,7 +8094,7 @@ feature {NONE} -- Implementation: overloading
 
 	feature_arg_type
 			(a_feature: FEATURE_I; a_pos: INTEGER; a_type: TYPE_A; a_arg_types: ARRAY [TYPE_A]; last_id: INTEGER): TYPE_A
-		
+
 			-- Find type of argument at position `a_pos' of feature `a_feature' in context
 			-- of `a_type', `last_id'.
 		require
@@ -8122,7 +8129,7 @@ feature {NONE} -- Agents
 	compute_routine (
 			a_table: FEATURE_TABLE; a_feature: FEATURE_I; a_is_query, a_has_args: BOOLEAN; cid : INTEGER; a_target_type: TYPE_A;
 			a_feat_type: TYPE_A; an_agent: ROUTINE_CREATION_AS; an_access: ACCESS_B; a_target_node: BYTE_NODE)
-		
+
 			-- Type of routine object.
 		require
 			valid_table: a_table /= Void
@@ -8458,7 +8465,7 @@ feature {NONE} -- Agents
 			a_target_type: TYPE_A
 			a_agent_type: TYPE_A
 			a_for_feature: FEATURE_I)
-		
+
 			-- Creates an inline agent bytenode that is semanticaly equivalent to the agent on the target byte node
 			-- It further creates the proper routine creation
 			-- agent T.a becomes:

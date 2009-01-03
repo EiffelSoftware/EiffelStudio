@@ -337,6 +337,7 @@ feature {AST_FEATURE_CHECKER_GENERATOR} -- Internal type checking
 
 			if error_level = l_error_level then
 				type_a_checker.init_for_checking (a_feature, context.current_class, context.supplier_ids, error_handler)
+				inherited_type_a_checker.init_for_checking (a_feature, context.written_class, Void, Void)
 				a_feature.record_suppliers (context.supplier_ids)
 				current_feature := a_feature
 				reset
@@ -915,8 +916,7 @@ feature -- Roundtrip
 			create l_feature_checker
 			l_feature_checker.init (context)
 			context.set_current_inline_agent_body (l_as.body)
-			l_feature_checker.check_body (
-				l_feature, l_as.body, is_byte_node_enabled, is_inherited, True)
+			l_feature_checker.check_body (l_feature, l_as.body, is_byte_node_enabled, is_inherited, True)
 
 			l_new_feature_dep := context.supplier_ids
 			context.restore (l_context)
@@ -2195,8 +2195,7 @@ feature -- Implementation
 							-- Only interprets the `built_in' implementation if this is not an attribute.
 						create l_feature_checker
 						l_feature_checker.init (context)
-						l_feature_checker.check_body (current_feature,
-							l_feature_as.body, True, False, False)
+						l_feature_checker.check_body (current_feature, l_feature_as.body, True, False, False)
 						last_byte_node := l_feature_checker.last_byte_node
 						l_as.set_body (l_feature_as)
  					else

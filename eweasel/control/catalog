@@ -455,6 +455,7 @@ test	conversion-take-deanchored-form	svalid011 tcf pass system-validity conversi
 test	inherited-conversion-crash		svalid012 tcf pass system-validity conversion
 test	unused-local-warning-not-repeated	svalid013 tcf fail system-validity
 test	inline-agent-inherited-crash	svalid014 tcf pass system-validity
+test	svalid-multi-constraint-inheritance	svalid015 tcf pass system-validity multiconstraint
 
 -- Catcall tests
 test	simple-catcall				catcall001 tcf pass catcall

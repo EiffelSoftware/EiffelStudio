@@ -7,7 +7,7 @@
 		<setting name="console_application" value="true"/>
 		<precompile name="base_pre" location="$ISE_PRECOMP\base.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="net_ipv6" location="$ISE_LIBRARY\library\net_ipv6\net.ecf"/>
+		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
 		<cluster name="common_classes" location="..\common\"/>
 		<cluster name="root_cluster" location=".\"/>
 	</target>

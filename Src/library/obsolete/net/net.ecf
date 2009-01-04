@@ -11,33 +11,33 @@
 		<option namespace="EiffelSoftware.Library.Net" syntax_level="1">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
-		<external_object location="$(ISE_LIBRARY)/library/net/spec/$(ISE_PLATFORM)/lib/libmtnet.a">
+		<external_object location="$(ISE_LIBRARY)/library/obsolete/net/spec/$(ISE_PLATFORM)/lib/libmtnet.a">
 			<condition>
 				<platform excluded_value="windows"/>
 				<multithreaded value="true"/>
 			</condition>
 		</external_object>
-		<external_object location="$(ISE_LIBRARY)/library/net/spec/$(ISE_PLATFORM)/lib/libnet.a">
+		<external_object location="$(ISE_LIBRARY)/library/obsolete/net/spec/$(ISE_PLATFORM)/lib/libnet.a">
 			<condition>
 				<platform excluded_value="windows"/>
 				<multithreaded value="false"/>
 			</condition>
 		</external_object>
-		<external_object location="$(ISE_LIBRARY)\library\net\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\mtnet.lib">
+		<external_object location="$(ISE_LIBRARY)\library\obsolete\net\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\mtnet.lib">
 			<condition>
 				<platform value="windows"/>
 				<multithreaded value="true"/>
 				<dotnet value="false"/>
 			</condition>
 		</external_object>
-		<external_object location="$(ISE_LIBRARY)\library\net\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\net.lib">
+		<external_object location="$(ISE_LIBRARY)\library\obsolete\net\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\net.lib">
 			<condition>
 				<platform value="windows"/>
 				<multithreaded value="false"/>
 				<dotnet value="false"/>
 			</condition>
 		</external_object>
-		<external_object location="$(ISE_LIBRARY)\library\net\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\ilnet.lib">
+		<external_object location="$(ISE_LIBRARY)\library\obsolete\net\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\ilnet.lib">
 			<condition>
 				<platform value="windows"/>
 				<dotnet value="true"/>

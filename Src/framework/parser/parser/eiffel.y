@@ -162,7 +162,7 @@ create
 %type <STRING_AS>			Manifest_string Non_empty_string Default_manifest_string Typed_manifest_string Infix_operator Prefix_operator Alias_name
 %type <TAGGED_AS>			Assertion_clause
 %type <TUPLE_AS>			Manifest_tuple
-%type <TYPE_AS>				Type Attached_type Non_class_type Typed Class_or_tuple_type Attached_class_type Attached_class_or_tuple_type Tuple_type Type_no_id Constraint_type
+%type <TYPE_AS>				Type Attached_type Non_class_type Typed Class_or_tuple_type Attached_class_type Attached_class_or_tuple_type Marked_class_or_tuple_type Tuple_type Type_no_id Constraint_type
 %type <PAIR [SYMBOL_AS, TYPE_AS]> Type_mark
 %type <CLASS_TYPE_AS>		Parent_class_type
 %type <TYPE_DEC_AS>			Entity_declaration_group
@@ -1585,6 +1585,8 @@ Type_no_id:
 			{ $$ := $1 }
 	|	Non_class_type
 			{ $$ := $1 }
+	| Marked_class_or_tuple_type
+			{ $$ := $1 }
 	;
 	
 Non_class_type: TE_EXPANDED Attached_class_type
@@ -1647,7 +1649,12 @@ Non_class_type: TE_EXPANDED Attached_class_type
 Class_or_tuple_type:
 	Attached_class_or_tuple_type
 			{ $$ := $1 }
-	| TE_BANG Attached_class_or_tuple_type
+	| Marked_class_or_tuple_type
+			{ $$ := $1 }
+	;
+
+Marked_class_or_tuple_type:
+	TE_BANG Attached_class_or_tuple_type
 			{
 				$$ := $2
 				if $$ /= Void then

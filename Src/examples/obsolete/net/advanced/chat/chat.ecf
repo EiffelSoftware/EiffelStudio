@@ -6,7 +6,7 @@
 		</option>
 		<precompile name="precompile" location="$ISE_PRECOMP\base.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
+		<library name="net" location="$ISE_LIBRARY\library\obsolete\net\net.ecf"/>
 		<cluster name="common_classes" location="..\common\"/>
 		<cluster name="root_cluster" location=".\"/>
 	</target>

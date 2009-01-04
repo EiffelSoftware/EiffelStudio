@@ -29,8 +29,8 @@ feature{NONE} -- Initlization
 	make
 			-- Creation method
 		do
-					-- Make user not break the invariant from EV_ANY_I
-					set_state_flag (base_make_called_flag, True)
+			-- Make user not break the invariant from EV_ANY_I
+			set_state_flag (base_make_called_flag, True)
 		end
 
 feature -- Redefine
@@ -202,25 +202,32 @@ feature {NONE} -- Implementation
 			l_button: SD_TOOL_BAR_BUTTON
 			l_popup_button: SD_TOOL_BAR_POPUP_BUTTON
 			l_position: EV_COORDINATE
-			l_temp_pixmap: EV_PIXMAP
+			l_temp_pixmap, l_pixmap: EV_PIXMAP
 			l_temp_imp: EV_PIXMAP_IMP
 			l_pixbuf: POINTER
 		do
 			l_button ?= a_arguments.item
 			l_popup_button ?= a_arguments.item
-			if l_button /= Void and l_button.pixmap /= Void and l_button.tool_bar /= Void then
+			if l_button /= Void and (l_button.pixel_buffer /= Void or  l_button.pixmap /= Void) and l_button.tool_bar /= Void then
 				-- We should render pixmap by theme.
+				if l_button.pixel_buffer /= Void then
+					l_pixmap := l_button.pixel_buffer.to_pixmap
+				else
+					l_pixmap := l_button.pixmap
+				end
+
+				check l_pixmap_not_void: l_pixmap /= Void end
 
 				l_position := l_button.pixmap_position
 
 				if a_arguments.item.is_sensitive then
-					a_arguments.tool_bar.draw_pixmap (l_position.x, l_position.y, l_button.pixmap)
+					a_arguments.tool_bar.draw_pixmap (l_position.x, l_position.y, l_pixmap)
 					if l_popup_button /= Void then
 						-- cache `l_popup_button.dropdown_pixel_buffer.to_pixmap'?
 						a_arguments.tool_bar.draw_pixmap (l_popup_button.dropdown_left, l_position.y, l_popup_button.dropdown_pixel_buffer.to_pixmap)
 					end
 				else
-					l_temp_pixmap := l_button.pixmap.sub_pixmap (create {EV_RECTANGLE}.make (0, 0, l_button.pixmap.width, l_button.pixmap.height))
+					l_temp_pixmap := l_pixmap.sub_pixmap (create {EV_RECTANGLE}.make (0, 0, l_pixmap.width, l_pixmap.height))
 					l_temp_imp ?= l_temp_pixmap.implementation
 					check not_void: l_temp_imp /= Void end
 					c_gdk_desatuate (l_temp_imp.pixbuf_from_drawable, $l_pixbuf)

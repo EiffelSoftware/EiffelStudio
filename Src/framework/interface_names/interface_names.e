@@ -1348,6 +1348,7 @@ feature -- Label texts
 	l_Not_yet_called: STRING_32			do Result := locale.translation("Not yet called")	end
 	l_Called: STRING_32					do Result := locale.translation("Called")	end
 	l_Cannot_create_test_case_files: STRING_32	do Result := locale.translation("Can't create test case files")	end
+	l_Cannot_delete_selected_item: STRING_32	do Result := locale.translation("Can't delete selected item")	end
 	l_in_n_classes (n: INTEGER): STRING_32
 		do
 			Result := locale.formatted_string (locale.plural_translation ("in $1 class", "in $1 classes", n), [n])
@@ -2067,6 +2068,7 @@ feature -- Title part
 		once
 			Result := locale.formatted_string (locale.translation("From $1"), [Workbench_name])
 		end
+	t_delete_selected_item: STRING_32			do Result := locale.translation("Delete selected item in the list.")	end
 	t_delete_selected_items: STRING_32			do Result := locale.translation("Delete selected items in the list.")	end
 	t_Deleting_files: STRING_32					do Result := locale.translation("Deleting Files")	end
 	t_Dummy: STRING_32							do Result := locale.translation("Dummy")	end
@@ -2716,7 +2718,7 @@ feature -- String escape
 		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

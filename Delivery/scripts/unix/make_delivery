@@ -36,11 +36,11 @@ NO_WIZARDS="True"
 else
 NO_WIZARDS=""
 fi
-awk 'index($0, "no_doc") != 0 { exit 54 }' tmpin$$.tmp
+awk 'index($0, "doc") != 0 { exit 54 }' tmpin$$.tmp
 if [ $? -eq 54 ] ;  then
-NO_DOCUMENTATION="True"
-else
 NO_DOCUMENTATION=""
+else
+NO_DOCUMENTATION="True"
 fi
 awk 'index($0, "no_new_ec") != 0 { exit 54 }' tmpin$$.tmp
 if [ $? -eq 54 ] ;  then

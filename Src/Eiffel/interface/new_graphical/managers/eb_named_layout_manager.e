@@ -98,11 +98,39 @@ feature -- Command
 			if layouts.has (a_name) then
 				l_fn := layouts.item (a_name).file_path
 			else
+				-- FIXIT: When `a_name' is non-English, file name is not correct
 				l_fn := layout_file_name (a_name.as_string_8, is_normal_mode)
 			end
 			create l_file_utils
 			l_file_utils.create_directory_for_file (l_fn.string.as_attached)
 			Result := development_window.docking_manager.save_tools_data_with_name (l_fn, a_name)
+		end
+
+	delete_layout (a_name: STRING_GENERAL): BOOLEAN
+			-- Delete a layout which name is `a_name'
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: not a_name.is_empty
+		local
+			l_retired: BOOLEAN
+			l_item: TUPLE [file_path: FILE_NAME; is_normal_mode: BOOLEAN]
+			l_file: RAW_FILE
+		do
+			if not l_retired then
+				l_item := layouts.item (a_name)
+				if l_item /= Void then
+					create l_file.make (l_item.file_path)
+					l_file.open_read_write
+
+					l_file.delete
+					layouts.remove (a_name)
+
+					Result := True
+				end
+			end
+		rescue
+			l_retired := True
+			retry
 		end
 
 	open_layout (a_name: STRING_GENERAL)
@@ -228,7 +256,7 @@ invariant
 	not_void: layouts /= Void
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

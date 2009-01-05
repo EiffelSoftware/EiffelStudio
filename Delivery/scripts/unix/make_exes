@@ -79,6 +79,7 @@ safe_md $EXPORT_DIR/esbuilder
 move esbuilder.tar.bz2 $EXPORT_DIR/esbuilder
 
 if [ ! "$NO_NEW_EC" ]; then
+	safe_md $EXPORT_DIR/bin
 	remtrace Recompile EiffelStudio
 	remtrace GPL edition
 	if [ ! -d $FINALIZATION_DIR ]; then
@@ -96,7 +97,7 @@ if [ ! "$NO_NEW_EC" ]; then
 		CANCEL
 	fi
 	clean_project
-	move ec.tar.bz2 $EXPORT_DIR/ec_gpl.tar.bz2
+	move ec.tar.bz2 $EXPORT_DIR/bin/ec_gpl.tar.bz2
 
 	remtrace Batch version
 	clean_project
@@ -107,7 +108,7 @@ if [ ! "$NO_NEW_EC" ]; then
 		CANCEL
 	fi
 	clean_project
-	move ecb.tar.bz2 $EXPORT_DIR/ecb_gpl.tar.bz2
+	move ecb.tar.bz2 $EXPORT_DIR/bin/ecb_gpl.tar.bz2
 
 	if [ "$MULTIPLE_EDITIONS" ]; then
 		remtrace Enterprise version edition
@@ -125,7 +126,7 @@ if [ ! "$NO_NEW_EC" ]; then
 			CANCEL
 		fi
 		clean_project
-		move ec.tar.bz2 $EXPORT_DIR/ec_ent.tar.bz2
+		move ec.tar.bz2 $EXPORT_DIR/bin/ec_ent.tar.bz2
 
 		remtrace Batch version
 		clean_project
@@ -136,7 +137,7 @@ if [ ! "$NO_NEW_EC" ]; then
 			CANCEL
 		fi
 		clean_project
-		move ecb.tar.bz2 $EXPORT_DIR/ecb_ent.tar.bz2
+		move ecb.tar.bz2 $EXPORT_DIR/bin/ecb_ent.tar.bz2
 	fi
 else
 	# FIXME doesn't work.
@@ -153,7 +154,7 @@ if [ ! -f quick_finalize.tar.bz2 ]; then
 	CANCEL
 fi
 clean_project
-move quick_finalize.tar.bz2 $EXPORT_DIR
+move quick_finalize.tar.bz2 $EXPORT_DIR/bin
 
 if [ "$MULTIPLE_EDITIONS" ]; then
 	remtrace Compiling CD key validator
@@ -167,7 +168,7 @@ if [ "$MULTIPLE_EDITIONS" ]; then
 		if [ ! -f setup.tar.bz2 ]; then
 			echo Could not finalize a new setup
 		else
-			move setup.tar.bz2 $EXPORT_DIR
+			move setup.tar.bz2 $EXPORT_DIR/bin
 		fi
 		clean_project
 	fi
@@ -183,7 +184,10 @@ if [ ! -f estudio.tar.bz2 ]; then
 	CANCEL
 fi
 clean_project
-move estudio.tar.bz2 $EXPORT_DIR
+move estudio.tar.bz2 $EXPORT_DIR/bin
+
+cd $INIT_DIR
+. ./make_tools
 
 remtrace Compiling Gobo tools
 cd $EIFFEL_SRC/library/gobo/src
@@ -196,7 +200,7 @@ if [ ! -f geant.tar.bz2 ]; then
     CANCEL
 fi
 clean_project
-move geant.tar.bz2 $EXPORT_DIR
+move geant.tar.bz2 $EXPORT_DIR/bin
 
 remtrace gec
 finalize gec.ecf gec
@@ -206,7 +210,7 @@ if [ ! -f gec.tar.bz2 ]; then
 	CANCEL
 fi
 clean_project
-move gec.tar.bz2 $EXPORT_DIR
+move gec.tar.bz2 $EXPORT_DIR/bin
 
 remtrace gelex
 finalize gelex.ecf gelex
@@ -216,7 +220,7 @@ if [ ! -f gelex.tar.bz2 ]; then
 	CANCEL
 fi
 clean_project
-move gelex.tar.bz2 $EXPORT_DIR
+move gelex.tar.bz2 $EXPORT_DIR/bin
 
 remtrace gelint
 finalize gelint.ecf gelint
@@ -226,7 +230,7 @@ if [ ! -f gelint.tar.bz2 ]; then
 	CANCEL
 fi
 clean_project
-move gelint.tar.bz2 $EXPORT_DIR
+move gelint.tar.bz2 $EXPORT_DIR/bin
 
 remtrace gepp
 finalize gepp.ecf gepp
@@ -236,7 +240,7 @@ if [ ! -f gepp.tar.bz2 ]; then
 	CANCEL
 fi
 clean_project
-move gepp.tar.bz2 $EXPORT_DIR
+move gepp.tar.bz2 $EXPORT_DIR/bin
 
 remtrace getest
 finalize getest.ecf getest
@@ -246,7 +250,7 @@ if [ ! -f getest.tar.bz2 ]; then
 	CANCEL
 fi
 clean_project
-move getest.tar.bz2 $EXPORT_DIR
+move getest.tar.bz2 $EXPORT_DIR/bin
 
 remtrace gexace
 finalize gexace.ecf gexace
@@ -256,7 +260,7 @@ if [ ! -f gexace.tar.bz2 ]; then
 	CANCEL
 fi
 clean_project
-move gexace.tar.bz2 $EXPORT_DIR
+move gexace.tar.bz2 $EXPORT_DIR/bin
 
 remtrace gexslt
 finalize gexslt.ecf gexslt
@@ -266,7 +270,7 @@ if [ ! -f gexslt.tar.bz2 ]; then
 	CANCEL
 fi
 clean_project
-move gexslt.tar.bz2 $EXPORT_DIR
+move gexslt.tar.bz2 $EXPORT_DIR/bin
 
 remtrace geyacc
 finalize geyacc.ecf geyacc
@@ -276,4 +280,4 @@ if [ ! -f geyacc.tar.bz2 ]; then
 	CANCEL
 fi
 clean_project
-move geyacc.tar.bz2 $EXPORT_DIR
+move geyacc.tar.bz2 $EXPORT_DIR/bin

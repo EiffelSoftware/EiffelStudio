@@ -35,29 +35,32 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	non_switched_argument_name: !STRING
+	non_switched_argument_name: STRING
 			-- Name of non-switched argument, used in usage information.
 		deferred
 		ensure
+			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
 		end
 
-	non_switched_argument_description: !STRING
+	non_switched_argument_description: STRING
 			-- Description of non-switched argument, used in usage information.
 		deferred
 		ensure
+			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
 		end
 
-	non_switched_argument_type: !STRING
+	non_switched_argument_type: STRING
 			-- Type of non-switched argument, used in usage information.
 			-- A type is a short description of the argument. I.E. "Configuration File"
 		deferred
 		ensure
+			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
 		end
 
-	frozen non_switched_argument_name_arg: !STRING
+	frozen non_switched_argument_name_arg: STRING
 			-- Name of non-switched argument arg name, used in usage information.
 		once
 			create Result.make (non_switched_argument_name.count + 2)
@@ -65,15 +68,16 @@ feature {NONE} -- Access
 			Result.append (non_switched_argument_name)
 			Result.append_character ('>')
 		ensure
+			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
 		end
 
 feature {NONE} -- Query
 
-	command_option_group_configuration (a_group: !LIST [!ARGUMENT_SWITCH]; a_show_non_switch: BOOLEAN; a_non_switch_required: BOOLEAN; a_add_appurtenances: BOOLEAN; a_src_group: !LIST [!ARGUMENT_SWITCH]): ?STRING
+	command_option_group_configuration (a_group: LIST [ARGUMENT_SWITCH]; a_show_non_switch: BOOLEAN; a_non_switch_required: BOOLEAN; a_add_appurtenances: BOOLEAN; a_src_group: LIST [ARGUMENT_SWITCH]): STRING
 			-- <Precursor>
 		local
-			l_suffix: STRING
+			l_suffix: ?STRING
 			l_arg: STRING
 			l_args: STRING
 		do
@@ -100,7 +104,7 @@ feature {NONE} -- Query
 			end
 		end
 
-	extended_usage: !STRING
+	extended_usage: STRING
 			-- <Precursor>
 		local
 			l_tabbed_nl: STRING
@@ -121,15 +125,15 @@ feature {NONE} -- Query
 
 feature {NONE} -- Validation
 
-	validate_non_switched_arguments (a_groups: ?LIST [!ARGUMENT_GROUP])
+	validate_non_switched_arguments (a_groups: LIST [ARGUMENT_GROUP])
 			-- <Precursor>
 		local
 			l_check_non_switched_arguments: BOOLEAN
 			l_cursor: CURSOR
 		do
-			Precursor {ARGUMENT_BASE_PARSER} (a_groups)
+			Precursor (a_groups)
 
-			l_check_non_switched_arguments := a_groups = Void
+			l_check_non_switched_arguments := a_groups.is_empty
 			if not l_check_non_switched_arguments then
 					-- There are groups so check if non-switch arguments are used.
 				l_cursor := a_groups.cursor
@@ -149,15 +153,15 @@ feature {NONE} -- Validation
 
 feature {NONE} -- Internationalization
 
-	e_missing_non_switched_argument: !STRING = "{1} is require and was not specified."
+	e_missing_non_switched_argument: STRING = "{1} is require and was not specified."
 
 invariant
 	is_allowing_non_switched_arguments: is_allowing_non_switched_arguments
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
-	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -168,19 +172,19 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

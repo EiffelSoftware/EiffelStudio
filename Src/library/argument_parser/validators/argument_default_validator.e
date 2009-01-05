@@ -1,45 +1,24 @@
 note
-	description: "Argument parser that accepts only switch options."
+	description: "A command line switch validator that validates all values."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
-	ARGUMENT_OPTION_PARSER
+class
+	ARGUMENT_DEFAULT_VALIDATOR
 
 inherit
-	ARGUMENT_BASE_PARSER
-		rename
-			make as make_base_parser
-		export
-			{NONE} values
-		redefine
-			execute_noop
-		end
+	ARGUMENT_VALUE_VALIDATOR
 
-feature {NONE} -- Initialization
+feature {NONE} -- Validation
 
-	make (a_cs: like is_case_sensitive)
-			-- ...
-		do
-			make_base_parser (a_cs, False, False)
-		ensure
-			is_case_sensitive_set: is_case_sensitive = a_cs
-		end
-
-feature {NONE} -- Basic Operations
-
-	execute_noop (a_action: PROCEDURE [ANY, ?TUPLE])
+	validate_value (a_value: READABLE_STRING_8)
 			-- <Precursor>
 		do
-			a_action.call (Void)
 		end
 
-invariant
-	not_is_allowing_non_switched_arguments: not is_allowing_non_switched_arguments
-
-note
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
@@ -71,4 +50,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class {ARGUMENT_OPTION_PARSER}
+end

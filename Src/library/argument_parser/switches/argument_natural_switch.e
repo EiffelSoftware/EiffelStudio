@@ -13,8 +13,8 @@ inherit
 		redefine
 			make,
 			make_hidden,
-			create_option,
-			create_value_option,
+			new_option,
+			new_value_option,
 			value_validator
 		end
 
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			--
 			-- Note: To use long and short names set name `a_id' := "s|long"
 		do
-			Precursor {ARGUMENT_VALUE_SWITCH}(a_id, a_desc, a_optional, a_allow_mutliple, a_arg_name, a_arg_desc, a_val_optional)
+			Precursor (a_id, a_desc, a_optional, a_allow_mutliple, a_arg_name, a_arg_desc, a_val_optional)
 			min := {NATURAL_64}.min_value
 			max := {NATURAL_64}.max_value
 		ensure then
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			--
 			-- Note: To use long and short names set name `a_id' := "s|long"
 		do
-			Precursor {ARGUMENT_VALUE_SWITCH}(a_id, a_desc, a_optional, a_allow_mutliple, a_arg_name, a_arg_desc, a_val_optional)
+			Precursor (a_id, a_desc, a_optional, a_allow_mutliple, a_arg_name, a_arg_desc, a_val_optional)
 		ensure then
 			min_set: min = {NATURAL_64}.min_value
 			max_set: max = {NATURAL_64}.max_value
@@ -115,7 +115,7 @@ feature -- Access
 
 feature {ARGUMENT_BASE_PARSER} -- Access
 
-	value_validator: !ARGUMENT_NATURAL_RANGE_VALIDATOR
+	value_validator: ARGUMENT_NATURAL_RANGE_VALIDATOR
 			-- <Precursor>
 		do
 			create Result.make (min, max)
@@ -137,13 +137,13 @@ feature -- Element change
 
 feature {ARGUMENT_BASE_PARSER} -- Factory Functions
 
-	create_option: !ARGUMENT_NATURAL_OPTION
+	new_option: ARGUMENT_NATURAL_OPTION
 			-- <Precursor>
 		do
 			create Result.make (Current)
 		end
 
-	create_value_option (a_value: !STRING): !ARGUMENT_NATURAL_OPTION
+	new_value_option (a_value: STRING): ARGUMENT_NATURAL_OPTION
 			-- <Precursor>
 		do
 			create Result.make_with_value (a_value, Current)
@@ -155,9 +155,9 @@ invariant
 	min_less_than_max: min < max
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
-	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -168,19 +168,19 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

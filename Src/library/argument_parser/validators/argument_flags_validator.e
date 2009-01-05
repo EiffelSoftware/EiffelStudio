@@ -25,18 +25,19 @@ feature {NONE} -- Initialization
 			-- `a_flags': The list of available, valid flags.
 			-- `is_case_sensitive': True to indicate if the flags are case sensitive; False otherwise.
 		require
+			a_flags_attached: a_flags /= Void
 			not_a_flags_is_empty: not a_flags.is_empty
 		do
 			flags := a_flags
 			is_case_sensitive := a_cs
 		ensure
-			flags_set: flags = a_flags
+			flags_set: flags ~ a_flags
 			is_case_sensitive_set: is_case_sensitive = a_cs
 		end
 
 feature -- Access
 
-	flags: !LINEAR [CHARACTER]
+	flags: LINEAR [CHARACTER]
 			-- Available valid flag options.
 
 feature -- Status report
@@ -44,9 +45,9 @@ feature -- Status report
 	is_case_sensitive: BOOLEAN
 			-- Indicates if flags are case sensitive.
 
-feature -- Validation
+feature {NONE} -- Validation
 
-	validate_value (a_value: !STRING)
+	validate_value (a_value: READABLE_STRING_8)
 			-- <Precursor>
 		local
 			l_cs: BOOLEAN
@@ -57,7 +58,6 @@ feature -- Validation
 			c: CHARACTER
 			i: INTEGER
 		do
-			l_valid := True
 			create l_invalid_flags.make (a_value.count)
 			l_cs := is_case_sensitive
 			l_flags := flags
@@ -74,22 +74,26 @@ feature -- Validation
 				end
 				i := i + 1
 			end
-			l_valid := l_invalid_flags.is_empty
-			if l_valid then
-				reason := (create {STRING_FORMATTER}).format ("Flags '{1}' are not valid flags for this option.", [l_invalid_flags])
+			if not l_invalid_flags.is_empty then
+				invalidate_option ((create {STRING_FORMATTER}).format (e_invalid_flag, [l_invalid_flags]))
 			end
-			is_option_valid := l_valid
 		end
 
+feature {NONE} -- Internationalization
+
+	e_invalid_flag: STRING = "Flags '{1}' are not valid flags for this option."
+
 invariant
+	flags_attached: flags/= Void
 	not_flags_is_empty: not flags.is_empty
 	flags_contain_printable_character: flags.for_all (
-		agent (ia_char: CHARACTER): BOOLEAN do Result := ia_char.is_printable end)
+		agent (ia_char: CHARACTER): BOOLEAN
+			do Result := ia_char.is_printable end)
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
-	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -100,22 +104,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class {ARGUMENT_FLAGS_VALIDATOR}
+end

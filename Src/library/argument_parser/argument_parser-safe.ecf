@@ -5,10 +5,10 @@
 		<file_rule>
 			<exclude>/.svn$</exclude>
 		</file_rule>
-		<option full_class_checking="true" is_attached_by_default="false" is_void_safe="false" syntax_level="1" namespace="EiffelSoftware.Framework">
+		<option full_class_checking="true" is_attached_by_default="true" is_void_safe="true" syntax_level="1" namespace="EiffelSoftware.Framework">
 			<assertions supplier_precondition="true"/>
 		</option>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="true"/>
 		<cluster name="arg_parser" location=".\" recursive="true">
 			<option namespace="ArgumentParser">
 			</option>

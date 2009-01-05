@@ -1,45 +1,50 @@
 note
-	description: "Argument parser that accepts only switch options."
+	description: "A command line switch file validator that checks if an integer is with a value range."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
-	ARGUMENT_OPTION_PARSER
+	ARGUMENT_NUMERIC_RANGE_VALIDATOR [G -> {NUMERIC, COMPARABLE}]
 
 inherit
-	ARGUMENT_BASE_PARSER
-		rename
-			make as make_base_parser
-		export
-			{NONE} values
-		redefine
-			execute_noop
-		end
+	ARGUMENT_VALUE_VALIDATOR
 
 feature {NONE} -- Initialization
 
-	make (a_cs: like is_case_sensitive)
-			-- ...
+	make (a_min: like min; a_max: like max)
+			-- Initializes validator with a minimum and maximum value.
+			--
+			-- `a_min': Minimum, inclusive accepted value.
+			-- `a_max': Maximum, inclusive accepted value.
+		require
+			a_min_less_than_a_max: a_min < a_max
 		do
-			make_base_parser (a_cs, False, False)
+			min := a_min
+			max := a_max
 		ensure
-			is_case_sensitive_set: is_case_sensitive = a_cs
+			min_set: min = a_min
+			max_set: max = a_max
 		end
 
-feature {NONE} -- Basic Operations
+feature -- Access
 
-	execute_noop (a_action: PROCEDURE [ANY, ?TUPLE])
-			-- <Precursor>
-		do
-			a_action.call (Void)
-		end
+	min: G
+			-- Minimum accepted value.
+
+	max: G
+			-- Maximum accepted value.
+
+feature {NONE} -- Internationalization
+
+	e_not_within_range: STRING = "'{1} is not within the range from {2} to {3}.'"
+	e_invalid_number: STRING = "The specified value is not a valid number."
 
 invariant
-	not_is_allowing_non_switched_arguments: not is_allowing_non_switched_arguments
+	min_less_than_max: min < max
 
-note
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
@@ -71,4 +76,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class {ARGUMENT_OPTION_PARSER}
+end

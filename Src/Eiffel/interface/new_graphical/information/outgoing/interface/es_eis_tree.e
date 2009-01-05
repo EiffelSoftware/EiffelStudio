@@ -124,7 +124,7 @@ feature {NONE} -- Initialization
 		local
 			l_item: ES_EIS_TREE_TAG_ITEM
 			l_managed_tags: like managed_tags
-			l_tags: HASH_TABLE [!SEARCH_TABLE [!EIS_ENTRY], !STRING_32]
+			l_tags: HASH_TABLE [SEARCH_TABLE [EIS_ENTRY], STRING_32]
 		do
 			create l_item.make (interface_names.l_items_without_tag)
 			l_item.set_pixmap (pixmaps.icon_pixmaps.information_no_tag_icon)
@@ -366,14 +366,14 @@ feature {NONE} -- Access
 	eis_tool_widget: !ES_EIS_TOOL_WIDGET;
 			-- The tool widget
 
-	managed_tags: !SORTED_TWO_WAY_LIST [!STRING_32];
+	managed_tags: !SORTED_TWO_WAY_LIST [STRING_32];
 			-- Sorted tags. Do not change directly out of EIS observer.
 
 invariant
 	only_first_item_is_off_mapping: (tag_header /= Void and not is_recycled) implies managed_tags.count = tag_header.count - 1
 
 note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -398,7 +398,7 @@ note
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

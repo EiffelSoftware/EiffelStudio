@@ -144,11 +144,11 @@ feature -- Element change
 			-- `a_component_id' is the class EIS id when `a_entry' is written in a feature
 		local
 			l_tags: ARRAYED_LIST [STRING_32]
-			l_entries: SEARCH_TABLE [!EIS_ENTRY]
+			l_entries: SEARCH_TABLE [EIS_ENTRY]
 		do
 			if entry_server.deregister_entry (a_entry, a_component_id) then
 					-- Syncronize tag server
-				if {lt_tags: ARRAYED_LIST [!STRING_32]}a_entry.tags and then not lt_tags.is_empty then
+				if {lt_tags: ARRAYED_LIST [STRING_32]}a_entry.tags and then not lt_tags.is_empty then
 					l_tags := lt_tags.twin
 					from
 						l_tags.start
@@ -175,9 +175,11 @@ feature -- Element change
 			end
 		end
 
-	register_entries_of_component_id (a_entries: !SEARCH_TABLE [!EIS_ENTRY]; a_component_id: !STRING)
+	register_entries_of_component_id (a_entries: !SEARCH_TABLE [EIS_ENTRY]; a_component_id: !STRING)
 			-- Deregister entries of `a_component_id'.
 			-- Syncronize servers
+		local
+			l_entry: ?EIS_ENTRY
 		do
 				-- We need to correctly remove old entries first, and sync tag server.
 			deregister_entries_of_component_id (a_component_id)
@@ -187,7 +189,9 @@ feature -- Element change
 			until
 				a_entries.after
 			loop
-				register_entry (a_entries.item_for_iteration, a_component_id)
+				l_entry := a_entries.item_for_iteration
+				check l_entry_not_void: l_entry /= Void end
+				register_entry (l_entry, a_component_id)
 				a_entries.forth
 			end
 				-- We still keep the information that the component does not contain any entry.
@@ -200,9 +204,10 @@ feature -- Element change
 			-- Deregister entries of `a_component_id'.
 			-- Syncronize servers
 		local
-			l_entries: SEARCH_TABLE [!EIS_ENTRY]
+			l_entries: SEARCH_TABLE [EIS_ENTRY]
+			l_entry: ?EIS_ENTRY
 		do
-			if {lt_entries: SEARCH_TABLE [!EIS_ENTRY]}entry_server.entries_of_id (a_component_id) then
+			if {lt_entries: SEARCH_TABLE [EIS_ENTRY]}entry_server.entries_of_id (a_component_id) then
 					-- Twinning to ensure that the circulation structure is not broken by `deregister_entry'
 				l_entries := lt_entries.twin
 				from
@@ -210,9 +215,9 @@ feature -- Element change
 				until
 					lt_entries.after
 				loop
-					if {lt_entry: EIS_ENTRY}lt_entries.item_for_iteration then
-						deregister_entry (lt_entries.item_for_iteration, a_component_id)
-					end
+					l_entry := lt_entries.item_for_iteration
+					check l_entry_not_void: l_entry /= Void end
+					deregister_entry (l_entry, a_component_id)
 					lt_entries.forth
 				end
 			end
@@ -221,7 +226,7 @@ feature -- Element change
 	clean_up
 			-- Clean up the storage, remove garbage information
 		local
-			l_entries: HASH_TABLE [!SEARCH_TABLE [!EIS_ENTRY], !STRING]
+			l_entries: HASH_TABLE [SEARCH_TABLE [EIS_ENTRY], STRING]
 		do
 			l_entries := entry_server.entries.twin
 			from
@@ -238,7 +243,7 @@ feature -- Element change
 
 feature -- Access
 
-	tag_server: !EIS_ENTRY_SERVER [!EIS_ENTRY, !STRING_32]
+	tag_server: !EIS_ENTRY_SERVER [EIS_ENTRY, STRING_32]
 			-- Tag server
 		do
 			if {lt_tag_server: like tag_server}internal_tag_server then
@@ -249,7 +254,7 @@ feature -- Access
 			end
 		end
 
-	entry_server: !EIS_ENTRY_SERVER [!EIS_ENTRY, !STRING]
+	entry_server: !EIS_ENTRY_SERVER [EIS_ENTRY, STRING]
 			-- Entry server
 		do
 			if {lt_entry_server: like entry_server}internal_entry_server then
@@ -279,7 +284,7 @@ feature {NONE} -- Access
 			-- Internal entry server
 
 note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -304,7 +309,7 @@ note
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

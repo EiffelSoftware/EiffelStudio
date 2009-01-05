@@ -34,7 +34,7 @@ feature {EIS_STORAGE} -- Element change
 			-- Return True if an entry is really registered.
 		local
 			l_entries: like entries
-			l_entry_list: !SEARCH_TABLE [!H]
+			l_entry_list: !SEARCH_TABLE [H]
 		do
 			l_entries := entries
 			l_entries.search (a_id)
@@ -58,7 +58,7 @@ feature {EIS_STORAGE} -- Element change
 			-- Return True if an entry is really deregistered.
 		local
 			l_entries: like entries
-			l_entry_list: !SEARCH_TABLE [!H]
+			l_entry_list: !SEARCH_TABLE [H]
 		do
 			if {lt_entries: like entries}entries then
 				l_entries := entries
@@ -74,7 +74,7 @@ feature {EIS_STORAGE} -- Element change
 			end
 		end
 
-	register_entries_of_id (a_entries: !SEARCH_TABLE [!H]; a_id: !G)
+	register_entries_of_id (a_entries: !SEARCH_TABLE [H]; a_id: !G)
 			-- Deregister entries of `a_id'.
 		do
 			entries.force (a_entries, a_id)
@@ -92,13 +92,13 @@ feature {EIS_STORAGE} -- Element change
 			-- Register `a_id' with no entry.
 		do
 			if {lt_entries: like entries}entries then
-				lt_entries.force (create {SEARCH_TABLE [!H]}.make (0), a_id)
+				lt_entries.force (create {SEARCH_TABLE [H]}.make (0), a_id)
 			end
 		end
 
 feature -- Access
 
-	entries_of_id (a_id: !G): ?SEARCH_TABLE [!H]
+	entries_of_id (a_id: !G): ?SEARCH_TABLE [H]
 			-- EIS entries of `a_id'
 			-- Do not change directly.
 			-- Only for querying.
@@ -111,7 +111,7 @@ feature -- Access
 			end
 		end
 
-	entries: !HASH_TABLE [!SEARCH_TABLE [!H], !G]
+	entries: !HASH_TABLE [SEARCH_TABLE [H], G]
 			-- Entries to be stored.
 			-- Do not change directly.
 			-- Only for querying.
@@ -119,7 +119,7 @@ feature -- Access
 feature {NONE} -- Implementation
 
 note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -144,7 +144,7 @@ note
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

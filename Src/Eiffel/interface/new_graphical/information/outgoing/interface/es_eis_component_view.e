@@ -538,7 +538,7 @@ feature {NONE} -- Access
 		do
 			if session_manager.is_service_available then
 				l_session := session_manager.service.retrieve (False)
-				if {lt_column: !INTEGER_REF} l_session.value_or_default (eis_entry_grid_sorting_column_session_id, False) then
+				if {lt_column: INTEGER_REF} l_session.value_or_default (eis_entry_grid_sorting_column_session_id, False) then
 					Result := lt_column.item
 				end
 			end
@@ -556,7 +556,7 @@ feature {NONE} -- Access
 		do
 			if session_manager.is_service_available then
 				l_session := session_manager.service.retrieve (False)
-				if {lt_order: !BOOLEAN_REF} l_session.value_or_default (eis_entry_grid_sorting_order_session_id, False) then
+				if {lt_order: BOOLEAN_REF} l_session.value_or_default (eis_entry_grid_sorting_order_session_id, False) then
 					Result := lt_order.item
 				end
 			end

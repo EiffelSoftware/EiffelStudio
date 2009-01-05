@@ -165,15 +165,16 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	parse_tags (a_tag_string: !STRING): !ARRAYED_LIST [!STRING_32]
+	parse_tags (a_tag_string: !STRING): !ARRAYED_LIST [STRING_32]
 			-- Parse `a_tag_string' into an array.
 			-- tag string should be in the form of "tag1, tag2, tag3"
 		do
 			if {lt_tag_string: STRING_32}a_tag_string.as_string_32 then
-				if {lt_splitted: !ARRAYED_LIST [!STRING_32]}lt_tag_string.split ({ES_EIS_TOKENS}.tag_seperator) then
+				if {lt_splitted: ARRAYED_LIST [STRING_32]}lt_tag_string.split ({ES_EIS_TOKENS}.tag_seperator) then
 					lt_splitted.do_all (
-							agent (aa_string: !STRING_32)
+							agent (aa_string: STRING_32)
 								do
+									check aa_string_not_void: aa_string /= Void end
 									aa_string.left_adjust
 									aa_string.right_adjust
 								end)
@@ -197,7 +198,7 @@ feature {NONE} -- Implementation
 			-- Or ""other1=value1", other2=value2, "other3=value3""
 		do
 			if {lt_tag_string: STRING_32}a_others_string then
-				if {lt_splitted: !ARRAYED_LIST [!STRING_32]}lt_tag_string.split ({ES_EIS_TOKENS}.attribute_seperator) then
+				if {lt_splitted: ARRAYED_LIST [STRING_32]}lt_tag_string.split ({ES_EIS_TOKENS}.attribute_seperator) then
 					create Result.make (1)
 					lt_splitted.do_all (
 							agent (aa_string: !STRING_32; a_result: !HASH_TABLE [STRING_32, STRING_32])
@@ -238,7 +239,7 @@ feature {NONE} -- Implemetation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -263,7 +264,7 @@ note
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

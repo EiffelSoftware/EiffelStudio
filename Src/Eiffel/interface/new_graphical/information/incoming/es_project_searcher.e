@@ -98,7 +98,8 @@ feature {NONE} -- Implemetation
 			search_needed: search_needed
 		local
 			l_file_uti: FILE_UTILITIES
-			l_files: !DS_ARRAYED_LIST [!STRING]
+			l_files: !DS_ARRAYED_LIST [STRING]
+			l_file: ?STRING
 		do
 			if file_system.directory_exists (a_path) then
 				create l_file_uti
@@ -108,7 +109,9 @@ feature {NONE} -- Implemetation
 				until
 					l_files.after or project_found
 				loop
-					check_file (l_files.item_for_iteration)
+					l_file := l_files.item_for_iteration
+					check l_file_not_void: l_file /= Void end
+					check_file (l_file)
 					l_files.forth
 				end
 			end
@@ -228,7 +231,7 @@ invariant
 	project_found_implies_project_not_void: project_found implies (found_project /= Void)
 
 note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -253,7 +256,7 @@ note
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

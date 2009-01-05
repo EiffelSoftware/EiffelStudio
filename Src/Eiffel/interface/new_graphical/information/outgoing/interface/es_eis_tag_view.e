@@ -10,7 +10,7 @@ class
 	ES_EIS_TAG_VIEW
 
 inherit
-	ES_EIS_COMPONENT_VIEW [!STRING_32]
+	ES_EIS_COMPONENT_VIEW [STRING_32]
 		rename
 			component as tag
 		end
@@ -38,7 +38,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -63,7 +63,7 @@ note
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

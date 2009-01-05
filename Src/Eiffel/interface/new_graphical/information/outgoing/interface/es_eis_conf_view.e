@@ -9,7 +9,7 @@ class
 	ES_EIS_CONF_VIEW
 
 inherit
-	ES_EIS_COMPONENT_VIEW [!CONF_NOTABLE]
+	ES_EIS_COMPONENT_VIEW [CONF_NOTABLE]
 		rename
 			component as conf_notable
 		redefine
@@ -371,7 +371,7 @@ feature {NONE} -- Callbacks
 			-- We modify neither the referenced EIS entry when the modification is done.
 		local
 			l_new_entry: !EIS_ENTRY
-			l_tags: !ARRAYED_LIST [!STRING_32]
+			l_tags: !ARRAYED_LIST [STRING_32]
 		do
 			if {lt_entry: EIS_ENTRY}a_item.row.data and then {lt_tags: STRING_32}a_item.text then
 					 -- |FIXME: Bad conversion, should not convert to string_8.

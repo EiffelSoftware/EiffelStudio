@@ -29,6 +29,10 @@ if [ ! -d $EXPORT_DIR ]; then
 	remtrace Couldnt find the directory with the compressed files.
 	CANCEL
 fi
+if [ ! -d $EXPORT_DIR/bin ]; then
+	remtrace Couldnt find the bin directory with the compressed files.
+	CANCEL
+fi
 if [ -f ec_ent.tar.bz2 ]; then
 	MULTIPLE_EDITIONS="True"
 else
@@ -102,6 +106,12 @@ mv $INSTALL_DIR/precomp/spec/platform $INSTALL_DIR/precomp/spec/$ISE_PLATFORM
 fullrd $INSTALL_DIR/studio/config/unix
 fullrd $INSTALL_DIR/studio/spec/unix
 
+#Creates the tools directory
+safe_md $INSTALL_DIR/tools
+safe_md $INSTALL_DIR/tools/spec
+safe_md $INSTALL_DIR/tools/spec/$ISE_PLATFORM
+safe_md $INSTALL_DIR/tools/spec/$ISE_PLATFORM/bin
+
 
 cp C/run-time/lib*.a $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib 
 mac_ranlib $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib/libmtfinalized.a
@@ -124,7 +134,7 @@ fi
 move x2c $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
 
 remtrace Recompile quick_finalize
-cd $EXPORT_DIR
+cd $EXPORT_DIR/bin
 untgz_ccode quick_finalize
 move quick_finalize $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
 
@@ -191,17 +201,17 @@ move vision2_demo $INSTALL_DIR/vision2_demo/spec/$ISE_PLATFORM/bin
 
 if [ "$MULTIPLE_EDITIONS" ]; then
 	remtrace Recompile CD key validator
-	cd $EXPORT_DIR
+	cd $EXPORT_DIR/bin
 	if [ -f setup.tar.bz2 ]; then
 		untgz_ccode setup
 	fi
 fi
 
 remtrace Recompile EiffelStudio
-cd $EXPORT_DIR
 safe_md $EXPORT_DIR/ecs
 
 remtrace GPL edition
+cd $EXPORT_DIR/bin
 cp ec_gpl.tar.bz2 ec.tar.bz2
 untgz_ccode ec no_cancel
 if [ -f ec ]; then
@@ -236,9 +246,19 @@ else
 fi
 
 remtrace Recompile estudio
-cd $EXPORT_DIR
+cd $EXPORT_DIR/bin
 untgz_ccode estudio
 move estudio $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/estudio
+
+remtrace Recompile compile_all
+cd $EXPORT_DIR/bin
+untgz_ccode compile_all
+move compile_all $INSTALL_DIR/tools/spec/$ISE_PLATFORM/bin/compile_all
+
+remtrace Recompile Eiffel Image Embedder
+cd $EXPORT_DIR/bin
+untgz_ccode eimgemb
+move eimgemb $INSTALL_DIR/tools/spec/$ISE_PLATFORM/bin/eimgemb
 
 remtrace Compiling Gobo tools
 safe_md $INSTALL_DIR/library/gobo/spec/
@@ -246,47 +266,47 @@ safe_md $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM
 safe_md $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM/bin
 
 remtrace geant
-cd $EXPORT_DIR
+cd $EXPORT_DIR/bin
 untgz_ccode geant
 move geant $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM/bin/geant
 
 remtrace gec
-cd $EXPORT_DIR
+cd $EXPORT_DIR/bin
 untgz_ccode gec
 move gec $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM/bin/gec
 
 remtrace gelex
-cd $EXPORT_DIR
+cd $EXPORT_DIR/bin
 untgz_ccode gelex
 move gelex $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM/bin/gelex
 
 remtrace gelint
-cd $EXPORT_DIR
+cd $EXPORT_DIR/bin
 untgz_ccode gelint
 move gelint $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM/bin/gelint
 
 remtrace gepp
-cd $EXPORT_DIR
+cd $EXPORT_DIR/bin
 untgz_ccode gepp
 move gepp $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM/bin/gepp
 
 remtrace getest
-cd $EXPORT_DIR
+cd $EXPORT_DIR/bin
 untgz_ccode getest
 move getest $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM/bin/getest
 
 remtrace gexace
-cd $EXPORT_DIR
+cd $EXPORT_DIR/bin
 untgz_ccode gexace
 move gexace $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM/bin/gexace
 
 remtrace gexslt
-cd $EXPORT_DIR
+cd $EXPORT_DIR/bin
 untgz_ccode gexslt
 move gexslt $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM/bin/gexslt
 
 remtrace geyacc
-cd $EXPORT_DIR
+cd $EXPORT_DIR/bin
 untgz_ccode geyacc
 move geyacc $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM/bin/geyacc
 

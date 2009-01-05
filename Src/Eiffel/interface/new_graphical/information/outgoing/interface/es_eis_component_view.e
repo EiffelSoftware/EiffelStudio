@@ -424,16 +424,17 @@ feature {NONE} -- Events
 	on_item_display (a_column, a_row: INTEGER): EV_GRID_ITEM
 			-- On item expose.
 		local
-			l_eis_entry: !EIS_ENTRY
+			l_eis_entry: EIS_ENTRY
 			l_entry_row_count: INTEGER
 		do
 			l_entry_row_count := eis_grid.row_count
 			if new_entry_possible then
 				l_entry_row_count := l_entry_row_count - 1
 			end
-			if a_row > 0 and a_row <= l_entry_row_count and {lt_entries: DS_ARRAYED_LIST [!EIS_ENTRY]}extracted_entries then
+			if a_row > 0 and a_row <= l_entry_row_count and {lt_entries: DS_ARRAYED_LIST [EIS_ENTRY]}extracted_entries then
 					-- Retrieve corresponding EIS entry.
 				l_eis_entry := lt_entries.item (a_row)
+				check l_eis_entry_not_void: l_eis_entry /= Void end
 					-- Connect the EIS entry to the line of the grid.
 				if not {lt_entry: EIS_ENTRY}eis_grid.row (a_row).data then
 					eis_grid.row (a_row).set_data (l_eis_entry)
@@ -976,7 +977,7 @@ feature {NONE} -- Column constants
 	numbers_of_column: INTEGER = 6;
 
 note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -1001,7 +1002,7 @@ note
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

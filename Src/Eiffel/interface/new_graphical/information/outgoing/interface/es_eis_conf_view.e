@@ -25,6 +25,11 @@ inherit
 			on_others_changed
 		end
 
+	SHARED_WORKBENCH
+		export
+			{NONE} all
+		end
+
 	CONF_ACCESS
 		export
 			{NONE} all
@@ -57,19 +62,8 @@ feature -- Querry
 
 	component_editable: BOOLEAN
 			-- Is component editable?
-		local
-			l_lib: CONF_LIBRARY
 		do
-			if {lt_target: CONF_TARGET}conf_notable then
-				l_lib := lt_target.system.application_target_library
-				if l_lib /= Void then
-					Result := not l_lib.is_readonly
-				else
-					Result := not lt_target.system.is_readonly
-				end
-			elseif {lt_cluster: CONF_CLUSTER}conf_notable then
-				Result := not lt_cluster.is_readonly
-			end
+			Result := conf_notable_editable (conf_notable)
 		end
 
 feature -- Operation
@@ -243,28 +237,40 @@ feature {NONE} -- Conf modification
 			-- If `a_entry' is editable through current view?
 		local
 			l_type: NATURAL
-			l_cluster: CONF_CLUSTER
 			l_target: CONF_TARGET
-			l_lib: CONF_LIBRARY
 		do
 			if {lt_id: STRING}a_entry.id then
 				l_type := id_solution.most_possible_type_of_id (lt_id)
 				if l_type = id_solution.target_type and then lt_id.is_equal (component_id) then
 					l_target := id_solution.target_of_id (lt_id)
 					if l_target /= Void then
-						l_lib := l_target.system.application_target_library
-						if l_lib /= Void then
-							Result := not l_lib.is_readonly
-						else
-							Result := not l_target.system.is_readonly
-						end
+						Result := conf_notable_editable (l_target)
 					end
 				elseif l_type = id_solution.group_type and then lt_id.is_equal (component_id) then
-					l_cluster ?= id_solution.group_of_id (lt_id)
-					if l_cluster /= Void then
-						Result := not l_cluster.is_readonly
+					if {lt_cluster: CONF_CLUSTER}id_solution.group_of_id (lt_id) then
+						Result := conf_notable_editable (lt_cluster)
 					end
 				end
+			end
+		end
+
+	conf_notable_editable (a_notable: CONF_NOTABLE): BOOLEAN
+			-- Is `a_notable' editable?
+		local
+			l_lib: CONF_LIBRARY
+		do
+			if {lt_target: CONF_TARGET}conf_notable then
+				l_lib := lt_target.system.application_target_library
+				if l_lib /= Void then
+					Result := not l_lib.is_readonly
+				elseif lt_target = universe.target then
+						-- Application target is always editable.
+					Result := True
+				else
+					Result := not lt_target.system.is_readonly
+				end
+			elseif {lt_cluster: CONF_CLUSTER}conf_notable then
+				Result := not lt_cluster.is_readonly
 			end
 		end
 
@@ -501,7 +507,7 @@ invariant
 	conf_notable_is_valid: valid_notable (conf_notable)
 
 note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -526,7 +532,7 @@ note
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

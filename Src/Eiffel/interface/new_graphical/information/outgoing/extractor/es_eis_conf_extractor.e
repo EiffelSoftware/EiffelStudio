@@ -18,12 +18,15 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_notable: !CONF_NOTABLE)
+	make (a_notable: !CONF_NOTABLE; a_force: BOOLEAN)
 			-- Initialize with `a_notable'.
 		do
 			notable := a_notable
 			create eis_entries.make (2)
+			force_extracting := a_force
 			extract
+		ensure
+			force_extracting_set: force_extracting = a_force
 		end
 
 feature -- Access
@@ -37,7 +40,7 @@ feature -- Access
 				if {lt_target: CONF_TARGET}notable then
 					Result := eis_entries
 				elseif {lt_group: CONF_CLUSTER}notable and then {lt_group_target: CONF_TARGET}lt_group.target then
-					create l_conf_extractor.make (lt_group_target)
+					create l_conf_extractor.make (lt_group_target, True)
 					Result := l_conf_extractor.eis_entries.twin
 					Result.merge (eis_entries.twin)
 				else
@@ -69,7 +72,7 @@ feature {NONE} -- Implementation
 			if {lt_id: STRING}l_id then
 				l_entries := storage.entry_server.entries
 				l_entries.search (lt_id)
-				if not l_entries.found then
+				if not l_entries.found or force_extracting then
 					l_notable := notable
 					l_notes := l_notable.notes
 					if l_notes /= Void then

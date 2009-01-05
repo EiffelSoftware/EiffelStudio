@@ -373,7 +373,7 @@ feature {NONE} -- Implementation
 	new_extractor: !ES_EIS_EXTRACTOR
 			-- Create extractor
 		do
-			create {ES_EIS_CLASS_EXTRACTOR}Result.make (class_i)
+			create {ES_EIS_CLASS_EXTRACTOR}Result.make (class_i, True)
 		end
 
 	background_color_of_entry (a_entry: !EIS_ENTRY): EV_COLOR

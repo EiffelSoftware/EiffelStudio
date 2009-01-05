@@ -245,14 +245,16 @@ feature {NONE} -- Variable expansion
 
 	es_built_in_variables: !HASH_TABLE [STRING, STRING]
 			-- ES built-in variables.
+			-- These variables should ideally be built into a configure file.
 		once
-			create Result.make (2)
+			create Result.make (3)
 			Result.put ("http://dev.eiffel.com", "ISE_WIKI")
 			Result.put ("http://www.eiffelroom.com", "EIFFELROOM")
+			Result.put ("http://doc.eiffel.com", "ISE_DOC")
 		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

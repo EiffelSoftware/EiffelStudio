@@ -1705,18 +1705,24 @@ feature -- Polymorphism
  		require
 			positive_rout_id: rout_id > 0
 			valid_rout_id: rout_id_set.has (rout_id)
+		local
+			seed: FEATURE_I
  		do
  			if not is_attribute or else not Routine_id_counter.is_attribute (rout_id) then
  					-- This is a routine.
  					-- The seed is a routine as well.
  				create {ROUT_TABLE} Result.make (rout_id)
- 			elseif system.seed_of_routine_id (rout_id).has_formal then
- 					-- This is an attribute with a seed of a formal generic type.
- 				create {GENERIC_ATTRIBUTE_TABLE} Result.make (rout_id)
  			else
- 					-- This is an attribute with a seed that is not of a formal generic type.
- 				create {ATTR_TABLE [ATTR_ENTRY]} Result.make (rout_id)
- 			end
+ 				seed := system.seed_of_routine_id (rout_id)
+	 			if seed.has_formal or else not  seed.type.actual_type.is_expanded then
+	 					-- This is an attribute with a seed of a formal generic type that may become expanded
+	 					--  or of a non-expanded type that may require initialization.
+	 				create {GENERIC_ATTRIBUTE_TABLE} Result.make (rout_id)
+	 			else
+	 					-- This is an attribute with a seed that is not of a formal generic type.
+	 				create {ATTR_TABLE [ATTR_ENTRY]} Result.make (rout_id)
+	 			end
+	 		end
  		end
 
  	new_entry (rout_id: INTEGER): ENTRY

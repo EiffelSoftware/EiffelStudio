@@ -156,9 +156,11 @@ feature -- Element change
 			l_pos: !like ast_position
 			l_license: !STRING_32
 			l_data: like modified_data
-			l_parser: !like indexing_parser
-			l_wrapper: !like eiffel_parser_wrapper
+			l_parser: like indexing_parser
+			l_wrapper: like eiffel_parser_wrapper
 			l_options: CONF_OPTION
+			l_indexing_ast: ?INDEXING_CLAUSE_AS
+			l_match_list: like ast_match_list
 		do
 			if a_license = Void then
 					-- Remove the license
@@ -169,12 +171,12 @@ feature -- Element change
 			else
 				if not a_license.as_string_32.is_equal (license) then
 						-- The license is different from the class license, so change it.
-					l_ast := ast_license
-					if l_ast /= Void then
-						l_pos := ast_position (l_ast)
-						replace_code (l_pos.start_position, l_pos.end_position, a_license)
+					l_indexing_ast ?= ast_license
+					l_match_list := ast_match_list
+					if l_indexing_ast /= Void and then l_match_list /= Void then
+						merge_license_code (l_indexing_ast, l_match_list, a_license)
 					else
-							-- There is not indexing AST clause, so insert just above the class end keyword.
+							-- There is no indexing AST clause, so insert just above the class end keyword.
 						l_ast := ast.end_keyword
 						if l_ast /= Void then
 							create l_license.make_from_string (a_license)
@@ -245,7 +247,7 @@ feature {NONE} -- Query
 
 feature -- Status report
 
-	is_valid_license (a_license: ?STRING_GENERAL): BOOLEAN
+	is_valid_license (a_license: ?READABLE_STRING_GENERAL): BOOLEAN
 			-- Detemines if a license text is valid for the current modifier.
 			--
 			-- `a_license': The license to validate.
@@ -260,7 +262,7 @@ feature -- Status report
 
 feature {NONE} -- Status report
 
-	is_parse_valid_license (a_license: ?STRING_GENERAL): BOOLEAN
+	is_parse_valid_license (a_license: ?READABLE_STRING_GENERAL): BOOLEAN
 			-- Detemines if a license text is Eiffel parser valid.
 			--
 			-- `a_license': The license to validate.
@@ -285,6 +287,49 @@ feature {NONE} -- Status report
 			end
 		end
 
+feature {NONE} -- Basic operations: Modifications
+
+	merge_license_code (a_ast: !INDEXING_CLAUSE_AS; a_match_list: !LEAF_AS_LIST; a_license: !READABLE_STRING_GENERAL)
+			-- Merges a license with an indexing/note clause.
+			--
+			-- `a_ast': An AST indexing node.
+			-- `a_match_list': A match list for the AST indexing node.
+			-- `a_license': The license to merge with the supplied AST indexing node.
+		require
+			not_a_license_is_empty: not a_license.is_empty
+			a_license_is_valid_license: is_valid_license (a_license)
+		local
+			l_wrapper: like eiffel_parser_wrapper
+			l_indexing: ?INDEXING_CLAUSE_AS
+			l_match_list: ?LEAF_AS_LIST
+			l_index: INDEX_AS
+			l_old_index: ?INDEX_AS
+			l_tag_name: STRING_GENERAL
+			l_atoms: EIFFEL_LIST [ATOMIC_AS]
+		do
+			l_wrapper := eiffel_parser_wrapper
+			l_wrapper.parse_with_option (round_trip_indexing_parser, a_license, context_class.options, True)
+			if not l_wrapper.has_error then
+				l_indexing ?= l_wrapper.ast_node
+				l_match_list := l_wrapper.ast_match_list
+				if l_indexing /= Void and not l_indexing.is_empty then
+					check l_match_list_attached: l_match_list /= Void end
+					from l_indexing.start until l_indexing.after loop
+						l_index := l_indexing.item_for_iteration
+						l_tag_name := l_index.tag.name
+						l_old_index := a_ast.index_as_of_tag_name (l_tag_name)
+						if l_old_index /= Void then
+							l_atoms := l_old_index.index_list
+							replace_code (l_atoms.start_position, l_atoms.end_position, l_index.index_list.text (l_match_list))
+						else
+							insert_code (a_ast.end_position, "%N%T" + l_index.text (l_match_list))
+						end
+						l_indexing.forth
+					end
+				end
+			end
+		end
+
 feature {NONE} -- Helpers
 
 	indexing_parser: !EIFFEL_PARSER
@@ -296,12 +341,21 @@ feature {NONE} -- Helpers
 			result_is_indexing_parser: Result.indexing_parser
 		end
 
+	round_trip_indexing_parser: !EIFFEL_PARSER
+			-- A parser used to parse indexing clauses, with round-trip facilities.
+		once
+			create Result.make_with_factory (create {AST_ROUNDTRIP_FACTORY})
+			Result.set_indexing_parser
+		ensure
+			result_is_indexing_parser: Result.indexing_parser
+		end
+
 feature -- Constants
 
-	license_name_term: !STRING = "license_name"
+	license_name_term: STRING = "license_name"
 			-- Note term for specifying a license ID.
 
-	default_license_name: !STRING = "default"
+	default_license_name: STRING = "default"
 			-- Default license name.
 
 feature {NONE} -- Implementation: Internal cache
@@ -311,9 +365,9 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -324,19 +378,19 @@ feature {NONE} -- Implementation: Internal cache
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

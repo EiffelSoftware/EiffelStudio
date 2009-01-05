@@ -82,7 +82,7 @@ feature -- Access
 			list: EIFFEL_LIST [ATOMIC_AS]
 			a_string: STRING_AS
 		do
-			i := find_index_as (Assembly_header)
+			i := index_as_of_tag_name (Assembly_header)
 
 			if i /= Void then
 				list := i.index_list
@@ -186,7 +186,7 @@ feature -- Access
 			id: ID_AS
 			list: EIFFEL_LIST [ATOMIC_AS]
 		do
-			i := find_index_as (property_name_header)
+			i := index_as_of_tag_name (property_name_header)
 			if i /= Void then
 				list := i.index_list
 				if not list.is_empty then
@@ -213,7 +213,7 @@ feature -- Access
 			l_string: STRING_AS
 			l_id: ID_AS
 		do
-			l_index := find_index_as (Dotnet_constructors_header)
+			l_index := index_as_of_tag_name (Dotnet_constructors_header)
 			if l_index /= Void then
 				l_list := l_index.index_list
 				if not l_list.is_empty then
@@ -248,7 +248,7 @@ feature -- Access
 			l_id: ID_AS
 			list: EIFFEL_LIST [ATOMIC_AS]
 		do
-			i := find_index_as (Once_status_header)
+			i := index_as_of_tag_name (Once_status_header)
 
 			if i /= Void then
 				list := i.index_list
@@ -278,7 +278,7 @@ feature -- Access
 			s: STRING_AS
 			list: EIFFEL_LIST [ATOMIC_AS]
 		do
-			i := find_index_as (Enum_type_header)
+			i := index_as_of_tag_name (Enum_type_header)
 
 			if i /= Void then
 				list := i.index_list
@@ -296,6 +296,36 @@ feature -- Access
 					end
 				end
 			end
+		end
+
+feature -- Query
+
+	index_as_of_tag_name (tag: READABLE_STRING_GENERAL): ?INDEX_AS
+			-- Find INDEX_AS object holding `tag'
+			-- Void if not found.
+		require
+			tag_not_void: tag /= Void
+			tag_not_empty: not tag.is_empty
+		local
+			i, nb: INTEGER
+			l_index: INDEX_AS
+		do
+			from
+				i := lower
+				nb := upper
+			until
+				i > nb
+			loop
+				l_index := i_th (i)
+				if l_index.tag /= Void and then l_index.tag.name ~ tag then
+					Result := l_index
+						-- Jump out of loop
+					i := nb
+				end
+				i := i + 1
+			end
+		ensure
+			found_return_same_object: Result /= Void implies Result = index_as_of_tag_name (tag)
 		end
 
 feature {NONE} -- Constants
@@ -377,7 +407,7 @@ feature {NONE} -- Implementation
 			ca: CUSTOM_ATTRIBUTE_AS
 			list: EIFFEL_LIST [ATOMIC_AS]
 		do
-			i := find_index_as (tag)
+			i := index_as_of_tag_name (tag)
 
 			if i /= Void then
 					-- Do not care if more than one element has been added
@@ -401,43 +431,18 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	find_index_as (tag: STRING): INDEX_AS
-			-- Find INDEX_AS object holding `tag'
-			-- Void if not found.
-		require
-			tag_not_void: tag /= Void
-			tag_not_empty: not tag.is_empty
-		local
-			i, nb: INTEGER
-			l_index: INDEX_AS
-		do
-			from
-				i := lower
-				nb := upper
-			until
-				i > nb
-			loop
-				l_index := i_th (i)
-				if l_index.tag /= Void and then l_index.tag.name.is_equal (tag) then
-					Result := l_index
-						-- Jump out of loop
-					i := nb
-				end
-				i := i + 1
-			end
-		ensure
-			found_return_same_object: Result /= Void implies Result = find_index_as (tag)
-		end
-
-	string_value (tag: STRING): STRING
+	string_value (tag: READABLE_STRING_GENERAL): STRING
 			-- String associated with `tag'
 			-- Void if not a string or not tag `tag'
+		require
+			tag_attached: tag /= Void
+			not_tag_is_empty: not tag.is_empty
 		local
 			i: INDEX_AS
 			list: EIFFEL_LIST [ATOMIC_AS]
 			s: STRING_AS
 		do
-			i := find_index_as (tag)
+			i := index_as_of_tag_name (tag)
 
 			if i /= Void then
 				list := i.index_list
@@ -514,9 +519,9 @@ feature -- Roundtrip
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -527,19 +532,19 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

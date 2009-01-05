@@ -39,13 +39,13 @@ feature {NONE} -- Basic operations
 			if {lt_class_stone: CLASSI_STONE}a_object.stone then
 				if a_object.text_is_fully_loaded then
 					if {lt_class: CLASS_I}lt_class_stone.class_i then
-						create l_class_extractor.make_with_location (a_object.position, lt_class)
+						create l_class_extractor.make_with_location (a_object.position, lt_class, True)
 						l_entries := l_class_extractor.eis_full_entries
 					end
 				end
 			elseif {lt_cluster_stone: CLUSTER_STONE}a_object.stone then
 				if {lt_cluster: CONF_CLUSTER}lt_cluster_stone.group then
-					create l_cluster_extractor.make (lt_cluster)
+					create l_cluster_extractor.make (lt_cluster, True)
 					l_entries := l_class_extractor.eis_full_entries
 				end
 			end

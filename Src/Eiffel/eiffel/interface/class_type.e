@@ -1507,17 +1507,27 @@ feature -- Structure generation
 			-- Define associated expanded structure if current is expanded.
 		require
 			buffer_not_void: buffer /= Void
+		local
+			l_size: INTEGER
 		do
 			if is_expanded then
 				buffer.put_new_line
 				buffer.put_string (expanded_structure_name)
 				buffer.put_string (" {union overhead overhead; char data [")
-				if byte_context.final_mode then
-					skeleton.generate_size (buffer, False)
+					-- We check the workbench size for a 0 sized object in which case this
+					-- also applies to finalized code. This fixes eweasel test#ccomp
+				l_size := skeleton.workbench_size
+				if l_size = 0 then
+					buffer.put_three_character ('1', ']', ';')
 				else
-					buffer.put_integer (skeleton.workbench_size)
+					if byte_context.final_mode then
+						skeleton.generate_size (buffer, False)
+					else
+						buffer.put_integer (l_size)
+					end
+					buffer.put_two_character (']', ';')
 				end
-				buffer.put_string ("]; };")
+				buffer.put_two_character ('}', ';')
 			end
 		end
 

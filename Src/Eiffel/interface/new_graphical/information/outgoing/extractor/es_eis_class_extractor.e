@@ -19,23 +19,26 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_class: like class_i)
+	make (a_class: like class_i; a_force: BOOLEAN)
 			-- Initialize with `a_class'.
 			-- The extractor returns all EIS enties in the given class.
 		do
 			class_i := a_class
 			create eis_entries.make (2)
+			force_extracting := a_force
 			extract
+		ensure
+			force_extracting_set: force_extracting = a_force
 		end
 
-	make_with_location (a_location: like location; a_class: like class_i)
+	make_with_location (a_location: like location; a_class: like class_i; a_force: BOOLEAN)
 			-- Initialize with `a_class' and `a_location'.
 			-- `a_location' indicates the extractor only return EIS entries containing
 			-- `a_location'.
 		do
 			location_specialized := True
 			location := a_location
-			make (a_class)
+			make (a_class, a_force)
 		ensure
 			location_set: location = a_location
 			location_specialized: location_specialized
@@ -50,7 +53,7 @@ feature -- Access
 		do
 			if not {lt_full_entries: like eis_full_entries}internal_eis_full_entries then
 				if {lt_cluster: CONF_CLUSTER}class_i.config_class.group then
-					create l_conf_extractor.make (lt_cluster)
+					create l_conf_extractor.make (lt_cluster, True)
 					Result := l_conf_extractor.eis_full_entries.twin
 					Result.merge (eis_entries.twin)
 				else
@@ -79,7 +82,7 @@ feature {NONE} -- Implementation
 			eis_class_id := id_solution.id_of_class (class_i.config_class)
 
 			if {lt_id: STRING}eis_class_id then
-				if not location_specialized then
+				if not location_specialized and not force_extracting then
 					l_entries := storage.entry_server.entries
 					l_entries.search (lt_id)
 					if not l_entries.found then

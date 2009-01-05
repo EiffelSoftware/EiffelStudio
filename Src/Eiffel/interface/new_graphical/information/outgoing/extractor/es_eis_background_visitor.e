@@ -185,7 +185,7 @@ feature {NONE} -- Implementation
 			l_extractor: ES_EIS_CONF_EXTRACTOR
 		do
 			if {lt_notable: CONF_NOTABLE}a_tuple.t_notable then
-				create l_extractor.make (lt_notable)
+				create l_extractor.make (lt_notable, False)
 			end
 			background_procedures.prune_all (a_tuple.t_procedure)
 			if is_value_valid (background_procedures.count) then
@@ -218,7 +218,7 @@ feature {NONE} -- Implementation
 			l_extractor: ES_EIS_CLASS_EXTRACTOR
 		do
 			if {lt_class: CLASS_I}a_tuple.t_class then
-				create l_extractor.make (lt_class)
+				create l_extractor.make (lt_class, False)
 			end
 			background_procedures.prune_all (a_tuple.t_procedure)
 			if is_value_valid (background_procedures.count) then
@@ -245,7 +245,7 @@ feature {NONE} -- Implementation
 			-- All managed background procedures.
 
 note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -270,7 +270,7 @@ note
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

@@ -54,7 +54,7 @@ feature {NONE} -- Validation
 			l_count: INTEGER
 			l_valid: BOOLEAN
 			l_invalid_flags: STRING
-			l_flags: !like flags
+			l_flags: like flags
 			c: CHARACTER
 			i: INTEGER
 		do
@@ -91,7 +91,7 @@ invariant
 			do Result := ia_char.is_printable end)
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

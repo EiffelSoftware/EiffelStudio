@@ -77,8 +77,9 @@ feature {NONE} -- Status setting
 	parse_trace
 			-- Parse `exception_trace' and update `trace_depth' and `exception_break_point_slot' accordingly.
 		local
-			l_list: LIST [!STRING]
+			l_list: LIST [STRING]
 			l_found: BOOLEAN
+			l_item: STRING
 		do
 			l_list := trace.split ('%N')
 			if l_list.count >= 5 then
@@ -91,7 +92,9 @@ feature {NONE} -- Status setting
 				until
 					l_list.off or l_found
 				loop
-					if is_test_interpreter_line (l_list.item_for_iteration) then
+					l_item := l_list.item_for_iteration
+					check l_item /= Void end
+					if is_test_interpreter_line (l_item) then
 						l_found := True
 					else
 						trace_depth := trace_depth + 1
@@ -105,10 +108,11 @@ feature {NONE} -- Status setting
 
 		end
 
-	go_after_next_dash_line (a_list: LIST [!STRING])
+	go_after_next_dash_line (a_list: LIST [STRING])
 		require
 			a_list_not_void: a_list /= Void
 			a_list_not_off: not a_list.off
+			a_list_valid: not a_list.has (Void)
 		local
 			l_found: BOOLEAN
 		do

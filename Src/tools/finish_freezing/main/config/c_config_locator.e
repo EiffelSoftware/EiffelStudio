@@ -315,7 +315,7 @@ feature {NONE} -- Localization
 	e_x86_compiler_binary_1: !STRING = "The located Microsoft C/C++ compiler at '$1' is a 32-bit compiler. Please install the 64-bit (x64) C/C++ tools!"
 	e_x64_compiler_binary_1: !STRING = "The located Microsoft C/C++ compiler at '$1'  is a 64-bit compiler. Please install the 32-bit (x86) C/C++ tools!"
 	e_corrupt_compiler_binary_1: !STRING = "The located Microsoft C/C++ compiler at '$1' is not a valid executable file!"
-	e_no_compiler_1: !STRING = "$1 was found but is could not be configured, indicating some of its installation files have been moved or deleted. Please also check you have installed the $2 C/C++ compiler tools."
+	e_no_compiler_1: !STRING = "$1 was found but could not be configured, indicating some of its installation files have been moved or deleted. Please also check you have installed the $2 C/C++ compiler tools."
 	e_compiler_deprecated_1: !STRING = "The located Microsoft C/C++ compiler at '$1' has been deprecated and cannot be used. Please upgrade to one of the supported C/C++ compilers."
 
 ;note

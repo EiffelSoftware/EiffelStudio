@@ -57,7 +57,7 @@ feature -- Access
 			successful: is_successful
 			has_input_option: has_file_option
 		do
-			Result := option_of_name (file_switch).value
+			Result := option_of_name (file_switch).value.as_attached
 		ensure
 			result_not_empty: not Result.is_empty
 		end
@@ -68,7 +68,7 @@ feature -- Access
 			successful: is_successful
 			has_output_option: has_output_option
 		do
-			Result := option_of_name (output_switch).value
+			Result := option_of_name (output_switch).value.as_attached
 		ensure
 			result_not_empty: not Result.is_empty
 		end

@@ -1,4 +1,4 @@
-remtrace Should be called by `make_exes.btm'
+remtrace Should be called by make_exes.btm
 
 remtrace Create tools directory for your platform.
 safe_md %STUDIO_DIR\tools

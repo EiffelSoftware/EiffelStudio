@@ -68,7 +68,7 @@ feature {NONE} -- Basic operations
 			-- Note: It is fine to call this even when the switch does not have a set value, the property
 			--       name and value will consequently be Void also.
 		local
-			l_value: !like value
+			l_value: like value
 			l_pval, l_pname: ?STRING
 			l_count: INTEGER
 			l_pos: INTEGER
@@ -109,7 +109,7 @@ invariant
 	not_has_name_or_value: not has_value implies (not has_property_name and not has_property_value)
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

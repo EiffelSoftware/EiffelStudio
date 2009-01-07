@@ -22,7 +22,7 @@ execute_work	NONE exec_output2
 execute_result	ok
 compare		exec_output2 output
 
-compile_final
+compile_final_keep
 compile_result	ok
 
 c_compile_final

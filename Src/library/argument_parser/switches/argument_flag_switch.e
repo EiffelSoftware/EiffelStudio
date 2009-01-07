@@ -154,7 +154,7 @@ feature -- Status report
 
 feature {ARGUMENT_BASE_PARSER} -- Factory Functions
 
-	new_option: !ARGUMENT_FLAG_OPTION
+	new_option: ARGUMENT_FLAG_OPTION
 			-- <Precursor>
 		do
 			create Result.make ("", create {ARRAYED_LIST [CHARACTER]}.make (0), is_case_sensitive, Current)
@@ -251,7 +251,7 @@ invariant
 				Result := ia_item.is_printable
 			end)
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

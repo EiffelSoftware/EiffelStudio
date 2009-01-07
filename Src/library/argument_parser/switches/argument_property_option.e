@@ -13,6 +13,7 @@ class
 inherit
 	ARGUMENT_OPTION
 		redefine
+			make,
 			set_value
 		end
 
@@ -20,19 +21,23 @@ create {ARGUMENT_SWITCH}
 	make,
 	make_with_value
 
+feature {NONE} -- Initialization
+
+	make (a_switch: like switch)
+			-- <Precursor>
+		do
+			create property_name.make_empty
+			create property_value.make_empty
+			Precursor (a_switch)
+		end
+
 feature -- Access
 
-	property_name: !STRING
+	property_name: STRING
 			-- Name of property
-		attribute
-			create Result.make_empty
-		end
 
-	property_value: !STRING
+	property_value: STRING
 			-- Value of property
-		attribute
-			create Result.make_empty
-		end
 
 feature -- Status report
 
@@ -105,6 +110,8 @@ feature {NONE} -- Basic operations
 		end
 
 invariant
+	property_name_attached: property_name /= Void
+	property_value_attached: property_value /= Void
 	has_name_or_value: has_value implies (has_property_name or has_property_value)
 	not_has_name_or_value: not has_value implies (not has_property_name and not has_property_value)
 

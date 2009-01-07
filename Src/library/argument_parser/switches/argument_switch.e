@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			a_id_is_valid_id: is_valid_id (a_id)
 			not_a_desc_is_empty: not a_desc.is_empty
 		local
-			l_names: !like split_canonical_id
+			l_names: like split_canonical_id
 		do
 			l_names := split_canonical_id (a_id)
 			short_name := l_names.short_name
@@ -179,7 +179,7 @@ feature -- Query
 
 feature {NONE} -- Query
 
-	split_canonical_id (a_id: READABLE_STRING_8): !TUPLE [long_name: STRING; short_name: CHARACTER]
+	split_canonical_id (a_id: READABLE_STRING_8): TUPLE [long_name: STRING; short_name: CHARACTER]
 			-- Splits canonical switch identifier in a long and short name.
 			-- Note: When no short name is found `Result.short_name' will be a null character ('%U').
 			--

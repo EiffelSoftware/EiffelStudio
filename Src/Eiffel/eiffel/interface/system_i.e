@@ -4155,30 +4155,7 @@ feature -- Generation
 				if used.item (i) then
 					table := l_tmp_poly_server.item (i)
 					if used_for_routines.item (i) then
-						if table.is_routine_table then
-							l_table_name := l_encoder.routine_table_name (i)
-								-- Declare initialization routine for table
-							l_header_buf.put_new_line
-							l_header_buf.put_string ("extern void ")
-							l_header_buf.put_string (l_table_name)
-							l_header_buf.put_string ("_init(void);")
-								-- Call the routine
-							l_buf.put_new_line
-							l_buf.put_string (l_table_name)
-							l_buf.put_string ("_init();")
-						end
-						if table.is_attribute_table then
-							l_table_name := l_encoder.attribute_table_name (i)
-								-- Declare initialization routine for table
-							l_header_buf.put_new_line
-							l_header_buf.put_string ("extern void ")
-							l_header_buf.put_string (l_table_name)
-							l_header_buf.put_string ("_init(void);")
-								-- Call the routine
-							l_buf.put_new_line
-							l_buf.put_string (l_table_name)
-							l_buf.put_string ("_init();")
-						end
+						table.generate_initialization (l_buf, l_header_buf)
 					end
 					if used_for_types.item (i) then
 						l_table_name := l_encoder.type_table_name (i)
@@ -6112,7 +6089,7 @@ feature {NONE} -- External features
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

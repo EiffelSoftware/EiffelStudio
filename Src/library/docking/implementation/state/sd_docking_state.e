@@ -284,12 +284,22 @@ feature -- Redefine.
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
-				internal_docking_manager.command.lock_update (zone, False)
+				if {lt_widget: EV_WIDGET} zone then
+					internal_docking_manager.command.lock_update (lt_widget, False)
+				else
+					check not_possible: False end
+				end
+
 				record_state
 				if zone.parent /= Void then
 					zone.parent.prune (zone)
 				end
-				internal_docking_manager.command.lock_update (a_target_zone, False)
+				if {lt_target_widget: EV_WIDGET} a_target_zone then
+					internal_docking_manager.command.lock_update (lt_target_widget, False)
+				else
+					check not_possible: False end
+				end
+
 				l_called := True
 
 				change_zone_split_area_to_zone (a_target_zone, a_direction)
@@ -471,7 +481,11 @@ feature {NONE} -- Implementation
 
 			l_docking_zone ?= a_target_zone
 			l_tab_zone ?= a_target_zone
-			internal_docking_manager.command.lock_update (a_target_zone, False)
+			if {lt_widget: EV_WIDGET} a_target_zone then
+				internal_docking_manager.command.lock_update (lt_widget, False)
+			else
+				check not_possible: False end
+			end
 			if l_docking_zone /= Void then
 				create l_tab_state.make (internal_content, l_docking_zone, l_orignal_direction)
 			else
@@ -500,43 +514,49 @@ feature {NONE} -- Implementation
 			l_target_zone_parent_spliter: EV_SPLIT_AREA
 		do
 			-- First, remove current zone from old parent split area.	
-			l_target_zone_parent := a_target_zone.parent
-			if a_target_zone.parent /= Void then
-				-- Remember target zone parent split position.
-				l_target_zone_parent_spliter ?= a_target_zone.parent
-				if l_target_zone_parent_spliter /= Void then
-					l_target_zone_parent_split_position := l_target_zone_parent_spliter.split_position
+			if {lt_widget: EV_WIDGET} a_target_zone then
+				l_target_zone_parent := lt_widget.parent
+
+				if lt_widget.parent /= Void then
+					-- Remember target zone parent split position.
+					l_target_zone_parent_spliter ?= lt_widget.parent
+					if l_target_zone_parent_spliter /= Void then
+						l_target_zone_parent_split_position := l_target_zone_parent_spliter.split_position
+					end
+					lt_widget.parent.prune (lt_widget)
 				end
-				a_target_zone.parent.prune (a_target_zone)
-			end
-			check not l_target_zone_parent.full end
-			-- Then, insert current zone to new split area base on  `a_direction'.
-			if a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom then
-				create {SD_VERTICAL_SPLIT_AREA} l_new_split_area
-			elseif a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right then
-				create {SD_HORIZONTAL_SPLIT_AREA} l_new_split_area
-			end
-			if a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.left then
-				l_new_split_area.set_first (zone)
-				l_new_split_area.set_second (a_target_zone)
+
+				check not l_target_zone_parent.full end
+				-- Then, insert current zone to new split area base on  `a_direction'.
+				if a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom then
+					create {SD_VERTICAL_SPLIT_AREA} l_new_split_area
+				elseif a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right then
+					create {SD_HORIZONTAL_SPLIT_AREA} l_new_split_area
+				end
+				if a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.left then
+					l_new_split_area.set_first (zone)
+					l_new_split_area.set_second (lt_widget)
+				else
+					l_new_split_area.set_first (lt_widget)
+					l_new_split_area.set_second (zone)
+				end
+				l_target_zone_parent.extend (l_new_split_area)
+
+				if l_target_zone_parent_spliter /= Void and then l_target_zone_parent_spliter.full and
+					 l_target_zone_parent_spliter.minimum_split_position <= l_target_zone_parent_split_position and
+					 	l_target_zone_parent_spliter.maximum_split_position >= l_target_zone_parent_split_position then
+					l_target_zone_parent_spliter.set_split_position (l_target_zone_parent_split_position)
+				end
+				-- If we don't resize here and content is in top level,
+				-- content's widget will be minimum size.
+				internal_docking_manager.command.resize (False)
+
+				l_new_split_area.set_proportion (0.5)
+				set_direction (a_target_zone.state.direction)
+				internal_docking_manager.command.remove_empty_split_area
 			else
-				l_new_split_area.set_first (a_target_zone)
-				l_new_split_area.set_second (zone)
+				check not_possible: False end
 			end
-			l_target_zone_parent.extend (l_new_split_area)
-
-			if l_target_zone_parent_spliter /= Void and then l_target_zone_parent_spliter.full and
-				 l_target_zone_parent_spliter.minimum_split_position <= l_target_zone_parent_split_position and
-				 	l_target_zone_parent_spliter.maximum_split_position >= l_target_zone_parent_split_position then
-				l_target_zone_parent_spliter.set_split_position (l_target_zone_parent_split_position)
-			end
-			-- If we don't resize here and content is in top level,
-			-- content's widget will be minimum size.
-			internal_docking_manager.command.resize (False)
-
-			l_new_split_area.set_proportion (0.5)
-			set_direction (a_target_zone.state.direction)
-			internal_docking_manager.command.remove_empty_split_area
 		ensure
 			changed:
 		end
@@ -550,7 +570,8 @@ feature {NONE} -- Implementation
 			l_widget: EV_WIDGET
 		do
 			from
-				l_widget := a_zone
+				l_widget ?= a_zone
+				check l_widget_not_void: l_widget /= Void end
 				l_spliter ?= l_widget.parent
 			until
 				l_spliter = Void

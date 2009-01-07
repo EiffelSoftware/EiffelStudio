@@ -97,9 +97,14 @@ feature -- Querys
 					l_zones.after or Result /= Void
 				loop
 					l_item := l_zones.item
-					if l_widget = l_item or l_item.has_recursive (l_widget) then
-						Result := l_item
+					if {lt_container: EV_CONTAINER} l_item then
+						if l_widget = l_item or lt_container.has_recursive (l_widget) then
+							Result := l_item
+						end
+					else
+						check not_possible: False end
 					end
+
 					l_zones.forth
 				end
 			end
@@ -172,12 +177,16 @@ feature -- Querys
 			end
 		end
 
-	inner_container (a_zone: EV_WIDGET): SD_MULTI_DOCK_AREA
+	inner_container (a_zone: SD_ZONE): SD_MULTI_DOCK_AREA
 			-- SD_MULTI_DOCK_AREA which `a_zone' in.
 		require
 			a_zone_not_void: a_zone /= Void
 		do
-			Result := internal_inner_container (a_zone)
+			if {lt_widget: EV_WIDGET} a_zone then
+				Result := internal_inner_container (lt_widget)
+			else
+				check not_possible: False end
+			end
 
 			if Result = Void then
 				Result := inner_container_main
@@ -192,13 +201,17 @@ feature -- Querys
 		require
 			not_void: a_zone /= Void
 		do
-			Result := internal_inner_container (a_zone)
-			if Result = Void then
-				-- Maybe `a_zone' is hidden, because there is a zone maximized in that dock area.
-				Result := maximized_inner_container (a_zone)
-			end
-			if Result = Void then
-				Result := maiximized_hidden_main_container (a_zone)
+			if {lt_widget: EV_WIDGET} a_zone then
+				Result := internal_inner_container (lt_widget)
+				if Result = Void then
+					-- Maybe `a_zone' is hidden, because there is a zone maximized in that dock area.
+					Result := maximized_inner_container (lt_widget)
+				end
+				if Result = Void then
+					Result := maiximized_hidden_main_container (a_zone)
+				end
+			else
+				check not_possible: False end
 			end
 		end
 
@@ -249,8 +262,12 @@ feature -- Querys
 						Result := inner_container_main
 					end
 				else
-					if l_container.has_recursive (a_zone) then
-						Result := inner_container_main
+					if {lt_widget: EV_WIDGET} a_zone then
+						if l_container.has_recursive (lt_widget) then
+							Result := inner_container_main
+						end
+					else
+						check not_possible: False end
 					end
 				end
 			end
@@ -332,7 +349,7 @@ feature -- Querys
 			end
 		end
 
-	find_window_by_zone (a_zone: EV_WIDGET): EV_WINDOW
+	find_window_by_zone (a_zone: SD_ZONE): EV_WINDOW
 			-- Find a window which can lock_update.
 		require
 			a_zone_not_void: a_zone /= Void
@@ -400,7 +417,11 @@ feature -- Querys
 				loop
 					l_container := l_floating_zones.item.inner_container
 					if l_container /= Void then
-						Result := l_container.has_recursive (l_zone)
+						if {lt_widget: EV_WIDGET} l_zone then
+							Result := l_container.has_recursive (lt_widget)
+						else
+							check not_possible: False end
+						end
 					end
 					l_floating_zones.forth
 				end
@@ -536,18 +557,22 @@ feature -- Querys
 			not_void: Result /= Void
 		end
 
-	is_in_main_window (a_tool_bar: SD_TOOL_BAR): BOOLEAN
+	is_in_main_window (a_tool_bar: SD_GENERIC_TOOL_BAR): BOOLEAN
 			-- If `a_widget' in main window?
 		do
-			Result := internal_docking_manager.tool_bar_container.top.has_recursive (a_tool_bar)
-			if not Result then
-				Result := internal_docking_manager.tool_bar_container.bottom.has_recursive (a_tool_bar)
-			end
-			if not Result then
-				Result := internal_docking_manager.tool_bar_container.left.has_recursive (a_tool_bar)
-			end
-			if not Result then
-				Result := internal_docking_manager.tool_bar_container.right.has_recursive (a_tool_bar)
+			if {lt_widget: EV_WIDGET} a_tool_bar then
+				Result := internal_docking_manager.tool_bar_container.top.has_recursive (lt_widget)
+				if not Result then
+					Result := internal_docking_manager.tool_bar_container.bottom.has_recursive (lt_widget)
+				end
+				if not Result then
+					Result := internal_docking_manager.tool_bar_container.left.has_recursive (lt_widget)
+				end
+				if not Result then
+					Result := internal_docking_manager.tool_bar_container.right.has_recursive (lt_widget)
+				end
+			else
+				check not_possible: False end
 			end
 		end
 

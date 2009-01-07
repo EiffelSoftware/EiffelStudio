@@ -83,7 +83,11 @@ feature -- Redefine.
 			l_docking_state: SD_DOCKING_STATE
 		do
 			content.set_visible (True)
-			internal_docking_manager.command.lock_update (a_target_zone, False)
+			if {lt_widget: EV_WIDGET} a_target_zone then
+				internal_docking_manager.command.lock_update (lt_widget, False)
+			else
+				check not_possible: False end
+			end
 			create l_docking_state.make (internal_content, a_direction, 0)
 			l_docking_state.change_zone_split_area (a_target_zone, a_direction)
 			change_state (l_docking_state)
@@ -218,8 +222,15 @@ feature -- Redefine.
 
 			if content /= Void then
 				l_new_zone := content.state.zone
-				if l_new_zone /= Void and then l_new_zone.is_displayed then
-					call_show_actions
+
+				if l_new_zone /= Void then
+					if {lt_widget: EV_WIDGET} l_new_zone then
+						if lt_widget.is_displayed then
+							call_show_actions
+						end
+					else
+						check not_possible: False end
+					end
 				end
 			end
 		rescue

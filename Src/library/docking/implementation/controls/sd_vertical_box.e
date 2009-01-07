@@ -21,6 +21,8 @@ inherit
 			is_in_default_state
 		redefine
 			initialize,
+			implementation,
+			may_contain,
 			set_splitter_visible
 		select
 			count_except_spliter,
@@ -28,18 +30,19 @@ inherit
 		end
 
 	EV_VERTICAL_BOX
+		export
+			{SD_VERTICAL_BOX} cl_extend
 		redefine
 			initialize,
+			implementation,
 			extend,
 			may_contain,
 			first,
 			last,
 			is_in_default_state
 		select
-			implementation,
-			cl_extend,
-			cl_put,
-			may_contain
+			put,
+			cl_extend
 		end
 
 feature {NONE} -- Initlization
@@ -129,15 +132,16 @@ feature {NONE} -- Initlization
 			end
 		end
 
+	spliter_width: INTEGER = 4
+			-- Fake spliter width.
+
+feature -- Contract support
+
 	may_contain (v: EV_WIDGET): BOOLEAN
 			-- Redefine
 		do
-			Result := Precursor {EV_VERTICAL_BOX} (v)
-			Result := Result and count <= 3
+			Result := Precursor {EV_VERTICAL_BOX} (v) and then count <= 3
 		end
-
-	spliter_width: INTEGER = 4
-			-- Fake spliter width.
 
 feature -- Access
 
@@ -189,6 +193,13 @@ feature -- Setting
 				end
 			end
 		end
+
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
+	implementation: EV_VERTICAL_BOX_I
+			-- Responsible for interaction with native graphics toolkit.
+
+invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."

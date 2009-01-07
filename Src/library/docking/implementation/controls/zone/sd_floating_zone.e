@@ -12,25 +12,12 @@ inherit
 	SD_ZONE
 		rename
 			internal_shared as internal_shared_zone,
-			extend_widget as extend_sizeable_popup_window,
-			has_widget as has_untitled_dialog,
 			is_maximized as is_maximized_zone
 		export
 			{NONE} all
-			{ANY} has_focus, width, height, is_destroyed, is_displayed
-			{SD_OPEN_CONFIG_MEDIATOR, SD_DOCKING_MANAGER} destroy
-		undefine
-			initialize,
-			Identifier_path_separator,
-			show
 		redefine
 			type,
-			state,
-			hide,
-			screen_y,
-			screen_x,
-			width,
-			height
+			state
 		end
 
 	SD_DOCKER_SOURCE
@@ -45,7 +32,7 @@ inherit
 			has as has_untitled_dialog
 		export
 			{NONE} all
-			{ANY} set_position, set_size, screen_x, screen_y
+			{ANY} set_position, set_size, screen_x, screen_y, is_displayed, is_destroyed, has_focus
 			{SD_DOCKING_MANAGER_COMMAND} accelerators
 			{SD_DOCKING_STATE, SD_STATE_VOID} set_width, set_height
 			{SD_DOCKING_MANAGER_COMMAND} hide
@@ -58,9 +45,6 @@ inherit
 			height,
 			set_position,
 			set_size
-		select
-			implementation,
-			show_allow_to_back
 		end
 
 create
@@ -421,9 +405,13 @@ feature {NONE} -- Implementation
 		do
 			l_zone ?= a_container
 			if l_zone /= Void then
-				if l_zone.is_displayed then
-					only_one_zone_displayed := l_zone
-					zone_display_count := zone_display_count + 1
+				if {lt_widget: EV_WIDGET} l_zone then
+					if lt_widget.is_displayed then
+						only_one_zone_displayed := l_zone
+						zone_display_count := zone_display_count + 1
+					end
+				else
+					check not_possible: False end
 				end
 			else
 				l_split ?= a_container
@@ -477,18 +465,22 @@ feature {NONE} -- Agents
 			if {l_content: SD_CONTENT} internal_docking_manager.property.last_focus_content then
 				if {l_state: SD_STATE} l_content.state then
 					l_last_zone := l_state.zone
-					if not has_recursive (l_last_zone) then
-						l_zones := all_zones
-						if l_zones.count > 0 then
-							-- If the first content is not visible, it means the floating zone is showing for the first time.
-							if l_zones.first.content.is_visible then
-								l_zones.first.content.set_focus
+					if {lt_widget: EV_WIDGET} l_last_zone then
+						if not has_recursive (lt_widget) then
+							l_zones := all_zones
+							if l_zones.count > 0 then
+								-- If the first content is not visible, it means the floating zone is showing for the first time.
+								if l_zones.first.content.is_visible then
+									l_zones.first.content.set_focus
+								end
 							end
+						else
+							l_last_zone.set_focus_color (True)
 						end
+						internal_title_bar.enable_focus_color
 					else
-						l_last_zone.set_focus_color (True)
+						check not_possible: False end
 					end
-					internal_title_bar.enable_focus_color
 				end
 			end
 		end
@@ -501,10 +493,15 @@ feature {NONE} -- Agents
 			if {l_content: SD_CONTENT} internal_docking_manager.property.last_focus_content then
 				if {l_state: SD_STATE} l_content.state then
 					l_last_zone := l_state.zone
-					if not is_destroyed and then has_recursive (l_last_zone) then
-						internal_title_bar.enable_non_focus_active_color
-						l_last_zone.set_non_focus_selection_color
+					if {lt_widget: EV_WIDGET} l_last_zone then
+						if not is_destroyed and then has_recursive (lt_widget) then
+							internal_title_bar.enable_non_focus_active_color
+							l_last_zone.set_non_focus_selection_color
+						end
+					else
+						check not_possible: False end
 					end
+
 				end
 			end
 		end

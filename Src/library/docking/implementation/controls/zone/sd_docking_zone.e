@@ -13,15 +13,15 @@ inherit
 		rename
 			has as has_cell,
 			extend as extend_cell
-		select
-			implementation
+--		select
+--			implementation
 		end
 
 	SD_SINGLE_CONTENT_ZONE
 		rename
-			internal_shared as internal_shared_not_used,
-			extend_widget as extend_cell,
-			has_widget as has_cell
+			internal_shared as internal_shared_not_used
+--			extend_widget as extend_cell,
+--			has_widget as has_cell
 		redefine
 			close
 		end

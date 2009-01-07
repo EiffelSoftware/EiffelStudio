@@ -12,9 +12,7 @@ inherit
 	SD_TOOL_BAR
 		redefine
 			make,
-			extend,
-			force,
-			prune,
+			item_type,
 			internal_items,
 			on_pointer_press,
 			on_pointer_release
@@ -31,24 +29,11 @@ feature {NONE} -- Initlization
 			Precursor {SD_TOOL_BAR}
 		end
 
-feature -- Command
+feature -- Acces
 
-	extend (a_item: SD_TOOL_BAR_MENU_ITEM)
-			-- Redefine
+	item_type: SD_TOOL_BAR_MENU_ITEM
+			-- <Precursor>
 		do
-			Precursor {SD_TOOL_BAR} (a_item)
-		end
-
-	force (a_item: SD_TOOL_BAR_MENU_ITEM; a_index: INTEGER)
-			-- Redefine
-		do
-			Precursor {SD_TOOL_BAR}(a_item, a_index)
-		end
-
-	prune (a_item: SD_TOOL_BAR_MENU_ITEM)
-			-- Redefine
-		do
-			Precursor {SD_TOOL_BAR} (a_item)
 		end
 
 feature {NONE} -- Agents

@@ -15,17 +15,17 @@ inherit
 	SD_MIDDLE_CONTAINER
 		undefine
 			is_in_default_state,
-			initialize,
 			copy
+		redefine
+			initialize,
+			implementation
 		end
 
 	EV_HORIZONTAL_SPLIT_AREA
 		redefine
 			initialize,
-			set_split_position
-		select
-			implementation,
-			may_contain
+			set_split_position,
+			implementation
 		end
 
 feature {NONE} -- Implementation
@@ -70,6 +70,13 @@ feature -- Command
 			update_proportion
 		end
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
+	implementation: EV_HORIZONTAL_SPLIT_AREA_I
+			-- Responsible for interaction with native graphics toolkit.
+
+invariant
+
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -81,10 +88,5 @@ note
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

@@ -10,18 +10,15 @@ deferred class
 
 inherit
 	EV_CONTAINER
-		rename
-			implementation as implementation_not_use,
-			may_contain as may_contain_not_use
 		undefine
-			extend,
 			put,
+			extend,
 			item,
 			prune_all,
 			fill,
 			replace,
-			cl_extend,
-			cl_put
+			cl_put,
+			cl_extend
 		end
 
 feature -- Docking query
@@ -110,11 +107,6 @@ feature -- Setting
 
 	set_split_position (a_pos: INTEGER)
 			-- Set `split_position` with `a_pos'
-		deferred
-		end
-
-	extend (a_widget: EV_WIDGET)
-			-- Extend `a_widget'
 		deferred
 		end
 

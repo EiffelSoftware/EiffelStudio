@@ -139,7 +139,11 @@ feature {NONE} -- Initialization: User interface
     build_mini_toolbar
             -- Build mini tool bar.
         do
-            mini_toolbar := mini_tool_bar_widget
+			if {lt_widget: EV_WIDGET} mini_tool_bar_widget then
+            	mini_toolbar := lt_widget
+			else
+				check not_possible: False end
+			end
         end
 
     build_tool_interface (a_widget: G)
@@ -665,7 +669,7 @@ feature {NONE} -- User interface elements
             result_consistent: Result = user_widget
         end
 
-    frozen mini_tool_bar_widget: SD_TOOL_BAR
+    frozen mini_tool_bar_widget: SD_GENERIC_TOOL_BAR
             -- Access to user widget, as `widget' may not be the indicated user widget due to
             -- tool bar additions
         local
@@ -705,7 +709,7 @@ feature {NONE} -- User interface elements
 							if {l_widget: SD_TOOL_BAR_WIDGET_ITEM} l_items.item_for_iteration then
 									-- The tool bar is a widget item, so register resize actions to recompute the minimum width
 									-- when the widget changes size.
-								register_action (l_widget.widget.resize_actions, agent (ia_tool_bar: !SD_TOOL_BAR; ia_x: INTEGER_32; ia_y: INTEGER_32; ia_width: INTEGER_32; ia_height: INTEGER_32)
+								register_action (l_widget.widget.resize_actions, agent (ia_tool_bar: !SD_GENERIC_TOOL_BAR; ia_x: INTEGER_32; ia_y: INTEGER_32; ia_width: INTEGER_32; ia_height: INTEGER_32)
 									do
 										if is_interface_usable then
 											ia_tool_bar.update_size
@@ -739,7 +743,7 @@ feature {NONE} -- User interface elements
             result_consistent: Result = mini_tool_bar_widget
         end
 
-    frozen tool_bar_widget: SD_TOOL_BAR
+    frozen tool_bar_widget: SD_GENERIC_TOOL_BAR
             -- Main tool tool bar
         local
             l_cell: like internal_tool_bar_widget
@@ -767,7 +771,7 @@ feature {NONE} -- User interface elements
 						if {l_widget: SD_TOOL_BAR_WIDGET_ITEM} l_items.item_for_iteration then
 								-- The tool bar is a widget item, so register resize actions to recompute the minimum width
 								-- when the widget changes size.
-							register_action (l_widget.widget.resize_actions, agent (ia_tool_bar: !SD_TOOL_BAR; ia_x: INTEGER_32; ia_y: INTEGER_32; ia_width: INTEGER_32; ia_height: INTEGER_32)
+							register_action (l_widget.widget.resize_actions, agent (ia_tool_bar: !SD_GENERIC_TOOL_BAR; ia_x: INTEGER_32; ia_y: INTEGER_32; ia_width: INTEGER_32; ia_height: INTEGER_32)
 								do
 									if is_interface_usable then
 										ia_tool_bar.update_size
@@ -786,7 +790,7 @@ feature {NONE} -- User interface elements
             result_consistent: Result = tool_bar_widget
         end
 
-    frozen right_tool_bar_widget: SD_TOOL_BAR
+    frozen right_tool_bar_widget: SD_GENERIC_TOOL_BAR
             -- Secondary right tool bar
         local
             l_cell: like internal_right_tool_bar_widget
@@ -986,16 +990,24 @@ feature {NONE} -- Factory
 
                 -- Add left tool bar
             if l_tool_bar /= Void then
-                l_container.extend (l_tool_bar)
+				if {lt_widget: EV_WIDGET} l_tool_bar then
+					l_container.extend (lt_widget)
+				else
+					check not_possible: False end
+				end
             end
 
                 -- Add right tool bar
             if l_right_tool_bar /= Void then
-                create l_padding
-                l_container.extend (l_padding)
-                l_container.extend (l_right_tool_bar)
-                l_right_tool_bar.compute_minimum_size
-                l_container.disable_item_expand (l_right_tool_bar)
+				if {lt_widget_2: EV_WIDGET} l_right_tool_bar then
+	                create l_padding
+	                l_container.extend (l_padding)
+	                l_container.extend (lt_widget_2)
+	                l_right_tool_bar.compute_minimum_size
+	                l_container.disable_item_expand (lt_widget_2)
+				else
+					check not_possible: False end
+				end
             end
 
             create Result
@@ -1084,7 +1096,7 @@ invariant
     not_is_initialized: is_initializing implies not is_initialized
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

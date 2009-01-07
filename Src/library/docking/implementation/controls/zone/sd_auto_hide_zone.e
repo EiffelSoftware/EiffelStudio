@@ -16,37 +16,14 @@ inherit
 			has_focus as has_focus_vertical_box
 		redefine
 			destroy
-		select
-			pointer_enter_actions,
-			implementation,
-			item_vertical_box,
-			count_vertical_box,
-			linear_representation_vertical_box,
-			set_extend,
-			prune_vertical_box,
-			wipe_out_vertical_box,
-			cl_put,
-			prune_all,
-			set_background_color,
-			background_color,
-			is_empty_vertical_box
 		end
 
 	SD_SINGLE_CONTENT_ZONE
-		rename
-			extend_widget as extend_vertical_box,
-			has_widget as has_vertical_box,
-			has_focus as has_focus_vertical_box
 		undefine
 			on_focus_in,
-			on_focus_out,
-			pointer_enter_actions,
-			set_background_color,
-			background_color,
-			is_background_color_void
+			on_focus_out
 		redefine
-			set_focus_color,
-			destroy
+			set_focus_color
 		end
 
 	SD_RESIZE_SOURCE
@@ -205,7 +182,7 @@ feature -- Command
 	destroy
 			-- Redefine.
 		do
-			Precursor {SD_SINGLE_CONTENT_ZONE}
+			Precursor
 			window.title_bar.destroy
 			window.destroy
 			resize_bar.destroy

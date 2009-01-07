@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 			l_widgets := internal_shared.widgets
 			l_widgets.all_tool_bars.do_all (agent (a_item: SD_TOOL_BAR)
 												do
-													a_item.need_calculate_size
+													a_item.set_need_calculate_size (True)
 													a_item.update_size
 												end)
 

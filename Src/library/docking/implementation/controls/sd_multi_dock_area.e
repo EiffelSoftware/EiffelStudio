@@ -238,8 +238,14 @@ feature -- Query
 				if l_all_editors.count > 0 then
 					from
 						l_zone := l_all_editors.first
-						l_parent := l_zone.parent
-						l_last_parent := l_zone
+						if {lt_widget: EV_WIDGET} l_zone then
+							l_parent := lt_widget.parent
+						else
+							check not_possible: False end
+						end
+
+						l_last_parent ?= l_zone
+						check l_last_parent_not_void: l_last_parent /= Void end
 					until
 						l_parent = Void or Result /= Void
 					loop
@@ -448,8 +454,11 @@ feature {NONE} -- Implementation
 			if l_middle_container /= Void and then l_zone = Void then
 				l_left_all_invisible := update_visible_imp (l_middle_container)
 			else
-				check not_void: l_zone /= Void end
-				l_left_all_invisible := not l_zone.is_displayed
+				if {lt_widget: EV_WIDGET} l_zone then
+					l_left_all_invisible := not lt_widget.is_displayed
+				else
+					check not_possible: False end
+				end
 			end
 
 			-- Update all middle container in second widget.
@@ -459,8 +468,11 @@ feature {NONE} -- Implementation
 			if l_middle_container /= Void and then l_zone = Void then
 				l_right_all_invisible := update_visible_imp (l_middle_container)
 			else
-				check not_void: l_zone /= Void end
-				l_right_all_invisible := not l_zone.is_displayed
+				if {lt_widget_2: EV_WIDGET} l_zone then
+					l_right_all_invisible := not lt_widget_2.is_displayed
+				else
+					check not_possible: False end
+				end
 			end
 
 			Result := l_left_all_invisible and l_right_all_invisible
@@ -504,7 +516,11 @@ feature {NONE} -- Implementation
 				if l_upper_zone_left /= Void and then l_upper_zone_left.is_displayed then
 					l_left_all_minimized := l_upper_zone_left.is_minimized
 				else
-					l_left_all_minimized := not l_zone.is_displayed
+					if {lt_widget: EV_WIDGET} l_zone then
+						l_left_all_minimized := not lt_widget.is_displayed
+					else
+						check not_possible: False end
+					end
 				end
 			end
 
@@ -517,10 +533,20 @@ feature {NONE} -- Implementation
 			else
 				check not_void: l_zone /= Void end
 				l_upper_zone_right ?= l_zone
-				if l_upper_zone_right /= Void and then l_upper_zone_right.is_displayed then
-					l_right_all_minimized := l_upper_zone_right.is_minimized
+				if l_upper_zone_right /= Void then
+					if {lt_widget_2: EV_WIDGET} l_upper_zone_right then
+						if lt_widget_2.is_displayed then
+							l_right_all_minimized := l_upper_zone_right.is_minimized
+						end
+					else
+						check not_possible: False end
+					end
 				else
-					l_right_all_minimized := not l_zone.is_displayed
+					if {lt_widget_3: EV_WIDGET} l_zone then
+						l_right_all_minimized := not lt_widget_3.is_displayed
+					else
+						check not_possible: False end
+					end
 				end
 			end
 

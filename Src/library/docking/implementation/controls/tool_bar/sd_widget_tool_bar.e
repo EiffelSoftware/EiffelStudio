@@ -12,67 +12,14 @@ class
 	SD_WIDGET_TOOL_BAR
 
 inherit
-	SD_TOOL_BAR
-		rename
-			make as make_tool_bar,
-			implementation as implementation_not_use
+	SD_GENERIC_TOOL_BAR
 		undefine
-			create_implementation,
-			is_in_default_state,
+			default_create,
 			is_equal,
-			destroy
-		redefine
-			row_height,
-			extend,
-			force,
-			prune,
-			compute_minimum_size,
-			wipe_out,
-			items,
-			has,
-			item_x,
-			item_y,
-			update,
-			is_parent_set,
-			is_start_x_set,
-			is_start_y_set,
-			enable_capture,
-			disable_capture,
-			has_capture,
-			pointer_motion_actions,
-			pointer_button_release_actions,
-			pointer_button_press_actions,
-			pointer_double_press_actions,
-			expose_actions,
-			draw_pixmap,
-			clear_rectangle,
-			redraw_rectangle,
-			set_start_x,
-			set_start_y,
-			start_x,
-			start_y,
-			redraw_item,
-			is_displayed,
-			update_size,
-			tooltip,
-			set_tooltip,
-			is_bridge_ok,
-			is_cloned,
-			drawer,
-			items_have_texts,
-			on_pointer_release,
-			on_expose,
-			initialize,
-			item_at_position,
-			line_width,
-			drawing_mode
-		select
-			has_capture_vision2,
-			enable_capture_vision2,
-			disable_capture_vision2
+			copy
 		end
 
-	SD_FIXED
+	EV_FIXED
 		rename
 			extend as extend_fixed,
 			wipe_out as wipe_out_fixed,
@@ -82,9 +29,6 @@ inherit
 			has_capture as has_capture_not_use,
 			enable_capture as enable_capture_not_use,
 			disable_capture as disable_capture_not_use
-		export
-			{NONE} all
-			{ANY} is_destroyed
 		undefine
 			pointer_motion_actions,
 			pointer_button_release_actions,
@@ -94,8 +38,6 @@ inherit
 			initialize
 		redefine
 			destroy
-		select
-			implementation
 		end
 
 	SD_ACCESS
@@ -115,20 +57,15 @@ feature {NONE} -- Initlization
 		require
 			not_void: a_tool_bar /= Void
 		do
-
-			create internal_shared
-
 			tool_bar := a_tool_bar
 
 			tool_bar.expose_actions.extend (agent on_expose)
+
 			default_create
 
 			extend_fixed (tool_bar)
 
 			tool_bar.expose_actions.extend (agent on_tool_bar_expose_actions)
-
-			-- We create this only for making sure the invariant not borken.
-			create internal_items.make (0)
 
 			internal_shared.widgets.add_tool_bar (Current)
 		ensure
@@ -144,12 +81,12 @@ feature {NONE} -- Initlization
 feature -- Properties
 
 	row_height: INTEGER
-			--  Height of row.
+			-- <Precursor>
 		local
 			l_tool_bar: SD_TOOL_BAR
 		do
 			if is_need_calculate_size then
-				is_need_calculate_size := False
+				set_need_calculate_size (False)
 				Result := tool_bar.row_height
 				from
 					start
@@ -164,16 +101,16 @@ feature -- Properties
 					end
 					forth
 				end
-				internal_row_height  := Result
+				set_row_height (Result)
 			else
-				Result := internal_row_height
+				Result := tool_bar.row_height
 			end
 		end
 
 feature -- Command
 
 	extend (a_item: SD_TOOL_BAR_ITEM)
-			-- Extend `a_item'.
+			-- <Precursor>
 		local
 			l_widget_item: SD_TOOL_BAR_WIDGET_ITEM
 		do
@@ -184,11 +121,11 @@ feature -- Command
 				extend_fixed (l_widget_item.widget)
 				set_item_size (l_widget_item.widget, l_widget_item.widget.minimum_width, l_widget_item.widget.minimum_height)
 			end
-			is_need_calculate_size := True
+			set_need_calculate_size (True)
 		end
 
 	force (a_item: SD_TOOL_BAR_ITEM; a_index: INTEGER)
-			-- Extend `a_item' at `a_index'
+			-- <Precursor>
 		local
 			l_widget_item: SD_TOOL_BAR_WIDGET_ITEM
 		do
@@ -198,11 +135,11 @@ feature -- Command
 				extend_fixed (l_widget_item.widget)
 				set_item_size (l_widget_item.widget, l_widget_item.widget.minimum_width, l_widget_item.widget.minimum_height)
 			end
-			is_need_calculate_size := True
+			set_need_calculate_size (True)
 		end
 
 	prune (a_item: SD_TOOL_BAR_ITEM)
-			-- Prune `a_item'
+			-- <Precursor>
 		local
 			l_widget_item: SD_TOOL_BAR_WIDGET_ITEM
 			l_resizable_item: SD_TOOL_BAR_RESIZABLE_ITEM
@@ -217,32 +154,37 @@ feature -- Command
 			if l_resizable_item /= Void then
 				l_resizable_item.clear
 			end
-			is_need_calculate_size := True
+			set_need_calculate_size (True)
 		end
 
 	compute_minimum_size
-			-- Compute minimum size.
+			-- <Precursor>
 		do
 			tool_bar.compute_minimum_size
-			check has: has_fixed (tool_bar) end
-			set_minimum_size (tool_bar.minimum_width, tool_bar.minimum_height)
-			set_item_size (tool_bar, minimum_width, minimum_height)
+			if {lt_widget: EV_WIDGET} tool_bar then
+				check has: has_fixed (lt_widget) end
+
+				set_minimum_size (tool_bar.minimum_width, tool_bar.minimum_height)
+				set_item_size (lt_widget, minimum_width, minimum_height)
+			else
+				check not_possible: False end
+			end
 		end
 
 	wipe_out
-			-- Wipe out.
+			-- <Precursor>
 		do
 			tool_bar.wipe_out
 		end
 
 	enable_capture
-			-- Enable capture.
+			-- <Precursor>
 		do
 			tool_bar.enable_capture
 		end
 
 	disable_capture
-			-- Disable capture.
+			-- <Precursor>
 		do
 			tool_bar.disable_capture
 		end
@@ -294,7 +236,7 @@ feature -- Command
 			l_tool_bar_row: SD_TOOL_BAR_ROW
 			l_zones: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 			l_found, l_is_end: BOOLEAN
-			l_next_tool_bar: SD_TOOL_BAR
+			l_next_tool_bar: SD_GENERIC_TOOL_BAR
 		do
 			l_tool_bar_row ?= parent
 			if l_tool_bar_row /= Void then
@@ -322,7 +264,7 @@ feature -- Command
 		end
 
 	update_size
-			-- Update `tool_bar' size if Current width changed.
+			-- <Precursor>
 		local
 			l_tool_bar_row: SD_TOOL_BAR_ROW
 			l_parent: EV_CONTAINER
@@ -361,22 +303,42 @@ feature -- Command
 			tool_bar.set_tooltip (a_tooltip)
 		end
 
-	destroy
-			-- Redefine
+	set_need_calculate_size (a_bool: BOOLEAN)
+			-- <Precursor>
 		do
-			content := Void
-			internal_shared.widgets.prune_tool_bar (Current)
-			Precursor {SD_FIXED}
-			if tool_bar /= Void then
-				tool_bar.destroy
-				tool_bar := Void
+			tool_bar.set_need_calculate_size (a_bool)
+		end
+
+	remove_tooltip
+			-- <Precursor>
+		do
+			tool_bar.remove_tooltip
+		end
+
+	destroy
+			-- <Precursor>
+		do
+			if not is_destroyed then
+				set_content (Void)
+				internal_shared.widgets.prune_tool_bar (Current)
+				Precursor {EV_FIXED}
+				if tool_bar /= Void then
+					tool_bar.destroy
+					tool_bar := Void
+				end
 			end
 		end
 
 feature -- Query
 
+	content: SD_TOOL_BAR_CONTENT
+			-- <Precursor>
+		do
+			Result := tool_bar.content
+		end
+
 	items: ARRAYED_SET [SD_TOOL_BAR_ITEM]
-			-- All items in Current.
+			-- <Precursor>
 		do
 			if tool_bar /= Void then
 				Result := tool_bar.items
@@ -425,7 +387,11 @@ feature -- Query
 	expose_actions: EV_GEOMETRY_ACTION_SEQUENCE
 			-- Expose actions.
 		do
-			Result := tool_bar.expose_actions
+			if {lt_tool_bar: SD_TOOL_BAR} tool_bar then
+				Result := lt_tool_bar.expose_actions
+			else
+				check not_possible: False end
+			end
 		end
 
 	tooltip: STRING_32
@@ -434,20 +400,32 @@ feature -- Query
 			Result := tool_bar.tooltip
 		end
 
-	is_bridge_ok (a_string: STRING_32): BOOLEAN
-			-- Fake implementation for decorator pattern.
+	padding_width: INTEGER
+			-- <Precursor>
 		do
-			Result := True
+			Result := tool_bar.padding_width
 		end
 
-	is_cloned (a_string: STRING_32): BOOLEAN
-			-- Fake implementation for decorator pattern.
+	is_item_position_valid (a_screen_x, a_screen_y: INTEGER_32): BOOLEAN
+			-- <Precursor>
 		do
-			Result := True
+			Result := tool_bar.is_item_position_valid (a_screen_x, a_screen_y)
+		end
+
+	is_need_calculate_size: BOOLEAN
+			-- <Precursor>
+		do
+			Result := tool_bar.is_need_calculate_size
+		end
+
+	is_item_valid (a_item: SD_TOOL_BAR_ITEM): BOOLEAN
+			-- <Precursor>
+		do
+			Result := tool_bar.is_item_valid (a_item)
 		end
 
 	items_have_texts: BOOLEAN
-			-- Redefine.
+			-- <Precursor>
 		do
 			Result := tool_bar.items_have_texts
 		end
@@ -457,7 +435,11 @@ feature {SD_TOOL_BAR_DRAWER_I, SD_TOOL_BAR_ZONE}
 	draw_pixmap (a_x, a_y: INTEGER; a_pixmap: EV_PIXMAP)
 			-- Draw `a_pixmap' at `a_x', `a_y'.
 		do
-			tool_bar.draw_pixmap (a_x, a_y, a_pixmap)
+			if {lt_tool_bar: SD_TOOL_BAR} tool_bar then
+				lt_tool_bar.draw_pixmap (a_x, a_y, a_pixmap)
+			else
+				check not_possible: False end
+			end
 		end
 
 	clear_rectangle (a_x, a_y, a_width, a_height: INTEGER)
@@ -481,13 +463,13 @@ feature -- Contract support
 		end
 
 	is_start_x_set (a_x: INTEGER): BOOLEAN
-			-- If `a_x' equal `start_x' of `tool_bar'?
+			-- <Precursor>
 		do
 			Result := tool_bar.is_start_x_set (a_x)
 		end
 
 	is_start_y_set (a_y: INTEGER): BOOLEAN
-			-- If `a_y' equal `start_y' of `tool_bar'?
+			-- <Precursor>
 		do
 			Result := tool_bar.is_start_y_set (a_y)
 		end
@@ -504,47 +486,71 @@ feature -- Contract support
 			Result := tool_bar.has_capture
 		end
 
-feature {SD_TOOL_BAR_DRAWER_IMP, SD_TOOL_BAR_ITEM, SD_TOOL_BAR} -- Internal issues
+feature {SD_TOOL_BAR_DRAWER_IMP, SD_TOOL_BAR_ITEM, SD_GENERIC_TOOL_BAR} -- Internal issues
 
 	item_x (a_item: SD_TOOL_BAR_ITEM): INTEGER
-			-- Item x position on Current.
+			-- <Precursor>
 		do
 			Result := tool_bar.item_x (a_item)
 		end
 
 	item_y (a_item: SD_TOOL_BAR_ITEM): INTEGER
-			-- Item y position on Current.
+			-- <Precursor>
 		do
 			Result := tool_bar.item_y (a_item)
 		end
 
+	standard_height: INTEGER
+			-- <Precursor>
+		do
+			Result := tool_bar.standard_height
+		end
+
+	set_row_height (a_height: INTEGER)
+			-- <Precursor>
+		do
+			tool_bar.set_row_height (a_height)
+		end
+
 	update
-			-- Redraw item(s) which `is_need_redraw'
+			-- <Precursor>
 		do
 			tool_bar.update
 			on_expose (0, 0, width, height)
 		end
 
+	all_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			-- <Precursor>
+		do
+			Result := tool_bar.all_items
+		end
+
+	set_content (a_content: SD_TOOL_BAR_CONTENT)
+			-- <Precursor>
+		do
+			tool_bar.set_content (a_content)
+		end
+
 	set_start_x (a_x: INTEGER)
-			-- Set `start_x'
+			-- <Precursor>
 		do
 			tool_bar.set_start_x (a_x)
 		end
 
 	set_start_y (a_y: INTEGER)
-			-- Set `start_y'
+			-- <Precursor>
 		do
 			tool_bar.set_start_y (a_y)
 		end
 
 	start_x: INTEGER
-			-- Set `internal_start_x' of `tool_bar'.
+			-- <Precursor>
 		do
 			Result := tool_bar.start_x
 		end
 
 	start_y: INTEGER
-			-- Set `internal_start_y' of `tool_bar'.
+			-- <Precursor>
 		do
 			Result := tool_bar.start_y
 		end
@@ -553,6 +559,12 @@ feature {SD_TOOL_BAR_DRAWER_IMP, SD_TOOL_BAR_ITEM, SD_TOOL_BAR} -- Internal issu
 			-- Redefine
 		do
 			Result := tool_bar.item_at_position (a_screen_x, a_screen_y)
+		end
+
+	is_row_height_valid (a_height: INTEGER): BOOLEAN
+			-- <Precursor>
+		do
+			Result := tool_bar.is_row_height_valid (a_height)
 		end
 
 feature {NONE} -- Implementation
@@ -578,9 +590,9 @@ feature {NONE} -- Implementation
 		end
 
 	on_expose (a_x, a_y, a_width, a_height: INTEGER_32)
-			-- Redefine.
+			-- <Precursor>
 		local
-			l_items: like internal_items
+			l_items: like items
 			l_rect: EV_RECTANGLE
 			l_widget_item: SD_TOOL_BAR_WIDGET_ITEM
 			l_widget: EV_WIDGET
@@ -630,6 +642,12 @@ feature {NONE} -- Implementation
 				end
 				l_items.forth
 			end
+		end
+
+	internal_shared: SD_SHARED
+			-- <Precursor>
+		do
+			Result := tool_bar.internal_shared
 		end
 
 feature -- Contract support

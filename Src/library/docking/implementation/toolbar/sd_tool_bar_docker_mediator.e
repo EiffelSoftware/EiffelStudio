@@ -15,7 +15,7 @@ inherit
 		end
 
 	SD_ACCESS
-	
+
 create
 	make
 
@@ -273,9 +273,14 @@ feature {NONE} -- Implementation functions
 			l_pixmaps: EV_STOCK_PIXMAPS
 		do
 			if is_in_orignal_row then
-				if not orignal_row.has (caller.tool_bar) then
-					is_in_orignal_row := False
+				if {lt_widget: EV_WIDGET} caller.tool_bar then
+					if not orignal_row.has (lt_widget) then
+						is_in_orignal_row := False
+					end
+				else
+					check not_possible: False end
 				end
+
 				if motion_count = motion_count_max then
 					if is_in_orignal_row then
 						is_resizing_mode := True
@@ -349,7 +354,12 @@ feature {NONE} -- Implementation functions
 
 				docking_manager.command.unlock_update
 			else
-				caller.row.set_item_position_relative (caller.tool_bar, 0)
+				if {lt_widget: EV_WIDGET} caller.tool_bar then
+					caller.row.set_item_position_relative (lt_widget, 0)
+				else
+					check not_possible: False end
+				end
+
 				caller.row.reposition
 			end
 		end

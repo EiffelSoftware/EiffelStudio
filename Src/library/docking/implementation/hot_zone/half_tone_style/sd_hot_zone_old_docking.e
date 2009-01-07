@@ -51,52 +51,55 @@ feature -- Redefine
 			if l_in_five_hot_area and a_dockable then
 
 				Result := True
+				if {lt_widget: EV_WIDGET} internal_zone then
+					l_half_height := (lt_widget.height * 0.5).ceiling
+					l_half_width := (lt_widget.width * 0.5).ceiling
+					if internal_rectangle_top.has_x_y (a_screen_x, a_screen_y) then
+						l_left := internal_rectangle_top.left
+						l_top := internal_rectangle_top.top
+						l_width := lt_widget.width
+						l_height := l_half_height
+						debug ("docking")
+							print ("%NSD_HOT_ZONE_OLD_DOCKING	update_for_pointer_position_feedback icons is: " + internal_shared.icons.drag_pointer_up.out)
+						end
 
-				l_half_height := (internal_zone.height * 0.5).ceiling
-				l_half_width := (internal_zone.width * 0.5).ceiling
-				if internal_rectangle_top.has_x_y (a_screen_x, a_screen_y) then
-					l_left := internal_rectangle_top.left
-					l_top := internal_rectangle_top.top
-					l_width := internal_zone.width
-					l_height := l_half_height
-					debug ("docking")
-						print ("%NSD_HOT_ZONE_OLD_DOCKING	update_for_pointer_position_feedback icons is: " + internal_shared.icons.drag_pointer_up.out)
+						set_pointer_style (internal_shared.icons.drag_pointer_up)
+					elseif internal_rectangle_bottom.has_x_y (a_screen_x, a_screen_y) then
+						l_left := internal_rectangle_top.left
+						l_top := internal_rectangle_bottom.bottom - l_half_height
+						l_width := lt_widget.width
+						l_height := l_half_height
+
+						set_pointer_style (internal_shared.icons.drag_pointer_down)
+					elseif internal_rectangle_left.has_x_y (a_screen_x, a_screen_y) then
+						l_left := internal_rectangle_top.left
+						l_top := internal_rectangle_top.top
+						l_width := l_half_width
+						l_height := lt_widget.height
+
+						set_pointer_style (internal_shared.icons.drag_pointer_left)
+					elseif internal_rectangle_right.has_x_y (a_screen_x, a_screen_y) then
+						l_left := internal_rectangle_right.right - l_half_width
+						l_top := internal_rectangle_top.top
+						l_width := l_half_width
+						l_height := lt_widget.height
+
+						set_pointer_style (internal_shared.icons.drag_pointer_right)
+					elseif internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) then
+						l_left := lt_widget.screen_x
+						l_top := lt_widget.screen_y
+						l_width := lt_widget.width
+						l_height := lt_widget.height
+
+						set_pointer_style (internal_shared.icons.drag_pointer_center)
 					end
-
-					set_pointer_style (internal_shared.icons.drag_pointer_up)
-				elseif internal_rectangle_bottom.has_x_y (a_screen_x, a_screen_y) then
-					l_left := internal_rectangle_top.left
-					l_top := internal_rectangle_bottom.bottom - l_half_height
-					l_width := internal_zone.width
-					l_height := l_half_height
-
-					set_pointer_style (internal_shared.icons.drag_pointer_down)
-				elseif internal_rectangle_left.has_x_y (a_screen_x, a_screen_y) then
-					l_left := internal_rectangle_top.left
-					l_top := internal_rectangle_top.top
-					l_width := l_half_width
-					l_height := internal_zone.height
-
-					set_pointer_style (internal_shared.icons.drag_pointer_left)
-				elseif internal_rectangle_right.has_x_y (a_screen_x, a_screen_y) then
-					l_left := internal_rectangle_right.right - l_half_width
-					l_top := internal_rectangle_top.top
-					l_width := l_half_width
-					l_height := internal_zone.height
-
-					set_pointer_style (internal_shared.icons.drag_pointer_right)
-				elseif internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) then
-					l_left := internal_zone.screen_x
-					l_top := internal_zone.screen_y
-					l_width := internal_zone.width
-					l_height := internal_zone.height
-
-					set_pointer_style (internal_shared.icons.drag_pointer_center)
+					debug ("docking")
+						print ("%NSD_HOT_ZONE_OLD_DOCKING on_pointer_motion: " + l_left.out + " " + l_top.out + " " + l_width.out + " " + l_height.out)
+					end
+					internal_shared.feedback.draw_rectangle (l_left, l_top, l_width, l_height, internal_shared.line_width)
+				else
+					check not_possible: False end
 				end
-				debug ("docking")
-					print ("%NSD_HOT_ZONE_OLD_DOCKING on_pointer_motion: " + l_left.out + " " + l_top.out + " " + l_width.out + " " + l_height.out)
-				end
-				internal_shared.feedback.draw_rectangle (l_left, l_top, l_width, l_height, internal_shared.line_width)
 			end
 		end
 

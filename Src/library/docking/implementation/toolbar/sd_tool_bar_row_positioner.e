@@ -39,7 +39,7 @@ feature -- Command
 	position_resize_on_extend (a_new_tool_bar: SD_TOOL_BAR_ZONE; a_relative_pointer_position: INTEGER)
 			-- When extend `a_new_tool_bar', if not `is_enough_max_space', then resize tool bars.
 		require
-			has: has (a_new_tool_bar.tool_bar)
+			has: {lt_widget: EV_WIDGET} a_new_tool_bar.tool_bar implies has (lt_widget)
 		local
 			l_hot_index: INTEGER
 			l_tool_bars: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
@@ -52,7 +52,11 @@ feature -- Command
 				l_tool_bars := internal_tool_bar_row.zones
 				l_tool_bars.delete (a_new_tool_bar)
 				if l_hot_index = 0 then
-					internal_tool_bar_row.internal_set_item_position (a_new_tool_bar.tool_bar, 0)
+					if {lt_widget_2: EV_WIDGET} a_new_tool_bar.tool_bar then
+						internal_tool_bar_row.internal_set_item_position (lt_widget_2, 0)
+					else
+						check not_possible: False end
+					end
 					l_last_end_position := a_new_tool_bar.size
 				end
 				from
@@ -60,11 +64,21 @@ feature -- Command
 				until
 					l_tool_bars.after
 				loop
-					internal_tool_bar_row.internal_set_item_position (l_tool_bars.item_for_iteration.tool_bar, l_last_end_position)
+					if {lt_widget_3: EV_WIDGET} l_tool_bars.item_for_iteration.tool_bar then
+						internal_tool_bar_row.internal_set_item_position (lt_widget_3, l_last_end_position)
+					else
+						check not_possible: False end
+					end
+
 					l_last_end_position := l_tool_bars.item_for_iteration.position + l_tool_bars.item_for_iteration.size
 
 					if l_tool_bars.index = l_hot_index then
-						internal_tool_bar_row.internal_set_item_position (a_new_tool_bar.tool_bar, l_last_end_position)
+						if {lt_widget_4: EV_WIDGET} a_new_tool_bar.tool_bar then
+							internal_tool_bar_row.internal_set_item_position (lt_widget_4, l_last_end_position)
+						else
+							check not_possible: False end
+						end
+
 						l_last_end_position := a_new_tool_bar.position + a_new_tool_bar.size
 					end
 					l_tool_bars.forth
@@ -96,7 +110,12 @@ feature -- Command
 					l_tool_bar := l_tool_bars.item_for_iteration
 					-- User dragged tool bar out of current row
 					-- We reset orignal position.
-					l_tool_bar.row.set_item_position_relative (l_tool_bar.tool_bar, l_positions_and_sizes.item.pos)
+					if {lt_widget: EV_WIDGET} l_tool_bar.tool_bar then
+						l_tool_bar.row.set_item_position_relative (lt_widget, l_positions_and_sizes.item.pos)
+					else
+						check not_possible: False end
+					end
+
 					l_tool_bars.forth
 					l_positions_and_sizes.forth
 				end
@@ -135,7 +154,12 @@ feature -- Command
 					until
 						l_tool_bars.after
 					loop
-						internal_tool_bar_row.internal_set_item_position (l_tool_bars.item_for_iteration.tool_bar, l_last_x + l_last_width)
+						if {lt_widget: EV_WIDGET} l_tool_bars.item_for_iteration.tool_bar then
+							internal_tool_bar_row.internal_set_item_position (lt_widget, l_last_x + l_last_width)
+						else
+							check not_possible: False end
+						end
+
 						l_last_x := l_tool_bars.item_for_iteration.position
 						l_last_width := l_tool_bars.item_for_iteration.size
 						l_tool_bars.forth
@@ -172,11 +196,20 @@ feature -- Command
 					loop
 						check non_negative: positions_and_sizes_try.item.pos >= 0 end
 						check not_outside: positions_and_sizes_try.item.pos + l_tool_bars.item (positions_and_sizes_try.index).size <= internal_tool_bar_row.size end
-						internal_tool_bar_row.internal_set_item_position (l_tool_bars.item_for_iteration.tool_bar, positions_and_sizes_try.item.pos)
+						if {lt_widget: EV_WIDGET} l_tool_bars.item_for_iteration.tool_bar then
+							internal_tool_bar_row.internal_set_item_position (lt_widget, positions_and_sizes_try.item.pos)
+						else
+							check not_possible: False end
+						end
+
 						l_tool_bars.forth
 						positions_and_sizes_try.forth
 					end
-					internal_tool_bar_row.internal_set_item_position (internal_mediator.caller.tool_bar, caller_position)
+					if {lt_widget_2: EV_WIDGET} internal_mediator.caller.tool_bar then
+						internal_tool_bar_row.internal_set_item_position (lt_widget_2, caller_position)
+					else
+						check not_possible: False end
+					end
 				end
 			end
 		end
@@ -225,7 +258,12 @@ feature -- Command
 				until
 					l_zones.after
 				loop
-					internal_tool_bar_row.internal_set_item_position (l_zones.item_for_iteration.tool_bar, l_last_end_postion)
+					if {lt_widget: EV_WIDGET} l_zones.item_for_iteration.tool_bar then
+						internal_tool_bar_row.internal_set_item_position (lt_widget, l_last_end_postion)
+					else
+						check not_possible: False end
+					end
+
 					l_last_end_postion := l_zones.item_for_iteration.size + l_last_end_postion
 					l_zones.forth
 				end
@@ -300,14 +338,22 @@ feature {NONE}  -- Implementation
 			loop
 				l_zone := l_zones.item_for_iteration
 				if l_zones.item_for_iteration.assistant.last_state.position + l_zone.size < l_last_start_position then
-					-- We can position it to orignal position.
-					internal_tool_bar_row.internal_set_item_position (l_zone.tool_bar, l_zones.item_for_iteration.assistant.last_state.position)
+					if {lt_widget: EV_WIDGET} l_zone.tool_bar then
+						-- We can position it to orignal position.
+						internal_tool_bar_row.internal_set_item_position (lt_widget, l_zones.item_for_iteration.assistant.last_state.position)
+					else
+						check not_possible: False end
+					end
 				else
 					l_temp_position := l_last_start_position - 1 - l_zone.size
 					if l_temp_position < 0 then
 						l_need_reposition := True
 					else
-						internal_tool_bar_row.internal_set_item_position (l_zone.tool_bar, l_temp_position)
+						if {lt_widget_2: EV_WIDGET} l_zone.tool_bar then
+							internal_tool_bar_row.internal_set_item_position (lt_widget_2, l_temp_position)
+						else
+							check not_possible: False end
+						end
 					end
 				end
 				l_last_start_position := l_zone.position

@@ -17,7 +17,7 @@ inherit
 			wipe_out as wipe_out_dialog
 		export
 			{NONE} all
-			{ANY} destroy, screen_x, screen_y, has_recursive, prune, set_position, set_size
+			{ANY} destroy, screen_x, screen_y, has_recursive, is_destroyed, prune, set_position, set_size, prunable
 			{ANY} lock_update, unlock_update
 			{SD_FLOATING_TOOL_BAR_ZONE_ASSISTANT, SD_TOOL_BAR} minimum_width, minimum_height, resize_actions
 			{SD_TOOL_BAR_MANAGER, SD_TOOL_BAR_CONTENT} hide, is_displayed
@@ -46,7 +46,7 @@ feature {NONE} -- Initlization
 			internal_docking_manager := a_docking_manager
 			create internal_shared
 			disable_user_resize
-			
+
 			create internal_title_bar
 
 			init_border_box
@@ -102,12 +102,17 @@ feature -- Command
 		require
 			a_tool_bar_zone_not_void: a_tool_bar_zone /= Void
 			a_tool_bar_zone_horizontal: not a_tool_bar_zone.is_vertical
-			a_tool_bar_zone_parent_void: a_tool_bar_zone.tool_bar.parent = Void
+			a_tool_bar_zone_parent_void: {lt_widget: EV_WIDGET} a_tool_bar_zone.tool_bar implies lt_widget.parent = Void
 			not_extended: content = Void
 		do
 			zone := a_tool_bar_zone
 			tool_bar := a_tool_bar_zone.tool_bar
-			internal_padding_box.extend (a_tool_bar_zone.tool_bar)
+			if {lt_widget_2: EV_WIDGET} a_tool_bar_zone.tool_bar then
+				internal_padding_box.extend (lt_widget_2)
+			else
+				check not_possible: False end
+			end
+
 			content := a_tool_bar_zone.content
 
 			internal_title_bar.set_content (content)
@@ -173,7 +178,7 @@ feature -- Query
 	assistant: SD_FLOATING_TOOL_BAR_ZONE_ASSISTANT
 			-- Assistant to position items.
 
-	tool_bar: SD_TOOL_BAR
+	tool_bar: SD_GENERIC_TOOL_BAR
 			-- SD_TOOL_BAR where contain SD_TOOL_BAR_ITEMs.
 
 feature {NONE} -- Implementation of resize issues.

@@ -42,8 +42,12 @@ feature {NONE} -- Initialization
 			end
 
 			is_vertical := a_vertical
+			if {lt_widget: EV_WIDGET} tool_bar then
+				create internal_tool_bar_dot_drawer.make (lt_widget.background_color)
+			else
+				check not_possible: False end
+			end
 
-			create internal_tool_bar_dot_drawer.make (tool_bar.background_color)
 			create bar_dot.make_with_size (3, 3)
 			internal_tool_bar_dot_drawer.draw (bar_dot)
 
@@ -192,7 +196,7 @@ feature -- Command
 		require
 			not_destroyed: not is_destroyed
 		do
-			tool_bar.need_calculate_size
+			tool_bar.set_need_calculate_size (True)
 			if not docking_manager.tool_bar_manager.is_locked then
 				set_drag_area (not is_vertical)
 			else
@@ -215,9 +219,14 @@ feature -- Command
 			disable_drag_area
 
 			create floating_tool_bar.make (docking_manager)
-			if tool_bar.parent /= Void then
-				tool_bar.parent.prune (tool_bar)
+			if {lt_widget: EV_WIDGET} tool_bar then
+				if lt_widget.parent /= Void then
+					lt_widget.parent.prune (lt_widget)
+				end
+			else
+				check not_possible: False end
 			end
+
 			floating_tool_bar.extend (Current)
 
 			prune (tail_indicator)
@@ -245,7 +254,7 @@ feature -- Command
 
 			assistant.update_indicator
 		ensure
-			pruned: row /= Void implies not row.has (tool_bar)
+			pruned: row /= Void and {lt_widget_2: EV_WIDGET} tool_bar implies not row.has (lt_widget_2)
 			is_floating: is_floating
 		end
 
@@ -260,13 +269,17 @@ feature -- Command
 			-- But on Gtk, we need first disable capture then enable capture,
 			-- because it's off-screen widget, it'll not have capture until it show again (in SD_TOOL_BAR_HOT_ZONE).
 			tool_bar.disable_capture
+			if {lt_widget: EV_WIDGET} tool_bar then
+				floating_tool_bar.prune (lt_widget)
 
-			floating_tool_bar.prune (tool_bar)
-			floating_tool_bar.destroy
-			floating_tool_bar := Void
+				floating_tool_bar.destroy
+				floating_tool_bar := Void
 
-			if tool_bar.parent /= Void then
-				tool_bar.parent.prune (tool_bar)
+				if lt_widget.parent /= Void then
+					lt_widget.parent.prune (lt_widget)
+				end
+			else
+				check not_possible: False end
 			end
 
 			if not docking_manager.tool_bar_manager.is_locked then
@@ -331,8 +344,12 @@ feature -- Command
 			not_destroyed: not is_destroyed
 		do
 			tool_bar.compute_minimum_size
-			if row /= Void and row.has (tool_bar) then
-				row.set_item_size (tool_bar, tool_bar.minimum_width, tool_bar.minimum_height)
+			if {lt_widget: EV_WIDGET} tool_bar then
+				if row /= Void and row.has (lt_widget) then
+					row.set_item_size (lt_widget, tool_bar.minimum_width, tool_bar.minimum_height)
+				end
+			else
+				check not_possible: False end
 			end
 		end
 
@@ -376,7 +393,11 @@ feature -- Command
 		require
 			not_destroyed: not is_destroyed
 		do
-			tool_bar.show
+			if {lt_widget: EV_WIDGET} tool_bar then
+				lt_widget.show
+			else
+				check not_possible: False end
+			end
 		end
 
 	hide
@@ -384,7 +405,11 @@ feature -- Command
 		require
 			not_destroyed: not is_destroyed
 		do
-			tool_bar.hide
+			if {lt_widget: EV_WIDGET} tool_bar then
+				lt_widget.hide
+			else
+				check not_possible: False end
+			end
 		end
 
 	prune (a_item: SD_TOOL_BAR_ITEM)
@@ -411,7 +436,7 @@ feature -- Query
 	customize_dialog: SD_TOOL_BAR_CUSTOMIZE_DIALOG
 			-- SD_TOOL_BAR_CUSTOMIZE_DIALOG if exists.
 
-	tool_bar: SD_TOOL_BAR
+	tool_bar: SD_GENERIC_TOOL_BAR
 			-- Tool bar which managed by Current.
 
 	is_vertical: BOOLEAN
@@ -435,7 +460,11 @@ feature -- Query
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result ?= tool_bar.parent
+			if {lt_widget: EV_WIDGET} tool_bar then
+				Result ?= lt_widget.parent
+			else
+				check not_possible: False end
+			end
 		end
 
 	maximize_size: INTEGER
@@ -464,10 +493,14 @@ feature -- Query
 		require
 			not_destroyed: not is_destroyed
 		do
-			if is_vertical then
-				Result := tool_bar.y_position
+			if {lt_widget: EV_WIDGET} tool_bar then
+				if is_vertical then
+					Result := lt_widget.y_position
+				else
+					Result := lt_widget.x_position
+				end
 			else
-				Result := tool_bar.x_position
+				check not_possible: False end
 			end
 		end
 
@@ -680,7 +713,7 @@ feature {NONE} -- Implmentation
 			end
 		end
 
-feature {SD_TOOL_BAR_ZONE_ASSISTANT, SD_TOOL_BAR_HIDDEN_ITEM_DIALOG, SD_FLOATING_TOOL_BAR_ZONE, SD_TOOL_BAR, SD_TOOL_BAR_CONTENT} -- Internal issues
+feature {SD_TOOL_BAR_ZONE_ASSISTANT, SD_TOOL_BAR_HIDDEN_ITEM_DIALOG, SD_FLOATING_TOOL_BAR_ZONE, SD_GENERIC_TOOL_BAR, SD_TOOL_BAR_CONTENT} -- Internal issues
 
 	tail_indicator: SD_TOOL_BAR_NARROW_BUTTON
 			-- Button at tail of Current, which used for show hide buttons and customize dialog.

@@ -86,25 +86,30 @@ feature  -- Agents
 			until
 				l_zones.after
 			loop
-				if not l_zones.item.is_destroyed and then (l_zones.item.has_recursive (a_widget) and not ignore_additional_click) and l_zones.item.content /= internal_docking_manager.zones.place_holder_content then
-					if internal_docking_manager.property.last_focus_content /= l_zones.item.content then
-						internal_docking_manager.property.set_last_focus_content (l_zones.item.content)
-						l_zones.item.on_focus_in (Void)
-						if l_zones.item.content.focus_in_actions /= Void then
-							l_zones.item.content.focus_in_actions.call (Void)
-						end
-					else
-						l_content := internal_docking_manager.property.last_focus_content
-						if l_content /= Void then
-							l_auto_hide_zone ?= l_content.state.zone
-						end
-						if l_auto_hide_zone = Void and not ignore_additional_click then
-							internal_docking_manager.command.remove_auto_hide_zones (True)
-						elseif l_auto_hide_zone /= Void then
-							l_auto_hide_zone.set_focus_color (True)
+				if {lt_container: EV_CONTAINER} l_zones.item then
+					if not lt_container.is_destroyed and then (lt_container.has_recursive (a_widget) and not ignore_additional_click) and l_zones.item.content /= internal_docking_manager.zones.place_holder_content then
+						if internal_docking_manager.property.last_focus_content /= l_zones.item.content then
+							internal_docking_manager.property.set_last_focus_content (l_zones.item.content)
+							l_zones.item.on_focus_in (Void)
+							if l_zones.item.content.focus_in_actions /= Void then
+								l_zones.item.content.focus_in_actions.call (Void)
+							end
+						else
+							l_content := internal_docking_manager.property.last_focus_content
+							if l_content /= Void then
+								l_auto_hide_zone ?= l_content.state.zone
+							end
+							if l_auto_hide_zone = Void and not ignore_additional_click then
+								internal_docking_manager.command.remove_auto_hide_zones (True)
+							elseif l_auto_hide_zone /= Void then
+								l_auto_hide_zone.set_focus_color (True)
+							end
 						end
 					end
+				else
+					check not_possible: False end
 				end
+
 				l_zones.forth
 			end
 
@@ -128,14 +133,19 @@ feature  -- Agents
 			loop
 				l_upper_zone ?= l_zones.item
 				if l_upper_zone /= Void then
-					if l_zones.item.has_recursive (a_widget) then
-						l_tool_bar ?= a_widget
-						-- We ignore click on tool bar.
-						if l_tool_bar = Void and then not l_upper_zone.is_ignore_restore_area then
-							l_upper_zone.recover_normal_size_from_minimize
+					if {lt_container: EV_CONTAINER} l_zones.item then
+						if lt_container.has_recursive (a_widget) then
+							l_tool_bar ?= a_widget
+							-- We ignore click on tool bar.
+							if l_tool_bar = Void and then not l_upper_zone.is_ignore_restore_area then
+								l_upper_zone.recover_normal_size_from_minimize
+							end
 						end
+					else
+						check not_possible: False end
 					end
 				end
+
 				l_zones.forth
 			end
 		end
@@ -224,8 +234,14 @@ feature  -- Agents
 			if internal_docking_manager /= Void then
 				l_content := internal_docking_manager.property.last_focus_content
 				l_zone := internal_docking_manager.zones.zone_by_content (l_content)
-				if l_zone /= Void and then internal_docking_manager.main_container.has_recursive (l_zone) then
-					l_zone.set_non_focus_selection_color
+				if l_zone /= Void then
+					if {lt_widget: EV_WIDGET} l_zone then
+						if internal_docking_manager.main_container.has_recursive (lt_widget) then
+							l_zone.set_non_focus_selection_color
+						end
+					else
+						check not_possible: False end
+					end
 				end
 			end
 			debug ("docking")
@@ -244,8 +260,14 @@ feature  -- Agents
 			if internal_docking_manager /= Void then
 				l_content := internal_docking_manager.property.last_focus_content
 				l_zone := internal_docking_manager.zones.zone_by_content (l_content)
-				if l_zone /= Void and then internal_docking_manager.main_container.has_recursive (l_zone) then
-					l_zone.set_focus_color (True)
+				if l_zone /= Void then
+					if {lt_widget: EV_WIDGET} l_zone then
+						if internal_docking_manager.main_container.has_recursive (lt_widget) then
+							l_zone.set_focus_color (True)
+						end
+					else
+						check not_possible: False end
+					end
 				end
 			end
 			debug ("docking")

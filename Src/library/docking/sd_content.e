@@ -742,7 +742,13 @@ feature -- States report
 			l_zone: SD_ZONE
 		do
 			l_zone := a_target_content.state.zone
-			Result := l_zone /= Void and then l_zone.parent /= Void
+			if l_zone /= Void then
+				if {lt_widget: EV_WIDGET} l_zone then
+					Result := lt_widget.parent /= Void
+				else
+					check not_possible: False end
+				end
+			end
 		end
 
 	target_content_zone_parent_exist (a_target_content: SD_CONTENT): BOOLEAN
@@ -752,7 +758,11 @@ feature -- States report
 		do
 			l_zone := a_target_content.state.zone
 			if l_zone /= Void then
-				Result := l_zone.parent /= Void
+				if {lt_widget: EV_WIDGET} l_zone then
+					Result := lt_widget.parent /= Void
+				else
+					check not_possible: False end
+				end
 			else
 				Result := True
 			end
@@ -839,8 +849,14 @@ feature {SD_STATE, SD_OPEN_CONFIG_MEDIATOR}
 				internal_user_widget.show
 			end
 			l_zone := state.zone
-			if l_zone /= Void and then not l_zone.is_destroyed and then not l_zone.is_displayed then
-				l_zone.show
+			if l_zone /= Void then
+				if {lt_widget: EV_WIDGET} l_zone then
+					if not lt_widget.is_destroyed and then not lt_widget.is_displayed then
+						lt_widget.show
+					end
+				else
+					check not_possible: False end
+				end
 			end
 		ensure
 			set: is_visible = a_bool

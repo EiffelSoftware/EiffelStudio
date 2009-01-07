@@ -68,10 +68,10 @@ feature -- Commands
 			end
 		end
 
-	lock_update (a_zone: EV_WIDGET; a_main_window: BOOLEAN)
+	lock_update (a_widget: EV_WIDGET; a_main_window: BOOLEAN)
 			-- Lock window update.
 		require
-			a_zone_not_void_when_not_main_window: not a_main_window implies a_zone /= Void
+			a_widget_not_void_when_not_main_window: not a_main_window implies a_widget /= Void
 		do
 			if not internal_docking_manager.is_closing_all then
 				if lock_call_time = 0 then
@@ -79,7 +79,7 @@ feature -- Commands
 							-- We should ignore these lock window update calls.
 						ignore_update := True
 					else
-						lock_update_internal (a_zone, a_main_window)
+						lock_update_internal (a_widget, a_main_window)
 					end
 				else
 					-- Nothing to be done, since we have already locked it, or it was already locked.
@@ -207,9 +207,14 @@ feature -- Commands
 			until
 				l_zones.after
 			loop
-				if l_zones.item /= Void and then a_dock_area.has_recursive (l_zones.item) then
-					l_zones.item.recover_to_normal_state
+				if {lt_widget: EV_WIDGET} l_zones.item then
+					if l_zones.item /= Void and then a_dock_area.has_recursive (lt_widget) then
+						l_zones.item.recover_to_normal_state
+					end
+				else
+					check not_possible: False end
 				end
+
 				l_zones.forth
 			end
 		end
@@ -549,7 +554,7 @@ feature -- Contract Support
 	lock_call_time: INTEGER
 			-- Used for remember how many times client call `lock_update'.
 
-	find_window (a_zone: EV_WIDGET): EV_WINDOW
+	find_window (a_zone: SD_ZONE): EV_WINDOW
 			-- Function wrapper for contract support.
 		require
 			a_zone_not_void: a_zone /= Void
@@ -601,14 +606,22 @@ feature {NONE}  -- Implementation
 				if a_main_window then
 					locked_windows.force_last (internal_docking_manager.main_window, 0)
 				else
-					locked_windows.force_last (internal_docking_manager.query.find_window_by_zone (a_zone), 0)
+					if {lt_zone: SD_ZONE} a_zone then
+						locked_windows.force_last (internal_docking_manager.query.find_window_by_zone (lt_zone), 0)
+					else
+						check not_possible: False end
+					end
 				end
 				locked_windows.item (0).lock_update
 			else
 				if a_main_window then
 					l_lock_window := internal_docking_manager.main_window
 				else
-					l_lock_window := find_window(a_zone)
+					if {lt_zone_2: SD_ZONE} a_zone then
+						l_lock_window := find_window (lt_zone_2)
+					else
+						check not_possible: False end
+					end
 				end
 				if  l_lock_window /= locked_windows.last then
 					locked_windows.last.unlock_update

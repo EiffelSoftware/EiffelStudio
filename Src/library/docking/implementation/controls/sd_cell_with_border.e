@@ -16,7 +16,6 @@ class
 	SD_CELL_WITH_BORDER
 
 inherit
-
 	EV_VERTICAL_BOX
 		rename
 			extend as extend_vertical_box,
@@ -24,9 +23,6 @@ inherit
 			count as count_vertical_box,
 			wipe_out as wipe_out_vertical_box,
 			set_border_width as set_border_width_vertical_box
-		export
-			{NONE} all
-			{ANY} destroy
 		end
 
 create

@@ -13,11 +13,11 @@ inherit
 
 feature -- Query
 
-	all_tool_bars: ARRAYED_LIST [SD_TOOL_BAR]
+	all_tool_bars: ARRAYED_LIST [SD_GENERIC_TOOL_BAR]
 			-- All SD_TOOL_BAR instances.
 		local
 			l_list: ARRAYED_LIST [INTEGER]
-			l_item: SD_TOOL_BAR
+			l_item: SD_GENERIC_TOOL_BAR
 		do
 			create Result.make (10)
 
@@ -155,7 +155,7 @@ feature -- Query
 
 feature -- Command is
 
-	add_tool_bar (a_tool_bar: SD_TOOL_BAR)
+	add_tool_bar (a_tool_bar: SD_GENERIC_TOOL_BAR)
 			-- Add `a_tool_bar''s object id.
 		require
 			not_void: a_tool_bar /= Void
@@ -165,7 +165,7 @@ feature -- Command is
 			has: all_tool_bars.has (a_tool_bar)
 		end
 
-	prune_tool_bar (a_tool_bar: SD_TOOL_BAR)
+	prune_tool_bar (a_tool_bar: SD_GENERIC_TOOL_BAR)
 			-- Prune `a_tool_bar''s object id.
 		require
 			not_void: a_tool_bar /= Void

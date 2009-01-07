@@ -278,7 +278,7 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_OPEN_CONFIG_MEDIATOR, SD_TOOL_BAR_ZONE_AS
 		end
 
 feature {SD_DOCKING_MANAGER_AGENTS, SD_OPEN_CONFIG_MEDIATOR, SD_SAVE_CONFIG_MEDIATOR,
-			SD_TOOL_BAR_ZONE_ASSISTANT,	SD_TOOL_BAR_ZONE, SD_DEBUG_ACCESS, SD_TOOL_BAR,
+			SD_TOOL_BAR_ZONE_ASSISTANT,	SD_TOOL_BAR_ZONE, SD_DEBUG_ACCESS, SD_GENERIC_TOOL_BAR,
 			SD_TOOL_BAR_CONTENT} -- Internal querys
 
 	tool_bar_container (a_direction: INTEGER): EV_BOX
@@ -311,14 +311,18 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_OPEN_CONFIG_MEDIATOR, SD_SAVE_CONFIG_MEDI
 			not_floating: not a_tool_bar.is_floating
 			has: contents.has (a_tool_bar.content)
 		do
-			if docking_manager.tool_bar_container.top.has_recursive (a_tool_bar.tool_bar) then
-				Result := {SD_ENUMERATION}.top
-			elseif docking_manager.tool_bar_container.bottom.has_recursive (a_tool_bar.tool_bar) then
-				Result := {SD_ENUMERATION}.bottom
-			elseif docking_manager.tool_bar_container.left.has_recursive (a_tool_bar.tool_bar) then
-				Result := {SD_ENUMERATION}.left
-			elseif docking_manager.tool_bar_container.right.has_recursive (a_tool_bar.tool_bar) then
-				Result := {SD_ENUMERATION}.right
+			if {lt_widget: EV_WIDGET} a_tool_bar.tool_bar then
+				if docking_manager.tool_bar_container.top.has_recursive (lt_widget) then
+					Result := {SD_ENUMERATION}.top
+				elseif docking_manager.tool_bar_container.bottom.has_recursive (lt_widget) then
+					Result := {SD_ENUMERATION}.bottom
+				elseif docking_manager.tool_bar_container.left.has_recursive (lt_widget) then
+					Result := {SD_ENUMERATION}.left
+				elseif docking_manager.tool_bar_container.right.has_recursive (lt_widget) then
+					Result := {SD_ENUMERATION}.right
+				end
+			else
+				check not_possible: False end
 			end
 		ensure
 			vaild: Result = {SD_ENUMERATION}.top or Result = {SD_ENUMERATION}.bottom
@@ -350,7 +354,7 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_OPEN_CONFIG_MEDIATOR, SD_SAVE_CONFIG_MEDI
 			end
 		end
 
-	content_of (a_tool_bar: SD_TOOL_BAR): SD_TOOL_BAR_CONTENT
+	content_of (a_tool_bar: SD_GENERIC_TOOL_BAR): SD_TOOL_BAR_CONTENT
 			-- Content of `a_tool_bar'
 		require
 			not_destroyed: not is_destroyed

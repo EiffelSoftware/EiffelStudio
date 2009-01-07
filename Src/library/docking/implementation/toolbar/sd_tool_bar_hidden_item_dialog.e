@@ -11,7 +11,6 @@ class
 inherit
 	EV_POPUP_WINDOW
 		export
-			{NONE}	all
 			{ANY} show
 		end
 
@@ -28,7 +27,7 @@ inherit
 			is_equal,
 			copy
 		end
-		
+
 create
 	make,
 	make_for_menu

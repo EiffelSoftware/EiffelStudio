@@ -11,7 +11,7 @@ class
 inherit
 	SD_TOOL_BAR_TOGGLE_BUTTON
 		export
-			{NONE} set_pixmap, pixmap
+			{ANY} on_pointer_motion, on_pointer_leave
 		end
 
 create

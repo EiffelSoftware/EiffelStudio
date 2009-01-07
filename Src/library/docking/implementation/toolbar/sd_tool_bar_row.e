@@ -19,11 +19,19 @@ inherit
 			prune as prune_fixed
 		export
 			{NONE} all
-			{ANY} has, parent, count, prunable, is_destroyed
-			{SD_TOOL_BAR_ZONE, SD_TOOL_BAR} set_item_size, width, screen_x
+			{ANY} has, parent, count, prunable, is_destroyed, is_empty, cursor, start, item, forth,
+				go_to, index, changeable_comparison_criterion, after, extendible,
+				valid_cursor, object_comparison, readable, off
+			{SD_TOOL_BAR_ROW} compare_objects, set_extend
+			{SD_TOOL_BAR_ZONE, SD_GENERIC_TOOL_BAR} set_item_size, width, screen_x
 			{SD_TOOL_BAR_HOT_ZONE, SD_TOOL_BAR_CONTENT} destroy
 		redefine
 			destroy
+		end
+
+	ANY
+		undefine
+			default_create, is_equal, copy
 		end
 
 create
@@ -58,36 +66,40 @@ feature -- Command
 			if a_zone.is_vertical /= is_vertical then
 				a_zone.change_direction (not is_vertical)
 			end
-			extend_fixed (a_zone.tool_bar)
 
-			if is_vertical then
-				if a_zone.tool_bar.minimum_width > internal_shared.tool_bar_size then
-					a_zone.tool_bar.set_minimum_width (internal_shared.tool_bar_size)
-				end
-				set_item_width (a_zone.tool_bar, internal_shared.tool_bar_size)
-			else
-				-- We can't use `internal_shared.tool_bar_size' as tool bar's height.  And we don't need care about it since `a_zone.tool_bar' calculated correctly itself.
-				-- Otherwise when desktop system font is very small (ie, Scans 8 on Linux Desktop),  `SD_WIDGET_TOOL_BAR.height' may larger than `internal_shared.tool_bar_size'.
-				-- If we force to use `internal_shared.tool_bar_size', it will lead to notebook tab cut-off problem after just shown a SD_WIDGET_TOOL_BAR.
---				if a_zone.tool_bar.minimum_height > internal_shared.tool_bar_size then
---					a_zone.tool_bar.set_minimum_height (internal_shared.tool_bar_size)
---				end
+			if {lt_widget: EV_WIDGET} a_zone.tool_bar then
+				extend_fixed (lt_widget)
 
-				set_item_height (a_zone.tool_bar, a_zone.tool_bar.minimum_height )
-			end
-
-			set_item_position_fixed (a_zone.tool_bar, 0, 0)
-			if internal_shared.tool_bar_docker_mediator_cell.item /= Void then
 				if is_vertical then
-					internal_positioner.position_resize_on_extend (a_zone, to_relative_position (internal_shared.tool_bar_docker_mediator_cell.item.screen_y))
+					if a_zone.tool_bar.minimum_width > internal_shared.tool_bar_size then
+						lt_widget.set_minimum_width (internal_shared.tool_bar_size)
+						set_item_width (lt_widget, internal_shared.tool_bar_size)
+					end
 				else
-					internal_positioner.position_resize_on_extend (a_zone, to_relative_position (internal_shared.tool_bar_docker_mediator_cell.item.screen_x))
+					-- We can't use `internal_shared.tool_bar_size' as tool bar's height.  And we don't need care about it since `a_zone.tool_bar' calculated correctly itself.
+					-- Otherwise when desktop system font is very small (ie, Scans 8 on Linux Desktop),  `SD_WIDGET_TOOL_BAR.height' may larger than `internal_shared.tool_bar_size'.
+					-- If we force to use `internal_shared.tool_bar_size', it will lead to notebook tab cut-off problem after just shown a SD_WIDGET_TOOL_BAR.
+	--				if a_zone.tool_bar.minimum_height > internal_shared.tool_bar_size then
+	--					a_zone.tool_bar.set_minimum_height (internal_shared.tool_bar_size)
+	--				end
+					set_item_height (lt_widget, a_zone.tool_bar.minimum_height)
 				end
+
+				set_item_position_fixed (lt_widget, 0, 0)
+				if internal_shared.tool_bar_docker_mediator_cell.item /= Void then
+					if is_vertical then
+						internal_positioner.position_resize_on_extend (a_zone, to_relative_position (internal_shared.tool_bar_docker_mediator_cell.item.screen_y))
+					else
+						internal_positioner.position_resize_on_extend (a_zone, to_relative_position (internal_shared.tool_bar_docker_mediator_cell.item.screen_x))
+					end
+				end
+				a_zone.assistant.update_indicator
+				internal_zones.force_last (a_zone)
+			else
+				check not_possible: False end
 			end
-			a_zone.assistant.update_indicator
-			internal_zones.force_last (a_zone)
 		ensure
-			extended: has (a_zone.tool_bar) and internal_zones.has (a_zone)
+			extended: {lt_widget_2: EV_WIDGET} a_zone.tool_bar implies has (lt_widget_2) and internal_zones.has (a_zone)
 			direction_changed: a_zone.is_vertical = is_vertical
 			tool_bar_row_set: a_zone.row = Current
 		end
@@ -98,10 +110,13 @@ feature -- Command
 			l_result: INTEGER
 		do
 			l_result := a_zone.assistant.expand_size (a_zone.maximize_size)
+			if {lt_widget: EV_WIDGET} a_zone.tool_bar then
+				prune_fixed (lt_widget)
+			else
+				check not_possible: False end
+			end
 
-			prune_fixed (a_zone.tool_bar)
 			internal_zones.delete (a_zone)
-
 			internal_positioner.position_resize_on_prune
 		ensure
 			pruned: not internal_zones.has (a_zone)

@@ -1714,10 +1714,12 @@ feature -- Polymorphism
  				create {ROUT_TABLE} Result.make (rout_id)
  			else
  				seed := system.seed_of_routine_id (rout_id)
-	 			if seed.has_formal or else not  seed.type.actual_type.is_expanded then
-	 					-- This is an attribute with a seed of a formal generic type that may become expanded
-	 					--  or of a non-expanded type that may require initialization.
-	 				create {GENERIC_ATTRIBUTE_TABLE} Result.make (rout_id)
+	 			if seed.has_formal then
+	 					-- This is an attribute with a seed of a formal generic type that may become expanded.
+	 				create {GENERIC_ATTRIBUTE_TABLE} Result.make (rout_id, True)
+	 			elseif not  seed.type.actual_type.is_expanded then
+	 					-- This is an attribute with a seed of a non-expanded type that may require initialization.
+	 				create {GENERIC_ATTRIBUTE_TABLE} Result.make (rout_id, False)
 	 			else
 	 					-- This is an attribute with a seed that is not of a formal generic type.
 	 				create {ATTR_TABLE [ATTR_ENTRY]} Result.make (rout_id)
@@ -3150,7 +3152,7 @@ invariant
 	valid_inline_agent_nr: is_inline_agent implies inline_agent_nr > 0 or is_fake_inline_agent
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -88,6 +88,25 @@ feature
 			end
 		end;
 
+feature -- Code generation
+
+	generate_initialization (buf: GENERATION_BUFFER; header_buf: GENERATION_BUFFER)
+			-- <Precursor>
+		local
+			l_table_name: STRING
+		do
+			l_table_name := encoder.attribute_table_name (rout_id)
+				-- Declare initialization routine for table
+			header_buf.put_new_line
+			header_buf.put_string ("extern void ")
+			header_buf.put_string (l_table_name)
+			header_buf.put_string ("_init(void);")
+				-- Call the routine
+			buf.put_new_line
+			buf.put_string (l_table_name)
+			buf.put_string ("_init();")
+		end
+
 	generate (writer: TABLE_GENERATOR)
 			-- Generation of the attribute table in buffer "eattr*.x".
 		require
@@ -238,7 +257,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

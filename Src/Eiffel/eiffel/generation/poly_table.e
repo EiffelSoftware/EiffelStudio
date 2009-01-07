@@ -655,6 +655,16 @@ feature -- Sort
 			end
 		end
 
+feature -- Code generation
+
+	generate_initialization (buf: GENERATION_BUFFER; header_buf: GENERATION_BUFFER)
+			-- Generate calls required to initialize the table into `buf' and the associated declarations into `header_buf'.
+		require
+			buf_attached: buf /= Void
+			header_buf_attached: header_buf /= Void
+		deferred
+		end
+
 feature {NONE} -- Implementation of quick sort algorithm
 
 	quick_sort (min, max: INTEGER)
@@ -819,7 +829,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

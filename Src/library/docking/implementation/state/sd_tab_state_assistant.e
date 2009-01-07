@@ -80,21 +80,35 @@ feature {SD_TAB_STATE}  -- Implementation functions.
 			l_target_zone_parent_split_position: INTEGER
 			l_target_zone_parent_spliter: EV_SPLIT_AREA
 		do
-			internal_docking_manager.command.lock_update (a_target_zone, False)
+			if {lt_widget: EV_WIDGET} a_target_zone then
+				internal_docking_manager.command.lock_update (lt_widget, False)
+			else
+				check not_possible: False end
+			end
+
 			-- First, remove current internal_zone from old parent split area.	
 			if  state.tab_zone.parent /= Void then
 				l_old_zone_parent_type := state.tab_zone.parent.generating_type
 				state.tab_zone.parent.prune (state.tab_zone)
 			end
 
-			l_target_zone_parent := a_target_zone.parent
-			if a_target_zone.parent /= Void then
+			if {lt_widget_2: EV_WIDGET} a_target_zone then
+				l_target_zone_parent := lt_widget_2.parent
+			else
+				check not_possible: False end
+			end
+
+			if l_target_zone_parent /= Void then
 				-- Remember target zone parent split position.
-				l_target_zone_parent_spliter ?= a_target_zone.parent
+				l_target_zone_parent_spliter ?= l_target_zone_parent
 				if l_target_zone_parent_spliter /= Void then
 					l_target_zone_parent_split_position := l_target_zone_parent_spliter.split_position
 				end
-				a_target_zone.parent.prune (a_target_zone)
+				if {lt_widget_3: EV_WIDGET} a_target_zone then
+					l_target_zone_parent.prune (lt_widget_3)
+				else
+					check not_possible: False end
+				end
 			end
 			check not l_target_zone_parent.full end
 			-- Then, insert current internal_zone to new split area base on  `a_direction'.
@@ -103,13 +117,18 @@ feature {SD_TAB_STATE}  -- Implementation functions.
 			elseif a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right then
 				create {SD_HORIZONTAL_SPLIT_AREA} l_new_split_area
 			end
-			if a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.left then
-				l_new_split_area.set_first (state.tab_zone)
-				l_new_split_area.set_second (a_target_zone)
+			if {lt_widget_4: EV_WIDGET} a_target_zone then
+				if a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.left then
+					l_new_split_area.set_first (state.tab_zone)
+					l_new_split_area.set_second (lt_widget_4)
+				else
+					l_new_split_area.set_first (lt_widget_4)
+					l_new_split_area.set_second (state.tab_zone)
+				end
 			else
-				l_new_split_area.set_first (a_target_zone)
-				l_new_split_area.set_second (state.tab_zone)
+				check not_possible: False end
 			end
+
 			l_target_zone_parent.extend (l_new_split_area)
 			l_new_split_area.set_proportion (0.5)
 			if l_target_zone_parent_spliter /= Void and then l_target_zone_parent_spliter.full then
@@ -121,7 +140,7 @@ feature {SD_TAB_STATE}  -- Implementation functions.
 			internal_docking_manager.query.inner_container (state.tab_zone).remove_empty_split_area
 			internal_docking_manager.command.unlock_update
 		ensure
-			changed: a_target_zone.parent.has (state.tab_zone)
+			changed: {lt_widget_5: EV_WIDGET} a_target_zone implies lt_widget_5.parent.has (state.tab_zone)
 		end
 
 	move_whole_to_docking_zone (a_target_zone: SD_DOCKING_ZONE)

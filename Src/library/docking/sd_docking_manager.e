@@ -558,7 +558,12 @@ feature -- Command
 			until
 				l_floating_zones.after
 			loop
-				l_floating_zones.item.destroy
+				if {lt_widget: EV_WIDGET} l_floating_zones.item then
+					lt_widget.destroy
+				else
+					check not_possible: False end
+				end
+				
 				l_floating_zones.forth
 			end
 

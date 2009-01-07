@@ -84,10 +84,14 @@ feature -- Open inner container data.
 					end
 				end
 
-				-- If this time we only restore a editor place holder zone? No real editors restored.
-				if not internal_docking_manager.main_container.has_recursive (internal_docking_manager.zones.place_holder_content.state.zone) then
-					-- We should close place holder content if exist. Because there is(are) already normal editor zone(s).				
-					internal_docking_manager.zones.place_holder_content.close
+				-- If this time we only restore a editor place holder zone? No real editors restored.				
+				if {lt_widget: EV_WIDGET} internal_docking_manager.zones.place_holder_content.state.zone then
+					if not internal_docking_manager.main_container.has_recursive (lt_widget) then
+						-- We should close place holder content if exist. Because there is(are) already normal editor zone(s).				
+						internal_docking_manager.zones.place_holder_content.close
+					end
+				else
+					check not_possible: False end
 				end
 
 				-- We have to call `remove_empty_split_area' first to make sure no void widget when update_middle_container.
@@ -168,13 +172,22 @@ feature -- Open inner container data.
 				l_place_holder_zone ?= internal_docking_manager.zones.place_holder_content.state.zone
 				if l_place_holder_zone /= Void then
 				-- l_place_holder_zone maybe void because open_config fail.
-					l_parent := l_place_holder_zone.parent
+					if {lt_container: EV_CONTAINER} l_place_holder_zone then
+						l_parent := lt_container.parent
+					else
+						check not_possible: False end
+					end
+
 					if l_parent /= Void then
 						l_split ?= l_parent
 						if l_split /= Void then
 							l_split_position := l_split.split_position
 						end
-						l_parent.prune (l_place_holder_zone)
+						if {lt_widget: EV_WIDGET} l_place_holder_zone then
+							l_parent.prune (lt_widget)
+						else
+							check not_possible: False end
+						end
 
 						if top_container /= Void then
 							if top_container.parent /= Void then
@@ -373,7 +386,11 @@ feature {NONE} -- Implementation
 				-- Sometime `editor_parent' feature give us a zone as top parent.
 				l_zone ?= Result
 				if l_zone /= Void then
-					Result := l_zone.parent
+					if {lt_widget: EV_WIDGET} l_zone then
+						Result := lt_widget.parent
+					else
+						check not_possible: False end
+					end
 				end
 
 				l_top_split_area ?= Result
@@ -489,7 +506,12 @@ feature {NONE} -- Implementation
 			until
 				l_floating_zones.after
 			loop
-				l_floating_zones.item.destroy
+				if {lt_widget: EV_WIDGET} l_floating_zones.item then
+					lt_widget.destroy
+				else
+					check not_possible: False end
+				end
+
 				internal_docking_manager.inner_containers.start
 				internal_docking_manager.inner_containers.prune (l_floating_zones.item.inner_container)
 				l_floating_zones.forth
@@ -750,11 +772,20 @@ feature {NONE} -- Implementation
 					end
 					if a_config_data.is_minimized then
 						-- l_state.zone will be void. We should query zone indirectly.
-						l_parent ?= l_state.content.state.zone.parent
+						if {lt_widget: EV_WIDGET} l_state.content.state.zone then
+							l_parent ?= lt_widget.parent
+						else
+							check not_possible: False end
+						end
+
 						if l_parent /= Void and l_parent.is_minimized then
 							-- Maybe parent not full now, Current is the first child of parent, parent will fill another child immediately.
 							-- check full: l_parent.full end
-							l_parent.disable_item_expand (l_state.content.state.zone)
+							if {lt_widget_2: EV_WIDGET} l_state.content.state.zone then
+								l_parent.disable_item_expand (lt_widget_2)
+							else
+								check not_possible: False end
+							end
 						end
 					end
 				end
@@ -1049,7 +1080,12 @@ feature {NONE} -- Implementation
 
 					l_tool_bar_row.extend (l_tool_bar_zone)
 					l_tool_bar_row.record_state
-					l_tool_bar_row.set_item_position_relative (l_tool_bar_zone.tool_bar, l_row_item.pos)
+					if {lt_widget: EV_WIDGET} l_tool_bar_zone.tool_bar then
+						l_tool_bar_row.set_item_position_relative (lt_widget, l_row_item.pos)
+					else
+						check not_possible: False end
+					end
+
 					l_tool_bar_zone.assistant.record_docking_state
 					l_row.forth
 				end

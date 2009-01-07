@@ -38,11 +38,11 @@ inherit
 			count as count_widget,
 			has as has_widget,
 			index_of as index_of_widget
-		select
-			implementation,
-			count_widget,
-			set_extend,
-			put
+--		select
+--			implementation,
+--			count_widget,
+--			set_extend,
+--			put
 		end
 
 	SD_DOCKER_SOURCE

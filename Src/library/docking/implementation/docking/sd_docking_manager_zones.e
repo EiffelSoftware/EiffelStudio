@@ -10,7 +10,7 @@ class
 
 inherit
 	SD_ACCESS
-	
+
 create
 	make
 
@@ -79,8 +79,12 @@ feature -- Zones managements
 				l_zones.after or Result /= Void
 			loop
 				if l_zones.item.is_maximized then
-					if l_main_area.has_recursive (l_zones.item) then
-						Result := l_zones.item
+					if {lt_widget: EV_WIDGET} l_zones.item then
+						if l_main_area.has_recursive (lt_widget) then
+							Result := l_zones.item
+						end
+					else
+						check not_possible: False end
 					end
 				end
 				l_zones.forth
@@ -183,9 +187,14 @@ feature -- Zones managements
 		local
 			l_parent: EV_CONTAINER
 		do
-			if a_zone.parent /= Void then
-				a_zone.parent.prune (a_zone)
+			if {lt_widget: EV_WIDGET} a_zone then
+				if lt_widget.parent /= Void then
+					lt_widget.parent.prune (lt_widget)
+				end
+			else
+				check not_possible: False end
 			end
+
 			-- FIXIT: call prune_all from ACTIVE_LIST contract broken?
 			zones.start
 			zones.prune (a_zone)
@@ -232,16 +241,16 @@ feature -- Zones managements
 			l_height := a_height
 			l_auto_hide_zone ?= a_zone
 			if l_auto_hide_zone /= Void then
-				if l_width < a_zone.minimum_width then
-					l_width := a_zone.minimum_width
+				if l_width < l_auto_hide_zone.minimum_width then
+					l_width := l_auto_hide_zone.minimum_width
 				end
-				if l_height < a_zone.minimum_height then
-					l_height := a_zone.minimum_height
+				if l_height < l_auto_hide_zone.minimum_height then
+					l_height := l_auto_hide_zone.minimum_height
 				end
 				internal_docking_manager.fixed_area.set_item_size (l_auto_hide_zone, l_width, l_height)
 			end
 		ensure
-			set: a_zone.width = a_width and a_zone.height =  a_height
+			set: {lt_widget: EV_WIDGET} a_zone implies lt_widget.width = a_width and lt_widget.height = a_height
 		end
 
 	disable_all_zones_focus_color (a_except: SD_ZONE)

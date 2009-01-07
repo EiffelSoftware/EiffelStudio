@@ -69,7 +69,11 @@ feature -- Command
 								l_other := l_parent.second
 								l_first := True
 							end
-							internal_docking_manager.query.inner_container (Current).save_spliter_position (l_other, generating_type + ".recover_normal_size_from_minimize")
+							if {lt_zone: SD_ZONE} Current then
+								internal_docking_manager.query.inner_container (lt_zone).save_spliter_position (l_other, generating_type + ".recover_normal_size_from_minimize")
+							else
+								check not_possible: False end
+							end
 
 							l_parent_parent.prune (l_parent)
 							l_parent.wipe_out
@@ -90,7 +94,11 @@ feature -- Command
 							end
 
 							if l_other /= Void then
-								internal_docking_manager.query.inner_container (Current).restore_spliter_position (l_other, generating_type + ".recover_normal_size_from_minimize")
+								if {lt_zone_2: SD_ZONE} Current then
+								internal_docking_manager.query.inner_container (lt_zone_2).restore_spliter_position (l_other, generating_type + ".recover_normal_size_from_minimize")
+								else
+									check not_possible: False end
+								end
 							end
 						end
 					end
@@ -99,7 +107,11 @@ feature -- Command
 				is_minimized := False
 				show_notebook_contents (True)
 				internal_notebook.set_show_minimized (is_minimized)
-				internal_docking_manager.query.inner_container (Current).update_middle_container
+				if {lt_zone_3: SD_ZONE} Current then
+					internal_docking_manager.query.inner_container (lt_zone_3).update_middle_container
+				else
+					check not_possible: False end
+				end
 			end
 			internal_docking_manager.command.unlock_update
 		ensure
@@ -202,28 +214,31 @@ feature -- Command
 					save_parent_split_position (l_parent_parent)
 					l_last_normal_size := l_parent.split_position
 					l_parent_parent.prune (l_parent)
+					if {lt_zone: SD_ZONE} Current then
+						if l_parent.first = Current then
+							l_other := l_parent.second
+							internal_docking_manager.query.inner_container (lt_zone).save_spliter_position (l_other, generating_type + ".minimize")
+							l_parent.wipe_out
+							l_box := minimized_container (l_parent)
 
-					if l_parent.first = Current then
-
-						l_other := l_parent.second
-						internal_docking_manager.query.inner_container (Current).save_spliter_position (l_other, generating_type + ".minimize")
-						l_parent.wipe_out
-						l_box := minimized_container (l_parent)
-
-						l_parent_parent.extend (l_box)
-						l_box.extend (Current)
-						l_box.extend (l_other)
-						l_box.disable_item_expand (Current)
+							l_parent_parent.extend (l_box)
+							l_box.extend (Current)
+							l_box.extend (l_other)
+							l_box.disable_item_expand (Current)
+						else
+							l_other := l_parent.first
+							internal_docking_manager.query.inner_container (lt_zone).save_spliter_position (l_other, generating_type + ".minimize")
+							l_parent.wipe_out
+							l_box := minimized_container (l_parent)
+							l_parent_parent.extend (l_box)
+							l_box.extend (l_other)
+							l_box.extend (Current)
+							l_box.disable_item_expand (Current)
+						end
 					else
-						l_other := l_parent.first
-						internal_docking_manager.query.inner_container (Current).save_spliter_position (l_other, generating_type + ".minimize")
-						l_parent.wipe_out
-						l_box := minimized_container (l_parent)
-						l_parent_parent.extend (l_box)
-						l_box.extend (l_other)
-						l_box.extend (Current)
-						l_box.disable_item_expand (Current)
+						check not_possible: False end
 					end
+
 					l_box.set_split_position (l_last_normal_size)
 					restore_parent_split_position (l_parent_parent)
 
@@ -236,15 +251,21 @@ feature -- Command
 				is_minimized := True
 				show_notebook_contents (False)
 				internal_notebook.set_show_minimized (is_minimized)
-
-				internal_docking_manager.query.inner_container (Current).update_middle_container
-
+				if {lt_zone_2: SD_ZONE} Current then
+					internal_docking_manager.query.inner_container (lt_zone_2).update_middle_container
+				else
+					check not_possible: False end
+				end
 			else
 				-- Current is in top level
 			end
 			internal_docking_manager.command.resize (True)
 			if l_other /= Void then
-				internal_docking_manager.query.inner_container (Current).restore_spliter_position (l_other, generating_type + ".minimize")
+				if {lt_zone_3: SD_ZONE} Current then
+				internal_docking_manager.query.inner_container (lt_zone_3).restore_spliter_position (l_other, generating_type + ".minimize")
+				else
+					check not_possible: False end
+				end
 			end
 			internal_docking_manager.command.unlock_update
 		end

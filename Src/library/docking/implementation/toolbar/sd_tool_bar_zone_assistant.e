@@ -263,11 +263,15 @@ feature -- Command
 			end
 			check not_void: l_row /= Void end
 			if zone.row /= Void then
-				zone.tool_bar.parent.prune (zone.tool_bar)
+				if {lt_widget: EV_WIDGET} zone.tool_bar then
+					lt_widget.parent.prune (lt_widget)
+					l_row.extend (zone)
+					l_row.set_item_position_relative (lt_widget, last_state.position)
+					zone.docking_manager.command.resize (True)
+				else
+					check not_possible: False end
+				end
 			end
-			l_row.extend (zone)
-			l_row.set_item_position_relative (zone.tool_bar, last_state.position)
-			zone.docking_manager.command.resize (True)
 		end
 
 	record_docking_state
@@ -291,7 +295,11 @@ feature -- Command
 			last_state.set_container_direction (l_direction)
 
 			l_box := zone.docking_manager.tool_bar_manager.tool_bar_container (last_state.container_direction)
-			l_parent ?= zone.tool_bar.parent
+			if {lt_widget: EV_WIDGET} zone.tool_bar then
+				l_parent ?= lt_widget.parent
+			else
+				check not_possible: False end
+			end
 			check not_void: l_parent /= Void end
 			last_state.set_container_row_number (l_box.index_of (l_parent, 1))
 			last_state.set_is_only_zone (l_parent.count = 1)

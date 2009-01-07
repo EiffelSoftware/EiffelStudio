@@ -13,9 +13,13 @@ inherit
 	SD_TOOL_BAR_TITLE_BAR_IMP
 		rename
 			pointer_double_press_actions as pointer_double_press_actions_horizontal_box
-		export
-			{NONE} all
-			{ANY} drawing_area
+		end
+
+	ANY
+		undefine
+			default_create,
+			is_equal,
+			copy
 		end
 
 feature {NONE} -- Initialization

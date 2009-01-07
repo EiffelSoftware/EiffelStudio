@@ -78,8 +78,12 @@ feature -- Hanlde pointer events
 				l_floating_zone.set_position (l_x, l_y)
 			else
 				l_orignal_multi_dock_area := docking_manager.query.inner_container (caller)
-				if l_orignal_multi_dock_area.has (caller) and l_orignal_multi_dock_area.parent_floating_zone /= Void then
-					l_orignal_multi_dock_area.parent_floating_zone.set_position (l_x, l_y)
+				if {lt_widget: EV_WIDGET} caller then
+					if l_orignal_multi_dock_area.has (lt_widget) and l_orignal_multi_dock_area.parent_floating_zone /= Void then
+						l_orignal_multi_dock_area.parent_floating_zone.set_position (l_x, l_y)
+					end
+				else
+					check not_possible: False end
 				end
 			end
 		end

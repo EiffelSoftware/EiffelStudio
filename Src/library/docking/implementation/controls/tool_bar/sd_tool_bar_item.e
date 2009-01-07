@@ -105,7 +105,7 @@ feature -- Query
 
 feature -- Properties
 
-	tool_bar: SD_TOOL_BAR
+	tool_bar: SD_GENERIC_TOOL_BAR
 			-- Tool bar which Current button belong to.
 
 	set_wrap (a_wrap: BOOLEAN)
@@ -160,7 +160,7 @@ feature -- Properties
 		do
 			pixmap := a_pixmap
 			if tool_bar /= Void then
-				tool_bar.need_calculate_size
+				tool_bar.set_need_calculate_size (True)
 			end
 			refresh
 		ensure
@@ -176,7 +176,7 @@ feature -- Properties
 		do
 			pixel_buffer := a_pixel_buffer
 			if tool_bar /= Void then
-				tool_bar.need_calculate_size
+				tool_bar.set_need_calculate_size (True)
 			end
 			refresh
 		ensure
@@ -244,7 +244,7 @@ feature {SD_NOTEBOOK_TAB_AREA} -- Implementation
 			end
 		end
 
-feature {SD_TOOL_BAR, SD_TOOL_BAR_ITEM} -- Internal issues
+feature {SD_GENERIC_TOOL_BAR, SD_TOOL_BAR_ITEM} -- Internal issues
 
 	update_for_pick_and_drop (a_starting: BOOLEAN; a_pebble: ANY)
 			--  Update for pick and drop.
@@ -259,7 +259,7 @@ feature {SD_TOOL_BAR, SD_TOOL_BAR_ITEM} -- Internal issues
 			is_need_redraw := False
 		end
 
-	set_tool_bar (a_tool_bar: SD_TOOL_BAR)
+	set_tool_bar (a_tool_bar: SD_GENERIC_TOOL_BAR)
 			-- Set `tool_bar'.
 		do
 			tool_bar := a_tool_bar
@@ -273,7 +273,7 @@ feature {NONE} -- Implementation
 			-- Refresh button drawing if possible
 			-- This is useful just after `pixel_buffer' or `bitmap' changed
 		local
-			l_tool_bar: SD_TOOL_BAR
+			l_tool_bar: SD_GENERIC_TOOL_BAR
 		do
 			l_tool_bar := tool_bar
 			if l_tool_bar /= Void then

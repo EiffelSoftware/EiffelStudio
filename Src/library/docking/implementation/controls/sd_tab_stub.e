@@ -10,10 +10,6 @@ class
 
 inherit
 	SD_HOR_VER_BOX
-		export
-			{NONE} all
-			{ANY} screen_x, screen_y, width, height, pointer_enter_actions
-		end
 
 	SD_ACCESS
 		undefine
@@ -141,8 +137,14 @@ feature -- Query
 			until
 				l_group.after or Result
 			loop
-				if l_group.item /= Current and then l_group.item.content.state.zone /= Void and then not l_group.item.content.state.zone.is_destroyed then
-					Result := True
+				if l_group.item /= Current and then l_group.item.content.state.zone /= Void then
+					if {lt_widget: EV_WIDGET} l_group.item.content.state.zone then
+						if not lt_widget.is_destroyed then
+							Result := True
+						end
+					else
+						check not_possible: False end
+					end
 				end
 				l_group.forth
 			end

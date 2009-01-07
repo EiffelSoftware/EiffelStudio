@@ -54,8 +54,12 @@ feature {NONE} -- Implementation
 			build_slices_box
 			if is_associated_with_tool then
 				build_tool_bar
-				vb.extend (tool_bar)
-				vb.disable_item_expand (tool_bar)
+				if {lt_widget: EV_WIDGET} tool_bar then
+					vb.extend (lt_widget)
+					vb.disable_item_expand (lt_widget)
+				else
+					check not_possible: False end
+				end
 			end
 
 				--| Editor
@@ -128,7 +132,7 @@ feature {NONE} -- Implementation
 	build_tool_bar
 			-- <Precursor>
 		local
-			l_tb: SD_TOOL_BAR
+			l_tb: SD_GENERIC_TOOL_BAR
 			l_tbw: SD_WIDGET_TOOL_BAR
 			tbb: SD_TOOL_BAR_BUTTON
 			tbtgb: SD_TOOL_BAR_TOGGLE_BUTTON
@@ -542,7 +546,7 @@ feature {NONE} -- Event handling
 		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -47,10 +47,14 @@ feature -- Properties
 	width_height_by_direction: INTEGER
 			-- Width of zone if dock left/right, Height of zone if dock top/bottom.
 		do
-			if direction = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.right then
-				Result := zone.width
+			if {lt_widget: EV_WIDGET} zone then
+				if direction = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.right then
+					Result := lt_widget.width
+				else
+					Result := lt_widget.height
+				end
 			else
-				Result := zone.height
+				check not_possible: False end
 			end
 		end
 
@@ -124,9 +128,13 @@ feature -- Commands
 				zone.on_focus_in (a_content)
 				docking_manager.property.set_last_focus_content (content)
 			end
-			if zone /= Void and then not zone.is_displayed then
-				-- Maybe current is hidden, we restore zones normal state in that dock area.
-				docking_manager.command.recover_normal_state_in_dock_area_of (zone)
+			if {lt_widget: EV_WIDGET} zone then
+				if zone /= Void and then not lt_widget.is_displayed then
+					-- Maybe current is hidden, we restore zones normal state in that dock area.
+					docking_manager.command.recover_normal_state_in_dock_area_of (zone)
+				end
+			else
+				check not_possible: False end
 			end
 		end
 
@@ -146,7 +154,11 @@ feature -- Commands
 			l_state: SD_STATE_VOID
 		do
 			if zone /= Void then
-				internal_docking_manager.command.lock_update (zone, False)
+				if {lt_widget: EV_WIDGET} zone then
+					internal_docking_manager.command.lock_update (lt_widget, False)
+				else
+					check not_possible: False end
+				end
 			else
 				internal_docking_manager.command.lock_update (Void, True)
 			end
@@ -195,9 +207,13 @@ feature -- Commands
 		local
 			l_parent: EV_SPLIT_AREA
 		do
-			l_parent ?= zone.parent
-			if l_parent /= Void then
-				l_parent.set_proportion (a_proportion)
+			if {lt_widget: EV_WIDGET} zone then
+				l_parent ?= lt_widget.parent
+				if l_parent /= Void then
+					l_parent.set_proportion (a_proportion)
+				end
+			else
+				check not_possible: False end
 			end
 		end
 
@@ -251,14 +267,18 @@ feature -- Properties
 			l_2_parent: EV_CONTAINER
 			l_3_parent: EV_CONTAINER
 		do
-			if zone.parent /= Void then
-				l_2_parent := zone.parent.parent
-			end
-			if l_2_parent /= Void then
-				l_3_parent := l_2_parent.parent
-			end
+			if {lt_widget: EV_WIDGET} zone then
+				if lt_widget.parent /= Void then
+					l_2_parent := lt_widget.parent.parent
+				end
+				if l_2_parent /= Void then
+					l_3_parent := l_2_parent.parent
+				end
 
-			Result ?= l_3_parent
+				Result ?= l_3_parent
+			else
+				check not_possible: False end
+			end
 		end
 
 	last_floating_width: INTEGER
@@ -490,7 +510,7 @@ feature {NONE} -- Implementation
 			-- Call content's show actions if possible.
 		require
 			exists: content.state.zone /= Void
-			displayed: content.state.zone.is_displayed
+			displayed: {lt_widget: EV_WIDGET} content.state.zone implies lt_widget.is_displayed
 		do
 			if not docking_manager.property.is_opening_config then
 				content.show_actions.call (Void)

@@ -21,7 +21,7 @@ feature{NONE} -- Initlization
 
 feature -- Command
 
-	set_tool_bar (a_tool_bar: SD_TOOL_BAR)
+	set_tool_bar (a_tool_bar: SD_GENERIC_TOOL_BAR)
 			-- Set `a_tool_bar' where is Current to draw on.
 		require
 			not_void: a_tool_bar /= Void

@@ -21,8 +21,6 @@ inherit
 				set_minimum_size
 			{SD_NOTEBOOK_TAB_AREA}
 				set_minimum_width
-			{SD_NOTEBOOK_TAB_DRAWER_IMP}
-				implementation
 		end
 
 create

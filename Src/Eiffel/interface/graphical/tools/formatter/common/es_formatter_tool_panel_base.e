@@ -639,7 +639,7 @@ feature{NONE} -- Implementation
 	empty_widget_internal: like empty_widget
 			-- Implementation of `empty_widget'
 
-	clear_control_bar_butons (a_tool_bar: SD_TOOL_BAR)
+	clear_control_bar_butons (a_tool_bar: SD_GENERIC_TOOL_BAR)
 			-- Clear previous `control_bar' buttons from a formatter.
 		require
 			not_void: a_tool_bar /= Void
@@ -922,7 +922,7 @@ invariant
 	veto_format_function_agent_attached: veto_format_function_agent /= Void
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

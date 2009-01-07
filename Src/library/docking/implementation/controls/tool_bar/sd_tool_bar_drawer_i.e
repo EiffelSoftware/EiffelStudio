@@ -10,7 +10,7 @@ deferred class
 
 feature -- Commands
 
-	set_tool_bar (a_tool_bar: SD_TOOL_BAR)
+	set_tool_bar (a_tool_bar: SD_GENERIC_TOOL_BAR)
 			-- Set `a_tool_bar'
 		require
 			not_void: a_tool_bar /= Void

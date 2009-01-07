@@ -210,7 +210,11 @@ feature -- Redefine.
 			l_docking_state: SD_DOCKING_STATE
 		do
 			content.set_visible (True)
-			internal_docking_manager.command.lock_update (a_target_zone, False)
+			if {lt_widget: EV_WIDGET} a_target_zone then
+				internal_docking_manager.command.lock_update (lt_widget, False)
+			else
+				check not_possible: False end
+			end
 			create l_docking_state.make (internal_content, a_direction, 0)
 			l_docking_state.change_zone_split_area (a_target_zone, a_direction)
 			change_state (l_docking_state)

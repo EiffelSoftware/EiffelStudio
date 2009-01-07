@@ -70,13 +70,11 @@ feature {NONE} -- Initialization
 	update_current_viewer (v: EB_OBJECT_VIEWER)
 		local
 			t: STRING_GENERAL
-			w: EV_WIDGET
 		do
 				--| Toolbar
 			if v /= Void then
 				v.build_tool_bar
-				w := v.tool_bar
-				if w /= Void then
+				if {w: EV_WIDGET} v.tool_bar then
 					if {wp: EV_WIDGET} w.parent then
 						if wp /= viewer_header_cell then
 							--| wp is already parented somewhere
@@ -246,7 +244,7 @@ invariant
 	has_command: command /= Void
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

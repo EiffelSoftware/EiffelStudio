@@ -66,7 +66,7 @@ feature {NONE} -- Implementation
 			but: SD_TOOL_BAR_BUTTON
 		do
 			if tool_bar = Void then
-				create tool_bar.make
+				create {SD_TOOL_BAR} tool_bar.make
 				create but.make
 				but.set_pixmap (pixmaps.icon_pixmaps.general_copy_icon)
 				but.set_pixel_buffer (pixmaps.icon_pixmaps.general_copy_icon_buffer)
@@ -198,7 +198,7 @@ feature {NONE} -- Event handling
 		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

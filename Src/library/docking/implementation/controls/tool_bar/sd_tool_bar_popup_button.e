@@ -167,7 +167,11 @@ feature {NONE} -- Implementation
 					l_y := tool_bar.item_y (Current)
 					l_height := tool_bar.height
 					if l_menu /= Void then
-						l_menu.show_at (tool_bar, l_x, l_y + tool_bar.standard_height)
+						if {lt_widget: EV_WIDGET} tool_bar then
+							l_menu.show_at (lt_widget, l_x, l_y + tool_bar.standard_height)
+						else
+							check not_possible: False end
+						end
 					else
 						l_helper.set_dialog_position (popup, tool_bar.screen_x + l_x, tool_bar.screen_y + l_y, l_height)
 						popup.show

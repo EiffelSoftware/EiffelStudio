@@ -85,7 +85,7 @@ feature -- Contextual widget
 		do
 		end
 
-	tool_bar: SD_TOOL_BAR
+	tool_bar: SD_GENERIC_TOOL_BAR
 			-- Tool bar widget
 
 feature -- Change
@@ -196,7 +196,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

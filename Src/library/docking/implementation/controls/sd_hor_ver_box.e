@@ -39,9 +39,6 @@ inherit
 			swap as swap_vertical_box,
 			is_empty as is_empty_vertical_box,
 			put_right as put_right_vertical_box
-		export
-			{NONE} all
-			{ANY} height, set_minimum_height, set_minimum_width, has_recursive
 		redefine
 			is_background_color_void
 		end

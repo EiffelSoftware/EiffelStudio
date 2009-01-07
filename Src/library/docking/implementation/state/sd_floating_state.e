@@ -152,7 +152,12 @@ feature -- Redefine.
 			l_zones: ARRAYED_LIST [SD_ZONE]
 			l_tab_zone_source: SD_TAB_ZONE
 		do
-			internal_docking_manager.command.lock_update (zone, False)
+			if {lt_widget: EV_WIDGET} zone then
+				internal_docking_manager.command.lock_update (lt_widget, False)
+			else
+				check not_possible: False end
+			end
+
 			l_zones := inner_container.zones
 			from
 				l_zones.start

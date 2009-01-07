@@ -21,6 +21,8 @@ inherit
 			is_in_default_state
 		redefine
 			initialize,
+			implementation,
+			may_contain,
 			set_splitter_visible
 		select
 			count_except_spliter,
@@ -28,18 +30,19 @@ inherit
 		end
 
 	EV_HORIZONTAL_BOX
+		export
+			{SD_HORIZONTAL_BOX} cl_extend
 		redefine
 			initialize,
+			implementation,
 			extend,
 			may_contain,
 			first,
 			last,
 			is_in_default_state
 		select
-			implementation,
-			cl_extend,
-			cl_put,
-			may_contain
+			put,
+			cl_extend
 		end
 
 feature {NONE} -- Initlization
@@ -129,13 +132,6 @@ feature {NONE} -- Initlization
 			end
 		end
 
-	may_contain (v: EV_WIDGET): BOOLEAN
-			-- Redefine
-		do
-			Result := Precursor {EV_HORIZONTAL_BOX} (v)
-			Result := Result and count <= 3
-		end
-
 	spliter_width: INTEGER = 4
 			-- Fake spliter width.
 
@@ -166,6 +162,14 @@ feature -- Access
 	split_position: INTEGER
 			-- Redefine
 
+feature -- Contract support
+
+	may_contain (v: EV_WIDGET): BOOLEAN
+			-- Redefine
+		do
+			Result := Precursor {EV_HORIZONTAL_BOX} (v) and then count <= 3
+		end
+
 feature -- Setting
 
 	set_split_position (a_pos: INTEGER)
@@ -188,7 +192,12 @@ feature -- Setting
 			end
 		end
 
-note
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
+	implementation: EV_HORIZONTAL_BOX_I
+			-- Responsible for interaction with native graphics toolkit.
+
+;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
@@ -199,10 +208,5 @@ note
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

@@ -255,7 +255,12 @@ feature {NONE} -- Implementation
 					l_zone.save_content_title (a_config_data)
 					a_config_data.set_state (l_zone.content.state.generating_type)
 					a_config_data.set_direction (l_zone.content.state.direction)
-					a_config_data.set_visible (l_zone.is_displayed)
+					if {lt_widget: EV_WIDGET} l_zone then
+						a_config_data.set_visible (lt_widget.is_displayed)
+					else
+						check not_possible: False end
+					end
+					
 					check valid: l_zone.content.state.last_floating_width > 0 end
 					check valid: l_zone.content.state.last_floating_height > 0 end
 					a_config_data.set_width (l_zone.content.state.last_floating_width)

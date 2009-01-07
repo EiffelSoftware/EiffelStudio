@@ -10,7 +10,7 @@ class
 
 inherit
 	SD_ACCESS
-	
+
 create
 	make
 
@@ -97,7 +97,11 @@ feature -- Basic operation
 				l_tool_bar_row := Void
 				l_tool_bar_row ?= internal_box.item
 				check box_only_have_tool_bar_row: l_tool_bar_row /= Void end
-				l_tool_bar_row.start_drag (internal_dock_mediator.caller.tool_bar)
+				if {lt_widget: EV_WIDGET} internal_dock_mediator.caller.tool_bar then
+					l_tool_bar_row.start_drag (lt_widget)
+				else
+					check not_possible: False end
+				end
 				internal_box.forth
 			end
 		ensure
@@ -119,28 +123,33 @@ feature {NONE} -- Implementation functions.
 				l_tool_bar_row ?= internal_box.item
 				check l_tool_bar_row /= Void end
 
-				if not l_tool_bar_row.has (internal_dock_mediator.caller.tool_bar)  then
-					if (l_tool_bar_row.has_screen_y (a_screen_y) and not internal_vertical)
-						or (l_tool_bar_row.has_screen_x (a_screen_x) and internal_vertical) then
-						--Change caller's row.
-						internal_docking_manager.command.lock_update (Void, True)
-						prune_internal_caller_from_parent
-						l_tool_bar_row.extend (internal_dock_mediator.caller)
+				if {lt_widget: EV_WIDGET} internal_dock_mediator.caller.tool_bar then
+					if not l_tool_bar_row.has (lt_widget)  then
+						if (l_tool_bar_row.has_screen_y (a_screen_y) and not internal_vertical)
+							or (l_tool_bar_row.has_screen_x (a_screen_x) and internal_vertical) then
+							--Change caller's row.
+							internal_docking_manager.command.lock_update (Void, True)
+							prune_internal_caller_from_parent
+							l_tool_bar_row.extend (internal_dock_mediator.caller)
 
-						internal_dock_mediator.caller.tool_bar.enable_capture
-						debug ("docking")
-							print ("%N SD_TOOL_BAR_HOT_ZONE move_in a_screen_x: " + a_screen_x.out + " .a_screen_y: " + a_screen_y.out)
+							internal_dock_mediator.caller.tool_bar.enable_capture
+							debug ("docking")
+								print ("%N SD_TOOL_BAR_HOT_ZONE move_in a_screen_x: " + a_screen_x.out + " .a_screen_y: " + a_screen_y.out)
+							end
+							if internal_vertical then
+								l_tool_bar_row.on_pointer_motion (a_screen_y)
+							else
+								l_tool_bar_row.on_pointer_motion (a_screen_x)
+							end
+							internal_docking_manager.command.resize (True)
+							internal_docking_manager.command.unlock_update
+							Result := True
 						end
-						if internal_vertical then
-							l_tool_bar_row.on_pointer_motion (a_screen_y)
-						else
-							l_tool_bar_row.on_pointer_motion (a_screen_x)
-						end
-						internal_docking_manager.command.resize (True)
-						internal_docking_manager.command.unlock_update
-						Result := True
 					end
+				else
+					check not_possible: False end
 				end
+
 				if not internal_box.after then
 					internal_box.forth
 				end
@@ -232,17 +241,22 @@ feature {NONE} -- Implementation functions.
 				end
 			end
 			-- Maybe parent is floating tool bar zone
-			if internal_dock_mediator.caller.tool_bar.parent /= Void then
-				check is_floating: internal_dock_mediator.caller.is_floating end
-				internal_dock_mediator.set_ignore_focus_out_actions (True)
-				internal_dock_mediator.caller.dock
-				internal_dock_mediator.set_ignore_focus_out_actions (False)
+			if {lt_widget: EV_WIDGET} internal_dock_mediator.caller.tool_bar then
+				if lt_widget.parent /= Void then
+					check is_floating: internal_dock_mediator.caller.is_floating end
+					internal_dock_mediator.set_ignore_focus_out_actions (True)
+					internal_dock_mediator.caller.dock
+					internal_dock_mediator.set_ignore_focus_out_actions (False)
+				end
+			else
+				check not_possible: False end
 			end
+
 		ensure
-			pruned: internal_dock_mediator.caller.row /= Void implies
-				 not internal_dock_mediator.caller.row.has (internal_dock_mediator.caller.tool_bar)
+			pruned: internal_dock_mediator.caller.row /= Void and {lt_widget_2: EV_WIDGET} internal_dock_mediator.caller.tool_bar
+			implies not internal_dock_mediator.caller.row.has (lt_widget_2)
 			parent_row_void: internal_dock_mediator.caller.row = Void
-			parent_void: internal_dock_mediator.caller.tool_bar.parent = Void
+			parent_void: {lt_widget_3: EV_WIDGET} internal_dock_mediator.caller.tool_bar implies lt_widget_3.parent = Void
 		end
 
 feature {NONE}  -- Implementation query
@@ -265,7 +279,12 @@ feature {NONE}  -- Implementation query
 			loop
 				l_tool_bar_row ?= internal_box.item
 				check l_tool_bar_row /= Void end
-				Result := l_tool_bar_row.has (internal_dock_mediator.caller.tool_bar)
+				if {lt_widget: EV_WIDGET} internal_dock_mediator.caller.tool_bar then
+					Result := l_tool_bar_row.has (lt_widget)
+				else
+					check not_possible: False end
+				end
+
 				internal_box.forth
 			end
 		end

@@ -220,12 +220,7 @@ feature {NONE}  -- Implementation
 	style_source: POINTER
 			-- Notebook for query theme style.
 		once
-			-- We can't use notebook for the soure of style here.
-			-- Becaues it will always return white style. when using a notebook object to query the style.
-			--- Result := {EV_GTK_EXTERNALS}.gtk_notebook_new
-			-- {EV_GTK_EXTERNALS}.gtk_notebook_append_page (Result, {EV_GTK_EXTERNALS}.gtk_button_new, default_pointer)
-
-			Result := {EV_GTK_EXTERNALS}.gtk_button_new
+			Result := {EV_GTK_EXTERNALS}.gtk_notebook_new
 		end
 
 	internal_expose (a_width: INTEGER; a_x: INTEGER; a_is_selected: BOOLEAN)

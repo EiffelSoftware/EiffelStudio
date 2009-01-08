@@ -30,6 +30,8 @@ feature {NONE} -- Initialization
 			internal_border_box.extend (internal_padding_box)
 			create l_styles
 			internal_padding_box.set_pointer_style (l_styles.standard_cursor)
+
+			create internal_shared
 		end
 
 	init_border_box
@@ -275,7 +277,7 @@ feature {NONE} -- Implementation
 				fixed_point_y := screen_y + height
 				fixed_point_x := screen_x + width
 
-				setter.before_enable_capture
+				internal_shared.setter.before_enable_capture
 				internal_border_box.enable_capture
 			end
 		end
@@ -287,16 +289,10 @@ feature {NONE} -- Implementation
 		do
 			if internal_border_box.has_capture then
 				internal_border_box.disable_capture
-				setter.after_disable_capture
+				internal_shared.setter.after_disable_capture
 				create l_stock_pixmaps
 				internal_padding_box.set_pointer_style (l_stock_pixmaps.standard_cursor)
 			end
-		end
-
-	setter: SD_SYSTEM_SETTER
-			-- Smart Docking library system setter.
-		once
-			create {SD_SYSTEM_SETTER_IMP} Result
 		end
 
 	border_width_factor: INTEGER = 3
@@ -326,6 +322,9 @@ feature {NONE} -- Implementation
 				Result := 3
 			end
 		end
+
+	internal_shared: SD_SHARED
+			-- Shared singletons
 
 	internal_pointer_direction: INTEGER;
 			-- Pointer direction, one value of SD_DOCKING_MANAGER dock_top, dock_bottom, dock_left, dock_right.

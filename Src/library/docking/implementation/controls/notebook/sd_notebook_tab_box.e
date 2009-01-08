@@ -552,9 +552,6 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	internal_shared: SD_SHARED
-			-- All sigletons.
-
 	internal_tabs: ARRAYED_LIST [SD_NOTEBOOK_TAB]
 			-- All tabs in Current.
 invariant

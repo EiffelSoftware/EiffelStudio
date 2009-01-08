@@ -31,12 +31,14 @@ feature{NONE} -- Initlization
 		do
 			-- Make user not break the invariant from EV_ANY_I
 			set_state_flag (base_make_called_flag, True)
+
+			create internal_shared
 		end
 
 feature -- Redefine
 
 	start_draw (a_rectangle: EV_RECTANGLE)
-			-- Redefine
+			-- <Precursor>
 		local
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			l_item_rect, l_rect: EV_RECTANGLE
@@ -58,7 +60,7 @@ feature -- Redefine
 				l_items.forth
 			end
 			if not tool_bar.is_destroyed then
-				tool_bar.clear_rectangle (l_rect.left, l_rect.top, l_rect.width, l_rect.height)
+				internal_shared.setter.clear_background_for_theme (tool_bar, l_rect)
 			end
 		end
 
@@ -86,7 +88,8 @@ feature -- Redefine
 				l_button ?= a_arguments.item
 				l_popup_button ?= a_arguments.item
 				if l_button /= Void then
-					-- Paint background
+
+					-- Paint button background
 					if a_arguments.item.state /= {SD_TOOL_BAR_ITEM_STATE}.normal then
 						c_gtk_paint_box (button_style, l_tool_bar_imp.c_object, to_gtk_state (a_arguments.item.state), gtk_shadow_type (a_arguments.item.state), l_rect.x, l_rect.y, l_rect.width, l_rect.height, True)
 						if l_popup_button /= Void and then not l_popup_button.is_dropdown_area then
@@ -290,6 +293,9 @@ feature {NONE} -- Implementation
 			end
 
 		end
+
+	internal_shared: SD_SHARED
+			-- Shared singleton
 
 feature {NONE} -- Externals
 

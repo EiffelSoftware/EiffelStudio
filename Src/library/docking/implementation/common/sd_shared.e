@@ -70,6 +70,12 @@ feature -- Access
 		ensure
 			not_void: Result /= Void
 		end
+		
+	setter: SD_SYSTEM_SETTER
+			-- System special handler
+		once
+			create {SD_SYSTEM_SETTER_IMP} Result
+		end
 
 	auto_hide_tab_slide_timer_interval: INTEGER
 			-- Auto hide tab slide timer interval

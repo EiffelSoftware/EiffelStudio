@@ -50,7 +50,7 @@ feature -- Agents
 					internal_docker_mediator := Void
 					internal_shared.set_tool_bar_docker_mediator (Void)
 
-					setter.before_enable_capture
+					internal_shared.setter.before_enable_capture
 					-- Following `enable_capture' will cancel pointer double press actions of SD_TOOL_BAR_TITLE_BAR on GTK.				
 					zone.tool_bar.enable_capture
 				end
@@ -71,7 +71,7 @@ feature -- Agents
 					internal_docker_mediator := Void
 					internal_shared.set_tool_bar_docker_mediator (Void)
 					zone.tool_bar.disable_capture
-					setter.after_disable_capture
+					internal_shared.setter.after_disable_capture
 				end
 			end
 		ensure
@@ -189,7 +189,7 @@ feature {NONE} -- Implementation functions
 		do
 			if not is_destroyed then
 				zone.tool_bar.disable_capture
-				setter.after_disable_capture
+				internal_shared.setter.after_disable_capture
 				internal_pointer_pressed := False
 				internal_docker_mediator := Void
 				internal_shared.set_tool_bar_docker_mediator (Void)
@@ -233,14 +233,6 @@ feature {NONE} -- Implementation functions
 		end
 
 feature {NONE} -- Implementation attributes
-
-	setter: SD_SYSTEM_SETTER
-			-- System setter singleton.
-		require
-			not_destroyed: not is_destroyed
-		once
-			create {SD_SYSTEM_SETTER_IMP} Result
-		end
 
 	setted: BOOLEAN
 		-- If pointer style setted?

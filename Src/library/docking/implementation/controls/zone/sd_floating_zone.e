@@ -21,6 +21,8 @@ inherit
 		end
 
 	SD_DOCKER_SOURCE
+		rename
+			internal_shared as internal_shared_not_used
 		undefine
 			default_create, copy
 		end

@@ -914,9 +914,6 @@ feature {SD_GENERIC_TOOL_BAR, SD_TOOL_BAR_ZONE} -- Implementation
 			-- Has pointer enter actions been called?
 			-- The reason why have this flag see `on_pointer_enter''s comments.
 
-	internal_shared: SD_SHARED
-			-- <Precursor>
-
 	internal_row_height: INTEGER
 			-- Row height of Current.
 

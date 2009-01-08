@@ -11,21 +11,56 @@ class
 inherit
 	SD_SYSTEM_SETTER
 
+	EV_BUTTON_IMP
+		rename
+			make as make_not_use
+		export
+			{NONE} all
+		end
+
 feature -- Command
 
 	before_enable_capture
-			-- Redefine
+			-- <Precursor>
 		do
 		end
 
 	after_disable_capture
-			-- Redefine
+			-- <Precursor>
 		do
 		end
 
 	is_remote_desktop: BOOLEAN
-			-- Redefine
+			-- <Precursor>
 		do
+		end
+
+	clear_background_for_theme (a_widget: EV_DRAWING_AREA; a_rect: EV_RECTANGLE)
+			-- <Precursor>
+		do
+			if {l_widget_imp: EV_DRAWING_AREA_IMP} a_widget.implementation then
+				c_clear_background (l_widget_imp.c_object, a_rect.left, a_rect.top, a_rect.width, a_rect.height)
+			else
+				check not_possible: False end
+			end
+		end
+
+feature {NONE} -- Externals
+
+	c_clear_background (a_gtk_widget: POINTER; a_x, a_y, a_width, a_height: INTEGER_32)
+			-- Clear background
+			-- This feature will set background to theme background color/pixmap
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+			{
+				GtkWidget *l_widget;
+				l_widget = GTK_WIDGET ($a_gtk_widget);
+				gdk_window_set_back_pixmap (l_widget->window, NULL, TRUE);
+				gdk_window_clear_area (l_widget->window, $a_x, $a_y, $a_width, $a_height);		
+			}
+			]"
 		end
 
 note

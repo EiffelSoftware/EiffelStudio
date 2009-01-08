@@ -37,6 +37,7 @@ class
 inherit
 	TAG_BASED_TREE_NODE_CONTAINER [G]
 		rename
+			make as make_container,
 			tag as tag_prefix
 		end
 
@@ -56,6 +57,7 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize `Current'.
 		do
+			make_container
 			create internal_untagged_items.make_default
 		ensure
 			not_connected: not is_connected
@@ -308,7 +310,7 @@ feature {NONE} -- Events
 		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

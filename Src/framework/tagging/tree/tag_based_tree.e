@@ -92,8 +92,6 @@ feature -- Access
 					end)
 		end
 
-feature {TAG_BASED_TREE_NODE_CONTAINER} -- Access
-
 	collection: !ACTIVE_COLLECTION_I [G]
 			-- Collection for which tree is maintained
 		require
@@ -106,6 +104,8 @@ feature {TAG_BASED_TREE_NODE_CONTAINER} -- Access
 			check l_collection /= Void end
 			Result := l_collection
 		end
+
+feature {TAG_BASED_TREE_NODE_CONTAINER} -- Access
 
 	tree: !TAG_BASED_TREE [G]
 			-- <Precursor>

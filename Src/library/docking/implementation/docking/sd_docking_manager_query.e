@@ -98,7 +98,7 @@ feature -- Querys
 				loop
 					l_item := l_zones.item
 					if {lt_container: EV_CONTAINER} l_item then
-						if l_widget = l_item or lt_container.has_recursive (l_widget) then
+						if l_widget = lt_container or lt_container.has_recursive (l_widget) then
 							Result := l_item
 						end
 					else
@@ -177,8 +177,22 @@ feature -- Querys
 			end
 		end
 
+	inner_container_by_widget (a_widget: EV_WIDGET): SD_MULTI_DOCK_AREA
+			-- SD_MULTI_DOCK_AREA which has `a_widget'
+		require
+			a_zone_not_void: a_widget /= Void
+		do
+			Result := internal_inner_container (a_widget)
+
+			if Result = Void then
+				Result := inner_container_main
+			end
+		ensure
+			not_void: Result /= Void
+		end
+
 	inner_container (a_zone: SD_ZONE): SD_MULTI_DOCK_AREA
-			-- SD_MULTI_DOCK_AREA which `a_zone' in.
+			-- SD_MULTI_DOCK_AREA which has `a_zone'
 		require
 			a_zone_not_void: a_zone /= Void
 		do
@@ -255,20 +269,21 @@ feature -- Querys
 		do
 			l_item := internal_docking_manager.command.orignal_whole_item
 			if l_item /= Void then
-				check not_void_at_same_tiem: internal_docking_manager.command.orignal_editor_parent /= Void end
-				l_container ?= l_item
-				if l_container = Void then
-					if l_item = a_zone then
-						Result := inner_container_main
-					end
-				else
-					if {lt_widget: EV_WIDGET} a_zone then
-						if l_container.has_recursive (lt_widget) then
+				if {lt_widget: EV_WIDGET} a_zone then
+					check not_void_at_same_tiem: internal_docking_manager.command.orignal_editor_parent /= Void end
+					l_container ?= l_item
+
+					if l_container = Void then
+						if l_item = lt_widget then
 							Result := inner_container_main
 						end
 					else
-						check not_possible: False end
+						if l_container.has_recursive (lt_widget) then
+							Result := inner_container_main
+						end
 					end
+				else
+					check not_possible: False end
 				end
 			end
 		end
@@ -347,6 +362,23 @@ feature -- Querys
 			if l_titled_window /= Void then
 				Result := l_titled_window.accelerators
 			end
+		end
+
+	find_window_by_widget (a_widget: EV_WIDGET): EV_WINDOW
+			-- Find a window which can lock_update.
+		require
+			a_zone_not_void: a_widget /= Void
+		local
+			l_main_container: SD_MULTI_DOCK_AREA
+		do
+			l_main_container := internal_docking_manager.query.inner_container_by_widget (a_widget)
+			if l_main_container.parent_floating_zone = Void then
+				Result := internal_docking_manager.main_window
+			else
+				Result := l_main_container.parent_floating_zone
+			end
+		ensure
+			not_void: Result /= Void
 		end
 
 	find_window_by_zone (a_zone: SD_ZONE): EV_WINDOW
@@ -616,11 +648,11 @@ feature -- Command
 
 feature {NONE} -- Implemnetation
 
-	internal_inner_container (a_zone: EV_WIDGET): SD_MULTI_DOCK_AREA
+	internal_inner_container (a_widget: EV_WIDGET): SD_MULTI_DOCK_AREA
 			-- SD_MULTI_DOCK_AREA which `a_zone' in.
 			-- Maybe void if not found.
 		require
-			not_void: a_zone /= Void
+			not_void: a_widget /= Void
 		local
 			l_containers: ARRAYED_LIST [SD_MULTI_DOCK_AREA]
 		do
@@ -631,7 +663,7 @@ feature {NONE} -- Implemnetation
 				l_containers.after or Result /= Void
 			loop
 				Result := l_containers.item
-				if not Result.has_recursive (a_zone) then
+				if not Result.has_recursive (a_widget) then
 					Result := Void
 				end
 				l_containers.forth

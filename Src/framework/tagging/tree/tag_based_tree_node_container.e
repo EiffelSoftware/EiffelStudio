@@ -14,6 +14,14 @@ inherit
 
 	USABLE_I
 
+feature {NONE} -- Initialization
+
+	make
+			-- Initialize `Current'.
+		do
+			create descending_tags.make_default
+		end
+
 feature -- Access
 
 	frozen children: !DS_LINEAR [like child_for_token]
@@ -368,34 +376,36 @@ feature {TAG_BASED_TREE} -- Implementation
 			descending_tags := Void
 			create cached_children.make_default
 			create cached_items.make (item_count.as_integer_32)
-			retrieve_items
-			from
-				l_cursor.start
-			until
-				l_cursor.after
-			loop
-				l_tag := l_cursor.key
-				i := l_tag.index_of (split_char, 1)
-				if i > 0 then
-					l_token := l_tag.substring (1, i - 1)
-					l_tag := l_tag.substring (i + 1, l_tag.count)
-				else
-					l_token := l_tag
-				end
-				if not has_child_for_token (l_token) then
-					add_child (l_token)
-				end
-				l_child := child_for_token (l_token)
+			if tree.is_connected then
+				retrieve_items
+				from
+					l_cursor.start
+				until
+					l_cursor.after
+				loop
+					l_tag := l_cursor.key
+					i := l_tag.index_of (split_char, 1)
+					if i > 0 then
+						l_token := l_tag.substring (1, i - 1)
+						l_tag := l_tag.substring (i + 1, l_tag.count)
+					else
+						l_token := l_tag
+					end
+					if not has_child_for_token (l_token) then
+						add_child (l_token)
+					end
+					l_child := child_for_token (l_token)
 
-				check
-					child_not_evaluated: not l_child.is_evaluated
+					check
+						child_not_evaluated: not l_child.is_evaluated
+					end
+					if i > 0 then
+						l_child.descending_tags.force (l_cursor.item, l_tag)
+					else
+						l_child.set_item_count (l_cursor.item)
+					end
+					l_cursor.forth
 				end
-				if i > 0 then
-					l_child.descending_tags.force (l_cursor.item, l_tag)
-				else
-					l_child.set_item_count (l_cursor.item)
-				end
-				l_cursor.forth
 			end
 		ensure
 			evaluated: is_evaluated
@@ -407,6 +417,7 @@ feature {NONE} -- Implementation
 			-- Fill `cached_items' with items from collection observed by `tree' tagged with `tag'.
 		require
 			usable: is_interface_usable
+			tree_connected: tree.is_connected
 			collection_usable: tree.collection.is_interface_usable
 			evaluated: is_evaluated
 		local
@@ -441,4 +452,35 @@ invariant
 	not_evaluated_implies_descending_tags_attached:
 		(is_interface_usable and then not is_evaluated) implies descending_tags /= Void
 
+note
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			 Eiffel Software
+			 5949 Hollister Ave., Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
 end

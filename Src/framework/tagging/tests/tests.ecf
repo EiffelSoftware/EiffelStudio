@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="tagging-tests" uuid="7901148E-24B6-4BD6-A8BE-F75FE0026842" library_target="tagging-tests">
+	<description>Unit-tests for the Tagging framework.</description>
+	<target name="tagging-tests">
+		<root class="ANY" feature="default_create"/>
+		<file_rule>
+			<exclude>/\.svn</exclude>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/tests$</exclude>
+		</file_rule>
+		<option syntax_level="1" namespace="EiffelSoftware.Library">
+		</option>
+		<setting name="dotnet_naming_convention" value="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf"/>
+		<library name="tagging" location="$EIFFEL_SRC\framework\tagging\tagging.ecf"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
+		<tests name="tests" location=".\" recursive="true">
+			<option namespace="Tests">
+			</option>
+		</tests>
+	</target>
+</system>

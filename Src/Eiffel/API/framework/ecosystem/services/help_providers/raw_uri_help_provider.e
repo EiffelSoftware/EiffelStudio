@@ -251,6 +251,7 @@ feature {NONE} -- Variable expansion
 			Result.put ("http://dev.eiffel.com", "ISE_WIKI")
 			Result.put ("http://www.eiffelroom.com", "EIFFELROOM")
 			Result.put ("http://doc.eiffel.com", "ISE_DOC")
+			Result.put ("http://doc.eiffel.com/isedoc/uuid", "ISE_DOC_UUID")
 		end
 
 note

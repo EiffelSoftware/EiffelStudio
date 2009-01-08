@@ -554,14 +554,6 @@ feature -- Contract Support
 	lock_call_time: INTEGER
 			-- Used for remember how many times client call `lock_update'.
 
-	find_window (a_zone: SD_ZONE): EV_WINDOW
-			-- Function wrapper for contract support.
-		require
-			a_zone_not_void: a_zone /= Void
-		do
-			Result := internal_docking_manager.query.find_window_by_zone (a_zone)
-		end
-
 feature {NONE}  -- Implementation
 
 	restore_minimized_editors_for_maximize_editor_area
@@ -595,10 +587,10 @@ feature {NONE}  -- Implementation
 	ignore_update: BOOLEAN
 			-- If ignore update?
 
-	lock_update_internal (a_zone: EV_WIDGET; a_main_window: BOOLEAN)
+	lock_update_internal (a_widget: EV_WIDGET; a_main_window: BOOLEAN)
 			-- Lock window update.
 		require
-			a_zone_not_void_when_not_main_window: not a_main_window implies a_zone /= Void
+			a_zone_not_void_when_not_main_window: not a_main_window implies a_widget /= Void
 		local
 			l_lock_window: EV_WINDOW
 		do
@@ -606,22 +598,14 @@ feature {NONE}  -- Implementation
 				if a_main_window then
 					locked_windows.force_last (internal_docking_manager.main_window, 0)
 				else
-					if {lt_zone: SD_ZONE} a_zone then
-						locked_windows.force_last (internal_docking_manager.query.find_window_by_zone (lt_zone), 0)
-					else
-						check not_possible: False end
-					end
+					locked_windows.force_last (internal_docking_manager.query.find_window_by_widget (a_widget), 0)
 				end
 				locked_windows.item (0).lock_update
 			else
 				if a_main_window then
 					l_lock_window := internal_docking_manager.main_window
 				else
-					if {lt_zone_2: SD_ZONE} a_zone then
-						l_lock_window := find_window (lt_zone_2)
-					else
-						check not_possible: False end
-					end
+					l_lock_window := internal_docking_manager.query.find_window_by_widget (a_widget)
 				end
 				if  l_lock_window /= locked_windows.last then
 					locked_windows.last.unlock_update

@@ -43,7 +43,7 @@ feature {NONE} -- Initlization
 			create normal_max_actions
 			create minimize_actions
 			create drag_tab_area_actions
-			
+
 			Precursor {SD_NOTEBOOK}	(a_docking_manager)
 
 			prune_vertical_box (internal_border_for_tab_area)
@@ -233,7 +233,7 @@ feature {NONE}  -- Agents
 			-- Handle tab area pointer press actions.
 		do
 			if a_button = 1 then
-				setter.before_enable_capture
+				internal_shared.setter.before_enable_capture
 				internal_tab_box.enable_capture
 				is_pointer_pressed := True
 			end
@@ -244,7 +244,7 @@ feature {NONE}  -- Agents
 		do
 			if a_button = 1 then
 				internal_tab_box.disable_capture
-				setter.after_disable_capture
+				internal_shared.setter.after_disable_capture
 				is_pointer_pressed := False
 			end
 		end
@@ -254,7 +254,7 @@ feature {NONE}  -- Agents
 		do
 			if is_pointer_pressed then
 				internal_tab_box.disable_capture
-				setter.after_disable_capture
+				internal_shared.setter.after_disable_capture
 				is_pointer_pressed := False
 				drag_tab_area_actions.call ([a_x, a_y, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
 			end
@@ -264,12 +264,6 @@ feature {NONE}  -- Implementation
 
 	is_pointer_pressed: BOOLEAN
 			-- If pointer pressed on `internal_tab_box'?
-
-	setter: SD_SYSTEM_SETTER
-			-- System setter
-		once
-			create {SD_SYSTEM_SETTER_IMP} Result
-		end
 
 	internal_top_box: EV_HORIZONTAL_BOX
 			-- Box which contain

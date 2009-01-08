@@ -13,15 +13,11 @@ inherit
 		rename
 			has as has_cell,
 			extend as extend_cell
---		select
---			implementation
 		end
 
 	SD_SINGLE_CONTENT_ZONE
 		rename
 			internal_shared as internal_shared_not_used
---			extend_widget as extend_cell,
---			has_widget as has_cell
 		redefine
 			close
 		end
@@ -111,7 +107,7 @@ feature {NONE} -- For redocker.
 				docker_mediator := internal_docking_manager.query.docker_mediator (Current, internal_docking_manager)
 				docker_mediator.cancel_actions.extend (agent on_cancel_dragging)
 				docker_mediator.start_tracing_pointer (a_screen_x - screen_x, a_screen_y - screen_y)
-				setter.before_enable_capture
+				internal_shared.setter.before_enable_capture
 				enable_capture
 			end
 		end
@@ -121,7 +117,7 @@ feature {NONE} -- For redocker.
 		do
 			if docker_mediator /= Void then
 				disable_capture
-				setter.after_disable_capture
+				internal_shared.setter.after_disable_capture
 				docker_mediator.end_tracing_pointer (a_screen_x, a_screen_y)
 				docker_mediator := Void
 			end
@@ -139,18 +135,12 @@ feature {NONE} -- For redocker.
 			-- Handle cancel dragging from SD_DOCKER_MEDIATOR.
 		do
 			disable_capture
-			setter.after_disable_capture
+			internal_shared.setter.after_disable_capture
 			docker_mediator := Void
 		end
 
 	docker_mediator: SD_DOCKER_MEDIATOR;
 			-- Mediator perform dock.	
-
-	setter: SD_SYSTEM_SETTER
-			-- System setter
-		once
-			create {SD_SYSTEM_SETTER_IMP} Result
-		end
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."

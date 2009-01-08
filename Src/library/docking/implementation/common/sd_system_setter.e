@@ -26,6 +26,15 @@ feature -- Command
 		deferred
 		end
 
+	clear_background_for_theme (a_widget: EV_DRAWING_AREA; a_rect: EV_RECTANGLE)
+			-- Clear background
+			-- This feature will set background to theme background color/pixmap
+		require
+			a_widget_not_void: a_widget /= Void
+			a_rect_not_void: a_rect /= Void
+		deferred
+		end
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

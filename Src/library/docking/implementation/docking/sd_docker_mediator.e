@@ -52,7 +52,7 @@ feature {NONE} -- Initlization
 			ev_application.key_release_actions.extend (internal_key_release_function)
 
 			is_dockable := True
-			setter.before_enable_capture
+			internal_shared.setter.before_enable_capture
 
 			docking_manager.property.set_docker_mediator (Current)
 		ensure
@@ -306,7 +306,7 @@ feature {NONE} -- Implementation functions
 			ev_application.key_press_actions.prune_all (internal_key_press_function)
 			ev_application.key_release_actions.prune_all (internal_key_release_function)
 
-			setter.after_disable_capture
+			internal_shared.setter.after_disable_capture
 
 			create l_env
 			l_env.application.focus_out_actions.start
@@ -563,12 +563,6 @@ feature {NONE} -- Implementation functions
 		end
 
 feature {NONE} -- Implementation attributes
-
-	setter: SD_SYSTEM_SETTER
-			--
-		once
-			create {SD_SYSTEM_SETTER_IMP} Result
-		end
 
 	hot_zones: ACTIVE_LIST [SD_HOT_ZONE]
 			-- Hot zones.

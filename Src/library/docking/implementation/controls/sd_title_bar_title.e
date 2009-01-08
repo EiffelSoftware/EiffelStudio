@@ -241,13 +241,19 @@ feature {NONE} -- Implementation
 				set_background_color (hightlight_gray_color)
 				set_disable_focus_background_color
 
-				clear
+				clear_for_theme
 				l_clipping_width := width - internal_shared.highlight_before_width - internal_shared.highlight_tail_width
 				if l_clipping_width >= 0 then
 					draw_ellipsed_text_top_left (internal_shared.highlight_before_width + internal_shared.title_bar_text_start_x, internal_shared.title_bar_text_start_y, title, l_clipping_width)
 				end
 
 			end
+		end
+
+	clear_for_theme
+			-- Clear backgroud with theme data
+		do
+			internal_shared.setter.clear_background_for_theme (Current, create {EV_RECTANGLE}.make (0, 0, width, height))
 		end
 
 	internal_shared: SD_SHARED

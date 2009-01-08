@@ -24,7 +24,7 @@ feature -- Command
 	enable_capture
 			-- Redefine
 		do
-			setter.before_enable_capture
+			internal_shared.setter.before_enable_capture
 			Precursor {EV_DRAWING_AREA}
 		end
 
@@ -32,7 +32,7 @@ feature -- Command
 			-- Redefine
 		do
 			Precursor {EV_DRAWING_AREA}
-			setter.after_disable_capture
+			internal_shared.setter.after_disable_capture
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -52,13 +52,10 @@ feature {EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	setter: SD_SYSTEM_SETTER
-			-- System setter
-		once
-			create {SD_SYSTEM_SETTER_IMP} Result
-		end
+	internal_shared: SD_SHARED
+			-- Shared singletons
 
-note
+;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

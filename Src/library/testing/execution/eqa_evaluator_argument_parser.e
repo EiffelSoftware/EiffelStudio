@@ -33,13 +33,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	non_switched_argument_name: !STRING = "test_id"
+	non_switched_argument_name: STRING = "test_id"
 			-- <Precursor>
 
-	non_switched_argument_type: !STRING = "index"
+	non_switched_argument_type: STRING = "index"
 			-- <Precursor>
 
-	non_switched_argument_description: !STRING = "Index of test to be executed"
+	non_switched_argument_description: STRING = "Index of test to be executed"
 			-- <Precursor>
 
 	port_option: INTEGER
@@ -95,7 +95,7 @@ feature -- Status report
 
 feature {NONE} -- Access
 
-	switches: ARRAYED_LIST [!ARGUMENT_SWITCH]
+	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
 			-- <Precursor>
 		once
 			create Result.make (4)
@@ -109,7 +109,7 @@ feature {NONE} -- Access
 				"Add test output to result", True, False))
 		end
 
-	switch_groups: ARRAYED_LIST [!ARGUMENT_GROUP]
+	switch_groups: ARRAYED_LIST [ARGUMENT_GROUP]
 			-- <Precursor>
 		once
 			create Result.make (2)

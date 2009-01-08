@@ -1251,7 +1251,7 @@ feature {NONE} -- Validation
 					else
 						check False end
 					end
-					i := i + 1
+					l_group_switches.forth
 				end
 			end
 

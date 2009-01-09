@@ -73,6 +73,21 @@ feature -- Content Change
 			read_enough_lines: number_of_lines >= first_read_block_size or else reading_text_finished
 		end
 
+feature {TEXT_PANEL} -- Content Change		
+
+	flush
+			-- Load texts immediately
+		do
+			from until
+				not text_being_processed
+			loop
+				finish_reading_string
+			end
+		ensure
+			not_text_being_processed: not text_being_processed
+			reading_text_finished: reading_text_finished
+		end
+
 feature -- Reinitialization
 
 	reset_text

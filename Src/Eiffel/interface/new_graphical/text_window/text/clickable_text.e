@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 			Precursor {EDITABLE_TEXT}
 			make_translator
 			reading_text_finished := True
-			eol_reached := false
+			eol_reached := False
 			new_line
 		end
 
@@ -142,7 +142,7 @@ feature {EB_CLICKABLE_EDITOR} -- Load Text handling
 	start_processing (append: BOOLEAN)
 			-- Start processing text.
 		do
-			reading_text_finished := false
+			reading_text_finished := False
 			if not append then
 				block_counter := 0
 			end
@@ -243,7 +243,7 @@ feature {NONE} -- Load Text handling
 			-- Process new line.
 		do
 			line_read := line_read + 1
-			eol_reached := true
+			eol_reached := True
 			last_processed_line.update_token_information
 			if number_of_lines = 0 then
 				append_line (last_processed_line)
@@ -267,7 +267,7 @@ feature {NONE} -- Load Text handling
 			end
 			new_line
 			append_line (last_processed_line)
-			eol_reached := false
+			eol_reached := False
 		end
 
 	on_text_loaded
@@ -380,7 +380,7 @@ feature {NONE} -- Private Constants
 	from_text: INTEGER = 2;
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

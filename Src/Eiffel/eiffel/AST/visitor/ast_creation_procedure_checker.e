@@ -253,7 +253,9 @@ feature {AST_EIFFEL} -- Visitor: access to features
 			r := context.current_feature.rout_id_set
 			rc := r.count
 			from
-				p := current_class.parents_classes
+					-- `context.written_class' is used instead of `context.current_class'
+					-- as the feature being processed can be inherited.
+				p := context.written_class.parents_classes
 				k := p.count
 			until
 				k <= 0
@@ -451,7 +453,7 @@ feature {NONE} -- Access
 			-- Bodies that are being processed
 
 note
-	copyright:	"Copyright (c) 2008, Eiffel Software"
+	copyright:	"Copyright (c) 2008-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

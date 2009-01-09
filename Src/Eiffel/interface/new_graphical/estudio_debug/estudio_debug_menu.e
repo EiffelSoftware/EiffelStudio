@@ -498,7 +498,6 @@ feature {NONE} -- Actions
 						l_classes: HASH_TABLE [CONF_CLASS, STRING_8]
 						l_class_stone: CLASSI_STONE
 						l_editor: EB_SMART_EDITOR
-						l_click_tool: BOOLEAN
 					do
 						check a_cluster_not_void: a_cluster /= Void end
 						l_classes := a_cluster.classes
@@ -513,21 +512,10 @@ feature {NONE} -- Actions
 									a_window.set_stone (l_class_stone)
 									l_editor := a_window.editors_manager.current_editor
 									if l_editor /= Void then
-										l_click_tool := l_editor.text_displayed.click_tool_enabled
-										l_editor.text_displayed.disable_click_tool
-											-- Need to process the idle actions until text is full loaded.
-										from
-										until
-											not l_editor.text_displayed.text_being_processed
-										loop
-											ev_application.process_events
-										end
+										l_editor.flush
 										if l_editor.is_editable then
 											l_editor.set_changed (True)
 											a_window.save_cmd.execute
-										end
-										if l_click_tool then
-											l_editor.text_displayed.enable_click_tool
 										end
 									end
 								end

@@ -1,7 +1,7 @@
 note
 	description: "[
 					Image encoder used by Gdi+, 
-					such as {WEL_GDIP_IMAGE}.save_image_to_file_with_encoder 
+					such as {WEL_GDIP_IMAGE}.save_image_to_file_with_encoder
 																							]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,6 +19,7 @@ feature {NONE} -- Initlization
 
 	make (a_guid: WEL_GUID)
 			-- Creation method
+			-- `a_guid' is format id (not class id)
 		require
 			not_void: a_guid /= Void
 		do
@@ -193,7 +194,7 @@ feature {NONE} -- Implementation
 			end
 
 			if l_info /= Void then
-				create Result.make (l_info.cls_id)
+				create Result.make (l_info.format_id)
 			end
 		end
 

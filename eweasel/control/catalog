@@ -967,6 +967,7 @@ test	change-actual-generic-to-expanded final069 tcf fail finalizing expanded gen
 test	finalize-expanded-unref-local	final070 tcf fail finalizing expanded
 test	finalize-all-classes-true	final071 tcf fail finalizing
 test	finalize-self-init-attribute	final072 tcf fail finalizing
+test	finalize-invariant-wrong-class-name	final073 tcf fail finalizing
 
 -- Runtime
 test	gc-tracking-001					runtime001	tcf pass runtime

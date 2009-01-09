@@ -977,6 +977,8 @@ feature {NONE} -- Validation
 				l_switch := l_switches.item
 				if has_option (l_switch.id) then
 					l_options := options_of_name (l_switch.id)
+				else
+					l_options := Void
 				end
 
 					-- Check optional
@@ -1891,9 +1893,8 @@ feature {NONE} -- Switches
 		deferred
 		ensure
 			result_attached: Result /= Void
-			result_consistent: Result = switches
-
 			result_contains_attached_items: assertions.sequence_contains_attached_items (Result)
+			result_consistent: Result = switches
 		end
 
 	switch_groups: ARRAYED_LIST [ARGUMENT_GROUP]
@@ -1902,22 +1903,20 @@ feature {NONE} -- Switches
 			create Result.make (0)
 		ensure
 			result_attached: Result /= Void
-			result_consistent: Result = switch_groups
-
 			result_contains_attached_items: assertions.sequence_contains_attached_items (Result)
+			result_consistent: Result = switch_groups
 		end
 
 	switch_dependencies: HASH_TABLE [ARRAY [ARGUMENT_SWITCH], ARGUMENT_SWITCH]
 			-- Switch appurtenances (dependencies).
 			-- Note: Switch appurtenances are implictly added to a group where a switch is present.
-		do
+		once
 			create Result.make (0)
 		ensure
 			result_attached: Result /= Void
-			result_consistent: Result = switch_dependencies
-
 			result_contains_attached_keys: assertions.array_contains_attached_items (Result.current_keys)
 			result_contains_attached_items: assertions.sequence_contains_attached_items (Result.linear_representation)
+			result_consistent: Result = switch_dependencies
 		end
 
 feature {NONE} -- Temporary

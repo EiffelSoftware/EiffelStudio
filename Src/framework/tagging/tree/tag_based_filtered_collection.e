@@ -61,6 +61,9 @@ feature {NONE} -- Initialization
 			create negative_matchers.make_default
 
 			create internal_items.make_default
+		ensure
+			not_has_expression: not has_expression
+			not_connected: not is_connected
 		end
 
 feature {NONE} -- Clean up
@@ -179,7 +182,9 @@ feature -- Status setting
 			positive_matchers.wipe_out
 			negative_matchers.wipe_out
 			add_matchers (a_expression)
-			update (l_had_expr)
+			if is_connected then
+				update (l_had_expr)
+			end
 		end
 
 	remove_expression
@@ -191,7 +196,9 @@ feature -- Status setting
 			internal_expression := Void
 			positive_matchers.wipe_out
 			negative_matchers.wipe_out
-			update (l_had_expr)
+			if is_connected then
+				update (l_had_expr)
+			end
 		ensure
 			not_has_expression: not has_expression
 		end
@@ -509,7 +516,7 @@ invariant
 	negative_matchers_compiled: negative_matchers.for_all (agent {like create_matcher}.is_compiled)
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

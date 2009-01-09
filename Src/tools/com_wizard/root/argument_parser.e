@@ -291,7 +291,7 @@ feature {NONE} -- Usage
 	name: STRING_8 = "Eiffel COM Wizard"
 			-- Full name of application
 
-	version: !STRING_8
+	version: STRING_8
 			-- Version number of application
 		do
 			create Result.make (10)
@@ -314,7 +314,7 @@ feature {NONE} -- Usage
 			Result := 0000
 		end
 
-	switches: ?ARRAYED_LIST [!ARGUMENT_SWITCH]
+	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
 			-- Retrieve a list of switch used for a specific application
 		local
 			l_ecf_switch: STRING
@@ -343,7 +343,7 @@ feature {NONE} -- Usage
 			result_attached: Result /= Void
 		end
 
-	switch_groups: ?ARRAYED_LIST [!ARGUMENT_GROUP]
+	switch_groups: ARRAYED_LIST [ARGUMENT_GROUP]
 			-- Valid switch grouping
 		once
 			create Result.make (0)
@@ -355,7 +355,7 @@ feature {NONE} -- Usage
 			result_attached: Result /= Void
 		end
 
-	switch_dependencies: ?HASH_TABLE [!ARRAY [!ARGUMENT_SWITCH], !ARGUMENT_SWITCH]
+	switch_dependencies: HASH_TABLE [ARRAY [ARGUMENT_SWITCH], ARGUMENT_SWITCH]
 			-- Switch appurtenances (dependencies)
 			-- Note: Switch appurtenances are implictly added to a group where a switch is present
 		once

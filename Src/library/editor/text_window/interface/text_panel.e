@@ -788,6 +788,14 @@ feature -- Basic Operations
 			is_checking_modifications_is_false: is_checking_modifications = False
 		end
 
+	flush
+			-- Load texts immediately
+		do
+			if text_displayed /= Void then
+				text_displayed.flush
+			end
+		end
+
 feature -- Graphical interface
 
 	pointer_style: EV_POINTER_STYLE

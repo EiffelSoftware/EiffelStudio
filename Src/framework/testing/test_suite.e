@@ -201,7 +201,7 @@ feature {TEST_EXECUTOR_I} -- Status setting
 				end
 				if l_old = {EQA_TEST_OUTCOME_STATUS_TYPES}.failed then
 					count_failing := count_failing - 1
-				elseif l_new = {EQA_TEST_OUTCOME_STATUS_TYPES}.passed then
+				elseif l_old = {EQA_TEST_OUTCOME_STATUS_TYPES}.passed then
 					count_passing := count_passing - 1
 				end
 			end
@@ -374,7 +374,7 @@ invariant
 	internal_processors_usable: internal_processors.for_all (agent {!TEST_PROCESSOR_I}.is_interface_usable)
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

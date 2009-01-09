@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {EWB_TEST_EXECUTION}."
+	description: "[
+		TTY testing command which launches background test execution.
+	]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,7 +35,7 @@ feature -- Access
 
 	help_message: STRING_GENERAL
 		do
-			Result := locale.translation ("run tests")
+			Result := locale.translation (h_run_tests)
 		end
 
 	abbreviation: CHARACTER
@@ -43,20 +45,26 @@ feature -- Access
 
 feature {NONE} -- Basic operations
 
-	execute_with_test_suite
+	execute_with_test_suite (a_test_suite: !TEST_SUITE_S)
 			-- <Precursor>
 		local
-			l_service: TEST_SUITE_S
 			l_conf: TEST_EXECUTOR_CONF
+			l_filter: like filtered_tests
 		do
-			create l_conf.make
-			if test_suite.is_service_available then
-				l_service := test_suite.service
-				l_service.test_suite_connection.connect_events (Current)
-				launch_processor (background_executor_type, l_conf, True)
-				l_service.test_suite_connection.disconnect_events (Current)
+			print_current_expression (a_test_suite, False)
+			print_current_prefix (a_test_suite, False)
+			print_string ("%N")
+			l_filter := filtered_tests (a_test_suite)
+			if l_filter.has_expression then
+				create l_conf.make_with_tests (l_filter.items)
+			else
+				create l_conf.make
 			end
-			print_statistics
+			l_conf.set_sorter_prefix (tree_view (a_test_suite).tag_prefix)
+			a_test_suite.test_suite_connection.connect_events (Current)
+			launch_processor (background_executor_type, l_conf, True)
+			a_test_suite.test_suite_connection.disconnect_events (Current)
+			print_statistics (a_test_suite, True)
 		end
 
 feature -- Events
@@ -70,15 +78,9 @@ feature -- Events
 
 	on_test_changed (a_collection: !ACTIVE_COLLECTION_I [!TEST_I]; a_test: !TEST_I)
 			-- <Precursor>
-		local
-			l_outcome_text: like outcome
 		do
 			if a_test.memento.is_outcome_added then
-				print_string (create_identifier (a_test))
-				print_string (": ")
-				l_outcome_text := outcome (a_test)
-				print_string (l_outcome_text)
-				print_string ("%N")
+				print_test (a_test, True, 50)
 				if not a_test.passed then
 					print_outcome (a_test.last_outcome)
 					print_string ("%N")
@@ -125,7 +127,10 @@ feature {NONE} -- Implementation
 		end
 
 	print_invocation (a_invocation: !EQA_TEST_INVOCATION_RESPONSE; a_name: !STRING)
-			-- Print information about a given test invocation
+			-- Print information about a given test invocation.
+			--
+			-- `a_invocation': Invocation response for which information should be printed.
+			-- `a_name': Name of invocation (e.g. prepare/test/clean)
 		local
 			l_exception: EQA_TEST_INVOCATION_EXCEPTION
 		do
@@ -206,11 +211,13 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Internationalization
 
+	h_run_tests: STRING = "run tests"
+
 	t_aborted: STRING = "no response"
 	t_user_aborted: STRING = "user abort"
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

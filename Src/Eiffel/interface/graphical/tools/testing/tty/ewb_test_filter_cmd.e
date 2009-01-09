@@ -1,62 +1,66 @@
 note
 	description: "[
-		Command line menu for testing functionality.
+		TTY command for setting the expressions which currently filters tests before displaying or
+		executing them.
 	]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	EWB_TESTING
+	EWB_TEST_FILTER_CMD
 
 inherit
-	EWB_STRING
-		rename
-			make as make_string
-		end
-
-	SHARED_LOCALE
-		export
-			{NONE} all
-		end
-
-create
-	make
-
-feature {NONE} -- Initialization
-
-	make
-			-- Initialize `Current'.
-		do
-			make_string (menu_name, menu_help, menu_abbreviation, create_menu)
-		end
+	EWB_TEST_CMD
 
 feature -- Access
 
-	is_available: BOOLEAN = True
-			-- Is testing
-
-feature {NONE} -- Factory
-
-	create_menu: like sub_menu
-			-- Create testing menu.
+	abbreviation: CHARACTER
+			-- <Precursor>
 		do
-			create Result.make (1, 6)
-			Result.put (create {EWB_TEST_LIST_VIEW}, 1)
-			Result.put (create {EWB_TEST_TREE_VIEW}, 2)
-			Result.put (create {EWB_TEST_EXECUTION}, 3)
-			Result.put (create {EWB_TEST_FILTER_CMD}, 4)
-			Result.put (create {EWB_TEST_TAG_PREFIX_CMD}, 5)
-			Result.put (create {EWB_AUTO_TEST}, 6)
+			Result := 'f'
+		end
+
+	name: STRING
+			-- <Precursor>
+		do
+			Result := "Filter"
+		end
+
+	help_message: STRING
+			-- <Precursor>
+		do
+			Result := locale.translation (h_set_expression)
+		end
+
+feature {NONE} -- Basic operations
+
+	execute_with_test_suite (a_test_suite: !TEST_SUITE_S)
+			-- <Precursor>
+		local
+			l_filter: like filtered_tests
+			l_expr: ?STRING
+		do
+			print_string (locale.translation (q_filter_expression))
+			io.read_line
+			l_expr := io.last_string
+			check l_expr /= Void end
+			create l_expr.make_from_string (l_expr)
+
+			l_filter := filtered_tests (a_test_suite)
+			if l_expr.is_empty then
+				l_filter.remove_expression
+			else
+				l_filter.set_expression (l_expr)
+			end
+			print_current_expression (a_test_suite, True)
 		end
 
 feature {NONE} -- Internationalization
 
-	menu_name: STRING = "Testing"
+	h_set_expression: STRING = "Set expression for filtering tests"
 
-	menu_help: STRING_GENERAL do Result := locale.translation ("manage and run tests") end
-
-	menu_abbreviation: CHARACTER = 't'
+	q_filter_expression: STRING = "Enter new filter expression (leave blank to remove current): "
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

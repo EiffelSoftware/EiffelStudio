@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {EWB_TEST_LIST_VIEW}."
+	description: "[
+		TTY command displaying tests in a sorted list.
+	]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -12,97 +14,82 @@ inherit
 
 feature -- Access
 
-	name: STRING_8 = "List view"
+	name: STRING_8
 			-- <Precursor>
+		do
+			Result := "List view"
+		end
 
-	abbreviation: CHARACTER = 'l'
+	abbreviation: CHARACTER
 			-- <Precursor>
+		do
+			Result := 'l'
+		end
 
 	help_message: STRING_GENERAL
 			-- <Precursor>
 		do
-			Result := locale.translation ("Display tests in a list")
+			Result := locale.translation (h_display_list)
 		end
 
 feature {NONE} -- Query
 
-	test_map: DS_HASH_TABLE [TEST_I, like create_identifier]
-			-- Map containings tests to be listed together with their id.
-		require
-			test_suite_available: test_suite.is_service_available
+	item_sorter: DS_SORTER [!TEST_I]
+			-- Sorter for {TEST_I}.
+			--
+			-- Note: this sorter also takes class names in account.
 		local
-			l_service: TEST_SUITE_S
-			l_tests: DS_LINEAR [TEST_I]
-			l_cursor: DS_LINEAR_CURSOR [TEST_I]
-			l_id: like create_identifier
+			l_cache: like item_sorter_cache
+			l_comparator: AGENT_BASED_EQUALITY_TESTER [!TEST_I]
+			l_sorter: DS_QUICK_SORTER [!TEST_I]
 		do
-			l_service := test_suite.service
-			l_tests := l_service.tests
-			create Result.make (l_tests.count)
-			from
-				l_cursor := l_tests.new_cursor
-				l_cursor.start
-			until
-				l_cursor.after
-			loop
-				l_id := create_identifier (l_cursor.item)
-				Result.force_last (l_cursor.item, l_id)
-				l_cursor.forth
+			l_cache := item_sorter_cache
+			if l_cache = Void then
+				create l_comparator.make (
+					agent (a_test1, a_test2: !TEST_I): BOOLEAN
+						do
+							if a_test1.class_name.same_string (a_test2.class_name) then
+								Result := a_test1.name < a_test2.name
+							else
+								Result := a_test1.class_name < a_test2.class_name
+							end
+						end)
+				create l_sorter.make (l_comparator)
+				item_sorter_cache := l_sorter
+				Result := l_sorter
+			else
+				Result := l_cache
 			end
 		ensure
 			result_attached: Result /= Void
-			not_result_has_void: not Result.has (Void)
 		end
+
+	item_sorter_cache: ?like item_sorter
+			-- Cache for `node_sorter'
 
 feature {NONE} -- Basic operations
 
-	execute_with_test_suite
+	execute_with_test_suite (a_test_suite: !TEST_SUITE_S)
 			-- <Precursor>
 		local
-			l_map: like test_map
-			l_ids: DS_ARRAYED_LIST [like create_identifier]
-			l_comp: KL_COMPARABLE_COMPARATOR [like create_identifier]
-			l_id: like create_identifier
+			l_items: DS_ARRAYED_LIST [TEST_I]
 		do
-				-- TODO: check for test suite availability
-			l_map := test_map
-			create l_ids.make_from_linear (l_map.keys)
-			create l_comp.make
-			l_ids.sort (create {DS_QUICK_SORTER [like create_identifier]}.make (l_comp))
-			from
-				l_ids.start
-			until
-				l_ids.after
-			loop
-				l_id := l_ids.item_for_iteration
-				print_test (l_map.item (l_id), l_id)
-				l_ids.forth
+			print_current_expression (a_test_suite, False)
+			create l_items.make_from_linear (filtered_tests (a_test_suite).items)
+			l_items.sort (item_sorter)
+			if not l_items.is_empty then
+				print_string ("%N")
 			end
-
-			print_statistics
+			l_items.do_all (agent print_test (?, True, 50))
+			print_statistics (a_test_suite, True)
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Internationalization
 
-	print_test (a_test: TEST_I; a_id: like create_identifier)
-			-- Print line containing information about a single test
-			--
-			-- `a_test': Test for which information should be printed
-			-- `a_id': Previously create identifier for `a_test'
-		do
-			print_string (a_id)
-			print_multiple_string (" ", column_spacing + max_identifier_count - a_id.count)
-			print_string (outcome (a_test))
-			print_string ("%N")
-		end
-
-feature {NONE} -- Constants
-
-	column_spacing: INTEGER = 5
-			-- Number of spaces between columns
+	h_display_list: STRING = "Display tests in a list"
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

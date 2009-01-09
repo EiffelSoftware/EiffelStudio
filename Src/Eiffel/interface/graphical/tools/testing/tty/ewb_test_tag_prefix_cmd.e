@@ -1,62 +1,72 @@
 note
 	description: "[
-		Command line menu for testing functionality.
+		TTY command for setting the current tag prefix, used to sort tests before execution and display
+		them in a tree structure.
 	]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	EWB_TESTING
+	EWB_TEST_TAG_PREFIX_CMD
 
 inherit
-	EWB_STRING
-		rename
-			make as make_string
-		end
+	EWB_TEST_CMD
 
-	SHARED_LOCALE
+	TAG_UTILITIES
 		export
 			{NONE} all
 		end
 
-create
-	make
-
-feature {NONE} -- Initialization
-
-	make
-			-- Initialize `Current'.
-		do
-			make_string (menu_name, menu_help, menu_abbreviation, create_menu)
-		end
-
 feature -- Access
 
-	is_available: BOOLEAN = True
-			-- Is testing
-
-feature {NONE} -- Factory
-
-	create_menu: like sub_menu
-			-- Create testing menu.
+	abbreviation: CHARACTER
+			-- <Precursor>
 		do
-			create Result.make (1, 6)
-			Result.put (create {EWB_TEST_LIST_VIEW}, 1)
-			Result.put (create {EWB_TEST_TREE_VIEW}, 2)
-			Result.put (create {EWB_TEST_EXECUTION}, 3)
-			Result.put (create {EWB_TEST_FILTER_CMD}, 4)
-			Result.put (create {EWB_TEST_TAG_PREFIX_CMD}, 5)
-			Result.put (create {EWB_AUTO_TEST}, 6)
+			Result := 'p'
+		end
+
+	name: STRING
+			-- <Precursor>
+		do
+			Result := "Prefix"
+		end
+
+	help_message: STRING
+			-- <Precursor>
+		do
+			Result := locale.translation (h_set_prefix)
+		end
+
+feature {NONE} -- Basic operations
+
+	execute_with_test_suite (a_test_suite: !TEST_SUITE_S)
+			-- <Precursor>
+		local
+			l_view: like tree_view
+			l_expr: ?STRING
+		do
+			print_string (locale.translation (q_enter_prefix))
+			io.read_line
+			l_expr := io.last_string
+			check l_expr /= Void end
+			create l_expr.make_from_string (l_expr)
+
+			l_view := tree_view (a_test_suite)
+			if is_valid_tag (l_expr) then
+				l_view.disconnect
+				l_view.connect (filtered_tests (a_test_suite), l_expr)
+			else
+				print_string (l_expr)
+				print_string (" is not a valid tag.")
+			end
+			print_current_prefix (a_test_suite, True)
 		end
 
 feature {NONE} -- Internationalization
 
-	menu_name: STRING = "Testing"
-
-	menu_help: STRING_GENERAL do Result := locale.translation ("manage and run tests") end
-
-	menu_abbreviation: CHARACTER = 't'
+	h_set_prefix: STRING = "Set tag prefix for tree view and execution order"
+	q_enter_prefix: STRING = "Enter new tag prefix: "
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

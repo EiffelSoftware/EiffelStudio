@@ -6234,8 +6234,7 @@ feature -- Implementation
 	process_inspect_as (l_as: INSPECT_AS)
 		local
 			l_vomb1: VOMB1
-			l_controler: INSPECT_CONTROL
-			l_needs_byte_node: BOOLEAN
+			l_controler: ?INSPECT_CONTROL
 			l_inspect: INSPECT_B
 			l_expr: EXPR_B
 			l_list: BYTE_LIST [BYTE_NODE]
@@ -6244,11 +6243,9 @@ feature -- Implementation
 		do
 			break_point_slot_count := break_point_slot_count + 1
 
-			l_needs_byte_node := is_byte_node_enabled
-
 			l_as.switch.process (Current)
 			if last_type /= Void then
-				if l_needs_byte_node then
+				if is_byte_node_enabled then
 					l_expr ?= last_byte_node
 					create l_inspect
 					l_inspect.set_switch (l_expr)
@@ -6279,38 +6276,38 @@ feature -- Implementation
 					l_vomb1.set_location (l_as.switch.end_location)
 					error_handler.insert_error (l_vomb1)
 				else
-						-- Initialization of the multi-branch controler
+						-- Initialization of the multi-branch controler if no errors are detected.
 					create l_controler.make (l_constraint_type)
-					inspect_controlers.put_front (l_controler)
-
-					context.enter_realm
-					if l_as.case_list /= Void then
-						l_as.case_list.process (Current)
-						if l_needs_byte_node then
-							l_list ?= last_byte_node
-							l_list := l_list.remove_voids
-							l_inspect.set_case_list (l_list)
-						end
-					end
-
-					if l_as.else_part /= Void then
-						process_compound (l_as.else_part)
-						context.save_sibling
-						if l_needs_byte_node then
-							l_list ?= last_byte_node
-							l_inspect.set_else_part (l_list)
-						end
-					end
-					context.leave_realm
-					if l_needs_byte_node then
-						l_inspect.set_line_number (l_as.switch.start_location.line)
-						l_inspect.set_end_location (l_as.end_keyword)
-						last_byte_node := l_inspect
-					end
-					inspect_controlers.start
-					inspect_controlers.remove
 				end
 			end
+
+			inspect_controlers.put_front (l_controler)
+			context.enter_realm
+			if l_as.case_list /= Void then
+				l_as.case_list.process (Current)
+				if l_inspect /= Void then
+					l_list ?= last_byte_node
+					l_list := l_list.remove_voids
+					l_inspect.set_case_list (l_list)
+				end
+			end
+
+			if l_as.else_part /= Void then
+				process_compound (l_as.else_part)
+				context.save_sibling
+				if l_inspect /= Void then
+					l_list ?= last_byte_node
+					l_inspect.set_else_part (l_list)
+				end
+			end
+			context.leave_realm
+			if l_inspect /= Void then
+				l_inspect.set_line_number (l_as.switch.start_location.line)
+				l_inspect.set_end_location (l_as.end_keyword)
+				last_byte_node := l_inspect
+			end
+			inspect_controlers.start
+			inspect_controlers.remove
 		end
 
 	process_instr_call_as (l_as: INSTR_CALL_AS)
@@ -6659,10 +6656,15 @@ feature -- Implementation
 		end
 
 	process_interval_as (l_as: INTERVAL_AS)
+		local
+			l_inspect_control: like inspect_control
 		do
-			inspect_control.process_interval (l_as, is_inherited)
-			if is_byte_node_enabled then
-				last_byte_node := inspect_control.last_interval_byte_node
+			l_inspect_control := inspect_control
+			if l_inspect_control /= Void then
+				l_inspect_control.process_interval (l_as, is_inherited)
+				if is_byte_node_enabled then
+					last_byte_node := l_inspect_control.last_interval_byte_node
+				end
 			end
 		end
 
@@ -6757,23 +6759,27 @@ feature -- Implementation
 			l_case: CASE_B
 			l_list: BYTE_LIST [BYTE_NODE]
 			l_is_empty: BOOLEAN
+			l_inspect_control: like inspect_control
 		do
 			if not is_byte_node_enabled then
-				from
-					nb := l_as.interval.count
-					i := nb
-					j := nb + 1
-				until
-					i <= 0
-				loop
-					l_as.interval.i_th (i).process (Current)
-					if inspect_control.last_interval_byte_node /= Void then
-						j := j - 1
+				l_inspect_control := inspect_control
+				if l_inspect_control /= Void then
+					from
+						nb := l_as.interval.count
+						i := nb
+						j := nb + 1
+					until
+						i <= 0
+					loop
+						l_as.interval.i_th (i).process (Current)
+						if l_inspect_control.last_interval_byte_node /= Void then
+							j := j - 1
+						end
+						i := i - 1
 					end
-					i := i - 1
-				end
-				if j > nb then
-					l_is_empty := True
+					if j > nb then
+						l_is_empty := True
+					end
 				end
 				if l_as.compound /= Void then
 					process_compound (l_as.compound)
@@ -9627,7 +9633,7 @@ feature {NONE} -- Implementation: catcall check
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

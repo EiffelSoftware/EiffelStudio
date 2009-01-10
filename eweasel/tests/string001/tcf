@@ -4,6 +4,8 @@ test_description Test on STRING features
 
 copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test_string_8.e $CLUSTER test_string_8.e
+copy_raw 	test_string_32.e $CLUSTER test_string_32.e
 compile_melted
 compile_result ok
 

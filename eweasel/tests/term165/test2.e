@@ -22,7 +22,7 @@ feature
 
 	initialize
 		do
-			create s
+			create s.make_empty
 			s.do_nothing
 		end
 

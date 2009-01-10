@@ -1,0 +1,13 @@
+test_name 	 object-test-not-visible-to-old-express
+test_description Checks an object test should not be visible to an old expression (Missing ECMA specification)
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+execute_work 	NONE 	exec_output
+execute_result 	ok
+compare		exec_output output
+
+test_end

@@ -1,24 +1,27 @@
 note
+	description: "Shared instance of mulit-branch instruction controler."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
--- Shared instance of mulit-branch instruction controler
+	date: "$Date$"
+	revision: "$Revision$"
 
 class SHARED_INSPECT
-	
+
 feature {NONE}
 
-	Inspect_control: INSPECT_CONTROL
-			-- Controler of multi-branch instruction
+	Inspect_control: ?INSPECT_CONTROL
+			-- Controler of multi-branch instruction (if any)
 		do
 			Result := Inspect_controlers.first
-		end;
+		end
 
-	Inspect_controlers: LINKED_LIST [INSPECT_CONTROL]
+	Inspect_controlers: LINKED_LIST [?INSPECT_CONTROL]
 		once
-			create Result.make;
-		end;
+			create Result.make
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

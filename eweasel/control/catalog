@@ -2045,6 +2045,7 @@ test	default-in-special-access						attach036 tcf pass special
 test	attached-type-set-in-conditional					attach037 tcf fail attached_types
 test	object-test-local-same-lower-name				attach038 tcf fail attached_types
 test	void-safe-inherited-precursor					attach039 tcf pass void_safe precursor
+test	object-test-not-visible-to-old-express				attach040 tcf fail object_test system-validity
 
 -- Tests for conformance in general
 test	basic-conformance		conform001 tcf pass conformance

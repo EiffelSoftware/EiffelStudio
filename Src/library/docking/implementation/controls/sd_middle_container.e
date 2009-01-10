@@ -50,11 +50,6 @@ feature -- Access
 		deferred
 		end
 
-	full: BOOLEAN
-			-- If full?
-		deferred
-		end
-
 	maximum_split_position: INTEGER
 			-- Maximum split position.
 		deferred

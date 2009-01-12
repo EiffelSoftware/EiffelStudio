@@ -53,15 +53,15 @@ feature {NONE} -- Initialization
 			-- <precursor>
 		do
 			Precursor {EB_GRID_EDITOR_TOKEN_ITEM}
-			pointer_button_press_actions.force_extend (agent conditional_activate)
+			pointer_button_press_actions.extend (agent conditional_activate)
 		end
 
 feature {NONE} -- Implementation
 
-	conditional_activate
+	conditional_activate (x_pos, y_pos, button: INTEGER; unused1, unused2, unused3: DOUBLE; a_screen_x, a_screen_y:INTEGER)
 			-- Activate when item has been selected.
 		do
-			if is_selected then
+			if is_selected and then button = 1 then
 				activate
 			end
 		end
@@ -142,12 +142,12 @@ feature {NONE} -- Implementation
 			-- Setup the action sequences when the item is shown.
 		do
 			editor.editor_drawing_area.focus_out_actions.extend (agent deactivate)
-			editor.set_focus
 			editor.editor_drawing_area.key_press_actions.extend (agent handle_key)
+			editor.editor_drawing_area.set_focus
 		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

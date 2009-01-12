@@ -19,7 +19,7 @@ inherit
 feature -- Command
 
 	on_normal_max_window
-			-- Normal or max `Current'.
+			-- Normal or max `Current'
 		local
 			l_split_area: EV_SPLIT_AREA
 		do
@@ -48,7 +48,7 @@ feature -- Command
 		end
 
 	close
-			-- Close window.
+			-- Close window
 		do
 			if {lt_widget: EV_WIDGET} Current then
 				internal_docking_manager.command.lock_update (lt_widget, False)
@@ -66,7 +66,7 @@ feature -- Command
 		end
 
 	recover_to_normal_state
-			-- If Current maximized, then normal Current.
+			-- If Current maximized, then normal Current
 		local
 			l_split_area: EV_SPLIT_AREA
 		do
@@ -102,22 +102,22 @@ feature -- Command
 		end
 
 	set_max (a_max: BOOLEAN)
-			-- Set if current is maximized.
+			-- Set if current is maximized
 		do
 		end
 
 	set_focus_color (a_focus: BOOLEAN)
-			-- Set title bar focuse color.
+			-- Set title bar focuse color
 		do
 		end
 
 	set_non_focus_selection_color
-			-- Set title bar non-focuse color.
+			-- Set title bar non-focuse color
 		do
 		end
 
 	set_last_floating_width (a_width: INTEGER)
-			-- Set `last_floating_width' of zone's state.
+			-- Set `last_floating_width' of zone's state
 		require
 			vaild: a_width >= 0
 		do
@@ -137,14 +137,14 @@ feature -- Command
 		end
 
 	update_mini_tool_bar_size
-			-- Update mini tool bar size since client programmers mini tool bar widget size changed.
+			-- Update mini tool bar size since client programmers mini tool bar widget size changed
 		do
 		end
 
 feature {SD_DOCKING_STATE, SD_TAB_STATE} -- Maximize state initlization
 
 	set_widget_main_area (a_widget: EV_WIDGET; a_main_area: SD_MULTI_DOCK_AREA; a_parent: EV_CONTAINER; a_split_position: INTEGER)
-			-- Set widget and main area which used for normal window.
+			-- Set widget and main area which used for normal window
 		require
 			a_widget_not_void: a_widget /= Void
 			a_main_area_not_void: a_main_area /= Void
@@ -161,7 +161,7 @@ feature {SD_DOCKING_STATE, SD_TAB_STATE} -- Maximize state initlization
 feature -- Query
 
 	state: SD_STATE
-			-- State which `Current' is.
+			-- State which `Current' is
 		do
 			Result := content.state
 		ensure
@@ -169,14 +169,14 @@ feature -- Query
 		end
 
 	content: SD_CONTENT
-			-- Content which `Current' holded.
+			-- Content which `Current' holded
 		deferred
 		ensure
 			not_void: not is_floating_zone implies Result /= Void
 		end
 
 	extend (a_content: SD_CONTENT)
-			-- Set `a_content'.
+			-- Set `a_content'
 		require
 			a_content_not_void: a_content /= Void
 		deferred
@@ -210,7 +210,7 @@ feature -- Query
 			Result := l_floating_zone /= Void
 		end
 
-feature {SD_SAVE_CONFIG_MEDIATOR} -- Save config.
+feature {SD_SAVE_CONFIG_MEDIATOR} -- Save config
 
 	save_content_title (a_config_data: SD_INNER_CONTAINER_DATA)
 			-- save content(s) title(s) to `a_config_data'.
@@ -250,19 +250,19 @@ feature {SD_DOCKING_MANAGER, SD_DOCKING_MANAGER_AGENTS, SD_CONTENT, SD_STATE, SD
 			end
 		end
 
-feature {SD_TAB_STATE_ASSISTANT, SD_TAB_STATE, SD_DOCKING_MANAGER_QUERY} -- Maximum issues.
+feature {SD_TAB_STATE_ASSISTANT, SD_TAB_STATE, SD_DOCKING_MANAGER_QUERY} -- Maximum issues
 
 	main_area_widget: EV_WIDGET
-			-- Other user widgets when `Current' is maximized.
+			-- Other user widgets when `Current' is maximized
 
 	main_area: SD_MULTI_DOCK_AREA
-			-- SD_MULTI_DOCK_AREA current zone belong to.
+			-- SD_MULTI_DOCK_AREA current zone belong to
 
 	internal_parent_split_position: INTEGER
-			-- Parent split position.
+			-- Parent split position
 
 	internal_parent: EV_CONTAINER
-			-- Parent.
+			-- Parent
 
 	restore_from_maximized
 			-- Restore to normal size if current maximized
@@ -275,16 +275,16 @@ feature {SD_TAB_STATE_ASSISTANT, SD_TAB_STATE, SD_DOCKING_MANAGER_QUERY} -- Maxi
 feature {NONE} -- Implementation
 
 	on_close_request
-			-- Handle close request actions.
+			-- Handle close request actions
 		do
 			content.close_request_actions.call (Void)
 		end
 
 	internal_docking_manager: SD_DOCKING_MANAGER
-			-- Docking manager manage Current.
+			-- Docking manager manage Current
 
 	internal_shared: SD_SHARED
-			-- All singletons.
+			-- All singletons
 
 invariant
 

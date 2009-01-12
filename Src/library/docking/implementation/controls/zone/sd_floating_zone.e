@@ -21,8 +21,6 @@ inherit
 		end
 
 	SD_DOCKER_SOURCE
-		rename
-			internal_shared as internal_shared_not_used
 		undefine
 			default_create, copy
 		end
@@ -61,7 +59,9 @@ feature {NONE} -- Initlization
 		do
 			internal_floating_state := a_floating_state
 			internal_docking_manager := a_floating_state.docking_manager
+
 			create internal_shared
+
 			create internal_shared_zone
 			default_create
 			create internal_vertical_box

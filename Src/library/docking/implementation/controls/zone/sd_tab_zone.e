@@ -38,11 +38,6 @@ inherit
 			count as count_widget,
 			has as has_widget,
 			index_of as index_of_widget
---		select
---			implementation,
---			count_widget,
---			set_extend,
---			put
 		end
 
 	SD_DOCKER_SOURCE
@@ -65,7 +60,6 @@ feature {NONE} -- Initlization
 			a_content_parent_void: a_content.user_widget.parent = Void
 		do
 			create internal_shared
-			create internal_shared_not_used
 			internal_docking_manager := a_content.docking_manager
 			default_create
 			create internal_notebook.make (internal_docking_manager)

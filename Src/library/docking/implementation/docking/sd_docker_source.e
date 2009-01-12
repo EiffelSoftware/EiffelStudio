@@ -26,7 +26,9 @@ feature -- Key feature.
 feature {NONE}  -- Implementation
 
 	internal_shared: SD_SHARED
-			-- All singletons.
+			-- All singletons
+		deferred
+		end
 
 invariant
 

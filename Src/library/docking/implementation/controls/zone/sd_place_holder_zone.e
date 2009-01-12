@@ -47,8 +47,7 @@ feature {NONE} -- Initlization
 			only_for_place_holder_zone: a_content.unique_title.is_equal ((create {SD_SHARED}).editor_place_holder_content_name)
 		do
 			default_create
-			-- Not breaking the invariant
-			create internal_shared_not_used
+
 			create internal_shared
 
 			internal_content := a_content
@@ -195,7 +194,7 @@ feature {NONE} -- Implementation
 
 	internal_notebook: SD_NOTEBOOK_UPPER
 			-- Fake notebook for {SD_UPPER_ZONE}
-			
+
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

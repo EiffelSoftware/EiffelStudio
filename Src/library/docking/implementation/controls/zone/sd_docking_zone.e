@@ -16,8 +16,6 @@ inherit
 		end
 
 	SD_SINGLE_CONTENT_ZONE
-		rename
-			internal_shared as internal_shared_not_used
 		redefine
 			close
 		end

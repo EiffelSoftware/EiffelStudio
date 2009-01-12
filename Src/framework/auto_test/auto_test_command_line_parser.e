@@ -12,15 +12,13 @@ note
 class AUTO_TEST_COMMAND_LINE_PARSER
 
 inherit
-
 	AUT_SHARED_RANDOM
 
-	KL_SHARED_EXCEPTIONS
 	KL_SHARED_ARGUMENTS
 
 feature -- Status report
 
-	error_handler: AUT_ERROR_HANDLER
+	error_handler: ?AUT_ERROR_HANDLER
 			-- Error handler
 
 	output_dirname: STRING
@@ -87,15 +85,23 @@ feature -- Status report
 			-- Help message for command line arguments
 			-- This value is only set if help option presents.
 
+feature -- Element change
+
+	set_error_handler (a_error_handler: like error_handler)
+			-- Set `error_handler' to `a_error_handler'.
+		do
+			error_handler := a_error_handler
+		end
+
 feature -- Parsing
 
 	process_arguments (a_arguments: DS_LIST [STRING])
 			-- Process `a_arguments'.
 		require
 			a_arguments_attached: a_arguments /= Void
-			error_hanlder_not_void: error_handler /= Void
+			error_hadler_not_void: error_handler /= Void
 		local
-			parser: AP_PARSER
+			parser: AUT_AP_PARSER
 			version_option: AP_FLAG
 			quiet_option: AP_FLAG
 			just_test_option: AP_FLAG
@@ -195,12 +201,12 @@ feature -- Parsing
 
 			parser.parse_list (a_arguments)
 
-			if version_option.was_found then
-				error_handler.enable_verbose
-				error_handler.report_version_message
-				error_handler.disable_verbose
-				Exceptions.die (0)
-			end
+--			if version_option.was_found then
+--				error_handler.enable_verbose
+--				error_handler.report_version_message
+--				error_handler.disable_verbose
+--				Exceptions.die (0)
+--			end
 
 			if not quiet_option.was_found then
 				error_handler.enable_verbose
@@ -233,7 +239,7 @@ feature -- Parsing
 						is_ddmin_enabled := True
 					else
 						error_handler.report_invalid_minimization_algorithm (minimize_option.parameter)
-						Exceptions.die (1)
+						--Exceptions.die (1)
 
 					end
 				else
@@ -242,54 +248,57 @@ feature -- Parsing
 			else
 				if minimize_option.was_found then
 					error_handler.report_cannot_specify_both_disable_minimze_and_minimize
-					Exceptions.die (1)
+					--Exceptions.die (1)
 				end
 			end
 
-			if output_dir_option.was_found then
-				output_dirname := output_dir_option.parameter
-			end
+			if not error_handler.has_error then
+				if output_dir_option.was_found then
+					output_dirname := output_dir_option.parameter
+				end
 
-			if time_out_option.was_found then
-				create time_out.make (0, 0 ,0, 0, time_out_option.parameter, 0)
-			end
+				if time_out_option.was_found then
+					create time_out.make (0, 0 ,0, 0, time_out_option.parameter, 0)
+				end
 
-			if seed_option.was_found then
-				random.set_seed (seed_option.parameter)
-			else
-				create time.make_now
-				random.set_seed (time.milli_second)
-			end
-
-			if statistics_format_op.was_found then
-				if statistics_format_op.parameter.is_equal ("text") then
-					is_text_statistics_format_enabled := True
-				elseif statistics_format_op.parameter.is_equal ("html") then
-					is_html_statistics_format_enabled := True
+				if seed_option.was_found then
+					random.set_seed (seed_option.parameter)
 				else
-					error_handler.report_statistics_format_error (statistics_format_op.parameter)
-					Exceptions.die (1)
+					create time.make_now
+					random.set_seed (time.milli_second)
 				end
-			else
-				is_html_statistics_format_enabled := True
-				is_text_statistics_format_enabled := True
+
+				if statistics_format_op.was_found then
+					if statistics_format_op.parameter.is_equal ("text") then
+						is_text_statistics_format_enabled := True
+					elseif statistics_format_op.parameter.is_equal ("html") then
+						is_html_statistics_format_enabled := True
+					else
+						error_handler.report_statistics_format_error (statistics_format_op.parameter)
+					end
+				else
+					is_html_statistics_format_enabled := True
+					is_text_statistics_format_enabled := True
+				end
 			end
 
-			if proxy_time_out_option.was_found then
-				proxy_time_out := proxy_time_out_option.parameter
-			end
+			if not error_handler.has_error then
+				if proxy_time_out_option.was_found then
+					proxy_time_out := proxy_time_out_option.parameter
+				end
 
-			if l_log_to_replay.was_found then
-				is_replay_enabled := True
-				log_to_replay := l_log_to_replay.parameter.twin
-			end
+				if l_log_to_replay.was_found then
+					is_replay_enabled := True
+					log_to_replay := l_log_to_replay.parameter.twin
+				end
 
-			should_display_help_message := l_help_option.was_found
-			if should_display_help_message then
-				create l_help_flag.make_with_short_form ('h')
-				help_message := l_help_flag.full_help_text (parser)
-			end
+				should_display_help_message := l_help_option.was_found
+				if should_display_help_message then
+					create l_help_flag.make_with_short_form ('h')
+					help_message := l_help_flag.full_help_text (parser)
+				end
 
+			end
 --			if parser.parameters.count = 0 then
 --				error_handler.report_missing_ecf_filename_error
 --				-- TODO: Display usage_instruction (currently not exported, find better way to do it.)
@@ -318,7 +327,7 @@ invariant
 	minimization_is_either_slicing_or_ddmin: is_minimization_enabled implies (is_slicing_enabled xor is_ddmin_enabled)
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

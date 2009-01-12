@@ -34,7 +34,7 @@ feature {EIS_STORAGE} -- Element change
 			-- Return True if an entry is really registered.
 		local
 			l_entries: like entries
-			l_entry_list: !SEARCH_TABLE [H]
+			l_entry_list: SEARCH_TABLE [H]
 		do
 			l_entries := entries
 			l_entries.search (a_id)
@@ -58,7 +58,7 @@ feature {EIS_STORAGE} -- Element change
 			-- Return True if an entry is really deregistered.
 		local
 			l_entries: like entries
-			l_entry_list: !SEARCH_TABLE [H]
+			l_entry_list: SEARCH_TABLE [H]
 		do
 			if {lt_entries: like entries}entries then
 				l_entries := entries
@@ -111,12 +111,13 @@ feature -- Access
 			end
 		end
 
-	entries: !HASH_TABLE [SEARCH_TABLE [H], G]
+	entries: HASH_TABLE [SEARCH_TABLE [H], G]
 			-- Entries to be stored.
 			-- Do not change directly.
 			-- Only for querying.
 
-feature {NONE} -- Implementation
+invariant
+	entries_not_void: entries /= Void
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

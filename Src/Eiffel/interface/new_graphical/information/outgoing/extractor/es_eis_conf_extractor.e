@@ -60,7 +60,7 @@ feature {NONE} -- Implementation
 			l_notable: like notable
 			l_notes: ARRAYED_LIST [HASH_TABLE [STRING_8, STRING_8]]
 			l_note: HASH_TABLE [STRING_8, STRING_8]
-			l_entries: !HASH_TABLE [SEARCH_TABLE [HASHABLE], STRING]
+			l_entries: HASH_TABLE [SEARCH_TABLE [HASHABLE], STRING]
 			l_id: STRING
 		do
 				-- Compute id.

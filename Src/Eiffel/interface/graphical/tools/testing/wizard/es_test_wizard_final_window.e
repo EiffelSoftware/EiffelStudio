@@ -17,12 +17,8 @@ inherit
 	ES_TEST_WIZARD_WINDOW
 		redefine
 			is_final_state,
-			wizard_information
-		end
-
-	ES_SHARED_PROMPT_PROVIDER
-		export
-			{NONE} all
+			wizard_information,
+			on_processor_launch_error
 		end
 
 feature {NONE} -- Access
@@ -39,6 +35,9 @@ feature -- Status report
 
 	is_interface_usable: BOOLEAN = True
 			-- <Precursor>
+
+	has_error: BOOLEAN
+			-- Has error occured launching processor?
 
 feature {NONE} -- Status report
 
@@ -57,11 +56,24 @@ feature {NONE} -- Basic operations
 		do
 			l_info := wizard_information
 			check l_info /= Void end
+			has_error := False
 			launch_processor (factory_type, l_info, False)
+			if not has_error then
+				cancel_actions
+			end
+		end
+
+feature {NONE} -- Events
+
+	on_processor_launch_error (a_error: !STRING_32; a_type: !TYPE [TEST_PROCESSOR_I]; a_code: NATURAL_32)
+			-- <Precursor>
+		do
+			has_error := True
+			Precursor (a_error, a_type, a_code)
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

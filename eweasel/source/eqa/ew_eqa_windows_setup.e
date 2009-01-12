@@ -41,6 +41,8 @@ feature {NONE} -- Initialization
 	make is
 			-- Creation method
 		do
+			create all_converted_classes.make (100)
+			all_converted_classes.compare_objects
 		end
 
 feature -- Config
@@ -158,81 +160,13 @@ feature -- Query
 			Result := l_ise_eiffel_set and l_eweasel_set
 		end
 
-feature -- Util
-
-	convert_tcf_in_folder (a_dir: STRING; a_test_name: STRING) is
-			-- Convert `a_tcf_file' to normal Eiffel class if there is a tcf under `a_dir'
-		require
-			not_void: a_dir /= Void
---			is_dir_exists: is_dir_exists (a_dir)
-			not_void: a_test_name /= Void
-		local
-			l_file_name: FILE_NAME
-			l_file: RAW_FILE
-		do
-			create l_file_name.make_from_string (a_dir)
-			l_file_name.set_file_name ("tcf")
-			create l_file.make (l_file_name)
-			if l_file.exists then
-				converter.append_one_test_routine (l_file_name, a_test_name)
-			else
-				print ("%NError: tcf file not exists in dir: " + a_dir)
-			end
-		end
-
-	convert_all_tcf_in (a_dir: STRING; a_output_file_path: STRING; a_output_file_prefix: STRING) is
-			-- Convert all tcf files in `a_dir'
-			-- This feature will place all tests under a dir to one Eiffel testing class
-		require
-			not_void: a_dir /= Void
-			is_dir_exists: is_dir_exists (a_dir)
-			not_void: a_output_file_path /= Void
-			not_void: a_output_file_prefix /= Void
-		local
-			l_dir: DIRECTORY
-			l_list: ARRAYED_LIST [STRING_8]
-			l_dir_name: DIRECTORY_NAME
-			l_current_test_prefix: STRING
-		do
-			create l_dir.make (a_dir)
-			l_dir.open_read
-
-			from
-				create converter.make_default
-				converter.set_ignore_non_exist_test_cases (True)
-				l_list := l_dir.linear_representation
-
-				l_list.start
-				last_test_prefix := test_case_prefix (l_list.item)
-			until
-				l_list.after
-			loop
-				create l_dir_name.make_from_string (a_dir)
-				l_dir_name.extend (l_list.item)
-
-				l_current_test_prefix := test_case_prefix (l_list.item)
-				if not last_test_prefix.is_equal (l_current_test_prefix) and converter.is_flush_needed then
-					check first_time_must_pass: l_list.index /= 1 end
-					converter.flush_to_output_file (file_name (a_output_file_path, a_output_file_prefix, last_test_prefix), a_output_file_prefix + "_" + last_test_prefix)
-					last_test_prefix := l_current_test_prefix
-				end
-				last_test_prefix := l_current_test_prefix
-
-				convert_tcf_in_folder (l_dir_name, l_list.item)
-
-				l_list.forth
-			end
-
-			if converter.is_flush_needed then
-				-- We flush last one
-				converter.flush_to_output_file (file_name (a_output_file_path, a_output_file_prefix, last_test_prefix), a_output_file_prefix + "_" + last_test_prefix)
-			end
-		end
+	all_converted_classes: ARRAYED_SET [STRING]
+			-- All converted classes
 
 feature -- Command
 
 	setup is
-			-- Start eweasel testing
+			-- Setup environment for eweasel testing
 		local
 			l_eweasel_63: EW_EQA_EWEASEL_MT
 		do
@@ -310,6 +244,113 @@ feature -- Command
 
 			prepare
 			source_path (source_directory)
+		end
+
+	convert_tcf_in_folder (a_dir: STRING; a_test_name: STRING) is
+			-- Convert `a_tcf_file' to normal Eiffel class if there is a tcf under `a_dir'
+		require
+			not_void: a_dir /= Void
+--			is_dir_exists: is_dir_exists (a_dir)
+			not_void: a_test_name /= Void
+		local
+			l_file_name: FILE_NAME
+			l_file: RAW_FILE
+		do
+			create l_file_name.make_from_string (a_dir)
+			l_file_name.set_file_name ("tcf")
+			create l_file.make (l_file_name)
+			if l_file.exists then
+				converter.append_one_test_routine (l_file_name, a_test_name)
+			else
+				print ("%NError: tcf file not exists in dir: " + a_dir)
+			end
+		end
+
+	convert_all_tcf_in (a_dir: STRING; a_output_file_path: STRING; a_output_file_prefix: STRING) is
+			-- Convert all tcf files in `a_dir'
+			-- This feature will place all tests under a dir to one Eiffel testing class
+		require
+			not_void: a_dir /= Void
+			is_dir_exists: is_dir_exists (a_dir)
+			not_void: a_output_file_path /= Void
+			not_void: a_output_file_prefix /= Void
+		local
+			l_dir: DIRECTORY
+			l_list: ARRAYED_LIST [STRING_8]
+			l_dir_name: DIRECTORY_NAME
+			l_current_test_prefix: STRING
+			l_class_name: STRING
+			l_all_test_case_file_name: FILE_NAME
+		do
+			create l_dir.make (a_dir)
+			l_dir.open_read
+
+			from
+				create converter.make_default
+				converter.set_ignore_non_exist_test_cases (True)
+				l_list := l_dir.linear_representation
+
+				l_list.start
+				last_test_prefix := test_case_prefix (l_list.item)
+			until
+				l_list.after
+			loop
+				create l_dir_name.make_from_string (a_dir)
+				l_dir_name.extend (l_list.item)
+
+				l_current_test_prefix := test_case_prefix (l_list.item)
+				if not last_test_prefix.is_equal (l_current_test_prefix) and converter.is_flush_needed then
+					check first_time_must_pass: l_list.index /= 1 end
+					l_class_name := a_output_file_prefix + "_" + last_test_prefix
+					converter.flush_to_output_file (file_name (a_output_file_path, a_output_file_prefix, last_test_prefix), l_class_name)
+					all_converted_classes.extend (l_class_name)
+					last_test_prefix := l_current_test_prefix
+				end
+				last_test_prefix := l_current_test_prefix
+
+				convert_tcf_in_folder (l_dir_name, l_list.item)
+
+				l_list.forth
+			end
+
+			if converter.is_flush_needed then
+				l_class_name := a_output_file_prefix + "_" + last_test_prefix
+				-- We flush last one
+				converter.flush_to_output_file (file_name (a_output_file_path, a_output_file_prefix, last_test_prefix), a_output_file_prefix + "_" + last_test_prefix)
+				all_converted_classes.extend (l_class_name)
+			end
+
+			-- Finally, generate a class which contain all class names
+			create l_all_test_case_file_name.make_from_string (a_output_file_path)
+			l_all_test_case_file_name.set_file_name ("all_eweasel_test_cases.e")
+			write_all_converted_classes_to_file (l_all_test_case_file_name)
+		end
+
+	write_all_converted_classes_to_file (a_output_file: FILE_NAME)
+			--
+		require
+			a_output_file_not_void: a_output_file /= Void
+			all_converted_classes_not_void: all_converted_classes /= Void
+		local
+			l_content: STRING
+			l_converted_classes: like all_converted_classes
+			l_item: STRING
+		do
+			from
+				l_converted_classes := all_converted_classes
+				l_converted_classes.start
+				create l_content.make_empty
+			until
+				l_converted_classes.after
+			loop
+				l_item := l_converted_classes.item
+				l_content.append ("%N%T" + l_item.as_lower + ": " + l_item.as_upper)
+
+				l_converted_classes.forth
+			end
+
+			l_content := converter.all_eweasel_test_case_template_content (l_content)
+			converter.write_content_to_file (l_content, a_output_file)
 		end
 
 feature {NONE} -- Implementation

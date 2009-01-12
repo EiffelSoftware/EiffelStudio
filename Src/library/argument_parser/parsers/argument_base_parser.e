@@ -720,7 +720,7 @@ feature {NONE} -- Parsing
 			l_option: STRING
 			l_value: ?STRING
 			l_switch: ?ARGUMENT_SWITCH
-			l_value_switch: ?ARGUMENT_VALUE_SWITCH
+			l_match_switch: ?ARGUMENT_SWITCH
 			l_prefixes: like switch_prefixes
 			l_args: like arguments
 			l_upper: INTEGER
@@ -802,7 +802,7 @@ feature {NONE} -- Parsing
 									end
 
 										-- Attempt to find a matching switch
-									l_value_switch := Void
+									l_match_switch := Void
 									l_match := False
 									l_cursor := l_switches.cursor
 									from l_switches.start until l_switches.after or l_match loop
@@ -821,7 +821,7 @@ feature {NONE} -- Parsing
 											end
 										end
 										if l_match then
-											l_value_switch ?= l_switch
+											l_match_switch := l_switch
 										end
 										l_switches.forth
 									end
@@ -856,14 +856,14 @@ feature {NONE} -- Parsing
 
 										if l_match then
 												-- Last item can be a value switch
-											l_value_switch ?= l_switch
+											l_match_switch := l_switch
 										end
 									end
 									l_switches.go_to (l_cursor)
 
 									if l_match then
 										check l_switch_attached: l_switch /= Void end
-										if l_value /= Void and then not l_value.is_empty and then l_value_switch /= Void then
+										if l_value /= Void and then not l_value.is_empty and then {l_value_switch: ARGUMENT_VALUE_SWITCH} l_match_switch then
 											internal_option_values.extend (l_value_switch.new_value_option (l_value))
 										else
 												-- Create user option
@@ -881,23 +881,21 @@ feature {NONE} -- Parsing
 							end
 						end
 					else
-						l_value_switch ?= l_last_switch
-						if l_value_switch = Void then
+						if {l_last_value_switch: ARGUMENT_VALUE_SWITCH} l_last_switch then
+							check
+								not_internal_option_values_is_empty: not internal_option_values.is_empty
+								same_name: internal_option_values.last.switch.id ~ l_last_value_switch.id
+							end
+							internal_option_values.finish
+							if l_arg /= Void and then not l_arg.is_empty then
+								internal_option_values.replace (l_last_value_switch.new_value_option (l_arg))
+							end
+						else
 							if not l_arg.is_empty then
 									-- Create non-switched option
 								internal_values.extend (l_arg)
 							else
 								add_template_error (e_invalid_switch_error, [ellipse_text (l_arg)])
-							end
-						else
-							check
-								l_last_switch_attached: l_last_switch /= Void
-								not_internal_option_values_is_empty: not internal_option_values.is_empty
-								same_name: internal_option_values.last.switch.id ~ l_last_switch.id
-							end
-							internal_option_values.finish
-							if l_arg /= Void and then not l_arg.is_empty then
-								internal_option_values.replace (l_value_switch.new_value_option (l_arg))
 							end
 						end
 						l_last_switch := Void

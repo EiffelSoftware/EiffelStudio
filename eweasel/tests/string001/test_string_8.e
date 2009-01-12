@@ -2410,7 +2410,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Checking
 
-	check_equality (a_name: STRING_8; a, b: ANY) is
+	check_equality (a_name: STRING; a, b: ANY) is
 			-- If `a' and `b' are not equal print something on the console.
 		require
 			a_name_not_void: a_name /= Void
@@ -2421,7 +2421,7 @@ feature {NONE} -- Checking
 			end
 		end
 
-	check_boolean (a_name: STRING_8; b: BOOLEAN) is
+	check_boolean (a_name: STRING; b: BOOLEAN) is
 			-- If `a' and `b' are not equal print something on the console.
 		require
 			a_name_not_void: a_name /= Void

@@ -72,7 +72,7 @@ feature {NONE} -- Basic operations
 	execute_with_test_suite (a_test_suite: !TEST_SUITE_S)
 			-- <Precursor>
 		local
-			l_items: DS_ARRAYED_LIST [TEST_I]
+			l_items: DS_ARRAYED_LIST [!TEST_I]
 		do
 			print_current_expression (a_test_suite, False)
 			create l_items.make_from_linear (filtered_tests (a_test_suite).items)

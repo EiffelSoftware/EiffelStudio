@@ -76,7 +76,7 @@ feature {NONE} -- Implementation
 			-- Perform extracting
 			-- If the information is up-to-date, read cached info from storage.
 		local
-			l_entries: !HASH_TABLE [SEARCH_TABLE [HASHABLE], STRING]
+			l_entries: HASH_TABLE [SEARCH_TABLE [HASHABLE], STRING]
 		do
 				-- Compute EIS class id.
 			eis_class_id := id_solution.id_of_class (class_i.config_class)

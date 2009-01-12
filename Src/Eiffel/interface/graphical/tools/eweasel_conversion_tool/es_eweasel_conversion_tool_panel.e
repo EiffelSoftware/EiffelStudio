@@ -205,11 +205,11 @@ feature {NONE} -- Model Implementation
 		require
 			a_dir_not_void: a_top_source_dir /= Void
 		local
-			l_setup: EW_EQA_WINDOWS_SETUP
+--			l_setup: EW_EQA_WINDOWS_SETUP
 		do
-			create l_setup.make
-			l_setup.setup
-			l_setup.convert_all_tcf_in (a_top_source_dir, dest_test_case_dir, "test")
+--			create l_setup.make
+--			l_setup.setup
+--			l_setup.convert_all_tcf_in (a_top_source_dir, dest_test_case_dir, "test")
 		end
 
 feature -- Query

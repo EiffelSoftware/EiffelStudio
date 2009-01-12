@@ -290,43 +290,47 @@ feature -- Commands
 			l_wd: STRING
 			l_cmd: STRING
 			l_args: ARRAYED_LIST [STRING_8]
+			l_state: CONF_STATE
 		do
 			create l_prc_factory
+			l_state := universe.conf_state_from_target (lace.target)
 			from
 				an_actions.start
 			until
 				an_actions.after
 			loop
 				l_action := an_actions.item
-				if l_action.working_directory /= Void then
-					l_wd := l_action.working_directory.evaluated_path
-				end
-				if platform_constants.is_windows then
-					l_cmd := l_action.command
-					l_prc_launcher := l_prc_factory.process_launcher_with_command_line (l_cmd, l_wd)
-				else
-					l_cmd := "/bin/sh"
-					create l_args.make (2)
-					l_args.extend ("-c")
-					l_args.extend ("%'%'"+l_action.command+"%'%'")
-					l_prc_launcher := l_prc_factory.process_launcher (l_cmd, l_args, l_wd)
-				end
-				l_prc_launcher.set_separate_console (is_gui)
-
-				l_prc_launcher.launch
-				if l_prc_launcher.launched then
-					l_prc_launcher.wait_for_exit
-					l_success := l_prc_launcher.exit_code = 0
-				end
-				if not l_success then
-					if l_action.must_succeed then
-						create vd84.make (l_action.command)
-						error_handler.insert_error (vd84)
-						error_handler.checksum
-						not_actions_successful := True
+				if l_action.is_enabled (l_state) then
+					if l_action.working_directory /= Void then
+						l_wd := l_action.working_directory.evaluated_path
+					end
+					if platform_constants.is_windows then
+						l_cmd := l_action.command
+						l_prc_launcher := l_prc_factory.process_launcher_with_command_line (l_cmd, l_wd)
 					else
-						create vd85.make (l_action.command)
-						error_handler.insert_warning (vd85)
+						l_cmd := "/bin/sh"
+						create l_args.make (2)
+						l_args.extend ("-c")
+						l_args.extend ("%'%'"+l_action.command+"%'%'")
+						l_prc_launcher := l_prc_factory.process_launcher (l_cmd, l_args, l_wd)
+					end
+					l_prc_launcher.set_separate_console (is_gui)
+
+					l_prc_launcher.launch
+					if l_prc_launcher.launched then
+						l_prc_launcher.wait_for_exit
+						l_success := l_prc_launcher.exit_code = 0
+					end
+					if not l_success then
+						if l_action.must_succeed then
+							create vd84.make (l_action.command)
+							error_handler.insert_error (vd84)
+							error_handler.checksum
+							not_actions_successful := True
+						else
+							create vd85.make (l_action.command)
+							error_handler.insert_warning (vd85)
+						end
 					end
 				end
 				an_actions.forth

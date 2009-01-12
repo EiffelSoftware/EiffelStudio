@@ -38,7 +38,7 @@ feature -- Test routines
 			l_args: ARRAYED_LIST [STRING]
 		do
 			create l_args.make (2)
-			l_args.force ("-stderr")
+			l_args.force ("--stderr")
 			l_args.force ("ARGUMENT1")
 			create_echo_process (l_args)
 			launch_process
@@ -78,7 +78,7 @@ feature -- Test routines
 			l_file: like create_temporary_file
 		do
 			create l_args.make (2)
-			l_args.force ("-stderr")
+			l_args.force ("--stderr")
 			l_args.force ("ARGUMENT1")
 			create_echo_process (l_args)
 			l_process := current_process
@@ -101,7 +101,7 @@ feature -- Test routines
 			l_file: like create_temporary_file
 		do
 			create l_args.make (2)
-			l_args.force ("-stdin")
+			l_args.force ("--stdin")
 			create_echo_process (l_args)
 			l_process := current_process
 			check l_process /= Void end
@@ -127,7 +127,7 @@ feature -- Test routines
 			l_process: like current_process
 		do
 			create l_args.make (2)
-			l_args.force ("-stdin")
+			l_args.force ("--stdin")
 			create_echo_process (l_args)
 			l_process := current_process
 			check l_process /= Void end

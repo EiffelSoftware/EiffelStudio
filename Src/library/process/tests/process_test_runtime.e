@@ -81,7 +81,7 @@ feature -- Test routines
 		do
 			create l_terminate_cell
 			create l_args.make (1)
-			l_args.force ("-stdin")
+			l_args.force ("--stdin")
 			create_echo_process (l_args)
 			l_process := current_process
 			check l_process /= Void end

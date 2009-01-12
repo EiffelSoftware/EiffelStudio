@@ -31,7 +31,6 @@ feature	{NONE} -- Initlization
 		require
 			a_content_not_void: a_content /= Void
 		do
-			create internal_shared_not_used
 			create internal_shared
 			internal_docking_manager := a_content.docking_manager
 			default_create

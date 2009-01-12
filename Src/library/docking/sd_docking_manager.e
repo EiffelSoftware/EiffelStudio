@@ -32,7 +32,6 @@ feature {NONE} -- Initialization
 			top_container := a_container
 			main_window := a_window
 
-			init_managers
 			init_widget_structure
 			init_auto_hide_panel
 
@@ -42,8 +41,10 @@ feature {NONE} -- Initialization
 
 			init_inner_container
 
-			create tool_bar_manager.make (Current)
 
+			create tool_bar_manager.make (Current)
+			init_managers
+			
 			agents.init_actions
 
 			contents.extend (zones.place_holder_content)
@@ -563,7 +564,7 @@ feature -- Command
 				else
 					check not_possible: False end
 				end
-				
+
 				l_floating_zones.forth
 			end
 
@@ -750,10 +751,10 @@ feature -- Obsolete
 invariant
 
 	internal_viewport_not_void: internal_viewport /= Void
-	internal_fixed_not_void: fixed_area /= Void
-	internal_main_container_not_void: main_container /= Void
-	internal_inner_container_not_void: inner_containers /= Void and inner_containers.count >= 1
-	internal_contents_not_void: contents /= Void
+	fixed_not_void: fixed_area /= Void
+	main_container_not_void: main_container /= Void
+	inner_container_not_void: inner_containers /= Void and inner_containers.count >= 1
+	contents_not_void: contents /= Void
 	tool_bar_manager_not_void: tool_bar_manager /= Void
 
 note

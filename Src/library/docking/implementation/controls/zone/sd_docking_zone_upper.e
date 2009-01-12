@@ -46,8 +46,6 @@ feature -- Initlization
 		do
 			default_create
 			create internal_shared
-			-- Not breaking the invariant
-			create internal_shared_not_used
 
 			internal_content := a_content
 			internal_docking_manager := a_content.docking_manager

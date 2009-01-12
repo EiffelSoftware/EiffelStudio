@@ -95,8 +95,55 @@ feature -- Command
 			needed: is_flush_needed
 		do
 			temp_converted := test_control_file_template_content (temp_converted, a_class_name.as_upper)
-			write_content_to_template (temp_converted, a_output_file_name)
+			write_content_to_file (temp_converted, a_output_file_name)
 			temp_converted := Void
+		end
+
+feature {EW_EQA_WINDOWS_SETUP} -- Internal
+
+	write_content_to_file (a_content: STRING; a_output_file: STRING) is
+			-- Writing converted strings to template file
+		require
+			not_void: a_output_file /= Void
+		local
+			l_io: IO_MEDIUM
+			l_file_name: FILE_NAME
+			l_raw_file: RAW_FILE
+		do
+			create l_file_name.make_from_string (a_output_file)
+
+			-- Overwrite previous generated tcf
+			create l_raw_file.make (l_file_name)
+			if l_raw_file.exists then
+				l_raw_file.delete
+			end
+			if not l_raw_file.is_closed then
+				l_raw_file.close
+			end
+
+			l_io := create_file (l_file_name)
+			l_io.put_string (a_content)
+			l_io.close
+		end
+
+	all_eweasel_test_case_template_content (all_converted_class_content: STRING): STRING
+			--
+		require
+			all_converted_class_names_not_void: all_converted_class_content /= Void
+		local
+			l_file: RAW_FILE
+		do
+			create l_file.make (all_eweasel_test_case_template_file_name)
+			create Result.make_empty
+			if l_file.exists then
+				l_file.open_read
+				l_file.read_stream (l_file.count)
+				Result.append (l_file.last_string)
+				Result.replace_substring_all ("$TEST_CASES", all_converted_class_content)
+			else
+				Result := "Warning: template file not found"
+				print ("%NWarning: can't read file " + all_eweasel_test_case_template_file_name)
+			end
 		end
 
 feature -- Query
@@ -128,7 +175,7 @@ feature {NONE} -- Implementation
 		do
 			l_converted := convert_one_tcf (a_input_file, "start")
 			l_converted := test_control_file_template_content (l_converted, a_output_class_name)
-			write_content_to_template (l_converted, a_output_class_name + ".e")
+			write_content_to_file (l_converted, a_output_class_name + ".e")
 		end
 
 	convert_one_tcf (a_input_file: STRING; a_routine_name: STRING): STRING is
@@ -163,31 +210,6 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	write_content_to_template (a_content: STRING; a_output_file: STRING) is
-			-- Writing converted strings to template file
-		require
-			not_void: a_output_file /= Void
-		local
-			l_io: IO_MEDIUM
-			l_file_name: FILE_NAME
-			l_raw_file: RAW_FILE
-		do
-			create l_file_name.make_from_string (a_output_file)
-
-			-- Overwrite previous generated tcf
-			create l_raw_file.make (l_file_name)
-			if l_raw_file.exists then
-				l_raw_file.delete
-			end
-			if not l_raw_file.is_closed then
-				l_raw_file.close
-			end
-
-			l_io := create_file (l_file_name)
-			l_io.put_string (a_content)
-			l_io.close
-		end
-
 	create_file (a_file_name: FILE_NAME): IO_MEDIUM  is
 			-- Create a new {IO_MEDIUM} which file name is `a_file_name'
 			-- Callers have to close `Result' themselves
@@ -210,7 +232,7 @@ feature {NONE} -- Implementation
 		end
 
 	control_file: EW_EQA_TEST_CONTROL_FILE
-			--
+			-- Tcf file
 
 	test_control_file_template_content (a_tcf_content: STRING; a_class_name: STRING): STRING is
 			-- Default control file template content
@@ -236,7 +258,7 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	tcf_content_file_name: !FILE_NAME
+	tcf_content_file_name: FILE_NAME
 			-- Tcf content file name
 			-- (export status {NONE})
 		local
@@ -246,6 +268,17 @@ feature {NONE} -- Implementation
 			create Result.make_from_string (l_factory.environment.value ("ISE_EIFFEL"))
 			Result.extend_from_array (<<"studio", "help", "defaults">>)
 			Result.set_file_name ("eiffel_eweasel_tcf_template.e")
+		end
+
+	all_eweasel_test_case_template_file_name: FILE_NAME
+			-- All eweasel test case template file name
+		local
+			l_factory: EW_EQA_TEST_FACTORY
+		do
+			create l_factory
+			create Result.make_from_string (l_factory.environment.value ("ISE_EIFFEL"))
+			Result.extend_from_array (<<"studio", "help", "defaults">>)
+			Result.set_file_name ("all_eweasel_test_case_template.e")
 		end
 
 	convert_instruction_to_one_line (a_instruction: EW_TEST_INSTRUCTION): STRING is

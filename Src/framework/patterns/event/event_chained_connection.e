@@ -100,12 +100,12 @@ feature -- Event connection
 			Precursor (a_observer)
 		ensure then
 			link_disconnected:
-				{el_observer: LINKG} a_observer implies
-				(old linked_connection.is_connected (el_observer) implies not linked_connection.is_connected (el_observer))
+				old ({el_observer: LINKG} a_observer implies linked_connection.is_connected (el_observer)) implies
+					({el_observer_2: LINKG} a_observer and then linked_connection.is_connected (el_observer_2))
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

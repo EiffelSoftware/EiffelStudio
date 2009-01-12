@@ -12,6 +12,11 @@ deferred class
 inherit
 	EWB_CMD
 
+	TEST_SUITE_OBSERVER
+		redefine
+			on_processor_error
+		end
+
 	SHARED_TEST_SERVICE
 
 feature -- Basic operations
@@ -216,7 +221,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	print_test (a_test: TEST_I; a_include_class: BOOLEAN; a_tab_count: INTEGER)
+	print_test (a_test: !TEST_I; a_include_class: BOOLEAN; a_tab_count: INTEGER)
 			-- Print information for given test.
 		require
 			a_test_attached: a_test /= Void
@@ -238,7 +243,26 @@ feature {NONE} -- Basic operations
 			print_string ("%N")
 		end
 
+feature {NONE} -- Events
+
+	on_processor_error (a_test_suite: !TEST_SUITE_S; a_processor: !TEST_PROCESSOR_I; a_error: !STRING_8; a_token_values: TUPLE)
+			-- <Precursor>
+		do
+			print_string (locale.formatted_string (a_error, a_token_values))
+			print_string ("%N")
+		end
+
 feature {NONE} -- Implementation
+
+	launch_ewb_processor (a_test_suite: TEST_SUITE_S; a_type: !TYPE [TEST_PROCESSOR_I]; a_conf: !TEST_PROCESSOR_CONF_I)
+			-- Launch test suite processor.
+		require
+			a_test_suite_usable: a_test_suite.is_interface_usable
+		do
+			a_test_suite.test_suite_connection.connect_events (Current)
+			launch_processor (a_type, a_conf, True)
+			a_test_suite.test_suite_connection.disconnect_events (Current)
+		end
 
 	execute_with_test_suite (a_test_suite: !TEST_SUITE_S)
 		require

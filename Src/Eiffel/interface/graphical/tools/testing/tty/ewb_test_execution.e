@@ -12,13 +12,8 @@ class
 inherit
 	EWB_TEST_CMD
 		redefine
-			on_processor_launch_error
-		end
-
-	TEST_SUITE_OBSERVER
-		redefine
-			on_test_changed,
-			on_processor_error
+			on_processor_launch_error,
+			on_test_changed
 		end
 
 	EXCEPTION_CODE_MEANING
@@ -61,9 +56,7 @@ feature {NONE} -- Basic operations
 				create l_conf.make
 			end
 			l_conf.set_sorter_prefix (tree_view (a_test_suite).tag_prefix)
-			a_test_suite.test_suite_connection.connect_events (Current)
-			launch_processor (background_executor_type, l_conf, True)
-			a_test_suite.test_suite_connection.disconnect_events (Current)
+			launch_ewb_processor (a_test_suite, background_executor_type, l_conf)
 			print_statistics (a_test_suite, True)
 		end
 
@@ -86,13 +79,6 @@ feature -- Events
 					print_string ("%N")
 				end
 			end
-		end
-
-	on_processor_error (a_test_suite: !TEST_SUITE_S; a_processor: !TEST_PROCESSOR_I; a_error: !STRING_8; a_token_values: TUPLE)
-			-- <Precursor>
-		do
-			print_string (locale.formatted_string (a_error, a_token_values))
-			print_string ("%N")
 		end
 
 feature {NONE} -- Implementation

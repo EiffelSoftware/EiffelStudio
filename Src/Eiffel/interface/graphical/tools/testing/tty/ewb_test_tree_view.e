@@ -39,17 +39,17 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	node_sorter: DS_SORTER [!TAG_BASED_TREE_NODE [!TEST_I]]
+	node_sorter: DS_SORTER [!TAG_BASED_TREE_NODE [TEST_I]]
 			-- Sorter for {TAG_BASED_TREE_NODE}.
 		local
 			l_cache: like node_sorter_cache
-			l_comparator: AGENT_BASED_EQUALITY_TESTER [!TAG_BASED_TREE_NODE [!TEST_I]]
-			l_sorter: DS_QUICK_SORTER [!TAG_BASED_TREE_NODE [!TEST_I]]
+			l_comparator: AGENT_BASED_EQUALITY_TESTER [!TAG_BASED_TREE_NODE [TEST_I]]
+			l_sorter: DS_QUICK_SORTER [!TAG_BASED_TREE_NODE [TEST_I]]
 		do
 			l_cache := node_sorter_cache
 			if l_cache = Void then
 				create l_comparator.make (
-					agent (a_node1, a_node2: !TAG_BASED_TREE_NODE [!TEST_I]): BOOLEAN
+					agent (a_node1, a_node2: !TAG_BASED_TREE_NODE [TEST_I]): BOOLEAN
 						do
 							Result := a_node1.token < a_node2.token
 						end)
@@ -107,7 +107,7 @@ feature {NONE} -- Basic operations
 			-- <Precursor>
 		local
 			l_view: like tree_view
-			l_items: DS_ARRAYED_LIST [TEST_I]
+			l_items: DS_ARRAYED_LIST [!TEST_I]
 		do
 			print_current_expression (a_test_suite, False)
 			print_current_prefix (a_test_suite, False)
@@ -138,9 +138,9 @@ feature {NONE} -- Implementation
 		require
 			a_node_attached: a_node /= Void
 		local
-			l_nodes: DS_ARRAYED_LIST [TAG_BASED_TREE_NODE [TEST_I]]
+			l_nodes: DS_ARRAYED_LIST [!TAG_BASED_TREE_NODE [TEST_I]]
 			l_child: TAG_BASED_TREE_NODE [TEST_I]
-			l_items: DS_ARRAYED_LIST [TEST_I]
+			l_items: DS_ARRAYED_LIST [!TEST_I]
 		do
 			create l_nodes.make_from_linear (a_node.children)
 			if not l_nodes.is_empty then
@@ -174,7 +174,7 @@ feature {NONE} -- Implementation
 			print_string ("%N")
 		end
 
-	print_indented_test (a_test: TEST_I; a_depth: NATURAL)
+	print_indented_test (a_test: !TEST_I; a_depth: NATURAL)
 			-- Print test with indentation.
 			--
 			-- `a_test': Test to be printed.

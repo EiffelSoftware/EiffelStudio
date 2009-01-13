@@ -55,6 +55,7 @@ feature {NONE} -- Initialization
 	initialize
 			-- Initialize.
 		local
+			l_void_safe_check: EV_CHECK_BUTTON
 			l_btn: EV_BUTTON
 			vb, vb2, l_padding: EV_VERTICAL_BOX
 			hb, hb2: EV_HORIZONTAL_BOX
@@ -105,6 +106,17 @@ feature {NONE} -- Initialization
 			l_padding.extend (libraries_grid)
 
 			vb2.extend (l_padding)
+
+				-- Void-Safe check
+			if target.options.is_void_safe then
+				create l_void_safe_check.make_with_text ("Show only Void-Safe libraries")
+				l_void_safe_check.enable_select
+				l_void_safe_check.select_actions.extend (agent on_void_safe_check_selected)
+				vb2.extend (l_void_safe_check)
+				vb2.disable_item_expand (l_void_safe_check)
+
+				void_safe_check := l_void_safe_check
+			end
 
 				-- name
 			create vb2
@@ -181,6 +193,9 @@ feature {NONE} -- Initialization
 		end
 
 feature {NONE} -- GUI elements
+
+	void_safe_check: ?EV_CHECK_BUTTON
+			-- Void-safe check button
 
 	libraries_grid: ES_GRID
 			-- Libraries grid
@@ -334,6 +349,38 @@ feature {NONE} -- Action handlers
 			location.set_text (a_location)
 		end
 
+	on_void_safe_check_selected
+			-- Called when the Void-Safe option is selected
+		require
+			void_safe_check_attached: void_safe_check /= Void
+			libraries_grid_attached: libraries_grid /= Void
+		local
+			l_grid: like libraries_grid
+			l_row: EV_GRID_ROW
+			l_show_all: BOOLEAN
+			i, nb: INTEGER
+		do
+			l_grid := libraries_grid
+
+			l_grid.lock_update
+			l_show_all := not void_safe_check.is_selected
+			from
+				i := 1
+				nb := l_grid.row_count
+			until
+				i > nb
+			loop
+				l_row := l_grid.row (i)
+				if l_show_all or else ({l_target: CONF_TARGET} l_row.data and then l_target.options.is_void_safe) then
+					l_row.show
+				else
+					l_row.hide
+				end
+				i := i + 1
+			end
+			l_grid.unlock_update
+		end
+
 	on_ok
 			-- Add library and close the dialog.
 		local
@@ -386,7 +433,12 @@ feature {NONE} -- Basic operation
 			l_path: STRING
 			l_key: STRING
 			l_description: STRING
+			l_void_safe_check: like void_safe_check
+			l_show_void_safe_only: BOOLEAN
 		do
+			l_void_safe_check := void_safe_check
+			l_show_void_safe_only := l_void_safe_check /= Void and then l_void_safe_check.is_selected
+
 			libraries_grid.remove_and_clear_all_rows
 			l_libraries := configuration_libraries
 
@@ -434,6 +486,11 @@ feature {NONE} -- Basic operation
 					end
 				end
 
+				if l_show_void_safe_only and then not l_target.options.is_void_safe then
+						-- The library is not Void-Safe, hide it if showing only Void-Safe libraries.
+					l_row.hide
+				end
+
 					-- Library name
 				create l_item.make_with_text (l_system.name)
 				l_item.set_tooltip (l_description)
@@ -446,6 +503,7 @@ feature {NONE} -- Basic operation
 				l_row.set_item (location_column, l_item)
 
 				l_row.select_actions.extend (agent on_library_selected (l_system, l_path))
+				l_row.set_data (l_target)
 
 				l_list.forth
 			end
@@ -562,7 +620,7 @@ feature {NONE} -- Constants
 	location_column: INTEGER = 2
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

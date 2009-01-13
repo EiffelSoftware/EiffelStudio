@@ -17,7 +17,7 @@ feature -- Access
 
 	a: TEST
 		attribute
-			create Result.make (Current)
+			Result := Current
 		end
 
 end

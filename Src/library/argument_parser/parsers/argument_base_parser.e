@@ -1232,7 +1232,7 @@ feature {NONE} -- Validation
 			l_switch_dependencies := switch_dependencies
 
 			create l_switches.make_from_array (l_group_switches)
-			if l_switch_dependencies /= Void then
+			if not l_switch_dependencies.is_empty then
 				from l_group_switches.start until l_group_switches.after loop
 					l_switch := l_group_switches.item
 					if {l_appurtenances: ARRAY [ARGUMENT_SWITCH]} l_switch_dependencies [l_switch] then

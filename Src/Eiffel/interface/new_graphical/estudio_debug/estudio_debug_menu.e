@@ -122,10 +122,6 @@ feature {NONE} -- Initialization
 				--| Show logger tool
 			create l_menu_item.make_with_text_and_action ("Show Logger Tool", agent on_show_logger_tool)
 			a_menu.extend (l_menu_item)
-
-				--| Show eweasel tcf converter tool
-			create l_menu_item.make_with_text_and_action ("Show eweasel converter", agent on_show_eweasel_tool)
-			a_menu.extend (l_menu_item)
 		end
 
 	build_services_sub_menu (a_menu: !EV_MENU)
@@ -252,12 +248,6 @@ feature {NONE} -- Actions
 			-- Shows the integrated memory tool
 		do
 			window_manager.last_focused_development_window.shell_tools.show_tool ({ES_MEMORY_TOOL}, True)
-		end
-
-	on_show_eweasel_tool
-			-- Show eweasel tcf converter tool
-		do
-			window_manager.last_focused_development_window.shell_tools.show_tool ({ES_EWEASEL_CONVERSION_TOOL}, True)
 		end
 
 	on_show_logger_tool

@@ -32,7 +32,7 @@ feature {NONE} -- Clean up
 
 feature -- Basic operations
 
-	render_template (a_template: !READABLE_STRING_GENERAL; a_parameters: ?DS_HASH_TABLE [!ANY, !STRING]): !STRING_32
+	render_template (a_template: !READABLE_STRING_GENERAL; a_parameters: ?DS_HASH_TABLE [!ANY, STRING]): !STRING_32
 			-- <Precursor>
 		local
 			l_templates: !like build_code_template
@@ -57,7 +57,7 @@ feature -- Basic operations
 			end
 		end
 
-	render_template_from_file (a_file_name: !READABLE_STRING_GENERAL; a_parameters: ?DS_HASH_TABLE [!ANY, !STRING]): ?STRING_32
+	render_template_from_file (a_file_name: !READABLE_STRING_GENERAL; a_parameters: ?DS_HASH_TABLE [!ANY, STRING]): ?STRING_32
 			-- <Precursor>
 		local
 			l_file: KI_TEXT_INPUT_FILE
@@ -86,7 +86,7 @@ feature -- Basic operations
 			end
 		end
 
-	render_template_to_file (a_template: !READABLE_STRING_GENERAL; a_parameters: ?DS_HASH_TABLE [!ANY, !STRING]; a_destination_file: !READABLE_STRING_GENERAL)
+	render_template_to_file (a_template: !READABLE_STRING_GENERAL; a_parameters: ?DS_HASH_TABLE [!ANY, STRING]; a_destination_file: !READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_file: KI_TEXT_OUTPUT_FILE
@@ -107,7 +107,7 @@ feature -- Basic operations
 			end
 		end
 
-	render_template_from_file_to_file (a_file_name: !READABLE_STRING_GENERAL; a_parameters: ?DS_HASH_TABLE [!ANY, !STRING]; a_destination_file: !READABLE_STRING_GENERAL)
+	render_template_from_file_to_file (a_file_name: !READABLE_STRING_GENERAL; a_parameters: ?DS_HASH_TABLE [!ANY, STRING]; a_destination_file: !READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_file: KI_TEXT_OUTPUT_FILE
@@ -130,7 +130,7 @@ feature -- Basic operations
 
 feature {NONE} -- Basic operations
 
-	build_code_template (a_template: ?STRING_32; a_parameters: ?DS_HASH_TABLE [!ANY, !STRING]): !TUPLE [template: !CODE_TEMPLATE_DEFINITION; symbol_table: !CODE_SYMBOL_TABLE]
+	build_code_template (a_template: ?STRING_32; a_parameters: ?DS_HASH_TABLE [!ANY, STRING]): !TUPLE [template: !CODE_TEMPLATE_DEFINITION; symbol_table: !CODE_SYMBOL_TABLE]
 			-- Builds a code template definition file from a template text.
 			--
 			-- `a_template': The tokenized text to render with the supplied parameters.
@@ -141,7 +141,8 @@ feature {NONE} -- Basic operations
 			not_a_template_is_empty: not a_template.is_empty
 			a_parameters_attached: a_parameters /= Void
 		local
-			l_cursor: DS_HASH_TABLE_CURSOR [!ANY, !STRING]
+			l_cursor: DS_HASH_TABLE_CURSOR [!ANY, STRING]
+			l_key: STRING
 			l_factory: !CODE_FACTORY
 			l_definition: !CODE_TEMPLATE_DEFINITION
 			l_declarations: !CODE_DECLARATION_COLLECTION
@@ -158,7 +159,9 @@ feature {NONE} -- Basic operations
 			l_declarations := l_definition.declarations
 			l_cursor := a_parameters.new_cursor
 			from l_cursor.start until l_cursor.after loop
-				l_literal_declaration := l_factory.create_code_literal_declaration (l_cursor.key, l_declarations)
+				l_key := l_cursor.key
+				check l_key_attached: l_key /= Void end
+				l_literal_declaration := l_factory.create_code_literal_declaration (l_key, l_declarations)
 				if {l_value: STRING_32} l_cursor.item.out.as_string_32 then
 					l_literal_declaration.default_value := l_value
 				end
@@ -184,7 +187,7 @@ feature {NONE} -- Basic operations
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

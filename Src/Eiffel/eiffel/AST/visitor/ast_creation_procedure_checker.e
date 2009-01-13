@@ -150,15 +150,16 @@ feature {NONE} -- Processing
 			l_attached: l /= Void
 		local
 			s: GENERIC_SKELETON
+			i: INTEGER
 		do
 			from
 				s := current_class.skeleton
-				s.start
+				i := s.count
 			until
-				s.after
+				i <= 0
 			loop
-				check_attribute (current_class.feature_of_feature_id (s.item_for_iteration.feature_id), l)
-				s.forth
+				check_attribute (current_class.feature_of_feature_id (s [i].feature_id), l)
+				i := i - 1
 			end
 		end
 

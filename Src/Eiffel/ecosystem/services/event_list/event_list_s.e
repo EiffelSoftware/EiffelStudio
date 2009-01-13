@@ -155,12 +155,10 @@ feature -- Events: Connection point
 	event_list_connection: !EVENT_CONNECTION_I [EVENT_LIST_OBSERVER, EVENT_LIST_S]
 			-- <Precursor>
 		local
-			l_observer: EVENT_LIST_OBSERVER
 			l_result: like internal_event_list_connection
 		do
 			l_result := internal_event_list_connection
 			if l_result = Void then
-				create l_observer
 				create {EVENT_CONNECTION [EVENT_LIST_OBSERVER, EVENT_LIST_S]} Result.make (
 					agent (ia_observer: !EVENT_LIST_OBSERVER): !ARRAY [TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]]
 						do

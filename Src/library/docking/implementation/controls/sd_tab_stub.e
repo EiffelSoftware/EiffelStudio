@@ -297,7 +297,7 @@ feature {SD_AUTO_HIDE_STATE} -- Expose handling
 			l_imp: EV_DRAWING_AREA_IMP
 		do
 			internal_drawing_area.set_background_color (internal_shared.default_background_color)
-			internal_drawing_area.clear
+			internal_shared.setter.clear_background_for_theme (internal_drawing_area, create {EV_RECTANGLE}.make (0, 0, internal_drawing_area.width, internal_drawing_area.height))
 
 			internal_drawing_area.draw_pixmap (start_x_pixmap_internal, start_y_pixmap_internal, content.pixmap)
 			if is_show_text then

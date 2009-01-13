@@ -175,7 +175,9 @@ feature -- Normal mode command
 				create l_file.make (l_file_name)
 				if l_file.exists then
 					l_result := develop_window.docking_manager.open_tools_config (l_file_name)
-					check open_tools_config_succeed: l_result end
+					if not l_result then
+						construct_standard_layout_by_code
+					end
 				else
 					construct_standard_layout_by_code
 				end
@@ -492,7 +494,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

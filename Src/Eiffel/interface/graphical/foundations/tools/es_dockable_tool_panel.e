@@ -141,8 +141,6 @@ feature {NONE} -- Initialization: User interface
         do
 			if {lt_widget: EV_WIDGET} mini_tool_bar_widget then
             	mini_toolbar := lt_widget
-			else
-				check not_possible: False end
 			end
         end
 

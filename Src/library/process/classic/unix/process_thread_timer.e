@@ -67,25 +67,30 @@ feature -- Control
 			if not destroyed then
 				prc_imp ?= process_launcher
 				check prc_imp /= Void end
-				if a_timeout > 0 then
-					create l_start_time.make_now
-				end
-				from
-					l_sleep_time := sleep_time * 1000000
-				until
-					destroyed or l_timeout
-				loop
+				if {PLATFORM}.is_thread_capable then
 					if a_timeout > 0 then
-						create l_now_time.make_now
-						if l_now_time.relative_duration (l_start_time).fine_seconds_count * 1000 > a_timeout then
-							l_timeout := True
+						create l_start_time.make_now
+					end
+					from
+						l_sleep_time := sleep_time * 1000000
+					until
+						destroyed or l_timeout
+					loop
+						if a_timeout > 0 then
+							create l_now_time.make_now
+							if l_now_time.relative_duration (l_start_time).fine_seconds_count * 1000 > a_timeout then
+								l_timeout := True
+							end
+						end
+						if not l_timeout then
+							sleep (l_sleep_time)
 						end
 					end
-					if not l_timeout then
-						sleep (l_sleep_time)
-					end
+					Result := not l_timeout
+				elseif a_timeout = 0 then
+						-- We are not in multithreaded mode, simply wait indefinitely
+					prc_imp.check_exit
 				end
-				Result := not l_timeout
 			else
 				Result := True
 			end

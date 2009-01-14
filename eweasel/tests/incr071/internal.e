@@ -29,7 +29,18 @@ feature -- Conformance
 		do
 			Result := c_type_conforms_to (type1, type2)
 		end
-		
+
+	field_conforms_to (a_source_type, a_field_type: INTEGER): BOOLEAN
+			-- Does `a_source_type' conform to `a_field_type'?
+			--| Different from `type_conforms_to' since possible attachment mark of `a_field_type'
+			--| is discarded.
+		require
+			a_source_type_non_negative: a_source_type >= 0
+			a_field_type_non_negative: a_field_type >= 0
+		do
+			Result := c_type_conforms_to (a_source_type, {ISE_RUNTIME}.detachable_type (a_field_type))
+		end
+	
 feature -- Creation
 
 	dynamic_type_from_string (class_type: STRING): INTEGER is
@@ -114,6 +125,14 @@ feature -- Status report
 			object_exists: obj /= Void
 		do
 			Result := c_is_marked ($obj)
+		end
+
+	is_attached_type (a_type_id: INTEGER): BOOLEAN
+			-- Is `a_type_id' an attached type?
+		require
+			a_type_non_negative: a_type_id >= 0
+		do
+			Result := {ISE_RUNTIME}.is_attached_type (a_type_id)
 		end
 
 feature -- Access

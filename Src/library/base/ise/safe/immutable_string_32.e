@@ -259,6 +259,8 @@ feature {NONE} -- Implementation
 			empty_string_empty: Result.is_empty
 		end
 
+feature {READABLE_STRING_8, READABLE_STRING_32} -- Implementation
+
 	area_lower: INTEGER
 			-- Index where current string starts in `area'
 

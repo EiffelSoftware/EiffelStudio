@@ -2065,7 +2065,8 @@ test	manifest-tuple-type-conformance	conform006 tcf pass conformance
 test	attached-agent-procedure-conformance	conform007 tcf fail conformance attached_types
 
 -- Test for Reflection
-test	basic-type-internal			reflection001 tcf pass reflection
+test	basic-type-internal				reflection001 tcf pass reflection
+test	basic-type-internal-violation	reflection002 tcf pass reflection
  
 -- .NET specific test
 if DOTNET test expanded-object-conversion	dotnet001	tcf pass dotnet

@@ -507,7 +507,6 @@ feature {NONE} -- Implementation
 	test_make is
 		local
 			s: IMMUTABLE_STRING_8
-			p: SPECIAL [CHARACTER_8]
 		do
 			s := "1234567890"
 

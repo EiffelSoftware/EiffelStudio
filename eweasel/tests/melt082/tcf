@@ -1,0 +1,28 @@
+test_name 	melted-external-call
+test_description When you call an external using $obj as argument, then the execution is done using the content of obj, not obj.
+
+define	STRING	STRING
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+
+compile_frozen
+compile_result	ok
+
+c_compile_work
+c_compile_result	ok
+
+execute_work 	NONE exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+define	STRING	STRING2
+copy_sub 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+execute_work 	NONE exec_output2
+execute_result 	ok
+compare		exec_output2 output
+
+test_end

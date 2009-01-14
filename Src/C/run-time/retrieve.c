@@ -3003,7 +3003,7 @@ rt_private int old_attribute_type_matched (EIF_TYPE_INDEX **gtype, EIF_TYPE_INDE
 	return result;
 }
 
-rt_private int attribute_type_matched (EIF_TYPE_INDEX **gtype, EIF_TYPE_INDEX **atype)
+rt_private int attribute_type_matched (type_descriptor *context_type, EIF_TYPE_INDEX **gtype, EIF_TYPE_INDEX **atype)
 {
 	RT_GET_CONTEXT
 	int result = 1;
@@ -3033,12 +3033,46 @@ rt_private int attribute_type_matched (EIF_TYPE_INDEX **gtype, EIF_TYPE_INDEX **
 			}
 
 			if (dftype == FORMAL_TYPE) {
+					/* Read the formal generic position */
+				(*gtype)++;
 				if (aftype == FORMAL_TYPE) {
-					(*gtype)++;
 					(*atype)++;
 					result = (**gtype == **atype ? 1 : 0);
 				} else {
-					result = 0;
+						/* Attribute is not matching. This could happen if the storable was created with a
+						 * version <= 6.1 where formals in a generic derivation involving some basic types
+						 * where instantiated whereas in 6.2 and above we keep them. So let's check the
+						 * context type and see if there is indeed a formal generic at the expected position
+						 * and check if it is the same type. */
+					if ((context_type) && (aftype <= MAX_DTYPE) && type_defined (aftype)) {
+							/* We can resolve only if a context type was specified. */
+						EIF_TYPE_INDEX l_pos = **gtype;
+						if (context_type->generic_count <= l_pos) {
+							EIF_TYPE_INDEX l_new_dftype = type_description (aftype)->new_type;
+							switch (context_type->generics [l_pos - 1] & SK_HEAD) {
+								case SK_CHAR:	result = (egc_char_dtype == l_new_dftype); break;
+								case SK_WCHAR:	result = (egc_wchar_dtype == l_new_dftype); break;
+								case SK_BOOL:	result = (egc_bool_dtype == l_new_dftype); break;
+								case SK_UINT8:	result = (egc_uint8_dtype == l_new_dftype); break;
+								case SK_UINT16:	result = (egc_uint16_dtype == l_new_dftype); break;
+								case SK_UINT32:	result = (egc_uint32_dtype == l_new_dftype); break;
+								case SK_UINT64:	result = (egc_uint64_dtype == l_new_dftype); break;
+								case SK_INT8:	result = (egc_int8_dtype == l_new_dftype); break;
+								case SK_INT16:	result = (egc_int16_dtype == l_new_dftype); break;
+								case SK_INT32:	result = (egc_int32_dtype == l_new_dftype); break;
+								case SK_INT64:	result = (egc_int64_dtype == l_new_dftype); break;
+								case SK_REAL32:	result = (egc_real32_dtype == l_new_dftype); break;
+								case SK_REAL64:	result = (egc_real64_dtype == l_new_dftype); break;
+								case SK_POINTER:result = (egc_point_dtype == l_new_dftype); break;
+								default:
+									result = 0;
+							}
+						} else {
+							result = 0;
+						}
+					} else {
+						result = 0;
+					}
 				}
 			} else if (result) {
 				if (dftype <= MAX_DTYPE  &&  aftype <= MAX_DTYPE) {
@@ -3057,7 +3091,7 @@ rt_private int attribute_type_matched (EIF_TYPE_INDEX **gtype, EIF_TYPE_INDEX **
 	return result;
 }
 
-rt_private int attribute_types_matched (EIF_TYPE_INDEX *gtypes, EIF_TYPE_INDEX *atypes)
+rt_private int attribute_types_matched (type_descriptor *context_type, EIF_TYPE_INDEX *gtypes, EIF_TYPE_INDEX *atypes)
 {
 	RT_GET_CONTEXT
 	int result;
@@ -3104,7 +3138,7 @@ rt_private int attribute_types_matched (EIF_TYPE_INDEX *gtypes, EIF_TYPE_INDEX *
 		 */
 		result = 1;
 		for (; (result == 1) && (*gtypes != TERMINATOR); gtypes++, atypes++) {
-			result = attribute_type_matched (&gtypes, &atypes);
+			result = attribute_type_matched (context_type, &gtypes, &atypes);
 		}
 	}
 	return result;
@@ -3113,7 +3147,7 @@ rt_private int attribute_types_matched (EIF_TYPE_INDEX *gtypes, EIF_TYPE_INDEX *
 /* The index of the attribute in `type' matching `att_type' and `att_name'
  * A result of -1 means no match found.
  */
-rt_private int find_attribute (EIF_TYPE_INDEX dtype, char *att_name, uint32 att_type, EIF_TYPE_INDEX *atypes)
+rt_private int find_attribute (type_descriptor *context_type, EIF_TYPE_INDEX dtype, char *att_name, uint32 att_type, EIF_TYPE_INDEX *atypes)
 {
 	int result = -1;
 	if (dtype != INVALID_DTYPE) {
@@ -3129,7 +3163,7 @@ rt_private int find_attribute (EIF_TYPE_INDEX dtype, char *att_name, uint32 att_
 				 * reference type detail matches the request, then we have
 				 * matched the attribute.
 				 */
-				if (atypes == NULL || attribute_types_matched (System (dtype).cn_gtypes[i]+1, atypes)) {
+				if (atypes == NULL || attribute_types_matched (context_type, System (dtype).cn_gtypes[i]+1, atypes)) {
 					result = i;
 				}
 			}
@@ -3401,7 +3435,7 @@ rt_private void iread_header_new (EIF_CONTEXT_NOARG)
 					strcpy (attributes[j].name, vis_name);
 				attributes[j].basic_type = att_type;
 				attributes[j].types = NULL;
-				attributes[j].new_index = find_attribute (new_dtype, vis_name, att_type, NULL);
+				attributes[j].new_index = find_attribute (NULL, new_dtype, vis_name, att_type, NULL);
 			}
 		}
 
@@ -3607,7 +3641,7 @@ rt_private void map_type_attributes (type_descriptor *t)
 
 	for (i=0; i<t->attribute_count; i++) {
 		attribute_detail *a = t->attributes + i;
-		a->new_index = find_attribute (t->new_type, a->name, a->basic_type, a->types);
+		a->new_index = find_attribute (t, t->new_type, a->name, a->basic_type, a->types);
 	}
 
 	check_mismatch (t);

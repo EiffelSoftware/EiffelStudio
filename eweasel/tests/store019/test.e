@@ -1,5 +1,5 @@
 class
-	APPLICATION
+	TEST
 
 create
 	make

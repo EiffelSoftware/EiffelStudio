@@ -27,19 +27,19 @@ feature -- Access
 		do
 			Result := cwel_process_info_get_thread_handle (item)
 		end
-	
+
 	process_id: INTEGER
 			-- Process identifier
 		do
 			Result := cwel_process_info_get_process_id (item)
 		end
-	
+
 	thread_id: INTEGER
 			-- Thread identifier
 		do
 			Result := cwel_process_info_get_thread_id (item)
 		end
-	
+
 feature -- Element Settings
 
 	set_process_handle (a_handle: like process_handle)
@@ -140,11 +140,11 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

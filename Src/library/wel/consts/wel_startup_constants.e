@@ -25,7 +25,7 @@ feature -- Access
 		alias
 			"STARTF_USEPOSITION"
 		end
-	
+
 	Startf_use_size: INTEGER
 			-- Attributes `width' and `height' from WEL_STARTUP_INFO are meaningful
 		external
@@ -96,11 +96,11 @@ feature -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

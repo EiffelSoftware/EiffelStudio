@@ -345,11 +345,13 @@ feature {NONE} -- Basic operations
 					end
 
 					create l_params.make_default
+						-- Class name
 					l_class_name := class_name.as_string_32
 					if l_class_name /= Void then
 						l_params.put_last (l_class_name, class_name_symbol)
 					end
 
+						-- Note keyword
 					if cluster.options.syntax_level.item = {CONF_OPTION}.syntax_level_obsolete then
 							-- Use old syntax
 						l_params.put_last ({EIFFEL_KEYWORD_CONSTANTS}.indexing_keyword, note_keyword_symbol)
@@ -357,6 +359,10 @@ feature {NONE} -- Basic operations
 							-- Use new syntax
 						l_params.put_last ({EIFFEL_KEYWORD_CONSTANTS}.note_keyword, note_keyword_symbol)
 					end
+
+						-- Year
+					l_parameters.put_last ((create {DATE}.make_now).year, year_symbol)
+
 					if (create {RAW_FILE}.make (l_source_file)).exists then
 							-- Only render if the file exists.
 						create l_buffer.make (64)
@@ -790,6 +796,7 @@ feature {NONE} -- Constants
 	inherit_clause_symbol: !STRING = "INHERIT_CLAUSE"
 	create_clause_symbol: !STRING = "CREATE_CLAUSE"
 	init_clause_symbol: !STRING = "INIT_CLAUSE"
+	year_symbol: !STRING = "YEAR"
 
 	default_class_template: !STRING = "class%N%T$CLASS_NAME%N%N-- Class template file not found in the installation!%N%Nend"
 
@@ -809,7 +816,7 @@ invariant
 	cluster_implies_path: cluster /= Void implies path /= Void
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

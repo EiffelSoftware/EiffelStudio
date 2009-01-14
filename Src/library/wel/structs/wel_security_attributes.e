@@ -4,7 +4,7 @@ note
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class
 	WEL_SECURITY_ATTRIBUTES
 
@@ -61,33 +61,33 @@ feature {NONE} -- External
 		alias
 			"sizeof (SECURITY_ATTRIBUTES)"
 		end
-		
+
 	cwel_security_attributes_set_length (a_ptr: POINTER; a_length: INTEGER)
 		external
 			"C [macro %"wel_security_attributes.h%"] (LPSECURITY_ATTRIBUTES, DWORD)"
 		end
-		
+
 	cwel_security_attributes_set_security_descriptor (a_ptr: POINTER; a_descriptor: POINTER)
 		external
 			"C [macro %"wel_security_attributes.h%"] (LPSECURITY_ATTRIBUTES, LPVOID)"
 		end
-		
+
 	cwel_security_attributes_get_inherit_handle (a_ptr: POINTER): BOOLEAN
 		external
 			"C [macro %"wel_security_attributes.h%"] (LPSECURITY_ATTRIBUTES): EIF_BOOLEAN"
 		end
-		
+
 	cwel_security_attributes_set_inherit_handle (a_ptr: POINTER; a_boolean:BOOLEAN)
 		external
 			"C [macro %"wel_security_attributes.h%"] (LPSECURITY_ATTRIBUTES, BOOL)"
 		end
-		
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

@@ -12,29 +12,29 @@ feature -- Access
 
 	generic_read: INTEGER = 0x80000000
 			-- Read access
-			
+
 	generic_write: INTEGER = 0x40000000
 			-- Write access			
 
 	generic_execute: INTEGER = 0x20000000
 			-- Execute access
-			
+
 	generic_all: INTEGER = 0x10000000
 			-- Read/write/execute access
-			
+
 feature -- CreateFile
 
 	create_new: INTEGER = 1
 			-- Creates a new file. The function fails if the specified file already exists
-			
+
 	create_always: INTEGER = 2
 			-- Creates a new file. If the file exists, the function overwrites the file,
 			-- clears the existing attributes, combines the specified file attributes
-			-- and flags with FILE_ATTRIBUTE_ARCHIVE, but does not set the security 
+			-- and flags with FILE_ATTRIBUTE_ARCHIVE, but does not set the security
 			-- descriptor specified by the SECURITY_ATTRIBUTES structure
-			
+
 	open_existing: INTEGER = 3
-			-- Opens the file. The function fails if the file does not exist. 
+			-- Opens the file. The function fails if the file does not exist.
 			-- For a discussion of why you should use OPEN_EXISTING for devices, see Remarks.
 
 	open_always: INTEGER = 4
@@ -44,7 +44,7 @@ feature -- CreateFile
 	truncate_existing: INTEGER = 5
 			-- Opens the file and truncates it so that its size is zero bytes.
 			-- The calling process must open the file with the GENERIC_WRITE access right.
-			-- The function fails if the file does not exist. 
+			-- The function fails if the file does not exist.
 
 feature -- Attributes
 
@@ -75,9 +75,9 @@ feature -- Share mode
 			-- must include this flag.
 
 	file_flag_write_through: INTEGER = 0x80000000
-	
+
 	File_flag_no_buffering: INTEGER = 0x20000000
-	
+
 feature -- Position
 
 	file_begin: INTEGER = 0
@@ -86,11 +86,11 @@ feature -- Position
 			-- Position in file where to set pointer
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

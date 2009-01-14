@@ -96,7 +96,7 @@ feature -- Removal
 			--
 			-- This function should be called by the GC when the
 			-- object is collected or by the user if `Current' is
-			-- no more usefull. 
+			-- no more usefull.
 		do
 			if exists and then not shared then
 				destroy_item
@@ -124,11 +124,11 @@ feature {WEL_ANY} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

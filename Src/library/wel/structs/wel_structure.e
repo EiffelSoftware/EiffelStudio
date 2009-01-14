@@ -52,7 +52,7 @@ feature -- Basic operations
 			end
 			memory_copy (other.item, structure_size)
 		end
-		
+
 	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
@@ -146,7 +146,7 @@ feature {NONE} -- Externals
 		end
 
 	c_memset (destination: POINTER; filling_char: CHARACTER; count: INTEGER)
-			-- C function 
+			-- C function
 		obsolete
 			"Use `memory_set' from POINTER class instead."
 		do
@@ -154,11 +154,11 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

@@ -17,7 +17,7 @@ feature -- Access
 		alias
 			"FOREGROUND_BLUE"
 		end
-		
+
 	foreground_green: INTEGER
 			-- Add green to foreground
 		external
@@ -25,7 +25,7 @@ feature -- Access
 		alias
 			"FOREGROUND_GREEN"
 		end
-		
+
 	foreground_red: INTEGER
 			-- Add red to foreground
 		external
@@ -33,7 +33,7 @@ feature -- Access
 		alias
 			"FOREGROUND_RED"
 		end
-		
+
 	foreground_intensity: INTEGER
 			-- Increase console foreground intensity
 		external
@@ -41,7 +41,7 @@ feature -- Access
 		alias
 			"FOREGROUND_INTENSITY"
 		end
-		
+
 	background_blue: INTEGER
 			-- Add blue to background
 		external
@@ -49,7 +49,7 @@ feature -- Access
 		alias
 			"BACKGROUND_BLUE"
 		end
-		
+
 	background_green: INTEGER
 			-- Add green to background
 		external
@@ -57,7 +57,7 @@ feature -- Access
 		alias
 			"BACKGROUND_GREEN"
 		end
-		
+
 	background_red: INTEGER
 			-- Add red to background
 		external
@@ -65,7 +65,7 @@ feature -- Access
 		alias
 			"BACKGROUND_RED"
 		end
-		
+
 	background_intensity: INTEGER
 			-- Increase console background intensity
 		external
@@ -83,11 +83,11 @@ feature -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

@@ -48,8 +48,10 @@ feature -- Initialization
 			end_exists: e /= Void
 			start_before_end: s <= e
 		do
-			start_bound := s.deep_twin
-			end_bound := e.deep_twin
+			start_bound := s
+			start_bound := start_bound.deep_twin
+			end_bound := e
+			end_bound := end_bound.deep_twin
 		ensure
 			start_bound_set: start_bound /= Void and then
 				deep_equal (start_bound, s)
@@ -59,10 +61,10 @@ feature -- Initialization
 
 feature -- Access
 
-	start_bound: G
+	start_bound: !G
 			-- Start bound of the current interval
 
-	end_bound: G
+	end_bound: !G
 			-- End bound of the current interval
 
 feature -- Measurement
@@ -258,7 +260,8 @@ feature -- Element change
 			start_bound_exists: s /= Void
 			start_before_end_bound: s <= end_bound
 		do
-			start_bound := s.deep_twin
+			start_bound := s
+			start_bound := start_bound.deep_twin
 		ensure
 			start_bound_set: equal (start_bound, s)
 		end
@@ -269,7 +272,8 @@ feature -- Element change
 			end_bound_exists: e /= Void
 			end_after_start_bound: e >= start_bound
 		do
-			end_bound := e.deep_twin
+			end_bound := e
+			end_bound := end_bound.deep_twin
 		ensure
 			end_bound_set: equal (end_bound, e)
 		end
@@ -290,7 +294,7 @@ feature -- Basic operations
 			result_includes_other: Result.includes (other)
 		end
 
-	intersection (other: like Current): like Current
+	intersection (other: like Current): ?like Current
 			-- Intersection with `other'
 		require
 			other_exists: other /= Void
@@ -341,7 +345,7 @@ invariant
 	start_bound_exists: start_bound /= Void
 	end_bound_exists: end_bound /= Void
 	start_bound_before_end_bound: start_bound <= end_bound
-	current_intersection: intersection (Current).is_equal (Current)
+	current_intersection: intersection (Current) ~ Current
 	current_union: union (Current).is_equal (Current)
 	has_bounds: has (start_bound) and has (end_bound)
 	between_bound: after (start_bound) and before (end_bound)

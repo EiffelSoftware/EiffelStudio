@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-2-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-2-0 http://www.eiffel.com/developers/xml/configuration-1-2-0.xsd" name="time_french" uuid="FCF0935B-50DE-4DE0-B620-4B66AA72FD67" library_target="time_french">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="time_french" uuid="FCF0935B-50DE-4DE0-B620-4B66AA72FD67" library_target="time_french">
 	<target name="time_french">
 		<description>EiffelTime: Date/Time abstractions and computations.
       Copyright (c) 1984-2006, Eiffel Software and others.
@@ -18,6 +18,7 @@
 				<exclude>/german$</exclude>
 				<exclude>/english$</exclude>
 				<exclude>/dotnet$</exclude>
+				<exclude>/tests$</exclude>
 				<condition>
 					<dotnet value="false"/>
 				</condition>
@@ -27,6 +28,7 @@
 				<exclude>/german$</exclude>
 				<exclude>/english$</exclude>
 				<exclude>/classic$</exclude>
+				<exclude>/tests$</exclude>
 				<condition>
 					<dotnet value="true"/>
 				</condition>

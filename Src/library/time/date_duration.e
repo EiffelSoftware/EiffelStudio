@@ -71,15 +71,19 @@ feature -- Attribute
 
 	year: INTEGER
 
-	origin_date: DATE
+	origin_date: ?DATE
 			-- Origin date of duration
 
 	days_count: INTEGER
 			-- Number of days in duration
 		require
 			origin_date_set: has_origin_date
+		local
+			l_origin_date: like origin_date
 		do
-			Result := (origin_date + to_canonical (origin_date)).days - origin_date.days
+			l_origin_date := origin_date
+			check l_origin_date_not_void: l_origin_date /= Void end
+			Result := (l_origin_date + to_canonical (l_origin_date)).days - l_origin_date.days
 		end
 
 feature -- Comparison
@@ -234,11 +238,14 @@ feature -- Basic operations
 
 	infix "+" (other: like Current): like Current
 			-- Sum of current object with `other'
+		local
+			l_origin: like origin_date
 		do
 			create Result.make (year + other.year, month + other.month,
 				day + other.day)
-			if origin_date /= Void then
-				Result.set_origin_date (origin_date.twin)
+			l_origin := origin_date
+			if l_origin /= Void then
+				Result.set_origin_date (l_origin.twin)
 			else
 				Result.set_origin_date (Void)
 			end
@@ -248,10 +255,13 @@ feature -- Basic operations
 
 	prefix "-": like Current
 			-- Unary minus
+		local
+			l_origin: like origin_date
 		do
 			create Result.make (-year, -month, -day)
-			if origin_date /= Void then
-				Result.set_origin_date (origin_date.twin)
+			l_origin := origin_date
+			if l_origin /= Void then
+				Result.set_origin_date (l_origin.twin)
 			else
 				Result.set_origin_date (Void)
 			end
@@ -343,7 +353,9 @@ feature -- Conversion
 
 invariant
 
-	equal_signs: (has_origin_date and then canonical (origin_date)) implies
+	equal_signs: (has_origin_date and then
+				{l_origin_date: like origin_date} origin_date and then
+				canonical (l_origin_date)) implies
 			(day >= 0 and month >= 0 and year >= 0) or
 			(day <= 0 and month <= 0 and year <= 0)
 

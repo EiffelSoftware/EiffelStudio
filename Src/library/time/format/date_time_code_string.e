@@ -23,6 +23,8 @@ feature -- Creation
 			code: DATE_TIME_CODE
 			i, pos1, pos2: INTEGER
 			date_constants: DATE_CONSTANTS
+			l_substrgs: like extracted_substrings
+			l_substrg, l_substrg2: STRING
 		do
 			create value.make (20)
 			pos1 := 1
@@ -36,16 +38,18 @@ feature -- Creation
 				pos1 >= s.count
 			loop
 				pos2 := find_separator (s, pos1)
-				extract_substrings (s, pos1, pos2)
+				l_substrgs := extracted_substrings (s, pos1, pos2)
 				pos2 := abs (pos2)
-				substrg.to_lower
-				if substrg.count > 0 then
-					create code.make (substrg)
+				l_substrg := l_substrgs.substrg
+				l_substrg.to_lower
+				if l_substrg.count > 0 then
+					create code.make (l_substrg)
 					value.put (code, i)
 					i := i + 1
 				end
-				if substrg2.count > 0 then
-					value.put (create {DATE_TIME_CODE}.make (substrg2), i)
+				l_substrg2 := l_substrgs.substrg2
+				if l_substrg2.count > 0 then
+					value.put (create {DATE_TIME_CODE}.make (l_substrg2), i)
 					i := i + 1
 					separators_used := True
 				end
@@ -68,16 +72,19 @@ feature -- Attributes
 			-- Name of the code string.
 		local
 			i: INTEGER
+			l_item: ?DATE_TIME_CODE
 		do
 			create Result.make (1)
 			from
 				i := 1
+				l_item := value.item (i)
 			until
-				value.item (i) = Void
+				l_item = Void
 			loop
-				Result.append (value.item (i).name)
-				Result.append (" ")
+				Result.append (l_item.name)
+				Result.append_character (' ')
 				i := i + 1
+				l_item := value.item (i)
 			end
 		end
 
@@ -92,8 +99,7 @@ feature -- Status report
 		require
 			non_empty_string: s /= Void and then not s.is_empty
 		do
-			build_parser (s)
-			Result := parser.is_date
+			Result := parser (s).is_date
 		end
 
 	is_time (s: STRING): BOOLEAN
@@ -101,8 +107,7 @@ feature -- Status report
 		require
 			non_empty_string: s /= Void and then not s.is_empty
 		do
-			build_parser (s)
-			Result := parser.is_time
+			Result := parser (s).is_time
 		end
 
 	is_date_time (s: STRING): BOOLEAN
@@ -110,17 +115,18 @@ feature -- Status report
 		require
 			non_empty_string: s /= Void and then not s.is_empty
 		do
-			build_parser (s)
-			Result := parser.is_date_time
+			Result := parser (s).is_date_time
 		end
 
 	is_value_valid (s: STRING): BOOLEAN
 			-- Does `s' contain a valid date or time as string representation?
 		require
 			non_empty_string: s /= Void and then not s.is_empty
+		local
+			l_parser: like parser
 		do
-			build_parser (s)
-			Result := parser.is_date or parser.is_time or parser.is_date_time
+			l_parser := parser (s)
+			Result := l_parser.is_date or l_parser.is_time or l_parser.is_date_time
 		end
 
 	separators_used: BOOLEAN
@@ -146,8 +152,10 @@ feature -- Interface
 			s_exists: s /= Void
 		local
 			pos1, pos2, i: INTEGER
-			code: DATE_TIME_CODE
+			code: ?DATE_TIME_CODE
 			has_seps: BOOLEAN
+			l_substrgs: like extracted_substrings
+			l_substrg, l_substrg2: STRING
 		do
 			pos1 := 1
 			pos2 := 1
@@ -165,34 +173,35 @@ feature -- Interface
 				or Result = False
 			loop
 				code := value.item (i)
-				if has_seps then
-					pos2 := find_separator (s, pos1)
-				else
-					pos2 := (pos1 + code.count_max - 1) * -1
-				end
-				extract_substrings (s, pos1, pos2)
-				pos2 := abs (pos2)
 				if code = Void then
-					Result := false
+					Result := False
 				else
-					if substrg.count > 0 then
-						Result := substrg.count <= code.count_max and
-						substrg.count >= code.count_min
+					if has_seps then
+						pos2 := find_separator (s, pos1)
+					else
+						pos2 := (pos1 + code.count_max - 1) * -1
+					end
+					l_substrgs := extracted_substrings (s, pos1, pos2)
+					pos2 := abs (pos2)
+					l_substrg := l_substrgs.substrg
+					if l_substrg.count > 0 then
+						Result := l_substrg.count <= code.count_max and
+						l_substrg.count >= code.count_min
 						if code.is_numeric then
-							Result := Result and substrg.is_integer
+							Result := Result and l_substrg.is_integer
 							if code.value_max /= -1 and
 								code.value_min /= -1 then
 								Result := Result and
-									substrg.to_integer <= code.value_max and
-									substrg.to_integer >= code.value_min
+									l_substrg.to_integer <= code.value_max and
+									l_substrg.to_integer >= code.value_min
 							end
 						elseif code.is_meridiem (code.value) then
-							Result := Result and (substrg.as_upper.is_equal ("AM") or
-								substrg.as_upper.is_equal ("PM"))
+							Result := Result and (l_substrg.as_upper.is_equal ("AM") or
+								l_substrg.as_upper.is_equal ("PM"))
 						elseif code.is_day_text (code.value) then
-							Result := Result and days.has (substrg)
+							Result := Result and days.has (l_substrg)
 						elseif code.is_month_text (code.value) then
-							Result := Result and months.has (substrg)
+							Result := Result and months.has (l_substrg)
 						end
 						i := i + 1
 					end
@@ -200,8 +209,9 @@ feature -- Interface
 						code := value.item (i)
 						i := i + 1
 						if code /= Void then
+							l_substrg2 := l_substrgs.substrg2
 							Result := Result and (pos2 /= s.count) and
-								substrg2.is_equal (code.value)
+								l_substrg2.is_equal (code.value)
 						end
 					end
 					pos1 := pos2 + 1
@@ -219,16 +229,18 @@ feature -- Interface
 			int, i, type: INTEGER
 			double: DOUBLE
 			l_tmp: STRING
+			l_item: ?DATE_TIME_CODE
 		do
 			create Result.make (1)
 			date := date_time.date
 			time := date_time.time
 			from
 				i := 1
+				l_item := value.item (i)
 			until
-				value.item (i) = Void
+				l_item = Void
 			loop
-				type := value.item (i).type
+				type := l_item.type
 				inspect
 					type
 				when 1 then
@@ -321,11 +333,11 @@ feature -- Interface
 					Result.append (int.out)
 				when 16 then
 					double := time.fractional_second *
-						10 ^ (value.item (i).count_max)
+						10 ^ (l_item.count_max)
 					int := double.truncated_to_integer
 					l_tmp := int.out
-					if l_tmp.count < value.item (i).count_max then
-						Result.append (create {STRING}.make_filled ('0', value.item (i).count_max - l_tmp.count))
+					if l_tmp.count < l_item.count_max then
+						Result.append (create {STRING}.make_filled ('0', l_item.count_max - l_tmp.count))
 					end
 					Result.append (l_tmp)
 				when 23 then
@@ -336,9 +348,10 @@ feature -- Interface
 						Result.append ("PM")
 					end
 				else
-					Result.append (value.item (i).value)
+					Result.append (l_item.value)
 				end
 				i := i + 1
+				l_item := value.item (i)
 			end
 		ensure
 			string_exists: Result /= Void
@@ -383,14 +396,17 @@ feature -- Interface
 			valid: is_value_valid (s)
 		local
 			i: INTEGER
+			l_parser: like parser
+			l_day_text: ?STRING
 		do
 			right_day_text := True
-			build_parser (s)
-			create Result.make_fine (parser.year, parser.month, parser.day,
-					parser.hour, parser.minute, parser.fine_second)
-			if parser.day_text /= Void then
+			l_parser := parser (s)
+			create Result.make_fine (l_parser.year, l_parser.month, l_parser.day,
+					l_parser.hour, l_parser.minute, l_parser.fine_second)
+			l_day_text := l_parser.day_text
+			if l_day_text /= Void then
 				i := Result.date.day_of_the_week
-				right_day_text := parser.day_text.is_equal (days.item (i))
+				right_day_text := l_day_text.is_equal (days.item (i))
 			end
 		ensure
 			date_time_exists: Result /= Void
@@ -505,16 +521,17 @@ feature -- Interface
 		require
 			not_void: value /= Void
 		local
-			code: DATE_TIME_CODE
+			l_item, code: ?DATE_TIME_CODE
 			i, type: INTEGER
 			has_day, has_month, has_year: BOOLEAN
 		do
 			from
 				i := 1
+				l_item := value.item (i)
 			until
-				value.item (i) = Void
+				l_item = Void
 			loop
-				code := value.item (i).twin
+				code := l_item.twin
 				type := code.type
 				if separators_used then
 					inspect
@@ -542,6 +559,7 @@ feature -- Interface
 					end
 				end
 				i := i + 1
+				l_item := value.item (i)
 			end
 			Result := has_day and has_month and has_year
 		end
@@ -552,16 +570,17 @@ feature -- Interface
 		require
 			not_void: value /= Void
 		local
-			code: DATE_TIME_CODE
+			l_item, code: ?DATE_TIME_CODE
 			i, type: INTEGER
 			has_hour, has_minute, has_second: BOOLEAN
 		do
 			from
 				i := 1
+				l_item := value.item (i)
 			until
-				value.item (i) = Void
+				l_item = Void
 			loop
-				code := value.item (i).twin
+				code := l_item.twin
 				type := code.type
 				if separators_used then
 					inspect
@@ -589,14 +608,12 @@ feature -- Interface
 					end
 				end
 				i := i + 1
+				l_item := value.item (i)
 			end
 			Result := has_hour and has_minute and has_second
 		end
 
 feature {NONE} -- Implementation
-
-	parser: DATE_TIME_PARSER
-			-- Instance of date-time string parser
 
 	days: ARRAY [STRING]
 
@@ -605,22 +622,31 @@ feature {NONE} -- Implementation
 	right_day_text: BOOLEAN
 			-- Is the name of the day the right one?
 
-	build_parser (s: STRING)
-			-- Build parser from `s'.
+	parser (s: STRING): DATE_TIME_PARSER
+			-- Parser from `s'.
+			-- Build a new one if necessary.
 		require
 			non_empty_string: s /= Void and then not s.is_empty
+		local
+			l_parser: like internal_parser
 		do
-			if parser = Void or else not equal (parser.source_string, s) then
-				create parser.make (value)
-				parser.set_day_array (days)
-				parser.set_month_array (months)
-				parser.set_base_century (base_century)
-				parser.set_source_string (s)
-				parser.parse
+			l_parser := internal_parser
+			if l_parser = Void or else not equal (l_parser.source_string, s) then
+				create l_parser.make (value)
+				l_parser.set_day_array (days)
+				l_parser.set_month_array (months)
+				l_parser.set_base_century (base_century)
+				l_parser.set_source_string (s)
+				l_parser.parse
+				internal_parser := l_parser
 			end
+			Result := l_parser
 		ensure
-			parser_created: parser /= Void
+			parser_not_void: Result /= Void
 		end
+
+	internal_parser: ?DATE_TIME_PARSER;
+			-- Cached instance of date-time string parser
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"

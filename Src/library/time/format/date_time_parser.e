@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	source_string: STRING
+	source_string: ?STRING
 			-- String to be parsed
 
 	year: INTEGER
@@ -88,7 +88,7 @@ feature -- Access
 			Result := fine_second_val
 		end
 
-	day_text: STRING
+	day_text: ?STRING
 			-- Text representation of `day'
 		require
 			value_parsed: parsed
@@ -105,7 +105,7 @@ feature -- Status report
 			-- Has parser been set up completely?
 		do
 			Result := (days /= Void) and (months /= Void) and
-				(source_string /= Void and then not source_string.is_empty)
+				({l_source_string: like source_string} source_string and then not l_source_string.is_empty)
 		end
 
 	is_date: BOOLEAN
@@ -198,9 +198,15 @@ feature -- Basic operations
 			l_year_now: INTEGER
 			l_is_pm, l_is_pm_computed: BOOLEAN
 			l_hour_val_need_computation: BOOLEAN
+			l_source_string: like source_string
+			l_item: ?DATE_TIME_CODE
+			l_substrg: STRING
+			l_months: like months
 		do
+			l_source_string := source_string
+			check l_source_string_not_void: l_source_string /= Void end
 			l_year_now := (create {C_DATE}).year_now
-			s := source_string.as_upper
+			s := l_source_string.as_upper
 			year_val := 1
 			month_val := 1
 			day_val := 1
@@ -215,25 +221,26 @@ feature -- Basic operations
 			until
 				pos1 > s.count
 			loop
-				if has_seps then
-					pos2 := find_separator (s, pos1)
-				else
-					pos2 := (pos1 + code.item (i).count_max - 1) * -1
-				end
-				extract_substrings (s, pos1, pos2)
-				pos2 := abs (pos2)
-				if code.item (i) = Void then
+				l_item := code.item (i)
+				if l_item = Void then
 					pos1 := s.count + 1
 				else
-					type := code.item (i).type
+					if has_seps then
+						pos2 := find_separator (s, pos1)
+					else
+						pos2 := (pos1 + l_item.count_max - 1) * -1
+					end
+					l_substrg := extracted_substrings (s, pos1, pos2).substrg
+					pos2 := abs (pos2)
+					type := l_item.type
 					inspect
 						type
 					when 1, 2 then
-						day_val := substrg.to_integer
+						day_val := l_substrg.to_integer
 					when 3 then
-						day_text_val := substrg
+						day_text_val := l_substrg
 					when 4 then
-						year_val := substrg.to_integer
+						year_val := l_substrg.to_integer
 					when 5 then
 						if base_century < 0 then
 							-- A negative value in `base_century' indicates
@@ -241,7 +248,7 @@ feature -- Basic operations
 							-- automaticaly. Since we want to add it, we
 							-- have to substract it, because it is
 							-- negative.
-							year_val := substrg.to_integer - base_century
+							year_val := l_substrg.to_integer - base_century
 
 							-- We need a smart century correction
 							-- eventually.
@@ -252,17 +259,19 @@ feature -- Basic operations
 							end
 						else
 							-- `base_century' has been set manually.
-							year_val := substrg.to_integer - base_century
+							year_val := l_substrg.to_integer - base_century
 						end
 					when 6, 7 then
-						month_val := substrg.to_integer
+						month_val := l_substrg.to_integer
 					when 8 then
+						l_months := months
+						check l_months_not_void: l_months /= Void end
 						from
 							j := 1
 						until
 							j > 12
 						loop
-							if months.item (j).is_equal (substrg) then
+							if l_months.item (j).is_equal (l_substrg) then
 								month_val := j
 							else
 								-- error
@@ -270,9 +279,9 @@ feature -- Basic operations
 							j := j + 1
 						end
 					when 9, 10 then
-						hour_val := substrg.to_integer
+						hour_val := l_substrg.to_integer
 					when 11 then
-						hour_val := substrg.to_integer
+						hour_val := l_substrg.to_integer
 						if l_is_pm_computed then
 							if l_is_pm then
 								hour_val := hour_val + 12
@@ -289,12 +298,12 @@ feature -- Basic operations
 						l_is_pm_computed := True
 						l_is_pm := s.as_upper.is_equal ("PM")
 					when 12, 13 then
-						minute_val := substrg.to_integer
+						minute_val := l_substrg.to_integer
 					when 14, 15 then
-						second_val := substrg.to_integer
+						second_val := l_substrg.to_integer
 					when 16 then
-						fine_second_val := substrg.to_double /
-							(10 ^ (substrg.count))
+						fine_second_val := l_substrg.to_double /
+							(10 ^ (l_substrg.count))
 					end
 					if has_seps then
 						i := i + 2
@@ -339,15 +348,15 @@ feature {NONE} -- Implementation
 
 	fine_second_val: DOUBLE
 
-	day_text_val: STRING
+	day_text_val: ?STRING
 
 	code: HASH_TABLE [DATE_TIME_CODE, INTEGER]
 			-- Hash table containing the parsed date/time code
 
-	months: ARRAY [STRING]
+	months: ?ARRAY [STRING]
 			-- Names of months
 
-	days: ARRAY [STRING]
+	days: ?ARRAY [STRING]
 			-- Names of days	
 
 	base_century: INTEGER

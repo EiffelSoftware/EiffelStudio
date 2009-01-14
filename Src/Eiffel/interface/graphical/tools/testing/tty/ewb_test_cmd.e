@@ -18,6 +18,9 @@ inherit
 		end
 
 	SHARED_TEST_SERVICE
+		redefine
+			on_processor_launch_error
+		end
 
 feature -- Basic operations
 
@@ -250,6 +253,13 @@ feature {NONE} -- Events
 		do
 			print_string (locale.formatted_string (a_error, a_token_values))
 			print_string ("%N")
+		end
+
+	on_processor_launch_error (a_error: like error_message; a_type: !TYPE [TEST_PROCESSOR_I]; a_code: NATURAL_32)
+			-- <Precursor>
+		do
+			print_string (a_error)
+			print_string ("%N%N")
 		end
 
 feature {NONE} -- Implementation

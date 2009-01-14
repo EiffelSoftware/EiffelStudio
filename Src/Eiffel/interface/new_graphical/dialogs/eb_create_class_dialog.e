@@ -361,7 +361,7 @@ feature {NONE} -- Basic operations
 					end
 
 						-- Year
-					l_parameters.put_last ((create {DATE}.make_now).year, year_symbol)
+					l_params.put_last ((create {DATE}.make_now).year, year_symbol)
 
 					if (create {RAW_FILE}.make (l_source_file)).exists then
 							-- Only render if the file exists.

@@ -45,7 +45,12 @@ feature {NONE} -- Implementation
 				l_dtype := l_dtype_table.item_for_iteration
 				l_ser.write_compressed_natural_32 (l_dtype.to_natural_32)
 					-- Write type name
-				l_ser.write_string_8 (l_int.type_name_of_type (l_dtype))
+				if l_int.is_attached_type (l_dtype) then
+						-- We could use a buffer to speed up things here.
+					l_ser.write_string_8 ("!" + l_int.type_name_of_type (l_dtype))
+				else
+					l_ser.write_string_8 (l_int.type_name_of_type (l_dtype))
+				end
 				l_dtype_table.forth
 			end
 
@@ -63,7 +68,12 @@ feature {NONE} -- Implementation
 				l_dtype := l_attr_dtype_table.item_for_iteration
 				l_ser.write_compressed_natural_32 (l_dtype.to_natural_32)
 					-- Write type name
-				l_ser.write_string_8 (l_int.type_name_of_type (l_dtype))
+				if l_int.is_attached_type (l_dtype) then
+						-- We could use a buffer to speed up things here.
+					l_ser.write_string_8 ("!" + l_int.type_name_of_type (l_dtype))
+				else
+					l_ser.write_string_8 (l_int.type_name_of_type (l_dtype))
+				end
 				l_attr_dtype_table.forth
 			end
 
@@ -85,7 +95,7 @@ feature {NONE} -- Implementation
 				-- Write object table if necessary.
 			write_object_table (a_list)
 		end
-	
+
 	attributes_dynamic_types (a_type_table: like type_table): like type_table
 			-- Table of dynamic types of attributes appearing in `a_type_table'.
 		require
@@ -146,7 +156,7 @@ feature {NONE} -- Implementation
 				l_ser.write_compressed_natural_32 (l_int.field_static_type_of_type (i, a_dtype).to_natural_32)
 					-- Write attribute name
 				l_ser.write_string_8 (l_int.field_name_of_type (i, a_dtype))
-				
+
 				i := i + 1
 			end
 		end

@@ -116,7 +116,7 @@ feature {EQA_SYSTEM_EXECUTION} -- Status setting
 		do
 			is_launched := True
 			create l_factory
-			l_process := l_factory.process_launcher (a_exec, a_arg_list, a_dir)
+			l_process := l_factory.process_launcher (a_exec, a_arg_list, a_dir.string)
 			l_process.enable_launch_in_new_process_group
 			l_process.set_separate_console (False)
 			l_process.set_hidden (True)

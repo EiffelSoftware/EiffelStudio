@@ -26,13 +26,6 @@ inherit
 			{NONE} all
 		end
 
-	ISE_RUNTIME
-		rename
-			dynamic_type as ise_rt_dynamic_type
-		export
-			{NONE} all
-		end
-
 feature {NONE} -- Access
 
 	context: !ARRAY [!TUPLE [type: !TYPE [ANY]; attributes: !TUPLE; inv: BOOLEAN]]
@@ -414,7 +407,7 @@ feature {NONE} -- Object initialization
 			an_object_not_void: an_object /= Void
 			an_object_valid: not is_tuple (an_object) and not is_special (an_object)
 		local
-			i, j, l_dtype: INTEGER
+			i, j: INTEGER
 			l_attributes: HASH_TABLE [INTEGER, !STRING]
 			l_obj: !ANY
 			l_name: like field_name
@@ -447,8 +440,7 @@ feature {NONE} -- Object initialization
 						if an_attributes.is_reference_item (j) and then {l_id: !STRING} an_attributes.reference_item (j) then
 							if is_valid_id (l_id) and then is_existing_id (l_id) then
 								l_obj := object_for_id (l_id)
-								l_dtype := detachable_type (field_static_type_of_type (i, dynamic_type (an_object)))
-								if type_conforms_to (dynamic_type (l_obj), l_dtype) then
+								if field_conforms_to (dynamic_type (l_obj), field_static_type_of_type (i, dynamic_type (an_object))) then
 									set_reference_field (i, an_object, l_obj)
 								end
 							end
@@ -670,7 +662,7 @@ feature {NONE} -- Object initialization
 				l_type := pointer_type
 			else
 				l_type := reference_type
-				l_gtype := detachable_type (generic_dynamic_type (a_special, 1))
+				l_gtype := generic_dynamic_type (a_special, 1)
 			end
 
 			from
@@ -684,7 +676,7 @@ feature {NONE} -- Object initialization
 					if {l_id: !STRING} an_attributes.reference_item (i) then
 						if is_valid_id (l_id) and then is_existing_id (l_id) then
 							l_obj := object_for_id (l_id)
-							if type_conforms_to (dynamic_type (l_obj), l_gtype) then
+							if field_conforms_to (dynamic_type (l_obj), l_gtype) then
 								a_special.put (l_obj, i-1)
 							end
 						end

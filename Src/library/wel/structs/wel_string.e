@@ -63,7 +63,7 @@ feature --{NONE} -- Initialization
 			managed_data.item.memory_copy (a_ptr, a_length)
 		end
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	share_from_pointer (a_ptr: POINTER)
 			-- New instance sharing `a_ptr'.
@@ -81,11 +81,7 @@ feature -- Initialization
 			a_length_valid: (a_length \\ {WEL_STRING}.character_size) = 0
 		do
 			count := a_length // character_size
-			if managed_data = Void or else not managed_data.is_shared then
-				create managed_data.share_from_pointer (a_ptr, a_length + character_size)
-			else
-				managed_data.set_from_pointer (a_ptr, a_length + character_size)
-			end
+			create managed_data.share_from_pointer (a_ptr, a_length + character_size)
 		end
 
 feature -- Access
@@ -181,7 +177,7 @@ feature -- Access
 			loop
 				Result.extend (current_string)
 				current_pos := current_pos + (current_string.count + 1) * character_size
-				l_str.share_from_pointer (current_pos)
+				l_str.set_shared_from_pointer (current_pos)
 				current_string := l_str.string
 			end
 		ensure
@@ -247,6 +243,29 @@ feature -- Comparison
 		end
 
 feature -- Element change
+
+	set_shared_from_pointer (a_ptr: POINTER)
+			-- New instance sharing `a_ptr'.
+		require
+			a_ptr_not_null: a_ptr /= default_pointer
+		do
+			set_shared_from_pointer_and_count (a_ptr, buffer_length (a_ptr))
+		end
+
+	set_shared_from_pointer_and_count (a_ptr: POINTER; a_length: INTEGER)
+			-- New instance sharing `a_ptr' of `a_length' byte.
+		require
+			a_ptr_not_null: a_ptr /= default_pointer
+			a_length_non_negative: a_length >= 0
+			a_length_valid: (a_length \\ {WEL_STRING}.character_size) = 0
+		do
+			count := a_length // character_size
+			if not managed_data.is_shared then
+				create managed_data.share_from_pointer (a_ptr, a_length + character_size)
+			else
+				managed_data.set_from_pointer (a_ptr, a_length + character_size)
+			end
+		end
 
 	set_string (a_string: STRING_GENERAL)
 			-- Set `string' with `a_string'.

@@ -36,19 +36,20 @@ feature -- Access
 		require
 			index_in_range: 1 <= i and i <= last
 		local
-			c_t: INTEGER_REF
-			frac_sec: DOUBLE_REF
+			l_result: ?TIME
 		do
-			c_t ?= item_array ((2 * i) - 1)
-			frac_sec ?= item_array (2 * i)
-			check
-				time_exists: c_t /= Void
-				fractional_second_exists: frac_sec /= Void
+			if
+				{c_t: INTEGER_REF}item_array ((2 * i) - 1) and then
+				{frac_sec: DOUBLE_REF}item_array (2 * i)
+			then
+				create l_result.make_by_compact_time (c_t.item)
+				l_result.set_fractionals (frac_sec.item)
+			else
+				check l_result /= Void end
 					-- Because the fractional second value always follows the
 					-- compact time value
 			end
-			create Result.make_by_compact_time (c_t.item)
-			Result.set_fractionals (frac_sec.item)
+			Result := l_result
 		end
 
 	last: INTEGER

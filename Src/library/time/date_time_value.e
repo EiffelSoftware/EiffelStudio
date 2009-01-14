@@ -4,17 +4,25 @@ note
 	revision: "$Revision$"
 	access: date, time
 
-class DATE_TIME_VALUE inherit
+class
+	DATE_TIME_VALUE
 
+inherit
 	DATE_TIME_MEASUREMENT
 
 feature -- Access
 
 	date: DATE_VALUE
 			-- Date of the current object
+		attribute
+			create Result
+		end
 
 	time: TIME_VALUE
 			-- Time of the current object
+		attribute
+			create Result
+		end
 
 	fractional_second: DOUBLE
 			-- Decimal part of second

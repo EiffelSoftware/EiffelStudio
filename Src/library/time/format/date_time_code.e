@@ -34,12 +34,14 @@ feature -- Change
 		require
 			v_exists: v /= Void
 			v_is_code: is_code (v)
+		local
+			l_name: like name
 		do
 			value := v.twin
 			if is_day (value) then
 				count_max := 2
 				count_min := 1
-				name := "day-numeric"
+				l_name := "day-numeric"
 				value_max := 31
 				value_min := 1
 				is_text := False
@@ -48,7 +50,7 @@ feature -- Change
 			elseif is_day0 (value) then
 				count_max := 2
 				count_min := 2
-				name := "day-numeric-on-2-digits"
+				l_name := "day-numeric-on-2-digits"
 				value_max := 31
 				value_min := 1
 				is_text := False
@@ -57,7 +59,7 @@ feature -- Change
 			elseif is_day_text (value) then
 				count_max := 3
 				count_min := 3
-				name := "day-text"
+				l_name := "day-text"
 				value_max := 7
 				value_min := 1
 				is_text := True
@@ -66,7 +68,7 @@ feature -- Change
 			elseif is_year4 (value) then
 				count_max := 4
 				count_min := 4
-				name := "year-on-4-digits"
+				l_name := "year-on-4-digits"
 				is_text := False
 				is_numeric := True
 				type := 4
@@ -75,7 +77,7 @@ feature -- Change
 			elseif is_year2 (value) then
 				count_max := 2
 				count_min := 2
-				name := "year-on-2-digits"
+				l_name := "year-on-2-digits"
 				is_text := False
 				is_numeric := True
 				type := 5
@@ -84,7 +86,7 @@ feature -- Change
 			elseif is_month (value) then
 				count_max := 2
 				count_min := 1
-				name := "month-numeric"
+				l_name := "month-numeric"
 				value_max := 12
 				value_min := 1
 				is_text := False
@@ -93,7 +95,7 @@ feature -- Change
 			elseif is_month0 (value) then
 				count_max := 2
 				count_min := 2
-				name := "month-numeric-on-2-digits"
+				l_name := "month-numeric-on-2-digits"
 				value_max := 12
 				value_min := 1
 				is_text := False
@@ -102,7 +104,7 @@ feature -- Change
 			elseif is_month_text (value) then
 				count_max := 3
 				count_min := 3
-				name := "month-text"
+				l_name := "month-text"
 				value_max := 12
 				value_min := 1
 				is_text := True
@@ -111,7 +113,7 @@ feature -- Change
 			elseif is_hour (value) then
 				count_max := 2
 				count_min := 1
-				name := "hour-numeric"
+				l_name := "hour-numeric"
 				value_max := 24
 				value_min := 0
 				is_text := False
@@ -120,7 +122,7 @@ feature -- Change
 			elseif is_hour0 (value) then
 				count_max := 2
 				count_min := 2
-				name := "hour-numeric-on-2-digits"
+				l_name := "hour-numeric-on-2-digits"
 				value_max := 24
 				value_min := 0
 				is_text := False
@@ -129,7 +131,7 @@ feature -- Change
 			elseif is_hour12 (value) then
 				count_max := 2
 				count_min := 1
-				name := "hour-12-clock-scale"
+				l_name := "hour-12-clock-scale"
 				value_max := 12
 				value_min := 0
 				is_text := False
@@ -138,7 +140,7 @@ feature -- Change
 			elseif is_minute (value) then
 				count_max := 2
 				count_min := 1
-				name := "minute-numeric"
+				l_name := "minute-numeric"
 				value_max := 59
 				value_min := 0
 				is_text := False
@@ -147,7 +149,7 @@ feature -- Change
 			elseif is_minute0 (value) then
 				count_max := 2
 				count_min := 2
-				name := "minute-numeric-on-2-digits"
+				l_name := "minute-numeric-on-2-digits"
 				value_max := 59
 				value_min := 0
 				is_text := False
@@ -156,7 +158,7 @@ feature -- Change
 			elseif is_second (value) then
 				count_max := 2
 				count_min := 1
-				name := "second-numeric"
+				l_name := "second-numeric"
 				value_max := 59
 				value_min := 0
 				is_text := False
@@ -165,7 +167,7 @@ feature -- Change
 			elseif is_second0 (value) then
 				count_max := 2
 				count_min := 2
-				name := "second-numeric-on-2-digits"
+				l_name := "second-numeric-on-2-digits"
 				value_max := 59
 				value_min := 0
 				is_text := False
@@ -174,7 +176,7 @@ feature -- Change
 			elseif is_fractional_second (value) then
 				count_max := value.substring (3, value.count).to_integer
 				count_min := 1
-				name := "fractional-second-numeric"
+				l_name := "fractional-second-numeric"
 				is_text := False
 				is_numeric := True
 				type := 16
@@ -183,62 +185,64 @@ feature -- Change
 			elseif is_colon (value) then
 				count_max := 1
 				count_min := 1
-				name := "colon"
+				l_name := "colon"
 				is_text := True
 				is_numeric := False
 				type := 17
 			elseif is_slash (value) then
 				count_max := 1
 				count_min := 1
-				name := "slash"
+				l_name := "slash"
 				is_text := True
 				is_numeric := False
 				type := 18
 			elseif is_minus (value) then
 				count_max := 1
 				count_min := 1
-				name := "minus"
+				l_name := "minus"
 				is_text := True
 				is_numeric := False
 				type := 19
 			elseif is_comma (value) then
 				count_max := 1
 				count_min := 1
-				name := "comma"
+				l_name := "comma"
 				is_text := True
 				is_numeric := False
 				type := 20
 			elseif is_space (value) then
 				count_max := 1
 				count_min := 1
-				name := "space"
+				l_name := "space"
 				is_text := True
 				is_numeric := False
 				type := 21
 			elseif is_dot (value) then
 				count_max := 1
 				count_min := 1
-				name := "dot"
+				l_name := "dot"
 				is_text := True
 				is_numeric := False
 				type := 22
 			elseif is_meridiem (value) then
 				count_max := 2
 				count_min := 2
-				name := "meridiem"
+				l_name := "meridiem"
 				is_text := True
 				is_numeric := False
 				type := 23
-			elseif is_hour12_0 (value) then
+			else
+				check is_hour12_0: is_hour12_0 (value) end
 				count_max := 2
 				count_min := 2
-				name := "hour-12-clock-scale-on-2-digits"
+				l_name := "hour-12-clock-scale-on-2-digits"
 				value_max := 12
 				value_min := 0
 				is_text := False
 				is_numeric := True
 				type := 24
 			end
+			name := l_name
 		ensure
 			value_set: value.is_equal (v)
 		end

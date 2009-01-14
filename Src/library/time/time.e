@@ -199,8 +199,8 @@ feature -- Measurement
 		do
 			create Result.make_fine (hour, minute, fine_second)
 		ensure then
-			seconds_large_enough: duration.seconds_count >= 0
-			seconds_small_enough: duration.seconds_count < Seconds_in_day
+			seconds_large_enough: Result.seconds_count >= 0
+			seconds_small_enough: Result.seconds_count < Seconds_in_day
 		end
 
 	seconds: INTEGER

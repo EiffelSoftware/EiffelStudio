@@ -112,7 +112,7 @@ feature -- Access
 	time: TIME_DURATION
 			-- Time part of current duration
 
-	origin_date_time: DATE_TIME
+	origin_date_time: ?DATE_TIME
 			-- Origin date time of duration
 
 	zero: like Current
@@ -177,6 +177,8 @@ feature -- Status report
 	canonical (start_date: DATE_TIME): BOOLEAN
 			-- Are the time and date parts of the same sign,
 			-- and both canonical?
+		require
+			start_date_not_void: start_date /= Void
 		local
 			final_date: DATE_TIME
 		do
@@ -211,14 +213,14 @@ feature -- Status setting
 			-- Set `origin_date_time' to `dt'.
 		do
 			origin_date_time := dt
-			if origin_date_time /= Void then
-				date.set_origin_date (origin_date_time.date)
+			if dt /= Void then
+				date.set_origin_date (dt.date)
 			else
 				date.set_origin_date (Void)
 			end
 		ensure
 			origin_date_time_set: origin_date_time = dt
-			origin_date_set: origin_date_time /= Void implies (origin_date_time.date = date.origin_date)
+			origin_date_set: dt /= Void implies (dt.date = date.origin_date)
 		end
 
 feature -- Element Change
@@ -247,11 +249,14 @@ feature -- Basic operations
 
 	infix "+" (other: like Current): like Current
 			-- Sum with `other' (commutative)
+		local
+			l_origin: like origin_date_time
 		do
 			create Result.make_by_date_time (date + other.date,
 				time + other.time)
-			if origin_date_time /= Void then
-				Result.set_origin_date_time (origin_date_time.twin)
+			l_origin := origin_date_time
+			if l_origin /= Void then
+				Result.set_origin_date_time (l_origin.twin)
 			else
 				Result.set_origin_date_time (Void)
 			end
@@ -261,10 +266,13 @@ feature -- Basic operations
 
 	prefix "-": like Current
 			-- Unary minus
+		local
+			l_origin: like origin_date_time
 		do
 			create Result.make_by_date_time (-date, -time)
-			if origin_date_time /= Void then
-				Result.set_origin_date_time (origin_date_time.twin)
+			l_origin := origin_date_time
+			if l_origin /= Void then
+				Result.set_origin_date_time (l_origin.twin)
 			else
 				Result.set_origin_date_time (Void)
 			end
@@ -348,9 +356,11 @@ invariant
 	time_exists: time /= Void
 	origin_constraint: (origin_date_time = Void and
 			date.origin_date = Void) or else
-			origin_date_time.date = date.origin_date
+			({l_origin_1: like origin_date_time} origin_date_time and then
+			l_origin_1.date = date.origin_date)
 	same_signs: (has_origin_date_time and then
-				canonical (origin_date_time)) implies
+				{l_origin_2: like origin_date_time} origin_date_time and then
+				canonical (l_origin_2)) implies
 				((date.is_positive or date.is_zero) and
 				(time.is_positive or time.is_zero)) or else
 				((date.is_negative or date.is_zero) and

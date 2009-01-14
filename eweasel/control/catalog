@@ -2050,6 +2050,8 @@ test	object-test-local-same-lower-name				attach038 tcf fail attached_types
 test	void-safe-inherited-precursor					attach039 tcf pass void_safe precursor
 test	object-test-not-visible-to-old-express				attach040 tcf fail object_test system-validity
 test	current-in-self-init-attribute					attach041 tcf pass attached_types self_init void_safe validity
+test	agent-attached-by-default					attach042 tcf pass attached_types void_safe
+test	empty-agent-argument-attached-by-default			attach043 tcf pass attached_types void_safe
 
 -- Tests for conformance in general
 test	basic-conformance		conform001 tcf pass conformance

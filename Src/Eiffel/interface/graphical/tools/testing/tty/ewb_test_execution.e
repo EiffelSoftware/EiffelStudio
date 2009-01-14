@@ -12,7 +12,6 @@ class
 inherit
 	EWB_TEST_CMD
 		redefine
-			on_processor_launch_error,
 			on_test_changed
 		end
 
@@ -61,13 +60,6 @@ feature {NONE} -- Basic operations
 		end
 
 feature -- Events
-
-	on_processor_launch_error (a_error: like error_message; a_type: !TYPE [TEST_PROCESSOR_I]; a_code: NATURAL_32)
-			-- <Precursor>
-		do
-			print_string (a_error)
-			print_string ("%N%N")
-		end
 
 	on_test_changed (a_collection: !ACTIVE_COLLECTION_I [!TEST_I]; a_test: !TEST_I)
 			-- <Precursor>

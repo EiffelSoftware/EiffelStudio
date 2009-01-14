@@ -108,6 +108,7 @@ feature -- Execution
 				if l_root_group.is_cluster then
 					if {l_cluster: CONF_CLUSTER} l_root_group then
 						l_conf.set_cluster (l_cluster)
+						l_conf.set_path ("")
 					end
 				end
 				l_conf.set_new_class_name("NEW_AUTO_TEST")

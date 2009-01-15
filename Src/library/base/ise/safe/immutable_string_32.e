@@ -83,8 +83,10 @@ feature {NONE} -- Initialization
 			s_area: SPECIAL [CHARACTER_32]
 			i, j, nb: INTEGER
 		do
+			area := s.area
 			if same_type (s) then
-				make_from_area_and_bounds (s.area, s.area_lower, s.count)
+				area_lower := s.area_lower
+				count := s.count
 			else
 				create a.make (s.count + 1)
 				from
@@ -99,8 +101,10 @@ feature {NONE} -- Initialization
 					i := i + 1
 					j := j + 1
 				end
-				make_from_area_and_bounds (a, 0, s.count)
+				area := a
+				area_lower := 0
 			end
+			count := s.count
 		end
 
 	make_from_area_and_bounds (a: like area; low, n: like count)

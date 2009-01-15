@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 			create tool_bar_manager.make (Current)
 			init_managers
-			
+
 			agents.init_actions
 
 			contents.extend (zones.place_holder_content)
@@ -600,6 +600,15 @@ feature -- Command
 			is_destroyed := True
 		ensure
 			destroyed: is_destroyed
+		end
+
+	reset_all_widgets
+			-- Reset all widgets to default states
+		local
+			l_cleaner: SD_WIDGET_CLEANER
+		do
+			create l_cleaner.make (Current)
+			l_cleaner.reset_all_to_default (False)
 		end
 
 feature -- Contract support

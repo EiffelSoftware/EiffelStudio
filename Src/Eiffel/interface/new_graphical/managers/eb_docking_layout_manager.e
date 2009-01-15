@@ -64,6 +64,7 @@ feature -- Normal mode command
 				develop_window.window.lock_update
 			end
 			develop_window.close_all_tools
+			develop_window.docking_manager.reset_all_widgets
 
 			-- Right bottom tools
 			l_tool := develop_window.tools.c_output_tool

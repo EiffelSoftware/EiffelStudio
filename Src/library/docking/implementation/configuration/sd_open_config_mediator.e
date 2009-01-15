@@ -23,6 +23,8 @@ feature {NONE} -- Initialization
 		do
 			create internal_shared
 			internal_docking_manager := a_docking_manager
+
+			create cleaner.make (a_docking_manager)
 		ensure
 			set: internal_docking_manager = a_docking_manager
 		end
@@ -55,6 +57,7 @@ feature -- Open inner container data.
 			l_reader: SED_MEDIUM_READER_WRITER
 			l_data: SD_INNER_CONTAINER_DATA
 			l_split_area: EV_SPLIT_AREA
+			l_place_holder_content: SD_CONTENT
 		do
 			-- We have to set all zones to normal state, otherwise we can't find the editor parent.
 			internal_docking_manager.command.recover_normal_state
@@ -71,7 +74,7 @@ feature -- Open inner container data.
 				l_top_parent := editor_top_parent_for_restore
 				internal_docking_manager.command.lock_update (Void, True)
 
-				clean_up_all_editors
+				cleaner.clean_up_all_editors
 
 				open_inner_container_data (l_data, l_top_parent)
 				l_split_area ?= l_top_parent
@@ -84,20 +87,40 @@ feature -- Open inner container data.
 					end
 				end
 
-				-- If this time we only restore a editor place holder zone? No real editors restored.				
-				if {lt_widget: EV_WIDGET} internal_docking_manager.zones.place_holder_content.state.zone then
-					if not internal_docking_manager.main_container.has_recursive (lt_widget) then
-						-- We should close place holder content if exist. Because there is(are) already normal editor zone(s).				
-						internal_docking_manager.zones.place_holder_content.close
+				l_place_holder_content := internal_docking_manager.zones.place_holder_content
+				if has_editor_or_place_holder (l_top_parent) then
+					if {lt_widget: EV_WIDGET} l_place_holder_content.state.zone then
+						-- If this time we only restore a editor place holder zone? No real editors restored.
+						if not internal_docking_manager.main_container.has_recursive (lt_widget) then
+							-- We should close place holder content if exist. Because there is(are) already normal editor zone(s).				
+							l_place_holder_content.close
+						end
+					else
+						check not_possible: False end
 					end
 				else
-					check not_possible: False end
+					-- Maybe nothing restored, we should restore place holder zone
+					-- Otherwise, editor will missing, see bug#15253
+
+					-- `l_top_parent' is not full before `open_inner_container_data',
+					-- `open_inner_container_data' restored nothing, so it's not full here
+					check not_full: not l_top_parent.full end
+
+					if {lt_zone: SD_PLACE_HOLDER_ZONE} l_place_holder_content.state.zone then
+						l_top_parent.extend (lt_zone)
+						if not internal_docking_manager.zones.has_zone (lt_zone) then
+							internal_docking_manager.zones.add_zone (lt_zone)
+						end
+						if not internal_docking_manager.contents.has (l_place_holder_content) then
+							internal_docking_manager.contents.extend (l_place_holder_content)
+						end
+						--FIXIT: Maybe SD_PLACE_HOLDER_ZONE's cotent's state is not correct, is it important?
+					end
 				end
 
-				-- We have to call `remove_empty_split_area' first to make sure no void widget when update_middle_container.
 				internal_docking_manager.property.set_is_opening_config (False)
+				-- We have to call `remove_empty_split_area' first to make sure no void widget when update_middle_container.
 				internal_docking_manager.query.inner_container_main.remove_empty_split_area
-
 				internal_docking_manager.query.inner_container_main.update_middle_container
 
 				internal_docking_manager.command.resize (True)
@@ -307,12 +330,8 @@ feature {NONE} -- Implementation
 					l_called := True
 
 					-- First we clear all areas.
-					clean_up_mini_tool_bar
+					cleaner.clean_up_for_open_all_config (top_container /= Void)
 
-					clear_up_containers
-
-					clear_up_floating_zones
-					clean_up_tool_bars
 					set_all_visible
 
 					if l_config_data.is_docking_locked then
@@ -357,15 +376,7 @@ feature {NONE} -- Implementation
 					internal_docking_manager.command.unlock_update
 				end
 				l_retried := True
-				clean_up_mini_tool_bar
-				clean_up_tool_bars
-				clear_up_containers
-				internal_docking_manager.unlock
-				internal_docking_manager.tool_bar_manager.unlock
-				if not internal_docking_manager.has_content (internal_docking_manager.zones.place_holder_content) then
-					internal_docking_manager.contents.extend (internal_docking_manager.zones.place_holder_content)
-				end
-				internal_docking_manager.zones.place_holder_content.set_top ({SD_ENUMERATION}.top)
+				cleaner.reset_all_to_default (top_container /= Void)
 				retry
 			end
 		end
@@ -492,218 +503,6 @@ feature {NONE} -- Implementation
 					open_inner_container_data_split_position (l_data_item, l_split)
 				end
 				l_data.forth
-			end
-		end
-
-	clear_up_floating_zones
-			-- Clear up all floating zones
-		local
-			l_floating_zones: ARRAYED_LIST [SD_FLOATING_ZONE]
-		do
-			l_floating_zones := internal_docking_manager.query.floating_zones
-			from
-				l_floating_zones.start
-			until
-				l_floating_zones.after
-			loop
-				if {lt_widget: EV_WIDGET} l_floating_zones.item then
-					lt_widget.destroy
-				else
-					check not_possible: False end
-				end
-
-				internal_docking_manager.inner_containers.start
-				internal_docking_manager.inner_containers.prune (l_floating_zones.item.inner_container)
-				l_floating_zones.forth
-			end
-		end
-
-	clean_up_tool_bar_containers
-			-- Wipe out all tool bar containers.
-		local
-			l_cont: SD_TOOL_BAR_CONTAINER
-		do
-			l_cont := internal_docking_manager.tool_bar_container
-			l_cont.top.wipe_out
-			l_cont.bottom.wipe_out
-			l_cont.left.wipe_out
-			l_cont.right.wipe_out
-		end
-
-	clear_up_containers
-			-- Wipe out all containers in docking library.
-		local
-			l_all_main_containers: ARRAYED_LIST [SD_MULTI_DOCK_AREA]
-			l_all_contents: ARRAYED_LIST [SD_CONTENT]
-			l_content: SD_CONTENT
-			l_parent: EV_CONTAINER
-			l_floating_tool_bars: ARRAYED_LIST [SD_FLOATING_TOOL_BAR_ZONE]
-			l_zones: ARRAYED_LIST [SD_ZONE]
-			l_query: SD_DOCKING_MANAGER_QUERY
-		do
-			internal_docking_manager.command.remove_auto_hide_zones (False)
-			l_all_main_containers := internal_docking_manager.inner_containers
-			from
-				l_all_main_containers.start
-			until
-				l_all_main_containers.after
-			loop
-				l_all_main_containers.item.wipe_out
-
-				if l_all_main_containers.index = 1 then
-					l_all_main_containers.item.wipe_out
-				end
-				l_all_main_containers.forth
-			end
-
-			-- Remove auto hide panel widgets.
-			l_query := internal_docking_manager.query
-			l_query.auto_hide_panel ({SD_ENUMERATION}.top).tab_stubs.wipe_out
-			l_query.auto_hide_panel ({SD_ENUMERATION}.top).set_minimum_height (0)
-
-			l_query.auto_hide_panel ({SD_ENUMERATION}.bottom).tab_stubs.wipe_out
-			l_query.auto_hide_panel ({SD_ENUMERATION}.bottom).set_minimum_height (0)
-
-			l_query.auto_hide_panel ({SD_ENUMERATION}.left).tab_stubs.wipe_out
-			l_query.auto_hide_panel ({SD_ENUMERATION}.left).set_minimum_width (0)
-
-			l_query.auto_hide_panel ({SD_ENUMERATION}.right).tab_stubs.wipe_out
-			l_query.auto_hide_panel ({SD_ENUMERATION}.right).set_minimum_width (0)
-
-			l_zones := internal_docking_manager.zones.zones
-			if top_container /= Void then
-				-- We are only restore tools data now.
-                from
-                    l_zones.start
-                until
-                    l_zones.after
-                loop
-                    if l_zones.item.content.type /= {SD_ENUMERATION}.editor then
-                    	l_zones.remove
-					else
-                    	l_zones.forth
-                    end
-                end
-			else
-				l_zones.wipe_out
-			end
-
-			-- Remove tool bar containers
-			clean_up_tool_bar_containers
-
-			-- Remove floating tool bar containers.
-			l_floating_tool_bars := internal_docking_manager.tool_bar_manager.floating_tool_bars
-			from
-				l_floating_tool_bars.start
-			until
-				l_floating_tool_bars.after
-			loop
-				l_floating_tool_bars.item.destroy
-				l_floating_tool_bars.forth
-			end
-			l_floating_tool_bars.wipe_out
-
-			l_all_contents := internal_docking_manager.contents
-			from
-				l_all_contents.start
-			until
-				l_all_contents.after
-			loop
-				l_content := l_all_contents.item
-				l_parent := l_content.user_widget.parent
-				if top_container /= Void then
-					-- We only restore tools config now.
-					if l_content.type /= {SD_ENUMERATION}.editor then
-						if l_parent /= Void then
-							l_parent.prune_all (l_content.user_widget)
-						end
-					end
-				else
-					if l_parent /= Void then
-						l_parent.prune_all (l_content.user_widget)
-					end
-				end
-
-				l_all_contents.forth
-			end
-		ensure
-			cleared: not internal_docking_manager.query.inner_container_main.full
-		end
-
-	clean_up_tool_bars
-			-- Clean up all tool bars.
-		local
-			l_contents: ARRAYED_LIST [SD_TOOL_BAR_CONTENT]
-		do
-			from
-				l_contents := internal_docking_manager.tool_bar_manager.contents
-				l_contents.start
-			until
-				l_contents.after
-			loop
-				l_contents.item.clear
-				l_contents.item.set_visible (False)
-				l_contents.forth
-			end
-		end
-
-	clean_up_mini_tool_bar
-			-- Clean up all mini tool bars' parents.
-		local
-			l_contents: ARRAYED_LIST [SD_CONTENT]
-			l_mini_tool_bar: EV_WIDGET
-			l_parent: EV_CONTAINER
-		do
-			l_contents := internal_docking_manager.contents
-			from
-				l_contents.start
-			until
-				l_contents.after
-			loop
-				l_mini_tool_bar := l_contents.item.mini_toolbar
-				if l_mini_tool_bar /= Void then
-					l_parent := l_mini_tool_bar.parent
-					if l_parent /= Void then
-						l_parent.prune (l_mini_tool_bar)
-						l_parent.destroy
-					end
-				end
-				l_contents.forth
-			end
-		end
-
-	clean_up_all_editors
-			-- Clean up all editors
-			-- Remove all parents of all editors.
-		local
-			l_contents: ARRAYED_LIST [SD_CONTENT]
-			l_content: SD_CONTENT
-			l_parent: EV_CONTAINER
-			l_place_holder_widget: EV_WIDGET
-		do
-			l_contents := internal_docking_manager.contents
-			from
-				l_contents.start
-			until
-				l_contents.after
-			loop
-				l_content := l_contents.item
-				if l_content.type = {SD_ENUMERATION}.editor then
-					l_parent := l_content.user_widget.parent
-					if l_parent /= Void	then
-						l_parent.prune (l_content.user_widget)
-					end
-					-- Maybe uesr_widget is hidden because minimize.
-					l_content.user_widget.show
-				end
-				l_contents.forth
-			end
-			l_place_holder_widget := internal_docking_manager.zones.place_holder_content.user_widget
-			if l_place_holder_widget /= Void then
-				l_parent := l_place_holder_widget.parent
-				if l_parent /= Void then
-					l_parent.prune (l_place_holder_widget)
-				end
 			end
 		end
 
@@ -1227,6 +1026,33 @@ feature {NONE} -- Implementation
 
 	found_place_holder_already: BOOLEAN
 			-- When executing `open_tools_config', does place holder content already restored?
+
+	cleaner: SD_WIDGET_CLEANER
+			-- Widget cleaner
+
+	has_editor_or_place_holder (a_top_container: EV_CONTAINER): BOOLEAN
+			-- If `a_top_container' has any editor related widget?
+		require
+			a_top_container_not_void: a_top_container /= Void
+		local
+			l_editors: ARRAYED_LIST [SD_CONTENT]
+		do
+			from
+				l_editors := internal_docking_manager.query.contents_editors
+				l_editors.start
+			until
+				l_editors.after or Result
+			loop
+				if a_top_container.has_recursive (l_editors.item.user_widget) then
+					Result := True
+				end
+				l_editors.forth
+			end
+
+			if not Result then
+				Result := a_top_container.has_recursive (internal_docking_manager.zones.place_holder_content.user_widget)
+			end
+		end
 
 feature {NONE} -- Internals.
 

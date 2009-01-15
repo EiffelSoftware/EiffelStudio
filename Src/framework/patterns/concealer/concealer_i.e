@@ -1,35 +1,30 @@
 note
 	description: "[
-		A base interface for all services.
-		
-		All services will be "sited" with the service provider ({SERVICE_PROVIDER_I}) the service was
-		registered on, or some other provider if the provider is not also a container
-		({SERVICE_CONTAINER_I}).
+		A concealer pattern to abstract access to an object resource.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
-	date: "$date$";
-	revision: "$revision$"
+	date: "$Date$";
+	revision: "$Revision $"
 
 deferred class
-	SERVICE_I
+	CONCEALER_I [G -> ANY]
 
-inherit
-	SITE [SERVICE_PROVIDER_I]
-		export
-			{SERVICE_PROVIDER_I} all
+feature -- Access
+
+	object: ?G
+			-- Concealed object.
+		require
+			is_interface_usable: {l_usable: USABLE_I} Current implies l_usable.is_interface_usable
+		deferred
+		ensure
+			result_consistent: Result ~ object
 		end
 
-	USABLE_I
-
-	DISPOSABLE_I
-
-	INTERFACE_I
-
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options: "http://www.eiffel.com/licensing"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			

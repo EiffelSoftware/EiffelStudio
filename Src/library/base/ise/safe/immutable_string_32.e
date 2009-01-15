@@ -86,7 +86,6 @@ feature {NONE} -- Initialization
 			area := s.area
 			if same_type (s) then
 				area_lower := s.area_lower
-				count := s.count
 			else
 				create a.make (s.count + 1)
 				from

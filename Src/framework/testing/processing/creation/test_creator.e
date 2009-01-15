@@ -166,7 +166,7 @@ feature {NONE} -- Basic operations
 								l_file.close
 							end
 							if l_file.exists and then l_file.count > 0 then
-								add_class (l_filename)
+								add_class (l_filename, l_class_name)
 							end
 						else
 							test_suite.propagate_error (e_file_not_creatable, [l_location, l_filename], Current)
@@ -195,13 +195,13 @@ feature {NONE} -- Basic operations
 		deferred
 		end
 
-	add_class (a_filename: !STRING)
+	add_class (a_filename: !STRING; a_class_name: !STRING)
 			-- Add new test class to eiffel project and update test suite.
 		require
 			running: is_running
 			configuration_valid: configuration.is_new_class
 		do
-			test_suite.eiffel_project_helper.add_class (configuration.cluster, configuration.path, a_filename, configuration.new_class_name)
+			test_suite.eiffel_project_helper.add_class (configuration.cluster, configuration.path, a_filename, a_class_name)
 			if test_suite.eiffel_project_helper.is_class_added then
 				synchronize_class (test_suite.eiffel_project_helper.last_added_class)
 			end
@@ -275,7 +275,7 @@ feature {NONE} -- Constants
 		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

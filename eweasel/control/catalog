@@ -98,6 +98,7 @@ test	incorrect_once_trace_at_first_call	except030 tcf pass exception
 test	every_trace_has_root			except031 tcf pass exception
 test	trace_has_no_pass			except032 tcf pass exception
 test	precondition-violation-infinite-loop	except033 tcf fail exception skip
+test	last-exception-not-cleared		except034 tcf fail exception
 
 -- Non Conforming Inheritance
 test basic-non-conforming-inheritance			noncon001 tcf pass non-conforming

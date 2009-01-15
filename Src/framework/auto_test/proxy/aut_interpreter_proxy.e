@@ -769,28 +769,18 @@ feature -- Socket IPC
 		do
 			if not l_retried then
 				l_socket := socket
-				from
-				until
-					l_socket.readable or l_socket.is_closed
-				loop
-					sleep (10000)
-				end
-
-				if l_socket.is_readable then
-					l_socket.read_natural_32
-					l_data ?= l_socket.retrieved
-					process.set_timeout (0)
-					if l_data /= Void then
-						create last_raw_response.make (l_data.output, l_data.error, l_data.is_interpreter_error)
-
+				l_socket.read_natural_32
+				l_data ?= l_socket.retrieved
+				process.set_timeout (0)
+				if l_data /= Void then
+					create last_raw_response.make (l_data.output, l_data.error, l_data.is_interpreter_error)
 							-- Fixme: This is a walk around for the issue that we cannot launch a process
-							-- only with standard input redirected. Remove the following line when fixed,
-							-- because everything that the interpreter output should come from `l_data.output'.
-							-- Jason 2008.10.22
-						replace_output_from_socket_by_pipe_data
-					else
-						last_raw_response := Void
-					end
+						-- only with standard input redirected. Remove the following line when fixed,
+						-- because everything that the interpreter output should come from `l_data.output'.
+						-- Jason 2008.10.22
+					replace_output_from_socket_by_pipe_data
+				else
+					last_raw_response := Void
 				end
 			end
 		rescue
@@ -925,4 +915,35 @@ invariant
 	raw_response_analyzer_attached: raw_response_analyzer /= Void
 
 
+note
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			 Eiffel Software
+			 5949 Hollister Ave., Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
 end

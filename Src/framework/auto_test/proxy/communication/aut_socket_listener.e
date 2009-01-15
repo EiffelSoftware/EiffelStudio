@@ -166,6 +166,7 @@ feature {NONE} -- Implementation
 				mutex.lock
 				if is_listening then
 					connection := a_socket.accepted
+					connection.set_blocking
 					condition.broadcast
 				end
 				mutex.unlock
@@ -185,7 +186,7 @@ invariant
 	current_port_not_negative: current_port >= 0
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

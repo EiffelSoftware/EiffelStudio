@@ -44,13 +44,15 @@ feature -- Access
 			-- Will raise an exception (code `Retrieve_exception')
 			-- if content is not a stored Eiffel structure.
 		local
-			was_blocking: BOOLEAN
+			was_not_blocking: BOOLEAN
 		do
 			(create {MISMATCH_CORRECTOR}).mismatch_information.do_nothing
-			was_blocking := is_blocking
-			set_blocking
+			if not is_blocking then
+				was_not_blocking := True
+				set_blocking
+			end
 			Result := eif_net_retrieved (descriptor)
-			if not was_blocking then
+			if was_not_blocking then
 				set_non_blocking
 			end
 		end
@@ -440,7 +442,7 @@ feature -- Output
 
 	readable: BOOLEAN
 		do
-			Result := exists and then is_open_write
+			Result := exists and then is_open_read
 		end
 
 	extendible: BOOLEAN

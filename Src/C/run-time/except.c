@@ -1735,7 +1735,7 @@ rt_private jmp_buf *backtrack(void)
 		}
 
 #ifdef DEBUG
-		dump_vector("backtrack: top of eif_trace", trace);
+		dump_vector("backtrack: top of eif_trace", top);
 #endif
 
 	}
@@ -3831,7 +3831,7 @@ rt_private void make_exception (long except_code, int signal_code, int eno, char
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 
-#ifdef WORKBENCH
+#ifndef DEBUG
 	DISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
 #endif
 	
@@ -3958,7 +3958,7 @@ rt_private void make_exception (long except_code, int signal_code, int eno, char
 		RT_GC_WEAN(_trace);
 	}
 
-#ifdef WORKBENCH
+#ifndef DEBUG
 	UNDISCARD_BREAKPOINTS; /* the debugger can now stop again */
 #endif
 
@@ -3983,11 +3983,11 @@ rt_public void set_last_exception (EIF_REFERENCE ex)
 		_ex = ex;
 #endif
 
-#ifdef WORKBENCH
+#ifndef DEBUG
 		DISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
 #endif
 		(egc_set_last_exception)(except_mnger, _ex);
-#ifdef WORKBENCH
+#ifndef DEBUG
 		UNDISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
 #endif
 		nstcall = is_nested;	/* Restore `nstcall' */
@@ -4007,12 +4007,12 @@ rt_public EIF_REFERENCE last_exception (void)
 #endif
 
 	if (except_mnger) { /* In case get called in `dispose' */
-#ifdef WORKBENCH
+#ifndef DEBUG
 		DISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
 #endif
 		_re = (egc_last_exception)(except_mnger);
 
-#ifdef WORKBENCH
+#ifndef DEBUG
 		UNDISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
 #endif
 	nstcall = is_nested;	/* Restore `nstcall' */
@@ -4075,11 +4075,11 @@ rt_private int is_ex_ignored (int ex_code)
 	code = (EIF_INTEGER)ex_code;
 #endif
 
-#ifdef WORKBENCH
+#ifndef DEBUG
 	DISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
 #endif
 	result = (egc_is_code_ignored)(except_mnger, code);
-#ifdef WORKBENCH
+#ifndef DEBUG
 	UNDISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
 #endif
 
@@ -4120,13 +4120,13 @@ rt_public void init_emnger (void)
 	if (!ex_string.area) {
 		failure(); /* No enough memory to init the application */
 	}
-#ifdef WORKBENCH
+#ifndef DEBUG
 	DISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
 #endif
 	egc_prof_enabled = 0; /* Disable profiling to be save. */
 	(egc_init_exception_manager)(except_mnger);
 	egc_prof_enabled = pf_status; /* Resume profiling status. */
-#ifdef WORKBENCH
+#ifndef DEBUG
 	UNDISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
 #endif
 }

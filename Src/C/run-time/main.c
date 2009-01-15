@@ -758,7 +758,7 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 
 	ufill();							/* Get urgent memory chunks */
 
-#if defined (DEBUG) && ! defined (VXWORKS)
+#if defined (DEBUG) && ! defined (EIF_OS_VXWORKS) && ! defined (EIF_WINDOWS)
 	/* The following install signal handlers for signals USR1 and USR2. Both
 	 * raise an immediate scanning of memory and dumping of the free list usage
 	 * and other statistics. The difference is that USR1 also performrs a full

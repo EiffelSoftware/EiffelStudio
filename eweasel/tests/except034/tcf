@@ -1,0 +1,25 @@
+
+test_name 	 last-exception-not-cleared
+test_description After an exception is rescued and successfully retried and the routine returns normally, `last_exception' is non-Void in the caller if system is melted.  Frozen and finalized code work correctly
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+
+compile_melted
+compile_result 	 ok
+
+execute_work	NONE exec_output1
+execute_result ok
+compare		exec_output1 output
+
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	NONE exec_output2
+execute_result 	ok
+compare		exec_output2 output
+
+test_end

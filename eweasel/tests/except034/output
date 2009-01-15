@@ -1,0 +1,19 @@
+Last exception is Void = True
+Precondition Violation (Main routine)
+assertion_violation: False
+is_signal: False
+is_system_exception: False
+is_developer_exception: False
+developer_exception_name: 
+exception: 0
+tag_name: 
+recipient_name: 
+class_name: 
+meaning: 
+original_exception: 0
+original_tag_name: 
+original_recipient_name: 
+original_class_name: 
+original_meaning: 
+Last exception is Void = True
+Execution completed

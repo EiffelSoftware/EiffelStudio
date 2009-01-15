@@ -4,7 +4,7 @@
 #include "eif_config.h"
 
 #ifdef EIF_WINDOWS
-
+#define FD_SETSIZE 256
 #include <Winsock2.h>
 #include <ws2tcpip.h>
 #include "eif_eiffel.h"

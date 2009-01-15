@@ -48,7 +48,7 @@ feature {NONE} -- Implementation
 	show_exception (where, s: STRING)
 		do
 			print (s); print (" (" + where + ")%N")
-			print ("assertion_violation: " + is_developer_exception.out + "%N")
+			print ("assertion_violation: " + assertion_violation.out + "%N")
 			print ("is_signal: " + is_signal.out + "%N")
 			print ("is_system_exception: " + is_system_exception.out + "%N")
 			print ("is_developer_exception: " + is_developer_exception.out + "%N")

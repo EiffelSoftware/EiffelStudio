@@ -14,6 +14,8 @@ inherit
 
 	MEMORY
 
+	THREAD
+
 feature {NONE} -- Query
 
 	current_usage (a_type: INTEGER): NATURAL_64
@@ -32,7 +34,23 @@ feature {NONE} -- Query
 
 feature -- Test routines
 
-	test_memory_leak_in_eif_thr_wait
+	test_002_nested_thread_exit_failure
+			-- A system creating a few threads crashes when threads exit, it does not crash if the parent
+			-- thread always wait for the child thread to terminate (see commented line about `join' in
+			-- {NESTED_THREAD}).
+			--
+			-- Note: copy of eweasel test thread003
+		note
+			testing: "covers/{THREAD}.exit"
+		local
+			l_test: NESTED_THREAD
+		do
+			create l_test.make
+			create l_test.make
+			create l_test.make
+		end
+
+	test_003_memory_leak_in_eif_thr_wait
 			-- Show memory leak in `eif_thr_wait' calling RT_GC_PROTECT(thread_object) without an RT_GC_WEAN
 			-- if `eif_children_mutex' is NULL.
 			--
@@ -61,13 +79,13 @@ feature -- Test routines
 				l_mdiff := l_m2 - l_m1
 				if l_mdiff >= 100_000 then
 					print ("Memory leak - used memory increased by " + l_mdiff.out + " bytes after " + i.out + " iterations%N")
-					assert ("memory_leak", True)
+					assert ("memory_leak", False)
 				end
 				i := i + 1
 			end
 		end
 
-	test_creating_string_runtime_panic
+	test_004_creating_string_runtime_panic
 			-- Show crashes in the runtime when creating strings.
 			--
 			-- Note: copy of eweasel test thread004
@@ -92,7 +110,7 @@ feature -- Test routines
 			join_all
 		end
 
-	test_mem_info_update_crash_after_threads
+	test_005_mem_info_update_crash_after_threads
 			-- Show crashes revealed calling {MEM_INFO}.update or `full_collect' after launching empty threads.
 			--
 			-- Note: copy of eweasel test thread005
@@ -120,7 +138,7 @@ feature -- Test routines
 			end
 		end
 
-	test_panic_when_too_many_allocation
+	test_006_panic_when_too_many_allocation
 			-- A class creates several threads. Each thread repeatedly creates a string whose length is
 			-- determined by a random number generator. System execution ends with an exception, but should
 			-- not.
@@ -206,8 +224,41 @@ feature {NONE} -- Constants
 
 	thread_count: NATURAL = 10
 			-- Number of threads `launch_threads' will launch
+
+feature {NONE} -- Implementation of test_002
+
+	test_002
+		do
+
+		end
+
+	make
+		do
+			counter := 0
+
+		end
+
+	exit_application (code: INTEGER)
+		external
+			"C use %"eif_eiffel.h%""
+		alias
+			"exit"
+		end
+
+	make_typed (v: like counter)
+		do
+
+		end
+
+	counter: INTEGER
+
+	execute
+		do
+
+		end
+
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software

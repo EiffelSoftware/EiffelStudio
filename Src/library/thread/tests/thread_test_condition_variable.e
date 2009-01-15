@@ -14,7 +14,7 @@ inherit
 
 feature -- Test routines
 
-	test_cond_timedwait_failure
+	test_001_cond_timedwait_failure
 			-- A system performing repeated calls to the C underlying routine `pthread_cond_timedwait' may
 			-- fail because the timeout is improperly specified.
 
@@ -26,7 +26,8 @@ feature -- Test routines
 			l_cond: CONDITION_VARIABLE
 			l_wt: WORKER_THREAD
 		do
-			create l_mutex
+			create l_mutex.make
+			create l_cond.make
 
 			create l_wt.make (
 				agent (a_mutex: MUTEX; a_cond: CONDITION_VARIABLE)
@@ -51,7 +52,7 @@ feature -- Test routines
 		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software

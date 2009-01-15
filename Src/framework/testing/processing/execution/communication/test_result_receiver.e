@@ -90,6 +90,9 @@ feature {NONE} -- Implementation
 				a_socket.accept
 				l_connection := a_socket.accepted
 				if l_connection /= Void then
+						-- We have to make sure that the socket is blocking otherwise
+						-- for unknown reason, we get some memory corruption. See bug#15279.
+					l_connection.set_blocking
 					receive_results (l_connection, a_status)
 				end
 			end
@@ -118,7 +121,7 @@ feature {NONE} -- Implementation
 					if l_next > 0 then
 						l_flag := evaluator_status (a_socket)
 						if l_flag = l_next then
-							if {l_outcome: !EQA_TEST_OUTCOME} a_socket.retrieved then
+							if {l_outcome: EQA_TEST_OUTCOME} a_socket.retrieved then
 								a_status.put_outcome (l_outcome)
 								l_stop := False
 							end
@@ -145,16 +148,8 @@ feature {NONE} -- Implementation
 			l_rescued: BOOLEAN
 		do
 			if not l_rescued then
-				from
-				until
-					a_socket.readable or a_socket.is_closed
-				loop
-					sleep (100000000)
-				end
-				if a_socket.readable then
-					a_socket.read_natural_32
-					Result := a_socket.last_natural_32
-				end
+				a_socket.read_natural_32
+				Result := a_socket.last_natural_32
 			end
 		rescue
 			l_rescued := True
@@ -162,7 +157,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

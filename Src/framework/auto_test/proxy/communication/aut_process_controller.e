@@ -164,7 +164,10 @@ feature -- Basic operations
 			not_launched: not is_launched
 		do
 			is_launched := True
+
 			process.enable_launch_in_new_process_group
+			process.set_hidden (True)
+			process.set_separate_console (False)
 
 				-- Fixme: We should only redirect input and left output and error not redirected.
 				-- But maybe due to a bug in process library, if we do this, the launched process
@@ -174,9 +177,9 @@ feature -- Basic operations
 			process.redirect_input_to_stream
 			process.redirect_error_to_same_as_output
 			process.redirect_output_to_agent (a_output_handler)
-			process.set_hidden (True)
-			process.set_separate_console (False)
+
 			process.launch
+			
 			launch_thread
 		ensure
 			launched: is_launched
@@ -234,7 +237,7 @@ invariant
 	timeout_not_negative: timeout >= 0
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

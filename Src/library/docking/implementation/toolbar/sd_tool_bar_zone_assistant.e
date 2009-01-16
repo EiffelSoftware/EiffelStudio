@@ -262,15 +262,17 @@ feature -- Command
 				-- Insert current zone to exsiting row.
 			end
 			check not_void: l_row /= Void end
-			if zone.row /= Void then
-				if {lt_widget: EV_WIDGET} zone.tool_bar then
+
+			if {lt_widget: EV_WIDGET} zone.tool_bar then
+				if zone.row /= Void then
 					lt_widget.parent.prune (lt_widget)
-					l_row.extend (zone)
-					l_row.set_item_position_relative (lt_widget, last_state.position)
-					zone.docking_manager.command.resize (True)
-				else
-					check not_possible: False end
 				end
+			
+				l_row.extend (zone)
+				l_row.set_item_position_relative (lt_widget, last_state.position)
+				zone.docking_manager.command.resize (True)
+			else
+				check not_possible: False end
 			end
 		end
 

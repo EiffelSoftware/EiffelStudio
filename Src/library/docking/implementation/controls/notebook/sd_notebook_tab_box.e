@@ -500,7 +500,7 @@ feature{NONE} -- Implementation
 		end
 
 	tab_at (a_x: INTEGER): SD_NOTEBOOK_TAB
-			--  Tab at `a_x' which is relative position
+			-- Tab at `a_x' which is relative position
 		require
 			valid: a_x >= 0 and a_x <= width
 		local
@@ -508,7 +508,7 @@ feature{NONE} -- Implementation
 			l_item: SD_NOTEBOOK_TAB
 		do
 			from
-				l_snapshot := internal_tabs
+				l_snapshot := internal_tabs.twin
 				l_snapshot.start
 			until
 				l_snapshot.after or Result /= Void

@@ -784,6 +784,7 @@ test	attempt-on-expanded-then-reference	incr306	tcf fail incrementality
 test	formal-generic-constraint-rename-crash	incr307	tcf fail incrementality
 test	generic-attach-mark-change-bogus-vevi	incr308	tcf fail incrementality
 test	real-feature-id-crash			incr309	tcf fail incrementality
+test	change-class-to-deferred-vtcg-sneak	incr310	tcf fail incrementality
 
 
 -- Melting

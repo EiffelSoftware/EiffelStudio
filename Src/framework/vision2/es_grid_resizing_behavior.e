@@ -82,7 +82,10 @@ feature {NONE} -- Actions
 	leave_resize_agent:   PROCEDURE [ANY, TUPLE]
 
 	set_grid_separator_resizer (a_enabling: BOOLEAN)
+		local
+			g: like grid
 		do
+			g := grid
 			if a_enabling then
 				if release_resize_agent = Void then
 					release_resize_agent := agent release_resize
@@ -92,63 +95,69 @@ feature {NONE} -- Actions
 				end
 				if motion_resize_agent = Void then
 					motion_resize_agent := agent motion_resize
-					grid.pointer_motion_actions.extend (motion_resize_agent)
+					g.pointer_motion_actions.extend (motion_resize_agent)
 				end
 				if press_resize_agent = Void then
 					press_resize_agent := agent press_resize
-					grid.pointer_button_press_actions.extend (press_resize_agent)
+					g.pointer_button_press_actions.extend (press_resize_agent)
 				end
 			else
 				if motion_resize_agent /= Void then
-					grid.pointer_motion_actions.prune_all (motion_resize_agent)
+					g.pointer_motion_actions.prune_all (motion_resize_agent)
 					motion_resize_agent := Void
 				end
 				if press_resize_agent /= Void then
-					grid.pointer_button_press_actions.prune_all (press_resize_agent)
+					g.pointer_button_press_actions.prune_all (press_resize_agent)
 					press_resize_agent := Void
 				end
 				if release_resize_agent /= Void then
-					grid.pointer_button_release_actions.prune_all (release_resize_agent)
+					g.pointer_button_release_actions.prune_all (release_resize_agent)
 					release_resize_agent := Void
 				end
 				if leave_resize_agent /= Void then
-					grid.pointer_leave_actions.prune_all (leave_resize_agent)
+					g.pointer_leave_actions.prune_all (leave_resize_agent)
 					leave_resize_agent := Void
 				end
 			end
 		end
 
-	screen: EV_SCREEN
-			-- Once access to EV_SCREEN object.
-		once
-			create Result
-		end
-
 	motion_resize (x_pos, y_pos: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; x_screen, y_screen: INTEGER)
 			-- Check if we reach a border and should enable column resizing.
 		local
+			g: like grid
 			start_x: INTEGER
 			column_index: INTEGER
 			l_near_border: BOOLEAN
 			l_new_width, l_new_neighbor, l_x_pos: INTEGER
 			l_resize, l_neighbor: EV_GRID_COLUMN
 			over_grid_content: BOOLEAN
-			l_draw: EV_DRAWING_AREA
 			l_visible_height: INTEGER
+			h,vscroll,hscroll: EV_WIDGET
 		do
-			if resizing_column_enabled and then grid.activated_item = Void then
-				l_x_pos := x_pos + grid.virtual_x_position
-				l_draw ?= Screen.widget_at_mouse_pointer
-				over_grid_content := l_draw /= Void
+			g := grid
+			if resizing_column_enabled and then g.activated_item = Void then
+				l_x_pos := x_pos + g.virtual_x_position
+				vscroll := g.vertical_scroll_bar
+				hscroll := g.horizontal_scroll_bar
+				over_grid_content := True
+				if g.is_header_displayed then
+					h := g.header
+					if h /= Void then
+						over_grid_content := (y_screen > (h.screen_y + h.height))
+					end
+				end
+				over_grid_content := over_grid_content and
+						(vscroll = Void or else x_screen < vscroll.screen_x) and
+						(hscroll = Void or else y_screen < hscroll.screen_y)
 				if over_grid_content then
 					if not is_resize_mode then
-						l_visible_height := grid.viewable_height
-						if grid.is_header_displayed then
+						l_visible_height := g.viewable_height
+						if g.is_header_displayed then
 							 l_visible_height := l_visible_height + grid.header.height
 						end
 
-						if l_x_pos >= 0 and l_x_pos < grid.virtual_width then
-							l_resize := grid.column_at_virtual_position (l_x_pos)
+						if l_x_pos >= 0 and l_x_pos < g.virtual_width then
+							l_resize := g.column_at_virtual_position (l_x_pos)
 						end
 						if l_resize /= Void and then (y_pos < l_visible_height) then
 							column_index := l_resize.index
@@ -167,15 +176,15 @@ feature {NONE} -- Actions
 								or disabled_resize_columns.has (column_index + 1)
 								) then
 							is_near_border := True
-							grid.set_pointer_style (Stock_cursors.sizewe_cursor)
+							g.set_pointer_style (Stock_cursors.sizewe_cursor)
 							resize_index := column_index
 						elseif is_near_border and not l_near_border then
 							is_near_border := False
-							grid.set_pointer_style (Stock_cursors.standard_cursor)
+							g.set_pointer_style (Stock_cursors.standard_cursor)
 						end
 					else
-						l_resize := grid.column (resize_index)
-						l_neighbor := grid.column (resize_index + 1)
+						l_resize := g.column (resize_index)
+						l_neighbor := g.column (resize_index + 1)
 						l_new_width := l_x_pos - l_resize.virtual_x_position
 						l_new_neighbor := l_neighbor.virtual_x_position + l_neighbor.width - l_x_pos
 						if l_new_width > edge_size and l_new_neighbor > edge_size then
@@ -216,51 +225,59 @@ feature {NONE} -- Actions
 	start_resizing (x_pos, y_pos: INTEGER_32)
 		local
 			vx,vy: INTEGER_32
-			l_header: EV_HEADER_ITEM
+			hi: EV_HEADER_ITEM
+			i: like clicked_item
+			g: like grid
 		do
 			is_resize_mode := True
+			g := grid
 
-			vx := grid.virtual_x_position + x_pos
-			vy := grid.virtual_y_position + y_pos
+			vx := g.virtual_x_position + x_pos
+			vy := g.virtual_y_position + y_pos
 			if
-				vx >= 0 and vx <= grid.virtual_width
-				and vy >= 0 and vy <= grid.virtual_height
+				vx >= 0 and vx <= g.virtual_width
+				and vy >= 0 and vy <= g.virtual_height
 			then
-				clicked_item := grid.item_at_virtual_position (vx, vy)
-				if clicked_item /= Void then
-					clicked_item.pointer_button_press_actions.block
+				i := g.item_at_virtual_position (vx, vy)
+				clicked_item := i
+				if i /= Void then
+					i.pointer_button_press_actions.block
 				end
 			end
 
-			grid.pointer_button_press_item_actions.block
-			grid.pointer_button_press_actions.block
-			grid.pointer_button_release_actions.extend (release_resize_agent)
-			grid.pointer_leave_actions.extend (leave_resize_agent)
+			g.pointer_button_press_item_actions.block
+			g.pointer_button_press_actions.block
+			g.pointer_button_release_actions.extend (release_resize_agent)
+			g.pointer_leave_actions.extend (leave_resize_agent)
 
-			if resize_index > 0 and resize_index < grid.header.count then
-				l_header := grid.header.i_th (resize_index)
+			if resize_index > 0 and resize_index < g.header.count then
+				hi := g.header.i_th (resize_index)
 			end
-			header_resize_start_actions.call ([l_header])
+			header_resize_start_actions.call ([hi])
 		end
 
 	end_resizing
 		local
-			l_header: EV_HEADER_ITEM
+			hi: EV_HEADER_ITEM
+			i: like clicked_item
+			g: like grid
 		do
-			grid.pointer_button_release_actions.prune_all (release_resize_agent)
-			grid.pointer_leave_actions.prune_all (leave_resize_agent)
-			if clicked_item /= Void then
-				clicked_item.pointer_button_press_actions.resume
+			grid := g
+			g.pointer_button_release_actions.prune_all (release_resize_agent)
+			g.pointer_leave_actions.prune_all (leave_resize_agent)
+			i := clicked_item
+			if i /= Void then
+				i.pointer_button_press_actions.resume
 				clicked_item := Void
 			end
-			grid.pointer_button_press_item_actions.resume
-			grid.pointer_button_press_actions.resume
+			g.pointer_button_press_item_actions.resume
+			g.pointer_button_press_actions.resume
 			is_resize_mode := False
 
-			if resize_index > 0 and resize_index < grid.header.count then
-				l_header := grid.header.i_th (resize_index)
+			if resize_index > 0 and resize_index < g.header.count then
+				hi := g.header.i_th (resize_index)
 			end
-			header_resize_end_actions.call ([l_header])
+			header_resize_end_actions.call ([hi])
 		end
 
 feature -- Status
@@ -287,7 +304,7 @@ invariant
 	header_resize_end_actions_attached: header_resize_end_actions /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -300,19 +317,19 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

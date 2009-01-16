@@ -1,6 +1,6 @@
 note
 	description: "[
-		Objects representing a {ES_TAGABLE_GRID} layout for eiffel tests.
+		Objects representing a {ES_TAGABLE_GRID} layout for Eiffel tests.
 		
 		See {ES_TAGABLE_GRID_LAYOUT} for more information.
 	]"
@@ -166,7 +166,7 @@ feature {NONE} -- Constants
 		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

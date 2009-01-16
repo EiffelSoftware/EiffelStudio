@@ -1,6 +1,6 @@
 note
 	description: "[
-		Objects that will scan an eiffel project in order to find classes containing tests.
+		Objects that will scan an Eiffel project in order to find classes containing tests.
 	]"
 	author: ""
 	date: "$Date$"
@@ -99,7 +99,7 @@ feature {NONE} -- Access
 			-- values: List of test routine names contained in that class
 
 	test_routine_map: !DS_HASH_TABLE [!TEST_I, !STRING]
-			-- Hash table mapping a test routine name to its associated eiffel test instance
+			-- Hash table mapping a test routine name to its associated Eiffel test instance
 			--
 			-- keys: Test routine names in the form CLASS_NAME.routine_name (to avoid clashes)
 			-- values: {TEST_I} instance corresponding to routine name
@@ -532,12 +532,12 @@ feature -- Element change
 feature {NONE} -- Element change
 
 	add_test_class (a_class: !EIFFEL_CLASS_I; a_class_as: !CLASS_AS)
-			-- Add eiffel class to eiffel test class map and analyze syntax to find tests defined in class.
+			-- Add Eiffel class to Eiffel test class map and analyze syntax to find tests defined in class.
 			--
-			--| If attached, `old_class_map' is searched for any previously created eiffel test class
+			--| If attached, `old_class_map' is searched for any previously created Eiffel test class
 			--| instance. If found it will be reused instead of creating a new instance.
 			--
-			-- `a_class': Class for which a eiffel test class should be added to `test_class_map'.
+			-- `a_class': Class for which a Eiffel test class should be added to `test_class_map'.
 			-- `a_class_as': Syntax representation of class
 		require
 			not_added: not is_test_class (a_class)
@@ -563,13 +563,13 @@ feature {NONE} -- Element change
 		end
 
 	synchronize_test_class (a_test_class: !TEST_CLASS; a_class_as: !CLASS_AS)
-			-- Add eiffel class to eiffel test class map.
+			-- Add Eiffel class to Eiffel test class map.
 			--
 			-- Note: `add_test_class' will add a {TEST_CLASS} instance to `test_class_map'. In
 			--       addition the class text is analysed to update `test_routine_map' with the test
 			--       routines defined in the class.
 			--
-			-- `a_class': Class for which a eiffel test class should be added to `test_class_map'.
+			-- `a_class': Class for which a Eiffel test class should be added to `test_class_map'.
 			-- `a_class_as': Syntax representation of class
 		require
 			a_test_class_valid: test_class_map.has_item (a_test_class)
@@ -1004,7 +1004,7 @@ invariant
 	cluster_stack_empty: cluster_stack.is_empty
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -234,7 +234,7 @@ feature {NONE} -- Basic operations
 	run_extracted_test (a_routine: !ROUTINE [ANY, TUPLE]; a_operands: !TUPLE)
 			-- Call routine with given operands.
 			--
-			-- `a_routine': Arbitrary eiffel routine.
+			-- `a_routine': Arbitrary Eiffel routine.
 			-- `a_operands': Tuple containing operands for `a_routine'.
 			--
 			-- Note: items in `a_operands' of the form #ID where ID is a valid index for `context', will be

@@ -176,7 +176,7 @@ feature -- Basic operations
 	capture_call_stack_element (a_cse: !EIFFEL_CALL_STACK_ELEMENT)
 			-- Capture objects referenced by call stack element.
 			--
-			-- `a_cse': Active eiffel call stack element.
+			-- `a_cse': Active Eiffel call stack element.
 		require
 			a_cse_valid: is_valid_call_stack_element (a_cse)
 			capturing_invocations: is_capturing_invocations
@@ -448,7 +448,7 @@ invariant
 	capturing_equals_object_queue_attached: is_capturing = (object_queue /= Void)
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

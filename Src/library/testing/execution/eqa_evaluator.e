@@ -117,6 +117,7 @@ feature {NONE} -- Status setting
 				if arguments.has_port_option then
 					create l_socket.make_client_by_port (arguments.port_option, "localhost")
 					l_socket.connect
+					l_socket.set_blocking
 					if not l_socket.is_open_write then
 						raise ("bad_socket")
 					end

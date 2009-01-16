@@ -13,12 +13,13 @@ class TRANSFER_MANAGER inherit
 		rename
 			item as transaction
 		undefine
-			copy, is_equal, force, is_inserted, search, append, fill
+			copy, is_equal, force, is_inserted, search, append, fill,
+			do_all, do_if, there_exists, for_all
 		end
 
 	ARRAYED_LIST [TRANSACTION]
 		rename
-			make as list_make, item as transaction, 
+			make as list_make, item as transaction,
 			go_i_th as select_transaction
 		export
 			{ANY} valid_index, valid_cursor_index
@@ -33,7 +34,7 @@ class TRANSFER_MANAGER inherit
 		undefine
 			copy, is_equal
 		end
-		
+
 create
 	make
 
@@ -86,7 +87,7 @@ feature -- Measurement
 
 	finished_transactions: INTEGER
 			-- Number of already finished transactions
-			
+
 feature -- Status report
 
 	error: BOOLEAN
@@ -96,7 +97,7 @@ feature -- Status report
 		do
 			Result := check_query (agent transaction.error)
 		end
-		
+
 	error_reason: STRING
 			-- Reason of most recent error
 		require
@@ -131,16 +132,16 @@ feature -- Status report
 				Result := check_query (agent transaction.succeeded)
 			end
 		end
-		
+
 	transfer_finished: BOOLEAN
 			-- Has a transfer taken place?
-	
+
 	insertable (t: TRANSACTION): BOOLEAN
 			-- Can transaction `t' be added?
 		do
 			Result := True
 		end
-	 
+
 feature -- Status setting
 
 	reset_status
@@ -171,10 +172,10 @@ feature -- Removal
 		ensure
 			one_less_item: count = count - 1
 			index_unchanged: (old index < old count) implies (index = old index)
-			index_adapted: (old index = old count) implies 
+			index_adapted: (old index = old count) implies
 					(index = old index - 1)
 		end
-			
+
 feature -- Basic operations
 
 	transfer
@@ -194,12 +195,12 @@ feature -- Basic operations
 		do
 			transaction.execute
 			if not transaction.error then
-				finished_transactions := 
+				finished_transactions :=
 					finished_transactions + transaction.count
 			end
 		ensure
 			counter_updated: not transaction.error implies
-				finished_transactions = old finished_transactions + 
+				finished_transactions = old finished_transactions +
 					transaction.count
 		end
 

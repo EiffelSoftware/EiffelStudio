@@ -75,6 +75,9 @@ doc:<file name="except.c" header="eif_except.c" version="$Id$" summary="Exceptio
 
 #include <stdlib.h>				/* For exit(), abort() */
 
+/* Comment out the line below to step through the Eiffel code in EiffelStudio */
+/* #define ENABLE_STEP_THROUGH */
+
 /* Failure yields a specific code. For a given execution vector 'v', the macro
  * xcode gives the associated exception code for the trace stack. Note that
  * for GC purposes, the value of EX_* constants starts at EX_START, not 0--RAM.
@@ -3831,7 +3834,7 @@ rt_private void make_exception (long except_code, int signal_code, int eno, char
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 
-#ifndef DEBUG
+#ifndef ENABLE_STEP_THROUGH
 	DISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
 #endif
 	
@@ -3958,7 +3961,7 @@ rt_private void make_exception (long except_code, int signal_code, int eno, char
 		RT_GC_WEAN(_trace);
 	}
 
-#ifndef DEBUG
+#ifndef ENABLE_STEP_THROUGH
 	UNDISCARD_BREAKPOINTS; /* the debugger can now stop again */
 #endif
 
@@ -3983,11 +3986,11 @@ rt_public void set_last_exception (EIF_REFERENCE ex)
 		_ex = ex;
 #endif
 
-#ifndef DEBUG
+#ifndef ENABLE_STEP_THROUGH
 		DISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
 #endif
 		(egc_set_last_exception)(except_mnger, _ex);
-#ifndef DEBUG
+#ifndef ENABLE_STEP_THROUGH
 		UNDISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
 #endif
 		nstcall = is_nested;	/* Restore `nstcall' */
@@ -4007,12 +4010,12 @@ rt_public EIF_REFERENCE last_exception (void)
 #endif
 
 	if (except_mnger) { /* In case get called in `dispose' */
-#ifndef DEBUG
+#ifndef ENABLE_STEP_THROUGH
 		DISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
 #endif
 		_re = (egc_last_exception)(except_mnger);
 
-#ifndef DEBUG
+#ifndef ENABLE_STEP_THROUGH
 		UNDISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
 #endif
 	nstcall = is_nested;	/* Restore `nstcall' */
@@ -4075,11 +4078,11 @@ rt_private int is_ex_ignored (int ex_code)
 	code = (EIF_INTEGER)ex_code;
 #endif
 
-#ifndef DEBUG
+#ifndef ENABLE_STEP_THROUGH
 	DISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
 #endif
 	result = (egc_is_code_ignored)(except_mnger, code);
-#ifndef DEBUG
+#ifndef ENABLE_STEP_THROUGH
 	UNDISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
 #endif
 
@@ -4120,13 +4123,13 @@ rt_public void init_emnger (void)
 	if (!ex_string.area) {
 		failure(); /* No enough memory to init the application */
 	}
-#ifndef DEBUG
+#ifndef ENABLE_STEP_THROUGH
 	DISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
 #endif
 	egc_prof_enabled = 0; /* Disable profiling to be save. */
 	(egc_init_exception_manager)(except_mnger);
 	egc_prof_enabled = pf_status; /* Resume profiling status. */
-#ifndef DEBUG
+#ifndef ENABLE_STEP_THROUGH
 	UNDISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
 #endif
 }

@@ -22,12 +22,13 @@ inherit
 		rename
 			item as transaction
 		undefine
-			copy, is_equal, force, is_inserted, search, append, fill
+			copy, is_equal, force, is_inserted, search, append, fill,
+			for_all, there_exists, do_all, do_if
 		end
-	
+
 	ARRAYED_LIST[TRANSACTION]
 		rename
-			make as list_make, go_i_th as select_transaction, 
+			make as list_make, go_i_th as select_transaction,
 			item as transaction
 		export
 			{ANY} valid_index, valid_cursor_index
@@ -58,13 +59,13 @@ feature -- Access
 		do
 			Result := transaction.source
 		end
-	
+
 	target: DATA_RESOURCE
 			-- Current target
 		do
 			Result := transaction.target
 		end
-	
+
 feature -- Status report
 
 	is_correct: BOOLEAN
@@ -72,7 +73,7 @@ feature -- Status report
 		do
 			Result := check_query (agent transaction.is_correct)
 		end
-	 
+
 	error: BOOLEAN
 			-- Has an error occurred in current transaction?
 		do
@@ -84,14 +85,14 @@ feature -- Status report
 		do
 			Result := check_query (agent transaction.succeeded)
 		end
-	 
+
 	insertable (t: TRANSACTION): BOOLEAN
 	 		-- Can transaction `t' be inserted in container?
 		do
 			Result := t.source.supports_multiple_transactions and then
 				(not is_empty implies equal (transaction.source, t.source))
 		end
-	 
+
 feature -- Status setting
 
 	reset_error
@@ -120,7 +121,7 @@ feature {NONE} -- Implementation
 
 	first_source: DATA_RESOURCE
 			-- Handle to first source in collection
-			
+
 	reset_error_flags
 			-- Reset error flags for selected transaction.
 		require
@@ -136,7 +137,7 @@ feature {NONE} -- Implementation
 			not_empty: not is_empty
 			first_source_set: first_source /= Void
 		do
-			if index > 1 then 
+			if index > 1 then
 				transaction.source.reuse_connection (first_source)
 			end
 			debug Io.error.put_string ("- OPEN TARGET -%N") end
@@ -153,7 +154,7 @@ feature {NONE} -- Implementation
 			debug Io.error.put_string ("- CLOSE TARGET -%N") end
 			target.close
 		end
-		
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

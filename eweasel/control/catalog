@@ -39,6 +39,8 @@ test	merging-compatible-arrayed-list	list011 tcf pass list
 test	sorted-two-way-list-invariant-violation	list012 tcf pass list
 test	do-all-with-index-arrayed-list	list013 tcf pass list
 
+test	priority-queue-basics	queue001 tcf pass queue
+
 test	disjoint-sets			set001  tcf pass set
 test	disjoint-sets-expanded		set001a tcf pass set
 test	disjoint-sets-heterogenous	set001b tcf pass set

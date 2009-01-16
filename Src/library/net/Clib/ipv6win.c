@@ -1,10 +1,13 @@
 #include "ipv6.h"
 
+#ifdef __MINGW32__
+#define s6_words	_s6_words
+#define s6_bytes	_s6_bytes
+#endif
+
 /* Here are some declarations that strangely are not defined when we set for compiling for Win2k and above 
  * even if they don't use any features from those OSes. */
-WS2TCPIP_INLINE 
-VOID
-NET_IN6_SET_ADDR_UNSPECIFIED(PIN6_ADDR a)
+static void NET_IN6_SET_ADDR_UNSPECIFIED(PIN6_ADDR a)
 {
     //
     // We can't use the in6addr_any variable, since that would
@@ -13,15 +16,13 @@ NET_IN6_SET_ADDR_UNSPECIFIED(PIN6_ADDR a)
     memset(a->s6_bytes, 0, sizeof(IN6_ADDR));
 }
 
-WS2TCPIP_INLINE
-BOOLEAN
-NET_IN6_IS_ADDR_UNSPECIFIED(CONST IN6_ADDR *a)
+static EIF_BOOLEAN NET_IN6_IS_ADDR_UNSPECIFIED(CONST IN6_ADDR *a)
 {
     //
     // We can't use the in6addr_any variable, since that would
     // require existing callers to link with a specific library.
     //
-    return (BOOLEAN)((a->s6_words[0] == 0) &&
+    return EIF_TEST((a->s6_words[0] == 0) &&
                      (a->s6_words[1] == 0) &&
                      (a->s6_words[2] == 0) &&
                      (a->s6_words[3] == 0) &&
@@ -31,15 +32,13 @@ NET_IN6_IS_ADDR_UNSPECIFIED(CONST IN6_ADDR *a)
                      (a->s6_words[7] == 0));
 }
 
-WS2TCPIP_INLINE
-BOOLEAN
-NET_IN6_IS_ADDR_LOOPBACK(CONST IN6_ADDR *a)
+static EIF_BOOLEAN NET_IN6_IS_ADDR_LOOPBACK(CONST IN6_ADDR *a)
 {
     //
     // We can't use the in6addr_loopback variable, since that would
     // require existing callers to link with a specific library.
     //
-    return (BOOLEAN)((a->s6_words[0] == 0) &&
+    return EIF_TEST((a->s6_words[0] == 0) &&
                      (a->s6_words[1] == 0) &&
                      (a->s6_words[2] == 0) &&
                      (a->s6_words[3] == 0) &&
@@ -49,9 +48,7 @@ NET_IN6_IS_ADDR_LOOPBACK(CONST IN6_ADDR *a)
                      (a->s6_words[7] == 0x0100));
 }
 
-WS2TCPIP_INLINE
-VOID
-NET_IN6ADDR_SETANY(PSOCKADDR_IN6 a)
+static void NET_IN6ADDR_SETANY(PSOCKADDR_IN6 a)
 {
     a->sin6_family = AF_INET6;
     a->sin6_port = 0;
@@ -60,17 +57,12 @@ NET_IN6ADDR_SETANY(PSOCKADDR_IN6 a)
     a->sin6_scope_id = 0;
 }
 
-
-WS2TCPIP_INLINE
-BOOLEAN
-NET_IN6ADDR_ISANY(CONST SOCKADDR_IN6 *a)
+static EIF_BOOLEAN NET_IN6ADDR_ISANY(CONST SOCKADDR_IN6 *a)
 {
     return NET_IN6_IS_ADDR_UNSPECIFIED(&a->sin6_addr);
 }
 
-WS2TCPIP_INLINE
-BOOLEAN
-NET_IN6ADDR_ISLOOPBACK(CONST SOCKADDR_IN6 *a)
+static EIF_BOOLEAN NET_IN6ADDR_ISLOOPBACK(CONST SOCKADDR_IN6 *a)
 {
     return NET_IN6_IS_ADDR_LOOPBACK(&a->sin6_addr);
 }
@@ -477,7 +469,7 @@ void en_socket_stream_create (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1) {
 
 void en_socket_datagram_create (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1) {
 	SOCKET fd, fd1;
-	int t = TRUE;
+	BOOL t = TRUE;
 	DWORD x1, x2; /* ignored result codes */
 
 	EIF_NET_INITIALIZE;
@@ -500,7 +492,7 @@ void en_socket_datagram_create (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1) {
 			 * as connected sockets. The solution is to only enable this feature
 			 * when the socket is connected */
 		t = FALSE; 
-		WSAIoctl(fd,SIO_UDP_CONNRESET,&t,sizeof(t),&x1,sizeof(x1),&x2,0,0);
+		WSAIoctl(fd,SIO_UDP_CONNRESET,&t,sizeof(BOOL),&x1,sizeof(x1),&x2,0,0);
 		t = TRUE;
 		fd1 = check_socket_bounds(socket (AF_INET6, SOCK_DGRAM, 0));
 		if (fd1 == INVALID_SOCKET) {
@@ -511,7 +503,7 @@ void en_socket_datagram_create (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1) {
 		} else {
 			net_set_sock_opt((int)fd1, SOL_SOCKET, SO_BROADCAST, (char*)&t, sizeof(BOOL));
 			t = FALSE;
-			WSAIoctl(fd1,SIO_UDP_CONNRESET,&t,sizeof(t),&x1,sizeof(x1),&x2,0,0);
+			WSAIoctl(fd1,SIO_UDP_CONNRESET,&t,sizeof(BOOL),&x1,sizeof(x1),&x2,0,0);
 			SetHandleInformation((HANDLE)fd1, HANDLE_FLAG_INHERIT, FALSE);
 			*a_fd1 = (EIF_INTEGER) fd1;
 		}

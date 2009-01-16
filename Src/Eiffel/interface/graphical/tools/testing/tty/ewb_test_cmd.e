@@ -224,24 +224,39 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	print_test (a_test: !TEST_I; a_include_class: BOOLEAN; a_tab_count: INTEGER)
+	print_test (a_test: !TEST_I; a_prefix: !READABLE_STRING_8; a_tab_count: INTEGER)
 			-- Print information for given test.
+			--
+			-- `a_test': Test for which information should be printed.
+			-- `a_prefix': String which will be printed before the test name.
+			-- `a_tab_count': Tabulator count for outcome row following test name.
 		require
 			a_test_attached: a_test /= Void
-			a_tab_count_not_negative: a_tab_count >= 0
+			a_tab_count_valid: a_tab_count >= -1
 		local
+			l_name: STRING
 			l_count: INTEGER
 		do
-			if a_include_class then
-				print_string (a_test.class_name)
-				print_string (".")
-				l_count := a_test.class_name.count + 1
+			l_count := a_test.name.count + a_prefix.count
+			create l_name.make (l_count)
+			l_name.append (a_prefix)
+			l_name.append (a_test.name)
+
+			if a_tab_count = -1 then
+				print_string (" ")
+				print_string (l_name)
+			elseif a_tab_count > 4 or l_count < a_tab_count then
+				if l_count >= a_tab_count then
+					print_string (l_name.substring (1, a_tab_count - 4))
+					print_string ("... ")
+				else
+					print_string (l_name)
+					print_multiple_string (" ", a_tab_count - l_count)
+				end
+			else
+				print_multiple_string (" ", a_tab_count)
 			end
-			print_string (a_test.name)
-			l_count := l_count + a_test.name.count
-			if a_tab_count > 0 then
-				print_multiple_string (" ", a_tab_count - (l_count \\ a_tab_count))
-			end
+
 			print_string (outcome (a_test))
 			print_string ("%N")
 		end
@@ -285,6 +300,8 @@ feature {NONE} -- Constants
 
 	max_outcome_count: INTEGER = 10
 			-- Max length for `outcome'
+
+	tab_count: INTEGER = 65
 
 feature {NONE} -- Internationalization
 

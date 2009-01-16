@@ -15,7 +15,9 @@ inherit
 		rename
 			make as make_widget
 		redefine
-			on_before_initialize
+			internal_detach_entities,
+			on_before_initialize,
+			on_after_initialized
 		end
 
 create
@@ -26,7 +28,7 @@ convert
 
 feature {NONE} -- Initialization
 
-	make (a_text_field: !like text_field; a_function: !like validation_function)
+	make (a_text_field: !like text_field; a_function: !like entry_error_function)
 			-- Initializes a validation text field.
 			--
 			-- `a_text_field': The text field to wrap.
@@ -37,17 +39,17 @@ feature {NONE} -- Initialization
 		do
 			original_foreground_color := a_text_field.foreground_color.as_attached
 			text_field := a_text_field
-			validation_function := a_function
+			entry_error_function := a_function
 			make_widget
 		ensure
-			original_foreground_color_set: equal (a_text_field.foreground_color, original_foreground_color)
+			original_foreground_color_set: is_valid implies a_text_field.foreground_color ~ original_foreground_color
 			text_field_set: text_field = a_text_field
-			validation_function_set: validation_function = a_function
+			entry_error_function_set: entry_error_function = a_function
 			is_initialized: is_initialized
 			is_initializing_unchanged: old is_initializing = is_initializing
 		end
 
-feature {NONE} -- User interface initialization
+feature {NONE} -- Initialization: User interface
 
 	build_widget_interface (a_widget: !EV_HORIZONTAL_BOX)
 			-- <Precursor>
@@ -66,8 +68,29 @@ feature {NONE} -- User interface initialization
 			-- <Precursor>
 		do
 			is_valid := True
-			create valid_state_changed_event
 			Precursor
+		end
+
+	on_after_initialized
+			-- <Precursor>
+		do
+			Precursor
+			validate
+		end
+
+feature {NONE} -- Clean up
+
+	internal_detach_entities
+			-- <Precursor>
+		do
+			Precursor
+			entry_error_function := Void
+			entry_validation := Void
+			entry_formatter := Void
+		ensure then
+			entry_error_function_detached: entry_error_function = Void
+			entry_validation_detached: entry_validation = Void
+			entry_formatter_detached: entry_formatter = Void
 		end
 
 feature -- Access
@@ -85,14 +108,87 @@ feature -- Access
 			end
 		end
 
+feature {NONE} -- Access
+
+	old_text: ?STRING_32
+			-- The preserved old text value of the set widget.
+
+	old_caret_position: INTEGER
+			-- The preserved old caret position of the set widget.
+
+feature -- Access: Validataion and formatting
+
+	entry_error_function: ?FUNCTION [ANY, TUPLE [!STRING_32], !TUPLE [is_valid: BOOLEAN; reason: ?STRING_32]]
+			-- Function used to validate the entered text, which upon failing will display an error message.
+
+	entry_validation: ?PREDICATE [ANY, TUPLE [text: !STRING_32]] assign set_entry_validation
+			-- An optional predicate used to determine if the changed text is valid for the widget.
+			-- Note: This differs from `entry_error_function' because text will be disallowed where
+			--       as the `entry_error_function' will allow text but display an error.
+
+	entry_formatter: ?FUNCTION [ANY, TUPLE [!STRING_32], !STRING_32] assign set_entry_formatter
+			-- An optional function used to format the entered text.
+
+feature -- User interface elements
+
+	text_field: !EV_TEXT_FIELD
+			-- Actual text field.
+
+feature {NONE} -- User interface elements
+
+	validation_pixmap: !EV_PIXMAP
+			-- Validation pixmap to show when not validated.
+
+	original_foreground_color: !EV_COLOR
+			-- Original text field forground color.
+
 feature -- Element change
 
 	set_text (a_text: !like text)
-			-- Set field text
+			-- Set field text.
+			--
+			-- `a_text': The new text to set.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
 		do
 			text_field.set_text (a_text)
 		ensure
 			text_set: text.is_equal (a_text)
+		end
+
+feature -- Element change
+
+	set_entry_validation (a_predicate: like entry_validation)
+			-- Set/reset a new entry validation predication to ensure only specific text can be inserted
+			-- into the text field.
+			--
+			-- `a_predicate': A new predication function to test the validity of a piece of entered text,
+			--                or Void to remove the predicate.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+		do
+			entry_validation := a_predicate
+			if is_initialized and then widget.has_parent then
+				on_text_field_changed
+			end
+		ensure
+			entry_validation_set: entry_validation = a_predicate
+		end
+
+	set_entry_formatter (a_function: like entry_formatter)
+			-- Set/reset a new entry formatting function to manipulate any entered test to a desired form.
+			--
+			-- `a_function': A new formatting function manipulate any entered text, or Void to remove
+			--               the formatting.
+		require
+			is_interface_usable: is_interface_usable
+		do
+			entry_formatter := a_function
+			if is_initialized and then widget.has_parent then
+				on_text_field_changed
+			end
 		end
 
 feature -- Status report
@@ -111,57 +207,125 @@ feature -- Basic operations
 			on_text_field_changed
 		end
 
-feature -- Events
+feature -- Actions
 
-	valid_state_changed_event: !EVENT_TYPE [TUPLE [is_valid: BOOLEAN]]
+	valid_state_changed_actions: !ACTION_SEQUENCE [TUPLE [is_valid: BOOLEAN]]
 			-- Event published when the valid state of Current changes.
-
-feature -- User interface elements
-
-	text_field: !EV_TEXT_FIELD
-			-- Actual text field.
-
-feature {NONE} -- User interface elements
-
-	validation_pixmap: !EV_PIXMAP
-			-- Validation pixmap to show when not validated.
-
-	validation_function: !FUNCTION [ANY, TUPLE [!STRING_32], !TUPLE [is_valid: BOOLEAN; reason: ?STRING_32]]
-			-- Function used to validate the entered text.
-
-	original_foreground_color: !EV_COLOR
-			-- Original text field forground color.
+		require
+			is_interface_usable: is_interface_usable
+		local
+			l_result: like internal_valid_state_changed_actions
+		do
+			l_result := internal_valid_state_changed_actions
+			if l_result = Void then
+				create Result
+				internal_valid_state_changed_actions := Result
+				auto_recycle (Result)
+			else
+				Result := l_result
+			end
+		ensure
+			result_consistent: Result = internal_valid_state_changed_actions
+		end
 
 feature {NONE} -- Action handlers
 
-	on_text_field_changed
-			-- Called when the text field changes
+	frozen on_text_field_changed
+			-- Called when the widget's text has changed
 		require
 			is_interface_usable: is_interface_usable
-			is_initialized: is_initialized
 		local
-			l_item: !TUPLE [is_valid: BOOLEAN; reason: ?STRING_32]
-			l_old_is_valid: like is_valid
+			l_old_text: like text
+			l_text: like text
+			l_actions: ACTION_SEQUENCE [TUPLE]
+			l_running: BOOLEAN
 		do
-			l_old_is_valid := is_valid
-			l_item := validation_function.item ([text])
-			is_valid := l_item.is_valid
-			if is_valid then
-				validation_pixmap.hide
-				text_field.set_foreground_color (original_foreground_color)
-			else
-				validation_pixmap.show
-				text_field.set_foreground_color (colors.high_priority_foreground_color)
-				if l_item.reason = Void or else l_item.reason.is_empty then
-					validation_pixmap.set_tooltip ("The entered value is invalid.")
-				else
-					validation_pixmap.set_tooltip ("The entered value is invalid: " + l_item.reason)
-				end
+			l_actions := text_field.change_actions
+			l_running := l_actions.state = l_actions.normal_state
+			if l_running then
+				l_actions.block
 			end
 
-			if l_old_is_valid /= is_valid then
-					-- Publish events
-				valid_state_changed_event.publish ([is_valid])
+			l_old_text := text
+			internal_on_text_field_changed
+			l_text := text
+
+			if l_running then
+				l_actions.resume
+			end
+
+			if l_text /~ l_old_text then
+					-- Text changed
+				l_actions.call (Void)
+			end
+		end
+
+	internal_on_text_field_changed
+			-- Called when the widget's text has changed
+		require
+			is_interface_usable: is_interface_usable
+		local
+			l_text: like text
+			l_old_text: like old_text
+			l_formatter: ?like entry_formatter
+			l_predicate: ?like entry_validation
+			l_item: !TUPLE [is_valid: BOOLEAN; reason: ?STRING_32]
+			l_old_is_valid: like is_valid
+			l_tooltip: STRING_32
+			l_reason: ?STRING_32
+			l_actions: like internal_valid_state_changed_actions
+		do
+			l_text := text
+			if l_text /= Void then
+				l_formatter := entry_formatter
+				if l_formatter /= Void then
+					l_text := l_formatter.item ([l_text])
+				end
+
+				l_old_text := old_text
+				if l_old_text = Void or else not l_old_text.same_string (l_text) then
+					l_predicate := entry_validation
+					if l_predicate = Void or else l_predicate.item ([l_text]) then
+						old_text := l_text.twin
+						old_caret_position := text_field.caret_position
+						text_field.set_text (l_text)
+						text_field.set_caret_position (old_caret_position)
+					elseif l_old_text /= Void then
+						text_field.set_text (l_old_text)
+						text_field.set_caret_position (old_caret_position)
+					else
+						set_text (create {STRING_32}.make_empty)
+					end
+				end
+
+				l_old_is_valid := is_valid
+				l_item := entry_error_function.item ([l_text])
+				is_valid := l_item.is_valid
+				if is_valid then
+					validation_pixmap.hide
+					text_field.set_foreground_color (original_foreground_color)
+				else
+					validation_pixmap.show
+					text_field.set_foreground_color (colors.high_priority_foreground_color)
+					l_reason := l_item.reason
+					if l_reason = Void or else l_reason.is_empty then
+						l_tooltip := locale_formatter.translation (tt_invalid_entry)
+						l_tooltip.append_string_general (".")
+					else
+						l_tooltip := locale_formatter.translation (tt_invalid_entry)
+						l_tooltip.append_string_general (": ")
+						l_tooltip.append_string_general (l_reason)
+					end
+					validation_pixmap.set_tooltip (l_tooltip)
+				end
+
+				if l_old_is_valid /= is_valid then
+						-- Process actions
+					l_actions := internal_valid_state_changed_actions
+					if l_actions /= Void then
+						l_actions.call ([is_valid])
+					end
+				end
 			end
 		end
 
@@ -173,8 +337,18 @@ feature {NONE} -- Factory
 			create Result
 		end
 
+feature {NONE} -- Internationalization
+
+	tt_invalid_entry: STRING = "The entered value is invalid"
+
+feature {NONE} -- Implementation: Internal cache
+
+	internal_valid_state_changed_actions: ?like valid_state_changed_actions
+			-- Cached version of `valid_state_changed_actions'.
+			-- Note: Do not use directly!
+
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -187,19 +361,19 @@ feature {NONE} -- Factory
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

@@ -139,9 +139,7 @@ feature {NONE} -- Initialization: User interface
     build_mini_toolbar
             -- Build mini tool bar.
         do
-			if {lt_widget: EV_WIDGET} mini_tool_bar_widget then
-            	mini_toolbar := lt_widget
-			end
+			mini_toolbar := mini_tool_bar_widget
         end
 
     build_tool_interface (a_widget: G)
@@ -667,7 +665,7 @@ feature {NONE} -- User interface elements
             result_consistent: Result = user_widget
         end
 
-    frozen mini_tool_bar_widget: SD_GENERIC_TOOL_BAR
+    frozen mini_tool_bar_widget: ?SD_WIDGET_TOOL_BAR
             -- Access to user widget, as `widget' may not be the indicated user widget due to
             -- tool bar additions
         local
@@ -691,7 +689,7 @@ feature {NONE} -- User interface elements
 
                 l_items := create_mini_tool_bar_items
                 if l_items /= Void or else l_multi or else l_help_button /= Void then
-                    create {SD_WIDGET_TOOL_BAR} Result.make (create {SD_TOOL_BAR}.make)
+                    create Result.make (create {SD_TOOL_BAR}.make)
 
 	                if l_items /= Void then
 	                        -- Add tool bar items
@@ -741,7 +739,7 @@ feature {NONE} -- User interface elements
             result_consistent: Result = mini_tool_bar_widget
         end
 
-    frozen tool_bar_widget: SD_GENERIC_TOOL_BAR
+    frozen tool_bar_widget: SD_WIDGET_TOOL_BAR
             -- Main tool tool bar
         local
             l_cell: like internal_tool_bar_widget
@@ -754,7 +752,7 @@ feature {NONE} -- User interface elements
 
                 l_items := create_tool_bar_items
                 if l_items /= Void then
-                    create {SD_WIDGET_TOOL_BAR} Result.make (create {SD_TOOL_BAR}.make)
+                    create Result.make (create {SD_TOOL_BAR}.make)
 
                         -- Add tool bar items
 					from l_items.start until l_items.after loop

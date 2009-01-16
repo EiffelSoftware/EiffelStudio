@@ -431,6 +431,12 @@ test	bogus-vevi-on-invalid-inspect		valid228 tcf fail validity
 test	bogus-vevi-on-inspect-empty-interval	valid229 tcf pass validity
 test	inline-c-external-without-alias		valid230 tcf fail validity
 test	validity-in-empty-case			valid231 tcf pass validity
+test	redefine-deferred-to-effective		valid232 tcf fail validity
+test	redefine-2-deferred-to-effective	valid233 tcf fail validity
+test	redefine-effective-to-deferred		valid234 tcf pass validity
+test	undefine-renamed-deferred		valid235 tcf pass validity
+test	undefine-redefine-to-effective		valid236 tcf fail validity
+test	effective-redefinition			valid237 tcf pass validity
 
 -- Multiple error reporting tests
 test	multi-error-degree-4	multierr001 tcf pass multi-errors

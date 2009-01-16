@@ -1,0 +1,11 @@
+test_name 	 effective-redefinition
+test_description An effective routine should be listed in redefine clause when redefined.
+
+copy_raw	a.e $CLUSTER a.e
+copy_raw	test.e $CLUSTER test.e
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	validity_error TEST VDRD(4)
+
+test_end

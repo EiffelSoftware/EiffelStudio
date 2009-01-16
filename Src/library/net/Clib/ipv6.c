@@ -35,7 +35,7 @@ int en_addrinfo_ai_protocol(struct addrinfo *s) {
 }
 
 int en_addrinfo_ai_addrlen(struct addrinfo *s) {
-	return s->ai_addrlen;
+	return (int) s->ai_addrlen;
 }
 
 char* en_addrinfo_ai_canonname(struct addrinfo *s) {
@@ -87,7 +87,12 @@ int en_sockaddr_get_family(SOCKETADDRESS *s) {
 }
 
 void en_sockaddr_set_family(SOCKETADDRESS *s, int family) {
+#ifdef EIF_WINDOWS
+		/* On Windows, it is define as `u_short'. */
+	s->him.sa_family = (u_short) family;
+#else
 	s->him.sa_family = family;
+#endif
 }
 
 int en_sockaddr_get_ipv4_address (SOCKETADDRESS *s) {
@@ -109,7 +114,7 @@ int en_sockaddr_get_port (SOCKETADDRESS *s) {
 }
 
 void en_sockaddr_set_port (SOCKETADDRESS *s, int port) {
-	SET_PORT(s, htons(port));
+	SET_PORT(s, htons((u_short) port));
 }
 
 unsigned long en_sockaddr_get_ipv6_address_scope (struct addrinfo *s) {

@@ -302,14 +302,26 @@ EIF_INTEGER mask_size()
 void c_mask_clear(EIF_POINTER mask, EIF_INTEGER pos)
 	/*x turn the bit for pos off in mask */
 {
+#ifdef EIF_WINDOWS
+		/* The cast to SOCKET is required because it assumes
+		 * we pass a SOCKET which is a UINT_PTR. */
+	FD_CLR((SOCKET) pos, (fd_set *) mask);
+#else
 	FD_CLR((int) pos, (fd_set *) mask);
+#endif
 }
 
 
 void c_set_bit(EIF_POINTER mask, EIF_INTEGER pos)
 	/*x turn the bit for pos on in mask */
 {
+#ifdef EIF_WINDOWS
+		/* The cast to SOCKET is required because it assumes
+		 * we pass a SOCKET which is a UINT_PTR. */
+	FD_SET((SOCKET) pos, (fd_set *) mask);
+#else
 	FD_SET((int) pos, (fd_set *) mask);
+#endif
 }
 
 EIF_BOOLEAN c_is_bit_set(EIF_POINTER mask, EIF_INTEGER pos)
@@ -609,7 +621,7 @@ EIF_INTEGER c_accept(EIF_INTEGER s, EIF_POINTER add, EIF_INTEGER length)
 #ifdef EIF_VMS
 	size_t a_length = (size_t) length;
 #else
-	int a_length = (int) length;
+	socklen_t a_length = (socklen_t) length;
 #endif
 	EIF_SOCKET_TYPE l_socket;
 	int result;
@@ -675,7 +687,7 @@ void c_sock_name(EIF_INTEGER s, EIF_POINTER addr, EIF_INTEGER length)
 #ifdef EIF_VMS
 	size_t a_length = (size_t) length;
 #else
-	int a_length = (int) length;
+	socklen_t a_length = (socklen_t) length;
 #endif
 	int result;
 
@@ -691,7 +703,7 @@ EIF_INTEGER c_peer_name(EIF_INTEGER s, EIF_POINTER addr, EIF_INTEGER length)
 #ifdef EIF_VMS
 	size_t a_length = (size_t) length;
 #else
-	int a_length = (int) length;
+	socklen_t a_length = (socklen_t) length;
 #endif
 	int result;
 
@@ -861,7 +873,7 @@ EIF_INTEGER c_rcv_from(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INT
 #ifdef EIF_VMS
 	size_t l_addr_len = (size_t) (*(EIF_INTEGER *) addr_len);
 #else
-	int l_addr_len = (int) (*(EIF_INTEGER *) addr_len);
+	socklen_t l_addr_len = (socklen_t) (*(EIF_INTEGER *) addr_len);
 #endif
 	result = recvfrom ((EIF_SOCKET_TYPE) fd, (char *) buf, (int) len, (int) flags, (struct sockaddr *) addr, &l_addr_len);
 	*(EIF_INTEGER *) addr_len = (EIF_INTEGER) l_addr_len;
@@ -915,7 +927,7 @@ EIF_INTEGER c_get_sock_opt_int(EIF_INTEGER fd, EIF_INTEGER level, EIF_INTEGER op
 #ifdef EIF_VMS
 	size_t asize;
 #else
-	int asize;
+	socklen_t asize;
 #endif
 	asize = sizeof(arg);
 	eif_net_check(getsockopt((EIF_SOCKET_TYPE) fd, (int) level, (int) opt, (char *) &arg, &asize));
@@ -929,7 +941,7 @@ EIF_BOOLEAN c_is_linger_on(EIF_INTEGER fd)
 #ifdef EIF_VMS
 	size_t asize;
 #else
-	int asize;
+	socklen_t asize;
 #endif
 	asize = sizeof(arg);
 	eif_net_check (getsockopt((EIF_SOCKET_TYPE) fd, SOL_SOCKET, SO_LINGER, (char *) &arg, &asize));
@@ -943,7 +955,7 @@ EIF_INTEGER c_linger_time(EIF_INTEGER fd)
 #ifdef EIF_VMS
 	size_t asize;
 #else
-	int asize;
+	socklen_t asize;
 #endif
 	asize = sizeof(arg);
 	eif_net_check (getsockopt((EIF_SOCKET_TYPE) fd, SOL_SOCKET, SO_LINGER, (char *) &arg, &asize));
@@ -956,8 +968,14 @@ EIF_INTEGER c_set_sock_opt_linger(EIF_INTEGER fd, EIF_BOOLEAN flag, EIF_INTEGER 
 	struct linger arg;
 	int result;
 
+#ifdef EIF_WINDOWS
+		/* On Windows the struct expects `u_short' not `int'. */
+	arg.l_onoff = (u_short) flag;
+	arg.l_linger = (u_short) time;
+#else
 	arg.l_onoff = (int) flag;
 	arg.l_linger = (int) time;
+#endif
 	result = setsockopt((EIF_SOCKET_TYPE) fd, SOL_SOCKET, SO_LINGER, (char *) &arg, sizeof(arg));
 	eif_net_check (result);
 	return (EIF_INTEGER) result;

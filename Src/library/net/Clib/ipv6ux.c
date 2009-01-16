@@ -53,7 +53,7 @@ int ipv6_supported_()
 {
 	int fd;
 	SOCKETADDRESS sa;
-	int l_sa_len = sizeof(sa);
+	socklen_t l_sa_len = sizeof(sa);
 
 	fd = socket(AF_INET6, SOCK_STREAM, 0) ;
 	if (fd < 0) {
@@ -222,7 +222,7 @@ void en_socket_stream_connect (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1, EIF_INTEGE
 				return;
 			} else {
 				/* has connection been established */
-				int optlen = sizeof(connect_res);
+				socklen_t optlen = sizeof(connect_res);
 				if (getsockopt(fd, SOL_SOCKET, SO_ERROR, (void*)&connect_res, &optlen) <0) {
 				    connect_res = errno;
 				}
@@ -245,7 +245,7 @@ void en_socket_stream_connect (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1, EIF_INTEGE
 			/* Now that we're a connected socket, let's extract the port number
 			 * that the system chose for us and store it in the Socket object. */
 		u_short port;
-		int len = SOCKETADDRESS_LEN(him);
+		socklen_t len = SOCKETADDRESS_LEN(him);
 		if (getsockname(fd, (struct sockaddr *)him, &len) == -1) {
 				/* TODO Handle Error  */
 			return;
@@ -283,7 +283,7 @@ void en_socket_stream_bind (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1, EIF_INTEGER *
 	if (localport == 0) {
 			/* Now that we're a bound socket, let's extract the port number
 			 * that the system chose for us and store it in the Socket object. */
-		int len = SOCKETADDRESS_LEN(him);
+		socklen_t len = SOCKETADDRESS_LEN(him);
 		u_short port;
 
 		if ((rv=getsockname(fd, (struct sockaddr *)him, &len)) == -1) {
@@ -303,7 +303,7 @@ void en_socket_stream_listen (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1, EIF_POINTER
 
 
 EIF_INTEGER en_socket_stream_accept (EIF_INTEGER fd, EIF_INTEGER fd1, EIF_INTEGER *a_last_fd, SOCKETADDRESS *him, EIF_INTEGER timeout) {
-	int len;
+	socklen_t len;
 
 	if (timeout) {
 		int ret = net_timeout(fd, timeout);
@@ -366,8 +366,7 @@ void en_socket_datagram_connect (EIF_INTEGER fd, EIF_INTEGER fd1, EIF_POINTER so
 EIF_INTEGER en_socket_datagram_rcv_from (EIF_INTEGER fd, EIF_INTEGER fd1, EIF_INTEGER *a_last_fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INTEGER flags, EIF_INTEGER timeout, SOCKETADDRESS *him) {
 
 	int result;
-	int lenn = sizeof(SOCKETADDRESS);
-	int ipv6_supported = en_ipv6_available();
+	socklen_t lenn = sizeof(SOCKETADDRESS);
 
 	if (timeout) {
 		int ret;

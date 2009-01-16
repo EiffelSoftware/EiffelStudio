@@ -1,6 +1,95 @@
 #include "ipv6.h"
 
-static int net_bind(int s, struct sockaddr *him, int len)
+/* Here are some declarations that strangely are not defined when we set for compiling for Win2k and above 
+ * even if they don't use any features from those OSes. */
+WS2TCPIP_INLINE 
+VOID
+NET_IN6_SET_ADDR_UNSPECIFIED(PIN6_ADDR a)
+{
+    //
+    // We can't use the in6addr_any variable, since that would
+    // require existing callers to link with a specific library.
+    //
+    memset(a->s6_bytes, 0, sizeof(IN6_ADDR));
+}
+
+WS2TCPIP_INLINE
+BOOLEAN
+NET_IN6_IS_ADDR_UNSPECIFIED(CONST IN6_ADDR *a)
+{
+    //
+    // We can't use the in6addr_any variable, since that would
+    // require existing callers to link with a specific library.
+    //
+    return (BOOLEAN)((a->s6_words[0] == 0) &&
+                     (a->s6_words[1] == 0) &&
+                     (a->s6_words[2] == 0) &&
+                     (a->s6_words[3] == 0) &&
+                     (a->s6_words[4] == 0) &&
+                     (a->s6_words[5] == 0) &&
+                     (a->s6_words[6] == 0) &&
+                     (a->s6_words[7] == 0));
+}
+
+WS2TCPIP_INLINE
+BOOLEAN
+NET_IN6_IS_ADDR_LOOPBACK(CONST IN6_ADDR *a)
+{
+    //
+    // We can't use the in6addr_loopback variable, since that would
+    // require existing callers to link with a specific library.
+    //
+    return (BOOLEAN)((a->s6_words[0] == 0) &&
+                     (a->s6_words[1] == 0) &&
+                     (a->s6_words[2] == 0) &&
+                     (a->s6_words[3] == 0) &&
+                     (a->s6_words[4] == 0) &&
+                     (a->s6_words[5] == 0) &&
+                     (a->s6_words[6] == 0) &&
+                     (a->s6_words[7] == 0x0100));
+}
+
+WS2TCPIP_INLINE
+VOID
+NET_IN6ADDR_SETANY(PSOCKADDR_IN6 a)
+{
+    a->sin6_family = AF_INET6;
+    a->sin6_port = 0;
+    a->sin6_flowinfo = 0;
+    NET_IN6_SET_ADDR_UNSPECIFIED(&a->sin6_addr);
+    a->sin6_scope_id = 0;
+}
+
+
+WS2TCPIP_INLINE
+BOOLEAN
+NET_IN6ADDR_ISANY(CONST SOCKADDR_IN6 *a)
+{
+    return NET_IN6_IS_ADDR_UNSPECIFIED(&a->sin6_addr);
+}
+
+WS2TCPIP_INLINE
+BOOLEAN
+NET_IN6ADDR_ISLOOPBACK(CONST SOCKADDR_IN6 *a)
+{
+    return NET_IN6_IS_ADDR_LOOPBACK(&a->sin6_addr);
+}
+
+static SOCKET check_socket_bounds (SOCKET l_socket) {
+#ifdef EIF_64_BITS
+		/* On 64-bit system `SOCKET' is actually a pointer. For the moment, we check that
+		 * it is not coded on the whole 64-bit. */
+	if (l_socket != INVALID_SOCKET) {
+		if ((l_socket & RTU64C(0x00000000FFFFFFFF)) != l_socket) {
+				/* We are in trouble. Raise an exception for the moment. */
+			eraise ("Descriptor too big to be represented as INTEGER_32", EN_PROG);
+		}
+	}
+#endif
+	return l_socket;
+}
+
+static int net_bind(SOCKET s, struct sockaddr *him, int len)
 {
 	int rv = bind(s, him, len);
 
@@ -15,9 +104,10 @@ static int net_bind(int s, struct sockaddr *him, int len)
 }
 
 static int net_bindV6(struct ipv6bind* b) {
-	int fd=-1, ofd=-1, rv, len;
+	SOCKET fd=INVALID_SOCKET, ofd=INVALID_SOCKET, rv;
+	int len;
 		/* need to defer close until new sockets created */
-	int close_fd=-1, close_ofd=-1; 
+	SOCKET close_fd=INVALID_SOCKET, close_ofd=INVALID_SOCKET; 
 	SOCKETADDRESS oaddr; /* other address to bind */
 	int family = b->addr->him.sa_family;
 	int ofamily;
@@ -32,7 +122,7 @@ static int net_bindV6(struct ipv6bind* b) {
 			CLOSE_SOCKETS_AND_RETURN;
 		}
 		closesocket (b->ipv6_fd);
-		b->ipv6_fd = -1;
+		b->ipv6_fd = INVALID_SOCKET;
 		return 0;
 	}
 	if (family == AF_INET6 && (!IN6_IS_ADDR_ANY(&b->addr->him6.sin6_addr))) {
@@ -43,7 +133,7 @@ static int net_bindV6(struct ipv6bind* b) {
 			CLOSE_SOCKETS_AND_RETURN;
 		}
 		closesocket (b->ipv4_fd);
-		b->ipv4_fd = -1;
+		b->ipv4_fd = INVALID_SOCKET;
 		return 0;
 	}
 
@@ -53,14 +143,14 @@ static int net_bindV6(struct ipv6bind* b) {
 		ofamily = AF_INET6;
 		fd = b->ipv4_fd;
 		ofd = b->ipv6_fd;
-		port = (u_short)GET_PORT (b->addr);
-		IN6ADDR_SETANY (&oaddr.him6);
+		port = GET_PORT (b->addr);
+		NET_IN6ADDR_SETANY (&oaddr.him6);
 		oaddr.him6.sin6_port = port;
 	} else {
 		ofamily = AF_INET;
 		ofd = b->ipv4_fd;
 		fd = b->ipv6_fd;
-		port = (u_short)GET_PORT (b->addr);
+		port = GET_PORT (b->addr);
 		oaddr.him4.sin_family = AF_INET;
 		oaddr.him4.sin_port = port;
 		oaddr.him4.sin_addr.s_addr = INADDR_ANY;
@@ -96,18 +186,18 @@ static int net_bindV6(struct ipv6bind* b) {
 		 */
 		for (retries = 0; retries < SOCK_RETRIES; retries ++) {
 			int len;
-			close_fd = fd; fd = -1;
-			close_ofd = ofd; ofd = -1;
-			b->ipv4_fd = SOCKET_ERROR;
-			b->ipv6_fd = SOCKET_ERROR;
+			close_fd = fd; fd = INVALID_SOCKET;
+			close_ofd = ofd; ofd = INVALID_SOCKET;
+			b->ipv4_fd = INVALID_SOCKET;
+			b->ipv6_fd = INVALID_SOCKET;
 
 			/* create two new sockets */
-			fd = socket (family, sotype, 0);
-			if (fd == SOCKET_ERROR) {
+			fd = check_socket_bounds (socket (family, sotype, 0));
+			if (fd == INVALID_SOCKET) {
 				CLOSE_SOCKETS_AND_RETURN;
 			}
-			ofd = socket (ofamily, sotype, 0);
-			if (ofd == SOCKET_ERROR) {
+			ofd = check_socket_bounds (socket (ofamily, sotype, 0));
+			if (ofd == INVALID_SOCKET) {
 				CLOSE_SOCKETS_AND_RETURN;
 			}
 
@@ -120,7 +210,7 @@ static int net_bindV6(struct ipv6bind* b) {
 			/* close the original pair of sockets before continuing */
 			closesocket (close_fd); 
 			closesocket (close_ofd); 
-			close_fd = close_ofd = -1;
+			close_fd = close_ofd = INVALID_SOCKET;
 
 			/* bind new port on second socket */
 			len = SOCKETADDRESS_LEN(&oaddr);
@@ -202,7 +292,7 @@ static int net_get_default_tos() {
 	return default_tos;
 }
 
-static int net_get_sock_opt(int s, int level, int optname, void *optval, int *optlen)
+static int net_get_sock_opt(SOCKET s, int level, int optname, void *optval, int *optlen)
 {
 	int rv;
 
@@ -253,7 +343,7 @@ static int net_set_sock_opt(int s, int level, int optname, const void *optval, i
 	return rv;
 }
 
-static int net_socket_close(int fd) {
+static int net_socket_close(SOCKET fd) {
 	struct linger l;
 	int ret;
 	int len = sizeof (l);
@@ -273,7 +363,7 @@ static int net_timeout(int fd, long timeout) {
 	t.tv_sec = timeout / 1000;
 	t.tv_usec = (timeout % 1000) * 1000;
 	FD_ZERO(&tbl);
-	FD_SET(fd, &tbl);
+	FD_SET((SOCKET)fd, &tbl);
 	ret = select (fd + 1, &tbl, 0, 0, &t);
 	return ret;
 }
@@ -300,8 +390,8 @@ static int net_timeout2(int fd, int fd1, long timeout, int *fdret) {
 		t.tv_usec = (timeout % 1000) * 1000; 
 	}
 	FD_ZERO(&tbl); 
-	FD_SET(fd, &tbl); 
-	FD_SET(fd1, &tbl); 
+	FD_SET((SOCKET) fd, &tbl); 
+	FD_SET((SOCKET) fd1, &tbl); 
 	ret = select (0, &tbl, 0, 0, tP); 
 	switch (ret) {
 	case 0:
@@ -326,46 +416,30 @@ EIF_BOOLEAN en_ipv6_supported() {
 
 	if (res == -1) {
 		HMODULE lib;
-		int fd = socket(AF_INET6, SOCK_STREAM, 0);
-		if (fd < 0) {
-			return (res = 0);
-		} 
-		closesocket (fd);
-		if ((lib = LoadLibrary ("ws2_32.dll")) == 0) {
-			return (res = 0);
-		}
-		if (GetProcAddress (lib, "getaddrinfo") == 0) {
-			FreeLibrary (lib);
-			return (res = 0);
-		}
-		if (GetProcAddress (lib, "freeaddrinfo") == 0) {
-			FreeLibrary (lib);
-			return (res = 0);
-		}
-		if (GetProcAddress (lib, "getnameinfo") == 0) {
-			FreeLibrary (lib);
-			return (res = 0);
-		}
-		FreeLibrary(lib);		
-		return (res = 1);
-	}
-	return res;
-}
-
-static SOCKET check_socket_bounds (SOCKET l_socket) {
-#ifdef EIF_64_BITS
-		/* On 64-bit system `SOCKET' is actually a pointer. For the moment, we check that
-		 * it is not coded on the whole 64-bit. */
-	if (l_socket != INVALID_SOCKET) {
-		if ((l_socket & RTU64C(0x00000000FFFFFFFF)) != l_socket) {
-				/* We are in trouble. Raise an exception for the moment. */
-			eraise ("Descriptor too big to be represented as INTEGER_32", EN_PROG);
+		SOCKET fd = socket(AF_INET6, SOCK_STREAM, 0);
+		if (fd == INVALID_SOCKET) {
+			res = 0;
+		} else { 
+			closesocket (fd);
+			if ((lib = LoadLibrary ("ws2_32.dll")) == 0) {
+				res = 0;
+			} else if (GetProcAddress (lib, "getaddrinfo") == 0) {
+				FreeLibrary (lib);
+				res = 0;
+			} else if (GetProcAddress (lib, "freeaddrinfo") == 0) {
+				FreeLibrary (lib);
+				res = 0;
+			} else if (GetProcAddress (lib, "getnameinfo") == 0) {
+				FreeLibrary (lib);
+				res = 0;
+			} else {
+				FreeLibrary(lib);		
+				res = 1;
+			}
 		}
 	}
-#endif
-	return l_socket;
+	return EIF_TEST(res);
 }
-
 
 void en_socket_stream_create (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1) {
 	SOCKET fd, fd1;
@@ -450,7 +524,7 @@ void en_socket_stream_connect (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1, EIF_INTEGE
 
 	SOCKETADDRESS* him;
 	int family;
-	EIF_INTEGER fd, fd1=-1;
+	SOCKET fd, fd1 = INVALID_SOCKET;
 	int ipv6_supported;
 	int connect_res;
 
@@ -458,7 +532,7 @@ void en_socket_stream_connect (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1, EIF_INTEGE
 
 	ipv6_supported = en_ipv6_available();
 
-	fd = *a_fd;
+	fd = (SOCKET) *a_fd;
 	if (ipv6_supported) {
 		fd1 = *a_fd1;
 	}
@@ -476,7 +550,7 @@ void en_socket_stream_connect (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1, EIF_INTEGE
 				return;
 			}
 				/* close the v4 socket, and set fd to be the v6 socket */
-			*a_fd = fd1;
+			*a_fd = (EIF_INTEGER) fd1;
 			*a_fd1 = -1;
 			net_socket_close(fd); 
 			fd = fd1;
@@ -487,7 +561,7 @@ void en_socket_stream_connect (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1, EIF_INTEGE
 			*a_fd1 = -1;
 			net_socket_close(fd1); 
 		}
-		if (fd == -1) {
+		if (fd == INVALID_SOCKET) {
 			eraise ("Destination unreachable", EN_PROG);
 			return;
 		} 
@@ -499,8 +573,8 @@ void en_socket_stream_connect (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1, EIF_INTEGE
 			connect_res = WSAGetLastError();
 		}
 	} else {
-		int optval;
-		int optlen = sizeof(optval);
+		u_long optval;
+		int optlen = sizeof(int);
 
 			/* make socket non-blocking */
 		optval = 1;
@@ -522,7 +596,7 @@ void en_socket_stream_connect (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1, EIF_INTEGE
 
 					/* Wait for timout, connection established or
 					 * connection failed. */
-				connect_res = select(fd+1, 0, &wr, &ex, &t);
+				connect_res = select((int) fd+1, 0, &wr, &ex, &t);
 
 				/* Timeout before connection is established/failed so
 				 * we throw exception and shutdown input/output to prevent
@@ -578,7 +652,7 @@ void en_socket_stream_connect (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1, EIF_INTEGE
 		return;
 	}
 
-	*a_fd = fd;
+	*a_fd = (EIF_INTEGER) fd;
 
 		/* we need to initialize the local port field if bind was called
 		 * previously to the connect (by the client) then localport field
@@ -596,7 +670,7 @@ void en_socket_stream_connect (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1, EIF_INTEGE
 			}
 			return;
 		}
-		port = ntohs ((u_short)GET_PORT(him));
+		port = ntohs (GET_PORT(him));
 		*a_local_port = port;
 	}
 }
@@ -605,7 +679,7 @@ void en_socket_stream_bind (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1, EIF_INTEGER *
 
 	SOCKETADDRESS* him;
 	int family;
-	int fd, fd1;
+	SOCKET fd, fd1;
 	int ipv6_supported;
 	int localport;
 	int rv;
@@ -616,14 +690,10 @@ void en_socket_stream_bind (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1, EIF_INTEGER *
 
 	him = (SOCKETADDRESS*) sockaddr;
 	family = him->him.sa_family; 
-	localport = ntohs ((u_short) GET_PORT (him));
+	localport = ntohs (GET_PORT (him));
 
-	fd = *a_fd;
-	if (ipv6_supported) {
-		fd1 = *a_fd1;
-	}
-
-
+	fd = (SOCKET) *a_fd;
+	fd1 = (SOCKET) *a_fd1;
 	if (ipv6_supported) {
 		struct ipv6bind v6bind;
 		v6bind.addr = him;
@@ -634,22 +704,22 @@ void en_socket_stream_bind (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1, EIF_INTEGER *
 				/* check if the fds have changed */
 			if (v6bind.ipv4_fd != fd) {
 				fd = v6bind.ipv4_fd;
-				if (fd == -1) {
+				if (fd == INVALID_SOCKET) {
 						/* socket is closed. */
 					*a_fd = -1;
 				} else {
 						/* socket was re-created */
-					*a_fd = fd;
+					*a_fd = (EIF_INTEGER) fd;
 				}
 			}
 			if (v6bind.ipv6_fd != fd1) {
 				fd1 = v6bind.ipv6_fd;
-				if (fd1 == -1) {
+				if (fd1 == INVALID_SOCKET) {
 						/* socket is closed. */
 					*a_fd1 = -1;
 				} else {
 						/* socket was re-created */
-					*a_fd1 = fd1;
+					*a_fd1 = (EIF_INTEGER) fd1;
 				}
 			}
 		}
@@ -674,7 +744,7 @@ void en_socket_stream_bind (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1, EIF_INTEGER *
 			eif_net_check(rv);
 			return;
 		}
-		port = ntohs ((u_short) GET_PORT (him));
+		port = ntohs (GET_PORT (him));
 		*a_local_port = port;
 	} else {
 		*a_local_port = localport;
@@ -694,7 +764,7 @@ void en_socket_stream_listen (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1, EIF_POINTER
 
 	fd = *a_fd;
 
-	if (addr->him.sa_family == AF_INET || IN6ADDR_ISANY(&addr->him6) || IN6ADDR_ISLOOPBACK(&addr->him6)) {
+	if (addr->him.sa_family == AF_INET || NET_IN6ADDR_ISANY(&addr->him6) || NET_IN6ADDR_ISLOOPBACK(&addr->him6)) {
 			/* listen on v4 */
 		if ((res=listen(fd, count)) == -1) {
 			eif_net_check(res);
@@ -729,8 +799,8 @@ EIF_INTEGER en_socket_stream_accept (EIF_INTEGER fd, EIF_INTEGER fd1, EIF_INTEGE
 		struct timeval t, *tP=&t;
 		int res, fd2;
 		FD_ZERO(&rfds);
-		FD_SET(fd,&rfds);
-		FD_SET(fd1,&rfds);
+		FD_SET((SOCKET) fd,&rfds);
+		FD_SET((SOCKET) fd1,&rfds);
 		if (timeout) {
 			t.tv_sec = timeout/1000;
 			t.tv_usec = (timeout%1000)*1000;

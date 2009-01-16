@@ -28,25 +28,24 @@
  * closes the two sockets (if open),
  * and returns SOCKET_ERROR. Used in NET_BindV6 only.
  */
-
 #define CLOSE_SOCKETS_AND_RETURN {	\
-	if (fd != -1) {			\
+	if (fd != INVALID_SOCKET) {			\
 		closesocket (fd); 		\
-		fd = -1;			\
+		fd = INVALID_SOCKET;			\
 	}					\
-	if (ofd != -1) {			\
+	if (ofd != INVALID_SOCKET) {			\
 		closesocket (ofd); 		\
-		ofd = -1;			\
+		ofd = INVALID_SOCKET;			\
 	}					\
-	if (close_fd != -1) {		\
+	if (close_fd != INVALID_SOCKET) {		\
 		closesocket (close_fd);		\
-		close_fd = -1;			\
+		close_fd = INVALID_SOCKET;			\
 	}					\
-	if (close_ofd != -1) {		\
+	if (close_ofd != INVALID_SOCKET) {		\
 		closesocket (close_ofd);	\
-		close_ofd = -1;			\
+		close_ofd = INVALID_SOCKET;			\
 	}					\
-	b->ipv4_fd = b->ipv6_fd = -1;	\
+	b->ipv4_fd = b->ipv6_fd = INVALID_SOCKET;	\
 	return SOCKET_ERROR;		\
 }
 
@@ -110,7 +109,13 @@ struct ipv6bind {
 	}						\
 }
 
+#ifdef EIF_WINDOWS
+	/* Avoid a warning on Windows because the type of (a ? b : c) is not the type of `b' and `c'
+	 * even if they are the same. */
+#define GET_PORT(X) (u_short)((X)->him.sa_family==AF_INET ?(X)->him4.sin_port: (X)->him6.sin6_port)
+#else
 #define GET_PORT(X) ((X)->him.sa_family==AF_INET ?(X)->him4.sin_port: (X)->him6.sin6_port)
+#endif
 
 #ifndef IN6_IS_ADDR_ANY
 #define IN6_IS_ADDR_ANY(a)	\

@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 
 			create l_text_field
 			create test_name.make (l_text_field, agent on_validate_test_name)
-			test_name.valid_state_changed_event.subscribe (agent on_valid_state_changed)
+			test_name.valid_state_changed_actions.extend (agent on_valid_state_changed)
 			l_hb.extend (test_name)
 
 			a_parent.extend (l_hb)
@@ -116,7 +116,7 @@ feature {NONE} -- Initialization
 
 			create l_text_field
 			create tag_list.make (l_text_field, agent on_validate_tag_list)
-			tag_list.valid_state_changed_event.subscribe (agent on_valid_state_changed)
+			tag_list.valid_state_changed_actions.extend (agent on_valid_state_changed)
 			l_vb.extend (tag_list)
 			l_vb.disable_item_expand (tag_list)
 
@@ -166,7 +166,6 @@ feature {NONE} -- Initialization
 			end
 			tag_list.set_text (l_text)
 			tag_list.validate
-
 			update_next_button_status
 		end
 
@@ -645,7 +644,7 @@ feature {NONE} -- Internationalization
 	e_invalid_tag3: STRING = "%N%Nwhere tokens can contain letters, numbers or any of "
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

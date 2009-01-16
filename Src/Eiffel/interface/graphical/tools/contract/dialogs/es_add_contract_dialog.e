@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 			tag_text.text_field.set_font (preferences.editor_data.editor_font_preference.value)
 			suppress_confirmation_key_close (tag_text.text_field)
 			auto_recycle (tag_text)
-			tag_text.valid_state_changed_event.subscribe (agent on_valid_state_changed)
+			register_action (tag_text.valid_state_changed_actions, agent on_valid_state_changed)
 			l_vbox.extend (tag_text)
 			l_vbox.disable_item_expand (tag_text)
 			a_container.extend (l_vbox)
@@ -275,7 +275,7 @@ invariant
 	contract_tag_is_valid: contract /= Void implies not contract.contract.is_empty
 
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -288,19 +288,19 @@ invariant
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

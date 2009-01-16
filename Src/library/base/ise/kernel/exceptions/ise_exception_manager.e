@@ -383,6 +383,7 @@ feature {NONE} -- Implementation
 				if {l_rf: ROUTINE_FAILURE} e then
 					t := last_exception
 					if t /= Void then
+						check e_not_throwing_t: not e.is_throwing (t) end
 						e.set_throwing_exception (t)
 					end
 					l_rf.set_routine_name (l_data.rf_routine)
@@ -390,6 +391,7 @@ feature {NONE} -- Implementation
 				elseif {l_ov: OLD_VIOLATION} e then
 					t := last_exception
 					if t /= Void then
+						check e_not_throwing_t: not e.is_throwing (t) end
 						e.set_throwing_exception (t)
 					end
 				else
@@ -405,6 +407,7 @@ feature {NONE} -- Implementation
 						l_com.set_hresult_code (l_data.signal_code)
 						l_com.set_exception_information (l_data.tag)
 					end
+					check e_not_throwing_e: not e.is_throwing (e) end
 					e.set_throwing_exception (e)
 				end
 				e.set_exception_trace (l_data.trace)

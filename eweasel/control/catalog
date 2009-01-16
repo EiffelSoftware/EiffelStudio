@@ -1588,6 +1588,7 @@ test	bad-c-code-on-debug-clause		ccomp078 tcf pass c_compilation
 test	missing-makefile-for-precompile		ccomp079 tcf fail c_compilation
 test	bad-c-code-from-argument-anchor-2	ccomp080 tcf fail c_compilation
 test	bad-c-code-for-expanded-definition	ccomp081 tcf pass c_compilation expanded
+test	expanded-generic-object-test	ccomp082 tcf fail c_compilation expanded
 
 -- Storable tests
 

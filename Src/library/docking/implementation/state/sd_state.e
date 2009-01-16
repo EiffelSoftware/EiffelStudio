@@ -402,7 +402,7 @@ feature {NONE} -- Implementation
 			l_mutli_dock_area: SD_MULTI_DOCK_AREA
 		do
 			-- If it's a eidtor zone, and it's the last editor zone, then we put the SD_PLACE_HOLDER_ZONE in.
-			if zone /= Void then
+			if zone /= Void and then zone.type = {SD_ENUMERATION}.editor then
 				l_mutli_dock_area := internal_docking_manager.query.inner_container (zone)
 				if l_mutli_dock_area.editor_zone_count > 1 and then internal_docking_manager.has_content (internal_docking_manager.zones.place_holder_content) then
 					internal_docking_manager.zones.place_holder_content.close

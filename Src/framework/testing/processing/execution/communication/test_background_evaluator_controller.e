@@ -69,10 +69,14 @@ feature -- Status setting
 			-- <Precursor>
 		do
 			process := process_factory.process_launcher (executable, a_args, Void)
+
 			process.enable_launch_in_new_process_group
 			process.set_separate_console (False)
 			process.set_hidden (True)
 
+				--| Note: we do not really need input redirection, however on windows with a non console
+				--|       application this is needed or the process will crash.
+			process.redirect_input_to_stream
 			process.redirect_output_to_agent (
 				agent (a_string: STRING)
 					do
@@ -96,7 +100,7 @@ invariant
 		(process /= Void and then process.launched)
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

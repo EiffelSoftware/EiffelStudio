@@ -1,6 +1,6 @@
 note
 	description: "[
-		Responce produced from executing an eiffel test
+		Responce produced from executing an Eiffel test
 		
 		TEST_OUTCOME holds information about the tree stages each test execution consists of: setup, test
 		and teardown. Based on that information it tries to determine whether the implementation passes

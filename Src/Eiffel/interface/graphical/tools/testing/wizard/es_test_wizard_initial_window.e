@@ -127,8 +127,8 @@ feature -- Basic operations
 
 feature {NONE} -- Internationalization
 
-	t_title: STRING = "New eiffel test wizard"
-	t_subtitle: STRING = "This will create a new eiffel test"
+	t_title: STRING = "New Eiffel test wizard"
+	t_subtitle: STRING = "This will create a new Eiffel test"
 
 	b_new_class: STRING = "Create new test class"
 	b_existing_class: STRING = "Use existing test class"
@@ -136,7 +136,7 @@ feature {NONE} -- Internationalization
 	b_generation: STRING = "Automatically generate new tests"
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

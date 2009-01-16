@@ -1,7 +1,7 @@
 note
 	description: "[
 		Represents an exception that occurred during the execution
-		of an eiffel test
+		of an Eiffel test
 	]"
 	date: "$Date$"
 	revision: "$Revision$"

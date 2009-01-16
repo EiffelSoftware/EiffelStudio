@@ -1,6 +1,6 @@
 note
 	description: "[
-		Objects that compile and execute eiffel tests.
+		Objects that compile and execute Eiffel tests.
 
 		The actual compilation and execution are done in separate processes.
 		See {EIFFEL_TEST_PROCESS_I} for more details.
@@ -276,7 +276,7 @@ feature {NONE} -- Basic functionality
 		end
 
 	compile_project
-			-- Melt eiffel project
+			-- Melt Eiffel project
 		require
 			running: is_running
 		local
@@ -572,7 +572,7 @@ invariant
 	running_implies_result_cursor_attached: is_running implies result_cursor /= Void
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,6 +1,6 @@
 note
 	description: "[
-		Objects providing base implementation for eiffel test factories.
+		Objects providing base implementation for Eiffel test factories.
 	]"
 	author: ""
 	date: "$Date$"
@@ -196,7 +196,7 @@ feature {NONE} -- Basic operations
 		end
 
 	add_class (a_filename: !STRING; a_class_name: !STRING)
-			-- Add new test class to eiffel project and update test suite.
+			-- Add new test class to Eiffel project and update test suite.
 		require
 			running: is_running
 			configuration_valid: configuration.is_new_class

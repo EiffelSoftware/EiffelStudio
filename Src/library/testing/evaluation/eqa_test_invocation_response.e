@@ -1,6 +1,6 @@
 note
 	description: "[
-		Represents the result from executing one of the stages in an eiffel test.
+		Represents the result from executing one of the stages in an Eiffel test.
 	]"
 	date: "$Date$"
 	revision: "$Revision$"

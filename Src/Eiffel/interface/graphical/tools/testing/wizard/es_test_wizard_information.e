@@ -1,6 +1,6 @@
 note
 	description: "[
-		Information gathered by the eiffel test wizard to create new test.
+		Information gathered by the Eiffel test wizard to create new test.
 	]"
 	author: ""
 	date: "$Date$"
@@ -542,7 +542,7 @@ invariant
 	            type = generated_test_class_code
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -73,6 +73,7 @@ feature {NONE} -- Basic operations
 			-- <Precursor>
 		local
 			l_items: DS_ARRAYED_LIST [!TEST_I]
+			l_item: !TEST_I
 		do
 			print_current_expression (a_test_suite, False)
 			create l_items.make_from_linear (filtered_tests (a_test_suite).items)
@@ -80,7 +81,15 @@ feature {NONE} -- Basic operations
 			if not l_items.is_empty then
 				print_string ("%N")
 			end
-			l_items.do_all (agent print_test (?, True, 50))
+			from
+				l_items.start
+			until
+				l_items.after
+			loop
+				l_item := l_items.item_for_iteration
+				print_test (l_item, l_item.class_name + ".", tab_count)
+				l_items.forth
+			end
 			print_statistics (a_test_suite, True)
 		end
 

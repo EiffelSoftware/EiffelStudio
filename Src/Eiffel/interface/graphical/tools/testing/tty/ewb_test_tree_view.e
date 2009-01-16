@@ -120,9 +120,11 @@ feature {NONE} -- Basic operations
 
 			create l_items.make_from_linear (l_view.untagged_items)
 			if not l_items.is_empty then
-				print_string ("%NUntagged items:%N")
+				print_string ("%N")
+				print_string (locale.translation (t_untagged_tests))
+				print_string ("%N")
 				l_items.sort (item_sorter)
-				l_items.do_all (agent print_test (?, False, 50))
+				l_items.do_all (agent print_test (?, "+ ", tab_count))
 			end
 
 			print_statistics (a_test_suite, True)
@@ -168,8 +170,7 @@ feature {NONE} -- Implementation
 			--
 			-- `a_node': Node for which information is printed.
 		do
-			print_multiple_string (indentation, a_depth.to_integer_32)
-			print_string ("+ ")
+			print_multiple_string (" ", indent_count * a_depth.to_integer_32)
 			print_token (a_node.token)
 			print_string ("%N")
 		end
@@ -181,9 +182,13 @@ feature {NONE} -- Implementation
 			-- `a_depth': Depth used for indentation.
 		require
 			a_test_attached: a_test /= Void
+		local
+			l_indent, l_tab: INTEGER
 		do
-			print_multiple_string (indentation, a_depth.to_integer_32)
-			print_test (a_test, False, 50 - indentation.count * a_depth.to_integer_32)
+			l_indent := a_depth.to_integer_32
+			l_tab := (indent_count * l_indent).min (tab_count)
+			print_multiple_string (" ", l_tab)
+			print_test (a_test, "+ ", tab_count - l_tab)
 		end
 
 	print_token (a_token: STRING)
@@ -244,9 +249,11 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	indentation: STRING = "    "
+	indent_count: INTEGER = 4
 
 feature {NONE} -- Internationalization
+
+	t_untagged_tests: STRING = "Tests not containing prefix:"
 
 	h_display_tree: STRING = "Display tests in a tree structure"
 

@@ -65,7 +65,7 @@ feature -- Events
 			-- <Precursor>
 		do
 			if a_test.memento.is_outcome_added then
-				print_test (a_test, True, 50)
+				print_test (a_test, a_test.class_name + ".", tab_count)
 				if not a_test.passed then
 					print_outcome (a_test.last_outcome)
 					print_string ("%N")

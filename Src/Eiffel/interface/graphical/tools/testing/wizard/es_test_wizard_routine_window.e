@@ -386,7 +386,9 @@ feature {NONE} -- Events
 			end
 			if l_removed then
 				update_tag_list
-				tag_list.i_th (l_pos.min (tag_list.count)).enable_select
+				if not tag_list.is_empty then
+					tag_list.i_th (l_pos.min (tag_list.count)).enable_select
+				end
 			end
 		end
 

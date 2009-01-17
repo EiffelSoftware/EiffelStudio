@@ -60,19 +60,19 @@ feature {NONE} -- Initialization
 			l_vbox.set_padding ({ES_UI_CONSTANTS}.vertical_padding)
 
 			create timeout_field
-			--timeout_field.disable_edit
 			timeout_field.value_range.resize_exactly (1, {INTEGER_32}.max_value)
 			timeout_field.change_actions.extend (agent on_timeout_change)
+			timeout_field.text_change_actions.extend (agent on_timeout_change)
 
 			create proxy_time_out
-			--proxy_time_out.disable_edit
 			proxy_time_out.value_range.resize_exactly (1, {INTEGER_32}.max_value)
 			proxy_time_out.change_actions.extend (agent on_proxy_timeout_change)
+			proxy_time_out.text_change_actions.extend (agent on_proxy_timeout_change)
 
 			create seed
-			--seed.disable_edit
 			seed.set_minimum_width (170)
 			seed.change_actions.extend (agent on_seed_change)
+			seed.text_change_actions.extend (agent on_seed_change)
 
 			create benchmark_checkbox
 			benchmark_checkbox.select_actions.extend (agent on_benchmark_change)
@@ -516,7 +516,7 @@ feature {NONE} -- Constants
 	b_remove_type: !STRING = "-"
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

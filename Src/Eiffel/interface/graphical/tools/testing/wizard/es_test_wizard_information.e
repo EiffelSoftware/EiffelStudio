@@ -42,6 +42,7 @@ feature {NONE} -- Initialization
 		do
 			set_new_manual_test_class
 			create tag_list.make_default
+			tag_list.set_equality_tester (create {KL_EQUALITY_TESTER_A [!STRING]})
 			create call_stack_elements.make_default
 			create types.make_default
 

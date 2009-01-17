@@ -1,60 +1,44 @@
 note
 	description: "[
-		Shared access to testing facilities.
+		Observer used to notify test suite service that class has been removed.
 	]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
-	ES_SHARED_TEST_SERVICE
+class
+	ES_TEST_CLUSTER_OBSERVER
 
 inherit
-	SHARED_TEST_SERVICE
+	EB_CLUSTER_MANAGER_OBSERVER
 		redefine
-			test_suite,
-			on_processor_launch_error
+			on_class_removed
 		end
 
-	ES_SHARED_PROMPT_PROVIDER
+	SHARED_TEST_SERVICE
 		export
 			{NONE} all
 		end
 
-feature {NONE} -- Access
+create
+	make
 
-	test_suite: !SERVICE_CONSUMER [TEST_SUITE_S]
-			-- <Precursor>
-		local
-			l_observer: ES_TEST_CLUSTER_OBSERVER
+feature {NONE} -- Initialization
+
+	make
+			-- Initialize `Current'.
 		do
-			Result := Precursor
-			l_observer := observer_cell.item
-			if l_observer = Void then
-				create l_observer.make
-				observer_cell.put (l_observer)
-			end
-		end
-
-	current_window: !EV_WINDOW
-			-- Window in which `Current' is used.
-		deferred
-		end
-
-	observer_cell: CELL [?ES_TEST_CLUSTER_OBSERVER]
-			-- Observer which notifies test suite whenever a class is removed
-		once
-			create Result
-		ensure
-			result_attached: Result /= Void
+			manager.add_observer (Current)
 		end
 
 feature {NONE} -- Events
 
-	on_processor_launch_error (a_error: like error_message; a_type: !TYPE [TEST_PROCESSOR_I]; a_code: NATURAL)
+	on_class_removed (a_class: CLASS_I)
 			-- <Precursor>
 		do
-			prompts.show_error_prompt (a_error, current_window, Void)
+			if {l_class: !EIFFEL_CLASS_I} a_class and then test_suite.is_service_available then
+				test_suite.service.synchronize_with_class (l_class)
+			end
 		end
 
 note

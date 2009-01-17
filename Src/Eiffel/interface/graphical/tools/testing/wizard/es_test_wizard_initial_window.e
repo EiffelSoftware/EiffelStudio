@@ -40,11 +40,11 @@ feature {NONE} -- Initialization
 			new_class_button.set_background_color (white_color)
 			l_parent.extend (new_class_button)
 
-			create existing_class_button
-			existing_class_button.set_text (locale_formatter.translation (b_existing_class))
-			existing_class_button.select_actions.extend (agent wizard_information.set_manual_test_class)
-			existing_class_button.set_background_color (white_color)
-			l_parent.extend (existing_class_button)
+--			create existing_class_button
+--			existing_class_button.set_text (locale_formatter.translation (b_existing_class))
+--			existing_class_button.select_actions.extend (agent wizard_information.set_manual_test_class)
+--			existing_class_button.set_background_color (white_color)
+--			l_parent.extend (existing_class_button)
 
 			create extraction_button
 			extraction_button.set_text (locale_formatter.translation (b_extraction))
@@ -67,9 +67,6 @@ feature {NONE} -- Initialization
 			l_button: like new_class_button
 		do
 			l_button := new_class_button
-
-				-- Adding tests to existing classes is not implemented yet
-			existing_class_button.disable_sensitive
 
 			if debugger_manager.application_is_executing and then debugger_manager.application_is_stopped then
 				extraction_button.enable_sensitive
@@ -99,8 +96,8 @@ feature {NONE} -- Access: widgets
 	new_class_button: EV_RADIO_BUTTON
 			-- Button for creating a new test class
 
-	existing_class_button: EV_RADIO_BUTTON
-			-- Button indicating that existing test class shall be used
+--	existing_class_button: EV_RADIO_BUTTON
+--			-- Button indicating that existing test class shall be used
 
 	extraction_button: EV_RADIO_BUTTON
 			-- Button for creating new extracted test
@@ -128,12 +125,12 @@ feature -- Basic operations
 feature {NONE} -- Internationalization
 
 	t_title: STRING = "New Eiffel test wizard"
-	t_subtitle: STRING = "This will create a new Eiffel test"
+	t_subtitle: STRING = "Select type of test you would like to create:"
 
-	b_new_class: STRING = "Create new test class"
+	b_new_class: STRING = "Manual test case"
 	b_existing_class: STRING = "Use existing test class"
-	b_extraction: STRING = "Create test using current application status"
-	b_generation: STRING = "Automatically generate new tests"
+	b_extraction: STRING = "Extract tests from running application"
+	b_generation: STRING = "Synthesized tests using AutoTest%N(experimental)"
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

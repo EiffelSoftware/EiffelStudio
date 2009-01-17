@@ -7,12 +7,12 @@
 			<exclude>/\.svn</exclude>
 			<exclude>/tests</exclude>
 		</file_rule>
-		<option full_class_checking="true" is_attached_by_default="true" is_void_safe="true" syntax_level="1" namespace="EiffelSoftware.Library">
+		<option syntax_level="1" namespace="EiffelSoftware.Library">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf"/>
-		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<tests name="tests" location=".\" recursive="true">
 			<option namespace="Tests">
 			</option>

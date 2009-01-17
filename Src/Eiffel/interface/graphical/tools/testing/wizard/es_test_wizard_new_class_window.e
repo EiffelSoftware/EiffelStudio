@@ -22,6 +22,11 @@ inherit
 			cancel
 		end
 
+	EB_CLUSTER_MANAGER_OBSERVER
+		redefine
+			on_cluster_added
+		end
+
 create
 	make_window
 
@@ -31,23 +36,36 @@ feature {NONE} -- Initialization
 			-- <Precursor>
 		local
 			l_parent: EV_BOX
-			l_sep: EV_HORIZONTAL_SEPARATOR
+			l_hsep: EV_HORIZONTAL_SEPARATOR
+			l_vsep: EV_VERTICAL_SEPARATOR
+			l_hbox: EV_HORIZONTAL_BOX
+			l_cell: EV_VERTICAL_BOX
 		do
 			l_parent := initialize_container (choice_box)
 
 			build_class_name (l_parent)
-			create l_sep
-			l_parent.extend (l_sep)
-			l_parent.disable_item_expand (l_sep)
+			create l_hsep
+			l_parent.extend (l_hsep)
+			l_parent.disable_item_expand (l_hsep)
 
-			build_class_tree (l_parent)
+			create l_hbox
+			l_hbox.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
+			build_class_tree (l_hbox)
 
 			if wizard_information.is_new_manual_test_class then
-				create l_sep
-				l_parent.extend (l_sep)
-				l_parent.disable_item_expand (l_sep)
-				build_checkboxes (l_parent)
+				create l_vsep
+				l_hbox.extend (l_vsep)
+				l_hbox.disable_item_expand (l_vsep)
+				build_checkboxes (l_hbox)
+			else
+				create l_cell
+				build_checkboxes (l_cell)
+				l_hbox.extend (l_cell)
+				l_hbox.disable_item_expand (l_cell)
+				l_cell.hide
 			end
+
+			l_parent.extend (l_hbox)
 
 			on_after_initialize
 		end
@@ -85,45 +103,46 @@ feature {NONE} -- Initialization
 	build_class_tree (a_parent: EV_BOX)
 			-- Initialize `class_tree'
 		local
+			l_vbox: EV_VERTICAL_BOX
 			l_hbox: EV_HORIZONTAL_BOX
 			l_button: SD_TOOL_BAR_BUTTON
 			l_tb: SD_TOOL_BAR
 			l_layouts: EV_LAYOUT_CONSTANTS
 			l_label: EV_LABEL
-			l_cmd: EB_NEW_CLUSTER_COMMAND
 		do
+			create l_vbox
+
 			create l_hbox
 			create l_label.make_with_text (locale_formatter.translation (l_select_cluster))
 			l_label.align_text_left
 			l_hbox.extend (l_label)
 
+			cluster_error_icon := pixmaps.icon_pixmaps.general_error_icon.twin
+			l_hbox.extend (cluster_error_icon)
+			l_hbox.disable_item_expand (cluster_error_icon)
+
 			create l_tb.make
 			create l_button.make
 			l_button.set_pixmap (pixmaps.icon_pixmaps.new_cluster_icon)
-			create l_cmd.make (development_window, True)
-			l_button.select_actions.extend (agent l_cmd.execute)
+			l_button.select_actions.extend (agent on_create_cluster)
 			l_button.set_tooltip (locale_formatter.translation (tt_new_cluster))
 			l_tb.extend (l_button)
 			l_tb.compute_minimum_size
 			l_hbox.extend (l_tb)
 			l_hbox.disable_item_expand (l_tb)
 
-			a_parent.extend (l_hbox)
-			a_parent.disable_item_expand (l_hbox)
+			l_vbox.extend (l_hbox)
+			l_vbox.disable_item_expand (l_hbox)
 
 			create l_layouts
 			create class_tree.make_with_options (development_window.menus.context_menu_factory, False, False)
 			class_tree.select_actions.extend (agent on_select_tree_item)
-			class_tree.set_minimum_width (l_layouts.dialog_unit_to_pixels(350))
-			class_tree.set_minimum_height (l_layouts.dialog_unit_to_pixels(200))
+	--		class_tree.set_minimum_width (l_layouts.dialog_unit_to_pixels(270))
+	--		class_tree.set_minimum_height (l_layouts.dialog_unit_to_pixels(200))
 			class_tree.refresh
-			a_parent.extend (class_tree)
+			l_vbox.extend (class_tree)
 
-			create cluster_error_label
-			cluster_error_label.set_foreground_color ((create {EV_STOCK_COLORS}).red)
-			cluster_error_label.align_text_right
-			a_parent.extend (cluster_error_label)
-			a_parent.disable_item_expand (cluster_error_label)
+			a_parent.extend (l_vbox)
 		end
 
 	build_checkboxes (a_parent: EV_BOX)
@@ -166,7 +185,10 @@ feature {NONE} -- Initialization
 			l_name := wizard_information.new_class_name_cache
 			if l_name /= Void then
 				class_name.widget.set_text (l_name)
+			else
+				class_name.widget.set_text (default_class_name)
 			end
+			class_name.widget.set_focus
 			l_text := class_name.widget.text
 			check l_text /= Void end
 			b := validate_class_name (l_text)
@@ -192,11 +214,11 @@ feature {NONE} -- Initialization
 				else
 					tear_down_checkbox.disable_select
 				end
-	--			if wizard_information.is_system_level_test then
-	--				system_level_test_checkbox.enable_select
-	--			else
-	--				system_level_test_checkbox.disable_select
-	--			end
+				if wizard_information.is_system_level_test then
+					system_level_test_checkbox.enable_select
+				else
+					system_level_test_checkbox.disable_select
+				end
 				system_level_test_checkbox.disable_sensitive
 			end
 
@@ -228,8 +250,8 @@ feature {NONE} -- Access: widgets
 			--
 			-- Note: must be detachable for recycling
 
-	cluster_error_label: EV_LABEL
-			-- Label showing invalid cluster selection
+	cluster_error_icon: EV_PIXMAP
+			-- Icon used to show error with selected cluster
 
 	setup_checkbox: EV_CHECK_BUTTON
 			-- Checkbox for creating setup routine
@@ -265,6 +287,7 @@ feature {NONE} -- Events
 			l_name: STRING
 			l_path: STRING
 			l_error: ?STRING_32
+			l_cluster: ?CONF_CLUSTER
 		do
 			l_name := a_name.to_string_8
 			check l_name /= Void end
@@ -282,7 +305,9 @@ feature {NONE} -- Events
 						end
 						if class_name_validator.is_valid then
 							if is_cluster_valid and not wizard_information.is_generated_test_class then
-								l_path := wizard_information.cluster.location.build_path (wizard_information.path, l_name.as_lower)
+								l_cluster := wizard_information.cluster_cache
+								check l_cluster /= Void end
+								l_path := l_cluster.location.build_path (wizard_information.path, l_name.as_lower)
 								l_path.append (".e")
 								if (create {RAW_FILE}.make (l_path)).exists then
 									l_error := locale_formatter.formatted_translation (e_file_exists, [l_path])
@@ -310,6 +335,26 @@ feature {NONE} -- Events
 			end
 		end
 
+	on_create_cluster
+			-- Called when new cluster should be added.
+		local
+			l_cmd: EB_NEW_CLUSTER_COMMAND
+		do
+			create l_cmd.make (development_window, True)
+			if l_cmd.executable then
+				manager.add_observer (Current)
+				l_cmd.execute
+				manager.remove_observer (Current)
+			end
+			l_cmd.recycle
+		end
+
+	on_cluster_added (a_cluster: CLUSTER_I)
+			-- <Precursor>
+		do
+			class_tree.show_stone (create {CLUSTER_STONE}.make (a_cluster))
+		end
+
 	on_select_tree_item
 			-- Called when item in `class_tree' is selected.
 		local
@@ -322,14 +367,15 @@ feature {NONE} -- Events
 			wizard_information.path_cache := Void
 			if {l_item: ES_TEST_WIZARD_CLASS_TREE_FOLDER_ITEM} class_tree.selected_item then
 				if {l_eb_cluster: EB_SORTED_CLUSTER} l_item.data then
-					l_parent := l_eb_cluster.actual_cluster
-					check l_parent /= Void end
-					wizard_information.cluster_cache := l_parent
-					l_path := l_item.path
-					if l_path /= Void then
-						wizard_information.path_cache := l_path
-					else
-						wizard_information.path_cache := ""
+					if l_eb_cluster.actual_group /= Void and then l_eb_cluster.is_cluster then
+						l_parent := l_eb_cluster.actual_cluster
+						wizard_information.cluster_cache := l_parent
+						l_path := l_item.path
+						if l_path /= Void then
+							wizard_information.path_cache := l_path
+						else
+							wizard_information.path_cache := ""
+						end
 					end
 				end
 			end
@@ -383,11 +429,12 @@ feature {NONE} -- Basic operations
 			end
 			if l_error /= Void then
 				is_cluster_valid := False
-				cluster_error_label.show
-				cluster_error_label.set_text (l_error)
+				cluster_error_icon.show
 			else
-				cluster_error_label.hide
+				create l_error.make_empty
+				cluster_error_icon.hide
 			end
+			cluster_error_icon.set_tooltip (l_error)
 		end
 
 	proceed_with_current_info
@@ -418,6 +465,10 @@ feature {NONE} -- Basic operations
 			class_tree.recycle
 		end
 
+feature {NONE} -- Constants
+
+	default_class_name: STRING = "NEW_TEST_CLASS"
+
 feature {NONE} -- Internationalization
 
 	t_title: STRING = "New test class"
@@ -425,13 +476,13 @@ feature {NONE} -- Internationalization
 
 	l_class_name: STRING = "Class name: "
 	l_class_name_prefix: STRING = "Prefix for new class names"
-	l_select_cluster: STRING = "Select parent cluster for new class"
+	l_select_cluster: STRING = "Select cluster:"
 
 	tt_new_cluster: STRING = "Create new cluster"
 
-	b_setup_routine: STRING = "Redefine `$1' routine"
-	b_tear_down_routine: STRING = "Redefine `$1' routine"
-	b_system_level_test: STRING = "Create system level test class"
+	b_setup_routine: STRING = "Redefine `$1'"
+	b_tear_down_routine: STRING = "Redefine `$1'"
+	b_system_level_test: STRING = "System level test"
 
 	e_project_not_available: STRING = "Project is currently not available"
 	e_file_exists: STRING = "Class file $1 already exists"
@@ -442,7 +493,7 @@ invariant
 	cluster_valid_implies_attached: is_cluster_valid implies (wizard_information.cluster_cache /= Void and
 		wizard_information.path_cache /= Void)
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

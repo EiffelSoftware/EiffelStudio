@@ -15,19 +15,24 @@ feature {NONE} -- Access
 	test_suite: !SERVICE_CONSUMER [TEST_SUITE_S]
 			-- Access to a test suite service {TEST_SUITE_S} consumer
 		local
-			l_test_suite: like test_suite_cache
+			l_test_suite: ?like test_suite
 		do
-			l_test_suite := test_suite_cache
+			l_test_suite := test_suite_cell.item
 			if l_test_suite = Void then
 				create l_test_suite
-				test_suite_cache := l_test_suite
+				test_suite_cell.put (l_test_suite)
 			end
 
 			Result := l_test_suite
 		end
 
-	test_suite_cache: ?like test_suite
+	test_suite_cell: CELL [?SERVICE_CONSUMER [TEST_SUITE_S]]
 			-- Cache for `test_suite'
+		once
+			create Result
+		ensure
+			result_attached: Result /= Void
+		end
 
 	background_executor_type: !TYPE [TEST_BACKGROUND_EXECUTOR_I]
 			-- Type for executor used to execute tests in background
@@ -198,7 +203,7 @@ feature {NONE} -- Internationalization
 	e_unkonwn_error: !STRING = "Unable to launch processor"
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

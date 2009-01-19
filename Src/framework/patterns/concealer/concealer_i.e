@@ -18,7 +18,17 @@ feature -- Access
 			is_interface_usable: {l_usable: USABLE_I} Current implies l_usable.is_interface_usable
 		deferred
 		ensure
+			is_revealed: is_revealed
 			result_consistent: Result ~ object
+		end
+
+feature -- Status report
+
+	is_revealed: BOOLEAN
+			-- Indicates if the concealed object has been revealed yet.
+		require
+			is_interface_usable: {l_usable: USABLE_I} Current implies l_usable.is_interface_usable
+		deferred
 		end
 
 note

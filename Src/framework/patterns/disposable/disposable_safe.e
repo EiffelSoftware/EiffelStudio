@@ -81,9 +81,11 @@ feature -- Clean Up
 				is_actively_disposing := False
 			end
 		ensure then
-			is_disposed: (not is_actively_disposing implies is_disposed) and
-				(is_actively_disposing implies not is_disposed)
-			not_is_actively_disposing: is_disposed implies not is_actively_disposing
+			is_disposed: not old is_actively_disposing implies
+				((not is_actively_disposing implies is_disposed) and
+				(is_actively_disposing implies not is_disposed))
+			not_is_actively_disposing: not old is_actively_disposing implies
+				(is_disposed implies not is_actively_disposing)
 			is_actively_disposing_unchanged: is_actively_disposing = old is_actively_disposing
 		rescue
 			is_actively_disposing := l_active
@@ -159,14 +161,14 @@ feature -- Access
 feature -- Status report
 
 	is_interface_usable: BOOLEAN
-			-- Dtermines if the interface was usable
+			-- <Precursor>
 		do
 			Result := not is_disposed
 		ensure then
 			not_is_disposed: is_disposed implies not Result
 		end
 
-feature {DISPOSABLE} -- Status report
+feature {DISPOSABLE_I} -- Status report
 
 	is_disposed: BOOLEAN
 			-- Indicates if `Current' has been disposed of.
@@ -208,7 +210,7 @@ invariant
 	not_is_interface_usable: is_disposed implies not is_interface_usable
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

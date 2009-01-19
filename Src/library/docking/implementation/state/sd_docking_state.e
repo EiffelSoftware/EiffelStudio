@@ -31,6 +31,9 @@ create
 	make,
 	make_for_tab_zone
 
+create {SD_PLACE_HOLDER_ZONE}
+	make_for_place_holder_zone
+
 feature {NONE}-- Initlization
 
 	make (a_content: SD_CONTENT; a_direction: INTEGER; a_width_height: INTEGER)
@@ -39,15 +42,9 @@ feature {NONE}-- Initlization
 			a_content_not_void: a_content /= Void
 			a_content_attached: a_content.is_docking_manager_attached
 		do
-			create internal_shared
-			internal_docking_manager := a_content.docking_manager
-			direction := a_direction
-			width_height := a_width_height
-			internal_content := a_content
+			make_common (a_content, a_direction, a_width_height)
 			zone := internal_shared.widget_factory.docking_zone (a_content)
 			internal_docking_manager.zones.add_zone (zone)
-			last_floating_height := a_content.state.last_floating_height
-			last_floating_width := a_content.state.last_floating_width
 			initialized := True
 		ensure
 			set: internal_content = a_content
@@ -65,8 +62,48 @@ feature {NONE}-- Initlization
 		do
 			make (a_content, a_direction, 0)
 			a_container.extend (zone)
+			initialized := True
 		ensure
 			extended: a_container.has (zone)
+		end
+
+	make_for_place_holder_zone (a_content: SD_CONTENT; a_zone: SD_PLACE_HOLDER_ZONE)
+			-- Creation method for SD_PLACE_HOLDER_ZONE
+		require
+			a_content_not_void: a_content /= Void
+			a_content_attached: a_content.is_docking_manager_attached
+			a_zone_not_void: a_zone /= Void
+			a_zone_not_destroyed: not a_zone.is_destroyed
+			a_zone_parented: a_zone.parent /= Void
+		local
+			l_zones: SD_DOCKING_MANAGER_ZONES
+		do
+			make_common (a_content, a_content.state.direction, a_content.state.width_height)
+			zone := a_zone
+			l_zones := internal_docking_manager.zones
+			if not l_zones.has_zone (a_zone) then
+				l_zones.add_zone (a_zone)
+			end
+
+			change_state (Current)
+
+			initialized := True
+		end
+
+	make_common (a_content: SD_CONTENT; a_direction: INTEGER; a_width_height: INTEGER)
+			-- Initialize common part
+		require
+			a_content_not_void: a_content /= Void
+			a_content_attached: a_content.is_docking_manager_attached
+		do
+			create internal_shared
+			internal_docking_manager := a_content.docking_manager
+			direction := a_direction
+			width_height := a_width_height
+			internal_content := a_content
+
+			last_floating_height := a_content.state.last_floating_height
+			last_floating_width := a_content.state.last_floating_width
 		end
 
 feature {SD_TAB_STATE_ASSISTANT} -- Initlization
@@ -82,10 +119,10 @@ feature {SD_TAB_STATE_ASSISTANT} -- Initlization
 			zone.set_widget_main_area (a_widget, a_main_area, a_parent, a_split_position)
 		end
 
-feature -- Redefine.
+feature -- Redefine
 
 	restore (a_data: SD_INNER_CONTAINER_DATA; a_container: EV_CONTAINER)
-			-- Redefine.
+			-- <Precursor>
 		local
 			l_content: SD_CONTENT
 			l_titles: ARRAYED_LIST [STRING_GENERAL]
@@ -117,7 +154,7 @@ feature -- Redefine.
 		end
 
 	record_state
-			-- Redefine
+			-- <Precursor>
 		do
 			if floating_zone /= Void then
 				check valid_height: floating_zone.height > 0 end
@@ -128,7 +165,7 @@ feature -- Redefine.
 		end
 
 	change_title (a_title: STRING_GENERAL; a_content: SD_CONTENT)
-			-- Redefine.
+			-- <Precursor>
 		do
 			zone.set_title (a_title)
 		ensure then
@@ -136,13 +173,13 @@ feature -- Redefine.
 		end
 
 	change_pixmap (a_pixmap: EV_PIXMAP; a_content: SD_CONTENT)
-			-- Refine
+			-- <Precursor>
 		do
 			zone.set_pixmap (a_pixmap)
 		end
 
 	dock_at_top_level (a_multi_dock_area: SD_MULTI_DOCK_AREA)
-			-- Redefine.
+			-- <Precursor>
 		local
 			l_old_stuff: EV_WIDGET
 			l_old_spliter: EV_SPLIT_AREA
@@ -224,7 +261,7 @@ feature -- Redefine.
 		end
 
 	stick (a_direction: INTEGER)
-				-- Redefine.
+			-- <Precursor>
 		local
 			l_auto_hide_state: SD_AUTO_HIDE_STATE
 			l_width_height: INTEGER
@@ -251,7 +288,7 @@ feature -- Redefine.
 		end
 
 	float (a_x, a_y: INTEGER)
-			-- Redefine.
+			-- <Precursor>
 		local
 			l_floating_state: SD_FLOATING_STATE
 			l_orignal_multi_dock_area: SD_MULTI_DOCK_AREA
@@ -278,7 +315,7 @@ feature -- Redefine.
 		end
 
 	change_zone_split_area (a_target_zone: SD_ZONE; a_direction: INTEGER)
-			-- Redefine.
+			-- <Precursor>
 		local
 			l_called: BOOLEAN
 			l_retried: BOOLEAN
@@ -322,7 +359,7 @@ feature -- Redefine.
 		end
 
 	move_to_docking_zone (a_target_zone: SD_DOCKING_ZONE; a_first: BOOLEAN)
-			-- Redefine.
+			-- <Precursor>
 		do
 			move_to_zone_internal (a_target_zone, a_first)
 		ensure then
@@ -330,7 +367,7 @@ feature -- Redefine.
 		end
 
 	move_to_tab_zone (a_target_zone: SD_TAB_ZONE; a_index: INTEGER)
-			-- Redefine.
+			-- <Precursor>
 		do
 			if a_index = 1 then
 				move_to_zone_internal (a_target_zone, True)
@@ -346,7 +383,7 @@ feature -- Redefine.
 		end
 
 	auto_hide_tab_with (a_target_content: SD_CONTENT)
-			-- Redefine
+			-- <Precursor>
 		do
 			if zone /= Void then
 				internal_docking_manager.command.lock_update (zone, False)
@@ -361,7 +398,7 @@ feature -- Redefine.
 		end
 
 	show
-			-- Redefine.
+			-- <Precursor>
 		local
 			l_multi_dock_area: SD_MULTI_DOCK_AREA
 			l_state_void: SD_STATE_VOID
@@ -412,7 +449,7 @@ feature -- Redefine.
 		end
 
 	hide
-			-- Redefine.
+			-- <Precursor>
 		local
 			l_multi_dock_area: SD_MULTI_DOCK_AREA
 			l_spliter: EV_SPLIT_AREA
@@ -442,13 +479,13 @@ feature -- Redefine.
 		end
 
 	set_user_widget (a_widget: EV_WIDGET)
-			-- Redefine
+			-- <Precursor>
 		do
 			zone.update_user_widget
 		end
 
 	change_tab_tooltip (a_text: STRING_GENERAL)
-			-- Redefine
+			-- <Precursor>
 		local
 			l_upper: SD_DOCKING_ZONE_UPPER
 			l_tab: SD_NOTEBOOK_TAB
@@ -463,7 +500,7 @@ feature -- Redefine.
 		end
 
 	zone: SD_DOCKING_ZONE
-			-- Redefine.
+			-- <Precursor>
 
 feature {NONE} -- Implementation
 

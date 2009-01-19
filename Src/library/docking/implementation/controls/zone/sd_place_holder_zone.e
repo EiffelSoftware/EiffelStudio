@@ -88,6 +88,23 @@ feature -- Command
 			extend_cell (l_widget)
 		end
 
+	add_to_container (a_container: EV_CONTAINER)
+			-- Add `Current' to `a_container'
+		require
+			a_container_not_void: a_container /= Void
+			a_container_not_full: not a_container.full
+		local
+			l_docking_state: SD_DOCKING_STATE
+		do
+			a_container.extend (Current)
+
+			create l_docking_state.make_for_place_holder_zone (content, Current)
+
+			if not internal_docking_manager.contents.has (content) then
+				internal_docking_manager.contents.extend (content)
+			end
+		end
+
 feature {SD_DOCKING_MANAGER_COMMAND} -- Internal command
 
 	prepare_for_minimized_editor_area (a_manager: SD_DOCKING_MANAGER)

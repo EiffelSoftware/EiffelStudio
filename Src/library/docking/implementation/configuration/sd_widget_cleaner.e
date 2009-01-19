@@ -32,19 +32,30 @@ feature -- General command
 
 	reset_all_to_default (a_tool_only: BOOLEAN)
 			-- After `clean_up_for_open_all_config', this feature will insert editor place holder
+		local
+			l_place_holder_content: SD_CONTENT
 		do
 			clean_up_for_open_all_config (a_tool_only)
 
 			internal_docking_manager.unlock
 			internal_docking_manager.tool_bar_manager.unlock
-			if not internal_docking_manager.has_content (internal_docking_manager.zones.place_holder_content) then
-				internal_docking_manager.contents.extend (internal_docking_manager.zones.place_holder_content)
+			l_place_holder_content := internal_docking_manager.zones.place_holder_content
+			if not internal_docking_manager.has_content (l_place_holder_content) then
+				internal_docking_manager.contents.extend (l_place_holder_content)
 			end
-			internal_docking_manager.zones.place_holder_content.set_top ({SD_ENUMERATION}.top)
+			l_place_holder_content.set_top ({SD_ENUMERATION}.top)
+
+			if {lt_zone: SD_PLACE_HOLDER_ZONE} l_place_holder_content.state.zone then
+				-- Maybe `user_widget' is cleared
+				if not lt_zone.has_recursive (l_place_holder_content.user_widget) then
+					lt_zone.extend (l_place_holder_content)
+				end
+			end
+
 		end
 
 	clean_up_for_open_all_config (a_tool_only: BOOLEAN)
-			--
+			-- Clear all widgets
 		do
 			clean_up_mini_tool_bar
 			clean_up_tool_bars

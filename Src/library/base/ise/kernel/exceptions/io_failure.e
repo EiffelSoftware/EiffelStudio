@@ -19,7 +19,12 @@ feature -- Access
 	frozen code: INTEGER
 			-- Exception code
 		do
-			Result := {EXCEP_CONST}.io_exception
+			if internal_code = {EXCEP_CONST}.Io_exception then
+				Result := internal_code
+			else
+					-- Default to `Runtime_io_exception'.
+				Result := {EXCEP_CONST}.Runtime_io_exception
+			end
 		end
 
 	error_code: INTEGER
@@ -27,14 +32,22 @@ feature -- Access
 
 feature {EXCEPTION_MANAGER} -- Status setting
 
-	set_Error_code (a_code: like Error_code)
-			-- Set `Error_code' with `a_code'
+	set_error_code (a_code: like error_code)
+			-- Set `error_code' with `a_code'
 		do
-			Error_code := a_code
+			error_code := a_code
+		end
+
+	set_code (a_code: like code)
+			-- Set `code' with `a_code'.
+		do
+			internal_code := code
 		end
 
 feature {NONE} -- Accesss
 
 	frozen internal_meaning: STRING = "I/O error."
 
+	internal_code: like code
+			-- Internal code
 end

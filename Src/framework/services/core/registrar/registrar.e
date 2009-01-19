@@ -2,6 +2,18 @@ note
 	description: "[
 		The default implementation of {REGISTRAR_I} for supporting other iterfaces with
 		registration/unregisteration of modular/extension objects.
+		
+		Objects registered are automatically adopted by the registrar and will be disposed
+		of when removed. If this is not the desired functionality then seek the functions
+		of {ACTIVE_DICTIONARY_I}/{ACTIVE_DICTIONARY}.
+		
+		Objects registered will be automatically sited with the registrar object, if the
+		object implemented {SITE}[{REGISTRAR_I}[G, K]], when registration takes place or
+		a registered activator actives an object.
+		
+		All clean up is performed automously starting with the object being disposed if
+		implementing {DISPOSABLE_I} and then unsite if implementing a conforming site
+		specification.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."

@@ -827,6 +827,31 @@ feature -- Element change
 				end
 			end
 		end
+		
+	synchronize_with_docking_manager
+			-- Becaues sometimes the editors datas we saved will not synchronized with docking editors data,
+			-- we want to make sure it's synchronized here.
+		local
+			l_contents: ARRAYED_LIST [SD_CONTENT]
+		do
+			from
+				l_contents := docking_manager.contents.twin
+				l_contents.start
+			until
+				l_contents.after
+			loop
+				if l_contents.item.type = {SD_ENUMERATION}.editor then
+					if not l_contents.item.is_visible then
+						-- This editor not exists in saved docking layout, we should remove it.
+						remove_editor_of_content (l_contents.item)
+
+						-- Remove it from docking manager too.
+						l_contents.item.close
+					end
+				end
+				l_contents.forth
+			end
+		end
 
 feature -- Basic operations
 
@@ -1436,31 +1461,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	synchronize_with_docking_manager
-			-- Becaues sometimes the editors datas we saved will not synchronized with docking editors data,
-			-- we want to make sure it's synchronized here.
-		local
-			l_contents: ARRAYED_LIST [SD_CONTENT]
-		do
-			from
-				l_contents := docking_manager.contents.twin
-				l_contents.start
-			until
-				l_contents.after
-			loop
-				if l_contents.item.type = {SD_ENUMERATION}.editor then
-					if not l_contents.item.is_visible then
-						-- This editor not exists in saved docking layout, we should remove it.
-						remove_editor_of_content (l_contents.item)
-
-						-- Remove it from docking manager too.
-						l_contents.item.close
-					end
-				end
-				l_contents.forth
-			end
-		end
-
 	remove_editor_of_content (a_content: SD_CONTENT)
 			-- Remove editor related with `a_content'.
 		local
@@ -1517,7 +1517,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

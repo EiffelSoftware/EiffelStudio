@@ -25,6 +25,7 @@ feature {NONE} -- Initialization
 			internal_docking_manager := a_docking_manager
 
 			create cleaner.make (a_docking_manager)
+			create editor_helper.make (Current)
 		ensure
 			set: internal_docking_manager = a_docking_manager
 		end
@@ -88,7 +89,7 @@ feature -- Open inner container data.
 				end
 
 				l_place_holder_content := internal_docking_manager.zones.place_holder_content
-				if has_editor_or_place_holder (l_top_parent) then
+				if editor_helper.has_editor_or_place_holder (l_top_parent) then
 					if {lt_widget: EV_WIDGET} l_place_holder_content.state.zone then
 						-- If this time we only restore a editor place holder zone? No real editors restored.
 						if not internal_docking_manager.main_container.has_recursive (lt_widget) then
@@ -103,18 +104,15 @@ feature -- Open inner container data.
 					-- Otherwise, editor will missing, see bug#15253
 
 					-- `l_top_parent' is not full before `open_inner_container_data',
-					-- `open_inner_container_data' restored nothing, so it's not full here
-					check not_full: not l_top_parent.full end
+					-- `open_inner_container_data' restored nothing, so it should not full here
+					-- However, if `l_top_parent' has restored somethings (such as EV_SPLIT_AREA), we
+					-- can wipe out it, since `editor_top_parent_for_restore' guranntee not has tools' widgets
+					if l_top_parent.full then
+						l_top_parent.wipe_out
+					end
 
 					if {lt_zone: SD_PLACE_HOLDER_ZONE} l_place_holder_content.state.zone then
-						l_top_parent.extend (lt_zone)
-						if not internal_docking_manager.zones.has_zone (lt_zone) then
-							internal_docking_manager.zones.add_zone (lt_zone)
-						end
-						if not internal_docking_manager.contents.has (l_place_holder_content) then
-							internal_docking_manager.contents.extend (l_place_holder_content)
-						end
-						--FIXIT: Maybe SD_PLACE_HOLDER_ZONE's cotent's state is not correct, is it important?
+						lt_zone.add_to_container (l_top_parent)
 					end
 				end
 
@@ -132,132 +130,12 @@ feature -- Open inner container data.
 
 	open_tools_config (a_file: STRING_GENERAL): BOOLEAN
 			-- Open tools config, except all editors
-		require
-			not_called: top_container = Void
+			-- Not same as normal `open_config', it doesn't clear editors related things.
 		local
-			l_has_place_holder: BOOLEAN
-			l_place_holder_zone: SD_ZONE
-			l_parent: EV_CONTAINER
-			l_split: EV_SPLIT_AREA
-			l_split_position: INTEGER
-			l_only_one_item: EV_WIDGET
-			l_temp_split: SD_VERTICAL_SPLIT_AREA
-			l_container: EV_CONTAINER
 			l_config_data: SD_CONFIG_DATA
-			l_env: EV_ENVIRONMENT
 		do
-			internal_docking_manager.query.set_opening_tools_layout (True)
-
-			-- We have to set all zones to normal state, otherwise we can't find the editor parent.
-			internal_docking_manager.command.recover_normal_state
-
-			-- We have to open unminimized editor data here. Because after the following codes which will INSERT `l_temp_split' to the docking tree
-			-- when editor top parent is SD_MULTI_DOCK_AREA, the docking logic tree is not a full two fork tree. Then there will be problems
-			-- in `update_middle_container' which called by `recover_normal_size_from_minimize' from SD_UPPER_ZONE. See bug#12427.
 			l_config_data := config_data_from_file (a_file)
-			open_editor_minimized_data_unminimized (l_config_data)
-
-			if not internal_docking_manager.has_content (internal_docking_manager.zones.place_holder_content) then
-				top_container := internal_docking_manager.query.inner_container_main.editor_parent
-				if top_container = internal_docking_manager.query.inner_container_main then
-					l_container ?= top_container
-					if l_container /= Void then
-						-- It must be only one zone in top container
-						l_only_one_item := l_container.item
-						if l_only_one_item /= Void then
-							l_container.wipe_out
-							create l_temp_split
-							l_container.extend (l_temp_split)
-							l_temp_split.extend (l_only_one_item)
-							top_container := l_temp_split
-						else
-							check not_possible: False end
-						end
-					else
-						check not_possible: False end
-					end
-				end
-				if top_container /= Void then
-					internal_docking_manager.query.inner_container_main.save_spliter_position (top_container, generating_type)
-				else
-					check not_possible: False end
-				end
-				internal_docking_manager.contents.extend (internal_docking_manager.zones.place_holder_content)
-			else
-				l_has_place_holder := True
-			end
-
-			-- Different from normal `open_config', we don't clear editors related things.
-			Result := open_all_config (a_file)
-
-			if not l_has_place_holder then
-				check has_place_holder: internal_docking_manager.has_content (internal_docking_manager.zones.place_holder_content) end
-				l_place_holder_zone ?= internal_docking_manager.zones.place_holder_content.state.zone
-				if l_place_holder_zone /= Void then
-				-- l_place_holder_zone maybe void because open_config fail.
-					if {lt_container: EV_CONTAINER} l_place_holder_zone then
-						l_parent := lt_container.parent
-					else
-						check not_possible: False end
-					end
-
-					if l_parent /= Void then
-						l_split ?= l_parent
-						if l_split /= Void then
-							l_split_position := l_split.split_position
-						end
-						if {lt_widget: EV_WIDGET} l_place_holder_zone then
-							l_parent.prune (lt_widget)
-						else
-							check not_possible: False end
-						end
-
-						if top_container /= Void then
-							if top_container.parent /= Void then
-								top_container.parent.prune (top_container)
-							end
-							l_parent.extend (top_container)
-						else
-							check not_possible: False end
-						end
-
-						if l_split /= Void and then l_split.minimum_split_position <= l_split_position and l_split_position <= l_split.maximum_split_position then
-							l_split.set_split_position (l_split_position)
-						end
-					else
-						check not_possible: False end
-					end
-
-				end
-				if top_container /= Void then
-					internal_docking_manager.query.inner_container_main.restore_spliter_position (top_container, generating_type)
-				else
-					check not_possible: False end
-				end
-
-				internal_docking_manager.zones.place_holder_content.close
-				if l_place_holder_zone /= Void then
-					internal_docking_manager.query.inner_container_main.update_middle_container
-					internal_docking_manager.command.resize (False)
-				end
-			end
-			top_container := Void
-
-			if Result then
-				open_editor_minimized_data_minimize (l_config_data)
-			end
-
-			internal_docking_manager.command.resize (True)
-
-			-- We have to do it on idle, otherwise, maximized mini tool bar buttons positions in floating zone not correct.
-			create l_env
-			l_env.application.do_once_on_idle (agent internal_open_maximized_tool_data (l_config_data))
-
-			call_show_actions
-
-			internal_docking_manager.query.set_opening_tools_layout (False)
-		ensure
-			cleared: top_container = Void
+			Result := open_tools_config_imp (l_config_data, agent open_all_config (a_file))
 		end
 
 	open_maximized_tool_data (a_file: STRING_GENERAL)
@@ -306,8 +184,8 @@ feature -- Query
 			end
 		end
 
-	top_container: EV_WIDGET
-		-- When only save tools config, and zone place holder not in, this is top contianer of all editors.
+	editor_helper: SD_EDITOR_CONFIG_HELPER
+			-- Editor config helper
 
 feature {NONE} -- Implementation
 
@@ -330,7 +208,7 @@ feature {NONE} -- Implementation
 					l_called := True
 
 					-- First we clear all areas.
-					cleaner.clean_up_for_open_all_config (top_container /= Void)
+					cleaner.clean_up_for_open_all_config (editor_helper.is_top_container_recorded)
 
 					set_all_visible
 
@@ -376,7 +254,43 @@ feature {NONE} -- Implementation
 					internal_docking_manager.command.unlock_update
 				end
 				l_retried := True
-				cleaner.reset_all_to_default (top_container /= Void)
+				cleaner.reset_all_to_default (editor_helper.is_top_container_recorded)
+				retry
+			end
+		end
+
+	open_tools_config_imp (a_config_data: SD_CONFIG_DATA; a_after_editor_prepared: PREDICATE [ANY, TUPLE]): BOOLEAN
+			-- Open tools config, except all editors
+			-- Not same as normal `open_config', it doesn't clear editors related things.
+			-- `a_config_data' can be void
+		require
+			not_called: not editor_helper.is_top_container_recorded
+		local
+			l_retried: BOOLEAN
+		do
+			if not l_retried then
+				editor_helper.remember_editors_state (a_config_data)
+				-- Editor related data prepared
+				a_after_editor_prepared.call (void)
+				Result := a_after_editor_prepared.last_result
+				-- We restore editor
+				if Result and editor_helper.is_editor_state_valid then
+					editor_helper.restore_editor_state (a_config_data, Result)
+				else
+					editor_helper.restore_editor_state (a_config_data, False)
+					cleaner.reset_all_to_default (editor_helper.is_top_container_recorded)
+					Result := False
+				end
+			else
+				editor_helper.restore_editor_state (a_config_data, False)
+			end
+		ensure
+			cleared: not editor_helper.is_top_container_recorded
+		rescue
+			-- If something bad happen, we restore all to default
+			if not l_retried then
+				l_retried := True
+				cleaner.reset_all_to_default (editor_helper.is_top_container_recorded)
 				retry
 			end
 		end
@@ -442,6 +356,7 @@ feature {NONE} -- Implementation
 		ensure
 			not_full: Result /= Void implies not Result.full
 			parented: Result /= Void implies Result.parent /= Void
+			result_not_have_tool_widgets:
 		end
 
 	is_all_tools (a_zones: ARRAYED_LIST [SD_ZONE]): BOOLEAN
@@ -517,7 +432,7 @@ feature {NONE} -- Implementation
 			until
 				l_contents.after
 			loop
-				if top_container /= Void then
+				if editor_helper.is_top_container_recorded then
 					-- We are restoring tools config
 					if l_contents.item.type /= {SD_ENUMERATION}.editor then
 						l_contents.item.set_visible (False)
@@ -893,62 +808,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	open_editor_minimized_data_unminimized (a_config_data: SD_CONFIG_DATA)
-			-- Unminimized editor zone if `a_config_data' is unminimized.
-		local
-			l_editor_zone: SD_UPPER_ZONE
-		do
-			if a_config_data /= Void then
-				l_editor_zone := internal_docking_manager.query.only_one_editor_zone
-				if l_editor_zone /= Void and a_config_data.is_one_editor_zone then
-					if not a_config_data.is_editor_minimized and l_editor_zone.is_minimized then
-						l_editor_zone.on_minimize
-					end
-				end
-			end
-		end
-
-	open_editor_minimized_data_minimize (a_config_data: SD_CONFIG_DATA)
-			-- Minimized editor zone if `a_cofig_data' is minimized.
-		local
-			l_editor_zone: SD_UPPER_ZONE
-		do
-			if a_config_data /= Void then
-				l_editor_zone := internal_docking_manager.query.only_one_editor_zone
-				if l_editor_zone /= Void and a_config_data.is_one_editor_zone then
-					if a_config_data.is_editor_minimized and not l_editor_zone.is_minimized then
-						l_editor_zone.on_minimize
-					end
-				end
-			end
-		end
-
-	internal_open_maximized_tool_data (a_config_data: SD_CONFIG_DATA)
-			-- Open maximized tool data.
-		local
-			l_content: SD_CONTENT
-			l_maximzied_tools: ARRAYED_LIST [STRING_GENERAL]
-			l_zone: SD_ZONE
-		do
-			if a_config_data /= Void then
-				from
-					l_maximzied_tools := a_config_data.maximized_tools
-					l_maximzied_tools.start
-				until
-					l_maximzied_tools.after
-				loop
-					l_content := internal_docking_manager.query.content_by_title (l_maximzied_tools.item)
-					if l_content /= Void then
-						l_zone := l_content.state.zone
-						if l_zone /= Void and then not l_zone.is_maximized then
-							l_content.state.on_normal_max_window
-						end
-					end
-					l_maximzied_tools.forth
-				end
-			end
-		end
-
 	internal_open_tool_bar_item_data (a_config_data: SD_CONFIG_DATA)
 			-- Open tool bar resizable item data.
 		local
@@ -994,6 +853,40 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	found_place_holder_already: BOOLEAN
+			-- When executing `open_tools_config', does place holder content already restored?
+
+	cleaner: SD_WIDGET_CLEANER
+			-- Widget cleaner
+
+feature {SD_EDITOR_CONFIG_HELPER} -- Internals
+
+	internal_open_maximized_tool_data (a_config_data: SD_CONFIG_DATA)
+			-- Open maximized tool data.
+		local
+			l_content: SD_CONTENT
+			l_maximzied_tools: ARRAYED_LIST [STRING_GENERAL]
+			l_zone: SD_ZONE
+		do
+			if a_config_data /= Void then
+				from
+					l_maximzied_tools := a_config_data.maximized_tools
+					l_maximzied_tools.start
+				until
+					l_maximzied_tools.after
+				loop
+					l_content := internal_docking_manager.query.content_by_title (l_maximzied_tools.item)
+					if l_content /= Void then
+						l_zone := l_content.state.zone
+						if l_zone /= Void and then not l_zone.is_maximized then
+							l_content.state.on_normal_max_window
+						end
+					end
+					l_maximzied_tools.forth
+				end
+			end
+		end
+
 	call_show_actions
 			-- Call SD_CONTENT.show_action inner containers.
 		local
@@ -1024,43 +917,15 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	found_place_holder_already: BOOLEAN
-			-- When executing `open_tools_config', does place holder content already restored?
-
-	cleaner: SD_WIDGET_CLEANER
-			-- Widget cleaner
-
-	has_editor_or_place_holder (a_top_container: EV_CONTAINER): BOOLEAN
-			-- If `a_top_container' has any editor related widget?
-		require
-			a_top_container_not_void: a_top_container /= Void
-		local
-			l_editors: ARRAYED_LIST [SD_CONTENT]
-		do
-			from
-				l_editors := internal_docking_manager.query.contents_editors
-				l_editors.start
-			until
-				l_editors.after or Result
-			loop
-				if a_top_container.has_recursive (l_editors.item.user_widget) then
-					Result := True
-				end
-				l_editors.forth
-			end
-
-			if not Result then
-				Result := a_top_container.has_recursive (internal_docking_manager.zones.place_holder_content.user_widget)
-			end
-		end
-
-feature {NONE} -- Internals.
-
 	internal_docking_manager: SD_DOCKING_MANAGER
-			-- Docking manager which Current belong to.
+			-- Docking manager which Current belong to
 
-	internal_shared: SD_SHARED;
-			-- All singletons.
+	internal_shared: SD_SHARED
+			-- All singletons
+
+invariant
+	editor_helper_not_void: editor_helper /= Void
+
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

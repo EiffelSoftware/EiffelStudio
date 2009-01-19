@@ -51,99 +51,10 @@ feature -- Normal mode command
 		end
 
 	construct_standard_layout_by_code
-			-- After docking manager have all widgets, set all tools to standard default layout.
-		local
-			l_tool: EB_TOOL
-			l_last_tool: EB_TOOL
-			l_tool_bar_content, l_tool_bar_content_2: SD_TOOL_BAR_CONTENT
-			l_no_locked_window: BOOLEAN
-			l_features_tool: ES_FEATURES_TOOL
+			-- After docking manager contains all widgets, set all tools to standard default layout.
 		do
-			l_no_locked_window := ((create {EV_ENVIRONMENT}).application.locked_window = Void)
-			if l_no_locked_window then
-				develop_window.window.lock_update
-			end
-			develop_window.close_all_tools
-			develop_window.docking_manager.reset_all_widgets
-
-			-- Right bottom tools
-			l_tool := develop_window.tools.c_output_tool
-			l_tool.content.set_top ({SD_ENUMERATION}.bottom)
-
-			l_tool := develop_window.shell_tools.tool ({ES_ERROR_LIST_TOOL}).panel
-			l_tool.content.set_tab_with (develop_window.tools.c_output_tool.content, True)
-			l_last_tool := l_tool
-
-			l_tool := develop_window.tools.output_tool
-			l_tool.content.set_tab_with (l_last_tool.content, True)
-
-			l_tool := develop_window.tools.features_relation_tool
-			l_tool.content.set_tab_with (develop_window.tools.output_tool.content, True)
-
-			l_tool := develop_window.tools.class_tool
-			l_tool.content.set_tab_with (develop_window.tools.features_relation_tool.content, True)
-
-			l_tool.content.set_split_proportion (0.6)
-
-			-- Right tools
-			l_features_tool ?= develop_window.shell_tools.tool ({ES_FEATURES_TOOL})
-
-			l_tool := develop_window.tools.favorites_tool
-			l_tool.content.set_top ({SD_ENUMERATION}.right)
-			l_tool := l_features_tool.panel
-			l_tool.content.set_tab_with (develop_window.tools.favorites_tool.content, True)
-			l_tool := develop_window.tools.cluster_tool
-			l_tool.content.set_tab_with (l_features_tool.panel.content, True)
-			l_tool.content.set_split_proportion (0.73)
-
-			-- Auto hide tools
-			l_tool := develop_window.tools.diagram_tool
-			if l_tool.content.state_value /= {SD_ENUMERATION}.auto_hide then
-				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
-			else
-				-- First we pin it, then pin it again. So we can make sure the tab stub order and tab stub direction.
-				-- Docking library will add a feature to set auto hide tab stub order directly in the future. -- Larry 2007/7/13
-				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
-				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
-			end
-
-			l_tool := develop_window.tools.dependency_tool
-			if l_tool.content.state_value /= {SD_ENUMERATION}.auto_hide then
-				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
-			else
-				-- First we pin it, then pin it again. So we can make sure the tab stub order and tab stub direction.
-				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
-				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
-			end
-
-			l_tool := develop_window.tools.metric_tool
-			l_tool.content.set_tab_with (develop_window.tools.dependency_tool.content, False)
-
-			develop_window.shell_tools.tool ({ES_INFORMATION_TOOL}).panel.content.set_tab_with (l_tool.content, False)
-
-			-- Tool bars
-			l_tool_bar_content := develop_window.docking_manager.tool_bar_manager.content_by_title (interface_names.to_standard_toolbar)
-			l_tool_bar_content_2 := l_tool_bar_content
-			check not_void: l_tool_bar_content /= Void end
-			l_tool_bar_content.set_top ({SD_ENUMERATION}.top)
-
-			l_tool_bar_content := develop_window.docking_manager.tool_bar_manager.content_by_title (interface_names.to_address_toolbar)
-			check not_void: l_tool_bar_content /= Void end
-			l_tool_bar_content.set_top ({SD_ENUMERATION}.top)
-
-			l_tool_bar_content := develop_window.docking_manager.tool_bar_manager.content_by_title (interface_names.to_project_toolbar)
-			check not_void: l_tool_bar_content /= Void end
-			l_tool_bar_content.set_top_with (l_tool_bar_content_2)
-
-			l_tool_bar_content := develop_window.docking_manager.tool_bar_manager.content_by_title (interface_names.to_refactory_toolbar)
-			check not_void: l_tool_bar_content /= Void end
-			l_tool_bar_content.set_top ({SD_ENUMERATION}.top)
-			-- We first call `set_top' because we want set a default location for the tool bar.
-			l_tool_bar_content.hide
-
-			if l_no_locked_window then
-				develop_window.window.unlock_update
-			end
+			develop_window.editors_manager.synchronize_with_docking_manager
+			construct_standard_layout_by_code_imp
 		end
 
 	restore_tools_docking_layout
@@ -228,6 +139,7 @@ feature -- Debug mode command
 			l_wt_lst: LINKED_SET [ES_WATCH_TOOL]
 			l_debugger_manager: EB_DEBUGGER_MANAGER
 			l_tool_bar_content: SD_TOOL_BAR_CONTENT
+			l_env: EV_ENVIRONMENT
 		do
 			l_debugger_manager := develop_window.eb_debugger_manager
 
@@ -286,7 +198,22 @@ feature -- Debug mode command
 
 				--| Objects tool			
 			l_debugger_manager.objects_tool.panel.content.set_top ({SD_ENUMERATION}.bottom)
-			l_debugger_manager.objects_tool.show (True)
+
+			-- FIXIT: *Maybe* here is a Windows bug or Vision2 bug, when "reset tools layout" (from menu), if we
+			-- call `l_debugger_manager.objects_tool).show (True)' directy, the widgets will not be diplayed correctly (all grey)
+			-- so we do it in idle actions
+			-- However, this is not total fix...sometimes, it still not work...
+			create l_env
+			l_env.application.do_once_on_idle (agent (a_debugger_manager: EB_DEBUGGER_MANAGER)
+													local
+														la_tool: ES_OBJECTS_TOOL
+													do
+														la_tool := a_debugger_manager.objects_tool
+														if la_tool.is_interface_usable then
+															la_tool.show (True)
+														end
+													end (l_debugger_manager))
+
 			l_refer_tool_content := l_debugger_manager.objects_tool.panel.content
 
 				--| Breakpoints tool
@@ -398,6 +325,8 @@ feature -- Debug mode command
 				l_result := develop_window.docking_manager.open_tools_config (l_fn)
 			end
 			if not l_result then
+				-- Synchornze editors with docking contents
+				develop_window.editors_manager.synchronize_with_docking_manager
 				restore_standard_debug_docking_layout_by_code
 			end
 		end
@@ -466,6 +395,101 @@ feature {NONE} -- Implementation
 			develop_window.menus.update_menu_lock_items
 			develop_window.menus.update_show_tool_bar_items
 
+		end
+
+	construct_standard_layout_by_code_imp
+			-- Implementation of `construct_standard_layout_by_code'
+		local
+			l_tool: EB_TOOL
+			l_last_tool: EB_TOOL
+			l_tool_bar_content, l_tool_bar_content_2: SD_TOOL_BAR_CONTENT
+			l_no_locked_window: BOOLEAN
+			l_features_tool: ES_FEATURES_TOOL
+		do
+			l_no_locked_window := ((create {EV_ENVIRONMENT}).application.locked_window = Void)
+			if l_no_locked_window then
+				develop_window.window.lock_update
+			end
+			develop_window.close_all_tools
+
+			-- Right bottom tools
+			l_tool := develop_window.tools.c_output_tool
+			l_tool.content.set_top ({SD_ENUMERATION}.bottom)
+
+			l_tool := develop_window.shell_tools.tool ({ES_ERROR_LIST_TOOL}).panel
+			l_tool.content.set_tab_with (develop_window.tools.c_output_tool.content, True)
+			l_last_tool := l_tool
+
+			l_tool := develop_window.tools.output_tool
+			l_tool.content.set_tab_with (l_last_tool.content, True)
+
+			l_tool := develop_window.tools.features_relation_tool
+			l_tool.content.set_tab_with (develop_window.tools.output_tool.content, True)
+
+			l_tool := develop_window.tools.class_tool
+			l_tool.content.set_tab_with (develop_window.tools.features_relation_tool.content, True)
+
+			l_tool.content.set_split_proportion (0.6)
+
+			-- Right tools
+			l_features_tool ?= develop_window.shell_tools.tool ({ES_FEATURES_TOOL})
+
+			l_tool := develop_window.tools.favorites_tool
+			l_tool.content.set_top ({SD_ENUMERATION}.right)
+			l_tool := l_features_tool.panel
+			l_tool.content.set_tab_with (develop_window.tools.favorites_tool.content, True)
+			l_tool := develop_window.tools.cluster_tool
+			l_tool.content.set_tab_with (l_features_tool.panel.content, True)
+			l_tool.content.set_split_proportion (0.73)
+
+			-- Auto hide tools
+			l_tool := develop_window.tools.diagram_tool
+			if l_tool.content.state_value /= {SD_ENUMERATION}.auto_hide then
+				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
+			else
+				-- First we pin it, then pin it again. So we can make sure the tab stub order and tab stub direction.
+				-- Docking library will add a feature to set auto hide tab stub order directly in the future. -- Larry 2007/7/13
+				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
+				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
+			end
+
+			l_tool := develop_window.tools.dependency_tool
+			if l_tool.content.state_value /= {SD_ENUMERATION}.auto_hide then
+				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
+			else
+				-- First we pin it, then pin it again. So we can make sure the tab stub order and tab stub direction.
+				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
+				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
+			end
+
+			l_tool := develop_window.tools.metric_tool
+			l_tool.content.set_tab_with (develop_window.tools.dependency_tool.content, False)
+
+			develop_window.shell_tools.tool ({ES_INFORMATION_TOOL}).panel.content.set_tab_with (l_tool.content, False)
+
+			-- Tool bars
+			l_tool_bar_content := develop_window.docking_manager.tool_bar_manager.content_by_title (interface_names.to_standard_toolbar)
+			l_tool_bar_content_2 := l_tool_bar_content
+			check not_void: l_tool_bar_content /= Void end
+			l_tool_bar_content.set_top ({SD_ENUMERATION}.top)
+
+			l_tool_bar_content := develop_window.docking_manager.tool_bar_manager.content_by_title (interface_names.to_address_toolbar)
+			check not_void: l_tool_bar_content /= Void end
+			l_tool_bar_content.set_top ({SD_ENUMERATION}.top)
+
+			l_tool_bar_content := develop_window.docking_manager.tool_bar_manager.content_by_title (interface_names.to_project_toolbar)
+			check not_void: l_tool_bar_content /= Void end
+			l_tool_bar_content.set_top_with (l_tool_bar_content_2)
+
+			l_tool_bar_content := develop_window.docking_manager.tool_bar_manager.content_by_title (interface_names.to_refactory_toolbar)
+			check not_void: l_tool_bar_content /= Void end
+			l_tool_bar_content.set_top ({SD_ENUMERATION}.top)
+			-- We first call `set_top' because we want set a default location for the tool bar.
+			l_tool_bar_content.hide
+
+			if l_no_locked_window then
+				develop_window.window.unlock_update
+			end
 		end
 
 	internal_recycle

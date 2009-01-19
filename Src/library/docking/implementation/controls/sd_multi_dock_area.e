@@ -119,12 +119,11 @@ feature -- Command
 				l_data := all_spliters_data.item (a_data_name)
 				l_data.start
 				restore_spliter_position_imp (l_split, l_data)
-
 				-- Remove data with `a_name'
 				all_spliters_data.remove (a_data_name)
 			end
 		ensure
-			data_cleared: not has_spliter_data (a_data_name)
+			data_cleared: ({lt_widget_2: SD_MIDDLE_CONTAINER} a_widget) implies not has_spliter_data (a_data_name)
 		end
 
 	update_middle_container

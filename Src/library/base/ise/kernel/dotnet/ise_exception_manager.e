@@ -143,7 +143,7 @@ feature {EXCEPTIONS} -- Backward compatibility support
 					-- Obselete
 				Result := {RESCUE_FAILURE}
 			when {EXCEP_CONST}.Out_of_memory then
-					-- Should have difference with `No_more_memory'
+					-- Merged with `No_more_memory'
 				Result := {NO_MORE_MEMORY}
 			when {EXCEP_CONST}.Resumption_failed then
 					-- Obselete
@@ -166,10 +166,12 @@ feature {EXCEPTIONS} -- Backward compatibility support
 			when {EXCEP_CONST}.Developer_exception then
 				Result := {DEVELOPER_EXCEPTION}
 			when {EXCEP_CONST}.Eiffel_runtime_fatal_error then
+					-- Merged with `Eiffel_runtime_panic'
 				Result := {EIFFEL_RUNTIME_PANIC}
 			when {EXCEP_CONST}.Dollar_applied_to_melted_feature then
 				Result := {ADDRESS_APPLIED_TO_MELTED_FEATURE}
 			when {EXCEP_CONST}.Runtime_io_exception then
+					-- Merged with `Io_exception'
 				Result := {IO_FAILURE}
 			when {EXCEP_CONST}.Com_exception then
 				Result := {COM_FAILURE}
@@ -186,12 +188,18 @@ feature {EXCEPTIONS} -- Backward compatibility support
 
 	exception_from_code (a_code: INTEGER): EXCEPTION
 			-- Create exception object from `a_code'
+		local
+			l_rt_panic: EIFFEL_RUNTIME_PANIC
+			l_io_failure: IO_FAILURE
+			l_no_more_mem: NO_MORE_MEMORY
 		do
 			inspect a_code
 			when {EXCEP_CONST}.void_call_target then
 				create {VOID_TARGET}Result
 			when {EXCEP_CONST}.No_more_memory then
-				create {NO_MORE_MEMORY}Result
+				create l_no_more_mem
+				l_no_more_mem.set_code ({EXCEP_CONST}.No_more_memory)
+				Result := l_no_more_mem
 			when {EXCEP_CONST}.Precondition then
 				create {PRECONDITION_VIOLATION}Result
 			when {EXCEP_CONST}.Postcondition then
@@ -213,13 +221,17 @@ feature {EXCEPTIONS} -- Backward compatibility support
 			when {EXCEP_CONST}.Signal_exception then
 				create {OPERATING_SYSTEM_SIGNAL_FAILURE}Result
 			when {EXCEP_CONST}.Eiffel_runtime_panic then
-				create {EIFFEL_RUNTIME_PANIC}Result
+				create l_rt_panic
+				l_rt_panic.set_code ({EXCEP_CONST}.Eiffel_runtime_panic)
+				Result := l_rt_panic
 			when {EXCEP_CONST}.Rescue_exception then
 					-- Obselete
 				create {RESCUE_FAILURE}Result
 			when {EXCEP_CONST}.Out_of_memory then
-					-- Should have difference with `No_more_memory'
-				create {NO_MORE_MEMORY}Result
+					-- Merged with `No_more_memory'
+				create l_no_more_mem
+				l_no_more_mem.set_code ({EXCEP_CONST}.Out_of_memory)
+				Result := l_no_more_mem
 			when {EXCEP_CONST}.Resumption_failed then
 					-- Obselete
 				create {RESUMPTION_FAILURE}Result
@@ -233,7 +245,9 @@ feature {EXCEPTIONS} -- Backward compatibility support
 					-- Obselete
 				create {EXCEPTION_IN_SIGNAL_HANDLER_FAILURE}Result
 			when {EXCEP_CONST}.Io_exception then
-				create {IO_FAILURE}Result
+				create l_io_failure
+				l_io_failure.set_code ({EXCEP_CONST}.Io_exception)
+				Result := l_io_failure
 			when {EXCEP_CONST}.Operating_system_exception then
 				create {OPERATING_SYSTEM_FAILURE}Result
 			when {EXCEP_CONST}.Retrieve_exception then
@@ -241,12 +255,17 @@ feature {EXCEPTIONS} -- Backward compatibility support
 			when {EXCEP_CONST}.Developer_exception then
 				create {DEVELOPER_EXCEPTION}Result
 			when {EXCEP_CONST}.Eiffel_runtime_fatal_error then
-					-- Should be different from `Eiffel_runtime_panic'
-				create {EIFFEL_RUNTIME_PANIC}Result
+					-- Merged with `Eiffel_runtime_panic'
+				create l_rt_panic
+				l_rt_panic.set_code ({EXCEP_CONST}.Eiffel_runtime_fatal_error)
+				Result := l_rt_panic
 			when {EXCEP_CONST}.Dollar_applied_to_melted_feature then
 				create {ADDRESS_APPLIED_TO_MELTED_FEATURE}Result
 			when {EXCEP_CONST}.Runtime_io_exception then
-				create {IO_FAILURE}Result
+					-- Merged with `Io_exception'
+				create l_io_failure
+				l_io_failure.set_code ({EXCEP_CONST}.Runtime_io_exception)
+				Result := l_io_failure
 			when {EXCEP_CONST}.Com_exception then
 				create {COM_FAILURE}Result
 			when {EXCEP_CONST}.Runtime_check_exception then

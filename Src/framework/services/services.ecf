@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="services" uuid="f7149529-584c-43cf-a9c3-9d29d4d04740" library_target="services">
+	<target name="services">
+		<description>Service framework library for building service-based applicatsion.</description>
+		<option syntax_level="1">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true"/>
+		</option>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf"/>
+		<library name="patterns" location="$EIFFEL_SRC\framework\patterns\patterns.ecf"/>
+		<cluster name="services" location=".\" recursive="true">
+			<file_rule>
+				<exclude>\.svn$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+</system>

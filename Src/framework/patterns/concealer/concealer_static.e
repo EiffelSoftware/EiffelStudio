@@ -8,7 +8,7 @@ note
 	date: "$Date$";
 	revision: "$Revision $"
 
-class
+frozen class
 	CONCEALER_STATIC [G ->  ANY]
 
 inherit
@@ -25,13 +25,20 @@ feature {NONE} -- Initialization
 			-- `a_object': The object the concealer will reveal on request.
 		do
 			object := a_object
+			is_revealed := True
 		ensure
 			object_set: object = a_object
+			is_revealed: is_revealed
 		end
 
 feature -- Access
 
 	object: ?G
+			-- <Precursor>
+
+feature -- Status report
+
+	is_revealed: BOOLEAN
 			-- <Precursor>
 
 ;note

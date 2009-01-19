@@ -2,7 +2,6 @@ note
 	description: "[
 		An implementation of the {CONCEALER_I} pattern interface to provided access to a concealed
 		object using an activator function to retrieve the object.
-
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -13,7 +12,13 @@ class
 	CONCEALER_WITH_ACTIVATOR [G -> ANY]
 
 inherit
+	USABLE_I
+
+	DISPOSABLE_I
+
 	CONCEALER_I [G]
+
+	DISPOSABLE_SAFE
 
 create
 	make
@@ -30,27 +35,47 @@ feature {NONE} -- Initialization
 			activator_set: activator = a_activator
 		end
 
+feature {NONE} -- Clean up
+
+	safe_dispose (a_explicit: BOOLEAN)
+			-- <Precursor>
+		do
+			activator := Void
+			internal_object := default_item
+			is_revealed := False
+		ensure then
+			activator_detached: activator = Void
+			internal_object_is_default: internal_object = default_item
+		end
+
 feature -- Access
 
 	object: ?G
 			-- <Precursor>
 		local
-			l_cache: like internal_object
 			l_activator: like activator
+			l_events: like internal_activated_event
 		do
-			l_cache := internal_object
-			if l_cache = Void then
+			if is_revealed then
+				Result := internal_object
+			else
 				l_activator := activator
 				check l_activator_attached: l_activator /= Void end
 				Result := activator.item (Void)
 					-- Detach activator as it is no longer required
 				activator := Void
-				create internal_object.put (Result)
-			else
-				Result := l_cache.item
+				internal_object := Result
+				is_revealed := True
+
+				l_events := internal_activated_event
+				if l_events /= Void then
+					l_events.publish ([Result])
+					l_events.dispose
+				end
 			end
 		ensure then
-			activator_detached: Result /= Void implies activator = Void
+			internal_activated_event_disposed:
+				{el_events: like internal_activated_event} internal_activated_event implies not el_events.is_interface_usable
 		end
 
 feature {NONE} -- Access
@@ -59,15 +84,50 @@ feature {NONE} -- Access
 			-- The function use to active an object for the first time
 			-- Note: Once the object has been activated the function will not long be available.
 
+	default_item: G
+			-- Default generic item.
+
+feature -- Status report
+
+	is_revealed: BOOLEAN
+			-- <Precursor>
+
+feature -- Event
+
+	activated_event: !EVENT_TYPE [TUPLE [object: ?G]]
+			-- Events called when the object is activated.
+		require
+			is_interface_usable: is_interface_usable
+			not_is_revealed: not is_revealed
+		local
+			l_result: ?EVENT_TYPE [TUPLE [?G]]
+		do
+			l_result := internal_activated_event
+			if l_result = Void then
+				create Result
+				internal_activated_event := Result
+				automation.auto_dispose (Result)
+			else
+				Result := l_result
+			end
+		ensure
+			result_consistent: Result = activated_event
+		end
+
 feature {NONE} -- Implementation: Internal cache
 
-	internal_object: ?CELL [?like object]
+	internal_object: ?like object
 			-- Cached version of `object'.
 			-- Note: Do not use directly!
 
+	internal_activated_event: ?like activated_event
+			-- Cached version of `activated_event'.
+			-- Note: Do not use directly!
+
 invariant
-	activator_attached: internal_object = Void implies activator /= Void
-	activator_detached: internal_object /= Void implies activator = Void
+	activator_attached: is_interface_usable implies (is_revealed implies activator /= Void)
+	activator_detached: is_interface_usable implies (is_revealed implies activator = Void)
+	is_revealed: is_interface_usable implies (internal_object /= Void implies is_revealed)
 
 note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

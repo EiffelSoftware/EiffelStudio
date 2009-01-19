@@ -45,12 +45,13 @@ feature {NONE} -- Access
 feature -- Status report
 
 	is_interface_usable: BOOLEAN
-			-- Dtermines if the interface was usable
+			-- <Precursor>
 		do
 			Result := not is_disposed
 		ensure then
 			not_is_disposed: is_disposed implies not Result
 		end
+
 
 	is_notified_on_disposing (a_action: !PROCEDURE [ANY, ?TUPLE]): BOOLEAN
 			-- <Precursor>
@@ -289,7 +290,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

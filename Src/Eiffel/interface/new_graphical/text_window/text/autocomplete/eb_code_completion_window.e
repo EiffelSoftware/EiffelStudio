@@ -125,7 +125,7 @@ feature {NONE} -- Initialization
 			filter_button.set_pixmap (pixmaps.mini_pixmaps.completion_filter_icon)
 			l_tooltip := preferences.editor_data.filter_completion_list_preference.description
 			if l_tooltip /= Void then
-			 	filter_button.set_tooltip (l_tooltip)
+			 	filter_button.set_tooltip (locale.translation (l_tooltip))
 			end
 			option_bar.extend (filter_button)
 
@@ -133,7 +133,7 @@ feature {NONE} -- Initialization
 			show_return_type_button.set_pixmap (pixmaps.mini_pixmaps.completion_show_return_type_icon)
 			l_tooltip := preferences.editor_data.show_completion_type_preference.description
 			if l_tooltip /= Void then
-				show_return_type_button.set_tooltip (l_tooltip)
+				show_return_type_button.set_tooltip (locale.translation (l_tooltip))
 			end
 			option_bar.extend (show_return_type_button)
 
@@ -149,7 +149,7 @@ feature {NONE} -- Initialization
 			show_disambiguated_name_button.set_pixmap (pixmaps.mini_pixmaps.completion_show_disambiguants_icon)
 			l_tooltip := preferences.editor_data.show_completion_disambiguated_name_preference.description
 			if l_tooltip /= Void then
-				show_disambiguated_name_button.set_tooltip (l_tooltip)
+				show_disambiguated_name_button.set_tooltip (locale.translation (l_tooltip))
 			end
 			option_bar.extend (show_disambiguated_name_button)
 
@@ -157,7 +157,7 @@ feature {NONE} -- Initialization
 			show_obsolete_items_button.set_pixmap (pixmaps.mini_pixmaps.completion_show_obsolete_icon)
 			l_tooltip := preferences.editor_data.show_completion_obsolete_items_preference.description
 			if l_tooltip /= Void then
-				show_disambiguated_name_button.set_tooltip (l_tooltip)
+				show_obsolete_items_button.set_tooltip (locale.translation (l_tooltip))
 			end
 			option_bar.extend (show_obsolete_items_button)
 
@@ -165,7 +165,7 @@ feature {NONE} -- Initialization
 			remember_size_button.set_pixmap (pixmaps.mini_pixmaps.completion_remember_size_icon)
 			l_tooltip := preferences.development_window_data.remember_completion_list_size_preference.description
 			if l_tooltip /= Void then
-				remember_size_button.set_tooltip (l_tooltip)
+				remember_size_button.set_tooltip (locale.translation (l_tooltip))
 			end
 			option_bar.extend (remember_size_button)
 		end
@@ -918,7 +918,7 @@ feature {NONE} -- Implementation
 			-- Did the last inserted completed feature name contain arguments?
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

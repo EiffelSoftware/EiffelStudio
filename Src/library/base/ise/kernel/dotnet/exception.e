@@ -206,15 +206,22 @@ feature {EXCEPTION_MANAGER} -- Implementation
 			a_exception_not_viod: a_exception /= Void
 		local
 			l_exception: EXCEPTION
+			l_stop: BOOLEAN
 		do
 			if a_exception /= Current and then a_exception.throwing_exception /= a_exception then
 				from
 					l_exception := a_exception.throwing_exception
 				until
-					l_exception = Void or else Result
+					l_exception = Void or else l_stop
 				loop
 					if l_exception = Current then
 						Result := True
+						l_stop := True
+					elseif l_exception = l_exception.throwing_exception then
+							-- Allow self-throwing.
+							-- In this case, no possibility to throw `a_exception'.
+						Result := False
+						l_stop := True
 					else
 						l_exception := l_exception.throwing_exception
 					end

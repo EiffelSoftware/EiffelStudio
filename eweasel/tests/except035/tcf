@@ -1,0 +1,14 @@
+test_name	code-compatible-io-failure
+test_description Show the behavior that IO_FAILURE raised as Runtime_io_exception by the runtime return a correct exception code. This is compatible to {EXCEPTIONS}.exception after the merging Io_exception and Runtime_io_exception.
+
+copy_sub 	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+execute_work   NONE exec_output
+execute_result ok
+compare        exec_output output
+
+test_end

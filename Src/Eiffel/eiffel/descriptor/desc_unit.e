@@ -56,37 +56,41 @@ feature -- Generation
 			ae: ATTR_ENTRY
 			l_area: like area
 			entry_item: ENTRY
-			body_index_type, body_index_type_separator, type_index, gen_type, separator, null_init: STRING
-			invalid_entry: STRING
+			body_index_cast, invalid_dtype_string, type_index_cast, gen_type, null_string: STRING
+			l_static_feature_type_id, l_real_body_index: INTEGER
 		do
 			from
-				body_index_type := once "%N%T{(BODY_INDEX) "
-				body_index_type_separator := once ", (BODY_INDEX) "
-				type_index := once ", (EIF_TYPE_INDEX) "
-				gen_type := once ", gen_type"
-				separator := once "}, "
-				null_init := once ", NULL"
-				Invalid_entry := once ", INVALID_DTYPE, NULL},"
+				body_index_cast := once "(BODY_INDEX)"
+				invalid_dtype_string := once "INVALID_DTYPE"
+
+				type_index_cast := once "(EIF_TYPE_INDEX)"
+				gen_type := once "gen_type"
+				null_string := once "NULL"
 				l_count := count - 1
 				l_area := area
 			until
 				i > l_count
 			loop
 				entry_item := l_area.item (i)
-				buffer.put_string (body_index_type)
+				buffer.put_three_character ('%N', '%T', '{')
 				if entry_item /= Void then
 					re ?= entry_item
 					if re /= Void then
 							-- The entry corresponds to a routine.
 							-- Write the body index of the routine (index
 							-- into the run-time dispatch table).
-						buffer.put_real_body_index (re.real_body_index)
-						buffer.put_string (body_index_type_separator)
+						l_real_body_index := re.real_body_index
+						if l_real_body_index <= 0 then
+							buffer.put_string (body_index_cast)
+						end
+						buffer.put_real_body_index (l_real_body_index)
+						buffer.put_two_character (',', ' ')
 							-- Write the offset of the attribute in the
 							-- run-time structure (object) (if any).
 						if re.is_attribute then
 							buffer.put_integer (re.workbench_offset)
 						else
+							buffer.put_string (body_index_cast)
 							buffer.put_integer (Invalid_index)
 						end
 					else
@@ -95,15 +99,25 @@ feature -- Generation
 							ae_not_void: ae /= Void
 						end
 							-- The entry corresponds to an attribute.
+						buffer.put_string (body_index_cast)
 						buffer.put_integer (Invalid_index)
 							-- Write the offset of the attribute in the
 							-- run-time structure (object).
-						buffer.put_string (body_index_type_separator)
+						buffer.put_two_character (',', ' ')
 						buffer.put_integer (ae.workbench_offset)
 					end
 						-- Write the type of the feature.
-					buffer.put_string (type_index)
-					buffer.put_static_type_id (entry_item.static_feature_type_id)
+
+					buffer.put_two_character (',', ' ')
+
+					l_static_feature_type_id := entry_item.static_feature_type_id
+					if l_static_feature_type_id <= 0 then
+							-- For zero values and below we need to cast.
+						buffer.put_string (type_index_cast)
+					end
+					buffer.put_static_type_id (l_static_feature_type_id)
+
+					buffer.put_two_character (',', ' ')
 
 					if entry_item.needs_extended_info then
 						buffer.put_string (gen_type)
@@ -111,18 +125,24 @@ feature -- Generation
 						buffer.put_string (id_string)
 						j := cnt.next
 					else
-						buffer.put_string (null_init)
+						buffer.put_string (null_string)
 					end
 
-					buffer.put_string (separator)
+					buffer.put_two_character ('}', ',')
 
 				else
 						-- The entry corresponds to a routine that
 						-- is not polymorphic.
+					buffer.put_string (body_index_cast)
 					buffer.put_integer (Invalid_index)
-					buffer.put_string (body_index_type_separator)
+					buffer.put_two_character (',', ' ')
+					buffer.put_string (body_index_cast)
 					buffer.put_integer (Invalid_index)
-					buffer.put_string (invalid_entry)
+					buffer.put_two_character (',', ' ')
+					buffer.put_string (invalid_dtype_string)
+					buffer.put_two_character (',', ' ')
+					buffer.put_string (null_string)
+					buffer.put_two_character ('}', ',')
 				end
 				i := i + 1
 			end

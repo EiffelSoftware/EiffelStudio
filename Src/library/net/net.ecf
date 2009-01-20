@@ -44,12 +44,6 @@
 			</condition>
 		</external_object>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="lex" location="$ISE_LIBRARY\library\lex\lex.ecf"/>
-		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf">
-			<condition>
-				<platform value="windows"/>
-			</condition>
-		</library>
 		<cluster name="abstract" location="abstract\" recursive="true">
 			<option namespace="Common">
 			</option>

@@ -43,7 +43,7 @@ feature -- Checking
 			-- in `old_features' and the feature `new_feature'. Since it
 			-- is a definition, there is no merging of assertions.
 		local
-			deferred_features, features: LINKED_LIST [INHERIT_INFO]
+			deferred_features, features: ARRAYED_LIST [INHERIT_INFO]
 			new_feat: FEATURE_I
 		do
 				-- The signature of the new feature in the context of
@@ -57,7 +57,7 @@ feature -- Checking
 				--| replication of new_feature has occurred.
 				--! Hence, we need to update the new_feature
 				--| so it is referenced correctly.
-			new_feature := new_feat
+			new_feature_info.set_a_feature (new_feat)
 			deferred_features := old_features.deferred_features
 			if deferred_features.count > 0 then
 				check_list (deferred_features, feat_tbl)
@@ -68,7 +68,7 @@ feature -- Checking
 			end
 		end
 
-	check_list (feats: LINKED_LIST [INHERIT_INFO]; tbl: FEATURE_TABLE)
+	check_list (feats: ARRAYED_LIST [INHERIT_INFO]; tbl: FEATURE_TABLE)
 			-- Check signature conformance of the redefinition of the
 			-- features contained into `features' into `new_feature'.
 		require
@@ -86,9 +86,8 @@ feature -- Checking
 		end
 
 	check_redeclaration (new_tbl, old_tbl: FEATURE_TABLE
-			pattern_list: ARRAYED_LIST [INTEGER]
-			origin_table: ORIGIN_TABLE)
-		
+			pattern_list: ARRAYED_LIST [INTEGER])
+
 			-- Check redeclaration into an attribute.
 		local
 			l_attribute, old_attribute: ATTRIBUTE_I
@@ -96,14 +95,16 @@ feature -- Checking
 			constant: CONSTANT_I
 			rout_id_set: ROUT_ID_SET
 			new_rout_id: INTEGER
-			inherited_features: LINKED_LIST [INHERIT_INFO]
+			inherited_features: ARRAYED_LIST [INHERIT_INFO]
 			stop: BOOLEAN
+			l_new_feature: FEATURE_I
 		do
-			if new_feature.is_routine then
+			l_new_feature := new_feature
+			if l_new_feature.is_routine then
 				-- Nothing needed for routines, however this check prevents checking for both attribute and constant separately.
 			else
-				if new_feature.is_attribute then
-					l_attribute ?= new_feature
+				if l_new_feature.is_attribute then
+					l_attribute ?= l_new_feature
 					if not old_features.all_attributes then
 							-- At least, the attribute is a redeclaration
 							-- of a deferred routine or an implemented function.
@@ -151,7 +152,7 @@ feature -- Checking
 						end
 					end
 				else -- We must be a constant.
-					constant ?= new_feature
+					constant ?= l_new_feature
 						-- We do not need to force the generation of a constant
 						-- which is generated as a once function since it is
 						-- always generated in class where it is written.
@@ -168,8 +169,8 @@ feature -- Checking
 
 
 			if system.il_generation and then
-				(not new_feature.has_property_getter or else
-				not new_feature.has_property_setter)
+				(not l_new_feature.has_property_getter or else
+				not l_new_feature.has_property_setter)
 			then
 					-- Check if an inherited feature has a setter or a getter
 					-- and ensure a getter and a setter are generated for the current feature.
@@ -177,19 +178,19 @@ feature -- Checking
 					old_features.features.there_exists (agent {INHERIT_INFO}.has_property_getter) or else
 					old_features.deferred_features.there_exists (agent {INHERIT_INFO}.has_property_getter)
 				then
-					new_feature.set_has_property_getter (True)
+					l_new_feature.set_has_property_getter (True)
 				end
 				if
 					old_features.features.there_exists (agent {INHERIT_INFO}.has_property_setter) or else
 					old_features.deferred_features.there_exists (agent {INHERIT_INFO}.has_property_setter)
 				then
-					new_feature.set_has_property_setter (True)
+					l_new_feature.set_has_property_setter (True)
 				end
 			end
 
 				-- Insert the feature with new rout id in the origin
 				-- table for later process of a selection table
-			origin_table.insert (create {INHERIT_INFO}.make (new_feature))
+			origin_table.insert (inherit_info_cache.new_inherited_info (l_new_feature, Void, Void))
 		end
 
 note

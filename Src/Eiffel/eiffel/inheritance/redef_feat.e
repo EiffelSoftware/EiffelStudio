@@ -20,8 +20,8 @@ feature -- Basic operation
 			-- Process 'adaptions' to update the assert_id_set for
 			-- redefined features.
 		local
-			redef_assert_feats: LINKED_LIST [FEATURE_I]
-			list: LINKED_LIST [INHERIT_INFO]
+			redef_assert_feats: ARRAYED_LIST [FEATURE_I]
+			list: ARRAYED_LIST [INHERIT_INFO]
 			feat: FEATURE_I
 		do
 			from
@@ -30,7 +30,7 @@ feature -- Basic operation
 				adaptations.after
 			loop
 				feat := adaptations.item.new_feature
-				create redef_assert_feats.make
+				create redef_assert_feats.make (5)
 
 				from
 					list := adaptations.item.old_features.deferred_features
@@ -62,7 +62,7 @@ feature -- Basic operation
 
 feature {NONE} -- Implementation
 
-	update_assert_set (features: LINKED_LIST [FEATURE_I]; new_feat: FEATURE_I)
+	update_assert_set (features: ARRAYED_LIST [FEATURE_I]; new_feat: FEATURE_I)
 			-- Update assert_id_set of `new_feat' from `features'.
 		require
 			valid_features: features /= Void

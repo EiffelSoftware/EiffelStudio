@@ -278,7 +278,7 @@ feature {NONE} -- C code generation
 			internal_name: STRING
 			rout_id: INTEGER
 		do
-			rout_id := real_ty.associated_class.feature_table.item_id (make_name_id).rout_id_set.first;
+			rout_id := real_ty.associated_class.feature_table.item_id ({PREDEFINED_NAMES}.make_name_id).rout_id_set.first;
 			rout_table ?= Eiffel_table.poly_table (rout_id);
 
 				-- Generate the signature of the function
@@ -316,7 +316,7 @@ feature {NONE} -- C code generation
 		do
 			base_class := real_ty.associated_class
 			f_table := base_class.feature_table
-			feat_i := f_table.item_id (make_name_id)
+			feat_i := f_table.item_id ({PREDEFINED_NAMES}.make_name_id)
 			buf := buffer
 			buf.put_new_line
 			arg1_register.print_register

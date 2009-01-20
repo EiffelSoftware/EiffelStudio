@@ -182,7 +182,7 @@ feature {STATIC_ACCESS_AS} -- Visitor
 				(type.same_as (constant_i.type) or (not constant_i.type.is_enum and then not type.is_enum and then constant_i.value.valid_type (type)))
 			then
 					-- Record dependencies
-				context.supplier_ids.extend (create {DEPEND_UNIT}.make (class_c.class_id, constant_i))
+				context.supplier_ids.extend_depend_unit_with_level (class_c.class_id, constant_i, 0)
 					-- Check if this is a unique constant
 				last_unique_constant ?= constant_i
 					-- Calculate byte node
@@ -233,7 +233,7 @@ feature {ID_AS} -- Visitor
 			constant_i ?= feature_i
 			if constant_i /= Void and then constant_i.value.valid_type (type) then
 					-- Record dependencies.
-				context.supplier_ids.extend (create {DEPEND_UNIT}.make (context.current_class.class_id, constant_i))
+				context.supplier_ids.extend_depend_unit_with_level (context.current_class.class_id, constant_i, 0)
 					-- Check if this is a unique constant
 				last_unique_constant ?= constant_i
 					-- Calculate byte node

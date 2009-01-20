@@ -32,7 +32,7 @@ feature -- Checking
 			-- identical to the signatures of the deferred features
 			-- contained in `old_features'
 		local
-			deferred_features: LINKED_LIST [INHERIT_INFO]
+			deferred_features: ARRAYED_LIST [INHERIT_INFO]
 			old_feat: FEATURE_I
 			info: INHERIT_INFO
 			feature_with_assigner: FEATURE_I

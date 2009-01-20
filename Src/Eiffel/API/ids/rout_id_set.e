@@ -73,7 +73,7 @@ feature {COMPILER_EXPORTER}
 			Result := Routine_id_counter.is_attribute (first)
 		end
 
-	update (l: LINKED_LIST [INHERIT_INFO])
+	update (l: ARRAYED_LIST [INHERIT_INFO])
 			-- Update through inherited features in `l'.
 		require
 			l_not_void: l /= Void

@@ -178,6 +178,9 @@ feature -- Access
 						l_id := content [iteration_position]
 						if l_id > 0 then
 							Result.put_i_th (l_server.item (l_id), i)
+							if Result [i] = Void then
+								do_nothing
+							end
 						end
 					end
 					feature_table_cache.force (Result)
@@ -240,13 +243,16 @@ feature -- HASH_TABLE like feature
 			end
 		end
 
-	put (new: FEATURE_I; key: INTEGER)
+	put (new: FEATURE_I; key: INTEGER; new_is_aliased: BOOLEAN)
 		local
 			alias_name_id: INTEGER
 		do
-				-- Even if there is an id, we recreate one.
-			new.set_id (system.feature_counter.next_id)
-			tmp_feature_server.put (new)
+			if not new_is_aliased then
+					-- If the feature is not aliased then we generate
+					-- a new id.
+				new.set_id (system.feature_counter.next_id)
+			end
+			tmp_feature_server.put (new, new_is_aliased)
 			internal_table_put (new.id, key)
 			if not found and then new.is_attribute then
 					-- We are adding a new attribute so we update the attribute count.
@@ -259,10 +265,12 @@ feature -- HASH_TABLE like feature
 			end
 		end
 
-	replace (new: FEATURE_I; key: INTEGER)
+	replace (new: FEATURE_I; key: INTEGER; new_is_aliased: BOOLEAN)
 		do
-			remove (key)
-			put (new, key)
+			if item_id (key) /= new then
+				remove (key)
+				put (new, key, new_is_aliased)
+			end
 		end
 
 	item_for_iteration: FEATURE_I
@@ -297,7 +305,10 @@ feature {NONE} -- HASH_TABLE like features
 				end
 				l_id := old_feature.id
 				if l_id > 0 then
-					tmp_feature_server.remove (l_id)
+					if not tmp_feature_server.aliased_features.has (l_id) then
+							-- We do not want aliased features to be removed from disk.
+						tmp_feature_server.remove (l_id)
+					end
 				end
 					-- Remove old alias name
 				alias_name_id := old_feature.alias_name_id
@@ -739,59 +750,6 @@ end
 			end
 		end
 
-feature -- Check
-
-	check_table
-			-- Check all the features in the table
-		local
-			non_deferred, deferred_found: BOOLEAN
-			feature_i: FEATURE_I
-			vcch1: VCCH1
-		do
-			from
-				non_deferred := not associated_class.is_deferred
-				start
-			until
-				after
-			loop
-				feature_i := item_for_iteration
-				if feature_i.is_deferred then
-					deferred_found := True
-					if non_deferred then
-						create vcch1
-						vcch1.set_class (associated_class)
-						vcch1.set_a_feature (feature_i)
-						Error_handler.insert_error (vcch1)
-					end
-				end
-				check_feature (feature_i)
-				forth
-			end
-		end
-
-	check_feature (f: FEATURE_I)
-			-- Check arguments and type of feature `f'.
-			-- The objective is to deal with anchored types and genericity.
-			-- All the anchored types are interpreted here and the generic
-			-- parameter instantiated if possible.
-		do
-debug
-io.error.put_string ("Check feature: ")
-io.error.put_string (f.feature_name)
-io.error.put_new_line
-end
-			if f.written_in = feat_tbl_id then
-					-- Take a feature written in the class associated
-					-- to the feature table
-				if f.arguments /= Void then
-						-- Check if there is not twice the same argument name,
-						-- or if one argument has a feature name.
-					f.check_argument_names (Current)
-				end
-			end
-			f.check_types (Current)
-		end
-
 	compute_lookup_tables
 			-- Build `select_table', `feature_id_table' and `body_index_table'.
 		local
@@ -1044,23 +1002,21 @@ end
 			feat: FEATURE_I
 			i, nb: INTEGER
 			rout_id: INTEGER
-			l_int32_str, l_comma_newline_str: STRING
 		do
 			tab := routine_id_array
+			nb := tab.upper
 			buffer.put_string ("int32 ra")
 			buffer.put_integer (feat_tbl_id)
-			buffer.put_string ("[] = {")
-			buffer.put_new_line
+			buffer.put_string ("[")
+				-- Print number of static array initializers.
+			buffer.put_integer (nb + 1)
+			buffer.put_string ("] = {")
 			from
 				i := 0
-				nb := tab.upper
-				l_int32_str := "(int32) "
-				l_comma_newline_str := ",%N"
 			until
 				i > nb
 			loop
 				feat := tab.item (i)
-				buffer.put_string (l_int32_str)
 				if feat = Void then
 					buffer.put_integer (0)
 				else
@@ -1072,10 +1028,12 @@ buffer.put_string (feat.feature_name)
 buffer.put_string ("' */")
 end
 				end
-				buffer.put_string (l_comma_newline_str)
+				if i < nb then
+					buffer.put_character (',')
+				end
 				i := i + 1
 			end
-			buffer.put_string ("};%N%N")
+			buffer.put_string ("};%N")
 		end
 
 	routine_id_array: ARRAY [FEATURE_I]

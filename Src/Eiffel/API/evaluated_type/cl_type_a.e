@@ -329,12 +329,13 @@ feature -- Output
 				Result.append_character ('?')
 			end
 			if has_expanded_mark then
-				Result.append ("expanded ")
+				Result.append ({SHARED_TEXT_ITEMS}.ti_expanded_keyword)
 			elseif has_reference_mark then
-				Result.append ("reference ")
+				Result.append ({SHARED_TEXT_ITEMS}.ti_reference_keyword)
 			elseif has_separate_mark then
-				Result.append ("separate ")
+				Result.append ({SHARED_TEXT_ITEMS}.ti_separate_keyword)
 			end
+			Result.append_character (' ')
 			Result.append (class_name)
 		end
 
@@ -800,7 +801,7 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 			-- that `c' would have for Current.
 		require
 			good_argument: c /= Void
-			conformance: c.conform_to (associated_class) or else True --| FIXME Manu Add CLASS_C.ancestors_from routine for non-conforming inheritance.
+			conformance: c.inherits_from (associated_class)
 		local
 			l_generics, l_result_generics: like generics
 			l_class: like associated_class
@@ -850,7 +851,7 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 			-- context
 		require
 			good_argument: c /= Void
-			conformance: associated_class.conform_to (c) or else True --| FIXME IEK Add CLASS_C.inherits_from routine for non-conforming inheritance.
+			conformance: c.conform_to (associated_class) or else True --| FIXME Manu Add CLASS_C.ancestors_from routine for non-conforming inheritance.
 		local
 			parents: FIXED_LIST [CL_TYPE_A]
 			parent: CL_TYPE_A
@@ -887,7 +888,7 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 		do
 			Result := twin
 		end
-		
+
 	reference_type: CL_TYPE_A
 			-- Reference counterpart of an expanded type
 		do

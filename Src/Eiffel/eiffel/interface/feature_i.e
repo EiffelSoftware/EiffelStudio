@@ -1969,6 +1969,9 @@ feature -- Signature checking
 			-- to deal with anchored types and genericity. All anchored
 			-- types are interpreted here and generic parameter
 			-- instantiated if possible.
+			-- Make sure that `context' is already initialized for `feat_table' before calling.
+		require
+			context_initialize_for_feat_table: context.current_feature_table = feat_table and then context.current_class = feat_table.associated_class
 		local
 			solved_type: TYPE_A
 			vffd5: VFFD5
@@ -1978,6 +1981,8 @@ feature -- Signature checking
 			l_error_level: NATURAL_32
 		do
 			l_class := feat_table.associated_class
+				-- Make sure that context is already initialized for `feat_table' by caller.
+				-- This saves expensive repeated calls to `actual_type'.
 			context.initialize (l_class, l_class.actual_type, feat_table)
 			context.set_current_feature (Current)
 				-- Not that the checks is only done for real `onces'. Constants
@@ -2010,7 +2015,7 @@ feature -- Signature checking
 
 				if
 					is_infix and then
-					((argument_count /= 1) or else (type.is_void))
+					((argument_count /= 1) or else (solved_type.is_void))
 				then
 						-- Infixed features should have only one argument
 						-- and must have a return type.
@@ -2021,7 +2026,7 @@ feature -- Signature checking
 				end
 				if
 					is_prefix and then
-					((argument_count /= 0) or else (type.is_void))
+					((argument_count /= 0) or else (solved_type.is_void))
 				then
 						-- Prefixed features shouldn't have any argument
 						-- and must have a return type.
@@ -2743,7 +2748,7 @@ feature -- Replication
 				-- `export_status' needs to be set via `set_export_status'
 			set_export_status (other.export_status)
 
-			feature_id := other.feature_id
+			--feature_id := other.feature_id
 			feature_name_id := other.feature_name_id
 			alias_name_id := other.alias_name_id
 			written_feature_id := other.written_feature_id

@@ -24,6 +24,11 @@ inherit
 			external_class_c
 		end
 
+	SHARED_AST_CONTEXT
+		rename
+			context as ast_context
+		end
+
 create
 	make
 
@@ -580,6 +585,10 @@ feature {NONE} -- Initialization
 			check
 				l_any_tbl_not_void: l_any_tbl /= Void
 			end
+
+				-- Make sure context is initialized for `a_feat_tbl' before calling check_types on the feature_i objects.
+			ast_context.initialize (a_feat_tbl.associated_class, a_feat_tbl.associated_class.actual_type, a_feat_tbl)
+
 			from
 				l_any_tbl.start
 			until
@@ -589,10 +598,12 @@ feature {NONE} -- Initialization
 				l_table_feat := l_any_tbl.item_for_iteration
 				l_feat := l_table_feat.instantiated (any_parent_type)
 				if l_feat = l_table_feat then
-						-- If the instantiation didn't return a new object then we duplicate.
-					l_feat := l_feat.duplicate
+						-- If the instantiation didn't return a new object then we twin.
+					l_feat := l_feat.twin
+				else
+						-- We only need to check types should feature be instantiated for `Current'
+					l_feat.check_types (a_feat_tbl)
 				end
-				l_feat.check_types (a_feat_tbl)
 				l_feat.set_feature_id (feature_id_counter.next)
 				l_feat.set_is_origin (False)
 				l_feat.set_rout_id_set (l_feat.rout_id_set.twin)
@@ -639,7 +650,7 @@ feature {NONE} -- Initialization
 				end
 			end
 
-			a_feat_tbl.put (a_feat, a_feat.feature_name_id)
+			a_feat_tbl.put (a_feat, a_feat.feature_name_id, False)
 		end
 
 	process_features (a_feat_tbl: like feature_table; a_features: ARRAYED_LIST [CONSUMED_ENTITY])
@@ -1145,7 +1156,7 @@ feature {NONE} -- Implementation
 
 	update_feature_with_parents (a_feat_tbl: FEATURE_TABLE; a_feat: FEATURE_I;
 			a_member: CONSUMED_ENTITY)
-		
+
 			-- Compute a new `rout_id_set' for `a_feat' based on info of current class and
 			-- parent classes. If we do not found a matching routine in a parent class, then
 			-- we set `is_origin' on `a_feat'.
@@ -1248,7 +1259,7 @@ feature {NONE} -- Implementation
 
 	matching_external_feature_in (
 			a_feat: FEATURE_I; a_class: CLASS_C; a_member: CONSUMED_ENTITY): FEATURE_I
-		
+
 			-- Look up a feature whose external name is `a_name_id' in `a_class'.
 		require
 			a_feat_not_void: a_feat /= Void
@@ -1346,7 +1357,7 @@ feature {NONE} -- Implementation
 
 	internal_type_from_consumed_type (
 			force_compilation: BOOLEAN; c: CONSUMED_REFERENCED_TYPE): CL_TYPE_A
-		
+
 			-- Given an external type `c' get its associated CL_TYPE_A.
 			-- If `force_compilation' automatically add it for later compilation
 		require

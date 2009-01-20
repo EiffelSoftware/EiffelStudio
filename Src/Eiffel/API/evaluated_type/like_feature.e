@@ -115,14 +115,12 @@ feature -- Access
 			-- Update dependency for Dead Code Removal
 		local
 			a_class: CLASS_C
-			depend_unit: DEPEND_UNIT
 			feature_i: FEATURE_I
 		do
 				-- we must had a dependance to the anchor feature
 			a_class := System.class_of_id (class_id)
 			feature_i := a_class.feature_table.item_id (feature_name_id)
-			create depend_unit.make (class_id, feature_i)
-			feat_depend.extend (depend_unit)
+			feat_depend.extend_depend_unit_with_level (class_id, feature_i, 0)
 		end
 
 feature -- Generic conformance

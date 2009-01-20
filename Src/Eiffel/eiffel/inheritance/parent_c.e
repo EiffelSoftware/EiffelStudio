@@ -12,11 +12,6 @@ inherit
 			{NONE} all
 		end
 
-	PREDEFINED_NAMES
-		export
-			{NONE} all
-		end
-
 	PREFIX_INFIX_NAMES
 		export
 			{NONE} all
@@ -223,7 +218,7 @@ feature
 					elseif alias_name_id > 0 then
 						vfav := Void
 						f := parent_table.item_id (old_name_id)
-						if alias_name_id = bracket_symbol_id then
+						if alias_name_id = {PREDEFINED_NAMES}.bracket_symbol_id then
 							if f.argument_count = 0 or else f.type.is_void then
 									-- Bracket features should have at least one argument and a return type.
 								create {VFAV2_VHRC} vfav

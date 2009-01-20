@@ -53,6 +53,9 @@ feature -- Purge of compilation files
 			m_feature_server.cache.wipe_out
 			m_rout_id_server.cache.wipe_out
 			m_desc_server.cache.wipe_out
+
+			--| Wipe out all cache information.
+			feature_server.cache.wipe_out
 		end
 
 feature -- Access

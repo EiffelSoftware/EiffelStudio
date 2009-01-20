@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 			l_exports := l_as.exports
 			if l_exports /= Void then
 				from
-					create last_export_adaptation.make (5)
+					create last_export_adaptation.make (l_exports.count)
 					last_parent_c.set_exports (last_export_adaptation)
 					l_exports.start
 				until

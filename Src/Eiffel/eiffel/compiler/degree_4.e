@@ -208,7 +208,18 @@ feature -- Processing
 				l_system.check_vtec
 			end
 
+				-- Reset all inheritance helper structures.
+			analyzer.wipe_out
+			analyzer.origin_table.wipe_out
+			analyzer.selection_list_cache.reset_all
+			analyzer.inherit_feat_cache.reset_all
+			analyzer.inherit_info_cache.reset_all
+
+				-- Wipe out feature table cache.
+			feature_table_cache.wipe_out
 			wipe_out
+
+
 			changed_status.wipe_out
 			l_system.set_current_class (Void)
 			l_degree_output.put_end_degree

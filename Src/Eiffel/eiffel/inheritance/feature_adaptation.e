@@ -8,16 +8,22 @@ note
 deferred class
 	FEATURE_ADAPTATION
 
+inherit
+	SHARED_ORIGIN_TABLE
+		export
+			{NONE} all
+		end
+
 feature {NONE} -- Initialization
 
-	make (old_feats: INHERIT_FEAT; new_feat: FEATURE_I)
+	make (old_feats: INHERIT_FEAT; new_feat_info: INHERIT_INFO)
 			-- Creation
 		require
-			good_argument: not (old_feats = Void or else new_feat = Void)
+			good_argument: not (old_feats = Void or else new_feat_info = Void)
 			consistency: is_valid_old_features (old_feats)
 		do
 			old_features := old_feats
-			new_feature := new_feat
+			new_feature_info := new_feat_info
 		end
 
 feature -- Access
@@ -27,6 +33,12 @@ feature -- Access
 
 	new_feature: FEATURE_I
 			-- Adapted feature
+		do
+			Result := new_feature_info.a_feature
+		end
+
+	new_feature_info: INHERIT_INFO
+			-- Inherit info of feature to be adapted.
 
 feature -- Status report
 
@@ -48,9 +60,8 @@ feature -- Checking
 		end
 
 	check_redeclaration (feat_tbl, old_tbl: FEATURE_TABLE
-			pattern_list: LIST [INTEGER]
-			origin_table: ORIGIN_TABLE)
-		
+			pattern_list: LIST [INTEGER])
+
 			-- Check adaptation with computed new feature table `feat_tbl'.
 		do
 			-- Do nothing
@@ -70,7 +81,7 @@ feature -- Debugging
 
 invariant
 	old_features_exists: old_features /= Void
-	new_feature_exists: new_feature /= Void
+	new_feature_exists: new_feature_info /= Void
 	deferred_to_join: is_valid_old_features (old_features)
 
 note

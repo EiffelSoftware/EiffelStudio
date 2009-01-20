@@ -780,10 +780,13 @@ feature {NONE} -- Implementation
 		local
 			l_vtat1a: VTAT1A
 			l_controler_state: BOOLEAN
+			l_like_control: like like_control
 		do
+			l_like_control := like_control
+
 				-- Found argument
-			l_controler_state := like_control.is_on
-			if l_controler_state and like_control.has_argument (a_type.position) then
+			l_controler_state := l_like_control.is_on
+			if l_controler_state and l_like_control.has_argument (a_type.position) then
 					-- Cycle involving anchors on arguments
 				last_type := Void
 				if has_error_reporting then
@@ -797,11 +800,11 @@ feature {NONE} -- Implementation
 			else
 				if not l_controler_state then
 						-- Enable like controler only if not already enabled.
-					like_control.turn_on
+					l_like_control.turn_on
 				end
-				like_control.put_argument (a_type.position)
+				l_like_control.put_argument (a_type.position)
 				a_feature.arguments.i_th (a_type.position).process (Current)
-				like_control.remove_argument
+				l_like_control.remove_argument
 				if last_type /= Void then
 					a_type.set_actual_type (last_type)
 					last_type := a_type
@@ -809,7 +812,7 @@ feature {NONE} -- Implementation
 				if not l_controler_state then
 						-- Disable like controler only if it was not enabled before
 						-- entering current routine.
-					like_control.turn_off
+					l_like_control.turn_off
 				end
 			end
 		end
@@ -823,16 +826,19 @@ feature {NONE} -- Implementation
 		local
 			l_anchor_type: TYPE_A
 			l_rout_id: INTEGER
-			l_depend_unit: DEPEND_UNIT
 			l_vtat1: VTAT1
 			l_controler_state: BOOLEAN
+			l_like_control: like like_control
 		do
 				-- It is an anchored type on a feature: check if the
 				-- anchor feature has not an anchored type itself.
 			l_rout_id := a_feature.rout_id_set.first
-			l_controler_state := like_control.is_on
 
-			if l_controler_state and like_control.has_routine_id (l_rout_id) then
+			l_like_control := like_control
+
+			l_controler_state := l_like_control.is_on
+
+			if l_controler_state and then l_like_control.has_routine_id (l_rout_id) then
 					-- Error because of cycle
 				last_type := Void
 				if has_error_reporting then
@@ -844,14 +850,14 @@ feature {NONE} -- Implementation
 			else
 				if not l_controler_state then
 						-- Enable like controler only if not already enabled.
-					like_control.turn_on
+					l_like_control.turn_on
 				end
 					-- Update anchored type controler
-				like_control.put_routine_id (l_rout_id)
+				l_like_control.put_routine_id (l_rout_id)
 					-- Process type referenced by anchor.
 				a_feature.type.process (Current)
 					-- Update anchored type controler
-				like_control.remove_routine_id
+				l_like_control.remove_routine_id
 
 				l_anchor_type := last_type
 
@@ -874,14 +880,13 @@ feature {NONE} -- Implementation
 							-- There is a dependance between `current_feature' and
 							-- the `a_feature'.
 							-- Record it for the propagation of the recompilations
-						create l_depend_unit.make (current_class.class_id, a_feature)
-						suppliers.extend (l_depend_unit)
+						suppliers.extend_depend_unit_with_level (current_class.class_id, a_feature, 0)
 					end
 				end
 				if not l_controler_state then
 						-- Disable like controler only if it was not enabled before
 						-- entering current routine.
-					like_control.turn_off
+					l_like_control.turn_off
 				end
 			end
 		ensure

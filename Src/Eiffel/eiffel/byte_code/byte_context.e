@@ -1302,7 +1302,7 @@ feature -- Access
 	change_class_type_context (
 				new_context_class_type: CLASS_TYPE; new_context_cl_type: CL_TYPE_A;
 				new_written_class_type: CLASS_TYPE; new_written_cl_type: CL_TYPE_A)
-		
+
 			-- Change the current `class_type' to `new_written_class_type',
 			-- not related to `original_class_type', but to `new_context_class_type'.
 			-- (Multiple calls to this feature are allowed and should
@@ -1807,7 +1807,7 @@ feature -- Access
 						j > nb_vars
 					loop
 						buf.put_new_line_only
-						buf.put_string ("#undef ")
+						buf.put_string (once "#undef ")
 						put_register_name (i, j, buf)
 						j := j + 1
 					end
@@ -1897,9 +1897,9 @@ feature -- Access
 			if nb_refs > 0 then
 				buf.put_new_line
 				if compound_or_post or else byte_code.rescue_clause = Void then
-					buf.put_string ("RTLI(")
+					buf.put_string (once "RTLI(")
 				else
-					buf.put_string ("RTXI(")
+					buf.put_string (once "RTXI(")
 				end
 				buf.put_integer (nb_refs)
 				buf.put_string (gc_rparan_semi_c)
@@ -1929,7 +1929,7 @@ feature -- Access
 							buf.put_local_registration (position, rname)
 							buf.put_new_line
 							buf.put_string (rname)
-							buf.put_string (" = RTCB(")
+							buf.put_string (once " = RTCB(")
 							buf.put_string (rname)
 							buf.put_character (')')
 							buf.put_character (';')

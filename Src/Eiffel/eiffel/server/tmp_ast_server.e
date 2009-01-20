@@ -13,7 +13,7 @@ inherit
 	COMPILER_SERVER [CLASS_AS]
 		redefine
 			make_index, need_index, make,
-			has, item, put, remove
+			has, item, put, remove, flush
 		end
 
 	INTERNAL
@@ -415,6 +415,12 @@ feature {NONE} -- Store to disk
 		do
 			l_dynamic_type := {ISE_RUNTIME}.dynamic_type (obj)
 			Result := l_dynamic_type = feature_as_type or else l_dynamic_type = invariant_as_type
+		end
+
+	flush
+			-- Flush server
+		do
+			do_nothing
 		end
 
 feature {NONE} -- Implementation

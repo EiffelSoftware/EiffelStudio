@@ -20,59 +20,13 @@ feature -- Initialisation
 	make
 			-- Creates a table of Cache_size hash_entry
 		local
-			i: INTEGER
-			array: ARRAY [H_CELL[T]]
 			s: INTEGER
 		do
 			s := Cache_size
 			count := 0
 			size := s
-			make_area (s)
-			create array_count.make (0, s - 1)
-			create history.make (s)
-			create index.make (0, s - 1)
-			from
-			until
-				i = s
-			loop
-				create array.make (1, 5)
-				area.put (array, i)
-				i := i + 1
-			end
+			set_internal_items (s)
 		end
-
-	cache_size: INTEGER
-			-- Cache size
-		local
-			s: STRING
-			l_int: INTERNAL
-		do
-			create l_int
-			if l_int.generic_count (Current) > 0 then
-				s := l_int.class_name_of_type (l_int.generic_dynamic_type (Current, 1))
-			else
-				s := generator
-			end
-			s.to_lower
-			Result := Configure_resources.get_integer (s, default_value)
-
-			debug ("CACHE_SERVER")
-				io.error.put_string ("Size of ")
-				io.error.put_string (generator)
-				io.error.put_string (" is ")
-				io.error.put_integer (Result)
-				io.error.put_new_line
-			end
-		end;
-
-	default_value: INTEGER
-			-- Default value of cache
-		do
-			Result :=  Configure_resources.get_integer (r_Cache_size, 20)
-		end;
-
-	Default_size: INTEGER
-			-- Default cache size
 
 	array_count: ARRAY [INTEGER]
 		-- number of element in each sub-array
@@ -430,7 +384,57 @@ feature -- linear iteration
 			Result := last_item_array.item (last_item_pos).item
 		end
 
-feature {NONE}
+feature {NONE} -- Implementation
+
+	set_internal_items (s: INTEGER)
+			-- Set up items for `cache'.
+		local
+			i: INTEGER
+			array: ARRAY [H_CELL[T]]
+		do
+			make_area (s)
+			create array_count.make (0, s - 1)
+			create history.make (s)
+			create index.make (0, s - 1)
+			from
+			until
+				i = s
+			loop
+				create array.make (1, 5)
+				area.put (array, i)
+				i := i + 1
+			end
+		end
+
+	cache_size: INTEGER
+			-- Cache size
+		local
+			s: STRING
+			l_int: INTERNAL
+		do
+			create l_int
+			if l_int.generic_count (Current) > 0 then
+				s := l_int.class_name_of_type (l_int.generic_dynamic_type (Current, 1))
+			else
+				s := generator
+			end
+			s.to_lower
+			Result := Configure_resources.get_integer (s, default_value)
+
+			debug ("CACHE_SERVER")
+				io.error.put_string ("Size of ")
+				io.error.put_string (generator)
+				io.error.put_string (" is ")
+				io.error.put_integer (Result)
+				io.error.put_new_line
+			end
+		end;
+
+	default_value: INTEGER
+			-- Default value of cache
+		do
+			Result :=  Configure_resources.get_integer (r_Cache_size, 20)
+		end;
 
 	last_item_array: ARRAY [H_CELL[T]]
 		-- the array in which the last searched item

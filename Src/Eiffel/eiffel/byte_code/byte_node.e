@@ -146,7 +146,9 @@ feature -- Eiffel source line information
 						buf.put_string (gc_comma)
 						buf.put_integer (l_expanded)
 						buf.put_string (gc_rparan_semi_c)
-						buf.put_string (" /* " + attb.attribute_name + " */")
+						buf.put_string (" /* ")
+						buf.put_string (attb.attribute_name)
+						buf.put_string (" */")
 					end
 				elseif a_target.is_local then
 					if {locb: !LOCAL_B} a_target then
@@ -165,7 +167,9 @@ feature -- Eiffel source line information
 						buf.put_string (gc_comma)
 						buf.put_integer (0) --| not melted						
 						buf.put_string (gc_rparan_semi_c)
-						buf.put_string (" /* " + locb.register_name + " */")
+						buf.put_string (" /* ")
+						buf.put_string (locb.register_name)
+						buf.put_string (" */")
 					end
 				elseif a_target.is_result then
 					if {resb: !RESULT_B} a_target then

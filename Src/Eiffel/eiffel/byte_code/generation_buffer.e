@@ -23,9 +23,13 @@ feature {NONE} -- Initialization
 		do
 			create current_buffer.make (n)
 			create buffers.make (10)
+			initial_size := n
 		end
 
 feature -- Status report
+
+	initial_size: INTEGER
+			-- Initial size of generation buffer.
 
 	tabs: INTEGER
 			-- Number of inserted tabs.
@@ -69,7 +73,13 @@ feature -- Open, close buffer operations
 			if not buffers.is_empty then
 				current_buffer := buffers.first
 			end
-			current_buffer.set_count (0)
+			if current_buffer.capacity > initial_size then
+					-- Reset to initial size should 'area' be larger than `initial_size'
+				current_buffer.make (initial_size)
+			else
+					-- No need for size reset.
+				current_buffer.set_count (0)
+			end
 			buffers.wipe_out
 		end
 

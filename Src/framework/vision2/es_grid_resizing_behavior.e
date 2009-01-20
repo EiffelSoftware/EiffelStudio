@@ -16,6 +16,8 @@ create
 feature {NONE} -- Resizing : initialization
 
 	make (g: EV_GRID)
+		require
+			g_attached: g /= Void
 		do
 			grid := g
 			edge_size := 3
@@ -299,6 +301,7 @@ feature {NONE} -- Implementation
 		end
 
 invariant
+	grid_attached: grid /= Void
 	disabled_resize_columns_not_void: disabled_resize_columns /= Void
 	header_resize_start_actions_attached: header_resize_start_actions /= Void
 	header_resize_end_actions_attached: header_resize_end_actions /= Void

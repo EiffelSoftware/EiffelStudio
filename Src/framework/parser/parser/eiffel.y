@@ -1876,7 +1876,7 @@ Formal_generic_list: Formal_generic
 
 Formal_parameter: TE_REFERENCE Class_identifier
 			{
-				if $2 /= Void and then none_class_name_id = $2.name_id then
+				if $2 /= Void and then {PREDEFINED_NAMES}.none_class_name_id = $2.name_id then
 						-- Trigger an error when constraint is NONE.
 						-- Needs to be done manually since current test for
 						-- checking that `$2' is not a class name
@@ -1890,7 +1890,7 @@ Formal_parameter: TE_REFERENCE Class_identifier
 			}
 	| TE_EXPANDED Class_identifier
 			{
-				if $2 /= Void and then none_class_name_id = $2.name_id then
+				if $2 /= Void and then {PREDEFINED_NAMES}.none_class_name_id = $2.name_id then
 						-- Trigger an error when constraint is NONE.
 						-- Needs to be done manually since current test for
 						-- checking that `$2' is not a class name
@@ -1905,7 +1905,7 @@ Formal_parameter: TE_REFERENCE Class_identifier
 
 	|	Class_identifier
 			{
-				if $1 /= Void and then none_class_name_id = $1.name_id then
+				if $1 /= Void and then {PREDEFINED_NAMES}.none_class_name_id = $1.name_id then
 						-- Trigger an error when constraint is NONE.
 						-- Needs to be done manually since current test for
 						-- checking that `$1' is not a class name

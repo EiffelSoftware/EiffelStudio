@@ -262,7 +262,7 @@ feature {NONE} -- Actions
 			i: like clicked_item
 			g: like grid
 		do
-			grid := g
+			g := grid
 			g.pointer_button_release_actions.prune_all (release_resize_agent)
 			g.pointer_leave_actions.prune_all (leave_resize_agent)
 			i := clicked_item

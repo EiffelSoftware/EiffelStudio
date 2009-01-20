@@ -30,7 +30,6 @@ feature {NONE} -- Implementation
 			not_void: a_parser /= Void
 		local
 			l_src_option, l_dest_option: ?ARGUMENT_OPTION
-			l_eweasel: EW_EQA_WINDOWS_SETUP
 			l_src, l_dest: DIRECTORY
 			l_src_name, l_dest_name: DIRECTORY_NAME
 		do

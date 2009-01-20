@@ -168,13 +168,20 @@ feature {COMPILER_EXPORTER} -- Compiler features
 		local
 			other_set, new: EXPORT_SET_I
 		do
-			if other.is_set then
-				other_set ?= other
-					-- Duplication
-				new := duplicate_internal (count)
-					-- Merge
-				new.merge (other_set)
-				Result := new
+			if other = Current then
+					-- Return same object if identical.
+				Result := other
+			elseif other.is_set then
+				if equiv (other) then
+					Result := other
+				else
+					other_set ?= other
+						-- Duplication
+					new := duplicate_internal (count)
+						-- Merge
+					new.merge (other_set)
+					Result := new
+				end
 			elseif other.is_none then
 				Result := Current
 			else

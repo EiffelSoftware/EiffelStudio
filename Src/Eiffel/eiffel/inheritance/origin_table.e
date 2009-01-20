@@ -51,6 +51,13 @@ inherit
 			copy, is_equal
 		end
 
+	SHARED_AST_CONTEXT
+		export
+			{NONE} all
+		undefine
+			copy, is_equal
+		end
+
 	COMPILER_EXPORTER
 		undefine
 			copy, is_equal
@@ -83,7 +90,7 @@ feature
 				if found_item = Void then
 						-- We are adding the first feature corresponding to `rout_id'
 						-- so we create a new selection list.
-					put (create {SELECTION_LIST}.make, rout_id)
+					put (selection_list_cache.new_selection_list, rout_id)
 				end
 				found_item.extend (info)
 				i := i + 1
@@ -105,6 +112,9 @@ feature
 				start
 				l_feature_tbl_id := a_feature_table.feat_tbl_id
 				l_associated_class_non_deferred := not a_feature_table.associated_class.is_deferred
+					-- Initialize AST context before checking types.
+				context.initialize (a_feature_table.associated_class, a_feature_table.associated_class.actual_type, a_feature_table)
+
 			until
 				after
 			loop
@@ -237,7 +247,7 @@ feature
 						l_feature_replication_generator.process_replicated_feature (
 								l_selection_list.item.a_feature,
 								l_selection_list.item.parent,
-								l_selection_list.item = l_selection_list.first_element.item and then not l_selection_list.item.internal_a_feature.from_non_conforming_parent,
+								l_selection_list.item = l_selection_list.first and then not l_selection_list.item.internal_a_feature.from_non_conforming_parent,
 									-- Item is selected if first in the selection list and from a conforming parent.
 								l_current_class,
 								old_t,
@@ -260,6 +270,14 @@ feature
 			debug
 				io.error.put_string ("========= END TRACE ==========%N")
 			end
+		end
+
+	selection_list_cache: SELECTION_LIST_CACHE
+			-- Cache for reusing SELECTION_LIST objects for each degree 4 pass.
+		once
+			create Result.make (35)
+		ensure
+			cache_not_void: Result /= Void
 		end
 
 note

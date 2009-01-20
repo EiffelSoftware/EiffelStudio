@@ -1395,7 +1395,7 @@ feature {NONE} -- Implementation
 			a_set_to_check, 	a_constraint_types: TYPE_SET_A;
 			i: INTEGER;
 			in_constraint: BOOLEAN)
-		
+
 			-- Check that if we have class A [G -> ANY] and we found A [X] where
 			-- X is expanded, then it exists a conversion routine from X to reference X
 			-- and that `reference X' conforms to the constraint ANY.

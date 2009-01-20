@@ -30,11 +30,6 @@ inherit
 			validate_non_conforming_inheritance_type
 		end
 
-	PREDEFINED_NAMES
-		export
-			{NONE} all
-		end
-
 	SHARED_WORKBENCH
 		export
 			{NONE} all
@@ -108,7 +103,7 @@ feature -- Access
 			s: SUPPLIERS_AS;
 			o: STRING_AS;
 			ed: KEYWORD_AS): CLASS_AS
-		
+
 			-- New CLASS AST node
 		do
 			if n /= Void and s /= Void and (co = Void or else not co.is_empty) and ed /= Void then

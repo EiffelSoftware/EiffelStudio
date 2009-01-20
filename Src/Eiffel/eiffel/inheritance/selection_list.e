@@ -4,7 +4,15 @@ note
 class SELECTION_LIST
 
 inherit
-	SORTED_TWO_WAY_LIST [INHERIT_INFO]
+	ARRAYED_LIST [INHERIT_INFO]
+		undefine
+			is_equal
+		end
+
+	COMPARABLE
+		undefine
+			copy
+		end
 
 	COMPILER_EXPORTER
 		undefine
@@ -39,9 +47,6 @@ inherit
 create
 	make
 
-create {SELECTION_LIST}
-	make_sublist
-
 feature -- Selection
 
 	process_selection (parents: PARENT_LIST; old_t, new_t: FEATURE_TABLE)
@@ -55,29 +60,42 @@ feature -- Selection
 			l_has_old_feature_replication: BOOLEAN
 			l_from_non_conforming_parent: BOOLEAN
 			l_selected_rout_id_set: ROUT_ID_SET
+			replication: FEATURE_I
+			l_inheriting_class_id: INTEGER_32
 		do
 			l_has_old_feature_replication := System.has_old_feature_replication
-			l_from_non_conforming_parent := first.parent /= Void and then first.parent.is_non_conforming
+			l_from_non_conforming_parent := first.non_conforming
 			l_replicated_features_present := count > 1 or else l_from_non_conforming_parent
 
 			if l_replicated_features_present then
-				process_replication (old_t, new_t)
-				if l_from_non_conforming_parent or else not l_has_old_feature_replication then
+				from
+					l_inheriting_class_id := new_t.feat_tbl_id
+					start
+				until
+					after
+				loop
+					if l_has_old_feature_replication and then not item.non_conforming then
+							-- Use legacy replication if set and parent is non-conforming
+						replication := item.a_feature.replicated (item.internal_a_feature.written_in)
+					else
+						replication := item.a_feature.replicated (l_inheriting_class_id)
+						if item.non_conforming then
+							replication.set_from_non_conforming_parent (True)
+						end
+					end
+					item.set_a_feature (replication)
+					forth
+				end
+
+				if not l_has_old_feature_replication or else first.non_conforming then
 						-- We only want replication processing enabled for legacy replication
 						-- for non-conforming features.
 					set_has_replicated_features
 				end
 			end
 
-				-- Set the selected feature to the first element in the selection list.
-			l_selected_feature := first.a_feature
-			if not l_replicated_features_present then
-					-- Make sure that direct replication flag is reset.
-				l_selected_feature.set_is_replicated_directly (False)
-			end
-
 			if
-				not (one_body_only and then (l_selected_feature.written_class.generics = Void or else same_parent_type))
+				not (one_body_only and then (first.a_feature.written_class.generics = Void or else same_parent_type))
 			then
 					-- Look for a valid selection
 				l_selected_feature := parent_selection (parents);
@@ -94,7 +112,6 @@ feature -- Selection
 							-- Set `selected_rout_id' for comparison in `unselect'
 							-- No twin is needed as there are no side effects.
 						l_selected_rout_id_set := l_selected_feature.rout_id_set
-
 							-- Move to the second item in the list as the first is 'selected'.
 						start
 						forth
@@ -104,16 +121,9 @@ feature -- Selection
 						unselect (item, new_t, old_t, l_selected_rout_id_set)
 						forth
 					end;
-
-						--| Merge routine ids from unselected features
-debug ("REPLICATION", "ACTUAL_REPLICATION")
-	io.error.put_string ("Selected feature is: ");
-	io.error.put_string (l_selected_feature.feature_name);
-	io.error.put_string (l_selected_feature.generator);
-	io.error.put_new_line;
-end;
 				end
 			else
+				l_selected_feature := first.a_feature
 					-- Remove all discarded features, ie: those after 'first'.
 					-- We do this so that post-processing of `Current' doesn't go over redundant types.
 				from
@@ -122,6 +132,7 @@ end;
 				until
 					after
 				loop
+					item.reset
 					remove
 				end
 			end
@@ -136,18 +147,10 @@ end;
 				if l_replicated_features_present then
 						-- Make sure that the code id is reset so feature is not treated as a new seed.
 					l_selected_feature.set_code_id (new_t.item_id (l_selected_feature.feature_name_id).code_id)
+					new_t.replace (l_selected_feature, l_selected_feature.feature_name_id, False)
 				end
-
-					-- Add selected feature to new feature table.
-				l_selected_feature.set_is_selected (True)
-				new_t.replace (l_selected_feature, l_selected_feature.feature_name_id)
+				--l_selected_feature.set_is_selected (True)
 			end
-		end;
-
-	Routine_id_counter: ROUTINE_COUNTER
-			-- Routine id counter
-		once
-			Result := System.routine_id_counter;
 		end;
 
 	parent_selection (parents: PARENT_LIST): FEATURE_I
@@ -167,7 +170,7 @@ end;
 				if parents.is_explicitly_selecting (item.internal_a_feature.feature_name_id) then
 					if Result = Void then
 						Result := item.a_feature
-						if active /= first_element then
+						if item /= first then
 								-- Add selected feature to the front of the selection list.
 							put_front (item)
 							remove
@@ -191,7 +194,7 @@ end;
 					else
 							-- This routine will be selected should every other routine come from a non-conforming branch.
 						l_implicit_selection := item
-						if Result = Void and then active /= first_element then
+						if Result = Void and then item /= first then
 								-- Add selected feature to the front of the selection list.
 							put_front (item)
 							remove
@@ -211,7 +214,7 @@ end;
 				end
 			end
 			check
-				selected_is_first: Result /= Void implies Result = first_element.item.a_feature
+				selected_is_first: Result /= Void implies Result = first.a_feature
 			end
 		end
 
@@ -220,21 +223,21 @@ end;
 		require
 			not is_empty
 		local
-			l_active: like active
+			i, l_count: INTEGER
 			l_code_id: INTEGER
 		do
 			Result := True
-			if count > 1 then
+			l_count := count
+			if l_count > 1 then
 				from
-					l_active := first_element
-					l_code_id := l_active.item.internal_a_feature.code_id
+					l_code_id := first.internal_a_feature.code_id
 						-- Go to the second item so we don't compare the code id with itself.
-					l_active := l_active.right
+					i := 2
 				until
-					l_active = Void or else not Result
+					i > l_count or else not Result
 				loop
-					Result := l_code_id = l_active.item.internal_a_feature.code_id
-					l_active := l_active.right
+					Result := l_code_id = i_th (i).internal_a_feature.code_id
+					i := i + 1
 				end
 			end
 		end;
@@ -249,18 +252,18 @@ end;
 			instantiator, written_actual_type, l_comparison_type: TYPE_A;
 			written_class: CLASS_C;
 			written_id: INTEGER;
-			l_active: like active
+			i, l_count : INTEGER
 		do
 			Result := True
-			if count > 1 then
+			l_count := count
+			if l_count > 1 then
 				from
 						-- Set up the first parent type as the one to compare all other parent types
-					l_active := first_element
-					written_class := l_active.item.internal_a_feature.written_class;
+					written_class := first.internal_a_feature.written_class;
 					written_id := written_class.class_id;
 					written_actual_type := written_class.actual_type;
-					if l_active.item.parent /= Void then
-						instantiator := l_active.item.parent.parent_type
+					if first.parent /= Void then
+						instantiator := first.parent.parent_type
 					else
 							-- Redeclaration
 						instantiator := written_actual_type
@@ -268,12 +271,12 @@ end;
 					l_comparison_type := written_actual_type.instantiation_in (instantiator, written_id);
 
 						-- Move to the second element in the list.
-					l_active := l_active.right
+					i := 2
 				until
-					l_active = Void or else not Result
+					i > l_count or else not Result
 				loop
-					if l_active.item.parent /= Void then
-						instantiator := l_active.item.parent.parent_type
+					if i_th (i).parent /= Void then
+						instantiator := i_th (i).parent.parent_type
 					else
 							-- Redeclaration
 						instantiator := written_actual_type
@@ -281,7 +284,7 @@ end;
 					Result := l_comparison_type.is_safe_equivalent (
 								written_actual_type.instantiation_in (instantiator, written_id)
 							)
-					l_active := l_active.right
+					i := i + 1
 				end;
 			end
 
@@ -372,7 +375,7 @@ end;
 
 				-- Add unselected feature to feature table, replacing the previous one.
 			a_feature.set_is_selected (False)
-			new_t.replace (a_feature, feature_name_id);
+			new_t.replace (a_feature, feature_name_id, False);
 		end;
 
 feature -- Conceptual Replication
@@ -422,6 +425,21 @@ feature -- Conceptual Replication
 			-- Does `Current' contain directly replicated features?
 		do
 			Result := status_flags & has_replicated_features_mask = has_replicated_features_mask
+		end
+
+	is_less alias "<" (other: SELECTION_LIST): BOOLEAN
+			-- Is `other' less than `Current'
+		do
+			Result := True
+		end
+
+feature -- Removal
+
+	reset
+			-- Reset `Current' for reuse.
+		do
+			wipe_out
+			status_flags := 0
 		end
 
 feature {NONE} -- Implementation

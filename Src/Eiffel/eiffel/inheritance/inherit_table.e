@@ -76,6 +76,13 @@ inherit
 			copy, is_equal
 		end
 
+	PREFIX_INFIX_NAMES
+		export
+			{NONE} all
+		undefine
+			copy, is_equal
+		end
+
 	SHARED_NAMES_HEAP
 		export
 			{NONE} all
@@ -235,19 +242,24 @@ feature
 				-- that the second pass has been applied to the parents
 				-- of class `cl' before.
 				-- We also check if renamed features are available
-			parents.merge_and_check_renamings (Current)
+			merge_parent_list_and_check_renamings (parents)
 
 			if error_handler.error_level /= l_error_level then
 				error_handler.raise_error
 			end
 
+			process_renaming_new
 
-			if parents.are_features_renamed then
-					-- Analyze features inherited under the same final name.
-					-- This only needs to be called if the direct parents
-					-- are explicitly renaming features.
-				process_renaming
-			end
+--			if parents.are_features_renamed then
+--					-- Analyze features inherited under the same final name.
+--					-- This only needs to be called if the direct parents
+--					-- are explicitly renaming features.
+--				process_renaming
+--			end
+
+				-- Make sure unused feature id table is cleared.
+			unused_feature_id_table.wipe_out
+
 			analyze
 				-- Check adaptation clauses of parents
 			parents.check_validity2
@@ -281,11 +293,14 @@ feature
 				-- of possible joins between deferred features
 			check_validity2
 
+				-- Wipeout unused feature table as it is no longer required.
+			unused_feature_id_table.wipe_out
+
 				-- Computes a good size for the feature table
 			resulting_table := inherited_features
 
 				-- Check redeclarations into an attribute
-			check_redeclarations (resulting_table)
+			process_redeclarations (resulting_table)
 
 				-- Check sum
 			if error_handler.error_level /= l_error_level then
@@ -309,8 +324,6 @@ feature
 			resulting_table.compute_lookup_tables
 
 				-- Check types in the feature table
-			--resulting_table.check_table;
-
 			origin_table.check_feature_types (resulting_table)
 
 			if error_handler.error_level /= l_error_level then
@@ -341,7 +354,6 @@ feature
 					error_handler.raise_error
 				end
 			end
-
 
 				-- Track generic types in the result and arguments of
 				-- features of a changed class
@@ -573,6 +585,36 @@ end;
 			empty_table_not_void: Result /= Void
 		end
 
+	merge_parent_list_and_check_renamings (a_parent_list: PARENT_LIST)
+			-- Merge features of parents from `a_parent_list' into `Current'
+			-- Renaming is checked during each merge.
+		require
+			a_parent_list_not_void: a_parent_list /= Void
+		local
+			i: INTEGER
+			l_parent_count: INTEGER
+		do
+			from
+				l_parent_count := a_parent_list.count
+				inherit_feat_cache.reset_with_n_elements (0)
+				inherit_info_cache.reset_with_n_elements (0)
+				selection_list_cache.reset_with_n_elements (0)
+					-- Non-conforming parents to the list at the end.
+					-- This will leave any features from conforming
+					-- branches as the first item in the list which is
+					-- the version we wish to take should the features be the same.
+					-- We can then check to see if the parent is non-conforming, this
+					-- will mean that it needs to be replicated as a conforming version
+					-- is not present (see {INHERIT_FEAT}.process_features)
+				i := 1
+			until
+				i > l_parent_count
+			loop
+				merge_features_of_parent_c (a_parent_list [i])
+				i := i + 1
+			end
+		end
+
 	merge_features_of_parent_c (parent_c: PARENT_C)
 			-- Merge feature table of parent `cl' into
 			-- a data structure to analyse.
@@ -584,8 +626,12 @@ end;
 			actual_parent_type: CL_TYPE_A
 			l_feature_name_id: INTEGER
 			i: INTEGER
+			l_inherit_info_cache: like inherit_info_cache
+			l_inherit_feat_cache: like inherit_feat_cache
 		do
 			from
+				l_inherit_info_cache := inherit_info_cache
+				l_inherit_feat_cache := inherit_feat_cache
 				create parent_type
 				actual_parent_type := parent_c.parent_type
 				if not actual_parent_type.is_attached then
@@ -626,10 +672,9 @@ end;
 					-- If an INHERIT_FEAT object corresponding to feature_name_id is not present then add one.
 				if found_item = Void then
 							-- Add new feature to the inheritance table.
-					put (create {INHERIT_FEAT}.make, l_feature_name_id)
+					put (l_inherit_feat_cache.new_inherit_feat, l_feature_name_id)
 				end
-
-				found_item.insert (create {INHERIT_INFO}.make_with_feature_and_parent (parent_table [i], parent_c, parent_type))
+				found_item.insert (l_inherit_info_cache.new_inherited_info (parent_table [i], parent_c, parent_type))
 				i := i - 1
 			end
 
@@ -642,10 +687,155 @@ end;
 		do
 			search (feature_name_id)
 			if not found then
-				put (create {INHERIT_FEAT}.make, feature_name_id)
+				put (inherit_feat_cache.new_inherit_feat, feature_name_id)
 			end
 			found_item.insert (info)
 			renaming_occurred := True
+		end
+
+	process_renaming_new
+			-- Process all direct renamings.
+		local
+			l_parents: like parents
+			l_old_feature_name_id: INTEGER
+			i, l_count: INTEGER
+			l_inherit_info: INHERIT_INFO
+			l_from_features_list: BOOLEAN
+			new_name_id, new_alias_name_id: INTEGER
+			names: like names_heap
+		do
+			-- Loop through the parent list
+			names := names_heap
+			l_parents := parents
+			from
+				l_parents.start
+			until
+				l_parents.after
+			loop
+				if l_parents.item.has_renaming then
+					from
+						l_parents.item.renaming.start
+					until
+						l_parents.item.renaming.after
+					loop
+						l_old_feature_name_id := l_parents.item.renaming.key_for_iteration
+						search (l_old_feature_name_id)
+						if found then
+							l_inherit_info := Void
+								-- We have retrieved the appropriate inherit feat object
+								-- Now we retrieve the inherit info for the parent_c corresponding to `l_old_feature_name_id'.	
+							from
+								i := 1
+								l_count := found_item.features.count
+								l_from_features_list := False
+							until
+								i > l_count or else l_from_features_list
+							loop
+								if found_item.features [i].parent = l_parents.item then
+									l_from_features_list := True
+									l_inherit_info := found_item.features [i]
+								else
+									i := i + 1
+								end
+							end
+
+							if not l_from_features_list then
+								from
+									i := 1
+									l_count := found_item.deferred_features.count
+								until
+									i > l_count or else l_inherit_info /= Void
+								loop
+									if found_item.deferred_features [i].parent = l_parents.item then
+										l_inherit_info := found_item.deferred_features [i]
+									else
+										i := i + 1
+									end
+								end
+							end
+
+							if not l_inherit_info.renaming_processed then
+									-- We have found the inherit info object to be renamed
+
+								new_name_id := l_parents.item.renaming.item_for_iteration.feature_name_id
+								new_alias_name_id := l_parents.item.renaming.item_for_iteration.alias_name_id
+
+									-- Instantiate then copy if aliased.
+								if l_inherit_info.a_feature_needs_instantiation then
+									l_inherit_info.instantiate_a_feature
+								end
+								l_inherit_info.copy_a_feature_for_feature_table
+
+									-- Move the inherit feature information under
+									-- 'new_name'.
+								l_inherit_info.a_feature.set_renamed_name_id (new_name_id, new_alias_name_id)
+								l_inherit_info.a_feature.set_has_convert_mark (l_parents.item.renaming.item_for_iteration.has_convert_mark)
+
+									-- Update feature flags
+								if is_mangled_name (names.item (new_name_id)) then
+									if l_inherit_info.a_feature.argument_count = 0 then
+											-- Prefix feature
+										l_inherit_info.a_feature.set_is_infix (False)
+										l_inherit_info.a_feature.set_is_prefix (True)
+									else
+											-- Infix feature
+										l_inherit_info.a_feature.set_is_infix (True)
+										l_inherit_info.a_feature.set_is_prefix (False)
+									end
+								else
+										-- Identifier feature
+									l_inherit_info.a_feature.set_is_infix (False)
+									l_inherit_info.a_feature.set_is_prefix (False)
+								end
+								if new_alias_name_id > 0 then
+									if new_alias_name_id = {PREDEFINED_NAMES}.bracket_symbol_id then
+											-- Bracket alias
+										l_inherit_info.a_feature.set_is_binary (False)
+										l_inherit_info.a_feature.set_is_bracket (True)
+										l_inherit_info.a_feature.set_is_unary (False)
+									elseif l_inherit_info.a_feature.argument_count = 0 then
+											-- Unary operator
+										l_inherit_info.a_feature.set_is_binary (False)
+										l_inherit_info.a_feature.set_is_bracket (False)
+										l_inherit_info.a_feature.set_is_unary (True)
+									else
+											-- Binary operator
+										l_inherit_info.a_feature.set_is_binary (True)
+										l_inherit_info.a_feature.set_is_bracket (False)
+										l_inherit_info.a_feature.set_is_unary (False)
+									end
+								else
+									l_inherit_info.a_feature.set_is_binary (False)
+									l_inherit_info.a_feature.set_is_bracket (False)
+									l_inherit_info.a_feature.set_is_unary (False)
+								end
+									-- Remove the inherit info from its old location
+								if l_from_features_list then
+									found_item.features.go_i_th (i)
+									found_item.features.remove
+								else
+									found_item.deferred_features.go_i_th (i)
+									found_item.deferred_features.remove
+								end
+									-- If old feature has no remaining features then remove from `Current'.
+								if found_item.is_empty then
+									found_item.reset
+									remove (l_old_feature_name_id)
+									check
+										removed: removed
+									end
+								end
+
+								add_renamed_feature (l_inherit_info, new_name_id)
+									-- Mark it as processed so that it doesn't get reiterated.
+								l_inherit_info.set_renaming_processed
+							end
+						end
+						l_parents.item.renaming.forth
+					end
+				end
+				l_parents.forth
+			end
 		end
 
 	renaming_occurred: BOOLEAN
@@ -716,6 +906,26 @@ end;
 			end
 		end
 
+	uninitialized_features: ARRAYED_LIST [INTEGER]
+			-- Iteration position for features that have yet to have their feature ids initialized.
+		once
+			create Result.make (35)
+		end
+
+	used_feature_ids:  SEARCH_TABLE [INTEGER]
+			-- Search table for used feature id's
+		once
+			create Result.make (35)
+		end
+
+	add_to_inherit_table (a_inherit_info: INHERIT_INFO)
+		do
+			inherited_features.put (a_inherit_info.a_feature, a_inherit_info.a_feature.feature_name_id, a_inherit_info.a_feature_aliased)
+			if a_inherit_info.a_feature.alias_name_id > 0 then
+				check_alias_name_conflict (a_inherit_info.a_feature)
+			end
+		end
+
 	analyze
 			-- Analyze inherited features: the renamings must have
 			-- been treated before
@@ -725,15 +935,30 @@ end;
 		local
 			feature_name_id: INTEGER;
 			inherit_feat: INHERIT_FEAT;
-			inherited_info: INHERIT_INFO;
-			feature_i: FEATURE_I;
 			l_count, i: INTEGER
 			l_keys: like keys
 			l_content: like content
 			l_iteration_position: INTEGER
 			l_check_undefinition, l_check_redefinition: BOOLEAN
+			l_adaptations: like adaptations
+			l_origin_table: like origin_table
+			l_first_compilation: BOOLEAN
+			l_uninitialized_features: like uninitialized_features
+			l_used_feature_ids: like used_feature_ids
+			l_feature_id, l_highest_feature_id: INTEGER
 		do
 			from
+				l_first_compilation := System.first_compilation
+
+					-- Wipe out previous meta information.
+				l_used_feature_ids := used_feature_ids
+				l_used_feature_ids.wipe_out
+				l_uninitialized_features := uninitialized_features
+				uninitialized_features.wipe_out
+
+				l_adaptations := adaptations
+				l_origin_table := origin_table
+
 					-- Determining whether to check features for undefinition and redefinition
 				l_check_undefinition := parents.are_features_undefined
 				l_check_redefinition := parents.are_features_redefined
@@ -763,29 +988,76 @@ end;
 					-- Calculates attribute `inherited_feature' of
 					-- instance `inherit_feat'.
 				inherit_feat.process (a_class, feature_name_id, l_check_undefinition, l_check_redefinition)
-				inherited_info := inherit_feat.inherited_info;
-				if inherited_info /= Void then
-						-- Class inherit from a feature coming from one
-						-- parent.
-
-						-- initialization of an inherited feature
-					feature_i := init_inherited_feature (feature_name_id, inherited_info, inherit_feat);
-						-- Insertion in the origin table
-					inherited_info.set_a_feature (feature_i);
+				if inherit_feat.inherited_info /= Void then
+						-- Feature is coming from a single parent.
+						-- Initialize (without feature id processing) then insert into origin table
+						-- We add to `Current' later due to aliasing processing.
+					init_inherited_feature (inherit_feat.inherited_info, inherit_feat, False)
 					if
-						not feature_i.is_deferred and then
+						not inherit_feat.inherited_info.internal_a_feature.is_deferred and then
 						inherit_feat.deferred_features.count > 0
 					then
 							-- Case of an implementation of inherited deferred
 							-- features by an inherited non-deferred feature.
 							-- Reset assertions of `feature_i'
-						adaptations.put_front (create {DEFINITION}.make (inherit_feat, feature_i));
+							-- Make sure that feature_i is not aliased.
+						inherit_feat.inherited_info.copy_a_feature_for_feature_table
+						l_adaptations.extend (create {DEFINITION}.make (inherit_feat, inherit_feat.inherited_info));
 					else
-						Origin_table.insert (inherited_info);
-					end;
-				end;
-			end;
-		end;
+						l_origin_table.insert (inherit_feat.inherited_info);
+					end
+						-- Attempt to reuse feature id for aliasing
+					if l_first_compilation and then inherit_feat.inherited_info.a_feature_aliased then
+						l_feature_id := inherit_feat.inherited_info.a_feature.feature_id
+						if not l_used_feature_ids.has (l_feature_id) then
+								-- We can reuse the feature id for this aliased feature.
+							add_to_inherit_table (inherit_feat.inherited_info)
+							l_used_feature_ids.put (l_feature_id)
+							l_highest_feature_id := l_highest_feature_id.max (l_feature_id)
+						else
+							l_uninitialized_features.extend (l_iteration_position)
+						end
+					else
+						l_uninitialized_features.extend (l_iteration_position)
+					end
+				end
+			end
+
+				-- Add all unaliased features to `Current'.
+			from
+				i := 1
+				l_count := l_uninitialized_features.count
+			until
+				i > l_count
+			loop
+				if l_first_compilation then
+						-- Retrieve next available feature id.
+					from
+						l_feature_id := i
+					until
+						not l_used_feature_ids.has (l_feature_id)
+					loop
+						l_feature_id := l_feature_id + 1
+					end
+					l_highest_feature_id := l_highest_feature_id.max (l_feature_id)
+
+						-- Add to used_feature_ids so that it cannot be reused.
+					l_used_feature_ids.put (l_feature_id)
+
+						-- Set feature id and add to `Current'.
+					l_content [l_uninitialized_features [i]].inherited_info.copy_a_feature_for_feature_table
+					l_content [l_uninitialized_features [i]].inherited_info.a_feature.set_feature_id (l_feature_id)
+					add_to_inherit_table (l_content [l_uninitialized_features [i]].inherited_info)
+				else
+					assign_feature_id_and_insert (l_content [l_uninitialized_features [i]].inherited_info)
+				end
+				i := i + 1
+			end
+
+			if l_first_compilation then
+				a_class.feature_id_counter.set_value (l_highest_feature_id)
+			end
+		end
 
 	analyze_declarations
 			-- Analyze local declarations written in the class for a
@@ -971,7 +1243,7 @@ end;
 				end;
 					-- Insertion into the system routine info table.
 				System.rout_info_table.put (new_rout_id, a_class);
-				create info.make (feature_i)
+				info := inherit_info_cache.new_inherited_info (feature_i, Void, Void)
 			else
 					-- This is either an explicit redefinition through
 					-- the redefine clause or an implicit redefinition like
@@ -999,11 +1271,10 @@ end;
 						-- not the correct value. The correct one will
 						-- will be set later by one of the routine that
 						-- calls `set_a_feature' from INHERIT_INFO.
-
-					create info.make (feature_i)
+					info := inherit_info_cache.new_inherited_info (feature_i, Void, Void)
 					inherit_feat.set_inherited_info (info);
-						-- Store the redefintion for later
-					create redef.make (inherit_feat, feature_i);
+						-- Store the redefinition for later
+					create redef.make (inherit_feat, info);
 					adaptations.put_front (redef);
 				elseif inherited_info.parent = Void then
 						-- The feature has two implementations in the class
@@ -1026,7 +1297,7 @@ end;
 				if old_feature = Void then
 						-- Since the old feature table hasn't a feature named
 						-- `feature_name', new feature id for the feature
-					give_new_feature_id (feature_i);
+					feature_i.set_feature_id (retrieve_feature_id (feature_i))
 				else
 						-- Take the previous feature id
 					feature_i.set_feature_id (old_feature.feature_id);
@@ -1317,7 +1588,7 @@ end;
 	update_convert_clause (
 			a_old_convert, a_new_convert: DS_HASH_TABLE [INTEGER, NAMED_TYPE_A];
 			a_resulting_table: FEATURE_TABLE)
-		
+
 			-- Take into account incremental changes in `convert' clauses.
 		require
 			a_class_not_void: a_class /= Void
@@ -1372,10 +1643,9 @@ end;
 			inherited_feature: FEATURE_I;
 			deferred_info: INHERIT_INFO;
 			inherit_feat: INHERIT_FEAT;
-			feature_name_id: INTEGER;
 			vdrs4: VDRS4;
 			l_count, i: INTEGER
-			l_features_list: LINKED_LIST [INHERIT_INFO]
+			l_features_list: ARRAYED_LIST [INHERIT_INFO]
 		do
 			from
 					-- We iterate 'count' times so as to only call 'forth' that number of times
@@ -1400,20 +1670,18 @@ end;
 						check
 							not inherit_feat.is_empty;
 						end;
-						feature_name_id := key_for_iteration;
 						deferred_info := inherit_feat.deferred_features.first;
 							-- New inherited feature
 
 							-- Initialization of an inherited feature
-						inherited_feature := init_inherited_feature (feature_name_id, deferred_info, inherit_feat);
-							-- Insertion in the origin table
-						deferred_info.set_a_feature (inherited_feature);
-						Origin_table.insert (deferred_info);
+						init_inherited_feature (deferred_info, inherit_feat, True)
+
+						Origin_table.insert (deferred_info)
 						if inherit_feat.deferred_features.count > 1 then
 								-- Keep track of the feature adaptation.
 								-- The deferred features must have the same
 								-- signature
-							adaptations.put_front (create {JOIN}.make (inherit_feat, inherited_feature));
+							adaptations.put_front (create {JOIN}.make (inherit_feat, deferred_info));
 debug ("ACTIVITY")
 	io.put_string ("joining feature: ");
 	io.put_string (inherited_feature.feature_name);
@@ -1448,44 +1716,79 @@ end;
 			end;
 		end;
 
-	init_inherited_feature (a_feature_name_id: INTEGER_32; inherit_info: INHERIT_INFO; inherit_feat: INHERIT_FEAT): FEATURE_I
+	init_inherited_feature (inherit_info: INHERIT_INFO; inherit_feat: INHERIT_FEAT; a_add_to_table: BOOLEAN) is
 			-- Initialization of an inherited feature
 		require
 			a_feature_valid: inherit_info /= Void and then inherit_info.internal_a_feature /= Void
 			inherit_feat_not_void: inherit_feat /= Void
 		local
-			l_inherit_info: INHERIT_INFO
-			old_feature: FEATURE_I
-			feature_name_id: INTEGER
+
+			l_export_status, l_old_export_status: EXPORT_I
 		do
-			Result := inherit_info.a_feature
-			if not inherit_info.a_feature_instantiated_for_feature_table then
-					-- We need to duplicate so that type and argument information
-					-- get twinned too.
-				Result := Result.duplicate
+				-- Make sure that inherit info is instantiated if not already done so.
+			if inherit_info.a_feature_needs_instantiation then
+				inherit_info.instantiate_a_feature
 			end
-			Result.set_feature_name_id (a_feature_name_id, Result.alias_name_id)
+
+			if inherit_info.a_feature.is_origin then
 				-- It is no more an origin
-			Result.set_is_origin (False)
-			Result.set_has_property (False)
-			if a_class.is_single then
-					-- Feature getters and setters may have been generated.
-				l_inherit_info := inherit_feat.inherited_info
-				if l_inherit_info /= Void and then l_inherit_info.parent.parent.is_single then
-					Result.set_has_property_getter (False)
-					Result.set_has_property_setter (False)
+				--| FIXME IEK: This needs to be rewritten as a feature is still an origin if inherited.
+				--| This also means that features directly inherited from ANY are not aliased.
+				inherit_info.copy_a_feature_for_feature_table
+				inherit_info.a_feature.set_is_origin (False)
+			end
+
+			if inherit_info.a_feature.has_property then
+				-- We need to aliasing if not already done
+				inherit_info.copy_a_feature_for_feature_table
+				inherit_info.a_feature.set_has_property (False)
+				if a_class.is_single then
+						-- Feature getters and setters may have been generated so we reset.
+					if inherit_feat.inherited_info /= Void and then inherit_feat.inherited_info.parent.parent.is_single then
+						inherit_info.a_feature.set_has_property_getter (False)
+						inherit_info.a_feature.set_has_property_setter (False)
+					end
 				end
 			end
 
-				--  Check the routine table ids
-			Result.set_rout_id_set (inherit_feat.rout_id_set.twin)
+				-- Copy over the rout_id_set if different from inherited routine.
+			if not inherit_feat.rout_id_set.is_equal (inherit_info.a_feature.rout_id_set) then
+				inherit_info.copy_a_feature_for_feature_table
+				inherit_info.a_feature.set_rout_id_set (inherit_feat.rout_id_set.twin)
+			end
+
+				-- Concatenation of the export statuses of all the
+				-- precursors of the inherited feature: take care of new
+				-- adapted export status specified in inheritance clause
+			l_old_export_status := inherit_info.a_feature.export_status
+			l_export_status := inherit_feat.exports (inherit_info.a_feature.feature_name_id)
+			if l_old_export_status /= l_export_status then
+				inherit_info.copy_a_feature_for_feature_table
+				inherit_info.a_feature.set_export_status (l_export_status)
+			end
+
+			if a_add_to_table then
+				assign_feature_id_and_insert (inherit_info)
+			end
+		end
+
+	assign_feature_id_and_insert (a_inherit_info: INHERIT_INFO)
+		local
+			old_feature: FEATURE_I
+			l_new_feature_id, l_current_feature_id: INTEGER
+			l_feature_is_aliased: BOOLEAN
+			l_first_compilation: BOOLEAN
+		do
+			l_feature_is_aliased := a_inherit_info.a_feature_aliased
 				-- Process feature id
-			feature_name_id := Result.feature_name_id
-			old_feature := feature_table.item_id (feature_name_id)
+			l_first_compilation := System.first_compilation
+			if not l_first_compilation then
+				old_feature := feature_table.item_id (a_inherit_info.a_feature.feature_name_id)
+			end
 			if old_feature = Void then
 					-- New feature id since the old feature table
 					-- doesn't have an entry `feature_name'
-				give_new_feature_id (Result)
+				l_new_feature_id := retrieve_feature_id (a_inherit_info.a_feature)
 
 					-- We reactivate `body_index' in case `old_feature' is Void because
 					-- it was removed in `assign_feature_table' as it was not valid
@@ -1496,10 +1799,12 @@ end;
 					--| The only issue when performing this call is that in a compilation
 					--| from scratch it is useless, but we do not have much choice in
 					--| case of incremental compilation.
-				Tmp_ast_server.reactivate (Result.body_index)
+				if not l_first_compilation then
+					Tmp_ast_server.reactivate (a_inherit_info.a_feature.body_index)
+				end
 			else
 					-- Take the old feature id
-				Result.set_feature_id (old_feature.feature_id)
+				l_new_feature_id := old_feature.feature_id
 				if
 					old_feature.can_be_encapsulated and then
 					old_feature.to_generate_in (a_class)
@@ -1511,26 +1816,32 @@ end;
 					system.execution_table.add_dead_function (old_feature.body_index)
 				end
 			end
-				-- Concatenation of the export statuses of all the
-				-- precursors of the inherited feature: take care of new
-				-- adapted export status specified in inheritance clause
-			Result.set_export_status (inherit_feat.exports (feature_name_id))
-				-- Insert it in the table `inherited_features'.
-			inherited_features.put (Result, feature_name_id)
 
-			if Result.alias_name_id > 0 then
-					-- If there is an alias id then check to make sure there is no conflict.
-				check_alias_name_conflict (Result)
+			l_current_feature_id := a_inherit_info.a_feature.feature_id
+
+				-- Set feature id if different than current
+			if l_current_feature_id /= l_new_feature_id then
+				a_inherit_info.copy_a_feature_for_feature_table
+				a_inherit_info.a_feature.set_feature_id (l_new_feature_id)
 			end
+
+				-- Insert it in the table `inherited_features'.
+			add_to_inherit_table (a_inherit_info)
 		end
 
-	give_new_feature_id (f: FEATURE_I)
-			-- Give a new feature id to `f'.
+	unused_feature_id_table: SEARCH_TABLE [INTEGER]
+			-- Table for storing unused feature ids of current class.
+		once
+			create Result.make (35)
+		end
+
+	retrieve_feature_id (f: FEATURE_I): INTEGER
+			-- Retrieve a feature id for `f', generate a new one
+			-- if `a_new', otherwise return 0.
 		require
 			good_argument: f /= Void;
 			has_a_new_name: not feature_table.has_id (f.feature_name_id);
 		local
-			new_feature_id: INTEGER;
 			old_feature: FEATURE_I;
 		do
 			if previous_feature_table /= Void then
@@ -1539,15 +1850,14 @@ end;
 						-- Keep the feature id, because byte code for client
 						-- features using this new feature name could have been	
 						-- already computed.
-					new_feature_id := old_feature.feature_id
+					Result := old_feature.feature_id
 				else
-					new_feature_id := a_class.feature_id_counter.next;
+					Result := a_class.feature_id_counter.next;
 				end
 			else
-				new_feature_id := a_class.feature_id_counter.next;
+				Result := a_class.feature_id_counter.next;
 			end;
-			f.set_feature_id (new_feature_id);
-		end;
+		end
 
 	check_validity3 (resulting_table: FEATURE_TABLE)
 			-- Check the signature conformance of the redefinitions and
@@ -1573,7 +1883,7 @@ end;
 			end
 		end
 
-	check_redeclarations (resulting_table: FEATURE_TABLE)
+	process_redeclarations (resulting_table: FEATURE_TABLE)
 			-- Check redeclarations into an attribute.
 		do
 			from
@@ -1581,7 +1891,7 @@ end;
 			until
 				adaptations.after
 			loop
-				adaptations.item.check_redeclaration (resulting_table, feature_table, origins, Origin_table)
+				adaptations.item.check_redeclaration (resulting_table, feature_table, origins)
 				adaptations.forth
 			end;
 		end;
@@ -1595,7 +1905,7 @@ end;
 			vmfn: VMFN
 		do
 			feature_name_id := f.feature_name_id
-			inherited_features.put (f, feature_name_id)
+			inherited_features.put (f, feature_name_id, False)
 			if inherited_features.conflict then
 				create vmfn
 				vmfn.set_class (a_class)

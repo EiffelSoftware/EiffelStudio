@@ -21,8 +21,6 @@ inherit
 
 	IL_CONST
 
-	PREDEFINED_NAMES
-
 create
 	make
 
@@ -197,13 +195,13 @@ feature -- IL code generation
 			inspect
 				name_id
 
-			when item_name_id, infix_at_name_id, at_name_id then
+			when {PREDEFINED_NAMES}.item_name_id, {PREDEFINED_NAMES}.infix_at_name_id, {PREDEFINED_NAMES}.at_name_id then
 				il_generator.generate_array_access (type_kind, generic_type_id)
 
-			when put_name_id then
+			when {PREDEFINED_NAMES}.put_name_id then
 				il_generator.generate_array_write (type_kind, generic_type_id)
 
-			when make_name_id then
+			when {PREDEFINED_NAMES}.make_name_id then
 				if l_formal /= Void then
 						-- Create the correct array type based on how the formal
 						-- will be instantiated.
@@ -217,24 +215,24 @@ feature -- IL code generation
 					il_generator.generate_array_initialization (l_actual_array_type, generic_type)
 				end
 
-			when count_name_id then
+			when {PREDEFINED_NAMES}.count_name_id then
 				il_generator.generate_array_count
 
-			when lower_name_id then
+			when {PREDEFINED_NAMES}.lower_name_id then
 				il_generator.generate_array_lower
 
-			when upper_name_id then
+			when {PREDEFINED_NAMES}.upper_name_id then
 				il_generator.generate_array_upper
 
-			when all_default_name_id then
+			when {PREDEFINED_NAMES}.all_default_name_id then
 
-			when clear_all_name_id then
+			when {PREDEFINED_NAMES}.clear_all_name_id then
 
-			when index_of_name_id then
+			when {PREDEFINED_NAMES}.index_of_name_id then
 
-			when resized_area_name_id then
+			when {PREDEFINED_NAMES}.resized_area_name_id then
 
-			when same_items_name_id then
+			when {PREDEFINED_NAMES}.same_items_name_id then
 
 			else
 --					check

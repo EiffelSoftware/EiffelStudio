@@ -11,32 +11,6 @@ inherit
 create
 	make, make_filled
 
-feature -- Merging parents
-
-	merge_and_check_renamings (inherit_table: INHERIT_TABLE)
-			-- Go through each parents and merge them into `inherit_table'
-			-- Check also the renaming clause of the parents
-		local
-			i: INTEGER
-		do
-			from
-					-- Add non-conforming parents to the list first.
-					-- This will leave any features from conforming
-					-- branches as the first item in the list which is
-					-- the version we wish to take should the features be the same.
-					-- We can then check to see if the parent is non-conforming, this
-					-- will mean that it needs to be replicated as a conforming version
-					-- is not present (see {INHERIT_FEAT}.process_features)
-				i := count - 1
-			until
-				i < 0
-			loop
-				inherit_table.merge_features_of_parent_c (area [i])
-					-- Renaming is checked during the merge.
-				i := i - 1
-			end
-		end
-
 feature -- Validity
 
 	check_validity2

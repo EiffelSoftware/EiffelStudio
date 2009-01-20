@@ -5,8 +5,8 @@ note
 -- of selections
 
 class SHARED_ORIGIN_TABLE
-	
-feature {NONE}
+
+feature -- Access
 
 	Origin_table: ORIGIN_TABLE
 			-- Origin table associated to `feature_table': it is the table
@@ -15,6 +15,30 @@ feature {NONE}
 		once
 			create Result.make (500);
 		end;
+
+	inherit_info_cache: INHERIT_INFO_CACHE
+			-- Cache for reusing INHERIT_INFO objects for each degree 4 pass.
+		once
+			create Result.make (35)
+		ensure
+			cache_not_void: Result /= Void
+		end
+
+	inherit_feat_cache: INHERIT_FEAT_CACHE
+			-- Cache for reusing INHERIT_FEAT objects for each degree 4 pass.
+		once
+			create Result.make (35)
+		ensure
+			cache_not_void: Result /= Void
+		end
+
+	selection_list_cache: SELECTION_LIST_CACHE
+			-- Cache for reusing SELECTION_LIST objects for each degree 4 pass.
+		do
+			Result := origin_table.selection_list_cache
+		ensure
+			cache_not_void: Result /= Void
+		end
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

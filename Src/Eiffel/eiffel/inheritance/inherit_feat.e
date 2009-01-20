@@ -8,22 +8,58 @@ note
 class INHERIT_FEAT
 
 inherit
-	PREDEFINED_NAMES
+
 	SHARED_INHERITED
+		undefine
+			is_equal
+		end
+
 	SHARED_WORKBENCH
+		undefine
+			is_equal
+		end
+
 	SHARED_SERVER
+		undefine
+			is_equal
+		end
+
 	SHARED_ERROR_HANDLER
+		undefine
+			is_equal
+		end
+
 	SHARED_EXPORT_STATUS
+		undefine
+			is_equal
+		end
+
 	COMPILER_EXPORTER
+		undefine
+			is_equal
+		end
+
+	COMPARABLE
 
 	PREFIX_INFIX_NAMES
 		export
 			{NONE} all
+		undefine
+			is_equal
 		end
 
 	SHARED_NAMES_HEAP
 		export
 			{NONE} all
+		undefine
+			is_equal
+		end
+
+	SHARED_ORIGIN_TABLE
+		export
+			{NONE} all
+		undefine
+			is_equal
 		end
 
 create
@@ -31,19 +67,19 @@ create
 
 feature
 
-	deferred_features: LINKED_LIST [INHERIT_INFO]
+	deferred_features: ARRAYED_LIST [INHERIT_INFO]
 			-- List of deferred inherited features informations
 		do
 			Result := deferred_features_internal
 			if Result = Void then
-				create Result.make
+				create Result.make (1)
 				deferred_features_internal := Result
 			end
 		end
 
 	deferred_features_internal: like deferred_features
 
-	features: LINKED_LIST [INHERIT_INFO]
+	features: ARRAYED_LIST [INHERIT_INFO]
 			-- List of informations on non-deferred inherited features
 
 	inherited_info: INHERIT_INFO
@@ -57,7 +93,7 @@ feature
 	make
 			-- Lists creation
 		do
-			create features.make
+			create features.make (1)
 			create rout_id_set.make
 		end
 
@@ -70,7 +106,7 @@ feature
 						check_assertion (features)
 		end
 
-	check_assertion (list: LINKED_LIST [INHERIT_INFO]): BOOLEAN
+	check_assertion (list: like features): BOOLEAN
 			-- Check to see if list has assertion
 			-- (for merging)
 		do
@@ -84,7 +120,7 @@ feature
 			end
 		end
 
-	wipe_out
+	reset
 			-- Clear the structure
 		do
 			deferred_features.wipe_out
@@ -114,9 +150,9 @@ feature
 				-- The position of the list of features must not change
 				-- as `treat_renamings' may call it.
 			if not info.internal_a_feature.is_deferred then
-				features.put_front (info)
+				features.extend (info)
 			else
-				deferred_features.put_front (info)
+				deferred_features.extend (info)
 			end
 		end
 
@@ -131,13 +167,12 @@ feature
 			end
 		end
 
-	treat_renamings (feat: LINKED_LIST [INHERIT_INFO])
+	treat_renamings (feat: ARRAYED_LIST [INHERIT_INFO])
 			-- Check renamings in the feature list `feat'.
 		require
 			good_argument: feat /= Void
 		local
 			next: INHERIT_INFO
-			replication: FEATURE_I
 			feature_name_id: INTEGER
 			extended_feature_name: RENAMING
 			new_name_id: INTEGER
@@ -148,7 +183,8 @@ feature
 				feat.start
 				names := Names_heap
 			until
-				feat.after
+				feat.off
+					-- We need off as we can reset `Current' during renaming.
 			loop
 				next := feat.item
 				if next.renaming_processed then
@@ -158,66 +194,60 @@ feature
 					if next.parent.renaming /= Void then
 						extended_feature_name := next.parent.renaming.item (feature_name_id)
 						if extended_feature_name /= Void then
-
 							new_name_id := extended_feature_name.feature_name_id
 							new_alias_name_id := extended_feature_name.alias_name_id
 
-								-- Instantiate `a_feature', only twin if a new object
-								-- is not created to avoid aliasing.
-
-							next.instantiate_a_feature
-							if next.a_feature_instantiated_for_feature_table then
-								replication := next.a_feature
-							else
-								replication := next.a_feature.twin
+								-- Instantiate then copy if aliased.
+							if next.a_feature_needs_instantiation then
+								next.instantiate_a_feature
 							end
+							next.copy_a_feature_for_feature_table
 
 								-- Mark it as processed
 							next.set_renaming_processed
 								-- Move the inherit feature information under
 								-- 'new_name'.
-							replication.set_renamed_name_id (new_name_id, new_alias_name_id)
-							replication.set_has_convert_mark (extended_feature_name.has_convert_mark)
+							next.a_feature.set_renamed_name_id (new_name_id, new_alias_name_id)
+							next.a_feature.set_has_convert_mark (extended_feature_name.has_convert_mark)
 
 								-- Update feature flags
 							if is_mangled_name (names.item (new_name_id)) then
-								if replication.argument_count = 0 then
+								if next.a_feature.argument_count = 0 then
 										-- Prefix feature
-									replication.set_is_infix (False)
-									replication.set_is_prefix (True)
+									next.a_feature.set_is_infix (False)
+									next.a_feature.set_is_prefix (True)
 								else
 										-- Infix feature
-									replication.set_is_infix (True)
-									replication.set_is_prefix (False)
+									next.a_feature.set_is_infix (True)
+									next.a_feature.set_is_prefix (False)
 								end
 							else
 									-- Identifier feature
-								replication.set_is_infix (False)
-								replication.set_is_prefix (False)
+								next.a_feature.set_is_infix (False)
+								next.a_feature.set_is_prefix (False)
 							end
 							if new_alias_name_id > 0 then
-								if new_alias_name_id = bracket_symbol_id then
+								if new_alias_name_id = {PREDEFINED_NAMES}.bracket_symbol_id then
 										-- Bracket alias
-									replication.set_is_binary (False)
-									replication.set_is_bracket (True)
-									replication.set_is_unary (False)
-								elseif replication.argument_count = 0 then
+									next.a_feature.set_is_binary (False)
+									next.a_feature.set_is_bracket (True)
+									next.a_feature.set_is_unary (False)
+								elseif next.a_feature.argument_count = 0 then
 										-- Unary operator
-									replication.set_is_binary (False)
-									replication.set_is_bracket (False)
-									replication.set_is_unary (True)
+									next.a_feature.set_is_binary (False)
+									next.a_feature.set_is_bracket (False)
+									next.a_feature.set_is_unary (True)
 								else
 										-- Binary operator
-									replication.set_is_binary (True)
-									replication.set_is_bracket (False)
-									replication.set_is_unary (False)
+									next.a_feature.set_is_binary (True)
+									next.a_feature.set_is_bracket (False)
+									next.a_feature.set_is_unary (False)
 								end
 							else
-								replication.set_is_binary (False)
-								replication.set_is_bracket (False)
-								replication.set_is_unary (False)
+								next.a_feature.set_is_binary (False)
+								next.a_feature.set_is_bracket (False)
+								next.a_feature.set_is_unary (False)
 							end
-							next.set_a_feature (replication)
 							Inherit_table.add_renamed_feature (next, new_name_id)
 								-- Remove the information, this will move the cursor to the next item
 							feat.remove
@@ -225,6 +255,8 @@ feature
 							if is_empty then
 									-- If there are no longer any features using that name then we remove the reference to the feature name.
 								Inherit_table.remove (feature_name_id)
+									-- Make sure that `Current' is reset as it is should no longer be used.
+								reset
 							end
 						else
 							feat.forth
@@ -262,7 +294,7 @@ feature
 			positive_feature_name_id: feature_name_id > 0
 		local
 			info, new_info: INHERIT_INFO;
-			a_feature, new_deferred: FEATURE_I;
+			a_feature: FEATURE_I;
 			vdus2: VDUS2;
 			vdus3: VDUS3;
 		do
@@ -298,8 +330,8 @@ feature
 						Error_handler.insert_error (vdus2);
 						features.forth;
 					else
-						new_deferred := info.a_feature.new_deferred;
-						create new_info.make (new_deferred)
+							-- We initially set parent as Void in 'new_inherit_info' as `new_deferred' is instantiated.
+						new_info := inherit_info_cache.new_inherited_info (info.a_feature.new_deferred, Void, Void)
 						new_info.set_parent (info.parent);
 						insert (new_info);
 						features.remove;
@@ -327,30 +359,50 @@ feature
 		local
 			encapsulated_i: ENCAPSULATED_I
 			vmfn2: VMFN2;
+			l_exit_loop: BOOLEAN
 		do
 			if a_check_redefinition and then features_all_redefined (feature_name_id) then
 					-- To be redefined later
+					-- Update `rout_id_set'
+				rout_id_set.update (features);
 			elseif features_all_the_same then
-					-- Shared features
-				inherited_info := features.first;
-				encapsulated_i ?= inherited_info.internal_a_feature
-				if encapsulated_i /= Void and then encapsulated_i.generate_in = 0 then
+					-- Shared features from the same parent.
+				if features.count > 1 and then features.first.internal_a_feature.can_be_encapsulated then
+					encapsulated_i ?= features.first.internal_a_feature
+					if encapsulated_i /= Void and then encapsulated_i.generate_in = 0 then
+						from
+								-- Go to the second item as the first has already been checked.
+							features.start
+							features.forth
+						until
+							features.after or else l_exit_loop
+						loop
+							encapsulated_i ?= features.item.internal_a_feature
+							if encapsulated_i /= Void and then encapsulated_i.generate_in /= 0 then
+								inherited_info := features.item
+								l_exit_loop := True
+							end
+							features.forth
+						end
+					end
+				end
+				if inherited_info = Void then
+					-- Return the most optimal feature.
+					inherited_info := features.first
 					from
 						features.start
-						inherited_info := Void
+						features.forth
 					until
-						features.after or else inherited_info /= Void
+						features.after
 					loop
-						encapsulated_i ?= features.item.internal_a_feature
-						if encapsulated_i /= Void and then encapsulated_i.generate_in /= 0 then
+						if features.item.a_feature.rout_id_set.count < inherited_info.a_feature.rout_id_set.count then
 							inherited_info := features.item
 						end
 						features.forth
 					end
-					if inherited_info = Void then
-						inherited_info := features.first;
-					end
 				end
+					-- Add the selected inherited info's routine id to the set.
+				rout_id_set.update (features)
 			else
 					-- Name clash
 				create vmfn2;
@@ -358,8 +410,6 @@ feature
 				vmfn2.set_features (features);
 				Error_handler.insert_error (vmfn2);
 			end;
-				-- Update `rout_id_set'
-			rout_id_set.update (features);
 		end;
 
 	features_all_redefined (feature_name_id: INTEGER): BOOLEAN
@@ -402,48 +452,57 @@ feature
 			alias_name_id: INTEGER
 		do
 				-- First condition for sharing feature: same body id
-			from
-				Result := True
-				first_feature := features.first.internal_a_feature
-				body_id := first_feature.code_id
-				alias_name_id := first_feature.alias_name_id
-				features.start
-				features.forth
-			until
-				features.after or else not Result
-			loop
-				current_feature := features.item.internal_a_feature
-				Result := body_id = current_feature.code_id
-					-- Check that aliases are the same
-				if not first_feature.is_same_alias (current_feature) then
-					error_handler.insert_error (create {VMFN2_NEW}.make (system.current_class, first_feature, current_feature))
+			Result := True
+			if features.count > 1 then
+				from
+					first_feature := features.first.internal_a_feature
+					body_id := first_feature.code_id
+					alias_name_id := first_feature.alias_name_id
+					features.start
+					features.forth
+				until
+					features.after or else not Result
+				loop
+					current_feature := features.item.internal_a_feature
+					Result := body_id = current_feature.code_id
+						-- Check that aliases are the same
+					if not first_feature.is_same_alias (current_feature) then
+						error_handler.insert_error (create {VMFN2_NEW}.make (system.current_class, first_feature, current_feature))
+					end
+					features.forth
 				end
-				features.forth
-			end
-				-- Second condition: if the feature is written in a
-				-- generic class, check if there is no generic derivation
-			if Result and features.count > 1 then
-				written_class := first_feature.written_class
-				if written_class.generics /= Void then
-						-- The class where the feature is written is a
-						-- generic class
-					from
-						written_actual_type := written_class.actual_type
-						written_id := written_class.class_id
-						to_compare := written_actual_type.instantiation_in (features.first.parent.parent_type, written_id)
-							-- Go to the second item in 'features'
+					-- Second condition: if the feature is written in a
+					-- generic class, check if there is no generic derivation
+				if Result then
+					written_class := first_feature.written_class
+					if written_class.generics /= Void then
+							-- The class where the feature is written is a
+							-- generic class
+							-- Check if instantation has an effect.
+						if features.first.a_feature_needs_instantiation then
+							features.first.instantiate_a_feature
+						end
+						if features.first.a_feature_instantiated_for_feature_table then
+								-- Instantiation has an effect so we need to check all of the features to make sure they are equivalent
+							from
+								written_actual_type := written_class.actual_type
+								written_id := written_class.class_id
+								to_compare := written_actual_type.instantiation_in (features.first.parent.parent_type, written_id)
+									-- Go to the second item in 'features'
 
-						features.start
-						features.forth
-					until
-						features.after or else not Result
-					loop
-							-- Same instantiated parent type for
-							-- sharing feature
-						Result := to_compare.is_safe_equivalent (
-							written_actual_type.instantiation_in (features.item.parent.parent_type, written_id)
-						)
-						features.forth
+								features.start
+								features.forth
+							until
+								features.after or else not Result
+							loop
+									-- Same instantiated parent type for
+									-- sharing feature
+								Result := to_compare.is_safe_equivalent (
+									written_actual_type.instantiation_in (features.item.parent.parent_type, written_id)
+								)
+								features.forth
+							end
+						end
 					end
 				end
 			end
@@ -541,6 +600,12 @@ feature -- Debug
 				io.error.put_string ("Void inherited info%N");
 			end;
 		end;
+
+	is_less alias "<" (other: INHERIT_FEAT): BOOLEAN
+			-- Is `other' less than `Current'
+		do
+			Result := True
+		end
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

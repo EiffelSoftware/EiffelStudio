@@ -88,11 +88,6 @@ inherit
 			{NONE} all
 		end
 
-	PREDEFINED_NAMES
-		export
-			{NONE} all
-		end
-
 	REFACTORING_HELPER
 		export
 			{NONE} all
@@ -344,6 +339,9 @@ feature {AST_FEATURE_CHECKER_GENERATOR} -- Internal type checking
 				is_byte_node_enabled := a_is_byte_node_enabled
 				set_is_inherited (a_is_inherited)
 				l_written_class := context.written_class
+					-- Initialize AST context before calling `check_types'
+					-- This is an optimization for checking types during degree 4 to avoid repetitive type creation.
+				context.initialize (context.current_feature_table.associated_class, context.current_feature_table.associated_class.actual_type, context.current_feature_table)
 				a_feature.check_types (context.current_feature_table)
 				if error_level = l_error_level then
 					a_feature.check_type_validity (context.current_class)
@@ -1102,7 +1100,6 @@ feature -- Implementation
 				-- Id of the class correponding to `l_last_type'
 			l_last_class: CLASS_C
 			l_context_current_class: CLASS_C
-			l_depend_unit: DEPEND_UNIT
 			l_access: ACCESS_B
 			l_ext: EXTERNAL_B
 			l_vuar1: VUAR1
@@ -1683,13 +1680,17 @@ feature -- Implementation
 
 								-- Supplier dependances update
 							if l_is_target_of_creation_instruction then
-								create l_depend_unit.make_with_level (l_last_id, l_feature,
+--								create l_depend_unit.make_with_level (l_last_id, l_feature,
+--									{DEPEND_UNIT}.is_in_creation_flag | depend_unit_level)
+								context.supplier_ids.extend_depend_unit_with_level (l_last_id, l_feature,
 									{DEPEND_UNIT}.is_in_creation_flag | depend_unit_level)
 							else
 								if is_precursor then
-									create l_depend_unit.make_with_level (a_precursor_type.associated_class.class_id, l_feature,
+--									create l_depend_unit.make_with_level (a_precursor_type.associated_class.class_id, l_feature,
+--										depend_unit_level)
+--									context.supplier_ids.extend (l_depend_unit)
+									context.supplier_ids.extend_depend_unit_with_level (a_precursor_type.associated_class.class_id, l_feature,
 										depend_unit_level)
-									context.supplier_ids.extend (l_depend_unit)
 								end
 								if not is_qualified and then l_feature.is_replicated_directly and then not l_feature.from_non_conforming_parent then
 										-- We are unqualified-calling an inherited conforming feature that is replicated in the current class.
@@ -1699,9 +1700,10 @@ feature -- Implementation
 										Error_handler.insert_warning (create {REPLICATED_FEATURE_CALL_WARNING}.make (System.current_class, current_feature, l_feature))
 									end
 								end
-								create l_depend_unit.make_with_level (l_last_id, l_feature, depend_unit_level)
+								--create l_depend_unit.make_with_level (l_last_id, l_feature, depend_unit_level)
+								context.supplier_ids.extend_depend_unit_with_level (l_last_id, l_feature, depend_unit_level)
 							end
-							context.supplier_ids.extend (l_depend_unit)
+--							context.supplier_ids.extend (l_depend_unit)
 
 							if l_is_assigner_call then
 								process_assigner_command (l_last_id, l_feature)
@@ -2906,7 +2908,7 @@ feature -- Implementation
 					-- the current class type (e.g. like Current).
 				l_feature_i := l_feature_i.instantiated (context.current_class_type)
 
-				create l_precursor_id.initialize_from_id (precursor_name_id)
+				create l_precursor_id.initialize_from_id ({PREDEFINED_NAMES}.precursor_name_id)
 				l_precursor_id.set_position (l_as.precursor_keyword.line, l_as.precursor_keyword.column,
 					l_as.precursor_keyword.position, l_as.precursor_keyword.location_count)
 				process_call (context.current_class_type, l_parent_type, l_precursor_id, l_feature_i,
@@ -7724,8 +7726,7 @@ feature {NONE} -- Implementation
 					assigner_command := system.class_of_id (target_class_id).feature_of_rout_id
 						(assigner_command.rout_id_set.first)
 						-- Suppliers update
-					context.supplier_ids.extend (create {DEPEND_UNIT}.make_with_level
-						(target_class_id, assigner_command, depend_unit_level))
+					context.supplier_ids.extend_depend_unit_with_level (target_class_id, assigner_command, depend_unit_level)
 				end
 				last_assigner_command := assigner_command
 			end

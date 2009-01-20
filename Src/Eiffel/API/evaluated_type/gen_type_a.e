@@ -286,7 +286,8 @@ feature -- Output
 			-- TUPLE may have zero generic parameters
 
 			if count > 0 then
-				Result.append (" [")
+				Result.append_character (' ')
+				Result.append_character ('[')
 				from
 					i := 1
 				until
@@ -294,11 +295,12 @@ feature -- Output
 				loop
 					Result.append (generics.item (i).dump)
 					if i /= count then
-						Result.append (", ")
+						Result.append_character (',')
+						Result.append_character (' ')
 					end
 					i := i + 1
 				end
-				Result.append ("]")
+				Result.append_character (']')
 			end
 		end
 

@@ -16,11 +16,6 @@ inherit
 			allocates_memory, has_call, is_constant_expression
 		end
 
-	PREDEFINED_NAMES
-		export
-			{NONE} all
-		end
-
 create
 	make
 

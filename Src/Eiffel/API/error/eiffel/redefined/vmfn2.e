@@ -15,11 +15,11 @@ inherit
 		redefine
 			build_explain, is_defined
 		end
-	
+
 feature -- Properties
 
 	features: LINKED_LIST [CELL2 [E_FEATURE, CLASS_C]];
-			-- Features inherited defined in a eiffel class which are neither 
+			-- Features inherited defined in a eiffel class which are neither
 			-- the same (from the repeated inheritance point of view) or all redefined
 			-- by their parent
 
@@ -69,7 +69,7 @@ feature -- Output
 
 feature {COMPILER_EXPORTER}
 
-	set_features (fs: LINKED_LIST [INHERIT_INFO])
+	set_features (fs: ARRAYED_LIST [INHERIT_INFO])
 			-- Assign `fs' to `features'.
 		require
 			valid_fs: fs /= Void

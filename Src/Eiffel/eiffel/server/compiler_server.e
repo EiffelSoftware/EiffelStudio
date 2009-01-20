@@ -297,11 +297,14 @@ end
 			end
 			other.clear_all
 
+				-- Wipe out cache as we are storing to disk
 			other_cache ?= other.cache
 			if other_cache /= Void then
-				cache.copy (other_cache)
-				other_cache.make
+--				cache.copy (other_cache)
+--				other_cache.make
+				other_cache.wipe_out
 			end
+			cache.wipe_out
 
 			l_server_file := server_controler.file_of_id (other.current_file_id)
 			if l_server_file /= Void and then l_server_file.occurrence > 0 then

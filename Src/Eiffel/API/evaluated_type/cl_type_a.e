@@ -330,12 +330,14 @@ feature -- Output
 			end
 			if has_expanded_mark then
 				Result.append ({SHARED_TEXT_ITEMS}.ti_expanded_keyword)
+				Result.append_character (' ')
 			elseif has_reference_mark then
 				Result.append ({SHARED_TEXT_ITEMS}.ti_reference_keyword)
+				Result.append_character (' ')
 			elseif has_separate_mark then
 				Result.append ({SHARED_TEXT_ITEMS}.ti_separate_keyword)
+				Result.append_character (' ')
 			end
-			Result.append_character (' ')
 			Result.append (class_name)
 		end
 

@@ -96,6 +96,14 @@ feature {NONE} -- Initialization
 			internal_flags := is_special_flag
 		end
 
+feature -- Status Setting
+
+	set_with_level (c_id: INTEGER; f: FEATURE_I; a_context: NATURAL_16)
+			-- Reset `Current'
+		do
+			make_with_level (c_id, f, a_context)
+		end
+
 feature -- Access
 
 	class_id: INTEGER

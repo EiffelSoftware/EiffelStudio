@@ -387,19 +387,7 @@ feature
 					end
 				end
 				if inherited_info = Void then
-					-- Return the most optimal feature.
 					inherited_info := features.first
-					from
-						features.start
-						features.forth
-					until
-						features.after
-					loop
-						if features.item.a_feature.rout_id_set.count < inherited_info.a_feature.rout_id_set.count then
-							inherited_info := features.item
-						end
-						features.forth
-					end
 				end
 					-- Add the selected inherited info's routine id to the set.
 				rout_id_set.update (features)

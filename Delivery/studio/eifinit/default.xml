@@ -131,7 +131,15 @@
 	<PREF NAME="tools.class_browser.class_flat_client_sorting_order" DESCRIPTION="Sorting order of flat clients of class." HIDDEN="True"><STRING>1:1</STRING></PREF>
 
 	<PREF NAME="tools.error_list.expand_errors" DESCRIPTION="Specifies if errors in the Error List tool should be expanded automatically, to show the verbose error information."><BOOLEAN>False</BOOLEAN></PREF>	
-
+        <PREF NAME="tools.testing_tool.execution.processes" DESCRIPTION="Specifies the number of tests being executed simultaneously."><INTEGER>4</INTEGER></PREF>
+	<PREF NAME="tools.testing_tool.new_tests.prepare_routine" DESCRIPTION="Should new manual tests redefine the preparation routine?"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="tools.testing_tool.new_tests.clean_routine" DESCRIPTION="Should new manual tests redefine the clean routine?"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="tools.testing_tool.autotest.duration" DESCRIPTION="Number of minutes AutoTest executes generated tests."><INTEGER>3</INTEGER></PREF>
+	<PREF NAME="tools.testing_tool.autotest.proxy_timeout" DESCRIPTION="Number of seconds until an automatically tested routine must return before being aborted."><INTEGER>2</INTEGER></PREF>
+	<PREF NAME="tools.testing_tool.autotest.random_seed" DESCRIPTION="Seed used by AutoTest to generate random input (if zero current time is used)."><INTEGER>0</INTEGER></PREF>
+	<PREF NAME="tools.testing_tool.autotest.use_ddmin" DESCRIPTION="Should ddmin algorithm be used for minimizing found failures?"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="tools.testing_tool.autotest.use_slicing" DESCRIPTION="Should slicing be used for minimizing found failures?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="tools.testing_tool.autotest.html_statistics" DESCRIPTION="Should AutoTest generate HTML statistics?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.confirm_always_compile_before_executing" DESCRIPTION="Display confirmation dialog on execution."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.confirm_apply_debugger_profiles" DESCRIPTION="Display confirmation dialog when applying debugger profiles."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.confirm_on_exit" DESCRIPTION="Display confirmation dialog on exit."><BOOLEAN>True</BOOLEAN></PREF>

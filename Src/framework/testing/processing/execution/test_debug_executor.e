@@ -13,8 +13,8 @@ inherit
 		rename
 			make as make_executor
 		redefine
-			evaluator_count,
 			is_ready,
+			is_valid_typed_configuration,
 			start_process_internal,
 			stop_process
 		end
@@ -39,11 +39,6 @@ feature {NONE} -- Initialization
 		do
 			make_executor (a_test_suite)
 		end
-
-feature -- Access
-
-	frozen evaluator_count: NATURAL = 1
-			-- <Precursor>
 
 feature {NONE} -- Access
 
@@ -118,6 +113,14 @@ feature {NONE} -- Status setting
 			breakpoints := Void
 		end
 
+feature {NONE} -- Query
+
+	is_valid_typed_configuration (a_conf: like conf_type): BOOLEAN
+			-- <Precursor>
+		do
+			Result := Precursor (a_conf) and then a_conf.evaluator_count = 0
+		end
+
 feature {NONE} -- Implementation
 
 	start_process_internal (a_conf: like conf_type)
@@ -150,7 +153,7 @@ invariant
 	running_equals_breakpoints_not_void: is_running = (breakpoints /= Void)
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -11,6 +11,7 @@ inherit
 	EB_WIZARD_INTERMEDIARY_STATE_WINDOW
 		redefine
 			wizard_information,
+			update_state_information,
 			clean_screen,
 			cancel
 		end
@@ -18,8 +19,10 @@ inherit
 	ES_TEST_WIZARD_WINDOW
 		redefine
 			wizard_information,
+			update_state_information,
 			clean_screen,
-			cancel
+			cancel,
+			has_valid_conf
 		end
 
 	EB_CLUSTER_MANAGER_OBSERVER
@@ -52,7 +55,7 @@ feature {NONE} -- Initialization
 			l_hbox.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
 			build_class_tree (l_hbox)
 
-			if wizard_information.is_new_manual_test_class then
+			if wizard_information.is_manual_conf then
 				create l_vsep
 				l_hbox.extend (l_vsep)
 				l_hbox.disable_item_expand (l_vsep)
@@ -79,7 +82,7 @@ feature {NONE} -- Initialization
 			create l_hb
 			l_hb.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
 			create l_label
-			if wizard_information.is_generated_test_class then
+			if wizard_information.is_generator_conf then
 				l_label.set_text (locale_formatter.translation (l_class_name_prefix))
 			else
 				l_label.set_text (locale_formatter.translation (l_class_name))
@@ -87,17 +90,13 @@ feature {NONE} -- Initialization
 			l_hb.extend (l_label)
 			l_hb.disable_item_expand (l_label)
 
-			create class_name.make (create {EV_TEXT_FIELD}, agent validate_class_name, agent {!STRING_32}.as_upper)
+			create class_name.make (create {EV_TEXT_FIELD}, agent validate_class_name)
+			class_name.set_entry_formatter (agent {!STRING_32}.as_upper)
+			class_name.valid_state_changed_actions.extend (agent on_valid_state_changed)
 			l_hb.extend (class_name)
 
 			a_parent.extend (l_hb)
 			a_parent.disable_item_expand (l_hb)
-
-			create class_name_error_label
-			class_name_error_label.set_foreground_color ((create {EV_STOCK_COLORS}).red)
-			class_name_error_label.align_text_right
-			a_parent.extend (class_name_error_label)
-			a_parent.disable_item_expand (class_name_error_label)
 		end
 
 	build_class_tree (a_parent: EV_BOX)
@@ -154,19 +153,16 @@ feature {NONE} -- Initialization
 
 			create setup_checkbox
 			setup_checkbox.set_text (locale_formatter.formatted_translation (b_setup_routine, [{TEST_CONSTANTS}.prepare_routine_name]))
-			setup_checkbox.select_actions.extend (agent on_setup_change)
 			l_vb.extend (setup_checkbox)
 			l_vb.disable_item_expand (setup_checkbox)
 
 			create tear_down_checkbox
 			tear_down_checkbox.set_text (locale_formatter.formatted_translation (b_tear_down_routine, [{TEST_CONSTANTS}.clean_routine_name]))
-			tear_down_checkbox.select_actions.extend (agent on_tear_down_change)
 			l_vb.extend (tear_down_checkbox)
 			l_vb.disable_item_expand (tear_down_checkbox)
 
 			create system_level_test_checkbox
 			system_level_test_checkbox.set_text (locale_formatter.translation (b_system_level_test))
-			system_level_test_checkbox.select_actions.extend (agent on_system_level_test_change)
 			l_vb.extend (system_level_test_checkbox)
 			l_vb.disable_item_expand (system_level_test_checkbox)
 
@@ -177,25 +173,23 @@ feature {NONE} -- Initialization
 	on_after_initialize
 			-- Called after all widgets have been initialized.
 		local
-			l_text: STRING_32
 			l_name, l_path: ?STRING
+			l_name_32: STRING_32
 			l_cluster: ?CONF_CLUSTER
-			b: BOOLEAN
 		do
-			l_name := wizard_information.new_class_name_cache
-			if l_name /= Void then
-				class_name.widget.set_text (l_name)
+			l_name := conf.new_class_name_cache
+			if l_name /= Void and then not l_name.is_empty then
+				l_name_32 := l_name.to_string_32
 			else
-				class_name.widget.set_text (default_class_name)
+				l_name_32 := default_class_name.as_string_32
 			end
+			check l_name_32 /= Void end
+			class_name.set_text (l_name_32)
 			class_name.widget.set_focus
-			l_text := class_name.widget.text
-			check l_text /= Void end
-			b := validate_class_name (l_text)
 
-			l_cluster := wizard_information.cluster_cache
+			l_cluster := conf.cluster_cache
 			if l_cluster /= Void then
-				l_path := wizard_information.path_cache
+				l_path := conf.path_cache
 				if l_path /= Void then
 					class_tree.show_subfolder (l_cluster, l_path)
 				else
@@ -203,18 +197,18 @@ feature {NONE} -- Initialization
 				end
 			end
 
-			if wizard_information.is_new_manual_test_class then
-				if wizard_information.has_prepare_cache then
+			if wizard_information.is_manual_conf then
+				if manual_conf.has_prepare_cache then
 					setup_checkbox.enable_select
 				else
 					setup_checkbox.disable_select
 				end
-				if wizard_information.has_clean_cache then
+				if manual_conf.has_clean_cache then
 					tear_down_checkbox.enable_select
 				else
 					tear_down_checkbox.disable_select
 				end
-				if wizard_information.is_system_level_test then
+				if manual_conf.is_system_level_test then
 					system_level_test_checkbox.enable_select
 				else
 					system_level_test_checkbox.disable_select
@@ -231,6 +225,15 @@ feature {NONE} -- Access
 	wizard_information: ES_TEST_WIZARD_INFORMATION
 			-- Information user has provided to the wizard
 
+	manual_conf: TEST_MANUAL_CREATOR_CONF
+			-- Manual configuration
+		require
+			valid_conf: has_valid_conf (wizard_information)
+			manual_conf: wizard_information.is_manual_conf
+		do
+			Result := wizard_information.manual_conf
+		end
+
 	class_name_validator: ES_CLASS_NAME_VALIDATOR
 			-- Validator for `class_name'
 		once
@@ -239,11 +242,8 @@ feature {NONE} -- Access
 
 feature {NONE} -- Access: widgets
 
-	class_name: ES_RESTRICTED_TEXTABLE_WIDGET [EV_TEXT_FIELD]
+	class_name: ES_VALIDATION_TEXT_FIELD
 			-- Text field for new test class name
-
-	class_name_error_label: EV_LABEL
-			-- Label showing invalid class name
 
 	class_tree: ?ES_TEST_WIZARD_CLASS_TREE
 			-- Tree displaying clusters and existing test classes
@@ -267,11 +267,14 @@ feature {NONE} -- Status report
 	is_valid: BOOLEAN
 			-- <Precursor>
 		do
-			Result := is_class_name_valid and is_cluster_valid
+			Result := class_name.is_valid and is_cluster_valid
 		end
 
-	is_class_name_valid: BOOLEAN
-			-- Is entered class name valid?
+	has_valid_conf (a_wizard_info: like wizard_information): BOOLEAN
+			-- <Precursor>
+		do
+			Result := Precursor (a_wizard_info) and then a_wizard_info.current_conf.is_new_class
+		end
 
 	is_cluster_valid: BOOLEAN
 			-- Is choosen cluster valid?
@@ -281,7 +284,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Events
 
-	validate_class_name (a_name: !STRING_32): BOOLEAN
+	validate_class_name (a_name: !STRING_32): !TUPLE [BOOLEAN, ?STRING_32]
 			-- Called when `class_name' contents need to be validated
 		local
 			l_name: STRING
@@ -291,48 +294,30 @@ feature {NONE} -- Events
 		do
 			l_name := a_name.to_string_8
 			check l_name /= Void end
-			Result := True
 			class_name_validator.validate_class_name (l_name)
-			if l_name.is_empty or class_name_validator.is_valid then
-				Result := True
-				wizard_information.new_class_name_cache := l_name
-				if not l_name.is_empty then
-					if test_suite.is_service_available and then test_suite.service.is_project_initialized then
-						if wizard_information.is_generated_test_class then
-							class_name_validator.validate_class_name (l_name)
-						else
-							class_name_validator.validate_new_class_name (l_name, test_suite.service.eiffel_project)
-						end
-						if class_name_validator.is_valid then
-							if is_cluster_valid and not wizard_information.is_generated_test_class then
-								l_cluster := wizard_information.cluster_cache
-								check l_cluster /= Void end
-								l_path := l_cluster.location.build_path (wizard_information.path, l_name.as_lower)
-								l_path.append (".e")
-								if (create {RAW_FILE}.make (l_path)).exists then
-									l_error := locale_formatter.formatted_translation (e_file_exists, [l_path])
-								end
-							end
-						else
+			if class_name_validator.is_valid then
+				if test_suite.is_service_available and then test_suite.service.is_project_initialized then
+					if not wizard_information.is_generator_conf then
+						class_name_validator.validate_new_class_name (l_name, test_suite.service.eiffel_project)
+						if not class_name_validator.is_valid then
 							l_error := class_name_validator.last_error_message
+						elseif is_cluster_valid then
+							l_cluster := conf.cluster_cache
+							check l_cluster /= Void end
+							l_path := l_cluster.location.build_path (conf.path_cache, l_name.as_lower)
+							l_path.append (".e")
+							if (create {RAW_FILE}.make (l_path)).exists then
+								l_error := locale_formatter.formatted_translation (e_file_exists, [l_path])
+							end
 						end
-					else
-						l_error := locale_formatter.translation (e_project_not_available)
 					end
-				end
-				if l_error /= Void then
-					class_name_error_label.set_text (l_error)
-					class_name_error_label.show
-					is_class_name_valid := False
 				else
-					is_class_name_valid := not l_name.is_empty
-					class_name_error_label.hide
+					l_error := locale_formatter.translation (e_project_not_available)
 				end
-				update_next_button_status
 			else
-					-- This means text in box will remain the same, so we also should not update anything
-				Result := False
+				l_error := class_name_validator.last_error_message
 			end
+			Result := [l_error = Void, l_error]
 		end
 
 	on_create_cluster
@@ -358,50 +343,28 @@ feature {NONE} -- Events
 	on_select_tree_item
 			-- Called when item in `class_tree' is selected.
 		local
-			l_text: STRING_32
 			l_parent: CONF_CLUSTER
 			l_path: ?STRING
-			b: BOOLEAN
 		do
-			wizard_information.cluster_cache := Void
-			wizard_information.path_cache := Void
+			conf.cluster_cache := Void
+			conf.path_cache := Void
 			if {l_item: ES_TEST_WIZARD_CLASS_TREE_FOLDER_ITEM} class_tree.selected_item then
 				if {l_eb_cluster: EB_SORTED_CLUSTER} l_item.data then
 					if l_eb_cluster.actual_group /= Void and then l_eb_cluster.is_cluster then
 						l_parent := l_eb_cluster.actual_cluster
-						wizard_information.cluster_cache := l_parent
+						conf.cluster_cache := l_parent
 						l_path := l_item.path
 						if l_path /= Void then
-							wizard_information.path_cache := l_path
+							conf.path_cache := l_path
 						else
-							wizard_information.path_cache := ""
+							conf.path_cache := ""
 						end
 					end
 				end
 			end
 			validate_cluster
-			l_text := class_name.widget.text
-			check l_text /= Void end
-			b := validate_class_name (l_text)
+			class_name.validate
 			update_next_button_status
-		end
-
-	on_setup_change
-			-- Called when selection state of `setup_checkbox' changes.
-		do
-			wizard_information.has_prepare := setup_checkbox.is_selected
-		end
-
-	on_tear_down_change
-			-- Called when selection state of `tear_down_checkbox' changes.
-		do
-			wizard_information.has_clean := tear_down_checkbox.is_selected
-		end
-
-	on_system_level_test_change
-			-- Called when selection state of `system_level_test_checkbox' changes.
-		do
-			wizard_information.is_system_level_test := system_level_test_checkbox.is_selected
 		end
 
 feature {NONE} -- Basic operations
@@ -413,9 +376,9 @@ feature {NONE} -- Basic operations
 			l_path: FILE_NAME
 			l_directory: DIRECTORY
 		do
-			if wizard_information.cluster_cache /= Void and wizard_information.path_cache /= Void then
+			if conf.cluster_cache /= Void and conf.path_cache /= Void then
 				is_cluster_valid := True
-				create l_path.make_from_string (wizard_information.cluster.location.build_path (wizard_information.path, ""))
+				create l_path.make_from_string (conf.cluster_cache.location.build_path (conf.path_cache, ""))
 				create l_directory.make (l_path)
 				if l_directory.exists then
 					if not l_directory.is_writable then
@@ -440,12 +403,23 @@ feature {NONE} -- Basic operations
 	proceed_with_current_info
 			-- <Precursor>
 		do
-			if wizard_information.is_extracted_test_class then
+			if wizard_information.is_extractor_conf then
 				proceed_with_new_state (create {ES_TEST_WIZARD_CALL_STACK_WINDOW}.make_window (development_window, wizard_information))
-			elseif wizard_information.is_generated_test_class then
+			elseif wizard_information.is_generator_conf then
 				proceed_with_new_state (create {ES_TEST_WIZARD_AUTO_TEST_WINDOW}.make_window (development_window, wizard_information))
 			else
 				proceed_with_new_state (create {ES_TEST_WIZARD_ROUTINE_WINDOW}.make_window (development_window, wizard_information))
+			end
+		end
+
+	update_state_information
+			-- <Precursor>
+		do
+			conf.new_class_name_cache := class_name.text.to_string_8
+			if wizard_information.is_manual_conf then
+				manual_conf.has_prepare_cache := setup_checkbox.is_selected
+				manual_conf.has_clean_cache := tear_down_checkbox.is_selected
+				manual_conf.is_system_level_test_cache := system_level_test_checkbox.is_selected
 			end
 		end
 
@@ -490,8 +464,8 @@ feature {NONE} -- Internationalization
 	e_directory_non_existent: STRING = "Directory $1 does not exists"
 
 invariant
-	cluster_valid_implies_attached: is_cluster_valid implies (wizard_information.cluster_cache /= Void and
-		wizard_information.path_cache /= Void)
+	cluster_valid_implies_attached: is_cluster_valid implies (conf.cluster_cache /= Void and
+		conf.path_cache /= Void)
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

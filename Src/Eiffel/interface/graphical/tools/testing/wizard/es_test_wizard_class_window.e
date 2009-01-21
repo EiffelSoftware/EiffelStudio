@@ -406,7 +406,7 @@ feature {NONE} -- Internationalization
 	e_new_feature_clause_name_empty: STRING = "Feature clause name can not be empty."
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,56 +1,52 @@
 note
 	description: "[
-		Executor running tests in separate processes.
+		Class providing shared access to testing tool preferences.
 	]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	TEST_BACKGROUND_EXECUTOR
+	SHARED_TEST_PREFERENCES
 
-inherit
-	TEST_EXECUTOR
-		redefine
-			compile_project,
-			relaunch_evaluators
-		end
+feature -- Access
 
-	TEST_BACKGROUND_EXECUTOR_I
-		undefine
-			is_ready
-		end
-
-create
-	make
-
-feature {NONE} -- Status report
-
-	relaunch_evaluators: BOOLEAN = True
-			-- <Precursor>
-
-feature {NONE} -- Status setting
-
-	compile_project
-			-- <Precursor>
+	preferences: TEST_PREFERENCES
+			-- Testing preferences
+		local
+			l_result: ?like preferences
 		do
-			Precursor
-				-- TODO: copy wkbench executable to separate directory
+			l_result := preferences_cell.item
+			if l_result = Void then
+				l_result := create_preferences
+				preferences_cell.put (l_result)
+			end
+			Result := l_result
+		ensure
+			result_attached: Result /= Void
+		end
+
+feature {NONE} -- Implementation
+
+	preferences_cell: CELL [?TEST_PREFERENCES]
+			-- Once cell for `preferences'
+		once
+			create Result
+		ensure
+			result_attached: Result /= Void
 		end
 
 feature {NONE} -- Factory
 
-	create_evaluator: !TEST_EVALUATOR_CONTROLLER
-			-- <Precursor>
+	create_preferences: like preferences
+			-- Create testing preferences instance
 		local
-			l_exec: !STRING
-			l_assigner: like assigner
+			l_shared: EB_SHARED_PREFERENCES
 		do
-				-- TODO: use temporary executable
-			create l_exec.make_from_string (test_suite.eiffel_project.system.application_name (True))
-			l_assigner := assigner
-			check l_assigner /= Void end
-			create {TEST_BACKGROUND_EVALUATOR_CONTROLLER} Result.make (l_assigner, l_exec)
+			create l_shared
+			create Result.make (l_shared.preferences.preferences)
+		ensure
+			result_attached: Result /= Void
 		end
 
 note

@@ -9,6 +9,9 @@ deferred class
 
 inherit
 	EB_WIZARD_STATE_WINDOW
+		redefine
+			wizard_information
+		end
 
 	ES_SHARED_LOCALE_FORMATTER
 		export
@@ -39,9 +42,13 @@ feature {NONE} -- Initialization
 
 	make_window (a_development_window: like development_window; a_wizard_info: like wizard_information)
 			-- Initialize `Current'.
+		require
+			wizard_info_valid: has_valid_conf (a_wizard_info)
 		do
 			development_window := a_development_window
 			make (a_wizard_info)
+		ensure
+			wizard_information_set: wizard_information = a_wizard_info
 		end
 
 	initialize_container (a_container: EV_VERTICAL_BOX): EV_BOX
@@ -63,6 +70,19 @@ feature {NONE} -- Initialization
 		end
 
 feature {NONE} -- Access
+
+	wizard_information: ES_TEST_WIZARD_INFORMATION
+			-- <Precursor>
+
+	conf: TEST_CREATOR_CONF
+			-- Configuration applicable to current wizard window
+		require
+			has_valid_conf: has_valid_conf (wizard_information)
+		do
+			Result := wizard_information.current_conf
+		ensure
+			result_attached: Result /= Void
+		end
 
 	development_window: EB_DEVELOPMENT_WINDOW
 			-- Window `Current' is attached to.
@@ -100,6 +120,14 @@ feature {NONE} -- Status report
 	is_valid: BOOLEAN
 			-- Is `wizard_information' in a state where we can continue?
 		deferred
+		end
+
+	has_valid_conf (a_wizard_info: like wizard_information): BOOLEAN
+			-- Does `wizard_information' contain a valid configuration for `Current'?
+		do
+			Result := a_wizard_info.has_current_conf
+		ensure
+			result_implies_has_conf: Result implies a_wizard_info.has_current_conf
 		end
 
 feature {NONE} -- Status setting

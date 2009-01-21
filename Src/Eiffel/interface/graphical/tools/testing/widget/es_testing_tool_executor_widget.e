@@ -132,18 +132,20 @@ feature {NONE} -- Events: widgets
 		local
 			l_conf: TEST_EXECUTOR_CONF
 			l_list: ?DS_LINEAR [!TEST_I]
+			l_is_dbg: BOOLEAN
 		do
 			if not grid.selected_items.is_empty then
 				l_list := grid.selected_items
 			elseif executor.are_tests_available then
 				l_list := executor.active_tests
 			end
+			l_is_dbg := debug_executor_type.attempt (executor) /= Void
 			if l_list = Void or else (test_suite.is_service_available and then test_suite.service.tests.count = l_list.count) then
-				create l_conf.make
+				create l_conf.make (l_is_dbg)
 			else
-				create l_conf.make_with_tests (l_list)
+				create l_conf.make_with_tests (l_list, l_is_dbg)
 			end
-			if debug_executor_type.attempt (executor) /= Void then
+			if l_is_dbg then
 				launch_processor (debug_executor_type, l_conf, False)
 			else
 				launch_processor (background_executor_type, l_conf, False)
@@ -214,7 +216,7 @@ feature {NONE} -- Internationalization
 	b_skip: STRING = "Skip"
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

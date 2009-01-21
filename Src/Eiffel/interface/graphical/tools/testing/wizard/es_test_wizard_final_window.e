@@ -52,12 +52,12 @@ feature {NONE} -- Basic operations
 	proceed_with_current_info
 			-- <Precursor>
 		local
-			l_info: like wizard_information
+			l_conf: TEST_CREATOR_CONF
 		do
-			l_info := wizard_information
-			check l_info /= Void end
+			l_conf := wizard_information.current_conf
+			check l_conf /= Void end
 			has_error := False
-			launch_processor (factory_type, l_info, False)
+			launch_processor (factory_type, l_conf, False)
 			if not has_error then
 				cancel_actions
 			end

@@ -681,9 +681,9 @@ feature {NONE} -- Events: test execution
 			l_conf: TEST_EXECUTOR_CONF
 		do
 			if a_list /= Void then
-				create l_conf.make_with_tests (a_list)
+				create l_conf.make_with_tests (a_list, a_type = debug_executor_type)
 			else
-				create l_conf.make
+				create l_conf.make (a_type = debug_executor_type)
 			end
 			launch_processor (a_type, l_conf, False)
 		end
@@ -1051,7 +1051,7 @@ invariant
 	details_tab_valid: notebook.has (outcome_tab.widget)
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -50,13 +50,6 @@ feature -- Access
 
 feature -- Status report
 
-	is_benchmarking: BOOLEAN
-			-- Log timeing information (usefull for assessing efficiency)
-		require
-			usable: is_interface_usable
-		deferred
-		end
-
 	is_slicing_enabled: BOOLEAN
 			-- Is slicing enabled?
 		require

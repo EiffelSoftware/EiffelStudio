@@ -50,9 +50,9 @@ feature {NONE} -- Basic operations
 			print_string ("%N")
 			l_filter := filtered_tests (a_test_suite)
 			if l_filter.has_expression then
-				create l_conf.make_with_tests (l_filter.items)
+				create l_conf.make_with_tests (l_filter.items, False)
 			else
-				create l_conf.make
+				create l_conf.make (False)
 			end
 			l_conf.set_sorter_prefix (tree_view (a_test_suite).tag_prefix)
 			launch_ewb_processor (a_test_suite, background_executor_type, l_conf)

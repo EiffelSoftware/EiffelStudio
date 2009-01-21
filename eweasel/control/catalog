@@ -1310,6 +1310,7 @@ test	deep-twin-expanded-type			exec300 tcf fail execution
 test	attempt-on-type-none			exec301 tcf fail execution
 test	self-init-attribute-call-to-precursor	exec302 tcf fail execution manual
 test	out-on-nan-violates-invariant		exec303 tcf fail execution
+test	operations-on-numeric-generic		exec304 tcf fail execution
 
 
 -- Compiler termination (exception trace, panic, etc.)

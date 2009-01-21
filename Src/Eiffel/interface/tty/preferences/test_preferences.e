@@ -17,13 +17,17 @@ feature {NONE} -- Initialization
 	make (a_preferences: PREFERENCES)
 			-- Initialize `Current'.
 		local
-			l_manager: EB_PREFERENCE_MANAGER
+			l_manager: PREFERENCE_MANAGER
 		do
-			create l_manager.make (a_preferences, namespace)
+			if a_preferences.has_manager (namespace) then
+				l_manager := a_preferences.manager (namespace)
+			else
+				l_manager := a_preferences.new_manager (namespace)
+			end
 			initialize_preferences (l_manager)
 		end
 
-	initialize_preferences (a_manager: EB_PREFERENCE_MANAGER)
+	initialize_preferences (a_manager: PREFERENCE_MANAGER)
 			-- Initialize all preferences.
 		require
 			a_manager_attached: a_manager /= Void

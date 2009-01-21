@@ -88,11 +88,6 @@ feature {NONE} -- Access
 
 	evaluator_count: NATURAL
 			-- Number of evaluators running at the same time
-		do
-			Result := 1
-		ensure
-			positive: Result > 0
-		end
 
 	completed_tests_count: NATURAL
 			-- Number of tests that have been either aborted or executed in current run
@@ -207,6 +202,7 @@ feature {NONE} -- Basic functionality
 			end
 			create assigner.make (l_count)
 			is_compiled := False
+			evaluator_count := a_conf.evaluator_count
 			initialize_evaluators
 			initialize_result_log
 			completed_tests_count := 0

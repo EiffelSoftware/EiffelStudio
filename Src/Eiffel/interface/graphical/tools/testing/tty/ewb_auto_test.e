@@ -61,7 +61,9 @@ feature -- Execution
 			l_error_handler: AUT_ERROR_HANDLER
 
 				-- Using wizard information to create AutoTest configuration
-			l_conf: ES_TEST_WIZARD_INFORMATION
+			l_shared_prefs: EC_SHARED_PREFERENCES
+			l_prefs: TEST_PREFERENCES
+			l_conf: TEST_GENERATOR_CONF
 			l_type: STRING
 			l_root_group: CONF_GROUP
 			l_project: E_PROJECT
@@ -73,8 +75,10 @@ feature -- Execution
 				create l_error_handler.make (l_project.system.system)
 				l_ap.set_error_handler (l_error_handler)
 				l_ap.process_arguments (l_args)
-				create l_conf.make
-				l_conf.set_generated_test_class
+
+				create l_shared_prefs
+				l_prefs := l_shared_prefs.preferences.testing_tool_data
+				create l_conf.make (l_prefs)
 
 					-- Types
 				from
@@ -84,7 +88,7 @@ feature -- Execution
 				loop
 					l_type := l_ap.class_names.item_for_iteration
 					if l_type /= Void then
-						l_conf.types.force (l_type)
+						l_conf.types_cache.force (l_type)
 					end
 					l_ap.class_names.forth
 				end

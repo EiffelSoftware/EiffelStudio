@@ -21,8 +21,11 @@ feature {NONE} -- Initialization
 
 	make (a_development_window: EB_DEVELOPMENT_WINDOW)
 			-- Initialize `Current'.
+		local
+			l_shared_prefs: EB_SHARED_PREFERENCES
 		do
-			create wizard_info.make
+			create l_shared_prefs
+			create wizard_info.make (l_shared_prefs.preferences.testing_tool_data)
 			make_and_show (a_development_window.window, create {ES_TEST_WIZARD_INITIAL_WINDOW}.make_window (a_development_window, wizard_info))
 		end
 

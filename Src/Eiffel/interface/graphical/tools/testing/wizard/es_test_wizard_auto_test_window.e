@@ -10,7 +10,10 @@ class
 inherit
 	ES_TEST_WIZARD_FINAL_WINDOW
 		redefine
-			make_window
+			make_window,
+			conf,
+			has_valid_conf,
+			update_state_information
 		end
 
 	SHARED_EIFFEL_PARSER
@@ -61,30 +64,16 @@ feature {NONE} -- Initialization
 
 			create timeout_field
 			timeout_field.value_range.resize_exactly (1, {INTEGER_32}.max_value)
-			timeout_field.change_actions.extend (agent on_timeout_change)
-			timeout_field.text_change_actions.extend (agent on_timeout_change)
 
 			create proxy_time_out
 			proxy_time_out.value_range.resize_exactly (1, {INTEGER_32}.max_value)
-			proxy_time_out.change_actions.extend (agent on_proxy_timeout_change)
-			proxy_time_out.text_change_actions.extend (agent on_proxy_timeout_change)
 
 			create seed
 			seed.set_minimum_width (170)
-			seed.change_actions.extend (agent on_seed_change)
-			seed.text_change_actions.extend (agent on_seed_change)
-
-			create benchmark_checkbox
-			benchmark_checkbox.select_actions.extend (agent on_benchmark_change)
-
+			seed.value_range.resize_exactly (1, {INTEGER_32}.max_value)
 			create ddmin_checkbox
-			ddmin_checkbox.select_actions.extend (agent on_ddmin_change)
-
 			create slicing_checkbox
-			slicing_checkbox.select_actions.extend (agent on_slicing_change)
-
 			create html_output
-			html_output.select_actions.extend (agent on_html_output_change)
 
 			append_option (l_vbox, b_timeout, timeout_field)
 			append_option (l_vbox, b_proxy_timeout, proxy_time_out)
@@ -93,7 +82,6 @@ feature {NONE} -- Initialization
 			append_option (l_vbox, b_slicing, slicing_checkbox)
 			append_option (l_vbox, b_ddmin, ddmin_checkbox)
 			append_option (l_vbox, b_html_output, html_output)
-			append_option (l_vbox, b_benchmark, benchmark_checkbox)
 
 			create l_cell
 			l_vbox.extend (l_cell)
@@ -193,25 +181,20 @@ feature {NONE} -- Initialization
 			l_cursor: DS_LINEAR_CURSOR [!STRING]
 			l_types: STRING_32
 		do
-			timeout_field.set_text (wizard_information.time_out.out)
-			proxy_time_out.set_text (wizard_information.proxy_time_out.out)
-			seed.set_text (wizard_information.seed.out)
-			if wizard_information.is_ddmin_enabled then
+			timeout_field.set_text (conf.time_out_cache.out)
+			proxy_time_out.set_text (conf.proxy_time_out_cache.out)
+			seed.set_text (conf.seed_cache.out)
+			if conf.is_ddmin_enabled_cache then
 				ddmin_checkbox.enable_select
 			else
 				ddmin_checkbox.disable_select
 			end
-			if wizard_information.is_slicing_enabled then
+			if conf.is_slicing_enabled_cache then
 				slicing_checkbox.enable_select
 			else
 				slicing_checkbox.disable_select
 			end
-			if wizard_information.is_benchmarking then
-				benchmark_checkbox.enable_select
-			else
-				benchmark_checkbox.disable_select
-			end
-			if wizard_information.is_html_output then
+			if conf.is_html_output_cache then
 				html_output.enable_select
 			else
 				html_output.disable_select
@@ -219,9 +202,9 @@ feature {NONE} -- Initialization
 			update_next_button_status
 
 			from
-				l_cursor := wizard_information.types.new_cursor
+				l_cursor := conf.types_cache.new_cursor
 				l_cursor.start
-				create l_types.make (wizard_information.types.count * 25)
+				create l_types.make (conf.types_cache.count * 25)
 			until
 				l_cursor.after
 			loop
@@ -232,7 +215,7 @@ feature {NONE} -- Initialization
 				end
 			end
 
-			wizard_information.types.do_all (
+			conf.types_cache.do_all (
 				agent (a_type: !STRING)
 					do
 						type_list.extend (create {EV_LIST_ITEM}.make_with_text (a_type))
@@ -243,6 +226,12 @@ feature {NONE} -- Initialization
 		end
 
 feature {NONE} -- Access
+
+	conf: TEST_GENERATOR_CONF
+			-- <Precursor>
+		do
+			Result := wizard_information.generator_conf
+		end
 
 	factory_type: !TYPE [TEST_CREATOR_I]
 			-- <Precursor>
@@ -260,9 +249,6 @@ feature {NONE} -- Access: widgets
 
 	seed: EV_SPIN_BUTTON
 			-- Text field containg random number seed
-
-	benchmark_checkbox: EV_CHECK_BUTTON
-			-- Check box for benchmarking option
 
 	ddmin_checkbox: EV_CHECK_BUTTON
 			-- Check box for ddmin option
@@ -287,7 +273,13 @@ feature {NONE} -- Status report
 	is_valid: BOOLEAN
 			-- <Precursor>
 		do
-			Result := not wizard_information.types.is_empty
+			Result := not conf.types_cache.is_empty
+		end
+
+	has_valid_conf (a_wizard_info: like wizard_information): BOOLEAN
+			-- <Precursor>
+		do
+			Result := Precursor (a_wizard_info) and a_wizard_info.is_generator_conf
 		end
 
 feature {NONE} -- Events
@@ -401,9 +393,9 @@ feature {NONE} -- Events
 			if not type_field.text.is_empty and type_field.is_valid then
 				l_new := type_field.text.to_string_8
 				check l_new /= Void end
-				wizard_information.types.search (l_new)
-				if not wizard_information.types.found then
-					wizard_information.types.force_last (l_new)
+				conf.types_cache.search (l_new)
+				if not conf.types_cache.found then
+					conf.types_cache.force_last (l_new)
 					type_list.extend (create {EV_LIST_ITEM}.make_with_text (l_new))
 				end
 				type_field.set_text (create {STRING_32}.make_empty)
@@ -419,7 +411,7 @@ feature {NONE} -- Events
 			if type_list.selected_item /= Void then
 				l_type := type_list.selected_item.text.to_string_8
 				check l_type /= Void end
-				wizard_information.types.remove (l_type)
+				conf.types_cache.remove (l_type)
 				type_list.prune (type_list.selected_item)
 				update_next_button_status
 			end
@@ -450,39 +442,20 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_timeout_change (a_value: INTEGER_32)
-		do
-			wizard_information.set_time_out (a_value.to_natural_32)
-		end
+feature {NONE} -- Basic operations
 
-	on_proxy_timeout_change (a_value: INTEGER_32)
+	update_state_information
+			-- <Precursor>
+		local
+			l_conf: like conf
 		do
-			wizard_information.set_proxy_time_out (a_value.to_natural_32)
-		end
-
-	on_seed_change (a_value: INTEGER_32)
-		do
-			wizard_information.set_seed (a_value.to_natural_32)
-		end
-
-	on_benchmark_change
-		do
-			wizard_information.set_benchmarking (benchmark_checkbox.is_selected)
-		end
-
-	on_ddmin_change
-		do
-			wizard_information.set_ddmin_enabled (ddmin_checkbox.is_selected)
-		end
-
-	on_slicing_change
-		do
-			wizard_information.set_slicing_enabled (slicing_checkbox.is_selected)
-		end
-
-	on_html_output_change
-		do
-			wizard_information.set_html_output (html_output.is_selected)
+			l_conf := conf
+			l_conf.time_out_cache := timeout_field.value.to_natural_32
+			l_conf.proxy_time_out_cache := proxy_time_out.value.to_natural_32
+			l_conf.seed_cache := seed.value.to_natural_32
+			l_conf.is_ddmin_enabled_cache := ddmin_checkbox.is_selected
+			l_conf.is_slicing_enabled_cache := slicing_checkbox.is_selected
+			l_conf.is_html_output_cache := html_output.is_selected
 		end
 
 feature {NONE} -- Internationalization
@@ -493,7 +466,6 @@ feature {NONE} -- Internationalization
 	b_timeout: !STRING = "Duration (minutes)"
 	b_proxy_timeout: !STRING = "Routine timeout (seconds)"
 	b_seed: !STRING = "Random number generation seed"
-	b_benchmark: !STRING = "Enable benchmarking"
 	b_ddmin: !STRING = "Use ddmin for minimization"
 	b_slicing: !STRING = "Use slicing for minimization"
 	b_html_output: !STRING = "Create HTML output"

@@ -9,6 +9,11 @@ class
 
 inherit
 	ES_TEST_WIZARD_FINAL_WINDOW
+		redefine
+			conf,
+			has_valid_conf,
+			update_state_information
+		end
 
 create
 	make_window
@@ -72,7 +77,7 @@ feature {NONE} -- Initialization
 					l_stack := debugger_manager.application_status.current_call_stack
 				end
 			end
-			wizard_information.call_stack_elements.wipe_out
+			conf.call_stack_elements_cache.wipe_out
 			if l_stack /= Void and then not l_stack.is_empty then
 				from
 					l_stack.start
@@ -90,9 +95,16 @@ feature {NONE} -- Initialization
 					i := i + 1
 				end
 			end
+			update_next_button_status
 		end
 
 feature {NONE} -- Access
+
+	conf: TEST_EXTRACTOR_CONF
+			-- <Precursor>
+		do
+			Result := wizard_information.extractor_conf
+		end
 
 	factory_type: !TYPE [TEST_CREATOR_I]
 			-- <Precursor>
@@ -106,12 +118,21 @@ feature {NONE} -- Access
 	extractor: ?TEST_EXTRACTOR_I
 			-- Extractor instance
 
+	selection_count: NATURAL
+			-- Number of items selected in `grid'
+
 feature {NONE} -- Status report
 
 	is_valid: BOOLEAN
 			-- <Precursor>
 		do
-			Result := not wizard_information.call_stack_elements.is_empty
+			Result := selection_count > 0
+		end
+
+	has_valid_conf (a_wizard_info: like wizard_information): BOOLEAN
+			-- <Precursor>
+		do
+			Result := Precursor (a_wizard_info) and a_wizard_info.is_extractor_conf
 		end
 
 feature {NONE} -- Query
@@ -136,7 +157,7 @@ feature {NONE} -- Query
 			gclab: EV_GRID_CHECKABLE_LABEL_ITEM
 			glab: EV_GRID_LABEL_ITEM
 			app_exec: APPLICATION_EXECUTION
-			l_sensitive, l_selected: BOOLEAN
+			l_sensitive: BOOLEAN
 		do
 			if extractor /= Void then
 				l_sensitive := extractor.is_valid_call_stack_element (a_cse.level_in_stack)
@@ -174,10 +195,6 @@ feature {NONE} -- Query
 					--| Origin class
 				dc := e_cse.dynamic_class
 				oc := e_cse.written_class
-
-				if l_sensitive and then {l_ec: EIFFEL_CLASS_C} dc then
-					l_selected := a_cse.level_in_stack = 1 or not (l_ec.cluster.is_used_in_library and l_ec.cluster.is_readonly)
-				end
 
 				if oc /= Void then
 					l_orig_class_info := oc.name_in_upper
@@ -231,10 +248,12 @@ feature {NONE} -- Query
 			a_row.set_item (Feature_column_index, gclab)
 			if l_sensitive then
 				gclab.enable_sensitive
-				if l_selected then
+				if conf.call_stack_elements_cache.has (a_cse.level_in_stack) then
+					selection_count := selection_count + 1
 					gclab.toggle_is_checked
 				end
 			else
+				conf.call_stack_elements_cache.remove (a_cse.level_in_stack)
 				gclab.set_foreground_color (unsensitive_color)
 				gclab.disable_sensitive
 			end
@@ -265,18 +284,35 @@ feature {NONE} -- Query
 
 feature {NONE} -- Events
 
+	update_state_information
+			-- <Precursor>
+		local
+			i: INTEGER
+			l_set: DS_HASH_SET [INTEGER]
+		do
+			l_set := conf.call_stack_elements_cache
+			l_set.wipe_out
+			from
+				i := 1
+			until
+				i > grid.row_count
+			loop
+				if {l_item: EV_GRID_CHECKABLE_LABEL_ITEM} grid.row (i).item (1) then
+					if l_item.is_checked and {l_cse: EIFFEL_CALL_STACK_ELEMENT} l_item.data then
+						l_set.force (l_cse.level_in_stack)
+					end
+				end
+				i := i + 1
+			end
+		end
+
 	on_selection_change (a_item: EV_GRID_CHECKABLE_LABEL_ITEM)
 			-- Called when item is check box changes.
-		local
-			l_index: INTEGER
 		do
-			if {l_cse: CALL_STACK_ELEMENT} a_item.data then
-				l_index := l_cse.level_in_stack
-				if a_item.is_checked then
-					wizard_information.call_stack_elements.force (l_index)
-				else
-					wizard_information.call_stack_elements.remove (l_index)
-				end
+			if a_item.is_checked then
+				selection_count := selection_count + 1
+			else
+				selection_count := selection_count - 1
 			end
 			update_next_button_status
 		end
@@ -303,7 +339,7 @@ feature {NONE} -- Constants
 		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

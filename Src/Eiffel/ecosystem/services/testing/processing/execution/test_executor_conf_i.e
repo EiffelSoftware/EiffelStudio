@@ -31,6 +31,15 @@ feature -- Access
 			valid: (create {TAG_UTILITIES}).is_valid_tag (Result)
 		end
 
+	evaluator_count: NATURAL
+			-- Number of evaluators to be ran simultaneously
+		require
+			usable: is_interface_usable
+		deferred
+		ensure
+			positive: Result > 0
+		end
+
 feature -- Status report
 
 	is_specific: BOOLEAN

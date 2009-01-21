@@ -9,6 +9,11 @@ class
 
 inherit
 	ES_TEST_WIZARD_FINAL_WINDOW
+		redefine
+			update_state_information,
+			conf,
+			has_valid_conf
+		end
 
 	SHARED_ERROR_HANDLER
 		export
@@ -189,7 +194,7 @@ feature {NONE} -- Initialization
 			l_item.set_data (
 				agent
 					do
-						wizard_information.tag_list.force ("execution/isolate")
+						conf.tags_cache.force ("execution/isolate")
 						update_tag_list
 					end)
 			template_list.extend (l_item)
@@ -218,7 +223,7 @@ feature {NONE} -- Initialization
 			l_name: ?STRING
 			l_name_32: STRING_32
 		do
-			l_name := wizard_information.name_cache
+			l_name := conf.name_cache
 			if l_name /= Void and then not l_name.is_empty then
 				l_name_32 := l_name.to_string_32
 			else
@@ -234,6 +239,12 @@ feature {NONE} -- Initialization
 		end
 
 feature {NONE} -- Access
+
+	conf: TEST_MANUAL_CREATOR_CONF
+			-- <Precursor>
+		do
+			Result := wizard_information.manual_conf
+		end
 
 	factory_type: !TYPE [TEST_CREATOR_I]
 			-- <Precursor>
@@ -286,6 +297,12 @@ feature {NONE} -- Status report
 			Result := test_name.is_valid
 		end
 
+	has_valid_conf (a_wizard_info: like wizard_information): BOOLEAN
+			-- <Precursor>
+		do
+			Result := Precursor (a_wizard_info) and a_wizard_info.is_manual_conf
+		end
+
 feature {NONE} -- Events
 
 	on_validate_test_name (a_name: !STRING_32): !TUPLE [BOOLEAN, ?STRING_32]
@@ -297,8 +314,7 @@ feature {NONE} -- Events
 		do
 			l_name := a_name.to_string_8
 			check l_name /= Void end
-			wizard_information.name_cache := l_name
-			if not wizard_information.is_new_class and then {l_class: !CLASS_I} wizard_information.test_class then
+			if not conf.is_new_class and then {l_class: !CLASS_I} conf.test_class_cache then
 				feature_name_validator.validate_new_feature_name (l_name, l_class)
 			else
 				feature_name_validator.validate_feature_name (l_name)
@@ -352,7 +368,7 @@ feature {NONE} -- Events
 			l_tag := tag_field.text.to_string_8
 			check l_tag /= Void end
 			if not l_tag.is_empty and tag_utilities.is_valid_tag (l_tag) then
-				wizard_information.tag_list.force (l_tag)
+				conf.tags_cache.force (l_tag)
 				update_tag_list
 				tag_field.set_text (create {STRING_32}.make_empty)
 			end
@@ -376,7 +392,7 @@ feature {NONE} -- Events
 				if l_item.is_selected then
 					l_tag := l_item.text.to_string_8
 					check l_tag /= Void end
-					wizard_information.tag_list.remove (l_tag)
+					conf.tags_cache.remove (l_tag)
 					if not l_removed then
 						l_removed := True
 						l_pos := i
@@ -422,11 +438,19 @@ feature {NONE} -- Events
 							l_tag.append (l_feature.name)
 						end
 					end
-					wizard_information.tag_list.force (l_tag)
+					conf.tags_cache.force (l_tag)
 					update_tag_list
 				end
 			end
 			l_dialog.recycle
+		end
+
+feature {NONE} -- Basic operations
+
+	update_state_information
+			-- <Precursor>
+		do
+			conf.name_cache := test_name.text.to_string_8
 		end
 
 feature {NONE} -- Implementation
@@ -447,7 +471,7 @@ feature {NONE} -- Implementation
 			l_tags: DS_ARRAYED_LIST [STRING]
 		do
 			tag_list.wipe_out
-			create l_tags.make_from_linear (wizard_information.tag_list)
+			create l_tags.make_from_linear (conf.tags_cache)
 			l_tags.sort (sorter)
 			from
 				l_tags.start

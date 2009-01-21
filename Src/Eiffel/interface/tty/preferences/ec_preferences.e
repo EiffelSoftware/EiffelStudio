@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 			create misc_data.make (a_preferences)
 			create feature_tool_data.make (a_preferences)
 			create flat_short_data.make (a_preferences)
+			create testing_tool_data.make (a_preferences)
 			preferences := a_preferences
 		end
 
@@ -40,6 +41,9 @@ feature -- Access
 	feature_tool_data: EB_FEATURE_TOOL_DATA
 		-- Preference data for the feature tool.
 
+	testing_tool_data: TEST_PREFERENCES
+		-- Preference data for testing tool.
+
 	misc_data: EB_MISC_DATA
 		-- Misc data.  This should be removed.  neilc
 
@@ -49,7 +53,7 @@ invariant
 	flat_short_data_not_void: flat_short_data /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -62,19 +66,19 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

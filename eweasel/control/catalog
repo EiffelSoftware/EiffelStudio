@@ -1946,6 +1946,7 @@ test	roundtrip-number-denoted-character rdtp002 tcf pass fixed
 -- Tests for assertion monitoring
 test	supplier-preconditions assert001 tcf pass assertions execution
 test	use-application-options-assertions	assert002 tcf pass assertions execution
+test undefined-assertion-merge assert003 tcf pass assertions
 
 -- Multi Constraint Tests
 test	multi-constraint-basics							multicon001 tcf pass multiconstraint

@@ -167,6 +167,8 @@ feature {NONE} -- Initialization: widget status
 
 	on_after_initialized
 			-- <Precursor>
+		local
+			l_app: EV_APPLICATION
 		do
 			Precursor
 			if test_suite.is_service_available then
@@ -178,6 +180,9 @@ feature {NONE} -- Initialization: widget status
 			initialize_tool_bar
 			initialize_view_bar
 			update_run_labels
+
+			l_app := (create {EV_SHARED_APPLICATION}).ev_application
+			l_app.add_idle_action_kamikaze (agent split_area.set_proportion (0.5))
 		end
 
 	initialize_tool_bar

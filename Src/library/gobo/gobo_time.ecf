@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="gobo_time" uuid="2922ED98-1404-491F-B713-52BFA8FFA5AB" library_target="gobo_time">
+	<target name="gobo_time">
+		<description>gobo time library</description>
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/\.svn</exclude>
+			<exclude>/hact$</exclude>
+			<exclude>/se$</exclude>
+			<exclude>/ve$</exclude>
+			<exclude>/ge$</exclude>
+			<exclude>/base$</exclude>
+			<exclude>/cvs$</exclude>
+			<exclude>/free_elks$</exclude>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/Documentation$</exclude>
+		</file_rule>
+		<option namespace="Gobo.Library">
+		</option>
+		<setting name="dotnet_naming_convention" value="true"/>
+		<library name="eiffelbase" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="eiffeltime" location="$ISE_LIBRARY\library\time\time.ecf"/>
+		<library name="gobo_kernel" location="gobo_kernel.ecf"/>
+		<assembly name="eiffelsoftware.runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
+		<cluster name="time" location="svn\library\time\" recursive="true">
+			<option namespace="Time">
+			</option>
+			<file_rule>
+				<exclude>/time_zone/dt_zoned_date_time.e$</exclude>
+				<exclude>/time_zone/dt_fixed_offset_zoned_time.e$</exclude>
+				<exclude>/date/dt_date.e$</exclude>
+				<exclude>/date/dt_date_time.e$</exclude>
+				<exclude>/date/dt_time.e$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="override" location="override\library\time" recursive="true"/>		
+	</target>
+</system>

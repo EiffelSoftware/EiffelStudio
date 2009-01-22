@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="gobo_xml" uuid="720038BE-BF92-4C26-9C61-4568BEFC1D97" library_target="gobo_xml">
+	<target name="gobo_xml">
+		<description>gobo xml library</description>
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/\.svn</exclude>
+			<exclude>/hact$</exclude>
+			<exclude>/se$</exclude>
+			<exclude>/ve$</exclude>
+			<exclude>/ge$</exclude>
+			<exclude>/base$</exclude>
+			<exclude>/cvs$</exclude>
+			<exclude>/free_elks$</exclude>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/Documentation$</exclude>
+		</file_rule>
+		<option namespace="Gobo.Library">
+		</option>
+		<setting name="dotnet_naming_convention" value="true"/>
+		<library name="eiffelbase" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="eiffeltime" location="$ISE_LIBRARY\library\time\time.ecf"/>
+		<library name="gobo_kernel" location="gobo_kernel.ecf"/>
+		<library name="gobo_structures" location="gobo_structures.ecf"/>
+		<library name="gobo_utility" location="gobo_utility.ecf"/>	
+		<library name="gobo_string" location="gobo_string.ecf"/>	
+		<library name="gobo_time" location="gobo_time.ecf"/>
+		<library name="gobo_math" location="gobo_math.ecf"/>
+		<library name="gobo_parse" location="gobo_parse.ecf"/>		
+		<library name="gobo_regexp" location="gobo_regexp.ecf"/>		
+		<library name="gobo_lexical" location="gobo_lexical.ecf"/>	
+		<assembly name="eiffelsoftware.runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
+		<cluster name="xml" location="svn\library\xml\" recursive="true">
+			<option namespace="Xml">
+			</option>
+			<file_rule>
+				<exclude>/expat$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+</system>
+

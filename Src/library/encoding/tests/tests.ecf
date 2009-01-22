@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="encoding-tests" uuid="4ADBFCB6-7E4E-42AD-92CD-55A8418B7EE8" library_target="encoding-tests">
+	<description>Unit-tests for the Encoding library.</description>
+	<target name="encoding-tests">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/\.svn</exclude>
+			<exclude>/tests</exclude>
+		</file_rule>
+		<option syntax_level="1" namespace="EiffelSoftware.Library">
+		</option>
+		<setting name="dotnet_naming_convention" value="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
+		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf"/>
+		<tests name="tests" location=".\" recursive="true">
+			<option namespace="Tests">
+			</option>
+		</tests>
+	</target>
+</system>

@@ -23,6 +23,7 @@
 		<library name="gobo_kernel" location="gobo_kernel.ecf"/>
 		<library name="gobo_structures" location="gobo_structures.ecf"/>
 		<library name="gobo_time" location="gobo_time.ecf"/>
+		<library name="gobo_argument" location="gobo_argument.ecf"/>
 		<library name="gobo_pattern" location="gobo_pattern.ecf"/>
 		<library name="gobo_math" location="gobo_math.ecf"/>
 		<library name="gobo_string" location="gobo_string.ecf"/>		
@@ -32,10 +33,6 @@
 		<library name="gobo_utility" location="gobo_utility.ecf"/>
 		<library name="gobo_xml" location="gobo_xml.ecf"/>
 		<assembly name="eiffelsoftware.runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
-		<cluster name="argument" location="svn\library\argument\" recursive="true">
-			<option namespace="Argument">
-			</option>
-		</cluster>
 		<cluster name="tools" location="svn\library\tools\" recursive="true">
 			<option namespace="Tools">
 			</option>

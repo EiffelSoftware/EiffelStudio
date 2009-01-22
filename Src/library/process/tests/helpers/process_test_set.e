@@ -130,7 +130,6 @@ feature {NONE} -- Query
 					end
 				else
 					l_filename.extend (l_ise_eiffel)
-					l_filename.extend ("studio")
 					l_filename.extend ("tools")
 					l_filename.extend ("spec")
 					l_filename.extend (l_ise_platform)

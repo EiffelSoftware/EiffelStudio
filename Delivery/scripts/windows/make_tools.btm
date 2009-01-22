@@ -49,3 +49,14 @@ iff not exist eimgemb.exe then
 	CANCEL
 endiff
 move eimgemb.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
+
+remtrace Recompile eiffel_echo
+cdd %EIFFEL_SRC\tools\eiffel_echo
+clean_project
+finalize eiffel_echo.ecf
+cleanup_eiffel eiffel_echo eiffel_echo.exe
+iff not exist eiffel_echo.exe then
+	remtrace Could not finalize a new eiffel_echo
+	CANCEL
+endiff
+move eiffel_echo.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin

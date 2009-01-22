@@ -29,9 +29,14 @@ feature{NONE} -- Implementation
 			is_std_input_open := False
 			is_std_output_open := False
 			is_std_error_open := False
-			input_file_name := Void
-			output_file_name := Void
-			error_file_name := Void
+
+				--| In the original implementation, `input_file_name', `output_file_name' and `error_file_name'
+				--| were initialized Void. Since nowhere in the process library it is checked if they are Void,
+				--| they are now attached and by default attached (Arno 1/14/2009).
+			create input_file_name.make_empty
+			create output_file_name.make_empty
+			create error_file_name.make_empty
+
 			input_direction := {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
 			output_direction := {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
 			error_direction := {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
@@ -40,9 +45,9 @@ feature{NONE} -- Implementation
 			std_input_not_open: not is_std_input_open
 			std_output_not_open: not is_std_output_open
 			std_error_not_open: not is_std_error_open
-			input_file_name_set: input_file_name = Void
-			output_file_name_set: output_file_name = Void
-			error_file_name_set: error_file_name = Void
+			input_file_name_set: input_file_name.is_empty
+			output_file_name_set: output_file_name.is_empty
+			error_file_name_set: error_file_name.is_empty
 			no_input_redirection: input_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
 			no_output_redirection: output_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
 			no_error_redirection: error_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
@@ -51,7 +56,7 @@ feature{NONE} -- Implementation
 
 feature -- Process operations
 
-	launch (a_cmd: STRING; a_working_directory: STRING; has_separate_console: BOOLEAN; has_detached_console: BOOLEAN; use_unicode: BOOLEAN; environs: POINTER)
+	launch (a_cmd: STRING; a_working_directory: ?STRING; has_separate_console: BOOLEAN; has_detached_console: BOOLEAN; use_unicode: BOOLEAN; environs: POINTER)
 			-- Launch a process whose command is `a_cmd' in `a_working_directory'.
 			-- If `has_separate_console' is True, launch process in a separate console.
 			-- If `has_detached_console' is True, launch process without any console.
@@ -96,8 +101,12 @@ feature -- Process operations
 		-- in `last_process_result'.
 		require
 			process_launched: launched
+		local
+			l_process_info: like process_info
 		do
-			last_operation_successful := cwin_exit_code_process (process_info.process_handle,$last_process_result)
+			l_process_info := process_info
+			check l_process_info /= Void end
+			last_operation_successful := cwin_exit_code_process (l_process_info.process_handle,$last_process_result)
 		end
 
 feature -- Status setting
@@ -134,7 +143,7 @@ feature -- Status setting
 		do
 			input_file_name := a_name.twin
 		ensure
-			file_name_set: input_file_name.is_equal (a_name)
+			file_name_set: input_file_name.same_string (a_name)
 		end
 
 	set_output_file_name (a_name: STRING)
@@ -145,7 +154,7 @@ feature -- Status setting
 		do
 			output_file_name := a_name.twin
 		ensure
-			file_name_set: output_file_name.is_equal (a_name)
+			file_name_set: output_file_name.same_string (a_name)
 		end
 
 	set_error_file_name (a_name: STRING)
@@ -156,7 +165,7 @@ feature -- Status setting
 		do
 			error_file_name := a_name.twin
 		ensure
-			file_name_set: error_file_name.is_equal (a_name)
+			file_name_set: error_file_name.same_string (a_name)
 		end
 
 feature -- Status reporting
@@ -305,9 +314,13 @@ feature -- Handle operation
 			-- Close process handle.
 		require
 			process_launched: launched
+		local
+			l_process_info: like process_info
 		do
-			last_operation_successful := file_handle.close (process_info.thread_handle)
-			last_operation_successful := file_handle.close (process_info.process_handle)
+			l_process_info := process_info
+			check l_process_info /= Void end
+			last_operation_successful := file_handle.close (l_process_info.thread_handle)
+			last_operation_successful := file_handle.close (l_process_info.process_handle)
 		end
 
 feature
@@ -315,7 +328,7 @@ feature
 	startup_info: WEL_STARTUP_INFO
 			-- Process startup information
 		local
-			l_tuple: TUPLE [p1: POINTER; p2: POINTER]
+			l_tuple: ?TUPLE [p1: POINTER; p2: POINTER]
 		do
 			create Result.make
 
@@ -328,6 +341,7 @@ feature
 				else
 					if input_pipe_needed then
 						l_tuple := file_handle.create_pipe_read_inheritable
+						check l_tuple /= Void end
 						child_input := l_tuple.p1
 						std_input := l_tuple.p2
 					else
@@ -344,6 +358,7 @@ feature
 				else
 					if output_pipe_needed then
 						l_tuple := file_handle.create_pipe_write_inheritable
+						check l_tuple /= Void end
 						std_output := l_tuple.p1
 						child_output := l_tuple.p2
 					else
@@ -367,6 +382,7 @@ feature
 					else
 						if error_pipe_needed then
 							l_tuple := file_handle.create_pipe_write_inheritable
+							check l_tuple /= Void end
 							std_error := l_tuple.p1
 							child_error := l_tuple.p2
 						else
@@ -424,27 +440,30 @@ feature{NONE} -- Implementation
 			"GetStdHandle (STD_ERROR_HANDLE)"
 		end
 
-	spawn_process (a_command_line, a_working_directory: STRING_GENERAL; a_flags: INTEGER; a_environs: POINTER)
+	spawn_process (a_command_line: STRING_GENERAL; a_working_directory: ?STRING_GENERAL; a_flags: INTEGER; a_environs: POINTER)
 			-- Spawn asynchronously process described in `a_command_line' from `a_working_directory'.
 		require
 			non_void_command_line: a_command_line /= Void
 			valid_command_line: not a_command_line.is_empty
 		local
 			a_wel_string1, a_wel_string2: WEL_STRING
+			l_process_info: like process_info
 		do
 			create process_info.make
 			create a_wel_string1.make (a_command_line)
+			l_process_info := process_info
+			check l_process_info /= Void end
 			if a_working_directory /= Void and then not a_working_directory.is_empty then
 				create a_wel_string2.make (a_working_directory)
 				last_launch_successful := cwin_create_process (default_pointer, a_wel_string1.item,
 							default_pointer, default_pointer, True, a_flags,
 							a_environs, a_wel_string2.item,
-							startup_info.item, process_info.item)
+							startup_info.item, l_process_info.item)
 			else
 				last_launch_successful := cwin_create_process (default_pointer, a_wel_string1.item,
 							default_pointer, default_pointer, True, a_flags,
 							a_environs, default_pointer,
-							startup_info.item, process_info.item)
+							startup_info.item, l_process_info.item)
 			end
 		end
 

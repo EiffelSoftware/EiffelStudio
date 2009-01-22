@@ -23,10 +23,13 @@ feature {NONE} -- Initialization
 
 	make
 			-- Initialize pipe.
+		local
+			l_sec_attr: like security_attributes
 		do
-			create security_attributes.make
-			security_attributes.set_inherit_handle (True)
-			exists := cwin_create_pipe ($output_handle, $input_handle, security_attributes.item, 0)
+			create l_sec_attr.make
+			l_sec_attr.set_inherit_handle (True)
+			exists := cwin_create_pipe ($output_handle, $input_handle, l_sec_attr.item, 0)
+			security_attributes := l_sec_attr
 		end
 
 	make_named (a_name: STRING_GENERAL; a_direction: INTEGER)
@@ -39,10 +42,12 @@ feature {NONE} -- Initialization
 			l_handle: POINTER
 			l_connected: BOOLEAN
 			ws: WEL_STRING
+			l_sec_attr: like security_attributes
 		do
 			create ws.make (format_pipe_name (a_name))
-			create security_attributes.make
-			security_attributes.set_inherit_handle (True)
+			create l_sec_attr.make
+			l_sec_attr.set_inherit_handle (True)
+			security_attributes := l_sec_attr
 
 			input_closed := True
 			output_closed := True
@@ -149,7 +154,7 @@ feature -- Status Report
 	last_read_successful: BOOLEAN
 			-- Was last read operation successful?
 
-	last_string: STRING_GENERAL
+	last_string: ?STRING_GENERAL
 			-- Last read string
 
 	last_written_bytes: INTEGER
@@ -244,8 +249,11 @@ feature {NONE} -- Implementation
 			non_void_result: Result /= Void
 		end
 
-	security_attributes: WEL_SECURITY_ATTRIBUTES
+	security_attributes: ?WEL_SECURITY_ATTRIBUTES
 			-- Security attributes used to create pipe
+			--
+			--| Note: This is not initialized in `make_client', otherwise it could be attached, more
+			--|       information needed! (Arno 01/14/2009)
 
 	max_pipe_buffer_length: INTEGER = 4096
 			-- max length for pipe buffer

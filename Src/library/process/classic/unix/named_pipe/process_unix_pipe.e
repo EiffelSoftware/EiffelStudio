@@ -11,7 +11,7 @@ inherit
 	PROCESS_UNIX_OS
 		export
 			{NONE} all
-			{PROCESS_UNIX_PIPE} close_file_descriptor
+			{PROCESS_UNIX_PIPE} valid_file_descriptor, close_file_descriptor
 		end
 
 	DISPOSABLE

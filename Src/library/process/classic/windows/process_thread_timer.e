@@ -90,19 +90,21 @@ feature {NONE} -- Implementation
 
 	execute
 		local
-			prc_imp: PROCESS_IMP
 			l_sleep_time: INTEGER_64
 		do
-			prc_imp ?= process_launcher
-			from
-				l_sleep_time := sleep_time.to_integer_64 * 1_000_000
-			until
-				should_destroy
-			loop
-				prc_imp.check_exit
-				if not should_destroy then
-					sleep (l_sleep_time)
+			if {l_prc_imp: PROCESS_IMP} process_launcher then
+				from
+					l_sleep_time := sleep_time.to_integer_64 * 1_000_000
+				until
+					should_destroy
+				loop
+					l_prc_imp.check_exit
+					if not should_destroy then
+						sleep (l_sleep_time)
+					end
 				end
+			else
+				check process_launcher_has_valid_type: False end
 			end
 		end
 

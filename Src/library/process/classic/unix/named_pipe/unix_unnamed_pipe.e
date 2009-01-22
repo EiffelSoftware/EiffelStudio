@@ -58,9 +58,8 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: STRING
+	name: ?STRING
 		do
-			Result := Void
 		end
 
 	retrieved: ANY
@@ -196,7 +195,7 @@ feature -- Input
 	readreal, read_real
 			-- Was declared in UNIX_UNNAMED_PIPE as synonym of `readreal'.
 		do
-			read_block (read_descriptor, shared_mptr.item, current_platform.real_bytes)
+			read_block (read_descriptor, shared_mptr.item, current_platform.real_32_bytes)
 			if last_read_successful then
 				last_real := shared_mptr.read_real_32 (0)
 			end
@@ -204,7 +203,7 @@ feature -- Input
 
 	read_double, readdouble
 		do
-			read_block (read_descriptor, shared_mptr.item, current_platform.double_bytes)
+			read_block (read_descriptor, shared_mptr.item, current_platform.real_64_bytes)
 			if last_read_successful then
 				last_double := shared_mptr.read_real_64 (0)
 			end
@@ -212,7 +211,7 @@ feature -- Input
 
 	read_character
 		do
-			read_block (read_descriptor, shared_mptr.item, current_platform.character_bytes)
+			read_block (read_descriptor, shared_mptr.item, current_platform.character_8_bytes)
 			if last_read_successful then
 				last_character := shared_mptr.read_character (0)
 			end
@@ -220,7 +219,7 @@ feature -- Input
 
 	readchar
 		do
-			read_block (read_descriptor, shared_mptr.item, current_platform.character_bytes)
+			read_block (read_descriptor, shared_mptr.item, current_platform.character_8_bytes)
 			if last_read_successful then
 				last_character := shared_mptr.read_character (0)
 			end
@@ -295,17 +294,19 @@ feature -- Input
 		local
 			mp: MANAGED_POINTER
 			i: INTEGER
+			l_last_string: like last_string
 		do
 			create mp.make (nb_char)
 			read_block (read_descriptor, mp.item, nb_char)
 			if last_read_successful then
-				create last_string.make (nb_char)
+				create l_last_string.make (nb_char)
+				last_string := l_last_string
 				from
 					i := 0
 				until
 					i = nb_char
 				loop
-					last_string.append_character (mp.read_natural_8 (i).to_character_8)
+					l_last_string.append_character (mp.read_natural_8 (i).to_character_8)
 					i := i + 1
 				end
 			end
@@ -316,17 +317,19 @@ feature -- Input
 		local
 			mp: MANAGED_POINTER
 			i: INTEGER
+			l_last_string: like last_string
 		do
 			create mp.make (nb_char)
 			read_block (read_descriptor, mp.item, nb_char)
 			if last_read_successful then
-				create last_string.make (nb_char)
+				create l_last_string.make (nb_char)
+				last_string := l_last_string
 				from
 					i := 0
 				until
 					i = nb_char
 				loop
-					last_string.append_character (mp.read_natural_8 (i).to_character_8)
+					l_last_string.append_character (mp.read_natural_8 (i).to_character_8)
 					i := i + 1
 				end
 			end
@@ -335,14 +338,16 @@ feature -- Input
 	read_stream_non_block (nb_char: INTEGER)
 		local
 			count: INTEGER
-			mp: MANAGED_POINTER
+			mp: ?MANAGED_POINTER
+			l_last_string: like last_string
 		do
 			last_read_successful := True
 			create mp.make (nb_char)
 			count := read (read_descriptor, mp.item, nb_char)
 			if count > 0 then
-				create last_string.make (count + 1)
-				last_string.from_c_substring (mp.item, 1, count)
+				create l_last_string.make (count + 1)
+				l_last_string.from_c_substring (mp.item, 1, count)
+				last_string := l_last_string
 			else
 				last_string := Void
 				if count = -1 then
@@ -357,19 +362,21 @@ feature -- Input
 		local
 			done: BOOLEAN
 			char: CHARACTER
+			l_last_string: like last_string
 		do
 			from
-				last_string := ""
+				create l_last_string.make_empty
+				last_string := l_last_string
 			until
 				done
 			loop
-				read_block (read_descriptor, shared_mptr.item, current_platform.character_bytes)
+				read_block (read_descriptor, shared_mptr.item, current_platform.character_8_bytes)
 				if last_read_successful then
 					char := shared_mptr.read_character (0)
 					if char = '%N' then
 						done := True
 					else
-						last_string.append_character (char)
+						l_last_string.append_character (char)
 					end
 				else
 					done := True
@@ -382,19 +389,21 @@ feature -- Input
 		local
 			done: BOOLEAN
 			char: CHARACTER
+			l_last_string: like last_string
 		do
 			from
-				last_string := ""
+				create l_last_string.make_empty
+				last_string := l_last_string
 			until
 				done
 			loop
-				read_block (read_descriptor, shared_mptr.item, current_platform.character_bytes)
+				read_block (read_descriptor, shared_mptr.item, current_platform.character_8_bytes)
 				if last_read_successful then
 					char := shared_mptr.read_character (0)
 					if char = '%N' then
 						done := True
 					else
-						last_string.append_character (char)
+						l_last_string.append_character (char)
 					end
 				else
 					done := True
@@ -425,14 +434,14 @@ feature -- Output
 			-- Was declared in UNIX_UNNAMED_PIPE as synonym of `putchar'.
 		do
 			shared_mptr.put_character (c, 0)
-			write_block (write_descriptor, shared_mptr.item, current_platform.character_bytes)
+			write_block (write_descriptor, shared_mptr.item, current_platform.character_8_bytes)
 		end
 
 	putchar (c: CHARACTER)
 			-- Was declared in UNIX_UNNAMED_PIPE as synonym of `put_character'.
 		do
 			shared_mptr.put_character (c, 0)
-			write_block (write_descriptor, shared_mptr.item, current_platform.character_bytes)
+			write_block (write_descriptor, shared_mptr.item, current_platform.character_8_bytes)
 		end
 
 	put_string (s: STRING)
@@ -474,7 +483,7 @@ feature -- Output
 	putreal, put_real (r: REAL)
 		do
 			shared_mptr.put_real_32 (r, 0)
-			write_block (write_descriptor, shared_mptr.item, current_platform.real_bytes)
+			write_block (write_descriptor, shared_mptr.item, current_platform.real_32_bytes)
 		end
 
 	put_integer, putint, put_integer_32  (i: INTEGER)
@@ -543,7 +552,7 @@ feature -- Output
 			-- Was declared in UNIX_UNNAMED_PIPE as synonym of `putdouble'.
 		do
 			shared_mptr.put_real_64 (d, 0)
-			write_block (write_descriptor, shared_mptr.item, current_platform.double_bytes)
+			write_block (write_descriptor, shared_mptr.item, current_platform.real_64_bytes)
 		end
 
 	put_managed_pointer (p: MANAGED_POINTER; start_pos, nb_bytes: INTEGER)

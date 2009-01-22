@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	process_launcher (a_file_name: STRING; args: LIST [STRING]; a_working_directory: STRING): PROCESS
+	process_launcher (a_file_name: STRING; args: ?LIST [STRING]; a_working_directory: ?STRING): PROCESS
 			-- Returns a process launcher used to launch program `a_file_name' with arguments `args'
 			-- and working directory `a_working_directory'.
 			-- Use Void for `a_working_directory' if no working directory is specified.
@@ -24,7 +24,7 @@ feature -- Access
 			process_launched_created: Result /= Void
 		end
 
-	process_launcher_with_command_line (a_cmd_line: STRING; a_working_directory: STRING): PROCESS
+	process_launcher_with_command_line (a_cmd_line: STRING; a_working_directory: ?STRING): PROCESS
 			-- Returns a process launcher to launch command line `cmd_line' that specifies an executable and
 			-- optional arguments, using `a_working_directory' as its working directory.
 			-- Use Void for `a_working_directory' if no working directory is required.		

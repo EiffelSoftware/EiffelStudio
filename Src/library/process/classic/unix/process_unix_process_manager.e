@@ -48,7 +48,7 @@ create
 
 feature {PROCESS_UNIX_OS} -- Creation
 
-	make (fname: STRING; args: LIST [STRING]; working_dir: STRING)
+	make (fname: STRING; args: ?LIST [STRING]; working_dir: like working_directory)
 			-- Create a process object which represents an
 			-- independent process that can execute the
 			-- program residing in file `fname'
@@ -66,9 +66,9 @@ feature {PROCESS_UNIX_OS} -- Creation
 			set_is_executing (False)
 		ensure
 			program_file_name_set: program_file_name.is_equal (fname)
-			leave_input_unchanged: input_file_name.is_equal ("")
-			leave_output_unchanged: output_file_name.is_equal ("")
-			leave_error_unchanged: error_file_name.is_equal ("")
+			input_file_name_empty: {l_input_fn: like input_file_name} input_file_name and then l_input_fn.is_empty
+			output_file_name_empty: {l_output_fn: like output_file_name} output_file_name and then l_output_fn.is_empty
+			error_file_name_empty: {l_error_fn: like error_file_name} error_file_name and then l_error_fn.is_empty
 			input_not_piped: not input_piped
 			output_not_piped: not output_piped
 			error_not_piped: not error_piped
@@ -93,10 +93,10 @@ feature -- Access
 			end
 		end
 
-	working_directory: STRING
+	working_directory: ?STRING
 			-- Working directory of process
 
-	arguments_for_exec: ARRAY [STRING]
+	arguments_for_exec: ?ARRAY [STRING]
 			-- Arguments to be passed to `exec_process'
 
 feature -- Status report
@@ -131,25 +131,27 @@ feature -- Status report
 
 feature -- Setting
 
-	set_arguments (arg_list: LIST [STRING])
+	set_arguments (arg_list: ?LIST [STRING])
 			-- Set `arguments' to `args'.
 		local
 			count: INTEGER
 			i: INTEGER
+			l_arguments: like arguments
 		do
 			if arg_list /= Void then
 				count := arg_list.count
-				create arguments.make (1, count)
+				create l_arguments.make (1, count)
 				from
 					i := 1
 					arg_list.start
 				until
 					arg_list.after
 				loop
-					arguments.put (arg_list.item.twin, i)
+					l_arguments.put (arg_list.item.twin, i)
 					arg_list.forth
 					i := i + 1
 				end
+				arguments := l_arguments
 			else
 				arguments := Void
 			end
@@ -163,7 +165,7 @@ feature -- Setting
 			value_set: close_nonstandard_files = b
 		end
 
-	set_input_file_name (fname: STRING)
+	set_input_file_name (fname: like input_file_name)
 			-- Set `input_file_name' to `fname', which must
 			-- be the name of an existing file readable by
 			-- the parent process
@@ -172,7 +174,7 @@ feature -- Setting
 			input_piped := (fname = Void)
 		end
 
-	set_output_file_name (fname: STRING)
+	set_output_file_name (fname: like output_file_name)
 			-- Set `output_file_name' to `fname', which must
 			-- be the name of a file writable by the parent
 			-- process.  File is created if it does not exist
@@ -182,7 +184,7 @@ feature -- Setting
 			output_piped := (fname = Void)
 		end
 
-	set_error_file_name (fname: STRING)
+	set_error_file_name (fname: like error_file_name)
 			-- Set `error_file_name' to `fname', which must
 			-- be the name of a file writable by the parent
 			-- process.  File is created if it does not exist
@@ -240,15 +242,25 @@ feature {PROCESS_IMP} -- Process management
 
 	close_pipes
 			-- Close opened pipes.
+		local
+			l_in_pipe: like shared_input_unnamed_pipe
+			l_out_pipe: like shared_output_unnamed_pipe
+			l_err_pipe: like shared_error_unnamed_pipe
 		do
 			if input_piped then
-				shared_input_unnamed_pipe.close_write_descriptor
+				l_in_pipe := shared_input_unnamed_pipe
+				check l_in_pipe /= Void end
+				l_in_pipe.close_write_descriptor
 			end
 			if output_piped then
-				shared_output_unnamed_pipe.close_read_descriptor
+				l_out_pipe := shared_output_unnamed_pipe
+				check l_out_pipe /= Void end
+				l_out_pipe.close_read_descriptor
 			end
 			if error_piped then
-				shared_error_unnamed_pipe.close_read_descriptor
+				l_err_pipe := shared_error_unnamed_pipe
+				check l_err_pipe /= Void end
+				l_err_pipe.close_read_descriptor
 			end
 		end
 
@@ -261,16 +273,19 @@ feature {PROCESS_IMP} -- Process management
 			-- Check `is_last_process_spawn_successful' after to make sure process has been spawned successfully.
         local
             ee: EXECUTION_ENVIRONMENT
-            cur_dir: STRING
+            cur_dir: ?STRING
             exceptions: EXCEPTIONS
             d: like internal_debug_mode
+            l_working_directory: like working_directory
+            l_arguments: like arguments_for_exec
         do
             build_argument_list
             open_files_and_pipes
             create ee
-            if working_directory /= Void then
-                create cur_dir.make_from_string ( ee.current_working_directory)
-                ee.change_working_directory (working_directory)
+            l_working_directory := working_directory
+            if l_working_directory /= Void then
+                create cur_dir.make_from_string (ee.current_working_directory)
+                ee.change_working_directory (l_working_directory)
             end
             d := internal_debug_mode
             internal_set_debug_mode (0)
@@ -279,7 +294,8 @@ feature {PROCESS_IMP} -- Process management
             when -1 then --| Error
                 internal_set_debug_mode (d)
                 -- Error ... no fork allowed
-                if working_directory /= Void then
+                if l_working_directory /= Void then
+                	check cur_dir /= Void end
                     ee.change_working_directory (cur_dir)
                 end
             when 0 then --| Child process
@@ -291,13 +307,16 @@ feature {PROCESS_IMP} -- Process management
                     end
                 end
                 setup_child_process_files
-                exec_process (program_file_name, arguments_for_exec, close_nonstandard_files, evnptr)
+                l_arguments := arguments_for_exec
+                check l_arguments /= Void end
+                exec_process (program_file_name, l_arguments, close_nonstandard_files, evnptr)
             else --| Parent process
                 internal_set_debug_mode (d)
                 setup_parent_process_files
                 arguments_for_exec := Void
                 set_is_executing (True)
-                if working_directory /= Void then
+                if l_working_directory /= Void then
+                	check cur_dir /= Void end
                     ee.change_working_directory (cur_dir)
                 end
             end
@@ -326,10 +345,14 @@ feature {PROCESS_IMP} -- Process management
 			-- Set data in `lasT_outp
 		require
 			buf_size_positive: buf_size > 0
+		local
+			l_out_pipe: like shared_output_unnamed_pipe
 		do
-			if  output_piped then
-				shared_output_unnamed_pipe.read_stream_non_block (buf_size)
-				last_output := shared_output_unnamed_pipe.last_string
+			if output_piped then
+				l_out_pipe := shared_output_unnamed_pipe
+				check l_out_pipe /= Void end
+				l_out_pipe.read_stream_non_block (buf_size)
+				last_output := l_out_pipe.last_string
 			else
 				last_output := Void
 			end
@@ -340,11 +363,14 @@ feature {PROCESS_IMP} -- Process management
 			-- Set data in `last_error'.
 		require
 			buf_size_positive: buf_size > 0
+		local
+			l_err_pipe: like shared_error_unnamed_pipe
 		do
-			if error_piped and then not error_same_as_output
-			then
-				shared_error_unnamed_pipe.read_stream_non_block (buf_size)
-				last_error := shared_error_unnamed_pipe.last_string
+			if error_piped and then not error_same_as_output then
+				l_err_pipe := shared_error_unnamed_pipe
+				check l_err_pipe /= Void end
+				l_err_pipe.read_stream_non_block (buf_size)
+				last_error := l_err_pipe.last_string
 			else
 				last_error := Void
 			end
@@ -354,16 +380,20 @@ feature {PROCESS_IMP} -- Process management
 			-- Put `s' into input pipe of process.
 		require
 			s_not_void: s /= Void
+		local
+			l_in_pipe: like shared_input_unnamed_pipe
 		do
 			if is_executing and then input_piped then
-				shared_input_unnamed_pipe.put_string (s)
+				l_in_pipe := shared_input_unnamed_pipe
+				check l_in_pipe /= Void end
+				l_in_pipe.put_string (s)
 			end
 		end
 
-	last_output: STRING
+	last_output: ?STRING
 			-- Last read data from output pipe
 
-	last_error: STRING
+	last_error: ?STRING
 			-- Last read data from error pipe
 
 feature {NONE} -- Properties
@@ -372,7 +402,7 @@ feature {NONE} -- Properties
 			-- Name of file containing program which will be
 			-- executed when process is spawned
 
-	arguments: ARRAY [STRING];
+	arguments: ?ARRAY [STRING];
 			-- Arguments to passed to process when it is spawned,
 			-- not including argument 0 (which is conventionally
 			-- the name of the program).  If Void or if count
@@ -383,21 +413,21 @@ feature {NONE} -- Properties
 			-- standard input, standard output and standard
 			-- error) be closed in the spawned process?
 
-	input_file_name: STRING;
+	input_file_name: ?STRING;
 			-- Name of file to be used as standard input in
 			-- spawned process if `input_descriptor' is not a
 			-- valid descriptor and `input_piped' is false.
 			-- A Void value leaves standard input same as
 			-- parent's and an empty string closes standard input
 
-	output_file_name: STRING;
+	output_file_name: ?STRING;
 			-- Name of file to be used as standard output in
 			-- spawned process if `output_descriptor' is not a
 			-- valid descriptor and `output_piped' is false.
 			-- A Void value leaves standard output same as
 			-- parent's and an empty string closes standard output
 
-	error_file_name: STRING;
+	error_file_name: ?STRING;
 			-- Name of file to be used as standard error in
 			-- spawned process if `error_descriptor' is not a
 			-- valid descriptor and `error_piped' is false.
@@ -432,13 +462,15 @@ feature {NONE} -- Implementation
 			-- Make `process_name' argument 0 and append
 			-- `arguments' as the rest of the arguments
 		local
-			k, count, lower, pos: INTEGER
+			k, count, lower: INTEGER
 			pname: STRING
 			a: ARRAY [STRING]
+			l_arguments: like arguments
 		do
-			if arguments /= Void then
-				count := arguments.count + 1;
-				lower := arguments.lower;
+			l_arguments := arguments
+			if l_arguments /= Void then
+				count := l_arguments.count + 1;
+				lower := l_arguments.lower;
 			else
 				count := 1
 				lower := 1	-- Not applicable
@@ -452,15 +484,21 @@ feature {NONE} -- Implementation
 			until
 				k > count
 			loop
-				a.put (arguments.item (lower + k - 2), k)
+				check l_arguments /= Void end
+				a.put (l_arguments.item (lower + k - 2), k)
 				k := k + 1
 			end
 			arguments_for_exec := a;
+		ensure
+			arguments_for_exec_attached: arguments_for_exec /= Void
 		end
 
 	open_files_and_pipes
 		local
 			pipe_fac: UNIX_PIPE_FACTORY
+			l_input_fn: like input_file_name
+			l_output_fn: like output_file_name
+			l_error_fn: like error_file_name
 		do
 			create pipe_fac
 				-- Open file or pipe for input.
@@ -468,22 +506,22 @@ feature {NONE} -- Implementation
 			in_file := Void
 			if input_piped then
 				shared_input_unnamed_pipe := pipe_fac.new_unnamed_pipe
-			elseif
-				(input_file_name /= Void) and then
-				(not input_file_name.is_empty)
-			then
-				create in_file.make_open_read (input_file_name)
+			else
+				l_input_fn := input_file_name
+				if l_input_fn /= Void and then not l_input_fn.is_empty then
+					create in_file.make_open_read (l_input_fn)
+				end
 			end
 				-- Open file or pipe for output.
 			shared_output_unnamed_pipe := Void
 			out_file := Void
 			if output_piped then
 				shared_output_unnamed_pipe := pipe_fac.new_unnamed_pipe
-			elseif
-				(output_file_name /= Void) and then
-				(not output_file_name.is_empty)
-			then
-				create out_file.make_open_write (output_file_name)
+			else
+				l_output_fn := output_file_name
+				if l_output_fn /= Void and then not l_output_fn.is_empty then
+					create out_file.make_open_write (l_output_fn)
+				end
 			end
 
 				-- Open file or pipe for error.
@@ -492,79 +530,123 @@ feature {NONE} -- Implementation
 			if not error_same_as_output then
 				if error_piped then
 					shared_error_unnamed_pipe := pipe_fac.new_unnamed_pipe
-				elseif
-					(error_file_name /= Void) and then
-					(not error_file_name.is_empty)
-				then
-					create err_file.make_open_write (error_file_name)
+				else
+					l_error_fn := error_file_name
+					if l_error_fn /= Void and then not l_error_fn.is_empty then
+						create err_file.make_open_write (l_error_fn)
+					end
 				end
 			end
 		end
 
 	setup_parent_process_files
+		local
+			l_input_fn: like input_file_name
+			l_output_fn: like output_file_name
+			l_error_fn: like error_file_name
+			l_in_pipe: like shared_input_unnamed_pipe
+			l_out_pipe: like shared_output_unnamed_pipe
+			l_err_pipe: like shared_error_unnamed_pipe
+			l_in_file: like in_file
+			l_out_file: like out_file
+			l_err_file: like err_file
 		do
 			if input_piped then
-				shared_input_unnamed_pipe.close_read_descriptor
-			elseif
-				(input_file_name /= Void) and then
-				(not input_file_name.is_empty)
-			then
-				in_file.close
+				l_in_pipe := shared_input_unnamed_pipe
+				check l_in_pipe /= Void end
+				l_in_pipe.close_read_descriptor
+			else
+				l_input_fn := input_file_name
+				if l_input_fn /= Void and then not l_input_fn.is_empty then
+					l_in_file := in_file
+					check l_in_file /= Void end
+					l_in_file.close
+				end
 			end
 
 			if output_piped then
-				shared_output_unnamed_pipe.close_write_descriptor
-			elseif
-				(output_file_name /= Void) and then
-				(not output_file_name.is_empty)
-			then
-				out_file.close
+				l_out_pipe := shared_output_unnamed_pipe
+				check l_out_pipe /= Void end
+				l_out_pipe.close_write_descriptor
+			else
+				l_output_fn := output_file_name
+				if l_output_fn /= Void and then not l_output_fn.is_empty then
+					l_out_file := out_file
+					check l_out_file /= Void end
+					l_out_file.close
+				end
 			end
 
 			if not error_same_as_output then
 				if error_piped then
-					shared_error_unnamed_pipe.close_write_descriptor
-				elseif
-					(error_file_name /= Void) and then
-					(not error_file_name.is_empty)
-				then
-					err_file.close
+					l_err_pipe := shared_error_unnamed_pipe
+					check l_err_pipe /= Void end
+					l_err_pipe.close_write_descriptor
+				else
+					l_error_fn := error_file_name
+					if l_error_fn /= Void and then not l_error_fn.is_empty then
+						l_err_file := err_file
+						check l_err_file /= Void end
+						l_err_file.close
+					end
 				end
 			end
 		end
 
 	setup_child_process_files
+		local
+			l_input_fn: like input_file_name
+			l_output_fn: like output_file_name
+			l_error_fn: like error_file_name
+			l_in_pipe: like shared_input_unnamed_pipe
+			l_out_pipe: like shared_output_unnamed_pipe
+			l_err_pipe: like shared_error_unnamed_pipe
+			l_in_file: like in_file
+			l_out_file: like out_file
+			l_err_file: like err_file
 		do
 			if input_piped then
-				move_desc (shared_input_unnamed_pipe.read_descriptor, stdin_descriptor)
-				shared_input_unnamed_pipe.close_write_descriptor
-			elseif
-				(input_file_name /= Void) and then
-				(not input_file_name.is_empty)
-			then
-				move_desc (in_file.descriptor, stdin_descriptor)
+				l_in_pipe := shared_input_unnamed_pipe
+				check l_in_pipe /= Void end
+				move_desc (l_in_pipe.read_descriptor, stdin_descriptor)
+				l_in_pipe.close_write_descriptor
+			else
+				l_input_fn := input_file_name
+				if l_input_fn /= Void and then not l_input_fn.is_empty then
+					l_in_file := in_file
+					check l_in_file /= Void end
+					move_desc (l_in_file.descriptor, stdin_descriptor)
+				end
 			end
 			if output_piped then
-				move_desc (shared_output_unnamed_pipe.write_descriptor, stdout_descriptor)
-				shared_output_unnamed_pipe.close_read_descriptor
-			elseif
-				(output_file_name /= Void) and then
-				(not output_file_name.is_empty)
-			then
-				move_desc (out_file.descriptor, stdout_descriptor)
+				l_out_pipe := shared_output_unnamed_pipe
+				check l_out_pipe /= Void end
+				move_desc (l_out_pipe.write_descriptor, stdout_descriptor)
+				l_out_pipe.close_read_descriptor
+			else
+				l_output_fn := output_file_name
+				if l_output_fn /= Void and then not l_output_fn.is_empty then
+					l_out_file := out_file
+					check l_out_file /= Void end
+					move_desc (l_out_file.descriptor, stdout_descriptor)
+				end
 			end
 
 			if error_same_as_output then
 				duplicate_file_descriptor (stdout_descriptor, stderr_descriptor)
 			else
 				if error_piped then
-					move_desc (shared_error_unnamed_pipe.write_descriptor, stderr_descriptor)
-					shared_error_unnamed_pipe.close_read_descriptor
-				elseif
-					(error_file_name /= Void) and then
-					(not error_file_name.is_empty)
-				then
-					move_desc (err_file.descriptor, stderr_descriptor)
+					l_err_pipe := shared_error_unnamed_pipe
+					check l_err_pipe /= Void end
+					move_desc (l_err_pipe.write_descriptor, stderr_descriptor)
+					l_err_pipe.close_read_descriptor
+				else
+					l_error_fn := error_file_name
+					if l_error_fn /= Void and then not l_error_fn.is_empty then
+						l_err_file := err_file
+						check l_err_file /= Void end
+						move_desc (l_err_file.descriptor, stderr_descriptor)
+					end
 				end
 			end
 		end
@@ -582,15 +664,15 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	in_file: RAW_FILE
+	in_file: ?RAW_FILE
 			-- File to be used by child process for standard input
 			-- when it comes from a file
 
-	out_file: RAW_FILE
+	out_file: ?RAW_FILE
 			-- File to be used by child process for standard output
 			-- when it goes to a file
 
-	err_file: RAW_FILE
+	err_file: ?RAW_FILE
 			-- File to be used by child process for standard error
 			-- when it goes to a file
 
@@ -605,13 +687,13 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	shared_input_unnamed_pipe: UNIX_UNNAMED_PIPE
+	shared_input_unnamed_pipe: ?UNIX_UNNAMED_PIPE
 			-- Pipe used to redirect input of process
 
-	shared_output_unnamed_pipe: UNIX_UNNAMED_PIPE
+	shared_output_unnamed_pipe: ?UNIX_UNNAMED_PIPE
 			-- Pipe used to redirect output of process
 
-	shared_error_unnamed_pipe: UNIX_UNNAMED_PIPE
+	shared_error_unnamed_pipe: ?UNIX_UNNAMED_PIPE
 			-- Pipe used to redirect error of process
 
 	exit_code_from_status (a_status: INTEGER): INTEGER

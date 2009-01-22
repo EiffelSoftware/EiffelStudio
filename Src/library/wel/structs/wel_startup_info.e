@@ -37,6 +37,7 @@ feature {NONE} -- Initialize
 	make
 			-- Allocate `item'.
 		do
+			create internal_title.make_empty (0)
 			Precursor {WEL_STRUCTURE}
 			cwel_init (item)
 		end
@@ -46,11 +47,9 @@ feature -- Access
 	title: STRING_32
 			-- Console application title
 		do
-			if internal_title /= Void then
-				Result := internal_title.string
-			else
-				create Result.make_empty
-			end
+			Result := internal_title.string
+		ensure
+			result_attached: Result /= Void
 		end
 
 	x_offset: INTEGER

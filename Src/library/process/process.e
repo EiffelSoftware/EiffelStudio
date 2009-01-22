@@ -21,7 +21,7 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	make (a_exec_name: STRING; args: LIST [STRING]; a_working_directory: STRING)
+	make (a_exec_name: STRING; args: ?LIST [STRING]; a_working_directory: like working_directory)
 			-- Create process object with `a_exec_name' as executable with `args'
 			-- as arguments, and with `a_working_directory' as its working directory.
 			-- Apply Void to `a_working_directory' if no working directory is specified.
@@ -31,14 +31,14 @@ feature {NONE} -- Initialization
 			thread_capable: {PLATFORM}.is_thread_capable
 		deferred
 		ensure
-			command_line_not_void: command_line /= Void
-			comand_line_not_empty: not command_line.is_empty
-			working_directory_set: (a_working_directory /= Void) implies (working_directory.is_equal (a_working_directory)) and
-								   (a_working_directory = Void) implies (working_directory = Void)
+			command_line_not_empty: command_line /= Void and then not command_line.is_empty
+			working_directory_set: a_working_directory /= Void implies
+				({l_wd: like working_directory} working_directory and then l_wd.same_string (a_working_directory))
+			working_directory_set: a_working_directory = Void implies working_directory = Void
 			init_succeeded: parameter_initialized
 		end
 
-	make_with_command_line (cmd_line: STRING; a_working_directory: STRING)
+	make_with_command_line (cmd_line: STRING; a_working_directory: like working_directory)
 			-- Create process object with `cmd_line' as command line in which executable and
 			-- arguments are included and with `a_working_directory' as its working directory.
 			-- Apply Void to `a_working_directory' if no working directory is specified.		
@@ -48,10 +48,10 @@ feature {NONE} -- Initialization
 			thread_capable: {PLATFORM}.is_thread_capable
 		deferred
 		ensure
-			command_line_not_void: command_line /= Void
-			comand_line_not_empty: not command_line.is_empty
-			working_directory_set: (a_working_directory /= Void) implies (working_directory.is_equal (a_working_directory)) and
-								   (a_working_directory = Void) implies (working_directory = Void)
+			command_line_not_empty: command_line /= Void and then not command_line.is_empty
+			working_directory_set: a_working_directory /= Void implies
+				({l_wd: like working_directory} working_directory and then l_wd.same_string (a_working_directory))
+			working_directory_set: a_working_directory = Void implies working_directory = Void
 			init_succeeded: parameter_initialized
 		end
 
@@ -97,18 +97,18 @@ feature -- IO redirection
 		ensure
 			input_redirection_canceled:
 				input_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
-			input_file_name_set: input_file_name.is_equal ("")
+			input_file_name_set: input_file_name ~ ""
 		end
 
-	redirect_output_to_file (a_file_name: STRING)
+	redirect_output_to_file (a_file_name: like output_file_name)
 			-- Redirect output stream of process to a file
 			-- with name `a_file_name'.
 		require
 			process_not_running: not is_running
 			a_file_name_not_void: a_file_name /= Void
 			a_file_name_not_empty: not a_file_name.is_empty
-			output_and_error_file_not_same:
-				(error_file_name /= Void) implies not error_file_name.is_equal (a_file_name)
+			output_and_error_file_not_same: {l_fn: like error_file_name} error_file_name implies
+				not l_fn.same_string (a_file_name)
 		do
 			output_direction := {PROCESS_REDIRECTION_CONSTANTS}.to_file
 			output_file_name := a_file_name
@@ -150,18 +150,18 @@ feature -- IO redirection
 		ensure
 			output_redirection_canceled:
 				output_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
-			output_file_name_set: output_file_name.is_equal ("")
+			output_file_name_set: {l_file_name: like output_file_name} output_file_name and then l_file_name.same_string ("")
 			output_handler_set: output_handler = Void
 		end
 
-	redirect_error_to_file (a_file_name: STRING)
+	redirect_error_to_file (a_file_name: like error_file_name)
 			-- Redirect the error stream of process to a file.
 		require
 			process_not_running: not is_running
 			a_file_name_not_void: a_file_name /= Void
 			a_file_name_not_empty: not a_file_name.is_empty
-			output_and_error_file_not_same:
-				(output_file_name /= Void) implies (not output_file_name.is_equal (a_file_name))
+			output_and_error_file_not_same: {l_fn: like output_file_name} output_file_name implies
+				not l_fn.same_string (a_file_name)
 		do
 			error_direction := {PROCESS_REDIRECTION_CONSTANTS}.to_file
 			error_file_name := a_file_name
@@ -221,7 +221,7 @@ feature -- IO redirection
 		ensure
 			error_redirection_canceled:
 				error_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
-			error_file_name_set: error_file_name.is_equal ("")
+			error_file_name_set: {l_file_name: like error_file_name} error_file_name and then l_file_name.same_string ("")
 			error_handler_set: error_handler = Void
 		end
 
@@ -334,7 +334,7 @@ feature -- Status setting
 			buffer_size_set: buffer_size = size
 		end
 
-	set_timer (a_timer: PROCESS_TIMER)
+	set_timer (a_timer: like timer)
 			-- Set `a_timer' as timer used by this process launcher.
 			-- If no timer is set, a `PROCESS_THREAD_TIMER' will be used
 			-- when launch a process.
@@ -399,7 +399,7 @@ feature -- Status setting
 		do
 			environment_variable_table := a_table
 		ensure
-			environment_variable_table_set: environment_variable_table /= a_table
+			environment_variable_table_set: environment_variable_table = a_table
 		end
 
 	set_environment_variables (a_table: HASH_TABLE [C_STRING, STRING])
@@ -411,12 +411,13 @@ feature -- Status setting
 		local
 			l_tbl: like environment_variable_table
 		do
-			if environment_variable_table /= Void then
-				environment_variable_table.clear_all
-			else
-				create environment_variable_table.make (20)
-			end
 			l_tbl := environment_variable_table
+			if l_tbl /= Void then
+				l_tbl.clear_all
+			else
+				create l_tbl.make (20)
+				environment_variable_table := l_tbl
+			end
 			from
 				a_table.start
 			until
@@ -441,7 +442,7 @@ feature -- Status setting
 
 feature -- Actions setting
 
-	set_on_start_handler (handler: ROUTINE [ANY, TUPLE])
+	set_on_start_handler (handler: like on_start_handler)
 			-- Set a `handler' which will be called when process starts.
 			-- Set with Void to disable start handler.
 		require
@@ -452,7 +453,7 @@ feature -- Actions setting
 			handler_set: on_start_handler = handler
 		end
 
-	set_on_exit_handler (handler: ROUTINE [ANY, TUPLE])
+	set_on_exit_handler (handler: like on_exit_handler)
 			-- Set a `handler' which will be called when process exits.
 			-- Set with Void to disable exit handler.			
 		require
@@ -463,7 +464,7 @@ feature -- Actions setting
 			handler_set: on_exit_handler = handler
 		end
 
-	set_on_terminate_handler (handler: ROUTINE [ANY, TUPLE])
+	set_on_terminate_handler (handler: like on_terminate_handler)
 			-- Set a `handler' which will be called when process has been terminated.
 			-- Set with Void to disable terminate handler.
 		require
@@ -474,7 +475,7 @@ feature -- Actions setting
 			handler_set: on_terminate_handler = handler
 		end
 
-	set_on_fail_launch_handler (handler: ROUTINE [ANY, TUPLE])
+	set_on_fail_launch_handler (handler: like on_fail_launch_handler)
 			-- Set a `handler' which will be called when process launch failed.
 			-- Set with Void to disable fail launch handler.			
 		require
@@ -485,7 +486,7 @@ feature -- Actions setting
 			handler_set: on_fail_launch_handler = handler
 		end
 
-	set_on_successful_launch_handler (handler: ROUTINE [ANY, TUPLE])
+	set_on_successful_launch_handler (handler: like on_successful_launch_handler)
 			-- Set a `handler' which will be called when process launch successed.
 			-- Set with Void to disable successful launch handler.
 		require
@@ -524,41 +525,56 @@ feature {NONE} -- Actions
 
 	on_start
 		-- Agent called when process launched
+		local
+			l_handler: like on_start_handler
 		do
-			if on_start_handler /= Void then
-				on_start_handler.call (Void)
+			l_handler := on_start_handler
+			if l_handler /= Void then
+				l_handler.call (Void)
 			end
 		end
 
 	on_terminate
 			-- Agent called when process has been terminated
+		local
+			l_handler: like on_terminate_handler
 		do
-			if on_terminate_handler /= Void then
-				on_terminate_handler.call (Void)
+			l_handler := on_terminate_handler
+			if l_handler /= Void then
+				l_handler.call (Void)
 			end
 		end
 
 	on_exit
 			-- Agent called when process has exited
+		local
+			l_handler: like on_exit_handler
 		do
-			if on_exit_handler /= Void then
-				on_exit_handler.call (Void)
+			l_handler := on_exit_handler
+			if l_handler /= Void then
+				l_handler.call (Void)
 			end
 		end
 
 	on_launch_failed
 			-- Agent called when process launch failed
+		local
+			l_handler: like on_fail_launch_handler
 		do
-			if on_fail_launch_handler /= Void then
-				on_fail_launch_handler.call (Void)
+			l_handler := on_fail_launch_handler
+			if l_handler /= Void then
+				l_handler.call (Void)
 			end
 		end
 
 	on_launch_successed
 			-- Agent called when process launch succeeded
+		local
+			l_handler: like on_successful_launch_handler
 		do
-			if on_successful_launch_handler /= Void then
-				on_successful_launch_handler.call (Void)
+			l_handler := on_successful_launch_handler
+			if l_handler /= Void then
+				l_handler.call (Void)
 			end
 		end
 
@@ -594,16 +610,16 @@ feature -- Access
 			-- Program name, with its arguments, if any, which will be run
 			-- in launched process
 
-	working_directory: STRING
+	working_directory: ?STRING
 			-- Working directory of the program to be launched
 
-	input_file_name: STRING
+	input_file_name: ?STRING
 			-- File name served as the redirected input stream of the new process
 
-	output_file_name: STRING
+	output_file_name: ?STRING
 			-- File name served as the redirected output stream of the new process
 
-	error_file_name: STRING
+	error_file_name: ?STRING
 			-- File name served as the redirected error stream of the new process
 
 	input_direction: INTEGER
@@ -618,7 +634,7 @@ feature -- Access
 			-- Where will the error stream of the to-be launched process be redirected.
 			-- Valid values are those constants defined in class `PROCESS_REDIRECTION_CONSTANTS'
 
-	environment_variable_table: HASH_TABLE [STRING, STRING]
+	environment_variable_table: ?HASH_TABLE [STRING, STRING]
 			-- Table of environment variables to be passes to new process.
 			-- Key is variable name and value is the value of the variable.
 			-- If this table is Void or empty, environment variables of the parent process will be passes to the new process.
@@ -669,7 +685,7 @@ feature -- Status report
 			-- Will process be launched without any console ?
 			-- Has effects on Windows.
 
-	are_agents_valid (handler: PROCEDURE [ANY, TUPLE [STRING]]; is_error: BOOLEAN): BOOLEAN
+	are_agents_valid (handler: ?PROCEDURE [ANY, TUPLE [STRING]]; is_error: BOOLEAN): BOOLEAN
 			-- Are output redirection agent and error redirection agent valid?
 			-- If you redirect both output and error to one agent,
 			-- they are not valid. You must redirect output and error to
@@ -727,36 +743,36 @@ feature -- Validation checking
 
 feature {PROCESS_IO_LISTENER_THREAD} -- Output/error handlers
 
-	output_handler: PROCEDURE [ANY, TUPLE [STRING]]
+	output_handler: ?PROCEDURE [ANY, TUPLE [STRING]]
 			-- Handler called when output from process arrives
 
-	error_handler: PROCEDURE [ANY, TUPLE [STRING]]
+	error_handler: ?PROCEDURE [ANY, TUPLE [STRING]]
 			-- Handler called when error from process arrives
 
 feature {NONE} -- Implementation
 
-	on_start_handler: ROUTINE [ANY, TUPLE]
+	on_start_handler: ?ROUTINE [ANY, TUPLE]
 			-- Agent called when process starts
 
-	on_exit_handler: ROUTINE [ANY, TUPLE]
+	on_exit_handler: ?ROUTINE [ANY, TUPLE]
 			-- Agent called when process exits
 
-	on_terminate_handler: ROUTINE [ANY, TUPLE]
+	on_terminate_handler: ?ROUTINE [ANY, TUPLE]
 			-- Agent called when process has been terminated
 
-	on_fail_launch_handler: ROUTINE [ANY, TUPLE]
+	on_fail_launch_handler: ?ROUTINE [ANY, TUPLE]
 			-- Agent called when process launch failed
 
-	on_successful_launch_handler: ROUTINE [ANY, TUPLE]
+	on_successful_launch_handler: ?ROUTINE [ANY, TUPLE]
 			-- Agent called when process launch is successful
 
-	arguments: LINKED_LIST [STRING]
+	arguments: ?LINKED_LIST [STRING]
 			-- Arguments of the program indicated by file_name
 
 	timer: PROCESS_TIMER
 			-- Timer used to check process termination so that some cleanups are done
 
-	initialize_working_directory (a_working_directory: STRING)
+	initialize_working_directory (a_working_directory: like working_directory)
 			-- Setup `working_directory' according to `a_working_directory'.
 		do
 			if a_working_directory /= Void then
@@ -772,7 +788,7 @@ feature {NONE} -- Implementation
 	initial_time_interval: INTEGER = 100
 			-- Initial time interval in milliseconds used to check process status	
 
-feature{NONE} -- Implementation
+feature {NONE} -- Implementation
 
 	initialize_parameter
 			-- Initialize parameters.
@@ -785,7 +801,7 @@ feature{NONE} -- Implementation
 			hidden := False
 			separate_console := False
 			buffer_size := initial_buffer_size
-			create {PROCESS_THREAD_TIMER}timer.make (initial_time_interval)
+			create {PROCESS_THREAD_TIMER} timer.make (initial_time_interval)
 			timer.set_process_launcher (Current)
 			abort_termination_when_failed := False
 			launched := False
@@ -802,9 +818,9 @@ feature{NONE} -- Implementation
 			    (input_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection) and
 				(output_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection) and
 				(error_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection) and
-				(input_file_name.is_equal ("")) and
-				(output_file_name.is_equal ("")) and
-				(error_file_name.is_equal ("")) and
+				({l_ifn: like input_file_name} input_file_name and then l_ifn.same_string ("")) and
+				({l_ofn: like output_file_name} output_file_name and then l_ofn.same_string ("")) and
+				({l_efn: like error_file_name} error_file_name and then l_efn.same_string ("")) and
 				(output_handler = Void) and
 				(error_handler = Void) and
 				(not hidden) and

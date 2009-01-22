@@ -22,9 +22,26 @@ feature {NONE} -- Initialization
 
 	make (a_preference: TEST_PREFERENCES)
 			-- <Precursor>
+		local
+			l_timeout, l_proxy, l_seed: INTEGER
 		do
 			create types_cache.make_default
 			Precursor (a_preference)
+			l_timeout := a_preference.autotest_timeout.value
+			if l_timeout > 0 then
+				time_out_cache := l_timeout.to_natural_32
+			end
+			l_proxy := a_preference.autotest_proxy_timeout.value
+			if l_proxy > 0 then
+				proxy_time_out_cache := l_proxy.to_natural_32
+			end
+			l_seed := a_preference.autotest_seed.value
+			if l_seed >= 0 then
+				seed_cache := l_seed.to_natural_32
+			end
+			is_slicing_enabled_cache := a_preference.autotest_slice_minimization.value
+			is_ddmin_enabled_cache := a_preference.autotest_ddmin_minimization.value
+			is_html_output_cache := a_preference.autotest_html_statistics.value
 		end
 
 feature -- Access

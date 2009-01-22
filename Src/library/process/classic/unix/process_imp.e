@@ -38,29 +38,33 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_exec_name: STRING; args: LIST[STRING]; a_working_directory: STRING)
+	make (a_exec_name: STRING; args: ?LIST[STRING]; a_working_directory: like working_directory)
 		do
 			setup_command (a_exec_name, args, a_working_directory)
 			create_child_process_manager
+			create input_buffer.make_empty
+			create input_mutex.make
 			initialize_parameter
 		end
 
-	make_with_command_line (cmd_line: STRING; a_working_directory: STRING)
+	make_with_command_line (cmd_line: STRING; a_working_directory: like working_directory)
 		local
-			p_name :STRING
-			args: LIST [STRING]
+			l_exec_name: STRING
+			l_args: ?LIST [STRING]
 		do
-			args := separated_words (cmd_line)
-			if args.is_empty then
-				make (" ", Void, a_working_directory)
-			elseif args.count = 1 then
-				make (args.first, Void, a_working_directory)
+			l_args := separated_words (cmd_line)
+			if l_args.is_empty then
+				l_exec_name := " "
+				l_args := Void
+			elseif l_args.count = 1 then
+				l_exec_name := l_args.first
+				l_args := Void
 			else
-				args.start
-				p_name := args.item
-				args.remove
-				make (p_name, args, a_working_directory)
+				l_exec_name := l_args.first
+				l_args.start
+				l_args.remove
 			end
+			make (l_exec_name, l_args, a_working_directory)
 		end
 
 feature  -- Control
@@ -146,8 +150,14 @@ feature {PROCESS_TIMER}  -- Status checking
 			-- Check if process has exited.
 		local
 			l_threads_exited: BOOLEAN
+			l_in_thread: like in_thread
+			l_out_thread: like out_thread
+			l_err_thread: like err_thread
 		do
 			if not has_exited then
+				l_in_thread := in_thread
+				l_out_thread := out_thread
+				l_err_thread := err_thread
 				if not has_process_exited then
 					child_process.wait_for_process (id, False)
 					has_process_exited := not child_process.is_executing
@@ -157,27 +167,25 @@ feature {PROCESS_TIMER}  -- Status checking
 							attach_terminals (process_id)
 						end
 
-						if in_thread /= Void then
-							in_thread.set_exit_signal
+						if l_in_thread /= Void then
+							l_in_thread.set_exit_signal
 						end
-						if out_thread /= Void then
-							out_thread.set_exit_signal
+						if l_out_thread /= Void then
+							l_out_thread.set_exit_signal
 						end
-						if err_thread /= Void then
-							err_thread.set_exit_signal
+						if l_err_thread /= Void then
+							l_err_thread.set_exit_signal
 						end
 					end
 				else
-					l_threads_exited := ((in_thread /= Void) implies in_thread.terminated) and
-							  ((out_thread /= Void) implies out_thread.terminated) and
-							  ((err_thread /= Void) implies err_thread.terminated)
+					l_threads_exited := ((l_in_thread /= Void) implies l_in_thread.terminated) and
+							  ((l_out_thread /= Void) implies l_out_thread.terminated) and
+							  ((l_err_thread /= Void) implies l_err_thread.terminated)
 							  -- If all listenning threads exited, perform clean up.
 					if l_threads_exited then
 						if not has_cleaned_up then
 							timer.destroy
-							if input_buffer /= Void then
-								input_buffer.clear_all
-							end
+							input_buffer.clear_all
 							child_process.close_pipes
 							has_cleaned_up := True
 								-- Call registered actions.
@@ -192,24 +200,26 @@ feature {PROCESS_TIMER}  -- Status checking
 			end
 		end
 
-feature{NONE} -- Interprocess IO
+feature {NONE} -- Interprocess IO
 
 	input_buffer: STRING
 			-- Buffer used to store input data of process
 			-- This buffer is used temporarily to store data that can not be
 			-- consumed by launched process.
 
-	append_input_buffer (a_input:STRING)
+	append_input_buffer (a_input: STRING)
 			-- Append `a_input' to `input_buffer'.
 		require
 			a_input_not_void: a_input /= Void
+			input_mutex_attached: input_mutex /= Void
+			input_buffer_attached: input_buffer /= Void
 		do
 			input_mutex.lock
 			input_buffer.append (a_input)
 			input_mutex.unlock
 		end
 
-feature{PROCESS_IO_LISTENER_THREAD} -- Interprocess IO
+feature {PROCESS_IO_LISTENER_THREAD} -- Interprocess IO
 
 	last_output_bytes: INTEGER
 			-- Number of bytes of data read from output of process
@@ -229,7 +239,7 @@ feature{PROCESS_IO_LISTENER_THREAD} -- Interprocess IO
 		local
 			l_cnt: INTEGER
 			l_left: INTEGER
-			l_str: STRING
+			l_str: ?STRING
 			l_retried: BOOLEAN
 		do
 			if not l_retried and then not is_read_pipe_broken then
@@ -264,11 +274,17 @@ feature{PROCESS_IO_LISTENER_THREAD} -- Interprocess IO
 			process_running: is_running
 			output_redirected_to_agent: output_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_agent
 			output_handler_not_void: output_handler /= Void
+		local
+			l_output_handler: like output_handler
+			l_last_output: ?STRING
 		do
 			child_process.read_output_stream (buffer_size)
-			if child_process.last_output /= Void then
-				last_output_bytes := child_process.last_output.count
-				output_handler.call ([child_process.last_output])
+			l_last_output := child_process.last_output
+			if l_last_output /= Void then
+				last_output_bytes := l_last_output.count
+				l_output_handler := output_handler
+				check l_output_handler /= Void end
+				l_output_handler.call ([l_last_output])
 			else
 				last_output_bytes := 0
 			end
@@ -280,12 +296,18 @@ feature{PROCESS_IO_LISTENER_THREAD} -- Interprocess IO
 		require
 			process_running: is_running
 			error_redirected_to_agent: error_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_agent
-			error_hander_not_viod: error_handler /= Void
+			error_hander_not_void: error_handler /= Void
+		local
+			l_handler: like error_handler
+			l_last_error: ?STRING
 		do
 			child_process.read_error_stream (buffer_size)
-			if child_process.last_error /= Void then
-				last_error_bytes := child_process.last_error.count
-				error_handler.call ([child_process.last_error])
+			l_last_error := child_process.last_error
+			if child_process.last_error /= Void and l_last_error /= Void then
+				last_error_bytes := l_last_error.count
+				l_handler := error_handler
+				check l_handler /= Void end
+				l_handler.call ([l_last_error])
 			else
 				last_error_bytes := 0
 			end
@@ -345,23 +367,30 @@ feature {NONE}  -- Implementation
 
 	start_listening_threads
 			-- Setup listeners for process output/error and for process status acquiring.
+		local
+			l_in_thread: like in_thread
+			l_out_thread: like out_thread
+			l_err_thread: like err_thread
 		do
 			if input_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_stream then
 				create input_buffer.make (initial_buffer_size)
 				create input_mutex.make
-				create in_thread.make (Current)
-				in_thread.launch_with_attributes (new_thread_attributes)
+				create l_in_thread.make (Current)
+				l_in_thread.launch_with_attributes (new_thread_attributes)
+				in_thread := l_in_thread
 			end
 				-- Start  output listening thread is necessory
 			if output_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_agent then
-				create out_thread.make (Current)
-			   	out_thread.launch_with_attributes (new_thread_attributes)
+				create l_out_thread.make (Current)
+			   	l_out_thread.launch_with_attributes (new_thread_attributes)
+			   	out_thread := l_out_thread
 			end
 				-- Start a error listening thread is necessory	
 			if (error_direction /= {PROCESS_REDIRECTION_CONSTANTS}.to_same_as_output)  then
 				if error_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_agent then
-					create err_thread.make (Current)
-					err_thread.launch_with_attributes (new_thread_attributes)
+					create l_err_thread.make (Current)
+					l_err_thread.launch_with_attributes (new_thread_attributes)
+					err_thread := l_err_thread
 				end
 			end
 					-- Start a timer for process status acquiring.
@@ -370,28 +399,31 @@ feature {NONE}  -- Implementation
 
 feature{NONE} -- Initialization
 
-	setup_command (a_exec_name: STRING; args: LIST[STRING]; a_working_directory: STRING)
+	setup_command (a_exec_name: STRING; a_args: ?LIST[STRING]; a_working_directory: like working_directory)
 			-- Setup command line.
 		require
 			a_exec_name_not_void: a_exec_name /= Void
 			a_exec_name_not_empty: not a_exec_name.is_empty
+		local
+			l_arguments: like arguments
 		do
 			create command_line.make_from_string (a_exec_name)
 			create executable.make_from_string (a_exec_name)
 			initialize_working_directory (a_working_directory)
 
-			if args /= Void then
-				create arguments.make
+			if a_args /= Void then
+				create l_arguments.make
 				from
-					args.start
+					a_args.start
 				until
-					args.after
+					a_args.after
 				loop
 					command_line.append_character (' ')
-					command_line.append (args.item)
-					arguments.extend (args.item)
-					args.forth
+					command_line.append (a_args.item_for_iteration)
+					l_arguments.extend (a_args.item_for_iteration)
+					a_args.forth
 				end
+				arguments := l_arguments
 			end
 		ensure
 			command_line_not_void: command_line /= Void
@@ -399,8 +431,8 @@ feature{NONE} -- Initialization
 			executable_not_void: executable /= Void
 			executable_not_empty: not executable.is_empty
 			arguments_set:
-					(args /= Void implies (arguments /= Void and then arguments.count = args.count)) and
-					(args = Void implies arguments = Void)
+					(a_args /= Void implies ({l_args: like arguments} arguments and then l_args.count = a_args.count)) and
+					(a_args = Void implies arguments = Void)
 		end
 
 	create_child_process_manager
@@ -418,9 +450,9 @@ feature {NONE} -- Implementation
 	executable: STRING
 			-- Program which will be launched
 
-	in_thread: PROCESS_INPUT_LISTENER_THREAD
-	out_thread: PROCESS_OUTPUT_LISTENER_THREAD
-	err_thread: PROCESS_ERROR_LISTENER_THREAD
+	in_thread: ?PROCESS_INPUT_LISTENER_THREAD
+	out_thread: ?PROCESS_OUTPUT_LISTENER_THREAD
+	err_thread: ?PROCESS_ERROR_LISTENER_THREAD
 			-- Threads to listen to output and error from process
 
 	input_mutex: MUTEX

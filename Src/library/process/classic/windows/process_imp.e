@@ -39,10 +39,14 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_exec_name: STRING; args: LIST[STRING]; a_working_directory: STRING)
+	make (a_exec_name: STRING; args: ?LIST [STRING]; a_working_directory: ?STRING)
 		local
 			l_arg: STRING
 		do
+			create child_process.make
+			create input_buffer.make_empty
+			create input_mutex.make
+
 			create arguments.make
 			create command_line.make_from_string (a_exec_name)
 
@@ -70,8 +74,12 @@ feature{NONE} -- Initialization
 			initialize_parameter
 		end
 
-	make_with_command_line (cmd_line: STRING; a_working_directory: STRING)
+	make_with_command_line (cmd_line: STRING; a_working_directory: ?STRING)
 		do
+			create child_process.make
+			create input_buffer.make_empty
+			create input_mutex.make
+
 			create command_line.make_from_string (cmd_line)
 			initialize_working_directory (a_working_directory)
 			initialize_parameter
@@ -103,8 +111,12 @@ feature -- Control
 
 	terminate
 			-- Terminate launched process.
+		local
+			l_process_info: ?WEL_PROCESS_INFO
 		do
-			try_terminate_process (child_process.process_info.process_handle)
+			l_process_info := process_info
+			check l_process_info /= Void end
+			try_terminate_process (l_process_info.process_handle)
 			force_terminated := last_termination_successful
 		end
 
@@ -180,33 +192,37 @@ feature{PROCESS_TIMER} -- Process status checking
 			-- Check if process has exited.
 		local
 			l_threads_exited: BOOLEAN
+			l_in_thread: like in_thread
+			l_out_thread: like out_thread
+			l_err_thread: like err_thread
 		do
 			if not has_exited then
+				l_in_thread := in_thread
+				l_out_thread := out_thread
+				l_err_thread := err_thread
 				if not process_has_exited then
 					process_has_exited := child_process.has_exited
 						-- If launched process exited, send signal to all listenning threads.
 					if process_has_exited then
-						if in_thread /= Void then
-							in_thread.set_exit_signal
+						if l_in_thread /= Void then
+							l_in_thread.set_exit_signal
 						end
-						if out_thread /= Void then
-							out_thread.set_exit_signal
+						if l_out_thread /= Void then
+							l_out_thread.set_exit_signal
 						end
-						if err_thread /= Void then
-							err_thread.set_exit_signal
+						if l_err_thread /= Void then
+							l_err_thread.set_exit_signal
 						end
 					end
 				else
-					l_threads_exited := ((in_thread /= Void) implies in_thread.terminated) and
-							  ((out_thread /= Void) implies out_thread.terminated) and
-							  ((err_thread /= Void) implies err_thread.terminated)
+					l_threads_exited := ((l_in_thread /= Void) implies l_in_thread.terminated) and
+							  ((l_out_thread /= Void) implies l_out_thread.terminated) and
+							  ((l_err_thread /= Void) implies l_err_thread.terminated)
 							  -- If all listenning threads exited, perform clean up.
 					if l_threads_exited then
 						if not has_cleaned_up then
 							timer.destroy
-							if input_buffer /= Void then
-								input_buffer.clear_all
-							end
+							input_buffer.clear_all
 							child_process.close_process_handle
 							child_process.close_io
 							has_cleaned_up := True
@@ -259,7 +275,8 @@ feature{PROCESS_IO_LISTENER_THREAD} -- Interprocess IO
 		local
 			l_cnt: INTEGER
 			l_left: INTEGER
-			l_str: STRING
+			l_str: ?STRING
+			l_input_file_handle: like input_file_handle
 		do
 			input_mutex.lock
 			l_cnt := input_buffer.count
@@ -274,7 +291,9 @@ feature{PROCESS_IO_LISTENER_THREAD} -- Interprocess IO
 			end
 			input_mutex.unlock
 			if l_str /= Void then
-				input_file_handle.put_string (child_process.std_input, l_str)
+				l_input_file_handle := input_file_handle
+				check l_input_file_handle /= Void end
+				l_input_file_handle.put_string (child_process.std_input, l_str)
 			end
 		end
 
@@ -288,14 +307,23 @@ feature{PROCESS_IO_LISTENER_THREAD} -- Interprocess IO
 		local
 			succ: BOOLEAN
 			bytes_avail: INTEGER
+			l_output_handler: like output_handler
+			l_last_string: ?STRING_8
+			l_output_file_handle: like output_file_handle
 		do
 			succ := cwin_peek_named_pipe (child_process.std_output, default_pointer, 0, default_pointer, $bytes_avail, default_pointer)
 			if succ and bytes_avail > 0 then
-				output_file_handle.read_stream (child_process.std_output, buffer_size.min (bytes_avail))
-				succ := output_file_handle.last_read_successful
+				l_output_file_handle := output_file_handle
+				check l_output_file_handle /= Void end
+				l_output_file_handle.read_stream (child_process.std_output, buffer_size.min (bytes_avail))
+				succ := l_output_file_handle.last_read_successful
 				if succ then
-					last_output_bytes := output_file_handle.last_read_bytes
-					output_handler.call ([output_file_handle.last_string])
+					l_output_handler := output_handler
+					check l_output_handler /= Void end
+					last_output_bytes := l_output_file_handle.last_read_bytes
+					l_last_string := l_output_file_handle.last_string
+					check l_last_string /= Void end
+					l_output_handler.call ([l_last_string])
 				end
 			else
 				last_output_bytes := 0
@@ -312,14 +340,23 @@ feature{PROCESS_IO_LISTENER_THREAD} -- Interprocess IO
 		local
 			succ: BOOLEAN
 			bytes_avail: INTEGER
+			l_error_handler: like error_handler
+			l_last_string: ?STRING
+			l_error_file_handle: like error_file_handle
 		do
 			succ := cwin_peek_named_pipe (child_process.std_error, default_pointer, 0, default_pointer, $bytes_avail, default_pointer)
 			if succ and bytes_avail > 0 then
-				error_file_handle.read_stream (child_process.std_error, buffer_size.min (bytes_avail))
-				succ := error_file_handle.last_read_successful
+				l_error_file_handle := error_file_handle
+				check l_error_file_handle /= Void end
+				l_error_file_handle.read_stream (child_process.std_error, buffer_size.min (bytes_avail))
+				succ := l_error_file_handle.last_read_successful
 				if succ then
-					last_error_bytes := error_file_handle.last_read_bytes
-					error_handler.call ([error_file_handle.last_string])
+					l_error_handler := error_handler
+					check l_error_handler /= Void end
+					last_error_bytes := l_error_file_handle.last_read_bytes
+					l_last_string := l_error_file_handle.last_string
+					check l_last_string /= Void end
+					l_error_handler.call ([l_last_string])
 				end
 			else
 				last_error_bytes := 0
@@ -338,8 +375,11 @@ feature{NONE} -- Implementation
 
 	initialize_child_process
 			-- Initialize `child_process'.
+		local
+			l_input_file_name: like input_file_name
+			l_output_file_name: like output_file_name
+			l_error_file_name: like error_file_name
 		do
-			create child_process.make
 			if hidden then
 				child_process.run_hidden
 			end
@@ -347,13 +387,19 @@ feature{NONE} -- Implementation
 			child_process.set_output_direction (output_direction)
 			child_process.set_error_direction (error_direction)
 			if input_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_file then
-				child_process.set_input_file_name (input_file_name)
+				l_input_file_name := input_file_name
+				check l_input_file_name /= Void end
+				child_process.set_input_file_name (l_input_file_name)
 			end
 			if output_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_file then
-				child_process.set_output_file_name (output_file_name)
+				l_output_file_name := output_file_name
+				check l_output_file_name /= Void end
+				child_process.set_output_file_name (l_output_file_name)
 			end
 			if error_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_file then
-				child_process.set_error_file_name (error_file_name)
+				l_error_file_name := error_file_name
+				check l_error_file_name /= Void end
+				child_process.set_error_file_name (l_error_file_name)
 			end
 		ensure
 			child_process_not_void: child_process /= Void
@@ -361,8 +407,12 @@ feature{NONE} -- Implementation
 
 	initialize_after_launch
 			-- Initialize when process has been launched successfully.
+		local
+			l_process_info: ?WEL_PROCESS_INFO
 		do
-			internal_id := child_process.process_info.process_id
+			l_process_info := child_process.process_info
+			check l_process_info /= Void end
+			internal_id := l_process_info.process_id
 			process_has_exited := False
 			force_terminated := False
 			last_termination_successful := True
@@ -372,27 +422,33 @@ feature{NONE} -- Implementation
 
 	start_listening_threads
 			-- Start listening threads.
+		local
+			l_in_thread: like in_thread
+			l_out_thread: like out_thread
+			l_err_thread: like err_thread
 		do
 			if input_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_stream then
-				create input_mutex.make
 				create input_file_handle
 				create input_buffer.make (4096)
-				create in_thread.make (Current)
-				in_thread.launch
+				create l_in_thread.make (Current)
+				in_thread := l_in_thread
+				l_in_thread.launch
 			else
 				in_thread := Void
 			end
 			if output_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_agent then
 				create output_file_handle
-				create out_thread.make (Current)
-				out_thread.launch
+				create l_out_thread.make (Current)
+				out_thread := l_out_thread
+				l_out_thread.launch
 			else
 				out_thread := Void
 			end
 			if error_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_agent then
 				create error_file_handle
-				create err_thread.make (Current)
-				err_thread.launch
+				create l_err_thread.make (Current)
+				err_thread := l_err_thread
+				l_err_thread.launch
 			else
 				err_thread := Void
 			end
@@ -586,9 +642,9 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Implementation
 
-	out_thread: PROCESS_OUTPUT_LISTENER_THREAD
-	err_thread: PROCESS_ERROR_LISTENER_THREAD
-	in_thread: PROCESS_INPUT_LISTENER_THREAD
+	out_thread: ?PROCESS_OUTPUT_LISTENER_THREAD
+	err_thread: ?PROCESS_ERROR_LISTENER_THREAD
+	in_thread: ?PROCESS_INPUT_LISTENER_THREAD
 			-- Threads to listen to output and error from child process.
 
 	child_process: WEL_PROCESS
@@ -612,7 +668,7 @@ feature{NONE} -- Implementation
 
 	input_file_handle,
 	output_file_handle,
-	error_file_handle: FILE_HANDLE
+	error_file_handle: ?FILE_HANDLE
 			-- Handles used	to read and write file
 
 	internal_id: INTEGER

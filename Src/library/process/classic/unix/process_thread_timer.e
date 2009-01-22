@@ -12,6 +12,16 @@ inherit
 	PROCESS_TIMER
 
 	THREAD
+		rename
+			sleep as obsolete_sleep
+		end
+
+	EXECUTION_ENVIRONMENT
+		rename
+			launch as environment_launch
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -59,14 +69,11 @@ feature -- Control
 	wait (a_timeout: INTEGER): BOOLEAN
 		local
 			l_sleep_time: INTEGER_64
-			prc_imp: PROCESS_IMP
 			l_timeout: BOOLEAN
-			l_start_time: DATE_TIME
+			l_start_time: ?DATE_TIME
 			l_now_time: DATE_TIME
 		do
 			if not destroyed then
-				prc_imp ?= process_launcher
-				check prc_imp /= Void end
 				if {PLATFORM}.is_thread_capable then
 					if a_timeout > 0 then
 						create l_start_time.make_now
@@ -78,6 +85,7 @@ feature -- Control
 					loop
 						if a_timeout > 0 then
 							create l_now_time.make_now
+							check l_start_time /= Void end
 							if l_now_time.relative_duration (l_start_time).fine_seconds_count * 1000 > a_timeout then
 								l_timeout := True
 							end
@@ -89,7 +97,11 @@ feature -- Control
 					Result := not l_timeout
 				elseif a_timeout = 0 then
 						-- We are not in multithreaded mode, simply wait indefinitely
-					prc_imp.check_exit
+					if {l_prc_imp: PROCESS_IMP} process_launcher then
+						l_prc_imp.check_exit
+					else
+						check launcher_has_valid_type: False end
+					end
 				end
 			else
 				Result := True
@@ -107,19 +119,21 @@ feature {NONE} -- Implementation
 
 	execute
 		local
-			prc_imp: PROCESS_IMP
 			l_sleep_time: INTEGER_64
 		do
-			prc_imp ?= process_launcher
-			from
-				l_sleep_time := sleep_time.to_integer_64 * 1000000
-			until
-				should_destroy
-			loop
-				prc_imp.check_exit
-				if not should_destroy then
-					sleep (l_sleep_time)
+			if {l_prc_imp: PROCESS_IMP} process_launcher then
+				from
+					l_sleep_time := sleep_time.to_integer_64 * 1000000
+				until
+					should_destroy
+				loop
+					l_prc_imp.check_exit
+					if not should_destroy then
+						sleep (l_sleep_time)
+					end
 				end
+			else
+				check process_launcher_has_valid_type: False end
 			end
 		end
 

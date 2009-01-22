@@ -65,7 +65,7 @@ feature -- Factory
 			end
 		end
 
-	create_pipe_write_inheritable: TUPLE [POINTER, POINTER]
+	create_pipe_write_inheritable: ?TUPLE [POINTER, POINTER]
 			-- Create pipe where `write' part of pipe can be written to.
 			-- Actual type is TUPLE [read, write: POINTER]
 		local
@@ -86,7 +86,7 @@ feature -- Factory
 			end
 		end
 
-	create_pipe_read_inheritable: TUPLE [POINTER, POINTER]
+	create_pipe_read_inheritable: ?TUPLE [POINTER, POINTER]
 			-- Create pipe where `write' part of pipe can be written to.
 			-- Actual type is TUPLE [read, write: POINTER]
 		local
@@ -115,7 +115,7 @@ feature -- Status report
 	last_read_successful: BOOLEAN
 			-- Was last read operation successful?
 
-	last_string: STRING
+	last_string: ?STRING
 			-- Last read string
 
 	last_written_bytes: INTEGER
@@ -177,9 +177,11 @@ feature -- Input
 			l_str: C_STRING
 			l_done, l_success: BOOLEAN
 			l_bytes: like last_read_bytes
+			l_last_string: like last_string
 		do
 			from
-				create last_string.make (10)
+				create l_last_string.make (10)
+				last_string := l_last_string
 				create l_str.make_empty (1)
 				last_read_successful := True
 			until
@@ -199,8 +201,8 @@ feature -- Input
 					check l_bytes > 0 end
 					last_read_successful := True
 					l_str.set_count (l_bytes)
-					last_string.append (l_str.substring (1, l_bytes))
-					l_done := last_string.item (last_string.count) = '%N'
+					l_last_string.append (l_str.substring (1, l_bytes))
+					l_done := l_last_string.item (l_last_string.count) = '%N'
 				else
 					last_read_successful := False
 					last_string := Void

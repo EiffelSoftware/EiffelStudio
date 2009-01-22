@@ -50,7 +50,7 @@ feature -- Access
 			last_conversion_successful_implies_not_void: last_conversion_successful implies Result /= Void
 		end
 
-	last_converted_string: STRING_GENERAL
+	last_converted_string: ?STRING_GENERAL
 			-- Last converted string.
 			-- Note: Original string object could be returned directly.
 		require

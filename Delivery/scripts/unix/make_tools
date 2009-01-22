@@ -37,3 +37,15 @@ if [ ! -f eimgemb.tar.bz2 ]; then
 fi
 clean_project
 move eimgemb.tar.bz2 $EXPORT_DIR/bin
+
+remtrace Recompile eiffel_echo
+cd $EIFFEL_SRC/tools/eiffel_echo
+clean_project
+finalize eiffel_echo.ecf eiffel_echo
+tgz_ccode eiffel_echo eiffel_echo.tar.bz2
+if [ ! -f eiffel_echo.tar.bz2 ]; then
+	echo Could not finalize a new Eiffel Echo
+	CANCEL
+fi
+clean_project
+move eiffel_echo.tar.bz2 $EXPORT_DIR/bin

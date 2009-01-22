@@ -260,6 +260,11 @@ cd $EXPORT_DIR/bin
 untgz_ccode eimgemb
 move eimgemb $INSTALL_DIR/tools/spec/$ISE_PLATFORM/bin/eimgemb
 
+remtrace Recompile Eiffel Echo
+cd $EXPORT_DIR/bin
+untgz_ccode eiffel_echo
+move eiffel_echo $INSTALL_DIR/tools/spec/$ISE_PLATFORM/bin/eiffel_echo
+
 remtrace Compiling Gobo tools
 safe_md $INSTALL_DIR/library/gobo/spec/
 safe_md $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM

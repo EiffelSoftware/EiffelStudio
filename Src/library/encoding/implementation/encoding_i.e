@@ -53,20 +53,25 @@ feature {ENCODING} -- Access
 
 	last_converted_stream: STRING_8
 			-- Stream prepresentation of last converted string.
+		require
+			last_conversion_successful: last_conversion_successful
+		local
+			l_result: ?STRING_8
+			l_last: like last_converted_string
 		do
-			if last_converted_string /= Void then
-				if last_was_wide_string then
-					Result := string_16_to_stream (last_converted_string.as_string_32)
-				else
-					Result := string_general_to_stream (last_converted_string)
-				end
+			l_last := last_converted_string
+			check l_last_not_void: l_last /= Void end -- implied by precondition `last_conversion_successful'
+			if last_was_wide_string then
+				l_result := string_16_to_stream (l_last.as_string_32)
+			else
+				l_result := string_general_to_stream (l_last)
 			end
+			Result := l_result
 		ensure
-			last_converted_string_syn_with_last_converted_stream:
-					(last_converted_string /= Void) = (Result /= Void)
+			last_converted_stream_not_void: Result /= Void
 		end
 
-	last_converted_string: STRING_GENERAL
+	last_converted_string: ?STRING_GENERAL
 			-- Last converted string.
 
 feature {ENCODING} -- Status report

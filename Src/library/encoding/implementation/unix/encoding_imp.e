@@ -35,9 +35,9 @@ feature -- String encoding convertion
 			l_big_endian: BOOLEAN
 			l_no_endian: BOOLEAN
 			l_error: INTEGER
-			l_failure: CONVERSION_FAILURE
 			l_retried: BOOLEAN
 			l_converted: STRING_GENERAL
+			l_exception: ?EXCEPTION
 		do
 			if not l_retried then
 				l_big_endian := is_big_endian_code_page (a_from_code_page) or else (not is_little_endian and not is_little_endian_code_page (a_from_code_page))
@@ -68,46 +68,41 @@ feature -- String encoding convertion
 				else
 					last_conversion_successful := True
 				end
-				if l_pointer /= Void then
-					l_no_endian := not is_big_endian_code_page (a_to_code_page) and not is_little_endian_code_page (a_to_code_page)
-					if is_four_byte_code_page (a_to_code_page) then
-						l_converted := pointer_to_string_32 (l_pointer, l_out_count)
-						if not l_converted.is_empty then
-							if bom_little_endian (l_converted.code (1)) then
-								l_converted := l_converted.substring (2, l_converted.count)
-								if l_no_endian and then not is_little_endian then
-									l_converted := string_32_switch_endian (l_converted)
-								end
-							elseif bom_big_endian (l_converted.code (1)) then
-								l_converted := l_converted.substring (2, l_converted.count)
-								if l_no_endian and then is_little_endian then
-									l_converted := string_32_switch_endian (l_converted)
-								end
+				check l_pointer_set: l_pointer /= default_pointer end
+				l_no_endian := not is_big_endian_code_page (a_to_code_page) and not is_little_endian_code_page (a_to_code_page)
+				if is_four_byte_code_page (a_to_code_page) then
+					l_converted := pointer_to_string_32 (l_pointer, l_out_count)
+					if not l_converted.is_empty then
+						if bom_little_endian (l_converted.code (1)) then
+							l_converted := l_converted.substring (2, l_converted.count)
+							if l_no_endian and then not is_little_endian then
+								l_converted := string_32_switch_endian (l_converted)
+							end
+						elseif bom_big_endian (l_converted.code (1)) then
+							l_converted := l_converted.substring (2, l_converted.count)
+							if l_no_endian and then is_little_endian then
+								l_converted := string_32_switch_endian (l_converted)
 							end
 						end
-					elseif is_two_byte_code_page (a_to_code_page) then
-						l_converted := pointer_to_wide_string (l_pointer, l_out_count)
-						if not l_converted.is_empty then
-							if bom_little_endian (l_converted.code (1)) then
-								l_converted := l_converted.substring (2, l_converted.count)
-								if l_no_endian and then not is_little_endian then
-									l_converted := string_16_switch_endian (l_converted)
-								end
-							elseif bom_big_endian (l_converted.code (1)) then
-								l_converted := l_converted.substring (2, l_converted.count)
-								if l_no_endian and then is_little_endian then
-									l_converted := string_16_switch_endian (l_converted)
-								end
-							end
-						end
-						last_was_wide_string := True
-					else
-						l_converted := pointer_to_multi_byte (l_pointer, l_out_count)
 					end
+				elseif is_two_byte_code_page (a_to_code_page) then
+					l_converted := pointer_to_wide_string (l_pointer, l_out_count)
+					if not l_converted.is_empty then
+						if bom_little_endian (l_converted.code (1)) then
+							l_converted := l_converted.substring (2, l_converted.count)
+							if l_no_endian and then not is_little_endian then
+								l_converted := string_16_switch_endian (l_converted)
+							end
+						elseif bom_big_endian (l_converted.code (1)) then
+							l_converted := l_converted.substring (2, l_converted.count)
+							if l_no_endian and then is_little_endian then
+								l_converted := string_16_switch_endian (l_converted)
+							end
+						end
+					end
+					last_was_wide_string := True
 				else
-					check
-						l_pointer_not_void: l_pointer /= Void
-					end
+					l_converted := pointer_to_multi_byte (l_pointer, l_out_count)
 				end
 				last_converted_string := l_converted
 				if l_pointer /= Void then
@@ -119,8 +114,8 @@ feature -- String encoding convertion
 			if l_pointer /= Void then
 				l_pointer.memory_free
 			end
-			l_failure ?= exception_manager.last_exception.original
-			if l_failure /= Void then
+			l_exception := exception_manager.last_exception
+			if l_exception /= Void and then {l_failure: CONVERSION_FAILURE} l_exception.original then
 					-- In the future, a proper mechanism should be worked out
 					-- to reflect such internal errors. For now the rescue
 					-- is mostly for debugging.

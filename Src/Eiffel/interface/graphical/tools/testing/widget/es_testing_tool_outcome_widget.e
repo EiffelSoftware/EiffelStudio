@@ -234,22 +234,18 @@ feature {NONE} -- Implementation
 		local
 			l_pos: INTEGER
 			l_label: EV_GRID_LABEL_ITEM
+			l_link_label: EVS_GRID_LINK_LABEL_ITEM
 			l_row: EV_GRID_ROW
-			l_font: EV_FONT
 		do
 			l_pos := a_parent.index + a_parent.subrow_count_recursive + 1
 			grid.insert_new_row_parented (l_pos, a_parent)
 			l_row := grid.row (l_pos)
 			create l_label.make_with_text (a_name)
-			l_label.pointer_double_press_actions.force_extend (agent show_text (a_text))
 			l_row.set_item (1, l_label)
-			create l_label
-			create l_font
-			l_font.set_shape ({EV_FONT_CONSTANTS}.shape_italic)
-			l_label.set_font (l_font)
-			l_label.set_text ("double click to view")
-			l_label.pointer_double_press_actions.force_extend (agent show_text (a_text))
-			l_row.set_item (2, l_label)
+
+			create l_link_label.make_with_text (locale.translation (l_click_to_view))
+			l_link_label.select_actions.extend (agent show_text (a_text))
+			l_row.set_item (2, l_link_label)
 		end
 
 	add_exception_details (a_parent: EV_GRID_ROW; a_exception: !EQA_TEST_INVOCATION_EXCEPTION)
@@ -364,9 +360,10 @@ feature {NONE} -- Factory
 feature {NONE} -- Internationalization
 
 	t_title: !STRING = "Outcomes"
+	l_click_to_view: !STRING = "Click here to view"
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

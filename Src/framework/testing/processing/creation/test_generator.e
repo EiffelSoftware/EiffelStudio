@@ -158,6 +158,7 @@ feature {NONE} -- Basic operations
 			l_total: INTEGER
 			l_progress: REAL
 			l_file: ?KI_TEXT_OUTPUT_STREAM
+			l_cancel: BOOLEAN
 		do
 			is_finished := is_stop_requested
 			if current_task /= Void and then current_task.has_next_step then
@@ -167,12 +168,27 @@ feature {NONE} -- Basic operations
 					l_total := time_out.second_count
 					l_progress := {REAL} 1.0
 					if l_total > 0 then
-						l_progress := l_progress - error_handler.remaining_time.second_count/l_total
+						if error_handler.remaining_time /= Void then
+							l_progress := l_progress - error_handler.remaining_time.second_count/l_total
+						else
+							l_progress := l_progress - error_handler.counter.to_integer_32/time_out.minute
+						end
 					end
 					internal_progress := {REAL} 0.1 + ({REAL} 0.50)* (l_progress)
 				end
 
-				if is_stop_requested or (is_executing and then error_handler.remaining_time.second_count <= 0) then
+				if is_stop_requested then
+					l_cancel := True
+				elseif is_executing then
+							-- Fix to test a specific number of random tests through AutoTest
+					if time_out.minute > 99 then
+						l_cancel := error_handler.counter = 0
+					else
+						l_cancel := error_handler.remaining_time.second_count <= 0
+					end
+				end
+
+				if l_cancel then
 					current_task.cancel
 				else
 					current_task.step
@@ -184,6 +200,9 @@ feature {NONE} -- Basic operations
 			elseif is_executing then
 				if current_task = Void then
 					error_handler.report_random_testing
+					if time_out.minute > 99 then
+						error_handler.set_counter (time_out.minute.to_natural_32)
+					end
 					execute_random_tests
 				else
 					current_task := Void
@@ -563,7 +582,9 @@ feature{NONE} -- Test case generation and execution
 			if time_left.second_count < 0 then
 				create time_left.make (0, 0, 0, 0, 0, 0)
 			end
-			error_handler.set_remaining_time (time_left)
+			if time_out.minute < 100 then
+				error_handler.set_remaining_time (time_left)
+			end
 		ensure
 			remaining_time_set: error_handler.remaining_time /= Void
 		end
@@ -816,7 +837,7 @@ invariant
 	not_running_implies_status_compiling: not is_running implies (status = compile_status_code)
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

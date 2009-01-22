@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			create name_cache.make_from_string (default_name)
 			Precursor (a_preference)
 			has_prepare_cache := a_preference.prepare_routine.value
-			has_clean_cache := a_preference.prepare_routine.value
+			has_clean_cache := a_preference.clean_routine.value
 		end
 
 feature -- Access

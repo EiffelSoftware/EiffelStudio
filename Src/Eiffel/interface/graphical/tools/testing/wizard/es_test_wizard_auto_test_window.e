@@ -70,7 +70,7 @@ feature {NONE} -- Initialization
 
 			create seed
 			seed.set_minimum_width (170)
-			seed.value_range.resize_exactly (1, {INTEGER_32}.max_value)
+			seed.value_range.resize_exactly (0, {INTEGER_32}.max_value)
 			create ddmin_checkbox
 			create slicing_checkbox
 			create html_output

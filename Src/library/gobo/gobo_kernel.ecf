@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="gobo_kernel" uuid="9DC10612-E326-4FB8-B773-92E0BDC2AD44" library_target="gobo_kernel">
+	<target name="gobo_kernel">
+		<description>gobo kernel library</description>
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/\.svn</exclude>
+			<exclude>/hact$</exclude>
+			<exclude>/se$</exclude>
+			<exclude>/ve$</exclude>
+			<exclude>/ge$</exclude>
+			<exclude>/base$</exclude>
+			<exclude>/cvs$</exclude>
+			<exclude>/free_elks$</exclude>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/Documentation$</exclude>
+		</file_rule>
+		<option namespace="Gobo.Library">
+		</option>
+		<setting name="dotnet_naming_convention" value="true"/>
+		<library name="eiffelbase" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="eiffeltime" location="$ISE_LIBRARY\library\time\time.ecf"/>
+		<assembly name="eiffelsoftware.runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
+		<cluster name="kernel" location="svn\library\kernel\" recursive="true">
+			<option namespace="Kernel">
+			</option>
+			<file_rule>
+				<exclude>/unicode/uc_string.e$</exclude>
+				<exclude>/unicode/uc_character.e$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="override" location="override\library\kernel" recursive="true"/>
+	</target>
+</system>

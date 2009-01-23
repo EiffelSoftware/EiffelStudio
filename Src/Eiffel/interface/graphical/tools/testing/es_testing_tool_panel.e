@@ -559,7 +559,7 @@ feature {NONE} -- Events: wizard
 			l_uuid: UUID
 			l_wizard: ES_TEST_WIZARD_MANAGER
 		do
-			if test_suite.is_service_available then
+			if test_suite.is_service_available and then test_suite.service.is_project_initialized then
 				l_project := test_suite.service.eiffel_project
 				if test_suite.service.is_project_initialized then
 					create l_uuid.make_from_string (testing_library_uuid)
@@ -686,9 +686,9 @@ feature {NONE} -- Events: test execution
 			l_conf: TEST_EXECUTOR_CONF
 		do
 			if a_list /= Void then
-				create l_conf.make_with_tests (a_list, a_type = debug_executor_type)
+				create l_conf.make_with_tests (a_list, a_type ~ debug_executor_type)
 			else
-				create l_conf.make (a_type = debug_executor_type)
+				create l_conf.make (a_type ~ debug_executor_type)
 			end
 			launch_processor (a_type, l_conf, False)
 		end

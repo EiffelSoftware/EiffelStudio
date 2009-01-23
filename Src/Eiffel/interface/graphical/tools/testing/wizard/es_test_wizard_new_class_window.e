@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			l_hsep: EV_HORIZONTAL_SEPARATOR
 			l_vsep: EV_VERTICAL_SEPARATOR
 			l_hbox: EV_HORIZONTAL_BOX
-			l_cell: EV_VERTICAL_BOX
+			l_vbox: EV_VERTICAL_BOX
 		do
 			l_parent := initialize_container (choice_box)
 
@@ -55,18 +55,20 @@ feature {NONE} -- Initialization
 			l_hbox.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
 			build_class_tree (l_hbox)
 
+			create l_vbox
+			build_checkboxes (l_vbox)
+			l_vbox.extend (create {EV_CELL})
+
+
 			if wizard_information.is_manual_conf then
 				create l_vsep
 				l_hbox.extend (l_vsep)
 				l_hbox.disable_item_expand (l_vsep)
-				build_checkboxes (l_hbox)
 			else
-				create l_cell
-				build_checkboxes (l_cell)
-				l_hbox.extend (l_cell)
-				l_hbox.disable_item_expand (l_cell)
-				l_cell.hide
+				l_vbox.hide
 			end
+			l_hbox.extend (l_vbox)
+			l_hbox.disable_item_expand (l_vbox)
 
 			l_parent.extend (l_hbox)
 
@@ -78,11 +80,14 @@ feature {NONE} -- Initialization
 		local
 			l_label: EV_LABEL
 			l_hb: EV_HORIZONTAL_BOX
+			l_prefix: BOOLEAN
 		do
+			l_prefix := conf.is_multiple_new_classes
+
 			create l_hb
 			l_hb.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
 			create l_label
-			if wizard_information.is_generator_conf then
+			if l_prefix then
 				l_label.set_text (locale_formatter.translation (l_class_name_prefix))
 			else
 				l_label.set_text (locale_formatter.translation (l_class_name))
@@ -93,7 +98,23 @@ feature {NONE} -- Initialization
 			create class_name.make (create {EV_TEXT_FIELD}, agent validate_class_name)
 			class_name.set_entry_formatter (agent {!STRING_32}.as_upper)
 			class_name.valid_state_changed_actions.extend (agent on_valid_state_changed)
+			class_name.set_entry_validation (
+				agent (a_entry: !STRING_32): BOOLEAN
+					do
+						if a_entry.is_empty then
+							Result := True
+						else
+							class_name_validator.validate_class_name (a_entry.to_string_8.as_attached)
+							Result := class_name_validator.is_valid
+						end
+					end)
 			l_hb.extend (class_name)
+
+			if l_prefix then
+				create l_label.make_with_text (multiple_class_suffix)
+				l_hb.extend (l_label)
+				l_hb.disable_item_expand (l_label)
+			end
 
 			a_parent.extend (l_hb)
 			a_parent.disable_item_expand (l_hb)
@@ -262,6 +283,9 @@ feature {NONE} -- Access: widgets
 	system_level_test_checkbox: EV_CHECK_BUTTON
 			-- Checkbox for creating a system level test
 
+	class_name_example: EV_LABEL
+			-- Label showing example class name for given prefix.
+
 feature {NONE} -- Status report
 
 	is_valid: BOOLEAN
@@ -278,9 +302,6 @@ feature {NONE} -- Status report
 
 	is_cluster_valid: BOOLEAN
 			-- Is choosen cluster valid?
-
-	is_validating_class_name: BOOLEAN
-			-- Is `on_validate_class_name' already called?
 
 feature {NONE} -- Events
 
@@ -442,6 +463,7 @@ feature {NONE} -- Basic operations
 feature {NONE} -- Constants
 
 	default_class_name: STRING = "NEW_TEST_CLASS"
+	multiple_class_suffix: STRING = "_001"
 
 feature {NONE} -- Internationalization
 
@@ -449,7 +471,7 @@ feature {NONE} -- Internationalization
 	t_subtitle: STRING = "Define properties of new test class"
 
 	l_class_name: STRING = "Class name: "
-	l_class_name_prefix: STRING = "Prefix for new class names"
+	l_class_name_prefix: STRING = "Class name prefix: "
 	l_select_cluster: STRING = "Select cluster:"
 
 	tt_new_cluster: STRING = "Create new cluster"

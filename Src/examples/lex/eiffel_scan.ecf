@@ -1,12 +1,18 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="eiffel_scan" uuid="0B80447F-59D4-4A57-B683-65906CC4D778">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="eiffel_scan" uuid="0B80447F-59D4-4A57-B683-65906CC4D778">
 	<target name="common" abstract="true">
-		<root cluster="root_cluster" class="EIFFEL_SCAN" feature="make"/>
-		<option warning="true">
-			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+		<root cluster="root_cluster" class="APPLICATION" feature="make"/>
+		<option debug="true" warning="true" full_class_checking="true" is_attached_by_default="true" is_void_safe="true">
+			<debug name="lex_output" enabled="true"/>
+			<assertions precondition="true"/>
 		</option>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="lex" location="$ISE_LIBRARY\library\lex\lex.ecf"/>
-		<precompile name="precompile" location="$ISE_PRECOMP\base.ecf"/>
+		<precompile name="base_pre" location="$ISE_PRECOMP\base-safe.ecf" readonly="false"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="false"/>
+		<library name="lex" location="$ISE_LIBRARY\library\lex-safe\lex-safe.ecf" readonly="false">
+			<option debug="true">
+				<debug name="lex_output" enabled="true"/>
+			</option>
+		</library>
 		<cluster name="root_cluster" location=".\"/>
 	</target>
 	<target name="classic" extends="common">

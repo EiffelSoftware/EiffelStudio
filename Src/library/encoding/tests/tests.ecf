@@ -4,8 +4,8 @@
 	<target name="encoding-tests">
 		<root all_classes="true"/>
 		<file_rule>
-			<exclude>/\.svn</exclude>
-			<exclude>/tests</exclude>
+			<exclude>/\.svn$</exclude>
+			<exclude>/EIFGENs$</exclude>
 		</file_rule>
 		<option syntax_level="1" namespace="EiffelSoftware.Library">
 		</option>

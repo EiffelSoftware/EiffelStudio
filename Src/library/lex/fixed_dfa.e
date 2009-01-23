@@ -36,11 +36,11 @@ feature -- Initialization
 			fixed_make (i, s);
 			greatest_input := i;
 			nb_states := s
-		end; 
+		end;
 
 feature -- Access
 
-	find_successor (source, input_doc: INTEGER): STATE_OF_DFA
+	find_successor (source, input_doc: INTEGER): ?STATE_OF_DFA
 			-- Successor of source on `input_doc';
 			-- void if no successor
 		require else
@@ -59,7 +59,7 @@ feature -- Status setting
 		do
 			create current_state.make (greatest_input);
 			add_right (current_state)
-		end; 
+		end;
 
 	set_transition (source, input_doc, target: INTEGER)
 			-- Set transition from `source' to `target' on `input_doc'.
@@ -75,7 +75,7 @@ feature -- Status setting
 			-- Make `state' final for regular expression `f'.
 		do
 			f_set_final (state, f)
-		end; 
+		end;
 
 feature -- Output
 
@@ -84,6 +84,7 @@ feature -- Output
 		local
 			i,j, index: INTEGER;
 			value: STATE_OF_DFA
+			l_array: ?ARRAY [INTEGER]
 		do
 			io.put_string (" FIXED_DFA%N");
 			from
@@ -95,16 +96,18 @@ feature -- Output
 				io.put_integer (j);
 				value := item (j);
 				if value.final /= 0 then
+					l_array := value.final_array
+					check l_array_attached: l_array /= Void end
 					io.put_string (" final state of token type ");
 					io.put_integer (value.final);
-					if value.final_array.count > 1 then
+					if l_array.count > 1 then
 						io.put_string ("%N and also of token types ");
 						from
-							i := value.final_array.lower + 1
+							i := l_array.lower + 1
 						until
-							i > value.final_array.upper
+							i > l_array.upper
 						loop
-							io.put_integer (value.final_array.item (i));
+							io.put_integer (l_array.item (i));
 							io.put_string (" ");
 							i := i + 1
 						end
@@ -140,7 +143,7 @@ feature -- Output
 				io.new_line
 			end;
 			io.put_string (" End FIXED DFA.%N")
-		end; 
+		end;
 
 feature {NONE} -- Implementation
 
@@ -150,21 +153,17 @@ feature {NONE} -- Implementation
 			-- through the automaton)
 		do
 			Result := item (start_number)
-		end; 
+		end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class FIXED_DFA
-

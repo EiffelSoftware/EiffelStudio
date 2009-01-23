@@ -10,30 +10,43 @@ note
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class TEXT_FILLER 
+deferred class TEXT_FILLER
 
 feature -- Access
 
-	buffer: STRING;
+	buffer: STRING
 			-- Buffer filled by fill_buffer
+		attribute
+			create Result.make_empty
+		end
 
-	file_name : STRING
+	file_name : ?STRING
 			-- Name of input file
+		local
+			l_file: like file
 		do
 			if source_is_file then
-				Result := file.name
+				l_file := file
+				check l_file_attached: l_file /= Void end
+				Result := l_file.name
 			end
-		end; 
+		end;
 
-	line_nb_array: LEX_ARRAY [INTEGER];
+	line_nb_array: LEX_ARRAY [INTEGER]
 			-- Array recording the line numbers of each buffered
 			-- character (the line number of the `i'-th character in the
 			-- buffer is the `i'-th entry of `line_nb_array')
+		attribute
+			create Result.make (1, 0)
+		end
 
-	column_nb_array: LEX_ARRAY [INTEGER];
+	column_nb_array: LEX_ARRAY [INTEGER]
 			-- Array recording the column numbers of each buffered
 			-- character (the column number of the `i'-th character in the
 			-- buffer is the `i'-th entry of `column_nb_array')
+		attribute
+			create Result.make (1, 0)
+		end
 
 	char_buffered_number: INTEGER;
 			-- Number of characters read and written
@@ -53,7 +66,7 @@ feature -- Status setting
 		ensure
 			buffer_size = buf;
 			line_length = lin
-		end; 
+		end;
 
 	resize_and_fill_buffer (buf, b: INTEGER)
 			-- When increasing `buffer_size': resize the buffer and then
@@ -104,7 +117,7 @@ feature -- Status setting
 			end
 		ensure
 			buffer_size = buf
-		end; 
+		end;
 
 	exclude (i, j: INTEGER)
 			-- Discard columns `i' to `j' from the input.
@@ -115,10 +128,13 @@ feature -- Status setting
 			j_null_or_greater_than_i: j = 0 or j >= i
 		local
 			index, last_index: INTEGER
+			l_mask: like mask
 		do
-			if mask = Void then
-				create mask.make (line_length);
-				mask.all_true
+			l_mask := mask
+			if l_mask = Void then
+				create l_mask.make (line_length);
+				l_mask.all_true
+				mask := l_mask
 			end
 			if j = 0 then
 				last_index := line_length + 1
@@ -130,25 +146,28 @@ feature -- Status setting
 			until
 				index = last_index
 			loop
-				mask.remove (index);
+				l_mask.remove (index);
 				index := index + 1
 			end
-		end; 
+		end;
 
 	set_file (f_name: STRING)
 			-- Use `f_name' as input file.
 		require
 			file_name_not_void: f_name /= Void
+		local
+			l_file: like file
 		do
 			close_file;
-			create file.make_open_read (f_name);
+			create l_file.make_open_read (f_name);
+			file := l_file
 			reset;
 			char_buffered_number := 0;
 			source_is_file := True;
-			source_size := file.count;
+			source_size := l_file.count;
 			initialize;
 			reset_data
-		end; 
+		end;
 
 	set_string (s: STRING)
 			-- Use `s' as the input string.
@@ -160,10 +179,10 @@ feature -- Status setting
 			reset;
 			char_buffered_number := 0;
 			source_is_file := False;
-			source_size := string.capacity;
+			source_size := s.capacity;
 			initialize;
 			reset_data
-		end; 
+		end;
 
 	fill_buffer (b: INTEGER)
 			-- Copy the characters from the `b'+1-st to the last one in
@@ -184,19 +203,22 @@ feature -- Status setting
 			else
 				fill_from_string (b, buffer_size, buffer_size)
 			end
-		end; 
+		end;
 
 	fill_whole_buffer
 			-- Fill with new characters.
 		do
 			fill_buffer (buffer_size)
-		end 
+		end
 
 	close_file
 			-- Close input file if any.
+		local
+			l_file: like file
 		do
-			if file /= Void and then not file.is_closed then
-				file.close
+			l_file := file
+			if l_file /= Void and then not l_file.is_closed then
+				l_file.close
 			end
 			file := Void
 		ensure
@@ -216,13 +238,13 @@ feature {NONE} -- Implementation
 	source_size: INTEGER;
 			-- Character number in file or string source
 
-	file: PLAIN_TEXT_FILE
+	file: ?PLAIN_TEXT_FILE
 			-- File to be buffered
 
-	string: STRING;
+	string: ?STRING;
 			-- String to be buffered
 
-	mask: FIXED_INTEGER_SET;
+	mask: ?FIXED_INTEGER_SET;
 			-- Set of readable columns
 
 	source_is_file: BOOLEAN;
@@ -243,7 +265,7 @@ feature {NONE} -- Implementation
 	reset_data
 			-- Initialize datas when set_file or set_string is used.
 		deferred
-		end 
+		end
 
 	reset
 			-- Initialize character position in document.
@@ -266,15 +288,21 @@ feature {NONE} -- Implementation
 			valid_old_size: old_size >= 0 and old_size <= buffer_size;
 			valid_new_size: new_size >= 0 and new_size <= buffer_size;
 			file_not_void: file /= Void
+			source_is_file: source_is_file
 		local
 			c: CHARACTER;
 			i, nb: INTEGER;
 			eof: BOOLEAN;
 			lines, columns: LEX_ARRAY [INTEGER];
-			cmask: FIXED_INTEGER_SET;
+			cmask: like mask;
 			file_nb: INTEGER;
-			file_last_string: STRING
+			file_last_string: ?STRING
+			l_file: like file
 		do
+			l_file := file
+				-- Precondition checks if `file' is attached, just adding check for Void-Safety.
+			check l_file_attached: l_file /= Void end
+
 			lines := line_nb_array;
 			columns := column_nb_array;
 			if position /= 0 and position < old_size then
@@ -284,10 +312,13 @@ feature {NONE} -- Implementation
 			end;
 			nb := old_size - position;
 			i := nb + 1;
-			if mask = Void then
+
+			cmask := mask
+			if cmask = Void then
 				file_nb := new_size - nb;
-				file.read_stream (file_nb);
-				file_last_string := file.last_string;
+				l_file.read_stream (file_nb);
+				file_last_string := l_file.last_string;
+				check file_last_string_attached: file_last_string /= Void end
 				if file_last_string.count < file_nb then
 					file_nb := file_last_string.count;
 					buffer.put ('%/255/', i + file_nb);
@@ -319,20 +350,18 @@ feature {NONE} -- Implementation
 					i := i + 1
 				end
 			else
-				from
-					cmask := mask
-				until
+				from until
 					eof or i > new_size
 				loop
-					if file.end_of_file then
+					if l_file.end_of_file then
 						buffer.put ('%/255/', i);
 						lines.put (-1, i);
 						columns.put (-1, i);
 						close_file;
 						eof := True
 					else
-						file.read_character;
-						c := file.last_character;
+						l_file.read_character;
+						c := l_file.last_character;
 						if c = '%N' then
 							buffer.put (c, i);
 							lines.put (line_number, i);
@@ -352,7 +381,7 @@ feature {NONE} -- Implementation
 							end;
 							column_number := column_number + 1
 						end
-					end	
+					end
 				end
 				char_buffered_number := char_buffered_number + i - nb
 			end
@@ -371,14 +400,19 @@ feature {NONE} -- Implementation
 			valid_old_size: old_size >= 0 and old_size <= buffer_size;
 			valid_new_size: new_size >= 0 and new_size <= buffer_size;
 			string_not_void: string /= Void
+			not_source_is_file: not source_is_file
 		local
 			c: CHARACTER;
 			i, nb: INTEGER;
 			eof: BOOLEAN;
 			lines, columns: LEX_ARRAY [INTEGER];
-			cmask: FIXED_INTEGER_SET;
+			cmask: like mask;
 			str_nb: INTEGER
+			l_string: like string
 		do
+			l_string := string
+			check l_string_attached: l_string /= Void end
+
 			lines := line_nb_array;
 			columns := column_nb_array;
 			if position /= 0 and position < old_size then
@@ -388,16 +422,17 @@ feature {NONE} -- Implementation
 			end;
 			nb := old_size - position;
 			i := nb + 1;
-			if mask = Void then
+			cmask := mask
+			if cmask = Void then
 				str_nb := new_size - nb;
-				if string.count - position_in_string < str_nb then
-					str_nb := string.count - position_in_string
+				if l_string.count - position_in_string < str_nb then
+					str_nb := l_string.count - position_in_string
 					buffer.put ('%/255/', i + str_nb);
 					char_buffered_number := char_buffered_number + str_nb + 1
 				else
 					char_buffered_number := char_buffered_number + str_nb
 				end;
-				buffer.subcopy (string, position_in_string + 1, position_in_string + str_nb, i)
+				buffer.subcopy (l_string, position_in_string + 1, position_in_string + str_nb, i)
 				position_in_string := position_in_string + str_nb;
 				from
 				until
@@ -421,19 +456,17 @@ feature {NONE} -- Implementation
 					i := i + 1
 				end
 			else
-				from
-					cmask := mask
-				until
+				from until
 					eof or i > new_size
 				loop
 					position_in_string := position_in_string + 1
-					if position_in_string > string.count then
+					if position_in_string > l_string.count then
 						buffer.put ('%/255/', i);
 						lines.put (-1, i);
 						columns.put (-1, i);
 						eof := True
 					else
-						c := string.item (position_in_string);
+						c := l_string.item (position_in_string);
 						if c = '%N' then
 							buffer.put (c, i);
 							lines.put (line_number, i);
@@ -453,7 +486,7 @@ feature {NONE} -- Implementation
 							end;
 							column_number := column_number + 1
 						end
-					end	
+					end
 				end
 				char_buffered_number := char_buffered_number + i - nb
 			end
@@ -471,18 +504,14 @@ feature {NONE} -- Implementation
 -- Do not forget to create the buffers before using this class.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class TEXT_FILLER
-
+end

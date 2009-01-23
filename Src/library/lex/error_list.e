@@ -1,9 +1,7 @@
 note
-
 	description:
 		"Lists of error messages for screen display"
 	legal: "See notice at end of class.";
-
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -29,8 +27,8 @@ feature -- Initialization
 			linked_list_make;
 			debug ("lex_output")
 				display := True
-			end		
-		end; 
+			end
+		end;
 
 feature -- Status setting
 
@@ -40,7 +38,7 @@ feature -- Status setting
 			display := True
 		ensure
 			display_enabled: display
-		end; 
+		end;
 
 	do_not_display_message
 			-- From now, do not display new messages on standard output.
@@ -48,12 +46,14 @@ feature -- Status setting
 			display := False
 		ensure
 			display_disabled: not display
-		end; 
+		end;
 
 feature -- Element change
 
 	add_message (message: STRING)
 			-- Add message in list and display it or not.
+		require
+			message_attached: message /= Void
 		do
 			finish;
 			if (before or is_empty) or else not message.is_equal (item) then
@@ -63,7 +63,7 @@ feature -- Element change
 					output.new_line
 				end
 			end
-		end; 
+		end;
 
 feature {NONE} -- Implementation
 
@@ -79,18 +79,14 @@ feature {NONE} -- Implementation
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class ERROR_LIST
-
+end

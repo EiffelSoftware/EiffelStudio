@@ -1,9 +1,7 @@
 note
-
 	description:
 		"Sets of integers with a finite number of items"
 	legal: "See notice at end of class.";
-
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -21,7 +19,7 @@ class FIXED_INTEGER_SET inherit
 
 create
 	make
-	
+
 create {FIXED_INTEGER_SET}
 	boolean_set_make
 
@@ -83,7 +81,7 @@ feature -- Access
 				else
 					Result := Result + 1
 				end
-			end	
+			end
 		end
 
 	largest: INTEGER
@@ -161,7 +159,6 @@ feature -- Conversion
 			Result := area
 		end;
 
-
 feature -- Output
 
 	print
@@ -186,22 +183,17 @@ feature -- Output
 		end;
 
 invariant
-
 	positive_size: count > 0
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class FIXED_INTEGER_SET
-
+end

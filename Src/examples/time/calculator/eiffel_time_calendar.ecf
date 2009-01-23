@@ -3,8 +3,6 @@
 	<target name="common" abstract="true">
 		<root class="CALCULATOR" feature="make"/>
 		<setting name="console_application" value="true"/>
-	</target>
-	<target name="classic" extends="common">
 		<option warning="true" full_class_checking="true" is_attached_by_default="true" is_void_safe="true" syntax_level="1">
 			<assertions precondition="true"/>
 		</option>
@@ -13,11 +11,9 @@
 		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
 		<cluster name="root_cluster" location=".\"/>
 	</target>
+	<target name="classic" extends="common">
+	</target>
 	<target name="dotnet" extends="common">
 		<setting name="msil_generation" value="true"/>
-		<precompile name="base_pre" location="$ISE_PRECOMP\base.ecf"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
-		<cluster name="root_cluster" location=".\"/>
 	</target>
 </system>

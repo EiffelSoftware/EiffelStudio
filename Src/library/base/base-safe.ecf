@@ -7,7 +7,7 @@
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option full_class_checking="true" is_attached_by_default="true" is_void_safe="true" namespace="EiffelSoftware.Library" syntax_level="1">
+		<option full_class_checking="true" is_attached_by_default="true" is_void_safe="true" syntax_level="1" namespace="EiffelSoftware.Library">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<mapping old_name="REAL" new_name="REAL_32"/>
@@ -36,7 +36,6 @@
 			<file_rule>
 				<exclude>/support/c_string.e$</exclude>
 				<exclude>/structures/list/cell.e$</exclude>
-				<exclude>/structures/tree/fixed_tree.e</exclude>
 				<exclude>/kernel/immutable_string_32.e$</exclude>
 				<exclude>/kernel/immutable_string_8.e$</exclude>
 				<exclude>/kernel/string_32.e$</exclude>

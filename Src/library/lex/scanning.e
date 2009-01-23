@@ -37,25 +37,29 @@ feature -- Initialization
 			retrieve_analyzer (store_file_name)
 		ensure
 			analyzer_exists: analyzer /= Void
-		end; 
+		end;
 
 feature -- Status setting
 
 	analyze (input_file_name: STRING)
 			-- Perform lexical analysis on file
 			-- of name `input_file_name'.
+		local
+			l_analyzer: like analyzer
 		do
+			l_analyzer := analyzer
+			check l_analyzer_attached: l_analyzer /= Void end
 			from
-				analyzer.set_file (input_file_name);
+				l_analyzer.set_file (input_file_name);
 				begin_analysis
 			until
-				analyzer.end_of_text
+				l_analyzer.end_of_text
 			loop
-				analyzer.get_any_token;
-				do_a_token (analyzer.last_token)
+				l_analyzer.get_any_token;
+				do_a_token (l_analyzer.last_token)
 			end;
 			end_analysis
-		end; 
+		end;
 
 feature -- Output
 
@@ -111,7 +115,7 @@ feature -- Output
 					io.new_line
 				end
 			end
-		end 
+		end
 
 feature {NONE} -- Implementation
 
@@ -125,14 +129,14 @@ feature {NONE} -- Implementation
 			store_analyzer (store_file_name)
 		ensure
 			analyzer_exists: analyzer /= Void
-		end 
+		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

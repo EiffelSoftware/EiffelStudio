@@ -40,11 +40,11 @@ feature -- Initialization
 		do
 			link_make;
 			greatest_input := i
-		end; 
+		end;
 
 feature -- Access
 
-	find_successor (source, input_doc: INTEGER): STATE_OF_DFA
+	find_successor (source, input_doc: INTEGER): ?STATE_OF_DFA
 			-- Successor of `source' for `input_doc';
 			-- void if no successor
 		require else
@@ -59,7 +59,7 @@ feature -- Access
 			go_i_th (memory)
 		ensure then
 			same_index: old index = index
-		end; 
+		end;
 
 feature -- Status setting
 
@@ -75,7 +75,7 @@ feature -- Status setting
 			finish
 		ensure then
 			current_state_is_last: islast
-		end; 
+		end;
 
 	set_transition (source, input_doc, target: INTEGER)
 		-- Make a transition from `source' to `target'
@@ -102,7 +102,7 @@ feature -- Status setting
 			-- Make `state' a final state for regular expression `f'.
 		do
 			l_set_final (state, f)
-		end 
+		end
 
 feature -- Duplication
 
@@ -135,18 +135,18 @@ feature {NONE} -- Implementation
 			go_i_th (memory)
 		ensure then
 			index_unchanged: index = old index
-		end 
+		end
 
 invariant
 
 	nb_states_right: nb_states = count
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

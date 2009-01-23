@@ -42,9 +42,9 @@ feature -- Initialization
 			greatest_input := i;
 			create input_array.make (0, greatest_input);
 			create final_array.make (1, nb_states);
-			array_make (1, nb_states);
 			create keywords_list.make
-		end; 
+			array_make (1, nb_states);
+		end;
 
 feature -- Access
 
@@ -68,13 +68,13 @@ feature -- Status setting
 			-- Direct the active transitions to include letters.
 		do
 			has_letters := True
-		end; 
+		end;
 
 	set_final (s, r: INTEGER)
 			-- Make `s' the final state of regular expression `r'.
 		do
 			final_array.put (r, s)
-		end; 
+		end;
 
 	set_transition (source, input_doc, target: INTEGER)
 			-- Set transition from `source' to `target' on `input_doc'.
@@ -91,7 +91,7 @@ feature -- Status setting
 				input_array.put (set, input_doc)
 			end;
 			input_array.item (input_doc).put (source)
-		end; 
+		end;
 
 	set_e_transition (source, target: INTEGER)
 			-- Set epsilon transition from `source' to `target'.
@@ -104,7 +104,7 @@ feature -- Status setting
 			end;
 			item (source).put_right (target);
 			item (source).forth
-		end; 
+		end;
 
 feature -- Element change
 
@@ -113,7 +113,7 @@ feature -- Element change
 		do
 			keywords_list.finish;
 			keywords_list.put_right (word)
-		end; 
+		end;
 
 	include (fa: PDFA; shift: INTEGER)
 			-- Copy `fa' with state numbers shifted
@@ -150,7 +150,7 @@ feature -- Element change
 			if fa.has_letters then
 				has_letters := True
 			end
-		end; 
+		end;
 
 	remove_case_sensitiveness
 			-- Remove case sensitiveness.
@@ -182,7 +182,7 @@ feature -- Element change
 					end
 				end
 			end
-		end; 
+		end;
 
 feature -- Removal
 
@@ -197,7 +197,7 @@ feature -- Removal
 			if input_array.item (input_doc) /= Void then
 				input_array.item (input_doc).remove (source)
 			end
-		end; 
+		end;
 
 feature -- Output
 
@@ -251,7 +251,7 @@ feature -- Output
 					io.new_line
 				end
 			end
-		end 
+		end
 
 feature {NONE} -- Implementation
 
@@ -293,10 +293,11 @@ feature {NONE} -- Implementation
 				end
 			end
 		ensure then
+			result_attached: Result /= Void
 			state_in_closure: Result.has (state)
-		end; 
+		end;
 
-	move (initial_set: FIXED_INTEGER_SET; i: INTEGER): FIXED_INTEGER_SET
+	move (initial_set: FIXED_INTEGER_SET; i: INTEGER): ?FIXED_INTEGER_SET
 			-- Set of NDFA states to which there is a transition on
 			-- input i from some NDFA state s of initial_set.
 			-- Void if the set if empty.
@@ -312,43 +313,58 @@ feature {NONE} -- Implementation
 					Result := Void
 				end
 			end
-		end; 
+		end;
 
 	initial_final_designation
 			-- Set the final and initial attributes of the dfa,
 			-- consistent with those of the current automaton.
-		require else
-			dfa_exists: dfa /= Void
 		local
 			index: INTEGER
+			l_dfa: like dfa
+			l_sets_list: like sets_list
+			l_array: like final_array
 		do
-			dfa.set_start (1);
+			l_dfa := dfa
+			l_sets_list := sets_list
+			l_array := final_array
+			check
+				l_dfa_attached: l_dfa /= Void
+				l_sets_list_attached: l_sets_list /= Void
+				l_array_attached: l_array /= Void
+			end
+			l_dfa.set_start (1);
 			from
 			until
 				index = nb_states
 			loop
 				index := index + 1;
-				if final_array.item (index) /= 0 then
+				if l_array.item (index) /= 0 then
 					from
-						sets_list.start
+						l_sets_list.start
 					until
-						sets_list.after or sets_list.is_empty
+						l_sets_list.after or l_sets_list.is_empty
 					loop
-						if sets_list.item.has (index) then
-							dfa_set_final (sets_list.index,
-									final_array.item (index));
+						if l_sets_list.item.has (index) then
+							dfa_set_final (l_sets_list.index,
+									l_array.item (index));
 						end;
-						sets_list.forth;
+						l_sets_list.forth;
 					end
 				end
 			end
-		end; 
+		end;
 
 	dfa_set_final (s, f: INTEGER)
 			-- Make `f' the `final' state for `s'.
+		require
+			dfa_attached: dfa /= Void
+		local
+			l_dfa: like dfa
 		do
-			dfa.item (s).set_final (final_array.item (f))
-		end; 
+			l_dfa := dfa
+			check l_dfa_attached: l_dfa /= Void end
+			l_dfa.item (s).set_final (final_array.item (f))
+		end;
 
 	e_include (fa: PDFA; shift: INTEGER)
 			-- Copy the fa epsilon transition in Current
@@ -378,9 +394,9 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
-		end; 
+		end;
 
-	find_successors (source, input_doc: INTEGER): LINKED_LIST [INTEGER]
+	find_successors (source, input_doc: INTEGER): ?LINKED_LIST [INTEGER]
 			-- Successors of `source' on `input_doc';
 			-- void if no successor
 		require else
@@ -391,22 +407,22 @@ feature {NONE} -- Implementation
 				create Result.make;
 				Result.put_right (source + 1)
 			end
-		end; 
+		end;
 
-	find_e_successors (source: INTEGER): LINKED_LIST [INTEGER]
+	find_e_successors (source: INTEGER): ?LINKED_LIST [INTEGER]
 			-- Epsilon successors of source;
 			-- Void if no successor
 		require else
 			source_in_automaton: source >= 1 and source <= nb_states
 		do
 			Result := item (source)
-		end; 
+		end;
 
 	set_state
 			-- This routine is deferred in NDFA,
 			-- but is useless in PDFA.
 		do
-		end 
+		end
 
 -- These PDFA have a very special structure.
 -- They are NDFA but for each state, only one successor is
@@ -423,11 +439,11 @@ feature {NONE} -- Implementation
 -- can be associated with Current.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

@@ -6,38 +6,36 @@ note
 -- is created according to the file  ``eiffel_token'' if not
 -- previously built and stored.
 
-class EIFFEL_SCAN
+class APPLICATION
 
 inherit
-	SCANNING
-		rename
-			make as scanning_make
-		redefine
-			analyze
-		end;
+	ARGUMENTS
 
 create
-	make
-
-feature {NONE} -- Initialization
 
 	make
-			-- Create a lexical analyser for Eiffel,
-		do
-			scanning_make;
-			build ("eiffel_lex", "eiffel_regular");
-		end
 
-feature -- Basic operations
+feature
 
-	analyze (file_name: STRING)
-			-- <Precursor>
+	make
+			-- Create a lexical analyser for Eiffel if none,
+			-- then use it to analyze the file of name
+			-- `file_name'.
+		local
+			file_name: STRING;
+			l_scanner: EIFFEL_SCAN
 		do
-			io.putstring ("Scanning file `");
-			io.putstring (file_name);
-			io.putstring ("'.%N");
-			Precursor (file_name)
-		end
+			if argument_count < 1 or else argument (1).is_empty then
+				io.error.putstring ("Usage: eiffel_scan eiffel_class_file.e%N")
+			else
+				file_name := argument (1);
+				if (create {RAW_FILE}.make (file_name)).exists then
+					create l_scanner.make
+					check l_scanner.initialized end
+					l_scanner.analyze (file_name)
+				end
+			end
+		end -- make
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -51,5 +49,4 @@ note
 		]"
 
 
-end -- class EIFFEL_SCAN
-
+end

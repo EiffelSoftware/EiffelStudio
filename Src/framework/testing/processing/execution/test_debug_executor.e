@@ -118,7 +118,7 @@ feature {NONE} -- Query
 	is_valid_typed_configuration (a_conf: like conf_type): BOOLEAN
 			-- <Precursor>
 		do
-			Result := Precursor (a_conf) and then a_conf.evaluator_count = 0
+			Result := Precursor (a_conf) and then a_conf.evaluator_count = 1
 		end
 
 feature {NONE} -- Implementation

@@ -134,6 +134,7 @@ feature -- Debug mode command
 			l_dyna_tools: ES_SHELL_TOOLS
 			l_tool: EB_TOOL
 			l_last_watch_tool: ES_WATCH_TOOL
+			l_testing_tool: EB_TOOL
 			l_refer_tool_content: SD_CONTENT
 			l_sd_button: SD_TOOL_BAR_ITEM
 			l_wt_lst: LINKED_SET [ES_WATCH_TOOL]
@@ -193,8 +194,10 @@ feature -- Debug mode command
 			l_tool := l_dyna_tools.tool ({ES_FEATURE_RELATION_TOOL}).panel
 			l_tool.content.set_tab_with (l_refer_tool_content, True)
 
-				--| Call stack tool (on right)
-			l_debugger_manager.call_stack_tool.panel.content.set_top ({SD_ENUMERATION}.right)
+
+				--| Testing tool to the right (which will be the actual position of the call stack tool)
+			l_testing_tool := develop_window.shell_tools.tool ({ES_TESTING_TOOL}).panel
+			l_testing_tool.content.set_top ({SD_ENUMERATION}.right)
 
 				--| Objects tool			
 			l_debugger_manager.objects_tool.panel.content.set_top ({SD_ENUMERATION}.bottom)
@@ -280,10 +283,17 @@ feature -- Debug mode command
 
 			-- We do this to make sure the minimized editor minized horizontally, otherwise the editor will be minimized vertically.
 
-			l_refer_tool_content := l_debugger_manager.call_stack_tool.panel.content
+
+			l_refer_tool_content := l_testing_tool.content
+
+				--| Adding favourites tool to the right of the testing tool (hidden)
 			l_tool := l_dyna_tools.tool ({ES_FAVORITES_TOOL}).panel
 			l_tool.content.set_tab_with (l_refer_tool_content, False)
 			l_tool.content.hide
+
+				--| Adding call stack tool to the left of the testing tool (which will appear in front)
+			l_tool := l_debugger_manager.call_stack_tool.panel
+			l_tool.content.set_tab_with (l_refer_tool_content, True)
 
 				--| Minimize all editors
 			from
@@ -405,6 +415,7 @@ feature {NONE} -- Implementation
 			l_tool_bar_content, l_tool_bar_content_2: SD_TOOL_BAR_CONTENT
 			l_no_locked_window: BOOLEAN
 			l_features_tool: ES_FEATURES_TOOL
+			l_testing_tool: EB_TOOL
 		do
 			l_no_locked_window := ((create {EV_ENVIRONMENT}).application.locked_window = Void)
 			if l_no_locked_window then
@@ -436,8 +447,10 @@ feature {NONE} -- Implementation
 
 			l_tool := develop_window.tools.favorites_tool
 			l_tool.content.set_top ({SD_ENUMERATION}.right)
+			l_testing_tool := develop_window.shell_tools.tool ({ES_TESTING_TOOL}).panel
+			l_testing_tool.content.set_tab_with (l_tool.content, True)
 			l_tool := l_features_tool.panel
-			l_tool.content.set_tab_with (develop_window.tools.favorites_tool.content, True)
+			l_tool.content.set_tab_with (l_testing_tool.content, True)
 			l_tool := develop_window.tools.cluster_tool
 			l_tool.content.set_tab_with (l_features_tool.panel.content, True)
 			l_tool.content.set_split_proportion (0.73)

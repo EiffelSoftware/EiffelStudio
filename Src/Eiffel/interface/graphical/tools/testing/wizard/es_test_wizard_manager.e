@@ -175,11 +175,17 @@ feature {NONE} -- Implementation
 			l_system: CONF_SYSTEM
 			l_target: CONF_TARGET
 			l_manager: EB_CLUSTER_MANAGER
+			l_name: STRING
 		do
 			l_target := a_project.universe.target
 			create l_factory
 			l_location := l_factory.new_location_from_full_path (testing_library_path, l_target)
-			l_library := l_factory.new_library ("testing", l_location, l_target)
+			if a_project.universe.group_of_name (testing_library_name) /= Void then
+				l_name := testing_library_name + "_library"
+			else
+				l_name := testing_library_name
+			end
+			l_library := l_factory.new_library (l_name, l_location, l_target)
 			l_library.set_classes (create {HASH_TABLE [CONF_CLASS, STRING]}.make (0))
 			l_system := l_factory.new_system_generate_uuid ("temp")
 			l_system.set_application_target (l_target)
@@ -196,6 +202,10 @@ feature {NONE} -- Implementation
 
 			launch_wizard
 		end
+
+feature {NONE} -- Constants
+
+	testing_library_name: STRING = "testing"
 
 feature {NONE} -- Internationalization
 

@@ -136,7 +136,7 @@ feature {NONE} -- Basic operations
 			l_proc: TEST_PROCESSOR_I
 			l_code: NATURAL
 		do
-			if test_suite.is_service_available then
+			if test_suite.is_service_available and then test_suite.service.is_project_initialized then
 				l_service := test_suite.service
 				l_registrar := l_service.processor_registrar
 				if l_registrar.is_valid_type (a_type, l_service) then
@@ -178,6 +178,9 @@ feature {NONE} -- Constants
 	processor_not_available_code: NATURAL = 2
 	processor_not_ready_code: NATURAL = 3
 	configuration_not_valid_code: NATURAL = 4
+
+	testing_library_uuid: !STRING = "B77B3A44-A1A9-4050-8DF9-053598561C33"
+	testing_library_path: !STRING = "$ISE_LIBRARY/library/testing/testing.ecf"
 
 feature {NONE} -- Internationalization
 

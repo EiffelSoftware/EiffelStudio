@@ -10,7 +10,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class 
+deferred class
 	EV_CONTAINER
 
 inherit
@@ -19,7 +19,7 @@ inherit
 			implementation,
 			is_in_default_state
 		end
-		
+
 	EV_PIXMAPABLE
 		rename
 			set_pixmap as set_background_pixmap,
@@ -78,11 +78,11 @@ feature -- Access
 		ensure
 			bridge_ok: Result = implementation.item
 		end
-		
+
 	count: INTEGER
 			-- Number of elements in `Current'.
 		require
-			not_destroyed: not is_destroyed	
+			not_destroyed: not is_destroyed
 		deferred
 		end
 
@@ -119,7 +119,7 @@ feature -- Access
 				cs.go_to (c)
 			end
 		end
-		
+
 	background_pixmap: EV_PIXMAP
 			-- `Result' is pixmap displayed on background of `Current'.
 			-- It is tessellated and fills whole of `Current'.
@@ -137,7 +137,7 @@ feature -- Status setting
 		do
 			implementation.merge_radio_button_groups (other)
 		end
-		
+
 	unmerge_radio_button_groups (other: EV_CONTAINER)
 			-- Remove `other' from radio button group of `Current'.
 			-- If no radio button of `other' was checked before removal
@@ -177,7 +177,7 @@ feature -- Status report
 		ensure
 			not_is_empty: Result /= Void implies not Result.is_empty
 		end
-		
+
 
 	writable: BOOLEAN
 			-- Is there a current item that may be modified?
@@ -232,7 +232,7 @@ feature -- Element change
 feature -- Measurement
 
 	client_width: INTEGER
-			-- Width of the area available to children in pixels. 
+			-- Width of the area available to children in pixels.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -240,9 +240,9 @@ feature -- Measurement
 		ensure
 			bridge_ok: Result = implementation.client_width
 		end
-	
+
 	client_height: INTEGER
-			-- Height of the area available to children in pixels. 
+			-- Height of the area available to children in pixels.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -250,7 +250,7 @@ feature -- Measurement
 		ensure
 			bridge_ok: Result = implementation.client_height
 		end
-		
+
 feature -- Basic operations
 
 	propagate_foreground_color
@@ -327,14 +327,14 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Contract support
 		do
 			Result := implementation.has_selected_radio_button
 		end
-		
+
 	has_radio_button: BOOLEAN
 			-- Does `Current' contain one or more radio buttons?
 		do
 			Result := implementation.has_radio_button
 		end
-		
-		
+
+
 feature {NONE} -- Contract support
 
 	is_in_default_state: BOOLEAN
@@ -342,9 +342,9 @@ feature {NONE} -- Contract support
 		do
 			Result := Precursor {EV_WIDGET} and Precursor {EV_PIXMAPABLE}
 		end
-		
+
 feature -- Contract support
-		
+
 	is_parent_recursive (a_widget: EV_WIDGET): BOOLEAN
 			-- Is `a_widget' `parent', or recursivly, `parent' of `parent'.
 		require
@@ -353,7 +353,7 @@ feature -- Contract support
 			Result := a_widget = parent or else
 				(parent /= Void and then parent.is_parent_recursive (a_widget))
 		end
-		
+
 	may_contain (v: EV_WIDGET): BOOLEAN
 			-- May `v' be inserted in `Current'.
 			-- Instances of EV_WINDOW may not be inserted
@@ -389,10 +389,10 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	client_width_within_bounds: is_usable implies
-		client_width >= 0 and client_width <= width
-	client_height_within_bounds: is_usable implies
-		client_height >= 0 and client_height <= height
+	client_width_non_negative: is_usable implies client_width >= 0
+	client_width_within_limit: is_usable implies client_width <= width
+	client_height_non_negative: is_usable implies client_height >= 0
+	client_height_within_limit: is_usable implies client_height <= height
 
 	all_radio_buttons_connected: is_usable implies all_radio_buttons_connected
 	parent_of_items_is_current: is_usable implies parent_of_items_is_current

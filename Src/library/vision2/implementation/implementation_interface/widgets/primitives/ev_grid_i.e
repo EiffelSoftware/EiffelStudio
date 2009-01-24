@@ -2800,6 +2800,7 @@ feature -- Measurements
 			-- are ignored.
 		do
 			if uses_row_offsets then
+				perform_vertical_computation
 				Result := computed_visible_row_count
 			else
 				Result := row_count

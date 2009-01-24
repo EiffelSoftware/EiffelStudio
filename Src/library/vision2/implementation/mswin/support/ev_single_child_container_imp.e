@@ -88,8 +88,8 @@ feature -- Element change
 				check
 					v_imp_not_void: v_imp /= Void
 				end
-				item := v
 				v_imp.set_parent (interface)
+				item := v
 				notify_change (nc_minsize, Current)
 				new_item_actions.call ([item])
 			end

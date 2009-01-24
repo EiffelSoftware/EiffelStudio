@@ -146,10 +146,10 @@ feature {NONE} -- Implementation
 				end
 					-- If `v_imp' not Void (meaning `v' is being removed).
 				if v_imp /= Void then
-						-- Call `remove_item_actions' for `Current'.
-					remove_item_actions.call ([v_imp.interface])
 						-- Unparent `v_imp' from `Current'.
 					v_imp.set_parent (Void)
+						-- Call `remove_item_actions' for `Current'.
+					remove_item_actions.call ([v_imp.interface])
 						-- Reflect the changes by updating the position of the
 						-- splitter and laying out the widgets.
 					update_split_position

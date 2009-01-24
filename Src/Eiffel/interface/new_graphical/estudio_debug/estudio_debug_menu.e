@@ -96,6 +96,11 @@ feature {NONE} -- Initialization
 			create menu_item.make_with_text_and_action ("Center Floating Tools", agent on_center_floating_tools)
 			extend (menu_item)
 
+			extend (create {EV_MENU_SEPARATOR})
+
+				--| Void safe helpers
+			create menu_item.make_with_text_and_action ("Check all routines in system", agent on_check_routines)
+			extend (menu_item)
 		end
 
 	build_tools_sub_menu (a_menu: !EV_MENU)
@@ -186,6 +191,14 @@ feature {NONE} -- Access
 			create Result.make
 		ensure
 			replay_window_not_void: Result /= Void
+		end
+
+	feature_checker_window: CELL [EB_FEATURE_CHECKER_TOOL]
+			-- Link to window
+		once
+			create Result.put (Void)
+		ensure
+			feature_checker_window_not_void: Result /= Void
 		end
 
 feature {NONE} -- Services
@@ -531,6 +544,25 @@ feature {NONE} -- Actions
 				if l_stone /= Void then
 					l_window.set_stone (l_stone)
 				end
+			end
+		end
+
+	on_check_routines
+			-- Window that let you see all features in a system in the feature tool.
+		local
+			dw: EB_DEVELOPMENT_WINDOW
+			feature_checker_tool: EB_FEATURE_CHECKER_TOOL
+		do
+			dw := window_manager.last_focused_development_window
+			if dw /= Void and then dw.eiffel_project.initialized then
+				feature_checker_tool := feature_checker_window.item
+				if feature_checker_tool = Void then
+					create feature_checker_tool.make (dw)
+					feature_checker_window.put (feature_checker_tool)
+				else
+					feature_checker_tool.set_development_window (dw)
+				end
+				feature_checker_tool.show
 			end
 		end
 

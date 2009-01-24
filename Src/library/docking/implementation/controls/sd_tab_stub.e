@@ -31,6 +31,10 @@ feature {NONE} -- Initlization
 				or a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right
 		do
 			create internal_shared
+			create internal_drawing_area
+			internal_drawing_area.expose_actions.extend (agent on_expose)
+			create pointer_press_actions
+			create delay_timer
 
 			if a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right then
 				init (True)
@@ -40,8 +44,6 @@ feature {NONE} -- Initlization
 				create internal_box.init (False)
 			end
 			content := a_content
-			create internal_drawing_area
-			internal_drawing_area.expose_actions.extend (agent on_expose)
 
 			extend (internal_box)
 			internal_box.extend (internal_drawing_area)
@@ -58,9 +60,6 @@ feature {NONE} -- Initlization
 			set_text (a_content.short_title)
 
 			on_expose (0, 0, internal_drawing_area.width, internal_drawing_area.height)
-
-			create pointer_press_actions
-			create delay_timer
 		ensure
 			set: content = a_content
 			drawing_area_added: internal_box.has (internal_drawing_area)

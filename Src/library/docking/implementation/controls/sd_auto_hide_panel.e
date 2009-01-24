@@ -34,7 +34,7 @@ inherit
 			is_equal,
 			copy
 		end
-		
+
 create
 	make
 
@@ -49,18 +49,19 @@ feature {NONE} -- Initlization
 		do
 			create internal_shared
 			internal_docking_manager := a_docking_manager
+			create internal_tab_stubs
+			internal_tab_stubs.compare_objects
+			create tab_groups
+
 			if a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right then
 				init (True)
 			else
 				init (False)
 			end
 			internal_direction := a_direction
-			create internal_tab_stubs
-			internal_tab_stubs.compare_objects
 			set_minimum_size (0, 0)
 			internal_tab_stubs.add_actions.extend (agent on_add_tab_stub)
 			internal_tab_stubs.remove_actions.extend (agent on_pruned_tab_stub)
-			create tab_groups
 
 			set_background_color (internal_shared.non_focused_color_lightness)
 

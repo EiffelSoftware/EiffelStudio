@@ -34,11 +34,15 @@ feature {NONE} -- Status Setting
 
 	set_first (v: like item)
 			-- Assign `v' to `first'.
+		local
+			l_imp: EV_WIDGET_IMP
 		do
+			v.implementation.on_parented
+			l_imp ?= v.implementation
+			check l_imp_not_void: l_imp /= Void end
+			l_imp.set_parent (interface)
 			first := v
-			first.implementation.on_parented
 			disable_item_expand (first)
-			first_imp.set_parent (interface)
 			if second_visible then
 				set_split_position (minimum_split_position)
 			else
@@ -50,10 +54,14 @@ feature {NONE} -- Status Setting
 
 	set_second (v: like item)
 			-- Assign `v' to `second'.
+		local
+			l_imp: EV_WIDGET_IMP
 		do
+			v.implementation.on_parented
+			l_imp ?= v.implementation
+			check l_imp_not_void: l_imp /= Void end
+			l_imp.set_parent (interface)
 			second := v
-			second.implementation.on_parented
-			second_imp.set_parent (interface)
 			notify_change (Nc_minsize, Current)
 			if first_visible then
 				set_split_position (height - splitter_width - second.minimum_height.min

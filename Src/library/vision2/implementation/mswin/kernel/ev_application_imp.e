@@ -68,12 +68,12 @@ feature {NONE} -- Initialization
 			l_result: INTEGER
 			l_process: POINTER
 		do
+			create dispatcher.make
 			if {PLATFORM}.is_thread_capable then
 				create idle_action_mutex.make
 			end
 			base_make (an_interface)
 			set_application (Current)
-			create_dispatcher
 			create blocking_windows_stack.make (5)
 			init_instance
 			init_application

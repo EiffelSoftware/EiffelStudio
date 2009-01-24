@@ -11,6 +11,8 @@ class
 
 inherit
 	EV_CLIPBOARD_I
+		undefine
+			default_create
 		redefine
 			interface
 		end

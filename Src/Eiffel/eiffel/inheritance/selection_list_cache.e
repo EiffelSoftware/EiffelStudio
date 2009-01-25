@@ -16,6 +16,9 @@ inherit
 create
 	make
 
+create {SELECTION_LIST_CACHE}
+	sstwl_make, make_sublist
+
 feature {NONE} -- Initialization
 
 	make (a_initial_count: INTEGER)

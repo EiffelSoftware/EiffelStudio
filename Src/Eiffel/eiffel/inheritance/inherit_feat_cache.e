@@ -16,6 +16,9 @@ inherit
 create
 	make
 
+create {INHERIT_FEAT_CACHE}
+	sstwl_make, make_sublist
+
 feature {NONE} -- Initialization
 
 	make (a_initial_count: INTEGER)

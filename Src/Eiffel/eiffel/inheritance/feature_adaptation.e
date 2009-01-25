@@ -9,6 +9,8 @@ deferred class
 	FEATURE_ADAPTATION
 
 inherit
+	ANY
+
 	SHARED_ORIGIN_TABLE
 		export
 			{NONE} all

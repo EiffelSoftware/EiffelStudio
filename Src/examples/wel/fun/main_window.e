@@ -26,27 +26,24 @@ feature {NONE} -- Initialization
 		do
 			make_top (Title)
 			resize (415, 330)
-			create maze_button.make (Current, "Maze",
-				35, 240, 100, 50, -1)
-			create artist_button.make (Current, "Artist",
-				154, 240, 100, 50, -1)
-			create fun_button.make (Current, "Fun",
-				270, 240, 100, 50, -1)
+			create maze_button.make (Current, "Maze", 35, 240, 100, 50, -1)
+			create artist_button.make (Current, "Artist", 154, 240, 100, 50, -1)
+			create fun_button.make (Current, "Fun", 270, 240, 100, 50, -1)
 		end
 
 feature -- Access
 
-	maze: MAZE
+	maze: ?MAZE
 
-	artist: ARTIST
+	artist: ?ARTIST
 
-	fun_dialog: FUN_DIALOG
-
-	maze_button, artist_button, fun_button: WEL_PUSH_BUTTON
+	maze_button, artist_button, fun_button: ?WEL_PUSH_BUTTON
 
 feature {NONE} -- Implementation
 
 	on_control_command (control: WEL_CONTROL)
+		local
+			fun_dialog: FUN_DIALOG
 		do
 			if control = maze_button then
 				create maze.make

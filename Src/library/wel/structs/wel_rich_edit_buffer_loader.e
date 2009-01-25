@@ -53,27 +53,31 @@ feature {NONE} -- Implementation
 			l_uni_str: WEL_STRING
 			l_c_str: C_STRING
 			l_upper: INTEGER
+			l_buffer: like buffer
 		do
+			l_buffer := buffer
+				-- Per precondition
+			check l_buffer_attached: l_buffer /= Void end
 			if last_position > string.count then
-				buffer.set_from_pointer (buffer.item, 0)
+				l_buffer.set_from_pointer (l_buffer.item, 0)
 			else
 					-- Because `shared_from_pointer_and_count' assumes an additional character
 					-- for the nyll character, and that the call to `set_substring' always adds
 					-- a null character at the end of the string, it caused a memory corruption.
-					-- Removing one character from the given `buffer' seems to do the trick
+					-- Removing one character from the given `l_buffer' seems to do the trick
 					-- until both `shared_from_pointer_and_count' and `set_substring' don't assume
 					-- anything about a null-terminated string.
 				if is_unicode_data then
-					create l_uni_str.share_from_pointer_and_count (buffer.item, buffer.count - {WEL_STRING}.character_size)
+					create l_uni_str.share_from_pointer_and_count (l_buffer.item, l_buffer.count - {WEL_STRING}.character_size)
 					l_upper := (last_position + l_uni_str.count - 1).min (string.count)
 					l_uni_str.set_substring (string, last_position, l_upper)
-					buffer.set_from_pointer (buffer.item, (l_upper - last_position + 1) * l_uni_str.character_size)
+					l_buffer.set_from_pointer (l_buffer.item, (l_upper - last_position + 1) * l_uni_str.character_size)
 					last_position := last_position + l_uni_str.count
 				else
-					create l_c_str.share_from_pointer_and_count (buffer.item, buffer.count - {C_STRING}.character_size)
+					create l_c_str.make_shared_from_pointer_and_count (l_buffer.item, l_buffer.count - {C_STRING}.character_size)
 					l_upper := (last_position + l_c_str.count - 1).min (string.count)
 					l_c_str.set_substring (string, last_position, l_upper)
-					buffer.set_from_pointer (buffer.item, (l_upper - last_position + 1) * l_c_str.character_size)
+					l_buffer.set_from_pointer (l_buffer.item, (l_upper - last_position + 1) * l_c_str.character_size)
 					last_position := last_position + l_c_str.count
 				end
 			end

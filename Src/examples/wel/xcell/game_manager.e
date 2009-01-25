@@ -19,6 +19,7 @@ feature {NONE} -- Initialization
 		do
 			number_of_cards := no_cards
 			create game.make (number_of_cards)
+			create active_card.make ({GAME_CONSTANTS}.card_offset + 1)
 		end
 
 feature -- Status report
@@ -41,8 +42,8 @@ feature -- Status report
 	active_card: CARD
 			-- Card that is currently selected
 
-	previous_card: CARD
-			-- If the source is a column, this card will be the 
+	previous_card: ?CARD
+			-- If the source is a column, this card will be the
 			-- card that is one from the top in the source column.
 			-- If the column has only one card or the source is
 			-- not a column, this card will be void.
@@ -74,7 +75,7 @@ feature -- Access
 		end
 
 	initialize_the_cards
-			-- Initialize each card in the game, by 
+			-- Initialize each card in the game, by
 			-- setting its coordinates.
 		local
 			a_column: LINKED_LIST [INTEGER]
@@ -136,7 +137,7 @@ feature -- Access
 		local
 			i: INTEGER
 		do
-			from 
+			from
 				i := First_card
 			until
 				i > number_of_cards + Card_offset or source_selected
@@ -160,21 +161,27 @@ feature -- Access
 				else
 					source_selected := False
 				end
-				i := i + 1	
+				i := i + 1
 			end
 		end
 
-	select_destination (x_pos, y_pos: INTEGER)	
+	select_destination (x_pos, y_pos: INTEGER)
+		require
+			active_card_attached: active_card /= Void
 		local
 			i: INTEGER
+			l_active_card: like active_card
 		do
-			from 
+			l_active_card := active_card
+				-- Per precondition
+			check l_active_card_attached: l_active_card /= Void end
+			from
 				i := First_card
 			until
 				i > number_of_cards + Card_offset or destination_selected
 			loop
-				if (the_cards @ i).card_number /= active_card.card_number then
-					if (the_cards @ i).overlapped_with (active_card) then
+				if (the_cards @ i).card_number /= l_active_card.card_number then
+					if (the_cards @ i).overlapped_with (l_active_card) then
 						if top_of_column (the_cards @ i) then
 							destination := last_column_found + column_offset
 							destination_selected := True
@@ -184,8 +191,8 @@ feature -- Access
 				i := i + 1
 			end
 			if not destination_selected then
-				if active_card.y_position < Start_of_column_y_position then
-					if active_card.x_position < middle_of_cells then				
+				if l_active_card.y_position < Start_of_column_y_position then
+					if l_active_card.x_position < middle_of_cells then
 						select_empty_xcell
 					else
 						select_destination_home_cell
@@ -214,7 +221,6 @@ feature -- Access
 		do
 			source_selected := False
 			previous_card := Void
-			active_card := Void
 			source := 0
 		ensure
 			no_source: not source_selected
@@ -257,7 +263,7 @@ feature -- Access
 	select_empty_xcell
 			-- Selects an empty xcell if available
 		require
-			no_destination: not destination_selected			
+			no_destination: not destination_selected
 		local
 			i: INTEGER
 		do
@@ -279,8 +285,14 @@ feature -- Access
 			-- to the kind of the card
 		require
 			no_destination: not destination_selected
+			active_card_attached: active_card /= Void
+		local
+			l_active_card: like active_card
 		do
-			destination := (active_card.card_number \\ 4) + home_cell_offset + 1
+			l_active_card := active_card
+				-- Per precondition
+			check l_active_card_attached: l_active_card /= Void end
+			destination := (l_active_card.card_number \\ 4) + home_cell_offset + 1
 			destination_selected := True
 		ensure
 			destination_is_set: destination /=0
@@ -331,7 +343,7 @@ feature -- Access
 		do
 			game.deal_game
 		end
-		
+
 	shuffle_the_cards (game_number: INTEGER)
 			-- Shuffle the cards with `game_number'
 		require
@@ -360,15 +372,19 @@ feature {NONE} -- Implementation
 
 	last_xcell_found: INTEGER
 			-- The last "xcell" found on a search for an empty column.
-	
+
 	middle_of_cells: INTEGER
 			-- Compute the x_position between the
 			-- xcells and the home_cells.
 		require
 			active_card_not_void: active_card /= Void
+		local
+			l_active_card: like active_card
 		do
-			Result := 20 + 3 * Space_between_columns +
-				active_card.card_image.width // 2
+			l_active_card := active_card
+				-- Per precondition
+			check l_active_card_attached: l_active_card /= Void end
+			Result := 20 + 3 * Space_between_columns + l_active_card.card_image.width // 2
 		end
 
 	setup_a_card (a_card_number, x_position, y_position: INTEGER)

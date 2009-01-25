@@ -20,7 +20,7 @@ inherit
 
 feature {NONE} -- For weak references
 
-	frozen eif_id_object (an_id: INTEGER): WEL_WINDOW
+	frozen eif_id_object (an_id: INTEGER): ?WEL_WINDOW
 			-- Object associated with `an_id'
 		require
 			an_id_non_negative: an_id >= 0

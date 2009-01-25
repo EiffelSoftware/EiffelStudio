@@ -49,7 +49,7 @@ feature -- Settings
 
 feature {NONE} -- Implementation: Access
 
-	exception_callback: PROCEDURE [ANY, TUPLE [EXCEPTION]]
+	exception_callback: ?PROCEDURE [ANY, TUPLE [EXCEPTION]]
 			-- Action being executed when an exception occurs during
 
 feature {NONE} -- Implementation
@@ -57,11 +57,12 @@ feature {NONE} -- Implementation
 	frozen window_procedure (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER
 			-- Window messages dispatcher routine
 		local
-			window: WEL_WINDOW
+			window: ?WEL_WINDOW
 			returned_value: POINTER
 			has_return_value: BOOLEAN
 			need_decrement: BOOLEAN
 			retried: BOOLEAN
+			l_callback: like exception_callback
 		do
 			if not retried then
 				window := window_of_item (hwnd)
@@ -105,8 +106,9 @@ feature {NONE} -- Implementation
 					-- Something wrong occurred here, perform default action
 				Result := cwin_def_window_proc (hwnd, msg, wparam, lparam)
 					-- And call `exception_callback' if it is set
-				if exception_callback /= Void then
-					exception_callback.call ([new_exception])
+				l_callback := exception_callback
+				if l_callback /= Void then
+					l_callback.call ([new_exception])
 				end
 			end
 		rescue
@@ -121,10 +123,11 @@ feature {NONE} -- Implementation
 	frozen dialog_procedure (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER
 			-- Dialog box messages dispatcher routine
 		local
-			window: WEL_WINDOW
+			window: ?WEL_WINDOW
 			last_result: POINTER
 			need_decrement: BOOLEAN
 			retried: BOOLEAN
+			l_callback: like exception_callback
 		do
 			if not retried then
 				debug ("dlg_dispatcher")
@@ -161,7 +164,7 @@ feature {NONE} -- Implementation
 					Result := to_lresult (1)
 				else
 					window := window_of_item (hwnd)
-					if window /= Void and window.exists then
+					if window /= Void and then window.exists then
 						window.increment_level
 						need_decrement := True
 						last_result := window.process_message (hwnd, msg, wparam, lparam)
@@ -182,8 +185,9 @@ feature {NONE} -- Implementation
 					-- Something wrong occurred here, perform default action
 				Result := to_lresult (0)
 					-- And call `exception_callback' if it is set
-				if exception_callback /= Void then
-					exception_callback.call ([new_exception])
+				l_callback := exception_callback
+				if l_callback /= Void then
+					l_callback.call ([new_exception])
 				end
 			end
 		rescue
@@ -197,10 +201,14 @@ feature {NONE} -- Implementation
 
 	new_exception: EXCEPTION
 			-- New exception object representating the last exception caught in Current
+		require
+			exception_manager.last_exception /= Void
+		local
+			l_exception: ?EXCEPTION
 		do
-			Result := exception_manager.last_exception
-		ensure
-			new_exception_not_void: Result /= Void
+			l_exception := exception_manager.last_exception
+			check l_exception_attached: l_exception /= Void end
+			Result := l_exception
 		end
 
 feature {NONE} -- Externals

@@ -23,6 +23,7 @@ feature {NONE} -- Initialization
 			-- Make the structure with `a_nmhdr'.
 		require
 			a_nmhdr_not_void: a_nmhdr /= Void
+			a_nmhdr_exits: a_nmhdr.exists
 		do
 			make_by_pointer (a_nmhdr.item)
 		end
@@ -31,6 +32,8 @@ feature -- Access
 
 	hdr: WEL_NMHDR
 			-- Information about the Wm_notify message
+		require
+			exists: exists
 		do
 			create Result.make_by_pointer (cwel_nm_updown_get_hdr (item))
 		ensure
@@ -39,6 +42,8 @@ feature -- Access
 
 	position: INTEGER
 			-- Current position of the up-down control
+		require
+			exists: exists
 		do
 			Result := cwel_nm_updown_get_ipos (item)
 		end
@@ -46,6 +51,8 @@ feature -- Access
 	delta: INTEGER
 			-- Proposed change in the position of the up-down
 			-- control
+		require
+			exists: exists
 		do
 			Result := cwel_nm_updown_get_idelta (item)
 		end
@@ -54,6 +61,8 @@ feature -- Element change
 
 	set_position (a_position: INTEGER)
 			-- Set `position' with `a_position'.
+		require
+			exists: exists
 		do
 			cwel_nm_updown_set_ipos (item, a_position)
 		ensure
@@ -62,6 +71,8 @@ feature -- Element change
 
 	set_delta (a_delta: INTEGER)
 			-- Set `delta' with `a_delta'.
+		require
+			exists: exists
 		do
 			cwel_nm_updown_set_idelta (item, a_delta)
 		ensure

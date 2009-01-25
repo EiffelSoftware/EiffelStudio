@@ -20,6 +20,8 @@ feature -- Access
 
 	max_size: WEL_POINT
 			-- Maximized width and height of the window
+		require
+			exists: exists
 		do
 			create Result.make_by_pointer (cwel_minmaxinfo_get_maxsize (item))
 		ensure
@@ -29,6 +31,8 @@ feature -- Access
 	max_position: WEL_POINT
 			-- Position of the left side of the maximized window
 			-- and the position of the top of the maximized window
+		require
+			exists: exists
 		do
 			create Result.make_by_pointer (cwel_minmaxinfo_get_maxposition (item))
 		ensure
@@ -38,6 +42,8 @@ feature -- Access
 	min_track_size: WEL_POINT
 			-- Minimum tracking width and the minimum tracking
 			-- height of the window
+		require
+			exists: exists
 		do
 			create Result.make_by_pointer (cwel_minmaxinfo_get_mintracksize (item))
 		ensure
@@ -47,6 +53,8 @@ feature -- Access
 	max_track_size: WEL_POINT
 			-- Maximum tracking width and the minimum tracking
 			-- height of the window
+		require
+			exists: exists
 		do
 			create Result.make_by_pointer (cwel_minmaxinfo_get_maxtracksize (item))
 		ensure
@@ -58,6 +66,7 @@ feature -- Element change
 	set_max_size (point: WEL_POINT)
 			-- Set `max_size' with `point'.
 		require
+			exists: exists
 			point_not_void: point /= Void
 		do
 			cwel_minmaxinfo_set_maxsize (item, point.item)
@@ -68,6 +77,7 @@ feature -- Element change
 	set_max_position (point: WEL_POINT)
 			-- Set `max_position' with `point'.
 		require
+			exists: exists
 			point_not_void: point /= Void
 		do
 			cwel_minmaxinfo_set_maxposition (item, point.item)
@@ -78,6 +88,7 @@ feature -- Element change
 	set_min_track_size (point: WEL_POINT)
 			-- Set `min_track_size' with `point'.
 		require
+			exists: exists
 			point_not_void: point /= Void
 		do
 			cwel_minmaxinfo_set_mintracksize (item, point.item)
@@ -88,6 +99,7 @@ feature -- Element change
 	set_max_track_size (point: WEL_POINT)
 			-- Set `max_track_size' with `point'.
 		require
+			exists: exists
 			point_not_void: point /= Void
 		do
 			cwel_minmaxinfo_set_maxtracksize (item, point.item)

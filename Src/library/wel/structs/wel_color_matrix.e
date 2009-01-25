@@ -33,6 +33,7 @@ feature -- Commands
 	set_m_row (a_value: ARRAY [REAL]; a_x: INTEGER)
 			-- Set `m_row' at `a_x'
 		require
+			a_value_not_void: a_value /= Void
 			valid: 0 <= a_x and a_x <= 4
 			valid: a_value.count = 5
 		do

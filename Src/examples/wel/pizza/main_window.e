@@ -27,12 +27,11 @@ feature {NONE} -- Initialization
 			make_top (Title)
 			set_menu (main_menu)
 			resize (300, 200)
-			create dialog.make (Current)
 		end
 
 feature -- Access
 
-	dialog: DIALOG
+	dialog: ?DIALOG
 			-- Pizza dialog
 
 feature {NONE} -- Implementation
@@ -47,13 +46,19 @@ feature {NONE} -- Implementation
 		end
 
 	on_menu_command (menu_id: INTEGER)
+		local
+			l_dialog: like dialog
 		do
 			if menu_id = Cmd_exit then
 				if closeable then
 					destroy
 				end
 			elseif menu_id = Cmd_order then
-				dialog.activate
+				if l_dialog = Void then
+					create l_dialog.make (Current)
+					dialog := l_dialog
+				end
+				l_dialog.activate
 			end
 		end
 

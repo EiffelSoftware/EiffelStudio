@@ -23,6 +23,7 @@ feature -- Initialization
 			-- Make the structure with `a_nmhdr'.
 		require
 			a_nmhdr_not_void: a_nmhdr /= Void
+			a_nmhdr_exists: a_nmhdr.exists
 		do
 			make_by_pointer (a_nmhdr.item)
 		end
@@ -31,6 +32,8 @@ feature -- Access
 
 	hdr: WEL_NMHDR
 			-- Information about the Wm_notify message.
+		require
+			exists: exists
 		do
 			create Result.make_by_pointer (cwel_nm_cbeendedit_get_hdr (item))
 		ensure
@@ -40,6 +43,8 @@ feature -- Access
 	has_changed: BOOLEAN
 			-- Value indicating whether the contents of the control's
 			-- edit box have changed.
+		require
+			exists: exists
 		do
 			Result := cwel_nm_cbeendedit_get_fchanged (item) /= 0
 		end
@@ -47,6 +52,8 @@ feature -- Access
 	selected_item: INTEGER
 			-- Zero-based index of the item that will be selected
 			-- after completing the edit operation.
+		require
+			exists: exists
 		do
 			Result := cwel_nm_cbeendedit_get_inewselection (item)
 		end
@@ -63,6 +70,8 @@ feature -- Access
 			-- Cben_endedit notification message.
 			-- Can be any of the Cbenf_* constants.
 			-- See class WEL_CBEN_CONSTANTS for values.
+		require
+			exists: exists
 		do
 			Result := cwel_nm_cbeendedit_get_iwhy (item)
 		end

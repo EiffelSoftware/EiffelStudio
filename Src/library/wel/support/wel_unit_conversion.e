@@ -50,6 +50,7 @@ feature -- Basic Operations
 			-- Convert pixels into himetric.
 		require
 			non_void_size: a_size_in_pixel /= Void
+			a_size_in_pixel_exists: a_size_in_pixel.exists
 		local
 			screen_dc: WEL_SCREEN_DC
 			n_pixels_per_inch_x: INTEGER
@@ -74,6 +75,7 @@ feature -- Basic Operations
 			-- Convert himetric into pixels.
 		require
 			non_void_size: a_size_in_himetric /= Void
+			a_size_in_himetric_exists: a_size_in_himetric.exists
 		local
 			screen_dc: WEL_SCREEN_DC
 			n_pixels_per_inch_x: INTEGER
@@ -96,6 +98,9 @@ feature -- Basic Operations
 
 	point_to_pixel (hdc: WEL_DC; pt, divisor: INTEGER): INTEGER
 			-- Convert a size `pt/divisor' expressed in point into pixel.
+		require
+			hdc_not_void: hdc /= Void
+			hdc_exists: hdc.exists
 		do
 			Result :=  mul_div (
 				get_device_caps (hdc.item, logical_pixels_y), pt, 72 * divisor)
@@ -103,6 +108,9 @@ feature -- Basic Operations
 
 	pixel_to_point (hdc: WEL_DC; pi: INTEGER): INTEGER
 			-- Convert a size `pi' expressed in pixel into point.
+		require
+			hdc_not_void: hdc /= Void
+			hdc_exists: hdc.exists
 		do
 			Result :=  mul_div (pi, 72,
 				get_device_caps (hdc.item, logical_pixels_y))
@@ -110,18 +118,27 @@ feature -- Basic Operations
 
 	point_to_logical (hdc: WEL_DC; pt, divisor: INTEGER): INTEGER
 			-- Convert a size `pt/divisor' expressed in point into logical units.
+		require
+			hdc_not_void: hdc /= Void
+			hdc_exists: hdc.exists
 		do
 			Result := pixel_to_logical (hdc, point_to_pixel (hdc, pt, divisor))
 		end
 
 	logical_to_point (hdc: WEL_DC; lo: INTEGER): INTEGER
 			-- Convert a size `lo' expressed in logical unit into point.
+		require
+			hdc_not_void: hdc /= Void
+			hdc_exists: hdc.exists
 		do
 			Result := pixel_to_point (hdc, logical_to_pixel (hdc, lo))
 		end
 
 	pixel_to_logical (hdc: WEL_DC; pi: INTEGER): INTEGER
 			-- Convert `pi' expressed in pixel unit into logical unit.
+		require
+			hdc_not_void: hdc /= Void
+			hdc_exists: hdc.exists
 		local
 			arr: WEL_ARRAY [WEL_POINT]
 			p1, p2: WEL_POINT
@@ -140,6 +157,9 @@ feature -- Basic Operations
 
 	logical_to_pixel (hdc: WEL_DC; lo: INTEGER): INTEGER
 			-- Convert `lo' expressed in logical unit into pixel unit.
+		require
+			hdc_not_void: hdc /= Void
+			hdc_exists: hdc.exists
 		local
 			arr: WEL_ARRAY [WEL_POINT]
 			p1, p2: WEL_POINT

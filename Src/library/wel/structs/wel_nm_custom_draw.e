@@ -7,10 +7,10 @@ note
 
 class
 	WEL_NM_CUSTOM_DRAW
-	
+
 inherit
 	WEL_STRUCTURE
-	
+
 create
 	make,
 	make_by_nmhdr,
@@ -22,6 +22,7 @@ feature {NONE} -- Initialization
 			-- Make the structure with `a_nmhdr'.
 		require
 			a_nmhdr_not_void: a_nmhdr /= Void
+			a_nmhdr_exists: a_nmhdr.exists
 		do
 			make_by_pointer (a_nmhdr.item)
 		end
@@ -30,51 +31,65 @@ feature -- Access
 
 	hdr: WEL_NMHDR
 			-- NMHDR structure that contains information about this notification message.
+		require
+			exists: exists
 		local
 			p: POINTER
 		do
 			p := cwel_nm_customdraw_get_hdr (item)
 			create Result.make_by_pointer (p)
 		end
-		
+
 	dwdrawstage: INTEGER
 			-- Current drawing stage. See WEL_CDDS_CONSTANTS for values.
+		require
+			exists: exists
 		do
 			Result := cwel_nm_customdraw_get_dwdrawstage (item)
 		end
 
 	hdc: WEL_CLIENT_DC
 			-- Handle to the control's device context.
+		require
+			exists: exists
 		local
 			p: POINTER
 		do
 			p := cwel_nm_customdraw_get_hdc (item)
 			create Result.make_by_pointer (p)
 		end
-		
+
 	rc: WEL_RECT
 			-- WEL_RECT that describes the bounding rectangle of the area being drawn.
+		require
+			exists: exists
 		local
 			p: POINTER
 		do
 			p := cwel_nm_customdraw_get_rc (item)
 			create Result.make_by_pointer (p)
 		end
-		
+
 	dwitemspec: POINTER
 			-- Item number.
+		require
+			exists: exists
 		do
 			Result := cwel_nm_customdraw_get_dwitemspec (item)
 		end
-		
+
 	uitemstate: INTEGER
 			-- Current item state.
+		require
+			exists: exists
 		do
 			Result := cwel_nm_customdraw_get_uitemstate (item)
 		end
-		
+
 	litemlparam: POINTER
 			-- Application-defined item data.
+		require
+			exists: exists
 		do
 			Result := cwel_nm_customdraw_get_litemlparam (item)
 		end
@@ -95,14 +110,14 @@ feature {NONE} -- Implementation
 		alias
 			"sizeof (NMCUSTOMDRAW)"
 		end
-		
+
 	cwel_nm_customdraw_get_hdr (ptr: POINTER): POINTER
 		external
 			"C [struct %"commctrl.h%"] (NMCUSTOMDRAW): EIF_POINTER"
 		alias
 			"&hdr"
 		end
-		
+
 	cwel_nm_customdraw_get_dwdrawstage (ptr: POINTER): INTEGER
 		external
 			"C [struct %"commctrl.h%"] (NMCUSTOMDRAW): EIF_INTEGER"
@@ -130,14 +145,14 @@ feature {NONE} -- Implementation
 		alias
 			"dwItemSpec"
 		end
-	
+
 	cwel_nm_customdraw_get_uitemstate (ptr: POINTER): INTEGER
 		external
 			"C [struct %"commctrl.h%"] (NMCUSTOMDRAW): EIF_INTEGER"
 		alias
 			"uItemState"
 		end
-		
+
 	cwel_nm_customdraw_get_litemlparam (ptr: POINTER): POINTER
 		external
 			"C [struct %"commctrl.h%"] (NMCUSTOMDRAW): EIF_POINTER"

@@ -52,9 +52,12 @@ feature -- Access
 			-- Either `target' or `lparam' will be used during search according to `flags'.
 		require
 			valid_flags: flag_set (flags, Lvfi_string)
+		local
+			l_target: like str_target
 		do
-			if str_target /= Void then
-				Result := str_target.string
+			l_target := str_target
+			if l_target /= Void then
+				Result := l_target.string
 			else
 				create Result.make_empty
 			end
@@ -122,10 +125,13 @@ feature -- Element Change
 		require
 			non_void_target: a_target /= Void
 			valid_target: not a_target.is_empty
+		local
+			l_target: like str_target
 		do
 			add_flag (Lvfi_string)
-			create str_target.make (a_target)
-			cwel_list_view_search_info_set_target (item, str_target.item)
+			create l_target.make (a_target)
+			str_target := l_target
+			cwel_list_view_search_info_set_target (item, l_target.item)
 		ensure
 			target_set: target.is_equal (a_target)
 		end
@@ -197,7 +203,7 @@ feature -- Measurment
 
 feature {NONE} -- Externals
 
-	str_target: WEL_STRING
+	str_target: ?WEL_STRING
 			-- Buffer for `target' field.
 
 	c_structure_size: INTEGER

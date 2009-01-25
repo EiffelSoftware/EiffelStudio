@@ -34,8 +34,7 @@ feature {NONE} -- Implementation
 	is_result_id_set: BOOLEAN
 			-- Is `result_id' set in `terminate'?
 
-	internal_dialog_make (a_parent: WEL_WINDOW; an_id: INTEGER;
-			a_name: STRING_GENERAL)
+	internal_dialog_make (a_parent: ?WEL_WINDOW; an_id: INTEGER; a_name: ?STRING_GENERAL)
 			-- Create the dialog
 		local
 			c_name: WEL_STRING

@@ -183,7 +183,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_parent (a_parent: WEL_WINDOW)
+	set_parent (a_parent: ?WEL_WINDOW)
 			-- Change the parent of the current window.
 			-- We need to use both windows methods to reparent
 			-- the rebar otherwise it doesn't work.

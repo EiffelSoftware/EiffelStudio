@@ -23,6 +23,7 @@ feature {NONE} -- Initialization
 			-- Make the structure with `a_nmhdr'.
 		require
 			a_nmhdr_not_void: a_nmhdr /= Void
+			a_nmhdr_exists: a_nmhdr.exists
 		do
 			make_by_pointer (a_nmhdr.item)
 		end
@@ -31,6 +32,8 @@ feature -- Access
 
 	hdr: WEL_NMHDR
 			-- Information about the Wm_notify message.
+		require
+			exists: exists
 		do
 			create Result.make_by_pointer (cwel_nm_listview_get_hdr (item))
 		ensure
@@ -40,12 +43,16 @@ feature -- Access
 	iitem: INTEGER
 			-- Information about the list view item or -1 if
 			-- not used.
+		require
+			exists: exists
 		do
 			Result := cwel_nm_listview_get_iitem (item)
 		end
 
 	isubitem: INTEGER
 			-- Information about the subitem or 0 if none.
+		require
+			exists: exists
 		do
 			Result := cwel_nm_listview_get_isubitem (item)
 		end
@@ -54,6 +61,8 @@ feature -- Access
 			-- Information about the new item state or 0 if
 			-- not used.
 			-- See class WEL_LVIS_CONSTANTS.
+		require
+			exists: exists
 		do
 			Result := cwel_nm_listview_get_unewstate (item)
 		end
@@ -61,6 +70,8 @@ feature -- Access
 	uoldstate: INTEGER
 			-- Information about the old item state or 0 if
 			-- not used.		
+		require
+			exists: exists
 		do
 			Result := cwel_nm_listview_get_uoldstate (item)
 		end
@@ -68,6 +79,8 @@ feature -- Access
 	uchanged: INTEGER
 			-- Information about the item attributes that
 			-- has changed.
+		require
+			exists: exists
 		do
 			Result := cwel_nm_listview_get_uchanged (item)
 		end
@@ -76,6 +89,8 @@ feature -- Access
 			-- Location at which the event occurred.
 			-- valid argument only for the Lvn_begindrag and
 			-- Lvn_beginrdrag notification messages.
+		require
+			exists: exists
 		do
 			create Result.make_by_pointer (cwel_nm_listview_get_ptaction (item))
 		end

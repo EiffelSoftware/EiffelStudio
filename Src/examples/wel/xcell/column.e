@@ -45,7 +45,7 @@ feature -- Access
 			new_count: count = old count + 1
 		end
 
-	one_from_top: G
+	one_from_top: ?G
 			-- The item under the top of the column
 		do
 			if count > 1 then

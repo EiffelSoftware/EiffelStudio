@@ -151,7 +151,7 @@ feature -- Status report
 			consistent_result: Result /= -1 implies Result >= 0 and Result < count
 		end
 
-	selected_window: WEL_WINDOW
+	selected_window: ?WEL_WINDOW
 			-- Window corresponding to currently selected tab
 		do
 			Result := get_item (current_selection).window
@@ -273,6 +273,9 @@ feature -- Status setting
 			-- (Cannot use `set_font' since its postcondition is not always fulfilled)
 			-- To use for a notebook with the tabs on the left or
 			-- the right.
+		require
+			exists: exists
+			fnt_not_void: fnt /= Void
 		do
 			{WEL_API}.send_message (item, wm_setfont, fnt.item, cwin_make_long (1, 0))
 		end
@@ -299,7 +302,7 @@ feature -- Element change
 			index_large_enough: index >= 0
 			index_small_enough: index <= count
 		local
-			window: WEL_WINDOW
+			window: ?WEL_WINDOW
 		do
 			{WEL_API}.send_message (item, Tcm_insertitem, to_wparam (index), an_item.item)
 			window := an_item.window
@@ -377,7 +380,7 @@ feature {NONE} -- Basic operation
 		require
 			exists: exists
 		local
-			selected_item: WEL_WINDOW
+			selected_item: ?WEL_WINDOW
 		do
 			selected_item := get_item (current_selection).window
 			if selected_item /= Void and then selected_item.exists then
@@ -390,7 +393,7 @@ feature {NONE} -- Basic operation
 		require
 			exists: exists
 		local
-			selected_item: WEL_WINDOW
+			selected_item: ?WEL_WINDOW
 		do
 			selected_item := get_item (current_selection).window
 			if selected_item /= Void and then selected_item.exists then
@@ -403,13 +406,17 @@ feature {NONE} -- Basic operation
 			-- to the current size.
 		local
 			index: INTEGER
+			l_window: ?WEL_WINDOW
 		do
 			from
 				index := 0
 			until
 				index = count
 			loop
-				get_item (index).window.move_and_resize (sheet_rect.left, sheet_rect.top, sheet_rect.width, sheet_rect.height, False)
+				l_window := get_item (index).window
+				if l_window /= Void then
+					l_window.move_and_resize (sheet_rect.left, sheet_rect.top, sheet_rect.width, sheet_rect.height, False)
+				end
 				index := index + 1
 			end
 		end
@@ -456,7 +463,7 @@ feature {WEL_COMPOSITE_WINDOW} -- Implementation
 			-- the invalid rectangle of the client area that
 			-- needs to be repainted.
 		local
-			bk_brush: WEL_BRUSH
+			bk_brush: ?WEL_BRUSH
 			a_background_region: WEL_REGION
 		do
 			bk_brush := background_brush

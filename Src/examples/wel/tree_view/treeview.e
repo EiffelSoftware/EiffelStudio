@@ -13,8 +13,9 @@ inherit
 	APPLICATION_IDS
 	WEL_COLOR_CONSTANTS
 	WEL_TREE_VIEW
+		rename
+			make as tree_view_make
 		redefine
-			make,
 			on_tvn_begindrag,
 			on_tvn_beginlabeledit,
 			on_tvn_beginrdrag,
@@ -34,8 +35,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parent: WEL_WINDOW; a_x, a_y, a_width, a_height, an_id: INTEGER)
+	make (a_parent: WEL_WINDOW; a_x, a_y, a_width, a_height, an_id: INTEGER; a_item_output: like item_output; a_mess_output: like mess_output)
 			-- Create the tree and some items in it.
+		require
+			a_parent_not_void: a_parent /= Void
 		local
 			tvis1, tvis2, tvis3			: WEL_TREE_VIEW_INSERT_STRUCT
 			tv_item1, tv_item2, tv_item3: WEL_TREE_VIEW_ITEM
@@ -51,7 +54,10 @@ feature {NONE} -- Initialization
 			bitmap_icon_application		: INTEGER
 			background_color			: WEL_COLOR_REF
 		do
-			Precursor {WEL_TREE_VIEW} (a_parent, a_x, a_y, a_width, a_height, an_id)
+			item_output := a_item_output
+			mess_output := a_mess_output
+
+			tree_view_make (a_parent, a_x, a_y, a_width, a_height, an_id)
 
 				-- create the image list
 			create image_list.make(16, 16, Ilc_color32, False)
@@ -261,7 +267,7 @@ feature -- Notifications
 		end
 
 	on_tvn_keydown (virtual_key: INTEGER)
-			-- The user pressed a key and the tree-view control 
+			-- The user pressed a key and the tree-view control
 			-- has the input focus.
 		do
 			add_mess_output ("Key pressed : ")
@@ -271,11 +277,11 @@ feature -- Notifications
 	on_tvn_selchanged (info: WEL_NM_TREE_VIEW)
 			-- Selection has changed from one item to another.
 		local
-			tree_item: WEL_TREE_VIEW_ITEM
+			tree_item: ?WEL_TREE_VIEW_ITEM
 		do
 			add_mess_output ("Selection changed")
 			tree_item := info.new_item
-			if tree_item.text_is_valid then
+			if tree_item /= Void and then tree_item.text_is_valid then
 				item_output.set_text (tree_item.text)
 			end
 		end

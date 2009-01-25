@@ -30,7 +30,7 @@ feature -- Element change
 			extend (exec)
 		end
 
-	remove_command (command: WEL_COMMAND; argument: ANY)
+	remove_command (command: WEL_COMMAND; argument: ?ANY)
 			-- Remove all `command' with `argument' from the list of commands.
 		require
 			command_not_void: command /= Void
@@ -51,7 +51,7 @@ feature -- Element change
 
 feature -- Execution
 
-	execute (argument: ANY)
+	execute (argument: ?ANY)
 			-- Execute list of commands
 		do
 			from
@@ -64,7 +64,7 @@ feature -- Execution
 				forth
 			end
 		end
- 
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

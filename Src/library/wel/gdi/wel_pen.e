@@ -67,6 +67,7 @@ feature {NONE} -- Initialization
 			-- Make a pen using `a_log_pen'.
 		require
 			a_log_pen_not_void: a_log_pen /= Void
+			a_log_pen_exists: a_log_pen.exists
 		do
 			item := cwin_create_pen_indirect (a_log_pen.item)
 			gdi_make

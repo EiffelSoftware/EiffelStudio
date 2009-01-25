@@ -65,6 +65,7 @@ feature {NONE} -- Initialization
 			-- Make a font using `a_log_font'.
 		require
 			a_log_font_not_void: a_log_font /= Void
+			a_log_font_exists: a_log_font.exists
 		do
 			item := cwin_create_font_indirect (a_log_font.item)
 			gdi_make
@@ -75,6 +76,7 @@ feature -- Setting
 	set_height (a_height: INTEGER)
 			-- Set `height' with `a_height'.
 		require
+			exists: exists
 			a_height_bigger_than_zero: a_height > 0
 		local
 			l: like log_font
@@ -91,6 +93,8 @@ feature -- Setting
 
 	set_height_in_points (a_height_in_points: INTEGER)
 			-- Set `height' based on `a_height_in_points'.
+		require
+			exists: exists
 		local
 			l: like log_font
 			screen_dc: WEL_SCREEN_DC
@@ -111,6 +115,7 @@ feature -- Re-initialisation
 			-- Reset the current font the 'a_log_font' without
 			-- creating new object
 		require
+			exists: exists
 			a_log_font_not_void: a_log_font /= Void
 		local
 			object_destroyed: BOOLEAN
@@ -151,12 +156,16 @@ feature -- Access
 
 	width: INTEGER
 			-- Character width of current fixed-width font.
+		require
+			exists: exists
 		do
 			Result := string_width ("x")
 		end
 
 	height: INTEGER
 			-- Size of font measured in pixels.
+		require
+			exists: exists
 		local
 			screen_dc: WEL_SCREEN_DC
 		do
@@ -170,6 +179,8 @@ feature -- Access
 
 	point: INTEGER
 			-- Size of font in points (1 point = 1/72 of an inch)
+		require
+			exists: exists
 		local
 			screen_dc: WEL_SCREEN_DC
 		do
@@ -181,12 +192,18 @@ feature -- Access
 
 	string_width (a_string: STRING_GENERAL): INTEGER
 			-- Width of `a_string'.
+		require
+			exists: exists
+			a_string_not_void: a_string /= Void
 		do
 			Result := string_size (a_string).width
 		end
 
 	string_height (a_string: STRING_GENERAL): INTEGER
 			-- Height of `a_string'.
+		require
+			exists: exists
+			a_string_not_void: a_string /= Void
 		do
 			Result := string_size (a_string).height
 		end
@@ -205,6 +222,9 @@ feature -- Access
 			-- to the left hand side (before the string), with a negative value specifying a protuding point.
 			-- The fourth integer value of `Result' corresponds to the maximum character extent
 			-- to the right hand side (after the string), with a negative value indicating that it protudes)
+		require
+			exists: exists
+			a_string_not_void: a_string /= Void
 		local
 			cur_width, cur_height: INTEGER
 			screen_dc: WEL_SCREEN_DC
@@ -336,6 +356,9 @@ feature -- Access
 
 	string_size (a_string: STRING_GENERAL): TUPLE [width: INTEGER; height: INTEGER]
 			-- [width, height] of `a_string'.
+		require
+			exists: exists
+			a_string_not_void: a_string /= Void
 		local
 			cur_width, cur_height: INTEGER
 			screen_dc: WEL_SCREEN_DC

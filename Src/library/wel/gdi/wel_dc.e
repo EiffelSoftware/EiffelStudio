@@ -80,22 +80,22 @@ inherit
 
 feature -- Access
 
-	pen: WEL_PEN
+	pen: ?WEL_PEN
 			-- Current pen selected.
 
-	brush: WEL_BRUSH
+	brush: ?WEL_BRUSH
 			-- Current brush selected.
 
-	palette: WEL_PALETTE
+	palette: ?WEL_PALETTE
 			-- Current palette selected.
 
-	region: WEL_REGION
+	region: ?WEL_REGION
 			-- Current region selected.
 
-	font: WEL_FONT
+	font: ?WEL_FONT
 			-- Current font selected.
 
-	bitmap: WEL_BITMAP
+	bitmap: ?WEL_BITMAP
 			-- Current bitmap selected.
 
 feature -- Basic operations
@@ -714,6 +714,7 @@ feature -- Status setting
 			a_bitmap_exists: a_bitmap.exists
 			positive_start_scan: start_scan >= 0
 			positive_scan_lines: scan_lines >= 0
+			bits_not_void: bits /= Void
 			bitmap_info_not_void: bitmap_info /= Void
 			valid_usage: valid_dib_colors_constant (usage)
 		local
@@ -1092,7 +1093,7 @@ feature -- Basic operations
 			cwin_draw_disabled_text (item, a_wel_string.item, string.count, rect.item, format)
 		end
 
-	draw_state_text (a_brush: WEL_BRUSH; string: STRING_GENERAL; x, y: INTEGER; format: INTEGER)
+	draw_state_text (a_brush: ?WEL_BRUSH; string: STRING_GENERAL; x, y: INTEGER; format: INTEGER)
 			-- Draw the text `string' using `format' at the
 			-- location (`x',`y') using the brush `a_brush' if `format' include `Dss_mono'.
 			--
@@ -1124,7 +1125,7 @@ feature -- Basic operations
 			draw_text (string, rect, Dt_singleline + Dt_center + Dt_vcenter)
 		end
 
-	draw_state_bitmap (a_brush: WEL_BRUSH; a_bitmap: WEL_BITMAP; x, y: INTEGER; format: INTEGER)
+	draw_state_bitmap (a_brush: ?WEL_BRUSH; a_bitmap: WEL_BITMAP; x, y: INTEGER; format: INTEGER)
 			-- Draw the bitmap `a_bitmap' using `format' at the
 			-- location (`x',`y') using the brush `a_brush' if `format' include `Dss_mono'.
 			--
@@ -1144,7 +1145,7 @@ feature -- Basic operations
 			success := cwin_draw_state (item, a_brush_ptr, null, a_bitmap.item, 0, x, y, 0, 0, format | Dst_bitmap)
 		end
 
-	draw_state_icon (a_brush: WEL_BRUSH; an_icon: WEL_GRAPHICAL_RESOURCE; x, y: INTEGER; format: INTEGER)
+	draw_state_icon (a_brush: ?WEL_BRUSH; an_icon: WEL_GRAPHICAL_RESOURCE; x, y: INTEGER; format: INTEGER)
 			-- Draw the icon/cursor `an_icon' using `format' at the
 			-- location (`x',`y') using the brush `a_brush' if `format' include `Dss_mono'.
 			--
@@ -1173,10 +1174,14 @@ feature -- Basic operations
 			a_bitmap_exists: a_bitmap.exists
 		local
 			bitmap_dc: WEL_MEMORY_DC
+			l_palette: like palette
 		do
 			create bitmap_dc.make_by_dc (Current)
 			if palette_selected then
-				bitmap_dc.select_palette (palette)
+				l_palette := palette
+					-- Per check `palette_selected'.
+				check l_palette_attached: l_palette /= Void end
+				bitmap_dc.select_palette (l_palette)
 				bitmap_dc.realize_palette
 			end
 			bitmap_dc.select_bitmap (a_bitmap)
@@ -1198,10 +1203,14 @@ feature -- Basic operations
 			a_bitmap_exists: a_bitmap.exists
 		local
 			bitmap_dc: WEL_MEMORY_DC
+			l_palette: like palette
 		do
 			create bitmap_dc.make_by_dc (Current)
 			if palette_selected then
-				bitmap_dc.select_palette (palette)
+				l_palette := palette
+					-- Per check `palette_selected'.
+				check l_palette_attached: l_palette /= Void end
+				bitmap_dc.select_palette (l_palette)
 				bitmap_dc.realize_palette
 			end
 			bitmap_dc.select_bitmap (a_bitmap)
@@ -1223,7 +1232,7 @@ feature -- Basic operations
 			cwin_draw_icon (item, x, y, icon.item)
 		end
 
-	draw_icon_ex (icon: WEL_ICON; x, y, icon_width, icon_height, frame_index: INTEGER; flicker_free_background: WEL_BRUSH; di_flags: INTEGER)
+	draw_icon_ex (icon: WEL_ICON; x, y, icon_width, icon_height, frame_index: INTEGER; flicker_free_background: ?WEL_BRUSH; di_flags: INTEGER)
 			-- Draw `icon' at the `x', `y' position.
 		require
 			exists: exists
@@ -1520,11 +1529,15 @@ feature -- Basic operations
 		end
 
 	alpha_blend (a_x_dest, a_y_dest, a_width, a_height: INTEGER;
-			a_dc_src: WEL_DC; a_x_src, a_y_src, a_width_src, a_height_src: INTEGER
+			dc_source: WEL_DC; a_x_src, a_y_src, a_width_src, a_height_src: INTEGER
 			a_blend_function: WEL_BLEND_FUNCTION): BOOLEAN
 				-- Per pixel alpha blend.
 		require
 			exists: exists
+			dc_source_not_void: dc_source /= Void
+			dc_source_exists: dc_source.exists
+			blend_function_not_void: a_blend_function /= Void
+			blend_function_exists: a_blend_function.exists
 		local
 			l_result: INTEGER
 			l_err: WEL_ERROR
@@ -1532,7 +1545,7 @@ feature -- Basic operations
 			create l_err
 			l_err.reset_last_error_code
 			cwin_alpha_blend (item, a_x_dest, a_y_dest, a_width, a_height,
-								a_dc_src.item, a_x_src, a_y_src, a_width_src, a_height_src,
+								dc_source.item, a_x_src, a_y_src, a_width_src, a_height_src,
 								a_blend_function.item, $l_result)
 			if l_result = 0 and l_err.last_error_code /= 0 then
 				Result := False
@@ -1822,6 +1835,9 @@ feature -- Obsolete
 	set_bk_color (color: WEL_COLOR_REF)
 		obsolete
 			"Use ``set_background_color''"
+		require
+			exists: exists
+			color_not_void: color /= Void
 		do
 			set_background_color (color)
 		end
@@ -1829,6 +1845,10 @@ feature -- Obsolete
 	poly_line (points: ARRAY [INTEGER])
 		obsolete
 			"Use ``polyline''"
+		require
+			exists: exists
+			points_not_void: points /= Void
+			points_count: points.count \\ 2 = 0
 		do
 			polyline (points)
 		end
@@ -1836,6 +1856,12 @@ feature -- Obsolete
 	save (a_bitmap: WEL_BITMAP; file: FILE_NAME)
 		obsolete
 			"Use ``save_bitmap''"
+		require
+			exists: exists
+			a_bitmap_not_void: a_bitmap /= Void
+			a_bitmap_exists: a_bitmap.exists
+			file_not_void: file /= Void
+			file_is_valid: file.is_valid
 		do
 			save_bitmap (a_bitmap, file)
 		end

@@ -53,6 +53,9 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
+	user_tree_view_item: ?WEL_TREE_VIEW_ITEM
+			-- The tree-item given by the user.
+
 feature -- Element change
 
 	set_parent (a_parent: POINTER)
@@ -80,9 +83,14 @@ feature -- Element change
 			-- the user is using it.
 			-- At insertion time, the h_item paremeter of both
 			-- structure will be set at the good value.
+		require
+			a_tree_view_item_not_void: a_tree_view_item /= Void
+			a_tree_view_item_exists: a_tree_view_item.exists
 		do
 			cwel_insertstruct_set_item (item, a_tree_view_item.item)
 			user_tree_view_item := a_tree_view_item
+		ensure
+			user_tree_view_item_set: user_tree_view_item = a_tree_view_item
 		end
 
 	set_first
@@ -116,11 +124,6 @@ feature -- Measurement
 		once
 			Result := c_size_of_insertstruct
 		end
-
-feature {WEL_TREE_VIEW} -- Implementation
-
-	user_tree_view_item: WEL_TREE_VIEW_ITEM
-			-- The tree-item given by the user. 
 
 feature {NONE} -- Externals
 

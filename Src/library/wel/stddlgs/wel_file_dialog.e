@@ -243,11 +243,10 @@ feature -- Element change
 			filter_names_not_void: filter_names /= Void
 			filter_patterns_not_void: filter_patterns /= Void
 			same_count: filter_names.count = filter_patterns.count
-			no_void_name: not filter_names.has (Void)
-			no_void_pattern: not filter_patterns.has (Void)
 		local
 			i: INTEGER
 			s: STRING_32
+			l_filter: like str_filter
 		do
 			-- Make a string containing pairs of string.
 			-- The first string in each pair describe the
@@ -269,9 +268,10 @@ feature -- Element change
 			end
 			s.extend ('%U')
 			s.extend ('%U')
-			create str_filter.make (s)
-			cwel_open_file_name_set_lpstrfilter (item,
-				str_filter.item)
+			create l_filter.make (s)
+				-- For GC reference
+			str_filter := l_filter
+			cwel_open_file_name_set_lpstrfilter (item, l_filter.item)
 		end
 
 	set_filter_index (a_filter_index: INTEGER)
@@ -289,10 +289,13 @@ feature -- Element change
 			-- Set the initial directory with `directory'.
 		require
 			directory_not_void: directory /= Void
+		local
+			l_directory: like str_initial_directory
 		do
-			create str_intial_directory.make (directory)
-			cwel_open_file_name_set_lpstrinitialdir (item,
-				str_intial_directory.item)
+			create l_directory.make (directory)
+				-- For GC reference
+			str_initial_directory := l_directory
+			cwel_open_file_name_set_lpstrinitialdir (item, l_directory.item)
 		end
 
 	set_initial_directory_as_current
@@ -308,10 +311,13 @@ feature -- Element change
 			-- file name if the user fails to type an extension.
 		require
 			extension_not_void: extension/= Void
+		local
+			l_extension: like str_default_extension
 		do
-			create str_default_extension.make (extension)
-			cwel_open_file_name_set_lpstrdefext (item,
-				str_default_extension.item)
+			create l_extension.make (extension)
+				-- For GC reference
+			str_default_extension := l_extension
+			cwel_open_file_name_set_lpstrdefext (item, l_extension.item)
 		end
 
 feature -- Status report
@@ -340,16 +346,16 @@ feature {NONE} -- Implementation
 	str_file_title: WEL_STRING
 			-- C string to save the file title
 
-	str_filter: WEL_STRING
+	str_filter: ?WEL_STRING
 			-- C string to save the filters
 
 	str_title: WEL_STRING
 			-- C string to save the title
 
-	str_intial_directory: WEL_STRING
+	str_initial_directory: ?WEL_STRING
 			-- C string to save the initial directory
 
-	str_default_extension: WEL_STRING
+	str_default_extension: ?WEL_STRING
 			-- C string to save the default extension
 
 	Max_file_title_length: INTEGER = 256

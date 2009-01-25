@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			-- Make a funny dialog
 		do
 			make_by_id (a_parent, Id_dialog)
-			create ok_button.make_by_id (Current, Idok)
+			create internal_ok_button.make_by_id (Current, Idok)
 			direction_x := Inc_x
 			direction_y := Inc_y
 		end
@@ -118,7 +118,7 @@ feature
 			msg_box: WEL_MSG_BOX
 		do
 			create msg_box.make
-			msg_box.information_message_box (Current, 
+			msg_box.information_message_box (Current,
 				"Thank you for your participation...", "ISE Example")
 			terminate (Idok)
 		end
@@ -156,7 +156,23 @@ feature -- Access
 	direction_y: INTEGER
 			-- The step button direction when it goes up or down
 
-	ok_button: WEL_PUSH_BUTTON;
+	ok_button: WEL_PUSH_BUTTON
+		local
+			l_ok_button: like internal_ok_button
+		do
+			l_ok_button := internal_ok_button
+				-- Per invariant
+			check l_ok_button_attached: l_ok_button /= Void end
+			Result := l_ok_button
+		end
+
+feature {NONE} -- Access
+
+	internal_ok_button: ?like ok_button
+			-- Storage
+
+invariant
+	internal_ok_button_attached: internal_ok_button /= Void
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

@@ -38,21 +38,29 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	red: INTEGER
+		require
+			exists: exists
 		do
 			Result := cwel_rgb_quad_get_rgb_red (item)
 		end
 
 	green: INTEGER
+		require
+			exists: exists
 		do
 			Result := cwel_rgb_quad_get_rgb_green (item)
 		end
 
 	blue: INTEGER
+		require
+			exists: exists
 		do
 			Result := cwel_rgb_quad_get_rgb_blue (item)
 		end
 
 	reserved: INTEGER
+		require
+			exists: exists
 		do
 			Result := cwel_rgb_quad_get_rgb_reserved (item)
 		end
@@ -61,6 +69,8 @@ feature -- Element change
 
 	set_red (a_red: INTEGER)
 			-- Set `red' with `a_red'
+		require
+			exists: exists
 		do
 			cwel_rgb_quad_set_rgb_red (item, a_red)
 		ensure
@@ -69,6 +79,8 @@ feature -- Element change
 
 	set_green (a_green: INTEGER)
 			-- Set `green' with `a_green'
+		require
+			exists: exists
 		do
 			cwel_rgb_quad_set_rgb_green (item, a_green)
 		ensure
@@ -77,6 +89,8 @@ feature -- Element change
 
 	set_blue (a_blue: INTEGER)
 			-- Set `blue' with `a_blue'
+		require
+			exists: exists
 		do
 			cwel_rgb_quad_set_rgb_blue (item, a_blue)
 		ensure
@@ -85,6 +99,8 @@ feature -- Element change
 
 	set_reserved (a_reserved: INTEGER)
 			-- Set `reserved' with `a_reserved'
+		require
+			exists: exists
 		do
 			cwel_rgb_quad_set_rgb_reserved (item, a_reserved)
 		ensure

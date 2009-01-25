@@ -66,6 +66,7 @@ feature {NONE} -- Initialization
 			-- the controls parent window
 		require
 			a_parent_not_void: a_parent /= Void
+			a_parent_exists: a_parent.exists
 		local
 			a_rect: WEL_RECT
 		do
@@ -80,9 +81,8 @@ feature {NONE} -- Initialization
 				-- will be made visible in case default_style
 				-- includes Ws_visible.
 			internal_window_make (a_parent, Void,
-										 clear_flag (default_style, Ws_visible),
-										 0, 0, 0, 0,
-										 an_id, default_pointer)
+				 clear_flag (default_style, Ws_visible),
+				 0, 0, 0, 0, an_id, default_pointer)
 			id := an_id
 
 			create a_rect.make (a_x, a_y, a_x + a_width, a_y + a_height)
@@ -127,7 +127,7 @@ feature -- Status report
 			{WEL_API}.send_message (item, Hdm_hit_test, to_wparam (0), Result.item)
 		end
 
-	get_image_list: WEL_IMAGE_LIST
+	get_image_list: ?WEL_IMAGE_LIST
 			-- Get the image list associated with `Current'
 			-- or `Void' if none.
 		local
@@ -176,6 +176,7 @@ feature -- Element change
 		require
 			exists: exists
 			hd_item_not_void: hd_item /= Void
+			hd_item_exists: hd_item.exists
 			insert_after_item_no_positive: insert_after_item_no >= 0
 		local
 			i_result: INTEGER
@@ -229,18 +230,19 @@ feature -- Element change
 			window_handle_insert_after: POINTER
 			a_window_style: INTEGER
 			l_success: BOOLEAN
+			l_window_pos: WEL_WINDOW_POS
+			l_window: ?WEL_WINDOW
 		do
-			send_layout_message (parent_client_rect)
+			l_window_pos := retrieved_window_position (parent_client_rect)
 
 				-- Set the size we got from windows
 				-- Only use the `window_insert_after' field if it is not Void
-			if
-				last_retrieved_window_pos.window_insert_after /= Void
-			then
-				window_handle_insert_after := last_retrieved_window_pos.window_insert_after.item
+			l_window := l_window_pos.window_insert_after
+			if l_window /= Void then
+				window_handle_insert_after := l_window.item
 			end
 
-			a_window_style :=	last_retrieved_window_pos.flags
+			a_window_style :=	l_window_pos.flags
 				--	If Ws_visible is set in `default_style' make the window now
 				-- visible.
 			if
@@ -251,15 +253,17 @@ feature -- Element change
 
 				-- Set the initial window position				
 			l_success := {WEL_API}.set_window_pos (item, window_handle_insert_after,
-										last_retrieved_window_pos.x, last_retrieved_window_pos.y,
-										last_retrieved_window_pos.width, last_retrieved_window_pos.height,
+										l_window_pos.x, l_window_pos.y,
+										l_window_pos.width, l_window_pos.height,
 										a_window_style)
 		end
 
-	set_image_list (image_list: WEL_IMAGE_LIST)
+	set_image_list (image_list: ?WEL_IMAGE_LIST)
 			-- Associate `image_list' with `Current'.
 			-- If `image_list' is `Void', removes the currently associated
 			-- image list (if any).
+		require
+			image_list_valid: image_list /= Void implies image_list.exists
 		do
 			if image_list = Void then
 				{WEL_API}.send_message (item, hdm_set_image_list, to_wparam (0), to_lparam (0))
@@ -377,13 +381,10 @@ feature {WEL_COMPOSITE_WINDOW} -- Implementation
 
 feature {NONE} -- Implementation
 
-	last_retrieved_window_pos: WEL_WINDOW_POS
-
-	send_layout_message (a_rect: WEL_RECT)
+	retrieved_window_position (a_rect: WEL_RECT): WEL_WINDOW_POS
 			-- This Windows message retrieves the size and position of a header control
 			-- within a given rectangle. This message is used to determine the appropriate
 			-- dimensions for a new header control that is to occupy the given rectangle.
-			-- The resulting window position will be stored in `last_retrieved_window_pos'
 		require
 			exists: exists
 			rect_exists: a_rect /= Void and then a_rect.exists
@@ -397,9 +398,9 @@ feature {NONE} -- Implementation
 			check
 				successfull: i_result /= 0
 			end
-			last_retrieved_window_pos := hd_layout.window_pos
+			Result := hd_layout.window_pos
 		ensure
-			last_retrieved_window_pos_not_void: last_retrieved_window_pos /= Void
+			last_retrieved_window_pos_not_void: Result /= Void
 		end
 
 	class_name: STRING_32

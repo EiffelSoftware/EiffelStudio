@@ -11,7 +11,7 @@ class
 inherit
 	WEL_BUTTON
 		redefine
-			make, 
+			make,
 			make_by_id
 		end
 
@@ -46,7 +46,7 @@ feature {NONE} -- Initialisation
 		ensure then
 			pixmap_not_set: current_pixmap /= Image_icon and current_pixmap /= Image_bitmap
 		end
-		
+
 	make_by_id (a_parent: WEL_DIALOG; an_id: INTEGER)
 			-- Make a control identified by `an_id' with `a_parent'
 			-- as parent.
@@ -56,7 +56,7 @@ feature {NONE} -- Initialisation
 		ensure then
 			pixmap_not_set: current_pixmap /= Image_icon and current_pixmap /= Image_bitmap
 		end
-		
+
 feature -- Access
 
 	bitmap: WEL_BITMAP
@@ -65,8 +65,13 @@ feature -- Access
 			-- do not copy this object.
 		require
 			current_pixmap = Image_bitmap
+		local
+			l_bitmap: like internal_bitmap
 		do
-			Result := internal_bitmap
+			l_bitmap := internal_bitmap
+				-- Per precondition
+			check l_bitmap_attached: l_bitmap /= Void end
+			Result := l_bitmap
 		end
 
 	icon: WEL_ICON
@@ -75,8 +80,13 @@ feature -- Access
 			-- do not copy this object.
 		require
 			current_pixmap = Image_icon
+		local
+			l_icon: like internal_icon
 		do
-			Result := internal_icon
+			l_icon := internal_icon
+				-- Per precondition
+			check l_icon_attached: l_icon /= Void end
+			Result := l_icon
 		end
 
 	current_pixmap: INTEGER
@@ -125,14 +135,19 @@ feature -- Element change
 		require
 			exists: exists
 			valid_bitmap: a_bitmap /= Void
+		local
+			l_bitmap: like internal_bitmap
 		do
-			if internal_bitmap /= Void and then internal_bitmap.reference_tracked then
-				internal_bitmap.decrement_reference
+			l_bitmap := internal_bitmap
+			if l_bitmap /= Void and then l_bitmap.reference_tracked then
+				l_bitmap.decrement_reference
 			end
-			internal_bitmap := a_bitmap
-			if internal_bitmap.reference_tracked then
-				internal_bitmap.increment_reference
+			l_bitmap := a_bitmap
+			internal_bitmap := l_bitmap
+			if l_bitmap.reference_tracked then
+				l_bitmap.increment_reference
 			end
+			current_pixmap := Image_bitmap
 			show_bitmap
 			{WEL_API}.send_message (item, Bm_setimage, to_wparam (Image_bitmap), a_bitmap.item)
 		end
@@ -143,14 +158,19 @@ feature -- Element change
 		require
 			exists: exists
 			valid_icon: an_icon /= Void
+		local
+			l_icon: like internal_icon
 		do
-			if internal_icon /= Void and then internal_icon.reference_tracked then
-				internal_icon.decrement_reference
+			l_icon := internal_icon
+			if l_icon /= Void and then l_icon.reference_tracked then
+				l_icon.decrement_reference
 			end
-			internal_icon := an_icon
-			if internal_icon.reference_tracked then
-				internal_icon.increment_reference
+			l_icon := an_icon
+			internal_icon := l_icon
+			if l_icon.reference_tracked then
+				l_icon.increment_reference
 			end
+			current_pixmap := Image_icon
 			show_icon
 			{WEL_API}.send_message (item, Bm_setimage, to_wparam (Image_icon), an_icon.item)
 		end
@@ -160,17 +180,21 @@ feature -- Element change
 		require
 			exists: exists
 			valid_bitmap: bitmap /= Void or icon /= Void
+		local
+			l_bitmap: like internal_bitmap
+			l_icon: like internal_icon
 		do
 			show_text
-			if internal_bitmap /= Void then 
-				if internal_bitmap.reference_tracked then
-					internal_bitmap.decrement_reference
+			l_bitmap := internal_bitmap
+			if l_bitmap /= Void then
+				if l_bitmap.reference_tracked then
+					l_bitmap.decrement_reference
 				end
 				internal_bitmap := Void
 			end
-			if internal_icon /= Void then
-				if internal_icon.reference_tracked then
-					internal_icon.decrement_reference
+			if l_icon /= Void then
+				if l_icon.reference_tracked then
+					l_icon.decrement_reference
 				end
 				internal_icon := Void
 			end
@@ -188,10 +212,10 @@ feature {NONE} -- Implementation
 						+ Ws_tabstop
 		end
 
-	internal_bitmap: WEL_BITMAP
+	internal_bitmap: ?WEL_BITMAP
 			-- Bitmap currently selected in the button. Void if none
-	
-	internal_icon: WEL_ICON;
+
+	internal_icon: ?WEL_ICON;
 			-- Bitmap currently selected in the button. Void if none
 
 note

@@ -24,7 +24,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (dc: WEL_DC; family: STRING_GENERAL)
+	make (dc: WEL_DC; family: ?STRING_GENERAL)
 			-- Enumerate the fonts in the font `family' that are
 			-- available on the `dc'.
 			-- If `family' is Void, Windows randomly selects and
@@ -50,7 +50,9 @@ feature -- Basic operations
 			-- `font_type' values.
 		require
 			elf_not_void: elf /= Void
+			elf_exists: elf.exists
 			tm_not_void: tm /= Void
+			tm_exists: tm.exists
 		deferred
 		end
 
@@ -68,7 +70,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	enumerate (dc: WEL_DC; family: STRING_GENERAL)
+	enumerate (dc: WEL_DC; family: ?STRING_GENERAL)
 			-- Enumerate `family' on `dc'
 		require
 			dc_not_void: dc /= Void

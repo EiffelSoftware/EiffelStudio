@@ -83,7 +83,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	scroller: WEL_SCROLLER
+	scroller: ?WEL_SCROLLER
 			-- Scroller object for processing scroll messages.
 
 feature -- Status report
@@ -129,8 +129,13 @@ feature -- Status report
 		require
 			exists: exists
 			scroller_exists: scroller /= Void
+		local
+			l_scroller: like scroller
 		do
-			Result := scroller.horizontal_position
+			l_scroller := scroller
+				-- Per precondition
+			check l_scroller_attached: l_scroller /= Void end
+			Result := l_scroller.horizontal_position
 		ensure
 			result_small_enough: Result <= maximal_horizontal_position
 			result_large_enough: Result >= minimal_horizontal_position
@@ -141,8 +146,13 @@ feature -- Status report
 		require
 			exists: exists
 			scroller_exists: scroller /= Void
+		local
+			l_scroller: like scroller
 		do
-			Result := scroller.vertical_position
+			l_scroller := scroller
+				-- Per precondition
+			check l_scroller_attached: l_scroller /= Void end
+			Result := l_scroller.vertical_position
 		ensure
 			result_small_enough: Result <= maximal_vertical_position
 			result_large_enough: Result >= minimal_vertical_position
@@ -153,8 +163,13 @@ feature -- Status report
 		require
 			exists: exists
 			scroller_exists: scroller /= Void
+		local
+			l_scroller: like scroller
 		do
-			Result := scroller.maximal_horizontal_position
+			l_scroller := scroller
+				-- Per precondition
+			check l_scroller_attached: l_scroller /= Void end
+			Result := l_scroller.maximal_horizontal_position
 		ensure
 			result_large_enough: Result >= minimal_horizontal_position
 		end
@@ -164,8 +179,13 @@ feature -- Status report
 		require
 			exists: exists
 			scroller_exists: scroller /= Void
+		local
+			l_scroller: like scroller
 		do
-			Result := scroller.maximal_vertical_position
+			l_scroller := scroller
+				-- Per precondition
+			check l_scroller_attached: l_scroller /= Void end
+			Result := l_scroller.maximal_vertical_position
 		ensure
 			result_large_enough: Result >= minimal_vertical_position
 		end
@@ -175,8 +195,13 @@ feature -- Status report
 		require
 			exists: exists
 			scroller_exists: scroller /= Void
+		local
+			l_scroller: like scroller
 		do
-			Result := scroller.minimal_horizontal_position
+			l_scroller := scroller
+				-- Per precondition
+			check l_scroller_attached: l_scroller /= Void end
+			Result := l_scroller.minimal_horizontal_position
 		ensure
 			result_small_enough: Result <= maximal_horizontal_position
 		end
@@ -186,8 +211,13 @@ feature -- Status report
 		require
 			exists: exists
 			scroller_exists: scroller /= Void
+		local
+			l_scroller: like scroller
 		do
-			Result := scroller.minimal_vertical_position
+			l_scroller := scroller
+				-- Per precondition
+			check l_scroller_attached: l_scroller /= Void end
+			Result := l_scroller.minimal_vertical_position
 		ensure
 			result_small_enough: Result <= maximal_vertical_position
 		end
@@ -199,6 +229,7 @@ feature -- Status report
 			-- the ChildWindowFromPoint Windows API call.
 		require
 			point_not_void: point /= Void
+			point_exists: point.exists
 		do
 			Result := cwin_child_window_from_point (item, point.item)
 		end
@@ -258,10 +289,16 @@ feature -- Status setting
 		require
 			exists: exists
 			scroller_exists: scroller /= Void
-			position_small_enough: scroller.valid_maximal_horizontal_position (position)
+			position_small_enough: {l_scroller_var: like scroller} scroller and then
+				l_scroller_var.valid_maximal_horizontal_position (position)
 			position_large_enough: position >= minimal_horizontal_position
+		local
+			l_scroller: like scroller
 		do
-			scroller.set_horizontal_position (position)
+			l_scroller := scroller
+				-- Per precondition
+			check l_scroller_attached: l_scroller /= Void end
+			l_scroller.set_horizontal_position (position)
 		ensure
 			horizontal_position_set: horizontal_position = position
 		end
@@ -271,10 +308,16 @@ feature -- Status setting
 		require
 			exists: exists
 			scroller_exists: scroller /= Void
-			position_small_enough: scroller.valid_maximal_vertical_position (position)
+			position_small_enough: {l_scroller_var: like scroller} scroller and then
+				l_scroller_var.valid_maximal_vertical_position (position)
 			position_large_enough: position >= minimal_vertical_position
+		local
+			l_scroller: like scroller
 		do
-			scroller.set_vertical_position (position)
+			l_scroller := scroller
+				-- Per precondition
+			check l_scroller_attached: l_scroller /= Void end
+			l_scroller.set_vertical_position (position)
 		ensure
 			vertical_position_set: vertical_position = position
 		end
@@ -287,8 +330,13 @@ feature -- Status setting
 			exists: exists
 			scroller_exists: scroller /= Void
 			consistent_range: minimum <= maximum
+		local
+			l_scroller: like scroller
 		do
-			scroller.set_horizontal_range (minimum, maximum)
+			l_scroller := scroller
+				-- Per precondition
+			check l_scroller_attached: l_scroller /= Void end
+			l_scroller.set_horizontal_range (minimum, maximum)
 		ensure
 			minimal_horizontal_position_set: minimal_horizontal_position =
 				minimum
@@ -304,8 +352,13 @@ feature -- Status setting
 			exists: exists
 			scroller_exists: scroller /= Void
 			consistent_range: minimum <= maximum
+		local
+			l_scroller: like scroller
 		do
-			scroller.set_vertical_range (minimum, maximum)
+			l_scroller := scroller
+				-- Per precondition
+			check l_scroller_attached: l_scroller /= Void end
+			l_scroller.set_vertical_range (minimum, maximum)
 		ensure
 			minimal_vertical_position_set: minimal_vertical_position =
 				minimum
@@ -319,7 +372,8 @@ feature -- Status setting
 		require
 			exists: exists
 			scroller_not_void: scroller /= Void
-			position_small_enough: scroller.valid_maximal_horizontal_position (position)
+			position_small_enough: {l_scroller: like scroller} scroller and then
+				l_scroller.valid_maximal_horizontal_position (position)
 			position_large_enough: position >= minimal_horizontal_position
 		do
 			scroll (inc, 0)
@@ -335,7 +389,8 @@ feature -- Status setting
 		require
 			exists: exists
 			scroller_not_void: scroller /= Void
-			position_small_enough: scroller.valid_maximal_vertical_position (position)
+			position_small_enough: {l_scroller: like scroller} scroller and then
+				l_scroller.valid_maximal_vertical_position (position)
 			position_large_enough: position >= minimal_vertical_position
 		do
 			scroll (0, inc)
@@ -372,10 +427,12 @@ feature -- Basic operations
 			exists: exists
 		local
 			point: WEL_POINT
+			l_parent: like parent
 		do
-			if parent /= Void then
+			l_parent := parent
+			if l_parent /= Void then
 				create point.make (a_x, a_y)
-				point.screen_to_client (parent)
+				point.screen_to_client (l_parent)
 				move (point.x, point.y)
 			else
 				move (a_x, a_y)
@@ -387,8 +444,10 @@ feature -- Basic operations
 			-- resize it with `a_width', `a_height'.
 		local
 			point: WEL_POINT
+			l_parent: like parent
 		do
-			if parent = Void then
+			l_parent := parent
+			if l_parent = Void then
 				move_absolute (a_x, a_y)
 				resize (a_width, a_height)
 				if repaint then
@@ -396,7 +455,7 @@ feature -- Basic operations
 				end
 			else
 				create point.make (a_x, a_y)
-				point.client_to_screen (parent)
+				point.client_to_screen (l_parent)
 				Precursor {WEL_WINDOW} (point.x, point.y, a_width, a_height, repaint)
 			end
 		end
@@ -455,7 +514,7 @@ feature {NONE}-- Messages
 		do
 		end
 
-	on_menu_select (menu_item, flags: INTEGER; a_menu: WEL_MENU)
+	on_menu_select (menu_item, flags: INTEGER; a_menu: ?WEL_MENU)
 			-- The `menu_item' from `a_menu' is currently
 			-- highlighted by the selection bar. `flags'
 			-- indicates the state of `a_menu'.
@@ -473,9 +532,11 @@ feature {NONE}-- Messages
 			-- the invalid rectangle of the client area that
 			-- needs to be repainted.
 		require
+			exists: exists
 			paint_dc_not_void: paint_dc /= Void
 			paint_dc_exists: paint_dc.exists
 			invalid_rect_not_void: invalid_rect /= Void
+			invalid_rect_exists: invalid_rect.exists
 		do
 		end
 
@@ -514,9 +575,12 @@ feature {NONE}-- Messages
 			-- scrollbox position.
 		require
 			exists: exists
+		local
+			l_scroller: like scroller
 		do
-			if scroller /= Void then
-				scroller.on_vertical_scroll (scroll_code,
+			l_scroller := scroller
+			if l_scroller /= Void then
+				l_scroller.on_vertical_scroll (scroll_code,
 					position)
 			end
 		end
@@ -528,9 +592,12 @@ feature {NONE}-- Messages
 			-- scrollbox position.
 		require
 			exists: exists
+		local
+			l_scroller: like scroller
 		do
-			if scroller /= Void then
-				scroller.on_horizontal_scroll (scroll_code,
+			l_scroller := scroller
+			if l_scroller /= Void then
+				l_scroller.on_horizontal_scroll (scroll_code,
 					position)
 			end
 		end
@@ -544,6 +611,7 @@ feature {NONE}-- Messages
 		require
 			exists: exists
 			draw_item_not_void: draw_item /= Void
+			draw_item_exists: draw_item.exists
 		do
 		end
 
@@ -580,10 +648,11 @@ feature {NONE}-- Messages
 		require
 			exists: exists
 			min_max_info_not_void: min_max_info /= Void
+			min_max_info_exists: min_max_info.exists
 		do
 		end
 
-	on_palette_is_changing (window: WEL_WINDOW)
+	on_palette_is_changing (window: ?WEL_WINDOW)
 			-- Wm_paletteischanging.
 			-- Inform that an application is going to realize its
 			-- logical palette. `window' identifies the window
@@ -593,7 +662,7 @@ feature {NONE}-- Messages
 		do
 		end
 
-	on_palette_changed (window: WEL_WINDOW)
+	on_palette_changed (window: ?WEL_WINDOW)
 			-- Wm_palettechanged message.
 			-- This message is sent after the window with the
 			-- keyboard focus has realized its logical palette.
@@ -629,7 +698,7 @@ feature {NONE} -- Implementation
 			-- Wm_notify message
 		local
 			info: WEL_NMHDR
-			control: WEL_CONTROL
+			control: ?WEL_CONTROL
 		do
 			create info.make_by_pointer (lparam)
 			on_notify (wparam.to_integer_32, info)
@@ -653,7 +722,7 @@ feature {NONE} -- Implementation
 		require
 			exists: exists
 		local
-			control: WEL_CONTROL
+			control: ?WEL_CONTROL
 			control_id: INTEGER
 			hwnd_control: POINTER
 			notify_code: INTEGER
@@ -734,12 +803,14 @@ feature {NONE} -- Implementation
 			exists: exists
 		local
 			paint_dc: WEL_PAINT_DC
+			l_scroller: like scroller
 		do
 			create paint_dc.make_by_pointer (Current, wparam)
 			paint_dc.get
-			if scroller /= Void then
-				paint_dc.set_viewport_origin (-scroller.horizontal_position,
-					-scroller.vertical_position)
+			l_scroller := scroller
+			if l_scroller /= Void then
+				paint_dc.set_viewport_origin (-l_scroller.horizontal_position,
+					-l_scroller.vertical_position)
 			end
 			on_paint (paint_dc, paint_dc.paint_struct.rect_paint)
 			paint_dc.release
@@ -750,7 +821,7 @@ feature {NONE} -- Implementation
 		require
 			exists: exists
 		local
-			a_bar: WEL_BAR
+			a_bar: ?WEL_BAR
 			p: POINTER
 		do
 			p := cwin_get_wm_vscroll_hwnd (wparam, lparam)
@@ -776,7 +847,7 @@ feature {NONE} -- Implementation
 		require
 			exists: exists
 		local
-			a_bar: WEL_BAR
+			a_bar: ?WEL_BAR
 			p: POINTER
 		do
 			p := cwin_get_wm_hscroll_hwnd (wparam, lparam)
@@ -824,7 +895,7 @@ feature {NONE} -- Implementation
 		require
 			exists: exists
 		local
-			control: WEL_COLOR_CONTROL
+			control: ?WEL_COLOR_CONTROL
 			hwnd_control: POINTER
 			paint_dc: WEL_PAINT_DC
 		do
@@ -875,7 +946,7 @@ feature {NONE} -- Implementation
 			-- Update the system colors.
 		local
 			child_wnd: LIST [WEL_WINDOW]
-			control: WEL_CONTROL
+			control: ?WEL_CONTROL
 		do
 				-- Invalidate the colors
 			system_color_scrollbar_cell.put (Void)
@@ -930,6 +1001,8 @@ feature {WEL_DISPATCHER}
 			msg: INTEGER; wparam, lparam: POINTER): POINTER
 		local
 			called: BOOLEAN
+			l_message: ?WEL_COMMAND_EXEC
+			l_commands: like commands
 		do
 			inspect msg
 			when Wm_paint then
@@ -977,11 +1050,12 @@ feature {WEL_DISPATCHER}
 				Result := window_process_message (hwnd, msg, wparam, lparam)
 			end
 			if not called then
-				if commands /= Void and then
-				   commands_enabled and then
-				   commands.has (msg)
-				then
-					commands.item (msg).execute (Current, msg, wparam, lparam)
+				l_commands := commands
+				if l_commands /= Void and then commands_enabled and then l_commands.has (msg) then
+					l_message := l_commands.item (msg)
+						-- Per checking.
+					check l_message_attached: l_message /= Void end
+					l_message.execute (Current, msg, wparam, lparam)
 				end
 			end
 		end

@@ -48,8 +48,12 @@ feature {NONE} -- Implementation
 
 	write_buffer
 			-- Write `a_buffer' in `file'.
+		local
+			l_buffer: like buffer
 		do
-			file.put_managed_pointer (buffer, 0, buffer.count)
+			l_buffer := buffer
+			check l_buffer_attached: l_buffer /= Void end
+			file.put_managed_pointer (l_buffer, 0, l_buffer.count)
 		end
 
 	finish_action

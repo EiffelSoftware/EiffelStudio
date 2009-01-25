@@ -85,6 +85,7 @@ feature {NONE} -- Initialization
 			-- Make a tree view control.
 		require
 			a_parent_not_void: a_parent /= Void
+			a_parent_exists: a_parent.exists
 		do
 			internal_window_make (a_parent, Void,
 				default_style, a_x, a_y, a_width, a_height,
@@ -101,8 +102,12 @@ feature -- Access
 	last_item: POINTER
 			-- Handle of the last item inserted
 
-	get_parent_item (an_item: WEL_TREE_VIEW_ITEM): WEL_TREE_VIEW_ITEM
+	get_parent_item (an_item: WEL_TREE_VIEW_ITEM): ?WEL_TREE_VIEW_ITEM
 			-- Return the parent item of the given item.
+		require
+			exists: exists
+			an_item_not_void: an_item /= Void
+			an_item_exists: an_item.exists
 		local
 			handle: POINTER
 		do
@@ -156,6 +161,8 @@ feature -- Status report
 			-- Is `an_item' selected?
 		require
 			exists: exists
+			an_item_not_void: an_item /= Void
+			an_item_exists: an_item.exists
 			valid_item: has_item (an_item)
 		local
 			wel_tree_view_item: WEL_TREE_VIEW_ITEM
@@ -172,6 +179,8 @@ feature -- Status report
 			-- Is `an_item' expanded?
 		require
 			exists: exists
+			an_item_not_void: an_item /= Void
+			an_item_exists: an_item.exists
 			valid_item: has_item (an_item)
 		local
 			wel_tree_view_item: WEL_TREE_VIEW_ITEM
@@ -189,6 +198,8 @@ feature -- Status report
 			-- operation?
 		require
 			exists: exists
+			an_item_not_void: an_item /= Void
+			an_item_exists: an_item.exists
 			valid_item: has_item (an_item)
 		local
 			wel_tree_view_item: WEL_TREE_VIEW_ITEM
@@ -205,6 +216,8 @@ feature -- Status report
 			-- Is `an_item' bold?
 		require
 			exists: exists
+			an_item_not_void: an_item /= Void
+			an_item_exists: an_item.exists
 			valid_item: has_item (an_item)
 		local
 			wel_tree_view_item: WEL_TREE_VIEW_ITEM
@@ -221,6 +234,8 @@ feature -- Status report
 			-- Is `an_item' selected as a drag ans drop target?
 		require
 			exists: exists
+			an_item_not_void: an_item /= Void
+			an_item_exists: an_item.exists
 			valid_item: has_item (an_item)
 		local
 			wel_tree_view_item: WEL_TREE_VIEW_ITEM
@@ -237,6 +252,8 @@ feature -- Status report
 			-- Is `an_item' a parent of other items?
 		require
 			exists: exists
+			an_item_not_void: an_item /= Void
+			an_item_exists: an_item.exists
 			valid_item: has_item (an_item)
 		local
 			wel_tree_view_item: WEL_TREE_VIEW_ITEM
@@ -291,9 +308,11 @@ feature -- Status report
 			item_valid: Result.exists
 		end
 
-	get_image_list: WEL_IMAGE_LIST
+	get_image_list: ?WEL_IMAGE_LIST
 			-- Get the image list associated with this treeview.
 			-- Returns Void if none.
+		require
+			exists: exists
 		local
 			handle: POINTER
 		do
@@ -304,11 +323,13 @@ feature -- Status report
 			end
 		end
 
-	get_item_rect (an_item: WEL_TREE_VIEW_ITEM): WEL_RECT
+	get_item_rect (an_item: WEL_TREE_VIEW_ITEM): ?WEL_RECT
 			-- `Result' is rect of item `an_item' or `Void'
 			-- if `an_item' is not visible.
 		require
+			exists: exists
 			an_item_not_void: an_item /= Void
+			an_item_exists: an_item.exists
 		local
 			rect: WEL_RECT
 		do
@@ -319,11 +340,13 @@ feature -- Status report
 			end
 		end
 
-	get_item_text_rect (an_item: WEL_TREE_VIEW_ITEM): WEL_RECT
+	get_item_text_rect (an_item: WEL_TREE_VIEW_ITEM): ?WEL_RECT
 			-- `Result' is rect for text of `an_item' or `Void'
 			-- if `an_item' is not visible.
 		require
+			exists: exists
 			an_item_not_void: an_item /= Void
+			an_item_exists: an_item.exists
 		local
 			rect: WEL_RECT
 		do
@@ -334,8 +357,10 @@ feature -- Status report
 			end
 		end
 
-	get_tooltip: WEL_TOOLTIP
+	get_tooltip: ?WEL_TOOLTIP
 			-- `Result' is tooltip associated with `Current'.
+		require
+			exists: exists
 		local
 			pointer: POINTER
 		do
@@ -347,6 +372,8 @@ feature -- Status report
 
 	get_background_color: WEL_COLOR_REF
 			-- `Result' is background color used for control.
+		require
+			exists: exists
 		local
 			color_int: INTEGER
 		do
@@ -356,6 +383,8 @@ feature -- Status report
 
 	get_text_color: WEL_COLOR_REF
 			-- `Result' is color for item text.
+		require
+			exists: exists
 		local
 			color_int: INTEGER
 		do
@@ -369,6 +398,8 @@ feature -- Status setting
 			-- Set the selection to the given `an_item'.
 		require
 			exists: exists
+			an_item_not_void: an_item /= Void
+			an_item_exists: an_item.exists
 			valid_item: has_item (an_item)
 		do
 			{WEL_API}.send_message (item, Tvm_selectitem, to_wparam (Tvgn_caret), an_item.h_item)
@@ -380,6 +411,8 @@ feature -- Status setting
 			-- Deselect the given item.
 		require
 			exists: exists
+			an_item_not_void: an_item /= Void
+			an_item_exists: an_item.exists
 			valid_item: has_item (an_item)
 		do
 			{WEL_API}.send_message (item, Tvm_selectitem, to_wparam (Tvgn_caret), to_lparam (0))
@@ -391,8 +424,10 @@ feature -- Status setting
 			-- Expand the given item.
 		require
 			exists: exists
-			is_parent: is_parent (an_item)
+			an_item_not_void: an_item /= Void
+			an_item_exists: an_item.exists
 			valid_item: has_item (an_item)
+			is_parent: is_parent (an_item)
 		do
 			{WEL_API}.send_message (item, Tvm_expand, to_wparam (Tve_expand), an_item.h_item)
 		ensure
@@ -403,8 +438,10 @@ feature -- Status setting
 			-- Collapse the given item.
 		require
 			exists: exists
-			is_parent (an_item)
+			an_item_not_void: an_item /= Void
+			an_item_exists: an_item.exists
 			valid_item: has_item (an_item)
+			is_parent: is_parent (an_item)
 		do
 			{WEL_API}.send_message (item, Tvm_expand, to_wparam (Tve_collapse), an_item.h_item)
 		ensure
@@ -416,6 +453,8 @@ feature -- Status setting
 			-- the given `an_item' is the first visible item.
 		require
 			exists: exists
+			an_item_not_void: an_item /= Void
+			an_item_exists: an_item.exists
 			valid_item: has_item (an_item)
 		do
 			{WEL_API}.send_message (item, Tvm_selectitem, to_wparam (Tvgn_firstvisible), an_item.h_item)
@@ -426,6 +465,8 @@ feature -- Status setting
 			-- indicate the target of a drag and drop operation.
 		require
 			exists: exists
+			an_item_not_void: an_item /= Void
+			an_item_exists: an_item.exists
 			valid_item: has_item (an_item)
 		do
 			{WEL_API}.send_message (item, Tvm_selectitem, to_wparam (Tvgn_drophilite), an_item.h_item)
@@ -439,10 +480,12 @@ feature -- Status setting
 			{WEL_API}.send_message (item, Tvm_setindent, to_wparam (an_indent), to_lparam (0))
 		end
 
-	set_image_list(an_imagelist: WEL_IMAGE_LIST)
+	set_image_list(an_imagelist: ?WEL_IMAGE_LIST)
 			-- Set the current image list to `an_imagelist'.
 			-- If `an_imagelist' is set to Void, it removes
 			-- the current associated image list (if any).
+		require
+			exists: exists
 		do
 				-- Then, associate the image list to the tree view.
 			if an_imagelist /= Void then
@@ -453,18 +496,28 @@ feature -- Status setting
 		end
 
 	set_tooltip (tooltip: WEL_TOOLTIP)
+		require
+			exists: exists
+			tooltip_not_void: tooltip /= Void
+			tooltip_exists: tooltip.exists
 		do
 			treeview_settooltips (item, tooltip.item)
 		end
 
 	set_background_color (a_color: WEL_COLOR_REF)
 			-- Assign `a_color' to background color.
+		require
+			exists: exists
+			a_color_not_void: a_color /= Void
 		do
 			{WEL_API}.send_message (item, Tvm_setbkcolor, to_wparam (0), to_lparam (a_color.item))
 		end
 
 	set_text_color (a_color: WEL_COLOR_REF)
 			-- Assign `a_color' to color of item text.
+		require
+			exists: exists
+			a_color_not_void: a_color /= Void
 		do
 			{WEL_API}.send_message (item, Tvm_settextcolor, to_wparam (0), to_lparam (a_color.item))
 		end
@@ -477,10 +530,16 @@ feature -- Element change
 			exists: exists
 			an_item_not_void: an_item /= Void
 			an_item_exists: an_item.exists
+			user_item_set: an_item.user_tree_view_item /= Void
+		local
+			l_user_item: ?WEL_TREE_VIEW_ITEM
 		do
 			last_item := {WEL_API}.send_message_result (item, Tvm_insertitem, to_wparam (0), an_item.item)
 			an_item.tree_view_item.set_h_item (last_item)
-			an_item.user_tree_view_item.set_h_item (last_item)
+			l_user_item := an_item.user_tree_view_item
+				-- Per precondition
+			check l_user_item_attached: l_user_item /= Void end
+			l_user_item.set_h_item (last_item)
 		ensure
 			new_count: count = old count + 1
 		end
@@ -490,6 +549,7 @@ feature -- Element change
 		require
 			exists: exists
 			item_not_void: an_item /= Void
+			an_item_exists: an_item.exists
 			valid_item: has_item (an_item)
 			has_items: count > 0
 		local
@@ -534,6 +594,8 @@ feature -- Notifications
 			-- button is being initiated.
 		require
 			exists: exists
+			info_not_void: info /= Void
+			info_exists: info.exists
 		do
 		end
 
@@ -541,6 +603,8 @@ feature -- Notifications
 			-- A label editing for an item has started.
 		require
 			exists: exists
+			info_not_void: info /= Void
+			info_exists: info.exists
 		do
 		end
 
@@ -549,6 +613,8 @@ feature -- Notifications
 			-- button is being initiated.
 		require
 			exists: exists
+			info_not_void: info /= Void
+			info_exists: info.exists
 		do
 		end
 
@@ -556,6 +622,8 @@ feature -- Notifications
 			-- An item has been deleted.
 		require
 			exists: exists
+			info_not_void: info /= Void
+			info_exists: info.exists
 		do
 		end
 
@@ -563,6 +631,8 @@ feature -- Notifications
 			-- A label editing for an item has ended.
 		require
 			exists: exists
+			info_not_void: info /= Void
+			info_exists: info.exists
 		do
 		end
 
@@ -571,6 +641,8 @@ feature -- Notifications
 			-- to display or sort an item.
 		require
 			exists: exists
+			info_not_void: info /= Void
+			info_exists: info.exists
 		do
 		end
 
@@ -579,6 +651,8 @@ feature -- Notifications
 			-- or collapsed.
 		require
 			exists: exists
+			info_not_void: info /= Void
+			info_exists: info.exists
 		do
 		end
 
@@ -587,6 +661,8 @@ feature -- Notifications
 			-- expand or collapse.
 		require
 			exists: exists
+			info_not_void: info /= Void
+			info_exists: info.exists
 		do
 		end
 
@@ -602,6 +678,8 @@ feature -- Notifications
 			-- Selection has changed from one item to another.
 		require
 			exists: exists
+			info_not_void: info /= Void
+			info_exists: info.exists
 		do
 		end
 
@@ -610,6 +688,8 @@ feature -- Notifications
 			-- another.
 		require
 			exists: exists
+			info_not_void: info /= Void
+			info_exists: info.exists
 		do
 		end
 
@@ -618,6 +698,8 @@ feature -- Notifications
 			-- it maintains about an item.
 		require
 			exists: exists
+			info_not_void: info /= Void
+			info_exists: info.exists
 		do
 		end
 
@@ -685,14 +767,13 @@ feature {WEL_NM_TREE_VIEW} -- Implementation
       		local
 			buffer: STRING_32
 		do
-			an_item.set_mask (Tvif_text + Tvif_state + Tvif_param)
+			Result := an_item
+			Result.set_mask (Tvif_text + Tvif_state + Tvif_param)
 			create buffer.make (Buffer_size)
 			buffer.fill_blank
-			an_item.set_text (buffer)
-			an_item.set_cchtextmax (Buffer_size)
-			if {WEL_API}.send_message_result (item, Tvm_getitem, to_wparam (0), an_item.item) /= default_pointer then
-				Result := an_item
-			end
+			Result.set_text (buffer)
+			Result.set_cchtextmax (Buffer_size)
+			{WEL_API}.send_message (item, Tvm_getitem, to_wparam (0), an_item.item)
 		ensure
 			item_found: Result /= Void
 			item_valid: Result.exists

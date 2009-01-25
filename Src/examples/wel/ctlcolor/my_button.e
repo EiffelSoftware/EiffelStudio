@@ -22,11 +22,15 @@ create
 
 feature -- Initialization
 
- 	make (a_parent: WEL_WINDOW; a_name: STRING; a_x, a_y, a_width, a_height, an_id, a_type: INTEGER)
+ 	make (a_parent: MAIN_WINDOW; a_name: STRING; a_x, a_y, a_width, a_height, an_id, a_type: INTEGER)
 			-- Create the button.
+		require -- from WEL_BUTTON
+			a_parent_not_void: a_parent /= Void
+			a_parent_exists: a_parent.exists
+			a_name_not_void: a_name /= Void
 		do
+			window := a_parent
 			wel_make (a_parent, a_name, a_x, a_y, a_width, a_height, an_id)
-			window ?= a_parent
 			type := a_type
 		end
 
@@ -43,7 +47,7 @@ feature {NONE} -- Implementation
   	on_bn_clicked
    			-- Called when the button is clicked
 		local
-			dialog: WEL_CHOOSE_COLOR_DIALOG 
+			dialog: WEL_CHOOSE_COLOR_DIALOG
 		do
 			create dialog.make
 			dialog.activate (window)

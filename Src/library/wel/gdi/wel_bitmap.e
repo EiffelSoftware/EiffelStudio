@@ -85,6 +85,7 @@ feature {NONE} -- Initialization
 			a_dc_not_void: a_dc /= Void
 			a_dc_exists: a_dc.exists
 			dib_not_void: dib /= Void
+			dib_exists: dib.exists
 			valid_mode: valid_dib_colors_constant (mode)
 		do
 			item := cwin_create_di_bitmap (a_dc.item, dib.info_header.item,
@@ -97,6 +98,9 @@ feature {NONE} -- Initialization
 	make_by_bitmap (a_bitmap: WEL_BITMAP)
 			-- Create a WEL_BITMAP from another WEL_BITMAP. The
 			-- bitmap is copied by value
+		require
+			a_bitmap_not_void: a_bitmap /= Void
+			a_bitmap_exists: a_bitmap.exists
 		do
 			item := cwin_copy_image(a_bitmap.item, Image_bitmap, a_bitmap.width, a_bitmap.height, 0)
 			shared := False
@@ -110,6 +114,7 @@ feature {NONE} -- Initialization
 			-- Make a bitmap using `a_log_bitmap'.
 		require
 			a_log_bitmap_not_void: a_log_bitmap /= Void
+			a_log_bitmap_exists: a_log_bitmap.exists
 		do
 			item := cwin_create_bitmap_indirect (a_log_bitmap.item)
 			gdi_make
@@ -201,6 +206,7 @@ feature -- Basic operations
 			a_dc_not_void: a_dc /= Void
 			a_dc_exists: a_dc.exists
 			dib_not_void: dib /= Void
+			dib_exists: dib.exists
 			valid_mode: valid_dib_colors_constant (mode)
 		do
 			cwin_set_di_bits (a_dc.item, item, start_line, length,

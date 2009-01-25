@@ -22,6 +22,7 @@ feature {NONE} -- Initialization
 	make
 			-- Make the main window.
 		do
+			create dc.make (create {WEL_FRAME_WINDOW}.make_top ("dummy"))
 			make_top ("My application")
 			create dc.make (Current)
 		end
@@ -76,8 +77,7 @@ feature {NONE} -- Implementation
 			msg_box: WEL_MSG_BOX
 		do
 			create msg_box.make
-			msg_box.question_message_box (Current, "Do you want to quit?",
-				"Quit")
+			msg_box.question_message_box (Current, "Do you want to quit?", "Quit")
 			Result := msg_box.message_box_result = Idyes
 		end
 

@@ -5,6 +5,8 @@ class
 	CARD
 
 inherit
+	ANY
+
 	BASIC_ROUTINES
 		export
 			{NONE} all
@@ -90,7 +92,7 @@ feature -- Access
 		ensure
 			offset_x_is_set: offset_x = a_x
 		end
-	
+
 	set_x (a_x: INTEGER)
 			-- Set the `x_position' to `a_y'
 		do
@@ -111,7 +113,7 @@ feature -- Access
 			-- Does the point defined by
 			-- (x_pos, y_pos) is inside the image?
 		do
-			Result := x_pos > x_position 
+			Result := x_pos > x_position
 				and y_pos > y_position
 				and x_pos < x_position + card_image.width
 				and y_pos < y_position + card_image.height
@@ -122,7 +124,7 @@ feature -- Access
 		require
 			a_card_not_void: a_card /= Void
 		do
-			Result := includes_point (a_card.x_position + (card_image.width // 2), a_card.y_position) 
+			Result := includes_point (a_card.x_position + (card_image.width // 2), a_card.y_position)
 				or includes_point (a_card.x_position + (card_image.width // 2), a_card.y_position +
 					card_image.height)
 		end

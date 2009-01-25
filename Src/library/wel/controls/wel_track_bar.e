@@ -38,6 +38,7 @@ feature {NONE} -- Initialization
 			-- Make a vertical track bar.
 		require
 			a_parent_not_void: a_parent /= Void
+			a_parent_exists: a_parent.exists
 		do
 			internal_window_make (a_parent, Void,
 				default_style + Tbs_vert,
@@ -56,6 +57,7 @@ feature {NONE} -- Initialization
 			-- Make a horizontal track bar.
 		require
 			a_parent_not_void: a_parent /= Void
+			a_parent_exists: a_parent.exists
 		do
 			internal_window_make (a_parent, Void,
 				default_style + Tbs_horz,

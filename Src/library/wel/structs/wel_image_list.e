@@ -112,6 +112,7 @@ feature -- Basic operations
 			-- Add the bitmap `bitmap_to_add' into the image list.
 		require
 			bitmap_not_void: bitmap_to_add /= Void
+			bitmap_exists: bitmap_to_add.exists
 			compatible_width_for_bitmap: bitmap_to_add.width = bitmaps_width
 			compatible_height_for_bitmap: bitmap_to_add.height = bitmaps_height
 			exists: exists
@@ -124,6 +125,7 @@ feature -- Basic operations
 			-- `bitmap_to_add'.
 		require
 			bitmap_not_void: bitmap_to_add /= Void
+			bitmap_to_add_exists: bitmap_to_add.exists
 			not_use_masked_bitmap: not use_masked_bitmap
 			index_not_too_small: index >= 0
 			index_not_too_big: index < count
@@ -137,7 +139,9 @@ feature -- Basic operations
 			-- `bitmap_mask' represents the mask for the bitmap.
 		require
 			bitmap_not_void: bitmap_to_add /= Void
+			bitmap_to_add_exists: bitmap_to_add.exists
 			mask_not_void: bitmap_mask /= Void
+			mask_exists: bitmap_mask.exists
 			compatible_width_for_bitmap: bitmap_to_add.width = bitmaps_width
 			compatible_height_for_bitmap: bitmap_to_add.height = bitmaps_height
 			compatible_width_for_mask: bitmap_mask.width = bitmaps_width
@@ -154,7 +158,9 @@ feature -- Basic operations
 			-- `bitmap_mask' represents the mask for the bitmap.
 		require
 			bitmap_not_void: bitmap_to_add /= Void
+			bitmap_to_add_exists: bitmap_to_add.exists
 			mask_not_void: bitmap_mask /= Void
+			mask_exists: bitmap_mask.exists
 			compatible_width_for_bitmap: bitmap_to_add.width = bitmaps_width
 			compatible_height_for_bitmap: bitmap_to_add.height = bitmaps_height
 			compatible_width_for_mask: bitmap_mask.width = bitmaps_width
@@ -177,6 +183,7 @@ feature -- Basic operations
 
 		require
 			bitmap_not_void: bitmap_to_add /= Void
+			bitmap_to_add_exists: bitmap_to_add.exists
 			mask_color_not_void: mask_color /= Void
 			compatible_width_for_bitmap: bitmap_to_add.width = bitmaps_width
 			compatible_height_for_bitmap: bitmap_to_add.height = bitmaps_height
@@ -188,14 +195,18 @@ feature -- Basic operations
 	add_icon (icon_to_add: WEL_GRAPHICAL_RESOURCE)
 			-- Adds the icon or cursor `icon_to_add' to this image list
 		require
-			icon_not_void: icon_to_add /= Void
 			exists: exists
+			icon_not_void: icon_to_add /= Void
+			icon_exists: icon_to_add.exists
 		do
 			last_position := cwel_imagelist_add_icon(item, icon_to_add.item)
 		end
 
 	draw_to_dc (index: INTEGER; a_dc: WEL_DC; a_x, a_y: INTEGER; a_style: NATURAL_32)
 			-- Draw image at index `index' to `a_dc' at (`a_x', `a_y') using `a_style'.
+		require
+			a_dc_not_void: a_dc /= Void
+			a_dc_exists: a_dc.exists
 		local
 			l_success: INTEGER
 		do
@@ -207,6 +218,7 @@ feature -- Basic operations
 			-- the cursor or icon `icon_to_add'.
 		require
 			icon_not_void: icon_to_add /= Void
+			icon_exists: icon_to_add.exists
 			index_not_too_small: index >= 0
 			index_not_too_big: index < count
 			exists: exists

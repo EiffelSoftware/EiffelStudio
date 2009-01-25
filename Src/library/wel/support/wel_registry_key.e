@@ -10,11 +10,15 @@ class
 
 create
 	make
-	
+
 feature -- Initialization
 
 	make (a_name, a_class_id: STRING_GENERAL; a_modification_time: WEL_FILE_TIME)
 			-- Create current instance.
+		require
+			a_name_not_void: a_name /= Void
+			a_class_id_not_void: a_class_id /= Void
+			a_modification_time_not_void: a_modification_time /= Void
 		do
 			name := a_name
 			class_id := a_class_id
@@ -24,12 +28,12 @@ feature -- Initialization
 			class_id_set: class_id = a_class_id
 			last_change_set: last_change = a_modification_time
 		end
-		
+
 feature -- Access
 
 	name: STRING_GENERAL
 			-- Name of key
-		
+
 	class_id: STRING_GENERAL
 			-- Class of key
 
@@ -46,9 +50,6 @@ note
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end -- class WEL_REGISTRY_KEY
 

@@ -8,7 +8,7 @@ note
 			The `lparam' parameter of the message contains a long pointer 
 			to a COMPAREITEMSTRUCT structure. Upon receiving the message, 
 			the owner compares the two items and returns a value indicating 
-			which item sorts before the other. 
+			which item sorts before the other.
 			]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ inherit
 		undefine
 			copy, is_equal
 		end
-	
+
 create
 	make_by_pointer
 
@@ -40,62 +40,62 @@ feature -- Access
 		end
 
 	ctl_id: INTEGER
-			-- Specifies the identifier of the list box or combo box. 
+			-- Specifies the identifier of the list box or combo box.
 		do
 			Result := cwel_compareitemstruct_get_ctlid (item)
 		end
 
-	window_item: WEL_CONTROL
+	window_item: ?WEL_CONTROL
 			-- Identifies the control.
 		do
 			Result ?= window_of_item (cwel_compareitemstruct_get_hwnditem (item))
 		end
-		
+
 	item_id_1: INTEGER
-			-- Specifies the index of the first item in 
-			-- the list box or combo box being compared. 
-			-- This member will be -1 if the item has not 
-			-- been inserted or when searching for a potential 
-			-- item in the list box or combo box. 
+			-- Specifies the index of the first item in
+			-- the list box or combo box being compared.
+			-- This member will be -1 if the item has not
+			-- been inserted or when searching for a potential
+			-- item in the list box or combo box.
 		do
 			Result := cwel_compareitemstruct_get_itemid1 (item)
 		end
 
 	item_data_1: POINTER
-			-- Specifies application-supplied data for the 
-			-- first item being compared. (This value was 
-			-- passed as the lParam parameter of the message 
-			-- that added the item to the list box or combo box.) 
+			-- Specifies application-supplied data for the
+			-- first item being compared. (This value was
+			-- passed as the lParam parameter of the message
+			-- that added the item to the list box or combo box.)
 		do
 			Result := cwel_compareitemstruct_get_itemdata1 (item)
 		end
-		
+
 	item_id_2: INTEGER
-			-- Specifies the index of the second item in the 
-			-- list box or combo box being compared. 
+			-- Specifies the index of the second item in the
+			-- list box or combo box being compared.
 		do
 			Result := cwel_compareitemstruct_get_itemid2 (item)
 		end
 
 	item_data_2: POINTER
-			-- Specifies application-supplied data for the 
-			-- second item being compared. This value was 
-			-- passed as the lParam parameter of the message 
-			-- that added the item to the list box or combo box. 
-			-- This member will be -1 if the item has not been 
-			-- inserted or when searching for a potential item 
-			-- in the list box or combo box. 
+			-- Specifies application-supplied data for the
+			-- second item being compared. This value was
+			-- passed as the lParam parameter of the message
+			-- that added the item to the list box or combo box.
+			-- This member will be -1 if the item has not been
+			-- inserted or when searching for a potential item
+			-- in the list box or combo box.
 		do
 			Result := cwel_compareitemstruct_get_itemdata2 (item)
 		end
 
 	locale_id: INTEGER
-			-- Specifies the locale identifier. To create a 
-			-- locale identifier, use the MAKELCID macro. 
+			-- Specifies the locale identifier. To create a
+			-- locale identifier, use the MAKELCID macro.
 		do
 			Result := cwel_compareitemstruct_get_dwlocaleid (item)
 		end
-		
+
 feature -- Measurement
 
 	structure_size: INTEGER

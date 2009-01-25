@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 			name_set: text.is_equal (a_name)
 		end
 
-	make_top (a_name: STRING_GENERAL)
+	make_top (a_name: ?STRING_GENERAL)
 			-- Make a top window (without parent) with `a_name'
 			-- as a title.
 		do
@@ -139,7 +139,7 @@ feature -- Standard window class values
 		ensure
 			result_not_null: Result /= default_pointer
 		end
-	
+
 	class_requires_icon: BOOLEAN
 			-- Does `Current' require an icon to be registered?
 			-- If `True' `register_class' assigns a class icon, otherwise

@@ -29,6 +29,8 @@ feature {NONE} -- Initialization
 	make
 		local
 			char_format: WEL_CHARACTER_FORMAT
+			l_rich_edit: WEL_RICH_EDIT
+			l_split_area: like split_area
 		do
 			make_top (Title)
 
@@ -36,36 +38,38 @@ feature {NONE} -- Initialization
 			char_format.set_face_name ("Arial")
 			char_format.set_height_in_points (25)
 
-			create split_area.make (Current, "", 0, 0, 440, 390, 220)
+			create l_split_area.make (Current, "", 0, 0, 440, 390, 220)
+			split_area := l_split_area
 
 				-- Create the left RichEdit control
-			create rich_edit_left.make (split_area, "", 7, 7, 200, 300, -1)
-			rich_edit_left.set_character_format_selection (char_format)
-			rich_edit_left.set_text ("Left RichEdit control")
+			create l_rich_edit.make (l_split_area, "", 7, 7, 200, 300, -1)
+			l_rich_edit.set_character_format_selection (char_format)
+			l_rich_edit.set_text ("Left RichEdit control")
+			l_split_area.set_left_control (l_rich_edit)
+				-- For GC tracking
+			rich_edit_right := l_rich_edit
 
 				-- Create the right  RichEdit control
-			create rich_edit_right.make (split_area, "", 207, 7, 200, 300, -1)
-			rich_edit_right.set_character_format_selection (char_format)
-			rich_edit_right.set_text ("Right RichEdit control")
-
-			split_area.set_left_control (rich_edit_left)
-			split_area.set_right_control (rich_edit_right)
+			create l_rich_edit.make (l_split_area, "", 207, 7, 200, 300, -1)
+			l_rich_edit.set_character_format_selection (char_format)
+			l_rich_edit.set_text ("Right RichEdit control")
+			l_split_area.set_right_control (l_rich_edit)
+				-- For GC tracking
+			rich_edit_left := l_rich_edit
 
 			resize (450, 400)
 		end
 
 feature -- Access
 
-	split_area: WEL_SPLIT_AREA
+	split_area: ?WEL_SPLIT_AREA
 			-- Our split area !!
 
-	rich_edit_left: WEL_RICH_EDIT
+	rich_edit_left: ?WEL_RICH_EDIT
 			-- The left RichEdit control
 
-	rich_edit_right: WEL_RICH_EDIT
+	rich_edit_right: ?WEL_RICH_EDIT
 			-- The right RichEdit control
-
-feature {NONE} -- Implementation
 
 	background_brush: WEL_BRUSH
 			-- Dialog boxes background color is the same than
@@ -74,11 +78,15 @@ feature {NONE} -- Implementation
 			create Result.make_by_sys_color (Color_btnface + 1)
 		end
 
+feature {NONE} -- Implementation
+
 	on_size (size_type: INTEGER; a_width: INTEGER; a_height: INTEGER)
 			-- Wm_size message handle
 		do
 				-- Reposition & Resize the split area
-			split_area.move_and_resize (0, 0, a_width, a_height, True)
+			if {l_split_area: like split_area} split_area then
+				l_split_area.move_and_resize (0, 0, a_width, a_height, True)
+			end
 		end
 
 	Title: STRING = "WEL SplitArea Example (c) ISE 2000-2001";

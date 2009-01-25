@@ -82,6 +82,7 @@ feature -- Element change
 			-- Set `a_pal_entry' at `index'
 		require
 			a_pal_entry_not_void: a_pal_entry /= Void
+			a_pal_entry_exists: a_pal_entry.exists
 		do
 			cwel_log_palette_set_pal_entry_red (item, index,
 				a_pal_entry.red)

@@ -68,8 +68,21 @@ feature {NONE} -- Initialization
 		local
 			background_bitmap: WEL_BITMAP
 			virtual_bitmap: WEL_BITMAP
+			l_frame: WEL_FRAME_WINDOW
 		do
+			create game_manager.make (Maximum_number_of_cards)
+				-- To make code Void safe, we create a dummy window and intialize attributes.
+			create l_frame.make_top ("Dummy")
+			create client_dc.make (l_frame)
+			client_dc.get
+			create virtual_dc.make_by_dc (client_dc)
+			create background_dc.make_by_dc (client_dc)
+			create virtual_bitmap.make_compatible (client_dc, scr_width, scr_height)
+			create background_bitmap.make_compatible (client_dc, scr_width, scr_height)
+
 			make_top ("Xcell")
+
+				-- Initialize attributes based on Current Window.
 			create client_dc.make (Current)
 			client_dc.get
 			create virtual_dc.make_by_dc (client_dc)
@@ -77,7 +90,7 @@ feature {NONE} -- Initialization
 			create virtual_bitmap.make_compatible (client_dc, scr_width, scr_height)
 			create background_bitmap.make_compatible (client_dc, scr_width, scr_height)
 			virtual_dc.select_bitmap (virtual_bitmap)
-			background_dc.select_bitmap (background_bitmap)	
+			background_dc.select_bitmap (background_bitmap)
 			set_menu (main_menu)
 			resize_to_start_window
 		end
@@ -129,11 +142,11 @@ feature {NONE} -- Implementation
 				if number_of_cards = 0 then
 					number_of_cards := Maximum_number_of_cards
 				end
-				create game_manager.make (number_of_cards)
 				if game_number = 0 then
 					game_number := tick_count \\ Maximum_game_number
 					select_game_number_dialog.set_game_number (game_number)
 				end
+				create game_manager.make (number_of_cards)
 				game_manager.shuffle_the_cards (game_number)
 				game_manager.deal_game
 				draw_background_virtual
@@ -155,7 +168,6 @@ feature {NONE} -- Implementation
 				main_menu.enable_item (Cmd_select_game_number)
 				virtual_dc.pat_blt (0, 0, scr_width, scr_height, patcopy)
 				resize_to_start_window
-				game_manager := Void
 				started := false
 			elseif id_menu = Cmd_select_number_of_cards then
 				select_number_of_cards_dialog.activate
@@ -214,7 +226,7 @@ feature {NONE} -- Implementation
 	redraw_before_move (source_is_column: BOOLEAN)
 			-- Redraw when card is selected
 		local
-			card_p: CARD
+			card_p: ?CARD
 			card_a: CARD
 		do
 			card_a := active_card
@@ -222,7 +234,7 @@ feature {NONE} -- Implementation
 			if source_is_column then
 				if card_p /= Void then
 					virtual_dc.bit_blt (card_p.x_position, card_p.y_position + card_p.height,
-						card_p.width, card_a.y_position - card_p.y_position, background_dc, 
+						card_p.width, card_a.y_position - card_p.y_position, background_dc,
 						card_p.x_position, card_p.y_position + card_p.height, Srccopy)
 					draw_card (card_p, virtual_dc)
 				else
@@ -243,7 +255,7 @@ feature {NONE} -- Implementation
 			draw_card (active_card, client_dc)
 			draw_card (active_card, virtual_dc)
 		end
-			
+
 	on_right_button_down (keys, x_pos, y_pos: INTEGER)
 		do
 			-- If the user clicked on a card with the right mouse
@@ -286,7 +298,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-				
+
 	on_left_button_down (keys, x_pos, y_pos: INTEGER)
 			-- If the user clicked on a card with the left mouse
 			-- button, the selected card will become the `active_card',
@@ -392,7 +404,7 @@ feature {NONE} -- Implementation
 		end
 
 	end_sequence
-			-- The user has finished a game, a bitmap is tiled 
+			-- The user has finished a game, a bitmap is tiled
 			-- in the client-area
 		local
 			x_position: INTEGER
@@ -417,7 +429,7 @@ feature {NONE} -- Implementation
 				x_position := x_position + end_bitmap.width
 			end
 		end
-	
+
 	draw_background_virtual
 			-- Setup the background on the virtual and the
 			-- background DC
@@ -482,8 +494,8 @@ feature {NONE} -- Implementation
 			a_card_not_void: a_card /= Void
 			a_dc_not_void: a_dc /= Void
 			a_dc_exists: a_dc.exists
-		do			
-			a_dc.draw_bitmap (a_card.card_image, a_card.x_position, 
+		do
+			a_dc.draw_bitmap (a_card.card_image, a_card.x_position,
 				a_card.y_position, a_card.width, a_card.height)
 		end
 
@@ -520,7 +532,7 @@ feature {NONE} -- Implementation
 				paint_dc.copy_dc (virtual_dc, invalid_rect)
 			else
 				paint_dc.rectangle (-1, -1, scr_width, scr_height)
-				paint_dc.draw_bitmap (start_bitmap, (client_rect.width - start_bitmap.width) // 2, 
+				paint_dc.draw_bitmap (start_bitmap, (client_rect.width - start_bitmap.width) // 2,
 					(client_rect.height - start_bitmap.height) // 2, start_bitmap.width,
 					start_bitmap.height)
 			end
@@ -528,7 +540,7 @@ feature {NONE} -- Implementation
 
 feature -- Implementation
 
-	previous_card: CARD
+	previous_card: ?CARD
 			-- The previous card in the columnn of the active card.
 			-- This is necessary for efficient redrawing.
 		do
@@ -618,7 +630,7 @@ feature -- Implementation
 		ensure
 			positive_height: scr_height /= 0
 		end
-	
+
 	scr_width: INTEGER
 			-- The maximum width of the client area
 		once
@@ -633,7 +645,7 @@ invariant
 	background_dc_exists: exists implies background_dc.exists
 	virtual_dc_not_void: exists implies virtual_dc /= Void
 	virtual_dc_exists: exists implies virtual_dc.exists
-		
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

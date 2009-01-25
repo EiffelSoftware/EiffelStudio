@@ -41,22 +41,22 @@ feature {NONE} -- Initialization
 				-- Set a timer for the 3d_demo.
 				-- `demo_timer_id' is the timer id and 50 is the
 				-- interval length in milliseconds.
-			set_timer (demo_timer_id, 50)	
+			set_timer (demo_timer_id, 50)
 		end
 
 feature -- Access
 
-	brush_demo: BRUSH_DEMO
+	brush_demo: ?BRUSH_DEMO
 
-	rectangle_demo: RECTANGLE_DEMO
+	rectangle_demo: ?RECTANGLE_DEMO
 
-	three_d_demo: DEMO_3D
+	three_d_demo: ?DEMO_3D
 
-	brush_button: WEL_PUSH_BUTTON
+	brush_button: ?WEL_PUSH_BUTTON
 
-	rectangle_button: WEL_PUSH_BUTTON
+	rectangle_button: ?WEL_PUSH_BUTTON
 
-	demo3d_button: WEL_PUSH_BUTTON
+	demo3d_button: ?WEL_PUSH_BUTTON
 
 feature {NONE} -- Implementation
 
@@ -74,23 +74,23 @@ feature {NONE} -- Implementation
 	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- Draw the ISE logo bitmap
 		do
-			paint_dc.draw_bitmap (ise_logo, 158, 10, 
+			paint_dc.draw_bitmap (ise_logo, 158, 10,
 				ise_logo.width, ise_logo.height)
 		end
-		
+
 	on_timer (timer_id: INTEGER)
 			-- Wm_timer message.
 			-- A Wm_timer has been received from `timer_id'
-			-- We use this timer to 
+			-- We use this timer to
 		do
-			if timer_id = demo_timer_id and then
-				three_d_demo /= Void and then
-				three_d_demo.exists and then
-				three_d_demo.ready then
-				three_d_demo.go
+			if
+				timer_id = demo_timer_id and then
+				{l_demo: like three_d_demo} three_d_demo and then
+				l_demo.exists and then l_demo.ready
+			then
+				l_demo.go
 			end
 		end
-		
 
 	class_icon: WEL_ICON
 			-- Window's icon
@@ -108,7 +108,7 @@ feature {NONE} -- Implementation
 
 	Title: STRING = "WEL GDI demo"
 		-- Window's title
-			
+
 	demo_timer_id: INTEGER = unique;
 		-- Unique integer for timer.
 

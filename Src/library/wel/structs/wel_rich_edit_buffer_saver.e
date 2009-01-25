@@ -47,12 +47,16 @@ feature {NONE} -- Implementation
 			l_uni_str: WEL_STRING
 			l_c_str: C_STRING
 			l_text: STRING_32
+			l_buffer: like buffer
 		do
+			l_buffer := buffer
+				-- Per precondition
+			check l_buffer_attached: l_buffer /= Void end
 			if is_unicode_data then
-				create l_uni_str.share_from_pointer_and_count (buffer.item, buffer.count)
+				create l_uni_str.share_from_pointer_and_count (l_buffer.item, l_buffer.count)
 				l_text := l_uni_str.substring (1, l_uni_str.count)
 			else
-				create l_c_str.share_from_pointer_and_count (buffer.item, buffer.count)
+				create l_c_str.make_shared_from_pointer_and_count (l_buffer.item, l_buffer.count)
 				l_text := l_c_str.substring (1, l_c_str.count)
 			end
 			text.append (l_text)

@@ -23,6 +23,7 @@ feature {NONE} -- Initialization
 			-- Make the structure with `a_nmhdr'.
 		require
 			a_nmhdr_not_void: a_nmhdr /= Void
+			a_nmhdr_exists: a_nmhdr.exists
 		do
 			make_by_pointer (a_nmhdr.item)
 		end
@@ -31,6 +32,8 @@ feature -- Access
 
 	hdr: WEL_NMHDR
 			-- Information about the Wm_notify message.
+		require
+			exists: exists
 		do
 			create Result.make_by_pointer (cwel_nm_treeview_get_hdr (item))
 		ensure
@@ -40,19 +43,24 @@ feature -- Access
 	action: INTEGER
 			-- Information about the notification-specific action flag.
 			-- See class WEL_TVAF_CONSTANTS for the meaning of this parameter.
+		require
+			exists: exists
 		do
 			Result := cwel_nm_treeview_get_action (item)
 		end
 
-	new_item: WEL_TREE_VIEW_ITEM
+	new_item: ?WEL_TREE_VIEW_ITEM
 			-- Information about the new item state
-		local
-			tree: WEL_TREE_VIEW
+		require
+			exists: exists
 		do
 			create Result.make_by_pointer (cwel_nm_treeview_get_itemnew (item))
-			tree ?= hdr.window_from
-			if tree.has_item (Result) then
-				Result := tree.get_item_with_data (Result)
+			if {l_tree: WEL_TREE_VIEW} hdr.window_from then
+				if l_tree.has_item (Result) then
+					Result := l_tree.get_item_with_data (Result)
+				else
+					Result := Void
+				end
 			else
 				Result := Void
 			end
@@ -60,13 +68,14 @@ feature -- Access
 
 	old_item: WEL_TREE_VIEW_ITEM
 			-- Information about the old item state
-		local
-			tree: WEL_TREE_VIEW
+		require
+			exists: exists
 		do
 			create Result.make_by_pointer (cwel_nm_treeview_get_itemold (item))
-			tree ?= hdr.window_from
-			if tree.has_item (Result) then
-				Result := tree.get_item_with_data (Result)
+			if {l_tree: WEL_TREE_VIEW} hdr.window_from then
+				if l_tree.has_item (Result) then
+					Result := l_tree.get_item_with_data (Result)
+				end
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -74,6 +83,8 @@ feature -- Access
 
 	position: WEL_POINT
 			-- Mouse coordinates when notification occurred.
+		require
+			exists: exists
 		do
 			create Result.make_by_pointer (cwel_nm_treeview_get_ptdrag (item))
 		ensure

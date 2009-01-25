@@ -77,7 +77,7 @@ feature {NONE} -- implementation
 			end
 			dc.release
 			destroy
-	end
+		end
 
 feature {NONE} -- Implementation
 

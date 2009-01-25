@@ -21,6 +21,8 @@ feature {NONE} -- Initialization
 
 	make (a_range: WEL_CHARACTER_RANGE; to_find: STRING_GENERAL)
 		require
+			a_range_not_void: a_range /= Void
+			a_range_exists: a_range.exists
 			string_to_find_valid: to_find /= Void
 		local
 			a: WEL_STRING
@@ -36,6 +38,8 @@ feature -- Access
 
 	range: WEL_CHARACTER_RANGE
 			-- Range of search
+		require
+			exists: exists
 		do
 			create Result.make_by_pointer (cwel_findargument_get_range (item))
 		end
@@ -46,18 +50,26 @@ feature -- Access
 	range_out: WEL_CHARACTER_RANGE
 			-- Range in which text is found
 			-- Return (0,0) if no text was found
+		require
+			exists: exists
 		do
 			create Result.make_by_pointer (cwel_findargument_get_range_out (item))
 		end
-		
+
 feature -- Element change
 
 	set_range (a_range: WEL_CHARACTER_RANGE)
+		require
+			a_range_not_void: a_range /= Void
+			a_range_exists: a_range.exists
 		do
 			cwel_findargument_set_range (item, a_range.item)
 		end
 
 	set_string_to_find (a_string_to_find: WEL_STRING)
+		require
+			a_string_to_find_not_void: a_string_to_find /= Void
+			a_string_to_find_exists: a_string_to_find.exists
 		do
 			string_to_find := a_string_to_find
 			cwel_findargument_set_string_to_find (item, a_string_to_find.item)
@@ -89,7 +101,7 @@ feature {NONE} -- Externals
 		external
 			"C [macro %"wel_find_argument.h%"]"
 		end
-		
+
 	cwel_findargument_set_range (ptr, value: POINTER)
 		external
 			"C [macro %"wel_find_argument.h%"]"
@@ -114,7 +126,7 @@ feature {NONE} -- Externals
 		external
 			"C [macro %"wel_find_argument.h%"] (FINDTEXTEX*): EIF_POINTER"
 		end
-		
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

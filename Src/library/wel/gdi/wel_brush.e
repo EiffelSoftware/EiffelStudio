@@ -76,6 +76,7 @@ feature {NONE} -- Initialization
 			-- Make a brush using `a_log_brush'
 		require
 			a_log_brush_not_void: a_log_brush /= Void
+			a_log_brush_exists: a_log_brush.exists
 		do
 			item := cwin_create_brush_indirect (a_log_brush.item)
 			gdi_make

@@ -22,13 +22,13 @@ feature -- Access
 		once
 			create Result.make (0, 0, 0, 0)
 		end
-		
+
 	wel_string: WEL_STRING
 			-- Once access to an object of type WEL_STRING
 		once
 			create Result.make_empty (256)
 		end
-		
+
 	wel_string_restricted (characters: INTEGER): WEL_STRING
 			-- Return shared `wel_string' as `Result' if `characters'
 			-- is less than `maximum_buffered_string_size', otherwise return a
@@ -41,11 +41,13 @@ feature -- Access
 				create Result.make_empty (characters)
 			end
 		end
-		
+
 	wel_string_from_string (s: STRING_GENERAL): WEL_STRING
 			-- Return a shared wel string set to `s' if
 			-- `s.count' < `maximum_buffered_string_size', otherwise
 			-- return a new WEL_STRING object set to `s'.
+		require
+			s_not_void: s /= Void
 		do
 			if s.count < maximum_buffered_string_size then
 				Result := wel_string
@@ -54,9 +56,9 @@ feature -- Access
 				create Result.make (s)
 			end
 		end
-		
+
 	maximum_buffered_string_size: INTEGER = 10000;
-		-- Maximum size of string permitting a shared WEL_STRING object to 
+		-- Maximum size of string permitting a shared WEL_STRING object to
 		-- be returned by `wel_string_restricted'.
 
 note

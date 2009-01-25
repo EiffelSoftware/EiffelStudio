@@ -50,7 +50,7 @@ feature -- Access
 			Result := cwel_toolinfo_get_uflags (item)
 		end
 
-	window: WEL_WINDOW
+	window: ?WEL_WINDOW
 			-- Window that contains the tool
 		do
 			Result := window_of_item (cwel_toolinfo_get_hwnd (item))
@@ -84,9 +84,12 @@ feature -- Access
 			-- Text for the tool
 		require
 			text_id_not_set: not text_id_set
+		local
+			l_text: like str_text
 		do
-			if str_text /= Void then
-				Result := str_text.string
+			l_text := str_text
+			if l_text /= Void then
+				Result := l_text.string
 			else
 				create Result.make_empty
 			end
@@ -161,6 +164,7 @@ feature -- Element change
 			-- Set `rect' with `a_rect'.
 		require
 			a_rect_not_void: a_rect /= Void
+			a_rect_exists: a_rect.exists
 		do
 			cwel_toolinfo_set_rect (item, a_rect.item)
 		ensure
@@ -171,6 +175,7 @@ feature -- Element change
 			-- Set `instance' with `an_instance'.
 		require
 			an_instance_not_void: an_instance /= Void
+			an_instance_exists: an_instance.exists
 		do
 			cwel_toolinfo_set_hinst (item, an_instance.item)
 		ensure
@@ -181,9 +186,13 @@ feature -- Element change
 			-- Set `text' with `a_text'.
 		require
 			a_text_not_void: a_text /= Void
+		local
+			l_text: like str_text
 		do
-			create str_text.make (a_text)
-			cwel_toolinfo_set_lpsztext (item, str_text.item)
+			create l_text.make (a_text)
+				-- For GC reference
+			str_text := l_text
+			cwel_toolinfo_set_lpsztext (item, l_text.item)
 		ensure
 			text_set: text.is_equal (a_text)
 		end
@@ -215,7 +224,7 @@ feature -- Measurement
 
 feature {NONE} -- Implementation
 
-	str_text: WEL_STRING
+	str_text: ?WEL_STRING
 			-- C string to save `text'
 
 	main_args: WEL_MAIN_ARGUMENTS

@@ -29,8 +29,8 @@ feature {NONE} -- Initialization
 			-- set the application's main window and run
 			-- the application.
 		do
+			create dispatcher.make
 			set_application (Current)
-			create_dispatcher
 			init_instance
 			init_application
 			set_application_main_window (main_window)
@@ -50,10 +50,10 @@ feature -- Access
 			parent_main_window_is_void: Result.parent = Void
 		end
 
-	accelerators: WEL_ACCELERATORS
+	accelerators: ?WEL_ACCELERATORS
 			-- Application's accelerators
 			-- May be redefined (in once) to associate accelerators.
-		once
+		do
 		end
 
 	default_show_command: INTEGER
@@ -119,15 +119,17 @@ feature -- Basic operations
 		require
 			runable: runable
 			main_window_not_void: application_main_window /= Void
-			parent_main_window_is_void: application_main_window.parent = Void
+			parent_main_window_is_void: {l_app: like application_main_window} application_main_window and then l_app.parent = Void
 		local
-			d: WEL_MAIN_DIALOG
+			l_window: like application_main_window
 		do
-			d ?= application_main_window
-			if d /= Void then
-				d.activate
+			l_window := application_main_window
+				-- Per precondition.
+			check l_window_attached: l_window /= Void end
+			if {l_dialog: WEL_MAIN_DIALOG} l_window then
+				l_dialog.activate
 			end
-			application_main_window.show_with_option (default_show_command)
+			l_window.show_with_option (default_show_command)
 			message_loop
 		end
 
@@ -158,8 +160,8 @@ feature {NONE} -- Implementation
 			-- Windows message loop
 		local
 			msg: WEL_MSG
-			accel: WEL_ACCELERATORS
-			main_w: WEL_WINDOW
+			accel: ?WEL_ACCELERATORS
+			main_w: ?WEL_WINDOW
 			done: BOOLEAN
 			dlg: POINTER
 		do
@@ -188,7 +190,7 @@ feature {NONE} -- Implementation
 									msg.dispatch
 								end
 							else
-								if main_w.exists then
+								if main_w /= Void and then main_w.exists then
 									msg.translate_accelerator (main_w, accel)
 								end
 								if not msg.last_boolean_result then
@@ -239,16 +241,6 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
-		end
-
-	create_dispatcher
-			-- Create the `dispatcher'.
-		require
-			dispatcher_void: dispatcher = Void
-		do
-			create dispatcher.make
-		ensure
-			dispatcher_not_void: dispatcher /= Void
 		end
 
 	dispatcher: WEL_DISPATCHER

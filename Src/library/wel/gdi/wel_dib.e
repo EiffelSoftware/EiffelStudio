@@ -46,8 +46,6 @@ feature {NONE} -- Initialization
 			make_by_stream (file)
 			file.close
 		ensure
-			palette_not_void: palette /= Void
-			palette_exists: palette.exists
 			file_closed: file.is_closed
 		end
 
@@ -72,10 +70,7 @@ feature {NONE} -- Initialization
 			a_stream.read_to_managed_pointer (a_buf_2, 0, structure_size)
 			memory_copy (a_buf_2.item, a_buf_2.count)
 			info_header.memory_copy (item, info_header.structure_size)
-			calculate_palette
-		ensure
-			palette_not_void: palette /= Void
-			palette_exists: palette.exists
+			palette := new_palette
 		end
 
 	make_by_content_pointer (bits_ptr: POINTER; size: INTEGER)
@@ -89,16 +84,14 @@ feature {NONE} -- Initialization
 
 			memory_copy (bits_ptr, structure_size)
 			info_header.memory_copy (item, info_header.structure_size)
-			calculate_palette
-		ensure
-			palette_not_void: palette /= Void
-			palette_exists: palette.exists
+			palette := new_palette
 		end
 
 	make_with_info_and_data (an_info: WEL_BITMAP_INFO; a_ptr: POINTER; a_size: INTEGER)
 			-- Create a WEL_DIB section using data of `a_ptr' corresponding to `an_info'.
 		require
 			an_info_not_void: an_info /= Void
+			an_info_exists: an_info.exists
 			a_ptr_not_null: a_ptr /= default_pointer
 			a_size_positive: a_size > 0
 			rgb_data: an_info.header.compression = {WEL_BI_COMPRESSION_CONSTANTS}.bi_rgb
@@ -111,7 +104,7 @@ feature {NONE} -- Initialization
 			(item + an_info.structure_size).memory_copy (a_ptr, a_size)
 			create info_header.make
 			info_header.memory_copy (item, info_header.structure_size)
-			calculate_palette
+			palette := new_palette
 		end
 
 feature -- Access
@@ -197,20 +190,14 @@ feature {NONE} -- Removal
 	destroy_item
 			-- Free all GDI resource allocated by Current.
 			-- Should be called by the GC or by the user if i
-		local
-			internal_palette: like palette
 		do
-			internal_palette ?= eif_id_object (object_id_palette)
-			if internal_palette /= Void and then internal_palette.reference_tracked then
-				internal_palette.decrement_reference
+			if palette.reference_tracked then
+				palette.decrement_reference
 			end
 			Precursor
 		end
 
 feature {NONE} -- Implementation
-
-	object_id_palette: INTEGER
-			-- Object id of `palette'.
 
 	i_th_quad (i: INTEGER): WEL_RGB_QUAD
 		require
@@ -224,7 +211,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	calculate_palette
+	new_palette: WEL_PALETTE
 			-- Calculates pallete for images regardless of their colordepth
 		require
 			exists: exists
@@ -232,27 +219,24 @@ feature {NONE} -- Implementation
 			num_color: INTEGER
 		do
 			num_color := color_count
-			if
-				num_color /= 0
-			then
-				calculate_palette_all_but_24_bits
-			elseif
-				has_24_bits or has_32_bits
-			then
-				calculate_palette_24_bits
+			if num_color /= 0 then
+				Result := new_palette_all_but_24_bits
+			elseif has_24_bits or has_32_bits then
+				Result := new_palette_24_bits
 			else
-				-- Dead end! This code must never be reached
-					check
-						dead_end: False
-					end
+					-- Dead end! This code must never be reached
+				check
+					dead_end: False
+				end
+					-- For void-safety purpose, create a dummy palette
+				create Result.make (create {WEL_LOG_PALETTE}.make (1, 1))
 			end
-			object_id_palette := palette.object_id
 		ensure
-			palette_not_void: palette /= Void
-			palette_exists: palette.exists
+			palette_not_void: Result /= Void
+			palette_exists: Result.exists
 		end
 
-	calculate_palette_all_but_24_bits
+	new_palette_all_but_24_bits: WEL_PALETTE
 			-- Calculates pallete for images with all colordepths except 24 bits
 		require
 			exists: exists
@@ -279,16 +263,16 @@ feature {NONE} -- Implementation
 				log_pal.set_pal_entry (ind, pal_entry)
 				ind := ind + 1
 			end
-			create palette.make (log_pal)
+			create Result.make (log_pal)
 		ensure
-			palette_not_void: palette /= Void
-			palette_exists: palette.exists
+			palette_not_void: Result /= Void
+			palette_exists: Result.exists
 		end
 
-	calculate_palette_24_bits
+	new_palette_24_bits: WEL_PALETTE
 			-- Calculates pallete for images with a colordepth of 24 bits (32bits is the same).
-         -- A 24 bitcount DIB has no color table entries so, set the number of
-         -- to the maximum value (max_palette).
+			-- A 24 bitcount DIB has no color table entries so, set the number of
+			-- to the maximum value (max_palette).
 		require
 			exists: exists
 			has_24_bits: has_24_bits or has_32_bits
@@ -328,10 +312,10 @@ feature {NONE} -- Implementation
 
 				ind := ind + 1
 			end
-			create palette.make (log_pal)
+			create Result.make (log_pal)
 		ensure
-			palette_not_void: palette /= Void
-			palette_exists: palette.exists
+			palette_not_void: Result /= Void
+			palette_exists: Result.exists
 		end
 
 	has_24_bits: BOOLEAN

@@ -21,6 +21,8 @@ feature {NONE} -- Initialization
 
 	make (a_color: WEL_GDIP_COLOR; a_width: REAL)
 			-- Creation method
+		require
+			a_color_not_void: a_color /= Void
 		local
 			l_result: INTEGER
 		do

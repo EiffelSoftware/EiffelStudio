@@ -36,14 +36,16 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	number_edit: WEL_SINGLE_LINE_EDIT
+	number_edit: ?WEL_SINGLE_LINE_EDIT
 			-- Edit control to input the number of cards
 
 	setup_dialog
 			-- Setup the dialog before
 			-- it is activated
 		do
-			number_edit.set_text (no_cards.out)
+			if {l_number_edit: like number_edit} number_edit then
+				l_number_edit.set_text (no_cards.out)
+			end
 		end
 
 	on_ok
@@ -51,23 +53,24 @@ feature {NONE} -- Implementation
 		local
 			msg_box: WEL_MSG_BOX
 		do
-			if number_edit.text.is_integer then
-				if number_edit.text.to_integer < 1 or number_edit.text.to_integer > 52 then
-					create msg_box.make
-					msg_box.information_message_box (Current, "You can only select %
-						%a number of cards%Nwithin the range of 1-52.", "Information")
-					number_edit.set_text (no_cards.out)
+			if {l_number_edit: like number_edit} number_edit then
+				if l_number_edit.text.is_integer then
+					if l_number_edit.text.to_integer < 1 or l_number_edit.text.to_integer > 52 then
+						create msg_box.make
+						msg_box.information_message_box (Current, "You can only select %
+							%a number of cards%Nwithin the range of 1-52.", "Information")
+						l_number_edit.set_text (no_cards.out)
+					else
+						no_cards := l_number_edit.text.to_integer
+						terminate (Idok)
+					end
 				else
-					no_cards := number_edit.text.to_integer
-					terminate (Idok)
+					create msg_box.make
+					msg_box.information_message_box (Current, "This field requires %
+							%a number.", "Information")
+					l_number_edit.set_text (no_cards.out)
 				end
-			else
-				create msg_box.make
-				msg_box.information_message_box (Current, "This field requires %
-						%a number.", "Information")
-				number_edit.set_text (no_cards.out)
 			end
-
 		end
 
 note

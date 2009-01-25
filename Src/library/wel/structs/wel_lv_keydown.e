@@ -23,6 +23,7 @@ feature {NONE} -- Initialization
 			-- Make the structure with `a_nmhdr'.
 		require
 			a_nmhdr_not_void: a_nmhdr /= Void
+			a_nmhdr_exists: a_nmhdr.exists
 		do
 			make_by_pointer (a_nmhdr.item)
 		end
@@ -31,6 +32,8 @@ feature -- Access
 
 	hdr: WEL_NMHDR
 			-- Information about the Wm_notify message.
+		require
+			exists: exists
 		do
 			create Result.make_by_pointer (cwel_lv_keydown_get_hdr (item))
 		ensure
@@ -39,6 +42,8 @@ feature -- Access
 
 	virtual_key: INTEGER
 			-- Virtual key number.
+		require
+			exists: exists
 		do
 			Result := cwel_lv_keydown_get_wvkey (item)
 		end

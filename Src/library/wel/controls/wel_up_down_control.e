@@ -37,6 +37,7 @@ feature {NONE} -- Initialization
 			-- Make an up-down control.
 		require
 			a_parent_not_void: a_parent /= Void
+			a_parent_exists: a_parent.exists
 		do
 			internal_window_make (a_parent, Void,
 				default_style, a_x, a_y, a_width, a_height,
@@ -76,7 +77,7 @@ feature -- Access
 			Result := upper
 		end
 
-	buddy_window: WEL_WINDOW
+	buddy_window: ?WEL_WINDOW
 			-- Current buddy window
 		require
 			exists: exists

@@ -61,7 +61,7 @@ feature -- Access
 
 	flags: INTEGER
 			-- Dialog box creation flags.
-			-- Can be a combination of the values defined in 
+			-- Can be a combination of the values defined in
 			-- class WEL_CHOOSE_COLOR_CONSTANTS.
 		do
 			Result := cwel_choose_color_get_flags (item)
@@ -114,10 +114,10 @@ feature -- Element change
 			-- Set `custom_colors' with `a_custom_colors'.
 		require
 			a_custom_colors_not_void: a_custom_colors /= Void
+			a_custom_colors_exists: a_custom_colors.exists
 		do
 			custom_colors := a_custom_colors
-			cwel_choose_color_set_lpcustcolors (item,
-				custom_colors.item)
+			cwel_choose_color_set_lpcustcolors (item, custom_colors.item)
 		ensure
 			custom_colors_set: custom_colors = a_custom_colors
 		end
@@ -174,6 +174,7 @@ feature {NONE} -- Implementation
 	set_parent (a_parent: WEL_COMPOSITE_WINDOW)
 			-- Set the parent window with `a_parent'.
 		require
+			exists: exists
 			a_parent_not_void: a_parent /= Void
 			a_parent_exists: a_parent.exists
 		do

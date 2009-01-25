@@ -33,13 +33,14 @@ feature {NONE} -- Initialization
 			-- Make a vertical scroll bar.
 		require
 			a_parent_not_void: a_parent /= Void
+			a_parent_exists: a_parent.exists
 		do
+			create scroll_info_struct.make
 			internal_window_make (a_parent, Void,
 				default_style + Sbs_vert,
 				a_x, a_y, a_width, a_height, an_id,
 				default_pointer)
 			id := an_id
-			create scroll_info_struct.make
 			set_line (Default_line_value)
 		ensure
 			parent_set: parent = a_parent
@@ -55,13 +56,14 @@ feature {NONE} -- Initialization
 			-- Make a horizontal scroll bar.
 		require
 			a_parent_not_void: a_parent /= Void
+			a_parent_exists: a_parent.exists
 		do
+			create scroll_info_struct.make
 			internal_window_make (a_parent, Void,
 				default_style + Sbs_horz,
 				a_x, a_y, a_width, a_height, an_id,
 				default_pointer)
 			id := an_id
-			create scroll_info_struct.make
 			set_line (Default_line_value)
 		ensure
 			parent_set: parent = a_parent
@@ -76,8 +78,8 @@ feature {NONE} -- Initialization
 			-- Make a control identified by `an_id' with `a_parent'
 			-- as parent.
 		do
-			Precursor {WEL_BAR} (a_parent, an_id)
 			create scroll_info_struct.make
+			Precursor {WEL_BAR} (a_parent, an_id)
 			set_line (Default_line_value)
 		end
 

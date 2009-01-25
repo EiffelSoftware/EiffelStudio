@@ -41,6 +41,8 @@ feature -- Access
 
 	style: INTEGER
 			-- Position style, can be one of the values from WEL_IME_CONSTANTS
+		require
+			exists: exists
 		do
 			Result := c_style (item)
 		end
@@ -49,6 +51,8 @@ feature -- Status Setting
 
 	set_style (sty: INTEGER)
 			-- Set style with 'sty'
+		require
+			exists: exists
 		do
 			c_set_style (item, sty)
 		ensure
@@ -58,6 +62,7 @@ feature -- Status Setting
 	set_point (a_point: WEL_POINT)
 			-- Set `a_point' tp `point'.
 		require
+			exists: exists
 			a_point_not_void: a_point /= Void
 			a_point_exists: a_point.exists
 		do
@@ -71,6 +76,7 @@ feature -- Status Setting
 			-- Set `a_point' tp `point'.
 			-- Override IME settings.
 		require
+			exists: exists
 			a_point_not_void: a_point /= Void
 			a_point_exists: a_point.exists
 		do
@@ -83,6 +89,7 @@ feature -- Status Setting
 	set_rect (a_rect: WEL_RECT)
 			-- Set `rect' with `a_rect'.
 		require
+			exists: exists
 			a_rect_not_void: a_rect /= Void
 			a_rect_exists: a_rect.exists
 		do

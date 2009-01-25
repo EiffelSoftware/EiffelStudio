@@ -36,21 +36,53 @@ feature {NONE} -- Initialization
 			-- Make the main window
 		do
 			make_by_id (Id_main_dialog)
-			create eiffel_file_edit.make_by_id (Current, Id_edit_eiffel)
-			create h_file_edit.make_by_id (Current, id_edit_h)
-			create class_name_edit.make_by_id (Current, Id_edit_class_name)
-			create translate_button.make_by_id (Current, Cmd_file_translate)
+			create internal_eiffel_file_edit.make_by_id (Current, Id_edit_eiffel)
+			create internal_h_file_edit.make_by_id (Current, id_edit_h)
+			create internal_class_name_edit.make_by_id (Current, Id_edit_class_name)
+			create internal_translate_button.make_by_id (Current, Cmd_file_translate)
 		end
 
 feature -- Access
 
 	eiffel_file_edit: WEL_SINGLE_LINE_EDIT
+		local
+			l_edit: ?WEL_SINGLE_LINE_EDIT
+		do
+			l_edit := internal_eiffel_file_edit
+				-- Per invariant
+			check l_edit_attached: l_edit /= Void end
+			Result := l_edit
+		end
 
 	h_file_edit: WEL_SINGLE_LINE_EDIT
+		local
+			l_edit: ?WEL_SINGLE_LINE_EDIT
+		do
+			l_edit := internal_h_file_edit
+				-- Per invariant
+			check l_edit_attached: l_edit /= Void end
+			Result := l_edit
+		end
 
 	class_name_edit: WEL_SINGLE_LINE_EDIT
+		local
+			l_edit: ?WEL_SINGLE_LINE_EDIT
+		do
+			l_edit := internal_class_name_edit
+				-- Per invariant
+			check l_edit_attached: l_edit /= Void end
+			Result := l_edit
+		end
 
 	translate_button: WEL_PUSH_BUTTON
+		local
+			l_button: ?WEL_PUSH_BUTTON
+		do
+			l_button := internal_translate_button
+				-- Per invariant
+			check l_button_attached: l_button /= Void end
+			Result := l_button
+		end
 
 feature {NONE} -- Behaviors
 
@@ -148,6 +180,7 @@ feature {NONE} -- Implementation
 
 	scan_file_for_classname (a_file_name: STRING)
 		require
+			a_file_name_not_void: a_file_name /= Void
 			file_exists: file_exists (a_file_name)
 		local
 			a_file: PLAIN_TEXT_FILE
@@ -176,13 +209,21 @@ feature {NONE} -- Implementation
 			a_file_not_void: a_file /= Void
 			a_file_exists: a_file.exists
 			a_file_open: a_file.is_open_read
+		local
+			l_string: ?STRING
 		do
 			if not a_file.end_of_file then
 				a_file.read_word
-				if a_file.last_string.is_equal ("lass") then
+				l_string := a_file.last_string
+					-- Per postcondition of `a_file.read_word'.
+				check l_string_attached: l_string /= Void end
+				if l_string.same_string ("lass") then
 					if not a_file.end_of_file then
 						a_file.read_word
-						class_name_edit.set_text (a_file.last_string)
+						l_string := a_file.last_string
+							-- Per postcondition of `a_file.read_word'.
+						check l_string_attached: l_string /= Void end
+						class_name_edit.set_text (l_string)
 						Result := True
 					end
 				end
@@ -250,6 +291,22 @@ feature {NONE} -- Implementation
 			create a_file.make (filename)
 			Result := a_file.exists
 		end
+
+feature {NONE} -- Internal data
+
+	internal_eiffel_file_edit: ?WEL_SINGLE_LINE_EDIT
+
+	internal_h_file_edit: ?WEL_SINGLE_LINE_EDIT
+
+	internal_class_name_edit: ?WEL_SINGLE_LINE_EDIT
+
+	internal_translate_button: ?WEL_PUSH_BUTTON
+
+invariant
+	internal_eiffel_file_edit_attached: internal_eiffel_file_edit /= Void
+	internal_h_file_edit_attached: internal_h_file_edit /= Void
+	internal_class_name_edit_attached: internal_class_name_edit /= Void
+	internal_translate_button_attached: internal_translate_button /= Void
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

@@ -99,16 +99,18 @@ inherit
 
 feature -- Access
 
-	parent: WEL_WINDOW
+	parent: ?WEL_WINDOW
 			-- Parent window
 
-	commands: WEL_COMMAND_MANAGER
+	commands: ?WEL_COMMAND_MANAGER
 			-- Command manager associated to the current window.
 
 feature -- Status report
 
 	is_inside: BOOLEAN
 			-- Is the current window inside another window?
+		require
+			exists: exists
 		do
 			Result := flag_set (style, Ws_child)
 		end
@@ -157,7 +159,7 @@ feature -- Status report
 			Result := cwin_is_zoomed (item)
 		end
 
-	focused_window: WEL_WINDOW
+	focused_window: ?WEL_WINDOW
 			-- Current window which has the focus.
 		require
 			exists: exists
@@ -170,7 +172,7 @@ feature -- Status report
 			end
 		end
 
-	captured_window: WEL_WINDOW
+	captured_window: ?WEL_WINDOW
 			-- Current window which has been captured.
 		require
 			exists: exists
@@ -241,14 +243,16 @@ feature -- Status report
 		local
 			rect: WEL_RECT
 			point: WEL_POINT
+			l_parent: like parent
 		do
-			if parent /= Void then
+			l_parent := parent
+			if l_parent /= Void then
 				-- Unfortunately, there is no easy
 				-- way to get the relative x position of
 				-- a child!
 				rect := window_rect
 				create point.make (rect.x, rect.y)
-				point.screen_to_client (parent)
+				point.screen_to_client (l_parent)
 				Result := point.x
 			else
 				Result := absolute_x
@@ -264,14 +268,16 @@ feature -- Status report
 		local
 			rect: WEL_RECT
 			point: WEL_POINT
+			l_parent: like parent
 		do
-			if parent /= Void then
+			l_parent := parent
+			if l_parent /= Void then
 				-- Unfortunately, there is no easy
 				-- way to get the relative y position of
 				-- a child!
 				rect := window_rect
 				create point.make (rect.x, rect.y)
-				point.screen_to_client (parent)
+				point.screen_to_client (l_parent)
 				Result := point.y
 			else
 				Result := absolute_y
@@ -428,7 +434,7 @@ feature -- Status report
 			Result := cwin_get_window_long (item, Gwl_exstyle).to_integer_32
 		end
 
-	background_brush: WEL_BRUSH
+	background_brush: ?WEL_BRUSH
 			-- Current window background color used to refresh the window when
 			-- requested by the WM_ERASEBKGND windows message.
 			-- By default there is no background
@@ -447,9 +453,13 @@ feature -- Status report
 			-- Does a command associated to `message' exist?
 		require
 			positive_message: message >= 0
+		local
+			l_commands: like commands
 		do
-			Result := commands /= Void and then
-				commands.exists (message)
+			l_commands := commands
+			Result := l_commands /= Void and then l_commands.exists (message)
+		ensure
+			definition: Result implies {l_commands_var: like commands} commands and then l_commands_var.item (message) /= Void
 		end
 
 	command (message: INTEGER): WEL_COMMAND
@@ -457,19 +467,37 @@ feature -- Status report
 		require
 			positive_message: message >= 0
 			command_exists: command_exists (message)
+		local
+			l_message: ?WEL_COMMAND_EXEC
+			l_commands: like commands
 		do
-			Result := commands.item (message).command
+			l_commands := commands
+				-- Per precondition
+			check l_commands_attached: l_commands /= Void end
+			l_message := l_commands.item (message)
+				-- Per precondition
+			check l_message_attached: l_message /= Void end
+			Result := l_message.command
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	command_argument (message: INTEGER): ANY
+	command_argument (message: INTEGER): ?ANY
 			-- Command argument associated to `message'
 		require
 			positive_message: message >= 0
 			command_exists: command_exists (message)
+		local
+			l_message: ?WEL_COMMAND_EXEC
+			l_commands: like commands
 		do
-			Result := commands.item (message).argument
+			l_commands := commands
+				-- Per precondition
+			check l_commands_attached: l_commands /= Void end
+			l_message := l_commands.item (message)
+				-- Per precondition
+			check l_message_attached: l_message /= Void end
+			Result := l_message.argument
 		end
 
 feature -- Status setting
@@ -734,14 +762,14 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_parent (a_parent: WEL_WINDOW)
+	set_parent (a_parent: ?WEL_WINDOW)
 			-- Change the parent of the current window.
 		require
 			exists: exists
 		local
 			l_previous_hwnd: POINTER
 		do
-			if a_parent /= Void then
+			if a_parent /= Void and then a_parent.exists then
 				parent := a_parent
 				l_previous_hwnd := {WEL_API}.set_parent (item, a_parent.item)
 			else
@@ -755,7 +783,7 @@ feature -- Element change
 			end
 		end
 
-	set_text (a_text: STRING_GENERAL)
+	set_text (a_text: ?STRING_GENERAL)
 			-- Set the window text
 		require
 			exists: exists
@@ -778,6 +806,7 @@ feature -- Element change
 		require
 			exists: exists
 			a_placement_not_void: a_placement /= Void
+			a_placement_exists: a_placement.exists
 		do
 			cwin_set_window_placement (item, a_placement.item)
 		ensure
@@ -886,21 +915,24 @@ feature -- Element change
 
 feature -- Basic operations
 
-	put_command (a_command: WEL_COMMAND; message: INTEGER; argument: ANY)
+	put_command (a_command: WEL_COMMAND; message: INTEGER; argument: ?ANY)
 			-- Put `a_command' associated to `message'.
 		require
 			a_command_not_void: a_command /= Void
 			positive_message: message >= 0
 		local
 			command_exec: WEL_COMMAND_EXEC
+			l_commands: like commands
 		do
-			-- Has a command been already put?
-			-- If no, let's create `commands'.
-			if commands = Void then
-				create commands.make
+				-- Has a command been already put?
+				-- If no, let's create `commands'.
+			l_commands := commands
+			if l_commands = Void then
+				create l_commands.make
+				commands := l_commands
 			end
 			create command_exec.make (a_command, argument)
-			commands.force (command_exec, message)
+			l_commands.force (command_exec, message)
 		ensure
 			command_added: command (message) = a_command and
 				command_argument (message) = argument
@@ -911,8 +943,13 @@ feature -- Basic operations
 		require
 			positive_message: message >= 0
 			command_exists: command_exists (message)
+		local
+			l_commands: like commands
 		do
-			commands.remove (message)
+			l_commands := commands
+				-- Per precondition
+			check l_commands_attached: l_commands /= Void end
+			l_commands.remove (message)
 		ensure
 			command_removed: not command_exists (message)
 		end
@@ -922,8 +959,7 @@ feature -- Basic operations
 			-- See class WEL_SW_CONSTANTS for `cmd_show' value.
 		require
 			exists: exists
-			parent_shown: parent /= Void implies parent.exists and
-				parent.shown
+			parent_shown: {l_parent: like parent} parent implies l_parent.exists and l_parent.shown
 		do
 			cwin_show_window (item, cmd_show)
 		end
@@ -1195,6 +1231,7 @@ feature -- Basic operations
 		require
 			exists: exists
 			rect_not_void: rect /= Void
+			rect_exists: rect.exists
 		do
 			cwin_invalidate_rect (item, rect.item, erase_background)
 		end
@@ -1224,6 +1261,7 @@ feature -- Basic operations
 		require
 			exists: exists
 			rect_not_void: rect /= Void
+			rect_exists: rect.exists
 		do
 			cwin_validate_rect (item, rect.item)
 		end
@@ -1282,6 +1320,9 @@ feature -- Basic operations
 			-- value at the specified offset into the extra class memory
 			-- or the WNDCLASSEX structure for the class to which the
 			-- specified window belongs.
+		require
+			new_icon_not_void: new_icon /= Void
+			new_icon_exists: new_icon.exists
 		do
 			cwin_set_class_long (item, Wel_gcl_constants.Gclp_hicon, new_icon.item)
 		end
@@ -1294,6 +1335,9 @@ feature -- Basic operations
 			-- value at the specified offset into the extra class memory
 			-- or the WNDCLASSEX structure for the class to which the
 			-- specified window belongs.
+		require
+			new_icon_not_void: new_icon /= Void
+			new_icon_exists: new_icon.exists
 		do
 			cwin_set_class_long (item, Wel_gcl_constants.Gclp_hiconsm, new_icon.item)
 		end
@@ -1320,6 +1364,7 @@ feature {NONE} -- Messages
 		require
 			exists: exists
 			window_pos_not_void: window_pos /= Void
+			window_pos_exists: window_pos.exists
 		do
 		end
 
@@ -1333,6 +1378,7 @@ feature {NONE} -- Messages
 		require
 			exists: exists
 			window_pos_not_void: window_pos /= Void
+			window_pos_exists: window_pos.exists
 		do
 		end
 
@@ -1546,6 +1592,7 @@ feature {NONE} -- Messages
 		require
 			exists: exists
 			info_not_void: info /= Void
+			info_exists: info.exists
 		do
 		end
 
@@ -1555,8 +1602,12 @@ feature {NONE} -- Messages
 			-- the `paint_dc'. `invalid_rect' defines
 			-- the invalid rectangle of the client area that
 			-- needs to be repainted.
+		require
+			paint_dc_not_void: paint_dc /= Void
+			invalid_rect_not_void: invalid_rect /= Void
+			invalid_rect_exists: invalid_rect.exists
 		local
-			bk_brush: WEL_BRUSH
+			bk_brush: ?WEL_BRUSH
 		do
 			bk_brush := background_brush
 			if bk_brush /= Void then
@@ -1596,7 +1647,7 @@ feature {WEL_WINDOW, WEL_DISPATCHER} -- Implementation
 
 feature {WEL_WINDOW} -- Implementation
 
-	internal_window_make (a_parent: WEL_WINDOW; a_name: STRING_GENERAL;
+	internal_window_make (a_parent: ?WEL_WINDOW; a_name: ?STRING_GENERAL;
 			a_style, a_x, a_y, a_w, a_h, an_id: INTEGER;
 			data: POINTER)
 			-- Create the window
@@ -1639,9 +1690,12 @@ feature {WEL_WINDOW} -- Implementation
 	parent_item: POINTER
 			-- Parent `item'.
 			-- Equal to `default_pointer' if no parent
+		local
+			l_parent: like parent
 		do
-			if parent /= Void then
-				Result := parent.item
+			l_parent := parent
+			if l_parent /= Void then
+				Result := l_parent.item
 			end
 		ensure
 			result_parent_not_void: (parent /= Void implies
@@ -1794,8 +1848,9 @@ feature {WEL_WINDOW} -- Implementation
 			-- until we reached no parent.
 		require
 			a_parent_not_void: a_parent /= Void
+			a_parent_exists: a_parent.exists
 		local
-			l_parent_of_parent: WEL_WINDOW
+			l_parent_of_parent: ?WEL_WINDOW
 			l_previous_child_parent: POINTER
 			l_failure: BOOLEAN
 		do
@@ -1847,6 +1902,9 @@ feature {WEL_ABSTRACT_DISPATCHER, WEL_WINDOW} -- Implementation
 			-- message `msg'.
 		require
 			exists: exists
+		local
+			l_message: ?WEL_COMMAND_EXEC
+			l_commands: like commands
 		do
 			inspect msg
 			when Wm_mousemove then
@@ -1962,11 +2020,12 @@ feature {WEL_ABSTRACT_DISPATCHER, WEL_WINDOW} -- Implementation
 			else
 				default_process_message (msg, wparam, lparam)
 			end
-			if commands /= Void and then
-			   commands_enabled and then
-			   commands.has (msg)
-			then
-				commands.item (msg).execute (Current, msg, wparam, lparam)
+			l_commands := commands
+			if l_commands /= Void and then commands_enabled and then l_commands.has (msg) then
+				l_message := l_commands.item (msg)
+					-- Per checking.
+				check l_message_attached: l_message /= Void end
+				l_message.execute (Current, msg, wparam, lparam)
 			end
 		end
 
@@ -2020,13 +2079,18 @@ feature {WEL_WINDOW} -- Properties
 
 	is_located_inside (window: WEL_WINDOW): BOOLEAN
 			-- Is `Current' directly or indirectly located inside `window'?
+		local
+			l_parent: like parent
 		do
 			if window = Current then
 				Result := True
-			elseif parent = Void then
-				Result := False
 			else
-				Result := parent.is_located_inside (window)
+				l_parent := parent
+				if l_parent = Void then
+					Result := False
+				else
+					Result := l_parent.is_located_inside (window)
+				end
 			end
 		end
 
@@ -2111,6 +2175,9 @@ feature {NONE} -- Removal
 	track_mouse_event (info: WEL_TRACK_MOUSE_EVENT): BOOLEAN
 			-- Start a windows TRACKMOUSEEVENT dependent on information
 			-- contained in `info'
+		require
+			info_not_void: info /= Void
+			info_exists: info.exists
 		do
 			Result := cwin_track_mouse_event (info.item)
 		end
@@ -2132,6 +2199,7 @@ feature {WEL_WINDOW} -- Windows bug workaround
 		local
 			l_diff: BOOLEAN
 			l_flags: INTEGER
+			l_parent: like parent
 		do
 				-- Reset `internal_wm_size_called'. It is set to True in `process_message'
 				-- when receiving a WM_SIZE message.
@@ -2162,8 +2230,9 @@ feature {WEL_WINDOW} -- Windows bug workaround
 					-- was not sent because it did not need to.
 					-- Ideally, we should hook to the WM_WINDOWPOSCHANGED in Vision2 to better bypass
 					-- this limitation.
-				if parent /= Void then
-					parent.invalidate
+				l_parent := parent
+				if l_parent /= Void then
+					l_parent.invalidate
 				end
 				invalidate
 				{WEL_API}.post_message (item, wm_size, to_wparam (0), cwin_make_long (a_width, a_height))

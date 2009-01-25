@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			instance_set: instance.item = main_args.current_instance.item
 			icon_unset: not icon_set
 			cursor_unset: not cursor_set
-			background_unset: not background_set							
+			background_unset: not background_set
 			menu_nameunset: not menu_name_set
 			class_name_set: class_name.is_equal (a_class_name)
 			atom_set: atom = 0
@@ -237,6 +237,8 @@ feature -- Element change
 		require
 			a_background_not_void: a_background /= Void
 		do
+				-- It is ok to have `background.item' being the NULL pointer
+				-- thus the lack of precondition `background.exists'.
 			cwel_wnd_class_set_background (item, a_background.item)
 		ensure
 			background_equal: background.item = a_background.item
@@ -247,14 +249,15 @@ feature -- Element change
 		require
 			a_class_name_valid: a_class_name /= Void
 			a_class_name_not_empty: not a_class_name.is_empty
+		local
+			l_name: like str_class_name
 		do
-			create str_class_name.make (a_class_name)
+			create l_name.make (a_class_name)
+			str_class_name := l_name
 			check
-				str_class_name_not_void: str_class_name /= Void
-				str_class_name_exists: str_class_name.exists
+				str_class_name_exists: l_name.exists
 			end
-			cwel_wnd_class_set_class_name (item,
-				str_class_name.item)
+			cwel_wnd_class_set_class_name (item, l_name.item)
 		ensure
 			class_name_set: class_name.is_equal (a_class_name)
 		end
@@ -263,14 +266,15 @@ feature -- Element change
 			-- Set `menu_name' with `a_menu_name'.
 		require
 			a_menu_name_valid: a_menu_name /= Void
+		local
+			l_name: like str_menu_name
 		do
-			create str_menu_name.make (a_menu_name)
+			create l_name.make (a_menu_name)
+			str_menu_name := l_name
 			check
-				str_menu_name_not_void: str_menu_name /= Void
-				str_menu_name_exists: str_menu_name.exists
+				str_menu_name_exists: l_name.exists
 			end
-			cwel_wnd_class_set_menu_name (item,
-				str_menu_name.item)
+			cwel_wnd_class_set_menu_name (item, l_name.item)
 		ensure
 			menu_name_equal: menu_name.is_equal (a_menu_name)
 		end
@@ -327,7 +331,7 @@ feature -- Status report
 				if atom = 0 then
 						-- Not yet registered or already unregistered
 					Result := cwin_get_class_info (default_pointer,
-						cwel_wnd_class_get_class_name (item), p) 
+						cwel_wnd_class_get_class_name (item), p)
 						or else  cwin_get_class_info (
 							main_args.current_instance.item,
 							cwel_wnd_class_get_class_name (item), p)
@@ -335,10 +339,10 @@ feature -- Status report
 						-- Already registered. Simply check that it is still
 						-- registered.
 					Result := cwin_get_class_info (default_pointer,
-						cwel_integer_to_pointer (atom), p) 
+						cwel_integer_to_pointer (atom), p)
 						or else cwin_get_class_info (
 							main_args.current_instance.item,
-							cwel_integer_to_pointer (atom), p) 
+							cwel_integer_to_pointer (atom), p)
 				end
 				p.memory_free
 			end
@@ -422,10 +426,10 @@ feature -- Measurement
 
 feature {NONE} -- Implementation
 
-	str_class_name: WEL_STRING
+	str_class_name: ?WEL_STRING
 			-- C string to save the class name
 
-	str_menu_name: WEL_STRING
+	str_menu_name: ?WEL_STRING
 			-- C string to save the menu name
 
 	main_args: WEL_MAIN_ARGUMENTS
@@ -511,7 +515,7 @@ feature {NONE} -- Externals
 
 	cwel_wnd_class_get_instance (ptr: POINTER): POINTER
 		external
-			"C [macro <wndclass.h>] (WNDCLASS*): EIF_POINTER" 
+			"C [macro <wndclass.h>] (WNDCLASS*): EIF_POINTER"
 		end
 
 	cwel_wnd_class_get_wnd_proc (ptr: POINTER): POINTER

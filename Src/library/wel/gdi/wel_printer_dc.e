@@ -43,6 +43,7 @@ feature -- Basic operations
 		require
 			exists: exists
 			doc_info_not_void: doc_info /= Void
+			doc_info_exiss: doc_info.exists
 		do
 			cwin_start_doc (item, doc_info.item)
 		end

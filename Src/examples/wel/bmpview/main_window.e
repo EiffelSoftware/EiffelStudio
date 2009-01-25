@@ -32,6 +32,7 @@ feature {NONE} -- Implementation
 	on_menu_command (menu_id: INTEGER)
 		local
 			child: CHILD_WINDOW
+			l_active_window: like active_window
 		do
 			inspect
 				menu_id
@@ -48,7 +49,10 @@ feature {NONE} -- Implementation
 				end
 			when Cmd_file_close then
 				if has_active_window then
-					active_window.destroy
+					l_active_window := active_window
+						-- Per `has_active_window' postcondition.
+					check l_active_window_attached: l_active_window /= Void end
+					l_active_window.destroy
 				end
 			when Cmd_window_tile_vertical then
 				tile_children_vertical

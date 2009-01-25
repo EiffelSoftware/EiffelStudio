@@ -48,15 +48,20 @@ feature {NONE} -- Implementation
 
 	read_buffer
 			-- Read from `file' `length' characters.
+		local
+			l_buffer: like buffer
 		do
+			l_buffer := buffer
+				-- Per precondition
+			check l_buffer_attached: l_buffer /= Void end
 				-- FIXME: we do not handle `is_unicode' because it would imply
 				-- that we know which encoding is used in `file'. This explains
 				-- the not_is_unicode invariant.
 			if file.readable then
-				file.read_to_managed_pointer (buffer, 0, buffer.count)
-				buffer.set_from_pointer (buffer.item, file.bytes_read)
+				file.read_to_managed_pointer (l_buffer, 0, l_buffer.count)
+				l_buffer.set_from_pointer (l_buffer.item, file.bytes_read)
 			else
-				buffer.set_from_pointer (buffer.item, 0)
+				l_buffer.set_from_pointer (l_buffer.item, 0)
 			end
 		end
 

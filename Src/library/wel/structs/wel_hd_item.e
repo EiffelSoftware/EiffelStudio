@@ -11,12 +11,12 @@ class
 
 inherit
 	WEL_STRUCTURE
-	
+
 	WEL_BIT_OPERATIONS
 		undefine
 			copy, is_equal
 		end
-		
+
 	WEL_HDF_CONSTANTS
 		undefine
 			copy, is_equal
@@ -39,15 +39,18 @@ feature -- Access
 			exists: exists
 		do
 			Result := cwel_hd_item_get_mask (item)
-		end	
+		end
 
 	text: STRING_32
 			-- Text of the button associated with the notification.
 		require
 			exists: exists
+		local
+			l_text: like internal_text
 		do
-			if internal_text /= Void then
-				Result := internal_text.string
+			l_text := internal_text
+			if l_text /= Void then
+				Result := l_text.string
 			else
 				create Result.make_empty
 			end
@@ -84,9 +87,9 @@ feature -- Access
 		ensure
 			positive_result: Result >= 0
 		end
-		
+
 	format: INTEGER
-			-- A set of bit flags that specify the item's format. 
+			-- A set of bit flags that specify the item's format.
 			-- Constants are defined in class WEL_HDF_CONSTANTS.
 			-- Constants may be combined.
 		require
@@ -95,18 +98,18 @@ feature -- Access
 		do
 			Result := cwel_hd_item_get_fmt (item)
 		end
-		
+
 	bitmap_handle: POINTER
-			-- Handle to item bitmap. 
+			-- Handle to item bitmap.
 		require
 			exists: exists
 			good_mask: flag_set (mask, {WEL_HDI_CONSTANTS}.Hdi_bitmap)
 		do
 			Result := cwel_hd_item_get_hbm (item)
 		end
-	
+
 	custom_data: INTEGER
-			-- Application-defined item data. 
+			-- Application-defined item data.
 		require
 			exists: exists
 			good_mask: flag_set (mask, {WEL_HDI_CONSTANTS}.Hdi_lparam)
@@ -133,17 +136,20 @@ feature -- Element change
 			exists: exists
 		do
 			cwel_hd_item_set_mask (item, value)
-		end	
+		end
 
 	set_text (a_text: STRING_GENERAL)
 			-- Set `text' with `a_text'.
 			-- Also Updates `text_count' and `mask'
 		require
 			text_not_void: a_text /= Void
+		local
+			l_text: like internal_text
 		do
-			create internal_text.make (a_text)
-			cwel_hd_item_set_psz_text (item, internal_text.item)
-			cwel_hd_item_set_cch_text_max (item, internal_text.length)
+			create l_text.make (a_text)
+			internal_text := l_text
+			cwel_hd_item_set_psz_text (item, l_text.item)
+			cwel_hd_item_set_cch_text_max (item, l_text.length)
 			set_mask (set_flag (mask, {WEL_HDI_CONSTANTS}.Hdi_text))
 			internal_add_format (hdf_string)
 			set_format (clear_flag (format, hdf_bitmap))
@@ -183,7 +189,7 @@ feature -- Element change
 
 
 	set_format (value: INTEGER)
-			-- Sets a set of bit flags that specify the item's format. 
+			-- Sets a set of bit flags that specify the item's format.
 			-- Constants are defined in class WEL_HDF_CONSTANTS.
 			-- Constants may be combined.
 			-- Also updates `mask'
@@ -195,12 +201,13 @@ feature -- Element change
 		ensure
 			mask_set: flag_set (mask, {WEL_HDI_CONSTANTS}.Hdi_format)
 		end
-		
+
 	set_bitmap (a_bitmap: WEL_BITMAP)
-			-- Sets item bitmap. 
+			-- Sets item bitmap.
 			-- Also updates `mask'
 		require
 			exists: exists
+			a_bitmap_not_void: a_bitmap /= Void
 			bitmap_exsits: a_bitmap.exists
 		do
 			cwel_hd_item_set_hbm (item, a_bitmap.item)
@@ -210,7 +217,7 @@ feature -- Element change
 		end
 
 	set_custom_data (value: INTEGER)
-			-- Sets application-defined item data. 
+			-- Sets application-defined item data.
 			-- Also updates `mask'
 		require
 			exists: exists
@@ -220,7 +227,7 @@ feature -- Element change
 		ensure
 			mask_set: flag_set (mask, {WEL_HDI_CONSTANTS}.Hdi_lparam)
 		end
-		
+
 	set_iimage (an_index: INTEGER)
 			-- Zero-based index of an image within the image list.
 		require
@@ -231,7 +238,7 @@ feature -- Element change
 			set_mask (set_flag (mask, {WEL_HDI_CONSTANTS}.hdi_image))
 			internal_add_format ({WEL_HDF_CONSTANTS}.hdf_image)
 		end
-		
+
 feature -- Measurement
 
 	structure_size: INTEGER
@@ -239,10 +246,10 @@ feature -- Measurement
 		once
 			Result := c_size_of_hd_item
 		end
-		
+
 feature {NONE} -- Implementation
 
-	internal_text: WEL_STRING
+	internal_text: ?WEL_STRING
 			-- Prevent buffer of HDITEM.pszText to be garbage collected
 
 	internal_add_format (a_format: INTEGER)
@@ -333,14 +340,14 @@ feature {NONE} -- Externals
 		external
 			"C [macro %"hd_item.h%"] (HDITEM*, LPARAM)"
 		end
-		
+
 	cwel_hditem_get_iimage (ptr: POINTER): INTEGER
 		external
 			"C [struct %"commctrl.h%"] (HDITEM): EIF_INTEGER"
 		alias
 			"iImage"
 		end
-		
+
 	cwel_hditem_set_iimage (ptr: POINTER; value: INTEGER)
 		external
 			"C [struct %"commctrl.h%"] (HDITEM, EIF_INTEGER)"

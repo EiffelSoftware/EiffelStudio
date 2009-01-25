@@ -49,6 +49,7 @@ feature -- Initialization
 			-- `a_text' is the text of of the header.
 		require
 			valid_fmt: valid_lvcfmt_constant (an_alignment)
+			a_text_not_void: a_text /= Void
 		do
 			structure_make
 			cwel_lv_column_set_mask (item, a_mask)
@@ -65,6 +66,8 @@ feature -- Access
 			-- to be filled in. This member can be a combination
 			-- of the Lvcf_* values.
 			-- See class WEL_LVCF_CONSTANTS.
+		require
+			exists: exists
 		do
 			Result := cwel_lv_column_get_mask (item)
 		end
@@ -73,9 +76,12 @@ feature -- Access
 			-- Title of the column
 		require
 			text_meaningfull: is_text_valid
+		local
+			l_text: like str_text
 		do
-			if str_text /= Void then
-				Result := str_text.string
+			l_text := str_text
+			if l_text /= Void then
+				Result := l_text.string
 			else
 				create Result.make_empty
 			end
@@ -86,6 +92,7 @@ feature -- Access
 	width: INTEGER
 			-- Get the width, in pixel, of the column
 		require
+			exists: exists
 			width_meaningfull: is_width_valid
 		do
 			Result := cwel_lv_column_get_cx (item)
@@ -96,6 +103,8 @@ feature -- Access
 	alignment: INTEGER
 			-- Specifies the alignment of the column
 			-- See class WEL_LVCF_CONSTANTS for possible values.
+		require
+			exists: exists
 		do
 			Result := cwel_lv_column_get_fmt (item)
 		ensure
@@ -106,24 +115,32 @@ feature -- Status Report
 
 	is_width_valid: BOOLEAN
 			-- Is there any specified width in pixel for this column?
+		require
+			exists: exists
 		do
 			Result := is_in_mask (Lvcf_width)
 		end
 
 	is_text_valid: BOOLEAN
 			-- Is there any specified text for this column?
+		require
+			exists: exists
 		do
 			Result := is_in_mask (Lvcf_text)
 		end
 
 	is_alignment_valid: BOOLEAN
 			-- Is there any specified alignment for this column?
+		require
+			exists: exists
 		do
 			Result := is_in_mask (Lvcf_fmt)
 		end
 
 	is_in_mask (a_mask: INTEGER): BOOLEAN
 			-- Is `a_mask' contained in the current mask?
+		require
+			exists: exists
 		local
 			backup_mask: INTEGER
 			new_mask: INTEGER
@@ -147,6 +164,8 @@ feature -- Element change
 
 	set_mask (a_mask: INTEGER)
 			-- Set `mask' with `a_mask'.
+		require
+			exists: exists
 		do
 			cwel_lv_column_set_mask (item, a_mask)
 		ensure
@@ -155,6 +174,8 @@ feature -- Element change
 
 	remove_mask
 			-- Reset the mask to zero.
+		require
+			exists: exists
 		do
 			cwel_lv_column_set_mask (item, 0)
 		ensure
@@ -164,11 +185,15 @@ feature -- Element change
 	set_text (a_text: STRING_GENERAL)
 			-- Set `text' with `a_text'.
 		require
+			exists: exists
 			a_text_not_void: a_text /= Void
+		local
+			l_text: like str_text
 		do
 			cwel_lv_column_add_mask (item, Lvcf_text)
-			create str_text.make (a_text)
-			cwel_lv_column_set_psztext (item, str_text.item)
+			create l_text.make (a_text)
+			str_text := l_text
+			cwel_lv_column_set_psztext (item, l_text.item)
 			cwel_lv_column_set_cchtextmax (item, a_text.count)
 		ensure
 			text_set: text.is_equal (a_text)
@@ -176,6 +201,8 @@ feature -- Element change
 
 	remove_text
 			-- Remove any specified text on the column.
+		require
+			exists: exists
 		do
 			cwel_lv_column_remove_mask (item, Lvcf_text)
 		ensure
@@ -185,6 +212,7 @@ feature -- Element change
 	set_width (a_width: INTEGER)
 			-- Set the width of the column to `a_width'.
 		require
+			exists: exists
 			valid_width: a_width >= 0 or
 			a_width = Lvscw_autosize or
 			a_width = Lvscw_autosize_useheader
@@ -197,6 +225,8 @@ feature -- Element change
 
 	remove_width
 			-- Remove any specified width on the column.
+		require
+			exists: exists
 		do
 			cwel_lv_column_remove_mask (item, Lvcf_width)
 		ensure
@@ -207,6 +237,7 @@ feature -- Element change
 			-- Set the alignment of the column to `an_alignment'.
 			-- See class WEL_LVCF_CONSTANTS for possible values.
 		require
+			exists: exists
 			valid_alignment: valid_lvcfmt_constant (an_alignment)
 		do
 			cwel_lv_column_add_mask (item, Lvcf_fmt)
@@ -217,6 +248,8 @@ feature -- Element change
 
 	remove_alignment
 			-- Remove any specified alignment on the column.
+		require
+			exists: exists
 		do
 			cwel_lv_column_remove_mask (item, Lvcf_fmt)
 		ensure
@@ -237,6 +270,8 @@ feature -- Obsolete
 			-- Specifies the width, in pixel, of the column
 		obsolete
 			"use `width' instead, `cx' will be removed after January 2001"
+		require
+			exists: exists
 		do
 			Result := width
 		end
@@ -245,6 +280,8 @@ feature -- Obsolete
 			-- Set `cx' with `a_cx'.
 		obsolete
 			"use `set_width' instead, `set_cx' will be removed after January 2001"
+		require
+			exists: exists
 		do
 			set_width (a_width)
 		end
@@ -253,6 +290,8 @@ feature -- Obsolete
 			-- Set `fmt' with `a_fmt'.
 		obsolete
 			"use `set_alignment' instead, `set_fmt' will be removed after January 2001"
+		require
+			exists: exists
 		do
 			set_alignment (a_fmt)
 		end
@@ -262,13 +301,15 @@ feature -- Obsolete
 			-- See class WEL_LVCF_CONSTANTS for possible values.
 		obsolete
 			"use `alignment' instead, `fmt' will be removed after January 2001"
+		require
+			exists: exists
 		do
 			Result := alignment
 		end
 
 feature {NONE} -- Externals
 
-	str_text: WEL_STRING
+	str_text: ?WEL_STRING
 			-- Backend buffer for `text'.
 
 	c_size_of_lv_column: INTEGER

@@ -19,7 +19,7 @@ inherit
 		undefine
 			copy, is_equal
 		end
-	
+
 	WEL_HDI_CONSTANTS
 		export
 			{NONE} all
@@ -32,6 +32,7 @@ create
 	make_by_pointer
 
 feature {NONE} -- Initialization
+
 	make
 		local
 			a_window_pos: WEL_WINDOW_POS
@@ -40,9 +41,10 @@ feature {NONE} -- Initialization
 			create a_window_pos.make
 			set_window_pos (a_window_pos)
 		end
+
 feature -- Access
 
-	
+
 	rectangle: WEL_RECT
 			-- Contains the coordinates of a rectangle that the header control is to occupy
 		require
@@ -52,21 +54,22 @@ feature -- Access
 		end
 
 	window_pos: WEL_WINDOW_POS
-			-- Object that receives information about the appropriate size 
-			-- and position of the header control. 
+			-- Object that receives information about the appropriate size
+			-- and position of the header control.
 		require
 			exists: exists
 		do
 			create Result.make_by_pointer (cwel_hd_layout_get_pwpos (item))
 		end
-	
-		
+
+
 feature -- Element change
 
 	set_rectangle (a_rect: WEL_RECT)
 			-- Contains the coordinates of a rectangle that the header control is to occupy
 		require
 			exists: exists
+			rect_not_void: a_rect /= Void
 			rect_exists: a_rect.exists
 		do
 			cwel_hd_layout_set_prc (item, a_rect.item)
@@ -76,13 +79,12 @@ feature -- Element change
 			-- Filled usually by Windows
 		require
 			exists: exists
+			value_not_void: value /= Void
 			window_pos_exists: value.exists
 		do
 			cwel_hd_layout_set_pwpos (item, value.item)
 		end
-		
-		
-		
+
 feature -- Measurement
 
 	structure_size: INTEGER

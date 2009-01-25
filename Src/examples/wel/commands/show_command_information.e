@@ -13,27 +13,19 @@ feature
 			-- Add information about Wm_move message in the
 			-- list box.
 		local
-			mi: WEL_COMMAND_MESSAGE
-			lb: WEL_SINGLE_SELECTION_LIST_BOX
 			s: STRING
 		do
-			mi ?= message_information
-			lb ?= argument
-			check
-				mi_not_void: mi /= Void
-				lb_not_void: lb /= Void
-			end
+			if {mi: WEL_COMMAND_MESSAGE} message_information and then {lb: WEL_SINGLE_SELECTION_LIST_BOX} argument then
+				if mi.from_menu or (mi.from_control and then mi.control /= lb) then
+					s := "WM_COMMAND: id="
+					s.append (mi.id.out)
 
-			if mi.from_menu or (mi.from_control and then
-				mi.control /= lb) then
-				s := "WM_COMMAND: id="
-				s.append (mi.id.out)
+					s.append (" From control=")
+					s.append (mi.from_control.out)
 
-				s.append (" From control=")
-				s.append (mi.from_control.out)
-
-				lb.add_string (s)
-				lb.select_item (lb.count - 1)
+					lb.add_string (s)
+					lb.select_item (lb.count - 1)
+				end
 			end
 		end
 

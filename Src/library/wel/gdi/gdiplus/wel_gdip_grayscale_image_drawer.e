@@ -15,8 +15,10 @@ feature -- Command
 	draw_grayscale_bitmap (a_image: WEL_GDIP_BITMAP; a_dest_dc: WEL_DC; a_dest_x, a_dest_y: INTEGER)
 			-- Draw grayscale version of `a_image' on `a_dest_dc' at `a_dest_x', `a_dest_y'.
 		require
-			not_void: a_image /= Void
-			not_void: a_dest_dc /= Void
+			a_image_not_void: a_image /= Void
+			a_image_exists: a_image.exists
+			a_dest_dc_not_void: a_dest_dc /= Void
+			a_dest_dc_exists: a_dest_dc.exists
 		local
 			l_graphics: WEL_GDIP_GRAPHICS
 			l_image_attributes: WEL_GDIP_IMAGE_ATTRIBUTES
@@ -42,7 +44,13 @@ feature -- Command
 	draw_grayscale_bitmap_or_icon_with_memory_buffer (a_bitmap: WEL_BITMAP; a_icon: WEL_ICON; a_control_dc: WEL_DC; a_dest_x, a_dest_y: INTEGER; a_background_color: WEL_COLOR_REF; a_pixmap_has_mask: BOOLEAN)
 			-- This feature will use one of `draw_grayscale_icon_with_memory_buffer' or `draw_grayscale_bitmap_with_memory_buffer' automatically.
 		require
-			not_void: a_bitmap /= Void and a_icon /= Void and a_control_dc /= Void and a_background_color /= Void
+			a_bitmap_not_void: a_bitmap /= Void
+			a_bitmap_exists: a_bitmap.exists
+			a_icon_not_void: a_icon /= Void
+			a_icon_exists: a_icon.exists
+			a_control_dc_not_void: a_control_dc /= Void
+			a_control_dc_exists: a_control_dc.exists
+			a_background_color_not_void: a_background_color /= Void
 		local
 			l_log_bitmap: WEL_LOG_BITMAP
 			l_gdip_bitmap: WEL_GDIP_BITMAP
@@ -61,7 +69,11 @@ feature -- Command
 	draw_grayscale_icon_with_memory_buffer (a_orignal_icon: WEL_ICON; a_control_dc: WEL_DC; a_dest_x, a_dest_y: INTEGER; a_background_color: WEL_COLOR_REF)
 			-- Draw grayscale version of `a_orignal_icon' on `a_control_dc'
 		require
-			not_void: a_orignal_icon /= Void and a_control_dc /= Void and a_background_color /= Void
+			a_orignal_icon_not_void: a_orignal_icon /= Void
+			a_orignal_icon_exists: a_orignal_icon.exists
+			a_control_dc_not_void: a_control_dc /= Void
+			a_control_dc_exists: a_control_dc.exists
+			a_background_color_not_void: a_background_color /= Void
 		local
 			l_gdip_bitmap: WEL_GDIP_BITMAP
 		do
@@ -74,7 +86,11 @@ feature -- Command
 			-- Draw grayscale version of `a_orignal_icon' on `a_control_dc'
 			-- We must draw on a buffer dc first, otherwise in Windows Remote Desktop (at least Windows Vista), the generated grayscale icon will distorted.
 		require
-			not_void: a_gdip_bitmap /= Void and a_control_dc /= Void and a_background_color /= Void
+			a_gdip_bitmap_not_void: a_gdip_bitmap /= Void
+			a_gdip_bitmap_exists: a_gdip_bitmap.exists
+			a_control_dc_not_void: a_control_dc /= Void
+			a_control_dc_exists: a_control_dc.exists
+			a_background_color_not_void: a_background_color /= Void
 		local
 			l_buffered_dc: WEL_DC
 			l_wel_bitmap: WEL_BITMAP

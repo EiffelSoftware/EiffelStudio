@@ -56,12 +56,16 @@ feature -- Access
 			-- See class WEL_PFM_CONSTANTS for values.
 			-- This attribut is automatically set by the
 			-- features set_*.
+		require
+			exists: exists
 		do
 			Result := cwel_paraformat_get_dwmask (item)
 		end
 
 	numbering: INTEGER
 			-- Numbering type
+		require
+			exists: exists
 		do
 			Result := cwel_paraformat_get_wnumbering (item)
 		end
@@ -69,6 +73,8 @@ feature -- Access
 	alignment: INTEGER
 			-- Alignment type.
 			-- See class WEL_PFA_CONSTANTS for values.
+		require
+			exists: exists
 		do
 			Result := cwel_paraformat_get_walignment (item)
 		end
@@ -76,12 +82,16 @@ feature -- Access
 	right_indent: INTEGER
 			-- Size of the right indentation, relative to the right
 			-- margin
+		require
+			exists: exists
 		do
 			Result := cwel_paraformat_get_dxrightindent (item)
 		end
 
 	start_indent: INTEGER
 			-- Indentation of the first line in the paragraph
+		require
+			exists: exists
 		do
 			Result := cwel_paraformat_get_dxstartindent (item)
 		end
@@ -91,12 +101,16 @@ feature -- Access
 			-- lines, relative to the starting indentation. The
 			-- first line is indented if this member is negative,
 			-- or outdented is this member is positive.
+		require
+			exists: exists
 		do
 			Result := cwel_paraformat_get_dxoffset (item)
 		end
 
 	tabulations: ARRAY [INTEGER]
 			-- Contains tab stops
+		require
+			exists: exists
 		local
 			i: INTEGER
 		do
@@ -118,6 +132,8 @@ feature -- Element change
 
 	no_numbering
 			-- Remove any numbering.
+		require
+			exists: exists
 		do
 			add_mask (Pfm_numbering)
 			cwel_paraformat_set_wnumbering (item, 0)
@@ -127,6 +143,8 @@ feature -- Element change
 
 	bullet_numbering
 			-- Add bullets.
+		require
+			exists: exists
 		do
 			add_mask (Pfm_numbering)
 			cwel_paraformat_set_wnumbering (item, Pfn_bullet)
@@ -136,6 +154,8 @@ feature -- Element change
 
 	set_start_indent (a_start_indent: INTEGER)
 			-- Set `start_indent' with `a_start_indent'.
+		require
+			exists: exists
 		do
 			add_mask (Pfm_startindent)
 			cwel_paraformat_set_dxstartindent (item, a_start_indent)
@@ -145,6 +165,8 @@ feature -- Element change
 
 	set_right_indent (a_right_indent: INTEGER)
 			-- Set `right_indent' with `a_right_indent'.
+		require
+			exists: exists
 		do
 			add_mask (Pfm_rightindent)
 			cwel_paraformat_set_dxrightindent (item, a_right_indent)
@@ -154,6 +176,8 @@ feature -- Element change
 
 	set_offset (an_offset: INTEGER)
 			-- Set `offset' with `an_offset'.
+		require
+			exists: exists
 		do
 			add_mask (Pfm_offset)
 			cwel_paraformat_set_dxoffset (item, an_offset)
@@ -164,6 +188,8 @@ feature -- Element change
 	set_alignment (an_alignment: INTEGER)
 			-- Set `alignment' with `an_alignment'.
 			-- See class WEL_PFA_CONSTANTS for values.
+		require
+			exists: exists
 		do
 			add_mask (Pfm_alignment)
 			cwel_paraformat_set_walignment (item, an_alignment)
@@ -173,6 +199,8 @@ feature -- Element change
 
 	set_left_alignment
 			-- Paragraphs are aligned with the left margin.
+		require
+			exists: exists
 		do
 			set_alignment (Pfa_left)
 		ensure
@@ -181,6 +209,8 @@ feature -- Element change
 
 	set_right_alignment
 			-- Paragraphs are aligned with the right margin.
+		require
+			exists: exists
 		do
 			set_alignment (Pfa_right)
 		ensure
@@ -189,6 +219,8 @@ feature -- Element change
 
 	set_center_alignment
 			-- Paragraphs are centered.
+		require
+			exists: exists
 		do
 			set_alignment (Pfa_center)
 		ensure
@@ -198,6 +230,7 @@ feature -- Element change
 	set_tabulations (tabs: ARRAY [INTEGER])
 			-- Set tabulation stops using the values of `tabs'.
 		require
+			exists: exists
 			tabs_not_void: tabs /= Void
 			tabs_count: tabs.count <= Max_tab_stops
 		local
@@ -221,6 +254,8 @@ feature -- Element change
 
 	set_tabulation (tab: INTEGER)
 			-- Set a tab stop at every `tab'.
+		require
+			exists: exists
 		local
 			a: ARRAY [INTEGER]
 			i: INTEGER
@@ -239,6 +274,8 @@ feature -- Element change
 
 	set_default_tabulation
 			-- Set the default tabulation.
+		require
+			exists: exists
 		do
 			set_tabulations (<<Default_tab_value>>)
 		end
@@ -246,6 +283,8 @@ feature -- Element change
 	set_mask (a_mask: INTEGER)
 			-- Set `mask' with `a_mask'.
 			-- See class WEL_PFM_CONSTANTS for `a_mask' values.
+		require
+			exists: exists
 		do
 			cwel_paraformat_set_dwmask (item, a_mask)
 		ensure
@@ -255,6 +294,8 @@ feature -- Element change
 	add_mask (a_mask: INTEGER)
 			-- Add `a_mask' to `mask'.
 			-- See class WEL_PFM_CONSTANTS for `a_mask' values.
+		require
+			exists: exists
 		do
 			set_mask (set_flag (mask, a_mask))
 		ensure
@@ -264,6 +305,8 @@ feature -- Element change
 	remove_mask (a_mask: INTEGER)
 			-- Remove `a_mask' from `mask'.
 			-- See class WEL_PFM_CONSTANTS for `a_mask' values.
+		require
+			exists: exists
 		do
 			set_mask (clear_flag (mask, a_mask))
 		ensure
@@ -275,6 +318,8 @@ feature -- Status report
 	has_mask (a_mask: INTEGER): BOOLEAN
 			-- Is `a_mask' set in `mask'?
 			-- See class WEL_PFM_CONSTANTS for `a_mask' values.
+		require
+			exists: exists
 		do
 			Result := flag_set (mask, a_mask)
 		end

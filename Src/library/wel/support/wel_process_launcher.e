@@ -55,7 +55,7 @@ feature -- Element settings
 
 feature -- Basic Operations
 
-	spawn (a_command_line, a_working_directory: ?STRING_GENERAL)
+	spawn (a_command_line: STRING_GENERAL; a_working_directory: ?STRING_GENERAL)
 			-- Spawn asynchronously process described in `a_command_line' from `a_working_directory'.
 		require
 			non_void_command_line: a_command_line /= Void
@@ -64,7 +64,7 @@ feature -- Basic Operations
 			spawn_with_flags (a_command_line, a_working_directory, detached_process)
 		end
 
-	spawn_with_console (a_command_line, a_working_directory: ?STRING_GENERAL)
+	spawn_with_console (a_command_line: STRING_GENERAL; a_working_directory: ?STRING_GENERAL)
 			-- Spawn asynchronously process described in `a_command_line' from `a_working_directory'.
 		require
 			non_void_command_line: a_command_line /= Void

@@ -63,7 +63,7 @@ feature -- Access
 	x_hotspot: INTEGER
 			-- X-coordinate of `Current's hot spot.
 		local
-			icon_info: WEL_ICON_INFO
+			icon_info: like get_icon_info
 		do
 			icon_info := get_icon_info
 			if icon_info /= Void then
@@ -80,7 +80,7 @@ feature -- Access
 	y_hotspot: INTEGER
 			-- Y-coordinate of a `Current's hot spot.
 		local
-			icon_info: WEL_ICON_INFO
+			icon_info: like get_icon_info
 		do
 			icon_info := get_icon_info
 			if icon_info /= Void then
@@ -94,7 +94,7 @@ feature -- Access
 			end
 		end
 
-	previous_cursor: WEL_CURSOR
+	previous_cursor: ?WEL_CURSOR
 			-- Previously assigned cursor
 		local
 			a_default_pointer: POINTER

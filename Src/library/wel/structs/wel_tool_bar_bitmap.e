@@ -107,7 +107,7 @@ feature -- Access
 
 feature {WEL_TOOL_BAR} -- Internal State
 
-	internal_bitmap: WEL_BITMAP
+	internal_bitmap: ?WEL_BITMAP
 			-- Associated bitmap. Void if a predefined bitmap or
 			-- a ressource bitmap is associated.
 
@@ -130,19 +130,21 @@ feature -- Element change
 			-- Set `bitmap_id' with `a_bitmap_id'.
 		require
 			positive_bitmap_id: a_bitmap_id > 0
+		local
+			l_internal_bitmap: like internal_bitmap
 		do
 				-- Remove any existing bitmap.
-			if internal_bitmap /= Void then
-				if internal_bitmap.reference_tracked then
-					internal_bitmap.decrement_reference
+			l_internal_bitmap := internal_bitmap
+			if l_internal_bitmap /= Void then
+				if l_internal_bitmap.reference_tracked then
+					l_internal_bitmap.decrement_reference
 				end
 				internal_bitmap := Void
 				internal_bitmap_object_id := 0
 			end
 
 				-- Set the new bitmap id.
-			cwel_tbaddbitmap_set_hinst (item,
-				main_args.resource_instance.item)
+			cwel_tbaddbitmap_set_hinst (item, main_args.resource_instance.item)
 			cwel_tbaddbitmap_set_nid (item, cwel_integer_to_pointer (a_bitmap_id))
 		ensure
 			bitmap_id_set: bitmap_id = a_bitmap_id
@@ -153,13 +155,15 @@ feature -- Element change
 			-- bitmap identifier `a_bitmap_id'.
 			-- See class WEL_IDB_CONSTANTS for `a_bitmap_id' values.
 		require
-			valid_tool_bar_bitmap_constant:
-				valid_tool_bar_bitmap_constant (a_bitmap_id)
+			valid_tool_bar_bitmap_constant: valid_tool_bar_bitmap_constant (a_bitmap_id)
+		local
+			l_internal_bitmap: like internal_bitmap
 		do
 				-- Remove any existing bitmap.
-			if internal_bitmap /= Void then
-				if internal_bitmap.reference_tracked then
-					internal_bitmap.decrement_reference
+			l_internal_bitmap := internal_bitmap
+			if l_internal_bitmap /= Void then
+				if l_internal_bitmap.reference_tracked then
+					l_internal_bitmap.decrement_reference
 				end
 				internal_bitmap := Void
 				internal_bitmap_object_id := 0
@@ -193,14 +197,10 @@ feature {NONE} -- Removal
 
 	destroy_item
 			-- Free `item'
-		local
-			a_bitmap: WEL_BITMAP
 		do
 			Precursor {WEL_STRUCTURE}
-
-			a_bitmap ?= eif_id_object (internal_bitmap_object_id)
-			if a_bitmap /= Void and then a_bitmap.reference_tracked then
-				a_bitmap.decrement_reference
+			if {l_bitmap: WEL_BITMAP} eif_id_object (internal_bitmap_object_id) and then l_bitmap.reference_tracked then
+				l_bitmap.decrement_reference
 			end
 		end
 

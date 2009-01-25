@@ -33,6 +33,7 @@ feature {NONE} -- Initialization
 			-- Make the structure with `a_nmhdr'.
 		require
 			a_nmhdr_not_void: a_nmhdr /= Void
+			a_nmhdr_exists: a_nmhdr.exists
 		do
 			make_by_pointer (a_nmhdr.item)
 		end
@@ -41,6 +42,8 @@ feature -- Access
 
 	selection_type: INTEGER
 			-- Type of selection, see WEL_EN_SELCHANGE_CONSTANTS for values.
+		require
+			exists: exists
 		do
 			Result := cwel_selchange_get_seltyp (item)
 		end
@@ -48,6 +51,8 @@ feature -- Access
 	character_range: WEL_CHARACTER_RANGE
 			-- Lower and upper indexes of selection, equal when caret is displayed
 			-- and no selection.
+		require
+			exists: exists
 		do
 			create Result.make_by_pointer (cwel_selchange_get_chrg (item))
 		ensure

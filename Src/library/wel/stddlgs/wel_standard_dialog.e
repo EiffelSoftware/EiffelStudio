@@ -20,6 +20,7 @@ feature -- Basic operations
 			-- Activate the dialog box (modal mode) with
 			-- `a_parent' as owner.
 		require
+			exists: exists
 			a_parent_not_void: a_parent /= Void
 			a_parent_exists: a_parent.exists
 		deferred

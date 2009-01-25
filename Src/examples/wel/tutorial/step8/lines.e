@@ -8,10 +8,10 @@ inherit
 	LINKED_LIST [LINE]
 
 	STORABLE
-                undefine
-                        is_equal,
-                        copy
-                end
+		undefine
+			is_equal,
+			copy
+		end
 
 create
 	make

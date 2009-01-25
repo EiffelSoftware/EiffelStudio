@@ -40,11 +40,11 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parent: WEL_WINDOW; a_x, a_y, a_width, a_height,
-				an_id: INTEGER)
+	make (a_parent: WEL_WINDOW; a_x, a_y, a_width, a_height, an_id: INTEGER)
 			-- Make a List view control.
 		require
 			a_parent_not_void: a_parent /= Void
+			a_parent_exists: a_parent.exists
 		do
 			internal_window_make (a_parent, Void,
 				default_style, a_x, a_y, a_width, a_height,
@@ -318,7 +318,7 @@ feature -- Status report
 				to_wparam (0), to_lparam (0))
 		end
 
-	get_tooltip: WEL_TOOLTIP
+	get_tooltip: ?WEL_TOOLTIP
 			-- `Result' is tooltip associated with `Current'.
 		local
 			pointer: POINTER
@@ -404,6 +404,7 @@ feature -- Status setting
 			iitem_large_enough: iitem >= 0
 			isub_item_small_enough: isub_item < column_count
 			iitem_small_enough: iitem < count
+			txt_not_void: txt /= Void
 		local
 			an_item: WEL_LIST_VIEW_ITEM
 		do
@@ -415,6 +416,7 @@ feature -- Status setting
 			-- Make `txt' the new title of the `index'-th column.
 		require
 			exists: exists
+			txt_not_void: txt /= Void
 			index_large_enough: index >= 0
 			index_small_enough: index < column_count
 		local
@@ -439,7 +441,7 @@ feature -- Status setting
 			{WEL_API}.send_message (item, Lvm_setcolumn, to_wparam (index), a_column.item)
 		end
 
-	set_image_list(an_imagelist: WEL_IMAGE_LIST)
+	set_image_list (an_imagelist: ?WEL_IMAGE_LIST)
 			-- Set the current "large" image list to `an_imagelist'.
 			-- If `an_imagelist' is set to Void, it removes
 			-- the current associated image list (if any).
@@ -452,7 +454,7 @@ feature -- Status setting
 			end
 		end
 
-	set_small_image_list(an_imagelist: WEL_IMAGE_LIST)
+	set_small_image_list (an_imagelist: ?WEL_IMAGE_LIST)
 			-- Set the current "small" image list to `an_imagelist'.
 			-- If `an_imagelist' is set to Void, it removes
 			-- the current associated image list (if any).
@@ -467,18 +469,24 @@ feature -- Status setting
 
 	set_background_color (a_color: WEL_COLOR_REF)
 			-- Assign `a_color' to background of `Current'.
+		require
+			a_color_not_void: a_color /= Void
 		do
 			{WEL_API}.send_message (item, Lvm_setbkcolor, to_wparam (0), to_lparam (a_color.item))
 		end
 
 	set_text_background_color (a_color: WEL_COLOR_REF)
 			-- Assign `a_color' to background color of item text.
+		require
+			a_color_not_void: a_color /= Void
 		do
 			{WEL_API}.send_message (item, Lvm_settextbkcolor, to_wparam (0), to_lparam (a_color.item))
 		end
 
 	set_text_foreground_color (a_color: WEL_COLOR_REF)
 			-- Assign `a_color' to foreground color for item text.
+		require
+			a_color_not_void: a_color /= Void
 		do
 			{WEL_API}.send_message (item, Lvm_settextcolor, to_wparam (0), to_lparam (a_color.item))
 		end
@@ -489,6 +497,8 @@ feature -- Element change
 			-- Append `column' to the list view.
 		require
 			exists: exists
+			column_not_void: column /= Void
+			column_exists: column.exists
 		do
 			{WEL_API}.send_message (item, Lvm_insertcolumn, to_wparam (column_count), column.item)
 			column_count := column_count + 1
@@ -500,6 +510,8 @@ feature -- Element change
 			-- Insert `column' at the zero-based `index'.
 		require
 			exists: exists
+			column_not_void: column /= Void
+			column_exists: column.exists
 			index_large_enough: index >= 0
 			index_small_enough: index <= column_count
 		do
@@ -513,6 +525,8 @@ feature -- Element change
 			-- Prepend `column' to the list view.
 		require
 			exists: exists
+			column_not_void: column /= Void
+			column_exists: column.exists
 		do
 			{WEL_API}.send_message (item, Lvm_insertcolumn, to_wparam (0), column.item)
 			column_count := column_count + 1
@@ -538,6 +552,8 @@ feature -- Element change
 			-- given by the `iitem' attribute of the item.
 		require
 			exists: exists
+			an_item_not_void: an_item /= Void
+			an_item_exists: an_item.exists
 			index_large_enough: an_item.iitem >= 0
 			index_small_enough: an_item.iitem <= count
 		do
@@ -552,6 +568,8 @@ feature -- Element change
 			-- `iitem' attribute of the item.
 		require
 			exists: exists
+			an_item_not_void: an_item /= Void
+			an_item_exists: an_item.exists
 			index_large_enough: an_item.iitem >= 0
 			index_small_enough: an_item.iitem <= count
 		do
@@ -603,6 +621,8 @@ feature -- Notifications
 			-- button is being initiated.
 		require
 			exists: exists
+			info_not_void: info /= Void
+			info_exists: info.exists
 		do
 		end
 
@@ -610,6 +630,8 @@ feature -- Notifications
 			-- A label editing for an item has started.
 		require
 			exists: exists
+			info_not_void: info /= Void
+			info_exists: info.exists
 		do
 		end
 
@@ -618,6 +640,8 @@ feature -- Notifications
 			-- button is being initiated.
 		require
 			exists: exists
+			info_not_void: info /= Void
+			info_exists: info.exists
 		do
 		end
 
@@ -625,6 +649,8 @@ feature -- Notifications
 			-- A column was tapped.
 		require
 			exists: exists
+			info_not_void: info /= Void
+			info_exists: info.exists
 		do
 		end
 
@@ -632,6 +658,8 @@ feature -- Notifications
 			-- All the items were deleted.
 		require
 			exists: exists
+			info_not_void: info /= Void
+			info_exists: info.exists
 		do
 		end
 
@@ -639,6 +667,8 @@ feature -- Notifications
 			-- An item was deleted.
 		require
 			exists: exists
+			info_not_void: info /= Void
+			info_exists: info.exists
 		do
 		end
 
@@ -646,6 +676,8 @@ feature -- Notifications
 			-- A label editing for an item has ended.
 		require
 			exists: exists
+			info_not_void: info /= Void
+			info_exists: info.exists
 		do
 		end
 
@@ -655,6 +687,8 @@ feature -- Notifications
 			-- sort a list view item.
 		require
 			exists: exists
+			info_not_void: info /= Void
+			info_exists: info.exists
 		do
 		end
 
@@ -662,6 +696,8 @@ feature -- Notifications
 			-- A new item was inserted.
 		require
 			exists: exists
+			info_not_void: info /= Void
+			info_exists: info.exists
 		do
 		end
 
@@ -669,6 +705,8 @@ feature -- Notifications
 			-- An item has changed.
 		require
 			exists: exists
+			info_not_void: info /= Void
+			info_exists: info.exists
 		do
 		end
 
@@ -676,6 +714,8 @@ feature -- Notifications
 			-- An item is changing
 		require
 			exists: exists
+			info_not_void: info /= Void
+			info_exists: info.exists
 		do
 		end
 
@@ -691,6 +731,8 @@ feature -- Notifications
 			-- for an item.
 		require
 			exists: exists
+			info_not_void: info /= Void
+			info_exists: info.exists
 		do
 		end
 

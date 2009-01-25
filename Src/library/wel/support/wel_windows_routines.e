@@ -118,7 +118,7 @@ feature -- Status report
 			"IsWindow"
 		end
 
-	window_of_item (hwnd: POINTER): WEL_WINDOW
+	window_of_item (hwnd: POINTER): ?WEL_WINDOW
 			-- Retrieve Eiffel object associated with `hwnd' pointer.
 		require
 			hwnd_not_null: hwnd /= default_pointer
@@ -236,7 +236,7 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
-	foreground_window: WEL_WINDOW
+	foreground_window: ?WEL_WINDOW
 			-- Foreground window (window with focus)
 		local
 			p, null: POINTER

@@ -33,6 +33,8 @@ feature -- Access
 
 	bitmaps_width: INTEGER
 			-- width of all bitmaps located in this imageList
+		require
+			exists: exists
 		local
 			loc_imagelist: WEL_IMAGE_LIST
 		do
@@ -43,6 +45,8 @@ feature -- Access
 
 	bitmaps_height: INTEGER
 			-- height of all bitmaps located in this imageList
+		require
+			exists: exists
 		local
 			loc_imagelist: WEL_IMAGE_LIST
 		do
@@ -53,12 +57,16 @@ feature -- Access
 
 	buttons_width: INTEGER
 			-- Width of the buttons in the toolbar.
+		require
+			exists: exists
 		do
 			Result := get_button_width
 		end
 
 	buttons_height: INTEGER
 			-- Height of the buttons in the toolbar.
+		require
+			exists: exists
 		do
 			Result := get_button_height
 		end
@@ -73,6 +81,8 @@ feature -- Status report
 			-- If the return value is negative, the point does not lie within a button.
 			-- The absolute value of the return value is the index of a separator item
 			-- or the nearest nonseparator item.
+		require
+			exists: exists
 		local
 			coordinates: WEL_POINT
 		do
@@ -82,6 +92,8 @@ feature -- Status report
 
 	get_max_width: INTEGER
 			-- Retrieves the total width of all of the visible buttons and separators in the toolbar.
+		require
+			exists: exists
 		local
 			l_rect: WEL_RECT
 			l_count: INTEGER
@@ -104,6 +116,8 @@ feature -- Status report
 
 	get_max_height: INTEGER
 			-- Retrieves the common height of all of the visible buttons and separators in the toolbar.
+		require
+			exists: exists
 		local
 			l_rect: WEL_RECT
 		do
@@ -118,6 +132,8 @@ feature -- Status report
 
 	get_max_size: WEL_SIZE
 			-- Retrieves the total size of all of the visible buttons and separators in the toolbar
+		require
+			exists: exists
 		local
 			error_code: INTEGER
 		do
@@ -132,22 +148,28 @@ feature -- Resizing
 
 	get_button_width: INTEGER
 			-- Get the width of the buttons.
+		require
+			exists: exists
 		do
 			Result := cwin_lo_word({WEL_API}.send_message_result (item, Tb_getbuttonsize, to_wparam (0), to_lparam (0)))
 		end
 
 	get_button_height: INTEGER
 			-- Get the height of the buttons.
+		require
+			exists: exists
 		do
 			Result := cwin_hi_word({WEL_API}.send_message_result (item, Tb_getbuttonsize, to_wparam (0), to_lparam (0)))
 		end
 
 feature -- Element change
 
-	set_image_list (an_image_list: WEL_IMAGE_LIST)
+	set_image_list (an_image_list: ?WEL_IMAGE_LIST)
 			-- Set the default imageList to `an_image_list'.
 			--
 			-- To remove the imagelist, set `an_image_list' to Void.
+		require
+			exists: exists
 		do
 			if an_image_list = Void then
 				{WEL_API}.send_message (item, Tb_setimagelist, to_wparam (0), to_lparam (0))
@@ -157,15 +179,19 @@ feature -- Element change
 		end
 
 	get_image_list: WEL_IMAGE_LIST
+		require
+			exists: exists
 		do
 			create Result.make_by_pointer(
 				{WEL_API}.send_message_result (item, Tb_getimagelist, to_wparam (0), to_lparam (0)))
 		end
 
-	set_hot_image_list (an_image_list: WEL_IMAGE_LIST)
+	set_hot_image_list (an_image_list: ?WEL_IMAGE_LIST)
 			-- Set the hot imageList to `an_image_list'.
 			--
 			-- To remove the imagelist, set `an_image_list' to Void.
+		require
+			exists: exists
 		do
 			if an_image_list = Void then
 				{WEL_API}.send_message (item, Tb_sethotimagelist, to_wparam (0), to_lparam (0))
@@ -192,9 +218,6 @@ note
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end -- class WEL_IMAGELIST_TOOL_BAR
 

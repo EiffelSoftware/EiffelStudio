@@ -8,6 +8,19 @@ note
 class
 	WEL_CLIPBOARD
 
+inherit
+	ANY
+		redefine
+			default_create
+		end
+
+feature {NONE} -- Initialization
+
+	default_create
+		do
+			create last_string.make_empty
+		end
+
 feature -- Access
 
 	clipboard_open: BOOLEAN
@@ -33,12 +46,16 @@ feature -- Element Change
 		local
 			shared_string: WEL_SHARED_MEMORY_STRING
 			shared_memory_handle: POINTER
+			l_string: ?like last_string
 		do
 			shared_memory_handle := cwel_get_clipboard_data ({WEL_CLIPBOARD_CONSTANTS}.Cf_unicodetext)
 			if shared_memory_handle /= default_pointer then
 				create shared_string.make_from_handle (shared_memory_handle)
 				shared_string.retrieve_string
-				last_string := shared_string.last_string
+				l_string := shared_string.last_string
+					-- Per postcondition of `shared_string.last_string'.
+				check l_string_attached: l_string /= Void end
+				last_string := l_string
 			else
 				last_string := ""
 			end
@@ -50,6 +67,7 @@ feature -- Element Change
 			-- Assign `a_text' to the clipboard
 		require
 			clipboard_open: clipboard_open
+			a_text_not_void: a_text /= Void
 		local
 			shared_string: WEL_SHARED_MEMORY_STRING
 		do
@@ -57,7 +75,7 @@ feature -- Element Change
 			cwel_set_clipboard_data ({WEL_CLIPBOARD_CONSTANTS}.Cf_unicodetext, shared_string.handle)
 		end
 
-	open_clipboard (window: WEL_WINDOW)
+	open_clipboard (window: ?WEL_WINDOW)
 			-- Open clipboard for `window'. If `Void',
 			-- clipboard is opened to the current task.
 		require

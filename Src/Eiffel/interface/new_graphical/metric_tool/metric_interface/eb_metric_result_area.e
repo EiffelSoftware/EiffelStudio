@@ -100,6 +100,9 @@ feature {NONE} -- Initialization
 		local
 			l_text: EV_TEXT
 		do
+			create metric_result.make (metric_tool, Current)
+			create archive_result.make (metric_tool, Current)
+
 			Precursor {EV_VERTICAL_BOX}
 				-- Create all widgets.
 			create metric_result_area
@@ -114,8 +117,6 @@ feature {NONE} -- Initialization
 			dummy_text.disable_edit
 			dummy_text.set_text (metric_names.l_no_result_available)
 			dummy_area.extend (dummy_text)
-			create metric_result.make (metric_tool, Current)
-			create archive_result.make (metric_tool, Current)
 			metric_result_area.extend (metric_result)
 			archive_result_area.extend (archive_result)
 			metric_result_area.hide

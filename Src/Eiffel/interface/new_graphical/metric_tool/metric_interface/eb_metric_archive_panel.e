@@ -87,7 +87,6 @@ feature {NONE} -- Initialization
 			create reference_archive_timer.make_with_interval (0)
 			on_unit_order_change_agent := agent on_unit_order_change
 
-			default_create
 				-- Setup `open_file_dialog'.
 			l_pref := preferences.dialog_data.last_opened_metric_browse_archive_directory_preference
 			if l_pref.value = Void or else l_pref.value.is_empty then
@@ -97,6 +96,11 @@ feature {NONE} -- Initialization
 			open_file_dialog.set_title (metric_names.t_select_archive)
 			open_file_dialog.filters.extend (["*.xml", metric_names.e_xml_files])
 			open_file_dialog.filters.extend (["*.*", metric_names.e_all_files])
+
+			create domain_selector.make
+			create metric_selector.make (True)
+
+			default_create
 			set_is_metric_reloaded (True)
 
 			append_drop_actions (
@@ -122,11 +126,9 @@ feature {NONE} -- Initialization
 			-- can be added here.
 		do
 				-- Setup domain selector.
-			create domain_selector
 			domain_selector.setup_delayed_domain_item_buttons (True, False, False)
 			domain_selector.set_context_menu_factory (metric_tool.develop_window.menus.context_menu_factory)
 				-- Setup metric selector.
-			create metric_selector.make (True)
 			metric_selector.double_click_actions.extend (agent on_pointer_double_click_on_metric_item)
 			metric_selector.set_context_menu_factory (metric_tool.develop_window.menus.context_menu_factory)
 
@@ -967,7 +969,7 @@ invariant
 	calculator_attached: calculator /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -980,19 +982,19 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

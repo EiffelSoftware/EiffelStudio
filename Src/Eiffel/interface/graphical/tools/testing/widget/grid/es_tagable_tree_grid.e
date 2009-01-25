@@ -306,7 +306,7 @@ feature {NONE} -- Constants
 
 invariant
 	untagged_subrow_valid: untagged_items.is_empty = (untagged_subrow = Void)
-	expansion_cache_not_exceeded: expansion_cache.count <= max_expansion_cache_count
+	expansion_cache_not_exceeded: is_initialized implies expansion_cache.count <= max_expansion_cache_count
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

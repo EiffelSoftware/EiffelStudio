@@ -148,7 +148,6 @@ feature -- Setting
 			a_development_window_attached: a_development_window /= Void
 		do
 			development_window := a_development_window
-			reset
 		ensure
 			development_window_set: development_window = a_development_window
 		end

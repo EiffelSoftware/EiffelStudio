@@ -19,17 +19,23 @@ feature -- Initialization
 
 	make_from_string (a_string: STRING_GENERAL)
 			-- Create `Current' from `a_string'.
+		require
+			a_string: a_string /= Void
+		local
+			l_internal_string: like internal_string
 		do
-			create internal_string.make (a_string)
-			make_from_handle (global_alloc (gmem_moveable, internal_string.capacity))
+			create l_internal_string.make (a_string)
+				-- Keep a GC reference to allocated block of memory
+			internal_string := l_internal_string
+			make_from_handle (global_alloc (gmem_moveable, l_internal_string.capacity))
 			lock
-			item.memory_copy (internal_string.item, internal_string.capacity)
+			item.memory_copy (l_internal_string.item, l_internal_string.capacity)
 			unlock
 		end
 
 feature -- Access
 
-	last_string: STRING_32
+	last_string: ?STRING_32
 			-- String created from shared memory.
 			-- Only valid after a call to `retrieve_string'
 			-- Note: Changes to this object will not be
@@ -45,11 +51,13 @@ feature -- Element change
 			end
 			last_string := (create {WEL_STRING}.share_from_pointer (item)).string
 			unlock
+		ensure
+			last_string_set: last_string /= Void
 		end
 
 feature {NONE} -- Access
 
-	internal_string: WEL_STRING;
+	internal_string: ?WEL_STRING;
 			-- Wrapper around non-moveable buffer.
 
 note

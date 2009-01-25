@@ -21,14 +21,7 @@ feature {NONE} -- Initialization
 			-- Make the main window.
 		do
 			make_top ("My application")
-			create dc.make (Current)
 		end
-
-feature -- Access
-
-	dc: WEL_CLIENT_DC
-			-- Device context associated to the current
-			-- client window
 
 feature {NONE} -- Implementation
 
@@ -37,7 +30,9 @@ feature {NONE} -- Implementation
 			-- the left mouse button.
 		local
 			position: STRING
+			dc: WEL_CLIENT_DC
 		do
+			create dc.make (Current)
 			position := "("
 			position.append_integer (x_pos)
 			position.append (", ")

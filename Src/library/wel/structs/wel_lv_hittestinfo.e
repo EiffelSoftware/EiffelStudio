@@ -21,6 +21,9 @@ feature {NONE} -- Initialization
 
 	make_with_point (pt: WEL_POINT)
 			-- Create a structure with `pt'.
+		require
+			pt_not_void: pt /= Void
+			pt_exits: pt.exists
 		do
 			make
 			set_point (pt)
@@ -30,6 +33,8 @@ feature -- Access
 
 	point: WEL_POINT
 			-- Client coordinates of the point to test.
+		require
+			exists: exists
 		do
 			create Result.make_by_pointer (cwel_lv_hittestinfo_get_pt (item))
 		end
@@ -37,18 +42,24 @@ feature -- Access
 	flags: INTEGER
 			-- Variable that receives information about the result of
 			-- a hit test. See WEL_LVHT_CONSTANTS for values.
+		require
+			exists: exists
 		do
 			Result := cwel_lv_hittestinfo_get_flags (item)
 		end
 
 	iitem: INTEGER
 			-- index of the item that occupies the point
+		require
+			exists: exists
 		do
 			Result := cwel_lv_hittestinfo_get_iitem (item)
 		end
 
 	isubitem: INTEGER
 			-- index of the subitem that occupies the point
+		require
+			exists: exists
 		do
 			Result := cwel_lv_hittestinfo_get_isubitem (item)
 		end
@@ -57,6 +68,10 @@ feature -- Element change
 
 	set_point (pt: WEL_POINT)
 			-- Set `point' with `pt'.
+		require
+			exists: exists
+			pt_not_void: pt /= Void
+			pt_exists: pt.exists
 		do
 			cwel_lv_hittestinfo_set_pt (item, pt.item)
 		ensure

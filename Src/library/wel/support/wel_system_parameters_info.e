@@ -15,7 +15,7 @@ inherit
 		export
 			{NONE} all
 		end
-	
+
 	WEL_WINDOWS_VERSION
 		export
 			{NONE} all
@@ -41,7 +41,7 @@ feature -- Status
 			-- Determines whether dragging of full windows is enabled.
 			-- The pvParam parameter must point to a BOOL variable that
 			-- receives TRUE if enabled, or FALSE otherwise.
-			-- 
+			--
 			-- Windows 95: This flag is supported only if Windows Plus!
 			-- is installed. See SPI_GETWINDOWSEXTENSION.
 		local
@@ -75,23 +75,19 @@ feature -- Status
 
 	get_non_client_metrics: WEL_NON_CLIENT_METRICS
 			-- Retrieves the metrics associated with the nonclient area of
-			-- nonminimized windows. 
-			--
-			-- Void if an error occurred.
+			-- nonminimized windows.
+			-- If non-successful, default value
 		local
 			success: BOOLEAN
 		do
 			create Result.make
 			success := c_system_parameters_info (
-				Spi_getnonclientmetrics, 
-				Result.structure_size, 
-				Result.item, 
+				Spi_getnonclientmetrics,
+				Result.structure_size,
+				Result.item,
 				0)
-			if not success then
-				Result := Void
-			end
 		end
-		
+
 	get_wheel_scroll_lines: INTEGER
 			-- Retrieves the number of lines that will be scrolled when the mouse wheel is rotated.
 		local

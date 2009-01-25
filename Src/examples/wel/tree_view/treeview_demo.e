@@ -30,9 +30,9 @@ feature
 			create rich_edit_dll.make
 		end
 
-	common_controls_dll: WEL_COMMON_CONTROLS_DLL
+	common_controls_dll: ?WEL_COMMON_CONTROLS_DLL
 
-	rich_edit_dll: WEL_RICH_EDIT_DLL;
+	rich_edit_dll: ?WEL_RICH_EDIT_DLL;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

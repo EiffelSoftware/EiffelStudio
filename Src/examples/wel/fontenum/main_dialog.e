@@ -46,19 +46,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	edit: WEL_MULTIPLE_LINE_EDIT
+	edit: ?WEL_MULTIPLE_LINE_EDIT
 			-- Edit box
 
-	list_box: WEL_SINGLE_SELECTION_LIST_BOX
+	list_box: ?WEL_SINGLE_SELECTION_LIST_BOX
 			-- List box which contains the fonts
 
-	size: WEL_SINGLE_LINE_EDIT
+	size: ?WEL_SINGLE_LINE_EDIT
 			-- Edit box to input the size
 
 	current_size: INTEGER
 			-- Last size entered by the user
 
-	current_font: WEL_FONT
+	current_font: ?WEL_FONT
 			-- Current font selected
 
 feature -- Basic operations
@@ -68,15 +68,29 @@ feature -- Basic operations
 			-- by the user.
 		local
 			lf: WEL_LOG_FONT
+			l_font: like current_font
+			l_size: like size
+			l_edit: like edit
+			l_list_box: like list_box
 		do
 			if control.id = Idc_font_list_box and
 				notify_code = Lbn_selchange then
-				if size.text.is_integer then
-					current_size := size.text.to_integer
+				l_size := size
+				l_list_box := list_box
+				l_edit := edit
+					-- Per invariant
+				check
+					l_size_attached: l_size /= Void
+					l_list_box_attached: l_list_box /= Void
+					l_edit_attached: l_edit /= Void
 				end
-				create lf.make (current_size, list_box.selected_string)
-				create current_font.make_indirect (lf)
-				edit.set_font (current_font)
+				if l_size.text.is_integer then
+					current_size := l_size.text.to_integer
+				end
+				create lf.make (current_size, l_list_box.selected_string)
+				create l_font.make_indirect (lf)
+				current_font := l_font
+				l_edit.set_font (l_font)
 			end
 		end
 
@@ -90,7 +104,7 @@ feature -- Basic operations
 
 	setup_dialog
 			-- Fill the list box with the fonts.
-		local		
+		local
 			dc: WEL_CLIENT_DC
 		do
 			create dc.make (Current)
@@ -101,9 +115,14 @@ feature -- Basic operations
 
 	action (elf: WEL_ENUM_LOG_FONT; tm: WEL_TEXT_METRIC; font_type: INTEGER)
 			-- Called for each font found.
+		local
+			l_list_box: like list_box
 		do
 			if font_type = Truetype_fonttype then
-				list_box.add_string (elf.full_name)
+				l_list_box := list_box
+					-- Per invariant
+				check l_list_box_attached: l_list_box /= Void end
+				l_list_box.add_string (elf.full_name)
 			end
 		end
 
@@ -113,6 +132,11 @@ feature -- Basic operations
 			Precursor {WEL_FONT_FAMILY_ENUMERATOR}
 			Precursor {WEL_MAIN_DIALOG}
 		end
+
+invariant
+	edit_attached: edit /= Void
+	size_attached: size /= Void
+	list_box_attached: list_box /= Void
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -125,6 +149,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
 end -- class MAIN_DIALOG
-

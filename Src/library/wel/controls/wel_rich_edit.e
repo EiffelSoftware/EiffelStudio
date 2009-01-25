@@ -395,12 +395,16 @@ feature -- Status setting
 			{WEL_API}.send_message (item, Em_setoptions, to_wparam (operation), to_lparam (an_options))
 		end
 
-	set_text (a_text: STRING_GENERAL)
+	set_text (a_text: ?STRING_GENERAL)
 			-- Set `text' with `a_text'.
 		local
 			stream: WEL_RICH_EDIT_BUFFER_LOADER
 		do
-			create stream.make (a_text)
+			if a_text /= Void then
+				create stream.make (a_text)
+			else
+				create stream.make ("")
+			end
 			stream.set_is_unicode_data (True)
 			text_stream_in (stream)
 			stream.release_stream
@@ -409,6 +413,9 @@ feature -- Status setting
 	insert_text (a_text: STRING_GENERAL)
 			-- Insert `a_text' at the position of the cursor.
 			-- Replace the current selection if there is one
+		require
+			exists: exists
+			a_text_not_void: a_text /= Void
 		local
 			stream: WEL_RICH_EDIT_BUFFER_LOADER
 		do
@@ -544,6 +551,7 @@ feature -- Basic operations
 		require
 			exists: exists
 			stream_not_void: stream /= Void
+			stream_exists: stream.exists
 		do
 			send_stream_in_message (Sf_text | Sf_unicode, stream)
 		end
@@ -553,6 +561,7 @@ feature -- Basic operations
 		require
 			exists: exists
 			stream_not_void: stream /= Void
+			stream_exists: stream.exists
 		do
 			send_stream_out_message (Sf_text | Sf_unicode, stream)
 		end
@@ -562,6 +571,7 @@ feature -- Basic operations
 		require
 			exists: exists
 			stream_not_void: stream /= Void
+			stream_exists: stream.exists
 		do
 			send_stream_in_message (Sf_rtf, stream)
 		end
@@ -571,6 +581,7 @@ feature -- Basic operations
 		require
 			exists: exists
 			stream_not_void: stream /= Void
+			stream_exists: stream.exists
 		do
 			send_stream_out_message (Sf_rtf, stream)
 		end
@@ -580,6 +591,7 @@ feature -- Basic operations
 		require
 			exists: exists
 			stream_not_void: stream /= Void
+			stream_exists: stream.exists
 		do
 			send_stream_in_message (Sf_text | Sf_unicode | Sff_selection, stream)
 		end
@@ -589,6 +601,7 @@ feature -- Basic operations
 		require
 			exists: exists
 			stream_not_void: stream /= Void
+			stream_exists: stream.exists
 		do
 			send_stream_in_message (Sf_rtf + Sff_selection, stream)
 		end
@@ -601,6 +614,7 @@ feature -- Basic operations
 		require
 			exists: exists
 			stream_not_void: stream /= Void
+			stream_exists: stream.exists
 		do
 			stream.init_action
 			{WEL_API}.send_message (item, Em_streamin, to_wparam (format), stream.item)
@@ -615,6 +629,7 @@ feature -- Basic operations
 		require
 			exists: exists
 			stream_not_void: stream /= Void
+			stream_exists: stream.exists
 		do
 			stream.init_action
 			{WEL_API}.send_message (item, Em_streamout, to_wparam (format), stream.item)
@@ -639,6 +654,8 @@ feature -- Basic operations
 
 	find (text_to_find: STRING_GENERAL; match_case: BOOLEAN; start_from: INTEGER): INTEGER
 			-- Find `text_to_find' in WEL_RICH_EDIT
+		require
+			text_to_find: text_to_find /= Void
 		local
 			find_text: WEL_FIND_ARGUMENT
 			range: WEL_CHARACTER_RANGE
@@ -662,6 +679,7 @@ feature -- Element change
 		require
 			exists: exists
 			a_char_format_not_void: a_char_format /= Void
+			a_char_format_exists: a_char_format.exists
 		do
 			{WEL_API}.send_message (item, Em_setcharformat,
 				to_wparam (Scf_all), a_char_format.item)
@@ -672,6 +690,7 @@ feature -- Element change
 		require
 			exists: exists
 			a_char_format_not_void: a_char_format /= Void
+			a_char_format_exists: a_char_format.exists
 		do
 			{WEL_API}.send_message (item, Em_setcharformat,
 				to_wparam (Scf_selection), a_char_format.item)
@@ -682,6 +701,7 @@ feature -- Element change
 		require
 			exists: exists
 			a_char_format_not_void: a_char_format /= Void
+			a_char_format_exists: a_char_format.exists
 		do
 			{WEL_API}.send_message (item, Em_setcharformat,
 				to_wparam (Scf_word + Scf_selection), a_char_format.item)
@@ -692,6 +712,7 @@ feature -- Element change
 		require
 			exists: exists
 			a_para_format_not_void: a_para_format /= Void
+			a_para_format_exists: a_para_format.exists
 		do
 			{WEL_API}.send_message (item, Em_setparaformat, to_wparam (0), a_para_format.item)
 		end
@@ -760,9 +781,14 @@ feature -- Element change
 				-- Call this message from within `on_en_msgfilter'
 				-- to prevent the filtered message to be handled
 				-- by the Rich Edit Control.
+			local
+				l_parent: like parent
 			do
-				parent.set_message_return_value (to_lresult (1))
-				parent.disable_default_processing
+				l_parent := parent
+				if l_parent /= Void then
+					l_parent.set_message_return_value (to_lresult (1))
+					l_parent.disable_default_processing
+				end
 			end
 feature -- Notifications
 

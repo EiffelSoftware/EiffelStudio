@@ -58,12 +58,16 @@ feature -- Access
 
 	style: INTEGER
 			-- Brush style
+		require
+			exists: exists
 		do
 			Result := cwel_logbrush_get_style (item)
 		end
 
 	color: WEL_COLOR_REF
 			-- Brush color
+		require
+			exists: exists
 		do
 			create Result.make_by_color (cwel_logbrush_get_color (item))
 		ensure
@@ -72,6 +76,8 @@ feature -- Access
 
 	hatch: INTEGER
 			-- Brush hatch
+		require
+			exists: exists
 		do
 			Result := cwel_logbrush_get_hatch (item)
 		end
@@ -80,6 +86,8 @@ feature -- Element change
 
 	set_style (a_style: INTEGER)
 			-- Set `style' with `a_style'
+		require
+			exists: exists
 		do
 			cwel_logbrush_set_style (item, a_style)
 		ensure
@@ -89,6 +97,7 @@ feature -- Element change
 	set_color (a_color: WEL_COLOR_REF)
 			-- Set `color' with `a_color'
 		require
+			exists: exists
 			a_color_not_void: a_color /= Void
 		do
 			cwel_logbrush_set_color (item, a_color.item)
@@ -96,6 +105,8 @@ feature -- Element change
 
 	set_hatch (a_hatch: INTEGER)
 			-- Set `hatch' with `a_hatch'
+		require
+			exists: exists
 		do
 			cwel_logbrush_set_hatch (item, a_hatch)
 		ensure

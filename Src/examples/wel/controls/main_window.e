@@ -40,27 +40,27 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	list_box: WEL_SINGLE_SELECTION_LIST_BOX
+	list_box: ?WEL_SINGLE_SELECTION_LIST_BOX
 
-	list_box_mul: WEL_MULTIPLE_SELECTION_LIST_BOX
+	list_box_mul: ?WEL_MULTIPLE_SELECTION_LIST_BOX
 
-	combo_box: WEL_DROP_DOWN_LIST_COMBO_BOX
+	combo_box: ?WEL_DROP_DOWN_LIST_COMBO_BOX
 
-	edit: WEL_SINGLE_LINE_EDIT
+	edit: ?WEL_SINGLE_LINE_EDIT
 
-	multi_edit: WEL_MULTIPLE_LINE_EDIT
+	multi_edit: ?WEL_MULTIPLE_LINE_EDIT
 
-	static: WEL_STATIC
+	static: ?WEL_STATIC
 
-	button: WEL_PUSH_BUTTON
+	button: ?WEL_PUSH_BUTTON
 
-	scroll_bar: WEL_SCROLL_BAR
+	scroll_bar: ?WEL_SCROLL_BAR
 
-	radio1, radio2: WEL_RADIO_BUTTON
+	radio1, radio2: ?WEL_RADIO_BUTTON
 
-	bcheck1, bcheck2: WEL_CHECK_BOX
+	bcheck1, bcheck2: ?WEL_CHECK_BOX
 
-	group1, group2: WEL_GROUP_BOX
+	group1, group2: ?WEL_GROUP_BOX
 
 	list_box_item_num: INTEGER
 
@@ -79,18 +79,20 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	on_vertical_scroll_control (scroll_code, position: INTEGER;
-			bar: WEL_SCROLL_BAR)
+	on_vertical_scroll_control (scroll_code, position: INTEGER; bar: WEL_BAR)
 		do
-			bar.on_scroll (scroll_code, position)
-			static.set_text (bar.position.out)
+			if {l_scroll_bar: like scroll_bar} bar and then {l_static: like static} static then
+				l_scroll_bar.on_scroll (scroll_code, position)
+				l_static.set_text (l_scroll_bar.position.out)
+			end
 		end
 
-	on_horizontal_scroll_control (scroll_code, position: INTEGER;
-			bar: WEL_SCROLL_BAR)
+	on_horizontal_scroll_control (scroll_code, position: INTEGER; bar: WEL_BAR)
 		do
-			bar.on_scroll (scroll_code, position)
-			static.set_text (bar.position.out)
+			if {l_scroll_bar: like scroll_bar} bar and then {l_static: like static} static then
+				l_scroll_bar.on_scroll (scroll_code, position)
+				l_static.set_text (l_scroll_bar.position.out)
+			end
 		end
 
 	on_menu_command (menu_id: INTEGER)
@@ -306,10 +308,13 @@ feature {NONE} -- Implementation
 		end
 
 	menu_list_box_create
+		local
+			l_list_box: like list_box
 		do
 			list_box_item_num := 0
-			create list_box.make (Current, 10, 100, 100, 200, -1)
-			list_box.set_font(gui_font)
+			create l_list_box.make (Current, 10, 100, 100, 200, -1)
+			list_box := l_list_box
+			l_list_box.set_font (gui_font)
 			list_box_menu.disable_item (Cmd_list_box_create)
 			list_box_menu.disable_item (Cmd_list_box_current_item)
 			list_box_menu.enable_item (Cmd_list_box_add_item)
@@ -319,7 +324,9 @@ feature {NONE} -- Implementation
 
 	menu_list_box_delete
 		do
-			list_box.destroy
+			if {l_list_box: like list_box} list_box then
+				l_list_box.destroy
+			end
 			list_box_menu.enable_item (Cmd_list_box_create)
 			list_box_menu.disable_item (Cmd_list_box_delete)
 			list_box_menu.disable_item (Cmd_list_box_add_item)
@@ -331,10 +338,12 @@ feature {NONE} -- Implementation
 		do
 			list_box_menu.enable_item (Cmd_list_box_current_item)
 			text_info.wipe_out
-			text_info.append ("Item ")
-			text_info.append_integer (list_box_item_num)
-			list_box.add_string (text_info)
-			list_box_item_num := list_box_item_num + 1
+			if {l_list_box: like list_box} list_box then
+				text_info.append ("Item ")
+				text_info.append_integer (list_box_item_num)
+				l_list_box.add_string (text_info)
+				list_box_item_num := list_box_item_num + 1
+			end
 		end
 
 	menu_list_box_count_item
@@ -342,11 +351,13 @@ feature {NONE} -- Implementation
 			msg_box: WEL_MSG_BOX
 		do
 			text_info.wipe_out
-			text_info.append_integer (list_box.count)
-			if list_box.count /= 1 then
-				text_info.append (" items are present.")
-			else
-				text_info.append (" item is present.")
+			if {l_list_box: like list_box} list_box then
+				text_info.append_integer (l_list_box.count)
+				if l_list_box.count /= 1 then
+					text_info.append (" items are present.")
+				else
+					text_info.append (" item is present.")
+				end
 			end
 			create msg_box.make
 			msg_box.information_message_box (Current, text_info, "Count item")
@@ -356,9 +367,9 @@ feature {NONE} -- Implementation
 		local
 			msg_box: WEL_MSG_BOX
 		do
-			if list_box.selected then
+			if {l_list_box: like list_box} list_box and then l_list_box.selected then
 				text_info.wipe_out
-				text_info.append (list_box.selected_string)
+				text_info.append (l_list_box.selected_string)
 				text_info.append (" is selected.")
 			else
 				text_info.wipe_out
@@ -369,10 +380,13 @@ feature {NONE} -- Implementation
 		end
 
 	menu_mul_create
+		local
+			l_list_box_mul: like list_box_mul
 		do
 			list_box_mul_item_num := 0
-			create list_box_mul.make (Current, 116, 100, 100, 200, -1)
-			list_box_mul.set_font(gui_font)
+			create l_list_box_mul.make (Current, 116, 100, 100, 200, -1)
+			list_box_mul := l_list_box_mul
+			l_list_box_mul.set_font (gui_font)
 			list_box_mul_menu.disable_item (Cmd_mul_create)
 			list_box_mul_menu.disable_item (Cmd_mul_current_item)
 			list_box_mul_menu.enable_item (Cmd_mul_add_item)
@@ -383,7 +397,9 @@ feature {NONE} -- Implementation
 
 	menu_mul_delete
 		do
-			list_box_mul.destroy
+			if {l_list_box_mul: like list_box_mul} list_box_mul then
+				l_list_box_mul.destroy
+			end
 			list_box_mul_menu.enable_item (Cmd_mul_create)
 			list_box_mul_menu.disable_item (Cmd_mul_delete)
 			list_box_mul_menu.disable_item (Cmd_mul_add_item)
@@ -396,10 +412,12 @@ feature {NONE} -- Implementation
 		do
 			list_box_mul_menu.enable_item (Cmd_mul_current_item)
 			text_info.wipe_out
-			text_info.append ("Item ")
-			text_info.append_integer (list_box_mul_item_num)
-			list_box_mul.add_string (text_info)
-			list_box_mul_item_num := list_box_mul_item_num + 1
+			if {l_list_box_mul: like list_box_mul} list_box_mul then
+				text_info.append ("Item ")
+				text_info.append_integer (list_box_mul_item_num)
+				l_list_box_mul.add_string (text_info)
+				list_box_mul_item_num := list_box_mul_item_num + 1
+			end
 		end
 
 	menu_mul_count_item
@@ -407,11 +425,13 @@ feature {NONE} -- Implementation
 			msg_box: WEL_MSG_BOX
 		do
 			text_info.wipe_out
-			text_info.append_integer (list_box_mul.count)
-			if list_box_mul.count > 1 then
-				text_info.append (" items are present.")
-			else
-				text_info.append (" item is present.")
+			if {l_list_box_mul: like list_box_mul} list_box_mul then
+				text_info.append_integer (l_list_box_mul.count)
+				if l_list_box_mul.count > 1 then
+					text_info.append (" items are present.")
+				else
+					text_info.append (" item is present.")
+				end
 			end
 			create msg_box.make
 			msg_box.information_message_box (Current, text_info, "Count item")
@@ -424,25 +444,27 @@ feature {NONE} -- Implementation
 			i: INTEGER
 		do
 			text_info.wipe_out
-			text_info.append_integer (list_box_mul.count_selected_items)
-			text_info.append (" items are selected.%N%N")
-			text_info.append ("Selected items: ")
+			if {l_list_box_mul: like list_box_mul} list_box_mul then
+				text_info.append_integer (l_list_box_mul.count_selected_items)
+				text_info.append (" items are selected.%N%N")
+				text_info.append ("Selected items: ")
 
-			selected_items := list_box_mul.selected_items
-			from
-				i := selected_items.lower
-			until
-				i > selected_items.upper
-			loop
-				text_info.append ((selected_items @ i).out)
-				if i /= selected_items.upper then
-					text_info.append (", ")
+				selected_items := l_list_box_mul.selected_items
+				from
+					i := selected_items.lower
+				until
+					i > selected_items.upper
+				loop
+					text_info.append ((selected_items @ i).out)
+					if i /= selected_items.upper then
+						text_info.append (", ")
+					end
+						-- Goto line if
+					if (i \\ 15) = 14 then
+						text_info.append ("%N")
+					end
+					i := i + 1
 				end
-					-- Goto line if
-				if (i \\ 15) = 14 then
-					text_info.append ("%N")
-				end
-				i := i + 1
 			end
 			create msg_box.make
 			msg_box.information_message_box (Current, text_info, "Count item")
@@ -454,9 +476,12 @@ feature {NONE} -- Implementation
 			array_items: ARRAY [STRING_32]
 			msg_box: WEL_MSG_BOX
 		do
-			if list_box_mul.count_selected_items > 0 then
+			if
+				{l_list_box_mul: like list_box_mul} list_box_mul and then
+				l_list_box_mul.count_selected_items > 0
+			then
 				text_info.wipe_out
-				array_items := list_box_mul.selected_strings
+				array_items := l_list_box_mul.selected_strings
 				from
 					i := array_items.lower
 				until
@@ -468,7 +493,7 @@ feature {NONE} -- Implementation
 						text_info.append (", ")
 					end
 				end
-				if list_box_mul.count_selected_items > 1 then
+				if l_list_box_mul.count_selected_items > 1 then
 					text_info.append (" are selected.")
 				else
 					text_info.append (" is selected.")
@@ -482,10 +507,13 @@ feature {NONE} -- Implementation
 		end
 
 	menu_combo_box_create
+		local
+			l_combo_box: like combo_box
 		do
 			combo_box_item_num := 0
-			create combo_box.make (Current, 115, 20, 102, 90, -1)
-			combo_box.set_font(gui_font)
+			create l_combo_box.make (Current, 115, 20, 102, 90, -1)
+			combo_box := l_combo_box
+			l_combo_box.set_font (gui_font)
 			combo_box_menu.disable_item (Cmd_combo_box_create)
 			combo_box_menu.disable_item (Cmd_combo_box_current_item)
 			combo_box_menu.enable_item (Cmd_combo_box_add_item)
@@ -497,8 +525,10 @@ feature {NONE} -- Implementation
 
 	menu_combo_box_delete
 		do
-			combo_box.hide_list
-			combo_box.destroy
+			if {l_combo_box: like combo_box} combo_box then
+				l_combo_box.hide_list
+				l_combo_box.destroy
+			end
 			combo_box_menu.enable_item (Cmd_combo_box_create)
 			combo_box_menu.disable_item (Cmd_combo_box_delete)
 			combo_box_menu.disable_item (Cmd_combo_box_add_item)
@@ -514,8 +544,10 @@ feature {NONE} -- Implementation
 			text_info.wipe_out
 			text_info.append ("Item ")
 			text_info.append_integer (combo_box_item_num)
-			combo_box.add_string (text_info)
-			combo_box_item_num := combo_box_item_num + 1
+			if {l_combo_box: like combo_box} combo_box then
+				l_combo_box.add_string (text_info)
+				combo_box_item_num := combo_box_item_num + 1
+			end
 		end
 
 	menu_combo_box_count_item
@@ -523,11 +555,13 @@ feature {NONE} -- Implementation
 			msg_box: WEL_MSG_BOX
 		do
 			text_info.wipe_out
-			text_info.append_integer (combo_box.count)
-			if combo_box.count > 1 then
-				text_info.append (" items are present.")
-			else
-				text_info.append (" item is present.")
+			if {l_combo_box: like combo_box} combo_box then
+				text_info.append_integer (l_combo_box.count)
+				if l_combo_box.count > 1 then
+					text_info.append (" items are present.")
+				else
+					text_info.append (" item is present.")
+				end
 			end
 			create msg_box.make
 			msg_box.information_message_box (Current, text_info, "Count item")
@@ -537,9 +571,9 @@ feature {NONE} -- Implementation
 		local
 			msg_box: WEL_MSG_BOX
 		do
-			if combo_box.selected then
+			if {l_combo_box: like combo_box} combo_box and then l_combo_box.selected then
 				text_info.wipe_out
-				text_info.append (combo_box.selected_string)
+				text_info.append (l_combo_box.selected_string)
 				text_info.append (" is selected.")
 				create msg_box.make
 				msg_box.information_message_box (Current, text_info, "Current item")
@@ -551,18 +585,25 @@ feature {NONE} -- Implementation
 
 	menu_combo_show_list
 		do
-			combo_box.show_list
+			if {l_combo_box: like combo_box} combo_box then
+				l_combo_box.show_list
+			end
 		end
 
 	menu_combo_hide_list
 		do
-			combo_box.hide_list
+			if {l_combo_box: like combo_box} combo_box then
+				l_combo_box.hide_list
+			end
 		end
 
 	menu_button_create
+		local
+			l_button: like button
 		do
-			create button.make (Current, "Button", 10, 20, 100, 50, -1)
-			button.set_font(gui_font)
+			create l_button.make (Current, "Button", 10, 20, 100, 50, -1)
+			button := l_button
+			l_button.set_font (gui_font)
 			button_menu.disable_item (Cmd_button_create)
 			button_menu.enable_item (Cmd_button_delete)
 			button_menu.uncheck_item (Cmd_button_enable)
@@ -574,7 +615,9 @@ feature {NONE} -- Implementation
 
 	menu_button_delete
 		do
-			button.destroy
+			if {l_button: like button} button then
+				l_button.destroy
+			end
 			button_menu.disable_item (Cmd_button_delete)
 			button_menu.disable_item (Cmd_button_enable)
 			button_menu.disable_item (Cmd_button_disable)
@@ -585,23 +628,29 @@ feature {NONE} -- Implementation
 
 	menu_button_enable
 		do
-			button.enable
+			if {l_button: like button} button then
+				l_button.enable
+			end
 			button_menu.check_item (Cmd_button_enable)
 			button_menu.uncheck_item (Cmd_button_disable)
 		end
 
 	menu_button_disable
 		do
-			button.disable
+			if {l_button: like button} button then
+				l_button.disable
+			end
 			button_menu.uncheck_item (Cmd_button_enable)
 			button_menu.check_item (Cmd_button_disable)
 		end
 
 	menu_edit_create
+		local
+			l_edit: like edit
 		do
-			create edit.make (Current, "Edit", 250,
-				100, 100, 22, -1)
-			edit.set_font(gui_font)
+			create l_edit.make (Current, "Edit", 250, 100, 100, 22, -1)
+			edit := l_edit
+			l_edit.set_font (gui_font)
 			edit_menu.disable_item (Cmd_edit_create)
 			edit_menu.enable_item (Cmd_edit_delete)
 			edit_menu.enable_item (Cmd_edit_set_text)
@@ -612,7 +661,9 @@ feature {NONE} -- Implementation
 
 	menu_edit_delete
 		do
-			edit.destroy
+			if {l_edit: like edit} edit then
+				l_edit.destroy
+			end
 			edit_menu.enable_item (Cmd_edit_create)
 			edit_menu.disable_item (Cmd_edit_delete)
 			edit_menu.disable_item (Cmd_edit_set_text)
@@ -623,12 +674,16 @@ feature {NONE} -- Implementation
 
 	menu_edit_set_text
 		do
-			edit.set_text ("New text")
+			if {l_edit: like edit} edit then
+				l_edit.set_text ("New text")
+			end
 		end
 
 	menu_edit_clear_text
 		do
-			edit.clear
+			if {l_edit: like edit} edit then
+				l_edit.clear
+			end
 		end
 
 	menu_edit_text_length
@@ -636,8 +691,10 @@ feature {NONE} -- Implementation
 			msg_box: WEL_MSG_BOX
 		do
 			text_info.wipe_out
-			text_info.append ("The length is ")
-			text_info.append_integer (edit.text_length)
+			if {l_edit: like edit} edit then
+				text_info.append ("The length is ")
+				text_info.append_integer (l_edit.text_length)
+			end
 			create msg_box.make
 			msg_box.information_message_box (Current, text_info, "Text length")
 		end
@@ -646,15 +703,19 @@ feature {NONE} -- Implementation
 		local
 			msg_box: WEL_MSG_BOX
 		do
-			create msg_box.make
-			msg_box.information_message_box (Current, edit.text, "Current text")
+			if {l_edit: like edit} edit then
+				create msg_box.make
+				msg_box.information_message_box (Current, l_edit.text, "Current text")
+			end
 		end
 
 	menu_multi_edit_create
+		local
+			l_multi_edit: like multi_edit
 		do
-			create multi_edit.make (Current, "Multiple line edit", 250,
-				20, 300, 70, -1)
-			multi_edit.set_font(gui_font)
+			create l_multi_edit.make (Current, "Multiple line edit", 250, 20, 300, 70, -1)
+			multi_edit := l_multi_edit
+			l_multi_edit.set_font (gui_font)
 			multi_edit_menu.disable_item (Cmd_multi_edit_create)
 			multi_edit_menu.enable_item (Cmd_multi_edit_delete)
 			multi_edit_menu.enable_item (Cmd_multi_edit_set_text)
@@ -665,7 +726,9 @@ feature {NONE} -- Implementation
 
 	menu_multi_edit_delete
 		do
-			multi_edit.destroy
+			if {l_multi_edit: like multi_edit} multi_edit then
+				l_multi_edit.destroy
+			end
 			multi_edit_menu.enable_item (Cmd_multi_edit_create)
 			multi_edit_menu.disable_item (Cmd_multi_edit_delete)
 			multi_edit_menu.disable_item (Cmd_multi_edit_set_text)
@@ -676,12 +739,16 @@ feature {NONE} -- Implementation
 
 	menu_multi_edit_set_text
 		do
-			multi_edit.set_text ("New text")
+			if {l_multi_edit: like multi_edit} multi_edit then
+				l_multi_edit.set_text ("New text")
+			end
 		end
 
 	menu_multi_edit_clear_text
 		do
-			multi_edit.clear
+			if {l_multi_edit: like multi_edit} multi_edit then
+				l_multi_edit.clear
+			end
 		end
 
 	menu_multi_edit_text_length
@@ -689,8 +756,10 @@ feature {NONE} -- Implementation
 			msg_box: WEL_MSG_BOX
 		do
 			text_info.wipe_out
-			text_info.append ("The length is ")
-			text_info.append_integer (multi_edit.text_length)
+			if {l_multi_edit: like multi_edit} multi_edit then
+				text_info.append ("The length is ")
+				text_info.append_integer (l_multi_edit.text_length)
+			end
 			create msg_box.make
 			msg_box.information_message_box (Current, text_info, "Text length")
 		end
@@ -699,36 +768,44 @@ feature {NONE} -- Implementation
 		local
 			msg_box: WEL_MSG_BOX
 		do
-			create msg_box.make
-			msg_box.information_message_box (Current, multi_edit.text, "Current text")
+			if {l_multi_edit: like multi_edit} multi_edit then
+				create msg_box.make
+				msg_box.information_message_box (Current, l_multi_edit.text, "Current text")
+			end
 		end
 
 	menu_scroll_bar_create
+		local
+			l_scroll_bar: like scroll_bar
+			l_static: like static
 		do
-			create static.make (Current, "static", 250, 270,
-				30, 20, -1)
-			static.set_font(gui_font)
+			create l_static.make (Current, "static", 250, 270, 30, 20, -1)
+			static := l_static
+			l_static.set_font (gui_font)
 			if vertical_scroll_bar then
-				create scroll_bar.make_vertical (Current, 250, 170,
-					20, 100, -1)
+				create l_scroll_bar.make_vertical (Current, 250, 170, 20, 100, -1)
 			else
-				create scroll_bar.make_horizontal (Current, 250,
-					250, 100, 20, -1)
+				create l_scroll_bar.make_horizontal (Current, 250, 250, 100, 20, -1)
 			end
+			scroll_bar := l_scroll_bar
 			scroll_bar_menu.enable_item (Cmd_scroll_bar_delete)
 			scroll_bar_sub_menu.disable_item (Cmd_scroll_bar_set_vertical)
 			scroll_bar_sub_menu.disable_item (Cmd_scroll_bar_set_horizontal)
-			scroll_bar.set_range (0, 100)
-			scroll_bar.set_position (50)
+			l_scroll_bar.set_range (0, 100)
+			l_scroll_bar.set_position (50)
 			text_info.wipe_out
-			text_info.append_integer (scroll_bar.position)
-			static.set_text (text_info)
+			text_info.append_integer (l_scroll_bar.position)
+			l_static.set_text (text_info)
 		end
 
 	menu_scroll_bar_delete
 		do
-			static.destroy
-			scroll_bar.destroy
+			if {l_static: like static} static then
+				l_static.destroy
+			end
+			if {l_scroll_bar: like scroll_bar} scroll_bar then
+				l_scroll_bar.destroy
+			end
 			scroll_bar_menu.disable_item (Cmd_scroll_bar_delete)
 			scroll_bar_sub_menu.enable_item (Cmd_scroll_bar_set_vertical)
 			scroll_bar_sub_menu.enable_item (Cmd_scroll_bar_set_horizontal)
@@ -747,13 +824,20 @@ feature {NONE} -- Implementation
 		end
 
 	menu_radio_create
+		local
+			l_group1: like group1
+			l_radio1: like radio1
+			l_radio2: like radio2
 		do
-			create group1.make (Current, "Group box", 380, 90, 85, 70, -1)
-			group1.set_font(gui_font)
-			create radio1.make (Current, "Radio1", 390, 110, 65, 20, -1)
-			radio1.set_font(gui_font)
-			create radio2.make (Current, "Radio2", 390, 130, 65, 20, -1)
-			radio2.set_font(gui_font)
+			create l_group1.make (Current, "Group box", 380, 90, 85, 70, -1)
+			group1 := l_group1
+			l_group1.set_font (gui_font)
+			create l_radio1.make (Current, "Radio1", 390, 110, 65, 20, -1)
+			radio1 := l_radio1
+			l_radio1.set_font (gui_font)
+			create l_radio2.make (Current, "Radio2", 390, 130, 65, 20, -1)
+			radio2 := l_radio2
+			l_radio2.set_font (gui_font)
 			radio_menu.enable_item (Cmd_radio_delete)
 			radio_menu.enable_item (Cmd_radio_state)
 			radio_menu.disable_item (Cmd_radio_create)
@@ -761,9 +845,15 @@ feature {NONE} -- Implementation
 
 	menu_radio_delete
 		do
-			radio1.destroy
-			radio2.destroy
-			group1.destroy
+			if {l_radio1: like radio1} radio1 then
+				l_radio1.destroy
+			end
+			if {l_radio2: like radio2} radio2 then
+				l_radio2.destroy
+			end
+			if {l_group1: like group1} group1 then
+				l_group1.destroy
+			end
 			radio_menu.disable_item (Cmd_radio_delete)
 			radio_menu.disable_item (Cmd_radio_state)
 			radio_menu.enable_item (Cmd_radio_create)
@@ -774,32 +864,43 @@ feature {NONE} -- Implementation
 			msg_box: WEL_MSG_BOX
 		do
 			text_info.wipe_out
-			text_info.append (radio1.text)
-			text_info.append (" is ")
-			if radio1.checked then
-				text_info.append ("checked.%N")
-			else
-				text_info.append ("unchecked.%N")
+			if {l_radio1: like radio1} radio1 then
+				text_info.append (l_radio1.text)
+				text_info.append (" is ")
+				if l_radio1.checked then
+					text_info.append ("checked.%N")
+				else
+					text_info.append ("unchecked.%N")
+				end
 			end
-			text_info.append (radio2.text)
-			text_info.append (" is ")
-			if radio2.checked then
-				text_info.append ("checked.")
-			else
-				text_info.append ("unchecked.")
+			if {l_radio2: like radio2} radio2 then
+				text_info.append (l_radio2.text)
+				text_info.append (" is ")
+				if l_radio2.checked then
+					text_info.append ("checked.")
+				else
+					text_info.append ("unchecked.")
+				end
 			end
 			create msg_box.make
 			msg_box.information_message_box (Current, text_info, "State")
 		end
 
 	menu_check_create
+		local
+			l_group2: like group2
+			l_bcheck1: like bcheck1
+			l_bcheck2: like bcheck2
 		do
-			create group2.make (Current, "Group box", 380, 180, 85, 70, -1)
-			group2.set_font(gui_font)
-			create bcheck1.make (Current, "Check1", 390, 200, 65, 20, -1)
-			bcheck1.set_font(gui_font)
-			create bcheck2.make (Current, "Check2", 390, 220, 65, 20, -1)
-			bcheck2.set_font(gui_font)
+			create l_group2.make (Current, "Group box", 380, 180, 85, 70, -1)
+			group2 := l_group2
+			l_group2.set_font (gui_font)
+			create l_bcheck1.make (Current, "Check1", 390, 200, 65, 20, -1)
+			bcheck1 := l_bcheck1
+			l_bcheck1.set_font (gui_font)
+			create l_bcheck2.make (Current, "Check2", 390, 220, 65, 20, -1)
+			bcheck2 := l_bcheck2
+			l_bcheck2.set_font (gui_font)
 			check_menu.enable_item (Cmd_check_delete)
 			check_menu.enable_item (Cmd_check_state)
 			check_menu.disable_item (Cmd_check_create)
@@ -807,9 +908,15 @@ feature {NONE} -- Implementation
 
 	menu_check_delete
 		do
-			bcheck1.destroy
-			bcheck2.destroy
-			group2.destroy
+			if {l_bcheck1: like bcheck1} bcheck1 then
+				l_bcheck1.destroy
+			end
+			if {l_bcheck2: like bcheck2} bcheck2 then
+				l_bcheck2.destroy
+			end
+			if {l_group2: like group2} group2 then
+				l_group2.destroy
+			end
 			check_menu.disable_item (Cmd_check_delete)
 			check_menu.disable_item (Cmd_check_state)
 			check_menu.enable_item (Cmd_check_create)
@@ -820,19 +927,23 @@ feature {NONE} -- Implementation
 			msg_box: WEL_MSG_BOX
 		do
 			text_info.wipe_out
-			text_info.append (bcheck1.text)
-			text_info.append (" is ")
-			if bcheck1.checked then
-				text_info.append ("checked.%N")
-			else
-				text_info.append ("unchecked.%N")
+			if {l_bcheck1: like bcheck1} bcheck1 then
+				text_info.append (l_bcheck1.text)
+				text_info.append (" is ")
+				if l_bcheck1.checked then
+					text_info.append ("checked.%N")
+				else
+					text_info.append ("unchecked.%N")
+				end
 			end
-			text_info.append (bcheck2.text)
-			text_info.append (" is ")
-			if bcheck2.checked then
-				text_info.append ("checked.")
-			else
-				text_info.append ("unchecked.")
+			if {l_bcheck2: like bcheck2} bcheck2 then
+				text_info.append (l_bcheck2.text)
+				text_info.append (" is ")
+				if l_bcheck2.checked then
+					text_info.append ("checked.")
+				else
+					text_info.append ("unchecked.")
+				end
 			end
 			create msg_box.make
 			msg_box.information_message_box (Current, text_info, "State")

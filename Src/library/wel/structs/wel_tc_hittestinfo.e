@@ -21,6 +21,9 @@ feature {NONE} -- Initialization
 
 	make_with_point (pt: WEL_POINT)
 			-- Create a structure with `pt'.
+		require
+			pt_not_void: pt /= Void
+			pt_exists: pt.exists
 		do
 			make
 			set_point (pt)
@@ -45,6 +48,10 @@ feature -- Element change
 
 	set_point (pt: WEL_POINT)
 			-- Set `point' with `pt'.
+		require
+			exists: exists
+			pt_not_void: pt /= Void
+			pt_exists: pt.exists
 		do
 			cwel_tv_hittestinfo_set_pt (item, pt.item)
 		ensure
@@ -67,14 +74,14 @@ feature {NONE} -- externals
 		alias
 			"sizeof (TCHITTESTINFO)"
 		end
-		
+
 	cwel_tc_hittestinfo_get_flags (ptr: POINTER): INTEGER
 		external
 			"C [struct %"commctrl.h%"] (TCHITTESTINFO): EIF_INTEGER"
 		alias
 			"flags"
 		end
-		
+
 	cwel_tc_hittestinfo_set_flags (ptr: POINTER; value: INTEGER)
 		external
 			"C [struct %"commctrl.h%"] (TCHITTESTINFO, EIF_INTEGER)"

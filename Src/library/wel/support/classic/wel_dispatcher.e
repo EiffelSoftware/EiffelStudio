@@ -30,11 +30,9 @@ feature {NONE} -- Implementation
 
 	dispose
 			-- Wean `Current'
-		local
-			default_object: like Current
 		do
 			cwel_release_dispatcher_object
-			cwel_set_dispatcher_object (default_object)
+			cwel_set_dispatcher_object (Void)
 		end
 
 feature {NONE} -- Externals
@@ -49,7 +47,7 @@ feature {NONE} -- Externals
 			"C [macro %"disptchr.h%"]"
 		end
 
-	cwel_set_dispatcher_object (dispatcher: like Current)
+	cwel_set_dispatcher_object (dispatcher: ?like Current)
 		external
 			"C macro signature (EIF_OBJECT) use %"disptchr.h%""
 		end

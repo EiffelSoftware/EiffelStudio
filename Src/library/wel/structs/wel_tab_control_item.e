@@ -56,6 +56,9 @@ feature {NONE} -- Initialization
 	make_with_window (a_parent: WEL_TAB_CONTROL)
 			-- Make a tab item structure and create a window
 			-- associated to the item.
+		require
+			a_parent_not_void: a_parent /= Void
+			a_parent_exists: a_parent.exists
 		local
 			temp_window: WEL_CONTROL_WINDOW
 		do
@@ -78,9 +81,12 @@ feature -- Access
 
 	text: STRING_32
 			-- Item text
+		local
+			l_text: like str_text
 		do
-			if str_text /= Void then
-				Result := str_text.string
+			l_text := str_text
+			if l_text /= Void then
+				Result := l_text.string
 			else
 				create Result.make_empty
 			end
@@ -88,7 +94,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	window: WEL_WINDOW
+	window: ?WEL_WINDOW
 			-- The current window associated to the item.
 		local
 			window_hwmd: POINTER
@@ -121,9 +127,13 @@ feature -- Element change
 			-- Set `text' with `a_text'.
 		require
 			a_text_not_void: a_text /= Void
+		local
+			l_text: like str_text
 		do
-			create str_text.make (a_text)
-			cwel_tc_item_set_psztext (item, str_text.item)
+			create l_text.make (a_text)
+				-- For GC reference
+			str_text := l_text
+			cwel_tc_item_set_psztext (item, l_text.item)
 			cwel_tc_item_set_cchtextmax (item, a_text.count)
 		ensure
 			text_set: text.is_equal (a_text)
@@ -133,6 +143,7 @@ feature -- Element change
 			-- Associate `a_window' to the current item.
 		require
 			a_window_not_void: a_window /= Void
+			a_window_exists: a_window.exists
 			inside_window: a_window.is_inside
 		do
 			cwel_tc_item_set_lparam (item, a_window.item)
@@ -165,7 +176,7 @@ feature {WEL_TAB_CONTROL} -- Implementation
 
 feature {NONE} -- Implementation
 
-	str_text: WEL_STRING
+	str_text: ?WEL_STRING
 			-- C string to save the text
 
 feature {NONE} -- Externals

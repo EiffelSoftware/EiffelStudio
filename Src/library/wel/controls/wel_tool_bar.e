@@ -301,7 +301,7 @@ feature -- Status report
 				Tb_gettooltips, to_wparam (0), to_lparam (0)) /= default_pointer
 		end
 
-	tooltip: WEL_TOOLTIP
+	tooltip: ?WEL_TOOLTIP
 			-- The tooltip associated with the toolbar
 		require
 			tooltip_exists: tooltip_exists
@@ -407,6 +407,7 @@ feature -- Element change
 		require
 			exists: exists
 			button_not_void: button /= Void
+			button_exists: button.exists
 			index_large_enough: index >= 0
 			index_small_enough: index <= button_count
 		do
@@ -421,7 +422,6 @@ feature -- Element change
 			exists: exists
 			buttons_not_void: buttons /= Void
 			buttons_not_empty: not buttons.is_empty
-			no_void_button: not buttons.has (Void)
 		local
 			i: INTEGER
 		do
@@ -442,6 +442,7 @@ feature -- Element change
 		require
 			exists: exists
 			bitmap_not_void: tb_bitmap /= Void
+			bitmap_exists: tb_bitmap.exists
 			positive_bitmap_count: bitmap_count > 0
 		do
 			last_bitmap_index := {WEL_API}.send_message_result_integer (item, Tb_addbitmap,
@@ -496,6 +497,8 @@ feature -- Notifications
 			-- Retrieves toolbar customization.
 		require
 			exists: exists
+			info_not_void: info /= Void
+			info_exists: info.exists
 		do
 		end
 
@@ -503,6 +506,8 @@ feature -- Notifications
 			-- The user has begun dragging a button in the toolbar.
 		require
 			exists: exists
+			info_not_void: info /= Void
+			info_exists: info.exists
 		do
 		end
 
@@ -510,6 +515,8 @@ feature -- Notifications
 			-- The user has stopped dragging a button in the toolbar.
 		require
 			exists: exists
+			info_not_void: info /= Void
+			info_exists: info.exists
 		do
 		end
 
@@ -541,6 +548,8 @@ feature -- Notifications
 			-- the toolbar.
 		require
 			exists: exists
+			info_not_void: info /= Void
+			info_exists: info.exists
 		do
 		end
 
@@ -549,6 +558,8 @@ feature -- Notifications
 			-- the user is customizing the toolbar.
 		require
 			exists: exists
+			info_not_void: info /= Void
+			info_exists: info.exists
 		do
 		end
 
@@ -572,6 +583,8 @@ feature -- Notifications
 			-- Tbstyle_dropdown style.
 		require
 			exists: exists
+			info_not_void: info /= Void
+			info_exists: info.exists
 		do
 		end
 
@@ -675,7 +688,7 @@ feature {NONE} -- Inapplicable
 		do
 		end
 
-	set_text (s: STRING_GENERAL)
+	set_text (s: ?STRING_GENERAL)
 		do
 		end
 

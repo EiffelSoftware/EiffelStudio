@@ -18,7 +18,7 @@ inherit
 		rename
 			make as structure_make
 		end
-	
+
 	WEL_NETWORKING_CONSTANTS
 		undefine
 			copy, is_equal
@@ -63,7 +63,7 @@ feature -- Access
 		end
 
 	type: INTEGER
-			-- Value that contains a set of bit flags identifying the 
+			-- Value that contains a set of bit flags identifying the
 			-- type of resource.
 		do
 			Result := cwel_net_resource_get_type (item)
@@ -73,7 +73,7 @@ feature -- Access
 				Result = Resource_type_disk or
 				Result = Resource_type_print
 		end
-		
+
 	display_type: INTEGER
 			-- Value that indicates how the network object should be
 			-- displayed in a network browsing user interface.
@@ -86,8 +86,8 @@ feature -- Access
 				Result = Resource_display_type_share or
 				Result = Resource_display_type_generic
 		end
-		
-		
+
+
 	usage: INTEGER
 			-- Value that contains a set of bit flags describing how
 			-- the resource can be used.
@@ -100,19 +100,23 @@ feature -- Access
 		end
 
 	local_name: STRING_32
-			-- If `scope' is equal to `Resource_connected' or 
+			-- If `scope' is equal to `Resource_connected' or
 			-- `Resource_remembered', it specifies the name of a local
 			-- device. It is Void if the connection does not use a device.
+		local
+			l_name: like internal_local_name
 		do
-			if internal_local_name /= Void then
-				Result := internal_local_name.string
+			l_name := internal_local_name
+			if l_name /= Void then
+				Result := l_name.string
 			else
 				create Result.make_empty
 			end
 		ensure
-			valid_result: (Result /= Void) = (scope = Resource_connected or scope = Resource_remembered)
+			local_name_attached: Result /= Void
+			valid_scope: (scope = Resource_connected or scope = Resource_remembered)
 		end
-		
+
 	remote_name: STRING_32
 			-- If the entry is a network resource, it specifies the remote
 			-- network name.
@@ -123,45 +127,54 @@ feature -- Access
 			--
 			-- The string can be MAX_PATH characters in length, and it must
 			-- follow the network provider's naming conventions.
+		local
+			l_name: like internal_remote_name
 		do
-			if internal_remote_name /= Void then
-				Result := internal_remote_name.string
+			l_name := internal_remote_name
+			if l_name /= Void then
+				Result := l_name.string
 			else
 				create Result.make_empty
 			end
 		end
-		
+
 	comment: STRING_32
 			-- Comment supplied by the network provider.
 			-- It can be Void if there is no supplied comment.
+		local
+			l_name: like internal_comment
 		do
-			if internal_comment /= Void then
-				Result := internal_comment.string
+			l_name := internal_comment
+			if l_name /= Void then
+				Result := l_name.string
 			else
 				create Result.make_empty
 			end
 		end
-		
+
 	provider: STRING_32
 			-- Name of the provider that owns the resource.
 			-- It can be Void if the provider name is unknown.
 			--
 			-- To retrieve the provider name, you can call
 			-- `WNetGetProviderName'.
+		local
+			l_provider: like internal_provider
 		do
-			if internal_provider /= Void then
-				Result := internal_provider.string
+			l_provider := internal_provider
+			if l_provider /= Void then
+				Result := l_provider.string
 			else
 				create Result.make_empty
 			end
 		end
-		
+
 feature -- Element change
 
 	set_scope (a_value: INTEGER)
 			-- Set `scope' to `a_value'
 		require
-			valid_value: 
+			valid_value:
 				a_value = Resource_connected or
 				a_value = Resource_globalnet or
 				a_value = Resource_remembered
@@ -201,7 +214,7 @@ feature -- Element change
 	set_usage (a_value: INTEGER)
 			-- Set `usage' to `a_value'
 			--
-			-- Note that this member can be specified only if `scope' 
+			-- Note that this member can be specified only if `scope'
 			-- is equal to `Resource_globalnet'
 		require
 			global_scope: scope = Resource_globalnet
@@ -214,7 +227,7 @@ feature -- Element change
 			value_set: usage = a_value
 		end
 
-	set_local_name (a_value: STRING_GENERAL)
+	set_local_name (a_value: ?STRING_GENERAL)
 			-- Set `local_name' to `a_value'
 			--
 			-- Can only be set if `scope' is equal to `Resource_connected'
@@ -223,10 +236,12 @@ feature -- Element change
 			connection_use_device: scope = Resource_connected or scope = Resource_remembered
 		local
 			string_pointer: POINTER
+			l_name: like internal_local_name
 		do
 			if a_value /= Void then
-				create internal_local_name.make (a_value)
-				string_pointer := internal_local_name.item
+				create l_name.make (a_value)
+				internal_local_name := l_name
+				string_pointer := l_name.item
 			else
 				internal_local_name := Void
 			end
@@ -234,20 +249,23 @@ feature -- Element change
 		ensure
 			value_set: equal (local_name, a_value)
 		end
-		
-	set_remote_name (a_value: STRING_GENERAL)
+
+	set_remote_name (a_value: ?STRING_GENERAL)
 			-- Set `remote_name' to `a_value'
 			--
 			-- The string can be MAX_PATH characters in length, and it must
 			-- follow the network provider's naming conventions.
 		require
-			valid_value: a_value.count <= Max_path 
+			a_value_not_void: a_value /= Void
+			valid_value: a_value.count <= Max_path
 		local
 			string_pointer: POINTER
+			l_name: like internal_remote_name
 		do
 			if a_value /= Void then
-				create internal_remote_name.make (a_value)
-				string_pointer := internal_remote_name.item
+				create l_name.make (a_value)
+				internal_remote_name := l_name
+				string_pointer := l_name.item
 			else
 				internal_remote_name := Void
 			end
@@ -255,15 +273,17 @@ feature -- Element change
 		ensure
 			value_set: equal (remote_name, a_value)
 		end
-		
-	set_comment (a_value: STRING_GENERAL)
+
+	set_comment (a_value: ?STRING_GENERAL)
 			-- Set `comment' to `a_value'
 		local
 			string_pointer: POINTER
+			l_name: like internal_comment
 		do
 			if a_value /= Void then
-				create internal_comment.make (a_value)
-				string_pointer := internal_comment.item
+				create l_name.make (a_value)
+				internal_comment := l_name
+				string_pointer := l_name.item
 			else
 				internal_comment := Void
 			end
@@ -271,15 +291,17 @@ feature -- Element change
 		ensure
 			value_set: equal (comment, a_value)
 		end
-		
-	set_provider (a_value: STRING_GENERAL)
+
+	set_provider (a_value: ?STRING_GENERAL)
 			-- Set `provider' to `a_value'
 		local
 			string_pointer: POINTER
+			l_provider: like internal_provider
 		do
 			if a_value /= Void then
-				create internal_provider.make (a_value)
-				string_pointer := internal_provider.item
+				create l_provider.make (a_value)
+				internal_provider := l_provider
+				string_pointer := l_provider.item
 			else
 				internal_provider := Void
 			end
@@ -287,7 +309,7 @@ feature -- Element change
 		ensure
 			value_set: equal (provider, a_value)
 		end
-		
+
 feature -- Measurement
 
 	structure_size: INTEGER
@@ -298,16 +320,16 @@ feature -- Measurement
 
 feature {NONE} -- Implementation
 
-	internal_local_name: WEL_STRING
+	internal_local_name: ?WEL_STRING
 			-- WEL_STRING for `local_name'. Void if none.
 
-	internal_remote_name: WEL_STRING
+	internal_remote_name: ?WEL_STRING
 			-- WEL_STRING for `remote_name'. Void if none.
 
-	internal_comment: WEL_STRING
+	internal_comment: ?WEL_STRING
 			-- WEL_STRING for `comment'. Void if none.
 
-	internal_provider: WEL_STRING
+	internal_provider: ?WEL_STRING
 			-- WEL_STRING for `provider'. Void if none.
 
 feature {NONE} -- Externals

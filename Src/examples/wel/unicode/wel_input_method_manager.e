@@ -23,14 +23,13 @@ feature --Initialization
 
 	make
 			-- Create a new input method manager
-		once
+		do
 			initialise
 		end
 
-
 feature -- Access
 
-	input_method_editor: WEL_INPUT_METHOD_EDITOR
+	input_method_editor: ?WEL_INPUT_METHOD_EDITOR
 		-- The input method editor (IME) associated with the current input locale
 
 	input_locale: POINTER
@@ -143,8 +142,13 @@ feature -- IME Access
 		require
 			imm_enabled: enabled
 			imm_has_ime: has_ime (input_locale)
+		local
+			l_input_method_editor: like input_method_editor
 		do
-			Result := input_method_editor.description
+			l_input_method_editor := input_method_editor
+				-- Per precondition
+			check l_input_method_editor_attached: l_input_method_editor /= Void end
+			Result := l_input_method_editor.description
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -154,8 +158,13 @@ feature -- IME Access
 		require
 			imm_enabled: enabled
 			imm_has_ime: has_ime (input_locale)
+		local
+			l_input_method_editor: like input_method_editor
 		do
-			Result := input_method_editor.filename
+			l_input_method_editor := input_method_editor
+				-- Per precondition
+			check l_input_method_editor_attached: l_input_method_editor /= Void end
+			Result := l_input_method_editor.filename
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -165,8 +174,13 @@ feature -- IME Access
 		require
 			imm_enabled: enabled
 			imm_has_ime: has_ime (input_locale)
+		local
+			l_input_method_editor: like input_method_editor
 		do
-			Result := input_method_editor.filename_by_locale (a_input_locale)
+			l_input_method_editor := input_method_editor
+				-- Per precondition
+			check l_input_method_editor_attached: l_input_method_editor /= Void end
+			Result := l_input_method_editor.filename_by_locale (a_input_locale)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -177,7 +191,9 @@ feature -- IME Access
 			imm_enabled: enabled
 			imm_has_ime: has_ime (input_locale)
 		do
-			Result := input_method_editor.opened
+			if {l_input_method_editor: like input_method_editor} input_method_editor then
+				Result := l_input_method_editor.opened
+			end
 		end
 
 	has_ime (a_input_locale: POINTER): BOOLEAN
@@ -193,7 +209,9 @@ feature -- IME Access
 			imm_has_ime: has_ime (input_locale)
 			a_prop_type:
 		do
-			Result := input_method_editor.get_property (a_prop_type)
+			if {l_input_method_editor: like input_method_editor} input_method_editor then
+				Result := l_input_method_editor.get_property (a_prop_type)
+			end
 		ensure
 			result_valid: Result >= 0
 		end
@@ -204,7 +222,9 @@ feature -- IME Access
 			imm_enabled: enabled
 			imm_has_ime: has_ime (input_locale)
 		do
-			input_method_editor.dialog_configure (a_parent)
+			if {l_input_method_editor: like input_method_editor} input_method_editor then
+				l_input_method_editor.dialog_configure (a_parent)
+			end
 		end
 
 	ime_regword_configure (a_parent: POINTER)
@@ -213,7 +233,9 @@ feature -- IME Access
 			imm_enabled: enabled
 			imm_has_ime: has_ime (input_locale)
 		do
-			input_method_editor.regword_configure (a_parent)
+			if {l_input_method_editor: like input_method_editor} input_method_editor then
+				l_input_method_editor.regword_configure (a_parent)
+			end
 		end
 
 	ime_dictionary_configure (parent: POINTER)
@@ -222,7 +244,9 @@ feature -- IME Access
 			imm_enabled: enabled
 			imm_has_ime: has_ime (input_locale)
 		do
-			input_method_editor.dictionary_configure (parent)
+			if {l_input_method_editor: like input_method_editor} input_method_editor then
+				l_input_method_editor.dictionary_configure (parent)
+			end
 		end
 
 
@@ -256,13 +280,17 @@ feature --Status Setting
 	ime_open (a_input_context: POINTER)
 			-- Open the IME associated with 'a_input_context'
 		do
-			input_method_editor.open
+			if {l_input_method_editor: like input_method_editor} input_method_editor then
+				l_input_method_editor.open
+			end
 		end
 
 	ime_close (a_input_context: POINTER)
 			-- Open the IME associated with 'a_input_context'
 		do
-			input_method_editor.close
+			if {l_input_method_editor: like input_method_editor} input_method_editor then
+				l_input_method_editor.close
+			end
 		end
 
 	load_input_locale (a_input_locale: POINTER)
@@ -317,7 +345,9 @@ feature --Status Setting
 			imm_enabled: enabled
 			imm_has_ime: has_ime (input_locale)
 		do
-			input_method_editor.move_composition_window (a_x, a_y)
+			if {l_input_method_editor: like input_method_editor} input_method_editor then
+				l_input_method_editor.move_composition_window (a_x, a_y)
+			end
 		end
 
 	move_status_window (a_x, a_y: INTEGER)
@@ -326,7 +356,9 @@ feature --Status Setting
 			imm_enabled: enabled
 			imm_has_ime: has_ime (input_locale)
 		do
-			input_method_editor.move_status_window (a_x, a_y)
+			if {l_input_method_editor: like input_method_editor} input_method_editor then
+				l_input_method_editor.move_status_window (a_x, a_y)
+			end
 		end
 
 
@@ -347,8 +379,8 @@ feature {NONE} -- Implementation
 			if has_ime (input_locale) then
 				create input_method_editor.make (input_context, input_locale)
 			end
-			ensure
-				valid_ime: has_ime (input_locale) implies input_method_editor /= Void
+		ensure
+			valid_ime: has_ime (input_locale) implies input_method_editor /= Void
 		end
 
 	set_input_locale
@@ -508,6 +540,8 @@ feature {NONE} -- Externals
 			"ImmSetConversionStatus"
 		end
 
+invariant
+	input_method_editor_attached: has_ime (input_locale) implies input_method_editor /= Void
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

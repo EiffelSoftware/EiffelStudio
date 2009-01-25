@@ -42,6 +42,7 @@ feature {NONE} -- Initialization
 			bitmap_dib: WEL_DIB
 			dc: WEL_SCREEN_DC
 			raw_file: RAW_FILE
+			l_bitmap: like bitmap
 		do
 			internal_window_make (a_parent, Void, default_style, a_x, a_y, a_width, a_height, an_id, default_pointer)
 			id := an_id
@@ -53,28 +54,36 @@ feature {NONE} -- Initialization
 				-- Convert the bitmap to the current device
 			create dc
 			dc.get
-			create bitmap.make_by_dib(dc, bitmap_dib, Dib_pal_colors)
-			{WEL_API}.send_message(item, Stm_setimage, to_wparam (Image_bitmap), bitmap.item)
+			create l_bitmap.make_by_dib(dc, bitmap_dib, Dib_pal_colors)
+			bitmap := l_bitmap
+			{WEL_API}.send_message(item, Stm_setimage, to_wparam (Image_bitmap), l_bitmap.item)
 			dc.release
 		end
 
 	make_by_bitmap_id (a_parent: WEL_WINDOW; bitmap_id: INTEGER;
 			a_x, a_y, a_width, a_height, an_id: INTEGER)
 			-- Make a static control
+		require
+			a_parent_not_void: a_parent /= Void
+			a_parent_exists: a_parent.exists
+			bitmap_id_positive: bitmap_id > 0
+		local
+			l_bitmap: like bitmap
 		do
 			internal_window_make (a_parent, Void, default_style, a_x, a_y, a_width, a_height, an_id, default_pointer)
 			id := an_id
 
 				-- Read the bitmap file
-			create bitmap.make_by_id(bitmap_id)
+			create l_bitmap.make_by_id (bitmap_id)
+			bitmap := l_bitmap
 
 				-- Convert the bitmap to the current device
-			{WEL_API}.send_message(item, Stm_setimage, to_wparam (Image_bitmap), bitmap.item)
+			{WEL_API}.send_message(item, Stm_setimage, to_wparam (Image_bitmap), l_bitmap.item)
 		end
 
 feature -- Access
 
-	bitmap: WEL_BITMAP
+	bitmap: ?WEL_BITMAP
 		-- displayed bitmap
 
 feature {NONE} -- Implementation

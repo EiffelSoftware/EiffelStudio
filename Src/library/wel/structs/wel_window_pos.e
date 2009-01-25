@@ -32,13 +32,13 @@ create
 
 feature -- Access
 
-	window: WEL_WINDOW
+	window: ?WEL_WINDOW
 			-- Identifies the window
 		do
 			Result := window_of_item (cwel_windowpos_get_hwnd (item))
 		end
 
-	window_insert_after: WEL_WINDOW
+	window_insert_after: ?WEL_WINDOW
 			-- Position of the window in Z order (front-to-back
 			-- position). This window can be the window behind
 			-- which this window is placed.

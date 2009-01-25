@@ -23,7 +23,8 @@ feature{NONE} -- Initlization
 	make (a_font_family: WEL_GDIP_FONT_FAMILY; a_em_size: REAL)
 			-- Creation method.
 		require
-			not_void: a_font_family /= Void
+			a_font_familiy_not_void: a_font_family /= Void
+			a_font_family_exists: a_font_family.exists
 		do
 			make_with_family_size_sytle_unit (a_font_family, a_em_size, {WEL_GDIP_FONT_STYLE}.fontstyleregular, {WEL_GDIP_UNIT}.unitpoint)
 		end
@@ -31,7 +32,8 @@ feature{NONE} -- Initlization
 	make_with_family_size_sytle_unit (a_font_family: WEL_GDIP_FONT_FAMILY; a_em_size: REAL; a_style: INTEGER; a_unit: INTEGER)
 			-- Create a font with `a_font_family', `a_em_size', `a_style' and `a_unit'.
 		require
-			not_void: a_font_family /= Void
+			a_font_familiy_not_void: a_font_family /= Void
+			a_font_family_exists: a_font_family.exists
 			valid: (create {WEL_GDIP_FONT_STYLE}).is_valid (a_unit)
 			valid: (create {WEL_GDIP_UNIT}).is_valid (a_unit)
 		local

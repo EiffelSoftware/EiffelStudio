@@ -24,6 +24,9 @@ feature {NONE} -- Initialization
 		local
 			loc_driver, loc_device, loc_output: WEL_STRING
 		do
+			create device.make_empty
+			create driver.make_empty
+			create output.make_empty
 			retrieve_default_printer
 			create loc_device.make (device)
 			create loc_driver.make (driver)
@@ -58,16 +61,12 @@ feature -- Basic operations
 			printer := a_printer.substring (1, nb)
 			if printer.is_equal (Options_const) then
 				-- There is no default printer connected.
-				-- Let's create empty strings.
-				create device.make (0)
-				create driver.make (0)
-				create output.make (0)
+				-- Nothing to be done
 			else
 				-- There is a default printer connected.
 				-- Let's parse the string and find the device,
 				-- driver and output fields.
-				device := printer.substring (1,
-					printer.index_of (Comma_const, 1) - 1)
+				device := printer.substring (1, printer.index_of (Comma_const, 1) - 1)
 				device_count := device.count
 				driver := printer.substring (device_count + 2,
 					printer.index_of (Comma_const, device_count + 2) - 1)

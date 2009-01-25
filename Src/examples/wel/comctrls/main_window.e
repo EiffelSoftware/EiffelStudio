@@ -54,6 +54,20 @@ feature {NONE} -- Initialization
 	make
 		local
 			bitmap_index1, bitmap_index2: INTEGER
+			l_tool: WEL_TOOL_INFO
+			l_tool_bar: like tool_bar
+			l_status_window: like status_window
+			l_progress_bar: like progress_bar
+			l_track_bar: like track_bar
+			l_tooltip: like tooltip
+			l_rich_edit: like rich_edit
+			l_char_format: WEL_CHARACTER_FORMAT
+			tool_bar_button4,
+			tool_bar_button5,
+			tool_bar_button6,
+			tool_bar_button7,
+			tool_bar_button8: WEL_TOOL_BAR_BUTTON
+			tool_bar_bitmap, standard_tool_bar_bitmap: WEL_TOOL_BAR_BITMAP
 		do
 			make_top (Title)
 			set_menu (main_menu)
@@ -64,37 +78,42 @@ feature {NONE} -- Initialization
 				%buttons.", 200, 50, 200, 70, -1)
 
 			-- Create a track bar
-			create track_bar.make_horizontal (Current, 10, 40, 110, 40, -1)
-			track_bar.set_range (0, 100)
+			create l_track_bar.make_horizontal (Current, 10, 40, 110, 40, -1)
+			track_bar := l_track_bar
+			l_track_bar.set_range (0, 100)
 
 			-- Create a progress bar
-			create progress_bar.make (Current, 10, 110, 110, 20, -1)
+			create l_progress_bar.make (Current, 10, 110, 110, 20, -1)
+			progress_bar := l_progress_bar
 
 			-- Create a status window
-			create status_window.make (Current, -1)
-			status_window.set_multiple_mode
-			status_window.set_parts (<<300, 350, -1>>)
+			create l_status_window.make (Current, -1)
+			status_window := l_status_window
+			l_status_window.set_multiple_mode
+			l_status_window.set_parts (<<300, 350, -1>>)
 
 			-- Create a rich edit control
-			create rich_edit.make (Current, "", 5, 150, 200, 150, -1)
-			create char_format.make
-			char_format.set_face_name ("Arial")
-			char_format.set_height_in_points (12)
-			char_format.unset_bold
-			rich_edit.set_character_format_all (char_format)
-			rich_edit.set_text ("Rich edit control")
+			create l_rich_edit.make (Current, "", 5, 150, 200, 150, -1)
+			rich_edit := l_rich_edit
+			create l_char_format.make
+			l_char_format.set_face_name ("Arial")
+			l_char_format.set_height_in_points (12)
+			l_char_format.unset_bold
+			l_rich_edit.set_character_format_all (l_char_format)
+			l_rich_edit.set_text ("Rich edit control")
 
 			-- Create a toolbar and buttons
-			create tool_bar.make (Current, -1)
+			create l_tool_bar.make (Current, -1)
+			tool_bar := l_tool_bar
 
 			create tool_bar_bitmap.make (Bmp_toolbar)
 			create standard_tool_bar_bitmap.make_by_predefined_id (Idb_std_small_color)
 
-			tool_bar.add_bitmaps (standard_tool_bar_bitmap, 1)
-			bitmap_index1 := tool_bar.last_bitmap_index
+			l_tool_bar.add_bitmaps (standard_tool_bar_bitmap, 1)
+			bitmap_index1 := l_tool_bar.last_bitmap_index
 
-			tool_bar.add_bitmaps (tool_bar_bitmap, 1)
-			bitmap_index2 := tool_bar.last_bitmap_index
+			l_tool_bar.add_bitmaps (tool_bar_bitmap, 1)
+			bitmap_index2 := l_tool_bar.last_bitmap_index
 
 			create tool_bar_button4.make_check (bitmap_index2 + 0, Cmd_bold)
 			create tool_bar_button5.make_check (bitmap_index2 + 1, Cmd_italic)
@@ -102,7 +121,7 @@ feature {NONE} -- Initialization
 			create tool_bar_button7.make_button (bitmap_index2 + 2, Cmd_progress_bar)
 			create tool_bar_button8.make_button (bitmap_index2 + 3, Cmd_exit)
 
-			tool_bar.add_buttons (<<
+			l_tool_bar.add_buttons (<<
 				tool_bar_button4,
 				tool_bar_button5,
 				tool_bar_button6,
@@ -110,50 +129,45 @@ feature {NONE} -- Initialization
 				tool_bar_button8>>)
 
 			-- Create a tooltip
-			create tooltip.make (Current, -1)
+			create l_tooltip.make (Current, -1)
+			tooltip := l_tooltip
 
-			create tool_info1.make
-			tool_info1.set_window (track_bar)
-			tool_info1.set_flags (Ttf_subclass)
-			tool_info1.set_rect (track_bar.client_rect)
-			tool_info1.set_text_id (Str_tooltip) -- Use a string resource id
-			tooltip.add_tool (tool_info1)
+			create l_tool.make
+			tool_info1 := l_tool
+			l_tool.set_window (l_track_bar)
+			l_tool.set_flags (Ttf_subclass)
+			l_tool.set_rect (l_track_bar.client_rect)
+			l_tool.set_text_id (Str_tooltip) -- Use a string resource id
+			l_tooltip.add_tool (l_tool)
 
-			create tool_info2.make
-			tool_info2.set_window (progress_bar)
-			tool_info2.set_flags (Ttf_subclass)
-			tool_info2.set_rect (progress_bar.client_rect)
-			tool_info2.set_text ("This a tooltip for the progress bar") -- Use a string
-			tooltip.add_tool (tool_info2)
+			create l_tool.make
+			tool_info2 := l_tool
+			l_tool.set_window (l_progress_bar)
+			l_tool.set_flags (Ttf_subclass)
+			l_tool.set_rect (l_progress_bar.client_rect)
+			l_tool.set_text ("This a tooltip for the progress bar") -- Use a string
+			l_tooltip.add_tool (l_tool)
 		end
 
 feature -- Access
 
-	static: WEL_STATIC
+	static: ?WEL_STATIC
 
-	progress_bar: WEL_PROGRESS_BAR
+	progress_bar: ?WEL_PROGRESS_BAR
 
-	track_bar: WEL_TRACK_BAR
+	track_bar: ?WEL_TRACK_BAR
 
-	status_window: WEL_STATUS_WINDOW
+	status_window: ?WEL_STATUS_WINDOW
 
-	tool_bar: WEL_TOOL_BAR
+	tool_bar: ?WEL_TOOL_BAR
 
-	tooltip: WEL_TOOLTIP
+	tooltip: ?WEL_TOOLTIP
 
-	tool_info1, tool_info2: WEL_TOOL_INFO
+	tool_info1, tool_info2: ?WEL_TOOL_INFO
 
-	tool_bar_bitmap, standard_tool_bar_bitmap: WEL_TOOL_BAR_BITMAP
 
-	tool_bar_button4,
-	tool_bar_button5,
-	tool_bar_button6,
-	tool_bar_button7,
-	tool_bar_button8: WEL_TOOL_BAR_BUTTON
 
-	rich_edit: WEL_RICH_EDIT
-
-	char_format: WEL_CHARACTER_FORMAT
+	rich_edit: ?WEL_RICH_EDIT
 
 	background_brush: WEL_BRUSH
 			-- Dialog boxes background color is the same than
@@ -185,6 +199,10 @@ feature {NONE} -- Implementation
 			-- Execute the command identified by `menu_id'.
 		local
 			i: INTEGER
+			l_progress_bar: like progress_bar
+			l_rich_edit: like rich_edit
+			l_tool_bar: like tool_bar
+			l_char_format: WEL_CHARACTER_FORMAT
 		do
 			inspect
 				menu_id
@@ -192,51 +210,68 @@ feature {NONE} -- Implementation
 				destroy
 			when Cmd_progress_bar then
 				from
+					l_progress_bar := progress_bar
+						-- Per invariant
+					check l_progress_bar_attached: l_progress_bar /= Void end
 					i := 0
 				until
 					i = 100
 				loop
-					progress_bar.step_it
+					l_progress_bar.step_it
 					i := i + 10
 				end
-			when Cmd_bold then
-				create char_format.make
-				if tool_bar.button_checked (Cmd_bold) then
-					char_format.set_bold
-
+			when Cmd_bold, Cmd_italic then
+				create l_char_format.make
+				l_tool_bar := tool_bar
+					-- Per invariant
+				check l_tool_bar_attached: l_tool_bar /= Void end
+				if l_tool_bar.button_checked (menu_id) then
+					if menu_id = Cmd_bold then
+						l_char_format.set_bold
+					else
+						l_char_format.set_italic
+					end
 				else
-					char_format.unset_bold
+					if menu_id = Cmd_bold then
+						l_char_format.unset_bold
+					else
+						l_char_format.unset_italic
+					end
 				end
-				rich_edit.set_character_format_selection (char_format)
-			when Cmd_italic then
-				create char_format.make
-				if tool_bar.button_checked (Cmd_italic) then
-					char_format.set_italic
-				else
-					char_format.unset_italic
-				end
-				rich_edit.set_character_format_selection (char_format)
+				l_rich_edit := rich_edit
+					-- Per invariant
+				check l_rich_edit_attached: l_rich_edit /= Void end
+				l_rich_edit.set_character_format_selection (l_char_format)
 			else
 			end
 		end
 
-	on_menu_select (menu_item: INTEGER; flags: INTEGER; a_menu: WEL_MENU)
+	on_menu_select (menu_item: INTEGER; flags: INTEGER; a_menu: ?WEL_MENU)
 			-- Display a message in the status window corresponding
 			-- to the selected menu_item.
+		local
+			l_status_window: like status_window
 		do
-			status_window.set_text_part (0,
-				resource_string_id (menu_item))
+			l_status_window := status_window
+				-- Per invariant
+			check l_status_window_attached: l_status_window /= Void end
+			l_status_window.set_text_part (0, resource_string_id (menu_item))
 		end
 
 	on_size (size_type: INTEGER; a_width: INTEGER; a_height: INTEGER)
 			-- Reposition the status window and the tool bar when
 			-- the window has been resized.
+		local
+			l_status_window: like status_window
+			l_tool_bar: like tool_bar
 		do
-			if status_window /= Void then
-				status_window.reposition
+			l_status_window := status_window
+			if l_status_window /= Void then
+				l_status_window.reposition
 			end
-			if tool_bar /= Void then
-				tool_bar.reposition
+			l_tool_bar := tool_bar
+			if l_tool_bar /= Void then
+				l_tool_bar.reposition
 			end
 		end
 
@@ -256,6 +291,12 @@ feature {NONE} -- Implementation
 
 	Title: STRING = "WEL Common controls";
 			-- Window's title
+
+invariant
+	tool_bar_attached: tool_bar /= Void
+	status_window_attached: status_window /= Void
+	rich_edit_attached: rich_edit /= Void
+	progress_bar_attached: progress_bar /= Void
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

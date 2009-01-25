@@ -15,11 +15,12 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_guid: !WEL_GUID; a_value: NATURAL_64)
+	make (a_guid: WEL_GUID; a_value: NATURAL_64)
 			-- Creation method
 		require
-			valid: (create {WEL_GDIP_IMAGE_ENCODER}.make_empty).is_valid (a_guid)
-			valid_for_quality: a_guid.is_equal ((create {WEL_GDIP_IMAGE_ENCODER}.make_empty).quality) implies (0 <= a_value and a_value <= 100)
+			a_guid_attached: a_guid /= Void
+			valid: (create {WEL_GDIP_IMAGE_ENCODER}.make (a_guid)).is_valid (a_guid)
+			valid_for_quality: a_guid.is_equal ((create {WEL_GDIP_IMAGE_ENCODER}.make (a_guid)).quality) implies (0 <= a_value and a_value <= 100)
 		do
 			create item.make (size)
 			set_guid (a_guid)
@@ -35,11 +36,13 @@ feature {NONE} -- Initialization
 
 feature -- Command
 
-	item: !MANAGED_POINTER
+	item: MANAGED_POINTER
 			-- Convert current to C pointer
 
-	set_guid (a_guid: !WEL_GUID)
+	set_guid (a_guid: WEL_GUID)
 			-- Set `gudi' with `a_guid'
+		require
+			a_guid_attached: a_guid /= Void
 		do
 			c_set_guid (item.item, a_guid.item)
 		ensure
@@ -74,7 +77,7 @@ feature -- Command
 
 feature -- Query
 
-	guid: !WEL_GUID
+	guid: WEL_GUID
 			-- Parameter GUID.
 		do
 			create Result.share_from_pointer (c_guid (item.item))

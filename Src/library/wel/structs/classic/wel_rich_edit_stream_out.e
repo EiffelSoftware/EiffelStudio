@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	buffer: MANAGED_POINTER
+	buffer: ?MANAGED_POINTER
 			-- Buffer to set in `read_buffer'.
 
 feature -- Basic operations
@@ -43,11 +43,15 @@ feature {NONE} -- Implementation
 
 	internal_callback (a_buffer: POINTER; a_length: INTEGER): INTEGER
 			-- `buffer' contains `length' characters.
+		local
+			l_buffer: like buffer
 		do
-			if buffer = Void then
-				create buffer.share_from_pointer (a_buffer, a_length)
+			l_buffer := buffer
+			if l_buffer = Void then
+				create l_buffer.share_from_pointer (a_buffer, a_length)
+				buffer := l_buffer
 			else
-				buffer.set_from_pointer (a_buffer, a_length)
+				l_buffer.set_from_pointer (a_buffer, a_length)
 			end
 			stream_result := 0
 			write_buffer

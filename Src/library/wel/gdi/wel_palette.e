@@ -21,6 +21,7 @@ feature {NONE} -- Initialization
 			-- Create a palette associated to `a_log_palette'
 		require
 			a_log_palette_not_void: a_log_palette /= Void
+			a_log_palette_exists: a_log_palette.exists
 		do
 			item := cwin_create_palette (a_log_palette.item)
 			gdi_make

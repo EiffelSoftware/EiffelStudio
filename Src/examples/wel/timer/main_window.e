@@ -44,20 +44,25 @@ create
 
 feature {NONE} -- Initialization
 
-	make 
+	make
 		local
 			button: WEL_PUSH_BUTTON
 			rect: WEL_RECT
 			i: INTEGER
 		do
+			create buttons.make (1, 4)
+			create flash_rects.make (1, 4)
+			create blue_brush.make_hatch (Hs_horizontal, Blue)
+			create green_brush.make_hatch (Hs_vertical, Green)
+			create yellow_brush.make_hatch (Hs_fdiagonal, Yellow)
+			create red_brush.make_hatch (Hs_bdiagonal, Red)
+
 			make_top (Title)
-			from 
-				create buttons.make (1, 4)
-				create flash_rects.make (1, 4)
+			from
 				i := buttons.lower
-			until 
+			until
 				i > buttons.upper
-			loop 
+			loop
 				create button.make (Current, Start_timer, 0, 0, 0, 0, i)
 				buttons.put (button, i)
 				create rect.make (0, 0, 0, 0)
@@ -65,10 +70,8 @@ feature {NONE} -- Initialization
 				i := i + 1
 			end
 			create dc.make (Current)
-			create blue_brush.make_hatch (Hs_horizontal, Blue)
-			create green_brush.make_hatch (Hs_vertical, Green)
-			create yellow_brush.make_hatch (Hs_fdiagonal, Yellow)
-			create red_brush.make_hatch (Hs_bdiagonal, Red)
+		ensure
+			dc_attached: dc /= Void
 		end
 
 feature -- Access
@@ -77,7 +80,7 @@ feature -- Access
 
 	flash_rects: ARRAY [WEL_RECT]
 
-	dc: WEL_CLIENT_DC
+	dc: ?WEL_CLIENT_DC
 
 	blue_brush, green_brush, yellow_brush, red_brush: WEL_BRUSH
 
@@ -141,14 +144,19 @@ feature
 			-- Flash rectangle corresponding to `timer_id'.
 		require else
 			valid_timer: timer_id >= Timer1 and timer_id <= Timer4
+		local
+			l_dc: like dc
 		do
-			dc.get
-			dc.set_rop2 (R2_not)
-			dc.rectangle (flash_rects.item (timer_id).left,
+			l_dc := dc
+				-- Per postcondition of creation routine and `dc' is a stable attribute.
+			check l_dc_attached: l_dc /= Void end
+			l_dc.get
+			l_dc.set_rop2 (R2_not)
+			l_dc.rectangle (flash_rects.item (timer_id).left,
 				flash_rects.item (timer_id).top,
 				flash_rects.item (timer_id).right,
 				flash_rects.item (timer_id).bottom)
-			dc.release
+			l_dc.release
 		end
 
 	on_control_command (a_control: WEL_CONTROL)

@@ -26,26 +26,35 @@ feature {NONE} -- Initialization
 			a_window_not_void: a_window /= Void
 			a_window_exists: a_window.exists
 		do
-			hwindow := a_window.item
 			window := a_window
+			hwindow := a_window.item
 		ensure
+			has_window: has_window
 			window_set: window = a_window
 		end
 
 feature -- Access
 
-	window: WEL_WINDOW
+	window: ?WEL_WINDOW
 			-- Window associated with the dc
+
+feature -- Status report
+
+	has_window: BOOLEAN
+			-- Is current associated with a window?
+		local
+			l_window: like window
+		do
+			l_window := window
+			Result := l_window /= Void and then l_window.exists
+		end
 
 feature -- Basic operations
 
 	get
 			-- Get the device context
 		do
-			check
-				window_not_void: window /= Void
-				window_exist: window.exists
-			end
+			check has_window: has_window end
 			item := cwin_get_window_dc (hwindow)
 		end
 
@@ -54,10 +63,7 @@ feature -- Basic operations
 		local
 			a_default_pointer: POINTER
 		do
-			check
-				window_not_void: window /= Void
-				window_exist: window.exists
-			end
+			check has_window: has_window end
 			unselect_all
 			cwin_release_dc (hwindow, item)
 			item := a_default_pointer
@@ -71,10 +77,7 @@ feature -- Basic operations
 		local
 			a_default_pointer: POINTER
 		do
-			check
-				window_not_void: window /= Void
-				window_exist: window.exists
-			end
+			check has_window: has_window end
 			cwin_release_dc (hwindow, item)
 			item := a_default_pointer
 		end
@@ -88,9 +91,13 @@ feature {NONE} -- Implementation
 		local
 			a_default_pointer: POINTER
 		do
-			unselect_all
-			cwin_release_dc (a_default_pointer, item)
-			item := a_default_pointer
+				-- Protect the call to DeleteDC, because `destroy_item' can 
+				-- be called by the GC so without assertions.
+			if item /= a_default_pointer then
+				unselect_all
+				cwin_release_dc (hwindow, item)
+				item := a_default_pointer
+			end
 		end
 
 feature {NONE} -- Externals

@@ -32,7 +32,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_by_id (a_parent: WEL_WINDOW; an_id: INTEGER)
+	make_by_id (a_parent: ?WEL_WINDOW; an_id: INTEGER)
 			-- Initialize a loadable dialog box identified by
 			-- `an_id' using `a_parent' as parent.
 		require
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			dialog_children_not_void: dialog_children /= Void
 		end
 
-	make_by_name (a_parent: WEL_COMPOSITE_WINDOW; a_name: STRING_GENERAL)
+	make_by_name (a_parent: ?WEL_COMPOSITE_WINDOW; a_name: STRING_GENERAL)
 			-- Initialize a loadable dialog box identified by
 			-- `a_name' using `a_parent' as parent.
 		require
@@ -60,16 +60,24 @@ feature {NONE} -- Initialization
 			create dialog_children.make
 		ensure
 			parent_set: parent = a_parent
-			resource_name_set: resource_name.is_equal (a_name)
+			resource_name_set: {l_name: like resource_name} resource_name and then l_name.same_string (a_name)
 			dialog_children_not_void: dialog_children /= Void
 		end
 
-	make_by_template (a_parent: WEL_COMPOSITE_WINDOW; a_template: WEL_DLG_TEMPLATE)
+	make_by_template (a_parent: ?WEL_COMPOSITE_WINDOW; a_template: WEL_DLG_TEMPLATE)
+		require
+			parent_exists: a_parent /= Void implies a_parent.exists
+		local
+			l_parent_item: POINTER
 		do
-			register_dialog
+			parent := a_parent
 			create dialog_children.make
+			register_dialog
+			if a_parent /= Void then
+				l_parent_item := a_parent.item
+			end
 			item := cwin_dialog_box_indirect (main_args.current_instance.item, a_template.item,
-				a_parent.item, cwel_dialog_procedure_address)
+				l_parent_item, cwel_dialog_procedure_address)
 		ensure
 			dialog_children_not_void: dialog_children /= Void
 		end
@@ -94,11 +102,10 @@ feature -- Basic operations
 			-- Activate the dialog box.
 			-- Can be called several times.
 		require
-			parent_exists: parent /= Void implies parent.exists
+			parent_exists: {l_parent: like parent} parent implies l_parent.exists
 			not_exists: not exists
 		do
-			internal_dialog_make (parent, resource_id,
-				resource_name)
+			internal_dialog_make (parent, resource_id, resource_name)
 		end
 
 	setup_dialog
@@ -191,7 +198,7 @@ feature {NONE} -- Implementation
 			registered: new_dialog = Current
 		end
 
-	resource_name: STRING_GENERAL
+	resource_name: ?STRING_GENERAL
 			-- Name of the dialog in the resource.
 			-- Void if the dialog is identified by an
 			-- id (`resource_id').
@@ -268,8 +275,8 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	internal_dialog_make (a_parent: WEL_WINDOW; an_id: INTEGER;
-			a_name: STRING_GENERAL)
+	internal_dialog_make (a_parent: ?WEL_WINDOW; an_id: INTEGER;
+			a_name: ?STRING_GENERAL)
 			-- Create the dialog
 		deferred
 		end

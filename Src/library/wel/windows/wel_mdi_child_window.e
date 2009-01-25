@@ -20,7 +20,6 @@ inherit
 			destroy,
 			parent,
 			move_and_resize,
-			move_absolute,
 			make,
 			set_parent
 		end
@@ -33,6 +32,7 @@ feature {NONE} -- Initialization
 	make (a_parent: WEL_MDI_FRAME_WINDOW; a_name: STRING_GENERAL)
 			-- Make window as child of `a_parent' and `a_name' as title.
 		do
+			parent := a_parent
 			register_class
 			internal_window_make (a_parent, a_name,
 				default_style,
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	parent: WEL_MDI_FRAME_WINDOW
+	parent: ?WEL_MDI_FRAME_WINDOW
 			-- Parent window
 
 feature -- Basic operations
@@ -55,43 +55,34 @@ feature -- Basic operations
 			move_and_resize_internal (a_x, a_y, a_width, a_height, repaint, 0)
 		end
 
-	move_absolute (a_x, a_y: INTEGER)
-			-- Move the window to `a_x', `a_y' absolute position.
-		local
-			point: WEL_POINT
-		do
-			create point.make (a_x, a_y)
-			point.screen_to_client (parent)
-			move (point.x, point.y)
-		end
-
 	destroy
 			-- Destroy the window.
+		local
+			l_parent: like parent
 		do
-			parent.client_window.destroy_window (Current)
+			l_parent := parent
+			if l_parent /= Void then
+				l_parent.client_window.destroy_window (Current)
+			end
 		end
 
 feature -- Element change
 
-	set_parent (a_parent: WEL_WINDOW)
+	set_parent (a_parent: ?WEL_WINDOW)
 			-- Change parent of current window if possible.
 		local
-			l_parent: like parent
 			l_prev_parent: POINTER
 		do
-			l_parent ?= a_parent
-			if l_parent /= Void then
+				-- We do the object test because `parent' has been redefined to a WEL_MDI_FRAME_WINDOW.
+			if {l_parent: like parent} a_parent then
 				parent := l_parent
 				l_prev_parent := {WEL_API}.set_parent (item, l_parent.item)
-			else
-				parent := Void
-				l_prev_parent := {WEL_API}.set_parent (item, default_pointer)
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	internal_window_make (a_parent: WEL_MDI_FRAME_WINDOW; a_name: STRING_GENERAL;
+	internal_window_make (a_parent: ?WEL_MDI_FRAME_WINDOW; a_name: ?STRING_GENERAL;
 			a_style, a_x, a_y, a_w, a_h, an_id: INTEGER;
 			data: POINTER)
 			-- Create the window
@@ -99,13 +90,19 @@ feature {NONE} -- Implementation
 			mdi_cs: WEL_MDI_CREATE_STRUCT
 		do
 			parent := a_parent
-			create mdi_cs.make (class_name, a_name)
-			mdi_cs.set_style (default_style)
-			item := {WEL_API}.send_message_result (a_parent.client_window.item,
-				Wm_mdicreate, to_wparam (0), mdi_cs.item)
-			if item /= default_pointer then
-				register_current_window
-				set_default_window_procedure
+				-- It only makes sense to create a child window if there is a parent specified.
+			if a_parent /= Void then
+				if a_name /= Void then
+					create mdi_cs.make (class_name, a_name)
+				else
+					create mdi_cs.make (class_name, "")
+				end
+				mdi_cs.set_style (default_style)
+				item := {WEL_API}.send_message_result (a_parent.client_window.item, Wm_mdicreate, to_wparam (0), mdi_cs.item)
+				if item /= default_pointer then
+					register_current_window
+					set_default_window_procedure
+				end
 			end
 		end
 

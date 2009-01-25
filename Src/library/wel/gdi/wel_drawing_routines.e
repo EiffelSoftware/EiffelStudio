@@ -35,6 +35,7 @@ feature -- Basic operations
 			-- `border'.
 		require
 			rect_not_void: rect /= Void
+			rect_exists: rect.exists
 			dc_not_void: dc /= Void
 			dc_exists: dc.exists
 		do
@@ -45,6 +46,7 @@ feature -- Basic operations
 			-- Draw a focus line in the given rect.
 		require
 			rect_not_void: rect /= Void
+			rect_exists: rect.exists
 			dc_not_void: dc /= Void
 			dc_exists: dc.exists
 		do

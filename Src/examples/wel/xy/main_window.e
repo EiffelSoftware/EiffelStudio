@@ -21,8 +21,7 @@ feature {NONE} -- Initialization
 			-- Make the main window and a button
 		do
 			make_top ("WEL xy")
-			create clear_button.make (Current, "Clear",
-				1, 1, 70, 40, 1)
+			create clear_button.make (Current, "Clear", 1, 1, 70, 40, 1)
 		end
 
 feature {NONE} -- Behaviors
@@ -55,7 +54,7 @@ feature {NONE} -- Behaviors
 
 feature {NONE} -- Implementation
 
-	clear_button: WEL_PUSH_BUTTON
+	clear_button: ?WEL_PUSH_BUTTON
 			-- Clear button
 
 	class_background: WEL_WHITE_BRUSH

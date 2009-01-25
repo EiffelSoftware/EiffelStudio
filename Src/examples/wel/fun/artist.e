@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	dc: WEL_CLIENT_DC
+	dc: ?WEL_CLIENT_DC
 
 	sqr_3_2: REAL = 0.86602540
 		-- sqrt (3) / 2
@@ -79,8 +79,13 @@ feature {NONE} -- Implementation
 
 	on_mouse_move (keys, x_pos, y_pos: INTEGER)
 			-- The mouse has been moved.
+		local
+			l_dc: like dc
 		do
-			dc.get
+			l_dc := dc
+				-- Per invariant
+			check l_dc_attached: l_dc /= Void end
+			l_dc.get
 			if not button_down then
 				draw (x_bak, y_bak, black)
 			end
@@ -88,7 +93,7 @@ feature {NONE} -- Implementation
 			y_bak := y_pos
 			draw (x_pos, y_pos, colors.item ((x_pos * y_pos) \\
 				16 + 1))
-			dc.release
+			l_dc.release
 		end
 
 feature {NONE} -- Implementation
@@ -97,27 +102,31 @@ feature {NONE} -- Implementation
 			-- Draw the 16 points
 		local
 			xx, yy, dx, dy: INTEGER
+			l_dc: like dc
 		do
 			dx := (x_pos - mid_width).abs
 			dy := (y_pos - mid_height).abs
 			xx := (dx / 2 - sqr_3_2 * dy).rounded
 			yy := (dy / 2 + sqr_3_2 * dx).rounded
-			dc.set_pixel (mid_width + dx, mid_height + dy, color)
-			dc.set_pixel (mid_width + dy, mid_height + dx, color)
-			dc.set_pixel (mid_width - dx, mid_height + dy, color)
-			dc.set_pixel (mid_width - dy, mid_height + dx, color)
-			dc.set_pixel (mid_width + dx, mid_height - dy, color)
-			dc.set_pixel (mid_width + dy, mid_height - dx, color)
-			dc.set_pixel (mid_width - dx, mid_height - dy, color)
-			dc.set_pixel (mid_width - dy, mid_height - dx, color)
-			dc.set_pixel (mid_width + xx, mid_height + yy, color)
-			dc.set_pixel (mid_width + yy, mid_height + xx, color)
-			dc.set_pixel (mid_width - xx, mid_height + yy, color)
-			dc.set_pixel (mid_width - yy, mid_height + xx, color)
-			dc.set_pixel (mid_width + xx, mid_height - yy, color)
-			dc.set_pixel (mid_width + yy, mid_height - xx, color)
-			dc.set_pixel (mid_width - xx, mid_height - yy, color)
-			dc.set_pixel (mid_width - yy, mid_height - xx, color)
+			l_dc := dc
+				-- Per invariant
+			check l_dc_attached: l_dc /= Void end
+			l_dc.set_pixel (mid_width + dx, mid_height + dy, color)
+			l_dc.set_pixel (mid_width + dy, mid_height + dx, color)
+			l_dc.set_pixel (mid_width - dx, mid_height + dy, color)
+			l_dc.set_pixel (mid_width - dy, mid_height + dx, color)
+			l_dc.set_pixel (mid_width + dx, mid_height - dy, color)
+			l_dc.set_pixel (mid_width + dy, mid_height - dx, color)
+			l_dc.set_pixel (mid_width - dx, mid_height - dy, color)
+			l_dc.set_pixel (mid_width - dy, mid_height - dx, color)
+			l_dc.set_pixel (mid_width + xx, mid_height + yy, color)
+			l_dc.set_pixel (mid_width + yy, mid_height + xx, color)
+			l_dc.set_pixel (mid_width - xx, mid_height + yy, color)
+			l_dc.set_pixel (mid_width - yy, mid_height + xx, color)
+			l_dc.set_pixel (mid_width + xx, mid_height - yy, color)
+			l_dc.set_pixel (mid_width + yy, mid_height - xx, color)
+			l_dc.set_pixel (mid_width - xx, mid_height - yy, color)
+			l_dc.set_pixel (mid_width - yy, mid_height - xx, color)
 		end
 
 	colors: ARRAY [WEL_COLOR_REF]
@@ -166,6 +175,9 @@ feature {NONE} -- Implementation
 		once
 			Result := "GDI Artist"
 		end;
+
+invariant
+	dc_attached: dc /= Void
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

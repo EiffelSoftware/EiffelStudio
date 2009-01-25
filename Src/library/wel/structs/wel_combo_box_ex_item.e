@@ -66,10 +66,13 @@ feature -- Access
 			-- Text of the current item
 		require
 			exists: exists
+		local
+			l_text: like str_text
 		do
 			set_mask (set_flag (mask, Cbeif_text))
-			if str_text /= Void then
-				Result := str_text.string
+			l_text := str_text
+			if l_text /= Void then
+				Result := l_text.string
 			else
 				create Result.make_empty
 			end
@@ -136,11 +139,14 @@ feature -- Element change
 		require
 			exists: exists
 			valid_text: txt /= Void
+		local
+			l_text: like str_text
 		do
 			set_mask (set_flag (mask, Cbeif_text))
-			create str_text.make (txt)
-			cwel_comboboxex_item_set_cchtextmax (item, str_text.length)
-			cwel_comboboxex_item_set_psztext (item, str_text.item)
+			create l_text.make (txt)
+			str_text := l_text
+			cwel_comboboxex_item_set_cchtextmax (item, l_text.length)
+			cwel_comboboxex_item_set_psztext (item, l_text.item)
 		ensure
 			text_set: text.is_equal (txt)
 		end
@@ -211,7 +217,7 @@ feature -- Measurement
 
 feature {WEL_COMBO_BOX_EX} -- Implementation
 
-	str_text: WEL_STRING
+	str_text: ?WEL_STRING
 			-- C string to save the text
 
 	set_mask (value: INTEGER)

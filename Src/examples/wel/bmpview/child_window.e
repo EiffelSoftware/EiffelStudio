@@ -34,43 +34,47 @@ feature -- Initialization
 			file: RAW_FILE
 			dc: WEL_CLIENT_DC
 			dib: WEL_DIB
+			l_bitmap: like bitmap
 		do
 			mdi_child_window_make (a_parent, a_name)
 			create file.make_open_read (a_name)
 			create dib.make_by_file (file)
 			create dc.make (Current)
 			dc.get
-			create bitmap.make_by_dib (dc, dib, Dib_rgb_colors)
+			create l_bitmap.make_by_dib (dc, dib, Dib_rgb_colors)
+			bitmap := l_bitmap
 			dc.release
-			create scroller.make (Current, bitmap.width, bitmap.height, 1, 20)
+			create scroller.make (Current, l_bitmap.width, l_bitmap.height, 1, 20)
 		end
 
 feature -- Access
 
-	bitmap: WEL_BITMAP
+	bitmap: ?WEL_BITMAP
 			-- Bitmap selected by the user
 
 feature -- Basic operations
 
 	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- Paint the bitmap
+		local
+			l_bitmap: like bitmap
 		do
-			paint_dc.draw_bitmap (bitmap, 0, 0,
-				bitmap.width, bitmap.height)
+			l_bitmap := bitmap
+				-- Per invariant
+			check l_bitmap_attached: l_bitmap /= Void end
+			paint_dc.draw_bitmap (l_bitmap, 0, 0, l_bitmap.width, l_bitmap.height)
 		end
-		
+
 	on_destroy
 			-- Notify `parent' that `Current' is being destroyed.
-		local
-			main_window: MAIN_WINDOW
 		do
-			main_window ?= parent
-			check
-				parent_of_correct_type: main_window /= Void
+			if {main_window: MAIN_WINDOW} parent then
+				main_window.remove_child_reference (Current)
+			else
+				check False end
 			end
-			main_window.remove_child_reference (Current)
 		end
-		
+
 
 feature {NONE} -- Implementation
 
@@ -79,6 +83,9 @@ feature {NONE} -- Implementation
 		once
 			create Result.make_by_id (Id_ico_child_window)
 		end
+
+invariant
+	bitmap_attached: bitmap /= Void
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

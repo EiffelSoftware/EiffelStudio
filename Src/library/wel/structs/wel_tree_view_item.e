@@ -50,12 +50,16 @@ feature -- Access
 			-- to be filled in. This member can be a combination
 			-- of the Tvif_* values.
 			-- See class WEL_TVIF_CONSTANTS.
+		require
+			exists: exists
 		do
 			Result := cwel_tv_item_get_mask (item)
 		end
-		
+
 	state_mask: INTEGER
 			-- State mask flag.
+		require
+			exists: exists
 		do
 			Result := cwel_tv_item_get_statemask (item)
 		end
@@ -64,9 +68,12 @@ feature -- Access
 			-- Item text
 		require
 			valid_member: text_is_valid
+		local
+			l_text: like str_text
 		do
-			if str_text /= Void then
-				Result := str_text.string
+			l_text := str_text
+			if l_text /= Void then
+				Result := l_text.string
 			else
 				create Result.make_empty
 			end
@@ -76,6 +83,8 @@ feature -- Access
 
 	h_item: POINTER
 			-- Item to which this structure refers.
+		require
+			exists: exists
 		do
 			Result := cwel_tv_item_get_hitem (item)
 		end
@@ -83,6 +92,7 @@ feature -- Access
 	state: INTEGER
 			-- Current state of the item.
 		require
+			exists: exists
 			valid_member: state_is_valid
 		do
 			Result := cwel_tv_item_get_state (item)
@@ -91,6 +101,7 @@ feature -- Access
 	children: INTEGER
 			-- Information about the children of the item
 		require
+			exists: exists
 			valid_member: children_is_valid
 		do
 			Result := cwel_tv_item_get_cchildren (item)
@@ -99,6 +110,7 @@ feature -- Access
 	lparam: INTEGER
 			-- Information about the lparam of the item
 		require
+			exists: exists
 			valid_member: lparam_is_valid
 		do
 			Result := cwel_tv_item_get_lparam (item)
@@ -108,24 +120,32 @@ feature -- Status report
 
 	text_is_valid: BOOLEAN
 			-- Is the structure member `text' valid?
+		require
+			exists: exists
 		do
 			Result := flag_set (mask, Tvif_text)
 		end
 
 	state_is_valid: BOOLEAN
 			-- Is the structure member `state' valid?
+		require
+			exists: exists
 		do
 			Result := flag_set (mask, Tvif_state)
 		end
 
 	lparam_is_valid: BOOLEAN
 			-- Is the structure member `lParam' valid?
+		require
+			exists: exists
 		do
 			Result := flag_set (mask, Tvif_param)
 		end
 
 	children_is_valid: BOOLEAN
 			-- Is the structure member `children' valid?
+		require
+			exists: exists
 		do
 			Result := flag_set (mask, Tvif_children)
 		end
@@ -134,12 +154,16 @@ feature -- Element change
 
 	set_mask (a_mask_value: INTEGER)
 			-- Set `mask' with `a_mask_value'.
+		require
+			exists: exists
 		do
 			cwel_tv_item_set_mask (item, a_mask_value)
 		end
 
 	add_mask (a_mask_value: INTEGER)
 			-- add `a_mask_value' to the current mask.
+		require
+			exists: exists
 		do
 			cwel_tv_item_add_mask (item, mask, a_mask_value)
 		end
@@ -147,10 +171,14 @@ feature -- Element change
 	set_text (a_text: STRING_GENERAL)
 			-- Set `text' with `a_text'.
 		require
+			exists: exists
 			a_text_not_void: a_text /= Void
+		local
+			l_text: like str_text
 		do
-			create str_text.make (a_text)
-			cwel_tv_item_set_psztext (item, str_text.item)
+			create l_text.make (a_text)
+			str_text := l_text
+			cwel_tv_item_set_psztext (item, l_text.item)
 			cwel_tv_item_set_cchtextmax (item, a_text.count)
 		ensure
 			text_set: text.is_equal (a_text)
@@ -158,6 +186,8 @@ feature -- Element change
 
 	set_h_item (a_h_item: POINTER)
 			-- Set `h_item' with `a_h_item'.
+		require
+			exists: exists
 		do
 			cwel_tv_item_set_hitem (item, a_h_item)
 		ensure
@@ -166,6 +196,8 @@ feature -- Element change
 
 	set_state (a_state: INTEGER)
 			-- Set `a_state' as current `state'.
+		require
+			exists: exists
 		do
 			cwel_tv_item_set_state (item, a_state)
 		ensure
@@ -174,6 +206,8 @@ feature -- Element change
 
 	set_lparam (a_lparam: INTEGER)
 			-- Set `a_lparam' as current `lparam'.
+		require
+			exists: exists
 		do
 			cwel_tv_item_set_lparam (item, a_lparam)
 		ensure
@@ -186,6 +220,8 @@ feature -- Element change
 			-- item is selected.
 			-- `image_normal' and `image_selected' are the index of
 			-- an image in the image list associated with the treeview.
+		require
+			exists: exists
 		do
 			cwel_tv_item_set_iimage (item, image_normal)
 			cwel_tv_item_set_iselectedimage (item, image_selected)
@@ -202,19 +238,23 @@ feature -- Measurement
 
 feature {NONE} -- Implementation
 
-	str_text: WEL_STRING
+	str_text: ?WEL_STRING
 			-- C string to save the text
 
 feature {WEL_TREE_VIEW} -- Implementation
 
 	set_cchtextmax (value: INTEGER)
 			-- Set the maximum size of the text getting by get item)
+		require
+			exists: exists
 		do
 			cwel_tv_item_set_cchtextmax (item, value)
 		end
 
 	set_statemask (value: INTEGER)
 			-- Set the valid bits of the state attribute.
+		require
+			exists: exists
 		do
 			cwel_tv_item_set_statemask (item, value)
 		end

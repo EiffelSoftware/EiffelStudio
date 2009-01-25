@@ -80,6 +80,7 @@ feature -- Element change
 	set_default_output
 			-- Set the output to the default system value.
 		do
+			create str_output.make_empty (0)
 			cwel_doc_info_set_lpszoutput (item, default_pointer)
 		ensure
 			default_output_set: default_output_set

@@ -27,9 +27,10 @@ feature {NONE} -- Initialization
 	make
 			-- Make the main window.
 		do
+			create dc.make (create {WEL_FRAME_WINDOW}.make_top ("dummy"))
+			set_pen_width (1)
 			make_top ("My application")
 			create dc.make (Current)
-			set_pen_width (1)
 		end
 
 feature -- Access
@@ -44,7 +45,7 @@ feature -- Access
 	pen: WEL_PEN
 			-- Pen currently selected in `dc'
 
-	line_thickness_dialog: LINE_THICKNESS_DIALOG
+	line_thickness_dialog: ?LINE_THICKNESS_DIALOG
 			-- Dialog box to change line thickness
 
 feature -- Element change
@@ -88,13 +89,17 @@ feature {NONE} -- Implementation
 	on_right_button_down (keys, x_pos, y_pos: INTEGER)
 			-- Bring up `line_thickness_dialog' and set the
 			-- new pen width.
+		local
+			l_dialog: like line_thickness_dialog
 		do
-			if line_thickness_dialog = Void then
-				create line_thickness_dialog.make (Current)
+			l_dialog := line_thickness_dialog
+			if l_dialog = Void then
+				create l_dialog.make (Current)
+				line_thickness_dialog := l_dialog
 			end
-			line_thickness_dialog.activate
-			if line_thickness_dialog.ok_pushed then
-				set_pen_width (line_thickness_dialog.pen_width)
+			l_dialog.activate
+			if l_dialog.ok_pushed then
+				set_pen_width (l_dialog.pen_width)
 			end
 		end
 

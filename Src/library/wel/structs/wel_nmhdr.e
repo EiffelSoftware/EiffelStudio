@@ -25,7 +25,7 @@ create
 
 feature -- Access
 
-	window_from: WEL_WINDOW
+	window_from: ?WEL_WINDOW
 			-- Control sending message
 		local
 			l_hwnd, l_null: POINTER

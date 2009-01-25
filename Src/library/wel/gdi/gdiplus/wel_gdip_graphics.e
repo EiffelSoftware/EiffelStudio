@@ -29,6 +29,7 @@ feature {NONE} -- Initlization
 			-- Initlialize Current from `a_image'
 		require
 			not_void: a_image /= Void
+			a_image: a_image.exists
 		local
 			l_result: INTEGER
 		do
@@ -56,6 +57,7 @@ feature -- Command
 			-- Draw a line
 		require
 			not_void: a_pen /= Void
+			a_pen_exists: a_pen.exists
 		local
 			l_result: INTEGER
 		do
@@ -67,6 +69,7 @@ feature -- Command
 			-- Draw a rectangle with the specified `a_x'/`a_y' and `a_width'/`a_height'
 		require
 			not_void: a_pen /= Void
+			a_pen_exists: a_pen.exists
 		local
 			l_result: INTEGER
 		do
@@ -78,6 +81,7 @@ feature -- Command
 			-- Draw `a_image' at `a_dest_x' `a_dest_y'
 		require
 			not_void: a_image /= Void
+			a_image_exists: a_image.exists
 		local
 			l_dest_rect, l_src_rect: WEL_RECT
 		do
@@ -94,18 +98,24 @@ feature -- Command
 			-- Draw `a_image' at `a_dest_rect' from `a_src_dest'
 		require
 			not_void: a_image /= Void
+			a_image_exists: a_image.exists
 			not_void: a_dest_rect /= Void
+			a_dest_rect_exists: a_dest_rect.exists
 			not_void: a_src_rect /= Void
+			a_src_rect_exists: a_src_rect.exists
 		do
 			draw_image_with_src_rect_dest_rect_unit_attributes (a_image, a_dest_rect, a_src_rect, {WEL_GDIP_UNIT}.unitpixel, Void)
 		end
 
-	draw_image_with_src_rect_dest_rect_unit_attributes (a_image: WEL_GDIP_IMAGE; a_dest_rect, a_src_rect: WEL_RECT; a_unit: INTEGER; a_image_attributes: WEL_GDIP_IMAGE_ATTRIBUTES)
+	draw_image_with_src_rect_dest_rect_unit_attributes (a_image: WEL_GDIP_IMAGE; a_dest_rect, a_src_rect: WEL_RECT; a_unit: INTEGER; a_image_attributes: ?WEL_GDIP_IMAGE_ATTRIBUTES)
 			-- Draw `a_image' with arguments.
 		require
 			not_void: a_image /= Void
+			a_image_exists: a_image.exists
 			not_void: a_dest_rect /= Void
+			a_dest_rect_exists: a_dest_rect.exists
 			not_void: a_src_rect /= Void
+			a_src_rect_exists: a_src_rect.exists
 			valid: (create {WEL_GDIP_UNIT}).is_valid (a_unit)
 		local
 			l_result: INTEGER
@@ -125,6 +135,7 @@ feature -- Command
 			not_void: a_string /= Void
 			valid: a_length >= 0
 			not_void: a_font /= Void
+			a_font_exists: a_font.exists
 			valid: a_x >= 0 and a_y >= 0
 		local
 			l_rect_f: WEL_GDIP_RECT_F
@@ -149,7 +160,12 @@ feature -- Command
 			not_void: a_string /= Void
 			valid: a_length >= 0
 			not_void: a_font /= Void
+			a_font_exists: a_font.exists
 			not_void: a_rect_f /= Void
+			a_format_not_void: a_format /= Void
+			a_format_exists: a_format.exists
+			a_brush_not_void: a_brush /= Void
+			a_brush_exists: a_brush.exists
 		local
 			l_result: INTEGER
 			l_wel_string: WEL_STRING
@@ -168,15 +184,16 @@ feature -- Command
 			l_brush_item := a_brush.item
 
 			c_gdip_draw_string (gdi_plus_handle, item, l_string_item, a_length, l_font_item, l_rect_item, l_format_item, l_brush_item, $l_result)
-			
+
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
 	fill_rectangle (a_brush: WEL_GDIP_BRUSH; a_rect: WEL_GDIP_RECT)
 			-- Uses `a_brush' to fill the interior of a rectangle.
 		require
-			not_void: a_brush /= Void
-			not_void: a_rect /= Void
+			a_brush_not_void: a_brush /= Void
+			a_brush_exists: a_brush.exists
+			a_rect_not_void: a_rect /= Void
 		local
 			l_result: INTEGER
 	 	do
@@ -251,6 +268,9 @@ feature -- Command
 			-- Updates the clipping region of this Graphics object to a region that is the combination of itself and the region specified by
 			-- a graphics path. If a figure in the path is not closed, this method treats the nonclosed figure as if it were closed by a
 			-- straight line that connects the figure's starting and ending points.
+		require
+			a_path_not_void: a_path /= Void
+			a_path_exists: a_path.exists
 		local
 			l_result: INTEGER
 		do
@@ -279,11 +299,15 @@ feature -- Query
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 			create {WEL_MEMORY_DC} Result.make_by_pointer (l_pointer)
 		ensure
-			not_void: Result /= Void
+			dc_not_void: Result /= Void
+			dc_exists: Result.exists
 		end
 
 	release_dc (a_dc: WEL_DC)
 			-- Release `a_dc' which was created by previous calling of `dc'.
+		require
+			a_dc_not_void: a_dc /= Void
+			a_dc_exists: a_dc.exists
 		local
 			l_result: INTEGER
 		do
@@ -817,6 +841,13 @@ feature -- Obsolete
 			-- Draw `a_image' at `a_dest_rect' from `a_src_dest'
 		obsolete
 			"Use draw_image_with_dest_rect_src_rect instead"
+		require
+			not_void: a_image /= Void
+			a_image_exists: a_image.exists
+			not_void: a_dest_rect /= Void
+			a_dest_rect_exists: a_dest_rect.exists
+			not_void: a_src_rect /= Void
+			a_src_rect_exists: a_src_rect.exists
 		do
 			draw_image_with_dest_rect_src_rect (a_image, a_dest_rect, a_src_rect)
 		end

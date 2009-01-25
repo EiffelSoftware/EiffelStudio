@@ -21,9 +21,10 @@ feature -- Access
 	rect: WEL_RECT
 			-- Area to render to.
 			-- Units are in TWIPS.
+		require
+			exists: exists
 		do
-			create Result.make_by_pointer (
-				cwel_formatrange_get_rc (item))
+			create Result.make_by_pointer (cwel_formatrange_get_rc (item))
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -31,18 +32,20 @@ feature -- Access
 	rect_page: WEL_RECT
 			-- Entire area of rendering device.
 			-- Units are in TWIPS.
+		require
+			exists: exists
 		do
-			create Result.make_by_pointer (
-				cwel_formatrange_get_rcpage (item))
+			create Result.make_by_pointer (cwel_formatrange_get_rcpage (item))
 		ensure
 			result_not_void: Result /= Void
 		end
 
 	character_range: WEL_CHARACTER_RANGE
 			-- Range of text to format
+		require
+			exists: exists
 		do
-			create Result.make_by_pointer (
-				cwel_formatrange_get_chrg (item))
+			create Result.make_by_pointer (cwel_formatrange_get_chrg (item))
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -52,7 +55,9 @@ feature -- Element change
 	set_dc (a_dc: WEL_DC)
 			-- Set the device to render to.
 		require
+			exists: exists
 			a_dc_not_void: a_dc /= Void
+			a_dc_exists: a_dc.exists
 		do
 			cwel_formatrange_set_hdc (item, a_dc.item)
 		end
@@ -60,7 +65,9 @@ feature -- Element change
 	set_dc_target (a_dc: WEL_DC)
 			-- Set the target device to format for.
 		require
+			exists: exists
 			a_dc_not_void: a_dc /= Void
+			a_dc_exists: a_dc.exists
 		do
 			cwel_formatrange_set_hdctarget (item, a_dc.item)
 		end
@@ -69,7 +76,9 @@ feature -- Element change
 			-- Set `rect' with `a_rect'.
 			-- Units are in TWIPS.
 		require
+			exists: exists
 			a_rect_not_void: a_rect /= Void
+			a_rect_exists: a_rect.exists
 		do
 			cwel_formatrange_set_rc (item, a_rect.item)
 		end
@@ -78,7 +87,9 @@ feature -- Element change
 			-- Set `rect_page' with `a_rect'.
 			-- Units are in TWIPS.
 		require
+			exists: exists
 			a_rect_not_void: a_rect /= Void
+			a_rect_exists: a_rect.exists
 		do
 			cwel_formatrange_set_rcpage (item, a_rect.item)
 		end
@@ -86,7 +97,9 @@ feature -- Element change
 	set_character_range (a_character_range: WEL_CHARACTER_RANGE)
 			-- Set `character_range' with `a_character_range'.
 		require
+			exists: exists
 			a_character_range_not_void: a_character_range /= Void
+			a_character_range_exists: a_character_range.exists
 		do
 			cwel_formatrange_set_chrg (item, a_character_range.item)
 		end
@@ -94,6 +107,7 @@ feature -- Element change
 	set_range (min, max: INTEGER)
 			-- Set the range with `min' and `max'.
 		require
+			exists: exists
 			valid_min_max: max >= min
 		local
 			cr: WEL_CHARACTER_RANGE

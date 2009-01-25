@@ -24,11 +24,14 @@ feature {NONE} -- Initialize
 	make
 			-- Initialize current.
 		do
-			make_top (Void)
-			create notify_icon_data.make
+				-- Create message
 			notify_uid := notify_uid_counter.item + 1
 			notify_uid_counter.put (notify_uid)
 			create notify_message_name.make ("Notify_msg_" + notify_uid_counter.item.out)
+
+				-- Create window
+			create notify_icon_data.make
+			make_top (Void)
 			notify_message_id := {WEL_API}.register_window_message (notify_message_name.item)
 
 			notify_icon_data.set_window (Current)
@@ -52,18 +55,23 @@ feature -- Access
 
 	notify_icon_actions: ACTION_SEQUENCE [TUPLE [INTEGER]]
 			-- Actions being called when context menu is requested.
+		local
+			l_actions: like internal_notify_icon_actions
 		do
-			Result := internal_notify_icon_actions
-			if Result = Void then
-				create Result
-				internal_notify_icon_actions := Result
+			l_actions := internal_notify_icon_actions
+			if l_actions = Void then
+				create l_actions
+				internal_notify_icon_actions := l_actions
 			end
+			Result := l_actions
 		end
 
 feature -- Setting
 
-	set_icon (a_icon: WEL_ICON)
+	set_icon (a_icon: ?WEL_ICON)
 			-- Set `a_icon' to `notify_icon_data'.
+		require
+			a_icon_exists: a_icon /= Void implies a_icon.exists
 		do
 			if a_icon = Void then
 				notify_icon_data.set_uflags (notify_icon_data.uflags &
@@ -127,7 +135,7 @@ feature {NONE} -- Messaging
 			end
 		end
 
-	internal_notify_icon_actions: ACTION_SEQUENCE [TUPLE [INTEGER]]
+	internal_notify_icon_actions: ?ACTION_SEQUENCE [TUPLE [INTEGER]]
 			-- Actions being called when context menu is requested.
 
 	notify_uid_counter: CELL [INTEGER]
@@ -142,6 +150,7 @@ feature {NONE} -- Messaging
 			-- Sends a message to the taskbar's status area.
 		require
 			a_notify_icon_data_not_void: a_notify_icon_data /= Void
+			a_notify_icon_data_exists: a_notify_icon_data.exists
 		local
 			l_bool: INTEGER
 		do

@@ -33,24 +33,22 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	log_font: WEL_LOG_FONT
+	log_font: ?WEL_LOG_FONT
 			-- Selected log font
 
-	font: WEL_FONT
+	font: ?WEL_FONT
 			-- Selected font
 
-	color: WEL_COLOR_REF
+	color: ?WEL_COLOR_REF
 			-- Selected color
 
 	txt: STRING
 			-- Default shown text
 
-	printer_dc: WEL_PRINTER_DC
-			-- Printer dc used to print
-
 	on_menu_command (menu_id: INTEGER)
 			-- Create the appropriate dialog.
 		local
+			printer_dc: WEL_PRINTER_DC
 			rect: WEL_RECT
 		do
 			inspect
@@ -70,34 +68,28 @@ feature {NONE} -- Implementation
 					invalidate
 				end
 			when Cmd_choose_font then
-				if log_font /= Void then
-					-- To select the previous font (optional)
-					choose_font.set_log_font (log_font)
+				if {l_log_font: like log_font} log_font then
+						-- To select the previous font (optional)
+					choose_font.set_log_font (l_log_font)
 				end
 				choose_font.activate (Current)
 				if choose_font.selected then
-					-- A new font has been selected, let's
-					-- repaint the text with this new font.
+						-- A new font has been selected, let's
+						-- repaint the text with this new font.
 					log_font := choose_font.log_font
-					log_font.set_weight (choose_font.log_font.weight)
-					if choose_font.log_font.italic then
-						log_font.set_italic
-					else
-						log_font.set_not_italic
-					end
 					color := choose_font.color
-					create font.make_indirect (log_font)
+					create font.make_indirect (choose_font.log_font)
 					invalidate
 				end
 			when Cmd_choose_color then
-				if color /= Void then
-					-- To select the previous color (optional)
-					choose_color.set_rgb_result (color)
+				if {l_color: like color} color then
+						-- To select the previous color (optional)
+					choose_color.set_rgb_result (l_color)
 				end
 				choose_color.activate (Current)
 				if choose_color.selected then
-					-- A new color has been selected, let's
-					-- repaint the text with this new color.
+						-- A new color has been selected, let's
+						-- repaint the text with this new color.
 					color := choose_color.rgb_result
 					invalidate
 				end
@@ -111,8 +103,6 @@ feature {NONE} -- Implementation
 					draw (printer_dc, rect)
 					printer_dc.end_page
 					printer_dc.end_document
-				else
-					printer_dc := Void
 				end
 			end
 		end
@@ -128,11 +118,11 @@ feature {NONE} -- Implementation
 			-- Paint the text with the selected font and the
 			-- selected color.
 		do
-			if color /= Void then
-				dc.set_text_color (color)
+			if {l_color: like color} color then
+				dc.set_text_color (l_color)
 			end
-			if font /= Void then
-				dc.select_font (font)
+			if {l_font: like font} font then
+				dc.select_font (l_font)
 			end
 			dc.rectangle (0, 0, rect.width, rect.height)
 			dc.draw_centered_text (txt, rect)

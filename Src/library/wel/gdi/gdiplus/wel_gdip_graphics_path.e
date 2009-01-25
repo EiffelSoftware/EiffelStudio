@@ -48,7 +48,7 @@ feature {NONE} -- Initlization
 			-- Initializes Current with the specified PathPointType and
 			-- Point arrays and with the specified FillMode enumeration element.
 		require
-			not_void: a_points /= Void and a_types = Void
+			not_void: a_points /= Void and a_types /= Void
 			count_equal: a_points.count = a_types.count
 			type_valid: (create {WEL_GDIP_PATH_POINT_TYPE}).is_valid_array (a_types)
 		local

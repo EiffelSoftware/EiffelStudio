@@ -33,6 +33,7 @@ feature {NONE} -- Implementation
 		local
 			child: WEL_MDI_CHILD_WINDOW
 			s: STRING
+			l_window: like active_window
 		do
 			inspect
 				menu_id
@@ -43,7 +44,10 @@ feature {NONE} -- Implementation
 				create child.make (Current, s)
 			when Cmd_file_close then
 				if has_active_window then
-					active_window.destroy
+					l_window := active_window
+						-- Per postcondition of `has_active_window'.
+					check l_window_attached: l_window /= Void end
+					l_window.destroy
 				end
 			when Cmd_file_exit then
 				if closeable then

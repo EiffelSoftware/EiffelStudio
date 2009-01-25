@@ -6,6 +6,9 @@ class
 
 inherit
 	WEL_FRAME_WINDOW
+		redefine
+			on_show
+		end
 
 	WEL_STANDARD_PENS
 		export
@@ -43,10 +46,13 @@ feature {NONE} -- Initialization
 
 	make
 		do
+			create virtual_dcs.make (1, virtual_dcs_count)
+			create virtual_bitmaps.make (1, virtual_dcs_count)
+			create brushes.make (1, max_color)
+			create pens.make (1, max_color)
 			make_top ("3D Demo")
 			resize (400, 300)
 			show
-			run_demo
 		end
 
 feature -- Access
@@ -57,6 +63,8 @@ feature -- Access
 feature -- Basic operations
 
 	go
+		local
+			win_dc: WEL_CLIENT_DC
 		do
 			create win_dc.make (Current)
 			win_dc.get
@@ -69,15 +77,18 @@ feature -- Basic operations
 			win_dc.release
 		end
 
+	on_show
+		do
+			run_demo
+		end
+
 feature {NONE} -- Implementation
 
-	Max_color: INTEGER = 200
+	max_color: INTEGER = 200
 
-	Virtual_dcs_count: INTEGER = 20
+	virtual_dcs_count: INTEGER = 20
 
-	palette: WEL_PALETTE
-
-	win_dc: WEL_CLIENT_DC
+	palette: ?WEL_PALETTE
 
 	virtual_dcs: ARRAY [WEL_MEMORY_DC]
 
@@ -101,6 +112,8 @@ feature {NONE} -- Implementation
 			number_bitmap: INTEGER
 			virtual_dc: WEL_MEMORY_DC
 			message: STRING
+			win_dc: WEL_CLIENT_DC
+			l_palette: like palette
 		do
 			create win_dc.make (Current)
 			win_dc.get
@@ -116,8 +129,11 @@ feature {NONE} -- Implementation
 			rap := max_y / max_x
 			nx := 50
 			ny := 50
-			initialize_demo
-			win_dc.select_palette (palette)
+			initialize_demo (win_dc)
+			l_palette := palette
+				-- Per postcondition of `initialize_demo'.
+			check l_palette_attached: l_palette /= Void end
+			win_dc.select_palette (l_palette)
 			win_dc.realize_palette
 			win_dc.select_brush (White_brush)
 			win_dc.rectangle (0, 0, max_x, max_y)
@@ -133,7 +149,7 @@ feature {NONE} -- Implementation
 			loop
 				phase := ((dec - 1) * 6.28 / virtual_dcs_count)
 				virtual_dc := (virtual_dcs @ dec)
-				virtual_dc.select_palette (palette)
+				virtual_dc.select_palette (l_palette)
 				virtual_dc.realize_palette
 				message := "Now computing bitmap #"
 				message.append (dec.out)
@@ -147,7 +163,7 @@ feature {NONE} -- Implementation
 			ready := True
 		end
 
-	initialize_demo 
+	initialize_demo (a_dc: WEL_DC)
 		local
 			log_pal: WEL_LOG_PALETTE
 			pal_entry: WEL_PALETTE_ENTRY
@@ -158,6 +174,7 @@ feature {NONE} -- Implementation
 			colors: ARRAY [WEL_COLOR_REF]
 			virtual_dc: WEL_MEMORY_DC
 			virtual_bitmap: WEL_BITMAP
+			l_palette: like palette
 		do
 			create log_pal.make (768, max_color)
 			from
@@ -172,16 +189,15 @@ feature {NONE} -- Implementation
 				log_pal.set_pal_entry (ind, pal_entry)
 				ind := ind + 1
 			end
-			create palette.make (log_pal)
+			create l_palette.make (log_pal)
+			palette := l_palette
 			create colors.make (1, max_color)
-			create brushes.make (1, max_color)
-			create pens.make (1, max_color)
 			from
 				ind := 1
 			until
 				ind > max_color
 			loop
-				color := palette.palette_index (ind - 1)
+				color := l_palette.palette_index (ind - 1)
 				colors.force (color,ind)
 				create brush.make_solid (color)
 				brushes.force (brush, ind)
@@ -189,15 +205,13 @@ feature {NONE} -- Implementation
 				pens.force (pen, ind)
 				ind := ind + 1
 			end
-			create virtual_dcs.make (1, virtual_dcs_count)
-			create virtual_bitmaps.make (1, virtual_dcs_count)
 			from
 				dec := 1
 			until
 				dec > virtual_dcs_count
 			loop
-				create virtual_dc.make_by_dc (win_dc)
-				create virtual_bitmap.make_compatible (win_dc,
+				create virtual_dc.make_by_dc (a_dc)
+				create virtual_bitmap.make_compatible (a_dc,
 					width, height)
 				virtual_dc.select_bitmap (virtual_bitmap)
 				virtual_dc.select_brush (white_brush)
@@ -205,7 +219,9 @@ feature {NONE} -- Implementation
 				virtual_dcs.force (virtual_dc, dec)
 				virtual_bitmaps.force (virtual_bitmap, dec)
 				dec := dec + 1
-			end			
+			end
+		ensure
+			palette_attached: palette /= Void
 		end
 
 	surface (nx, ny: INTEGER; x_min, x_max, y_min, y_max,
@@ -227,7 +243,7 @@ feature {NONE} -- Implementation
 			from
 				ind := 1
 			until
-				ind > nx 
+				ind > nx
 			loop
 				create projected_point
 				coord.force (projected_point, ind)

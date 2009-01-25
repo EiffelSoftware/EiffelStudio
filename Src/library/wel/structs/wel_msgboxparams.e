@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- initialization
 
-	make_basic (a_window: WEL_WINDOW; a_text, a_title: STRING_GENERAL; a_style,a_language,a_sublanguage: INTEGER)
+	make_basic (a_window: ?WEL_WINDOW; a_text, a_title: STRING_GENERAL; a_style,a_language,a_sublanguage: INTEGER)
 			-- create a MSGBOXPARAMS structure
 			-- without user icon.
 			-- With `a_window' as parent, `a_text' displayed as message, `a_title' displayed in title bar.
@@ -49,7 +49,7 @@ feature {NONE} -- initialization
 				a_wel_string2.item, a_style, default_pointer, cwin_make_lang_id (a_language, a_sublanguage))
 		end
 
-	make_by_id (a_window: WEL_WINDOW; a_text, a_title: STRING_GENERAL; a_style, an_id, a_language, a_sublanguage: INTEGER)
+	make_by_id (a_window: ?WEL_WINDOW; a_text, a_title: STRING_GENERAL; a_style, an_id, a_language, a_sublanguage: INTEGER)
 			-- create a MSGBOXPARAMS structure
 			-- with user icon defined by `an_id, `a_window' as parent, `a_text' displayed as message,
 			--`a_title' displayed in title bar and `a_style' as the window style.
@@ -75,7 +75,7 @@ feature {NONE} -- initialization
 				handle := default_pointer
 			end
 			structure_make
-			cwel_msgboxparams_set (item, a_window.item, a_main_arguments.resource_instance.item, a_wel_string1.item,
+			cwel_msgboxparams_set (item, handle, a_main_arguments.resource_instance.item, a_wel_string1.item,
 				a_wel_string2.item, a_style, cwin_make_int_resource (an_id), cwin_make_lang_id (a_language, a_sublanguage))
 		end
 

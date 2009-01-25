@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			create dialog_children.make
 		ensure
 			no_parent: parent = Void
-			resource_name_set: resource_name.is_equal (a_name)
+			resource_name_set: {l_name: like resource_name} resource_name and then l_name.same_string (a_name)
 			dialog_children_not_void: dialog_children /= Void
 		end
 
@@ -58,8 +58,7 @@ feature -- Basic operations
 	activate
 			-- Activate the dialog.
 		do
-			internal_dialog_make (parent, resource_id,
-				resource_name)
+			internal_dialog_make (parent, resource_id, resource_name)
 		end
 
 note

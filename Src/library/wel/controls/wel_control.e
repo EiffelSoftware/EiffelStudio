@@ -102,11 +102,13 @@ feature -- Basic operations
 			valid_parent: a_parent /= Void and then a_parent.exists
 		local
 			hwnd: POINTER
-			window: WEL_WINDOW
+			window: ?WEL_WINDOW
 		do
 			hwnd := cwin_get_next_dlgtabitem (a_parent.item, item, after)
 			window := window_of_item (hwnd)
-			window.set_focus
+			if window /= Void then
+				window.set_focus
+			end
 		end
 
 	go_to_next_group_item (a_parent: WEL_COMPOSITE_WINDOW; after: BOOLEAN)
@@ -117,11 +119,13 @@ feature -- Basic operations
 			valid_parent: a_parent /= Void and then a_parent.exists
 		local
 			hwnd: POINTER
-			window: WEL_WINDOW
+			window: ?WEL_WINDOW
 		do
 			hwnd := cwin_get_next_dlggroupitem (a_parent.item, item, after)
 			window := window_of_item (hwnd)
-			window.set_focus
+			if window /= Void then
+				window.set_focus
+			end
 		end
 
 feature {WEL_COMPOSITE_WINDOW}
@@ -134,10 +138,12 @@ feature {WEL_COMPOSITE_WINDOW}
 			default_process_notification (notification_code)
 		end
 
-	process_notification_info (notification_info:WEL_NMHDR)
+	process_notification_info (notification_info: WEL_NMHDR)
 			-- Process a `notification_info' sent by Windows
 		require
 			exists: exists
+			notification_info_not_void: notification_info /= Void
+			notification_info_exists: notification_info.exists
 		do
 		end
 

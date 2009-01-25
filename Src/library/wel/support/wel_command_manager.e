@@ -59,6 +59,8 @@ feature -- Status report
 			positive_message: message >= 0
 		do
 			Result := has (message)
+		ensure
+			present: Result implies item (message) /= Void
 		end
 
 feature {NONE} -- Implementation

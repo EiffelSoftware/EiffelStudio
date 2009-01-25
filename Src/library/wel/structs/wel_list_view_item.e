@@ -43,8 +43,9 @@ feature {NONE} -- Initialization
 			set_mask (Lvif_text)
 		end
 
-	make_with_attributes (a_mask, a_iitem, a_isubitem, an_iimage: INTEGER;
-				a_text: STRING_GENERAL)
+	make_with_attributes (a_mask, a_iitem, a_isubitem, an_iimage: INTEGER; a_text: STRING_GENERAL)
+		require
+			a_text_not_void: a_text /= Void
 		do
 			structure_make
 			set_mask (a_mask)
@@ -62,12 +63,16 @@ feature -- Access
 			-- to be filled in. This member can be a combination
 			-- of the Tvif_* values.
 			-- See class WEL_TVIF_CONSTANTS.
+		require
+			exists: exists
 		do
 			Result := cwel_lv_item_get_mask (item)
 		end
 
 	iitem: INTEGER
 			-- Index of the row of the item.
+		require
+			exists: exists
 		do
 			Result := cwel_lv_item_get_iitem (item)
 		end
@@ -75,21 +80,28 @@ feature -- Access
 	isubitem: INTEGER
 			-- Index of the item in his row. 0 if it is an item and not a
 			-- subitem.
+		require
+			exists: exists
 		do
 			Result := cwel_lv_item_get_isubitem (item)
 		end
 
 	state: INTEGER
 			-- Current state of the item.
+		require
+			exists: exists
 		do
 			Result := cwel_lv_item_get_state (item)
 		end
 
 	text: STRING_32
 			-- Text of the item
+		local
+			l_text: like str_text
 		do
-			if str_text /= Void then
-				Result := str_text.string
+			l_text := str_text
+			if l_text /= Void then
+				Result := l_text.string
 			else
 				create Result.make_empty
 			end
@@ -99,12 +111,16 @@ feature -- Access
 
 	iimage: INTEGER
 			-- Index of the icon.
+		require
+			exists: exists
 		do
 			Result := cwel_lv_item_get_iimage (item)
 		end
 
 	lparam: INTEGER
 			-- User parameter.
+		require
+			exists: exists
 		do
 			Result := cwel_lv_item_get_lparam (item)
 		end
@@ -113,6 +129,8 @@ feature -- Element change
 
 	set_mask (value: INTEGER)
 			-- Set `mask' with `value'.
+		require
+			exists: exists
 		do
 			cwel_lv_item_set_mask (item, value)
 		ensure
@@ -121,12 +139,16 @@ feature -- Element change
 
 	add_mask (a_mask_value: INTEGER)
 			-- add `a_mask_value' to the current mask.
+		require
+			exists: exists
 		do
 			cwel_lv_item_add_mask (item, mask, a_mask_value)
 		end
 
 	set_iitem (value: INTEGER)
 			-- Set `iitem' with `value'.
+		require
+			exists: exists
 		do
 			cwel_lv_item_set_iitem (item, value)
 		ensure
@@ -135,6 +157,8 @@ feature -- Element change
 
 	set_isubitem (value: INTEGER)
 			-- Set `isubitem' with `value'.
+		require
+			exists: exists
 		do
 			cwel_lv_item_set_isubitem (item, value)
 		ensure
@@ -143,6 +167,8 @@ feature -- Element change
 
 	set_lparam (value: INTEGER)
 			-- Set `lparam' with `value'.
+		require
+			exists: exists
 		do
 			cwel_lv_item_set_lparam (item, value)
 		ensure
@@ -151,6 +177,8 @@ feature -- Element change
 
 	set_state (value: INTEGER)
 			-- Set `state' with `value'.
+		require
+			exists: exists
 		do
 			cwel_lv_item_set_state (item, value)
 		ensure
@@ -160,10 +188,14 @@ feature -- Element change
 	set_text (a_text: STRING_GENERAL)
 			-- Set `text' with `a_text'.
 		require
+			exists: exists
 			a_text_not_void: a_text /= Void
+		local
+			l_text: like str_text
 		do
-			create str_text.make (a_text)
-			cwel_lv_item_set_psztext (item, str_text.item)
+			create l_text.make (a_text)
+			str_text := l_text
+			cwel_lv_item_set_psztext (item, l_text.item)
 			cwel_lv_item_set_cchtextmax (item, a_text.count)
 		ensure
 			text_set: text.is_equal (a_text)
@@ -174,7 +206,9 @@ feature -- Element change
 			-- Faster than calling `set_text' as string conversion
 			-- is not required internally.
 		require
+			exists: exists
 			a_text_not_void: a_text /= Void
+			a_text_exists: a_text.exists
 		do
 			str_text := a_text
 			cwel_lv_item_set_psztext (item, a_text.item)
@@ -185,6 +219,8 @@ feature -- Element change
 			-- Set the image for the list item to `image_normal'.
 			-- `image_normal' is the index of an image in the
 			-- image list associated with the listview.
+		require
+			exists: exists
 		do
 			cwel_lv_item_set_iimage (item, image_normal)
 			add_mask(Lvif_image)
@@ -200,19 +236,23 @@ feature -- Measurement
 
 feature {NONE} -- Implementation
 
-	str_text: WEL_STRING
+	str_text: ?WEL_STRING
 			-- C string to save the text
 
 feature {WEL_LIST_VIEW} -- Implementation
 
 	set_cchtextmax (value: INTEGER)
 			-- Set the maximum size of the text getting by get item)
+		require
+			exists: exists
 		do
 			cwel_lv_item_set_cchtextmax (item, value)
 		end
 
 	set_statemask (value: INTEGER)
 			-- Set the statemask with `value'.
+		require
+			exists: exists
 		do
 			cwel_lv_item_set_statemask  (item, value)
 		end

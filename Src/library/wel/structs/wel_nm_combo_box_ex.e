@@ -23,6 +23,7 @@ feature -- Initialization
 			-- Make the structure with `a_nmhdr'.
 		require
 			a_nmhdr_not_void: a_nmhdr /= Void
+			a_nmhdr_exists: a_nmhdr.exists
 		do
 			make_by_pointer (a_nmhdr.item)
 		end
@@ -31,6 +32,8 @@ feature -- Access
 
 	hdr: WEL_NMHDR
 			-- Information about the Wm_notify message.
+		require
+			exists: exists
 		do
 			create Result.make_by_pointer (cwel_nm_comboboxex_get_hdr (item))
 		ensure
@@ -40,13 +43,12 @@ feature -- Access
 	comboboxex_item: WEL_COMBO_BOX_EX_ITEM
 			-- Information about the notification-specific action flag.
 			-- See class WEL_TVAF_CONSTANTS for the meaning of this parameter.
-		local
-			combo: WEL_COMBO_BOX_EX
+		require
+			exists: exists
 		do
 			create Result.make_by_pointer (cwel_nm_comboboxex_get_ceitem (item))
-			combo ?= hdr.window_from
-			if combo /= Void then
-				Result := combo.get_item_info (Result.index)
+			if {l_combo: WEL_COMBO_BOX_EX} hdr.window_from then
+				Result := l_combo.get_item_info (Result.index)
 			end
 		end
 

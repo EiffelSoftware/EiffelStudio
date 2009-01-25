@@ -92,10 +92,13 @@ feature -- Access
 			-- Item text
 		require
 			exists: exists
+		local
+			l_text: like str_text
 		do
 			set_mask (set_flag (mask, Rbbim_text))
-			if str_text /= Void then
-				Result := str_text.string
+			l_text := str_text
+			if l_text /= Void then
+				Result := l_text.string
 			else
 				create Result.make_empty
 			end
@@ -121,7 +124,7 @@ feature -- Access
 			Result := cwel_rebarbandinfo_get_wid (item)
 		end
 
-	child: WEL_WINDOW
+	child: ?WEL_WINDOW
 			-- Child currently in the rebar.
 		require
 			exists: exists
@@ -197,11 +200,15 @@ feature -- Element change
 		require
 			exists: exists
 			a_text_not_void: txt /= Void
+		local
+			l_text: like str_text
 		do
 			set_mask (set_flag (mask, Rbbim_text))
-			create str_text.make (txt)
+			create l_text.make (txt)
+				-- For GC reference
+			str_text := l_text
 			cwel_rebarbandinfo_set_cch (item, txt.count)
-			cwel_rebarbandinfo_set_lptext (item, str_text.item)
+			cwel_rebarbandinfo_set_lptext (item, l_text.item)
 		ensure
 			text_set: text.is_equal (txt)
 		end
@@ -237,12 +244,13 @@ feature -- Element change
 		require
 			exists: exists
 			window_not_void: window /= Void
+			window_exists: window.exists
 			window_is_inside: window.is_inside
 		do
 			set_mask (set_flag (mask, Rbbim_child))
 			cwel_rebarbandinfo_set_hwndchild (item, window.item)
 		ensure
-			window_set: child.is_equal (window)
+			window_set: child ~ window
 		end
 
 	set_unpositionable_child (window: WEL_WINDOW)
@@ -254,17 +262,20 @@ feature -- Element change
 		require
 			exists: exists
 			window_not_void: window /= Void
+			window_exists: window.exists
 			window_is_inside: window.is_inside
 		local
 			container: WEL_UNPOSITIONABLE_CONTROL_CONTAINER
-			composite: WEL_COMPOSITE_WINDOW
 		do
 			set_mask (set_flag (mask, Rbbim_child))
-			composite ?= window.parent
-			create container.make (composite, window)
-			cwel_rebarbandinfo_set_hwndchild (item, container.item)
+			if {l_composite: WEL_COMPOSITE_WINDOW} window.parent then
+				create container.make (l_composite, window)
+				cwel_rebarbandinfo_set_hwndchild (item, container.item)
+			else
+				check not_possible: False end
+			end
 		ensure
-			window_set: child.is_equal (window.parent)
+			window_set: child ~ window.parent
 		end
 
 	set_child_minimum_width (value: INTEGER)
@@ -320,6 +331,7 @@ feature -- Element change
 		require
 			exists: exists
 			bitmap_not_void: bmp /= Void
+			bitmap_exists: bmp.exists
 		do
 			set_mask (set_flag (mask, Rbbim_background))
 			cwel_rebarbandinfo_set_hbmback (item, bmp.item)
@@ -349,12 +361,16 @@ feature {WEL_REBAR} -- Implementation
 
 	set_cch (value: INTEGER)
 			-- Set the maximum size of the text getting by get item)
+		require
+			exists: exists
 		do
 			cwel_rebarbandinfo_set_cch (item, value)
 		end
 
 	set_cbsize (value: INTEGER)
 			-- Set `cbSize' (size of the structure) as `value'.
+		require
+			exists: exists
 		do
 			cwel_rebarbandinfo_set_cbsize (item, value)
 		end
@@ -362,6 +378,8 @@ feature {WEL_REBAR} -- Implementation
 	set_mask (a_mask: INTEGER)
 			-- Set `mask' with `a_mask'.
 			-- Internal use
+		require
+			exists: exists
 		do
 			cwel_rebarbandinfo_set_fmask (item, a_mask)
 		ensure
@@ -370,7 +388,7 @@ feature {WEL_REBAR} -- Implementation
 
 feature {NONE} -- Implementation
 
-	str_text: WEL_STRING
+	str_text: ?WEL_STRING
 			-- C string to save the text
 
 feature {NONE} -- Externals

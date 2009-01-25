@@ -30,7 +30,7 @@ feature -- Access
 			Result := cwin_get_wm_command_id (w_param, l_param)
 		end
 
-	control: WEL_CONTROL
+	control: ?WEL_CONTROL
 			-- Control sending the message if the message is from a
 			-- control.
 		require

@@ -6,7 +6,7 @@ note
 			item is removed from a list box or combo box 
 			or when a list box or combo box is destroyed, 
 			the system sends the Wm_deleteitem message to 
-			the owner for each deleted item. 
+			the owner for each deleted item.
 			]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,16 +23,16 @@ inherit
 		undefine
 			copy, is_equal
 		end
-	
+
 create
 	make_by_pointer
 
 feature -- Access
 
 	ctl_type: INTEGER
-			-- Specifies one of the following values to 
-			-- indicate whether the item was deleted from 
-			-- a list box or a combo box. 
+			-- Specifies one of the following values to
+			-- indicate whether the item was deleted from
+			-- a list box or a combo box.
 			-- See class WEL_ODT_CONSTANTS.
 			-- Specifies ODT_LISTBOX or ODT_COMBOBOX.
 		do
@@ -40,34 +40,34 @@ feature -- Access
 		end
 
 	ctl_id: INTEGER
-			-- Specifies the identifier of the list box or combo box. 
+			-- Specifies the identifier of the list box or combo box.
 		do
 			Result := cwel_deleteitemstruct_get_ctlid (item)
 		end
 
-	window_item: WEL_CONTROL
+	window_item: ?WEL_CONTROL
 			-- Identifies the control.
 		do
 			Result ?= window_of_item (cwel_deleteitemstruct_get_hwnditem (item))
 		end
-		
+
 	item_id: INTEGER
-			-- Specifies index of the item in the list box or 
-			-- combo box being removed.  
+			-- Specifies index of the item in the list box or
+			-- combo box being removed.
 		do
 			Result := cwel_deleteitemstruct_get_itemid (item)
 		end
 
 	item_data: POINTER
-			-- Specifies application-defined data for the item. 
-			-- This value is passed to the control in the 
-			-- `lparam' parameter of the message that adds 
-			-- the item to the list box or combo box.  
+			-- Specifies application-defined data for the item.
+			-- This value is passed to the control in the
+			-- `lparam' parameter of the message that adds
+			-- the item to the list box or combo box.
 		do
 			Result := cwel_deleteitemstruct_get_itemdata (item)
 		end
-		
-		
+
+
 feature -- Measurement
 
 	structure_size: INTEGER

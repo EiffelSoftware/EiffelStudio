@@ -51,9 +51,9 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_output: WEL_STATIC
+	item_output: ?WEL_STATIC
 
-	mess_output: WEL_SINGLE_SELECTION_LIST_BOX
+	mess_output: ?WEL_SINGLE_SELECTION_LIST_BOX
 
 feature -- Element change
 
@@ -72,9 +72,9 @@ feature -- Element change
 	add_mess_output (str: STRING)
 			-- Add a message to the output.
 		do
-			if mess_output /= Void then
-				mess_output.add_string (str)
-				mess_output.set_top_index (mess_output.count - 1)
+			if {l_mess_output: like mess_output} mess_output then
+				l_mess_output.add_string (str)
+				l_mess_output.set_top_index (l_mess_output.count - 1)
 			end
 		end
 

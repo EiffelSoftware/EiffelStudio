@@ -29,15 +29,16 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	window: WEL_WINDOW
+	window: ?WEL_WINDOW
 			-- Associated window processing messages for Current.
 
-	icon: WEL_ICON
+	icon: ?WEL_ICON
 			-- Associated icon displayed in taskbar.
 
 	tooltip_text: STRING_32
 			-- Associated tooltip if any.
 		require
+			exists: exists
 			valid_flags: (uflags & {WEL_NIF_CONSTANTS}.nif_icon) = {WEL_NIF_CONSTANTS}.nif_icon
 		local
 			l_str: WEL_STRING
@@ -58,19 +59,25 @@ feature -- Access
 			-- NIF_INFO: Use a balloon ToolTip instead of a standard ToolTip.
 			--           The szInfo, uTimeout, szInfoTitle, and dwInfoFlags members are valid.
 			-- NIF_GUID: Reserved.
+		require
+			exists: exists
 		do
 			Result := c_uflags (item)
 		end
 
 	callback_message: INTEGER
+		require
+			exists: exists
 		do
 			Result := c_ucallback_message (item)
 		end
 
 feature -- Settings
 
-	set_window (a_window: WEL_WINDOW)
+	set_window (a_window: ?WEL_WINDOW)
 			-- Set `window' with `a_window'.
+		require
+			exists: exists
 		do
 			window := a_window
 			if a_window = Void then
@@ -82,8 +89,11 @@ feature -- Settings
 			window_set: window = a_window
 		end
 
-	set_icon (a_icon: WEL_ICON)
+	set_icon (a_icon: ?WEL_ICON)
 			-- Set `icon' with `a_icon'.
+		require
+			exists: exists
+			a_icon_exists: a_icon /= Void implies a_icon.exists
 		do
 			icon := a_icon
 			if a_icon = Void then
@@ -95,9 +105,10 @@ feature -- Settings
 			icon_set: icon = a_icon
 		end
 
-	set_tooltip_text (a_str: STRING_GENERAL)
+	set_tooltip_text (a_str: ?STRING_GENERAL)
 			-- Set `a_str' as `tooltip_text'.
 		require
+			exists: exists
 			valid_size: a_str /= Void implies a_str.count < tooltip_text_size
 		local
 			l_str: WEL_STRING
@@ -114,6 +125,8 @@ feature -- Settings
 
 	set_uflags (a_uflags: INTEGER)
 			-- Set `uflags' with `a_uflags'.
+		require
+			exists: exists
 		do
 			c_set_uflags (item, a_uflags)
 		ensure
@@ -122,6 +135,8 @@ feature -- Settings
 
 	set_callback_message (a_id: INTEGER)
 			-- Set `callback_message' with `a_id'.
+		require
+			exists: exists
 		do
 			c_set_ucallback_message (item, a_id)
 		ensure
@@ -140,6 +155,8 @@ feature -- Sizing
 
 	tooltip_text_size: INTEGER
 			-- Size of tooltip text.
+		require
+			exists: exists
 		do
 			Result := c_sztip_size (item)
 		ensure

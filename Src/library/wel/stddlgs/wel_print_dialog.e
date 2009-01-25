@@ -46,6 +46,8 @@ feature -- Access
 
 	from_page: INTEGER
 			-- Value for the starting page edit control
+		require
+			exists: exists
 		do
 			Result := cwel_print_dlg_get_nfrompage (item)
 		ensure
@@ -54,6 +56,8 @@ feature -- Access
 
 	to_page: INTEGER
 			-- Value for the ending page edit control
+		require
+			exists: exists
 		do
 			Result := cwel_print_dlg_get_ntopage (item)
 		ensure
@@ -63,6 +67,8 @@ feature -- Access
 	minimum_page: INTEGER
 			-- Minimum value for the range of pages specified
 			-- in the From and To page edit controls
+		require
+			exists: exists
 		do
 			Result := cwel_print_dlg_get_nminpage (item)
 		end
@@ -70,20 +76,26 @@ feature -- Access
 	maximum_page: INTEGER
 			-- Maximum value for the range of pages specified
 			-- in the From and To page edit controls
+		require
+			exists: exists
 		do
 			Result := cwel_print_dlg_get_nmaxpage (item)
 		end
 
 	copies: INTEGER
 			-- Number of copies for the Copies edit control
+		require
+			exists: exists
 		do
 			Result := cwel_print_dlg_get_ncopies (item)
 		end
 
 	flags: INTEGER
 			-- Dialog box creation flags.
-			-- Can be a combination of the values defined in 
+			-- Can be a combination of the values defined in
 			-- class WEL_PD_CONSTANTS.
+		require
+			exists: exists
 		do
 			Result := cwel_print_dlg_get_flags (item)
 		end
@@ -92,8 +104,13 @@ feature -- Access
 			-- Device context associated to the selected printer
 		require
 			selected: selected
+		local
+			l_dc: ?WEL_PRINTER_DC
 		do
-			Result := private_dc
+			l_dc := private_dc
+				-- Pre precondition
+			check l_dc_attached: l_dc /= Void end
+			Result := l_dc
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -103,6 +120,8 @@ feature -- Element change
 	set_flags (a_flags: INTEGER)
 			-- Set `flags' with `a_flags'.
 			-- See class WEL_PD_CONSTANTS for `a_flags' values.
+		require
+			exists: exists
 		do
 			cwel_print_dlg_set_flags (item, a_flags)
 		ensure
@@ -112,6 +131,8 @@ feature -- Element change
 	add_flag (a_flags: INTEGER)
 			-- Add `a_flags' to `flags'.
 			-- See class WEL_PD_CONSTANTS for `a_flags' values.
+		require
+			exists: exists
 		do
 			set_flags (set_flag (flags, a_flags))
 		ensure
@@ -121,6 +142,8 @@ feature -- Element change
 	remove_flag (a_flags: INTEGER)
 			-- Remove `a_flags' from `flags'.
 			-- See class WEL_PD_CONSTANTS for `a_flags' values.
+		require
+			exists: exists
 		do
 			set_flags (clear_flag (flags, a_flags))
 		ensure
@@ -129,6 +152,8 @@ feature -- Element change
 
 	set_from_page (page: INTEGER)
 			-- Set `from_page' with `page'.
+		require
+			exists: exists
 		do
 			add_flag (Pd_pagenums)
 			cwel_print_dlg_set_nfrompage (item, page)
@@ -138,6 +163,8 @@ feature -- Element change
 
 	set_to_page (page: INTEGER)
 			-- Set `to_page' with `page'.
+		require
+			exists: exists
 		do
 			add_flag (Pd_pagenums)
 			cwel_print_dlg_set_ntopage (item, page)
@@ -147,6 +174,8 @@ feature -- Element change
 
 	set_minimum_page (page: INTEGER)
 			-- Set `minimum_page' with `page'.
+		require
+			exists: exists
 		do
 			add_flag (Pd_pagenums)
 			cwel_print_dlg_set_nminpage (item, page)
@@ -156,6 +185,8 @@ feature -- Element change
 
 	set_maximum_page (page: INTEGER)
 			-- Set `maximum_page' with `page'.
+		require
+			exists: exists
 		do
 			add_flag (Pd_pagenums)
 			cwel_print_dlg_set_nmaxpage (item, page)
@@ -165,6 +196,8 @@ feature -- Element change
 
 	set_copies (number: INTEGER)
 			-- Set `copies' with `number'.
+		require
+			exists: exists
 		do
 			cwel_print_dlg_set_ncopies (item, number)
 		ensure
@@ -177,12 +210,16 @@ feature -- Status report
 			-- Is `a_flags' set in `flags'?
 			-- See class WEL_PD_CONSTANTS for `a_flags'
 			-- values.
+		require
+			exists: exists
 		do
 			Result := flag_set (flags, a_flags)
 		end
 
 	all_pages_selected: BOOLEAN
 			-- Is the "All pages" radio button selected?
+		require
+			exists: exists
 		do
 			Result := not has_flag (Pd_pagenums) and then
 				not has_flag (Pd_selection)
@@ -190,48 +227,64 @@ feature -- Status report
 
 	page_numbers_selected: BOOLEAN
 			-- Is the "Page" radio button selected?
+		require
+			exists: exists
 		do
 			Result := has_flag (Pd_pagenums)
 		end
 
 	selection_selected: BOOLEAN
 			-- Is the "Selection" radio box selected?
+		require
+			exists: exists
 		do
 			Result := has_flag (Pd_selection)
 		end
 
 	page_numbers_enabled: BOOLEAN
 			-- Is the "Page numbers" radio button enabled?
+		require
+			exists: exists
 		do
 			Result := not has_flag (Pd_nopagenums)
 		end
 
 	selection_enabled: BOOLEAN
 			-- Is the "Selection" radio button enabled?
+		require
+			exists: exists
 		do
 			Result := not has_flag (Pd_noselection)
 		end
 
 	collate_checked: BOOLEAN
 			-- Is the "Collate" check box checked?
+		require
+			exists: exists
 		do
 			Result := has_flag (Pd_collate)
 		end
 
 	print_to_file_enabled: BOOLEAN
 			-- Is the "Print to file" check box enabled?
+		require
+			exists: exists
 		do
 			Result := not has_flag (Pd_disableprinttofile)
 		end
 
 	print_to_file_shown: BOOLEAN
 			-- Is the "Print to file" check box shown?
+		require
+			exists: exists
 		do
 			Result := not has_flag (Pd_hideprinttofile)
 		end
 
 	print_to_file_checked: BOOLEAN
 			-- Is the "Print to file" check box checked?
+		require
+			exists: exists
 		do
 			Result := has_flag (Pd_printtofile)
 		end
@@ -239,12 +292,16 @@ feature -- Status report
 	warning_enabled: BOOLEAN
 			-- Is the warning message from being displayed when
 			-- there is no default printer enabled?
+		require
+			exists: exists
 		do
 			Result := not has_flag (Pd_nowarning)
 		end
 
 	print_setup_enabled: BOOLEAN
 			-- Is the Print setup dialog box enabled?
+		require
+			exists: exists
 		do
 			Result := has_flag (Pd_printsetup)
 		end
@@ -253,6 +310,8 @@ feature -- Status setting
 
 	select_all_pages
 			-- Select the "All pages" radio button.
+		require
+			exists: exists
 		do
 			remove_flag (Pd_pagenums + Pd_selection)
 		ensure
@@ -261,6 +320,8 @@ feature -- Status setting
 
 	select_page_numbers
 			-- Select the "Page numbers" radio button.
+		require
+			exists: exists
 		do
 			add_flag (Pd_pagenums)
 		ensure
@@ -269,6 +330,8 @@ feature -- Status setting
 
 	select_selection
 			-- Select the "Selection" radio button.
+		require
+			exists: exists
 		do
 			add_flag (Pd_selection)
 		ensure
@@ -277,6 +340,8 @@ feature -- Status setting
 
 	enable_page_numbers
 			-- Enable the "Page numbers" radio button.
+		require
+			exists: exists
 		do
 			remove_flag (Pd_nopagenums)
 		ensure
@@ -285,6 +350,8 @@ feature -- Status setting
 
 	disable_page_numbers
 			-- Disable the "Page numbers" radio button.
+		require
+			exists: exists
 		do
 			add_flag (Pd_nopagenums)
 		ensure
@@ -293,6 +360,8 @@ feature -- Status setting
 
 	enable_selection
 			-- Enable the "Selection" radio button.
+		require
+			exists: exists
 		do
 			remove_flag (Pd_noselection)
 		ensure
@@ -301,6 +370,8 @@ feature -- Status setting
 
 	disable_selection
 			-- Disable the "Selection" radio button.
+		require
+			exists: exists
 		do
 			add_flag (Pd_noselection)
 		ensure
@@ -309,6 +380,8 @@ feature -- Status setting
 
 	check_collate
 			-- Check the "Collate" check box.
+		require
+			exists: exists
 		do
 			add_flag (Pd_collate)
 		ensure
@@ -317,6 +390,8 @@ feature -- Status setting
 
 	uncheck_collate
 			-- Uncheck the "Collate" check box.
+		require
+			exists: exists
 		do
 			remove_flag (Pd_collate)
 		ensure
@@ -325,6 +400,8 @@ feature -- Status setting
 
 	enable_print_to_file
 			-- Enable the "Print to file" check box.
+		require
+			exists: exists
 		do
 			remove_flag (Pd_disableprinttofile)
 		ensure
@@ -333,6 +410,8 @@ feature -- Status setting
 
 	disable_print_to_file
 			-- Disable the "Print to file" check box.
+		require
+			exists: exists
 		do
 			add_flag (Pd_disableprinttofile)
 		ensure
@@ -341,6 +420,8 @@ feature -- Status setting
 
 	show_print_to_file
 			-- Show the "Print to file" check box.
+		require
+			exists: exists
 		do
 			remove_flag (Pd_hideprinttofile)
 		ensure
@@ -349,6 +430,8 @@ feature -- Status setting
 
 	hide_print_to_file
 			-- Hide the "Print to file" check box.
+		require
+			exists: exists
 		do
 			add_flag (Pd_hideprinttofile)
 		ensure
@@ -357,6 +440,8 @@ feature -- Status setting
 
 	check_print_to_file
 			-- Check the "Print to file" check box.
+		require
+			exists: exists
 		do
 			add_flag (Pd_printtofile)
 		ensure
@@ -365,6 +450,8 @@ feature -- Status setting
 
 	uncheck_print_to_file
 			-- Uncheck the "Print to file" check box.
+		require
+			exists: exists
 		do
 			remove_flag (Pd_printtofile)
 		ensure
@@ -374,6 +461,8 @@ feature -- Status setting
 	enable_warning
 			-- Enable the warning message from being displayed when
 			-- there is no default printer.
+		require
+			exists: exists
 		do
 			remove_flag (Pd_nowarning)
 		ensure
@@ -383,6 +472,8 @@ feature -- Status setting
 	disable_warning
 			-- Disable the warning message from being displayed when
 			-- there is no default printer.
+		require
+			exists: exists
 		do
 			add_flag (Pd_nowarning)
 		ensure
@@ -392,6 +483,8 @@ feature -- Status setting
 	enable_print_setup
 			-- Enable the system to display the Print setup dialog
 			-- box rather than the Print dialog box.
+		require
+			exists: exists
 		do
 			add_flag (Pd_printsetup)
 		ensure
@@ -401,6 +494,8 @@ feature -- Status setting
 	disable_print_setup
 			-- Disable the system to display the Print setup dialog
 			-- box rather than the Print dialog box.
+		require
+			exists: exists
 		do
 			remove_flag (Pd_printsetup)
 		ensure
@@ -427,13 +522,14 @@ feature {NONE} -- Implementation
 	set_parent (a_parent: WEL_COMPOSITE_WINDOW)
 			-- Set the parent window with `a_parent'.
 		require
+			exists: exists
 			a_parent_not_void: a_parent /= Void
 			a_parent_exists: a_parent.exists
 		do
 			cwel_print_dlg_set_hwndowner (item, a_parent.item)
 		end
 
-	private_dc: WEL_PRINTER_DC
+	private_dc: ?WEL_PRINTER_DC
 			-- Device context associated to the selected printer
 
 feature -- Measurement

@@ -37,6 +37,9 @@ feature {NONE} -- Initialization
 
 	make_by_pointer (a_window: WEL_WINDOW; a_pointer: POINTER)
 			-- Makes a DC associated with `a_pointer' and `a_window'
+		require
+			a_window_not_void: a_window /= Void
+			a_window_exists: a_window.exists
 		do
 			window := a_window
 			hwindow := a_window.item
@@ -83,7 +86,7 @@ feature {NONE} -- Removal
 		local
 			a_default_pointer: POINTER
 		do
-				-- Protect the call to DeleteDC, because `destroy_item' can 
+				-- Protect the call to DeleteDC, because `destroy_item' can
 				-- be called by the GC so without assertions.
 			if item /= a_default_pointer then
 				unselect_all

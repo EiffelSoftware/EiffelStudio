@@ -33,17 +33,17 @@ inherit
 	APPLICATION_IDS
 		export
 			{NONE} all
-		end 
+		end
 
 	WEL_ILC_CONSTANTS
 		export
 			{NONE} all
-		end 
+		end
 
 	WEL_COLOR_CONSTANTS
 		export
 			{NONE} all
-		end 
+		end
 
 create
 	make
@@ -56,31 +56,31 @@ feature {NONE} -- Initialization
 		local
  			column: WEL_LIST_VIEW_COLUMN
  			litem: WEL_LIST_VIEW_ITEM
-			image_list					: WEL_IMAGE_LIST
-			small_image_list			: WEL_IMAGE_LIST
-			an_icon						: WEL_ICON
-			image_red					: INTEGER
-			image_blue					: INTEGER
-			image_green					: INTEGER
-			image_magenta				: INTEGER
-			background_color			: WEL_COLOR_REF
+			image_list: WEL_IMAGE_LIST
+			small_image_list: WEL_IMAGE_LIST
+			an_icon: WEL_ICON
+			image_red: INTEGER
+			image_blue: INTEGER
+			image_green: INTEGER
+			image_magenta: INTEGER
+			background_color: WEL_COLOR_REF
 		do
  			Precursor {WEL_LIST_VIEW} (a_parent, a_x, a_y, a_width, a_height, an_id)
 
 				-- create the image list
-			create image_list.make(Large_image_width, Large_image_height, Ilc_color4, True)
-			create small_image_list.make(Small_image_width, Small_image_height, Ilc_color4, True)
+			create image_list.make (Large_image_width, Large_image_height, Ilc_color4, True)
+			create small_image_list.make (Small_image_width, Small_image_height, Ilc_color4, True)
 
 				-- First match the background color of the imagelist with
 				-- the background color of the list view.
-			create background_color.make_system(Color_window)
-			image_list.set_background_color(background_color)
-			small_image_list.set_background_color(background_color)
+			create background_color.make_system (Color_window)
+			image_list.set_background_color (background_color)
+			small_image_list.set_background_color (background_color)
 
 				-- Add icons to the image list.
-			create an_icon.make_by_id(Idi_red)
-			image_list.add_icon(an_icon)
-			small_image_list.add_icon(an_icon)
+			create an_icon.make_by_id (Idi_red)
+			image_list.add_icon (an_icon)
+			small_image_list.add_icon (an_icon)
 				-- ensure that the small and the large icons are
 				-- at the same index.
 			check
@@ -88,33 +88,33 @@ feature {NONE} -- Initialization
 			end
 			image_red := image_list.last_position
 
-			create an_icon.make_by_id(Idi_blue)
-			image_list.add_icon(an_icon)
-			small_image_list.add_icon(an_icon)
+			create an_icon.make_by_id (Idi_blue)
+			image_list.add_icon (an_icon)
+			small_image_list.add_icon (an_icon)
 			check
 				image_list.last_position = small_image_list.last_position
 			end
 			image_blue := image_list.last_position
 
-			create an_icon.make_by_id(Idi_green)
-			image_list.add_icon(an_icon)
-			small_image_list.add_icon(an_icon)
+			create an_icon.make_by_id (Idi_green)
+			image_list.add_icon (an_icon)
+			small_image_list.add_icon (an_icon)
 			check
 				image_list.last_position = small_image_list.last_position
 			end
 			image_green := image_list.last_position
 
-			create an_icon.make_by_id(Idi_magenta)
-			image_list.add_icon(an_icon)
-			small_image_list.add_icon(an_icon)
+			create an_icon.make_by_id (Idi_magenta)
+			image_list.add_icon (an_icon)
+			small_image_list.add_icon (an_icon)
 			check
 				image_list.last_position = small_image_list.last_position
 			end
 			image_magenta := image_list.last_position
 
 				-- set the image list
-			set_small_image_list(small_image_list)
-			set_image_list(image_list)
+			set_small_image_list (small_image_list)
+			set_image_list (image_list)
 
 				-- We add the columns
 			create column.make
@@ -141,7 +141,7 @@ feature {NONE} -- Initialization
 				-- We add the items in the first row
 			create litem.make
 			litem.set_text ("Item 1 : 0,0")
-			litem.set_image(image_red)
+			litem.set_image (image_red)
 			insert_item (litem)
 			set_cell_text (1, 0, "1,0")
 			set_cell_text (2, 0, "2,0")
@@ -150,7 +150,7 @@ feature {NONE} -- Initialization
 				-- We add the items in the second row
 			create litem.make
 			litem.set_text ("Item 2 : 0,1")
-			litem.set_image(image_blue)
+			litem.set_image (image_blue)
 			litem.set_iitem (1)
 			insert_item (litem)
 			set_cell_text (1, 1, "1,1")
@@ -160,7 +160,7 @@ feature {NONE} -- Initialization
 				-- We add the items in the third row
 			create litem.make
 			litem.set_text ("Item 3 : 0,2")
-			litem.set_image(image_green)
+			litem.set_image (image_green)
 			litem.set_iitem (2)
 			insert_item (litem)
 			set_cell_text (1, 2, "1,2")
@@ -171,7 +171,7 @@ feature {NONE} -- Initialization
 			create litem.make
 			litem.set_iitem (3)
 			litem.set_text ("Item 4 : 0,3")
-			litem.set_image(image_magenta)
+			litem.set_image (image_magenta)
 			insert_item (litem)
 			set_cell_text (1, 3, "1,3")
 			set_cell_text (2, 3, "2,3")
@@ -180,9 +180,9 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_output: WEL_STATIC
+	item_output: ?WEL_STATIC
 
-	mess_output: WEL_SINGLE_SELECTION_LIST_BOX
+	mess_output: ?WEL_SINGLE_SELECTION_LIST_BOX
 
 feature -- Element change
 
@@ -201,9 +201,9 @@ feature -- Element change
 	add_mess_output (str: STRING)
 			-- Add a message to the output.
 		do
-			if mess_output /= Void then
-				mess_output.add_string (str)
-				mess_output.set_top_index (mess_output.count - 1)
+			if {l_mess_output: like mess_output} mess_output then
+				l_mess_output.add_string (str)
+				l_mess_output.set_top_index (l_mess_output.count - 1)
 			end
 		end
 
@@ -273,10 +273,12 @@ feature -- Notifications
 			lvitem: WEL_LIST_VIEW_ITEM
 		do
 			add_mess_output ("Item changed")
-			if flag_set (info.unewstate, Lvis_selected) and 
+			if flag_set (info.unewstate, Lvis_selected) and
 					not flag_set (info.uoldstate, Lvis_selected) then
 				lvitem := get_item (info.iitem, info.isubitem)
-				item_output.set_text (lvitem.text)
+				if {l_item_output: like item_output} item_output then
+					l_item_output.set_text (lvitem.text)
+				end
 			end
 		end
 
@@ -290,7 +292,9 @@ feature -- Notifications
 			-- A key has been pressed.
 		do
 			add_mess_output ("Key pressed :")
-			item_output.set_text (virtual_key.out)
+			if {l_item_output: like item_output} item_output then
+				l_item_output.set_text (virtual_key.out)
+			end
 		end
 
 	on_lvn_setdispinfo (info: WEL_LIST_VIEW_ITEM)
@@ -347,7 +351,7 @@ feature -- Changing the style
 			when 3 then
 				set_style (value + Lvs_report)
 				current_type := 0
-			end 
+			end
 		end
 
 feature {NONE} -- Private Constants
@@ -355,7 +359,7 @@ feature {NONE} -- Private Constants
 	Small_image_width, Small_image_height : INTEGER = 16
 		-- Size of small icons, as displayed in the list view, the
 		-- details view and the small icon view
-	
+
 	Large_image_width, Large_image_height : INTEGER = 32;
 		-- Size of large icons, as displayed in the large
 		-- icon view

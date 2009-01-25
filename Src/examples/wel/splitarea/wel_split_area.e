@@ -49,11 +49,11 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	left_control: WEL_WINDOW
+	left_control: ?WEL_WINDOW
 			-- Control in the left part of the split area.
 			-- Void if none
 
-	right_control: WEL_WINDOW
+	right_control: ?WEL_WINDOW
 			-- Control in the right part of the split area.
 			-- Void if none
 
@@ -74,16 +74,16 @@ feature -- Element change
 			-- Put `a_control' in the left part of the split area
 		do
 			left_control := a_control
-			left_control.set_parent (Current)
-			left_control.move_and_resize (0, 0, splitter_position, height, True)
+			a_control.set_parent (Current)
+			a_control.move_and_resize (0, 0, splitter_position, height, True)
 		end
 
 	set_right_control (a_control: WEL_WINDOW)
 			-- Put `a_control' in the right part of the split area
 		do
 			right_control := a_control
-			right_control.set_parent (Current)
-			right_control.move_and_resize (0, 0, splitter_position + separator_width, height, True)
+			a_control.set_parent (Current)
+			a_control.move_and_resize (0, 0, splitter_position + separator_width, height, True)
 		end
 
 feature {NONE} -- Implementation
@@ -144,8 +144,8 @@ feature {NONE} -- Windows message handling
 				-- Modify this line if you don't want the split
 				-- area to resize the left control (if it's a button
 				-- for example)
-			if left_control /= Void and then left_control.exists then
-				left_control.move_and_resize (
+			if {l_left_control: like left_control} left_control and then l_left_control.exists then
+				l_left_control.move_and_resize (
 					0, 0,
 					splitter_position, a_height,
 					True
@@ -157,8 +157,8 @@ feature {NONE} -- Windows message handling
 				-- Modify this line if you don't want the split
 				-- area to resize the right control (if it's a button
 				-- for example)
-			if right_control /= Void and then right_control.exists then
-				right_control.move_and_resize (
+			if {l_right_control: like right_control} right_control and then l_right_control.exists then
+				l_right_control.move_and_resize (
 					splitter_position + separator_width, 0,
 					a_width - (splitter_position + separator_width), a_height,
 					True

@@ -28,15 +28,19 @@ feature {WEL_GRAPHICAL_RESOURCE}-- Initialization
 			-- Initialize the bitmaps from the structure.
 		require
 			not_yet_initialized: not is_initialized
+		local
+			l_bitmap: WEL_BITMAP
 		do
 				-- Create the mask
-			create internal_mask_bitmap.make_by_pointer (hbmMask_ext (item))
-			internal_mask_bitmap.set_unshared
+			create l_bitmap.make_by_pointer (hbmMask_ext (item))
+			internal_mask_bitmap := l_bitmap
+			l_bitmap.set_unshared
 
 				-- Create the bitmap (if any)
 			if has_color_bitmap then
-				create internal_color_bitmap.make_by_pointer(hbmColor_ext (item))
-				internal_color_bitmap.set_unshared
+				create l_bitmap.make_by_pointer(hbmColor_ext (item))
+				internal_color_bitmap := l_bitmap
+				l_bitmap.set_unshared
 			end
 
 			is_initialized := True
@@ -55,8 +59,13 @@ feature -- Access
 			-- AND bitmask of the icon.
 		require
 			initialized: is_initialized
+		local
+			l_bitmap: ?WEL_BITMAP
 		do
-			Result := internal_mask_bitmap
+			l_bitmap := internal_mask_bitmap
+				-- Per precondition.
+			check l_bitmap_attached: l_bitmap /= Void end
+			Result := l_bitmap
 		ensure
 			Result_not_void: Result /= Void
 			Result_exists: Result.exists
@@ -73,8 +82,13 @@ feature -- Access
 		require
 			initialized: is_initialized
 			has_color_bitmap: has_color_bitmap
+		local
+			l_bitmap: ?WEL_BITMAP
 		do
-			Result := internal_color_bitmap
+			l_bitmap := internal_color_bitmap
+				-- Per precondition.
+			check l_bitmap_attached: l_bitmap /= Void end
+			Result := l_bitmap
 		ensure
 			Result_not_void: Result /= Void
 			Result_exists: Result.exists
@@ -154,13 +168,19 @@ feature -- Status Setting
 			-- `mask_bitmap' and `color_bitmap' will be decreased.
 		require
 			initialized: is_initialized
+		local
+			l_bitmap: ?WEL_BITMAP
 		do
-			internal_mask_bitmap.enable_reference_tracking
-			internal_mask_bitmap_object_id := internal_mask_bitmap.object_id
+			l_bitmap := internal_mask_bitmap
+			check l_bitmap_attached: l_bitmap /= Void end
+			l_bitmap.enable_reference_tracking
+			internal_mask_bitmap_object_id := l_bitmap.object_id
 
 			if has_color_bitmap then
-				internal_color_bitmap.enable_reference_tracking
-				internal_color_bitmap_object_id := internal_color_bitmap.object_id
+				l_bitmap := internal_color_bitmap
+				check l_bitmap_attached: l_bitmap /= Void end
+				l_bitmap.enable_reference_tracking
+				internal_color_bitmap_object_id := l_bitmap.object_id
 			end
 		end
 
@@ -178,12 +198,16 @@ feature -- Status Setting
 
 	set_mask_bitmap (a_mask_bitmap: WEL_BITMAP)
 			-- Assign `a_mask_bitmap' to hbmMask
+		require
+			a_mask_bitmap_attached: a_mask_bitmap /= Void
+			a_mask_bitmap_exists: a_mask_bitmap.exists
+		local
+			l_bitmap: ?WEL_BITMAP
 		do
 				-- Remove the existing mask bitmap if any.
-			if internal_mask_bitmap /= Void and then
-				internal_mask_bitmap.reference_tracked
-			then
-				internal_mask_bitmap.decrement_reference
+			l_bitmap := internal_mask_bitmap
+			if l_bitmap /= Void and then l_bitmap.reference_tracked then
+				l_bitmap.decrement_reference
 			end
 
 				-- Set the new mask bitmap.
@@ -200,12 +224,16 @@ feature -- Status Setting
 
 	set_color_bitmap (a_color_bitmap: WEL_BITMAP)
 			-- Assign `a_color_bitmap' to hbmColor
+		require
+			a_color_bitmap_attached: a_color_bitmap /= Void
+			a_color_bitmap_exists: a_color_bitmap.exists
+		local
+			l_bitmap: ?WEL_BITMAP
 		do
 				-- Remove the existing bitmap if any.
-			if internal_color_bitmap /= Void and then
-				internal_color_bitmap.reference_tracked
-			then
-				internal_color_bitmap.decrement_reference
+			l_bitmap := internal_color_bitmap
+			if l_bitmap /= Void and then l_bitmap.reference_tracked then
+				l_bitmap.decrement_reference
 			end
 
 				-- Set the new color bitmap.
@@ -288,31 +316,27 @@ feature {NONE} -- Removal
 
 	destroy_item
 			-- Free allocated C memory and GDI objects.
-		local
-			a_bitmap: WEL_BITMAP
 		do
 			Precursor {WEL_STRUCTURE}
 
-			a_bitmap ?= eif_id_object (internal_mask_bitmap_object_id)
-			if a_bitmap /= Void and then a_bitmap.reference_tracked then
-				a_bitmap.decrement_reference
+			if {l_mask: WEL_BITMAP} eif_id_object (internal_mask_bitmap_object_id) and then l_mask.reference_tracked then
+				l_mask.decrement_reference
 			end
 
-			a_bitmap ?= eif_id_object (internal_color_bitmap_object_id)
-			if a_bitmap /= Void and then a_bitmap.reference_tracked then
-				a_bitmap.decrement_reference
+			if {l_bitmap: WEL_BITMAP} eif_id_object (internal_color_bitmap_object_id) and then l_bitmap.reference_tracked then
+				l_bitmap.decrement_reference
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	internal_mask_bitmap: WEL_BITMAP
+	internal_mask_bitmap: ?WEL_BITMAP
 			-- Mask bitmap build from the hbmMask pointer.
 
 	internal_mask_bitmap_object_id: INTEGER
 			-- Object id of `internal_mask_bitmap'
 
-	internal_color_bitmap: WEL_BITMAP
+	internal_color_bitmap: ?WEL_BITMAP
 			-- Mask bitmap build from the hbmColor pointer.
 
 	internal_color_bitmap_object_id: INTEGER

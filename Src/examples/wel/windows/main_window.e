@@ -40,10 +40,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	modal: MODAL
+	modal: ?MODAL
 			-- Modal dialog box
 
-	modeless: MODELESS
+	modeless: ?MODELESS
 			-- Modeless dialog box
 
 feature {NONE} -- Implementation
@@ -58,12 +58,16 @@ feature {NONE} -- Implementation
 			when Cmd_exit then
 				destroy
 			when Cmd_modal_dlg then
-				modal.activate
+				if {l_modal: like modal} modal then
+					l_modal.activate
+				end
 			when Cmd_modeless_dlg then
-				if not modeless.exists then
-					modeless.activate
-				else
-					modeless.set_focus
+				if {l_modeless: like modeless} modeless then
+					if not l_modeless.exists then
+						l_modeless.activate
+					else
+						l_modeless.set_focus
+					end
 				end
 			when Cmd_popup_window_with_parent then
 				create popup.make_child (Current, "Popup Window with parent")

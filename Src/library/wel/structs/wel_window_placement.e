@@ -29,6 +29,8 @@ feature {NONE} -- Initialization
 			structure_make
 			cwel_window_placement_set_length (item, structure_size)
 			cwin_get_window_placement (a_window.item, item)
+		ensure
+			exists: exists
 		end
 
 feature -- Access
@@ -38,6 +40,8 @@ feature -- Access
 			-- minimized window and the method by which
 			-- the window is restored.
 			-- See class WEL_WPF_CONSTANTS for possible values.
+		require
+			exists: exists
 		do
 			Result := cwel_window_placement_get_flags (item)
 		end
@@ -45,6 +49,8 @@ feature -- Access
 	show_command: INTEGER
 			-- Show state of the window.
 			-- See class WEL_SW_CONSTANTS for possible values
+		require
+			exists: exists
 		do
 			Result := cwel_window_placement_get_show_command (item)
 		end
@@ -52,10 +58,10 @@ feature -- Access
 	minimum_position: WEL_POINT
 			-- Coordinates of the window's upper left
 			-- corner when the window is minimized.
+		require
+			exists: exists
 		do
-			create Result.make_by_pointer
-				(cwel_window_placement_get_minimum_position
-					(item))
+			create Result.make_by_pointer (cwel_window_placement_get_minimum_position (item))
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -63,10 +69,10 @@ feature -- Access
 	maximum_position: WEL_POINT
 			-- Coordinates of the window's upper left
 			-- corner when the window is maximized.
+		require
+			exists: exists
 		do
-			create Result.make_by_pointer
-				(cwel_window_placement_get_maximum_position
-					(item))
+			create Result.make_by_pointer (cwel_window_placement_get_maximum_position (item))
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -74,10 +80,10 @@ feature -- Access
 	normal_position: WEL_RECT
 			-- Window's coordinates when the
 			-- windows is in the restored position
+		require
+			exists: exists
 		do
-			create Result.make_by_pointer
-				(cwel_window_placement_get_normal_position
-					(item))
+			create Result.make_by_pointer (cwel_window_placement_get_normal_position (item))
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -86,6 +92,8 @@ feature -- Element change
 
 	set_flags (a_flags: INTEGER)
 			-- Set `flags' with `a_flags'
+		require
+			exists: exists
 		do
 			cwel_window_placement_set_flags (item, a_flags)
 		ensure
@@ -94,9 +102,10 @@ feature -- Element change
 
 	set_show_command (a_show_command: INTEGER)
 			-- Set `show_command' with `a_show_command'
+		require
+			exists: exists
 		do
-			cwel_window_placement_set_show_command (item,
-				a_show_command)
+			cwel_window_placement_set_show_command (item, a_show_command)
 		ensure
 			show_command_set: show_command = a_show_command
 		end
@@ -104,10 +113,11 @@ feature -- Element change
 	set_minimum_position (a_point: WEL_POINT)
 			-- Set `minimum_position' with `a_point'
 		require
+			exists: exists
 			a_point_not_void: a_point /= Void
+			a_point_exists: a_point.exists
 		do
-			cwel_window_placement_set_minimum_position (item,
-				a_point.item)
+			cwel_window_placement_set_minimum_position (item, a_point.item)
 		ensure
 			-- minimum_position_set: minimum_position = a_point
 		end
@@ -115,10 +125,11 @@ feature -- Element change
 	set_maximum_position (a_point: WEL_POINT)
 			-- Set `maximum_position' with `a_point'
 		require
+			exists: exists
 			a_point_not_void: a_point /= Void
+			a_point_exists: a_point.exists
 		do
-			cwel_window_placement_set_maximum_position (item,
-				a_point.item)
+			cwel_window_placement_set_maximum_position (item, a_point.item)
 		ensure
 			-- maximum_position_set: maximum_position = a_point
 		end
@@ -126,10 +137,11 @@ feature -- Element change
 	set_normal_position (a_rect: WEL_RECT)
 			-- Set `normal_position' with `a_rect'
 		require
+			exists: exists
 			a_rect_not_void: a_rect /= Void
+			a_rect_exists: a_rect.exists
 		do
-			cwel_window_placement_set_normal_position (item,
-				a_rect.item)
+			cwel_window_placement_set_normal_position (item, a_rect.item)
 		ensure
 			-- normal_position_set: normal_position = a_rect
 		end

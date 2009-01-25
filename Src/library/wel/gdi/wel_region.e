@@ -51,6 +51,7 @@ feature {NONE} -- Initialization
 			-- the bounding rectangle `rect'
 		require
 			rect_not_void: rect /= Void
+			rect_exists: rect.exists
 		do
 			item := cwin_create_elliptic_rgn_indirect (rect.item)
 			gdi_make
@@ -100,6 +101,7 @@ feature {NONE} -- Initialization
 			-- the rectangle `rect'.
 		require
 			rect_not_void: rect /= Void
+			rect_exists: rect.exists
 		do
 			item := cwin_create_rect_rgn_indirect (rect.item)
 			gdi_make
@@ -163,6 +165,7 @@ feature -- Status report
 		require
 			exists: exists
 			rect_not_void: rect /= Void
+			rect_exists: rect.exists
 		do
 			Result := cwin_rect_in_region (item, rect.item)
 		end

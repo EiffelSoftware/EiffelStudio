@@ -25,64 +25,75 @@ feature {NONE} -- Initialization
 	make (a_parent: WEL_COMPOSITE_WINDOW)
 		do
 			make_by_id (a_parent, Id_dialog_pizza)
-			create size.make_by_id (Current,
-				Id_size)
-			create listbox_items.make_by_id (Current,
-				Id_listbox_items)
-			create radio_thin.make_by_id (Current,
-				Id_rad_thin)
-			create radio_thick.make_by_id (Current,
-				Id_rad_thick)
-			create radio_stuff.make_by_id (Current,
-				Id_rad_stuff)
-			create radio_for_here.make_by_id (Current,
-				Id_rad_for_here)
-			create radio_to_go.make_by_id (Current,
-				Id_rad_to_go)
-			create static_price.make_by_id (Current,
-				Id_static_price)
+			create size.make_by_id (Current, Id_size)
+			create listbox_items.make_by_id (Current, Id_listbox_items)
+			create radio_thin.make_by_id (Current, Id_rad_thin)
+			create radio_thick.make_by_id (Current, Id_rad_thick)
+			create radio_stuff.make_by_id (Current, Id_rad_stuff)
+			create radio_for_here.make_by_id (Current, Id_rad_for_here)
+			create radio_to_go.make_by_id (Current, Id_rad_to_go)
+			create static_price.make_by_id (Current, Id_static_price)
 		end
 
 	setup_dialog
+		local
+			l_static_price: like static_price
+			l_size: like size
+			l_radio_thin: like radio_thin
+			l_radio_for_here: like radio_for_here
+			l_listbox_items: like listbox_items
 		do
-			static_price.set_text ("$0")
-			listbox_items.add_string ("Bacon")
-			listbox_items.add_string ("Pork")
-			listbox_items.add_string ("Beef")
-			listbox_items.add_string ("Salami")
-			listbox_items.add_string ("Sausage")
-			listbox_items.add_string ("Pepperoni")
-			listbox_items.add_string ("Olive")
-			listbox_items.add_string ("Green olive")
-			listbox_items.add_string ("Onions")
-			listbox_items.add_string ("Pineapple")
-			listbox_items.add_string ("Mushroom")
-			listbox_items.add_string ("Red pepper")
-			listbox_items.add_string ("Green pepper")
-			listbox_items.add_string ("Meat ball")
-			listbox_items.add_string ("Fresh tomato")
-			listbox_items.add_string ("Cheese")
-			listbox_items.add_string ("Ham")
-			listbox_items.add_string ("Chorizo")
-			listbox_items.add_string ("Canadian bacon")
+			l_static_price := static_price
+			l_size := size
+			l_radio_thin := radio_thin
+			l_radio_for_here := radio_for_here
+			l_listbox_items := listbox_items
+				-- Per invariant
+			check
+				l_static_price_attached: l_static_price /= Void
+				l_size_attached: l_size /= Void
+				l_radio_thin_attached: l_radio_thin /= Void
+				l_radio_for_here_attached: l_radio_for_here /= Void
+				l_listbox_items_attached: l_listbox_items /= Void
+			end
+			l_static_price.set_text ("$0")
+			l_listbox_items.add_string ("Bacon")
+			l_listbox_items.add_string ("Pork")
+			l_listbox_items.add_string ("Beef")
+			l_listbox_items.add_string ("Salami")
+			l_listbox_items.add_string ("Sausage")
+			l_listbox_items.add_string ("Pepperoni")
+			l_listbox_items.add_string ("Olive")
+			l_listbox_items.add_string ("Green olive")
+			l_listbox_items.add_string ("Onions")
+			l_listbox_items.add_string ("Pineapple")
+			l_listbox_items.add_string ("Mushroom")
+			l_listbox_items.add_string ("Red pepper")
+			l_listbox_items.add_string ("Green pepper")
+			l_listbox_items.add_string ("Meat ball")
+			l_listbox_items.add_string ("Fresh tomato")
+			l_listbox_items.add_string ("Cheese")
+			l_listbox_items.add_string ("Ham")
+			l_listbox_items.add_string ("Chorizo")
+			l_listbox_items.add_string ("Canadian bacon")
 
-			size.add_string ("Small")
-			size.add_string ("Medium")
-			size.add_string ("Large")
-			size.select_item (0)
+			l_size.add_string ("Small")
+			l_size.add_string ("Medium")
+			l_size.add_string ("Large")
+			l_size.select_item (0)
 
-			radio_thin.set_checked
-			radio_for_here.set_checked
+			l_radio_thin.set_checked
+			l_radio_for_here.set_checked
 		end
 
 	notify (control: WEL_CONTROL; notify_code: INTEGER)
 		do
-			if control = listbox_items then
-				items_selected := listbox_items.count_selected_items
+			if control = listbox_items and then {l_listbox_items: like listbox_items} listbox_items then
+				items_selected := l_listbox_items.count_selected_items
 			elseif control = size then
-				if size.selected then
+				if {l_size: like size} size and then l_size.selected then
 					inspect
-						size.selected_item
+						l_size.selected_item
 					when 0 then
 						size_price := 0
 					when 1 then
@@ -100,11 +111,21 @@ feature {NONE} -- Implementation
 	update_price
 		local
 			price: REAL
+			l_static_price: like static_price
+			l_radio_stuff: like radio_stuff
 		do
+			l_static_price := static_price
+			l_radio_stuff := radio_stuff
+				-- Per invariant
+			check
+				l_static_price_attached: l_static_price /= Void
+				l_radio_stuff_attached: l_radio_stuff /= Void
+			end
+
 			text_info.wipe_out
 			text_info.extend ('$')
 			price := 1.5 + items_selected * 0.5 + size_price
-			if radio_stuff.checked then
+			if l_radio_stuff.checked then
 				price := price + 1
 			end
 			text_info.append_real (price)
@@ -113,7 +134,7 @@ feature {NONE} -- Implementation
 			else
 				text_info.append (".00")
 			end
-			static_price.set_text (text_info)
+			l_static_price.set_text (text_info)
 		end
 
 feature
@@ -126,7 +147,10 @@ feature
 		do
 			text_info.wipe_out
 			text_info.append ("You ordered a Pizza with ")
-			if listbox_items.count_selected_items > 0 then
+			if
+				{l_listbox_items: like listbox_items} listbox_items and then
+				l_listbox_items.count_selected_items > 0
+			then
 				text_info.append_integer (items_selected)
 				if items_selected > 1 then
 					text_info.append (" toppings.%N%N")
@@ -135,7 +159,7 @@ feature
 					text_info.append (" topping.%N%N")
 					text_info.append ("This topping is:%N%N")
 				end
-				sel_string := listbox_items.selected_strings
+				sel_string := l_listbox_items.selected_strings
 				from
 					i := sel_string.lower
 				until
@@ -166,14 +190,22 @@ feature -- Access
 
 	size_price: INTEGER
 
-	size: WEL_DROP_DOWN_LIST_COMBO_BOX
+	size: ?WEL_DROP_DOWN_LIST_COMBO_BOX
 
-	listbox_items: WEL_MULTIPLE_SELECTION_LIST_BOX
+	listbox_items: ?WEL_MULTIPLE_SELECTION_LIST_BOX
 
 	radio_thin, radio_thick, radio_stuff,
-	radio_for_here, radio_to_go: WEL_RADIO_BUTTON
+	radio_for_here, radio_to_go: ?WEL_RADIO_BUTTON
 
-	static_price: WEL_STATIC;
+	static_price: ?WEL_STATIC;
+
+invariant
+	static_price_attached: static_price /= Void
+	size_attached: size /= Void
+	radio_thin_attached: radio_thin /= Void
+	radio_for_here_attached: radio_for_here /= Void
+	radio_stuff_attached: radio_stuff /= Void
+	listbox_items_attached: listbox_items /= Void
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -186,6 +218,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class DIALOG
-
+end

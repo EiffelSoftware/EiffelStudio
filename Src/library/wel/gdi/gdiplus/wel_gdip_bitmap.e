@@ -60,6 +60,7 @@ feature {NONE} -- Initlization
 			larger_than_0: a_width > 0
 			larger_than_0: a_height > 0
 			not_void: a_graphics /= Void
+			a_graphics_exists: a_graphics.exists
 		local
 			l_result: INTEGER
 		do
@@ -72,6 +73,7 @@ feature {NONE} -- Initlization
 			-- Creation method.
 		require
 			a_icon_not_void: a_icon /= Void
+			a_icon_exists: a_icon.exists
 		local
 			l_result: INTEGER
 		do
@@ -80,11 +82,13 @@ feature {NONE} -- Initlization
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
-	make_from_bitmap (a_bitmap: WEL_BITMAP; a_palette: WEL_PALETTE)
+	make_from_bitmap (a_bitmap: WEL_BITMAP; a_palette: ?WEL_PALETTE)
 			-- Creation method.
 			-- When convert from `a_bitmap' to Current, alpha channel data will lost.
 		require
 			a_bitmap_not_void: a_bitmap /= Void
+			a_bitmap_exists: a_bitmap.exists
+			a_palette_valid: a_palette /= Void implies a_palette.exists
 		local
 			l_result: INTEGER
 			l_palette: POINTER
@@ -148,6 +152,7 @@ feature -- Command
 			-- Creation method.
 		require
 			a_icon_not_void: a_icon /= Void
+			a_icon_exists: a_icon.exists
 		do
 			destroy_item
 			make_from_icon (a_icon)
@@ -266,7 +271,7 @@ feature -- Command
 
 feature -- Query
 
-	raw_format: WEL_GUID
+	raw_format: ?WEL_GUID
 			-- Redefine
 		do
 			Result := raw_format_recorded
@@ -274,7 +279,7 @@ feature -- Query
 
 feature {NONE} -- Implementation
 
-	raw_format_recorded: WEL_GUID
+	raw_format_recorded: ?WEL_GUID
 			-- When `load_image_from_file' we copied orignal datas to a memoryBMP image, we record orignal image type here.
 
 feature -- C externals

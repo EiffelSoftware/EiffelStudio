@@ -32,6 +32,8 @@ feature{NONE} -- Initlization
 
 	make_with_name (a_font_name: STRING_GENERAL)
 			-- Creation method
+		require
+			a_font_name_not_void: a_font_name /= Void
 		local
 			l_wel_string: WEL_STRING
 			l_result: INTEGER

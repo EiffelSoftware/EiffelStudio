@@ -61,6 +61,7 @@ feature -- Status setting
 		require
 			exists: exists
 			rect_not_void: rect /= Void
+			rect_exists: rect.exists
 		do
 			{WEL_API}.send_message (item, Em_setrect, to_wparam (0), rect.item)
 		end

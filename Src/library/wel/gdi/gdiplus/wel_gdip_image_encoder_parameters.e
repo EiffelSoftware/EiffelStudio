@@ -26,10 +26,10 @@ feature {NONE} -- Initialization
 
 feature -- Query
 
-	parameters: !ARRAYED_LIST [WEL_GDIP_IMAGE_ENCODER_PARAMETER]
+	parameters: ARRAYED_LIST [WEL_GDIP_IMAGE_ENCODER_PARAMETER]
 			-- All parameters current managed.
 
-	item: !MANAGED_POINTER
+	item: MANAGED_POINTER
 			-- Convert Current to C memory
 		local
 			l_paras: like parameters

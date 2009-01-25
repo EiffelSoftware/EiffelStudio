@@ -30,13 +30,12 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_bitmap_info_header: WEL_BITMAP_INFO_HEADER;
-			a_rgb_quad_count: INTEGER)
+	make (a_bitmap_info_header: WEL_BITMAP_INFO_HEADER; a_rgb_quad_count: INTEGER)
 			-- Make a BITMAPINFO structure
 			-- with `a_bitmap_info_header'
 		require
-			a_bitmap_info_header_not_void: a_bitmap_info_header
-				/= Void
+			a_bitmap_info_header_not_void: a_bitmap_info_header /= Void
+			a_bitmap_info_header_exists: a_bitmap_info_header.exists
 			positive_rgb_quad_count: a_rgb_quad_count >= 0
 		do
 			rgb_quad_count := a_rgb_quad_count
@@ -62,8 +61,7 @@ feature {NONE} -- Initialization
 			structure_make
 			create bih.make
 			set_bitmap_info_header (bih)
-			cwin_get_di_bits (dc.item, bitmap.item, 0, 0,
-				default_pointer, item, usage)
+			cwin_get_di_bits (dc.item, bitmap.item, 0, 0, default_pointer, item, usage)
 		end
 
 feature -- Access
@@ -71,9 +69,10 @@ feature -- Access
 	header: WEL_BITMAP_INFO_HEADER
 			-- Information about the dimensions and color
 			-- format of a DIB
+		require
+			exists: exists
 		do
-			create Result.make_by_pointer (
-				cwel_bitmap_info_get_header (item))
+			create Result.make_by_pointer (cwel_bitmap_info_get_header (item))
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -84,6 +83,7 @@ feature -- Access
 	rgb_quad (index: INTEGER): WEL_RGB_QUAD
 			-- Bitmap color at zero-based `index'
 		require
+			exists: exists
 			index_small_enough: index < rgb_quad_count
 			index_large_enough: index >= 0
 		do
@@ -97,7 +97,9 @@ feature -- Element change
 	set_bitmap_info_header (a_header: WEL_BITMAP_INFO_HEADER)
 			-- Set `header' with `a_header'.
 		require
+			exists: exists
 			a_header_not_void: a_header /= Void
+			a_header_exists: a_header.exists
 		do
 			cwel_bitmap_info_set_header (item, a_header.item)
 		end
@@ -109,15 +111,12 @@ feature -- Element change
 			index_small_enough: index < rgb_quad_count
 			index_large_enough: index >= 0
 			a_rgb_quad_not_void: a_rgb_quad /= Void
+			a_rgb_quad_exists: a_rgb_quad.exists
 		do
-			cwel_bitmap_info_set_rgb_quad_rgb_red (item, index,
-				a_rgb_quad.red)
-			cwel_bitmap_info_set_rgb_quad_rgb_green (item, index,
-				a_rgb_quad.green)
-			cwel_bitmap_info_set_rgb_quad_rgb_blue (item, index,
-				a_rgb_quad.blue)
-			cwel_bitmap_info_set_rgb_quad_rgb_reserved (item,
-				index, a_rgb_quad.reserved)
+			cwel_bitmap_info_set_rgb_quad_rgb_red (item, index, a_rgb_quad.red)
+			cwel_bitmap_info_set_rgb_quad_rgb_green (item, index, a_rgb_quad.green)
+			cwel_bitmap_info_set_rgb_quad_rgb_blue (item, index, a_rgb_quad.blue)
+			cwel_bitmap_info_set_rgb_quad_rgb_reserved (item, index, a_rgb_quad.reserved)
 		end
 
 feature -- Measurement
@@ -127,13 +126,14 @@ feature -- Measurement
 		do
 				-- It has to be `- 1' because in the size of `BITMAP_INFO' it already
 				-- contains one entry for a RGBQUAD.
-			Result := c_size_of_bitmap_info +
-				((rgb_quad_count - 1) * c_size_of_rgb_quad)
+			Result := c_size_of_bitmap_info + ((rgb_quad_count - 1) * c_size_of_rgb_quad)
 		end
 
 feature -- Obsolete
 
 	bitmap_info_header: WEL_BITMAP_INFO_HEADER obsolete "Use ``header''"
+		require
+			exists: exists
 		do
 			Result := header
 		end

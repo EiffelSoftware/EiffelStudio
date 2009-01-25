@@ -61,11 +61,10 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := {WEL_API}.send_message_result (item,
-				Wm_mdigetactive, to_wparam (0), to_lparam (0)) /= default_pointer
+			Result := active_window /= Void
 		end
 
-	active_window: WEL_MDI_CHILD_WINDOW
+	active_window: ?WEL_MDI_CHILD_WINDOW
 			-- Currently active window.
 		require
 			exists: exists
@@ -73,8 +72,6 @@ feature -- Status report
 		do
 			Result ?= window_of_item ({WEL_API}.send_message_result (item, Wm_mdigetactive,
 				to_wparam (0), to_lparam (0)))
-		ensure
-			result_not_void: Result /= Void
 		end
 
 feature -- Basic operations

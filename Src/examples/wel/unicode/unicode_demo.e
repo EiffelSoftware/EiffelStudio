@@ -12,7 +12,7 @@ create
 
 feature
 
-	rich_edit_dll: WEL_RICH_EDIT_DLL
+	rich_edit_dll: ?WEL_RICH_EDIT_DLL
 
 	main_window: MAIN_WINDOW
 			-- Create the application's main window

@@ -56,6 +56,7 @@ feature {NONE} -- Initialization
 			-- Create an icon from an `icon_info' structure
 		require
 			icon_info_not_void: icon_info /= Void
+			icon_info_exists: icon_info.exists
 		do
 			item := cwin_create_icon_indirect (icon_info.item)
 			gdi_make
@@ -86,7 +87,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	get_icon_info: WEL_ICON_INFO
+	get_icon_info: ?WEL_ICON_INFO
 			-- Retrieve information about a icon/cursor
 			--
 			-- Return Void if an error occurred while retrieving
@@ -95,7 +96,7 @@ feature -- Access
 			icon_info: WEL_ICON_INFO
 		do
 			create icon_info.make
-			if cwin_get_icon_info(item, icon_info.item) = 0 then
+			if cwin_get_icon_info (item, icon_info.item) = 0 then
 				Result := Void
 			else
 				icon_info.initialize_bitmaps

@@ -30,6 +30,9 @@ feature {NONE} -- Initialization
 	make (a_class_name: STRING_GENERAL; a_title: STRING_GENERAL)
 			-- Make a MDI create structure with `a_class_name' and
 			-- `a_title'.
+		require
+			a_class_name_not_void: a_class_name /= Void
+			a_title_not_void: a_title /= Void
 		do
 			structure_make
 			set_class_name (a_class_name)
@@ -77,6 +80,8 @@ feature -- Access
 
 	owner: WEL_INSTANCE
 			-- Owner of the MDI child window
+		require
+			exists: exists
 		do
 			create Result.make (cwel_mdi_cs_get_owner (item))
 		ensure
@@ -85,36 +90,48 @@ feature -- Access
 
 	x: INTEGER
 			-- x position of the MDI child window
+		require
+			exists: exists
 		do
 			Result := cwel_mdi_cs_get_x (item)
 		end
 
 	y: INTEGER
 			-- y position of the MDI child window
+		require
+			exists: exists
 		do
 			Result := cwel_mdi_cs_get_y (item)
 		end
 
 	width: INTEGER
 			-- Width of the MDI child window
+		require
+			exists: exists
 		do
 			Result := cwel_mdi_cs_get_width (item)
 		end
 
 	height: INTEGER
 			-- Height of the MDI child window
+		require
+			exists: exists
 		do
 			Result := cwel_mdi_cs_get_height (item)
 		end
 
 	style: INTEGER
 			-- Style of the MDI child window
+		require
+			exists: exists
 		do
 			Result := cwel_mdi_cs_get_style (item)
 		end
 
 	lparam: POINTER
 			-- Lparam of the MDI child window
+		require
+			exists: exists
 		do
 			Result := cwel_mdi_cs_get_lparam (item)
 		end
@@ -124,6 +141,7 @@ feature -- Element change
 	set_class_name (a_class_name: STRING_GENERAL)
 			-- Set `class_name' with `a_class_name'
 		require
+			exists: exists
 			a_class_name_valid: a_class_name /= Void
 		do
 			create str_class_name.make (a_class_name)
@@ -136,6 +154,7 @@ feature -- Element change
 	set_title (a_title: STRING_GENERAL)
 			-- Set `title' with `a_title'
 		require
+			exists: exists
 			a_title_valid: a_title /= Void
 		do
 			create str_title.make (a_title)
@@ -147,7 +166,9 @@ feature -- Element change
 	set_owner (an_owner: WEL_INSTANCE)
 			-- Set `owner' with `an_owner'
 		require
+			exists: exists
 			an_owner_not_void: an_owner /= Void
+			an_owner_exists: an_owner.exists
 		do
 			cwel_mdi_cs_set_owner (item, an_owner.item)
 		ensure
@@ -156,30 +177,40 @@ feature -- Element change
 
 	set_x (a_x: INTEGER)
 			-- Set `x' with `a_x'
+		require
+			exists: exists
 		do
 			cwel_mdi_cs_set_x (item, a_x)
 		end
 
 	set_y (a_y: INTEGER)
 			-- Set `y' with `a_y'
+		require
+			exists: exists
 		do
 			cwel_mdi_cs_set_y (item, a_y)
 		end
 
 	set_width (a_width: INTEGER)
 			-- Set `width' with `a_width'
+		require
+			exists: exists
 		do
 			cwel_mdi_cs_set_width (item, a_width)
 		end
 
 	set_height (a_height: INTEGER)
 			-- Set `height' with `a_height'
+		require
+			exists: exists
 		do
 			cwel_mdi_cs_set_height (item, a_height)
 		end
 
 	set_style (a_style: INTEGER)
 			-- Set `style' with `a_style'
+		require
+			exists: exists
 		do
 			cwel_mdi_cs_set_style (item, a_style)
 		ensure
@@ -188,6 +219,8 @@ feature -- Element change
 
 	set_lparam (a_lparam: POINTER)
 			-- Set `lparam' with `a_lparam'
+		require
+			exists: exists
 		do
 			cwel_mdi_cs_set_lparam (item, a_lparam)
 		ensure

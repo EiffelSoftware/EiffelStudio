@@ -33,29 +33,34 @@ create
 feature {NONE} -- Initialization
 
 	make
+		local
+			l_list: like list
+			l_label: like label
 		do
 			make_top (Title)
 			resize (185, 345)
 
 				-- Create the output
-			create list.make (Current, 0, 0, client_rect.width, 120, 1)
-			list.set_font(gui_font)
-			create label.make (Current, "What happens?", 0, 120, client_rect.width, 20, 0)
-			label.set_font(gui_font)
+			create l_list.make (Current, 0, 0, client_rect.width, 120, 1)
+				-- For GC reference
+			list := l_list
+			l_list.set_font(gui_font)
+			create l_label.make (Current, "What happens?", 0, 120, client_rect.width, 20, 0)
+				-- For GC reference
+			label := l_label
+			l_label.set_font(gui_font)
 
 				-- Create the tree view.
-			create tree_view.make (Current, 10, 150, 150, 150, -1)
-			tree_view.set_item_output (label)
-			tree_view.set_mess_output (list)
+			create tree_view.make (Current, 10, 150, 150, 150, -1, l_label, l_list)
 		end
 
 feature -- Access
 
-	list: WEL_SINGLE_SELECTION_LIST_BOX
+	list: ?WEL_SINGLE_SELECTION_LIST_BOX
 
-	label: WEL_STATIC
+	label: ?WEL_STATIC
 
-	tree_view: TREEVIEW
+	tree_view: ?TREEVIEW
 
 feature {NONE} -- Implementation
 
@@ -81,7 +86,7 @@ feature {NONE} -- Implementation
 				+ Ws_clipchildren + Ws_clipsiblings
 		end
 
-	
+
    	on_get_min_max_info (min_max_info: WEL_MIN_MAX_INFO)
    			-- Wm_getminmaxinfo message.
    			-- The size or position of the window is about to

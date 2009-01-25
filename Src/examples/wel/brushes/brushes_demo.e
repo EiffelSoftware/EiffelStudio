@@ -26,9 +26,8 @@ feature
 			-- The message queue is empty.
 			-- Execute the rectangle_demo if it exists.
 		do
-			if main_window.rectangle_demo /= Void and then
-				main_window.rectangle_demo.exists then
-				main_window.rectangle_demo.draw
+			if {l_demo: RECTANGLE_DEMO} main_window.rectangle_demo and then l_demo.exists then
+				l_demo.draw
 			end
 		end
 

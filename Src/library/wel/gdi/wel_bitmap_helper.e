@@ -14,6 +14,7 @@ feature -- Command
 			-- Mirror image datas. It's a vertical filp conversion.
 		require
 			not_void: a_bitmap /= Void
+			a_bitmap_exits: a_bitmap.exists
 			bitmap_not_selected_by_dc: True
 		local
 			l_orignal_dc: WEL_MEMORY_DC
@@ -43,6 +44,7 @@ feature -- Query
 			-- Data bits of `a_bitmap'
 		require
 			not_void: a_bitmap /= Void
+			a_bitmap_exists: a_bitmap.exists
 		local
 			l_dc: WEL_MEMORY_DC
 			l_info: WEL_BITMAP_INFO
@@ -60,6 +62,7 @@ feature -- Query
 			-- Data bits of `a_bitmap', vertical filp data bits.
 		require
 			not_void: a_bitmap /= Void
+			a_bitmap_exits: a_bitmap.exists
 		local
 			l_dc: WEL_MEMORY_DC
 			l_info: WEL_BITMAP_INFO
@@ -74,6 +77,9 @@ feature -- Query
 
 	info_of_bitmap (a_bitmap: WEL_BITMAP): WEL_BITMAP_INFO
 			-- Create a Result base on `a_bitmap'
+		require
+			a_bitmap_not_void: a_bitmap /= Void
+			a_bitmap_exits: a_bitmap.exists
 		local
 			l_dc: WEL_MEMORY_DC
 			l_info: WEL_BITMAP_INFO

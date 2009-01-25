@@ -12,9 +12,11 @@ class
 
 feature -- Access
 
-	short_path_name (a_file_name: !STRING_GENERAL): STRING_32
+	short_path_name (a_file_name: STRING_GENERAL): STRING_32
 			-- Short path name of `a_file_name'
 			-- File/directory must exists before convert to short name
+		require
+			a_file_name_attached: a_file_name /= Void
 		local
 			l_wel_string, l_wel_string_result: WEL_STRING
 			l_api_return_value: INTEGER

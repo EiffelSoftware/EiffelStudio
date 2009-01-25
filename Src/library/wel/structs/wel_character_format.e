@@ -35,14 +35,14 @@ inherit
 		undefine
 			copy, is_equal
 		end
-		
+
 	WEL_UNIT_CONVERSION
 		export
 			{NONE} all
 		undefine
 			copy, is_equal
 		end
-		
+
 create
 	make,
 	make_by_pointer
@@ -62,12 +62,16 @@ feature -- Access
 			-- Character set value. Can be one of the values
 			-- specified for the `char_set' function of the
 			-- WEL_LOG_FONT structure.
+		require
+			exists: exists
 		do
 			Result := cwel_charformat_get_bcharset (item)
 		end
 
 	face_name: STRING_32
 			-- Font face name
+		require
+			exists: exists
 		local
 			l_str: WEL_STRING
 		do
@@ -80,18 +84,24 @@ feature -- Access
 	height: INTEGER
 			-- Character height
 		obsolete "Use height in twips instead."
+		require
+			exists: exists
 		do
 			Result := cwel_charformat_get_yheight (item)
 		end
-		
+
 	height_in_points: INTEGER
 			-- Character height in points.
+		require
+			exists: exists
 		do
 			Result := height_in_twips // 20
 		end
-		
+
 	height_in_pixels: INTEGER
 			-- Character height in pixels
+		require
+			exists: exists
 		local
 			logical_pixels: INTEGER
 			screen_dc: WEL_SCREEN_DC
@@ -103,9 +113,11 @@ feature -- Access
 				-- 1440 is twips per inch.
 			Result := mul_div (logical_pixels, height_in_twips, 1440)
 		end
-		
+
 	height_in_twips: INTEGER
 			-- Character height in twips.
+		require
+			exists: exists
 		do
 			Result := cwel_charformat_get_yheight (item)
 		end
@@ -114,6 +126,8 @@ feature -- Access
 			-- Character offset from the baseline. If the value
 			-- is positive, the character is a superscript; if it
 			-- is negative, the character is a subscript.
+		require
+			exists: exists
 		do
 			Result := cwel_charformat_get_yoffset (item)
 		end
@@ -121,12 +135,16 @@ feature -- Access
 	pitch_and_family: INTEGER
 			-- Font pitch and family. This value is the same as
 			-- `pitch_and_family' of the WEL_LOG_FONT structure.
+		require
+			exists: exists
 		do
 			Result := cwel_charformat_get_bpitchandfamily (item)
 		end
 
 	text_color: WEL_COLOR_REF
 			-- Text color
+		require
+			exists: exists
 		do
 			create Result.make_by_color (
 				cwel_charformat_get_crtextcolor (item))
@@ -139,9 +157,11 @@ feature -- Access
 		once
 			Result := Lf_facesize
 		end
-		
+
 	log_font: WEL_LOG_FONT
 			-- Log font representing `Current'.
+		require
+			exists: exists
 		local
 			logical_pixels: INTEGER
 			screen_dc: WEL_SCREEN_DC
@@ -167,6 +187,8 @@ feature -- Access
 			-- See class WEL_CFM_CONSTANTS for values.
 			-- This attribut is automatically set by the
 			-- features set_*.
+		require
+			exists: exists
 		do
 			Result := cwel_charformat_get_dwmask (item)
 		end
@@ -174,6 +196,8 @@ feature -- Access
 	effects: INTEGER
 			-- Character effects.
 			-- See class WEL_CFE_CONSTANTS for values.
+		require
+			exists: exists
 		do
 			Result := cwel_charformat_get_dweffects (item)
 		end
@@ -182,6 +206,8 @@ feature -- Element change
 
 	set_default_format
 			-- Set Current to default formatting.
+		require
+			exists: exists
 		do
 			unset_bold
 			unset_italic
@@ -191,6 +217,8 @@ feature -- Element change
 
 	set_char_set (a_char_set: INTEGER)
 			-- Set `char_set' with `a_char_set'.
+		require
+			exists: exists
 		do
 			add_mask (Cfm_charset)
 			cwel_charformat_set_bcharset (item, a_char_set)
@@ -201,6 +229,7 @@ feature -- Element change
 	set_face_name (a_face_name: STRING_GENERAL)
 			-- Set `face_name' with `a_face_name'.
 		require
+			exists: exists
 			a_face_name_not_void: a_face_name /= Void
 			valid_count: a_face_name.count <= Max_face_name_length
 		local
@@ -216,7 +245,9 @@ feature -- Element change
 
 	set_height (a_height: INTEGER)
 			-- Set `height' with `a_height' (height specified in points).
-			Obsolete "Use `set_height_in_points' instead"
+		Obsolete "Use `set_height_in_points' instead"
+		require
+			exists: exists
 		do
 			add_mask (Cfm_size)
 				-- Set `yHeight' with `a_height * 20' since the expected
@@ -228,6 +259,8 @@ feature -- Element change
 
 	set_height_in_pixels (a_height: INTEGER)
 			-- Set `height_in_pixels' to `a_height' in pixels.
+		require
+			exists: exists
 		local
 			logical_pixels: INTEGER
 			screen_dc: WEL_SCREEN_DC
@@ -240,26 +273,32 @@ feature -- Element change
 		ensure
 			height_set: height_in_pixels = a_height
 		end
-		
+
 	set_height_in_points (a_height: INTEGER)
 			-- Set `height_in_points' to `a_height' in points.
+		require
+			exists: exists
 		do
 			set_height_in_twips (a_height * 20)
 		ensure
 			height_set: height_in_points = a_height
 		end
-		
+
 	set_height_in_twips (a_height: INTEGER)
 			-- Set `height_in_twips' to `a_height' twips.
+		require
+			exists: exists
 		do
 			add_mask (Cfm_size)
 			cwel_charformat_set_yheight (item, a_height)
 		ensure
-			height_set: height_in_twips = a_height	
+			height_set: height_in_twips = a_height
 		end
 
 	set_offset (an_offset: INTEGER)
 			-- Set `offset' with `an_offset'.
+		require
+			exists: exists
 		do
 			add_mask (Cfm_offset)
 			cwel_charformat_set_yoffset (item, an_offset)
@@ -269,6 +308,8 @@ feature -- Element change
 
 	set_pitch_and_family (a_pitch_and_family: INTEGER)
 			-- Set `pitch_and_family' with `a_pitch_and_family'.
+		require
+			exists: exists
 		do
 			cwel_charformat_set_bpitchandfamily (item,
 				a_pitch_and_family)
@@ -278,6 +319,9 @@ feature -- Element change
 
 	set_text_color (a_color: WEL_COLOR_REF)
 			-- Set `text_color' with `a_text_color'.
+		require
+			exists: exists
+			a_color_not_void: a_color /= Void
 		do
 			add_mask (Cfm_color)
 			cwel_charformat_set_crtextcolor (item, a_color.item)
@@ -287,6 +331,8 @@ feature -- Element change
 
 	set_bold
 			-- Set bold characters.
+		require
+			exists: exists
 		do
 			add_mask (Cfm_bold)
 			add_effects (Cfe_bold)
@@ -294,6 +340,8 @@ feature -- Element change
 
 	unset_bold
 			-- Unset bold characters.
+		require
+			exists: exists
 		do
 			add_mask (Cfm_bold)
 			remove_effects (Cfe_bold)
@@ -301,6 +349,8 @@ feature -- Element change
 
 	set_italic
 			-- Set italic characters.
+		require
+			exists: exists
 		do
 			add_mask (Cfm_italic)
 			add_effects (Cfe_italic)
@@ -308,6 +358,8 @@ feature -- Element change
 
 	unset_italic
 			-- Unset italic characters.
+		require
+			exists: exists
 		do
 			add_mask (Cfm_italic)
 			remove_effects (Cfe_italic)
@@ -315,6 +367,8 @@ feature -- Element change
 
 	set_strike_out
 			-- Set strike out characters.
+		require
+			exists: exists
 		do
 			add_mask (Cfm_strikeout)
 			add_effects (Cfe_strikeout)
@@ -322,6 +376,8 @@ feature -- Element change
 
 	unset_strike_out
 			-- Unset strike out characters.
+		require
+			exists: exists
 		do
 			add_mask (Cfm_strikeout)
 			remove_effects (Cfe_strikeout)
@@ -329,6 +385,8 @@ feature -- Element change
 
 	set_underline
 			-- Set underline characters.
+		require
+			exists: exists
 		do
 			add_mask (Cfm_underline)
 			add_effects (Cfe_underline)
@@ -336,6 +394,8 @@ feature -- Element change
 
 	unset_underline
 			-- Unset underline characters.
+		require
+			exists: exists
 		do
 			add_mask (Cfm_underline)
 			remove_effects (Cfe_underline)
@@ -343,6 +403,8 @@ feature -- Element change
 
 	set_protected
 			-- Set protected characters.
+		require
+			exists: exists
 		do
 			add_mask (Cfm_protected)
 			add_effects (Cfe_protected)
@@ -350,6 +412,8 @@ feature -- Element change
 
 	unset_protected
 			-- Unset protected characters.
+		require
+			exists: exists
 		do
 			add_mask (Cfm_protected)
 			remove_effects (Cfe_protected)
@@ -358,6 +422,8 @@ feature -- Element change
 	set_mask (a_mask: INTEGER)
 			-- Set `mask' with `a_mask'.
 			-- See class WEL_CFM_CONSTANTS for `a_mask' values.
+		require
+			exists: exists
 		do
 			cwel_charformat_set_dwmask (item, a_mask)
 		ensure
@@ -367,6 +433,8 @@ feature -- Element change
 	add_mask (a_mask: INTEGER)
 			-- Add `a_mask' to `mask'.
 			-- See class WEL_CFM_CONSTANTS for `a_mask' values.
+		require
+			exists: exists
 		do
 			set_mask (set_flag (mask, a_mask))
 		ensure
@@ -376,6 +444,8 @@ feature -- Element change
 	remove_mask (a_mask: INTEGER)
 			-- Remove `a_mask' from `mask'.
 			-- See class WEL_CFM_CONSTANTS for `a_mask' values.
+		require
+			exists: exists
 		do
 			set_mask (clear_flag (mask, a_mask))
 		ensure
@@ -385,6 +455,8 @@ feature -- Element change
 	set_effects (an_effects: INTEGER)
 			-- Set `effects' with `an_effects'.
 			-- See class WEL_CFE_CONSTANTS for `a_mask' values.
+		require
+			exists: exists
 		do
 			cwel_charformat_set_dweffects (item, an_effects)
 		ensure
@@ -394,6 +466,8 @@ feature -- Element change
 	add_effects (an_effects: INTEGER)
 			-- Add `an_effects' to `effects'.
 			-- See class WEL_CFE_CONSTANTS for `a_mask' values.
+		require
+			exists: exists
 		do
 			set_effects (set_flag (effects, an_effects))
 		ensure
@@ -403,6 +477,8 @@ feature -- Element change
 	remove_effects (an_effects: INTEGER)
 			-- Remove `an_effects' from `effects'.
 			-- See class WEL_CFE_CONSTANTS for `a_mask' values.
+		require
+			exists: exists
 		do
 			set_effects (clear_flag (effects, an_effects))
 		ensure
@@ -411,6 +487,8 @@ feature -- Element change
 
 	set_all_masks
 			-- Set `mask' with all possible values.
+		require
+			exists: exists
 		do
 			set_mask (Cfm_bold + Cfm_color + Cfm_face +
 				Cfm_italic + Cfm_offset + Cfm_protected +
@@ -423,6 +501,8 @@ feature -- Status report
 	has_mask (a_mask: INTEGER): BOOLEAN
 			-- Is `a_mask' set in `mask'?
 			-- See class WEL_CFM_CONSTANTS for `a_mask' values.
+		require
+			exists: exists
 		do
 			Result := flag_set (mask, a_mask)
 		end
@@ -430,6 +510,8 @@ feature -- Status report
 	has_effects (an_effects: INTEGER): BOOLEAN
 			-- Is `an_effects' set in `effects'?
 			-- See class WEL_CFE_CONSTANTS for `an_effects' values.
+		require
+			exists: exists
 		do
 			Result := flag_set (effects, an_effects)
 		end

@@ -41,7 +41,7 @@ feature -- Command
 			save_image_to_file_with_encoder (a_file_name, l_format)
 		end
 
-	save_image_to_file_with_parameters (a_file_name: STRING; a_parameters: WEL_GDIP_IMAGE_ENCODER_PARAMETERS)
+	save_image_to_file_with_parameters (a_file_name: STRING; a_parameters: ?WEL_GDIP_IMAGE_ENCODER_PARAMETERS)
 			-- Save data to a file with `a_parameters' options
 		require
 			not_void: a_file_name /= Void
@@ -62,7 +62,7 @@ feature -- Command
 			save_image_to_file_with_encoder_and_parameters (a_file_name, a_format, Void)
 		end
 
-	save_image_to_file_with_encoder_and_parameters (a_file_name: STRING; a_format: WEL_GDIP_IMAGE_ENCODER; a_parameters: WEL_GDIP_IMAGE_ENCODER_PARAMETERS)
+	save_image_to_file_with_encoder_and_parameters (a_file_name: STRING; a_format: WEL_GDIP_IMAGE_ENCODER; a_parameters: ?WEL_GDIP_IMAGE_ENCODER_PARAMETERS)
 			-- Save data to a file with image encoder and parameters
 		require
 			not_void: a_file_name /= Void
@@ -71,7 +71,7 @@ feature -- Command
 			l_result: INTEGER
 			l_wel_string: WEL_STRING
 			l_parameters: POINTER
-			l_encoder_info: WEL_GDIP_IMAGE_CODEC_INFO
+			l_encoder_info: ?WEL_GDIP_IMAGE_CODEC_INFO
 		do
 			create l_wel_string.make (a_file_name)
 			if a_parameters /= Void then
@@ -122,7 +122,7 @@ feature -- Query
 			check ok: l_result_status = {WEL_GDIP_STATUS}.ok end
 		end
 
-	raw_format: WEL_GUID
+	raw_format: ?WEL_GUID
 			-- Image format guid.
 		do
 			Result := raw_format_orignal
@@ -218,19 +218,21 @@ feature {WEL_GDIP_IMAGE} -- Implementation
 		local
 			l_all_format: ARRAYED_LIST [WEL_GDIP_IMAGE_ENCODER]
 			l_constants: WEL_GDIP_IMAGE_ENCODER_CONSTANTS
+			l_result: ?like find_format
 		do
 			from
 				create l_constants
 				l_all_format := l_constants.all_formats
 				l_all_format.start
 			until
-				l_all_format.after or Result /= Void
+				l_result /= Void
 			loop
-				if l_all_format.item.guid.is_equal (raw_format) then
-					Result := l_all_format.item
+				if l_all_format.item.guid ~ raw_format then
+					l_result := l_all_format.item
 				end
 				l_all_format.forth
 			end
+			Result := l_result
 		ensure
 			not_void: Result /= Void
 		end

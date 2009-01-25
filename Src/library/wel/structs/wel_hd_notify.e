@@ -27,6 +27,7 @@ feature {NONE} -- Initialization
 			-- Make the structure with `a_nmhdr'.
 		require
 			a_nmhdr_not_void: a_nmhdr /= Void
+			a_nmhdr_exists: a_nmhdr.exists
 		do
 			make_by_pointer (a_nmhdr.item)
 		end
@@ -50,6 +51,7 @@ feature -- Access
 		do
 			Result := cwel_hd_notify_get_i_item (item)
 		end
+
 	button_index: INTEGER
 			-- Specifies the index of the mouse button involved in 
 			-- generating the notification message. 
@@ -112,8 +114,6 @@ feature -- Element change
 		do
 			cwel_hd_notify_set_p_item (item, hd_item.item)
 		end
-				
-		
 		
 feature -- Measurement
 

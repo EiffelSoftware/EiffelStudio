@@ -1,6 +1,7 @@
 note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+
 class SELECTION_LIST
 
 inherit
@@ -46,6 +47,9 @@ inherit
 
 create
 	make
+
+create {SELECTION_LIST}
+	make_filled
 
 feature -- Selection
 

@@ -980,7 +980,7 @@ feature {NONE} -- Internationalization
 
 invariant
 	predefined_view_count_correct: view_template_descriptions.count = view_templates.count
-	details_tab_valid: notebook.has (outcome_tab.widget)
+	details_tab_valid: is_initialized implies notebook.has (outcome_tab.widget)
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

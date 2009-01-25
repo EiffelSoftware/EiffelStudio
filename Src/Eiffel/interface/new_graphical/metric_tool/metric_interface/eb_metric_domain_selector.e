@@ -100,7 +100,21 @@ inherit
 			copy
 		end
 
+create
+	make
+
 feature {NONE} -- Initialization
+
+	make is
+			--
+		do
+				-- Objects created before `default_create' and `user_initialization' to satisfy invariant.
+			create domain_change_actions
+			create grid
+			grid_support := new_grid_support (grid)
+
+			default_create
+		end
 
 	user_initialization
 			-- Called by `initialize'.
@@ -114,7 +128,6 @@ feature {NONE} -- Initialization
 			l_colors: EV_STOCK_COLORS
 		do
 			create l_colors
-			create domain_change_actions
 
 				-- Setup scope type
 			add_input_scope_btn.set_tooltip (metric_names.f_delayed_scope)
@@ -144,7 +157,7 @@ feature {NONE} -- Initialization
 			create l_border
 			l_border.set_border_width (1)
 			l_border.set_background_color (l_colors.black)
-			create grid
+
 			grid.set_column_count_to (1)
 			grid.set_minimum_width (100)
 			grid.enable_multiple_row_selection
@@ -152,7 +165,6 @@ feature {NONE} -- Initialization
 			grid.set_focused_selection_color (preferences.editor_data.selection_background_color)
 			grid.set_non_focused_selection_color (preferences.editor_data.focus_out_selection_background_color)
 
-			grid_support := new_grid_support (grid)
 			grid_support.enable_ctrl_right_click_to_open_new_window
 			grid_support.enable_grid_item_pnd_support
 
@@ -783,36 +795,36 @@ invariant
 	grid_support_attached: grid_support /= Void
 
 note
-        copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2009, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[
-                        This file is part of Eiffel Software's Eiffel Development Environment.
-                        
-                        Eiffel Software's Eiffel Development Environment is free
-                        software; you can redistribute it and/or modify it under
-                        the terms of the GNU General Public License as published
-                        by the Free Software Foundation, version 2 of the License
-                        (available at the URL listed under "license" above).
-                        
-                        Eiffel Software's Eiffel Development Environment is
-                        distributed in the hope that it will be useful,	but
-                        WITHOUT ANY WARRANTY; without even the implied warranty
-                        of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-                        See the	GNU General Public License for more details.
-                        
-                        You should have received a copy of the GNU General Public
-                        License along with Eiffel Software's Eiffel Development
-                        Environment; if not, write to the Free Software Foundation,
-                        Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
-                ]"
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
         source: "[
-                         Eiffel Software
-                         356 Storke Road, Goleta, CA 93117 USA
-                         Telephone 805-685-1006, Fax 805-685-6869
-                         Website http://www.eiffel.com
-                         Customer support http://support.eiffel.com
-                ]"
+			 Eiffel Software
+			 5949 Hollister Ave., Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
 
 end -- class EB_METRIC_DOMAIN_SELECTOR
 

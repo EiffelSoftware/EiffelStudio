@@ -56,11 +56,15 @@ feature {NONE} -- Initialization
 		do
 			set_metric_tool (a_tool)
 			set_metric_panel (a_panel)
+			mode := a_mode
+			set_unit (a_unit)
 			create change_actions
+			create metric_grid
+
 			default_create
 			set_mode (a_mode)
-			set_unit (a_unit)
 			setup_editor
+
 			append_drop_actions (
 				<<linear_lbl_empty_area,
 				  linear_definition_empty_area,
@@ -87,7 +91,6 @@ feature {NONE} -- Initialization
 			create move_down_shortcut.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_numpad_add), True, False, False)
 
 				-- Initialize `metric_grid'.
-			create metric_grid
 			metric_grid.set_column_count_to (2)
 			metric_grid.enable_row_separators
 			metric_grid.enable_column_separators
@@ -649,7 +652,7 @@ invariant
 	metric_grid_attached: metric_grid /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -662,19 +665,19 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

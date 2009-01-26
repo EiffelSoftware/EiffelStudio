@@ -77,11 +77,6 @@ feature {NONE} -- Access
 	ot_counter: NATURAL
 			-- Counter vor object test locals
 
-feature {NONE} -- Status report
-
-	is_last_request: BOOLEAN
-			-- Is current request last in list?
-
 feature -- Status setting
 
 	set_output_stream (an_output_stream: like output_stream)
@@ -98,6 +93,7 @@ feature -- Status setting
 feature {NONE} -- Query
 
 	variable_name (a_var: ITP_VARIABLE): STRING
+			-- Name of variable in generated test.
 		do
 			Result := a_var.name (variable_name_prefix)
 		ensure
@@ -206,7 +202,15 @@ feature -- Basic operations
 			until
 				cs.off
 			loop
-				is_last_request := cs.is_last
+				if cs.is_last then
+					output_stream.put_new_line
+					indent
+					print_indentation
+					output_stream.put_line ("-- Final routine call")
+					dedent
+					print_indentation
+					output_stream.put_line ("set_is_recovery_enabled (False)")
+				end
 				cs.item.process (Current)
 				cs.forth
 			end
@@ -308,17 +312,6 @@ feature {AUT_REQUEST} -- Processing
 			l_rec_type: TYPE_A
 			l_use_ot: BOOLEAN
 		do
-
-			if is_last_request then
-				output_stream.put_new_line
-				indent
-				print_indentation
-				output_stream.put_line ("-- Final routine call")
-				dedent
-				print_indentation
-				output_stream.put_line ("set_is_recovery_enabled (False)")
-			end
-
 			print_indentation
 			output_stream.put_string ("execute_safe (agent ")
 			output_stream.put_string (variable_name (a_request.target))
@@ -564,7 +557,7 @@ invariant
 	valid_expression_printer_output_stream: expression_printer.output_stream = output_stream
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -588,10 +581,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

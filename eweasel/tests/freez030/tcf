@@ -1,0 +1,26 @@
+
+test_name 	invariant-qualified-call-on-constant
+test_description A qualified call on a constant attribute where the target is Current does not check the class invariant when the system is frozen.  Melted code works correctly
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE exec_output1
+execute_result 	ok
+compare 	exec_output1 output
+
+compile_frozen
+compile_result ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE exec_output2
+execute_result 	ok
+compare 	exec_output2 output
+
+test_end

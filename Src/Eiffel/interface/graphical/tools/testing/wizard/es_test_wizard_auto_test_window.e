@@ -132,6 +132,38 @@ feature {NONE} -- Initialization
 					end)
 
 			create type_field.make (l_textfield, agent on_validate_type)
+			type_field.set_entry_formatter (agent {!STRING_32}.as_upper)
+			type_field.set_entry_validation (
+				agent (a_string: !STRING_32): BOOLEAN
+					local
+						i: INTEGER
+						nb: INTEGER
+						c: CHARACTER
+					do
+						from
+							i := 1
+							Result := True
+							nb := a_string.count
+						until
+							i > a_string.count or not Result
+						loop
+							c := a_string.item (i).to_character_8
+							if not c.is_alpha_numeric then
+								inspect c
+								when '[' then
+								when ']' then
+								when '!' then
+								when '?' then
+								when '_' then
+								when ' ' then
+								when ',' then
+								else
+									Result := False
+								end
+							end
+							i := i + 1
+						end
+					end)
 			l_hbox.extend (type_field)
 
 			l_vbox.extend (l_hbox)
@@ -512,10 +544,10 @@ feature {NONE} -- Constants
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

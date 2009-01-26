@@ -1479,6 +1479,7 @@ test	inline-agent-with-attribute-body	term168	tcf fail termination
 test	self-init-attribute-returning-current	term169	tcf pass termination self_init void_safe
 test	self-init-attribute-crash	term170	tcf pass termination
 test	keyword-in-multi-constraint-generic-crash	term171	tcf fail termination
+test	catcall-crash-is-covariant-to	term172	tcf fail termination catcall
 
 -- Config
 

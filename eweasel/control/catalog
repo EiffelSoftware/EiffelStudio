@@ -2073,6 +2073,7 @@ test	current-in-self-init-attribute					attach041 tcf pass attached_types self_i
 test	agent-attached-by-default					attach042 tcf pass attached_types void_safe
 test	empty-agent-argument-attached-by-default			attach043 tcf pass attached_types void_safe
 test	attached-type-attribute-attachment				attach044 tcf pass attached_types reflection
+test	attached-inherited-argument					attach045 tcf fail attached_types void_safe scope
 
 -- Tests for conformance in general
 test	basic-conformance		conform001 tcf pass conformance

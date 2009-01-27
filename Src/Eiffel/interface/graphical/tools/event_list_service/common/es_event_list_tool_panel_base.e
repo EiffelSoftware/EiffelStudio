@@ -70,7 +70,7 @@ feature {NONE} -- Initialization
 			grid_events.disable_vertical_scrolling_per_item
 
 				-- Register action to display context menus.
-			register_action (grid_events.pointer_button_press_actions, agent (ia_widget: ES_GRID; ia_x, ia_y, ia_button, ia_x_tilt, ia_y_tilt, ia_pressure, ia_screen_x, ia_screen_y: INTEGER_32)
+			register_action (grid_events.pointer_button_press_actions, agent (ia_widget: ES_GRID; ia_x, ia_y, ia_button: INTEGER_32; ia_x_tilt, ia_y_tilt, ia_pressure: REAL_64; ia_screen_x, ia_screen_y: INTEGER_32)
 				do
 					if ia_button = 3 then
 							-- Process the right click
@@ -80,7 +80,7 @@ feature {NONE} -- Initialization
 						register_kamikaze_action (ia_widget.pointer_button_release_actions, agent (
 								iia_widget: ES_GRID; iia_x, iia_y: INTEGER;
 									-- Ingore all other arguments.
-								iia_u1, iia_u2, iia_u3, iia_u4, iia_u5, iia_u6, iia_u7, iia_u8: INTEGER_32)
+								iia_u1, iia_u2, iia_u3: INTEGER_32; iia_u4, iia_u5, iia_u6: REAL_64; iia_u7, iia_u8: INTEGER_32)
 							local
 								l_item: EV_GRID_ITEM
 							do
@@ -1168,7 +1168,7 @@ invariant
 	grid_events_attached: is_initialized implies grid_events /= Void
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -1192,11 +1192,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

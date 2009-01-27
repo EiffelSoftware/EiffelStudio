@@ -470,6 +470,7 @@ test	inherited-conversion-crash		svalid012 tcf pass system-validity conversion
 test	unused-local-warning-not-repeated	svalid013 tcf fail system-validity
 test	inline-agent-inherited-crash	svalid014 tcf pass system-validity
 test	svalid-multi-constraint-inheritance	svalid015 tcf pass system-validity multiconstraint
+test	svalid-conversion-validity-error	svalid016 tcf pass system-validity
 
 -- Catcall tests
 test	simple-catcall				catcall001 tcf pass catcall
@@ -1473,7 +1474,7 @@ test	formal-generic-creation-crash	term160 tcf pass termination
 test	array-with-anchor-crash		term161 tcf pass termination dotnet
 test	crash-when-calling-out-on-a-formal	term162 tcf pass termination dotnet
 test    bad_formal_types                        term163 tcf pass validity
-test    crash-in-convertion-clause 	term164 tcf pass validity
+test    crash-in-conversion-clause 	term164 tcf pass validity
 test    crash-in-checking-inherited-code	term165 tcf pass validity
 test    catcall-and-full-class-checking	term166 tcf fail termination
 test	single-constraint-with-renaming-crash	term167	tcf fail termination

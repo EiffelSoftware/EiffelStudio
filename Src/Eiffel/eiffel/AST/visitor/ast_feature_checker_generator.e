@@ -2268,7 +2268,7 @@ feature -- Implementation
 						end
 					elseif
 						l_feat_type.is_initialization_required and then
-						not context.initialization_keeper.is_result_set and then
+						not context.local_initialization.is_result_set and then
 						context.current_class.lace_class.is_void_safe
 					then
 							-- Result is not properly initialized.
@@ -2599,7 +2599,7 @@ feature -- Implementation
 						end
 					elseif
 						l_type.is_initialization_required and then
-						not context.initialization_keeper.is_local_set (l_local_info.position)
+						not context.local_initialization.is_local_set (l_local_info.position)
 					then
 							-- Local is not properly initialized.
 						if context.current_class.lace_class.is_void_safe then
@@ -3028,9 +3028,7 @@ feature -- Implementation
 			l_feat_type: TYPE_A
 			creators: HASH_TABLE [EXPORT_I, STRING_8]
 			is_creation_procedure: BOOLEAN
---			feature_id: INTEGER
---			attr: FEATURE_I
---			skeleton: GENERIC_SKELETON
+			precondition_scope: AST_SCOPE_COMBINED_PRECONDITION
 		do
 			l_needs_byte_node := is_byte_node_enabled
 			l_error_level := error_level
@@ -3046,6 +3044,14 @@ feature -- Implementation
 				is_creation_procedure := True
 			else
 				context.variables.start_feature
+			end
+
+				-- Check if some arguments are attached because of an inherited precondition.
+				-- Avoid doing it when there are no inherited preconditions.
+			if context.current_class.lace_class.is_void_safe and then
+				not (current_feature.has_precondition and then current_feature.assert_id_set = Void)
+			then
+				create precondition_scope.make (current_feature, context)
 			end
 
 				-- Check preconditions
@@ -3080,41 +3086,19 @@ feature -- Implementation
 				if
 					l_feat_type.is_initialization_required and then
 					not l_as.is_external and then
-					not context.initialization_keeper.is_result_set and then
+					not context.local_initialization.is_result_set and then
 					not current_feature.is_deferred and then
 					context.current_class.lace_class.is_void_safe
 				then
 						-- Result is not properly initialized.
 					error_handler.insert_error (create {VEVI}.make_result (context, l_as.end_keyword))
 				end
---				if is_creation_procedure then
---						-- Verify that attributes are properly initialized.
---					from
---						skeleton := context.current_class.skeleton
---						skeleton.start
---					until
---						skeleton.after
---					loop
---						feature_id := skeleton.item_for_iteration.feature_id
---						attr := context.current_class.feature_of_feature_id (feature_id)
---						l_feat_type := attr.type
---						if
---							l_feat_type.is_attached and then not l_feat_type.is_expanded and then
---							{a: ATTRIBUTE_I} attr and then not a.has_body and then
---							not context.variables.is_attribute_initialized (feature_id)
---						then
---								-- Attribute is not properly initialized.
---							error_handler.insert_error (create {VEVI}.make_attribute (attr, context.current_class.class_id, context, l_as.end_keyword))
---						end
---						skeleton.forth
---					end
---				end
 					-- Check postconditions
 				if l_as.postcondition /= Void then
 						-- Set access id level analysis to `is_checking_postcondition': locals
 						-- are not taken into account
 					set_is_checking_postcondition (True)
-					if l_feat_type.is_initialization_required and then not context.initialization_keeper.is_result_set then
+					if l_feat_type.is_initialization_required and then not context.local_initialization.is_result_set then
 						context.set_result
 					end
 					if l_feat_type.is_attached then
@@ -7126,7 +7110,7 @@ feature {NONE} -- Implementation
 				if not process_preconditions then
 						-- Mark that result is initialized and attached if required.
 					t := a_feature.type
-					if t.is_initialization_required and then not context.initialization_keeper.is_result_set then
+					if t.is_initialization_required and then not context.local_initialization.is_result_set then
 						context.set_result
 					end
 					if t.is_attached then

@@ -1,74 +1,52 @@
 note
-	description: "Keeper for non-void entity scopes with a limited range of variable indicies."
+	description: "Tracker for scopes of local variables."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class AST_BOUNDED_SCOPE_KEEPER
+class
+	AST_LOCAL_SCOPE_TRACKER
 
 inherit
-	AST_STACKED_SCOPE_KEEPER [NATURAL_64]
-		redefine
-			duplicate
+	AST_LOCAL_INITIALIZATION_TRACKER
+		rename
+			is_local_set as is_local_attached,
+			is_result_set as is_result_attached,
+			keeper as initialization_keeper,
+			scope_keeper as keeper,
+			set_local as start_local_scope,
+			set_result as start_result_scope
+		export
+			{AST_CONTEXT} keeper
 		end
 
 create
 	make
 
-feature -- Access
+feature {AST_CONTEXT} -- Element change
 
-	is_attached (index: like count): BOOLEAN
-			-- Is a variable with the given `index' is not void?
+	stop_local_scope (position: like local_count)
+			-- Mark that a local with the given `position' can be void.
+		require
+			position_large_enough: position > 0
+			position_small_emough: position <= local_count
 		do
-			Result := scope.bit_test (index - 1)
+			keeper.stop_scope (position)
+		ensure
+			is_local_not_attached: not is_local_attached (position)
 		end
 
-feature -- Status report: variables
-
-	max_count: INTEGER = 63
-			-- Maximum value of `count'
-			--| One bit is reserved to indicate a non-empty stack element
-
-feature -- Modification: variables
-
-	start_scope (index: like count)
-			-- Mark that a local with the given `index' is not void.
+	stop_result_scope
+			-- Mark that "Result" can be void.
 		do
-			scope := scope | (({NATURAL_64} 1) |<< (index - 1))
-		end
-
-	stop_scope (index: like count)
-			-- Mark that a local with the given `index' can be void.
-		do
-			scope := scope & (({NATURAL_64} 1) |<< (index - 1)).bit_not
-		end
-
-feature {NONE} -- Modification: nesting
-
-	merge_siblings
-			-- Merge sibling scope information from `scope'
-			-- into `inner_scopes.item'.
-		do
-			inner_scopes.replace (inner_scopes.item & scope)
-		end
-
-feature {NONE} -- Initialization
-
-	new_scope (n: like count): like scope
-		do
-			Result := {NATURAL_64} 0x8000000000000000
-		end
-
-feature {NONE} -- Duplication
-
-	duplicate (s: like scope): like scope
-		do
-			Result := s
+			keeper.stop_scope (result_index)
+		ensure
+			is_result_not_attached: not is_result_attached
 		end
 
 note
-	copyright:	"Copyright (c) 2008-2009, Eiffel Software"
+	copyright:	"Copyright (c) 2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

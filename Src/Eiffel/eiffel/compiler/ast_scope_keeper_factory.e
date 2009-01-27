@@ -14,18 +14,18 @@ feature -- Access
 		require
 			non_negative_n: n >= 0
 		do
-			if n > {AST_BOUNDED_SCOPE_KEEPER}.max_local_count then
+			if n > {AST_BOUNDED_SCOPE_KEEPER}.max_count then
 				create {AST_UNBOUNDED_SCOPE_KEEPER} Result.make (n)
 			else
 				create {AST_BOUNDED_SCOPE_KEEPER} Result.make (n)
 			end
 		ensure
 			result_attached: Result /= Void
-			result_local_count_set: Result.local_count = n
+			result_local_count_set: Result.count = n
 		end
 
 note
-	copyright:	"Copyright (c) 2008, Eiffel Software"
+	copyright:	"Copyright (c) 2008-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

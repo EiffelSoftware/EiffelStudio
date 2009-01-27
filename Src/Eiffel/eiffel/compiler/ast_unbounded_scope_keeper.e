@@ -1,5 +1,5 @@
 note
-	description: "Keeper for non-void entity scopes with an unlimited range of variable positions."
+	description: "Keeper for non-void entity scopes with an unlimited range of variable indicies."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -15,49 +15,32 @@ create
 
 feature -- Access
 
-	is_local_attached (position: like local_count): BOOLEAN
-			-- Is a local with the given `position' is not void?
+	is_attached (index: like count): BOOLEAN
+			-- Is a variable with the given `index' is not void?
 		do
-			Result := scope [position]
-		end
-
-	is_result_attached: BOOLEAN
-		do
-			Result := scope [0]
+			Result := scope [index]
 		end
 
 feature -- Status report: variables
 
-	max_local_count: INTEGER
-			-- Maximum value of `local_count'
+	max_count: INTEGER
+			-- Maximum value of `count'
 		do
-			Result := {INTEGER}.max_value
+			Result := {like count}.max_value
 		end
 
 feature -- Modification: variables
 
-	start_local_scope (position: like local_count)
-			-- Mark that a local with the given `position' is not void.
+	start_scope (index: like count)
+			-- Mark that a variable with the given `index' is not void.
 		do
-			scope [position] := True
+			scope [index] := True
 		end
 
-	start_result_scope
-			-- Mark that "Result" is not void.
-		do
-			scope [0] := True
-		end
-
-	stop_local_scope (position: like local_count)
+	stop_scope (index: like count)
 			-- Mark that a local with the given `position' can be void.
 		do
-			scope [position] := False
-		end
-
-	stop_result_scope
-			-- Mark that "Result" can be void.
-		do
-			scope [0] := False
+			scope [index] := False
 		end
 
 feature {NONE} -- Modification: nesting
@@ -72,7 +55,7 @@ feature {NONE} -- Modification: nesting
 			s := inner_scopes.item
 			if s /= scope then
 				from
-					i := local_count
+					i := count
 				until
 					i < 0
 				loop
@@ -85,14 +68,13 @@ feature {NONE} -- Modification: nesting
 
 feature {NONE} -- Initialization
 
-	new_scope (n: like local_count): like scope
+	new_scope (n: like count): like scope
 		do
-				-- "Result" status is kept at index 0.
-			create Result.make (0, n)
+			create Result.make (1, n)
 		end
 
 note
-	copyright:	"Copyright (c) 2008, Eiffel Software"
+	copyright:	"Copyright (c) 2008-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

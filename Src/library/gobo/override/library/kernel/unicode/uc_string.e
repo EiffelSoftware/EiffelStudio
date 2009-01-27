@@ -70,6 +70,8 @@ inherit
 				is_case_insensitive_equal,
 				valid_code,
 				to_string_32
+			{READABLE_STRING_8, READABLE_STRING_32}
+				area_lower
 			{ANY}
 				is_string_8,
 				valid_index

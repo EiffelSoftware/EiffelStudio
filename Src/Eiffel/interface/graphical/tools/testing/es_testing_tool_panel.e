@@ -651,7 +651,7 @@ feature {NONE} -- Events: test execution
 
 feature {NONE} -- Events: labels
 
-	on_run_label_select
+	on_run_label_select (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tile, a_pressure: REAL_64; a_screen_x, a_screen_y: INTEGER)
 			-- Called when user clicks on `runs_label'.
 		do
 			view_box.set_text (l_outcome_view)
@@ -659,7 +659,7 @@ feature {NONE} -- Events: labels
 			update_view
 		end
 
-	on_error_label_select
+	on_error_label_select (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tile, a_pressure: REAL_64; a_screen_x, a_screen_y: INTEGER)
 			-- Called when user clicks on `errors_label'.
 		do
 			view_box.set_text (l_outcome_view)
@@ -1007,10 +1007,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

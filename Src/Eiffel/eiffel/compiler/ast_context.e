@@ -193,7 +193,7 @@ feature {AST_FEATURE_CHECKER_GENERATOR, AST_CONTEXT} -- Local scopes: status rep
 	is_local_attached (id: INTEGER_32): BOOLEAN
 			-- Is local `id' in the scope where it is considered attached?
 		do
-			Result := scope_keeper.is_local_attached (locals.item (id).position)
+			Result := local_scope.is_local_attached (locals.item (id).position)
 			if not Result then
 				Result := scopes.has (id)
 			end
@@ -202,7 +202,7 @@ feature {AST_FEATURE_CHECKER_GENERATOR, AST_CONTEXT} -- Local scopes: status rep
 	is_result_attached: BOOLEAN
 			-- Is special entity "Result" in the scope where it is considered attached?
 		do
-			Result := scope_keeper.is_result_attached
+			Result := local_scope.is_result_attached
 			if not Result then
 				Result := scopes.has (result_id)
 			end
@@ -251,28 +251,20 @@ feature -- Scope state
 	init_variable_scopes
 			-- Prepare structures to track variable scopes.
 		do
-			initialization_keeper := scope_keeper_factory.create_scope_keeper (locals.count)
-			scope_keeper := scope_keeper_factory.create_scope_keeper (locals.count)
+			create local_initialization.make (locals.count)
+			create local_scope.make (locals.count)
 		ensure
-			initialization_keeper_attached: initialization_keeper /= Void
-			initialization_keeper_initialized: initialization_keeper.local_count = locals.count
-			scope_keeper_attached: scope_keeper /= Void
-			scope_keeper_initialized: scope_keeper.local_count = locals.count
+			local_initialization_attached: local_initialization /= Void
+			local_initialization_initialized: local_initialization.local_count = locals.count
+			local_scope_attached: local_scope /= Void
+			local_scope_initialized: local_scope.local_count = locals.count
 		end
 
-	initialization_keeper: AST_INITIALIZATION_KEEPER
-			-- Keeper of initialized variables
+	local_initialization: AST_LOCAL_INITIALIZATION_TRACKER
+			-- Tracker of initialized locals
 
-	scope_keeper: AST_SCOPE_KEEPER
-			-- Keeper of scopes of non-void variables
-
-feature {NONE} -- Scope state
-
-	scope_keeper_factory: AST_SCOPE_KEEPER_FACTORY
-			-- Factory to create scope keepers
-		once
-			create Result
-		end
+	local_scope: AST_LOCAL_SCOPE_TRACKER
+			-- Tracker of scopes of non-void locals
 
 feature {AST_SCOPE_MATCHER, AST_FEATURE_CHECKER_GENERATOR} -- Local scopes: modification
 
@@ -314,7 +306,7 @@ feature {AST_SCOPE_MATCHER, AST_FEATURE_CHECKER_GENERATOR} -- Local scopes: modi
 	add_local_instruction_scope (id: INTEGER_32)
 			-- Add a scope for a local identified by `id'.
 		do
-			scope_keeper.start_local_scope (locals.item (id).position)
+			local_scope.start_local_scope (locals.item (id).position)
 		ensure
 			is_local_attached: is_local_attached (id)
 		end
@@ -322,7 +314,7 @@ feature {AST_SCOPE_MATCHER, AST_FEATURE_CHECKER_GENERATOR} -- Local scopes: modi
 	add_result_instruction_scope
 			-- Add a scope for the special entity "Result".
 		do
-			scope_keeper.start_result_scope
+			local_scope.start_result_scope
 		ensure
 			is_result_attached: is_result_attached
 		end
@@ -330,13 +322,13 @@ feature {AST_SCOPE_MATCHER, AST_FEATURE_CHECKER_GENERATOR} -- Local scopes: modi
 	set_local (id: INTEGER_32)
 			-- Mark that a local identified by `id' is set.
 		do
-			initialization_keeper.set_local (locals.item (id).position)
+			local_initialization.set_local (locals.item (id).position)
 		end
 
 	set_result
 			-- Mark that "Result" is set.
 		do
-			initialization_keeper.set_result
+			local_initialization.set_result
 		end
 
 feature {AST_SCOPE_MATCHER, SHARED_AST_CONTEXT} -- Local scopes: modification
@@ -380,17 +372,13 @@ feature {AST_FEATURE_CHECKER_GENERATOR, AST_CONTEXT} -- Local scopes: removal
 	remove_local_scope (id: INTEGER_32)
 			-- Mark that an attached scope of a local identified by `id' is terminated.
 		do
-			scope_keeper.stop_local_scope (locals.item (id).position)
-		ensure
-			local_scope_removed: not is_local_attached (id)
+			local_scope.stop_local_scope (locals.item (id).position)
 		end
 
 	remove_result_scope
 			-- Mark that an attached scope of the special entity "Result" is terminated.
 		do
-			scope_keeper.stop_result_scope
-		ensure
-			result_scope_removed: not is_result_attached
+			local_scope.stop_result_scope
 		end
 
 feature -- Local initialization and scopes: nesting
@@ -398,38 +386,38 @@ feature -- Local initialization and scopes: nesting
 	enter_realm
 			-- Enter a new complex instruction with inner compound parts.
 		do
-			initialization_keeper.enter_realm
-			scope_keeper.enter_realm
+			local_initialization.keeper.enter_realm
+			local_scope.keeper.enter_realm
 		end
 
 	update_realm
 			-- Update realm variable information from the current state.
 		do
-			initialization_keeper.update_realm
-			scope_keeper.update_realm
+			local_initialization.keeper.update_realm
+			local_scope.keeper.update_realm
 		end
 
 	save_sibling
 			-- Save variable information of a sibling in a complex instrution.
 			-- For example, Then_part of Elseif condition.
 		do
-			initialization_keeper.save_sibling
-			scope_keeper.save_sibling
+			local_initialization.keeper.save_sibling
+			local_scope.keeper.save_sibling
 		end
 
 	leave_realm
 			-- Leave a complex instruction and promote variable information to the outer compound.
 		do
-			initialization_keeper.leave_realm
-			scope_keeper.leave_realm
+			local_initialization.keeper.leave_realm
+			local_scope.keeper.leave_realm
 		end
 
 	leave_optional_realm
 			-- Leave a complex instruction and discard its variable information.
 			-- For example, Debug instruction.
 		do
-			initialization_keeper.leave_optional_realm
-			scope_keeper.leave_optional_realm
+			local_initialization.keeper.leave_optional_realm
+			local_scope.keeper.leave_optional_realm
 		end
 
 feature -- Variable context
@@ -709,8 +697,8 @@ feature	-- Saving contexts
 			used_argument_names := Void
 			used_local_names := Void
 			scopes.copy (Result.scopes)
-			scope_keeper := Void
-			initialization_keeper := Void
+			local_scope := Void
+			local_initialization := Void
 		end
 
 	restore (context: AST_CONTEXT)
@@ -728,7 +716,7 @@ invariant
 
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

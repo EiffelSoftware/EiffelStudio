@@ -56,10 +56,24 @@ feature {NONE} -- Creation
 		require
 			f_attached: f /= Void
 			c_attached: c /= Void
+		local
+			s: GENERIC_SKELETON
+			i: INTEGER
 		do
 			creation_procedure := f
 			context := c
 			create {ARRAYED_STACK [INTEGER_32]} bodies.make (1)
+			from
+				s := current_class.skeleton
+				i := s.count
+				create attribute_initialization.make (i)
+				create attributes.make (i)
+			until
+				i <= 0
+			loop
+				attributes.put (i, s [i].feature_id)
+				i := i - 1
+			end
 			variables.start_creation_procedure
 			variables.enter_compound
 			process (f)
@@ -202,7 +216,7 @@ feature {AST_EIFFEL} -- Visitor: access to features
 		local
 			f: FEATURE_I
 		do
-			if not is_qualified then
+			if not is_qualified and then not a.is_local and then not a.is_argument then
 				f := written_class.feature_of_name_id (a.feature_name.name_id)
 				if f /= Void then
 						-- This is indeed a feature rather than a local or an argument.
@@ -444,6 +458,12 @@ feature {NONE} -- Access
 		do
 			Result := context.written_class
 		end
+
+	attributes: HASH_TABLE [INTEGER_32, INTEGER_32]
+			-- Attribute indecies indexed by their feature ID
+
+	attribute_initialization: AST_ATTRIBUTE_INITIALIZATION_TRACKER
+			-- Storage to track attributes usage
 
 	variables: AST_VARIABLE_CONTEXT
 			-- Storage to track variables usage

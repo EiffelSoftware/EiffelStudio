@@ -12,18 +12,18 @@ inherit
 
 feature {NONE} -- Creation
 
-	make (n: like local_count)
-			-- Create storage to keep at least `n' locals.
+	make (n: like count)
+			-- Create storage to keep at least `n' variables.
 		require
 			non_negative_n: n >= 0
-			n_small_enough: n <= max_local_count
+			n_small_enough: n <= max_count
 		do
 			scope := new_scope (n)
 			create {ARRAYED_STACK [like scope]} outer_scopes.make (1)
 			create {ARRAYED_STACK [like scope]} inner_scopes.make (1)
-			local_count := n
+			count := n
 		ensure
-			local_count_set: local_count = n
+			count_set: count = n
 		end
 
 feature -- Status report: nesting
@@ -129,9 +129,8 @@ feature {NONE} -- Storage
 
 feature {NONE} -- Initialization
 
-	new_scope (n: like local_count): like scope
-			-- New scope that can track attachment status of Result
-			-- and up to `n' local variables.
+	new_scope (n: like count): like scope
+			-- New scope that can track attachment status of `n' variables.
 		deferred
 		ensure
 			result_attached: Result /= Void
@@ -159,7 +158,7 @@ invariant
 	same_level: outer_scopes.count = inner_scopes.count
 
 note
-	copyright:	"Copyright (c) 2008, Eiffel Software"
+	copyright:	"Copyright (c) 2008-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

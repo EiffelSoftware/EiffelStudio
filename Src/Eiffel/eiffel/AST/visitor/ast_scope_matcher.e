@@ -112,17 +112,9 @@ feature {NONE} -- Check for void test
 				end
 				if {expr_call_as: EXPR_CALL_AS} e then
 					if {access_id_as: ACCESS_ID_AS} expr_call_as.call then
-						if access_id_as.is_argument then
-							add_argument_scope (access_id_as.feature_name.name_id)
-						elseif access_id_as.is_local then
-							add_local_scope (access_id_as.feature_name.name_id)
-						end
+						add_access_scope (access_id_as)
 					elseif {access_assert_as: ACCESS_ASSERT_AS} expr_call_as.call then
-						if access_assert_as.is_argument then
-							add_argument_scope (access_assert_as.feature_name.name_id)
-						elseif access_assert_as.is_local then
-							add_local_scope (access_assert_as.feature_name.name_id)
-						end
+						add_access_scope (access_assert_as)
 					elseif {result_as: RESULT_AS} expr_call_as.call then
 						add_result_scope
 					end
@@ -144,6 +136,18 @@ feature {NONE} -- Context
 
 	context: AST_CONTEXT
 			-- Associated AST context
+
+	add_access_scope (a: ACCESS_INV_AS)
+			-- Add scope for `a' if this is a recognized variable.
+		require
+			a_attached: a /= Void
+		do
+			if a.is_argument then
+				add_argument_scope (a.feature_name.name_id)
+			elseif a.is_local then
+				add_local_scope (a.feature_name.name_id)
+			end
+		end
 
 	add_argument_scope (id: INTEGER_32)
 			-- Add scope of a non-void argument.

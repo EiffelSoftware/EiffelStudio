@@ -1,5 +1,5 @@
 note
-	description: "Keeper for initialized local entities."
+	description: "Keeper for initialized variables."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -9,41 +9,31 @@ deferred class AST_INITIALIZATION_KEEPER
 
 feature -- Access
 
-	is_local_set (position: like local_count): BOOLEAN
-			-- Is a local with the given `position' set?
+	is_set (index: like count): BOOLEAN
+			-- Is a variable with the given `index' set?
 		require
-			position_large_enough: position > 0
-			position_small_emough: position <= local_count
-		deferred
-		end
-
-	is_result_set: BOOLEAN
-			-- Is Result set?
+			index_large_enough: index > 0
+			index_small_emough: index <= count
 		deferred
 		end
 
 feature -- Status report: variables
 
-	local_count: like max_local_count
-			-- Maximum number of locals that can be registered
+	count: like max_count
+			-- Maximum number of variables that can be registered
 
-	max_local_count: INTEGER
-			-- Maximum value of `local_count'
+	max_count: INTEGER
+			-- Maximum value of `count'
 		deferred
 		end
 
-feature {AST_CONTEXT} -- Modification: variables
+feature {AST_ATTRIBUTE_INITIALIZATION_TRACKER, AST_LOCAL_INITIALIZATION_TRACKER} -- Modification: variables
 
-	set_local (position: like local_count)
-			-- Mark that a local with the given `position' is set.
+	set (index: like count)
+			-- Mark that a variable with the given `index' is set.
 		require
-			position_large_enough: position > 0
-			position_small_emough: position <= local_count
-		deferred
-		end
-
-	set_result
-			-- Mark that "Result" is set.
+			index_large_enough: index > 0
+			index_small_emough: index <= count
 		deferred
 		end
 
@@ -54,7 +44,7 @@ feature -- Status report: nesting
 		deferred
 		end
 
-feature {AST_CONTEXT} -- Modification: nesting
+feature {AST_SCOPE_COMBINED_PRECONDITION, AST_CONTEXT} -- Modification: nesting
 
 	enter_realm
 			-- Enter a new complex instruction with inner compound parts.
@@ -100,7 +90,7 @@ feature {AST_CONTEXT} -- Modification: nesting
 		end
 
 note
-	copyright:	"Copyright (c) 2008, Eiffel Software"
+	copyright:	"Copyright (c) 2008-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

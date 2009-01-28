@@ -64,8 +64,8 @@ feature {NONE} -- Implementation
 		do
 			from
 				lines.start
-				create b.make_from_character_pos (1, 1, text)
-				create e.make_from_character_pos (1, 1, text)
+				b := text.new_cursor_from_character_pos (1, 1)
+				e := text.new_cursor_from_character_pos (1, 1)
 			until
 				lines.after
 			loop

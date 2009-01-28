@@ -8,9 +8,9 @@ copy_raw	test.e $CLUSTER test.e
 compile_melted
 compile_result	ok
 
-execute_work NONE exec_output_m
+execute_work NONE exec_output_1
 execute_result	ok
-compare		exec_output_m output
+compare		exec_output_1 output
 
 cleanup_compile
 define	VOID_SAFE false
@@ -19,8 +19,8 @@ copy_sub	Ace	$TEST Ace
 compile_melted
 compile_result	ok
 
-execute_work NONE exec_output_m
+execute_work NONE exec_output_2
 execute_result	ok
-compare		exec_output_m output
+compare		exec_output_2 output
 
 test_end

@@ -795,6 +795,7 @@ test	real-feature-id-crash			incr309	tcf fail incrementality
 test	change-class-to-deferred-vtcg-sneak	incr310	tcf fail incrementality
 test	remove-and-add-base-eats-memory		incr311	tcf fail incrementality skip
 test	generate-final-c-body-crash		incr312	tcf fail incrementality
+test	remove-convert-clause-undetected-vjar	incr313	tcf fail incrementality
 
 
 -- Melting

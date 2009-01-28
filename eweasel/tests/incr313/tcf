@@ -1,0 +1,24 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 remove-convert-clause-undetected-vjar
+test_description After initial compilation, a convert clause is removed completely.  This introduces a VJAR error but the compiler does not detectit
+
+define		CONVERT "convert make_from_test ({TEST})"
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_sub 	test1.e $CLUSTER test1.e
+compile_melted
+compile_result 	ok
+
+define		CONVERT ""
+copy_sub 	test1.e $CLUSTER test1.e
+compile_melted
+compile_result 	validity_error TEST VJAR
+
+test_end

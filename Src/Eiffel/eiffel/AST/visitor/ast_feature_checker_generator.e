@@ -8319,7 +8319,7 @@ feature {NONE} -- Agents
 				-- Create open argument type tuple
 			create l_tuple_type.make (System.tuple_id, l_oargtypes)
 			l_current_class_void_safe := context.current_class.lace_class.is_void_safe
-			if l_oargtypes.count > 0 and then not l_tuple_type.is_attached then
+			if not l_tuple_type.is_attached then
 					-- Type of an argument tuple is always attached.
 				if l_current_class_void_safe then
 					l_tuple_type := l_tuple_type.as_attached_type

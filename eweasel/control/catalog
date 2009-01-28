@@ -796,6 +796,7 @@ test	change-class-to-deferred-vtcg-sneak	incr310	tcf fail incrementality
 test	remove-and-add-base-eats-memory		incr311	tcf fail incrementality skip
 test	generate-final-c-body-crash		incr312	tcf fail incrementality
 test	remove-convert-clause-undetected-vjar	incr313	tcf fail incrementality
+test	add-inherit-clause-undetected-vycp	incr314	tcf fail incrementality
 
 
 -- Melting

@@ -276,6 +276,7 @@ feature -- Generic conformance
 			-- separated by commas. `use_info' is true iff
 			-- we generate code for a creation instruction.
 		do
+			generate_cid_prefix (buffer, Void)
 			if use_info then
 				create_info.generate_cid (buffer, final_mode)
 			else
@@ -285,6 +286,7 @@ feature -- Generic conformance
 
 	generate_cid_array (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; idx_cnt: COUNTER; a_context_type: TYPE_A)
 		do
+			generate_cid_prefix (buffer, idx_cnt)
 			if use_info then
 				create_info.generate_cid_array (buffer, final_mode, idx_cnt)
 			else
@@ -294,6 +296,7 @@ feature -- Generic conformance
 
 	generate_cid_init (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; idx_cnt: COUNTER; a_level: NATURAL)
 		do
+			generate_cid_prefix (Void, idx_cnt)
 			if use_info then
 				create_info.generate_cid_init (buffer, final_mode, idx_cnt, a_level)
 			else
@@ -303,6 +306,7 @@ feature -- Generic conformance
 
 	make_type_byte_code (ba: BYTE_ARRAY; use_info: BOOLEAN; a_context_type: TYPE_A)
 		do
+			make_type_prefix_byte_code (ba)
 			if use_info then
 				create_info.make_type_byte_code (ba)
 			else

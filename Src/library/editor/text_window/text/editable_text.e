@@ -62,6 +62,9 @@ feature -- Cursor creation
 	new_cursor_from_character_pos (ch_num, y: INTEGER): like cursor
 			-- Correct way to create a cursor for Current text since `cursor'
 			-- could be covariantly redefined.
+		require
+			ch_num_valid: ch_num >= 1
+			y_valid: y >= 1
 		do
 			create Result.make_from_character_pos (ch_num, y, Current)
 		ensure

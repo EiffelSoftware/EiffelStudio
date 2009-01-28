@@ -1150,8 +1150,8 @@ test	melted-memory-copy		exec131  tcf pass execution
 test	is-integer-accepts-invalid	exec132  tcf pass execution
 test	agent-lighter-tuple-arg		exec133  tcf pass execution tuple
 test	insert-hash-table-zero		exec134  tcf pass execution
-test	store-expanded-retrieve-wrong	exec135  tcf pass execution
-test	store-expanded-retrieve-dies	exec136  tcf pass execution
+test	store-expanded-retrieve-wrong	exec135  tcf pass execution storable
+test	store-expanded-retrieve-dies	exec136  tcf pass execution storable
 test	array-expanded-not-deep-equal	exec137  tcf pass execution
 test	expanded-no-default-create	exec138  tcf fail execution
 test	retr-expanded-not-deep-equal	exec139  tcf pass execution
@@ -1159,7 +1159,7 @@ test	linked-queue-linear-rep		exec140  tcf pass execution
 test	inspect-high-bit-char		exec141  tcf pass execution
 test	invariant-changes-current	exec142  tcf fail execution
 test	is-special-any-type-lies	exec143  tcf pass execution
-test	indep-store-big-array		exec144  tcf pass execution
+test	indep-store-big-array		exec144  tcf pass execution storable
 test	recursive-once-create-result	exec145  tcf pass execution
 test	frozen-floor-ceiling		exec146  tcf pass execution
 test	special-of-expanded		exec147  tcf pass execution

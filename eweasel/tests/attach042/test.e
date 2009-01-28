@@ -4,7 +4,7 @@ class
 create
 	make
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
 	make
 		local
@@ -38,6 +38,20 @@ feature {NONE} -- Initialization
 				print ("OK%N")
 			else
 				print ("Agent4 not conforming%N")
+			end
+
+			l_agent := agent {TEST}.bar
+			if {l_rout5: ROUTINE [ANY, TUPLE [TEST, BOOLEAN]]} l_agent then
+				print ("OK%N")
+			else
+				print ("Agent5 not conforming%N")
+			end
+
+			l_agent := agent {?TEST}.bar
+			if {l_rout6: ROUTINE [ANY, TUPLE [TEST, BOOLEAN]]} l_agent then
+				print ("OK%N")
+			else
+				print ("Agent6 not conforming%N")
 			end
 		end
 	

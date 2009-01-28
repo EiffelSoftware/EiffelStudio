@@ -47,12 +47,7 @@ feature -- Initialization
 				print ("Agent5 not conforming%N")
 			end
 
-			l_agent := agent {?TEST}.bar
-			if {l_rout6: ROUTINE [ANY, TUPLE [TEST, BOOLEAN]]} l_agent then
-				print ("OK%N")
-			else
-				print ("Agent6 not conforming%N")
-			end
+			$BAD_AGENT
 		end
 	
 	bar (a_bool: BOOLEAN)

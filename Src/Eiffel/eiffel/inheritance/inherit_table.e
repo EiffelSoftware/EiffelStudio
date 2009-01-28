@@ -723,7 +723,7 @@ end;
 						if found then
 							l_inherit_info := Void
 								-- We have retrieved the appropriate inherit feat object
-								-- Now we retrieve the inherit info for the parent_c corresponding to `l_old_feature_name_id'.	
+								-- Now we retrieve the unprocessed inherit info for the parent_c corresponding to `l_old_feature_name_id'.	
 							from
 								i := 1
 								l_count := found_item.features.count
@@ -731,7 +731,7 @@ end;
 							until
 								i > l_count or else l_from_features_list
 							loop
-								if found_item.features [i].parent = l_parents.item then
+								if not found_item.features [i].renaming_processed and then found_item.features [i].parent = l_parents.item then
 									l_from_features_list := True
 									l_inherit_info := found_item.features [i]
 								else
@@ -746,7 +746,7 @@ end;
 								until
 									i > l_count or else l_inherit_info /= Void
 								loop
-									if found_item.deferred_features [i].parent = l_parents.item then
+									if not found_item.deferred_features [i].renaming_processed and then found_item.deferred_features [i].parent = l_parents.item then
 										l_inherit_info := found_item.deferred_features [i]
 									else
 										i := i + 1
@@ -821,9 +821,6 @@ end;
 								if found_item.is_empty then
 									found_item.reset
 									remove (l_old_feature_name_id)
-									check
-										removed: removed
-									end
 								end
 
 								add_renamed_feature (l_inherit_info, new_name_id)

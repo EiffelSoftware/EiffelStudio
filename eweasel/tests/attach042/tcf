@@ -2,10 +2,18 @@ test_name 	 agent-attached-by-default
 test_description Agents are not attached by default in void-safe code
 
 copy_sub	Ace $TEST Ace
-copy_raw	test.e $CLUSTER test.e
+define BAD_AGENT "l_agent := agent {?TEST}.bar"
+copy_sub	test.e $CLUSTER test.e
 
 compile_melted
-compile_result ok
+compile_result validity_error TEST VUTA(2)
+
+define BAD_AGENT ""
+copy_sub	test.e $CLUSTER test.e
+
+resume_compile
+compile_result	ok
+
 c_compile_work
 c_compile_result ok
 

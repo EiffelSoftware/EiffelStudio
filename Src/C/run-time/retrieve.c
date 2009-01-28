@@ -3014,11 +3014,26 @@ rt_private int attribute_type_matched (type_descriptor *context_type, EIF_TYPE_I
 		result = old_attribute_type_matched (gtype, atype);
 	} else {
 		while ((result) && (RT_HAS_ANNOTATION_TYPE(dftype))) {
-			result = (aftype == dftype);
+			if (RT_HAS_ANNOTATION_TYPE(aftype)) {
+					/* Both types have annotation, we only need to compare the actual annotation
+					 * when the old one is not attached, as if the old one is attached and the new one
+					 * is not then it is a match. The truth table is:
+					  	    old	-> attached | detachable
+						new
+						 |
+						attached       1          0
+						detachable     1          1
+					 */
+				if (!RT_IS_ATTACHED_TYPE(aftype)) {
+					result = (aftype == dftype);
+				}
+				*atype +=1;
+				aftype = **atype;
+			} else {
+				result = RT_IS_DETACHABLE_TYPE(dftype);
+			}
 			*gtype +=1;
-			*atype +=1;
 			dftype = **gtype;
-			aftype = **atype;
 		}
 		if (result) {
 			if (dftype == TUPLE_TYPE) {

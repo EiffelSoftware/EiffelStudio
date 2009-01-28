@@ -57,6 +57,17 @@ feature -- Access
 			-- Is '%T' or as many blank spaces as defined in
 			-- the preferences
 
+feature -- Cursor creation
+
+	new_cursor_from_character_pos (ch_num, y: INTEGER): like cursor
+			-- Correct way to create a cursor for Current text since `cursor'
+			-- could be covariantly redefined.
+		do
+			create Result.make_from_character_pos (ch_num, y, Current)
+		ensure
+			new_cursor_attached: Result /= Void
+		end
+
 feature -- Status Report
 
 	use_smart_indentation: BOOLEAN

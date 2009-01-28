@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+
+<project name="PROJECT_eiffel_echo" default="help">
+	<description>
+		description: "eiffel_echo compilation"
+	</description>
+
+	<inherit>
+		<parent location="${PROJECT_eiffel_echo.absdir}/_inc/_eiffel_tools_compilation.eant">
+			<redefine target="init"/>
+		</parent>
+	</inherit>
+
+	<target name="init" >
+		<precursor/>
+		<geant target="set_ECF" 
+			arguments="${EIFFEL_SRC}${path_separator}tools${path_separator}eiffel_echo${path_separator}eiffel_echo.ecf" />
+		<geant target="set_TARGET" 	arguments="eiffel_echo" />
+		<geant target="set_NAME" 	arguments="eiffel_echo" />
+	</target>
+
+</project>

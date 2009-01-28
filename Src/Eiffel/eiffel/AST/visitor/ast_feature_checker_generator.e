@@ -8124,6 +8124,7 @@ feature {NONE} -- Agents
 			-- Type of routine object.
 		require
 			valid_table: a_table /= Void
+			a_target_type_not_void: a_target_type /= Void
 			valid_feature: is_byte_node_enabled or a_has_args implies a_feature /= Void;
 			no_byte_code_for_attribute: is_byte_node_enabled implies not a_feature.is_attribute
 		local
@@ -8176,7 +8177,18 @@ feature {NONE} -- Agents
 				create l_result_type.make (System.procedure_class_id, l_generics)
 			end
 
-			l_generics.put (a_target_type, 1)
+			l_current_class_void_safe := context.current_class.lace_class.is_void_safe
+			l_type := a_target_type
+			if not l_type.is_attached then
+					-- Type of the first actual generic parameter of the routine type
+					-- should always be attached.
+				if l_current_class_void_safe then
+					l_type := l_type.as_attached_type
+				elseif not l_type.is_implicitly_attached then
+					l_type := l_type.as_implicitly_attached
+				end
+			end
+			l_generics.put (l_type, 1)
 
 			if a_has_args then
 				l_feat_args := a_feature.arguments

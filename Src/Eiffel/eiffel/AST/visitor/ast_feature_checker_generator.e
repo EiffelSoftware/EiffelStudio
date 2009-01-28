@@ -1462,10 +1462,9 @@ feature -- Implementation
 											l_warning_count := error_handler.warning_list.count
 											if
 												not l_arg_type.conform_to (l_context_current_class, l_like_arg_type) and then
-												not l_arg_type.convert_to (l_context_current_class, l_like_arg_type.deep_actual_type)
+												(is_inherited or else not l_arg_type.convert_to (l_context_current_class, l_like_arg_type.deep_actual_type))
 											then
-												insert_vuar2_error (l_feature, l_parameters, l_last_id, i, l_arg_type,
-													l_like_arg_type)
+												insert_vuar2_error (l_feature, l_parameters, l_last_id, i, l_arg_type, l_like_arg_type)
 											end
 											if l_warning_count /= error_handler.warning_list.count then
 												error_handler.warning_list.last.set_location (l_parameters.i_th (i).start_location)
@@ -1512,8 +1511,8 @@ feature -- Implementation
 										l_warning_count := error_handler.warning_list.count
 										if l_open_type /= Void or else not l_arg_type.conform_to (l_context_current_class, l_formal_arg_type) then
 											if
-												l_open_type = Void and
-												l_arg_type.convert_to (l_context_current_class, l_formal_arg_type.deep_actual_type)
+												l_open_type = Void and (not is_inherited and then
+												l_arg_type.convert_to (l_context_current_class, l_formal_arg_type.deep_actual_type))
 											then
 												l_conv_info := context.last_conversion_info
 												if l_conv_info.has_depend_unit then
@@ -1969,7 +1968,7 @@ feature -- Implementation
 						loop
 							l_element_type := l_last_types.item (i)
 							if not l_element_type.conform_to (l_current_class, l_type_a) then
-								if l_element_type.convert_to (l_current_class, l_type_a.deep_actual_type) then
+								if not is_inherited and then l_element_type.convert_to (l_current_class, l_type_a.deep_actual_type) then
 									if not is_inherited and then l_context.last_conversion_info.has_depend_unit then
 										l_as.expressions.put_i_th (l_as.expressions.i_th (i).converted_expression (
 											create {PARENT_CONVERSION_INFO}.make (l_context.last_conversion_info)), i)
@@ -2035,12 +2034,14 @@ feature -- Implementation
 									-- If not found it will be ANY.
 								if
 									l_element_type.conform_to (l_current_class, l_type_a) or
-									l_element_type.convert_to (l_current_class, l_type_a.deep_actual_type)
+									(not is_inherited and then
+										l_element_type.convert_to (l_current_class, l_type_a.deep_actual_type))
 								then
 										-- Nothing to be done
 								elseif
 									l_type_a.conform_to (l_current_class, l_element_type) or
-									l_type_a.convert_to (l_current_class, l_element_type.deep_actual_type)
+									(not is_inherited and then
+										l_element_type.convert_to (l_current_class, l_type_a.deep_actual_type))
 								then
 										-- Found a lowest type.
 									l_type_a := l_element_type
@@ -4261,7 +4262,7 @@ feature -- Implementation
 
 							else
 								l_error := last_infix_error
-								if l_left_type.convert_to (context.current_class, l_right_type.deep_actual_type) then
+								if not is_inherited and then l_left_type.convert_to (context.current_class, l_right_type.deep_actual_type) then
 									l_target_conv_info := context.last_conversion_info
 									if is_infix_valid (l_right_type, l_right_type, l_as.infix_function_name) then
 										l_right_constrained := last_calls_target_type

@@ -23,7 +23,6 @@
 		<echo message=" == Compilation == "/>
 		<echo message=" geant make_binaries              : Compile all binaries"/>
 		<echo message=" geant make_f_codes               : Compile and store F_code"/>
-		<echo message=" geant make_documentation         : Compile documentation"/>
 		<echo message=" == Installation =="/>
 		<echo message=" geant install_delivery           : Install delivery"/>
 		<echo message=" geant install_minimal_delivery   : Install minimal delivery"/>
@@ -33,7 +32,6 @@
 		<echo message=" geant install_binaries           : Install binaries"/>
 		<echo message=" geant install_library            : Install library"/>
 		<echo message=" geant install_examples           : Install example"/>
-		<echo message=" geant install_documentation      : Install documentation"/>
 		-->
 	</target>
 
@@ -233,7 +231,6 @@
 
 		<!-- Compile binaries, and others -->
 		<geant target="make_binaries" 			/>
-		<geant target="make_documentation"		/>
 
 		<!-- Build target delivery, 
 			and install compiled binaries -->
@@ -250,7 +247,6 @@
 		<geant target="install_binaries"			/>
 		<geant target="install_library"			/>
 		<geant target="install_examples"			/>
-		<geant target="install_documentation"		/>
 	</target>
 
 	<target name="install_eweasel" depend="init_deliv" >
@@ -470,8 +466,9 @@
 		<set name="devpack_binary_dir" value="${a_binary_dir}${path_separator}devpack" />
 		<mkdir directory="$devpack_binary_dir" />
 
-		<geant target="get_bin__" arguments="ec_lite,${devpack_binary_dir},ecl${exe}" />
 		<geant target="get_bin__" arguments="compile_all,${devpack_binary_dir},compile_all${exe}" />
+		<geant target="get_bin__" arguments="syntax_updater,${devpack_binary_dir},syntax_updater${exe}" />
+		<geant target="get_bin__" arguments="eiffel_echo,${devpack_binary_dir},eiffel_echo${exe}" />
 		<geant target="get_bin__" arguments="eimgemb,${devpack_binary_dir},eimgemb${exe}" />
 		<geant target="get_bin__" arguments="copyright_tool,${devpack_binary_dir},copyright_tool${exe}" />
 		<!--
@@ -480,7 +477,6 @@
 		<geant target="get_bin__" arguments="espawn,${devpack_binary_dir},espawn${exe}" if="$is_windows" />
 		<geant target="get_bin__" arguments="hallow,${devpack_binary_dir},hallow${exe}" if="$is_windows"  />
 		<geant target="get_bin__" arguments="reg2wix,${devpack_binary_dir},reg2wix${exe}" if="$is_windows" />
-		<geant target="get_bin__" arguments="doc_builder,${devpack_binary_dir},doc_builder${exe}" />
 
 		<unset name="devpack_binary_dir" />
 	</target>
@@ -535,8 +531,9 @@
 		<set name="devpack_f_codes_dir" value="${a_f_codes_dir}${path_separator}devpack" />
 		<mkdir directory="$devpack_f_codes_dir" />
 
-		<geant target="get_f_code__" arguments="ec_lite,${devpack_f_codes_dir}" />
 		<geant target="get_f_code__" arguments="compile_all,${devpack_f_codes_dir}" />
+		<geant target="get_f_code__" arguments="syntax_updater,${devpack_f_codes_dir}" />
+		<geant target="get_f_code__" arguments="eiffel_echo,${devpack_f_codes_dir}" />
 		<geant target="get_f_code__" arguments="eimgemb,${devpack_f_codes_dir}" />
 		<geant target="get_f_code__" arguments="copyright_tool,${devpack_f_codes_dir}" />
 		<!--
@@ -545,14 +542,9 @@
 		<geant target="get_f_code__" arguments="espawn,${devpack_f_codes_dir}" if="$is_windows" />
 		<geant target="get_f_code__" arguments="hallow,${devpack_f_codes_dir}" if="$is_windows"  />
 		<geant target="get_f_code__" arguments="reg2wix,${devpack_f_codes_dir}" if="$is_windows" />
-		<geant target="get_f_code__" arguments="doc_builder,${devpack_f_codes_dir}" />
+
 
 		<unset name="devpack_f_codes_dir" />
-	</target>
-
-	<target name="make_documentation" depend="init_deliv">
-		<geant target="_log" arguments="Compiling Documentation into ${_BINARY_DIR} -> To Be Completed" />
-		<geant target="get__documentation_generated" arguments="${_BINARY_DIR},documentation_generated" />
 	</target>
 
 	<target name="bootstrap_gobo" depend="init_deliv">
@@ -659,159 +651,6 @@
 		<echo message="compiled" dir="$a_output_dir" to_file="$a_resource" if="${return_code}=0" />
 	</target>
 
-	<target name="get__documentation_generated" >
-		<!-- Get documentation generated -->
-		<argument name="a_output_dir" />
-		<argument name="a_resource" />
-
-		<geant target="_log" arguments="Product: 'documentation' " />
-
-		<available dir="$a_output_dir" resource="$a_resource" variable="tmp_doc_available" />
-
-		<!-- Resource is already built -->
-		<set name="return_code" value="0" 						if="$tmp_doc_available=true" />
-		<geant target="_log" arguments=" -> Already available" 	if="$tmp_doc_available=true" />
-
-		<!-- Let's build it -->
-		<geant target="_log" arguments=" -> Building documentation ..."	if="$tmp_doc_available=false" />
-		<geant target="_make_documentation" arguments="$a_output_dir"	if="$tmp_doc_available=false" /><!-- return return_code -->
-		<echo message="compiled" dir="$a_output_dir" to_file="$a_resource" if="${return_code}=0" />
-		<geant target="_log" arguments=" -> 'documentation' is ready." if="${return_code}=0"  />
-		<geant target="_fail" arguments=" -> Error occurred during 'make_documentation' (${return_code})" unless="${return_code}=0"  />
-		<unset name="tmp_doc_available" />
-	</target>
-
-
-<!-- ============================ -->
-<!-- Documentation implementation -->
-<!-- ============================ -->
-
-	<target name="_make_documentation" depend="init_deliv" >
-		<argument  name="a_output_dir" />
-		<set name="l_doc_error" value="0" />
-
-
-		<!-- get doc_builder executable -->
-		<available dir="$a_output_dir" resource="ecb${exe}" variable="ecb_available" />
-		<geant target="switch_to_ecb" arguments="$a_output_dir" if="$ecb_available=true" />
-
-		<geant target="get_bin__" arguments="doc_builder,${a_output_dir},doc_builder${exe}" />
-
-		<geant target="unswitch_from_ecb" arguments="$_BINARY_DIR" if="$ecb_available=true" />
-		<unset name="ecb_available" />
-
-		<available resource="${a_output_dir}/doc_builder${exe}" variable="tmp_docbuilder_avail" />
-		<geant target="_logv" arguments="doc_builder missing" unless="${tmp_docbuilder_avail}=true" />
-		<set name="l_doc_error" value="1" unless="${tmp_docbuilder_avail}=true" />
-
-		<available resource="${_XMLDOC_DIR}" variable="tmp_documentation_avail" />
-		<geant target="_logv" arguments="Documentation folder missing in parent of EIFFEL_SRC" if="${tmp_documentation_avail}=false" />
-		<set name="l_doc_error" value="2" unless="${tmp_documentation_avail}=true" />
-
-		<set name="return_code" value="$l_doc_error" />
-
-		<setenv name="DOCUMENT_DIR" value="${_XMLDOC_DIR}" />
-
-		<!-- generate eiffel information for all_libs -->
-		<!-- Not Yet Ready ...
-		<set name="tmp_dir" value="${EIFFEL_SRC}${path_separator}tools${path_separator}doc_builder${path_separator}resources${path_separator}xml" />
-		<geant target="melt" file="${DELIV_SCRIPT.absdir}/ise_eiffel_compiler.eant"
-			dir="$tmp_dir" >
-			<argument name="a_ecf" value="all_libs.ecf" />
-			<argument name="a_target" value="all_libs" />
-			<argument name="a_name" value="all_libs" />
-			<argument name="a_comp_dir" value="$tmp_dir" />
-			<argument name="a_output_dir" value="" />
-		</geant>
-		<exec executable="ec -local -flatshort -filter xml -all -config all_libs.ecf" dir="$tmp_dir" 
-			accept_errors="true" exit_code_variable="no_return_code" />
-		<unset name="no_return_code" />
-		<geant target="recursive_remove_file" arguments="*.html" dir="$tmp_dir/Documentation" />
-		<geant target="recursive_remove_file" arguments="*_links.xml" dir="$tmp_dir/Documentation" />
-		<geant target="recursive_remove_file" arguments="*_short.xml" dir="$tmp_dir/Documentation" />
-		<unset name="tmp_dir" />
-
-		TO COMPLETE ...
-		-->
-
-		<!-- delegate to _windows and _unix  -->
-		<geant target="_make_documentation_windows" arguments="$a_output_dir" if="${is_windows}" />
-		<geant target="_make_documentation_unix" arguments="$a_output_dir" unless="${is_windows}" />
-
-		<geant target="_logv" arguments="_make_documentation: return_code=$return_code" />
-	</target>
-
-	<target name="_make_documentation_windows" depend="init_deliv" if="${is_windows}" >
-		<argument  name="a_output_dir" />
-
-
-		<set name="l_doc_error_win" value="0" />
-		<!-- check for hhc -->
-		<exec executable="cd %TMP%" />
-		<exec executable="hhc.exe %TMP% > NUL:" accept_errors="true" exit_code_variable="conf_hhc" />
-		<geant target="_log" arguments="ERROR: hhc.exe not in path (exit code: $conf_hhc)! please check you have Microsofts hhc Compiler installed and that it appears in your path." unless="${conf_hhc}=0" />	
-		<set name="l_doc_error_win" value="1" unless="${conf_hhc}=0" />
-
-		<geant target="_log" arguments="Generate documentation using doc_builder" />
-		<mkdir directory="${a_output_dir}/tmp_doc" />
-
-		<geant target="_make_documentation_web_simple" arguments="$a_output_dir" unless="${conf_hhc}=0" />
-		<geant target="_make_documentation_chm" arguments="$a_output_dir" if="${conf_hhc}=0" />
-
-		<unset name="conf_hhc" />
-	</target>
-
-	<target name="_make_documentation_unix" depend="init_deliv" unless="${is_windows}" >
-		<argument  name="a_output_dir" />
-		<geant target="_make_documentation_web_simple" arguments="$a_output_dir" />
-	</target>
-
-	<target name="_make_documentation_chm" depend="init_deliv" if="${is_windows}" >
-		<argument  name="a_output_dir" />
-
-		<mkdir directory="${a_output_dir}/tmp_doc" />
-		<exec executable="${a_output_dir}\doc_builder${exe} -gen /xml2help -o /studio -t /mshtml -nohtml ${_XMLDOC_DIR}\xmldoc\projects\documentation.dpr" 
-			dir="${a_output_dir}/tmp_doc"  
-			exit_code_variable="tmp_return_code"
-			accept_errors="true" 
-			/>
-		<geant target="_log" arguments="Generate .chm file using hhc.exe" if="$tmp_return_code=0"/>
-		<exec executable="del /s/q docs.chm" dir="${a_output_dir}\tmp_doc\Html" if="$tmp_return_code=0" 
-			exit_code_variable="no_return_code"
-			accept_errors="true" 
-			/>
-		<unset name="no_return_code" />
-
-		<exec executable="hhc.exe docs.hhp" dir="${a_output_dir}\tmp_doc\Html" if="$tmp_return_code=0" 
-			exit_code_variable="tmp_return_code"
-			accept_errors="true" 
-			/>
-
-		<available resource="docs.chm" variable="tmp_chm_available" dir="${a_output_dir}/tmp_doc/Html" />
-		<mkdir directory="docs" dir="${a_output_dir}" if="$tmp_chm_available=true"/>
-		<geant target="copy_file_as" arguments="${a_output_dir}\tmp_doc\Html,$a_output_dir\docs,docs.chm,eiffel.chm,false" if="$tmp_chm_available=true" />
-		<set name="return_code" value="0" 			if="$tmp_chm_available=true" />
-		<set name="return_code" value="1" 			unless="$tmp_chm_available=true" />
-
-		<unset name="tmp_chm_available" />
-		<geant target="clean_folder" arguments="tmp_doc" dir="${a_output_dir}" if="$_CLEAN_AFTER_COMPILE=true" />
-	</target>
-
-	<target name="_make_documentation_web_simple" depend="init_deliv" >
-		<argument  name="a_output_dir" />
-
-		<mkdir directory="${a_output_dir}/tmp_doc" />
-		<exec executable="${a_output_dir}${path_separator}doc_builder${exe} -gen /xml2help -o /studio -t /web_simple -nohtml ${_XMLDOC_DIR}${path_separator}xmldoc${path_separator}projects${path_separator}documentation.dpr" dir="${a_output_dir}/tmp_doc"
-			accept_errors="true" exit_code_variable="tmp_return_code" 
-			/>
-
-		<mkdir directory="docs" dir="${a_output_dir}" if="$tmp_return_code=0"/>
-		<geant target="copy_full_tree" arguments="${a_output_dir}${path_separator}tmp_doc${path_separator}Help,${a_output_dir}${path_separator}docs" if="$tmp_return_code=0" />
-		<set name="return_code" value="$tmp_return_code" />
-
-		<geant target="clean_folder" arguments="tmp_doc" dir="${a_output_dir}" />
-	</target>
-
 <!-- =========================== -->
 <!-- bridge to predefined target -->
 <!-- =========================== -->
@@ -886,7 +725,6 @@
 	<target name="install_generated_files" depend="init_deliv" >
 		<geant target="_log" arguments="Installing Generated executables, files .. into ${_TARGET_DELIV_DIR}" />
 		<geant target="install_binaries" />
-		<geant target="install_documentation" />
 	</target>
 
 	<target name="install_binaries" depend="init_deliv" >
@@ -903,11 +741,6 @@
 	<target name="install_examples" depend="init_deliv" >
 		<geant target="_log" arguments="Installing Examples into ${_TARGET_DELIV_DIR}" />
 		<geant target="_install_examples" arguments="${_TARGET_DELIV_DIR}" />
-	</target>
-
-	<target name="install_documentation" depend="init_deliv" >
-		<geant target="_log" arguments="Installing Documentation into ${_TARGET_DELIV_DIR}" />
-		<geant target="_install_docs" arguments="$_BINARY_DIR,$_TARGET_DELIV_DIR" />
 	</target>
 
 	<target name="_install_gobo" depend="init_deliv" >
@@ -938,8 +771,9 @@
 
 		<set name="devpack_binary_dir" value="${a_binary_dir}${path_separator}devpack" />
 
-		<geant target="copy_exec_file" arguments="${devpack_binary_dir},${a_target_dir},ecl${exe}" />
 		<geant target="copy_exec_file" arguments="${devpack_binary_dir},${a_target_dir},compile_all${exe}" />
+		<geant target="copy_exec_file" arguments="${devpack_binary_dir},${a_target_dir},syntax_updater${exe}" />
+		<geant target="copy_exec_file" arguments="${devpack_binary_dir},${a_target_dir},eiffel_echo${exe}" />
 		<geant target="copy_exec_file" arguments="${devpack_binary_dir},${a_target_dir},eimgemb${exe}" />
 		<geant target="copy_exec_file" arguments="${devpack_binary_dir},${a_target_dir},copyright_tool${exe}" />
 		<!--
@@ -948,7 +782,6 @@
 		<geant target="copy_exec_file" arguments="${devpack_binary_dir},${a_target_dir},espawn${exe}" if="${is_windows}" />
 		<geant target="copy_exec_file" arguments="${devpack_binary_dir},${a_target_dir},hallow${exe}" if="${is_windows}" />
 		<geant target="copy_exec_file" arguments="${devpack_binary_dir},${a_target_dir},reg2wix${exe}" if="${is_windows}" />
-		<geant target="copy_exec_file" arguments="${devpack_binary_dir},${a_target_dir},doc_builder${exe}" />
 
 		<unset name="devpack_binary_dir" />
 	</target>
@@ -970,7 +803,6 @@
 		<geant target="copy_library_to" arguments="lex,${a_target_dir}" />
 		<geant target="copy_library_to" arguments="memory_analyzer,${a_target_dir}" />
 		<geant target="copy_library_to" arguments="net,${a_target_dir}" />
-		<geant target="copy_library_to" arguments="net_ipv6,${a_target_dir}" />
 		<geant target="copy_library_to" arguments="obsolete,${a_target_dir}" />
 		<geant target="copy_library_to" arguments="parse,${a_target_dir}" />
 		<geant target="copy_library_to" arguments="preferences,${a_target_dir}" />
@@ -1031,18 +863,6 @@
 		<geant target="copy_full_tree" arguments="${EIFFEL_SRC}${path_separator}examples,${a_target_dir}${path_separator}examples" />
 	</target>
 
-	<target name="_install_docs" depend="init_deliv" >
-		<!-- Documentation Installation -->
-		<argument name="a_binary_dir" />
-		<argument name="a_target_dir" />
-
-		<available resource="docs" dir="${a_binary_dir}" variable="tmp_docs_available" />
-		<copy dir="${a_binary_dir}${path_separator}docs" to_directory="${a_target_dir}${path_separator}docs" if="$tmp_docs_available=true" >
-			<fileset include="@(*.*)" />
-		</copy>
-		<unset name="tmp_docs_available" />
-	</target>
-
 	<target name="_install_dotnet" depend="init_deliv" if="${_INCLUDE_DOTNET}=true" >
 		<!-- Dotnet Installation -->
 		<argument name="a_from_bin_dir" />
@@ -1091,6 +911,7 @@
 
 		<!-- install binaries -->
 		<set name="tmp_install_dir_bin" value="${a_dir}${path_separator}studio${path_separator}spec${path_separator}${ISE_PLATFORM}${path_separator}bin" />
+		<set name="tmp_install_dir_tool_bin" value="${a_dir}${path_separator}tools${path_separator}spec${path_separator}${ISE_PLATFORM}${path_separator}bin" />
 
 		<!-- ec -->
 		<geant target="copy_exec_file" arguments="${a_binary_dir},${tmp_install_dir_bin},ec${exe}" />
@@ -1120,8 +941,9 @@
 		<geant target="_install_gobo" arguments="${a_binary_dir}${path_separator}gobo,${a_dir}" if="$a_only_core=false"/>
 
 		<!-- Dev Pack -->
-		<geant target="_install_devpack" arguments="${a_binary_dir},${tmp_install_dir_bin}" if="$a_only_core=false" />
+		<geant target="_install_devpack" arguments="${a_binary_dir},${tmp_install_dir_tool_bin}" if="$a_only_core=false" />
 
+		<unset name="tmp_install_dir_tool_bin" />
 		<unset name="tmp_install_dir_bin" />
 	</target>
 
@@ -1254,6 +1076,15 @@
 			dir="${DELIV_SCRIPT.absdir}/tools"
 			file="${a_product_name}.eant" 
 			fork="false" reuse_variables="true" /><!-- return variable '$return_code' -->
+		<geant target="zip" if="${return_code}=0"
+			dir="${DELIV_SCRIPT.absdir}"
+			file="archive_tools.eant" 
+			fork="false" reuse_variables="true" 
+			>
+			<argument name="archive" value="$a_f_codes_dir${path_separator}$a_product_name" />
+			<argument name="folder" value="$a_f_codes_dir${path_separator}$a_product_name" />
+		</geant>
+
 		<geant target="_log" arguments=" -> F_code is ready: $a_product_name" if="${return_code}=0"  />
 		<geant target="_fail" arguments=" -> Error occurred for F_code: $a_product_name" unless="${return_code}=0"  />
 

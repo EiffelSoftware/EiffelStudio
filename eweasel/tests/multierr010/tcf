@@ -1,0 +1,11 @@
+
+test_name 	precondition-vupr-fail-to-check-body
+test_description The compiler fails to check the body for additional validity errors for a routine that has a precondition that calls precursor
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	validity_error TEST VUPR(1) VEEN VEEN
+
+test_end

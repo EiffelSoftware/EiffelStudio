@@ -453,6 +453,7 @@ test	error-in-elsif			multierr006 tcf pass multi-errors
 test	failing-to-recompile-descendant	multierr007 tcf pass multi-errors
 test	recompile-descendant-code	multierr008 tcf pass multi-errors
 test	recompile-assertion-descendant-code	multierr009 tcf pass multi-errors
+test	precondition-vupr-fail-to-check-body	multierr010 tcf pass multi-errors
 
 -- System validity tests
 test	svalid-infix-with-conversion	svalid001 tcf pass system-validity

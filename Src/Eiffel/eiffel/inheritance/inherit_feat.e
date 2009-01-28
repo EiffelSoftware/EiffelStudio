@@ -299,7 +299,7 @@ feature
 			vdus3: VDUS3;
 		do
 			from
-					-- Check unvalid undefintions of deferred features
+					-- Check unvalid undefinitions of deferred features
 				deferred_features.start
 			until
 				deferred_features.after
@@ -311,7 +311,7 @@ feature
 					vdus3.set_parent (info.parent.parent);
 					vdus3.set_a_feature (info.a_feature);
 					Error_handler.insert_error (vdus3);
-				end;
+				end
 				deferred_features.forth;
 			end;
 			from

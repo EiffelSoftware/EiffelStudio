@@ -363,7 +363,7 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Internationalization
 
-	t_title: !STRING = "Outcomes"
+	t_title: !STRING = "Results"
 	l_click_to_view: !STRING = "Click here to view"
 
 ;note

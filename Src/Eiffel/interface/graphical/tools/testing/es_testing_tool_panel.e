@@ -199,7 +199,7 @@ feature {NONE} -- Initialization: widget status
 			view_templates.force_last ("class")
 			view_template_descriptions.force_last ("Tests")
 			view_templates.force_last ("outcome")
-			view_template_descriptions.force_last ("Outcomes")
+			view_template_descriptions.force_last ("Results")
 			view_templates.force_last ("covers")
 			view_template_descriptions.force_last ("Classes under test")
 			view_templates.force_last ("type")

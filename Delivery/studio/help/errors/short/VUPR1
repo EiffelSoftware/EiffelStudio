@@ -1,5 +1,0 @@
-Error: Invalid use of Precursor
-What to do: make sure that the Precursor construct appears in the
-  Routine_body or Rescue_clause of a routine declaration, and that
-  this declaration is for one routine only (no synonym routines).
-

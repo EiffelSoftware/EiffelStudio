@@ -1,0 +1,5 @@
+Error: Invalid use of Precursor
+What to do: make sure that the Precursor construct appears in the
+  Feature_body of a Feature_declaration, and that this declaration
+  is for one routine only (no synonym routines).
+

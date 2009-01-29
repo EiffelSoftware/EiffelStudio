@@ -248,14 +248,8 @@ feature
 				error_handler.raise_error
 			end
 
-			process_renaming_new
-
---			if parents.are_features_renamed then
---					-- Analyze features inherited under the same final name.
---					-- This only needs to be called if the direct parents
---					-- are explicitly renaming features.
---				process_renaming
---			end
+				-- Process feature renaming.
+			process_renaming
 
 				-- Make sure unused feature id table is cleared.
 			unused_feature_id_table.wipe_out
@@ -682,18 +676,7 @@ end;
 			parent_c.check_validity1
 		end
 
-	add_renamed_feature (info: INHERIT_INFO; feature_name_id: INTEGER)
-			-- Adds a renamed inherited feature in the table.
-		do
-			search (feature_name_id)
-			if not found then
-				put (inherit_feat_cache.new_inherit_feat, feature_name_id)
-			end
-			found_item.insert (info)
-			renaming_occurred := True
-		end
-
-	process_renaming_new
+	process_renaming
 			-- Process all direct renamings.
 		local
 			l_parents: like parents
@@ -704,7 +687,7 @@ end;
 			new_name_id, new_alias_name_id: INTEGER
 			names: like names_heap
 		do
-			-- Loop through the parent list
+				-- Loop through the parent list
 			names := names_heap
 			l_parents := parents
 			from
@@ -841,74 +824,6 @@ end;
 			end
 		end
 
-	renaming_occurred: BOOLEAN
-		-- Did a renaming occur during `process_renaming'?
-
-	process_renaming
-			-- Process all direct renamings.
-		local
-			l_feature_list, l_content: SPECIAL [INHERIT_FEAT]
-			i, j, l_count, l_content_count: INTEGER
-			l_exit_loop: BOOLEAN
-		do
-			from
-				-- We keep iterating until no more names are processed.
-				-- This should be at most 2 iterations.
-
-			until
-				l_exit_loop
-			loop
-				from
-					l_count := count
-						-- No need to process inheritance of ANY which has no inherited features.
-					if not renaming_occurred then
-							-- We are on the first iteration so we create the iteration list.
-						create l_feature_list.make (l_count)
-					else
-							-- Reuse l_feature_list if possible
-							-- Clear items then resize if necessary.
-						l_feature_list.clear_all
-						if l_count > l_feature_list.count then
-							l_feature_list := l_feature_list.aliased_resized_area (l_count)
-						end
-					end
-						-- Build iteration list using `content' directly.
-						-- It needs rebuilding each time as {INHERIT_FEAT}.check_renamings has a side effect
-						-- of adding items to `Current' should a rename be detected.
-					from
-						l_content := content
-						l_content_count := l_content.count
-						i := 0
-						j := 0
-					until
-						i >= l_content_count
-					loop
-						if l_content [i] /= Void then
-								-- If the content at 'i' is non void then it must be an INHERIT_FEAT object.
-							l_feature_list.put (l_content [i], j)
-								-- Increase the content counter, if it equals 'count' then there are no more items left to add.
-							j := j + 1
-							if j = l_count then
-									-- We have added the number of items in `Current' so we exit the list.
-								i := l_content_count
-							end
-						end
-						i := i + 1
-					end
-
-					renaming_occurred := False
-					i := l_count - 1
-				until
-					i < 0
-				loop
-						-- Check the renamings on one name.
-					l_feature_list [i].process_renamings
-					i := i - 1
-				end
-				l_exit_loop := not renaming_occurred
-			end
-		end
-
 	uninitialized_features: ARRAYED_LIST [INTEGER]
 			-- Iteration position for features that have yet to have their feature ids initialized.
 		once
@@ -922,11 +837,22 @@ end;
 		end
 
 	add_to_inherit_table (a_inherit_info: INHERIT_INFO)
+			-- Add renamed feature referenced in `a_inherit_info'.
 		do
 			inherited_features.put (a_inherit_info.a_feature, a_inherit_info.a_feature.feature_name_id, a_inherit_info.a_feature_aliased)
 			if a_inherit_info.a_feature.alias_name_id > 0 then
 				check_alias_name_conflict (a_inherit_info.a_feature)
 			end
+		end
+
+	add_renamed_feature (info: INHERIT_INFO; feature_name_id: INTEGER)
+			-- Adds a renamed inherited feature in the table.
+		do
+			search (feature_name_id)
+			if not found then
+				put (inherit_feat_cache.new_inherit_feat, feature_name_id)
+			end
+			found_item.insert (info)
 		end
 
 	analyze

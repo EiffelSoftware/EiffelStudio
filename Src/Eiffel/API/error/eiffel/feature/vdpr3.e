@@ -1,22 +1,71 @@
 note
-
-	description: 
-		"Error in precursor construct."
+	description: "Error in precursor construct."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision $"
 
-class VUPR
+class VDPR3
 
 inherit
 
-	FEATURE_ERROR
-	
+	VDPR
+		redefine
+			subcode, build_explain
+		end
+
+create
+	default_create,
+	make_with_list
+
+feature {NONE} -- Initialization
+
+	make_with_list (a_list: LIST [TUPLE [feat: FEATURE_I; parent_type: CL_TYPE_A]])
+		require
+			a_list_not_void: a_list /= Void
+			a_list_not_empty: not a_list.is_empty
+		do
+			create conflicting_features.make (a_list.count)
+			from
+				a_list.start
+			until
+				a_list.after
+			loop
+				conflicting_features.extend ([a_list.item.feat.api_feature (a_list.item.parent_type.class_id), a_list.item.parent_type])
+				a_list.forth
+			end
+		end
+
 feature -- Properties
 
-	code: STRING = "VUPR";
-			-- Error code
+	subcode: INTEGER = 3;
+
+feature {NONE} -- Access
+
+	conflicting_features: ARRAYED_LIST [TUPLE [feat: E_FEATURE; parent_type: CL_TYPE_A]]
+			-- List of features causing a conflict
+
+feature
+
+	build_explain (a_text_formatter: TEXT_FORMATTER)
+		do
+			if conflicting_features /= Void then
+				a_text_formatter.add ("Ambiguous Precursor between effective features:")
+				a_text_formatter.add_new_line
+				from
+					conflicting_features.start
+				until
+					conflicting_features.after
+				loop
+					a_text_formatter.add (" - ")
+					conflicting_features.item.feat.append_name (a_text_formatter)
+					a_text_formatter.add (" from ")
+					conflicting_features.item.parent_type.append_to (a_text_formatter)
+					a_text_formatter.add_new_line
+					conflicting_features.forth
+				end
+			end
+		end
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -50,5 +99,5 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class VUPR
+end -- class VUPR3
 

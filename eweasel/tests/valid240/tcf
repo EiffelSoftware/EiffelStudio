@@ -1,0 +1,21 @@
+
+test_name 	explicit-attachment-mark-convert-fail
+test_description A convert clause that uses explicit attachment marks (? or !) should be applicable to a type which gets its attachment status from the default but the compiler incorrectly reports a VJAR error
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result ok
+
+cleanup_compile
+
+copy_sub 	Ace_safe $TEST Ace
+copy_raw 	test_safe.e $CLUSTER test.e
+copy_raw 	test1_safe.e $CLUSTER test1.e
+
+compile_melted
+compile_result ok
+
+test_end

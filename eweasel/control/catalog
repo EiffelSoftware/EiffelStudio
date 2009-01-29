@@ -1631,6 +1631,7 @@ test	storable-with-attached-type	store017 tcf pass storable attached_types
 test	storable-with-attached-type-by-62	store018 tcf pass storable attached_types
 test	storable-with-attached-type-1	store019 tcf pass storable attached_types
 test	storable-with-attached-type-by-63	store020 tcf pass storable attached_types
+test	storable-removing-attachment-marks	store021 tcf pass storable attached_types
 
 -- Flat, short, flatshort tests
 

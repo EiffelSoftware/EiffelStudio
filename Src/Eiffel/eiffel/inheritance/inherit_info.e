@@ -158,10 +158,9 @@ feature -- Settings
 
 	copy_a_feature_for_feature_table
 			-- Make sure that `a_feature' is copied directly for feature_table.
+		require
+			not_a_feature_needs_instantiation: not a_feature_needs_instantiation
 		do
-			check
-				not_a_feature_needs_instantiation: not a_feature_needs_instantiation
-			end
 			if a_feature_aliased then
 				internal_a_feature := internal_a_feature.twin
 				set_a_feature_copied_for_feature_table (True)

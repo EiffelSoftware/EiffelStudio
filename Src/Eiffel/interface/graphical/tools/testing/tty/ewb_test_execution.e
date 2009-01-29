@@ -136,7 +136,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	print_multiline_text (a_text, a_indentation: !STRING)
+	print_multiline_text (a_text, a_indentation: READABLE_STRING_8)
 			-- Print string cotaining new line characters in a human readable format.
 			--
 			-- If text has not new line characters or only at very beginning and end, the actual content
@@ -145,6 +145,9 @@ feature {NONE} -- Implementation
 			--
 			-- `a_text': Text to be printed
 			-- `a_indenation': Indentation used before printing text after printing a new line character.
+		require
+			a_text_attached: a_text /= Void
+			a_indentation_attached: a_indentation /= Void
 		local
 			l_buffer: STRING
 			i: INTEGER
@@ -219,10 +222,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

@@ -162,13 +162,12 @@ feature -- Status report
 			--       from an agent.
 		do
 			if is_setup_clean then
-				Result := not test_response.is_exceptional or else (test_response.exception.trace_depth > 1 or
-					test_response.exception.code /= test_response.exception.precondition)
+				Result := not test_response.is_exceptional or else test_response.exception.is_test_exceptional
 			end
 		ensure
 			result_implies_clean_setup: Result implies is_setup_clean
-			definition: Result implies (not test_response.is_exceptional or else (test_response.exception.trace_depth > 1 or
-					test_response.exception.code /= test_response.exception.precondition))
+			definition: Result implies (not test_response.is_exceptional or else
+				test_response.exception.is_test_exceptional)
 		end
 
 	is_teardown_clean: BOOLEAN
@@ -197,4 +196,14 @@ invariant
 	setup_clean_implies_test_response_attached: is_setup_clean implies test_response /= Void
 	setup_clean_implies_teardown_response_attached: is_setup_clean implies teardown_response /= Void
 
+note
+	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

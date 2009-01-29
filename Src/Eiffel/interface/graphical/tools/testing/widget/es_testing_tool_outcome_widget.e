@@ -210,7 +210,7 @@ feature {NONE} -- Implementation
 			if a_invocation.is_exceptional and then not a_invocation.exception.trace.is_empty then
 				l_text.append ("exceptional")
 				add_exception_details (l_row, a_invocation.exception)
-				add_text (l_row, "trace", a_invocation.exception.trace)
+				add_text (l_row, "trace", a_invocation.exception.trace.string)
 			else
 				l_text.append ("normal")
 			end
@@ -223,13 +223,15 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_text (a_parent: EV_GRID_ROW; a_name, a_text: !STRING)
+	add_text (a_parent: EV_GRID_ROW; a_name, a_text: READABLE_STRING_8)
 			-- Add plain text to grid
 			--
 			-- `a_parent': Parent row for all new rows.
 			-- `a_name': Name describing text.
 			-- `a_text': Actual text to be added.
 		require
+			a_name_attached: a_name /= Void
+			a_text_attached: a_text /= Void
 			a_text_not_empty: not a_text.is_empty
 		local
 			l_pos: INTEGER
@@ -240,7 +242,7 @@ feature {NONE} -- Implementation
 			l_pos := a_parent.index + a_parent.subrow_count_recursive + 1
 			grid.insert_new_row_parented (l_pos, a_parent)
 			l_row := grid.row (l_pos)
-			create l_label.make_with_text (a_name)
+			create l_label.make_with_text (a_name.string)
 			l_row.set_item (1, l_label)
 
 			create l_link_label.make_with_text (locale.translation (l_click_to_view))
@@ -270,12 +272,14 @@ feature {NONE} -- Implementation
 				-- tag
 			create l_label.make_with_text ("tag")
 			grid.row (l_pos + 2).set_item (1, l_label)
-			create l_label.make_with_text (a_exception.tag_name)
+			create l_label.make_with_text (a_exception.tag_name.string)
 			grid.row (l_pos + 2).set_item (2, l_label)
 		end
 
-	show_text (a_text: !STRING)
+	show_text (a_text: READABLE_STRING_8)
 			-- Display text in a separate window.
+		require
+			a_text_attached: a_text /= Void
 		local
 			l_dialog: ES_BASIC_EDITOR_DIALOG
 			l_text: STRING_32
@@ -338,14 +342,14 @@ feature {NONE} -- Factory
 			if l_class /= Void then
 				token_writer.add_class (l_class)
 			else
-				token_writer.add_string (a_exception.class_name)
+				token_writer.add_string (a_exception.class_name.string)
 			end
 			token_writer.add_char ('}')
 			token_writer.add_char ('.')
 			if l_feat /= Void then
 				token_writer.add_feature (l_feat, l_feat.name)
 			else
-				token_writer.add_string (a_exception.recipient_name)
+				token_writer.add_string (a_exception.recipient_name.string)
 			end
 			create l_eitem
 			l_eitem.set_text_with_tokens (token_writer.last_line.content)
@@ -387,10 +391,10 @@ feature {NONE} -- Internationalization
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

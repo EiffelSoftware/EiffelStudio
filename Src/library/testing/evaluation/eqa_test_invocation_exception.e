@@ -10,34 +10,113 @@ class
 	EQA_TEST_INVOCATION_EXCEPTION
 
 inherit
+	ANY
+
 	EXCEP_CONST
+		export
+			{NONE} all
+		end
+
+	INTERNAL
+		rename
+			class_name as class_name_from_object,
+			dynamic_type as dynamic_type_from_object
+		export
+			{NONE} all
+		end
 
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_code: like code; a_recipient_name: like recipient_name; a_class_name: like class_name;
-	      a_type: like dynamic_type; a_tag_name: like tag_name; a_trace: like trace)
+	make (a_exception: EXCEPTION; a_class_name: READABLE_STRING_8)
 			-- Initialize `Current'.
 			--
-			-- `a_code': Code defining type of exception (as in {EXCEP_CONST})
+			-- `a_exception': Original exception object.
+			-- `a_class_name': Name of test class in which exception was raised.
 		require
-			a_code_valid: valid_code (a_code)
+			a_exception_attached: a_exception /= Void
+			a_class_name_attached: a_class_name /= Void
 		do
-			code := a_code
-			recipient_name := a_recipient_name
-			class_name := a_class_name
-			dynamic_type := a_type
-			tag_name := a_tag_name
-			trace := a_trace
-			parse_trace
-		ensure
-			code_set: code = a_code
-			recipient_name_set: recipient_name = a_recipient_name
-			class_name_set: class_name = a_class_name
-			tag_name_set: tag_name = a_tag_name
-			trace_set: trace = a_trace
+			code := a_exception.code
+			if {l_type: like class_name} a_exception.type_name then
+				class_name := l_type.string
+			else
+				create {STRING_8} class_name.make_empty
+			end
+			if {l_rec: like recipient_name} a_exception.recipient_name then
+				recipient_name := l_rec.string
+			else
+				create {STRING_8} recipient_name.make_empty
+			end
+			if {l_tag: like tag_name} a_exception.message then
+				tag_name := l_tag.string
+			else
+				create {STRING_8} tag_name.make_empty
+			end
+			if {l_trace: like trace} a_exception.exception_trace and then not l_trace.is_empty then
+				parse_trace (l_trace, a_class_name)
+			else
+				create {STRING_8} trace.make_empty
+			end
+		end
+
+	parse_trace (a_trace: like trace; a_class_name: READABLE_STRING_8)
+			-- Initialize trace from original trace by cutting off routines which invoked testing routine.
+			--
+			-- `a_trace': Original exception trace.
+			-- `a_class_name': Name of test class in which exception was raised.
+		require
+			a_trace_not_empty: a_trace /= Void and then not a_trace.is_empty
+			a_class_name_attached: a_class_name /= Void
+			code_valid: valid_code (code)
+		local
+			i, l_last, l_depth: INTEGER
+			l_prev, l_found: BOOLEAN
+		do
+				-- `i': Cursor position in `a_trace'
+				-- `l_last': Last character in `a_trace' which will be added to truncated `trace'
+				-- `l_depth': Position of first frame containing feature of `a_class_name'
+				-- `l_prev': Was the previous stack frame a feature of `a_class_name'?
+				-- `l_found': Has any frame been passed yet for `a_class_name'?
+
+				-- Go to first stack frame
+			i := next_frame (a_trace, 1)
+			i := next_frame (a_trace, i)
+
+				-- Go to last frame for `a_class_name' and `a_routine_name'
+			from until
+				i = 0
+			loop
+				if not l_found then
+					l_depth := l_depth + 1
+				end
+				if is_frame_of_class (a_trace, i, a_class_name) then
+					l_found := True
+					l_prev := True
+				elseif l_prev then
+					l_last := i - 1
+					l_prev := False
+				end
+				i := next_frame (a_trace, i)
+			end
+
+			if l_found then
+				if code = precondition then
+					is_test_exceptional := l_depth <= 2
+				else
+					is_test_exceptional := l_depth <= 1
+				end
+				if l_prev then
+						-- Note: special case where the last frame was a feature of the test class
+					l_last := a_trace.count
+				end
+			else
+				is_test_exceptional := True
+				l_last := a_trace.count
+			end
+			trace := a_trace.substring (1, l_last)
 		end
 
 feature -- Access
@@ -45,119 +124,95 @@ feature -- Access
 	code: INTEGER
 			-- Exception code
 
-	recipient_name: !STRING
+	recipient_name: READABLE_STRING_8
 			-- Name of the feature that triggered the exception
 
-	class_name: !STRING
+	class_name: READABLE_STRING_8
 			-- Name of the class in which the exception occurred
 
-	dynamic_type: INTEGER
-			-- Dynamic type of `class_name', -1 if type was not available
-
-	tag_name: !STRING
+	tag_name: READABLE_STRING_8
 			-- Tag describing the exception
 
-	trace: !STRING
+	trace: READABLE_STRING_8
 			-- Text based representation of the stack trace
 
-	trace_depth: NATURAL
-			-- Depth of exception trace stored in `exception_trace' (without interpreter frames)
+feature -- Status report
 
-feature {NONE} -- Access
+	is_test_exceptional: BOOLEAN
+			-- Is recipient of exception a feature of the test class?
 
-	erl_class_imp: STRING = "TEST_EVALUATOR"
-	function: STRING = "FUNCTION"
-	predicate: STRING = "PREDICATE"
-	procedure: STRING = "PROCEDURE"
-	dash_line: STRING = "-------------------------------------------------------------------------------"
-			-- Constants for used to parse trace
+feature {NONE} -- Implementation
 
-feature {NONE} -- Status setting
-
-	parse_trace
-			-- Parse `exception_trace' and update `trace_depth' and `exception_break_point_slot' accordingly.
-		local
-			l_list: LIST [STRING]
-			l_found: BOOLEAN
-			l_item: STRING
-		do
-			l_list := trace.split ('%N')
-			if l_list.count >= 5 then
-				l_list.start
-				go_after_next_dash_line (l_list)
-				go_after_next_dash_line (l_list)
-
-				from
-					trace_depth := 0
-				until
-					l_list.off or l_found
-				loop
-					l_item := l_list.item_for_iteration
-					check l_item /= Void end
-					if is_test_interpreter_line (l_item) then
-						l_found := True
-					else
-						trace_depth := trace_depth + 1
-						go_after_next_dash_line (l_list)
-					end
-				end
-			else
-				-- Something is wrong the the trace.
-				-- Not exactly sure what to do. For now we leave `trace_depth' and `exception_break_point_slot' to their default values.
-			end
-
-		end
-
-	go_after_next_dash_line (a_list: LIST [STRING])
+	next_frame (a_trace: like trace; a_start: INTEGER): INTEGER
+			-- Start index of next stack frame
+			--
+			-- Note: if `a_start' is 0, `Result' will be 0 as well. This allows `next_frame' to be called
+			--       iterratively without checking the result.
+			--
+			-- `a_trace': Trace containing stack frames.
+			-- `a_start': Start position from which next stack frame will be searched.
+			-- `Result': Contains index of first character of next stack frame, or 0 if no frame found.
 		require
-			a_list_not_void: a_list /= Void
-			a_list_not_off: not a_list.off
-			a_list_valid: not a_list.has (Void)
+			a_start_valid: a_start >= 0 and a_start <= a_trace.count
 		local
-			l_found: BOOLEAN
+			i, l_count: INTEGER
 		do
 			from
+				l_count := dash_line.count
+				i := a_start
 			until
-				l_found or a_list.off
+				Result > 0 or i = 0
 			loop
-				if a_list.item_for_iteration.is_equal (dash_line) then
-					l_found := True
-				end
-				a_list.forth
-			end
-		end
-
-	is_test_interpreter_line (v: !STRING): BOOLEAN
-			-- Is `v' a stack line describing a frame in an TEST_INTERPRETER_* class?
-		do
-			Result := v.count > erl_class_imp.count and then
-					(v.substring (1, erl_class_imp.count).is_equal (erl_class_imp))
-		end
-
-	is_routine_fast_line (v: !STRING): BOOLEAN
-			-- Is `v' a stack line describing a frame in an `ROUTINE.fast_*' class?
-		local
-			l_list: LIST [!STRING]
-			l_string: !STRING
-		do
-			l_list := v.split (' ')
-			if l_list.count = 2 then
-				l_list.start
-				l_string := l_list.item_for_iteration
-				if
-					l_string.is_equal (function) or
-					l_string.is_equal (predicate) or
-					l_string.is_equal (procedure)
+				if a_trace.item (i) = '%N' and
+				   i > l_count and then
+				   a_trace.substring_index_in_bounds (dash_line, i - l_count + 1, i) /= 0
 				then
-					l_list.forth
-					l_string := l_list.item_for_iteration
-					Result := l_string.is_equal ("fast_item") or l_string.is_equal ("fast_call")
+					Result := i + 1
+					if i >= a_trace.count then
+						i := 0
+						Result := 0
+					end
+				else
+					i := a_trace.index_of ('%N', i + 1)
 				end
 			end
+		ensure
+			result_valid: Result = 0 or else (Result > a_start and then Result <= a_trace.count)
 		end
+
+	is_frame_of_class (a_trace: like trace; a_position: INTEGER; a_class_name: READABLE_STRING_8): BOOLEAN
+			-- Does stack frame represent call to test routine?
+			--
+			-- `a_trace': Complete exception trace.
+			-- `a_position': Start position of current stack frame.
+			-- `a_class_name': Test class name.
+			-- `Result': True is current stack frame calls test routine, False otherwise.
+		require
+			a_position_valid: a_position > 0 and a_position <= a_trace.count
+			a_class_name_not_empty: a_class_name /= Void and then not a_class_name.is_empty
+		do
+			Result := a_trace.substring_index_in_bounds (a_class_name + " ", a_position, a_position + a_class_name.count + 1) > 0
+		end
+
+feature {NONE} -- Constants
+
+	dash_line: STRING = "-------------------------------------------------------------------------------%N"
 
 invariant
 	code_valid: valid_code (code)
-	trace_depth_not_negative: trace_depth >= 0
+	recipient_name_attached: recipient_name /= Void
+	class_name_attached: class_name /= Void
+	tag_attached: tag_name /= Void
+	trace_attached: trace /= Void
 
+note
+	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

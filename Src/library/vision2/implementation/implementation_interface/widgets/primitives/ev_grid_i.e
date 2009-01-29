@@ -154,9 +154,6 @@ feature -- Access
 	item_at_virtual_position (a_virtual_x, a_virtual_y: INTEGER): EV_GRID_ITEM
 			-- Cell at virtual position `a_virtual_x', `a_virtual_y' or
 			-- `Void' if none.
-		require
-			virtual_x_valid: a_virtual_x >=0 and a_virtual_x <= virtual_width
-			virtual_y_valid: a_virtual_y >=0 and a_virtual_y <= virtual_height
 		local
 			item_i: EV_GRID_ITEM_I
 		do
@@ -168,8 +165,6 @@ feature -- Access
 
 	row_at_virtual_position (a_virtual_y: INTEGER; ignore_locked_rows: BOOLEAN): EV_GRID_ROW
 			-- Row at virtual y position `a_virtual_y'.
-		require
-			virtual_y_valid: a_virtual_y >=0 and a_virtual_y <= virtual_height
 		local
 			row_i: EV_GRID_ROW_I
 		do
@@ -181,8 +176,6 @@ feature -- Access
 
 	column_at_virtual_position (a_virtual_x: INTEGER): EV_GRID_COLUMN
 			-- Column at virtual x position `a_virtual_x'.
-		require
-			virtual_x_valid: a_virtual_x >=0 and a_virtual_x <= virtual_width
 		local
 			column_i: EV_GRID_COLUMN_I
 		do

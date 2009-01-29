@@ -31,7 +31,6 @@ feature -- Initialization
 			a: ANY
 			l_file: RAW_FILE
 			retried: BOOLEAN
-			l_spec: A [!ANY, ?ANY]
 		do
 			if not retried then
 				create l_file.make_open_read (file_name)

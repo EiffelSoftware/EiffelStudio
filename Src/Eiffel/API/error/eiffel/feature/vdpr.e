@@ -1,24 +1,19 @@
 note
-
-	description: 
-		"Error in precursor construct."
+	description: "Error in precursor construct."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision $"
 
-class VUPR3
+class VDPR
 
 inherit
+	FEATURE_ERROR
 
-	VUPR
-		redefine
-			subcode
-		end
-	
 feature -- Properties
 
-	subcode: INTEGER = 3;
+	code: STRING = "VDPR"
+			-- Error code
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -52,5 +47,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class VUPR3
-
+end

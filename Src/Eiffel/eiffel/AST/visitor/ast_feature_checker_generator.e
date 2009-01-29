@@ -2787,10 +2787,10 @@ feature -- Implementation
 
 	process_precursor_as (l_as: PRECURSOR_AS)
 		local
-			l_vupr1: VUPR1
-			l_vupr2: VUPR2
-			l_vupr3: VUPR3
-			l_pre_table: LINKED_LIST [PAIR[CL_TYPE_A, INTEGER]]
+			l_vdpr1: VDPR1
+			l_vdpr2: VDPR2
+			l_vdpr3: VDPR3
+			l_pre_table: like precursor_table
 			l_feature_i: FEATURE_I
 			l_parent_type: CL_TYPE_A
 			l_parent_class: CLASS_C
@@ -2803,9 +2803,9 @@ feature -- Implementation
 		do
 			if not is_inherited then
 				if current_feature.is_invariant or else current_feature.is_inline_agent then
-					create l_vupr1
-					context.init_error (l_vupr1)
-					error_handler.insert_error (l_vupr1)
+					create l_vdpr1
+					context.init_error (l_vdpr1)
+					error_handler.insert_error (l_vdpr1)
 					l_has_error := True
 				else
 					l_feat_ast := context.current_class.feature_with_name (current_feature.feature_name).ast
@@ -2827,16 +2827,16 @@ feature -- Implementation
 						l_rout_id_set := current_feature.rout_id_set
 					end
 
-						-- Check that feature has a unique name (vupr1)
-						-- Check that we're in the body of a routine (l_vupr1).
+						-- Check that feature has a unique name (vdpr1)
+						-- Check that we're in the body of a routine (l_vdpr1).
 
 					if
 						l_feat_ast.feature_names.count > 1 or
 						is_checking_precondition or is_checking_postcondition or is_checking_invariant
 					then
-						create l_vupr1
-						context.init_error (l_vupr1)
-						error_handler.insert_error (l_vupr1)
+						create l_vdpr1
+						context.init_error (l_vdpr1)
+						error_handler.insert_error (l_vdpr1)
 						l_has_error := True
 					else
 							-- Create table of routine ids of all parents which have
@@ -2848,23 +2848,23 @@ feature -- Implementation
 							if l_as.parent_base_class /= Void then
 									-- The specified parent does not have
 									-- an effective precursor.
-								create l_vupr2
-								context.init_error (l_vupr2)
-								error_handler.insert_error (l_vupr2)
+								create l_vdpr2
+								context.init_error (l_vdpr2)
+								error_handler.insert_error (l_vdpr2)
 								l_has_error := True
 							else
 									-- No parent has an effective precursor
 									-- (not a redefinition)
-								create l_vupr3
-								context.init_error (l_vupr3)
-								error_handler.insert_error (l_vupr3)
+								create l_vdpr3
+								context.init_error (l_vdpr3)
+								error_handler.insert_error (l_vdpr3)
 								l_has_error := True
 							end
 						elseif l_pre_table.count > 1 then
 								-- Unqualified precursor construct is ambiguous
-							create l_vupr3
-							context.init_error (l_vupr3)
-							error_handler.insert_error (l_vupr3)
+							create l_vdpr3
+							context.init_error (l_vdpr3)
+							error_handler.insert_error (l_vdpr3)
 							l_has_error := True
 						end
 
@@ -8755,9 +8755,9 @@ feature {AST_FEATURE_CHECKER_GENERATOR}
 feature {NONE} -- Precursor handling
 
 	precursor_table (l_as: PRECURSOR_AS; a_current_class: CLASS_C; a_rout_id_set: ROUT_ID_SET): LINKED_LIST [PAIR[CL_TYPE_A, INTEGER]]
-				-- Table of parent types which have an effective
-				-- precursor of current feature. Indexed by
-				-- routine ids.
+			-- Table of parent types which have an effective
+			-- precursor of current feature. Indexed by
+			-- routine ids.
 		require
 			l_as_not_void: l_as /= Void
 		local

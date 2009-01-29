@@ -1,21 +1,18 @@
 note
-
-	description: 
-		"Error in precursor construct."
+	description: "Error in precursor construct."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision $"
 
-class VUPR1
+class VDPR1
 
 inherit
-
-	VUPR
+	VDPR
 		redefine
 			subcode
 		end
-	
+
 feature -- Properties
 
 	subcode: INTEGER = 1;

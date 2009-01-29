@@ -823,7 +823,13 @@ end;
 									remove (l_old_feature_name_id)
 								end
 
-								add_renamed_feature (l_inherit_info, new_name_id)
+									-- Add renamed feature back to `Current' with new name.
+								search (new_name_id)
+								if not found then
+									put (inherit_feat_cache.new_inherit_feat, new_name_id)
+								end
+								found_item.insert (l_inherit_info)
+
 									-- Mark it as processed so that it doesn't get reiterated.
 								l_inherit_info.set_renaming_processed
 							end
@@ -939,13 +945,13 @@ end;
 			l_check_undefinition, l_check_redefinition: BOOLEAN
 			l_adaptations: like adaptations
 			l_origin_table: like origin_table
-			l_first_compilation: BOOLEAN
+			l_compilation_straight: BOOLEAN
 			l_uninitialized_features: like uninitialized_features
 			l_used_feature_ids: like used_feature_ids
 			l_feature_id, l_highest_feature_id: INTEGER
 		do
 			from
-				l_first_compilation := System.first_compilation
+				l_compilation_straight := System.compilation_straight
 
 					-- Wipe out previous meta information.
 				l_used_feature_ids := used_feature_ids
@@ -1004,7 +1010,7 @@ end;
 						l_origin_table.insert (inherit_feat.inherited_info);
 					end
 						-- Attempt to reuse feature id for aliasing
-					if l_first_compilation and then inherit_feat.inherited_info.a_feature_aliased then
+					if l_compilation_straight and then inherit_feat.inherited_info.a_feature_aliased then
 						l_feature_id := inherit_feat.inherited_info.a_feature.feature_id
 						if not l_used_feature_ids.has (l_feature_id) then
 								-- We can reuse the feature id for this aliased feature.
@@ -1027,7 +1033,7 @@ end;
 			until
 				i > l_count
 			loop
-				if l_first_compilation then
+				if l_compilation_straight then
 						-- Retrieve next available feature id.
 					from
 						l_feature_id := i
@@ -1051,7 +1057,7 @@ end;
 				i := i + 1
 			end
 
-			if l_first_compilation then
+			if l_compilation_straight then
 				a_class.feature_id_counter.set_value (l_highest_feature_id)
 			end
 		end
@@ -1318,6 +1324,7 @@ end;
 					Origin_table.insert (info);
 				end;
 			end;
+
 				-- Keep track of the origin features for pattern
 				-- processing
 			origins.extend (feature_i.feature_name_id);
@@ -1774,12 +1781,12 @@ end;
 			old_feature: FEATURE_I
 			l_new_feature_id, l_current_feature_id: INTEGER
 			l_feature_is_aliased: BOOLEAN
-			l_first_compilation: BOOLEAN
+			l_compilation_straight: BOOLEAN
 		do
 			l_feature_is_aliased := a_inherit_info.a_feature_aliased
 				-- Process feature id
-			l_first_compilation := System.first_compilation
-			if not l_first_compilation then
+			l_compilation_straight := System.compilation_straight
+			if not l_compilation_straight then
 				old_feature := feature_table.item_id (a_inherit_info.a_feature.feature_name_id)
 			end
 			if old_feature = Void then
@@ -1796,7 +1803,7 @@ end;
 					--| The only issue when performing this call is that in a compilation
 					--| from scratch it is useless, but we do not have much choice in
 					--| case of incremental compilation.
-				if not l_first_compilation then
+				if not l_compilation_straight then
 					Tmp_ast_server.reactivate (a_inherit_info.a_feature.body_index)
 				end
 			else

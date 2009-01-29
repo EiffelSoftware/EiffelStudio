@@ -14,7 +14,7 @@ define		 RENAME "rename wimp as hamster"
 copy_sub 	 test.e  $CLUSTER test.e
 copy_raw 	 test1.e  $CLUSTER test1.e
 compile_melted
-compile_result 	 ok
+compile_result 	 validity_error TEST VUPR(3)
 
 execute_work 	NONE exec_output1
 execute_result 	ok

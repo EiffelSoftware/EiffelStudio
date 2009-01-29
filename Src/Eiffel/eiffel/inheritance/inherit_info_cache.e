@@ -24,6 +24,8 @@ create {INHERIT_INFO_CACHE}
 feature {NONE} -- Initialization
 
 	make (a_initial_count: INTEGER)
+		require
+			a_initial_count_valid: a_initial_count >= 0
 		do
 			sstwl_make
 			reset_with_n_elements (a_initial_count)
@@ -33,6 +35,8 @@ feature
 
 	reset_with_n_elements (n: INTEGER)
 			-- Reset `Current' to hold at least `n' elements.
+		require
+			n_valid: n >= 0
 		local
 			i: INTEGER
 			l_used_item_count: INTEGER

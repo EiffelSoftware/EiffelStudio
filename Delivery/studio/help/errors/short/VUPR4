@@ -1,5 +1,0 @@
-Semantic error: precursor appears in a routine which is a
-                redefinition of more than one feature from
-                different parents.
-What to do    : qualify the parent name.
-

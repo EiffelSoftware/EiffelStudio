@@ -1,0 +1,23 @@
+VDPR
+
+	A Precursor is valid if and only if it satisfies the
+	following conditions:
+
+		1. It appears in the Feature_body of a Feature_declaration
+		of a feature f.
+
+		2. If the Parent_qualification part is present, its Class_name
+		is the name of a parent class P of C.
+
+		3. Among the features of C's parents, limited to features of P
+		if condition 2 applies, exactly one is an effective feature
+		redefined by C into f. (The class to which this feature
+		belongs is called the applicable parent of the Precursor.)
+
+		4. The unfolded form relative to the applicable parent is, as
+		an Unqualified_call, argument-valid.
+
+In addition:
+
+		5. It is valid as an Instruction if and only if f is a
+		command, and as an Expression if and only if f is a query.

@@ -12,7 +12,7 @@ note
 	revision: "$Revision$"
 
 class
-	EQA_TEST_OUTCOME
+	EQA_TEST_RESULT
 
 create
 	make, make_with_setup, make_without_response
@@ -112,11 +112,11 @@ feature -- Status report
 			-- Status indicating status of `is_pass', `is_fail' and `is_unresolved'
 		do
 			if is_pass then
-				Result := {EQA_TEST_OUTCOME_STATUS_TYPES}.passed
+				Result := {EQA_TEST_RESULT_STATUS_TYPES}.passed
 			elseif is_fail then
-				Result := {EQA_TEST_OUTCOME_STATUS_TYPES}.failed
+				Result := {EQA_TEST_RESULT_STATUS_TYPES}.failed
 			else
-				Result := {EQA_TEST_OUTCOME_STATUS_TYPES}.unresolved
+				Result := {EQA_TEST_RESULT_STATUS_TYPES}.unresolved
 			end
 		end
 

@@ -129,7 +129,7 @@ feature {TEST_RESULT_RECEIVER} -- Status setting
 						end
 					else
 						if l_first.attempts >= max_attempts then
-							l_first.outcome := create {EQA_TEST_OUTCOME}.make_without_response (create {DATE_TIME}.make_now, False)
+							l_first.outcome := create {EQA_TEST_RESULT}.make_without_response (create {DATE_TIME}.make_now, False)
 							assign_next
 						else
 							l_first.attempts := l_first.attempts + 1
@@ -164,7 +164,7 @@ feature {TEST_RESULT_RECEIVER} -- Status setting
 			queue_mutex.unlock
 		end
 
-	put_outcome (a_outcome: !EQA_TEST_OUTCOME)
+	put_outcome (a_outcome: !EQA_TEST_RESULT)
 			-- Add `a_outcome' to `status_queue'.
 		do
 			queue_mutex.lock
@@ -199,7 +199,7 @@ feature {NONE} -- Status setting
 
 feature {TEST_EXECUTOR_I} -- Basic operations
 
-	fetch_progress: !TUPLE [index: like next; outcome: ?EQA_TEST_OUTCOME; attempts: NATURAL]
+	fetch_progress: !TUPLE [index: like next; outcome: ?EQA_TEST_RESULT; attempts: NATURAL]
 			-- Retrieve current status
 			--
 			-- Note: `fetch_progress' might return information about tests which have been aborted.

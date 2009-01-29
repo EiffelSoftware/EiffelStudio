@@ -104,7 +104,7 @@ feature {NONE} -- Query
 	status_text (a_test: !TEST_I): !STRING_32
 			-- Status text for `a_test'.
 		local
-			l_outcome: EQA_TEST_OUTCOME
+			l_outcome: EQA_TEST_RESULT
 		do
 			if a_test.is_queued then
 				Result := locale_formatter.translation (l_queued)
@@ -149,7 +149,7 @@ feature {NONE} -- Query
 	status_tooltip (a_test: !TEST_I): !STRING_32
 			-- Tooltip for status of `a_test'.
 		local
-			l_outcome: EQA_TEST_OUTCOME
+			l_outcome: EQA_TEST_RESULT
 		do
 			if a_test.is_queued then
 				Result := locale_formatter.translation (tt_queued)

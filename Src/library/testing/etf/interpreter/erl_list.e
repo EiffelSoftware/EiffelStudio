@@ -1,5 +1,4 @@
 note
-
 	description:
 
 		"Simple list for use within the Erl runtime. (Modified version of ET_TAIL_LIST from Gobo)"
@@ -279,4 +278,14 @@ invariant
 	consistent_count: count <= capacity
 	storage_not_void: not is_empty implies storage /= Void
 
+note
+	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

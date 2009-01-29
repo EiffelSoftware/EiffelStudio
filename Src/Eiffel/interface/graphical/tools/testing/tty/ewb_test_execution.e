@@ -75,7 +75,7 @@ feature -- Events
 
 feature {NONE} -- Implementation
 
-	print_outcome (a_outcome: !EQA_TEST_OUTCOME)
+	print_outcome (a_outcome: !EQA_TEST_RESULT)
 			-- Print outcome information
 			--
 			-- `a_outcome': Outcome for which information shall be printed.

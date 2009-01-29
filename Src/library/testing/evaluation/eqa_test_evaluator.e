@@ -35,7 +35,7 @@ inherit
 
 feature -- Status report
 
-	last_outcome: ?EQA_TEST_OUTCOME
+	last_outcome: ?EQA_TEST_RESULT
 			-- Outcome last produced by `execute'
 
 feature {NONE} -- Access

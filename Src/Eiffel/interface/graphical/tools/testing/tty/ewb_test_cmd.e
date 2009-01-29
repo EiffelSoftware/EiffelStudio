@@ -124,9 +124,9 @@ feature {NONE} -- Query
 		do
 			if a_test.is_outcome_available then
 				inspect a_test.last_outcome.status
-				when {EQA_TEST_OUTCOME_STATUS_TYPES}.passed then
+				when {EQA_TEST_RESULT_STATUS_TYPES}.passed then
 					Result := "passes"
-				when {EQA_TEST_OUTCOME_STATUS_TYPES}.failed then
+				when {EQA_TEST_RESULT_STATUS_TYPES}.failed then
 					Result := "FAIL"
 				else
 					Result := "unresolved"

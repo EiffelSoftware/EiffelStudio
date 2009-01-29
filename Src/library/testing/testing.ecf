@@ -4,6 +4,10 @@
 		<root all_classes="true"/>
 		<option namespace="EiffelSoftware.Library" syntax_level="1">
 		</option>
+		<file_rule>
+			<exclude>/\.svn$</exclude>
+			<exclude>/tests$</exclude>
+		</file_rule>
 		<library name="argument_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
@@ -12,9 +16,9 @@
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<cluster name="testing" location=".\" recursive="true">
 			<file_rule>
-				<exclude>/\.svn$</exclude>
-				<exclude>/tests$</exclude>
+				<exclude>/etf$</exclude>
 			</file_rule>
 		</cluster>
+		<cluster name="etf" location=".\etf" recursive="true"/>
 	</target>
 </system>

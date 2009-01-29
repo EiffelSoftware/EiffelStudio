@@ -405,10 +405,10 @@ feature {NONE} -- Basic functionality
 			--
 			-- `a_evaluator': Evaluator from which new results are fetched.
 		local
-			l_tuple: !TUPLE [index: NATURAL; outcome: ?EQA_TEST_OUTCOME; attempts: NATURAL]
+			l_tuple: !TUPLE [index: NATURAL; outcome: ?EQA_TEST_RESULT; attempts: NATURAL]
 			l_done, l_terminate: BOOLEAN
 			l_test: !TEST_I
-			l_outcome: EQA_TEST_OUTCOME
+			l_outcome: EQA_TEST_RESULT
 		do
 			from
 			until
@@ -488,7 +488,7 @@ feature {NONE} -- Basic functionality
 				test_map.after
 			loop
 				if test_map.item_for_iteration.is_running then
-					test_suite.add_outcome_to_test (test_map.item_for_iteration, create {EQA_TEST_OUTCOME}.make_without_response (create {DATE_TIME}.make_now, True))
+					test_suite.add_outcome_to_test (test_map.item_for_iteration, create {EQA_TEST_RESULT}.make_without_response (create {DATE_TIME}.make_now, True))
 				elseif test_map.item_for_iteration.is_queued then
 					test_suite.set_test_aborted (test_map.item_for_iteration)
 				end
@@ -514,7 +514,7 @@ feature {NONE} -- Basic functionality
 							if a_test.executor = Current and not a_remove then
 								completed_tests_count := completed_tests_count + 1
 								if a_test.is_running then
-									test_suite.add_outcome_to_test (test_map.item_for_iteration, create {EQA_TEST_OUTCOME}.make_without_response (create {DATE_TIME}.make_now, True))
+									test_suite.add_outcome_to_test (test_map.item_for_iteration, create {EQA_TEST_RESULT}.make_without_response (create {DATE_TIME}.make_now, True))
 								else
 									test_suite.set_test_aborted (a_test)
 								end

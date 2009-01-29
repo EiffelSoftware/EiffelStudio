@@ -113,7 +113,7 @@ feature -- Status setting
 			-- <Precursor>
 		local
 			i: INTEGER
-			l_cursor: DS_BILINEAR_CURSOR [!EQA_TEST_OUTCOME]
+			l_cursor: DS_BILINEAR_CURSOR [!EQA_TEST_RESULT]
 		do
 			if is_active and a_test /= test then
 				remove_test
@@ -145,7 +145,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	add_outcome (a_outcome: !EQA_TEST_OUTCOME; a_expanded: BOOLEAN)
+	add_outcome (a_outcome: !EQA_TEST_RESULT; a_expanded: BOOLEAN)
 			-- Add outcome to grid
 			--
 			-- `a_outcome': Outcome for which information should be added.

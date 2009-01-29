@@ -114,7 +114,7 @@ feature -- Control
 		local
 			l_process_info: ?WEL_PROCESS_INFO
 		do
-			l_process_info := process_info
+			l_process_info := child_process.process_info
 			check l_process_info /= Void end
 			try_terminate_process (l_process_info.process_handle)
 			force_terminated := last_termination_successful

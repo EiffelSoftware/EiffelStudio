@@ -119,7 +119,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Query
 
-	outcome (a_test: TEST_I): STRING_GENERAL
+	outcome (a_test: TEST_I): READABLE_STRING_8
 			-- String representation for the current outcome of `a_test'
 		do
 			if a_test.is_outcome_available then
@@ -142,11 +142,11 @@ feature {NONE} -- Query
 
 feature {NONE} -- Basic operations
 
-	print_string (a_string: STRING_GENERAL)
+	print_string (a_string: READABLE_STRING_8)
 		require
 			a_string_attached: a_string /= Void
 		do
-			command_line_io.localized_print (a_string)
+			command_line_io.localized_print (a_string.string)
 		end
 
 	print_statistics (a_test_suite: !TEST_SUITE_S; a_include_filter: BOOLEAN)
@@ -174,7 +174,7 @@ feature {NONE} -- Basic operations
 			print_string ("%N%N")
 		end
 
-	print_multiple_string (a_string: STRING_GENERAL; a_count: INTEGER)
+	print_multiple_string (a_string: READABLE_STRING_8; a_count: INTEGER)
 		require
 			a_count_not_negative: a_count >= 0
 		local
@@ -345,10 +345,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

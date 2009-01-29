@@ -89,10 +89,11 @@ feature -- Execution
 		local
 			l_tuple: TUPLE [EQA_TEST_SET]
 			l_prepare, l_test, l_clean: like last_invocation_response
-			l_work_dir: STRING
+			l_work_dir, l_target: STRING
 		do
 			l_work_dir := current_working_directory.twin
-			safe_execute (agent a_test_set.prepare (a_name))
+			l_target := a_test_set.generator
+			safe_execute (agent a_test_set.prepare (a_name), l_target)
 			l_prepare := last_invocation_response
 			check l_prepare /= Void end
 			if not last_invocation_response.is_exceptional then
@@ -102,9 +103,9 @@ feature -- Execution
 					valid_for_tuple: l_tuple.valid_type_for_index (a_test_set, 1)
 				end
 				l_tuple.put (a_test_set, 1)
-				safe_execute (agent a_test.call (l_tuple))
+				safe_execute (agent a_test.call (l_tuple), l_target)
 				l_test := last_invocation_response
-				safe_execute (agent a_test_set.clean (l_test.is_exceptional))
+				safe_execute (agent a_test_set.clean (l_test.is_exceptional), l_target)
 				l_clean := last_invocation_response
 				check l_test /= Void and l_clean /= Void end
 				create last_outcome.make (l_prepare, l_test, l_clean, create {DATE_TIME}.make_now)
@@ -116,16 +117,15 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	safe_execute (a_procedure: !PROCEDURE [ANY, TUPLE])
+	safe_execute (a_procedure: !PROCEDURE [ANY, TUPLE]; a_target: READABLE_STRING_8)
 			-- Execute `procedure' in a protected way.
 		require
 			buffer_empty: buffer.is_empty
+			a_target_attached: a_target /= Void
 		local
 			l_retry: BOOLEAN
 			l_old: PLAIN_TEXT_FILE
 			l_excpt: EXCEPTION
-			l_type, l_rec, l_tag, l_trace: !STRING
-			l_dtype: INTEGER
 			l_texcpt: !EQA_TEST_INVOCATION_EXCEPTION
 		do
 			if not l_retry then
@@ -144,29 +144,7 @@ feature {NONE} -- Implementation
 			l_retry := True
 			l_excpt := exception_manager.last_exception
 			check l_excpt /= Void end
-			if l_excpt.type_name = Void or else l_excpt.type_name.is_empty then
-				create l_type.make_empty
-				l_dtype := -1
-			else
-				create l_type.make_from_string (l_excpt.type_name)
-				l_dtype := dynamic_type_from_string (l_type)
-			end
-			if l_excpt.recipient_name = Void then
-				create l_rec.make_empty
-			else
-				create l_rec.make_from_string (l_excpt.recipient_name)
-			end
-			if l_excpt.message = Void then
-				create l_tag.make_empty
-			else
-				create l_tag.make_from_string (l_excpt.message)
-			end
-			if {l_trace2: !STRING} l_excpt.exception_trace then
-				l_trace := relevant_trace_representation (l_trace2)
-			else
-				create l_trace.make_empty
-			end
-			create l_texcpt.make (l_excpt.code, l_rec, l_type, l_dtype, l_tag, l_trace)
+			create l_texcpt.make (l_excpt, a_target)
 			create last_invocation_response.make_exceptional (buffered_output, l_texcpt)
 			buffer.wipe_out
 			retry
@@ -340,4 +318,14 @@ feature {NONE} -- Constants
 			create Result.make_from_string ((create {EQA_ASSERTIONS}).generator)
 		end
 
+note
+	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

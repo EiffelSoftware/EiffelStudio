@@ -1493,6 +1493,7 @@ test	self-init-attribute-returning-current	term169	tcf pass termination self_ini
 test	self-init-attribute-crash	term170	tcf pass termination
 test	keyword-in-multi-constraint-generic-crash	term171	tcf fail termination
 test	catcall-crash-is-covariant-to	term172	tcf fail termination catcall
+test	conversion-query-constant-attribute	term173	tcf fail termination convert
 
 -- Config
 

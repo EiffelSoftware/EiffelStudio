@@ -801,6 +801,7 @@ test	add-inherit-clause-undetected-vycp	incr314	tcf fail incrementality
 test	add-remove-expanded-mark-generic-class	incr315	tcf fail incrementality
 test	make-parent-expanded-call-precursor	incr316	tcf fail incrementality
 test	remove-convert-clause-crash		incr317	tcf fail incrementality
+test	remove-convert-clause-bogus-vncp	incr318	tcf fail incrementality
 
 
 -- Melting

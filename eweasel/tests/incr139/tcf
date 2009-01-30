@@ -5,28 +5,28 @@
 --| Public License version 2.
 
 -- This is a test control file
+-- NOTE: originally the test tried to change the Precursor you were calling by a rename but the compiler
+-- should have rejected this with a VDPR(3) error. Now it does but the code does not check for the change
+-- in renaming anymore.
 
 test_name 	 rename-get-new-precursor
-test_description A class calls a routine and the routine calls its precursor. After initial compilation, system execution works correctly.  Then a rename is removed, which causes the routine with the precursor call to have a different precursor.  Recompilation works but execution output is wrong.
+test_description A class calls a routine and the routine calls its precursor but should report a VDPR(3) error. Fixing the error should yield for the proper output.
 
-copy_sub 	 Ace $TEST Ace
-define		 RENAME "rename wimp as hamster"
-copy_sub 	 test.e  $CLUSTER test.e
-copy_raw 	 test1.e  $CLUSTER test1.e
+copy_sub	Ace $TEST Ace
+define		RENAME "rename wimp as hamster"
+copy_sub	test.e  $CLUSTER test.e
+copy_raw	test1.e  $CLUSTER test1.e
 compile_melted
-compile_result 	 validity_error TEST VUPR(3)
+compile_result 	 validity_error TEST VDPR(3) VDPR(3)
 
-execute_work 	NONE exec_output1
-execute_result 	ok
-compare		exec_output1 output1
+define		RENAME ""
+copy_sub	test.e  $CLUSTER test.e
 
-define		 RENAME ""
-copy_sub 	 test.e  $CLUSTER test.e
-compile_melted
-compile_result 	 ok
+resume_compile
+compile_result	ok
 
-execute_work 	NONE exec_output2
-execute_result 	ok
-compare		exec_output2 output2
+execute_work	NONE exec_output1
+execute_result	ok
+compare		exec_output1 output
 
 test_end

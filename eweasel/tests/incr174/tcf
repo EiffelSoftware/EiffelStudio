@@ -24,7 +24,7 @@ define FEATURE1 "make (args: ARRAY [ANY]) is deferred end"
 copy_sub 	test.e $CLUSTER test.e
 copy_sub 	test1.e $CLUSTER test1.e
 compile_melted
-compile_result 	validity_error TEST VUPR(3)
+compile_result 	validity_error TEST VDPR(3)
 
 define FEATURE1 "make2 (args: ARRAY [ANY]) is external "C" rescue end"
 copy_sub 	test1.e $CLUSTER test1.e

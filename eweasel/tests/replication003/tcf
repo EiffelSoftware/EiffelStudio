@@ -1,5 +1,5 @@
-test_name wrong-vupr-error
-test_description Test shows incorrectly VUPR errors.
+test_name wrong-vdpr-error
+test_description Test shows incorrectly VDPR errors.
 
 copy_sub Ace $TEST Ace
 copy_raw test.e $CLUSTER test.e

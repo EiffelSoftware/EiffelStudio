@@ -6,8 +6,8 @@
 
 -- This is a test control file
 
-test_name 	 vupr-sneak
-test_description After initial compilation, a VUPR(3) error is introduced by removing an inheritance clause, yielding no effective precursors.  The compiler does not detect the VUPR(3) error.
+test_name 	 vdpr-sneak
+test_description After initial compilation, a VDPR(3) error is introduced by removing an inheritance clause, yielding no effective precursors.  The compiler does not detect the VDPR(3) error.
 
 define PARENT "TEST3 redefine make, f end"
 copy_sub 	Ace $TEST Ace
@@ -21,7 +21,7 @@ compile_result 	ok
 define PARENT ""
 copy_sub 	test1.e $CLUSTER test1.e
 compile_melted
-compile_result 	validity_error TEST1 VUPR(3)
+compile_result 	validity_error TEST1 VDPR(3)
 
 define PARENT "TEST3 redefine make, f end"
 copy_sub 	test1.e $CLUSTER test1.e

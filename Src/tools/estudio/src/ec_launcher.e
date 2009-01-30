@@ -86,7 +86,7 @@ feature -- Launching
 			io.error.put_string ("     /ec_action <action> %N")
 			io.error.put_string ("                : Send <action> to suitable running ec, or start new ec if needed. %N")
 			io.error.put_string ("  * ec's parameters %N")
-			io.error.put_string ("     any ec's command line parameters (-config, -target, -project_path ...)%N")
+			io.error.put_string ("     any ec's command line parameters (-compat -config, -target, -project_path ...)%N")
 			io.error.put_string ("     if there is only one parameter, this is the eiffel configuration file (file.ecf)%N")
 			io.error.put_string ("%NOptional environment variables:%N")
 			io.error.put_string ("  * EC_NAME     : name of the compiler (default: ec)%N")
@@ -473,18 +473,34 @@ feature -- Environment
 			fn: FILE_NAME
 			file: RAW_FILE
 			i: INTEGER
+			l_has_compat_index: INTEGER
 		do
 				--| Compute command line, args, and working directory
 			create {ARRAYED_LIST [STRING]} ec_arguments.make (cmdline_arguments_count + 1)
-			ec_arguments.extend ("-from_bench")
+			ec_arguments.extend ("-gui")
 
 			if cmdline_arguments_count > 0 then
 					--| And now we get the parameters for EiffelStudio
-
-				if cmdline_arguments_count = 1 then
+				l_has_compat_index := cmdline_arguments.index_of_word_option ("compat")
+				if cmdline_arguments_count = 1 and l_has_compat_index > 0 then
+					ec_arguments.extend ("-compat")
+				elseif
+					(cmdline_arguments_count = 1 and l_has_compat_index = 0) or
+					(cmdline_arguments_count = 2 and l_has_compat_index > 0)
+				then
+					if l_has_compat_index > 0 then
+						ec_arguments.extend ("-compat")
+					end
 						--| use the -config argument
 					ec_arguments.extend ("-config")
-					s := cmdline_argument (1).twin
+					if l_has_compat_index = 1 then
+						s := cmdline_argument (2).twin
+					else
+						check
+							absent_or_last: l_has_compat_index = 0 or l_has_compat_index = 2
+						end
+						s := cmdline_argument (1)
+					end
 
 						--| Try to be smart and guess if the path is relative or not
 					cwd := Execution_environment.current_working_directory
@@ -514,29 +530,24 @@ feature -- Environment
 					end
 					ec_arguments.extend (s)
 				elseif cmdline_arguments_count >= 1  then
-					ec_arguments.fill (	cmdline_arguments.argument_array.subarray (1 + cmdline_arguments_offset,
-										cmdline_arguments_count))
 					from
 						i := 1
 					until
 						i > cmdline_arguments_count
 					loop
-						s := cmdline_argument (i)
+						s := cmdline_argument (i).twin
 						if
-							s.is_equal ("-config")
-							or s.is_equal ("-project_path")
-							or s.is_equal ("-target")
+							i < cmdline_arguments_count and then
+							(s.is_equal ("-config") or s.is_equal ("-project_path") or s.is_equal ("-target"))
 						then
-							if i < cmdline_arguments_count then
-								ec_arguments.extend (s)
-								i := i + 1
-								s := cmdline_argument (i)
-								if s.has (' ') and then not s.has ('"') then
-									s.left_adjust
-									s.right_adjust
-									s.prepend_character ('"')
-									s.append_character ('"')
-								end
+							ec_arguments.extend (s)
+							i := i + 1
+							s := cmdline_argument (i).twin
+							if s.has (' ') and then not s.has ('"') then
+								s.left_adjust
+								s.right_adjust
+								s.prepend_character ('"')
+								s.append_character ('"')
 							end
 						end
 						ec_arguments.extend (s)
@@ -628,7 +639,7 @@ feature {NONE} -- File system helpers
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -641,22 +652,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EC_LAUNCHER

@@ -1,0 +1,25 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 remove-convert-clause-bogus-vncp
+test_description After the compiler correctly detects a VNCP error because two classes convert to each other, the entire convert clause is removed from one of the classes.  This fixes the error but the compiler still reports VNCP
+
+
+define		CONVERT "convert to_test: {TEST}, make_from_test ({TEST})"
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_sub 	test1.e $CLUSTER test1.e
+compile_melted
+compile_result 	validity_error TEST1 VNCP
+
+define		CONVERT ""
+copy_sub 	test1.e $CLUSTER test1.e
+resume_compile
+compile_result 	ok
+
+test_end

@@ -103,7 +103,7 @@ feature -- Basic operations
 		deferred
 		ensure
 			is_registered_a_key: is_registered (a_key)
-			a_item_sited: {l_site: SITE [ACTIVE_DICTIONARY_I [G, K]]} a_item implies (l_site.is_sited and then l_site.site = Current)
+			a_item_sited: {l_site: SITE [REGISTRAR_I [G, K]]} a_item implies (l_site.is_sited and then l_site.site = Current)
 		end
 
 	register_with_activator (a_activator: !FUNCTION [ANY, TUPLE, !G]; a_key: !K)
@@ -126,7 +126,7 @@ feature -- Basic operations
 		deferred
 		ensure
 			not_is_registered_a_key: not is_registered (a_key)
-			a_item_unsited: {l_site: SITE [ACTIVE_DICTIONARY_I [G, K]]} old registration (a_key) implies not l_site.is_sited
+			a_item_unsited: {l_site: SITE [REGISTRAR_I [G, K]]} old registration (a_key) implies not l_site.is_sited
 		end
 
 feature -- Events

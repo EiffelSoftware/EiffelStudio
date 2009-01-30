@@ -14,7 +14,7 @@ inherit
 	SERVICE_INITIALIZER
 		redefine
 			add_core_services,
-			create_testing_service
+			new_testing_service
 		end
 
 --inherit {NONE}
@@ -31,10 +31,10 @@ feature -- Services
 			-- `a_container': The service container to add services to.
 		do
 			Precursor {SERVICE_INITIALIZER} (a_container)
-			a_container.register_with_activator ({FILE_NOTIFIER_S}, agent create_file_notifier_service, False)
-			a_container.register_with_activator ({HELP_PROVIDERS_S}, agent create_help_providers_service, False)
-			a_container.register_with_activator ({CODE_TEMPLATE_CATALOG_S}, agent create_code_template_catalog_service, False)
-			a_container.register_with_activator ({WIZARD_ENGINE_S}, agent create_wizard_service, False)
+			a_container.register_with_activator ({FILE_NOTIFIER_S}, agent new_file_notifier_service, False)
+			a_container.register_with_activator ({HELP_PROVIDERS_S}, agent new_help_providers_service, False)
+			a_container.register_with_activator ({CODE_TEMPLATE_CATALOG_S}, agent new_code_template_catalog_service, False)
+			a_container.register_with_activator ({WIZARD_ENGINE_S}, agent new_wizard_service, False)
 		end
 
 feature {NONE} -- Help registration
@@ -78,7 +78,7 @@ feature {NONE} -- Code template cataloging
 
 feature {NONE} -- Factory
 
-	create_file_notifier_service: ?FILE_NOTIFIER_S
+	new_file_notifier_service: ?FILE_NOTIFIER_S
 			-- Creates the file notifier service.
 		do
 			create {FILE_NOTIFIER} Result.make
@@ -86,7 +86,7 @@ feature {NONE} -- Factory
 			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end
 
-	create_help_providers_service: ?HELP_PROVIDERS_S
+	new_help_providers_service: ?HELP_PROVIDERS_S
 			-- Creates the help providers service.
 		do
 			create {HELP_PROVIDERS} Result.make
@@ -97,7 +97,7 @@ feature {NONE} -- Factory
 			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end
 
-	create_code_template_catalog_service: ?CODE_TEMPLATE_CATALOG_S
+	new_code_template_catalog_service: ?CODE_TEMPLATE_CATALOG_S
 			-- Creates the code templates catalog service.
 		do
 			create {CODE_TEMPLATE_CATALOG} Result.make
@@ -108,7 +108,7 @@ feature {NONE} -- Factory
 			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end
 
-	create_wizard_service: ?WIZARD_ENGINE_S
+	new_wizard_service: ?WIZARD_ENGINE_S
 			-- Create the wizard service
 		do
 			create {WIZARD_ENGINE} Result
@@ -116,7 +116,7 @@ feature {NONE} -- Factory
 			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end
 
-	create_testing_service: ?TEST_SUITE_S
+	new_testing_service: ?TEST_SUITE_S
 			-- <Precursor>
 		local
 			l_ev_app: EV_SHARED_APPLICATION
@@ -130,7 +130,7 @@ feature {NONE} -- Factory
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

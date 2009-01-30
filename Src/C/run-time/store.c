@@ -415,6 +415,7 @@ rt_shared void eif_store_thread_init (void)
 	RT_GET_CONTEXT;
 	eif_is_new_independent_format = EIF_TRUE;
 	eif_is_new_recoverable_format = EIF_TRUE;
+	eif_is_discarding_attachment_marks = EIF_FALSE;
 }
 #endif
 
@@ -582,6 +583,16 @@ doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_private EIF_BOOLEAN eif_is_new_recoverable_format = EIF_TRUE;
+
+/*
+doc:	<attribute name="eif_is_discarding_attachment_marks" return_type="EIF_BOOLEAN" export="private">
+doc:		<summary>Does `independent_store' discard the attachment marks if found during store operation? Default False.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
+doc:	</attribute>
+*/
+rt_private EIF_BOOLEAN eif_is_discarding_attachment_marks = EIF_FALSE;
 #endif
 
 rt_public EIF_BOOLEAN eif_is_new_recoverable_format_active (void)
@@ -594,6 +605,18 @@ rt_public void eif_set_new_recoverable_format (EIF_BOOLEAN state)
 {
 	RT_GET_CONTEXT
 	eif_is_new_recoverable_format = state;
+}
+
+rt_public EIF_BOOLEAN eif_is_discarding_attachment_marks_active (void)
+{
+	RT_GET_CONTEXT
+	return eif_is_discarding_attachment_marks;
+}
+
+rt_public void eif_set_is_discarding_attachment_marks (EIF_BOOLEAN state)
+{
+	RT_GET_CONTEXT
+	eif_is_discarding_attachment_marks = state;
 }
 
 /* Independent store */
@@ -797,8 +820,13 @@ rt_shared void internal_store(char *object)
 			printf ("Storing in new recoverable format\n");
 #endif
 			if (eif_is_new_recoverable_format) {
-				c = INDEPENDENT_STORE_6_3;
-				rt_kind_version = INDEPENDENT_STORE_6_3;
+				if (eif_is_discarding_attachment_marks) {
+					c = INDEPENDENT_STORE_6_0;
+					rt_kind_version = INDEPENDENT_STORE_6_0;
+				} else {
+					c = INDEPENDENT_STORE_6_3;
+					rt_kind_version = INDEPENDENT_STORE_6_3;
+				}
 			}
 		}
 		else {
@@ -1868,6 +1896,7 @@ rt_private struct cecil_info * cecil_info_for_dynamic_type (EIF_TYPE_INDEX dtype
 
 rt_private void widr_type_attribute (int16 dtype, int16 attrib_index)
 {
+	RT_GET_CONTEXT
 	char *name = System (dtype).cn_names[attrib_index];
 	int16 name_length = (int16) strlen (name);
 	EIF_TYPE_INDEX *gtypes = System (dtype).cn_gtypes[attrib_index] + 1;
@@ -1880,8 +1909,16 @@ rt_private void widr_type_attribute (int16 dtype, int16 attrib_index)
 
 	REQUIRE("valid name_length", (size_t) name_length == strlen (name));
 
-	for (num_gtypes=0; gtypes[num_gtypes] != TERMINATOR; num_gtypes++)
-		; /* count types */
+	num_gtypes = 0;
+	for (i=0; gtypes[i] != TERMINATOR; i++) {
+		 	/* count types, and ignore attachment marks if any and requested. */
+		if (eif_is_discarding_attachment_marks) {
+			while (RT_HAS_ANNOTATION_TYPE (gtypes[i])) {
+				i++;
+			}
+		}
+		num_gtypes++;
+	}
 
 #ifdef RECOVERABLE_DEBUG
 	printf ("        %s:", name);
@@ -1895,18 +1932,25 @@ rt_private void widr_type_attribute (int16 dtype, int16 attrib_index)
 	/* Write type information: "num_gtypes attribute_type {gen_types}*" */
 	widr_multi_int16 (&num_gtypes, 1);
 	/* Write type array */
-	for (i=0; i<num_gtypes; i++) {
+	for (i=0; gtypes[i] != TERMINATOR; i++) {
 		EIF_TYPE_INDEX gtype = gtypes[i];
 #ifdef RECOVERABLE_DEBUG
 		rt_shared char *name_of_attribute_type (int16 **type);
 		printf ("%s%s", i==0 ? " " : i==1 ? " [" : ", ", name_of_attribute_type (&typearr));
 		typearr++;
 #endif
-		while (RT_HAS_ANNOTATION_TYPE (gtype)) {
-				/* Write annotation mark. */
-			widr_multi_uint16 (&gtype, 1);
-			i += 1;
-			gtype = gtypes [i];
+		if (eif_is_discarding_attachment_marks) {
+			while (RT_HAS_ANNOTATION_TYPE (gtype)) {
+				i++;
+				gtype = gtypes [i];
+			}
+		} else {
+			while (RT_HAS_ANNOTATION_TYPE (gtype)) {
+					/* Write annotation mark. */
+				widr_multi_uint16 (&gtype, 1);
+				i++;
+				gtype = gtypes [i];
+			}
 		}
 		if (gtype == TUPLE_TYPE) {
 				/* Write TUPLE_TYPE, nb generic parames */
@@ -2171,26 +2215,43 @@ rt_private void st_write_cid (EIF_TYPE_INDEX dftype)
 rt_private void ist_write_cid (EIF_TYPE_INDEX dftype)
 
 {
+	RT_GET_CONTEXT
 	EIF_TYPE_INDEX *l_cidarr;
 	uint32 count, i, val;
+	int is_discarding = eif_is_discarding_attachment_marks;
 
 	l_cidarr = eif_gen_cid (dftype);
-	count  = (uint32) *l_cidarr;
+	count = *l_cidarr;
+	++l_cidarr;
+
+	if (is_discarding) {
+		val = 0;
+		for (i=0; i < count; i++) {
+			while (RT_HAS_ANNOTATION_TYPE (l_cidarr[i])) {
+				i++;
+			}
+			val++;
+		}
+			/* Update `count' without taking into account any attachments. */
+		count = val;
+	}
 
 	widr_norm_int (&count);
 
-	/* If count = 1 then we don't need to write more data */
-
-	if (count > 1)
-	{
-		++l_cidarr;
-
-		for (i = 1; i <= count; ++i, ++l_cidarr)
-		{
-			val = (uint32) *l_cidarr;
+		/* If count = 1 then we don't need to write more data */
+	if (count > 1) {
+		for (i = 0; i < count; ++i, ++l_cidarr) {
+			val = *l_cidarr;
+			if (is_discarding) {
+				while (RT_HAS_ANNOTATION_TYPE(val)) {
+					++l_cidarr;
+					val = *l_cidarr;
+				}
+			}
 			widr_norm_int (&val);
 		}
 	}
+
 }
 
 /*

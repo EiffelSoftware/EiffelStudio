@@ -74,6 +74,7 @@ extern "C" {
 RT_LNK void eif_set_new_independent_format(EIF_BOOLEAN v);
 RT_LNK EIF_BOOLEAN eif_is_new_recoverable_format_active (void);
 RT_LNK void eif_set_new_recoverable_format (EIF_BOOLEAN);
+RT_LNK void eif_set_is_discarding_attachment_marks (EIF_BOOLEAN);
 
 /*
  * Eiffel calls

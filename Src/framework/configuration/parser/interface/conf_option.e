@@ -23,11 +23,27 @@ inherit
 			is_equal
 		end
 
+	CONF_DEFAULT_OPTION_SETTING
+		redefine
+			copy,
+			default_create,
+			is_equal
+		end
+
 feature {NONE} -- Creation
 
 	default_create
 		do
-			create syntax_level.make (syntax_level_transitional, syntax_level_count)
+			if is_63_compatible then
+				create syntax_level.make (syntax_level_obsolete, syntax_level_count)
+			else
+				create syntax_level.make (syntax_level_transitional, syntax_level_count)
+					-- Uncomment the line below once all libraries
+					-- have been converted to Void-safe.
+--				is_full_class_checking := True
+--				is_attached_by_default := True
+--				is_void_safe := True
+			end
 		end
 
 feature -- Status
@@ -68,7 +84,7 @@ feature -- Status
 			Result := not (is_profile_configured or is_trace_configured or is_optimize_configured or is_debug_configured or
 				is_warning_configured or is_msil_application_optimize_configured or is_full_class_checking_configured or
 				is_cat_call_detection_configured or is_attached_by_default_configured or is_void_safe_configured or
-				assertions /= Void or local_namespace /= Void or warnings /= Void or debugs /= Void)
+				assertions /= Void or local_namespace /= Void or warnings /= Void or debugs /= Void or syntax_level.is_set)
 		end
 
 feature -- Status update
@@ -633,10 +649,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

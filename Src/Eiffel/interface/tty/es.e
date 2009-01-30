@@ -51,6 +51,8 @@ inherit
 
 	SHARED_BATCH_NAMES
 
+	CONF_DEFAULT_OPTION_SETTING
+
 create
 	make
 
@@ -364,6 +366,7 @@ feature -- Properties
 			Result.put (clean_help, clean_cmd_name)
 			Result.put (gui_help, gui_cmd_name)
 			Result.put (gc_stats_help, gc_stats_cmd_name)
+			Result.put (compat_help, compat_cmd_name)
 			add_help_special_cmds
 		end
 
@@ -422,8 +425,8 @@ feature -- Output
 		do
 			localized_print (ewb_names.usage)
 			localized_print (argument (0))
-			io.put_string (" [-help | -version | -batch | -clean | -verbose | -use_settings | ")
-			add_usage_special_cmds
+			io.put_string (" [-help | -compat | -version | -batch | -clean | -verbose | -use_settings |%N%T")
+			io.put_string ("-freeze | -finalize [-keep] | -precompile [-finalize [-keep]] | -c_compile |%N%T")
 			io.put_string ("-loop | -debug | -quick_melt | -melt | ")
 			if eiffel_layout.Has_documentation_generation then
 				io.put_string ("-clients [-filter filtername] class |%N%
@@ -572,11 +575,6 @@ feature -- Output
 		end
 
 feature -- Update
-
-	add_usage_special_cmds
-		do
-			io.put_string ("-freeze | %N%T-finalize [-keep] | -precompile [-finalize [-keep]] | -c_compile |%N%T")
-		end
 
 	add_help_special_cmds
 		do
@@ -1225,6 +1223,10 @@ feature -- Update
 				else
 					option_error := True
 				end
+			elseif option.is_equal ("-compat") then
+					-- This option enables the default set of options of 6.3 and earlier if not specified in the ECF file.
+				set_is_63_compatible (True)
+
 			elseif is_eiffel_class_file_name (option) then
 					-- This option is only valid if no other config options are set
 				if config_file_name = Void and target_name = Void and old_ace_file = Void and old_project_file = Void then
@@ -1350,7 +1352,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -1374,11 +1376,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class ES

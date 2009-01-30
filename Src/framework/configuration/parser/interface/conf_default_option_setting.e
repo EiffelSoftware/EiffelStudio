@@ -1,60 +1,45 @@
 note
-	description: "Core of the application"
+	description: "Global flag that specifies what is the default value of options."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	EB_KERNEL
-
-inherit
-	ARGUMENTS
-
-	SHARED_FLAGS
-
 	CONF_DEFAULT_OPTION_SETTING
 
-create
-	make
+feature -- Access
 
-feature {NONE} -- Initialization
-
-	make
-			-- Create and map the first window: the system window.
-		local
-			compiler: ES_BATCH
-			graphic_compiler: ES_GRAPHIC
-			--| uncomment the following line when profiling
-			--prof_setting: PROFILING_SETTING
+	is_63_compatible: BOOLEAN
+			-- Are default options initialized in 6.3 or older compatibility mode?
 		do
-			--| uncomment the following lines when profiling
-			--create prof_setting.make
-			--prof_setting.stop_profiling
+			Result := is_63_compatible_cell.item
+		end
 
-			if index_of_word_option ("compat") > 0 then
-				set_is_63_compatible (True)
-			end
+feature -- Setting
 
-			if
-				argument_count > 0 and then
-				(index_of_word_option ("gui") > 0 or else
-				argument (1).is_equal ("-from_bench") or else argument (1).is_equal ("-bench"))
-			then
-				set_gui (True)
-				create graphic_compiler.make
-			else
-					-- Start the compilation in batch mode from the bench executable.
-				create compiler.make
-			end
+	set_is_63_compatible (v: like is_63_compatible)
+			-- Set `is_63_compatible' with `v'.
+		do
+			is_63_compatible_cell.put (v)
+		ensure
+			set: is_63_compatible = v
+		end
 
-			--| uncomment the following line when profiling
-			--prof_setting.start_profiling
+feature {NONE} -- Implementation
+
+	is_63_compatible_cell: CELL [BOOLEAN]
+			-- Storage for `is_63_compatible'.
+		once
+				-- By default we are not 6.3 compatible.
+			create Result.put (False)
+		ensure
+			is_63_compatible_cell_not_void: Result /= Void
 		end
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
@@ -83,5 +68,4 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 end

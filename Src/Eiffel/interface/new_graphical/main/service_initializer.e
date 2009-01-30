@@ -17,15 +17,16 @@ feature -- Services
 			--
 			-- `a_container': The service container to add services to.
 		do
-			a_container.register_with_activator ({EVENT_LIST_S}, agent create_event_list_service, False)
-			a_container.register_with_activator ({LOGGER_S}, agent create_logger_service, False)
-			a_container.register_with_activator ({SESSION_MANAGER_S}, agent create_session_manager_service, False)
-			a_container.register_with_activator ({TEST_SUITE_S}, agent create_testing_service, False)
+			a_container.register_with_activator ({EVENT_LIST_S}, agent new_event_list_service, False)
+			a_container.register_with_activator ({LOGGER_S}, agent new_logger_service, False)
+			a_container.register_with_activator ({SESSION_MANAGER_S}, agent new_session_manager_service, False)
+			a_container.register_with_activator ({TEST_SUITE_S}, agent new_testing_service, False)
+			a_container.register_with_activator ({OUTPUT_MANAGER_S}, agent new_output_manager_service, False)
 		end
 
 feature {NONE} -- Factory
 
-	create_event_list_service: ?EVENT_LIST_S
+	new_event_list_service: ?EVENT_LIST_S
 			-- Creates the event list service.
 		do
 			create {EVENT_LIST} Result.make
@@ -33,7 +34,7 @@ feature {NONE} -- Factory
 			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end
 
-	create_logger_service: ?LOGGER_S
+	new_logger_service: ?LOGGER_S
 			-- Creates the logger service.
 		do
 			create {LOGGER} Result.make
@@ -41,7 +42,7 @@ feature {NONE} -- Factory
 			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end
 
-	create_session_manager_service: ?SESSION_MANAGER_S
+	new_session_manager_service: ?SESSION_MANAGER_S
 			-- Creates the session manager service.
 		do
 			create {SESSION_MANAGER} Result
@@ -49,13 +50,43 @@ feature {NONE} -- Factory
 			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end
 
-	create_testing_service: ?TEST_SUITE_S
+	new_testing_service: ?TEST_SUITE_S
 			-- Create test suite service
 		do
 			create {TEST_SUITE} Result.make (create {TEST_PROJECT_HELPER})
 			register_test_suite_processors (Result)
 		ensure
 			result_not_void_implies_usable: Result /= Void implies Result.is_interface_usable
+		end
+
+	new_output_manager_service: ?OUTPUT_MANAGER_S
+			-- Creates the output manager service
+		do
+			create {OUTPUT_MANAGER} Result.make
+			register_outputs (Result)
+		end
+
+feature {NONE} -- Output registration
+
+	register_outputs (a_service: !OUTPUT_MANAGER_S)
+			-- Registers all default output providers with the output managers service.
+			--
+			-- `a_service': The service interface to register the outputs on.
+		require
+			a_service_is_interface_usable: a_service.is_interface_usable
+		local
+			l_kinds: OUTPUT_MANAGER_KINDS
+			l_output: OUTPUT_TTY
+		do
+			create l_output
+			create l_kinds
+			a_service.register (l_output, l_kinds.general)
+			a_service.register (l_output, l_kinds.eiffel_compiler)
+			a_service.register (l_output, l_kinds.c_compiler)
+		ensure
+			general_output_registered: a_service.is_registered ((create {OUTPUT_MANAGER_KINDS}).general)
+			eiffel_compiler_output_registered: a_service.is_registered ((create {OUTPUT_MANAGER_KINDS}).eiffel_compiler)
+			c_compilerl_output_registered: a_service.is_registered ((create {OUTPUT_MANAGER_KINDS}).c_compiler)
 		end
 
 feature {NONE} -- Test suite extension
@@ -78,7 +109,7 @@ feature {NONE} -- Test suite extension
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -102,11 +133,11 @@ feature {NONE} -- Test suite extension
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

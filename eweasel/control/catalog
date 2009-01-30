@@ -127,7 +127,7 @@ test incorrect-vrle-error						noncon020 tcf pass non-conforming
 -- Replication
 test replicate-precursor				replication001 tcf pass replication
 test replicated-feature-merge				replication002 tcf fail replication
-test wrong-vupr-error					replication003 tcf pass replication
+test wrong-vdpr-error					replication003 tcf pass replication
 test vmcs-warning1					replication004 tcf pass replication
 test vmcs-warning2					replication005 tcf pass replication
 test repeated-onces					replication006 tcf pass replication
@@ -320,7 +320,7 @@ test	generic-constraint-not-used	valid114 tcf fail validity
 test	two-generic-precursors		valid115 tcf fail validity
 test	invariant-result-address	valid116 tcf pass validity
 test	two-precursors-same-parent	valid117 tcf fail validity
-test	bogus-vupr2			valid118 tcf fail validity
+test	bogus-vdpr2			valid118 tcf fail validity
 test	nonconforming-generic-creation	valid119 tcf pass validity
 test	unreferenced-locals		valid120 tcf pass validity
 test	default-create-no-vd27		valid121 tcf fail validity
@@ -454,7 +454,7 @@ test	error-in-elsif			multierr006 tcf pass multi-errors
 test	failing-to-recompile-descendant	multierr007 tcf pass multi-errors
 test	recompile-descendant-code	multierr008 tcf pass multi-errors
 test	recompile-assertion-descendant-code	multierr009 tcf pass multi-errors
-test	precondition-vupr-fail-to-check-body	multierr010 tcf pass multi-errors
+test	precondition-vdpr-fail-to-check-body	multierr010 tcf pass multi-errors
 
 -- System validity tests
 test	svalid-infix-with-conversion	svalid001 tcf pass system-validity
@@ -648,12 +648,12 @@ test	vsrt-vtct-vcfg-die		incr158  tcf pass incrementality
 test	vtct-vcfg-vsrt-die		incr159  tcf pass incrementality
 test	alternate-vd27-and-vsrt		incr160  tcf pass incrementality
 test	missing-rescue-clause		incr161  tcf pass incrementality
-test	vupr-sneak			incr162  tcf fail incrementality
+test	vdpr-sneak			incr162  tcf fail incrementality
 test	switch-generics-tricky-vtcg	incr163  tcf fail incrementality
 test	delete-parent-vtcg-sneak	incr164  tcf pass incrementality
 test	switch-generics-tricky-vdrd	incr165  tcf pass incrementality
 test	change-external-melt		incr166  tcf pass incrementality
-test	make-synonyms-vupr-sneak	incr167  tcf fail incrementality
+test	make-synonyms-vdpr-sneak	incr167  tcf fail incrementality
 test	add-alternative-precondition	incr168  tcf fail incrementality
 test	change-created-actual-generic	incr169  tcf pass incrementality
 test	vmfn-new-deferred-ancestor	incr170  tcf pass incrementality
@@ -696,7 +696,7 @@ test	chg-indexing-tag-to-attribute	incr207  tcf fail incrementality
 test	bit-n-illegal-opcode		incr208  tcf pass incrementality
 test	external-make-precondition-true	incr209  tcf pass incrementality
 test	unexpand-class-no-conformance	incr210  tcf fail incrementality conformance
-test	uninherit-any-vupr2-sneak	incr211  tcf fail incrementality
+test	uninherit-any-vdpr2-sneak	incr211  tcf fail incrementality
 test	c-inline-change-arg-order	incr212  tcf pass incrementality
 test	chg-generic-c-inline-function	incr213  tcf pass incrementality
 test	freeze-no-c-compile-melt	incr214  tcf fail incrementality
@@ -708,7 +708,7 @@ test	remove-constraint-veen-sneak	incr220  tcf fail incrementality
 test	vuex-weasel			incr221  tcf fail incrementality
 test	change-system-name		incr222  tcf fail incrementality
 test	function-attribute-constant	incr223  tcf fail incrementality
-test	vupr-weasel			incr224  tcf fail incrementality
+test	vdpr-weasel			incr224  tcf fail incrementality
 test	change-anchor-type-finalize	incr225  tcf fail incrementality
 test	precompile-again		incr226  tcf fail incrementality
 test	remove-ace-object-clause	incr227  tcf fail incrementality

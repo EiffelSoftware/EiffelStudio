@@ -6,8 +6,8 @@
 
 -- This is a test control file
 
-test_name 	 vupr-weasel
-test_description After initial compilation, a VUPR(3) error is introduced by changing an inherited deferred feature to effective, so that a routine calling precursor has two precursors.  On recompile, the compiler does not detect the VUPR(3) error.
+test_name 	 vdpr-weasel
+test_description After initial compilation, a VDPR(3) error is introduced by changing an inherited deferred feature to effective, so that a routine calling precursor has two precursors.  On recompile, the compiler does not detect the VDPR(3) error.
 
 define REDEFINE ""
 define FEATURE "try is deferred end"
@@ -23,6 +23,6 @@ define FEATURE "try is do print ("In TEST2 try%N") end"
 copy_sub 	test.e $CLUSTER test.e
 copy_sub 	test2.e $CLUSTER test2.e
 compile_melted
-compile_result 	validity_error TEST VUPR(3)
+compile_result 	validity_error TEST VDPR(3)
 
 test_end

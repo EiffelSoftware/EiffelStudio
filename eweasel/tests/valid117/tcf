@@ -7,12 +7,12 @@
 -- This is a test control file
 
 test_name 	 two-precursors-same-parent
-test_description A class inherits from a second class and renames two effective features to a new name, redefining that new feature name.  The redefinition calls precursor.  The compiler should report a VUPR(3) error, but it accepts the classes.
+test_description A class inherits from a second class and renames two effective features to a new name, redefining that new feature name.  The redefinition calls precursor.  The compiler should report a VDPR(3) error, but it accepts the classes.
 
 copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e
 copy_raw 	test1.e $CLUSTER test1.e
 compile_melted
-compile_result 	validity_error TEST VUPR(3)
+compile_result 	validity_error TEST VDPR(3)
 
 test_end

@@ -35,8 +35,8 @@ inherit
 
 feature -- Status report
 
-	last_outcome: ?EQA_TEST_RESULT
-			-- Outcome last produced by `execute'
+	last_result: ?EQA_TEST_RESULT
+			-- Result last produced by `execute'
 
 feature {NONE} -- Access
 
@@ -49,7 +49,7 @@ feature {NONE} -- Access
 feature -- Status report
 
 	record_output: BOOLEAN
-			-- Shall output produced by tests be recorded in responses of `last_outcome'
+			-- Shall output produced by tests be recorded in responses of `last_result'
 
 feature {NONE} -- Status report
 
@@ -108,9 +108,9 @@ feature -- Execution
 				safe_execute (agent a_test_set.clean (l_test.is_exceptional), l_target)
 				l_clean := last_invocation_response
 				check l_test /= Void and l_clean /= Void end
-				create last_outcome.make (l_prepare, l_test, l_clean, create {DATE_TIME}.make_now)
+				create last_result.make (l_prepare, l_test, l_clean, create {DATE_TIME}.make_now)
 			else
-				create last_outcome.make_with_setup (l_prepare, create {DATE_TIME}.make_now)
+				create last_result.make_with_setup (l_prepare, create {DATE_TIME}.make_now)
 			end
 			change_working_directory (l_work_dir)
 		end
@@ -144,7 +144,7 @@ feature {NONE} -- Implementation
 			l_retry := True
 			l_excpt := exception_manager.last_exception
 			check l_excpt /= Void end
-			create l_texcpt.make (l_excpt, a_target)
+			create l_texcpt.make (l_excpt, a_target, Void)
 			create last_invocation_response.make_exceptional (buffered_output, l_texcpt)
 			buffer.wipe_out
 			retry

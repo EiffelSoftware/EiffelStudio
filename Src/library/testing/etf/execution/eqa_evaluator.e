@@ -177,7 +177,7 @@ feature {NONE} -- Execution
 			evaluator.execute (test_set_instance (a_index), test_procedure (a_index), test_name (a_index))
 			if stream.extendible then
 				stream.put_natural (a_index)
-				stream.independent_store (evaluator.last_outcome)
+				stream.independent_store (evaluator.last_result)
 			else
 				is_stream_invalid := True
 			end

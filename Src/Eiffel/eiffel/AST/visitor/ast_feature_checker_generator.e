@@ -2862,7 +2862,7 @@ feature -- Implementation
 							end
 						elseif l_pre_table.count > 1 then
 								-- Unqualified precursor construct is ambiguous
-							create l_vdpr3
+							create l_vdpr3.make_with_list (l_pre_table)
 							context.init_error (l_vdpr3)
 							error_handler.insert_error (l_vdpr3)
 							l_has_error := True
@@ -2871,9 +2871,9 @@ feature -- Implementation
 						if not l_has_error then
 								-- Table has exactly one entry.
 							l_pre_table.start
-							l_parent_type := l_pre_table.item.first
+							l_parent_type := l_pre_table.item.parent_type
 							l_parent_class := l_parent_type.associated_class
-							l_feature_i := l_parent_class.feature_table.feature_of_rout_id (l_pre_table.item.second)
+							l_feature_i := l_pre_table.item.feat
 							l_as.set_class_id (l_parent_class.class_id)
 							l_as.set_routine_ids (l_feature_i.rout_id_set)
 						end
@@ -8754,7 +8754,7 @@ feature {AST_FEATURE_CHECKER_GENERATOR}
 
 feature {NONE} -- Precursor handling
 
-	precursor_table (l_as: PRECURSOR_AS; a_current_class: CLASS_C; a_rout_id_set: ROUT_ID_SET): LINKED_LIST [PAIR[CL_TYPE_A, INTEGER]]
+	precursor_table (l_as: PRECURSOR_AS; a_current_class: CLASS_C; a_rout_id_set: ROUT_ID_SET): LINKED_LIST [TUPLE [feat: FEATURE_I; parent_type: CL_TYPE_A]]
 			-- Table of parent types which have an effective
 			-- precursor of current feature. Indexed by
 			-- routine ids.
@@ -8769,9 +8769,8 @@ feature {NONE} -- Precursor handling
 			spec_p_name: STRING
 			p_list: HASH_TABLE [CL_TYPE_A, STRING]
 			i, rc: INTEGER
-			pair: PAIR [CL_TYPE_A, INTEGER]
-			couple: PAIR [INTEGER, INTEGER]
-			check_written_in: LINKED_LIST [PAIR [INTEGER, INTEGER]]
+			couple: TUPLE [written_in, body_index: INTEGER]
+			check_written_in: LINKED_LIST [TUPLE [written_in, body_index: INTEGER]]
 			r_class_i: CLASS_I
 		do
 			rc := a_rout_id_set.count
@@ -8822,30 +8821,22 @@ feature {NONE} -- Precursor handling
 
 						if a_feature /= Void and then not a_feature.is_deferred  then
 								-- Ok, add parent.
-							create pair
-							pair.set_first (parents.item)
-							pair.set_second (rout_id)
-
-							create couple
-							couple.set_first (rout_id)
-							couple.set_second (a_feature.written_in)
+							couple := [a_feature.written_in, a_feature.body_index]
 
 								-- Before entering the new info in `Result' we
 								-- need to make sure that we do not have the same
 								-- item, because if we were adding it, it will
-								-- cause a VUPR3 error when it is not needed.
-							if not special_has (check_written_in, couple) then
-								Result.extend (pair)
+								-- cause a VDPR3 error when it is not needed.
+							if not check_written_in.has (couple) then
+								Result.extend ([a_feature, parents.item])
 								check_written_in.extend (couple)
 							end
 
-								-- Register parent
-							p_list.put (parents.item, p_name)
-							i := rc -- terminate loop
 						end
-
 						i := i + 1
 					end
+						-- Register parent
+					p_list.put (parents.item, p_name)
 				end
 				parents.forth
 			end
@@ -8888,28 +8879,6 @@ feature {NONE} -- Implementation
 					l_class_id := l_type_a.associated_class.class_id
 			end
 			Result := l_class_id
-		end
-
-	special_has (l: LINKED_LIST [PAIR [INTEGER, INTEGER]]; p: PAIR [INTEGER, INTEGER]): BOOLEAN
-			-- Does `l' contain `p'?
-		require
-			valid_pair: p /= Void
-			valid_pair_first: p.first /= 0
-			valid_pair_second: p.second /= 0
-		local
-			l_item: PAIR [INTEGER, INTEGER]
-		do
-			from
-				l.start
-				Result := False
-			until
-				l.after or Result
-			loop
-				l_item := l.item
-				Result := l_item.first = p.first and then
-								l_item.second = p.second
-				l.forth
-			end
 		end
 
 	match_list_of_class (a_class_id: INTEGER): LEAF_AS_LIST

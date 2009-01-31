@@ -35,6 +35,7 @@ feature -- Services
 			a_container.register_with_activator ({HELP_PROVIDERS_S}, agent new_help_providers_service, False)
 			a_container.register_with_activator ({CODE_TEMPLATE_CATALOG_S}, agent new_code_template_catalog_service, False)
 			a_container.register_with_activator ({WIZARD_ENGINE_S}, agent new_wizard_service, False)
+			a_container.register_with_activator ({STATUS_BAR_S}, agent new_status_bar_service, False)
 		end
 
 feature {NONE} -- Help registration
@@ -116,6 +117,14 @@ feature {NONE} -- Factory
 			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end
 
+	new_status_bar_service: ?STATUS_BAR_S
+			-- Create the wizard service
+		do
+			create {STATUS_BAR} Result
+		ensure
+			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
+		end
+
 	new_testing_service: ?TEST_SUITE_S
 			-- <Precursor>
 		local
@@ -154,11 +163,11 @@ feature {NONE} -- Factory
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

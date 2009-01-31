@@ -651,6 +651,7 @@ rt_private void spcopy(register EIF_REFERENCE source, register EIF_REFERENCE tar
 	 */
 
 	rt_uint_ptr field_size;
+	rt_uint_ptr t_count, s_count;
 #ifdef ISE_GC
 	uint16 flags;
 #endif
@@ -659,14 +660,20 @@ rt_private void spcopy(register EIF_REFERENCE source, register EIF_REFERENCE tar
 	REQUIRE ("target not null", target);
 	REQUIRE ("source is special", HEADER(source)->ov_flags & EO_SPEC);
 	REQUIRE ("target is special", HEADER(source)->ov_flags & EO_SPEC);
-	REQUIRE ("target_count_greater", RT_SPECIAL_COUNT(target) >= RT_SPECIAL_COUNT(source));
-	REQUIRE ("target size is large enough", (HEADER(target)->ov_size & B_SIZE) >= (HEADER(source)->ov_size & B_SIZE));
+	REQUIRE ("target_elem_size_identical", RT_SPECIAL_ELEM_SIZE(target) == RT_SPECIAL_ELEM_SIZE(source));
 
-		/* Evaluation of the size field to copy. It is important to use the `source' for the
-		   size as `target' can be larger than `source'. This happens when the runtime prevented
-		   creation of a 0-sized object if it had created exactly the same size as `source'.*/
-	field_size = (HEADER(source)->ov_size & B_SIZE) - LNGPAD_2;
+		/* Because we can call copy with special/tuples of different size, we have to take the min size
+		 * of the two objects to know exactly how much we are allowed to copy without causing a
+		 * memory corruption. In case users actually call `copy' directly, not indirectly via `twin',
+		 * the postcondition of `copy' will be violated, although it would have been better to have
+		 * a precondition it is much better than memory corruption.*/
 
+		/* FIXME: Once `copy' is not exported anymore to ANY, but just TUPLE/SPECIAL then we will be able
+		 * to add RT_SPECIAL_COUNT(target) == RT_SPECIAL_COUNT(sourcE) as precondition of `spcopy'.*/
+
+	t_count = RT_SPECIAL_COUNT(target);
+	s_count = RT_SPECIAL_COUNT(source);
+	field_size = (t_count > s_count ? s_count : t_count) * RT_SPECIAL_ELEM_SIZE (source);
 	memmove(target, source, field_size);			/* Block copy */
 
 #ifdef ISE_GC

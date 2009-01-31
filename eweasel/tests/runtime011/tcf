@@ -1,0 +1,17 @@
+test_name	tuple-special-twin-bug
+test_description If we create a lot of TUPLEs whose physical size is larger than what they really need to be and try to copy it in a TUPLE of a smaller physical size (even though both TUPLE have the same count) we could corrupt the TUPLE memory. Same goes with SPECIAL.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_frozen
+compile_result ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

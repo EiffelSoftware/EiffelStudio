@@ -257,15 +257,25 @@ feature -- Execution
 	execute
 			-- Recompile the project, start C compilation if necessarry.
 		local
-			l_content: SD_CONTENT
+			l_window: EB_DEVELOPMENT_WINDOW
+			l_tool: ES_TOOL [EB_TOOL]
 		do
 			if is_sensitive then
 				if process_manager.is_c_compilation_running then
 					process_manager.confirm_process_termination (agent go_on_compile, Void, window_manager.last_focused_development_window.window)
 				else
-					l_content := window_manager.last_focused_development_window.tools.output_tool.content
+					l_window := window_manager.last_focused_development_window
+					check
+						l_window_attached: l_window /= Void
+						l_window_is_interface_usable: l_window.is_interface_usable
+					end
+					l_tool := l_window.shell_tools.tool ({ES_OUTPUT_TOOL})
+					check
+						l_tool_attached: l_tool /= Void
+						l_tool_is_interface_usable: l_tool.is_interface_usable
+					end
 					if preferences.development_window_data.output_tool_prompted then
-						l_content.set_focus
+						l_tool.show (True)
 					end
 					go_on_compile
 				end
@@ -498,7 +508,7 @@ feature {NONE} -- Implementation
 			-- Number of compilations done in a certain mode so far.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -511,22 +521,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_MELT_PROJECT_COMMAND

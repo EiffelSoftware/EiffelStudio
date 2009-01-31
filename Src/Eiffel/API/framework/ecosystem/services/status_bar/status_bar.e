@@ -41,7 +41,9 @@ feature -- Element change
 			from l_windows.start until l_windows.after loop
 				l_window := l_windows.item_for_iteration
 				check l_window_attached: l_window /= Void end
-				set_text_on_window (a_text, a_style, l_window)
+				if l_window.is_interface_usable then
+					set_text_on_window (a_text, a_style, l_window)
+				end
 				l_windows.forth
 			end
 		end

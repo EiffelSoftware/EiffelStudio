@@ -21,7 +21,7 @@ feature -- Services
 			a_container.register_with_activator ({LOGGER_S}, agent new_logger_service, False)
 			a_container.register_with_activator ({SESSION_MANAGER_S}, agent new_session_manager_service, False)
 			a_container.register_with_activator ({TEST_SUITE_S}, agent new_testing_service, False)
-			a_container.register_with_activator ({OUTPUT_MANAGER_S}, agent new_output_manager_service, False)
+--			a_container.register_with_activator ({OUTPUT_MANAGER_S}, agent new_output_manager_service, False)
 		end
 
 feature {NONE} -- Factory
@@ -59,36 +59,36 @@ feature {NONE} -- Factory
 			result_not_void_implies_usable: Result /= Void implies Result.is_interface_usable
 		end
 
-	new_output_manager_service: ?OUTPUT_MANAGER_S
-			-- Creates the output manager service
-		do
-			create {OUTPUT_MANAGER} Result.make
-			register_outputs (Result)
-		end
+--	new_output_manager_service: ?OUTPUT_MANAGER_S
+--			-- Creates the output manager service
+--		do
+--			create {OUTPUT_MANAGER} Result.make
+--			register_outputs (Result)
+--		end
 
 feature {NONE} -- Output registration
 
-	register_outputs (a_service: !OUTPUT_MANAGER_S)
-			-- Registers all default output providers with the output managers service.
-			--
-			-- `a_service': The service interface to register the outputs on.
-		require
-			a_service_is_interface_usable: a_service.is_interface_usable
-		local
-			l_kinds: OUTPUT_MANAGER_KINDS
-			l_output: OUTPUT_TTY
-		do
-			create l_output
-			create l_kinds
-			a_service.register (l_output, l_kinds.general)
-			a_service.register (l_output, l_kinds.eiffel_compiler)
-			a_service.register (l_output, l_kinds.c_compiler)
-		ensure
-			general_output_registered: a_service.is_registered ((create {OUTPUT_MANAGER_KINDS}).general)
-			eiffel_compiler_output_registered: a_service.is_registered ((create {OUTPUT_MANAGER_KINDS}).eiffel_compiler)
-			c_compilerl_output_registered: a_service.is_registered ((create {OUTPUT_MANAGER_KINDS}).c_compiler)
-		end
-
+--	register_outputs (a_service: !OUTPUT_MANAGER_S)
+--			-- Registers all default output providers with the output managers service.
+--			--
+--			-- `a_service': The service interface to register the outputs on.
+--		require
+--			a_service_is_interface_usable: a_service.is_interface_usable
+--		local
+--			l_kinds: OUTPUT_MANAGER_KINDS
+--			l_output: OUTPUT_TTY
+--		do
+--			create l_output
+--			create l_kinds
+--			a_service.register (l_output, l_kinds.general)
+--			a_service.register (l_output, l_kinds.eiffel_compiler)
+--			a_service.register (l_output, l_kinds.c_compiler)
+--		ensure
+--			general_output_registered: a_service.is_registered ((create {OUTPUT_MANAGER_KINDS}).general)
+--			eiffel_compiler_output_registered: a_service.is_registered ((create {OUTPUT_MANAGER_KINDS}).eiffel_compiler)
+--			c_compilerl_output_registered: a_service.is_registered ((create {OUTPUT_MANAGER_KINDS}).c_compiler)
+--		end
+--
 feature {NONE} -- Test suite extension
 
 	register_test_suite_processors (a_service: !TEST_SUITE_S)

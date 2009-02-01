@@ -24,14 +24,16 @@ feature {NONE} -- Implementation
 			Result := term_window
 		end
 
-	term_window: OUTPUT_WINDOW
+	term_window: TERM_WINDOW
 			-- terminal output. Used in text mode
 		local
-			l_service: SERVICE_CONSUMER [OUTPUT_MANAGER_S]
+-- Uncomment those lines when it is fully committed
+--			l_service: SERVICE_CONSUMER [OUTPUT_MANAGER_S]
 		once
-			create l_service
-			check is_service_available: l_service.is_service_available end
-			Result := l_service.service.output ((create {OUTPUT_MANAGER_KINDS}).general).writer
+--			create l_service
+--			check is_service_available: l_service.is_service_available end
+--			Result := l_service.service.output ((create {OUTPUT_MANAGER_KINDS}).general).writer
+			create Result
 		end
 
 note

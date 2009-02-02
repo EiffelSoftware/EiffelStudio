@@ -1,4 +1,4 @@
-test_name svalid-convertion-validity-error
+test_name svalid-conversion-validity-error
 test_description When redefining the signature of a routine called by another routine the argument does not conform to the target but convert then the compiler accepts the code instead of rejecting because in inherited code we should not redo the conversion.
 
 copy_sub 	Ace $TEST Ace

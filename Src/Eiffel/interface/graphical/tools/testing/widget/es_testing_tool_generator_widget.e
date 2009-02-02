@@ -67,15 +67,15 @@ feature {NONE} -- Events
 		do
 			if factory.is_running then
 				if factory.is_compiling then
-					status_label.set_text ("Compiling")
+					status_label.set_text (locale.translation (l_compiling))
 				elseif factory.is_executing then
-					status_label.set_text ("Executing random tests")
+					status_label.set_text (locale.translation (l_random_testing))
 				elseif factory.is_replaying_log then
-					status_label.set_text ("Replaying log")
+					status_label.set_text (locale.translation (l_replaying_log))
 				elseif factory.is_minimizing_witnesses then
-					status_label.set_text ("Minimizing witnesses")
+					status_label.set_text (locale.translation (l_minimizing))
 				elseif factory.is_generating_statistics then
-					status_label.set_text ("Generating statistics")
+					status_label.set_text (locale.translation (l_statistics))
 					if busy_dialog = Void then
 						create busy_dialog.make (locale_formatter.translation (i_please_be_patient))
 						busy_dialog.show_relative_to_window (development_window.window)
@@ -117,8 +117,14 @@ feature {NONE} -- Internationalization
 	i_done_message: !STRING = "AutoTest is finished!%N%NResults can be found in: $1"
 	i_please_be_patient: !STRING = "Please be patient while AutoTest generates results.%N(The window might become unresponsive during that time)"
 
+	l_compiling: STRING = "Compiling"
+	l_random_testing: STRING = "Generating and executing routine invocations"
+	l_replaying_log: STRING = "Replaying log"
+	l_minimizing: STRING = "Minimizing generated tests"
+	l_statistics: STRING = "Generating statistics"
+
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -142,10 +148,10 @@ feature {NONE} -- Internationalization
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

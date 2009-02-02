@@ -322,9 +322,9 @@ feature {NONE} -- Events
 			l_valid := feature_name_validator.is_valid
 			l_msg := feature_name_validator.last_error_message
 			if l_valid then
-				if l_name.is_equal ("setup") or l_name.is_equal ("tear_down") then
+				if l_name.is_equal ({TEST_CONSTANTS}.prepare_routine_name) or l_name.is_equal ({TEST_CONSTANTS}.clean_routine_name) then
 					l_valid := False
-					l_msg := locale_formatter.translation (e_bad_test_name)
+					l_msg := locale_formatter.formatted_translation (e_bad_test_name, [a_name])
 				end
 			end
 			Result := [l_valid, l_msg]
@@ -503,7 +503,7 @@ feature {NONE} -- Internationalization
 	l_remove: STRING = "Remove"
 	l_add: STRING = "Add"
 
-	e_bad_test_name: STRING = "`setup' or `tear_down' can not be used as test routine names."
+	e_bad_test_name: STRING = "$1 can not be used as a new test routine name since it already exists in one of the ancestor classes."
 	e_invalid_tag: STRING = "[
 			$1 is not a valid tag
 			
@@ -539,10 +539,10 @@ feature {NONE} -- Internationalization
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

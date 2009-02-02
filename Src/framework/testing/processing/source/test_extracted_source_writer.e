@@ -242,6 +242,7 @@ feature {TEST_CAPTURER} -- Events
 
 			stream.put_line ("indexing")
 			stream.indent
+			stream.put_line ("testing: %"type/extracted%"")
 			stream.put_string ("testing: %"covers/{")
 			stream.put_string (a_stack_element.called_feature.associated_class.name)
 			stream.put_string ("}.")
@@ -443,7 +444,6 @@ feature {NONE} -- Output
 			stream.indent
 			stream.put_line ("description: %"Regression tests reproducing application state of a previous execution.%"")
 			stream.put_line ("author: %"Testing tool%"")
-			stream.put_line ("testing: %"type/extracted%"")
 			stream.dedent
 			stream.put_line ("")
 		end

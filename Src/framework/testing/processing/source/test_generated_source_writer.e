@@ -75,9 +75,8 @@ feature {NONE} -- Output
 		do
 			stream.put_line ("indexing%N")
 			stream.indent
-			stream.put_line ("description: %"Automatically generated tests.%"")
+			stream.put_line ("description: %"Synthesized test created by AutoTest.%"")
 			stream.put_line ("author: %"Testing tool%"")
-			stream.put_line ("testing: %"type/generated%"")
 			stream.dedent
 			stream.put_line ("")
 		end

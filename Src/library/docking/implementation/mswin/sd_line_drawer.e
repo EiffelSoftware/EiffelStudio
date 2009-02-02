@@ -61,7 +61,7 @@ feature -- Command
 		end
 
 	reset_feedback_clearing
-			-- Redefine
+			-- Reset feedback's values to default
 		do
 			if internal_last_feedback_top /= 0 and internal_last_feedback_left /=0
 				and internal_last_feedback_width /= 0 and internal_last_feedback_height /= 0 then

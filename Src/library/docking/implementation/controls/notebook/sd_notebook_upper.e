@@ -32,7 +32,7 @@ create
 feature {NONE} -- Initlization
 
 	make (a_docking_manager: SD_DOCKING_MANAGER)
-			-- Creation method.
+			-- Creation method
 		do
 			create internal_tool_bar.make
 			create internal_minimize_button.make
@@ -83,7 +83,7 @@ feature {NONE} -- Initlization
 		end
 
 	init_action
-			-- Initialize actions.
+			-- Initialize actions
 		do
 			internal_normal_max_button.select_actions.extend (agent on_normal_max_window)
 			internal_minimize_button.select_actions.extend (agent on_minimize)
@@ -95,19 +95,19 @@ feature {NONE} -- Initlization
 feature -- Query
 
 	custom_area: EV_CELL
-			-- Custom area which allow client programmer extend.
+			-- Custom area which allow client programmer extend
 
 	normal_max_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Normal\max actions.
+			-- Normal\max actions
 
 	minimize_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Minimize actions.
+			-- Minimize actions
 
 	drag_tab_area_actions: EV_POINTER_MOTION_ACTION_SEQUENCE
-			-- Tab area drag actions.
+			-- Tab area drag actions
 
 	is_maximized: BOOLEAN
-			-- If Current is maximized?
+			-- If Current maximized?
 
 	is_in_close_area: BOOLEAN
 			-- If pointer position in tab close button area?
@@ -131,7 +131,7 @@ feature -- Query
 feature -- Command
 
 	set_mini_tool_bar (a_widget: EV_WIDGET)
-			-- Set `custom_area' widget.
+			-- Set `custom_area' widget with `a_widget'
 		require
 			a_widget_not_void: a_widget /= Void
 		do
@@ -140,7 +140,7 @@ feature -- Command
 		end
 
 	set_tab_position (a_position: INTEGER)
-			-- Redefine
+			-- <Precursor>
 		do
 			start
 			search (internal_border_for_tab_area)
@@ -159,7 +159,7 @@ feature -- Command
 		end
 
 	set_show_maximized (a_maximized: BOOLEAN)
-			-- Set `internal_normal_max_button''s pixmap.
+			-- Set `internal_normal_max_button''s pixmap
 		do
 			if a_maximized then
 				internal_normal_max_button.set_pixmap (internal_shared.icons.normal)
@@ -196,19 +196,19 @@ feature -- Command
 		end
 
 	extend (a_content: SD_CONTENT)
-			-- Redefine.
+			-- <Precursor>
 		do
 			Precursor {SD_NOTEBOOK} (a_content)
 		end
 
 	on_resize (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER)
-			-- Redefine.
+			-- <Precursor>
 		do
 			internal_tab_box.on_resize (a_x, a_y, a_width - internal_tool_bar.width, a_height)
 		end
 
 	destroy
-			-- Refefine
+			-- <Precursor>
 		do
 			Precursor {SD_NOTEBOOK}
 			-- If we don't call destory, there is 2 Gdi objects leak.
@@ -218,19 +218,19 @@ feature -- Command
 feature {NONE}  -- Agents
 
 	on_normal_max_window
-			-- Handle normal max window.
+			-- Handle normal max window
 		do
 			normal_max_actions.call (Void)
 		end
 
 	on_minimize
-			-- Handle minimize actions.
+			-- Handle minimize actions
 		do
 			minimize_actions.call (Void)
 		end
 
 	on_tab_area_pointer_press (a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32)
-			-- Handle tab area pointer press actions.
+			-- Handle tab area pointer press actions
 		do
 			if a_button = 1 then
 				internal_shared.setter.before_enable_capture
@@ -240,7 +240,7 @@ feature {NONE}  -- Agents
 		end
 
 	on_tab_area_pointer_release (a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32)
-			-- Handle tab area pointer release actions.
+			-- Handle tab area pointer release actions
 		do
 			if a_button = 1 then
 				internal_tab_box.disable_capture
@@ -250,7 +250,7 @@ feature {NONE}  -- Agents
 		end
 
 	on_tab_area_motion (a_x: INTEGER_32; a_y: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32)
-			-- Handle tab area motion actions.
+			-- Handle tab area motion actions
 		do
 			if is_pointer_pressed then
 				internal_tab_box.disable_capture
@@ -272,10 +272,10 @@ feature {NONE}  -- Implementation
 			-- Box which contain `custom_area' and `internal_tool_bar'
 
 	internal_tool_bar: SD_TOOL_BAR
-			-- Tool bar has `internal_normal_max_button', `internal_close_button'.
+			-- Tool bar has `internal_normal_max_button', `internal_close_button'
 
 	internal_minimize_button: SD_TOOL_BAR_BUTTON
-			-- Minimize button.
+			-- Minimize button
 
 	internal_normal_max_button: SD_TOOL_BAR_BUTTON
 			-- Normal\max button

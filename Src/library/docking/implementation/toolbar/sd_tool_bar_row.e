@@ -105,7 +105,7 @@ feature -- Command
 		end
 
 	prune (a_zone: SD_TOOL_BAR_ZONE)
-			-- Redefine
+			-- <Precursor>
 		local
 			l_result: INTEGER
 		do
@@ -195,7 +195,7 @@ feature -- Command
 		end
 
 	destroy
-			-- Redefine
+			-- <Precursor>
 		do
 			docking_manager := Void
 			Precursor {EV_FIXED}

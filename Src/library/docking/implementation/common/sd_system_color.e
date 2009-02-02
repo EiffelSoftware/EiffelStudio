@@ -68,7 +68,7 @@ feature -- Query
 feature -- Font
 
 	tool_bar_font: EV_FONT
-			-- Redefine
+			-- <Precursor>
 		deferred
 		ensure
 			not_void: Result /= Void

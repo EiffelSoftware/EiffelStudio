@@ -101,7 +101,7 @@ feature {NONE} -- Initlization
 		end
 
 	make_with_tab_zone (a_content: SD_CONTENT; a_target_zone: SD_TAB_ZONE; a_direction: INTEGER)
-			-- Creation method.
+			-- Creation method
 		require
 			a_content_not_void: a_content /= Void
 			a_target_zone: a_target_zone /= Void
@@ -124,7 +124,7 @@ feature {NONE} -- Initlization
 		end
 
 	make_for_restore (a_contents: ARRAYED_LIST [SD_CONTENT]; a_container: EV_CONTAINER; a_direction: INTEGER)
-			-- Creation method for restoring.
+			-- Creation method for restoring
 		require
 			at_least_two: a_contents /= Void and then a_contents.count >= 2
 			not_full: a_container /= Void and then not a_container.full
@@ -156,7 +156,7 @@ feature {NONE} -- Initlization
 		end
 
 	make_for_restore_internal (a_content: SD_CONTENT; a_tab_zone: SD_TAB_ZONE; a_direction: INTEGER)
-			-- Creation method, only called by `make_for_restore'.
+			-- Creation method, only called by `make_for_restore'
 		require
 			not_void: a_content /= Void
 			not_void: a_tab_zone /= Void
@@ -167,7 +167,7 @@ feature {NONE} -- Initlization
 		end
 
 	init_common (a_content: SD_CONTENT; a_direction: INTEGER)
-			-- Initlization common parts.
+			-- Initlization common parts
 		require
 			not_void: a_content /= Void
 		do
@@ -186,7 +186,7 @@ feature {NONE} -- Initlization
 feature -- Redefine
 
 	restore (a_data: SD_INNER_CONTAINER_DATA; a_container: EV_CONTAINER)
-			-- Redefine.
+			-- <Precursor>
 		local
 			l_content: SD_CONTENT
 			l_contents: ARRAYED_LIST [SD_CONTENT]
@@ -270,7 +270,7 @@ feature -- Redefine
 		end
 
 	dock_at_top_level (a_multi_dock_area: SD_MULTI_DOCK_AREA)
-			-- Redefine.
+			-- <Precursor>
 		do
 			internal_docking_manager.command.lock_update (a_multi_dock_area, False)
 			if zone.is_drag_title_bar then
@@ -289,7 +289,7 @@ feature -- Redefine
 		end
 
 	stick (a_direction: INTEGER)
-			-- Redefine.
+			-- <Precursor>
 		local
 			l_auto_hide_state: SD_AUTO_HIDE_STATE
 			l_contents: ARRAYED_LIST [SD_CONTENT]
@@ -325,7 +325,7 @@ feature -- Redefine
 		end
 
 	close
-			-- Redefine.
+			-- <Precursor>
 		local
 			l_parent: EV_CONTAINER
 			l_state_void: SD_STATE_VOID
@@ -346,7 +346,7 @@ feature -- Redefine
 		end
 
 	change_zone_split_area (a_target_zone: SD_ZONE; a_direction: INTEGER)
-			-- Redefine.
+			-- <Precursor>
 		local
 			l_docking_state: SD_DOCKING_STATE
 			l_parent: EV_CONTAINER
@@ -382,7 +382,7 @@ feature -- Redefine
 		end
 
 	float (a_x, a_y: INTEGER)
-			-- Redefine.
+			-- <Precursor>
 		local
 			l_orignal_multi_dock_area: SD_MULTI_DOCK_AREA
 		do
@@ -398,7 +398,7 @@ feature -- Redefine
 		end
 
 	move_to_tab_zone (a_target_zone: SD_TAB_ZONE; a_index: INTEGER)
-			-- Redefine.
+			-- <Precursor>
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
 			l_tab_state: SD_TAB_STATE
@@ -433,7 +433,7 @@ feature -- Redefine
 		end
 
 	move_to_docking_zone (a_target_zone: SD_DOCKING_ZONE; a_first: BOOLEAN)
-			-- Redefine.
+			-- <Precursor>
 		do
 			internal_docking_manager.command.lock_update (zone, False)
 			if zone.is_drag_title_bar then
@@ -453,7 +453,7 @@ feature -- Redefine
 		end
 
 	hide
-			-- Redefine.
+			-- <Precursor>
 		local
 			l_state: SD_STATE_VOID
 		do
@@ -464,7 +464,7 @@ feature -- Redefine
 		end
 
 	show
-			-- Redefine
+			-- <Precursor>
 		local
 			l_state_void: SD_STATE_VOID
 		do
@@ -479,7 +479,7 @@ feature -- Redefine
 		end
 
 	set_user_widget (a_widget: EV_WIDGET)
-			-- Redefine
+			-- <Precursor>
 		do
 			zone.replace_user_widget (content)
 		end
@@ -519,7 +519,7 @@ feature {SD_CONTENT} -- Redefine
 feature {SD_OPEN_CONFIG_MEDIATOR, SD_STATE} -- Redefine
 
 	set_last_floating_width (a_int: INTEGER)
-			-- Redefine
+			-- <Precursor>
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
 			l_state: SD_TAB_STATE
@@ -548,7 +548,7 @@ feature {SD_OPEN_CONFIG_MEDIATOR, SD_STATE} -- Redefine
 		end
 
 	set_last_floating_height (a_int: INTEGER)
-			-- Redefine
+			-- <Precursor>
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
 			l_state: SD_TAB_STATE
@@ -579,10 +579,10 @@ feature {SD_OPEN_CONFIG_MEDIATOR, SD_STATE} -- Redefine
 	is_set_width_after_restore, is_set_height_after_restore: BOOLEAN
 			-- Is set `last_floating_width' and `last_floating_height' after restore?
 
-feature -- Properties redefine.
+feature -- Properties redefine
 
 	content: SD_CONTENT
-			-- Redefine.
+			-- <Precursor>
 		do
 			Result := internal_content
 		ensure then
@@ -590,7 +590,7 @@ feature -- Properties redefine.
 		end
 
 	zone: SD_TAB_ZONE
-			-- Redefine.
+			-- <Precursor>
 		do
 			Result := tab_zone
 		ensure then
@@ -605,13 +605,13 @@ feature -- Query
 		end
 
 	has (a_content: SD_CONTENT): BOOLEAN
-			-- Redefine
+			-- <Precursor>
 		do
 			Result := tab_zone.has (a_content)
 		end
 
 	is_dock_at_top (a_multi_dock_area: SD_MULTI_DOCK_AREA): BOOLEAN
-			-- Redefine.
+			-- <Precursor>
 		local
 			l_container: EV_SPLIT_AREA
 			l_widget: EV_WIDGET
@@ -647,7 +647,7 @@ feature -- Query
 feature -- Command
 
 	select_tab (a_content: SD_CONTENT; a_focus: BOOLEAN)
-			-- Enable select one tab.
+			-- Enable select one tab
 		require
 			has_content: has (a_content)
 		do
@@ -656,13 +656,13 @@ feature -- Command
 			selected: tab_zone.selected_item_index = tab_zone.index_of (a_content)
 		end
 
-feature {SD_TAB_STATE_ASSISTANT} -- Internal attibutes.
+feature {SD_TAB_STATE_ASSISTANT} -- Internal attibutes
 
 	tab_zone: SD_TAB_ZONE
-			-- SD_TAB_ZONE managed by `Current'.
+			-- SD_TAB_ZONE managed by `Current'
 
 	assistant: SD_TAB_STATE_ASSISTANT
-			-- Assistant for Current.
+			-- Assistant for Current
 
 invariant
 	tab_zone_not_void: initialized implies tab_zone /= Void

@@ -33,30 +33,30 @@ feature {NONE} -- Initlization
 			pixmap := l_shared.icons.tool_bar_separator_icon
 		end
 
-feature -- Redefine Agents
+feature -- Redefine agents
 
 	on_pointer_motion (a_relative_x, a_relative_y: INTEGER)
-			-- Redefine
+			-- <Precursor>
 		do
 		end
 
 	on_pointer_leave
-			-- Redefine
+			-- <Precursor>
 		do
 		end
 
 	on_pointer_press (a_relative_x, a_relative_y: INTEGER)
-			-- Redefine
+			-- <Precursor>
 		do
 		end
 
 	on_pointer_release (a_relative_x, a_relative_y: INTEGER)
-			-- Redefine
+			-- <Precursor>
 		do
 		end
 
 	on_pointer_motion_for_tooltip (a_relative_x, a_relative_y: INTEGER)
-			-- Redefine
+			-- <Precursor>
 		do
 			if rectangle.has_x_y (a_relative_x, a_relative_y) then
 				tool_bar.remove_tooltip
@@ -64,23 +64,23 @@ feature -- Redefine Agents
 		end
 
 	on_pointer_press_forwarding (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
-			-- Redefine
+			-- <Precursor>
 		do
 		end
 
 feature -- Redefine querys
 
 	width: INTEGER = 6
-			-- Redefine
+			-- <Precursor>
 
 	has_rectangle (a_rect: EV_RECTANGLE): BOOLEAN
-			-- Redefine
+			-- <Precursor>
 		do
 			Result := True
 		end
 
 	rectangle: EV_RECTANGLE
-			-- Redefine
+			-- <Precursor>
 		do
 			if tool_bar /= Void and then is_wrap then
 				create Result.make (0, tool_bar.item_y (Current), tool_bar.minimum_width, width)

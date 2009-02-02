@@ -20,7 +20,7 @@ create
 feature {NONE} -- Initlization
 
 	make (a_docker_mediator: SD_DOCKER_MEDIATOR; a_docking_manager: SD_DOCKING_MANAGER)
-			-- Creation method.
+			-- Creation method
 		require
 			a_docker_mediator_not_void: a_docker_mediator /= Void
 			a_docking_manager_not_void: a_docking_manager /= Void
@@ -61,7 +61,7 @@ feature {NONE} -- Initlization
 feature  -- Command
 
 	apply_change (a_screen_x, a_screen_y: INTEGER): BOOLEAN
-			-- Redefine.
+			-- <Precursor>
 		local
 			l_floating_zone: SD_FLOATING_ZONE
 			l_caller: SD_ZONE
@@ -114,7 +114,7 @@ feature  -- Command
 		end
 
 	update_for_feedback (a_screen_x, a_screen_y: INTEGER; a_dockable: BOOLEAN): BOOLEAN
-			-- Redefine.
+			-- <Precursor>
 		local
 			l_rect: EV_RECTANGLE
 			l_floating_zone: SD_FLOATING_ZONE
@@ -156,7 +156,7 @@ feature  -- Command
 		end
 
 	update_for_indicator (a_screen_x, a_screen_y: INTEGER): BOOLEAN
-			-- Redefine.
+			-- <Precursor>
 		do
 			if internal_docking_manager.query.container_rectangle_screen.has_x_y (a_screen_x, a_screen_y) or internal_shared.show_all_feedback_indicator then
 
@@ -188,7 +188,7 @@ feature  -- Command
 		end
 
 	update_for_indicator_clear (a_screen_x, a_screen_y: INTEGER)
-			-- Redefine
+			-- <Precursor>
 		do
 			if not internal_docking_manager.query.container_rectangle_screen.has_x_y (a_screen_x, a_screen_y)  then
 				clear_indicator
@@ -198,7 +198,7 @@ feature  -- Command
 		end
 
 	show_indicator
-			-- Show indicators if possible.
+			-- Show indicators if possible
 		do
 			if not top_indicator.exists then
 				build_indicator
@@ -206,7 +206,7 @@ feature  -- Command
 		end
 
 	clear_indicator
-			-- Redefine
+			-- <Precursor>
 		do
 			if top_indicator.exists then
 				top_indicator.clear
@@ -244,7 +244,7 @@ feature  -- Command
 feature -- Query
 
 	has_x_y (a_screen_x, a_screen_y: INTEGER): BOOLEAN
-			-- Redefine.
+			-- <Precursor>
 		do
 			Result := True
 		ensure then
@@ -254,7 +254,7 @@ feature -- Query
 feature {NONE} -- Implementation
 
 	left_position (a_pointer_screen_x: INTEGER; a_feedback_screen_left: INTEGER; a_feedback_width: INTEGER): INTEGER
-			-- If pointer dragging position out of feedback rect right side, we recalculate left position.
+			-- If pointer dragging position out of feedback rect right side, we recalculate left position
 		do
 			if a_pointer_screen_x > a_feedback_screen_left + a_feedback_width then
 				if last_offset_x = 0 then
@@ -269,16 +269,16 @@ feature {NONE} -- Implementation
 		end
 
 	last_offset_x: INTEGER
-			-- Last offset position.
+			-- Last offset position
 
 	top_rectangle, bottom_rectangle, left_rectangle, right_rectangle: EV_RECTANGLE
-			-- Areas which contain four indicator.
+			-- Areas which contain four indicator
 
 	top_indicator, bottom_indicator, left_indicator, right_indicator: SD_FEEDBACK_INDICATOR
-			-- Feedback inidcator at four sides.
+			-- Feedback inidcator at four sides
 
 	internal_docking_manager: SD_DOCKING_MANAGER
-			-- Docking manager manage Current.
+			-- Docking manager manage Current
 
 invariant
 

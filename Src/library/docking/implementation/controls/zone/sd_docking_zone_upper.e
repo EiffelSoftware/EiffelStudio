@@ -40,7 +40,7 @@ create
 feature -- Initlization
 
 	make (a_content: SD_CONTENT)
-			-- Creation method.
+			-- Creation method
 		require
 			a_content_not_void: a_content /= Void
 		do
@@ -171,12 +171,12 @@ feature -- Redefine
 feature {SD_DOCKING_STATE} -- Query
 
 	notebook: SD_NOTEBOOK_UPPER
-			-- Notebook used for hold SD_CONTENT.
+			-- Notebook used for hold SD_CONTENT
 
 feature {NONE} -- Implementation
 
 	on_tab_drag (a_content: SD_CONTENT; a_x, a_y, a_screen_x, a_screen_y: INTEGER)
-			-- Handle drag tab actions.
+			-- Handle drag tab actions
 		do
 			on_drag_started (a_x, a_y, 0, 0, 0, a_screen_x, a_screen_y)
 		end

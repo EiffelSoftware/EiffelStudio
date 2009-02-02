@@ -60,17 +60,17 @@ feature {NONE} -- Initlization
 feature -- Command
 
 	set_show_stick (a_show: BOOLEAN)
-			-- Do nothing.
+			-- Do nothing
 		do
 		end
 
 	set_show_normal_max (a_show: BOOLEAN)
-			-- Do nothing.
+			-- Do nothing
 		do
 		end
 
 	set_title (a_title: STRING_GENERAL)
-			-- Do nothing.
+			-- Do nothing
 		do
 		end
 
@@ -181,7 +181,7 @@ feature -- Query
 		end
 
 	title_area: EV_RECTANGLE
-			-- Place holder content has zero sized title area.
+			-- Place holder content has zero sized title area
 		do
 			create Result
 		end
@@ -189,12 +189,12 @@ feature -- Query
 feature -- Agents
 
 	on_focus_in (a_content: SD_CONTENT)
-			-- Do nothing.
+			-- Do nothing
 		do
 		end
 
 	on_focus_out
-			-- Do nothing.
+			-- Do nothing
 		do
 		end
 

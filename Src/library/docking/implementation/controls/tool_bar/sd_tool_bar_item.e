@@ -43,7 +43,7 @@ feature -- Agents
 feature -- Query
 
 	is_need_redraw: BOOLEAN
-			-- Redefine
+			-- <Precursor>
 
 	width: INTEGER
 			-- Width of Current item.
@@ -86,7 +86,7 @@ feature -- Query
 		end
 
 	drop_actions: EV_PND_ACTION_SEQUENCE
-			-- Redefine
+			-- <Precursor>
 		do
 			if internal_drop_actions = Void then
 				create internal_drop_actions

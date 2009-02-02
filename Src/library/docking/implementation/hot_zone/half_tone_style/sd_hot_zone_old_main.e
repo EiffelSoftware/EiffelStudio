@@ -44,7 +44,7 @@ feature {NONE} -- Initlization
 feature  -- Redefine
 
 	apply_change (a_screen_x, a_screen_y: INTEGER): BOOLEAN
-			-- Redefine
+			-- <Precursor>
 		local
 			l_floating_zone: SD_FLOATING_ZONE
 			l_caller: SD_ZONE
@@ -82,7 +82,7 @@ feature  -- Redefine
 		end
 
 	update_for_feedback (a_screen_x, a_screen_y: INTEGER; a_dockable: BOOLEAN): BOOLEAN
-			-- Redefine
+			-- <Precursor>
 		local
 			l_rect: EV_RECTANGLE
 			l_left, l_top, l_width, l_height: INTEGER
@@ -161,24 +161,24 @@ feature  -- Redefine
 		end
 
 	clear_indicator
-			-- Redefine
+			-- <Precursor>
 		do
 			set_pointer_style ((create {EV_STOCK_PIXMAPS}).standard_cursor)
 		end
 
 	build_indicator
-			-- Redefine
+			-- <Precursor>
 		do
 
 		end
 
 	update_for_indicator (a_screen_x, a_screen_y: INTEGER): BOOLEAN
-			-- Redefine
+			-- <Precursor>
 		do
 		end
 
 	update_for_indicator_clear (a_screen_x, a_screen_y: INTEGER)
-			-- Redefine
+			-- <Precursor>
 		do
 		end
 

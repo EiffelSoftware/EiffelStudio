@@ -38,7 +38,7 @@ feature -- Query
 feature {NONE} -- Agents
 
 	on_pointer_motion (a_relative_x, a_relative_y: INTEGER)
-			-- Redefine
+			-- <Precursor>
 		do
 			-- Tool bar maybe void when CPU is busy on GTK.
 			-- See bug#13102.
@@ -75,7 +75,7 @@ feature {NONE} -- Agents
 		end
 
 	on_pointer_release (a_relative_x, a_relative_y: INTEGER)
-			-- Redefine
+			-- <Precursor>
 		do
 			if tool_bar /= Void and has_position (a_relative_x, a_relative_y) then
 				if state = {SD_TOOL_BAR_ITEM_STATE}.pressed then

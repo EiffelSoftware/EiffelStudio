@@ -21,7 +21,7 @@ inherit
 feature -- Command
 
 	before_enable_capture
-			-- Redefine
+			-- <Precursor>
 		local
 			l_app_imp: EV_APPLICATION_IMP
 		do
@@ -30,7 +30,7 @@ feature -- Command
 		end
 
 	after_disable_capture
-			-- Redefine
+			-- <Precursor>
 		local
 			l_app_imp: EV_APPLICATION_IMP
 		do
@@ -39,7 +39,7 @@ feature -- Command
 		end
 
 	is_remote_desktop: BOOLEAN
-			-- Redefine
+			-- <Precursor>
 		local
 			l_routine: WEL_WINDOWS_ROUTINES
 		do

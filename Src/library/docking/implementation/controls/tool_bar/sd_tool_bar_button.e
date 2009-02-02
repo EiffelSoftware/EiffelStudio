@@ -87,7 +87,7 @@ feature -- Command
 feature -- Query
 
 	width: INTEGER
-			-- Redefine
+			-- <Precursor>
 		do
 			Result := {SD_TOOL_BAR}.padding_width
 			if text /= Void and then not text.is_empty then
@@ -138,7 +138,7 @@ feature {SD_TOOL_BAR, SD_TOOL_BAR_DRAWER, SD_TOOL_BAR_DRAWER_IMP} -- Internal is
 		end
 
 	has_rectangle (a_rect: EV_RECTANGLE): BOOLEAN
-			-- Redefine
+			-- <Precursor>
 		do
 			Result := a_rect.intersects (rectangle)
 		end
@@ -225,7 +225,7 @@ feature {SD_TOOL_BAR, SD_TOOL_BAR_DRAWER, SD_TOOL_BAR_DRAWER_IMP} -- Internal is
 feature {SD_TOOL_BAR} -- Agents
 
 	on_pointer_motion (a_relative_x, a_relative_y: INTEGER)
-			-- Redefine
+			-- <Precursor>
 		do
 			-- Tool bar maybe void when CPU is busy on GTK.
 			-- See bug#13102.
@@ -249,7 +249,7 @@ feature {SD_TOOL_BAR} -- Agents
 		end
 
 	on_pointer_motion_for_tooltip (a_relative_x, a_relative_y: INTEGER)
-			-- Redefine
+			-- <Precursor>
 		do
 			-- Tool bar maybe void when CPU is busy on GTK.
 			-- See bug#13102.
@@ -265,7 +265,7 @@ feature {SD_TOOL_BAR} -- Agents
 		end
 
 	on_pointer_press (a_relative_x, a_relative_y: INTEGER)
-			-- Redefine
+			-- <Precursor>
 		do
 			if is_sensitive then
 				if has_position (a_relative_x, a_relative_y) then
@@ -289,7 +289,7 @@ feature {SD_TOOL_BAR} -- Agents
 		end
 
 	on_pointer_release (a_relative_x, a_relative_y: INTEGER)
-			-- Redefine
+			-- <Precursor>
 		do
 			if tool_bar /= Void and has_position (a_relative_x, a_relative_y) then
 				if state = {SD_TOOL_BAR_ITEM_STATE}.pressed then
@@ -303,7 +303,7 @@ feature {SD_TOOL_BAR} -- Agents
 		end
 
 	on_pointer_leave
-			-- Redefine
+			-- <Precursor>
 		do
 			if state = {SD_TOOL_BAR_ITEM_STATE}.hot then
 				state := {SD_TOOL_BAR_ITEM_STATE}.normal
@@ -314,7 +314,7 @@ feature {SD_TOOL_BAR} -- Agents
 		end
 
 	on_pointer_press_forwarding (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
-			-- Redefine
+			-- <Precursor>
 		do
 			if is_sensitive and then has_position (a_x, a_y) then
 				pointer_button_press_actions.call ([a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])

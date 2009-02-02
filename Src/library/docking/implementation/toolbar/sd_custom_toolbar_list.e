@@ -49,7 +49,7 @@ feature -- Status Report
 feature -- Basic operations
 
 	extend (v: like item)
-   			-- Add `v' to end. Do not move cursor.
+   			-- Add `v' to end. Do not move cursor
 		local
 			a_customizable_item: like customizable_item
 			pix: EV_PIXMAP
@@ -64,7 +64,7 @@ feature -- Basic operations
 				end
 			end
 
-				-- Call the original `extend'.
+				-- Call the original `extend'
 			Precursor (v)
 		end
 

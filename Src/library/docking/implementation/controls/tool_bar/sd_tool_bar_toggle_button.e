@@ -41,7 +41,7 @@ feature -- Query
 feature -- Command
 
 	enable_select
-			-- Enable select.
+			-- Enable select
 		do
 			state := {SD_TOOL_BAR_ITEM_STATE}.checked
 			last_state := state
@@ -59,7 +59,7 @@ feature -- Command
 feature {NONE} -- Agents
 
 	on_pointer_press (a_relative_x, a_relative_y: INTEGER)
-			-- Handle pointer press actions.
+			-- Handle pointer press actions
 		do
 			if has_position (a_relative_x, a_relative_y) and is_sensitive then
 				if state = {SD_TOOL_BAR_ITEM_STATE}.hot then
@@ -75,7 +75,7 @@ feature {NONE} -- Agents
 		end
 
 	on_pointer_release (a_relative_x, a_relative_y: INTEGER)
-			-- Handle pointer release actions.
+			-- Handle pointer release actions
 		do
 			if is_sensitive then
 				if tool_bar /= Void and then has_position (a_relative_x, a_relative_y) then
@@ -97,7 +97,7 @@ feature {NONE} -- Agents
 		end
 
 	on_pointer_motion (a_relative_x, a_relative_y: INTEGER)
-			-- Handle pointer motion actions.
+			-- Handle pointer motion actions
 		do
 			if tool_bar /= Void then
 				if has_position (a_relative_x, a_relative_y) and is_sensitive then
@@ -122,7 +122,7 @@ feature {NONE} -- Agents
 		end
 
 	on_pointer_leave
-			-- Handle pointer leave actions.
+			-- Handle pointer leave actions
 		do
 			if state /= last_state then
 				state := last_state
@@ -135,7 +135,7 @@ feature {NONE} -- Agents
 feature {NONE} --Implementation
 
 	last_state: INTEGER;
-			-- Last button state.
+			-- Last button state
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."

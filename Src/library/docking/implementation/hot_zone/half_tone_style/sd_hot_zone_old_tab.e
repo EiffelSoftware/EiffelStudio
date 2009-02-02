@@ -39,7 +39,7 @@ feature {NONE}  -- Initlization
 feature -- Redefine
 
 	apply_change  (a_screen_x, a_screen_y: INTEGER): BOOLEAN
-			-- Redefine.
+			-- <Precursor>
 		local
 			l_tab_zone: SD_TAB_ZONE
 			l_caller: SD_ZONE
@@ -86,7 +86,7 @@ feature -- Redefine
 		end
 
 	update_for_feedback (a_screen_x, a_screen_y: INTEGER; a_dockable: BOOLEAN): BOOLEAN
-			-- Redefine.
+			-- <Precursor>
 		local
 
 			l_item: EV_RECTANGLE
@@ -112,7 +112,7 @@ feature -- Redefine
 		end
 
 	set_rectangle (a_rect: EV_RECTANGLE)
-			-- Redefine
+			-- <Precursor>
 		local
 			l_tabs: DS_HASH_TABLE [SD_NOTEBOOK_TAB, INTEGER]
 			l_tab_behind_last: EV_RECTANGLE

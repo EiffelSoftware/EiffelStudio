@@ -312,7 +312,7 @@ feature -- Command
 		end
 
 	set_background_color (a_color: EV_COLOR)
-			-- Redefine
+			-- <Precursor>
 		local
 			l_spacer: SD_AUTO_HIDE_SEPARATOR
 		do
@@ -352,7 +352,7 @@ feature -- Command
 		end
 
 	destroy
-			-- Redefine
+			-- <Precursor>
 		do
 			internal_docking_manager := Void
 			prune_auto_hide_panel (Current)

@@ -14,7 +14,7 @@ inherit
 feature -- Hot zone factory
 
 	hot_zone_factory: SD_HOT_ZONE_ABSTRACT_FACTORY
-			-- Redefine
+			-- <Precursor>
 		local
 			l_version: WEL_WINDOWS_VERSION
 			l_shared: SD_SHARED

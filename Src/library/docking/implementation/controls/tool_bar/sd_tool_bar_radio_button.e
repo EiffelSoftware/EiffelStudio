@@ -26,7 +26,7 @@ create
 feature -- Command
 
 	enable_select
-			-- Enable select.
+			-- Enable select
 
 		do
 			Precursor {SD_TOOL_BAR_TOGGLE_BUTTON}
@@ -55,7 +55,7 @@ feature {NONE} -- Implementation
 		end
 
 	set_other_radio_button (a_select: BOOLEAN)
-			-- Set all other radio buttons in `tool_bar' states.
+			-- Set all other radio buttons in `tool_bar' states
 		local
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			l_item: SD_TOOL_BAR_RADIO_BUTTON

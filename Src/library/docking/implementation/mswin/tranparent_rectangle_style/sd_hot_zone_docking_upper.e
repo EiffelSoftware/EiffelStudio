@@ -21,7 +21,7 @@ create
 feature {NONE} -- Redefine
 
 	update_feedback (a_screen_x, a_screen_y: INTEGER; a_rect: EV_RECTANGLE)
-			-- Redefine, draw tab recangle on top.
+			-- <Precursor>, draw tab recangle on top.
 		local
 			l_shared: like internal_shared
 			l_icons: SD_ICONS_SINGLETON
@@ -48,7 +48,7 @@ feature {NONE} -- Redefine
 		end
 
 --	set_rectangle (a_rect: like internal_rectangle) is
---			-- Redefine
+--			-- <Precursor>
 --		do
 --			internal_rectangle := a_rect
 --			-- Calculate five rectangle area where allow user to dock a window in this zone.

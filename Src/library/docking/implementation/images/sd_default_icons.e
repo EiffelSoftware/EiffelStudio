@@ -196,7 +196,7 @@ feature -- Implementation
 		end
 
 	tool_bar_separator_icon: EV_PIXMAP
-			-- Redefine
+			-- <Precursor>
 		local
 			l_bitmap: EV_BITMAP
 		once
@@ -219,67 +219,67 @@ feature -- Implementation
 		end
 
 	tool_bar_customize_indicator_horizontal: EV_PIXMAP
-			-- Redefine
+			-- <Precursor>
 		once
 			Result := icons_16_8.tool_bar_customize_indicator_horizontal_icon
 		end
 
 	tool_bar_customize_indicator_horizontal_buffer: EV_PIXEL_BUFFER
-			-- Redefine
+			-- <Precursor>
 		once
 			Result := icons_16_8.tool_bar_customize_indicator_horizontal_icon_buffer
 		end
 
 	tool_bar_customize_indicator_with_hidden_items_horizontal: EV_PIXMAP
-			-- Redefine
+			-- <Precursor>
 		once
 			Result := icons_16_8.tool_bar_customize_indicator_hidden_items_horizontal_icon
 		end
 
 	tool_bar_customize_indicator_with_hidden_items_horizontal_buffer: EV_PIXEL_BUFFER
-			-- Redefine
+			-- <Precursor>
 		once
 			Result := icons_16_8.tool_bar_customize_indicator_hidden_items_horizontal_icon_buffer
 		end
 
 	tool_bar_customize_indicator_with_hidden_items: EV_PIXMAP
-			-- Redefine
+			-- <Precursor>
 		do
 			Result := icons_8_16.tool_bar_customize_indicator_hidden_items_icon
 		end
 
 	tool_bar_customize_indicator_with_hidden_items_buffer: EV_PIXEL_BUFFER
-			-- Redefine
+			-- <Precursor>
 		do
 			Result := icons_8_16.tool_bar_customize_indicator_hidden_items_icon_buffer
 		end
 
 	tool_bar_dropdown_buffer: EV_PIXEL_BUFFER
-			-- Redefine
+			-- <Precursor>
 		do
 			Result := icons_8_16.tool_bar_dropdown_icon_buffer
 		end
 
 	tool_bar_floating_customize: EV_PIXMAP
-			-- Redefine
+			-- <Precursor>
 		once
 			Result := floating_tool_bar_icon.icon_drop_down_icon
 		end
 
 	tool_bar_floating_close: EV_PIXMAP
-			-- Redefine
+			-- <Precursor>
 		once
 			Result := floating_tool_bar_icon.icon_close_icon
 		end
 
 	floating_tool_bar_icon: SD_ICONS_11_7
-			-- Redefine
+			-- <Precursor>
 		once
 			create Result.make
 		end
 
 	tool_bar_customize_dialog: EV_PIXMAP
-			-- Redefine
+			-- <Precursor>
 		local
 			l_stock: EV_STOCK_PIXMAPS
 		once
@@ -288,37 +288,37 @@ feature -- Implementation
 		end
 
 	drag_pointer_up: EV_POINTER_STYLE
-			-- Redefine
+			-- <Precursor>
 		do
 			create Result.make_with_pixel_buffer (icons_32_32.drag_up_icon_buffer, 16, 16)
 		end
 
 	drag_pointer_down: EV_POINTER_STYLE
-			-- Redefine
+			-- <Precursor>
 		do
 			create Result.make_with_pixel_buffer (icons_32_32.drag_down_icon_buffer, 16, 16)
 		end
 
 	drag_pointer_left: EV_POINTER_STYLE
-			-- Redefine
+			-- <Precursor>
 		do
 			create Result.make_with_pixel_buffer (icons_32_32.drag_left_icon_buffer, 16, 16)
 		end
 
 	drag_pointer_right: EV_POINTER_STYLE
-			-- Redefine
+			-- <Precursor>
 		do
 			create Result.make_with_pixel_buffer (icons_32_32.drag_right_icon_buffer, 16, 16)
 		end
 
 	drag_pointer_center: EV_POINTER_STYLE
-			-- Redefine
+			-- <Precursor>
 		do
 			create Result.make_with_pixel_buffer (icons_32_32.drag_center_icon_buffer, 16, 16)
 		end
 
 	drag_pointer_float: EV_POINTER_STYLE
-			-- Redefine
+			-- <Precursor>
 		do
 			create Result.make_with_pixel_buffer (icons_32_32.drag_float_icon_buffer, 16, 16)
 		end
@@ -358,85 +358,85 @@ feature -- Generated matrix classes
 feature -- Feedback indicators
 
 	arrow_indicator_center: EV_PIXEL_BUFFER
-			-- Redefine
+			-- <Precursor>
 		once
 			create {SD_CENTER_ICON} Result.make
 		end
 
 	arrow_indicator_center_lightening_up: EV_PIXEL_BUFFER
-			-- Redefine
+			-- <Precursor>
 		once
 			create {SD_CENTER_UP_LIGHT_ICON} Result.make
 		end
 
 	arrow_indicator_center_lightening_down: EV_PIXEL_BUFFER
-			-- Redefine
+			-- <Precursor>
 		once
 			create {SD_CENTER_DOWN_LIGHT_ICON} Result.make
 		end
 
 	arrow_indicator_center_lightening_left: EV_PIXEL_BUFFER
-			-- Redefine
+			-- <Precursor>
 		once
 			create {SD_CENTER_LEFT_ICON} Result.make
 		end
 
 	arrow_indicator_center_lightening_right: EV_PIXEL_BUFFER
-			-- Redefine
+			-- <Precursor>
 		once
 			create {SD_CENTER_RIGHT_ICON} Result.make
 		end
 
 	arrow_indicator_center_lightening_center: EV_PIXEL_BUFFER
-			-- Redefine
+			-- <Precursor>
 		once
 			create {SD_CENTER_CENTER_LIGHT_ICON} Result.make
 		end
 
 	arrow_indicator_up: EV_PIXEL_BUFFER
-			-- Redefine
+			-- <Precursor>
 		once
 			create {SD_UP_ICON} Result.make
 		end
 
 	arrow_indicator_down: EV_PIXEL_BUFFER
-			-- Redefine
+			-- <Precursor>
 		once
 			create {SD_DOWN_ICON} Result.make
 		end
 
 	arrow_indicator_left: EV_PIXEL_BUFFER
-			-- Redefine
+			-- <Precursor>
 		once
 			create {SD_LEFT_ICON} Result.make
 		end
 
 	arrow_indicator_right: EV_PIXEL_BUFFER
-			-- Redefine
+			-- <Precursor>
 		once
 			create {SD_RIGHT_ICON} Result.make
 		end
 
 	arrow_indicator_up_lightening: EV_PIXEL_BUFFER
-			-- Redefine
+			-- <Precursor>
 		once
 			create {SD_UP_LIGHT_ICON} Result.make
 		end
 
 	arrow_indicator_down_lightening: EV_PIXEL_BUFFER
-			-- Redefine
+			-- <Precursor>
 		once
 			create {SD_DOWN_LIGHT_ICON} Result.make
 		end
 
 	arrow_indicator_left_lightening: EV_PIXEL_BUFFER
-			-- Redefine
+			-- <Precursor>
 		once
 			create {SD_LEFT_LIGHT_ICON} Result.make
 		end
 
 	arrow_indicator_right_lightening: EV_PIXEL_BUFFER
-			-- Redefine
+			-- <Precursor>
 		once
 			create {SD_RIGHT_LIGHT_ICON} Result.make
 		end
@@ -444,19 +444,19 @@ feature -- Feedback indicators
 feature -- Editor icons
 
 	close_context_tool_bar: EV_PIXMAP
-			-- Redefine
+			-- <Precursor>
 		do
 			Result := icons_16_16.zone_close_icon
 		end
 
 	close_others: EV_PIXMAP
-			-- Redefine
+			-- <Precursor>
 		do
 			create Result
 		end
 
 	close_all: EV_PIXMAP
-			-- Redefine
+			-- <Precursor>
 		do
 			Result := icons_16_16.zone_close_all_icon
 		end

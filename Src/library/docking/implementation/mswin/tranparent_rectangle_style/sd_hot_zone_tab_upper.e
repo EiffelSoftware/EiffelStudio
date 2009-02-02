@@ -20,7 +20,7 @@ create
 feature {NONE} -- Redefine
 
 	update_feedback (a_screen_x, a_screen_y: INTEGER; a_rect: EV_RECTANGLE)
-			-- Redefine
+			-- <Precursor>
 		local
 			l_shared: like internal_shared
 			l_icons: SD_ICONS_SINGLETON
@@ -47,7 +47,7 @@ feature {NONE} -- Redefine
 		end
 
 	apply_change (a_screen_x: INTEGER; a_screen_y: INTEGER): BOOLEAN
-			-- Redefine
+			-- <Precursor>
 		local
 			l_caller: SD_ZONE
 		do

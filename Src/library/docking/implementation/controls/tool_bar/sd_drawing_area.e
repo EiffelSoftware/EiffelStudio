@@ -22,14 +22,14 @@ inherit
 feature -- Command
 
 	enable_capture
-			-- Redefine
+			-- <Precursor>
 		do
 			internal_shared.setter.before_enable_capture
 			Precursor {EV_DRAWING_AREA}
 		end
 
 	disable_capture
-			-- Redefine
+			-- <Precursor>
 		do
 			Precursor {EV_DRAWING_AREA}
 			internal_shared.setter.after_disable_capture

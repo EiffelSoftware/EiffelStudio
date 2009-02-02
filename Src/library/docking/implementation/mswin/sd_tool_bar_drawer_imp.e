@@ -46,7 +46,7 @@ feature{NONE} -- Initlization
 		end
 
 	init_theme
-			-- Initialize theme drawer.
+			-- Initialize theme drawer
 		local
 			l_app_imp: EV_APPLICATION_IMP
 			l_tool_bar: EV_TOOL_BAR
@@ -67,30 +67,30 @@ feature{NONE} -- Initlization
 		end
 
 	base_make_called: BOOLEAN = True
-			-- Not breaking the invariant.
+			-- Not breaking the invariant
 
 feature -- Redefine
 
 	internal_buffered_dc: WEL_DC
-			-- Buffered dc.
+			-- Buffered dc
 
 	internal_rectangle: EV_RECTANGLE
-			-- Whole rectangle ara during a `start_draw' and `end_draw'.
+			-- Whole rectangle ara during a `start_draw' and `end_draw'
 
 	internal_client_dc: WEL_DC
-			-- Dc for tool bar windows implementation.
+			-- Dc for tool bar windows implementation
 
 	is_start_draw_called: BOOLEAN
-			-- Redefine
+			-- <Precursor>
 
 	set_tool_bar (a_tool_bar: SD_TOOL_BAR)
-			-- Redefine
+			-- <Precursor>
 		do
 			tool_bar := a_tool_bar
 		end
 
 	start_draw (a_rectangle: EV_RECTANGLE)
-			-- Redefine
+			-- <Precursor>
 		local
 			l_imp: WEL_WINDOW
 			l_wel_bitmap: WEL_BITMAP
@@ -135,7 +135,7 @@ feature -- Redefine
 		end
 
 	end_draw
-			-- Redefine
+			-- <Precursor>
 		local
 		do
 			if internal_buffered_dc /= Void then
@@ -161,7 +161,7 @@ feature -- Redefine
 		end
 
 	draw_item (a_arguments: SD_TOOL_BAR_DRAWER_ARGUMENTS)
-			-- Redefine
+			-- <Precursor>
 		local
 			l_rect, l_rect_2: WEL_RECT
 			l_vision_rect: EV_RECTANGLE
@@ -238,7 +238,7 @@ feature -- Redefine
 		end
 
 	on_wm_theme_changed
-			-- Redefine
+			-- <Precursor>
 		local
 			l_app_imp: EV_APPLICATION_IMP
 		do
@@ -252,16 +252,16 @@ feature -- Redefine
 feature {NONE} -- Implementation
 
 	internal_shared: SD_SHARED
-			-- All singletons.
+			-- All singletons
 
 	theme_data: POINTER
-			-- Theme data.
+			-- Theme data
 
 	theme_drawer: EV_THEME_DRAWER_IMP
-			-- Theme drawer.
+			-- Theme drawer
 
 	to_mswin_state (a_state: INTEGER): INTEGER
-			-- Convert from SD_TOOL_BAR_ITEM_STATE to WEL_THEME_TS_CONSTANTS.
+			-- Convert from SD_TOOL_BAR_ITEM_STATE to WEL_THEME_TS_CONSTANTS
 		do
 			inspect
 				a_state
@@ -311,7 +311,7 @@ feature {NONE} -- Implementation
 		end
 
 	draw_pixel_buffer (a_dc_to_draw: WEL_DC; a_arguments: SD_TOOL_BAR_DRAWER_ARGUMENTS)
-			-- Draw icons when using gdi+.
+			-- Draw icons when using gdi+
 		require
 			use_gdip: is_use_gdip (a_arguments)
 		local
@@ -361,7 +361,7 @@ feature {NONE} -- Implementation
 		end
 
 	draw_pixmap_real (a_dc_to_draw: WEL_DC; a_arguments: SD_TOOL_BAR_DRAWER_ARGUMENTS)
-			-- Draw icons when using gdi.
+			-- Draw icons when using gdi
 		local
 			l_pixmap_state: EV_PIXMAP_IMP_STATE
 			l_wel_bitmap, l_mask_bitmap: WEL_BITMAP
@@ -433,10 +433,10 @@ feature {NONE} -- Implementation
 		end
 
 	arguments: SD_TOOL_BAR_DRAWER_ARGUMENTS
-			-- Temp arguments during draw desartuated tool bar icons.
+			-- Temp arguments during draw desartuated tool bar icons
 
 	pixmap_coordinate: EV_COORDINATE
-			-- Temp arguments during draw desartuated tool bar icons.
+			-- Temp arguments during draw desartuated tool bar icons
 
 	draw_text (a_dc_to_draw: WEL_DC; a_arguments: SD_TOOL_BAR_DRAWER_ARGUMENTS)
 			-- Draw text
@@ -485,7 +485,7 @@ feature {NONE} -- Implementation
 		end
 
 	part_constants_by_type (a_item: SD_TOOL_BAR_ITEM): INTEGER
-			-- Part constants base on `a_item''s type.
+			-- Part constants base on `a_item''s type
 		require
 			not_void: a_item /= Void
 		local
@@ -512,7 +512,7 @@ feature {NONE} -- Implementation
 		end
 
 	desaturation (a_pixmap: EV_PIXMAP; a_k: REAL; a_dc_to_draw: WEL_DC)
-			-- Desatuation `a_pixmap' with `a_k' when Gdi+ is not available.
+			-- Desatuation `a_pixmap' with `a_k' when Gdi+ is not available
 		require
 			valid: 0 <= a_k  and a_k <= 1
 			not_void: a_pixmap /= Void
@@ -558,7 +558,7 @@ feature {NONE} -- Implementation
 		end
 
 	desaturation_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_dc_to_draw: WEL_DC)
-			-- Disaturation `a_pixel_buffer' when Gdi+ is available.
+			-- Disaturation `a_pixel_buffer' when Gdi+ is available
 		require
 			not_void: a_pixel_buffer /= Void
 			not_void: a_dc_to_draw /= Void and then a_dc_to_draw.exists
@@ -574,7 +574,7 @@ feature {NONE} -- Implementation
 		end
 
 	grayscale_icon_drawer: WEL_GDIP_GRAYSCALE_IMAGE_DRAWER
-			-- Grayscale icon drawer.
+			-- Grayscale icon drawer
 		once
 			create Result
 		ensure
@@ -616,7 +616,7 @@ feature {NONE} -- Implementation
 		end
 
 	draw_flat_button_edge_hot (a_dc: WEL_DC; a_rect: WEL_RECT)
-			-- Draw flat style button edge when is hot.
+			-- Draw flat style button edge when is hot
 		require
 			not_void: a_dc /= Void
 			not_void: a_rect /= Void
@@ -639,7 +639,7 @@ feature {NONE} -- Implementation
 		end
 
 	draw_flat_button_edge_hot_pressed (a_dc: WEL_DC; a_rect: WEL_RECT)
-			-- Draw flat style button edge when is hot and checked.
+			-- Draw flat style button edge when is hot and checked
 		require
 			not_void: a_dc /= Void
 			not_void: a_rect /= Void
@@ -659,7 +659,7 @@ feature {NONE} -- Implementation
 		end
 
 	draw_flat_button_edge_pressed (a_dc: WEL_DC; a_rect: WEL_RECT)
-			-- Draw flat style button edge when is pressed.
+			-- Draw flat style button edge when is pressed
 		require
 			not_void: a_dc /= Void
 			not_void: a_rect /= Void

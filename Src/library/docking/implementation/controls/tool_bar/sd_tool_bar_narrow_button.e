@@ -19,7 +19,7 @@ create
 feature -- Redefine
 
 	rectangle: EV_RECTANGLE
-			-- Redefine
+			-- <Precursor>
 		do
 			Result := Precursor {SD_TOOL_BAR_BUTTON}
 			if is_wrap then

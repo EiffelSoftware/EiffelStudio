@@ -392,7 +392,7 @@ feature -- Command
 		end
 
 	out: STRING
-			-- Redefine
+			-- <Precursor>
 		do
 			Result := "%NSD_TOOL_BAR_GROUP_INFO:"
 			Result := Result + "%N                   group count: " + group_count.out

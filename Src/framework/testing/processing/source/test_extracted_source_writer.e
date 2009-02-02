@@ -240,7 +240,7 @@ feature {TEST_CAPTURER} -- Events
 			end
 			stream.indent
 
-			stream.put_line ("indexing")
+			put_indexing_keyword
 			stream.indent
 			stream.put_line ("testing: %"type/extracted%"")
 			stream.put_string ("testing: %"covers/{")
@@ -440,7 +440,7 @@ feature {NONE} -- Output
 	put_indexing
 			-- Append indexing clause.
 		do
-			stream.put_line ("indexing")
+			put_indexing_keyword
 			stream.indent
 			stream.put_line ("description: %"Regression tests reproducing application state of a previous execution.%"")
 			stream.put_line ("author: %"Testing tool%"")

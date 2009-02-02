@@ -73,7 +73,7 @@ feature {NONE} -- Output
 	put_indexing
 			-- Append indexing clause.
 		do
-			stream.put_line ("indexing%N")
+			put_indexing_keyword
 			stream.indent
 			stream.put_line ("description: %"Synthesized test created by AutoTest.%"")
 			stream.put_line ("author: %"Testing tool%"")

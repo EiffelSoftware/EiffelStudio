@@ -31,6 +31,7 @@ feature {NONE} -- Initialization
 		do
 			create call_stack_elements_cache.make_default
 			make_conf (a_preference)
+			initialize_cs_elements (a_cs)
 		end
 
 	initialize_cs_elements (a_cs: EIFFEL_CALL_STACK)
@@ -46,7 +47,7 @@ feature {NONE} -- Initialization
 				a_cs.after
 			loop
 				if {l_cse: EIFFEL_CALL_STACK_ELEMENT} a_cs.item then
-					if is_selected_cse (l_cse) then
+					if is_selected_cse (l_cse) and a_cs.count /= l_cse.level_in_stack then
 						call_stack_elements_cache.force (l_cse.level_in_stack)
 					end
 				end
@@ -114,10 +115,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

@@ -77,7 +77,6 @@ feature {NONE} -- Initialization
 					l_stack := debugger_manager.application_status.current_call_stack
 				end
 			end
-			conf.call_stack_elements_cache.wipe_out
 			if l_stack /= Void and then not l_stack.is_empty then
 				from
 					l_stack.start
@@ -363,10 +362,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

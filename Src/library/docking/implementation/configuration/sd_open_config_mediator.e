@@ -274,10 +274,8 @@ feature {NONE} -- Implementation
 				a_after_editor_prepared.call (void)
 				Result := a_after_editor_prepared.last_result
 				-- We restore editor
-				if Result and editor_helper.is_editor_state_valid then
-					editor_helper.restore_editor_state (a_config_data, Result)
-				else
-					editor_helper.restore_editor_state (a_config_data, False)
+				editor_helper.restore_editor_state (a_config_data, Result)
+				if (not Result) or else (not editor_helper.is_editor_state_valid) then
 					cleaner.reset_all_to_default (editor_helper.is_top_container_recorded)
 					Result := False
 				end

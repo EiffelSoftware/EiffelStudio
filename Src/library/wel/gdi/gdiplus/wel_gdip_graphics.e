@@ -85,7 +85,7 @@ feature -- Command
 		local
 			l_dest_rect, l_src_rect: WEL_RECT
 		do
-			create l_dest_rect.make (a_dest_x, a_dest_y, a_dest_x + a_image.width, a_image.height)
+			create l_dest_rect.make (a_dest_x, a_dest_y, a_dest_x + a_image.width, a_dest_y + a_image.height)
 			create l_src_rect.make (0, 0, a_image.width, a_image.height)
 
 			draw_image_with_dest_rect_src_rect (a_image, l_dest_rect, l_src_rect)

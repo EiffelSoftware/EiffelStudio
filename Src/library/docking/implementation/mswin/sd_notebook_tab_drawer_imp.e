@@ -83,14 +83,14 @@ feature{NONE} -- Initlization
 feature -- Commands
 
 	expose_unselected (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO)
-			-- Redefine
+			-- <Precursor>
 		do
 			Precursor {SD_NOTEBOOK_TAB_DRAWER_I}(a_width, a_tab_info)
 			expose_unselected_or_hot (a_width, a_tab_info, False)
 		end
 
 	expose_selected (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO)
-			-- Redefine
+			-- <Precursor>
 		local
 			l_wel_rect: WEL_RECT
 			l_brush: WEL_BRUSH
@@ -129,14 +129,14 @@ feature -- Commands
 		end
 
 	expose_hot (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO)
-			-- Redefine
+			-- <Precursor>
 		do
 			Precursor {SD_NOTEBOOK_TAB_DRAWER_I}(a_width, a_tab_info)
 			expose_unselected_or_hot (a_width, a_tab_info, True)
 		end
 
 	draw_focus_rect (a_rect: EV_RECTANGLE)
-			-- Redefine
+			-- <Precursor>
 		local
 			l_rect: WEL_RECT
 
@@ -462,7 +462,7 @@ feature{NONE} -- Implementation
 		end
 
 	draw_close_button (a_drawable: EV_DRAWABLE; a_close_pixmap: EV_PIXMAP)
-			-- Redefine
+			-- <Precursor>
 		local
 			l_imp: EV_PIXMAP_IMP_DRAWABLE
 			l_brush: WEL_BRUSH
@@ -498,7 +498,7 @@ feature{NONE} -- Implementation
 		end
 
 	draw_pixmap_text_unselected (a_pixmap: EV_DRAWABLE; a_start_x, a_width: INTEGER)
-			-- Redefine
+			-- <Precursor>
 		local
 			l_font: EV_FONT
 		do
@@ -519,7 +519,7 @@ feature{NONE} -- Implementation
 		end
 
 	draw_pixmap_text_selected (a_pixmap: EV_DRAWABLE; a_start_x, a_width: INTEGER)
-			-- Redefine
+			-- <Precursor>
 		local
 			l_font: EV_FONT
 		do
@@ -553,10 +553,10 @@ feature{NONE} -- Implementation
 feature {NONE} -- Attributes
 
 	gap_height: INTEGER = 2
-	 		-- Redefine
+	 		-- <Precursor>
 
 	start_y_position: INTEGER
-	 		-- Redefine
+	 		-- <Precursor>
 	 	do
 			if pixmap /= Void then
 				Result := (height / 2 - pixmap.height / 2).floor

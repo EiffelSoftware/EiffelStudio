@@ -37,7 +37,7 @@ create
 feature	{NONE} -- Initlization
 
 	make (a_content: SD_CONTENT; a_direction: INTEGER)
-			-- Creation method.
+			-- Creation method
 		require
 			a_content_not_void: a_content /= Void
 			a_direction_valid: a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom
@@ -84,19 +84,19 @@ feature	{NONE} -- Initlization
 feature {NONE} -- Implementation
 
 	internal_direction: INTEGER
-			-- Direction.
+			-- Direction
 
 	stick
-			-- Stick zone.
+			-- Stick zone
 		do
 			internal_content.state.stick (content.state.direction)
 		end
 
 	resize_bar: SD_RESIZE_BAR
-			-- Resize bar at side.
+			-- Resize bar at side
 
 	start_resize_operation (a_bar: SD_RESIZE_BAR; a_screen_boundary: EV_RECTANGLE)
-			-- Redefine.
+			-- <Precursor>
 		do
 			-- Set the area which allow user to resize the window.
 			if internal_direction = {SD_ENUMERATION}.left then
@@ -118,7 +118,7 @@ feature {NONE} -- Implementation
 		end
 
 	end_resize_operation (a_bar: SD_RESIZE_BAR; a_delta: INTEGER)
-			-- Redefine.
+			-- <Precursor>
 		do
 			disable_item_expand (resize_bar)
 			if internal_direction = {SD_ENUMERATION}.left or internal_direction = {SD_ENUMERATION}.right then
@@ -143,14 +143,14 @@ feature {NONE} -- Implementation
 feature {SD_AUTO_HIDE_STATE} -- For user docking
 
 	on_focus_in (a_content: SD_CONTENT)
-			-- Redefine.
+			-- <Precursor>
 		do
 			Precursor {SD_SINGLE_CONTENT_ZONE} (a_content)
 			window.set_focus_color (True)
 		end
 
 	on_focus_out
-			-- Redefine.
+			-- <Precursor>
 		do
 			Precursor {SD_SINGLE_CONTENT_ZONE}
 			window.set_focus_color (False)
@@ -159,7 +159,7 @@ feature {SD_AUTO_HIDE_STATE} -- For user docking
 feature -- Query
 
 	window: SD_PANEL
-			-- Window.
+			-- Window
 
 	has_focus: BOOLEAN
 			-- If `Current' has focus?
@@ -170,7 +170,7 @@ feature -- Query
 feature -- Command
 
 	set_focus_color (a_selection: BOOLEAN)
-			-- Redefine.
+			-- <Precursor>
 		do
 			if a_selection then
 				window.title_bar.enable_focus_color
@@ -180,7 +180,7 @@ feature -- Command
 		end
 
 	destroy
-			-- Redefine.
+			-- <Precursor>
 		do
 			Precursor
 			window.title_bar.destroy

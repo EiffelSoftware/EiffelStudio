@@ -27,7 +27,7 @@ create
 feature	{NONE} -- Initlization
 
 	make (a_content: SD_CONTENT)
-			-- Creation method.
+			-- Creation method
 		require
 			a_content_not_void: a_content /= Void
 		do
@@ -64,7 +64,7 @@ feature	{NONE} -- Initlization
 feature {SD_CONTENT}
 
 	on_focus_in (a_content: SD_CONTENT)
-			-- Redefine.
+			-- <Precursor>
 		do
 			Precursor {SD_DOCKING_ZONE} (a_content)
 			internal_docking_manager.command.remove_auto_hide_zones (True)
@@ -74,31 +74,31 @@ feature {SD_CONTENT}
 feature -- Command
 
 	set_show_normal_max (a_show: BOOLEAN)
-			-- Redefine.
+			-- <Precursor>
 		do
 			window.set_show_normal_max (a_show)
 		end
 
 	set_show_stick (a_show: BOOLEAN)
-			-- Redefine.
+			-- <Precursor>
 		do
 			window.set_show_stick (a_show)
 		end
 
 	set_title (a_title: STRING_GENERAL)
-			-- Set title.
+			-- <Precursor>
 		do
 			window.title_bar.set_title (a_title)
 		end
 
 	set_max (a_max: BOOLEAN)
-			-- Redefine.
+			-- <Precursor>
 		do
 			window.title_bar.set_max (a_max)
 		end
 
 	set_focus_color (a_selection: BOOLEAN)
-			-- Redefine.
+			-- <Precursor>
 		do
 			if a_selection then
 				window.title_bar.enable_focus_color
@@ -108,13 +108,13 @@ feature -- Command
 		end
 
 	set_non_focus_selection_color
-			-- Set title bar non-focuse color.
+			-- <Precursor>
 		do
 			window.title_bar.enable_non_focus_active_color
 		end
 
 	stick
-			-- Stick window.
+			-- Stick window
 		local
 			l_enum: SD_ENUMERATION
 			l_direction: INTEGER
@@ -131,19 +131,19 @@ feature -- Command
 feature -- Query
 
 	title: STRING_32
-			-- Redefine
+			-- <Precursor>
 		do
 			Result := window.title_bar.title
 		end
 
 	title_area: EV_RECTANGLE
-			-- Refedine
+			-- <Precursor>
 		do
 			create Result.make (window.title_bar.screen_x, window.title_bar.screen_y, window.title_bar.width, window.title_bar.height)
 		end
 
 	is_maximized: BOOLEAN
-			-- Redefine
+			-- <Precursor>
 		do
 			Result := window.title_bar.is_max
 		end
@@ -151,20 +151,20 @@ feature -- Query
 feature {NONE} -- Implementation
 
 	resize_bar: SD_RESIZE_BAR
-			-- Resize bar at the side.
+			-- Resize bar at the side
 
 	window: SD_PANEL
-			-- Window.
+			-- Window
 
 	on_focus_out
-			-- Redefine.
+			-- <Precursor>
 		do
 			Precursor {SD_DOCKING_ZONE}
 			window.set_focus_color (False)
 		end
 
 	on_normal_max_window
-			-- Redefine
+			-- <Precursor>
 		do
 			if window.is_show_normal_max then
 				Precursor {SD_DOCKING_ZONE}
@@ -173,13 +173,13 @@ feature {NONE} -- Implementation
 		end
 
 	update_user_widget
-			-- Redefine
+			-- <Precursor>
 		do
 			window.set_user_widget (content.user_widget)
 		end
 
 	update_mini_tool_bar_size
-			-- Redefine
+			-- <Precursor>
 		do
 			window.title_bar.update_fixed_size
 		end

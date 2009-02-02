@@ -27,7 +27,7 @@ inherit
 feature {NONE}-- Initialization
 
 	initialize
-			-- Initialize `Current'.
+			-- Initialize `Current'
 		do
 			Precursor {EV_VERTICAL_BOX}
 			initialize_constants
@@ -122,7 +122,7 @@ feature {NONE} -- Implementation
 		end
 
 	user_initialization
-			-- Feature for custom initialization, called at end of `initialize'.
+			-- Feature for custom initialization, called at end of `initialize'
 		deferred
 		end
 

@@ -55,7 +55,7 @@ feature {NONE} -- Implementation
 feature -- Querys
 
 	default_background_color: EV_COLOR
-			-- Redefine
+			-- <Precursor>
 		local
 			l_colors: EV_STOCK_COLORS
 		do
@@ -64,7 +64,7 @@ feature -- Querys
 		end
 
 	active_border_color: EV_COLOR
-			-- Redefine
+			-- <Precursor>
 		local
 			l_pointer: POINTER
 		do
@@ -72,7 +72,7 @@ feature -- Querys
 		end
 
 	focused_selection_color: EV_COLOR
-			-- Redefine
+			-- <Precursor>
 		local
 			l_pointer: POINTER
 		do
@@ -80,7 +80,7 @@ feature -- Querys
 		end
 
 	focused_title_text_color: EV_COLOR
-			-- Redefine
+			-- <Precursor>
 		local
 			l_pointer: POINTER
 		do
@@ -88,7 +88,7 @@ feature -- Querys
 		end
 
 	non_focused_selection_color: EV_COLOR
-			-- Redefine
+			-- <Precursor>
 		local
 			l_pointer: POINTER
 		do
@@ -96,7 +96,7 @@ feature -- Querys
 		end
 
 	non_focused_selection_title_color: EV_COLOR
-			-- Redefine
+			-- <Precursor>
 		local
 			l_pointer: POINTER
 		do
@@ -104,7 +104,7 @@ feature -- Querys
 		end
 
 	non_focused_title_text_color: EV_COLOR
-			-- Redefine
+			-- <Precursor>
 		local
 			l_pointer: POINTER
 		do
@@ -112,7 +112,7 @@ feature -- Querys
 		end
 
 	button_text_color: EV_COLOR
-			-- Redefine
+			-- <Precursor>
 		local
 			l_pointer: POINTER
 		do
@@ -122,7 +122,7 @@ feature -- Querys
 feature -- Font
 
 	tool_bar_font: EV_FONT
-			-- Redefine
+			-- <Precursor>
 		local
 			l_imp: EV_FONT_IMP
 			l_shared_font: WEL_SHARED_FONTS

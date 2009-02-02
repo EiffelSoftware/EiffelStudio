@@ -30,13 +30,13 @@ feature {NONE}  -- Initlization
 feature {NONE} -- Implementation
 
 	apply_change (a_screen_x, a_screen_y: INTEGER): BOOLEAN
-			-- Redefine
+			-- <Precursor>
 		do
 
 		end
 
 	update_for_feedback (a_screen_x, a_screen_y: INTEGER; a_dockable: BOOLEAN): BOOLEAN
-			-- Redefine
+			-- <Precursor>
 		do
 			-- There is no operation available in this case,
 			-- so we should clear the feedback
@@ -44,25 +44,25 @@ feature {NONE} -- Implementation
 		end
 
 	update_for_indicator (a_screen_x, a_screen_y: INTEGER): BOOLEAN
-			-- Redefine
+			-- <Precursor>
 		do
 
 		end
 
 	update_for_indicator_clear (a_screen_x, a_screen_y: INTEGER)
-			-- Redefine
+			-- <Precursor>
 		do
 
 		end
 
 	clear_indicator
-			-- Redefine
+			-- <Precursor>
 		do
 
 		end
 
 	build_indicator
-			-- Redefine
+			-- <Precursor>
 		do
 
 		end

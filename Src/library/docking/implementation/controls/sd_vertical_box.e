@@ -57,13 +57,13 @@ feature {NONE} -- Initlization
 		end
 
 	full_docking: BOOLEAN
-			-- Redefine
+			-- <Precursor>
 		do
 			Result := first /= Void and second /= Void
 		end
 
 	initialize
-			-- Redefine
+			-- <Precursor>
 		do
 			Precursor {EV_VERTICAL_BOX}
 			create fake_spliter
@@ -76,7 +76,7 @@ feature {NONE} -- Initlization
 			-- Fake spiter which can't be dragged.
 
 	extend (a_widget: EV_WIDGET)
-			-- Redefine
+			-- <Precursor>
 		local
 			l_index: INTEGER
 		do
@@ -100,7 +100,7 @@ feature {NONE} -- Initlization
 		end
 
 	first: EV_WIDGET
-			-- Redefine
+			-- <Precursor>
 		do
 			if i_th (1) /= Void then
 				if i_th (1) /= fake_spliter then
@@ -113,13 +113,13 @@ feature {NONE} -- Initlization
 			-- If second is void?
 
 	is_in_default_state: BOOLEAN
-			-- Redefine
+			-- <Precursor>
 		do
 			Result := True
 		end
 
 	last: EV_WIDGET
-			-- Redefine
+			-- <Precursor>
 		do
 			if Result = Void and count = 1 then
 				Result := fake_spliter
@@ -138,7 +138,7 @@ feature {NONE} -- Initlization
 feature -- Contract support
 
 	may_contain (v: EV_WIDGET): BOOLEAN
-			-- Redefine
+			-- <Precursor>
 		do
 			Result := Precursor {EV_VERTICAL_BOX} (v) and then count <= 3
 		end
@@ -146,7 +146,7 @@ feature -- Contract support
 feature -- Access
 
 	second: EV_WIDGET
-			-- Redefine	
+			-- <Precursor>
 		do
 			if first = Void then
 				Result := i_th (2)
@@ -158,24 +158,24 @@ feature -- Access
 		end
 
 	minimum_split_position: INTEGER
-			-- Redefine
+			-- <Precursor>
 		do
 		end
 
 	maximum_split_position: INTEGER
-			-- Redefine
+			-- <Precursor>
 			-- This value is useful when executing SD_MULTI_DOCK_AREA.restore_spliter_position.
 		do
 			Result := {INTEGER}.max_value
 		end
 
 	split_position: INTEGER
-			-- Redefine
+			-- <Precursor>
 
 feature -- Setting
 
 	set_split_position (a_pos: INTEGER)
-			-- Redefine
+			-- <Precursor>
 		do
 			split_position := a_pos
 		ensure then
@@ -183,7 +183,7 @@ feature -- Setting
 		end
 
 	set_splitter_visible (a_visible: BOOLEAN)
-			-- Redefine
+			-- <Precursor>
 		do
 			if fake_spliter /= Void then
 				if a_visible then

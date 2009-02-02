@@ -44,7 +44,7 @@ feature -- Query
 		-- Text font
 
 	text_width: INTEGER
-			-- Redefine
+			-- <Precursor>
 		local
 			l_font: EV_FONT
 		do
@@ -59,7 +59,7 @@ feature -- Query
 		end
 
 	is_selected: BOOLEAN
-			-- Redefine
+			-- <Precursor>
 		do
 			Result := Precursor {SD_TOOL_BAR_RADIO_BUTTON} or state = {SD_TOOL_BAR_ITEM_STATE}.hot
 		end

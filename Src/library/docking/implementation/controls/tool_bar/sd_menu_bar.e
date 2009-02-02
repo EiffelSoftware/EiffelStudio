@@ -24,7 +24,7 @@ create
 feature {NONE} -- Initlization
 
 	make
-			-- Redefine
+			-- <Precursor>
 		do
 			Precursor {SD_TOOL_BAR}
 		end
@@ -39,7 +39,7 @@ feature -- Acces
 feature {NONE} -- Agents
 
 	on_pointer_press (a_x, a_y, a_button: INTEGER_32; a_x_tilt, a_y_tilt, a_pressure: REAL_64; a_screen_x, a_screen_y: INTEGER_32)
-			-- Redefine
+			-- <Precursor>
 		do
 			enable_capture
 			from
@@ -57,7 +57,7 @@ feature {NONE} -- Agents
 		end
 
 	on_pointer_release (a_x, a_y, a_button: INTEGER_32; a_x_tilt, a_y_tilt, a_pressure: REAL_64; a_screen_x, a_screen_y: INTEGER_32)
-			-- Redefine
+			-- <Precursor>
 		do
 			disable_capture
 		end
@@ -65,7 +65,7 @@ feature {NONE} -- Agents
 feature {NONE} -- Implementations
 
 	internal_items: ARRAYED_SET [SD_TOOL_BAR_MENU_ITEM];
-			-- Redefine
+			-- <Precursor>
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."

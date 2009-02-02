@@ -14,7 +14,7 @@ inherit
 feature -- Factory method
 
 	hot_zone (a_zone: SD_ZONE): SD_HOT_ZONE
-			-- Redefine
+			-- <Precursor>
 		local
 			l_docking_zone: SD_DOCKING_ZONE
 			l_tab_zone: SD_TAB_ZONE
@@ -34,7 +34,7 @@ feature -- Factory method
 		end
 
 	hot_zone_main (a_zone: SD_ZONE; a_docking_manager: SD_DOCKING_MANAGER): SD_HOT_ZONE
-			-- Redefine
+			-- <Precursor>
 		do
 			if a_zone.type = {SD_ENUMERATION}.tool then
 				Result := create {SD_HOT_ZONE_OLD_MAIN}.make (docker_mediator, a_docking_manager)

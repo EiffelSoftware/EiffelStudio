@@ -381,7 +381,7 @@ feature {NONE} -- Initialization
 feature -- Command
 
 	show
-			-- Redefine
+			-- <Precursor>
 		do
 			Precursor {SD_ZONE_NAVIGATION_DIALOG_IMP}
 			focus_label (init_focued_lable)

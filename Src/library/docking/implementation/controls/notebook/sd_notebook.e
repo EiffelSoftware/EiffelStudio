@@ -40,7 +40,7 @@ create
 feature {NONE}  -- Initlization
 
 	make (a_docking_manager: SD_DOCKING_MANAGER)
-			-- Creation method.
+			-- Creation method
 		require
 			a_docking_manager_not_void: a_docking_manager /= Void
 		local
@@ -91,7 +91,7 @@ feature {NONE}  -- Initlization
 feature -- Command
 
 	set_focus_color (a_focus: BOOLEAN)
-			-- Set border focus color base on `a_focus'.
+			-- Set border focus color base on `a_focus'
 		do
 			if a_focus then
 				internal_border_box.set_background_color (internal_shared.focused_color)
@@ -107,7 +107,7 @@ feature -- Command
 		end
 
 	set_tab_active_color (a_focus: BOOLEAN)
-			-- Set tab active selection color to focus color or non-focus color.
+			-- Set tab active selection color to focus color or non-focus color
 		do
 			if selected_item /= Void then
 				tab_by_content (selected_item).set_selection_color (a_focus)
@@ -115,7 +115,7 @@ feature -- Command
 		end
 
 	set_item_text (a_content: SD_CONTENT; a_text: STRING_GENERAL)
-			-- Assign `a_text' to label of `an_item'.
+			-- Assign `a_text' to label of `an_item'
 		require
 			has: has (a_content)
 			a_content_not_void: a_content /= Void
@@ -132,7 +132,7 @@ feature -- Command
 		end
 
 	set_item_pixmap (a_content: SD_CONTENT; a_pixmap: EV_PIXMAP)
-			-- Set tab which represent `a_content''s pixmap to `a_pixmap'.
+			-- Set tab which represent `a_content''s pixmap to `a_pixmap'
 		require
 			has: has (a_content)
 			a_pixmap_not_void: a_pixmap /= Void
@@ -147,7 +147,7 @@ feature -- Command
 		end
 
 	select_item (a_content: SD_CONTENT; a_focus: BOOLEAN)
-			-- Select `a_widget' and show it.
+			-- Select `a_widget' and show it
 		require
 			has: has (a_content)
 		do
@@ -170,7 +170,7 @@ feature -- Command
 		end
 
 	extend (a_content: SD_CONTENT)
-			-- Extend `a_content'.
+			-- Extend `a_content'
 		require
 			a_content_not_void: a_content /= Void
 			not_has: not has (a_content)
@@ -187,7 +187,7 @@ feature -- Command
 		end
 
 	extend_contents (a_contents: ARRAYED_LIST [SD_CONTENT])
-			-- Extend `a_contents'.
+			-- Extend `a_contents'
 			-- This feature is faster than extend content one by one.
 		require
 			not_void: a_contents /= Void
@@ -217,7 +217,7 @@ feature -- Command
 		end
 
 	prune (a_content: SD_CONTENT; a_focus: BOOLEAN)
-			-- Prune `a_widget'.
+			-- Prune `a_widget'
 		require
 			has: has (a_content)
 		local
@@ -258,7 +258,7 @@ feature -- Command
 		end
 
 	replace (a_content: SD_CONTENT)
-			-- Replace `a_content''s old `user_widget' with new one.
+			-- Replace `a_content''s old `user_widget' with new one
 		require
 			has: has (a_content)
 		do
@@ -270,7 +270,7 @@ feature -- Command
 		end
 
 	set_tab_position (a_position: INTEGER)
-			-- Set tab position base on `a_position' which is one of top_top, top_bottom. See at bottom of class.
+			-- Set tab position base on `a_position' which is one of top_top, top_bottom. See bottom of class
 		require
 			a_position_valid: a_position = tab_top or a_position = tab_bottom
 		do
@@ -292,7 +292,7 @@ feature -- Command
 		end
 
 	destroy
-			-- Redefine.
+			-- <Precursor>
 		do
 			prune_notebook (Current)
 			from
@@ -308,13 +308,13 @@ feature -- Command
 		end
 
 	on_resize (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER)
-			-- Handle resize actions.
+			-- Handle resize actions
 		do
 			internal_tab_box.on_resize (a_x, a_y, a_width, a_height)
 		end
 
 	set_content_position (a_content: SD_CONTENT; a_index: INTEGER)
-			-- Position `a_content' at `a_index'.
+			-- Position `a_content' at `a_index'
 		require
 			has: has (a_content)
 			valid: a_index > 0 and a_index <= contents.count
@@ -356,15 +356,15 @@ feature -- Command
 		end
 
 	update_size
-			-- Update minimum height base on font size.
+			-- Update minimum height base on font size
 		do
-				-- set_minimum_height is not needed on Windows.
-				-- But on Linux, if we don't set it, docking (not tabbed) zone minimum height will be 1 when zone is minimized.
-				set_minimum_height (internal_shared.notebook_tab_height + 3)
+			-- set_minimum_height is not needed on Windows.
+			-- But on Linux, if we don't set it, docking (not tabbed) zone minimum height will be 1 when zone is minimized.
+			set_minimum_height (internal_shared.notebook_tab_height + 3)
 		end
 
 	update_size_and_font
-			-- Update tabs, tab box, tab area's size base on font size.
+			-- Update tabs, tab box, tab area's size base on font size
 		local
 			l_tabs: ARRAYED_LIST [SD_NOTEBOOK_TAB]
 		do
@@ -390,7 +390,7 @@ feature -- Command
 feature -- Query
 
 	contents: ARRAYED_LIST [SD_CONTENT]
-			-- All contents in Current.
+			-- All contents in Current
 		do
 			Result := internal_contents.twin
 		ensure
@@ -398,13 +398,13 @@ feature -- Query
 		end
 
 	index_of (a_content: SD_CONTENT): INTEGER
-			-- Index of a_widget
+			-- Index of `a_widget'
 		do
 			Result := internal_contents.index_of (a_content, 1)
 		end
 
 	index_of_tab (a_tab: SD_NOTEBOOK_TAB): INTEGER
-			-- Index of a_tab
+			-- Index of `a_tab'
 		require
 			has: has_tab (a_tab)
 		do
@@ -412,7 +412,7 @@ feature -- Query
 		end
 
 	tab_by_content (a_content: SD_CONTENT): SD_NOTEBOOK_TAB
-			-- Tab which associate with `a_widget'.
+			-- Tab which associate with `a_content'
 		require
 			has: has (a_content)
 		do
@@ -424,19 +424,19 @@ feature -- Query
 		end
 
 	has (a_content: SD_CONTENT): BOOLEAN
-			-- If Current has `a_widget'?
+			-- If Current has `a_content'?
 		do
 			Result := internal_contents.has (a_content)
 		end
 
 	has_tab (a_tab: SD_NOTEBOOK_TAB): BOOLEAN
-			-- If Current has `a_tab'.
+			-- If Current has `a_tab'?
 		do
 			Result := internal_tabs.has (a_tab)
 		end
 
 	selected_item_index: INTEGER
-			-- Index of `selected_item'.
+			-- Index of `selected_item'
 		local
 			l_found: BOOLEAN
 		do
@@ -459,7 +459,7 @@ feature -- Query
 		end
 
 	selected_item: SD_CONTENT
-			-- Selected item.
+			-- Selected item
 		local
 			l_index: INTEGER
 		do
@@ -478,7 +478,7 @@ feature -- Query
 		end
 
 	item_pixmap (a_content: SD_CONTENT): EV_PIXMAP
-			-- `a_content''s pixmap.
+			-- `a_content''s pixmap
 		require
 			has: has (a_content)
 		do
@@ -489,7 +489,7 @@ feature -- Query
 		end
 
 	item_text (a_content: SD_CONTENT): STRING_32
-			-- `a_content''s pixmap.
+			-- `a_content''s pixmap
 		require
 			has: has (a_content)
 		do
@@ -500,7 +500,7 @@ feature -- Query
 		end
 
 	content_by_tab (a_tab: SD_NOTEBOOK_TAB): SD_CONTENT
-			-- Widget which associate with `a_tab'.
+			-- Widget which associate with `a_tab'
 		require
 			has: has_tab (a_tab)
 		do
@@ -512,16 +512,16 @@ feature -- Query
 		end
 
 	selection_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Selection actions.
+			-- Selection actions
 
 	tab_double_click_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Tab double click actions.
+			-- Tab double click actions
 
 	tab_drag_actions: ACTION_SEQUENCE [ TUPLE [SD_CONTENT, INTEGER, INTEGER, INTEGER, INTEGER]]
-			-- Tab drag actions. In tuple, 1st is dragged tab, 2nd is x, 3rd is y, 4th is screen_x, 5th is screen_y.
+			-- Tab drag actions. In tuple, 1st parameter is dragged tab, 2nd is x, 3rd is y, 4th is screen_x, 5th is screen_y
 
 	tabs_shown: ARRAYED_LIST [SD_NOTEBOOK_TAB]
-			-- Tabs which is currently shown.
+			-- Tabs which is currently shown
 		local
 			l_tabs: like internal_tabs
 		do
@@ -548,7 +548,7 @@ feature -- Query
 		end
 
 	docking_manager: like internal_docking_manager
-			-- Docking manager which Current managed by.
+			-- Docking manager which Current managed
 		do
 			Result := internal_docking_manager
 		end
@@ -556,7 +556,7 @@ feature -- Query
 feature {SD_NOTEBOOK_HIDE_TAB_DIALOG} -- Internal commands
 
 	on_content_selected (a_content: SD_CONTENT)
-			-- Handle hidden item list select actions.
+			-- Handle hidden item list select actions
 		require
 			not_void: a_content /= Void
 		local
@@ -570,7 +570,7 @@ feature {SD_NOTEBOOK_HIDE_TAB_DIALOG} -- Internal commands
 feature {NONE}  -- Implementation
 
 	on_tab_dragging (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER; a_tab: SD_NOTEBOOK_TAB)
-			-- Handle tab dragging.
+			-- Handle tab dragging
 
 		do
 			dragging_tab := a_tab
@@ -582,10 +582,10 @@ feature {NONE}  -- Implementation
 		end
 
 	dragging_tab: SD_NOTEBOOK_TAB
-			-- Tab which is dragging.
+			-- Tab which is dragging
 
 	on_pointer_release (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
-			-- Handle pointer release.
+			-- Handle pointer release
 		do
 			dragging_tab := Void
 			disable_capture
@@ -597,7 +597,7 @@ feature {NONE}  -- Implementation
 		end
 
 	on_pointer_motion (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
-			-- Handle pointer motion.
+			-- Handle pointer motion
 		local
 			l_in_tabs: BOOLEAN
 			l_index: INTEGER
@@ -639,7 +639,7 @@ feature {NONE}  -- Implementation
 		end
 
 	on_tab_selected (a_tab: SD_NOTEBOOK_TAB)
-			-- Handle notebook tab select actions.
+			-- Handle notebook tab select actions
 		require
 			not_void: a_tab /= Void
 			has: has_tab (a_tab)
@@ -650,7 +650,7 @@ feature {NONE}  -- Implementation
 		end
 
 	notify_tab (a_except: SD_NOTEBOOK_TAB; a_focus: BOOLEAN)
-			-- Disable all tabs selection except `a_except'. Select `a_except'.
+			-- Disable all tabs selection except `a_except'. Select `a_except'
 		local
 			l_tab_item: SD_NOTEBOOK_TAB
 		do
@@ -671,7 +671,7 @@ feature {NONE}  -- Implementation
 		end
 
 	swap_tabs_and_contents (a_tab_1, a_tab_2: SD_NOTEBOOK_TAB)
-			-- Swap order of a_tab_1 and a_tab_2.
+			-- Swap order of `a_tab_1' and `a_tab_2'
 		require
 			nor_equal: a_tab_1 /= a_tab_2
 			has: internal_tabs.has (a_tab_1) and internal_tab_box.has (a_tab_1)
@@ -719,7 +719,7 @@ feature {NONE}  -- Implementation
 		end
 
 	tab_factory_method (a_content: SD_CONTENT): SD_NOTEBOOK_TAB
-			-- Factory method for SD_NOTEBOOK_TAB.
+			-- Factory method for SD_NOTEBOOK_TAB
 		require
 			not_void: a_content /= Void
 		do
@@ -741,25 +741,25 @@ feature {NONE}  -- Implementation
 			-- it will cause tab jumping if a tab is very narrow and a tab is very wide.
 
 	internal_contents: ARRAYED_LIST [SD_CONTENT]
-			-- All widgets in Current.
+			-- All widgets in Current
 
 	internal_tabs: ARRAYED_LIST [SD_NOTEBOOK_TAB]
-			-- All tabs in Current.
+			-- All tabs in Current
 
 	internal_tab_box: SD_NOTEBOOK_TAB_AREA
-			-- Horizontal box which hold tabs and mini tool bar and close buttons..
+			-- Horizontal box which hold tabs and mini tool bar and close buttons
 
 	internal_cell: EV_CELL
-			-- Cell which hold notebook selected content.
+			-- Cell which hold notebook selected content
 
 	internal_border_box: EV_BOX
-			-- Box used for highlight border.
+			-- Box used for highlight border
 
 	internal_shared: SD_SHARED
-			-- All singletons.
+			-- All singletons
 
 	internal_docking_manager: SD_DOCKING_MANAGER
-			-- Docking manager which Current belong to.
+			-- Docking manager which Current belong to
 
 	internal_border_for_tab_area: SD_CELL_WITH_BORDER
 			-- Border box
@@ -767,9 +767,10 @@ feature {NONE}  -- Implementation
 feature -- Emumeration
 
 	tab_top: INTEGER = 1
-			-- Tab shown at top.
+			-- Tab shown at top
+
 	tab_bottom: INTEGER = 2
-			-- Tab shown at bottom.
+			-- Tab shown at bottom
 
 invariant
 

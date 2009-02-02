@@ -95,7 +95,7 @@ feature {NONE} -- Initlization
 feature -- Query
 
 	is_maximized: BOOLEAN
-			-- Redefine.
+			-- <Precursor>
 		do
 			Result := internal_title_bar.is_max
 		end
@@ -105,7 +105,7 @@ feature -- Query
 			-- If true, then we move all the contents, otherwise only move selected content.
 
 	title_area: EV_RECTANGLE
-			-- Title bar area.
+			-- Title bar area
 		do
 			create Result.make (internal_title_bar.screen_x, internal_title_bar.screen_y, internal_title_bar.width, internal_title_bar.height)
 		ensure
@@ -115,7 +115,7 @@ feature -- Query
 feature -- Command
 
 	extend (a_content: SD_CONTENT)
-			-- Redefine
+			-- <Precursor>
 		do
 			if not has (a_content) then
 				if a_content.user_widget.parent /= Void then
@@ -129,7 +129,7 @@ feature -- Command
 		end
 
 	prune (a_content: SD_CONTENT; a_focus: BOOLEAN)
-			-- Redefine
+			-- <Precursor>
 		local
 			l_selected: SD_CONTENT
 			l_index: INTEGER
@@ -149,7 +149,7 @@ feature -- Command
 		end
 
 	set_show_normal_max (a_show: BOOLEAN)
-			-- Redefine.
+			-- <Precursor>
 		do
 			internal_title_bar.set_show_normal_max (a_show)
 		ensure then
@@ -157,7 +157,7 @@ feature -- Command
 		end
 
 	set_show_stick (a_show: BOOLEAN)
-			-- Redefine.
+			-- <Precursor>
 		do
 			internal_title_bar.set_show_stick (a_show)
 		ensure then
@@ -165,7 +165,7 @@ feature -- Command
 		end
 
 	set_title (a_title: STRING_GENERAL; a_content: SD_CONTENT)
-			-- Set title.
+			-- Set title
 		require
 			a_title_not_void: a_title /= Void
 			a_content_not_void: a_content /= Void
@@ -182,7 +182,7 @@ feature -- Command
 		end
 
 	set_pixmap (a_pixmap: EV_PIXMAP; a_content: SD_CONTENT)
-			-- Set a_content's pixmap.
+			-- Set a_content's pixmap
 		require
 			a_pixmap_not_void: a_pixmap /= Void
 			a_content_not_void: a_content /= Void
@@ -194,13 +194,13 @@ feature -- Command
 		end
 
 	set_max (a_max: BOOLEAN)
-			-- Redefine.
+			-- <Precursor>
 		do
 			internal_title_bar.set_max (a_max)
 		end
 
 	set_focus_color (a_selection: BOOLEAN)
-			-- Redefine
+			-- <Precursor>
 		do
 			if a_selection then
 				internal_title_bar.enable_focus_color
@@ -211,14 +211,14 @@ feature -- Command
 		end
 
 	set_non_focus_selection_color
-			-- Redefine
+			-- <Precursor>
 		do
 			internal_title_bar.enable_non_focus_active_color
 			internal_notebook.set_tab_active_color (False)
 		end
 
 	set_content_position (a_content: SD_CONTENT; a_index: INTEGER)
-			-- Set a_content's position to a_index.
+			-- Set a_content's position with `a_index'
 		require
 			has: has (a_content)
 		do
@@ -230,7 +230,7 @@ feature -- Command
 		end
 
 	update_mini_tool_bar_size
-			-- Redefine
+			-- <Precursor>
 		do
 			internal_title_bar.update_fixed_size
 		end
@@ -238,7 +238,7 @@ feature -- Command
 feature {SD_OPEN_CONFIG_MEDIATOR} --
 
 	save_content_title (a_config_data: SD_INNER_CONTAINER_DATA)
-			-- Redefine.
+			-- <Precursor>
 		do
 			Precursor {SD_MULTI_CONTENT_ZONE}(a_config_data)
 			a_config_data.set_selected_tab_index (selected_item_index)
@@ -247,13 +247,13 @@ feature {SD_OPEN_CONFIG_MEDIATOR} --
 feature {SD_TAB_STATE} -- Internal issues.
 
 	selected_item_index: INTEGER
-			-- Selected item index.
+			-- Selected item index
 		do
 			Result := internal_notebook.selected_item_index
 		end
 
 	select_item (a_content: SD_CONTENT; a_focus: BOOLEAN)
-			-- Select `a_item' on the notebook.
+			-- Select `a_item' on the notebook
 		require
 			a_content_not_void: a_content /= Void
 			has: has (a_content)
@@ -286,7 +286,7 @@ feature {SD_FLOATING_STATE} -- Internal issues
 feature -- Agents for user
 
 	on_focus_in (a_content: SD_CONTENT)
-			-- Redefine.
+			-- <Precursor>
 		do
 			Precursor {SD_MULTI_CONTENT_ZONE} (a_content)
 			internal_docking_manager.command.remove_auto_hide_zones (True)
@@ -302,7 +302,7 @@ feature -- Agents for user
 		end
 
 	on_focus_out
-			-- Redefine.
+			-- <Precursor>
 		do
 			Precursor {SD_MULTI_CONTENT_ZONE}
 			internal_title_bar.disable_focus_color
@@ -310,7 +310,7 @@ feature -- Agents for user
 		end
 
 	on_stick
-			-- Handle user click button.
+			-- Handle user click button
 		do
 			content.state.stick ({SD_ENUMERATION}.left)
 		ensure
@@ -318,7 +318,7 @@ feature -- Agents for user
 		end
 
 	on_normal_max_window
-			-- Handle user click min max button.
+			-- Handle user click min max button
 		do
 			if internal_title_bar.is_show_normal_max then
 				Precursor {SD_MULTI_CONTENT_ZONE}
@@ -328,7 +328,7 @@ feature -- Agents for user
 feature {NONE} -- Agents for docker
 
 	on_select_tab
-			-- Handle user click a tab in `internal_notebook'.
+			-- Handle user click a tab in `internal_notebook'
 		local
 			l_content: SD_CONTENT
 		do
@@ -346,7 +346,7 @@ feature {NONE} -- Agents for docker
 		end
 
 	on_drag_title_bar (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
-			-- Handle user drag title bar.
+			-- Handle user drag title bar
 		local
 			l_tab_state: SD_TAB_STATE
 		do
@@ -369,7 +369,7 @@ feature {NONE} -- Agents for docker
 		end
 
 	on_pointer_release (a_x, a_y, a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
-			-- Handle pointer release.
+			-- Handle pointer release
 		do
 			if internal_docker_mediator /= Void then
 				debug ("docking")
@@ -385,7 +385,7 @@ feature {NONE} -- Agents for docker
 		end
 
 	on_notebook_drag (a_content: SD_CONTENT; a_x, a_y, a_screen_x, a_screen_y: INTEGER)
-			-- Handle notebook drag actions.
+			-- Handle notebook drag actions
 		do
 			-- We should check if `internal_docker_mediator' is void since `on_drag_title_bar' will be called multi times when starting dragging on GTK			
 			if internal_docker_mediator = Void then
@@ -398,7 +398,7 @@ feature {NONE} -- Agents for docker
 		end
 
 	on_pointer_motion (a_x, a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
-			-- Handle pointer motion.
+			-- Handle pointer motion
 		do
 			-- If `internal_docker_mediator' /= Void and `internal_docker_mediator'.is_tracing = False, it means, we just started enable capture in `on_notebook_drag', but not called `start_tracing_pointer' yet.
 			if internal_docker_mediator /= Void and then internal_docker_mediator.is_tracing then
@@ -410,12 +410,12 @@ feature {NONE} -- Agents for docker
 		end
 
 	on_notebook_drop (a_any: ANY)
-			-- Handle pointer drop.
+			-- Handle pointer drop
 		do
 		end
 
 	on_cancel_dragging
-			-- Handle cancel dragging from SD_DOCKER_MEDIATOR.
+			-- Handle cancel dragging from SD_DOCKER_MEDIATOR
 		do
 			disable_capture
 			internal_docker_mediator := Void
@@ -425,7 +425,7 @@ feature {NONE} -- Agents for docker
 feature {NONE} -- Implementation
 
 	update_mini_tool_bar (a_content: SD_CONTENT)
-			-- Show mini tool bar if exist, otherwise clear mini tool bar area.
+			-- Show mini tool bar if exist, otherwise clear mini tool bar area
 		require
 			not_void: a_content /= Void
 		do
@@ -440,10 +440,10 @@ feature {NONE} -- Implementation
 		end
 
 	internal_title_bar: SD_TITLE_BAR
-			-- Title bar.
+			-- Title bar
 
 	internal_docker_mediator: SD_DOCKER_MEDIATOR
-			-- Docker mediator.
+			-- Docker mediator
 
 invariant
 

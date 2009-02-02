@@ -40,13 +40,13 @@ feature {NONE} -- Initlization
 feature -- Query
 
 	has_rectangle (a_rect: EV_RECTANGLE): BOOLEAN
-			-- Redefine
+			-- <Precursor>
 		do
 			Result := a_rect.intersects (rectangle)
 		end
 
 	width: INTEGER
-			-- Redefine
+			-- <Precursor>
 		do
 			Result := widget.minimum_width
 		end

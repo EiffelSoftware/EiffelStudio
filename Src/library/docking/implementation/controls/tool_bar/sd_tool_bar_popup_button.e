@@ -68,7 +68,7 @@ feature -- Command
 feature -- Query
 
 	width: INTEGER
-			-- Redefine
+			-- <Precursor>
 		do
 			Result := Precursor + gap + dropdrown_width
 		end

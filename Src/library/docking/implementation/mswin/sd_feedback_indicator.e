@@ -267,7 +267,7 @@ feature {NONE} -- Implementation
 		end
 
 	dispose
-			-- Redefine
+			-- <Precursor>
 		do
 			Precursor {SD_DIALOG}
 			if should_destroy_bitmap then

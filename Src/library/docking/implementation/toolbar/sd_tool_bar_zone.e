@@ -339,7 +339,7 @@ feature -- Command
 		end
 
 	compute_minmum_size
-			-- Redefine
+			-- <Precursor>
 		require
 			not_destroyed: not is_destroyed
 		do

@@ -23,20 +23,20 @@ inherit
 feature {NONE}-- Initialization
 
 	initialize
-			-- Initialize `Current'.
+			-- Initialize `Current'
 		local
 			internal_pixmap: EV_PIXMAP
 		do
 			Precursor {EV_HORIZONTAL_BOX}
 
-				-- Create all widgets.
+				-- Create all widgets
 			create drawing_area
 			create tool_bar.make
 			create customize.make
 			create close.make
 			create internal_pixmap
 
-				-- Build widget structure.
+				-- Build widget structure
 			extend (drawing_area)
 			extend (tool_bar)
 			tool_bar.extend (customize)
@@ -61,7 +61,7 @@ feature {NONE}-- Initialization
 
 			set_all_attributes_using_constants
 
-				-- Connect events.
+				-- Connect events
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
 
@@ -87,7 +87,7 @@ feature {NONE} -- Implementation
 		end
 
 	user_initialization
-			-- Feature for custom initialization, called at end of `initialize'.
+			-- Feature for custom initialization, called at end of `initialize'
 		deferred
 		end
 
@@ -113,7 +113,7 @@ feature {NONE} -- Constant setting
 
 	set_attributes_using_integer_constants
 			-- Set all attributes relying on integer constants to the current
-			-- value of the associated constant.
+			-- value of the associated constant
 		local
 			i: INTEGER
 			arg1, arg2: INTEGER
@@ -149,7 +149,7 @@ feature {NONE} -- Constant setting
 
 	set_attributes_using_pixmap_constants
 			-- Set all attributes relying on pixmap constants to the current
-			-- value of the associated constant.
+			-- value of the associated constant
 		local
 			p: EV_PIXMAP
 		do
@@ -167,7 +167,7 @@ feature {NONE} -- Constant setting
 
 	set_attributes_using_font_constants
 			-- Set all attributes relying on font constants to the current
-			-- value of the associated constant.
+			-- value of the associated constant
 		local
 			f: EV_FONT
 		do
@@ -185,7 +185,7 @@ feature {NONE} -- Constant setting
 
 	set_attributes_using_color_constants
 			-- Set all attributes relying on color constants to the current
-			-- value of the associated constant.
+			-- value of the associated constant
 		local
 			c: EV_COLOR
 		do
@@ -203,7 +203,7 @@ feature {NONE} -- Constant setting
 
 	set_all_attributes_using_constants
 			-- Set all attributes relying on constants to the current
-			-- calue of the associated constant.
+			-- calue of the associated constant
 		do
 			set_attributes_using_string_constants
 			set_attributes_using_integer_constants
@@ -227,7 +227,7 @@ feature {NONE} -- Constant setting
 
 	integer_from_integer (an_integer: INTEGER): INTEGER
 			-- Return `an_integer', used for creation of
-			-- an agent that returns a fixed integer value.
+			-- an agent that returns a fixed integer value
 		do
 			Result := an_integer
 		end

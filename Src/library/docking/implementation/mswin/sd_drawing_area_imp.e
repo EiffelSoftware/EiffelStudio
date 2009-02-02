@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 feature {NONE} -- Implementation
 
 	update_for_pick_and_drop (a_starting: BOOLEAN)
-			-- Redefine
+			-- <Precursor>
 		local
 			l_app_imp: EV_APPLICATION_IMP
 			l_src: EV_PICK_AND_DROPABLE_IMP
@@ -56,7 +56,7 @@ feature {NONE} -- Implementation
 		end
 
 	interface: SD_DRAWING_AREA;
-			-- Redefine
+			-- <Precursor>
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."

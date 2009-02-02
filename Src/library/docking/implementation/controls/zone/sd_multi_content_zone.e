@@ -19,7 +19,7 @@ inherit
 feature -- Query
 
 	content: SD_CONTENT
-			-- Redefine
+			-- <Precursor>
 		do
 			if internal_notebook.selected_item_index /= 0 then
 				Result := contents.i_th (internal_notebook.selected_item_index)
@@ -31,7 +31,7 @@ feature -- Query
 		end
 
 	contents: ARRAYED_LIST [SD_CONTENT]
-			-- SD_CONTENTs managed by `Current'.
+			-- SD_CONTENTs managed by `Current'
 		do
 			Result := internal_notebook.contents
 		end
@@ -43,7 +43,7 @@ feature -- Query
 		end
 
 	last_content: SD_CONTENT
-			-- Last content when there is only one widget.
+			-- Last content when there is only one widget
 		require
 --			only_one_content: only_one_content
 		local
@@ -57,7 +57,7 @@ feature -- Query
 		end
 
 	tabs_shown: DS_HASH_TABLE [SD_NOTEBOOK_TAB, INTEGER]
-			-- Tabs which is shown.
+			-- Tabs which is shown
 		local
 			l_tabs: ARRAYED_LIST [SD_NOTEBOOK_TAB]
 		do
@@ -76,7 +76,7 @@ feature -- Query
 feature -- Command
 
 	extend (a_content: SD_CONTENT)
-			-- Redefine
+			-- <Precursor>
 		do
 			if not contents.has (a_content) then
 				internal_notebook.extend (a_content)
@@ -91,7 +91,7 @@ feature -- Command
 
 	extend_contents (a_contents: ARRAYED_LIST [SD_CONTENT])
 			-- Extend `a_contents'
-			-- This feature is faster than extend one by one.
+			-- This feature is faster than extend one by one
 		require
 			not_void: a_contents /= Void
 		do
@@ -103,7 +103,7 @@ feature -- Command
 		end
 
 	replace_user_widget (a_content: SD_CONTENT)
-			-- Replace `user_widget' which is related to `a_content'.
+			-- Replace `user_widget' which is related to `a_content'
 		require
 			has: has (a_content)
 		do
@@ -111,7 +111,7 @@ feature -- Command
 		end
 
 	prune (a_content: SD_CONTENT; a_focus: BOOLEAN)
-			-- Prune `a_content' from `Current'.
+			-- Prune `a_content' from `Current'
 		require
 			a_content_not_void: a_content /= Void
 			has_content: has (a_content)
@@ -123,7 +123,7 @@ feature -- Command
 		end
 
 	set_last_floating_width (a_width: INTEGER)
-			-- Redefine
+			-- <Precursor>
 		local
 			l_content: ARRAYED_LIST [SD_CONTENT]
 		do
@@ -139,7 +139,7 @@ feature -- Command
 		end
 
 	set_last_floating_height (a_height: INTEGER)
-			-- Redefine
+			-- <Precursor>
 		local
 			l_content: ARRAYED_LIST [SD_CONTENT]
 		do
@@ -155,7 +155,7 @@ feature -- Command
 		end
 
 	change_tab_tooltip (a_content: SD_CONTENT; a_tooltip: STRING_GENERAL)
-			-- Change `a_content' tab's tooltip to `a_tooltip'.
+			-- Change `a_content' tab's tooltip to `a_tooltip'
 		require
 			not_void: a_content /= Void
 			has: has (a_content)
@@ -169,7 +169,7 @@ feature -- Command
 feature {SD_OPEN_CONFIG_MEDIATOR} -- Save config
 
 	save_content_title (a_config_data: SD_INNER_CONTAINER_DATA)
-			-- Redefine.
+			-- <Precursor>
 		local
 			l_contents: like contents
 		do
@@ -187,19 +187,19 @@ feature {SD_OPEN_CONFIG_MEDIATOR} -- Save config
 feature -- States report
 
 	has (a_content: SD_CONTENT): BOOLEAN
-			-- Redefine.
+			-- <Precursor>
 		do
 			Result := contents.has (a_content)
 		end
 
 	only_one_content: BOOLEAN
-			-- If there only one SD_CONTENT in `Current'.
+			-- If there only one SD_CONTENT in `Current'?
 		do
 			Result := contents.count = 1
 		end
 
 	index_of (a_content: SD_CONTENT): INTEGER
-			-- Index of `i'th occurrence of `a_content'.
+			-- Index of `i'th occurrence of `a_content'
 		require
 			a_content_not_void: a_content /= Void
 		do
@@ -209,7 +209,7 @@ feature -- States report
 feature {NONE} -- Implementation
 
 	internal_notebook: SD_NOTEBOOK;
-			-- Container which `Current' in.
+			-- Container which `Current' belong to
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."

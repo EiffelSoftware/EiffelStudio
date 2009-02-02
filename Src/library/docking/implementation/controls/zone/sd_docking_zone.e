@@ -47,7 +47,7 @@ feature -- Command
 		end
 
 	close
-			-- Redefine
+			-- <Precursor>
 		do
 			internal_docking_manager.command.lock_update (Current, False)
 			Precursor {SD_SINGLE_CONTENT_ZONE}

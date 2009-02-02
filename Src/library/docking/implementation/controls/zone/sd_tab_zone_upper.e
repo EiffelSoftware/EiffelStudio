@@ -37,7 +37,7 @@ create
 feature {NONE} -- Initlization
 
 	make (a_content: SD_CONTENT)
-			-- Redefine.
+			-- <Precursor>
 		do
 			Precursor {SD_TAB_ZONE} (a_content)
 			internal_notebook.set_tab_position ({SD_NOTEBOOK}.tab_top)
@@ -52,13 +52,13 @@ feature {NONE} -- Initlization
 feature -- Query
 
 	is_maximized: BOOLEAN
-			-- Redefine
+			-- <Precursor>
 		do
 			Result := internal_notebook.is_maximized
 		end
 
 	title_area: EV_RECTANGLE
-			-- Redefine
+			-- <Precursor>
 		do
 			Result := internal_notebook.tab_area
 		end
@@ -66,13 +66,13 @@ feature -- Query
 feature -- Command
 
 	set_max (a_max: BOOLEAN)
-			-- Redefine.
+			-- <Precursor>
 		do
 			 internal_notebook.set_show_maximized (a_max)
 		end
 
 	show_notebook_contents (a_is_show: BOOLEAN)
-			-- Redefine
+			-- <Precursor>
 		do
 			Precursor {SD_UPPER_ZONE}(a_is_show)
 			if a_is_show then
@@ -85,7 +85,7 @@ feature -- Command
 feature {NONE} -- Implementation
 
 	on_select_tab
-			-- Redefine
+			-- <Precursor>
 		local
 			l_content: SD_CONTENT
 		do
@@ -99,7 +99,7 @@ feature {NONE} -- Implementation
 		end
 
 	on_normal_max_window
-			-- Redefine. (Just copy from SD_ZONE version)
+			-- <Precursor> (Just copy from SD_ZONE version)
 		local
 			l_split_area: EV_SPLIT_AREA
 		do
@@ -124,7 +124,7 @@ feature {NONE} -- Implementation
 		end
 
 	recover_to_normal_state
-			-- Redefine.
+			-- <Precursor>
 		do
 --			internal_notebook.set_show_maximized (False)
 			Precursor {SD_TAB_ZONE}
@@ -133,7 +133,7 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	internal_notebook: SD_NOTEBOOK_UPPER;
-			-- Notebook which tabs at top.
+			-- Notebook which tabs at top
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."

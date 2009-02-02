@@ -33,7 +33,7 @@ feature -- Command
 feature -- Query
 
 	width: INTEGER
-			-- Redefine
+			-- <Precursor>
 		do
 			Result := Precursor {SD_TOOL_BAR_RADIO_BUTTON}
 			if Result > maximum_width then
@@ -42,7 +42,7 @@ feature -- Query
 		end
 
 	text_rectangle: EV_RECTANGLE
-			-- Redefine
+			-- <Precursor>
 		local
 			l_text_width: INTEGER
 		do

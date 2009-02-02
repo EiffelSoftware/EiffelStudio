@@ -17,7 +17,7 @@ inherit
 feature -- Factory method
 
 	hot_zone (a_zone: SD_ZONE): SD_HOT_ZONE
-			-- Redefine.
+			-- <Precursor>
 		local
 			l_docking_zone: SD_DOCKING_ZONE_NORMAL
 			l_docking_zone_upper: SD_DOCKING_ZONE_UPPER
@@ -41,7 +41,7 @@ feature -- Factory method
 		end
 
 	hot_zone_main (a_zone: SD_ZONE; a_docking_manager: SD_DOCKING_MANAGER): SD_HOT_ZONE
-			-- Redefine.
+			-- <Precursor>
 		do
 			if a_zone.type = {SD_ENUMERATION}.editor then
 				Result := create {SD_HOT_ZONE_MAIN_EDITOR}.make (docker_mediator)
@@ -54,7 +54,7 @@ feature -- Factory method
 feature {NONE}-- Implementation
 
 	hot_zone_docking (a_zone: SD_DOCKING_ZONE_NORMAL): SD_HOT_ZONE_DOCKING
-			-- Hot zone for SD_DOCKING_ZONE.
+			-- Hot zone for SD_DOCKING_ZONE
 		require
 			a_zone_not_void: a_zone /= Void
 		do
@@ -64,7 +64,7 @@ feature {NONE}-- Implementation
 		end
 
 	hot_zone_docking_upper (a_zone: SD_DOCKING_ZONE_UPPER): SD_HOT_ZONE_DOCKING_UPPER
-			-- Hot zone for SD_DOCKING_ZONE.
+			-- Hot zone for SD_DOCKING_ZONE
 		require
 			a_zone_not_void: a_zone /= Void
 		do
@@ -74,7 +74,7 @@ feature {NONE}-- Implementation
 		end
 
 	hot_zone_tab (a_zone: SD_TAB_ZONE): SD_HOT_ZONE_TAB
-			-- Hot zone for SD_TAB_ZONE.
+			-- Hot zone for SD_TAB_ZONE
 		require
 			a_zone_not_void: a_zone /= Void
 		do

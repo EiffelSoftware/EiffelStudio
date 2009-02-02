@@ -53,7 +53,7 @@ create
 feature {NONE} -- Initlization
 
 	make (a_floating_state: SD_FLOATING_STATE)
-			-- Creation method.
+			-- Creation method
 		require
 			a_floating_state_not_void: a_floating_state /= Void
 		do
@@ -100,8 +100,8 @@ feature {SD_OPEN_CONFIG_MEDIATOR} -- Save config
 feature -- Command
 
 	update_title_bar
-			-- Remove/add title bar if `Current' content count changed.
-			-- Destroy Current if no zone in.
+			-- Remove/add title bar if `Current' content count changed
+			-- Destroy Current if no zone in
 		local
 			l_title_zone: SD_TITLE_BAR_REMOVEABLE
 			l_env: EV_ENVIRONMENT
@@ -144,7 +144,7 @@ feature -- Command
 		end
 
 	show
-			-- Show `Current'.
+			-- Show `Current'
 		do
 			if internal_shared.allow_window_to_back then
 				show_allow_to_back
@@ -156,7 +156,7 @@ feature -- Command
 		end
 
 	hide
-			-- Redefine.
+			-- <Precursor>
 		do
 			last_screen_x := screen_x
 			last_screen_y := screen_y
@@ -178,12 +178,12 @@ feature -- Command
 		end
 
 	extend (a_content: SD_CONTENT)
-			-- Redefine.
+			-- <Precursor>
 		do
 		end
 
 	has (a_content: SD_CONTENT): BOOLEAN
-			-- Redefine.
+			-- <Precursor>
 		do
 			Result := has_recursive (a_content.user_widget)
 		end
@@ -191,13 +191,13 @@ feature -- Command
 feature -- Query
 
 	type: INTEGER
-			-- Redefine.
+			-- <Precursor>
 		do
 			Result := {SD_ENUMERATION}.tool
 		end
 
 	state: SD_STATE
-			-- Redefine.
+			-- <Precursor>
 		local
 			l_zone: SD_ZONE
 		do
@@ -212,7 +212,7 @@ feature -- Query
 		end
 
 	inner_container: like internal_inner_container
-			-- Main container which is  a SD_MULTI_DOCK_AREA.
+			-- Main container which is a SD_MULTI_DOCK_AREA
 		do
 			Result := internal_inner_container
 		ensure
@@ -220,7 +220,7 @@ feature -- Query
 		end
 
 	content: SD_CONTENT
-			-- Redefine.
+			-- <Precursor>
 		local
 			l_zone: SD_ZONE
 		do
@@ -256,11 +256,11 @@ feature -- Query
 		end
 
 	last_width, last_height, last_screen_x, last_screen_y: INTEGER
-			-- On GTK, `width', `height', `screen_x' and `screen_y' are 0 if Current hidden.
-			-- See bug#13685 which only happens on GTK.
+			-- On GTK, `width', `height', `screen_x' and `screen_y' are 0 if Current hidden
+			-- See bug#13685 which only happens on GTK
 
 	set_position (a_screen_x, a_screen_y: INTEGER)
-			-- Redefine
+			-- <Precursor>
 		do
 			last_screen_x := a_screen_x
 			last_screen_y := a_screen_y
@@ -272,7 +272,7 @@ feature -- Query
 		end
 
 	set_size (a_width, a_height: INTEGER)
-			-- Redefine
+			-- <Precursor>
 		do
 			last_width := a_width
 			last_height := a_height
@@ -290,7 +290,7 @@ feature -- Query
 			-- If any of `last_width', `last_height', `last_screen_x' or `last_screen_y' have been set?
 
 	screen_y: INTEGER
-			-- Redefine
+			-- <Precursor>
 		do
 			if not is_displayed and then is_last_position_recorded then
 				Result := last_screen_y
@@ -300,7 +300,7 @@ feature -- Query
 		end
 
 	screen_x: INTEGER
-			-- Redefine
+			-- <Precursor>
 		do
 			if not is_displayed and then is_last_position_recorded then
 				Result := last_screen_x
@@ -310,7 +310,7 @@ feature -- Query
 		end
 
 	width: INTEGER
-			-- Redefine
+			-- <Precursor>
 		do
 			if not is_displayed and then is_last_size_recorded then
 				Result := last_width
@@ -320,7 +320,7 @@ feature -- Query
 		end
 
 	height: INTEGER
-			-- Redefine
+			-- <Precursor>
 		do
 			if not is_displayed and then is_last_size_recorded then
 				Result := last_height
@@ -332,25 +332,25 @@ feature -- Query
 feature {NONE} -- Implementation
 
 	internal_floating_state: SD_FLOATING_STATE
-			-- Zone state.
+			-- Zone state
 
 	internal_vertical_box: EV_VERTICAL_BOX
-			-- Vertical box which contain `internal_title_bar' and `internal_inner_container'.
+			-- Vertical box which contain `internal_title_bar' and `internal_inner_container'
 
 	internal_inner_container: SD_MULTI_DOCK_AREA
-			-- Main container allow dock SD_ZONEs.
+			-- Main container allow dock SD_ZONEs
 
 	internal_title_bar: SD_TITLE_BAR
-			-- Title bar.
+			-- Title bar
 
 	docker_mediator: SD_DOCKER_MEDIATOR
-			-- Docker mediator.
+			-- Docker mediator
 
 	pointer_press_offset_x, pointer_press_offset_y: INTEGER
-			-- When user clicked title bar, x y offset.
+			-- When user clicked title bar, x y offset
 
 	all_zones: ARRAYED_LIST [SD_ZONE]
-			-- All zones in Current.
+			-- All zones in Current
 		do
 			create Result.make (1)
 			if inner_container.readable then
@@ -361,7 +361,7 @@ feature {NONE} -- Implementation
 		end
 
 	all_zones_in_current (a_widget: EV_WIDGET; a_zones: ARRAYED_LIST [SD_ZONE])
-			-- Find all zones in Current.
+			-- Find all zones in Current
 		require
 			a_widget_not_void: a_widget /= Void
 			a_zones_not_void: a_zones /= Void
@@ -386,7 +386,7 @@ feature {NONE} -- Implementation
 		end
 
 	extend_title_bar
-			-- Extend title bar.
+			-- Extend title bar
 		do
 			if not internal_vertical_box.has (internal_title_bar) then
 				internal_vertical_box.start
@@ -397,7 +397,7 @@ feature {NONE} -- Implementation
 		end
 
 	count_zone_display (a_container: EV_CONTAINER)
-			-- Count zone which is displayed.
+			-- Count zone which is displayed
 		require
 			a_container_not_void: a_container /= Void
 		local
@@ -433,7 +433,7 @@ feature {NONE} -- Implementation
 		end
 
 	set_all_title_bar (a_widget: EV_WIDGET)
-			-- Set all zones' title bar in `Current' show normal\max.
+			-- Set all zones' title bar in `Current' show normal\max
 		require
 			a_widget_not_void: a_widget /= Void
 		local
@@ -454,12 +454,12 @@ feature {NONE} -- Implementation
 			-- How many zones are displayed?
 
 	only_one_zone_displayed: SD_ZONE
-			-- Zone which is only one displayed.
+			-- Zone which is only one displayed
 
 feature {NONE} -- Agents
 
 	on_dialog_focus_in
-			-- Handle Current dialog focus in actions.
+			-- Handle Current dialog focus in actions
 		local
 			l_last_zone: SD_ZONE
 			l_zones: like all_zones
@@ -488,7 +488,7 @@ feature {NONE} -- Agents
 		end
 
 	on_dialog_focus_out
-			-- Handle Current dialog focus out actions.
+			-- Handle Current dialog focus out actions
 		local
 			l_last_zone: SD_ZONE
 		do
@@ -509,7 +509,7 @@ feature {NONE} -- Agents
 		end
 
 	on_pointer_motion (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
-			-- Forward pointer motion actions to docker mediator.
+			-- Forward pointer motion actions to docker mediator
 		do
 			debug ("docking")
 				print ("%NSD_FLOATING_ZONE on_pointer_motion screen_x, screen_y: " + a_screen_x.out + " " + a_screen_y.out)
@@ -520,7 +520,7 @@ feature {NONE} -- Agents
 		end
 
 	on_close
-			-- Handle close request.
+			-- Handle close request
 		local
 			l_zones: ARRAYED_LIST [SD_ZONE]
 			l_multi_zone: SD_MULTI_CONTENT_ZONE
@@ -553,7 +553,7 @@ feature {NONE} -- Agents
 		end
 
 	on_title_bar_drag (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
-			-- Start `docker_mediator'.
+			-- Start `docker_mediator'
 		do
 			-- We should check if `docker_mediator' is void since `on_drag_started' will be called multi times when starting dragging on GTK
 			if docker_mediator = Void then
@@ -567,7 +567,7 @@ feature {NONE} -- Agents
 		end
 
 	on_pointer_button_release (a_x, a_y, a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
-			-- Stop `docker_mediator'.
+			-- Stop `docker_mediator'
 		do
 			if a_button = 1 and docker_mediator /= Void then
 				disable_capture
@@ -580,14 +580,14 @@ feature {NONE} -- Agents
 		end
 
 	on_cancel_dragging
-			-- Handle cancel dragging from SD_DOCKER_MEDIATOR.
+			-- Handle cancel dragging from SD_DOCKER_MEDIATOR
 		do
 			disable_capture
 			docker_mediator := Void
 		end
 
 	on_resize (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER)
-			-- Handle resize actions.
+			-- Handle resize actions
 		local
 			l_zone: SD_ZONE
 		do

@@ -73,7 +73,7 @@ feature {NONE} -- Initlization
 		end
 
 	initialize
-			-- Redefine
+			-- <Precursor>
 		do
 			implementation.set_state_flag ({EV_ANY_I}.interface_is_initialized_flag, True)
 		end
@@ -556,7 +556,7 @@ feature {SD_TOOL_BAR_DRAWER_IMP, SD_TOOL_BAR_ITEM, SD_GENERIC_TOOL_BAR} -- Inter
 		end
 
 	item_at_position (a_screen_x, a_screen_y: INTEGER_32): SD_TOOL_BAR_ITEM
-			-- Redefine
+			-- <Precursor>
 		do
 			Result := tool_bar.item_at_position (a_screen_x, a_screen_y)
 		end
@@ -585,7 +585,7 @@ feature {NONE} -- Implementation
 		end
 
 	on_pointer_release (a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32)
-			-- Redefine
+			-- <Precursor>
 		do
 		end
 
@@ -648,20 +648,6 @@ feature {NONE} -- Implementation
 			-- <Precursor>
 		do
 			Result := tool_bar.internal_shared
-		end
-
-feature -- Contract support
-
-	line_width: INTEGER
-			-- Redefine `line_width' from {EV_DRAWABLE} to make sure invariant not broken.
-			-- See bug#13387.
-		do
-		end
-
-	drawing_mode: INTEGER
-			-- Redefine `drawing_mode' from {EV_DRAWABLE} to make sure invariant not broken.
-			-- See bug#13387.
-		do
 		end
 
 note

@@ -20,7 +20,7 @@ create
 feature {NONE} -- Initlization
 
 	make (a_zone: SD_DOCKING_ZONE; a_docker_mediator: SD_DOCKER_MEDIATOR)
-			-- Creation method.
+			-- Creation method
 		require
 			a_zone_not_void: a_zone /= Void
 		do
@@ -36,7 +36,7 @@ feature {NONE} -- Initlization
 feature -- Redefine
 
 	update_for_feedback (a_screen_x, a_screen_y: INTEGER; a_dockable: BOOLEAN): BOOLEAN
-			-- Redefine
+			-- <Precursor>
 		local
 			l_half_height, l_half_width: INTEGER
 			l_left, l_top, l_width, l_height: INTEGER
@@ -128,7 +128,7 @@ feature -- Redefine
 		end
 
 	apply_change  (a_screen_x, a_screen_y: INTEGER): BOOLEAN
-			-- Redefine
+			-- <Precursor>
 		local
 			l_docking_zone: SD_DOCKING_ZONE
 			l_caller: SD_ZONE
@@ -160,31 +160,31 @@ feature -- Redefine
 		end
 
 	clear_indicator
-			-- Redefine
+			-- <Precursor>
 		do
 --			internal_zone.set_pointer_style ((create {EV_STOCK_PIXMAPS}).standard_cursor)
 		end
 
 	build_indicator
-			-- Redefine
+			-- <Precursor>
 		do
 
 		end
 
 	update_for_indicator (a_screen_x, a_screen_y: INTEGER): BOOLEAN
-			-- Redefine
+			-- <Precursor>
 		do
 		end
 
 	update_for_indicator_clear (a_screen_x, a_screen_y: INTEGER)
-			-- Redefine
+			-- <Precursor>
 		do
 		end
 
 feature {NONE} -- Implementation
 
 	set_rectangle (a_rect: EV_RECTANGLE)
-			-- Set the rectangle which allow user to dock.
+			-- Set the rectangle which allow user to dock
 		require
 			a_rect_not_void: a_rect /= Void
 		local
@@ -211,7 +211,7 @@ feature {NONE} -- Implementation
 			-- Caller
 
 	internal_rectangle_left, internal_rectangle_right, internal_rectangle_top, internal_rectangle_bottom, internal_rectangle_center: EV_RECTANGLE
-			-- Five rectangle areas which allow user dock a window in this zone.
+			-- Five rectangle areas which allow user dock a window in this zone
 
 invariant
 

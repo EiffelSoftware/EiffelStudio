@@ -33,37 +33,37 @@ feature {NONE} -- Initlization
 feature -- Command
 
 	update_for_indicator (a_screen_x, a_screen_y: INTEGER): BOOLEAN
-			-- Redefine
+			-- <Precursor>
 		do
 
 		end
 
 	update_for_indicator_clear (a_screen_x, a_screen_y: INTEGER)
-			-- Redefine
+			-- <Precursor>
 		do
 
 		end
 
 	clear_indicator
-			-- Redefine
+			-- <Precursor>
 		do
 			internal_docking_manager.main_window.set_pointer_style ((create {EV_STOCK_PIXMAPS}).standard_cursor)
 		end
 
 	build_indicator
-			-- Redefine
+			-- <Precursor>
 		do
 
 		end
 
 	apply_change (a_screen_x, a_screen_y: INTEGER): BOOLEAN
-			-- Redefine
+			-- <Precursor>
 		do
 
 		end
 
 	update_for_feedback (a_screen_x, a_screen_y: INTEGER; a_dockable: BOOLEAN): BOOLEAN
-			-- Redefine
+			-- <Precursor>
 		local
 			l_pixmaps: EV_STOCK_PIXMAPS
 		do

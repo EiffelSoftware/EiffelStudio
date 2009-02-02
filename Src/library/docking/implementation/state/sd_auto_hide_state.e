@@ -89,10 +89,10 @@ feature {NONE} -- Initlization
 			auto_hide_panel.set_tab_with_friend (tab_stub, a_friend)
 		end
 
-feature -- Redefine.
+feature -- Redefine
 
 	set_focus (a_content: SD_CONTENT)
-			-- Redefine
+			-- <Precursor>
 		do
 			show
 			if zone /= Void then
@@ -102,7 +102,7 @@ feature -- Redefine.
 		end
 
 	close
-			-- Redefine
+			-- <Precursor>
 		do
 			Precursor {SD_STATE}
 			internal_close
@@ -111,7 +111,7 @@ feature -- Redefine.
 		end
 
 	stick (a_direction: INTEGER)
-			-- Redefine. `a_direction' is useless. This feature used by SD_DOCKING_STATE and SD_CONTENT.set_auto_hide.
+			-- <Precursor> `a_direction' is useless. This feature used by SD_DOCKING_STATE and SD_CONTENT.set_auto_hide.
 		local
 			l_retried: BOOLEAN
 		do
@@ -140,7 +140,7 @@ feature -- Redefine.
 		end
 
  	change_title (a_title: STRING_GENERAL; a_content: SD_CONTENT)
-			-- Redefine
+			-- <Precursor>
 		do
 			tab_stub.set_text (a_title)
 		ensure then
@@ -148,13 +148,13 @@ feature -- Redefine.
 		end
 
 	change_pixmap (a_pixmap: EV_PIXMAP; a_content: SD_CONTENT)
-			-- Redefine
+			-- <Precursor>
 		do
 			tab_stub.on_expose (0, 0, tab_stub.width, tab_stub.height)
 		end
 
 	restore (a_data: SD_INNER_CONTAINER_DATA; a_container: EV_CONTAINER)
-			-- Redefine.
+			-- <Precursor>
 		do
 			-- This class can created by make (not like SD_DOCKING_STATE, created by INTERNAL), so this routine do less work.
 			change_state (Current)
@@ -164,7 +164,7 @@ feature -- Redefine.
 		end
 
 	record_state
-			-- Redefine.
+			-- <Precursor>
 		do
 			if direction = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.right then
 				width_height := zone.width
@@ -184,7 +184,7 @@ feature -- Redefine.
 		end
 
 	dock_at_top_level (a_multi_dock_area: SD_MULTI_DOCK_AREA)
-			-- Redefine.
+			-- <Precursor>
 			-- It's completely same as SD_STATE_VOID, merge?
 		local
 			l_docking_state: SD_DOCKING_STATE
@@ -205,7 +205,7 @@ feature -- Redefine.
 		end
 
 	change_zone_split_area (a_target_zone: SD_ZONE; a_direction: INTEGER)
-			-- Redefine.
+			-- <Precursor>
 		local
 			l_docking_state: SD_DOCKING_STATE
 		do
@@ -226,7 +226,7 @@ feature -- Redefine.
 		end
 
 	show
-			-- Redefine.
+			-- <Precursor>
 		local
 			l_retried: BOOLEAN
 		do
@@ -248,7 +248,7 @@ feature -- Redefine.
 		end
 
 	hide
-			-- Redefine.
+			-- <Precursor>
 		local
 			l_state: SD_STATE_VOID
 			l_tab_group: ARRAYED_LIST [SD_TAB_STUB]
@@ -268,7 +268,7 @@ feature -- Redefine.
 		end
 
 	set_user_widget (a_widget: EV_WIDGET)
-			-- Redefine
+			-- <Precursor>
 		do
 			if zone /= Void then
 				zone.window.set_user_widget (a_widget)
@@ -372,14 +372,14 @@ feature {NONE} -- Implementation functions.
 		end
 
 	move_to_docking_zone (a_target_zone: SD_DOCKING_ZONE; a_first: BOOLEAN)
-			-- Redefine
+			-- <Precursor>
 			-- FIXIT: It's similiar to SD_DOCKING_STATE move_to_docking_zone, merge?
 		do
 			move_to_zone_internal (a_target_zone, a_first)
 		end
 
 	move_to_tab_zone (a_target_zone: SD_TAB_ZONE; a_index: INTEGER_32)
-			-- Redefine
+			-- <Precursor>
 			-- FIXIT: It's similiar to SD_DOCKING_STATE move_to_tab_zone, merge?
 		do
 			if a_index = 1 then

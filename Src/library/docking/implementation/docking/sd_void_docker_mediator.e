@@ -25,7 +25,7 @@ create
 feature {NONE} -- Initlization
 
 	make (a_caller: like caller; a_docking_manager: SD_DOCKING_MANAGER)
-			-- Redefine
+			-- <Precursor>
 		do
 			caller := a_caller
 			docking_manager := a_docking_manager
@@ -35,7 +35,7 @@ feature {NONE} -- Initlization
 feature -- Hanlde pointer events
 
 	start_tracing_pointer (a_offset_x, a_offset_y: INTEGER_32)
-			-- Redefine
+			-- <Precursor>
 		local
 			l_env: EV_ENVIRONMENT
 		do
@@ -49,21 +49,21 @@ feature -- Hanlde pointer events
 		end
 
 	cancel_tracing_pointer
-			-- Redefine
+			-- <Precursor>
 		do
 			is_tracing := False
 			clear_up
 		end
 
 	end_tracing_pointer (a_screen_x, a_screen_y: INTEGER_32)
-			-- Redefine
+			-- <Precursor>
 		do
 			is_tracing := False
 			clear_up
 		end
 
 	on_pointer_motion (a_screen_x, a_screen_y: INTEGER_32)
-			-- Redefine
+			-- <Precursor>
 		local
 			l_floating_zone: SD_FLOATING_ZONE
 			l_orignal_multi_dock_area: SD_MULTI_DOCK_AREA
@@ -91,7 +91,7 @@ feature -- Hanlde pointer events
 feature {NONE} -- Implementation
 
 	clear_up
-			-- Redefine
+			-- <Precursor>
 		local
 			l_env: EV_ENVIRONMENT
 		do

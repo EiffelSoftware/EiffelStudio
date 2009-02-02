@@ -31,7 +31,7 @@ inherit
 feature {NONE} -- Implementation
 
 	initialize
-			-- Redefine
+			-- <Precursor>
 		local
 			l_platform: PLATFORM
 		do

@@ -27,7 +27,7 @@ feature -- Command
 		end
 
 	is_solaris_cde: BOOLEAN
-			-- Redefine
+			-- <Precursor>
 		do
 		end
 

@@ -27,7 +27,7 @@ create
 feature {NONE} -- Initlization
 
 	make (a_screen_x, a_screen_y: INTEGER; a_docking_manager: SD_DOCKING_MANAGER; a_visible: BOOLEAN)
-			-- Creation method.
+			-- Creation method
 		require
 			a_docking_manager_not_void: a_docking_manager /= Void
 		do
@@ -44,10 +44,10 @@ feature {NONE} -- Initlization
 			set: internal_docking_manager = a_docking_manager
 		end
 
-feature -- Redefine.
+feature -- Redefine
 
 	dock_at_top_level (a_multi_dock_area: SD_MULTI_DOCK_AREA)
-			-- Redefine.
+			-- <Precursor>
 		local
 			l_width_height: INTEGER
 			l_widget: EV_WIDGET
@@ -86,12 +86,12 @@ feature -- Redefine.
 		end
 
 	stick (a_direction: INTEGER)
-			-- Redefine.
+			-- <Precursor>
 		do
 		end
 
 	change_zone_split_area (a_target_zone: SD_ZONE; a_direction: INTEGER)
-			-- Redefine.
+			-- <Precursor>
 		local
 			l_zone: SD_ZONE
 			l_current_item: EV_WIDGET
@@ -107,7 +107,7 @@ feature -- Redefine.
 		end
 
 	move_to_docking_zone (a_target_zone: SD_DOCKING_ZONE; a_first: BOOLEAN)
-			-- Redefine.
+			-- <Precursor>
 		local
 			l_zones: ARRAYED_LIST [SD_ZONE]
 			l_tab_zone, l_tab_zone_source: SD_TAB_ZONE
@@ -147,7 +147,7 @@ feature -- Redefine.
 		end
 
 	move_to_tab_zone (a_target_zone: SD_TAB_ZONE; a_index: INTEGER)
-			-- Redefine.
+			-- <Precursor>
 		local
 			l_zones: ARRAYED_LIST [SD_ZONE]
 			l_tab_zone_source: SD_TAB_ZONE
@@ -182,7 +182,7 @@ feature -- Redefine.
 		end
 
 	change_state (a_state: SD_STATE)
-			-- Redefine
+			-- <Precursor>
 		do
 			content.change_state (a_state)
 			a_state.set_last_floating_height (internal_zone.height)
@@ -193,43 +193,43 @@ feature -- Redefine.
 		end
 
 	record_state
-			-- Redefine
+			-- <Precursor>
 		do
 			last_floating_width := internal_zone.width
 			last_floating_height := internal_zone.height
 		end
 
 	content_void: BOOLEAN
-			-- Redefine.
+			-- <Precursor>
 		do
 			Result := not internal_zone.inner_container.readable
 		end
 
 	internal_zone: SD_FLOATING_ZONE
-			-- Redefine.
+			-- <Precursor>
 
 	zone: SD_ZONE
-			-- Redefine.
+			-- <Precursor>
 		do
 			Result := internal_zone
 		end
 
 	set_user_widget (a_widget: EV_WIDGET)
-			-- Redefine
+			-- <Precursor>
 		do
-			-- Do nothing.
+			-- Do nothing
 		end
 
 feature -- Command
 
 	update_title_bar
-			-- Update title bar.
+			-- Update title bar
 		do
 			internal_zone.update_title_bar
 		end
 
 	set_size (a_width, a_height: INTEGER)
-			-- Set floating zone size.
+			-- Set floating zone size
 		do
 			internal_zone.set_size (a_width, a_height)
 			last_floating_width := a_width
@@ -239,7 +239,7 @@ feature -- Command
 feature -- Query
 
 	inner_container: SD_MULTI_DOCK_AREA
-			-- Main container of `Current'.
+			-- Main container of Current
 		do
 			Result := internal_zone.inner_container
 		ensure
@@ -249,7 +249,7 @@ feature -- Query
 feature {NONE} -- Implementation
 
 	set_all_zones_direction (a_direction: INTEGER)
-			-- Set all zones direction.
+			-- Set all zones direction
 		local
 			l_zones: ARRAYED_LIST [SD_ZONE]
 		do
@@ -265,7 +265,7 @@ feature {NONE} -- Implementation
 		end
 
 	change_zone_split_area_whole_content (a_target_zone: SD_ZONE; a_direction: INTEGER)
-			-- Change whole floating zone contents to `a_target_zone'.
+			-- Change whole floating zone contents to `a_target_zone'
 		require
 			a_target_zone_not_void: a_target_zone /= Void
 			a_direction_valid: a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom

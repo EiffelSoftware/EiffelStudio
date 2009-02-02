@@ -72,21 +72,21 @@ feature {NONE}  -- Initlization
 feature -- Command
 
 	init
-			-- Update size and initilize search issues before show.
+			-- Update size and initilize search issues before shown
 		do
 			init_search
 			update_size
 		end
 
 	show
-			-- Redefine
+			-- <Precursor>
 		do
 			Precursor {EV_POPUP_WINDOW}
 			internal_text_box.set_focus
 		end
 
 	extend_hide_tab (a_tab: SD_NOTEBOOK_TAB)
-			-- Extend a_tab which is hide.
+			-- Extend `a_tab' which is hidden
 		require
 			not_void: a_tab /= Void
 		do
@@ -94,17 +94,17 @@ feature -- Command
 		end
 
 	extend_shown_tab (a_tab: SD_NOTEBOOK_TAB)
-			-- Extend a_tab which is shown.
+			-- Extend `a_tab' which is shown
 		require
 			not_void: a_tab /= Void
 		do
 			extend_tab_imp (a_tab, True)
 		end
 
-feature {NONE} -- Implementation agents.
+feature {NONE} -- Implementation agents
 
 	on_text_key_press (a_key: EV_KEY)
-			-- Handle `internal_text_box' key press.
+			-- Handle `internal_text_box' key press
 		local
 			l_stop: BOOLEAN
 			l_selected_tab: SD_NOTEBOOK_TAB
@@ -132,7 +132,7 @@ feature {NONE} -- Implementation agents.
 		end
 
 	current_focus_label: SD_TOOL_BAR_FONT_BUTTON
-			-- Current focused label.
+			-- Current focused label
 		local
 			l_items: ARRAYED_SET [SD_TOOL_BAR_ITEM]
 			l_toggle_button: SD_TOOL_BAR_FONT_BUTTON
@@ -153,7 +153,7 @@ feature {NONE} -- Implementation agents.
 		end
 
 	on_focus_out
-			-- Handle focus out.
+			-- Handle focus out
 		do
 			if not internal_text_box.has_focus and not internal_tool_bar.has_focus then
 				destroy
@@ -164,7 +164,7 @@ feature {NONE} -- Implementation agents.
 		end
 
 	on_label_selected (a_index: INTEGER)
-			-- Handle user click one label.
+			-- Handle user click one label
 		require
 			a_index_valid: a_index > 0 and a_index <= items_and_tabs.count
 		local
@@ -187,7 +187,7 @@ feature {NONE} -- Implementation agents.
 		end
 
 	on_search_text_change
-			-- Handle `internal_text_box' text change.
+			-- Handle `internal_text_box' text change
 		local
 			l_search_result: ARRAYED_LIST [INTEGER]
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
@@ -249,7 +249,7 @@ feature {NONE} -- Implementation agents.
 		end
 
 	disable_select_all_item
-			--	Disable select all items.
+			--	Disable select all items
 		local
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			l_item: SD_TOOL_BAR_FONT_BUTTON
@@ -268,7 +268,7 @@ feature {NONE} -- Implementation agents.
 		end
 
 	next_selected_item (a_next: BOOLEAN): SD_TOOL_BAR_FONT_BUTTON
-			-- Next item base on current selected item.
+			-- Next item base on current selected item
 		local
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			l_item: SD_TOOL_BAR_FONT_BUTTON
@@ -302,7 +302,7 @@ feature {NONE} -- Implementation agents.
 		end
 
 	on_tool_bar_key_press (a_key: EV_KEY)
-			-- Handle `internal_label_box' tab key press.
+			-- Handle `internal_label_box' tab key press
 		local
 			l_label: SD_TOOL_BAR_ITEM
 			l_text: STRING
@@ -362,10 +362,10 @@ feature {NONE} -- Implementation agents.
 			end
 		end
 
-feature {NONE} -- Implementation functions.
+feature {NONE} -- Implementation functions
 
 	update_size
-			-- Update current size base on current minmum size.
+			-- Update current size base on current minmum size
 		local
 			l_max_height: INTEGER
 			l_screen: EV_SCREEN
@@ -406,7 +406,7 @@ feature {NONE} -- Implementation functions.
 		end
 
 	extend_tab_imp (a_tab: SD_NOTEBOOK_TAB; a_show: BOOLEAN)
-			-- Extend a_tab.
+			-- Extend `a_tab'
 		require
 			not_void: a_tab /= Void
 		local
@@ -442,7 +442,7 @@ feature {NONE} -- Implementation functions.
 		end
 
 	find_tab_by_label (a_label: SD_TOOL_BAR_ITEM): SD_NOTEBOOK_TAB
-			-- Find a tab by a_label.
+			-- Find a tab by `a_label'
 		require
 			a_label_not_void: a_label /= Void
 			has: internal_tool_bar.has (a_label)
@@ -486,7 +486,7 @@ feature {NONE} -- Implementation functions.
 		end
 
 	init_search
-			-- Initialize search issues.
+			-- Initialize search issues
 		local
 			l_texts: ARRAYED_LIST [STRING_32]
 		do
@@ -505,7 +505,7 @@ feature {NONE} -- Implementation functions.
 		end
 
 	widget_has_x_y (a_widget: EV_WIDGET;  a_screen_x, a_screen_y: INTEGER): BOOLEAN
-			-- If a_widget has a_screen_x, a_screen_y?
+			-- If `a_widget' has `a_screen_x', `a_screen_y'?
 		require
 			a_widget_not_void: a_widget /= Void
 		do
@@ -527,31 +527,31 @@ feature {NONE}  --Implementation attributes.
 		-- Top level box
 
 	internal_scroll_area: EV_SCROLLABLE_AREA
-			-- Scrollable area which contain `internal_vertical_box'.
+			-- Scrollable area which contain `internal_vertical_box'
 
 	internal_tool_bar: SD_TOOL_BAR
-			-- Tool bar to show the tabs.
+			-- Tool bar to show the tabs
 
 	internal_notebook: SD_NOTEBOOK
-			-- Notebook which current is belong to.
+			-- Notebook which current belong to
 
 	internal_vertical_box: EV_VERTICAL_BOX
-			-- Box which has `internal_text_box' and `internal_label_box'.
+			-- Box which has `internal_text_box' and `internal_label_box'
 
 	internal_text_box: EV_TEXT_FIELD
-			-- Text field for search input.
+			-- Text field for search input
 
 	text_finder: SD_TEXT_FINDER [STRING_32]
-			-- Find text.
+			-- Find text
 
 	internal_shared: SD_SHARED
-			-- All singletons.
+			-- All singletons
 
 	items_and_tabs: ARRAYED_LIST [TUPLE [tool_bar_item: SD_TOOL_BAR_ITEM; notebook_tab: SD_NOTEBOOK_TAB]]
-			-- Tool bar items and notebook tabs which are related.
+			-- Tool bar items and notebook tabs which are related
 
 	max_screen_height_proportion: REAL = 0.50
-			-- Max proprotion of height base on screen.
+			-- Max proprotion of height base on screen
 
 invariant
 

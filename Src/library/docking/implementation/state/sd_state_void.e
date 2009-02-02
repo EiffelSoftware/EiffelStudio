@@ -28,7 +28,7 @@ create
 feature {NONE}  -- Initlization
 
 	make (a_content: SD_CONTENT)
-			-- Creation method.
+			-- Creation method
 		require
 			a_content_not_void: a_content /= Void
 		do
@@ -44,22 +44,22 @@ feature {NONE}  -- Initlization
 			set: internal_docking_manager = a_content.docking_manager
 		end
 
-feature -- Redefine.
+feature -- Redefine
 
 	zone: SD_ZONE
-			-- Redefine.
+			-- <Precursor>
 		do
 		end
 
 	restore (a_data: SD_INNER_CONTAINER_DATA; a_container: EV_CONTAINER)
-			-- Redefine.
+			-- <Precursor>
 		do
 			content.set_visible (False)
 			initialized := True
 		end
 
 	dock_at_top_level (a_multi_dock_area: SD_MULTI_DOCK_AREA)
-			-- Redefine.
+			-- <Precursor>
 		local
 			l_docking_state: SD_DOCKING_STATE
 		do
@@ -78,7 +78,7 @@ feature -- Redefine.
 		end
 
 	change_zone_split_area (a_target_zone: SD_ZONE; a_direction: INTEGER)
-			-- Redefine.
+			-- <Precursor>
 		local
 			l_docking_state: SD_DOCKING_STATE
 		do
@@ -97,7 +97,7 @@ feature -- Redefine.
 		end
 
 	stick (a_direction: INTEGER)
-			-- Redefine.
+			-- <Precursor>
 		local
 			l_auto_hide_state: SD_AUTO_HIDE_STATE
 		do
@@ -111,7 +111,7 @@ feature -- Redefine.
 		end
 
 	float (a_x, a_y: INTEGER)
-			-- Redefine.
+			-- <Precursor>
 		local
 			l_docking_state: SD_DOCKING_STATE
 			l_floating_state: SD_FLOATING_STATE
@@ -142,7 +142,7 @@ feature -- Redefine.
 		end
 
 	move_to_tab_zone (a_target_zone: SD_TAB_ZONE; a_index: INTEGER)
-			-- Redefine.
+			-- <Precursor>
 		local
 			l_tab_state: SD_TAB_STATE
 		do
@@ -159,7 +159,7 @@ feature -- Redefine.
 		end
 
 	move_to_docking_zone (a_target_zone: SD_DOCKING_ZONE; a_first: BOOLEAN)
-			-- Redefine.
+			-- <Precursor>
 		local
 			l_tab_state: SD_TAB_STATE
 		do
@@ -179,7 +179,7 @@ feature -- Redefine.
 		end
 
 	show
-			-- Redefine
+			-- <Precursor>
 		local
 			l_tab_zone: SD_TAB_ZONE
 			l_docking_zone: SD_DOCKING_ZONE
@@ -241,20 +241,20 @@ feature -- Redefine.
 		end
 
 	close
-			-- Redefine
+			-- <Precursor>
 		do
 		end
 
 	set_user_widget (a_widget: EV_WIDGET)
-			-- Redefine
+			-- <Precursor>
 		do
-			-- Do nothing.
+			-- Do nothing
 		end
 
 feature {SD_TAB_STATE, SD_AUTO_HIDE_STATE} -- Hide/Show issues when Tab
 
 	set_relative (a_content: SD_CONTENT)
-			-- Set `relative'.
+			-- Set `relative' with `a_content'
 		require
 			a_content_not_void: a_content /= Void
 			a_content_valid: content_valid (a_content)
@@ -265,7 +265,7 @@ feature {SD_TAB_STATE, SD_AUTO_HIDE_STATE} -- Hide/Show issues when Tab
 		end
 
 	relative: SD_CONTENT
-			-- When hide, who is group.
+			-- When hide, who is grouped with
 
 feature -- Contract support
 
@@ -278,7 +278,7 @@ feature -- Contract support
 feature {NONE} -- Implementation
 
 	set_size_in_idle (a_width, a_height: INTEGER; a_zone: !SD_FLOATING_ZONE)
-			-- Set `a_zone''s size with `a_width' and `a_height'.
+			-- Set `a_zone''s size with `a_width' and `a_height'
 		require
 			valid: a_width >= 0 and a_height >= 0
 		do

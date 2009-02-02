@@ -19,13 +19,14 @@ feature {NONE} -- Creation
 
 	make_1
 		do
-			-- Attribute is not initialized.
+				-- Attribute is not initialized.
 		end
 
 	make_2
 		do
-			-- Attribute is not initialized in body and in rescue.
+				-- Attribute is not initialized in body and in rescue.
 		rescue
+			a.do_nothing
 		end
 
 	make_3
@@ -33,13 +34,15 @@ feature {NONE} -- Creation
 				-- Attribute is initialized in body, but not in rescue.
 			create a.make_1
 		rescue
+			a.do_nothing
 		end
 
 	make_4
 		do
-			-- Attribute is initialized in rescue, but not in body.
+				-- Attribute is initialized in rescue, but not in body.
 		rescue
 			create a.make_1
+			a.do_nothing
 		end
 
 	make_5
@@ -48,6 +51,7 @@ feature {NONE} -- Creation
 			create a.make_1
 		rescue
 			create a.make_1
+			a.do_nothing
 		end
 
 feature {NONE} -- Access

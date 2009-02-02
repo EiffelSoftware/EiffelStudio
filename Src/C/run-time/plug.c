@@ -118,7 +118,7 @@ rt_public EIF_REFERENCE argarr(int argc, char **argv)
 	 * Create the array
 	 */
 
-	typres = eif_typeof_array_of (egc_str_dtype);
+	typres = eif_typeof_array_of (eif_attached_type (egc_str_dtype));
 	array = emalloc(typres);		/* If we return, it succeeded */
 	RT_GC_PROTECT(array); 		/* Protect address in case it moves */
 	nstcall = 0;					/* Turn invariant checking off */

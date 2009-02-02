@@ -49,22 +49,6 @@ feature {NONE} -- Initialization
 			create used_object_test_local_names.make (0)
 		end
 
-feature -- Initialization
-
-	initialize_variables
-			-- Initializes `variables' to meet the void-safety requirements of `current_class'
-		require
-			current_class_attached: current_class /= Void
-		do
-			if current_class.lace_class.is_void_safe then
-				create {AST_VOID_SAFE_VARIABLE_CONTEXT} variables
-			else
-				create {AST_VARIABLE_CONTEXT} variables
-			end
-		ensure
-			variables_attached: variables /= Void
-		end
-
 feature -- Access
 
 	current_class: CLASS_C
@@ -420,11 +404,6 @@ feature -- Local initialization and scopes: nesting
 			local_scope.keeper.leave_optional_realm
 		end
 
-feature -- Variable context
-
-	variables: AST_VARIABLE_CONTEXT
-			-- Context for tracking variable usage.
-
 feature -- Status report
 
 	is_ignoring_export: BOOLEAN
@@ -656,7 +635,6 @@ feature -- Managing the type stack
 			current_class := Void
 			current_class_type := Void
 			current_feature_table := Void
-			variables := Void
 			clear_feature_context
 		end
 
@@ -679,9 +657,6 @@ feature -- Managing the type stack
 			object_test_locals.wipe_out
 			used_object_test_local_names.wipe_out
 			scopes.wipe_out
-			if variables /= Void then
-				variables.wipe_out
-			end
 		end
 
 feature	-- Saving contexts
@@ -693,7 +668,6 @@ feature	-- Saving contexts
 		do
 			Result := twin
 			create_local_containers
-			initialize_variables
 			used_argument_names := Void
 			used_local_names := Void
 			scopes.copy (Result.scopes)

@@ -57,7 +57,7 @@ feature {AST_CREATION_PROCEDURE_CHECKER} -- Element change
 			is_attribute_set: is_attribute_set (position)
 		end
 
-feature {AST_CONTEXT} -- Transformation
+feature {AST_CONTEXT, AST_CREATION_PROCEDURE_CHECKER} -- Transformation
 
 	keeper: AST_INITIALIZATION_KEEPER
 			-- Storage to keep changes in the surrounding context

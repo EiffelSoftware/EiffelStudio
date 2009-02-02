@@ -44,7 +44,7 @@ feature -- Status report: nesting
 		deferred
 		end
 
-feature {AST_SCOPE_COMBINED_PRECONDITION, AST_CONTEXT} -- Modification: nesting
+feature {AST_SCOPE_COMBINED_PRECONDITION, AST_CONTEXT, AST_CREATION_PROCEDURE_CHECKER} -- Modification: nesting
 
 	enter_realm
 			-- Enter a new complex instruction with inner compound parts.

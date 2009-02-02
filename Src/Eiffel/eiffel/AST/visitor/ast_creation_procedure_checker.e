@@ -28,7 +28,8 @@ inherit
 			process_loop_as,
 			process_nested_expr_as,
 			process_nested_as,
-			process_precursor_as
+			process_precursor_as,
+			process_routine_as
 		end
 
 	SHARED_ERROR_HANDLER
@@ -74,11 +75,8 @@ feature {NONE} -- Creation
 				attributes.put (i, s [i].feature_id)
 				i := i - 1
 			end
-			variables.start_creation_procedure
-			variables.enter_compound
 			process (f)
 			check_attributes (f.body.last_token (Void))
-			variables.leave_compound
 		end
 
 feature {NONE} -- Processing
@@ -185,7 +183,7 @@ feature {NONE} -- Processing
 			f_attached: f /= Void
 			l_attached: l /= Void
 		do
-			if f.type.is_initialization_required and then not variables.is_attribute_set (f.feature_id) then
+			if f.type.is_initialization_required and then not attribute_initialization.is_attribute_set (attributes.item (f.feature_id)) then
 				if {d: ATTRIBUTE_I} f and then d.has_body and then not bodies.has (d.body_index) then
 						-- Attribute is self-initializing and not processed yet
 						-- (there is no recursion for an uninitialized self-initializing attribute).
@@ -196,7 +194,7 @@ feature {NONE} -- Processing
 				end
 					-- Mark that the attribute is initialized because it is self-initializing
 					-- or just to avoid repeated errors.
-				variables.set_attribute (f.feature_id)
+				attribute_initialization.set_attribute (attributes.item (f.feature_id))
 			end
 		end
 
@@ -230,7 +228,7 @@ feature {AST_EIFFEL} -- Visitor: access to features
 							process (f)
 						elseif f.is_attribute then
 							if is_attachment then
-								variables.set_attribute (f.feature_id)
+								attribute_initialization.set_attribute (attributes.item (f.feature_id))
 							else
 								check_attribute (f, a.feature_name)
 							end
@@ -340,9 +338,7 @@ feature {AST_EIFFEL} -- Visitor: compound
 	process_compound (c: EIFFEL_LIST [INSTRUCTION_AS])
 		do
 			if c /= Void then
-				variables.enter_compound
 				c.process (Current)
-				variables.leave_compound
 			end
 		end
 
@@ -350,32 +346,45 @@ feature {AST_EIFFEL} -- Visitor: compound
 		do
 			a.interval.process (Current)
 			process_compound (a.compound)
+			attribute_initialization.keeper.save_sibling
 		end
 
 	process_debug_as (a: DEBUG_AS)
 		do
+			attribute_initialization.keeper.enter_realm
 			process_compound (a.compound)
+			attribute_initialization.keeper.leave_optional_realm
 		end
 
 	process_elseif_as (a: ELSIF_AS)
 		do
 			a.expr.process (Current)
 			process_compound (a.compound)
+			attribute_initialization.keeper.save_sibling
 		end
 
 	process_if_as (a: IF_AS)
 		do
 			a.condition.process (Current)
+			attribute_initialization.keeper.enter_realm
 			process_compound (a.compound)
+			attribute_initialization.keeper.save_sibling
 			safe_process (a.elsif_list)
 			process_compound (a.else_part)
+			attribute_initialization.keeper.save_sibling
+			attribute_initialization.keeper.leave_realm
 		end
 
 	process_inspect_as (a: INSPECT_AS)
 		do
 			a.switch.process (Current)
+			attribute_initialization.keeper.enter_realm
 			safe_process (a.case_list)
-			process_compound (a.else_part)
+			if a.else_part /= Void then
+				process_compound (a.else_part)
+				attribute_initialization.keeper.save_sibling
+			end
+			attribute_initialization.keeper.leave_realm
 		end
 
 	process_loop_as (a: LOOP_AS)
@@ -383,8 +392,25 @@ feature {AST_EIFFEL} -- Visitor: compound
 			safe_process (a.from_part)
 			safe_process (a.invariant_part)
 			a.stop.process (Current)
-			process_compound (a.compound)
+			if a.compound /= Void then
+				attribute_initialization.keeper.enter_realm
+				attribute_initialization.keeper.save_sibling
+				process_compound (a.compound)
+				attribute_initialization.keeper.save_sibling
+				attribute_initialization.keeper.leave_realm
+			end
 			safe_process (a.variant_part)
+		end
+
+	process_routine_as (a: ROUTINE_AS)
+		do
+			safe_process (a.precondition)
+			attribute_initialization.keeper.enter_realm
+			a.routine_body.process (Current)
+			safe_process (a.postcondition)
+			attribute_initialization.keeper.save_sibling
+			safe_process (a.rescue_clause)
+			attribute_initialization.keeper.leave_realm
 		end
 
 feature {AST_EIFFEL} -- Nested call
@@ -464,12 +490,6 @@ feature {NONE} -- Access
 
 	attribute_initialization: AST_ATTRIBUTE_INITIALIZATION_TRACKER
 			-- Storage to track attributes usage
-
-	variables: AST_VARIABLE_CONTEXT
-			-- Storage to track variables usage
-		do
-			Result := context.variables
-		end
 
 	bodies: STACK [INTEGER_32];
 			-- Bodies that are being processed

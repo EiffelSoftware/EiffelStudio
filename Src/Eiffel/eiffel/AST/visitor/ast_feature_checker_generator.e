@@ -124,7 +124,6 @@ feature -- Type checking
 			set_is_replicated (a_replicated_in_current_class)
 			type_a_checker.init_for_checking (a_feature, context.current_class, context.supplier_ids, error_handler)
 			a_feature.record_suppliers (context.supplier_ids)
-			context.initialize_variables
 			current_feature := a_feature
 			reset
 			is_byte_node_enabled := False
@@ -159,7 +158,6 @@ feature -- Type checking
 			set_is_replicated (a_replicated_in_current_class)
 			type_a_checker.init_for_checking (a_feature, context.current_class, context.supplier_ids, error_handler)
 			a_feature.record_suppliers (context.supplier_ids)
-			context.initialize_variables
 			current_feature := a_feature
 			reset
 			if a_is_safe_to_check_inherited then
@@ -213,7 +211,6 @@ feature -- Type checking
 			set_is_replicated (False)
 			type_a_checker.init_for_checking (a_feature, context.current_class, context.supplier_ids, error_handler)
 			is_byte_node_enabled := a_generate_code
-			context.initialize_variables
 			current_feature := a_feature
 			reset
 			a_clause.process (Current)
@@ -3027,8 +3024,6 @@ feature -- Implementation
 			l_error_level: NATURAL_32
 			l_has_invalid_locals: BOOLEAN
 			l_feat_type: TYPE_A
-			creators: HASH_TABLE [EXPORT_I, STRING_8]
-			is_creation_procedure: BOOLEAN
 			precondition_scope: AST_SCOPE_COMBINED_PRECONDITION
 		do
 			l_needs_byte_node := is_byte_node_enabled
@@ -3036,16 +3031,6 @@ feature -- Implementation
 
 				-- Remember current scope state
 			s := context.scope
-
-			creators := context.current_class.creators
-			if creators /= Void and then creators.has (current_feature.feature_name) or else
-				context.current_class.creation_feature /= Void and then context.current_class.creation_feature.feature_id = current_feature.feature_id
-			then
-				context.variables.start_creation_procedure
-				is_creation_procedure := True
-			else
-				context.variables.start_feature
-			end
 
 				-- Check if some arguments are attached because of an inherited precondition.
 				-- Avoid doing it when there are no inherited preconditions.
@@ -3119,11 +3104,6 @@ feature -- Implementation
 			end
 
 				-- Check rescue-clause
-			if is_creation_procedure then
-				context.variables.start_creation_procedure
-			else
-				context.variables.start_feature
-			end
 			if l_as.rescue_clause /= Void then
 					-- A deferred or external feature cannot have a rescue
 					-- clause
@@ -3184,9 +3164,7 @@ feature -- Implementation
 			s: INTEGER
 		do
 			s := context.scope
-			context.variables.enter_compound
 			compound.process (Current)
-			context.variables.leave_compound
 			context.set_scope (s)
 		end
 
@@ -4965,7 +4943,6 @@ feature -- Implementation
 			l_vjar: VJAR
 			l_vncb: VNCB
 			l_warning_count: INTEGER
-			l_initialized_variable: like last_initialized_variable
 			l_reinitialized_local: like last_reinitialized_local
 		do
 			break_point_slot_count := break_point_slot_count + 1
@@ -4980,7 +4957,6 @@ feature -- Implementation
 			l_as.target.process (Current)
 			set_is_in_assignment (False)
 				-- Record initialized variable to commit it after the expression is processed.
-			l_initialized_variable := last_initialized_variable
 			l_reinitialized_local := last_reinitialized_local
 			l_target_type := last_type
 			if l_target_type /= Void then
@@ -5082,7 +5058,6 @@ feature -- Implementation
 						end
 					end
 				end
-				commit_initialized_variable (l_initialized_variable)
 			end
 		end
 
@@ -5900,7 +5875,6 @@ feature -- Implementation
 			l_needs_byte_node: BOOLEAN
 			l_error_level: NATURAL_32
 			l_warning_count: INTEGER
-			l_initialized_variable: like last_initialized_variable
 			l_reinitialized_local: like last_reinitialized_local
 			l_current_class_void_safe: BOOLEAN
 		do
@@ -5920,7 +5894,6 @@ feature -- Implementation
 				l_access ?= last_byte_node
 			end
 				-- Record initialized variable to commit it after the call is processed.
-			l_initialized_variable := last_initialized_variable
 			l_reinitialized_local := last_reinitialized_local
 				-- Although it might be already reset when `target' is indeed
 				-- a feature of the current class, it is not reset when it is a local,
@@ -6015,7 +5988,6 @@ feature -- Implementation
 						end
 					end
 				end
-				commit_initialized_variable (l_initialized_variable)
 				if l_reinitialized_local /= 0 then -- and then not l_target_type.is_attached then
 						-- Local variable is now attached.
 					if l_reinitialized_local = result_name_id then
@@ -6631,7 +6603,6 @@ feature -- Implementation
 		do
 			break_point_slot_count := 0
 			context.inline_agent_counter.reset
-			context.variables.start_feature
 			if l_as.assertion_list /= Void then
 				reset_for_unqualified_call_checking
 				set_is_checking_invariant (True)
@@ -9148,14 +9119,6 @@ feature {NONE} -- Variable initialization
 			-- positive - local position
 			-- negative - feature id
 
-	record_initialized_attribute (feature_id: INTEGER)
-			-- Record that result is about to be set.
-		require
-			positive_feature_id: feature_id > 0
-		do
-			last_initialized_variable := - feature_id
-		end
-
 	record_initialized_local (position: INTEGER)
 			-- Record that result is about to be set.
 		require
@@ -9168,14 +9131,6 @@ feature {NONE} -- Variable initialization
 			-- Record that result is about to be set.
 		do
 			last_initialized_variable := 0
-		end
-
-	commit_initialized_variable (initialized_variable: like last_initialized_variable)
-			-- Mark that a previously recorded variable is now properly set.
-		do
-			if initialized_variable < 0 then
-				context.variables.set_attribute (- initialized_variable)
-			end
 		end
 
 	last_reinitialized_local: INTEGER_32

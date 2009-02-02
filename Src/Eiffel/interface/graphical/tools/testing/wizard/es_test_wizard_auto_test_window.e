@@ -110,14 +110,16 @@ feature {NONE} -- Initialization
 			type_list.key_press_actions.extend (agent on_type_list_key_press)
 			l_vbox.extend (type_list)
 
-			create l_hbox
-			l_hbox.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
 			create l_label.make_with_text (locale_formatter.translation (b_new_type))
-			l_hbox.extend (l_label)
-			l_hbox.disable_item_expand (l_label)
+			l_label.align_text_left
+			l_vbox.extend (l_label)
+			l_vbox.disable_item_expand (l_label)
 
 			create add_type_button
 			create remove_type_button
+
+			create l_hbox
+			l_hbox.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
 
 			create l_textfield
 			l_textfield.focus_in_actions.extend (
@@ -165,14 +167,6 @@ feature {NONE} -- Initialization
 						end
 					end)
 			l_hbox.extend (type_field)
-
-			l_vbox.extend (l_hbox)
-			l_vbox.disable_item_expand (l_hbox)
-
-			create l_hbox
-			l_hbox.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
-
-			l_hbox.extend (create {EV_CELL})
 
 			add_type_button.set_text (locale_formatter.translation (b_add_type))
 			add_type_button.select_actions.extend (agent on_add_type)
@@ -501,7 +495,7 @@ feature {NONE} -- Internationalization
 	b_ddmin: !STRING = "Use ddmin for minimization"
 	b_slicing: !STRING = "Use slicing for minimization"
 	b_html_output: !STRING = "Create HTML output"
-	b_new_type: !STRING = "Typename"
+	b_new_type: !STRING = "Class or type name"
 
 	e_no_valid_type_name: !STRING = "$1 is not a valid type name"
 	e_unable_to_check_compiled_classes: !STRING = "Unable to check if types or valid, please recompile and start again"

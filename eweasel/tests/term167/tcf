@@ -7,6 +7,11 @@ copy_raw test.e $CLUSTER test.e
 copy_raw test1.e $CLUSTER test1.e
 
 compile_melted
+compile_result validity_error TEST VWOE VUAR(1) VUAR(1) VWOE VWOE
+
+copy_raw test1_rev1.e $CLUSTER test1.e
+
+resume_compile
 compile_result ok
 
 test_end

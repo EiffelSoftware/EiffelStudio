@@ -44,6 +44,7 @@ feature {NONE} -- Printing
 			-- <Precursor>
 		local
 			l_feature: FEATURE_I
+			l_target: CONF_TARGET
 		do
 			indent
 			print_indentation
@@ -54,7 +55,16 @@ feature {NONE} -- Printing
 			if current_result /= Void then
 				indent
 				print_indentation
-				output_stream.put_line ("indexing")
+
+				l_target := system.universe.target
+				if l_target /= Void and then l_target.options.syntax_level.item = {CONF_OPTION}.syntax_level_obsolete then
+						-- Use old syntax
+					output_stream.put_line ({EIFFEL_KEYWORD_CONSTANTS}.indexing_keyword)
+				else
+						-- Use new syntax
+					output_stream.put_line ({EIFFEL_KEYWORD_CONSTANTS}.note_keyword)
+				end
+
 				indent
 				print_indentation
 				output_stream.put_line ("testing: %"type/generated%"")

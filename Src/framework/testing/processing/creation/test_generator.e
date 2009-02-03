@@ -236,9 +236,19 @@ feature {NONE} -- Basic operations
 					status := statistic_status_code
 				end
 			elseif is_generating_statistics then
-				generate_statistics
-				generate_test_class
-				is_finished := True
+				if current_task = Void then
+					generate_statistics
+				else
+					if {l_task: AUT_HTML_STATISTICS_GENERATOR} current_task then
+						if l_task.has_fatal_error then
+							error_handler.report_html_generation_error
+						else
+							error_handler.report_html_generation_finished (l_task.absolute_index_filename)
+						end
+					end
+					generate_test_class
+					is_finished := True
+				end
 			end
 
 			if is_finished then
@@ -686,12 +696,8 @@ feature{NONE} -- Test result analyizing
 			end
 			if is_html_statistics_format_enabled then
 				create html_generator.make (file_system.pathname (output_dirname, "result"), system, classes_under_test)
-				html_generator.generate (result_repository)
-				if html_generator.has_fatal_error then
-					error_handler.report_html_generation_error
-				else
-					error_handler.report_html_generation_finished (html_generator.absolute_index_filename)
-				end
+				html_generator.set_repository (result_repository)
+				launch_task (html_generator)
 			end
 		end
 
@@ -861,10 +867,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

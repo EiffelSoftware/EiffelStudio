@@ -36,6 +36,8 @@ inherit
 
 	REFACTORING_HELPER
 
+	AUT_TASK
+
 create
 
 	make
@@ -57,14 +59,180 @@ feature -- Access
 			Result := file_system.pathname (output_dirname, "index.html")
 		end
 
-feature -- HTML generation
+feature {NONE} -- Access
+
+	repository: ?AUT_TEST_CASE_RESULT_REPOSITORY
+			-- Result repository for which documentation is currently generated
+
+	cursor: ?DS_LINEAR_CURSOR [CLASS_C]
+			-- Cursor pointing to current class being processed by `step'
+
+	state: NATURAL_8
+			-- Current state of `step'
+
+	class_state: NATURAL_8 = 1
+	scope_state: NATURAL_8 = 2
+	manual_state: NATURAL_8 = 3
+	other_state: NATURAL_8 = 4
+			-- Valid states for `state'
+
+	counter: INTEGER
+			-- Counter used by `step'
+
+	is_first: BOOLEAN
+			-- Boolean flag used by `step'
+
+feature -- Status report
+
+	has_next_step: BOOLEAN
+			-- <Precursor>
+		do
+			Result := cursor /= Void
+		end
+
+feature -- Status setting
+
+	start
+			-- <Precursor>
+			--
+			-- Note: `start' and `step' together do the same as `generate'.
+		local
+			l_repo: like repository
+			l_cursor: like cursor
+		do
+			l_repo := repository
+			if l_repo /= Void then
+				current_id := 0
+				file_system.recursive_create_directory (output_dirname)
+				file_system.recursive_create_directory (file_system.pathname (output_dirname, "image"))
+				copy_static_files
+				create tree_content_file.make (file_system.pathname (output_dirname, "treeContent.js"))
+				tree_content_file.open_write
+				generate_tree_content_file_header
+				generate_summary_page (l_repo)
+				generate_header_page
+				if not tree_content_file.is_open_write then
+					has_fatal_error := True
+				else
+					l_cursor := l_repo.classes.new_cursor
+					l_cursor.start
+					cursor := l_cursor
+					state := class_state
+				end
+			end
+		end
+
+	step
+			-- <Precursor>
+			--
+			-- Note: `start' and `step' together do the same as `generate'.
+		local
+			l_cursor: like cursor
+			l_repo: like repository
+		do
+			l_cursor := cursor
+			l_repo := repository
+			if l_cursor = Void or l_cursor.after then
+					-- Actions performed at the end of the stage currently set in `state'
+				if state = other_state then
+					tree_content_file.put_line ("])")
+				else
+					inspect
+						state
+					when class_state then
+						tree_content_file.put_string ("ClassesInScope.addChildren([")
+						state := scope_state
+					when scope_state then
+						tree_content_file.put_line ("])")
+						tree_content_file.put_string ("ManualTests.addChildren([")
+						state := manual_state
+					when manual_state then
+						tree_content_file.put_line ("])")
+						tree_content_file.put_string ("Others.addChildren([")
+						state := other_state
+					end
+					l_cursor := repository.classes.new_cursor
+					l_cursor.start
+					cursor := l_cursor
+					counter := 1
+					is_first := True
+				end
+			else
+				inspect
+					state
+				when class_state then
+					generate_class (l_cursor.item, l_repo)
+				when scope_state then
+					if is_class_in_test_scope (l_cursor.item) then
+						if is_first then
+							is_first := False
+						else
+							tree_content_file.put_string (", ")
+						end
+						tree_content_file.put_string ("class_")
+						tree_content_file.put_string (l_cursor.item.name_in_upper)
+					end
+				when manual_state then
+					if is_manual_test_class (l_cursor.item) then
+						if is_first then
+							is_first := False
+						else
+							tree_content_file.put_string (", ")
+						end
+						tree_content_file.put_string ("class_")
+						tree_content_file.put_string (l_cursor.item.name_in_upper)
+					end
+				when other_state then
+					if not is_class_in_test_scope (l_cursor.item) and not is_manual_test_class (l_cursor.item) then
+						if is_first then
+							is_first := False
+						else
+							tree_content_file.put_string (", ")
+						end
+						tree_content_file.put_string ("class_")
+						tree_content_file.put_string (l_cursor.item.name_in_upper)
+					end
+				end
+				counter := counter + 1
+			end
+			if has_fatal_error or l_cursor.off then
+				cancel
+			else
+				l_cursor.forth
+			end
+		end
+
+	cancel
+			-- <Precursor>
+		local
+			l_cursor: like cursor
+		do
+			generate_tree_content_file_footer
+			tree_content_file.close
+			repository := Void
+			l_cursor := cursor
+			if l_cursor /= Void then
+				l_cursor.go_after
+				cursor := Void
+			end
+		end
+
+feature -- Element change
+
+	set_repository (a_repository: like repository)
+			-- Set `repository' to `a_repository'.
+		require
+			not_started: not has_next_step
+		do
+			repository := a_repository
+		end
 
 	generate (a_repository: AUT_TEST_CASE_RESULT_REPOSITORY)
 			-- Generate HTML pages describing the results from `a_repository'.
 		local
 			cs: DS_LINEAR_CURSOR [CLASS_C]
 			i: INTEGER
-			is_first: BOOLEAN
+			l_first: BOOLEAN
 		do
 			current_id := 0
 			file_system.recursive_create_directory (output_dirname)
@@ -92,13 +260,13 @@ feature -- HTML generation
 					cs := a_repository.classes.new_cursor
 					cs.start
 					i := 1
-					is_first := True
+					l_first := True
 				until
 					cs.off
 				loop
 					if is_class_in_test_scope (cs.item) then
-						if is_first then
-							is_first := False
+						if l_first then
+							l_first := False
 						else
 							tree_content_file.put_string (", ")
 						end
@@ -114,13 +282,13 @@ feature -- HTML generation
 					cs := a_repository.classes.new_cursor
 					cs.start
 					i := 1
-					is_first := True
+					l_first := True
 				until
 					cs.off
 				loop
 					if is_manual_test_class (cs.item) then
-						if is_first then
-							is_first := False
+						if l_first then
+							l_first := False
 						else
 							tree_content_file.put_string (", ")
 						end
@@ -136,13 +304,13 @@ feature -- HTML generation
 					cs := a_repository.classes.new_cursor
 					cs.start
 					i := 1
-					is_first := True
+					l_first := True
 				until
 					cs.off
 				loop
 					if not is_class_in_test_scope (cs.item) and not is_manual_test_class (cs.item) then
-						if is_first then
-							is_first := False
+						if l_first then
+							l_first := False
 						else
 							tree_content_file.put_string (", ")
 						end
@@ -771,4 +939,35 @@ invariant
 
 	test_case_printer_not_void: test_case_printer /= Void
 
+note
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

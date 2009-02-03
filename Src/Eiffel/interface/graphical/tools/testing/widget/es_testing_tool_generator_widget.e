@@ -47,9 +47,6 @@ feature {NONE} -- Access
 	status_label: !EV_LABEL
 			-- Label showing status of generator
 
-	busy_dialog: ?ES_POPUP_TRANSITION_WINDOW
-			-- Dialog telling use to be patient
-
 feature {NONE} -- Status report
 
 	has_error: BOOLEAN
@@ -76,10 +73,6 @@ feature {NONE} -- Events
 					status_label.set_text (locale.translation (l_minimizing))
 				elseif factory.is_generating_statistics then
 					status_label.set_text (locale.translation (l_statistics))
-					if busy_dialog = Void then
-						create busy_dialog.make (locale_formatter.translation (i_please_be_patient))
-						busy_dialog.show_relative_to_window (development_window.window)
-					end
 				else
 					status_label.set_text ("")
 				end
@@ -100,10 +93,6 @@ feature {NONE} -- Events
 			l_dir: DIRECTORY_NAME
 			l_message: !STRING_32
 		do
-			if busy_dialog /= Void then
-				busy_dialog.hide
-				busy_dialog := Void
-			end
 			if not has_error then
 				create l_dir.make_from_string (factory.test_suite.eiffel_project.project_directory.testing_results_path)
 				l_dir.extend ("auto_test")

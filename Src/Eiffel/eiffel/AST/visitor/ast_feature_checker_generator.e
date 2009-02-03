@@ -3394,11 +3394,13 @@ feature -- Implementation
 			l_feat: FEATURE_I
 			l_feat_name: ID_AS
 			l_location: LOCATION_AS
+			l_error_level: like error_level
 		do
+			l_error_level := error_level
 			l_as.expr.process (Current)
 				-- It only make sense to process the conversion data only when
 				-- rechecking the code in a descendant class.
-			if is_inherited and then {l_info: PARENT_CONVERSION_INFO} l_as.data then
+			if is_inherited and then l_error_level = error_level and then {l_info: PARENT_CONVERSION_INFO} l_as.data then
 					-- If we have some data about the above with a conversion, we need
 					-- to extract it so that we can recheck that the converted code still
 					-- make sense in a descendant.

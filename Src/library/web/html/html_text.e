@@ -35,9 +35,7 @@ feature -- Out representation
 	out: STRING
 			-- Provide a STRING representation for the HTML text
 		do
-			if html_text /= Void then
-				Result := html_text.twin
-			end
+			Result := html_text.twin
 		end
 
 feature -- Add some new features

@@ -5,7 +5,7 @@ note
 		%by classes needing its facilities."
 	legal: "See notice at end of class.";
 
-	status: "See notice at end of class."; 
+	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -140,7 +140,7 @@ feature -- Cookies
 			from
 				i := 1
 			until
-				i < 1 
+				i < 1
 			loop
 				i := s.index_of ('=', 1)
 				if i > 0 then
@@ -193,9 +193,10 @@ feature {NONE} -- Implementation
 	get_env_variable (v: STRING): STRING
 			-- Get value of environment variable `v'.
 		do
-			Result := get (v)
-			if Result = Void then
-				Result := ""
+			if {l_result: STRING} get (v) then
+				Result := l_result
+			else
+				create Result.make_empty
 			end
 		end
 

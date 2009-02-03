@@ -35,6 +35,7 @@ feature -- Initialization
 				parse_input
 				execute
 			else
+				create form_data.make (0)
 				if debug_mode then
 					handle_exception
 				end
@@ -58,7 +59,7 @@ feature -- Miscellanous
 
 feature {CGI_INTERFACE} -- Access	
 
-	debug_mode: BOOLEAN 
+	debug_mode: BOOLEAN
 			-- Is Current application executed in debug mode?
 		deferred
 		end
@@ -114,21 +115,24 @@ feature {CGI_FORMS}-- Access
 
 	Input_data: STRING
 			-- Data sent by the server.
+		local
+			l_result: ?STRING
 		once
 				-- Default method is "GET".
 			if Request_method.is_equal ("POST") then
 				if Content_length.is_integer then
 					stdin.read_stream (Content_length.to_integer)
-					Result := stdin.last_string
+					l_result := stdin.last_string
+						-- Per postcondition of `stdin.read_stream'.
+					check l_result_attached: l_result /= Void end
+					Result := l_result
 				else
+					create Result.make_empty
 					raise_error ("Incorrect value for CONTENT_LENGTH")
 				end
 			else
 				Result := Query_string
 			end;
-			if Result = Void then
-				Result := ""
-			end
 		ensure
 			input_data_exists: Result /= Void
 		end
@@ -142,9 +146,9 @@ feature {CGI_FORMS}-- Access
 			hexa_to_ascii (name)
 			hexa_to_ascii (val)
 				-- Is there already a value for `name'?
-			if form_data.has (name) then
-				form_data.item (name).extend (val)
-				form_data.item (name).start
+			if form_data.has (name) and then {l_list: LINKED_LIST [STRING]} form_data.item (name) then
+				l_list.extend (val)
+				l_list.start
 			else
 				create vl.make
 				vl.extend (val)
@@ -190,7 +194,7 @@ feature {CGI_FORMS}-- Access
 			if not data.is_empty then
 					-- Convert +'s to spaces
 				data.replace_substring_all ("+", " ")
-	
+
 					-- Build the (name,value) pairs
 				nb_pairs := data.occurrences (Pair_separator) + 1
 				create form_data.make (nb_pairs)

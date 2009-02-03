@@ -29,7 +29,7 @@ feature
 	make(nb_row, nb_col: INTEGER)
 			-- Create a table
 		do
-			array2_make(nb_row, nb_col);
+			array2_make (nb_row, nb_col);
 			set_row(1);
 			set_col(1);
 		end;
@@ -96,7 +96,7 @@ feature -- Inputs in the table
 			set_col(col_value+1);
 		end;
 
-feature -- Routines out: provide STRING representations 
+feature -- Routines out: provide STRING representations
 
 	out: STRING
 			-- Provide a STRING representation for the current table
@@ -110,7 +110,7 @@ feature -- Routines out: provide STRING representations
 			Result.append(Table_end);
 		end;
 
-	body_out: STRING 
+	body_out: STRING
 		local
 			row, col: INTEGER;
 		do
@@ -195,8 +195,8 @@ feature -- Routines out: provide STRING representations
 			-- String representation for the attributes
 			-- of the caption
 		do
-			if caption_attributes /= Void then
-				Result := caption_attributes;
+			if {l_attr: like caption_attributes} caption_attributes then
+				Result := l_attr;
 			else
 				Result := "";
 			end;
@@ -205,13 +205,13 @@ feature -- Routines out: provide STRING representations
 	caption_out: STRING
 			-- String representation for the caption
 		do
-			if (caption /= Void) and then (not caption.is_equal("")) then
+			if {l_caption: like caption} caption and then not l_caption.is_empty then
 				Result := Caption_start.twin
-				Result.append(caption_attributes_out);
-				Result.append(Tag_end);
-				Result.append(caption);
-				Result.append(Caption_end);
-				Result.append(NewLine);
+				Result.append (caption_attributes_out);
+				Result.append (Tag_end);
+				Result.append (l_caption);
+				Result.append (Caption_end);
+				Result.append (NewLine);
 			else
 				Result := "";
 			end;
@@ -228,7 +228,7 @@ feature -- Routines out: provide STRING representations
 
 feature -- Attributes
 
-	caption: STRING;
+	caption: ?STRING;
 
 	border_value: INTEGER;
 	row_value: INTEGER;
@@ -236,7 +236,7 @@ feature -- Attributes
 
 feature -- Set attributes
 
-	set_caption(s: STRING)
+	set_caption (s: ?STRING)
 			-- Set the caption element
 		do
 			if s /= Void then
@@ -267,26 +267,23 @@ feature -- Set attributes
 		do
 			row_value := n;
 		end;
-	
+
 	set_col(n: INTEGER)
 			-- Set the current working value for col to 'n'
 		do
 			col_value := n;
 		end;
-	
+
 
 feature {NONE}
 
-	caption_attributes: STRING;
+	caption_attributes: ?STRING;
 
-	is_text(s: STRING): BOOLEAN
+	is_text (s: ?STRING): BOOLEAN
 			-- Is 's' simple text or key word?
 		do
-			if (s /= Void) and then not
-			(s.is_equal(Colspan) or s.is_equal(Rowspan)) then
-				Result := true;
-			end;
-		end;
+			Result := (s /= Void) and then not (s.is_equal(Colspan) or s.is_equal(Rowspan))
+		end
 
 	get_Colspan(row, col: INTEGER): INTEGER
 			-- Number of Colspan for the cell 'row, col'
@@ -300,8 +297,8 @@ feature {NONE}
 				col_value := col + 1;
 			until
 				(row > height) or else
-				(col_value > width) or else 
-				(item(row, col_value) = Void) or else 
+				(col_value > width) or else
+				(item(row, col_value) = Void) or else
 				(not item(row, col_value).is_equal(Colspan))
 			loop
 				col_value := col_value + 1;
@@ -320,9 +317,9 @@ feature {NONE}
 			from
 				row_value := row + 1;
 			until
-				(col > width) or else 
-				(row_value > height) or else 
-				(item(row_value, col) = Void) or else 
+				(col > width) or else
+				(row_value > height) or else
+				(item(row_value, col) = Void) or else
 				(not item(row_value, col).is_equal(Rowspan))
 			loop
 				row_value := row_value + 1;

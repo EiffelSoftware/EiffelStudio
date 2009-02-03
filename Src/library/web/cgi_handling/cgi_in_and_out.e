@@ -14,18 +14,18 @@ feature -- Access
 	output: STDOUT
 			-- Shared standard output.
 		once
-			Create Result.make
+			create Result.make
 		end
 
 	stdin: STDIN
 			-- Shared standard input
 		once
-			Create Result.make
+			create Result.make
 		end
 
 	response_header: CGI_RESPONSE_HEADER
 		once
-			Create Result
+			create Result.make
 		end
 
 note

@@ -9,10 +9,19 @@ class
 	CGI_RESPONSE_HEADER
 
 inherit
-
 	CGI_COMMON_STATUS_TYPES
 
 	CGI_IN_AND_OUT
+
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make
+		do
+			create header.make_empty
+		end
 
 feature -- Basic Operations
 
@@ -21,8 +30,8 @@ feature -- Basic Operations
 			-- This operation has to be performed before
 			-- you send anything else to the browser.
 		require
-			header_exists: header /= Void
 			not_yet_sent: not is_sent
+			header_is_complete: is_complete_header
 		do
 			output.put_string (header + "%N%N")
 			is_sent := True
@@ -31,23 +40,23 @@ feature -- Basic Operations
 		end
 
 	generate_text_header
-			-- Generate header for a future text (generally HTML) 
+			-- Generate header for a future text (generally HTML)
 			-- you are going to send.
 		require
-			header_void: header = Void  
 			not_yet_sent: not is_sent
+			header_not_complete: not is_complete_header
 		do
 			header := "Content-type: text/html"
 			is_complete_header := True
 		end
 
-	generate_http_redirection (an_url: STRING;is_secure: BOOLEAN)	
+	generate_http_redirection (an_url: STRING;is_secure: BOOLEAN)
 			-- Generate CGI secure re-direction, via 'https' protocol if secure,
 			--	via http if not.
 		require
 			not_yet_sent: not is_sent
 			url_not_void_and_not_empty: an_url /= Void and then not an_url.is_empty
-			header_void: header = Void  
+			header_not_complete: not is_complete_header
 		do
 			if is_secure then
 				header := "location:https://" + an_url
@@ -58,33 +67,32 @@ feature -- Basic Operations
 
 	return_status (a_status: INTEGER;a_message: STRING)
 				-- Set the status of the user request.
-				-- A complete list of status may be found at : 
+				-- A complete list of status may be found at :
 				-- http://www.w3.org/hypertext/WWW/protocols/HTTP/HTRESP.html
 				-- See also CGI_COMMON_STATUS_TYPES
 	 	require
 	 		not_yet_sent: not is_sent
 			message_exists: a_message /= Void
-			header_void: header /= Void  
+			header_is_complete: is_complete_header
 		do
 			header.append ("%NStatus: " + a_status.out + " " + a_message)
-		end	
+		end
 
 	reinitialize_header
 			-- Re-initialize header.
-			-- May be called if the header built sor far 
+			-- May be called if the header built sor far
 			-- has to be re-build from scratch.
 		require
 			not_yet_sent: not is_sent
 		do
-			header := Void
 			is_complete_header := False
 		ensure
-			reinitialized: header = Void and not is_complete_header and not is_sent
+			reinitialized: not is_complete_header and not is_sent
 		end
 
 feature {CGI_ERROR_HANDLING} -- Exception handling
 
-	send_trace (s: STRING)
+	send_trace (s: ?STRING)
 			-- Send the exception trace 's' to the browser, when
 			-- possible ( most cases ).
 		do
@@ -104,13 +112,12 @@ feature {CGI_ERROR_HANDLING} -- Exception handling
 feature -- Advanced Settings
 
 	set_expiration (a_date: STRING)
-			-- Set the expiration date before which the page needs to be 
+			-- Set the expiration date before which the page needs to be
 			-- refreshed
 		 require
 			not_yet_sent: not is_sent
 			date_exists: a_date /= Void
-			header_exists: header /= Void
-			header_is_complete: is_complete_header  
+			header_is_complete: is_complete_header
 		do
 			header.append ("%NExpires: " + a_date)
 		end
@@ -122,21 +129,19 @@ feature -- Advanced Settings
 		 require
 			not_yet_sent: not is_sent
 			pragma_exists: a_pragma /= Void
-			header_exists: header /= Void
-			header_is_complete: is_complete_header  
+			header_is_complete: is_complete_header
 		do
 			header.append ("%NPragma: " + a_pragma)
-		end	
+		end
 
-	set_cookie (key, value, expiration, path, domain, secure: STRING)
+	set_cookie (key, value: STRING; expiration, path, domain, secure: ?STRING)
 			-- Set a cookie on the client's machine
 			-- with key 'key' and value 'value'.
 		require
 			not_yet_sent: not is_sent
-			make_sense: (key /= Void and value /= Void) and then 
+			make_sense: (key /= Void and value /= Void) and then
 						(not key.is_empty and not value.is_empty)
-			header_exists: header /= Void
-			header_is_complete: is_complete_header  
+			header_is_complete: is_complete_header
 		local
 			s: STRING
 		do
@@ -153,21 +158,25 @@ feature -- Advanced Settings
 			if secure /= Void then
 				s.append (";secure=" + secure)
 			end
-			header.append (s)			
+			header.append (s)
 		end
 
 feature -- Access
 
 	header: STRING
-			-- Message Header which will be returned to the 
+			-- Message Header which will be returned to the
 			-- the browser.
 
 	is_sent: BOOLEAN
 			-- Is current header sent to the browser ?
 
-	is_complete_header: BOOLEAN;
+	is_complete_header: BOOLEAN
 			-- Is Current header a complete header ?
-		
+
+invariant
+	header_not_void: header /= Void
+	header_not_empty: is_complete_header implies not header.is_empty
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
@@ -179,8 +188,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class CGI_RESPONSE_HEADER
-

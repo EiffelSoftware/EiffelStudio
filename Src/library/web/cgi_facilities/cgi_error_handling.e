@@ -7,7 +7,7 @@ note
 
 class
 	CGI_ERROR_HANDLING
-	
+
 inherit
 	CGI_IN_AND_OUT
 
@@ -21,14 +21,19 @@ feature -- Basic Operations
 	handle_exception
 			-- General exception hanlding.
 		local
-			msg: STRING
+			msg: ?STRING
+			l_trace: ?STRING
 		do
-			if raised_error /= Void then
-				msg := raised_error
-			else
+			msg := raised_error
+			if msg = Void then
 				msg := ""
 			end
-			response_header.send_trace (msg + exception_trace)
+			l_trace := exception_trace
+			if l_trace /= Void then
+				response_header.send_trace (msg + l_trace)
+			else
+				response_header.send_trace (msg)
+			end
 		end
 
 	raise_error(msg: STRING)
@@ -44,7 +49,7 @@ feature -- Basic Operations
 
 feature {CGI_ERROR_HANDLING} -- Access
 
-	raised_error: STRING;
+	raised_error: ?STRING;
 			-- Error explicitely raised by developer code.
 
 note

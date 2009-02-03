@@ -18,6 +18,7 @@ feature
 	make
 		do
 			create options.make
+			create title_value.make_empty
 		end
 
 feature -- Routines out
@@ -58,7 +59,7 @@ feature -- Routines out
 		end
 
 	head_out: STRING
-		do 
+		do
 			Result := ""
 			Result.append ("<HEAD><TITLE>")
 			if has_value (title_value) then
@@ -75,14 +76,14 @@ feature -- Wipe out
 			options.wipe_out
 		end
 
-feature -- Set 
+feature -- Set
 
-	set_title (s: STRING)
+	set_title (s: ?STRING)
 		do
 			if s /= Void then
 				title_value := s.twin
 			else
-				title_value := Void
+				title_value := ""
 			end
 		end
 
@@ -96,15 +97,13 @@ feature -- Add new options
 		end
 
 feature {NONE}
- 
-    has_value(s: STRING): BOOLEAN
+
+    has_value(s: ?STRING): BOOLEAN
             -- Has the attribute 's' a value ?
         do
-            if s = Void or else s.is_equal ("") then
-                Result := False
-            else
-                Result := True
-            end
+            Result := s /= Void and then not s.is_empty
+		ensure
+			s_not_void: Result = (s /= Void and then not s.is_empty)
         end
 
 feature {NONE}

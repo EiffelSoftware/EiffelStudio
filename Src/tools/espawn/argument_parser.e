@@ -136,7 +136,7 @@ feature {NONE} -- Usage
 
 	version: !STRING
 			-- <Precursor>
-		do
+		once
 			create Result.make (3)
 			Result.append_integer ({EIFFEL_ENVIRONMENT_CONSTANTS}.major_version)
 			Result.append_character ('.')
@@ -170,7 +170,7 @@ feature {NONE} -- Usage
 
 	switch_groups: !ARRAYED_LIST [!ARGUMENT_GROUP]
 			-- Valid switch grouping
-		do
+		once
 			create Result.make (2)
 			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (x86_switch), switch_of_name (use_compiler_switch), switch_of_name (aync_switch), switch_of_name (ignore_switch)>>, True))
 			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (manual_switch), switch_of_name (aync_switch), switch_of_name (ignore_switch)>>, True))
@@ -179,12 +179,12 @@ feature {NONE} -- Usage
 
 feature {NONE} -- Switch names
 
-	manual_switch: !STRING = "manual"
+	manual_switch: !STRING = "m|manual"
 	x86_switch: !STRING = "x86"
-	aync_switch: !STRING = "async"
-	ignore_switch: !STRING = "ignore"
-	list_compilers_switch: !STRING = "l"
-	use_compiler_switch: !STRING = "use"
+	aync_switch: !STRING = "a|async"
+	ignore_switch: !STRING = "i|ignore"
+	list_compilers_switch: !STRING = "l|list"
+	use_compiler_switch: !STRING = "u|use"
 
 feature {NONE} -- Externals
 
@@ -204,7 +204,7 @@ feature {NONE} -- Externals
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -217,22 +217,22 @@ feature {NONE} -- Externals
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

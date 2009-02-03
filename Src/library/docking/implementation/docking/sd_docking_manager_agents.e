@@ -277,13 +277,11 @@ feature  -- Agents
 
 	on_top_level_window_focus_out
 			-- Handle top level window focus out actions.
-		require
-			not_destroyed: not is_destroyed
 		local
 			l_floating_zones: ARRAYED_LIST [SD_FLOATING_ZONE]
 			l_has_focus: BOOLEAN
 		do
-			if internal_docking_manager /= Void then
+			if not is_destroyed and then internal_docking_manager /= Void then
 				if not internal_docking_manager.main_window.is_destroyed and not internal_docking_manager.property.is_opening_config then
 					l_floating_zones := internal_docking_manager.query.floating_zones
 					l_has_focus := internal_docking_manager.main_window.has_focus

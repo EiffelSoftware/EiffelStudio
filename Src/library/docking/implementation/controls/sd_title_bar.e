@@ -221,7 +221,8 @@ feature -- Command
 		end
 
 	extend_custom_area (a_widget: EV_WIDGET)
-			-- Extend `custom_area' with a_widget
+			-- Extend `custom_area' with `a_widget'
+			-- `a_widget' can be void
 		do
 			if internal_custom_widget /= a_widget and fixed.has (internal_custom_widget) then
 				-- Prune the old one

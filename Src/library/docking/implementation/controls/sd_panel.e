@@ -83,7 +83,7 @@ feature   -- Access
 		end
 
 	set_user_widget (a_widget: like internal_user_widget)
-			-- Set the client programmer's widget.
+			-- Set client programmer's widget.
 		require
 			a_widget_not_void: a_widget /= Void
 		do
@@ -97,6 +97,12 @@ feature   -- Access
 		ensure
 			contain_right_number_widget: internal_border_box.count = 1
 			contain_user_wiget: internal_border_box.has (a_widget)
+		end
+
+	set_mini_toolbar (a_widget: EV_WIDGET)
+			-- Set mini toolbar with {SD_CONTENT}.mini_toolbar
+		do
+			title_bar.extend_custom_area (a_widget)
 		end
 
 feature {NONE} -- Two widgets

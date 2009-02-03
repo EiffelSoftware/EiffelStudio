@@ -312,6 +312,7 @@ feature -- Set
 			a_bar_not_void: a_bar /= Void
 		do
 			internal_mini_toolbar := a_bar
+			state.set_mini_toolbar (internal_mini_toolbar)
 		ensure
 			a_bar_set: a_bar = internal_mini_toolbar
 		end

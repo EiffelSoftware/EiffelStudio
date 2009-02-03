@@ -484,6 +484,12 @@ feature -- Redefine
 			zone.update_user_widget
 		end
 
+	set_mini_toolbar (a_toolbar_widget: EV_WIDGET)
+			-- <Precursor>
+		do
+			zone.update_mini_toolbar
+		end
+
 	change_tab_tooltip (a_text: STRING_GENERAL)
 			-- <Precursor>
 		local

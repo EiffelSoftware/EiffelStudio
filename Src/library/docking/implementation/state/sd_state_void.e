@@ -251,6 +251,12 @@ feature -- Redefine
 			-- Do nothing
 		end
 
+	set_mini_toolbar (a_widget: EV_WIDGET)
+			-- <Precursor>
+		do
+			-- Do nothing
+		end
+
 feature {SD_TAB_STATE, SD_AUTO_HIDE_STATE} -- Hide/Show issues when Tab
 
 	set_relative (a_content: SD_CONTENT)

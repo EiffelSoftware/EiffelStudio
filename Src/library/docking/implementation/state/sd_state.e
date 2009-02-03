@@ -78,6 +78,11 @@ feature -- Properties
 		deferred
 		end
 
+	set_mini_toolbar (a_toolbar_widget: EV_WIDGET)
+			-- After SD_CONTENT changed `mini_toolbar', we update related container's mini toolbar.
+		deferred
+		end
+
 	change_tab_tooltip (a_tooltip: STRING_GENERAL)
 			-- Set notebook tab tooltip if possible.
 		do

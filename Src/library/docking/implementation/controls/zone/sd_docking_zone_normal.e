@@ -18,6 +18,7 @@ inherit
 			on_focus_out,
 			on_normal_max_window,
 			update_user_widget,
+			update_mini_toolbar,
 			update_mini_tool_bar_size,
 			set_non_focus_selection_color
 		end
@@ -176,6 +177,15 @@ feature {NONE} -- Implementation
 			-- <Precursor>
 		do
 			window.set_user_widget (content.user_widget)
+		end
+
+	update_mini_toolbar
+			-- <Precursor>
+		local
+			l_title_bar: SD_TITLE_BAR
+		do
+			l_title_bar := window.title_bar
+			l_title_bar.extend_custom_area (content.mini_toolbar)
 		end
 
 	update_mini_tool_bar_size

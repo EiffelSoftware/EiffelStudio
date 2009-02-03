@@ -484,6 +484,12 @@ feature -- Redefine
 			zone.replace_user_widget (content)
 		end
 
+	set_mini_toolbar (a_widget: EV_WIDGET)
+			-- <Precursor>
+		do
+			zone.update_mini_tool_bar (content)
+		end
+
 feature {SD_CONTENT} -- Redefine
 
 	change_title (a_title: STRING_GENERAL; a_content: SD_CONTENT)

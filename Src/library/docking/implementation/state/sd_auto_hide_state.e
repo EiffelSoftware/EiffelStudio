@@ -275,6 +275,14 @@ feature -- Redefine
 			end
 		end
 
+	set_mini_toolbar (a_widget: EV_WIDGET)
+			-- <Precursor>
+		do
+			if zone /= Void then
+				zone.window.set_mini_toolbar (a_widget)
+			end
+		end
+
 feature -- Command
 
 	close_animation

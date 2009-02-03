@@ -220,6 +220,12 @@ feature -- Redefine
 			-- Do nothing
 		end
 
+	set_mini_toolbar (a_toolbar: EV_WIDGET)
+			-- <Precursor>
+		do
+			-- Do nothing
+		end
+
 feature -- Command
 
 	update_title_bar

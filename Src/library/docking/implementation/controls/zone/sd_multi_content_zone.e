@@ -110,6 +110,11 @@ feature -- Command
 			internal_notebook.replace (a_content)
 		end
 
+	update_mini_tool_bar (a_content: SD_CONTENT)
+			-- Replace `mini_toolbar' which is related to `a_content'
+		do
+		end
+
 	prune (a_content: SD_CONTENT; a_focus: BOOLEAN)
 			-- Prune `a_content' from `Current'
 		require

@@ -60,6 +60,11 @@ feature -- Command
 		do
 		end
 
+	update_mini_toolbar
+			-- If `content''s mini toolbar changed, we update containers.
+		do
+		end
+
 feature -- Query
 
 	title: STRING_32

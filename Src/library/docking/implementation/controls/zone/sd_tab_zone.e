@@ -21,6 +21,7 @@ inherit
 			set_focus_color,
 			set_non_focus_selection_color,
 			save_content_title,
+			update_mini_tool_bar,
 			update_mini_tool_bar_size
 		end
 
@@ -229,6 +230,19 @@ feature -- Command
 			end
 		end
 
+	update_mini_tool_bar (a_content: SD_CONTENT)
+			-- <Precursor>
+		do
+			if a_content.mini_toolbar /= Void then
+				if a_content.mini_toolbar.parent /= Void then
+					a_content.mini_toolbar.parent.prune (a_content.mini_toolbar)
+				end
+				internal_title_bar.extend_custom_area (a_content.mini_toolbar)
+			else
+				internal_title_bar.clear_custom_widget
+			end
+		end
+		
 	update_mini_tool_bar_size
 			-- <Precursor>
 		do
@@ -423,21 +437,6 @@ feature {NONE} -- Agents for docker
 		end
 
 feature {NONE} -- Implementation
-
-	update_mini_tool_bar (a_content: SD_CONTENT)
-			-- Show mini tool bar if exist, otherwise clear mini tool bar area
-		require
-			not_void: a_content /= Void
-		do
-			if a_content.mini_toolbar /= Void then
-				if a_content.mini_toolbar.parent /= Void then
-					a_content.mini_toolbar.parent.prune (a_content.mini_toolbar)
-				end
-				internal_title_bar.extend_custom_area (a_content.mini_toolbar)
-			else
-				internal_title_bar.clear_custom_widget
-			end
-		end
 
 	internal_title_bar: SD_TITLE_BAR
 			-- Title bar

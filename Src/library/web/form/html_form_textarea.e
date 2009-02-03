@@ -21,6 +21,11 @@ feature
 
 	make
 		do
+			create name_value.make_empty
+			create value_value.make_empty
+			create rows_value.make_empty
+			create cols_value.make_empty
+			create wrap_value.make_empty
 		end
 
 feature -- Routines out
@@ -128,14 +133,12 @@ feature -- Set attributes
 
 feature {NONE}
 
-	has_value (s: STRING): BOOLEAN
+	has_value (s: ?STRING): BOOLEAN
 			-- Has the attribute 's' a value ?
 		do
-			if s = Void or else s.is_equal("") then
-				Result := False
-			else
-				Result := True
-			end
+			Result := s /= Void and then not s.is_empty
+		ensure
+			definition: Result = (s /= Void and then not s.is_empty)
 		end
 
 feature {NONE}

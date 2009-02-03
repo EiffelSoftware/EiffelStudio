@@ -7,7 +7,7 @@ note
 
 class
 	HTML_PAGE
-		
+
 inherit
 	ANY
 		redefine
@@ -35,11 +35,15 @@ feature -- Initialization
 		local
 			fi: PLAIN_TEXT_FILE
 			retried: BOOLEAN
+			l_image: ?STRING
 		do
 			if not retried then
 				create fi.make_open_read (fi_n)
 				fi.read_stream (fi.count)
-				image := fi.last_string.twin
+				l_image := fi.last_string
+					-- Per postcondition of `fi.read_stream'
+				check l_image_attached: l_image /= Void end
+				image := l_image.twin
 				fi.close
 			else
 				image := "<HTML>Could not read file " + fi_n + ".</HTML>"
@@ -54,7 +58,7 @@ feature -- Initialization
 feature -- Basic Operations
 
 	replace_marker (a_marker, s: STRING)
-			-- Replace marker 'a_marker' by string 's' 
+			-- Replace marker 'a_marker' by string 's'
 			-- within the template.
 			-- Do nothing if it does not exist.
 		require
@@ -81,7 +85,7 @@ feature -- Basic Operations
 			s1 := image.substring (i, i + 6)
 			s.append (s1)
 			image.replace_substring_all (s1, s)
-		end 
+		end
 
 	insert_hidden_field (name,value: STRING)
 				-- Insert hidden field with name 'name' and value 'value'.
@@ -109,16 +113,14 @@ feature -- Access
 	out: STRING
 			-- Usable copy of the output.
 		do
-			if image /= Void then
-				Result := image.twin
-			end
+			Result := image.twin
 		end
 
 feature {NONE} -- Implementation
 
 	image: STRING
 		-- Image corresponding to Current.
-	
+
 invariant
 	page_exists: out /= Void
 

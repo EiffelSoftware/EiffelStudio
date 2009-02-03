@@ -19,17 +19,17 @@ feature -- Access
 	Debug_mode: BOOLEAN = True
 			-- Should exception trace be displayed in case a crash occurs?
 
-	return_message: HTML_PAGE
-			-- Message which is sent back to the browser.
 
 feature -- Basic Operations
 
 	execute
 			-- Perform form entries processing, and send back the answer
 			-- to the browser.
+		local
+			return_message: HTML_PAGE
 		do
+			create return_message.make
 			if field_defined ("name") then
-				create return_message.make
 					-- Add the <head> and <title> tags.
 				return_message.add_html_code ("<HEAD><TITLE>EiffelWEB Example</TITLE></HEAD>")
 					-- Display the name entered in the body of the page.

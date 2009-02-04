@@ -56,10 +56,9 @@ feature {NONE} -- Initialization
 				l_auto_show_check.set_text (locale_formatter.translation (l_do_not_auto_show))
 				l_auto_show_check.set_tooltip (locale_formatter.translation (f_do_not_auto_show))
 				l_auto_show_check.set_foreground_color (preferences.editor_data.normal_text_color)
-
-				l_hbox.extend (auto_show_check)
-				l_hbox.disable_item_expand (auto_show_check)
-				auto_recycle (l_auto_show_check)
+				l_hbox.extend (l_auto_show_check)
+				l_hbox.disable_item_expand (l_auto_show_check)
+				auto_recycle (auto_show_check)
 			end
 
 				-- Padding between the check box and edit

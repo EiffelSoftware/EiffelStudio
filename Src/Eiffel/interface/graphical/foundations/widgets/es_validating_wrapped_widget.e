@@ -1,6 +1,6 @@
 note
 	description: "[
-		A widget wrapper to give text fields ({EV_TEXT_FIELD}) validation capabilities.
+		A widget wrapper to give text fields ({EV_TEXT_FIELD}/{EV_COMBO_BOX}) validation capabilities.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 class
-	ES_VALIDATION_TEXT_FIELD
+	ES_VALIDATING_WRAPPED_WIDGET
 
 inherit
 	ES_WIDGET [EV_HORIZONTAL_BOX]

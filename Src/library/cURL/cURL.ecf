@@ -57,6 +57,11 @@
 		</external_object>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</libray>
 		<cluster name="curl" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/spec$</exclude>

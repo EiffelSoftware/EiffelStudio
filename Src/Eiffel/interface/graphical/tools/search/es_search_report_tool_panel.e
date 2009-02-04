@@ -16,7 +16,6 @@ inherit
 		rename
 			widget as report_box
 		redefine
-			build_docking_content,
 			build_mini_toolbar,
 			mini_toolbar,
 			internal_recycle,
@@ -83,22 +82,6 @@ feature {NONE} -- Initialization
 			report_box.extend (report)
 		end
 
-	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER)
-			-- Redefine
-		do
-			create content.make_with_widget (report_box, title)
-			content.close_request_actions.extend (agent close)
-			content.set_long_title (title)
-			content.set_short_title (title)
-			if pixmap /= Void then
-				content.set_pixmap (pixmap)
-			end
-			if pixel_buffer /= Void then
-				content.set_pixel_buffer (pixel_buffer)
-			end
-			content.focus_in_actions.extend (agent show)
-		end
-
 feature {EB_DEVELOPMENT_WINDOW_BUILDER, ES_TOOL} -- Initialize
 
 	build_mini_toolbar
@@ -127,7 +110,7 @@ feature -- Access
 	search_tool: ES_MULTI_SEARCH_TOOL_PANEL
 			-- Search tool
 		do
-			Result ?= develop_window.shell_tools.tool ({ES_SEARCH_TOOL})
+			Result ?= develop_window.shell_tools.tool ({ES_SEARCH_TOOL}).panel
 		end
 
 	report_box: EV_VERTICAL_BOX
@@ -202,7 +185,7 @@ feature {NONE} -- Recyclable
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -215,22 +198,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

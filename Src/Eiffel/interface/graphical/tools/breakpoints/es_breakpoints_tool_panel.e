@@ -13,7 +13,6 @@ inherit
 	ES_DOCKABLE_TOOL_PANEL [EV_VERTICAL_BOX]
 		redefine
 			create_mini_tool_bar_items,
-			build_docking_content,
 			on_after_initialized,
 			internal_recycle,
 			on_show
@@ -173,18 +172,14 @@ feature {NONE} -- Initialization
 			end
         end
 
-	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER)
-		do
-			Precursor {ES_DOCKABLE_TOOL_PANEL} (a_docking_manager)
-			check content_not_void : content /= Void end
-			register_action (content.drop_actions, agent on_stone_dropped)
-			content.drop_actions.set_veto_pebble_function (agent can_drop_debuggable_feature_or_class)
-		end
-
 	on_after_initialized
 			-- Use to perform additional creation initializations, after the UI has been created.
 		do
 			Precursor {ES_DOCKABLE_TOOL_PANEL}
+
+				-- FIXME: Tool should be refactored to implement {ES_DOCKABLE_STONEABLE_TOOL_PANEL}
+			register_action (content.drop_actions, agent on_stone_dropped)
+			content.drop_actions.set_veto_pebble_function (agent can_drop_debuggable_feature_or_class)
 
 			enable_sorting
 
@@ -448,7 +443,7 @@ feature -- Updating
 			g: like grid
 			l_row: EV_GRID_ROW
 		do
-			if is_initialized and shown then
+			if is_initialized and is_shown then
 				g := grid
 				if g.row_count = 0 then
 					update
@@ -548,7 +543,7 @@ feature {NONE} -- Implementation
 	refresh_breakpoints_info
 			-- Refresh and recomputed breakpoints's grid when shown
 		do
-			if shown then -- Tool exists in layout and is displayed
+			if is_shown then -- Tool exists in layout and is displayed
 				refresh_breakpoints_info_now
 			else
 				request_refresh_breakpoints_info_now
@@ -1423,7 +1418,7 @@ feature {NONE} -- Implementation, cosmetic
 			-- Row highlight background color.
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -1447,11 +1442,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

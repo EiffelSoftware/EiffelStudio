@@ -16,57 +16,52 @@ inherit
 create {NONE}
 	default_create
 
-feature -- Status
-
-	shown: BOOLEAN
-			-- Is Current instantiated and shown on the screen?
-		do
-			if is_tool_instantiated then
-				Result := panel.shown
-			end
-		end
-
-	refresh
-			-- Refresh breakpoints display if shown.
-		do
-			if shown then
-				panel.refresh
-			end
-		end
-
 feature -- Access
 
-	icon: EV_PIXEL_BUFFER
-			-- Tool icon
-			-- Note: Do not call `tool.icon' as it will create the tool unnecessarly!
+	icon: !EV_PIXEL_BUFFER
+			-- <Precursor>
 		do
 			Result := stock_pixmaps.tool_breakpoints_icon_buffer
 		end
 
-	icon_pixmap: EV_PIXMAP
-			-- Tool icon pixmap
-			-- Note: Do not call `tool.icon' as it will create the tool unnecessarly!
+	icon_pixmap: !EV_PIXMAP
+			-- <Precursor>
 		do
 			Result := stock_pixmaps.tool_breakpoints_icon
 		end
 
-	title: STRING_32
-			-- Tool title.
-			-- Note: Do not call `tool.title' as it will create the tool unnecessarly!
+	title: !STRING_32
+			-- <Precursor>
 		do
-			Result := interface_names.t_breakpoints_tool
+			Result := locale_formatter.translation (t_tool_title)
+		end
+
+feature -- Basic operations
+
+	refresh
+			-- Refreshes breakpoints display, if shown.
+		require
+			is_interface_usable: is_interface_usable
+		do
+			if is_tool_instantiated and then is_shown then
+				panel.refresh
+			end
 		end
 
 feature {NONE} -- Factory
 
-	create_tool: ES_BREAKPOINTS_TOOL_PANEL
-			-- Creates the tool for first use on the development `window'
+	new_tool: !ES_BREAKPOINTS_TOOL_PANEL
+			-- <Precursor>
 		do
 			create Result.make (window, Current)
 		end
 
+feature {NONE} -- Internationalization
+
+	t_tool_title: STRING = "Breakpoints"
+
 ;note
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -79,19 +74,19 @@ feature {NONE} -- Factory
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

@@ -23,8 +23,6 @@ inherit
 			internal_detach_entities,
 			scroll_to_end,set_focus,
 			quick_refresh_editor,quick_refresh_margin, is_general,
-			build_docking_content,
-			attach_to_docking_manager,
 			show
 		end
 
@@ -47,19 +45,6 @@ feature{NONE} -- Initialization
 			initialization (develop_window)
 			widget := main_frame
 			external_output_manager.extend (Current)
-		end
-
-	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER)
-			-- Build docking content
-		local
-			l_constants: EB_CONSTANTS
-		do
-			Precursor {ES_OUTPUT_TOOL_PANEL} (a_docking_manager)
-			content.drop_actions.extend (agent drop_class)
-			content.drop_actions.extend (agent drop_feature)
-			create l_constants
-			content.set_long_title (title)
-			content.set_short_title (title)
 		end
 
 	initialization (a_tool: EB_DEVELOPMENT_WINDOW)
@@ -216,10 +201,7 @@ feature{NONE} -- Initialization
 
 			terminate_btn.set_pixmap (stock_pixmaps.debug_stop_icon)
 			terminate_btn.set_pixel_buffer (stock_pixmaps.debug_stop_icon_buffer)
-			output_text.drop_actions.extend (agent drop_class)
-			output_text.drop_actions.extend (agent drop_feature)
-			output_text.drop_actions.extend (agent drop_cluster)
-			output_text.drop_actions.extend (agent drop_breakable)
+			stone_director.bind (output_text, Current)
 
 			terminate_btn.set_tooltip (f_terminate_command_button)
 			terminate_btn.select_actions.extend (agent on_terminate_process)
@@ -231,10 +213,7 @@ feature{NONE} -- Initialization
 
 			state_label.set_minimum_height (State_bar_height)
 			state_label.align_text_right
-			state_label.drop_actions.extend (agent drop_class)
-			state_label.drop_actions.extend (agent drop_feature)
-			state_label.drop_actions.extend (agent drop_cluster)
-			state_label.drop_actions.extend (agent drop_breakable)
+			stone_director.bind (state_label, Current)
 
 			run_btn.set_pixmap (stock_pixmaps.debug_run_icon)
 			run_btn.set_pixel_buffer (stock_pixmaps.debug_run_icon_buffer)
@@ -248,10 +227,7 @@ feature{NONE} -- Initialization
 			check not_void: cmd_lst.choices /= Void end
 			register_action (cmd_lst.choices.focus_in_actions, agent on_focus_in_completion_window)
 
---			cmd_lst.drop_actions.extend (agent drop_class)
---			cmd_lst.drop_actions.extend (agent drop_feature)
-			cmd_lst.drop_actions.extend (agent drop_cluster)
-			cmd_lst.drop_actions.extend (agent drop_breakable)
+			stone_director.bind (cmd_lst, Current)
 
 			edit_cmd_detail_btn.set_pixmap (stock_pixmaps.general_add_icon)
 			edit_cmd_detail_btn.set_pixel_buffer (stock_pixmaps.general_add_icon_buffer)
@@ -259,10 +235,7 @@ feature{NONE} -- Initialization
 
 			input_field.key_press_actions.extend (agent on_key_pressed_in_input_field (?))
 
-			input_field.drop_actions.extend (agent drop_class)
-			input_field.drop_actions.extend (agent drop_feature)
-			input_field.drop_actions.extend (agent drop_cluster)
-			input_field.drop_actions.extend (agent drop_breakable)
+			stone_director.bind (input_field, Current)
 
 			send_input_btn.set_pixmap (stock_pixmaps.general_send_enter_icon)
 			send_input_btn.set_pixel_buffer (stock_pixmaps.general_send_enter_icon_buffer)
@@ -272,18 +245,9 @@ feature{NONE} -- Initialization
 			l_ev_cmd_lbl.set_text (l_command)
 			l_ev_output_lbl.set_text (l_output)
 			l_ev_input_lbl.set_text (l_input)
-			l_ev_cmd_lbl.drop_actions.extend (agent drop_class)
-			l_ev_cmd_lbl.drop_actions.extend (agent drop_feature)
-			l_ev_cmd_lbl.drop_actions.extend (agent drop_cluster)
-			l_ev_cmd_lbl.drop_actions.extend (agent drop_breakable)
-			l_ev_output_lbl.drop_actions.extend (agent drop_class)
-			l_ev_output_lbl.drop_actions.extend (agent drop_feature)
-			l_ev_output_lbl.drop_actions.extend (agent drop_cluster)
-			l_ev_output_lbl.drop_actions.extend (agent drop_breakable)
-			l_ev_input_lbl.drop_actions.extend (agent drop_class)
-			l_ev_input_lbl.drop_actions.extend (agent drop_feature)
-			l_ev_input_lbl.drop_actions.extend (agent drop_cluster)
-			l_ev_input_lbl.drop_actions.extend (agent drop_breakable)
+			stone_director.bind (l_ev_cmd_lbl, Current)
+			stone_director.bind (l_ev_output_lbl, Current)
+			stone_director.bind (l_ev_input_lbl, Current)
 
 			synchronize_command_list (Void)
 			if external_launcher.is_launch_session_over then
@@ -299,16 +263,6 @@ feature{NONE} -- Initialization
 			toolbar.compute_minimum_size
 			l_del_tool_bar.compute_minimum_size
 			cmd_lst.drop_actions.extend (agent on_stone_dropped_at_cmd_list)
-		end
-
-feature -- Docking
-
-	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER)
-			-- Attach to docking manager
-		do
-			build_docking_content (a_docking_manager)
-			check not_already_has: not a_docking_manager.has_content (content) end
-			a_docking_manager.contents.extend (content)
 		end
 
 feature -- Basic operation
@@ -931,7 +885,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -944,22 +898,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_EXTERNAL_OUTPUT_TOOL

@@ -13,11 +13,21 @@ frozen class
 inherit
 	ES_DEBUGGER_STONABLE_TOOL [ES_WATCH_TOOL_PANEL]
 		redefine
-			is_supporting_multiple_instances
+			on_tool_instantiated,
+			is_multiple_edition
 		end
 
 create {NONE}
 	default_create
+
+feature {NONE} -- Initialization: User interface
+
+	on_tool_instantiated
+			-- <Precursor>
+		do
+			Precursor
+			debugger_manager.update_all_debugging_tools_menu
+		end
 
 feature -- Access
 
@@ -29,15 +39,43 @@ feature -- Access
 			end
 		end
 
-	has_focus: BOOLEAN
-			-- Has focus
+feature -- Access
+
+	icon: !EV_PIXEL_BUFFER
+			-- <Precursor>
 		do
-			if is_tool_instantiated then
-				Result := panel.has_focus
-			end
+			Result := stock_pixmaps.tool_watch_icon_buffer
 		end
 
-feature {DEBUGGER_MANAGER, ES_WATCH_TOOL_PANEL} -- Access
+	icon_pixmap: !EV_PIXMAP
+			-- <Precursor>
+		do
+			Result := stock_pixmaps.tool_watch_icon
+		end
+
+	title: !STRING_32
+			-- <Precursor>
+		do
+			Result := locale_formatter.translation (t_tool_title)
+		end
+
+feature -- Status report
+
+	is_multiple_edition: BOOLEAN
+			-- <Precursor>
+		do
+			Result := True
+		end
+
+feature {NONE} -- Status report
+
+	internal_is_stone_usable (a_stone: !like stone): BOOLEAN
+			-- <Precursor>
+		do
+			Result := {l_stone: CALL_STACK_STONE} a_stone
+		end
+
+feature {DEBUGGER_MANAGER, ES_WATCH_TOOL_PANEL} -- Basic operations
 
 	disable_refresh
 			-- Disable refresh
@@ -77,51 +115,21 @@ feature {DEBUGGER_MANAGER, ES_WATCH_TOOL_PANEL} -- Access
 			end
 		end
 
-feature {NONE} -- Status report
-
-	internal_is_stone_usable (a_stone: !like stone): BOOLEAN
-			-- <Precursor>
-		do
-			Result := {l_stone: CALL_STACK_STONE} a_stone
-		end
-
-feature -- Properties
-
-	icon: EV_PIXEL_BUFFER
-			-- <Precursor>
-		do
-			Result := stock_pixmaps.tool_watch_icon_buffer
-		end
-
-	icon_pixmap: EV_PIXMAP
-			-- <Precursor>
-		do
-			Result := stock_pixmaps.tool_watch_icon
-		end
-
-	title: STRING_32
-			-- <Precursor>
-		do
-			Result := interface_names.t_watch_tool
-		end
-
-feature -- Status report
-
-	is_supporting_multiple_instances: BOOLEAN = True
-			-- <Precursor>
-
 feature {NONE} -- Factory
 
-	create_tool: ES_WATCH_TOOL_PANEL
+	new_tool: !ES_WATCH_TOOL_PANEL
 			-- <Precursor>
 		do
 			create Result.make (window, Current)
 			Result.set_debugger_manager (debugger_manager)
-			debugger_manager.update_all_debugging_tools_menu
 		end
 
+feature {NONE} -- Internationalization
+
+	t_tool_title: STRING = "Watch"
+
 ;note
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -134,22 +142,22 @@ feature {NONE} -- Factory
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

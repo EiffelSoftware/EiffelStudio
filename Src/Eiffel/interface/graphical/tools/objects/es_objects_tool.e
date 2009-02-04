@@ -16,7 +16,7 @@ inherit
 create {NONE}
 	default_create
 
-feature {DEBUGGER_MANAGER} -- Access
+feature {DEBUGGER_MANAGER} -- Status setting
 
 	disable_refresh
 			-- Disable refresh
@@ -33,6 +33,8 @@ feature {DEBUGGER_MANAGER} -- Access
 				panel.enable_refresh
 			end
 		end
+
+feature -- Basic operations
 
 	record_grids_layout
 			-- Record grid's layout
@@ -58,22 +60,22 @@ feature {DEBUGGER_MANAGER} -- Access
 
 feature -- Access
 
-	icon: EV_PIXEL_BUFFER
+	icon: !EV_PIXEL_BUFFER
 			-- <Precursor>
 		do
 			Result := stock_pixmaps.tool_objects_icon_buffer
 		end
 
-	icon_pixmap: EV_PIXMAP
+	icon_pixmap: !EV_PIXMAP
 			-- <Precursor>
 		do
 			Result := stock_pixmaps.tool_objects_icon
 		end
 
-	title: STRING_32
+	title: !STRING_32
 			-- <Precursor>
 		do
-			Result := interface_names.t_object_tool
+			Result := locale_formatter.translation (t_tool_title)
 		end
 
 feature {NONE} -- Status report
@@ -86,15 +88,19 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Factory
 
-	create_tool: ES_OBJECTS_TOOL_PANEL
+	new_tool:! ES_OBJECTS_TOOL_PANEL
 			-- <Precursor>
 		do
 			create Result.make (window, Current)
 			Result.set_debugger_manager (debugger_manager)
 		end
 
+feature {NONE} -- Internationalization
+
+	t_tool_title: STRING = "Objects"
+
 ;note
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -107,19 +113,19 @@ feature {NONE} -- Factory
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

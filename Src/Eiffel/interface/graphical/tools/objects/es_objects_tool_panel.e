@@ -15,7 +15,6 @@ inherit
 			on_before_initialize,
 			on_after_initialized,
 			create_mini_tool_bar_items,
-			build_docking_content,
 			internal_recycle,
 			show
 		end
@@ -112,6 +111,10 @@ feature {NONE} -- Initialization
 		do
 			Precursor
 
+				-- FIXME: Tool should be refactored to implement {ES_DOCKABLE_STONEABLE_TOOL_PANEL}
+			register_action (content.drop_actions, agent add_debugged_object)
+			register_action (content.drop_actions, agent drop_stack_element)
+
 				--| Initialize various agent and special mecanisms
 			init_delayed_cleaning_mecanism
 			preferences.debug_tool_data.objects_tool_layout_preference.change_actions.extend (agent refresh_objects_layout_from_preference)
@@ -176,14 +179,6 @@ feature {NONE} -- Initialization
 			Result.force_last (hex_format_cmd.new_mini_sd_toolbar_item)
 
 			Result.force_last (debugger_manager.object_storage_management_cmd.new_mini_sd_toolbar_item)
-		end
-
-	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER)
-			-- Build docking content
-		do
-			Precursor {ES_DEBUGGER_DOCKABLE_STONABLE_TOOL_PANEL} (a_docking_manager)
-			content.drop_actions.extend (agent add_debugged_object)
-			content.drop_actions.extend (agent drop_stack_element)
 		end
 
 feature -- Access: Help
@@ -1528,7 +1523,7 @@ invariant
 	objects_grids_not_void: (is_initialized and is_interface_usable) implies objects_grids /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -1541,22 +1536,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

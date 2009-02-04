@@ -12,7 +12,6 @@ inherit
 	EB_STONABLE_TOOL
 		redefine
 			build_mini_toolbar,
-			build_docking_content,
 			mini_toolbar,
 			force_last_stone,
 			show,
@@ -64,22 +63,17 @@ feature{NONE} -- Initialization
 			eiffel_project.manager.load_agents.extend (on_project_loaded_agent)
 		end
 
-	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER)
-			-- Build dockable content.
+	build_interface
+			-- Build interface
 		do
-			Precursor (a_docking_manager)
-			content.drop_actions.extend (agent on_item_dropped)
+			initialize
+
+			register_action (content.drop_actions, agent on_item_dropped)
 			content.drop_actions.set_veto_pebble_function (agent (a_stone: ANY): BOOLEAN
 						do
 							Result := {st: !STONE} a_stone and then st.is_storable
 						end
 					)
-		end
-
-	build_interface
-			-- Build interface
-		do
-			initialize
 
 			create history_manager.make (Current)
 			create address_manager.make (Current, True)
@@ -257,7 +251,7 @@ feature -- Setting
 	set_focus
 			-- Give the focus to `Current'.
 		require
-			focusable: content.is_visible and widget.is_sensitive
+			focusable: is_shown and then widget.is_sensitive
 		do
 			do_all_in_list (formatters, agent (a_formatter: EB_FORMATTER) do a_formatter.set_focus end)
 		end
@@ -470,7 +464,7 @@ feature{NONE} -- Implementation
 
 			l_customized_formatters := customized_formatters
 			l_customized_formatters.wipe_out
-			l_customized_formatters.append (customized_formatter_manager.formatters (title_for_pre, develop_window))
+			l_customized_formatters.append (customized_formatter_manager.formatters (tool_descriptor.content_id, develop_window))
 
 			if not l_customized_formatters.is_empty then
 				if not predefined_formatters.is_empty then
@@ -946,11 +940,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

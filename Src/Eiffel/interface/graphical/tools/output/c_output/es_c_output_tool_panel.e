@@ -18,8 +18,6 @@ inherit
 			clear, internal_recycle, scroll_to_end,set_focus,
 			quick_refresh_editor,quick_refresh_margin,
 			is_general,
-			attach_to_docking_manager,
-			build_docking_content,
 			show,
 			pixmap_failure,
 			pixmap_success
@@ -63,13 +61,6 @@ feature{NONE} -- Initialization
 			initialization (a_tool)
 			widget := l_ev_vertical_box_1
 			c_compilation_output_manager.extend (Current)
-		end
-
-	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER)
-			-- Build docking content.
-		do
-			Precursor {ES_OUTPUT_TOOL_PANEL}(a_docking_manager)
-			content.drop_actions.extend (agent set_stone)
 		end
 
 	initialization (a_tool: EB_DEVELOPMENT_WINDOW)
@@ -163,10 +154,7 @@ feature{NONE} -- Initialization
 			clear_output_btn.set_tooltip (f_clear_output)
 			clear_output_btn.select_actions.extend (agent on_clear_output_window)
 
-			output_text.drop_actions.extend (agent drop_class)
-			output_text.drop_actions.extend (agent drop_feature)
-			output_text.drop_actions.extend (agent drop_cluster)
-			output_text.drop_actions.extend (agent drop_breakable)
+			stone_director.bind (output_text, Current)
 
 			output_text.change_actions.extend (agent on_text_change)
 
@@ -182,6 +170,8 @@ feature{NONE} -- Initialization
 			l_ev_save_toolbar.compute_minimum_size
 
 			l_locale_lbl.set_text (interface_names.l_locale)
+
+			register_action (content.drop_actions, agent set_stone)
 		end
 
 	pixmap_failure: EV_PIXMAP
@@ -197,16 +187,6 @@ feature{NONE} -- Initialization
 		end
 
 feature -- Command
-
-	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER)
-			-- Attach to docking manager
-		do
-			build_docking_content (a_docking_manager)
-
-			check friend_tool_created: develop_window.tools.external_output_tool /= Void end
-			check not_already_has: not a_docking_manager.has_content (content) end
-			a_docking_manager.contents.extend (content)
-		end
 
 	set_stone (a_stone: ANY)
 			-- Set `a_stone' into Current.
@@ -809,7 +789,7 @@ feature {NONE} -- Recycle
 		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -833,11 +813,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_C_COMPILATION_OUTPUT_TOOL

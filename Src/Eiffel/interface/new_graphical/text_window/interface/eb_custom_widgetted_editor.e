@@ -111,7 +111,7 @@ feature -- Quick search bar basic operation
 			l_string : STRING_32
 		do
 			if search_tool /= Void then
-				if search_tool.is_visible then
+				if search_tool.is_shown then
 					search_tool.close
 				end
 				show_search_bar
@@ -145,7 +145,7 @@ feature -- Quick search bar basic operation
 		do
 			-- Commented out to prevent QSB flickering.
 			-- set_quick_search_mode (true)
-			if not search_tool.is_visible then
+			if not search_tool.is_shown then
 				search_bar.show
 			end
 		end
@@ -294,7 +294,7 @@ feature {NONE} -- Quick search bar.
 		do
 			l_tool := search_tool
 			if l_tool /= Void then
-				if not l_tool.is_visible then
+				if not l_tool.is_shown then
 					l_tool.prepare_search
 				else
 					l_tool.close
@@ -421,7 +421,7 @@ feature -- Search commands
 			-- Find next occurrence of last searched pattern.
 		do
 			if search_tool /= Void then
-				if search_tool.is_visible then
+				if search_tool.is_shown then
 					search_tool.go_to_next_found
 					if not text_displayed.is_empty then
 						check_cursor_position
@@ -437,7 +437,7 @@ feature -- Search commands
 			-- Find next occurrence of last searched pattern.
 		do
 			if search_tool /= Void then
-				if search_tool.is_visible then
+				if search_tool.is_shown then
 					search_tool.go_to_previous_found
 					if not text_displayed.is_empty then
 						check_cursor_position
@@ -765,7 +765,7 @@ feature {NONE} -- Internal implentation cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -789,11 +789,11 @@ feature {NONE} -- Internal implentation cache
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

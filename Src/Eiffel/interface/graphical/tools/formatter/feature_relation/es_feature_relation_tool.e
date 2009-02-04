@@ -23,30 +23,26 @@ create {NONE}
 
 feature -- Access
 
-	icon: EV_PIXEL_BUFFER
-			-- Tool icon
-			-- Note: Do not call `tool.icon' as it will create the tool unnecessarly!
+	icon: !EV_PIXEL_BUFFER
+			-- <Precursor>
 		do
 			Result := stock_pixmaps.tool_feature_icon_buffer
 		end
 
-	icon_pixmap: EV_PIXMAP
-			-- Tool icon pixmap
-			-- Note: Do not call `tool.icon' as it will create the tool unnecessarly!
+	icon_pixmap: !EV_PIXMAP
+			-- <Precursor>
 		do
 			Result := stock_pixmaps.tool_feature_icon
 		end
 
-	title: STRING_32
-			-- Tool title.
-			-- Note: Do not call `tool.title' as it will create the tool unnecessarly!
+	title: !STRING_32
+			-- <Precursor>
 		do
-			Result := interface_names.l_tab_feature_info
+			Result := locale_formatter.translation (t_tool_title)
 		end
 
 	mode: NATURAL_8 assign set_mode
-			-- The feature relation tool's view mode.
-			-- See {ES_FEATURE_RELATION_TOOL_VIEW_MODES} for applicable values.
+			-- <Precursor>.
 		do
 			if is_tool_instantiated then
 				Result := panel.mode
@@ -58,19 +54,14 @@ feature -- Access
 feature -- Element change
 
 	set_mode (a_mode: like mode)
-			-- Sets the current view mode.
-			--
-			-- `a_mode': The view mode to set. See {ES_FEATURE_RELATION_TOOL_VIEW_MODES} for applicable values.
+			-- <Precursor>
 		do
 				-- Setting a mode will force the creation of the tool, by design.
 			panel.set_mode (a_mode)
 		end
 
 	set_mode_with_stone (a_mode: like mode; a_stone: STONE)
-			-- Sets the current view mode and the stone to view using the mode.
-			--
-			-- `a_mode': The view mode to set.
-			-- `a_stone': The stone to set on the feature releation tool.
+			-- <Precursor>
 		do
 				-- First clear the stone, for performance reasons
 			panel.set_stone (Void)
@@ -87,14 +78,18 @@ feature -- Status report
 
 feature {NONE} -- Factory
 
-	create_tool: ES_FEATURES_RELATION_TOOL_PANEL
-			-- Creates the tool for first use on the development `window'
+	new_tool: !ES_FEATURES_RELATION_TOOL_PANEL
+			-- <Precursor>
 		do
 			create Result.make (window, Current)
 		end
 
+feature {NONE} -- Internationalization
+
+	t_tool_title: STRING = "Feature"
+
 ;note
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -107,19 +102,19 @@ feature {NONE} -- Factory
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

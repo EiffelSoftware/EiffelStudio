@@ -14,9 +14,7 @@ inherit
 		redefine
 			make,
 			reverse,
-			internal_recycle,
-			build_docking_content,
-			attach_to_docking_manager
+			internal_recycle
 		end
 
 	EB_SHARED_MANAGERS
@@ -173,17 +171,6 @@ feature {NONE} -- Initialization
 	build_report_box: EV_VERTICAL_BOX
 			-- Build a report.
 		do
-		end
-
-feature -- Docking management
-
-	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER)
-			-- Attach to docking manager
-		do
-			build_docking_content (a_docking_manager)
-
-			check not_already_has: not a_docking_manager.has_content (content) end
-			a_docking_manager.contents.extend (content)
 		end
 
 feature -- Access
@@ -553,27 +540,27 @@ feature {MSR_REPLACE_IN_ESTUDIO_STRATEGY, EB_CUSTOM_WIDGETTED_EDITOR, EB_SEARCH_
 
 feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Build interface
 
-	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER)
-			-- Build the associated explorer bar item and
-			-- Add it to `explorer_bar'
-		do
-			-- Search tool have to delay building mini tool bar.
-			-- So we can't call precursor here.
-			create content.make_with_widget (widget, title)
-			content.set_long_title (title)
-			content.set_short_title (title)
-			if pixmap /= Void then
-				content.set_pixmap (pixmap)
-			end
-			if pixel_buffer /= Void then
-				content.set_pixel_buffer (pixel_buffer)
-			end
-			content.set_floating_width (527)
-			content.set_floating_height (189)
-			content.close_request_actions.extend (agent close)
-			content.drop_actions.extend (agent on_drop_notebook)
-			content.focus_in_actions.extend (agent show)
-		end
+--	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER)
+--			-- Build the associated explorer bar item and
+--			-- Add it to `explorer_bar'
+--		do
+--			-- Search tool have to delay building mini tool bar.
+--			-- So we can't call precursor here.
+--			create content.make_with_widget (widget, title)
+--			content.set_long_title (title)
+--			content.set_short_title (title)
+--			if pixmap /= Void then
+--				content.set_pixmap (pixmap)
+--			end
+--			if pixel_buffer /= Void then
+--				content.set_pixel_buffer (pixel_buffer)
+--			end
+--			content.set_floating_width (527)
+--			content.set_floating_height (189)
+--			content.close_request_actions.extend (agent close)
+--			content.drop_actions.extend (agent on_drop_notebook)
+--			content.focus_in_actions.extend (agent show)
+--		end
 
 	prepare_interface
 			-- Initialize options' status.
@@ -795,7 +782,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR, EB_CONTEXT_MENU_FACTORY} -- Actions handler
 			end
 			if notebook /= Void then
 				if a_button = current_editor_button then
-					if widget /= Void and then is_visible then
+					if widget /= Void and then is_shown then
 						set_focus
 					end
 				end
@@ -1044,7 +1031,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR, EB_CONTEXT_MENU_FACTORY} -- Actions handler
 			-- On notebook selected.
 		do
 			if notebook.pointed_tab_index = 1 then
-				if widget /= Void and is_visible then
+				if widget /= Void and is_shown then
 					set_focus
 				end
 			end
@@ -1094,7 +1081,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 	dispatch_search
 			-- Dispatch search.
 		do
-			if shown then
+			if is_shown then
 				if is_whole_project_searched then
 					search_whole_project
 				elseif is_customized then
@@ -1349,7 +1336,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 				if
 					not is_current_editor_searched and then
 					not multi_search_performer.is_empty and then
-					not report_tool.shown
+					not report_tool.is_shown
 				then
 					report_tool.show
 				end
@@ -2177,7 +2164,7 @@ invariant
 	multi_search_performer_not_void: multi_search_performer /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -2190,22 +2177,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_MULTI_SEARCH_TOOL

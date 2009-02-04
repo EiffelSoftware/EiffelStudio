@@ -7,7 +7,7 @@ note
               (B) All initialization of the shim should be done by redefining `initialize', where `window' will be available
                   as an attached entity carrying the hosted development window, as will the `edition' number.
               (C) Recycle memory management is handled automatically so there is no need to call `recycle' on this shim or on
-                  the created tool.
+                  the created tool panel.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -18,6 +18,12 @@ deferred class
 	ES_TOOL [G -> EB_TOOL]
 
 inherit
+	ES_RECYCLABLE_TOOL
+		redefine
+			internal_detach_entities,
+			out
+		end
+
 	SITE [EB_DEVELOPMENT_WINDOW]
 		rename
 			site as window,
@@ -33,13 +39,15 @@ inherit
 			out
 		end
 
-	EB_RECYCLABLE
+inherit {NONE}
+	ES_SHARED_LOCALE_FORMATTER
+		export
+			{NONE} all
 		redefine
 			out
 		end
 
---inherit {NONE}
-	ES_SHARED_LOCALE_FORMATTER
+	ES_SHARED_FOUNDATION_HELPERS
 		export
 			{NONE} all
 		redefine
@@ -48,66 +56,96 @@ inherit
 
 feature {NONE} -- Initialization
 
-	build_tool (a_tool: G)
+	initialize
+			-- <Precursor>
+		do
+			Precursor {SITE}
+		end
+
+feature {NONE} -- Initialization: User interface
+
+	build_tool (a_tool: !G)
 			-- Initializes tool after it has been created.
 			--
 			-- `a_tool': Tool to initialize.
 		require
-			a_tool_attached: a_tool /= Void
 			a_tool_is_interface_usable: a_tool.is_interface_usable
 		do
-		end
-
-	initialize
-			-- Called when Current has been sited
-		do
-			create edition_changed
-			Precursor {SITE}
 		end
 
 feature {NONE} -- Clean up
 
 	internal_recycle
-			-- To be called when the button has became useless.
+			-- <Precursor>
+		local
+			l_content: like internal_docking_content
+			l_panel: like internal_panel
 		do
-			if internal_panel /= Void then
-					-- Clean up tool
-				check is_tool_instantiated: is_tool_instantiated end
-				if internal_panel.content.is_docking_manager_attached then
-					internal_panel.content.close
+			l_content := internal_docking_content
+			if l_content /= Void then
+				if {l_stonable: ES_STONABLE_I} Current then
+						-- Remove veto stonable actions
+					l_content.drop_actions.set_veto_pebble_function (agent l_stonable.is_stone_usable)
 				end
-				internal_panel.recycle
-				internal_panel := internal_panel.default
+
+				if l_content.is_docking_manager_attached then
+					l_content.close
+				end
 			end
-			edition_changed.dispose
-			edition_changed := Void
+			l_panel := internal_panel
+			if l_panel /= Void then
+					-- Clean up tool (because it's not auto-recycled)
+				check is_tool_instantiated: is_tool_instantiated end
+				l_panel.recycle
+			end
 			set_window (Void)
 		ensure then
-			internal_tool_dettached: internal_panel = Void
 			internal_tool_recycled: old internal_panel /= Void implies (old internal_panel).is_recycled
+			not_is_sited: not is_sited
+		end
+
+	internal_detach_entities
+			-- <Precursor>
+		local
+			l_default_panel: ?G
+		do
+			Precursor
+			internal_panel := l_default_panel
+			internal_docking_content := Void
+			internal_edition_changed_actions := Void
+		ensure then
+			internal_panel_detached: internal_panel = Void
+			internal_docking_content_detached: internal_docking_content = Void
+			internal_edition_changed_actions_detached: internal_edition_changed_actions = Void
 			window_detached: window = Void
-			edition_changed_detached: edition_changed = Void
-			not_edition_changed_is_interface_usable: not (old edition_changed).is_interface_usable
 		end
 
 feature -- Access
 
 	name: !STRING
 			-- The tool's associated name, used for modularizing development of a tool.
-			-- Note: the name is edition independent!
+			-- Note: the name should be edition independent!
 		require
 			is_interface_usable: is_interface_usable
+		local
+			l_result: like internal_name
 		do
-			if {l_result: STRING} internal_name then
-				Result := l_result
-			else
+			l_result := internal_name
+			if l_result = Void then
 				Result := tool_utilities.tool_associated_name (Current)
 				internal_name := Result
+			else
+				Result := l_result
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty
-			result_consistent: Result = name
+			result_consistent: Result ~ name
 		end
+
+	edition: NATURAL_8
+			-- Tool edition index.
+			-- Note: When `is_supporting_multiple_instances' returns true this will
+			--       be set to an index greater than 1.
 
 	profile_kind: !UUID
 			-- Applicable profile kind.
@@ -116,46 +154,24 @@ feature -- Access
 			Result := (create {ES_TOOL_PROFILE_KINDS}).generic
 		end
 
-	icon: EV_PIXEL_BUFFER
-			-- Tool icon
-			-- Note: Do not call `tool.icon' as it will create the tool unnecessarly!
-		require
-			is_interface_usable: is_interface_usable
-		deferred
-		ensure
-			result_attached: Result /= Void
-			not_result_is_destroyed: not Result.is_destroyed
-		end
-
-	icon_pixmap: EV_PIXMAP
-			-- Tool icon pixmap
-			-- Note: Do not call `tool.icon' as it will create the tool unnecessarly!
-		require
-			is_interface_usable: is_interface_usable
-		deferred
-		ensure
-			result_attached: Result /= Void
-			not_result_is_destroyed: not Result.is_destroyed
-		end
-
-	title: STRING_32
+	title: !STRING_32
 			-- Tool title.
-			-- Note: Do not call `tool.title' as it will create the tool unnecessarly!
+			--|Note: Do not call `tool.title' as it will create the tool unnecessarly!
 		require
 			is_interface_usable: is_interface_usable
 		deferred
 		ensure
-			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
+			result_consistent: Result ~ title
 		end
 
 	edition_title: !STRING_32
 			-- Tool title with an edition number.
-			-- Note: Do not call `tool.title' as it will create the tool unnecessarly!
+			--|Note: Do not call `tool.title' as it will create the tool unnecessarly!
 		require
 			is_interface_usable: is_interface_usable
 		do
-			if is_supporting_multiple_instances and then edition > 1 then
+			if is_multiple_edition and then edition > 1 then
 				create Result.make (title.count + 3)
 				Result.append (title)
 				Result.append (" #" + edition.out)
@@ -164,12 +180,8 @@ feature -- Access
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty
+			result_consistent: Result ~ edition_title
 		end
-
-	edition: NATURAL_8
-			-- Tool edition index.
-			-- Note: When `is_supporting_multiple_instances' returns true this will
-			--       be set to an index greater than 1.
 
 	shortcut_preference_name: ?STRING
 			-- An optional shortcut preference name, for automatic preference binding.
@@ -184,61 +196,24 @@ feature -- Access
 			Result.append (once "_tool")
 		ensure
 			not_result_is_empty: Result /= Void implies not Result.is_empty
-			result_consistent: Result /= Void implies Result.is_equal (shortcut_preference_name)
+			result_consistent: Result ~ shortcut_preference_name
 		end
 
-	frozen type_id: !STRING_32
-			-- A type identifier, used to store layout information and reinstantiate the type from
-			-- a stored layout.
+	hash_code: INTEGER
+			-- <Precursor>
 		do
-			if {l_id: STRING_32} internal_type_id then
-				Result := l_id
-			else
-				Result := tool_utilities.tool_id (Current)
-				internal_type_id := Result
-			end
+			Result := content_id.hash_code
 		ensure then
-			not_result_is_empty: not Result.is_empty
-			result_consistent: Result = Result
-		end
-
-	frozen panel: G
-			-- Actual tool panel.
-			-- Note: Only call this feature when absolutely necessary as it will create the tool.
-			--
-			-- WARNING: This feature is only exported for now. It will be hidden from almost all clients
-			--          in the future. Interaction with the tool UI should be done only through `Current'
-			--          using proxy routines, which respect `is_tool_instantiated' and not unecessarly
-			--          creating the tool UI.
-		require
-			not_is_recycled: not is_recycled
-		local
-			l_result: like internal_panel
-		do
-			l_result := internal_panel
-			if l_result = Void then
-				Result := create_tool
-				internal_panel := Result
-
-				Result.attach_to_docking_manager (window.docking_manager)
-				build_tool (Result)
-
-				on_tool_instantiated
-			else
-				Result := l_result
-			end
-		ensure
-			result_attached: Result /= Void
-			result_consistent: Result = panel
-			is_tool_instantiated: is_tool_instantiated
+			result_consistent: Result = hash_code
 		end
 
 feature {NONE} -- Access
 
 	frozen tool: !like Current
 			-- Provides a reference to the actual tool.
-			-- Note, this is for ESF helper functionality that may be optionally inherited in the actual
-			--       tool. See {ES_TOOL_PIXMAPS_PROVIDER} for an example.
+			--|Note, this is for ESF helper functionality that may be optionally inherited in the actual
+			--|      tool. See {ES_TOOL_PIXMAPS_PROVIDER} for an example.
+			--|      DO NOT REMOVE!
 		require
 			is_interface_usable: is_interface_usable
 		do
@@ -255,22 +230,29 @@ feature {ES_SHELL_TOOLS} -- Element change
 			-- `a_edition': The tool edition index
 		require
 			is_interface_usable: is_interface_usable
-			is_supporting_multiple_instances: a_edition > 1 implies is_supporting_multiple_instances
+			is_multiple_edition: a_edition > 1 implies is_multiple_edition
 			a_edition_positive: a_edition > 0
 		local
 			l_old: like edition
+			l_content: like internal_docking_content
 		do
 			l_old := edition
 			if l_old /= a_edition then
 				edition := a_edition
-				internal_type_id := Void
+				internal_content_id := Void
+				l_content := internal_docking_content
+				if l_content /= Void then
+					l_content.set_unique_title (content_id)
+					l_content.set_long_title (title)
+					l_content.set_short_title (title)
+				end
 				if is_tool_instantiated then
 						-- Notify tool that the edition changed
 					panel.on_edition_changed
 				end
 					-- Raise events
-				if edition_changed /= Void then
-					edition_changed.publish ([Current, l_old, a_edition])
+				if internal_edition_changed_actions /= Void then
+					internal_edition_changed_actions.call ([Current, l_old, a_edition])
 				end
 			end
 
@@ -278,35 +260,170 @@ feature {ES_SHELL_TOOLS} -- Element change
 					-- Calling an event handler might cause `internal_type_id' to become attached.
 					-- It's more important that we satify the post-condition an inccur a very minor
 					-- additional calculation of the type id.
-				internal_type_id := Void
+				internal_content_id := Void
+				l_content := internal_docking_content
+				if l_content /= Void then
+					l_content.set_unique_title (content_id)
+					l_content.set_long_title (title)
+					l_content.set_short_title (title)
+				end
 			end
 		ensure
 			edition_set: a_edition /= old edition implies edition = a_edition
-			internal_type_id_detached: a_edition /= old edition implies internal_type_id = Void
+			--internal_type_id_detached: a_edition /= old edition implies internal_content_id /~ old internal_content_id
 		end
 
-feature -- Status report
+feature -- Access: User interface
 
-	is_supporting_multiple_instances: BOOLEAN
-			-- Indicates if the tool can spawn multiple instances in the
-			-- same development window
+	icon: !EV_PIXEL_BUFFER
+			-- Tool icon.
+			--|Note: Do not call `tool.icon' as it will create the tool unnecessarly!
 		require
 			is_interface_usable: is_interface_usable
-		do
-			Result := False
-		end
-
-feature {ES_SHELL_TOOLS} -- Status report
-
-	is_recycled_on_closing: BOOLEAN
-			-- Indicates if the tool should be recycled on closing
-		require
-			is_interface_usable: is_interface_usable
-		do
-				-- Keeps a single tool available always.
-			Result := is_supporting_multiple_instances and not is_hide_requested and then window.shell_tools.editions_of_tool ({like Current}, False) > 1
+		deferred
 		ensure
-			not_is_hide_requested: is_hide_requested implies not Result
+			not_result_is_destroyed: not Result.is_destroyed
+			result_consistent: Result ~ icon
+		end
+
+	icon_pixmap: !EV_PIXMAP
+			-- Tool icon pixmap
+			--|Note: Do not call `tool.icon' as it will create the tool unnecessarly!
+		require
+			is_interface_usable: is_interface_usable
+		deferred
+		ensure
+			not_result_is_destroyed: not Result.is_destroyed
+			result_consistent: Result ~ icon_pixmap
+		end
+
+	frozen panel: !G
+			-- Actual tool panel.
+			-- Note: Only call this feature when absolutely necessary as it will create the tool.
+			--
+			-- WARNING: This feature is only exported for now. It will be hidden from almost all clients
+			--          in the future. Interaction with the tool UI should be done only through `Current'
+			--          using proxy routines, which respect `is_tool_instantiated' and not unecessarly
+			--          creating the tool UI.
+		require
+			is_interface_usable: is_interface_usable
+		local
+			l_result: like internal_panel
+		do
+			l_result := internal_panel
+			if l_result = Void then
+				Result := new_tool
+				internal_panel := Result
+				build_tool (Result)
+				on_tool_instantiated
+			else
+				Result := l_result
+			end
+		ensure
+			result_consistent: Result = panel
+			is_tool_instantiated: is_tool_instantiated
+		end
+
+	frozen content_id: !STRING_32
+			-- A content identifier, used to store layout information and reinstantiate the type from
+			-- a stored layout.
+		local
+			l_result: like internal_content_id
+		do
+			l_result := internal_content_id
+			if l_result = Void then
+				Result := tool_utilities.tool_id (Current)
+				internal_content_id := Result
+			else
+				Result := l_result
+			end
+		ensure then
+			not_result_is_empty: not Result.is_empty
+			result_consistent: Result ~ content_id
+		end
+
+	frozen docking_content, content: !SD_CONTENT
+			-- Access the docking content
+		require
+			is_interface_usable: is_interface_usable
+		local
+			l_result: like internal_docking_content
+			l_label: EV_LABEL
+		do
+			l_result := internal_docking_content
+			if l_result = Void then
+				if is_tool_instantiated then
+					create Result.make_with_widget (panel.widget, content_id)
+				else
+					create l_label.make_with_text ("Uh Oh!")
+					l_label.set_font ((create {ES_SHARED_FONTS_AND_COLORS}).fonts.prompt_sub_title_font)
+					create Result.make_with_widget (l_label, content_id)
+				end
+				Result.set_long_title (title)
+				Result.set_short_title (title)
+				Result.set_pixel_buffer (icon)
+				Result.set_pixmap (icon_pixmap)
+				internal_docking_content := Result
+				auto_recycle (Result)
+
+				if {l_stonable: ES_STONABLE_I} Current then
+						-- Set stonable actions
+
+		        		-- Register the same action with the docking content
+		        	register_action (Result.drop_actions, agent (ia_pebble: ANY; ia_stonable: !ES_STONABLE_I)
+		        			-- Propagate the stone drop actions	
+		        		do
+		        			if is_interface_usable then
+		        				if {l_stone: !STONE} ia_pebble and then ia_stonable.is_stone_usable (l_stone) then
+										-- Force tool to be shown. This way any query set stone prompt can be displayed in the correct context.
+									show (True)
+
+		      							-- Force stone on descriptor, which will optimize the display of the stone on Current.
+			        					-- I cannot see any reason why the tool would not be shown when a drop action occurs (unless the action is published programmatically),
+			        					-- but going through the descriptor is the safest and most optimized means of setting a stone.
+		        					ia_stonable.set_stone_with_query (l_stone)
+								else
+									if ia_pebble = Void then
+											-- Force tool to be shown. This way any query set stone prompt can be displayed in the correct context.
+										show (True)
+
+										ia_stonable.set_stone_with_query (Void)
+									end
+		        				end
+							end
+		        		end (?, l_stonable))
+
+						-- Set veto function
+					Result.drop_actions.set_veto_pebble_function (agent (ia_pebble: ANY; ia_stonable: !ES_STONABLE_I): BOOLEAN
+							-- Query if a pebble should be vetoed.
+						do
+							if is_interface_usable then
+								Result := ia_pebble = Void
+								if not Result and then {l_stone: STONE} ia_pebble then
+									Result := ia_stonable.is_stone_usable (l_stone)
+								end
+							end
+						end (?, l_stonable))
+				end
+
+				register_action (Result.close_request_actions, agent close)
+
+				register_kamikaze_action (Result.show_actions, agent (ia_content: !SD_CONTENT)
+						-- Attach the real panel to the docking manager.
+	                do
+	                    if not is_tool_instantiated then
+	                    		-- Just access the panel to initalize it. This is kind of a hack, but it
+	                    		-- works for what is needed.
+							panel.do_nothing
+	                    end
+	                end (Result))
+
+				window.docking_manager.contents.extend (Result)
+			else
+				Result := l_result
+			end
+		ensure
+			result_consistent: Result = docking_content
 		end
 
 feature -- Status report
@@ -317,19 +434,68 @@ feature -- Status report
 			-- of the system.
 		do
 			Result := internal_panel /= Void
+		ensure
+			internal_panel_attached: Result implies internal_panel /= Void
+		end
+
+	is_multiple_edition: BOOLEAN
+			-- Indicates if the tool can spawn multiple instances in the same development window.
+		require
+			is_interface_usable: is_interface_usable
+		do
+			Result := False
+		end
+
+	is_shown: BOOLEAN
+			-- Indicates if the tool is current shown on screen.
+		require
+			is_interface_usable: is_interface_usable
+		do
+			if is_tool_instantiated then
+				Result := panel.is_shown
+			end
+		ensure
+			is_interface_usable: Result implies is_interface_usable
+			is_tool_instantiated: Result implies is_tool_instantiated
+			is_visible: Result implies is_visible
+			panel_is_shown: Result implies panel.is_shown
+		end
+
+	is_visible: BOOLEAN
+			-- Indicates if foundation tool is current visible, which is not the same as being shown.
+			-- Visible refers to tool UI being available to click on (as a tab or auto-hide tab.)
+		require
+			is_interface_usable: is_interface_usable
+		do
+			Result := docking_content.is_visible
+		ensure
+			is_interface_usable: Result implies is_interface_usable
+			docking_content_is_visible: Result implies docking_content.is_visible
+		end
+
+	has_focus: BOOLEAN
+			-- Indicates if the tool has focus
+		require
+			is_interface_usable: is_interface_usable
+		do
+			if is_tool_instantiated then
+				Result := content.has_focus
+			end
 		end
 
 feature {ES_SHELL_TOOLS} -- Status report
 
 	is_hide_requested: BOOLEAN
 			-- Indicates if a hide is requested, rather than a proper close which could cause a recycle.
+			--| FIXME: Get rid of this attribute by implementing `hide' correctly.
 
-feature -- Hashing
-
-	hash_code: INTEGER
-			-- Hash code
+	is_recycled_on_close: BOOLEAN
+			-- <Precursor>
 		do
-			Result := type_id.hash_code
+				-- Keeps a single tool available - always.
+			Result := is_multiple_edition and not is_hide_requested and then window.shell_tools.editions_of_tool ({like Current}, False) > 1
+		ensure then
+			not_is_hide_requested: is_hide_requested implies not Result
 		end
 
 feature -- Output
@@ -338,43 +504,9 @@ feature -- Output
 			-- New string containing terse printable representation
 			-- of current object
 		do
-			Result := type_id
+			Result := content_id
 		ensure then
 			not_result_is_empty: not Result.is_empty
-		end
-
-feature {NONE} -- Helpers
-
-	frozen interface_names: INTERFACE_NAMES
-			-- All names used in the interface
-		once
-			create Result
-		ensure
-			result_attached: Result /= Void
-		end
-
-	frozen stock_pixmaps: ES_PIXMAPS_16X16
-			-- Shared access to stock 16x16 EiffelStudio pixmaps.
-		once
-			Result := (create {EB_SHARED_PIXMAPS}).icon_pixmaps
-		ensure
-			result_attached: Result /= Void
-		end
-
-	frozen preferences: EB_PREFERENCES
-			-- Shared access to EiffelStudio preferences.
-		once
-			Result := (create {EB_SHARED_PREFERENCES}).preferences
-		ensure
-			result_attached: Result /= Void
-		end
-
-	frozen tool_utilities: ES_TOOL_UTILITIES
-			-- Shared access to the tool utilities
-		once
-			create Result
-		ensure
-			result_attached: Result /= Void
 		end
 
 feature -- Basic operations
@@ -382,33 +514,36 @@ feature -- Basic operations
 	show (a_activate: BOOLEAN)
 			-- Show and activate the tool window.
 			--
-			-- `a_activate': True to set focus to the displayed window
+			-- `a_activate': True to set focus to the displayed window; False only to show.
 		require
 			is_interface_usable: is_interface_usable
+		local
+			l_panel: like panel
 		do
-			if panel.is_interface_usable then
-				if not panel.shown or panel.is_auto_hide then
-					panel.show
+			l_panel := panel
+			if l_panel.is_interface_usable then
+				if not l_panel.is_shown then
+					l_panel.show
 				end
 
 				if a_activate then
 					check
 							-- FIXME: Paul, when {ES_TOOL} uses {ES_DOCKABLE_TOOL_PANEL} instead of {EB_TOOL} this check
 							-- can be greatly simplified.
-						tool_is_initialized: (({ES_DOCKABLE_TOOL_PANEL [EV_WIDGET]}) #? panel) /= Void implies
-							(({ES_DOCKABLE_TOOL_PANEL [EV_WIDGET]}) #? panel).is_initialized
+						tool_is_initialized: {cl_panel: ES_DOCKABLE_TOOL_PANEL [EV_WIDGET]} l_panel implies cl_panel.is_initialized
 					end
-					panel.content.set_focus
+					docking_content.set_focus
 				end
 			end
 		ensure
-			tool_shown: panel.is_interface_usable implies not panel.is_auto_hide implies panel.shown
+			is_tool_instantiated: is_tool_instantiated
+			panel_is_shown: panel.is_interface_usable implies panel.is_shown
 		end
 
 	close
-			-- Closes or hides the tool based on the tool's options
+			-- Closes or hides the tool based on the tool's options.
 		do
-			if is_tool_instantiated and then internal_panel /= Void and then internal_panel.shown then
+			if is_tool_instantiated and then internal_panel /= Void and then internal_panel.is_shown then
 					-- Close was called directly, so reroute through the actual tool instance to ensure
 					-- the tool is cleaned up too.
 				internal_panel.close
@@ -418,35 +553,57 @@ feature -- Basic operations
 		end
 
 	hide
-			-- Hides the tool, without closing and possibly recycling it.
+			-- Hides the tool, without closing and potentially recycling it.
 		do
-			check not_is_hide_requested: not is_hide_requested end
-			is_hide_requested := True
-			close
-			is_hide_requested := False
+			-- FIXME: Paul. This should not call close, but perform a simple hide.
+			--              We can then rid ourselves of `is_hide_requested'.
+			if is_tool_instantiated then
+				is_hide_requested := True
+				close
+				is_hide_requested := False
+			end
+		ensure then
+			is_hide_requested_unchanged: is_hide_requested = old is_hide_requested
 		end
 
 feature -- Action handlers
 
 	on_tool_instantiated
-			-- Called when a tool panel is instatiated
+			-- Called when a tool panel is instatiated and has been built.
 		require
 			is_interface_usable: is_interface_usable
 			is_tool_instantiated: is_tool_instantiated
 		do
 		end
 
-feature -- Events
+feature -- Actions
 
-	edition_changed: EVENT_TYPE [TUPLE [tool: ES_TOOL [EB_TOOL]; old_edition, new_edition: like edition]]
-			-- Events raised when a tool's edition number changes.
+	edition_changed_actions: !ACTION_SEQUENCE [TUPLE [tool: ES_TOOL [EB_TOOL]; old_edition, new_edition: like edition]]
+			-- Actions raised when a tool's edition number changes.
+		require
+			is_interface_usable: is_interface_usable
+		local
+			l_result: ACTION_SEQUENCE [TUPLE [tool: ES_TOOL [EB_TOOL]; old_edition, new_edition: like edition]]
+		do
+			l_result := internal_edition_changed_actions
+			if l_result = Void then
+				create Result
+				auto_recycle (Result)
+				internal_edition_changed_actions := Result
+			else
+				Result := l_result
+			end
+		ensure
+			result_consistent: Result ~ edition_changed_actions
+		end
 
 feature {NONE} -- Factory
 
-	create_tool: G
-			-- Creates the tool for first use on the development `window'
+	new_tool: !G
+			-- Creates the tool for first use on the development `window'.
 		require
 			is_interface_usable: is_interface_usable
+			is_sited: is_sited
 			window_attached: window /= Void
 			window_is_interface_usable: window.is_interface_usable
 			not_is_tool_instantiated: not is_tool_instantiated
@@ -458,11 +615,15 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Implementation: Internal cache
 
+	internal_docking_content: ?like docking_content
+			-- Cached version of `docking_content'.
+			-- Note: Do not use directly!
+
 	internal_panel: ?like panel
 			-- Cached version of `panel'.
 			-- Note: Do not use directly!
 
-	internal_type_id: ?like type_id
+	internal_content_id: ?like content_id
 			-- Cached version of `type_id'.
 			-- Note: Do not use directly!
 
@@ -470,12 +631,18 @@ feature {NONE} -- Implementation: Internal cache
 			-- Cached version of `name'.
 			-- Note: Do not use directly!
 
+	internal_edition_changed_actions: ?like edition_changed_actions
+			-- Cached version of `edition_changed_actions'.
+			-- Note: Do not use directly!
+
 invariant
 	edition_big_enough: window /= Void implies edition > 0
-	edition_small_enough: not is_supporting_multiple_instances implies edition <= 1
+	edition_small_enough: not is_multiple_edition implies edition <= 1
+	internal_docking_content_has_widget: (is_interface_usable and internal_docking_content /= Void) implies
+		internal_docking_content.user_widget /= Void
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -499,11 +666,11 @@ invariant
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

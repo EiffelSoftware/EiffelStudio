@@ -11,44 +11,55 @@ frozen class
 	ES_FAVORITES_TOOL
 
 inherit
-	ES_TOOL [ES_FAVORITES_TOOL_PANEL]
+	ES_STONABLE_TOOL [ES_FAVORITES_TOOL_PANEL]
 
 create {NONE}
 	default_create
 
 feature -- Access
 
-	icon: EV_PIXEL_BUFFER
-			-- Tool icon
-			-- Note: Do not call `tool.icon' as it will create the tool unnecessarly!
+	icon: !EV_PIXEL_BUFFER
+			-- <Precursor>
 		do
 			Result := stock_pixmaps.tool_favorites_icon_buffer
 		end
 
-	icon_pixmap: EV_PIXMAP
-			-- Tool icon pixmap
-			-- Note: Do not call `tool.icon' as it will create the tool unnecessarly!
+	icon_pixmap: !EV_PIXMAP
+			-- <Precursor>
 		do
 			Result := stock_pixmaps.tool_favorites_icon
 		end
 
-	title: STRING_32
-			-- Tool title.
-			-- Note: Do not call `tool.title' as it will create the tool unnecessarly!
+	title: !STRING_32
+			-- <Precursor>
 		do
-			Result := interface_names.t_favorites_tool
+			Result := locale_formatter.translation (t_tool_title)
+		end
+
+feature {NONE} -- Status report
+
+	internal_is_stone_usable (a_stone: !like stone): BOOLEAN
+			-- <Precursor>
+		do
+			Result := {l_cs: CLASSI_STONE} a_stone
+		ensure then
+			a_stone_is_class_stone: {el_cs: CLASSI_STONE} a_stone
 		end
 
 feature {NONE} -- Factory
 
-	create_tool: ES_FAVORITES_TOOL_PANEL
-			-- Creates the tool for first use on the development `window'
+	new_tool: !ES_FAVORITES_TOOL_PANEL
+			-- <Precursor>
 		do
-			create Result.make (window, Current, window.favorites_manager)
+			create Result.make (window, Current)
 		end
 
+feature {NONE} -- Internationalization
+
+	t_tool_title: STRING = "Favorites"
+
 ;note
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -61,22 +72,22 @@ feature {NONE} -- Factory
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

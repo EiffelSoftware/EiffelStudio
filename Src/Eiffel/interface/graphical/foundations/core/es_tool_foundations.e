@@ -11,9 +11,9 @@ deferred class
 	ES_TOOL_FOUNDATIONS
 
 inherit
-	EB_RECYCLABLE
+	ES_RECYCLABLE
 
---inherit {NONE}
+inherit {NONE}
 	EV_SHARED_APPLICATION
 		export
 			{NONE} all
@@ -25,6 +25,11 @@ inherit
 		end
 
 	ES_SHARED_LOCALE_FORMATTER
+		export
+			{NONE} all
+		end
+
+	ES_SHARED_FOUNDATION_HELPERS
 		export
 			{NONE} all
 		end
@@ -162,42 +167,10 @@ feature {NONE} -- Query
 
 feature {NONE} -- Helpers
 
-	frozen interface_names: !INTERFACE_NAMES
-			-- Access to EiffelStudio's interface names
-		once
-			create Result
-		end
-
 	frozen interface_messages: !INTERFACE_MESSAGES
 			-- Access to EiffelStudio's interface messages
 		once
 			create Result
-		end
-
-	frozen stock_pixmaps: !ES_PIXMAPS_16X16
-			-- Shared access to stock 16x16 EiffelStudio pixmaps
-		once
-			Result := (create {EB_SHARED_PIXMAPS}).icon_pixmaps.as_attached
-		end
-
-	frozen mini_stock_pixmaps: !ES_PIXMAPS_10X10
-			-- Shared access to stock 10x10 EiffelStudio pixmaps
-		once
-			Result := (create {EB_SHARED_PIXMAPS}).mini_pixmaps.as_attached
-		end
-
-	frozen helpers: !EVS_HELPERS
-			-- Helpers to extend the operations of EiffelVision2
-		once
-			create Result
-		end
-
-	frozen preferences: !EB_PREFERENCES
-			-- Access to environment preferences
-		require
-			preferences_initialized: (create {EB_SHARED_PREFERENCES}).preferences /= Void
-		once
-			Result := (create {EB_SHARED_PREFERENCES}).preferences.as_attached
 		end
 
 	frozen session_manager: !SERVICE_CONSUMER [SESSION_MANAGER_S]
@@ -423,7 +396,7 @@ feature {NONE} -- Action Handlers
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -19,37 +19,38 @@ create {NONE}
 
 feature -- Access
 
-	title: STRING_32
-			-- Tool title.
-			-- Note: Do not call `tool.title' as it will create the tool unnecessarly!
-		do
-			Result := interface_names.t_testing_result
-		end
-
-	icon: EV_PIXEL_BUFFER
-			-- Tool icon
-			-- Note: Do not call `tool.icon' as it will create the tool unnecessarly!
+	icon: !EV_PIXEL_BUFFER
+			-- <Precursor>
 		do
 			Result := stock_pixmaps.testing_result_tool_icon_buffer
 		end
 
-	icon_pixmap: EV_PIXMAP
-			-- Tool icon pixmap
-			-- Note: Do not call `tool.icon' as it will create the tool unnecessarly!
+	icon_pixmap: !EV_PIXMAP
+			-- <Precursor>
 		do
 			Result := stock_pixmaps.testing_result_tool_icon
 		end
 
+	title: !STRING_32
+			-- <Precursor>
+		do
+			Result := locale_formatter.translation (t_tool_title)
+		end
+
 feature {NONE} -- Factory
 
-	create_tool: ES_EWEASEL_TESTING_RESULT_TOOL_PANEL
-			-- Creates the tool for first use on the development `window'
+	new_tool: !ES_EWEASEL_TESTING_RESULT_TOOL_PANEL
+			-- <Precursor>
 		do
 			create Result.make (window, Current)
 		end
 
+feature {NONE} -- Internationalization
+
+	t_tool_title: STRING = "Testing Results"
+
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -73,11 +74,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -9,132 +9,102 @@ class
 	ES_FAVORITES_TOOL_PANEL
 
 inherit
-	EB_TOOL
-		rename
-			make as tool_make
+	ES_DOCKABLE_STONABLE_TOOL_PANEL [EB_FAVORITES_TREE]
 		redefine
-			attach_to_docking_manager,
-			build_docking_content,
-			build_mini_toolbar,
-			internal_recycle,
-			show
+			on_show,
+			create_mini_tool_bar_items
+		end
+
+	ES_HELP_CONTEXT
+		export
+			{NONE} all
 		end
 
 create
 	make
 
-feature {NONE} -- Initialization
+feature {NONE} -- Initialization: User interface
 
-	make (a_manager: EB_DEVELOPMENT_WINDOW; a_tool: like tool_descriptor; a_favorites_manager: EB_FAVORITES_MANAGER)
-			-- Make a new favorites tool.
-		require
-			a_manager_exists: a_manager /= Void
-			a_favorites_manager_exists: a_favorites_manager /= Void
-			not_a_tool_is_recycled: not a_tool.is_recycled
+    build_tool_interface (a_widget: !EB_FAVORITES_TREE)
+            -- <Precursor>
 		do
-			favorites_manager := a_favorites_manager
-			tool_make (a_manager, a_tool)
-		ensure
-			tool_descriptor_set: tool_descriptor = a_tool
+
 		end
 
-	build_interface
-			-- Build all the tool's widgets.
-		do
-			-- The widget has already been created, so do nothing.
-		end
+feature {NONE} -- Access
 
-	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER)
-			-- Build docking content.
-		local
-			l_tree: EB_FAVORITES_TREE
-		do
-			Precursor {EB_TOOL}(a_docking_manager)
-			l_tree := favorites_manager.widget
-			content.drop_actions.extend (agent l_tree.remove_class_stone)
-			content.drop_actions.extend (agent l_tree.remove_feature_stone)
-			content.drop_actions.extend (agent l_tree.remove_folder)
-			content.drop_actions.extend (agent l_tree.add_stone)
-			content.drop_actions.extend (agent l_tree.add_folder)
-			content.drop_actions.extend (agent on_drop)
-		end
-
-	build_mini_toolbar
-			-- Build `mini_toolbar'
-		local
-			sd: SD_TOOL_BAR
-			sdb: SD_TOOL_BAR_BUTTON
-		do
-			create sd.make
-			mini_toolbar := sd
-
-			create sdb.make
-			sdb.set_tooltip (Interface_names.t_organize_favorites)
-			sdb.select_actions.extend (agent favorites_manager.organize_favorites)
-			sdb.set_pixmap (pixmaps.mini_pixmaps.general_edit_icon)
-			sd.extend (sdb)
-			sd.update_size
-		end
-
-feature -- Initialization
-
-	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER)
-			-- Attach to docking manager
-		do
-			build_docking_content (a_docking_manager)
-
-			check not_already_has: not a_docking_manager.has_content (content) end
-			a_docking_manager.contents.extend (content)
-		end
-
-feature -- Access
-
-	widget: EV_WIDGET
-			-- Widget representing Current
-		do
-			Result := favorites_manager.widget
-		end
-
-feature -- Command
-
-	show
-			-- Show tool.
-		local
-			w: EV_WIDGET
-		do
-			Precursor {EB_TOOL}
-			w := favorites_manager.widget
-			if w /= Void and then w.is_displayed and then w.is_sensitive then
-				favorites_manager.widget.set_focus
-			end
-		end
-
-feature -- Memory management
-
-	internal_recycle
-			-- Recycle `Current', but leave `Current' in an unstable state,
-			-- so that we know whether we're still referenced or not.
-		do
-			if favorites_manager /= Void then
-				favorites_manager.recycle
-				favorites_manager := Void
-			end
-			Precursor {EB_TOOL}
-		end
-
-feature {NONE} -- Implementation
-
-	on_drop (a_stone: STONE)
-			-- Set focus to content.
-		do
-			content.set_focus
-		end
-
-	favorites_manager: EB_FAVORITES_MANAGER;
+	favorites_manager: !EB_FAVORITES_MANAGER
 			-- Associated favorites manager.
+		do
+			Result := develop_window.favorites_manager.as_attached
+		end
+
+feature {NONE} -- Access: User interface
+
+	edit_tool_bar_button: ?SD_TOOL_BAR_BUTTON
+			-- Edit tool bar button.
+
+feature -- Access: Help
+
+	help_context_id: !STRING_GENERAL
+			-- <Precursor>
+		once
+			Result := "75CFEDA2-3823-EF29-130A-39E686116F40"
+		end
+
+feature {NONE} -- Action handlers
+
+	on_stone_changed (a_old_stone: ?like stone)
+			-- <Precursor>
+		local
+			l_stone: like stone
+		do
+			l_stone := stone
+			if l_stone /= Void then
+				favorites_manager.add_stone (l_stone)
+			end
+		end
+
+	on_show
+			-- <Precursor>
+		do
+			Precursor
+			user_widget.set_focus
+		end
+
+feature {NONE} -- Factory
+
+    create_widget: !EB_FAVORITES_TREE
+    		-- <Precursor>
+		do
+			Result := favorites_manager.widget.as_attached
+		end
+
+    create_mini_tool_bar_items: ?DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+    		-- <Precursor>
+    	local
+    		l_button: SD_TOOL_BAR_BUTTON
+		do
+			create Result.make (1)
+
+				-- `edit_tool_bar_button'
+			create l_button.make
+			l_button.set_tooltip (Interface_names.t_organize_favorites)
+			l_button.select_actions.extend (agent favorites_manager.organize_favorites)
+			l_button.set_pixel_buffer (stock_mini_pixmaps.general_edit_icon_buffer)
+			l_button.set_pixmap (stock_mini_pixmaps.general_edit_icon)
+			edit_tool_bar_button := l_button
+
+			Result.put_last (l_button)
+		end
+
+    create_tool_bar_items: ?DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+    		-- <Precursor>
+		do
+		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -147,22 +117,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_FAVORITES_TOOL
+end

@@ -1,8 +1,9 @@
 note
-	description: "Tool to view the cluster hierarchy"
+	description: "[
+			The groups tool to view a project's group hierarchy and contained classes
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: "Xavier Rousselot"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,21 +11,25 @@ class
 	ES_GROUPS_TOOL_PANEL
 
 inherit
-	EB_TOOL
+	ES_DOCKABLE_STONABLE_TOOL_PANEL [EB_CLASSES_TREE]
 		redefine
-			make,
-			mini_toolbar,
-			build_mini_toolbar,
-			build_docking_content,
-			internal_recycle,
-			show
+			on_after_initialized,
+			is_stone_sychronization_required,
+			create_mini_tool_bar_items
 		end
 
-	EB_SHARED_MANAGERS
+	ES_HELP_CONTEXT
+		export
+			{NONE} all
+		end
 
+	ES_GROUPS_COMMANDER_I
+		export
+			{ES_GROUPS_COMMANDER_I} all
+		end
+
+inherit {NONE}
 	SHARED_WORKBENCH
-
-	EIFFEL_LAYOUT
 		export
 			{NONE} all
 		end
@@ -32,205 +37,205 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
+feature {NONE} -- Initialization: User interface
 
-	make (a_manager: EB_DEVELOPMENT_WINDOW; a_tool: like tool_descriptor)
-			-- Make a new cluster tool.
+	build_tool_interface (a_widget: !EB_CLASSES_TREE)
+			-- <Precursor>
 		do
-			window := a_manager
-			Precursor (a_manager, a_tool)
+			a_widget.associate_with_window (develop_window)
 		end
 
-	build_interface
-			-- Build all the tool's widgets.
-		do
-			create widget.make (window.menus.context_menu_factory)
-			widget.associate_with_window (window)
-		end
-
-	build_mini_toolbar
-			-- Build associated tool bar
+	on_after_initialized
+			-- <Precursor>
 		local
-			sep: SD_TOOL_BAR_SEPARATOR
-			but: SD_TOOL_BAR_BUTTON
+			l_project_manager: ?EB_PROJECT_MANAGER
 		do
-			create show_current_class_cluster_cmd.make
-			show_current_class_cluster_cmd.set_tooltip (Interface_names.e_Show_class_cluster)
-			show_current_class_cluster_cmd.set_mini_pixmap (pixmaps.mini_pixmaps.general_search_icon)
-			show_current_class_cluster_cmd.set_mini_pixel_buffer (pixmaps.mini_pixmaps.general_search_icon_buffer)
-			show_current_class_cluster_cmd.set_name ("Show_class_cluster")
-			show_current_class_cluster_cmd.add_agent (agent show_current_class_cluster)
-			show_current_class_cluster_cmd.set_menu_name (Interface_names.m_Show_class_cluster)
+			Precursor
 
-			create mini_toolbar.make
-			mini_toolbar.extend (window.commands.new_cluster_cmd.new_mini_sd_toolbar_item)
-			mini_toolbar.extend (window.commands.new_library_cmd.new_mini_sd_toolbar_item)
-			if eiffel_layout.default_il_environment.is_dotnet_installed then
-				mini_toolbar.extend (window.commands.new_assembly_cmd.new_mini_sd_toolbar_item)
-			end
-			mini_toolbar.extend (window.commands.new_class_cmd.new_mini_sd_toolbar_item)
-			mini_toolbar.extend (window.commands.delete_class_cluster_cmd.new_mini_sd_toolbar_item)
-			create sep.make
-			mini_toolbar.extend (sep)
-			but := show_current_class_cluster_cmd.new_mini_sd_toolbar_item
-			but.drop_actions.extend (agent show_class)
-			but.drop_actions.extend (agent show_group)
-			mini_toolbar.extend (but)
-
-			mini_toolbar.compute_minimum_size
-
-			widget.refresh
-			if not widget.is_empty and Workbench.is_already_compiled then
-				show_current_class_cluster_cmd.enable_sensitive
+			l_project_manager := workbench.eiffel_project.manager
+			if not workbench.is_already_compiled then
+					-- The is an incomplete compiled project, set up the agents to handle
+					-- senitivity setting of project-sensitive widgets.
+				find_stone_button.disable_sensitive
+				register_action (l_project_manager.load_agents, agent on_project_loaded)
 			else
-				show_current_class_cluster_cmd.disable_sensitive
-			end
-		ensure then
-			toolbar_exists: mini_toolbar /= Void
-		end
-
-	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER)
-		do
-			Precursor {EB_TOOL} (a_docking_manager)
-			check content_not_void : content /= Void end
-			content.drop_actions.extend (agent show_class)
-			content.drop_actions.extend (agent show_group)
-		end
-
-feature -- Access
-
-	mini_toolbar: SD_TOOL_BAR
-			-- Bar containing a button for a new cluster and class.
-
-	widget: EB_CLASSES_TREE
-			-- tree representing clusters and classes in the system.
-
-	window: EB_DEVELOPMENT_WINDOW
-			-- development window `Current' is in.
-
-	show_current_class_cluster_cmd: EB_STANDARD_CMD
-			-- Command that highlights currently edited object in the cluster tree.
-
-feature -- Command
-
-	show
-			-- Show tool.
-		do
-			Precursor {EB_TOOL}
-			if widget.is_displayed then
-				widget.set_focus
+				check find_stone_button_enabled: find_stone_button.is_sensitive end
+				on_project_loaded
 			end
 		end
 
-feature -- Status setting
+feature {NONE} -- Access: User interface elements
 
-	set_stone (st: STONE)
-			-- A stone was dropped in `Current's parent.
-			-- Maybe we should enable `show_current_class_cluster_cmd'.
+	new_cluster_button: SD_TOOL_BAR_BUTTON
+			-- Button use to add a new cluster.
+
+	new_library_button: SD_TOOL_BAR_BUTTON
+			-- Button use to add a new library.
+
+	new_assembly_button: ?SD_TOOL_BAR_BUTTON
+			-- Button use to add a new assembly.
+
+	new_class_button: SD_TOOL_BAR_BUTTON
+			-- Button use to add a new class.
+
+	delete_group_button: SD_TOOL_BAR_BUTTON
+			-- Button use to remove a group.
+
+	find_stone_button: SD_TOOL_BAR_BUTTON
+			-- Button used to locate a class or cluster
+
+feature -- Access: Help
+
+	help_context_id: !STRING_GENERAL
+			-- <Precursor>
+		once
+			Result := "0BAEBAA5-A9C8-4C7C-6ACE-C11D82804906"
+		end
+
+feature {NONE} -- Status report
+
+	is_stone_sychronization_required (a_old_stone: ?STONE; a_new_stone: ?STONE): BOOLEAN
+			-- <Precursor>
 		do
-			if Workbench.is_already_compiled and not widget.is_empty then
-				show_current_class_cluster_cmd.enable_sensitive
+				-- No synchornization required, stone setting is only used to locate a stone.
+			Result := False
+		end
+
+feature {ES_GROUPS_COMMANDER_I} -- Basic operations
+
+	highlight_stone (a_stone: !STONE)
+			-- <Precursor>
+		do
+			set_stone (a_stone)
+		end
+
+	highlight_editor_stone
+			-- <Precursor>
+		local
+			l_editor: ?EB_SMART_EDITOR
+			l_stone: ?STONE
+			l_error: ES_ERROR_PROMPT
+		do
+			l_editor := develop_window.editors_manager.current_editor
+			if l_editor /= Void then
+				l_stone := l_editor.stone
+				if l_stone /= Void and then is_stone_usable (l_stone) then
+					highlight_stone (l_stone)
+				else
+					create l_error.make_standard (locale_formatter.translation (e_invalid_editor))
+					l_error.show_on_active_window
+				end
 			else
-				show_current_class_cluster_cmd.disable_sensitive
+				create l_error.make_standard (locale_formatter.translation (e_no_open_editor))
+				l_error.show_on_active_window
 			end
 		end
 
-	synchronize
-			-- The system was recompiled, update `Current'.
+feature {NONE} -- Action handlers
+
+	on_stone_changed (a_old_stone: ?like stone)
+			-- <Precursor>
+		local
+			l_stone: like stone
 		do
-			if Workbench.is_already_compiled and not widget.is_empty then
-				show_current_class_cluster_cmd.enable_sensitive
+			l_stone := stone
+			if l_stone /= Void and then not user_widget.is_empty then
+				if {l_class: CLASSI_STONE} l_stone then
+					user_widget.show_class (l_class.class_i)
+				elseif {l_group: CLUSTER_STONE} l_stone then
+					user_widget.show_subfolder (l_group.group, l_group.path)
+				else
+					user_widget.show_stone (l_stone)
+				end
+			end
+		end
+
+	on_find_stone (a_stone: STONE)
+			-- Called when the user requests to find the active class or cluster in the editor
+		require
+			is_interface_usable: is_interface_usable
+			a_stone_is_stone_usable: a_stone /= Void implies is_stone_usable (a_stone)
+		do
+			if a_stone = Void then
+					-- There is no context stone, so attempt to locate a stone from the editor
+				highlight_editor_stone
 			else
-				show_current_class_cluster_cmd.disable_sensitive
+				highlight_stone (a_stone)
 			end
 		end
 
 	on_project_loaded
-			-- A project has been created or loaded. Enable the locate command if necessary.
+			-- Called when a project has been loaded.
+		require
+			is_interface_usable: is_interface_usable
+			workbench_is_already_compiled: workbench.is_already_compiled
 		do
-			if Workbench.is_already_compiled and not widget.is_empty then
-				show_current_class_cluster_cmd.enable_sensitive
-			else
-				show_current_class_cluster_cmd.disable_sensitive
-			end
+			user_widget.on_project_loaded
+			highlight_editor_stone
 		end
 
-	on_project_unloaded
-			-- The current project has been unloaded. Disable the locate command if necessary.
+feature {NONE} -- Factory
+
+    create_widget: !EB_CLASSES_TREE
+			-- <Precursor>
 		do
-			show_current_class_cluster_cmd.disable_sensitive
+			create Result.make (context_menus)
 		end
 
-feature {NONE} -- Memory management
-
-	internal_recycle
-			-- Recycle `Current', but leave `Current' in an unstable state,
-			-- so that we know whether we're still referenced or not.
-		do
-			show_current_class_cluster_cmd.recycle
-			show_current_class_cluster_cmd := Void
-			widget.recycle
-			widget := Void
-			window := Void
-			Precursor {EB_TOOL}
-		end
-
-feature -- Implementation
-
-	show_class (st: CLASSI_STONE)
-			-- Display the class relative to `st' in the cluster tree.
-		do
-			widget.show_class (st.class_i)
-			if content /= Void and then content.is_visible then
-				content.set_focus
-			end
-		end
-
-	show_group (st: CLUSTER_STONE)
-			-- Display the class relative to `st' in the cluster tree.
-		do
-			widget.show_subfolder (st.group, st.path)
-			if content /= Void and then content.is_visible then
-				content.set_focus
-			end
-		end
-
-feature {NONE} -- Implementation
-
-	show_current_class_cluster
-			-- Highlight currently edited object in the cluster tree.
+    create_mini_tool_bar_items: ?DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			-- <Precursor>
 		local
-			conv_class: CLASSI_STONE
-			conv_cluster: CLUSTER_STONE
-			retried: BOOLEAN
+			l_button: SD_TOOL_BAR_BUTTON
+			l_commands: EB_DEVELOPMENT_WINDOW_COMMANDS
 		do
-			if not retried then
-				conv_class ?= window.stone
-				if conv_class /= Void then
-					widget.show_class (conv_class.class_i)
-				else
-					conv_cluster ?= window.stone
-					if conv_cluster /= Void then
-						widget.show_subfolder (conv_cluster.group, conv_cluster.path)
-					else
-							-- The current stone is neither a class stone nor a cluster stone.
-						prompts.show_warning_prompt (Warning_messages.w_Choose_class_or_cluster, window.window, Void)
-					end
-				end
-			else
-				if window.stone /= Void then
-					prompts.show_error_prompt (Warning_messages.w_Could_not_locate (window.stone.stone_signature), window.window, Void)
-				end
+			create Result.make (7)
+
+			l_commands := develop_window.commands
+			l_button := l_commands.new_cluster_cmd.new_mini_sd_toolbar_item
+			Result.put_last (l_button)
+			new_cluster_button := l_button
+
+			l_button := l_commands.new_library_cmd.new_mini_sd_toolbar_item
+			Result.put_last (l_button)
+			new_library_button := l_button
+
+			if eiffel_layout.default_il_environment.is_dotnet_installed then
+				l_button := l_commands.new_assembly_cmd.new_mini_sd_toolbar_item
+				Result.put_last (l_button)
+				new_assembly_button := l_button
 			end
-		rescue
-			retried := True
-			retry
+
+			l_button := l_commands.new_class_cmd.new_mini_sd_toolbar_item
+			Result.put_last (l_button)
+			new_class_button := l_button
+
+			l_button := l_commands.delete_class_cluster_cmd.new_mini_sd_toolbar_item
+			Result.put_last (l_button)
+			delete_group_button := l_button
+
+			Result.put_last (create {SD_TOOL_BAR_SEPARATOR}.make)
+
+				-- `find_stone_button'.
+			l_button := l_commands.find_class_or_cluster_command.new_mini_sd_toolbar_item
+			find_stone_button := l_button
+
+			Result.put_last (l_button)
 		end
+
+    create_tool_bar_items: ?DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			-- <Precursor>
+		do
+		end
+
+feature {NONE} -- Internationalization
+
+	e_no_open_editor: STRING = "There is no open editor to locate a class or cluster from."
+	e_invalid_editor: STRING = "The active editor does not contain a valid class or cluster."
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -241,22 +246,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_CLUSTER_TOOL
+end

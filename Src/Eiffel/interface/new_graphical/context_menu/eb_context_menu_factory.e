@@ -914,8 +914,8 @@ feature {NONE} -- Menu section, Granularity 1.
 		local
 			l_menu, l_c_menu: EV_MENU
 			l_class_formatter: EB_CLASS_INFO_FORMATTER
-			l_customized_tools: LIST [EB_CUSTOMIZED_TOOL]
-			l_customized_tool: EB_CUSTOMIZED_TOOL
+--			l_customized_tools: LIST [EB_CUSTOMIZED_TOOL]
+--			l_customized_tool: EB_CUSTOMIZED_TOOL
 		do
 			create l_menu.make_with_text (names.m_show)
 			a_menu.extend (l_menu)
@@ -943,25 +943,25 @@ feature {NONE} -- Menu section, Granularity 1.
 
 			extend_formatter (l_c_menu, dev_window.tools.class_tool.customized_formatters, dev_window.tools.class_tool, a_class_stone)
 			extend_formatter (l_c_menu, dev_window.tools.dependency_tool.customized_formatters, dev_window.tools.dependency_tool, a_class_stone)
-			l_customized_tools := dev_window.tools.customized_tools
-			from
-				l_customized_tools.start
-			until
-				l_customized_tools.after
-			loop
-				l_customized_tool := l_customized_tools.item
-				extend_formatter (l_c_menu, l_customized_tool.formatters, l_customized_tool, a_class_stone)
-				l_customized_tools.forth
-			end
+--			l_customized_tools := dev_window.tools.customized_tools
+--			from
+--				l_customized_tools.start
+--			until
+--				l_customized_tools.after
+--			loop
+--				l_customized_tool := l_customized_tools.item
+--				extend_formatter (l_c_menu, l_customized_tool.formatters, l_customized_tool, a_class_stone)
+--				l_customized_tools.forth
+--			end
 			if l_c_menu.is_empty then
 				l_c_menu.disable_sensitive
 			end
 
 			extend_separator (l_menu)
 
-			l_menu.extend (dev_window.tools.cluster_tool.show_current_class_cluster_cmd.new_menu_item_unmanaged)
+			l_menu.extend (dev_window.commands.find_class_or_cluster_command.new_menu_item_unmanaged)
 			l_menu.last.select_actions.wipe_out
-			l_menu.last.select_actions.extend (agent (dev_window.tools.cluster_tool).show_class (a_class_stone))
+			l_menu.last.select_actions.extend (agent (dev_window.commands.find_class_or_cluster_command).execute_with_stone (a_class_stone))
 
 			l_menu.extend (dev_window.tools.diagram_tool.center_diagram_cmd.new_menu_item_unmanaged)
 			l_menu.last.select_actions.wipe_out
@@ -976,8 +976,8 @@ feature {NONE} -- Menu section, Granularity 1.
 		local
 			l_menu, l_c_menu: EV_MENU
 			l_feature_formatter: EB_FEATURE_INFO_FORMATTER
-			l_customized_tools: LIST [EB_CUSTOMIZED_TOOL]
-			l_customized_tool: EB_CUSTOMIZED_TOOL
+--			l_customized_tools: LIST [EB_CUSTOMIZED_TOOL]
+--			l_customized_tool: EB_CUSTOMIZED_TOOL
 		do
 			create l_menu.make_with_text (names.m_show)
 			a_menu.extend (l_menu)
@@ -1005,16 +1005,16 @@ feature {NONE} -- Menu section, Granularity 1.
 
 			extend_formatter (l_c_menu, dev_window.tools.features_relation_tool.customized_formatters, dev_window.tools.features_relation_tool, a_feature_stone)
 			extend_formatter (l_c_menu, dev_window.tools.dependency_tool.customized_formatters, dev_window.tools.dependency_tool, a_feature_stone)
-			l_customized_tools := dev_window.tools.customized_tools
-			from
-				l_customized_tools.start
-			until
-				l_customized_tools.after
-			loop
-				l_customized_tool := l_customized_tools.item
-				extend_formatter (l_c_menu, l_customized_tool.formatters, l_customized_tool, a_feature_stone)
-				l_customized_tools.forth
-			end
+--			l_customized_tools := dev_window.tools.customized_tools
+--			from
+--				l_customized_tools.start
+--			until
+--				l_customized_tools.after
+--			loop
+--				l_customized_tool := l_customized_tools.item
+--				extend_formatter (l_c_menu, l_customized_tool.formatters, l_customized_tool, a_feature_stone)
+--				l_customized_tools.forth
+--			end
 			if l_c_menu.is_empty then
 				l_c_menu.disable_sensitive
 			end
@@ -1316,16 +1316,18 @@ feature {NONE} -- Menu section, Granularity 1.
 			a_menu_not_void: a_menu /= Void
 		local
 			l_menu_item: EV_MENU_ITEM
-			l_properties_tool: ES_PROPERTIES_TOOL_PANEL
+			l_tool: ES_PROPERTIES_TOOL
 			l_stone: STONE
 		do
 			l_stone ?= a_pebble
 			if l_stone /= Void then
-				l_properties_tool := dev_window.tools.properties_tool
-				if l_properties_tool.dropable (l_stone) then
-					create l_menu_item.make_with_text (l_properties_tool.menu_name)
-					l_menu_item.select_actions.extend (agent l_properties_tool.show)
-					l_menu_item.select_actions.extend (agent l_properties_tool.set_stone (l_stone))
+					-- FIXME: Properties tool needs to be converted to ESF
+				l_tool ?= dev_window.shell_tools.tool ({ES_PROPERTIES_TOOL})
+				check l_tool_attached: l_tool /= Void end
+				if l_tool.panel.dropable (l_stone) then
+					create l_menu_item.make_with_text (l_tool.title)
+					l_menu_item.select_actions.extend (agent l_tool.show)
+					l_menu_item.select_actions.extend (agent (l_tool.panel).set_stone (l_stone))
 					a_menu.extend (create {EV_MENU_SEPARATOR})
 					a_menu.extend (l_menu_item)
 				end
@@ -1961,7 +1963,7 @@ invariant
 	dev_window_not_void: dev_window /= Void
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -1985,11 +1987,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

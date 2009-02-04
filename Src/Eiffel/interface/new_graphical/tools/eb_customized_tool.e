@@ -13,9 +13,9 @@ inherit
 		rename
 			make as old_make
 		redefine
-			is_customized_tool,
+--			is_customized_tool,
 			title,
-			title_for_pre,
+--			title_for_pre,
 			pixmap,
 			pixel_buffer
 		end
@@ -47,13 +47,13 @@ feature -- Access
 	id: STRING
 			-- ID of current tool
 
-	title_for_pre: STRING
-			-- Title of the tool
-		do
-			Result := id
-		ensure then
-			good_result: Result = id
-		end
+--	title_for_pre: STRING
+--			-- Title of the tool
+--		do
+--			Result := id
+--		ensure then
+--			good_result: Result = id
+--		end
 
 	title: STRING_GENERAL
 			-- Title of the tool which for show, it maybe not in English.
@@ -158,16 +158,16 @@ feature -- Setting
 	drop_stone (st: like stone)
 			-- Set `st' in the stone manager and pop up the feature view if it is a feature stone.
 		local
-			l_tool_id: STRING
+--			l_tool_id: STRING
 			l_tool: EB_STONABLE_TOOL
 		do
-			l_tool_id := suitable_tool_for_stone (st)
-			if l_tool_id /= Void then
-				l_tool ?= develop_window.tools.customizable_tool_by_id (l_tool_id)
-				if l_tool /= Void then
-					l_tool.show_with_setting
-				end
-			end
+--			l_tool_id := suitable_tool_for_stone (st)
+--			if l_tool_id /= Void then
+--				l_tool ?= develop_window.tools.customizable_tool_by_id (l_tool_id)
+--				if l_tool /= Void then
+--					l_tool.show_with_setting
+--				end
+--			end
 
 			if develop_window.unified_stone then
 				develop_window.set_stone (st)
@@ -191,7 +191,7 @@ feature -- Setting
 				set_last_stone (l_stone)
 				develop_window.tools.set_last_stone (last_stone)
 			end
-			
+
 			if widget.is_displayed or else is_auto_hide or else develop_window.link_tools then
 				force_last_stone
 			end
@@ -372,35 +372,35 @@ invariant
 	id_attached: id /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-
+			
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-
+			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
-
+			See the GNU General Public License for more details.
+			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

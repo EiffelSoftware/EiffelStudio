@@ -16,7 +16,6 @@ deferred class
 inherit
     EB_TOOL
         rename
-            title_for_pre as tool_ref_id,
             pixmap as icon_pixmap,
             pixel_buffer as icon,
             build_interface as on_before_initialize
@@ -29,7 +28,6 @@ inherit
             icon_pixmap,
             title,
             show,
-            build_docking_content,
             on_edition_changed
 		end
 
@@ -62,12 +60,15 @@ feature {NONE} -- Initialization
 			-- <Precursor>
 		do
 			Precursor {EB_TOOL} (a_window, a_tool)
+			initialize
 		end
 
     frozen initialize
             -- Initializes the creation of the tool.
         require
             not_is_initialized: not is_initialized
+		local
+			l_content: like content
         do
             if not is_initializing then
                 is_initializing := True
@@ -76,6 +77,18 @@ feature {NONE} -- Initialization
                 else
                     widget.extend (user_widget)
                 end
+
+				build_mini_toolbar
+
+				l_content := content
+				l_content.set_user_widget (widget)
+
+				if mini_tool_bar_widget /= Void then
+					l_content.set_mini_toolbar (mini_tool_bar_widget)
+					mini_tool_bar_widget.update_size
+					l_content.update_mini_tool_bar_size
+					mini_tool_bar_widget.update_size
+				end
 
                 build_tool_interface (user_widget)
 
@@ -111,7 +124,7 @@ feature {NONE} -- Initialization
         		-- Focus
         	register_action (content.focus_in_actions, agent
         		do
-        			if is_interface_usable and then is_initialized and then shown then
+        			if is_interface_usable and then is_initialized and then is_shown then
         				on_focus_in
         			end
         		end)
@@ -154,27 +167,6 @@ feature {NONE} -- Initialization: User interface
         deferred
         ensure
             not_is_initialized: not is_initialized
-        end
-
-    build_docking_content (a_docking_manager: SD_DOCKING_MANAGER)
-            -- Build's docking tool content
-        do
-            Precursor {EB_TOOL}(a_docking_manager)
-
-                -- Initialize when showing for the first time.
-                -- This is useful when `content' is auto hide.
-			register_kamikaze_action (content.show_actions, agent
-                do
-                    if
-                    	not is_recycled and then
-                    	not is_initialized and then
-                    	develop_window /= Void and then
-                    	not (develop_window.is_recycled or develop_window.is_recycling)
-                    then
-                    		-- Only initialize if we really can (not in shutdown)
-                        initialize
-                    end
-                end)
         end
 
 feature {NONE} -- Clean up
@@ -221,10 +213,7 @@ feature {NONE} -- Clean up
 	internal_detach_entities
 			-- <Precursor>
 		do
-			internal_stone_director := Void
 			Precursor
-		ensure then
-			internal_stone_director_detached: internal_stone_director = Void
 		end
 
 feature -- Access
@@ -287,7 +276,7 @@ feature {NONE} -- Access
             l_tool := tool_descriptor
             create l_result.make (15)
             l_result.append (l_tool.title)
-            if l_tool.is_supporting_multiple_instances and then l_tool.edition > 1 then
+            if l_tool.is_multiple_edition and then l_tool.edition > 1 then
                 l_result.append (" #" + l_tool.edition.out)
             end
             Result := l_result
@@ -348,22 +337,6 @@ feature {NONE} -- Access
 
 feature {NONE} -- Helpers
 
-    frozen stone_director: ES_TOOL_STONE_REDIRECT_HELPER
-            -- Shared access to a stone redirection helper
-        require
-            not_development_window_is_recycled: internal_stone_director /= Void or not develop_window.is_recycled
-        do
-            Result := internal_stone_director
-            if Result = Void then
-                create Result.make (develop_window)
-                internal_stone_director := Result
-                auto_recycle (internal_stone_director)
-            end
-        ensure
-            result_attached: Result /= Void
-            result_consistent: Result = Result
-        end
-
     frozen preferences: EB_PREFERENCES
         once
             Result := (create {EB_SHARED_PREFERENCES}).preferences
@@ -393,6 +366,21 @@ feature {NONE} -- Helpers
 			create Result
 		ensure
 			result_attached: Result /= Void
+		end
+
+	context_menus: !EB_CONTEXT_MENU_FACTORY
+			-- Access to the window's content menu factory
+		require
+			is_interface_usable: is_interface_usable
+		local
+			l_menus: EB_DEVELOPMENT_WINDOW_MENUS
+		do
+			l_menus := develop_window.menus
+			check
+				l_menus_attached: l_menus /= Void
+				l_menus_is_interface_usable: l_menus.is_interface_usable
+			end
+			Result := l_menus.context_menu_factory.as_attached
 		end
 
 feature -- Element change
@@ -451,7 +439,7 @@ feature {NONE} -- Basic operations
 	show_help
 			-- <Precursor>
 		do
-			if is_initialized and then shown and content.has_focus then
+			if is_initialized and then is_shown and content.has_focus then
 					-- Only show help for focused tool.
 				Precursor
 			end
@@ -681,7 +669,7 @@ feature {NONE} -- User interface elements
             if l_cell = Void then
                 create l_cell.put (Void)
                 internal_mini_tool_bar_widget := l_cell
-                l_multi := tool_descriptor.is_supporting_multiple_instances
+                l_multi := tool_descriptor.is_multiple_edition
 				if {l_context: HELP_CONTEXT_I} Current then
 						-- Create the help button
 					l_help_button := create_help_button
@@ -823,7 +811,7 @@ feature {NONE} -- Action handlers
 				is_initialized: is_initialized
 			end
 
-			if shown then
+			if is_shown then
 				on_show
 			else
 					-- May be auto-hidden or some other state that does not indicate being shown.
@@ -832,7 +820,7 @@ feature {NONE} -- Action handlers
 					create show_polling_timer
 					register_action (show_polling_timer.actions, agent
 						do
-							if is_interface_usable and is_initialized and then shown then
+							if is_interface_usable and is_initialized and then is_shown then
 								show_polling_timer.destroy
 								show_polling_timer := Void
 								on_show
@@ -848,7 +836,7 @@ feature {NONE} -- Action handlers
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
-			shown: shown
+			is_shown: is_shown
 			user_widget_is_displayed: user_widget.is_displayed
 		do
 		end
@@ -858,7 +846,7 @@ feature {NONE} -- Action handlers
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
-			shown: shown
+			is_shown: is_shown
 		do
 		end
 
@@ -1061,9 +1049,6 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Internal implementation cache
 
-    internal_stone_director: ?like stone_director
-            -- Cached version of `stone_director'
-
     internal_icon_pixmap: ?like icon_pixmap
             -- Cached version of `pixmap'
 
@@ -1116,11 +1101,11 @@ invariant
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

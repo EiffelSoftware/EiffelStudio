@@ -26,13 +26,13 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_dev_window: like development_window; a_drop_actions: like drop_actions; a_for_caller: BOOLEAN)
+	make (a_dev_window: like development_window; a_for_caller: BOOLEAN)
 			-- Initialize.
 		require
 			a_dev_window_attached: a_dev_window /= Void
 		do
 			create row_table.make (100)
-			view_make (a_dev_window, a_drop_actions)
+			view_make (a_dev_window)
 			is_for_caller := a_for_caller
 		end
 
@@ -524,9 +524,6 @@ feature{NONE} -- Initialization
 			grid.set_dynamic_content_function (agent dynamic_grid_item_function)
 			grid.pointer_button_press_item_actions.extend (agent on_item_pressed)
 			grid.set_row_height (default_row_height)
-			if drop_actions /= Void then
-				grid.drop_actions.fill (drop_actions)
-			end
 			set_select_all_action (agent select_all)
 			enable_ctrl_right_click_to_open_new_window
 			grid.focus_in_actions.extend (agent on_grid_focus_in)
@@ -573,7 +570,7 @@ invariant
 	row_table_attached: row_table /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -586,21 +583,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

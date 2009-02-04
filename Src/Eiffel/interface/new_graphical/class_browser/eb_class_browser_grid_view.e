@@ -48,14 +48,12 @@ inherit
 
 feature{NONE} -- Initialization
 
-	make (a_dev_window: like development_window; a_drop_actions: like drop_actions)
+	make (a_dev_window: like development_window)
 			-- Initialize.
 		require
 			a_dev_window_attached: a_dev_window /= Void
-			a_drop_actions_attached: a_drop_actions /= Void
 		do
 			development_window := a_dev_window
-			drop_actions := a_drop_actions
 			post_sort_actions.extend (agent on_post_sort)
 			build_interface
 			grid.set_expand_selected_rows_agent (agent on_expand_one_level)
@@ -68,8 +66,6 @@ feature{NONE} -- Initialization
 			grid.enable_default_tree_navigation_behavior (True, True, True, True)
 			set_item_text_function (agent text_of_grid_item)
 			enable_copy
-		ensure
-			drop_actions_set: drop_actions = a_drop_actions
 		end
 
 	build_grid
@@ -88,6 +84,8 @@ feature{NONE} -- Initialization
 
 	build_interface
 			-- Build interface of current view.
+		local
+			l_binder: ES_TOOL_STONE_REDIRECT_HELPER
 		do
 			check development_window /= Void end
 				-- Build sortable and searchable `grid'.
@@ -95,9 +93,11 @@ feature{NONE} -- Initialization
 			build_sortable_and_searchable
 
 				-- Build rest of the interface
-			if drop_actions /= Void then
-				text.drop_actions.fill (drop_actions)
-			end
+			create l_binder.make (development_window)
+			l_binder.bind (text, Current)
+			l_binder.bind (grid, Current)
+			auto_recycle (l_binder)
+
 			color_or_font_change_actions.extend (agent on_color_or_font_changed)
 			synchronize_color_or_font_change_with_editor
 			synchronize_scroll_behavior_with_editor
@@ -733,9 +733,6 @@ feature {NONE} -- Implementation
 	quick_search_bar: EB_GRID_QUICK_SEARCH_TOOL
 			-- Search bar used in browser
 
-	drop_actions: EV_PND_ACTION_SEQUENCE
-			-- Actions performed when drop occurs on current view	
-
 	internal_text: like text
 			-- Implementation of `text'
 
@@ -1153,35 +1150,35 @@ invariant
 	development_window_attached: not is_recycled implies development_window /= Void
 
 note
-        copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2009, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[
-                        This file is part of Eiffel Software's Eiffel Development Environment.
-                        
-                        Eiffel Software's Eiffel Development Environment is free
-                        software; you can redistribute it and/or modify it under
-                        the terms of the GNU General Public License as published
-                        by the Free Software Foundation, version 2 of the License
-                        (available at the URL listed under "license" above).
-                        
-                        Eiffel Software's Eiffel Development Environment is
-                        distributed in the hope that it will be useful,	but
-                        WITHOUT ANY WARRANTY; without even the implied warranty
-                        of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-                        See the	GNU General Public License for more details.
-                        
-                        You should have received a copy of the GNU General Public
-                        License along with Eiffel Software's Eiffel Development
-                        Environment; if not, write to the Free Software Foundation,
-                        Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
-                ]"
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
         source: "[
-                         Eiffel Software
-                         356 Storke Road, Goleta, CA 93117 USA
-                         Telephone 805-685-1006, Fax 805-685-6869
-                         Website http://www.eiffel.com
-                         Customer support http://support.eiffel.com
-                ]"
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

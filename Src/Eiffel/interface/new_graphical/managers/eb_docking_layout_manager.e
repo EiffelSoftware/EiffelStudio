@@ -23,9 +23,6 @@ inherit
 		end
 
 	EB_DEVELOPMENT_WINDOW_PART
-		redefine
-			internal_recycle
-		end
 
 create
 	make
@@ -131,13 +128,11 @@ feature -- Debug mode command
 			-- Restore standard debug docking layout.
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
-			l_dyna_tools: ES_SHELL_TOOLS
-			l_tool: EB_TOOL
-			l_last_watch_tool: ES_WATCH_TOOL
-			l_testing_tool: EB_TOOL
-			l_refer_tool_content: SD_CONTENT
+			l_shell_tools: ES_SHELL_TOOLS
+			l_tool: ES_TOOL [EB_TOOL]
+			l_last_tool: ES_TOOL [EB_TOOL]
+			l_watch_tools: LINKED_SET [ES_WATCH_TOOL]
 			l_sd_button: SD_TOOL_BAR_ITEM
-			l_wt_lst: LINKED_SET [ES_WATCH_TOOL]
 			l_debugger_manager: EB_DEBUGGER_MANAGER
 			l_tool_bar_content: SD_TOOL_BAR_CONTENT
 			l_env: EV_ENVIRONMENT
@@ -180,72 +175,66 @@ feature -- Debug mode command
 
 			l_tool_bar_content.refresh
 
-			-- Setup tools
+				-- Setup tools
 			develop_window.close_all_tools
 
-			l_dyna_tools := develop_window.shell_tools
+			l_shell_tools := develop_window.shell_tools
 
 				--| Class tool (below the editor)
-			l_tool := l_dyna_tools.tool ({ES_CLASS_TOOL}).panel
+			l_tool := l_shell_tools.tool ({ES_CLASS_TOOL})
 			l_tool.content.set_top ({SD_ENUMERATION}.bottom)
-			l_refer_tool_content := l_tool.content
+			l_last_tool := l_tool
 
 				--| Features relation tool (tabbed with Class tool)
-			l_tool := l_dyna_tools.tool ({ES_FEATURE_RELATION_TOOL}).panel
-			l_tool.content.set_tab_with (l_refer_tool_content, True)
+			l_tool := l_shell_tools.tool ({ES_FEATURE_RELATION_TOOL})
+			l_tool.content.set_tab_with (l_last_tool.content, True)
+			l_last_tool := l_tool
 
-
-				--| Testing tool to the right (which will be the actual position of the call stack tool)
-			l_testing_tool := develop_window.shell_tools.tool ({ES_TESTING_TOOL}).panel
-			l_testing_tool.content.set_top ({SD_ENUMERATION}.right)
-
-				--| Objects tool			
-			l_debugger_manager.objects_tool.panel.content.set_top ({SD_ENUMERATION}.bottom)
+				--| Objects tool
+			l_tool := l_shell_tools.tool ({ES_OBJECTS_TOOL})
+			l_tool.content.set_top ({SD_ENUMERATION}.bottom)
+			l_last_tool := l_tool
 
 			-- FIXIT: *Maybe* here is a Windows bug or Vision2 bug, when "reset tools layout" (from menu), if we
 			-- call `l_debugger_manager.objects_tool).show (True)' directy, the widgets will not be diplayed correctly (all grey)
 			-- so we do it in idle actions
 			-- However, this is not total fix...sometimes, it still not work...
 			create l_env
-			l_env.application.do_once_on_idle (agent (a_debugger_manager: EB_DEBUGGER_MANAGER)
-													local
-														la_tool: ES_OBJECTS_TOOL
-													do
-														la_tool := a_debugger_manager.objects_tool
-														if la_tool.is_interface_usable then
-															la_tool.show (True)
-														end
-													end (l_debugger_manager))
-
-			l_refer_tool_content := l_debugger_manager.objects_tool.panel.content
+			l_env.application.do_once_on_idle (
+				agent (ia_debugger_manager: EB_DEBUGGER_MANAGER)
+					local
+						la_tool: ES_OBJECTS_TOOL
+					do
+						la_tool := ia_debugger_manager.objects_tool
+						if la_tool /= Void and then la_tool.is_interface_usable then
+							la_tool.show (True)
+						end
+					end (l_debugger_manager))
 
 				--| Breakpoints tool
-			l_tool := l_dyna_tools.tool ({ES_BREAKPOINTS_TOOL}).panel
-			l_tool.content.set_relative (l_refer_tool_content, {SD_ENUMERATION}.right)
-			l_refer_tool_content := l_tool.content
+			l_tool := l_shell_tools.tool ({ES_BREAKPOINTS_TOOL})
+			l_tool.content.set_relative (l_last_tool.content, {SD_ENUMERATION}.right)
+			l_last_tool := l_tool
 
 				--| Threads tool
-			l_debugger_manager.threads_tool.panel.content.set_tab_with (l_refer_tool_content, True)
-			l_refer_tool_content := l_debugger_manager.threads_tool.panel.content
+			l_tool := l_shell_tools.tool ({ES_THREADS_TOOL})
+			l_tool.content.set_tab_with (l_last_tool.content, True)
+			l_last_tool := l_tool
 
 				--| Watch tools
-			l_wt_lst := l_debugger_manager.watch_tool_list
+			l_watch_tools := l_debugger_manager.watch_tool_list
 			from
-				l_wt_lst.finish
+				l_watch_tools.finish
 			until
-				l_wt_lst.before
+				l_watch_tools.before
 			loop
-				if l_last_watch_tool = Void then
-					l_wt_lst.item.panel.content.set_tab_with (l_refer_tool_content, True)
-				else
-					l_wt_lst.item.panel.content.set_tab_with (l_last_watch_tool.panel.content, True)
-				end
-				l_last_watch_tool := l_wt_lst.item
-				l_wt_lst.back
+				l_watch_tools.item.content.set_tab_with (l_last_tool.content, True)
+				l_last_tool := l_watch_tools.item
+				l_watch_tools.back
 			end
 
 				--| Diagram tool
-			l_tool := l_dyna_tools.tool ({ES_DIAGRAM_TOOL}).panel
+			l_tool := l_shell_tools.tool ({ES_DIAGRAM_TOOL})
 			if l_tool.content.state_value = {SD_ENUMERATION}.auto_hide then
 				-- Same reason as EB_DEVELOPMENT_WINDOW.internal_construct_standard_layout_by_code.
 				-- First we pin it, then pin it again. So we can make sure the tab stub order and tab stub direction.
@@ -256,7 +245,7 @@ feature -- Debug mode command
 			end
 
 				--| Dependency tool
-			l_tool := l_dyna_tools.tool ({ES_DEPENDENCY_TOOL}).panel
+			l_tool := l_shell_tools.tool ({ES_DEPENDENCY_TOOL})
 			if l_tool.content.state_value = {SD_ENUMERATION}.auto_hide then
 				-- First we pin it, then pin it again. So we can make sure the tab stub order and tab stub direction.
 				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
@@ -264,14 +253,15 @@ feature -- Debug mode command
 			else
 				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
 			end
-			l_refer_tool_content := l_tool.content
+			l_last_tool := l_tool
 
 				--| Metrics tool
-			l_tool := l_dyna_tools.tool ({ES_METRICS_TOOL}).panel
-			l_tool.content.set_tab_with (l_refer_tool_content, False)
+			l_tool := l_shell_tools.tool ({ES_METRICS_TOOL})
+			l_tool.content.set_tab_with (l_last_tool.content, False)
+			l_last_tool := l_tool
 
 				--| Error list tool
-			l_tool := l_dyna_tools.tool ({ES_ERROR_LIST_TOOL}).panel
+			l_tool := l_shell_tools.tool ({ES_ERROR_LIST_TOOL})
 			if l_tool.content.state_value = {SD_ENUMERATION}.auto_hide then
 				-- Same reason as EB_DEVELOPMENT_WINDOW.internal_construct_standard_layout_by_code.
 				-- First we pin it, then pin it again. So we can make sure the tab stub order and tab stub direction.
@@ -280,20 +270,24 @@ feature -- Debug mode command
 			else
 				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
 			end
-
-			-- We do this to make sure the minimized editor minized horizontally, otherwise the editor will be minimized vertically.
-
-
-			l_refer_tool_content := l_testing_tool.content
-
-				--| Adding favourites tool to the right of the testing tool (hidden)
-			l_tool := l_dyna_tools.tool ({ES_FAVORITES_TOOL}).panel
-			l_tool.content.set_tab_with (l_refer_tool_content, False)
-			l_tool.content.hide
+			l_last_tool := l_tool
 
 				--| Adding call stack tool to the left of the testing tool (which will appear in front)
-			l_tool := l_debugger_manager.call_stack_tool.panel
-			l_tool.content.set_tab_with (l_refer_tool_content, True)
+			l_tool := l_shell_tools.tool ({ES_CALL_STACK_TOOL})
+			l_tool.content.set_top ({SD_ENUMERATION}.right)
+			l_last_tool := l_tool
+
+				--| Testing tool to the right (which will be the actual position of the call stack tool)
+			l_tool := l_shell_tools.tool ({ES_TESTING_TOOL})
+			l_tool.content.set_tab_with (l_last_tool.content, False)
+			l_last_tool := l_tool
+
+				--| Adding favourites tool to the right of the testing tool (hidden)
+			l_tool := l_shell_tools.tool ({ES_FAVORITES_TOOL})
+			l_tool.content.set_tab_with (l_last_tool.content, False)
+			l_last_tool := l_tool
+
+				-- We do this to make sure the minimized editor minized horizontally, otherwise the editor will be minimized vertically.
 
 				--| Minimize all editors
 			from
@@ -410,53 +404,63 @@ feature {NONE} -- Implementation
 	construct_standard_layout_by_code_imp
 			-- Implementation of `construct_standard_layout_by_code'
 		local
-			l_tool: EB_TOOL
-			l_last_tool: EB_TOOL
+			l_shell_tools: ES_SHELL_TOOLS
+			l_tool: ES_TOOL [EB_TOOL]
+			l_last_tool: ES_TOOL [EB_TOOL]
 			l_tool_bar_content, l_tool_bar_content_2: SD_TOOL_BAR_CONTENT
 			l_no_locked_window: BOOLEAN
-			l_features_tool: ES_FEATURES_TOOL
-			l_testing_tool: EB_TOOL
 		do
+			l_shell_tools := develop_window.shell_tools
+
 			l_no_locked_window := ((create {EV_ENVIRONMENT}).application.locked_window = Void)
 			if l_no_locked_window then
 				develop_window.window.lock_update
 			end
 			develop_window.close_all_tools
 
-			-- Right bottom tools
-			l_tool := develop_window.tools.c_output_tool
+				-- Right bottom tools
+			l_tool := l_shell_tools.tool ({ES_C_OUTPUT_TOOL})
 			l_tool.content.set_top ({SD_ENUMERATION}.bottom)
-
-			l_tool := develop_window.shell_tools.tool ({ES_ERROR_LIST_TOOL}).panel
-			l_tool.content.set_tab_with (develop_window.tools.c_output_tool.content, True)
 			l_last_tool := l_tool
 
-			l_tool := develop_window.tools.output_tool
+			l_tool := l_shell_tools.tool ({ES_ERROR_LIST_TOOL})
 			l_tool.content.set_tab_with (l_last_tool.content, True)
+			l_last_tool := l_tool
 
-			l_tool := develop_window.tools.features_relation_tool
-			l_tool.content.set_tab_with (develop_window.tools.output_tool.content, True)
+			l_tool := l_shell_tools.tool ({ES_OUTPUT_TOOL})
+			l_tool.content.set_tab_with (l_last_tool.content, True)
+			l_last_tool := l_tool
 
-			l_tool := develop_window.tools.class_tool
-			l_tool.content.set_tab_with (develop_window.tools.features_relation_tool.content, True)
+			l_tool := l_shell_tools.tool ({ES_FEATURE_RELATION_TOOL})
+			l_tool.content.set_tab_with (l_last_tool.content, True)
+			l_last_tool := l_tool
+
+			l_tool := l_shell_tools.tool ({ES_CLASS_TOOL})
+			l_tool.content.set_tab_with (l_last_tool.content, True)
+			l_last_tool := l_tool
 
 			l_tool.content.set_split_proportion (0.6)
 
-			-- Right tools
-			l_features_tool ?= develop_window.shell_tools.tool ({ES_FEATURES_TOOL})
-
-			l_tool := develop_window.tools.favorites_tool
+				-- Right tools
+			l_tool := l_shell_tools.tool ({ES_FAVORITES_TOOL})
 			l_tool.content.set_top ({SD_ENUMERATION}.right)
-			l_testing_tool := develop_window.shell_tools.tool ({ES_TESTING_TOOL}).panel
-			l_testing_tool.content.set_tab_with (l_tool.content, True)
-			l_tool := l_features_tool.panel
-			l_tool.content.set_tab_with (l_testing_tool.content, True)
-			l_tool := develop_window.tools.cluster_tool
-			l_tool.content.set_tab_with (l_features_tool.panel.content, True)
+			l_last_tool := l_tool
+
+			l_tool := l_shell_tools.tool ({ES_TESTING_TOOL})
+			l_tool.content.set_tab_with (l_last_tool.content, True)
+			l_last_tool := l_tool
+
+			l_tool := l_shell_tools.tool ({ES_FEATURES_TOOL})
+			l_tool.content.set_tab_with (l_last_tool.content, True)
+			l_last_tool := l_tool
+
+			l_tool := l_shell_tools.tool ({ES_GROUPS_TOOL})
+			l_tool.content.set_tab_with (l_last_tool.content, True)
+
 			l_tool.content.set_split_proportion (0.73)
 
-			-- Auto hide tools
-			l_tool := develop_window.tools.diagram_tool
+				-- Auto hide (bottom) tools
+			l_tool := l_shell_tools.tool ({ES_DIAGRAM_TOOL})
 			if l_tool.content.state_value /= {SD_ENUMERATION}.auto_hide then
 				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
 			else
@@ -465,8 +469,9 @@ feature {NONE} -- Implementation
 				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
 				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
 			end
+			l_last_tool := l_tool
 
-			l_tool := develop_window.tools.dependency_tool
+			l_tool := l_shell_tools.tool ({ES_DEPENDENCY_TOOL})
 			if l_tool.content.state_value /= {SD_ENUMERATION}.auto_hide then
 				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
 			else
@@ -474,11 +479,15 @@ feature {NONE} -- Implementation
 				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
 				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
 			end
+			l_last_tool := l_tool
 
-			l_tool := develop_window.tools.metric_tool
-			l_tool.content.set_tab_with (develop_window.tools.dependency_tool.content, False)
+			l_tool := l_shell_tools.tool ({ES_METRICS_TOOL})
+			l_tool.content.set_tab_with (l_last_tool.content, False)
+			l_last_tool := l_tool
 
-			develop_window.shell_tools.tool ({ES_INFORMATION_TOOL}).panel.content.set_tab_with (l_tool.content, False)
+			l_tool := l_shell_tools.tool ({ES_INFORMATION_TOOL})
+			l_tool.content.set_tab_with (l_last_tool.content, False)
+			l_last_tool := l_tool
 
 			-- Tool bars
 			l_tool_bar_content := develop_window.docking_manager.tool_bar_manager.content_by_title (interface_names.to_standard_toolbar)
@@ -503,12 +512,6 @@ feature {NONE} -- Implementation
 			if l_no_locked_window then
 				develop_window.window.unlock_update
 			end
-		end
-
-	internal_recycle
-			-- <Precursor>
-		do
-			Precursor {EB_DEVELOPMENT_WINDOW_PART}
 		end
 
 	show_last_error
@@ -556,11 +559,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_DOCKING_LAYOUT_MANAGER

@@ -204,7 +204,7 @@ feature {NONE} -- Clean up
 			recycle_formatters
 			shortcut_manager.clear_actions (window)
 			agents.manager.remove_observer (agents)
-			customized_tool_manager.change_actions.prune_all (agents.on_customized_tools_changed_agent)
+--			customized_tool_manager.change_actions.prune_all (agents.on_customized_tools_changed_agent)
 			if save_cmd /= Void then
 				save_cmd.recycle
 			end
@@ -506,18 +506,18 @@ feature -- Window Properties
 			l_content: SD_CONTENT
 			l_tools: DS_ARRAYED_LIST_CURSOR [ES_TOOL [EB_TOOL]]
 			l_tool: ES_TOOL [EB_TOOL]
-			l_tool_window: EB_TOOL
+			l_active_tool: ES_TOOL [EB_TOOL]
 			l_comb: EV_COMBO_BOX
 			l_is_comb: BOOLEAN
 		do
 			l_content := docking_manager.focused_content
 			if l_content /= Void then
-				l_tools := shell_tools.all_tools.new_cursor
-				from l_tools.start until l_tools.after or l_tool_window /= Void loop
+				l_tools := shell_tools.all_requested_tools.new_cursor
+				from l_tools.start until l_tools.after or l_active_tool /= Void loop
 					l_tool := l_tools.item
 					if l_tool.is_tool_instantiated and not l_tool.is_recycled then
-						if l_tool.panel.content = l_content then
-						 	l_tool_window := l_tool.panel
+						if l_tool.content = l_content then
+						 	l_active_tool := l_tool
 						end
 					end
 					l_tools.forth
@@ -526,8 +526,8 @@ feature -- Window Properties
 
 				l_comb ?= ev_application.focused_widget
 				l_is_comb := l_comb /= Void
-				if l_tool_window /= Void and then (l_tool_window.has_focus or not l_is_comb) then
-					l_tool_window.close
+				if l_active_tool /= Void and then (l_active_tool.has_focus or not l_is_comb) then
+					l_active_tool.close
 				else
 					if editors_manager.current_editor /= Void and then
 						editors_manager.current_editor.docking_content = l_content and then
@@ -572,7 +572,8 @@ feature -- Update
 				if
 					eiffel_system.universe.target.clusters.count = 1
 				then
-					tools.cluster_tool.show_current_class_cluster_cmd.execute
+						-- Show the current class.
+					commands.find_class_or_cluster_command.execute
 				end
 			end
 
@@ -589,7 +590,6 @@ feature -- Update
 				tools.diagram_tool.synchronize
 			end
 
-			tools.cluster_tool.synchronize
 			history_manager.synchronize
 			tools.breakpoints_tool.synchronize
 
@@ -2482,7 +2482,7 @@ invariant
 	window_id_positive: window_id > 0
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -2506,11 +2506,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_DEVELOPMENT_WINDOW

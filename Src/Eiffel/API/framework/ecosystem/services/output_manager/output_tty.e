@@ -21,7 +21,7 @@ feature -- Access
 			Result := "Terminal"
 		end
 
-	writer: !OUTPUT_WINDOW
+	output_window: !OUTPUT_WINDOW
 			-- <Precursor>
 		attribute
 			create {TERM_WINDOW} Result
@@ -32,16 +32,10 @@ feature -- Status report
 	is_interface_usable: BOOLEAN
 			-- <Precursor>
 		do
-			Result := has_writer
-		end
-
-	is_active: BOOLEAN
-			-- <Precursor>
-		do
 			Result := True
 		end
 
-	has_writer: BOOLEAN
+	is_active: BOOLEAN
 			-- <Precursor>
 		do
 			Result := True

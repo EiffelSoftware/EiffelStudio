@@ -109,61 +109,63 @@ feature -- Query
 			end
 		end
 
-	remove_item_from_tools_list_menu (a_tool: EB_TOOL)
-			-- Remove item corresponding to `a_tool' from `tools_list_menu' and recycle their components.
-		require
-			a_tool_attached: a_tool /= Void
-		local
-			l_menu: like tools_list_menu
-			l_menu_item: EV_MENU_ITEM
-			l_data: TUPLE [menu_item: EB_COMMAND_MENU_ITEM; tool_id: STRING]
-			l_develop_window: like develop_window
-		do
-			l_menu := tools_list_menu
-			l_develop_window := develop_window
-			from
-				l_menu.start
-			until
-				l_menu.after
-			loop
-				l_menu_item := l_menu.item
-				l_data ?= l_menu_item.data
-				if l_data /= Void and then l_data.tool_id.is_equal (a_tool.title_for_pre) then
-					l_menu.remove
-					l_develop_window.auto_recycle (l_data.menu_item)
-				else
-					l_menu.forth
-				end
-			end
-		end
+--	remove_item_from_tools_list_menu (a_tool: EB_TOOL)
+--			-- Remove item corresponding to `a_tool' from `tools_list_menu' and recycle their components.
+--		require
+--			a_tool_attached: a_tool /= Void
+--		local
+--			l_menu: like tools_list_menu
+--			l_menu_item: EV_MENU_ITEM
+--			l_data: TUPLE [menu_item: EB_COMMAND_MENU_ITEM; tool_id: STRING]
+--			l_develop_window: like develop_window
+--		do
+--			l_menu := tools_list_menu
+--			l_develop_window := develop_window
+--			from
+--				l_menu.start
+--			until
+--				l_menu.after
+--			loop
+--				l_menu_item := l_menu.item
+--				l_data ?= l_menu_item.data
+--					-- FIXME: title_for_pre does not exist anymore. Must use {ES_TOOL}.content_id
+--				if l_data /= Void and then l_data.tool_id.is_equal (a_tool.title_for_pre) then
+--					l_menu.remove
+--					l_develop_window.auto_recycle (l_data.menu_item)
+--				else
+--					l_menu.forth
+--				end
+--			end
+--		end
 
-	update_item_from_tools_list_menu (a_tool: EB_TOOL)
-			-- Update appearance such as title/pixmap for menu item of `a_tool' in `tools_list_menu'.
-		require
-			a_tool_attached: a_tool /= Void
-		local
-			l_menu: like tools_list_menu
-			l_menu_item: EV_MENU_ITEM
-			l_data: TUPLE [menu_item: EB_COMMAND_MENU_ITEM; tool_id: STRING]
-			l_done: BOOLEAN
-		do
-			from
-				l_menu := tools_list_menu
-				l_menu.start
-			until
-				l_menu.after or l_done
-			loop
-				l_menu_item := l_menu.item
-				l_data ?= l_menu_item.data
-				if l_data /= Void and then l_data.tool_id.is_equal (a_tool.title_for_pre) then
-					l_data.menu_item.set_pixmap (a_tool.pixmap)
-					l_data.menu_item.set_text (a_tool.title)
-					l_done := True
-				else
-					l_menu.forth
-				end
-			end
-		end
+--	update_item_from_tools_list_menu (a_tool: EB_TOOL)
+--			-- Update appearance such as title/pixmap for menu item of `a_tool' in `tools_list_menu'.
+--		require
+--			a_tool_attached: a_tool /= Void
+--		local
+--			l_menu: like tools_list_menu
+--			l_menu_item: EV_MENU_ITEM
+--			l_data: TUPLE [menu_item: EB_COMMAND_MENU_ITEM; tool_id: STRING]
+--			l_done: BOOLEAN
+--		do
+--			from
+--				l_menu := tools_list_menu
+--				l_menu.start
+--			until
+--				l_menu.after or l_done
+--			loop
+--				l_menu_item := l_menu.item
+--				l_data ?= l_menu_item.data
+--					-- FIXME: title_for_pre does not exist anymore. Must use {ES_TOOL}.content_id
+--				if l_data /= Void and then l_data.tool_id.is_equal (a_tool.title_for_pre) then
+--					l_data.menu_item.set_pixmap (a_tool.pixmap)
+--					l_data.menu_item.set_text (a_tool.title)
+--					l_done := True
+--				else
+--					l_menu.forth
+--				end
+--			end
+--		end
 
 feature -- Item querys
 
@@ -464,7 +466,7 @@ feature -- Recycle
 		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -488,11 +490,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

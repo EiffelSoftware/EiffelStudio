@@ -12,11 +12,9 @@ class
 inherit
 	EB_TOOL
 		redefine
-			make,
 			show,
 			internal_recycle,
-			close,
-			attach_to_docking_manager
+			close
 		end
 
 	SHARED_WORKBENCH
@@ -36,13 +34,11 @@ inherit
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
-	make (dw: EB_DEVELOPMENT_WINDOW; a_tool: like tool_descriptor)
-			-- Initialize `Current'.
+	build_interface
+			-- <Precursor>
 		do
-			develop_window := dw
-			tool_descriptor := a_tool
 
 			create widget
 			create metric_notebook
@@ -86,18 +82,8 @@ feature -- Initialization
 			if not window_manager.compile_start_actions.has (metric_manager.on_compile_start_agent) then
 				window_manager.compile_start_actions.extend (metric_manager.on_compile_start_agent)
 			end
-		end
 
-	attach_to_docking_manager (a_manager: SD_DOCKING_MANAGER)
-			-- <Precursor>
-		do
-			Precursor {EB_TOOL} (a_manager)
-			content.show_actions.extend (agent on_select)
-		end
-
-	build_interface
-			-- <Precursor>
-		do
+			register_action (content.show_actions, agent on_select)
 		end
 
 feature -- Actions
@@ -109,7 +95,6 @@ feature -- Actions
 				if workbench.system_defined and then workbench.is_already_compiled then
 					load_metrics_and_display_error (False, metric_names.t_loading_metrics)
 				end
-				set_is_shown (True)
 				on_tab_change
 				set_title (Void)
 			end
@@ -118,7 +103,6 @@ feature -- Actions
 	on_deselect
 			-- Metric tool has been deselected.
 		do
-			set_is_shown (False)
 			on_tab_change
 		end
 
@@ -231,14 +215,6 @@ feature -- Basic operations
 		do
 		end
 
-	set_is_shown (b: BOOLEAN)
-			-- Set `is_shown' with `b'.
-		do
-			is_shown := b
-		ensure
-			is_shown_set: is_shown = b
-		end
-
 	set_last_metric_value_historied (b: BOOLEAN)
 			-- Set `last_metric_value_historied' with `b'.
 		do
@@ -308,9 +284,6 @@ feature {NONE} -- Memory management
 		end
 
 feature -- Status report
-
-	is_shown: BOOLEAN
-			-- Is `Current' currently displayed in the context tool?
 
 	is_metrics_loaded: BOOLEAN
 			-- Have predefined and user-defined metrics been loaded from files?
@@ -396,9 +369,6 @@ feature{NONE} -- Actions
 	on_project_loaded
 			-- Action to be performed when project loaded
 		do
-			if content.user_widget.is_displayed then
-				set_is_shown (True)
-			end
 			on_tab_change
 			project_load_actions.call (Void)
 		end
@@ -577,7 +547,7 @@ invariant
 	notify_project_unloaded_agent_attached: notify_project_unloaded_agent /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -590,22 +560,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_METRIC_TOOL

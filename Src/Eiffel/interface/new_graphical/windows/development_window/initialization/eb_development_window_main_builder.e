@@ -139,7 +139,7 @@ feature -- Command
 			l_toggle_stone_cmd: EB_UNIFY_STONE_CMD
 			l_send_stone_to_context_cmd: EB_STANDARD_CMD
 
-			l_show_tool_commands: HASH_TABLE [EB_SHOW_TOOL_COMMAND, EB_TOOL]
+--			l_show_tool_commands: HASH_TABLE [EB_SHOW_TOOL_COMMAND, EB_TOOL]
 			l_show_toolbar_commands: HASH_TABLE [EB_SHOW_TOOLBAR_COMMAND, SD_TOOL_BAR_CONTENT]
 			l_editor_commands: ARRAYED_LIST [EB_GRAPHICAL_COMMAND]
 			l_simple_shortcut_commands: ARRAYED_LIST [EB_SIMPLE_SHORTCUT_COMMAND]
@@ -162,6 +162,7 @@ feature -- Command
 			l_editor_font_zoom_reset_numpad_command: ES_EDITOR_FONT_ZOOM_RESET_NUMPAD_COMMAND
 
 			l_edit_contracts_command: ES_EDIT_CONTRACTS_COMMAND
+			l_find_class_or_cluster_command: ES_FIND_CLASS_OR_CLUSTER_CMD
 
 			l_dev_commands: EB_DEVELOPMENT_WINDOW_COMMANDS
 		do
@@ -327,8 +328,8 @@ feature -- Command
 				-- Show tool/toolbar commands (will be filled when tools will
 				-- be created)
 
-			create l_show_tool_commands.make (7)
-			l_dev_commands.set_show_tool_commands (l_show_tool_commands)
+--			create l_show_tool_commands.make (7)
+--			l_dev_commands.set_show_tool_commands (l_show_tool_commands)
 			create l_show_toolbar_commands.make (3)
 			l_dev_commands.set_show_toolbar_commands (l_show_toolbar_commands)
 			create l_editor_commands.make (10)
@@ -390,6 +391,9 @@ feature -- Command
 
 			create l_edit_contracts_command.make (develop_window.shell_tools.tool ({ES_CONTRACT_TOOL}))
 			l_dev_commands.set_edit_contracts_command (l_edit_contracts_command)
+
+			create l_find_class_or_cluster_command.make (develop_window)
+			l_dev_commands.set_find_class_or_cluster_command (l_find_class_or_cluster_command)
 
 				-- Add history commands to toolbarable_commands.
 				-- Setup its accelerators.
@@ -683,8 +687,8 @@ feature -- Command
 				-- Build dynmaic tools
 			build_shell_tools
 
-				-- Build the features tool
-			build_customized_tools
+--				-- Build the features tool
+--			build_customized_tools
 
 			create l_editors_manager.make (develop_window)
 			develop_window.set_editors_manager (l_editors_manager)
@@ -847,70 +851,70 @@ feature -- Command
 			setup_editor_close_action
 		end
 
-	register_customized_tools (a_tools: LIST [EB_CUSTOMIZED_TOOL])
-			-- Register `a_tools' into `develop_window'.
-		require
-			a_tools_attached: a_tools /= Void
-			a_tools_valid: not a_tools.has (Void)
-		local
-			l_cursor: CURSOR
-			l_menu_builder: EB_DEVELOPMENT_WINDOW_MENU_BUILDER
-		do
-				-- Register `a_tools' into `develop_window'.
-			l_cursor := a_tools.cursor
-			from
-				a_tools.start
-			until
-				a_tools.after
-			loop
-				setup_tool (a_tools.item, a_tools.item.title_for_pre)
-				a_tools.item.force_reload
-				develop_window.tools.customized_tools.extend (a_tools.item)
-				a_tools.forth
-			end
-			a_tools.go_to (l_cursor)
+--	register_customized_tools (a_tools: LIST [EB_CUSTOMIZED_TOOL])
+--			-- Register `a_tools' into `develop_window'.
+--		require
+--			a_tools_attached: a_tools /= Void
+--			a_tools_valid: not a_tools.has (Void)
+--		local
+--			l_cursor: CURSOR
+--			l_menu_builder: EB_DEVELOPMENT_WINDOW_MENU_BUILDER
+--		do
+--				-- Register `a_tools' into `develop_window'.
+--			l_cursor := a_tools.cursor
+--			from
+--				a_tools.start
+--			until
+--				a_tools.after
+--			loop
+--				setup_tool (a_tools.item, a_tools.item.title_for_pre)
+--				a_tools.item.force_reload
+--				develop_window.tools.customized_tools.extend (a_tools.item)
+--				a_tools.forth
+--			end
+--			a_tools.go_to (l_cursor)
 
-				-- Setup menus.
-			create l_menu_builder.make (develop_window)
-			l_menu_builder.attach_customized_tools (a_tools)
-		end
+--				-- Setup menus.
+--			create l_menu_builder.make (develop_window)
+--			l_menu_builder.attach_customized_tools (a_tools)
+--		end
 
-	deregister_customized_tool (a_tool: EB_CUSTOMIZED_TOOL)
-			-- Delete `a_tool' from `develop_window'.
-		require
-			a_tool_attached: a_tool /= Void
-		local
-			l_show_cmd: EB_SHOW_TOOL_COMMAND
-			l_cmds: ARRAYED_LIST [EB_TOOLBARABLE_COMMAND]
-			l_dev_commands: EB_DEVELOPMENT_WINDOW_COMMANDS
-		do
-			l_dev_commands := develop_window.commands
-			if a_tool.content /= Void then
-				a_tool.content.close
-			end
+--	deregister_customized_tool (a_tool: EB_CUSTOMIZED_TOOL)
+--			-- Delete `a_tool' from `develop_window'.
+--		require
+--			a_tool_attached: a_tool /= Void
+--		local
+--			l_show_cmd: EB_SHOW_TOOL_COMMAND
+--			l_cmds: ARRAYED_LIST [EB_TOOLBARABLE_COMMAND]
+--			l_dev_commands: EB_DEVELOPMENT_WINDOW_COMMANDS
+--		do
+--			l_dev_commands := develop_window.commands
+--			if a_tool.content /= Void then
+--				a_tool.content.close
+--			end
 
-				--Remove `a_tool' from `develop_window'.`customized_tools'.
-			develop_window.tools.customized_tools.start
-			develop_window.tools.customized_tools.search (a_tool)
-			if not develop_window.tools.customized_tools.exhausted then
-				develop_window.tools.customized_tools.remove
-			end
+--				--Remove `a_tool' from `develop_window'.`customized_tools'.
+--			develop_window.tools.customized_tools.start
+--			develop_window.tools.customized_tools.search (a_tool)
+--			if not develop_window.tools.customized_tools.exhausted then
+--				develop_window.tools.customized_tools.remove
+--			end
 
-			develop_window.menus.remove_item_from_tools_list_menu (a_tool)
+--			develop_window.menus.remove_item_from_tools_list_menu (a_tool)
 
-				-- Remove and recycle related command.
-			l_show_cmd := l_dev_commands.show_tool_commands.item (a_tool)
-			if l_show_cmd /= Void then
-				l_cmds := l_dev_commands.toolbarable_commands
-				l_dev_commands.show_tool_commands.remove (a_tool)
-				l_cmds.start
-				l_cmds.search (l_show_cmd)
-				if not l_cmds.exhausted then
-					l_cmds.remove
-				end
-				auto_recycle (a_tool)
-			end
-		end
+--				-- Remove and recycle related command.
+--			l_show_cmd := l_dev_commands.show_tool_commands.item (a_tool)
+--			if l_show_cmd /= Void then
+--				l_cmds := l_dev_commands.toolbarable_commands
+--				l_dev_commands.show_tool_commands.remove (a_tool)
+--				l_cmds.start
+--				l_cmds.search (l_show_cmd)
+--				if not l_cmds.exhausted then
+--					l_cmds.remove
+--				end
+--				auto_recycle (a_tool)
+--			end
+--		end
 
 feature {NONE} -- Access
 
@@ -1004,11 +1008,11 @@ feature {NONE} -- Docking
 					if l_tool /= Void then
 						check
 								-- This check is just for the future, if we support reinstantiation of multiple editions.
-							l_tool_is_supporting_multiple_instance: l_tool.edition > 1 implies l_tool.is_supporting_multiple_instances
+							l_tool_is_multiple_edition: l_tool.edition > 1 implies l_tool.is_multiple_edition
 						end
 
 							-- The following initialize the tool and attached it to the docking manager.
-						Result := l_tool.panel.content
+						Result := l_tool.content
 					end
 				end
 			end
@@ -1016,62 +1020,64 @@ feature {NONE} -- Docking
 
 feature{NONE} -- Implementation
 
-	build_customized_tools
-			-- Build customized tools.
-		local
-			l_customized_tool: EB_CUSTOMIZED_TOOL
-			l_manager: EB_CUSTOMIZED_TOOL_MANAGER
-			l_descriptors: LIST [EB_CUSTOMIZED_TOOL_DESP]
-			l_tools: LIST [EB_CUSTOMIZED_TOOL]
-		do
-			l_manager := develop_window.customized_tool_manager
-			l_tools := develop_window.tools.customized_tools
-			l_tools.wipe_out
-			if not l_manager.is_loaded then
-				l_manager.load (Void)
-			end
-			if l_manager.has_tools then
-				from
-					l_descriptors := l_manager.tool_descriptors
-					l_descriptors.start
-				until
-					l_descriptors.after
-				loop
-					l_customized_tool := l_descriptors.item.new_tool (develop_window)
-					setup_tool (l_customized_tool, l_customized_tool.id)
-					l_tools.extend (l_customized_tool)
-					l_descriptors.forth
-				end
-			end
-		end
+--	build_customized_tools
+--			-- Build customized tools.
+--		local
+--			l_customized_tool: EB_CUSTOMIZED_TOOL
+--			l_manager: EB_CUSTOMIZED_TOOL_MANAGER
+--			l_descriptors: LIST [EB_CUSTOMIZED_TOOL_DESP]
+--			l_tools: LIST [EB_CUSTOMIZED_TOOL]
+--		do
+--			l_manager := develop_window.customized_tool_manager
+--			l_tools := develop_window.tools.customized_tools
+--			l_tools.wipe_out
+--			if not l_manager.is_loaded then
+--				l_manager.load (Void)
+--			end
+--			if l_manager.has_tools then
+--				from
+--					l_descriptors := l_manager.tool_descriptors
+--					l_descriptors.start
+--				until
+--					l_descriptors.after
+--				loop
+--					l_customized_tool := l_descriptors.item.new_tool (develop_window)
+--					setup_tool (l_customized_tool, l_customized_tool.id)
+--					l_tools.extend (l_customized_tool)
+--					l_descriptors.forth
+--				end
+--			end
+--		end
 
-	setup_tool (a_tool: EB_TOOL; a_shortcut_string: STRING)
-			-- Setup tool.
-		require
-			a_tool_not_void: a_tool /= Void
-			a_shortcut_string_not_void: a_shortcut_string /= Void
-		local
-			l_show_cmd: EB_SHOW_TOOL_COMMAND
-			l_accel: EV_ACCELERATOR
-			l_shortcut: SHORTCUT_PREFERENCE
-			l_dev_commands: EB_DEVELOPMENT_WINDOW_COMMANDS
-		do
-			a_tool.attach_to_docking_manager (develop_window.docking_manager)
+--	setup_tool (a_tool: EB_TOOL; a_shortcut_string: STRING)
+--			-- Setup tool.
+--		require
+--			a_tool_not_void: a_tool /= Void
+--			a_shortcut_string_not_void: a_shortcut_string /= Void
+--		local
+--			l_show_cmd: EB_SHOW_TOOL_COMMAND
+--			l_accel: EV_ACCELERATOR
+--			l_shortcut: SHORTCUT_PREFERENCE
+--			l_dev_commands: EB_DEVELOPMENT_WINDOW_COMMANDS
+--		do
+--			if {l_attachable: EB_DOCKING_MANAGER_ATTACHABLE} a_tool then
+--				l_attachable.attach_to_docking_manager (develop_window.docking_manager)
+--			end
 
-			l_dev_commands := develop_window.commands
-			create l_show_cmd.make (develop_window, a_tool)
-			l_dev_commands.show_tool_commands.force (l_show_cmd, a_tool)
-			l_dev_commands.toolbarable_commands.extend (l_show_cmd)
-			auto_recycle (a_tool)
+--			l_dev_commands := develop_window.commands
+--			create l_show_cmd.make (develop_window, a_tool)
+--			l_dev_commands.show_tool_commands.force (l_show_cmd, a_tool)
+--			l_dev_commands.toolbarable_commands.extend (l_show_cmd)
+--			auto_recycle (a_tool)
 
-			l_shortcut := develop_window.preferences.misc_shortcut_data.shortcuts.item (a_shortcut_string)
-			if l_shortcut /= Void then
-				create l_accel.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift)
-				l_accel.actions.extend (agent l_show_cmd.execute)
-				l_show_cmd.set_accelerator (l_accel)
-				l_show_cmd.set_referred_shortcut (l_shortcut)
-			end
-		end
+--			l_shortcut := develop_window.preferences.misc_shortcut_data.shortcuts.item (a_shortcut_string)
+--			if l_shortcut /= Void then
+--				create l_accel.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift)
+--				l_accel.actions.extend (agent l_show_cmd.execute)
+--				l_show_cmd.set_accelerator (l_accel)
+--				l_show_cmd.set_referred_shortcut (l_shortcut)
+--			end
+--		end
 
 	setup_main_formatter (a_form: EB_CLASS_TEXT_FORMATTER; a_shortcut_string: STRING)
 			-- Setup formatter.
@@ -1171,7 +1177,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -1195,11 +1201,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

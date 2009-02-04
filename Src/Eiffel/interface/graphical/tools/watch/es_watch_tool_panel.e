@@ -18,9 +18,9 @@ inherit
 		redefine
 			close,
 			on_before_initialize,
+			on_after_initialized,
 			on_show,
 			create_mini_tool_bar_items,
-			build_docking_content,
 			internal_recycle,
 			show
 		end
@@ -94,6 +94,15 @@ feature {NONE} -- Initialization
 			watches_grid.set_slices_cmd (slices_cmd)
 
 			a_widget.extend (watches_grid)
+		end
+
+	on_after_initialized
+			-- <Precursor>
+		do
+			Precursor
+
+				-- FIXME: Tool should be refactored to implement {ES_DOCKABLE_STONEABLE_TOOL_PANEL}
+			register_action (content.drop_actions, agent on_element_drop)
 		end
 
     create_mini_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
@@ -185,14 +194,6 @@ feature {NONE} -- Initialization
 			move_down_cmd.add_agent (agent move_selected (+1))
 			tbb := move_down_cmd.new_mini_sd_toolbar_item
 			Result.force_last (tbb)
-		end
-
-	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER)
-			-- Build content for docking.
-
-		do
-			Precursor (a_docking_manager)
-			content.drop_actions.extend (agent on_element_drop)
 		end
 
 	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY)
@@ -658,7 +659,7 @@ feature {NONE} -- Event handling
 		local
 			wt: ES_WATCH_TOOL
 		do
-			debugger_manager.create_new_watch_tool_tabbed_with (develop_window, Current)
+			debugger_manager.create_new_watch_tool_tabbed_with (develop_window, tool_descriptor)
 			wt := debugger_manager.watch_tool_list.last
 			if wt /= Void then
 				wt.show (True)
@@ -1937,7 +1938,7 @@ invariant
 	not_void_delete_expression_cmd: mini_toolbar /= Void implies delete_expression_cmd /= Void
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -1961,11 +1962,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class ES_WATCH_TOOL

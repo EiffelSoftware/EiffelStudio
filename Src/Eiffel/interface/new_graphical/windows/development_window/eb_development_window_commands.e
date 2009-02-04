@@ -168,13 +168,16 @@ feature -- Query
 	edit_contracts_command: !ES_EDIT_CONTRACTS_COMMAND
 			-- Edit contracts command
 
+	find_class_or_cluster_command: !ES_FIND_CLASS_OR_CLUSTER_CMD
+			-- Command used to locate a class or cluster
+
 feature -- Commands
 
 	toolbarable_commands: ARRAYED_LIST [EB_TOOLBARABLE_COMMAND]
 			-- All commands that can be put in a toolbar.
 
-	show_tool_commands: HASH_TABLE [EB_SHOW_TOOL_COMMAND, EB_TOOL]
-			-- Commands to show/hide a tool.
+--	show_tool_commands: HASH_TABLE [EB_SHOW_TOOL_COMMAND, EB_TOOL]
+--			-- Commands to show/hide a tool.
 
 	show_shell_tool_commands: HASH_TABLE [ES_SHOW_TOOL_COMMAND, ES_TOOL [EB_TOOL]]
 			-- Commands to show/hide a tool.
@@ -360,13 +363,13 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: show_profiler = a_cmd
 		end
 
-	set_show_tool_commands (a_commands: like show_tool_commands)
-			-- Set `show_tool_commands'
-		do
-			show_tool_commands := a_commands
-		ensure
-			set: show_tool_commands = a_commands
-		end
+--	set_show_tool_commands (a_commands: like show_tool_commands)
+--			-- Set `show_tool_commands'
+--		do
+--			show_tool_commands := a_commands
+--		ensure
+--			set: show_tool_commands = a_commands
+--		end
 
 	set_show_shell_tool_commands (a_commands: like show_shell_tool_commands)
 			-- Set `show_tool_commands'
@@ -592,6 +595,14 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			edit_contracts_command_set: edit_contracts_command = a_command
 		end
 
+	set_find_class_or_cluster_command (a_command: like find_class_or_cluster_command)
+			-- Sets `find_class_or_cluster_command' with `a_command'.
+		do
+			find_class_or_cluster_command := a_command
+		ensure
+			find_class_or_cluster_command_set: find_class_or_cluster_command = a_command
+		end
+
 feature -- Recycle
 
 	internal_recycle
@@ -641,16 +652,16 @@ feature -- Recycle
 			go_to_next_warning_command.recycle
 			go_to_previous_warning_command.recycle
 
-			from
-				show_tool_commands.start
-			until
-				show_tool_commands.after
-			loop
-				show_tool_commands.item_for_iteration.recycle
-				show_tool_commands.forth
-			end
-			show_tool_commands.wipe_out
-			show_tool_commands := Void
+--			from
+--				show_tool_commands.start
+--			until
+--				show_tool_commands.after
+--			loop
+--				show_tool_commands.item_for_iteration.recycle
+--				show_tool_commands.forth
+--			end
+--			show_tool_commands.wipe_out
+--			show_tool_commands := Void
 
 			from
 				toolbarable_commands.start
@@ -707,7 +718,7 @@ feature -- Recycle
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -720,22 +731,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

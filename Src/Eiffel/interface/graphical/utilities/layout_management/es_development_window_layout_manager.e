@@ -116,10 +116,9 @@ feature -- Basic operations: Standard persona
 		require
 			is_interface_usable: is_interface_usable
 		local
-			l_tool: EB_TOOL
-			l_last_tool: EB_TOOL
-			l_features_tool: ES_FEATURES_TOOL
-
+			l_shell_tools: ES_SHELL_TOOLS
+			l_tool: ES_TOOL [EB_TOOL]
+			l_last_tool: ES_TOOL [EB_TOOL]
 			l_tool_bar_content: SD_TOOL_BAR_CONTENT
 			l_tool_bar_content_2: SD_TOOL_BAR_CONTENT
 			l_is_unlocked: BOOLEAN
@@ -135,37 +134,48 @@ feature -- Basic operations: Standard persona
 			development_window.close_all_tools
 
 				-- Right bottom tools
-			l_tool := development_window.tools.c_output_tool
+			l_tool := l_shell_tools.tool ({ES_C_OUTPUT_TOOL})
 			l_tool.content.set_top ({SD_ENUMERATION}.bottom)
-
-			l_tool := development_window.shell_tools.tool ({ES_ERROR_LIST_TOOL}).panel
-			l_tool.content.set_tab_with (development_window.tools.c_output_tool.content, True)
 			l_last_tool := l_tool
 
-			l_tool := development_window.tools.output_tool
+			l_tool := l_shell_tools.tool ({ES_ERROR_LIST_TOOL})
 			l_tool.content.set_tab_with (l_last_tool.content, True)
+			l_last_tool := l_tool
 
-			l_tool := development_window.tools.features_relation_tool
-			l_tool.content.set_tab_with (development_window.tools.output_tool.content, True)
+			l_tool := l_shell_tools.tool ({ES_OUTPUT_TOOL})
+			l_tool.content.set_tab_with (l_last_tool.content, True)
+			l_last_tool := l_tool
 
-			l_tool := development_window.tools.class_tool
-			l_tool.content.set_tab_with (development_window.tools.features_relation_tool.content, True)
+			l_tool := l_shell_tools.tool ({ES_FEATURE_RELATION_TOOL})
+			l_tool.content.set_tab_with (l_last_tool.content, True)
+			l_last_tool := l_tool
+
+			l_tool := l_shell_tools.tool ({ES_CLASS_TOOL})
+			l_tool.content.set_tab_with (l_last_tool.content, True)
+			l_last_tool := l_tool
 
 			l_tool.content.set_split_proportion (0.6)
 
 				-- Right tools
-			l_features_tool ?= development_window.shell_tools.tool ({ES_FEATURES_TOOL})
-
-			l_tool := development_window.tools.favorites_tool
+			l_tool := l_shell_tools.tool ({ES_FAVORITES_TOOL})
 			l_tool.content.set_top ({SD_ENUMERATION}.right)
-			l_tool := l_features_tool.panel
-			l_tool.content.set_tab_with (development_window.tools.favorites_tool.content, True)
-			l_tool := development_window.tools.cluster_tool
-			l_tool.content.set_tab_with (l_features_tool.panel.content, True)
+			l_last_tool := l_tool
+
+			l_tool := l_shell_tools.tool ({ES_TESTING_TOOL})
+			l_tool.content.set_tab_with (l_last_tool.content, True)
+			l_last_tool := l_tool
+
+			l_tool := l_shell_tools.tool ({ES_FEATURES_TOOL})
+			l_tool.content.set_tab_with (l_last_tool.content, True)
+			l_last_tool := l_tool
+
+			l_tool := l_shell_tools.tool ({ES_GROUPS_TOOL})
+			l_tool.content.set_tab_with (l_last_tool.content, True)
+
 			l_tool.content.set_split_proportion (0.73)
 
-				-- Auto hide tools
-			l_tool := development_window.tools.diagram_tool
+				-- Auto hide (bottom) tools
+			l_tool := l_shell_tools.tool ({ES_DIAGRAM_TOOL})
 			if l_tool.content.state_value /= {SD_ENUMERATION}.auto_hide then
 				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
 			else
@@ -174,8 +184,9 @@ feature -- Basic operations: Standard persona
 				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
 				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
 			end
+			l_last_tool := l_tool
 
-			l_tool := development_window.tools.dependency_tool
+			l_tool := l_shell_tools.tool ({ES_DEPENDENCY_TOOL})
 			if l_tool.content.state_value /= {SD_ENUMERATION}.auto_hide then
 				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
 			else
@@ -183,11 +194,15 @@ feature -- Basic operations: Standard persona
 				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
 				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
 			end
+			l_last_tool := l_tool
 
-			l_tool := development_window.tools.metric_tool
-			l_tool.content.set_tab_with (development_window.tools.dependency_tool.content, False)
+			l_tool := l_shell_tools.tool ({ES_METRICS_TOOL})
+			l_tool.content.set_tab_with (l_last_tool.content, False)
+			l_last_tool := l_tool
 
-			development_window.shell_tools.tool ({ES_INFORMATION_TOOL}).panel.content.set_tab_with (l_tool.content, False)
+			l_tool := l_shell_tools.tool ({ES_INFORMATION_TOOL})
+			l_tool.content.set_tab_with (l_last_tool.content, False)
+			l_last_tool := l_tool
 				--
 				-- End TO BE REMOVED
 				--
@@ -512,7 +527,7 @@ feature {NONE} -- Basic operations
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -525,22 +540,22 @@ feature {NONE} -- Basic operations
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

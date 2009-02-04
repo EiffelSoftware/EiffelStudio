@@ -21,22 +21,22 @@ create {NONE}
 
 feature -- Access
 
-	title: STRING_32
-			-- <Precursor>
-		do
-			Result :=  locale_formatter.translation (t_title)
-		end
-
-	icon: EV_PIXEL_BUFFER
+	icon: !EV_PIXEL_BUFFER
 			-- <Precursor>
 		do
 			Result := stock_pixmaps.tool_external_output_icon_buffer
 		end
 
-	icon_pixmap: EV_PIXMAP
+	icon_pixmap: !EV_PIXMAP
 			-- <Precursor>
 		do
 			Result := stock_pixmaps.tool_external_output_icon
+		end
+
+	title: !STRING_32
+			-- <Precursor>
+		do
+			Result := locale_formatter.translation (t_tool_title)
 		end
 
 feature {NONE} -- Status report
@@ -49,7 +49,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Factory
 
-	create_tool: ES_TESTING_TOOL_PANEL
+	new_tool: !ES_TESTING_TOOL_PANEL
 			-- <Precursor>
 		do
 			create Result.make (window, Current)
@@ -57,10 +57,10 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Internationalization
 
-	t_title: STRING = "Testing Tool"
+	t_tool_title: STRING = "Testing"
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

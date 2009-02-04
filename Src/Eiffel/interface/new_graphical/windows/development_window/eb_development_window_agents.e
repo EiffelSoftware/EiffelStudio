@@ -42,10 +42,10 @@ feature {NONE} -- Clean up
 			-- Detaches objects from their container
 		do
 			Precursor {EB_DEVELOPMENT_WINDOW_PART}
-			on_customized_tools_changed_agent_internal := Void
+--			on_customized_tools_changed_agent_internal := Void
 			text_observer_manager := Void
 		ensure then
-			on_customized_tools_changed_agent_internal_detached: on_customized_tools_changed_agent_internal = Void
+--			on_customized_tools_changed_agent_internal_detached: on_customized_tools_changed_agent_internal = Void
 		end
 
 	internal_recycle
@@ -274,7 +274,7 @@ feature -- Agents
 				develop_window.commands.show_profiler.enable_sensitive
 			end
 			develop_window.commands.customized_formatter_command.enable_sensitive
-			develop_window.commands.customized_tool_command.enable_sensitive
+--			develop_window.commands.customized_tool_command.enable_sensitive
 		end
 
 	on_project_loaded
@@ -282,8 +282,6 @@ feature -- Agents
 		do
 			develop_window.cluster_manager.on_project_loaded
 			enable_commands_on_project_loaded
-			develop_window.tools.cluster_tool.on_project_loaded
-
 			develop_window.tools.breakpoints_tool.on_project_loaded
 		end
 
@@ -293,7 +291,7 @@ feature -- Agents
 			l_builder: EB_DEVELOPMENT_WINDOW_MENU_BUILDER
 		do
 			disable_commands_on_project_unloaded
-			develop_window.tools.cluster_tool.on_project_unloaded
+--			develop_window.tools.cluster_tool.on_project_unloaded
 			develop_window.address_manager.on_project_unloaded
 
 			create l_builder.make (develop_window)
@@ -306,47 +304,47 @@ feature -- Agents
 				develop_window.commands.show_profiler.disable_sensitive
 			end
 			develop_window.commands.customized_formatter_command.enable_sensitive
-			develop_window.commands.customized_tool_command.enable_sensitive
+--			develop_window.commands.customized_tool_command.enable_sensitive
 		end
 
-	on_customized_tools_changed (a_changed_tools: LIST [STRING])
-			-- Action to be performed when customized tools changes			
-		require
-			a_changed_tools_attached: a_changed_tools /= Void
-			a_changed_tools_valid: not a_changed_tools.has (Void)
-		local
-			l_tools: EB_DEVELOPMENT_WINDOW_TOOLS
-			l_customized_tools: LIST [EB_CUSTOMIZED_TOOL]
-			l_main_builder: EB_DEVELOPMENT_WINDOW_MAIN_BUILDER
-			l_unchanged_tools: LIST [EB_CUSTOMIZED_TOOL]
-		do
-			l_tools := develop_window.tools
-			create l_main_builder.make (develop_window)
-			auto_recycle (l_main_builder)
+--	on_customized_tools_changed (a_changed_tools: LIST [STRING])
+--			-- Action to be performed when customized tools changes			
+--		require
+--			a_changed_tools_attached: a_changed_tools /= Void
+--			a_changed_tools_valid: not a_changed_tools.has (Void)
+--		local
+--			l_tools: EB_DEVELOPMENT_WINDOW_TOOLS
+--			l_customized_tools: LIST [EB_CUSTOMIZED_TOOL]
+--			l_main_builder: EB_DEVELOPMENT_WINDOW_MAIN_BUILDER
+--			l_unchanged_tools: LIST [EB_CUSTOMIZED_TOOL]
+--		do
+--			l_tools := develop_window.tools
+--			create l_main_builder.make (develop_window)
+--			auto_recycle (l_main_builder)
 
-				-- Remove changed tools.
-			l_customized_tools := l_tools.customized_tools_from_tools (l_tools.customizable_tools_by_id (l_tools.customizable_tools, a_changed_tools, True))
-			l_customized_tools.do_all (agent l_main_builder.deregister_customized_tool)
+--				-- Remove changed tools.
+--			l_customized_tools := l_tools.customized_tools_from_tools (l_tools.customizable_tools_by_id (l_tools.customizable_tools, a_changed_tools, True))
+--			l_customized_tools.do_all (agent l_main_builder.deregister_customized_tool)
 
-				-- Add changed/newly added tools.
-			l_customized_tools := develop_window.customized_tool_manager.tools_by_ids (a_changed_tools, True, develop_window)
-			l_main_builder.register_customized_tools (l_customized_tools)
+--				-- Add changed/newly added tools.
+--			l_customized_tools := develop_window.customized_tool_manager.tools_by_ids (a_changed_tools, True, develop_window)
+--			l_main_builder.register_customized_tools (l_customized_tools)
 
-				-- Refresh titile/pixmap/stone handlers for unchanged tools.
-			l_unchanged_tools := l_tools.customized_tools_from_tools (l_tools.customizable_tools_by_id (l_tools.customizable_tools, a_changed_tools, False))
-			if not l_unchanged_tools.is_empty then
-				l_unchanged_tools.do_all (agent l_tools.refresh_customized_tool_appearance)
-			end
-		end
+--				-- Refresh titile/pixmap/stone handlers for unchanged tools.
+--			l_unchanged_tools := l_tools.customized_tools_from_tools (l_tools.customizable_tools_by_id (l_tools.customizable_tools, a_changed_tools, False))
+--			if not l_unchanged_tools.is_empty then
+--				l_unchanged_tools.do_all (agent l_tools.refresh_customized_tool_appearance)
+--			end
+--		end
 
-	on_customized_tools_changed_agent: PROCEDURE [ANY, TUPLE [LIST [STRING]]]
-			-- Agent of `on_cutomized_tools_changed'
-		do
-			if on_customized_tools_changed_agent_internal = Void then
-				on_customized_tools_changed_agent_internal := agent on_customized_tools_changed
-			end
-			Result := on_customized_tools_changed_agent_internal
-		end
+--	on_customized_tools_changed_agent: PROCEDURE [ANY, TUPLE [LIST [STRING]]]
+--			-- Agent of `on_cutomized_tools_changed'
+--		do
+--			if on_customized_tools_changed_agent_internal = Void then
+--				on_customized_tools_changed_agent_internal := agent on_customized_tools_changed
+--			end
+--			Result := on_customized_tools_changed_agent_internal
+--		end
 
 feature {NONE} -- Query
 
@@ -423,7 +421,7 @@ feature {NONE} -- Implementation
 			develop_window.commands.c_finalized_compilation_cmd.enable_sensitive
 			develop_window.refactoring_manager.enable_sensitive
 			develop_window.commands.customized_formatter_command.enable_sensitive
-			develop_window.commands.customized_tool_command.enable_sensitive
+--			develop_window.commands.customized_tool_command.enable_sensitive
 		end
 
 	disable_commands_on_project_unloaded
@@ -449,17 +447,17 @@ feature {NONE} -- Implementation
 			develop_window.refactoring_manager.disable_sensitive
 			develop_window.refactoring_manager.forget_undo_redo
 			develop_window.commands.customized_formatter_command.disable_sensitive
-			develop_window.commands.customized_tool_command.disable_sensitive
+--			develop_window.commands.customized_tool_command.disable_sensitive
 		end
 
-	on_customized_tools_changed_agent_internal: like on_customized_tools_changed_agent
-			-- Implementation of `on_customized_tools_changed_agent'
+--	on_customized_tools_changed_agent_internal: like on_customized_tools_changed_agent
+--			-- Implementation of `on_customized_tools_changed_agent'
 
 invariant
 	not_void: not is_recycled implies develop_window /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -472,22 +470,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

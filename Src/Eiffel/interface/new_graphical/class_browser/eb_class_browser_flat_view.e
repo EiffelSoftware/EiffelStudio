@@ -30,12 +30,12 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_dev_window: like development_window; a_drop_actions: like drop_actions)
+	make (a_dev_window: like development_window)
 			-- Initialize.
 		do
 			create filter.make (agent is_selected)
 			create wild_matcher.make_empty
-			Precursor (a_dev_window, a_drop_actions)
+			Precursor (a_dev_window)
 		end
 
 feature -- Actions
@@ -497,9 +497,6 @@ feature{NONE} -- Initialization
 			grid.enable_multiple_item_selection
 			grid.row_expand_actions.force_extend (agent on_row_expanded)
 			grid.row_collapse_actions.force_extend (agent on_row_collapsed)
-			if drop_actions /= Void then
-				grid.drop_actions.fill (drop_actions)
-			end
 			enable_ctrl_right_click_to_open_new_window
 			grid.key_press_actions.extend (agent on_key_pressed)
 			enable_grid_item_pnd_support
@@ -760,35 +757,35 @@ invariant
 	wild_matcher_attached: wild_matcher /= Void
 
 note
-        copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2009, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[
-                        This file is part of Eiffel Software's Eiffel Development Environment.
-                        
-                        Eiffel Software's Eiffel Development Environment is free
-                        software; you can redistribute it and/or modify it under
-                        the terms of the GNU General Public License as published
-                        by the Free Software Foundation, version 2 of the License
-                        (available at the URL listed under "license" above).
-                        
-                        Eiffel Software's Eiffel Development Environment is
-                        distributed in the hope that it will be useful,	but
-                        WITHOUT ANY WARRANTY; without even the implied warranty
-                        of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-                        See the	GNU General Public License for more details.
-                        
-                        You should have received a copy of the GNU General Public
-                        License along with Eiffel Software's Eiffel Development
-                        Environment; if not, write to the Free Software Foundation,
-                        Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
-                ]"
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
         source: "[
-                         Eiffel Software
-                         356 Storke Road, Goleta, CA 93117 USA
-                         Telephone 805-685-1006, Fax 805-685-6869
-                         Website http://www.eiffel.com
-                         Customer support http://support.eiffel.com
-                ]"
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

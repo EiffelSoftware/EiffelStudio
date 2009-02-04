@@ -179,8 +179,8 @@ feature -- Access
 			l_shell_tools: ES_SHELL_TOOLS
 			l_tools: DS_BILINEAR_CURSOR [ES_TOOL [EB_TOOL]]
 			l_tool: ES_FORMATTER_TOOL [ES_FORMATTER_TOOL_PANEL_BASE]
-			l_custom_tools: LIST [EB_TOOL]
-			l_custom_tool: EB_CUSTOMIZED_TOOL
+--			l_custom_tools: LIST [EB_TOOL]
+--			l_custom_tool: EB_CUSTOMIZED_TOOL
 		do
 			create Result.make (1)
 
@@ -190,21 +190,21 @@ feature -- Access
 			from l_tools.start until l_tools.after loop
 				l_tool ?= l_tools.item
 				if l_tool /= Void and then l_tool.is_customizable then
-					Result.put ([l_tool.edition_title, l_tool.icon_pixmap], l_tool.type_id)
+					Result.put ([l_tool.edition_title, l_tool.icon_pixmap], l_tool.content_id)
 				end
 				l_tools.forth
 			end
 
-				-- Access customized tools.
-				-- FIXME: The formatters need to use the new delayed-activation model!
-			l_custom_tools := window_manager.last_focused_development_window.tools.customized_tools
-			from l_custom_tools.start until l_custom_tools.after loop
-				l_custom_tool ?= l_custom_tools.item
-				if l_custom_tool /= Void and then l_custom_tool.is_customized_tool then
-					Result.put ([l_custom_tool.title.as_string_32, l_custom_tool.pixmap], l_custom_tool.title_for_pre)
-				end
-				l_custom_tools.forth
-			end
+--				-- Access customized tools.
+--				-- FIXME: The formatters need to use the new delayed-activation model!
+--			l_custom_tools := window_manager.last_focused_development_window.tools.customized_tools
+--			from l_custom_tools.start until l_custom_tools.after loop
+--				l_custom_tool ?= l_custom_tools.item
+--				if l_custom_tool /= Void and then l_custom_tool.is_customized_tool then
+--					Result.put ([l_custom_tool.title.as_string_32, l_custom_tool.pixmap], l_custom_tool.title_for_pre)
+--				end
+--				l_custom_tools.forth
+--			end
 		ensure
 			result_attached: Result /= Void
 		end
@@ -637,7 +637,7 @@ invariant
 	formatter_grid_wrapper_attached: item_grid_wrapper /= Void
 	descriptor_row_table_attached: descriptor_row_table /= Void
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -661,11 +661,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end
 

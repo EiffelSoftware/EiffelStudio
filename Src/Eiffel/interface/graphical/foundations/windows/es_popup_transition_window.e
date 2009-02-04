@@ -225,8 +225,8 @@ feature -- Status report
 			-- Indicates if the window is sensitive to having a mouse pointer. By default, if the mouse pointer leaves the
 			-- window, is it remains open.
 
-	is_recycled_on_closing: BOOLEAN
-			-- Indicates if the foundation should be recycled on closing.
+	is_recycled_on_close: BOOLEAN
+			-- <Precursor>
 		do
 			Result := True
 		end
@@ -316,7 +316,7 @@ feature {NONE} -- Internationalization
 	l_please_wait: STRING = "Please wait..."
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

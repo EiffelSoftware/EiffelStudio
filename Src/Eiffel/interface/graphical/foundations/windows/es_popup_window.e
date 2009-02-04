@@ -443,13 +443,13 @@ feature -- Basic operations
 				if internal_popup_window /= Void and then not internal_popup_window.is_destroyed then
 					popup_window.hide
 				end
-				if is_recycled_on_closing then
+				if is_recycled_on_close then
 					recycle
 				end
 			end
 		ensure
 			not_popup_window_is_displayed: not is_shown implies not popup_window.is_displayed
-			not_is_interface_usable: not is_shown implies (is_recycled_on_closing implies not is_interface_usable)
+			not_is_interface_usable: not is_shown implies (is_recycled_on_close implies not is_interface_usable)
 		end
 
 	hide_confirm
@@ -810,7 +810,7 @@ invariant
 	border_widget_attached: has_border implies border_widget /= Void
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -422,13 +422,13 @@ feature {NONE} -- Actions
 		do
 			l_window := window_manager.last_focused_development_window
 			if l_window /= Void and then l_window.is_interface_usable then
-				l_window.commands.show_tool_commands.linear_representation.do_all (agent (ia_cmd: EB_SHOW_TOOL_COMMAND)
-						-- Show legacy tools, should not be used anymore.
-					do
-						if ia_cmd /= Void and then ia_cmd.is_interface_usable and then ia_cmd.executable then
-							ia_cmd.execute
-						end
-					end)
+--				l_window.commands.show_tool_commands.linear_representation.do_all (agent (ia_cmd: EB_SHOW_TOOL_COMMAND)
+--						-- Show legacy tools, should not be used anymore.
+--					do
+--						if ia_cmd /= Void and then ia_cmd.is_interface_usable and then ia_cmd.executable then
+--							ia_cmd.execute
+--						end
+--					end)
 
 				l_window.commands.show_shell_tool_commands.linear_representation.do_all (agent (ia_cmd: ES_SHOW_TOOL_COMMAND)
 						-- Show ESF tools.
@@ -591,11 +591,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

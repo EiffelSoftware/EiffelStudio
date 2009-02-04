@@ -18,31 +18,28 @@ inherit
 
 feature -- Access
 
-	icon: EV_PIXEL_BUFFER
-			-- Tool icon
-			-- Note: Do not call `tool.icon' as it will create the tool unnecessarly!
+	icon: !EV_PIXEL_BUFFER
+			-- <Precursor>
 		do
 			Result := stock_pixmaps.tool_watch_icon_buffer
 		end
 
-	icon_pixmap: EV_PIXMAP
-			-- Tool icon pixmap
-			-- Note: Do not call `tool.icon' as it will create the tool unnecessarly!
+	icon_pixmap: !EV_PIXMAP
+			-- <Precursor>
 		do
 			Result := stock_pixmaps.tool_watch_icon
 		end
 
-	title: STRING_32
-			-- Tool title.
-			-- Note: Do not call `tool.title' as it will create the tool unnecessarly!
+	title: !STRING_32
+			-- <Precursor>
 		do
-			Result := interface_names.t_information_tool
+			Result := locale_formatter.translation (t_tool_title)
 		end
 
-feature -- Operation
+feature -- Basic operations
 
 	refresh_list
-			-- Refresh the entry list.
+			-- <Precursor>
 		do
 			if is_tool_instantiated then
 				panel.refresh_list
@@ -50,7 +47,7 @@ feature -- Operation
 		end
 
 	request_eis_visit
-			-- Reqest EIS background visiting to collect information into EIS storage.
+			-- <Precursor>
 		do
 			if is_tool_instantiated then
 				panel.request_eis_visit
@@ -59,14 +56,18 @@ feature -- Operation
 
 feature {NONE} -- Factory
 
-	create_tool: ES_INFORMATION_TOOL_PANEL
-			-- Creates the tool for first use on the development `window'
+	new_tool: !ES_INFORMATION_TOOL_PANEL
+			-- <Precursor>
 		do
 			create Result.make (window, Current)
 		end
 
+feature {NONE} -- Internationalization
+
+	t_tool_title: STRING = "Eiffel Information System"
+
 note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -91,7 +92,7 @@ note
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

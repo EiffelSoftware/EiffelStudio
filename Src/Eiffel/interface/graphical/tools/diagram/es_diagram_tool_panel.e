@@ -16,10 +16,8 @@ inherit
 			{EB_CONTEXT_DIAGRAM_COMMAND, ES_GRAPH, EIFFEL_WORLD, EIFFEL_FACTORY, CLASS_TEXT_MODIFIER, EIFFEL_CLASS_FIGURE}
 				develop_window
 		redefine
-			attach_to_docking_manager,
 			mini_toolbar,
 			build_mini_toolbar,
-			build_docking_content,
 			internal_recycle,
 			internal_detach_entities,
 			force_last_stone
@@ -526,14 +524,6 @@ feature {NONE} -- Initialization
 			view_selector.set_focus
 		end
 
-	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER)
-			-- Build dockable content.
-		do
-			Precursor {EB_STONABLE_TOOL}(a_docking_manager)
-			content.drop_actions.extend (agent center_diagram_cmd.execute_with_class_stone)
-			content.drop_actions.extend (agent center_diagram_cmd.execute_with_cluster_stone)
-		end
-
 feature -- EB_TOOL features
 
 	build_interface
@@ -562,16 +552,9 @@ feature -- EB_TOOL features
 			mini_toolbar.extend (address_manager.header_info)
 			mini_toolbar.extend (history_toolbar)
 			address_manager.label_changed_actions.extend (agent (develop_window.docking_manager).update_mini_tool_bar_size (content))
-		end
 
-feature -- Initialization
-
-	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER)
-			-- Attach to docking manager
-		do
-			build_docking_content (a_docking_manager)
-			check not_already_has: not a_docking_manager.has_content (content) end
-			a_docking_manager.contents.extend (content)
+			register_action (content.drop_actions, agent center_diagram_cmd.execute_with_class_stone)
+			register_action (content.drop_actions, agent center_diagram_cmd.execute_with_cluster_stone)
 		end
 
 feature -- Status report
@@ -2421,7 +2404,7 @@ invariant
 	shortcut_table_not_void: shortcut_table /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -2434,22 +2417,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_CONTEXT_EDITOR

@@ -295,7 +295,7 @@ feature{NONE} -- Implementation
 
 			develop_window.set_initialized_for_builder (True)
 			develop_window.set_is_destroying (False)
-			develop_window.agents.register_action (develop_window.customized_tool_manager.change_actions, develop_window.agents.on_customized_tools_changed_agent)
+--			develop_window.agents.register_action (develop_window.customized_tool_manager.change_actions, develop_window.agents.on_customized_tools_changed_agent)
 		end
 
 	main_builder: EB_DEVELOPMENT_WINDOW_MAIN_BUILDER
@@ -308,7 +308,7 @@ feature{NONE} -- Implementation
 			-- Builder which build toolbars.
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -332,11 +332,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

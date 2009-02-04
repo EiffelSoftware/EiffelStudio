@@ -14,7 +14,7 @@ inherit
 		redefine
 			create_mini_tool_bar_items,
 			on_before_initialize,
-			build_docking_content,
+			on_after_initialized,
 			show, close
 		end
 
@@ -55,18 +55,53 @@ feature {NONE} -- Initialization
 			make (a_manager, a_tool)
 		end
 
-	on_before_initialize
-			-- <Precursor>
-		do
-			Precursor
-			create viewers_manager.make_for_tool (Current)
-			viewers_manager.viewer_changed_actions.extend (agent update_viewers_selector)
-		end
+feature {NONE} -- Initialization: User interface
 
 	build_tool_interface (a_widget: EV_VERTICAL_BOX)
 			-- <Precursor>
 		do
 			a_widget.extend (viewers_manager.widget)
+		end
+
+	on_before_initialize
+			-- <Precursor>
+		do
+			Precursor
+
+			create viewers_manager.make_for_tool (Current)
+			viewers_manager.viewer_changed_actions.extend (agent update_viewers_selector)
+		end
+
+	on_after_initialized
+			-- <Precursor>
+		do
+			Precursor
+
+				-- FIXME: Tool should be refactored to implement {ES_DOCKABLE_STONEABLE_TOOL_PANEL}
+			register_action (content.drop_actions, agent set_stone)
+			content.drop_actions.set_veto_pebble_function (agent is_stone_valid)
+		end
+
+feature -- Access: Help
+
+	help_context_id: !STRING_GENERAL
+			-- <Precursor>
+		once
+			Result := "62002CE3-37F9-22DE-39F0-0930468A67BE"
+		end
+
+feature {NONE} -- Factory
+
+    create_widget: EV_VERTICAL_BOX
+            -- Create a new container widget upon request.
+            -- Note: You may build the tool elements here or in `build_tool_interface'
+        do
+        	Create Result
+        end
+
+	create_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			-- Retrieves a list of tool bar items to display at the top of the tool.
+		do
 		end
 
     create_mini_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
@@ -97,37 +132,7 @@ feature {NONE} -- Initialization
 			update_viewers_selector (Void)
 		end
 
-	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER)
-		do
-			Precursor (a_docking_manager)
-			check content_not_void : content /= Void end
-			content.drop_actions.extend (agent set_stone)
-			content.drop_actions.set_veto_pebble_function (agent is_stone_valid)
-		end
-
-feature -- Access: Help
-
-	help_context_id: !STRING_GENERAL
-			-- <Precursor>
-		once
-			Result := "62002CE3-37F9-22DE-39F0-0930468A67BE"
-		end
-
-feature {NONE} -- Factory
-
-    create_widget: EV_VERTICAL_BOX
-            -- Create a new container widget upon request.
-            -- Note: You may build the tool elements here or in `build_tool_interface'
-        do
-        	Create Result
-        end
-
-	create_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
-			-- Retrieves a list of tool bar items to display at the top of the tool.
-		do
-		end
-
-feature -- Properties
+feature -- Access: User interface elements
 
 	command: EB_OBJECT_VIEWER_COMMAND
 
@@ -331,7 +336,7 @@ feature -- Memory management
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -344,22 +349,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

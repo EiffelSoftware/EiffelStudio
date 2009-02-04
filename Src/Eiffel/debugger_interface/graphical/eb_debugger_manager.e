@@ -349,7 +349,7 @@ feature -- Settings
 		do
 			if debugging_window /= Void then
 				if {l_tool: ES_BREAKPOINTS_TOOL} debugging_window.shell_tools.tool ({ES_BREAKPOINTS_TOOL}) then
-					if l_tool.shown then
+					if l_tool.is_shown then
 						l_tool.refresh
 					end
 				end
@@ -909,7 +909,7 @@ feature -- tools management
 							l_shown := True
 							l_focused_watch_index := l_wt_lst.index
 						end
-						if l_watch_tool = Void and then not l_wt_lst.item.shown then
+						if l_watch_tool = Void and then not l_wt_lst.item.is_shown then
 							l_watch_tool := l_wt_lst.item
 						end
 						l_wt_lst.forth
@@ -937,24 +937,17 @@ feature -- tools management
 			end
 		end
 
-	create_new_watch_tool_tabbed_with (a_manager: EB_DEVELOPMENT_WINDOW; a_tool: EB_TOOL)
+	create_new_watch_tool_tabbed_with (a_window: EB_DEVELOPMENT_WINDOW; a_tool: ?ES_TOOL [EB_TOOL])
 			-- Create a new watch tool and set it tabbed with `a_tool'
 			-- if `a_tool' is not Void
 			-- Note: the new watch tool is not shown yet.
 		require
-			a_manager /= Void
-		local
-			l_watch_tool: ES_WATCH_TOOL_PANEL
+			a_window_attached: a_window /= Void
+			a_window_is_interface_usable: a_window.is_interface_usable
 		do
-			if debugging_window /= Void then
-					--| IMPORTANT: The following call has the side affect of creating the tool, do not remove it!				
-				l_watch_tool ?= debugging_window.shell_tools.tool_next_available_edition ({ES_WATCH_TOOL}, False).panel
-				if
-					a_tool /= Void
-					and then a_tool.content /= Void
-					and then l_watch_tool.content /= Void
-					and then l_watch_tool.content.manager_has_content (a_tool.content)
-				then
+				--| IMPORTANT: The following call has the side affect of creating the tool, do not remove it!				
+			if {l_watch_tool: ES_WATCH_TOOL} a_window.shell_tools.tool_next_available_edition ({ES_WATCH_TOOL}, False) then
+				if a_tool /= Void then
 					l_watch_tool.content.set_tab_with (a_tool.content, False)
 				end
 			end
@@ -1347,7 +1340,7 @@ feature -- Status setting
 			split: EV_SPLIT_AREA
 			l_watch_tool: ES_WATCH_TOOL
 			l_wt_lst: like watch_tool_list
-			l_tool: EB_TOOL
+			l_tool: ES_WATCH_TOOL
 			l_docking_manager: SD_DOCKING_MANAGER
 			nwt: INTEGER
 			l_unlock: BOOLEAN
@@ -1395,8 +1388,8 @@ feature -- Status setting
 					l_tool := Void
 					if not l_wt_lst.is_empty then
 						l_watch_tool := l_wt_lst.last
-						if l_watch_tool.is_tool_instantiated and then l_watch_tool.shown then
-							l_tool := l_watch_tool.panel
+						if l_watch_tool.is_tool_instantiated and then l_watch_tool.is_shown then
+							l_tool := l_watch_tool
 						end
 					end
 				until
@@ -1741,7 +1734,7 @@ feature -- Debugging events
 				if st /= Void then
 					launch_stone (st)
 						--| After launch_stone, the call stack tool will show something,
-					if call_stack_tool.shown then
+					if call_stack_tool.is_shown then
 						debugging_window.shell_tools.tool ({ES_FEATURE_RELATION_TOOL}).show (False)
 					end
 				end
@@ -2289,7 +2282,7 @@ feature {NONE} -- MSIL system implementation
 			-- DLL type constant for MSIL system
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -2313,11 +2306,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_DEBUGGER_MANAGER

@@ -12,8 +12,8 @@ class
 inherit
 	EB_TOOL
 		redefine
-			attach_to_docking_manager,
-			internal_recycle
+			internal_recycle,
+			internal_detach_entities
 		end
 
 	EB_SHARED_MANAGERS
@@ -39,9 +39,7 @@ feature {NONE} -- Initialization
 			create l_f
 			l_f.set_style ({EV_FRAME_CONSTANTS}.Ev_frame_lowered)
 			create text_area.make (develop_window)
-			text_area.drop_actions.extend (agent drop_class)
-			text_area.drop_actions.extend (agent drop_feature)
-			text_area.drop_actions.extend (agent drop_cluster)
+			auto_recycle (text_area)
 			text_area.disable_line_numbers
 			l_f.extend (text_area.widget)
 			widget := l_f
@@ -56,6 +54,9 @@ feature {NONE} -- Initialization
 			-- Build interface
 		do
 			make_with_tool
+			if text_area /= Void then
+				stone_director.bind (text_area.widget, Current)
+			end
 		end
 
 	pixmap_failure: EV_PIXMAP
@@ -76,28 +77,20 @@ feature {NONE} -- Initialization
 			Result := l_constants.pixmaps.icon_pixmaps.tool_output_successful_icon
 		end
 
-feature -- Initialization
-
-	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER)
-			-- Attach to docking manager
-		do
-			build_docking_content (a_docking_manager)
-
-			check not_already_has: not a_docking_manager.has_content (content) end
-			a_docking_manager.contents.extend (content)
-		end
-
 feature -- Clean up
 
 	internal_recycle
-			-- To be called before destroying this objects
+			-- <Precursor>
 		do
 			graphical_output_manager.prune (Current)
-			if text_area /= Void then
-				text_area.recycle
-				text_area := Void
-			end
-			Precursor {EB_TOOL}
+			Precursor
+		end
+
+	internal_detach_entities
+			-- <Precursor>
+		do
+			text_area := Void
+			Precursor
 		ensure then
 			text_area_detached: text_area = Void
 		end
@@ -118,7 +111,7 @@ feature -- Status setting
 			-- Only if `Current' is in the focused window.
 		do
 			if develop_window = Window_manager.last_focused_window then
-				if not shown or else is_auto_hide then
+				if not is_shown or else is_auto_hide then
 					show_with_setting
 				end
 				content.set_focus
@@ -229,59 +222,8 @@ feature {NONE} -- Implementation
 	visible: BOOLEAN
 			-- Are we displayed by `parent_notebook'.
 
-	drop_breakable (st: BREAKABLE_STONE)
-			-- Inform `Current's manager that a stone concerning breakpoints has been dropped.
-		do
-
-		end
-
-	drop_class (st: CLASSI_STONE)
-			-- Drop `st' in the context tool and pop the `class info' tab.
-		require
-			st_valid: st /= Void
-		local
-			l_class_tool: ES_CLASS_TOOL_PANEL
-			l_feature_tool: ES_FEATURES_RELATION_TOOL_PANEL
-			l_feature_stone: FEATURE_STONE
-		do
-			l_feature_stone ?= st
-			if l_feature_stone /= Void then
-				l_feature_tool := develop_window.tools.features_relation_tool
-				l_feature_tool.set_stone (st)
-				l_feature_tool.show
-				l_feature_tool.set_focus
-			else
-				l_class_tool := develop_window.tools.class_tool
-				l_class_tool.set_stone (st)
-				l_class_tool.show
-				l_class_tool.set_focus
-			end
-		end
-
-	drop_feature (st: FEATURE_STONE)
-			-- Drop `st' in the context tool and pop the `feature info' tab.
-		require
-			st_valid: st /= Void
-		local
-			l_feature_tool: ES_FEATURES_RELATION_TOOL_PANEL
-		do
-			l_feature_tool := develop_window.tools.features_relation_tool
-			l_feature_tool.set_stone (st)
-			l_feature_tool.show
-			l_feature_tool.content.set_focus
-			l_feature_tool.set_focus
-		end
-
-	drop_cluster (st: CLUSTER_STONE)
-			-- Drop `st' in the context tool.
-		require
-			st_valid: st /= Void
-		do
-			develop_window.tools.launch_stone (st)
-		end
-
-note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+;note
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -294,22 +236,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class ES_OUTPUT_TOOL_PANEL

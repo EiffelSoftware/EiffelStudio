@@ -5,7 +5,7 @@ note
 		composed of a container and manager
 		
 		Note: DO NOT USE as a base class for new tools in EiffelStudio!
-		      Please use {ES_DOCKABLE_TOOL_WINDOW} instead.
+			  Please use {ES_DOCKABLE_TOOL_PANEL} instead.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,10 +17,9 @@ deferred class
 	EB_TOOL
 
 inherit
-
 	REFACTORING_HELPER
 
-	EB_DOCKING_MANAGER_ATTACHABLE
+	HASHABLE
 
 	EB_RECYCLABLE
 		redefine
@@ -73,6 +72,19 @@ feature {NONE} -- Initialization
 			develop_window := a_window
 			tool_descriptor := a_tool
 			build_interface
+			if not {l_dockable: ES_DOCKABLE_TOOL_PANEL [EV_WIDGET]} Current then
+					-- Hack for transition period.
+					-- This is done in {ES_DOCKABLE_TOOL_PANEL}.initialize
+				build_mini_toolbar
+				if mini_toolbar /= Void then
+					if {l_widget_tb: SD_WIDGET_TOOL_BAR} mini_toolbar then
+						l_widget_tb.compute_minimum_size
+					end
+					content.set_mini_toolbar (mini_toolbar)
+					content.update_mini_tool_bar_size
+				end
+				content.set_user_widget (widget)
+			end
 		ensure
 			develop_window_set: develop_window = a_window
 			tool_descriptor_set: tool_descriptor = a_tool
@@ -85,39 +97,35 @@ feature {NONE} -- Initialization
 			widget_created: widget /= Void
 		end
 
-	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER)
-			-- Build the `content' item and
-			-- Add it to `a_docking_manager'.
-		do
-			build_mini_toolbar
-
-			create content.make_with_widget (widget, title_for_pre)
-
-			content.set_long_title (title)
-			content.set_short_title (title)
-
-			if mini_toolbar /= Void then
-				content.set_mini_toolbar (mini_toolbar)
-			end
-
-			if pixmap /= Void then
-				content.set_pixmap (pixmap)
-			end
-			if pixel_buffer /= Void then
-				content.set_pixel_buffer (pixel_buffer)
-			end
-			register_action (content.close_request_actions, agent close)
-		end
-
 	build_mini_toolbar
 			-- Build `mini_toolbar'
 		do
+		end
+
+feature -- Access
+
+	hash_code: INTEGER
+			-- <Precursor>
+		do
+			Result := tool_descriptor.content_id.hash_code
+		end
+
+feature {NONE} -- Access: User interface
+
+	content: !SD_CONTENT
+			-- Access to the tool's docking content
+		require
+			is_interface_usable: is_interface_usable
+		do
+			Result := tool_descriptor.content
 		end
 
 feature -- Change
 
 	set_manager (m: like develop_window)
 			-- Set value `m' to `develop_window'
+		obsolete
+			"No longer required as the window is set during creation."
 		require
 			m /= Void
 		do
@@ -131,14 +139,6 @@ feature -- Access
 		deferred
 		end
 
-	title_for_pre: STRING
-			-- Title of the tool
-		do
-			Result := tool_descriptor.type_id
-		ensure then
-			valid_title: Result /= Void and then not Result.is_empty
-		end
-
 	title: STRING_GENERAL
 			-- Title of the tool which for show, it maybe not in English.
 		do
@@ -150,22 +150,13 @@ feature -- Access
 	mini_toolbar: EV_WIDGET
 			-- Mini tool bar assiociate with Current.
 
-	minimized_title: STRING_GENERAL
-			-- Title of the tool when minimized.
-			--
-			-- By default this name is the same as `title', redefine this
-			-- feature to have a different minimized title.
-		do
-			Result := title
-		ensure
-			valid_minimized_title: minimized_title /= Void and then not minimized_title.is_empty
-		end
-
 	menu_name: STRING_GENERAL
 			-- Name as it may appear in a menu.
 			--
 			-- By default this name is the same as `title', redefine this
 			-- feature to have a different name.
+		obsolete
+			"Use the menu_name on {ES_TOOL}"
 		do
 			Result := title
 		ensure
@@ -189,33 +180,53 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	tool_descriptor: !ES_TOOL [like Current]
+	tool_descriptor: !ES_TOOL [EB_TOOL]
 			-- Descriptor used to created tool.
 
 feature -- Status report
 
-	shown: BOOLEAN
-			-- Is Current shown on the screen?
+	is_shown: BOOLEAN
+			-- Indicates if foundation tool is current displayed.
+		require
+			is_interface_usable: is_interface_usable
 		do
-			if is_interface_usable and then content /= Void and then not is_recycled then
-				Result := content.is_visible and then widget.is_displayed
+			if is_visible then
+				Result := content.user_widget.is_displayed
 			end
 		ensure
-			content_is_visible: Result implies content.is_visible
-			widget_is_displayed: Result implies widget.is_displayed
+			is_interface_usable: Result implies is_interface_usable
+			is_visible: Result implies is_visible
+			widget_is_displayed: Result implies content.user_widget.is_displayed
 		end
+
+	is_visible: BOOLEAN
+			-- Indicates if foundation tool is current visible, which is not the same as being shown.
+			-- Visible refers to tool UI being available to click on (as a tab or auto-hide tab.)
+		require
+			is_interface_usable: is_interface_usable
+		do
+			if is_interface_usable then
+				Result := content.is_visible
+			end
+		ensure
+			is_interface_usable: Result implies is_interface_usable
+			content_is_visible: Result implies content.is_visible
+		end
+
+feature {NONE} -- Status report
 
 	is_auto_hide: BOOLEAN
-			-- Is current auto hide status and content visible?
+			-- Inidicates if the tool is currently in an auto-hidden state.
+		require
+			is_interface_usable: is_interface_usable
 		do
-			if is_interface_usable and then content /= Void and then content.is_visible then
+			if is_visible then
 				Result := content.state_value = {SD_ENUMERATION}.auto_hide
 			end
-		end
-
-	is_customized_tool: BOOLEAN
-			-- Is Current tool a customized tool?
-		do
+		ensure
+			is_interface_usable: Result implies is_interface_usable
+			is_visible: Result implies is_visible
+			content_is_auto_hide: Result implies content.state_value = {SD_ENUMERATION}.auto_hide
 		end
 
 feature -- Status setting
@@ -231,7 +242,7 @@ feature -- Status setting
 	show
 			-- Show the tool (if possible)
 		do
-			if not shown or else is_auto_hide then
+			if not is_shown or else is_auto_hide then
 				content.show
 			end
 			content.set_focus
@@ -253,29 +264,42 @@ feature -- Status setting
 
 feature {NONE} -- Helpers
 
-    frozen stock_pixmaps: ES_PIXMAPS_16X16
-            -- Shared access to stock 16x16 EiffelStudio pixmaps
-        once
-            Result := (create {EB_SHARED_PIXMAPS}).icon_pixmaps
-        ensure
-            result_attached: Result /= Void
-        end
+	frozen stock_pixmaps: !ES_PIXMAPS_16X16
+			-- Shared access to stock 16x16 EiffelStudio pixmaps
+		once
+			Result := (create {EB_SHARED_PIXMAPS}).icon_pixmaps
+		end
 
-    frozen stock_mini_pixmaps: ES_PIXMAPS_10X10
-            -- Shared access to stock 10x10 EiffelStudio pixmaps
-        once
-            Result := (create {EB_SHARED_PIXMAPS}).mini_pixmaps
-        ensure
-            result_attached: Result /= Void
-        end
+	frozen stock_mini_pixmaps: !ES_PIXMAPS_10X10
+			-- Shared access to stock 10x10 EiffelStudio pixmaps
+		once
+			Result := (create {EB_SHARED_PIXMAPS}).mini_pixmaps
+		end
+
+	frozen stone_director: !ES_TOOL_STONE_REDIRECT_HELPER
+			-- Shared access to a stone redirection helper
+		require
+			develop_window_is_interface_usable: internal_stone_director = Void implies develop_window.is_interface_usable
+		local
+			l_result: like internal_stone_director
+		do
+			l_result := internal_stone_director
+			if l_result = Void then
+				create Result.make (develop_window)
+				internal_stone_director := Result
+				auto_recycle (internal_stone_director)
+			else
+				Result := l_result
+			end
+		ensure
+			result_consistent: Result = stone_director
+		end
 
 feature {ES_TOOL} -- Event handlers
 
 	on_edition_changed
-			-- Called when a tool's edition number changes due to purging recycled tools
+			-- Called when a tool's edition number changes due to purging recycled tools.
 		do
-			content.set_unique_title (title_for_pre)
-			content.set_long_title (title)
 		end
 
 feature {NONE} -- Implementation
@@ -361,15 +385,21 @@ feature {NONE} -- Memory management
 	internal_detach_entities
 			-- <Precusor>
 		do
-			content := Void
 			develop_window := Void
 			mini_toolbar := Void
+			internal_stone_director := Void
 			Precursor
 		ensure then
-			content_detached: content = Void
 			develop_window_detached: develop_window = Void
 			mini_toolbar_detached: mini_toolbar = Void
+			internal_stone_director_detached: internal_stone_director = Void
 		end
+
+feature {NONE} -- Implementation: Internal cache
+
+	internal_stone_director: ?like stone_director
+			-- Cached version of `stone_director'
+			-- Note: Do not use directly!
 
 invariant
 	develop_window_attached: is_interface_usable implies develop_window /= Void
@@ -377,7 +407,7 @@ invariant
 	--tool_descriptor_attached: not is_recycled implies tool_descriptor /= Void
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -401,11 +431,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_TOOL

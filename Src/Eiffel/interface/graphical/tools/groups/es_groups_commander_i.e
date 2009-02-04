@@ -1,64 +1,36 @@
 note
 	description: "[
-		Tool descriptor for EiffelStudio's features tool.
+		Commander interface for interacting with the Errors and Warnings tool.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$date$";
 	revision: "$revision$"
 
-frozen class
-	ES_CONTRACT_TOOL
+deferred class
+	ES_GROUPS_COMMANDER_I
 
 inherit
-	ES_PERSISTABLE_STONABLE_TOOL [ES_CONTRACT_TOOL_PANEL]
+	USABLE_I
 
-create {NONE}
-	default_create
+feature -- Basic operations
 
-feature -- Access
-
-	icon: !EV_PIXEL_BUFFER
-			-- <Precursor>
-		do
-			Result := stock_pixmaps.tool_contract_editor_icon_buffer
+	highlight_stone (a_stone: !STONE)
+			-- Attempts to highlight a given stone in the groups tree.
+		require
+			is_interface_usable: is_interface_usable
+			a_stone_is_stone_usable: {rl_stonable: ES_STONABLE_I} Current implies rl_stonable.is_stone_usable (a_stone)
+		deferred
+		ensure
+--			a_stone_set:  {el_stonable: ES_STONABLE_I} Current implies el_stonable.stone ~ a_stone
 		end
 
-	icon_pixmap: !EV_PIXMAP
-			-- <Precursor>
-		do
-			Result := stock_pixmaps.tool_contract_editor_icon
+	highlight_editor_stone
+			-- Attempts to highlight a stone in the groups tree using an editor as its stone context.
+		require
+			is_interface_usable: is_interface_usable
+		deferred
 		end
-
-	title: !STRING_32
-			-- <Precursor>
-		do
-			Result := locale_formatter.translation (t_tool_title)
-		end
-
-feature {NONE} -- Status report
-
-	internal_is_stone_usable (a_stone: !like stone): BOOLEAN
-			-- <Precursor>
-		do
-			if {l_fs: FEATURE_STONE} a_stone then
-				Result := {l_routine: E_ROUTINE} l_fs.e_feature
-			elseif {l_bs: CLASSI_STONE} a_stone then
-				Result := True
-			end
-		end
-
-feature {NONE} -- Factory
-
-	new_tool: !ES_CONTRACT_TOOL_PANEL
-			-- <Precursor>
-		do
-			create Result.make (window, Current)
-		end
-
-feature {NONE} -- Internationalization
-
-	t_tool_title: STRING = "Contract Editor"
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
@@ -85,11 +57,11 @@ feature {NONE} -- Internationalization
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

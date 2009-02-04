@@ -249,8 +249,6 @@ feature {NONE} -- Access
 			l_tools.put_last ({ES_WINDOWS_TOOL})
 			l_tools.put_last ({ES_CONTRACT_TOOL})
 			l_tools.put_last ({ES_INFORMATION_TOOL})
-			l_tools.put_last ({ES_EWEASEL_TESTING_TOOL})
-			l_tools.put_last ({ES_EWEASEL_TESTING_RESULT_TOOL})
 
 				-- Custom formatter tools
 				-- FIXME: Custom formatter tools have been tricking to adapt for 6.1. Given the time-frame
@@ -297,7 +295,7 @@ feature -- Status reporting
 				-- Fetch first edition to determine if it supports multiple instances.
 			l_tool := tool (a_type)
 			if l_tool /= Void then
-				Result := l_tool.is_supporting_multiple_instances
+				Result := l_tool.is_multiple_edition
 			end
 		end
 
@@ -474,7 +472,7 @@ feature -- Query
 						if
 							not l_tool.is_recycled and then
 							(not l_tool.is_tool_instantiated or else
-							(not l_tool.panel.is_recycled and then not l_tool.panel.shown))
+							(not l_tool.panel.is_recycled and then not l_tool.panel.is_shown))
 						then
 							Result := l_tool
 						end
@@ -584,7 +582,7 @@ feature -- Basic operation
 			show_tool_edition (a_type, 1, a_activate)
 		ensure
 			tool_is_instatiated: tool (a_type).is_tool_instantiated
-			tool_is_shown: tool (a_type).panel.shown
+			tool_is_shown: tool (a_type).panel.is_shown
 		end
 
 	show_tool_edition (a_type: TYPE [ES_TOOL [EB_TOOL]]; a_edition: NATURAL_8; a_activate: BOOLEAN)
@@ -606,7 +604,7 @@ feature -- Basic operation
 			l_tool.show (a_activate)
 		ensure
 			tool_is_instatiated: tool_edition (a_type, a_edition).is_tool_instantiated
-			tool_is_shown: tool_edition (a_type, a_edition).panel.shown
+			tool_is_shown: tool_edition (a_type, a_edition).panel.is_shown
 		end
 
 	show_tool_next_available_edition (a_type: TYPE [ES_TOOL [EB_TOOL]]; a_reuse: BOOLEAN; a_activate: BOOLEAN)
@@ -625,7 +623,7 @@ feature -- Basic operation
 			l_tool.show (a_activate)
 		ensure
 			tool_is_instatiated: (old tool_next_available_edition (a_type, a_reuse)).is_tool_instantiated
-			tool_is_shown: (old tool_next_available_edition (a_type, a_reuse)).panel.shown
+			tool_is_shown: (old tool_next_available_edition (a_type, a_reuse)).panel.is_shown
 		end
 
 feature {ES_TOOL} -- Removal
@@ -639,7 +637,7 @@ feature {ES_TOOL} -- Removal
 		require
 			a_tool_attached: a_tool /= Void
 		do
-			if not a_tool.is_recycled and then not a_tool.is_hide_requested and then a_tool.is_recycled_on_closing then
+			if not a_tool.is_recycled and then not a_tool.is_hide_requested and then a_tool.is_recycled_on_close then
 				a_tool.recycle
 				a_tool.set_window (Void)
 				if not is_recycled then
@@ -647,8 +645,8 @@ feature {ES_TOOL} -- Removal
 				end
 			end
 		ensure
-			a_tool_is_recycled: a_tool.is_recycled or else not a_tool.is_recycled_on_closing
-			not_requested_tools: (a_tool.is_recycled or else a_tool.is_recycled_on_closing) implies (not requested_tools.has (tool_id_from_tool (a_tool)) or not
+			a_tool_is_recycled: a_tool.is_recycled or else not a_tool.is_recycled_on_close
+			not_requested_tools: (a_tool.is_recycled or else a_tool.is_recycled_on_close) implies (not requested_tools.has (tool_id_from_tool (a_tool)) or not
 				requested_tools.item (tool_id_from_tool (a_tool)).has (a_tool))
 		end
 
@@ -672,7 +670,7 @@ feature {NONE} -- Factory
 			Result ?= l_internal.new_instance_of (l_internal.generic_dynamic_type (a_type, 1))
 			check
 				result_attached: Result /= Void
-				result_supports_multiple_editions: a_edition > 1 implies Result.is_supporting_multiple_instances
+				result_is_multiple_edition: a_edition > 1 implies Result.is_multiple_edition
 			end
 			Result.set_edition (a_edition)
 			Result.set_window (window)
@@ -699,7 +697,7 @@ invariant
 	internal_requested_tools_contains_attached_items: not is_recycled implies not internal_requested_tools.has_item (Void)
 
 ;note
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -712,22 +710,22 @@ invariant
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

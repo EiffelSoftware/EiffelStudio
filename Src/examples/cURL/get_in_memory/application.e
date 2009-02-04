@@ -26,40 +26,44 @@ feature -- Initialization
 			l_result: INTEGER
 			l_curl_string: CURL_STRING
 		do
-			print ("Eiffel cURL get in memory example.%N")
+			io.put_string ("Eiffel cURL get in memory example.")
+			io.put_new_line
 
-			create l_curl_string.make_empty
+			if curl.is_dynamic_library_exists then
+				create l_curl_string.make_empty
 
-			curl.global_init
+				curl.global_init
 
-			-- Init the curl session
-			curl_handle := curl_easy.init
+					-- Init the curl session
+				curl_handle := curl_easy.init
 
-			-- Specify URL to get
-			curl_easy.setopt_string (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_url, "http://www.google.com")
+					-- Specify URL to get
+				curl_easy.setopt_string (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_url, "http://www.google.com")
 
-			-- Send all data to default Eiffel curl write function
-			curl_easy.set_write_function (curl_handle)
+					-- Send all data to default Eiffel curl write function
+				curl_easy.set_write_function (curl_handle)
 
-			-- We pass our `l_curl_string''s object id to the callback function */
-			curl_easy.setopt_integer (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_writedata, l_curl_string.object_id)
+					-- We pass our `l_curl_string''s object id to the callback function */
+				curl_easy.setopt_integer (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_writedata, l_curl_string.object_id)
 
-			-- Get it!
-			l_result := curl_easy.perform (curl_handle)
+					-- Get it!
+				l_result := curl_easy.perform (curl_handle)
 
-			--  Cleanup curl stuff
-			curl_easy.cleanup (curl_handle)
+					--  Cleanup curl stuff
+				curl_easy.cleanup (curl_handle)
 
-			--Now, our `l_curl_string' contains the remote html source codes.
+					--Now, our `l_curl_string' contains the remote html source codes.
+					--Do something nice with it!
+				if not l_curl_string.is_empty then
+					print ("Remote html source got. Size is: " + l_curl_string.count.out + ". ")
+				end
 
-			--Do something nice with it!
-			if not l_curl_string.is_empty then
-				print ("Remote html source got. Size is: " + l_curl_string.count.out + ". ")
+					--You don't need to be aware of memory management issue since Eiffel will handle all of them for you.
+				curl.global_cleanup
+			else
+				io.error.put_string ("cURL library not found!")
+				io.error.put_new_line
 			end
-
-			--You don't need to be aware of memory management issue since Eiffel will handle all of them for you.
-
-			curl.global_cleanup
 		end
 
 feature {NONE} -- Implementation
@@ -75,9 +79,6 @@ feature {NONE} -- Implementation
 		once
 			create Result
 		end
-
-	curl_string: CURL_STRING
-			-- String used by Eiffel cURL library.
 
 	curl_handle: POINTER;
 			-- cURL handle

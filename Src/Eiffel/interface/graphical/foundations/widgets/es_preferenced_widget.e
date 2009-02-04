@@ -1,7 +1,7 @@
 note
 	description: "[
-			An ESF widget tied to a environment preferences.
-		]"
+		An ESF widget tied to a environment preferences.
+	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"

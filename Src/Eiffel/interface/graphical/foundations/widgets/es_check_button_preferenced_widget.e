@@ -1,7 +1,7 @@
 note
 	description: "[
-			A preference bound check button ESF widget.
-		]"
+		A preference bound check button ESF widget.
+	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"

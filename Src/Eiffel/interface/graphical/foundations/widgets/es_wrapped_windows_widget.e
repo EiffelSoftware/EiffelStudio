@@ -1,6 +1,6 @@
 note
 	description: "[
-			A preference bound check button ESF widget.
+			An ESF wrapper for EiffelVision2 widgets ({ES_WIDGET}), needing access to a host shell window.
 		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -8,73 +8,54 @@ note
 	revision: "$Revision$"
 
 class
-	ES_CHECK_BUTTON_PREFERENCED_WIDGET
+	ES_WRAPPED_WINDOWS_WIDGET [G -> EV_WIDGET]
 
 inherit
-	ES_PREFERENCED_WIDGET [EV_CHECK_BUTTON, BOOLEAN_PREFERENCE, BOOLEAN]
+	ES_WINDOW_WIDGET [G]
+		rename
+			make as make_window_widget
+		end
 
 create
 	make
 
-convert
-	widget: {EV_WIDGET, EV_CHECK_BUTTON}
+feature {NONE} -- Initialization
 
-feature {NONE} -- Initialization: User interface
-
-	build_widget_interface (a_widget: !EV_CHECK_BUTTON)
-			-- <Precursor>
+	make (a_widget: !like widget; a_window: !like develop_window)
+			-- Initializes a standard window widget.
+			--
+			-- `a_widget': The source EiffelVision2 widget to wrap.
+			-- `a_window': Host window on which the widget will be displayed.
+		require
+			not_a_widget_is_destroyed: not a_widget.is_destroyed
+			not_a_widget_has_parent: a_widget.parent = Void
+			a_window_is_interface_usable: a_window.is_interface_usable
 		do
+			internal_widget := a_widget
+			make_window_widget (a_window)
+		ensure
+			widget_set: widget = a_widget
+			develop_window_set: develop_window = a_window
 		end
 
-feature {NONE} -- Access
-
-	preference_value: BOOLEAN
+	build_widget_interface (a_widget: !G)
 			-- <Precursor>
 		do
-			Result := preference.value
-		end
-
-	widget_value: BOOLEAN
-			-- <Precursor>
-		do
-			Result := widget.is_selected
-		end
-
-	widget_change_actions: !ACTION_SEQUENCE [TUPLE]
-			-- <Precursor>
-		local
-			l_actions: ACTION_SEQUENCE [TUPLE]
-		do
-			l_actions := widget.select_actions
-			check l_actions_attached: l_actions /= Void end
-			Result := l_actions
-		end
-
-feature {NONE} -- Basic operations
-
-	update_widget_from_preference_value
-			-- <Precursor>
-		do
-			if preference_value then
-				widget.enable_select
-			else
-				widget.disable_select
-			end
-		end
-
-	update_preference_value_from_widget
-			-- <Precursor>
-		do
-			preference.set_value (widget.is_selected)
 		end
 
 feature {NONE} -- Factory
 
-	create_widget: !EV_CHECK_BUTTON
+	create_widget: !G
 			-- <Precursor>
 		do
-			create Result
+			Result := internal_widget
 		end
+
+feature {NONE} -- Implementation: Internal cache
+
+	internal_widget: !G
+			-- Cached version of `widget', used only for fake creation.
+			-- Note: Do not use directly!
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

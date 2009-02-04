@@ -1,79 +1,76 @@
 note
 	description: "[
-			A preference bound check button ESF widget.
-		]"
+		An ESF widget hosting an editor and optional tool bar.
+	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ES_CHECK_BUTTON_PREFERENCED_WIDGET
+	ES_EDITOR_WIDGET
 
 inherit
-	ES_PREFERENCED_WIDGET [EV_CHECK_BUTTON, BOOLEAN_PREFERENCE, BOOLEAN]
+	ES_TOOL_BAR_WIDGET [EV_WIDGET]
 
 create
 	make
 
 convert
-	widget: {EV_WIDGET, EV_CHECK_BUTTON}
+	widget: {EV_WIDGET}
 
-feature {NONE} -- Initialization: User interface
+feature {NONE} -- Initialization
 
-	build_widget_interface (a_widget: !EV_CHECK_BUTTON)
-			-- <Precursor>
-		do
-		end
-
-feature {NONE} -- Access
-
-	preference_value: BOOLEAN
-			-- <Precursor>
-		do
-			Result := preference.value
-		end
-
-	widget_value: BOOLEAN
-			-- <Precursor>
-		do
-			Result := widget.is_selected
-		end
-
-	widget_change_actions: !ACTION_SEQUENCE [TUPLE]
+	build_tool_bar_widget_interface (a_widget: !EV_WIDGET)
 			-- <Precursor>
 		local
-			l_actions: ACTION_SEQUENCE [TUPLE]
+			l_editor: like editor
 		do
-			l_actions := widget.select_actions
-			check l_actions_attached: l_actions /= Void end
-			Result := l_actions
+			l_editor := editor
+			check l_editor_attached: l_editor /= Void end
+			build_editor_interface (l_editor)
 		end
 
-feature {NONE} -- Basic operations
-
-	update_widget_from_preference_value
-			-- <Precursor>
+	build_editor_interface (a_editor: !like editor)
+			-- Build the editor's interface
+		require
+			a_editor_is_interface_usable: a_editor.is_interface_usable
 		do
-			if preference_value then
-				widget.enable_select
-			else
-				widget.disable_select
-			end
+			a_editor.disable_editable
+			a_editor.disable_line_numbers
+			a_editor.disable_has_breakable_slots
 		end
 
-	update_preference_value_from_widget
-			-- <Precursor>
-		do
-			preference.set_value (widget.is_selected)
-		end
+feature -- Access
+
+	editor: ?EB_CLICKABLE_EDITOR
+			-- Editor
 
 feature {NONE} -- Factory
 
-	create_widget: !EV_CHECK_BUTTON
+	frozen create_widget: !EV_WIDGET
 			-- <Precursor>
 		do
-			create Result
+			editor := create_editor
+			Result := editor.widget.as_attached
+		ensure then
+			editor_attached: editor /= Void
+		end
+
+	create_editor: !EB_CLICKABLE_EDITOR
+			-- Creates a new editor
+		require
+			is_interface_usable: is_interface_usable
+			is_initializing: is_initializing
+		do
+			create Result.make (develop_window)
+		ensure
+			result_is_interface_usable: Result.is_interface_usable
+		end
+
+	create_tool_bar_items: ?DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			-- <Precursor>
+		do
 		end
 
 ;note

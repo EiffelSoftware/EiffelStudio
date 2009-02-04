@@ -131,7 +131,7 @@ feature -- Query
 		do
 			Result := (api_loader.module_pointer (module_name) /= default_pointer)
 		end
-		
+
 feature -- Special setting
 
 	set_curl_function (a_curl_function: CURL_FUNCTION)
@@ -145,8 +145,9 @@ feature -- Special setting
 	curl_function: CURL_FUNCTION
 			-- cURL functions in curl_easy_setopt.
 		do
-			Result := internal_curl_function
-			if Result = Void then
+			if {l_curl_function: like curl_function} internal_curl_function then
+				Result := l_curl_function
+			else
 				create {CURL_DEFAULT_FUNCTION} Result.make
 				internal_curl_function := Result
 			end
@@ -197,7 +198,7 @@ feature -- Special setting
 
 feature {NONE} -- Implementation
 
-	internal_curl_function: CURL_FUNCTION
+	internal_curl_function: ?CURL_FUNCTION
 			-- cURL functions.
 
 	api_loader: API_LOADER

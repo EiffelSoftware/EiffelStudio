@@ -14,11 +14,17 @@ inherit
 	SERVICE_INITIALIZER
 		redefine
 			add_core_services,
-			new_testing_service
+			new_testing_service,
+			register_outputs
 		end
 
 --inherit {NONE}
 	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		end
+
+	ES_SHARED_LOCALE_FORMATTER
 		export
 			{NONE} all
 		end
@@ -137,6 +143,25 @@ feature {NONE} -- Factory
 				l_ev_app.ev_application.add_idle_action (agent Result.synchronize_processors)
 			end
 		end
+
+feature {NONE} -- Output registration
+
+	register_outputs (a_service: !OUTPUT_MANAGER_S)
+			-- <Precursor>
+		local
+			l_kinds: OUTPUT_MANAGER_KINDS
+		do
+			create l_kinds
+			a_service.register (create {ES_EDITOR_OUTPUT_PANE}.make (locale_formatter.translation (l_general)), l_kinds.general)
+			a_service.register (create {ES_EDITOR_OUTPUT_PANE}.make (locale_formatter.translation (l_compiler)), l_kinds.eiffel_compiler)
+			a_service.register (create {ES_EDITOR_OUTPUT_PANE}.make (locale_formatter.translation (l_external_compilation)), l_kinds.c_compiler)
+		end
+
+feature {NONE} -- Internationalization
+
+	l_general: STRING = "General"
+	l_compiler: STRING = "Compiler"
+	l_external_compilation: STRING = "External Compilation"
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

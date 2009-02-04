@@ -2098,6 +2098,7 @@ test	attached-type-attribute-attachment				attach044 tcf pass attached_types ref
 test	attached-inherited-argument					attach045 tcf fail attached_types void_safe scope
 test	attribute-initialization-in-rescue				attach046 tcf pass attached_types void_safe validity
 test	argument-type-correct							attach047 tcf pass attached_types
+test	infix-undetected-call-on-void-target			attach048 tcf pass attached_types
 
 -- Tests for conformance in general
 test	basic-conformance		conform001 tcf pass conformance

@@ -51,11 +51,12 @@ feature {NONE} -- Initialization
 				-- `auto_show_check'
 			l_preference := preferences.editor_data.auto_show_feature_contract_tooltips_preference
 			if l_preference /= Void then
-				create l_auto_show_check.make_with_text (locale_formatter.translation (l_do_not_auto_show))
+				create auto_show_check.make (l_preference)
+				l_auto_show_check := auto_show_check.widget
+				l_auto_show_check.set_text (locale_formatter.translation (l_do_not_auto_show))
 				l_auto_show_check.set_tooltip (locale_formatter.translation (f_do_not_auto_show))
 				l_auto_show_check.set_foreground_color (preferences.editor_data.normal_text_color)
 
-				create auto_show_check.make (l_auto_show_check, l_preference)
 				l_hbox.extend (auto_show_check)
 				l_hbox.disable_item_expand (auto_show_check)
 				auto_recycle (l_auto_show_check)
@@ -434,7 +435,7 @@ feature {NONE} -- Internationalization
 	f_edit_contracts: !STRING = "Places the current feature in the contract editor for edition"
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -458,11 +459,11 @@ feature {NONE} -- Internationalization
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

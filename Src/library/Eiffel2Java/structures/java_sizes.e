@@ -1,4 +1,4 @@
-note  
+note
 	description: "JNI external declarations"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ feature {NONE} -- Structure size
 			"C macro use %"jni.h%""
 		alias
 			"sizeof(jboolean)"
-		end	
+		end
 
 	sizeof_jchar: INTEGER
 			-- Size of `jchar' structure.
@@ -25,7 +25,7 @@ feature {NONE} -- Structure size
 		alias
 			"sizeof(jchar)"
 		end
-		
+
 	sizeof_jbyte: INTEGER
 			-- Size of `jbyte' structure.
 		external
@@ -33,7 +33,7 @@ feature {NONE} -- Structure size
 		alias
 			"sizeof(jbyte)"
 		end
-		
+
 	sizeof_jshort: INTEGER
 			-- Size of `jshort' structure.
 		external
@@ -41,7 +41,7 @@ feature {NONE} -- Structure size
 		alias
 			"sizeof(jshort)"
 		end
-		
+
 	sizeof_jint: INTEGER
 			-- Size of `jint' structure.
 		external
@@ -49,7 +49,7 @@ feature {NONE} -- Structure size
 		alias
 			"sizeof(jint)"
 		end
-		
+
 	sizeof_jlong: INTEGER
 			-- Size of `jlong' structure.
 		external
@@ -57,7 +57,7 @@ feature {NONE} -- Structure size
 		alias
 			"sizeof(jlong)"
 		end
-		
+
 	sizeof_jfloat: INTEGER
 			-- Size of `jfloat' structure.
 		external
@@ -65,7 +65,7 @@ feature {NONE} -- Structure size
 		alias
 			"sizeof(jfloat)"
 		end
-		
+
 	sizeof_jdouble: INTEGER
 			-- Size of `jdouble' structure.
 		external
@@ -75,14 +75,14 @@ feature {NONE} -- Structure size
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

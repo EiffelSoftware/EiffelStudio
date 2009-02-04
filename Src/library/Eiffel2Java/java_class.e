@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 	make (jclass_id: POINTER)
 			-- Create a new instance of Java class give "jclass_id"
 		local
-			mid: POINTER	
+			mid: POINTER
 			clsid: POINTER
 			str_get_name_to_c: C_STRING
 			str_Ljava_lang_String_to_c: C_STRING
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			java_class_id := jclass_id
 				-- Get the name of the class
 			clsid := jni.get_class (jclass_id)
-			mid := jni.get_method_id (clsid, 
+			mid := jni.get_method_id (clsid,
 									str_get_name_to_c.item,
 									str_Ljava_lang_String_to_c.item)
 			name := jni.call_string_method (jclass_id, mid, default_pointer)
@@ -80,7 +80,7 @@ feature -- Comparison
 feature -- Reflection
 
 	method_id (mname: STRING; sig: STRING): POINTER
-			-- Return "method_id" for a static method with "mname" and 
+			-- Return "method_id" for a static method with "mname" and
 			-- signature "sig" that belongs to this class.
 		local
 			mname_to_c: C_STRING
@@ -101,7 +101,7 @@ feature -- Reflection
 		do
 			create fname_to_c.make (fname)
 			create sig_to_c.make (sig)
-			Result := jni.get_static_field_id (java_class_id, 
+			Result := jni.get_static_field_id (java_class_id,
 										fname_to_c.item, sig_to_c.item)
 		end
 
@@ -141,7 +141,7 @@ feature -- calling static methods
 		end
 
 	short_method (mid: POINTER; args: JAVA_ARGS): INTEGER_16
-			-- Call a static function that returns a short 
+			-- Call a static function that returns a short
 			-- (represented as INTEGER in Eiffel)
 		local
 			argsp: POINTER
@@ -197,7 +197,7 @@ feature -- calling static methods
 		end
 
 	byte_method (mid: POINTER; args: JAVA_ARGS): INTEGER_8
-			-- Call a static function that returns a byte 
+			-- Call a static function that returns a byte
 			-- (represented as CHARACTER in Eiffel)
 		local
 			argsp: POINTER
@@ -209,7 +209,7 @@ feature -- calling static methods
 		end
 
 	long_method (mid: POINTER; args: JAVA_ARGS): INTEGER_64
-			-- Call a static function that returns a long 
+			-- Call a static function that returns a long
 			-- (represented as INTEGER_64 in Eiffel)
 		local
 			argsp: POINTER
@@ -221,7 +221,7 @@ feature -- calling static methods
 		end
 
 	object_method (lmethod_id: POINTER; args: JAVA_ARGS): JAVA_OBJECT
-			-- Call a static function that returns a JAVA_OBJECT. An 
+			-- Call a static function that returns a JAVA_OBJECT. An
 			-- Eiffl proxy object is returned.
 		local
 			argp: POINTER
@@ -232,7 +232,7 @@ feature -- calling static methods
 			end
 			jo := jni.call_static_object_method (java_class_id, lmethod_id, argp)
 			if jo /= default_pointer then
-					-- Check global table to see if we have an Eiffel 
+					-- Check global table to see if we have an Eiffel
 					-- proxy for this object
 				Result := jni.java_object_table.item (jo)
 				if Result = Void then
@@ -262,7 +262,7 @@ feature -- Access to static attributes
 		do
 			jo := jni.get_static_object_field (java_class_id, fid)
 			if jo /= default_pointer then
-					-- Check global table to see if we have an Eiffel 
+					-- Check global table to see if we have an Eiffel
 					-- proxy for this object
 				Result := jni.java_object_table.item (jo)
 				if Result = Void then
@@ -294,7 +294,7 @@ feature -- Access to static attributes
 		do
 			Result := jni.get_static_double_field (java_class_id, fid)
 		end
-	
+
 	byte_attribute (fid: POINTER): INTEGER_8
 			-- Access to a 'byte' attribute, returns a INTEGER_8
 		do
@@ -326,10 +326,10 @@ feature -- Setting static attributes
 		do
 			jni.set_static_string_field (java_class_id, fid, value)
 		end
-	
+
 	set_object_attribute (fid: POINTER; value: JAVA_OBJECT)
 			-- Set a java object attribute to 'value'
-		do	
+		do
 			jni.set_static_object_field (java_class_id, fid, value.java_object_id)
 		end
 
@@ -339,7 +339,7 @@ feature -- Setting static attributes
 			jni.set_static_boolean_field (java_class_id, fid, value)
 		end
 
-	set_char_attribute (fid: POINTER; value: CHARACTER) 
+	set_char_attribute (fid: POINTER; value: CHARACTER)
 			-- Set a 'char' attribute to 'value'
 		do
 			jni.set_static_char_field (java_class_id, fid, value)
@@ -356,7 +356,7 @@ feature -- Setting static attributes
 		do
 			jni.set_static_double_field (java_class_id, fid, value)
 		end
-	
+
 	set_byte_attribute (fid: POINTER; value: INTEGER_8)
 			-- Set a 'byte' attribute to 'value'
 		do
@@ -376,14 +376,14 @@ feature -- Setting static attributes
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

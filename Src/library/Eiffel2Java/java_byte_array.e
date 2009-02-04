@@ -10,24 +10,24 @@ class
 	JAVA_BYTE_ARRAY
 
 inherit
-	JAVA_ARRAY 
+	JAVA_ARRAY
 
 create
 	make,
 	make_from_pointer
-	
+
 feature -- Initialization
 
 	make (size: INTEGER)
 			-- Create a new Java array and an Eiffel accessor object
 			-- Note: Java arrays are indexed from zero
 		require
-			size_ok: size > 0		
+			size_ok: size > 0
 		do
 			jarray := jni.new_byte_array (size)
 			create jvalue.make
 		ensure
-			array_ok: jarray /= default_pointer	
+			array_ok: jarray /= default_pointer
 		end
 
 feature -- Access
@@ -63,14 +63,14 @@ feature -- Element change
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

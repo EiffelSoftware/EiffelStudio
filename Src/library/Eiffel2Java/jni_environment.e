@@ -31,7 +31,7 @@ feature -- Disposal
 			-- Destroy the JVM and reclaim its ressources
 			-- It can only be used in the main thread when it is the
 			-- last remaining thread
-		do	
+		do
 			jvm.destroy_vm
 		end
 
@@ -45,7 +45,7 @@ feature -- Exception mechanism
 		end
 
 	exception_clear
-			-- Clears any exception that is currently being thrown. 
+			-- Clears any exception that is currently being thrown.
 			-- If no exception is currently being thrown, this routine has no effect.
 		do
 			c_exception_clear(jvm.envp)
@@ -74,8 +74,8 @@ feature -- Exception mechanism
 
 	throw_custom_exception (jclass: JAVA_CLASS; msg: STRING)
 			-- Constructs an exception object from the specified class 'jclass'
-			-- with the message specified by 'msg' and causes that exception 
-			-- to be thrown. 
+			-- with the message specified by 'msg' and causes that exception
+			-- to be thrown.
 		local
 			l_msg_to_c: C_STRING
 		do
@@ -130,7 +130,7 @@ feature -- Reflection
 		end
 
 	find_class_by_pointer (classp: POINTER): JAVA_CLASS
-			-- Get a Java class Eiffel proxy given pointer to the 
+			-- Get a Java class Eiffel proxy given pointer to the
 			-- Java class. Create a new one if needed
 		require
 			classp_not_null: classp /= default_pointer
@@ -171,7 +171,7 @@ feature -- Reflection
 	get_method_id (cls: POINTER; mname: POINTER; sig: POINTER): POINTER
 			-- Find feature `mname' in class `cls' with signature `sig'.
 		do
-			Result := c_get_method_id (jvm.envp, cls, mname, sig)	
+			Result := c_get_method_id (jvm.envp, cls, mname, sig)
 			debug ("jni")
 				check_for_exceptions
 			end
@@ -180,7 +180,7 @@ feature -- Reflection
 	get_static_method_id (cls: POINTER; mname: POINTER; sig: POINTER): POINTER
 			-- Find static feature `mname' in class `cls' with signature `sig'.
 		do
-			Result := c_get_static_method_id (jvm.envp, cls, mname, sig)	
+			Result := c_get_static_method_id (jvm.envp, cls, mname, sig)
 			debug ("jni")
 				check_for_exceptions
 			end
@@ -421,7 +421,7 @@ feature -- Calls
 				check_for_exceptions
 			end
 		end
-	
+
 	call_string_method (oid: POINTER; mid: POINTER; args: POINTER): STRING
 			-- Call function `mid' with argument `args' on object `oid'.
 		local
@@ -753,7 +753,7 @@ feature -- Field setting
 				check_for_exceptions
 			end
 		end
-		
+
 	set_long_field (oid: POINTER; fid: POINTER; v: INTEGER_64)
 			-- Set attribute `fid' with value `v' in object `oid'.
 		do
@@ -762,7 +762,7 @@ feature -- Field setting
 				check_for_exceptions
 			end
 		end
-		
+
 	set_object_field (oid: POINTER; fid: POINTER; v: POINTER)
 			-- Set attribute `fid' with value `v' in object `oid'.
 		do
@@ -852,7 +852,7 @@ feature -- Static field setting
 				check_for_exceptions
 			end
 		end
-		
+
 	set_static_long_field (cls: POINTER; fid: POINTER; v: INTEGER_64)
 			-- Set attribute `fid' with value `v' in class `cls'.
 		do
@@ -861,7 +861,7 @@ feature -- Static field setting
 				check_for_exceptions
 			end
 		end
-		
+
 	set_static_object_field (cls: POINTER; fid: POINTER; v: POINTER)
 			-- Set attribute `fid' with value `v' in class `cls'.
 		do
@@ -1184,7 +1184,7 @@ feature -- Convenience
 				check_for_exceptions
 			end
 		end
-		
+
 feature {NONE} -- String manipulation
 
 	c_get_string_utf_chars (env: POINTER; js, is_copy: POINTER): POINTER
@@ -1200,14 +1200,14 @@ feature {NONE} -- String manipulation
 		alias
 			"ReleaseStringUTFChars"
 		end
-		
+
 	c_new_string_utf (env: POINTER; chars: POINTER): POINTER
 		external
 			"C++ JNIEnv signature (char *): EIF_POINTER use %"jni.h%""
 		alias
 			"NewStringUTF"
 		end
-		
+
 feature {NONE} -- Exceptions checking
 
 	c_exception_occurred (env: POINTER): POINTER
@@ -1230,7 +1230,7 @@ feature {NONE} -- Exceptions checking
 		alias
 			"ExceptionClear"
 		end
-		
+
 feature {NONE} -- object creation
 
 	c_new_object (env: POINTER; cls: POINTER; constructor: POINTER; args: POINTER): POINTER
@@ -1318,7 +1318,7 @@ feature {NONE} -- dynamic method calls
 		alias
 			"CallObjectMethodA"
 		end
-	
+
 feature {NONE} -- dynamic attribute access
 
 	c_get_field_id (env: POINTER; cls: POINTER; fname, sig: POINTER): POINTER
@@ -1470,7 +1470,7 @@ feature {NONE} -- dynamic attribute setting
 		alias
 			"SetIntField"
 		end
-		
+
 	c_set_static_integer_field (env: POINTER; oid: POINTER; fid: POINTER; value: INTEGER)
 		external
 			"C++ JNIEnv signature (jclass, jfieldID, jint) use %"jni.h%""
@@ -1484,7 +1484,7 @@ feature {NONE} -- dynamic attribute setting
 		alias
 			"SetLongField"
 		end
-		
+
 	c_set_static_long_field (env: POINTER; oid: POINTER; fid: POINTER; value: INTEGER_64)
 		external
 			"C++ JNIEnv signature (jclass, jfieldID, jlong) use %"jni.h%""
@@ -1679,7 +1679,7 @@ feature {NONE} -- array operations
 			"GetArrayLength"
 		end
 
-	c_new_object_array (lenv: POINTER; lsize: INTEGER; element_jclass: POINTER; 
+	c_new_object_array (lenv: POINTER; lsize: INTEGER; element_jclass: POINTER;
 						initial_element: POINTER): POINTER
 		external
 			"C++ JNIEnv signature (jsize, jclass, jobject): EIF_POINTER use %"jni.h%""
@@ -1910,7 +1910,7 @@ feature {NONE} -- Structure size
 		alias
 			"sizeof(jboolean)"
 		end
-		
+
 	sizeof_jchar: INTEGER
 			-- Size of `jchar' structure.
 		external
@@ -1918,7 +1918,7 @@ feature {NONE} -- Structure size
 		alias
 			"sizeof(jchar)"
 		end
-		
+
 	sizeof_jbyte: INTEGER
 			-- Size of `jbyte' structure.
 		external
@@ -1926,7 +1926,7 @@ feature {NONE} -- Structure size
 		alias
 			"sizeof(jbyte)"
 		end
-		
+
 	sizeof_jshort: INTEGER
 			-- Size of `jshort' structure.
 		external
@@ -1934,7 +1934,7 @@ feature {NONE} -- Structure size
 		alias
 			"sizeof(jshort)"
 		end
-		
+
 	sizeof_jint: INTEGER
 			-- Size of `jint' structure.
 		external
@@ -1942,7 +1942,7 @@ feature {NONE} -- Structure size
 		alias
 			"sizeof(jint)"
 		end
-		
+
 	sizeof_jlong: INTEGER
 			-- Size of `jlong' structure.
 		external
@@ -1950,7 +1950,7 @@ feature {NONE} -- Structure size
 		alias
 			"sizeof(jlong)"
 		end
-		
+
 	sizeof_jfloat: INTEGER
 			-- Size of `jfloat' structure.
 		external
@@ -1958,7 +1958,7 @@ feature {NONE} -- Structure size
 		alias
 			"sizeof(jfloat)"
 		end
-		
+
 	sizeof_jdouble: INTEGER
 			-- Size of `jdouble' structure.
 		external
@@ -1973,14 +1973,14 @@ invariant
 	java_object_table_not_void: java_object_table /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

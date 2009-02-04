@@ -25,7 +25,7 @@ feature -- Access
 				create internal_option.make_by_pointer (c_option_string (item))
 			end
 		end
-		
+
 feature -- Settings
 
 	set_option_string (an_option: STRING)
@@ -34,7 +34,7 @@ feature -- Settings
 			create internal_option.make (an_option)
 			c_set_option_string (item, internal_option.item)
 		end
-		
+
 feature -- Measurement
 
 	structure_size: INTEGER
@@ -42,7 +42,7 @@ feature -- Measurement
 		do
 			Result := c_structure_size
 		end
-		
+
 feature {NONE} -- Implementation
 
 	internal_option: C_STRING
@@ -55,7 +55,7 @@ feature {NONE} -- Implementation
 		alias
 			"sizeof(JavaVMOption)"
 		end
-		
+
 	c_option_string (an_item: POINTER): POINTER
 			-- Access to `optionString'.
 		external
@@ -75,14 +75,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

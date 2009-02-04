@@ -24,22 +24,24 @@ feature -- Initialization
 		local
 			l_result: INTEGER
 		do
-			print ("Eiffel cURL debug example.%N")
+			io.put_string ("Eiffel cURL debug example.")
+			io.put_new_line
 
-			curl_handle := curl_easy.init
-
-			if curl_handle /= default_pointer then
+			if curl_easy.is_dynamic_library_exists then
+				curl_handle := curl_easy.init
 				curl_easy.set_debug_function (curl_handle)
-				-- The DEBUGFUNCTION has no effect until we enable VERBOSE
+					-- The DEBUGFUNCTION has no effect until we enable VERBOSE
 				curl_easy.setopt_integer (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_verbose, 1)
 
 				curl_easy.setopt_string (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_url, "www.google.com")
 				l_result := curl_easy.perform (curl_handle)
 
-				-- Always cleanup
+					-- Always cleanup
 				curl_easy.cleanup (curl_handle)
+			else
+				io.error.put_string ("cURL library not found!")
+				io.error.put_new_line
 			end
-
 		end
 
 feature {NONE} -- Implementation

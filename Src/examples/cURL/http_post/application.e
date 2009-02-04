@@ -25,24 +25,28 @@ feature -- Initialization
 		local
 			l_result: INTEGER
 		do
-			print ("Eiffel cURL http post example.%N")
+			io.put_string ("Eiffel cURL http post example.")
+			io.put_new_line
 
-			curl_handle := curl_easy.init
+			if curl_easy.is_dynamic_library_exists then
+				curl_handle := curl_easy.init
 
-			if curl_handle /= default_pointer then
-				-- First set the URL that is about to receive our POST. This URL can
-				-- just as well be a https:// URL if that is what should receive the
-				-- data.
+					-- First set the URL that is about to receive our POST. This URL can
+					-- just as well be a https:// URL if that is what should receive the
+					-- data.
 				curl_easy.setopt_string (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_url, "http://postit.example.com/moo.cgi")
 
-				-- Now specify the POST data
+					-- Now specify the POST data
 				curl_easy.setopt_string (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_postfields, "name=daniel&project=curl")
 
-				-- Perform the request, `l_result' will get the return code
+					-- Perform the request, `l_result' will get the return code
 				l_result := curl_easy.perform (curl_handle)
 
-				-- Always cleanup
+					-- Always cleanup
 				curl_easy.cleanup (curl_handle)
+			else
+				io.error.put_string ("cURL library not found!")
+				io.error.put_new_line
 			end
 
 		end

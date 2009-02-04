@@ -237,7 +237,15 @@ feature {NONE} -- Basic operations
 				end
 			elseif is_generating_statistics then
 				if current_task = Void then
-					generate_statistics
+					generate_test_class
+					if is_text_statistics_format_enabled then
+						generate_text_statistics
+					end
+					if is_html_statistics_format_enabled then
+						generate_html_statistics
+					else
+						is_finished := True
+					end
 				else
 					if {l_task: AUT_HTML_STATISTICS_GENERATOR} current_task then
 						if l_task.has_fatal_error then
@@ -246,7 +254,6 @@ feature {NONE} -- Basic operations
 							error_handler.report_html_generation_finished (l_task.absolute_index_filename)
 						end
 					end
-					generate_test_class
 					is_finished := True
 				end
 			end
@@ -677,28 +684,31 @@ feature{NONE} -- Test result analyizing
 			end
 		end
 
-	generate_statistics
+	generate_text_statistics
+		require
+			result_repository_not_void: result_repository /= Void
+		local
+			l_generator: AUT_TEXT_STATISTICS_GENERATOR
+		do
+			create l_generator.make ("", file_system.pathname (output_dirname, "result"), system, classes_under_test)
+			l_generator.generate (result_repository)
+			if l_generator.has_fatal_error then
+				error_handler.report_text_generation_error
+			else
+				error_handler.report_text_generation_finished (l_generator.absolute_index_filename)
+			end
+		end
+
+	generate_html_statistics
 			-- Generate statistics about executed tests.
 		require
 			result_repository_not_void: result_repository /= Void
 		local
-			html_generator: AUT_HTML_STATISTICS_GENERATOR
-			text_generator: AUT_TEXT_STATISTICS_GENERATOR
+			l_generator: AUT_HTML_STATISTICS_GENERATOR
 		do
-			if is_text_statistics_format_enabled then
-				create text_generator.make ("", file_system.pathname (output_dirname, "result"), system, classes_under_test)
-				text_generator.generate (result_repository)
-				if text_generator.has_fatal_error then
-					error_handler.report_text_generation_error
-				else
-					error_handler.report_text_generation_finished (text_generator.absolute_index_filename)
-				end
-			end
-			if is_html_statistics_format_enabled then
-				create html_generator.make (file_system.pathname (output_dirname, "result"), system, classes_under_test)
-				html_generator.set_repository (result_repository)
-				launch_task (html_generator)
-			end
+			create l_generator.make (file_system.pathname (output_dirname, "result"), system, classes_under_test)
+			l_generator.set_repository (result_repository)
+			launch_task (l_generator)
 		end
 
 	generate_test_class

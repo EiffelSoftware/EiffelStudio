@@ -28,7 +28,7 @@ feature -- Access
 		do
 			Result := c_jboolean_address (item)
 		end
-		
+
 	byte_value: INTEGER_8
 			-- Access `jbyte' value of Current.
 		do
@@ -40,7 +40,7 @@ feature -- Access
 		do
 			Result := c_jbyte_address (item)
 		end
-		
+
 	char_value: CHARACTER
 			-- Access `jchar' value of Current.
 		do
@@ -52,7 +52,7 @@ feature -- Access
 		do
 			Result := c_jchar_address (item)
 		end
-		
+
 	short_value: INTEGER_16
 			-- Access `jshort' value of Current.
 		do
@@ -64,7 +64,7 @@ feature -- Access
 		do
 			Result := c_jshort_address (item)
 		end
-		
+
 	int_value: INTEGER
 			-- Access `jint' value of Current.
 		do
@@ -76,7 +76,7 @@ feature -- Access
 		do
 			Result := c_jint_address (item)
 		end
-		
+
 	long_value: INTEGER_64
 			-- Access `jlong' value of Current.
 		do
@@ -88,7 +88,7 @@ feature -- Access
 		do
 			Result := c_jlong_address (item)
 		end
-		
+
 	float_value: REAL
 			-- Access `jfloat' value of Current.
 		do
@@ -100,7 +100,7 @@ feature -- Access
 		do
 			Result := c_jfloat_address (item)
 		end
-		
+
 	double_value: DOUBLE
 			-- Access `jdouble' value of Current.
 		do
@@ -112,7 +112,7 @@ feature -- Access
 		do
 			Result := c_jdouble_address (item)
 		end
-		
+
 	object_value: POINTER
 			-- Access `jobject' value of Current.
 		do
@@ -124,7 +124,7 @@ feature -- Access
 		do
 			Result := c_jobject_address (item)
 		end
-	
+
 feature -- Settings
 
 	set_boolean_value (v: BOOLEAN)
@@ -215,7 +215,7 @@ feature {NONE} -- Implementation
 		alias
 			"sizeof(jvalue)"
 		end
-		
+
 	c_jboolean (an_item: POINTER): BOOLEAN
 			-- Access `z' from `Current'.
 		external
@@ -379,14 +379,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

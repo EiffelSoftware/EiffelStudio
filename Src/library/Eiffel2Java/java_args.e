@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	count: INTEGER 
+	count: INTEGER
 			-- Number of items in Current argument list.
 
 	item (index: INTEGER): JAVA_VALUE
@@ -187,7 +187,7 @@ feature -- Element change
 		ensure
 			not_void_inserted: value /= Void implies item (index).object_value = value.jarray
 			void_inserted: value = Void implies item (index).object_value = default_pointer
-		end 		   				
+		end
 
 feature -- Status report
 
@@ -200,7 +200,7 @@ feature -- Status report
 feature {JAVA_OBJECT, JAVA_CLASS}
 
 	to_c: POINTER
-			-- Return the pointer to the arg array that can be passed 
+			-- Return the pointer to the arg array that can be passed
 			-- to JNI/Java calls
 		do
 			Result := java_args_array.item
@@ -228,14 +228,14 @@ invariant
 	count_at_least_one: count >= 1
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

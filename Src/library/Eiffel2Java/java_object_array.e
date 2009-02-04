@@ -14,7 +14,7 @@ inherit
 create
 	make,
 	make_from_pointer
-	
+
 feature -- Initialization
 
 	make (size: INTEGER; element_name: STRING)
@@ -30,7 +30,7 @@ feature -- Initialization
 			jarray := jni.new_object_array (size, element_type.java_class_id, default_pointer)
 			create jvalue.make
 		ensure
-			array_ok: jarray /= default_pointer	
+			array_ok: jarray /= default_pointer
 		end
 
 feature -- Access
@@ -40,7 +40,7 @@ feature -- Access
 		require
 			valid_index: valid_index (index)
 		local
-			jo: POINTER		   
+			jo: POINTER
 		do
 			jo := jni.get_object_array_element (jarray, index)
 				-- Find the correspponding Eiffel object or create a new one
@@ -65,14 +65,14 @@ feature -- Element change
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

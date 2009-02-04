@@ -34,7 +34,7 @@ feature -- Access
 		do
 			Result := c_n_options (item)
 		end
-		
+
 	options: ARRAY [JAVA_VM_OPTION]
 			-- List all options.
 		require
@@ -44,7 +44,7 @@ feature -- Access
 		ensure
 			options_count_valid: number_of_option = options.count
 		end
-		
+
 feature -- Status report
 
 	is_valid_version (a_version: INTEGER): BOOLEAN
@@ -54,13 +54,13 @@ feature -- Status report
 				a_version = Jni_version_1_2 or
 				a_version = Jni_version_1_4
 		end
-		
+
 	options_set: BOOLEAN
 			-- Has `options' been set?
 		do
 			Result := internal_options /= Void
 		end
-		
+
 feature -- Settings
 
 	set_version (a_version: INTEGER)
@@ -100,9 +100,9 @@ feature -- Settings
 				j := j + 1
 			end
 		ensure
-			
+
 		end
-		
+
 feature -- Measurement
 
 	structure_size: INTEGER
@@ -110,12 +110,12 @@ feature -- Measurement
 		do
 			Result := c_structure_size
 		end
-		
+
 feature {NONE} -- Implementation
 
 	internal_options: ARRAY [JAVA_VM_OPTION]
 			-- Hold all C string values.
-	
+
 	internal_options_area: MANAGED_POINTER
 			-- Hold area where value of `internal_options' are stored.
 
@@ -126,7 +126,7 @@ feature {NONE} -- Implementation
 		alias
 			"sizeof(JavaVMInitArgs)"
 		end
-		
+
 	c_version (an_item: POINTER): INTEGER
 			-- Access to `version'.
 		external
@@ -156,16 +156,16 @@ feature {NONE} -- Implementation
 		external
 			"C struct JavaVMInitArgs access options type JavaVMOption * use %"jni.h%""
 		end
-		
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

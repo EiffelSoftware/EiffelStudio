@@ -16,7 +16,7 @@ inherit
 		redefine
 			is_equal
 		end
-	
+
 	SHARED_JNI_ENVIRONMENT
 		redefine
 			is_equal
@@ -34,7 +34,7 @@ feature -- Initialization
 		require
 			valid_java_id: jobject /= default_pointer
 		local
-			clsp: POINTER	
+			clsp: POINTER
 		do
 			java_object_id := jobject
 
@@ -47,9 +47,9 @@ feature -- Initialization
 		end
 
 	create_instance (my_cls: JAVA_CLASS; sig: STRING; args: JAVA_ARGS)
-			-- Create an instance of the class by calling the 
-			-- constructor with the specified arguments. If "sig" is 
-			-- void then we assume that the contructor has no 
+			-- Create an instance of the class by calling the
+			-- constructor with the specified arguments. If "sig" is
+			-- void then we assume that the contructor has no
 			-- arguments. In that case "args" can be void
 		require
 			class_valid: my_cls /= Void
@@ -75,7 +75,7 @@ feature -- Initialization
 					io.putstring (constructor_id.out)
 					io.new_line
 				end
-				java_object_id := jni.new_object (jclass.java_class_id, 
+				java_object_id := jni.new_object (jclass.java_class_id,
 												constructor_id, argsp)
 			end
 			if java_object_id = default_pointer then
@@ -86,7 +86,7 @@ feature -- Initialization
 				jni.java_object_table.put (Current, java_object_id)
 			end
 		ensure
-			created: java_object_id /= default_pointer	
+			created: java_object_id /= default_pointer
 		end
 
 feature -- Access
@@ -117,14 +117,14 @@ feature -- Comparison
 feature -- Reflection
 
 	method_id (feature_name: STRING; signature: STRING): POINTER
-			-- Find the method_id for `feature_name' with signature 
+			-- Find the method_id for `feature_name' with signature
 			-- encoded by "signature"
 		local
 			method_name_to_c, signature_to_c: C_STRING
 		do
 			create method_name_to_c.make (feature_name)
 			create signature_to_c.make (signature)
-			Result := jni.get_method_id (jclass.java_class_id, 
+			Result := jni.get_method_id (jclass.java_class_id,
 									   method_name_to_c.item, signature_to_c.item)
 		end
 
@@ -135,14 +135,14 @@ feature -- Reflection
 		do
 			create lname_to_c.make (lname)
 			create sig_to_c.make (sig)
-			Result := jni.get_field_id (jclass.java_class_id, 
+			Result := jni.get_field_id (jclass.java_class_id,
 									  lname_to_c.item, sig_to_c.item)
 		end
 
 feature -- Calls
 
 	void_method (mid: POINTER; args: JAVA_ARGS)
-			-- Call a Java procedure with method_id "mid" and 
+			-- Call a Java procedure with method_id "mid" and
 			-- arguments "args.
 		local
 			argsp: POINTER
@@ -176,7 +176,7 @@ feature -- Calls
 		end
 
 	short_method (mid: POINTER; args: JAVA_ARGS): INTEGER_16
-			-- Call an instance function that returns a Short (in 
+			-- Call an instance function that returns a Short (in
 			-- Eiffel we still return an INTEGER).
 		local
 			argsp: POINTER
@@ -188,8 +188,8 @@ feature -- Calls
 		end
 
 	long_method (mid: POINTER; args: JAVA_ARGS): INTEGER_64
-			-- Call an instance function that returns an Long. This 
-			-- function is not implemented. 
+			-- Call an instance function that returns an Long. This
+			-- function is not implemented.
 		local
 			argsp: POINTER
 		do
@@ -254,7 +254,7 @@ feature -- Calls
 			end
 			jo := jni.call_object_method (java_object_id, lmethod_id, argp)
 			if jo /= default_pointer then
-				-- Check global table to see if we have an Eiffel 
+				-- Check global table to see if we have an Eiffel
 				-- proxy for this object
 				Result := jni.java_object_table.item (jo)
 				if Result = Void then
@@ -297,7 +297,7 @@ feature -- Attributes
 		do
 			jo := jni.get_object_field (java_object_id, fid)
 			if jo /= default_pointer then
-				-- Check global table to see if we have an Eiffel 
+				-- Check global table to see if we have an Eiffel
 				-- proxy for this object
 				Result := jni.java_object_table.item (jo)
 				if Result = Void then
@@ -329,7 +329,7 @@ feature -- Attributes
 		do
 			Result := jni.get_double_field (java_object_id, fid)
 		end
-	
+
 	byte_attribute (fid: POINTER): INTEGER_8
 			-- Access to a 'byte' attribute, returns a INTEGER_8
 		do
@@ -361,10 +361,10 @@ feature -- Attributes setting
 		do
 			jni.set_string_field (java_object_id, fid, value)
 		end
-	
+
 	set_object_attribute (fid: POINTER; value: JAVA_OBJECT)
 			-- Set a java object attribute to 'value'
-		do	
+		do
 			jni.set_object_field (java_object_id, fid, value.java_object_id)
 		end
 
@@ -374,7 +374,7 @@ feature -- Attributes setting
 			jni.set_boolean_field (java_object_id, fid, value)
 		end
 
-	set_char_attribute (fid: POINTER; value: CHARACTER) 
+	set_char_attribute (fid: POINTER; value: CHARACTER)
 			-- Set a 'char' attribute to 'value'
 		do
 			jni.set_char_field (java_object_id, fid, value)
@@ -391,7 +391,7 @@ feature -- Attributes setting
 		do
 			jni.set_double_field (java_object_id, fid, value)
 		end
-	
+
 	set_byte_attribute (fid: POINTER; value: INTEGER_8)
 			-- Set a 'byte' attribute to 'value'
 		do
@@ -414,14 +414,14 @@ invariant
 	valid_proxy: java_object_id /= default_pointer
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

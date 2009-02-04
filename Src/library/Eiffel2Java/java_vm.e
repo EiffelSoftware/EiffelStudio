@@ -14,7 +14,7 @@ create {SHARED_JNI_ENVIRONMENT}
 
 feature {NONE} -- Initialization
 
-	make (class_path: STRING) 
+	make (class_path: STRING)
 			-- Create a JVM execution environment and specify a CLASSPATH
 		require
 			class_path_valid: class_path /= Void
@@ -27,14 +27,14 @@ feature {NONE} -- Initialization
 		do
 			create default_vm_args.make
 			default_vm_args.set_version ({JAVA_VM_INIT_ARGS}.Jni_version_1_4)
-			
+
 			create l_options.make (1, 1)
 			create l_option.make
 			l_option.set_option_string ("-Djava.class.path=" + class_path)
 			l_options.put (l_option, 1)
-			
+
 			default_vm_args.set_options (l_options)
-			
+
 				-- Store attribute into local variable as `$' operator is safer on
 				-- local variables and not on attributes.
 			l_envp := envp
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			err := c_create_jvm ($l_jvmp, $l_envp, default_vm_args.item)
 			envp := l_envp
 			jvmp := l_jvmp
-			
+
 			if err /= 0 then
 				debug ("java_vm")
 					io.error.putstring ("*** Failed to load JVM=")
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 					io.error.putstring (class_path)
 					io.error.new_line
 				end
-				
+
 				create l_ex
 				l_ex.raise ("Failed to load java VM")
 			else
@@ -139,7 +139,7 @@ feature {NONE} -- Implementation
 	default_vm_args: JAVA_VM_INIT_ARGS
 			-- Pointer to default arguments for JVM.
 
-	jvmp: POINTER 
+	jvmp: POINTER
 			-- Pointer to current JVM.
 
 feature {NONE} -- externals
@@ -173,14 +173,14 @@ feature {NONE} -- externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

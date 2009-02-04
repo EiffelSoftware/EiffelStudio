@@ -11,7 +11,7 @@ deferred class
 feature -- Reflection
 
 	method_id (feature_name: STRING; signature: STRING): POINTER
-			-- Find method_id for `feature_name' with signature 
+			-- Find method_id for `feature_name' with signature
 			-- encoded by `signature'
 		require
 			feature_name_not_void: feature_name /= Void
@@ -20,7 +20,7 @@ feature -- Reflection
 			signature_not_empty: not signature.is_empty
 		deferred
 		ensure
-			method_exists: Result /= default_pointer	
+			method_exists: Result /= default_pointer
 		end
 
 	field_id (attribute_name: STRING; signature: STRING): POINTER
@@ -37,7 +37,7 @@ feature -- Reflection
 feature -- call object's methods
 
 	void_method (mid: POINTER; args: JAVA_ARGS)
-			-- Call a Java procedure with method_id "mid" and 
+			-- Call a Java procedure with method_id "mid" and
 			-- arguments "args.
 		require
 			mid_not_null: mid /= default_pointer
@@ -59,7 +59,7 @@ feature -- call object's methods
 		end
 
 	short_method (mid: POINTER; args: JAVA_ARGS): INTEGER_16
-			-- Call an instance function that returns a Short (in 
+			-- Call an instance function that returns a Short (in
 			-- Eiffel we still return an INTEGER).
 		require
 			mid_not_null: mid /= default_pointer
@@ -67,8 +67,8 @@ feature -- call object's methods
 		end
 
 	long_method (mid: POINTER; args: JAVA_ARGS): INTEGER_64
-			-- Call an instance function that returns an Long. This 
-			-- function is not implemented. 
+			-- Call an instance function that returns an Long. This
+			-- function is not implemented.
 		require
 			mid_not_null: mid /= default_pointer
 		deferred
@@ -168,7 +168,7 @@ feature -- Access object's attributes
 			fid_not_null: fid /= default_pointer
 		deferred
 		end
-	
+
 	byte_attribute (fid: POINTER): INTEGER_8
 			-- Access to a 'byte' attribute
 		require
@@ -209,7 +209,7 @@ feature -- Setting object's attribute
 		ensure
 			string_attribute_set: equal (string_attribute (fid), value)
 		end
-	
+
 	set_object_attribute (fid: POINTER; value: JAVA_OBJECT)
 			-- Set a java object attribute to 'value'
 		require
@@ -228,7 +228,7 @@ feature -- Setting object's attribute
 			boolean_attribute_set: boolean_attribute (fid) = value
 		end
 
-	set_char_attribute (fid: POINTER; value: CHARACTER) 
+	set_char_attribute (fid: POINTER; value: CHARACTER)
 			-- Set a 'char' attribute to 'value'
 		require
 			fid_not_null: fid /= default_pointer
@@ -254,7 +254,7 @@ feature -- Setting object's attribute
 		ensure
 			double_attribute_set: double_attribute (fid) = value
 		end
-	
+
 	set_byte_attribute (fid: POINTER; value: INTEGER_8)
 			-- Set a 'byte' attribute to 'value'
 		require
@@ -283,14 +283,14 @@ feature -- Setting object's attribute
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

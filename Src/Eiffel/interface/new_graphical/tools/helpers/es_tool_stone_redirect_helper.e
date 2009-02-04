@@ -58,19 +58,19 @@ feature {NONE} -- Access
 
 feature -- Basic operations
 
-	bind (a_widget: ?EV_WIDGET; a_recycler: ?EB_RECYCLABLE)
+	bind (a_widget: ?EV_PICK_AND_DROPABLE_ACTION_SEQUENCES; a_recycler: ?EB_RECYCLABLE)
 			-- Bind drop actions to a widget.
 			--
 			-- `a_widget': Widget to bind common drop actions to.
 			-- `a_recycler': The recycler to use to register and clean up the drop actions.
 		require
+			is_interface_usable: is_interface_usable
 			a_widget_attached: a_widget /= Void
-			not_a_widget_is_destroyed: not a_widget.is_destroyed
 		do
 			a_recycler.register_action (a_widget.drop_actions, agent on_drop)
 		end
 
-	unbind (a_widget: EV_WIDGET; a_recycler: ?EB_RECYCLABLE)
+	unbind (a_widget: ?EV_PICK_AND_DROPABLE_ACTION_SEQUENCES; a_recycler: ?EB_RECYCLABLE)
 			-- Unbinds drop actions to a widget.
 			-- Note: This doesn't have to be called because binding with a recycler will unregister
 			--       any bound actions automatically. Only use this when explicit unbinding is required.
@@ -177,7 +177,7 @@ invariant
 	not_development_window_is_recycled: is_interface_usable implies development_window.is_interface_usable
 
 ;note
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -190,22 +190,22 @@ invariant
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

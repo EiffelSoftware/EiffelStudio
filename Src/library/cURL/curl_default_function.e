@@ -35,16 +35,17 @@ feature -- Command
 			-- Redefine
 		local
 			l_c_string: C_STRING
-			l_string: CURL_STRING
 			l_identified: IDENTIFIED
 		do
 			Result := a_size * a_nmemb
-			create l_c_string.share_from_pointer_and_count (a_data_pointer, Result)
+			create l_c_string.make_shared_from_pointer_and_count (a_data_pointer, Result)
 
 			create l_identified
-			l_string ?= l_identified.id_object (a_object_id.to_integer_32)
-			check not_void: l_string /= Void end
-			l_string.append (l_c_string.string)
+			if {l_string: CURL_STRING} l_identified.id_object (a_object_id.to_integer_32) then
+				l_string.append (l_c_string.string)
+			else
+				check False end
+			end
 		end
 
 	debug_function (a_curl_handle: POINTER; a_curl_infotype: INTEGER; a_char_pointer: POINTER; a_size: INTEGER; a_object_id: POINTER): INTEGER
@@ -85,7 +86,7 @@ feature {NONE} -- Implementation
 		local
 			l_c_string: C_STRING
 		do
-			create l_c_string.share_from_pointer_and_count (a_char_pointer, a_size)
+			create l_c_string.make_shared_from_pointer_and_count (a_char_pointer, a_size)
 			print ("%N" + a_text + "%N" + l_c_string.string)
 		end
 

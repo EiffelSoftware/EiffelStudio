@@ -61,7 +61,7 @@
 			<condition>
 				<platform excluded_value="windows"/>
 			</condition>
-		</libray>
+		</library>
 		<cluster name="curl" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/spec$</exclude>

@@ -9,19 +9,14 @@ note
 class
 	CGI_IN_AND_OUT
 
+inherit
+	SHARED_STDIN
+	SHARED_STDOUT
+		rename
+			stdout as output
+		end
+
 feature -- Access
-
-	output: STDOUT
-			-- Shared standard output.
-		once
-			create Result.make
-		end
-
-	stdin: STDIN
-			-- Shared standard input
-		once
-			create Result.make
-		end
 
 	response_header: CGI_RESPONSE_HEADER
 		once

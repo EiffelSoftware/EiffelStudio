@@ -260,7 +260,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Access: widgets
 
-	test_name: ES_VALIDATION_TEXT_FIELD
+	test_name: ES_VALIDATING_WRAPPED_WIDGET
 			-- Text field for new test class name
 
 	tag_list: EV_LIST
@@ -269,7 +269,7 @@ feature {NONE} -- Access: widgets
 	remove_button: EV_BUTTON
 			-- Button for removing selected items in `tag_list'
 
-	tag_field: ES_VALIDATION_TEXT_FIELD
+	tag_field: ES_VALIDATING_WRAPPED_WIDGET
 			-- Text field containing additional tags for new test
 
 	add_button: EV_BUTTON

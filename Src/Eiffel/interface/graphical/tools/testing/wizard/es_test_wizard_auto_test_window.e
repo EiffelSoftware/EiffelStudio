@@ -288,7 +288,7 @@ feature {NONE} -- Access: widgets
 	type_list: EV_LIST
 			-- List showing types entered so far
 
-	type_field: ES_VALIDATION_TEXT_FIELD
+	type_field: ES_VALIDATING_WRAPPED_WIDGET
 
 	add_type_button: EV_BUTTON
 

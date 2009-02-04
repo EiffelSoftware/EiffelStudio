@@ -1,7 +1,7 @@
 note
 	description: "[
-			An ESF wrapper for EiffelVision2 widgets ({ES_WIDGET}), needing access to a host shell window.
-		]"
+		An ESF wrapper for EiffelVision2 widgets ({ES_WIDGET}), needing access to a host shell window.
+	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"

@@ -1,7 +1,7 @@
 note
 	description: "[
-			An ESF wrapper for EiffelVision2 widgets ({ES_WIDGET}).
-		]"
+		An ESF wrapper for EiffelVision2 widgets ({ES_WIDGET}).
+	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"

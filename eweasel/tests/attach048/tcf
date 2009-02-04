@@ -1,0 +1,11 @@
+test_name	 infix-undetected-call-on-void-target
+test_description A system uses operator but the compiler fails to detect a call on Void target.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result	validity_error TEST VEVI; TEST1 VUTA(2) VUTA(2) VUTA(2) VUTA(2) VUTA(2) VUTA(2) VUAR VUAR
+
+test_end

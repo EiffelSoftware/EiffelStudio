@@ -15,6 +15,8 @@ inherit
 
 	REGISTRAR_OBSERVER [OUTPUT_I, UUID]
 		rename
+			on_registered as on_output_registered,
+			on_unregistered as on_output_unregistered,
 			on_registeration_activated as on_output_activated
 		export
 			{OUTPUT_MANAGER_S} all

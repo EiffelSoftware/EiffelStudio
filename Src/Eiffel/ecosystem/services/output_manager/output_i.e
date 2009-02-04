@@ -1,7 +1,7 @@
 note
 	description: "[
-
-		]"
+		Exposes an output window to be register with the output manager service ({OUTPUT_MANAGER_S}).
+	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -30,26 +30,16 @@ feature -- Access
 			result_consistent: Result ~ name
 		end
 
-	writer: !OUTPUT_WINDOW
+	output_window: !OUTPUT_WINDOW
 			-- Name given the output editor
 		require
 			is_interface_usable: is_interface_usable
-			has_writer: has_writer
 		deferred
 		ensure
-			result_consistent: Result = writer
+			result_consistent: Result = output_window
 		end
 
 feature -- Status report
-
-	has_writer: BOOLEAN
-			-- Indicates if the output has a functioning writer.
-		require
-			is_interface_usable: is_interface_usable
-		deferred
-		ensure
-			is_interface_usable: {l_usable: USABLE_I} writer implies l_usable.is_interface_usable
-		end
 
 	is_active: BOOLEAN
 			-- Indicates if the output is current active
@@ -65,9 +55,7 @@ feature -- Basic operations
 		require
 			is_interface_usable: is_interface_usable
 		do
-			if has_writer then
-				writer.clear_window
-			end
+			output_window.clear_window
 		end
 
 	activate

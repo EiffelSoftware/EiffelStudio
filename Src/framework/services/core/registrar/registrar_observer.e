@@ -62,15 +62,6 @@ feature {REGISTRAR_I} -- Event handlers
 			is_interface_usable: {l_usable_item: USABLE_I} a_registration implies l_usable_item.is_interface_usable
 		do
 		end
---inherit
---	ACTIVE_DICTIONARY_OBSERVER [G, K]
---		rename
---			on_item_extended as on_registered,
---			on_item_changed as on_reregistered,
---			on_item_pruned as on_unregistered
---		export
---			{REGISTRAR_I} on_registered, on_reregistered, on_unregistered
---		end
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
@@ -97,11 +88,11 @@ feature {REGISTRAR_I} -- Event handlers
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

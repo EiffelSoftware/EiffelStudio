@@ -38,8 +38,7 @@ feature {NONE} -- Implementation
 	internal_project_settings: CELL [EC_PROJECT_SETTINGS]
 			-- Cache project settings.
 		once
-			create Result
-			Result.put (create {EC_PROJECT_SETTINGS}.make_empty)
+			create Result.put (create {EC_PROJECT_SETTINGS}.make_empty)
 		ensure
 			result_not_void: Result /= Void
 			result_item_not_void: Result.item /= Void

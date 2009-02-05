@@ -46,7 +46,7 @@ feature -- Initialization
 			jni.java_object_table.put (Current, java_object_id)
 		end
 
-	create_instance (my_cls: JAVA_CLASS; sig: STRING; args: JAVA_ARGS)
+	create_instance (my_cls: JAVA_CLASS; sig: ?STRING; args: ?JAVA_ARGS)
 			-- Create an instance of the class by calling the
 			-- constructor with the specified arguments. If "sig" is
 			-- void then we assume that the contructor has no
@@ -56,7 +56,8 @@ feature -- Initialization
 			sig_and_args_consistent: (sig = Void) implies (args = Void)
 		local
 			constructor_id, argsp: POINTER
-			lsig: STRING
+			lsig: ?STRING
+			l_name: ?STRING
 		do
 			jclass := my_cls
 			lsig := sig
@@ -80,7 +81,10 @@ feature -- Initialization
 			end
 			if java_object_id = default_pointer then
 				io.putstring ("Failed to get constructor for class:")
-				io.putstring (my_cls.name)
+				l_name := my_cls.name
+				if l_name /= Void then
+					io.putstring (l_name)
+				end
 				io.new_line
 			else
 				jni.java_object_table.put (Current, java_object_id)
@@ -141,7 +145,7 @@ feature -- Reflection
 
 feature -- Calls
 
-	void_method (mid: POINTER; args: JAVA_ARGS)
+	void_method (mid: POINTER; args: ?JAVA_ARGS)
 			-- Call a Java procedure with method_id "mid" and
 			-- arguments "args.
 		local
@@ -153,7 +157,7 @@ feature -- Calls
 			jni.call_void_method (java_object_id, mid, argsp)
 		end
 
-	string_method (mid: POINTER; args: JAVA_ARGS): STRING
+	string_method (mid: POINTER; args: ?JAVA_ARGS): ?STRING
 			-- Call an instance function that returns a STRING.
 		local
 			argsp: POINTER
@@ -164,7 +168,7 @@ feature -- Calls
 			Result := jni.call_string_method (java_object_id, mid, argsp)
 		end
 
-	integer_method (mid: POINTER; args: JAVA_ARGS): INTEGER
+	integer_method (mid: POINTER; args: ?JAVA_ARGS): INTEGER
 			-- Call an instance function that returns an INTEGER.
 		local
 			argsp: POINTER
@@ -175,7 +179,7 @@ feature -- Calls
 			Result := jni.call_int_method (java_object_id, mid, argsp)
 		end
 
-	short_method (mid: POINTER; args: JAVA_ARGS): INTEGER_16
+	short_method (mid: POINTER; args: ?JAVA_ARGS): INTEGER_16
 			-- Call an instance function that returns a Short (in
 			-- Eiffel we still return an INTEGER).
 		local
@@ -187,7 +191,7 @@ feature -- Calls
 			Result := jni.call_short_method (java_object_id, mid, argsp)
 		end
 
-	long_method (mid: POINTER; args: JAVA_ARGS): INTEGER_64
+	long_method (mid: POINTER; args: ?JAVA_ARGS): INTEGER_64
 			-- Call an instance function that returns an Long. This
 			-- function is not implemented.
 		local
@@ -199,7 +203,7 @@ feature -- Calls
 			Result := jni.call_long_method (java_object_id, mid, argsp)
 		end
 
-	double_method (mid: POINTER; args: JAVA_ARGS): DOUBLE
+	double_method (mid: POINTER; args: ?JAVA_ARGS): DOUBLE
 			-- Call an instance function that returns a DOUBLE.
 		local
 			argsp: POINTER
@@ -210,7 +214,7 @@ feature -- Calls
 			Result := jni.call_double_method (java_object_id, mid, argsp)
 		end
 
-	float_method (mid: POINTER; args: JAVA_ARGS): REAL
+	float_method (mid: POINTER; args: ?JAVA_ARGS): REAL
 			-- Call an instance function that returns a REAL.
 		local
 			argsp: POINTER
@@ -221,7 +225,7 @@ feature -- Calls
 			Result := jni.call_float_method (java_object_id, mid, argsp)
 		end
 
-	char_method (mid: POINTER; args: JAVA_ARGS): CHARACTER
+	char_method (mid: POINTER; args: ?JAVA_ARGS): CHARACTER
 			-- Call an instance function that returns a char
 		local
 			argsp: POINTER
@@ -232,7 +236,7 @@ feature -- Calls
 			Result := jni.call_char_method (java_object_id, mid, argsp)
 		end
 
-	boolean_method (mid: POINTER; args: JAVA_ARGS): BOOLEAN
+	boolean_method (mid: POINTER; args: ?JAVA_ARGS): BOOLEAN
 			-- Call an instance function that returns a boolean
 		local
 			argsp: POINTER
@@ -243,7 +247,7 @@ feature -- Calls
 			Result := jni.call_boolean_method (java_object_id, mid, argsp)
 		end
 
-	object_method (lmethod_id: POINTER; args: JAVA_ARGS): JAVA_OBJECT
+	object_method (lmethod_id: POINTER; args: ?JAVA_ARGS): ?JAVA_OBJECT
 			-- Call an instance function that returns a java object
 		local
 			argp: POINTER
@@ -263,7 +267,7 @@ feature -- Calls
 			end
 		end
 
-	byte_method (mid: POINTER; args: JAVA_ARGS): INTEGER_8
+	byte_method (mid: POINTER; args: ?JAVA_ARGS): INTEGER_8
 			-- Call an instance function that return a byte
 			-- ( 8-bit integer (signed)), in Eiffel return
 			-- a INTEGER_8
@@ -284,13 +288,13 @@ feature -- Attributes
 			Result := jni.get_integer_field (java_object_id, fid)
 		end
 
-	string_attribute (fid: POINTER): STRING
+	string_attribute (fid: POINTER): ?STRING
 			-- Access to a String attribute
 		do
 			Result := jni.get_string_field (java_object_id, fid)
 		end
 
-	object_attribute (fid: POINTER): JAVA_OBJECT
+	object_attribute (fid: POINTER): ?JAVA_OBJECT
 			-- Access to a java object attribute
 		local
 			jo: POINTER

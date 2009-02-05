@@ -10,7 +10,7 @@ note
 class
 	JNI_ENVIRONMENT
 
-create {JAVA_VM}
+create {SHARED_JNI_ENVIRONMENT}
 	make
 
 feature {NONE} -- Initialization
@@ -68,6 +68,8 @@ feature -- Exception mechanism
 
 	throw_java_exception (jthrowable: JAVA_OBJECT)
 			-- throw the exception 'jthrowable' (must be a java.lang.Throwable object)
+		require
+			jthrowable_not_void: jthrowable /= Void
 		do
 			c_throw_java_exception (jvm.envp, jthrowable.java_object_id)
 		end
@@ -76,6 +78,9 @@ feature -- Exception mechanism
 			-- Constructs an exception object from the specified class 'jclass'
 			-- with the message specified by 'msg' and causes that exception
 			-- to be thrown.
+		require
+			jclass_not_void: jclass /= Void
+			msg_not_void: msg /= Void
 		local
 			l_msg_to_c: C_STRING
 		do
@@ -112,7 +117,7 @@ feature {NONE} -- Access
 
 feature -- Reflection
 
-	find_class (name: STRING): JAVA_CLASS
+	find_class (name: STRING): ?JAVA_CLASS
 			-- Load in the Java class with the given name.
 			-- Namespace if any are delimited by `/'
 		require
@@ -126,7 +131,9 @@ feature -- Reflection
 			debug ("jni")
 				check_for_exceptions
 			end
-			Result := find_class_by_pointer (clsp)
+			if clsp /= default_pointer then
+				Result := find_class_by_pointer (clsp)
+			end
 		end
 
 	find_class_by_pointer (classp: POINTER): JAVA_CLASS
@@ -134,19 +141,22 @@ feature -- Reflection
 			-- Java class. Create a new one if needed
 		require
 			classp_not_null: classp /= default_pointer
+		local
+			l_result: ?JAVA_CLASS
 		do
-			Result := java_class_table.item (classp)
-			if Result = Void then
-				if classp /= default_pointer then
-					create Result.make (classp)
-					java_class_table.put (Result, classp)
-				end
+			l_result := java_class_table.item (classp)
+			if l_result = Void then
+				create l_result.make (classp)
+				java_class_table.put (l_result, classp)
 			end
+			Result := l_result
 		end
 
 	find_class_pointer (name: STRING): POINTER
 			-- Find class pointer only (used during creation in descendants).
 			-- Namespace if any are delimited by `/'
+		require
+			name_not_void: name /= Void
 		local
 			l_name_to_c: C_STRING
 		do
@@ -216,7 +226,7 @@ feature -- Object creation
 			end
 		end
 
-	new_string (v: STRING): POINTER
+	new_string (v: ?STRING): POINTER
 			-- Create a new java string from `v'.
 		local
 			l_str: C_STRING
@@ -422,7 +432,7 @@ feature -- Calls
 			end
 		end
 
-	call_string_method (oid: POINTER; mid: POINTER; args: POINTER): STRING
+	call_string_method (oid: POINTER; mid: POINTER; args: POINTER): ?STRING
 			-- Call function `mid' with argument `args' on object `oid'.
 		local
 			p, null: POINTER
@@ -528,7 +538,7 @@ feature -- Static calls
 			end
 		end
 
-	call_static_string_method (cls: POINTER; mid: POINTER; argsp: POINTER): STRING
+	call_static_string_method (cls: POINTER; mid: POINTER; argsp: POINTER): ?STRING
 		require
 			cls_not_null: cls /= default_pointer
 			mid_not_null: mid /= default_pointer
@@ -628,7 +638,7 @@ feature -- Field Access
 			end
 		end
 
-	get_string_field (oid: POINTER; fid: POINTER): STRING
+	get_string_field (oid: POINTER; fid: POINTER): ?STRING
 		require
 			oid_not_null: oid /= default_pointer
 			fid_not_null: fid /= default_pointer
@@ -727,7 +737,7 @@ feature -- Static Field access
 			end
 		end
 
-	get_static_string_field (cls: POINTER; fid: POINTER): STRING
+	get_static_string_field (cls: POINTER; fid: POINTER): ?STRING
 		require
 			cls_not_null: cls /= default_pointer
 			fid_not_null: fid /= default_pointer
@@ -839,7 +849,7 @@ feature -- Field setting
 			p := c_new_string_utf (jvm.envp, l_str.item)
 			c_set_object_field (jvm.envp, oid, fid, p)
 		ensure
-			string_field_set: v.is_equal (get_string_field (oid, fid))
+			string_field_set: v ~ get_string_field (oid, fid)
 		end
 
 feature -- Static field setting
@@ -941,7 +951,7 @@ feature -- Static field setting
 				check_for_exceptions
 			end
 		ensure
-			static_string_field_set: value.is_equal (get_static_string_field (cls, fid))
+			static_string_field_set: value ~ get_static_string_field (cls, fid)
 		end
 
 feature -- Array manipulation

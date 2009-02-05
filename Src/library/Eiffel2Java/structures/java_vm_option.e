@@ -16,11 +16,15 @@ create
 
 feature -- Access
 
-	option_string: STRING
+	option_string: ?STRING
 			-- Associated option string.
+			--| FIXME: This is a bad design, since a query should not change an attribute.
+		local
+			l_internal_option: like internal_option
 		do
-			if internal_option /= Void then
-				Result := internal_option.string
+			l_internal_option := internal_option
+			if l_internal_option /= Void then
+				Result := l_internal_option.string
 			else
 				create internal_option.make_by_pointer (c_option_string (item))
 			end
@@ -30,9 +34,14 @@ feature -- Settings
 
 	set_option_string (an_option: STRING)
 			-- Set `an_option' to `option_string'.
+		require
+			an_option_not_void: an_option /= Void
+		local
+			l_internal_option: like internal_option
 		do
-			create internal_option.make (an_option)
-			c_set_option_string (item, internal_option.item)
+			create l_internal_option.make (an_option)
+			internal_option := l_internal_option
+			c_set_option_string (item, l_internal_option.item)
 		end
 
 feature -- Measurement
@@ -45,7 +54,7 @@ feature -- Measurement
 
 feature {NONE} -- Implementation
 
-	internal_option: C_STRING
+	internal_option: ?C_STRING
 			-- To hold data.
 
 	c_structure_size: INTEGER

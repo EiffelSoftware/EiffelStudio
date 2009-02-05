@@ -23,19 +23,21 @@ feature -- Initialization
 		require
 			size_ok: size > 0
 			element_ok: element_name /= Void
+			element_exists: jni.find_class (element_name) /= Void
 		local
-			element_type: JAVA_CLASS
+			element_type: ?JAVA_CLASS
+			l_jarray: like jarray
 		do
 			element_type := jni.find_class (element_name)
-			jarray := jni.new_object_array (size, element_type.java_class_id, default_pointer)
-			create jvalue.make
-		ensure
-			array_ok: jarray /= default_pointer
+			check element_type_not_void: element_type /= Void end -- Implied by the precondition.
+			l_jarray := jni.new_object_array (size, element_type.java_class_id, default_pointer)
+			check l_jarray_not_default: l_jarray /= default_pointer end
+			make_from_pointer (l_jarray)
 		end
 
 feature -- Access
 
-	item (index: INTEGER): JAVA_OBJECT
+	item (index: INTEGER): ?JAVA_OBJECT
 			-- object at index-th position
 		require
 			valid_index: valid_index (index)
@@ -57,6 +59,7 @@ feature -- Element change
 	put (an_item: JAVA_OBJECT; index: INTEGER)
 			-- put an object at index
 		require
+			an_item_not_void: an_item /= Void
 			valid_index: valid_index (index)
 		do
 			jni.set_object_array_element (jarray, index, an_item.java_object_id)

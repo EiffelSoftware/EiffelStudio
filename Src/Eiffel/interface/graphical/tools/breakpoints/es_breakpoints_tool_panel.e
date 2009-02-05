@@ -1091,7 +1091,7 @@ feature {NONE} -- Dynamic item filling
 						bp.tags.do_all (agent (atag: STRING_32; astr: STRING)
 								do
 									if atag /= Void then
-										astr.append_string (atag + ", ")
+										astr.append (atag + ", ")
 									end
 								end(?, t)
 							)

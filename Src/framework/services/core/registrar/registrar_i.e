@@ -30,7 +30,7 @@ feature -- Access
 			is_interface_usable: is_interface_usable
 		deferred
 		ensure
-			result_consistent: Result = registrations
+			result_consistent: Result = active_registrations
 --			result_contains_attached_items: not Result.has (Void)
 			result_contains_usable_items: Result.for_all (agent (ia_item: G): BOOLEAN
 				do
@@ -196,10 +196,10 @@ feature -- Events
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

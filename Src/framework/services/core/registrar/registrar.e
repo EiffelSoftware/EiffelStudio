@@ -73,25 +73,33 @@ feature -- Access
 	active_registrations: !DS_LINEAR [G]
 			-- <Precursor>
 		local
-			l_result: DS_ARRAYED_LIST [G]
+			l_result: DS_LINEAR [G]
+			l_list: DS_ARRAYED_LIST [G]
 			l_cursor: DS_LINEAR_CURSOR [CONCEALER_I [G]]
 			l_concealer: ?CONCEALER_I [G]
 			l_object: ?G
 		do
-			create l_result.make_default
-			l_cursor := registrations.new_cursor
-			from l_cursor.start until l_cursor.after loop
-				l_concealer := l_cursor.item
-				check l_concealer_attached: l_concealer /= Void end
-				if l_concealer.is_revealed then
-					l_object := l_concealer.object
-					if l_object /= Void then
-						if not {l_usable: USABLE_I} l_object or else l_usable.is_interface_usable then
-							l_result.force_last (l_object)
+			l_result := internal_active_registrations
+			if l_result = Void then
+				create l_list.make_default
+				l_cursor := registrations.new_cursor
+				from l_cursor.start until l_cursor.after loop
+					l_concealer := l_cursor.item
+					check l_concealer_attached: l_concealer /= Void end
+					if l_concealer.is_revealed then
+						l_object := l_concealer.object
+						if l_object /= Void then
+							if not {l_usable: USABLE_I} l_object or else l_usable.is_interface_usable then
+								l_list.force_last (l_object)
+							end
 						end
 					end
+					l_cursor.forth
 				end
-				l_cursor.forth
+				Result := l_list
+				internal_active_registrations := Result
+			else
+				Result := l_result
 			end
 		end
 
@@ -250,6 +258,9 @@ feature {NONE} -- Actions handlers
 				if l_event /= Void then
 					l_event.publish ([Current, l_registration, a_key])
 				end
+
+					-- Detach the cache active registrations so it's recached.
+				internal_active_registrations := Void
 			elseif {l_concealer: CONCEALER_I [G]} a_registration then
 					-- The registration is wrapped in a concealer.
 
@@ -313,6 +324,9 @@ feature {NONE} -- Actions handlers
 						l_old_site.site := Void
 					end
 				end
+
+					-- Detach the cache active registrations so it's recached.
+				internal_active_registrations := Void
 			elseif {l_concealer: CONCEALER_I [G]} a_registration then
 					-- The item is wrapped in a concealer.
 				if not {l_usable: USABLE_I} l_concealer or else l_usable.is_interface_usable then
@@ -405,6 +419,10 @@ feature -- Events
 
 feature {NONE} -- Implementation: Internal cache
 
+	internal_active_registrations: ?like active_registrations
+			-- Cached version of `active_registrations'
+			-- Note: Do not use directly!
+
 	internal_registered_event: ?like registered_event
 			-- Cached version of `registered_event'.
 			-- Note: Do not use directly!
@@ -446,11 +464,11 @@ feature {NONE} -- Implementation: Internal cache
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

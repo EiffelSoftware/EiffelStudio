@@ -13,8 +13,8 @@ frozen class
 inherit
 	ES_FORMATTER_TOOL [EB_CUSTOMIZED_TOOL]
 		redefine
-			is_supporting_multiple_instances,
-			is_recycled_on_closing,
+			is_multiple_edition,
+			is_recycled_on_close,
 			shortcut_preference_name
 		end
 
@@ -23,14 +23,15 @@ create {NONE}
 
 feature -- Access
 
-	icon: EV_PIXEL_BUFFER
+	icon: !EV_PIXEL_BUFFER
 			-- Tool icon
 			-- Note: Do not call `tool.icon' as it will create the tool unnecessarly!
 		local
 			l_path: like icon_file_path
 		do
-			Result := internal_icon
-			if Result = Void then
+			if {l_icon: like icon} internal_icon then
+				Result := l_icon
+			else
 				l_path := icon_file_path
 				if l_path /= Void and (create {RAW_FILE}.make (l_path)).exists then
 					create Result
@@ -45,14 +46,15 @@ feature -- Access
 			retry
 		end
 
-	icon_pixmap: EV_PIXMAP
+	icon_pixmap: !EV_PIXMAP
 			-- Tool icon pixmap
 			-- Note: Do not call `tool.icon' as it will create the tool unnecessarly!
 		local
 			l_path: like icon_file_path
 		do
-			Result := internal_icon_pixmap
-			if Result = Void then
+			if {l_icon: like icon_pixmap} internal_icon_pixmap then
+				Result := l_icon
+			else
 				l_path := icon_file_path
 				if l_path /= Void and (create {RAW_FILE}.make (l_path)).exists then
 					create Result
@@ -67,7 +69,7 @@ feature -- Access
 			retry
 		end
 
-	title: STRING_32 assign set_title
+	title: !STRING_32 assign set_title
 			-- Tool title.
 
 feature {NONE} -- Access
@@ -118,30 +120,31 @@ feature -- Status report
 	is_customizable: BOOLEAN = True
 			-- Indicates if the tool can be customize to support custom views.
 
-	is_supporting_multiple_instances: BOOLEAN = True
+	is_multiple_edition: BOOLEAN = True
 			-- Indicates if the tool can spawn multiple instances in the
 			-- same development window
 
 feature {NONE} -- Status report
 
-	is_recycled_on_closing: BOOLEAN = False
+	is_recycled_on_close: BOOLEAN = False
 			-- Indicates if the tool should be recycled on closing
 
 feature {NONE} -- Factory
 
-	create_tool: EB_CUSTOMIZED_TOOL
+	new_tool: !EB_CUSTOMIZED_TOOL
 			-- Creates the tool for first use on the development `window'
 		do
-			--create Result.make (window, Current)
+				-- Needs to be fixed. Code was added to make the compiler happy.
+			create Result.make (window, "", "", "", Void)
 		end
 
 feature {NONE} -- Internal implementation cache
 
-	internal_icon: like icon
+	internal_icon: ?like icon
 			-- Cached version of `icon'
 			-- Note: Do not use directly
 
-	internal_icon_pixmap: like icon_pixmap
+	internal_icon_pixmap: ?like icon_pixmap
 			-- Cached version of `icon_pixmap'
 			-- Note: Do not use directly
 
@@ -149,7 +152,7 @@ invariant
 	not_icon_file_path_is_empty: icon_file_path /= Void not icon_file_path.is_empty
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -173,11 +176,11 @@ invariant
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

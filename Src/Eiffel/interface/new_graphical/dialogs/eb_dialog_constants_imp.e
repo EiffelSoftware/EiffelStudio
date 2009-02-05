@@ -7,7 +7,7 @@ note
 
 class
 	EB_DIALOG_CONSTANTS_IMP
-	
+
 feature {NONE} -- Initialization
 
 	initialize_constants
@@ -43,19 +43,19 @@ feature -- Access
 			Result := "Save"
 		end
 
-	small_padding: INTEGER 
+	small_padding: INTEGER
 			-- `Result' is INTEGER constant named small_padding.
 		once
 			Result := 4
 		end
 
-	default_button_width: INTEGER 
+	default_button_width: INTEGER
 			-- `Result' is INTEGER constant named default_button_width.
 		once
 			Result := 80
 		end
 
-	tiny_padding: INTEGER 
+	tiny_padding: INTEGER
 			-- `Result' is INTEGER constant named tiny_padding.
 		once
 			Result := 2
@@ -73,7 +73,7 @@ feature -- Access
 		end
 
 	string_constant_by_name (a_name: STRING): STRING
-			-- `Result' is STRING 
+			-- `Result' is STRING
 		require
 			initialized: constants_initialized
 			name_valid: a_name /= Void and not a_name.is_empty
@@ -83,9 +83,9 @@ feature -- Access
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
+
 	integer_constant_by_name (a_name: STRING): INTEGER
-			-- `Result' is STRING 
+			-- `Result' is STRING
 		require
 			initialized: constants_initialized
 			name_valid: a_name /= Void and not a_name.is_empty
@@ -97,10 +97,10 @@ feature -- Access
 			check
 				is_integer: l_string.is_integer
 			end
-			
+
 			Result := l_string.to_integer
 		end
-		
+
 	has_constant (a_name: STRING): BOOLEAN
 			-- Does constant `a_name' exist?
 		require
@@ -115,22 +115,22 @@ feature {NONE} -- Implementation
 	initialized_cell: CELL [BOOLEAN]
 			-- A cell to hold whether the constants have been loaded.
 		once
-			create Result
+			create Result.put (False)
 		end
-		
+
 	all_constants: HASH_TABLE [STRING, STRING]
 			-- All constants loaded from constants file.
 		once
 			create Result.make (4)
 		end
-		
+
 	file_name: STRING = "constants.txt"
 		-- File name from which constants must be loaded.
-		
+
 	String_constant: STRING = "STRING"
-	
+
 	Integer_constant: STRING = "INTEGER"
-		
+
 	parse_file_contents (content: STRING)
 			-- Parse contents of `content' into `all_constants'.
 		local
@@ -160,7 +160,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	first_line (content: STRING): STRING
 			-- `Result' is first line of `Content',
 			-- which will be stripped from `content'.
@@ -168,7 +168,7 @@ feature {NONE} -- Implementation
 			content_not_void: content /= Void
 			content_not_empty: not content.is_empty
 		local
-			new_line_index: INTEGER		
+			new_line_index: INTEGER
 		do
 			new_line_index := content.index_of ('%N', 1)
 			if new_line_index /= 0 then
@@ -202,7 +202,7 @@ invariant
 	all_constants_not_void: all_constants /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -215,22 +215,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_DIALOG_CONSTANTS_IMP

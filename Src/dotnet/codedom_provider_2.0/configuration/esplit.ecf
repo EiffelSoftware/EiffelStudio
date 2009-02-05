@@ -32,7 +32,7 @@
 		<library name="vision2_extension" location="$ISE_LIBRARY\library\vision2_extension\vision2_extension.ecf" readonly="true"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf" readonly="true"/>
 		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf" readonly="true"/>
-		<library name="parser" location="$EIFFEL_SRC\eiffel\parser\parser.ecf" readonly="true"/>
+		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser.ecf" readonly="true"/>
 
 		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>

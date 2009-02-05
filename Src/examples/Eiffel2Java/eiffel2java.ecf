@@ -1,13 +1,14 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="eiffel2java" uuid="20FD9834-3FC9-4349-AD78-73ABA2C735D4">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="eiffel2java" uuid="20FD9834-3FC9-4349-AD78-73ABA2C735D4">
 	<target name="classic">
 		<root class="ROOT_CLASS" feature="make"/>
-		<option warning="true">
-			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" is_void_safe="true">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
-		<precompile name="base_pre" location="$ISE_PRECOMP\base.ecf"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="eiffel2java" location="$ISE_LIBRARY\library\Eiffel2Java\Eiffel2Java.ecf"/>
+		<precompile name="base_pre" location="$ISE_PRECOMP\base-safe.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="eiffel2java" location="$ISE_LIBRARY\library\Eiffel2Java\Eiffel2Java-safe.ecf" use_application_options="true"/>
 		<cluster name="root_cluster" location=".\"/>
 	</target>
 </system>

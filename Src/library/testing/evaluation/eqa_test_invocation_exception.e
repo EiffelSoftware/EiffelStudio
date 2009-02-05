@@ -5,6 +5,9 @@ note
 		Note: {EQA_TEST_INVOCATION_EXCEPTION} does not only contain the exception information, it also
 		      analyses the stack trace to determine whether the implementation or the test code is
 		      to blame.
+
+		TODO: Take stack frames of agent calls into account, meaning that even though {PROCEDURE}.fast_call
+		      causes a precondition violation, the stack frame calling the agent is to blame.
 	]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -257,10 +260,10 @@ note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			Eiffel Software
-			5949 Hollister Ave., Goleta, CA 93117 USA
-			Telephone 805-685-1006, Fax 805-685-6869
-			Website http://www.eiffel.com
-			Customer support http://support.eiffel.com
+			 Eiffel Software
+			 5949 Hollister Ave., Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
 		]"
 end

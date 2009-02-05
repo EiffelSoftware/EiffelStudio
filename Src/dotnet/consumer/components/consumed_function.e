@@ -5,7 +5,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-frozen class
+class
 	CONSUMED_FUNCTION
 
 inherit
@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 	make (en, dn, den: STRING; args: like arguments; ret: like return_type;
 			froz, static, defer, inf, pref, pub, ns, virt, poe: BOOLEAN;
 			a_type: CONSUMED_REFERENCED_TYPE)
-		
+
 			-- Initialize consumed method.
 		require
 			non_void_eiffel_name: en /= Void

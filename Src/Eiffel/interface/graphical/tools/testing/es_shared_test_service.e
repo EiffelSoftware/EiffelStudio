@@ -44,7 +44,7 @@ feature {NONE} -- Access
 	observer_cell: CELL [?ES_TEST_CLUSTER_OBSERVER]
 			-- Observer which notifies test suite whenever a class is removed
 		once
-			create Result
+			create Result.put (Void)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -82,10 +82,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

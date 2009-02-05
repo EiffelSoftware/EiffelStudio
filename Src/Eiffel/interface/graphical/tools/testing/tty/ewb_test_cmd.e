@@ -101,7 +101,7 @@ feature {NONE} -- Access
 	filtered_tests_cell: CELL [?TAG_BASED_FILTERED_COLLECTION [!TEST_I]]
 			-- Cache for `filtered_tests'
 		once
-			create Result
+			create Result.put (Void)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -109,7 +109,7 @@ feature {NONE} -- Access
 	tree_view_cell: CELL [?TAG_BASED_TREE [!TEST_I]]
 			-- Cache for `tree_view'
 		once
-			create Result
+			create Result.put (Void)
 		ensure
 			result_attached: Result /= Void
 		end

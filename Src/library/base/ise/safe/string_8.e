@@ -674,7 +674,7 @@ feature -- Element change
 			Result.append (s)
 		end
 
-	append_string (s: READABLE_STRING_8)
+	append_string (s: ?READABLE_STRING_8)
 			-- Append a copy of `s', if not void, at end.
 		do
 			if s /= Void then

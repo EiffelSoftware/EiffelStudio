@@ -21,11 +21,6 @@ inherit
 			return_type
 		end
 
-	COMPARABLE
-		undefine
-			default_create, is_equal, copy
-		end
-
 create
 	make_with_consumed_field
 
@@ -36,9 +31,9 @@ feature -- Access
 	return_type: CONSUMED_REFERENCED_TYPE
 	arguments: ARRAY [CONSUMED_ARGUMENT]
 	declared_type: CONSUMED_REFERENCED_TYPE
-	
+
 feature -- Initialization
-	
+
 	make_with_consumed_field (a_consumed_field: CONSUMED_FIELD)
 		require
 			non_void_a_consumed_field: a_consumed_field /= Void
@@ -48,22 +43,14 @@ feature -- Initialization
 			arguments := a_consumed_field.arguments
 			declared_type := a_consumed_field.declared_type
 			return_type := a_consumed_field.return_type
-			r := a_consumed_field.r
+			r := a_consumed_field.return_type
 		ensure
 			eiffel_name_set: eiffel_name = a_consumed_field.eiffel_name
 			dotnet_name_set: dotnet_name = a_consumed_field.dotnet_name
 			arguments_set: arguments = a_consumed_field.arguments
 			declared_type_set: declared_type = a_consumed_field.declared_type
 			return_type_set: return_type = a_consumed_field.return_type
-			a_set: r = a_consumed_field.r
-		end
-
-feature -- Implementation
-	
-	infix "<" (other: like Current): BOOLEAN
-			-- Is current object less than `other'?
-		do
-			Result := dotnet_name < other.dotnet_name
+			a_set: r = a_consumed_field.return_type
 		end
 
 note

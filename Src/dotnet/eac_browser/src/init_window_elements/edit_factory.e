@@ -8,7 +8,7 @@ note
 
 class
 	EDIT_FACTORY
-	
+
 create
 	make
 
@@ -23,9 +23,9 @@ feature {NONE} -- Initialization
  		ensure
  			parent_window_set: parent_window = a_window implies parent_window /= Void
  		end
- 		
+
 feature {NONE}	-- Access
- 
+
 	parent_window: MAIN_WINDOW_IMP
 			-- current window.
 
@@ -40,19 +40,19 @@ feature -- Access
 			tree_factory: TREE_FACTORY
 		do
 			parent_window.notebook.select_item (parent_window.assemblies)
-			
+
 			parent_window.assemblies.wipe_out
-			
+
 				-- Set EV_MULTI_COLUMN_LIST
 			parent_window.assemblies.set_column_titles (<<"Name", "Version", "Culture", "Key">>)
-			
+
 			create tree_factory.make (parent_window)
 			from
 				create cache
 				cache.Assemblies.start
 				create l_list.make
 			until
-				cache.Assemblies.after				
+				cache.Assemblies.after
 			loop
 				create l_row
 				l_row.extend (cache.Assemblies.item.name)
@@ -72,7 +72,7 @@ feature -- Access
 			parent_window.assemblies.resize_column_to_content (4)
 			parent_window.assemblies.align_text_right (2)
 			parent_window.assemblies.align_text_right (4)
-		end		
+		end
 
 	edit_info_assembly (an_assembly: CONSUMED_ASSEMBLY)
 			-- print info of all assemblies and select assembly corresponding to `an_assembly'.
@@ -82,13 +82,13 @@ feature -- Access
 			l_row: EV_MULTI_COLUMN_LIST_ROW
 		do
 			parent_window.notebook.select_item (parent_window.assemblies)
-			
+
 			edit_info_assemblies
-			l_row := parent_window.assemblies.item_by_data (an_assembly)
+			l_row := parent_window.assemblies.retrieve_item_by_data (an_assembly, True)
 			if l_row /= Void then
 				l_row.enable_select
 			end
-			
+
 			parent_window.edit_comments_area.enable_edit
 			parent_window.edit_comments_area.remove_text
 			parent_window.edit_comments_area .append_text ("Assembly name : " + an_assembly.name )
@@ -123,13 +123,13 @@ feature -- Access
 
 					-- Set EV_MULTI_COLUMN_LIST
 				parent_window.search.set_column_titles (<<"Eiffel name", "Dotnet name", "Assembly">>)
-				
+
 				create tree_factory.make (parent_window)
 				from
 					dotnet_types.start
 					create l_list.make
 				until
-					dotnet_types.after				
+					dotnet_types.after
 				loop
 					create l_row
 					l_row.extend (dotnet_types.item.type.eiffel_name)
@@ -141,16 +141,16 @@ feature -- Access
 					dotnet_types.forth
 				end
 				parent_window.search.append (l_list)
-	
+
 				parent_window.search.resize_column_to_content (1)
 				parent_window.search.resize_column_to_content (2)
 				parent_window.search.resize_column_to_content (3)
 			end
-		end		
+		end
 
 feature -- Color edit
 
-	internal_color_output: CELL [DISPLAY_TYPE]		
+	internal_color_output: CELL [DISPLAY_TYPE]
 			-- Type to diplay.
 		once
 			create Result.put (Void)
@@ -187,7 +187,7 @@ feature -- Color edit
 				-- keep the output for refresh.
 			internal_color_output.put (output)
 		end
-		
+
 	color_refresh_type
 			-- Refresh type displayed in `color_edit_comments_area'.
 		local
@@ -198,7 +198,7 @@ feature -- Color edit
 				output.refresh
 			end
 		end
-		
+
 feature -- Tree Edit
 
 	display_tree_type (an_assembly: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING)
@@ -216,7 +216,7 @@ feature -- Tree Edit
 
 			tree_display.print_type (an_assembly, a_dotnet_type_name)
 		end
-	
+
 	display_imediat_features (an_assembly: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING)
 			-- display type in a tree.
 		require
@@ -261,7 +261,7 @@ feature -- Tree Edit
 			create tree_display.make (parent_window)
 			tree_display.print_constructors (an_assembly, a_dotnet_type_name)
 		end
-		
+
 	display_tree_all_features (an_assembly: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING)
 			-- display type in a tree.
 		require
@@ -276,7 +276,7 @@ feature -- Tree Edit
 			create tree_display.make (parent_window)
 			tree_display.print_all_features (an_assembly, a_dotnet_type_name)
 		end
-	
+
 invariant
 	non_void_parent_window: parent_window /= Void
 

@@ -1,6 +1,6 @@
 note
 	description: "[
-					
+
 				]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,7 +12,7 @@ class
 
 
 feature -- Access
-	
+
 	assemblies_informations: HASH_TABLE [ASSEMBLY_INFORMATION, STRING]
 			-- Comments related to an assembly. The key is the {CONSUMED_ASSEMBLY}.out field.
 		once
@@ -20,7 +20,7 @@ feature -- Access
 		ensure
 			assemblies_informations_set: Result /= Void
 		end
-	
+
 	assemblies: LINKED_LIST [CONSUMED_ASSEMBLY]
 			-- linked list of all assemblies contained in EAC. Is initialize during construction of widget tree.
 		once
@@ -58,14 +58,14 @@ feature -- Access
 			l_assembly_info: ASSEMBLY_INFORMATION
 		do
 			if not Assemblies_informations.has (an_assembly.out) then
-				create l_assembly_info.make
+				create l_assembly_info.make (Void)
 				l_assembly_info.initialize ((create {EAC_COMMON_PATH}).dotnet_framework_path + an_assembly.name + ".xml")
 				if l_assembly_info /= Void then
 					(create {CACHE}).assemblies_informations.put (l_assembly_info, an_assembly.out)
 				end
 			end
 		end
-		
+
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

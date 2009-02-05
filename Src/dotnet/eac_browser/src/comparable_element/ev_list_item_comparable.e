@@ -11,15 +11,15 @@ class
 
 inherit
 	EV_LIST_ITEM
-	
+
 	COMPARABLE
 		undefine
 			default_create, is_equal, copy
 		end
 
 feature -- Implementation
-	
-	infix "<" (other: like Current): BOOLEAN
+
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is current object less than `other'?
 		do
 			Result := text < other.text

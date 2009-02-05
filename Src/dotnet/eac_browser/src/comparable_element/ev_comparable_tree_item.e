@@ -8,10 +8,10 @@ note
 
 class
 	EV_COMPARABLE_TREE_ITEM
-	
+
 inherit
 	EV_TREE_ITEM
-	
+
 	COMPARABLE
 		undefine
 			default_create, is_equal, copy
@@ -23,8 +23,8 @@ create
 
 
 feature -- Implementation
-	
-	infix "<" (other: like Current): BOOLEAN
+
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is current object less than `other'?
 		do
 			Result := text < other.text

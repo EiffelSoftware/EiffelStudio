@@ -45,7 +45,7 @@ feature -- Access
 
 	output: EV_PIXMAP
 			-- output to print type.
-			
+
 	vertical_scroll_bar: EV_VERTICAL_SCROLL_BAR
 			-- vertical scroll bar.
 
@@ -54,7 +54,7 @@ feature -- Access
 
 	assembly_of_type: CONSUMED_ASSEMBLY
 			-- assembly where is located `dotnet_type_name'.
-			
+
 	feature_selected: STRING
 			-- feature selected. Empty if no feature selected.
 
@@ -64,7 +64,7 @@ feature -- Access
 feature -- Basic Operations
 
 	print_type (assembly_of_dotnet_type: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING)
-			-- Set `assembly_of_type' with `assembly_of_dotnet_type' 
+			-- Set `assembly_of_type' with `assembly_of_dotnet_type'
 			-- Set `dotnet_type_name' with `a_dotnet_type_name'
 			-- Display in `output' features corresponding to `a_type_name'.
 		require
@@ -106,8 +106,8 @@ feature -- Status Setting
 		ensure
 			feature_selected_set: feature_selected = an_eiffel_feature_name
 		end
-		
-	
+
+
 feature {NONE} -- Implementation
 
 	load_display_type (assembly_of_dotnet_type: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING)
@@ -117,7 +117,6 @@ feature {NONE} -- Implementation
 			non_void_a_dotnet_type_name: a_dotnet_type_name /= Void
 		local
 			ct: CONSUMED_TYPE
-			nt: CONSUMED_NESTED_TYPE
 			eac: EAC_BROWSER
 		do
 			create eac
@@ -140,7 +139,7 @@ feature {NONE} -- Implementation
 			l_ico: EV_PIXMAP
 		do
 			output.clear
-			
+
 			cursor_y_position := 0
 			cursor_x_position := - horizontal_scroll_bar.value * Nb_pixel_decal_h_scroll
 
@@ -182,7 +181,7 @@ feature {NONE} -- Implementation
 					--new_line
 				cursor_y_position := cursor_y_position + nb_pixel_line
 				cursor_x_position := - horizontal_scroll_bar.value * Nb_pixel_decal_h_scroll
-					
+
 				factory_display.lines.forth
 				i := i + 1
 			end
@@ -193,7 +192,7 @@ feature {NONE} -- Implementation
 			output.pick_ended_actions.force_extend (agent refresh)
 			output.drop_actions.wipe_out
 			output.drop_actions.extend (agent drop_action (?))
-			
+
 				-- mousse click actions.
 --			output.pointer_button_press_actions.wipe_out
 --			output.pointer_button_press_actions.force_extend (agent select_line_action (?, ?, ?, ?, ?, ?, ?, ?))
@@ -201,12 +200,12 @@ feature {NONE} -- Implementation
 --			output.pointer_button_release_actions.force_extend (agent select_line_action (?, ?, ?, ?, ?, ?, ?, ?))
 			output.pointer_double_press_actions.wipe_out
 			output.pointer_double_press_actions.force_extend (agent edit_action (?, ?, ?, ?, ?, ?, ?, ?))
-			
+
 			output.flush
 		end
 
 feature {NONE} -- Scroolbar Setting
-	
+
 	pick_action (a_x, a_y: INTEGER): SPECIFIC_TYPE
 			-- action performed for a pick action in `output'.
 		local
@@ -271,7 +270,7 @@ feature {NONE} -- Scroolbar Setting
 			tree.expand_type (a_type.assembly, a_type.type)
 		end
 
-	edit_action (a_x, a_y, c: INTEGER; d, e, f: DOUBLE; g, h: INTEGER) 
+	edit_action (a_x, a_y, c: INTEGER; d, e, f: DOUBLE; g, h: INTEGER)
 			-- action performed when double clicking.
 		local
 			current_x_position, current_y_position: INTEGER
@@ -332,7 +331,7 @@ feature {NONE} -- Scroolbar Setting
 			end
 		end
 
-	select_line_action (a_x, a_y, c: INTEGER; d, e, f: DOUBLE; g, h: INTEGER) 
+	select_line_action (a_x, a_y, c: INTEGER; d, e, f: DOUBLE; g, h: INTEGER)
 			-- action performed when double clicking.
 			-- | loop on all lines and set selected to False except for the selected line.
 		local
@@ -342,7 +341,7 @@ feature {NONE} -- Scroolbar Setting
 			initial_cursor: CURSOR
 		do
 			initial_cursor := factory_display.lines.cursor
-			
+
 				-- lines above the displayed lines.
 			from
 				i := 1
@@ -354,7 +353,7 @@ feature {NONE} -- Scroolbar Setting
 				factory_display.lines.forth
 				i := i + 1
 			end
-			
+
 				-- displayed lines.
 			from
 				--i := first_line_to_display
@@ -406,8 +405,8 @@ feature {NONE} -- Scroolbar Setting
 --			vertical_scroll_bar.set_leap (output.height)
 ----			vertical_scroll_bar.set_proportion (output.height / (nb_line * Nb_pixel_line))
 --			vertical_scroll_bar.set_step (output.height)
-		end		
-		
+		end
+
 feature {NONE} -- Implementation
 
 	Nb_pixel_line: INTEGER
@@ -415,7 +414,7 @@ feature {NONE} -- Implementation
 		once
 			Result := output.font.height + 4
 		end
-			
+
 	Nb_pixel_decal_h_scroll: INTEGER = 12
 			-- number of pixel for a step of horizontal scroll.
 
@@ -434,7 +433,7 @@ feature {NONE} -- Implementation
 		do
 			Result := (output.height / Nb_pixel_line).truncated_to_integer + 1
 		end
-		
+
 invariant
 	non_void_parent_window: parent_window /= Void
 	non_void_output: output /= Void

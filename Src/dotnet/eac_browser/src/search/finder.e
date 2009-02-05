@@ -12,7 +12,7 @@ class
 
 inherit
 	CACHE
-	
+
 feature -- Access
 
 	find_eiffel_type_name (an_eiffel_type_name: STRING): LINKED_LIST [SPECIFIC_TYPE]
@@ -102,7 +102,7 @@ feature -- Access
 --				end
 				i := i + 1
 			end
-			
+
 			if result /= Void then
 				Result := full_dotnet_type_name + ": " + Result
 			end
@@ -129,8 +129,8 @@ feature -- Access
 				until
 					i > l_type.constructors.count or Result /= Void
 				loop
-					if an_eiffel_feature_name.is_equal (l_type.constructors.item (i).eiffel_name) then
-						Result := l_type.constructors.item (i).Dotnet_name
+					if an_eiffel_feature_name.is_equal (l_type.constructors.i_th (i).eiffel_name) then
+						Result := l_type.constructors.i_th (i).Dotnet_name
 					end
 					i := i + 1
 				end
@@ -144,7 +144,7 @@ feature -- Access
 					end
 				end
 			end
-			
+
 --			if Result = Void then
 --				Result := an_assembly.name + " do not contain feature " + an_eiffel_feature_name
 --			end
@@ -193,7 +193,7 @@ feature -- Name
 		ensure
 			non_void_result: Result /= Void
 		end
-	
+
 	search_eiffel_type_name (an_assembly: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING): STRING
 			-- Return the `eiffel_type_name' corresponding to `a_dotnet_type_name'.
 		require

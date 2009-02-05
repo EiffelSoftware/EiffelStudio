@@ -37,14 +37,14 @@ feature -- Access
 
 	right_tree: EV_TREE
 			-- right tree to print type.
-	
+
 	assembly_of_type: CONSUMED_ASSEMBLY
 			-- Assembly_of_type.
-		
+
 feature -- Basic Operations
 
 	print_type (assembly_of_dotnet_type: CONSUMED_ASSEMBLY; a_full_dotnet_type_name: STRING)
-			-- Set `assembly_of_type' with `assembly_of_dotnet_type' 
+			-- Set `assembly_of_type' with `assembly_of_dotnet_type'
 			-- Set `dotnet_type_name' with `a_full_dotnet_type_name'
 			-- Display in `output' features corresponding to `a_type_name'.
 		require
@@ -56,7 +56,7 @@ feature -- Basic Operations
 		end
 
 	print_type_imediat_features (assembly_of_dotnet_type: CONSUMED_ASSEMBLY; a_full_dotnet_type_name: STRING)
-			-- Set `assembly_of_type' with `assembly_of_dotnet_type' 
+			-- Set `assembly_of_type' with `assembly_of_dotnet_type'
 			-- Set `dotnet_type_name' with `a_full_dotnet_type_name'
 			-- Display in `output' features corresponding to `a_type_name'.
 		require
@@ -71,13 +71,12 @@ feature -- Basic Operations
 			l_feature, l_field: CONSUMED_MEMBER
 			l_property: CONSUMED_PROPERTY
 			l_event: CONSUMED_EVENT
-			l_fields: LINKED_LIST [EV_COMPARABLE_TREE_ITEM]
 			l_features: LINKED_LIST [EV_COMPARABLE_TREE_ITEM]
 			l_properties: LINKED_LIST [EV_COMPARABLE_TREE_ITEM]
 			l_events: LINKED_LIST [EV_COMPARABLE_TREE_ITEM]
 		do
 			assembly_of_type := assembly_of_dotnet_type
-			
+
 			right_tree.wipe_out
 			create eac
 			ct := eac.consumed_type (assembly_of_dotnet_type, a_full_dotnet_type_name);
@@ -130,7 +129,7 @@ feature -- Basic Operations
 		end
 
 	print_type_inherited_features (assembly_of_dotnet_type: CONSUMED_ASSEMBLY; a_full_dotnet_type_name: STRING)
-			-- Set `assembly_of_type' with `assembly_of_dotnet_type' 
+			-- Set `assembly_of_type' with `assembly_of_dotnet_type'
 			-- Set `dotnet_type_name' with `a_full_dotnet_type_name'
 			-- Display in `output' features corresponding to `a_type_name'.
 		require
@@ -142,14 +141,13 @@ feature -- Basic Operations
 			eac: EAC_BROWSER
 			l_node: EV_COMPARABLE_TREE_ITEM
 			l_inherited_entities: ARRAY [CONSUMED_ENTITY]
-			l_entity: CONSUMED_ENTITY
 			l_property: CONSUMED_PROPERTY
 			l_event: CONSUMED_EVENT
 			l_feature: CONSUMED_MEMBER
 			l_inherited_features: LINKED_LIST [EV_COMPARABLE_TREE_ITEM]
 		do
 			assembly_of_type := assembly_of_dotnet_type
-			
+
 			right_tree.wipe_out
 			create eac
 			ct := eac.consumed_type (assembly_of_dotnet_type, a_full_dotnet_type_name)
@@ -179,11 +177,11 @@ feature -- Basic Operations
 				end
 				i := i + 1
 			end
-			right_tree.append (classify_tree_nodes (l_inherited_features))				
+			right_tree.append (classify_tree_nodes (l_inherited_features))
 		end
 
 	print_constructors (assembly_of_dotnet_type: CONSUMED_ASSEMBLY; a_full_dotnet_type_name: STRING)
-			-- Set `assembly_of_type' with `assembly_of_dotnet_type' 
+			-- Set `assembly_of_type' with `assembly_of_dotnet_type'
 			-- Set `dotnet_type_name' with `a_full_dotnet_type_name'
 			-- Display in `output' features corresponding to `a_type_name'.
 		require
@@ -198,7 +196,7 @@ feature -- Basic Operations
 			l_constructors_list: LINKED_LIST [EV_COMPARABLE_TREE_ITEM]
 		do
 			assembly_of_type := assembly_of_dotnet_type
-			
+
 			right_tree.wipe_out
 			create eac
 			ct := eac.consumed_type (assembly_of_dotnet_type, a_full_dotnet_type_name)
@@ -211,12 +209,12 @@ feature -- Basic Operations
 					ct.constructors = Void
 					or else i > ct.constructors.count
 				loop
-					create l_constructor_node.make_with_text (eiffel_signature_constructor (assembly_of_dotnet_type, ct.constructors.item (i)))
-					l_constructor_node.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_constructor_information (assembly_of_type, ct.constructors.item (i), a_full_dotnet_type_name))
+					create l_constructor_node.make_with_text (eiffel_signature_constructor (assembly_of_dotnet_type, ct.constructors.i_th (i)))
+					l_constructor_node.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_constructor_information (assembly_of_type, ct.constructors.i_th (i), a_full_dotnet_type_name))
 					if l_ico /= Void then
 						l_constructor_node.set_pixmap (l_ico)
 					end
-					
+
 					l_constructors_list.extend (l_constructor_node)
 					i := i + 1
 				end
@@ -225,7 +223,7 @@ feature -- Basic Operations
 		end
 
 	print_all_features (assembly_of_dotnet_type: CONSUMED_ASSEMBLY; a_full_dotnet_type_name: STRING)
-			-- Set `assembly_of_type' with `assembly_of_dotnet_type' 
+			-- Set `assembly_of_type' with `assembly_of_dotnet_type'
 			-- Set `dotnet_type_name' with `a_full_dotnet_type_name'
 			-- Display in `output' features corresponding to `a_type_name'.
 		require
@@ -253,8 +251,8 @@ feature -- Basic Operations
 					ct.fields = Void
 					or else i > ct.fields.count
 				loop
-					l_tree_item := initialize_tree_item_feature (ct.fields.item (i), a_full_dotnet_type_name)
-	
+					l_tree_item := initialize_tree_item_feature (ct.fields.i_th (i), a_full_dotnet_type_name)
+
 					l_methods_list.extend (l_tree_item)
 					i := i + 1
 				end
@@ -265,8 +263,8 @@ feature -- Basic Operations
 					ct.procedures = Void
 					or else i > ct.procedures.count
 				loop
-					if not ct.procedures.item (i).is_property_or_event then
-						l_tree_item := initialize_tree_item_feature (ct.procedures.item (i), a_full_dotnet_type_name)
+					if not ct.procedures.i_th (i).is_property_or_event then
+						l_tree_item := initialize_tree_item_feature (ct.procedures.i_th (i), a_full_dotnet_type_name)
 						l_methods_list.extend (l_tree_item)
 					end
 
@@ -279,11 +277,11 @@ feature -- Basic Operations
 					ct.functions = Void
 					or else i > ct.functions.count
 				loop
-					if not ct.functions.item (i).is_property_or_event then
-						l_tree_item := initialize_tree_item_feature (ct.functions.item (i), a_full_dotnet_type_name)
+					if not ct.functions.i_th (i).is_property_or_event then
+						l_tree_item := initialize_tree_item_feature (ct.functions.i_th (i), a_full_dotnet_type_name)
 						l_methods_list.extend (l_tree_item)
 					end
-	
+
 					i := i + 1
 				end
 				right_tree.append (classify_tree_nodes (l_methods_list))
@@ -295,8 +293,8 @@ feature -- Basic Operations
 					ct.properties = Void
 					or else i > ct.properties.count
 				loop
-					l_tree_item := initialize_tree_item_property (ct.properties.item (i), a_full_dotnet_type_name)
-	
+					l_tree_item := initialize_tree_item_property (ct.properties.i_th (i), a_full_dotnet_type_name)
+
 					l_properties_list.extend (l_tree_item)
 					i := i + 1
 				end
@@ -309,8 +307,8 @@ feature -- Basic Operations
 					ct.events = Void
 					or else i > ct.events.count
 				loop
-					l_tree_item := initialize_tree_item_event (ct.events.item (i), a_full_dotnet_type_name)
-	
+					l_tree_item := initialize_tree_item_event (ct.events.i_th (i), a_full_dotnet_type_name)
+
 					l_events_list.extend (l_tree_item)
 					i := i + 1
 				end
@@ -349,8 +347,8 @@ feature {NONE} -- Implementation
 					ct.constructors = Void
 					or else i > ct.constructors.count
 				loop
-					l_tree_item := initialize_tree_item_constructor (ct.constructors.item (i), a_full_dotnet_type_name)
-					
+					l_tree_item := initialize_tree_item_constructor (ct.constructors.i_th (i), a_full_dotnet_type_name)
+
 					l_constructors_list.extend (l_tree_item)
 					i := i + 1
 				end
@@ -361,7 +359,7 @@ feature {NONE} -- Implementation
 				end
 				l_constructors_node.append (classify_tree_nodes (l_constructors_list))
 				right_tree.extend (l_constructors_node)
-				
+
 				from
 					i := 1
 					create l_fields_list.make
@@ -369,8 +367,8 @@ feature {NONE} -- Implementation
 					ct.fields = Void
 					or else i > ct.fields.count
 				loop
-					l_tree_item := initialize_tree_item_feature (ct.fields.item (i), a_full_dotnet_type_name)
-	
+					l_tree_item := initialize_tree_item_feature (ct.fields.i_th (i), a_full_dotnet_type_name)
+
 					l_fields_list.extend (l_tree_item)
 					i := i + 1
 				end
@@ -394,7 +392,7 @@ feature {NONE} -- Implementation
 						l_tree_item := initialize_tree_item_feature (l_procedures.item (i), a_full_dotnet_type_name)
 						l_procedures_list.extend (l_tree_item)
 					end
-	
+
 					i := i + 1
 				end
 				create l_features_node.make_with_text ("Features")
@@ -416,7 +414,7 @@ feature {NONE} -- Implementation
 						l_tree_item := initialize_tree_item_feature (l_functions.item (i), a_full_dotnet_type_name)
 						l_functions_list.extend (l_tree_item)
 					end
-	
+
 					i := i + 1
 				end
 				l_ico := load_icon (Path_icon_constructor)
@@ -433,8 +431,8 @@ feature {NONE} -- Implementation
 					ct.properties = Void
 					or else i > ct.properties.count
 				loop
-					l_tree_item := initialize_tree_item_property (ct.properties.item (i), a_full_dotnet_type_name)
-	
+					l_tree_item := initialize_tree_item_property (ct.properties.i_th (i), a_full_dotnet_type_name)
+
 					l_properties_list.extend (l_tree_item)
 					i := i + 1
 				end
@@ -453,8 +451,8 @@ feature {NONE} -- Implementation
 					ct.events = Void
 					or else i > ct.events.count
 				loop
-					l_tree_item := initialize_tree_item_event (ct.events.item (i), a_full_dotnet_type_name)
-	
+					l_tree_item := initialize_tree_item_event (ct.events.i_th (i), a_full_dotnet_type_name)
+
 					l_events_list.extend (l_tree_item)
 					i := i + 1
 				end
@@ -481,7 +479,7 @@ feature {NONE} -- Implementation
 			create Result.make_with_text (eiffel_signature_constructor (assembly_of_type, a_member))
 
 			l_icon_path := Path_icon_constructor
-			
+
 				-- Add action to node
 			Result.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_constructor_information (assembly_of_type, a_member, a_full_dotnet_type_name))
 
@@ -491,7 +489,7 @@ feature {NONE} -- Implementation
 				Result.set_pixmap (l_ico)
 			end
 		ensure
-			non_void_result: Result /= Void		
+			non_void_result: Result /= Void
 		end
 
 	initialize_tree_item_feature (a_member: CONSUMED_MEMBER; a_full_dotnet_type_name: STRING): EV_COMPARABLE_TREE_ITEM
@@ -504,7 +502,6 @@ feature {NONE} -- Implementation
 			l_icon_path: STRING
 			l_tree_node: EV_TREE_ITEM
 			l_ico: EV_PIXMAP
-			l_assembly_member: CONSUMED_ASSEMBLY
 		do
 			create Result.make_with_text (signature_member (a_member))
 
@@ -514,7 +511,7 @@ feature {NONE} -- Implementation
 			if l_ico /= Void then
 				l_tree_node.set_pixmap (l_ico)
 			end
-			
+
 			if a_member.is_public then
 				if a_member.is_attribute then
 					if a_member.is_constant then
@@ -545,7 +542,7 @@ feature {NONE} -- Implementation
 					l_icon_path := Path_icon_protected_property
 				end
 			end
-			
+
 				-- Add action to nodes
 			Result.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_feature_information (assembly_of_type, a_member, a_full_dotnet_type_name))
 			Result.expand_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_feature_information (assembly_of_type, a_member, a_full_dotnet_type_name))
@@ -557,7 +554,7 @@ feature {NONE} -- Implementation
 				Result.set_pixmap (l_ico)
 			end
 		ensure
-			non_void_result: Result /= Void		
+			non_void_result: Result /= Void
 		end
 
 	initialize_tree_item_property (a_property: CONSUMED_PROPERTY; a_full_dotnet_type_name: STRING): EV_COMPARABLE_TREE_ITEM
@@ -585,14 +582,14 @@ feature {NONE} -- Implementation
 			end
 			if a_property.setter /= Void then
 				create l_tree_node.make_with_text (eiffel_signature_member (assembly_of_type, a_property.setter))
-				Result.extend (l_tree_node)	
+				Result.extend (l_tree_node)
 				if l_ico /= Void then
 					l_tree_node.set_pixmap (l_ico)
 				end
 					-- Add action to node
 				l_tree_node.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_property_information (assembly_of_type, a_property, a_full_dotnet_type_name))
 			end
-			
+
 				-- Add action to principal node
 			Result.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_property_information (assembly_of_type, a_property, a_full_dotnet_type_name))
 			Result.expand_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_property_information (assembly_of_type, a_property, a_full_dotnet_type_name))
@@ -608,7 +605,7 @@ feature {NONE} -- Implementation
 				Result.set_pixmap (l_ico)
 			end
 		ensure
-			non_void_result: Result /= Void		
+			non_void_result: Result /= Void
 		end
 
 	initialize_tree_item_event (an_event: CONSUMED_EVENT; a_full_dotnet_type_name: STRING): EV_COMPARABLE_TREE_ITEM
@@ -635,7 +632,7 @@ feature {NONE} -- Implementation
 				l_tree_node.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_event_information (assembly_of_type, an_event, a_full_dotnet_type_name))
 			end
 			if an_event.remover /= Void then
-				create l_tree_node.make_with_text (eiffel_signature_member (assembly_of_type, an_event.remover))				
+				create l_tree_node.make_with_text (eiffel_signature_member (assembly_of_type, an_event.remover))
 				Result.extend (l_tree_node)
 				if l_ico /= Void then
 					l_tree_node.set_pixmap (l_ico)
@@ -668,7 +665,7 @@ feature {NONE} -- Implementation
 				Result.set_pixmap (l_ico)
 			end
 		ensure
-			non_void_result: Result /= Void		
+			non_void_result: Result /= Void
 		end
 
 	classify_tree_nodes (nodes: LINKED_LIST [EV_COMPARABLE_TREE_ITEM]): LINKED_LIST [EV_COMPARABLE_TREE_ITEM]
@@ -690,9 +687,9 @@ feature {NONE} -- Implementation
 				counter := counter + 1
 				nodes.forth
 			end
-			
+
 			l_sortable_nodes.sort;
-			
+
 			from
 				counter := 1
 				create Result.make

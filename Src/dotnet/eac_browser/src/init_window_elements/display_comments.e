@@ -62,7 +62,7 @@ feature -- Basic Operations
 			l_assembly_info: ASSEMBLY_INFORMATION
 			l_member_info: MEMBER_INFORMATION
 		do
-			create l_assembly_info.make
+			create l_assembly_info.make (Void)
 			l_member_info := l_assembly_info.find_type (an_assembly.name, a_full_dotnet_type_name)
 			if l_member_info /= Void then
 				display (l_member_info)
@@ -90,7 +90,7 @@ feature -- Basic Operations
 			l_full_dotnet_type_name ?= l_static_type.item (2)
 			l_consumed_assembly ?= l_static_type.item (1)
 
-			create l_assembly_info.make
+			create l_assembly_info.make (Void)
 			l_signature := (create {SIGNATURE}).xml_signature_member (a_member, l_full_dotnet_type_name)
 			l_member_info := l_assembly_info.find_feature (l_consumed_assembly.name, l_full_dotnet_type_name, l_signature)
 			if l_member_info /= Void then
@@ -125,7 +125,7 @@ feature -- Basic Operations
 			l_member_info: MEMBER_INFORMATION
 			l_signature: STRING
 		do
-			create l_assembly_info.make
+			create l_assembly_info.make (Void)
 			l_signature := (create {SIGNATURE}).xml_signature_constructor (a_constructor, a_full_dotnet_type_name)
 			l_member_info := l_assembly_info.find_feature (an_assembly.name, a_full_dotnet_type_name, l_signature)
 			if l_member_info /= Void then
@@ -154,7 +154,7 @@ feature -- Basic Operations
 			l_full_dotnet_type_name ?= l_static_type.item (2)
 			l_consumed_assembly ?= l_static_type.item (1)
 
-			create l_assembly_info.make
+			create l_assembly_info.make (Void)
 			l_signature := a_property.dotnet_name
 			l_member_info := l_assembly_info.find_feature (l_consumed_assembly.name, l_full_dotnet_type_name, l_signature)
 			if l_member_info /= Void then
@@ -183,7 +183,7 @@ feature -- Basic Operations
 			l_full_dotnet_type_name ?= l_static_type.item (2)
 			l_consumed_assembly ?= l_static_type.item (1)
 
-			create l_assembly_info.make
+			create l_assembly_info.make (Void)
 			l_signature := an_event.dotnet_name
 			l_member_info := l_assembly_info.find_feature (l_consumed_assembly.name, l_full_dotnet_type_name, l_signature)
 			if l_member_info /= Void then
@@ -218,10 +218,10 @@ feature {NONE} -- Basic Operations
 			if not a_member.returns.is_empty then
 				comments_area.append_text ("%NReturns : %N" + a_member.returns + "%N")
 			end
-			
+
 			comments_area.disable_edit
 		end
-		
+
 	clear_comments
 			-- Clear `comment_area'.
 		do
@@ -229,7 +229,7 @@ feature {NONE} -- Basic Operations
 			comments_area.set_text ("")
 			comments_area.disable_edit
 		end
-		
+
 	immediate_type_feature (an_assembly: CONSUMED_ASSEMBLY; a_member: CONSUMED_ENTITY; a_full_dotnet_type: STRING): TUPLE [CONSUMED_ASSEMBLY, STRING]
 			-- Return the `full_dotnet_type' where `a_member' is declared.
 		require
@@ -239,7 +239,7 @@ feature {NONE} -- Basic Operations
 			l_ancestors: ARRAYED_LIST [CONSUMED_REFERENCED_TYPE]
 			l_entities: ARRAYED_LIST [CONSUMED_ENTITY]
 			l_ancestor_assembly: CONSUMED_ASSEMBLY
-			ct, ct2: CONSUMED_TYPE
+			ct: CONSUMED_TYPE
 			l_found: BOOLEAN
 		do
 			create eac
@@ -281,7 +281,7 @@ feature {NONE} -- Basic Operations
 			end
 
 			if l_found then
-				create Result.make
+				create Result
 				Result.put (an_assembly, 1)
 				Result.put (a_full_dotnet_type, 2)
 			else

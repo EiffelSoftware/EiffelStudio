@@ -1,6 +1,6 @@
 note
 	description: "[
-					
+
 				]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,7 +34,7 @@ feature -- Access
 			non_void_an_assembly: an_assembly /= Void
 			non_void_a_dotnet_type_name: a_dotnet_type_name /= Void
 		local
-			des: EIFFEL_XML_DESERIALIZER
+			des: EIFFEL_DESERIALIZER
 			a_file_name: STRING
 		do
 			a_file_name := absolute_type_path (relative_assembly_path (an_assembly), a_dotnet_type_name)
@@ -42,7 +42,8 @@ feature -- Access
 				Result := Consumed_types.item (a_file_name)
 			else
 				create des
-				Result ?= des.new_object_from_file (a_file_name)
+				des.deserialize  (a_file_name, 0)
+				Result ?= des.deserialized_object
 				Consumed_types.extend (Result, a_file_name)
 			end
 		ensure
@@ -54,27 +55,29 @@ feature -- Access
 		require
 			non_void_an_assembly: an_assembly /= Void
 		local
-			des: EIFFEL_XML_DESERIALIZER
+			des: EIFFEL_DESERIALIZER
 			a_file_name: STRING
 		do
 			a_file_name := absolute_info_assembly_path (an_assembly)
 			create des
-			Result ?= des.new_object_from_file (a_file_name)
+			des.deserialize  (a_file_name, 0)
+			Result ?= des.deserialized_object
 		ensure
 			non_void_consumed_type: Result /= Void
 		end
-		
+
 	referenced_assemblies (an_assembly: CONSUMED_ASSEMBLY): CONSUMED_ASSEMBLY_MAPPING
 			-- Consumed type corresponding to `a_file_name'.
 		require
 			non_void_an_assembly: an_assembly /= Void
 		local
-			des: EIFFEL_XML_DESERIALIZER
+			des: EIFFEL_DESERIALIZER
 			a_file_name: STRING
 		do
 			a_file_name := absolute_referenced_assemblies_path (an_assembly)
 			create des
-			Result ?= des.new_object_from_file (a_file_name)
+			des.deserialize  (a_file_name, 0)
+			Result ?= des.deserialized_object
 		ensure
 			non_void_consumed_type: Result /= Void
 		end
@@ -88,19 +91,20 @@ feature -- Access
 			l_cam: CONSUMED_ASSEMBLY_MAPPING
 		do
 			l_cam ?= referenced_assemblies (an_assembly)
-			
+
 			Result := l_cam.assemblies.item (assembly_id)
 		end
 
 	info: CACHE_INFO
 			-- Assembly information from EAC
 		local
-			des: EIFFEL_XML_DESERIALIZER
+			des: EIFFEL_DESERIALIZER
 			info_file_name: STRING
 		do
 			info_file_name := Absolute_info_assemblies_path
 			create des
-			Result ?= des.new_object_from_file (info_file_name)
+			des.deserialize  (info_file_name, 0)
+			Result ?= des.deserialized_object
 		ensure
 			non_void_info: Result /= Void
 		end
@@ -118,7 +122,7 @@ feature -- Access
 		do
 			l_referenced_assemblies := referenced_assemblies (an_assembly)
 			l_assembly_of_referenced_type := l_referenced_assemblies.assemblies.item (a_referenced_type.assembly_id)
-			
+
 --			l_array_referenced_type ?= a_referenced_type
 --			if l_array_referenced_type = Void then
 				l_referenced_consumed_type := consumed_type (l_assembly_of_referenced_type, a_referenced_type.name)
@@ -126,7 +130,7 @@ feature -- Access
 --				l_array_referenced_type.name.replace_substring_all ("[]", "")
 --				l_referenced_consumed_type := consumed_type (l_assembly_of_referenced_type, l_array_referenced_type.name)
 --			end
-			
+
 			create Result.make (l_assembly_of_referenced_type, l_referenced_consumed_type)
 		end
 
@@ -162,5 +166,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class EIFFEL_NET_NAME
+end

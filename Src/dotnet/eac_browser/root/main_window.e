@@ -41,7 +41,7 @@ feature {NONE} -- Implementation
 			import_item.disable_sensitive
 			remove_assembly_item.disable_sensitive
 			edit_type_item.disable_sensitive
-			
+
 				-- noteBook
 			--notebook.last.disable_sensitive
 		end
@@ -66,13 +66,13 @@ feature {NONE} -- Menu actions
 			l_print_projector: EV_PRINT_PROJECTOR
 			l_figure: EV_FIGURE_PICTURE
 			l_print_area: EV_PIXMAP
-			
+
 			l_current_assembly: CONSUMED_ASSEMBLY
 			l_current_type: CONSUMED_TYPE
 		do
 			l_current_assembly := (create {SESSION}).current_assembly
 			l_current_type := (create {SESSION}).current_type
-			
+
 			if l_current_type /= Void then
 				l_context := a_print_dialog.print_context
 				create l_figure_list.default_create
@@ -122,7 +122,7 @@ feature {NONE} -- Menu actions
 			file_dialog: EV_FILE_OPEN_DIALOG
 		do
 			create file_dialog
-			file_dialog.set_filter ("*.dll")
+			file_dialog.filters.extend (["*.dll", "Files of type ('DLL')"])
 			file_dialog.set_title ("Import assembly")
 			file_dialog.show_modal_to_window (Current)
 		end

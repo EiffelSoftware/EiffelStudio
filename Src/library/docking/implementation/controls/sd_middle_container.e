@@ -187,7 +187,7 @@ feature -- Split area resizing
 			-- Set by `remember_top_resize_split_area'
 			-- Cleaned by `set_proportion_recursive'
 		once
-			create Result
+			create Result.put (Void)
 		ensure
 			not_void: Result /= Void
 		end

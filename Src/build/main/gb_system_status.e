@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 	is_object_structure_changing_cell: CELL [BOOLEAN]
 			-- A cell to hold the value of `is_object_structure_changing'.
 		once
-			create Result
+			create Result.put (False)
 		end
 
 note

@@ -35,7 +35,7 @@ feature -- Initialization
 			create content_change_actions
 			components.history.change_actions.extend (agent history_changed)
 			object_stone_dirty := True
-			create contents_cell
+			create contents_cell.put (Void)
 		ensure
 			components_set: components = a_components
 		end
@@ -228,7 +228,7 @@ feature {GB_CUT_OBJECT_COMMAND, GB_COPY_OBJECT_COMMAND, GB_CLIPBOARD_COMMAND, GB
 			contents_cell_not_empty: contents_cell.item /= Void
 		end
 
-	contents_cell: CELL [XM_ELEMENT]
+	contents_cell: CELL [?XM_ELEMENT]
 			-- A cell to hold the contents of `Current'.
 			-- Whenver the contents are requested, this must be copied.
 

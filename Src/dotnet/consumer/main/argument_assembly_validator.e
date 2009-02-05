@@ -25,9 +25,8 @@ feature -- Validation
 			-- Validates option value against any defined rules.
 			-- `is_option_valid' will be set upon completion.
 		do
-			is_option_valid := assembly_loader.load_from (a_value) /= Void
-			if not is_option_valid then
-				reason := "The specified assembly cannot be loaded."
+			if assembly_loader.load_from (a_value) = Void then
+				invalidate_option ("The specified assembly cannot be loaded.")
 			end
 		end
 

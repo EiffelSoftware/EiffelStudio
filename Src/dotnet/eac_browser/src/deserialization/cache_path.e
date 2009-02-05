@@ -26,7 +26,7 @@ feature -- Access
 			create Result.make (an_assembly.name.count + an_assembly.version.count + an_assembly.culture.count + an_assembly.key.count + 4)
 			Result.append (an_assembly.name)
 			Result.append ("-")
-			version := clone (an_assembly.version)
+			version := an_assembly.version.twin
 			version.replace_substring_all (".", "_")
 			Result.append (version)
 			Result.append ("-")
@@ -42,7 +42,7 @@ feature -- Access
 			non_void_path: Result /= Void
 			ends_with_directory_separator: Result.item (Result.count) = (create {OPERATING_ENVIRONMENT}).Directory_separator
 		end
-	
+
 	absolute_assembly_path (an_assembly: CONSUMED_ASSEMBLY): STRING
 			-- Absolute path to folder containing `an_assembly' types.
 			-- Always return a value even if `an_assembly' in not in EAC.
@@ -69,11 +69,9 @@ feature -- Access
 			non_void_assembly_relative_path: assembly_relative_path /= Void
 			not_empty_assembly_relative_path: not assembly_relative_path.is_empty
 		do
-			create Result.make (assembly_relative_path.count + Classes_path.count + a_dotnet_type_name.count + 4)
+			create Result.make (assembly_relative_path.count + Classes_file_name.count)
 			Result.append (assembly_relative_path)
-			Result.append (Classes_path)
-			Result.append (a_dotnet_type_name)
-			Result.append (".xml")
+			Result.append (Classes_file_name)
 		ensure
 			non_void_result: Result /= Void
 		end
@@ -140,14 +138,14 @@ feature -- Access
 			Result.append (Eac_path)
 			Result.append (assembly_relative_path)
 			Result.append (Assembly_original_types_file_name)
-			
+
 			if not (create {RAW_FILE}.make (Result)).exists then
 				create Result.make (Eiffel_path.count + Eac_path.count + assembly_relative_path.count + Assembly_types_file_name.count + 4)
 				Result.append (Eiffel_path)
 				Result.append (Eac_path)
 				Result.append (assembly_relative_path)
 				Result.append (Assembly_types_file_name)
-				
+
 				if not (create {RAW_FILE}.make (Result)).exists then
 					Result := Void
 				end
@@ -155,7 +153,7 @@ feature -- Access
 		ensure
 			valid_path: Result /= Void implies (create {RAW_FILE}.make (Result)).exists
 		end
-		
+
 	absolute_info_assemblies_path: STRING
 			-- Absolute path to EAC assemblies file info.
 		once

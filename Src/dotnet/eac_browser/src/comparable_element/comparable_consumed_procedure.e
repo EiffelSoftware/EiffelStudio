@@ -12,17 +12,12 @@ class
 inherit
 	CONSUMED_PROCEDURE
 		export
-			{COMPARABLE_CONSUMED_PROCEDURE}a;
+			{COMPARABLE_CONSUMED_PROCEDURE} a
 		redefine
 			eiffel_name,
 			dotnet_name,
 			arguments,
 			declared_type
-		end
-
-	COMPARABLE
-		undefine
-			default_create, is_equal, copy
 		end
 
 create
@@ -36,7 +31,7 @@ feature -- Access
 	declared_type: CONSUMED_REFERENCED_TYPE
 
 feature -- Initialization
-	
+
 	make_with_consumed_procedure (a_consumed_procedure: CONSUMED_PROCEDURE)
 		require
 			non_void_a_consumed_procedure: a_consumed_procedure /= Void
@@ -45,20 +40,12 @@ feature -- Initialization
 			dotnet_name := a_consumed_procedure.dotnet_name
 			arguments := a_consumed_procedure.arguments
 			declared_type := a_consumed_procedure.declared_type
-			a := a_consumed_procedure.a
+			a := a_consumed_procedure.arguments
 		ensure
 			eiffel_name_set: eiffel_name = a_consumed_procedure.eiffel_name
 			dotnet_name_set: dotnet_name = a_consumed_procedure.dotnet_name
 			arguments_set: arguments = a_consumed_procedure.arguments
 			declared_type_set: declared_type = a_consumed_procedure.declared_type
-		end
-
-feature -- Implementation
-	
-	infix "<" (other: like Current): BOOLEAN
-			-- Is current object less than `other'?
-		do
-			Result := dotnet_name < other.dotnet_name
 		end
 
 note

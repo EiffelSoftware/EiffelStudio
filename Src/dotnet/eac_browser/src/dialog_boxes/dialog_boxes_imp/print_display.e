@@ -39,7 +39,7 @@ feature -- Access
 feature -- Basic Operations
 
 	print_type (assembly_of_dotnet_type: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING)
-			-- Set `assembly_of_type' with `assembly_of_dotnet_type' 
+			-- Set `assembly_of_type' with `assembly_of_dotnet_type'
 			-- Set `dotnet_type_name' with `a_dotnet_type_name'
 			-- Display in `output' features corresponding to `a_type_name'.
 		require
@@ -49,7 +49,7 @@ feature -- Basic Operations
 			load_display_type (assembly_of_dotnet_type, a_dotnet_type_name)
 			display
 		end
-	
+
 feature {NONE} -- Implementation
 
 	load_display_type (assembly_of_dotnet_type: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING)
@@ -59,7 +59,6 @@ feature {NONE} -- Implementation
 			non_void_a_dotnet_type_name: a_dotnet_type_name /= Void
 		local
 			ct: CONSUMED_TYPE
-			nt: CONSUMED_NESTED_TYPE
 			eac: EAC_BROWSER
 		do
 			create eac
@@ -117,13 +116,13 @@ feature {NONE} -- Implementation
 					--new_line
 				cursor_y_position := cursor_y_position + nb_pixel_line
 				cursor_x_position := 0
-					
+
 				factory_display.lines.forth
 			end
 
 			output.flush
 		end
-	
+
 feature {NONE} -- Implementation
 
 	Nb_pixel_line: INTEGER
@@ -131,7 +130,7 @@ feature {NONE} -- Implementation
 		once
 			Result := output.font.height + 4
 		end
-			
+
 	Nb_pixel_decal_h_scroll: INTEGER = 12
 			-- number of pixel for a step of horizontal scroll.
 
@@ -140,7 +139,7 @@ feature {NONE} -- Implementation
 		do
 			Result := (output.height / Nb_pixel_line).truncated_to_integer + 1
 		end
-		
+
 invariant
 	non_void_output: output /= Void
 

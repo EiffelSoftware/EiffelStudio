@@ -354,7 +354,7 @@ feature	{NONE} -- number formatting
 			-- get the decimal separator of numbers
 			-- according the current locales setting
 		do
-			create Result.make_from_c (decimal_point (localeconv))
+			create Result.make_from_c_pointer (decimal_point (localeconv))
 		ensure
 			result_exists: Result /= Void
 		end
@@ -363,7 +363,7 @@ feature	{NONE} -- number formatting
 			-- get the group separator (the separator thousend sep.)
 			-- according the current locales setting
 		do
-			create Result.make_from_c (thousands_sep (localeconv))
+			create Result.make_from_c_pointer (thousands_sep (localeconv))
 		ensure
 			result_exists: Result /= Void
 		end
@@ -418,7 +418,7 @@ feature	{NONE} -- currency formatting
 			-- get the decimal separator of currency numbers
 			-- according the current locales setting
 		do
-			create Result.make_from_c (mon_decimal_point (localeconv))
+			create Result.make_from_c_pointer (mon_decimal_point (localeconv))
 		ensure
 			result_exists: Result /= Void
 		end
@@ -439,7 +439,7 @@ feature	{NONE} -- currency formatting
 			-- get the decimal separator of numbers
 			-- according the current locales setting
 		do
-			create Result.make_from_c (mon_thousands_sep (localeconv))
+			create Result.make_from_c_pointer (mon_thousands_sep (localeconv))
 		ensure
 			result_exists: Result /= Void
 		end
@@ -447,7 +447,7 @@ feature	{NONE} -- currency formatting
 	get_currency_positive_sign: STRING_32
 			-- positive sign according the current locales setting
 		do
-			create Result.make_from_c (positive_sign (localeconv))
+			create Result.make_from_c_pointer (positive_sign (localeconv))
 		ensure
 			result_exists: Result /= Void
 		end
@@ -455,7 +455,7 @@ feature	{NONE} -- currency formatting
 	get_currency_negative_sign: STRING_32
 			-- positive sign according the current locales setting
 		do
-			create Result.make_from_c (negative_sign (localeconv))
+			create Result.make_from_c_pointer (negative_sign (localeconv))
 		ensure
 			result_exists: Result /= Void
 		end
@@ -481,7 +481,7 @@ feature {NONE} -- International currency formatting
 	get_int_currency_symbol: STRING_32
 			-- ISO 4217 currency code
 		do
-			create Result.make_from_c (int_curr_symbol (localeconv))
+			create Result.make_from_c_pointer (int_curr_symbol (localeconv))
 		end
 
 	get_int_currency_numbers_after_decimal_separator: INTEGER
@@ -503,7 +503,7 @@ feature {NONE} --Implementation
 			l_string: STRING_32
 			i, t: INTEGER
 		do
-			create l_string.make_from_c (a_pointer)
+			create l_string.make_from_c_pointer (a_pointer)
 			create Result.make (1, l_string.count)
 			from
 				i := 1
@@ -562,7 +562,7 @@ feature {NONE} --Implementation
 		end
 
 	guess_proper_locale (a_name: STRING): STRING
-			-- We try to guess a locale from `a_name', when `a_name', for example in LL_RR style, can 
+			-- We try to guess a locale from `a_name', when `a_name', for example in LL_RR style, can
 			-- not be recognized by `setlocale' on Solaris, but LL_RR.ENC does exist as system locale mostly.
 			-- First take the system locale, then try to find a most matching one.
 		require
@@ -582,7 +582,7 @@ feature {NONE} --Implementation
 					create l_str.make ("")
 					l_ptr := c_setlocale (c_lc_all, l_str.item)
 					if l_ptr /= l_null then
-						create l_str.share_from_pointer (l_ptr)
+						create l_str.make_shared_from_pointer (l_ptr)
 						l_s := l_str.string
 						if l_s.as_lower.has_substring (l_name) then
 							Result := l_s

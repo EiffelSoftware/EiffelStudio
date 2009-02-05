@@ -79,19 +79,22 @@ feature
 			-- after 'time_out...' milliseconds time
 		local
 			lrm, lwm, lem: POINTER
+			l_mask: POLL_MASK
 		do
 			if not ignore_read and then not read_command_list.all_default then
-				last_read_mask := read_mask.twin
-				lrm := last_read_mask.mask.item
+				l_mask := read_mask.twin
+				lrm := l_mask.mask.item
+				last_read_mask := l_mask
 			end;
 			if not ignore_write and then not write_command_list.all_default then
-				last_write_mask := write_mask.twin
-				lwm := last_write_mask.mask.item
+				l_mask := write_mask.twin
+				lwm := l_mask.mask.item
+				last_write_mask := l_mask
 			end;
-			if not ignore_exception and then
-				not exception_command_list.all_default then
-				last_except_mask := except_mask.twin
-				lem := last_except_mask.mask.item
+			if not ignore_exception and then not exception_command_list.all_default then
+				l_mask := except_mask.twin
+				lem := l_mask.mask.item
+				last_except_mask := l_mask
 			end;
 
 			if wait then
@@ -131,10 +134,13 @@ feature -- process set commands
 			valid_number: number_of_selected > 0
 		local
 			counter, counter1: INTEGER;
-			a_command: POLL_COMMAND
+			a_command: ?POLL_COMMAND
+			l_last_mask: ?POLL_MASK
 		do
 			if not ignore_read and then not read_command_list.all_default then
 				from
+					l_last_mask := last_read_mask
+					check l_last_mask_attached: l_last_mask /= Void end
 					counter1 := read_command_list.lower
 				until
 					counter1 > read_command_list.upper or else
@@ -142,7 +148,7 @@ feature -- process set commands
 				loop
 					a_command := read_command_list.item (counter1);
 					if a_command /= Void then
-						if last_read_mask.is_medium_ready (a_command.active_medium) then
+						if l_last_mask.is_medium_ready (a_command.active_medium) then
 							a_command.execute (Void);
 							counter := counter + 1
 						end
@@ -150,9 +156,10 @@ feature -- process set commands
 					counter1 := counter1 + 1
 				end
 			end;
-			if not ignore_write and then counter < number_of_selected and then
-				not write_command_list.all_default then
+			if not ignore_write and then counter < number_of_selected and then not write_command_list.all_default then
 				from
+					l_last_mask := last_write_mask
+					check l_last_mask_attached: l_last_mask /= Void end
 					counter1 := write_command_list.lower
 				until
 					counter1 > write_command_list.upper or else
@@ -160,7 +167,7 @@ feature -- process set commands
 				loop
 					a_command := write_command_list.item (counter1);
 					if a_command /= Void then
-						if last_write_mask.is_medium_ready (a_command.active_medium) then
+						if l_last_mask.is_medium_ready (a_command.active_medium) then
 							a_command.execute (Void);
 							counter := counter + 1
 						end
@@ -168,9 +175,10 @@ feature -- process set commands
 					counter1 := counter1 + 1
 				end
 			end;
-			if not ignore_exception and then counter < number_of_selected and
-				then not exception_command_list.all_default then
+			if not ignore_exception and then counter < number_of_selected and then not exception_command_list.all_default then
 				from
+					l_last_mask := last_except_mask
+					check l_last_mask_attached: l_last_mask /= Void end
 					counter1 := exception_command_list.lower
 				until
 					counter1 > exception_command_list.upper or else
@@ -178,7 +186,7 @@ feature -- process set commands
 				loop
 					a_command := exception_command_list.item (counter1);
 					if a_command /= Void then
-						if last_except_mask.is_medium_ready (a_command.active_medium) then
+						if l_last_mask.is_medium_ready (a_command.active_medium) then
 							a_command.execute (Void);
 							counter := counter + 1
 						end
@@ -190,13 +198,13 @@ feature -- process set commands
 
 feature -- medium masks
 
-	last_except_mask: POLL_MASK;
+	last_except_mask: ?POLL_MASK;
 			-- Exception mask returned by medium select
 
-	last_read_mask: POLL_MASK;
+	last_read_mask: ?POLL_MASK;
 			-- Read mask returned by medium select
 
-	last_write_mask: POLL_MASK;
+	last_write_mask: ?POLL_MASK;
 			-- Write mask returned by medium select
 
 	except_mask: POLL_MASK
@@ -278,7 +286,7 @@ feature -- booleans to decide whether to include each mask in the select call
 
 feature -- commands to be executed
 
-	read_command_list: ARRAY [POLL_COMMAND]
+	read_command_list: ARRAY [?POLL_COMMAND]
 			-- List of poll commands to be called
 			-- when their medium is selected for read event.
 		once
@@ -323,7 +331,7 @@ feature -- commands to be executed
 			command_removed: read_command_list.item (s.handle) = Void
 		end;
 
-	write_command_list: ARRAY [POLL_COMMAND]
+	write_command_list: ARRAY [?POLL_COMMAND]
 			-- List of poll commands to be called
 			-- when their medium is selected for write event.
 		once
@@ -366,7 +374,7 @@ feature -- commands to be executed
 			command_removed: write_command_list.item (s.handle) = Void
 		end;
 
-	exception_command_list: ARRAY [POLL_COMMAND]
+	exception_command_list: ARRAY [?POLL_COMMAND]
 			-- List of poll commands to be called
 			-- when their medium is selected for exception event.
 		once

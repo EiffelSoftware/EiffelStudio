@@ -32,11 +32,9 @@ inherit
 		end
 
 create
-
 	make, make_client_by_port, make_client_by_address_and_port, make_server_by_port
 
 create {NETWORK_STREAM_SOCKET}
-
 	make_from_fd
 
 feature -- Initialization
@@ -61,10 +59,11 @@ feature -- Initialization
 			valid_peer_host: a_peer_host /= Void and then not a_peer_host.is_empty
 			valid_port: a_peer_port >= 0
 		local
-			an_address: INET_ADDRESS
+			l_peer_address: ?INET_ADDRESS
 		do
-			an_address := create_from_name (a_peer_host)
-			make_client_by_address_and_port (an_address, a_peer_port)
+			l_peer_address := create_from_name (a_peer_host)
+			check l_peer_address_attached: l_peer_address /= Void end
+			make_client_by_address_and_port (l_peer_address, a_peer_port)
 		end
 
 	make_server_by_port (a_port: INTEGER)
@@ -88,24 +87,29 @@ feature -- Initialization
 			valid_port: a_peer_port >= 0
 		do
 			make
+			create address.make_localhost (1)
 			create peer_address.make_from_address_and_port (a_peer_address, a_peer_port)
 		end
 
 feature {NETWORK_STREAM_SOCKET} -- Initialization
 
-	make_from_fd (an_fd: INTEGER; an_address: like address)
+	make_from_fd (a_fd: INTEGER; a_address: like address)
+		require
+			a_fd_positive: a_fd > 0
+			a_address_positive: a_address /= Void
 		do
-			fd :=an_fd
-			address := an_address
-			family := address.family;
-			descriptor_available := True;
+			fd := a_fd
+			address := a_address
+			family := a_address.family
+			descriptor_available := True
 			is_closed := False
 			is_created := True
 			is_open_read := True
 			is_open_write := True
 			timeout := default_timeout
 		ensure
-			family_valid: family = address.family;
+			address_set: address = a_address
+			family_valid: family = a_address.family;
 			opened_all: is_open_write and is_open_read
 		end
 
@@ -133,10 +137,14 @@ feature
 			-- Listen on socket for at most `queue' connections.
 		local
 			l_fd, l_fd1: INTEGER
+			l_address: like address
 		do
 			l_fd := fd
 			l_fd1 := fd1
-			c_listen ($l_fd, $l_fd1, address.socket_address.item, queue)
+			l_address := address
+				-- Per inherited assertion.
+			check l_address_attached: l_address /= Void end
+			c_listen ($l_fd, $l_fd1, l_address.socket_address.item, queue)
 			fd := l_fd;
 			fd1 := l_fd1;
 		end
@@ -146,19 +154,25 @@ feature
 			-- Accepted service socket available in `accepted'.
 		local
 			retried: BOOLEAN
+			l_address: like address
 			pass_address: like address
 			return: INTEGER;
 			l_last_fd: like fd
+			l_accepted: like accepted
 		do
 			if not retried then
 				accepted := Void
-				pass_address := address.twin
+				l_address := address
+					-- Per inherited assertion
+				check l_address_attached: l_address /= Void end
+				pass_address := l_address.twin
 				l_last_fd := last_fd
 				return := c_accept (fd, fd1, $l_last_fd, pass_address.socket_address.item, accept_timeout);
 				last_fd := l_last_fd
 				if return > 0 then
-					create accepted.make_from_fd (return, address.twin);
-					accepted.set_peer_address (pass_address)
+					create l_accepted.make_from_fd (return, l_address.twin);
+					l_accepted.set_peer_address (pass_address)
+					accepted := l_accepted
 				end
 			end
 		rescue
@@ -294,27 +308,27 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	do_connect
+	do_connect (a_peer_address: like address)
 		local
 			l_fd, l_fd1, l_port: INTEGER
 		do
 			l_fd := fd
 			l_fd1 := fd1
 			l_port := the_local_port
-			c_connect ($l_fd, $l_fd1, $l_port, peer_address.socket_address.item, connect_timeout)
+			c_connect ($l_fd, $l_fd1, $l_port, a_peer_address.socket_address.item, connect_timeout)
 			fd := l_fd
 			fd1 := l_fd1
 			the_local_port := l_port
 		end
 
-	do_bind
+	do_bind (a_address: like address)
 		local
 			l_fd, l_fd1, l_port: INTEGER
 		do
 			l_fd := fd
 			l_fd1 := fd1
 			l_port := the_local_port
-			c_bind ($l_fd, $l_fd1, $l_port, address.socket_address.item)
+			c_bind ($l_fd, $l_fd1, $l_port, a_address.socket_address.item)
 			fd := l_fd
 			fd1 := l_fd1
 			the_local_port := l_port

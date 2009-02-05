@@ -72,27 +72,26 @@ feature
 			socket_non_void: socket /= Void
 			socket_valid: socket.is_bound and then socket.is_open_read
 		local
-			done: BOOLEAN
-			packet: TFTP_PACKET
+			packet: ?TFTP_PACKET
+			l_result: ?TFTP_REQUEST_PACKET
 		do
 			from
-				done := False
 			until
-				done
+				l_result /= Void
 			loop
 				packet := receive (socket)
 				if packet /= Void then
 					if packet.opcode = {TFTP_PACKET}.rrq or else packet.opcode = {TFTP_PACKET}.wrq then
-						Result ?= packet
-						done := True
+						l_result ?= packet
 					end
 				end
 			end
+			Result := l_result
 		ensure
 			Result /= Void
 		end
 
-	receive (socket: NETWORK_DATAGRAM_SOCKET): TFTP_PACKET is
+	receive (socket: NETWORK_DATAGRAM_SOCKET): ?TFTP_PACKET is
 			-- Receive the TFTP packet
 		require
 			socket_non_void: socket /= Void
@@ -122,16 +121,21 @@ feature
 		end
 
 	create_error_message_from_packet (packet: TFTP_PACKET): STRING is
-		local
-			p: TFTP_ERROR_PACKET
+		require
+			error_packet: {l_error: TFTP_ERROR_PACKET} packet
 		do
-			p ?= packet
-			Result := p.message
+			if {p: TFTP_ERROR_PACKET} packet then
+				Result := p.message
+			else
+				Result := ""
+					-- Per precondition
+				check False end
+			end
 		end
 
 feature {NONE} -- Implementation
 
-	create_tftp_packet_from_sockaddr_managed_pointer (addr: NETWORK_SOCKET_ADDRESS; opcode: NATURAL_16; p: MANAGED_POINTER): TFTP_PACKET is
+	create_tftp_packet_from_sockaddr_managed_pointer (addr: ?NETWORK_SOCKET_ADDRESS; opcode: NATURAL_16; p: MANAGED_POINTER): TFTP_PACKET is
 			--
 		require
 			addr_non_void: addr /= Void

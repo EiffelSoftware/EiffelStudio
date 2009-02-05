@@ -39,15 +39,13 @@ feature
 
 	mode: INTEGER
 
-	file: RAW_FILE
+	file: ?RAW_FILE
 
 	state: INTEGER
 
 	socket: NETWORK_DATAGRAM_SOCKET
 
-
 feature -- Initialization
-
 
 	make (a_server: SERVER_THREAD; a_frontend: TFTP_FRONTEND; a_packet: TFTP_REQUEST_PACKET) is
 		require
@@ -68,20 +66,17 @@ feature -- Initialization
 			a_filename := a_packet.filename
 
 			temp := frontend.base_path (remote_address)
+			filename := ""
 			if temp /= Void  and then not temp.is_empty  then
             	filename := temp + "/" + a_filename
-            else
-				filename := Void
 			end
 
 			create socket.make_targeted (remote_address.host_address, remote_port)
-			-- TODO socket.setSoTimeout (frontend.getTimeout (remote_address));
+				-- TODO socket.setSoTimeout (frontend.getTimeout (remote_address));
 			source_port := socket.port
 
 			id := remote_address.host_address + ":" + source_port.out + "-" + remote_port.out
-
 		end
-
 
 feature
 
@@ -99,8 +94,6 @@ feature
 		local
 			block_number: INTEGER
 			in_block_number: INTEGER
-			in_packet: TFTP_PACKET
-			data_packet: TFTP_DATA_PACKET
 			in_opcode: INTEGER
 			done: BOOLEAN
 			last_time: INTEGER
@@ -108,25 +101,25 @@ feature
 			setup: INTEGER
 			retransmits: INTEGER
 		do
-			-- If filename that came with WWQ is bogus, report error
-			if filename = Void or else filename.is_empty then
+				-- If filename that came with WWQ is bogus, report error
+			if filename.is_empty then
 				bad_file ("Illegal filename " + filename)
 				dispatch_tftp_event (remote_address, remote_port, {TFTP_EVENT}.REQUEST_INCOMPLETE, {TFTP_PACKET}.error, "Illegal file name in write request")
 				terminate
 			else
-				-- Try to open the file stream. If we can't, report error.
+					-- Try to open the file stream. If we can't, report error.
 				setup := setup_file_writer
 				if setup /= ERR_NO_ERROR then
 					if setup /= ERR_NOT_DEFINED then
-						send_error (socket, remote_address, remote_port, setup, Void)
+						send_error (socket, remote_address, remote_port, setup, create_error_message_from_id (setup, "Could not open file " + filename))
 					end
 					dispatch_tftp_event (remote_address, remote_port, {TFTP_EVENT}.REQUEST_INCOMPLETE, {TFTP_PACKET}.error, create_error_message_from_id (setup, "Could not open file " + filename))
 				end
 
 				dispatch_tftp_event (remote_address, remote_port,  {TFTP_EVENT}.REQUEST_PROCESSING, {TFTP_PACKET}.wrq, filename)
 
-				-- Send the first ack letting the remote guy know it's
-				-- okay to start sending data packets
+					-- Send the first ack letting the remote guy know it's
+					-- okay to start sending data packets
 				send_ack (socket, remote_address, remote_port, block_number)
 				last_time := milliseconds
 				from
@@ -135,40 +128,40 @@ feature
 					done
 				loop
 					-- Wait for DATA packet
-					in_packet := receive (socket)
-					in_opcode := in_packet.opcode
-					if in_opcode = {TFTP_PACKET}.error then
-						frontend.log_message_by_address (remote_address, 1, create_error_message_from_packet (in_packet))
-						dispatch_tftp_event (remote_address, remote_port, {TFTP_EVENT}.REQUEST_INCOMPLETE, {TFTP_PACKET}.error, create_error_message_from_packet (in_packet))
-						terminate
-					else
-						data_packet ?= in_packet
-						in_block_number := data_packet.block_number
-						if in_block_number = block_number then
-							dispatch_tftp_event (remote_address, remote_port, {TFTP_EVENT}.REQUEST_OUTOFORDER, in_opcode,
-								"Received data packet #" + in_block_number.out + " instead of #" + ((block_number + 1) \\ block_number_window).out)
-							now := milliseconds
-							if now - last_time > 1000 then
-								send_ack (socket, remote_address,remote_port, block_number)
-								dispatch_tftp_event (remote_address,remote_port,{TFTP_EVENT}.REQUEST_RETRANSMIT, {TFTP_PACKET}.ack,"Retransmitting ACK for packet #" + block_number.out);
+					if {in_packet: TFTP_PACKET} receive (socket) then
+						in_opcode := in_packet.opcode
+						if in_opcode = {TFTP_PACKET}.error then
+							frontend.log_message_by_address (remote_address, 1, create_error_message_from_packet (in_packet))
+							dispatch_tftp_event (remote_address, remote_port, {TFTP_EVENT}.REQUEST_INCOMPLETE, {TFTP_PACKET}.error, create_error_message_from_packet (in_packet))
+							terminate
+						elseif {data_packet: TFTP_DATA_PACKET} in_packet then
+							in_block_number := data_packet.block_number
+							if in_block_number = block_number then
+								dispatch_tftp_event (remote_address, remote_port, {TFTP_EVENT}.REQUEST_OUTOFORDER, in_opcode,
+									"Received data packet #" + in_block_number.out + " instead of #" + ((block_number + 1) \\ block_number_window).out)
+								now := milliseconds
+								if now - last_time > 1000 then
+									send_ack (socket, remote_address,remote_port, block_number)
+									dispatch_tftp_event (remote_address,remote_port,{TFTP_EVENT}.REQUEST_RETRANSMIT, {TFTP_PACKET}.ack,"Retransmitting ACK for packet #" + block_number.out);
+									last_time := milliseconds
+								end
+							elseif in_block_number /= ((block_number + 1) \\ block_number_window) then
+								dispatch_tftp_event (remote_address, remote_port, {TFTP_EVENT}.REQUEST_OUTOFORDER, in_opcode,"Received data packet #" + in_block_number.out + " instead of #" + ((block_number + 1) \\ block_number_window).out)
+								send_ack (socket, remote_address, remote_port, block_number)
+								dispatch_tftp_event (remote_address, remote_port, {TFTP_EVENT}.REQUEST_RETRANSMIT, {TFTP_PACKET}.ack, "Retransmitting ACK for packet #" + block_number.out)
 								last_time := milliseconds
-							end
-						elseif in_block_number /= ((block_number + 1) \\ block_number_window) then
-							dispatch_tftp_event (remote_address, remote_port, {TFTP_EVENT}.REQUEST_OUTOFORDER, in_opcode,"Received data packet #" + in_block_number.out + " instead of #" + ((block_number + 1) \\ block_number_window).out)
-							send_ack (socket, remote_address, remote_port, block_number)
-							dispatch_tftp_event (remote_address, remote_port, {TFTP_EVENT}.REQUEST_RETRANSMIT, {TFTP_PACKET}.ack, "Retransmitting ACK for packet #" + block_number.out)
-							last_time := milliseconds
-						else
-							-- We got the data packet, so write it out to
-							-- disk, send the ack for it, and wait again.
-							server.received_data (data_packet.data_length)
-							write_data (data_packet)
-							retransmits := 0
-							block_number := (block_number + 1) \\ block_number_window
-							send_ack (socket, remote_address, remote_port, block_number)
-							last_time := milliseconds
-							if data_packet.data_length < {TFTP_DATA_PACKET}.block_size then
-								done := True
+							else
+									-- We got the data packet, so write it out to
+									-- disk, send the ack for it, and wait again.
+								server.received_data (data_packet.data_length)
+								write_data (data_packet)
+								retransmits := 0
+								block_number := (block_number + 1) \\ block_number_window
+								send_ack (socket, remote_address, remote_port, block_number)
+								last_time := milliseconds
+								if data_packet.data_length < {TFTP_DATA_PACKET}.block_size then
+									done := True
+								end
 							end
 						end
 					end
@@ -182,8 +175,6 @@ feature
 		local
 			block_number: INTEGER
 			in_block_number: INTEGER
-			in_packet: TFTP_PACKET
-			ack_packet: TFTP_ACK_PACKET
 			in_opcode: INTEGER
 			in_buffer: MANAGED_POINTER
 			count: INTEGER
@@ -191,7 +182,7 @@ feature
 			setup: INTEGER
 			retransmits: INTEGER
 		do
-			if filename = Void or else filename.is_empty then
+			if filename.is_empty then
 				bad_file ("Bad file " + filename)
 				dispatch_tftp_event (remote_address, remote_port, {TFTP_EVENT}.REQUEST_INCOMPLETE, {TFTP_PACKET}.error, "Illegal file name in read request")
 				terminate
@@ -220,31 +211,31 @@ feature
 							done or else state = state_complete
 						loop
 							send_data_packet (socket, remote_address, remote_port, block_number, in_buffer, count)
-							-- Wait for response ack
-							in_packet := receive (socket)
-							in_opcode := in_packet.opcode
-							if in_opcode = {TFTP_PACKET}.error then
-								frontend.log_message_by_address (remote_address, 1, create_error_message_from_packet (in_packet))
-								dispatch_tftp_event (remote_address, remote_port, {TFTP_EVENT}.REQUEST_INCOMPLETE, {TFTP_PACKET}.error, create_error_message_from_packet (in_packet))
-								done := True
-								terminate
-							else
-								ack_packet ?= in_packet
-								in_block_number := ack_packet.block_number
-								if in_block_number /= block_number then
-									dispatch_tftp_event (remote_address, remote_port, {TFTP_EVENT}.REQUEST_OUTOFORDER, in_opcode, "Received ACK packet #" + in_block_number.out + " instead of #" + block_number.out)
-								else
-									server.sent_data (count)
-									if state = state_runt_packet then
-										state := state_complete
+								-- Wait for response ack
+							if {in_packet: TFTP_PACKET} receive (socket) then
+								in_opcode := in_packet.opcode
+								if in_opcode = {TFTP_PACKET}.error then
+									frontend.log_message_by_address (remote_address, 1, create_error_message_from_packet (in_packet))
+									dispatch_tftp_event (remote_address, remote_port, {TFTP_EVENT}.REQUEST_INCOMPLETE, {TFTP_PACKET}.error, create_error_message_from_packet (in_packet))
+									done := True
+									terminate
+								elseif {ack_packet: TFTP_ACK_PACKET} in_packet then
+									in_block_number := ack_packet.block_number
+									if in_block_number /= block_number then
+										dispatch_tftp_event (remote_address, remote_port, {TFTP_EVENT}.REQUEST_OUTOFORDER, in_opcode, "Received ACK packet #" + in_block_number.out + " instead of #" + block_number.out)
 									else
-										-- Got it! Read more data
-										count := read_data (in_buffer, {TFTP_PACKET}.max_data_length)
-										retransmits := 0
-										if count < 512 then
-											state := state_runt_packet
+										server.sent_data (count)
+										if state = state_runt_packet then
+											state := state_complete
+										else
+											-- Got it! Read more data
+											count := read_data (in_buffer, {TFTP_PACKET}.max_data_length)
+											retransmits := 0
+											if count < {TFTP_PACKET}.max_data_length then
+												state := state_runt_packet
+											end
+											block_number := (block_number + 1) \\ block_number_window
 										end
-										block_number := (block_number + 1) \\ block_number_window
 									end
 								end
 							end
@@ -260,59 +251,74 @@ feature
 			--
 		require
 			data_packet_non_void: data_packet /= Void
-			valid_file: file /= Void and then file.is_open_write
+			valid_file: {l_file: like file} file and then l_file.is_open_write
+		local
+			l_file_loc: like file
 		do
-			file.put_managed_pointer (data_packet.data_pointer, data_packet.data_offset, data_packet.data_length)
+			l_file_loc := file
+				-- Per precondition of `write_data'
+			check l_file_attached: l_file_loc /= Void end
+			l_file_loc.put_managed_pointer (data_packet.data_pointer, data_packet.data_offset, data_packet.data_length)
 		end
 
 	read_data (p: MANAGED_POINTER; length: INTEGER): INTEGER is
 			--
 		require
 			p_non_void: p /= Void
-			valid_file: file /= Void and then file.is_open_read
+			valid_file: {l_file: like file} file and then l_file.is_open_write
+		local
+			l_file_loc: like file
 		do
-			file.read_to_managed_pointer (p, 0, length)
-			Result := file.bytes_read
+			l_file_loc := file
+				-- Per precondition of `write_data'
+			check l_file_attached: l_file_loc /= Void end
+			l_file_loc.read_to_managed_pointer (p, 0, length)
+			Result := l_file_loc.bytes_read
 		end
 
 	terminate is
 		do
-			if file /= Void then
-				file.close
+			if {l_file: like file} file then
+				l_file.close
 				file := Void
 			end
 			if socket /= Void then
 				socket.close
-				socket := Void
 			end
 			server.worker_terminated (id)
 		end
 
 	setup_file_writer: INTEGER is
+		local
+			l_file: like file
 		do
-			Result := ERR_NO_ERROR;
-			Create file.make (filename)
-			if file.exists and then not frontend.allow_overwrite (remote_address) then
+			Result := ERR_NO_ERROR
+			create l_file.make (filename)
+			if l_file.exists and then not frontend.allow_overwrite (remote_address) then
 				file := Void
 				Result := ERR_FILE_EXISTS
 			else
-				file.open_write
+				file := l_file
+				l_file.open_write
 			end
 		end
 
 	setup_file_reader: INTEGER is
+		local
+			l_file: like file
 		do
 			Result := ERR_NO_ERROR;
-			Create file.make (filename)
-			if not file.exists then
+			create l_file.make (filename)
+			if not l_file.exists then
 				Result := ERR_FILE_NOT_FOUND
 				file := Void
 			else
-				if not file.is_readable then
+				if not l_file.is_readable then
 					file := Void
 					Result := ERR_ACCESS_VIOLATION
 				else
-					file.open_read
+					file := l_file
+					l_file.open_read
 				end
 			end
 		end

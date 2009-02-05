@@ -20,12 +20,12 @@ feature -- Access
 			-- Current transaction
 		deferred
 		end
-	 
+
 	index: INTEGER
 			-- Current index
 		deferred
 		end
-	
+
 feature -- Measurement
 
 	count: INTEGER
@@ -41,10 +41,10 @@ feature -- Status report
 			transaction_exists: t /= Void
 		deferred
 		end
-	 
+
 	 error_stops: BOOLEAN
 	 		-- Is transfer stopped on error?
-			
+
 feature -- Status setting
 
 	select_transaction (n: INTEGER)
@@ -116,23 +116,28 @@ feature {NONE} -- Implementation
 		ensure
 			index_unchanged: index = old index
 		end
-	 
-	execute_command (cmd: PROCEDURE[TRANSACTION_CONTAINER[G], TUPLE])
+
+	execute_command (cmd: PROCEDURE [TRANSACTION_CONTAINER[G], TUPLE])
 			-- Execute command `cmd' for all transactions.
 		require
 			command_exists: cmd /= Void
 		local
 			idx: INTEGER
 			i: INTEGER
+			l_transaction: G
 		do
 			idx := index
 			from
 				i := 1
 				select_transaction (1)
+				l_transaction := transaction
+				check l_transaction_attached: l_transaction /= Void end
 			until
-				i = count + 1 or (error_stops and transaction.error)
+				i = count + 1 or (error_stops and l_transaction.error)
 			loop
 				select_transaction (i)
+				l_transaction := transaction
+				check l_transaction_attached: l_transaction /= Void end
 				cmd.call (Void)
 				i := i + 1
 			end
@@ -140,7 +145,7 @@ feature {NONE} -- Implementation
 		ensure
 			index_unchanged: index = old index
 		end
-	 
+
 invariant
 
 	empty_definition: is_empty = (count = 0)

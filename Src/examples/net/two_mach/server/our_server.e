@@ -22,12 +22,12 @@ create
 
 feature
 
-	soc1, soc2: NETWORK_STREAM_SOCKET
 
 	make (argv: ARRAY [STRING])
 			-- Accept communication with client and exchange messages
 		local
 			count: INTEGER
+			soc1: ?NETWORK_STREAM_SOCKET
 		do
 			if argv.count /= 2 then
 				io.error.putstring ("Usage: ")
@@ -41,45 +41,46 @@ feature
 				until
 					count = 3
 				loop
-					process -- See below
+					process (soc1) -- See below
 					count := count + 1
 				end
 				soc1.cleanup
 			end
 		rescue
-			soc1.cleanup
+			if soc1 /= Void then
+				soc1.cleanup
+			end
 		end
 
-	process
+	process (soc1: NETWORK_STREAM_SOCKET)
 			-- Receive a message, extend it, and send it back.
 		local
-			our_new_list: OUR_MESSAGE
 			l_medium: SED_MEDIUM_READER_WRITER
 		do
 			soc1.accept
-			soc2 ?= soc1.accepted
-			create l_medium.make (soc2)
-			l_medium.set_for_reading
-			our_new_list ?= retrieved (l_medium, True)
-			if our_new_list = Void then
-				io.put_string ("Failed retrieving list.")
-				io.new_line
-			else
-				from
-					our_new_list.start
-				until
-					our_new_list.after
-				loop
-					io.putstring (our_new_list.item)
-					our_new_list.forth
+			if {soc2: NETWORK_STREAM_SOCKET} soc1.accepted then
+				create l_medium.make (soc2)
+				l_medium.set_for_reading
+				if {our_new_list: OUR_MESSAGE} retrieved (l_medium, True) then
+					from
+						our_new_list.start
+					until
+						our_new_list.after
+					loop
+						io.putstring (our_new_list.item)
+						our_new_list.forth
+						io.new_line
+					end
+
+					our_new_list.extend ("%N I'm back.%N")
+					l_medium.set_for_writing
+					independent_store (our_new_list, l_medium, True)
+				else
+					io.put_string ("Failed retrieving list.")
 					io.new_line
 				end
-
-				our_new_list.extend ("%N I'm back.%N")
-				l_medium.set_for_writing
-				independent_store (our_new_list, l_medium, True)
+				soc2.close
 			end
-			soc2.close
 		end
 
 note

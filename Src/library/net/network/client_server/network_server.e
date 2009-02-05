@@ -12,7 +12,7 @@ deferred class NETWORK_SERVER inherit
 
 	SERVER
 		redefine
-			in, resend
+			in
 		end
 
 feature -- Access
@@ -22,7 +22,7 @@ feature -- Access
 
 	make (a_port: INTEGER)
 			-- Make a network server listening to `a_port'.
-		require 
+		require
 			valid_port: a_port >= 0
 		do
 			create in.make_server_by_port (a_port);
@@ -41,23 +41,27 @@ feature -- Access
 
 	receive
 			-- Receive activity of server.
+		local
+			l_accepted: like outflow
 		do
 			in.accept;
-			outflow ?= in.accepted;
-			received ?= outflow.retrieved
+			l_accepted := in.accepted;
+			if l_accepted /= Void then
+				received := l_accepted.retrieved
+			else
+				received := Void
+			end
+			outflow := l_accepted
 		end;
 
-	resend (msg: ANY)
-			-- Send back message `msg'.
-		do
-			outflow.independent_store (msg)
-		end;
-	
 	close
 			-- Close server socket.
+		local
+			l_outflow: like outflow
 		do
-			if outflow /= Void and then not outflow.is_closed then
-				outflow.close
+			l_outflow := outflow
+			if l_outflow /= Void and then not l_outflow.is_closed then
+				l_outflow.close
 			end
 		end
 

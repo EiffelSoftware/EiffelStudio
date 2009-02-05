@@ -22,11 +22,10 @@ create
 
 feature
 
-	soc1, soc2: NETWORK_STREAM_SOCKET
-
 	make (argv: ARRAY [STRING])
 			-- Accept communication with client and exchange messages
 		local
+			soc1: ?NETWORK_STREAM_SOCKET
 			count: INTEGER
 		do
 			if argv.count /= 2 then
@@ -41,35 +40,38 @@ feature
 				until
 					count = 3
 				loop
-					process -- See below
+					process (soc1)-- See below
 					count := count + 1
 				end
 				soc1.cleanup
 			end
 		rescue
-			soc1.cleanup
+			if soc1 /= Void then
+				soc1.cleanup
+			end
 		end
 
-	process
+	process (soc1: NETWORK_STREAM_SOCKET)
 			-- Receive a message, extend it, and send it back.
-		local
-			our_new_list: OUR_MESSAGE
 		do
 			soc1.accept
-			soc2 ?= soc1.accepted
-			our_new_list ?= retrieved (soc2)
-			from
-				our_new_list.start
-			until
-				our_new_list.after
-			loop
-				io.putstring (our_new_list.item)
-				our_new_list.forth
-				io.new_line
+			if
+				{soc2: NETWORK_STREAM_SOCKET} soc1.accepted and then
+				{our_new_list: OUR_MESSAGE} retrieved (soc2)
+			then
+				from
+					our_new_list.start
+				until
+					our_new_list.after
+				loop
+					io.putstring (our_new_list.item)
+					our_new_list.forth
+					io.new_line
+				end
+				our_new_list.extend ("%N I'm back.%N")
+				our_new_list.general_store (soc2)
+				soc2.close
 			end
-			our_new_list.extend ("%N I'm back.%N")
-			our_new_list.general_store (soc2)
-			soc2.close
 		end
 
 note

@@ -20,7 +20,7 @@ feature -- Access
 		do
 			create data.make (256)
 			get_local_host_name (data.item)
-			create Result.make_from_c (data.item)
+			create Result.make_from_c_pointer (data.item)
 		end
 
 	any_local_address: INET_ADDRESS

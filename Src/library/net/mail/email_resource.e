@@ -14,10 +14,10 @@ inherit
 
 feature -- Access
 
-	header (h: STRING): HEADER
+	header (h: STRING): ?HEADER
 			-- Retrieve the content of the header 'h'
 		do
-			Result:= headers.item (h)
+			Result := headers.item (h)
 		end
 
 	headers: HASH_TABLE [HEADER, STRING]

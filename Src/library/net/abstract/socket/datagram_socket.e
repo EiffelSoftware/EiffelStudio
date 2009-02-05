@@ -51,6 +51,8 @@ feature -- Basic operations
 			-- Target socket to `a_peer_address'.
 		require
 			socket_exists: exists
+			a_peer_address_attached: a_peer_address /= Void
+			a_peer_address_valid: is_valid_peer_address (a_peer_address)
 		do
 			set_peer_address (a_peer_address);
 		end
@@ -101,8 +103,12 @@ feature -- Output
 
 	send (a_packet: PACKET; flags: INTEGER)
 			-- Send `a_packet' to address in `peer_address'.
+		local
+			l_peer_address: like peer_address
 		do
-			send_to (a_packet, peer_address, flags)
+			l_peer_address := peer_address
+			check l_peer_address_not_void: l_peer_address /= Void end
+			send_to (a_packet, l_peer_address, flags)
 		end
 
 note

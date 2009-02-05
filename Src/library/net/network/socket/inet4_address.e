@@ -26,9 +26,9 @@ feature -- Constants
 
 feature {INET_ADDRESS_FACTORY} -- Initialization
 
-	make_from_host_and_address (a_hostname: STRING; an_address: ARRAY [NATURAL_8])
+	make_from_host_and_address (a_hostname: ?STRING; an_address: ?ARRAY [NATURAL_8])
 		do
-			the_host_name := a_hostname
+			internal_host_name := a_hostname
 			family := ipv4
 			if an_address /= Void and then an_address.count = INADDRSZ then
 				the_address := an_address.item(4).to_integer_32 & 0xFF
@@ -38,9 +38,9 @@ feature {INET_ADDRESS_FACTORY} -- Initialization
 			end
 		end
 
-	make_from_host_and_pointer (a_hostname: STRING; a_pointer: POINTER)
+	make_from_host_and_pointer (a_hostname: ?STRING; a_pointer: POINTER)
 		do
-			the_host_name := a_hostname
+			internal_host_name := a_hostname
 			family := ipv4
 			if a_pointer /= default_pointer then
 				the_address := c_sockaddr_get_ipv4_address (a_pointer)

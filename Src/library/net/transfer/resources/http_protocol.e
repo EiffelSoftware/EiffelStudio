@@ -80,18 +80,21 @@ feature -- Status setting
 
 	open
 			-- Open resource.
+		local
+			l_main_socket: like main_socket
 		do
 			if not is_open then
 				if address.is_proxy_used then
-					create main_socket.make_client_by_port
+					create l_main_socket.make_client_by_port
 						(address.proxy_port, address.proxy_host)
 				else
-					create main_socket.make_client_by_port
+					create l_main_socket.make_client_by_port
 							(address.port, address.host)
 				end
-				main_socket.set_timeout (timeout)
-				main_socket.set_connect_timeout (connect_timeout)
-				main_socket.connect
+				main_socket := l_main_socket
+				l_main_socket.set_timeout (timeout)
+				l_main_socket.set_connect_timeout (connect_timeout)
+				l_main_socket.connect
 			end
 			if not is_open then
 				error_code := Connection_refused
@@ -107,8 +110,12 @@ feature -- Status setting
 
 	close
 			-- Close.
+		local
+			l_socket: like main_socket
 		do
-			main_socket.close
+			l_socket := main_socket
+			check l_socket_attached: l_socket /= Void end
+			l_socket.close
 			if is_packet_pending then is_count_valid := False end
 			main_socket := Void
 			last_packet := Void
@@ -121,6 +128,7 @@ feature -- Status setting
 			-- Initiate transfer.
 		local
 			str: STRING
+			l_socket: like main_socket
 		do
 			str := Http_get_command.twin
 			str.extend (' ')
@@ -145,10 +153,12 @@ feature -- Status setting
 			end
 			str.append (Http_end_of_command)
 			if not error then
-				main_socket.put_string (str)
-					debug ("eiffelnet")
-						Io.error.put_string (str)
-					end
+				l_socket := main_socket
+				check l_socket_attached: l_socket /= Void end
+				l_socket.put_string (str)
+				debug ("eiffelnet")
+					Io.error.put_string (str)
+				end
 				get_headers
 				transfer_initiated := True
 				is_packet_pending := True
@@ -189,23 +199,22 @@ feature {NONE} -- Implementation
 		require
 			open: is_open
 		local
-			str: STRING
+			str: ?STRING
+			l_socket: like main_socket
 		do
 			headers.wipe_out
+			l_socket := main_socket
+			check l_socket_not_void: l_socket /= Void end
 			from
 			until
-				error or else (str /= Void and str.is_equal ("%R"))
+				error or else (str /= Void and then str.is_equal ("%R"))
 			loop
-				check_socket (main_socket, Read_only)
+				check_socket (l_socket, Read_only)
 				if not error then
-					main_socket.read_line
-					str := main_socket.last_string.twin
-						debug ("eiffelnet")
-							Io.error.put_string (str)
-							Io.error.put_new_line
-						end
-					if not str.is_empty then
-						headers.extend (str)
+					l_socket.read_line
+					str := l_socket.last_string
+					if str /= Void and then not str.is_empty then
+						headers.extend (str.twin)
 					end
 				end
 			end

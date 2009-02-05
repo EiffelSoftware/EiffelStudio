@@ -21,6 +21,8 @@ feature -- Initialization
 			-- Initialize the headers table.
 		do
 			create headers.make (3)
+			mail_message := ""
+			mail_signature := ""
 		end
 
 	make_with_entry (header_from, header_to: STRING)
@@ -29,7 +31,7 @@ feature -- Initialization
 			needed_info: header_from /= Void
 						 and then header_to /= Void
 		do
-			create headers.make (3)
+			make
 			add_header_entry (H_from, header_from)
 			add_header_entry (H_to, header_to)
 		end
@@ -50,10 +52,11 @@ feature -- Basic operations
 		require
 			not_void: header_entry /= Void and then header_key /= Void
 		local
-			a_header: HEADER
+			a_header: ?HEADER
 		do
 			if headers.has (header_key) then
 				a_header:= headers.item (header_key)
+				check a_header_attached: a_header /= Void end
 				a_header.add_entry (header_entry)
 			else
 				create a_header.make (header_entry)
@@ -68,10 +71,11 @@ feature -- Basic operations
 			-- Add multiple 'header_entries' at once  to 'header_key',
 			-- If not such header exists. create it.
 		local
-			a_header: HEADER
+			a_header: ?HEADER
 		do
 			if headers.has (header_key) then
 				a_header:= headers.item (header_key)
+				check a_header_attached: a_header /= Void end
 				a_header.add_entries (header_entries)
 			else
 				create a_header.make_with_entries (header_entries)
@@ -87,24 +91,28 @@ feature -- Basic operations
 		require
 			header_exists: headers.has (header_key)
 			header_entry_exists:
-					(headers.item (header_key)). entries.has (header_entry)
+					{l_header: HEADER} headers.item (header_key) and then l_header.entries.has (header_entry)
 		local
-			a_header: HEADER
+			a_header: ?HEADER
 		do
 			a_header:= headers.item (header_key)
+				-- Per precondition
+			check a_header_attached: a_header /= Void end
 			a_header.entries.prune (header_entry)
 		ensure
 			header_entry_no_longer_exists:
-					not (headers.item (header_key)). entries.has (header_entry)
+				{l_header_after: HEADER} headers.item (header_key) and then not l_header_after.entries.has (header_entry)
 		end
 
 	remove_header_entries (header_key: STRING)
 		require
 			header_exists: headers.has (header_key)
 		local
-			a_header: HEADER
+			a_header: ?HEADER
 		do
 			a_header:= headers.item (header_key)
+				-- Per precondition
+			check a_header_attached: a_header /= Void end
 			a_header.entries.wipe_out
 		end
 

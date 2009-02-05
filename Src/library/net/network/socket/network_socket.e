@@ -57,7 +57,7 @@ feature
 			retried: BOOLEAN
 		do
 			if not retried then
-				do_connect
+				do_connect (peer_address)
 				is_connected := True
 				is_open_write := True;
 				is_open_read := True
@@ -77,7 +77,7 @@ feature
 			retried: BOOLEAN
 		do
 			if not retried then
-				do_bind
+				do_bind (address)
 				is_open_read := True
 				is_bound := True
 			end
@@ -94,7 +94,11 @@ feature -- Status report
 
 	address_type: NETWORK_SOCKET_ADDRESS
 			-- <Precursor>
+		local
+			l_result: ?NETWORK_SOCKET_ADDRESS
 		do
+			check l_result_attached: l_result /= Void end
+			Result := l_result
 		end
 
 	is_closed: BOOLEAN
@@ -136,12 +140,12 @@ feature -- Status report
 			Result := reuse /= 0
 		end
 
-	is_valid_peer_address (addr: like address): BOOLEAN
+	is_valid_peer_address (addr: !like address): BOOLEAN
 		do
 			Result := (addr.family = af_inet or else addr.family = af_inet6)
 		end
 
-	is_valid_family (addr: like address): BOOLEAN
+	is_valid_family (addr: !like address): BOOLEAN
 		do
 			Result := (addr.family = af_inet or else addr.family = af_inet6)
 		end
@@ -246,11 +250,15 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	do_connect
+	do_connect (a_peer_address: like peer_address)
+		require
+			a_peer_address_attached: a_peer_address /= Void
 		deferred
 		end
 
-	do_bind
+	do_bind (a_address: like address)
+		require
+			a_address_attached: a_address /= Void
 		deferred
 		end
 

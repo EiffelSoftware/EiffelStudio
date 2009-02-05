@@ -14,13 +14,13 @@ deferred class SERVER inherit
 
 feature -- Access
 
-	in : SOCKET;
+	in: SOCKET;
 			-- Listen socket
 
-	outflow : like in;
+	outflow: ?like in;
 			-- Service socket
 
-	received: ANY;
+	received: ?ANY;
 			-- Last message from socket
 
 	execute
@@ -41,8 +41,12 @@ feature -- Access
 
 	resend (msg: ANY)
 			-- Resend `msg'.
+		local
+			l_outflow: like outflow
 		do
-			outflow.independent_store (msg)
+			l_outflow := outflow
+			check l_outflow_attached: l_outflow /= Void end
+			l_outflow.independent_store (msg)
 		end;
 
 	set_queued (n: INTEGER)
@@ -51,7 +55,7 @@ feature -- Access
 			valid_queue_number: n > 0 and n < 6
 		do
 			queued := n
-		ensure 
+		ensure
 			assigned_queued: queued = n
 		end;
 
@@ -65,7 +69,7 @@ feature -- Access
 		deferred
 		end;
 
-	process_message 
+	process_message
 			-- Process the received message.
 		deferred
 		end;

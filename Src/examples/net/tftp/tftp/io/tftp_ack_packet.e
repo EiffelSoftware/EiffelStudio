@@ -10,8 +10,7 @@ inherit
 		end
 
 create
-
-	make_from_managed_pointer, make_from_host_port_managed_pointer, make_from_address_block
+	make_from_host_port_managed_pointer, make_from_address_block
 
 feature -- Initialisation
 

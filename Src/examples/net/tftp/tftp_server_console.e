@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			prefer_ipv4_stack: BOOLEAN
 			server_thread: SERVER_THREAD
 		do
-			if argument_count > 0  then
+			if argument_count > 0 then
 				prefer_ipv4_stack := argument (1).to_boolean
 			end
 
@@ -72,7 +72,6 @@ feature -- Implementation
 			Result := 5000
 		end
 
-
 	log_message_by_source (a_source: STRING; a_level: INTEGER; a_message: STRING)
 		do
 			io.put_string (a_source + "[" + a_level.out + "] " + a_message)
@@ -105,11 +104,12 @@ feature -- Implementation
 
 	sent_data (data_length: INTEGER)
 		do
-				io.put_string ("sent data, lenght = " + data_length.out +"%N")
+			io.put_string ("sent data, length = " + data_length.out +"%N")
 		end
 
 	received_data (data_length: INTEGER)
 		do
-				io.put_string ("received data, lenght = " + data_length.out +"%N")
+			io.put_string ("received data, length = " + data_length.out +"%N")
 		end
+
 end

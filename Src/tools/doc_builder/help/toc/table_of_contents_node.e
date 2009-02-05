@@ -490,7 +490,7 @@ feature -- Convenience
 	
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is current object less than `other'?
 		do
 			Result := other.title > title

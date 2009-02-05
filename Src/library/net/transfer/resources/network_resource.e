@@ -42,9 +42,11 @@ feature -- Status report
 
 	is_open: BOOLEAN
 			-- Is resource open?
+		local
+			l_socket: like main_socket
 		do
-			Result := main_socket /= Void and then
-				(main_socket.is_open_read or main_socket.is_open_write)
+			l_socket := main_socket
+			Result := l_socket /= Void and then (l_socket.is_open_read or l_socket.is_open_write)
 		end
 
 	is_readable: BOOLEAN
@@ -141,21 +143,10 @@ feature -- Status setting
 			read_buffer_size := n
 		end
 
-	reuse_connection (other: DATA_RESOURCE)
+	reuse_connection (other: NETWORK_RESOURCE)
 			-- Reuse connection of `other'.
-		local
-			o: like Current
 		do
-			o ?= other
-				check
-					same_type: o /= Void
-						-- Because of precondition
-				end
-			main_socket := o.main_socket
-				check
-					shared: equal (main_socket, o.main_socket)
-						-- Because of referential equality
-				end
+			main_socket := other.main_socket
 		end
 
 feature {NONE} -- Status setting
@@ -171,14 +162,21 @@ feature -- Output
 
 	put (other: DATA_RESOURCE)
 			-- Write out resource `other'.
+		local
+			l_main_socket: like main_socket
+			l_packet: like last_packet
 		do
+			l_main_socket := main_socket
+			check l_main_socket_attached: l_main_socket /= Void end
 			from until error or else not other.is_packet_pending loop
-				check_socket (main_socket, Write_only)
+				check_socket (l_main_socket, Write_only)
 				if not error then
 					other.read
-					main_socket.put_string (other.last_packet)
-					last_packet := other.last_packet
-					last_packet_size := last_packet.count
+					l_packet := other.last_packet
+					check l_packet_attached: l_packet /= Void end
+					l_main_socket.put_string (l_packet)
+					last_packet := l_packet
+					last_packet_size := l_packet.count
 					if last_packet_size /= other.last_packet_size then
 						error_code := Write_error
 					end
@@ -192,12 +190,20 @@ feature -- Input
 
 	read
 			-- Read packet.
+		local
+			l_main_socket: like main_socket
+			l_packet: like last_packet
 		do
-			check_socket (main_socket, Read_only)
+			l_main_socket := main_socket
+			check l_main_socket: l_main_socket /= Void end
+			check_socket (l_main_socket, Read_only)
 			if not error then
-				main_socket.read_stream (read_buffer_size)
-				last_packet := main_socket.last_string
-				last_packet_size := last_packet.count
+				l_main_socket.read_stream (read_buffer_size)
+				l_packet := l_main_socket.last_string
+					-- Per postcondition of `read_stream'.
+				check l_packet_attached: l_packet /= Void end
+				last_packet := l_packet
+				last_packet_size := l_packet.count
 				bytes_transferred := bytes_transferred + last_packet_size
 				if last_packet_size = 0 or (is_count_valid and bytes_transferred = count) then
 					is_packet_pending := False
@@ -217,7 +223,7 @@ feature -- Constants
 
 feature {DATA_RESOURCE} -- Implementation
 
-	main_socket: NETWORK_STREAM_SOCKET
+	main_socket: ?NETWORK_STREAM_SOCKET
 
 feature {NONE} -- Implementation
 

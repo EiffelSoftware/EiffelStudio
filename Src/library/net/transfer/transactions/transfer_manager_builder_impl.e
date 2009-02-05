@@ -8,12 +8,12 @@ note
 	revision: "$Revision$"
 
 class TRANSFER_MANAGER_BUILDER_IMPL inherit
-	
+
 	DATA_RESOURCE_FACTORY
 		export
 			{NONE} all
 		end
-		
+
 	HOST_VALIDITY_CHECKER
 
 create
@@ -39,8 +39,12 @@ feature -- Access
 			-- The built manager
 		require
 			built: manager_built
+		local
+			l_result: like transfer_manager
 		do
-			Result := transfer_manager
+			l_result := transfer_manager
+			check l_result_attached: l_result /= Void end
+			Result := l_result
 		end
 
 	transaction (n: INTEGER): TRANSACTION
@@ -53,7 +57,7 @@ feature -- Access
 		ensure
 			result_exists: Result /= Void
 		end
-		
+
 feature -- Measurement
 
 	count: INTEGER
@@ -61,7 +65,7 @@ feature -- Measurement
 		do
 			Result := transactions.count
 		end
-		
+
 feature -- Status report
 
 	is_empty: BOOLEAN
@@ -72,9 +76,11 @@ feature -- Status report
 
 	manager_built: BOOLEAN
 			-- Has manager been built?
+		local
+			l_manager: like transfer_manager
 		do
-			Result := transfer_manager /= Void and then 
-				not transfer_manager.is_empty
+			l_manager := transfer_manager
+			Result := l_manager /= Void and then not l_manager.is_empty
 		end
 
 	is_mode_valid (mode: INTEGER): BOOLEAN
@@ -82,7 +88,7 @@ feature -- Status report
 		do
 			Result := (Readable <= mode and mode <= Writable)
 		end
-		
+
 	is_address_correct (addr: STRING; mode: INTEGER): BOOLEAN
 			-- Is address `addr' correct considering `mode'?
 			-- (`mode' is `Readable' or `Writable')
@@ -90,12 +96,14 @@ feature -- Status report
 			non_empty_address: addr /= Void and then not addr.is_empty
 			mode_valid: is_mode_valid (mode)
 		local
-			res: DATA_RESOURCE
-			u: URL
+			res: ?DATA_RESOURCE
+			u: ?URL
+			l_proxy: ?PROXY_INFORMATION
 		do
 			resource_factory.set_address (addr)
 			if resource_factory.is_address_correct then
 				u := resource_factory.url
+				check u_attached: u /= Void end
 				resource_hash.search (u.location)
 				if resource_hash.found then
 					res := resource_hash.found_item
@@ -103,27 +111,30 @@ feature -- Status report
 					resource_factory.create_resource
 					res := resource_factory.resource
 				end
+				check res_attached: res /= Void end
 				inspect
 					mode
 				when Readable then
 					if res.is_proxy_supported then
-						res.set_proxy_information (source_proxy)
+						l_proxy := source_proxy
+						check l_proxy_attached: l_proxy /= Void end
+						res.set_proxy_information (l_proxy)
 					end
-					Result := add_reference 
-						(readable_set, res, agent res.is_readable)
+					Result := add_reference (readable_set, res, agent res.is_readable)
 				when Writable then
 					if res.is_proxy_supported then
-						res.set_proxy_information (target_proxy)
+						l_proxy := target_proxy
+						check l_proxy_attached: l_proxy /= Void end
+						res.set_proxy_information (l_proxy)
 					end
-					Result := add_reference 
-						(writable_set, res, agent res.is_writable)
+					Result := add_reference (writable_set, res, agent res.is_writable)
 				end
 				if Result and not resource_hash.found then
 					resource_hash.put (res, res.location)
 				end
 			end
 		end
-	
+
 	transfer_finished: BOOLEAN
 			-- Has a transfer occurred?
 		do
@@ -168,16 +179,19 @@ feature -- Status setting
 			-- order to affect the added transactions.)
 		require
 			non_negative: s >= 0
+		local
+			l_timeout: like timeout
 		do
-			if timeout = Void then
+			l_timeout := timeout
+			if l_timeout = Void then
 				create timeout.put (s)
-			else 
-				timeout.put (s)
+			else
+				l_timeout.put (s)
 			end
 		ensure
-			timeout_set: timeout.item = s
+			timeout_set: {l_timeout_var: like timeout} timeout and then l_timeout_var.item = s
 		end
-			
+
 	set_source_proxy (host: STRING; port: INTEGER)
 			-- Set source proxy host to `host' and port to `port'.
 		require
@@ -187,8 +201,7 @@ feature -- Status setting
 			create source_proxy.make (host, port)
 		ensure
 			source_proxy_exists: source_proxy /= Void
-			host_set: source_proxy.host = host
-			port_set: source_proxy.port = port
+			host_port_set: {l_proxy: like source_proxy} source_proxy and then (l_proxy.host = host and l_proxy.port = port)
 		end
 
 	set_target_proxy (host: STRING; port: INTEGER)
@@ -200,12 +213,11 @@ feature -- Status setting
 			create target_proxy.make (host, port)
 		ensure
 			target_proxy_exists: target_proxy /= Void
-			host_set: target_proxy.host = host
-			port_set: target_proxy.port = port
+			host_port_set: {l_proxy: like source_proxy} target_proxy and then (l_proxy.host = host and l_proxy.port = port)
 		end
 
 	set_proxies (host: STRING; port: INTEGER)
-			-- Set source and target proxy host to `host' and 
+			-- Set source and target proxy host to `host' and
 			-- port to `port'.
 		require
 			host_not_empty: host /= Void and then not host.is_empty
@@ -215,9 +227,8 @@ feature -- Status setting
 			target_proxy := source_proxy
 		ensure
 			source_proxy_exists: source_proxy /= Void
-			host_set: source_proxy.host = host
-			port_set: source_proxy.port = port
 			proxies_equal: source_proxy = target_proxy
+			host_port_set: {l_proxy: like source_proxy} source_proxy and then (l_proxy.host = host and l_proxy.port = port)
 		end
 
 	reset_source_proxy
@@ -254,11 +265,12 @@ feature -- Element change
 			source_exists: s /= Void
 			target_exists: t /= Void
 		local
-			sr: DATA_RESOURCE
-			tr: DATA_RESOURCE
-			su: URL
-			tu: URL
+			sr: ?DATA_RESOURCE
+			tr: ?DATA_RESOURCE
+			su: ?URL
+			tu: ?URL
 			ta: SINGLE_TRANSACTION
+			l_timeout: like timeout
 		do
 			last_added_source_correct := is_address_correct (s, Readable)
 			last_added_target_correct := is_address_correct (t, Writable)
@@ -268,44 +280,49 @@ feature -- Element change
 
 				resource_factory.set_address (s)
 				su := resource_factory.url
+				check su_attached: su /= Void end
 				resource_hash.search (su.location)
-					check
-						found: resource_hash.found
-							-- Because resource has been created during 
-							-- correctness check
-					end
-				sr := resource_hash.found_item.deep_twin
+				check
+						-- Because resource has been created during correctness check
+					found: resource_hash.found
+				end
+				sr := resource_hash.found_item
+				check sr_attached: sr /= Void end
+				sr := sr.deep_twin
 
 				resource_factory.set_address (t)
 				tu := resource_factory.url
+				check tu_attached: tu /= Void end
 				resource_hash.search (tu.location)
-					check
-						found: resource_hash.found
-							-- Because resource has been created during 
-							-- correctness check
-					end
-				tr := resource_hash.found_item.deep_twin
+				check
+						-- Because resource has been created during correctness check
+					found: resource_hash.found
+				end
+				tr := resource_hash.found_item
+				check tr_attached: tr /= Void end
+				tr := tr.deep_twin
+				debug
+					Io.error.put_string (s)
+					Io.error.put_string (" -> ")
+					Io.error.put_string (t)
+					Io.error.put_string (" added.%N")
+				end
+				l_timeout := timeout
+				if l_timeout /= Void then
+					sr.set_timeout (l_timeout.item)
+					tr.set_timeout (l_timeout.item)
 					debug
-						Io.error.put_string (s)
-						Io.error.put_string (" -> ")
-						Io.error.put_string (t)
-						Io.error.put_string (" added.%N")
+						Io.error.put_string ("Timeout set to ")
+						Io.error.put_integer (l_timeout.item)
+						Io.error.put_string (" seconds%N")
 					end
-				if timeout /= Void then
-					sr.set_timeout (timeout.item)
-					tr.set_timeout (timeout.item)
-						debug
-							Io.error.put_string ("Timeout set to ")
-							Io.error.put_integer (timeout.item)
-							Io.error.put_string (" seconds%N")
-						end
 				end
 				create ta.make (sr, tr)
 				transactions.extend (ta)
 			end
 		ensure
-			one_more_transaction_if_correct: 
-				(last_added_source_correct and 
+			one_more_transaction_if_correct:
+				(last_added_source_correct and
 				last_added_target_correct) implies count = old count + 1
 		end
 
@@ -326,18 +343,18 @@ feature -- Removal
 
 			remove_reference (readable_set, transactions.item.source)
 			remove_reference (writable_set, transactions.item.target)
-			
+
 			transactions.remove
 			if idx > count then idx := count end
 			transactions.go_i_th (idx)
 		ensure
 			one_less_item: count = count - 1
-			index_unchanged: (old transactions.index < old count) 
+			index_unchanged: (old transactions.index < old count)
 				implies (transactions.index = old transactions.index)
-			index_adapted: (old transactions.index = old count) 
+			index_adapted: (old transactions.index = old count)
 				implies (transactions.index = old transactions.index - 1)
 		end
-			
+
 	wipe_out
 			-- Clear manager.
 		do
@@ -352,7 +369,7 @@ feature -- Removal
 			no_optimized_transactions: optimized_transactions = Void
 			no_manager: not manager_built
 		end
-		
+
 feature -- Basic operations
 
 	build_manager
@@ -381,16 +398,16 @@ feature {NONE} -- Constants
 	Readable: INTEGER = 1
 	Writable: INTEGER = 2
 			-- Mode constants
-			
+
 feature {NONE} -- Implementation
 
 	transactions: ARRAYED_LIST [TRANSACTION]
 			-- Registered transactions
 
-	optimized_transactions: ARRAYED_LIST [TRANSACTION]
+	optimized_transactions: ?ARRAYED_LIST [TRANSACTION]
 			-- Optimized transactions
 
-	transfer_manager: TRANSFER_MANAGER
+	transfer_manager: ?TRANSFER_MANAGER
 			-- Transfer manager
 
 	readable_set: BINARY_SEARCH_TREE_SET [STRING]
@@ -402,28 +419,30 @@ feature {NONE} -- Implementation
 	resource_hash: HASH_TABLE [DATA_RESOURCE, STRING]
 			-- Hash table of created resources
 
-	timeout: CELL [INTEGER]
+	timeout: ?CELL [INTEGER]
 			-- Duration of timeout in seconds
 			-- (If `Void' the default value is used.)
-			
-	source_proxy: PROXY_INFORMATION
+
+	source_proxy: ?PROXY_INFORMATION
 			-- Information about proxy for the source resource
 
-	target_proxy: PROXY_INFORMATION
+	target_proxy: ?PROXY_INFORMATION
 			-- Information about proxy for the target resource
 
 	optimized_count: INTEGER
 			-- Number of optimized transactions
+		local
+			l_optimized_transactions: like optimized_transactions
 		do
-			if optimized_transactions /= Void and then not
-				optimized_transactions.is_empty then
-				from 
-					optimized_transactions.start 
-				until 
-					optimized_transactions.after
+			l_optimized_transactions := optimized_transactions
+			if l_optimized_transactions /= Void and then not l_optimized_transactions.is_empty then
+				from
+					l_optimized_transactions.start
+				until
+					l_optimized_transactions.after
 				loop
-					Result := Result + optimized_transactions.item.count
-					optimized_transactions.forth
+					Result := Result + l_optimized_transactions.item.count
+					l_optimized_transactions.forth
 				end
 			end
 		end
@@ -435,15 +454,18 @@ feature {NONE} -- Implementation
 		local
 			hash: HASH_TABLE [LINKED_LIST [INTEGER], URL]
 			addr: URL
-			lst: LINKED_LIST [INTEGER]
+			lst: ?LINKED_LIST [INTEGER]
 			multitrans: MULTIPLE_TRANSACTION
+			l_optimized_transactions: like optimized_transactions
 		do
 			create hash.make (count)
 			from transactions.start until transactions.after loop
 				addr := transactions.item.source.address
 				hash.search (addr)
 				if hash.found then
-					hash.found_item.extend (transactions.index)
+					lst := hash.found_item
+					check lst_attached: lst /= Void end
+					lst.extend (transactions.index)
 				else
 					create lst.make
 					lst.extend (transactions.index)
@@ -451,40 +473,41 @@ feature {NONE} -- Implementation
 				end
 				transactions.forth
 			end
-				
-			create optimized_transactions.make (count)
-			
+
+			create l_optimized_transactions.make (count)
+			optimized_transactions := l_optimized_transactions
+
 			from transactions.start until transactions.after loop
 				hash.search (transactions.item.source.address)
 				if hash.found then
 					lst := hash.found_item
+					check lst_attached: lst /= Void end
 					lst.start
-					if not (transactions @ lst.item).source.
-						supports_multiple_transactions or lst.count = 1 then
+					if not (transactions @ lst.item).source.supports_multiple_transactions or lst.count = 1 then
 						from lst.start until lst.after loop
-							optimized_transactions.extend 
-								(transactions @ lst.item)
+							l_optimized_transactions.extend (transactions @ lst.item)
 							lst.forth
 						end
 					else
-						from 
-							lst.start 
+						from
+							lst.start
 							create multitrans.make
-						until 
-							lst.after 
+						until
+							lst.after
 						loop
 							multitrans.add_transaction (transactions @ lst.item)
 							lst.forth
 						end
-						optimized_transactions.extend (multitrans)
+						l_optimized_transactions.extend (multitrans)
 					end
 					hash.remove (transactions.item.source.address)
 				end
 				transactions.forth
 			end
 		ensure
-			optimized: optimized_transactions /= Void and then not
-					optimized_transactions.is_empty
+			optimized:
+				{l_optimized_transactions_var: like optimized_transactions} optimized_transactions and then
+					l_optimized_transactions_var.is_empty
 		end
 
 	setup_manager
@@ -492,16 +515,22 @@ feature {NONE} -- Implementation
 		require
 			no_manager: not manager_built
 			optimized: optimized_count > 0
+		local
+			l_optimized_transactions: like optimized_transactions
+			l_manager: like transfer_manager
 		do
-			from 
-				optimized_transactions.start
-				create transfer_manager.make
-				transfer_manager.stop_on_error
-			until 
-				optimized_transactions.after
+			l_optimized_transactions := optimized_transactions
+			check l_optimized_transactions_attached: l_optimized_transactions /= Void end
+			from
+				l_optimized_transactions.start
+				create l_manager.make
+				transfer_manager := l_manager
+				l_manager.stop_on_error
+			until
+				l_optimized_transactions.after
 			loop
-				transfer_manager.add_transaction (optimized_transactions.item)
-				optimized_transactions.forth
+				l_manager.add_transaction (l_optimized_transactions.item)
+				l_optimized_transactions.forth
 			end
 		ensure
 			manager_set_up: manager_built

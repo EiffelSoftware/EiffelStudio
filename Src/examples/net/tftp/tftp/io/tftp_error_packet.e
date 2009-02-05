@@ -10,8 +10,7 @@ inherit
 		end
 
 create
-
-	make_from_managed_pointer, make_from_host_port_managed_pointer, make_from_address_code_message
+	make_from_host_port_managed_pointer, make_from_address_code_message
 
 feature -- Initialisation
 
@@ -26,13 +25,13 @@ feature -- Initialisation
 			--
 		require
 			address_non_void: an_address /= Void
+			a_message_not_void: a_message /= Void
 		local
 			size: INTEGER
 		do
 			size := 4
-			if a_message /= Void then
-				size := size + a_message.count + 1
-			end
+			message := a_message
+			size := size + a_message.count + 1
 			make_from_host_port_size (an_address, a_port, error, size)
 			write_opcode (error)
 			write_error (a_code, a_message)

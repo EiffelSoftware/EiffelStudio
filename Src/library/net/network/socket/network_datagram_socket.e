@@ -131,7 +131,7 @@ feature -- Status setting
 			return_val: INTEGER;
 		do
 			if not retried then
-				return_val := c_send_to (fd, fd1, a_packet.data.item, a_packet.count, flags, peer_address.socket_address.item)
+				return_val := c_send_to (fd, fd1, a_packet.data.item, a_packet.count, flags, to_address.socket_address.item)
 			end
 		rescue
 			retried := True
@@ -142,23 +142,24 @@ feature -- Status setting
 			-- Receive a packet.
 			-- Who from is put into the `peer_address'.
 		local
-			retried: BOOLEAN
 			return_val: INTEGER;
 			a_last_fd: like last_fd
 			p: MANAGED_POINTER
+			l_peer_address: like peer_address
 		do
-			if not retried then
-				create p.make (size)
-				a_last_fd := last_fd
-				if peer_address = Void then
-					make_peer_address
-				end
-				create Result.make (size);
-				return_val := c_recv_from (fd, fd1, $a_last_fd, p.item, size, flags, 0, peer_address.socket_address.item)
-				if return_val >= 0 then
-					p.resize (return_val)
-					create Result.make_from_managed_pointer (p)
-				end
+			create p.make (size)
+			a_last_fd := last_fd
+			l_peer_address := peer_address
+			if l_peer_address = Void then
+				make_peer_address
+				l_peer_address := peer_address
+				check l_peer_address_attached: l_peer_address /= Void end
+			end
+			create Result.make (size);
+			return_val := c_recv_from (fd, fd1, $a_last_fd, p.item, size, flags, 0, l_peer_address.socket_address.item)
+			if return_val >= 0 then
+				p.resize (return_val)
+				create Result.make_from_managed_pointer (p)
 			end
 		end
 
@@ -166,8 +167,16 @@ feature {NONE} -- Implementation
 
 	make_peer_address
 			-- Create a peer address.
+		require
+			address_attached: address /= Void
+		local
+			l_address: like address
 		do
-			peer_address := address.twin
+			l_address := address
+			check l_address_attached: l_address /= Void end
+			peer_address := l_address.twin
+		ensure
+			peer_address_attached: peer_address /= Void
 		end
 
 	do_create
@@ -182,18 +191,18 @@ feature {NONE} -- Implementation
 			is_created := True
 		end
 
-	do_connect
+	do_connect (a_peer_address: like peer_address)
 		do
 		end
 
-	do_bind
+	do_bind (a_address: like address)
 		local
 			l_fd, l_fd1, l_port: INTEGER
 		do
 			l_fd := fd
 			l_fd1 := fd1
 			l_port := the_local_port
-			c_bind ($l_fd, $l_fd1, $l_port, address.socket_address.item)
+			c_bind ($l_fd, $l_fd1, $l_port, a_address.socket_address.item)
 			fd := l_fd
 			fd1 := l_fd1
 			the_local_port := l_port

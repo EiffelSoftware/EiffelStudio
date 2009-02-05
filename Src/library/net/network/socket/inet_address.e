@@ -67,8 +67,17 @@ feature
 		end
 
 	host_name: STRING
+		local
+			l_name: ?STRING
 		do
-			Result := get_host_name
+			l_name := internal_host_name
+			if l_name /= Void then
+				Result := l_name
+			else
+					-- TODO For now we provide just the textual representation of the IP address
+				l_name := host_address.twin
+				Result := l_name
+			end
 		end
 
 	host_address: STRING
@@ -87,15 +96,7 @@ feature {NETWORK_SOCKET_ADDRESS}
 
 feature {NONE} -- Implementation
 
-    the_host_name: STRING
-
-    get_host_name: STRING
-		do
-			if the_host_name = Void then
-				-- TODO For now we provide just the textual representation of the IP address
-				the_host_name := host_address.twin
-			end
-		end
+    internal_host_name: ?STRING
 
 feature {NONE} -- Externals
 

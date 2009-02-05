@@ -105,18 +105,21 @@ feature -- Status report
 		local
 			idx: INTEGER
 			error_found: BOOLEAN
+			l_error: ?STRING
 		do
 			idx := index
 			from start until error_found or after loop
 				if source.error then
-					Result := error_text (source.error_code)
+					l_error := error_text (source.error_code)
 					error_found := True
 				elseif target.error then
-					Result := error_text (target.error_code)
+					l_error := error_text (target.error_code)
 					error_found := True
 				end
 				forth
 			end
+			check l_error_attached: l_error /= Void end
+			Result := l_error
 			select_transaction (idx)
 		ensure
 			non_empty_string: Result /= Void and then not Result.is_empty

@@ -30,10 +30,11 @@ feature
 			-- Listen on socket for at most `queue' connections.
 		require
 			socket_exists: exists
+			address_attached: address /= Void
 		deferred
 		end
 
-	accepted: like Current
+	accepted: ?like Current
 			-- Last accepted socket.
 
 	accept
@@ -41,6 +42,7 @@ feature
 			-- Accepted service socket available in `accepted'.
 		require
 			socket_exists: exists
+			address_attached: address /= Void
 		deferred
 		end
 

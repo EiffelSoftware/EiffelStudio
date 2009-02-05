@@ -17,7 +17,7 @@ feature -- Access
 	in_out: SOCKET;
 			-- Receive and send socket.
 
-	received : ANY;
+	received: ?ANY;
 			-- message received on `in'
 
 	cleanup
@@ -36,7 +36,7 @@ feature -- Access
 		do
 			received ?= in_out.retrieved
 		end
-	
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

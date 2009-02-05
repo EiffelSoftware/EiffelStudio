@@ -34,7 +34,6 @@ inherit
 		end
 
 create
-
 	make_from_hostname_and_port, make_from_address_and_port, make_any_local, make_localhost
 
 feature -- Initialization
@@ -55,12 +54,16 @@ feature -- Initialization
 			-- TODO look at this valid_host: is_valid_host (a_hostname)
 			valid_port: a_port >= 0 and then a_port <= 0xFFFF
 		local
-			addr: INET_ADDRESS
+			addr: ?INET_ADDRESS
+			l_socket_address: like socket_address
 		do
 			addr := create_from_name (a_hostname)
 			if addr /= Void then
-				socket_address := addr.sockaddr (a_port)
+				l_socket_address := addr.sockaddr (a_port)
+			else
+				create l_socket_address.make (address_size)
 			end
+			socket_address := l_socket_address
 		ensure
 			socket_address /= Void
 		end
@@ -71,9 +74,7 @@ feature -- Initialization
 			addr: INET_ADDRESS
 		do
 			addr := create_any_local
-			if addr /= Void then
-				socket_address := addr.sockaddr (a_port)
-			end
+			socket_address := addr.sockaddr (a_port)
 		ensure
 			socket_address /= Void
 		end
@@ -84,11 +85,7 @@ feature -- Initialization
 			addr: INET_ADDRESS
 		do
 			addr := create_localhost
-			if addr /= Void then
-				socket_address := addr.sockaddr (a_port)
-			end
-		ensure
-			socket_address /= Void
+			socket_address := addr.sockaddr (a_port)
 		end
 
 feature -- Status report
@@ -101,8 +98,14 @@ feature -- Status report
 
 	host_address: INET_ADDRESS
 			-- Host address of address
+		local
+			l_address: ?INET_ADDRESS
 		do
-			Result := create_from_sockaddr(socket_address.item)
+			l_address := create_from_sockaddr (socket_address.item)
+				-- Since we are providing a correct C pointer `socket_address' the result should
+				-- be attached.
+			check l_address_attached: l_address /= Void end
+			Result := l_address
 		end
 
 feature --

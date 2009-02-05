@@ -5,7 +5,6 @@ note
 	revision: "$Revision$"
 
 class
-
 	INET6_ADDRESS
 
 inherit
@@ -15,7 +14,6 @@ inherit
 	INET_PROPERTIES
 
 create
-
 	make_from_host_and_address, make_from_host_and_address_and_interface_name, make_from_host_and_address_and_scope
 
 create {INET_ADDRESS_FACTORY}
@@ -29,22 +27,21 @@ feature -- Constants
 
 feature {INET_ADDRESS_FACTORY} -- Initialization
 
-	make_from_host_and_address (a_hostname: STRING; an_address: ARRAY [NATURAL_8])
+	make_from_host_and_address (a_hostname: ?STRING; an_address: ARRAY [NATURAL_8])
 		do
 			family := ipv6
-			the_host_name := a_hostname
+			internal_host_name := a_hostname
 			the_address := an_address
 		end
 
-	make_from_host_and_address_and_interface_name (a_hostname: STRING; an_address: ARRAY [NATURAL_8]; an_iface_name: STRING)
+	make_from_host_and_address_and_interface_name (a_hostname: ?STRING; an_address: ARRAY [NATURAL_8]; an_iface_name: STRING)
 		do
 			-- TODO Implement scope check
 			the_scope_ifname := an_iface_name
 			make_from_host_and_address_and_scope(a_hostname, an_address, 0)
-			is_scope_ifname_set := True
 		end
 
-	make_from_host_and_address_and_scope (a_hostname: STRING; an_address: ARRAY [NATURAL_8]; a_scope_id: INTEGER)
+	make_from_host_and_address_and_scope (a_hostname: ?STRING; an_address: ARRAY [NATURAL_8]; a_scope_id: INTEGER)
 		do
 			make_from_host_and_address (a_hostname, an_address)
 			if a_scope_id >= 0 then
@@ -53,7 +50,7 @@ feature {INET_ADDRESS_FACTORY} -- Initialization
 			end
 		end
 
-	make_from_host_and_pointer (a_hostname: STRING; a_pointer: POINTER)
+	make_from_host_and_pointer (a_hostname: ?STRING; a_pointer: POINTER)
 		local
 			ptr: POINTER
 			addr: ARRAY [NATURAL_8]
@@ -79,11 +76,14 @@ feature {INET_ADDRESS_FACTORY} -- Initialization
 feature -- Access
 
 	host_address: STRING
+		local
+			l_scope_ifname: like the_scope_ifname
 		do
 			Result := numeric_to_text (the_address)
-			if is_scope_ifname_set and then the_scope_ifname /= Void then -- must check this first
+			l_scope_ifname := the_scope_ifname
+			if l_scope_ifname /= Void then -- must check this first
 				Result.append_character ('%%')
-				Result.append_string(the_scope_ifname)
+				Result.append_string(l_scope_ifname)
 			elseif is_scope_id_set and then the_scope_id > 0 then
 				Result.append_character ('%%')
 				Result.append_integer (the_scope_id)
@@ -186,15 +186,18 @@ feature {NONE} -- Implementation
 
 	the_scope_id: INTEGER
 
-	the_scope_ifname: STRING
+	the_scope_ifname: ?STRING
 
 	is_scope_ifname_set: BOOLEAN
-		-- This will be set to true if the object is constructed with a scoped
-		-- interface instead of a numeric scope id.
+			-- This will be set to true if the object is constructed with a scoped
+			-- interface instead of a numeric scope id.
+		do
+			Result := the_scope_ifname /= Void
+		end
 
 	is_scope_id_set: BOOLEAN
-		-- This will be set to true when the scope_id field contains a valid
-		-- integer scope_id.
+			-- This will be set to true when the scope_id field contains a valid
+			-- integer scope_id.
 
 	numeric_to_text (addr: ARRAY [NATURAL_8]): STRING
 		require

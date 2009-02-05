@@ -23,6 +23,7 @@ feature {NONE} -- Initialization
 			prefer_ipv4_stack: BOOLEAN
 			listen_socket: NETWORK_STREAM_SOCKET
 			accept_timeout: INTEGER
+			l_address: ?NETWORK_SOCKET_ADDRESS
 		do
 			port := 12111
 
@@ -52,7 +53,9 @@ feature {NONE} -- Initialization
 				io.put_string ("Unable bind to port "+ port.out)
 				io.put_new_line
 			else
-				io.put_string ("Listening on address = " + listen_socket.address.host_address.host_address + " port = " + listen_socket.address.port.out)
+				l_address := listen_socket.address
+				check l_address_attached: l_address /= Void end
+				io.put_string ("Listening on address = " + l_address.host_address.host_address + " port = " + l_address.port.out)
 				io.put_new_line
 					-- Listen on Server Socket with queue length = 2
 				listen_socket.listen (2)
@@ -71,7 +74,7 @@ feature {NONE} -- Implementation
 			valid_socket: socket /= Void and then socket.is_bound
 		local
 			done: BOOLEAN
-			client_socket: NETWORK_STREAM_SOCKET
+			client_socket: ?NETWORK_STREAM_SOCKET
 		do
 			from
 				done := False
@@ -97,10 +100,17 @@ feature {NONE} -- Implementation
 			socket_valid: socket.is_open_read and then socket.is_open_write
 		local
 			done: BOOLEAN
+			l_address, l_peer_address: ?NETWORK_SOCKET_ADDRESS
 		do
-			io.put_string ("Accepted client on the listen socket address = "+ socket.address.host_address.host_address + " port = " + socket.address.port.out +".")
+			l_address := socket.address
+			l_peer_address := socket.peer_address
+			check
+				l_address_attached: l_address /= Void
+				l_peer_address_attached: l_peer_address /= Void
+			end
+			io.put_string ("Accepted client on the listen socket address = "+ l_address.host_address.host_address + " port = " + l_address.port.out +".")
 			io.put_new_line
-			io.put_string ("%T Accepted client address = " + socket.peer_address.host_address.host_address + " , port = " + socket.peer_address.port.out)
+			io.put_string ("%T Accepted client address = " + l_peer_address.host_address.host_address + " , port = " + l_peer_address.port.out)
 			io.put_new_line
 			from
 				done := False
@@ -109,7 +119,7 @@ feature {NONE} -- Implementation
 			loop
 				done := receive_message_and_send_replay (socket)
 			end
-			io.put_string ("Finished processing the client, address = "+ socket.peer_address.host_address.host_address + " port = " + socket.peer_address.port.out + ".")
+			io.put_string ("Finished processing the client, address = "+ l_peer_address.host_address.host_address + " port = " + l_peer_address.port.out + ".")
 			io.put_new_line
 		end
 
@@ -118,7 +128,7 @@ feature {NONE} -- Implementation
 			socket_attached: client_socket /= Void
 			socket_valid: client_socket.is_open_read and then client_socket.is_open_write
 		local
-			message: STRING
+			message: ?STRING
 		do
 				-- Limit client message size to 10
 				-- It's here just to demonstrate the usage of the `read_line_until' routine

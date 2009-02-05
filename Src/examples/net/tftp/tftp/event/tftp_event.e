@@ -23,12 +23,12 @@ feature
 			-- Package ID
 	type: INTEGER
 			-- Event Type
-	arg: STRING
+	arg: ?STRING
 			-- Optional Argument
 
 feature -- Initialization
 
-	make (a_peer_address: INET_ADDRESS; a_peer_port: INTEGER; an_id: INTEGER; a_type: INTEGER; an_arg: STRING) is
+	make (a_peer_address: INET_ADDRESS; a_peer_port: INTEGER; an_id: INTEGER; a_type: INTEGER; an_arg: ?STRING) is
 		do
 			peer_address := a_peer_address
 			peer_port := a_peer_port

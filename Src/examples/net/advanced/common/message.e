@@ -11,18 +11,27 @@ note
 class MESSAGE
 
 inherit
+	LINKED_LIST [STRING]
+		redefine
+			make
+		end
 
 	STORABLE
 		undefine
-			copy,
-			is_equal
+			is_equal, copy
 		end
 
-	LINKED_LIST [STRING]
-
 create
+	make
 
-	make_message
+feature {NONE} -- Initialization
+
+	make
+		do
+			Precursor
+			create client_name.make_empty
+			extend ("-> ")
+		end
 
 feature
 
@@ -31,12 +40,6 @@ feature
 	over: BOOLEAN
 
 	client_name: STRING
-
-	make_message
-		do
-			make
-			extend ("-> ")
-		end
 
 	set_client_name (s: STRING)
 		require
@@ -56,9 +59,8 @@ feature
 		end
 
 	print_message
-		-- Prints the contents of the message to standard output
+			-- Prints the contents of the message to standard output
 		do
-
 			from
 				start
 			until

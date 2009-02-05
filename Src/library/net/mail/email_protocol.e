@@ -16,7 +16,7 @@ feature -- Access
 
 	hostname: STRING
 		-- hostname .. ex: smtp
-		
+
 	code_number: INTEGER
 		-- Last error code received from server.
 
@@ -63,12 +63,12 @@ feature -- Settings
 			port:= new_port
 		end
 
-feature {NONE} -- Implementation 
+feature {NONE} -- Implementation
 
 	port: INTEGER
 		-- port number
 
-	socket: NETWORK_STREAM_SOCKET
+	socket: ?NETWORK_STREAM_SOCKET
 		-- Socket use to communicate
 
 feature {NONE} -- Miscellaneous
@@ -84,17 +84,24 @@ feature {NONE} -- Miscellaneous
 
 	init_socket
 			-- Initiate the socket.
+		local
+			l_socket: like socket
 		do
-			create socket.make_client_by_port (port, hostname)
-			socket.connect
-			decode
+			create l_socket.make_client_by_port (port, hostname)
+			l_socket.connect
+			decode (l_socket)
+			socket := l_socket
 			if code_number = Ack_begin_connection then
 				enable_connected
 			end
+		ensure
+			socket_attached: socket /= Void
 		end
 
-	decode
+	decode (a_socket: !like socket)
 			-- Read answer from server and set `code_number'.
+		require
+			a_socket_attached: a_socket /= Void
 		deferred
 		end
 

@@ -30,7 +30,7 @@ feature -- Access
 
 feature -- Basic operation
 
-	execute (arg: ANY)
+	execute (arg: ?ANY)
 			-- do the work of the command
 		deferred
 		end

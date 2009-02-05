@@ -24,8 +24,9 @@ feature {NONE} -- Initialization
 			host: STRING
 			port: INTEGER
 			prefer_ipv4_stack: BOOLEAN
-			address: INET_ADDRESS
+			address: ?INET_ADDRESS
 			timeout: INTEGER
+			l_socket: NETWORK_STREAM_SOCKET
 		do
 			host := "localhost"
 			port := 12111
@@ -55,34 +56,34 @@ feature {NONE} -- Initialization
 			io.put_new_line
 
 				-- Obtain the host address
-			address := create_from_name(host)
+			address := create_from_name (host)
 			if address = Void then
 				io.put_string ("Unknown host " + host)
 				io.put_new_line
 			else
 					-- Create the socket connection to the Echo Server.
-				create nss.make_client_by_address_and_port (address, port)
+				create l_socket.make_client_by_address_and_port (address, port)
 					-- Set the connection timeout
-				nss.set_connect_timeout (timeout)
+				l_socket.set_connect_timeout (timeout)
 					-- Connect to the Server
-				nss.connect
-				if not nss.is_connected then
+				l_socket.connect
+				if not l_socket.is_connected then
 					io.put_string ("Unable to connect to host " + host + ":" + port.out)
 					io.put_new_line
 				else
 
 						-- Since this is the client, we will initiate the talking.
-					send_message_and_receive_reply ("Hello")
-					send_message_and_receive_reply ("This")
-					send_message_and_receive_reply ("is")
-					send_message_and_receive_reply ("a")
-					send_message_and_receive_reply ("test")
+					send_message_and_receive_reply (l_socket, "Hello")
+					send_message_and_receive_reply (l_socket, "This")
+					send_message_and_receive_reply (l_socket, "is")
+					send_message_and_receive_reply (l_socket, "a")
+					send_message_and_receive_reply (l_socket, "test")
 
 						-- Send the special string to tell server to quit.
-					send_message ("quit")
+					send_message (l_socket, "quit")
 
 						-- Close the connection
-					nss.close
+					l_socket.close
 				end
 			end
 			io.put_string ("finish echo_client")
@@ -91,33 +92,35 @@ feature {NONE} -- Initialization
 
 feature {NONE} --Implementation
 
-	send_message_and_receive_reply (message: STRING)
+	send_message_and_receive_reply (a_socket: SOCKET; message: STRING)
 		require
-			valid_socket: nss /= Void and then nss.is_open_read and then nss.is_open_write
+			valid_socket: a_socket /= Void and then a_socket.is_open_read and then a_socket.is_open_write
 			valid_message: message /= Void and then not message.is_empty
 		do
-			send_message (message)
-			receive_reply
+			send_message (a_socket, message)
+			receive_reply (a_socket)
 		end
 
-	send_message (message: STRING)
+	send_message (a_socket: SOCKET; message: STRING)
 		require
-			valid_socket: nss /= Void and then nss.is_open_write
+			valid_socket: a_socket /= Void and then a_socket.is_open_write
 			valid_message: message /= Void and then not message.is_empty
 		do
-			nss.put_string (message + "%N")
+			a_socket.put_string (message + "%N")
 		end
 
-	receive_reply
+	receive_reply (a_socket: SOCKET)
 		require
-			valid_socket: nss /= Void and then nss.is_open_read
+			valid_socket: a_socket /= Void and then a_socket.is_open_read
+		local
+			l_last_string: ?STRING
 		do
-			nss.read_line
+			a_socket.read_line
+			l_last_string := a_socket.last_string
+			check l_last_string_attached: l_last_string /= Void end
 			io.put_string ("Server Says: ")
-			io.put_string (nss.last_string)
+			io.put_string (l_last_string)
 			io.put_new_line
 		end
-
-	nss: NETWORK_STREAM_SOCKET
 
 end

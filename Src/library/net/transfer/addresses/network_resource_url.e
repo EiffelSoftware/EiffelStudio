@@ -28,6 +28,9 @@ feature {NONE} -- Initialization
 		do
 			create username.make (0)
 			create password.make (0)
+				-- Initialize `host' and `path' even if initialized below in `analyze' via Precursor
+			create host.make_empty
+			create path.make_empty
 			Precursor {URL} (a)
 		end
 
@@ -213,6 +216,7 @@ invariant
 	username_exists: username /= Void
 	password_exists: password /= Void
 	password_constraint: not password.is_empty implies not username.is_empty
+	host_not_void: host /= Void
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

@@ -15,6 +15,9 @@ class NETWORK_CLIENT inherit
 			in_out, send
 		end
 
+create
+	make
+
 feature -- Access
 
 	in_out: NETWORK_STREAM_SOCKET;

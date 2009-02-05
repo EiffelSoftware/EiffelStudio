@@ -207,12 +207,17 @@ feature -- Output
 
 	put (other: DATA_RESOURCE)
 			-- Write out resource `other'.
+		local
+			l_other_packet: like last_packet
 		do
 			from until not other.is_packet_pending loop
 				other.read
-				file.put_string (other.last_packet)
-				last_packet_size := other.last_packet.count
-				bytes_transferred := bytes_transferred + last_packet_size
+				l_other_packet := other.last_packet
+				if l_other_packet /= Void then
+					file.put_string (l_other_packet)
+					last_packet_size := l_other_packet.count
+					bytes_transferred := bytes_transferred + last_packet_size
+				end
 				if last_packet_size /= other.last_packet_size then
 					error_code := Write_error
 				end
@@ -223,10 +228,15 @@ feature -- Input
 
 	read
 			-- Read packet.
+		local
+			l_packet: like last_packet
 		do
 			file.read_stream (read_buffer_size)
-			last_packet := file.last_string
-			last_packet_size := last_packet.count
+			l_packet := file.last_string
+				-- Per postcondition of `file.read_stream'.
+			check l_packet_attached: l_packet /= Void end
+			last_packet := l_packet
+			last_packet_size := l_packet.count
 			bytes_transferred := bytes_transferred + last_packet_size
 		rescue
 			error_code := transfer_failed

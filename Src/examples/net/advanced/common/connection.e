@@ -11,12 +11,21 @@ note
 class CONNECTION
 
 inherit
-
 	POLL_COMMAND
+		redefine
+			make
+		end
 
 create
-
 	make
+
+feature {NONE} -- Initialization
+
+	make (s: IO_MEDIUM)
+		do
+			Precursor (s)
+			create client_name.make_empty
+		end
 
 feature
 

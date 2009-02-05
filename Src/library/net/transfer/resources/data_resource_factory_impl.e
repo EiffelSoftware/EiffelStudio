@@ -21,16 +21,16 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	resource: DATA_RESOURCE
+	resource: ?DATA_RESOURCE
 			-- Created data resource
 
-	service: STRING
+	service: ?STRING
 			-- Requested service
 
-	address: STRING
+	address: ?STRING
 			-- Address (without service part)
 
-	url: URL
+	url: ?URL
 			-- URL representation of the address
 
 feature -- Status report
@@ -43,17 +43,25 @@ feature -- Status report
 
 	is_address_set: BOOLEAN
 			-- Has address been set?
+		local
+			l_address: like address
+			l_service: like service
 		do
-			Result := (address /= Void and service /= Void) and then
-				not (address.is_empty and service.is_empty)
+			l_address := address
+			l_service := service
+			Result := (l_address /= Void and l_service /= Void) and then
+				not (l_address.is_empty and l_service.is_empty)
 		end
 
 	is_address_correct: BOOLEAN
 			-- Is address correct?
 		require
 			address_set: is_address_set
+		local
+			l_url: like url
 		do
-			Result := is_service_supported and then url.is_correct
+			l_url := url
+			Result := is_service_supported and then l_url /= Void and then l_url.is_correct
 		end
 
 	default_service: STRING
@@ -69,6 +77,7 @@ feature -- Status setting
 		local
 			s: STRING
 			pos: INTEGER
+			l_url_function: like url_function
 		do
 			s := addr.twin
 			pos := s.substring_index ("://", 1)
@@ -86,12 +95,12 @@ feature -- Status setting
 			address := s.substring (pos + 3, s.count)
 			if is_service_supported then
 				setup_factory
-					check
-						function_set: url_function /= Void
-							-- Because we know that the requested service is
-							-- supported.
-					end
-				url := url_function.item (Void)
+				l_url_function := url_function
+				check
+						-- Because we know that the requested service is supported.
+					function_set: l_url_function /= Void
+				end
+				url := l_url_function.item (Void)
 			else
 				address := Void
 				service := Void
@@ -116,17 +125,21 @@ feature -- Basic operations
 			-- Create resource.
 		require
 			correct_address: is_address_correct
+		local
+			l_resource_function: like resource_function
 		do
-			resource := resource_function.item (Void)
+			l_resource_function := resource_function
+			check l_resource_function_attached: l_resource_function /= Void end
+			resource := l_resource_function.item (Void)
 		ensure
 			resource_created: resource /= Void
 		end
 
 feature {NONE} -- Implementation
 
-	url_function: FUNCTION [DATA_RESOURCE_FACTORY_IMPL, TUPLE, URL]
+	url_function: ?FUNCTION [DATA_RESOURCE_FACTORY_IMPL, TUPLE, URL]
 
-	resource_function: FUNCTION [DATA_RESOURCE_FACTORY_IMPL, TUPLE, DATA_RESOURCE]
+	resource_function: ?FUNCTION [DATA_RESOURCE_FACTORY_IMPL, TUPLE, DATA_RESOURCE]
 
 	lookup_service_id: INTEGER
 			-- Lookup ID for service.
@@ -179,64 +192,79 @@ feature {NONE} -- Implementation (Factory setup)
 		end
 
 
-	create_file_url: URL
+	create_file_url: FILE_URL
 			-- Create file URL.
+		require
+			is_address_set: is_address_set
+		local
+			l_address: like address
 		do
-			create {FILE_URL} Result.make (address)
+			l_address := address
+			check l_address_not_void: l_address /= Void end
+			create Result.make (l_address)
 		end
 
-	create_file_resource: DATA_RESOURCE
+	create_file_resource: FILE_PROTOCOL
 			-- Create file service.
 		local
-			u: FILE_URL
+			u: ?FILE_URL
 		do
 			u ?= url
-				check
-					type_correct: u /= Void
-						-- Because factory has created the right URL type
-				end
-
-			create {FILE_PROTOCOL} Result.make (u)
+			check
+					-- Because factory has created the right URL type
+				type_correct: u /= Void
+			end
+			create Result.make (u)
 		end
 
-	create_http_url: URL
+	create_http_url: HTTP_URL
 			-- Create HTTP URL.
+		require
+			is_address_set: is_address_set
+		local
+			l_address: like address
 		do
-			create {HTTP_URL} Result.make (address)
+			l_address := address
+			check l_address_not_void: l_address /= Void end
+			create Result.make (l_address)
 		end
 
-	create_http_resource: DATA_RESOURCE
+	create_http_resource: HTTP_PROTOCOL
 			-- Create HTTP service.
 		local
-			u: HTTP_URL
+			u: ?HTTP_URL
 		do
 			u ?= url
-				check
-					type_correct: u /= Void
-						-- Because factory has created the right URL type
-				end
-
-			create {HTTP_PROTOCOL} Result.make (u)
+			check
+					-- Because factory has created the right URL type
+				type_correct: u /= Void
+			end
+			create Result.make (u)
 		end
 
-	create_ftp_url: URL
+	create_ftp_url: FTP_URL
 			-- Create FTP URL.
+		require
+			is_address_set: is_address_set
+		local
+			l_address: like address
 		do
-			create {FTP_URL} Result.make (address)
+			l_address := address
+			check l_address_not_void: l_address /= Void end
+			create Result.make (l_address)
 		end
 
-	create_ftp_resource: DATA_RESOURCE
+	create_ftp_resource: FTP_PROTOCOL
 			-- Create FTP service.
 		local
-			u: FTP_URL
+			u: ?FTP_URL
 		do
 			u ?= url
-				check
-					type_correct: u /= Void
-						-- Because factory has created the right URL type
-				end
-
-			create {FTP_PROTOCOL} Result.make (u)
+			check
+					-- Because factory has created the right URL type
+				type_correct: u /= Void
+			end
+			create Result.make (u)
 		end
 
 invariant

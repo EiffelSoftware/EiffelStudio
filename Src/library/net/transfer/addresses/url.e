@@ -37,19 +37,23 @@ feature -- Access
 
 	port: INTEGER
 			-- Port used by service
-	
+
 	default_port: INTEGER
 			-- Default port number for service
 		deferred
 		end
-	
+
 	proxy_host: STRING
 			-- Name or address of proxy host
 		require
 			proxy_supported: is_proxy_supported
 			has_proxy: is_proxy_used
+		local
+			l_proxy_information: like proxy_information
 		do
-			Result := proxy_information.host
+			l_proxy_information := proxy_information
+			check l_proxy_information_attached: l_proxy_information /= Void end
+			Result := l_proxy_information.host
 		ensure
 			result_not_empty: Result /= Void and then not Result.is_empty
 		end
@@ -59,36 +63,40 @@ feature -- Access
 		require
 			proxy_supported: is_proxy_supported
 			has_proxy: is_proxy_used
+		local
+			l_proxy_information: like proxy_information
 		do
-			Result := proxy_information.port
+			l_proxy_information := proxy_information
+			check l_proxy_information_attached: l_proxy_information /= Void end
+			Result := l_proxy_information.port
 		ensure
 			result_non_negative: Result >= 0
 		end
-			
+
 	location: STRING
 			-- Full URL of resource
 		deferred
 		end
-			
+
 feature -- Status report
 
 	is_correct: BOOLEAN
 			-- Is URL correct?
 		deferred
 		end
-	 
+
 	 is_proxy_supported: BOOLEAN
 			-- Are proxy connections supported?
 		deferred
 		end
-	 
+
 	 proxy_host_ok (host: STRING): BOOLEAN
 	 		-- Is host name of proxy correct?
 		require
 			proxy_supported: is_proxy_supported
 		deferred
 		end
-	
+
 	 is_proxy_used: BOOLEAN
 	 		-- Is a proxy used?
 		do
@@ -99,12 +107,12 @@ feature -- Status report
 			-- Can a password be set?
 		deferred
 		end
-	 
+
 	has_username: BOOLEAN
 			-- Can address contain a username?
 		deferred
 		end
-	 
+
 feature -- Status setting
 
 	set_port (port_no: INTEGER)
@@ -148,7 +156,7 @@ feature -- Status setting
 			non_empty_username: un /= Void and then not un.is_empty
 		deferred
 		end
-	 
+
 	set_password (pw: STRING)
 			-- Set password.
 		require
@@ -156,7 +164,7 @@ feature -- Status setting
 			non_empty_password: pw /= Void and then not pw.is_empty
 		deferred
 		end
-	 
+
 	reset_proxy
 			-- Reset proxy information.
 		require
@@ -182,14 +190,14 @@ feature {NONE} -- Implementation
 	address: STRING
 			-- Address string
 
-	proxy_information: PROXY_INFORMATION
+	proxy_information: ?PROXY_INFORMATION
 			-- Information about the proxy to be used
-			
+
 invariant
 
 	proxy_used_definition: is_proxy_used = (proxy_information /= Void)
 	proxy_usage_constraint: is_proxy_used implies is_proxy_supported
-	
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

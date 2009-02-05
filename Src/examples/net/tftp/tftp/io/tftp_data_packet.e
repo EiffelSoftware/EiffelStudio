@@ -7,8 +7,7 @@ inherit
 	TFTP_ACK_PACKET
 
 create
-
-	make_from_managed_pointer, make_from_host_port_managed_pointer, make_from_address_code_data
+	make_from_host_port_managed_pointer, make_from_address_code_data
 
 feature
 

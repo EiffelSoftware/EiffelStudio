@@ -19,7 +19,7 @@ feature
 
 	make (argv: ARRAY [STRING])
 		local
-			soc: NETWORK_DATAGRAM_SOCKET
+			soc: ?NETWORK_DATAGRAM_SOCKET
 			ps: MEDIUM_POLLER
 			readcomm: DATAGRAM_READER
 			writecomm: SERVER_DATAGRAM_WRITER
@@ -41,7 +41,7 @@ feature
 				soc.close
 			end
 		rescue
-			if not soc.is_closed then
+			if soc /= Void and then not soc.is_closed then
 				soc.close
 			end
 		end

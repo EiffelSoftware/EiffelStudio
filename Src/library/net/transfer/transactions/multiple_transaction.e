@@ -109,18 +109,14 @@ feature -- Basic operations
 			start
 			debug Io.error.put_string ("- OPEN SOURCE -%N") end
 			source.open
-			first_source := source
 			if not transaction.error then
-				execute_command (agent do_transaction)
+				execute_command (agent do_transaction (source))
 			end
 			debug Io.error.put_string ("- CLOSE SOURCE -%N") end
 			source.close
 		end
 
 feature {NONE} -- Implementation
-
-	first_source: DATA_RESOURCE
-			-- Handle to first source in collection
 
 	reset_error_flags
 			-- Reset error flags for selected transaction.
@@ -131,14 +127,14 @@ feature {NONE} -- Implementation
 			target.reset_error
 		end
 
-	do_transaction
+	do_transaction (a_first_source: DATA_RESOURCE)
 			-- Execute selected transaction.
 		require
 			not_empty: not is_empty
-			first_source_set: first_source /= Void
+			first_source_set: a_first_source /= Void
 		do
 			if index > 1 then
-				transaction.source.reuse_connection (first_source)
+				transaction.source.reuse_connection (a_first_source)
 			end
 			debug Io.error.put_string ("- OPEN TARGET -%N") end
 			target.open

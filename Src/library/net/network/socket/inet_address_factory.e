@@ -17,37 +17,44 @@ inherit
 feature
 
 	create_any_local: INET_ADDRESS
-			--
+			-- Address that allows connection from any host.
 		do
 			Result := impl.any_local_address
+		ensure
+			create_any_local_attached: Result /= Void
 		end
 
 	create_localhost: INET_ADDRESS
 			--
 		local
 			localhostname: STRING
+			l_result: ?INET_ADDRESS
 		do
 			localhostname := impl.local_host_name
-			Result := create_from_name (localhostname)
+			l_result := create_from_name (localhostname)
+			check l_result_attached: l_result /= Void end
+			Result := l_result
+		ensure
+			create_localhost_attached: Result /= Void
 		end
 
-	create_from_name (hostname: STRING): INET_ADDRESS
+	create_from_name (hostname: STRING): ?INET_ADDRESS
 			--
 		local
-			r: ARRAY[INET_ADDRESS]
+			r: ?ARRAY [INET_ADDRESS]
 		do
 			r := get_all_by_name (hostname)
-			if r /= Void then
+			if r /= Void and then not r.is_empty then
 				Result := r.item (1)
 			end
 		end
 
-	create_from_address (address: ARRAY [NATURAL_8]) : INET_ADDRESS
+	create_from_address (address: ARRAY [NATURAL_8]): ?INET_ADDRESS
 			--
 		require
 			valid_address: address /= Void
 		local
-			new_addr: ARRAY [NATURAL_8]
+			new_addr: ?ARRAY [NATURAL_8]
 		do
 		    if address.count = {INET4_ADDRESS}.INADDRSZ then
 				create {INET4_ADDRESS} Result.make_from_host_and_address (Void, address)
@@ -56,12 +63,12 @@ feature
 				if new_addr /= Void then
 					create {INET4_ADDRESS} Result.make_from_host_and_address (Void, new_addr)
 				else
-					create {INET6_ADDRESS} Result.make_from_host_and_address (Void, new_addr)
+					create {INET6_ADDRESS} Result.make_from_host_and_address (Void, address)
 				end
 			end
 		end
 
-	create_from_sockaddr (sockaddr: POINTER) : INET_ADDRESS
+	create_from_sockaddr (sockaddr: POINTER): ?INET_ADDRESS
 			--
 		require
 			valid_sockaddr: sockaddr /= default_pointer
@@ -92,80 +99,80 @@ feature {NONE} -- Implementation
 
 	INT16SZ: INTEGER = 2
 
-    get_all_by_name (a_host: STRING): ARRAY[INET_ADDRESS]
+    get_all_by_name (a_host: STRING): ?ARRAY[INET_ADDRESS]
     	local
     		ipv6_expected: BOOLEAN
     		host: STRING
-    		addr_array: ARRAY [NATURAL_8]
+    		addr_array: ?ARRAY [NATURAL_8]
     		addr: INET_ADDRESS
     		numeric_zone: INTEGER
-    		iface_name: STRING
+    		iface_name: ?STRING
     		pos: INTEGER
     		failed: BOOLEAN
-	do
-		host := a_host
-		numeric_zone := -1
-		if host = Void or else host.is_empty then
-			create Result.make (1, 1)
-			Result.put (impl.loopback_address, 1)
-		else
-			failed := False
-			if host.item (1) = '[' then
-				if host.count > 2 and then host.item(host.count) = ']' then
-					host := host.substring (2, host.count - 1)
-					ipv6_expected := True;
-				else
-					-- This was supposed to be a IPv6 address, but it's not!
-					-- TODO report error
-					failed := True
-				end
-			end
-			if not failed then
-				if host.item(1).is_hexa_digit or else host.item(1) = ':' then
-					addr_array := text_to_numeric_format_v4 (host)
-					if addr_array = Void then
-						pos :=  host.index_of ('%%', 1)
-						if  pos /= 0 then
-							numeric_zone := check_numeric_zone (host)
-							if numeric_zone = -1 then
-								iface_name := host.substring (pos+1, host.count)
-							end
-						end
-						addr_array := text_to_numeric_format_v6 (host);
-					elseif  ipv6_expected then
-						-- Means an IPv4 litteral between brackets!
-						-- TODO throw new UnknownHostException("["+host+"]");
+		do
+			host := a_host
+			numeric_zone := -1
+			if host = Void or else host.is_empty then
+				create Result.make (1, 1)
+				Result.put (impl.loopback_address, 1)
+			else
+				failed := False
+				if host.item (1) = '[' then
+					if host.count > 2 and then host.item(host.count) = ']' then
+						host := host.substring (2, host.count - 1)
+						ipv6_expected := True;
+					else
+						-- This was supposed to be a IPv6 address, but it's not!
 						-- TODO report error
 						failed := True
 					end
-					if not failed then
-						if addr_array /= Void then
-							create Result.make (1, 1)
-							if addr_array.count = {INET4_ADDRESS}.INADDRSZ then
-								create {INET4_ADDRESS} addr.make_from_host_and_address (Void, addr_array)
-							else
-								if iface_name /= Void then
-									create {INET6_ADDRESS} addr.make_from_host_and_address_and_interface_name (Void, addr_array, iface_name)
-								else
-									create {INET6_ADDRESS} addr.make_from_host_and_address_and_scope (Void, addr_array, numeric_zone)
+				end
+				if not failed then
+					if host.item(1).is_hexa_digit or else host.item(1) = ':' then
+						addr_array := text_to_numeric_format_v4 (host)
+						if addr_array = Void then
+							pos :=  host.index_of ('%%', 1)
+							if  pos /= 0 then
+								numeric_zone := check_numeric_zone (host)
+								if numeric_zone = -1 then
+									iface_name := host.substring (pos+1, host.count)
 								end
 							end
-							Result.put (addr, 1)
+							addr_array := text_to_numeric_format_v6 (host);
+						elseif  ipv6_expected then
+							-- Means an IPv4 litteral between brackets!
+							-- TODO throw new UnknownHostException("["+host+"]");
+							-- TODO report error
+							failed := True
 						end
+						if not failed then
+							if addr_array /= Void then
+								create Result.make (1, 1)
+								if addr_array.count = {INET4_ADDRESS}.INADDRSZ then
+									create {INET4_ADDRESS} addr.make_from_host_and_address (Void, addr_array)
+								else
+									if iface_name /= Void then
+										create {INET6_ADDRESS} addr.make_from_host_and_address_and_interface_name (Void, addr_array, iface_name)
+									else
+										create {INET6_ADDRESS} addr.make_from_host_and_address_and_scope (Void, addr_array, numeric_zone)
+									end
+								end
+								Result.put (addr, 1)
+							end
+						end
+					elseif ipv6_expected then
+						-- TODO We were expecting an IPv6 Litteral, but got something else
+						-- throw new UnknownHostException("["+host+"]");
+						-- TODO report error
+						failed := True
+						Result := Void
 					end
-				elseif ipv6_expected then
-					-- TODO We were expecting an IPv6 Litteral, but got something else
-					-- throw new UnknownHostException("["+host+"]");
-					-- TODO report error
-					failed := True
-					Result := Void
-				end
-				if Result = Void and then not failed then
-					Result := get_all_by_name_0 (host)
+					if Result = Void and then not failed then
+						Result := get_all_by_name_0 (host)
+					end
 				end
 			end
 		end
-	end
 
     check_numeric_zone (s: STRING): INTEGER
     		--
@@ -205,7 +212,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-    text_to_numeric_format_v4 (src: STRING): ARRAY [NATURAL_8]
+    text_to_numeric_format_v4 (src: STRING): ?ARRAY [NATURAL_8]
     	require
     		valid_src: src /= Void
     	local
@@ -273,6 +280,7 @@ feature {NONE} -- Implementation
 			    	if splitted.item(3).is_integer_32 then
 			    		val := splitted.item(3).to_integer_32
 		    			if val >= 0 and then val <= 0xffff then
+		    				check result_attached: Result /= Void end
 							Result.put (((val |>> 8) & 0xff).as_natural_8, 3)
 							Result.put ((val & 0xff).as_natural_8, 4)
 		    			else
@@ -303,7 +311,7 @@ feature {NONE} -- Implementation
 			end
     	end
 
-    text_to_numeric_format_v6 (src: STRING): ARRAY [NATURAL_8]
+    text_to_numeric_format_v6 (src: STRING): ?ARRAY [NATURAL_8]
     	require
     		valid_src: src /= Void
     	local
@@ -314,9 +322,9 @@ feature {NONE} -- Implementation
     		val: INTEGER
     		ch: CHARACTER
     		ia4: STRING
-    		v4addr: ARRAY [NATURAL_8]
+    		v4addr: ?ARRAY [NATURAL_8]
     		done: BOOLEAN
-    		new_result: ARRAY [NATURAL_8]
+    		new_result: ?ARRAY [NATURAL_8]
     	do
     		if src.count >= 2 then
     			length := src.count
@@ -386,7 +394,7 @@ feature {NONE} -- Implementation
 		    						Result := Void
 		    						done := True
 								else
-									v4addr := text_to_numeric_format_v4(ia4);
+									v4addr := text_to_numeric_format_v4 (ia4);
 									if v4addr = Void then
 		    							Result := Void
 		    							done := True
@@ -442,6 +450,7 @@ feature {NONE} -- Implementation
 							if j /= {INET6_ADDRESS}.INADDRSZ+1 then
 	    						Result := Void
 	    					else
+	    						check result_attached: Result /= Void end
 								new_result := convert_from_ipv4_mappedd_address (Result)
 								if new_result /= Void then
 	    							Result := new_result;
@@ -454,11 +463,11 @@ feature {NONE} -- Implementation
 		end
 
 
-	convert_from_ipv4_mappedd_address (addr: ARRAY [NATURAL_8]): ARRAY [NATURAL_8]
+	convert_from_ipv4_mappedd_address (addr: ARRAY [NATURAL_8]): ?ARRAY [NATURAL_8]
 		local
 			i: INTEGER
 		do
-			if is_ipv4_mapped_address(addr) then
+			if is_ipv4_mapped_address (addr) then
 				create Result.make (1, {INET4_ADDRESS}.INADDRSZ)
 				from
 					i := 1
@@ -547,9 +556,9 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	get_all_by_name_0 (host: STRING): ARRAY[INET_ADDRESS]
+	get_all_by_name_0 (host: STRING): ?ARRAY[INET_ADDRESS]
 		local
-			ai: ADDRINFO
+			ai: ?ADDRINFO
 			ia: INET_ADDRESS
 		do
 			ai := getaddrinfo(host)
@@ -571,13 +580,13 @@ feature {NONE} -- Implementation
 					end
 					ai := ai.next
 				end
-				if Result.count = 0  then
+				if Result.is_empty then
 					Result := Void
 				end
 			end
 		end
 
-	getaddrinfo (host: STRING): ADDRINFO
+	getaddrinfo (host: STRING): ?ADDRINFO
 		local
 			ext: C_STRING
 			p: POINTER

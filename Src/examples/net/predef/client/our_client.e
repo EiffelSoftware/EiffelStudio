@@ -25,23 +25,31 @@ feature
 
 	our_list: OUR_MESSAGE
 
-	received: OUR_MESSAGE -- Type redefinition
+	received: ?OUR_MESSAGE -- Type redefinition
 
 	make_client (argv: ARRAY [STRING])
 			-- Build list, send it, receive modified list, and print it.
+		local
+			l_host: STRING
+			l_port: INTEGER
 		do
 			if argv.count /= 3 then
-				io.error.putstring ("Usage: ")
-				io.error.putstring (argv.item (0))
-				io.error.putstring (" hostname portnumber%N")
+				io.error.put_string ("Usage: ")
+				io.error.put_string (argv.item (0))
+				io.error.put_string (" hostname portnumber%N")
+				io.error.put_string ("Defaulting to host `localhost' and port `2000'.%N")
+				l_port := 2000
+				l_host := "localhost"
 			else
-				make (argv.item (2).to_integer, argv.item (1))
-				build_list
-				send (our_list)
-				receive
-				process_received
-				cleanup
+				l_port := argv.item (2).to_integer
+				l_host := argv.item (1)
 			end
+			make (l_port, l_host)
+			build_list
+			send (our_list)
+			receive
+			process_received
+			cleanup
 		rescue
 			cleanup
 		end
@@ -59,13 +67,17 @@ feature
 	process_received
 			-- Print the contents of received in sequence.
 		do
-			if received = Void then
-				io.putstring ("No list received.")
-			else
-				from received.start until received.after loop
-					io.putstring (received.item)
-					received.forth
+			if {l_received: OUR_MESSAGE} received then
+				from
+					l_received.start
+				until
+					l_received.after
+				loop
+					io.put_string (l_received.item)
+					l_received.forth
 				end
+			else
+				io.put_string ("No list received.")
 			end
 			io.new_line
 		end

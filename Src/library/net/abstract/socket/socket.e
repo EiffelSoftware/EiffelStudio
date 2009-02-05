@@ -70,9 +70,13 @@ feature -- Status report
 
 	error: STRING
 			-- Output a related error message.
+		local
+			l_error: ?STRING
 		do
 			if was_error then
-				Result := socket_error
+				l_error := socket_error
+				check l_error_attached: l_error /= Void end
+				Result := l_error
 			else
 				Result := Precursor
 			end
@@ -84,7 +88,7 @@ feature -- Status report
 			Result := False
 		end
 
-	is_valid_peer_address (addr: like address): BOOLEAN
+	is_valid_peer_address (addr: !like address): BOOLEAN
 			-- Is `addr' a valid peer address?
 		require
 			address_exists: addr /= Void
@@ -92,7 +96,7 @@ feature -- Status report
 			Result := True
 		end
 
-	is_valid_family (addr: like address): BOOLEAN
+	is_valid_family (addr: !like address): BOOLEAN
 			-- Is `addr' the same family as Current?
 		require
 			address_exists: addr /= Void
@@ -205,15 +209,21 @@ feature -- Basic commands
 	type: INTEGER
 			-- Type of socket. eg stream, datagram
 
-	address: like address_type
+	address: ?like address_type
 			-- Local address of socket
 
-	peer_address: like address
+	peer_address: ?like address
 			-- Peer address of socket
 
 	address_type: SOCKET_ADDRESS
 			-- Type of `address' and `peer_address'
+		require
+			not_callable: False
+		local
+			l_result: ?SOCKET_ADDRESS
 		do
+			check l_result_attached: l_result /= Void end
+			Result := l_result
 		end
 
 	set_peer_address (addr: like address)
@@ -665,16 +675,19 @@ feature -- Input
 
 	read_line, readline
 			-- Read a line of characters (ended by a new_line).
+		local
+			l_last_string: like last_string
 		do
-			create last_string.make (512)
+			create l_last_string.make (512)
 			read_character
 			from
 			until
 				last_character = '%N'
 			loop
-				last_string.extend (last_character)
+				l_last_string.extend (last_character)
 				read_character
 			end
+			last_string := l_last_string
 		end
 
 	read_line_until (n: INTEGER)
@@ -684,9 +697,10 @@ feature -- Input
 			is_readable: readable
 		local
 			i: INTEGER
+			l_last_string: like last_string
 		do
 			from
-				create last_string.make (512)
+				create l_last_string.make (512)
 				was_error := False
 			until
 				i = n
@@ -695,7 +709,7 @@ feature -- Input
 				if was_error or else last_character = '%N' then
 					i := n - 1 -- Jump out of loop
 				else
-					last_string.extend (last_character)
+					l_last_string.extend (last_character)
 				end
 				i := i + 1
 			end
@@ -703,17 +717,19 @@ feature -- Input
 				socket_error := "End of line not reached after " + n.out + " read characters"
 				was_error := True
 			end
+			last_string := l_last_string
 		ensure
 			last_string_not_void: last_string /= Void
 		end
 
-	read (size: INTEGER): PACKET
+	read (size: INTEGER): ?PACKET
 			-- Read a packet of data of maximum size `size'.
 		require
 			socket_exists: exists
 			opened_for_read: is_open_read
 		local
-			l_data, recv_packet: MANAGED_POINTER
+			l_data: ?MANAGED_POINTER
+			recv_packet: MANAGED_POINTER
 			amount_read: INTEGER
 			return_val: INTEGER
 			ext_data: POINTER
@@ -742,13 +758,14 @@ feature -- Input
 			bytes_read := amount_read
 		end
 
-	receive (size, flags: INTEGER): PACKET
+	receive (size, flags: INTEGER): ?PACKET
 			-- Receive a packet of maximum size `size'.
 		require
 			socket_exists: exists
 			opened_for_read: is_open_read
 		local
-			l_data, recv_packet: MANAGED_POINTER
+			l_data: ?MANAGED_POINTER
+			recv_packet: MANAGED_POINTER
 			amount_read: INTEGER
 			return_val: INTEGER
 			ext_data: POINTER
@@ -964,7 +981,7 @@ feature -- socket options
 
 feature {NONE} -- Implementation
 
-	socket_error: STRING
+	socket_error: ?STRING
 
 	shutdown
 		deferred
@@ -974,14 +991,18 @@ feature {NONE} -- Externals
 
 	socket_buffer: MANAGED_POINTER
 			-- Buffer used to read/write basic types.
+		local
+			l_buffer: like internal_socket_buffer
 		do
-			if internal_socket_buffer = Void then
-				create internal_socket_buffer.make (16)
+			l_buffer := internal_socket_buffer
+			if l_buffer = Void then
+				create l_buffer.make (16)
+				internal_socket_buffer := l_buffer
 			end
-			Result := internal_socket_buffer
+			Result := l_buffer
 		end
 
-	internal_socket_buffer: MANAGED_POINTER
+	internal_socket_buffer: ?MANAGED_POINTER
 			-- Internal integer buffer
 
 	c_put_stream (fd: INTEGER; s: POINTER; length: INTEGER)

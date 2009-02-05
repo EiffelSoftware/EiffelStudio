@@ -15,17 +15,6 @@ deferred class
 inherit
 	USABLE_I
 
---feature {NONE} -- Access
-
---	events_action_map: !DS_HASH_SET [!TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [G, TUPLE]]]
---			-- A set of events mapped to an associated observer action.
---		require
---			is_interface_usable: is_interface_usable
---		deferred
---		ensure
---			not_result_is_empty: not Result.is_empty
---		end
-
 feature -- Status report
 
 	is_connected (a_observer: !G): BOOLEAN
@@ -75,7 +64,7 @@ feature -- Event connection
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -99,11 +88,11 @@ feature -- Event connection
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

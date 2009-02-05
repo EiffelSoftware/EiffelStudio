@@ -124,7 +124,7 @@ feature {NONE} -- Externals
 	c_free (ptr: POINTER)
 			-- C free
 		obsolete
-			"Use `memory_free' from POINTER class instead."
+			"Use ptr.`memory_free' from POINTER class instead."
 		do
 			ptr.memory_free
 		end
@@ -132,7 +132,7 @@ feature {NONE} -- Externals
 	c_memcpy (destination, source: POINTER; count: INTEGER)
 			-- C memcpy
 		obsolete
-			"Use `memory_free' from POINTER class instead."
+			"Use destination.`memory_copy' (source, count) from POINTER class instead."
 		do
 			destination.memory_copy (source, count)
 		end

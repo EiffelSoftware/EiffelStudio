@@ -67,12 +67,12 @@ feature -- Report
 			if l_meaning = Void or else l_meaning.is_empty then
 				if l_type_name /= Void then
 					Result.append (l_type_name.to_string_32)
-					Result.append_string (" raised")
+					Result.append (" raised")
 				else
-					Result.append_string ("Exception occurred (no more information).")
+					Result.append ("Exception occurred (no more information).")
 				end
 			elseif l_mesg = Void or else not l_meaning.is_equal (l_mesg) then
-				Result.append_string (l_meaning)
+				Result.append (l_meaning)
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -95,9 +95,9 @@ feature -- Report
 			s := text
 			if s /= Void and then not s.is_empty then
 				if not Result.is_empty then
-					Result.append_string ("%N")
+					Result.append ("%N")
 				end
-				Result.append_string (s)
+				Result.append (s)
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -119,10 +119,10 @@ feature -- Report
 					k := exception_others.key_for_iteration
 					s := exception_others.item_for_iteration
 					if k /= Void and s /= Void then
-						Result.append_string ("%N")
-						Result.append_string (k)
-						Result.append_string (": ")
-						Result.append_string (s)
+						Result.append ("%N")
+						Result.append (k)
+						Result.append (": ")
+						Result.append (s)
 					end
 					exception_others.forth
 				end

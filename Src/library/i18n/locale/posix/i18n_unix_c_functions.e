@@ -23,7 +23,7 @@ feature {I18N_LOCALE} -- Initialization
 			create l_str.make (a_locale)
 			l_ptr := c_setlocale (c_lc_all, l_str.item)
 			if l_ptr /= l_null then
-				create l_str.share_from_pointer (l_ptr)
+				create l_str.make_shared_from_pointer (l_ptr)
 				unix_locale_name_cell.put (l_str.string)
 			else
 				unix_locale_name_cell.put ("POSIX")

@@ -141,7 +141,7 @@ feature -- Status report
 			if a_selected then
 				l_char := {EV_GTK_EXTERNALS}.gtk_text_iter_get_text (a_start_iter.item, a_end_iter.item)
 				if l_char /= default_pointer then
-					create Result.make_from_c (l_char)
+					create Result.make_from_c_pointer (l_char)
 				else
 					create Result.make_empty
 				end

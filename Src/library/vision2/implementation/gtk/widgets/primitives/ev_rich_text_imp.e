@@ -166,7 +166,7 @@ feature -- Status Report
 				previous_text_attributes := gtk_text_view_get_default_attributes (text_view)
 				a_change := gtk_text_iter_get_attributes (a_text_iter.item, previous_text_attributes)
 				a_text_attributes := gtk_text_view_get_default_attributes (text_view)
-				create previous_font_family.make_from_c ({EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_get_family (gtk_text_attributes_struct_font_description (previous_text_attributes)))
+				create previous_font_family.make_from_c_pointer ({EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_get_family (gtk_text_attributes_struct_font_description (previous_text_attributes)))
 			until
 				exit_loop or else a_character_index = end_index
 			loop
@@ -176,7 +176,7 @@ feature -- Status Report
 				a_change := gtk_text_iter_get_attributes (a_text_iter.item, a_text_attributes)
 
 				if font_family_contiguous then
-					create font_family.make_from_c ({EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_get_family (gtk_text_attributes_struct_font_description (a_text_attributes)))
+					create font_family.make_from_c_pointer ({EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_get_family (gtk_text_attributes_struct_font_description (a_text_attributes)))
 
 					if font_family.hash_code /= previous_font_family.hash_code then
 						non_contiguous_range_information := non_contiguous_range_information.bit_or ({EV_CHARACTER_FORMAT_CONSTANTS}.font_family)

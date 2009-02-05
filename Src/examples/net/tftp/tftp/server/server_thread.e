@@ -31,6 +31,7 @@ feature -- Initialization
 			frontend := a_frontend
 			port := a_port
 			create server_socket.make_bound (port)
+			create mutex
 		end
 
 feature
@@ -84,6 +85,7 @@ feature
 		require
 			event_non_void: event /= Void
 		do
+			mutex.lock
 			from
 				listeners.start
 			until
@@ -92,10 +94,12 @@ feature
 				listeners.item.tftp_message (event)
 				listeners.forth
 			end
+			mutex.unlock
 		end
 
 	sent_data (data_length: INTEGER) is
 		do
+			mutex.lock
 			from
 				listeners.start
 			until
@@ -104,10 +108,12 @@ feature
 				listeners.item.sent_data (data_length)
 				listeners.forth
 			end
+			mutex.unlock
 		end
 
 	received_data (data_length: INTEGER) is
 		do
+			mutex.lock
 			from
 				listeners.start
 			until
@@ -116,27 +122,33 @@ feature
 				listeners.item.received_data (data_length)
 				listeners.forth
 			end
+			mutex.unlock
 		end
 
 	add_tftp_event_listener (listener: TFTP_EVENT_LISTENER) is
 		require
 			listener_non_void: listener /= Void
 		do
+			mutex.lock
 			listeners.extend (listener)
+			mutex.unlock
 		end
 
 	remove_tftp_event_listener (listener: TFTP_EVENT_LISTENER) is
 		require
 			listener_non_void: listener /= Void
 		do
+			mutex.lock
 			listeners.prune_all (listener)
+			mutex.unlock
 		end
 
 feature {NONE} -- Implementation
 
 	server_socket: NETWORK_DATAGRAM_SOCKET
+	mutex: MUTEX
 	frontend: TFTP_FRONTEND
 	port: NATURAL_16
-	listeners: ARRAYED_LIST[TFTP_EVENT_LISTENER]
+	listeners: ARRAYED_LIST [TFTP_EVENT_LISTENER]
 
 end

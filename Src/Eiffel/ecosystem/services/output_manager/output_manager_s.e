@@ -25,6 +25,8 @@ inherit
 			registration as output,
 			registration_activated_event as output_activated_event,
 			registrar_connection as output_manager_event_connection
+		export
+			{ANY} output_manager_event_connection
 		redefine
 			is_valid_registration_key
 		end

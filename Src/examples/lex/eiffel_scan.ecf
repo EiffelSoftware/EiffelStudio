@@ -8,7 +8,7 @@
 		</option>
 		<precompile name="base_pre" location="$ISE_PRECOMP\base-safe.ecf" readonly="false"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="false"/>
-		<library name="lex" location="$ISE_LIBRARY\library\lex-safe\lex-safe.ecf" readonly="false">
+		<library name="lex" location="$ISE_LIBRARY\library\lex\lex-safe.ecf" readonly="false">
 			<option debug="true">
 				<debug name="lex_output" enabled="true"/>
 			</option>

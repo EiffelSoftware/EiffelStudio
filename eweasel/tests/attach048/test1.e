@@ -1,5 +1,5 @@
 class
-	TEST1 [G -> COMPARABLE]
+	TEST1 [G -> COMPARABLE, H -> NUMERIC]
 
 feature
 
@@ -64,6 +64,38 @@ feature
 		do
 			if a_item /= Void then
 				b := item (2).is_less (a_item)
+			end
+		end
+
+	test1p (a_item: H)
+		local
+			a: ?ANY
+		do
+			a := + a_item
+		end
+
+	test2p (a_item: H)
+		local
+			a: ?ANY
+		do
+			if a_item /= Void then
+				a := + a_item
+			end
+		end
+
+	test3p (a_item: H)
+		local
+			a: ?ANY
+		do
+			a := a_item.identity
+		end
+
+	test4p (a_item: H)
+		local
+			a: ?ANY
+		do
+			if a_item /= Void then
+				a := a_item.identity
 			end
 		end
 

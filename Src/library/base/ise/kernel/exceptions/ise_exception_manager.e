@@ -300,7 +300,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Element change
 
-	set_last_exception (a_last_exception: EXCEPTION)
+	set_last_exception (a_last_exception: ?EXCEPTION)
 			-- Set `last_exception' with `a_last_exception'.
 		do
 			last_exception_cell.put (a_last_exception)
@@ -444,6 +444,8 @@ feature {NONE} -- Implementation
 
 	once_raise (a_exception: EXCEPTION)
 			-- Called by runtime to raise saved exception for once routines.
+		require
+			a_exception_not_void: a_exception /= Void
 		local
 			p_meaning, p_message: POINTER
 		do

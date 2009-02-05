@@ -56,7 +56,6 @@
 				<exclude>/emitter$</exclude>
 				<exclude>/cache$</exclude>
 				<exclude>/resources$</exclude>
-				<exclude>/support/constants$</exclude>
 				<exclude>/support/errors$</exclude>
 				<exclude>/support/helpers$</exclude>
 				<exclude>/support/interop$</exclude>

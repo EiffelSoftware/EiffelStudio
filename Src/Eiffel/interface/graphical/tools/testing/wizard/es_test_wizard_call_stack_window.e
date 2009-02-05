@@ -232,11 +232,11 @@ feature {NONE} -- Query
 			app_exec := Debugger_manager.application
 				--| Tooltip addition
 			l_nb_stack := app_exec.status.current_call_stack.count
-			l_tooltip.prepend_string ((a_cse.level_in_stack).out + "/" + l_nb_stack.out + ": ")
-			l_tooltip.append_string (interface_names.l_break_index_is (l_breakindex_info))
-			l_tooltip.append_string (interface_names.l_address_is (l_obj_address_info))
+			l_tooltip.prepend ((a_cse.level_in_stack).out + "/" + l_nb_stack.out + ": ")
+			l_tooltip.append (interface_names.l_break_index_is (l_breakindex_info))
+			l_tooltip.append (interface_names.l_address_is (l_obj_address_info))
 			if l_extra_info /= Void then
-				l_tooltip.append_string ("%N    + " + l_extra_info)
+				l_tooltip.append ("%N    + " + l_extra_info)
 			end
 
 				--| Fill columns

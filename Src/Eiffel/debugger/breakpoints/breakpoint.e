@@ -257,16 +257,16 @@ feature -- Tags access
 				if c /= Void then
 					create Result.make (10)
 					Result.append_character ('{')
-					Result.append_string (c.name_in_upper)
+					Result.append (c.name_in_upper)
 					Result.append_character ('}')
 					Result.append_character ('.')
-					Result.append_string (r.name)
+					Result.append (r.name)
 					Result.append_character ('@')
 					Result.append_integer (location.breakable_line_number)
 					g := c.group
 					if g /= Void then
 						Result.prepend_character ('.')
-						Result.prepend_string (g.name)
+						Result.prepend (g.name)
 					end
 				end
 			end

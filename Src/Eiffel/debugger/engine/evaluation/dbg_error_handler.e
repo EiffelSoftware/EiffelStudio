@@ -184,7 +184,7 @@ feature -- Error notification: expression error
 			tag: STRING
 		do
 			msg32 := "Error "
-			msg32.append_string (err.code)
+			msg32.append (err.code)
 			msg32.append_character ('%N')
 			msg32.append_string_general (error_to_string (err))
 			tag := err.code

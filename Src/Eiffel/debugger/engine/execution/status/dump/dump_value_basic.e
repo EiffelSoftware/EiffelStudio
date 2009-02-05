@@ -321,7 +321,7 @@ feature -- Access
 				Result.append_character ('%'')
 			when Type_character_32 then
 				create Result.make (10)
-				Result.append_string (value_character_32.natural_32_code.out)
+				Result.append (value_character_32.natural_32_code.out)
 				Result.append (" '")
 				Result.append (Character_routines.wchar_text (value_character_32))
 				Result.append_character ('%'')
@@ -366,13 +366,13 @@ feature -- Access
 			inspect type
 			when Type_character_8 then
 				create Result.make (10)
-				Result.append_string (to_minimal_hexa_representation (value_character_8.code.to_hex_string))
+				Result.append (to_minimal_hexa_representation (value_character_8.code.to_hex_string))
 				Result.append (" '")
 				Result.append (Character_routines.char_text (value_character_8))
 				Result.append_character ('%'')
 			when Type_character_32 then
 				create Result.make (10)
-				Result.append_string (to_minimal_hexa_representation (value_character_32.code.to_hex_string))
+				Result.append (to_minimal_hexa_representation (value_character_32.code.to_hex_string))
 				Result.append (" '")
 				Result.append (Character_routines.wchar_text (value_character_32))
 				Result.append_character ('%'')

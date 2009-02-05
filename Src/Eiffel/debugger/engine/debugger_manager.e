@@ -1349,9 +1349,9 @@ feature -- Application change
 			if application.last_assertion_check_stack.is_empty then
 				--| was unchanged
 			elseif application.last_assertion_check_stack.item then
-				s.append_string (" (was enabled)")
+				s.append (" (was enabled)")
 			else
-				s.append_string (" (was disabled)")
+				s.append (" (was disabled)")
 			end
 			application.disable_assertion_check
 			debugger_status_message (s)
@@ -1366,12 +1366,12 @@ feature -- Application change
 		do
 			s := "Restore assertion checking"
 			if application.last_assertion_check_stack.is_empty then
-				s.append_string (" (ignored since it was not changed).")
+				s.append (" (ignored since it was not changed).")
 			else
 				if application.last_assertion_check_stack.item then
-					s.append_string (" (was enabled)")
+					s.append (" (was enabled)")
 				else
-					s.append_string (" (was disabled)")
+					s.append (" (was disabled)")
 				end
 				application.restore_assertion_check
 			end

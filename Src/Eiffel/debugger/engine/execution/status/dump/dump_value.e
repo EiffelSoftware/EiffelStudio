@@ -336,6 +336,8 @@ feature -- Status report
 				print (Result)
 				print ("%N")
 			end
+		ensure
+			full_output_not_void: Result /= Void
 		end
 
 	output_for_debugger: STRING_32

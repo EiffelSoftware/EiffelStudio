@@ -876,7 +876,7 @@ feature {NONE} -- Catcall warning access
 						end
 					end
 
-					Result.append_string (" for ")
+					Result.append (" for ")
 						--| Get info with compiler data
 					if f /= Void then
 						if {args: E_FEATURE_ARGUMENTS} (f.arguments) and then args.count >= rtcc.pos then
@@ -892,17 +892,17 @@ feature {NONE} -- Catcall warning access
 							end
 						end
 					end
-					Result.append_string (" argument#")
+					Result.append (" argument#")
 					Result.append_integer (rtcc.pos)
 
 					if argname /= Void then
-						Result.append_string (" `")
-						Result.append_string (argname)
+						Result.append (" `")
+						Result.append (argname)
 						Result.append_character (''')
 					end
 					l_max_type_id := system.class_types.count
 
-					Result.append_string (": expected ")
+					Result.append (": expected ")
 					ct := Void
 
 					l_fdtype := rtcc.expected
@@ -931,11 +931,11 @@ feature {NONE} -- Catcall warning access
 						argtypename.append_integer (l_fdtype)
 						argtypename.append_string (")")
 					end
-					Result.append_string (" ")
-					Result.append_string (argtypename)
+					Result.append (" ")
+					Result.append (argtypename)
 					argtypename := Void
 
-					Result.append_string (" but got ")
+					Result.append (" but got ")
 					l_fdtype := rtcc.actual
 						--| Try with compiler data
 					if l_fdtype - 1 = {SHARED_GEN_CONF_LEVEL}.none_type then --| -1: to convert to runtime type id
@@ -952,9 +952,9 @@ feature {NONE} -- Catcall warning access
 						argtypename := debugger_manager.application.internal_type_name_of_type (l_fdtype - 1) --| -1: to convert to runtime type id
 					end
 					if argtypename /= Void then
-						Result.append_string (argtypename)
+						Result.append (argtypename)
 					else
-						Result.append_string ("type#")
+						Result.append ("type#")
 						Result.append_integer (l_fdtype)
 					end
 					argtypename := Void
@@ -1422,11 +1422,11 @@ feature {NONE} -- Stack grid implementation
 				app_exec := Debugger_manager.application
 					--| Tooltip addition
 				l_nb_stack := app_exec.status.current_call_stack.count
-				l_tooltip.prepend_string ((cse.level_in_stack).out + "/" + l_nb_stack.out + ": ")
-				l_tooltip.append_string (interface_names.l_break_index_is (l_breakindex_info))
-				l_tooltip.append_string (interface_names.l_address_is (l_obj_address_info))
+				l_tooltip.prepend ((cse.level_in_stack).out + "/" + l_nb_stack.out + ": ")
+				l_tooltip.append (interface_names.l_break_index_is (l_breakindex_info))
+				l_tooltip.append (interface_names.l_address_is (l_obj_address_info))
 				if l_extra_info /= Void then
-					l_tooltip.append_string ("%N    + " + l_extra_info)
+					l_tooltip.append ("%N    + " + l_extra_info)
 				end
 
 					--| Fill columns
@@ -1608,9 +1608,9 @@ feature {NONE} -- Stack grid implementation
 
 						--| Tooltip addition
 					l_nb_stack := app_exec.status.current_call_stack.count
-					l_tooltip.prepend_string (cse.remote_id + ": ")
-					l_tooltip.append_string (interface_names.l_break_index_is (l_breakindex_info))
-					l_tooltip.prepend_string (cse.id + "%N")
+					l_tooltip.prepend (cse.remote_id + ": ")
+					l_tooltip.append (interface_names.l_break_index_is (l_breakindex_info))
+					l_tooltip.prepend (cse.id + "%N")
 
 						--| Fill columns
 					if l_is_melted or l_has_rescue then
@@ -2078,7 +2078,7 @@ feature {NONE} -- Implementation, cosmetic
 
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -2102,11 +2102,11 @@ feature {NONE} -- Implementation, cosmetic
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_CALL_STACK_TOOL

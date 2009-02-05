@@ -26,7 +26,6 @@ inherit
 			on_after_initialized,
 			build_tool_interface,
 			is_appliable_event,
-			build_docking_content,
 			create_right_tool_bar_items
 		end
 
@@ -77,13 +76,6 @@ feature {NONE} -- Initialization
 			enable_copy_to_clipboard
 		ensure then
 			set: test_case_grid = a_grid
-		end
-
-	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER)
-			-- <Precursor>
-		do
-			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_PANEL_BASE} (a_docking_manager)
-			content.set_long_title (interface_names.t_testing_experimental)
 		end
 
 	on_after_initialized
@@ -445,7 +437,7 @@ feature {NONE} -- Factory
 		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -469,11 +461,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

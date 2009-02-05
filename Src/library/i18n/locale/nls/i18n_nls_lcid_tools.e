@@ -89,9 +89,9 @@ feature --Access
 
 			create name.make_from_string(id.language)
 			if (id.script /= Void and then not id.script.is_equal ("euro")) then
-				name.append_string("-"+id.script)
+				name.append ("-"+id.script)
 			end
-			name.append_string ("-"+id.region)
+			name.append ("-"+id.region)
 				-- locales is sorted by iso_code, so we can use etienne's well-contracted binary search
 
 			from

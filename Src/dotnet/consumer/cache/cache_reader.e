@@ -377,7 +377,7 @@ feature {NONE} -- Implementation
 	internal_info: CELL [CACHE_INFO]
 			-- cache `info'
 		once
-			create Result
+			create Result.put (Void)
 		end
 
 	type_position_from_type (a_type: SYSTEM_TYPE): INTEGER

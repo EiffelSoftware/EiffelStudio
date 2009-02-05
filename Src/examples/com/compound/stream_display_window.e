@@ -64,7 +64,7 @@ feature -- Basic Operations
 				stream.end_of_stream
 			loop
 				(p + Buffer_size).memory_copy ($l_null, 1) -- Add ending numm character before conversion
-				create displayed_text.make_from_c (p.item)
+				create displayed_text.make_from_c_pointer (p.item)
 				rich_edit.insert_text (displayed_text)
 				stream.read (p.item, Buffer_size - 1)
 			end

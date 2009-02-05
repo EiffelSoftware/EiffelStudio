@@ -474,7 +474,7 @@ feature {NONE} -- Implementation
 	initialized_cell: CELL [BOOLEAN]
 			-- A cell to hold whether the constants have been loaded.
 		once
-			create Result
+			create Result.put (False)
 		end
 		
 	all_constants: HASH_TABLE [STRING, STRING]

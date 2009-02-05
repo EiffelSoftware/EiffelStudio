@@ -73,7 +73,7 @@ feature -- Access
 					else
 						Result := not ia_dep.item
 					end
-				end (?, create {CELL [BOOLEAN]}))
+				end (?, create {CELL [BOOLEAN]}.put (False)))
 			result_consistent: Result = configs
 		end
 
@@ -301,7 +301,7 @@ feature {NONE} -- Access
 					else
 						Result := not ia_dep.item
 					end
-				end (?, create {CELL [BOOLEAN]}))
+				end (?, create {CELL [BOOLEAN]}.put (False)))
 		end
 
 feature {NONE} -- Internal implementation cache

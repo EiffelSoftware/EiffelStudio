@@ -110,9 +110,10 @@ feature -- Status report
 
 feature {NONE} -- Query
 
-	has_eiffel_extension (a_file_name: !STRING): BOOLEAN
+	has_eiffel_extension (a_file_name: STRING): BOOLEAN
 			-- Determines if `a_file_name' has an Eiffel source file extension
 		require
+			a_file_name_not_void: a_file_name /= Void
 			not_a_file_name_is_empty: not a_file_name.is_empty
 		local
 			l_count: INTEGER
@@ -130,10 +131,10 @@ feature {NONE} -- Implementation
 			a_params_successful: a_params.is_readable
 		local
 			l_exclude_rx: ?RX_PCRE_MATCHER
-			l_list: !LIST [!STRING]
-			l_excludes: !LIST [!STRING]
-			l_array_list: !ARRAYED_LIST [!STRING]
-			l_files: !ARRAYED_LIST [!STRING]
+			l_list: LIST [STRING]
+			l_excludes: LIST [STRING]
+			l_array_list: ARRAYED_LIST [STRING]
+			l_files: ARRAYED_LIST [STRING]
 			l_cursor: CURSOR
 			l_recurse: BOOLEAN
 		do
@@ -167,11 +168,13 @@ feature {NONE} -- Implementation
 			files_attached: files /= Void
 		end
 
-	append_file_list (a_path: !STRING; a_list: !ARRAYED_LIST [!STRING]; a_recurse: BOOLEAN; a_expression: ?RX_PCRE_MATCHER)
+	append_file_list (a_path: STRING; a_list: ARRAYED_LIST [STRING]; a_recurse: BOOLEAN; a_expression: ?RX_PCRE_MATCHER)
 			-- Appends Eiffel source files located at or in `a_path' to `a_list'. If `a_path' happens to
 			-- be a directory and `a_recurse' is True then any subdirectories will also be scanned.
 			-- `a_expression' represents an excluded expression
 		require
+			a_path_not_void: a_path /= Void
+			a_list_not_void: a_list /= Void
 			not_a_path_is_empty: not a_path.is_empty
 		local
 			l_file: RAW_FILE
@@ -181,8 +184,11 @@ feature {NONE} -- Implementation
 			if l_file.exists then
 				if l_file.is_directory or l_file.is_device then
 					create l_directory.make (a_path)
-					l_directory.filenames.do_all (agent (ia_item: !STRING; ia_inner_list: !ARRAYED_LIST [!STRING]; ia_dir: !STRING; ia_in_expr: ?RX_PCRE_MATCHER)
+					l_directory.filenames.do_all (agent (ia_item: STRING; ia_inner_list: ARRAYED_LIST [STRING]; ia_dir: STRING; ia_in_expr: ?RX_PCRE_MATCHER)
 						require
+							ia_item_not_void: ia_item /= Void
+							ia_inner_list_not_void: ia_inner_list /= Void
+							ia_dir_not_void: ia_dir /= Void
 							not_ia_item_is_empty: not ia_item.is_empty
 						local
 							l_file_name: FILE_NAME
@@ -201,8 +207,11 @@ feature {NONE} -- Implementation
 						end (?, a_list, a_path, a_expression))
 
 					if a_recurse then
-						l_directory.directory_names.do_all (agent (ia_item: !STRING; ia_files: !ARRAYED_LIST [!STRING]; ia_dir: !STRING; ia_in_expr: ?RX_PCRE_MATCHER)
+						l_directory.directory_names.do_all (agent (ia_item: STRING; ia_files: ARRAYED_LIST [STRING]; ia_dir: STRING; ia_in_expr: ?RX_PCRE_MATCHER)
 							require
+								ia_item_not_void: ia_item /= Void
+								ia_files_not_void: ia_files /= Void
+								ia_dir_not_void: ia_dir /= Void
 								not_ia_item_is_empty: not ia_item.is_empty
 							local
 								l_path_name: FILE_NAME
@@ -287,7 +296,7 @@ invariant
 
 
 ;note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -300,22 +309,22 @@ invariant
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class {APPLICATION_OPTIONS}

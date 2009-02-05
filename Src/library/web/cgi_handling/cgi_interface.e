@@ -72,7 +72,7 @@ feature {CGI_FORMS}-- Access
 	hexa_to_ascii (s: STRING)
 			-- Replace %xy by the corresponding ASCII character.
 		local
-			char: CHARACTER;
+			c, c1, c2: CHARACTER;
 			new: STRING;
 			i: INTEGER
 		do
@@ -82,30 +82,40 @@ feature {CGI_FORMS}-- Access
 			until
 				i > s.count
 			loop
-				if s.item (i) = '%%' then
+				c := s.item (i)
+				if c = '%%' then
 					if s.valid_index (i + 1) and s.valid_index (i + 2) then
-						char := charconv (16 * hexa_value (s.item (i + 1)) +
-											hexa_value (s.item (i + 2)))
-						new.append_character (char)
-						i := i + 2
-					else
-						new.append_character (s.item (i))
+						c1 := s.item (i + 1)
+						c2 := s.item (i + 2)
+						if is_valid_hexa_character (c1) and is_valid_hexa_character (c2) then
+							c := charconv (16 * hexa_value (c1) + hexa_value (c2))
+							i := i + 2
+						end
 					end
-				else
-					new.append_character (s.item (i))
 				end
+				new.append_character (c)
 				i := i + 1
 			end
 			s.make_from_string (new)
 		end
 
+	is_valid_hexa_character (c: CHARACTER): BOOLEAN
+			-- Is `c' a valid hexadecimal character
+			-- (and uppercase if it is alphabetic)?
+		local
+			l_upper: CHARACTER
+		do
+			l_upper := c.as_upper
+			Result := (l_upper >= '0' and l_upper <= '9') or (l_upper >= 'A' and l_upper <= 'F')
+		end
+
 	hexa_value (c: CHARACTER): INTEGER
 			-- Hexadecimal value of a character from the hexa alphabet.
 		require
-			valid_hexa_character: (c>='0' and c<='9') or (c>='A' and c<='F')
+			valid_hexa_character: is_valid_hexa_character (c)
 		do
 			inspect
-				c
+				c.as_upper
 			when '0'..'9' then
 				Result := c.code - ('0').code
 			when 'A'..'F' then
@@ -120,7 +130,9 @@ feature {CGI_FORMS}-- Access
 		once
 				-- Default method is "GET".
 			if Request_method.is_equal ("POST") then
-				if Content_length.is_integer then
+				if Content_length.is_empty then
+					create Result.make_empty
+				elseif Content_length.is_integer then
 					stdin.read_stream (Content_length.to_integer)
 					l_result := stdin.last_string
 						-- Per postcondition of `stdin.read_stream'.
@@ -132,19 +144,25 @@ feature {CGI_FORMS}-- Access
 				end
 			else
 				Result := Query_string
-			end;
+			end
 		ensure
 			input_data_exists: Result /= Void
 		end
 
 	insert_pair (name, val: STRING)
 			-- Insert pair (name,value) into form_data; take care of collisions.
-		local
-			vl: LINKED_LIST [STRING]
 		do
 				-- Convert strings to plain ASCII
 			hexa_to_ascii (name)
 			hexa_to_ascii (val)
+			insert_pair_without_encoding (name, val)
+		end
+
+	insert_pair_without_encoding (name, val: STRING)
+			-- Insert pair (name,value) into form_data; take care of collisions.
+		local
+			vl: LINKED_LIST [STRING]
+		do
 				-- Is there already a value for `name'?
 			if form_data.has (name) and then {l_list: LINKED_LIST [STRING]} form_data.item (name) then
 				l_list.extend (val)
@@ -184,6 +202,12 @@ feature {CGI_FORMS}-- Access
 		end
 
 	parse_input
+			-- Split input string and build (name,value) pairs.
+		do
+			parse_urlencoded_input
+		end
+
+	parse_urlencoded_input
 			-- Split input string and build (name,value) pairs.
 		local
 			data, pair, key, val: STRING;

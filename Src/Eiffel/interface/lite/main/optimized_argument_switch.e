@@ -11,8 +11,8 @@ class
 inherit
 	ARGUMENT_FLAG_SWITCH
 		redefine
-			create_option,
-			create_value_option
+			new_option,
+			new_value_option
 		end
 
 create
@@ -23,13 +23,13 @@ feature -- Status report
 
 feature {ARGUMENT_PARSER} -- Factory functions
 
-	create_option: !OPTIMIZED_ARGUMENT_OPTION
+	new_option: !OPTIMIZED_ARGUMENT_OPTION
 			-- Creates a new argument option for switch
 		do
 			create Result.make ("", create {ARRAYED_LIST [CHARACTER_8]}.make (0), case_sensitive_flags, Current)
 		end
 
-	create_value_option (a_value: !STRING_8): !OPTIMIZED_ARGUMENT_OPTION
+	new_value_option (a_value: !STRING_8): !OPTIMIZED_ARGUMENT_OPTION
 			-- Creates a new argument option given a value `a_value'
 		local
 			l_flags: ARRAYED_LIST [CHARACTER_8]
@@ -51,7 +51,7 @@ feature -- Flags
 			-- Flag used to keep assertions
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -75,11 +75,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class {OPTIMIZED_ARGUMENT_SWITCH}

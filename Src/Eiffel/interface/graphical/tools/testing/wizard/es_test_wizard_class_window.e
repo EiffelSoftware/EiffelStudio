@@ -176,7 +176,7 @@ feature {NONE} -- Access: widgets
 	feature_clause_box: EV_COMBO_BOX
 			-- Drop down box for selecting existing feature clause
 
-	new_feature_clause_name: ES_VALIDATION_TEXT_FIELD
+	new_feature_clause_name: ES_VALIDATING_WRAPPED_WIDGET
 			-- Text field for new feature clause name
 
 feature {NONE} -- Status report
@@ -430,10 +430,10 @@ feature {NONE} -- Internationalization
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

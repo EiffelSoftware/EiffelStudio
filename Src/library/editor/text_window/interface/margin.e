@@ -224,13 +224,12 @@ feature {NONE} -- Implementation
 			l_max_token: EDITOR_TOKEN_LINE_NUMBER
 			l_spacer: STRING
 		once
-			create Result
 			create l_max_token.make
 			l_no_lines := text_panel.text_displayed.number_of_lines
 			create l_spacer.make_filled ('0', default_width)
 			l_max_token.set_internal_image (l_spacer)
 			l_max_token.update_width
-			Result.put (l_max_token.width)
+			create Result.put (l_max_token.width)
 		end
 
 	internal_line_number_area_width: INTEGER

@@ -54,18 +54,8 @@ feature {NONE} -- Initialization
 
 				create l_ex
 				l_ex.raise ("Failed to load java VM")
-			else
-				create jni.make (Current)
-				debug ("java_vm")
-					io.error.putstring ("Created a Java VM OK.%N")
-				end
 			end
 		end
-
-feature {SHARED_JNI_ENVIRONMENT} -- Access
-
-	jni: JNI_ENVIRONMENT
-			-- Java environment information.
 
 feature {JNI_ENVIRONMENT} -- Access
 

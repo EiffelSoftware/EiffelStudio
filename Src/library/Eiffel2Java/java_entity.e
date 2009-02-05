@@ -36,7 +36,7 @@ feature -- Reflection
 
 feature -- call object's methods
 
-	void_method (mid: POINTER; args: JAVA_ARGS)
+	void_method (mid: POINTER; args: ?JAVA_ARGS)
 			-- Call a Java procedure with method_id "mid" and
 			-- arguments "args.
 		require
@@ -44,21 +44,21 @@ feature -- call object's methods
 		deferred
 		end
 
-	string_method (mid: POINTER; args: JAVA_ARGS): STRING
+	string_method (mid: POINTER; args: ?JAVA_ARGS): ?STRING
 			-- Call an instance function that returns a STRING.
 		require
 			mid_not_null: mid /= default_pointer
 		deferred
 		end
 
-	integer_method (mid: POINTER; args: JAVA_ARGS): INTEGER
+	integer_method (mid: POINTER; args: ?JAVA_ARGS): INTEGER
 			-- Call an instance function that returns an INTEGER.
 		require
 			mid_not_null: mid /= default_pointer
 		deferred
 		end
 
-	short_method (mid: POINTER; args: JAVA_ARGS): INTEGER_16
+	short_method (mid: POINTER; args: ?JAVA_ARGS): INTEGER_16
 			-- Call an instance function that returns a Short (in
 			-- Eiffel we still return an INTEGER).
 		require
@@ -66,7 +66,7 @@ feature -- call object's methods
 		deferred
 		end
 
-	long_method (mid: POINTER; args: JAVA_ARGS): INTEGER_64
+	long_method (mid: POINTER; args: ?JAVA_ARGS): INTEGER_64
 			-- Call an instance function that returns an Long. This
 			-- function is not implemented.
 		require
@@ -74,42 +74,42 @@ feature -- call object's methods
 		deferred
 		end
 
-	double_method (mid: POINTER; args: JAVA_ARGS): DOUBLE
+	double_method (mid: POINTER; args: ?JAVA_ARGS): DOUBLE
 			-- Call an instance function that returns a DOUBLE.
 		require
 			mid_not_null: mid /= default_pointer
 		deferred
 		end
 
-	float_method (mid: POINTER; args: JAVA_ARGS): REAL
+	float_method (mid: POINTER; args: ?JAVA_ARGS): REAL
 			-- Call an instance function that returns a REAL.
 		require
 			mid_not_null: mid /= default_pointer
 		deferred
 		end
 
-	char_method (mid: POINTER; args: JAVA_ARGS): CHARACTER
+	char_method (mid: POINTER; args: ?JAVA_ARGS): CHARACTER
 			-- Call an instance function that returns a char
 		require
 			mid_not_null: mid /= default_pointer
 		deferred
 		end
 
-	boolean_method (mid: POINTER; args: JAVA_ARGS): BOOLEAN
+	boolean_method (mid: POINTER; args: ?JAVA_ARGS): BOOLEAN
 			-- Call an instance function that returns a boolean
 		require
 			mid_not_null: mid /= default_pointer
 		deferred
 		end
 
-	object_method (mid: POINTER; args: JAVA_ARGS): JAVA_OBJECT
+	object_method (mid: POINTER; args: ?JAVA_ARGS): ?JAVA_OBJECT
 			-- Call an instance function that returns a java object
 		require
 			mid_not_null: mid /= default_pointer
 		deferred
 		end
 
-	byte_method (mid: POINTER; args: JAVA_ARGS): INTEGER_8
+	byte_method (mid: POINTER; args: ?JAVA_ARGS): INTEGER_8
 			-- Call an instance function that return a byte
 			-- ( 8-bit integer (signed)), in Eiffel return
 			-- a INTEGER_8
@@ -127,14 +127,14 @@ feature -- Access object's attributes
 		deferred
 		end
 
-	string_attribute (fid: POINTER): STRING
+	string_attribute (fid: POINTER): ?STRING
 			-- Access to a String attribute
 		require
 			fid_not_null: fid /= default_pointer
 		deferred
 		end
 
-	object_attribute (fid: POINTER): JAVA_OBJECT
+	object_attribute (fid: POINTER): ?JAVA_OBJECT
 			-- Access to a java object attribute
 		require
 			fid_not_null: fid /= default_pointer
@@ -205,15 +205,17 @@ feature -- Setting object's attribute
 			-- Set a 'String' attribute to 'value'
 		require
 			fid_not_null: fid /= default_pointer
+			value_not_void: value /= Void
 		deferred
 		ensure
-			string_attribute_set: equal (string_attribute (fid), value)
+			string_attribute_set: string_attribute (fid) ~ value
 		end
 
 	set_object_attribute (fid: POINTER; value: JAVA_OBJECT)
 			-- Set a java object attribute to 'value'
 		require
 			fid_not_null: fid /= default_pointer
+			value_not_void: value /= Void
 		deferred
 		ensure
 			object_attribute_set: object_attribute (fid) = value

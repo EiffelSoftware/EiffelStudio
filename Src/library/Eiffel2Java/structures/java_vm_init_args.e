@@ -39,8 +39,12 @@ feature -- Access
 			-- List all options.
 		require
 			options_set: options_set
+		local
+			l_result: ?like internal_options
 		do
-			Result := internal_options
+			l_result := internal_options
+			check l_result_not_void: l_result /= Void end -- Implied from the precondition
+			Result := l_result
 		ensure
 			options_count_valid: number_of_option = options.count
 		end
@@ -80,22 +84,25 @@ feature -- Settings
 		local
 			i, j, nb: INTEGER
 			l_option: JAVA_VM_OPTION
+			l_internal_options: like internal_options
+			l_options_area: MANAGED_POINTER
 		do
 			from
 				i := a_options.lower
 				nb := a_options.upper
 				create l_option.make
-				create internal_options_area.make (nb * l_option.structure_size)
-				c_set_options (item, internal_options_area.item)
+				create l_options_area.make (nb * l_option.structure_size)
+				c_set_options (item, l_options_area.item)
 				c_set_n_options (item, a_options.count)
-				create internal_options.make (1, a_options.count)
+				create l_internal_options.make (1, a_options.count)
+				internal_options := l_internal_options
 				j := 1
 			until
 				i > nb
 			loop
-				internal_options.put (a_options.item (i), j)
-				(internal_options_area.item + (j - 1) * l_option.structure_size).memory_copy (
-					internal_options.item (j).item, l_option.structure_size)
+				l_internal_options.put (a_options.item (i), j)
+				(l_options_area.item + (j - 1) * l_option.structure_size).memory_copy (
+					l_internal_options.item (j).item, l_option.structure_size)
 				i := i + 1
 				j := j + 1
 			end
@@ -113,11 +120,8 @@ feature -- Measurement
 
 feature {NONE} -- Implementation
 
-	internal_options: ARRAY [JAVA_VM_OPTION]
+	internal_options: ?ARRAY [JAVA_VM_OPTION]
 			-- Hold all C string values.
-
-	internal_options_area: MANAGED_POINTER
-			-- Hold area where value of `internal_options' are stored.
 
 	c_structure_size: INTEGER
 			-- Size of `JavaVMOption' structure.

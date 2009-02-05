@@ -132,7 +132,7 @@ feature -- Element change
 			inserted: item (index).long_value = value
 		end
 
-	put_string (value: STRING; index: INTEGER)
+	put_string (value: ?STRING; index: INTEGER)
 			-- Add "string" argument at position `index'.
 		require
 			valid_index: valid_index (index)
@@ -149,7 +149,7 @@ feature -- Element change
 				value = Void implies item (index).object_value = default_pointer
 		end
 
-	put_object (value: JAVA_OBJECT; index: INTEGER)
+	put_object (value: ?JAVA_OBJECT; index: INTEGER)
 			-- Add an "object" argument at position `index'.
 			-- Void `value' means a null value for Java.
 		require
@@ -170,7 +170,7 @@ feature -- Element change
 				value = Void implies item (index).object_value = default_pointer
 		end
 
-	put_array (value: JAVA_ARRAY; index: INTEGER)
+	put_array (value: ?JAVA_ARRAY; index: INTEGER)
 			-- Add a "array" argument at position `index'.
 			-- Void `value' means a null value for Java.
 		require

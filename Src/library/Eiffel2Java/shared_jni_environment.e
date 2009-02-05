@@ -16,7 +16,7 @@ feature -- Access
 			-- Standard JNI enviroment. It uses value of
 			-- CLASS_PATH environment variable to initialize JVM.
 		local
-			class_path: STRING
+			class_path: ?STRING
 			jvm: JAVA_VM
 			exec: EXECUTION_ENVIRONMENT
 		once
@@ -34,9 +34,12 @@ feature -- Access
 				io.error.new_line
 			end
 
-				-- Next create the JVM and get the JNI environment
+				-- Next create the JVM and the JNI environment
 			create jvm.make (class_path)
-			Result := jvm.jni
+			create Result.make (jvm)
+			debug ("java_vm")
+				io.error.putstring ("Created a Java VM OK.%N")
+			end
 		ensure
 			jni_not_void: Result /= Void
 		end

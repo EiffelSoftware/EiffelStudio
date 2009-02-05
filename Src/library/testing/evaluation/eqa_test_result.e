@@ -162,7 +162,7 @@ feature -- Status report
 			--       from an agent.
 		do
 			if is_setup_clean then
-				Result := not test_response.is_exceptional or else test_response.exception.is_test_exceptional
+				Result := not test_response.is_exceptional or else not test_response.exception.is_test_exceptional
 			end
 		ensure
 			result_implies_clean_setup: Result implies is_setup_clean

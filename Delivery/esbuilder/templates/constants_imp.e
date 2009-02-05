@@ -125,7 +125,7 @@ feature {NONE} -- Implementation
 	initialized_cell: CELL [BOOLEAN]
 			-- A cell to hold whether the constants have been loaded.
 		once
-			create Result
+			create Result.put (False)
 		end
 		
 	all_constants: HASH_TABLE [STRING, STRING]
@@ -142,8 +142,7 @@ feature {NONE} -- Implementation
 		
 	file_name_cell: CELL [STRING]
 		once
-			create Result
-			Result.put ("constants.txt")
+			create Result.put ("constants.txt")
 		end
 		
 	set_file_name (a_file_name: STRING)

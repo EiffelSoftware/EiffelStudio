@@ -40,9 +40,11 @@ feature -- Element change
 			message.extend (c)
 		end
 
-	extend_string(s: STRING)
+	extend_string (s: STRING)
+		require
+			s_not_void: s /= Void
 		do
-			message.append_string(s)
+			message.append (s)
 		end
 
 feature -- Basic operations

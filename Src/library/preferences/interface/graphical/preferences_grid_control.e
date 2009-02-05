@@ -884,14 +884,14 @@ feature {NONE} -- Implementation
 					when Status_sorting_mode then --| type name
 						l_pref_index := ""
 						if l_pref.is_default_value then
-							l_pref_index.append_string (p_default_value)
+							l_pref_index.append (p_default_value)
 						else
-							l_pref_index.append_string (user_value)
+							l_pref_index.append (user_value)
 						end
 						if l_pref.is_auto then
-							l_pref_index.append_string (auto_value)
+							l_pref_index.append (auto_value)
 						end
-						l_pref_index.append_string ("@" + l_display_name)
+						l_pref_index.append ("@" + l_display_name)
 					else
 						check False end
 					end

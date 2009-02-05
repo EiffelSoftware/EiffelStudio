@@ -59,7 +59,7 @@ feature	-- Element change
 				lines.after
 			loop
 				temporary := lines.item
-				temporary.prepend_string ("# ")
+				temporary.prepend ("# ")
 				lines.replace (temporary)
 				lines.forth
 			end
@@ -97,7 +97,7 @@ feature	-- Element change
 			temporary: STRING_32
 		do
 			temporary := a_comment.to_string_32
-			temporary.prepend_string ("#. ")
+			temporary.prepend ("#. ")
 			automatic_comments.extend (temporary)
 		end
 
@@ -130,7 +130,7 @@ feature	-- Output
 		do
 			create Result.make_empty
  				--start with 2 lines of whitespace
- 			Result.prepend_string("%N%N")
+ 			Result.prepend ("%N%N")
  				--first we must print the translator comments
  			Result.append_string (prepare_headers (user_comments))
  			Result.append_string (prepare_headers (automatic_comments))
@@ -230,7 +230,7 @@ feature {NONE} -- Implementation (formatting)
 				headers.after
 			loop
 				Result.append_string(headers.item)
-				Result.append_string("%N")
+				Result.append ("%N")
 				headers.forth
 			end
 		ensure
@@ -248,21 +248,21 @@ feature {NONE} -- Implementation (formatting)
 			create Result.make_empty
 				-- can we fit all on one line?
 			if string.count = 1 and (string.first.count + key.count +3) <= 80 then
-				Result.append_string(key)
-				Result.append_string(" %"")
-				Result.append_string(string.first)
-				Result.append_string("%"%N")
+				Result.append (key)
+				Result.append (" %"")
+				Result.append_string (string.first)
+				Result.append ("%"%N")
 			else
-				Result.append_string(key)
-				Result.append_string(" %"%"%N")
+				Result.append (key)
+				Result.append (" %"%"%N")
 				from
 					string.start
 				until
 					string.after
 				loop
-					Result.append_string("%"")
+					Result.append ("%"")
 					Result.append_string(string.item)
-					Result.append_string("%"%N")
+					Result.append ("%"%N")
 					string.forth
 				end
 			end
@@ -302,7 +302,7 @@ feature  {NONE} -- Implementation (datastructures)
 		end
 
 note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -326,11 +326,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

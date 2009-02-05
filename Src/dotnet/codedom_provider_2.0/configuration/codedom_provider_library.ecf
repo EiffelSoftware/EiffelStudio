@@ -34,7 +34,7 @@
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf" readonly="true">
 			<option namespace="EiffelSoftware.CodeDom.Support" />
 		</library>
-		<library name="compiler_parser" location="$EIFFEL_SRC\eiffel\parser\parser.ecf" readonly="true">
+		<library name="compiler_parser" location="$EIFFEL_SRC\framework\parser\parser.ecf" readonly="true">
 			<option namespace="EiffelSoftware.CodeDom.Support" />
 		</library>
 		<library name="consumer" location="$EIFFEL_SRC\dotnet\consumer\consumer.ecf" readonly="true">

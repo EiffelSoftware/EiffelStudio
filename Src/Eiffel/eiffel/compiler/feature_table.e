@@ -178,9 +178,6 @@ feature -- Access
 						l_id := content [iteration_position]
 						if l_id > 0 then
 							Result.put_i_th (l_server.item (l_id), i)
-							if Result [i] = Void then
-								do_nothing
-							end
 						end
 					end
 					feature_table_cache.force (Result)

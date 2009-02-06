@@ -21,7 +21,7 @@
 		<library name="eiffelbase" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="eiffeltime" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="gobo_kernel" location="gobo_kernel.ecf"/>
-		<library name="gobo_structures" location="gobo_structures.ecf"/>
+		<library name="gobo_structure" location="gobo_structure.ecf"/>
 		<library name="gobo_time" location="gobo_time.ecf"/>
 		<library name="gobo_argument" location="gobo_argument.ecf"/>
 		<library name="gobo_pattern" location="gobo_pattern.ecf"/>

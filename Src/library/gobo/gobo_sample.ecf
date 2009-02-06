@@ -17,7 +17,7 @@
 		</file_rule>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<library name="eiffelbase" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf"/>
+		<library name="gobo" location="gobo.ecf"/>
 		<cluster name="sample" location="." recursive="true"/>
 	</target>
 </system>

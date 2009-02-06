@@ -187,8 +187,6 @@ feature -- Status report
 
 	is_shown: BOOLEAN
 			-- Indicates if foundation tool is current displayed.
-		require
-			is_interface_usable: is_interface_usable
 		do
 			if is_visible then
 				Result := content.user_widget.is_displayed
@@ -202,8 +200,6 @@ feature -- Status report
 	is_visible: BOOLEAN
 			-- Indicates if foundation tool is current visible, which is not the same as being shown.
 			-- Visible refers to tool UI being available to click on (as a tab or auto-hide tab.)
-		require
-			is_interface_usable: is_interface_usable
 		do
 			if is_interface_usable then
 				Result := content.is_visible

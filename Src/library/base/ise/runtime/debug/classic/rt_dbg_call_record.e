@@ -26,8 +26,11 @@ create
 
 feature {NONE} -- Initialization
 
-	make (rec: like recorder; ref: !ANY; cid,fid: INTEGER; dep: INTEGER)
+	make (rec: like recorder; ref: ANY; cid,fid: INTEGER; dep: INTEGER)
 			-- Make as call `{cid}.fid' for object `ref' and depth `dep'
+		require
+			rec_attached: rec /= Void
+			ref_attached: ref /= Void
 		do
 			recorder := rec
 			class_type_id := cid
@@ -40,7 +43,7 @@ feature {NONE} -- Initialization
 			create steps.make (3)
 		end
 
-	recorder: !RT_DBG_EXECUTION_RECORDER
+	recorder: RT_DBG_EXECUTION_RECORDER
 			-- Associated recorder.
 
 feature -- Properties
@@ -71,16 +74,16 @@ feature -- Properties
 	parent: ?like Current
 			-- Parent's call record.
 
-	steps: !ARRAYED_LIST [BOOLEAN]
+	steps: ARRAYED_LIST [BOOLEAN]
 			-- Steps data
 			--| True->value;False->call
 			--| When not is_replaying, Cursor is always `after'
 			--| When is_replaying, Cursor point to replayed position's step
 
-	call_records: ?ARRAYED_LIST [!like Current]
+	call_records: ?ARRAYED_LIST [like Current]
 			-- Sub call records.
 
-	value_records: ?ARRAYED_LIST [!RT_DBG_VALUE_RECORD]
+	value_records: ?ARRAYED_LIST [RT_DBG_VALUE_RECORD]
 			-- Recorded values (assignment...)
 
 	flat_value_records_has_local: BOOLEAN
@@ -110,7 +113,7 @@ feature -- Measure
 			-- Is Runtime information available for this call ?
 			--| i.e: is this call in the main call stack
 
-	last_position: !TUPLE [line: INTEGER; nested: INTEGER]
+	last_position: TUPLE [line: INTEGER; nested: INTEGER]
 			-- Last position
 
 	same_object_type (ref: ?ANY): BOOLEAN
@@ -179,7 +182,7 @@ feature -- Status
 			is_not_closed: not is_closed
 		local
 			curs: CURSOR
-			c: !like Current
+			c: like Current
 		do
 			if {l_calls: like call_records} call_records and then l_calls.count > 0 then
 				curs := l_calls.cursor
@@ -201,29 +204,36 @@ feature -- Status
 
 feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Status report
 
-	parent_has_call_record (c: !like Current): BOOLEAN
+	parent_has_call_record (c: like Current): BOOLEAN
 			-- Is `c' contained by `parent'?
+		require
+			c_attached: c /= Void
 		do
 			Result := {p: like parent} parent and then p.has_call_record (c)
 		end
 
-	is_last_call_record (c: !like Current): BOOLEAN
+	is_last_call_record (c: like Current): BOOLEAN
 			-- Is `c' the last call record of `Current'?
+		require
+			c_attached: c /= Void
 		do
 			Result := {crecs: like call_records} call_records and then not crecs.is_empty and then crecs.last = c
 		end
 
-	has_call_record (c: !like Current): BOOLEAN
+	has_call_record (c: like Current): BOOLEAN
 			-- Is `c' contained by `call_records' ?
+		require
+			c_attached: c /= Void
 		do
 			Result := {crecs: like call_records} call_records and then crecs.has (c)
 		end
 
 feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 
-	attach_to (p: !like Current)
+	attach_to (p: like Current)
 			-- Attach Current call record to parent call record `c'
 		require
+			p_attached: p /= Void
 			not_in_parent_records: not parent_has_call_record (p)
 		do
 			parent := p
@@ -233,14 +243,15 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 			in_parent_records: {ot_p: like parent} parent and then {cr: like call_records} ot_p.call_records and then cr.has (Current)
 		end
 
-	add_call_record (c: !like Current)
+	add_call_record (c: like Current)
 			-- Add call record `c' to Current's sub call records
 		require
+			c_attached: c /= Void
 			record_parented_to_current: c.parent = Current
 			not_flat: not is_flat
 			is_ready_to_add_call_record: is_ready_to_add_call_record
 		local
-			crecs: !like call_records
+			crecs: like call_records
 		do
 			if {ot_crecs: like call_records} call_records then
 				crecs := ot_crecs
@@ -265,9 +276,10 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 			parent := Void
 		end
 
-	add_value_record (v: !RT_DBG_VALUE_RECORD)
+	add_value_record (v: RT_DBG_VALUE_RECORD)
 			-- Add value record
 		require
+			v_attached: v /= Void
 			is_not_flat: not is_flat
 			is_ready_to_add_value_record: is_ready_to_add_value_record
 		local
@@ -306,7 +318,9 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 			debug ("RT_DBG_RECORD")
 				if {ot_rs: like value_records} rs then
 					dtrace_indent (depth); dtrace ("record_fields -> " + ot_rs.count.out + " value(s).%N")
-					ot_rs.do_all (agent (r: !RT_DBG_VALUE_RECORD)
+					ot_rs.do_all (agent (r: RT_DBG_VALUE_RECORD)
+						require
+							r_attached: r /= Void
 						do
 							dtrace (" -> " + r.position.out + ") " + r.to_string + "%N")
 						end)
@@ -322,7 +336,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 			is_not_closed: not is_closed
 		local
 			curs: CURSOR
-			c: !like Current
+			c: like Current
 		do
 			if {l_calls: like call_records} call_records and then l_calls.count > 0 then
 				curs := l_calls.cursor
@@ -373,11 +387,12 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 			is_closed: is_closed
 		end
 
-	deep_close_until (r: !like Current)
+	deep_close_until (r: like Current)
 			-- Close Current, and all parent calls until call `r'
 		require
-			is_not_closed: not is_closed
+			r_attached: r /= Void
 			r_not_current: r /= Current
+			is_not_closed: not is_closed
 		local
 			n: ?like Current
 		do
@@ -420,10 +435,11 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 			no_records: not recorder.keep_calls_records implies call_records = Void
 		end
 
-	get_value_records_flattened_into (vals: !like value_records)
+	get_value_records_flattened_into (vals: like value_records)
 			-- Flatten record `rec'
 			--| Note: all value records and object will be removed from sub call records.
 		require
+			vals_attached: vals /= Void
 			rec_not_flat_if_current: is_flat implies value_records /= vals
 		local
 			vrecs: like value_records
@@ -514,8 +530,8 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 			is_flat: is_flat
 		local
 			ot: ARRAYED_LIST [ANY] -- indexed by `oi'
-			ort: ARRAY [LIST [!RT_DBG_VALUE_RECORD]] -- indexed by `oi'
-			orcds: ?LIST [!RT_DBG_VALUE_RECORD]
+			ort: ARRAY [LIST [RT_DBG_VALUE_RECORD]] -- indexed by `oi'
+			orcds: ?LIST [RT_DBG_VALUE_RECORD]
 			rec: RT_DBG_VALUE_RECORD
 			o: ?ANY
 			oi: INTEGER
@@ -546,7 +562,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 									ot.force (o)
 									ot.finish
 									oi := ot.index
-									create {ARRAYED_LIST [!RT_DBG_VALUE_RECORD]} orcds.make (10)
+									create {ARRAYED_LIST [RT_DBG_VALUE_RECORD]} orcds.make (10)
 									if not ort.valid_index (oi) then
 										ort.grow (oi + ort.count // 2)
 									end
@@ -637,7 +653,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Query
 			-- Number of records contained by Current and sub calls
 			-- apart from the records contained by `c' (and sub calls)
 		local
-			r: !like Current
+			r: like Current
 			p: CURSOR
 		do
 			if is_flat then
@@ -676,6 +692,8 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Query
 			if {p: like parent} parent then
 				Result := p.bottom
 			end
+		ensure
+			result_attached: Result /= Void
 		end
 
 	call_by_id (a_id: STRING): ?like Current
@@ -684,7 +702,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Query
 		local
 			p: INTEGER
 			i: INTEGER
-			r: !like Current
+			r: like Current
 			sub_id: ?STRING
 		do
 			debug ("RT_DBG_REPLAY")
@@ -720,7 +738,6 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Query
 
 	associated_replayable_call: ?like Current
 			-- Associated replayable call
-		local
 		do
 			if rt_information_available then
 				Result := Current
@@ -744,8 +761,8 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Query
 			-- String representation of Current
 		local
 			subs: ?STRING
-			at_subs: !STRING
-			l_steps: !like steps
+			at_subs: STRING
+			l_steps: like steps
 			i: INTEGER
 			val_cursor: ?CURSOR
 			call_cursor: ?CURSOR
@@ -883,12 +900,12 @@ feature {RT_DBG_EXECUTION_RECORDER} -- Steps
 			Result := steps.isfirst or steps.before
 		end
 
-	replayed_position: !like last_position
+	replayed_position: like last_position
 			-- Replayed position
 		require
 			is_replaying: is_replaying
 		local
-			l_steps: !like steps
+			l_steps: like steps
 			rpos: ?like last_position
 		do
 			l_steps := steps
@@ -922,7 +939,7 @@ feature {RT_DBG_EXECUTION_RECORDER} -- Steps
 		require
 			is_replaying: is_replaying
 		local
-			l_steps: !like steps
+			l_steps: like steps
 		do
 			l_steps := steps
 			debug ("RT_DBG_REPLAY")
@@ -982,7 +999,7 @@ feature {RT_DBG_EXECUTION_RECORDER} -- Steps
 			is_replaying: is_replaying
 			steps_not_after: not steps.after
 		local
-			l_steps: !like steps
+			l_steps: like steps
 		do
 			l_steps := steps
 			debug ("RT_DBG_REPLAY")
@@ -1179,6 +1196,9 @@ feature -- debug
 		end
 
 invariant
+	recorder_attached: recorder /= Void
+	steps_attached: steps /= Void
+	last_position_attached: last_position /= Void
 	non_empty_call_records: {crecs: like call_records} call_records implies not crecs.is_empty
 	value_records_not_void_if_flat: is_flat implies value_records /= Void
 

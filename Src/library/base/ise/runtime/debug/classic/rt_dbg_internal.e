@@ -18,17 +18,21 @@ inherit
 
 feature -- Object access
 
-	frozen object_field_count (obj: !ANY): INTEGER
+	frozen object_field_count (obj: ANY): INTEGER
 			-- Field_count on `obj'
+		require
+			obj_attached: obj /= Void
 		do
 			Result := field_count (obj)
 		end
 
-	frozen object_records (obj: !ANY): ?ARRAYED_LIST [!RT_DBG_VALUE_RECORD]
+	frozen object_records (obj: ANY): ?ARRAYED_LIST [RT_DBG_VALUE_RECORD]
 			-- List of field records on `obj'
+		require
+			obj_attached: obj /= Void
 		local
 			i, cnb: INTEGER
-			l_records: !like object_records
+			l_records: like object_records
 		do
 			cnb := object_field_count (obj)
 			if cnb > 0 then
@@ -173,7 +177,9 @@ feature -- Object access
 
 feature {NONE} -- Factory
 
-	frozen object_record (i: INTEGER; obj: !ANY): ?RT_DBG_VALUE_RECORD
+	frozen object_record (i: INTEGER; obj: ANY): ?RT_DBG_VALUE_RECORD
+		require
+			obj_attached: obj /= Void
 		local
 			ft: INTEGER
 		do
@@ -218,8 +224,10 @@ feature {NONE} -- Factory
 			end
 		end
 
-	frozen object_attribute_record (off: INTEGER; t: NATURAL_32; obj: !ANY): ?RT_DBG_VALUE_RECORD
+	frozen object_attribute_record (off: INTEGER; t: NATURAL_32; obj: ANY): ?RT_DBG_VALUE_RECORD
 			-- Record for attribute of type `t' at offset `o' on object `obj'
+		require
+			obj_attached: obj /= Void
 		local
 			ft: INTEGER
 		do
@@ -468,7 +476,9 @@ feature -- Get
 
 feature -- Change field
 
-	set_field_at (off: INTEGER; a_type: NATURAL_32; value: ?ANY; object: !ANY)
+	set_field_at (off: INTEGER; a_type: NATURAL_32; value: ?ANY; object: ANY)
+		require
+			object_attached: object /= Void
 		local
 			a_eif_type: INTEGER
 		do

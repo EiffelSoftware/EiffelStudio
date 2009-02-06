@@ -24,6 +24,8 @@ feature -- Object storage Access
 
 	saved_object_to (r: ?ANY; fn: STRING): ?ANY
 			-- Save object `r' into file `fn'
+		require
+			fn_attached: fn /= Void
 		local
 			file: RAW_FILE
 		do
@@ -43,6 +45,8 @@ feature -- Object storage Access
 			-- if `r' is Void return a new object
 			-- else load into `r'
 			-- If failure then results Void object.
+		require
+			fn_attached: fn /= Void
 		local
 			o: ANY
 			file: RAW_FILE

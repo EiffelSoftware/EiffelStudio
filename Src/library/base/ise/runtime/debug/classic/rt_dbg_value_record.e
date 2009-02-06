@@ -48,8 +48,10 @@ feature -- Access
 		deferred
 		end
 
-	is_same_as (other: !RT_DBG_VALUE_RECORD): BOOLEAN
+	is_same_as (other: RT_DBG_VALUE_RECORD): BOOLEAN
 			-- Is Current same as `other' ?
+		require
+			other_attached: other /= Void
 		deferred
 		ensure
 			same_type: Result implies type = other.type
@@ -57,6 +59,8 @@ feature -- Access
 
 	to_string: STRING
 		deferred
+		ensure
+			Result_attached: Result /= Void
 		end
 
 feature -- Change
@@ -76,14 +80,18 @@ feature -- Change properties
 
 feature -- Runtime
 
-	restore (val: !RT_DBG_VALUE_RECORD)
+	restore (val: RT_DBG_VALUE_RECORD)
 			-- Restore Current record
 			-- and associate the backup value to `val'
+		require
+			val_attached: val /= Void
 		deferred
 		end
 
-	revert (bak: !RT_DBG_VALUE_RECORD)
+	revert (bak: RT_DBG_VALUE_RECORD)
 			-- Revert previous `restore' using the associated `backup' value
+		require
+			bak_attached: bak /= Void
 		deferred
 		end
 

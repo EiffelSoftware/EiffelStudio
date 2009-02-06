@@ -13,7 +13,7 @@ inherit
 
 feature -- Query
 
-	changes_between (csr1: RT_DBG_CALL_RECORD; csr2: ?RT_DBG_CALL_RECORD): ?ARRAYED_LIST [RT_DBG_VALUE_RECORD]
+	changes_between (csr1: RT_DBG_CALL_RECORD; csr2: ?RT_DBG_CALL_RECORD): ARRAYED_LIST [RT_DBG_VALUE_RECORD]
 			-- Return records from `r1' to -beginning-of- `r2'.
 		require
 			csr1_not_void: csr1 /= Void

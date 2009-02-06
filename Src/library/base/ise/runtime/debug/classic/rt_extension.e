@@ -15,6 +15,8 @@ feature -- Notification
 
 	notify (a_id: INTEGER; a_data: TUPLE)
 			-- Notify operation `a_id' with data `a_data'
+		require
+			a_data_attached: a_data /= Void
 		local
 			retried: BOOLEAN
 		do
@@ -101,30 +103,44 @@ feature -- Notification
 			retry
 		end
 
-	cached_arguments: !ARRAY [TUPLE]
+	cached_arguments: ARRAY [TUPLE]
 			-- Cached argument to use less temporary objects
 		once
 				--| Make sure, the id are contigus, and in this range !
 			create Result.make (Op_enter_feature, Op_rt_assign_local)
+		ensure
+			result_attached: Result /= Void
 		end
 
 feature {NONE} -- Execution replay
 
-	events_feature_argument (t: TUPLE): ?TUPLE [ref: ?ANY; cid: INTEGER; fid: INTEGER; a_dep: INTEGER]
+	events_feature_argument (t: TUPLE): TUPLE [ref: ?ANY; cid: INTEGER; fid: INTEGER; a_dep: INTEGER]
 			-- Argument for `process_*_feature'.
+			-- used only as anchor for type declaration
+		local
+			a: ?like events_feature_argument
 		do
-			Result ?= t
+			a ?= t
+			check a /= Void end
+			Result := a
 		end
 
-	events_assign_argument (t: TUPLE): ?TUPLE [ref: ?ANY; a_dep: INTEGER; a_pos: INTEGER; a_type: INTEGER; a_xpm_info: INTEGER]
+	events_assign_argument (t: TUPLE): TUPLE [ref: ?ANY; a_dep: INTEGER; a_pos: INTEGER; a_type: INTEGER; a_xpm_info: INTEGER]
 
 			-- Argument for `process_*_assign'.
+			-- used only as anchor for type declaration
+		local
+			a: ?like events_assign_argument
 		do
-			Result ?= t
+			a ?= t
+			check a /= Void end
+			Result := a
 		end
 
 	reset_events_feature_argument (t: TUPLE)
 			-- Reset argument for `process_*_feature'.
+		require
+			t_attached: t /= Void
 		do
 			if {ot: like events_feature_argument} t then
 				ot.ref := Void
@@ -136,6 +152,8 @@ feature {NONE} -- Execution replay
 
 	reset_events_assign_argument (t: TUPLE)
 			-- Reset argument for `process_*_feature'.
+		require
+			t_attached: t /= Void
 		do
 			if {ot: like events_assign_argument} t then
 				ot.ref := Void
@@ -146,15 +164,13 @@ feature {NONE} -- Execution replay
 			end
 		end
 
-	process_enter_feature (a_data: !like events_feature_argument)
+	process_enter_feature (a_data: like events_feature_argument)
 			-- Execution enters a feature
 		require
+			a_data_attached: a_data /= Void
 			execution_recording_not_void: execution_recorder /= Void
-		local
-			r: like execution_recorder
 		do
-			r := execution_recorder
-			if r /= Void then
+			if {r: like execution_recorder} execution_recorder then
 				if {ref: ANY} a_data.ref then
 					r.enter_feature (ref, a_data.cid, a_data.fid, a_data.a_dep)
 				else
@@ -163,15 +179,13 @@ feature {NONE} -- Execution replay
 			end
 		end
 
-	process_rescue_feature (a_data: !like events_feature_argument)
+	process_rescue_feature (a_data: like events_feature_argument)
 			-- Execution enters a feature
 		require
+			a_data_attached: a_data /= Void
 			execution_recording_not_void: execution_recorder /= Void
-		local
-			r: like execution_recorder
 		do
-			r := execution_recorder
-			if r /= Void then
+			if {r: like execution_recorder} execution_recorder then
 				if {ref: ANY} a_data.ref then
 					r.enter_rescue (ref, a_data.cid, a_data.fid, a_data.a_dep)
 				else
@@ -180,15 +194,13 @@ feature {NONE} -- Execution replay
 			end
 		end
 
-	process_leave_feature (a_data: !like events_feature_argument)
+	process_leave_feature (a_data: like events_feature_argument)
 			-- Execution leaves a feature
 		require
+			a_data_attached: a_data /= Void
 			execution_recording_not_void: execution_recorder /= Void
-		local
-			r: like execution_recorder
 		do
-			r := execution_recorder
-			if r /= Void then
+			if {r: like execution_recorder} execution_recorder then
 				if {ref: ANY} a_data.ref then
 					r.leave_feature (ref, a_data.cid, a_data.fid, a_data.a_dep)
 				else
@@ -197,57 +209,59 @@ feature {NONE} -- Execution replay
 			end
 		end
 
-	process_rt_hook (a_data: !TUPLE [unused_ref: ?ANY; a_dep: INTEGER; bp_i: INTEGER; bp_ni: INTEGER])
+	process_rt_hook (a_data: TUPLE [unused_ref: ?ANY; a_dep: INTEGER; bp_i: INTEGER; bp_ni: INTEGER])
 			-- Execution reach a RTHOOK or RTNHOOK point
 		require
+			a_data_attached: a_data /= Void
 			execution_recording_not_void: execution_recorder /= Void
-		local
-			r: like execution_recorder
 		do
-			r := execution_recorder
-			if r /= Void then
+			if {r: like execution_recorder} execution_recorder then
 				r.notify_rt_hook (a_data.a_dep, a_data.bp_i, a_data.bp_ni)
 			end
 		end
 
-	process_rt_assign_attrib (a_data: !like events_assign_argument)
+	process_rt_assign_attrib (a_data: like events_assign_argument)
 			-- Local variable assignment event
 		require
+			a_data_attached: a_data /= Void
 			execution_recording_not_void: execution_recorder /= Void
-		local
-			r: like execution_recorder
 		do
-			r := execution_recorder
-			if r /= Void and then r.recording_values then
+			if
+				{r: like execution_recorder} execution_recorder and then
+				r.recording_values
+			then
 				if {ot_ref: ANY} a_data.ref then
 					r.notify_rt_assign_attribute (a_data.a_dep, ot_ref, a_data.a_pos, a_data.a_type.to_natural_32, a_data.a_xpm_info)
 				end
 			end
 		end
 
-	process_rt_assign_local (a_data: !like events_assign_argument)
+	process_rt_assign_local (a_data: like events_assign_argument)
 			-- Local variable assignment event
 		require
+			a_data_attached: a_data /= Void
 			execution_recording_not_void: execution_recorder /= Void
-		local
-			r: like execution_recorder
 		do
-			r := execution_recorder
-			if r /= Void and then r.recording_values then
+			if
+				{r: like execution_recorder} execution_recorder and then
+				r.recording_values
+			then
 				r.notify_rt_assign_local (a_data.a_dep, a_data.a_pos, a_data.a_type.to_natural_32, a_data.a_xpm_info)
 			end
 		end
 
-	new_execution_recorder: !like execution_recorder
+	new_execution_recorder: RT_DBG_EXECUTION_RECORDER
 			-- New Execution recorder.
 			-- You can overwrite default parameters in this feature.
 			-- Check `{RT_DBG_EXECUTION_RECORDER}.make' to see the default values.
 			--| Note: in the future, there will be a way to set those parameter from the debugger
 		do
 			create Result.make (execution_recorder_parameters)
+		ensure
+			result_attached: Result /= Void
 		end
 
-	execution_recorder: ?RT_DBG_EXECUTION_RECORDER
+	execution_recorder: ?like new_execution_recorder
 			-- Once per thread record.
 		do
 			Result := execution_recorder_cell.item
@@ -260,7 +274,7 @@ feature {NONE} -- Execution replay
 		once
 			create Result.make
 		ensure
-			Result_attached: Result /= Void
+			result_attached: Result /= Void
 		end
 
 	set_execution_recorder_parameters (a_maximum_record_count: INTEGER; a_flatten_when_closing: BOOLEAN;
@@ -269,31 +283,33 @@ feature {NONE} -- Execution replay
 			--| this feature might be used remotely by debugger to change parameters
 		local
 			p: like execution_recorder_parameters
-			r: like execution_recorder
 		do
 			p := execution_recorder_parameters
 			p.set_maximum_record_count (a_maximum_record_count)
 			p.set_flatten_when_closing (a_flatten_when_closing)
 			p.set_keep_calls_records (a_keep_calls_record)
 			p.set_recording_values (a_recording_values)
-			r := execution_recorder
-			if r /= Void then
+			if {r: like execution_recorder} execution_recorder then
 				r.update_parameters (p)
 			end
 		end
 
-	execution_recorder_cell: !CELL [?RT_DBG_EXECUTION_RECORDER]
+	execution_recorder_cell: CELL [?RT_DBG_EXECUTION_RECORDER]
 			-- Cell containing the once per thread recorder, if activated.
 		note
 			description: "Once per thread"
 		once
 			create Result.put (Void)
+		ensure
+			result_attached: Result /= Void
 		end
 
 feature -- Execution replay		
 
-	activate_execution_replay_recording (b: BOOLEAN; ref: !ANY; cid: INTEGER; fid: INTEGER; dep: INTEGER; break_index: INTEGER)
+	activate_execution_replay_recording (b: BOOLEAN; ref: ANY; cid: INTEGER; fid: INTEGER; dep: INTEGER; break_index: INTEGER)
 			-- Start or Stop execution replay recording
+		require
+			ref_attached: ref /= Void
 		local
 			r: like execution_recorder
 		do
@@ -316,7 +332,9 @@ feature -- Execution replay
 
 feature -- debug purpose: to remove
 
-	test_activate_recording (ref: !ANY; fid: INTEGER; dep: INTEGER; bpline: INTEGER)
+	test_activate_recording (ref: ANY; fid: INTEGER; dep: INTEGER; bpline: INTEGER)
+		require
+			ref_attached: ref /= Void
 		do
 			activate_execution_replay_recording (True, ref, (create {INTERNAL}).dynamic_type (ref), fid, dep, bpline)
 			c_activate_recording

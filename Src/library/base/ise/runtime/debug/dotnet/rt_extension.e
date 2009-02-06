@@ -17,6 +17,8 @@ feature -- Notification
 
 	notify (a_id: INTEGER; a_data: TUPLE)
 			-- Notify operation `a_id' with data `a_data'
+		require
+			a_data_attached: a_data /= Void
 		local
 			retried: BOOLEAN
 		do
@@ -48,31 +50,40 @@ feature -- Notification
 			retry
 		end
 
-	notify_argument (a_id: INTEGER): TUPLE
+	notify_argument (a_id: INTEGER): ?TUPLE
 			-- Empty argument container for operation `a_id'.
 		local
 			retried: BOOLEAN
 		do
 			if not retried then
-				inspect a_id
-				when Op_enter_feature, Op_leave_feature, Op_rescue_feature, 
-					Op_rt_hook,	Op_rt_assign_attrib, Op_rt_assign_local then
-					-- Not yet implemented on dotnet platform
---				when Op_exec_replay_record, Op_exec_replay, Op_exec_replay_query then
---					-- Not yet implemented on dotnet platform
---				when Op_object_storage_save, Op_object_storage_load then
---					create {like object_storage_argument} Result
-				else
-				end
+--				Result := cached_arguments[a_id]
+--				if Result = Void then
+--					inspect a_id
+--					when Op_enter_feature, Op_leave_feature, Op_rescue_feature, 
+--						Op_rt_hook,	Op_rt_assign_attrib, Op_rt_assign_local then
+--						 Not yet implemented on dotnet platform
+--					when Op_exec_replay_record, Op_exec_replay, Op_exec_replay_query then
+--						-- Not yet implemented on dotnet platform
+--					when Op_object_storage_save, Op_object_storage_load then
+--						create {like object_storage_argument} Result
+--					else
+--					end
+--				end
 			end
 		rescue
-			debug ("RT_EXTENSION")
-				dtrace ("Error: Rescue -> RT_EXTENSION.notify_argument (" + a_id.out + ")%N")
-			end
+			dtrace ("Error: Rescue -> RT_EXTENSION.notify_argument (" + a_id.out + ")%N")
 			retried := True
 			retry
 		end
 
+--	cached_arguments: ARRAY [TUPLE]
+--			-- Cached argument to use less temporary objects
+--		once
+--				--| Make sure, the id are contigus, and in this range !
+--			create Result.make (Op_enter_feature, Op_rt_assign_local)
+--		ensure
+--			result_attached: Result /= Void
+--		end
 
 feature {NONE} -- Object storage
 

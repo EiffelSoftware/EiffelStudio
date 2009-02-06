@@ -59,9 +59,52 @@ feature {NONE} -- Initialization
 	frozen make (a_window: like develop_window; a_tool: like tool_descriptor)
 			-- <Precursor>
 		do
+				-- This is seemingly pointless because it calls Precursor, but do not remove because this
+				-- routine is frozen for a reason!
 			Precursor {EB_TOOL} (a_window, a_tool)
-			initialize
 		end
+
+    on_before_initialize
+            -- Use to perform additional creation initializations, before the UI has been created.
+        do
+        end
+
+    on_after_initialized
+            -- Use to perform additional creation initializations, after the UI has been created.
+        require
+        	is_initialized: is_initialized
+        do
+        		-- Key handling
+        	register_action (user_widget.key_press_actions, agent on_key_pressed)
+        	register_action (user_widget.key_release_actions, agent on_key_released)
+
+        		-- Focus
+        	register_action (content.focus_in_actions, agent
+        		do
+        			if is_interface_usable and then is_initialized and then is_shown then
+        				on_focus_in
+        			end
+        		end)
+        	register_action (content.focus_out_actions, agent
+        		do
+        			if is_interface_usable and then is_initialized then
+        				on_focus_out
+        			end
+        		end)
+
+				-- Show actions
+        	register_kamikaze_action (content.show_actions, agent
+        			-- We need a widget that is parented to a window so we need to wait until after the
+        			-- docking content is attached to the window.
+        		do
+		        	if {l_window: !EV_WINDOW} helpers.widget_top_level_window (user_widget, False) then
+		        			-- Set up help shortcut binding
+		        		bind_help_shortcut (l_window)
+		        	end
+        		end)
+        end
+
+feature {ES_TOOL} -- Initialization: User interface
 
     frozen initialize
             -- Initializes the creation of the tool.
@@ -105,46 +148,6 @@ feature {NONE} -- Initialization
             end
         ensure
             is_initialized: not is_initializing implies is_initialized
-        end
-
-    on_before_initialize
-            -- Use to perform additional creation initializations, before the UI has been created.
-        do
-        end
-
-    on_after_initialized
-            -- Use to perform additional creation initializations, after the UI has been created.
-        require
-        	is_initialized: is_initialized
-        do
-        		-- Key handling
-        	register_action (user_widget.key_press_actions, agent on_key_pressed)
-        	register_action (user_widget.key_release_actions, agent on_key_released)
-
-        		-- Focus
-        	register_action (content.focus_in_actions, agent
-        		do
-        			if is_interface_usable and then is_initialized and then is_shown then
-        				on_focus_in
-        			end
-        		end)
-        	register_action (content.focus_out_actions, agent
-        		do
-        			if is_interface_usable and then is_initialized then
-        				on_focus_out
-        			end
-        		end)
-
-				-- Show actions
-        	register_kamikaze_action (content.show_actions, agent
-        			-- We need a widget that is parented to a window so we need to wait until after the
-        			-- docking content is attached to the window.
-        		do
-		        	if {l_window: !EV_WINDOW} helpers.widget_top_level_window (user_widget, False) then
-		        			-- Set up help shortcut binding
-		        		bind_help_shortcut (l_window)
-		        	end
-        		end)
         end
 
 feature {NONE} -- Initialization: User interface

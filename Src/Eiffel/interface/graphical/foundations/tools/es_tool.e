@@ -314,6 +314,13 @@ feature -- Access: User interface
 			if l_result = Void then
 				Result := new_tool
 				internal_panel := Result
+				if
+					docking_content.is_visible and then
+					{l_panel: ES_DOCKABLE_TOOL_PANEL [EV_WIDGET]} Result and then
+					not l_panel.is_initialized
+				then
+					l_panel.initialize
+				end
 				build_tool (Result)
 				on_tool_instantiated
 			else
@@ -406,6 +413,7 @@ feature -- Access: User interface
 						end (?, l_stonable))
 				end
 
+					-- Register the close actions.
 				register_action (Result.close_request_actions, agent close)
 
 				register_kamikaze_action (Result.show_actions, agent (ia_content: !SD_CONTENT)
@@ -414,6 +422,11 @@ feature -- Access: User interface
 	                    if not is_tool_instantiated then
 	                    		-- Just access the panel to initalize it. This is kind of a hack, but it
 	                    		-- works for what is needed.
+	                    		-- This is required because the multitude of ways a tools can be shown or
+	                    		-- accessed in code. We need to be sure that the panel is created on show
+	                    		-- because we use a fack widget for the docking content. This widget needs
+	                    		-- to be replaced before the user sees the content come into view. If the
+	                    		-- user sees "Uh Oh!" the content was shown without initializing the panel.
 							panel.do_nothing
 	                    end
 	                end (Result))

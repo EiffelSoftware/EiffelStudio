@@ -453,7 +453,7 @@ feature -- Query
 			l_count, i: INTEGER
 		do
 			l_tool := tool_edition (a_type, 1)
-			if not l_tool.is_tool_instantiated then
+			if a_reuse and then not l_tool.is_tool_instantiated then
 					-- We reuse the first edition if it hasn't been created because `all_tools'
 					-- will add an descriptor instances, even if the tool is never used.
 				Result := l_tool

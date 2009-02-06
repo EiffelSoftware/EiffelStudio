@@ -530,8 +530,7 @@ feature -- tools
 				l_tools.do_all (agent (a_tool: ES_TOOL [EB_TOOL]; a_result: LINKED_SET [ES_WATCH_TOOL])
 						do
 							if
-								{l_tool: ES_WATCH_TOOL} a_tool and then
-								l_tool.is_tool_instantiated
+								{l_tool: ES_WATCH_TOOL} a_tool
 							then
 								a_result.extend (l_tool)
 							end
@@ -1388,7 +1387,7 @@ feature -- Status setting
 					l_tool := Void
 					if not l_wt_lst.is_empty then
 						l_watch_tool := l_wt_lst.last
-						if l_watch_tool.is_tool_instantiated and then l_watch_tool.is_shown then
+						if l_watch_tool.is_visible then
 							l_tool := l_watch_tool
 						end
 					end

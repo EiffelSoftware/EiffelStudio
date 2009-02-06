@@ -809,7 +809,7 @@ feature -- tools management
 					loop
 						wt := l_wt_lst.item
 						if wt.is_tool_instantiated then
-							mn := wt.panel.menu_name.twin
+							mn := wt.edition_title.twin
 							if show_watch_tool_command.shortcut_available then
 								mn.append ("%T")
 								mn.append (show_watch_tool_command.shortcut_string)
@@ -948,6 +948,8 @@ feature -- tools management
 			if {l_watch_tool: ES_WATCH_TOOL} a_window.shell_tools.tool_next_available_edition ({ES_WATCH_TOOL}, False) then
 				if a_tool /= Void then
 					l_watch_tool.content.set_tab_with (a_tool.content, False)
+				else
+					l_watch_tool.show (False)
 				end
 			end
 		end
@@ -1371,12 +1373,8 @@ feature -- Status setting
 			object_storage_management_cmd.disable_sensitive
 
 				--| Grid Objects Tool
-			objects_tool.panel.set_manager (debugging_window)
 			objects_tool.update_cleaning_delay (debug_tool_data.delay_before_cleaning_objects_grid)
 			objects_tool.request_update
-
-				--| object viewer Objects Tool
-			object_viewer_tool.panel.set_manager (debugging_window)
 
 				--| Watches tool
 			l_wt_lst := watch_tool_list
@@ -1413,7 +1411,6 @@ feature -- Status setting
 			threads_tool.request_update
 
 				--| Call Stack Tool
-			call_stack_tool.panel.set_manager (debugging_window)
 			call_stack_tool.request_update
 
 				-- Show Tools and final visual settings

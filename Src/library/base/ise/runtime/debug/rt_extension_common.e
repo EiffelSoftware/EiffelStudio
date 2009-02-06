@@ -18,6 +18,8 @@ feature -- Trace
 
 	dtrace (m: STRING)
 			-- note: might be be removed with 6.2	
+		require
+			m_attached: m /= Void
 		do
 			io.error.put_string (m)
 		end

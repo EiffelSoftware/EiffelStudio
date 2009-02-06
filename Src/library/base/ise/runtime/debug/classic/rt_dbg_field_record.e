@@ -21,8 +21,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (obj: !ANY; i,t: INTEGER; v: like value)
+	make (obj: ANY; i,t: INTEGER; v: like value)
 			-- Make field record with index `i', type `t' an value `v'
+		require
+			obj_attached: obj /= Void
 		do
 			object := obj
 			index := i
@@ -32,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	object: !ANY
+	object: ANY
 			-- Associated object.
 
 	value: ?G
@@ -55,31 +57,36 @@ feature -- Access
 	is_local_record: BOOLEAN = False
 			-- <Precursor>
 
-	is_same_as (other: !RT_DBG_VALUE_RECORD): BOOLEAN
+	is_same_as (other: RT_DBG_VALUE_RECORD): BOOLEAN
 			-- Is Current same as `other' ?
 		do
-			Result := {c: like Current} other and then index = c.index and then value = c.value
+			Result := {l_field: like Current} other and then
+					index = l_field.index and then
+					value = l_field.value
 		end
 
 	to_string: STRING
 			-- String representation
+		local
+			v: like value
 		do
+			v := value
 			inspect type
 			when {INTERNAL}.reference_type then
-				if {vr: like value} value then
-					Result := ($vr).out
+				if v /= Void then
+					Result := ($v).out
 				else
 					Result := "Void"
 				end
 			when {INTERNAL}.expanded_type then
 				check value_attached: value /= Void end
-				if {vx: like value} value then
-					Result := ($vx).out
+				if v /= Void then
+					Result := ($v).out
 				else
 					create Result.make_empty
 				end
 			else
-				if {v: like value} value then
+				if v /= Void then
 					Result := v.out
 				else
 					check False end
@@ -102,7 +109,7 @@ feature -- Change properties
 
 feature -- Runtime
 
-	restore (val: !RT_DBG_VALUE_RECORD)
+	restore (val: RT_DBG_VALUE_RECORD)
 			-- Restore `value' on `object', and associate `val' as `backup'
 		do
 			debug ("RT_DBG_REPLAY")
@@ -121,7 +128,7 @@ feature -- Runtime
 			end
 		end
 
-	revert (bak: !RT_DBG_VALUE_RECORD)
+	revert (bak: RT_DBG_VALUE_RECORD)
 			-- Revert previous change due to Current to `object'
 		do
 			debug ("RT_DBG_REPLAY")
@@ -135,8 +142,11 @@ feature -- Runtime
 
 feature {NONE} -- Internal Implementation
 
-	set_object_field (obj: !ANY; r: !RT_DBG_VALUE_RECORD)
+	set_object_field (obj: ANY; r: RT_DBG_VALUE_RECORD)
 			-- Set object field defined by `r' on target `obj'
+		require
+			obj_attached: obj /= Void
+			r_attached: r /= Void
 		local
 			i: like index
 		do
@@ -219,6 +229,9 @@ feature {NONE} -- Implementation
 			-- Default value
 		do
 		end
+
+invariant
+	object_attached: object /= Void
 
 note
 	library:   "EiffelBase: Library of reusable components for Eiffel."

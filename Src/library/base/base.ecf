@@ -84,9 +84,6 @@
 			<option namespace="Base">
 			</option>
 			<file_rule>
-				<exclude>/safe$</exclude>
-			</file_rule>
-			<file_rule>
 				<exclude>/dotnet$</exclude>
 				<condition>
 					<dotnet value="false"/>

@@ -34,14 +34,6 @@
 			<class_option class="TWO_WAY_CURSOR_TREE" is_void_safe="false">
 			</class_option>
 			<file_rule>
-				<exclude>/support/c_string.e$</exclude>
-				<exclude>/structures/list/cell.e$</exclude>
-				<exclude>/kernel/immutable_string_32.e$</exclude>
-				<exclude>/kernel/immutable_string_8.e$</exclude>
-				<exclude>/kernel/string_32.e$</exclude>
-				<exclude>/kernel/string_8.e$</exclude>
-			</file_rule>
-			<file_rule>
 				<exclude>/support/class_name_translations.e$</exclude>
 				<exclude>/support/double_math.e$</exclude>
 				<exclude>/support/execution_environment.e$</exclude>

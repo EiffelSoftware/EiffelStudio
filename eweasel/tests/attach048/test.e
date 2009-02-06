@@ -16,4 +16,11 @@ feature {NONE} -- Creation
 			create c1
 		end
 
+feature -- Basic operations
+
+	plus alias "+" (other: !TEST): !TEST
+		do
+			Result := Current
+		end
+
 end

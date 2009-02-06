@@ -146,7 +146,8 @@ feature -- Command
 						l_error.show_on_active_window
 					else
 						display_testing_result_tool
-						testing_tool.content.set_focus
+							-- Was `testing_tool.content.set_focus'.
+						testing_tool.show
 					end
 				end
 			end
@@ -395,7 +396,8 @@ feature {NONE} -- Implementation
 			l_testing_result_tool := testing_result_tool
 			if l_testing_result_tool /= Void then
 				display_testing_result_tool
-				l_testing_result_tool.content.set_focus
+					-- Was `l_testing_result_tool.content.set_focus'.
+				l_testing_result_tool.show
 			end
 
 			l_testing_tool := testing_tool
@@ -413,7 +415,7 @@ feature {NONE} -- Implementation
 			l_show_tool_command: ES_SHOW_TOOL_COMMAND
 			l_win: EB_DEVELOPMENT_WINDOW
 		do
-			if testing_result_tool = Void or else not testing_result_tool.content.is_visible then
+			if testing_result_tool = Void or else not testing_result_tool.is_visible then
 				l_win := testing_tool.develop_window
 				check not_void: l_win /= Void end
 				l_shim ?= l_win.shell_tools.tool ({ES_EWEASEL_TESTING_RESULT_TOOL})
@@ -558,7 +560,7 @@ feature {NONE} -- Internal instance holders
 			-- Used by `result_anaylzer' only
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -582,11 +584,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

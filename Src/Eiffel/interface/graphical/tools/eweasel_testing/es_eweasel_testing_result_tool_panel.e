@@ -117,7 +117,8 @@ feature {NONE} -- Redefine
 									if {lt_conf_class: CONF_CLASS} l_conf_class then
 										l_row := l_testing_tool.test_case_grid_manager.test_case_row_related_with (lt_conf_class)
 										if l_row /= Void then
-											l_testing_tool.content.set_focus
+												-- Was `l_testing_tool.content.set_focus'.
+											l_testing_tool.show
 											l_testing_tool.test_case_grid_manager.unselect_all_rows
 											l_row.enable_select
 											-- Start test for that row
@@ -235,7 +236,7 @@ feature {NONE} -- Implementation
 			-- Used by `test_run_result_grid_manager' ONLY!
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -259,11 +260,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

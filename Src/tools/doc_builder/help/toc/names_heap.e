@@ -20,7 +20,7 @@ inherit
 			put as area_put,
 			valid_index as area_valid_index,
 			item as area_item,
-			infix_at as area_infix_at
+			at as area_infix_at
 		export
 			{NONE} all
 		end

@@ -369,6 +369,8 @@ feature -- Basic operations
 	infix "+" (d: DATE_DURATION): DATE
 			-- Sum to current date the duration `d'
 			-- if duration not define, add years and then months and then days.
+		require
+			d_not_void: d /= Void
 		do
 			Result := twin
 			Result.add (d)
@@ -381,6 +383,8 @@ feature -- Basic operations
 	add (d: DATE_DURATION)
 			-- Adds `d' to the current date.
 			-- if `d' is not definite, add years and months and then days.
+		require
+			d_not_void: d /= Void
 		do
 			if d.definite then
 				day_add (d.day)
@@ -592,11 +596,11 @@ note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

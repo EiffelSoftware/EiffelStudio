@@ -31,7 +31,7 @@ create
 	make_empty,
 	make_filled,
 	make_from_string,
-	make_from_c_pointer,
+	make_from_c,
 	make_from_cil
 
 note

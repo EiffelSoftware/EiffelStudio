@@ -81,7 +81,7 @@ feature -- Status_report
 	host_address: STRING
 			-- IP number (dotted format) of current address
 		do
-			create Result.make_from_c_pointer (net_host (address_host.item))
+			create Result.make_from_c (net_host (address_host.item))
 		end;
 
 	local_host_name: STRING

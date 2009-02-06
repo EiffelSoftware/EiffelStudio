@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 --			put ("localhost:0", "DISPLAY")
 				-- This line may be uncommented to allow for display redirection to another machine for debugging purposes
 
-			create locale_str.make_from_c_pointer ({EV_GTK_EXTERNALS}.gtk_set_locale)
+			create locale_str.make_from_c ({EV_GTK_EXTERNALS}.gtk_set_locale)
 
 			gtk_is_launchable := gtk_init_check
 			if
@@ -649,7 +649,7 @@ feature {EV_ANY_I} -- Implementation
 							print ("GDK_SETTING")
 					 	end
 						l_call_event := False
-						create l_event_string.make_from_c_pointer ({EV_GTK_EXTERNALS}.gdk_event_setting_struct_name (gdk_event))
+						create l_event_string.make_from_c ({EV_GTK_EXTERNALS}.gdk_event_setting_struct_name (gdk_event))
 						if l_event_string.is_equal ("gtk-theme-name") then
 							-- Theme change
 							l_call_theme_events := True
@@ -930,9 +930,9 @@ feature -- Basic operation
 					{EV_GTK_EXTERNALS}.gdk_selection_convert (src_window, a_selection, a_target, a_time)
 					prop_length := {EV_GTK_EXTERNALS}.gdk_selection_property_get (src_window, $prop_data, $prop_type, $prop_format)
 					if prop_data /= default_pointer then
-						create a_string.make_from_c_pointer ({EV_GTK_EXTERNALS}.gdk_atom_name (a_target))
+						create a_string.make_from_c ({EV_GTK_EXTERNALS}.gdk_atom_name (a_target))
 						if a_string.is_equal (l_string) then
-							create a_string.make_from_c_pointer (prop_data)
+							create a_string.make_from_c (prop_data)
 							l_file_list := a_string.split ('%N')
 							from
 								l_file_list.start

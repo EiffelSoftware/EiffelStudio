@@ -90,7 +90,7 @@ feature {NONE} -- Implementation
 		local
 			key: STRING
 		do
-			create key.make_from_c_pointer (ckey)
+			create key.make_from_c (ckey)
 			put (value, key)
 		end
 

@@ -295,6 +295,8 @@ feature -- Basic operations
 
 	infix "+" (d: DATE_TIME_DURATION): like Current
 			-- Sum the current object with `d'
+		require
+			d_not_void: d /= Void
 		do
 			Result := twin
 			Result.add (d)
@@ -304,6 +306,8 @@ feature -- Basic operations
 
 	add (dtd: DATE_TIME_DURATION)
 			-- Adds `dtd' to current duration
+		require
+			dtd_not_void: dtd /= Void
 		do
 			if dtd.definite then
 				day_add (dtd.day)
@@ -430,11 +434,11 @@ note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -95,11 +95,11 @@ feature -- Status report
 			create Result
 		end
 
---	customized_tool_manager: EB_CUSTOMIZED_TOOL_MANAGER
---			-- Customized tool manager
---		once
---			create Result
---		end
+	customized_tool_manager: EB_CUSTOMIZED_TOOL_MANAGER
+			-- Customized tool manager
+		once
+			create Result
+		end
 
 	Refactoring_manager: ERF_MANAGER
 			-- The refactoring manager.

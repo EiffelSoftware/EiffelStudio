@@ -47,13 +47,13 @@ feature -- Access
 	id: STRING
 			-- ID of current tool
 
---	title_for_pre: STRING
---			-- Title of the tool
---		do
---			Result := id
---		ensure then
---			good_result: Result = id
---		end
+	title_for_pre: STRING
+			-- Title of the tool
+		do
+			Result := id
+		ensure then
+			good_result: Result = id
+		end
 
 	title: STRING_GENERAL
 			-- Title of the tool which for show, it maybe not in English.

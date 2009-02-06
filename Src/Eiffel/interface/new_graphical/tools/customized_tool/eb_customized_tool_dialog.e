@@ -308,7 +308,7 @@ feature{NONE} -- Implementation
 		local
 			l_item_table: HASH_TABLE [EB_CUSTOMIZED_TOOL_DESP, STRING]
 			l_cursor: DS_ARRAYED_LIST_CURSOR [EB_CUSTOMIZED_TOOL_DESP]
-			l_tool: EB_TOOL
+			l_tool: EB_CUSTOMIZED_TOOL
 			l_tools: LIST [EB_CUSTOMIZED_TOOL]
 			l_shell_tools: DS_ARRAYED_LIST_CURSOR [ES_TOOL [EB_TOOL]]
 			l_shell_tool: ES_TOOL [EB_TOOL]
@@ -329,7 +329,7 @@ feature{NONE} -- Implementation
 			l_shell_tools := window_manager.last_focused_development_window.shell_tools.all_tools.new_cursor
 			from l_shell_tools.start until l_shell_tools.after loop
 				l_shell_tool := l_shell_tools.item
-				Result.extend ([l_shell_tool.title, l_shell_tool.type_id.as_string_8])
+				Result.extend ([l_shell_tool.title, l_shell_tool.content_id.as_string_8])
 				l_shell_tools.forth
 			end
 
@@ -341,13 +341,10 @@ feature{NONE} -- Implementation
 				l_tools.after
 			loop
 				l_tool := l_tools.item
-				if l_tool.is_customized_tool  then
-					if l_item_table.has (l_tool.title_for_pre) then
-						Result.extend ([l_tool.title, l_tool.title_for_pre])
-						l_item_table.remove (l_tool.title_for_pre)
-					end
-				else
+				check l_tool_attached: l_tool /= Void end
+				if l_item_table.has (l_tool.title_for_pre) then
 					Result.extend ([l_tool.title, l_tool.title_for_pre])
+					l_item_table.remove (l_tool.title_for_pre)
 				end
 				l_tools.forth
 			end
@@ -363,4 +360,35 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
+note
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

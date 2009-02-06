@@ -172,51 +172,49 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
---	customizable_tools: ARRAYED_LIST [EB_TOOL]
---			-- Access to list of tools that can be customized
---		local
---			l_tools: DS_ARRAYED_LIST_CURSOR [ES_TOOL [EB_TOOL]]
---			l_format_tool: ES_FORMATTER_TOOL [ES_FORMATTER_TOOL_PANEL_BASE]
---			l_tool: EB_TOOL
---			l_customized_tools: LIST [EB_TOOL]
---		do
---			create Result.make (3)
---			l_customized_tools := customized_tools
+	customizable_tools: ARRAYED_LIST [EB_CUSTOMIZED_TOOL]
+			-- Access to list of tools that can be customized
+		local
+			l_tools: DS_ARRAYED_LIST_CURSOR [ES_TOOL [EB_TOOL]]
+			l_format_tool: ES_FORMATTER_TOOL [ES_FORMATTER_TOOL_PANEL_BASE]
+			l_customized_tools: like customized_tools
+		do
+			create Result.make (3)
+			l_customized_tools := customized_tools
 
---				-- Fetch list of shell tool and extract the customizable ones.
---			l_tools := develop_window.shell_tools.all_tools.new_cursor
---			from l_tools.start until l_tools.after loop
---				l_format_tool ?= l_tools.item
---				if l_format_tool /= Void and then l_format_tool.is_customizable then
---						-- The tool is customizable so activate the tool instance
---					l_tool := l_format_tool.panel
---					if not l_customized_tools.has (l_tool) then
---							-- Only add the tool if it's not a customized tool because these will be added later
---						Result.extend (l_tool)
---					end
---				end
---				l_tools.forth
---			end
+				-- Fetch list of shell tool and extract the customizable ones.
+			l_tools := develop_window.shell_tools.all_tools.new_cursor
+			from l_tools.start until l_tools.after loop
+				l_format_tool ?= l_tools.item
+				if l_format_tool /= Void and then l_format_tool.is_customizable then
+						-- The tool is customizable so activate the tool instance
+					if {l_tool: EB_CUSTOMIZED_TOOL} l_format_tool.panel and then not l_customized_tools.has (l_tool) then
+							-- Only add the tool if it's not a customized tool because these will be added later
+						Result.extend (l_tool)
+					end
+				end
+				l_tools.forth
+			end
 
---				-- Add the customized tools
---			Result.append (l_customized_tools)
---		ensure
---			result_attached: Result /= Void
---			result_contains_attached_items: not Result.has (Void)
---		end
+				-- Add the customized tools
+			Result.append (l_customized_tools)
+		ensure
+			result_attached: Result /= Void
+			result_contains_attached_items: not Result.has (Void)
+		end
 
---	customized_tools: LIST [EB_CUSTOMIZED_TOOL]
---			-- Access to list of customized tools added by the user
---		do
---			Result := internal_customized_tools
---			if Result = Void then
---				create {LINKED_LIST [EB_CUSTOMIZED_TOOL]} Result.make
---				internal_customized_tools := Result
---			end
---		ensure
---			result_attached: Result /= Void
---			result_consistent: Result = customized_tools
---		end
+	customized_tools: LIST [EB_CUSTOMIZED_TOOL]
+			-- Access to list of customized tools added by the user
+		do
+			Result := internal_customized_tools
+			if Result = Void then
+				create {LINKED_LIST [EB_CUSTOMIZED_TOOL]} Result.make
+				internal_customized_tools := Result
+			end
+		ensure
+			result_attached: Result /= Void
+			result_consistent: Result = customized_tools
+		end
 
 feature -- Commands
 
@@ -239,7 +237,7 @@ feature -- Commands
 			features_relation_tool.set_stone (a_stone)
 			class_tool.set_stone (a_stone)
 			dependency_tool.set_stone (a_stone)
---			set_stone_to_customized_tools (a_stone)
+			set_stone_to_customized_tools (a_stone)
 
 			stone := a_stone
 		end
@@ -283,7 +281,7 @@ feature -- Commands
 			conv_dev := develop_window
 			if conv_dev /= Void then
 				if not conv_dev.unified_stone then
---					invalidate_customizable_tools
+					invalidate_customizable_tools
 					if conv_dev.link_tools then
 						if stone /= Void then
 							stone := stone.synchronized_stone
@@ -319,10 +317,10 @@ feature -- Commands
 			class_tool.refresh
 			features_relation_tool.refresh
 			dependency_tool.refresh
---			customized_tools.do_all (agent (a_tool: EB_CUSTOMIZED_TOOL)
---				do
---					a_tool.refresh
---				end)
+			customized_tools.do_all (agent (a_tool: EB_CUSTOMIZED_TOOL)
+				do
+					a_tool.refresh
+				end)
 		end
 
 	show_default_tool_of_feature
@@ -357,153 +355,153 @@ feature -- Query
 
 feature -- Custom tools
 
---	set_stone_to_customized_tools (a_stone: STONE)
---			-- Set `a_stone' to `customized_tools'.
---		local
---			l_cus_tools: like customized_tools
---			l_cursor: CURSOR
---		do
---			l_cus_tools := customized_tools
---			l_cursor := l_cus_tools.cursor
---			from
---				l_cus_tools.start
---			until
---				l_cus_tools.after
---			loop
---				l_cus_tools.item.set_stone (a_stone)
---				l_cus_tools.forth
---			end
---			l_cus_tools.go_to (l_cursor)
---		end
+	set_stone_to_customized_tools (a_stone: STONE)
+			-- Set `a_stone' to `customized_tools'.
+		local
+			l_cus_tools: like customized_tools
+			l_cursor: CURSOR
+		do
+			l_cus_tools := customized_tools
+			l_cursor := l_cus_tools.cursor
+			from
+				l_cus_tools.start
+			until
+				l_cus_tools.after
+			loop
+				l_cus_tools.item.set_stone (a_stone)
+				l_cus_tools.forth
+			end
+			l_cus_tools.go_to (l_cursor)
+		end
 
---	refresh_customized_tool_appearance (a_tool: EB_CUSTOMIZED_TOOL)
---			-- Refresh appearance such as title, pixmap, stone handlers for `a_tool'.
---		require
---			a_tool_attached: a_tool /= Void
---		local
---			l_manager: EB_CUSTOMIZED_TOOL_MANAGER
---			l_tool_desp: EB_CUSTOMIZED_TOOL_DESP
---		do
---			l_manager := develop_window.customized_tool_manager
---			l_tool_desp := l_manager.descriptor_by_id (a_tool.title_for_pre)
---			check l_tool_desp /= Void end
---			a_tool.set_title (l_tool_desp.name)
---			a_tool.set_stone_handlers (l_tool_desp.handlers)
---			a_tool.set_pixmap_location (l_tool_desp.pixmap_location)
-
+	refresh_customized_tool_appearance (a_tool: EB_CUSTOMIZED_TOOL)
+			-- Refresh appearance such as title, pixmap, stone handlers for `a_tool'.
+		require
+			a_tool_attached: a_tool /= Void
+		local
+			l_manager: EB_CUSTOMIZED_TOOL_MANAGER
+			l_tool_desp: EB_CUSTOMIZED_TOOL_DESP
+		do
+			l_manager := develop_window.customized_tool_manager
+			l_tool_desp := l_manager.descriptor_by_id (a_tool.title_for_pre)
+			check l_tool_desp /= Void end
+			a_tool.set_title (l_tool_desp.name)
+			a_tool.set_stone_handlers (l_tool_desp.handlers)
+			a_tool.set_pixmap_location (l_tool_desp.pixmap_location)
+-- FIXME: To reinstantiate as this code does not compile anymore
 --			a_tool.content.set_long_title (a_tool.title)
 --			a_tool.content.set_short_title (a_tool.title)
 --			a_tool.content.set_pixel_buffer (a_tool.pixel_buffer)
 --			a_tool.content.set_pixmap (a_tool.pixmap)
 --			develop_window.menus.update_item_from_tools_list_menu (a_tool)
---		end
+		end
 
---	customized_tools_from_tools (a_tools: like customizable_tools): LIST [EB_CUSTOMIZED_TOOL]
---			-- Customized tools from `a_tools'.
---		require
---			a_tools_attached: a_tools /= Void
---			a_tools_valid: not a_tools.has (Void)
---		local
---			l_cursor: CURSOR
---			l_customized_tool: EB_CUSTOMIZED_TOOL
---		do
---			create {LINKED_LIST [EB_CUSTOMIZED_TOOL]} Result.make
---			l_cursor := a_tools.cursor
---			from
---				a_tools.start
---			until
---				a_tools.after
---			loop
---				if a_tools.item.is_customized_tool then
---					l_customized_tool ?= a_tools.item
---					Result.extend (l_customized_tool)
---				end
---				a_tools.forth
---			end
---			a_tools.go_to (l_cursor)
---		ensure
---			result_attached: Result /= Void
---		end
+	customized_tools_from_tools (a_tools: like customizable_tools): LIST [EB_CUSTOMIZED_TOOL]
+			-- Customized tools from `a_tools'.
+		require
+			a_tools_attached: a_tools /= Void
+			a_tools_valid: not a_tools.has (Void)
+		local
+			l_cursor: CURSOR
+			l_customized_tool: EB_CUSTOMIZED_TOOL
+		do
+			create {LINKED_LIST [EB_CUSTOMIZED_TOOL]} Result.make
+			l_cursor := a_tools.cursor
+			from
+				a_tools.start
+			until
+				a_tools.after
+			loop
+				if a_tools.item.is_customized_tool then
+					l_customized_tool ?= a_tools.item
+					Result.extend (l_customized_tool)
+				end
+				a_tools.forth
+			end
+			a_tools.go_to (l_cursor)
+		ensure
+			result_attached: Result /= Void
+		end
 
---	customizable_tool_by_id (a_id: STRING): EB_TOOL
---			-- Tool from `all_tools' whose id is `a_id'
---			-- Void if no such tool is found.
---		require
---			a_id_attached: a_id /= Void
---		local
---			l_tools: like customizable_tools
---			l_cursor: CURSOR
---		do
---			l_tools := customizable_tools
---			l_cursor := l_tools.cursor
---			from
---				l_tools.start
---			until
---				l_tools.after or Result /= Void
---			loop
---				if l_tools.item.title_for_pre.is_equal (a_id) then
---					Result := l_tools.item
---				end
---				l_tools.forth
---			end
---			l_tools.go_to (l_cursor)
---		end
+	customizable_tool_by_id (a_id: STRING): EB_TOOL
+			-- Tool from `all_tools' whose id is `a_id'
+			-- Void if no such tool is found.
+		require
+			a_id_attached: a_id /= Void
+		local
+			l_tools: like customizable_tools
+			l_cursor: CURSOR
+		do
+			l_tools := customizable_tools
+			l_cursor := l_tools.cursor
+			from
+				l_tools.start
+			until
+				l_tools.after or Result /= Void
+			loop
+				if l_tools.item.title_for_pre.is_equal (a_id) then
+					Result := l_tools.item
+				end
+				l_tools.forth
+			end
+			l_tools.go_to (l_cursor)
+		end
 
---	customizable_tools_by_id (a_tools: like customizable_tools; a_ids: LIST [STRING]; a_include: BOOLEAN): like customizable_tools
---			-- Tools from `a_tools' whose IDs are in `a_ids' if `a_include' is True,
---			-- otherwise, return tools from `a_tools' whose IDS are not in `a_ids'.
---		require
---			a_tools_attached: a_tools /= Void
---			a_ids_attached: a_ids /= Void
---		local
---			l_set: DS_HASH_SET [STRING]
---			l_keep: BOOLEAN
---		do
---			create l_set.make (a_ids.count)
---			l_set.set_equality_tester (create {AGENT_BASED_EQUALITY_TESTER [STRING]}.make (agent (a_str, b_str: STRING): BOOLEAN do Result := equal (a_str, b_str) end))
---			a_ids.do_all (agent l_set.force_last)
---			Result := a_tools.twin
---			from
---				Result.start
---			until
---				Result.after
---			loop
---				if a_include then
---					l_keep := l_set.has (Result.item.title_for_pre)
---				else
---					l_keep := not l_set.has (Result.item.title_for_pre)
---				end
---				if l_keep then
---					Result.forth
---				else
---					Result.remove
---				end
---			end
---		ensure
---			result_attached: Result /= Void
---		end
+	customizable_tools_by_id (a_tools: like customizable_tools; a_ids: LIST [STRING]; a_include: BOOLEAN): like customizable_tools
+			-- Tools from `a_tools' whose IDs are in `a_ids' if `a_include' is True,
+			-- otherwise, return tools from `a_tools' whose IDS are not in `a_ids'.
+		require
+			a_tools_attached: a_tools /= Void
+			a_ids_attached: a_ids /= Void
+		local
+			l_set: DS_HASH_SET [STRING]
+			l_keep: BOOLEAN
+		do
+			create l_set.make (a_ids.count)
+			l_set.set_equality_tester (create {AGENT_BASED_EQUALITY_TESTER [STRING]}.make (agent (a_str, b_str: STRING): BOOLEAN do Result := equal (a_str, b_str) end))
+			a_ids.do_all (agent l_set.force_last)
+			Result := a_tools.twin
+			from
+				Result.start
+			until
+				Result.after
+			loop
+				if a_include then
+					l_keep := l_set.has (Result.item.title_for_pre)
+				else
+					l_keep := not l_set.has (Result.item.title_for_pre)
+				end
+				if l_keep then
+					Result.forth
+				else
+					Result.remove
+				end
+			end
+		ensure
+			result_attached: Result /= Void
+		end
 
---	invalidate_customizable_tools
---			-- Invalidate tools which will force a refresh of all currently selected formatters.
---		do
---			class_tool.invalidate
---			features_relation_tool.invalidate
---			dependency_tool.invalidate
---			if not customized_tools.is_empty then
---				customized_tools.do_all (agent (a_tool: EB_CUSTOMIZED_TOOL) do a_tool.invalidate end)
---			end
---		end
+	invalidate_customizable_tools
+			-- Invalidate tools which will force a refresh of all currently selected formatters.
+		do
+			class_tool.invalidate
+			features_relation_tool.invalidate
+			dependency_tool.invalidate
+			if not customized_tools.is_empty then
+				customized_tools.do_all (agent (a_tool: EB_CUSTOMIZED_TOOL) do a_tool.invalidate end)
+			end
+		end
 
---	customized_tools_internal: like customized_tools
---			-- Implementation of `customized_tools'
+	customized_tools_internal: like customized_tools
+			-- Implementation of `customized_tools'
 
---feature {NONE} -- Internal implementation cache
+feature {NONE} -- Internal implementation cache
 
---	internal_customized_tools: like customized_tools
---			-- Cached version of `customized_tools'
---			-- Note: Do not use directly!
+	internal_customized_tools: like customized_tools
+			-- Cached version of `customized_tools'
+			-- Note: Do not use directly!
 
-note
+;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

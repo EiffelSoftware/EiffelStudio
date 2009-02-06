@@ -20,6 +20,8 @@ inherit
 			active_registrations as active_outputs,
 			is_valid_registration as is_valid_output,
 			registration as output,
+			registered_event as output_registered_event,
+			unregistered_event as output_unregistered_event,
 			registration_activated_event as output_activated_event,
 			registrar_connection as output_manager_event_connection
 		export

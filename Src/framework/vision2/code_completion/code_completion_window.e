@@ -1067,7 +1067,6 @@ feature {NONE} -- Implementation
 					l_select_row_visible := l_list.visible_row_indexes.has (l_rows.first.index)
 				end
 				i := l_list.column (1).required_width_of_item_span (1, l_list.row_count) + 3
-				i := i.max (l_list.width)
 				if l_list.vertical_scroll_bar.is_displayed then
 					if i < l_list.width - l_list.vertical_scroll_bar.width then
 						l_list.column (1).set_width (l_list.width - l_list.vertical_scroll_bar.width)
@@ -1458,7 +1457,7 @@ invariant
 	choice_list_attached: choice_list /= Void
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

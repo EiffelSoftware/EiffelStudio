@@ -152,6 +152,76 @@ feature -- Status setting
 			current_conf_equals_a_conf: current_conf = a_conf
 		end
 
+feature -- Obsolete features
+
+	is_new_feature_clause_cache: BOOLEAN assign set_is_new_feature_clause
+			-- Cache for `is_new_feature_clause'
+		obsolete
+			"Will be removed as soon as we do not need ES_TEST_WIZARD_CLASS_WINDOW"
+		attribute
+		end
+
+	feature_clause_name_cache: ?STRING assign set_feature_clause_name
+			-- Cache for `feature_clause_name'
+		obsolete
+			"Will be removed as soon as we do not need ES_TEST_WIZARD_CLASS_WINDOW"
+		attribute
+		end
+
+	feature_clause_cache: ?FEATURE_CLAUSE_AS assign set_feature_clause
+			-- Cache for `feature_clause'
+		obsolete
+			"Will be removed as soon as we do not need ES_TEST_WIZARD_CLASS_WINDOW"
+		attribute
+		end
+
+	test_class_cache: ?EIFFEL_CLASS_I assign set_test_class
+			-- Cache for `test_class'
+		obsolete
+			"Will be removed as soon as we do not need ES_TEST_WIZARD_CLASS_WINDOW"
+		attribute
+		end
+
+	set_is_new_feature_clause (a_is_new_feature_clause: like is_new_feature_clause_cache)
+			-- Set `is_new_feature_clause' to `a_is_new_feature_clause'.
+		obsolete
+			"Will be removed as soon as we do not need ES_TEST_WIZARD_CLASS_WINDOW"
+		do
+			is_new_feature_clause_cache := a_is_new_feature_clause
+		ensure
+			is_is_new_feature_clause: is_new_feature_clause_cache = a_is_new_feature_clause
+		end
+
+	set_feature_clause_name (a_name: like feature_clause_name_cache)
+			-- Set `feature_clause_name_cache' to `a_name'.
+		obsolete
+			"Will be removed as soon as we do not need ES_TEST_WIZARD_CLASS_WINDOW"
+		do
+			feature_clause_name_cache := a_name
+		ensure
+			name_set: feature_clause_name_cache = a_name
+		end
+
+	set_feature_clause (a_feature_clause: like feature_clause_cache)
+			-- Set `feature_clause_cache' to `a_feature_clause'.
+		obsolete
+			"Will be removed as soon as we do not need ES_TEST_WIZARD_CLASS_WINDOW"
+		 do
+			feature_clause_cache := a_feature_clause
+		ensure
+			feature_clause_set: feature_clause_cache = a_feature_clause
+		end
+
+	set_test_class (a_test_class: like test_class_cache)
+			-- Set `test_class_cache' to `a_test_class'.
+		obsolete
+			"Will be removed as soon as we do not need ES_TEST_WIZARD_CLASS_WINDOW"
+		do
+			test_class_cache := a_test_class
+		ensure
+			test_class_set: test_class_cache = a_test_class
+		end
+
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
@@ -177,10 +247,10 @@ feature -- Status setting
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

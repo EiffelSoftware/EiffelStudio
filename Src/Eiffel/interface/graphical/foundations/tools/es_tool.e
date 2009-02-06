@@ -243,8 +243,8 @@ feature {ES_SHELL_TOOLS} -- Element change
 				l_content := internal_docking_content
 				if l_content /= Void then
 					l_content.set_unique_title (content_id)
-					l_content.set_long_title (title)
-					l_content.set_short_title (title)
+					l_content.set_long_title (edition_title)
+					l_content.set_short_title (edition_title)
 				end
 				if is_tool_instantiated then
 						-- Notify tool that the edition changed
@@ -366,8 +366,8 @@ feature -- Access: User interface
 					l_label.set_font ((create {ES_SHARED_FONTS_AND_COLORS}).fonts.prompt_sub_title_font)
 					create Result.make_with_widget (l_label, content_id)
 				end
-				Result.set_long_title (title)
-				Result.set_short_title (title)
+				Result.set_long_title (edition_title)
+				Result.set_short_title (edition_title)
 				Result.set_pixel_buffer (icon)
 				Result.set_pixmap (icon_pixmap)
 				internal_docking_content := Result

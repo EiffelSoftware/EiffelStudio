@@ -16,8 +16,7 @@ inherit
 			make as make_widget
 		redefine
 			internal_detach_entities,
-			on_before_initialize,
-			on_after_initialized
+			on_before_initialize
 		end
 
 create
@@ -69,13 +68,6 @@ feature {NONE} -- Initialization: User interface
 		do
 			is_valid := True
 			Precursor
-		end
-
-	on_after_initialized
-			-- <Precursor>
-		do
-			Precursor
-			validate
 		end
 
 feature {NONE} -- Clean up
@@ -372,11 +364,11 @@ feature {NONE} -- Implementation: Internal cache
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

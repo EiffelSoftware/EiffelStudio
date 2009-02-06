@@ -281,7 +281,7 @@ feature {NONE} -- Access
 
 feature -- Status reporting
 
-	is_multi_edition_tool (a_type: TYPE [ES_TOOL [EB_TOOL]]): BOOLEAN
+	is_multiple_edition_tool (a_type: TYPE [ES_TOOL [EB_TOOL]]): BOOLEAN
 			-- Determines if a tool support multiple editions
 			--
 			-- `a_type': The type of tool requested.
@@ -399,27 +399,27 @@ feature -- Query
 		require
 			is_interface_usable: is_interface_usable
 			a_type_attached: a_type /= Void
-			a_type_is_multi_edition_tool: a_edition > 1 implies is_multi_edition_tool (a_type)
+			a_type_is_multi_edition_tool: a_edition > 1 implies is_multiple_edition_tool (a_type)
 			a_edition_positive: a_edition > 0
 			a_edition_small_enough: a_edition <= editions_of_tool (a_type, False) + 1
 		local
 			l_tools: like internal_requested_tools
 			l_id: like tool_id
 			l_editions: ARRAY [ES_TOOL [EB_TOOL]]
-			l_tool: like create_tool
+			l_tool: like new_tool
 		do
 			l_tools := internal_requested_tools
 			l_id := tool_id (a_type)
 			if l_tools.has (l_id) then
 				l_editions := l_tools.item (l_id)
 				if a_edition > l_editions.count then
-					l_tool := create_tool (a_type, a_edition)
+					l_tool := new_tool (a_type, a_edition)
 					l_editions.grow (a_edition)
 					l_editions.put (l_tool, a_edition)
 				end
 			else
 				create l_editions.make (1, 1)
-				l_editions.put (create_tool (a_type, 1), 1)
+				l_editions.put (new_tool (a_type, 1), 1)
 				l_tools.force (l_editions, l_id)
 			end
 
@@ -453,9 +453,8 @@ feature -- Query
 			l_count, i: INTEGER
 		do
 			l_tool := tool_edition (a_type, 1)
-			if a_reuse and then not l_tool.is_tool_instantiated then
-					-- We reuse the first edition if it hasn't been created because `all_tools'
-					-- will add an descriptor instances, even if the tool is never used.
+			if not l_tool.is_visible then
+					-- We reuse the first edition if it is not on the UI.
 				Result := l_tool
 			else
 				l_editions := editions_of_tool (a_type, False)
@@ -518,7 +517,7 @@ feature -- Query
 						-- Active instances only.
 					from i := 1; l_count := l_tools.count until i > l_count loop
 						l_tool := l_tools[i]
-						if l_tool.is_tool_instantiated then
+						if l_tool.is_tool_instantiated or else l_tool.is_visible then
 							Result := Result + 1
 						end
 						i := i + 1
@@ -594,7 +593,7 @@ feature -- Basic operation
 		require
 			is_interface_usable: is_interface_usable
 			a_type_attached: a_type /= Void
-			a_type_is_multi_edition_tool: a_edition > 1 implies is_multi_edition_tool (a_type)
+			a_type_is_multi_edition_tool: a_edition > 1 implies is_multiple_edition_tool (a_type)
 			a_edition_positive: a_edition > 0
 			a_edition_small_enough: a_edition <= editions_of_tool (a_type, False) + 1
 		local
@@ -652,7 +651,7 @@ feature {ES_TOOL} -- Removal
 
 feature {NONE} -- Factory
 
-	create_tool (a_type: TYPE [ES_TOOL [EB_TOOL]]; a_edition: NATURAL_8): ES_TOOL [EB_TOOL]
+	new_tool (a_type: TYPE [ES_TOOL [EB_TOOL]]; a_edition: NATURAL_8): ES_TOOL [EB_TOOL]
 			-- Creates and initializes a tool.
 			--
 			-- `a_type': Tool type to initialize a tool for.
@@ -681,11 +680,11 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Internal implementation cache
 
-	internal_all_tools: like all_tools
+	internal_all_tools: ?like all_tools
 			-- Cached version of `all_tools'
 			-- Note: Do not use directly!
 
-	internal_requested_tools: like requested_tools
+	internal_requested_tools: ?like requested_tools
 			-- Mutable version of `requested_tools'
 			-- Note: Functions wanting to add tools to `requested_tools' should use this attribute instead
 			--       of `requested_tools'. All queries should use `requested_tools' and not this attribute!

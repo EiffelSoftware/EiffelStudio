@@ -120,18 +120,6 @@ feature {NONE} -- Access: User interface
 			Result := tool_descriptor.content
 		end
 
-feature -- Change
-
-	set_manager (m: like develop_window)
-			-- Set value `m' to `develop_window'
-		obsolete
-			"No longer required as the window is set during creation."
-		require
-			m /= Void
-		do
-			develop_window := m
-		end
-
 feature -- Access
 
 	widget: EV_WIDGET
@@ -149,19 +137,6 @@ feature -- Access
 
 	mini_toolbar: EV_WIDGET
 			-- Mini tool bar assiociate with Current.
-
-	menu_name: STRING_GENERAL
-			-- Name as it may appear in a menu.
-			--
-			-- By default this name is the same as `title', redefine this
-			-- feature to have a different name.
-		obsolete
-			"Use the menu_name on {ES_TOOL}"
-		do
-			Result := title
-		ensure
-			valid_menu_name: menu_name /= Void and then not menu_name.is_empty
-		end
 
 	pixmap: EV_PIXMAP
 			-- Pixmap as it appears in toolbars and menu, there is no pixmap by default.

@@ -1216,7 +1216,11 @@ feature {NONE} -- Menu section, Granularity 1.
 						l_list.after
 					loop
 						if l_list.item.is_tool_instantiated then
-							l_menu2.extend (new_menu_item (l_list.item.tool_title))
+							if l_list.item.is_multiple_edition then
+								l_menu2.extend (new_menu_item (l_list.item.edition_title))
+							else
+								l_menu2.extend (new_menu_item (l_list.item.title))
+							end
 							l_menu2.last.select_actions.extend (agent (l_list.item).set_stone (l_class_stone))
 						end
 						l_list.forth

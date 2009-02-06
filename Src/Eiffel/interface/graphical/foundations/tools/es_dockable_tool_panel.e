@@ -27,8 +27,7 @@ inherit
             icon,
             icon_pixmap,
             title,
-            show,
-            on_edition_changed
+            show
 		end
 
 	ES_HELP_REQUEST_BINDER
@@ -600,16 +599,6 @@ feature {NONE} -- Status report
 			-- the tool bar from the user widget.
 		do
 			Result := False
-		end
-
-feature {ES_TOOL} -- Event handlers
-
-	on_edition_changed
-			-- Called when a tool's edition number changes due to purging recycled tools
-		do
-				-- Reset the cached title, which is updated in the parent implementation.
-			internal_title := Void
-			Precursor
 		end
 
 feature {NONE} -- User interface elements

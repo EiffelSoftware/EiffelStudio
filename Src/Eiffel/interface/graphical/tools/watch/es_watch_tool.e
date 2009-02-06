@@ -31,16 +31,6 @@ feature {NONE} -- Initialization: User interface
 
 feature -- Access
 
-	tool_title: STRING_GENERAL
-			-- Panel's title
-		do
-			if is_tool_instantiated then
-				Result := panel.title
-			end
-		end
-
-feature -- Access
-
 	icon: !EV_PIXEL_BUFFER
 			-- <Precursor>
 		do

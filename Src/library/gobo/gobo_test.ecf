@@ -20,7 +20,7 @@
 		<setting name="dotnet_naming_convention" value="true"/>
 		<library name="eiffelbase" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="eiffeltime" location="$ISE_LIBRARY\library\time\time.ecf"/>
-		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf"/>
+		<library name="gobo" location="gobo.ecf"/>
 		<cluster name="test" location="svn\library\test\" recursive="true">
 			<option namespace="Test">
 			</option>

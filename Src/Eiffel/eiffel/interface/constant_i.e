@@ -176,14 +176,14 @@ feature -- Status
 					-- 2 - current constant is not a once and needs to be generated
 					--     because `a_class' has some visible features.
 					-- 3 - current constant is a once written in `a_class'.
-				Result := (class_id = generate_in)
+				Result := class_id = generate_in or else is_replicated_directly
 				if not Result then
 					once_feat := is_once
 					Result := (not once_feat and then a_class.has_visible)
 						or else (once_feat and then class_id = written_in)
 				end
 			else
-				Result := class_id = written_in
+				Result := class_id = written_in or else is_replicated_directly
 			end
 		end
 

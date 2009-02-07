@@ -13,7 +13,7 @@ feature -- Access
 	output: EW_EWEASEL_OUTPUT_CONTROL is
 			-- Output interface
 		indexing
-            		once_status: global 
+			once_status: global 
 		do
 			Result := output_cell.item
 		end
@@ -28,17 +28,17 @@ feature -- Status Setting
 			output_cell.put (a_output)
 		ensure
 			output_set: output = a_output
-		end		
+		end
 
 feature {NONE} -- Implementation
 
 	output_cell: CELL [EW_EWEASEL_OUTPUT_CONTROL] is
 			-- Output cell
 		indexing
-            		once_status: global 
+			once_status: global 
 		once
-			create Result	
-		end		
+			create Result.put (Void)
+		end
 
 indexing
 	copyright: "[

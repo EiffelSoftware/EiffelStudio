@@ -80,7 +80,7 @@ feature {NONE} -- Implementation
 	environment_cell: CELL [EW_TEST_ENVIRONMENT] is
 			--
 		once
-			create Result
+			create Result.put (Void)
 		ensure
 			not_void: Result /= Void
 		end
@@ -88,7 +88,7 @@ feature {NONE} -- Implementation
 	eweasel_test_cell: CELL [EW_EIFFEL_EWEASEL_TEST] is
 			--
 		once
-			create Result
+			create Result.put (Void)
 		ensure
 			not_void: Result /= Void
 		end

@@ -17,8 +17,6 @@ feature -- Notification
 
 	notify (a_id: INTEGER; a_data: TUPLE)
 			-- Notify operation `a_id' with data `a_data'
-		require
-			a_data_attached: a_data /= Void
 		local
 			retried: BOOLEAN
 		do
@@ -59,7 +57,7 @@ feature -- Notification
 --				Result := cached_arguments[a_id]
 --				if Result = Void then
 --					inspect a_id
---					when Op_enter_feature, Op_leave_feature, Op_rescue_feature, 
+--					when Op_enter_feature, Op_leave_feature, Op_rescue_feature,
 --						Op_rt_hook,	Op_rt_assign_attrib, Op_rt_assign_local then
 --						 Not yet implemented on dotnet platform
 --					when Op_exec_replay_record, Op_exec_replay, Op_exec_replay_query then

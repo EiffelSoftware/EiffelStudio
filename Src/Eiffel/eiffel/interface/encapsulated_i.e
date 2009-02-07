@@ -55,7 +55,7 @@ feature -- Status
 	to_generate_in (a_class: CLASS_C): BOOLEAN
 			-- Has the current feature in class `a_class" ?
 		do
-			Result := a_class.class_id = generate_in
+			Result := a_class.class_id = generate_in or else is_replicated_directly
 		end
 
 feature -- Element change

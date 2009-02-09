@@ -30,12 +30,9 @@
 		<library name="gobo_regexp" location="gobo_regexp.ecf"/>		
 		<library name="gobo_parse" location="gobo_parse.ecf"/>
 		<library name="gobo_lexical" location="gobo_lexical.ecf"/>
+		<library name="gobo_tools" location="gobo_tools.ecf"/>
 		<library name="gobo_utility" location="gobo_utility.ecf"/>
 		<library name="gobo_xml" location="gobo_xml.ecf"/>
 		<assembly name="eiffelsoftware.runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
-		<cluster name="tools" location="svn\library\tools\" recursive="true">
-			<option namespace="Tools">
-			</option>
-		</cluster>
 	</target>
 </system>

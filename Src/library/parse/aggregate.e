@@ -19,7 +19,7 @@ deferred class AGGREGATE inherit
 			commit
 		end
 
-feature -- Status report 
+feature -- Status report
 
 	left_recursion: BOOLEAN
 			-- Is the construct's definition left-recursive?
@@ -50,13 +50,13 @@ feature -- Status report
 			structure_list.go_i_th (0)
 		end
 
-feature -- Transformation 
+feature -- Transformation
 
 	commit
 			-- If this construct is one among several possible ones,
 			-- discard the others.
 		require else
-			only_commit_once: not has_commit 
+			only_commit_once: not has_commit
 		do
 			has_commit := True;
 			commit_value := production.index - 1
@@ -122,7 +122,7 @@ feature {NONE} -- Implementation
 			from
 				child_start
 			until
-				no_components or child_after 
+				no_components or child_after
 			loop
 				child.semantics;
 				child_forth
@@ -198,14 +198,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

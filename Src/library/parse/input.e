@@ -11,14 +11,14 @@ note
 class INPUT inherit
 
 	ARRAYED_LIST [TOKEN]
-		rename 
+		rename
 			item as token,
 			make as arrayed_list_make
 		end
 
 create
 	make
-	
+
 create {INPUT}
 	make_filled
 
@@ -40,7 +40,7 @@ feature  -- Access
 			-- -1 if no specimen of `s' is found.
 		require
 			lex_not_void: analyzer /= Void
-		do  
+		do
 			Result := analyzer.keyword_code (s)
 		end;
 
@@ -116,7 +116,7 @@ feature  -- Input
 			end;
 			forth
 		end;
-	
+
 	retrieve_lex (filename: STRING)
 			-- Retrieve `analyzer' from filename if exists.
 		require
@@ -139,7 +139,7 @@ feature  -- Output
 					start;
 					io.put_string ("Printing all tokens ");
 					io.new_line
-				until 
+				until
 					after
 				loop
 					io.put_string (token.string_value);
@@ -152,15 +152,15 @@ feature  -- Output
 
 	raise_error (s: STRING)
 			-- Print error message `s'.
-		do  
+		do
 			error_message.wipe_out;
 			if file_name /= Void then
-				error_message.append (file_name); 
+				error_message.append (file_name);
 			end
-			error_message.append (" (line "); 
+			error_message.append (" (line ");
 			error_message.append_integer (token.line_number);
-			error_message.append ("): "); 
-			error_message.append (s); 
+			error_message.append ("): ");
+			error_message.append (s);
 			io.error.put_string (error_message);
 			io.error.new_line
 		end;
@@ -176,7 +176,7 @@ feature {NONE}
 
 	file_name : STRING
 			-- Name of the file read by the lexical analyzer
-		do  
+		do
 			Result := analyzer.file_name
 		end;
 
@@ -187,14 +187,14 @@ feature {NONE}
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

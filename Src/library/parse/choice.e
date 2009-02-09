@@ -92,13 +92,13 @@ feature {NONE} -- Implementation
 				end
 			end;
 			io.new_line
-		end; 
+		end;
 
 	expand
 			-- Create list of possible choices.
 		do
 			expand_next
-		end; 
+		end;
 
 	parse_body
 			-- Try each possible expansion and keep
@@ -124,7 +124,7 @@ feature {NONE} -- Implementation
 			wipe_out;
 		-- A choice, once parsed, is not used as a tree node: it
 		-- has only one child which is accessed through 'retained'
-		end; 
+		end;
 
 	in_action
 		do
@@ -134,14 +134,14 @@ feature {NONE} -- Implementation
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

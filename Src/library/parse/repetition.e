@@ -38,7 +38,7 @@ feature -- Status report
 			structure_list.search (production);
 			structure_list.remove;
 			structure_list.go_i_th (0)
-		end 
+		end
 
 feature {CONSTRUCT} -- Implementation
 
@@ -48,7 +48,7 @@ feature {CONSTRUCT} -- Implementation
 			if no_components then
 				expand
 			end
-		end; 
+		end;
 
 	check_recursion
 			-- Check the sequence for left recursion.
@@ -62,23 +62,23 @@ feature {CONSTRUCT} -- Implementation
 				child.expand_all;
 				child.check_recursion
 			end
-		end 
+		end
 
 feature {NONE} -- Implementation
 
-	separator: STRING 
+	separator: STRING
 			-- List separator in the descendant,
 			-- must be defined as a keyword in the lexical analyzer
-		deferred 
-		end; 
+		deferred
+		end;
 
-	separator_code: INTEGER 
+	separator_code: INTEGER
 			-- Code of the keyword-separator; -1 if none
 			-- (according to lexical code)
 		local
 			separator_not_keyword: EXCEPTIONS
 		do
-			if separator /= Void then 
+			if separator /= Void then
 				Result := document.keyword_code (separator);
 				if Result = -1 then
 					create separator_not_keyword;
@@ -97,13 +97,13 @@ feature {NONE} -- Implementation
 			-- choice construct as a common ancestor of the parents)
 		do
 			Result := True
-		end; 
+		end;
 
 	has_separator: BOOLEAN
 			-- Has the sequence a separator?
 		do
 			Result := separator_code /= -1
-		end; 
+		end;
 
 	expand
 			-- Create next construct to be parsed and insert it in
@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 				n := n.twin
 			end
 			field (n)
-		end; 
+		end;
 
 	parse_body
 			-- Attempt to find a sequence of constructs with separators
@@ -130,17 +130,17 @@ feature {NONE} -- Implementation
 				child_found := parse_one;
 				first_child_found := child_found
 			until
-				not child_found 
+				not child_found
 			loop
 				separator_found := False;
 				child_found := False;
 				if has_separator then
 					separator_found := document.token.is_keyword (separator_code);
-					if separator_found then 
+					if separator_found then
 						if commit_on_separator then
 							committed := True
 						end;
-						document.get_token 
+						document.get_token
 					end
 				end;
 				if (not has_separator) or separator_found then
@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 			end;
 			wrong := has_separator and separator_found and not child_found;
 			complete := first_child_found and not (committed and wrong)
-		end; 
+		end;
 
 	parse_one: BOOLEAN
 			-- Parse one element of the sequence and
@@ -170,7 +170,7 @@ feature {NONE} -- Implementation
 			if not child.parsed then
 				remove_child
 			end
-		end; 
+		end;
 
 	in_action
 			-- Execute semantic actions on current construct
@@ -187,7 +187,7 @@ feature {NONE} -- Implementation
 					child_forth
 				end
 			end
-		end; 
+		end;
 
 	middle_action
 			-- Execute this after parsing each child.
@@ -216,7 +216,7 @@ feature {NONE} -- Implementation
 				print_keyword
 			end;
 			io.new_line
-		end; 
+		end;
 
 	print_keyword
 			-- Print separator string.
@@ -224,17 +224,17 @@ feature {NONE} -- Implementation
 			io.put_character ('"');
 			io.put_string (document.keyword_string (separator_code));
 			io.put_string ("%" ")
-		end 
+		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

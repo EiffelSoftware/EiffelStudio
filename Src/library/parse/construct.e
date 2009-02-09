@@ -20,7 +20,7 @@ inherit
 			make as twt_make
 		export
 			{CONSTRUCT} twt_put, twt_make
-		redefine 
+		redefine
 			parent, new_cell
 		end
 
@@ -40,12 +40,12 @@ feature -- Access
 			create Result.make
 		end
 
-	production: LINKED_LIST [CONSTRUCT] 
+	production: LINKED_LIST [CONSTRUCT]
 			-- Right-hand side of the production for the construct
-		deferred 
+		deferred
 		end
 
-	construct_name: STRING 
+	construct_name: STRING
 			-- Name of the construct in the grammar
 		deferred
 		end;
@@ -53,11 +53,11 @@ feature -- Access
 feature -- Status report
 
 	is_optional: BOOLEAN
-			-- Is construct optional? 
+			-- Is construct optional?
 
-	left_recursion: BOOLEAN 
+	left_recursion: BOOLEAN
 			-- Is the construct's definition left-recursive?
-		deferred 
+		deferred
 		end
 
 	parsed: BOOLEAN
@@ -70,10 +70,10 @@ feature -- Status report
 			-- (Otherwise the parsing process will backtrack, trying
 			-- other possible interpretations of the part already read.)
 
-	print_mode: CELL [BOOLEAN] 
+	print_mode: CELL [BOOLEAN]
 			-- Must the left-recursion test also print the production?
 			-- (Default: no.)
-		once 
+		once
 			create Result.put (False)
 		end
 
@@ -101,8 +101,8 @@ feature -- Transformation
 
 	parse
 			-- Attempt to analyze incoming lexical
-			-- tokens according to current construct. 
-			-- Set `parsed' to true if successful; 
+			-- tokens according to current construct.
+			-- Set `parsed' to true if successful;
 			-- return to original position in input otherwise.
 		local
 			initial_document_position: INTEGER
@@ -148,7 +148,7 @@ feature -- Transformation
 		do
 		end
 
-feature -- Output 
+feature -- Output
 
 	print_name
 			-- Print the construct name on standard output.
@@ -175,9 +175,9 @@ feature {CONSTRUCT} -- Implementation
 			Result.attach_to_parent (Current)
 		end
 
-	check_recursion 
+	check_recursion
 			-- Check construct for left recursion.
-		deferred 
+		deferred
 		end
 
 	expand_all
@@ -198,7 +198,7 @@ feature {NONE} -- Implementation
 
 	put (c: CONSTRUCT)
 			-- Add a construct to the production.
-		do  
+		do
 			production.put_left (c)
 			last_sub_construct := c
 		end
@@ -216,7 +216,7 @@ feature {NONE} -- Implementation
 			-- Insert a keyword into the production.
 		local
 			key: KEYWORD
-		do     
+		do
 			create key.make (s)
 			put (key)
 		end
@@ -269,10 +269,10 @@ feature {NONE} -- Implementation
 			-- Print error message s.
 		local
 			s2 : STRING
-		do  
+		do
 			s2 := s.twin
-			s2.append (" in ") 
-			s2.append (construct_name) 
+			s2.append (" in ")
+			s2.append (construct_name)
 			if parent /= Void then
 				s2.append (" in ")
 				s2.append (parent.construct_name)
@@ -281,7 +281,7 @@ feature {NONE} -- Implementation
 		end
 
 	expected_found_error
-			-- Print an error message saying what was 
+			-- Print an error message saying what was
 			-- expected and what was found.
 		local
 			err: STRING
@@ -312,15 +312,15 @@ feature {NONE} -- Implementation
 			create Result.make
 		end
 
-	global_left_recursion: CELL [BOOLEAN] 
+	global_left_recursion: CELL [BOOLEAN]
 			-- Is there any left recursion in the whole program?
-		once 
+		once
 			create Result.put (False)
 		end
 
-	child_recursion: CELL [BOOLEAN] 
+	child_recursion: CELL [BOOLEAN]
 			-- Is there any recursion in the whole program?
-		once 
+		once
 			create Result.put (False)
 		end
 
@@ -364,7 +364,7 @@ feature {NONE} -- Implementation
 			-- Perform any special parsing action for a particular
 			-- type of construct.
 			-- Call `parse_child' on each child construct.
-			-- Set `committed' to true if enough has been 
+			-- Set `committed' to true if enough has been
 			-- recognized to freeze the parse tree built so far.
 			-- Set `complete' to true if the whole construct has been
 			-- correctly recognized.
@@ -373,8 +373,8 @@ feature {NONE} -- Implementation
 
 	parse_child
 			-- Parse child recursively to build the tree.
-			-- An error is output the first time a parse fails 
-			-- in an uncommitted child of a committed parent 
+			-- An error is output the first time a parse fails
+			-- in an uncommitted child of a committed parent
 			-- i.e. at the deepest point known to be meaningful.
 		do
 			child.parse
@@ -387,14 +387,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

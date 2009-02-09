@@ -24,20 +24,30 @@ feature -- Status report
 			-- of `other' (as per Eiffel: The Language, chapter 13)?
 		local
 			l_cur: SYSTEM_OBJECT
+			l_cur_type: SYSTEM_TYPE
 		do
 			l_cur := Current
-			Result := l_cur.get_type.is_instance_of_type (other)
+			l_cur_type := l_cur.get_type
+			check l_cur_type_attached: l_cur_type /= Void end
+			Result := l_cur_type.is_instance_of_type (other)
 		end
 
 	same_type (other: ANY): BOOLEAN is
 			-- Is type of current object identical to type of `other'?
 		local
 			l_cur, l_other: SYSTEM_OBJECT
+			l_cur_type, l_other_type: ?SYSTEM_TYPE
 		do
 			l_cur := Current
+			l_cur_type := l_cur.get_type
 			l_other := other
-			Result := l_cur.get_type.is_instance_of_type (other) and then
-				l_other.get_type.is_instance_of_type (Current)
+			l_other_type := l_other.get_type
+			check
+				l_cur_type_attached: l_cur_type /= Void
+				l_other_type_attached: l_other_type /= Void
+			end
+			Result := l_cur_type.is_instance_of_type (other) and then
+				l_other_type.is_instance_of_type (Current)
 		end
 
 feature -- Comparison
@@ -72,10 +82,13 @@ feature -- Duplication
 			-- `twin' calls `copy'; to change copying/twining semantics, redefine `copy'.
 		local
 			l_temp: BOOLEAN
+			l_result: ?like Current
 		do
 			l_temp := {ISE_RUNTIME}.check_assert (False)
-			Result ?= {ISE_RUNTIME}.standard_clone (Current)
-			Result.copy (Current)
+			l_result ?= {ISE_RUNTIME}.standard_clone (Current)
+			check l_result_attached: l_result /= Void end
+			l_result.copy (Current)
+			Result := l_result
 			l_temp := {ISE_RUNTIME}.check_assert (l_temp)
 		end
 
@@ -96,14 +109,21 @@ feature -- Duplication
 	frozen standard_twin: like Current is
 			-- New object field-by-field identical to `other'.
 			-- Always uses default copying semantics.
+		local
+			l_result: ?like Current
 		do
-			-- Built-in
+			check l_result_not_void: l_result /= Void end
+			Result := l_result
 		end
 
 	frozen deep_twin: like Current is
 			-- New object structure recursively duplicated from Current.
+		local
+			l_result: ?like Current
 		do
-			Result ?= {ISE_RUNTIME}.deep_twin (Current)
+			l_result ?= {ISE_RUNTIME}.deep_twin (Current)
+			check l_result_attached: l_result /= Void end
+			Result := l_result
 		end
 
 feature -- Output

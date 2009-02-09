@@ -34,10 +34,10 @@ feature -- Initialization
 					-- First set the URL that is about to receive our POST. This URL can
 					-- just as well be a https:// URL if that is what should receive the
 					-- data.
-				curl_easy.setopt_string (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_url, "http://postit.example.com/moo.cgi")
+				curl_easy.setopt_string (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_url, "dev.eiffel.com/index.php?title=Special:UserLogin&action=submitlogin&type=login")
 
 					-- Now specify the POST data
-				curl_easy.setopt_string (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_postfields, "name=daniel&project=curl")
+				curl_easy.setopt_string (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_postfields, "wpName=test_id&wpPassword=test_password&wpLoginattempt=Log+in")
 
 					-- Perform the request, `l_result' will get the return code
 				l_result := curl_easy.perform (curl_handle)

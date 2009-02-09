@@ -11,10 +11,10 @@ note
 deferred class TERMINAL  inherit
 
 	CONSTRUCT
-		rename 
-			post_action as action, 
+		rename
+			post_action as action,
 			pre_action as unused_pre_action
-		redefine 
+		redefine
 			action
 		end
 
@@ -27,15 +27,15 @@ feature -- Status report
 
 	token_type: INTEGER
 			-- Token code associated with terminal
-		deferred 
-		end 
+		deferred
+		end
 
 feature {NONE} -- Implementation
 
 	production: LINKED_LIST [CONSTRUCT]
 			-- Void
 			-- (Meaningless for terminal constructs)
-		once 
+		once
 		end
 
 	left_recursion: BOOLEAN = False;
@@ -66,29 +66,29 @@ feature {NONE} -- Implementation
 
 	token_correct: BOOLEAN
 			-- Is token recognized?
-		do  
+		do
 			Result := document.token.type = token_type
-		end 
+		end
 
    action
 			-- To be redefined in descendants.
 		do
-		end 
+		end
 
 	in_action
 			-- Do nothing.
 		do
-		end 
+		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -33,7 +33,7 @@ feature -- Initialization
 		ensure
 			construct_name = s;
 			lex_code = document.keyword_code (s)
-		end; 
+		end;
 
 feature -- Access
 
@@ -49,20 +49,20 @@ feature {NONE} -- Implementation
 			-- Is this keyword the active token?
 		do
 			Result := document.token.is_keyword (lex_code)
-		end; 
+		end;
 
 	token_type: INTEGER = 0;
 			-- Unused token type
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

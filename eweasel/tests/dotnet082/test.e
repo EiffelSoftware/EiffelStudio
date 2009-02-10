@@ -10,10 +10,10 @@ feature -- Initialization
 			-- Tests
 		local
 			l_a: A
-			l_name: SYSTEM_STRING
+			l_name: STRING
 			retried: BOOLEAN
 			l_type: SYSTEM_TYPE
-			l_array: NATIVE_ARRAY [SYSTEM_STRING]
+			l_array: NATIVE_ARRAY [STRING]
 		do
 			if not retried then
 				l_name := "Eiffel"

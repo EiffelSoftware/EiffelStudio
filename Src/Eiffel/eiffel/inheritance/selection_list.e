@@ -71,6 +71,7 @@ feature -- Selection
 			l_from_non_conforming_parent := first.non_conforming
 			l_replicated_features_present := count > 1 or else l_from_non_conforming_parent
 
+				-- Process replicated features
 			if l_replicated_features_present then
 				from
 					l_inheriting_class_id := new_t.feat_tbl_id
@@ -86,12 +87,18 @@ feature -- Selection
 						if item.non_conforming then
 							replication.set_from_non_conforming_parent (True)
 						end
+						if {l_encapsulated_i: ENCAPSULATED_I} replication then
+								-- Make sure that `generate_in' is set to `l_inheriting_class_id' if non-zero.
+							if l_encapsulated_i.generate_in > 0 then
+								l_encapsulated_i.set_generate_in (l_inheriting_class_id)
+							end
+						end
 					end
 					item.set_a_feature (replication)
 					forth
 				end
 
-				if not l_has_old_feature_replication or else first.non_conforming then
+				if not l_has_old_feature_replication or else l_from_non_conforming_parent then
 						-- We only want replication processing enabled for legacy replication
 						-- for non-conforming features.
 					set_has_replicated_features
@@ -383,41 +390,6 @@ end;
 		end;
 
 feature -- Conceptual Replication
-
-	process_replication (old_t, new_t: FEATURE_TABLE)
-			-- Process conceptual replication. The only routines left under the
-			-- same routine_id will have different feature names. Hence, all
-			-- these features will be replicated.
-		local
-			replication: FEATURE_I
-			inh_info: INHERIT_INFO
-			l_inheriting_class_id: INTEGER
-			l_has_old_feature_replication: BOOLEAN
-			l_from_non_conforming_parent: BOOLEAN
-		do
-			from
-				l_has_old_feature_replication := system.has_old_feature_replication
-				l_inheriting_class_id := new_t.feat_tbl_id
-				start
-			until
-				after
-			loop
-				inh_info := item
-				l_from_non_conforming_parent := inh_info.parent /= Void and then inh_info.parent.is_non_conforming
-				if not l_from_non_conforming_parent and then l_has_old_feature_replication then
-						-- Previous replication behavior is required except for non-conforming inheritance.
-					replication := inh_info.a_feature.replicated (inh_info.a_feature.written_in)
-				else
-						-- Non-conforming routines are always replicated.
-					replication := inh_info.a_feature.replicated (l_inheriting_class_id)
-					if l_from_non_conforming_parent then
-						replication.set_from_non_conforming_parent (True)
-					end
-				end
-				inh_info.set_a_feature (replication)
-				forth
-			end
-		end
 
 	set_has_replicated_features
 			-- Set `has_replicated_features' to True.

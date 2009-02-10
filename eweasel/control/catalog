@@ -892,6 +892,7 @@ test	nan-comparison			melt080  tcf pass execution
 test	melted-special-creation-crash	melt081  tcf pass execution
 test	melted-external-call	melt082  tcf pass execution
 test	melted-agent-call-on-void-target	melt083  tcf fail execution melting
+test	inherited-like-current-object-test	melt084  tcf fail execution melting
 
 -- Freezing
 

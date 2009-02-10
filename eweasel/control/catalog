@@ -124,6 +124,7 @@ test non-conform-infinite-loop					noncon017 tcf pass non-conforming
 test non-conform-precondition-inheritance			noncon019 tcf pass non-conforming
 test incorrect-vrle-error						noncon020 tcf pass non-conforming
 test non-conforming-reference-attribute-access	noncon021 tcf pass non-conforming
+test non-conforming-constant-access	noncon022 tcf pass non-conforming
 
 -- Replication
 test replicate-precursor				replication001 tcf pass replication

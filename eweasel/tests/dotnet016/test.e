@@ -1,5 +1,5 @@
 indexing
-	attribute: create {OBSOLETE_ATTRIBUTE}.make () end
+	metadata: create {OBSOLETE_ATTRIBUTE}.make () end
 		
 class TEST
 

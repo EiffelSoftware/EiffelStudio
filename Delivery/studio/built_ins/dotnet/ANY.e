@@ -24,7 +24,7 @@ feature -- Status report
 			-- of `other' (as per Eiffel: The Language, chapter 13)?
 		local
 			l_cur: SYSTEM_OBJECT
-			l_cur_type: SYSTEM_TYPE
+			l_cur_type: ?SYSTEM_TYPE
 		do
 			l_cur := Current
 			l_cur_type := l_cur.get_type

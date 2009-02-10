@@ -23,6 +23,11 @@ feature
 			test_precondition_violation
 			show_exception ("Main routine", Precondition_violation)
 			print ("Last exception is Void = " + (last_exception = Void).out); io.new_line
+			
+			io.new_line
+			test_invariant_violation
+			show_exception ("Main routine", Invariant_violation)
+			print ("Last exception is Void = " + (last_exception = Void).out); io.new_line
 		end
 
 	test_precondition_violation
@@ -41,6 +46,24 @@ feature
 		require
 			weasel: False
 		do
+		end
+		
+	test_invariant_violation
+		local
+			tried: BOOLEAN
+		do
+			if not tried then
+				Current.violate_invariant
+			end
+		rescue
+			tried := True
+			num := 0
+			retry
+		end
+		
+	violate_invariant
+		do
+			num := 1
 		end
 
 feature {NONE} -- Implementation
@@ -72,5 +95,12 @@ feature {NONE} -- Implementation
 		end
 
 	Precondition_violation: STRING = "Precondition Violation"
+	
+	Invariant_violation: STRING = "Invariant Violation"
+	
+	num: INTEGER
+
+invariant
+	num_is_zero: num = 0
 
 end

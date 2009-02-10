@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="base_extension_safe" uuid="BB1FDCB0-C2AB-4911-8ABD-D20F72139DBF" library_target="base_extension">
+	<target name="base_extension">
+		<description>base extension library</description>
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/\.svn</exclude>
+		</file_rule>
+		<option full_class_checking="true" is_attached_by_default="true" is_void_safe="true" namespace="EiffelSoftware.Library.Base">
+		</option>
+		<setting name="dotnet_naming_convention" value="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="true"/>
+		<cluster name="base_extension" location=".\" recursive="true">
+			<option namespace="Extension">
+			</option>
+		</cluster>
+	</target>
+</system>

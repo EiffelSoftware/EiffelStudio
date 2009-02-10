@@ -15,6 +15,7 @@ create
 feature -- Initialization
 
 	make (n: INTEGER)
+			-- Creation method
 		require
 			non_negative_argument: n >= 0
 		do

@@ -33,6 +33,8 @@ feature {NONE} -- Initialization
 
 	make (a_tuple: G)
 			-- Initialize wrapper with implementation item
+		require
+			not_void: a_tuple /= Void
 		do
 			item := a_tuple
 		ensure
@@ -41,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item: G
+	item: !G
 			-- Implementation item
 
 feature -- Comparison
@@ -49,7 +51,7 @@ feature -- Comparison
 	is_equal (other: like Current): BOOLEAN
 			-- Does table contain the same information as `other'?
 		local
-			l_item, l_other: ANY
+			l_item, l_other: ?ANY
 			l_count, i: INTEGER
 		do
 			l_count := item.count

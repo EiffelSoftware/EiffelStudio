@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="precomp_dotnet_vision2-mt" uuid="B49AE40E-561D-45BB-A2F0-73E430F4F9A9" library_target="vision2-mt">
-	<target name="vision2-mt">
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="precomp_dotnet_vision2-mt" uuid="B49AE40E-561D-45BB-A2F0-73E430F4F9A9" library_target="vision2-mt-safe">
+	<target name="vision2-mt-safe">
 		<description>Vision2 library in MT mode</description>
 		<root class="ANY"/>
 		<setting name="multithreaded" value="true"/>

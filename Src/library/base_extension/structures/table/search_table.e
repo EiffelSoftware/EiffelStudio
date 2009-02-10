@@ -44,7 +44,7 @@ feature -- Creation
 
 feature -- Access and queries
 
-	item (key: H): H
+	item (key: H): ?H
 			-- Item associated with `key', if present
 			-- otherwise default value of type `G'
 		require
@@ -66,7 +66,7 @@ feature -- Access and queries
 			Result := (control = Found_constant)
 		end
 
-	key_at (n: INTEGER): H
+	key_at (n: INTEGER): ?H
 			-- Key corresponding to entry `n'
 		do
 			if n >= 0 and n < content.count then
@@ -85,7 +85,7 @@ feature -- Access and queries
 			-- If found, set `found' to True, and set
 			-- `found_item' to item associated with `key'.
 		local
-			default_value: H
+			default_value: ?H
 		do
 			internal_search (key)
 			if control = Found_constant then
@@ -105,7 +105,7 @@ feature -- Access and queries
 			iteration_position := c
 		end
 
-	found_item: H
+	found_item: ?H
 			-- Item found during a search with `has' to reduce the number of
 			-- search for clients
 
@@ -205,12 +205,10 @@ feature -- Insertion, deletion
 			-- Set `control' to `Removed' or `Not_found_constant'.
 		require
 			valid_key: valid_key (key)
-		local
-			dead_key: H
 		do
 			internal_search (key)
 			if control = Found_constant then
-				content.put (dead_key, position)
+				content.put_default (position)
 				deleted_marks.put (True, position)
 				count := count - 1
 			end
@@ -221,7 +219,7 @@ feature -- Insertion, deletion
 	wipe_out, clear_all
 			-- Reset all items to default values.
 		local
-			default_value: H
+			default_value: ?H
 		do
 			content.clear_all
 			deleted_marks.clear_all
@@ -336,11 +334,13 @@ feature {NONE} -- Internal features
 		local
 			increment, hash_code, table_size, pos: INTEGER
 			first_deleted_position, visited_count: INTEGER
-			old_key, default_key: H
+			old_key, default_key: ?H
 			stop: BOOLEAN
 			local_content: SPECIAL [H]
 			local_deleted_marks: SPECIAL [BOOLEAN]
 		do
+				-- Per precondition
+			check search_key_not_void: search_key /= Void end
 			from
 				local_content := content
 				local_deleted_marks := deleted_marks
@@ -356,7 +356,7 @@ feature {NONE} -- Internal features
 				pos := (pos + increment) \\ table_size
 				visited_count := visited_count + 1
 				old_key := local_content.item (pos)
-				if old_key = default_key then
+				if old_key = default_key or old_key = Void then
 					if not local_deleted_marks.item (pos) then
 						control := Not_found_constant
 						stop := True
@@ -422,15 +422,17 @@ feature -- Assertion check
 	valid_key (k: H): BOOLEAN
 			-- Is `k' a valid key?
 		local
-			dead_key: H
+			l_default_key: ?H
 		do
-			Result := k /= dead_key and then k.is_hashable
+			Result := k /= l_default_key
+		ensure
+			definition: Result implies k /= Void
 		end
 
 	valid_cursor (c: like cursor): BOOLEAN
 			-- Can cursor be moved to position `c'?
 		local
-			l_default: H
+			l_default: ?H
 		do
 			Result := (c >= capacity) or else (((c >= 0) and (c <= capacity)) and then content.item (c) /= l_default)
 		end
@@ -515,6 +517,7 @@ feature -- Iteration
 		end
 
 	cursor: INTEGER
+			-- Cursor
 		do
 			Result := iteration_position
 		end

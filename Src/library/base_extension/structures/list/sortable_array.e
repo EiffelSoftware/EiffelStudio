@@ -21,45 +21,53 @@ create
 feature -- Access
 
 	found_index: INTEGER
+			-- Found index
 
 	found: BOOLEAN
+			-- Found
 
 	binary_search (a_item: G)
 		local
 			l_mid, l_lower, l_upper: INTEGER
+			l_item_lower, l_item_upper: G
 		do
 			found_index := upper + 1
 			found := False
-			if a_item < item (lower) or else item (upper) < a_item then
-			elseif item (upper).is_equal (a_item) then
-				found := True;
-				found_index := upper
-			elseif item (lower).is_equal (a_item) then
-				found := True;
-				found_index := lower
-			else
-				from
-					l_lower := lower
-					l_upper := upper
-				until
-					l_lower >= l_upper - 1 or found
-				loop
-					l_mid := (l_lower + l_upper) // 2
-					found := a_item.is_equal (item (l_mid))
-					if not found then
-						if item (l_mid) < a_item then
-							l_lower := l_mid
+			if a_item /= Void then
+				l_item_lower := item (lower)
+				l_item_upper := item (upper)
+				if l_item_lower = Void or else l_item_upper = Void or else a_item < l_item_lower or else l_item_upper < a_item then
+				elseif l_item_upper ~ a_item then
+					found := True;
+					found_index := upper
+				elseif l_item_lower ~ a_item then
+					found := True;
+					found_index := lower
+				else
+					from
+						l_lower := lower
+						l_upper := upper
+					until
+						l_lower >= l_upper - 1 or found
+					loop
+						l_mid := (l_lower + l_upper) // 2
+						found := a_item ~ item (l_mid)
+						if not found then
+							if item (l_mid) < a_item then
+								l_lower := l_mid
+							else
+								l_upper := l_mid
+							end
 						else
-							l_upper := l_mid
+							found_index := l_mid
 						end
-					else
-						found_index := l_mid
 					end
 				end
 			end
 		end
 
 	balanced_linear_search (a_item: G; a_start: INTEGER)
+			-- Balanced linear search
 		local
 			l_lower, l_upper, l_start, l_examined: INTEGER
 		do
@@ -69,7 +77,8 @@ feature -- Access
 			else
 				l_start := a_start
 			end
-			if a_item.is_equal (item (l_start)) then
+
+			if a_item ~ item (l_start) then
 				found := True
 				found_index := l_start
 			else
@@ -86,10 +95,11 @@ feature -- Access
 					if l_upper > upper then
 						l_upper := lower
 					end
-					if item (l_lower).is_equal (a_item) then
+
+					if item (lower) ~ a_item then
 						found_index := l_lower
 						found := True
-					elseif item (l_upper).is_equal (a_item) then
+					elseif item (upper) ~ a_item then
 						found_index := l_upper;
 						found := True
 					end
@@ -101,6 +111,7 @@ feature -- Access
 		end
 
 	linear_search (a_item: G)
+			-- Linear search
 		do
 			found := False
 			from
@@ -108,7 +119,7 @@ feature -- Access
 			until
 				found_index > upper or found
 			loop
-				found := item (found_index).is_equal (a_item)
+				found := item (found_index) ~ a_item
 				if not found then
 					found_index := found_index + 1
 				end
@@ -240,5 +251,5 @@ note
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-		
+
 end

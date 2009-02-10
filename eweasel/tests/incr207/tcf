@@ -16,7 +16,7 @@ copy_raw 	test2.e $CLUSTER test2.e
 compile_melted
 compile_result 	ok
 
-define TAG "attribute_field"
+define TAG "metadata"
 copy_sub 	test.e $CLUSTER test.e
 compile_melted
 if DOTNET compile_result 	validity_error TEST VEEN

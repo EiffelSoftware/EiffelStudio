@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="precomp_dotnet_wel-mt" uuid="178082BF-D4B8-46d3-8C7C-B130655723F6" library_target="wel-mt">
-	<target name="wel-mt">
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="precomp_dotnet_wel-mt" uuid="178082BF-D4B8-46d3-8C7C-B130655723F6" library_target="wel-mt-safe">
+	<target name="wel-mt-safe">
 		<description>WEL library in MT mode</description>
 		<root class="ANY"/>
 		<setting name="multithreaded" value="true"/>

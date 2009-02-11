@@ -490,6 +490,7 @@ feature {NONE} -- Query
 				end
 				l_options.go_to (l_cursor)
 			else
+				check False end
 				create l_result.make (0)
 			end
 			Result := l_result
@@ -512,21 +513,26 @@ feature {NONE} -- Query
 			l_options: like options_of_name
 			l_result: ARRAYED_LIST [STRING]
 		do
-			l_options := options_of_name (a_name)
-			create l_result.make (l_options.count)
-			l_result.compare_objects
-			if not l_options.is_empty then
-				l_options.do_all (agent (ia_list: ARRAYED_LIST [STRING]; ia_option: ARGUMENT_OPTION)
-					require
-						ia_list_attached: ia_list /= Void
-						ia_option_attached: ia_option /= Void
-					do
-						if ia_option.has_value then
-							ia_list.extend (ia_option.value)
-						end
-					ensure
-						ia_list_has_a_path: ia_option.has_value implies ia_list.has (ia_option.value)
-					end (l_result, ?))
+			if has_option (a_name) then
+				l_options := options_of_name (a_name)
+				create l_result.make (l_options.count)
+				l_result.compare_objects
+				if not l_options.is_empty then
+					l_options.do_all (agent (ia_list: ARRAYED_LIST [STRING]; ia_option: ARGUMENT_OPTION)
+						require
+							ia_list_attached: ia_list /= Void
+							ia_option_attached: ia_option /= Void
+						do
+							if ia_option.has_value then
+								ia_list.extend (ia_option.value)
+							end
+						ensure
+							ia_list_has_a_path: ia_option.has_value implies ia_list.has (ia_option.value)
+						end (l_result, ?))
+				end
+			else
+				create l_result.make (0)
+				l_result.compare_objects
 			end
 			Result := l_result
 		ensure

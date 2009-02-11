@@ -5,11 +5,11 @@
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option syntax_level="1">
+		<option full_class_checking="true" is_attached_by_default="true" is_void_safe="true" syntax_level="1">
 			<assertions/>
 		</option>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
-		<library name="base_extension" location="$EIFFEL_SRC\library\base_extension\base_extension.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="base_extension" location="$EIFFEL_SRC\library\base_extension\base_extension-safe.ecf"/>
 		<cluster name="eiffel_identifier" location=".\" recursive="true"/>
 	</target>
 </system>

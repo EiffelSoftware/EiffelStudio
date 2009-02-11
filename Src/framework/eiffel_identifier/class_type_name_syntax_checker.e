@@ -7,8 +7,21 @@ note
 class
 	CLASS_TYPE_NAME_SYNTAX_CHECKER
 
+inherit
+	ANY
+		redefine
+			default_create
+		end
+
 create
 	default_create
+
+feature {NONE} -- Initialization
+
+	default_create
+		do
+			create current_parsed_string.make_empty
+		end
 
 feature -- Status report
 

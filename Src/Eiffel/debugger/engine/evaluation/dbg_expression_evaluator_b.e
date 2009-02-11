@@ -2469,8 +2469,11 @@ feature {NONE} -- OT locals
 					li.set_type (ta)
 					li.set_is_used (True)
 
-					Ast_context.add_object_test_local (li, l_name_id)
-					Ast_context.add_object_test_expression_scope (l_name_id)
+					debug ("to_implement")
+						to_implement ("Support object test locals of the same name.")
+					end
+					Ast_context.add_object_test_local (li, tu.id_as)
+					Ast_context.add_object_test_expression_scope (tu.id_as)
 					lst.forth
 				end
 			end
@@ -2518,7 +2521,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

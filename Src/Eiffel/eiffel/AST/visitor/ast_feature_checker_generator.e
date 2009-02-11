@@ -3923,6 +3923,9 @@ feature -- Implementation
 				end
 
 				l_error_level := error_level
+--				if not last_type.is_attached and then l_context_current_class.lace_class.is_void_safe then
+--					error_handler.insert_error (create {VUTA2}.make (context, last_type, l_as.operator_location))
+--				end
 				if l_is_multi_constrained then
 					l_type_set := last_type.actual_type.to_type_set.constraining_types (l_context_current_class)
 					l_result_tuple := l_type_set.feature_i_state_by_alias_name (l_as.prefix_feature_name)
@@ -4081,6 +4084,7 @@ feature -- Implementation
 			l_saved_vaol_check: BOOLEAN
 			l_expr: EXPR_B
 			l_un_old: UN_OLD_B
+			s: INTEGER
 		do
 			if not is_checking_postcondition then
 					-- Old expression found somewhere else that in a
@@ -4098,8 +4102,15 @@ feature -- Implementation
 						-- an old expression.
 					check_for_vaol := True
 				end
+					-- Record current scope information.
+				s := context.scope
+					-- Mark the beginning of the old expression
+					-- (to prevent OT locals declared outside the old expression from being used inside it).
+				context.add_old_expression_scope
 					-- Expression type check
 				l_as.expr.process (Current)
+					-- Restore scope information.
+				context.set_scope (s)
 				if last_type /= Void then
 					if not l_saved_vaol_check then
 							-- Reset flag for vaol check
@@ -4282,6 +4293,10 @@ feature -- Implementation
 									l_left_id := l_left_constrained.associated_class.class_id
 									l_target_type := l_left_type
 							end
+
+--							if not l_target_type.is_attached and then l_context_current_class.lace_class.is_void_safe then
+--								error_handler.insert_error (create {VUTA2}.make (context, l_target_type, l_as.operator_location))
+--							end
 
 							if not is_inherited then
 									-- Set type informations
@@ -4755,6 +4770,7 @@ feature -- Implementation
 	process_object_test_as (l_as: OBJECT_TEST_AS)
 		local
 			l_needs_byte_node: BOOLEAN
+			local_id: ID_AS
 			local_name_id: INTEGER
 			local_type: TYPE_A
 			local_info: LOCAL_INFO
@@ -4764,26 +4780,25 @@ feature -- Implementation
 			l_needs_byte_node := is_byte_node_enabled
 
 				-- Type check object-test local
-			local_name_id := l_as.name.name_id
+			local_id := l_as.name
+			local_name_id := local_id.name_id
 			if not is_inherited then
 				if current_feature.has_argument_name (local_name_id) then
 						-- The local name is an argument name of the
 						-- current analyzed feature
-					error_handler.insert_error (create {VUOT1}.make (context, l_as.name))
+					error_handler.insert_error (create {VUOT1}.make (context, local_id))
 				elseif context.current_feature_table.has_id (local_name_id) then
 						-- The local name is a feature name of the
 						-- current analyzed class.
-					error_handler.insert_error (create {VUOT1}.make (context, l_as.name))
+					error_handler.insert_error (create {VUOT1}.make (context, local_id))
 				end
 			end
 			if context.locals.has (local_name_id) then
 					-- The object-test local is a name of a feature local variable
-				error_handler.insert_error (create {VUOT1}.make (context, l_as.name))
+				error_handler.insert_error (create {VUOT1}.make (context, local_id))
 			end
-			if context.is_object_test_local_used (local_name_id) then
-					-- The object-test local is a name of a local of another object test
-				error_handler.insert_error (create {VUOT3}.make (context, l_as.name))
-			end
+				-- There is no reason to check for object test local name clash
+				-- as this will be detected and reported when their scopes intersect.
 			check_type (l_as.type)
 			local_type := last_type
 			if local_type /= Void then
@@ -4812,7 +4827,7 @@ feature -- Implementation
 				create local_info
 				local_info.set_type (local_type)
 				local_info.set_position (context.next_object_test_local_position)
-				context.add_object_test_local (local_info, local_name_id)
+				context.add_object_test_local (local_info, local_id)
 				local_info.set_is_used (True)
 
 					-- Type check expression

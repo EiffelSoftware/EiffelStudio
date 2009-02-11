@@ -26,6 +26,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_ERROR_HANDLER
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -45,8 +50,8 @@ feature {NONE} -- Initialization
 			create locals.make (10)
 			create supplier_ids.make
 			create scopes.make (0)
-			create object_test_locals.make (0)
-			create used_object_test_local_names.make (0)
+			create object_test_scopes.make (0)
+			create object_test_locals.make_map (0)
 		end
 
 feature -- Access
@@ -97,9 +102,6 @@ feature -- Access
 	used_local_names: SEARCH_TABLE [INTEGER]
 			-- Local names that are already used by enclosing features
 
-	used_object_test_local_names: SEARCH_TABLE [INTEGER_32]
-			-- Names of object-test locals used by enclosing features
-
 	set_used_argument_names (table: like used_argument_names)
 			-- Set the used argument names
 		do
@@ -126,19 +128,16 @@ feature -- Access
 			end
 		end
 
-	is_object_test_local_used (id: INTEGER_32): BOOLEAN
-			-- Is the name `id' already used in an object test of an enclosing feature?
-		do
-			Result := used_object_test_local_names.has (id)
-		end
-
 feature {NONE} -- Local scopes
 
-	object_test_locals: HASH_TABLE [LOCAL_INFO, INTEGER_32]
+	object_test_locals: DS_HASH_TABLE [LOCAL_INFO, ID_AS]
 			-- Types of object-test locals indexes by their name id
 
 	result_id: INTEGER_32 = 0x7fffffff
 			-- Name ID that is used for the special entity "Result"
+
+	old_id: INTEGER_32 = 0x7ffffffe
+			-- Name ID that is used to mark the scope of an old expression
 
 feature {AST_FEATURE_CHECKER_GENERATOR, SHARED_AST_CONTEXT} -- Local scopes
 
@@ -148,21 +147,50 @@ feature {AST_FEATURE_CHECKER_GENERATOR, SHARED_AST_CONTEXT} -- Local scopes
 			Result := object_test_locals.count + 1
 		end
 
-	add_object_test_local (l: LOCAL_INFO; id: INTEGER_32)
-			-- Add a new object test local of type `t' with name `id'.
+	add_object_test_local (l: LOCAL_INFO; id: ID_AS)
+			-- Add a new object test local of type `t' with name `id' specified in the object test.
 		require
 			l_attached: l /= Void
 		do
-			object_test_locals.put (l, id)
-			used_object_test_local_names.put (id)
+			object_test_locals.force (l, id)
 		end
 
 	object_test_local (id: INTEGER_32): LOCAL_INFO
 			-- Information about object-test local of name `id' if such
 			-- a local is currently in scope
+		local
+			i: INTEGER
+			l: INTEGER
+			n: ID_AS
 		do
-			if scopes.has (id) then
-				Result := object_test_locals.item (id)
+			from
+				i := scopes.count
+			until
+				i <= 0
+			loop
+				l := scopes [i]
+				if l = id then
+						-- The current evaulation position is in the scope of the name `id'.
+						-- Find the associated object test local information (if any).
+					from
+						i := object_test_scopes.count
+					until
+						i <= 0
+					loop
+						n := object_test_scopes [i]
+						if n.name_id = id then
+							Result := object_test_locals.item (n)
+						end
+						i := i - 1
+					end
+				elseif l = old_id then
+						-- Object test local declared outside an old expression cannot be used inside it.
+					i := 0
+				else
+					i := i - 1
+				end
+			variant
+				i
 			end
 		end
 
@@ -195,13 +223,16 @@ feature {AST_FEATURE_CHECKER_GENERATOR, AST_CONTEXT} -- Local scopes: status rep
 feature {AST_CONTEXT} -- Local scopes
 
 	scopes: ARRAYED_LIST [INTEGER_32]
-			-- Currently active scopes
+			-- Currently active scopes identified by entity name ID
 
 	scope_count: INTEGER
 			-- Number of active scopes
 		do
 			Result := scopes.count
 		end
+
+	object_test_scopes: ARRAYED_LIST [ID_AS]
+			-- Currently active scopes of object test locals
 
 feature -- Scope state
 
@@ -220,11 +251,17 @@ feature -- Scope state
 			i: like scope_count
 		do
 			from
+				object_test_scopes.finish
 				i := scope_count - s
 			until
 				i <= 0
 			loop
 				scopes.finish
+				if not object_test_scopes.before and then object_test_scopes.item_for_iteration.name_id = scopes.item_for_iteration then
+						-- Remove object test scope.
+					object_test_scopes.remove
+					object_test_scopes.finish
+				end
 				scopes.remove
 				i := i - 1
 			end
@@ -251,6 +288,12 @@ feature -- Scope state
 			-- Tracker of scopes of non-void locals
 
 feature {AST_SCOPE_MATCHER, AST_FEATURE_CHECKER_GENERATOR} -- Local scopes: modification
+
+	add_old_expression_scope
+			-- Add a scope of an old expression
+		do
+			scopes.extend (old_id)
+		end
 
 	add_argument_expression_scope (id: INTEGER_32)
 			-- Add a scope for an argument identified by `id'.
@@ -317,39 +360,57 @@ feature {AST_SCOPE_MATCHER, AST_FEATURE_CHECKER_GENERATOR} -- Local scopes: modi
 
 feature {AST_SCOPE_MATCHER, SHARED_AST_CONTEXT} -- Local scopes: modification
 
-	add_object_test_expression_scope (id: INTEGER_32)
+	add_object_test_expression_scope (id: ID_AS)
 			-- Add a scope for an object-test local identified by `id'.
+		require
+			id_attached: id /= Void
 		do
-			scopes.extend (id)
+			if scopes.has (id.name_id) then
+				error_handler.insert_error (create {VUOT1}.make (Current, id))
+			end
+			scopes.extend (id.name_id)
+			object_test_scopes.extend (id)
 		ensure
 			scope_count_inremented: scope_count = old scope_count +1
+			object_test_scopes_count_incremented: object_test_scopes.count = old object_test_scopes.count + 1
 		end
 
-	add_object_test_instruction_scope (id: INTEGER_32)
+	add_object_test_instruction_scope (id: ID_AS)
 			-- Add a scope for an object-test local identified by `id'.
+		require
+			id_attached: id /= Void
 		do
-			scopes.extend (id)
+			add_object_test_expression_scope (id)
 		ensure
 			scope_count_inremented: scope_count = old scope_count +1
+			object_test_scopes_count_incremented: object_test_scopes.count = old object_test_scopes.count + 1
 		end
 
 feature {AST_FEATURE_CHECKER_GENERATOR, AST_CONTEXT} -- Local scopes: removal
 
 	remove_object_test_scopes (s: like scope)
 			-- Remove scopes of any known object test locals registered after scope identified by `s'.
+		local
+			i: INTEGER
+			j: INTEGER
 		do
 			from
-				scopes.go_i_th (s + 1)
+				i := scopes.count
+				j := object_test_scopes.count
 			until
-				scopes.after
+				i <= s or else j <= 0
 			loop
-				if object_test_locals.has (scopes.item) then
+				if scopes [i] = object_test_scopes [j].name_id then
+						-- The `i'-th item corresponds to an object test local, let's remove it.
+					scopes.go_i_th (i)
 					scopes.remove
-				else
-					scopes.forth
+					object_test_scopes.go_i_th (j)
+					object_test_scopes.remove
+					j := j - 1
 				end
+				i := i - 1
 			variant
-				scopes.count - scopes.index + 1
+				i
 			end
 		end
 
@@ -655,8 +716,8 @@ feature -- Managing the type stack
 		do
 			locals.clear_all
 			object_test_locals.wipe_out
-			used_object_test_local_names.wipe_out
 			scopes.wipe_out
+			object_test_scopes.wipe_out
 		end
 
 feature	-- Saving contexts
@@ -671,6 +732,7 @@ feature	-- Saving contexts
 			used_argument_names := Void
 			used_local_names := Void
 			scopes.copy (Result.scopes)
+			object_test_scopes.copy (Result.object_test_scopes)
 			local_scope := Void
 			local_initialization := Void
 		end
@@ -687,7 +749,6 @@ feature {NONE} --Internals
 invariant
 	locals_attached: locals /= Void
 	object_test_locals_attached: object_test_locals /= Void
-
 
 note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

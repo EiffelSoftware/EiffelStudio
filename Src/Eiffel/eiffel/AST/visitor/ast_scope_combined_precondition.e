@@ -200,7 +200,7 @@ feature {NONE} -- Context
 				-- Do not record scope.
 		end
 
-	add_object_test_scope (id: INTEGER_32)
+	add_object_test_scope (id: ID_AS)
 			-- Add scope of an object test.
 		do
 				-- Do not record scope.

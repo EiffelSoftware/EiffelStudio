@@ -54,7 +54,7 @@ feature {AST_EIFFEL} -- Visitor pattern
 	process_object_test_as (l_as: OBJECT_TEST_AS)
 		do
 			if is_negated = is_negation_expected then
-				add_object_test_scope (l_as.name.name_id)
+				add_object_test_scope (l_as.name)
 			end
 		end
 
@@ -161,8 +161,10 @@ feature {NONE} -- Context
 			context.add_local_instruction_scope (id)
 		end
 
-	add_object_test_scope (id: INTEGER_32)
-			-- Add scope of an object test.
+	add_object_test_scope (id: ID_AS)
+			-- Add scope of an object test local.
+		require
+			id_attached: id /= Void
 		do
 			context.add_object_test_instruction_scope (id)
 		end
@@ -187,7 +189,7 @@ invariant
 	context_attached: context /= Void
 
 note
-	copyright:	"Copyright (c) 2007-2008, Eiffel Software"
+	copyright:	"Copyright (c) 2007-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

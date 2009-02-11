@@ -103,7 +103,7 @@ feature -- Lifetime Services
 			result_attached: Result /= Void
 		end
 
-feature {COM_CACHE_MANAGER2} -- Implementation
+feature {NONE} -- Implementation
 
 	internal_is_initialized: BOOLEAN
 			-- Storing for `is_initialized'.

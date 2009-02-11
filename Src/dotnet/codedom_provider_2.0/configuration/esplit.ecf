@@ -9,7 +9,6 @@
 			eSplitter utility
 		</description>
 		
-		<root feature="make" class="CODE_ES_APPLICATION"/>
 		<option syntax_level="1"/>
 		<version major="5" minor="7" release="426" build="0"/>
 		
@@ -49,6 +48,7 @@
 	</target>
 	
 	<target name="esplit_console_debug" extends="esplit_common">
+		<root feature="make" class="CODE_ES_APPLICATION"/>
 		<setting name="line_generation" value="true"/>
 		<setting name="executable_name" value="esplit2_0"/>
 		<setting name="console_application" value="true"/>
@@ -71,6 +71,7 @@
 	</target>
 
 	<target name="esplit_console_release" extends="esplit_console_debug">
+		<root feature="make" class="CODE_ES_APPLICATION"/>
 		<setting name="line_generation" value="false"/>
 		<option debug="false">
 			<assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false"/>
@@ -78,6 +79,7 @@
 	</target>
 
 	<target name="esplit_graphical_debug" extends="esplit_common">
+		<root feature="make" class="CODE_ES_APPLICATION"/>
 		<setting name="line_generation" value="true"/>
 		<setting name="executable_name" value="esplitter2_0"/>
 		<setting name="console_application" value="false"/>
@@ -96,6 +98,7 @@
 	</target>
 
 	<target name="esplit_graphical_release" extends="esplit_graphical_debug">
+		<root feature="make" class="CODE_ES_APPLICATION"/>
 		<setting name="line_generation" value="false"/>
 		<option debug="false">
 			<assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false"/>

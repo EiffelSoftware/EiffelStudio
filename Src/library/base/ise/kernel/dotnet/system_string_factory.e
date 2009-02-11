@@ -16,10 +16,10 @@ feature -- Conversion
 		local
 			i, nb: INTEGER
 			l_str: STRING_BUILDER
-			l_str8: STRING
+			l_dummy: ?STRING_BUILDER
+			l_string: ?SYSTEM_STRING
 		do
-			if a_str.is_string_8 then
-				l_str8 ?= a_str
+			if {l_str8: STRING_8} a_str then
 				create Result.make (l_str8.area.native_array, 0, a_str.count)
 			else
 				nb := a_str.count
@@ -29,10 +29,12 @@ feature -- Conversion
 				until
 					i > nb
 				loop
-					l_str := l_str.append_character (a_str.code (i).to_character_8)
+					l_dummy := l_str.append_character (a_str.code (i).to_character_8)
 					i := i + 1
 				end
-				Result := l_str.to_string
+				l_string := l_str.to_string
+				check l_string_attached: l_string /= Void end
+				Result := l_string
 			end
 		ensure
 			from_string_to_system_string_not_void: Result /= Void
@@ -47,10 +49,8 @@ feature -- Conversion
 			a_result_valid: a_result.count = a_str.length
 		local
 			i, nb: INTEGER
-			l_str8: STRING
 		do
-			if a_result.is_string_8 then
-				l_str8 ?= a_result
+			if {l_str8: STRING_8} a_result then
 				a_str.copy_to (0, l_str8.area.native_array, 0, a_str.length)
 			else
 				from

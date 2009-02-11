@@ -49,10 +49,11 @@ feature -- Comparison
 	is_equal (other: like Current): BOOLEAN
 			-- Is the path name equal to `other'?
 		local
-			l_a: PATH
+			l_other_full_path: ?SYSTEM_STRING
 		do
 			--| .Net exceptions may be raised due to invalid characters or io problems.
-			Result := l_a.get_full_path (other.to_cil).equals (l_a.get_full_path (to_cil))
+			l_other_full_path := {PATH}.get_full_path (other.to_cil)
+			Result := l_other_full_path /= Void and then l_other_full_path.equals ({PATH}.get_full_path (to_cil))
 		end
 
 feature -- Status report
@@ -62,10 +63,9 @@ feature -- Status report
 		require
 			exists: dir_name /= Void
 		local
-			l_a: PATH
-			a_sys_str: SYSTEM_STRING
+			a_sys_str: ?SYSTEM_STRING
 		do
-			a_sys_str := l_a.get_full_path (dir_name.to_cil)
+			a_sys_str := {PATH}.get_full_path (dir_name.to_cil)
 			Result := a_sys_str /= Void and then not a_sys_str.equals (a_sys_str.empty)
 		end
 
@@ -74,11 +74,10 @@ feature -- Status report
 		require
 			exists: vol_name /= Void
 		local
-			l_a: PATH
-			a_sys_str: SYSTEM_STRING
+			a_sys_str: ?SYSTEM_STRING
 		do
-			a_sys_str := l_a.get_full_path (vol_name.to_cil)
-			Result := a_sys_str.equals (l_a.get_path_root (a_sys_str))
+			a_sys_str := {PATH}.get_full_path (vol_name.to_cil)
+			Result := a_sys_str /= Void and then a_sys_str.equals ({PATH}.get_path_root (a_sys_str))
 		end
 
 	is_valid: BOOLEAN

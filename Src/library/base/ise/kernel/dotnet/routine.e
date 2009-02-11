@@ -53,6 +53,7 @@ feature -- Access
 					i := 0
 					nb := l_open_map.count - 1
 					l_internal := internal_operands
+					check l_internal_attached: l_internal /= Void end
 				until
 					i > nb
 				loop
@@ -81,7 +82,9 @@ feature -- Access
 	hash_code: INTEGER
 			-- Hash code value.
 		do
-			Result := rout_disp.get_hash_code.hash_code
+			if {l_rout_disp: like rout_disp} rout_disp then
+				Result := l_rout_disp.get_hash_code.hash_code
+			end
 		end
 
 	precondition (args: like operands): BOOLEAN
@@ -122,8 +125,8 @@ feature -- Status report
 		local
 			int_ops, other_int_ops: like internal_operands
 			i: INTEGER
-			e, oe: ANY
-			vt: VALUE_TYPE
+			e, oe: ?ANY
+			vt: ?VALUE_TYPE
 		do
 				--| Do not compare implementation data
 			Result := (rout_disp = other.rout_disp)
@@ -134,6 +137,10 @@ feature -- Status report
 			if Result then
 				int_ops := internal_operands
 				other_int_ops := other.internal_operands
+				check
+					int_ops_attached: int_ops /= Void
+					other_int_ops_attached: other_int_ops /= Void
+				end
 				if int_ops.count = other_int_ops.count then
 					from i := int_ops.lower until not Result or else i > other_int_ops.upper loop
 						e := int_ops.item (i)
@@ -167,12 +174,12 @@ feature -- Status report
 					-- Void operands are only allowed
 					-- if object has no open operands.
 				Result := (open_map = Void)
-			elseif open_map /= Void and then int.generic_count (args) >= open_map.count then
+			elseif {l_open_map: like open_map} open_map and then int.generic_count (args) >= l_open_map.count then
 				from
 					Result := True
 					i := 1
 				until
-					i > open_map.count or not Result
+					i > l_open_map.count or not Result
 				loop
 					arg_type_code := args.item_code (i)
 					if arg_type_code = {TUPLE}.reference_code then
@@ -192,7 +199,7 @@ feature -- Status report
 	is_target_closed: BOOLEAN
 			-- Is target for current agent closed, i.e. specified at creation time?
 		do
-			Result := open_map = void or else not (open_map.count > 0 and then open_map.item (0) = 1)
+			Result := not {l_open_map: like open_map} open_map or else not (l_open_map.count > 0 and then l_open_map.item (0) = 1)
 		end
 
 feature -- Measurement
@@ -200,8 +207,8 @@ feature -- Measurement
 	open_count: INTEGER
 			-- Number of open operands.
 		do
-			if open_map /= Void then
-				Result := open_map.count
+			if {l_open_map: like open_map} open_map then
+				Result := l_open_map.count
 			end
 		end
 
@@ -219,10 +226,12 @@ feature -- Element change
 		do
 			l_open_map := open_map
 			if l_open_map /= Void then
+				check args_attached: args /= Void end
 				from
 					i := 0
 					nb := l_open_map.count - 1
 					l_internal := internal_operands
+					check l_internal_attached: l_internal /= Void end
 				until
 					i > nb
 				loop
@@ -249,7 +258,7 @@ feature -- Element change
 			a_target_not_void: a_target /= Void
 			is_target_closed: is_target_closed
 			target_not_void: target /= Void
-			same_target_type: target.same_type (a_target)
+			same_target_type: {t: like target}  target and then t.same_type (a_target)
 		do
 			target_object := a_target
 		ensure
@@ -311,16 +320,16 @@ feature -- Obsolete
 
 feature {ROUTINE} -- Implementation
 
-	frozen target_object: SYSTEM_OBJECT
+	frozen target_object: ?SYSTEM_OBJECT
 			-- Target of call.
 
-	frozen internal_operands: NATIVE_ARRAY [SYSTEM_OBJECT]
+	frozen internal_operands: ?NATIVE_ARRAY [?SYSTEM_OBJECT]
 			-- All open and closed arguments provided at creation time
 
-	frozen open_map: NATIVE_ARRAY [INTEGER]
+	frozen open_map: ?NATIVE_ARRAY [INTEGER]
 			-- Index map for open arguments
 
-	frozen rout_disp: METHOD_BASE
+	frozen rout_disp: ?METHOD_BASE
 			-- Routine dispatcher
 
 	frozen is_cleanup_needed: BOOLEAN
@@ -424,10 +433,14 @@ feature {NONE} -- Implementation
 			l_internal: like internal_operands
 		do
 			l_open_map := open_map
+			l_internal := internal_operands
+			check
+				open_map_attached: l_open_map /= Void
+				l_internal_attached: l_internal /= Void
+			end
 			from
 				i := 0
 				nb := l_open_map.count - 1
-				l_internal := internal_operands
 			until
 				i > nb
 			loop
@@ -450,6 +463,7 @@ feature {NONE} -- Implementation
 			is_cleanup_needed := False
 			l_open_map := open_map
 			if l_open_map /= Void then
+				check args_attached: args /= Void end
 				from
 					i := 0
 					nb := l_open_map.count - 1
@@ -474,19 +488,22 @@ feature {NONE} -- Implementation
 			within_bounds: i <= open_count
 		local
 			l_internal: INTERNAL
-			o: like open_types
+			l_open_types: like open_types
+			l_open_map: like open_map
 		do
-			o := open_types
-			if o = Void then
-				create o.make (1, open_map.count)
-				open_types := o
+			l_open_types := open_types
+			if l_open_types = Void then
+				l_open_map := open_map
+				check l_open_map_attached: l_open_map /= Void end
+				create l_open_types.make (1, l_open_map.count)
+				open_types := l_open_types
 			end
-			Result := o.item (i)
+			Result := l_open_types.item (i)
 			if Result = 0 then
 				create l_internal
 				Result := l_internal.generic_dynamic_type_of_type (
 					l_internal.generic_dynamic_type (Current, 2), i)
-				o.force (Result, i)
+				l_open_types.force (Result, i)
 			end
 		end
 

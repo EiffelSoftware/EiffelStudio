@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 		do
 			set_message (a_tag)
 		ensure
-			tag_set: tag.is_equal (a_tag)
+			tag_set: tag ~ a_tag
 		end
 
 feature -- Raise
@@ -61,10 +61,10 @@ feature -- Access
 			Result := internal_meaning
 		end
 
-	message: STRING
+	message: ?STRING
 			-- A message in English describing what `except' is
 
-	exception_trace: STRING
+	exception_trace: ?STRING
 			-- String representation of current exception trace
 		do
 			create Result.make_from_cil (stack_trace)
@@ -73,10 +73,10 @@ feature -- Access
 	frozen original: EXCEPTION
 			-- The original exception caused current exception
 		do
-			if throwing_exception = Current or else throwing_exception = Void then
-				Result := Current
+			if {l_throwing_exception: like throwing_exception} throwing_exception and then l_throwing_exception /= Current then
+				Result := l_throwing_exception.original
 			else
-				Result := throwing_exception.original
+				Result := Current
 			end
 		ensure
 			original_not_void: Result /= Void
@@ -87,14 +87,14 @@ feature -- Access
 		do
 		end
 
-	frozen throwing_exception: EXCEPTION
+	frozen throwing_exception: ?EXCEPTION
 			-- The exception throwing current exception
 
-	frozen recipient_name: STRING
+	frozen recipient_name: ?STRING
 			-- Name of the routine whose execution was
 			-- interrupted by current exception
 
-	frozen type_name: STRING
+	frozen type_name: ?STRING
 			-- Name of the class that includes the recipient
 			-- of original form of current exception
 
@@ -103,7 +103,7 @@ feature -- Access
 
 feature -- Access obselete
 
-	tag: STRING
+	tag: ?STRING
 			-- Exception tag of `Current'
 		obsolete
 			"Use `message' instead."
@@ -111,7 +111,7 @@ feature -- Access obselete
 			Result := message
 		end
 
-	trace_as_string: STRING
+	trace_as_string: ?STRING
 			-- Exception trace represented as a string
 		obsolete
 			"Use `exception_trace' instead."
@@ -135,33 +135,33 @@ feature -- Status report
 			-- Is current exception ignorable?
 		local
 			l_internal: INTERNAL
-			l_type: TYPE [EXCEPTION]
 		do
 			create l_internal
-			l_type ?= l_internal.type_of (Current)
-			Result := exception_manager.is_ignorable (l_type)
+			if {l_type: TYPE [EXCEPTION]} l_internal.type_of (Current) then
+				Result := exception_manager.is_ignorable (l_type)
+			end
 		end
 
 	frozen is_raisable: BOOLEAN
 			-- Is current exception raisable by `raise'?
 		local
 			l_internal: INTERNAL
-			l_type: TYPE [EXCEPTION]
 		do
 			create l_internal
-			l_type ?= l_internal.type_of (Current)
-			Result := exception_manager.is_raisable (l_type)
+			if {l_type: TYPE [EXCEPTION]} l_internal.type_of (Current) then
+				Result := exception_manager.is_raisable (l_type)
+			end
 		end
 
 	frozen is_ignored: BOOLEAN
 			-- If set, no exception is raised.
 		local
 			l_internal: INTERNAL
-			l_type: TYPE [EXCEPTION]
 		do
 			create l_internal
-			l_type ?= l_internal.type_of (Current)
-			Result := exception_manager.is_ignored (l_type)
+			if {l_type: TYPE [EXCEPTION]} l_internal.type_of (Current) then
+				Result := exception_manager.is_ignored (l_type)
+			end
 		ensure
 			is_ignored_implies_is_ignorable: Result implies is_ignorable
 			not_is_caught: Result = not is_caught
@@ -189,7 +189,7 @@ feature -- Output
 
 feature {EXCEPTION_MANAGER} -- Implementation
 
-	frozen set_throwing_exception (a_exception: EXCEPTION)
+	frozen set_throwing_exception (a_exception: ?EXCEPTION)
 			-- Set `throwing_exception' with `a_exception'.
 		require
 			not_throwing_a_exception: a_exception /= Void implies not is_throwing (a_exception)
@@ -205,7 +205,7 @@ feature {EXCEPTION_MANAGER} -- Implementation
 		require
 			a_exception_not_viod: a_exception /= Void
 		local
-			l_exception: EXCEPTION
+			l_exception: ?EXCEPTION
 			l_stop: BOOLEAN
 		do
 			if a_exception /= Current and then a_exception.throwing_exception /= a_exception then
@@ -264,8 +264,8 @@ feature {EXCEPTION_MANAGER} -- Implementation
 			else
 				Result := "Code: " + code.out
 			end
-			if message /= Void then
-				Result := Result + " Tag: " + message
+			if {l_message: like message} message then
+				Result := Result + " Tag: " + l_message
 			end
 		end
 

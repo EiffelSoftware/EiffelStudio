@@ -23,9 +23,12 @@ feature -- Calls
 	apply
 			-- Call procedure with `operands' as last set.
 		local
-			obj: SYSTEM_OBJECT
+			obj: ?SYSTEM_OBJECT
+			l_rout_disp: like rout_disp
 		do
-			obj := rout_disp.invoke (target_object, internal_operands)
+			l_rout_disp := rout_disp
+			check l_rout_disp_attached: l_rout_disp /= Void end
+			obj := l_rout_disp.invoke (target_object, internal_operands)
 		end
 
 note

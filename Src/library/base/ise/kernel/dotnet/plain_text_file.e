@@ -44,14 +44,16 @@ feature -- Output
 			i: INTEGER
 			l_cnt: INTEGER
 		do
-			from
-				i := 1
-				l_cnt := dotnet_newline.count
-			until
-				i > l_cnt
-			loop
-				internal_stream.write_byte (dotnet_newline.item (i).code.to_natural_8)
-				i := i + 1
+			if {l_stream: like internal_stream} internal_stream then
+				from
+					i := 1
+					l_cnt := dotnet_newline.count
+				until
+					i > l_cnt
+				loop
+					l_stream.write_byte (dotnet_newline.item (i).code.to_natural_8)
+					i := i + 1
+				end
 			end
 		end
 
@@ -148,8 +150,8 @@ feature -- Output
 		do
 			if c = '%N' then
 				put_new_line
-			else
-				internal_stream.write_byte (c.code.to_natural_8)
+			elseif {l_stream: like internal_stream} internal_stream then
+				l_stream.write_byte (c.code.to_natural_8)
 			end
 		end
 
@@ -159,9 +161,13 @@ feature -- Input
 			-- Read a string of at most `nb_char' bound characters
 			-- or until end of file.
 			-- Make result available in `last_string'.
+		local
+			l_last_string: like last_string
 		do
 			Precursor {FILE} (nb_char)
-			last_string.replace_substring_all (dotnet_newline, eiffel_newline)
+			l_last_string := last_string
+			check l_last_string_attached: l_last_string /= Void end
+			l_last_string.replace_substring_all (dotnet_newline, eiffel_newline)
 		end
 
 	readstream (nb_char: INTEGER)
@@ -261,17 +267,19 @@ feature -- Input
 		local
 			a_code: INTEGER
 		do
-			a_code := internal_stream.read_byte
-			if a_code = - 1 then
-				internal_end_of_file := True
-			else
-					-- If we read `%R', i.e. value 13, then let's
-					-- check if next character is `%N'. If it is '%N'
-					-- then we return '%N', else we return '%R'.
-				if a_code = 13 and then peek = 10 then
-					a_code := internal_stream.read_byte
+			if {l_stream: like internal_stream} internal_stream then
+				a_code := l_stream.read_byte
+				if a_code = - 1 then
+					internal_end_of_file := True
+				else
+						-- If we read `%R', i.e. value 13, then let's
+						-- check if next character is `%N'. If it is '%N'
+						-- then we return '%N', else we return '%R'.
+					if a_code = 13 and then peek = 10 then
+						a_code := l_stream.read_byte
+					end
+					last_character := a_code.to_character_8
 				end
-				last_character := a_code.to_character_8
 			end
 		end
 
@@ -349,7 +357,9 @@ feature {NONE} -- Implementation
 			str_area: NATIVE_ARRAY [NATURAL_8]
 		do
 			create str_area.make (nb)
-			Result := internal_stream.read (str_area, 0, nb)
+			if {l_stream: like internal_stream} internal_stream then
+				Result := l_stream.read (str_area, 0, nb)
+			end
 			internal_end_of_file := peek = -1
 			from
 				i := 0

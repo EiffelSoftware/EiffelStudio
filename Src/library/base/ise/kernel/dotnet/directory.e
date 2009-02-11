@@ -43,7 +43,7 @@ feature -- Initialization
 		require
 			physical_not_exists: not exists
 		local
-			di: DIRECTORY_INFO
+			di: ?DIRECTORY_INFO
 			l_sub_dir: STRING
 			l_sep_index: INTEGER
 			l_full_path: STRING
@@ -75,19 +75,22 @@ feature -- Access
 		require
 			is_opened: not is_closed
 		local
-			ent: NATIVE_ARRAY [SYSTEM_STRING]
+			ent: ?NATIVE_ARRAY [?SYSTEM_STRING]
 			l_name: SYSTEM_STRING
+			l_entry: like lastentry
 		do
 			l_name := name.to_cil
 			ent := {SYSTEM_DIRECTORY}.get_file_system_entries (l_name)
+			check ent_attached: ent /= Void end
 			if search_index >= ent.count then
 				lastentry := Void
 			else
-				create lastentry.make_from_cil (ent.item (search_index))
+				create l_entry.make_from_cil (ent.item (search_index))
 					-- Because .NET will return something like `Current_dir\found_entry'
 					-- we need to get rid of `Current_dir\' to be consistent with
 					-- classic EiffelBase.
-				lastentry.remove_head (name.count + 1)
+				l_entry.remove_head (name.count + 1)
+				lastentry := l_entry
 				search_index := search_index + 1
 			end
 		end
@@ -103,7 +106,7 @@ feature -- Access
 		require
 			string_exists: entry_name /= Void
 		local
-			ent: NATIVE_ARRAY [SYSTEM_STRING]
+			ent: ?NATIVE_ARRAY [?SYSTEM_STRING]
 			l_name: SYSTEM_STRING
 			en: SYSTEM_STRING
 			i: INTEGER
@@ -111,6 +114,7 @@ feature -- Access
 		do
 			l_name := name.to_cil
 			ent := {SYSTEM_DIRECTORY}.get_file_system_entries (l_name)
+			check ent_attached: ent /= Void end
 			en := entry_name.to_cil
 			c := ent.count
 			from
@@ -118,7 +122,7 @@ feature -- Access
 			until
 				i = c or Result
 			loop
-				Result := ent.item (i).ends_with (en)
+				Result := {l_string: SYSTEM_STRING} ent.item (i) and then l_string.ends_with (en)
 				i := i + 1
 			end
 		end
@@ -170,11 +174,10 @@ feature -- Measurement
 			-- Number of entries in directory.
 		require
 			directory_exists: exists
-		local
-			l_name: SYSTEM_STRING
 		do
-			l_name := name.to_cil
-			Result := {SYSTEM_DIRECTORY}.get_file_system_entries (l_name).count
+			if {ent: NATIVE_ARRAY [?SYSTEM_STRING]} {SYSTEM_DIRECTORY}.get_file_system_entries ( name.to_cil) then
+				Result := ent.count
+			end
 		end
 
 feature -- Conversion
@@ -182,10 +185,12 @@ feature -- Conversion
 	linear_representation: ARRAYED_LIST [STRING]
 			-- The entries, in sequential format.
 		local
-			ent: NATIVE_ARRAY [SYSTEM_STRING]
+			ent: ?NATIVE_ARRAY [?SYSTEM_STRING]
 			i, c, dc: INTEGER
+			l_string: ?SYSTEM_STRING
 		do
 			ent := {SYSTEM_DIRECTORY}.get_file_system_entries (name.to_cil)
+			check ent_attached: ent /= Void end
 			c := ent.count
 			dc := name.count
 			if name.item (name.count) = (create {OPERATING_ENVIRONMENT}).directory_separator then
@@ -197,14 +202,16 @@ feature -- Conversion
 			until
 				i = c
 			loop
-				Result.extend (create {STRING}.make_from_cil (ent.item (i).remove (0, dc + 1)))
+				l_string := ent.item (i)
+				check l_string_attached: l_string /= Void end
+				Result.extend (create {STRING}.make_from_cil (l_string.remove (0, dc + 1)))
 				i := i + 1
 			end
 		end
 
 feature -- Status report
 
-	lastentry: STRING
+	lastentry: ?STRING
 			-- Last entry read by `readentry'
 
 	is_closed: BOOLEAN
@@ -373,7 +380,7 @@ feature -- Removal
 			action: PROCEDURE [ANY, TUPLE]
 			is_cancel_requested: FUNCTION [ANY, TUPLE, BOOLEAN]
 			file_number: INTEGER)
-		
+
 			-- Delete all files located in current directory and its
 			-- subdirectories.
 			--
@@ -467,7 +474,7 @@ feature -- Removal
 			action: PROCEDURE [ANY, TUPLE]
 			is_cancel_requested: FUNCTION [ANY, TUPLE, BOOLEAN]
 			file_number: INTEGER)
-		
+
 			-- Delete directory, its files and its subdirectories.
 			--
 			-- `action' is called each time `file_number' files has

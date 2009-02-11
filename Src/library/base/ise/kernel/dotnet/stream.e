@@ -6,7 +6,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	STREAM
 
 inherit
@@ -73,12 +73,15 @@ feature -- Access
 			l_formatter: BINARY_FORMATTER
 			l_mem: SYSTEM_MEMORY_STREAM
 			l_buf: NATIVE_ARRAY [NATURAL_8]
+			l_result: ?ANY
 		do
 			create l_buf.make (buffer_size)
 			{MARSHAL}.copy (item, l_buf, 0, buffer_size)
 			create l_mem.make_from_buffer (l_buf)
 			create l_formatter.make
-			Result ?= l_formatter.deserialize (l_mem)
+			l_result := l_formatter.deserialize (l_mem)
+			check l_result_attached: l_result /= Void end
+			Result := l_result
 			l_mem.close
 		end
 
@@ -185,7 +188,7 @@ feature -- Output
 		require else
 			stream_exists: exists
 		do
-			put_character ('%N')		
+			put_character ('%N')
 		end
 
 	put_string, putstring (s: STRING)
@@ -207,41 +210,41 @@ feature -- Output
 			-- Write `i' to medium.
 		do
 		end
-		
+
 	put_integer_8 (i: INTEGER_8)
 			-- Write `i' to medium.
-		do			
+		do
 		end
-		
+
 	put_integer_16 (i: INTEGER_16)
 			-- Write `i' to medium.
-		do			
+		do
 		end
 
 	put_integer_64 (i: INTEGER_64)
 			-- Write `i' to medium.
-		do			
+		do
 		end
-		
+
 	put_natural_8 (i: NATURAL_8)
 			-- Write `i' to medium.
-		do			
+		do
 		end
 
 	put_natural_16 (i: NATURAL_16)
 			-- Write `i' to medium.
-		do			
+		do
 		end
-		
+
 	put_natural, put_natural_32 (i: NATURAL_32)
 			-- Write `i' to medium.
-		do			
+		do
 		end
-		
+
 	put_natural_64 (i: NATURAL_64)
 			-- Write `i' to medium.
-		do			
-		end		
+		do
+		end
 
 	put_boolean, putbool (b: BOOLEAN)
 			-- Write `b' to medium.
@@ -295,14 +298,14 @@ feature -- Input
 			-- Read a new 16-bit integer.
 			-- Make result available in `last_integer_16'.
 		do
-		end		
-		
+		end
+
 	read_integer_64
 			-- Read a new 64-bit integer.
 			-- Make result available in `last_integer_64'.
 		do
 		end
-		
+
 	read_natural_8
 			-- Read a new 8-bit natural.
 			-- Make result available in `last_natural_8'.
@@ -313,20 +316,20 @@ feature -- Input
 			-- Read a new 16-bit natural.
 			-- Make result available in `last_natural_16'.
 		do
-		end		
+		end
 
 	read_natural, read_natural_32
 			-- Read a new 32-bit natural.
 			-- Make result available in `last_natural'.
 		do
 		end
-		
+
 	read_natural_64
 			-- Read a new 64-bit natural.
 			-- Make result available in `last_natural_64'.
 		do
 		end
-		
+
 	read_stream, readstream (nb_char: INTEGER)
 			-- Read a string of at most `nb_char' bound characters
 			-- or until end of medium is encountered.
@@ -349,7 +352,7 @@ feature -- Input
 
 feature {NONE} -- Not exported
 
-	name: STRING
+	name: ?STRING
 			-- Not meaningful
 		do
 		end

@@ -42,7 +42,12 @@ feature {NONE} -- Initialization
 			is_dotnet: {PLATFORM}.is_dotnet
 			an_array_not_void: an_array /= Void
 		do
-			internal_native_array ?= an_array.clone
+			if {l_array: like native_array} an_array.clone then
+				internal_native_array := l_array
+			else
+				check not_possible: False end
+				internal_native_array := an_array
+			end
 		ensure
 				-- Commented because `equals' in .NET does not compare the content of arrays.
 --			native_array_set: native_array.equals (an_array)
@@ -114,7 +119,7 @@ feature -- Access
 			base_address_not_null: Result /= default_pointer
 		end
 
-	native_array: ?NATIVE_ARRAY [T]
+	native_array: NATIVE_ARRAY [T]
 			-- Only for compatibility with .NET
 		require
 			is_dotnet: {PLATFORM}.is_dotnet
@@ -140,7 +145,7 @@ feature -- Measurement
 		do
 			Result := internal_native_array.count
 		end
-	
+
 	capacity: INTEGER
 			-- Count of special area
 		do
@@ -171,7 +176,6 @@ feature -- Status report
 			end_index_valid: end_index < count
 		local
 			i: INTEGER
-			t: T
 		do
 			from
 				Result := True
@@ -179,7 +183,7 @@ feature -- Status report
 			until
 				i > end_index or else not Result
 			loop
-				Result := item (i) = t
+				Result := is_default (i)
 				i := i + 1
 			end
 		ensure

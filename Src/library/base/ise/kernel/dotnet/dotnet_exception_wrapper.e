@@ -23,47 +23,47 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	get_base_exception: NATIVE_EXCEPTION
+	get_base_exception: ?NATIVE_EXCEPTION
 			-- {SYSTEM_EXCEPTION}.get_base_exception
 		do
-			if dotnet_exception /= Void then
-				Result := dotnet_exception.get_base_exception
+			if {l_dotnet_exception: like dotnet_exception} dotnet_exception then
+				Result := l_dotnet_exception.get_base_exception
 			else
 				Result := local_get_base_exception
 			end
 		end
 
-	local_get_base_exception: NATIVE_EXCEPTION
+	local_get_base_exception: ?NATIVE_EXCEPTION
 			-- get_base_exception of local exception
 		deferred
 		end
 
-	source: SYSTEM_STRING
+	source: ?SYSTEM_STRING
 			-- {SYSTEM_EXCEPTION}.source
 		do
-			if dotnet_exception /= Void then
-				Result := dotnet_exception.source
+			if {l_dotnet_exception: like dotnet_exception} dotnet_exception then
+				Result := l_dotnet_exception.source
 			else
 				Result := local_source
 			end
 		end
 
-	local_source: SYSTEM_STRING
+	local_source: ?SYSTEM_STRING
 			-- source of local exception
 		deferred
 		end
 
-	stack_trace: SYSTEM_STRING
+	stack_trace: ?SYSTEM_STRING
 			-- {SYSTEM_EXCEPTION}.stack_trace
 		do
-			if dotnet_exception /= Void then
-				Result := dotnet_exception.stack_trace
+			if {l_dotnet_exception: like dotnet_exception} dotnet_exception then
+				Result := l_dotnet_exception.stack_trace
 			else
 				Result := local_stack_trace
 			end
 		end
 
-	local_stack_trace: SYSTEM_STRING
+	local_stack_trace: ?SYSTEM_STRING
 			-- stack_trace of local exception
 		deferred
 		end
@@ -73,25 +73,22 @@ feature -- Status setting
 	set_source (value: SYSTEM_STRING)
 			-- {SYSTEM_EXCEPTION}.set_source
 		do
-			if dotnet_exception /= Void then
-				dotnet_exception.set_source (value)
+			if {l_dotnet_exception: like dotnet_exception} dotnet_exception then
+				l_dotnet_exception.set_source (value)
 			else
 				local_set_source (value)
 			end
 		end
 
-	local_set_source (value: SYSTEM_STRING)
+	local_set_source (value: like local_source)
 			-- set_source of local exception
 		deferred
 		end
 
 feature -- Access
 
-	dotnet_exception: NATIVE_EXCEPTION
+	dotnet_exception: ?NATIVE_EXCEPTION;
 			-- .NET exception
-
-invariant
-	dotnet_exception_not_void: dotnet_exception /= Void
 
 note
 	library:   "EiffelBase: Library of reusable components for Eiffel."

@@ -136,13 +136,15 @@ feature -- Output
 		local
 			i: INTEGER
 		do
-			from
-				i := 0
-			until
-				i > (size - 1)
-			loop
-				internal_stream.write_byte ({MARSHAL}.read_byte (p + i))
-				i := i + 1
+			if {l_stream: like internal_stream} internal_stream then
+				from
+					i := 0
+				until
+					i > (size - 1)
+				loop
+					l_stream.write_byte ({MARSHAL}.read_byte (p + i))
+					i := i + 1
+				end
 			end
 		end
 
@@ -161,13 +163,17 @@ feature -- Output
 				byte_array.put (str_index, s.item (str_index + 1).code.to_natural_8)
 				str_index := str_index + 1
 			end
-			internal_stream.write (byte_array, 0, byte_array.count)
+			if {l_stream: like internal_stream} internal_stream then
+				l_stream.write (byte_array, 0, byte_array.count)
+			end
 		end
 
 	put_character, putchar (c: CHARACTER)
 			-- Write `c' at current position.
 		do
-			internal_stream.write_byte (c.code.to_integer.to_natural_8)
+			if {l_stream: like internal_stream} internal_stream then
+				l_stream.write_byte (c.code.to_integer.to_natural_8)
+			end
 		end
 
 feature -- Input
@@ -176,21 +182,25 @@ feature -- Input
 			-- Read a string of at most `nb_char' bound characters
 			-- or until end of file.
 			-- Make result available in `last_string'.
-		require else
-			is_readable: file_readable
 		local
 			new_count: INTEGER
 			str_area: NATIVE_ARRAY [NATURAL_8]
 			str_area_index: INTEGER
+			l_last_string: like last_string
 		do
-			if last_string = Void then
+			l_last_string := last_string
+			if l_last_string = Void then
 				create_last_string (nb_char)
+				l_last_string := last_string
+				check l_last_string_attached: l_last_string /= Void end
 			else
-				last_string.clear_all
-				last_string.grow (nb_char)
+				l_last_string.clear_all
+				l_last_string.grow (nb_char)
 			end
 			create str_area.make (nb_char)
-			new_count := internal_stream.read (str_area, 0, nb_char)
+			if {l_stream: like internal_stream} internal_stream then
+				new_count := l_stream.read (str_area, 0, nb_char)
+			end
 
 			check
 				valid_new_count: new_count <= nb_char
@@ -201,7 +211,7 @@ feature -- Input
 			until
 				str_area_index = new_count
 			loop
-				last_string.append_character (str_area.item (str_area_index).to_character_8)
+				l_last_string.append_character (str_area.item (str_area_index).to_character_8)
 				str_area_index := str_area_index + 1
 			end
 		end
@@ -293,7 +303,9 @@ feature -- Input
 		local
 		  	a_code: INTEGER
 		do
-		  	a_code := internal_stream.read_byte
+			if {l_stream: like internal_stream} internal_stream then
+		  		a_code := l_stream.read_byte
+			end
 		  	if a_code = - 1 then
 				internal_end_of_file := True
 		  	else
@@ -310,20 +322,22 @@ feature -- Input
 		local
 			i, l_i, l_read: INTEGER
 		do
-			from
-				i := 0
-				l_i := 0
-			until
-				i > (nb_bytes - 1) or l_i = -1
-			loop
-				l_i := internal_stream.read_byte
-				if l_i /= -1 then
-					l_read := l_read + 1
-					{MARSHAL}.write_byte (p + i, l_i.to_natural_8)
-					i := i + 1
+			if {l_stream: like internal_stream} internal_stream then
+				from
+					i := 0
+					l_i := 0
+				until
+					i > (nb_bytes - 1) or l_i = -1
+				loop
+					l_i := l_stream.read_byte
+					if l_i /= -1 then
+						l_read := l_read + 1
+						{MARSHAL}.write_byte (p + i, l_i.to_natural_8)
+						i := i + 1
+					end
 				end
+				bytes_read := l_read
 			end
-			bytes_read := l_read
 		end
 
 feature {NONE} -- Implementation
@@ -337,7 +351,9 @@ feature {NONE} -- Implementation
 			str_area: NATIVE_ARRAY [NATURAL_8]
 		do
 			create str_area.make (nb)
-			Result := internal_stream.read (str_area, 0, nb)
+			if {l_stream: like internal_stream} internal_stream then
+				Result := l_stream.read (str_area, 0, nb)
+			end
 			from
 				i := 0
 				j := pos
@@ -356,13 +372,15 @@ feature {NONE} -- Implementation
 	internal_managed_pointer: MANAGED_POINTER
 			-- Managed pointer for internal use
 		do
-			if mgn_ptr = Void then
-				create mgn_ptr.make (64)
+			if {l_ptr: like mgn_ptr} mgn_ptr then
+				Result := l_ptr
+			else
+				create Result.make (64)
+				mgn_ptr := Result
 			end
-			Result := mgn_ptr
 		end
 
-	mgn_ptr: MANAGED_POINTER
+	mgn_ptr: ?MANAGED_POINTER
 			-- Managed pointer for internal use	
 
 invariant

@@ -460,6 +460,8 @@ rt_public void xinterp(unsigned char *icval)
 	if (se){
 		set_last_exception (eif_access (se));
 		eif_wean (se);
+	} else {
+		set_last_exception ((EIF_REFERENCE) 0); /* Clean `last_exception' */
 	}
 
 	expop(&eif_stack);					/* Pop pseudo vector */
@@ -509,6 +511,8 @@ rt_public void xiinv(unsigned char *icval, int where)
 	if (se){
 		set_last_exception (eif_access (se));
 		eif_wean (se);
+	} else {
+		set_last_exception ((EIF_REFERENCE) 0); /* Clean `last_exception' */
 	}
 
 	expop(&eif_stack);					/* Pop pseudo vector */

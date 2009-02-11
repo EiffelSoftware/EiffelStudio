@@ -205,7 +205,6 @@ feature -- Domain
 			l_new_dom: APP_DOMAIN
 			l_hnd: OBJECT_HANDLE
 			l_lease: ILEASE
-			l_setup: APP_DOMAIN_SETUP
 		do
 			Result := internal_gac_loader
 			if Result = Void then

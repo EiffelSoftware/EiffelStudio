@@ -16,9 +16,10 @@ create
 feature {NONE} -- Creation
 
 	make (c: AST_CONTEXT; n: ID_AS)
-			-- Create error object.
+			-- Create error object for object test local named `n' in the context `c'.
 		require
 			c_attached: c /= Void
+			n_attached: n /= Void
 		do
 			c.init_error (Current)
 			set_local_name (n.name_id)
@@ -33,7 +34,7 @@ feature -- Error properties
 			-- Subcode of error
 
 note
-	copyright:	"Copyright (c) 2007, Eiffel Software"
+	copyright:	"Copyright (c) 2007-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -50,8 +50,8 @@ feature {NONE} -- Context
 			context.add_local_expression_scope (id)
 		end
 
-	add_object_test_scope (id: INTEGER_32)
-			-- Add scope of an object test.
+	add_object_test_scope (id: ID_AS)
+			-- Add scope of an object test local.
 		do
 			context.add_object_test_expression_scope (id)
 		end
@@ -63,7 +63,7 @@ feature {NONE} -- Context
 		end
 
 note
-	copyright:	"Copyright (c) 2008, Eiffel Software"
+	copyright:	"Copyright (c) 2008-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

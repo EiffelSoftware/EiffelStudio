@@ -8,12 +8,8 @@ VUOT, ECMA-367, section 8.24.3
         1 x does not have the same lower name as any
           feature of the enclosing class, or any formal
           argument or local variable of any enclosing
-          feature or Inline_agent, or, if ot appears in the
-          scope of any other Object_test, its Object-Test
-          Local.
+          feature or Inline_agent, or, if ot or its scope
+          appears in the scope of any other Object_test,
+          its Object-Test Local.
 
         2 T is an attached type.
-
-        3 (Implementation restriction, 6.1 only) x does not
-          have the same lower name as the Object-Test Local
-          of any other Object Test of the same feature.

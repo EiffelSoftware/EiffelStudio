@@ -2104,6 +2104,7 @@ test	attribute-initialization-in-rescue				attach046 tcf pass attached_types voi
 test	argument-type-correct							attach047 tcf pass attached_types
 test	operator-undetected-call-on-void-target			attach048 tcf pass attached_types
 test	scope-with-non-boolean-operator					attach049 tcf fail void_safe object_test scope
+test	vevi-missed-for-once-routine					attach050 tcf fail void_safe
 
 -- Tests for conformance in general
 test	basic-conformance		conform001 tcf pass conformance

@@ -48,9 +48,9 @@ feature -- Initialization
 		local
 			l_exec: EXECUTION_ENVIRONMENT
 		do
-			if is_dotnet_installed then
+			if is_dotnet_installed and then {l_path: like dotnet_framework_path} dotnet_framework_path then
 				create l_exec
-				l_exec.put (dotnet_framework_path.string, ise_dotnet_framework_env)
+				l_exec.put (l_path.string, ise_dotnet_framework_env)
 			end
 		end
 
@@ -88,17 +88,18 @@ feature -- Access
 			Result := installed_runtimes.has (version)
 		end
 
-	installed_runtimes: DS_ARRAYED_LIST [STRING]
+	installed_runtimes: ARRAYED_LIST [STRING]
 			-- List all installed version of the runtime.
 		local
-			l_runtime_path: STRING
+			l_runtime_path: ?STRING
 			l_content: ARRAYED_LIST [STRING]
 			l_dir: DIRECTORY
 			l_file_name: FILE_NAME
 			l_file: RAW_FILE
 		do
 			l_runtime_path := dotnet_runtime_path
-			create Result.make_equal (5)
+			create Result.make (5)
+			Result.compare_objects
 			if l_runtime_path /= Void then
 				create l_dir.make (l_runtime_path)
 				if l_dir.exists then
@@ -130,32 +131,31 @@ feature -- Access
 					l_dir.close
 				end
 			end
-			Result.sort (create {DS_QUICK_SORTER [STRING]}.make (create {KL_COMPARABLE_COMPARATOR [STRING]}.make))
 		ensure
 			installed_runtimes_not_void: Result /= Void
 		end
 
-	dotnet_framework_path: STRING
+	dotnet_framework_path: ?STRING
 			-- Path to .NET Framework of version `version'.
 		require
 			is_dotnet_installed: is_dotnet_installed
 		local
 			l_file_name: FILE_NAME
 		do
-			if dotnet_runtime_path /= Void then
-				create l_file_name.make_from_string (dotnet_runtime_path)
+			if {l_path: like dotnet_runtime_path} dotnet_runtime_path then
+				create l_file_name.make_from_string (l_path)
 				l_file_name.extend (version)
 				Result := l_file_name
 			end
 		end
 
-	dotnet_framework_sdk_path: STRING
+	dotnet_framework_sdk_path: ?STRING
 			-- Path to .NET Framework SDK directory of version `version'.
 			-- Void if not installed.
 		local
 			reg: WEL_REGISTRY
 			p: POINTER
-			key: WEL_REGISTRY_KEY_VALUE
+			key: ?WEL_REGISTRY_KEY_VALUE
 			l_major_version: STRING
 		do
 			create reg
@@ -164,8 +164,8 @@ feature -- Access
 			if p /= default_pointer then
 				l_major_version := version.twin
 				l_major_version.keep_head (4)
-				if sdk_keys.has (l_major_version) then
-					key := reg.key_value (p, sdk_keys.item (l_major_version))
+				if {l_key: STRING} sdk_keys.item (l_major_version) then
+					key := reg.key_value (p, l_key)
 					if key /= Void then
 						Result := key.string_value
 					end
@@ -174,10 +174,10 @@ feature -- Access
 			end
 		end
 
-	Dotnet_framework_sdk_bin_path: STRING
+	dotnet_framework_sdk_bin_path: ?STRING
 			-- Path to bin directory of .NET Framework SDK of version `version'.
 		local
-			l_path: STRING
+			l_path: ?STRING
 		do
 			l_path := Dotnet_framework_sdk_path
 			if l_path /= Void then
@@ -202,12 +202,12 @@ feature -- Query
 			Result := a_string /= Void and then a_string.is_equal ("DbgCLR")
 		end
 
-	Dotnet_debugger_path (a_debug: STRING): STRING
+	dotnet_debugger_path (a_debug: STRING): ?STRING
 			-- The path to the .NET debugger associated with 'a_debug'.
 		require
 			a_debug_not_void: a_debug /= Void
 		local
-			l_path: STRING
+			l_path: ?STRING
 		do
 			if use_cordbg (a_debug) then
 				l_path := Dotnet_framework_sdk_bin_path
@@ -222,10 +222,10 @@ feature -- Query
 			end
 		end
 
-	resource_compiler: STRING
+	resource_compiler: ?STRING
 			-- Path to `resgen' tool from .NET Framework SDK.
 		local
-			l_path: STRING
+			l_path: ?STRING
 		do
 			l_path := dotnet_framework_sdk_bin_path
 			if l_path /= Void then
@@ -246,13 +246,13 @@ feature {NONE} -- Implementation
 			sdk_keys_not_void: Result /= Void
 		end
 
-	dotnet_runtime_path: STRING
+	dotnet_runtime_path: ?STRING
 			-- Path to where .NET runtimes are installed. It can be a once since this value is
 			-- not dependent on `version'.
 		local
 			reg: WEL_REGISTRY
 			p: POINTER
-			key: WEL_REGISTRY_KEY_VALUE
+			key: ?WEL_REGISTRY_KEY_VALUE
 		once
 			create reg
 			p := reg.open_key_with_access ("hkey_local_machine\SOFTWARE\Microsoft\.NETFramework",
@@ -291,7 +291,7 @@ invariant
 	version_not_void: version /= Void
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -315,11 +315,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class IL_ENVIRONMENT

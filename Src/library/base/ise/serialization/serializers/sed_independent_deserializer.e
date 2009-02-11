@@ -168,7 +168,7 @@ feature {NONE} -- Implementation
 			l_map: like attributes_map
 			l_mapping: SPECIAL [INTEGER]
 			l_name: STRING
-			l_dtype, l_field_count: INTEGER
+			l_old_dtype, l_dtype, l_field_count: INTEGER
 			i, nb: INTEGER
 			a: like attributes_mapping
 			l_item: ?TUPLE [INTEGER, INTEGER]
@@ -193,7 +193,8 @@ feature {NONE} -- Implementation
 					i = nb
 				loop
 						-- Read attribute static type
-					l_dtype := new_dynamic_type_id (l_deser.read_compressed_natural_32.to_integer_32)
+					l_old_dtype := l_deser.read_compressed_natural_32.to_integer_32
+					l_dtype := new_dynamic_type_id (l_old_dtype)
 						-- Write attribute name
 					l_name := l_deser.read_string_8
 

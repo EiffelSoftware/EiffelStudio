@@ -165,12 +165,12 @@ feature -- Status report
 			l_dotnet_type: ?SYSTEM_TYPE
 		do
 				-- Unlike `is_special_type' we need to take the interface type,
-				-- as the {SPECIAL [ANY]} will yield the interface type, not
+				-- as the ({SPECIAL [ANY]}).to_cil will yield the interface type, not
 				-- the implementation type.
 			if {l_gen_type: RT_GENERIC_TYPE} id_to_eiffel_type.item (type_id) and then l_gen_type.count = 1 then
 				l_dotnet_type := l_gen_type.dotnet_type
 				check l_dotnet_type_attached: l_dotnet_type /= Void end
-				Result := l_dotnet_type.equals ({SPECIAL [ANY]})
+				Result := l_dotnet_type.equals (({SPECIAL [ANY]}).to_cil)
 			end
 		end
 

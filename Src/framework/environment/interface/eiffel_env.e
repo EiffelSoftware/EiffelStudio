@@ -99,11 +99,9 @@ feature {NONE} -- Access
 			if {PLATFORM}.is_windows then
 				Result.extend ([{EIFFEL_ENVIRONMENT_CONSTANTS}.ise_c_compiler_env, False])
 			end
-		ensure
-			result_contains_attached_item: not Result.has (Void)
 		end
 
-	creatable_directories: !ARRAYED_LIST [STRING_8]
+	creatable_directories: ARRAYED_LIST [STRING_8]
 			-- List of directories to be created at start up
 		require
 			is_valid_environment: is_valid_environment
@@ -120,7 +118,6 @@ feature {NONE} -- Access
 				create Result.make (0)
 			end
 		ensure
-			result_contains_attached_items: not Result.has (Void)
 			result_contains: Result.for_all (agent (a_item: STRING_8): BOOLEAN do Result := not a_item.is_empty end)
 		end
 
@@ -133,7 +130,7 @@ feature -- Status update
 			l_op_env: like operating_environment
 			l_file: RAW_FILE
 			l_dir: DIRECTORY
-			l_value: STRING_8
+			l_value: ?STRING_8
 			l_variables: like required_environment_variables
 			l_variable: TUPLE [var: STRING_8; is_directory: BOOLEAN]
 			l_is_valid: like is_valid_environment
@@ -291,7 +288,7 @@ feature -- Status setting
 
 feature {NONE} -- Helpers
 
-	environment: !ENVIRONMENT_ACCESS
+	environment: ENVIRONMENT_ACCESS
 			-- Shared access to an instance of {ENVIRONMENT_ACCESS}.
 		once
 			create Result
@@ -818,8 +815,11 @@ feature -- Directories (top-level user)
 			l_dir := get_environment ({EIFFEL_ENVIRONMENT_CONSTANTS}.ise_app_data_env)
 			if l_dir = Void or else l_dir.is_empty then
 					-- Attempt to use home location.
-				if operating_environment.home_directory_supported then
-					create l_dir_name.make_from_string  ((create {EXECUTION_ENVIRONMENT}).home_directory_name)
+				if
+					operating_environment.home_directory_supported and then
+					{l_home: STRING} (create {EXECUTION_ENVIRONMENT}).home_directory_name
+				then
+					create l_dir_name.make_from_string  (l_home)
 					safe_create_dir (l_dir_name.string)
 					if {PLATFORM}.is_windows then
 							-- Add company directory
@@ -865,7 +865,7 @@ feature -- Directories (top-level user)
 			is_valid_environment: is_valid_environment
 			is_user_files_supported: is_user_files_supported
 		local
-			l_user_files: like user_directory_name
+			l_user_files: ?like user_directory_name
 			l_dir: !STRING_8
 			l_directory: !DIRECTORY
 		once
@@ -1001,18 +1001,21 @@ feature -- Directories (user)
 			not_result_is_empty: not Result.is_empty
 		end
 
-	user_projects_path: !DIRECTORY_NAME
+	user_projects_path: DIRECTORY_NAME
 			-- Location of Eiffel projects.
 		local
-			l_var: STRING
+			l_var: ?STRING
 		once
 			l_var := get_environment ({EIFFEL_ENVIRONMENT_CONSTANTS}.ise_projects_env)
 			if l_var = Void or else l_var.is_empty then
 				if {PLATFORM}.is_windows or else {PLATFORM}.is_mac then
 					Result := user_files_path.twin
 					Result.extend (projects_name)
+				elseif operating_environment.home_directory_supported and then {l_home: STRING} environment.home_directory_name then
+					create Result.make_from_string (l_home)
 				else
-					create Result.make_from_string (environment.home_directory_name)
+						-- FIXME: What path should we put there?
+					create Result.make_from_string ("\Invalid path")
 				end
 			else
 				create Result.make_from_string (l_var)
@@ -1618,48 +1621,61 @@ feature {NONE} -- Basic operations
 
 feature -- Environment variables
 
-	eiffel_install: ?STRING_8
+	eiffel_install: STRING_8
 			-- ISE_EIFFEL name
 		do
-			Result := get_environment ({EIFFEL_ENVIRONMENT_CONSTANTS}.ise_eiffel_env)
-			remove_trailing_dir_separator (Result)
+			if {l_result: STRING} get_environment ({EIFFEL_ENVIRONMENT_CONSTANTS}.ise_eiffel_env) then
+				Result := l_result
+				remove_trailing_dir_separator (Result)
+			else
+				Result := ""
+			end
 		ensure
-			result_attached: is_valid_environment implies Result /= Void
 			not_result_is_empty: is_valid_environment implies not Result.is_empty
 		end
 
-	eiffel_c_compiler: ?STRING_8
+	eiffel_c_compiler: STRING_8
 			-- ISE_C_COMPILER name.
 		require
 			windows: {PLATFORM}.is_windows
 		do
-			Result := get_environment ({EIFFEL_ENVIRONMENT_CONSTANTS}.ise_c_compiler_env)
+			if {l_result: STRING} get_environment ({EIFFEL_ENVIRONMENT_CONSTANTS}.ise_c_compiler_env) then
+				Result := l_result
+			else
+				Result := ""
+			end
 		ensure
-			result_attached: is_valid_environment implies Result /= Void
 			not_result_is_empty: is_valid_environment implies not Result.is_empty
 		end
 
-	eiffel_platform: ?STRING_8
+	eiffel_platform: STRING_8
 			-- ISE_PLATFORM name.
 		do
-			Result := get_environment ({EIFFEL_ENVIRONMENT_CONSTANTS}.ise_platform_env)
+			if {l_result: STRING} get_environment ({EIFFEL_ENVIRONMENT_CONSTANTS}.ise_platform_env) then
+				Result := l_result
+			else
+				Result := ""
+			end
 		ensure
-			result_attached: is_valid_environment implies Result /= Void
 			not_result_is_empty: is_valid_environment implies not Result.is_empty
 		end
 
-	eiffel_library: ?STRING_8
+	eiffel_library: STRING_8
 			-- ISE_LIBRARY directory name.
 		require
 			is_valid_environment: is_valid_environment
 		do
-			Result := get_environment ({EIFFEL_ENVIRONMENT_CONSTANTS}.ise_library_env)
-			remove_trailing_dir_separator (Result)
+			if {l_result: STRING} get_environment ({EIFFEL_ENVIRONMENT_CONSTANTS}.ise_library_env) then
+				Result := l_result
+				remove_trailing_dir_separator (Result)
+			else
+				Result := ""
+			end
 		ensure
-			not_result_is_empty: not Result.is_empty
+			not_result_is_empty: is_valid_environment implies not Result.is_empty
 		end
 
-	platform_abstraction: !STRING_8
+	platform_abstraction: STRING_8
 			-- Abstraction between Windows and Unix.
 		once
 			if {PLATFORM}.is_windows then
@@ -1853,8 +1869,14 @@ feature {NONE} -- Externals
 			if l_ptr /= default_pointer then
 				create l_dir.make_by_pointer (l_ptr)
 				Result := l_dir.string
+			elseif
+				operating_environment.home_directory_supported and then
+				{l_home: STRING} (create {EXECUTION_ENVIRONMENT}).home_directory_name
+			then
+				Result := l_home
 			else
-				Result := (create {EXECUTION_ENVIRONMENT}).home_directory_name
+					-- FIXME: What path should we put there?
+				create Result.make_from_string ("\Invalid path")
 			end
 		ensure
 			result_attached: Result /= Void
@@ -1956,7 +1978,7 @@ feature -- Preferences
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -1980,11 +2002,11 @@ feature -- Preferences
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

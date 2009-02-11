@@ -33,12 +33,14 @@ feature -- Access
 		local
 			l_rout_disp: like rout_disp
 			l_spec: like internal_special
+			l_result_type: ?RESULT_TYPE
 		do
 			set_operands (args)
 			clear_last_result
 			l_rout_disp := rout_disp
 			check l_rout_disp_attached: l_rout_disp /= Void end
-			if {l_result: RESULT_TYPE} l_rout_disp.invoke (target_object, internal_operands) then
+			l_result_type ?= l_rout_disp.invoke (target_object, internal_operands)
+			if {l_result: RESULT_TYPE} l_result_type then
 				Result := l_result
 			else
 				l_spec := internal_special

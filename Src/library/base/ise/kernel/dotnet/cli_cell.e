@@ -38,8 +38,8 @@ feature -- Access
 	hash_code: INTEGER
 			-- Hash code value
 		do
-			if item /= Void then
-				Result := item.get_hash_code.hash_code
+			if {l_item: like item} item then
+				Result := l_item.get_hash_code.hash_code
 			end
 		end
 
@@ -55,7 +55,7 @@ feature -- Comparison
 			l_other := other.item
 			Result := l_item = l_other
 			if not Result then
-				Result := l_item /= Void and then l_item.equals (l_other) 
+				Result := l_item /= Void and then l_item.equals (l_other)
 			end
 		end
 

@@ -23,12 +23,22 @@ inherit
 		export
 			{NONE} replace_key, remove
 		redefine
+			default_create,
 			put, force, extend, replace,
-			clear_all
+			clear_all,
+			out
 		end
 
 create
 	default_create
+
+feature -- Initialization
+
+	default_create
+			-- Make table with current translations
+		do
+			make (0)
+		end
 
 feature -- Element change
 
@@ -88,6 +98,35 @@ feature -- Removal
 			-- Reset all items to default values; reset status.
 		do
 			Precursor
+		end
+
+feature -- Output
+
+	out: STRING
+			-- Printable representation of translations
+		local
+			k: STRING
+			i: ?STRING
+		do
+			from
+				create Result.make (25 + count * 40)
+				Result.append ("Class name translations:%N")
+				start
+			until
+				after
+			loop
+				k := key_for_iteration
+				if k /= Void then
+					Result.append (k)
+				end
+				Result.append (" -> ")
+				i := item_for_iteration
+				if i /= Void then
+					Result.append (i)
+				end
+				Result.append_character ('%N')
+				forth
+			end
 		end
 
 feature {NONE} -- Implementation

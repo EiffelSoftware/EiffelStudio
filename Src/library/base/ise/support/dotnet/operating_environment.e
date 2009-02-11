@@ -16,10 +16,8 @@ feature
 	Directory_separator: CHARACTER
 			-- Character used to separate subdirectories in a path name on this platform.
 			--| To build portable path names, use PATH_NAME and its descendants.
-		local
-			l_a: PATH
 		once
-			Result := l_a.directory_separator_char
+			Result := {PATH}.directory_separator_char
 		end
 
 	Current_directory_name_representation: STRING = "."

@@ -30,10 +30,24 @@ feature -- Access
 		require
 			valid_operands: valid_operands (args)
 			callable: callable
+		local
+			l_rout_disp: like rout_disp
+			l_spec: like internal_special
 		do
 			set_operands (args)
 			clear_last_result
-			Result ?= rout_disp.invoke (target_object, internal_operands)
+			l_rout_disp := rout_disp
+			check l_rout_disp_attached: l_rout_disp /= Void end
+			if {l_result: RESULT_TYPE} l_rout_disp.invoke (target_object, internal_operands) then
+				Result := l_result
+			else
+				l_spec := internal_special
+				if l_spec = Void then
+					create l_spec.make (1)
+					internal_special := l_spec
+				end
+				Result := l_spec.item (0)
+			end
 			if is_cleanup_needed then
 				remove_gc_reference
 			end
@@ -62,8 +76,12 @@ feature -- Basic operations
 
 	apply
 			-- Call function with `operands' as last set.
+		local
+			l_rout_disp: like rout_disp
 		do
-			last_result ?= rout_disp.invoke (target_object, internal_operands)
+			l_rout_disp := rout_disp
+			check l_rout_disp_attached: l_rout_disp /= Void end
+			last_result ?= l_rout_disp.invoke (target_object, internal_operands)
 		end
 
 feature -- Obsolete
@@ -88,6 +106,11 @@ feature -- Removal
 		do
 			last_result := l_result
 		end
+
+feature {NONE} -- Hack
+
+	internal_special: ?SPECIAL [RESULT_TYPE];
+			-- Once per object behavior.
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."

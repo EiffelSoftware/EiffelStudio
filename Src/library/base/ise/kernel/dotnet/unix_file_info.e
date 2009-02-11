@@ -69,12 +69,18 @@ feature -- Access
 	owner_name: STRING
 			-- Name of the file owner, if available from /etc/passwd.
 			-- Otherwise, the UID
+		do
+			Result := "0"
+		end
 
 	group_name: STRING
 			-- Name of the file group, if available from /etc/group.
 			-- Otherwise, the GID
+		do
+			Result := "0"
+		end
 
-	file_name: STRING
+	file_name: ?STRING
 			-- File name to which information applies.
 
 feature -- Status report
@@ -144,7 +150,8 @@ feature -- Element change
 		local
 			f: RAW_FILE
 			fi: FILE_INFO
-		do	
+			l_name: ?SYSTEM_STRING
+		do
 			create f.make (f_name)
 			create fi.make (f_name.to_cil)
 			protection := 0
@@ -176,11 +183,11 @@ feature -- Element change
 			date := f.date
 			access_date := f.access_date
 			change_date := f.change_date
-			device := (fi.full_name.to_char_array @ 0).code - ('A').code
+			l_name := fi.full_name
+			check l_name_attached: l_name /= Void end
+			device := (l_name.to_char_array @ 0).code - ('A').code
 			device_type := device
 			links := 1
-			owner_name := "0"
-			group_name := "0"
 			is_owner := True
 			is_access_owner := True
 			file_name := f_name

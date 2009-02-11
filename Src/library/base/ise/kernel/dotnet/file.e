@@ -160,8 +160,8 @@ feature -- Access
 	position: INTEGER
 			-- Current cursor position.
 		do
-			if not is_closed then
-				Result := internal_stream.position.to_integer
+			if not is_closed and then {l_stream: like internal_stream} internal_stream then
+				Result := l_stream.position.to_integer
 			end
 		end
 
@@ -196,11 +196,8 @@ feature -- Access
 
 	file_pointer: POINTER
 			-- File pointer as required in C
-		local
-			l_file: FILE_STREAM
 		do
-			if not is_closed then
-				l_file ?= internal_stream
+			if not is_closed and then {l_file: FILE_STREAM} internal_stream then
 				Result := l_file.handle
 			end
 		end
@@ -295,9 +292,12 @@ feature -- Access
 			-- if content is not a stored Eiffel structure.
 		local
 			l_formatter: BINARY_FORMATTER
+			l_result: ?ANY
 		do
 			create l_formatter.make
-			Result ?= l_formatter.deserialize (internal_stream)
+			l_result := l_formatter.deserialize (internal_stream)
+			check l_result_attached: l_result /= Void end
+			Result := l_result
 		end
 
 feature -- Measurement
@@ -311,8 +311,8 @@ feature -- Measurement
 					if not is_directory then
 						Result := internal_file.length.to_integer
 					end
-				else
-					Result := internal_stream.length.to_integer
+				elseif {l_stream: like internal_stream} internal_stream then
+					Result := l_stream.length.to_integer
 				end
 			end
 		end
@@ -897,13 +897,15 @@ feature -- Status setting
 	close
 			-- Close file.
 		do
-			if internal_sread /= Void then
-				internal_sread.close
+			if {l_sread: like internal_sread} internal_sread then
+				l_sread.close
 			end
-			if internal_swrite /= Void then
-				internal_swrite.close
+			if {l_swrite: like internal_swrite} internal_swrite then
+				l_swrite.close
 			end
-			internal_stream.close
+			if {l_stream: like internal_stream} internal_stream then
+				l_stream.close
+			end
 			mode := Closed_file
 			descriptor_available := False
 			internal_sread := Void
@@ -922,7 +924,9 @@ feature -- Cursor movement
 		local
 			i: INTEGER_64
 		do
-			i := internal_stream.seek ((0).to_integer_64, {SEEK_ORIGIN}.begin)
+			if {l_stream: like internal_stream} internal_stream then
+				i := l_stream.seek ((0).to_integer_64, {SEEK_ORIGIN}.begin)
+			end
 		end
 
 	finish
@@ -932,7 +936,9 @@ feature -- Cursor movement
 		local
 			i: INTEGER_64
 		do
-			i := internal_stream.seek ((0).to_integer_64, {SEEK_ORIGIN}.end_)
+			if {l_stream: like internal_stream} internal_stream then
+				i := l_stream.seek ((0).to_integer_64, {SEEK_ORIGIN}.end_)
+			end
 		end
 
 	forth
@@ -942,7 +948,9 @@ feature -- Cursor movement
 		local
 			i: INTEGER_64
 		do
-			i := internal_stream.seek ((1).to_integer_64, {SEEK_ORIGIN}.current_)
+			if {l_stream: like internal_stream} internal_stream then
+				i := l_stream.seek ((1).to_integer_64, {SEEK_ORIGIN}.current_)
+			end
 		end
 
 	back
@@ -950,7 +958,9 @@ feature -- Cursor movement
 		local
 			i: INTEGER_64
 		do
-			i := internal_stream.seek ((-1).to_integer_64, {SEEK_ORIGIN}.current_)
+			if {l_stream: like internal_stream} internal_stream then
+				i := l_stream.seek ((-1).to_integer_64, {SEEK_ORIGIN}.current_)
+			end
 		end
 
 	move (offset: INTEGER)
@@ -960,7 +970,9 @@ feature -- Cursor movement
 		local
 			i: INTEGER_64
 		do
-			i := internal_stream.seek (offset.to_integer_64, {SEEK_ORIGIN}.current_)
+			if {l_stream: like internal_stream} internal_stream then
+				i := l_stream.seek (offset.to_integer_64, {SEEK_ORIGIN}.current_)
+			end
 		end
 
 	go (abs_position: INTEGER)
@@ -970,7 +982,9 @@ feature -- Cursor movement
 			file_opened: not is_closed
 			non_negative_argument: abs_position >= 0
 		do
-			internal_stream.set_position (abs_position.to_integer_64)
+			if {l_stream: like internal_stream} internal_stream then
+				l_stream.set_position (abs_position.to_integer_64)
+			end
 		end
 
 	recede (abs_position: INTEGER)
@@ -982,7 +996,9 @@ feature -- Cursor movement
 		local
 			i: INTEGER_64
 		do
-			i := internal_stream.seek (-abs_position.to_integer_64, {SEEK_ORIGIN}.end_)
+			if {l_stream: like internal_stream} internal_stream then
+				i := l_stream.seek (-abs_position.to_integer_64, {SEEK_ORIGIN}.end_)
+			end
 		end
 
 	next_line
@@ -993,14 +1009,16 @@ feature -- Cursor movement
 			c: INTEGER
 			eol, eof: INTEGER
 		do
-			from
-				c := internal_stream.read_byte
-				eol := ('%N').code
-				eof := -1
-			until
-				c = eol or c = eof
-			loop
-				c := internal_stream.read_byte
+			if {l_stream: like internal_stream} internal_stream then
+				from
+					c := l_stream.read_byte
+					eol := ('%N').code
+					eof := -1
+				until
+					c = eol or c = eof
+				loop
+					c := l_stream.read_byte
+				end
 			end
 		end
 
@@ -1011,10 +1029,12 @@ feature -- Element change
 		local
 			cpos: INTEGER_64
 		do
-			cpos := internal_stream.position
-			finish
-			put_character (v)
-			internal_stream.set_position (cpos)
+			if {l_stream: like internal_stream} internal_stream then
+				cpos := l_stream.position
+				finish
+				put_character (v)
+				l_stream.set_position (cpos)
+			end
 		end
 
 	flush
@@ -1026,7 +1046,9 @@ feature -- Element change
 		require
 			is_open: not is_closed
 		do
-			internal_stream.flush
+			if {l_stream: like internal_stream} internal_stream then
+				l_stream.flush
+			end
 		end
 
 	link (fn: STRING)
@@ -1058,6 +1080,10 @@ feature -- Element change
 			from
 				st := internal_stream
 				ost := f.internal_stream
+				check
+					ost_attached: ost /= Void
+					st_attached: st /= Void
+				end
 				create buf.make (bs + 1)
 				rd := ost.read (buf, 0, bs)
 			until
@@ -1112,7 +1138,9 @@ feature -- Element change
 					str_area.put (i-1, s.item (i).code.to_natural_8)
 					i := i + 1
 				end
-				internal_stream.write (str_area, 0, l_count)
+				if {l_stream: like internal_stream} internal_stream then
+					l_stream.write (str_area, 0, l_count)
+				end
 			end
 		end
 
@@ -1121,25 +1149,26 @@ feature -- Element change
 			-- current position.
 		local
 			i, nb: INTEGER
-			l_stream: like internal_stream
 		do
-			from
-				i := start_pos
-				nb := i + nb_bytes
-				l_stream := internal_stream
-			until
-				i = nb
-			loop
-				l_stream.write_byte (p.read_natural_8 (i))
-				i := i + 1
+			if {l_stream: like internal_stream} internal_stream then
+				from
+					i := start_pos
+					nb := i + nb_bytes
+				until
+					i = nb
+				loop
+					l_stream.write_byte (p.read_natural_8 (i))
+					i := i + 1
+				end
 			end
 		end
 
 	put_character, putchar (c: CHARACTER)
 			-- Write `c' at current position.
-
 		do
-			internal_stream.write_byte (c.code.to_natural_8)
+			if {l_stream: like internal_stream} internal_stream then
+				l_stream.write_byte (c.code.to_natural_8)
+			end
 		end
 
 	put_new_line, new_line
@@ -1148,7 +1177,9 @@ feature -- Element change
 			check
 				eiffel_newline_valid_count: eiffel_newline.count = 1
 			end
-			internal_stream.write_byte (eiffel_newline.item (1).code.to_natural_8)
+			if {l_stream: like internal_stream} internal_stream then
+				l_stream.write_byte (eiffel_newline.item (1).code.to_natural_8)
+			end
 		end
 
 	stamp (time: INTEGER)
@@ -1347,8 +1378,8 @@ feature -- Removal
 			end
 			make (fn)
 			last_integer := 0
-			if last_string /= Void then
-				last_string.wipe_out
+			if {l_last_string: like last_string} last_string then
+				l_last_string.wipe_out
 			end
 			last_real := 0.0
 			last_character := '%U'
@@ -1384,12 +1415,14 @@ feature -- Input
 		local
 		  	a_code: INTEGER
 		do
-		  	a_code := internal_stream.read_byte
-		  	if a_code = - 1 then
-				internal_end_of_file := True
-		  	else
-				last_character := a_code.to_character_8
-		  	end
+			if {l_stream: like internal_stream} internal_stream then
+				a_code := l_stream.read_byte
+				if a_code = - 1 then
+					internal_end_of_file := True
+				else
+					last_character := a_code.to_character_8
+				end
+			end
 		end
 
 	read_integer, readint
@@ -1410,42 +1443,48 @@ feature -- Input
 			i, c: INTEGER
 			str_cap: INTEGER
 			done: BOOLEAN
+			l_last_string: like last_string
 		do
-			from
-				if last_string = Void then
-					create_last_string (1024)
-				else
-					last_string.clear_all
-				end
-				done := False
-				i := 0
-				str_cap := last_string.capacity
-			until
-				done
-			loop
-				c := internal_stream.read_byte
-				if c = 13 and then peek = 10 then
-						-- Discard end of line in the form "%R%N".
-					c := internal_stream.read_byte
-					done := True
-				elseif c = 10 then
-						-- Discard end of line in the form "%N".
-					done := True
-				elseif c = -1 then
-					internal_end_of_file := True
-					done := True
-				else
-					i := i + 1
-					if i > str_cap then
-						if str_cap < 2048 then
-							last_string.grow (str_cap + 1024)
-							str_cap := str_cap + 1024
-						else
-							last_string.automatic_grow
-							str_cap := last_string.capacity
-						end
+			if {l_stream: like internal_stream} internal_stream then
+				from
+					l_last_string := last_string
+					if l_last_string = Void then
+						create_last_string (1024)
+						l_last_string := last_string
+						check l_last_string_attached: l_last_string /= Void end
+					else
+						l_last_string.clear_all
 					end
-					last_string.append_character (c.to_character_8)
+					done := False
+					i := 0
+					str_cap := l_last_string.capacity
+				until
+					done
+				loop
+					c := l_stream.read_byte
+					if c = 13 and then peek = 10 then
+							-- Discard end of line in the form "%R%N".
+						c := l_stream.read_byte
+						done := True
+					elseif c = 10 then
+							-- Discard end of line in the form "%N".
+						done := True
+					elseif c = -1 then
+						internal_end_of_file := True
+						done := True
+					else
+						i := i + 1
+						if i > str_cap then
+							if str_cap < 2048 then
+								l_last_string.grow (str_cap + 1024)
+								str_cap := str_cap + 1024
+							else
+								l_last_string.automatic_grow
+								str_cap := l_last_string.capacity
+							end
+						end
+						l_last_string.append_character (c.to_character_8)
+					end
 				end
 			end
 		end
@@ -1459,21 +1498,27 @@ feature -- Input
 		local
 			new_count: INTEGER
 			str_area: NATIVE_ARRAY [NATURAL_8]
+			l_last_string: like last_string
 		do
-			if last_string = Void then
+			l_last_string := last_string
+			if l_last_string = Void then
 				create_last_string (nb_char)
+				l_last_string := last_string
+				check l_last_string_attached: l_last_string /= Void end
 			else
-				last_string.clear_all
-				last_string.grow (nb_char)
+				l_last_string.clear_all
+				l_last_string.grow (nb_char)
 			end
 			create str_area.make (nb_char)
-			new_count := internal_stream.read (str_area, 0, nb_char)
+			if {l_stream: like internal_stream} internal_stream then
+				new_count := l_stream.read (str_area, 0, nb_char)
+			end
 			if new_count = -1  then
-				last_string.set_count (0)
+				l_last_string.set_count (0)
 				internal_end_of_file := True
 			else
-				set_string (str_area, 0, new_count, last_string)
-				last_string.set_count (new_count)
+				set_string (str_area, 0, new_count, l_last_string)
+				l_last_string.set_count (new_count)
 				internal_end_of_file := peek = -1
 			end
 		end
@@ -1487,24 +1532,24 @@ feature -- Input
 			is_readable: file_readable
 		local
 			i, nb, l_byte, l_read: INTEGER
-			l_stream: like internal_stream
 		do
-			from
-				i := start_pos
-				nb := nb_bytes + i
-				l_stream := internal_stream
-			until
-				i = nb
-			loop
-			   	l_byte := l_stream.read_byte
-				if l_byte = -1 then
-					internal_end_of_file := True
-					i := nb - 1 -- Jump out of loop
-				else
-					l_read := l_read + 1
-					p.put_natural_8 (l_byte.as_natural_8, i)
+			if {l_stream: like internal_stream} internal_stream then
+				from
+					i := start_pos
+					nb := nb_bytes + i
+				until
+					i = nb
+				loop
+					l_byte := l_stream.read_byte
+					if l_byte = -1 then
+						internal_end_of_file := True
+						i := nb - 1 -- Jump out of loop
+					else
+						l_read := l_read + 1
+						p.put_natural_8 (l_byte.as_natural_8, i)
+					end
+					i := i + 1
 				end
-				i := i + 1
 			end
 			bytes_read := l_read
 		end
@@ -1520,16 +1565,20 @@ feature -- Input
 		local
 			blanks: STRING
 			old_c, rc: CHARACTER
+			l_last_string: like last_string
 		do
 				-- Save previous state of `last_character' as we modify it
 				-- by using `read_character'
 			old_c := last_character
 
 				-- Clean previous stored string.
-			if last_string = Void then
+			l_last_string := last_string
+			if l_last_string = Void then
 				create_last_string (0)
+				l_last_string := last_string
+				check l_last_string_attached: l_last_string /= Void end
 			else
-				last_string.clear_all
+				l_last_string.clear_all
 			end
 
 				-- Initialize list of blanks character
@@ -1553,7 +1602,7 @@ feature -- Input
 				end
 			end
 
-			last_string.extend (rc)
+			l_last_string.extend (rc)
 
 			from
 				read_character
@@ -1563,7 +1612,7 @@ feature -- Input
 			until
 				end_of_file or else blanks.has (rc)
 			loop
-				last_string.extend (rc)
+				l_last_string.extend (rc)
 				read_character
 				if not end_of_file then
 					rc := last_character
@@ -1592,7 +1641,7 @@ feature -- Convenience
 		local
 			l_modulo, l_read, nb: INTEGER
 			l_pos: INTEGER
-			l_old_last_string: STRING
+			l_old_last_string, l_last_string: like last_string
 		do
 			from
 				l_read := 0
@@ -1608,7 +1657,9 @@ feature -- Convenience
 				l_read >= nb
 			loop
 				read_stream (l_modulo)
-				file.put_string (last_string)
+				l_last_string := last_string
+				check l_last_string_attached: l_last_string /= Void end
+				file.put_string (l_last_string)
 				l_read := l_read + l_modulo
 			end
 				-- Restore previous status of Current file.
@@ -1623,7 +1674,7 @@ feature {FILE} -- Implementation
 	internal_file: FILE_INFO
 			-- File data concerning `Current'
 
-	internal_stream: SYSTEM_STREAM
+	internal_stream: ?SYSTEM_STREAM
 			-- File stream relative to `Current'
 
 	internal_end_of_file: BOOLEAN
@@ -1641,7 +1692,7 @@ feature {NONE} -- Implementation
 			create last_string.make (default_last_string_size.max (a_min_size))
 		ensure
 			last_string_not_void: last_string /= Void
-			capacity_set: last_string.capacity >= a_min_size
+			capacity_set: {l_string: like last_string} last_string and then l_string.capacity >= a_min_size
 		end
 
 	default_last_string_size: INTEGER = 256
@@ -1665,10 +1716,10 @@ feature {NONE} -- Implementation
 			character_read: not end_of_file implies Result > 0
 		end
 
-	internal_sread: STREAM_READER
+	internal_sread: ?STREAM_READER
 			-- Stream reader used to read in `Current' (if any).
 
-	internal_swrite: STREAM_WRITER
+	internal_swrite: ?STREAM_WRITER
 			-- Stream writer used to write in `Current' (if any).
 
 	true_string: STRING
@@ -1808,9 +1859,11 @@ feature {NONE} -- Implementation
 		require
 			is_readable: file_readable
 		do
-			Result := internal_stream.read_byte
-			if Result /= -1 then
-				back
+			if {l_stream: like internal_stream} internal_stream then
+				Result := l_stream.read_byte
+				if Result /= -1 then
+					back
+				end
 			end
 		end
 

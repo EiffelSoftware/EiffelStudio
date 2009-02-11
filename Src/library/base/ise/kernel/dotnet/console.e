@@ -130,21 +130,23 @@ feature -- Input
 		local
 			a_code: INTEGER
 		do
-			a_code := internal_stream.read_byte
-			if a_code = - 1 then
-				internal_end_of_file := True
-			else
-					-- FIXME: If %R is not followed by %N,
-					--        we will lost the following character.
-					--        we always assume that %R is followed by %N.
-				if a_code = 13 then
-						a_code := internal_stream.read_byte
-						if a_code = -1 then
-							internal_end_of_file := True
-						end
-						a_code := 10
+			if {l_stream: like internal_stream} internal_stream then
+				a_code := l_stream.read_byte
+				if a_code = - 1 then
+					internal_end_of_file := True
+				else
+						-- FIXME: If %R is not followed by %N,
+						--        we will lost the following character.
+						--        we always assume that %R is followed by %N.
+					if a_code = 13 then
+							a_code := l_stream.read_byte
+							if a_code = -1 then
+								internal_end_of_file := True
+							end
+							a_code := 10
+					end
+					last_character := a_code.to_character_8
 				end
-				last_character := a_code.to_character_8
 			end
 		end
 
@@ -167,51 +169,57 @@ feature -- Input
 			str_cap: INTEGER
 			p_fetched: BOOLEAN
 			done: BOOLEAN
+			l_last_string: like last_string
 		do
-			from
-				if last_string = Void then
-					create_last_string (1024)
-				else
-					last_string.clear_all
-				end
-				done := False
-				i := 0
-				str_cap := last_string.capacity
-			until
-				done
-			loop
-				if p_fetched then
-					c := p
-				else
-					c := internal_stream.read_byte
-				end
-				if c = 13 then
-					p := internal_stream.read_byte
-					p_fetched := True
-				end
-				if c = 13 and then p = 10 then
-						-- Discard end of line in the form "%R%N".
-					c := p -- internal_stream.read_byte
-					p_fetched := False
-					done := True
-				elseif c = 10 then
-						-- Discard end of line in the form "%N".
-					done := True
-				elseif c = -1 then
-					internal_end_of_file := True
-					done := True
-				else
-					i := i + 1
-					if i > str_cap then
-						if str_cap < 2048 then
-							last_string.grow (str_cap + 1024)
-							str_cap := str_cap + 1024
-						else
-							last_string.automatic_grow
-							str_cap := last_string.capacity
-						end
+			if {l_stream: like internal_stream} internal_stream then
+				from
+					l_last_string := last_string
+					if l_last_string = Void then
+						create_last_string (1024)
+						l_last_string := last_string
+						check l_last_string_attached: l_last_string /= Void end
+					else
+						l_last_string.clear_all
 					end
-					last_string.append_character (c.to_character_8)
+					done := False
+					i := 0
+					str_cap := l_last_string.capacity
+				until
+					done
+				loop
+					if p_fetched then
+						c := p
+					else
+						c := l_stream.read_byte
+					end
+					if c = 13 then
+						p := l_stream.read_byte
+						p_fetched := True
+					end
+					if c = 13 and then p = 10 then
+							-- Discard end of line in the form "%R%N".
+						c := p -- l_stream.read_byte
+						p_fetched := False
+						done := True
+					elseif c = 10 then
+							-- Discard end of line in the form "%N".
+						done := True
+					elseif c = -1 then
+						internal_end_of_file := True
+						done := True
+					else
+						i := i + 1
+						if i > str_cap then
+							if str_cap < 2048 then
+								l_last_string.grow (str_cap + 1024)
+								str_cap := str_cap + 1024
+							else
+								l_last_string.automatic_grow
+								str_cap := l_last_string.capacity
+							end
+						end
+						l_last_string.append_character (c.to_character_8)
+					end
 				end
 			end
 		end

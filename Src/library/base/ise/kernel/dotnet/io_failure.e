@@ -34,7 +34,7 @@ create
 	default_create
 
 create
-	{EXCEPTION_MANAGER}make_dotnet_exception
+	{EXCEPTION_MANAGER} make_dotnet_exception
 
 feature -- Access
 

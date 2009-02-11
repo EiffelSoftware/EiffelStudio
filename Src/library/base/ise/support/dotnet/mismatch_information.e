@@ -41,9 +41,13 @@ feature -- Access
 
 	class_name: STRING
 			-- Name of generating class which held attribute values
+		local
+			l_result: ?STRING
 		do
 			check has_class_entry: has (Class_key) end
-			Result ?= item (Class_key)
+			l_result ?= item (Class_key)
+			check l_result_attached: l_result /= Void end
+			Result := l_result
 		ensure
 			result_exists: Result /= Void
 		end

@@ -30,8 +30,13 @@ feature -- Access
 
 	item, at alias "@" (i: INTEGER): G
 			-- Entry at index `i', if in index interval
+		local
+			r: ?G
 		do
-			-- Built-in
+			check
+				r_attached: r /= Void
+			end
+			Result := r
 		end
 
 feature -- Measurement

@@ -27,30 +27,28 @@ feature -- Access
 
 	default_shell: STRING
 			-- Default shell
+		local
+			l_result: ?STRING
 		once
-			Result := get ("SHELL")
-			if Result = Void then
-				Result := create {STRING}.make (0)
+			l_result := get ("SHELL")
+			if l_result = Void then
+				create {STRING} Result.make (0)
+			else
+				Result := l_result
 			end
 		end
 
-	get (s: STRING): STRING
+	get (s: STRING): ?STRING
 			-- Value of `s' if it is an environment variable and has been set;
 			-- void otherwise.
 		require
 			s_exists: s /= Void
-		local
-			cs: SYSTEM_STRING
 		do
 			user_environment_variables.search (s)
 			if user_environment_variables.found then
-				Result := user_environment_variables.found_item.twin
-			else
-				cs := s.to_cil
-				cs := {ENVIRONMENT}.get_environment_variable (cs)
-				if cs /= Void then
-					create Result.make_from_cil (cs)
-				end
+				Result := user_environment_variables.found_item
+			elseif {cs: SYSTEM_STRING} {ENVIRONMENT}.get_environment_variable (s.to_cil) then
+				create Result.make_from_cil (cs)
 			end
 		end
 
@@ -76,27 +74,27 @@ feature -- Access
 			-- Table of environment variables associated with current process,
 			-- indexed by variable name
 		local
-			l_dic: IDICTIONARY
-			l_enumerator: IENUMERATOR
-			l_entry: DICTIONARY_ENTRY
-			l_key: SYSTEM_STRING
-			l_value: SYSTEM_STRING
+			l_key: ?SYSTEM_STRING
+			l_value: ?SYSTEM_STRING
 		do
-			l_dic := {ENVIRONMENT}.get_environment_variables
-			l_enumerator := l_dic.get_enumerator_2
-			create Result.make (l_dic.count)
-			from
-			until
-				not l_enumerator.move_next
-			loop
-				l_entry ?= l_enumerator.current_
-				l_key ?= l_entry.key
-				l_value ?= l_entry.value
-				check
-					l_key /= Void
-					l_value /= Void
+			if {l_dic: IDICTIONARY} {ENVIRONMENT}.get_environment_variables and then {l_enumerator: IENUMERATOR} l_dic.get_enumerator_2 then
+				create Result.make (l_dic.count)
+				from
+				until
+					not l_enumerator.move_next
+				loop
+					if {l_entry: DICTIONARY_ENTRY} l_enumerator.current_ then
+						l_key ?= l_entry.key
+						l_value ?= l_entry.value
+						check
+							l_key /= Void
+							l_value /= Void
+						end
+						Result.force (l_value, l_key)
+					end
 				end
-				Result.force (l_value, l_key)
+			else
+				create Result.make (0)
 			end
 		end
 
@@ -158,7 +156,6 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	last_process: SYSTEM_DLL_PROCESS
 			-- Handle to last launched process through `launch'. Used by `system'
 			-- to wait until process is finished.
 
@@ -175,9 +172,10 @@ feature {NONE} -- Implementation
 		require
 			s_not_void: s /= Void
 		local
-			l_cmd, l_args: STRING
+			l_cmd, l_args: ?STRING
 			l_si: SYSTEM_DLL_PROCESS_START_INFO
 			l_pos: INTEGER
+			last_process: ?SYSTEM_DLL_PROCESS
 		do
 			if (current_working_directory @ 2) = ':' then -- assume a volume
 				internal_launch_from_local_volume (s, should_wait)
@@ -205,6 +203,7 @@ feature {NONE} -- Implementation
 					l_si.set_redirect_standard_error (True)
 					l_si.set_redirect_standard_output (True)
 					last_process := {SYSTEM_DLL_PROCESS}.start_process_start_info (l_si)
+					check last_process_attached: last_process /= Void end
 					if should_wait then
 						last_process.wait_for_exit
 						return_code := last_process.exit_code
@@ -222,9 +221,10 @@ feature {NONE} -- Implementation
 		require
 			s_not_void: s /= Void
 		local
-			l_comspec: STRING
+			l_comspec: ?STRING
 			l_si: SYSTEM_DLL_PROCESS_START_INFO
 			l_pos: INTEGER
+			last_process: ?SYSTEM_DLL_PROCESS
 		do
 			if should_wait then
 				l_comspec := get ("COMSPEC")
@@ -252,13 +252,14 @@ feature {NONE} -- Implementation
 			l_si.set_use_shell_execute (False)
 			merge_env_vars (l_si.environment_variables)
 			last_process := {SYSTEM_DLL_PROCESS}.start_process_start_info (l_si)
+			check last_process_attached: last_process /= Void end
 			if should_wait then
 				last_process.wait_for_exit
 				return_code := last_process.exit_code
 			end
 		end
 
-	fully_qualified_program_name (a_cmd: STRING): STRING
+	fully_qualified_program_name (a_cmd: STRING): ?STRING
 			-- If `a_cmd' can be found, then return a fully qualified
 			-- path to it. Otherwise returns a Void string
 		require
@@ -298,7 +299,7 @@ feature {NONE} -- Implementation
 	executable_extensions: ARRAYED_LIST [STRING]
 			-- List of legal executable extensions
 		local
-			l_extensions: STRING
+			l_extensions: ?STRING
 		do
 			l_extensions := get ("PATHEXT")
 			if l_extensions = Void then
@@ -317,11 +318,13 @@ feature {NONE} -- Implementation
 			-- calls. Plus the relative cost of repeating this code
 			-- with starting a windows process makes this operation cheap.
 		local
-			l_path: STRING
+			l_path: ?STRING
+			l_assembly: ?ASSEMBLY
 		do
 			create Result.make (100)
-			Result.extend ({PATH}.get_directory_name (
-				({ASSEMBLY}.get_entry_assembly).location))
+			l_assembly := {ASSEMBLY}.get_entry_assembly
+			check l_assembly_attached: l_assembly /= Void end
+			Result.extend ({PATH}.get_directory_name (l_assembly.location))
 			Result.extend (current_working_directory)
 			l_path := get ("PATH")
 			if l_path /= Void then
@@ -329,22 +332,22 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	merge_env_vars (evsd: SYSTEM_DLL_STRING_DICTIONARY)
+	merge_env_vars (evsd: ?SYSTEM_DLL_STRING_DICTIONARY)
 			-- Merge user environment variable set in `user_environment_variables'
 			-- to the system one.
-		require
-			evsd_not_void: evsd /= Void
 		local
 			l_vars: like user_environment_variables
 		do
-			from
-				l_vars := user_environment_variables
-				l_vars.start
-			until
-				l_vars.off
-			loop
-				evsd.set_item (l_vars.key_for_iteration, l_vars.item_for_iteration)
-				l_vars.forth
+			if evsd /= Void then
+				from
+					l_vars := user_environment_variables
+					l_vars.start
+				until
+					l_vars.off
+				loop
+					evsd.set_item (l_vars.key_for_iteration, l_vars.item_for_iteration)
+					l_vars.forth
+				end
 			end
 		end
 

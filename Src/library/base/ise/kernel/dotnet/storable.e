@@ -36,7 +36,7 @@ feature -- Access
 			Result_exists: Result /= Void
 		end
 
-	retrieve_by_name (file_name: STRING): ANY
+	retrieve_by_name (file_name: STRING): ?ANY
 			-- Retrieve object structure, from external
 			-- representation previously stored in a file
 			-- called `file_name'.
@@ -79,7 +79,7 @@ feature -- Setting
 				not_supported: False
 			end
 		end
-		
+
 	set_new_recoverable_format (v: BOOLEAN)
 			-- If `v' it will use ISE Eiffel 5.3 storable format for
 			-- storing with ability to recover when there is a type mismatch.

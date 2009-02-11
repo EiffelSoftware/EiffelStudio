@@ -40,7 +40,7 @@ feature -- Measurement
 		do
 			create Result.make (collector_type)
 		end
-	
+
 feature -- Status report
 
 	memory_threshold: INTEGER
@@ -51,8 +51,8 @@ feature -- Status report
 
 	collection_period: INTEGER
 			-- Period of full collection.
-			-- If the environment variable EIF_FULL_COLLECTION_PERIOD   
-			-- is defined, it is set to the closest reasonable 
+			-- If the environment variable EIF_FULL_COLLECTION_PERIOD
+			-- is defined, it is set to the closest reasonable
 			-- value from it.
 			-- If null, no full collection is launched.
 		do
@@ -60,13 +60,13 @@ feature -- Status report
 
 	coalesce_period: INTEGER
 			-- Period of full coalesce (in number of collections)
-			-- If the environment variable EIF_FULL_COALESCE_PERIOD   
-			-- is defined, it is set to the closest reasonable 
+			-- If the environment variable EIF_FULL_COALESCE_PERIOD
+			-- is defined, it is set to the closest reasonable
 			-- value from it.
 			-- If null, no full coalescing is launched.
 		do
 		end
-			
+
 	collecting: BOOLEAN
 			-- Is garbage collection enabled?
 		do
@@ -87,34 +87,34 @@ feature -- Status report
 	chunk_size: INTEGER
 			-- Minimal size of a memory chunk. The run-time always
 			-- allocates a multiple of this size.
-			-- If the environment variable EIF_MEMORY_CHUNK   
-			-- is defined, it is set to the closest reasonable 
+			-- If the environment variable EIF_MEMORY_CHUNK
+			-- is defined, it is set to the closest reasonable
 			-- value from it.
 		do
 		end
 
 	tenure: INTEGER
 			-- Maximum age of object before being considered
-			-- as old (old objects are not scanned during 
+			-- as old (old objects are not scanned during
 			-- partial collection).
-			-- If the environment variable EIF_TENURE_MAX   
-			-- is defined, it is set to the closest reasonable 
+			-- If the environment variable EIF_TENURE_MAX
+			-- is defined, it is set to the closest reasonable
 			-- value from it.
 		do
 		end
-			
+
 	generation_object_limit: INTEGER
 			-- Maximum size of object in generational scavenge zone.
-			-- If the environment variable EIF_GS_LIMIT   
-			-- is defined, it is set to the closest reasonable 
+			-- If the environment variable EIF_GS_LIMIT
+			-- is defined, it is set to the closest reasonable
 			-- value from it.
 		do
 		end
-	
+
 	scavenge_zone_size: INTEGER
 			-- Size of generational scavenge zone.
-			-- If the environment variable EIF_MEMORY_SCAVENGE   
-			-- is defined, it is set to the closest reasonable 
+			-- If the environment variable EIF_MEMORY_SCAVENGE
+			-- is defined, it is set to the closest reasonable
 			-- value from it.
 		do
 		end
@@ -124,17 +124,20 @@ feature -- Status report
 	referers (an_object: ANY): SPECIAL [ANY]
 			-- Objects that refer to `an_object'.
 		do
+			create Result.make (0)
 		end
-		
+
 	objects_instance_of (an_object: ANY): SPECIAL [ANY]
 			-- Objects that have same dynamic type as `an_object'.
 		do
+			create Result.make (0)
 		end
 
 	memory_map: HASH_TABLE [ARRAYED_LIST [ANY], INTEGER]
 			-- Retrieves all object in system as a table indexed by dynamic type
 			-- where elements are all instances of a given data type.
 		do
+			create Result.make (0)
 		end
 
 	memory_count_map: HASH_TABLE [INTEGER, INTEGER]
@@ -142,6 +145,7 @@ feature -- Status report
 			-- Same as `memory_map' except that no references on the objects themselves
 			-- is kept.
 		do
+			create Result.make (0)
 		end
 
 feature -- Status setting
@@ -187,7 +191,7 @@ feature -- Status setting
 		end
 
 	set_memory_threshold (value: INTEGER)
-			-- Set a new `memory_threshold' in bytes. Whenever the memory 
+			-- Set a new `memory_threshold' in bytes. Whenever the memory
 			-- allocated for Eiffel reaches this value, an automatic
 			-- collection is performed.
 		require
@@ -198,7 +202,7 @@ feature -- Status setting
 	set_collection_period (value: INTEGER)
 			-- Set `collection_period'. Every `value' collection,
 			-- the Garbage collector will perform a collection
-			-- on the whole memory (full collection), otherwise 
+			-- on the whole memory (full collection), otherwise
 			-- a simple partial collection is done.
 		require
 			positive_value: value >= 0
@@ -208,7 +212,7 @@ feature -- Status setting
 	set_coalesce_period (value: INTEGER)
 			-- Set `coalesce_period'. Every `value' collection,
 			-- the Garbage Collector will coalesce
-			-- the whole memory. 
+			-- the whole memory.
 		require
 			positive_value: value >= 0
 		do
@@ -276,7 +280,7 @@ feature {NONE} -- Implementation
 			-- Set up GC monitoring according to `flag'
 		do
 		end
-	
+
 	find_referers (target: POINTER; esult: POINTER; result_size: INTEGER)
 		do
 		end

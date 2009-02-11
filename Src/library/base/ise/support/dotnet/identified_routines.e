@@ -11,13 +11,13 @@ class IDENTIFIED_ROUTINES
 
 feature -- Basic operations
 
-	eif_id_object (an_id: INTEGER): ANY
+	eif_id_object (an_id: INTEGER): ?ANY
 			-- Object associated with `an_id'
 		require
 			an_id_non_negative: an_id >= 0
 		local
 			l_success: BOOLEAN
-			wr: WEAK_REFERENCE
+			wr: ?WEAK_REFERENCE
 		do
 			l_success := xyz_mutex.wait_one
 			if xyz_reference_list.valid_index (an_id) then
@@ -65,7 +65,7 @@ feature -- Basic operations
 
 feature {IDENTIFIED_CONTROLLER} -- Implementation
 
-	xyz_reference_list: ARRAYED_LIST [WEAK_REFERENCE]
+	xyz_reference_list: ARRAYED_LIST [?WEAK_REFERENCE]
 			-- List of weak references used. Id's correspond to indices in this list.
 			-- Synchronization has to be done with `xyz_mutex'.
 		note

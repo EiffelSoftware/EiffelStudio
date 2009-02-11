@@ -24,6 +24,7 @@ feature -- Creation
 		local
 			l_count: INTEGER
 		do
+			native_array := dummy_array
 			l_count := {ISE_RUNTIME}.generic_parameter_count (Current)
 			create native_array.make (l_count + 1)
 		ensure then
@@ -40,12 +41,12 @@ feature -- Creation
 
 feature -- Access
 
-	item alias "[]", at alias "@" (index: INTEGER): SYSTEM_OBJECT assign put
+	item alias "[]", at alias "@" (index: INTEGER): ?SYSTEM_OBJECT assign put
 			-- Entry of key `index'.
 		require
 			valid_index: valid_index (index)
 		local
-			l_result: ANY
+			l_result: ?ANY
 		do
 				-- If it is a basic type, then we need to do a promotion.
 				-- If not, then we simply get the element.
@@ -70,7 +71,7 @@ feature -- Access
 			Result := l_result
 		end
 
-	reference_item (index: INTEGER): ANY
+	reference_item (index: INTEGER): ?ANY
 			-- Reference item at `index'.
 		require
 			valid_index: valid_index (index)
@@ -291,8 +292,8 @@ feature -- Status report
 			-- Hash code value
 		local
 			i, nb: INTEGER
-			l_item: SYSTEM_OBJECT
-			l_key: HASHABLE
+			l_item: ?SYSTEM_OBJECT
+			l_key: ?HASHABLE
 		do
 			from
 				i := 1
@@ -324,7 +325,7 @@ feature -- Status report
 			Result := k >= 1 and then k <= count
 		end
 
-	valid_type_for_index (v: SYSTEM_OBJECT; index: INTEGER): BOOLEAN
+	valid_type_for_index (v: ?SYSTEM_OBJECT; index: INTEGER): BOOLEAN
 			-- Is object `v' a valid target for element at position `index'?
 		require
 			valid_index: valid_index (index)
@@ -372,7 +373,7 @@ feature -- Status report
 
 feature -- Element change
 
-	put (v: SYSTEM_OBJECT; k: INTEGER)
+	put (v: ?SYSTEM_OBJECT; k: INTEGER)
 			-- Associate value `v' with key `k'.
 		require
 			valid_index: valid_index (k)
@@ -381,7 +382,7 @@ feature -- Element change
 			native_array.put (k, v)
 		end
 
-	put_reference (v: ANY; index: INTEGER)
+	put_reference (v: ?ANY; index: INTEGER)
 			-- Put `v' at position `index' in Current.
 		require
 			valid_index: valid_index (index)
@@ -853,13 +854,13 @@ feature -- Type conversion queries
 
 feature -- Conversion
 
-	arrayed: ARRAY [ANY]
+	arrayed: ARRAY [?ANY]
 			-- Items of Current as array
 		obsolete
 			"Will be removed in future releases"
 		local
 			i, cnt: INTEGER
-			a: ANY
+			a: ?ANY
 		do
 			from
 				i := 1
@@ -1036,7 +1037,6 @@ feature -- Conversion
 			"Will be removed in future releases"
 		local
 			i, cnt: INTEGER
-			s: STRING
 		do
 			from
 				i := 1
@@ -1045,8 +1045,9 @@ feature -- Conversion
 			until
 				i > cnt
 			loop
-				s ?= native_array.item (i)
-				Result.put (s, i)
+				if {s: STRING} native_array.item (i) then
+					Result.put (s, i)
+				end
 				i := i + 1
 			end
 		ensure
@@ -1107,16 +1108,21 @@ feature -- Access
 
 feature {TUPLE} -- Implementation
 
-	native_array: NATIVE_ARRAY [SYSTEM_OBJECT]
+	native_array: NATIVE_ARRAY [?SYSTEM_OBJECT]
 			-- Storage where values are kept.
 
 feature {NONE} -- Implementation
+
+	dummy_array: NATIVE_ARRAY [SYSTEM_OBJECT]
+		once
+			create Result.make (0)
+		end
 
 	is_tuple_uniform (code: like item_code): BOOLEAN
 			-- Are all items of type `code'?
 		local
 			i, nb: INTEGER
-			first_type, type: SYSTEM_TYPE
+			first_type, type: ?SYSTEM_TYPE
 			l_val: SYSTEM_OBJECT
 		do
 			Result := True

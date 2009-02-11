@@ -30,7 +30,7 @@ inherit
 
 feature -- Access
 
-	last_exception: EXCEPTION
+	last_exception: ?EXCEPTION
 			-- Last exception
 		do
 			Result ?= {ISE_RUNTIME}.last_exception
@@ -109,7 +109,7 @@ feature -- Status report
 
 feature {EXCEPTIONS} -- Backward compatibility support
 
-	type_of_code (a_code: INTEGER): TYPE [EXCEPTION]
+	type_of_code (a_code: INTEGER): ?TYPE [EXCEPTION]
 			-- Exception type of `a_code'
 		do
 			inspect a_code
@@ -186,7 +186,7 @@ feature {EXCEPTIONS} -- Backward compatibility support
 			end
 		end
 
-	exception_from_code (a_code: INTEGER): EXCEPTION
+	exception_from_code (a_code: INTEGER): ?EXCEPTION
 			-- Create exception object from `a_code'
 		local
 			l_rt_panic: EIFFEL_RUNTIME_PANIC
@@ -280,7 +280,7 @@ feature {EXCEPTIONS} -- Backward compatibility support
 
 feature {NONE} -- Element change
 
-	compute_last_exception (a_last_exception: NATIVE_EXCEPTION): EXCEPTION
+	compute_last_exception (a_last_exception: NATIVE_EXCEPTION): ?EXCEPTION
 			-- Set `last_exception' with `a_last_exception'.
 		do
 			if a_last_exception /= Void then
@@ -319,21 +319,17 @@ feature {NONE} -- Implementation, exception chain
 		require
 			a_last_exception_not_viod: a_last_exception /= Void
 		local
-			l_exception: EXCEPTION
-			l_pre: PRECONDITION_VIOLATION
-			l_rf: ROUTINE_FAILURE
+			l_exception: ?EXCEPTION
 			l_stack_trace: STACK_TRACE
 			l_rs: like recipient_and_type_name
 			l_to_skip: INTEGER
 		do
-			l_rf ?= a_last_exception
-			if l_rf /= Void then
+			if {l_rf: ROUTINE_FAILURE} a_last_exception then
 				l_to_skip := 2
 			else
 					-- Skip a frame for precondition violation and invariant violation on entry
 					-- To get the caller.
-				l_pre ?= a_last_exception
-				if l_pre /= Void or {ISE_RUNTIME}.in_precondition then
+				if {l_pre: PRECONDITION_VIOLATION} a_last_exception or {ISE_RUNTIME}.in_precondition then
 					l_to_skip := 2	-- The number is decided because for a normal Eiffel call, there are two frames.
 				end
 			end
@@ -341,6 +337,7 @@ feature {NONE} -- Implementation, exception chain
 			create l_stack_trace.make (a_last_exception)
 			l_rs := recipient_and_type_name (l_stack_trace, l_to_skip)
 			l_exception := wrapped_exception (a_last_exception)
+			check l_exception_attached: l_exception /= Void end
 			l_exception.set_recipient_name (l_rs.recipient)
 			l_exception.set_type_name (l_rs.type)
 			l_exception.set_line_number (l_rs.line_number)
@@ -349,61 +346,48 @@ feature {NONE} -- Implementation, exception chain
 			constructed_exception_chain_not_void: Result /= Void
 		end
 
-	wrapped_exception (a_exception: NATIVE_EXCEPTION): EXCEPTION
+	wrapped_exception (a_exception: NATIVE_EXCEPTION): ?EXCEPTION
 			-- Wrapped .NET exception
 		require
 			a_exception_not_void: a_exception /= Void
 		local
-			l_conv_io: IO_EXCEPTION
-			l_conv_sys: SYSTEM_EXCEPTION
-			l_conv_acc: UNAUTHORIZED_ACCESS_EXCEPTION
-			l_conv_sec: SECURITY_EXCEPTION
-			l_nullref_exception: NULL_REFERENCE_EXCEPTION
-			l_exception: EXCEPTION
+			l_exception: ?EXCEPTION
 		do
 			l_exception ?= a_exception
 			if l_exception = Void then
 					-- A pure .NET exception
-				l_nullref_exception ?= a_exception
-				if l_nullref_exception /= Void then
+				if {l_nullref: NULL_REFERENCE_EXCEPTION} a_exception then
 						-- Replace NullReferenceException with VOID_TARGET
-					create {VOID_TARGET}l_exception.make_dotnet_exception (a_exception)
+					create {VOID_TARGET} l_exception.make_dotnet_exception (a_exception)
+				elseif
+					{l_conv_acc: UNAUTHORIZED_ACCESS_EXCEPTION} a_exception or
+					{l_conv_sec: SECURITY_EXCEPTION} a_exception or
+					{l_conv_io: IO_EXCEPTION} a_exception
+				then
+					create {IO_FAILURE} l_exception.make_dotnet_exception (a_exception)
 				else
-					l_conv_sec ?= a_exception
-					if l_conv_sys /= Void then
-						create {OPERATING_SYSTEM_FAILURE}l_exception.make_dotnet_exception (a_exception)
-					else
-						l_conv_acc ?= a_exception
-						l_conv_sec ?= a_exception
-						l_conv_io ?= a_exception
-						if l_conv_acc /= Void or l_conv_sec /= Void or l_conv_io /= Void then
-							create {IO_FAILURE}l_exception.make_dotnet_exception (a_exception)
-						else
-							create {OPERATING_SYSTEM_SIGNAL_FAILURE}l_exception.make_dotnet_exception (a_exception)
-						end
-					end
+					create {OPERATING_SYSTEM_SIGNAL_FAILURE} l_exception.make_dotnet_exception (a_exception)
 				end
 				l_exception.set_message ("")
 			end
 			Result := l_exception
-		ensure
-			wrapped_exception_not_void: Result /= Void
 		end
 
-	recipient_and_type_name (a_st: STACK_TRACE; a_skip: INTEGER): TUPLE [recipient, type: STRING; line_number: INTEGER]
+	recipient_and_type_name (a_st: STACK_TRACE; a_skip: INTEGER): TUPLE [recipient, type: ?STRING; line_number: INTEGER]
 			-- Compute recipient name, type name and possible line number via `a_st'.
 			-- `a_skip' is number of first caught frames to though away.
 		require
 			a_st_not_void: a_st /= Void
 		local
-			l_routine_name, l_class: STRING
+			l_routine_name, l_class: ?STRING
 			l_stack_trace: STACK_TRACE
-			l_frame: STACK_FRAME
+			l_frame: ?STACK_FRAME
 			l_frame_count, i: INTEGER
-			l_method: METHOD_BASE
+			l_method: ?METHOD_BASE
 			l_skipped, l_to_skip: INTEGER
 			l_line_number: INTEGER
 			l_found: BOOLEAN
+			l_type: ?SYSTEM_TYPE
 		do
 			l_stack_trace := a_st
 			l_frame_count := l_stack_trace.frame_count
@@ -414,8 +398,9 @@ feature {NONE} -- Implementation, exception chain
 				i >= l_frame_count or else l_found
 			loop
 				l_frame := l_stack_trace.get_frame (i)
+				check l_frame_attached: l_frame /= Void end
 				l_method := l_frame.get_method
-				if is_filtered_routine (l_method) then
+				if l_method /= Void and then is_filtered_routine (l_method) then
 					if l_skipped >= l_to_skip then
 						create l_routine_name.make_from_cil (l_method.name)
 						if l_routine_name.count > 2 and then
@@ -424,7 +409,9 @@ feature {NONE} -- Implementation, exception chain
 						then
 							l_routine_name := l_routine_name.substring (3, l_routine_name.count)
 						end
-						create l_class.make_from_cil (l_method.declaring_type.name)
+						l_type := l_method.declaring_type
+						check l_type_not_void: l_type /= Void end
+						create l_class.make_from_cil (l_type.name)
 						l_line_number := l_frame.get_file_line_number
 						l_found := True
 					else
@@ -444,14 +431,15 @@ feature {NONE} -- Implementation, exception chain
 		require
 			a_method_not_void: a_method /= Void
 		local
-			l_attributs: NATIVE_ARRAY [SYSTEM_OBJECT]
+			l_attributes: ?NATIVE_ARRAY [SYSTEM_OBJECT]
 			l_routine_name: STRING
-			l_attr: EIFFEL_NAME_ATTRIBUTE
+			l_type: ?SYSTEM_TYPE
 		do
-			l_attributs := a_method.declaring_type.get_custom_attributes ({EIFFEL_NAME_ATTRIBUTE}, False)
-			if l_attributs.count = 1 then
-				l_attr ?= l_attributs.item (0)
-				if l_attr /= Void then
+			l_type := a_method.declaring_type
+			check l_type_attached: l_type /= Void end
+			l_attributes := l_type.get_custom_attributes ({EIFFEL_NAME_ATTRIBUTE}, False)
+			if l_attributes /= Void and then l_attributes.count = 1 then
+				if {l_attr: EIFFEL_NAME_ATTRIBUTE} l_attributes.item (0) then
 					if not filtered_class.has (create {STRING}.make_from_cil(l_attr.name)) then
 						create l_routine_name.make_from_cil (a_method.name)
 						Result := not filtered_routines.has (l_routine_name)
@@ -500,8 +488,8 @@ feature {NONE} -- Internal raise, Implementation of RT_EXCEPTION_MANAGER
 	internal_raise (e_code: INTEGER; msg: SYSTEM_STRING)
 			-- Internal raise exception of code `e_code'
 		local
-			l_exception: EXCEPTION
-			l_inv: INVARIANT_VIOLATION
+			l_exception: ?EXCEPTION
+			l_inv: ?INVARIANT_VIOLATION
 			l_saved_assertion, l_assertion_set: BOOLEAN
 			l_assertion_tag: STRING
 		do
@@ -511,6 +499,7 @@ feature {NONE} -- Internal raise, Implementation of RT_EXCEPTION_MANAGER
 				l_saved_assertion := {ISE_RUNTIME}.check_assert (False)
 			end
 			l_exception := exception_from_code (e_code)
+			check l_exception_not_void: l_exception /= Void end
 			l_inv ?= l_exception
 			if l_inv /= Void then
 				l_inv.set_is_entry ({ISE_RUNTIME}.invariant_entry)
@@ -550,7 +539,7 @@ feature {NONE} -- Internal raise, Implementation of RT_EXCEPTION_MANAGER
 			-- Rethrow the exception at the end of rescue clause.
 		local
 			l_failure: ROUTINE_FAILURE
-			l_exception: EXCEPTION
+			l_exception: ?EXCEPTION
 			l_stack_trace: STACK_TRACE
 			l_rs: like recipient_and_type_name
 		do

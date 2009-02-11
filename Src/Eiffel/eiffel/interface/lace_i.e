@@ -1308,7 +1308,7 @@ feature {NONE} -- Implementation
 	set_clr_runtime_version (a_version: STRING)
 			-- Set clr runtime version, use default if `a_version' is Void.
 		local
-			l_installed_runtimes: DS_LINEAR [STRING]
+			l_installed_runtimes: LIST [STRING]
 			l_il_env: IL_ENVIRONMENT
 			vd15: VD15
 		do

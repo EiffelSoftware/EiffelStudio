@@ -84,10 +84,10 @@ feature -- Access
 		do
 		end
 
-	installed_runtimes: DS_ARRAYED_LIST [STRING]
+	installed_runtimes: ARRAYED_LIST [STRING]
 			-- List all installed version of the runtime.
 		do
-			create {DS_ARRAYED_LIST [STRING]} Result.make (1)
+			create {ARRAYED_LIST [STRING]} Result.make (1)
 		ensure
 			installed_runtimes_not_void: Result /= Void
 		end

@@ -1586,7 +1586,7 @@ feature {NONE} -- Implementation
 						if {l_class_type: RT_CLASS_TYPE} a_types.item (i) then
 							l_type := l_class_type.dotnet_type
 							if l_type /= Void and then l_type.is_value_type then
-								Result := {l_other_type: SYSTEM_TYPE} l_generics.item (i) and then
+								Result := {l_other_type: RT_TYPE} l_generics.item (i) and then
 									l_other_type.equals (associated_runtime_type (l_type))
 							else
 									-- It should be a formal

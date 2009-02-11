@@ -6,7 +6,7 @@
 			<exclude>/.svn$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option trace="false" profile="false" debug="false" syntax_level="1" namespace="EiffelSoftware.MetadataConsumer">
+		<option warning="true" syntax_level="1" namespace="EiffelSoftware.MetadataConsumer">
 			<assertions precondition="true"/>
 		</option>
 		<setting name="cls_compliant" value="false"/>

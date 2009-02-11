@@ -43,7 +43,7 @@ feature -- Basic Operation
 			l_vert: EV_VERTICAL_BOX
 			l_lab: EV_LABEL
 			l_il_env: IL_ENVIRONMENT
-			l_runtimes: DS_LINEAR [STRING]
+			l_runtimes: LIST [STRING]
 			l_item: EV_LIST_ITEM
 		do
 			create rb_project_type_exe.make_with_text (interface_names.l_Exe_type)

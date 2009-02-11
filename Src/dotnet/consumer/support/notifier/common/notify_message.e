@@ -10,7 +10,7 @@ frozen class
 
 inherit
 	SYSTEM_OBJECT
-	
+
 	NOTIFY_FUNCTIONS
 		export
 			{NONE} all
@@ -170,7 +170,7 @@ feature {NONE} -- Evaluation
 					elseif l_func.equals (key_function) then
 						Result := assembly.key
 					elseif l_func.equals (full_name_function) then
-						Result := {SYSTEM_STRING}.format (({SYSTEM_STRING})["{0}, Ver={1}, Cul={2}, PKT={3}"], ({NATIVE_ARRAY [SYSTEM_STRING]})[<<({SYSTEM_STRING})[assembly.name], ({SYSTEM_STRING})[assembly.version], ({SYSTEM_STRING})[assembly.culture], ({SYSTEM_STRING})[assembly.key]>>])
+						Result := {SYSTEM_STRING}.format (({SYSTEM_STRING})["{0}, Ver={1}, Cul={2}, PKT={3}"], ({NATIVE_ARRAY [?SYSTEM_STRING]})[<<({SYSTEM_STRING})[assembly.name], ({SYSTEM_STRING})[assembly.version], ({SYSTEM_STRING})[assembly.culture], ({SYSTEM_STRING})[assembly.key]>>])
 					elseif l_func.equals (path_function) then
 						Result := assembly_path
 					else

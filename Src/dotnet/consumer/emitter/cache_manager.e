@@ -255,8 +255,6 @@ feature {NONE} -- Basic Operations
 		require
 			non_void_name: a_name /= Void
 			valid_name: not a_name.is_empty
-		local
-			l_culture: STRING
 		do
 			Result := a_name.twin
 			if a_version /= Void and not a_version.is_empty then

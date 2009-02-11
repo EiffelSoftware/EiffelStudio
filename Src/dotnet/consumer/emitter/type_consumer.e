@@ -45,7 +45,6 @@ feature {NONE} -- Initialization
 			valid_eiffel_name: not en.is_empty
 		local
 			dotnet_name: STRING
-			parent_name: SYSTEM_STRING
 			inter: NATIVE_ARRAY [SYSTEM_TYPE]
 			interfaces: ARRAYED_LIST [CONSUMED_REFERENCED_TYPE]
 			parent: CONSUMED_REFERENCED_TYPE
@@ -646,7 +645,7 @@ feature {NONE} -- Implementation
 
 	solved_constructors (
 			tc: SORTED_TWO_WAY_LIST [CONSTRUCTOR_SOLVER]): ARRAYED_LIST [CONSUMED_CONSTRUCTOR]
-		
+
 			-- Initialize `constructors' from `tc'.
 		require
 			non_void_constructors: tc /= Void

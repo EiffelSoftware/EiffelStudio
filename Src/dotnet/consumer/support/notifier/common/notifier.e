@@ -44,7 +44,6 @@ feature {NONE} -- Initialization
 			-- Initialize worker application thread.
 		local
 			l_context: WINFORMS_APPLICATION_CONTEXT
-			retried: BOOLEAN
 		do
 			application_thread := {SYSTEM_THREAD}.current_thread
 			create notify_form.make

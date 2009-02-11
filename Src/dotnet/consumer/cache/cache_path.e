@@ -196,10 +196,6 @@ feature {CACHE_READER} -- Access
 			clr_version_not_empty: not clr_version.is_empty
 		local
 			retried: BOOLEAN
-			l_str: SYSTEM_STRING
-			l_registry_key: REGISTRY_KEY
-			l_obj: SYSTEM_OBJECT
-			l_file_info: FILE_INFO
 			l_dir_sep: CHARACTER
 		once
 			if not retried then

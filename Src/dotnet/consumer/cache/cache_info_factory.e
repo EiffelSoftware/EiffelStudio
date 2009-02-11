@@ -19,8 +19,6 @@ feature -- Factory Functions
 		local
 			l_file: FILE_INFO
 			l_dir: DIRECTORY_INFO
-			info_path: STRING
-			retried: BOOLEAN
 		do
 			create l_file.make (a_path)
 			l_dir := l_file.directory

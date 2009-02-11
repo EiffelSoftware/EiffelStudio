@@ -9052,16 +9052,14 @@ feature {NONE} -- Implementation: checking locals
 									l_vrle2.set_local_name (l_local_name_id)
 									l_vrle2.set_location (l_as.locals.item.start_location)
 									error_handler.insert_error (l_vrle2)
-								elseif is_replicated then
+								elseif not is_replicated and then context.current_feature_table.has_id (l_local_name_id) then
 										-- The local name is a feature name of the
 										-- current analyzed class.
-									if not context.current_feature.from_non_conforming_parent then
-										create l_vrle1
-										context.init_error (l_vrle1)
-										l_vrle1.set_local_name (l_local_name_id)
-										l_vrle1.set_location (l_as.locals.item.start_location)
-										error_handler.insert_error (l_vrle1)
-									end
+									create l_vrle1
+									context.init_error (l_vrle1)
+									l_vrle1.set_local_name (l_local_name_id)
+									l_vrle1.set_location (l_as.locals.item.start_location)
+									error_handler.insert_error (l_vrle1)
 								end
 							end
 

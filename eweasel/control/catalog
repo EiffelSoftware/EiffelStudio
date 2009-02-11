@@ -1006,6 +1006,7 @@ test	finalize-self-init-attribute	final072 tcf fail finalizing
 test	finalize-invariant-wrong-class-name	final073 tcf fail finalizing
 test	finalize-bogus-invariant-violation	final074 tcf fail finalizing
 test	finalize-external-creation-procedure	final075 tcf fail finalizing
+test	finalize-inline-attribute-body	final076 tcf fail finalizing
 
 -- Runtime
 test	gc-tracking-001					runtime001	tcf pass runtime

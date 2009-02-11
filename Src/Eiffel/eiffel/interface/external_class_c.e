@@ -1380,8 +1380,7 @@ feature {NONE} -- Implementation
 			l_array_type ?= c
 			l_is_array := l_array_type /= Void
 			if l_is_array then
-				l_type_a := internal_type_from_consumed_type (force_compilation,
-					l_array_type.element_type)
+				l_type_a := internal_type_from_consumed_type (force_compilation, l_array_type.element_type)
 				if l_type_a /= Void then
 					create l_generics.make (1, 1)
 					l_generics.put (l_type_a, 1)
@@ -1412,6 +1411,10 @@ feature {NONE} -- Implementation
 						Result := l_class.actual_type
 					end
 				end
+			end
+			if not Result.is_expanded then
+				Result := Result.duplicate
+				Result.set_detachable_mark
 			end
 			if c.is_by_ref then
 					-- We need to create an instance of TYPED_POINTER here.

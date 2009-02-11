@@ -168,7 +168,6 @@ feature {NONE} -- Implementation
 		local
 			l_inst_obj_handle: OBJECT_HANDLE
 			l_lifetime_lease: ILEASE
-			l_time_span: TIME_SPAN
 			l_marshal: MARSHAL_CACHE_MANAGER
 			l_location: SYSTEM_STRING
 			l_full_name: SYSTEM_STRING

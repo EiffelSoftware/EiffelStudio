@@ -399,6 +399,9 @@ feature {NONE} -- Implementation
 			develop_window.menus.update_menu_lock_items
 			develop_window.menus.update_show_tool_bar_items
 
+				-- Activate the output and c output windows now to ensure the output is updated
+			develop_window.tools.output_tool.do_nothing
+			develop_window.tools.c_output_tool.do_nothing
 		end
 
 	construct_standard_layout_by_code_imp

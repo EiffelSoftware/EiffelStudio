@@ -41,7 +41,7 @@ feature -- Access
 
 feature -- Status report
 
-	test (v, u: G): BOOLEAN
+	test (v, u: ?G): BOOLEAN
 			-- Are `v' and `u' considered equal?
 			-- (Use `equal' by default.)
 		do

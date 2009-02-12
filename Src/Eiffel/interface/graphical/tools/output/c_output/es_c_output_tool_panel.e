@@ -14,7 +14,7 @@ inherit
 		undefine
 			Ev_application
 		redefine
-			make,
+			build_interface,
 			clear, internal_recycle, scroll_to_end,set_focus,
 			quick_refresh_editor,quick_refresh_margin,
 			is_general,
@@ -51,19 +51,9 @@ inherit
 create
 	make
 
-feature{NONE} -- Initialization
+feature {NONE} -- Initialization
 
-	make (a_tool: EB_DEVELOPMENT_WINDOW; a_desc: like tool_descriptor)
-			-- Create a new external output tool.
-		do
-			develop_window := a_tool
-			tool_descriptor := a_desc
-			initialization (a_tool)
-			widget := l_ev_vertical_box_1
-			c_compilation_output_manager.extend (Current)
-		end
-
-	initialization (a_tool: EB_DEVELOPMENT_WINDOW)
+	build_interface
 			-- Initialize interface.
 		local
 			l_ev_tool_bar_separator_1: SD_TOOL_BAR_SEPARATOR
@@ -172,6 +162,8 @@ feature{NONE} -- Initialization
 			l_locale_lbl.set_text (interface_names.l_locale)
 
 			register_action (content.drop_actions, agent set_stone)
+			widget := l_ev_vertical_box_1
+			c_compilation_output_manager.extend (Current)
 		end
 
 	pixmap_failure: EV_PIXMAP

@@ -657,14 +657,17 @@ feature {COMPILER_EXPORTER} -- Conformance
 				else
 					Result :=
 						associated_class.conform_to (other_class_type.associated_class) and then
-						other_class_type.valid_generic (a_context_class, Current) and then
-						is_attachable_to (other_class_type)
+						other_class_type.valid_generic (a_context_class, Current)
 					if not Result and then system.il_generation and then system.system_object_class /= Void then
 							-- Any type in .NET conforms to System.Object
 						check
 							system.system_object_class.is_compiled
 						end
 						Result := other_class_type.class_id = system.system_object_id
+					end
+					if Result then
+							-- We should still verify that the attachment marks are taken into account.
+						Result := is_attachable_to (other_class_type)
 					end
 				end
 			elseif other.is_type_set then

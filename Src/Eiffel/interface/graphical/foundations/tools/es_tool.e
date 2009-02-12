@@ -30,7 +30,6 @@ inherit
 			set_site as set_window,
 			on_sited as initialize
 		redefine
-			initialize,
 			out
 		end
 
@@ -52,14 +51,6 @@ inherit {NONE}
 			{NONE} all
 		redefine
 			out
-		end
-
-feature {NONE} -- Initialization
-
-	initialize
-			-- <Precursor>
-		do
-			Precursor {SITE}
 		end
 
 feature {NONE} -- Initialization: User interface

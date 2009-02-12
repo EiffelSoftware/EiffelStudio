@@ -31,7 +31,7 @@ feature -- Lookup
 	index (an_obj: ANY): NATURAL_32
 			-- Index of `an_obj' in Current		
 		local
-			l_obj: SYSTEM_OBJECT
+			l_obj: ?SYSTEM_OBJECT
 			l_table: like table
 		do
 			l_table := table

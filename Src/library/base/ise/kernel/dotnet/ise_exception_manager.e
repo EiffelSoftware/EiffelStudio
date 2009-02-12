@@ -431,7 +431,7 @@ feature {NONE} -- Implementation, exception chain
 		require
 			a_method_not_void: a_method /= Void
 		local
-			l_attributes: ?NATIVE_ARRAY [SYSTEM_OBJECT]
+			l_attributes: ?NATIVE_ARRAY [?SYSTEM_OBJECT]
 			l_routine_name: STRING
 			l_type: ?SYSTEM_TYPE
 		do

@@ -43,7 +43,7 @@ feature -- Access
 			i, nb: INTEGER
 			l_open_map: like open_map
 			l_pos: INTEGER
-			l_item: SYSTEM_OBJECT
+			l_item: ?SYSTEM_OBJECT
 			l_internal: like internal_operands
 		do
 			l_open_map := open_map

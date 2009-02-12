@@ -235,7 +235,6 @@ feature -- C code generation
 							-- Expanded object is already attached to reference target.
 						result_value := true_constant
 					else
-						buf.put_new_line
 						if not target.type.has_like and then source_type.conform_to (context.associated_class, target.type) or else
 							target.type.same_as (expression.type) or else
 							target.type.is_like and then {t: LIKE_FEATURE} target.type and then
@@ -243,17 +242,29 @@ feature -- C code generation
 						then
 								-- There is no need to check actual object type,
 								-- because it always conforms to an object test local type.
-							target.print_register
-							buf.put_string (" = ")
-							if source_type.is_expanded then
-								register.print_register
-								result_value := true_constant
+							if register_propagated and then target = expression.register then
+									-- Target is already set to the expression value.
+								if source_type.is_expanded then
+									result_value := true_constant
+								else
+									result_value := target_variable
+								end
 							else
-								expression_print_register
-								result_value := target_variable
+								buf.put_new_line
+									-- Target register is different from expression register.
+								target.print_register
+								buf.put_string (" = ")
+								if source_type.is_expanded then
+									register.print_register
+									result_value := true_constant
+								else
+									expression_print_register
+									result_value := target_variable
+								end
+								buf.put_character (';')
 							end
-							buf.put_character (';')
 						else
+							buf.put_new_line
 							info.generate_start (buf)
 							info.generate_gen_type_conversion (0)
 							target.print_register

@@ -28,6 +28,7 @@ inherit
 			process_loop_as,
 			process_nested_expr_as,
 			process_nested_as,
+			process_once_as,
 			process_precursor_as,
 			process_routine_as
 		end
@@ -196,6 +197,17 @@ feature {NONE} -- Processing
 					-- or just to avoid repeated errors.
 				attribute_initialization.set_attribute (attributes.item (f.feature_id))
 			end
+		end
+
+feature {AST_EIFFEL} -- Visitor: routine body
+
+	process_once_as (a: ONCE_AS)
+		do
+				-- Attributes set by a once feature are not initialized,
+				-- because the next call to it will not execute the body.
+			attribute_initialization.keeper.enter_realm
+			Precursor (a)
+			attribute_initialization.keeper.leave_optional_realm
 		end
 
 feature {AST_EIFFEL} -- Visitor: access to features
@@ -413,7 +425,7 @@ feature {AST_EIFFEL} -- Visitor: compound
 			attribute_initialization.keeper.leave_realm
 		end
 
-feature {AST_EIFFEL} -- Nested call
+feature {AST_EIFFEL} -- Visitor: nested call
 
 	process_creation_expr_as (a: CREATION_EXPR_AS)
 		local

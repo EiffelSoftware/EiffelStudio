@@ -8,10 +8,10 @@ inherit
 
 feature
 
-        default_create
-                do
+	default_create
+		do
 			set_s
-                end
+		end
 
 	set_s
 		once

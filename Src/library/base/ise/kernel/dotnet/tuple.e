@@ -1070,7 +1070,7 @@ feature -- Conversion
 
 feature {ROUTINE} -- Fast access
 
-	fast_item (k: INTEGER): SYSTEM_OBJECT
+	fast_item (k: INTEGER): ?SYSTEM_OBJECT
 		require
 			valid_index: valid_index (k)
 		do
@@ -1123,7 +1123,7 @@ feature {NONE} -- Implementation
 		local
 			i, nb: INTEGER
 			first_type, type: ?SYSTEM_TYPE
-			l_val: SYSTEM_OBJECT
+			l_val: ?SYSTEM_OBJECT
 		do
 			Result := True
 			nb := count
@@ -1156,7 +1156,7 @@ feature {NONE} -- Implementation
 	generic_typecode (pos: INTEGER): NATURAL_8
 			-- Code for generic parameter `pos' in `obj'.
 		local
-			l_item: SYSTEM_OBJECT
+			l_item: ?SYSTEM_OBJECT
 		do
 			l_item := native_array.item (pos)
 			if l_item /= Void then

@@ -405,7 +405,7 @@ feature -- Access
 			dynamic_type_nonnegative: Result >= 0
 		end
 
-	field (i: INTEGER; object: ANY): ANY
+	field (i: INTEGER; object: ANY): ?ANY
 			-- Object attached to the `i'-th field of `object'
 			-- (directly or through a reference)
 		require
@@ -414,7 +414,7 @@ feature -- Access
 			index_small_enough: i <= field_count (object)
 			not_special: not is_special (object)
 		local
-			l_obj: SYSTEM_OBJECT
+			l_obj: ?SYSTEM_OBJECT
 			l_nat8: NATURAL_8
 			l_nat16: NATURAL_16
 			l_nat32: NATURAL_32
@@ -522,7 +522,7 @@ feature -- Access
 			l_name: STRING
 			l_eiffel_name: ?EIFFEL_NAME_ATTRIBUTE
 			k, nb: INTEGER
-			l_attributes: ?NATIVE_ARRAY [SYSTEM_OBJECT]
+			l_attributes: ?NATIVE_ARRAY [?SYSTEM_OBJECT]
 			l_field: FIELD_INFO
 			l_provider: ICUSTOM_ATTRIBUTE_PROVIDER
 		do
@@ -638,7 +638,7 @@ feature -- Access
 			l_current_rt_gen_type: ?RT_GENERIC_TYPE
 			l_type, l_current_type: ?SYSTEM_TYPE
 			l_dtypes: NATIVE_ARRAY [INTEGER]
-			l_attributes: ?NATIVE_ARRAY [SYSTEM_OBJECT]
+			l_attributes: ?NATIVE_ARRAY [?SYSTEM_OBJECT]
 			k, nb, l_dtype: INTEGER
 			l_type_feature_name: ?TYPE_FEATURE_ATTRIBUTE
 			l_name: ?SYSTEM_STRING
@@ -1414,7 +1414,7 @@ feature {NONE} -- Implementation
 	dynamic_type_from_rt_class_type (a_class_type: RT_CLASS_TYPE): INTEGER
 			-- Dynamic type of `a_class_type'.
 		local
-			l_obj: SYSTEM_OBJECT
+			l_obj: ?SYSTEM_OBJECT
 		do
 			if a_class_type = Void then
 				Result := -1
@@ -1438,7 +1438,7 @@ feature {NONE} -- Implementation
 			dynamic_type_from_rt_class_type: Result = -1 or Result = none_type or Result >= 0
 		end
 
-	internal_field (i: INTEGER; object: ANY; type_id: INTEGER): SYSTEM_OBJECT
+	internal_field (i: INTEGER; object: ANY; type_id: INTEGER): ?SYSTEM_OBJECT
 			-- Object attached to the `i'-th field of `object'
 			-- (directly or through a reference)
 		require

@@ -41,9 +41,10 @@ feature -- Access
 
 feature -- Status report
 
-	test (v, u: ?G): BOOLEAN
+	test (v, u: G): BOOLEAN
 			-- Are `v' and `u' considered equal?
 			-- (Use `equal' by default.)
+			--| NOTE: added detachable mark on arguments, when gobo-safe is available
 		do
 			if v = Void then
 				Result := (u = Void)

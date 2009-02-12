@@ -119,11 +119,15 @@ feature {ES_GROUPS_COMMANDER_I} -- Basic operations
 			l_editor := develop_window.editors_manager.current_editor
 			if l_editor /= Void then
 				l_stone := l_editor.stone
-				if l_stone /= Void and then is_stone_usable (l_stone) then
-					highlight_stone (l_stone)
-				else
-					create l_error.make_standard (locale_formatter.translation (e_invalid_editor))
-					l_error.show_on_active_window
+				if l_stone /= Void then
+					if is_stone_usable (l_stone) then
+						highlight_stone (l_stone)
+					elseif not is_in_stone_synchronization then
+							-- No need to show an error during a synchornization. This should never actually
+							-- happen because the tool {ES_GROUPS_TOOL} does not permit stone synchronization.
+						create l_error.make_standard (locale_formatter.translation (e_invalid_editor))
+						l_error.show_on_active_window
+					end
 				end
 			else
 				create l_error.make_standard (locale_formatter.translation (e_no_open_editor))

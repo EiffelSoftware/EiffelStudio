@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-2-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-2-0 http://www.eiffel.com/developers/xml/configuration-1-2-0.xsd" name="gobo_test" uuid="8561E49E-2C18-4e8a-9E8F-7EBADB96F0D3" library_target="gobo_test">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="gobo_test" uuid="8561E49E-2C18-4E8A-9E8F-7EBADB96F0D3" library_target="gobo_test">
 	<target name="gobo_test">
 		<root all_classes="true"/>
 		<file_rule>
@@ -19,8 +19,19 @@
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<library name="eiffelbase" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="eiffeltime" location="$ISE_LIBRARY\library\time\time.ecf"/>
-		<library name="gobo" location="gobo.ecf"/>
+		<library name="gobo_kernel" location="gobo_kernel.ecf"/>
+		<library name="gobo_structure" location="gobo_structure.ecf"/>
+		<library name="gobo_time" location="gobo_time.ecf"/>
+		<library name="gobo_argument" location="gobo_argument.ecf"/>
+		<library name="gobo_pattern" location="gobo_pattern.ecf"/>
+		<library name="gobo_math" location="gobo_math.ecf"/>
+		<library name="gobo_string" location="gobo_string.ecf"/>		
+		<library name="gobo_regexp" location="gobo_regexp.ecf"/>		
+		<library name="gobo_parse" location="gobo_parse.ecf"/>
+		<library name="gobo_lexical" location="gobo_lexical.ecf"/>
+		<library name="gobo_tools" location="gobo_tools.ecf"/>
+		<library name="gobo_utility" location="gobo_utility.ecf"/>
+		<library name="gobo_xml" location="gobo_xml.ecf"/>
 		<cluster name="test" location="svn\library\test\" recursive="true">
 			<option namespace="Test">
 			</option>

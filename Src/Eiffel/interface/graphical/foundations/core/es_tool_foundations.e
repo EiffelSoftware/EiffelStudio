@@ -13,12 +13,6 @@ deferred class
 inherit
 	ES_RECYCLABLE
 
-inherit {NONE}
-	EV_SHARED_APPLICATION
-		export
-			{NONE} all
-		end
-
 	ES_SHARED_FONTS_AND_COLORS
 		export
 			{NONE} all
@@ -30,6 +24,11 @@ inherit {NONE}
 		end
 
 	ES_SHARED_FOUNDATION_HELPERS
+		export
+			{NONE} all
+		end
+
+	EV_SHARED_APPLICATION
 		export
 			{NONE} all
 		end
@@ -420,11 +419,11 @@ feature {NONE} -- Action Handlers
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

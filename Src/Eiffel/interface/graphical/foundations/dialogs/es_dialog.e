@@ -219,14 +219,20 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	dialog: EV_DIALOG
-			-- Actual dialog
+	dialog: !EV_DIALOG
+			-- Actual dialog.
+		local
+			l_result: like internal_dialog
 		do
-			Result := internal_dialog
-			if Result = Void then
-				Result := create_dialog
+			l_result := internal_dialog
+			if l_result = Void then
+				Result := create_dialog.as_attached
 				internal_dialog := Result
+			else
+				Result := l_result
 			end
+		ensure then
+			result_consistent: Result = dialog
 		end
 
 	buttons: DS_SET [INTEGER]
@@ -275,12 +281,13 @@ feature {NONE} -- Access
 			is_interface_usable: is_interface_usable
 			is_initialized: internal_development_window /= Void or else (is_initialized or is_initializing)
 		local
+			l_result: like internal_development_window
 			l_window: EV_WINDOW
 			l_windows: BILINEAR [EB_WINDOW]
 			l_wm: ?EB_WINDOW_MANAGER
 		do
-			Result := internal_development_window
-			if Result = Void then
+			l_result := internal_development_window
+			if l_result = Void then
 				if is_modal then
 					l_window := dialog.blocking_window
 					if l_window /= Void then
@@ -290,21 +297,22 @@ feature {NONE} -- Access
 				if l_window /= Void then
 						-- Attempt to find matching top level window.
 					l_windows := (create {EB_SHARED_WINDOW_MANAGER}).window_manager.windows
-					from l_windows.start until l_windows.after or Result /= Void loop
-						if l_window = l_windows.item.window then
-							Result ?= l_windows.item
+					from l_windows.start until l_windows.after or l_result /= Void loop
+						if l_window = l_windows.item.window and then {l_result_window: EB_DEVELOPMENT_WINDOW} l_windows.item then
+							l_result := l_result_window
 						end
 						l_windows.forth
 					end
 				else
 					l_wm := (create {EB_SHARED_WINDOW_MANAGER}).window_manager
 					if l_wm /= Void then
-						Result := l_wm.last_focused_development_window
+						l_result := l_wm.last_focused_development_window
 					end
 				end
 			end
+			Result := l_result
 		ensure
-			not_result_is_recycled: Result /= Void implies not Result.is_recycled
+			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end
 
 	dialog_border_width: INTEGER
@@ -606,6 +614,12 @@ feature {NONE} -- Query
 				Result := interface_names.b_reset
 			when {ES_DIALOG_BUTTONS}.apply_button then
 				Result := interface_names.b_apply
+			when {ES_DIALOG_BUTTONS}.save_button then
+				Result := interface_names.b_save
+			when {ES_DIALOG_BUTTONS}.open_button then
+				Result := interface_names.b_open
+			when {ES_DIALOG_BUTTONS}.print_button then
+				Result := interface_names.b_print
 			end
 		ensure
 			result_attached: Result /= Void

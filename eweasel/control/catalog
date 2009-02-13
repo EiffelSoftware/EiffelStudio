@@ -2056,25 +2056,25 @@ test	agent-calling-attribute-with-formal-type	agent010 tcf pass agents formal ge
 test	print-large-pointer				platform001 tcf pass platform
 
 -- Tests for attached types and void-safe constructs
-test	object-test-semantics							attach001 tcf pass execution object_test expanded
-test	object-test-local-scope							attach002 tcf pass validity object_test scope local
+test	object-test-semantics							attach001 tcf pass execution object_test expanded attached_types
+test	object-test-local-scope							attach002 tcf pass validity object_test scope local attached_types
 test	like-current-object-test-no-defaults			attach003 tcf fail object_test attached_types
-test	object-test-with-local-use-failure				attach004 tcf pass object_test
+test	object-test-with-local-use-failure				attach004 tcf pass object_test attached_types
 test	current-is_attached-no-defaults					attach005 tcf fail attached_types
 test	anchored-attached-type-failure-no-defaults		attach006 tcf fail attached_types anchored_types
 test	attached-formal-generic							attach007 tcf pass conformance attached_types
-test	object-test-in-invariant						attach008 tcf fail object_test
+test	object-test-in-invariant						attach008 tcf fail object_test attached_types
 test	attached-basic-type								attach009 tcf pass conformance basic_types attached_types
 test	attached-generic-type-conformance				attach010 tcf fail conformance attached_types
-test	correct-attached-predicate-precedence-semantics	attach011 tcf fail object_test execution
-test	object-test-chain								attach012 tcf pass object_test execution
-test	object-test-code-generation						attach013 tcf pass object_test execution
+test	correct-attached-predicate-precedence-semantics	attach011 tcf fail object_test execution attached_types
+test	object-test-chain								attach012 tcf pass object_test execution attached_types
+test	object-test-code-generation						attach013 tcf pass object_test execution attached_types
 test	read-only-void-test-in-assertion				attach014 tcf pass attached_types scope local
 test	scope-after-combined-expression					attach015 tcf pass attached_types scope local
 test	anchored-object-test-local						attach016 tcf pass object_test attached_types anchored_types
-test	object-test-in-assertion						attach017 tcf pass object_test system-validity
-test	object-test-finalization-crash					attach018 tcf pass object_test
-test	object-test-invariant-any-to-expanded			attach019 tcf fail object_test expanded system-validity
+test	object-test-in-assertion						attach017 tcf pass object_test system-validity attached_types
+test	object-test-finalization-crash					attach018 tcf pass object_test attached_types
+test	object-test-invariant-any-to-expanded			attach019 tcf fail object_test expanded system-validity attached_types
 test	detached-type-target-conversion					attach020 tcf fail attached_types system-validity
 test	explicit-attached-formal-conformance			attach021 tcf fail attached_types system-validity conformance
 test	attached-external-check							attach022 tcf fail attached_types external generic anchored_types
@@ -2084,18 +2084,18 @@ test	attached-formal-constraint						attach025 tcf fail attached_types generic
 test	attached-attribute-init							attach026 tcf fail attached_types self_init
 test	redefine-attached-attribute-init				attach027 tcf fail attached_types self_init
 test	generic-attached-attribute-init					attach028 tcf fail attached_types self_init generic
-test	full-void-safe-compilation						attach029 tcf fail void_safe
-test	attribute-init-code-generation-correct			attach030 tcf fail self_init incrementality melting
-test	parent-attribute-init							attach031 tcf fail self_init
+test	full-void-safe-compilation						attach029 tcf fail void_safe attached_types
+test	attribute-init-code-generation-correct			attach030 tcf fail self_init incrementality melting attached_types
+test	parent-attribute-init							attach031 tcf fail self_init attached_types
 test	like-current-is-detached						attach032 tcf fail attached_types anchored_types system-validity
 test	attached-type-creation-internal					attach033 tcf pass attached_types reflection
-test	anchored-generic-carries-attachment				attach034 tcf fail attacched_types generic
-test	object-test-in-precondition						attach035 tcf pass object_test
-test	default-in-special-access						attach036 tcf pass special
+test	anchored-generic-carries-attachment				attach034 tcf fail attached_types generic
+test	object-test-in-precondition						attach035 tcf pass object_test attached_types
+test	default-in-special-access						attach036 tcf pass special attached_types
 test	attached-type-set-in-conditional					attach037 tcf fail attached_types
 test	object-test-local-same-lower-name				attach038 tcf fail attached_types
-test	void-safe-inherited-precursor					attach039 tcf pass void_safe precursor
-test	object-test-not-visible-to-old-express				attach040 tcf fail object_test system-validity
+test	void-safe-inherited-precursor					attach039 tcf pass void_safe precursor attached_types
+test	object-test-not-visible-to-old-express				attach040 tcf fail object_test system-validity attached_types
 test	current-in-self-init-attribute					attach041 tcf pass attached_types self_init void_safe validity
 test	agent-attached-by-default					attach042 tcf pass attached_types void_safe incrementality c_compilation
 test	empty-agent-argument-attached-by-default			attach043 tcf pass attached_types void_safe
@@ -2104,10 +2104,10 @@ test	attached-inherited-argument					attach045 tcf fail attached_types void_safe
 test	attribute-initialization-in-rescue				attach046 tcf pass attached_types void_safe validity
 test	argument-type-correct							attach047 tcf pass attached_types
 test	operator-undetected-call-on-void-target			attach048 tcf pass attached_types
-test	scope-with-non-boolean-operator					attach049 tcf fail void_safe object_test scope
-test	vevi-missed-for-once-routine					attach050 tcf fail void_safe
-test	detach-to-attach-assignment						attach051 tcf fail void_safe validity dotnet
-test	same-object-test-local-failure					attach052 tcf fail void_safe
+test	scope-with-non-boolean-operator					attach049 tcf fail void_safe object_test scope attached_types
+test	vevi-missed-for-once-routine					attach050 tcf fail void_safe attached_types
+test	detach-to-attach-assignment						attach051 tcf fail void_safe validity dotnet attached_types
+test	same-object-test-local-failure					attach052 tcf fail void_safe attached_types
 
 -- Tests for conformance in general
 test	basic-conformance		conform001 tcf pass conformance

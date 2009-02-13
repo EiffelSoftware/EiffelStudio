@@ -1107,6 +1107,18 @@ feature {NONE} -- Implementation
 					create l_displayed.make (window_manager)
 					create l_item.make ({ENVIRONMENT_CATEGORIES}.editor, l_error.out, l_error)
 					event_list.service.put_event_item (editor_context_cookie, l_item)
+
+					if {l_tool: ES_ERROR_LIST_TOOL} dev_window.shell_tools.tool ({ES_ERROR_LIST_TOOL}) then
+						if not l_tool.is_tool_instantiated then
+								-- If the error list tool is not yet shown, show it, but just the first time.
+								-- The purpose is two fold; This is the first error generated and so the user should
+								-- be alerted to the first error, much like in the same way the compiler error
+								-- brings the UI to the front. Second, it will update the error count index.
+							l_tool.show (False)
+								-- Brings focus back (Legacy tool implementation causes focusing when show is called - Grr!)
+							set_focus
+						end
+					end
 				end
 			end
 		end
@@ -1886,7 +1898,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -1910,11 +1922,11 @@ feature {NONE} -- Implementation: Internal cache
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class SMART_EDITOR

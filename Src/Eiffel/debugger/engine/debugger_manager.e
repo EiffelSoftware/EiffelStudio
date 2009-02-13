@@ -713,8 +713,15 @@ feature -- Status
 			-- Is debugging allowed?
 
 	system_defined: BOOLEAN
+			-- Is Eiffel system loaded?
 		do
 			Result := Eiffel_project.system_defined
+		end
+
+	is_project_loaded: BOOLEAN
+			-- Is Eiffel project loaded?
+		do
+			Result := Eiffel_project.manager.is_project_loaded
 		end
 
 	is_classic_project: BOOLEAN
@@ -1383,15 +1390,16 @@ feature -- Compilation events
 	on_project_recompiled (is_successful: BOOLEAN)
 		do
 			if is_successful then
-				if
-					breakpoints_manager /= Void and then
-					breakpoints_manager.has_breakpoint
-				then
-					Degree_output.put_resynchronizing_breakpoints_message
-					breakpoints_manager.resynchronize_breakpoints
+				if {bp: like breakpoints_manager} breakpoints_manager then
+					if bp.has_breakpoint then
+						Degree_output.put_resynchronizing_breakpoints_message
+						bp.resynchronize_breakpoints
+					end
+						-- Save breakpoint status and command line.
+					if is_project_loaded then
+						save_breakpoints_data
+					end
 				end
-					-- Save breakpoint status and command line.
-				save_breakpoints_data
 			end
 			update_rt_extension_available
 		end

@@ -11,6 +11,7 @@ svn up base time thread store
 #Performing single threaded precompilation
 cd $ISE_EIFFEL/precomp/spec/$ISE_PLATFORM
 $ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -config base.ecf -precompile -c_compile $2
+$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -config base-safe.ecf -precompile -c_compile $2
 
 #Performing multithreaded precompilation
 cd $ISE_EIFFEL/precomp/spec/$ISE_PLATFORM

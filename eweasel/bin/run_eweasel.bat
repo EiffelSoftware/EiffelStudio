@@ -16,6 +16,7 @@ mkdir %EWEASEL_OUTPUT%
 rem Performing single threaded precompilation
 cd /d %ISE_EIFFEL%\precomp\spec\%ISE_PLATFORM%
 %ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\ec.exe -config base.ecf -precompile -c_compile -local %2
+%ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\ec.exe -config base-safe.ecf -precompile -c_compile -local %2
 
 rem Performing multithreaded precompilation
 %ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\ec.exe -config base-mt.ecf -precompile -c_compile -local %2

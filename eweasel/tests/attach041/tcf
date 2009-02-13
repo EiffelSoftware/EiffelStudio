@@ -4,7 +4,7 @@ test_description Current used in a self-initializing attribute should not cause 
 copy_sub	Ace $TEST Ace
 copy_raw	test.e $CLUSTER test.e
 
-compile_frozen
+compile_melted
 compile_result validity_error TEST VEVI
 
 test_end

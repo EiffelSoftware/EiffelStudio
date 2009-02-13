@@ -264,9 +264,9 @@ feature -- C code generation
 								buf.put_character (';')
 							end
 						else
-							buf.put_new_line
 							info.generate_start (buf)
 							info.generate_gen_type_conversion (0)
+							buf.put_new_line
 							target.print_register
 							buf.put_string (" = RTRV(eif_non_attached_type(")
 							info.generate_type_id (buf, context.final_mode, 0)

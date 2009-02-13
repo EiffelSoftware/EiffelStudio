@@ -2107,6 +2107,7 @@ test	operator-undetected-call-on-void-target			attach048 tcf pass attached_types
 test	scope-with-non-boolean-operator					attach049 tcf fail void_safe object_test scope
 test	vevi-missed-for-once-routine					attach050 tcf fail void_safe
 test	detach-to-attach-assignment						attach051 tcf fail void_safe validity dotnet
+test	same-object-test-local-failure					attach052 tcf fail void_safe
 
 -- Tests for conformance in general
 test	basic-conformance		conform001 tcf pass conformance

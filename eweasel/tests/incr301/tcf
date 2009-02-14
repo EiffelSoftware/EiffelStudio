@@ -1,18 +1,14 @@
 
 test_name ececil-undefined-symbol
 test_description After a sequence of changes, C compilation fails with undefined symbols in ececil.c
--- FIXME: Change Ace to use precompile of base.ecf and change base-safe.ecf to base.ecf
 
 copy_sub Ace $TEST Ace
 copy_raw test.e $CLUSTER test.e
 copy_raw test1.e $CLUSTER test1.e
 copy_raw test2.e $CLUSTER test2.e
 
-compile_frozen
+compile_melted
 compile_result ok
-
-c_compile_work
-c_compile_result ok
 
 copy_raw test2_rev1.e $CLUSTER test2.e
 

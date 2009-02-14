@@ -1,7 +1,6 @@
 
 test_name	generic-attach-mark-change-bogus-vevi
 test_description Changing an attachment mark on a formal generic parameter to "?" causes the compiler to incorrectly continue to report a VEVI error instead of the expected VJAR error
--- FIXME: Change Ace to use precompile of base.ecf and change base-safe.ecf to base.ecf
 
 copy_sub Ace $TEST Ace
 copy_raw test.e $CLUSTER test.e

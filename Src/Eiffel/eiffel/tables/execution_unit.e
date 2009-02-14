@@ -111,6 +111,9 @@ feature -- Access
 	written_in: INTEGER
 		-- Id of the class where the associated feature of the unit is written in.
 
+	access_in: INTEGER
+		-- Id of the class where the associated feature's routine id is generated.
+
 	real_pattern_id: INTEGER
 			-- Pattern id associated with Current execution unit
 		local
@@ -148,9 +151,9 @@ feature -- Access
 					then
 						if is_encapsulated then
 								-- If this was a unit for keeping access to
-								-- an encapsulated feature, we need to check if
+								-- an encapsulated feature or if the attribute is directly replicated, we need to check if
 								-- encapsulation is still needed.
-							Result := is_encapsulation_needed
+							Result := is_attribute_needed
 						else
 							f := Body_server.server_item (body_index)
 
@@ -167,26 +170,16 @@ feature -- Access
 			end
 		end
 
-	is_encapsulation_needed: BOOLEAN
-			-- Check if an encapsulation is still needed?
+	is_attribute_needed: BOOLEAN
+			-- Check if an attribute is still needed?
 		require
 			is_encapsulated: is_encapsulated
-		local
-			feat_tbl: FEATURE_TABLE
-			encapsulated_feat: ENCAPSULATED_I
-			l_access_class: CLASS_C
 		do
-			l_access_class := system.class_of_id (written_in)
-			check
-				has_feature_table: l_access_class.has_feature_table
-			end
-				-- Load feature table associated to class id `access_in'.
-			feat_tbl := l_access_class.feature_table
-
 				-- Slow part, but we do not have any other way to find the
 				-- associated feature with current information.
-			encapsulated_feat ?= feat_tbl.feature_of_body_index (body_index)
-			Result := encapsulated_feat /= Void and then encapsulated_feat.generate_in > 0
+			if {l_encapsulated_feat: ENCAPSULATED_I} system.class_of_id (access_in).feature_table.feature_of_body_index (body_index) then
+				Result := l_encapsulated_feat.generate_in > 0 or else l_encapsulated_feat.is_replicated_directly
+			end
 		end
 
 	is_external: BOOLEAN
@@ -261,6 +254,16 @@ feature -- Setting
 			written_in := id
 		ensure
 			written_in_set: written_in = id
+		end
+
+	set_access_in (id: INTEGER)
+			-- Assign `id' to `access_in'.
+		require
+			valid_id: id >= 0
+		do
+			access_in := id
+		ensure
+			access_in_set: access_in = id
 		end
 
 	set_type (a_type: TYPE_C)

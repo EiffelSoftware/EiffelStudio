@@ -83,7 +83,7 @@ feature -- Setting
 	set_generate_in (class_id: INTEGER)
 			-- Assign `class_id' to `generate_in'.
 		require
-			valid_class_id: class_id > 0
+			valid_class_id: class_id > 0 or else (is_replicated_directly and then class_id = 0)
 		do
 			generate_in := class_id
 		ensure

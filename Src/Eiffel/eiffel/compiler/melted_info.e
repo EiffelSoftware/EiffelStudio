@@ -37,8 +37,18 @@ feature {NONE} -- Initialization
 			pattern_id := f.pattern_id
 			if {l_attr: ATTRIBUTE_I} f then
 				written_in := l_attr.generate_in
+				if written_in = 0 then
+						-- Attribute has come from a non-conforming branch so use
+						-- original written in value so that pattern id is generated correctly.
+					written_in := l_attr.written_in
+				end
 			else
 				written_in := f.written_in
+			end
+			if f.is_replicated_directly then
+				access_in := f.access_in
+			else
+				access_in := written_in
 			end
 			result_type := f.type
 		end
@@ -68,7 +78,10 @@ feature -- Access
 			-- Pattern id of feature to melt.
 
 	written_in: INTEGER
-			-- Class where current feature is to melt.
+			-- Class where current feature is originally written.
+
+	access_in: INTEGER
+			-- Class where current feature's routine id is from.
 
 	result_type: TYPE_A
 			-- Return type of current feature to melt.

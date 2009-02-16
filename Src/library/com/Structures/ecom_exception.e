@@ -9,29 +9,108 @@ class
 	ECOM_EXCEPTION
 
 inherit
-	COM_FAILURE
-		redefine
-			code
-		end
+	EXCEPTIONS
 
 	ECOM_EXCEPTION_CODES
 		export
 			{NONE} all
-		undefine
-			out
 		end
 
 	HRESULT_FORMATTER
-		undefine
-			out
-		end
 
 feature --  Access
 
 	code: INTEGER
 			-- Com error code.
+			-- Error code part of the `hresult'.
 		do
 			Result := hresult_code
+		end
+
+	message: STRING_8
+			-- Message(Tag) of current exception
+		do
+			if {l_com_failure: COM_FAILURE} exception_manager.last_exception then
+				Result := l_com_failure.message
+			else
+				create Result.make_empty
+			end
+		end
+
+	line_number: INTEGER
+			-- Line number
+		do
+			if {l_com_failure: COM_FAILURE} exception_manager.last_exception then
+				Result := l_com_failure.line_number
+			end
+		end
+
+	original: ?EXCEPTION
+			-- The original exception caused current exception
+		do
+			if {l_com_failure: COM_FAILURE} exception_manager.last_exception then
+				Result := l_com_failure.original
+			end
+		end
+
+	type_name: ?STRING_8
+			-- Name of the class that includes the recipient
+			-- of original form of current exception
+		do
+			if {l_com_failure: COM_FAILURE} exception_manager.last_exception then
+				Result := l_com_failure.type_name
+			end
+		end
+
+	throwing_exception: ?EXCEPTION
+			-- The exception throwing current exception
+		do
+			if {l_com_failure: COM_FAILURE} exception_manager.last_exception then
+				Result := l_com_failure.throwing_exception
+			end
+		end
+
+	hresult: INTEGER is
+			-- Original HRESULT.
+		do
+			if {l_com_failure: COM_FAILURE} exception_manager.last_exception then
+				Result := l_com_failure.hresult
+			end
+		end
+
+	hresult_code: INTEGER is
+			-- Status code.
+		do
+			if {l_com_failure: COM_FAILURE} exception_manager.last_exception then
+				Result := l_com_failure.hresult_code
+			end
+		end
+
+	hresult_facility: INTEGER is
+			-- Facility code.
+		do
+			if {l_com_failure: COM_FAILURE} exception_manager.last_exception then
+				Result := l_com_failure.hresult_facility
+			end
+		end
+
+	hresult_message: STRING is
+			-- Error message.
+		do
+			if {l_com_failure: COM_FAILURE} exception_manager.last_exception then
+				Result := l_com_failure.hresult_message
+			else
+				create Result.make_empty
+			end
+		end
+
+feature -- Element Change
+
+	trigger (a_code: INTEGER) is
+			-- Raise exception with code `a_code'.
+			-- See class ECOM_EXCEPTION_CODES for possible values.
+		do
+			(create {COM_FAILURE}).trigger (a_code)
 		end
 
 note

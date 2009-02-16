@@ -86,14 +86,7 @@ feature -- Selection
 						replication := item.a_feature.replicated (l_inheriting_class_id)
 						if item.non_conforming then
 							replication.set_from_non_conforming_parent (True)
-							if {l_encapsulated_i: ENCAPSULATED_I} replication then
-									-- Make sure that `generate_in' is set to zero if non-zero.
-								if l_encapsulated_i.generate_in > 0 then
-									l_encapsulated_i.set_generate_in (0)
-								end
-							end
 						end
-
 					end
 					item.set_a_feature (replication)
 					forth

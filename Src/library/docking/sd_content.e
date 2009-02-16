@@ -330,7 +330,7 @@ feature -- Set
 		require
 			visible: is_visible
 			not_destroyed: not is_destroyed
-			attached: is_docking_manager_attached
+			docking_attached: is_docking_manager_attached
 		do
 			if docking_manager.property.last_focus_content /= Current and not docking_manager.property.is_opening_config then
 				state.set_focus (Current)
@@ -344,7 +344,7 @@ feature -- Set
 			-- Same as `set_focus', but only do things when no maximized zone in dock area which has `a_zone'
 		require
 			not_destroyed: not is_destroyed
-			attached: is_docking_manager_attached
+			docking_manager_attached: is_docking_manager_attached
 		do
 			if docking_manager.property.last_focus_content /= Current and not docking_manager.property.is_opening_config then
 				if docking_manager.query.maximized_inner_container (a_zone) = Void then
@@ -388,7 +388,7 @@ feature -- Set Position
 			-- Set `Current' to dock at `a_direction' side of `a_relative'.
 		require
 			a_relative_not_void: a_relative /= Void
-			attached: is_docking_manager_attached
+			docking_manager_attached: is_docking_manager_attached
 			manager_has_content: manager_has_content (Current)
 			manager_has_content: manager_has_content (a_relative)
 			a_direction_valid: four_direction (a_direction)
@@ -412,7 +412,7 @@ feature -- Set Position
 	set_top (a_direction: INTEGER)
 			-- Set `Current' dock at top level of a main docking area at `a_direction' side.
 		require
-			attached: is_docking_manager_attached
+			docking_manager_attached: is_docking_manager_attached
 			manager_has_content: manager_has_content (Current)
 			a_direction_valid: four_direction (a_direction)
 			not_destroyed: not is_destroyed
@@ -435,7 +435,7 @@ feature -- Set Position
 	set_auto_hide (a_direction: INTEGER)
 			-- Set `Current' dock at main container's `a_direction' auto hide bar.
 		require
-			attached: is_docking_manager_attached
+			docking_manager_attached: is_docking_manager_attached
 			manager_has_content: manager_has_content (Current)
 			a_direction_valid: four_direction (a_direction)
 			not_destroyed: not is_destroyed
@@ -448,7 +448,7 @@ feature -- Set Position
 	set_floating (a_screen_x, a_screen_y: INTEGER)
 			-- Set `Current' floating at position `a_screen_x', `a_screen_y'.
 		require
-			attached: is_docking_manager_attached
+			docking_manager_attached: is_docking_manager_attached
 			manager_has_content: manager_has_content (Current)
 			not_destroyed: not is_destroyed
 		local
@@ -470,7 +470,7 @@ feature -- Set Position
 			-- Set `Current' tab with `a_content'.
 			-- If `a_left' then put new tab at left, otherwise put new tab at right
 		require
-			attached: is_docking_manager_attached
+			docking_manager_attached: is_docking_manager_attached
 			manager_has_current_content: manager_has_content (Current)
 			manager_has_a_content: manager_has_content (a_content)
 			target_content_zone_parent_exist: target_content_zone_parent_exist (a_content)
@@ -500,7 +500,7 @@ feature -- Set Position
 	set_default_editor_position
 			-- Set editor to default editor position.
 		require
-			attached: is_docking_manager_attached
+			docking_manager_attached: is_docking_manager_attached
 			manager_has_content: manager_has_content (Current)
 			editor_place_holder_in: manager_has_place_holder
 			is_editor: type = {SD_ENUMERATION}.editor
@@ -526,7 +526,7 @@ feature -- Set Position
 	set_split_proportion (a_proportion: REAL)
 			-- If current content is docking or tabbed, set parent splitter proportion to `a_proportion'.
 		require
-			attached: is_docking_manager_attached
+			docking_manager_attached: is_docking_manager_attached
 			valid: 0 <= a_proportion and a_proportion <= 1
 			not_destroyed: not is_destroyed
 		do
@@ -632,7 +632,7 @@ feature -- Command
 			-- Hide zone which has `Current'.
 		require
 			not_destroyed: not is_destroyed
-			attached: is_docking_manager_attached
+			docking_manager_attached: is_docking_manager_attached
 		do
 			state.hide
 			is_visible := False
@@ -645,7 +645,7 @@ feature -- Command
 			-- Show zone which has `Current'.
 		require
 			not_destroyed: not is_destroyed
-			attached: is_docking_manager_attached
+			docking_manager_attached: is_docking_manager_attached
 		do
 			state.show
 			is_visible := True
@@ -655,7 +655,7 @@ feature -- Command
 			-- Minimize if possible
 		require
 			not_destroyed: not is_destroyed
-			attached: is_docking_manager_attached
+			docking_manager_attached: is_docking_manager_attached
 		do
 			state.minimize
 		end
@@ -664,7 +664,7 @@ feature -- Command
 			-- Update mini tool bar size
 		require
 			not_destroyed: not is_destroyed
-			attached: is_docking_manager_attached
+			docking_manager_attached: is_docking_manager_attached
 		local
 			l_zone: SD_ZONE
 		do
@@ -718,7 +718,7 @@ feature -- States report
 			-- If docking manager has `a_content'.
 		require
 			a_content_not_void: a_content /= Void
-			attached: is_docking_manager_attached
+			docking_manager_attached: is_docking_manager_attached
 		do
 			Result := docking_manager.has_content (a_content)
 		end
@@ -726,7 +726,7 @@ feature -- States report
 	manager_has_place_holder: BOOLEAN
 			-- If docking manager has editor place holder?
 		require
-			attached: is_docking_manager_attached
+			docking_manager_attached: is_docking_manager_attached
 		do
 			Result := docking_manager.has_content (docking_manager.zones.place_holder_content)
 		end
@@ -910,7 +910,7 @@ feature {NONE}  -- Implemention.
 	internal_clear_docking_manager_property
 			-- Clear stuffs related with Current in {SD_DOCKING_MANAGER_PROPERTY}.
 		require
-			attached: is_docking_manager_attached
+			docking_manager_attached: is_docking_manager_attached
 		do
 			docking_manager.property.remove_from_clicked_list (Current)
 			if docking_manager.property.last_focus_content = Current then

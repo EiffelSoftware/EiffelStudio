@@ -324,7 +324,7 @@ feature -- Access
 			-- Number of once manifest strings in current feature declaration
 			-- or in an invariant
 
-	object_test_locals: ARRAYED_LIST [TUPLE [ID_AS, TYPE_AS]]
+	object_test_locals: ARRAYED_LIST [TUPLE [name: ID_AS; type: TYPE_AS]]
 			-- List of object test locals found
 			-- in the current feature declaration
 
@@ -896,11 +896,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EIFFEL_PARSER_SKELETON

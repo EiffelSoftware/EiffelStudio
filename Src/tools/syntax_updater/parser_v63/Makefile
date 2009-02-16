@@ -1,5 +1,5 @@
 # Gobo flag for gelex
-GOBO_LEX="$(ISE_EIFFEL)/library/gobo/spec/$(ISE_PLATFORM)/bin/gelex" -z
+GOBO_LEX="$(ISE_EIFFEL)/library/gobo/spec/$(ISE_PLATFORM)/bin/gelex" -z --pragma=noline
 
 # Gobo flag for geyaxx
 # To have verbose mode, simply add -v FILE_NAME

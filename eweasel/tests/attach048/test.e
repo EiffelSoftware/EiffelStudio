@@ -10,7 +10,7 @@ feature {NONE} -- Creation
 		local
 			a1, a2: COMPARABLE
 			b: BOOLEAN
-			c1: TEST1 [STRING]
+			c1: TEST1 [STRING, INTEGER]
 		do
 			b := a1 < a2
 			create c1

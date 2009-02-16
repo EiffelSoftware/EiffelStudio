@@ -1,7 +1,8 @@
 class
-	TEST1 [G -> COMPARABLE, H -> NUMERIC]
+	TEST1 [G -> ?COMPARABLE, H -> ?NUMERIC]
 
 create
+	default_create,
 	from_comparable
 
 convert

@@ -11,7 +11,7 @@ feature
 			print (z.out)
 		end
 
-	z: !STRING
+	z: attached STRING
 		local
 			n: INTEGER
 		do

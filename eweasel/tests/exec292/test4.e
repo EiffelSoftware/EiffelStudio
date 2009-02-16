@@ -2,17 +2,17 @@ class
 	TEST4 [G, H]
 
 inherit
-	TEST2 [?G]
+	TEST2 [detachable G]
 
-	TEST3 [!H]
+	TEST3 [attached H]
 
 feature
 
 	f is
 		local
 			list1: LINKED_LIST [G]
-			list2: LINKED_LIST [!G]
-			list3: LINKED_LIST [?G]
+			list2: LINKED_LIST [attached G]
+			list3: LINKED_LIST [detachable G]
 		do
 			g
 			h

@@ -6,7 +6,7 @@ feature
 	   deferred
 	   end
 
-	-- After initial compilation (void-safe), change to ?G and comment
+	-- After initial compilation (void-safe), change to detachable G and comment
 	-- out body of `t'
 
 	t: G

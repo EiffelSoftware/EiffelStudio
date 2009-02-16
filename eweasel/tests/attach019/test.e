@@ -14,18 +14,18 @@ feature {NONE} -- Initialization
 
 	test
 		do
-			print ({l_exp: EXPANDED_OBJ} expanded_any)
+			print (attached {EXPANDED_OBJ} expanded_any as l_exp)
 			print ("%N")
 		end
 
 feature -- Access
 
-	expanded_any: ?ANY
+	expanded_any: detachable ANY
 		do
 			create {EXPANDED_OBJ} Result
 		end
 
 invariant
-	test: {l_exp: EXPANDED_OBJ} expanded_any
+	test: attached {EXPANDED_OBJ} expanded_any as l_exp
 
 end

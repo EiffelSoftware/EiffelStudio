@@ -7,11 +7,11 @@ create
 
 convert
 
-	make ({!TEST})
+	make ({attached TEST})
 
 feature
 
-	make (t: !TEST)
+	make (t: attached TEST)
 		do
 		end
 

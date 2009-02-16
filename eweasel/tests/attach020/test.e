@@ -17,7 +17,7 @@ feature {NONE} -- Initialization
 
 feature -- Test
 
-	test (a_obj: ?B)
+	test (a_obj: detachable B)
 		require
 			a_obj_attached: a_obj /= Void
 		do

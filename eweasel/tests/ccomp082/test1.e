@@ -4,7 +4,7 @@ expanded class TEST1 [G]
 feature
         weasel
                 do
-			if {a: TEST1 [DOUBLE]} x then
+			if attached {TEST1 [DOUBLE]} x as a then
 			   print ("Error: DOUBLE should not conform to TEST1 [DOUBLE]%N");
 			end
                 end

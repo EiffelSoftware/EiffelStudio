@@ -3,7 +3,7 @@ deferred class
 
 feature
 
-	s: ?STRING
+	s: detachable STRING
 
 invariant
 	s_not_void: s = Void

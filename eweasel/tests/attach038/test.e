@@ -14,8 +14,8 @@ feature
 
 	try
 		do
-			if {X: ANY} Current then
-				if {x: TEST} Current then
+			if attached {ANY} Current as X then
+				if attached {TEST} Current as x then
 					print (x.n); io.new_line
 				end
 			end

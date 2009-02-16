@@ -1,11 +1,11 @@
 %{
-indexing
+note
 
 	description: "Scanners for Eiffel parsers"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date: 2008-11-19 09:23:08 -0800 (Wed, 19 Nov 2008) $"
-	revision: "$Revision: 75764 $"
+	date: "$Date: 2009-02-16 11:37:37 -0800 (Mon, 16 Feb 2009) $"
+	revision: "$Revision: 77174 $"
 
 class EIFFEL_SCANNER
 
@@ -106,10 +106,6 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 "~"			{				
 				last_symbol_as_value := ast_factory.new_symbol_as (TE_TILDE, Current)
 				last_token := TE_TILDE
-			}
-"}~"		{				
-				last_symbol_as_value := ast_factory.new_symbol_as (TE_CURLYTILDE, Current)
-				last_token := TE_CURLYTILDE
 			}
 "."			{			
 				last_symbol_as_value := ast_factory.new_symbol_as (TE_DOT, Current)
@@ -262,6 +258,23 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				end
 				last_token := TE_ASSIGN
 			}
+[aA][tT][tT][aA][cC][hH][eE][dD] {
+				if is_attached_keyword then
+					last_keyword_as_value := ast_factory.new_keyword_as (TE_ATTACHED, Current)
+					if last_keyword_as_value /= Void then
+						last_keyword_as_id_index := last_keyword_as_value.index
+					end
+					last_token := TE_ATTACHED
+				else
+					process_id_as
+					last_token := TE_ID
+					if has_syntax_warning then
+						report_one_warning (
+							create {SYNTAX_WARNING}.make (line, column, filename,
+								once "Keyword `attached' is used as identifier."))
+					end
+				end
+			}
 [aA][tT][tT][rR][iI][bB][uU][tT][eE] {
 				if is_attribute_keyword then
 					last_keyword_as_value := ast_factory.new_keyword_as (TE_ATTRIBUTE, Current)
@@ -316,6 +329,23 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 [dD][eE][fF][eE][rR][rR][eE][dD]	{				
 				last_deferred_as_value := ast_factory.new_deferred_as (Current)
 				last_token := TE_DEFERRED			
+			}
+[dD][eE][tT][aA][cC][hH][aA][bB][lL][eE]	{
+				if is_detachable_keyword then
+					last_keyword_as_value := ast_factory.new_keyword_as (TE_DETACHABLE, Current)
+					if last_keyword_as_value /= Void then
+						last_keyword_as_id_index := last_keyword_as_value.index
+					end
+					last_token := TE_DETACHABLE
+				else
+					process_id_as
+					last_token := TE_ID
+					if has_syntax_warning then
+						report_one_warning (
+							create {SYNTAX_WARNING}.make (line, column, filename,
+								once "Keyword `detachable' is used as identifier."))
+					end
+				end
 			}
 [dD][oO]	{				
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_DO, Current)
@@ -1209,7 +1239,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 
 %%
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

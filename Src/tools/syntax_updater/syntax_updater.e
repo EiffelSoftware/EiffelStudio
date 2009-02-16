@@ -240,6 +240,8 @@ feature {NONE} -- Implementation
 			a_parser.set_is_indexing_keyword (True)
 			a_parser.set_is_attribute_keyword (False)
 			a_parser.set_is_note_keyword (False)
+			a_parser.set_is_attached_keyword (False)
+			a_parser.set_is_detachable_keyword (False)
 			a_parser.parse_from_string (a_buffer)
 			if error_handler.has_error then
 				error_handler.wipe_out
@@ -247,6 +249,8 @@ feature {NONE} -- Implementation
 				a_parser.set_is_indexing_keyword (True)
 				a_parser.set_is_note_keyword (True)
 				a_parser.set_is_attribute_keyword (False)
+				a_parser.set_is_attached_keyword (False)
+				a_parser.set_is_detachable_keyword (False)
 				a_parser.parse_from_string (a_buffer)
 				if error_handler.has_error then
 					error_handler.wipe_out
@@ -254,7 +258,19 @@ feature {NONE} -- Implementation
 					a_parser.set_is_indexing_keyword (True)
 					a_parser.set_is_note_keyword (True)
 					a_parser.set_is_attribute_keyword (True)
+					a_parser.set_is_attached_keyword (False)
+					a_parser.set_is_detachable_keyword (False)
 					a_parser.parse_from_string (a_buffer)
+					if error_handler.has_error then
+						error_handler.wipe_out
+							-- Still an error, let's try to see if the code is already using the new `attached/detachable' keywords.
+						a_parser.set_is_indexing_keyword (True)
+						a_parser.set_is_note_keyword (True)
+						a_parser.set_is_attribute_keyword (True)
+						a_parser.set_is_attached_keyword (True)
+						a_parser.set_is_detachable_keyword (True)
+						a_parser.parse_from_string (a_buffer)
+					end
 				end
 			end
 		end
@@ -301,7 +317,7 @@ invariant
 	string_buffer_not_void: string_buffer /= Void
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -325,10 +341,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

@@ -10,12 +10,12 @@ class
 inherit
 	AST_NULL_FACTORY
 		redefine
-			new_bang_creation_as,
-			new_bang_creation_expr_as,
-			new_old_routine_creation_as,
-			new_static_access_as,
+			new_creation_keyword_as,
 			new_keyword_as,
-			new_creation_keyword_as
+			new_old_routine_creation_as,
+			new_old_syntax_object_test_as,
+			new_static_access_as,
+			new_symbol_as
 		end
 
 feature -- Access
@@ -48,22 +48,13 @@ feature -- Processing
 
 			when {EIFFEL_TOKENS}.te_is, {EIFFEL_TOKENS}.te_indexing then
 				has_obsolete_constructs := True
+
 			else
 
 			end
 		end
 
-	new_static_access_as (c: TYPE_AS; f: ID_AS; p: PARAMETER_LIST_AS; f_as: KEYWORD_AS; d_as: SYMBOL_AS): STATIC_ACCESS_AS
-		do
-			has_obsolete_constructs := has_obsolete_constructs or else f_as /= Void
-		end
-
-	new_bang_creation_as (tp: TYPE_AS; tg: ACCESS_AS; c: ACCESS_INV_AS; l_as, r_as: SYMBOL_AS): BANG_CREATION_AS
-		do
-			has_obsolete_constructs := True
-		end
-
-	new_bang_creation_expr_as (t: TYPE_AS; c: ACCESS_INV_AS; l_as, r_as: SYMBOL_AS): BANG_CREATION_EXPR_AS
+	new_old_syntax_object_test_as (start: SYMBOL_AS; name: ID_AS; type: TYPE_AS; expression: EXPR_AS): OBJECT_TEST_AS
 		do
 			has_obsolete_constructs := True
 		end
@@ -73,8 +64,28 @@ feature -- Processing
 			has_obsolete_constructs := True
 		end
 
+	new_static_access_as (c: TYPE_AS; f: ID_AS; p: PARAMETER_LIST_AS; f_as: KEYWORD_AS; d_as: SYMBOL_AS): STATIC_ACCESS_AS
+		do
+			has_obsolete_constructs := has_obsolete_constructs or else f_as /= Void
+		end
+
+	new_symbol_as (a_code: INTEGER_32; a_scn: EIFFEL_SCANNER): SYMBOL_AS
+		do
+			inspect
+				a_code
+			when {EIFFEL_TOKENS}.te_bang then
+				has_obsolete_constructs := True
+
+			when {EIFFEL_TOKENS}.te_question  then
+					-- We might trigger some false alarm since ? is also used for open agent arguments, but it
+					-- is easier to do it that way than redefining all the factory routines that creates a TYPE_AS or descendants.
+				has_obsolete_constructs := True
+			else
+
+			end
+		end
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -98,10 +109,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

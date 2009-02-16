@@ -15,7 +15,14 @@ inherit
 			process_body_as,
 			process_create_as,
 			process_indexing_clause_as,
+			process_object_test_as,
 			process_static_access_as,
+			process_like_id_as,
+			process_like_cur_as,
+			process_formal_as,
+			process_class_type_as,
+			process_generic_class_type_as,
+			process_named_tuple_type_as,
 			context,
 			reset
 		end
@@ -170,6 +177,50 @@ feature -- AST visiting
 			safe_process (l_as.end_keyword (match_list))
 		end
 
+	process_object_test_as (l_as: OBJECT_TEST_AS)
+		local
+			l_index: INTEGER
+		do
+			if l_as.is_attached_keyword then
+				safe_process (l_as.attached_keyword (match_list))
+				safe_process (l_as.type)
+				l_as.expression.process (Current)
+				safe_process (l_as.as_keyword (match_list))
+				safe_process (l_as.name)
+			else
+				is_updated := True
+				l_index := l_as.lcurly_symbol_index
+				process_leading_leaves (l_index)
+				last_index := l_index
+					-- We discard the type information when it is exactly the same as the expression
+				if {l_like_id: LIKE_ID_AS} l_as.type and then l_like_id.anchor.text (match_list).is_case_insensitive_equal (l_as.expression.text (match_list)) then
+					context.add_string ("attached ")
+				else
+					context.add_string ("attached {")
+					if {l_leaf: LEAF_AS} l_as.type.first_token (match_list) then
+						l_index := l_leaf.index
+						last_index := l_index
+						l_as.type.process (Current)
+					end
+					context.add_string ("} ")
+				end
+				if {l_leaf: LEAF_AS} l_as.expression.first_token (match_list) then
+					l_index := l_leaf.index
+					last_index := l_index
+					l_as.expression.process (Current)
+				end
+				context.add_string (" as ")
+				if {l_leaf: LEAF_AS} l_as.name.first_token (match_list) then
+					l_index := l_leaf.index
+					last_index := l_index
+					l_as.name.process (Current)
+				end
+				if {l_leaf: LEAF_AS} l_as.last_token (match_list) then
+					last_index := l_leaf.index
+				end
+			end
+		end
+
 	process_static_access_as (l_as: STATIC_ACCESS_AS)
 			-- Process `l_as'.
 		do
@@ -187,6 +238,67 @@ feature -- AST visiting
 			safe_process (l_as.feature_name)
 			safe_process (l_as.internal_parameters)
 		end
+
+feature -- Types
+
+	process_like_id_as (l_as: LIKE_ID_AS)
+		do
+			safe_process (l_as.lcurly_symbol (match_list))
+			process_attachment_mark (l_as)
+			safe_process (l_as.like_keyword (match_list))
+			safe_process (l_as.anchor)
+			safe_process (l_as.rcurly_symbol (match_list))
+		end
+
+	process_like_cur_as (l_as: LIKE_CUR_AS)
+		do
+			safe_process (l_as.lcurly_symbol (match_list))
+			process_attachment_mark (l_as)
+			safe_process (l_as.like_keyword (match_list))
+			safe_process (l_as.current_keyword)
+			safe_process (l_as.rcurly_symbol (match_list))
+		end
+
+	process_formal_as (l_as: FORMAL_AS)
+		do
+			safe_process (l_as.lcurly_symbol (match_list))
+			process_attachment_mark (l_as)
+			safe_process (l_as.reference_or_expanded_keyword (match_list))
+			safe_process (l_as.name)
+			safe_process (l_as.rcurly_symbol (match_list))
+		end
+
+	process_class_type_as (l_as: CLASS_TYPE_AS)
+		do
+			safe_process (l_as.lcurly_symbol (match_list))
+			process_attachment_mark (l_as)
+			safe_process (l_as.expanded_keyword (match_list))
+			safe_process (l_as.separate_keyword (match_list))
+			safe_process (l_as.class_name)
+			safe_process (l_as.rcurly_symbol (match_list))
+		end
+
+	process_generic_class_type_as (l_as: GENERIC_CLASS_TYPE_AS)
+		do
+			safe_process (l_as.lcurly_symbol (match_list))
+			process_attachment_mark (l_as)
+			safe_process (l_as.expanded_keyword (match_list))
+			safe_process (l_as.separate_keyword (match_list))
+			safe_process (l_as.class_name)
+			safe_process (l_as.internal_generics)
+			safe_process (l_as.rcurly_symbol (match_list))
+		end
+
+	process_named_tuple_type_as (l_as: NAMED_TUPLE_TYPE_AS)
+		do
+			safe_process (l_as.lcurly_symbol (match_list))
+			process_attachment_mark (l_as)
+			safe_process (l_as.separate_keyword (match_list))
+			safe_process (l_as.class_name)
+			safe_process (l_as.parameters)
+			safe_process (l_as.rcurly_symbol (match_list))
+		end
+
 
 feature {NONE} -- Access
 
@@ -271,9 +383,33 @@ feature {NONE} -- Access
 			last_index := i
 		end
 
+	process_attachment_mark (a_type: TYPE_AS)
+			-- Update ? and ! types to detachable and attached ones.
+		require
+			a_type_not_void: a_type /= Void
+		local
+			l_mark: SYMBOL_AS
+		do
+			l_mark := a_type.attachment_mark (match_list)
+			if l_mark /= Void then
+				if l_mark.code = {EIFFEL_TOKENS}.te_bang then
+					is_updated := True
+					process_leading_leaves (a_type.attachment_mark_index)
+					last_index := a_type.attachment_mark_index
+					context.add_string ("attached ")
+				elseif l_mark.code = {EIFFEL_TOKENS}.te_question then
+					is_updated := True
+					process_leading_leaves (a_type.attachment_mark_index)
+					last_index := a_type.attachment_mark_index
+					context.add_string ("detachable ")
+				else
+					l_mark.process (Current)
+				end
+			end
+		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -297,11 +433,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

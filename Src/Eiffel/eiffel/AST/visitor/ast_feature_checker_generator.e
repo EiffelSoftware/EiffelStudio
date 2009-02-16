@@ -4776,66 +4776,101 @@ feature -- Implementation
 			local_info: LOCAL_INFO
 			local_b: OBJECT_TEST_LOCAL_B
 			expr: EXPR_B
+			l_has_type_error: BOOLEAN
+			l_bin_ne: BIN_NE_B
 		do
 			l_needs_byte_node := is_byte_node_enabled
 
-				-- Type check object-test local
+				-- Type check object-test local name if present.
 			local_id := l_as.name
-			local_name_id := local_id.name_id
-			if not is_inherited then
-				if current_feature.has_argument_name (local_name_id) then
-						-- The local name is an argument name of the
-						-- current analyzed feature
-					error_handler.insert_error (create {VUOT1}.make (context, local_id))
-				elseif context.current_feature_table.has_id (local_name_id) then
-						-- The local name is a feature name of the
-						-- current analyzed class.
-					error_handler.insert_error (create {VUOT1}.make (context, local_id))
-				end
-			end
-			if context.locals.has (local_name_id) then
-					-- The object-test local is a name of a feature local variable
-				error_handler.insert_error (create {VUOT1}.make (context, local_id))
-			end
-				-- There is no reason to check for object test local name clash
-				-- as this will be detected and reported when their scopes intersect.
-			check_type (l_as.type)
-			local_type := last_type
-			if local_type /= Void then
-				if not local_type.is_attached then
-					if context.current_class.lace_class.is_void_safe then
-						local_type := local_type.as_attached_type
-					elseif not local_type.is_implicitly_attached then
-						local_type := local_type.as_implicitly_attached
+			if local_id /= Void then
+				local_name_id := local_id.name_id
+				if not is_inherited then
+					if current_feature.has_argument_name (local_name_id) then
+							-- The local name is an argument name of the
+							-- current analyzed feature
+						error_handler.insert_error (create {VUOT1}.make (context, local_id))
+					elseif context.current_feature_table.has_id (local_name_id) then
+							-- The local name is a feature name of the
+							-- current analyzed class.
+						error_handler.insert_error (create {VUOT1}.make (context, local_id))
 					end
 				end
-
-				if not is_inherited then
-						-- No need to recheck for obsolete classes when checking inherited code.
-					local_type.check_for_obsolete_class (context.current_class, context.current_feature)
+				if context.locals.has (local_name_id) then
+						-- The object-test local is a name of a feature local variable
+					error_handler.insert_error (create {VUOT1}.make (context, local_id))
 				end
+			end
 
-				if current_feature.written_in = context.current_class.class_id then
-					Instantiator.dispatch (local_type, context.current_class)
+				-- There is no reason to check for object test local name clash
+				-- as this will be detected and reported when their scopes intersect.
+			if l_as.type /= Void then
+				check_type (l_as.type)
+				local_type := last_type
+				if local_type /= Void then
+					if not local_type.is_attached then
+						if context.current_class.lace_class.is_void_safe then
+							local_type := local_type.as_attached_type
+						elseif not local_type.is_implicitly_attached then
+							local_type := local_type.as_implicitly_attached
+						end
+					end
+					if not is_inherited then
+							-- No need to recheck for obsolete classes when checking inherited code.
+						local_type.check_for_obsolete_class (context.current_class, context.current_feature)
+					end
+
+					if current_feature.written_in = context.current_class.class_id then
+						Instantiator.dispatch (local_type, context.current_class)
+					end
+
+					if local_type.has_associated_class then
+							-- Add the supplier in the feature_dependance list
+						context.supplier_ids.add_supplier (local_type.associated_class)
+					end
+				else
+					l_has_type_error := True
 				end
+			end
 
-				if local_type.has_associated_class then
-						-- Add the supplier in the feature_dependance list
-					context.supplier_ids.add_supplier (local_type.associated_class)
+				-- Type check expression
+			l_as.expression.process (Current)
+
+			if last_type /= Void and not l_has_type_error then
+				if l_as.is_attached_keyword and local_type = Void then
+						-- Set `local_type' to the type of the expression.
+					local_type := last_type
+					if not local_type.is_attached then
+						if context.current_class.lace_class.is_void_safe then
+							local_type := local_type.as_attached_type
+						elseif not local_type.is_implicitly_attached then
+							local_type := local_type.as_implicitly_attached
+						end
+					end
 				end
+				check local_type_attached: local_type /= Void end
+				if local_id /= Void or l_as.type /= Void then
+					create local_info
+					local_info.set_type (local_type)
+					local_info.set_position (context.next_object_test_local_position)
+					if local_id /= Void then
+						context.add_object_test_local (local_info, local_id)
+					else
+						context.add_object_test_local (local_info, create {ID_AS}.initialize ("dummy_" + context.hidden_local_counter.next.out))
+					end
+					local_info.set_is_used (True)
 
-				create local_info
-				local_info.set_type (local_type)
-				local_info.set_position (context.next_object_test_local_position)
-				context.add_object_test_local (local_info, local_id)
-				local_info.set_is_used (True)
-
-					-- Type check expression
-				l_as.expression.process (Current)
-				if l_needs_byte_node and then last_type /= Void then
+					if l_needs_byte_node then
+						expr ?= last_byte_node
+						create local_b.make (local_info.position, current_feature.body_index)
+						create {OBJECT_TEST_B} last_byte_node.make (local_b, expr, local_type.create_info)
+					end
+				elseif l_needs_byte_node then
+					create l_bin_ne
 					expr ?= last_byte_node
-					create local_b.make (local_info.position, current_feature.body_index)
-					create {OBJECT_TEST_B} last_byte_node.make (local_b, expr, local_type.create_info)
+					l_bin_ne.set_left (expr)
+					l_bin_ne.set_right (create {VOID_B})
+					last_byte_node := l_bin_ne
 				end
 			end
 
@@ -4843,7 +4878,6 @@ feature -- Implementation
 					-- Generate a stub.
 				create {BOOL_CONST_B} last_byte_node.make (False)
 			end
-
 			last_type := boolean_type
 		end
 
@@ -4861,6 +4895,7 @@ feature -- Implementation
 			l_error_level: NATURAL_32
 		do
 			context.inline_agent_counter.reset
+			context.hidden_local_counter.reset
 			last_byte_node := Void
 			l_error_level := error_level
 			reset_for_unqualified_call_checking
@@ -6620,6 +6655,7 @@ feature -- Implementation
 		do
 			break_point_slot_count := 0
 			context.inline_agent_counter.reset
+			context.hidden_local_counter.reset
 			if l_as.assertion_list /= Void then
 				reset_for_unqualified_call_checking
 				set_is_checking_invariant (True)

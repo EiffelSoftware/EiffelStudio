@@ -37,6 +37,7 @@ create
 %left		TE_OLD
 %left		TE_DOT
 %right		TE_LPARAN
+%right		TE_ATTACHED
 
 %token <ID_AS> TE_FREE TE_ID TE_TUPLE TE_A_BIT
 %token TE_INTEGER
@@ -45,7 +46,6 @@ create
 
 %token <SYMBOL_AS> 		TE_LSQURE TE_RSQURE
 %token <SYMBOL_AS>		TE_ACCEPT TE_ADDRESS TE_ASSIGNMENT
-%token <SYMBOL_AS> 		TE_CURLYTILDE
 %token <SYMBOL_AS>		TE_LARRAY TE_RARRAY TE_RPARAN TE_LPARAN
 %token <SYMBOL_AS>		TE_LCURLY TE_RCURLY
 %token <SYMBOL_AS> 		TE_BANG TE_SEMICOLON
@@ -74,8 +74,8 @@ create
 
 %token <KEYWORD_AS> TE_IS
 %token <KEYWORD_AS> TE_AGENT TE_ALIAS TE_ALL TE_AND TE_AS TE_ASSIGN
-%token <KEYWORD_AS> TE_ATTRIBUTE TE_BIT TE_CHECK TE_CLASS TE_CONVERT
-%token <KEYWORD_AS> TE_CREATE TE_DEBUG TE_DO TE_ELSE TE_ELSEIF
+%token <KEYWORD_AS> TE_ATTACHED TE_ATTRIBUTE TE_BIT TE_CHECK TE_CLASS TE_CONVERT
+%token <KEYWORD_AS> TE_CREATE TE_DEBUG TE_DETACHABLE TE_DO TE_ELSE TE_ELSEIF
 %token <KEYWORD_AS> TE_ENSURE TE_EXPANDED TE_EXPORT TE_EXTERNAL TE_FEATURE
 %token <KEYWORD_AS> TE_FROM TE_IF TE_IMPLIES TE_INDEXING TE_INHERIT
 %token <KEYWORD_AS> TE_INSPECT TE_INVARIANT TE_LIKE TE_LOCAL
@@ -207,7 +207,7 @@ create
 %type <CONSTRAINT_LIST_AS> Multiple_constraint_list
 %type <CONSTRAINING_TYPE_AS> Single_constraint
 
-%expect 109
+%expect 189
 
 %%
 
@@ -1614,11 +1614,30 @@ Non_class_type: TE_EXPANDED Attached_class_type
 			{ $$ := ast_factory.new_bits_symbol_as ($2, $1) }
 	|	TE_LIKE Identifier_as_lower
 			{ $$ := ast_factory.new_like_id_as ($2, $1) }
+	|	TE_ATTACHED TE_LIKE Identifier_as_lower
+			{
+				$$ := ast_factory.new_like_id_as ($3, $2)
+				if $$ /= Void then
+					$$.set_attachment_mark ($1, True, False)
+				end
+			}
 	|	TE_BANG TE_LIKE Identifier_as_lower
 			{
 				$$ := ast_factory.new_like_id_as ($3, $2)
 				if $$ /= Void then
 					$$.set_attachment_mark ($1, True, False)
+				end
+				if has_syntax_warning then
+					report_one_warning (
+						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
+						once "Use the `attached' keyword instead of !."))
+				end
+			}
+	|	TE_DETACHABLE TE_LIKE Identifier_as_lower
+			{
+				$$ := ast_factory.new_like_id_as ($3, $2)
+				if $$ /= Void then
+					$$.set_attachment_mark ($1, False, True)
 				end
 			}
 	|	TE_QUESTION TE_LIKE Identifier_as_lower
@@ -1627,14 +1646,38 @@ Non_class_type: TE_EXPANDED Attached_class_type
 				if $$ /= Void then
 					$$.set_attachment_mark ($1, False, True)
 				end
+				if has_syntax_warning then
+					report_one_warning (
+						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
+						once "Use the `detachable' keyword instead of ?."))
+				end
 			}
 	|	TE_LIKE TE_CURRENT
 			{ $$ := ast_factory.new_like_current_as ($2, $1) }
+	|	TE_ATTACHED TE_LIKE TE_CURRENT
+			{
+				$$ := ast_factory.new_like_current_as ($3, $2)
+				if $$ /= Void then
+					$$.set_attachment_mark ($1, True, False)
+				end
+			}
 	|	TE_BANG TE_LIKE TE_CURRENT
 			{
 				$$ := ast_factory.new_like_current_as ($3, $2)
 				if $$ /= Void then
 					$$.set_attachment_mark ($1, True, False)
+				end
+				if has_syntax_warning then
+					report_one_warning (
+						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
+						once "Use the `attached' keyword instead of !."))
+				end
+	}
+	|	TE_DETACHABLE TE_LIKE TE_CURRENT
+			{
+				$$ := ast_factory.new_like_current_as ($3, $2)
+				if $$ /= Void then
+					$$.set_attachment_mark ($1, False, True)
 				end
 			}
 	|	TE_QUESTION TE_LIKE TE_CURRENT
@@ -1643,7 +1686,12 @@ Non_class_type: TE_EXPANDED Attached_class_type
 				if $$ /= Void then
 					$$.set_attachment_mark ($1, False, True)
 				end
-			}
+				if has_syntax_warning then
+					report_one_warning (
+						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
+						once "Use the `detachable' keyword instead of ?."))
+				end
+	}
 	;
 
 Class_or_tuple_type:
@@ -1654,20 +1702,44 @@ Class_or_tuple_type:
 	;
 
 Marked_class_or_tuple_type:
-	TE_BANG Attached_class_or_tuple_type
+	TE_DETACHABLE Attached_class_or_tuple_type
+			{
+				$$ := $2
+				if $$ /= Void then
+					$$.set_attachment_mark ($1, False, True)
+				end
+		}
+	| TE_ATTACHED Attached_class_or_tuple_type
 			{
 				$$ := $2
 				if $$ /= Void then
 					$$.set_attachment_mark ($1, True, False)
 				end
-			}
+		}
+	| TE_BANG Attached_class_or_tuple_type
+			{
+				$$ := $2
+				if $$ /= Void then
+					$$.set_attachment_mark ($1, True, False)
+				end
+				if has_syntax_warning then
+					report_one_warning (
+						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
+						once "Use the `attached' keyword instead of !."))
+				end
+		}
 	| TE_QUESTION Attached_class_or_tuple_type
 			{
 				$$ := $2
 				if $$ /= Void then
 					$$.set_attachment_mark ($1, False, True)
 				end
-			}
+				if has_syntax_warning then
+					report_one_warning (
+						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
+						once "Use the `detachable' keyword instead of ?."))
+				end
+		}
 	;
 
 Attached_class_type: Class_identifier Generics_opt
@@ -2586,14 +2658,52 @@ Expression:
 			{ $$ := ast_factory.new_bin_ne_as ($1, $3, $2); has_type := True }
 	|	Qualified_binary_expression
 			{ $$ := $1; has_type := True }
+	|	TE_ATTACHED Expression
+			{
+				$$ := ast_factory.new_object_test_as ($1, Void, $2, Void, Void)
+				has_type := True
+			}
+	|	TE_ATTACHED Expression TE_AS Identifier_as_lower
+			{
+				$$ := ast_factory.new_object_test_as ($1, Void, $2, $3, $4)
+				has_type := True
+			}
+	|	TE_ATTACHED TE_LCURLY Type TE_RCURLY Expression
+			{
+				if $3 /= Void then
+					$3.set_lcurly_symbol ($2)
+					$3.set_rcurly_symbol ($4)
+				end
+				$$ := ast_factory.new_object_test_as ($1, $3, $5, Void, Void)
+				has_type := True
+			}
+	|	TE_ATTACHED TE_LCURLY Type TE_RCURLY Expression TE_AS Identifier_as_lower
+			{
+				if $3 /= Void then
+					$3.set_lcurly_symbol ($2)
+					$3.set_rcurly_symbol ($4)
+				end
+				$$ := ast_factory.new_object_test_as ($1, $3, $5, $6, $7)
+				has_type := True
+				if object_test_locals = Void then
+					create object_test_locals.make (1)
+				end
+				object_test_locals.extend ([$7, $3])
+			}
 	|	TE_LCURLY Identifier_as_lower TE_COLON Type TE_RCURLY Expression %prec TE_NOT
 			{
-				$$ := ast_factory.new_object_test_as ($1, $2, $4, $6);
+				$$ := ast_factory.new_old_syntax_object_test_as ($1, $2, $4, $6)
 				has_type := True
 				if object_test_locals = Void then
 					create object_test_locals.make (1)
 				end
 				object_test_locals.extend ([$2, $4])
+				if has_syntax_warning then
+					report_one_warning (
+						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1),
+							filename, once "Use the new syntax for object test `attached {T} exp as x'."))
+
+				end
 			}
 	;
 

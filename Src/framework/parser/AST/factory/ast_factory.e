@@ -883,7 +883,7 @@ feature -- Access
 			s: SUPPLIERS_AS;
 			o: STRING_AS;
 			ed: KEYWORD_AS): CLASS_AS
-		
+
 			-- New CLASS AST node
 		do
 			if n /= Void and s /= Void and (co = Void or else not co.is_empty) and ed /= Void then
@@ -1402,7 +1402,7 @@ feature -- Access
 	new_if_as (cnd: EXPR_AS; cmp: EIFFEL_LIST [INSTRUCTION_AS];
 			ei: EIFFEL_LIST [ELSIF_AS]; e: EIFFEL_LIST [INSTRUCTION_AS];
 			end_location, i_as, t_as, e_as: KEYWORD_AS): IF_AS
-		
+
 			-- New IF AST node
 		do
 			if cnd /= Void and end_location /= Void then
@@ -1428,7 +1428,7 @@ feature -- Access
 
 	new_inspect_as (s: EXPR_AS; c: EIFFEL_LIST [CASE_AS];
 			e: EIFFEL_LIST [INSTRUCTION_AS]; end_location, i_as, e_as: KEYWORD_AS): INSPECT_AS
-		
+
 			-- New INSPECT AST node
 		do
 			if s /= Void and end_location /= Void then
@@ -1526,7 +1526,7 @@ feature -- Access
 	new_loop_as (f: EIFFEL_LIST [INSTRUCTION_AS]; i: EIFFEL_LIST [TAGGED_AS];
 			v: VARIANT_AS; s: EXPR_AS; c: EIFFEL_LIST [INSTRUCTION_AS];
 			e, f_as, i_as, u_as, l_as: KEYWORD_AS): LOOP_AS
-		
+
 			-- New LOOP AST node
 		do
 			if s /= Void and e /= Void then
@@ -1558,11 +1558,19 @@ feature -- Access
 			end
 		end
 
-	new_object_test_as (start: SYMBOL_AS; name: ID_AS; type: TYPE_AS; expression: EXPR_AS): OBJECT_TEST_AS
+	new_object_test_as (l_attached: KEYWORD_AS; type: TYPE_AS; expression: EXPR_AS; l_as: KEYWORD_AS; name: ID_AS): OBJECT_TEST_AS
+			-- New OBJECT_TEST_AS node
+		do
+			if expression /= Void then
+				create Result.make (l_attached, type, expression, l_as, name)
+			end
+		end
+
+	new_old_syntax_object_test_as (start: SYMBOL_AS; name: ID_AS; type: TYPE_AS; expression: EXPR_AS): OBJECT_TEST_AS
 			-- New OBJECT_TEST_AS node
 		do
 			if name /= Void and type /= Void and expression /= Void then
-				create Result.make (start, name, type, expression)
+				create Result.make_curly (start, name, type, expression)
 			end
 		end
 
@@ -1589,7 +1597,7 @@ feature -- Access
 	new_parent_as (t: CLASS_TYPE_AS; rn: RENAME_CLAUSE_AS;
 			e: EXPORT_CLAUSE_AS; u: UNDEFINE_CLAUSE_AS;
 			rd: REDEFINE_CLAUSE_AS; s: SELECT_CLAUSE_AS; ed: KEYWORD_AS): PARENT_AS
-		
+
 			-- New PARENT AST node
 		do
 			if t /= Void then
@@ -1671,7 +1679,7 @@ feature -- Access
 			r: EIFFEL_LIST [INSTRUCTION_AS]; end_loc: KEYWORD_AS;
 			oms_count, a_pos: INTEGER; k_as, r_as: KEYWORD_AS;
 			object_test_locals: ARRAYED_LIST [TUPLE [ID_AS, TYPE_AS]]): ROUTINE_AS
-		
+
 			-- New ROUTINE AST node
 		require
 			valid_oms_count: oms_count >= 0
@@ -1909,7 +1917,7 @@ feature -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -1933,11 +1941,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class AST_FACTORY

@@ -57,6 +57,8 @@ feature {NONE} -- Initialization
 			is_indexing_keyword := True
 			is_note_keyword := False
 			is_attribute_keyword := False
+			is_attached_keyword := False
+			is_detachable_keyword := False
 		ensure
 			ast_factory_set: ast_factory = a_factory
 		end
@@ -75,6 +77,8 @@ feature -- Initialization
 			is_indexing_keyword := True
 			is_note_keyword := False
 			is_attribute_keyword := False
+			is_attached_keyword := False
+			is_detachable_keyword := False
 		end
 
 feature -- Roundtrip
@@ -162,6 +166,12 @@ feature {NONE} -- Status
 	is_attribute_keyword: BOOLEAN
 			-- Is "attribute" keyword allowed in current context?
 
+	is_attached_keyword: BOOLEAN
+			-- Is "attached" keyword allowed in current context?
+
+	is_detachable_keyword: BOOLEAN
+			-- Is "detachable" keyword allowed in current context?
+
 feature -- Convenience
 
 	token_line (a_node: AST_EIFFEL): like line
@@ -222,6 +232,22 @@ feature -- Settings
 			is_attribute_keyword := value
 		ensure
 			is_attribute_keyword_set: is_attribute_keyword = value
+		end
+
+	set_is_attached_keyword (value: BOOLEAN)
+			-- Set `is_attached_keyword' to `value'
+		do
+			is_attached_keyword := value
+		ensure
+			is_attached_keyword_set: is_attached_keyword = value
+		end
+
+	set_is_detachable_keyword (value: BOOLEAN)
+			-- Set `is_detachable_keyword' to `value'
+		do
+			is_detachable_keyword := value
+		ensure
+			is_detachable_keyword_set: is_detachable_keyword = value
 		end
 
 feature {NONE} -- Error handling

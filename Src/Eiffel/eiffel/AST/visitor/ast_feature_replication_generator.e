@@ -132,6 +132,12 @@ feature -- Processing
 					-- is not unreplicated if then inherited by a descendent so we need
 					-- a flag to distinguish the two types of replicated features.
 				a_feature.set_is_replicated_directly (True)
+
+					-- Make sure that `generate_in' is reset for non-conforming attributes as it is
+					-- not needed due to flat inheritance.
+				if a_parent_c.is_non_conforming and then {l_attr: ENCAPSULATED_I} a_feature then
+					l_attr.set_generate_in (0)
+				end
 			else
 					-- This routine is either joined or redefined in `a_current_class', if redefined
 					-- in current class then we need to set it as directly replicated so that

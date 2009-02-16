@@ -366,7 +366,7 @@ feature -- Access
 					ncv := eval.value
 					Result := last_condition_value = Void or ncv = Void
 						or else (not ncv.same_as (last_condition_value))
-					last_condition_value:= ncv
+					last_condition_value := ncv
 				else
 					Result := True
 				end

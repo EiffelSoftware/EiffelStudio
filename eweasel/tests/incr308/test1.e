@@ -6,10 +6,10 @@ feature
 	   deferred
 	   end
 
-	-- After initial compilation (void-safe), change to ?G and comment
+	-- After initial compilation (void-safe), change to attached G and comment
 	-- out body of `t'
 
-	t: !G
+	t: attached G
 	   do
 		create Result.make (3)
 	   end

@@ -11,7 +11,7 @@ feature
 			print (z.out)
 		end
 
-	z: !STRING
+	z: attached STRING
 		do
 			inspect 1
 			when 4..3 then

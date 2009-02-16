@@ -14,7 +14,7 @@ feature
 
 	try
 		do
-			if {X: TEST} {x: ANY} Current then
+			if attached {TEST} (attached {ANY} Current as x) as X then
 				print (x); io.new_line
 			end
 		end

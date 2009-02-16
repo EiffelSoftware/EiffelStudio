@@ -5,10 +5,10 @@ feature
 
 	f is
 		do
-			if {a: STD_FILES} io then
+			if attached {STD_FILES} io as a then
 			end
 		ensure
-			tag: {d: STD_FILES} io and then d.default = Void
+			tag: attached {STD_FILES} io as d and then d.default = Void
 		end
 
 end

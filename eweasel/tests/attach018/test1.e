@@ -10,16 +10,16 @@ feature {NONE} -- Creation
 		local
 			i, j: INTEGER
 		do
-			if {a: STRING} f then
+			if attached {STRING} f as a then
 				a.substring (i, j).do_nothing
 			end
 		end
 
-	f: ?STRING is
+	f: detachable STRING is
 		do
 		end
 
 invariant
-	f_not_void: {a: STRING} f
+	f_not_void: attached {STRING} f as a
 
 end

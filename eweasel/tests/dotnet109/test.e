@@ -10,7 +10,7 @@ feature {NONE} -- Initialization
 		local
 			l_io: ANY
 		do
-			if {a: ANY} io then
+			if attached {ANY} io as a then
 				l_io := a
 			else
 				check False end

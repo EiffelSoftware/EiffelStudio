@@ -36,7 +36,7 @@ feature {NONE} -- Creation
 
 	make (l: like target; e: like expression; i: like info)
 		require
-			t_attached: l /= Void
+			l_attached: l /= Void
 			e_attached: e /= Void
 		do
 			target := l

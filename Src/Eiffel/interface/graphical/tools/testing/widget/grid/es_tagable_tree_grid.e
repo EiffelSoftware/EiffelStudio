@@ -193,7 +193,7 @@ feature {NONE} -- Element change
 				grid.insert_new_row (i)
 				l_ut_row := grid.row (i)
 				check
-					attached: l_ut_row /= Void
+					ut_row_attached: l_ut_row /= Void
 				end
 				create l_new_ut.make (l_ut_row, "<untagged>")
 				l_ut_row.ensure_expandable
@@ -333,10 +333,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

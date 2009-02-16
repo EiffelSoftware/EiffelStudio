@@ -58,35 +58,26 @@ feature {NONE} -- Cell
 
 	debugger_on_project_loaded
 			-- Propagate `Project loaded' event to `debugger_manager'
-		local
-			dm: like Debugger_manager
 		do
 				-- Load application context (command line and breakpoints)
-			dm := Debugger_manager_cell.item
-			if dm /= Void then
+			if {dm: like Debugger_manager} Debugger_manager_cell.item then
 				dm.load_all_debugger_data
 			end
 		end
 
 	debugger_on_project_closed
 			-- Propagate `Project closed' event to `debugger_manager'
-		local
-			dm: like Debugger_manager
 		do
 				-- Save application context (command line and breakpoints)
-			dm := Debugger_manager_cell.item
-			if dm /= Void then
+			if {dm: like Debugger_manager} Debugger_manager_cell.item then
 				dm.save_all_debugger_data
 			end
 		end
 
 	debugger_on_project_recompiled (is_successful: BOOLEAN)
 			-- Propagate `Project recompiled' event to `debugger_manager'
-		local
-			dm: like Debugger_manager
 		do
-			dm := Debugger_manager_cell.item
-			if dm /= Void then
+			if {dm: like Debugger_manager} Debugger_manager_cell.item then
 				dm.on_project_recompiled (is_successful)
 			end
 		end

@@ -107,10 +107,6 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_symbol_as_value := ast_factory.new_symbol_as (TE_TILDE, Current)
 				last_token := TE_TILDE
 			}
-"}~"		{				
-				last_symbol_as_value := ast_factory.new_symbol_as (TE_CURLYTILDE, Current)
-				last_token := TE_CURLYTILDE
-			}
 "."			{			
 				last_symbol_as_value := ast_factory.new_symbol_as (TE_DOT, Current)
 				last_token := TE_DOT
@@ -262,6 +258,23 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				end
 				last_token := TE_ASSIGN
 			}
+[aA][tT][tT][aA][cC][hH][eE][dD] {
+				if is_attached_keyword then
+					last_keyword_as_value := ast_factory.new_keyword_as (TE_ATTACHED, Current)
+					if last_keyword_as_value /= Void then
+						last_keyword_as_id_index := last_keyword_as_value.index
+					end
+					last_token := TE_ATTACHED
+				else
+					process_id_as
+					last_token := TE_ID
+					if has_syntax_warning then
+						report_one_warning (
+							create {SYNTAX_WARNING}.make (line, column, filename,
+								once "Keyword `attached' is used as identifier."))
+					end
+				end
+			}
 [aA][tT][tT][rR][iI][bB][uU][tT][eE] {
 				if is_attribute_keyword then
 					last_keyword_as_value := ast_factory.new_keyword_as (TE_ATTRIBUTE, Current)
@@ -316,6 +329,23 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 [dD][eE][fF][eE][rR][rR][eE][dD]	{				
 				last_deferred_as_value := ast_factory.new_deferred_as (Current)
 				last_token := TE_DEFERRED			
+			}
+[dD][eE][tT][aA][cC][hH][aA][bB][lL][eE]	{
+				if is_detachable_keyword then
+					last_keyword_as_value := ast_factory.new_keyword_as (TE_DETACHABLE, Current)
+					if last_keyword_as_value /= Void then
+						last_keyword_as_id_index := last_keyword_as_value.index
+					end
+					last_token := TE_DETACHABLE
+				else
+					process_id_as
+					last_token := TE_ID
+					if has_syntax_warning then
+						report_one_warning (
+							create {SYNTAX_WARNING}.make (line, column, filename,
+								once "Keyword `detachable' is used as identifier."))
+					end
+				end
 			}
 [dD][oO]	{				
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_DO, Current)

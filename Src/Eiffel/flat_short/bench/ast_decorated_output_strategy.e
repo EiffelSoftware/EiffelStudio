@@ -409,12 +409,10 @@ feature {NONE} -- Implementation
 				text_formatter_decorator.process_symbol_text (ti_r_curly)
 			end
 			l_rout_ids := l_as.routine_ids
-			check
-				l_rout_ids_not_void: l_rout_ids /= Void
-				l_class_id_not_zero: l_as.class_id /= 0
-			end
-			if not has_error_internal then
+			if not has_error_internal and l_as.class_id /= 0 and l_rout_ids /= Void then
 				l_feat := feature_in_class (system.class_of_id (l_as.class_id), l_rout_ids)
+			else
+				has_error_internal := True
 			end
 			if not expr_type_visiting then
 				text_formatter_decorator.process_symbol_text (ti_dot)
@@ -2173,18 +2171,29 @@ feature {NONE} -- Implementation
 
 	process_object_test_as (l_as: OBJECT_TEST_AS)
 		do
+				-- Regardless of the syntax used for object test, we always use the most recent
+				-- one for the formatting.
 			if not expr_type_visiting then
-				text_formatter_decorator.process_symbol_text (ti_l_curly)
-				l_as.name.process (Current)
-				text_formatter_decorator.process_symbol_text (ti_colon)
+				text_formatter_decorator.process_keyword_text (ti_attached_keyword, Void)
 				text_formatter_decorator.put_space
 			end
-			l_as.type.process (Current)
-			if not expr_type_visiting then
-				text_formatter_decorator.process_symbol_text (ti_r_curly)
-				text_formatter_decorator.put_space
+			if l_as.type /= Void then
+				if not expr_type_visiting then
+					text_formatter_decorator.process_symbol_text (ti_l_curly)
+					l_as.type.process (Current)
+					text_formatter_decorator.process_symbol_text (ti_r_curly)
+					text_formatter_decorator.put_space
+				else
+					l_as.type.process (Current)
+				end
 			end
 			l_as.expression.process (Current)
+			if not expr_type_visiting and then l_as.name /= Void then
+				text_formatter_decorator.put_space
+				text_formatter_decorator.process_keyword_text (ti_as_keyword, Void)
+				text_formatter_decorator.put_space
+				l_as.name.process (Current)
+			end
 			last_type := boolean_type
 		end
 
@@ -4546,7 +4555,7 @@ invariant
 	object_test_locals_for_current_feature_not_void: object_test_locals_for_current_feature /= Void
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -4570,11 +4579,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class AST_DECORATED_OUTPUT_STRATEGY

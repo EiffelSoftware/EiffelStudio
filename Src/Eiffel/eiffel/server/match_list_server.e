@@ -63,6 +63,8 @@ feature -- Access
 						l_scanner.set_is_indexing_keyword (l_options.syntax_level.item /= {CONF_OPTION}.syntax_level_standard)
 						l_scanner.set_is_note_keyword (l_options.syntax_level.item /= {CONF_OPTION}.syntax_level_obsolete)
 						l_scanner.set_is_attribute_keyword (l_options.syntax_level.item /= {CONF_OPTION}.syntax_level_obsolete)
+						l_scanner.set_is_attached_keyword (l_options.syntax_level.item /= {CONF_OPTION}.syntax_level_obsolete)
+						l_scanner.set_is_detachable_keyword (l_options.syntax_level.item /= {CONF_OPTION}.syntax_level_obsolete)
 						l_scanner.scan_string (l_class.text)
 						Result := l_scanner.match_list
 						Result.set_class_id (an_id)

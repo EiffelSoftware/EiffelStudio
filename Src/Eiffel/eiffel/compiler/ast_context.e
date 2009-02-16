@@ -40,6 +40,7 @@ feature {NONE} -- Initialization
 			-- Create instance of AST_CONTEXT.	
 		do
 			create inline_agent_counter
+			create hidden_local_counter
 			create_local_containers
 		end
 
@@ -80,6 +81,10 @@ feature -- Access
 
 	inline_agent_counter: COUNTER
 			-- counter for managing the inline agents that are enclosed in the current feature
+
+	hidden_local_counter: COUNTER
+			-- Counter for managing hidden locals needed for object test where user does not specify
+			-- a local.
 
 	current_inline_agent_body: BODY_AS
 			-- Body of the current processec inline agent. Is only valid if the current feature is an inline agent

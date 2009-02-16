@@ -33,6 +33,9 @@ feature -- Keywords
 	ti_Assign_keyword: STRING = "assign"
 			-- "assign" keyword
 
+	ti_attached_keyword: STRING = "attached"
+			-- "attached" keyword
+
 	ti_Attribute_keyword: STRING = "attribute"
 			-- "attribute" keyword
 

@@ -12,19 +12,22 @@ inherit
 
 	WEL_MDI_CHILD_WINDOW
 		rename
-			make as mdi_child_window_make        
+			make as mdi_child_window_make
 		redefine
 			class_icon,
 			on_size,
 			on_window_pos_changed,
-			on_notify
+			on_notify,
+			dispose
 		end
 
-	EXCEPTIONS
+	ECOM_EXCEPTION
 		rename
 			class_name as exception_class_name
 		export
 			{NONE} all
+		redefine
+			dispose
 		end
 
 	ECOM_STORAGE_ROUTINES
@@ -103,19 +106,19 @@ feature -- Initialization
 				end
 			end
 		rescue
-			if exception =  Stg_e_shareviolation then
+			if hresult = Stg_e_shareviolation then
 				create mess_box.make
 				mess_box.error_message_box (p, "Sharing Violation", "Read error")
 				retried := True
 				retry
-			else					
+			else
 				create mess_box.make
 				mess_box.error_message_box (p, "Can not open file", "Open error")
 				retried := True
 				retry
 			end
 		end
-	
+
 	new_tvitem (stor: ECOM_STORAGE; stream_name: STRING): WEL_TREE_VIEW_ITEM
 			-- New tree view item referencing stream `stream_name' in storage `stor'
 		do
@@ -229,6 +232,13 @@ feature -- Message Processing
  		end
 
 feature {NONE} -- Implementation
+
+	dispose
+			-- Dispose precursors.
+		do
+			Precursor {WEL_MDI_CHILD_WINDOW}
+			Precursor {ECOM_EXCEPTION}
+		end
 
 	tvitem_table: HASH_TABLE [TUPLE [ECOM_STORAGE, STRING], INTEGER]
 			-- Table of streams identified by their contening storage and name

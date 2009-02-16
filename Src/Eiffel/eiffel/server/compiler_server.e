@@ -300,6 +300,7 @@ end
 				-- Wipe out cache as we are storing to disk
 			other_cache ?= other.cache
 			if other_cache /= Void then
+--				--| Wipe out cache instead of copying to retain system memory and speed up flush to disk.			
 --				cache.copy (other_cache)
 --				other_cache.make
 				other_cache.wipe_out

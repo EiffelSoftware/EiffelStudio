@@ -414,7 +414,8 @@ feature {NONE} -- Implementation
 						System.set_current_class (dynamic_class)
 
 						l_wc := rout.written_class
-						check same_written_class: l_wc = written_class end
+						--| check same_written_class: l_wc = written_class end
+						--| FIXME IEK This check does not hold for unselected features or non-conforming features
 						l_names_heap := Names_heap
 
 						l_index := l_locals.lower

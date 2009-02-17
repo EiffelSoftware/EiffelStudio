@@ -25,7 +25,7 @@ feature -- Access
 			create Result.make
 			Result.set_error (create {ECOM_HRESULT}.make_from_integer (Disp_e_paramnotfound))
 		ensure
-			attached: Result /= Void
+			missing_attached: Result /= Void
 			definition: is_missing (Result)
 		end
 
@@ -34,7 +34,7 @@ feature -- Status report
 	is_missing (v: ECOM_VARIANT): BOOLEAN
 			-- Does `v' represent a COM optional argument?
 		require
-			attached: v /= Void
+			v_attached: v /= Void
 		do
 			Result := is_error (v.variable_type) and then v.error.item = Disp_e_paramnotfound
 		end

@@ -53,7 +53,9 @@ feature {AST_EIFFEL} -- Visitor pattern
 
 	process_object_test_as (l_as: OBJECT_TEST_AS)
 		do
-			if is_negated = is_negation_expected then
+				-- `l_as.name' can be Void when no local is provided in which case the scope 
+				-- cannot be extended.
+			if l_as.name /= Void and is_negated = is_negation_expected then
 				add_object_test_scope (l_as.name)
 			end
 		end

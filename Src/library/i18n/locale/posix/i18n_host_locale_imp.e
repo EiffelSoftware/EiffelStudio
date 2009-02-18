@@ -8,7 +8,7 @@ note
 class
 	I18N_HOST_LOCALE_IMP
 inherit
-		IMPORTED_UTF8_READER_WRITER
+		UNICODE_CONVERSION
 			export
 				{NONE} all
 			end
@@ -524,15 +524,6 @@ feature {NONE} --Implementation
 			end
 		end
 
-
-	c_strlen (ptr: POINTER): INTEGER
-				-- length of a c string
-		external
-			"C (void *): EIF_INTEGER| %"string.h%""
-		alias
-			"strlen"
-		end
-
 	c_is_solaris: BOOLEAN
 			-- Is current OS Solaris?
 		external
@@ -547,15 +538,14 @@ feature {NONE} --Implementation
 			]"
 		end
 
-	utf8_pointer_to_string (ptr:POINTER): STRING_32
+	utf8_pointer_to_string (ptr: POINTER): STRING_32
 			-- convert a C UTF-8 string
 		local
-			managed: MANAGED_POINTER
+			l_cstr: C_STRING
 		do
-			create managed.make_from_pointer (ptr,c_strlen(ptr))
-			if managed.count > 0 then
-				create Result.make_from_string (
-					utf8_rw.array_natural_8_to_string_32 (managed.read_array (0, managed.count)))
+			create l_cstr.make_shared_from_pointer (ptr)
+			if l_cstr.count > 0 then
+				Result := utf8_to_utf32 (l_cstr.string)
 			else
 				create Result.make_empty
 			end

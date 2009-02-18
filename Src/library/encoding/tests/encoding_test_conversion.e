@@ -25,7 +25,7 @@ feature -- Test routines
 
 feature {NONE}
 
-	test is
+	test
 		do
 			test_interconvert (counter, "UTF-16", "UTF-8", utf32_16_string)
 			test_interconvert (counter, (create {CODE_PAGE_CONSTANTS}).utf32, (create {CODE_PAGE_CONSTANTS}).utf16, utf32_16_string)
@@ -56,7 +56,7 @@ feature {NONE}
 			end
 		end
 
-	test_interconvert (a_c: INTEGER; e1, e2: STRING; a_str: STRING_GENERAL) is
+	test_interconvert (a_c: INTEGER; e1, e2: STRING; a_str: STRING_GENERAL)
 		local
 			l_encoding1, l_encoding2: ENCODING
 			l_str: STRING_GENERAL
@@ -122,7 +122,7 @@ feature {NONE}
 			print ("%N")
 		end
 
-	foo is
+	foo
 		local
 			l_encoding_from, l_encoding_to: ENCODING
 			l_string_from: STRING_32
@@ -162,7 +162,7 @@ feature {NONE} -- Constants
 			end
 		end
 
-	ucs4_string: STRING_32 is
+	ucs4_string: STRING_32
 		once
 			create Result.make (3)
 			Result.append_code (0x233B4)
@@ -171,7 +171,7 @@ feature {NONE} -- Constants
 			--Result.append_string ("A")
 		end
 
-	utf8_string: STRING_8 is
+	utf8_string: STRING_8
 		once
 			create Result.make (4)
 			Result.append_code (0xE6)
@@ -205,7 +205,7 @@ feature {NONE} -- Constants
 			Result.append_code (0x7C7B)
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

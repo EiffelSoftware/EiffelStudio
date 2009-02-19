@@ -1,0 +1,14 @@
+test_name	 indirect-type-evaluation
+test_description Types that involve formal generics and anchored types should be correctly processed when used in type declarations and constraints.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	a.e $CLUSTER a.e
+copy_raw 	b.e $CLUSTER b.e
+copy_raw 	c.e $CLUSTER c.e
+copy_raw 	d.e $CLUSTER d.e
+copy_raw 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+test_end

@@ -236,7 +236,7 @@ feature -- Element change: International values
 		do
 			currency_international_numbers_after_decimal_separator := numbers
 		ensure
-			currency_international_numbers_after_decimal_separator_set: currency_numbers_after_decimal_separator = numbers
+			currency_international_numbers_after_decimal_separator_set: currency_international_numbers_after_decimal_separator = numbers
 		end
 
 	set_international_currency_group_separator(separator:STRING_GENERAL)

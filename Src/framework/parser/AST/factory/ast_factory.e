@@ -1369,12 +1369,6 @@ feature -- Access
 			Result.set_position (a_scn.line, a_scn.column, a_scn.position, l_cnt)
 		end
 
-	reusable_string_buffer: STRING
-			-- Reusable string buffer to avoid creation of unnecessary string objects
-		once
-			create Result.make (30)
-		end
-
 	new_filled_id_as_with_existing_stub (a_scn: EIFFEL_SCANNER_SKELETON; a_index: INTEGER): ID_AS
 			-- New empty ID AST node.
 		require
@@ -1921,6 +1915,14 @@ feature -- Access
 			-- New CREATION_CONSTRAIN_TRIPLE object
 		do
 			create Result.make (fl, c_as, e_as)
+		end
+
+feature {NONE} -- Implementation
+
+	reusable_string_buffer: STRING
+			-- Reusable string buffer to avoid creation of unnecessary string objects
+		once
+			create Result.make (30)
 		end
 
 note

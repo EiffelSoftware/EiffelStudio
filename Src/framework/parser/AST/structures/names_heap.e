@@ -102,9 +102,7 @@ feature -- Element change
 			s_not_void: s /= Void
 			s_valid_type: s.same_type (string_type)
 		local
-			l_s: STRING
 			l_lookup_table: like lookup_table
-			l_area: like area
 			l_top_index: INTEGER
 		do
 			l_lookup_table := lookup_table
@@ -114,16 +112,13 @@ feature -- Element change
 			else
 				l_top_index := top_index
 				found_item := l_top_index
-				l_area := area
-				if l_area.count <= l_top_index then
-					l_area := l_area.aliased_resized_area (l_top_index + (l_top_index // 2).max (Chunk))
-					area := l_area
+				if area.count <= l_top_index then
+					area := area.aliased_resized_area (l_top_index + (l_top_index // 2).max (Chunk))
 				end
-					-- Twin string as the heap cannot work if `s' is externally
+					-- Duplicate string as the heap cannot work if `s' is externally
 					-- modified.
-				l_s := s.twin
-				l_area.put (l_s, l_top_index)
-				l_lookup_table.put (l_top_index, l_s)
+				area.put (create {STRING}.make_from_string (s), l_top_index)
+				l_lookup_table.put (l_top_index, area [l_top_index])
 				top_index := l_top_index + 1
 			end
 		ensure
@@ -376,7 +371,7 @@ invariant
 	found_item_positive: found_item >= 0
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -389,22 +384,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class NAMES_HEAP

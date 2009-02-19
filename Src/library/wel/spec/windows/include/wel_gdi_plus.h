@@ -208,6 +208,7 @@ typedef struct GdiplusStartupOutputStruct
 
 typedef BOOL (CALLBACK * ImageAbort)(VOID *);
 typedef ImageAbort DrawImageAbort;
+typedef ImageAbort GetThumbnailImageAbort;
 
 #endif // !_GDIPLUSTYPES_H
 

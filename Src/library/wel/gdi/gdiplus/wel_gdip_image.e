@@ -19,6 +19,25 @@ inherit
 			destroy_item
 		end
 
+create
+	default_create
+
+create {WEL_GDIP_IMAGE}
+	make_with_item
+
+feature {NONE} -- Initialization
+
+	make_with_item (a_item: POINTER)
+			-- Creation method
+		require
+			not_void: a_item /= default_pointer
+		do
+			default_create
+			item := a_item
+		ensure
+			set: item = a_item
+		end
+
 feature -- Command
 
 	load_image_from_file (a_file_name: STRING)
@@ -139,6 +158,18 @@ feature -- Query
 			valid: (create {WEL_GDIP_PIXEL_FORMAT}).is_valid_format (Result)
 		end
 
+	get_thumbnail_image (a_width, a_height: INTEGER): WEL_GDIP_IMAGE
+			-- Gets a thumbnail image from this Image object
+		local
+			l_result_pointer: POINTER
+			l_result_status: INTEGER
+		do
+			l_result_pointer := c_gdip_get_thumbnail_image (gdi_plus_handle, item, a_width, a_height, default_pointer, default_pointer, $l_result_status)
+			check ok: l_result_status = {WEL_GDIP_STATUS}.ok end
+
+			create Result.make_with_item (l_result_pointer)
+		end
+
 	all_image_encoders: ARRAYED_LIST [WEL_GDIP_IMAGE_CODEC_INFO]
 			-- All image encoders.
 		local
@@ -225,7 +256,7 @@ feature {WEL_GDIP_IMAGE} -- Implementation
 				l_all_format := l_constants.all_formats
 				l_all_format.start
 			until
-				l_result /= Void
+				l_result /= Void or l_all_format.after
 			loop
 				if l_all_format.item.guid ~ raw_format then
 					l_result := l_all_format.item
@@ -495,6 +526,36 @@ feature {NONE} -- C externals
 								((GpImage *) $a_image,
 								(GUID *) $a_result_guid);
 				}
+			}
+			]"
+		end
+
+	c_gdip_get_thumbnail_image (a_gdiplus_handle: POINTER; a_image: POINTER; a_width, a_height: INTEGER; a_get_thumbnail_image_abort: POINTER; a_callback_data: POINTER; a_result_status: TYPED_POINTER [INTEGER]): POINTER
+			-- Get thumbnail_image
+		require
+			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
+		external
+			"C inline use %"wel_gdi_plus.h%""
+		alias
+			"[
+			{
+				static FARPROC GdipGetImageThumbnail = NULL;
+				GpImage *l_result = NULL;
+				*(EIF_INTEGER *) $a_result_status = 1;
+
+				if (!GdipGetImageThumbnail) {
+					GdipGetImageThumbnail = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipGetImageThumbnail");
+				}
+				if (GdipGetImageThumbnail) {
+					*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpImage *, UINT, UINT, GpImage **, GetThumbnailImageAbort, VOID *)) GdipGetImageThumbnail)
+								((GpImage *) $a_image,
+								(UINT) $a_width,
+								(UINT) $a_height,			
+								(GpBitmap **) &l_result,
+								(GetThumbnailImageAbort) $a_get_thumbnail_image_abort,
+								(VOID *) $a_callback_data);
+				}
+				return (EIF_POINTER) l_result;
 			}
 			]"
 		end

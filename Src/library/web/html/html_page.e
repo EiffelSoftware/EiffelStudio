@@ -16,7 +16,8 @@ inherit
 
 create
 	make,
-	make_from_template
+	make_from_template,
+	make_from_templates
 
 feature -- Initialization
 
@@ -26,27 +27,57 @@ feature -- Initialization
 			image := "<HTML>%N</HTML>"
 		end
 
-	make_from_template(fi_n: STRING)
+	make_from_template (a_fi_n: STRING)
 			-- Create an HTML page from a template whose path name is
 			-- 'fi'. The template may contains special symbols/words, which
 			-- will allow smart replacing (see feature 'replace').
 		require
-			path_not_void: fi_n /= Void
+			path_not_void: a_fi_n /= Void
+		do
+			create image.make (10)
+			image.append ("<html>")
+			fill_with_template (image, a_fi_n)
+			image.append ("</html>")
+		end
+
+feature {NONE} -- Initialization
+
+	make_from_templates (a_templates: ARRAY [STRING])
+		require
+			a_templates_not_void: a_templates /= Void
+		local
+			i, nb: INTEGER
+		do
+			create image.make (10)
+			image.append ("<html>")
+			from
+				i := a_templates.lower
+				nb := a_templates.upper
+			until
+				i > nb
+			loop
+				fill_with_template (image, a_templates.item (i))
+				i := i + 1
+			end
+			image.append ("</html>")
+		end
+
+	fill_with_template (a_buffer, a_fi_n: STRING)
+			-- Put content of file `a_fi_n' into `a_buffer'.
+		require
+			a_buffer_not_void: a_buffer /= Void
+			a_fi_n_not_void: a_fi_n /= Void
 		local
 			fi: PLAIN_TEXT_FILE
 			retried: BOOLEAN
-			l_image: ?STRING
 		do
 			if not retried then
-				create fi.make_open_read (fi_n)
+				create fi.make_open_read (a_fi_n)
 				fi.read_stream (fi.count)
-				l_image := fi.last_string
-					-- Per postcondition of `fi.read_stream'
-				check l_image_attached: l_image /= Void end
-				image := l_image.twin
+				a_buffer.append_string (fi.last_string)
 				fi.close
 			else
-				image := "<HTML>Could not read file " + fi_n + ".</HTML>"
+				image := "<p>Could not read file " + a_fi_n + ".</p>%N"
 			end
 		ensure
 			image_exists: image /= Void
@@ -76,7 +107,7 @@ feature -- Basic Operations
 			s1: STRING
 		do
 			i := image.substring_index ("</HTML",1)
-			if i=0 then
+			if i = 0 then
 				i := image.substring_index ("</html",1)
 			end
 			check

@@ -8,6 +8,7 @@
 			<exclude>/documents$</exclude>
 			<exclude>/EIFGENs$</exclude>
 			<exclude>/include$</exclude>
+			<exclude>/tests$</exclude>
 		</file_rule>
 		<option syntax_level="1" namespace="EiffelSoftware.Library">
 			<assertions precondition="true"/>

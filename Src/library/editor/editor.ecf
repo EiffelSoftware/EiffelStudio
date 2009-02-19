@@ -4,7 +4,8 @@
 		<description>Editor library</description>
 		<root all_classes="true"/>
 		<file_rule>
-			<exclude>/\.svn</exclude>
+			<exclude>/\.svn$</exclude>
+			<exclude>/tests$</exclude>
 			<exclude>/eiffel$</exclude>
 			<exclude>/text_formatter\.e$</exclude>
 		</file_rule>

@@ -286,7 +286,7 @@ feature {NONE} -- C code generation
 			check
 				is_implemented: rout_table.is_implemented
 			end
-			internal_name := rout_table.feature_name.twin
+			internal_name := rout_table.feature_name.string
 			buffer.put_new_line
 			buffer.put_string ("(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))")
 			buffer.put_string (internal_name);

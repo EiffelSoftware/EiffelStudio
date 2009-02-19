@@ -1554,7 +1554,7 @@ feature -- Access
 			key: STRING
 		do
 			if not associated_register_table.has (s) then
-				key := s.twin
+				create key.make_from_string (s)
 				local_index_table.extend (key)
 				local_index_counter := local_index_counter + 1
 				associated_register_table.put (r, key)

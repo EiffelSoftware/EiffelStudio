@@ -329,16 +329,16 @@ feature {NONE} -- Implementation
 				-- consecutives rows are identical we will generate a loop to fill the rows
 			from
 				buffer.put_new_line
-				buffer.put_string ("char *(*");
+				buffer.put_string (once "char *(*");
 				l_table_name := Encoder.routine_table_name (rout_id)
 				buffer.put_string (l_table_name);
-				buffer.put_string ("[")
+				buffer.put_character ('[')
 				buffer.put_integer (a_table_size)
-				buffer.put_string ("])();")
+				buffer.put_string (once "])();")
 				buffer.put_new_line
-				buffer.put_string ("void ")
+				buffer.put_string (once "void ")
 				buffer.put_string (l_table_name)
-				buffer.put_string ("_init () {")
+				buffer.put_string (once "_init () {")
 				buffer.indent
 				i := a_min;
 				j := an_offset
@@ -411,7 +411,8 @@ feature {NONE} -- Implementation
 						l_pattern_id := l_rout_entry.pattern_id
 						if l_seed_pattern_id /= l_pattern_id then
 								-- A wrapper needs to be used/generated.
-							l_wrapped_name := l_routine_name.twin
+							create l_wrapped_name.make (l_routine_name.count + 6)
+							l_wrapped_name.append (l_routine_name)
 							l_wrapped_name.append_character ('_')
 							l_wrapped_name.append_integer (rout_id)
 
@@ -444,7 +445,8 @@ feature {NONE} -- Implementation
 				l_pattern_id := l_rout_entry.pattern_id
 				if l_seed_pattern_id /= l_pattern_id then
 						-- A wrapper needs to be used/generated.
-					l_wrapped_name := l_routine_name.twin
+					create l_wrapped_name.make (l_routine_name.count + 6)
+					l_wrapped_name.append (l_routine_name)
 					l_wrapped_name.append_character ('_')
 					l_wrapped_name.append_integer (rout_id)
 
@@ -465,7 +467,7 @@ feature {NONE} -- Implementation
 			end
 			buffer.exdent
 			buffer.put_new_line
-			buffer.put_string ("}")
+			buffer.put_character ('}')
 				-- Add wrappers if any.
 			buffer.put_buffer (wrapper_buffer)
 			buffer.put_new_line

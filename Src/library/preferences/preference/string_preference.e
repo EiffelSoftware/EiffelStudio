@@ -19,7 +19,7 @@ feature -- Access
 	string_value: STRING
 			-- String representation of `value'.
 		do
-			Result := value.twin
+			create Result.make_from_string (value)
 		end
 
 	string_type: STRING

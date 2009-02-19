@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 			-- Escape xml entities in `a_string'.
 		do
 			if a_string /= Void then
-				Result := a_string.twin
+				create Result.make_from_string (a_string)
 				Result.replace_substring_all (Amp_string, amp_entity)
 				Result.replace_substring_all (Lt_string, Lt_entity)
 				Result.replace_substring_all (Gt_string, Gt_entity)

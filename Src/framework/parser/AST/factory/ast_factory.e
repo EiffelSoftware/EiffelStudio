@@ -325,7 +325,7 @@ feature -- Value AST creation
 			validate_integer_real_type (a_psr, a_type, buffer, True)
 			if is_valid_integer_real then
 					-- Remember original token
-				token_value := buffer.twin
+				token_value := buffer.string
 					-- Remove underscores (if any) without breaking
 					-- original token
 				if token_value.has ('_') then
@@ -368,7 +368,7 @@ feature -- Value AST creation
 			validate_integer_real_type (a_psr, a_type, buffer, False)
 			if is_valid_integer_real then
 				if is_signed and sign_symbol = '-' then
-					l_buffer := buffer.twin
+					l_buffer := buffer.string
 					buffer.precede ('-')
 				else
 					l_buffer := buffer

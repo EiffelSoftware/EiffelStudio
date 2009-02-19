@@ -230,7 +230,7 @@ debug
 	io.error.put_new_line
 end
 
-				unprocessed := include_files.twin
+				create unprocessed.make_from_string (include_files)
 					-- Compute maximum number of include files
 				nb := unprocessed.occurrences (',') + 1
 				create header_files.make (1, nb)

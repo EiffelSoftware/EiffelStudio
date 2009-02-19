@@ -107,7 +107,7 @@ feature -- Initialization
 			if d.exists then
 				create d.make (a_project_location.target_path)
 				if d.exists then
-					new_name := a_project_location.target_path.twin
+					create new_name.make_from_string (a_project_location.target_path)
 					if new_name.item (new_name.count) = ']' then
 							-- VMS specification. We need to append `_old' before the `]'.
 						new_name.insert_string ("_old", new_name.count - 1)
@@ -677,7 +677,7 @@ feature -- Update
 	delete_generation_directory (
 			base_name: STRING; deletion_agent: PROCEDURE [ANY, TUPLE];
 			cancel_agent: FUNCTION [ANY, TUPLE, BOOLEAN])
-		
+
 			-- Delete then EIFFEL generated directory named `base_name'.
 			--
 			-- `deletion_agent' is called each time `Deletion_agent_efficiency'

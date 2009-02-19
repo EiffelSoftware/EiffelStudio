@@ -120,7 +120,8 @@ feature -- C code generation
 
 			create f_name.make_from_string (dir_name)
 			if extension /= Void then
-				l_name := file_name.twin
+				create l_name.make (file_name.count + extension.count)
+				l_name.append (file_name)
 				l_name.append (extension)
 			else
 				l_name := file_name

@@ -656,7 +656,7 @@ feature {NONE} -- Implementation
 				end
 				text_formatter_decorator.put_new_line
 				if not l_as.value.is_empty then
-					append_format_multilined (l_as.value.twin, l_as.is_indentable)
+					append_format_multilined (l_as.value.string, l_as.is_indentable)
 				end
 				if l_as.is_indentable then
 					text_formatter_decorator.put_string_item ("]")
@@ -3375,7 +3375,7 @@ feature {NONE} -- Implementation
 				not_expr_type_visiting: not expr_type_visiting
 			end
 			if l_as.tag /= Void then
-				text_formatter_decorator.process_indexing_tag_text (l_as.tag.name.twin)
+				text_formatter_decorator.process_indexing_tag_text (l_as.tag.name.string)
 				text_formatter_decorator.set_without_tabs
 				text_formatter_decorator.process_symbol_text (ti_colon)
 				text_formatter_decorator.put_space
@@ -3996,7 +3996,7 @@ feature {NONE} -- Implementation: helpers
 				put_breakable
 			end
 			if l_as.tag /= Void then
-				text_formatter_decorator.process_assertion_tag_text (l_as.tag.name.twin)
+				text_formatter_decorator.process_assertion_tag_text (l_as.tag.name.string)
 				text_formatter_decorator.set_without_tabs
 				text_formatter_decorator.process_symbol_text (ti_colon)
 				text_formatter_decorator.put_space

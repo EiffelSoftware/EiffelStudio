@@ -501,7 +501,7 @@ feature  -- Directories (dotnet)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			Result := dotnet_path.twin
+			create Result.make_from_string (dotnet_path)
 			Result.extend (assemblies_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -514,7 +514,7 @@ feature -- Directories (distribution)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			Result := shared_application_path.twin
+			create Result.make_from_string (shared_application_path)
 			Result.extend (bitmaps_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -537,7 +537,7 @@ feature -- Directories (distribution)
 		require
 			is_valid_environment: is_valid_environment
 		do
-			Result := shared_application_path.twin
+			create Result.make_from_string (shared_application_path)
 			Result.extend (built_ins_name)
 			if a_is_platform_neutral then
 				Result.extend (neutral_name)
@@ -557,7 +557,7 @@ feature -- Directories (distribution)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			Result := shared_application_path.twin
+			create Result.make_from_string (shared_application_path)
 			Result.extend ("config")
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -579,7 +579,7 @@ feature -- Directories (distribution)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			Result := shared_application_path.twin
+			create Result.make_from_string (shared_application_path)
 			Result.extend ("eifinit")
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -635,10 +635,10 @@ feature -- Directories (distribution)
 			is_valid_environment: is_valid_environment
 		once
 			if is_unix_layout then
-				Result := unix_layout_share_path.twin
+				create Result.make_from_string (unix_layout_share_path)
 				Result.extend_from_array (<<unix_layout_locale_dir, product_version_name >>)
 			else
-				Result := shared_application_path.twin
+				create Result.make_from_string (shared_application_path)
 				Result.extend_from_array (<<lang_name, mo_files_name>>)
 			end
 		ensure
@@ -650,7 +650,7 @@ feature -- Directories (distribution)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			Result := shared_application_path.twin
+			create Result.make_from_string (shared_application_path)
 			Result.extend (metrics_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -661,7 +661,7 @@ feature -- Directories (distribution)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			Result := shared_application_path.twin
+			create Result.make_from_string (shared_application_path)
 			Result.extend (profiler_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -672,7 +672,7 @@ feature -- Directories (distribution)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			Result := shared_application_path.twin
+			create Result.make_from_string (shared_application_path)
 			Result.extend (templates_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -683,7 +683,7 @@ feature -- Directories (distribution)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			Result := templates_path.twin
+			create Result.make_from_string (templates_path)
 			Result.extend (defaults_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -695,10 +695,10 @@ feature -- Directories (distribution)
 			is_valid_environment: is_valid_environment
 		once
 			if is_unix_layout then
-				Result := unix_layout_base_path.twin
+				create Result.make_from_string (unix_layout_base_path)
 				Result.extend (bin_name)
 			else
-				Result := shared_application_path.twin
+				create Result.make_from_string (shared_application_path)
 				Result.extend_from_array (<<spec_name, eiffel_platform, bin_name>>)
 			end
 		ensure
@@ -742,7 +742,7 @@ feature -- Directories (distribution)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			Result := lib_application_path.twin
+			create Result.make_from_string (lib_application_path)
 			Result.extend (wizards_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -753,7 +753,7 @@ feature -- Directories (distribution)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			Result := wizards_path.twin
+			create Result.make_from_string (wizards_path)
 			Result.extend ("new_projects")
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -927,7 +927,7 @@ feature -- Directories (user)
 			is_valid_environment: is_valid_environment
 			is_user_files_supported: is_user_files_supported
 		once
-			Result := user_application_files_path.twin
+			create Result.make_from_string (user_application_files_path)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end

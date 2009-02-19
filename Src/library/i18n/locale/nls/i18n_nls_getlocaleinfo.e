@@ -36,7 +36,7 @@ feature -- Interface
 			pointer: POINTER
 		do
 			pointer := c_extract_locale_string(lcid, lc_ctype, bufferlen)
-			Result := pointer_to_string (pointer)
+			Result := pointer_to_string (pointer, bufferlen)
 			pointer.memory_free
 		end
 
@@ -57,7 +57,7 @@ feature {NONE} -- C helper
 
 feature {NONE} -- utf16-LE (aka "wide string") handling
 
-	pointer_to_string(ptr: POINTER): STRING_32
+	pointer_to_string(ptr: POINTER; buf_size: INTEGER): STRING_32
 			-- takes a pointer to a utf16-LE string (the LE is important!)
 			-- and returns the corresponding STRING_32 by means of Horrible Things
 		require
@@ -66,8 +66,14 @@ feature {NONE} -- utf16-LE (aka "wide string") handling
 		local
 			length: INTEGER
 		do
-			length := c_wcslen (ptr)
-			Result := pointer_to_wide_string (ptr, length * c_wcsize)
+				-- Ignore the reminder part, when it doesn't make sense to be a character.
+			if buf_size \\ c_wcsize /= 0 then
+				length := (buf_size // c_wcsize) * c_wcsize
+			else
+				length := buf_size
+			end
+			length := length.min (c_wcslen (ptr) * c_wcsize)
+			Result := pointer_to_wide_string (ptr, length)
 			Result := utf16_to_utf32 (Result)
 		end
 

@@ -38,7 +38,7 @@ feature -- Settings
 		require
 			rout_table_exists: rout_table /= Void
 		do
-			routine_tables.put (rout_table.twin)
+			routine_tables.put (rout_table.string)
 		end
 
 	add_attribute_table (attr_table: STRING)
@@ -46,7 +46,7 @@ feature -- Settings
 		require
 			attr_table_exists: attr_table /= Void
 		do
-			attribute_tables.put (attr_table.twin)
+			attribute_tables.put (attr_table.string)
 		end
 
 	add_once (type: TYPE_C; code_index: INTEGER; is_process_relative: BOOLEAN)
@@ -64,7 +64,7 @@ feature -- Settings
 		require
 			type_table_exists: type_table /= Void
 		do
-			type_tables.put (type_table.twin)
+			type_tables.put (type_table.string)
 		end
 
 	add_routine (type: TYPE_C; rout_name: STRING)

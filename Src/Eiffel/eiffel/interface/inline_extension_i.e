@@ -119,7 +119,7 @@ feature -- Code generation
 		do
 			if not context.generated_inlines.has (name) then
 				generate_inline_def (a_ret_type, name, arg_types)
-				context.generated_inlines.put (name.twin)
+				context.generated_inlines.put (name.string)
 			end
 		end
 

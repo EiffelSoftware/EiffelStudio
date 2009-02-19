@@ -5105,7 +5105,7 @@ feature -- Pattern table generation
 					check
 						implemented: l_root_rout_table.is_implemented
 					end
-					l_root_rout_cname := l_root_rout_table.feature_name.twin
+					l_root_rout_cname := l_root_rout_table.feature_name.string
 					if l_root_ft.has_arguments then
 						buffer.generate_extern_declaration
 							("void", l_root_rout_cname, <<"EIF_REFERENCE", "EIF_REFERENCE">>)
@@ -5114,7 +5114,7 @@ feature -- Pattern table generation
 							("void", l_root_rout_cname, <<"EIF_REFERENCE">>)
 					end
 
-					l_root_caller := l_root_rout_cname.twin
+					l_root_caller := l_root_rout_cname.string
 					l_root_caller.append ("(root_obj")
 					if l_root_ft.has_arguments then
 						l_root_caller.append (", argarr(argc, argv)")

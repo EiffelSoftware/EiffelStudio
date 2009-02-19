@@ -177,7 +177,9 @@ feature -- Basic Operations
 			remove_selection (begin_sel, end_sel)
 			cursor.make_from_character_pos (char_num, line_number, Current)
 			history.record_replace_selection (removed, a_word)
-			insert_string_at_cursor_pos (a_word)
+			if not a_word.is_empty then
+				insert_string_at_cursor_pos (a_word)
+			end
 			disable_selection
 			ignore_cursor_moves := False
 		end
@@ -472,7 +474,9 @@ feature -- Basic Operations
 			end
 			ignore_cursor_moves := True
 			history.record_paste (txt)
-			insert_string_at_cursor_pos (txt)
+			if not txt.is_empty then
+				insert_string_at_cursor_pos (txt)
+			end
 			ignore_cursor_moves := False
 			if has_selection then
 				disable_selection
@@ -682,7 +686,9 @@ feature -- for search only
 			remove_selection (selection_cursor, cursor)
 			cursor.make_from_character_pos (char_num, line_number, Current)
 			history.record_replace_all (removed, a_word)
-			insert_string_at_cursor_pos (a_word)
+			if not a_word.is_empty then
+				insert_string_at_cursor_pos (a_word)
+			end
 			disable_selection
 			ignore_cursor_moves := False
 		end

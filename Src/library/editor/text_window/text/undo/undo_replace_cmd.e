@@ -68,8 +68,12 @@ feature -- Basic operations
 			cur := text.cursor
 			cur.make_from_character_pos (x_start, y_start, text)
 			text.forget_selection
-			text.delete_n_chars_at_cursor_pos (new_message.count)
-			text.insert_string_at_cursor_pos (old_message)
+			if not new_message.is_empty then
+				text.delete_n_chars_at_cursor_pos (new_message.count)
+			end
+			if not old_message.is_empty then
+				text.insert_string_at_cursor_pos (old_message)
+			end
 		end
 
 	redo
@@ -78,9 +82,13 @@ feature -- Basic operations
 		do
 			cur := text.cursor
 			cur.make_from_character_pos (x_start, y_start, text)
-			text.delete_n_chars_at_cursor_pos (old_message.count)
+			if not old_message.is_empty then
+				text.delete_n_chars_at_cursor_pos (old_message.count)
+			end
 			text.forget_selection
-			text.insert_string_at_cursor_pos (new_message)
+			if not new_message.is_empty then
+				text.insert_string_at_cursor_pos (new_message)
+			end
 		end
 
 

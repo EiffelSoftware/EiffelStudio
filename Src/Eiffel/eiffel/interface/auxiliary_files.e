@@ -98,7 +98,7 @@ feature -- Dynamic Library file
 				is_dll_generated := dynamic_lib.is_content_valid and not dynamic_lib.is_empty
 				if is_dll_generated then
 					dynamic_lib_exports := dynamic_lib.dynamic_lib_exports
-					system_name := system.eiffel_system.name.twin
+					system_name := system.eiffel_system.name.string
 				end
 			end
 
@@ -129,7 +129,7 @@ feature -- Dynamic Library file
 
 						from
 							dynamic_lib_exports.item_for_iteration.start
-							class_name := dynamic_lib_exports.item_for_iteration.item.compiled_class.name_in_upper.twin
+							class_name := dynamic_lib_exports.item_for_iteration.item.compiled_class.name_in_upper.string
 							def_buffer.put_string(class_name)
 							def_buffer.put_string( "]%N" )
 						until
@@ -148,19 +148,19 @@ feature -- Dynamic Library file
 										buffer.put_string (")")
 										internal_creation_name := Encoder.feature_name (
 													System.class_of_id (dl_exp.creation_routine.written_in).types.first.type_id,
-													dl_exp.creation_routine.body_index).twin
+													dl_exp.creation_routine.body_index).string
 								elseif (dl_exp.creation_routine = Void) then
 										buffer.put_string (" (!!)")
 								end
 								if (dl_exp.routine /= Void) then
 									if dl_exp.has_alias then
-										feature_name := dl_exp.alias_name.twin
+										feature_name := dl_exp.alias_name.string
 									else
-										feature_name := dl_exp.routine.name.twin
+										feature_name := dl_exp.routine.name.string
 									end
 									internal_feature_name := Encoder.feature_name (
 											System.class_of_id (dl_exp.routine.written_in).types.first.type_id,
-											dl_exp.routine.body_index).twin
+											dl_exp.routine.body_index).string
 									args:= dl_exp.routine.arguments
 
 									def_buffer.put_string("%T")
@@ -452,14 +452,14 @@ feature -- Plug and Makefile file
 			correct_mismatch_feat :=
 				any_cl.feature_table.item_id (Names_heap.internal_correct_mismatch_name_id)
 			correct_mismatch_name := Encoder.feature_name (any_cl.types.first.type_id,
-				correct_mismatch_feat.body_index).twin
+				correct_mismatch_feat.body_index).string
 			buffer.put_string ("extern void ")
 			buffer.put_string (correct_mismatch_name)
 			buffer.put_string ("();%N")
 
 			twin_name :=
 				Encoder.feature_name (any_cl.types.first.type_id,
-					any_cl.feature_table.item_id (Names_heap.twin_name_id).body_index).twin
+					any_cl.feature_table.item_id (Names_heap.twin_name_id).body_index).string
 			buffer.put_string ("extern EIF_REFERENCE ")
 			buffer.put_string (twin_name)
 			buffer.put_string ("();%N")
@@ -467,7 +467,7 @@ feature -- Plug and Makefile file
 				-- Make STRING declaration
 			str_make_feat := string_cl.feature_table.item_id (Names_heap.make_name_id)
 			str_make_name := Encoder.feature_name (str_make_feat.written_class.types.first.type_id,
-				str_make_feat.body_index).twin
+				str_make_feat.body_index).string
 			buffer.put_string ("extern void ")
 			buffer.put_string (str_make_name)
 			buffer.put_string ("();%N")
@@ -477,7 +477,7 @@ feature -- Plug and Makefile file
 			else
 				set_count_feat ?= string_cl.feature_table.item_id (Names_heap.set_count_name_id)
 				set_count_name := Encoder.feature_name (set_count_feat.written_class.types.first.type_id,
-					set_count_feat.body_index).twin
+					set_count_feat.body_index).string
 				buffer.put_string ("extern void ")
 				buffer.put_string (set_count_name)
 				buffer.put_string ("();%N")
@@ -498,7 +498,7 @@ feature -- Plug and Makefile file
 				creators := array_cl.creators
 				creators.start
 				creation_feature := array_cl.feature_table.item_id (Names_heap.make_name_id)
-				arr_make_name := Encoder.feature_name (id, creation_feature.body_index).twin
+				arr_make_name := Encoder.feature_name (id, creation_feature.body_index).string
 				if not final_mode then
 						-- Only store the name of the routine in workbench mode. Otherwise
 						-- eweasel test#multicon008 would fail when freezing after finalizing.
@@ -525,10 +525,10 @@ feature -- Plug and Makefile file
 				id := cl_type.type_id
 				if final_mode then
 					feat := rout_cl.feature_table.item_id (Names_heap.set_rout_disp_final_name_id)
-					set_rout_disp_name := Encoder.feature_name (id, feat.body_index).twin
+					set_rout_disp_name := Encoder.feature_name (id, feat.body_index).string
 				else
 					feat := rout_cl.feature_table.item_id (Names_heap.set_rout_disp_name_id)
-					set_rout_disp_name := Encoder.feature_name (id, feat.body_index).twin
+					set_rout_disp_name := Encoder.feature_name (id, feat.body_index).string
 				end
 				buffer.put_string ("extern void ")
 				buffer.put_string (set_rout_disp_name)
@@ -540,43 +540,43 @@ feature -- Plug and Makefile file
 			if exception_manager_cl.types /= Void and then not exception_manager_cl.types.is_empty then
 				feat := exception_manager_cl.feature_table.item_id (Names_heap.set_exception_data_name_id)
 				id := exception_manager_cl.types.first.type_id
-				set_exception_data_name := Encoder.feature_name (id, feat.body_index).twin
+				set_exception_data_name := Encoder.feature_name (id, feat.body_index).string
 				buffer.put_string ("extern void ")
 				buffer.put_string (set_exception_data_name)
 				buffer.put_string ("();%N")
 
 				feat := exception_manager_cl.feature_table.item_id (Names_heap.last_exception_name_id)
-				last_exception_name := Encoder.feature_name (id, feat.body_index).twin
+				last_exception_name := Encoder.feature_name (id, feat.body_index).string
 				buffer.put_string ("extern EIF_REFERENCE ")
 				buffer.put_string (last_exception_name)
 				buffer.put_string ("();%N")
 
 				feat := exception_manager_cl.feature_table.item_id (Names_heap.set_last_exception_name_id)
-				set_last_exception_name := Encoder.feature_name (id, feat.body_index).twin
+				set_last_exception_name := Encoder.feature_name (id, feat.body_index).string
 				buffer.put_string ("extern EIF_BOOLEAN ")
 				buffer.put_string (set_last_exception_name)
 				buffer.put_string ("();%N")
 
 				feat := exception_manager_cl.feature_table.item_id (Names_heap.is_code_ignored_name_id)
-				is_code_ignored_name := Encoder.feature_name (id, feat.body_index).twin
+				is_code_ignored_name := Encoder.feature_name (id, feat.body_index).string
 				buffer.put_string ("extern EIF_BOOLEAN ")
 				buffer.put_string (is_code_ignored_name)
 				buffer.put_string ("();%N")
 
 				feat := exception_manager_cl.feature_table.item_id (Names_heap.once_raise_name_id)
-				once_raise_name := Encoder.feature_name (id, feat.body_index).twin
+				once_raise_name := Encoder.feature_name (id, feat.body_index).string
 				buffer.put_string ("extern void ")
 				buffer.put_string (once_raise_name)
 				buffer.put_string ("();%N")
 
 				feat := exception_manager_cl.feature_table.item_id (Names_heap.init_exception_manager_id)
-				init_exception_manager_name := Encoder.feature_name (id, feat.body_index).twin
+				init_exception_manager_name := Encoder.feature_name (id, feat.body_index).string
 				buffer.put_string ("extern void ")
 				buffer.put_string (init_exception_manager_name)
 				buffer.put_string ("();%N")
 
 				feat := exception_manager_cl.feature_table.item_id (Names_heap.free_preallocated_trace_id)
-				free_preallocated_trace_name := Encoder.feature_name (id, feat.body_index).twin
+				free_preallocated_trace_name := Encoder.feature_name (id, feat.body_index).string
 				buffer.put_string ("extern void ")
 				buffer.put_string (free_preallocated_trace_name)
 				buffer.put_string ("();%N")
@@ -593,7 +593,7 @@ feature -- Plug and Makefile file
 
 				feat := l_rt_dbg_cl.feature_table.item_id (Names_heap.notify_name_id)
 				if feat /= Void then
-					l_rt_extension_notify_name := Encoder.feature_name (id, feat.body_index).twin
+					l_rt_extension_notify_name := Encoder.feature_name (id, feat.body_index).string
 				end
 				if l_rt_extension_notify_name /= Void then
 					buffer.put_string ("extern void ")
@@ -604,7 +604,7 @@ feature -- Plug and Makefile file
 
 				feat := l_rt_dbg_cl.feature_table.item_id (Names_heap.notify_argument_name_id)
 				if feat /= Void then
-					l_rt_extension_notify_argument_name := Encoder.feature_name (id, feat.body_index).twin
+					l_rt_extension_notify_argument_name := Encoder.feature_name (id, feat.body_index).string
 				end
 				if l_rt_extension_notify_argument_name /= Void then
 					buffer.put_string ("extern EIF_TYPED_VALUE ")
@@ -629,9 +629,9 @@ feature -- Plug and Makefile file
 
 			if final_mode then
 				init_name :=
-					Encoder.routine_table_name (system.routine_id_counter.initialization_rout_id).twin
+					Encoder.routine_table_name (system.routine_id_counter.initialization_rout_id).string
 				exp_init_name :=
-					Encoder.routine_table_name (system.routine_id_counter.creation_rout_id).twin
+					Encoder.routine_table_name (system.routine_id_counter.creation_rout_id).string
 
 				buffer.put_string ("extern char *(*")
 				buffer.put_string (init_name)
@@ -640,17 +640,17 @@ feature -- Plug and Makefile file
 				buffer.put_string (exp_init_name)
 				buffer.put_string ("[])();%N")
 
-				dispose_name := Encoder.routine_table_name (system.routine_id_counter.dispose_rout_id).twin
+				dispose_name := Encoder.routine_table_name (system.routine_id_counter.dispose_rout_id).string
 				buffer.put_string ("extern char *(*")
 				buffer.put_string (dispose_name)
 				buffer.put_string ("[])();%N%N")
 
-				copy_name := Encoder.routine_table_name (system.routine_id_counter.copy_rout_id).twin
+				copy_name := Encoder.routine_table_name (system.routine_id_counter.copy_rout_id).string
 				buffer.put_string ("extern char *(*")
 				buffer.put_string (copy_name)
 				buffer.put_string ("[])();%N%N")
 
-				is_equal_name := Encoder.routine_table_name (system.routine_id_counter.is_equal_rout_id).twin
+				is_equal_name := Encoder.routine_table_name (system.routine_id_counter.is_equal_rout_id).string
 				buffer.put_string ("extern char *(*")
 				buffer.put_string (is_equal_name)
 				buffer.put_string ("[])();%N%N")

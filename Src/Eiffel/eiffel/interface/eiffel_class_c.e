@@ -1345,9 +1345,9 @@ feature
 			finished_file_name: FILE_NAME
 		do
 			if System.in_final_mode then
-				dir_name := project_location.final_path.twin
+				create dir_name.make_from_string (project_location.final_path)
 			else
-				dir_name := project_location.workbench_path.twin
+				create dir_name.make_from_string (project_location.workbench_path)
 			end
 
 			create subdirectory.make (5)

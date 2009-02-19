@@ -1362,10 +1362,17 @@ feature -- Access
 			l_str: STRING
 		do
 			l_cnt := a_scn.text_count
-			create l_str.make (l_cnt)
+			l_str := reusable_string_buffer
+			l_str.clear_all
 			a_scn.append_text_to_string (l_str)
 			create Result.initialize (l_str)
 			Result.set_position (a_scn.line, a_scn.column, a_scn.position, l_cnt)
+		end
+
+	reusable_string_buffer: STRING
+			-- Reusable string buffer to avoid creation of unnecessary string objects
+		once
+			create Result.make (30)
 		end
 
 	new_filled_id_as_with_existing_stub (a_scn: EIFFEL_SCANNER_SKELETON; a_index: INTEGER): ID_AS

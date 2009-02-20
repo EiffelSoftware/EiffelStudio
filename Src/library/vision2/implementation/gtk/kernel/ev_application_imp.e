@@ -127,6 +127,25 @@ feature {NONE} -- Initialization
 			"return (FUNCTION_CAST(gboolean, (GdkDisplay*)) $a_function)((GdkDisplay*) $a_display);"
 		end
 
+	gdk_test_simulate_button: POINTER
+			-- Symbol for `gdk_test_simulate_button'
+		once
+			Result := symbol_from_symbol_name ("gdk_test_simulate_button")
+		end
+
+	gdk_test_simulate_key: POINTER
+			-- Symbol for `gdk_test_simulate_key'
+		once
+			Result := symbol_from_symbol_name ("gdk_test_simulate_key")
+		end
+
+	gdk_test_simulate_call (a_function, a_window: POINTER; a_x, a_y: INTEGER; a_button, a_modifiers: NATURAL; a_press_release: BOOLEAN): BOOLEAN
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"return (FUNCTION_CAST(gboolean, (GdkWindow*, gint, gint, guint, GdkModifierType, GdkEventType)) $a_function) ((GdkWindow*) $a_window, (gint) $a_x, (gint) $a_y, (guint) $a_button, (GdkModifierType) $a_modifiers, (GdkEventType) $a_press_release)"
+		end
+
 feature {NONE} -- Event loop
 
 	 launch

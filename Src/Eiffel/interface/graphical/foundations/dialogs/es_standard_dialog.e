@@ -45,6 +45,7 @@ feature {NONE} -- Initialization
 			is_initializing := l_init
 
 			on_after_initialized
+			reset
 		ensure
 			is_initialized: is_initialized
 			is_initializing_unchanged: old is_initializing = is_initializing
@@ -309,7 +310,7 @@ feature -- Basic operations
 			is_interface_usable: is_interface_usable
 			not_a_window_is_destoryed: not a_window.is_destroyed
 		do
-			reset
+			on_before_shown
 			dialog.show_modal_to_window (a_window)
 			on_closed
 		end
@@ -322,7 +323,6 @@ feature -- Basic operations
 			l_dev_window: like development_window
 			l_window: EV_WINDOW
 		do
-			reset
 			l_window := helpers.parent_window_of_focused_widget
 			if l_window = Void then
 				l_dev_window := development_window
@@ -340,9 +340,23 @@ feature {NONE} -- Basic operation
 	reset
 			-- Resets current's state, removing and cached data
 		do
+			dialog_result := 0
+		ensure
+			not_is_confirmed: not is_confirmed
 		end
 
 feature {NONE} -- Action handlers
+
+	on_before_shown
+			-- Called prior to the dialog being shown.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+		do
+			dialog_result := 0
+		ensure
+			dialog_result_reset: dialog_result = 0
+		end
 
 	on_closed
 			-- Called when the dialog is closed

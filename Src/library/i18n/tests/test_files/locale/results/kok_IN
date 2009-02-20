@@ -1,0 +1,78 @@
+
+
+Test of locale: kok_IN
+DAY/MONTH NAMES TEST
+    Abbreviated day names:
+  सोम.
+  मंगळ.
+  बुध.
+  बिरे.
+  सुक्र.
+  शेन.
+  आय.
+    Full day names:
+  सोमार
+  मंगळार
+  बुधवार
+  बिरेस्तार
+  सुक्रार
+  शेनवार
+  आयतार
+    Abbreviated month names:
+  जानेवारी
+  फेब्रुवारी
+  मार्च
+  एप्रिल
+  मे
+  जून
+  जुलै
+  ऑगस्ट
+  सप्टेंबर
+  ऑक्टोबर
+  नोवेम्बर
+  डिसेंबर
+    Full month names:
+  जानेवारी
+  फेब्रुवारी
+  मार्च
+  एप्रिल
+  मे
+  जून
+  जुलै
+  ऑगस्ट
+  सप्टेंबर
+  ऑक्टोबर
+  नोवेम्बर
+  डिसेंबर
+DATE TIME FORMATTER TEST
+    Original string: local_date_time: &c, day: &A
+
+    formatted string: local_date_time: 19 फेब्रुवारी 2009 11:45:30, day: सुक्रार
+
+CURRENCY INFO TEST
+    cur dec sep: '.'
+    cur gr.sep: ''
+    Grouping: 320
+    cur nr list sep: ','
+    cur num after dec: '2'
+    currency symbol:'रु'
+    symbol location: 0
+    INT cur dec sep: '.'
+    INT cur gr.sep: ','
+    INT Grouping: 330
+    INT cur nr list sep: ';'
+    INT cur num after dec: '2'
+    INT currency symbol:'INR'
+    INT symbol location: 0
+CURRENCY FORMATTER TEST
+    Original value: 1324539.2339999999
+    Formatted: रु 1324539.23
+VALUE INFO TEST
+    value dec separator: '.'
+    value numb after dec. sep: '2'
+    value gr. sep.: ','
+    value nr list sep.: ','
+    Grouping: 330
+VALUE FORMATTER TEST
+    Original value: 123559.234
+    Formatted: 123,559.23

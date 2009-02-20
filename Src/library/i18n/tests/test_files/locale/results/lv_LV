@@ -1,0 +1,78 @@
+
+
+Test of locale: lv_LV
+DAY/MONTH NAMES TEST
+    Abbreviated day names:
+  Pr
+  Ot
+  Tr
+  Ce
+  Pk
+  Se
+  Sv
+    Full day names:
+  pirmdiena
+  otrdiena
+  trešdiena
+  ceturtdiena
+  piektdiena
+  sestdiena
+  svētdiena
+    Abbreviated month names:
+  Jan
+  Feb
+  Mar
+  Apr
+  Mai
+  Jūn
+  Jūl
+  Aug
+  Sep
+  Okt
+  Nov
+  Dec
+    Full month names:
+  janvāris
+  februāris
+  marts
+  aprīlis
+  maijs
+  jūnijs
+  jūlijs
+  augusts
+  septembris
+  oktobris
+  novembris
+  decembris
+DATE TIME FORMATTER TEST
+    Original string: local_date_time: &c, day: &A
+
+    formatted string: local_date_time: piektdiena, 2009. gada 19. februāris 11:45:30, day: piektdiena
+
+CURRENCY INFO TEST
+    cur dec sep: ','
+    cur gr.sep: ''
+    Grouping: 30
+    cur nr list sep: ';'
+    cur num after dec: '2'
+    currency symbol:'Ls'
+    symbol location: 0
+    INT cur dec sep: '.'
+    INT cur gr.sep: ','
+    INT Grouping: 330
+    INT cur nr list sep: ';'
+    INT cur num after dec: '2'
+    INT currency symbol:'LVL'
+    INT symbol location: 0
+CURRENCY FORMATTER TEST
+    Original value: 1324539.2339999999
+    Formatted: Ls 1324539,23
+VALUE INFO TEST
+    value dec separator: ','
+    value numb after dec. sep: '2'
+    value gr. sep.: ' '
+    value nr list sep.: ';'
+    Grouping: 330
+VALUE FORMATTER TEST
+    Original value: 123559.234
+    Formatted: 123 559,23

@@ -1,0 +1,78 @@
+
+
+Test of locale: vi_VN
+DAY/MONTH NAMES TEST
+    Abbreviated day names:
+  hai
+  ba
+  tư
+  năm
+  sáu
+  bảy
+  cn
+    Full day names:
+  thứ hai
+  thứ ba
+  thứ tư
+  thứ năm
+  thứ sáu
+  thứ bảy
+  chủ nhật
+    Abbreviated month names:
+  th1
+  th2
+  th3
+  th4
+  th5
+  th6
+  th7
+  th8
+  th9
+  th10
+  th11
+  th12
+    Full month names:
+  tháng một
+  tháng hai
+  tháng ba
+  tháng tư
+  tháng năm
+  tháng sáu
+  tháng bảy
+  tháng tám
+  tháng chín
+  tháng mười
+  tháng mười một
+  tháng mười hai
+DATE TIME FORMATTER TEST
+    Original string: local_date_time: &c, day: &A
+
+    formatted string: local_date_time: 19 tháng hai 2009 11:45:30 sa, day: thứ sáu
+
+CURRENCY INFO TEST
+    cur dec sep: ','
+    cur gr.sep: ''
+    Grouping: 30
+    cur nr list sep: ','
+    cur num after dec: '2'
+    currency symbol:'₫'
+    symbol location: 1
+    INT cur dec sep: '.'
+    INT cur gr.sep: ','
+    INT Grouping: 330
+    INT cur nr list sep: ';'
+    INT cur num after dec: '2'
+    INT currency symbol:'VND'
+    INT symbol location: 0
+CURRENCY FORMATTER TEST
+    Original value: 1324539.2339999999
+    Formatted: 1324539,23 ₫
+VALUE INFO TEST
+    value dec separator: ','
+    value numb after dec. sep: '2'
+    value gr. sep.: '.'
+    value nr list sep.: ','
+    Grouping: 330
+VALUE FORMATTER TEST
+    Original value: 123559.234
+    Formatted: 123.559,23

@@ -14,6 +14,7 @@ class
 inherit
 	ES_STANDARD_PATH_DIALOG [EV_DIRECTORY_DIALOG]
 		redefine
+			reset,
 			on_confirm
 		end
 
@@ -67,22 +68,22 @@ feature {NONE} -- Element change
 
 feature -- Status report
 
-	is_directory_created: BOOLEAN assign set_is_directory_created
+	is_path_created_on_confirm: BOOLEAN assign set_is_path_created_on_confirm
 			-- Indicates if a directory should be created if the directory chosen doesn't exist
 
 feature -- Status setting
 
-	set_is_directory_created (a_create: BOOLEAN)
+	set_is_path_created_on_confirm (a_created: BOOLEAN)
 			-- Sets dialog's ability to request a directory be created.
 			--
-			-- `a_create': True to create non-existing directories; False otherwise.
+			-- `a_created': True to create non-existing directories; False otherwise.
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
 		do
-			is_directory_created := a_create
+			is_path_created_on_confirm := a_created
 		ensure
-			is_directory_created_set: is_directory_created = a_create
+			is_path_created_on_confirm_set: is_path_created_on_confirm = a_created
 		end
 
 feature {NONE} -- Query
@@ -98,6 +99,17 @@ feature {NONE} -- Query
 			else
 				Result := dialog_buttons.ok_button
 			end
+		end
+
+feature -- Basic operations
+
+	reset
+			-- <Precursor>
+		do
+			Precursor
+			is_path_created_on_confirm := False
+		ensure then
+			not_is_path_created_on_confirm: not is_path_created_on_confirm
 		end
 
 feature {NONE} -- Action handlers
@@ -118,7 +130,7 @@ feature {NONE} -- Action handlers
 					create l_directory.make (l_path)
 					Result := l_directory.exists
 					if not Result then
-						if is_directory_created then
+						if is_path_created_on_confirm then
 							create l_question.make_standard (locale_formatter.formatted_translation (e_create_directory_1, [l_path]))
 							l_question.show_on_active_window
 							if l_question.dialog_result = l_question.dialog_buttons.yes_button then
@@ -135,6 +147,8 @@ feature {NONE} -- Action handlers
 				l_error.show_on_active_window
 				Result := False
 			end
+		ensure then
+			path_exists: (is_path_created_on_confirm and Result) implies (create {DIRECTORY}.make (path)).exists
 		end
 
 feature {NONE} -- Factory
@@ -149,7 +163,6 @@ feature {NONE} -- Internationalization
 
 	e_unable_to_create_directory_1: STRING = "Unable to create the directory '$1'."
 	e_create_directory_1: STRING = "The directory '$1' does not exist.%NDo you want to create it now?"
-	q_file_already_exists: STRING = "The selected file '$1' already exists.%NDo you want to contiue and overwrite this file?"
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

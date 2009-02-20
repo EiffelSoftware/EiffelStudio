@@ -58,9 +58,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	sticky_path_id: ?STRING
-			-- ID use to retain a sticky path to the last navigated folder
-
 	start_path: ?STRING_32 assign set_start_path
 			-- Initial path nagivated to when showing the dialog
 		require
@@ -73,7 +70,7 @@ feature -- Access
 		do
 			l_result := internal_start_path
 			if l_result = Void then
-				if is_dialog_path_sticky then
+				if is_path_sticky then
 					l_id := sticky_path_id
 					check l_id_attached: l_id /= Void end
 					if sticky_paths.has (l_id) then
@@ -108,19 +105,20 @@ feature -- Access
 			result_consistent: Result ~ start_path
 			not_result_is_empty: Result /= Void implies not Result.is_empty
 			not_result_has_trailing_separator: Result /= Void and then
-					 Result.item (Result.count) = operating_environment.directory_separator
+					 Result.item (Result.count) /= operating_environment.directory_separator
 		end
 
 	path: !STRING_32
 			-- Retrieves the dialog's path, which will be used on next show
 		require
+			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
 			is_confirmed: is_confirmed
 		deferred
 		ensure
 			not_result_is_empty: not Result.is_empty
 			not_result_has_trailing_separator:
-				Result.item (Result.count) = operating_environment.directory_separator
+				Result.item (Result.count) /= operating_environment.directory_separator
 		end
 
 feature {NONE} -- Access
@@ -130,6 +128,9 @@ feature {NONE} -- Access
 		once
 			create Result.make_default
 		end
+
+	sticky_path_id: ?STRING
+			-- ID use to retain a sticky path to the last navigated folder.
 
 feature {NONE} -- Element change
 
@@ -142,7 +143,7 @@ feature {NONE} -- Element change
 			is_initialized: is_initialized
 			not_a_path_is_empty: a_path /= Void implies not a_path.is_empty
 			not_a_path_has_trailing_separator: a_path /= Void implies
-				a_path.item (a_path.count) = operating_environment.directory_separator
+				a_path.item (a_path.count) /= operating_environment.directory_separator
 			a_path_exists: a_path /= Void implies (create {DIRECTORY}.make (a_path)).exists
 		local
 			l_path: ?like start_path
@@ -176,7 +177,7 @@ feature {NONE} -- Element change
 
 feature {NONE} -- Status report
 
-	is_dialog_path_sticky: BOOLEAN
+	is_path_sticky: BOOLEAN
 			-- Indicates if the dialog's path is perserve between dialogs shows.
 		require
 			is_interface_usable: is_interface_usable
@@ -202,7 +203,7 @@ feature {NONE} -- Action handlers
 			l_id: like sticky_path_id
 		do
 			Precursor
-			if is_dialog_path_sticky and then is_confirmed then
+			if is_path_sticky and then is_confirmed then
 					-- The dialog was confirmed, set a stick folder
 				l_id := sticky_path_id
 				check l_id_attached: l_id /= Void end

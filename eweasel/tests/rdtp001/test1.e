@@ -9,6 +9,11 @@ inherit {NONE}
 
 feature
 	try
+		require
+			assign: True
+			detached: True
+			attribute: True
+			attached: True
 		do
 			create x.make (47)
 			from

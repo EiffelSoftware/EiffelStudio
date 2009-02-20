@@ -1,0 +1,78 @@
+
+
+Test of locale: ta_IN
+DAY/MONTH NAMES TEST
+    Abbreviated day names:
+  தி
+  செ
+  பு
+  வி
+  வெ
+  ச
+  ஞா
+    Full day names:
+  திங்கள்
+  செவ்வாய்
+  புதன்
+  வியாழன்
+  வெள்ளி
+  சனி
+  ஞாயிறு
+    Abbreviated month names:
+  ஜன.
+  பெப்.
+  மார்.
+  ஏப்.
+  மே
+  ஜூன்
+  ஜூலை
+  ஆக.
+  செப்.
+  அக்.
+  நவ.
+  டிச.
+    Full month names:
+  ஜனவரி
+  பெப்ரவரி
+  மார்ச்
+  ஏப்ரல்
+  மே
+  ஜூன்
+  ஜூலை
+  ஆகஸ்ட்
+  செப்டம்பர்
+  அக்டோபர்
+  நவம்பர்
+  டிசம்பர்
+DATE TIME FORMATTER TEST
+    Original string: local_date_time: &c, day: &A
+
+    formatted string: local_date_time: 19 பெப்ரவரி 2009 11:45:30, day: வெள்ளி
+
+CURRENCY INFO TEST
+    cur dec sep: '.'
+    cur gr.sep: ''
+    Grouping: 320
+    cur nr list sep: ','
+    cur num after dec: '2'
+    currency symbol:'ரூ'
+    symbol location: 0
+    INT cur dec sep: '.'
+    INT cur gr.sep: ','
+    INT Grouping: 330
+    INT cur nr list sep: ';'
+    INT cur num after dec: '2'
+    INT currency symbol:'INR'
+    INT symbol location: 0
+CURRENCY FORMATTER TEST
+    Original value: 1324539.2339999999
+    Formatted: ரூ 1324539.23
+VALUE INFO TEST
+    value dec separator: '.'
+    value numb after dec. sep: '2'
+    value gr. sep.: ','
+    value nr list sep.: ','
+    Grouping: 330
+VALUE FORMATTER TEST
+    Original value: 123559.234
+    Formatted: 123,559.23

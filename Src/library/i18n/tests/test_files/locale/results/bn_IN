@@ -1,0 +1,78 @@
+
+
+Test of locale: bn_IN
+DAY/MONTH NAMES TEST
+    Abbreviated day names:
+  সোম.
+  মঙ্গল.
+  বুধ.
+  বৃহস্পতি.
+  শুক্র.
+  শফি.
+  রবি.
+    Full day names:
+  সোমবার
+  মঙ্গলবার
+  বুধবার
+  বৃহস্পতিবার
+  শুক্রবার
+  শফিবার
+  রবিবার
+    Abbreviated month names:
+  জানু.
+  ফেব্রু.
+  মার্চ
+  এপ্রিল
+  মে
+  জুন
+  জুলাই
+  আগ.
+  সেপ্টে.
+  অক্টো.
+  নভে.
+  ডিসে.
+    Full month names:
+  জানুয়ারী
+  ফেব্রুয়ারী
+  মার্চ
+  এপ্রিল
+  মে
+  জুন
+  জুলাই
+  আগস্ট
+  সেপ্টেম্বর
+  অক্টোবর
+  নভেম্বর
+  ডিসেম্বর
+DATE TIME FORMATTER TEST
+    Original string: local_date_time: &c, day: &A
+
+    formatted string: local_date_time: 19 ফেব্রুয়ারী 2009 11.45.30, day: শুক্রবার
+
+CURRENCY INFO TEST
+    cur dec sep: '.'
+    cur gr.sep: ''
+    Grouping: 320
+    cur nr list sep: ','
+    cur num after dec: '2'
+    currency symbol:'টা'
+    symbol location: 0
+    INT cur dec sep: '.'
+    INT cur gr.sep: ','
+    INT Grouping: 330
+    INT cur nr list sep: ';'
+    INT cur num after dec: '2'
+    INT currency symbol:'INR'
+    INT symbol location: 0
+CURRENCY FORMATTER TEST
+    Original value: 1324539.2339999999
+    Formatted: টা 1324539.23
+VALUE INFO TEST
+    value dec separator: '.'
+    value numb after dec. sep: '2'
+    value gr. sep.: ','
+    value nr list sep.: ','
+    Grouping: 330
+VALUE FORMATTER TEST
+    Original value: 123559.234
+    Formatted: 123,559.23

@@ -1,0 +1,78 @@
+
+
+Test of locale: fil_PH
+DAY/MONTH NAMES TEST
+    Abbreviated day names:
+  Lun
+  Mar
+  Mier
+  Hueb
+  Bier
+  Saba
+  Lin
+    Full day names:
+  Lunes
+  Martes
+  Mierkoles
+  Huebes
+  Biernes
+  Sabado
+  Linggo
+    Abbreviated month names:
+  En
+  Peb
+  Mar
+  Abr
+  Mayo
+  Hun
+  Hul
+  Agos
+  Sept
+  Oct
+  Nob
+  Dis
+    Full month names:
+  Enero
+  Pebrero
+  Marso
+  Abril
+  Mayo
+  Hunyo
+  Hulyo
+  Agosto
+  Septyembre
+  Oktubre
+  Nobyembre
+  Disyembre
+DATE TIME FORMATTER TEST
+    Original string: local_date_time: &c, day: &A
+
+    formatted string: local_date_time: Biernes, Pebrero 19, 2009 11:45:30 am, day: Biernes
+
+CURRENCY INFO TEST
+    cur dec sep: '.'
+    cur gr.sep: ''
+    Grouping: 30
+    cur nr list sep: ','
+    cur num after dec: '2'
+    currency symbol:'Ph'
+    symbol location: 0
+    INT cur dec sep: '.'
+    INT cur gr.sep: ','
+    INT Grouping: 330
+    INT cur nr list sep: ';'
+    INT cur num after dec: '2'
+    INT currency symbol:'PHP'
+    INT symbol location: 0
+CURRENCY FORMATTER TEST
+    Original value: 1324539.2339999999
+    Formatted: Ph 1324539.23
+VALUE INFO TEST
+    value dec separator: '.'
+    value numb after dec. sep: '2'
+    value gr. sep.: ','
+    value nr list sep.: ','
+    Grouping: 330
+VALUE FORMATTER TEST
+    Original value: 123559.234
+    Formatted: 123,559.23

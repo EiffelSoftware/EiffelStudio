@@ -1,0 +1,78 @@
+
+
+Test of locale: mk_MK
+DAY/MONTH NAMES TEST
+    Abbreviated day names:
+  пон
+  втр
+  срд
+  чет
+  пет
+  саб
+  нед
+    Full day names:
+  понеделник
+  вторник
+  среда
+  четврток
+  петок
+  сабота
+  недела
+    Abbreviated month names:
+  јан
+  фев
+  мар
+  апр
+  мај
+  јун
+  јул
+  авг
+  сеп
+  окт
+  ное
+  дек
+    Full month names:
+  јануари
+  февруари
+  март
+  април
+  мај
+  јуни
+  јули
+  август
+  септември
+  октомври
+  ноември
+  декември
+DATE TIME FORMATTER TEST
+    Original string: local_date_time: &c, day: &A
+
+    formatted string: local_date_time: петок, 19 февруари 2009 11:45:30, day: петок
+
+CURRENCY INFO TEST
+    cur dec sep: ','
+    cur gr.sep: ''
+    Grouping: 30
+    cur nr list sep: ';'
+    cur num after dec: '2'
+    currency symbol:'Ⲙǔ'
+    symbol location: 1
+    INT cur dec sep: '.'
+    INT cur gr.sep: ','
+    INT Grouping: 330
+    INT cur nr list sep: ';'
+    INT cur num after dec: '2'
+    INT currency symbol:'MKD'
+    INT symbol location: 0
+CURRENCY FORMATTER TEST
+    Original value: 1324539.2339999999
+    Formatted: 1324539,23 Ⲙǔ
+VALUE INFO TEST
+    value dec separator: ','
+    value numb after dec. sep: '2'
+    value gr. sep.: '.'
+    value nr list sep.: ';'
+    Grouping: 330
+VALUE FORMATTER TEST
+    Original value: 123559.234
+    Formatted: 123.559,23

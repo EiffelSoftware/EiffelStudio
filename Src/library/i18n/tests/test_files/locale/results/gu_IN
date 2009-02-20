@@ -1,0 +1,78 @@
+
+
+Test of locale: gu_IN
+DAY/MONTH NAMES TEST
+    Abbreviated day names:
+  સોમ
+  મંગળ
+  બુધ
+  ગુરુ
+  શુક્ર
+  શનિ
+  રવિ
+    Full day names:
+  સોમવાર
+  મંગળવાર
+  બુધવાર
+  ગુરુવાર
+  શુક્રવાર
+  શનિવાર
+  રવિવાર
+    Abbreviated month names:
+  જાન્યુ
+  ફેબ્રુ
+  માર્ચ
+  એપ્રિલ
+  મે
+  જૂન
+  જુલાઈ
+  ઑગસ્ટ
+  સપ્ટે
+  ઑક્ટો
+  નવે
+  ડિસે
+    Full month names:
+  જાન્યુઆરી
+  ફેબ્રુઆરી
+  માર્ચ
+  એપ્રિલ
+  મે
+  જૂન
+  જુલાઈ
+  ઑગસ્ટ
+  સપ્ટેમ્બર
+  ઑક્ટ્બર
+  નવેમ્બર
+  ડિસેમ્બર
+DATE TIME FORMATTER TEST
+    Original string: local_date_time: &c, day: &A
+
+    formatted string: local_date_time: 19 ફેબ્રુઆરી 2009 11:45:30, day: શુક્રવાર
+
+CURRENCY INFO TEST
+    cur dec sep: '.'
+    cur gr.sep: ''
+    Grouping: 320
+    cur nr list sep: ','
+    cur num after dec: '2'
+    currency symbol:'રૂ'
+    symbol location: 0
+    INT cur dec sep: '.'
+    INT cur gr.sep: ','
+    INT Grouping: 330
+    INT cur nr list sep: ';'
+    INT cur num after dec: '2'
+    INT currency symbol:'INR'
+    INT symbol location: 0
+CURRENCY FORMATTER TEST
+    Original value: 1324539.2339999999
+    Formatted: રૂ 1324539.23
+VALUE INFO TEST
+    value dec separator: '.'
+    value numb after dec. sep: '2'
+    value gr. sep.: ','
+    value nr list sep.: ','
+    Grouping: 330
+VALUE FORMATTER TEST
+    Original value: 123559.234
+    Formatted: 123,559.23

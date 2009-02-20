@@ -83,9 +83,9 @@ feature -- Access
 	valid_index (i:INTEGER): BOOLEAN
 			-- is this index valid?
 		do
-			Result := (i >= 1) and (i <= entry_count)
+			Result := ((i >= 1) and (i <= entry_count))
 		ensure then
-			correct_result: Result = (i >= 1) and (i <= entry_count)
+			correct_result: Result = ((i >= 1) and (i <= entry_count))
 		end
 
 	entry_has_plurals (i:INTEGER): BOOLEAN

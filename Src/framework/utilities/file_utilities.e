@@ -328,21 +328,6 @@ feature {NONE} -- Query
 
 			if a_separator /= Void then
 				Result.append_string_general (a_separator)
---				l_separator := a_separator.as_string_8
---				if l_count < l_separator.count then
---					Result.append (l_separator)
---				else
---					l_match_separator := Result.substring (l_count - (l_separator.count - 1) , l_count)
---					if {PLATFORM}.is_windows then
---						l_matched := l_match_separator.is_case_insensitive_equal (l_separator)
---					else
---						if  then
---							
---						end
---					end
---					or else l_separator (Result.count) /= '_' then
---					-- We want to reuse underscores to save on ugly file names like 'file__2'
---				Result.append_character ('_')
 			end
 			Result.append_natural_32 (a_index)
 

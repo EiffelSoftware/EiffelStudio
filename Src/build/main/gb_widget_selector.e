@@ -836,7 +836,7 @@ feature {GB_COMMAND_NAME_CHANGE} -- Implementation
 					file.read_stream (file.count)
 					file.close
 					file_contents := file.last_string
-					l_eiffel_parser.parse_from_string (file_contents)
+					l_eiffel_parser.parse_from_string (file_contents, Void)
 					l_class_as := l_eiffel_parser.root_node
 					create l_visitor
 					l_class_as.process (l_visitor)
@@ -869,7 +869,7 @@ feature {GB_COMMAND_NAME_CHANGE} -- Implementation
 					file.read_stream (file.count)
 					file.close
 					file_contents := file.last_string
-					l_eiffel_parser.parse_from_string (file_contents)
+					l_eiffel_parser.parse_from_string (file_contents, Void)
 					l_class_as := l_eiffel_parser.root_node
 					create l_visitor
 					l_class_as.process (l_visitor)

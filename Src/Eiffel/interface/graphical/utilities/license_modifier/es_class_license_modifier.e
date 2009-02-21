@@ -189,7 +189,7 @@ feature -- Element change
 							l_options := context_class.options
 							check l_options_attached: l_options /= Void end
 
-							l_wrapper.parse_with_option (l_parser, text, l_options, True)
+							l_wrapper.parse_with_option (l_parser, text, l_options, True, Void)
 							if l_wrapper.has_error then
 									-- It is quite possible for the license to introduce a syntax error because the last
 									-- feature may be an attribute, in which case we need to inject a ;.
@@ -281,7 +281,7 @@ feature {NONE} -- Status report
 			l_options := context_class.options
 			check l_options_attached: l_options /= Void end
 
-			l_wrapper.parse_with_option (l_parser, a_license, l_options, True)
+			l_wrapper.parse_with_option (l_parser, a_license, l_options, True, Void)
 			if not l_wrapper.has_error then
 				Result := l_wrapper.ast_node /= Void
 			end
@@ -308,7 +308,7 @@ feature {NONE} -- Basic operations: Modifications
 			l_atoms: EIFFEL_LIST [ATOMIC_AS]
 		do
 			l_wrapper := eiffel_parser_wrapper
-			l_wrapper.parse_with_option (round_trip_indexing_parser, a_license, context_class.options, True)
+			l_wrapper.parse_with_option (round_trip_indexing_parser, a_license, context_class.options, True, Void)
 			if not l_wrapper.has_error then
 				l_indexing ?= l_wrapper.ast_node
 				l_match_list := l_wrapper.ast_match_list

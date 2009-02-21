@@ -233,7 +233,7 @@ feature {NONE} -- Action handler
 		do
 			check not_error_handler_has_error: not error_handler.has_error end
 			create l_uc_string.make_from_utf8 (utf32_to_utf8 (("check ").as_string_32 + contract_editor.wide_text))
-			expression_parser.parse_from_string (l_uc_string)
+			expression_parser.parse_from_string (l_uc_string, Void)
 			if expression_parser.syntax_error then
 				create l_error.make_standard (interface_messages.e_contract_tool_expression_error)
 				l_error.show_on_active_window

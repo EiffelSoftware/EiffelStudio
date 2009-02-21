@@ -319,7 +319,7 @@ feature {DBG_EXPRESSION, DBG_EXPRESSION_EVALUATION, DBG_EXPRESSION_EVALUATOR} --
 					p := sp.expression_parser
 					check expression_not_void: text /= Void end
 					s8 := text.as_string_8
-					p.parse_from_string (once "check " + s8)
+					p.parse_from_string (once "check " + s8, context.associated_class)
 					has_syntax_error := p.syntax_error
 					if not has_syntax_error then
 						en := p.expression_node

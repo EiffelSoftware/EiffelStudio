@@ -77,12 +77,15 @@ feature -- Access
 			-- New BITS AST node
 		local
 			l_vtbt: VTBT_SIMPLE
+			l_class_c: CLASS_C
 		do
 			if v /= Void then
 				create Result.initialize (v, b_as)
 				if (v.integer_32_value <= 0) then
 					create l_vtbt
-					l_vtbt.set_class (system.current_class)
+					l_class_c ?= parser.current_class
+					check l_class_c_attached: l_class_c /= Void end
+					l_vtbt.set_class (l_class_c)
 					l_vtbt.set_value (v.integer_32_value)
 					l_vtbt.set_location (v.start_location)
 					Error_handler.insert_error (l_vtbt)
@@ -129,14 +132,17 @@ feature -- Access
 		end
 
 	set_expanded_class_type (a_type: TYPE_AS; is_expanded: BOOLEAN; s_as: KEYWORD_AS)
+		local
+			l_class_c: CLASS_C
 		do
 			Precursor {AST_FACTORY} (a_type, is_expanded, s_as)
 			if is_expanded then
 				system.set_has_expanded
+				l_class_c ?= parser.current_class
 				check
-					system_initialized: system.current_class /= Void
+					has_class_c: l_class_c /= Void
 				end
-				system.current_class.set_has_expanded
+				l_class_c.set_has_expanded
 			end
 		end
 
@@ -267,7 +273,7 @@ feature -- Access
 
 						-- We have a built in so we set the replacement feature inside if available.
 					l_built_in_processor := built_in_processor
-					l_built_in_processor.parse_current_class (system.current_class, system.il_generation) -- FIXME! Use {EIFFEL_PARSER}.current_class instead.
+					l_built_in_processor.parse_current_class (parser.current_class, system.il_generation)
 					l_built_in_class_as := l_built_in_processor.class_as
 					if l_built_in_class_as /= Void then
 							-- We have an associating built in class.
@@ -290,8 +296,8 @@ feature -- Access
 				end
 
 				if b.is_unique then
-					if system.current_class /= Void then
-						system.current_class.set_has_unique
+					if {l_class_c: CLASS_C} parser.current_class then
+						l_class_c.set_has_unique
 					end
 				end
 			end
@@ -347,6 +353,7 @@ feature -- Access for Erros
 			-- Create new VTGC1 error.
 		local
 			l_location: LOCATION_AS
+			l_class_c: CLASS_C
 		do
 			if a_id /= Void then
 				l_location := a_id
@@ -355,7 +362,9 @@ feature -- Access for Erros
 			end
 			check l_location_not_void: l_location /= Void end
 			create Result
-			Result.set_class (system.current_class)
+			l_class_c ?= parser.current_class
+			check l_class_c_attached: l_class_c /= Void end
+			Result.set_class (l_class_c)
 			Result.set_location (l_location)
 		end
 
@@ -368,8 +377,8 @@ feature {NONE} -- Validation
 		do
 			is_valid_integer_real := True
 			if for_integer then
-				if a_type /= Void then
-					l_type := type_a_generator.evaluate_type_if_possible (a_type, System.current_class)
+				if a_type /= Void and then {l_class_C: CLASS_C} a_psr.current_class then
+					l_type := type_a_generator.evaluate_type_if_possible (a_type, l_class_c)
 				end
 				if l_type /= Void then
 					if not l_type.is_valid or (not l_type.is_integer and not l_type.is_natural) then
@@ -382,8 +391,8 @@ feature {NONE} -- Validation
 					a_psr.report_invalid_type_for_integer_error (a_type, buffer)
 				end
 			else
-				if a_type /= Void then
-					l_type := type_a_generator.evaluate_type (a_type, System.current_class)
+				if a_type /= Void and then {l_class_C: CLASS_C} a_psr.current_class then
+					l_type := type_a_generator.evaluate_type (a_type, l_class_c)
 				end
 				if l_type /= Void then
 					if not l_type.is_valid or (not l_type.is_real_32 and not l_type.is_real_64) then

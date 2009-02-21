@@ -115,6 +115,25 @@ feature -- Roundtrip
 		do
 		end
 
+feature -- Parser Access
+
+	parser: EIFFEL_SCANNER_SKELETON
+			-- Parser used in conjonction with current factory.
+
+	set_parser (v: like parser)
+		do
+			parser := v
+		ensure
+			parser_set: parser =v
+		end
+
+feature -- Typing
+
+	keyword_id_type: TUPLE [keyword: KEYWORD_AS; id: ID_AS; line, column: INTEGER; filename: STRING]
+			-- Type for `new_keyowrd_id_as'.
+		do
+		end
+
 feature -- Access
 
 	new_agent_routine_creation_as (t: OPERAND_AS; f: ID_AS; o: DELAYED_ACTUAL_LIST_AS; is_qualified: BOOLEAN; a_as: KEYWORD_AS; d_as: SYMBOL_AS): AGENT_ROUTINE_CREATION_AS
@@ -239,7 +258,7 @@ feature -- Access
 			create Result.initialize (t_as, c, l, co, p, n)
 		end
 
-	new_line_pragma (a_scn: EIFFEL_SCANNER): BREAK_AS
+	new_line_pragma (a_scn: EIFFEL_SCANNER_SKELETON): BREAK_AS
 			-- New line pragma
 			--| Keep entire line, actual processing will be done later if we need it.
 		do
@@ -329,7 +348,6 @@ feature -- Value AST creation
 					-- Remove underscores (if any) without breaking
 					-- original token
 				if token_value.has ('_') then
-					token_value := token_value.twin
 					token_value.prune_all ('_')
 				end
 				if token_value.is_number_sequence then
@@ -407,14 +425,26 @@ feature -- Validation
 
 feature -- Roundtrip: leaf_as
 
-	new_keyword_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER): KEYWORD_AS
+	new_keyword_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): KEYWORD_AS
 			-- New KEYWORD AST node
 		require
 			a_scn_not_void: a_scn /= Void
 		do
 		end
 
-	new_feature_keyword_as (l, c, p, s:INTEGER; a_scn: EIFFEL_SCANNER): KEYWORD_AS
+	new_keyword_id_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): like keyword_id_type
+			-- New KEYWORD AST node
+		require
+			a_scn_not_void: a_scn /= Void
+			valid_code: a_code = {EIFFEL_TOKENS}.te_attached or
+				a_code = {EIFFEL_TOKENS}.te_attribute or
+				a_code = {EIFFEL_TOKENS}.te_detachable or
+				a_code = {EIFFEL_TOKENS}.te_assign
+		do
+			Result := [new_keyword_as (a_code, a_scn), new_filled_id_as (a_scn), a_scn.line, a_scn.column, a_scn.filename]
+		end
+
+	new_feature_keyword_as (l, c, p, s:INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): KEYWORD_AS
 			-- New KEYWORD AST node for keyword "feature".
 		require
 			l_non_negative: l >= 0
@@ -426,7 +456,7 @@ feature -- Roundtrip: leaf_as
 			create Result.make_with_location (l, c, p, s)
 		end
 
-	new_creation_keyword_as (a_scn: EIFFEL_SCANNER): KEYWORD_AS
+	new_creation_keyword_as (a_scn: EIFFEL_SCANNER_SKELETON): KEYWORD_AS
 			-- New KEYWORD AST node for keyword "creation'
 		require
 			a_scn_not_void: a_scn /= Void
@@ -434,7 +464,7 @@ feature -- Roundtrip: leaf_as
 			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
 		end
 
-	new_end_keyword_as (a_scn: EIFFEL_SCANNER): KEYWORD_AS
+	new_end_keyword_as (a_scn: EIFFEL_SCANNER_SKELETON): KEYWORD_AS
 			-- New KEYWORD AST node for keyword "end'
 		require
 			a_scn_not_void: a_scn /= Void
@@ -442,7 +472,7 @@ feature -- Roundtrip: leaf_as
 			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
 		end
 
-	new_frozen_keyword_as (a_scn: EIFFEL_SCANNER): KEYWORD_AS
+	new_frozen_keyword_as (a_scn: EIFFEL_SCANNER_SKELETON): KEYWORD_AS
 			-- New KEYWORD AST node for keyword "frozen'
 		require
 			a_scn_not_void: a_scn /= Void
@@ -450,7 +480,7 @@ feature -- Roundtrip: leaf_as
 			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
 		end
 
-	new_infix_keyword_as (a_scn: EIFFEL_SCANNER): KEYWORD_AS
+	new_infix_keyword_as (a_scn: EIFFEL_SCANNER_SKELETON): KEYWORD_AS
 			-- New KEYWORD AST node for keyword "infix'
 		require
 			a_scn_not_void: a_scn /= Void
@@ -458,7 +488,7 @@ feature -- Roundtrip: leaf_as
 			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
 		end
 
-	new_precursor_keyword_as (a_scn: EIFFEL_SCANNER): KEYWORD_AS
+	new_precursor_keyword_as (a_scn: EIFFEL_SCANNER_SKELETON): KEYWORD_AS
 			-- New KEYWORD AST node for keyword "precursor'.
 		require
 			a_scn_not_void: a_scn /= Void
@@ -466,7 +496,7 @@ feature -- Roundtrip: leaf_as
 			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
 		end
 
-	new_prefix_keyword_as (a_scn: EIFFEL_SCANNER): KEYWORD_AS
+	new_prefix_keyword_as (a_scn: EIFFEL_SCANNER_SKELETON): KEYWORD_AS
 			-- New KEYWORD AST node for keyword "prefix'.
 		require
 			a_scn_not_void: a_scn /= Void
@@ -486,14 +516,14 @@ feature -- Roundtrip: leaf_as
 		do
 		end
 
-	new_symbol_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER): SYMBOL_AS
+	new_symbol_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): SYMBOL_AS
 			-- New symbol AST node for all Eiffel symbols except ";", "[" and "]"
 		require
 			a_scn_not_void: a_scn /= Void
 		do
 		end
 
-	new_square_symbol_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER): SYMBOL_AS
+	new_square_symbol_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): SYMBOL_AS
 			-- New symbol AST node only for symbol "[" and "]"
 		require
 			a_scn_not_void: a_scn /= Void
@@ -502,7 +532,7 @@ feature -- Roundtrip: leaf_as
 			create Result.make (a_code, a_scn.line, a_scn.column, a_scn.position, 1)
 		end
 
-	create_break_as (a_scn: EIFFEL_SCANNER)
+	create_break_as (a_scn: EIFFEL_SCANNER_SKELETON)
 			-- NEw BREAK_AS node
 		do
 		end
@@ -827,7 +857,7 @@ feature -- Access
 			create Result.initialize (a, t, r, c, c_as, k_as, a_as, i_as)
 		end
 
-	new_boolean_as (b: BOOLEAN; a_scn: EIFFEL_SCANNER): BOOL_AS
+	new_boolean_as (b: BOOLEAN; a_scn: EIFFEL_SCANNER_SKELETON): BOOL_AS
 			-- New BOOLEAN AST node
 		require
 			a_scn_not_void: a_scn /= Void
@@ -971,7 +1001,7 @@ feature -- Access
 			end
 		end
 
-	new_current_as (a_scn: EIFFEL_SCANNER): CURRENT_AS
+	new_current_as (a_scn: EIFFEL_SCANNER_SKELETON): CURRENT_AS
 			-- New CURRENT AST node
 		require
 			a_scn_not_void: a_scn /= Void
@@ -995,7 +1025,7 @@ feature -- Access
 			end
 		end
 
-	new_deferred_as (a_scn: EIFFEL_SCANNER): DEFERRED_AS
+	new_deferred_as (a_scn: EIFFEL_SCANNER_SKELETON): DEFERRED_AS
 			-- New DEFERRED AST node
 		require
 			a_scn_not_void: a_scn /= Void
@@ -1377,7 +1407,7 @@ feature -- Access
 			Result := new_filled_id_as (a_scn)
 		end
 
-	new_filled_bit_id_as (a_scn: EIFFEL_SCANNER): ID_AS
+	new_filled_bit_id_as (a_scn: EIFFEL_SCANNER_SKELETON): ID_AS
 			-- New empty ID AST node.
 		require
 			a_scn_not_void: a_scn /= Void
@@ -1651,7 +1681,7 @@ feature -- Access
 			create Result.make (a, k_as, l_as)
 		end
 
-	new_result_as (a_scn: EIFFEL_SCANNER): RESULT_AS
+	new_result_as (a_scn: EIFFEL_SCANNER_SKELETON): RESULT_AS
 			-- New RESULT AST node
 		require
 			a_scn_not_void: a_scn /= Void
@@ -1659,7 +1689,7 @@ feature -- Access
 			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
 		end
 
-	new_retry_as (a_scn: EIFFEL_SCANNER): RETRY_AS
+	new_retry_as (a_scn: EIFFEL_SCANNER_SKELETON): RETRY_AS
 			-- New RETRY AST node
 		require
 			a_scn_not_void: a_scn /= Void
@@ -1796,7 +1826,7 @@ feature -- Access
 			end
 		end
 
-	new_unique_as (a_scn: EIFFEL_SCANNER): UNIQUE_AS
+	new_unique_as (a_scn: EIFFEL_SCANNER_SKELETON): UNIQUE_AS
 			-- New UNIQUE AST node
 		require
 			a_scn_not_void: a_scn /= Void
@@ -1827,7 +1857,7 @@ feature -- Access
 			end
 		end
 
-	new_void_as (a_scn: EIFFEL_SCANNER): VOID_AS
+	new_void_as (a_scn: EIFFEL_SCANNER_SKELETON): VOID_AS
 			-- New VOID AST node
 		require
 			a_scn_not_void: a_scn /= Void

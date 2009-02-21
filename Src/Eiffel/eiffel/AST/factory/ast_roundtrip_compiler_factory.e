@@ -42,6 +42,7 @@ inherit
 			backup_match_list_count,
 			resume_match_list_count,
 			new_keyword_as,
+			new_keyword_id_as,
 			new_symbol_as,
 			new_current_as,
 			new_deferred_as,

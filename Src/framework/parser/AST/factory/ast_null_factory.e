@@ -56,7 +56,7 @@ inherit
 			new_agent_routine_creation_as,
 			new_constraint_triple, new_alias_triple, new_agent_target_triple,
 			new_keyword_instruction_list_pair, new_keyword_string_pair, new_invariant_pair,
-			new_keyword_as, new_creation_keyword_as, new_end_keyword_as, new_frozen_keyword_as,
+			new_keyword_as, new_keyword_id_as, new_creation_keyword_as, new_end_keyword_as, new_frozen_keyword_as,
 			new_infix_keyword_as, new_precursor_keyword_as, new_prefix_keyword_as, new_once_string_keyword_as,
 			new_symbol_as, new_square_symbol_as,
 			create_break_as, create_break_as_with_data,
@@ -204,52 +204,56 @@ feature -- Roundtrip: New node
 
 feature -- Roundtrip: leaf_as
 
-	new_keyword_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER): KEYWORD_AS
+	new_keyword_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): KEYWORD_AS
 			-- New KEYWORD AST node
 		do
 		end
 
-	new_semicolon_symbol_as (a_scn: EIFFEL_SCANNER): SYMBOL_AS
+	new_keyword_id_as (a_code: INTEGER_32; a_scn: EIFFEL_SCANNER_SKELETON): like keyword_id_type
+		do
+		end
+
+	new_semicolon_symbol_as (a_scn: EIFFEL_SCANNER_SKELETON): SYMBOL_AS
 			-- New symbol AST node for ";"
 		do
 		end
 
-	new_feature_keyword_as (l, c, p, s:INTEGER; a_scn: EIFFEL_SCANNER): KEYWORD_AS
+	new_feature_keyword_as (l, c, p, s:INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): KEYWORD_AS
 			-- New KEYWORD AST node for keyword "feature".
 		do
 		end
 
-	new_keyword_as_without_extending_list (a_code:INTEGER; a_scn: EIFFEL_SCANNER): KEYWORD_AS
+	new_keyword_as_without_extending_list (a_code:INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): KEYWORD_AS
 			-- New KEYWORD AST node, but don't extend `internal_match_list'.
 		do
 		end
 
-	new_creation_keyword_as (a_scn: EIFFEL_SCANNER): KEYWORD_AS
+	new_creation_keyword_as (a_scn: EIFFEL_SCANNER_SKELETON): KEYWORD_AS
 			-- New KEYWORD AST node for keyword "creation'
 		do
 		end
 
-	new_end_keyword_as (a_scn: EIFFEL_SCANNER): KEYWORD_AS
+	new_end_keyword_as (a_scn: EIFFEL_SCANNER_SKELETON): KEYWORD_AS
 			-- New KEYWORD AST node for keyword "end'
 		do
 		end
 
-	new_frozen_keyword_as (a_scn: EIFFEL_SCANNER): KEYWORD_AS
+	new_frozen_keyword_as (a_scn: EIFFEL_SCANNER_SKELETON): KEYWORD_AS
 			-- New KEYWORD AST node for keyword "frozen'
 		do
 		end
 
-	new_infix_keyword_as (a_scn: EIFFEL_SCANNER): KEYWORD_AS
+	new_infix_keyword_as (a_scn: EIFFEL_SCANNER_SKELETON): KEYWORD_AS
 			-- New KEYWORD AST node for keyword "infix'
 		do
 		end
 
-	new_precursor_keyword_as (a_scn: EIFFEL_SCANNER): KEYWORD_AS
+	new_precursor_keyword_as (a_scn: EIFFEL_SCANNER_SKELETON): KEYWORD_AS
 			-- New KEYWORD AST node for keyword "precursor'
 		do
 		end
 
-	new_prefix_keyword_as (a_scn: EIFFEL_SCANNER): KEYWORD_AS
+	new_prefix_keyword_as (a_scn: EIFFEL_SCANNER_SKELETON): KEYWORD_AS
 			-- New KEYWORD AST node for keyword "prefix'
 		do
 		end
@@ -259,17 +263,17 @@ feature -- Roundtrip: leaf_as
 		do
 		end
 
-	new_symbol_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER): SYMBOL_AS
+	new_symbol_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): SYMBOL_AS
 			-- New KEYWORD AST node	all Eiffel symbols except "[" and "]"
 		do
 		end
 
-	new_square_symbol_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER): SYMBOL_AS
+	new_square_symbol_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): SYMBOL_AS
 			-- New KEYWORD AST node	only for symbol "[" and "]"
 		do
 		end
 
-	new_separator_as (a_scn: EIFFEL_SCANNER)
+	new_separator_as (a_scn: EIFFEL_SCANNER_SKELETON)
 			-- New KEYWORD AST node		
 		do
 		end
@@ -284,12 +288,12 @@ feature -- Roundtrip: leaf_as
 		do
 		end
 
-	new_new_line_as (a_scn: EIFFEL_SCANNER)
+	new_new_line_as (a_scn: EIFFEL_SCANNER_SKELETON)
 			-- New KEYWORD AST node		
 		do
 		end
 
-	new_comment_as (a_scn: EIFFEL_SCANNER)
+	new_comment_as (a_scn: EIFFEL_SCANNER_SKELETON)
 			-- New COMMENT_AS node
 		do
 		end
@@ -299,7 +303,7 @@ feature -- Roundtrip: leaf_as
 		do
 		end
 
-	create_break_as (a_scn: EIFFEL_SCANNER)
+	create_break_as (a_scn: EIFFEL_SCANNER_SKELETON)
 			-- NEw BREAK_AS node
 		do
 		end
@@ -502,7 +506,7 @@ feature -- Access
 		do
 		end
 
-	new_boolean_as (b: BOOLEAN; a_scn: EIFFEL_SCANNER): BOOL_AS
+	new_boolean_as (b: BOOLEAN; a_scn: EIFFEL_SCANNER_SKELETON): BOOL_AS
 			-- New BOOLEAN AST node
 		do
 		end
@@ -585,7 +589,7 @@ feature -- Access
 		do
 		end
 
-	new_current_as (a_scn: EIFFEL_SCANNER): CURRENT_AS
+	new_current_as (a_scn: EIFFEL_SCANNER_SKELETON): CURRENT_AS
 			-- New CURRENT AST node
 		do
 		end
@@ -600,7 +604,7 @@ feature -- Access
 		do
 		end
 
-	new_deferred_as (a_scn: EIFFEL_SCANNER): DEFERRED_AS
+	new_deferred_as (a_scn: EIFFEL_SCANNER_SKELETON): DEFERRED_AS
 			-- New DEFERRED AST node
 		do
 		end
@@ -966,12 +970,12 @@ feature -- Access
 		do
 		end
 
-	new_result_as (a_scn: EIFFEL_SCANNER): RESULT_AS
+	new_result_as (a_scn: EIFFEL_SCANNER_SKELETON): RESULT_AS
 			-- New RESULT AST node
 		do
 		end
 
-	new_retry_as (a_scn: EIFFEL_SCANNER): RETRY_AS
+	new_retry_as (a_scn: EIFFEL_SCANNER_SKELETON): RETRY_AS
 			-- New RETRY AST node
 		do
 		end
@@ -1064,7 +1068,7 @@ feature -- Access
 		do
 		end
 
-	new_unique_as (a_scn: EIFFEL_SCANNER): UNIQUE_AS
+	new_unique_as (a_scn: EIFFEL_SCANNER_SKELETON): UNIQUE_AS
 			-- New UNIQUE AST node
 		do
 		end
@@ -1079,7 +1083,7 @@ feature -- Access
 		do
 		end
 
-	new_void_as (a_scn: EIFFEL_SCANNER): VOID_AS
+	new_void_as (a_scn: EIFFEL_SCANNER_SKELETON): VOID_AS
 			-- New VOID AST node
 		do
 		end
@@ -1139,7 +1143,7 @@ feature -- Access
 		do
 		end
 
-	new_line_pragma (a_scn: EIFFEL_SCANNER): BREAK_AS
+	new_line_pragma (a_scn: EIFFEL_SCANNER_SKELETON): BREAK_AS
 			-- New line pragma
 		do
 		end

@@ -60,11 +60,14 @@ feature -- Access
 					if l_text /= Void then
 						l_options := l_class.lace_class.options
 						l_scanner := matchlist_scanner
-						l_scanner.set_is_indexing_keyword (l_options.syntax_level.item /= {CONF_OPTION}.syntax_level_standard)
-						l_scanner.set_is_note_keyword (l_options.syntax_level.item /= {CONF_OPTION}.syntax_level_obsolete)
-						l_scanner.set_is_attribute_keyword (l_options.syntax_level.item /= {CONF_OPTION}.syntax_level_obsolete)
-						l_scanner.set_is_attached_keyword (l_options.syntax_level.item /= {CONF_OPTION}.syntax_level_obsolete)
-						l_scanner.set_is_detachable_keyword (l_options.syntax_level.item /= {CONF_OPTION}.syntax_level_obsolete)
+						inspect l_options.syntax_level.item
+						when {CONF_OPTION}.syntax_level_obsolete then
+							l_scanner.set_syntax_version ({EIFFEL_SCANNER}.obsolete_64_syntax)
+						when {CONF_OPTION}.syntax_level_transitional then
+							l_scanner.set_syntax_version ({EIFFEL_SCANNER}.transitional_64_syntax)
+						else
+							l_scanner.set_syntax_version ({EIFFEL_SCANNER}.ecma_syntax)
+						end
 						l_scanner.scan_string (l_class.text)
 						Result := l_scanner.match_list
 						Result.set_class_id (an_id)

@@ -244,7 +244,7 @@ feature -- Parsing
 			reset
 		end
 
-	parse_from_string (a_string: STRING)
+	parse_from_string (a_string: STRING; a_class: ABSTRACT_CLASS_C)
 			-- Parse Eiffel class text in `a_string'.
 			-- Make result available in appropriate result node.
 			-- An exception is raised if a syntax error is found.
@@ -269,6 +269,7 @@ feature -- Parsing
 
 			l_ast_factory := ast_factory
 			l_ast_factory.create_match_list (initial_match_list_size)
+			current_class := a_class
 			yyparse
 			match_list := l_ast_factory.match_list
 			reset
@@ -634,6 +635,30 @@ feature {NONE} -- Actions
 
 			Result := ast_factory.new_class_as (n, ext_name, is_d, is_e, is_s, is_fc, is_ex, is_par, first_ind,
 				last_ind, g, l_conforming_parents, l_non_conforming_parents, c, co, f, inv, s, o, ed)
+		end
+
+	extract_keyword (a_keyword_id: TUPLE [keyword: KEYWORD_AS; id: ID_AS; line: INTEGER_32; column: INTEGER_32; filename: STRING_8]): KEYWORD_AS
+			-- Extract `keyword' entry if present. Void otherwise.
+		do
+			if a_keyword_id /= Void then
+				Result := a_keyword_id.keyword
+			end
+		end
+
+	extract_id (a_keyword_id: TUPLE [keyword: KEYWORD_AS; id: ID_AS; line: INTEGER_32; column: INTEGER_32; filename: STRING_8]): ID_AS
+			-- Extract `id' entry if present. Void otherwise.
+		do
+			if a_keyword_id /= Void then
+				Result := a_keyword_id.id
+					-- Report syntax error when we are compiling for ECMA.
+				if syntax_version = ecma_syntax then
+					report_one_error (create {SYNTAX_ERROR}.make (a_keyword_id.line, a_keyword_id.column, a_keyword_id.filename,
+						"Using keyword as identifier."))
+				elseif has_syntax_warning then
+					report_one_warning (create {SYNTAX_WARNING}.make (a_keyword_id.line, a_keyword_id.column, a_keyword_id.filename,
+						"Using keyword as identifier."))
+				end
+			end
 		end
 
 feature {NONE} -- ID factory

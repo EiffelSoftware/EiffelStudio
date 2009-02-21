@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Creation
 
-	make (l: like target; e: like expression; i: like info)
+	make (l: like target; e: like expression; i: like info; b: BOOLEAN)
 		require
 			l_attached: l /= Void
 			e_attached: e /= Void
@@ -42,10 +42,12 @@ feature {NONE} -- Creation
 			target := l
 			expression := e
 			info := i
+			is_void_check := b
 		ensure
 			target_set: target = l
 			expression_set: expression = e
 			info_set: info = i
+			is_void_check_set: is_void_check = b
 		end
 
 feature -- Visitor
@@ -72,6 +74,10 @@ feature -- Access
 
 	info: CREATE_INFO
 			-- Additional information about target type
+
+	is_void_check: BOOLEAN
+			-- Are we simply performing a check for voidness, in which case no need to
+			-- perform a type check.
 
 feature -- Status report
 

@@ -4838,7 +4838,7 @@ feature -- Implementation
 
 			if last_type /= Void and not l_has_type_error then
 				if l_as.is_attached_keyword and local_type = Void then
-						-- Set `local_type' to the type of the expression.
+						-- Set `local_type' to the type of the expression and make it attached.
 					local_type := last_type
 					if not local_type.is_attached then
 						if context.current_class.lace_class.is_void_safe then
@@ -4863,7 +4863,7 @@ feature -- Implementation
 					if l_needs_byte_node then
 						expr ?= last_byte_node
 						create local_b.make (local_info.position, current_feature.body_index)
-						create {OBJECT_TEST_B} last_byte_node.make (local_b, expr, local_type.create_info)
+						create {OBJECT_TEST_B} last_byte_node.make (local_b, expr, local_type.create_info, l_as.type = Void)
 					end
 				elseif l_needs_byte_node then
 					create l_bin_ne

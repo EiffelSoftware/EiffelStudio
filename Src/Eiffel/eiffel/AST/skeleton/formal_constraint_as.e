@@ -693,7 +693,7 @@ feature {NONE} -- Implementation
 						create l_renaming.make (l_renamings, a_constraint)
 						if l_renaming.has_error then
 							create l_vtgc2
-							l_vtgc2.set_class (system.current_class)
+							l_vtgc2.set_class (a_context_class)
 							l_vtgc2.set_formal_constraint (Current)
 							l_vtgc2.set_constraint (a_constraint, a_constraint_position)
 							l_vtgc2.set_renaming (a_rename_clause)

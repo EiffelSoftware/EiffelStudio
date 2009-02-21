@@ -52,11 +52,31 @@ feature {AST_EIFFEL} -- Visitor pattern
 		end
 
 	process_object_test_as (l_as: OBJECT_TEST_AS)
+		local
+			expr: EXPR_AS
 		do
-				-- `l_as.name' can be Void when no local is provided in which case the scope 
-				-- cannot be extended.
-			if l_as.name /= Void and is_negated = is_negation_expected then
-				add_object_test_scope (l_as.name)
+			if is_negated = is_negation_expected then
+				if l_as.name /= Void then
+					add_object_test_scope (l_as.name)
+				else
+						-- Remove parentheses surrounding expression
+					from
+						expr := l_as.expression
+					until
+						not {left_paran_as: PARAN_AS} expr
+					loop
+						expr := left_paran_as.expr
+					end
+					if {expr_call_as: EXPR_CALL_AS} expr then
+						if {access_id_as: ACCESS_ID_AS} expr_call_as.call then
+							add_access_scope (access_id_as)
+						elseif {access_assert_as: ACCESS_ASSERT_AS} expr_call_as.call then
+							add_access_scope (access_assert_as)
+						elseif {result_as: RESULT_AS} expr_call_as.call then
+							add_result_scope
+						end
+					end
+				end
 			end
 		end
 

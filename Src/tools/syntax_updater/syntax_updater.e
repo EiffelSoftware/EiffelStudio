@@ -237,40 +237,18 @@ feature {NONE} -- Implementation
 			a_buffer_not_void: a_buffer /= Void
 		do
 				-- First we do it using the old conventions.
-			a_parser.set_is_indexing_keyword (True)
-			a_parser.set_is_attribute_keyword (False)
-			a_parser.set_is_note_keyword (False)
-			a_parser.set_is_attached_keyword (False)
-			a_parser.set_is_detachable_keyword (False)
-			a_parser.parse_from_string (a_buffer)
+			a_parser.set_syntax_version ({EIFFEL_PARSER}.obsolete_64_syntax)
+			a_parser.parse_from_string (a_buffer, Void)
 			if error_handler.has_error then
 				error_handler.wipe_out
-					-- There was an error, let's try to see if the code is already using `note'.
-				a_parser.set_is_indexing_keyword (True)
-				a_parser.set_is_note_keyword (True)
-				a_parser.set_is_attribute_keyword (False)
-				a_parser.set_is_attached_keyword (False)
-				a_parser.set_is_detachable_keyword (False)
-				a_parser.parse_from_string (a_buffer)
+					-- There was an error, let's try to see if the code is using transitional syntax.
+				a_parser.set_syntax_version ({EIFFEL_PARSER}.transitional_64_syntax)
+				a_parser.parse_from_string (a_buffer, Void)
 				if error_handler.has_error then
 					error_handler.wipe_out
-						-- Still an error, let's try to see if the code is already using `attribute'.
-					a_parser.set_is_indexing_keyword (True)
-					a_parser.set_is_note_keyword (True)
-					a_parser.set_is_attribute_keyword (True)
-					a_parser.set_is_attached_keyword (False)
-					a_parser.set_is_detachable_keyword (False)
-					a_parser.parse_from_string (a_buffer)
-					if error_handler.has_error then
-						error_handler.wipe_out
-							-- Still an error, let's try to see if the code is already using the new `attached/detachable' keywords.
-						a_parser.set_is_indexing_keyword (True)
-						a_parser.set_is_note_keyword (True)
-						a_parser.set_is_attribute_keyword (True)
-						a_parser.set_is_attached_keyword (True)
-						a_parser.set_is_detachable_keyword (True)
-						a_parser.parse_from_string (a_buffer)
-					end
+						-- Still an error, let's try to see if the code is strictly ECMA compliant.
+					a_parser.set_syntax_version ({EIFFEL_PARSER}.ecma_syntax)
+					a_parser.parse_from_string (a_buffer, Void)
 				end
 			end
 		end

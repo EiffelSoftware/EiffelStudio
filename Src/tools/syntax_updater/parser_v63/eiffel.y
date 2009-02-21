@@ -73,9 +73,9 @@ create
 %token <KEYWORD_AS> TE_PREFIX
 
 %token <KEYWORD_AS> TE_IS
-%token <KEYWORD_AS> TE_AGENT TE_ALIAS TE_ALL TE_AND TE_AS TE_ASSIGN
-%token <KEYWORD_AS> TE_ATTACHED TE_ATTRIBUTE TE_BIT TE_CHECK TE_CLASS TE_CONVERT
-%token <KEYWORD_AS> TE_CREATE TE_DEBUG TE_DETACHABLE TE_DO TE_ELSE TE_ELSEIF
+%token <KEYWORD_AS> TE_AGENT TE_ALIAS TE_ALL TE_AND TE_AS
+%token <KEYWORD_AS> TE_BIT TE_CHECK TE_CLASS TE_CONVERT
+%token <KEYWORD_AS> TE_CREATE TE_DEBUG TE_DO TE_ELSE TE_ELSEIF
 %token <KEYWORD_AS> TE_ENSURE TE_EXPANDED TE_EXPORT TE_EXTERNAL TE_FEATURE
 %token <KEYWORD_AS> TE_FROM TE_IF TE_IMPLIES TE_INDEXING TE_INHERIT
 %token <KEYWORD_AS> TE_INSPECT TE_INVARIANT TE_LIKE TE_LOCAL
@@ -84,6 +84,8 @@ create
 %token <KEYWORD_AS> TE_REQUIRE TE_RESCUE TE_SELECT TE_SEPARATE TE_STRIP
 %token <KEYWORD_AS> TE_THEN TE_UNDEFINE	TE_UNTIL TE_VARIANT TE_WHEN	
 %token <KEYWORD_AS> TE_XOR
+-- Special type for keywords that are either keyword or identifier
+%token <TUPLE [KEYWORD_AS, ID_AS, INTEGER, INTEGER, STRING]> TE_ASSIGN TE_ATTRIBUTE TE_ATTACHED TE_DETACHABLE
 
 %token TE_STRING TE_EMPTY_STRING TE_VERBATIM_STRING	TE_EMPTY_VERBATIM_STRING
 %token TE_STR_LT TE_STR_LE TE_STR_GT TE_STR_GE TE_STR_MINUS
@@ -207,7 +209,7 @@ create
 %type <CONSTRAINT_LIST_AS> Multiple_constraint_list
 %type <CONSTRAINING_TYPE_AS> Single_constraint
 
-%expect 189
+%expect 278
 
 %%
 
@@ -929,7 +931,7 @@ Assigner_mark_opt: -- Empty
 			}
 	|	TE_ASSIGN Identifier_as_lower
 			{
-				$$ := ast_factory.new_assigner_mark_as ($1, $2)
+				$$ := ast_factory.new_assigner_mark_as (extract_keyword ($1), $2)
 			}
 	;
 
@@ -1392,7 +1394,7 @@ Internal: TE_DO Compound
 	|	TE_ONCE Compound
 			{ $$ := ast_factory.new_once_as ($2, $1) }
 	|	TE_ATTRIBUTE Compound
-			{ $$ := ast_factory.new_attribute_as ($2, $1) }
+			{ $$ := ast_factory.new_attribute_as ($2, extract_keyword ($1)) }
 	;
 
 Local_declarations: -- Empty
@@ -1618,7 +1620,7 @@ Non_class_type: TE_EXPANDED Attached_class_type
 			{
 				$$ := ast_factory.new_like_id_as ($3, $2)
 				if $$ /= Void then
-					$$.set_attachment_mark ($1, True, False)
+					$$.set_attachment_mark (extract_keyword ($1), True, False)
 				end
 			}
 	|	TE_BANG TE_LIKE Identifier_as_lower
@@ -1637,7 +1639,7 @@ Non_class_type: TE_EXPANDED Attached_class_type
 			{
 				$$ := ast_factory.new_like_id_as ($3, $2)
 				if $$ /= Void then
-					$$.set_attachment_mark ($1, False, True)
+					$$.set_attachment_mark (extract_keyword ($1), False, True)
 				end
 			}
 	|	TE_QUESTION TE_LIKE Identifier_as_lower
@@ -1658,7 +1660,7 @@ Non_class_type: TE_EXPANDED Attached_class_type
 			{
 				$$ := ast_factory.new_like_current_as ($3, $2)
 				if $$ /= Void then
-					$$.set_attachment_mark ($1, True, False)
+					$$.set_attachment_mark (extract_keyword ($1), True, False)
 				end
 			}
 	|	TE_BANG TE_LIKE TE_CURRENT
@@ -1677,7 +1679,7 @@ Non_class_type: TE_EXPANDED Attached_class_type
 			{
 				$$ := ast_factory.new_like_current_as ($3, $2)
 				if $$ /= Void then
-					$$.set_attachment_mark ($1, False, True)
+					$$.set_attachment_mark (extract_keyword ($1), False, True)
 				end
 			}
 	|	TE_QUESTION TE_LIKE TE_CURRENT
@@ -1706,14 +1708,14 @@ Marked_class_or_tuple_type:
 			{
 				$$ := $2
 				if $$ /= Void then
-					$$.set_attachment_mark ($1, False, True)
+					$$.set_attachment_mark (extract_keyword ($1), False, True)
 				end
 		}
 	| TE_ATTACHED Attached_class_or_tuple_type
 			{
 				$$ := $2
 				if $$ /= Void then
-					$$.set_attachment_mark ($1, True, False)
+					$$.set_attachment_mark (extract_keyword ($1), True, False)
 				end
 		}
 	| TE_BANG Attached_class_or_tuple_type
@@ -2660,12 +2662,12 @@ Expression:
 			{ $$ := $1; has_type := True }
 	|	TE_ATTACHED Expression
 			{
-				$$ := ast_factory.new_object_test_as ($1, Void, $2, Void, Void)
+				$$ := ast_factory.new_object_test_as (extract_keyword ($1), Void, $2, Void, Void)
 				has_type := True
 			}
 	|	TE_ATTACHED Expression TE_AS Identifier_as_lower
 			{
-				$$ := ast_factory.new_object_test_as ($1, Void, $2, $3, $4)
+				$$ := ast_factory.new_object_test_as (extract_keyword ($1), Void, $2, $3, $4)
 				has_type := True
 			}
 	|	TE_ATTACHED TE_LCURLY Type TE_RCURLY Expression
@@ -2674,7 +2676,7 @@ Expression:
 					$3.set_lcurly_symbol ($2)
 					$3.set_rcurly_symbol ($4)
 				end
-				$$ := ast_factory.new_object_test_as ($1, $3, $5, Void, Void)
+				$$ := ast_factory.new_object_test_as (extract_keyword ($1), $3, $5, Void, Void)
 				has_type := True
 			}
 	|	TE_ATTACHED TE_LCURLY Type TE_RCURLY Expression TE_AS Identifier_as_lower
@@ -2683,7 +2685,7 @@ Expression:
 					$3.set_lcurly_symbol ($2)
 					$3.set_rcurly_symbol ($4)
 				end
-				$$ := ast_factory.new_object_test_as ($1, $3, $5, $6, $7)
+				$$ := ast_factory.new_object_test_as (extract_keyword ($1), $3, $5, $6, $7)
 				has_type := True
 				if object_test_locals = Void then
 					create object_test_locals.make (1)
@@ -2972,14 +2974,22 @@ Class_identifier: TE_ID
 	|	TE_ASSIGN
 			{
 					-- Keyword used as identifier
-				process_id_as_with_existing_stub ($1, last_keyword_as_id_index, False)
-				$$ := last_id_as_value
+				$$ := extract_id ($1)
 			}
 	|	TE_ATTRIBUTE
 			{
 					-- Keyword used as identifier
-				process_id_as_with_existing_stub ($1, last_keyword_as_id_index, False)
-				$$ := last_id_as_value
+				$$ := extract_id ($1)
+			}
+	|	TE_ATTACHED
+			{
+					-- Keyword used as identifier
+				$$ := extract_id ($1)
+			}
+	|	TE_DETACHABLE
+			{
+					-- Keyword used as identifier
+				$$ := extract_id ($1)
 			}
 	;
 
@@ -3009,8 +3019,17 @@ Identifier_as_lower: TE_ID
 	|	TE_ASSIGN
 			{
 					-- Keyword used as identifier
-				process_id_as_with_existing_stub ($1, last_keyword_as_id_index, True)
-				$$ := last_id_as_value
+				$$ := extract_id ($1)
+			}
+	|	TE_ATTACHED
+			{
+					-- Keyword used as identifier
+				$$ := extract_id ($1)
+			}
+	|	TE_DETACHABLE
+			{
+					-- Keyword used as identifier
+				$$ := extract_id ($1)
 			}
 	;
 

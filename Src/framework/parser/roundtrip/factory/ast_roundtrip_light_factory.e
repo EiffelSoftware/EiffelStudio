@@ -23,6 +23,7 @@ inherit
 			backup_match_list_count,
 			resume_match_list_count,
 			new_keyword_as,
+			new_keyword_id_as,
 			new_symbol_as,
 			new_current_as,
 			new_deferred_as,
@@ -250,7 +251,7 @@ feature -- Leaf nodes
 			Result.set_index (a_index)
 		end
 
-	new_filled_bit_id_as (a_scn: EIFFEL_SCANNER): ID_AS
+	new_filled_bit_id_as (a_scn: EIFFEL_SCANNER_SKELETON): ID_AS
 			-- New empty ID AST node.
 		do
 			Result := Precursor (a_scn)
@@ -258,56 +259,56 @@ feature -- Leaf nodes
 			Result.set_index (match_list_count)
 		end
 
-	new_void_as (a_scn: EIFFEL_SCANNER): VOID_AS
+	new_void_as (a_scn: EIFFEL_SCANNER_SKELETON): VOID_AS
 		do
 			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
 			increase_match_list_count
 			Result.set_index (match_list_count)
 		end
 
-	new_unique_as (a_scn: EIFFEL_SCANNER): UNIQUE_AS
+	new_unique_as (a_scn: EIFFEL_SCANNER_SKELETON): UNIQUE_AS
 		do
 			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
 			increase_match_list_count
 			Result.set_index (match_list_count)
 		end
 
-	new_retry_as (a_scn: EIFFEL_SCANNER): RETRY_AS
+	new_retry_as (a_scn: EIFFEL_SCANNER_SKELETON): RETRY_AS
 		do
 			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
 			increase_match_list_count
 			Result.set_index (match_list_count)
 		end
 
-	new_result_as (a_scn: EIFFEL_SCANNER): RESULT_AS
+	new_result_as (a_scn: EIFFEL_SCANNER_SKELETON): RESULT_AS
 		do
 			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
 			increase_match_list_count
 			Result.set_index (match_list_count)
 		end
 
-	new_boolean_as (b: BOOLEAN; a_scn: EIFFEL_SCANNER): BOOL_AS
+	new_boolean_as (b: BOOLEAN; a_scn: EIFFEL_SCANNER_SKELETON): BOOL_AS
 		do
 			create Result.initialize (b, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
 			increase_match_list_count
 			Result.set_index (match_list_count)
 		end
 
-	new_current_as (a_scn: EIFFEL_SCANNER): CURRENT_AS
+	new_current_as (a_scn: EIFFEL_SCANNER_SKELETON): CURRENT_AS
 		do
 			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
 			increase_match_list_count
 			Result.set_index (match_list_count)
 		end
 
-	new_deferred_as (a_scn: EIFFEL_SCANNER): DEFERRED_AS
+	new_deferred_as (a_scn: EIFFEL_SCANNER_SKELETON): DEFERRED_AS
 		do
 			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
 			increase_match_list_count
 			Result.set_index (match_list_count)
 		end
 
-	new_keyword_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER): KEYWORD_AS
+	new_keyword_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): KEYWORD_AS
 			-- New KEYWORD AST node
 		do
 			create Result.make (a_code, a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
@@ -315,37 +316,64 @@ feature -- Leaf nodes
 			Result.set_index (match_list_count)
 		end
 
-	new_creation_keyword_as (a_scn: EIFFEL_SCANNER): KEYWORD_AS
+	new_keyword_id_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): like keyword_id_type
+			-- New KEYWORD AST node
+		local
+			l_id_as: ID_AS
+			l_keyword_as: KEYWORD_AS
+			l_cnt: INTEGER_32
+			l_str: STRING_8
+		do
+				-- Create the ID_AS first.
+			l_cnt := a_scn.text_count
+			l_str := reusable_string_buffer
+			l_str.clear_all
+			a_scn.append_text_to_string (l_str)
+			create l_id_as.initialize (l_str)
+			l_id_as.set_position (a_scn.line, a_scn.column, a_scn.position, l_cnt)
+
+				-- Create the KEYWORD_AS
+			create l_keyword_as.make (a_code, a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
+
+				-- Since the keyword is sharing the same piece of text as the ID_AS, we share the index.
+			increase_match_list_count
+			l_id_as.set_index (match_list_count)
+			l_keyword_as.set_index (match_list_count)
+
+			Result := [l_keyword_as, l_id_as, a_scn.line, a_scn.column, a_scn.filename]
+		end
+
+	new_creation_keyword_as (a_scn: EIFFEL_SCANNER_SKELETON): KEYWORD_AS
 			-- New KEYWORD AST node for keyword "creation'
 		do
 			Result := new_keyword_as ({EIFFEL_TOKENS}.te_creation, a_scn)
 		end
 
-	new_end_keyword_as (a_scn: EIFFEL_SCANNER): KEYWORD_AS
+	new_end_keyword_as (a_scn: EIFFEL_SCANNER_SKELETON): KEYWORD_AS
 			-- New KEYWORD AST node for keyword "end'
 		do
 			Result := new_keyword_as ({EIFFEL_TOKENS}.te_end, a_scn)
 		end
 
-	new_frozen_keyword_as (a_scn: EIFFEL_SCANNER): KEYWORD_AS
+	new_frozen_keyword_as (a_scn: EIFFEL_SCANNER_SKELETON): KEYWORD_AS
 			-- New KEYWORD AST node for keyword "frozen'
 		do
 			Result := new_keyword_as ({EIFFEL_TOKENS}.te_frozen, a_scn)
 		end
 
-	new_infix_keyword_as (a_scn: EIFFEL_SCANNER): KEYWORD_AS
+	new_infix_keyword_as (a_scn: EIFFEL_SCANNER_SKELETON): KEYWORD_AS
 			-- New KEYWORD AST node for keyword "infix'
 		do
 			Result := new_keyword_as ({EIFFEL_TOKENS}.te_infix, a_scn)
 		end
 
-	new_precursor_keyword_as (a_scn: EIFFEL_SCANNER): KEYWORD_AS
+	new_precursor_keyword_as (a_scn: EIFFEL_SCANNER_SKELETON): KEYWORD_AS
 			-- New KEYWORD AST node for keyword "precursor'
 		do
 			Result := new_keyword_as ({EIFFEL_TOKENS}.te_precursor, a_scn)
 		end
 
-	new_prefix_keyword_as (a_scn: EIFFEL_SCANNER): KEYWORD_AS
+	new_prefix_keyword_as (a_scn: EIFFEL_SCANNER_SKELETON): KEYWORD_AS
 			-- New KEYWORD AST node for keyword "prefix'
 		do
 			Result := new_keyword_as ({EIFFEL_TOKENS}.te_prefix, a_scn)
@@ -359,7 +387,7 @@ feature -- Leaf nodes
 			Result.set_index (match_list_count)
 		end
 
-	new_symbol_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER): SYMBOL_AS
+	new_symbol_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): SYMBOL_AS
 			-- New KEYWORD AST node		
 		do
 			create Result.make (a_code, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
@@ -367,14 +395,14 @@ feature -- Leaf nodes
 			Result.set_index (match_list_count)
 		end
 
-	new_square_symbol_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER): SYMBOL_AS
+	new_square_symbol_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): SYMBOL_AS
 			-- New KEYWORD AST node	only for symbol "[" and "]"
 		do
 			Result := new_symbol_as (a_code, a_scn)
 			Result.set_index (match_list_count)
 		end
 
-	create_break_as (a_scn: EIFFEL_SCANNER)
+	create_break_as (a_scn: EIFFEL_SCANNER_SKELETON)
 			-- NEw BREAK_AS node
 		do
 			increase_match_list_count
@@ -449,7 +477,7 @@ feature -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -462,22 +490,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

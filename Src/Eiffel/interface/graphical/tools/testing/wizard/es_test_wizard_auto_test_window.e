@@ -329,7 +329,7 @@ feature {NONE} -- Events
 				l_types := a_input.to_string_8
 				l_types.to_upper
 				if not (l_types.has ('!') or l_types.has ('?')) then
-					type_parser.parse_from_string ("type " + l_types)
+					type_parser.parse_from_string ("type " + l_types, Void)
 					error_handler.wipe_out
 					l_type_as := type_parser.type_node
 					if l_type_as /= Void then

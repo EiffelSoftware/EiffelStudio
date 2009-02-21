@@ -364,8 +364,8 @@ feature {NONE} -- Implementation
 				-- as new external syntax is not clearly specified.
 			if
 				False and
-				(system.current_class /= Void and then
-				system.current_class.lace_class.options.is_warning_enabled (w_syntax))
+				({l_class_c: CLASS_C} eiffel_parser.current_class and then
+				l_class_c.lace_class.options.is_warning_enabled (w_syntax))
 			then
 				create l_warning.make (
 					eiffel_parser.line,

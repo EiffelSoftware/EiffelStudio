@@ -19,6 +19,7 @@ inherit
 		redefine
 			create_match_list,
 			new_keyword_as,
+			new_keyword_id_as,
 			new_symbol_as,
 			new_current_as,
 			new_deferred_as,
@@ -186,38 +187,38 @@ feature -- Leaf Nodes
 			extend_match_list_with_stub (create {LEAF_STUB_AS}.make (a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count))
 		end
 
-	new_filled_bit_id_as (a_scn: EIFFEL_SCANNER): ID_AS
+	new_filled_bit_id_as (a_scn: EIFFEL_SCANNER_SKELETON): ID_AS
 			-- New empty ID AST node.
 		do
 			Result := Precursor (a_scn)
 			extend_match_list_with_stub (create{LEAF_STUB_AS}.make (a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count))
 		end
 
-	new_void_as (a_scn: EIFFEL_SCANNER): VOID_AS
+	new_void_as (a_scn: EIFFEL_SCANNER_SKELETON): VOID_AS
 		do
 			Result := Precursor (a_scn)
 			extend_match_list_with_stub (create{KEYWORD_STUB_AS}.make ({EIFFEL_TOKENS}.te_void, a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count))
 		end
 
-	new_unique_as (a_scn: EIFFEL_SCANNER): UNIQUE_AS
+	new_unique_as (a_scn: EIFFEL_SCANNER_SKELETON): UNIQUE_AS
 		do
 			Result := Precursor (a_scn)
 			extend_match_list_with_stub (create{KEYWORD_STUB_AS}.make ({EIFFEL_TOKENS}.te_unique, a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count))
 		end
 
-	new_retry_as (a_scn: EIFFEL_SCANNER): RETRY_AS
+	new_retry_as (a_scn: EIFFEL_SCANNER_SKELETON): RETRY_AS
 		do
 			Result := Precursor (a_scn)
 			extend_match_list_with_stub (create{KEYWORD_STUB_AS}.make ({EIFFEL_TOKENS}.te_retry, a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count))
 		end
 
-	new_result_as (a_scn: EIFFEL_SCANNER): RESULT_AS
+	new_result_as (a_scn: EIFFEL_SCANNER_SKELETON): RESULT_AS
 		do
 			Result := Precursor (a_scn)
 			extend_match_list_with_stub (create{KEYWORD_STUB_AS}.make ({EIFFEL_TOKENS}.te_result, a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count))
 		end
 
-	new_boolean_as (b: BOOLEAN; a_scn: EIFFEL_SCANNER): BOOL_AS
+	new_boolean_as (b: BOOLEAN; a_scn: EIFFEL_SCANNER_SKELETON): BOOL_AS
 		do
 			Result := Precursor (b, a_scn)
 			if b then
@@ -229,23 +230,31 @@ feature -- Leaf Nodes
 			end
 		end
 
-	new_current_as (a_scn: EIFFEL_SCANNER): CURRENT_AS
+	new_current_as (a_scn: EIFFEL_SCANNER_SKELETON): CURRENT_AS
 		do
 			Result := Precursor (a_scn)
 			extend_match_list_with_stub (create{KEYWORD_STUB_AS}.make ({EIFFEL_TOKENS}.te_current, a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count))
 		end
 
-	new_deferred_as (a_scn: EIFFEL_SCANNER): DEFERRED_AS
+	new_deferred_as (a_scn: EIFFEL_SCANNER_SKELETON): DEFERRED_AS
 		do
 			Result := Precursor (a_scn)
 			extend_match_list_with_stub (create{KEYWORD_STUB_AS}.make ({EIFFEL_TOKENS}.te_deferred, a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count))
 		end
 
-	new_keyword_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER): KEYWORD_AS
+	new_keyword_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): KEYWORD_AS
 			-- New KEYWORD AST node
 		do
 			Result := Precursor (a_code, a_scn)
-			extend_match_list_with_stub (create{KEYWORD_STUB_AS}.make (a_code, a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count))
+			extend_match_list_with_stub (create {KEYWORD_STUB_AS}.make (a_code, a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count))
+		end
+
+	new_keyword_id_as (a_code: INTEGER_32; a_scn: EIFFEL_SCANNER_SKELETON): like keyword_id_type
+		do
+			Result := Precursor (a_code, a_scn)
+				-- It is ok to create a KEYWORD_STUB_AS because it inherits from LEAF_STUB_AS and thus
+ 				-- when the keyword is actually used as an identifier it should be just fine.
+ 			extend_match_list_with_stub (create {KEYWORD_STUB_AS}.make (a_code, a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count))
 		end
 
 	new_once_string_keyword_as (a_text: STRING; l, c, p, n: INTEGER): KEYWORD_AS
@@ -255,14 +264,14 @@ feature -- Leaf Nodes
 			extend_match_list_with_stub (create{KEYWORD_STUB_AS}.make ({EIFFEL_TOKENS}.te_once_string, a_text.string, l, c, p, n))
 		end
 
-	new_symbol_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER): SYMBOL_AS
+	new_symbol_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): SYMBOL_AS
 			-- New KEYWORD AST node		
 		do
 			Result := Precursor (a_code, a_scn)
 			extend_match_list_with_stub (create{SYMBOL_STUB_AS}.make (a_code, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count))
 		end
 
-	create_break_as (a_scn: EIFFEL_SCANNER)
+	create_break_as (a_scn: EIFFEL_SCANNER_SKELETON)
 			-- NEw BREAK_AS node
 		local
 			b_as: BREAK_AS
@@ -285,7 +294,7 @@ feature -- Leaf Nodes
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -298,22 +307,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

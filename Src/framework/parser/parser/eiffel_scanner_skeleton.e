@@ -18,7 +18,9 @@ inherit
 		end
 
 	EIFFEL_TOKENS
-		export {NONE} all end
+		export
+			{NONE} all
+		end
 
 	BASIC_ROUTINES
 		export {NONE} all end
@@ -54,11 +56,8 @@ feature {NONE} -- Initialization
 			create token_buffer2.make (Initial_buffer_size)
 			create verbatim_marker.make (Initial_verbatim_marker_size)
 			filename := ""
-			is_indexing_keyword := True
-			is_note_keyword := False
-			is_attribute_keyword := False
-			is_attached_keyword := False
-			is_detachable_keyword := False
+			syntax_version := obsolete_64_syntax
+			ast_factory.set_parser (Current)
 		ensure
 			ast_factory_set: ast_factory = a_factory
 		end
@@ -74,11 +73,7 @@ feature -- Initialization
 			token_buffer.clear_all
 			token_buffer2.clear_all
 			verbatim_marker.clear_all
-			is_indexing_keyword := True
-			is_note_keyword := False
-			is_attribute_keyword := False
-			is_attached_keyword := False
-			is_detachable_keyword := False
+			syntax_version := obsolete_64_syntax
 		end
 
 feature -- Roundtrip
@@ -155,22 +150,19 @@ feature -- Access
 			--   C compiler (e.g., CL does not support strings longer than 0xFFFF bytes)
 			--   CLI specification (e.g., identifiers cannot be longer 0x1FFFFFFF bytes)
 
+	ecma_syntax: NATURAL_8 = 0x00
+			-- Syntax strictly follows the ECMA specification.
+
+	obsolete_64_syntax: NATURAL_8 = 0x01
+			-- Allows pre-ECMA keywords and ignore new ECMA keywords such as `note', `attribute', `attached' and `detachable'.
+
+	transitional_64_syntax: NATURAL_8 = 0x2
+			-- Allows both pre and ECMA keywords.
+
 feature {NONE} -- Status
 
-	is_note_keyword: BOOLEAN
-			-- Is "note" keyword allowed in current context?
-
-	is_indexing_keyword: BOOLEAN
-			-- Is "indexing" keyword allowed in current context?
-
-	is_attribute_keyword: BOOLEAN
-			-- Is "attribute" keyword allowed in current context?
-
-	is_attached_keyword: BOOLEAN
-			-- Is "attached" keyword allowed in current context?
-
-	is_detachable_keyword: BOOLEAN
-			-- Is "detachable" keyword allowed in current context?
+	syntax_version: NATURAL_8
+			-- Version of syntax used, one of the `ecma_syntax', `obsolete_64_syntax' and `transitional_64_syntax'.
 
 feature -- Convenience
 
@@ -210,44 +202,14 @@ feature -- Settings
 			has_syntax_warning_set: has_syntax_warning = b
 		end
 
-	set_is_indexing_keyword (value: BOOLEAN)
-			-- Set `is_indexing_keyword' to `value'
+	set_syntax_version (a_version: like syntax_version)
+			-- Set `syntax_version' to `a_version'.
+		require
+			valid_version: a_version = ecma_syntax or a_version = transitional_64_syntax or a_version = obsolete_64_syntax
 		do
-			is_indexing_keyword := value
+			syntax_version := a_version
 		ensure
-			is_indexing_keyword_set: is_indexing_keyword = value
-		end
-
-	set_is_note_keyword (value: BOOLEAN)
-			-- Set `is_note_keyword' to `value'
-		do
-			is_note_keyword := value
-		ensure
-			is_note_keyword_set: is_note_keyword = value
-		end
-
-	set_is_attribute_keyword (value: BOOLEAN)
-			-- Set `is_attribute_keyword' to `value'
-		do
-			is_attribute_keyword := value
-		ensure
-			is_attribute_keyword_set: is_attribute_keyword = value
-		end
-
-	set_is_attached_keyword (value: BOOLEAN)
-			-- Set `is_attached_keyword' to `value'
-		do
-			is_attached_keyword := value
-		ensure
-			is_attached_keyword_set: is_attached_keyword = value
-		end
-
-	set_is_detachable_keyword (value: BOOLEAN)
-			-- Set `is_detachable_keyword' to `value'
-		do
-			is_detachable_keyword := value
-		ensure
-			is_detachable_keyword_set: is_detachable_keyword = value
+			syntax_version_set: syntax_version = a_version
 		end
 
 feature {NONE} -- Error handling
@@ -566,7 +528,7 @@ invariant
 	filename_not_void: filename /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -579,22 +541,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EIFFEL_SCANNER_SKELETON

@@ -5723,7 +5723,7 @@ feature {NONE} -- Element change: Root creators
 			l_system_root: SYSTEM_ROOT
 			l_class: ?CLASS_I
 		do
-			type_parser.parse_from_string ("type " + a_class_name)
+			type_parser.parse_from_string ("type " + a_class_name, Void)
 			l_type_as ?= type_parser.type_node
 
 			if l_type_as = Void then

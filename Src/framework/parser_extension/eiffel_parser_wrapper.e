@@ -59,7 +59,7 @@ feature -- Status report
 
 feature -- Basic operation
 
-	parse (a_parser: !EIFFEL_PARSER; a_text: !READABLE_STRING_GENERAL; a_ignore_errors: BOOLEAN)
+	parse (a_parser: !EIFFEL_PARSER; a_text: !READABLE_STRING_GENERAL; a_ignore_errors: BOOLEAN; a_context_class: ABSTRACT_CLASS_C)
 			-- Performs a parse using an Eiffel parser.
 			--
 			-- `a_parser'       : The Eiffel parser to perform a parse with.
@@ -93,7 +93,7 @@ feature -- Basic operation
 				end
 
 					-- Perform parse
-				a_parser.parse_from_string (a_text.as_string_8)
+				a_parser.parse_from_string (a_text.as_string_8, a_context_class)
 
 				if a_ignore_errors then
 						-- Remove any added errors
@@ -107,7 +107,7 @@ feature -- Basic operation
 							end
 						end
 					end
-					l_warnings := error_handler.error_list
+					l_warnings := error_handler.warning_list
 					if l_warnings /= Void then
 						if l_warnings.count > l_warning_index then
 							l_warnings.go_i_th (l_warning_index)
@@ -131,7 +131,7 @@ feature -- Basic operation
 			error_handler_has_warning_unchanged: error_handler.has_warning = old error_handler.has_warning
 		end
 
-	parse_with_option (a_parser: !EIFFEL_PARSER; a_text: !READABLE_STRING_GENERAL; a_options: CONF_OPTION; a_ignore_errors: BOOLEAN)
+	parse_with_option (a_parser: !EIFFEL_PARSER; a_text: !READABLE_STRING_GENERAL; a_options: CONF_OPTION; a_ignore_errors: BOOLEAN; a_context_class: ABSTRACT_CLASS_C)
 			-- Performs a parse using an Eiffel parser.
 			--
 			-- `a_parser'       : The Eiffel parser to perform a parse with.
@@ -139,17 +139,16 @@ feature -- Basic operation
 			-- `a_options'      : The configuration options to apply to the parser before parsing.
 			-- `a_ignore_errors': True to remove all errors and warnings from the error handler after a
 			--                    parse has been completed; False to retain them.
-		local
-			l_syn_level: NATURAL_8
 		do
-			l_syn_level := a_options.syntax_level.item
-			a_parser.set_is_indexing_keyword (l_syn_level /= {CONF_OPTION}.syntax_level_standard)
-			a_parser.set_is_note_keyword (l_syn_level /= {CONF_OPTION}.syntax_level_obsolete)
-			a_parser.set_is_attribute_keyword (l_syn_level /= {CONF_OPTION}.syntax_level_obsolete)
-			a_parser.set_is_attached_keyword (l_syn_level /= {CONF_OPTION}.syntax_level_obsolete)
-			a_parser.set_is_detachable_keyword (l_syn_level /= {CONF_OPTION}.syntax_level_obsolete)
-
-			parse (a_parser, a_text, a_ignore_errors)
+			inspect a_options.syntax_level.item
+			when {CONF_OPTION}.syntax_level_obsolete then
+				a_parser.set_syntax_version ({EIFFEL_SCANNER}.obsolete_64_syntax)
+			when {CONF_OPTION}.syntax_level_transitional then
+				a_parser.set_syntax_version ({EIFFEL_SCANNER}.transitional_64_syntax)
+			else
+				a_parser.set_syntax_version ({EIFFEL_SCANNER}.ecma_syntax)
+			end
+			parse (a_parser, a_text, a_ignore_errors, a_context_class)
 		end
 
 feature {NONE} -- Basic operations

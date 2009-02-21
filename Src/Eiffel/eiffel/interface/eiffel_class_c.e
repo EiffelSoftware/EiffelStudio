@@ -299,12 +299,14 @@ feature -- Action
 				else
 					parser.set_has_syntax_warning (False)
 				end
-				parser.set_is_indexing_keyword (l_options.syntax_level.item /= {CONF_OPTION}.syntax_level_standard)
-				parser.set_is_note_keyword (l_options.syntax_level.item /= {CONF_OPTION}.syntax_level_obsolete)
-				parser.set_is_attribute_keyword (l_options.syntax_level.item /= {CONF_OPTION}.syntax_level_obsolete)
-				parser.set_is_attached_keyword (l_options.syntax_level.item /= {CONF_OPTION}.syntax_level_obsolete)
-				parser.set_is_detachable_keyword (l_options.syntax_level.item /= {CONF_OPTION}.syntax_level_obsolete)
-
+				inspect l_options.syntax_level.item
+				when {CONF_OPTION}.syntax_level_obsolete then
+					parser.set_syntax_version ({EIFFEL_SCANNER}.obsolete_64_syntax)
+				when {CONF_OPTION}.syntax_level_transitional then
+					parser.set_syntax_version ({EIFFEL_SCANNER}.transitional_64_syntax)
+				else
+					parser.set_syntax_version ({EIFFEL_SCANNER}.ecma_syntax)
+				end
 				Inst_context.set_group (cluster)
 				parser.parse_class (file, Current)
 				Result := parser.root_node

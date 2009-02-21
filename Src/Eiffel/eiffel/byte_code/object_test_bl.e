@@ -32,7 +32,7 @@ feature {NONE} -- Creation
 		require
 			other_attached: other /= Void
 		do
-			make_b (other.target.enlarged, other.expression.enlarged, other.info)
+			make_b (other.target.enlarged, other.expression.enlarged, other.info, other.is_void_check)
 		end
 
 feature -- C code generation
@@ -235,10 +235,12 @@ feature -- C code generation
 							-- Expanded object is already attached to reference target.
 						result_value := true_constant
 					else
-						if not target.type.has_like and then source_type.conform_to (context.associated_class, target.type) or else
+						if
+							is_void_check or else (
+							not target.type.has_like and then source_type.conform_to (context.associated_class, target.type) or else
 							target.type.same_as (expression.type) or else
-							target.type.is_like and then {t: LIKE_FEATURE} target.type and then
-							{c: CALL_ACCESS_B} expression and then c.feature_name_id = t.feature_name_id
+							(target.type.is_like and then {t: LIKE_FEATURE} target.type and then
+							{c: CALL_ACCESS_B} expression and then c.feature_name_id = t.feature_name_id))
 						then
 								-- There is no need to check actual object type,
 								-- because it always conforms to an object test local type.

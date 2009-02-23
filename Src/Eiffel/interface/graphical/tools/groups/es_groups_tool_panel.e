@@ -130,8 +130,8 @@ feature {ES_GROUPS_COMMANDER_I} -- Basic operations
 					end
 				end
 			else
-				create l_error.make_standard (locale_formatter.translation (e_no_open_editor))
-				l_error.show_on_active_window
+--				create l_error.make_standard (locale_formatter.translation (e_no_open_editor))
+--				l_error.show_on_active_window
 			end
 		end
 
@@ -151,20 +151,6 @@ feature {NONE} -- Action handlers
 				else
 					user_widget.show_stone (l_stone)
 				end
-			end
-		end
-
-	on_find_stone (a_stone: STONE)
-			-- Called when the user requests to find the active class or cluster in the editor
-		require
-			is_interface_usable: is_interface_usable
-			a_stone_is_stone_usable: a_stone /= Void implies is_stone_usable (a_stone)
-		do
-			if a_stone = Void then
-					-- There is no context stone, so attempt to locate a stone from the editor
-				highlight_editor_stone
-			else
-				highlight_stone (a_stone)
 			end
 		end
 

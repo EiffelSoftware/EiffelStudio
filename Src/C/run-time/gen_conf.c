@@ -2179,20 +2179,28 @@ rt_public EIF_TYPE_INDEX eif_attached_type (EIF_TYPE_INDEX dftype)
 	EIF_GEN_DER *gdp;
 	EIF_TYPE_INDEX l_result;
 	EIF_TYPE_INDEX *saved_out, *outtable, *saved_in, *intable;
-	size_t l_size;
+	uint32 nb, tuple_added_size;
 	gdp = eif_derivations [dftype];
 
 	if (!gdp || (!RT_IS_ATTACHED_TYPE(gdp->annotation))) {
+		tuple_added_size = 0;
 		if (gdp) {
-			l_size = gdp->size;
+			nb = gdp->size;
+			if (gdp->is_tuple) {
+					/* + 2 because we need to store TUPLE_TYPE followed by
+					 * the actual generic parameter count. */
+				tuple_added_size = 2;
+			}
 		} else {
-			l_size = 1;
+			nb = 0;
 		}
-		outtable = (EIF_TYPE_INDEX *) cmalloc (sizeof(EIF_TYPE_INDEX) * (l_size + 3));
+			/* + 3 because we need additional space for the attached mark, the dtype and the terminator. */
+		outtable = (EIF_TYPE_INDEX *) cmalloc (sizeof(EIF_TYPE_INDEX) * (nb + tuple_added_size + 3));
 		if (!outtable) {
 			enomem();
 		}
-		intable = (EIF_TYPE_INDEX *) cmalloc (sizeof(EIF_TYPE_INDEX) * (l_size + 3));
+			/* + 3 because we need additional space for the attached mark, the dtype and the terminator. */
+		intable = (EIF_TYPE_INDEX *) cmalloc (sizeof(EIF_TYPE_INDEX) * (nb + tuple_added_size + 3));
 		if (!intable) {
 			eif_rt_xfree(outtable);
 			enomem();
@@ -2200,13 +2208,16 @@ rt_public EIF_TYPE_INDEX eif_attached_type (EIF_TYPE_INDEX dftype)
 		saved_out = outtable;
 		saved_in = intable;
 		intable[0] = ATTACHED_TYPE;
-		intable[1] = To_dtype(dftype);
+		intable[tuple_added_size + 1] = To_dtype(dftype);
 		if (gdp) {
-			memcpy (intable + 2, gdp->typearr, sizeof(EIF_TYPE_INDEX) * l_size);
-		} else {
-			intable [2] = dftype;
+			if (tuple_added_size) {
+				intable[1] = TUPLE_TYPE;
+				CHECK("valid cound", nb < 0xFFFF);
+				intable[2] = (EIF_TYPE_INDEX) nb;
+			}
+			memcpy (intable + (tuple_added_size + 2), gdp->typearr, sizeof(EIF_TYPE_INDEX) * nb);
 		}
-		intable[l_size + 2] = TERMINATOR;
+		intable[nb + tuple_added_size + 2] = TERMINATOR;
 		l_result = eif_id_of (&intable, &outtable, dftype);
 
 		eif_rt_xfree(saved_out);

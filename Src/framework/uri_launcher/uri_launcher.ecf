@@ -11,7 +11,7 @@
 			</condition>
 		</library>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="bridge" location="$EIFFEL_SRC\framework\patterns\bridge\bridge.ecf"/>
+		<library name="patterns" location="$EIFFEL_SRC\framework\patterns\patterns.ecf"/>
 		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
 		<cluster name="uri_launcher" location=".\" recursive="true">
 			<file_rule>

@@ -17,7 +17,7 @@ feature
 		end
 
 	item: G
-	item_det: ?G
-	item_att: !G
+	item_det: detachable G
+	item_att: attached G
 
 end

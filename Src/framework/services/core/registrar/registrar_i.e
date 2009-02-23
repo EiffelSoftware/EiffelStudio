@@ -55,7 +55,10 @@ feature -- Access
 feature -- Status report
 
 	is_valid_registration_key (a_key: !K): BOOLEAN
+			-- Determines if a registeration key is valid for the registrar.
 			--
+			-- `a_key': The registeration key to determine validity for.
+			-- `Result': True if the key is valid; False otherwise.
 		require
 			is_interface_usable: is_interface_usable
 		deferred
@@ -64,7 +67,10 @@ feature -- Status report
 		end
 
 	is_valid_registration (a_item: !G): BOOLEAN
+			-- Determines if a registeration object is valid for the registrar.
 			--
+			-- `a_item': The registeration object to determine validity for.
+			-- `Result': True if the object is valid; False otherwise.
 		require
 			is_interface_usable: is_interface_usable
 		deferred
@@ -73,7 +79,10 @@ feature -- Status report
 		end
 
 	is_registered (a_key: !K): BOOLEAN
+			-- Determins if a object has been registered already.
 			--
+			-- `a_key': A registeration key.
+			-- `Result': True if there is a registeration pertaining to the supplied key; False otherwise.
 		require
 			is_interface_usable: is_interface_usable
 			a_key_is_valid_registration_key: is_valid_registration_key (a_key)
@@ -82,8 +91,11 @@ feature -- Status report
 
 feature -- Query
 
-	registration alias "[]" (a_key: !K): !G
+	registration alias "[]" (a_key: !K): !G assign register
+			-- Retrieves an object registered with the supplied registration key.
 			--
+			-- `a_key': The registeration key to retrieve an registration object for.
+			-- `Result': The registeration object, associated with the supplied registration key.
 		require
 			is_interface_usable: is_interface_usable
 			a_key_is_valid_registration_key: is_valid_registration_key (a_key)
@@ -94,7 +106,10 @@ feature -- Query
 feature -- Basic operations
 
 	register (a_item: !G; a_key: !K)
+			-- Registers an object with the registrar.
 			--
+			-- `a_item': The object to register.
+			-- `a_key': A unique registeration key to associate with the registration object.
 		require
 			is_interface_usable: is_interface_usable
 			a_item_is_valid_registration_key: is_valid_registration_key (a_key)
@@ -107,7 +122,10 @@ feature -- Basic operations
 		end
 
 	register_with_activator (a_activator: !FUNCTION [ANY, TUPLE, !G]; a_key: !K)
+			-- Registers an activator function, used to retrieve a registration object upon request.
 			--
+			-- `a_item': The object to register.
+			-- `a_key': A unique registeration key to associate with the registration object.
 		require
 			is_interface_usable: is_interface_usable
 			a_key_is_valid_registration_key: is_valid_registration_key (a_key)
@@ -117,8 +135,29 @@ feature -- Basic operations
 			a_key_is_registered: is_registered (a_key)
 		end
 
-	unregister (a_key: !K)
+	register_with_type_activator (a_type: !TYPE [G]; a_key: !K)
+			-- Registers an activator with the registrar, which will be used to instantiate the registration
+			-- object when the first request is made.
 			--
+			-- Note: The registration object should not have a creation routine because the regisration object
+			--       will be dynamically instatiated. For initialization properties use classes implementing
+			--       {SITE [REGISTRAR_I [..., ...]]}.
+			--
+			-- `a_type': The object type to register.
+			-- `a_key': A unique registeration key to associate with the registration object.
+		require
+			is_interface_usable: is_interface_usable
+			a_item_is_valid_registration_key: is_valid_registration_key (a_key)
+			not_a_key_is_registered: not is_registered (a_key)
+		deferred
+		ensure
+			is_registered_a_key: is_registered (a_key)
+		end
+
+	unregister (a_key: !K)
+			-- Unregisters a previous registered object or activator.
+			--
+			-- `a_key': The key originally used to register an object or activator.
 		require
 			is_interface_usable: is_interface_usable
 			a_key_is_valid_registration_key: is_valid_registration_key (a_key)

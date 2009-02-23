@@ -34,7 +34,7 @@ create
 feature {NONE} -- Initialization
 
 	make
-			-- Initialize a new set
+			-- Initialize a new registrar.
 		do
 			create table.make_default
 		end
@@ -162,6 +162,28 @@ feature -- Basic operations
 		do
 			create l_concealer.make (a_activator)
 			internal_register (l_concealer, a_key)
+		end
+
+	register_with_type_activator (a_type: !TYPE [G]; a_key: !K)
+			-- <Precursor>
+		local
+			l_concealer: CONCEALER_WITH_ACTIVATOR [G]
+		do
+			register_with_activator (agent (ia_type: !TYPE [G]): !G
+					-- Activator function to dynamically instantiate type.
+				local
+					l_internal: INTERNAL
+					l_type_id: INTEGER
+					l_result: detachable G
+				do
+					create l_internal
+					l_type_id := l_internal.generic_dynamic_type (ia_type, 1)
+					if attached {G} l_internal.new_instance_of (l_type_id) as l_object then
+						l_result := l_object
+					end
+					check attached l_result end
+					Result := l_result
+				end (a_type), a_key)
 		end
 
 	unregister (a_key: !K)

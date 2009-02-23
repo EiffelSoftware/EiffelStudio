@@ -487,7 +487,7 @@ feature -- Redefine
 	set_mini_toolbar (a_widget: EV_WIDGET)
 			-- <Precursor>
 		do
-			zone.update_mini_tool_bar (content)
+			zone.update_mini_tool_bar_when_selected (content)
 		end
 
 feature {SD_CONTENT} -- Redefine

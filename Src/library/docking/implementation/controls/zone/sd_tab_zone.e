@@ -230,6 +230,14 @@ feature -- Command
 			end
 		end
 
+	update_mini_tool_bar_when_selected (a_content: SD_CONTENT)
+			-- When `a_content' selected, call `update_mini_tool_bar'
+		do
+			if internal_notebook.is_content_selected (a_content) then
+				update_mini_tool_bar (a_content)
+			end
+		end
+
 	update_mini_tool_bar (a_content: SD_CONTENT)
 			-- <Precursor>
 		do
@@ -242,7 +250,7 @@ feature -- Command
 				internal_title_bar.clear_custom_widget
 			end
 		end
-		
+
 	update_mini_tool_bar_size
 			-- <Precursor>
 		do

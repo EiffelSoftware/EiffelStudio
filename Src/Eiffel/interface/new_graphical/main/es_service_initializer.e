@@ -32,9 +32,7 @@ inherit
 feature -- Services
 
 	add_core_services (a_container: !SERVICE_CONTAINER_S)
-			-- Adds all the core services.
-			--
-			-- `a_container': The service container to add services to.
+			-- <Precursor>
 		do
 			Precursor {SERVICE_INITIALIZER} (a_container)
 			a_container.register_with_activator ({FILE_NOTIFIER_S}, agent new_file_notifier_service, False)
@@ -44,27 +42,68 @@ feature -- Services
 			a_container.register_with_activator ({STATUS_BAR_S}, agent new_status_bar_service, False)
 		end
 
-feature {NONE} -- Help registration
+feature {NONE} -- Factory
 
-	register_help_providers (a_service: !HELP_PROVIDERS_S)
-			-- Registers all help providers with the help providers service.
-			--
-			-- `a_service': The service interface to register the helper providers on.
-		require
-			a_service_is_interface_usable: a_service.is_interface_usable
-		local
-			l_kinds: HELP_PROVIDER_KINDS
+	new_code_template_catalog_service: detachable CODE_TEMPLATE_CATALOG_S
+			-- Creates the code templates catalog service.
 		do
-			create l_kinds
-			a_service.register_provider (l_kinds.eiffel_doc, {EIFFEL_DOC_HELP_PROVIDER})
-			a_service.register_provider (l_kinds.wiki, {WIKI_HELP_PROVIDER})
-			a_service.register_provider (l_kinds.raw_uri, {RAW_URI_HELP_PROVIDER})
-			a_service.register_provider (l_kinds.pdf, {PDF_HELP_PROVIDER})
-			a_service.register_provider (l_kinds.doc, {DOC_HELP_PROVIDER})
-			a_service.register_provider (l_kinds.eis_default, {EIS_DEFAULT_HELP_PROVIDER})
+			create {CODE_TEMPLATE_CATALOG} Result.make
+			if attached Result then
+				extend_code_template_catalog (Result)
+			end
+		ensure
+			result_is_interface_usable: attached Result implies Result.is_interface_usable
 		end
 
-feature {NONE} -- Code template cataloging
+	new_file_notifier_service: detachable FILE_NOTIFIER_S
+			-- Creates the file notifier service.
+		do
+			create {FILE_NOTIFIER} Result.make
+		ensure
+			result_is_interface_usable: attached Result implies Result.is_interface_usable
+		end
+
+	new_help_providers_service: detachable HELP_PROVIDERS_S
+			-- Creates the help providers service.
+		do
+			create {HELP_PROVIDERS} Result.make
+			if attached Result then
+				register_help_providers (Result)
+			end
+		ensure
+			result_is_interface_usable: attached Result implies Result.is_interface_usable
+		end
+
+	new_status_bar_service: detachable STATUS_BAR_S
+			-- Create the wizard service.
+		do
+			create {STATUS_BAR} Result
+		ensure
+			result_is_interface_usable: attached Result implies Result.is_interface_usable
+		end
+
+	new_testing_service: detachable TEST_SUITE_S
+			-- <Precursor>
+		local
+			l_ev_app: EV_SHARED_APPLICATION
+		do
+			create {TEST_SUITE} Result.make (create {ES_TEST_PROJECT_HELPER})
+			register_test_suite_processors (Result)
+			if attached Result then
+				create l_ev_app
+				l_ev_app.ev_application.add_idle_action (agent Result.synchronize_processors)
+			end
+		end
+
+	new_wizard_service: detachable WIZARD_ENGINE_S
+			-- Create the wizard service
+		do
+			create {WIZARD_ENGINE} Result
+		ensure
+			result_is_interface_usable: attached Result implies Result.is_interface_usable
+		end
+
+feature {NONE} -- Registering: Code templates
 
 	extend_code_template_catalog (a_service: !CODE_TEMPLATE_CATALOG_S)
 			-- Extends the build in paths to the code template catalog service.
@@ -81,80 +120,45 @@ feature {NONE} -- Code template cataloging
 
 				-- User templates catalog
 			a_service.extend_catalog (eiffel_layout.user_templates_path.string.as_attached)
+
+				-- Should add user-preference paths here.
+			-- ...
 		end
 
-feature {NONE} -- Factory
+feature {NONE} -- Registration: Help
 
-	new_file_notifier_service: ?FILE_NOTIFIER_S
-			-- Creates the file notifier service.
-		do
-			create {FILE_NOTIFIER} Result.make
-		ensure
-			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
-		end
-
-	new_help_providers_service: ?HELP_PROVIDERS_S
-			-- Creates the help providers service.
-		do
-			create {HELP_PROVIDERS} Result.make
-			if Result /= Void then
-				register_help_providers (Result)
-			end
-		ensure
-			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
-		end
-
-	new_code_template_catalog_service: ?CODE_TEMPLATE_CATALOG_S
-			-- Creates the code templates catalog service.
-		do
-			create {CODE_TEMPLATE_CATALOG} Result.make
-			if Result /= Void then
-				extend_code_template_catalog (Result)
-			end
-		ensure
-			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
-		end
-
-	new_wizard_service: ?WIZARD_ENGINE_S
-			-- Create the wizard service
-		do
-			create {WIZARD_ENGINE} Result
-		ensure
-			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
-		end
-
-	new_status_bar_service: ?STATUS_BAR_S
-			-- Create the wizard service
-		do
-			create {STATUS_BAR} Result
-		ensure
-			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
-		end
-
-	new_testing_service: ?TEST_SUITE_S
-			-- <Precursor>
+	register_help_providers (a_service: !HELP_PROVIDERS_S)
+			-- Registers all help providers with the help providers service.
+			--
+			-- `a_service': The service interface to register the helper providers on.
+		require
+			a_service_is_interface_usable: a_service.is_interface_usable
 		local
-			l_ev_app: EV_SHARED_APPLICATION
+			l_kinds: HELP_PROVIDER_KINDS
 		do
-			create {TEST_SUITE} Result.make (create {ES_TEST_PROJECT_HELPER})
-			register_test_suite_processors (Result)
-			if Result /= Void then
-				create l_ev_app
-				l_ev_app.ev_application.add_idle_action (agent Result.synchronize_processors)
-			end
+			create l_kinds
+			a_service.register_with_type_activator ({EIFFEL_DOC_HELP_PROVIDER}, l_kinds.eiffel_doc)
+			a_service.register_with_type_activator ({WIKI_HELP_PROVIDER}, l_kinds.wiki)
+			a_service.register_with_type_activator ({RAW_URI_HELP_PROVIDER}, l_kinds.raw_uri)
+			a_service.register_with_type_activator ({PDF_HELP_PROVIDER}, l_kinds.pdf)
+			a_service.register_with_type_activator ({DOC_HELP_PROVIDER}, l_kinds.doc)
+			a_service.register_with_type_activator ({EIS_DEFAULT_HELP_PROVIDER}, l_kinds.eis_default)
 		end
 
-feature {NONE} -- Output registration
+feature {NONE} -- Registration: Output
 
 	register_outputs (a_service: !OUTPUT_MANAGER_S)
 			-- <Precursor>
 		local
 			l_kinds: OUTPUT_MANAGER_KINDS
+			l_icons: ES_PIXMAPS_16X16
 		do
+			l_icons := (create {EB_SHARED_PIXMAPS}).icon_pixmaps
+
 			create l_kinds
-			a_service.register (create {ES_EDITOR_OUTPUT_PANE}.make (locale_formatter.translation (l_general)), l_kinds.general)
-			a_service.register (create {ES_EDITOR_OUTPUT_PANE}.make (locale_formatter.translation (l_compiler)), l_kinds.eiffel_compiler)
-			a_service.register (create {ES_EDITOR_OUTPUT_PANE}.make (locale_formatter.translation (l_external_compilation)), l_kinds.c_compiler)
+			a_service.register (create {ES_EDITOR_OUTPUT_PANE}.make_with_icon (locale_formatter.translation (l_general), l_icons.tool_output_icon_buffer), l_kinds.general)
+			a_service.register (create {ES_EDITOR_OUTPUT_PANE}.make_with_icon (locale_formatter.translation (l_compiler), l_icons.compile_animation_7_icon_buffer), l_kinds.eiffel_compiler)
+			a_service.register (create {ES_EDITOR_OUTPUT_PANE}.make_with_icon (locale_formatter.translation (l_external_compilation), l_icons.tool_c_output_icon_buffer), l_kinds.c_compiler)
 		end
 
 feature {NONE} -- Internationalization

@@ -226,7 +226,7 @@ feature {NONE} -- Query
 			l_provider: !HELP_PROVIDER_I
 		do
 			if help_providers.is_service_available and help_providers.service.is_provider_available (a_context.help_provider) then
-				l_provider := help_providers.service.help_provider (a_context.help_provider)
+				l_provider := help_providers.service.provider (a_context.help_provider)
 				Result := l_provider.help_title (a_context.help_context_id, a_context.help_context_section)
 			else
 				create {!STRING_32} Result.make (100)
@@ -372,7 +372,7 @@ feature {NONE} -- Factory
 
 				-- Document type
 			if l_available then
-				l_provider := help_providers.service.help_provider (a_context.help_provider)
+				l_provider := help_providers.service.provider (a_context.help_provider)
 				create l_item.make_with_text (l_provider.document_description)
 				l_item.set_foreground_color (colors.grid_item_text_color)
 			else
@@ -402,7 +402,7 @@ invariant
 	links_contains_valid_items: is_initializing and is_interface_usable implies not links.for_all (agent is_context_valid)
 
 ;note
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -415,22 +415,22 @@ invariant
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

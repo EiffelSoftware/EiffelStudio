@@ -31,10 +31,10 @@ feature -- Access
 			create Result.make_from_string (c_compiler_string)
 		end
 
-	system_information: !UUID
-			-- System information output.
+	testing: !UUID
+			-- Testing tools output.
 		once
-			create Result.make_from_string (system_information_string)
+			create Result.make_from_string (testing_string)
 		end
 
 feature -- Constants
@@ -42,7 +42,7 @@ feature -- Constants
 	general_string: STRING				= "2431F588-3EE1-4455-AF18-8733D1A787D5"
 	eiffel_compiler_string: STRING 		= "714EF9B7-4AC6-418B-BEDC-009876372CB0"
 	c_compiler_string: STRING 			= "4ADC046F-70F6-4364-9E33-8805C8F5D242"
-	system_information_string: STRING 	= "D6CF2232-99CB-47AE-B99B-6B1350728231"
+	testing_string: STRING 	= "D6CF2232-99CB-47AE-B99B-6B1350728231"
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

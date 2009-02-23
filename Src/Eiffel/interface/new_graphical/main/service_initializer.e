@@ -26,47 +26,47 @@ feature -- Services
 
 feature {NONE} -- Factory
 
-	new_event_list_service: ?EVENT_LIST_S
+	new_event_list_service: detachable EVENT_LIST_S
 			-- Creates the event list service.
 		do
 			create {EVENT_LIST} Result.make
 		ensure
-			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
+			result_is_interface_usable: attached Result implies Result.is_interface_usable
 		end
 
-	new_logger_service: ?LOGGER_S
+	new_logger_service: detachable LOGGER_S
 			-- Creates the logger service.
 		do
 			create {LOGGER} Result.make
 		ensure
-			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
+			result_is_interface_usable: attached Result implies Result.is_interface_usable
 		end
 
-	new_session_manager_service: ?SESSION_MANAGER_S
-			-- Creates the session manager service.
-		do
-			create {SESSION_MANAGER} Result
-		ensure
-			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
-		end
-
-	new_testing_service: ?TEST_SUITE_S
-			-- Create test suite service
-		do
-			create {TEST_SUITE} Result.make (create {TEST_PROJECT_HELPER})
-			register_test_suite_processors (Result)
-		ensure
-			result_not_void_implies_usable: Result /= Void implies Result.is_interface_usable
-		end
-
-	new_output_manager_service: ?OUTPUT_MANAGER_S
+	new_output_manager_service: detachable OUTPUT_MANAGER_S
 			-- Creates the output manager service
 		do
 			create {OUTPUT_MANAGER} Result.make
 			register_outputs (Result)
 		end
 
-feature {NONE} -- Output registration
+	new_session_manager_service: detachable SESSION_MANAGER_S
+			-- Creates the session manager service.
+		do
+			create {SESSION_MANAGER} Result
+		ensure
+			result_is_interface_usable: attached Result implies Result.is_interface_usable
+		end
+
+	new_testing_service: detachable TEST_SUITE_S
+			-- Create test suite service
+		do
+			create {TEST_SUITE} Result.make (create {TEST_PROJECT_HELPER})
+			register_test_suite_processors (Result)
+		ensure
+			result_not_void_implies_usable: attached Result implies Result.is_interface_usable
+		end
+
+feature {NONE} -- Registration: Output
 
 	register_outputs (a_service: !OUTPUT_MANAGER_S)
 			-- Registers all default output providers with the output managers service.
@@ -84,12 +84,12 @@ feature {NONE} -- Output registration
 			a_service.register (l_output, l_kinds.eiffel_compiler)
 			a_service.register (l_output, l_kinds.c_compiler)
 		ensure
-			general_output_registered: a_service.is_registered ((create {OUTPUT_MANAGER_KINDS}).general)
-			eiffel_compiler_output_registered: a_service.is_registered ((create {OUTPUT_MANAGER_KINDS}).eiffel_compiler)
-			c_compilerl_output_registered: a_service.is_registered ((create {OUTPUT_MANAGER_KINDS}).c_compiler)
+			general_output_registered: a_service.is_output_available ((create {OUTPUT_MANAGER_KINDS}).general)
+			eiffel_compiler_output_registered: a_service.is_output_available ((create {OUTPUT_MANAGER_KINDS}).eiffel_compiler)
+			c_compilerl_output_registered: a_service.is_output_available ((create {OUTPUT_MANAGER_KINDS}).c_compiler)
 		end
 
-feature {NONE} -- Test suite extension
+feature {NONE} -- Registrations: Testing
 
 	register_test_suite_processors (a_service: !TEST_SUITE_S)
 			-- Register standard test processors for test suite service.

@@ -13,151 +13,36 @@ class
 inherit
 	HELP_PROVIDERS_S
 
-	DISPOSABLE_SAFE
+	REGISTRAR [HELP_PROVIDER_I, UUID]
+		rename
+			registrations as providers,
+			active_registrations as active_providers,
+			is_valid_registration as is_valid_provider,
+			is_registered as is_provider_available,
+			registration as provider,
+			registered_event as provider_registered_event,
+			unregistered_event as provider_unregistered_event,
+			registration_activated_event as provider_activated_event,
+			registrar_connection as help_providers_event_connection
 		redefine
-			safe_dispose
+			is_valid_registration_key
 		end
 
 create
 	make
 
-feature {NONE} -- Initialization
+feature -- Status report
 
-	make
-			-- Initialize help providers service
-		do
-			create providers.make_default
-			create activate_providers.make_default
-		end
-
-feature {NONE} -- Clean up
-
-	safe_dispose (a_disposing: BOOLEAN)
+	is_valid_registration_key (a_key: !UUID): BOOLEAN
 			-- <Precursor>
-		local
-			l_keys: DS_BILINEAR_CURSOR [!UUID]
 		do
-			if a_disposing then
-					-- Remove and clean up all providers
-				l_keys := providers.keys.new_cursor
-				from l_keys.start until l_keys.after loop
-				 	unregister_provider (l_keys.item)
-				 	l_keys.forth
-				end
-				check
-					providers_is_empty: providers.is_empty
-					activate_providers_is_empty: activate_providers.is_empty
-				end
-			end
+			Result := Precursor (a_key) and then not a_key.is_null
 		ensure then
-			internal_help_providers_is_empty:
-				a_disposing and then
-				(internal_help_providers /= Void implies internal_help_providers.is_empty)
+			not_a_key_is_null: Result implies not a_key.is_null
 		end
-
-feature -- Access
-
-	help_providers: !DS_BILINEAR [!HELP_PROVIDER_I]
-			-- <Precursor>
-		local
-			l_result: like internal_help_providers
-			l_list: DS_ARRAYED_LIST [!HELP_PROVIDER_I]
-			l_keys: DS_BILINEAR_CURSOR [!UUID]
-			l_providers: like providers
-		do
-			l_result := internal_help_providers
-			if l_result = Void then
-				l_providers := providers
-				create l_list.make (l_providers.count)
-
-				l_keys := l_providers.keys.new_cursor
-				from l_keys.start until l_keys.after loop
-					check
-						is_provider_available: is_provider_available (l_keys.item)
-					end
-					l_list.put_last (help_provider (l_keys.item))
-					l_keys.forth
-				end
-				Result := l_list
-				internal_help_providers := l_list
-			else
-				Result := l_result
-			end
-		end
-
-feature {NONE} -- Access
-
-	providers: !DS_HASH_TABLE [FUNCTION [ANY, TUPLE [providers: !HELP_PROVIDERS_S], !HELP_PROVIDER_I], !UUID]
-			-- Table of registered help providers
-
-	activate_providers: !DS_HASH_TABLE [!HELP_PROVIDER_I, !UUID]
-			-- Table of registered help providers, which have been requested
-
-feature -- Query
-
-	help_provider (a_kind: !UUID): !HELP_PROVIDER_I
-			-- <Precursor>
-		local
-			l_service: !HELP_PROVIDERS_S
-		do
-				-- Bad hack relying on one compiler bug to circumvent another compiler bug.
-			if activate_providers.has (a_kind) then
-				Result := activate_providers.item (a_kind)
-			else
-				l_service := Current
-				Result := providers.item (a_kind).item ([l_service])
-				Result.set_kind (a_kind)
-				activate_providers.force_last (Result, a_kind)
-			end
-		ensure then
-			activate_providers_has_a_kind: activate_providers.has (a_kind)
-			result_kind_set: Result.kind.is_equal (a_kind)
-		end
-
-	is_provider_available (a_kind: !UUID): BOOLEAN
-			-- <Precursor>
-		do
-			Result := providers.has (a_kind)
-		end
-
-feature -- Basic operations
-
-	register_provider_with_activator (a_kind: !UUID; a_activator: FUNCTION [ANY, TUPLE [providers: !HELP_PROVIDERS_S], !HELP_PROVIDER_I])
-			-- <Precursor>
-		do
-			providers.force_last (a_activator, a_kind)
-		ensure then
-			internal_help_providers_reset: internal_help_providers = Void or else
-				internal_help_providers /~ old internal_help_providers
-		end
-
-	unregister_provider (a_kind: !UUID)
-			-- <Precursor>
-		do
-			providers.remove (a_kind)
-			if activate_providers.has (a_kind) then
-					-- Clean up provider
-				if {l_disposable: !DISPOSABLE} activate_providers.item (a_kind) then
-					l_disposable.dispose
-				end
-
-					-- Remove active provider
-				activate_providers.remove (a_kind)
-			end
-		ensure then
-			internal_help_providers_reset: internal_help_providers = Void or else
-				internal_help_providers /~ old internal_help_providers
-			not_activate_providers_has_a_kind: not activate_providers.has (a_kind)
-		end
-
-feature {NONE} -- Implementation: Internal cache
-
-	internal_help_providers: ?like help_providers
-			-- Cached version of `help_providers'
-			-- Note: Never use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -181,11 +66,11 @@ feature {NONE} -- Implementation: Internal cache
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

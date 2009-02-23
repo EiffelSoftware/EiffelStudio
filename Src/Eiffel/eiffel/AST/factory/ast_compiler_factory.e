@@ -374,10 +374,12 @@ feature {NONE} -- Validation
 			-- New integer value.
 		local
 			l_type: TYPE_A
+			l_class_c: CLASS_C
 		do
 			is_valid_integer_real := True
+			l_class_c ?= a_psr.current_class
 			if for_integer then
-				if a_type /= Void and then {l_class_C: CLASS_C} a_psr.current_class then
+				if a_type /= Void and l_class_c /= Void then
 					l_type := type_a_generator.evaluate_type_if_possible (a_type, l_class_c)
 				end
 				if l_type /= Void then
@@ -391,7 +393,7 @@ feature {NONE} -- Validation
 					a_psr.report_invalid_type_for_integer_error (a_type, buffer)
 				end
 			else
-				if a_type /= Void and then {l_class_C: CLASS_C} a_psr.current_class then
+				if a_type /= Void and l_class_c /= Void then
 					l_type := type_a_generator.evaluate_type (a_type, l_class_c)
 				end
 				if l_type /= Void then

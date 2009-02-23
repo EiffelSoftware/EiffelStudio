@@ -1,0 +1,14 @@
+test_name	overflow-special-resizing
+test_description If we resize a SPECIAL object to have a size greater than 2^31 then the runtime does an overflow and you end up with an array of a smaller size.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

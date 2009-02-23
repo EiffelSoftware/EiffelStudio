@@ -402,7 +402,7 @@ feature -- Observation
 				l_cursor := text_displayed.cursor
 				if number_of_lines >= stored_cursor_line then
 					text_displayed.cursor.set_y_in_lines (stored_cursor_line)
-					set_first_line_displayed (stored_first_line, True)
+					set_first_line_displayed (stored_first_line.min (vertical_scrollbar.value_range.upper), True)
 						-- We add 1 to represent the last position of a line.
 						-- The position of 1 means the position before the first character of a line.
 					if text_displayed.line (stored_cursor_line).wide_image.count + 1 >= stored_cursor_char then

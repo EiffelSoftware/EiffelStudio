@@ -24,15 +24,12 @@ inherit
 			registrations as outputs,
 			active_registrations as active_outputs,
 			is_valid_registration as is_valid_output,
+			is_registered as is_output_available,
 			registration as output,
 			registered_event as output_registered_event,
 			unregistered_event as output_unregistered_event,
 			registration_activated_event as output_activated_event,
 			registrar_connection as output_manager_event_connection
-		export
-			{ANY} output_manager_event_connection
-		redefine
-			is_valid_registration_key
 		end
 
 feature -- Access
@@ -41,20 +38,36 @@ feature -- Access
 			-- The default, general purpose output pane.
 		require
 			is_interface_usable: is_interface_usable
-		local
-			l_id: UUID
 		do
-			l_id := (create {OUTPUT_MANAGER_KINDS}).general
-			if is_registered (l_id) then
-				Result := output (l_id)
+			Result := output_or_default ((create {OUTPUT_MANAGER_KINDS}).general)
+		ensure
+			is_interface_usable: {l_usable: USABLE_I} Result implies l_usable.is_interface_usable
+			result_is_valid_output: is_valid_output (Result)
+			result_consistent: Result = general_output
+		end
+
+feature -- Query
+
+	output_or_default (a_key: !UUID): !OUTPUT_I
+			-- Retrieves a registered output or a default output if it has not been registered yet.
+			-- This has the side-affect of registering the output if a default output is returned.
+			--
+			-- `a_key': An output key to retrieve a registered output from.
+		require
+			is_interface_usable: is_interface_usable
+			a_key_is_valid_registration_key: is_valid_registration_key (a_key)
+		do
+			if is_output_available (a_key) then
+				Result := output (a_key)
 			else
-				Result := new_output (l_id)
-				register (Result, l_id)
+				Result := new_output (a_key)
+				register (Result, a_key)
 			end
 		ensure
 			is_interface_usable: {l_usable: USABLE_I} Result implies l_usable.is_interface_usable
 			result_is_valid_output: is_valid_output (Result)
-			result_consistent: Result ~ general_output
+			a_key_is_output_available: is_output_available (a_key)
+			result_consistent: Result = output_or_default (a_key)
 		end
 
 feature {NONE} -- Factory
@@ -64,7 +77,7 @@ feature {NONE} -- Factory
 		require
 			is_interface_usable: is_interface_usable
 			a_key_is_valid_registration_key: is_valid_registration_key (a_key)
-			not_a_key_is_registered: not is_registered (a_key)
+			not_a_key_is_output_available: not is_output_available (a_key)
 		deferred
 		ensure
 			is_interface_usable: {l_usable: USABLE_I} Result implies l_usable.is_interface_usable

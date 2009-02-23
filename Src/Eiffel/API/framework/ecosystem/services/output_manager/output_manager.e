@@ -19,13 +19,12 @@ inherit
 			registrations as outputs,
 			active_registrations as active_outputs,
 			is_valid_registration as is_valid_output,
+			is_registered as is_output_available,
 			registration as output,
 			registered_event as output_registered_event,
 			unregistered_event as output_unregistered_event,
 			registration_activated_event as output_activated_event,
 			registrar_connection as output_manager_event_connection
-		export
-			{ANY} output_manager_event_connection
 		redefine
 			is_valid_registration_key
 		end

@@ -273,6 +273,31 @@ feature -- Measurement
 
 feature {NONE} -- Externals (XTEST extension)
 
+	gdk_test_simulate_button: POINTER
+			-- Symbol for `gdk_test_simulate_button'
+		once
+			Result := app_implementation.symbol_from_symbol_name ("gdk_test_simulate_button")
+		end
+
+	gdk_test_simulate_key: POINTER
+			-- Symbol for `gdk_test_simulate_key'
+		once
+			Result := app_implementation.symbol_from_symbol_name ("gdk_test_simulate_key")
+		end
+
+	gdk_display_warp_pointer_symbol: POINTER
+			-- Symbol for `gdk_display_warp_pointer'.
+		once
+			Result := app_implementation.symbol_from_symbol_name ("gdk_display_warp_pointer")
+		end
+
+	gdk_test_simulate_call (a_function, a_window: POINTER; a_x, a_y: INTEGER; a_button, a_modifiers: NATURAL; a_press_release: BOOLEAN): BOOLEAN
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"return (FUNCTION_CAST(gboolean, (GdkWindow*, gint, gint, guint, GdkModifierType, GdkEventType)) $a_function) ((GdkWindow*) $a_window, (gint) $a_x, (gint) $a_y, (guint) $a_button, (GdkModifierType) $a_modifiers, (GdkEventType) $a_press_release)"
+		end
+
 	frozen x_keysym_to_keycode (a_display: POINTER; a_keycode: INTEGER): INTEGER
 		external
 			"C: EIF_INTEGER| <X11/Xlib.h>"

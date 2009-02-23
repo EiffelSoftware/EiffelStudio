@@ -15,6 +15,38 @@ inherit
 
 feature -- Access
 
+	icon: !EV_PIXEL_BUFFER
+			-- An icon representing the output pane.
+		require
+			is_interface_usable: is_interface_usable
+		deferred
+		ensure
+			not_result_is_destroyed: not Result.is_destroyed
+		end
+
+	icon_pixmap: !EV_PIXMAP
+			-- A pixmap icon representing the output pane.
+		require
+			is_interface_usable: is_interface_usable
+		do
+			Result := icon.to_pixmap.as_attached
+		ensure
+			not_result_is_destroyed: not Result.is_destroyed
+		end
+
+feature -- Query
+
+	text_for_window (a_window: !SHELL_WINDOW_I): !STRING_32
+			-- Retrieves current text for a given shell window.
+			--
+			-- `a_window': A window to retrieve an text for.
+			-- `Result': The text for the given shell window.
+		require
+			is_interface_usable: is_interface_usable
+			a_window_is_interface_usable: a_window.is_interface_usable
+		deferred
+		end
+
 	output_window_for_window (a_window: !SHELL_WINDOW_I): !OUTPUT_WINDOW
 			-- Retrieves a writer for a given shell window.
 			--
@@ -28,7 +60,7 @@ feature -- Access
 			result_consistent: Result = output_window_for_window (a_window)
 		end
 
-feature -- Access: User interface elements
+feature -- Query: User interface elements
 
 	widget_for_window (a_window: !SHELL_WINDOW_I): !ES_WIDGET [EV_WIDGET]
 			-- Retrieves a graphical widget reprentation of the output for a given shell window.

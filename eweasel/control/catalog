@@ -2121,6 +2121,7 @@ test	tuple-conformance-broken	conform004 tcf pass conformance
 test	reverse-assignment-on-attached-target-broken	conform005 tcf pass conformance
 test	manifest-tuple-type-conformance	conform006 tcf pass conformance
 test	attached-agent-procedure-conformance	conform007 tcf fail conformance attached_types
+test	attached-formal-creation	conform008 tcf pass conformance attached_types
 
 -- Test for Reflection
 test	basic-type-internal				reflection001 tcf pass reflection

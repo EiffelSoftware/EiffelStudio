@@ -1,0 +1,16 @@
+test_name	 attached-formal-creation
+test_description When creating an instance of the formal generic parameter of a class that has some attachment marks the runtime create the wrong type.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	a.e $CLUSTER a.e
+copy_raw 	b.e $CLUSTER b.e
+
+compile_melted
+compile_result  ok
+
+execute_work 	NONE 	exec_output
+execute_result 	ok
+compare		exec_output output
+
+test_end

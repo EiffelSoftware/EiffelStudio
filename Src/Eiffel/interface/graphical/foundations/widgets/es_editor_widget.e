@@ -12,6 +12,10 @@ class
 
 inherit
 	ES_TOOL_BAR_WIDGET [EV_WIDGET]
+		redefine
+			internal_detach_entities,
+			is_tool_bar_separated
+		end
 
 create
 	make
@@ -41,23 +45,45 @@ feature {NONE} -- Initialization
 			a_editor.disable_has_breakable_slots
 		end
 
+feature {NONE} -- Clean up
+
+	internal_detach_entities
+			-- <Precursor>
+		do
+			Precursor
+
+			internal_editor := Void
+		ensure then
+			internal_editor_detached: internal_editor = Void
+		end
+
 feature -- Access
 
-	editor: ?EB_CLICKABLE_EDITOR
-			-- Editor
+	editor: !EB_CLICKABLE_EDITOR
+			-- Actual editor
+		local
+			l_result: like internal_editor
+		do
+			l_result := internal_editor
+			if l_result = Void then
+				Result := new_editor
+				auto_recycle (Result)
+				internal_editor := Result
+			else
+				Result := l_result
+			end
+		ensure
+			result_is_consistent: Result = editor
+		end
+
+feature {NONE} -- Status report
+
+	is_tool_bar_separated: BOOLEAN = True
+			-- <Precursor>
 
 feature {NONE} -- Factory
 
-	frozen create_widget: !EV_WIDGET
-			-- <Precursor>
-		do
-			editor := create_editor
-			Result := editor.widget.as_attached
-		ensure then
-			editor_attached: editor /= Void
-		end
-
-	create_editor: !EB_CLICKABLE_EDITOR
+	new_editor: !EB_CLICKABLE_EDITOR
 			-- Creates a new editor
 		require
 			is_interface_usable: is_interface_usable
@@ -68,10 +94,24 @@ feature {NONE} -- Factory
 			result_is_interface_usable: Result.is_interface_usable
 		end
 
-	create_tool_bar_items: ?DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+	new_tool_bar_items: ?DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- <Precursor>
 		do
 		end
+
+	frozen new_widget: !EV_WIDGET
+			-- <Precursor>
+		do
+			Result := editor.widget.as_attached
+		ensure then
+			editor_attached: editor /= Void
+		end
+
+feature {NONE} -- Implementation: Internal cache
+
+	internal_editor: ?like editor
+			-- Cached version of `editor'.
+			-- Note: Do not use directly!
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

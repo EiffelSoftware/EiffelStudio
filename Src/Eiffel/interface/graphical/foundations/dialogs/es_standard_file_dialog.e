@@ -94,7 +94,7 @@ feature -- Access
 			else
 				l_result := start_path
 			end
-			if l_result /= Void and then l_result.is_empty then
+			if l_result /= Void and then not l_result.is_empty then
 				Result := l_result
 				l_separator := operating_environment.directory_separator
 				if not Result.is_empty and then Result.item (Result.count) = l_separator then
@@ -149,11 +149,21 @@ feature -- Element change
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
 			not_a_file_name_is_empty: not a_file_name.is_empty
+		local
+			l_file_path: STRING_32
+			l_file: FILE_NAME
 		do
-			start_file_name := a_file_name
-			dialog.set_file_name (a_file_name)
-		ensure
-			start_file_name_set: start_file_name ~ a_file_name
+			l_file_path := start_path
+			if not l_file_path.is_empty then
+					-- The full path has to be used because
+				create l_file.make_from_string (l_file_path)
+				l_file.set_file_name (a_file_name)
+				l_file_path := l_file.string.as_string_32
+			else
+				l_file_path := a_file_name
+			end
+			start_file_name := l_file_path
+			dialog.set_file_name (l_file_path)
 		end
 
 	set_start_file_name_indexed (a_file_name: like start_file_name; a_separator: ?READABLE_STRING_GENERAL)

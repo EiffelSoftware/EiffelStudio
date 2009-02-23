@@ -12,7 +12,7 @@ note
 deferred class
 	EVENT_CONNECTION_POINT_I [G -> EVENT_OBSERVER_I, I -> USABLE_I]
 
-feature {NONE} -- Access
+feature -- Access
 
 	connection: !EVENT_CONNECTION_I [G, I]
 			-- Connection point.

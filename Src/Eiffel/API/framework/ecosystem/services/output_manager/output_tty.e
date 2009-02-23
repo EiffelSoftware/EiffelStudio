@@ -13,6 +13,15 @@ class
 inherit
 	OUTPUT_I
 
+	LOCKABLE
+
+feature {NONE} -- Clean up
+
+	safe_dispose (a_explicit: BOOLEAN)
+			-- <Precursor>
+		do
+		end
+
 feature -- Access
 
 	name: !IMMUTABLE_STRING_32
@@ -28,12 +37,6 @@ feature -- Access
 		end
 
 feature -- Status report
-
-	is_interface_usable: BOOLEAN
-			-- <Precursor>
-		do
-			Result := True
-		end
 
 	is_active: BOOLEAN
 			-- <Precursor>

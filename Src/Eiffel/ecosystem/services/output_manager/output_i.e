@@ -13,6 +13,8 @@ deferred class
 inherit
 	USABLE_I
 
+	LOCKABLE_I
+
 	SITE [OUTPUT_MANAGER_S]
 		export
 			{OUTPUT_MANAGER_S} all

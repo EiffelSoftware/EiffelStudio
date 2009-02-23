@@ -15,7 +15,7 @@ inherit
 	ES_WINDOW_WIDGET [EV_VERTICAL_BOX]
 		rename
 			widget as container_widget,
-			create_widget as create_container_widget
+			create_widget as new_container_widget
 		redefine
 			internal_recycle,
 			internal_detach_entities
@@ -26,22 +26,97 @@ convert
 
 feature {NONE} -- Initialization
 
-	frozen build_widget_interface (a_widget: !EV_VERTICAL_BOX)
+	frozen build_widget_interface (a_container_widget: !EV_VERTICAL_BOX)
 			-- <Precursor>
 		local
-			l_tool_bar_container: like create_tool_container_widget
-		do
-				-- Create tool bar
-			if has_tool_bar then
-				l_tool_bar_container := create_tool_container_widget (a_widget)
-				a_widget.extend (l_tool_bar_container)
-				a_widget.disable_item_expand (l_tool_bar_container)
-			end
+            l_top_padding: EV_CELL
+            l_padding: EV_CELL
+            l_container: EV_HORIZONTAL_BOX
+            l_tool_bar: like tool_bar_widget
+            l_right_tool_bar: like right_tool_bar_widget
+            l_border: EV_CELL
+        do
+        		-- Create real widget
+        	widget := new_widget
 
-				-- Create real widget
-			widget := create_widget
-			build_tool_bar_widget_interface (widget)
-			a_widget.extend (widget)
+        	if has_tool_bar then
+        			-- Build the tool bar
+				l_tool_bar := tool_bar_widget
+	            l_right_tool_bar := right_tool_bar_widget
+
+	                -- Top padding compensates for {SD_TOOL_BAR} not vertically aligning tool bars
+	            create l_top_padding
+	            l_top_padding.set_minimum_height (2)
+
+	            create l_container
+	            l_container.set_minimum_height (26)
+
+	                -- Add left tool bar
+	            if l_tool_bar /= Void then
+					if {lt_widget: EV_WIDGET} l_tool_bar then
+						l_container.extend (lt_widget)
+					else
+						check not_possible: False end
+					end
+	            end
+
+	                -- Add right tool bar
+	            if l_right_tool_bar /= Void then
+					if {lt_widget_2: EV_WIDGET} l_right_tool_bar then
+		                create l_padding
+		                l_container.extend (l_padding)
+		                l_container.extend (lt_widget_2)
+		                l_right_tool_bar.compute_minimum_size
+		                l_container.disable_item_expand (lt_widget_2)
+					else
+						check not_possible: False end
+					end
+	            end
+
+	            if is_tool_bar_bottom_aligned then
+					build_tool_bar_widget_interface (widget)
+	                a_container_widget.extend (widget)
+
+--	                create l_hs
+--	                l_hs.set_minimum_height (2)
+--	                a_container_widget.extend (l_hs)
+--	                a_container_widget.disable_item_expand (l_hs)
+
+	                if is_tool_bar_separated then
+	                		-- Add separator
+						create l_border
+						l_border.set_minimum_height (1)
+						l_border.set_background_color (colors.stock_colors.color_3d_shadow)
+		                a_container_widget.extend (l_border)
+		                a_container_widget.disable_item_expand (l_border)
+	                end
+	            end
+
+	            a_container_widget.extend (l_top_padding)
+	            a_container_widget.disable_item_expand (l_top_padding)
+	            a_container_widget.extend (l_container)
+	            a_container_widget.disable_item_expand (l_container)
+
+	            if not is_tool_bar_bottom_aligned then
+	                if is_tool_bar_separated then
+	                		-- Add separator
+						create l_border
+						l_border.set_minimum_height (1)
+						l_border.set_background_color (colors.stock_colors.color_3d_shadow)
+		                a_container_widget.extend (l_border)
+		                a_container_widget.disable_item_expand (l_border)
+	                end
+						-- Build the actual widget
+					build_tool_bar_widget_interface (widget)
+	                a_container_widget.extend (widget)
+	            end
+	       	else
+	       			-- There is not tool bar, just extend the widget
+
+					-- Build the actual widget
+				build_tool_bar_widget_interface (widget)
+	       		a_container_widget.extend (widget)
+        	end
 		end
 
 	build_tool_bar_widget_interface (a_widget: !G)
@@ -105,7 +180,7 @@ feature {NONE} -- Access
 				create l_cell.put (Void)
 				internal_tool_bar_widget := l_cell
 
-				l_items := create_tool_bar_items
+				l_items := new_tool_bar_items
 				if l_items /= Void then
 					create {SD_WIDGET_TOOL_BAR} Result.make (create {SD_TOOL_BAR}.make)
 					l_items.do_all (agent Result.extend)
@@ -130,7 +205,7 @@ feature {NONE} -- Access
 				create l_cell.put (Void)
 				internal_right_tool_bar_widget := l_cell
 
-				l_items := create_right_tool_bar_items
+				l_items := new_right_tool_bar_items
 				if l_items /= Void then
 					create {SD_WIDGET_TOOL_BAR} Result.make (create {SD_TOOL_BAR}.make)
 					Result.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
@@ -152,15 +227,23 @@ feature {NONE} -- Status report
 			Result := tool_bar_widget /= Void or right_tool_bar_widget /= Void
 		end
 
-feature {NONE} -- Factory
-
-	frozen create_container_widget: !EV_VERTICAL_BOX
-			-- <Precursor>
+	is_tool_bar_separated: BOOLEAN
+			-- Indicates if there should be a tool bar separator drawn on the UI to separate the tool bar
+			-- from the user widget.
 		do
-			create Result
+			Result := False
 		end
 
-	create_widget: !G
+    is_tool_bar_bottom_aligned: BOOLEAN
+            -- Indicates if the tool bar should be presented at the bottom of the tool
+            --|Redefine to change this.
+        do
+            Result := False
+        end
+
+feature {NONE} -- Factory
+
+	new_widget: !G
 			-- Creates a new widget, which will be initialized when `build_interface' is called.
 		require
 			is_interface_usable: is_interface_usable
@@ -172,7 +255,7 @@ feature {NONE} -- Factory
 			not_result_has_parent: not Result.has_parent
 		end
 
-	create_tool_bar_items: ?DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+	new_tool_bar_items: ?DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- Retrieves a list of tool bar items to display at the top of the tool.
 		deferred
 		ensure
@@ -180,7 +263,7 @@ feature {NONE} -- Factory
 			result_contains_attached_items: Result /= Void implies not Result.has (Void)
 		end
 
-	create_right_tool_bar_items: ?DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+	new_right_tool_bar_items: ?DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- Retrieves a list of tool bar items that should be displayed at the top, but right aligned.
 			-- Note: Redefine to add a right tool bar.
 		do
@@ -189,57 +272,10 @@ feature {NONE} -- Factory
 			result_contains_attached_items: Result /= Void implies not Result.has (Void)
 		end
 
-	create_tool_container_widget (a_widget: EV_VERTICAL_BOX): !EV_VERTICAL_BOX
-			-- Creates the tool's tool bars if `tool_bar_items' and/or `right_tool_bar_items' contain items
-			--
-			-- `a_widget': The user widget to place in container.
-		require
-			a_widget_attached: a_widget /= Void
-			has_tool_bar: has_tool_bar
-		local
-			l_top_padding: EV_CELL
-			l_padding: EV_CELL
-			l_container: EV_HORIZONTAL_BOX
-			l_tool_bar: like tool_bar_widget
-			l_right_tool_bar: like right_tool_bar_widget
+	frozen new_container_widget: !EV_VERTICAL_BOX
+			-- <Precursor>
 		do
-			l_tool_bar := tool_bar_widget
-			l_right_tool_bar := right_tool_bar_widget
-
-				-- Top padding compensates for {SD_TOOL_BAR} not vertically aligning tool bars
-			create l_top_padding
-			l_top_padding.set_minimum_height (2)
-
-			create l_container
-			l_container.set_minimum_height (26)
-
-				-- Add left tool bar
-			if l_tool_bar /= Void then
-				if {lt_widget: EV_WIDGET} l_tool_bar then
-					l_container.extend (lt_widget)
-				else
-					check not_possible: False end
-				end
-			end
-
-				-- Add right tool bar
-			if l_right_tool_bar /= Void then
-				if {lt_widget_2: EV_WIDGET} l_right_tool_bar then
-					create l_padding
-					l_container.extend (l_padding)
-					l_container.extend (lt_widget_2)
-					l_right_tool_bar.compute_minimum_size
-					l_container.disable_item_expand (lt_widget_2)
-				else
-					check not_possible: False end
-				end
-			end
-
 			create Result
-			Result.extend (l_top_padding)
-			Result.disable_item_expand (l_top_padding)
-			Result.extend (l_container)
-			Result.disable_item_expand (l_container)
 		end
 
 feature {NONE} -- Internal implementation cache

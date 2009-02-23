@@ -10,14 +10,42 @@ class
 	I18N_TEST_DICTIONARY_2
 
 inherit
-	SHARED_I18N_PLURAL_TOOLS
+	I18N_PLURAL_TOOLS
 
-create
-	make
+	EQA_SYSTEM_TEST_SET
 
-feature -- Initialization
+	I18N_TEST_UTILITIES
 
-	make(t:I18N_DICTIONARY; plural_form,datalength,seed:INTEGER)
+feature -- Tests
+
+	test_dictionary_2
+		local
+			l_dic: I18N_DICTIONARY
+		do
+			create {I18N_CHARACTER_BASED_DICTIONARY} l_dic.make (two_plural_forms_singular_one)
+			make (l_dic, two_plural_forms_singular_one, 1, 100)
+
+			create {I18N_CHARACTER_BASED_DICTIONARY} l_dic.make (two_plural_forms_singular_one)
+			make (l_dic, two_plural_forms_singular_one, 50, 100)
+
+			create {I18N_HASH_TABLE_DICTIONARY} l_dic.make (two_plural_forms_singular_one)
+			make (l_dic, two_plural_forms_singular_one, 50, 100)
+
+			create {I18N_HASH_TABLE_DICTIONARY} l_dic.make (two_plural_forms_singular_one_zero)
+			make (l_dic, two_plural_forms_singular_one_zero, 50, 100)
+
+			create {I18N_BINARY_SEARCH_ARRAY_DICTIONARY} l_dic.make (two_plural_forms_singular_one)
+			make (l_dic, two_plural_forms_singular_one, 50, 100)
+
+			create {I18N_BINARY_SEARCH_ARRAY_DICTIONARY} l_dic.make (two_plural_forms_singular_one_zero)
+			make (l_dic, two_plural_forms_singular_one_zero, 50, 100)
+
+			-- Set breakpoint here and check outputs in `cached_output'.
+		end
+
+feature {NONE} -- Initialization
+
+	make (t:I18N_DICTIONARY; plural_form,datalength,seed:INTEGER)
 
 			-- Creation procedure.
 		do
@@ -27,10 +55,11 @@ feature -- Initialization
 			data_insert(t,datalength)
 			data_query(t,datalength)
 			data_get(t,datalength)
-			io.put_string ("There are "+faults_counter.out+" mistakes.%N")
+			output_string ("There are "+faults_counter.out+" mistakes.%N")
+			assert ("Found mistakes.", faults_counter = 0)
 		end
 
-feature	-- Data generation
+feature {NONE}	-- Data generation
 
 	data_generation(datalength,seed:INTEGER)
 		-- generate random data and put them in
@@ -111,7 +140,7 @@ feature	-- Data generation
 
 		end
 
-feature	-- data insertion
+feature {NONE}	-- data insertion
 
 	data_insert(t:I18N_DICTIONARY; datalength:INTEGER)
 			-- fill 't' with datalength of `I18N_DICTIONARY_ENTRY' from `ods'
@@ -130,7 +159,7 @@ feature	-- data insertion
 		end
 
 
-feature -- data query
+feature {NONE} -- data query
 	data_query(t:I18N_DICTIONARY; datalength:INTEGER)
 					-- check all query functions in `I18N_DICTIONARY': `has, has_plural'
 					-- check all data for every function
@@ -145,7 +174,7 @@ feature -- data query
 				translated_singular, original_plural: STRING_GENERAL
 
 			do
-				io.put_string ("in feature data_query: %N")
+				output_string ("in feature data_query: %N")
 				-- query with its existent elems,check `has'
 				from
 					i:=1
@@ -158,9 +187,9 @@ feature -- data query
 					translated_singular:=entry.singular_translation
 
 					if t.has (singular) then
-						io.put_string (" has("+singular.out+")---ok--%N")
+						output_string (" has("+singular.out+")---ok--%N")
 					else
-						io.put_string ("do not has("+singular.out+")---not ok----%N")
+						output_string ("do not has("+singular.out+")---not ok----%N")
 						faults_counter:=faults_counter+1
 					end
 					i:=i+1
@@ -177,10 +206,10 @@ feature -- data query
 					translated_singular:=entry.singular_translation
 
 					if t.has (singular) then
-						io.put_string (" has("+singular.out+")---not ok--%N")
+						output_string (" has("+singular.out+")---not ok--%N")
 						faults_counter:=faults_counter+1
 					else
-						io.put_string ("do not has("+singular.out+")--- ok----%N")
+						output_string ("do not has("+singular.out+")--- ok----%N")
 					end
 					i:=i+1
 				end
@@ -196,7 +225,7 @@ feature -- data query
 				singular:=entry.original_singular
 				translated_singular:=entry.singular_translation
 					if entry.has_plural then
-						io.put_string("entry should not has_plural : mistake in 'test code'--not ok--%N")
+						output_string("entry should not has_plural : mistake in 'test code'--not ok--%N")
 						original_plural:=entry.original_plural
 						from
 							j:=0
@@ -204,15 +233,15 @@ feature -- data query
 							j>10
 						loop
 							if t.has_plural (singular,original_plural, j.as_integer_32) then
-								io.put_string (" has_plural --not not ok--%N")
+								output_string (" has_plural --not not ok--%N")
 								faults_counter:=faults_counter+1
 							else
-								io.put_string ("not has_plural --ok--%N")
+								output_string ("not has_plural --ok--%N")
 							end
 							j:=j+1
 						end
 					else
-						io.put_string ("entry should not has_plural --ok---%N")
+						output_string ("entry should not has_plural --ok---%N")
 					end
 					i:=i+1
 				end
@@ -227,7 +256,7 @@ feature -- data query
 				translated_singular:=entry.singular_translation
 
 					if entry.has_plural then
-						io.put_string("entry should  has_plural --ok--%N")
+						output_string("entry should  has_plural --ok--%N")
 						original_plural:=entry.original_plural
 						from
 							j:=0
@@ -235,22 +264,22 @@ feature -- data query
 							j>10
 						loop
 							if t.has_plural (singular,original_plural, j.as_integer_32) then
-								io.put_string (" has_plural --ok--%N")
+								output_string (" has_plural --ok--%N")
 							else
-								io.put_string ("should has_plural --not ok--%N")
+								output_string ("should has_plural --not ok--%N")
 								faults_counter:=faults_counter+1
 							end
 							j:=j+1
 						end
 					else
-						io.put_string ("entry should has_plural: mistake in 'test code' -- not ok---%N")
+						output_string ("entry should has_plural: mistake in 'test code' -- not ok---%N")
 					end
 				i:=i+1
 				end
 
 		end
 
-feature -- Data access
+feature {NONE} -- Data access
 
 	data_get(t:I18N_DICTIONARY; datalength:INTEGER)
 				-- check data access functions in `I18N_DICTIONARY': `get_plural, get_sigular'
@@ -262,7 +291,7 @@ feature -- Data access
 			translated_singular, original_plural: STRING_GENERAL
 
 		do
-			io.put_string ("in feature data_get: %N")
+			output_string ("in feature data_get: %N")
 			-- get data with its existent elems
 			-- check the first half of the entries, which do not have plural form
 			from
@@ -275,10 +304,10 @@ feature -- Data access
 
 				translated_singular:=entry.singular_translation
 
-				if t.has (singular) and then translated_singular=t.get_singular (singular) then
-					io.put_string ("get_singular  --ok--%N")
+				if t.has (singular) and then translated_singular=t.singular (singular) then
+					output_string ("get_singular  --ok--%N")
 				else
-					io.put_string (" get_singular --not ok--%N")
+					output_string (" get_singular --not ok--%N")
 					faults_counter:=faults_counter+1
 				end
 				i:=i+1
@@ -295,16 +324,16 @@ feature -- Data access
 
 				translated_singular:=entry.singular_translation
 
-				if t.has (singular) and then translated_singular=t.get_singular (singular) then
-					io.put_string ("get_singular  --ok--%N")
+				if t.has (singular) and then translated_singular=t.singular (singular) then
+					output_string ("get_singular  --ok--%N")
 				else
-					io.put_string (" get_singular --not ok--%N")
+					output_string (" get_singular --not ok--%N")
 					faults_counter:=faults_counter+1
 				end
 
 				if entry.has_plural then
 					original_plural:=entry.original_plural
-					io.put_string("entry should has_plural--ok-- %N")
+					output_string("entry should has_plural--ok-- %N")
 						-- actually plural_number >=0
 					from
 						j:=0
@@ -313,25 +342,25 @@ feature -- Data access
 					loop
 						if t.has_plural (singular,original_plural, j.as_integer_32) then
 							original_plural:=entry.original_plural
-							if ( t.get_plural (singular,original_plural, j)/= Void) then
+							if ( t.plural (singular,original_plural, j)/= Void) then
 								-- here it depends on j and the constant plural forms
 								-- that means, the constant plural forms should be required as correct
-								io.put_string (" get_plural -- ok--%N")
+								output_string (" get_plural -- ok--%N")
 							end
 						else
-							io.put_string ("should has_plural -- not ok-- %N ")
+							output_string ("should has_plural -- not ok-- %N ")
 							faults_counter:=faults_counter+1
 						end
 						j:=j+1
 					end
 				else
-					io.put_string ("entry should has_plural : mistake in test code --not ok-- %N")
+					output_string ("entry should has_plural : mistake in test code --not ok-- %N")
 				end
 
 				i:=i+1
 			end
 	end
-feature -- access
+feature {NONE} -- access
 
 	ods:LINKED_LIST[I18N_DICTIONARY_ENTRY]
 		--original_data_set

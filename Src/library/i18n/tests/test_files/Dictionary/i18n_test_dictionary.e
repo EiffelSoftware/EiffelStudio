@@ -7,15 +7,42 @@ note
 
 class
 	I18N_TEST_DICTIONARY
-inherit
-	SHARED_I18N_PLURAL_TOOLS
-create
-	make
 
-feature -- Initialization
+inherit
+	I18N_PLURAL_TOOLS
+
+	EQA_SYSTEM_TEST_SET
+
+	I18N_TEST_UTILITIES
+
+feature -- Tests
+
+	test_dictionary
+		local
+			l_dic: I18N_DICTIONARY
+		do
+--			create {I18N_CHARACTER_BASED_DICTIONARY} l_dic.make (two_plural_forms_singular_one)
+--			make (l_dic, two_plural_forms_singular_one, 1, 100)
+
+--			create {I18N_CHARACTER_BASED_DICTIONARY} l_dic.make (two_plural_forms_singular_one)
+--			make (l_dic, two_plural_forms_singular_one, 50, 100)
+
+			create {I18N_HASH_TABLE_DICTIONARY} l_dic.make (two_plural_forms_singular_one)
+			make (l_dic, two_plural_forms_singular_one, 50, 100)
+
+			create {I18N_HASH_TABLE_DICTIONARY} l_dic.make (two_plural_forms_singular_one_zero)
+			make (l_dic, two_plural_forms_singular_one_zero, 50, 100)
+
+			create {I18N_BINARY_SEARCH_ARRAY_DICTIONARY} l_dic.make (two_plural_forms_singular_one)
+			make (l_dic, two_plural_forms_singular_one, 50, 100)
+
+			create {I18N_BINARY_SEARCH_ARRAY_DICTIONARY} l_dic.make (two_plural_forms_singular_one_zero)
+			make (l_dic, two_plural_forms_singular_one_zero, 50, 100)
+		end
+
+feature {NONE} -- Initialization
 
 	make(t:I18N_DICTIONARY; plural_form,datalength,seed:INTEGER)
-
 			-- Creation procedure.
 		do
 			set_current_folder(t,plural_form,datalength,seed)
@@ -26,39 +53,48 @@ feature -- Initialization
 				current_folder.close
 			end
 		end
-feature -- set current_folder
+
+	result_file_name (t:I18N_DICTIONARY;plural_form,datalength,seed:INTEGER; a_name: STRING): STRING
+			-- This is a hack, since no such facility found in the testing framework, for a file name located in the source class directory.
+		do
+			Result := environment.get ("ISE_LIBRARY").twin
+			Result.append_character (Operating_environment.directory_separator)
+			Result.append ("library")
+			Result.append_character (Operating_environment.directory_separator)
+			Result.append ("i18n")
+			Result.append_character (Operating_environment.directory_separator)
+			Result.append ("tests")
+			Result.append_character (Operating_environment.directory_separator)
+			Result.append ("test_files")
+			Result.append_character (Operating_environment.directory_separator)
+			Result.append ("Dictionary")
+			Result.append_character (Operating_environment.directory_separator)
+			Result.append (directory_name (t, plural_form, datalength, seed))
+			Result.append_character (Operating_environment.directory_separator)
+			Result.append (a_name)
+		end
+
+feature {NONE} -- set current_folder
+
+	directory_name (t:I18N_DICTIONARY;plural_form,datalength,seed:INTEGER): STRING
+		do
+			Result := t.generating_type + "_TEST_WITH_PLURAL_FORM_"+plural_form.out+"_WITH_DATALENGTH_"+datalength.out+"_WITH_SEED_"+seed.out
+		end
+
 	set_current_folder (t:I18N_DICTIONARY;plural_form,datalength,seed:INTEGER)
 			-- check the type of t and create new folder in the relevant folder
 			-- this class could be extended when a new dictionary structure is added
 			-- need plural_form, datalength and seed to make directory uniq
-		local
-			t_b: I18N_BINARY_SEARCH_ARRAY_DICTIONAY
-			t_h: I18N_HASH_TABLE_DICTIONARY
 		do
-			t_b	?= t
-			t_h ?= t
-
-
-			if t_h /= Void then
-
-					create current_folder.make(current_folder_string
-					+"I18N_HASH_TABLE_DICTIONARY_TEST_WITH_PLURAL_FORM"+plural_form.out+"WITH_DATALENGTH_"+datalength.out+"WITH_SEED_"+seed.out)
-
-			elseif t_b /= Void then
-					create current_folder.make(current_folder_string
-					+"I18N_BINARY_SEARCH_ARRAY_DICTIONARY_TEST_WITH_PLURAL_FORM"+plural_form.out+"WITH_DATALENGTH_"+datalength.out+"WITH_SEED_"+seed.out)
-			else
-					create current_folder.make(current_folder_string
-					+"NEW_DICTIONARY_TEST_WITH_PLURAL_FORM"+plural_form.out+"WITH_DATALENGTH_"+datalength.out+"WITH_SEED_"+seed.out)
-			end
-
+			attr_plural_form := plural_form
+			create current_folder.make(current_folder_string
+				+directory_name (t, plural_form, datalength, seed))
 			if not current_folder.exists then
 				current_folder.create_dir
 			end
-	end
+		end
 
-
-feature	-- Data generation
+feature {NONE}	-- Data generation
 
 	data_generation(t:I18N_DICTIONARY; datalength,seed:INTEGER)
 			-- generate array of `I18N_DICTIONARY_ENTRY' and fill it in `t'
@@ -70,9 +106,13 @@ feature	-- Data generation
 			singular:STRING_GENERAL
 			translated_singular, original_plural: STRING_GENERAL
 			file: PLAIN_TEXT_FILE
+			l_name, l_generated_name: STRING
+			l_fn: STRING
 		do
+			l_fn := "data_file"
 			create random.set_seed (seed)
-			create file.make_create_read_write (current_folder.name+Operating_environment.Directory_separator.out+"data_file")
+			l_generated_name := current_folder.name+Operating_environment.Directory_separator.out+l_fn
+			create file.make_create_read_write (l_generated_name)
 			from
 				i:=1
 				random.start
@@ -120,6 +160,9 @@ feature	-- Data generation
 			io.put_string ("data generation is finished")
 			io.put_new_line
 			file.close
+
+			l_name := result_file_name (t, attr_plural_form, datalength, seed, l_fn)
+			assert ("Output does not match!", has_same_content_as_path (l_name, l_generated_name))
 		end
 
 
@@ -136,10 +179,14 @@ data_query(t:I18N_DICTIONARY; datalength,seed:INTEGER)
 			translated_singular, original_plural: STRING_GENERAL
 			random: RANDOM
 			output_file: PLAIN_TEXT_FILE
+
+			l_name, l_generated_name: STRING
+			l_fn: STRING
 		do
-			-- query with its existent elems
+			l_fn := "query_yes_file"
 			create random.set_seed (seed)
-			create output_file.make_create_read_write (current_folder.name+Operating_environment.Directory_separator.out+"query_yes_file")
+			l_generated_name := current_folder.name+Operating_environment.Directory_separator.out+l_fn
+			create output_file.make_create_read_write (l_generated_name)
 			from
 				i:=1
 				random.start
@@ -184,11 +231,15 @@ data_query(t:I18N_DICTIONARY; datalength,seed:INTEGER)
 				i:=i+1
 			end
 			output_file.close
+			l_name := result_file_name (t, attr_plural_form, datalength, seed, l_fn)
+			assert ("Output does not match!", has_same_content_as_path (l_name, l_generated_name))
 
 			-- query with its non-existent elems
 
+			l_fn := "query_non_file"
 			create random.set_seed (seed+1)
-			create output_file.make_create_read_write (current_folder.name+Operating_environment.Directory_separator.out+"query_non_file")
+			l_generated_name := current_folder.name+Operating_environment.Directory_separator.out+l_fn
+			create output_file.make_create_read_write (l_generated_name)
 			from
 				i:=1
 				random.start
@@ -228,10 +279,12 @@ data_query(t:I18N_DICTIONARY; datalength,seed:INTEGER)
 				i:=i+1
 			end
 			output_file.close
+			l_name := result_file_name (t, attr_plural_form, datalength, seed, l_fn)
+			assert ("Output does not match!", has_same_content_as_path (l_name, l_generated_name))
 			io.put_string ("data query is finished%N")
 		end
 
-feature -- Data access
+feature {NONE} -- Data access
 
 	data_get(t:I18N_DICTIONARY; datalength,seed:INTEGER)
 				-- check data access functions in `I18N_DICTIONARY': `get_plural, get_sigular'
@@ -245,11 +298,15 @@ feature -- Data access
 			translated_singular, original_plural: STRING_GENERAL
 			random: RANDOM
 			output_file: PLAIN_TEXT_FILE
-		do
 
+			l_name, l_generated_name: STRING
+			l_fn: STRING
+		do
 			-- get data with its existent elems
+			l_fn := "get_data_file"
 			create random.set_seed (seed)
-			create output_file.make_create_read_write (current_folder.name+Operating_environment.Directory_separator.out+"get_data_file")
+			l_generated_name := current_folder.name+Operating_environment.Directory_separator.out+l_fn
+			create output_file.make_create_read_write (l_generated_name)
 			from
 				i:=1
 				random.start
@@ -264,7 +321,7 @@ feature -- Data access
 				output_file.put_string ("get data iteration " + i.out + ": " + "%N")
 
 				if t.has (singular) then
-					output_file.put_string ("get_singular(" + singular.as_string_8 + "): "+ t.get_singular (singular)+"%N")
+					output_file.put_string ("get_singular(" + singular.as_string_8 + "): "+ t.singular (singular)+"%N")
 				else
 					output_file.put_string ("not has(" + singular.as_string_8 + "): "+ "%N")
 				end
@@ -281,7 +338,7 @@ feature -- Data access
 					if t.has_plural (singular,original_plural, j.as_integer_32) then
 						output_file.put_string ("get_plural (" + singular.as_string_8 + ","
 												+ original_plural.as_string_8 + "," + j.out +"): "
-												+ t.get_plural (singular, original_plural, j.as_integer_32)+"%N")
+												+ t.plural (singular, original_plural, j.as_integer_32)+"%N")
 
 					else
 
@@ -303,11 +360,16 @@ feature -- Data access
 			end
 			output_file.close
 
+			l_name := result_file_name (t, attr_plural_form, datalength, seed, l_fn)
+			assert ("Output does not match!", has_same_content_as_path (l_name, l_generated_name))
+
 			-- get data  with its non-existent elems
 			-- actually we could only get data with its existence
 
+			l_fn := "get_data_non_file"
 			create random.set_seed (seed+1)
-			create output_file.make_create_read_write (current_folder.name+Operating_environment.Directory_separator.out+"get_data_non_file")
+			l_generated_name := current_folder.name+Operating_environment.Directory_separator.out+l_fn
+			create output_file.make_create_read_write (l_generated_name)
 			from
 				i:=1
 				random.start
@@ -323,7 +385,7 @@ feature -- Data access
 
 
 				if t.has (singular) then
-					output_file.put_string ("get_singular(" + singular.as_string_8 + "): "+ t.get_singular (singular)+"%N")
+					output_file.put_string ("get_singular(" + singular.as_string_8 + "): "+ t.singular (singular)+"%N")
 				else
 					output_file.put_string (" not has_singular(" + singular.as_string_8 + ") %N ")
 				end
@@ -338,7 +400,7 @@ feature -- Data access
 				loop
 					if t.has_plural (singular,original_plural, j.as_integer_32) then
 						output_file.put_string ("get_plural (" + singular.as_string_8 + "," + original_plural.as_string_8 + "," + j.out +"): "
-						+ t.get_plural (singular, original_plural, j.as_integer_32)+"%N")
+						+ t.plural (singular, original_plural, j.as_integer_32)+"%N")
 
 					else
 
@@ -353,9 +415,14 @@ feature -- Data access
 				i:=i+1
 			end
 			output_file.close
+
+			l_name := result_file_name (t, attr_plural_form, datalength, seed, l_fn)
+			assert ("Output does not match!", has_same_content_as_path (l_name, l_generated_name))
+
 			io.put_string ("data_get is finished")
 		end
-feature -- access
+feature {NONE} -- access
+	attr_plural_form: INTEGER
 	current_folder: DIRECTORY
 	current_folder_string: STRING_8
 		do

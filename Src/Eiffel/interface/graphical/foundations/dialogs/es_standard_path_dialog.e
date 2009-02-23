@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	start_path: ?STRING_32 assign set_start_path
+	start_path: !STRING_32 assign set_start_path
 			-- Initial path nagivated to when showing the dialog
 		require
 			is_interface_usable: is_interface_usable
@@ -76,34 +76,32 @@ feature -- Access
 					if sticky_paths.has (l_id) then
 							-- Set stick path from previous show.
 						l_result := sticky_paths.item (l_id)
-						check l_result_attached: l_result /= Void end
-						Result := l_result
-					elseif workbench.system_defined then
+					end
+				end
+				if l_result = Void then
+					if workbench.system_defined then
 							-- Use the project location
 						l_result := workbench.project_location.path.string
-						check l_result_attached: l_result /= Void end
-						Result := l_result
 					else
-							-- Use the Eiffel Projects directory
-						l_result := eiffel_layout.user_projects_path.string
-						check l_result_attached: l_result /= Void end
-						Result := l_result
+							-- Use the working directory
+						l_result := (create {EXECUTION_ENVIRONMENT}).current_working_directory.as_string_32
 					end
 				end
-				if Result /= Void then
-						-- Remove trailing separator.
-					l_separator := operating_environment.directory_separator
-					if not Result.is_empty and then Result.item (Result.count) = l_separator then
-						Result.keep_head (Result.count - 1)
-					end
+				check l_result_attached: l_result /= Void end
+
+					-- Remove trailing separator.
+				l_separator := operating_environment.directory_separator
+				if not l_result.is_empty and then l_result.item (l_result.count) = l_separator then
+					l_result.keep_head (l_result.count - 1)
 				end
+				Result := l_result
 				internal_start_path := Result
 			else
 				Result := l_result
 			end
 		ensure
 			result_consistent: Result ~ start_path
-			not_result_is_empty: Result /= Void implies not Result.is_empty
+			not_result_is_empty: not Result.is_empty
 			not_result_has_trailing_separator: Result /= Void and then
 					 Result.item (Result.count) /= operating_environment.directory_separator
 		end
@@ -162,7 +160,7 @@ feature {NONE} -- Element change
 
 feature {NONE} -- Element change
 
-	set_start_path_on_dialog (a_path: like start_path; a_dialog: like dialog)
+	set_start_path_on_dialog (a_path: ?like start_path; a_dialog: like dialog)
 			-- Sets the start path on a dialog.
 			--
 			-- `a_path': The initial start location to set.

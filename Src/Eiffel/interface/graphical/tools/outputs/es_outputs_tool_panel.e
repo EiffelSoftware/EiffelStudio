@@ -20,6 +20,7 @@ inherit
 			output_manager as deprecated_output_manager
 		redefine
 			internal_recycle,
+			on_before_initialize,
 			on_after_initialized,
 			is_tool_bar_separated,
 			create_right_tool_bar_items
@@ -30,6 +31,15 @@ inherit
 			on_output_registered,
 			on_output_unregistered,
 			on_output_activated
+		end
+
+	LOCKABLE_OBSERVER
+		rename
+			on_locked as on_output_locked,
+			on_unlocked as on_output_unlocked
+		redefine
+			on_output_locked,
+			on_output_unlocked
 		end
 
 	ES_OUTPUTS_COMMANDER_I
@@ -47,6 +57,15 @@ feature {NONE} -- User interface initialization
 		do
 			register_action (selection_combo.change_actions, agent on_selected_editor_changed)
 			register_action (clear_button.select_actions, agent on_clear)
+			register_action (save_button.select_actions, agent on_save)
+		end
+
+	on_before_initialize
+			-- <Precursor>
+		do
+			Precursor
+
+			create modified_outputs.make_default
 		end
 
 	on_after_initialized
@@ -107,13 +126,16 @@ feature {NONE} -- Clean up
 
 feature {ES_OUTPUTS_COMMANDER_I} -- Access
 
-	output: ?ES_OUTPUT_PANE_I
+	output: detachable ES_OUTPUT_PANE_I
 			-- <Precursor>
 
 feature {NONE} -- Access
 
-	last_output: ?ES_OUTPUT_PANE_I
+	last_output: detachable ES_OUTPUT_PANE_I
 			-- The previously active output
+
+	modified_outputs: !DS_HASH_TABLE [TUPLE [output: !ES_OUTPUT_PANE_I; button: !SD_TOOL_BAR_BUTTON], IMMUTABLE_STRING_32]
+			-- Modified output panes, used to manage the show modified outputs buttons
 
 feature -- Access: Help
 
@@ -125,21 +147,39 @@ feature -- Access: Help
 
 feature {NONE} -- Access: User interface
 
-	selection_combo: ?EV_COMBO_BOX
+	selection_combo: detachable EV_COMBO_BOX
 			-- Editor selection combo box.
 
-	clear_button: ?SD_TOOL_BAR_BUTTON
+	save_button: detachable SD_TOOL_BAR_BUTTON
+			-- Tool bar button used to save the content of the editor.
+
+	clear_button: detachable SD_TOOL_BAR_BUTTON
 			-- Tool bar button used to clear the editor.
 
-feature -- Element change
+	modified_outputs_tool_bar: detachable SD_TOOL_BAR
+			-- Tool bar used to contain the modified outputs buttons.
+
+feature {ES_OUTPUTS_COMMANDER_I} -- Element change
 
 	set_output (a_output: !ES_OUTPUT_PANE_I)
 			-- <Precursor>
 		local
 			l_combo: like selection_combo
 			l_actions_running: BOOLEAN
+			l_locked: BOOLEAN
+			l_old_output: like output
 		do
 			if output /= a_output then
+				l_old_output := output
+				if l_old_output /= Void then
+						-- Clean up the old output
+					l_locked := l_old_output.is_locked
+					if l_old_output.lockable_connection.is_connected (Current) then
+							-- Disconnect the lock events
+						l_old_output.lockable_connection.disconnect_events (Current)
+					end
+				end
+
 				l_combo := selection_combo
 				l_actions_running := l_combo.change_actions.state = {ACTION_SEQUENCE [TUPLE]}.normal_state
 				if l_actions_running then
@@ -152,6 +192,19 @@ feature -- Element change
 
 				if l_actions_running then
 					l_combo.change_actions.resume
+				end
+
+					-- Connect to lock events
+				a_output.lockable_connection.connect_events (Current)
+				if a_output.is_locked /= l_locked then
+						-- Output pane locked status has changed, perform manual event publishing
+					if l_locked then
+							-- Was locked so unlock now.
+						on_output_unlocked (a_output)
+					else
+							-- Was unlocked so lock now.
+						on_output_locked (a_output)
+					end
 				end
 			end
 		ensure then
@@ -231,8 +284,10 @@ feature {NONE} -- Basic operations
 					end
 				end
 				create l_item.make_with_text (l_name)
+				l_item.set_pixmap (a_editor.icon_pixmap)
 				l_item.set_data (a_editor)
 				register_kamikaze_action (l_item.select_actions, agent inject_output_widget (a_editor))
+
 				l_combo.extend (l_item)
 			end
 			if l_actions_running then
@@ -250,7 +305,7 @@ feature {NONE} -- Basic operations
 			is_interface_usable: is_interface_usable
 			a_output_is_interface_usable: a_output.is_interface_usable
 		local
-			l_items: ?LINEAR [EV_ITEM]
+			l_items: detachable LINEAR [EV_ITEM]
 			l_item: EV_ITEM
 			l_window: like develop_window
 			l_widget: ES_WIDGET [EV_WIDGET]
@@ -305,37 +360,32 @@ feature {NONE} -- Basic operations
 			user_widget.extend (l_ev_widget)
 		end
 
-feature {REGISTRAR_I} -- Event handlers
-
-	on_output_registered (a_registrar: !OUTPUT_MANAGER_S; a_registration: !CONCEALER_I [OUTPUT_I]; a_key: !UUID)
-			-- <Precursor>
+	save_output (a_output: !ES_OUTPUT_PANE_I; a_file_path: !STRING_32)
+			-- Saves the selected output to disk.
+			--
+			-- `a_output': The output to save to disk.
+			-- `a_file_path': The full path to dump the output to.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+			a_output_is_interface_usable: a_output.is_interface_usable
+			not_a_file_path_is_empty: not a_file_path.is_empty
+		local
+			l_file: PLAIN_TEXT_FILE
+			l_text: STRING_32
 		do
-				-- We have to force revealing the object to retrieve the
-			if {l_output_pane: ES_OUTPUT_PANE_I} a_registration.object then
-				extend_output (l_output_pane)
-			else
-				check must_have_object: False end
+			create l_file.make_open_write (a_file_path)
+			l_text := a_output.text_for_window (develop_window.as_attached)
+			l_file.put_string (l_text)
+			l_file.flush
+			l_file.close
+		rescue
+			if l_file /= Void and then not l_file.is_closed then
+				l_file.close
 			end
 		end
 
-	on_output_unregistered (a_registrar: !OUTPUT_MANAGER_S; a_registration: !CONCEALER_I [OUTPUT_I]; a_key: !UUID)
-			-- <Precursor>
-		do
-			if a_registration.is_revealed then
-				if {l_output_pane: ES_OUTPUT_PANE_I} a_registration.object then
-					remove_output (l_output_pane)
-				end
-			end
-		end
-
-	on_output_activated (a_registrar: !OUTPUT_MANAGER_S; a_registration: !OUTPUT_I; a_key: !UUID)
-			-- <Precursor>
-		do
-				-- The output pane has been created in the registrar (as `on_output_activated' is a renamed
-				-- feature from {REGISTRAR_OBSERVER}. Now we can extend the UI to include the actual widget.
-		end
-
-feature {NONE} -- Event handler
+feature {NONE} -- Action handlers
 
 	on_selected_editor_changed
 			-- Called when the user opts to change the selected editor
@@ -373,8 +423,36 @@ feature {NONE} -- Event handler
 			end
 		end
 
+	on_save
+			-- Called when the user requests to save the active editor.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+			output_attached: output /= Void
+		local
+			l_file_name: FILE_NAME
+			l_dialog: ES_STANDARD_SAVE_DIALOG
+			retried: BOOLEAN
+		do
+			on_output_modified (output.as_attached)
+
+
+				-- Create output file name.
+			create l_file_name.make_from_string (output.name.as_string_8)
+			l_file_name.add_extension (".out")
+
+				-- Show save dialog.
+			create l_dialog.make_with_sticky_path (locale_formatter.formatted_translation (t_save_1, [output.name]), {ES_STANDARD_DIALOG_STICKY_IDS}.global_sticky_id)
+			l_dialog.is_all_files_filter_supported := True
+			l_dialog.start_file_name := l_file_name.string.as_lower
+			l_dialog.show_on_active_window
+			if l_dialog.is_confirmed then
+				save_output (output.as_attached, l_dialog.file_path)
+			end
+		end
+
 	on_clear
-			-- Called when the user requests to clear the active editor
+			-- Called when the user requests to clear the active editor.
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
@@ -385,6 +463,148 @@ feature {NONE} -- Event handler
 			if l_output_pane /= Void then
 				l_output_pane.clear
 			end
+		end
+
+feature {REGISTRAR_I} -- Event handlers
+
+	on_output_registered (a_registrar: !OUTPUT_MANAGER_S; a_registration: !CONCEALER_I [OUTPUT_I]; a_key: !UUID)
+			-- <Precursor>
+		do
+				-- We have to force revealing the object to retrieve the
+			if {l_output_pane: ES_OUTPUT_PANE_I} a_registration.object then
+				extend_output (l_output_pane)
+			else
+				check must_have_object: False end
+			end
+		end
+
+	on_output_unregistered (a_registrar: !OUTPUT_MANAGER_S; a_registration: !CONCEALER_I [OUTPUT_I]; a_key: !UUID)
+			-- <Precursor>
+		do
+			if a_registration.is_revealed then
+				if {l_output_pane: ES_OUTPUT_PANE_I} a_registration.object then
+					remove_output (l_output_pane)
+				end
+			end
+		end
+
+	on_output_activated (a_registrar: !OUTPUT_MANAGER_S; a_registration: !OUTPUT_I; a_key: !UUID)
+			-- <Precursor>
+		do
+				-- The output pane has been created in the registrar (as `on_output_activated' is a renamed
+				-- feature from {REGISTRAR_OBSERVER}. Now we can extend the UI to include the actual widget.
+		end
+
+feature {LOCKABLE_I} -- Event handlers
+
+	on_output_locked (a_lock: !ES_OUTPUT_PANE_I)
+			-- <Precursor>
+		do
+			if is_initialized and then a_lock ~ output then
+				clear_button.disable_sensitive
+			end
+		end
+
+	on_output_unlocked (a_lock: !ES_OUTPUT_PANE_I)
+			-- <Precursor>
+		do
+			if is_initialized and then a_lock ~ output then
+				clear_button.enable_sensitive
+			end
+		end
+
+feature {NONE} -- Events handlers
+
+	on_output_modified (a_output: !ES_OUTPUT_PANE_I)
+			-- Called when an output pane has been modified with new text
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+			a_output_is_interface_usable: a_output.is_interface_usable
+		local
+			l_outputs: like modified_outputs
+			l_tool_bar: like modified_outputs_tool_bar
+			l_main_tool_bar: like tool_bar_widget
+			l_name: !IMMUTABLE_STRING_32
+			l_button: SD_TOOL_BAR_BUTTON
+			l_output_window: OUTPUT_WINDOW
+		do
+			l_outputs := modified_outputs
+			l_name := a_output.name
+			if not l_outputs.has (l_name) then
+				l_tool_bar := modified_outputs_tool_bar
+				l_main_tool_bar := tool_bar_widget
+				check
+					l_tool_bar_attached: l_tool_bar /= Void
+					l_main_tool_bar_attached: l_main_tool_bar /= Void
+				end
+
+					-- Add the output to the table of modified outputs.
+				create l_button.make
+				l_button.set_pixel_buffer (stock_pixmaps.icon_buffer_with_overlay (a_output.icon, stock_pixmaps.overlay_warning_icon_buffer, 0, 0))
+				l_button.set_pixmap (stock_pixmaps.icon_with_overlay (a_output.icon_pixmap, stock_pixmaps.overlay_warning_icon_buffer, 0, 0))
+				l_button.set_tooltip (locale_formatter.formatted_translation (tt_show_modified_output_1, [l_name]))
+				l_tool_bar.extend (l_button)
+				l_tool_bar.compute_minimum_size
+				l_tool_bar.update_size
+				l_main_tool_bar.compute_minimum_size
+				l_main_tool_bar.update_size
+				if l_outputs.is_empty then
+					l_tool_bar.show
+				end
+				l_outputs.force_last ([a_output, l_button], l_name)
+			end
+
+			l_output_window := a_output.output_window
+			l_output_window.start_processing (True)
+			l_output_window.add ("This is a big tests!")
+			l_output_window.add_new_line
+			l_output_window.end_processing
+		ensure
+			modified_outputs_has_a_output: modified_outputs.has (a_output.name)
+			modified_outputs_tool_bar_is_displayed: is_shown implies modified_outputs_tool_bar.is_displayed
+		end
+
+	on_output_shown (a_output: !ES_OUTPUT_PANE_I)
+			-- Called when an output pane is shown on the UI.
+		require
+			is_interface_usable: is_interface_usable
+			a_output_is_interface_usable: a_output.is_interface_usable
+		local
+			l_outputs: like modified_outputs
+			l_tool_bar: like modified_outputs_tool_bar
+			l_main_tool_bar: like tool_bar_widget
+			l_name: !IMMUTABLE_STRING_32
+			l_item: TUPLE [output: !ES_OUTPUT_PANE_I; button: !SD_TOOL_BAR_BUTTON]
+		do
+			l_outputs := modified_outputs
+			l_name := a_output.name
+			if l_outputs.has (a_output.name) then
+				l_tool_bar := modified_outputs_tool_bar
+				l_main_tool_bar := tool_bar_widget
+				check
+					l_tool_bar_attached: l_tool_bar /= Void
+					l_main_tool_bar_attached: l_main_tool_bar /= Void
+				end
+
+					-- Need to remove the tool bar button
+				l_item := l_outputs.item (a_output.name)
+				check l_item_attached: l_item /= Void end
+				l_tool_bar.prune (l_item.button)
+				l_outputs.remove (a_output.name)
+
+				if l_outputs.is_empty then
+						-- No more outputs, hide the tool bar.
+					l_tool_bar.hide
+				end
+				l_tool_bar.compute_minimum_size
+				l_tool_bar.update_size
+				l_main_tool_bar.compute_minimum_size
+				l_main_tool_bar.update_size
+			end
+		ensure
+			not_modified_outputs_has_a_output: not modified_outputs.has (a_output.name)
+			not_modified_outputs_tool_bar_is_displayed: modified_outputs.is_empty implies not modified_outputs_tool_bar.is_displayed
 		end
 
 feature {NONE} -- Factory
@@ -401,9 +621,11 @@ feature {NONE} -- Factory
 			l_box: EV_HORIZONTAL_BOX
 			l_label: EV_LABEL
 			l_combo: EV_COMBO_BOX
+			l_button: SD_TOOL_BAR_BUTTON
 			l_widget: SD_TOOL_BAR_RESIZABLE_ITEM
+			l_tool_bar: SD_TOOL_BAR
 		do
-			create Result.make (1)
+			create Result.make (3)
 
 			create l_box
 			l_box.set_minimum_width (280)
@@ -422,6 +644,21 @@ feature {NONE} -- Factory
 
 			create l_widget.make (l_box)
 			Result.put_last (l_widget)
+
+				-- Save button
+			create l_button.make
+			l_button.set_pixel_buffer (stock_pixmaps.general_save_icon_buffer)
+			l_button.set_pixmap (stock_pixmaps.general_save_icon)
+			l_button.set_tooltip (locale_formatter.translation (tt_save_output))
+			Result.put_last (l_button)
+			save_button := l_button
+
+				-- Tool bar for modified outputs
+			create l_tool_bar.make
+			l_tool_bar.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
+			l_tool_bar.hide
+			Result.put_last (create {SD_TOOL_BAR_WIDGET_ITEM}.make (l_tool_bar))
+			modified_outputs_tool_bar := l_tool_bar
 		ensure then
 			result_attached: Result /= Void
 		end
@@ -445,7 +682,15 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Internationalization
 
+	t_save_1: STRING = "Save $1 Output"
+
 	l_output: STRING = "Output"
+
+	tt_save_output: STRING = "Save current output to disk"
+	tt_clear_output: STRING = "Clear current output"
+	tt_show_modified_output_1: STRING = "Show the modified $1 output"
+
+
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

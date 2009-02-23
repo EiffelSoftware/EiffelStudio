@@ -11,11 +11,23 @@ deferred class
 	ES_OUTPUT_PANE [G -> ES_WIDGET [EV_WIDGET]]
 
 inherit
-	EB_RECYCLABLE
+	LOCKABLE
+		redefine
+			is_interface_usable
+		end
 
 	ES_OUTPUT_PANE_I
 
-inherit {NONE}
+	ES_RECYCLABLE
+		redefine
+			is_interface_usable
+		end
+
+	ES_SHARED_FOUNDATION_HELPERS
+		export
+			{NONE} all
+		end
+
 	EB_SHARED_WINDOW_MANAGER
 		export
 			{NONE} all
@@ -71,37 +83,6 @@ feature -- Access
 			end
 		end
 
-feature -- Access: User interface elements
-
-	widget_for_window (a_window: !SHELL_WINDOW_I): !G
-			-- <Precursor>
-		local
-			l_table: like widget_table
-			l_id: NATURAL
-		do
-			l_table := widget_table
-			l_id := a_window.window_id
-			if l_table /= Void and then l_table.has (l_id) then
-				Result := l_table.item (l_id)
-			else
-				Result := new_widget (a_window)
-				if l_table = Void then
-					create l_table.make_default
-					widget_table := l_table
-				end
-				l_table.put_last (Result, l_id)
-
-					-- The widget has been requested so we can made the output window
-					-- available for use but adding it to the `output_window' object.
-				output_window.extend (widget_output_window (Result, a_window))
-			end
-		ensure then
-			widget_table_attached: widget_table /= Void
-			widget_table_has_a_window: widget_table.has (a_window.window_id)
-			widget_table_contains_result: widget_table.item (a_window.window_id) = Result
-			result_consistent: Result = widget_for_window (a_window)
-		end
-
 feature {NONE} -- Access: User interface
 
 	widget_table: ?DS_HASH_TABLE [!G, NATURAL]
@@ -111,6 +92,12 @@ feature {NONE} -- Access: User interface
 			-- Value: A widget displayed on key window.
 
 feature -- Status report
+
+	is_interface_usable: BOOLEAN
+			-- <Precursor>
+		do
+			Result := Precursor {LOCKABLE} and then Precursor {ES_RECYCLABLE}
+		end
 
 	is_active: BOOLEAN
 			-- <Precursor>
@@ -141,6 +128,37 @@ feature {NONE} -- Query
 			a_widget_is_interface_usable: a_widget.is_interface_usable
 			a_window_is_interface_usable: a_window.is_interface_usable
 		deferred
+		end
+
+feature -- Query: User interface elements
+
+	widget_for_window (a_window: !SHELL_WINDOW_I): !G
+			-- <Precursor>
+		local
+			l_table: like widget_table
+			l_id: NATURAL
+		do
+			l_table := widget_table
+			l_id := a_window.window_id
+			if l_table /= Void and then l_table.has (l_id) then
+				Result := l_table.item (l_id)
+			else
+				Result := new_widget (a_window)
+				if l_table = Void then
+					create l_table.make_default
+					widget_table := l_table
+				end
+				l_table.put_last (Result, l_id)
+
+					-- The widget has been requested so we can made the output window
+					-- available for use but adding it to the `output_window' object.
+				output_window.extend (widget_output_window (Result, a_window))
+			end
+		ensure then
+			widget_table_attached: widget_table /= Void
+			widget_table_has_a_window: widget_table.has (a_window.window_id)
+			widget_table_contains_result: widget_table.item (a_window.window_id) = Result
+			result_consistent: Result = widget_for_window (a_window)
 		end
 
 --feature -- Basic operations

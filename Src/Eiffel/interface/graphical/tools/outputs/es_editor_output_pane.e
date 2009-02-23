@@ -14,7 +14,8 @@ inherit
 	ES_OUTPUT_PANE [ES_EDITOR_WIDGET]
 
 create
-	make
+	make,
+	make_with_icon
 
 feature {NONE} -- Initialization
 
@@ -23,9 +24,22 @@ feature {NONE} -- Initialization
 			--
 			-- `a_name': A friendly, human readable name for the editor.
 		do
-			create name.make_from_string (a_name.as_string_32)
+			make_with_icon (a_name, stock_pixmaps.tool_output_icon_buffer)
 		ensure
 			name_set: a_name.as_string_32 ~ name.as_string_32
+		end
+
+	make_with_icon (a_name: !READABLE_STRING_GENERAL; a_icon: like icon)
+			-- Initialize a output editor with an representation icon
+			--
+			-- `a_name': A friendly, human readable name for the editor.
+			-- `a_icon': An icon representing the output pane.
+		do
+			create name.make_from_string (a_name.as_string_32)
+			icon := a_icon
+		ensure
+			name_set: a_name.as_string_32 ~ name.as_string_32
+			icon_set: icon ~ a_icon
 		end
 
 	build_interface (a_widget: !ES_EDITOR_WIDGET)
@@ -36,12 +50,42 @@ feature {NONE} -- Initialization
 			a_widget.editor.disable_has_breakable_slots
 		end
 
+feature {NONE} -- Clean up
+
+	safe_dispose (a_explicit: BOOLEAN)
+			-- <Precursor>
+		do
+			if a_explicit then
+				if not is_recycled and not is_recycling then
+					recycle
+				end
+			end
+		ensure then
+			is_recycled: (a_explicit and not is_recycling) implies is_recycled
+		end
+
 feature -- Access
+
+	icon: !EV_PIXEL_BUFFER
+			-- <Precursor>
 
 	name: !IMMUTABLE_STRING_32
 			-- <Precursor>
 
 feature -- Query
+
+	text_for_window (a_window: !SHELL_WINDOW_I): !STRING_32
+			-- <Precursor>
+		local
+			l_widget: like widget_for_window
+		do
+			l_widget := widget_for_window (a_window)
+			if l_widget.is_interface_usable and then l_widget.is_initialized then
+				create Result.make_from_string (l_widget.editor.wide_text)
+			else
+				create Result.make_empty
+			end
+		end
 
 	output_window_for_window (a_window: !SHELL_WINDOW_I): !OUTPUT_WINDOW
 			-- <Precursor>
@@ -82,7 +126,7 @@ feature {NONE} -- Factory
 			-- <Precursor>
 		do
 			if {l_window: EB_DEVELOPMENT_WINDOW} a_window then
-				create {ES_EDITOR_WIDGET} Result.make (l_window)
+				create {ES_C_COMPILER_EDITOR_WIDGET} Result.make (l_window)
 			else
 				check False end
 			end

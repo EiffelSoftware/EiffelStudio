@@ -17,7 +17,9 @@ feature -- Initialization
 			--
 			-- `a_site': The site object to site Current with or Void to unsite.
 		require
+			is_interface_usable: a_site /= Void implies ({l_usable: USABLE_I} Current implies l_usable.is_interface_usable)
 			is_valid_site: a_site /= Void implies is_valid_site (a_site)
+			not_is_sited: a_site /= Void implies not is_sited
 		local
 			l_old_site: ?G
 			l_entities: !like siteable_entities
@@ -50,6 +52,7 @@ feature {NONE} -- Initialization
 			-- Note: This is only called when Current is sited with an object, not when Current is sited
 			--       with Void.
 		require
+			is_interface_usable: {l_usable: USABLE_I} Current implies l_usable.is_interface_usable
 			is_sited: is_sited
 		do
 		end
@@ -58,12 +61,14 @@ feature -- Access
 
 	site: ?G assign set_site
 			-- Access to sited object instance (Void if unsited)
-			--| Note: Use `set_site' instead of assigning directly!
+			--| Note: Use `set_site' instead of assigning directly in Current!
 
 feature {NONE} -- Access
 
-	siteable_entities: !ARRAYED_LIST [!SITE [?G]]
+	siteable_entities: !ARRAYED_LIST [!SITE [G]]
 			-- List of siteable entities to automatically site when Current is sited.
+		require
+			is_interface_usable: {l_usable: USABLE_I} Current implies l_usable.is_interface_usable
 		do
 			create Result.make (0)
 		end
@@ -85,6 +90,8 @@ feature -- Status report
 			-- `Result': True if the site object is valid; False otherwise.
 		do
 			Result := {l_ot: G} a_site
+		ensure
+			not_a_catcall: {el_ot: G} a_site
 		end
 
 note

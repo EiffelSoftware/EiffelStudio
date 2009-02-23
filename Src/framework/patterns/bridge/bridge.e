@@ -14,12 +14,17 @@ feature {NONE} -- Access
 
 	frozen bridge: !G
 			-- Bridge implementation.
+		require
+			is_interface_usable: {l_usable: USABLE_I} Current implies l_usable.is_interface_usable
+		local
+			l_result: like internal_bridge
 		do
-			if {l_bridge: G} internal_bridge then
-				Result := l_bridge
-			else
+			l_result := internal_bridge
+			if l_result = Void then
 				Result := new_bridge
 				internal_bridge := Result
+			else
+				Result := l_result
 			end
 		ensure
 			result_consistent: Result = bridge
@@ -30,6 +35,7 @@ feature {NONE} -- Factory
 	new_bridge: !G
 			-- Creates a new implementation instance.
 		require
+			is_interface_usable: {l_usable: USABLE_I} Current implies l_usable.is_interface_usable
 			internal_bridge_detached: internal_bridge = Void
 		deferred
 		end

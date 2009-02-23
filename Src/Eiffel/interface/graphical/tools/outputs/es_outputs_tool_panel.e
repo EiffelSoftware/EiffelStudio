@@ -432,7 +432,6 @@ feature {NONE} -- Action handlers
 		local
 			l_file_name: FILE_NAME
 			l_dialog: ES_STANDARD_SAVE_DIALOG
-			retried: BOOLEAN
 		do
 			on_output_modified (output.as_attached)
 

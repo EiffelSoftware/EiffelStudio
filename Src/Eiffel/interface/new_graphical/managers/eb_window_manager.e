@@ -950,31 +950,27 @@ feature {NONE} -- Exit implementation
 			end
 		end
 
-feature -- Events
+feature -- Access: session data
 
 	load_favorites
-			-- Try to initialize the favorites with the 'preferences.wb' file.
+			-- Try to initialize the favorites with the session data.
 		local
-			fn: FILE_NAME
-			pref: PLAIN_TEXT_FILE
 			retried: BOOLEAN
+			l_data: STRING
 		do
 			if not retried then
-				create fn.make_from_string (project_location.target_path)
-				fn.set_file_name ("preferences.wb")
-				create pref.make (fn)
-				if pref.exists then
-					pref.open_read
-					pref.read_stream (pref.count)
-					pref.close
-					favorites.make_with_string (pref.last_string)
+				if favorites_storage = Void then
+					create favorites_storage
+				end
+				l_data := favorites_storage.data_from_storage
+				if l_data /= Void then
+					favorites.make_with_string (l_data)
 					if favorites.loading_error then
-							-- The file is corrupted, delete it.
-						pref.delete
+						favorites_storage.store_data (Void)
 					end
 				end
 			else
-				-- Do nothing. Something is wrong (maybe we dont have rights on the favorites file...)
+				-- Do nothing. Something is wrong
 			end
 		rescue
 			retried := True
@@ -982,25 +978,15 @@ feature -- Events
 		end
 
 	save_favorites
-			-- Try to save the favorites' state within the 'preferences.wb' file.
+			-- Try to save the favorites' state within the session data.
 		local
-			fn: FILE_NAME
-			pref: PLAIN_TEXT_FILE
 			retried: BOOLEAN
 		do
 			if not retried then
-				create fn.make_from_string (project_location.target_path)
-				fn.set_file_name ("preferences.wb")
-				create pref.make (fn)
-				if pref.exists then
-					pref.open_write
-					pref.put_string (favorites.string_representation)
-					pref.close
-				else
-					pref.create_read_write
-					pref.put_string (favorites.string_representation)
-					pref.close
+				if favorites_storage = Void then
+					create favorites_storage
 				end
+				favorites_storage.store_data (favorites.string_representation)
 			end
 		rescue
 			retried := True
@@ -1119,6 +1105,13 @@ feature -- Events
 			retried := True
 			retry
 		end
+
+feature {NONE} -- Implementation: session data
+
+	favorites_storage: FAVORITES_STORAGE
+			-- Favorites' storage
+
+feature -- Events
 
 	on_compile
 			-- A compilation has been launched.
@@ -1239,9 +1232,10 @@ feature -- Events
 				override_scan_cmd.disable_sensitive
 				discover_melt_cmd.disable_sensitive
 			end
-			load_favorites
 				-- Recreate window configuration from last session of project if any.
 			load_session
+			load_favorites
+
 			Manager.on_project_loaded
 			for_all (agent load_project_action)
 		end
@@ -1671,7 +1665,7 @@ feature{NONE} -- Implementation
 			-- Implementation of `compile_start_actions'
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -1684,22 +1678,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- EB_WINDOW_MANAGER

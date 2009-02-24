@@ -17,6 +17,22 @@ inherit
 		export
 			{NONE} all
 		end
+		
+feature -- Status report
+
+	is_attachment_token (a_start_token: !EDITOR_TOKEN): BOOLEAN
+			-- Determines if a token is an attached/detachable marker token
+			--
+			-- `a_token' : The token to determine if to be a attachment token.
+			-- `Result'  : True if the supplied token is a atachment token; False otherwise.
+		local
+			l_image: STRING
+		do
+			Result := is_keyword_token (a_start_token, {EIFFEL_KEYWORD_CONSTANTS}.detachable_keyword) or else
+					is_keyword_token (a_start_token, {EIFFEL_KEYWORD_CONSTANTS}.attached_keyword) or else
+					is_text_token (a_start_token, "?", False) or else
+					is_text_token (a_start_token, "!", False)
+		end
 
 feature -- Basic operations
 

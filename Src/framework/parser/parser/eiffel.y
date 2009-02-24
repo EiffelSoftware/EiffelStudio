@@ -415,9 +415,9 @@ Note_list: Note_entry
 					$$.reverse_extend ($1)
 				end
 			}
-	|	Note_entry Increment_counter Note_list
+	|	Note_entry ASemi Increment_counter Note_list
 			{
-				$$ := $3
+				$$ := $4
 				if $$ /= Void and $1 /= Void then
 					$$.reverse_extend ($1)
 				end
@@ -447,7 +447,7 @@ Index_clause_impl: Identifier_as_lower TE_COLON Index_terms ASemi
 			}
 	;
 
-Note_entry_impl: Identifier_as_lower TE_COLON Note_values ASemi
+Note_entry_impl: Identifier_as_lower TE_COLON Note_values
 			{
 				$$ := ast_factory.new_index_as ($1, $3, $2)
 			}

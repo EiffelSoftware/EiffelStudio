@@ -3,16 +3,16 @@
 remtrace Should be called by make_delivery
 
 #remtrace Recompile syntax_updater
-#cd $EIFFEL_SRC/tools/syntax_updater
-#clean_project
-#finalize syntax_updater.ecf syntax_updater
-#tgz_ccode syntax_updater syntax_updater.tar.bz2
-#if [ ! -f syntax_updater.tar.bz2 ]; then
-#	echo Could not finalize a new syntax_updater
-#	CANCEL
-#fi
-#clean_project
-#move syntax_updater.tar.bz2 $EXPORT_DIR/bin
+cd $EIFFEL_SRC/tools/syntax_updater
+clean_project
+finalize syntax_updater.ecf syntax_updater
+tgz_ccode syntax_updater syntax_updater.tar.bz2
+if [ ! -f syntax_updater.tar.bz2 ]; then
+	echo Could not finalize a new syntax_updater
+	CANCEL
+fi
+clean_project
+move syntax_updater.tar.bz2 $EXPORT_DIR/bin
 
 remtrace Recompile compile_all
 cd $EIFFEL_SRC/tools/compile_all

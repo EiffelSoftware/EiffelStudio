@@ -1,6 +1,12 @@
 class
 	TEST
 
+inherit
+	ANY
+		redefine
+			is_equal
+		end
+
 create
 	make
 
@@ -38,13 +44,21 @@ feature -- Initialization
 			if attached deta as w then print ("18 - " + w.out + "%N") end
 		end
 
+	is_equal (o: like Current): BOOLEAN
+		do
+			Result := attached Precursor (o)
+			Result := attached Precursor (o) as p
+			Result := attached {STRING} Precursor (o)
+			Result := attached {STRING} Precursor (o) as p
+		end
+
 	f: detachable STRING
 		do
 			create Result.make (10)
 			Result.append ("TEST")
 		end
 
-	g (o: ANY; u: STRING; i: INTEGER; b: BOOLEAN)
+	g (o: ANY; u: STRING; i: INTEGER; b: BOOLEAN): ANY
 		do
 		ensure
 			e1: attached o
@@ -126,6 +140,49 @@ feature -- Initialization
 			a1: attached agent f as p
 			a1: attached {STRING} agent f
 			a1: attached {STRING} agent f as p
+
+			e1: attached g ([attached o, attached u, attached i, attached b], "", 4, True)
+			e1: attached g ([attached o, attached u, attached i, attached b], "", 4, True) as bool
+			e1: attached {STRING} g ([attached o, attached u, attached i, attached b], "", 4, True)
+			e1: attached {STRING} g ([attached o, attached u, attached i, attached b], "", 4, True) as bool
+
+			e1: attached g (<<attached o, attached u, attached i, attached b>>, "", 4, True)
+			e1: attached g (<<attached o, attached u, attached i, attached b>>, "", 4, True) as bool
+			e1: attached {STRING} g (<<attached o, attached u, attached i, attached b>>, "", 4, True)
+			e1: attached {STRING} g (<<attached o, attached u, attached i, attached b>>, "", 4, True) as bool
+
+			b1: attached u [1]
+			b1: attached u [1] as c
+			b1: attached {STRING} u [1]
+			b1: attached {STRING} u [1] as c
+
+			c1: attached Current
+			c1: attached Current as cur
+			c1: attached {STRING} Current
+			c1: attached {STRING} Current as cur
+
+			c1: attached Current.f
+			c1: attached Current.f as cur
+			c1: attached {STRING} Current.f
+			c1: attached {STRING} Current.f as cur
+
+			e1: attached attached o
+			e2: attached attached o as x
+			e3: attached attached {STRING} o
+			e4: attached attached {STRING} o as x
+			e5: attached attached old o
+			e6: attached attached old o as x
+			e7: attached attached {STRING} old o
+			e8: attached attached {STRING} old o as x
+
+			e1: attached attached (o)
+			e2: attached attached (o) as x
+			e3: attached attached {STRING} (o)
+			e4: attached attached {STRING} (o) as x
+			e5: attached attached (old o)
+			e6: attached attached (old o) as x
+			e7: attached attached {STRING} (old o)
+			e8: attached attached {STRING} (old o) as x
 		end
 
 end

@@ -17,11 +17,11 @@ feature -- Access
 	connection: !EVENT_CONNECTION_I [G, I]
 			-- Connection point.
 		require
-			is_interface_usable: {l_usable: USABLE_I} Current implies l_usable.is_interface_usable
+			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable
 		deferred
 		ensure
 			result_is_interface_usable: Result.is_interface_usable
-			result_consistent: Result ~ connection
+			result_consistent: Result = connection
 		end
 
 ;note

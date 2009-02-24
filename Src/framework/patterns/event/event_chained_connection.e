@@ -61,8 +61,7 @@ feature -- Status report
 		do
 			Result := Precursor (a_observer) and then linked_connection.is_valid_connection (a_observer)
 		ensure then
-			linked_connection_is_valid_connection:
-				Result implies
+			linked_connection_is_valid_connection: Result implies
 				(linked_connection.is_interface_usable and then linked_connection.is_valid_connection (a_observer))
 		end
 
@@ -74,7 +73,11 @@ feature -- Event connection
 			l_link: like linked_connection
 		do
 			l_link := linked_connection
-			if {l_observer: LINKG} a_observer and then l_link.is_interface_usable and then l_link.is_valid_connection (l_observer) then
+			if
+				attached {LINKG} a_observer as l_observer and then
+				l_link.is_interface_usable and then
+				l_link.is_valid_connection (l_observer)
+			then
 				l_link.connect_events (l_observer)
 			else
 				check False end
@@ -82,8 +85,7 @@ feature -- Event connection
 			Precursor (a_observer)
 		ensure then
 			link_connected:
-				{el_observer: LINKG} a_observer implies
-				linked_connection.is_connected (el_observer)
+				attached {LINKG} a_observer as l_observer implies linked_connection.is_connected (l_observer)
 		end
 
 	disconnect_events (a_observer: !G)
@@ -92,7 +94,7 @@ feature -- Event connection
 			l_link: like linked_connection
 		do
 			l_link := linked_connection
-			if {l_observer: LINKG} a_observer and then l_link.is_connected (l_observer) then
+			if attached {LINKG} a_observer as l_observer and then l_link.is_connected (l_observer) then
 				l_link.disconnect_events (l_observer)
 			else
 				check False end
@@ -100,8 +102,8 @@ feature -- Event connection
 			Precursor (a_observer)
 		ensure then
 			link_disconnected:
-				old ({el_observer: LINKG} a_observer implies linked_connection.is_connected (el_observer)) implies
-					({el_observer_2: LINKG} a_observer and then linked_connection.is_connected (el_observer_2))
+				old (attached {LINKG} a_observer as l_old_observer implies linked_connection.is_connected (l_old_observer)) implies
+				(attached {LINKG} a_observer as l_observer and then linked_connection.is_connected (l_observer))
 		end
 
 ;note
@@ -129,11 +131,11 @@ feature -- Event connection
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

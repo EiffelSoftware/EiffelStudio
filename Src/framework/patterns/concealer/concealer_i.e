@@ -12,10 +12,11 @@ deferred class
 
 feature -- Access
 
-	object: ?G
+	object: detachable G
 			-- Concealed object.
 		require
-			is_interface_usable: {l_usable: USABLE_I} Current implies l_usable.is_interface_usable
+			is_interface_usable: attached {USABLE_I} Current as l_usable implies
+				l_usable.is_interface_usable
 		deferred
 		ensure
 			is_revealed: is_revealed
@@ -27,7 +28,8 @@ feature -- Status report
 	is_revealed: BOOLEAN
 			-- Indicates if the concealed object has been revealed yet.
 		require
-			is_interface_usable: {l_usable: USABLE_I} Current implies l_usable.is_interface_usable
+			is_interface_usable: attached {USABLE_I} Current as l_usable implies
+				l_usable.is_interface_usable
 		deferred
 		end
 

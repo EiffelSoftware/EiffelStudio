@@ -20,8 +20,8 @@ feature {LOCKABLE_I} -- Event handlers
 			--
 			-- `a_lock': The locked interface.
 		require
-			is_interface_usable: {l_usable: USABLE_I} Current implies l_usable.is_interface_usable
-			a_lock_is_interface_usable: {l_usable_lock: USABLE_I} a_lock implies l_usable_lock.is_interface_usable
+			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable
+			a_lock_is_interface_usable: attached {USABLE_I} Current as l_usable_lock implies l_usable_lock.is_interface_usable
 			a_lock_is_locked: a_lock.is_locked
 		do
 		end
@@ -31,8 +31,8 @@ feature {LOCKABLE_I} -- Event handlers
 			--
 			-- `a_lock': The unlocked interface.
 		require
-			is_interface_usable: {l_usable: USABLE_I} Current implies l_usable.is_interface_usable
-			a_lock_is_interface_usable: {l_usable_lock: USABLE_I} a_lock implies l_usable_lock.is_interface_usable
+			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable
+			a_lock_is_interface_usable: attached {USABLE_I} Current as l_usable_lock implies l_usable_lock.is_interface_usable
 			not_a_lock_is_locked: not a_lock.is_locked
 		do
 		end

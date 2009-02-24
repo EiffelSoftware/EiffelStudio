@@ -42,6 +42,6 @@ define	NOTE	"test: test; test: test;"
 copy_sub 	 test.e  $CLUSTER test.e
 
 compile_melted
-compile_result	syntax_error TEST 5
+compile_result	syntax_error TEST 4
 
 test_end

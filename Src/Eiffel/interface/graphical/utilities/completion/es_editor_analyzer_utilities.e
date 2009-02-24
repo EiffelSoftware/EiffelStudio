@@ -21,7 +21,11 @@ inherit
 feature -- Basic operations
 
 	scan_for_type (a_start_token: !EDITOR_TOKEN; a_start_line: !EDITOR_LINE; a_end_token: ?EDITOR_TOKEN): ?TUPLE [token: !EDITOR_TOKEN; line: !EDITOR_LINE]
-			-- Scans for a type
+			-- Scans for a type.
+			--
+			-- `a_start_token': A token to commence scanning.
+			-- `a_line'       : The line where the supplied token is resident.
+			-- `Result'       : A resulting token and resident line, or Void if no previous token exists.
 		require
 			a_start_token_has_a_token: a_start_line.has_token (a_start_token)
 			a_end_token_different_to_a_start_token: a_start_token /~ a_end_token
@@ -33,8 +37,7 @@ feature -- Basic operations
 			l_next: ?like next_text_token
 			l_match: ?like next_text_token
 		do
-			l_image := token_text_8 (a_start_token)
-			if l_image.is_equal ("!") or else l_image.is_equal ("?") then
+			if is_attachment_token (a_start_token) then
 					-- Start of the type, using an attachment mark
 				l_next := next_text_token (a_start_token, a_start_line, True, a_end_token)
 			else
@@ -91,7 +94,7 @@ feature {NONE} -- Helpers
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -104,22 +107,22 @@ feature {NONE} -- Helpers
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

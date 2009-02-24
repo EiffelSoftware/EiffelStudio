@@ -258,8 +258,10 @@ feature {NONE} -- Query
 		local
 			l_string_locals: !like string_local_declarations
 			l_local_string: !STRING_32
+			l_context_class: like context_class
+			l_option: CONF_OPTION
 			l_parser: EIFFEL_PARSER
-			l_entities: EIFFEL_LIST [TYPE_DEC_AS]
+			l_parser_wrapper: like eiffel_parser_wrapper
 			l_declarations: ARRAYED_LIST [TYPE_DEC_AS]
 			l_entity_name_map: !HASH_TABLE [!STRING_32, !STRING_32]
 			l_entity_name: !STRING_32
@@ -294,10 +296,15 @@ feature {NONE} -- Query
 			end
 
 				-- Parse local string declaration
-			l_parser := entity_declaration_parser
-			l_parser.parse_from_string (l_local_string, Void)
-			l_entities := l_parser.entity_declaration_node
-			if l_entities = Void then
+			l_context_class := context_class
+			l_option := l_context_class.group.options
+			l_parser := entity_declaration_parser.as_attached
+			l_parser_wrapper := eiffel_parser_wrapper
+			l_parser_wrapper.parse_with_option (l_parser, l_local_string, l_option, True, l_context_class)
+
+			if l_parser_wrapper.has_error then
+				create l_declarations.make (0)
+
 					-- There is a syntax error, try parsing one by one.
 				from l_string_locals.start until l_string_locals.after loop
 						-- Create an entity name map entry because the entity name might be a reserved word, whic
@@ -315,16 +322,16 @@ feature {NONE} -- Query
 					l_local_string.append_character (':')
 					l_local_string.append (l_string_locals.item_for_iteration)
 
-					l_parser.parse_from_string (l_local_string, Void)
-					l_entities := l_parser.entity_declaration_node
-					if l_entities /= Void then
-						l_declarations.extend (l_entities.first)
+					l_parser_wrapper.parse_with_option (l_parser, l_local_string, l_option, True, l_context_class)
+					if not l_parser_wrapper.has_error then
+						l_declarations.extend (l_parser.entity_declaration_node.first)
 					end
 
 					l_string_locals.forth
 				end
 			else
-				l_declarations := l_entities
+				l_declarations := l_parser.entity_declaration_node
+				check l_declarations_attached: attached l_declarations end
 			end
 
 				-- Build result, assigning the type declartation to an index local entity name.
@@ -356,6 +363,14 @@ feature {NONE} -- Query
 				end
 				l_declarations.forth
 			end
+		end
+
+feature {NONE} -- Helpers
+
+	eiffel_parser_wrapper: EIFFEL_PARSER_WRAPPER
+			-- Parser wrapper used to protect the parser for persisting syntax errors
+		once
+			create Result
 		end
 
 feature -- Extension

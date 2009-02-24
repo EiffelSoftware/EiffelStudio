@@ -103,7 +103,7 @@ feature -- Element change
 
 feature -- Status report
 
-	window_at: ?WEL_WINDOW
+	window_at: detachable WEL_WINDOW
 			-- Window containing current point
 		local
 			ptr, null: POINTER

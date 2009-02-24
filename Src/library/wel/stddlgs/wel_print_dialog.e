@@ -105,7 +105,7 @@ feature -- Access
 		require
 			selected: selected
 		local
-			l_dc: ?WEL_PRINTER_DC
+			l_dc: detachable WEL_PRINTER_DC
 		do
 			l_dc := private_dc
 				-- Pre precondition
@@ -529,7 +529,7 @@ feature {NONE} -- Implementation
 			cwel_print_dlg_set_hwndowner (item, a_parent.item)
 		end
 
-	private_dc: ?WEL_PRINTER_DC
+	private_dc: detachable WEL_PRINTER_DC
 			-- Device context associated to the selected printer
 
 feature -- Measurement

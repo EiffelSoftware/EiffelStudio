@@ -145,7 +145,7 @@ feature -- Special setting
 	curl_function: CURL_FUNCTION
 			-- cURL functions in curl_easy_setopt.
 		do
-			if {l_curl_function: like curl_function} internal_curl_function then
+			if attached {like curl_function} internal_curl_function as l_curl_function then
 				Result := l_curl_function
 			else
 				create {CURL_DEFAULT_FUNCTION} Result.make
@@ -198,7 +198,7 @@ feature -- Special setting
 
 feature {NONE} -- Implementation
 
-	internal_curl_function: ?CURL_FUNCTION
+	internal_curl_function: detachable CURL_FUNCTION
 			-- cURL functions.
 
 	api_loader: API_LOADER

@@ -26,7 +26,7 @@ feature -- Constants
 
 feature {INET_ADDRESS_FACTORY} -- Initialization
 
-	make_from_host_and_address (a_hostname: ?STRING; an_address: ?ARRAY [NATURAL_8])
+	make_from_host_and_address (a_hostname: detachable STRING; an_address: detachable ARRAY [NATURAL_8])
 		do
 			internal_host_name := a_hostname
 			family := ipv4
@@ -38,7 +38,7 @@ feature {INET_ADDRESS_FACTORY} -- Initialization
 			end
 		end
 
-	make_from_host_and_pointer (a_hostname: ?STRING; a_pointer: POINTER)
+	make_from_host_and_pointer (a_hostname: detachable STRING; a_pointer: POINTER)
 		do
 			internal_host_name := a_hostname
 			family := ipv4

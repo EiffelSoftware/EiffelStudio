@@ -99,7 +99,7 @@ feature -- Access
 			-- Result = -1 or last_string_read is in keyword_h_table.
 		end;
 
-	last_keyword_text: ?STRING
+	last_keyword_text: detachable STRING
 			-- Last read string if recognized as a keyword;
 			-- void otherwise.
 		do
@@ -135,7 +135,7 @@ feature -- Access
 	No_token: INTEGER = 0;
 			-- Token type for no token recognized.
 
-	other_possible_tokens: ?ARRAY [INTEGER];
+	other_possible_tokens: detachable ARRAY [INTEGER];
 			-- Other candidate types for last recognized token
 
 	end_of_text: BOOLEAN;
@@ -194,7 +194,7 @@ feature -- Input
 			not_end_of_text: not end_of_text;
 			buffers_created: buffer /= Void
 		local
-			state: ?STATE_OF_DFA;
+			state: detachable STATE_OF_DFA;
 			too_big, buffer_resized: BOOLEAN;
 			local_string: STRING
 			l_dfa: like dfa
@@ -295,7 +295,7 @@ feature -- Input
 			not_end_of_text: not end_of_text;
 			buffers_created: buffer /= Void
 		local
-			state: ?STATE_OF_DFA;
+			state: detachable STATE_OF_DFA;
 			too_big, recognized, buffer_resized: BOOLEAN;
 			local_string: STRING
 			l_dfa: like dfa
@@ -390,7 +390,7 @@ feature -- Input
 			not_end_of_text: not end_of_text;
 			buffers_created: buffer /= Void
 		local
-			state: ?STATE_OF_DFA;
+			state: detachable STATE_OF_DFA;
 			too_big, buffer_resized: BOOLEAN;
 			local_string: STRING
 			l_dfa: like dfa
@@ -559,7 +559,7 @@ feature {LEXICAL, LEX_BUILDER} -- Implementation
 
 feature -- Implementation
 
-	dfa: ?FIXED_DFA;
+	dfa: detachable FIXED_DFA;
 			-- Automaton used for the parsing
 
 feature {NONE} -- Implementation
@@ -584,7 +584,7 @@ feature {NONE} -- Implementation
 	Close_of_file: INTEGER = 255;
 			-- End-of-file indicator on some platforms
 
-	categories_table: ?ARRAY [INTEGER];
+	categories_table: detachable ARRAY [INTEGER];
 			-- For each input, category number
 
 	keyword_h_table: HASH_TABLE [INTEGER, STRING]
@@ -607,7 +607,7 @@ feature {NONE} -- Implementation
 			-- Position in buffer of the beginning
 			-- of the last recognized token
 
-	lower_word: ?STRING;
+	lower_word: detachable STRING;
 			-- String used to avoid modifying last_string_read
 
 	read_index: INTEGER;

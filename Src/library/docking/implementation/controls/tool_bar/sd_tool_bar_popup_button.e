@@ -167,7 +167,7 @@ feature {NONE} -- Implementation
 					l_y := tool_bar.item_y (Current)
 					l_height := tool_bar.height
 					if l_menu /= Void then
-						if {lt_widget: EV_WIDGET} tool_bar then
+						if attached {EV_WIDGET} tool_bar as lt_widget then
 							l_menu.show_at (lt_widget, l_x, l_y + tool_bar.standard_height)
 						else
 							check not_possible: False end

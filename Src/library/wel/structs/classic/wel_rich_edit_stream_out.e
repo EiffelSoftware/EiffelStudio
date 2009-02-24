@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	buffer: ?MANAGED_POINTER
+	buffer: detachable MANAGED_POINTER
 			-- Buffer to set in `read_buffer'.
 
 feature -- Basic operations

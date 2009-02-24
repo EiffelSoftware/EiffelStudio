@@ -97,7 +97,7 @@ feature -- Querys
 					l_zones.after or Result /= Void
 				loop
 					l_item := l_zones.item
-					if {lt_container: EV_CONTAINER} l_item then
+					if attached {EV_CONTAINER} l_item as lt_container then
 						if l_widget = lt_container or lt_container.has_recursive (l_widget) then
 							Result := l_item
 						end
@@ -196,7 +196,7 @@ feature -- Querys
 		require
 			a_zone_not_void: a_zone /= Void
 		do
-			if {lt_widget: EV_WIDGET} a_zone then
+			if attached {EV_WIDGET} a_zone as lt_widget then
 				Result := internal_inner_container (lt_widget)
 			else
 				check not_possible: False end
@@ -215,7 +215,7 @@ feature -- Querys
 		require
 			not_void: a_zone /= Void
 		do
-			if {lt_widget: EV_WIDGET} a_zone then
+			if attached {EV_WIDGET} a_zone as lt_widget then
 				Result := internal_inner_container (lt_widget)
 				if Result = Void then
 					-- Maybe `a_zone' is hidden, because there is a zone maximized in that dock area.
@@ -269,7 +269,7 @@ feature -- Querys
 		do
 			l_item := internal_docking_manager.command.orignal_whole_item
 			if l_item /= Void then
-				if {lt_widget: EV_WIDGET} a_zone then
+				if attached {EV_WIDGET} a_zone as lt_widget then
 					check not_void_at_same_tiem: internal_docking_manager.command.orignal_editor_parent /= Void end
 					l_container ?= l_item
 
@@ -449,7 +449,7 @@ feature -- Querys
 				loop
 					l_container := l_floating_zones.item.inner_container
 					if l_container /= Void then
-						if {lt_widget: EV_WIDGET} l_zone then
+						if attached {EV_WIDGET} l_zone as lt_widget then
 							Result := l_container.has_recursive (lt_widget)
 						else
 							check not_possible: False end
@@ -592,7 +592,7 @@ feature -- Querys
 	is_in_main_window (a_tool_bar: SD_GENERIC_TOOL_BAR): BOOLEAN
 			-- If `a_widget' in main window?
 		do
-			if {lt_widget: EV_WIDGET} a_tool_bar then
+			if attached {EV_WIDGET} a_tool_bar as lt_widget then
 				Result := internal_docking_manager.tool_bar_container.top.has_recursive (lt_widget)
 				if not Result then
 					Result := internal_docking_manager.tool_bar_container.bottom.has_recursive (lt_widget)

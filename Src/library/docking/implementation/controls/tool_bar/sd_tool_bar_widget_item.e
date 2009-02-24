@@ -71,7 +71,7 @@ feature -- Command
 			l_old_widget := widget
 			widget := a_widget
 
-			if {l_fixed: EV_FIXED} l_old_widget.parent then
+			if attached {EV_FIXED} l_old_widget.parent as l_fixed then
 				check must_has: l_fixed.has (l_old_widget) end
 				l_fixed.prune (l_old_widget)
 				l_fixed.extend (a_widget)

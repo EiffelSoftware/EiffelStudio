@@ -78,10 +78,10 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	arguments: !EQA_EVALUATOR_ARGUMENT_PARSER
+	arguments: attached EQA_EVALUATOR_ARGUMENT_PARSER
 			-- Command line arguments
 
-	evaluator: !EQA_TEST_EVALUATOR
+	evaluator: attached EQA_TEST_EVALUATOR
 			-- Evaluator for executing tests
 		require
 			arguments_valid: arguments.is_successful
@@ -90,7 +90,7 @@ feature {NONE} -- Access
 			Result.set_record_output (arguments.has_output_option)
 		end
 
-	stream: !IO_MEDIUM
+	stream: attached IO_MEDIUM
 			-- Represents the communication medium between interpreter and client
 			--
 			-- Note: this can be a socket or a raw file
@@ -111,7 +111,7 @@ feature {NONE} -- Status setting
 			-- Initialize `stream'.
 		local
 			l_rescued: BOOLEAN
-			l_socket: !NETWORK_STREAM_SOCKET
+			l_socket: attached NETWORK_STREAM_SOCKET
 		do
 			if not l_rescued then
 				if arguments.has_port_option then
@@ -143,21 +143,21 @@ feature {NONE} -- Status setting
 
 feature {NONE} -- Query		
 
-	test_set_instance (a_index: NATURAL): !EQA_TEST_SET
+	test_set_instance (a_index: NATURAL): attached EQA_TEST_SET
 			-- Instance of a test set class.
 		require
 			a_index_valid: is_valid_index (a_index)
 		deferred
 		end
 
-	test_procedure (a_index: NATURAL): !PROCEDURE [ANY, TUPLE [EQA_TEST_SET]]
+	test_procedure (a_index: NATURAL): attached PROCEDURE [ANY, TUPLE [EQA_TEST_SET]]
 			-- Agent for a test procedure.
 		require
 			a_index_valid: is_valid_index (a_index)
 		deferred
 		end
 
-	test_name (a_index: NATURAL): !READABLE_STRING_8
+	test_name (a_index: NATURAL): attached READABLE_STRING_8
 			-- Name of the test procedure
 		require
 			a_index_valid: is_valid_index (a_index)

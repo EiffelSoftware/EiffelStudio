@@ -26,7 +26,7 @@ feature -- Access
 
 feature -- Access
 
-	current_test_name: ?READABLE_STRING_8
+	current_test_name: detachable READABLE_STRING_8
 			-- Name of test currently being executed
 
 feature -- Status report
@@ -66,7 +66,7 @@ feature -- Status setting
 
 feature {EQA_TEST_EVALUATOR} -- Status setting
 
-	frozen prepare (a_name: !READABLE_STRING_8)
+	frozen prepare (a_name: attached READABLE_STRING_8)
 			-- Prepare `Current' to execute any test routine.
 			--
 			-- `a_name': Name of the test which will called after preparation.

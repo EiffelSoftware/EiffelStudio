@@ -100,7 +100,7 @@ feature -- Set attributes
 
 feature {NONE}
 
-	has_value (s: ?STRING): BOOLEAN
+	has_value (s: detachable STRING): BOOLEAN
 			-- Has the attribute 's' a value ?
 		do
 			Result := s /= Void and then not s.is_empty

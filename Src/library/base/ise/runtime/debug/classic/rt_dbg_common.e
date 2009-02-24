@@ -13,14 +13,14 @@ inherit
 
 feature -- Query
 
-	changes_between (csr1: RT_DBG_CALL_RECORD; csr2: ?RT_DBG_CALL_RECORD): ARRAYED_LIST [RT_DBG_VALUE_RECORD]
+	changes_between (csr1: RT_DBG_CALL_RECORD; csr2: detachable RT_DBG_CALL_RECORD): ARRAYED_LIST [RT_DBG_VALUE_RECORD]
 			-- Return records from `r1' to -beginning-of- `r2'.
 		require
 			csr1_not_void: csr1 /= Void
 		local
 			chgs: like changes_between
 			c,v: CURSOR
-			r: ?like changes_between
+			r: detachable like changes_between
 		do
 			if csr1.is_flat then
 				r := csr1.value_records
@@ -30,12 +30,12 @@ feature -- Query
 			else
 				create Result.make (30)
 					--| Get Full records
-				if {vrecs: LIST [RT_DBG_VALUE_RECORD]} csr1.value_records then
+				if attached {LIST [RT_DBG_VALUE_RECORD]} csr1.value_records as vrecs then
 					v := vrecs.cursor
 					Result.append (vrecs)
 					vrecs.go_to (v)
 				end
-				if {crecs: LIST [RT_DBG_CALL_RECORD]} csr1.call_records then
+				if attached {LIST [RT_DBG_CALL_RECORD]} csr1.call_records as crecs then
 					c := crecs.cursor
 					from
 						crecs.start

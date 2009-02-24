@@ -101,7 +101,7 @@ feature {NONE} -- Implementation
 			a_file_is_open: a_file.is_open_read
 			a_file_valid_pos: a_file.last_character.is_equal ('#')
 		local
-			l_string, id: ?STRING
+			l_string, id: detachable STRING
 		do
 			a_file.read_word
 			l_string := a_file.last_string

@@ -56,7 +56,7 @@ feature{NONE} -- Implementation
 
 feature -- Process operations
 
-	launch (a_cmd: STRING; a_working_directory: ?STRING; has_separate_console: BOOLEAN; has_detached_console: BOOLEAN; use_unicode: BOOLEAN; environs: POINTER)
+	launch (a_cmd: STRING; a_working_directory: detachable STRING; has_separate_console: BOOLEAN; has_detached_console: BOOLEAN; use_unicode: BOOLEAN; environs: POINTER)
 			-- Launch a process whose command is `a_cmd' in `a_working_directory'.
 			-- If `has_separate_console' is True, launch process in a separate console.
 			-- If `has_detached_console' is True, launch process without any console.
@@ -328,7 +328,7 @@ feature
 	startup_info: WEL_STARTUP_INFO
 			-- Process startup information
 		local
-			l_tuple: ?TUPLE [p1: POINTER; p2: POINTER]
+			l_tuple: detachable TUPLE [p1: POINTER; p2: POINTER]
 		do
 			create Result.make
 
@@ -440,7 +440,7 @@ feature{NONE} -- Implementation
 			"GetStdHandle (STD_ERROR_HANDLE)"
 		end
 
-	spawn_process (a_command_line: STRING_GENERAL; a_working_directory: ?STRING_GENERAL; a_flags: INTEGER; a_environs: POINTER)
+	spawn_process (a_command_line: STRING_GENERAL; a_working_directory: detachable STRING_GENERAL; a_flags: INTEGER; a_environs: POINTER)
 			-- Spawn asynchronously process described in `a_command_line' from `a_working_directory'.
 		require
 			non_void_command_line: a_command_line /= Void

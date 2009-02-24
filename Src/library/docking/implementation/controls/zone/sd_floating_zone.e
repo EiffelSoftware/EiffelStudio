@@ -407,7 +407,7 @@ feature {NONE} -- Implementation
 		do
 			l_zone ?= a_container
 			if l_zone /= Void then
-				if {lt_widget: EV_WIDGET} l_zone then
+				if attached {EV_WIDGET} l_zone as lt_widget then
 					if lt_widget.is_displayed then
 						only_one_zone_displayed := l_zone
 						zone_display_count := zone_display_count + 1
@@ -464,10 +464,10 @@ feature {NONE} -- Agents
 			l_last_zone: SD_ZONE
 			l_zones: like all_zones
 		do
-			if {l_content: SD_CONTENT} internal_docking_manager.property.last_focus_content then
-				if {l_state: SD_STATE} l_content.state then
+			if attached {SD_CONTENT} internal_docking_manager.property.last_focus_content as l_content then
+				if attached {SD_STATE} l_content.state as l_state then
 					l_last_zone := l_state.zone
-					if {lt_widget: EV_WIDGET} l_last_zone then
+					if attached {EV_WIDGET} l_last_zone as lt_widget then
 						if not has_recursive (lt_widget) then
 							l_zones := all_zones
 							if l_zones.count > 0 then
@@ -492,10 +492,10 @@ feature {NONE} -- Agents
 		local
 			l_last_zone: SD_ZONE
 		do
-			if {l_content: SD_CONTENT} internal_docking_manager.property.last_focus_content then
-				if {l_state: SD_STATE} l_content.state then
+			if attached {SD_CONTENT} internal_docking_manager.property.last_focus_content as l_content then
+				if attached {SD_STATE} l_content.state as l_state then
 					l_last_zone := l_state.zone
-					if {lt_widget: EV_WIDGET} l_last_zone then
+					if attached {EV_WIDGET} l_last_zone as lt_widget then
 						if not is_destroyed and then has_recursive (lt_widget) then
 							internal_title_bar.enable_non_focus_active_color
 							l_last_zone.set_non_focus_selection_color

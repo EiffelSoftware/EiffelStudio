@@ -77,7 +77,7 @@ feature {NONE} -- Query
 	command_option_group_configuration (a_group: LIST [ARGUMENT_SWITCH]; a_show_non_switch: BOOLEAN; a_non_switch_required: BOOLEAN; a_add_appurtenances: BOOLEAN; a_src_group: LIST [ARGUMENT_SWITCH]): STRING
 			-- <Precursor>
 		local
-			l_suffix: ?STRING
+			l_suffix: detachable STRING
 			l_arg: STRING
 			l_args: STRING
 		do

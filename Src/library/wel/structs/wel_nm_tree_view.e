@@ -49,13 +49,13 @@ feature -- Access
 			Result := cwel_nm_treeview_get_action (item)
 		end
 
-	new_item: ?WEL_TREE_VIEW_ITEM
+	new_item: detachable WEL_TREE_VIEW_ITEM
 			-- Information about the new item state
 		require
 			exists: exists
 		do
 			create Result.make_by_pointer (cwel_nm_treeview_get_itemnew (item))
-			if {l_tree: WEL_TREE_VIEW} hdr.window_from then
+			if attached {WEL_TREE_VIEW} hdr.window_from as l_tree then
 				if l_tree.has_item (Result) then
 					Result := l_tree.get_item_with_data (Result)
 				else
@@ -72,7 +72,7 @@ feature -- Access
 			exists: exists
 		do
 			create Result.make_by_pointer (cwel_nm_treeview_get_itemold (item))
-			if {l_tree: WEL_TREE_VIEW} hdr.window_from then
+			if attached {WEL_TREE_VIEW} hdr.window_from as l_tree then
 				if l_tree.has_item (Result) then
 					Result := l_tree.get_item_with_data (Result)
 				end

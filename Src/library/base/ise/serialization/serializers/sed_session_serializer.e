@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	root_object: ?ANY
+	root_object: detachable ANY
 			-- Root object of object graph
 		do
 			Result := traversable.root_object
@@ -116,9 +116,9 @@ feature -- Basic operations
 			traversing_mode_set: is_traversing_mode_set
 			root_object_set: is_root_object_set
 		local
-			l_mem: ?MEMORY
+			l_mem: detachable MEMORY
 			l_is_collecting: BOOLEAN
-			l_list: ?ARRAYED_LIST [ANY]
+			l_list: detachable ARRAYED_LIST [ANY]
 			l_list_count: NATURAL_32
 		do
 			if not {PLATFORM}.is_dotnet then
@@ -204,7 +204,7 @@ feature {NONE} -- Implementation
 			l_dtype, l_spec_item_type: INTEGER
 			l_obj: ANY
 			l_area: SPECIAL [ANY]
-			l_array: ?ARRAY [ANY]
+			l_array: detachable ARRAY [ANY]
 		do
 			if is_for_fast_retrieval then
 					-- Mark data with information that shows we have a mapping
@@ -251,7 +251,7 @@ feature {NONE} -- Implementation
 						l_ser.write_compressed_integer_32 (l_spec_item_type)
 
 							-- Write number of elements in SPECIAL
-						if {l_abstract_spec: ABSTRACT_SPECIAL} l_obj then
+						if attached {ABSTRACT_SPECIAL} l_obj as l_abstract_spec then
 							l_ser.write_compressed_integer_32 (l_abstract_spec.count)
 						else
 							check
@@ -286,7 +286,7 @@ feature {NONE} -- Implementation
 			l_obj: ANY
 			i, nb: INTEGER
 			l_area: SPECIAL [ANY]
-			l_array: ?ARRAY [ANY]
+			l_array: detachable ARRAY [ANY]
 		do
 			l_int := internal
 			l_ser := serializer
@@ -335,7 +335,7 @@ feature {NONE} -- Implementation
 						l_ser.write_compressed_integer_32 (l_spec_item_type)
 
 							-- Store count of special
-						if {l_abstract_spec: ABSTRACT_SPECIAL} l_obj then
+						if attached {ABSTRACT_SPECIAL} l_obj as l_abstract_spec then
 							l_ser.write_compressed_integer_32 (l_abstract_spec.count)
 						else
 							check l_abstract_spec_attached: False end
@@ -346,7 +346,7 @@ feature {NONE} -- Implementation
 					if l_is_for_slow_retrieval then
 						l_ser.write_natural_8 (is_tuple_flag)
 					end
-					if {l_tuple: TUPLE} l_obj then
+					if attached {TUPLE} l_obj as l_tuple then
 						encode_tuple_object (l_tuple)
 					else
 						check
@@ -362,7 +362,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	encode_reference (an_object: ?ANY)
+	encode_reference (an_object: detachable ANY)
 			-- Encode reference to `an_object'.
 		do
 			if an_object /= Void then
@@ -496,98 +496,98 @@ feature {NONE} -- Implementation
 		do
 			inspect a_item_type
 			when {INTERNAL}.boolean_type then
-				if {l_spec_boolean: SPECIAL [BOOLEAN]} an_object then
+				if attached {SPECIAL [BOOLEAN]} an_object as l_spec_boolean then
 					encode_special_boolean (l_spec_boolean)
 				else
 					check l_spec_boolean_not_void: False end
 				end
 
 			when {INTERNAL}.character_8_type then
-				if {l_spec_character_8: SPECIAL [CHARACTER_8]} an_object then
+				if attached {SPECIAL [CHARACTER_8]} an_object as l_spec_character_8 then
 					encode_special_character_8 (l_spec_character_8)
 				else
 					check l_spec_character_8_not_void: False end
 				end
 
 			when {INTERNAL}.character_32_type then
-				if {l_spec_character_32: SPECIAL [CHARACTER_32]} an_object then
+				if attached {SPECIAL [CHARACTER_32]} an_object as l_spec_character_32 then
 					encode_special_character_32 (l_spec_character_32)
 				else
 					check l_spec_character_32_not_void: False end
 				end
 
 			when {INTERNAL}.natural_8_type then
-				if {l_spec_natural_8: SPECIAL [NATURAL_8]} an_object then
+				if attached {SPECIAL [NATURAL_8]} an_object as l_spec_natural_8 then
 					encode_special_natural_8 (l_spec_natural_8)
 				else
 					check l_spec_natural_8_not_void: False end
 				end
 
 			when {INTERNAL}.natural_16_type then
-				if {l_spec_natural_16: SPECIAL [NATURAL_16]} an_object then
+				if attached {SPECIAL [NATURAL_16]} an_object as l_spec_natural_16 then
 					encode_special_natural_16 (l_spec_natural_16)
 				else
 					check l_spec_natural_16_not_void: False end
 				end
 
 			when {INTERNAL}.natural_32_type then
-				if {l_spec_natural_32: SPECIAL [NATURAL_32]} an_object then
+				if attached {SPECIAL [NATURAL_32]} an_object as l_spec_natural_32 then
 					encode_special_natural_32 (l_spec_natural_32)
 				else
 					check l_spec_natural_32_not_void: False end
 				end
 
 			when {INTERNAL}.natural_64_type then
-				if {l_spec_natural_64: SPECIAL [NATURAL_64]} an_object then
+				if attached {SPECIAL [NATURAL_64]} an_object as l_spec_natural_64 then
 					encode_special_natural_64 (l_spec_natural_64)
 				else
 					check l_spec_natural_64_not_void: False end
 				end
 
 			when {INTERNAL}.integer_8_type then
-				if {l_spec_integer_8: SPECIAL [INTEGER_8]} an_object then
+				if attached {SPECIAL [INTEGER_8]} an_object as l_spec_integer_8 then
 					encode_special_integer_8 (l_spec_integer_8)
 				else
 					check l_spec_integer_8_not_void: False end
 				end
 
 			when {INTERNAL}.integer_16_type then
-				if {l_spec_integer_16: SPECIAL [INTEGER_16]} an_object then
+				if attached {SPECIAL [INTEGER_16]} an_object as l_spec_integer_16 then
 					encode_special_integer_16 (l_spec_integer_16)
 				else
 					check l_spec_integer_16_not_void: False end
 				end
 
 			when {INTERNAL}.integer_32_type then
-				if {l_spec_integer_32: SPECIAL [INTEGER]} an_object then
+				if attached {SPECIAL [INTEGER]} an_object as l_spec_integer_32 then
 					encode_special_integer_32 (l_spec_integer_32)
 				else
 					check l_spec_integer_32_not_void: False end
 				end
 
 			when {INTERNAL}.integer_64_type then
-				if {l_spec_integer_64: SPECIAL [INTEGER_64]} an_object then
+				if attached {SPECIAL [INTEGER_64]} an_object as l_spec_integer_64 then
 					encode_special_integer_64 (l_spec_integer_64)
 				else
 					check l_spec_integer_64_not_void: False end
 				end
 
 			when {INTERNAL}.real_32_type then
-				if {l_spec_real_32: SPECIAL [REAL]} an_object then
+				if attached {SPECIAL [REAL]} an_object as l_spec_real_32 then
 					encode_special_real_32 (l_spec_real_32)
 				else
 					check l_spec_real_32_not_void: False end
 				end
 
 			when {INTERNAL}.real_64_type then
-				if {l_spec_real_64: SPECIAL [DOUBLE]} an_object then
+				if attached {SPECIAL [DOUBLE]} an_object as l_spec_real_64 then
 					encode_special_real_64 (l_spec_real_64)
 				else
 					check l_spec_real_64_not_void: False end
 				end
 
 			when {INTERNAL}.pointer_type then
-				if {l_spec_pointer: SPECIAL [POINTER]} an_object then
+				if attached {SPECIAL [POINTER]} an_object as l_spec_pointer then
 					encode_special_pointer (l_spec_pointer)
 				else
 					check l_spec_pointer_not_void: False end
@@ -597,7 +597,7 @@ feature {NONE} -- Implementation
 				check
 					a_item_type_valid: a_item_type = {INTERNAL}.reference_type
 				end
-				if {l_spec_any: SPECIAL [ANY]} an_object then
+				if attached {SPECIAL [ANY]} an_object as l_spec_any then
 					encode_special_reference (l_spec_any)
 				else
 					check l_spec_any_not_void: False end

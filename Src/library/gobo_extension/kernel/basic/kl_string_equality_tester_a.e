@@ -25,7 +25,7 @@ feature -- Status report
 
 feature -- Query
 
-	test (v, u: !G): BOOLEAN
+	test (v, u: attached G): BOOLEAN
 			-- <Precursor>
 		do
 			check is_case_sensitive: is_case_sensitive end

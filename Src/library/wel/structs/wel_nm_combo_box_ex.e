@@ -47,7 +47,7 @@ feature -- Access
 			exists: exists
 		do
 			create Result.make_by_pointer (cwel_nm_comboboxex_get_ceitem (item))
-			if {l_combo: WEL_COMBO_BOX_EX} hdr.window_from then
+			if attached {WEL_COMBO_BOX_EX} hdr.window_from as l_combo then
 				Result := l_combo.get_item_info (Result.index)
 			end
 		end

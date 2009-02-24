@@ -263,7 +263,7 @@ feature -- Command
 			end
 			check not_void: l_row /= Void end
 
-			if {lt_widget: EV_WIDGET} zone.tool_bar then
+			if attached {EV_WIDGET} zone.tool_bar as lt_widget then
 				if zone.row /= Void then
 					lt_widget.parent.prune (lt_widget)
 				end
@@ -297,7 +297,7 @@ feature -- Command
 			last_state.set_container_direction (l_direction)
 
 			l_box := zone.docking_manager.tool_bar_manager.tool_bar_container (last_state.container_direction)
-			if {lt_widget: EV_WIDGET} zone.tool_bar then
+			if attached {EV_WIDGET} zone.tool_bar as lt_widget then
 				l_parent ?= lt_widget.parent
 			else
 				check not_possible: False end

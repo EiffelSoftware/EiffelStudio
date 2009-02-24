@@ -24,7 +24,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (dc: WEL_DC; family: ?STRING_GENERAL)
+	make (dc: WEL_DC; family: detachable STRING_GENERAL)
 			-- Enumerate the fonts in the font `family' that are
 			-- available on the `dc'.
 			-- If `family' is Void, Windows randomly selects and
@@ -70,7 +70,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	enumerate (dc: WEL_DC; family: ?STRING_GENERAL)
+	enumerate (dc: WEL_DC; family: detachable STRING_GENERAL)
 			-- Enumerate `family' on `dc'
 		require
 			dc_not_void: dc /= Void

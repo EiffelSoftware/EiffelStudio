@@ -38,7 +38,7 @@ feature -- Command
 	clear_background_for_theme (a_widget: EV_DRAWING_AREA; a_rect: EV_RECTANGLE)
 			-- <Precursor>
 		do
-			if {l_widget_imp: EV_DRAWING_AREA_IMP} a_widget.implementation then
+			if attached {EV_DRAWING_AREA_IMP} a_widget.implementation as l_widget_imp then
 				c_clear_background (l_widget_imp.c_object, a_rect.left, a_rect.top, a_rect.width, a_rect.height)
 			else
 				check not_possible: False end

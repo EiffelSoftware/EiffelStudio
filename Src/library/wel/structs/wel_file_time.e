@@ -138,7 +138,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	file_times (a_file: FILE; a_creation_time, an_access_time, a_modification_time: ?WEL_FILE_TIME)
+	file_times (a_file: FILE; a_creation_time, an_access_time, a_modification_time: detachable WEL_FILE_TIME)
 			-- retrieves file times of file `a_file'
 		require
 			valid_file: a_file /= Void

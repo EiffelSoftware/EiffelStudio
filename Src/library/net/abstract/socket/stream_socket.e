@@ -34,7 +34,7 @@ feature
 		deferred
 		end
 
-	accepted: ?like Current
+	accepted: detachable like Current
 			-- Last accepted socket.
 
 	accept

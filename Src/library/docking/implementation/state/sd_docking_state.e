@@ -321,7 +321,7 @@ feature -- Redefine
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
-				if {lt_widget: EV_WIDGET} zone then
+				if attached {EV_WIDGET} zone as lt_widget then
 					internal_docking_manager.command.lock_update (lt_widget, False)
 				else
 					check not_possible: False end
@@ -331,7 +331,7 @@ feature -- Redefine
 				if zone.parent /= Void then
 					zone.parent.prune (zone)
 				end
-				if {lt_target_widget: EV_WIDGET} a_target_zone then
+				if attached {EV_WIDGET} a_target_zone as lt_target_widget then
 					internal_docking_manager.command.lock_update (lt_target_widget, False)
 				else
 					check not_possible: False end
@@ -524,7 +524,7 @@ feature {NONE} -- Implementation
 
 			l_docking_zone ?= a_target_zone
 			l_tab_zone ?= a_target_zone
-			if {lt_widget: EV_WIDGET} a_target_zone then
+			if attached {EV_WIDGET} a_target_zone as lt_widget then
 				internal_docking_manager.command.lock_update (lt_widget, False)
 			else
 				check not_possible: False end
@@ -557,7 +557,7 @@ feature {NONE} -- Implementation
 			l_target_zone_parent_spliter: EV_SPLIT_AREA
 		do
 			-- First, remove current zone from old parent split area.	
-			if {lt_widget: EV_WIDGET} a_target_zone then
+			if attached {EV_WIDGET} a_target_zone as lt_widget then
 				l_target_zone_parent := lt_widget.parent
 
 				if lt_widget.parent /= Void then

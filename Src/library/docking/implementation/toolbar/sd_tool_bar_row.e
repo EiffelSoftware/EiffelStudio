@@ -67,7 +67,7 @@ feature -- Command
 				a_zone.change_direction (not is_vertical)
 			end
 
-			if {lt_widget: EV_WIDGET} a_zone.tool_bar then
+			if attached {EV_WIDGET} a_zone.tool_bar as lt_widget then
 				extend_fixed (lt_widget)
 
 				if is_vertical then
@@ -99,7 +99,7 @@ feature -- Command
 				check not_possible: False end
 			end
 		ensure
-			extended: {lt_widget_2: EV_WIDGET} a_zone.tool_bar implies has (lt_widget_2) and internal_zones.has (a_zone)
+			extended: attached {EV_WIDGET} a_zone.tool_bar as lt_widget_2 implies has (lt_widget_2) and internal_zones.has (a_zone)
 			direction_changed: a_zone.is_vertical = is_vertical
 			tool_bar_row_set: a_zone.row = Current
 		end
@@ -110,7 +110,7 @@ feature -- Command
 			l_result: INTEGER
 		do
 			l_result := a_zone.assistant.expand_size (a_zone.maximize_size)
-			if {lt_widget: EV_WIDGET} a_zone.tool_bar then
+			if attached {EV_WIDGET} a_zone.tool_bar as lt_widget then
 				prune_fixed (lt_widget)
 			else
 				check not_possible: False end

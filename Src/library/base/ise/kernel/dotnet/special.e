@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			is_dotnet: {PLATFORM}.is_dotnet
 			an_array_not_void: an_array /= Void
 		do
-			if {l_array: like native_array} an_array.clone then
+			if attached {like native_array} an_array.clone as l_array then
 				internal_native_array := l_array
 			else
 				check not_possible: False end
@@ -162,7 +162,7 @@ feature -- Status report
 			index_big_enough: i >= 0
 			index_small_enough: i < count
 		local
-			default_value: ?T
+			default_value: detachable T
 		do
 			Result := item (i) = default_value
 		end

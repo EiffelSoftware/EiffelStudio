@@ -63,20 +63,20 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	test_set: !EQA_SYSTEM_TEST_SET
+	test_set: attached EQA_SYSTEM_TEST_SET
 			-- Current test set
 
-	source_directory: !READABLE_STRING_8
+	source_directory: attached READABLE_STRING_8
 			-- Directory name where source file for testing are stored
 			--
 			-- Note: this directory must exists before executing `test_set'
 
-	target_directory: !READABLE_STRING_8
+	target_directory: attached READABLE_STRING_8
 			-- Directory name where files needed for testing are created or copied to
 			--
 			-- Note: this directory must exist before executing `test_set'
 
-	test_suffix: !READABLE_STRING_8
+	test_suffix: attached READABLE_STRING_8
 			-- Directory suffix for `test_set'
 			--
 			-- Note: this should be unique for all tests, so each test has its private testing directory
@@ -105,11 +105,11 @@ feature -- Status setting
 
 feature {NONE} -- Constants
 
-	source_env: !STRING = "EQA_SOURCE"
-	testing_env: !STRING = "EQA_TARGET"
+	source_env: attached STRING = "EQA_SOURCE"
+	testing_env: attached STRING = "EQA_TARGET"
 			-- Environment variable names specifying testing directories.
 
-	default_source_directory: !READABLE_STRING_8
+	default_source_directory: attached READABLE_STRING_8
 			-- Default value for `source_directory'
 		once
 			if is_windows then
@@ -119,7 +119,7 @@ feature {NONE} -- Constants
 			end
 		end
 
-	default_target_directory: !READABLE_STRING_8
+	default_target_directory: attached READABLE_STRING_8
 			-- Default value for `target_directory'
 		once
 			if is_windows then

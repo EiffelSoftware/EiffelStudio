@@ -164,7 +164,7 @@ feature -- Resizing
 
 feature -- Element change
 
-	set_image_list (an_image_list: ?WEL_IMAGE_LIST)
+	set_image_list (an_image_list: detachable WEL_IMAGE_LIST)
 			-- Set the default imageList to `an_image_list'.
 			--
 			-- To remove the imagelist, set `an_image_list' to Void.
@@ -186,7 +186,7 @@ feature -- Element change
 				{WEL_API}.send_message_result (item, Tb_getimagelist, to_wparam (0), to_lparam (0)))
 		end
 
-	set_hot_image_list (an_image_list: ?WEL_IMAGE_LIST)
+	set_hot_image_list (an_image_list: detachable WEL_IMAGE_LIST)
 			-- Set the hot imageList to `an_image_list'.
 			--
 			-- To remove the imagelist, set `an_image_list' to Void.

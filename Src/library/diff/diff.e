@@ -10,10 +10,10 @@ class
 
 feature -- Access
 
-	match: ?LINKED_LIST [DIFF_LINE_MATCH]
+	match: detachable LINKED_LIST [DIFF_LINE_MATCH]
 			-- The indices of the elements that match in source and destination.
 
-	hunks: ?LINKED_LIST [LIST [DIFF_LINE]]
+	hunks: detachable LINKED_LIST [LIST [DIFF_LINE]]
 			-- The list of hunks.
 
 feature -- Status report
@@ -128,13 +128,13 @@ feature -- Change elements
 
 feature {NONE} -- Implementation
 
-	src: ?ARRAY[G]
+	src: detachable ARRAY[G]
 			-- The source array.
 
-	dst: ?ARRAY[G]
+	dst: detachable ARRAY[G]
 			-- The destination array.
 
-	all_matches: ?HASH_TABLE[INTEGER, INTEGER]
+	all_matches: detachable HASH_TABLE[INTEGER, INTEGER]
 			-- All the matches.
 
 	compute_lcs
@@ -145,9 +145,9 @@ feature {NONE} -- Implementation
 			start_src, end_src, start_dst, end_dst: INTEGER
 			hash_dst: HASH_TABLE [LINKED_LIST [INTEGER], G]
 			i, h, m, si, di: INTEGER
-			matches: ?LINKED_LIST [INTEGER]
+			matches: detachable LINKED_LIST [INTEGER]
 			links: ARRAYED_LIST [DIFF_INDEX_LINK]
-			link: ?DIFF_INDEX_LINK
+			link: detachable DIFF_INDEX_LINK
 			work: ARRAYED_LIST [INTEGER]
 			l_all_matches: like all_matches
 			l_src: like src

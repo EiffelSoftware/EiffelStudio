@@ -23,7 +23,7 @@ feature -- Command
 		local
 			l_split_area: EV_SPLIT_AREA
 		do
-			if {lt_widget: EV_WIDGET} Current then
+			if attached {EV_WIDGET} Current as lt_widget then
 				internal_docking_manager.command.lock_update (lt_widget, False)
 				main_area := internal_docking_manager.query.inner_container (Current)
 				if not is_maximized then
@@ -50,7 +50,7 @@ feature -- Command
 	close
 			-- Close window
 		do
-			if {lt_widget: EV_WIDGET} Current then
+			if attached {EV_WIDGET} Current as lt_widget then
 				internal_docking_manager.command.lock_update (lt_widget, False)
 			else
 				check not_possible: False end
@@ -71,7 +71,7 @@ feature -- Command
 			l_split_area: EV_SPLIT_AREA
 		do
 			if is_maximized then
-				if {lt_widget: EV_WIDGET} Current then
+				if attached {EV_WIDGET} Current as lt_widget then
 					internal_docking_manager.command.lock_update (lt_widget, False)
 
 					if internal_parent /= main_area then

@@ -130,7 +130,7 @@ feature -- Input
 		local
 			a_code: INTEGER
 		do
-			if {l_stream: like internal_stream} internal_stream then
+			if attached internal_stream as l_stream then
 				a_code := l_stream.read_byte
 				if a_code = - 1 then
 					internal_end_of_file := True
@@ -171,7 +171,7 @@ feature -- Input
 			done: BOOLEAN
 			l_last_string: like last_string
 		do
-			if {l_stream: like internal_stream} internal_stream then
+			if attached internal_stream as l_stream then
 				from
 					l_last_string := last_string
 					if l_last_string = Void then

@@ -58,7 +58,7 @@ feature -- Status report
 				Cb_getdroppedstate, to_wparam (0), to_lparam (0)) = 1
 		end
 
-	get_image_list: ?WEL_IMAGE_LIST
+	get_image_list: detachable WEL_IMAGE_LIST
        		-- Get the image list associated with this combination box.
        		-- Returns Void if none.\
        	local
@@ -108,7 +108,7 @@ feature -- Status setting
 			list_not_shown: not list_shown
 		end
 
-	set_image_list (an_imagelist: ?WEL_IMAGE_LIST)
+	set_image_list (an_imagelist: detachable WEL_IMAGE_LIST)
     		-- Set the current image list to `an_imagelist'.
        		-- If `an_imagelist' is set to Void, it removes
        		-- the current associated image list (if any).

@@ -70,14 +70,14 @@ feature -- Serialization routines
 			a_writer.write_footer
 		end
 
-	retrieved (a_reader: SED_READER_WRITER; a_is_gc_enabled: BOOLEAN): ?ANY
+	retrieved (a_reader: SED_READER_WRITER; a_is_gc_enabled: BOOLEAN): detachable ANY
 			-- Deserialization of object from `a_reader'.
 			-- Garbage collection will be enabled if `a_is_gc_enabled'.
 		require
 			a_reader_not_void: a_reader /= Void
 			a_reader_ready: a_reader.is_ready_for_reading
 		local
-			l_deserializer: ?SED_SESSION_DESERIALIZER
+			l_deserializer: detachable SED_SESSION_DESERIALIZER
 		do
 			a_reader.read_header
 			inspect

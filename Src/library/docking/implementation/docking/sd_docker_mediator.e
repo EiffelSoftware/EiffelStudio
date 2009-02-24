@@ -98,8 +98,8 @@ feature -- Query
 				loop
 					l_window := l_windows.item
 					if l_window /= Void and then not l_window.is_destroyed then
-						if {lt_widget: EV_WIDGET} caller then
-							if ({l_floating_zone: EV_WINDOW} caller and then l_window = l_floating_zone) or else l_window.has_recursive (lt_widget) then
+						if attached {EV_WIDGET} caller as lt_widget then
+							if (attached {EV_WINDOW} caller as l_floating_zone and then l_window = l_floating_zone) or else l_window.has_recursive (lt_widget) then
 								last_top_window := l_window
 							end
 						else
@@ -113,7 +113,7 @@ feature -- Query
 				-- Can't find top window for newly created panel, we search top window in another way,
 				-- see bug#14686
 			if last_top_window = Void then
-				if {lt_widget_2: EV_WIDGET} caller then
+				if attached {EV_WIDGET} caller as lt_widget_2 then
 					last_top_window := widget_top_level_window (lt_widget_2, False)
 				else
 					check not_possible: False end
@@ -461,7 +461,7 @@ feature {NONE} -- Implementation functions
 				l_zone := a_list.item
 				l_hot_zone_source ?= l_zone
 					-- Ingore the classes we don't care.
-				if {lt_widget: EV_WIDGET} l_zone then
+				if attached {EV_WIDGET} l_zone as lt_widget then
 					if l_hot_zone_source /= Void and lt_widget.is_displayed then
 						l_mutli_zone ?= l_zone
 						if l_mutli_zone /= Void and then not l_mutli_zone.is_drag_title_bar then

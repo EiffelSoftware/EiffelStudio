@@ -40,7 +40,7 @@ feature -- Actions
 			Result := key_from_path (key_path, False, acc)
 		end
 
-	open_key_value (key_path: STRING_GENERAL; value_name: STRING_GENERAL): ?WEL_REGISTRY_KEY_VALUE
+	open_key_value (key_path: STRING_GENERAL; value_name: STRING_GENERAL): detachable WEL_REGISTRY_KEY_VALUE
 				-- Open a key, with as path 'path' and
 				-- name 'key_name'.
 				-- The path should be like "a\b\c"
@@ -177,7 +177,7 @@ feature -- Access
 			end
 		end
 
-	enumerate_key (key: POINTER; index: INTEGER): ?WEL_REGISTRY_KEY
+	enumerate_key (key: POINTER; index: INTEGER): detachable WEL_REGISTRY_KEY
 			-- `index'th subkey of `key',
 			-- Void if `key' has less than `index' subkeys.
 		require
@@ -221,7 +221,7 @@ feature -- Access
 			end
 		end
 
-	default_key_value (key: POINTER; subkey: ?STRING_GENERAL): ?WEL_REGISTRY_KEY_VALUE
+	default_key_value (key: POINTER; subkey: detachable STRING_GENERAL): detachable WEL_REGISTRY_KEY_VALUE
 			-- Retrieve value of `subkey' associated with open
 			-- `key'.
 		obsolete
@@ -353,7 +353,7 @@ feature -- Basic Actions
 		-- key referenced by 'key'.
 		local
 			i: INTEGER
-			s: ?STRING_GENERAL
+			s: detachable STRING_GENERAL
 		do
 			create Result.make
 			from
@@ -376,7 +376,7 @@ feature -- Basic Actions
 		-- key referenced by 'key'.
 		local
 			i: INTEGER
-			s: ?STRING_GENERAL
+			s: detachable STRING_GENERAL
 		do
 			create Result.make
 			from
@@ -409,7 +409,7 @@ feature  -- New actions
 			last_call_successful := res = Error_success
 		end
 
-	enumerate_value (key: POINTER; index: INTEGER): ?STRING_GENERAL
+	enumerate_value (key: POINTER; index: INTEGER): detachable STRING_GENERAL
 			-- Find the name of the key_value corresponding
 			-- to the key 'key and the index 'index'.
 		local
@@ -461,7 +461,7 @@ feature  -- New actions
 
 feature -- Access
 
-	key_value (key: POINTER; value_name: STRING_GENERAL): ?WEL_REGISTRY_KEY_VALUE
+	key_value (key: POINTER; value_name: STRING_GENERAL): detachable WEL_REGISTRY_KEY_VALUE
 			-- Retrieve value of `value_name' associated with open
 			-- `key'.
 			-- The identifier 'key' relative to the parent key must

@@ -99,10 +99,10 @@ inherit
 
 feature -- Access
 
-	parent: ?WEL_WINDOW
+	parent: detachable WEL_WINDOW
 			-- Parent window
 
-	commands: ?WEL_COMMAND_MANAGER
+	commands: detachable WEL_COMMAND_MANAGER
 			-- Command manager associated to the current window.
 
 feature -- Status report
@@ -159,7 +159,7 @@ feature -- Status report
 			Result := cwin_is_zoomed (item)
 		end
 
-	focused_window: ?WEL_WINDOW
+	focused_window: detachable WEL_WINDOW
 			-- Current window which has the focus.
 		require
 			exists: exists
@@ -172,7 +172,7 @@ feature -- Status report
 			end
 		end
 
-	captured_window: ?WEL_WINDOW
+	captured_window: detachable WEL_WINDOW
 			-- Current window which has been captured.
 		require
 			exists: exists
@@ -434,7 +434,7 @@ feature -- Status report
 			Result := cwin_get_window_long (item, Gwl_exstyle).to_integer_32
 		end
 
-	background_brush: ?WEL_BRUSH
+	background_brush: detachable WEL_BRUSH
 			-- Current window background color used to refresh the window when
 			-- requested by the WM_ERASEBKGND windows message.
 			-- By default there is no background
@@ -459,7 +459,7 @@ feature -- Status report
 			l_commands := commands
 			Result := l_commands /= Void and then l_commands.exists (message)
 		ensure
-			definition: Result implies {l_commands_var: like commands} commands and then l_commands_var.item (message) /= Void
+			definition: Result implies attached commands as l_commands_var and then l_commands_var.item (message) /= Void
 		end
 
 	command (message: INTEGER): WEL_COMMAND
@@ -468,7 +468,7 @@ feature -- Status report
 			positive_message: message >= 0
 			command_exists: command_exists (message)
 		local
-			l_message: ?WEL_COMMAND_EXEC
+			l_message: detachable WEL_COMMAND_EXEC
 			l_commands: like commands
 		do
 			l_commands := commands
@@ -482,13 +482,13 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
-	command_argument (message: INTEGER): ?ANY
+	command_argument (message: INTEGER): detachable ANY
 			-- Command argument associated to `message'
 		require
 			positive_message: message >= 0
 			command_exists: command_exists (message)
 		local
-			l_message: ?WEL_COMMAND_EXEC
+			l_message: detachable WEL_COMMAND_EXEC
 			l_commands: like commands
 		do
 			l_commands := commands
@@ -762,7 +762,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_parent (a_parent: ?WEL_WINDOW)
+	set_parent (a_parent: detachable WEL_WINDOW)
 			-- Change the parent of the current window.
 		require
 			exists: exists
@@ -783,7 +783,7 @@ feature -- Element change
 			end
 		end
 
-	set_text (a_text: ?STRING_GENERAL)
+	set_text (a_text: detachable STRING_GENERAL)
 			-- Set the window text
 		require
 			exists: exists
@@ -915,7 +915,7 @@ feature -- Element change
 
 feature -- Basic operations
 
-	put_command (a_command: WEL_COMMAND; message: INTEGER; argument: ?ANY)
+	put_command (a_command: WEL_COMMAND; message: INTEGER; argument: detachable ANY)
 			-- Put `a_command' associated to `message'.
 		require
 			a_command_not_void: a_command /= Void
@@ -959,7 +959,7 @@ feature -- Basic operations
 			-- See class WEL_SW_CONSTANTS for `cmd_show' value.
 		require
 			exists: exists
-			parent_shown: {l_parent: like parent} parent implies l_parent.exists and l_parent.shown
+			parent_shown: attached parent as l_parent implies l_parent.exists and l_parent.shown
 		do
 			cwin_show_window (item, cmd_show)
 		end
@@ -1607,7 +1607,7 @@ feature {NONE} -- Messages
 			invalid_rect_not_void: invalid_rect /= Void
 			invalid_rect_exists: invalid_rect.exists
 		local
-			bk_brush: ?WEL_BRUSH
+			bk_brush: detachable WEL_BRUSH
 		do
 			bk_brush := background_brush
 			if bk_brush /= Void then
@@ -1647,7 +1647,7 @@ feature {WEL_WINDOW, WEL_DISPATCHER} -- Implementation
 
 feature {WEL_WINDOW} -- Implementation
 
-	internal_window_make (a_parent: ?WEL_WINDOW; a_name: ?STRING_GENERAL;
+	internal_window_make (a_parent: detachable WEL_WINDOW; a_name: detachable STRING_GENERAL;
 			a_style, a_x, a_y, a_w, a_h, an_id: INTEGER;
 			data: POINTER)
 			-- Create the window
@@ -1850,7 +1850,7 @@ feature {WEL_WINDOW} -- Implementation
 			a_parent_not_void: a_parent /= Void
 			a_parent_exists: a_parent.exists
 		local
-			l_parent_of_parent: ?WEL_WINDOW
+			l_parent_of_parent: detachable WEL_WINDOW
 			l_previous_child_parent: POINTER
 			l_failure: BOOLEAN
 		do
@@ -1903,7 +1903,7 @@ feature {WEL_ABSTRACT_DISPATCHER, WEL_WINDOW} -- Implementation
 		require
 			exists: exists
 		local
-			l_message: ?WEL_COMMAND_EXEC
+			l_message: detachable WEL_COMMAND_EXEC
 			l_commands: like commands
 		do
 			inspect msg

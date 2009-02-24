@@ -68,7 +68,7 @@ feature -- Access
 		deferred
 		end
 
-	next: ?ADDRINFO
+	next: detachable ADDRINFO
 			-- Pointer to the next structure in a linked list.
 			-- This is Void in the last addrinfo structure of a linked list
 		deferred

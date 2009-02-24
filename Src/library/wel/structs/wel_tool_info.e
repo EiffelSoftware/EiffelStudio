@@ -50,7 +50,7 @@ feature -- Access
 			Result := cwel_toolinfo_get_uflags (item)
 		end
 
-	window: ?WEL_WINDOW
+	window: detachable WEL_WINDOW
 			-- Window that contains the tool
 		do
 			Result := window_of_item (cwel_toolinfo_get_hwnd (item))
@@ -224,7 +224,7 @@ feature -- Measurement
 
 feature {NONE} -- Implementation
 
-	str_text: ?WEL_STRING
+	str_text: detachable WEL_STRING
 			-- C string to save `text'
 
 	main_args: WEL_MAIN_ARGUMENTS

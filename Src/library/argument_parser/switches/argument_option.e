@@ -91,7 +91,7 @@ feature -- Status Report
 
 feature {NONE} -- Implementation: Internal cache
 
-	internal_value: ?like value
+	internal_value: detachable like value
 			-- Cached version of `value'.
 			-- Note: Do not use directly!
 

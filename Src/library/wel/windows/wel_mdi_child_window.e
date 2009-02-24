@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	parent: ?WEL_MDI_FRAME_WINDOW
+	parent: detachable WEL_MDI_FRAME_WINDOW
 			-- Parent window
 
 feature -- Basic operations
@@ -68,13 +68,13 @@ feature -- Basic operations
 
 feature -- Element change
 
-	set_parent (a_parent: ?WEL_WINDOW)
+	set_parent (a_parent: detachable WEL_WINDOW)
 			-- Change parent of current window if possible.
 		local
 			l_prev_parent: POINTER
 		do
 				-- We do the object test because `parent' has been redefined to a WEL_MDI_FRAME_WINDOW.
-			if {l_parent: like parent} a_parent then
+			if attached {like parent} a_parent as l_parent then
 				parent := l_parent
 				l_prev_parent := {WEL_API}.set_parent (item, l_parent.item)
 			end
@@ -82,7 +82,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	internal_window_make (a_parent: ?WEL_MDI_FRAME_WINDOW; a_name: ?STRING_GENERAL;
+	internal_window_make (a_parent: detachable WEL_MDI_FRAME_WINDOW; a_name: detachable STRING_GENERAL;
 			a_style, a_x, a_y, a_w, a_h, an_id: INTEGER;
 			data: POINTER)
 			-- Create the window

@@ -374,7 +374,7 @@ feature {NONE} -- Implementation: Access
 	buffer: MANAGED_POINTER
 			-- Buffer to store/fetch data from `medium'
 
-	medium: ?ANY
+	medium: detachable ANY
 			-- Fake medium to avoid polymorphic attribute
 			-- access.
 

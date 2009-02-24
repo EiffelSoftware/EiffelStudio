@@ -38,7 +38,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_exec_name: STRING; args: ?LIST[STRING]; a_working_directory: like working_directory)
+	make (a_exec_name: STRING; args: detachable LIST[STRING]; a_working_directory: like working_directory)
 		do
 			setup_command (a_exec_name, args, a_working_directory)
 			create_child_process_manager
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 	make_with_command_line (cmd_line: STRING; a_working_directory: like working_directory)
 		local
 			l_exec_name: STRING
-			l_args: ?LIST [STRING]
+			l_args: detachable LIST [STRING]
 		do
 			l_args := separated_words (cmd_line)
 			if l_args.is_empty then
@@ -239,7 +239,7 @@ feature {PROCESS_IO_LISTENER_THREAD} -- Interprocess IO
 		local
 			l_cnt: INTEGER
 			l_left: INTEGER
-			l_str: ?STRING
+			l_str: detachable STRING
 			l_retried: BOOLEAN
 		do
 			if not l_retried and then not is_read_pipe_broken then
@@ -276,7 +276,7 @@ feature {PROCESS_IO_LISTENER_THREAD} -- Interprocess IO
 			output_handler_not_void: output_handler /= Void
 		local
 			l_output_handler: like output_handler
-			l_last_output: ?STRING
+			l_last_output: detachable STRING
 		do
 			child_process.read_output_stream (buffer_size)
 			l_last_output := child_process.last_output
@@ -299,7 +299,7 @@ feature {PROCESS_IO_LISTENER_THREAD} -- Interprocess IO
 			error_hander_not_void: error_handler /= Void
 		local
 			l_handler: like error_handler
-			l_last_error: ?STRING
+			l_last_error: detachable STRING
 		do
 			child_process.read_error_stream (buffer_size)
 			l_last_error := child_process.last_error
@@ -399,7 +399,7 @@ feature {NONE}  -- Implementation
 
 feature{NONE} -- Initialization
 
-	setup_command (a_exec_name: STRING; a_args: ?LIST[STRING]; a_working_directory: like working_directory)
+	setup_command (a_exec_name: STRING; a_args: detachable LIST[STRING]; a_working_directory: like working_directory)
 			-- Setup command line.
 		require
 			a_exec_name_not_void: a_exec_name /= Void
@@ -431,7 +431,7 @@ feature{NONE} -- Initialization
 			executable_not_void: executable /= Void
 			executable_not_empty: not executable.is_empty
 			arguments_set:
-					(a_args /= Void implies ({l_args: like arguments} arguments and then l_args.count = a_args.count)) and
+					(a_args /= Void implies (attached arguments as l_args and then l_args.count = a_args.count)) and
 					(a_args = Void implies arguments = Void)
 		end
 
@@ -450,9 +450,9 @@ feature {NONE} -- Implementation
 	executable: STRING
 			-- Program which will be launched
 
-	in_thread: ?PROCESS_INPUT_LISTENER_THREAD
-	out_thread: ?PROCESS_OUTPUT_LISTENER_THREAD
-	err_thread: ?PROCESS_ERROR_LISTENER_THREAD
+	in_thread: detachable PROCESS_INPUT_LISTENER_THREAD
+	out_thread: detachable PROCESS_OUTPUT_LISTENER_THREAD
+	err_thread: detachable PROCESS_ERROR_LISTENER_THREAD
 			-- Threads to listen to output and error from process
 
 	input_mutex: MUTEX

@@ -199,7 +199,7 @@ feature {NONE} -- Implementation
 		require
 			open: is_open
 		local
-			str: ?STRING
+			str: detachable STRING
 			l_socket: like main_socket
 		do
 			headers.wipe_out

@@ -97,7 +97,7 @@ feature -- Basic operation
 				l_tool_bar_row := Void
 				l_tool_bar_row ?= internal_box.item
 				check box_only_have_tool_bar_row: l_tool_bar_row /= Void end
-				if {lt_widget: EV_WIDGET} internal_dock_mediator.caller.tool_bar then
+				if attached {EV_WIDGET} internal_dock_mediator.caller.tool_bar as lt_widget then
 					l_tool_bar_row.start_drag (lt_widget)
 				else
 					check not_possible: False end
@@ -123,7 +123,7 @@ feature {NONE} -- Implementation functions.
 				l_tool_bar_row ?= internal_box.item
 				check l_tool_bar_row /= Void end
 
-				if {lt_widget: EV_WIDGET} internal_dock_mediator.caller.tool_bar then
+				if attached {EV_WIDGET} internal_dock_mediator.caller.tool_bar as lt_widget then
 					if not l_tool_bar_row.has (lt_widget)  then
 						if (l_tool_bar_row.has_screen_y (a_screen_y) and not internal_vertical)
 							or (l_tool_bar_row.has_screen_x (a_screen_x) and internal_vertical) then
@@ -241,7 +241,7 @@ feature {NONE} -- Implementation functions.
 				end
 			end
 			-- Maybe parent is floating tool bar zone
-			if {lt_widget: EV_WIDGET} internal_dock_mediator.caller.tool_bar then
+			if attached {EV_WIDGET} internal_dock_mediator.caller.tool_bar as lt_widget then
 				if lt_widget.parent /= Void then
 					check is_floating: internal_dock_mediator.caller.is_floating end
 					internal_dock_mediator.set_ignore_focus_out_actions (True)
@@ -253,10 +253,10 @@ feature {NONE} -- Implementation functions.
 			end
 
 		ensure
-			pruned: internal_dock_mediator.caller.row /= Void and {lt_widget_2: EV_WIDGET} internal_dock_mediator.caller.tool_bar
+			pruned: internal_dock_mediator.caller.row /= Void and attached {EV_WIDGET} internal_dock_mediator.caller.tool_bar as lt_widget_2
 			implies not internal_dock_mediator.caller.row.has (lt_widget_2)
 			parent_row_void: internal_dock_mediator.caller.row = Void
-			parent_void: {lt_widget_3: EV_WIDGET} internal_dock_mediator.caller.tool_bar implies lt_widget_3.parent = Void
+			parent_void: attached {EV_WIDGET} internal_dock_mediator.caller.tool_bar as lt_widget_3 implies lt_widget_3.parent = Void
 		end
 
 feature {NONE}  -- Implementation query
@@ -279,7 +279,7 @@ feature {NONE}  -- Implementation query
 			loop
 				l_tool_bar_row ?= internal_box.item
 				check l_tool_bar_row /= Void end
-				if {lt_widget: EV_WIDGET} internal_dock_mediator.caller.tool_bar then
+				if attached {EV_WIDGET} internal_dock_mediator.caller.tool_bar as lt_widget then
 					Result := l_tool_bar_row.has (lt_widget)
 				else
 					check not_possible: False end

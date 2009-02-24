@@ -46,7 +46,7 @@ feature -- Access
 
 	eiffel_file_edit: WEL_SINGLE_LINE_EDIT
 		local
-			l_edit: ?WEL_SINGLE_LINE_EDIT
+			l_edit: detachable WEL_SINGLE_LINE_EDIT
 		do
 			l_edit := internal_eiffel_file_edit
 				-- Per invariant
@@ -56,7 +56,7 @@ feature -- Access
 
 	h_file_edit: WEL_SINGLE_LINE_EDIT
 		local
-			l_edit: ?WEL_SINGLE_LINE_EDIT
+			l_edit: detachable WEL_SINGLE_LINE_EDIT
 		do
 			l_edit := internal_h_file_edit
 				-- Per invariant
@@ -66,7 +66,7 @@ feature -- Access
 
 	class_name_edit: WEL_SINGLE_LINE_EDIT
 		local
-			l_edit: ?WEL_SINGLE_LINE_EDIT
+			l_edit: detachable WEL_SINGLE_LINE_EDIT
 		do
 			l_edit := internal_class_name_edit
 				-- Per invariant
@@ -76,7 +76,7 @@ feature -- Access
 
 	translate_button: WEL_PUSH_BUTTON
 		local
-			l_button: ?WEL_PUSH_BUTTON
+			l_button: detachable WEL_PUSH_BUTTON
 		do
 			l_button := internal_translate_button
 				-- Per invariant
@@ -210,7 +210,7 @@ feature {NONE} -- Implementation
 			a_file_exists: a_file.exists
 			a_file_open: a_file.is_open_read
 		local
-			l_string: ?STRING
+			l_string: detachable STRING
 		do
 			if not a_file.end_of_file then
 				a_file.read_word
@@ -294,13 +294,13 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Internal data
 
-	internal_eiffel_file_edit: ?WEL_SINGLE_LINE_EDIT
+	internal_eiffel_file_edit: detachable WEL_SINGLE_LINE_EDIT
 
-	internal_h_file_edit: ?WEL_SINGLE_LINE_EDIT
+	internal_h_file_edit: detachable WEL_SINGLE_LINE_EDIT
 
-	internal_class_name_edit: ?WEL_SINGLE_LINE_EDIT
+	internal_class_name_edit: detachable WEL_SINGLE_LINE_EDIT
 
-	internal_translate_button: ?WEL_PUSH_BUTTON
+	internal_translate_button: detachable WEL_PUSH_BUTTON
 
 invariant
 	internal_eiffel_file_edit_attached: internal_eiffel_file_edit /= Void

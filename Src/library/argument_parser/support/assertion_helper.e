@@ -16,7 +16,7 @@ feature -- Array
 		require
 			a_array_attached: a_array /= Void
 		local
-			l_item: ?ANY
+			l_item: detachable ANY
 			l_count, i: INTEGER
 		do
 			Result := True
@@ -37,7 +37,7 @@ feature -- Array
 			a_array_attached: a_array /= Void
 			a_predicate_attached: a_predicate /= Void
 		local
-			l_item: ?ANY
+			l_item: detachable ANY
 			l_count, i: INTEGER
 		do
 			Result := True
@@ -61,10 +61,10 @@ feature -- Array
 		require
 			a_sequence_attached: a_sequence /= Void
 		local
-			l_item: ?ANY
-			l_cursor: ?CURSOR
+			l_item: detachable ANY
+			l_cursor: detachable CURSOR
 		do
-			if {l_cs1: CURSOR_STRUCTURE [ANY]} a_sequence then
+			if attached {CURSOR_STRUCTURE [ANY]} a_sequence as l_cs1 then
 				l_cursor := l_cs1.cursor
 			end
 			Result := True
@@ -73,7 +73,7 @@ feature -- Array
 				Result := l_item /= Void
 				a_sequence.forth
 			end
-			if {l_cs2: CURSOR_STRUCTURE [ANY]} a_sequence and then l_cursor /= Void then
+			if attached {CURSOR_STRUCTURE [ANY]} a_sequence as l_cs2 and then l_cursor /= Void then
 				l_cs2.go_to (l_cursor)
 			end
 		end
@@ -83,10 +83,10 @@ feature -- Array
 			a_sequence_attached: a_sequence /= Void
 			a_predicate_attached: a_predicate /= Void
 		local
-			l_item: ?ANY
-			l_cursor: ?CURSOR
+			l_item: detachable ANY
+			l_cursor: detachable CURSOR
 		do
-			if {l_cs1: CURSOR_STRUCTURE [ANY]} a_sequence then
+			if attached {CURSOR_STRUCTURE [ANY]} a_sequence as l_cs1 then
 				l_cursor := l_cs1.cursor
 			end
 			Result := True
@@ -98,7 +98,7 @@ feature -- Array
 					Result := False
 				end
 			end
-			if {l_cs2: CURSOR_STRUCTURE [ANY]} a_sequence and then l_cursor /= Void then
+			if attached {CURSOR_STRUCTURE [ANY]} a_sequence as l_cs2 and then l_cursor /= Void then
 				l_cs2.go_to (l_cursor)
 			end
 		end

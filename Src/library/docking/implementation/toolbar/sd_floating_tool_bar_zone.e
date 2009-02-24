@@ -102,12 +102,12 @@ feature -- Command
 		require
 			a_tool_bar_zone_not_void: a_tool_bar_zone /= Void
 			a_tool_bar_zone_horizontal: not a_tool_bar_zone.is_vertical
-			a_tool_bar_zone_parent_void: {lt_widget: EV_WIDGET} a_tool_bar_zone.tool_bar implies lt_widget.parent = Void
+			a_tool_bar_zone_parent_void: attached {EV_WIDGET} a_tool_bar_zone.tool_bar as lt_widget implies lt_widget.parent = Void
 			not_extended: content = Void
 		do
 			zone := a_tool_bar_zone
 			tool_bar := a_tool_bar_zone.tool_bar
-			if {lt_widget_2: EV_WIDGET} a_tool_bar_zone.tool_bar then
+			if attached {EV_WIDGET} a_tool_bar_zone.tool_bar as lt_widget_2 then
 				internal_padding_box.extend (lt_widget_2)
 			else
 				check not_possible: False end

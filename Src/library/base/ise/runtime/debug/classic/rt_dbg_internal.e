@@ -26,7 +26,7 @@ feature -- Object access
 			Result := field_count (obj)
 		end
 
-	frozen object_records (obj: ANY): ?ARRAYED_LIST [RT_DBG_VALUE_RECORD]
+	frozen object_records (obj: ANY): detachable ARRAYED_LIST [RT_DBG_VALUE_RECORD]
 			-- List of field records on `obj'
 		require
 			obj_attached: obj /= Void
@@ -42,7 +42,7 @@ feature -- Object access
 				until
 					i > cnb
 				loop
-					if {r: like object_record} object_record (i, obj) then
+					if attached {like object_record} object_record (i, obj) as r then
 						l_records.extend (r)
 					end
 					i := i + 1
@@ -79,7 +79,7 @@ feature -- Object access
 			end
 		end
 
-	frozen field_name_at (off: INTEGER; obj: ANY): ?STRING
+	frozen field_name_at (off: INTEGER; obj: ANY): detachable STRING
 			-- Field name at offset `off' on `obj'
 			--| note: heavy computing, for debug purpose only
 		require
@@ -93,7 +93,7 @@ feature -- Object access
 			end
 		end
 
-	frozen field_at (off: INTEGER; a_field_type: NATURAL_32; object: ANY): ?ANY
+	frozen field_at (off: INTEGER; a_field_type: NATURAL_32; object: ANY): detachable ANY
 			-- Object attached at offset `off' field of `object'
 			-- (directly or through a reference)
 		require
@@ -138,7 +138,7 @@ feature -- Object access
 			end
 		end
 
-	frozen stack_value_at (dep: INTEGER; a_loc_type: INTEGER; pos: INTEGER; a_rt_type: NATURAL_32): ?ANY
+	frozen stack_value_at (dep: INTEGER; a_loc_type: INTEGER; pos: INTEGER; a_rt_type: NATURAL_32): detachable ANY
 			-- Object attached at offset `off' field of `object'
 			-- (directly or through a reference)
 		require
@@ -177,7 +177,7 @@ feature -- Object access
 
 feature {NONE} -- Factory
 
-	frozen object_record (i: INTEGER; obj: ANY): ?RT_DBG_VALUE_RECORD
+	frozen object_record (i: INTEGER; obj: ANY): detachable RT_DBG_VALUE_RECORD
 		require
 			obj_attached: obj /= Void
 		local
@@ -205,9 +205,9 @@ feature {NONE} -- Factory
 			when Pointer_type then
 				create {RT_DBG_FIELD_RECORD [POINTER]} Result.make (obj, i, ft, pointer_field (i, obj))
 			when Reference_type then
-				create {RT_DBG_FIELD_RECORD [?ANY]} Result.make (obj, i, ft, field (i, obj))
+				create {RT_DBG_FIELD_RECORD [detachable ANY]} Result.make (obj, i, ft, field (i, obj))
 			when Expanded_type then
-				create {RT_DBG_FIELD_RECORD [?ANY]} Result.make (obj, i, ft, field (i, obj))
+				create {RT_DBG_FIELD_RECORD [detachable ANY]} Result.make (obj, i, ft, field (i, obj))
 			when Boolean_type then
 				create {RT_DBG_FIELD_RECORD [BOOLEAN]} Result.make (obj, i, ft, boolean_field (i, obj))
 			when real_32_type then
@@ -224,7 +224,7 @@ feature {NONE} -- Factory
 			end
 		end
 
-	frozen object_attribute_record (off: INTEGER; t: NATURAL_32; obj: ANY): ?RT_DBG_VALUE_RECORD
+	frozen object_attribute_record (off: INTEGER; t: NATURAL_32; obj: ANY): detachable RT_DBG_VALUE_RECORD
 			-- Record for attribute of type `t' at offset `o' on object `obj'
 		require
 			obj_attached: obj /= Void
@@ -271,7 +271,7 @@ feature {NONE} -- Factory
 			end
 		end
 
-	frozen object_local_record (dep: INTEGER; pos: INTEGER; t: NATURAL_32): ?RT_DBG_VALUE_RECORD
+	frozen object_local_record (dep: INTEGER; pos: INTEGER; t: NATURAL_32): detachable RT_DBG_VALUE_RECORD
 			-- Local or Result value record.
 		local
 			ft: INTEGER
@@ -466,7 +466,7 @@ feature -- Get
 			"return *(EIF_POINTER *) ei_field_at((long) $off, (uint32) $a_type, (EIF_REFERENCE) $object)"
 		end
 
-	frozen c_field_at (off: INTEGER; a_type: NATURAL_32; object: POINTER): ?ANY
+	frozen c_field_at (off: INTEGER; a_type: NATURAL_32; object: POINTER): detachable ANY
 			-- Object value referenced at `off' offset of `object'
 		external
 			"C inline use %"eif_internal.h%""
@@ -476,7 +476,7 @@ feature -- Get
 
 feature -- Change field
 
-	set_field_at (off: INTEGER; a_type: NATURAL_32; value: ?ANY; object: ANY)
+	set_field_at (off: INTEGER; a_type: NATURAL_32; value: detachable ANY; object: ANY)
 		require
 			object_attached: object /= Void
 		local
@@ -488,59 +488,59 @@ end
 			a_eif_type := eif_type (a_type)
 			inspect a_eif_type
 			when boolean_type then
-				if {bool: BOOLEAN} value then
+				if attached {BOOLEAN} value as bool then
 					c_set_boolean_field_at (off, bool, $object)
 				end
 			when character_8_type then
-				if {c8: CHARACTER_8} value then
+				if attached {CHARACTER_8} value as c8 then
 					c_set_character_8_field_at (off, c8, $object)
 				end
 			when character_32_type then
-				if {c32: CHARACTER_32} value then
+				if attached {CHARACTER_32} value as c32 then
 					c_set_character_32_field_at (off, c32, $object)
 				end
 			when natural_8_type then
-				if {n8: NATURAL_8} value then
+				if attached {NATURAL_8} value as n8 then
 					c_set_natural_8_field_at (off, n8, $object)
 				end
 			when natural_16_type then
-				if {n16: NATURAL_16} value then
+				if attached {NATURAL_16} value as n16 then
 					c_set_natural_16_field_at (off, n16, $object)
 				end
 			when natural_32_type then
-				if {n32: NATURAL_32} value then
+				if attached {NATURAL_32} value as n32 then
 					c_set_natural_32_field_at (off, n32, $object)
 				end
 			when natural_64_type then
-				if {n64: NATURAL_64} value then
+				if attached {NATURAL_64} value as n64 then
 					c_set_natural_64_field_at (off, n64, $object)
 				end
 			when integer_8_type then
-				if {i8: INTEGER_8} value then
+				if attached {INTEGER_8} value as i8 then
 					c_set_integer_8_field_at (off, i8, $object)
 				end
 			when integer_16_type then
-				if {i16: INTEGER_16} value then
+				if attached {INTEGER_16} value as i16 then
 					c_set_integer_16_field_at (off, i16, $object)
 				end
 			when integer_32_type then
-				if {i32: INTEGER_32} value then
+				if attached {INTEGER_32} value as i32 then
 					c_set_integer_32_field_at (off, i32, $object)
 				end
 			when integer_64_type then
-				if {i64: INTEGER_64} value then
+				if attached {INTEGER_64} value as i64 then
 					c_set_integer_64_field_at (off, i64, $object)
 				end
 			when real_32_type then
-				if {r32: REAL_32} value then
+				if attached {REAL_32} value as r32 then
 					c_set_real_32_field_at (off, r32, $object)
 				end
 			when real_64_type then
-				if {r64: REAL_64} value then
+				if attached {REAL_64} value as r64 then
 					c_set_real_64_field_at (off, r64, $object)
 				end
 			when pointer_type then
-				if {ptr: POINTER} value then
+				if attached {POINTER} value as ptr then
 					c_set_pointer_field_at (off, ptr, $object)
 				end
 			when reference_type then
@@ -656,7 +656,7 @@ end
 
 feature -- Access local
 
-	frozen c_stack_value_at (dep: INTEGER; a_loc_type: INTEGER; pos: INTEGER; a_rt_type: NATURAL_32): ?ANY
+	frozen c_stack_value_at (dep: INTEGER; a_loc_type: INTEGER; pos: INTEGER; a_rt_type: NATURAL_32): detachable ANY
 			-- Object value referenced at `off' offset of `object'
 		external
 			"C inline use %"eif_debug.h%""
@@ -681,7 +681,7 @@ feature -- Change local
 	rt_DLT_RESULT: INTEGER = 2
 			-- DLT=DebugLocalType, the type is the Result of the current feature
 
-	set_stack_value_at (dep: INTEGER; a_loc_type: INTEGER; pos: INTEGER; a_rt_type: NATURAL_32; value: ?ANY): INTEGER
+	set_stack_value_at (dep: INTEGER; a_loc_type: INTEGER; pos: INTEGER; a_rt_type: NATURAL_32; value: detachable ANY): INTEGER
 			-- Set stack value at position `pos' on stack of depth `dep' with `value'
 			--| Result is 0 is succeed, otherwise Result /= 0 implies error occurred.
 		require
@@ -700,59 +700,59 @@ feature -- Change local
 			a_eif_type := eif_type (a_rt_type)
 			inspect a_eif_type
 			when boolean_type then
-				if {bool: BOOLEAN} value then
+				if attached {BOOLEAN} value as bool then
 					Result := c_set_boolean_stack_value (dep, a_loc_type, pos, bool)
 				end
 			when character_8_type then
-				if {c8: CHARACTER_8} value then
+				if attached {CHARACTER_8} value as c8 then
 					Result := c_set_character_8_stack_value (dep, a_loc_type, pos, c8)
 				end
 			when character_32_type then
-				if {c32: CHARACTER_32} value then
+				if attached {CHARACTER_32} value as c32 then
 					Result := c_set_character_32_stack_value (dep, a_loc_type, pos, c32)
 				end
 			when natural_8_type then
-				if {n8: NATURAL_8} value then
+				if attached {NATURAL_8} value as n8 then
 					Result := c_set_natural_8_stack_value (dep, a_loc_type, pos, n8)
 				end
 			when natural_16_type then
-				if {n16: NATURAL_16} value then
+				if attached {NATURAL_16} value as n16 then
 					Result := c_set_natural_16_stack_value (dep, a_loc_type, pos, n16)
 				end
 			when natural_32_type then
-				if {n32: NATURAL_32} value then
+				if attached {NATURAL_32} value as n32 then
 					Result := c_set_natural_32_stack_value (dep, a_loc_type, pos, n32)
 				end
 			when natural_64_type then
-				if {n64: NATURAL_64} value then
+				if attached {NATURAL_64} value as n64 then
 					Result := c_set_natural_64_stack_value (dep, a_loc_type, pos, n64)
 				end
 			when integer_8_type then
-				if {i8: INTEGER_8} value then
+				if attached {INTEGER_8} value as i8 then
 					Result := c_set_integer_8_stack_value (dep, a_loc_type, pos, i8)
 				end
 			when integer_16_type then
-				if {i16: INTEGER_16} value then
+				if attached {INTEGER_16} value as i16 then
 					Result := c_set_integer_16_stack_value (dep, a_loc_type, pos, i16)
 				end
 			when integer_32_type then
-				if {i32: INTEGER_32} value then
+				if attached {INTEGER_32} value as i32 then
 					Result := c_set_integer_32_stack_value (dep, a_loc_type, pos, i32)
 				end
 			when integer_64_type then
-				if {i64: INTEGER_64} value then
+				if attached {INTEGER_64} value as i64 then
 					Result := c_set_integer_64_stack_value (dep, a_loc_type, pos, i64)
 				end
 			when real_32_type then
-				if {r32: REAL_32} value then
+				if attached {REAL_32} value as r32 then
 					Result := c_set_real_32_stack_value (dep, a_loc_type, pos, r32)
 				end
 			when real_64_type then
-				if {r64: REAL_64} value then
+				if attached {REAL_64} value as r64 then
 					Result := c_set_real_64_stack_value (dep, a_loc_type, pos, r64)
 				end
 			when pointer_type then
-				if {ptr: POINTER} value then
+				if attached {POINTER} value as ptr then
 					Result := c_set_pointer_stack_value (dep, a_loc_type, pos, ptr)
 				end
 			when reference_type then
@@ -767,7 +767,7 @@ feature -- Change local
 			debug ("RT_DBG_INTERNAL")
 				print ("set_stack_value_at (dep=" + dep.out + ", loc_type=" + a_loc_type.out + ", pos=" + pos.out  +", ...) -> " + Result.out + " %N")
 				print ("set_stack_value_at: check modification -> ")
-				if {a: ANY} stack_value_at (dep, a_loc_type, pos, a_rt_type) then
+				if attached {ANY} stack_value_at (dep, a_loc_type, pos, a_rt_type) as a then
 					print (a.generating_type + ": " + a.out + "%N")
 				else
 					print (" Void %N" )
@@ -1022,7 +1022,7 @@ feature -- Testing
 				print (s)
 --				s.wipe_out
 				s.append (" -> ")
-				if {a: ANY} stack_value_at (dep, rt_DLT_LOCALVAR, loc_pos, a_rt_type) then
+				if attached {ANY} stack_value_at (dep, rt_DLT_LOCALVAR, loc_pos, a_rt_type) as a then
 					s.append (a.generating_type + "=" + a.out)
 				else
 					s.append ("Void object")

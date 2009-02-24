@@ -161,7 +161,7 @@ feature -- Command
 			-- <Precursor>
 		do
 			tool_bar.compute_minimum_size
-			if {lt_widget: EV_WIDGET} tool_bar then
+			if attached {EV_WIDGET} tool_bar as lt_widget then
 				check has: has_fixed (lt_widget) end
 
 				set_minimum_size (tool_bar.minimum_width, tool_bar.minimum_height)
@@ -387,7 +387,7 @@ feature -- Query
 	expose_actions: EV_GEOMETRY_ACTION_SEQUENCE
 			-- Expose actions.
 		do
-			if {lt_tool_bar: SD_TOOL_BAR} tool_bar then
+			if attached {SD_TOOL_BAR} tool_bar as lt_tool_bar then
 				Result := lt_tool_bar.expose_actions
 			else
 				check not_possible: False end
@@ -435,7 +435,7 @@ feature {SD_TOOL_BAR_DRAWER_I, SD_TOOL_BAR_ZONE}
 	draw_pixmap (a_x, a_y: INTEGER; a_pixmap: EV_PIXMAP)
 			-- Draw `a_pixmap' at `a_x', `a_y'.
 		do
-			if {lt_tool_bar: SD_TOOL_BAR} tool_bar then
+			if attached {SD_TOOL_BAR} tool_bar as lt_tool_bar then
 				lt_tool_bar.draw_pixmap (a_x, a_y, a_pixmap)
 			else
 				check not_possible: False end

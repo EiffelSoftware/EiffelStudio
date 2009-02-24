@@ -44,7 +44,7 @@ feature -- Initialization
 
 feature -- Access
 
-	find_successor (source, input_doc: INTEGER): ?STATE_OF_DFA
+	find_successor (source, input_doc: INTEGER): detachable STATE_OF_DFA
 			-- Successor of `source' for `input_doc';
 			-- void if no successor
 		require else

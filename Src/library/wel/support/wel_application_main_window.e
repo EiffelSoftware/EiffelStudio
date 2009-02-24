@@ -10,13 +10,13 @@ class
 
 feature -- Access
 
-	application_main_window: ?WEL_COMPOSITE_WINDOW
+	application_main_window: detachable WEL_COMPOSITE_WINDOW
 			-- Application's main window
 		do
 			Result := application_main_window_cell.item
 		end
 
-	application: ?WEL_APPLICATION
+	application: detachable WEL_APPLICATION
 			-- Current application
 		do
 			Result := application_cell.item
@@ -59,7 +59,7 @@ feature {WEL_APPLICATION} -- Element change
 
 feature {NONE} -- Implementation
 
-	application_main_window_cell: CELL [?WEL_COMPOSITE_WINDOW]
+	application_main_window_cell: CELL [detachable WEL_COMPOSITE_WINDOW]
 			-- Application's main window cell
 		note
 			once_status: global
@@ -69,7 +69,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	application_cell: CELL [?WEL_APPLICATION]
+	application_cell: CELL [detachable WEL_APPLICATION]
 			-- Application cell
 		note
 			once_status: global

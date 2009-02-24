@@ -21,16 +21,16 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	resource: ?DATA_RESOURCE
+	resource: detachable DATA_RESOURCE
 			-- Created data resource
 
-	service: ?STRING
+	service: detachable STRING
 			-- Requested service
 
-	address: ?STRING
+	address: detachable STRING
 			-- Address (without service part)
 
-	url: ?URL
+	url: detachable URL
 			-- URL representation of the address
 
 feature -- Status report
@@ -137,9 +137,9 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	url_function: ?FUNCTION [DATA_RESOURCE_FACTORY_IMPL, TUPLE, URL]
+	url_function: detachable FUNCTION [DATA_RESOURCE_FACTORY_IMPL, TUPLE, URL]
 
-	resource_function: ?FUNCTION [DATA_RESOURCE_FACTORY_IMPL, TUPLE, DATA_RESOURCE]
+	resource_function: detachable FUNCTION [DATA_RESOURCE_FACTORY_IMPL, TUPLE, DATA_RESOURCE]
 
 	lookup_service_id: INTEGER
 			-- Lookup ID for service.
@@ -207,7 +207,7 @@ feature {NONE} -- Implementation (Factory setup)
 	create_file_resource: FILE_PROTOCOL
 			-- Create file service.
 		local
-			u: ?FILE_URL
+			u: detachable FILE_URL
 		do
 			u ?= url
 			check
@@ -232,7 +232,7 @@ feature {NONE} -- Implementation (Factory setup)
 	create_http_resource: HTTP_PROTOCOL
 			-- Create HTTP service.
 		local
-			u: ?HTTP_URL
+			u: detachable HTTP_URL
 		do
 			u ?= url
 			check
@@ -257,7 +257,7 @@ feature {NONE} -- Implementation (Factory setup)
 	create_ftp_resource: FTP_PROTOCOL
 			-- Create FTP service.
 		local
-			u: ?FTP_URL
+			u: detachable FTP_URL
 		do
 			u ?= url
 			check

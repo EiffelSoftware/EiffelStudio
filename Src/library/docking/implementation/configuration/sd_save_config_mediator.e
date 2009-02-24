@@ -255,7 +255,7 @@ feature {NONE} -- Implementation
 					l_zone.save_content_title (a_config_data)
 					a_config_data.set_state (l_zone.content.state.generating_type)
 					a_config_data.set_direction (l_zone.content.state.direction)
-					if {lt_widget: EV_WIDGET} l_zone then
+					if attached {EV_WIDGET} l_zone as lt_widget then
 						a_config_data.set_visible (lt_widget.is_displayed)
 					else
 						check not_possible: False end
@@ -329,7 +329,7 @@ feature {NONE} -- Implementation
 			l_temp.set_parent (a_config_data)
 			save_inner_container_data (a_split_area.second, l_temp)
 			if a_split_area.full then
-				if {lt_split: EV_SPLIT_AREA} a_split_area then
+				if attached {EV_SPLIT_AREA} a_split_area as lt_split then
 					lt_split.update_proportion
 					a_config_data.set_split_proportion (lt_split.proportion)
 				else

@@ -83,7 +83,7 @@ feature -- Redefine
 			l_docking_state: SD_DOCKING_STATE
 		do
 			content.set_visible (True)
-			if {lt_widget: EV_WIDGET} a_target_zone then
+			if attached {EV_WIDGET} a_target_zone as lt_widget then
 				internal_docking_manager.command.lock_update (lt_widget, False)
 			else
 				check not_possible: False end
@@ -130,7 +130,7 @@ feature -- Redefine
 			if not l_platform.is_windows then
 				-- Similar to {SD_DOCKING_STATE}.show, we have to do something special for GTK.
 				-- See bug#14105
-				if {l_floating_zone: !SD_FLOATING_ZONE} l_floating_state.zone then
+				if attached {attached SD_FLOATING_ZONE} l_floating_state.zone as l_floating_zone then
 					create l_env
 					l_env.application.do_once_on_idle (agent set_size_in_idle (last_floating_width, last_floating_height, l_floating_zone))
 				end
@@ -224,7 +224,7 @@ feature -- Redefine
 				l_new_zone := content.state.zone
 
 				if l_new_zone /= Void then
-					if {lt_widget: EV_WIDGET} l_new_zone then
+					if attached {EV_WIDGET} l_new_zone as lt_widget then
 						if lt_widget.is_displayed then
 							call_show_actions
 						end
@@ -283,7 +283,7 @@ feature -- Contract support
 
 feature {NONE} -- Implementation
 
-	set_size_in_idle (a_width, a_height: INTEGER; a_zone: !SD_FLOATING_ZONE)
+	set_size_in_idle (a_width, a_height: INTEGER; a_zone: attached SD_FLOATING_ZONE)
 			-- Set `a_zone''s size with `a_width' and `a_height'
 		require
 			valid: a_width >= 0 and a_height >= 0

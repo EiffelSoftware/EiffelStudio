@@ -70,7 +70,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 
-	call (event_data: ?EVENT_DATA)
+	call (event_data: detachable EVENT_DATA)
 			-- Call each procedure in order unless `is_blocked'.
 			-- If `is_paused' delay execution until `resume'.
 			-- Stop at current point in list on `abort'.
@@ -151,7 +151,7 @@ feature -- Basic operations
 
 feature -- Access
 
-	name: ?STRING
+	name: detachable STRING
 			-- Textual description.
 		local
 			i: like name_internal
@@ -169,7 +169,7 @@ feature -- Access
 			-- Useful for introspection and use in like statements.
 		obsolete "Not implemented. To be removed"
 		local
-			r: ?EVENT_DATA
+			r: detachable EVENT_DATA
 		do
 			r := dummy_event_data_internal
 			if r = Void then
@@ -179,7 +179,7 @@ feature -- Access
 			Result := r
 		end
 
-	event_data_names: ?ARRAY [STRING]
+	event_data_names: detachable ARRAY [STRING]
 			-- Textual description of each event datum.
 		obsolete "Not implemented. To be removed"
 		local
@@ -398,10 +398,10 @@ feature {NONE} -- Implementation
 			Result := r
 		end
 
-	is_aborted_stack_internal: ?like is_aborted_stack
+	is_aborted_stack_internal: detachable like is_aborted_stack
 		-- Internal storage for `is_aborted_stack'.
 
-	call_buffer: LINKED_QUEUE [?EVENT_DATA]
+	call_buffer: LINKED_QUEUE [detachable EVENT_DATA]
 			-- Holds calls made while `is_paused'
 			-- to be executed on `resume'.
 		local
@@ -415,22 +415,22 @@ feature {NONE} -- Implementation
 			Result := r
 		end
 
-	call_buffer_internal: ?like call_buffer
+	call_buffer_internal: detachable like call_buffer
 			-- Internal storage for `call_buffer'.
 
-	name_internal: ?STRING
+	name_internal: detachable STRING
 			-- See name.
 
-	event_data_names_internal: ?ARRAY [STRING]
+	event_data_names_internal: detachable ARRAY [STRING]
 			-- See event_data_names.
 
-	dummy_event_data_internal: ?EVENT_DATA
+	dummy_event_data_internal: detachable EVENT_DATA
 			-- See dummy_event_data.
 
 	kamikazes: ARRAYED_LIST [like item]
 			-- Used by `prune_when_called'.
 		local
-			r: ?ARRAYED_LIST [like item]
+			r: detachable ARRAYED_LIST [like item]
 		do
 			r := kamikazes_internal
 			if r = Void then
@@ -440,13 +440,13 @@ feature {NONE} -- Implementation
 			Result := r
 		end
 
-	kamikazes_internal: ?like kamikazes
+	kamikazes_internal: detachable like kamikazes
 			-- Internal storage for `kamikazes'.
 
-	not_empty_actions_internal: ?like not_empty_actions
+	not_empty_actions_internal: detachable like not_empty_actions
 			-- Internal storage for `not_empty_actions'.
 
-	empty_actions_internal: ?like empty_actions
+	empty_actions_internal: detachable like empty_actions
 			-- Internal storage for `empty_actions'.
 
 feature -- Obsolete

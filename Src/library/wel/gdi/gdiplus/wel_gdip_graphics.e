@@ -107,7 +107,7 @@ feature -- Command
 			draw_image_with_src_rect_dest_rect_unit_attributes (a_image, a_dest_rect, a_src_rect, {WEL_GDIP_UNIT}.unitpixel, Void)
 		end
 
-	draw_image_with_src_rect_dest_rect_unit_attributes (a_image: WEL_GDIP_IMAGE; a_dest_rect, a_src_rect: WEL_RECT; a_unit: INTEGER; a_image_attributes: ?WEL_GDIP_IMAGE_ATTRIBUTES)
+	draw_image_with_src_rect_dest_rect_unit_attributes (a_image: WEL_GDIP_IMAGE; a_dest_rect, a_src_rect: WEL_RECT; a_unit: INTEGER; a_image_attributes: detachable WEL_GDIP_IMAGE_ATTRIBUTES)
 			-- Draw `a_image' with arguments.
 		require
 			not_void: a_image /= Void

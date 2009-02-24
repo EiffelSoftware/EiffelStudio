@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item (object: POINTER): ?JAVA_OBJECT
+	item (object: POINTER): detachable JAVA_OBJECT
 			-- find a Eiffel proxy for an Java object
 		require
 			object_not_void: object /= default_pointer
@@ -36,7 +36,7 @@ feature -- Element change
 			object_not_void: object /= Void
 			object_alive: object.exists
 		local
-			it: ?JAVA_OBJECT
+			it: detachable JAVA_OBJECT
 			ex: EXCEPTIONS
 		do
 			it := table.item (object.java_object_id)

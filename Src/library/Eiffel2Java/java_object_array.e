@@ -25,7 +25,7 @@ feature -- Initialization
 			element_ok: element_name /= Void
 			element_exists: jni.find_class (element_name) /= Void
 		local
-			element_type: ?JAVA_CLASS
+			element_type: detachable JAVA_CLASS
 			l_jarray: like jarray
 		do
 			element_type := jni.find_class (element_name)
@@ -37,7 +37,7 @@ feature -- Initialization
 
 feature -- Access
 
-	item (index: INTEGER): ?JAVA_OBJECT
+	item (index: INTEGER): detachable JAVA_OBJECT
 			-- object at index-th position
 		require
 			valid_index: valid_index (index)

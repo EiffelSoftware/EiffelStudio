@@ -28,14 +28,14 @@ feature {NONE} -- Initialization
 			a_arguments_contains_attached_items:
 				a_arguments.for_all (agent (ia_item: READABLE_STRING_GENERAL): BOOLEAN
 					local
-						l_item: ?READABLE_STRING_GENERAL
+						l_item: detachable READABLE_STRING_GENERAL
 					do
 						l_item := ia_item
 						Result := l_item /= Void
 					end)
 		local
 			l_args: ARRAY [STRING]
-			l_arg: ?READABLE_STRING_GENERAL
+			l_arg: detachable READABLE_STRING_GENERAL
 			i: INTEGER
 		do
 			create l_args.make (1, a_arguments.count)
@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 			a_arguments_contains_attached_items:
 				a_arguments.for_all (agent (ia_item: READABLE_STRING_GENERAL): BOOLEAN
 					local
-						l_item: ?READABLE_STRING_GENERAL
+						l_item: detachable READABLE_STRING_GENERAL
 					do
 						l_item := ia_item
 						Result := l_item /= Void

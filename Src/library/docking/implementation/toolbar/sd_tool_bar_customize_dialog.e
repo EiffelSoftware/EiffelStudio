@@ -183,10 +183,10 @@ feature -- Result
 	veto_pebble_function (a_stone: ANY): BOOLEAN
 			-- Veto pebble function
 		do
-			if {an_item: SD_CUSTOMIZABLE_LIST_ITEM} a_stone then
-				if {l_separator: SD_TOOL_BAR_SEPARATOR} an_item.data then
+			if attached {SD_CUSTOMIZABLE_LIST_ITEM} a_stone as an_item then
+				if attached {SD_TOOL_BAR_SEPARATOR} an_item.data as l_separator then
 					Result := True
-				elseif {l_tool_bar_item: SD_TOOL_BAR_ITEM} an_item.data then
+				elseif attached {SD_TOOL_BAR_ITEM} an_item.data as l_tool_bar_item then
 					Result := all_items.has (l_tool_bar_item)
 				end
 			end

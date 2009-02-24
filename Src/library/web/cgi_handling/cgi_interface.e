@@ -126,7 +126,7 @@ feature {CGI_FORMS}-- Access
 	Input_data: STRING
 			-- Data sent by the server.
 		local
-			l_result: ?STRING
+			l_result: detachable STRING
 		once
 				-- Default method is "GET".
 			if Request_method.is_equal ("POST") then
@@ -164,7 +164,7 @@ feature {CGI_FORMS}-- Access
 			vl: LINKED_LIST [STRING]
 		do
 				-- Is there already a value for `name'?
-			if form_data.has (name) and then {l_list: LINKED_LIST [STRING]} form_data.item (name) then
+			if form_data.has (name) and then attached {LINKED_LIST [STRING]} form_data.item (name) as l_list then
 				l_list.extend (val)
 				l_list.start
 			else

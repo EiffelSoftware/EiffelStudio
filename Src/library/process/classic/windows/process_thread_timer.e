@@ -92,7 +92,7 @@ feature {NONE} -- Implementation
 		local
 			l_sleep_time: INTEGER_64
 		do
-			if {l_prc_imp: PROCESS_IMP} process_launcher then
+			if attached {PROCESS_IMP} process_launcher as l_prc_imp then
 				from
 					l_sleep_time := sleep_time.to_integer_64 * 1_000_000
 				until

@@ -297,7 +297,7 @@ feature -- Query
 				until
 					l_items.after
 				loop
-					if {l_item: like item_type} l_items.item then
+					if attached {like item_type} l_items.item as l_item then
 						Result.extend (l_item)
 					else
 						-- FIXIT: Maybe we should have SD_MENU_CONTENT? However, SD_MENU_BAR is not complete now

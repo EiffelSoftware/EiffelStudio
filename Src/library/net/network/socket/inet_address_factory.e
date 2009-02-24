@@ -28,7 +28,7 @@ feature
 			--
 		local
 			localhostname: STRING
-			l_result: ?INET_ADDRESS
+			l_result: detachable INET_ADDRESS
 		do
 			localhostname := impl.local_host_name
 			l_result := create_from_name (localhostname)
@@ -38,10 +38,10 @@ feature
 			create_localhost_attached: Result /= Void
 		end
 
-	create_from_name (hostname: STRING): ?INET_ADDRESS
+	create_from_name (hostname: STRING): detachable INET_ADDRESS
 			--
 		local
-			r: ?ARRAY [INET_ADDRESS]
+			r: detachable ARRAY [INET_ADDRESS]
 		do
 			r := get_all_by_name (hostname)
 			if r /= Void and then not r.is_empty then
@@ -49,12 +49,12 @@ feature
 			end
 		end
 
-	create_from_address (address: ARRAY [NATURAL_8]): ?INET_ADDRESS
+	create_from_address (address: ARRAY [NATURAL_8]): detachable INET_ADDRESS
 			--
 		require
 			valid_address: address /= Void
 		local
-			new_addr: ?ARRAY [NATURAL_8]
+			new_addr: detachable ARRAY [NATURAL_8]
 		do
 		    if address.count = {INET4_ADDRESS}.INADDRSZ then
 				create {INET4_ADDRESS} Result.make_from_host_and_address (Void, address)
@@ -68,7 +68,7 @@ feature
 			end
 		end
 
-	create_from_sockaddr (sockaddr: POINTER): ?INET_ADDRESS
+	create_from_sockaddr (sockaddr: POINTER): detachable INET_ADDRESS
 			--
 		require
 			valid_sockaddr: sockaddr /= default_pointer
@@ -99,14 +99,14 @@ feature {NONE} -- Implementation
 
 	INT16SZ: INTEGER = 2
 
-    get_all_by_name (a_host: STRING): ?ARRAY[INET_ADDRESS]
+    get_all_by_name (a_host: STRING): detachable ARRAY[INET_ADDRESS]
     	local
     		ipv6_expected: BOOLEAN
     		host: STRING
-    		addr_array: ?ARRAY [NATURAL_8]
+    		addr_array: detachable ARRAY [NATURAL_8]
     		addr: INET_ADDRESS
     		numeric_zone: INTEGER
-    		iface_name: ?STRING
+    		iface_name: detachable STRING
     		pos: INTEGER
     		failed: BOOLEAN
 		do
@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-    text_to_numeric_format_v4 (src: STRING): ?ARRAY [NATURAL_8]
+    text_to_numeric_format_v4 (src: STRING): detachable ARRAY [NATURAL_8]
     	require
     		valid_src: src /= Void
     	local
@@ -311,7 +311,7 @@ feature {NONE} -- Implementation
 			end
     	end
 
-    text_to_numeric_format_v6 (src: STRING): ?ARRAY [NATURAL_8]
+    text_to_numeric_format_v6 (src: STRING): detachable ARRAY [NATURAL_8]
     	require
     		valid_src: src /= Void
     	local
@@ -322,9 +322,9 @@ feature {NONE} -- Implementation
     		val: INTEGER
     		ch: CHARACTER
     		ia4: STRING
-    		v4addr: ?ARRAY [NATURAL_8]
+    		v4addr: detachable ARRAY [NATURAL_8]
     		done: BOOLEAN
-    		new_result: ?ARRAY [NATURAL_8]
+    		new_result: detachable ARRAY [NATURAL_8]
     	do
     		if src.count >= 2 then
     			length := src.count
@@ -463,7 +463,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	convert_from_ipv4_mappedd_address (addr: ARRAY [NATURAL_8]): ?ARRAY [NATURAL_8]
+	convert_from_ipv4_mappedd_address (addr: ARRAY [NATURAL_8]): detachable ARRAY [NATURAL_8]
 		local
 			i: INTEGER
 		do
@@ -556,9 +556,9 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	get_all_by_name_0 (host: STRING): ?ARRAY[INET_ADDRESS]
+	get_all_by_name_0 (host: STRING): detachable ARRAY[INET_ADDRESS]
 		local
-			ai: ?ADDRINFO
+			ai: detachable ADDRINFO
 			ia: INET_ADDRESS
 		do
 			ai := getaddrinfo(host)
@@ -586,7 +586,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	getaddrinfo (host: STRING): ?ADDRINFO
+	getaddrinfo (host: STRING): detachable ADDRINFO
 		local
 			ext: C_STRING
 			p: POINTER

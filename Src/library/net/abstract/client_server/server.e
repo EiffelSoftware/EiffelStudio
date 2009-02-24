@@ -17,10 +17,10 @@ feature -- Access
 	in: SOCKET;
 			-- Listen socket
 
-	outflow: ?like in;
+	outflow: detachable like in;
 			-- Service socket
 
-	received: ?ANY;
+	received: detachable ANY;
 			-- Last message from socket
 
 	execute

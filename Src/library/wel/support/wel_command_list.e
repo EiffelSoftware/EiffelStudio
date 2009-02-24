@@ -30,7 +30,7 @@ feature -- Element change
 			extend (exec)
 		end
 
-	remove_command (command: WEL_COMMAND; argument: ?ANY)
+	remove_command (command: WEL_COMMAND; argument: detachable ANY)
 			-- Remove all `command' with `argument' from the list of commands.
 		require
 			command_not_void: command /= Void
@@ -51,7 +51,7 @@ feature -- Element change
 
 feature -- Execution
 
-	execute (argument: ?ANY)
+	execute (argument: detachable ANY)
 			-- Execute list of commands
 		do
 			from

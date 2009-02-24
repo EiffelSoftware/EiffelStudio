@@ -53,7 +53,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	user_tree_view_item: ?WEL_TREE_VIEW_ITEM
+	user_tree_view_item: detachable WEL_TREE_VIEW_ITEM
 			-- The tree-item given by the user.
 
 feature -- Element change

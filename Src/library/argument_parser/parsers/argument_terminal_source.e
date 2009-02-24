@@ -26,7 +26,7 @@ feature -- Access
 	application_base: STRING
 			-- <Precursor>
 		local
-			l_result: ?STRING
+			l_result: detachable STRING
 			l_path: STRING
 			i: INTEGER
 		once
@@ -47,7 +47,7 @@ feature -- Access
 			-- <Precursor>
 		local
 			l_args: like argument_array
-			l_arg: ?STRING
+			l_arg: detachable STRING
 			l_count: INTEGER
 			i: INTEGER
 		once

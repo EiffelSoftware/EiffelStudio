@@ -14,11 +14,11 @@ deferred class NDFA inherit
 
 feature -- Access
 
-	dfa: ?FIXED_DFA;
+	dfa: detachable FIXED_DFA;
 			-- DFA built by routine construct_dfa,
 			-- which recognizes the same language.
 
-	find_successors (source, input_doc: INTEGER): ?LINKED_LIST [INTEGER]
+	find_successors (source, input_doc: INTEGER): detachable LINKED_LIST [INTEGER]
 			-- Successors of `source' on `input_doc';
 			-- Void if no successor
 		require
@@ -27,7 +27,7 @@ feature -- Access
 		deferred
 		end;
 
-	find_e_successors (source: INTEGER): ?LINKED_LIST [INTEGER]
+	find_e_successors (source: INTEGER): detachable LINKED_LIST [INTEGER]
 			-- Epsilon successors of source.
 			-- Void if no successor.
 		require
@@ -92,8 +92,8 @@ feature -- Transformation
 		local
 			dstates: LINKED_DFA
 			state: STATE_OF_DFA
-			state_memory: ?STATE_OF_DFA
-			set, e_set: ?FIXED_INTEGER_SET
+			state_memory: detachable STATE_OF_DFA
+			set, e_set: detachable FIXED_INTEGER_SET
 			old_move, current_set: FIXED_INTEGER_SET
 			input_doc, old_index: INTEGER
 			l_dfa: like dfa
@@ -159,7 +159,7 @@ feature -- Transformation
 
 feature {NONE} -- Implementation
 
-	sets_list: ?TWO_WAY_LIST [FIXED_INTEGER_SET];
+	sets_list: detachable TWO_WAY_LIST [FIXED_INTEGER_SET];
 			-- Sets used in construct_dfa:
 			-- Each dfa state is associated with a FIXED_INTEGER_SET
 			-- of NDFA states
@@ -170,7 +170,7 @@ feature {NONE} -- Implementation
 	new_number: INTEGER;
 			-- Used to search a set in sets_list
 
-	set_tree: ?FIXED_TREE [INTEGER];
+	set_tree: detachable FIXED_TREE [INTEGER];
 			-- Used to search a set in sets_list:
 			-- This tree is built by "search_in_tree" and
 			-- contains the same informations as sets_list,
@@ -179,11 +179,11 @@ feature {NONE} -- Implementation
 	set_position: INTEGER;
 			-- Position of the last searched set in sets_list
 
-	closures: ?ARRAY [FIXED_INTEGER_SET];
+	closures: detachable ARRAY [FIXED_INTEGER_SET];
 			-- Each element of this array represents the
 			-- epsilon closure of one NDFA state
 
-	epsilon_closure (initial_set: FIXED_INTEGER_SET): ?FIXED_INTEGER_SET
+	epsilon_closure (initial_set: FIXED_INTEGER_SET): detachable FIXED_INTEGER_SET
 			-- Epsilon-closure of initial_set:
 			-- set of NDFA states
 			-- reachable from some NDFA states in initial_set
@@ -242,7 +242,7 @@ feature {NONE} -- Implementation
 			set_tree_attached: set_tree /= Void
 		local
 			index, last_index: INTEGER;
-			current_tree, new_tree, child: ?FIXED_TREE [INTEGER]
+			current_tree, new_tree, child: detachable FIXED_TREE [INTEGER]
 		do
 			debug ("lex_output")
 				set.print
@@ -298,7 +298,7 @@ feature {NONE} -- Implementation
 			i_in_closure: Result.has (i)
 		end;
 
-	move (initial_set: FIXED_INTEGER_SET; i: INTEGER): ?FIXED_INTEGER_SET
+	move (initial_set: FIXED_INTEGER_SET; i: INTEGER): detachable FIXED_INTEGER_SET
 			-- Set of NDFA states to which there is a transition on
 			-- input i from some NDFA state s of initial_set;
 			-- Void if the set if empty

@@ -28,7 +28,7 @@ feature -- Access
 	default_shell: STRING
 			-- Default shell
 		local
-			l_result: ?STRING
+			l_result: detachable STRING
 		once
 			l_result := get ("SHELL")
 			if l_result = Void then
@@ -38,7 +38,7 @@ feature -- Access
 			end
 		end
 
-	get (s: STRING): ?STRING
+	get (s: STRING): detachable STRING
 			-- Value of `s' if it is an environment variable and has been set;
 			-- void otherwise.
 		require
@@ -47,7 +47,7 @@ feature -- Access
 			user_environment_variables.search (s)
 			if user_environment_variables.found then
 				Result := user_environment_variables.found_item
-			elseif {cs: SYSTEM_STRING} {ENVIRONMENT}.get_environment_variable (s.to_cil) then
+			elseif attached {SYSTEM_STRING} {ENVIRONMENT}.get_environment_variable (s.to_cil) as cs then
 				create Result.make_from_cil (cs)
 			end
 		end
@@ -74,16 +74,16 @@ feature -- Access
 			-- Table of environment variables associated with current process,
 			-- indexed by variable name
 		local
-			l_key: ?SYSTEM_STRING
-			l_value: ?SYSTEM_STRING
+			l_key: detachable SYSTEM_STRING
+			l_value: detachable SYSTEM_STRING
 		do
-			if {l_dic: IDICTIONARY} {ENVIRONMENT}.get_environment_variables and then {l_enumerator: IENUMERATOR} l_dic.get_enumerator_2 then
+			if attached {IDICTIONARY} {ENVIRONMENT}.get_environment_variables as l_dic and then attached {IENUMERATOR} l_dic.get_enumerator_2 as l_enumerator then
 				create Result.make (l_dic.count)
 				from
 				until
 					not l_enumerator.move_next
 				loop
-					if {l_entry: DICTIONARY_ENTRY} l_enumerator.current_ then
+					if attached {DICTIONARY_ENTRY} l_enumerator.current_ as l_entry then
 						l_key ?= l_entry.key
 						l_value ?= l_entry.value
 						check
@@ -172,10 +172,10 @@ feature {NONE} -- Implementation
 		require
 			s_not_void: s /= Void
 		local
-			l_cmd, l_args: ?STRING
+			l_cmd, l_args: detachable STRING
 			l_si: SYSTEM_DLL_PROCESS_START_INFO
 			l_pos: INTEGER
-			last_process: ?SYSTEM_DLL_PROCESS
+			last_process: detachable SYSTEM_DLL_PROCESS
 		do
 			if (current_working_directory @ 2) = ':' then -- assume a volume
 				internal_launch_from_local_volume (s, should_wait)
@@ -221,10 +221,10 @@ feature {NONE} -- Implementation
 		require
 			s_not_void: s /= Void
 		local
-			l_comspec: ?STRING
+			l_comspec: detachable STRING
 			l_si: SYSTEM_DLL_PROCESS_START_INFO
 			l_pos: INTEGER
-			last_process: ?SYSTEM_DLL_PROCESS
+			last_process: detachable SYSTEM_DLL_PROCESS
 		do
 			if should_wait then
 				l_comspec := get ("COMSPEC")
@@ -259,7 +259,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	fully_qualified_program_name (a_cmd: STRING): ?STRING
+	fully_qualified_program_name (a_cmd: STRING): detachable STRING
 			-- If `a_cmd' can be found, then return a fully qualified
 			-- path to it. Otherwise returns a Void string
 		require
@@ -299,7 +299,7 @@ feature {NONE} -- Implementation
 	executable_extensions: ARRAYED_LIST [STRING]
 			-- List of legal executable extensions
 		local
-			l_extensions: ?STRING
+			l_extensions: detachable STRING
 		do
 			l_extensions := get ("PATHEXT")
 			if l_extensions = Void then
@@ -318,8 +318,8 @@ feature {NONE} -- Implementation
 			-- calls. Plus the relative cost of repeating this code
 			-- with starting a windows process makes this operation cheap.
 		local
-			l_path: ?STRING
-			l_assembly: ?ASSEMBLY
+			l_path: detachable STRING
+			l_assembly: detachable ASSEMBLY
 		do
 			create Result.make (100)
 			l_assembly := {ASSEMBLY}.get_entry_assembly
@@ -332,7 +332,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	merge_env_vars (evsd: ?SYSTEM_DLL_STRING_DICTIONARY)
+	merge_env_vars (evsd: detachable SYSTEM_DLL_STRING_DICTIONARY)
 			-- Merge user environment variable set in `user_environment_variables'
 			-- to the system one.
 		local

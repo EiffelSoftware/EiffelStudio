@@ -59,7 +59,7 @@ feature -- Initialization
 			valid_peer_host: a_peer_host /= Void and then not a_peer_host.is_empty
 			valid_port: a_peer_port >= 0
 		local
-			l_peer_address: ?INET_ADDRESS
+			l_peer_address: detachable INET_ADDRESS
 		do
 			l_peer_address := create_from_name (a_peer_host)
 			check l_peer_address_attached: l_peer_address /= Void end

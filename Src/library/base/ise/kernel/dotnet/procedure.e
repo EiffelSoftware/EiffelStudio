@@ -23,7 +23,7 @@ feature -- Calls
 	apply
 			-- Call procedure with `operands' as last set.
 		local
-			obj: ?SYSTEM_OBJECT
+			obj: detachable SYSTEM_OBJECT
 			l_rout_disp: like rout_disp
 		do
 			l_rout_disp := rout_disp

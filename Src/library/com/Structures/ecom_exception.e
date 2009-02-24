@@ -30,7 +30,7 @@ feature --  Access
 	message: STRING_8
 			-- Message(Tag) of current exception
 		do
-			if {l_com_failure: COM_FAILURE} exception_manager.last_exception then
+			if attached {COM_FAILURE} exception_manager.last_exception as l_com_failure then
 				Result := l_com_failure.message
 			else
 				create Result.make_empty
@@ -40,64 +40,64 @@ feature --  Access
 	line_number: INTEGER
 			-- Line number
 		do
-			if {l_com_failure: COM_FAILURE} exception_manager.last_exception then
+			if attached {COM_FAILURE} exception_manager.last_exception as l_com_failure then
 				Result := l_com_failure.line_number
 			end
 		end
 
-	original: ?EXCEPTION
+	original: detachable EXCEPTION
 			-- The original exception caused current exception
 		do
-			if {l_com_failure: COM_FAILURE} exception_manager.last_exception then
+			if attached {COM_FAILURE} exception_manager.last_exception as l_com_failure then
 				Result := l_com_failure.original
 			end
 		end
 
-	type_name: ?STRING_8
+	type_name: detachable STRING_8
 			-- Name of the class that includes the recipient
 			-- of original form of current exception
 		do
-			if {l_com_failure: COM_FAILURE} exception_manager.last_exception then
+			if attached {COM_FAILURE} exception_manager.last_exception as l_com_failure then
 				Result := l_com_failure.type_name
 			end
 		end
 
-	throwing_exception: ?EXCEPTION
+	throwing_exception: detachable EXCEPTION
 			-- The exception throwing current exception
 		do
-			if {l_com_failure: COM_FAILURE} exception_manager.last_exception then
+			if attached {COM_FAILURE} exception_manager.last_exception as l_com_failure then
 				Result := l_com_failure.throwing_exception
 			end
 		end
 
-	hresult: INTEGER is
+	hresult: INTEGER
 			-- Original HRESULT.
 		do
-			if {l_com_failure: COM_FAILURE} exception_manager.last_exception then
+			if attached {COM_FAILURE} exception_manager.last_exception as l_com_failure then
 				Result := l_com_failure.hresult
 			end
 		end
 
-	hresult_code: INTEGER is
+	hresult_code: INTEGER
 			-- Status code.
 		do
-			if {l_com_failure: COM_FAILURE} exception_manager.last_exception then
+			if attached {COM_FAILURE} exception_manager.last_exception as l_com_failure then
 				Result := l_com_failure.hresult_code
 			end
 		end
 
-	hresult_facility: INTEGER is
+	hresult_facility: INTEGER
 			-- Facility code.
 		do
-			if {l_com_failure: COM_FAILURE} exception_manager.last_exception then
+			if attached {COM_FAILURE} exception_manager.last_exception as l_com_failure then
 				Result := l_com_failure.hresult_facility
 			end
 		end
 
-	hresult_message: STRING is
+	hresult_message: STRING
 			-- Error message.
 		do
-			if {l_com_failure: COM_FAILURE} exception_manager.last_exception then
+			if attached {COM_FAILURE} exception_manager.last_exception as l_com_failure then
 				Result := l_com_failure.hresult_message
 			else
 				create Result.make_empty
@@ -106,7 +106,7 @@ feature --  Access
 
 feature -- Element Change
 
-	trigger (a_code: INTEGER) is
+	trigger (a_code: INTEGER)
 			-- Raise exception with code `a_code'.
 			-- See class ECOM_EXCEPTION_CODES for possible values.
 		do

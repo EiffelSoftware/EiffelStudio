@@ -51,7 +51,7 @@ feature -- Access
 			Result := option_of_name (port_switch).value.to_integer
 		end
 
-	file_option: !STRING
+	file_option: attached STRING
 			-- File name of
 		require
 			successful: is_successful
@@ -62,7 +62,7 @@ feature -- Access
 			result_not_empty: not Result.is_empty
 		end
 
-	output_option: !STRING
+	output_option: attached STRING
 			-- Location to store test reports
 		require
 			successful: is_successful

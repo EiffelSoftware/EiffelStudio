@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Implementation: access
 
-	attributes_mapping: ?SPECIAL [SPECIAL [INTEGER]]
+	attributes_mapping: detachable SPECIAL [SPECIAL [INTEGER]]
 			-- Mapping for each dynamic type id between old attribute location
 			-- and new attribute location.
 
@@ -171,7 +171,7 @@ feature {NONE} -- Implementation
 			l_old_dtype, l_dtype, l_field_count: INTEGER
 			i, nb: INTEGER
 			a: like attributes_mapping
-			l_item: ?TUPLE [INTEGER, INTEGER]
+			l_item: detachable TUPLE [INTEGER, INTEGER]
 		do
 			l_deser := deserializer
 

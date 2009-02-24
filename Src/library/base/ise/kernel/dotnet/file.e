@@ -160,7 +160,7 @@ feature -- Access
 	position: INTEGER
 			-- Current cursor position.
 		do
-			if not is_closed and then {l_stream: like internal_stream} internal_stream then
+			if not is_closed and then attached internal_stream as l_stream then
 				Result := l_stream.position.to_integer
 			end
 		end
@@ -197,7 +197,7 @@ feature -- Access
 	file_pointer: POINTER
 			-- File pointer as required in C
 		do
-			if not is_closed and then {l_file: FILE_STREAM} internal_stream then
+			if not is_closed and then attached {FILE_STREAM} internal_stream as l_file then
 				Result := l_file.handle
 			end
 		end
@@ -292,7 +292,7 @@ feature -- Access
 			-- if content is not a stored Eiffel structure.
 		local
 			l_formatter: BINARY_FORMATTER
-			l_result: ?ANY
+			l_result: detachable ANY
 		do
 			create l_formatter.make
 			l_result := l_formatter.deserialize (internal_stream)
@@ -311,7 +311,7 @@ feature -- Measurement
 					if not is_directory then
 						Result := internal_file.length.to_integer
 					end
-				elseif {l_stream: like internal_stream} internal_stream then
+				elseif attached internal_stream as l_stream then
 					Result := l_stream.length.to_integer
 				end
 			end
@@ -897,13 +897,13 @@ feature -- Status setting
 	close
 			-- Close file.
 		do
-			if {l_sread: like internal_sread} internal_sread then
+			if attached internal_sread as l_sread then
 				l_sread.close
 			end
-			if {l_swrite: like internal_swrite} internal_swrite then
+			if attached internal_swrite as l_swrite then
 				l_swrite.close
 			end
-			if {l_stream: like internal_stream} internal_stream then
+			if attached internal_stream as l_stream then
 				l_stream.close
 			end
 			mode := Closed_file
@@ -924,7 +924,7 @@ feature -- Cursor movement
 		local
 			i: INTEGER_64
 		do
-			if {l_stream: like internal_stream} internal_stream then
+			if attached internal_stream as l_stream then
 				i := l_stream.seek ((0).to_integer_64, {SEEK_ORIGIN}.begin)
 			end
 		end
@@ -936,7 +936,7 @@ feature -- Cursor movement
 		local
 			i: INTEGER_64
 		do
-			if {l_stream: like internal_stream} internal_stream then
+			if attached internal_stream as l_stream then
 				i := l_stream.seek ((0).to_integer_64, {SEEK_ORIGIN}.end_)
 			end
 		end
@@ -948,7 +948,7 @@ feature -- Cursor movement
 		local
 			i: INTEGER_64
 		do
-			if {l_stream: like internal_stream} internal_stream then
+			if attached internal_stream as l_stream then
 				i := l_stream.seek ((1).to_integer_64, {SEEK_ORIGIN}.current_)
 			end
 		end
@@ -958,7 +958,7 @@ feature -- Cursor movement
 		local
 			i: INTEGER_64
 		do
-			if {l_stream: like internal_stream} internal_stream then
+			if attached internal_stream as l_stream then
 				i := l_stream.seek ((-1).to_integer_64, {SEEK_ORIGIN}.current_)
 			end
 		end
@@ -970,7 +970,7 @@ feature -- Cursor movement
 		local
 			i: INTEGER_64
 		do
-			if {l_stream: like internal_stream} internal_stream then
+			if attached internal_stream as l_stream then
 				i := l_stream.seek (offset.to_integer_64, {SEEK_ORIGIN}.current_)
 			end
 		end
@@ -982,7 +982,7 @@ feature -- Cursor movement
 			file_opened: not is_closed
 			non_negative_argument: abs_position >= 0
 		do
-			if {l_stream: like internal_stream} internal_stream then
+			if attached internal_stream as l_stream then
 				l_stream.set_position (abs_position.to_integer_64)
 			end
 		end
@@ -996,7 +996,7 @@ feature -- Cursor movement
 		local
 			i: INTEGER_64
 		do
-			if {l_stream: like internal_stream} internal_stream then
+			if attached internal_stream as l_stream then
 				i := l_stream.seek (-abs_position.to_integer_64, {SEEK_ORIGIN}.end_)
 			end
 		end
@@ -1009,7 +1009,7 @@ feature -- Cursor movement
 			c: INTEGER
 			eol, eof: INTEGER
 		do
-			if {l_stream: like internal_stream} internal_stream then
+			if attached internal_stream as l_stream then
 				from
 					c := l_stream.read_byte
 					eol := ('%N').code
@@ -1029,7 +1029,7 @@ feature -- Element change
 		local
 			cpos: INTEGER_64
 		do
-			if {l_stream: like internal_stream} internal_stream then
+			if attached internal_stream as l_stream then
 				cpos := l_stream.position
 				finish
 				put_character (v)
@@ -1046,7 +1046,7 @@ feature -- Element change
 		require
 			is_open: not is_closed
 		do
-			if {l_stream: like internal_stream} internal_stream then
+			if attached internal_stream as l_stream then
 				l_stream.flush
 			end
 		end
@@ -1138,7 +1138,7 @@ feature -- Element change
 					str_area.put (i-1, s.item (i).code.to_natural_8)
 					i := i + 1
 				end
-				if {l_stream: like internal_stream} internal_stream then
+				if attached internal_stream as l_stream then
 					l_stream.write (str_area, 0, l_count)
 				end
 			end
@@ -1150,7 +1150,7 @@ feature -- Element change
 		local
 			i, nb: INTEGER
 		do
-			if {l_stream: like internal_stream} internal_stream then
+			if attached internal_stream as l_stream then
 				from
 					i := start_pos
 					nb := i + nb_bytes
@@ -1166,7 +1166,7 @@ feature -- Element change
 	put_character, putchar (c: CHARACTER)
 			-- Write `c' at current position.
 		do
-			if {l_stream: like internal_stream} internal_stream then
+			if attached internal_stream as l_stream then
 				l_stream.write_byte (c.code.to_natural_8)
 			end
 		end
@@ -1177,7 +1177,7 @@ feature -- Element change
 			check
 				eiffel_newline_valid_count: eiffel_newline.count = 1
 			end
-			if {l_stream: like internal_stream} internal_stream then
+			if attached internal_stream as l_stream then
 				l_stream.write_byte (eiffel_newline.item (1).code.to_natural_8)
 			end
 		end
@@ -1378,7 +1378,7 @@ feature -- Removal
 			end
 			make (fn)
 			last_integer := 0
-			if {l_last_string: like last_string} last_string then
+			if attached last_string as l_last_string then
 				l_last_string.wipe_out
 			end
 			last_real := 0.0
@@ -1415,7 +1415,7 @@ feature -- Input
 		local
 		  	a_code: INTEGER
 		do
-			if {l_stream: like internal_stream} internal_stream then
+			if attached internal_stream as l_stream then
 				a_code := l_stream.read_byte
 				if a_code = - 1 then
 					internal_end_of_file := True
@@ -1445,7 +1445,7 @@ feature -- Input
 			done: BOOLEAN
 			l_last_string: like last_string
 		do
-			if {l_stream: like internal_stream} internal_stream then
+			if attached internal_stream as l_stream then
 				from
 					l_last_string := last_string
 					if l_last_string = Void then
@@ -1510,7 +1510,7 @@ feature -- Input
 				l_last_string.grow (nb_char)
 			end
 			create str_area.make (nb_char)
-			if {l_stream: like internal_stream} internal_stream then
+			if attached internal_stream as l_stream then
 				new_count := l_stream.read (str_area, 0, nb_char)
 			end
 			if new_count = -1  then
@@ -1533,7 +1533,7 @@ feature -- Input
 		local
 			i, nb, l_byte, l_read: INTEGER
 		do
-			if {l_stream: like internal_stream} internal_stream then
+			if attached internal_stream as l_stream then
 				from
 					i := start_pos
 					nb := nb_bytes + i
@@ -1674,7 +1674,7 @@ feature {FILE} -- Implementation
 	internal_file: FILE_INFO
 			-- File data concerning `Current'
 
-	internal_stream: ?SYSTEM_STREAM
+	internal_stream: detachable SYSTEM_STREAM
 			-- File stream relative to `Current'
 
 	internal_end_of_file: BOOLEAN
@@ -1692,7 +1692,7 @@ feature {NONE} -- Implementation
 			create last_string.make (default_last_string_size.max (a_min_size))
 		ensure
 			last_string_not_void: last_string /= Void
-			capacity_set: {l_string: like last_string} last_string and then l_string.capacity >= a_min_size
+			capacity_set: attached last_string as l_string and then l_string.capacity >= a_min_size
 		end
 
 	default_last_string_size: INTEGER = 256
@@ -1716,10 +1716,10 @@ feature {NONE} -- Implementation
 			character_read: not end_of_file implies Result > 0
 		end
 
-	internal_sread: ?STREAM_READER
+	internal_sread: detachable STREAM_READER
 			-- Stream reader used to read in `Current' (if any).
 
-	internal_swrite: ?STREAM_WRITER
+	internal_swrite: detachable STREAM_WRITER
 			-- Stream writer used to write in `Current' (if any).
 
 	true_string: STRING
@@ -1859,7 +1859,7 @@ feature {NONE} -- Implementation
 		require
 			is_readable: file_readable
 		do
-			if {l_stream: like internal_stream} internal_stream then
+			if attached internal_stream as l_stream then
 				Result := l_stream.read_byte
 				if Result /= -1 then
 					back

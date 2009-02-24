@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 			name_set: text.is_equal (a_name)
 		end
 
-	make_top (a_name: ?STRING_GENERAL)
+	make_top (a_name: detachable STRING_GENERAL)
 			-- Make a top window (without parent) with `a_name'
 			-- as a title.
 		do

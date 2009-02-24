@@ -35,7 +35,7 @@ feature -- Initialization
 
 feature -- Access
 
-	last_string: ?STRING_32
+	last_string: detachable STRING_32
 			-- String created from shared memory.
 			-- Only valid after a call to `retrieve_string'
 			-- Note: Changes to this object will not be
@@ -57,7 +57,7 @@ feature -- Element change
 
 feature {NONE} -- Access
 
-	internal_string: ?WEL_STRING;
+	internal_string: detachable WEL_STRING;
 			-- Wrapper around non-moveable buffer.
 
 note

@@ -112,7 +112,7 @@ feature -- Access
 	time: TIME_DURATION
 			-- Time part of current duration
 
-	origin_date_time: ?DATE_TIME
+	origin_date_time: detachable DATE_TIME
 			-- Origin date time of duration
 
 	zero: like Current
@@ -209,7 +209,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_origin_date_time (dt: ?DATE_TIME)
+	set_origin_date_time (dt: detachable DATE_TIME)
 			-- Set `origin_date_time' to `dt'.
 		do
 			origin_date_time := dt
@@ -356,10 +356,10 @@ invariant
 	time_exists: time /= Void
 	origin_constraint: (origin_date_time = Void and
 			date.origin_date = Void) or else
-			({l_origin_1: like origin_date_time} origin_date_time and then
+			(attached origin_date_time as l_origin_1 and then
 			l_origin_1.date = date.origin_date)
 	same_signs: (has_origin_date_time and then
-				{l_origin_2: like origin_date_time} origin_date_time and then
+				attached origin_date_time as l_origin_2 and then
 				canonical (l_origin_2)) implies
 				((date.is_positive or date.is_zero) and
 				(time.is_positive or time.is_zero)) or else

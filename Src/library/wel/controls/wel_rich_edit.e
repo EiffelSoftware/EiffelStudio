@@ -395,7 +395,7 @@ feature -- Status setting
 			{WEL_API}.send_message (item, Em_setoptions, to_wparam (operation), to_lparam (an_options))
 		end
 
-	set_text (a_text: ?STRING_GENERAL)
+	set_text (a_text: detachable STRING_GENERAL)
 			-- Set `text' with `a_text'.
 		local
 			stream: WEL_RICH_EDIT_BUFFER_LOADER

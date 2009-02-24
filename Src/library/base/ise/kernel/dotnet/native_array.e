@@ -31,7 +31,7 @@ feature -- Access
 	item, at alias "@" (i: INTEGER): G
 			-- Entry at index `i', if in index interval
 		local
-			r: ?G
+			r: detachable G
 		do
 			check
 				r_attached: r /= Void

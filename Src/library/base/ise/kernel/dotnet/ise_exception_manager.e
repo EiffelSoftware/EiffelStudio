@@ -30,7 +30,7 @@ inherit
 
 feature -- Access
 
-	last_exception: ?EXCEPTION
+	last_exception: detachable EXCEPTION
 			-- Last exception
 		do
 			Result ?= {ISE_RUNTIME}.last_exception
@@ -109,7 +109,7 @@ feature -- Status report
 
 feature {EXCEPTIONS} -- Backward compatibility support
 
-	type_of_code (a_code: INTEGER): ?TYPE [EXCEPTION]
+	type_of_code (a_code: INTEGER): detachable TYPE [EXCEPTION]
 			-- Exception type of `a_code'
 		do
 			inspect a_code
@@ -186,7 +186,7 @@ feature {EXCEPTIONS} -- Backward compatibility support
 			end
 		end
 
-	exception_from_code (a_code: INTEGER): ?EXCEPTION
+	exception_from_code (a_code: INTEGER): detachable EXCEPTION
 			-- Create exception object from `a_code'
 		local
 			l_rt_panic: EIFFEL_RUNTIME_PANIC
@@ -280,7 +280,7 @@ feature {EXCEPTIONS} -- Backward compatibility support
 
 feature {NONE} -- Element change
 
-	compute_last_exception (a_last_exception: NATIVE_EXCEPTION): ?EXCEPTION
+	compute_last_exception (a_last_exception: NATIVE_EXCEPTION): detachable EXCEPTION
 			-- Set `last_exception' with `a_last_exception'.
 		do
 			if a_last_exception /= Void then
@@ -319,17 +319,17 @@ feature {NONE} -- Implementation, exception chain
 		require
 			a_last_exception_not_viod: a_last_exception /= Void
 		local
-			l_exception: ?EXCEPTION
+			l_exception: detachable EXCEPTION
 			l_stack_trace: STACK_TRACE
 			l_rs: like recipient_and_type_name
 			l_to_skip: INTEGER
 		do
-			if {l_rf: ROUTINE_FAILURE} a_last_exception then
+			if attached {ROUTINE_FAILURE} a_last_exception as l_rf then
 				l_to_skip := 2
 			else
 					-- Skip a frame for precondition violation and invariant violation on entry
 					-- To get the caller.
-				if {l_pre: PRECONDITION_VIOLATION} a_last_exception or {ISE_RUNTIME}.in_precondition then
+				if attached {PRECONDITION_VIOLATION} a_last_exception as l_pre or {ISE_RUNTIME}.in_precondition then
 					l_to_skip := 2	-- The number is decided because for a normal Eiffel call, there are two frames.
 				end
 			end
@@ -346,23 +346,23 @@ feature {NONE} -- Implementation, exception chain
 			constructed_exception_chain_not_void: Result /= Void
 		end
 
-	wrapped_exception (a_exception: NATIVE_EXCEPTION): ?EXCEPTION
+	wrapped_exception (a_exception: NATIVE_EXCEPTION): detachable EXCEPTION
 			-- Wrapped .NET exception
 		require
 			a_exception_not_void: a_exception /= Void
 		local
-			l_exception: ?EXCEPTION
+			l_exception: detachable EXCEPTION
 		do
 			l_exception ?= a_exception
 			if l_exception = Void then
 					-- A pure .NET exception
-				if {l_nullref: NULL_REFERENCE_EXCEPTION} a_exception then
+				if attached {NULL_REFERENCE_EXCEPTION} a_exception as l_nullref then
 						-- Replace NullReferenceException with VOID_TARGET
 					create {VOID_TARGET} l_exception.make_dotnet_exception (a_exception)
 				elseif
-					{l_conv_acc: UNAUTHORIZED_ACCESS_EXCEPTION} a_exception or
-					{l_conv_sec: SECURITY_EXCEPTION} a_exception or
-					{l_conv_io: IO_EXCEPTION} a_exception
+					attached {UNAUTHORIZED_ACCESS_EXCEPTION} a_exception as l_conv_acc or
+					attached {SECURITY_EXCEPTION} a_exception as l_conv_sec or
+					attached {IO_EXCEPTION} a_exception as l_conv_io
 				then
 					create {IO_FAILURE} l_exception.make_dotnet_exception (a_exception)
 				else
@@ -373,21 +373,21 @@ feature {NONE} -- Implementation, exception chain
 			Result := l_exception
 		end
 
-	recipient_and_type_name (a_st: STACK_TRACE; a_skip: INTEGER): TUPLE [recipient, type: ?STRING; line_number: INTEGER]
+	recipient_and_type_name (a_st: STACK_TRACE; a_skip: INTEGER): TUPLE [recipient, type: detachable STRING; line_number: INTEGER]
 			-- Compute recipient name, type name and possible line number via `a_st'.
 			-- `a_skip' is number of first caught frames to though away.
 		require
 			a_st_not_void: a_st /= Void
 		local
-			l_routine_name, l_class: ?STRING
+			l_routine_name, l_class: detachable STRING
 			l_stack_trace: STACK_TRACE
-			l_frame: ?STACK_FRAME
+			l_frame: detachable STACK_FRAME
 			l_frame_count, i: INTEGER
-			l_method: ?METHOD_BASE
+			l_method: detachable METHOD_BASE
 			l_skipped, l_to_skip: INTEGER
 			l_line_number: INTEGER
 			l_found: BOOLEAN
-			l_type: ?SYSTEM_TYPE
+			l_type: detachable SYSTEM_TYPE
 		do
 			l_stack_trace := a_st
 			l_frame_count := l_stack_trace.frame_count
@@ -431,15 +431,15 @@ feature {NONE} -- Implementation, exception chain
 		require
 			a_method_not_void: a_method /= Void
 		local
-			l_attributes: ?NATIVE_ARRAY [?SYSTEM_OBJECT]
+			l_attributes: detachable NATIVE_ARRAY [detachable SYSTEM_OBJECT]
 			l_routine_name: STRING
-			l_type: ?SYSTEM_TYPE
+			l_type: detachable SYSTEM_TYPE
 		do
 			l_type := a_method.declaring_type
 			check l_type_attached: l_type /= Void end
 			l_attributes := l_type.get_custom_attributes ({EIFFEL_NAME_ATTRIBUTE}, False)
 			if l_attributes /= Void and then l_attributes.count = 1 then
-				if {l_attr: EIFFEL_NAME_ATTRIBUTE} l_attributes.item (0) then
+				if attached {EIFFEL_NAME_ATTRIBUTE} l_attributes.item (0) as l_attr then
 					if not filtered_class.has (create {STRING}.make_from_cil(l_attr.name)) then
 						create l_routine_name.make_from_cil (a_method.name)
 						Result := not filtered_routines.has (l_routine_name)
@@ -488,8 +488,8 @@ feature {NONE} -- Internal raise, Implementation of RT_EXCEPTION_MANAGER
 	internal_raise (e_code: INTEGER; msg: SYSTEM_STRING)
 			-- Internal raise exception of code `e_code'
 		local
-			l_exception: ?EXCEPTION
-			l_inv: ?INVARIANT_VIOLATION
+			l_exception: detachable EXCEPTION
+			l_inv: detachable INVARIANT_VIOLATION
 			l_saved_assertion, l_assertion_set: BOOLEAN
 			l_assertion_tag: STRING
 		do
@@ -539,7 +539,7 @@ feature {NONE} -- Internal raise, Implementation of RT_EXCEPTION_MANAGER
 			-- Rethrow the exception at the end of rescue clause.
 		local
 			l_failure: ROUTINE_FAILURE
-			l_exception: ?EXCEPTION
+			l_exception: detachable EXCEPTION
 			l_stack_trace: STACK_TRACE
 			l_rs: like recipient_and_type_name
 		do

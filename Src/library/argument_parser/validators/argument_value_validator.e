@@ -101,7 +101,7 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Implementation: Internal cache
 
-	internal_reason: ?like reason
+	internal_reason: detachable like reason
 			-- Cached version of `reason'
 			-- Note: Do not use directly!
 

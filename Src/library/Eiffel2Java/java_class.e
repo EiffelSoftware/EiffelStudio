@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			name := jni.call_string_method (jclass_id, mid, default_pointer)
 			debug ("java")
 				io.putstring ("JAVA_CLASS: name=")
-				if {l_name: like name} name then
+				if attached name as l_name then
 					io.putstring (l_name)
 				else
 					io.putstring ("")
@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: ?STRING
+	name: detachable STRING
 			-- Name of current class.
 
 	java_class_id: POINTER
@@ -108,7 +108,7 @@ feature -- Reflection
 
 feature -- calling static methods
 
-	void_method (lmethod_id: POINTER; args: ?JAVA_ARGS)
+	void_method (lmethod_id: POINTER; args: detachable JAVA_ARGS)
 			-- call static method with specific ID, passing arguments
 		local
 			argp: POINTER
@@ -119,7 +119,7 @@ feature -- calling static methods
 			jni.call_static_void_method (java_class_id, lmethod_id, argp)
 		end
 
-	string_method (lmethod_id: POINTER; args: ?JAVA_ARGS): ?STRING
+	string_method (lmethod_id: POINTER; args: detachable JAVA_ARGS): detachable STRING
 			-- Call static routine that returns a string
 		local
 			argp: POINTER
@@ -130,7 +130,7 @@ feature -- calling static methods
 			Result := Jni.call_static_string_method (java_class_id, lmethod_id, argp)
 		end
 
-	integer_method (mid: POINTER; args: ?JAVA_ARGS): INTEGER
+	integer_method (mid: POINTER; args: detachable JAVA_ARGS): INTEGER
 			-- Call a static function that returns an INTEGER.
 		local
 			argsp: POINTER
@@ -141,7 +141,7 @@ feature -- calling static methods
 			Result := jni.call_static_int_method (java_class_id, mid, argsp)
 		end
 
-	short_method (mid: POINTER; args: ?JAVA_ARGS): INTEGER_16
+	short_method (mid: POINTER; args: detachable JAVA_ARGS): INTEGER_16
 			-- Call a static function that returns a short
 			-- (represented as INTEGER in Eiffel)
 		local
@@ -153,7 +153,7 @@ feature -- calling static methods
 			Result := jni.call_static_short_method (java_class_id, mid, argsp)
 		end
 
-	double_method (mid: POINTER; args: ?JAVA_ARGS): DOUBLE
+	double_method (mid: POINTER; args: detachable JAVA_ARGS): DOUBLE
 			-- Call a static function that returns a DOUBLE.
 		local
 			argsp: POINTER
@@ -164,7 +164,7 @@ feature -- calling static methods
 			Result := jni.call_static_double_method (java_class_id, mid, argsp)
 		end
 
-	float_method (mid: POINTER; args: ?JAVA_ARGS): REAL
+	float_method (mid: POINTER; args: detachable JAVA_ARGS): REAL
 			-- Call a static function that returns a REAL.
 		local
 			argsp: POINTER
@@ -175,7 +175,7 @@ feature -- calling static methods
 			Result := jni.call_static_float_method (java_class_id, mid, argsp)
 		end
 
-	char_method (mid: POINTER; args: ?JAVA_ARGS): CHARACTER
+	char_method (mid: POINTER; args: detachable JAVA_ARGS): CHARACTER
 			-- Call a static function that returns a CHARACTER.
 		local
 			argsp: POINTER
@@ -186,7 +186,7 @@ feature -- calling static methods
 			Result := jni.call_static_char_method (java_class_id, mid, argsp)
 		end
 
-	boolean_method (mid: POINTER; args: ?JAVA_ARGS): BOOLEAN
+	boolean_method (mid: POINTER; args: detachable JAVA_ARGS): BOOLEAN
 			-- Call a static function that returns a BOOLEAN.
 		local
 			argsp: POINTER
@@ -197,7 +197,7 @@ feature -- calling static methods
 			Result := jni.call_static_boolean_method (java_class_id, mid, argsp)
 		end
 
-	byte_method (mid: POINTER; args: ?JAVA_ARGS): INTEGER_8
+	byte_method (mid: POINTER; args: detachable JAVA_ARGS): INTEGER_8
 			-- Call a static function that returns a byte
 			-- (represented as CHARACTER in Eiffel)
 		local
@@ -209,7 +209,7 @@ feature -- calling static methods
 			Result := jni.call_static_byte_method (java_class_id, mid, argsp)
 		end
 
-	long_method (mid: POINTER; args: ?JAVA_ARGS): INTEGER_64
+	long_method (mid: POINTER; args: detachable JAVA_ARGS): INTEGER_64
 			-- Call a static function that returns a long
 			-- (represented as INTEGER_64 in Eiffel)
 		local
@@ -221,7 +221,7 @@ feature -- calling static methods
 			Result := jni.call_static_long_method (java_class_id, mid, argsp)
 		end
 
-	object_method (lmethod_id: POINTER; args: ?JAVA_ARGS): ?JAVA_OBJECT
+	object_method (lmethod_id: POINTER; args: detachable JAVA_ARGS): detachable JAVA_OBJECT
 			-- Call a static function that returns a JAVA_OBJECT. An
 			-- Eiffl proxy object is returned.
 		local
@@ -250,13 +250,13 @@ feature -- Access to static attributes
 			Result := jni.get_static_integer_field (java_class_id, fid)
 		end
 
-	string_attribute (fid: POINTER): ?STRING
+	string_attribute (fid: POINTER): detachable STRING
 			-- get the value of STRING static field
 		do
 			Result := jni.get_static_string_field (java_class_id, fid)
 		end
 
-	object_attribute (fid: POINTER): ?JAVA_OBJECT
+	object_attribute (fid: POINTER): detachable JAVA_OBJECT
 			-- get the value of OBJECT static field
 		local
 			jo: POINTER

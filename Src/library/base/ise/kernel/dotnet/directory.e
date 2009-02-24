@@ -43,7 +43,7 @@ feature -- Initialization
 		require
 			physical_not_exists: not exists
 		local
-			di: ?DIRECTORY_INFO
+			di: detachable DIRECTORY_INFO
 			l_sub_dir: STRING
 			l_sep_index: INTEGER
 			l_full_path: STRING
@@ -75,7 +75,7 @@ feature -- Access
 		require
 			is_opened: not is_closed
 		local
-			ent: ?NATIVE_ARRAY [?SYSTEM_STRING]
+			ent: detachable NATIVE_ARRAY [detachable SYSTEM_STRING]
 			l_name: SYSTEM_STRING
 			l_entry: like lastentry
 		do
@@ -106,7 +106,7 @@ feature -- Access
 		require
 			string_exists: entry_name /= Void
 		local
-			ent: ?NATIVE_ARRAY [?SYSTEM_STRING]
+			ent: detachable NATIVE_ARRAY [detachable SYSTEM_STRING]
 			l_name: SYSTEM_STRING
 			en: SYSTEM_STRING
 			i: INTEGER
@@ -122,7 +122,7 @@ feature -- Access
 			until
 				i = c or Result
 			loop
-				Result := {l_string: SYSTEM_STRING} ent.item (i) and then l_string.ends_with (en)
+				Result := attached {SYSTEM_STRING} ent.item (i) as l_string and then l_string.ends_with (en)
 				i := i + 1
 			end
 		end
@@ -175,7 +175,7 @@ feature -- Measurement
 		require
 			directory_exists: exists
 		do
-			if {ent: NATIVE_ARRAY [?SYSTEM_STRING]} {SYSTEM_DIRECTORY}.get_file_system_entries ( name.to_cil) then
+			if attached {NATIVE_ARRAY [detachable SYSTEM_STRING]} {SYSTEM_DIRECTORY}.get_file_system_entries ( name.to_cil) as ent then
 				Result := ent.count
 			end
 		end
@@ -185,9 +185,9 @@ feature -- Conversion
 	linear_representation: ARRAYED_LIST [STRING]
 			-- The entries, in sequential format.
 		local
-			ent: ?NATIVE_ARRAY [?SYSTEM_STRING]
+			ent: detachable NATIVE_ARRAY [detachable SYSTEM_STRING]
 			i, c, dc: INTEGER
-			l_string: ?SYSTEM_STRING
+			l_string: detachable SYSTEM_STRING
 		do
 			ent := {SYSTEM_DIRECTORY}.get_file_system_entries (name.to_cil)
 			check ent_attached: ent /= Void end
@@ -211,7 +211,7 @@ feature -- Conversion
 
 feature -- Status report
 
-	lastentry: ?STRING
+	lastentry: detachable STRING
 			-- Last entry read by `readentry'
 
 	is_closed: BOOLEAN

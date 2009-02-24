@@ -99,7 +99,7 @@ feature -- Event handling
 	change_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions performed when interval changes.
 		local
-			r: ?ACTION_SEQUENCE [TUPLE]
+			r: detachable ACTION_SEQUENCE [TUPLE]
 		do
 			r := opo_change_actions
 			if r = Void then
@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 	on_change
 			-- Called when interval changes.
 		local
-			a: ?ACTION_SEQUENCE [TUPLE]
+			a: detachable ACTION_SEQUENCE [TUPLE]
 		do
 			a := opo_change_actions
 			if a /= Void then
@@ -124,7 +124,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	opo_change_actions: ?ACTION_SEQUENCE [TUPLE];
+	opo_change_actions: detachable ACTION_SEQUENCE [TUPLE];
 			-- Once per object implementation for `change_actions'
 
 note

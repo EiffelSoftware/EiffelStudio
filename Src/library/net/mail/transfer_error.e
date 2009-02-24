@@ -11,7 +11,7 @@ class
 
 feature -- Access
 
-	transfer_error_message: ?STRING
+	transfer_error_message: detachable STRING
 
 feature -- Status report
 

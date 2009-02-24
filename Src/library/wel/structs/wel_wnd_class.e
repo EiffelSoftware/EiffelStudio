@@ -426,10 +426,10 @@ feature -- Measurement
 
 feature {NONE} -- Implementation
 
-	str_class_name: ?WEL_STRING
+	str_class_name: detachable WEL_STRING
 			-- C string to save the class name
 
-	str_menu_name: ?WEL_STRING
+	str_menu_name: detachable WEL_STRING
 			-- C string to save the menu name
 
 	main_args: WEL_MAIN_ARGUMENTS

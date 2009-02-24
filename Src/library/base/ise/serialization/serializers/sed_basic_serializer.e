@@ -61,7 +61,7 @@ feature {NONE} -- Implementation
 		local
 			l_dtype: INTEGER
 			l_int: like internal
-			l_array: ?ARRAY [ANY]
+			l_array: detachable ARRAY [ANY]
 			l_area: SPECIAL [ANY]
 			i, nb: INTEGER
 		do

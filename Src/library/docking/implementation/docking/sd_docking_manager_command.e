@@ -207,7 +207,7 @@ feature -- Commands
 			until
 				l_zones.after
 			loop
-				if {lt_widget: EV_WIDGET} l_zones.item then
+				if attached {EV_WIDGET} l_zones.item as lt_widget then
 					if l_zones.item /= Void and then a_dock_area.has_recursive (lt_widget) then
 						l_zones.item.recover_to_normal_state
 					end
@@ -323,7 +323,7 @@ feature -- Commands
 
 				l_main_area := internal_docking_manager.query.inner_container_main
 
-				if {lt_upper_zone: SD_PLACE_HOLDER_ZONE} minimized_editor_area  then
+				if attached {SD_PLACE_HOLDER_ZONE} minimized_editor_area as lt_upper_zone  then
 
 					if not is_minimize_orignally then
 						lt_upper_zone.recover_normal_size_from_minimize
@@ -337,7 +337,7 @@ feature -- Commands
 				l_parent.prune (minimized_editor_area)
 				l_parent.extend (orignal_whole_item_for_minimized)
 				if is_minimize_orignally then
-					if {lt_box: EV_BOX} l_parent then
+					if attached {EV_BOX} l_parent as lt_box then
 						lt_box.disable_item_expand (orignal_whole_item_for_minimized)
 					end
 				end
@@ -385,7 +385,7 @@ feature -- Commands
 
 						l_editor_area.save_spliter_position (l_parent_parent, generating_type + ".minimized")
 
-						if {lt_parent_parent: EV_BOX} l_parent_parent then
+						if attached {EV_BOX} l_parent_parent as lt_parent_parent then
 							is_minimize_orignally := True
 						else
 							is_minimize_orignally := False
@@ -396,7 +396,7 @@ feature -- Commands
 						minimized_editor_area := internal_shared.widget_factory.docking_zone (internal_docking_manager.zones.place_holder_content)
 
 						l_parent_parent.extend (minimized_editor_area)
-						if {lt_upper_zone: SD_PLACE_HOLDER_ZONE} minimized_editor_area  then
+						if attached {SD_PLACE_HOLDER_ZONE} minimized_editor_area as lt_upper_zone  then
 							lt_upper_zone.prepare_for_minimized_editor_area (internal_docking_manager)
 
 							-- Minimize this place holder zone, so it can replace surrounded spliter bar with FAKE spliter bar

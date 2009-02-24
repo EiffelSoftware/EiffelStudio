@@ -177,9 +177,9 @@ feature {WEL_ABSTRACT_DISPATCHER, WEL_WINDOW}
 
 feature {NONE} -- Implementation
 
-	has_return_value_area: ?SPECIAL [BOOLEAN]
-	message_return_value_area: ?SPECIAL [POINTER]
-	default_processing_area: ?SPECIAL [BOOLEAN]
+	has_return_value_area: detachable SPECIAL [BOOLEAN]
+	message_return_value_area: detachable SPECIAL [POINTER]
+	default_processing_area: detachable SPECIAL [BOOLEAN]
 
 	Initial_area_size: INTEGER = 2
 	Area_resize_increment: INTEGER = 2;

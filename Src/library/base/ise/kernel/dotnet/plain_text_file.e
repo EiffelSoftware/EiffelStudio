@@ -44,7 +44,7 @@ feature -- Output
 			i: INTEGER
 			l_cnt: INTEGER
 		do
-			if {l_stream: like internal_stream} internal_stream then
+			if attached internal_stream as l_stream then
 				from
 					i := 1
 					l_cnt := dotnet_newline.count
@@ -150,7 +150,7 @@ feature -- Output
 		do
 			if c = '%N' then
 				put_new_line
-			elseif {l_stream: like internal_stream} internal_stream then
+			elseif attached internal_stream as l_stream then
 				l_stream.write_byte (c.code.to_natural_8)
 			end
 		end
@@ -267,7 +267,7 @@ feature -- Input
 		local
 			a_code: INTEGER
 		do
-			if {l_stream: like internal_stream} internal_stream then
+			if attached internal_stream as l_stream then
 				a_code := l_stream.read_byte
 				if a_code = - 1 then
 					internal_end_of_file := True
@@ -357,7 +357,7 @@ feature {NONE} -- Implementation
 			str_area: NATIVE_ARRAY [NATURAL_8]
 		do
 			create str_area.make (nb)
-			if {l_stream: like internal_stream} internal_stream then
+			if attached internal_stream as l_stream then
 				Result := l_stream.read (str_area, 0, nb)
 			end
 			internal_end_of_file := peek = -1

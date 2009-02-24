@@ -37,13 +37,13 @@ feature -- Initialization
 
 feature -- Access
 
-	operands: ?OPEN_ARGS
+	operands: detachable OPEN_ARGS
 			-- Open operands.
 		local
 			i, nb: INTEGER
 			l_open_map: like open_map
 			l_pos: INTEGER
-			l_item: ?SYSTEM_OBJECT
+			l_item: detachable SYSTEM_OBJECT
 			l_internal: like internal_operands
 		do
 			l_open_map := open_map
@@ -73,7 +73,7 @@ feature -- Access
 			end
 		end
 
-	target: ?ANY
+	target: detachable ANY
 			-- Target of call.
 		do
 			Result ?= target_object
@@ -82,7 +82,7 @@ feature -- Access
 	hash_code: INTEGER
 			-- Hash code value.
 		do
-			if {l_rout_disp: like rout_disp} rout_disp then
+			if attached rout_disp as l_rout_disp then
 				Result := l_rout_disp.get_hash_code.hash_code
 			end
 		end
@@ -125,8 +125,8 @@ feature -- Status report
 		local
 			int_ops, other_int_ops: like internal_operands
 			i: INTEGER
-			e, oe: ?ANY
-			vt: ?VALUE_TYPE
+			e, oe: detachable ANY
+			vt: detachable VALUE_TYPE
 		do
 				--| Do not compare implementation data
 			Result := (rout_disp = other.rout_disp)
@@ -162,11 +162,11 @@ feature -- Status report
 			end
 		end
 
-	valid_operands (args: ?TUPLE): BOOLEAN
+	valid_operands (args: detachable TUPLE): BOOLEAN
 			-- Are `args' valid operands for this routine?
 		local
 			i, arg_type_code: INTEGER
-			arg: ?ANY
+			arg: detachable ANY
 			int: INTERNAL
 		do
 			create int
@@ -174,7 +174,7 @@ feature -- Status report
 					-- Void operands are only allowed
 					-- if object has no open operands.
 				Result := (open_map = Void)
-			elseif {l_open_map: like open_map} open_map and then int.generic_count (args) >= l_open_map.count then
+			elseif attached open_map as l_open_map and then int.generic_count (args) >= l_open_map.count then
 				from
 					Result := True
 					i := 1
@@ -199,7 +199,7 @@ feature -- Status report
 	is_target_closed: BOOLEAN
 			-- Is target for current agent closed, i.e. specified at creation time?
 		do
-			Result := not {l_open_map: like open_map} open_map or else not (l_open_map.count > 0 and then l_open_map.item (0) = 1)
+			Result := not attached open_map as l_open_map or else not (l_open_map.count > 0 and then l_open_map.item (0) = 1)
 		end
 
 feature -- Measurement
@@ -207,14 +207,14 @@ feature -- Measurement
 	open_count: INTEGER
 			-- Number of open operands.
 		do
-			if {l_open_map: like open_map} open_map then
+			if attached open_map as l_open_map then
 				Result := l_open_map.count
 			end
 		end
 
 feature -- Element change
 
-	frozen set_operands (args: ?OPEN_ARGS)
+	frozen set_operands (args: detachable OPEN_ARGS)
 			-- Use `args' as operands for next call.
 		require
 			valid_operands: valid_operands (args)
@@ -258,7 +258,7 @@ feature -- Element change
 			a_target_not_void: a_target /= Void
 			is_target_closed: is_target_closed
 			target_not_void: target /= Void
-			same_target_type: {t: like target}  target and then t.same_type (a_target)
+			same_target_type: attached target as t and then t.same_type (a_target)
 		do
 			target_object := a_target
 		ensure
@@ -281,7 +281,7 @@ feature -- Duplication
 
 feature -- Basic operations
 
-	call (args: ?OPEN_ARGS)
+	call (args: detachable OPEN_ARGS)
 			-- Call routine with operands `args'.
 		require
 			valid_operands: valid_operands (args)
@@ -320,16 +320,16 @@ feature -- Obsolete
 
 feature {ROUTINE} -- Implementation
 
-	frozen target_object: ?SYSTEM_OBJECT
+	frozen target_object: detachable SYSTEM_OBJECT
 			-- Target of call.
 
-	frozen internal_operands: ?NATIVE_ARRAY [?SYSTEM_OBJECT]
+	frozen internal_operands: detachable NATIVE_ARRAY [detachable SYSTEM_OBJECT]
 			-- All open and closed arguments provided at creation time
 
-	frozen open_map: ?NATIVE_ARRAY [INTEGER]
+	frozen open_map: detachable NATIVE_ARRAY [INTEGER]
 			-- Index map for open arguments
 
-	frozen rout_disp: ?METHOD_BASE
+	frozen rout_disp: detachable METHOD_BASE
 			-- Routine dispatcher
 
 	frozen is_cleanup_needed: BOOLEAN
@@ -418,7 +418,7 @@ feature {ROUTINE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	frozen open_types: ?ARRAY [INTEGER]
+	frozen open_types: detachable ARRAY [INTEGER]
 			-- Types of open operands
 
 	frozen remove_gc_reference
@@ -509,21 +509,21 @@ feature {NONE} -- Implementation
 
 feature -- Obsolete
 
-	arguments: ?OPEN_ARGS
+	arguments: detachable OPEN_ARGS
 		obsolete
 			"use operands"
 		do
 			Result := operands
 		end
 
-	set_arguments (args: ?OPEN_ARGS)
+	set_arguments (args: detachable OPEN_ARGS)
 		obsolete
 			"use set_operands"
 		do
 			set_operands (args)
 		end
 
-	valid_arguments (args: ?OPEN_ARGS): BOOLEAN
+	valid_arguments (args: detachable OPEN_ARGS): BOOLEAN
 		obsolete
 			"use valid_operands"
 		do

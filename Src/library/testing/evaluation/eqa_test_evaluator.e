@@ -35,7 +35,7 @@ inherit
 
 feature -- Status report
 
-	last_result: ?EQA_TEST_RESULT
+	last_result: detachable EQA_TEST_RESULT
 			-- Result last produced by `execute'
 
 feature {NONE} -- Access
@@ -53,7 +53,7 @@ feature -- Status report
 
 feature {NONE} -- Status report
 
-	last_invocation_response: ?EQA_TEST_INVOCATION_RESPONSE
+	last_invocation_response: detachable EQA_TEST_INVOCATION_RESPONSE
 			-- Response last produced by `safe_execute'
 
 feature -- Status setting
@@ -70,7 +70,7 @@ feature -- Status setting
 
 feature -- Execution
 
-	frozen execute (a_test_set: !EQA_TEST_SET; a_test: PROCEDURE [ANY, TUPLE [EQA_TEST_SET]]; a_name: !READABLE_STRING_8)
+	frozen execute (a_test_set: attached EQA_TEST_SET; a_test: PROCEDURE [ANY, TUPLE [EQA_TEST_SET]]; a_name: attached READABLE_STRING_8)
 			-- Run full test sequence for given test set and test procedure. This includes invoking `set_up'
 			-- on the {TEST_SET} instance, then calling the procedure providing the test set as an operand
 			-- and finally invoking `tear_down' on the test set.
@@ -117,7 +117,7 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	safe_execute (a_procedure: !PROCEDURE [ANY, TUPLE]; a_target: READABLE_STRING_8)
+	safe_execute (a_procedure: attached PROCEDURE [ANY, TUPLE]; a_target: READABLE_STRING_8)
 			-- Execute `procedure' in a protected way.
 		require
 			buffer_empty: buffer.is_empty
@@ -126,7 +126,7 @@ feature {NONE} -- Implementation
 			l_retry: BOOLEAN
 			l_old: PLAIN_TEXT_FILE
 			l_excpt: EXCEPTION
-			l_texcpt: !EQA_TEST_INVOCATION_EXCEPTION
+			l_texcpt: attached EQA_TEST_INVOCATION_EXCEPTION
 		do
 			if not l_retry then
 				l_old := io.default_output
@@ -150,7 +150,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	buffered_output: !STRING
+	buffered_output: attached STRING
 			-- Output buffered by `buffer'
 			--
 			-- Note: if output was truncated, add string indicating so.
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	relevant_trace_representation (a_trace: !STRING): !STRING
+	relevant_trace_representation (a_trace: attached STRING): attached STRING
 			-- Relevant representation of original stack trace
 			--
 			-- `a_trace': Original stack trace.
@@ -244,7 +244,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_lines (a_list: LIST [STRING]; a_string: !STRING; a_start, a_end: INTEGER)
+	append_lines (a_list: LIST [STRING]; a_string: attached STRING; a_start, a_end: INTEGER)
 			-- Append lines from `a_list' to `a_string' up to current position of `a_list'
 		require
 			a_list_attached: a_list /= Void
@@ -265,7 +265,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_invocation_of (a_lines: LIST [STRING]; a_class:!STRING; a_feature: ?STRING): BOOLEAN
+	is_invocation_of (a_lines: LIST [STRING]; a_class:attached STRING; a_feature: detachable STRING): BOOLEAN
 		require
 			a_lines_not_void: a_lines /= Void
 			not_a_lines_has_void: not a_lines.has (Void)
@@ -273,7 +273,7 @@ feature {NONE} -- Implementation
 			a_class_not_empty: a_class /= Void
 			a_feature_not_empty: a_feature /= Void implies a_feature.is_empty
 		local
-			l_current: ?STRING
+			l_current: detachable STRING
 		do
 			l_current := a_lines.item_for_iteration
 			Result := l_current.substring_index_in_bounds (a_class, 1, a_class.count) = 1 and then
@@ -300,20 +300,20 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	m_truncated: !STRING = "%N%N---------------------------%NTruncated section%N---------------------------%N%N"
-	m_separator: !STRING = "-------------------------------------------------------------------------------"
+	m_truncated: attached STRING = "%N%N---------------------------%NTruncated section%N---------------------------%N%N"
+	m_separator: attached STRING = "-------------------------------------------------------------------------------"
 
-	m_evaluator_name: !STRING
+	m_evaluator_name: attached STRING
 		once
 			create Result.make_from_string (generator)
 		end
 
-	m_procedure_name: !STRING
+	m_procedure_name: attached STRING
 		once
 			create Result.make_from_string ((agent do_nothing).generator)
 		end
 
-	m_default_asserter_name: !STRING
+	m_default_asserter_name: attached STRING
 		once
 			create Result.make_from_string ((create {EQA_ASSERTIONS}).generator)
 		end

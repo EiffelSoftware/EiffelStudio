@@ -80,7 +80,7 @@ feature -- Access
 			Result := "0"
 		end
 
-	file_name: ?STRING
+	file_name: detachable STRING
 			-- File name to which information applies.
 
 feature -- Status report
@@ -150,7 +150,7 @@ feature -- Element change
 		local
 			f: RAW_FILE
 			fi: FILE_INFO
-			l_name: ?SYSTEM_STRING
+			l_name: detachable SYSTEM_STRING
 		do
 			create f.make (f_name)
 			create fi.make (f_name.to_cil)

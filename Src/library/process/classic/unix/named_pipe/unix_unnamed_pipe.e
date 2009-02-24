@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: ?STRING
+	name: detachable STRING
 		do
 		end
 
@@ -338,7 +338,7 @@ feature -- Input
 	read_stream_non_block (nb_char: INTEGER)
 		local
 			count: INTEGER
-			mp: ?MANAGED_POINTER
+			mp: detachable MANAGED_POINTER
 			l_last_string: like last_string
 		do
 			last_read_successful := True

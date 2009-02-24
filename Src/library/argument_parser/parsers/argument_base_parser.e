@@ -120,7 +120,7 @@ feature {NONE} -- Access
 			l_args: ARRAY [STRING]
 			l_result: ARRAYED_LIST [STRING]
 			l_arg: STRING
-			l_next_arg: ?STRING
+			l_next_arg: detachable STRING
 			l_prefixes: like switch_prefixes
 			l_use_separated_switched: BOOLEAN
 			i, l_count: INTEGER
@@ -645,7 +645,7 @@ feature {NONE} -- Helpers
 
 feature -- Basic Operations
 
-	execute (a_action: PROCEDURE [ANY, ?TUPLE])
+	execute (a_action: PROCEDURE [ANY, detachable TUPLE])
 			-- Main entry point, which parses the supplied command line arguments and then executes the
 			-- supplied action if parsing an argument validation was successful.
 			--
@@ -695,7 +695,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Basic Operations
 
-	execute_noop (a_action: PROCEDURE [ANY, ?TUPLE])
+	execute_noop (a_action: PROCEDURE [ANY, detachable TUPLE])
 			-- Executes an action when no arguments of any worth are passed.
 			--
 			-- `a_action': The action to call once the current parser has validated it can accept no
@@ -721,12 +721,12 @@ feature {NONE} -- Parsing
 		local
 			l_switches: like available_switches
 			l_use_separated: like is_using_separated_switch_values
-			l_last_switch: ?ARGUMENT_SWITCH
+			l_last_switch: detachable ARGUMENT_SWITCH
 			l_cursor: CURSOR
 			l_option: STRING
-			l_value: ?STRING
-			l_switch: ?ARGUMENT_SWITCH
-			l_match_switch: ?ARGUMENT_SWITCH
+			l_value: detachable STRING
+			l_switch: detachable ARGUMENT_SWITCH
+			l_match_switch: detachable ARGUMENT_SWITCH
 			l_prefixes: like switch_prefixes
 			l_args: like arguments
 			l_upper: INTEGER
@@ -869,7 +869,7 @@ feature {NONE} -- Parsing
 
 									if l_match then
 										check l_switch_attached: l_switch /= Void end
-										if l_value /= Void and then not l_value.is_empty and then {l_value_switch: ARGUMENT_VALUE_SWITCH} l_match_switch then
+										if l_value /= Void and then not l_value.is_empty and then attached {ARGUMENT_VALUE_SWITCH} l_match_switch as l_value_switch then
 											internal_option_values.extend (l_value_switch.new_value_option (l_value))
 										else
 												-- Create user option
@@ -887,7 +887,7 @@ feature {NONE} -- Parsing
 							end
 						end
 					else
-						if {l_last_value_switch: ARGUMENT_VALUE_SWITCH} l_last_switch then
+						if attached {ARGUMENT_VALUE_SWITCH} l_last_switch as l_last_value_switch then
 							check
 								not_internal_option_values_is_empty: not internal_option_values.is_empty
 								same_name: internal_option_values.last.switch.id ~ l_last_value_switch.id
@@ -946,7 +946,7 @@ feature {NONE} -- Validation
 			has_parsed: has_parsed
 		local
 			l_switches: like available_switches
-			l_options: ?like options_of_name
+			l_options: detachable like options_of_name
 			l_switch_groups: like switch_groups
 			l_switch_appurtenances: like switch_dependencies
 			l_cursor: CURSOR
@@ -996,7 +996,7 @@ feature {NONE} -- Validation
 
 					l_ocursor := l_options.cursor
 
-					if {l_val_switch: ARGUMENT_VALUE_SWITCH} l_switch then
+					if attached {ARGUMENT_VALUE_SWITCH} l_switch as l_val_switch then
 						if not l_val_switch.is_value_optional then
 								-- Check argument exists
 							from l_options.start until l_options.after loop
@@ -1086,7 +1086,7 @@ feature {NONE} -- Validation
 			not_option_values_is_empty: not option_values.is_empty
 		local
 			l_dependencies: like switch_dependencies
-			l_switches: ?ARRAY [ARGUMENT_SWITCH]
+			l_switches: detachable ARRAY [ARGUMENT_SWITCH]
 			l_switch: ARGUMENT_SWITCH
 			l_options: like option_values
 			l_option: ARGUMENT_SWITCH
@@ -1196,7 +1196,7 @@ feature {NONE} -- Validation
 			has_parsed: has_parsed
 			switch_groups_attached: switch_groups /= Void
 		local
-			l_groups: ?like switch_groups
+			l_groups: detachable like switch_groups
 			l_cursor: CURSOR
 		do
 				-- Create extend switch groups
@@ -1241,7 +1241,7 @@ feature {NONE} -- Validation
 			if not l_switch_dependencies.is_empty then
 				from l_group_switches.start until l_group_switches.after loop
 					l_switch := l_group_switches.item
-					if {l_appurtenances: ARRAY [ARGUMENT_SWITCH]} l_switch_dependencies [l_switch] then
+					if attached {ARRAY [ARGUMENT_SWITCH]} l_switch_dependencies [l_switch] as l_appurtenances then
 						from
 							i := l_appurtenances.lower
 							l_upper := l_appurtenances.upper
@@ -1500,7 +1500,7 @@ feature {NONE} -- Output
 				-- Output available options			
 			from l_switches.start until l_switches.after loop
 				l_switch := l_switches.item
-				if {l_value_switch_1: ARGUMENT_VALUE_SWITCH} l_switch then
+				if attached {ARGUMENT_VALUE_SWITCH} l_switch as l_value_switch_1 then
 					l_value_switches.extend (l_value_switch_1)
 				end
 
@@ -1524,7 +1524,7 @@ feature {NONE} -- Output
 				if l_switch.optional then
 					l_desc.append (once " (Optional)")
 				end
-				if l_inline_args and then {l_value_switch_2: ARGUMENT_VALUE_SWITCH} l_switch then
+				if l_inline_args and then attached {ARGUMENT_VALUE_SWITCH} l_switch as l_value_switch_2 then
 					l_arg_name := l_value_switch_2.arg_name
 					l_desc.append (once "%N<")
 					l_desc.append (l_arg_name)
@@ -1690,7 +1690,7 @@ feature {NONE} -- Usage
 			a_src_group_contains_attached_items: assertions.sequence_contains_attached_items (a_src_group)
 		local
 			l_dependencies: like switch_dependencies
-			l_dependent_switches: ?ARRAY [ARGUMENT_SWITCH]
+			l_dependent_switches: detachable ARRAY [ARGUMENT_SWITCH]
 			l_use_separated: like is_using_separated_switch_values
 			l_cursor: CURSOR
 			l_switch: ARGUMENT_SWITCH
@@ -1718,7 +1718,7 @@ feature {NONE} -- Usage
 							end
 							Result.append_character (l_prefix)
 							Result.append (l_switch.name)
-							if {l_val_switch: ARGUMENT_VALUE_SWITCH} l_switch then
+							if attached {ARGUMENT_VALUE_SWITCH} l_switch as l_val_switch then
 								l_opt_val := l_val_switch.is_value_optional
 								if l_opt_val then
 									Result.append_character ('[')
@@ -1925,7 +1925,7 @@ feature {NONE} -- Switches
 
 feature {NONE} -- Temporary
 
-	frozen assertions: !ASSERTION_HELPER
+	frozen assertions: attached ASSERTION_HELPER
 			-- Temporary
 		once
 			create Result
@@ -2022,7 +2022,7 @@ feature {NONE} -- Internationalization
 
 feature {NONE} -- Implementation: Query
 
-	internal_option_of_name (a_name: READABLE_STRING_8): ?ARGUMENT_OPTION
+	internal_option_of_name (a_name: READABLE_STRING_8): detachable ARGUMENT_OPTION
 			-- Retrieves the first switch-qualified option, passed by user, by switch name.
 			--
 			-- `a_name': The switch names to retrieve an options for.
@@ -2066,7 +2066,7 @@ feature {NONE} -- Implementation: Internal cache
 	internal_values: ARRAYED_LIST [STRING]
 			-- Mutable, unprotected version of `values'
 
-	internal_argument_source: ?like argument_source
+	internal_argument_source: detachable like argument_source
 			-- Cached version of `arugment_source'.
 			-- Note: Do not use directly!
 

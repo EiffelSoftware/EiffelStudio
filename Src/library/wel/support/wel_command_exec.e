@@ -13,7 +13,7 @@ create
 
 feature -- Initialization
 
-	make (a_command: WEL_COMMAND; an_argument: ?ANY)
+	make (a_command: WEL_COMMAND; an_argument: detachable ANY)
 			-- Set `command' and `argument' with
 			-- `a_command' and `an_argument'.
 		require
@@ -31,7 +31,7 @@ feature -- Access
 	command: WEL_COMMAND
 			-- User-defined command to execute
 
-	argument: ?ANY
+	argument: detachable ANY
 			-- Argument to be given to `command' before execution
 
 feature -- Execution

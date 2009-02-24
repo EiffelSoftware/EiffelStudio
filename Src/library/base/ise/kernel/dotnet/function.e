@@ -22,10 +22,10 @@ inherit
 
 feature -- Access
 
-	last_result: ?RESULT_TYPE
+	last_result: detachable RESULT_TYPE
 			-- Result of last call, if any.
 
-	item (args: ?OPEN_ARGS): RESULT_TYPE
+	item (args: detachable OPEN_ARGS): RESULT_TYPE
 			-- Result of calling function with `args' as operands.
 		require
 			valid_operands: valid_operands (args)
@@ -33,14 +33,14 @@ feature -- Access
 		local
 			l_rout_disp: like rout_disp
 			l_spec: like internal_special
-			l_result_type: ?RESULT_TYPE
+			l_result_type: detachable RESULT_TYPE
 		do
 			set_operands (args)
 			clear_last_result
 			l_rout_disp := rout_disp
 			check l_rout_disp_attached: l_rout_disp /= Void end
 			l_result_type ?= l_rout_disp.invoke (target_object, internal_operands)
-			if {l_result: RESULT_TYPE} l_result_type then
+			if attached {RESULT_TYPE} l_result_type as l_result then
 				Result := l_result
 			else
 				l_spec := internal_special
@@ -88,7 +88,7 @@ feature -- Basic operations
 
 feature -- Obsolete
 
-	eval (args: ?OPEN_ARGS): RESULT_TYPE
+	eval (args: detachable OPEN_ARGS): RESULT_TYPE
 			-- Result of evaluating function for `args'.
 		obsolete
 			"Please use `item' instead"
@@ -104,14 +104,14 @@ feature -- Removal
 	clear_last_result
 			-- Reset content of `last_result' to its default value
 		local
-			l_result: ?RESULT_TYPE
+			l_result: detachable RESULT_TYPE
 		do
 			last_result := l_result
 		end
 
 feature {NONE} -- Hack
 
-	internal_special: ?SPECIAL [RESULT_TYPE];
+	internal_special: detachable SPECIAL [RESULT_TYPE];
 			-- Once per object behavior.
 
 note

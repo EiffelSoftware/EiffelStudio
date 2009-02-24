@@ -20,7 +20,7 @@ feature -- Access
 			create Result.make_empty
 		end
 
-	file_name : ?STRING
+	file_name : detachable STRING
 			-- Name of input file
 		local
 			l_file: like file
@@ -238,13 +238,13 @@ feature {NONE} -- Implementation
 	source_size: INTEGER;
 			-- Character number in file or string source
 
-	file: ?PLAIN_TEXT_FILE
+	file: detachable PLAIN_TEXT_FILE
 			-- File to be buffered
 
-	string: ?STRING;
+	string: detachable STRING;
 			-- String to be buffered
 
-	mask: ?FIXED_INTEGER_SET;
+	mask: detachable FIXED_INTEGER_SET;
 			-- Set of readable columns
 
 	source_is_file: BOOLEAN;
@@ -296,7 +296,7 @@ feature {NONE} -- Implementation
 			lines, columns: LEX_ARRAY [INTEGER];
 			cmask: like mask;
 			file_nb: INTEGER;
-			file_last_string: ?STRING
+			file_last_string: detachable STRING
 			l_file: like file
 		do
 			l_file := file

@@ -47,7 +47,7 @@ feature {NONE} -- Externals
 			"C [macro %"disptchr.h%"]"
 		end
 
-	cwel_set_dispatcher_object (dispatcher: ?like Current)
+	cwel_set_dispatcher_object (dispatcher: detachable like Current)
 		external
 			"C macro signature (EIF_OBJECT) use %"disptchr.h%""
 		end

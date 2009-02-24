@@ -45,7 +45,7 @@ feature -- Status report
 		require
 			an_expression_not_void: an_expression /= Void
 		do
-			if {l_variable: ITP_VARIABLE} an_expression then
+			if attached {ITP_VARIABLE} an_expression as l_variable then
 				Result := is_variable_defined (l_variable.index)
 			else
 				Result := True
@@ -71,9 +71,9 @@ feature -- Access
 			an_expression_not_void: an_expression /= Void
 			an_expression_defined: is_expression_defined (an_expression)
 		do
-			if {l_variable: ITP_VARIABLE} an_expression then
+			if attached {ITP_VARIABLE} an_expression as l_variable then
 				Result := variable_value (l_variable.index)
-			elseif {l_constant: ITP_CONSTANT} an_expression then
+			elseif attached {ITP_CONSTANT} an_expression as l_constant then
 				Result := l_constant.value
 			else
 				check

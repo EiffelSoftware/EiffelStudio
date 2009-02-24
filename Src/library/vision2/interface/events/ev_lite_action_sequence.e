@@ -33,7 +33,7 @@ create {EV_LITE_ACTION_SEQUENCE}
 
 feature -- Basic operations
 
-	call (event_data: ?EVENT_DATA)
+	call (event_data: detachable EVENT_DATA)
 			-- Call each procedure in order unless `is_blocked'.
 			-- If `is_paused' delay execution until `resume'.
 			-- Stop at current point in list on `abort'.

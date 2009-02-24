@@ -45,7 +45,7 @@ feature -- Access
 			Result := cwel_compareitemstruct_get_ctlid (item)
 		end
 
-	window_item: ?WEL_CONTROL
+	window_item: detachable WEL_CONTROL
 			-- Identifies the control.
 		do
 			Result ?= window_of_item (cwel_compareitemstruct_get_hwnditem (item))

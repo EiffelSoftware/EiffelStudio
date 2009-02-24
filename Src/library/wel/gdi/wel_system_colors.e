@@ -272,157 +272,157 @@ feature -- Access
 
 feature {WEL_COMPOSITE_WINDOW}
 
-	system_color_scrollbar_cell: CELL [?WEL_COLOR_REF]
+	system_color_scrollbar_cell: CELL [detachable WEL_COLOR_REF]
 			-- Container for `system_color_scrollbar'
 		once
 			create Result.put (Void)
 		end
 
-	system_color_background_cell: CELL [?WEL_COLOR_REF]
+	system_color_background_cell: CELL [detachable WEL_COLOR_REF]
 			-- Container for `system_color_background'
 		once
 			create Result.put (Void)
 		end
 
-	system_color_activecaption_cell: CELL [?WEL_COLOR_REF]
+	system_color_activecaption_cell: CELL [detachable WEL_COLOR_REF]
 			-- Container for `system_color_activecaption'
 		once
 			create Result.put (Void)
 		end
 
-	system_color_inactivecaption_cell: CELL [?WEL_COLOR_REF]
+	system_color_inactivecaption_cell: CELL [detachable WEL_COLOR_REF]
 			-- Container for `system_color_inactivecaption'
 		once
 			create Result.put (Void)
 		end
 
-	system_color_menu_cell: CELL [?WEL_COLOR_REF]
+	system_color_menu_cell: CELL [detachable WEL_COLOR_REF]
 			-- Container for `system_color_menu'
 		once
 			create Result.put (Void)
 		end
 
-	system_color_window_cell: CELL [?WEL_COLOR_REF]
+	system_color_window_cell: CELL [detachable WEL_COLOR_REF]
 			-- Container for `system_color_window'
 		once
 			create Result.put (Void)
 		end
 
-	system_color_windowframe_cell: CELL [?WEL_COLOR_REF]
+	system_color_windowframe_cell: CELL [detachable WEL_COLOR_REF]
 			-- Container for `system_color_windowframe'
 		once
 			create Result.put (Void)
 		end
 
-	system_color_menutext_cell: CELL [?WEL_COLOR_REF]
+	system_color_menutext_cell: CELL [detachable WEL_COLOR_REF]
 			-- Container for `system_color_menutext'
 		once
 			create Result.put (Void)
 		end
 
-	system_color_windowtext_cell: CELL [?WEL_COLOR_REF]
+	system_color_windowtext_cell: CELL [detachable WEL_COLOR_REF]
 			-- Container for `system_color_windowtext'
 		once
 			create Result.put (Void)
 		end
 
-	system_color_captiontext_cell: CELL [?WEL_COLOR_REF]
+	system_color_captiontext_cell: CELL [detachable WEL_COLOR_REF]
 			-- Container for `system_color_captiontext'
 		once
 			create Result.put (Void)
 		end
 
-	system_color_activeborder_cell: CELL [?WEL_COLOR_REF]
+	system_color_activeborder_cell: CELL [detachable WEL_COLOR_REF]
 			-- Container for `system_color_activeborder'
 		once
 			create Result.put (Void)
 		end
 
-	system_color_inactiveborder_cell: CELL [?WEL_COLOR_REF]
+	system_color_inactiveborder_cell: CELL [detachable WEL_COLOR_REF]
 			-- Container for `system_color_inactiveborder'
 		once
 			create Result.put (Void)
 		end
 
-	system_color_appworkspace_cell: CELL [?WEL_COLOR_REF]
+	system_color_appworkspace_cell: CELL [detachable WEL_COLOR_REF]
 			-- Container for `system_color_appworkspace'
 		once
 			create Result.put (Void)
 		end
 
-	system_color_highlight_cell: CELL [?WEL_COLOR_REF]
+	system_color_highlight_cell: CELL [detachable WEL_COLOR_REF]
 			-- Container for `system_color_highlight'
 		once
 			create Result.put (Void)
 		end
 
-	system_color_highlighttext_cell: CELL [?WEL_COLOR_REF]
+	system_color_highlighttext_cell: CELL [detachable WEL_COLOR_REF]
 			-- Container for `system_color_highlighttext'
 		once
 			create Result.put (Void)
 		end
 
-	system_color_btnface_cell: CELL [?WEL_COLOR_REF]
+	system_color_btnface_cell: CELL [detachable WEL_COLOR_REF]
 			-- Container for `system_color_btnface'
 		once
 			create Result.put (Void)
 		end
 
-	system_color_btnshadow_cell: CELL [?WEL_COLOR_REF]
+	system_color_btnshadow_cell: CELL [detachable WEL_COLOR_REF]
 			-- Container for `system_color_btnshadow'
 		once
 			create Result.put (Void)
 		end
 
-	system_color_graytext_cell: CELL [?WEL_COLOR_REF]
+	system_color_graytext_cell: CELL [detachable WEL_COLOR_REF]
 			-- Container for `system_color_graytext'
 		once
 			create Result.put (Void)
 		end
 
-	system_color_btntext_cell: CELL [?WEL_COLOR_REF]
+	system_color_btntext_cell: CELL [detachable WEL_COLOR_REF]
 			-- Container for `system_color_btntext'
 		once
 			create Result.put (Void)
 		end
 
-	system_color_inactivecaptiontext_cell: CELL [?WEL_COLOR_REF]
+	system_color_inactivecaptiontext_cell: CELL [detachable WEL_COLOR_REF]
 			-- Container for `system_color_inactivecaptiontext'
 		once
 			create Result.put (Void)
 		end
 
-	system_color_btnhighlight_cell: CELL [?WEL_COLOR_REF]
+	system_color_btnhighlight_cell: CELL [detachable WEL_COLOR_REF]
 			-- Container for `system_color_btnhighlight'
 		once
 			create Result.put (Void)
 		end
 
-	system_color_menuhilight_cell: CELL [?WEL_COLOR_REF]
+	system_color_menuhilight_cell: CELL [detachable WEL_COLOR_REF]
 			-- Container for `system_color_menuhilight'
 		once
 			create Result.put (Void)
 		end
 
-	system_color_menubar_cell: CELL [?WEL_COLOR_REF]
+	system_color_menubar_cell: CELL [detachable WEL_COLOR_REF]
 			-- Container for `system_color_menubar'
 		once
 			create Result.put (Void)
 		end
 
-	system_color_hotlight_cell: CELL [?WEL_COLOR_REF]
+	system_color_hotlight_cell: CELL [detachable WEL_COLOR_REF]
 			-- Container for `system_color_hotlight'
 		once
 			create Result.put (Void)
 		end
 
-	system_color_gradientactivecaption_cell: CELL [?WEL_COLOR_REF]
+	system_color_gradientactivecaption_cell: CELL [detachable WEL_COLOR_REF]
 			-- Container for `system_color_gradientactivecaption'
 		once
 			create Result.put (Void)
 		end
 
-	system_color_gradientinactivecaption_cell: CELL [?WEL_COLOR_REF]
+	system_color_gradientinactivecaption_cell: CELL [detachable WEL_COLOR_REF]
 			-- Container for `system_color_gradientinactivecaption'
 		once
 			create Result.put (Void)
@@ -430,14 +430,14 @@ feature {WEL_COMPOSITE_WINDOW}
 
 feature {NONE} -- Implementation
 
-	get_color (color_cell: CELL [?WEL_COLOR_REF]; color_constant: INTEGER): WEL_COLOR_REF
+	get_color (color_cell: CELL [detachable WEL_COLOR_REF]; color_constant: INTEGER): WEL_COLOR_REF
 			-- Return the color contained in `color_cell'. Create it
 			-- if necessary using the system color `color_constant'.
 		require
 			valid_cell: color_cell /= Void
 			valid_color: Wel_color_constants.valid_color_constant (color_constant)
 		local
-			loc_color: ?WEL_COLOR_REF
+			loc_color: detachable WEL_COLOR_REF
 		do
 			loc_color := color_cell.item
 			if loc_color = Void then

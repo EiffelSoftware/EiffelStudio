@@ -92,7 +92,7 @@ feature -- Basic Operations
 
 feature {CGI_ERROR_HANDLING} -- Exception handling
 
-	send_trace (s: ?STRING)
+	send_trace (s: detachable STRING)
 			-- Send the exception trace 's' to the browser, when
 			-- possible ( most cases ).
 		do
@@ -134,7 +134,7 @@ feature -- Advanced Settings
 			header.append ("%NPragma: " + a_pragma)
 		end
 
-	set_cookie (key, value: STRING; expiration, path, domain, secure: ?STRING)
+	set_cookie (key, value: STRING; expiration, path, domain, secure: detachable STRING)
 			-- Set a cookie on the client's machine
 			-- with key 'key' and value 'value'.
 		require

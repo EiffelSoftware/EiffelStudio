@@ -51,7 +51,7 @@ feature -- Redefine
 			if l_in_five_hot_area and a_dockable then
 
 				Result := True
-				if {lt_widget: EV_WIDGET} internal_zone then
+				if attached {EV_WIDGET} internal_zone as lt_widget then
 					l_half_height := (lt_widget.height * 0.5).ceiling
 					l_half_width := (lt_widget.width * 0.5).ceiling
 					if internal_rectangle_top.has_x_y (a_screen_x, a_screen_y) then
@@ -120,7 +120,7 @@ feature -- Redefine
 			else
 				l_window := internal_mediator.caller_top_window
 
-				if {lt_floating_zone: SD_FLOATING_ZONE} l_window then
+				if attached {SD_FLOATING_ZONE} l_window as lt_floating_zone then
 					lt_floating_zone.set_pointer_style_for_border (a_pointer_style)
 				end
 				l_window.set_pointer_style (a_pointer_style)

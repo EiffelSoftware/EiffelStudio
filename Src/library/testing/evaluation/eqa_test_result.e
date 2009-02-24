@@ -63,16 +63,16 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	date: !DATE_TIME
+	date: attached DATE_TIME
 			-- Date and time `Current' was retrieved
 
-	setup_response: ?EQA_TEST_INVOCATION_RESPONSE
+	setup_response: detachable EQA_TEST_INVOCATION_RESPONSE
 			-- Response from setup stage
 
-	test_response: ?EQA_TEST_INVOCATION_RESPONSE
+	test_response: detachable EQA_TEST_INVOCATION_RESPONSE
 			-- Response from test stage
 
-	teardown_response: ?EQA_TEST_INVOCATION_RESPONSE
+	teardown_response: detachable EQA_TEST_INVOCATION_RESPONSE
 			-- Response from teardown stage
 
 feature -- Status report

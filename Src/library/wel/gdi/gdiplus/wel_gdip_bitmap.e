@@ -82,7 +82,7 @@ feature {NONE} -- Initlization
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
-	make_from_bitmap (a_bitmap: WEL_BITMAP; a_palette: ?WEL_PALETTE)
+	make_from_bitmap (a_bitmap: WEL_BITMAP; a_palette: detachable WEL_PALETTE)
 			-- Creation method.
 			-- When convert from `a_bitmap' to Current, alpha channel data will lost.
 		require
@@ -271,7 +271,7 @@ feature -- Command
 
 feature -- Query
 
-	raw_format: ?WEL_GUID
+	raw_format: detachable WEL_GUID
 			-- Redefine
 		do
 			Result := raw_format_recorded
@@ -279,7 +279,7 @@ feature -- Query
 
 feature {NONE} -- Implementation
 
-	raw_format_recorded: ?WEL_GUID
+	raw_format_recorded: detachable WEL_GUID
 			-- When `load_image_from_file' we copied orignal datas to a memoryBMP image, we record orignal image type here.
 
 feature -- C externals

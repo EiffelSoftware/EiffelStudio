@@ -42,7 +42,7 @@ feature -- Access
 	class_name: STRING
 			-- Name of generating class which held attribute values
 		local
-			l_result: ?STRING
+			l_result: detachable STRING
 		do
 			check has_class_entry: has (Class_key) end
 			l_result ?= item (Class_key)

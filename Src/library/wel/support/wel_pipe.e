@@ -154,7 +154,7 @@ feature -- Status Report
 	last_read_successful: BOOLEAN
 			-- Was last read operation successful?
 
-	last_string: ?STRING_GENERAL
+	last_string: detachable STRING_GENERAL
 			-- Last read string
 
 	last_written_bytes: INTEGER
@@ -249,7 +249,7 @@ feature {NONE} -- Implementation
 			non_void_result: Result /= Void
 		end
 
-	security_attributes: ?WEL_SECURITY_ATTRIBUTES
+	security_attributes: detachable WEL_SECURITY_ATTRIBUTES
 			-- Security attributes used to create pipe
 			--
 			--| Note: This is not initialized in `make_client', otherwise it could be attached, more

@@ -22,7 +22,7 @@ feature -- RT extension identifiers (check eif_debug.h uses the same values)
 
 feature -- Object storage Access
 
-	saved_object_to (r: ?ANY; fn: STRING): ?ANY
+	saved_object_to (r: detachable ANY; fn: STRING): detachable ANY
 			-- Save object `r' into file `fn'
 		require
 			fn_attached: fn /= Void
@@ -40,7 +40,7 @@ feature -- Object storage Access
 			end
 		end
 
-	object_loaded_from (r: ?ANY; fn: STRING): ?ANY
+	object_loaded_from (r: detachable ANY; fn: STRING): detachable ANY
 			-- Loaded object from file `fn'.
 			-- if `r' is Void return a new object
 			-- else load into `r'
@@ -58,8 +58,8 @@ feature -- Object storage Access
 					file.open_read
 					o := file.retrieved
 					file.close
-					if {o1: ANY} r then
-						if {o2: ANY} o and then o1.same_type (o2) then
+					if attached {ANY} r as o1 then
+						if attached {ANY} o as o2 and then o1.same_type (o2) then
 							o1.standard_copy (o2)
 							Result := o1
 						end

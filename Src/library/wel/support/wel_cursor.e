@@ -94,7 +94,7 @@ feature -- Access
 			end
 		end
 
-	previous_cursor: ?WEL_CURSOR
+	previous_cursor: detachable WEL_CURSOR
 			-- Previously assigned cursor
 		local
 			a_default_pointer: POINTER

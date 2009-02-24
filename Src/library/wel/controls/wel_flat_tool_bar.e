@@ -97,16 +97,16 @@ feature -- Access
 
 	last_hot_bitmap_index: INTEGER
 
-	default_image_list: ?WEL_IMAGE_LIST
+	default_image_list: detachable WEL_IMAGE_LIST
 			-- ImageList associated with the toolbar
 			-- Note: only used in the "Win95+IE3" version
 
-	disabled_image_list: ?WEL_IMAGE_LIST
+	disabled_image_list: detachable WEL_IMAGE_LIST
 			-- ImageList associated with the toolbar for disabled
 			-- buttons
 			-- Note: only used in the "Win95+IE3" version
 
-	hot_image_list: ?WEL_IMAGE_LIST
+	hot_image_list: detachable WEL_IMAGE_LIST
 			-- ImageList associated with the toolbar for hot buttons
 			-- Note: only used in the "Win95+IE3" version
 
@@ -205,7 +205,7 @@ feature -- Element change
 			icon_exists: a_icon.exists
 		local
 			l_bitmap: WEL_BITMAP
-			l_info: ?WEL_ICON_INFO
+			l_info: detachable WEL_ICON_INFO
 			l_toolbar_bitmap: WEL_TOOL_BAR_BITMAP
 			l_default_image_list: like default_image_list
 		do
@@ -528,7 +528,7 @@ feature -- Obsolete
 		obsolete
 			"use add_bitmap instead"
 		local
-			l_bitmap: ?WEL_BITMAP
+			l_bitmap: detachable WEL_BITMAP
 			l_default_image_list: like default_image_list
 		do
 			has_bitmap := True

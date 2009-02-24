@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_link: ?DIFF_INDEX_LINK; a_src: INTEGER; a_dst: INTEGER)
+	make (a_link: detachable DIFF_INDEX_LINK; a_src: INTEGER; a_dst: INTEGER)
 			-- Create the element
 		do
 			next := a_link
@@ -30,7 +30,7 @@ feature -- Access
 	index_dst: INTEGER
 			-- The destination index of the link.
 
-	next: ?DIFF_INDEX_LINK;
+	next: detachable DIFF_INDEX_LINK;
 			-- The next link (or void if none)
 
 note

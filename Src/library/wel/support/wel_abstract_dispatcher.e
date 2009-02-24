@@ -49,7 +49,7 @@ feature -- Settings
 
 feature {NONE} -- Implementation: Access
 
-	exception_callback: ?PROCEDURE [ANY, TUPLE [EXCEPTION]]
+	exception_callback: detachable PROCEDURE [ANY, TUPLE [EXCEPTION]]
 			-- Action being executed when an exception occurs during
 
 feature {NONE} -- Implementation
@@ -57,7 +57,7 @@ feature {NONE} -- Implementation
 	frozen window_procedure (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER
 			-- Window messages dispatcher routine
 		local
-			window: ?WEL_WINDOW
+			window: detachable WEL_WINDOW
 			returned_value: POINTER
 			has_return_value: BOOLEAN
 			need_decrement: BOOLEAN
@@ -123,7 +123,7 @@ feature {NONE} -- Implementation
 	frozen dialog_procedure (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER
 			-- Dialog box messages dispatcher routine
 		local
-			window: ?WEL_WINDOW
+			window: detachable WEL_WINDOW
 			last_result: POINTER
 			need_decrement: BOOLEAN
 			retried: BOOLEAN
@@ -204,7 +204,7 @@ feature {NONE} -- Implementation
 		require
 			exception_manager.last_exception /= Void
 		local
-			l_exception: ?EXCEPTION
+			l_exception: detachable EXCEPTION
 		do
 			l_exception := exception_manager.last_exception
 			check l_exception_attached: l_exception /= Void end

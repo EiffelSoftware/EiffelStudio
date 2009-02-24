@@ -96,9 +96,9 @@ feature -- Status report
 			non_empty_address: addr /= Void and then not addr.is_empty
 			mode_valid: is_mode_valid (mode)
 		local
-			res: ?DATA_RESOURCE
-			u: ?URL
-			l_proxy: ?PROXY_INFORMATION
+			res: detachable DATA_RESOURCE
+			u: detachable URL
+			l_proxy: detachable PROXY_INFORMATION
 		do
 			resource_factory.set_address (addr)
 			if resource_factory.is_address_correct then
@@ -189,7 +189,7 @@ feature -- Status setting
 				l_timeout.put (s)
 			end
 		ensure
-			timeout_set: {l_timeout_var: like timeout} timeout and then l_timeout_var.item = s
+			timeout_set: attached timeout as l_timeout_var and then l_timeout_var.item = s
 		end
 
 	set_source_proxy (host: STRING; port: INTEGER)
@@ -201,7 +201,7 @@ feature -- Status setting
 			create source_proxy.make (host, port)
 		ensure
 			source_proxy_exists: source_proxy /= Void
-			host_port_set: {l_proxy: like source_proxy} source_proxy and then (l_proxy.host = host and l_proxy.port = port)
+			host_port_set: attached source_proxy as l_proxy and then (l_proxy.host = host and l_proxy.port = port)
 		end
 
 	set_target_proxy (host: STRING; port: INTEGER)
@@ -213,7 +213,7 @@ feature -- Status setting
 			create target_proxy.make (host, port)
 		ensure
 			target_proxy_exists: target_proxy /= Void
-			host_port_set: {l_proxy: like source_proxy} target_proxy and then (l_proxy.host = host and l_proxy.port = port)
+			host_port_set: attached {like source_proxy} target_proxy as l_proxy and then (l_proxy.host = host and l_proxy.port = port)
 		end
 
 	set_proxies (host: STRING; port: INTEGER)
@@ -228,7 +228,7 @@ feature -- Status setting
 		ensure
 			source_proxy_exists: source_proxy /= Void
 			proxies_equal: source_proxy = target_proxy
-			host_port_set: {l_proxy: like source_proxy} source_proxy and then (l_proxy.host = host and l_proxy.port = port)
+			host_port_set: attached source_proxy as l_proxy and then (l_proxy.host = host and l_proxy.port = port)
 		end
 
 	reset_source_proxy
@@ -265,10 +265,10 @@ feature -- Element change
 			source_exists: s /= Void
 			target_exists: t /= Void
 		local
-			sr: ?DATA_RESOURCE
-			tr: ?DATA_RESOURCE
-			su: ?URL
-			tu: ?URL
+			sr: detachable DATA_RESOURCE
+			tr: detachable DATA_RESOURCE
+			su: detachable URL
+			tu: detachable URL
 			ta: SINGLE_TRANSACTION
 			l_timeout: like timeout
 		do
@@ -404,10 +404,10 @@ feature {NONE} -- Implementation
 	transactions: ARRAYED_LIST [TRANSACTION]
 			-- Registered transactions
 
-	optimized_transactions: ?ARRAYED_LIST [TRANSACTION]
+	optimized_transactions: detachable ARRAYED_LIST [TRANSACTION]
 			-- Optimized transactions
 
-	transfer_manager: ?TRANSFER_MANAGER
+	transfer_manager: detachable TRANSFER_MANAGER
 			-- Transfer manager
 
 	readable_set: BINARY_SEARCH_TREE_SET [STRING]
@@ -419,14 +419,14 @@ feature {NONE} -- Implementation
 	resource_hash: HASH_TABLE [DATA_RESOURCE, STRING]
 			-- Hash table of created resources
 
-	timeout: ?CELL [INTEGER]
+	timeout: detachable CELL [INTEGER]
 			-- Duration of timeout in seconds
 			-- (If `Void' the default value is used.)
 
-	source_proxy: ?PROXY_INFORMATION
+	source_proxy: detachable PROXY_INFORMATION
 			-- Information about proxy for the source resource
 
-	target_proxy: ?PROXY_INFORMATION
+	target_proxy: detachable PROXY_INFORMATION
 			-- Information about proxy for the target resource
 
 	optimized_count: INTEGER
@@ -454,7 +454,7 @@ feature {NONE} -- Implementation
 		local
 			hash: HASH_TABLE [LINKED_LIST [INTEGER], URL]
 			addr: URL
-			lst: ?LINKED_LIST [INTEGER]
+			lst: detachable LINKED_LIST [INTEGER]
 			multitrans: MULTIPLE_TRANSACTION
 			l_optimized_transactions: like optimized_transactions
 		do
@@ -506,7 +506,7 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			optimized:
-				{l_optimized_transactions_var: like optimized_transactions} optimized_transactions and then
+				attached optimized_transactions as l_optimized_transactions_var and then
 					l_optimized_transactions_var.is_empty
 		end
 

@@ -48,13 +48,13 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	object: ?ANY
+	object: detachable ANY
 			-- Target object.
 
 	dynamic_class_type_id: INTEGER
 			-- Related dynamic class type id.
 		do
-			if {o: ANY} object then
+			if attached {ANY} object as o then
 				Result := rt_dynamic_type (o) --class_type_id
 			end
 		end
@@ -65,13 +65,13 @@ feature -- Properties
 	feature_rout_id: INTEGER
 			-- Related feature routine id.
 
-	breakable_info: ?TUPLE [line: INTEGER; nested: INTEGER]
+	breakable_info: detachable TUPLE [line: INTEGER; nested: INTEGER]
 			-- Breakable info when call occurred.
 
 	depth: INTEGER
 			-- Call stack depth of Current's call
 
-	parent: ?like Current
+	parent: detachable like Current
 			-- Parent's call record.
 
 	steps: ARRAYED_LIST [BOOLEAN]
@@ -80,10 +80,10 @@ feature -- Properties
 			--| When not is_replaying, Cursor is always `after'
 			--| When is_replaying, Cursor point to replayed position's step
 
-	call_records: ?ARRAYED_LIST [like Current]
+	call_records: detachable ARRAYED_LIST [like Current]
 			-- Sub call records.
 
-	value_records: ?ARRAYED_LIST [RT_DBG_VALUE_RECORD]
+	value_records: detachable ARRAYED_LIST [RT_DBG_VALUE_RECORD]
 			-- Recorded values (assignment...)
 
 	flat_value_records_has_local: BOOLEAN
@@ -93,7 +93,7 @@ feature -- Properties
 		local
 			c: CURSOR
 		do
-			if {vals: like value_records} value_records then
+			if attached value_records as vals then
 				c := vals.cursor
 				from
 					vals.start
@@ -116,11 +116,11 @@ feature -- Measure
 	last_position: TUPLE [line: INTEGER; nested: INTEGER]
 			-- Last position
 
-	same_object_type (ref: ?ANY): BOOLEAN
+	same_object_type (ref: detachable ANY): BOOLEAN
 			-- Is `ref' representing the same value as `object' ?
 		do
-			if {r: ANY} ref then
-				Result := {o: like object} object and then dynamic_type (o) = dynamic_type (r)
+			if attached {ANY} ref as r then
+				Result := attached object as o and then dynamic_type (o) = dynamic_type (r)
 			else
 				Result := object = Void
 			end
@@ -184,7 +184,7 @@ feature -- Status
 			curs: CURSOR
 			c: like Current
 		do
-			if {l_calls: like call_records} call_records and then l_calls.count > 0 then
+			if attached call_records as l_calls and then l_calls.count > 0 then
 				curs := l_calls.cursor
 				from
 					Result := True
@@ -209,7 +209,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Status report
 		require
 			c_attached: c /= Void
 		do
-			Result := {p: like parent} parent and then p.has_call_record (c)
+			Result := attached parent as p and then p.has_call_record (c)
 		end
 
 	is_last_call_record (c: like Current): BOOLEAN
@@ -217,7 +217,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Status report
 		require
 			c_attached: c /= Void
 		do
-			Result := {crecs: like call_records} call_records and then not crecs.is_empty and then crecs.last = c
+			Result := attached call_records as crecs and then not crecs.is_empty and then crecs.last = c
 		end
 
 	has_call_record (c: like Current): BOOLEAN
@@ -225,7 +225,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Status report
 		require
 			c_attached: c /= Void
 		do
-			Result := {crecs: like call_records} call_records and then crecs.has (c)
+			Result := attached call_records as crecs and then crecs.has (c)
 		end
 
 feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
@@ -240,7 +240,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 			p.add_call_record (Current)
 			set_breakable_info (p.last_position.twin)
 		ensure
-			in_parent_records: {ot_p: like parent} parent and then {cr: like call_records} ot_p.call_records and then cr.has (Current)
+			in_parent_records: attached parent as ot_p and then attached {like call_records} ot_p.call_records as cr and then cr.has (Current)
 		end
 
 	add_call_record (c: like Current)
@@ -253,7 +253,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 		local
 			crecs: like call_records
 		do
-			if {ot_crecs: like call_records} call_records then
+			if attached call_records as ot_crecs then
 				crecs := ot_crecs
 			else
 				create crecs.make (5)
@@ -267,7 +267,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 				depth := c.depth - 1
 			end
 		ensure
-			in_records: {cr: like call_records} call_records and then cr.has (c) and then cr.after
+			in_records: attached call_records as cr and then cr.has (c) and then cr.after
 		end
 
 	remove_parent
@@ -297,7 +297,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 			register_value_step
 			recorder.increment_records_count (+1)
 		ensure
-			in_records: {vr: like value_records} value_records and then vr.has (v) and then vr.after
+			in_records: attached value_records as vr and then vr.has (v) and then vr.after
 		end
 
 	record_fields
@@ -309,14 +309,14 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 			rs: like value_records
 		do
 			if not is_expanded then
-				if {o: like object} object then
+				if attached object as o then
 					rs := object_records (o)
 				end
 				value_records := rs
 			end
 
 			debug ("RT_DBG_RECORD")
-				if {ot_rs: like value_records} rs then
+				if attached {like value_records} rs as ot_rs then
 					dtrace_indent (depth); dtrace ("record_fields -> " + ot_rs.count.out + " value(s).%N")
 					ot_rs.do_all (agent (r: RT_DBG_VALUE_RECORD)
 						require
@@ -338,7 +338,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 			curs: CURSOR
 			c: like Current
 		do
-			if {l_calls: like call_records} call_records and then l_calls.count > 0 then
+			if attached call_records as l_calls and then l_calls.count > 0 then
 				curs := l_calls.cursor
 				from
 					l_calls.finish
@@ -394,7 +394,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 			r_not_current: r /= Current
 			is_not_closed: not is_closed
 		local
-			n: ?like Current
+			n: detachable like Current
 		do
 			from
 				deep_close
@@ -418,7 +418,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 			if value_records = Void then
 				create value_records.make (0)
 			end
-			if {vals: like value_records} value_records then
+			if attached value_records as vals then
 				get_value_records_flattened_into (vals)
 			end
 			if not recorder.keep_calls_records then
@@ -492,7 +492,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 					end
 				end
 
-				if {crecs: like call_records} call_records then
+				if attached call_records as crecs then
 					c := crecs.cursor
 					from
 						crecs.start
@@ -531,15 +531,15 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 		local
 			ot: ARRAYED_LIST [ANY] -- indexed by `oi'
 			ort: ARRAY [LIST [RT_DBG_VALUE_RECORD]] -- indexed by `oi'
-			orcds: ?LIST [RT_DBG_VALUE_RECORD]
+			orcds: detachable LIST [RT_DBG_VALUE_RECORD]
 			rec: RT_DBG_VALUE_RECORD
-			o: ?ANY
+			o: detachable ANY
 			oi: INTEGER
 			b: BOOLEAN
 			n: INTEGER
 			retried: BOOLEAN
 		do
-			if not retried and then {vals: like value_records} value_records then
+			if not retried and then attached value_records as vals then
 				n := 0
 				if vals.count > 1 then
 					from
@@ -551,7 +551,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 					loop
 						rec := vals.item_for_iteration
 						check is_not_local_record: not rec.is_local_record end
-						if {rec_obj: ANY} rec.associated_object then
+						if attached {ANY} rec.associated_object as rec_obj then
 							if o /= rec_obj then
 								o := rec_obj
 								ot.search (o)
@@ -640,16 +640,16 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Query
 	is_ready_to_add_value_record: BOOLEAN
 			-- Is Current's structures in valid context to add value record?
 		do
-			Result := {vrecs: like value_records} value_records implies vrecs.after
+			Result := attached value_records as vrecs implies vrecs.after
 		end
 
 	is_ready_to_add_call_record: BOOLEAN
 			-- Is Current's structures in valid context to add call record?
 		do
-			Result := {crecs: like call_records} call_records implies crecs.after
+			Result := attached call_records as crecs implies crecs.after
 		end
 
-	record_count_but (c: ?like Current): INTEGER
+	record_count_but (c: detachable like Current): INTEGER
 			-- Number of records contained by Current and sub calls
 			-- apart from the records contained by `c' (and sub calls)
 		local
@@ -657,14 +657,14 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Query
 			p: CURSOR
 		do
 			if is_flat then
-				if {ffr: like value_records} value_records then
+				if attached value_records as ffr then
 					Result := ffr.count
 				end
 			else
-				if {vrs: like value_records} value_records then
+				if attached value_records as vrs then
 					Result := vrs.count
 				end
-				if {crs: like call_records} call_records then
+				if attached call_records as crs then
 					p := crs.cursor
 					from
 						crs.start
@@ -689,21 +689,21 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Query
 			-- Bottom's call record.
 		do
 			Result := Current
-			if {p: like parent} parent then
+			if attached parent as p then
 				Result := p.bottom
 			end
 		ensure
 			result_attached: Result /= Void
 		end
 
-	call_by_id (a_id: STRING): ?like Current
+	call_by_id (a_id: STRING): detachable like Current
 		require
 			a_id_not_empty: a_id.count > 0
 		local
 			p: INTEGER
 			i: INTEGER
 			r: like Current
-			sub_id: ?STRING
+			sub_id: detachable STRING
 		do
 			debug ("RT_DBG_REPLAY")
 				dtrace_indent (depth); dtrace ("call_by_id (" + a_id + ")%N")
@@ -715,7 +715,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Query
 			else
 				i := a_id.to_integer_32
 			end
-			if {crecs: like call_records} call_records then
+			if attached call_records as crecs then
 				if crecs.valid_index (i) then
 					r := crecs.i_th (i)
 					if sub_id = Void then
@@ -736,12 +736,12 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Query
 			end
 		end
 
-	associated_replayable_call: ?like Current
+	associated_replayable_call: detachable like Current
 			-- Associated replayable call
 		do
 			if rt_information_available then
 				Result := Current
-			elseif {p: like parent} parent then
+			elseif attached parent as p then
 				Result := p.associated_replayable_call
 			end
 		ensure
@@ -751,7 +751,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Query
 	available_calls_to_bottom: INTEGER
 			-- Number of available calls to reach the bottom record.
 		do
-			if {p: like parent} parent then
+			if attached parent as p then
 				Result := p.available_calls_to_bottom
 			end
 			Result := Result + 1
@@ -760,12 +760,12 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Query
 	to_string (a_level: INTEGER): STRING
 			-- String representation of Current
 		local
-			subs: ?STRING
+			subs: detachable STRING
 			at_subs: STRING
 			l_steps: like steps
 			i: INTEGER
-			val_cursor: ?CURSOR
-			call_cursor: ?CURSOR
+			val_cursor: detachable CURSOR
+			call_cursor: detachable CURSOR
 			c,v: INTEGER
 			l_calls: like call_records
 			l_values: like value_records
@@ -780,7 +780,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Query
 			Result.append_character ('.')
 			Result.append_integer (feature_rout_id)
 			Result.append_character ('.')
-			if {bi: like breakable_info} breakable_info then
+			if attached breakable_info as bi then
 				Result.append_integer (bi.line)  -- bp slot index
 				Result.append_character ('.')
 				Result.append_integer (bi.nested) -- bp slot nested index
@@ -789,7 +789,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Query
 				Result.append_character ('.')
 				Result.append_integer (0) -- bp slot nested index
 			end
-			if is_replaying and then {rbi: like replayed_position} replayed_position then
+			if is_replaying and then attached replayed_position as rbi then
 				Result.append_character ('.')
 				Result.append_integer (rbi.line)  -- bp slot index
 				Result.append_character ('.')
@@ -810,7 +810,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Query
 			v := 0
 			if a_level /= 0 then
 				l_steps := steps
-				if l_steps.count > 0 and then {steps_cursor: CURSOR} l_steps.cursor then
+				if l_steps.count > 0 and then attached {CURSOR} l_steps.cursor as steps_cursor then
 					create at_subs.make_empty
 					subs := at_subs
 					from
@@ -906,7 +906,7 @@ feature {RT_DBG_EXECUTION_RECORDER} -- Steps
 			is_replaying: is_replaying
 		local
 			l_steps: like steps
-			rpos: ?like last_position
+			rpos: detachable like last_position
 		do
 			l_steps := steps
 			if l_steps.after then
@@ -916,24 +916,24 @@ feature {RT_DBG_EXECUTION_RECORDER} -- Steps
 			else
 				if l_steps.item then
 					check value_records_attached: value_records /= Void end
-					if {vrecs: like value_records} value_records then
+					if attached value_records as vrecs then
 						rpos := vrecs.item.breakable_info
 					end
 				else
 					check call_records_attached: call_records /= Void end
-					if {crecs: like call_records} call_records then
+					if attached call_records as crecs then
 						rpos := crecs.item.breakable_info
 					end
 				end
 			end
-			if {ot_rpos: like replayed_position} rpos then
+			if attached {like replayed_position} rpos as ot_rpos then
 				Result := ot_rpos
 			else
 				Result := [0, 0]
 			end
 		end
 
-	left_step: ?ARRAYED_LIST [RT_DBG_VALUE_RECORD]
+	left_step: detachable ARRAYED_LIST [RT_DBG_VALUE_RECORD]
 			-- Record between current and previous step
 			--| also move replayed cursors
 		require
@@ -954,7 +954,7 @@ feature {RT_DBG_EXECUTION_RECORDER} -- Steps
 			if not l_steps.before then
 				if l_steps.item then --| Value
 					check value_records_attached: value_records /= Void end
-					if {vrecs: like value_records} value_records then
+					if attached value_records as vrecs then
 						vrecs.move (-1)
 						create Result.make (1)
 						check value_records_not_before: not vrecs.before end
@@ -966,7 +966,7 @@ feature {RT_DBG_EXECUTION_RECORDER} -- Steps
 					end
 				else --| call
 					check call_records_attached: call_records /= Void end
-					if {crecs: like call_records} call_records then
+					if attached call_records as crecs then
 						crecs.move (-1)
 						debug ("RT_DBG_REPLAY")
 							dtrace ("CALL ")
@@ -985,11 +985,11 @@ feature {RT_DBG_EXECUTION_RECORDER} -- Steps
 				end
 			end
 		ensure
-			value_records_cursor_valid: {vrecs2: like value_records} value_records implies not vrecs2.before
-			call_records_cursor_valid:  {crecs2: like call_records} call_records   implies not crecs2.before
+			value_records_cursor_valid: attached value_records as vrecs2 implies not vrecs2.before
+			call_records_cursor_valid:  attached call_records as crecs2   implies not crecs2.before
 			steps_before_implies_record_first: steps.before implies (
-						(not {vrecs3: like value_records} value_records or else vrecs3.isfirst) and
-						(not {crecs3: like call_records} call_records   or else crecs3.isfirst)
+						(not attached value_records as vrecs3 or else vrecs3.isfirst) and
+						(not attached call_records as crecs3   or else crecs3.isfirst)
 					)
 		end
 
@@ -1012,13 +1012,13 @@ feature {RT_DBG_EXECUTION_RECORDER} -- Steps
 				if not l_steps.after then
 					if l_steps.item then
 						check value_records_attached: value_records /= Void end
-						if {vrecs: like value_records} value_records then
+						if attached value_records as vrecs then
 							check not vrecs.after end
 							vrecs.move (+1)
 						end
 					else
 						check call_records_attached: call_records /= Void end
-						if {crecs: like call_records} call_records then
+						if attached call_records as crecs then
 							check not crecs.after end
 							crecs.move (+1)
 						end
@@ -1030,8 +1030,8 @@ feature {RT_DBG_EXECUTION_RECORDER} -- Steps
 				dtrace_indent (depth); dtrace ("revert_left_step -end-%N")
 			end
 		ensure
-			steps.after implies ({crecs2: like call_records} call_records implies crecs2.after) and
-							({vrecs2: like value_records} value_records  implies vrecs2.after)
+			steps.after implies (attached call_records as crecs2 implies crecs2.after) and
+							(attached value_records as vrecs2  implies vrecs2.after)
 		end
 
 feature {NONE} -- Steps implementation
@@ -1087,15 +1087,15 @@ feature -- debug
 			l_steps: like steps
 			i: INTEGER
 			v,c: INTEGER
-			val_cursor: ?CURSOR
-			call_cursor: ?CURSOR
+			val_cursor: detachable CURSOR
+			call_cursor: detachable CURSOR
 			l_values: like value_records
 			l_calls: like call_records
 		do
 			l_steps := steps
 			l_values := value_records
 			l_calls := call_records
-			if {steps_cursor: CURSOR} l_steps.cursor then
+			if attached {CURSOR} l_steps.cursor as steps_cursor then
 				from
 					i := l_steps.index
 					v := 0
@@ -1162,7 +1162,7 @@ feature -- debug
 			tn: STRING
 		do
 			tn := type_name_of_type (class_type_id)
-			if {o: like object} object and then {otn: STRING} o.generating_type then
+			if attached object as o and then attached {STRING} o.generating_type as otn then
 				if tn = Void or else otn /~ tn then
 					if tn /= Void then
 						tn := otn + " from " + tn
@@ -1177,7 +1177,7 @@ feature -- debug
 
 			Result := "{" + tn + "}."
 			Result.append (feature_rout_id.out + " <" + depth.out + ">")
-			if {bi: like breakable_info} breakable_info then
+			if attached breakable_info as bi then
 				Result.append_character (' ')
 				Result.append_character ('(')
 				Result.append_integer (bi.line)  -- bp slot index
@@ -1190,7 +1190,7 @@ feature -- debug
 				Result.append_character ('&')
 			end
 
-			if {obj: like object} object and then rt_dynamic_type (obj) /= class_type_id then
+			if attached object as obj and then rt_dynamic_type (obj) /= class_type_id then
 				Result.append_string (" -> ERROR Dtype(obj):" + rt_dynamic_type (obj).out + " /= " + class_type_id.out)
 			end
 		end
@@ -1199,7 +1199,7 @@ invariant
 	recorder_attached: recorder /= Void
 	steps_attached: steps /= Void
 	last_position_attached: last_position /= Void
-	non_empty_call_records: {crecs: like call_records} call_records implies not crecs.is_empty
+	non_empty_call_records: attached call_records as crecs implies not crecs.is_empty
 	value_records_not_void_if_flat: is_flat implies value_records /= Void
 
 note

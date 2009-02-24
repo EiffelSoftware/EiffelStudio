@@ -49,7 +49,7 @@ feature {NONE} -- Usage
 	command_option_group_configuration (a_group: LIST [ARGUMENT_SWITCH]; a_show_non_switch: BOOLEAN; a_non_switch_required: BOOLEAN; a_add_appurtenances: BOOLEAN; a_src_group: LIST [ARGUMENT_SWITCH]): STRING
 			-- <Precursor>
 		local
-			l_suffix: ?STRING
+			l_suffix: detachable STRING
 			l_arg: STRING
 		do
 			l_suffix := Precursor {ARGUMENT_BASE_PARSER} (a_group, a_show_non_switch, a_non_switch_required, a_add_appurtenances, a_src_group)
@@ -88,7 +88,7 @@ feature {NONE} -- Validation
 
 feature {NONE} -- Internationalization
 
-	e_one_non_switch_only: STRING is "Only one {1} can be specified."
+	e_one_non_switch_only: STRING = "Only one {1} can be specified."
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

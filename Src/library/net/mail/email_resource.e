@@ -14,7 +14,7 @@ inherit
 
 feature -- Access
 
-	header (h: STRING): ?HEADER
+	header (h: STRING): detachable HEADER
 			-- Retrieve the content of the header 'h'
 		do
 			Result := headers.item (h)

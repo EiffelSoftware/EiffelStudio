@@ -52,7 +52,7 @@ feature -- Status report
 
 feature -- Status settings
 
-	set_text (a_text: ?STRING_GENERAL)
+	set_text (a_text: detachable STRING_GENERAL)
 			-- Set the window text
 		local
 			a_wel_string: WEL_STRING

@@ -11,7 +11,7 @@ class
 
 feature -- Access
 
-	a_string: !STRING_8
+	a_string: attached STRING_8
 	a_current: like Current
 	a_integer: INTEGER
 

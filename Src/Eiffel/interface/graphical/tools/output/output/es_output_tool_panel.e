@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 		do
 			make_with_tool
 			if text_area /= Void then
-				stone_director.bind (text_area.widget, Current)
+				stone_director.bind (text_area.editor_drawing_area, Current)
 			end
 		end
 

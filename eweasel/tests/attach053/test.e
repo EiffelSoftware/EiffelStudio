@@ -44,4 +44,88 @@ feature -- Initialization
 			Result.append ("TEST")
 		end
 
+	g (o: ANY; u: STRING; i: INTEGER; b: BOOLEAN)
+		do
+		ensure
+			e1: attached o
+			e2: attached o as x
+			e3: attached {STRING} o
+			e4: attached {STRING} o as x
+			e5: attached old o
+			e6: attached old o as x
+			e7: attached {STRING} old o
+			e7: attached {STRING} old o as x
+
+			e1: attached (o)
+			e2: attached (o) as x
+			e3: attached {STRING} (o)
+			e4: attached {STRING} (o) as x
+			e5: attached (old o)
+			e6: attached (old o) as x
+			e7: attached {STRING} (old o)
+			e7: attached {STRING} (old o) as x
+
+			e1: attached u + u
+			e2: attached u + u as w
+			e3: attached {STRING} u + u
+			e4: attached {STRING} u + u as w
+			e1: attached (u + u)
+			e2: attached (u + u) as w
+			e3: attached {STRING} (u + u)
+			e4: attached {STRING} (u + u) as w
+
+			e1: attached old u + u
+			e2: attached old u + u as w
+			e3: attached {STRING} old u + u
+			e4: attached {STRING} old u + u as w
+			e1: attached old u + old u
+			e2: attached old u + old u as w
+			e3: attached {STRING} old u + old u
+			e4: attached {STRING} old u + old u as w
+			e1: attached old (u + u)
+			e2: attached old (u + u) as w
+			e3: attached {STRING} old (u + u)
+			e4: attached {STRING} old (u + u) as w
+
+			e1: attached -i
+			e2: attached -i as j
+			e3: attached {STRING} -i
+			e4: attached {STRING} -i as j
+			e5: attached old -i
+			e6: attached old -i as x
+			e7: attached {STRING} old -i
+			e7: attached {STRING} old -i as j
+
+			e1: attached not b
+			e1: attached not b as c
+			e1: attached {STRING} not b
+			e1: attached {STRING} not b as c
+			e1: attached old not b
+			e1: attached old not b as c
+			e1: attached {STRING} old not b
+			e1: attached {STRING} old not b as c
+
+			e1: attached o = u
+			e1: attached o ~ u
+			e1: attached o /= u
+			e1: attached o /~ u
+			e1: attached o = u as bool
+			e1: attached o ~ u as bool
+			e1: attached o /= u as bool
+			e1: attached o /~ u as bool
+			e1: attached {STRING} o = u
+			e1: attached {STRING} o ~ u
+			e1: attached {STRING} o /= u
+			e1: attached {STRING} o /~ u
+			e1: attached {STRING} o = u as bool
+			e1: attached {STRING} o ~ u as bool
+			e1: attached {STRING} o /= u as bool
+			e1: attached {STRING} o /~ u as bool
+
+			a1: attached agent f
+			a1: attached agent f as p
+			a1: attached {STRING} agent f
+			a1: attached {STRING} agent f as p
+		end
+
 end

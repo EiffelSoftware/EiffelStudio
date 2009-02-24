@@ -27,5 +27,6 @@ feature {NONE} -- Test
 
 $KW
 	what: "More description";
+	test: "Final"
 
 end

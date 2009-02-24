@@ -74,7 +74,7 @@ feature {NONE} -- Basic operations
 			--       name and value will consequently be Void also.
 		local
 			l_value: like value
-			l_pval, l_pname: ?STRING
+			l_pval, l_pname: detachable STRING
 			l_count: INTEGER
 			l_pos: INTEGER
 		do

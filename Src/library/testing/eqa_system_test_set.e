@@ -21,12 +21,12 @@ inherit
 
 feature {EQA_SYSTEM_EXECUTION} -- Access
 
-	file_system: !EQA_FILE_SYSTEM
+	file_system: attached EQA_FILE_SYSTEM
 			-- File system for creating directories and files
 		require
 			prepared: is_prepared
 		local
-			l_file_system: ?EQA_FILE_SYSTEM
+			l_file_system: detachable EQA_FILE_SYSTEM
 			l_env: like environment
 			l_platform: PLATFORM
 		do
@@ -40,12 +40,12 @@ feature {EQA_SYSTEM_EXECUTION} -- Access
 			Result := l_file_system
 		end
 
-	environment: !EQA_SYSTEM_ENVIRONMENT
+	environment: attached EQA_SYSTEM_ENVIRONMENT
 			-- Environment specifying source/target directory for `Current'.
 		require
 			prepared: is_prepared
 		local
-			l_env: ?like environment_cache
+			l_env: detachable like environment_cache
 		do
 			l_env := environment_cache
 			if l_env = Void then
@@ -57,43 +57,43 @@ feature {EQA_SYSTEM_EXECUTION} -- Access
 
 feature {NONE} -- Access: execution
 
-	current_execution: ?EQA_SYSTEM_EXECUTION
+	current_execution: detachable EQA_SYSTEM_EXECUTION
 
 feature {NONE} -- Access: caching
 
-	file_system_cache: ?like file_system
+	file_system_cache: detachable like file_system
 			-- Cache for `file_system'
 
-	environment_cache: ?like environment
+	environment_cache: detachable like environment
 			-- Cache for `environment'
 
 feature {NONE} -- Query
 
-	compare_output (a_output: !READABLE_STRING_8)
+	compare_output (a_output: attached READABLE_STRING_8)
 		require
 			current_execution_attached: current_execution /= Void
-			current_execution_exited: {l_exec_exited: !like current_execution} current_execution and then
+			current_execution_exited: attached current_execution as l_exec_exited and then
 				l_exec_exited.is_launched and then l_exec_exited.has_exited
-			current_execution_stored_output: {l_exec_out: !like current_execution} current_execution and then
+			current_execution_stored_output: attached current_execution as l_exec_out and then
 				l_exec_out.output_path /= Void
 		local
-			l_path: ?EQA_SYSTEM_PATH
+			l_path: detachable EQA_SYSTEM_PATH
 		do
 			l_path := current_execution.output_path
 			check l_path /= Void end
 			assert ("identical_output", file_system.has_same_content_as_string (l_path, a_output))
 		end
 
-	compare_output_with_file (a_output_path: !EQA_SYSTEM_PATH)
+	compare_output_with_file (a_output_path: attached EQA_SYSTEM_PATH)
 		require
 			current_execution_attached: current_execution /= Void
-			current_execution_exited: {l_exec_exited: !like current_execution} current_execution and then
+			current_execution_exited: attached current_execution as l_exec_exited and then
 				l_exec_exited.is_launched and then l_exec_exited.has_exited
-			current_execution_stored_output: {l_exec_out: !like current_execution} current_execution and then
+			current_execution_stored_output: attached current_execution as l_exec_out and then
 				l_exec_out.output_path /= Void
 			a_output_path_not_empty: not a_output_path.is_empty
 		local
-			l_path: ?EQA_SYSTEM_PATH
+			l_path: detachable EQA_SYSTEM_PATH
 		do
 			l_path := current_execution.output_path
 			check l_path /= Void end
@@ -102,7 +102,7 @@ feature {NONE} -- Query
 
 feature {NONE} -- Basic operations
 
-	prepare_system (a_output_path: !EQA_SYSTEM_PATH)
+	prepare_system (a_output_path: attached EQA_SYSTEM_PATH)
 			-- Create new `current_execution' using provided path to store output.
 			--
 			-- `a_output_path': Path where output retrieved from system will be stored.
@@ -114,26 +114,26 @@ feature {NONE} -- Basic operations
 			current_execution := l_exec
 		ensure
 			current_execution_attached: current_execution /= Void
-			current_execution_uses_environment: {l_exec_e: !like current_execution} current_execution and then
+			current_execution_uses_environment: attached current_execution as l_exec_e and then
 				l_exec_e.environment = environment
-			current_execution_not_launched: {l_exec_nl: !like current_execution} current_execution and then
+			current_execution_not_launched: attached current_execution as l_exec_nl and then
 				not l_exec_nl.is_launched
-			current_execution_uses_valid_output: {l_exec_o: !like current_execution} current_execution and then
+			current_execution_uses_valid_output: attached current_execution as l_exec_o and then
 				l_exec_o.output_path ~ old a_output_path
 		end
 
-	run_system (a_args: !ARRAY [STRING])
+	run_system (a_args: attached ARRAY [STRING])
 			-- Launch `current_execution' and process output until it exits.
 		require
 			current_execution_attached: current_execution /= Void
-			current_execution_not_launched: {l_exec_nl: !like current_execution} current_execution and then
+			current_execution_not_launched: attached current_execution as l_exec_nl and then
 				not l_exec_nl.is_launched
 		local
 			l_exec: like current_execution
 		do
 			l_exec := current_execution
 			check l_exec /= Void end
-			a_args.do_all (agent (a_arg: STRING; a_exec: !like current_execution)
+			a_args.do_all (agent (a_arg: STRING; a_exec: attached like current_execution)
 				require
 					a_arg_attached: a_arg /= Void
 				do
@@ -145,7 +145,7 @@ feature {NONE} -- Basic operations
 			current_execution := l_exec
 		ensure
 			current_execution_unchanged: current_execution = old current_execution
-			current_execution_exited: {l_exec_exited: !like current_execution} current_execution and then
+			current_execution_exited: attached current_execution as l_exec_exited and then
 				l_exec_exited.is_launched and then l_exec_exited.has_exited
 		end
 
@@ -195,8 +195,8 @@ feature {NONE} -- Events
 		end
 
 invariant
-	environment_cache_valid: {l_env: like environment} environment_cache implies l_env.test_set = Current
-	file_system_cache_valid: {l_fs: like file_system} file_system_cache implies l_fs.environment = environment
+	environment_cache_valid: attached {like environment} environment_cache as l_env implies l_env.test_set = Current
+	file_system_cache_valid: attached {like file_system} file_system_cache as l_fs implies l_fs.environment = environment
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"

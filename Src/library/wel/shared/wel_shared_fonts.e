@@ -31,7 +31,7 @@ feature -- Access
 		local
 			system_parameter_info: WEL_SYSTEM_PARAMETERS_INFO
 			non_client_metrics: WEL_NON_CLIENT_METRICS
-			loc_font: ?WEL_FONT
+			loc_font: detachable WEL_FONT
 		do
 			loc_font := message_font_cell.item
 			if loc_font = Void then
@@ -50,7 +50,7 @@ feature -- Access
 		local
 			system_parameter_info: WEL_SYSTEM_PARAMETERS_INFO
 			non_client_metrics: WEL_NON_CLIENT_METRICS
-			loc_font: ?WEL_FONT
+			loc_font: detachable WEL_FONT
 		do
 			loc_font := menu_font_cell.item
 			if loc_font = Void then
@@ -69,7 +69,7 @@ feature -- Access
 		local
 			system_parameter_info: WEL_SYSTEM_PARAMETERS_INFO
 			non_client_metrics: WEL_NON_CLIENT_METRICS
-			loc_font: ?WEL_FONT
+			loc_font: detachable WEL_FONT
 		do
 			loc_font := status_font_cell.item
 			if loc_font = Void then
@@ -88,7 +88,7 @@ feature -- Access
 		local
 			system_parameter_info: WEL_SYSTEM_PARAMETERS_INFO
 			non_client_metrics: WEL_NON_CLIENT_METRICS
-			loc_font: ?WEL_FONT
+			loc_font: detachable WEL_FONT
 		do
 			loc_font := caption_font_cell.item
 			if loc_font = Void then
@@ -107,7 +107,7 @@ feature -- Access
 		local
 			system_parameter_info: WEL_SYSTEM_PARAMETERS_INFO
 			non_client_metrics: WEL_NON_CLIENT_METRICS
-			loc_font: ?WEL_FONT
+			loc_font: detachable WEL_FONT
 		do
 			loc_font := small_caption_font_cell.item
 			if loc_font = Void then
@@ -123,31 +123,31 @@ feature -- Access
 
 feature {WEL_COMPOSITE_WINDOW}
 
-	message_font_cell: CELL [?WEL_FONT]
+	message_font_cell: CELL [detachable WEL_FONT]
 			-- Container for `message_font'
 		once
 			create Result.put (Void)
 		end
 
-	menu_font_cell: CELL [?WEL_FONT]
+	menu_font_cell: CELL [detachable WEL_FONT]
 			-- Container for `menu_font'
 		once
 			create Result.put (Void)
 		end
 
-	status_font_cell: CELL [?WEL_FONT]
+	status_font_cell: CELL [detachable WEL_FONT]
 			-- Container for `status_font'
 		once
 			create Result.put (Void)
 		end
 
-	caption_font_cell: CELL [?WEL_FONT]
+	caption_font_cell: CELL [detachable WEL_FONT]
 			-- Container for `caption_font'
 		once
 			create Result.put (Void)
 		end
 
-	small_caption_font_cell: CELL [?WEL_FONT]
+	small_caption_font_cell: CELL [detachable WEL_FONT]
 			-- Container for `small_caption_font'
 		once
 			create Result.put (Void)

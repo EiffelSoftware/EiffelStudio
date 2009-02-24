@@ -14,7 +14,7 @@ inherit
 
 feature -- Access
 
-	process_id_pair_list: ?LINKED_LIST [WEL_PROCESS_ID_PAIR]
+	process_id_pair_list: detachable LINKED_LIST [WEL_PROCESS_ID_PAIR]
 			-- List of process id pairs taken from a system snapshot.
 			-- first item of a pair is parent process id, second item of a pair is process id.
 		local
@@ -44,7 +44,7 @@ feature -- Access
 			end
 		end
 
-	process_information: ?ARRAYED_LIST [WEL_PROCESS_ENTRY_32]
+	process_information: detachable ARRAYED_LIST [WEL_PROCESS_ENTRY_32]
 			-- Information about all running processes
 		local
 			ptr: POINTER
@@ -242,7 +242,7 @@ feature{NONE} -- Thread iteration
 			]"
 		end
 
-	thread_information: ?ARRAYED_LIST [WEL_THREAD_ENTRY_32]
+	thread_information: detachable ARRAYED_LIST [WEL_THREAD_ENTRY_32]
 			-- Information of all threads that are running
 		local
 			handle: POINTER

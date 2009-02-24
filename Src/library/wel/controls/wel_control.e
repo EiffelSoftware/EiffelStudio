@@ -102,7 +102,7 @@ feature -- Basic operations
 			valid_parent: a_parent /= Void and then a_parent.exists
 		local
 			hwnd: POINTER
-			window: ?WEL_WINDOW
+			window: detachable WEL_WINDOW
 		do
 			hwnd := cwin_get_next_dlgtabitem (a_parent.item, item, after)
 			window := window_of_item (hwnd)
@@ -119,7 +119,7 @@ feature -- Basic operations
 			valid_parent: a_parent /= Void and then a_parent.exists
 		local
 			hwnd: POINTER
-			window: ?WEL_WINDOW
+			window: detachable WEL_WINDOW
 		do
 			hwnd := cwin_get_next_dlggroupitem (a_parent.item, item, after)
 			window := window_of_item (hwnd)

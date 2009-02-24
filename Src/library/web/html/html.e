@@ -78,7 +78,7 @@ feature -- Wipe out
 
 feature -- Set
 
-	set_title (s: ?STRING)
+	set_title (s: detachable STRING)
 		do
 			if s /= Void then
 				title_value := s.twin
@@ -98,7 +98,7 @@ feature -- Add new options
 
 feature {NONE}
 
-    has_value(s: ?STRING): BOOLEAN
+    has_value(s: detachable STRING): BOOLEAN
             -- Has the attribute 's' a value ?
         do
             Result := s /= Void and then not s.is_empty

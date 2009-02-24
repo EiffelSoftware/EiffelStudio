@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- initialization
 
-	make_basic (a_window: ?WEL_WINDOW; a_text, a_title: STRING_GENERAL; a_style,a_language,a_sublanguage: INTEGER)
+	make_basic (a_window: detachable WEL_WINDOW; a_text, a_title: STRING_GENERAL; a_style,a_language,a_sublanguage: INTEGER)
 			-- create a MSGBOXPARAMS structure
 			-- without user icon.
 			-- With `a_window' as parent, `a_text' displayed as message, `a_title' displayed in title bar.
@@ -49,7 +49,7 @@ feature {NONE} -- initialization
 				a_wel_string2.item, a_style, default_pointer, cwin_make_lang_id (a_language, a_sublanguage))
 		end
 
-	make_by_id (a_window: ?WEL_WINDOW; a_text, a_title: STRING_GENERAL; a_style, an_id, a_language, a_sublanguage: INTEGER)
+	make_by_id (a_window: detachable WEL_WINDOW; a_text, a_title: STRING_GENERAL; a_style, an_id, a_language, a_sublanguage: INTEGER)
 			-- create a MSGBOXPARAMS structure
 			-- with user icon defined by `an_id, `a_window' as parent, `a_text' displayed as message,
 			--`a_title' displayed in title bar and `a_style' as the window style.

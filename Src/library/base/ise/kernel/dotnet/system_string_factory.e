@@ -16,10 +16,10 @@ feature -- Conversion
 		local
 			i, nb: INTEGER
 			l_str: STRING_BUILDER
-			l_dummy: ?STRING_BUILDER
-			l_string: ?SYSTEM_STRING
+			l_dummy: detachable STRING_BUILDER
+			l_string: detachable SYSTEM_STRING
 		do
-			if {l_str8: STRING_8} a_str then
+			if attached {STRING_8} a_str as l_str8 then
 				create Result.make (l_str8.area.native_array, 0, a_str.count)
 			else
 				nb := a_str.count
@@ -50,7 +50,7 @@ feature -- Conversion
 		local
 			i, nb: INTEGER
 		do
-			if {l_str8: STRING_8} a_result then
+			if attached {STRING_8} a_result as l_str8 then
 				a_str.copy_to (0, l_str8.area.native_array, 0, a_str.length)
 			else
 				from

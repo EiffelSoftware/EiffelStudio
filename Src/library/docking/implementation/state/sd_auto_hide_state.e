@@ -210,7 +210,7 @@ feature -- Redefine
 			l_docking_state: SD_DOCKING_STATE
 		do
 			content.set_visible (True)
-			if {lt_widget: EV_WIDGET} a_target_zone then
+			if attached {EV_WIDGET} a_target_zone as lt_widget then
 				internal_docking_manager.command.lock_update (lt_widget, False)
 			else
 				check not_possible: False end

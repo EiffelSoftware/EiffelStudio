@@ -127,7 +127,7 @@ feature -- Status report
 			{WEL_API}.send_message (item, Hdm_hit_test, to_wparam (0), Result.item)
 		end
 
-	get_image_list: ?WEL_IMAGE_LIST
+	get_image_list: detachable WEL_IMAGE_LIST
 			-- Get the image list associated with `Current'
 			-- or `Void' if none.
 		local
@@ -231,7 +231,7 @@ feature -- Element change
 			a_window_style: INTEGER
 			l_success: BOOLEAN
 			l_window_pos: WEL_WINDOW_POS
-			l_window: ?WEL_WINDOW
+			l_window: detachable WEL_WINDOW
 		do
 			l_window_pos := retrieved_window_position (parent_client_rect)
 
@@ -258,7 +258,7 @@ feature -- Element change
 										a_window_style)
 		end
 
-	set_image_list (image_list: ?WEL_IMAGE_LIST)
+	set_image_list (image_list: detachable WEL_IMAGE_LIST)
 			-- Associate `image_list' with `Current'.
 			-- If `image_list' is `Void', removes the currently associated
 			-- image list (if any).

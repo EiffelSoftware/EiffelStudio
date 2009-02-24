@@ -227,7 +227,7 @@ feature -- Element change
 			value_set: usage = a_value
 		end
 
-	set_local_name (a_value: ?STRING_GENERAL)
+	set_local_name (a_value: detachable STRING_GENERAL)
 			-- Set `local_name' to `a_value'
 			--
 			-- Can only be set if `scope' is equal to `Resource_connected'
@@ -250,7 +250,7 @@ feature -- Element change
 			value_set: equal (local_name, a_value)
 		end
 
-	set_remote_name (a_value: ?STRING_GENERAL)
+	set_remote_name (a_value: detachable STRING_GENERAL)
 			-- Set `remote_name' to `a_value'
 			--
 			-- The string can be MAX_PATH characters in length, and it must
@@ -274,7 +274,7 @@ feature -- Element change
 			value_set: equal (remote_name, a_value)
 		end
 
-	set_comment (a_value: ?STRING_GENERAL)
+	set_comment (a_value: detachable STRING_GENERAL)
 			-- Set `comment' to `a_value'
 		local
 			string_pointer: POINTER
@@ -292,7 +292,7 @@ feature -- Element change
 			value_set: equal (comment, a_value)
 		end
 
-	set_provider (a_value: ?STRING_GENERAL)
+	set_provider (a_value: detachable STRING_GENERAL)
 			-- Set `provider' to `a_value'
 		local
 			string_pointer: POINTER
@@ -320,16 +320,16 @@ feature -- Measurement
 
 feature {NONE} -- Implementation
 
-	internal_local_name: ?WEL_STRING
+	internal_local_name: detachable WEL_STRING
 			-- WEL_STRING for `local_name'. Void if none.
 
-	internal_remote_name: ?WEL_STRING
+	internal_remote_name: detachable WEL_STRING
 			-- WEL_STRING for `remote_name'. Void if none.
 
-	internal_comment: ?WEL_STRING
+	internal_comment: detachable WEL_STRING
 			-- WEL_STRING for `comment'. Void if none.
 
-	internal_provider: ?WEL_STRING
+	internal_provider: detachable WEL_STRING
 			-- WEL_STRING for `provider'. Void if none.
 
 feature {NONE} -- Externals

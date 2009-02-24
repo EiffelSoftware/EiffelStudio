@@ -68,7 +68,7 @@ feature
 
 	host_name: STRING
 		local
-			l_name: ?STRING
+			l_name: detachable STRING
 		do
 			l_name := internal_host_name
 			if l_name /= Void then
@@ -96,7 +96,7 @@ feature {NETWORK_SOCKET_ADDRESS}
 
 feature {NONE} -- Implementation
 
-    internal_host_name: ?STRING
+    internal_host_name: detachable STRING
 
 feature {NONE} -- Externals
 

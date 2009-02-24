@@ -22,7 +22,7 @@ inherit
 
 feature {NONE} -- Access
 
-	last_object: ?ANY
+	last_object: detachable ANY
 	last_boolean: BOOLEAN
 	last_character_8: CHARACTER_8
 	last_character_32: CHARACTER_32
@@ -79,7 +79,7 @@ feature {NONE} -- Basic operations
 	execute_safe (a_routine: ROUTINE [ANY, TUPLE])
 			-- Call `a_agent'
 		require
-			no_open_args: ({l_args: TUPLE} a_routine.empty_operands) and then l_args.count = 0
+			no_open_args: (attached {TUPLE} a_routine.empty_operands as l_args) and then l_args.count = 0
 		local
 			l_rescued: BOOLEAN
 			l_empty: TUPLE
@@ -91,34 +91,34 @@ feature {NONE} -- Basic operations
 				check l_empty.count = 0 end
 				a_routine.call (l_empty)
 
-				if {l_func: FUNCTION [ANY, TUPLE, ANY]} a_routine then
-					if {l_bool_func: FUNCTION [ANY, TUPLE, BOOLEAN]} l_func then
+				if attached {FUNCTION [ANY, TUPLE, ANY]} a_routine as l_func then
+					if attached {FUNCTION [ANY, TUPLE, BOOLEAN]} l_func as l_bool_func then
 						last_boolean := l_bool_func.last_result
-					elseif {l_char8_func: FUNCTION [ANY, TUPLE, CHARACTER_8]} l_func then
+					elseif attached {FUNCTION [ANY, TUPLE, CHARACTER_8]} l_func as l_char8_func then
 						last_character_8 := l_char8_func.last_result
-					elseif {l_char32_func: FUNCTION [ANY, TUPLE, CHARACTER_32]} l_func then
+					elseif attached {FUNCTION [ANY, TUPLE, CHARACTER_32]} l_func as l_char32_func then
 						last_character_32 := l_char32_func.last_result
-					elseif {l_int8_func: FUNCTION [ANY, TUPLE, INTEGER_8]} l_func then
+					elseif attached {FUNCTION [ANY, TUPLE, INTEGER_8]} l_func as l_int8_func then
 						last_integer_8 := l_int8_func.last_result
-					elseif {l_int16_func: FUNCTION [ANY, TUPLE, INTEGER_16]} l_func then
+					elseif attached {FUNCTION [ANY, TUPLE, INTEGER_16]} l_func as l_int16_func then
 						last_integer_16 := l_int16_func.last_result
-					elseif {l_int32_func: FUNCTION [ANY, TUPLE, INTEGER_32]} l_func then
+					elseif attached {FUNCTION [ANY, TUPLE, INTEGER_32]} l_func as l_int32_func then
 						last_integer_32 := l_int32_func.last_result
-					elseif {l_int64_func: FUNCTION [ANY, TUPLE, INTEGER_64]} l_func then
+					elseif attached {FUNCTION [ANY, TUPLE, INTEGER_64]} l_func as l_int64_func then
 						last_integer_64 := l_int64_func.last_result
-					elseif {l_nat8_func: FUNCTION [ANY, TUPLE, NATURAL_8]} l_func then
+					elseif attached {FUNCTION [ANY, TUPLE, NATURAL_8]} l_func as l_nat8_func then
 						last_natural_8 := l_nat8_func.last_result
-					elseif {l_nat16_func: FUNCTION [ANY, TUPLE, NATURAL_16]} l_func then
+					elseif attached {FUNCTION [ANY, TUPLE, NATURAL_16]} l_func as l_nat16_func then
 						last_natural_16 := l_nat16_func.last_result
-					elseif {l_nat32_func: FUNCTION [ANY, TUPLE, NATURAL_32]} l_func then
+					elseif attached {FUNCTION [ANY, TUPLE, NATURAL_32]} l_func as l_nat32_func then
 						last_natural_32 := l_nat32_func.last_result
-					elseif {l_nat64_func: FUNCTION [ANY, TUPLE, NATURAL_64]} l_func then
+					elseif attached {FUNCTION [ANY, TUPLE, NATURAL_64]} l_func as l_nat64_func then
 						last_natural_64 := l_nat64_func.last_result
-					elseif {l_real32_func: FUNCTION [ANY, TUPLE, REAL_32]} l_func then
+					elseif attached {FUNCTION [ANY, TUPLE, REAL_32]} l_func as l_real32_func then
 						last_real_32 := l_real32_func.last_result
-					elseif {l_real64_func: FUNCTION [ANY, TUPLE, REAL_64]} l_func then
+					elseif attached {FUNCTION [ANY, TUPLE, REAL_64]} l_func as l_real64_func then
 						last_real_64 := l_real64_func.last_result
-					elseif {l_pointer_func: FUNCTION [ANY, TUPLE, POINTER]} l_func then
+					elseif attached {FUNCTION [ANY, TUPLE, POINTER]} l_func as l_pointer_func then
 						last_pointer := l_pointer_func.last_result
 					else
 						last_object := l_func.last_result

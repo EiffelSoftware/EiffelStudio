@@ -117,7 +117,7 @@ feature {NONE} -- Access
 
 feature -- Reflection
 
-	find_class (name: STRING): ?JAVA_CLASS
+	find_class (name: STRING): detachable JAVA_CLASS
 			-- Load in the Java class with the given name.
 			-- Namespace if any are delimited by `/'
 		require
@@ -142,7 +142,7 @@ feature -- Reflection
 		require
 			classp_not_null: classp /= default_pointer
 		local
-			l_result: ?JAVA_CLASS
+			l_result: detachable JAVA_CLASS
 		do
 			l_result := java_class_table.item (classp)
 			if l_result = Void then
@@ -226,7 +226,7 @@ feature -- Object creation
 			end
 		end
 
-	new_string (v: ?STRING): POINTER
+	new_string (v: detachable STRING): POINTER
 			-- Create a new java string from `v'.
 		local
 			l_str: C_STRING
@@ -432,7 +432,7 @@ feature -- Calls
 			end
 		end
 
-	call_string_method (oid: POINTER; mid: POINTER; args: POINTER): ?STRING
+	call_string_method (oid: POINTER; mid: POINTER; args: POINTER): detachable STRING
 			-- Call function `mid' with argument `args' on object `oid'.
 		local
 			p, null: POINTER
@@ -538,7 +538,7 @@ feature -- Static calls
 			end
 		end
 
-	call_static_string_method (cls: POINTER; mid: POINTER; argsp: POINTER): ?STRING
+	call_static_string_method (cls: POINTER; mid: POINTER; argsp: POINTER): detachable STRING
 		require
 			cls_not_null: cls /= default_pointer
 			mid_not_null: mid /= default_pointer
@@ -638,7 +638,7 @@ feature -- Field Access
 			end
 		end
 
-	get_string_field (oid: POINTER; fid: POINTER): ?STRING
+	get_string_field (oid: POINTER; fid: POINTER): detachable STRING
 		require
 			oid_not_null: oid /= default_pointer
 			fid_not_null: fid /= default_pointer
@@ -737,7 +737,7 @@ feature -- Static Field access
 			end
 		end
 
-	get_static_string_field (cls: POINTER; fid: POINTER): ?STRING
+	get_static_string_field (cls: POINTER; fid: POINTER): detachable STRING
 		require
 			cls_not_null: cls /= default_pointer
 			fid_not_null: fid /= default_pointer

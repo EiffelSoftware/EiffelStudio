@@ -10,7 +10,7 @@ class
 
 feature {WEL_DISPATCHER} -- Dialog creation
 
-	new_dialog: ?WEL_DIALOG
+	new_dialog: detachable WEL_DIALOG
 			-- Dialog which will be created after receiving WM_INITDIALOG message.
 		do
 			Result := new_dialog_cell.item
@@ -18,7 +18,7 @@ feature {WEL_DISPATCHER} -- Dialog creation
 
 feature {NONE} -- Implementation
 
-	new_dialog_cell: CELL [?WEL_DIALOG]
+	new_dialog_cell: CELL [detachable WEL_DIALOG]
 			-- Save dialog that is going to be created
 		once
 			create Result.put (Void)

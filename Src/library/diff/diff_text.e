@@ -65,7 +65,7 @@ feature -- Access
 						-- What kind of line is it (add or remove)
 					l_line := l_hunk.item
 					check l_line_attached: l_line /= Void end
-					if {l_line_add: DIFF_LINE_ADD} l_line then
+					if attached {DIFF_LINE_ADD} l_line as l_line_add then
 						if ds > l_line_add.dst then
 							ds := l_line_add.dst
 						end
@@ -181,7 +181,7 @@ feature -- Element change
 			a_dst_file_not_empty: not a_dst_file.is_empty
 		local
 			file_src, file_dst: PLAIN_TEXT_FILE
-			line: ?STRING
+			line: detachable STRING
 			i: INTEGER
 			l_header: like unified_header
 			l_src: like src
@@ -331,7 +331,7 @@ feature {NONE} -- Implementation
 			Result := '%N'
 		end
 
-	unified_header: ?STRING
+	unified_header: detachable STRING
 			-- The header for the unified diff.
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"

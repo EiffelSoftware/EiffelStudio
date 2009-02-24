@@ -48,7 +48,7 @@ create
 
 feature {PROCESS_UNIX_OS} -- Creation
 
-	make (fname: STRING; args: ?LIST [STRING]; working_dir: like working_directory)
+	make (fname: STRING; args: detachable LIST [STRING]; working_dir: like working_directory)
 			-- Create a process object which represents an
 			-- independent process that can execute the
 			-- program residing in file `fname'
@@ -66,9 +66,9 @@ feature {PROCESS_UNIX_OS} -- Creation
 			set_is_executing (False)
 		ensure
 			program_file_name_set: program_file_name.is_equal (fname)
-			input_file_name_empty: {l_input_fn: like input_file_name} input_file_name and then l_input_fn.is_empty
-			output_file_name_empty: {l_output_fn: like output_file_name} output_file_name and then l_output_fn.is_empty
-			error_file_name_empty: {l_error_fn: like error_file_name} error_file_name and then l_error_fn.is_empty
+			input_file_name_empty: attached input_file_name as l_input_fn and then l_input_fn.is_empty
+			output_file_name_empty: attached output_file_name as l_output_fn and then l_output_fn.is_empty
+			error_file_name_empty: attached error_file_name as l_error_fn and then l_error_fn.is_empty
 			input_not_piped: not input_piped
 			output_not_piped: not output_piped
 			error_not_piped: not error_piped
@@ -93,10 +93,10 @@ feature -- Access
 			end
 		end
 
-	working_directory: ?STRING
+	working_directory: detachable STRING
 			-- Working directory of process
 
-	arguments_for_exec: ?ARRAY [STRING]
+	arguments_for_exec: detachable ARRAY [STRING]
 			-- Arguments to be passed to `exec_process'
 
 feature -- Status report
@@ -131,7 +131,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_arguments (arg_list: ?LIST [STRING])
+	set_arguments (arg_list: detachable LIST [STRING])
 			-- Set `arguments' to `args'.
 		local
 			count: INTEGER
@@ -273,7 +273,7 @@ feature {PROCESS_IMP} -- Process management
 			-- Check `is_last_process_spawn_successful' after to make sure process has been spawned successfully.
         local
             ee: EXECUTION_ENVIRONMENT
-            cur_dir: ?STRING
+            cur_dir: detachable STRING
             exceptions: EXCEPTIONS
             d: like internal_debug_mode
             l_working_directory: like working_directory
@@ -390,10 +390,10 @@ feature {PROCESS_IMP} -- Process management
 			end
 		end
 
-	last_output: ?STRING
+	last_output: detachable STRING
 			-- Last read data from output pipe
 
-	last_error: ?STRING
+	last_error: detachable STRING
 			-- Last read data from error pipe
 
 feature {NONE} -- Properties
@@ -402,7 +402,7 @@ feature {NONE} -- Properties
 			-- Name of file containing program which will be
 			-- executed when process is spawned
 
-	arguments: ?ARRAY [STRING];
+	arguments: detachable ARRAY [STRING];
 			-- Arguments to passed to process when it is spawned,
 			-- not including argument 0 (which is conventionally
 			-- the name of the program).  If Void or if count
@@ -413,21 +413,21 @@ feature {NONE} -- Properties
 			-- standard input, standard output and standard
 			-- error) be closed in the spawned process?
 
-	input_file_name: ?STRING;
+	input_file_name: detachable STRING;
 			-- Name of file to be used as standard input in
 			-- spawned process if `input_descriptor' is not a
 			-- valid descriptor and `input_piped' is false.
 			-- A Void value leaves standard input same as
 			-- parent's and an empty string closes standard input
 
-	output_file_name: ?STRING;
+	output_file_name: detachable STRING;
 			-- Name of file to be used as standard output in
 			-- spawned process if `output_descriptor' is not a
 			-- valid descriptor and `output_piped' is false.
 			-- A Void value leaves standard output same as
 			-- parent's and an empty string closes standard output
 
-	error_file_name: ?STRING;
+	error_file_name: detachable STRING;
 			-- Name of file to be used as standard error in
 			-- spawned process if `error_descriptor' is not a
 			-- valid descriptor and `error_piped' is false.
@@ -664,15 +664,15 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	in_file: ?RAW_FILE
+	in_file: detachable RAW_FILE
 			-- File to be used by child process for standard input
 			-- when it comes from a file
 
-	out_file: ?RAW_FILE
+	out_file: detachable RAW_FILE
 			-- File to be used by child process for standard output
 			-- when it goes to a file
 
-	err_file: ?RAW_FILE
+	err_file: detachable RAW_FILE
 			-- File to be used by child process for standard error
 			-- when it goes to a file
 
@@ -687,13 +687,13 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	shared_input_unnamed_pipe: ?UNIX_UNNAMED_PIPE
+	shared_input_unnamed_pipe: detachable UNIX_UNNAMED_PIPE
 			-- Pipe used to redirect input of process
 
-	shared_output_unnamed_pipe: ?UNIX_UNNAMED_PIPE
+	shared_output_unnamed_pipe: detachable UNIX_UNNAMED_PIPE
 			-- Pipe used to redirect output of process
 
-	shared_error_unnamed_pipe: ?UNIX_UNNAMED_PIPE
+	shared_error_unnamed_pipe: detachable UNIX_UNNAMED_PIPE
 			-- Pipe used to redirect error of process
 
 	exit_code_from_status (a_status: INTEGER): INTEGER

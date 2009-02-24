@@ -36,7 +36,7 @@ feature -- Access
 	deserializer: SED_READER_WRITER
 			-- Serializer used to decode data
 
-	last_decoded_object: ?ANY
+	last_decoded_object: detachable ANY
 			-- Object decoded during last call to `decode'
 
 feature -- Status report
@@ -63,7 +63,7 @@ feature -- Basic operations
 			-- Decode object graph stored in `deserializer'.
 		local
 			l_count: NATURAL_32
-			l_mem: ?like memory
+			l_mem: detachable like memory
 			l_is_collecting: BOOLEAN
 			retried: BOOLEAN
 		do
@@ -109,7 +109,7 @@ feature {NONE} -- Implementation: Access
 	object_references: SPECIAL [ANY]
 			-- Mapping between reference ID and the associated object.
 
-	missing_references: ?SPECIAL [?ARRAYED_LIST [like new_tuple]]
+	missing_references: detachable SPECIAL [detachable ARRAYED_LIST [like new_tuple]]
 			-- When decoding an object some of its references might not be decoded yet, so
 			-- we store the object index, the field position in this object and the reference id.
 
@@ -432,7 +432,7 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 		do
 			l_deser := deserializer
-			if {l_tuple: TUPLE} an_obj then
+			if attached {TUPLE} an_obj as l_tuple then
 				from
 					i := 1
 					nb := l_tuple.count + 1
@@ -517,98 +517,98 @@ feature {NONE} -- Implementation
 		do
 			inspect an_item_type
 			when {INTERNAL}.boolean_type then
-				if {l_spec_boolean: SPECIAL [BOOLEAN]} an_obj then
+				if attached {SPECIAL [BOOLEAN]} an_obj as l_spec_boolean then
 					decode_special_boolean (l_spec_boolean)
 				else
 					check l_spec_boolean_not_void: False end
 				end
 
 			when {INTERNAL}.character_8_type then
-				if {l_spec_character_8: SPECIAL [CHARACTER_8]} an_obj then
+				if attached {SPECIAL [CHARACTER_8]} an_obj as l_spec_character_8 then
 					decode_special_character_8 (l_spec_character_8)
 				else
 					check l_spec_character_8_not_void: False end
 				end
 
 			when {INTERNAL}.character_32_type then
-				if {l_spec_character_32: SPECIAL [CHARACTER_32]} an_obj then
+				if attached {SPECIAL [CHARACTER_32]} an_obj as l_spec_character_32 then
 					decode_special_character_32 (l_spec_character_32)
 				else
 					check l_spec_character_32_not_void: False end
 				end
 
 			when {INTERNAL}.natural_8_type then
-				if {l_spec_natural_8: SPECIAL [NATURAL_8]} an_obj then
+				if attached {SPECIAL [NATURAL_8]} an_obj as l_spec_natural_8 then
 					decode_special_natural_8 (l_spec_natural_8)
 				else
 					check l_spec_natural_8_not_void: False end
 				end
 
 			when {INTERNAL}.natural_16_type then
-				if {l_spec_natural_16: SPECIAL [NATURAL_16]} an_obj then
+				if attached {SPECIAL [NATURAL_16]} an_obj as l_spec_natural_16 then
 					decode_special_natural_16 (l_spec_natural_16)
 				else
 					check l_spec_natural_16_not_void: False end
 				end
 
 			when {INTERNAL}.natural_32_type then
-				if {l_spec_natural_32: SPECIAL [NATURAL_32]} an_obj then
+				if attached {SPECIAL [NATURAL_32]} an_obj as l_spec_natural_32 then
 					decode_special_natural_32 (l_spec_natural_32)
 				else
 					check l_spec_natural_32_not_void: False end
 				end
 
 			when {INTERNAL}.natural_64_type then
-				if {l_spec_natural_64: SPECIAL [NATURAL_64]} an_obj then
+				if attached {SPECIAL [NATURAL_64]} an_obj as l_spec_natural_64 then
 					decode_special_natural_64 (l_spec_natural_64)
 				else
 					check l_spec_natural_64_not_void: False end
 				end
 
 			when {INTERNAL}.integer_8_type then
-				if {l_spec_integer_8: SPECIAL [INTEGER_8]} an_obj then
+				if attached {SPECIAL [INTEGER_8]} an_obj as l_spec_integer_8 then
 					decode_special_integer_8 (l_spec_integer_8)
 				else
 					check l_spec_integer_8_not_void: False end
 				end
 
 			when {INTERNAL}.integer_16_type then
-				if {l_spec_integer_16: SPECIAL [INTEGER_16]} an_obj then
+				if attached {SPECIAL [INTEGER_16]} an_obj as l_spec_integer_16 then
 					decode_special_integer_16 (l_spec_integer_16)
 				else
 					check l_spec_integer_16_not_void: False end
 				end
 
 			when {INTERNAL}.integer_32_type then
-				if {l_spec_integer_32: SPECIAL [INTEGER]} an_obj then
+				if attached {SPECIAL [INTEGER]} an_obj as l_spec_integer_32 then
 					decode_special_integer_32 (l_spec_integer_32)
 				else
 					check l_spec_integer_32_not_void: False end
 				end
 
 			when {INTERNAL}.integer_64_type then
-				if {l_spec_integer_64: SPECIAL [INTEGER_64]} an_obj then
+				if attached {SPECIAL [INTEGER_64]} an_obj as l_spec_integer_64 then
 					decode_special_integer_64 (l_spec_integer_64)
 				else
 					check l_spec_integer_64_not_void: False end
 				end
 
 			when {INTERNAL}.real_32_type then
-				if {l_spec_real_32: SPECIAL [REAL]} an_obj then
+				if attached {SPECIAL [REAL]} an_obj as l_spec_real_32 then
 					decode_special_real_32 (l_spec_real_32)
 				else
 					check l_spec_real_32_not_void: False end
 				end
 
 			when {INTERNAL}.real_64_type then
-				if {l_spec_real_64: SPECIAL [DOUBLE]} an_obj then
+				if attached {SPECIAL [DOUBLE]} an_obj as l_spec_real_64 then
 					decode_special_real_64 (l_spec_real_64)
 				else
 					check l_spec_real_64_not_void: False end
 				end
 
 			when {INTERNAL}.pointer_type then
-				if {l_spec_pointer: SPECIAL [POINTER]} an_obj then
+				if attached {SPECIAL [POINTER]} an_obj as l_spec_pointer then
 					decode_special_pointer (l_spec_pointer)
 				else
 					check l_spec_pointer_not_void: False end
@@ -616,7 +616,7 @@ feature {NONE} -- Implementation
 
 			else
 				check an_item_type_valid: an_item_type = {INTERNAL}.reference_type end
-				if {l_spec_any: SPECIAL [ANY]} an_obj then
+				if attached {SPECIAL [ANY]} an_obj as l_spec_any then
 					decode_special_reference (l_spec_any, an_index)
 				else
 					check l_spec_any_not_void: False end
@@ -919,7 +919,7 @@ feature {NONE} -- Implementation
 			l_nat32: NATURAL_32
 			l_index: INTEGER
 			l_sub_obj: ANY
-			l_list: ?ARRAYED_LIST [like new_tuple]
+			l_list: detachable ARRAYED_LIST [like new_tuple]
 			l_tuple: like new_tuple
 			l_missing: like missing_references
 		do
@@ -965,11 +965,11 @@ feature {NONE} -- Implementation
 			l_int := internal
 
 			if l_int.is_special (an_obj) then
-				if {l_spec: SPECIAL [ANY]} an_obj then
+				if attached {SPECIAL [ANY]} an_obj as l_spec then
 					l_spec.put (a_sub_obj, an_index)
 				end
 			elseif l_int.is_tuple (an_obj) then
-				if {l_tuple: TUPLE} an_obj then
+				if attached {TUPLE} an_obj as l_tuple then
 					l_tuple.put_reference (a_sub_obj, an_index)
 				end
 			else
@@ -983,7 +983,7 @@ feature {NONE} -- Implementation
 			l_missing_references: like missing_references
 			l_object_references: like object_references
 			l_tuple: like new_tuple
-			l_list: ?ARRAYED_LIST [like new_tuple]
+			l_list: detachable ARRAYED_LIST [like new_tuple]
 			l_tuple_stack: like tuple_stack
 			l_list_stack: like list_stack
 		do
@@ -1056,10 +1056,10 @@ feature {NONE} -- Implementation
 			new_list_not_void: Result /= Void
 		end
 
-	tuple_stack: ?ARRAYED_STACK [like new_tuple]
+	tuple_stack: detachable ARRAYED_STACK [like new_tuple]
 			-- Storage for `new_tuple'.
 
-	list_stack: ?ARRAYED_STACK [like new_list]
+	list_stack: detachable ARRAYED_STACK [like new_list]
 			-- Storage for `new_list'.
 
 	memory: MEMORY

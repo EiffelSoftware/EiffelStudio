@@ -134,8 +134,8 @@ feature -- process set commands
 			valid_number: number_of_selected > 0
 		local
 			counter, counter1: INTEGER;
-			a_command: ?POLL_COMMAND
-			l_last_mask: ?POLL_MASK
+			a_command: detachable POLL_COMMAND
+			l_last_mask: detachable POLL_MASK
 		do
 			if not ignore_read and then not read_command_list.all_default then
 				from
@@ -198,13 +198,13 @@ feature -- process set commands
 
 feature -- medium masks
 
-	last_except_mask: ?POLL_MASK;
+	last_except_mask: detachable POLL_MASK;
 			-- Exception mask returned by medium select
 
-	last_read_mask: ?POLL_MASK;
+	last_read_mask: detachable POLL_MASK;
 			-- Read mask returned by medium select
 
-	last_write_mask: ?POLL_MASK;
+	last_write_mask: detachable POLL_MASK;
 			-- Write mask returned by medium select
 
 	except_mask: POLL_MASK
@@ -286,7 +286,7 @@ feature -- booleans to decide whether to include each mask in the select call
 
 feature -- commands to be executed
 
-	read_command_list: ARRAY [?POLL_COMMAND]
+	read_command_list: ARRAY [detachable POLL_COMMAND]
 			-- List of poll commands to be called
 			-- when their medium is selected for read event.
 		once
@@ -331,7 +331,7 @@ feature -- commands to be executed
 			command_removed: read_command_list.item (s.handle) = Void
 		end;
 
-	write_command_list: ARRAY [?POLL_COMMAND]
+	write_command_list: ARRAY [detachable POLL_COMMAND]
 			-- List of poll commands to be called
 			-- when their medium is selected for write event.
 		once
@@ -374,7 +374,7 @@ feature -- commands to be executed
 			command_removed: write_command_list.item (s.handle) = Void
 		end;
 
-	exception_command_list: ARRAY [?POLL_COMMAND]
+	exception_command_list: ARRAY [detachable POLL_COMMAND]
 			-- List of poll commands to be called
 			-- when their medium is selected for exception event.
 		once

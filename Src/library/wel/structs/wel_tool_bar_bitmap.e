@@ -107,7 +107,7 @@ feature -- Access
 
 feature {WEL_TOOL_BAR} -- Internal State
 
-	internal_bitmap: ?WEL_BITMAP
+	internal_bitmap: detachable WEL_BITMAP
 			-- Associated bitmap. Void if a predefined bitmap or
 			-- a ressource bitmap is associated.
 
@@ -199,7 +199,7 @@ feature {NONE} -- Removal
 			-- Free `item'
 		do
 			Precursor {WEL_STRUCTURE}
-			if {l_bitmap: WEL_BITMAP} eif_id_object (internal_bitmap_object_id) and then l_bitmap.reference_tracked then
+			if attached {WEL_BITMAP} eif_id_object (internal_bitmap_object_id) as l_bitmap and then l_bitmap.reference_tracked then
 				l_bitmap.decrement_reference
 			end
 		end

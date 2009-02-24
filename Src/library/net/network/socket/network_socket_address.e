@@ -54,7 +54,7 @@ feature -- Initialization
 			-- TODO look at this valid_host: is_valid_host (a_hostname)
 			valid_port: a_port >= 0 and then a_port <= 0xFFFF
 		local
-			addr: ?INET_ADDRESS
+			addr: detachable INET_ADDRESS
 			l_socket_address: like socket_address
 		do
 			addr := create_from_name (a_hostname)
@@ -99,7 +99,7 @@ feature -- Status report
 	host_address: INET_ADDRESS
 			-- Host address of address
 		local
-			l_address: ?INET_ADDRESS
+			l_address: detachable INET_ADDRESS
 		do
 			l_address := create_from_sockaddr (socket_address.item)
 				-- Since we are providing a correct C pointer `socket_address' the result should

@@ -193,7 +193,7 @@ feature {NONE} -- Implementation
 	get_env_variable (v: STRING): STRING
 			-- Get value of environment variable `v'.
 		do
-			if {l_result: STRING} get (v) then
+			if attached {STRING} get (v) as l_result then
 				Result := l_result
 			else
 				create Result.make_empty

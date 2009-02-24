@@ -48,7 +48,7 @@ feature -- Notification
 			retry
 		end
 
-	notify_argument (a_id: INTEGER): ?TUPLE
+	notify_argument (a_id: INTEGER): detachable TUPLE
 			-- Empty argument container for operation `a_id'.
 		local
 			retried: BOOLEAN

@@ -19,7 +19,7 @@ feature -- Access
 			-- identification number of the regular expression
 			-- recognized. 0 means that nothing has been recognized.)
 
-	final_array: ?ARRAY [INTEGER]
+	final_array: detachable ARRAY [INTEGER]
 			-- Array of all the possible `final' states (useful
 			-- in the case of several possible final attributes)
 
@@ -42,13 +42,13 @@ feature -- Status setting
 			end
 		ensure
 			final_is_i: final = i;
-			lower_entry_is_i: {rl_array: like final_array} final_array and then rl_array.item (rl_array.lower) = i
+			lower_entry_is_i: attached final_array as rl_array and then rl_array.item (rl_array.lower) = i
 		end
 
 invariant
 	lower_entry_is_final:
 		(final = 0 and final_array = Void) or else
-		({il_array: like final_array} final_array and then il_array.item (il_array.lower) = final)
+		(attached final_array as il_array and then il_array.item (il_array.lower) = final)
 
 note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"

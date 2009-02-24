@@ -68,7 +68,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_icon (a_icon: ?WEL_ICON)
+	set_icon (a_icon: detachable WEL_ICON)
 			-- Set `a_icon' to `notify_icon_data'.
 		require
 			a_icon_exists: a_icon /= Void implies a_icon.exists
@@ -135,7 +135,7 @@ feature {NONE} -- Messaging
 			end
 		end
 
-	internal_notify_icon_actions: ?ACTION_SEQUENCE [TUPLE [INTEGER]]
+	internal_notify_icon_actions: detachable ACTION_SEQUENCE [TUPLE [INTEGER]]
 			-- Actions being called when context menu is requested.
 
 	notify_uid_counter: CELL [INTEGER]

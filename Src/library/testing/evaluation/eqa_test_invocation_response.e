@@ -43,7 +43,7 @@ feature -- Query
 
 feature -- Access
 
-	exception: !EQA_TEST_INVOCATION_EXCEPTION
+	exception: attached EQA_TEST_INVOCATION_EXCEPTION
 			-- Exception thrown during the execution
 		require
 			exceptional: is_exceptional
@@ -51,12 +51,12 @@ feature -- Access
 			Result := internal_exception.as_attached
 		end
 
-	output: !STRING
+	output: attached STRING
 			-- Output produced by test
 
 feature {NONE} -- Access
 
-	internal_exception: ?like exception
+	internal_exception: detachable like exception
 			-- Internal storage for `exception'
 
 ;note

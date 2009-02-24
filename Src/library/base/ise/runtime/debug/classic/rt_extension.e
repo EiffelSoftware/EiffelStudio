@@ -23,42 +23,42 @@ feature -- Notification
 			if not retried then
 				inspect a_id
 				when Op_enter_feature then
-					if {t_ef: like events_feature_argument} a_data then
+					if attached {like events_feature_argument} a_data as t_ef then
 						process_enter_feature (t_ef)
 					else
 						check valid_tuple_data: False end
 					end
 					reset_events_feature_argument (a_data)
 				when Op_leave_feature then
-					if {t_lf: like events_feature_argument} a_data then
+					if attached {like events_feature_argument} a_data as t_lf then
 						process_leave_feature (t_lf)
 					else
 						check valid_tuple_data: False end
 					end
 					reset_events_feature_argument (a_data)
 				when Op_rescue_feature then
-					if {t_rf: like events_feature_argument} a_data then
+					if attached {like events_feature_argument} a_data as t_rf then
 						process_rescue_feature (t_rf)
 					else
 						check valid_tuple_data: False end
 					end
 					reset_events_feature_argument (a_data)
 				when Op_rt_hook then
-					if {t_rh: like events_feature_argument} a_data then
+					if attached {like events_feature_argument} a_data as t_rh then
 						process_rt_hook (t_rh)
 					else
 						check valid_tuple_data: False end
 					end
 					reset_events_feature_argument (a_data)
 				when Op_rt_assign_attrib then
-					if {t_att: like events_assign_argument} a_data then
+					if attached {like events_assign_argument} a_data as t_att then
 						process_rt_assign_attrib (t_att)
 					else
 						check valid_tuple_data: False end
 					end
 					reset_events_assign_argument (a_data)
 				when Op_rt_assign_local then
-					if {t_loc: like events_assign_argument} a_data then
+					if attached {like events_assign_argument} a_data as t_loc then
 						process_rt_assign_local (t_loc)
 					else
 						check valid_tuple_data: False end
@@ -76,7 +76,7 @@ feature -- Notification
 			retry
 		end
 
-	notify_argument (a_id: INTEGER): ?TUPLE
+	notify_argument (a_id: INTEGER): detachable TUPLE
 			-- Empty argument container for operation `a_id'.
 		local
 			retried: BOOLEAN
@@ -114,23 +114,23 @@ feature -- Notification
 
 feature {NONE} -- Execution replay
 
-	events_feature_argument (t: TUPLE): TUPLE [ref: ?ANY; cid: INTEGER; fid: INTEGER; a_dep: INTEGER]
+	events_feature_argument (t: TUPLE): TUPLE [ref: detachable ANY; cid: INTEGER; fid: INTEGER; a_dep: INTEGER]
 			-- Argument for `process_*_feature'.
 			-- used only as anchor for type declaration
 		local
-			a: ?like events_feature_argument
+			a: detachable like events_feature_argument
 		do
 			a ?= t
 			check a /= Void end
 			Result := a
 		end
 
-	events_assign_argument (t: TUPLE): TUPLE [ref: ?ANY; a_dep: INTEGER; a_pos: INTEGER; a_type: INTEGER; a_xpm_info: INTEGER]
+	events_assign_argument (t: TUPLE): TUPLE [ref: detachable ANY; a_dep: INTEGER; a_pos: INTEGER; a_type: INTEGER; a_xpm_info: INTEGER]
 
 			-- Argument for `process_*_assign'.
 			-- used only as anchor for type declaration
 		local
-			a: ?like events_assign_argument
+			a: detachable like events_assign_argument
 		do
 			a ?= t
 			check a /= Void end
@@ -142,7 +142,7 @@ feature {NONE} -- Execution replay
 		require
 			t_attached: t /= Void
 		do
-			if {ot: like events_feature_argument} t then
+			if attached {like events_feature_argument} t as ot then
 				ot.ref := Void
 				ot.cid := 0
 				ot.fid := 0
@@ -155,7 +155,7 @@ feature {NONE} -- Execution replay
 		require
 			t_attached: t /= Void
 		do
-			if {ot: like events_assign_argument} t then
+			if attached {like events_assign_argument} t as ot then
 				ot.ref := Void
 				ot.a_dep := 0
 				ot.a_pos := 0
@@ -170,8 +170,8 @@ feature {NONE} -- Execution replay
 			a_data_attached: a_data /= Void
 			execution_recording_not_void: execution_recorder /= Void
 		do
-			if {r: like execution_recorder} execution_recorder then
-				if {ref: ANY} a_data.ref then
+			if attached execution_recorder as r then
+				if attached {ANY} a_data.ref as ref then
 					r.enter_feature (ref, a_data.cid, a_data.fid, a_data.a_dep)
 				else
 					check ref_should_not_be_void: False end
@@ -185,8 +185,8 @@ feature {NONE} -- Execution replay
 			a_data_attached: a_data /= Void
 			execution_recording_not_void: execution_recorder /= Void
 		do
-			if {r: like execution_recorder} execution_recorder then
-				if {ref: ANY} a_data.ref then
+			if attached execution_recorder as r then
+				if attached {ANY} a_data.ref as ref then
 					r.enter_rescue (ref, a_data.cid, a_data.fid, a_data.a_dep)
 				else
 					check ref_should_not_be_void: False end
@@ -200,8 +200,8 @@ feature {NONE} -- Execution replay
 			a_data_attached: a_data /= Void
 			execution_recording_not_void: execution_recorder /= Void
 		do
-			if {r: like execution_recorder} execution_recorder then
-				if {ref: ANY} a_data.ref then
+			if attached execution_recorder as r then
+				if attached {ANY} a_data.ref as ref then
 					r.leave_feature (ref, a_data.cid, a_data.fid, a_data.a_dep)
 				else
 					check ref_should_not_be_void: False end
@@ -209,13 +209,13 @@ feature {NONE} -- Execution replay
 			end
 		end
 
-	process_rt_hook (a_data: TUPLE [unused_ref: ?ANY; a_dep: INTEGER; bp_i: INTEGER; bp_ni: INTEGER])
+	process_rt_hook (a_data: TUPLE [unused_ref: detachable ANY; a_dep: INTEGER; bp_i: INTEGER; bp_ni: INTEGER])
 			-- Execution reach a RTHOOK or RTNHOOK point
 		require
 			a_data_attached: a_data /= Void
 			execution_recording_not_void: execution_recorder /= Void
 		do
-			if {r: like execution_recorder} execution_recorder then
+			if attached execution_recorder as r then
 				r.notify_rt_hook (a_data.a_dep, a_data.bp_i, a_data.bp_ni)
 			end
 		end
@@ -227,10 +227,10 @@ feature {NONE} -- Execution replay
 			execution_recording_not_void: execution_recorder /= Void
 		do
 			if
-				{r: like execution_recorder} execution_recorder and then
+				attached execution_recorder as r and then
 				r.recording_values
 			then
-				if {ot_ref: ANY} a_data.ref then
+				if attached {ANY} a_data.ref as ot_ref then
 					r.notify_rt_assign_attribute (a_data.a_dep, ot_ref, a_data.a_pos, a_data.a_type.to_natural_32, a_data.a_xpm_info)
 				end
 			end
@@ -243,7 +243,7 @@ feature {NONE} -- Execution replay
 			execution_recording_not_void: execution_recorder /= Void
 		do
 			if
-				{r: like execution_recorder} execution_recorder and then
+				attached execution_recorder as r and then
 				r.recording_values
 			then
 				r.notify_rt_assign_local (a_data.a_dep, a_data.a_pos, a_data.a_type.to_natural_32, a_data.a_xpm_info)
@@ -261,7 +261,7 @@ feature {NONE} -- Execution replay
 			result_attached: Result /= Void
 		end
 
-	execution_recorder: ?like new_execution_recorder
+	execution_recorder: detachable like new_execution_recorder
 			-- Once per thread record.
 		do
 			Result := execution_recorder_cell.item
@@ -289,12 +289,12 @@ feature {NONE} -- Execution replay
 			p.set_flatten_when_closing (a_flatten_when_closing)
 			p.set_keep_calls_records (a_keep_calls_record)
 			p.set_recording_values (a_recording_values)
-			if {r: like execution_recorder} execution_recorder then
+			if attached execution_recorder as r then
 				r.update_parameters (p)
 			end
 		end
 
-	execution_recorder_cell: CELL [?RT_DBG_EXECUTION_RECORDER]
+	execution_recorder_cell: CELL [detachable RT_DBG_EXECUTION_RECORDER]
 			-- Cell containing the once per thread recorder, if activated.
 		note
 			description: "Once per thread"

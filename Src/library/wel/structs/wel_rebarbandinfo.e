@@ -124,7 +124,7 @@ feature -- Access
 			Result := cwel_rebarbandinfo_get_wid (item)
 		end
 
-	child: ?WEL_WINDOW
+	child: detachable WEL_WINDOW
 			-- Child currently in the rebar.
 		require
 			exists: exists
@@ -268,7 +268,7 @@ feature -- Element change
 			container: WEL_UNPOSITIONABLE_CONTROL_CONTAINER
 		do
 			set_mask (set_flag (mask, Rbbim_child))
-			if {l_composite: WEL_COMPOSITE_WINDOW} window.parent then
+			if attached {WEL_COMPOSITE_WINDOW} window.parent as l_composite then
 				create container.make (l_composite, window)
 				cwel_rebarbandinfo_set_hwndchild (item, container.item)
 			else
@@ -388,7 +388,7 @@ feature {WEL_REBAR} -- Implementation
 
 feature {NONE} -- Implementation
 
-	str_text: ?WEL_STRING
+	str_text: detachable WEL_STRING
 			-- C string to save the text
 
 feature {NONE} -- Externals

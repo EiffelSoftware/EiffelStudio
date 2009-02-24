@@ -102,7 +102,7 @@ feature -- Access
 	last_item: POINTER
 			-- Handle of the last item inserted
 
-	get_parent_item (an_item: WEL_TREE_VIEW_ITEM): ?WEL_TREE_VIEW_ITEM
+	get_parent_item (an_item: WEL_TREE_VIEW_ITEM): detachable WEL_TREE_VIEW_ITEM
 			-- Return the parent item of the given item.
 		require
 			exists: exists
@@ -308,7 +308,7 @@ feature -- Status report
 			item_valid: Result.exists
 		end
 
-	get_image_list: ?WEL_IMAGE_LIST
+	get_image_list: detachable WEL_IMAGE_LIST
 			-- Get the image list associated with this treeview.
 			-- Returns Void if none.
 		require
@@ -323,7 +323,7 @@ feature -- Status report
 			end
 		end
 
-	get_item_rect (an_item: WEL_TREE_VIEW_ITEM): ?WEL_RECT
+	get_item_rect (an_item: WEL_TREE_VIEW_ITEM): detachable WEL_RECT
 			-- `Result' is rect of item `an_item' or `Void'
 			-- if `an_item' is not visible.
 		require
@@ -340,7 +340,7 @@ feature -- Status report
 			end
 		end
 
-	get_item_text_rect (an_item: WEL_TREE_VIEW_ITEM): ?WEL_RECT
+	get_item_text_rect (an_item: WEL_TREE_VIEW_ITEM): detachable WEL_RECT
 			-- `Result' is rect for text of `an_item' or `Void'
 			-- if `an_item' is not visible.
 		require
@@ -357,7 +357,7 @@ feature -- Status report
 			end
 		end
 
-	get_tooltip: ?WEL_TOOLTIP
+	get_tooltip: detachable WEL_TOOLTIP
 			-- `Result' is tooltip associated with `Current'.
 		require
 			exists: exists
@@ -480,7 +480,7 @@ feature -- Status setting
 			{WEL_API}.send_message (item, Tvm_setindent, to_wparam (an_indent), to_lparam (0))
 		end
 
-	set_image_list(an_imagelist: ?WEL_IMAGE_LIST)
+	set_image_list(an_imagelist: detachable WEL_IMAGE_LIST)
 			-- Set the current image list to `an_imagelist'.
 			-- If `an_imagelist' is set to Void, it removes
 			-- the current associated image list (if any).
@@ -532,7 +532,7 @@ feature -- Element change
 			an_item_exists: an_item.exists
 			user_item_set: an_item.user_tree_view_item /= Void
 		local
-			l_user_item: ?WEL_TREE_VIEW_ITEM
+			l_user_item: detachable WEL_TREE_VIEW_ITEM
 		do
 			last_item := {WEL_API}.send_message_result (item, Tvm_insertitem, to_wparam (0), an_item.item)
 			an_item.tree_view_item.set_h_item (last_item)

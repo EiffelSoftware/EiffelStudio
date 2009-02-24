@@ -18,7 +18,7 @@ feature -- Access
 			field_not_void: field_name /= Void;
 			field_exists: field_defined (field_name)
 		local
-			l_list: ?LINKED_LIST [STRING_8]
+			l_list: detachable LINKED_LIST [STRING_8]
 		do
 			l_list := form_data.item (field_name)
 				-- Per precondition
@@ -28,14 +28,14 @@ feature -- Access
 			value_exists: Result /= Void
 		end
 
-	button_value (field_name: STRING; overriding_value: ?STRING): BOOLEAN
+	button_value (field_name: STRING; overriding_value: detachable STRING): BOOLEAN
 			-- Is Button relative to 'field_name' selected ?
 		require
 			field_not_void: field_name /= Void;
 			field_exists: field_defined (field_name)
 		local
 			s: STRING
-			l_list: ?LINKED_LIST [STRING_8]
+			l_list: detachable LINKED_LIST [STRING_8]
 		do
 			l_list := form_data.item (field_name)
 				-- Per precondition
@@ -57,7 +57,7 @@ feature -- Access
 			field_not_void: field_name /= Void
 			field_exists: field_defined (field_name)
 		local
-			l_list: ?LINKED_LIST [STRING_8]
+			l_list: detachable LINKED_LIST [STRING_8]
 		do
 			l_list := form_data.item (field_name)
 				-- Per precondition
@@ -82,7 +82,7 @@ feature -- Advanced Access
 			field_not_void: field_name /= Void
 			field_exists: field_defined (field_name)
 		local
-			l_list: ?LINKED_LIST [STRING_8]
+			l_list: detachable LINKED_LIST [STRING_8]
 		do
 			l_list := form_data.item (field_name)
 				-- Per precondition
@@ -98,7 +98,7 @@ feature -- Advanced Access
 			field_not_void: field_name /= Void
 			field_exists: field_defined (field_name)
 		local
-			l_list: ?LINKED_LIST [STRING_8]
+			l_list: detachable LINKED_LIST [STRING_8]
 		do
 			l_list := form_data.item (field_name)
 				-- Per precondition

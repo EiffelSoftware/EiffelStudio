@@ -164,7 +164,7 @@ feature -- Measurement
 
 feature {NONE} -- Implementation
 
-	str_text: ?WEL_STRING
+	str_text: detachable WEL_STRING
 			-- C string to save `text'
 
 	main_args: WEL_MAIN_ARGUMENTS

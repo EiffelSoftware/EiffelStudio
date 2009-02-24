@@ -62,7 +62,7 @@ feature {NONE} -- Implementation
 					else
 						dr := Void
 					end
-					if dr = Void and {g: EV_MODEL_GROUP} draw_item then
+					if dr = Void and attached {EV_MODEL_GROUP} draw_item as g then
 						project_figure_group (g, r)
 					else
 						project_figure (draw_item, r)
@@ -138,7 +138,7 @@ feature {NONE} -- Implementation
 					else
 						dr := Void
 					end
-					if dr = Void and {g: EV_MODEL_GROUP} draw_item then
+					if dr = Void and attached {EV_MODEL_GROUP} draw_item as g then
 						project_figure_group_full (g)
 					else
 						project_figure_full (draw_item)

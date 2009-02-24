@@ -28,7 +28,7 @@ inherit
 
 feature {NONE} -- Access
 
-	context: !ARRAY [!TUPLE [type: !TYPE [ANY]; attributes: !TUPLE; inv: BOOLEAN]]
+	context: attached ARRAY [attached TUPLE [type: attached TYPE [ANY]; attributes: attached TUPLE; inv: BOOLEAN]]
 			-- List of objects needed to reconstruct application state as it was when test routines were
 			--     extracted. Once the content is restored (after `prepare' was called), each object can
 			--     be accessed through `object_for_id', where id is is in the form of '#' + index.
@@ -47,7 +47,7 @@ feature {NONE} -- Access
 		deferred
 		end
 
-	object_cache: ?ARRAY [!ANY]
+	object_cache: detachable ARRAY [attached ANY]
 			-- Cache containing restored objects from `context'
 
 feature -- Status report
@@ -62,7 +62,7 @@ feature -- Status report
 
 feature {NONE} -- Status report
 
-	is_existing_id (a_id: !STRING): BOOLEAN
+	is_existing_id (a_id: attached STRING): BOOLEAN
 			-- Is `a_id' an id of an existing object in `context'?
 		require
 			a_id_valid: is_valid_id (a_id)
@@ -99,7 +99,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Query
 
-	is_valid_id (a_id: !STRING): BOOLEAN
+	is_valid_id (a_id: attached STRING): BOOLEAN
 			-- Is `a_id' a possible identifier for an object in `context'?
 		do
 			if a_id.count > 1 and then a_id.item (1) = '#' then
@@ -111,7 +111,7 @@ feature {NONE} -- Query
 			result_implies_is_natural: Result implies a_id.substring (2, a_id.count).is_natural
 		end
 
-	index_of_id (a_id: !STRING): NATURAL
+	index_of_id (a_id: attached STRING): NATURAL
 			-- Index component of `a_id'.
 		require
 			a_id_valid: is_valid_id (a_id)
@@ -121,7 +121,7 @@ feature {NONE} -- Query
 			result_valid: ("#" + Result.out).is_equal (a_id)
 		end
 
-	object_for_id (a_id: !STRING): !ANY
+	object_for_id (a_id: attached STRING): attached ANY
 			-- Cached instance restored from `context' for given id.
 			--
 			-- `a_id': ID used in `context' for requested object.
@@ -133,60 +133,60 @@ feature {NONE} -- Query
 			Result := object_cache.item (index_of_id (a_id).to_integer_32)
 		end
 
-	is_valid_item_tuple (a_special: !SPECIAL [ANY]; a_tuple: !TUPLE): BOOLEAN
+	is_valid_item_tuple (a_special: attached SPECIAL [ANY]; a_tuple: attached TUPLE): BOOLEAN
 			-- Does `a_tuple' contain valid elements for `a_special'?
 		do
-			if {l_b_special: SPECIAL [BOOLEAN]} a_special then
+			if attached {SPECIAL [BOOLEAN]} a_special as l_b_special then
 				Result := a_tuple.is_uniform_boolean
-			elseif {l_c8_special: SPECIAL [CHARACTER_8]} a_special then
+			elseif attached {SPECIAL [CHARACTER_8]} a_special as l_c8_special then
 				Result := a_tuple.is_uniform_character_8
-			elseif {l_c32_special: SPECIAL [CHARACTER_32]} a_special then
+			elseif attached {SPECIAL [CHARACTER_32]} a_special as l_c32_special then
 				Result := a_tuple.is_uniforme_character_32
-			elseif {l_i8_special: SPECIAL [INTEGER_8]} a_special then
+			elseif attached {SPECIAL [INTEGER_8]} a_special as l_i8_special then
 				Result := a_tuple.is_uniform_integer_8
-			elseif {l_i16_special: SPECIAL [INTEGER_16]} a_special then
+			elseif attached {SPECIAL [INTEGER_16]} a_special as l_i16_special then
 				Result := a_tuple.is_uniform_integer_16
-			elseif {l_i32_special: SPECIAL [INTEGER_32]} a_special then
+			elseif attached {SPECIAL [INTEGER_32]} a_special as l_i32_special then
 				Result := a_tuple.is_uniform_integer_32
-			elseif {l_i64_special: SPECIAL [INTEGER_64]} a_special then
+			elseif attached {SPECIAL [INTEGER_64]} a_special as l_i64_special then
 				Result := a_tuple.is_uniform_integer_64
-			elseif {l_n8_special: SPECIAL [NATURAL_8]} a_special then
+			elseif attached {SPECIAL [NATURAL_8]} a_special as l_n8_special then
 				Result := a_tuple.is_uniform_natural_8
-			elseif {l_n16_special: SPECIAL [NATURAL_16]} a_special then
+			elseif attached {SPECIAL [NATURAL_16]} a_special as l_n16_special then
 				Result := a_tuple.is_uniform_natural_16
-			elseif {l_n32_special: SPECIAL [NATURAL_32]} a_special then
+			elseif attached {SPECIAL [NATURAL_32]} a_special as l_n32_special then
 				Result := a_tuple.is_uniform_natural_32
-			elseif {l_n64_special: SPECIAL [NATURAL_64]} a_special then
+			elseif attached {SPECIAL [NATURAL_64]} a_special as l_n64_special then
 				Result := a_tuple.is_uniform_natural_64
-			elseif {l_r_special: SPECIAL [REAL]} a_special then
+			elseif attached {SPECIAL [REAL]} a_special as l_r_special then
 				Result := a_tuple.is_uniform_real
-			elseif {l_d_special: SPECIAL [DOUBLE]} a_special then
+			elseif attached {SPECIAL [DOUBLE]} a_special as l_d_special then
 				Result := a_tuple.is_uniform_double
-			elseif {l_p_special: SPECIAL [POINTER]} a_special then
+			elseif attached {SPECIAL [POINTER]} a_special as l_p_special then
 				Result := a_tuple.is_uniform_pointer
 			else
 				Result := a_tuple.is_uniform_reference
 			end
 		ensure
-			tuple_uniform_boolean: (Result and {l_b: SPECIAL [BOOLEAN]} a_special) implies a_tuple.is_uniform_boolean
-			tuple_uniform_character_8: (Result and {l_c8: SPECIAL [CHARACTER_8]} a_special) implies a_tuple.is_uniform_character_8
-			tuple_uniform_character_32: (Result and {l_c32: SPECIAL [CHARACTER_32]} a_special) implies a_tuple.is_uniforme_character_32
-			tuple_uniform_integer_8: (Result and {l_i8: SPECIAL [INTEGER_8]} a_special) implies a_tuple.is_uniform_integer_8
-			tuple_uniform_integer_16: (Result and {l_i16: SPECIAL [INTEGER_16]} a_special) implies a_tuple.is_uniform_integer_16
-			tuple_uniform_integer_32: (Result and {l_i32: SPECIAL [INTEGER_32]} a_special) implies a_tuple.is_uniform_integer_32
-			tuple_uniform_integer_64: (Result and {l_i64: SPECIAL [INTEGER_64]} a_special) implies a_tuple.is_uniform_integer_64
-			tuple_uniform_natural_8: (Result and {l_n8: SPECIAL [NATURAL_8]} a_special) implies a_tuple.is_uniform_natural_8
-			tuple_uniform_natural_16: (Result and {l_n16: SPECIAL [NATURAL_16]} a_special) implies a_tuple.is_uniform_natural_16
-			tuple_uniform_natural_32: (Result and {l_n32: SPECIAL [NATURAL_32]} a_special) implies a_tuple.is_uniform_natural_32
-			tuple_uniform_natural_64: (Result and {l_n64: SPECIAL [NATURAL_64]} a_special) implies a_tuple.is_uniform_natural_64
-			tuple_uniform_real: (Result and {l_r: SPECIAL [REAL]} a_special) implies a_tuple.is_uniform_real
-			tuple_uniform_double: (Result and {l_d: SPECIAL [DOUBLE]} a_special) implies a_tuple.is_uniform_double
-			tuple_uniform_pointer: (Result and {l_p: SPECIAL [POINTER]} a_special) implies a_tuple.is_uniform_pointer
-			tuple_uniform_reference: (Result and not {l_nb: SPECIAL [BOOLEAN]} a_special and not {l_nc8: SPECIAL [CHARACTER_8]} a_special and not
-				{l_nc32: SPECIAL [CHARACTER_32]} a_special and not {l_ni8: SPECIAL [INTEGER_8]} a_special and not {l_ni16: SPECIAL [INTEGER_16]} a_special and not
-				{l_ni32: SPECIAL [INTEGER_32]} a_special and not {l_ni64: SPECIAL [INTEGER_64]} a_special and not {l_nn8: SPECIAL [NATURAL_8]} a_special and not
-				{l_nn16: SPECIAL [NATURAL_16]} a_special and not {l_nn32: SPECIAL [NATURAL_32]} a_special and not {l_nn64: SPECIAL [NATURAL_64]} a_special and not
-				{l_nr: SPECIAL [REAL]} a_special and not {l_nd: SPECIAL [DOUBLE]} a_special and not {l_np: SPECIAL [POINTER]} a_special) implies a_tuple.is_uniform_reference
+			tuple_uniform_boolean: (Result and attached {SPECIAL [BOOLEAN]} a_special as l_b) implies a_tuple.is_uniform_boolean
+			tuple_uniform_character_8: (Result and attached {SPECIAL [CHARACTER_8]} a_special as l_c8) implies a_tuple.is_uniform_character_8
+			tuple_uniform_character_32: (Result and attached {SPECIAL [CHARACTER_32]} a_special as l_c32) implies a_tuple.is_uniforme_character_32
+			tuple_uniform_integer_8: (Result and attached {SPECIAL [INTEGER_8]} a_special as l_i8) implies a_tuple.is_uniform_integer_8
+			tuple_uniform_integer_16: (Result and attached {SPECIAL [INTEGER_16]} a_special as l_i16) implies a_tuple.is_uniform_integer_16
+			tuple_uniform_integer_32: (Result and attached {SPECIAL [INTEGER_32]} a_special as l_i32) implies a_tuple.is_uniform_integer_32
+			tuple_uniform_integer_64: (Result and attached {SPECIAL [INTEGER_64]} a_special as l_i64) implies a_tuple.is_uniform_integer_64
+			tuple_uniform_natural_8: (Result and attached {SPECIAL [NATURAL_8]} a_special as l_n8) implies a_tuple.is_uniform_natural_8
+			tuple_uniform_natural_16: (Result and attached {SPECIAL [NATURAL_16]} a_special as l_n16) implies a_tuple.is_uniform_natural_16
+			tuple_uniform_natural_32: (Result and attached {SPECIAL [NATURAL_32]} a_special as l_n32) implies a_tuple.is_uniform_natural_32
+			tuple_uniform_natural_64: (Result and attached {SPECIAL [NATURAL_64]} a_special as l_n64) implies a_tuple.is_uniform_natural_64
+			tuple_uniform_real: (Result and attached {SPECIAL [REAL]} a_special as l_r) implies a_tuple.is_uniform_real
+			tuple_uniform_double: (Result and attached {SPECIAL [DOUBLE]} a_special as l_d) implies a_tuple.is_uniform_double
+			tuple_uniform_pointer: (Result and attached {SPECIAL [POINTER]} a_special as l_p) implies a_tuple.is_uniform_pointer
+			tuple_uniform_reference: (Result and not attached {SPECIAL [BOOLEAN]} a_special as l_nb and not attached {SPECIAL [CHARACTER_8]} a_special as l_nc8 and not
+				attached {SPECIAL [CHARACTER_32]} a_special as l_nc32 and not attached {SPECIAL [INTEGER_8]} a_special as l_ni8 and not attached {SPECIAL [INTEGER_16]} a_special as l_ni16 and not
+				attached {SPECIAL [INTEGER_32]} a_special as l_ni32 and not attached {SPECIAL [INTEGER_64]} a_special as l_ni64 and not attached {SPECIAL [NATURAL_8]} a_special as l_nn8 and not
+				attached {SPECIAL [NATURAL_16]} a_special as l_nn16 and not attached {SPECIAL [NATURAL_32]} a_special as l_nn32 and not attached {SPECIAL [NATURAL_64]} a_special as l_nn64 and not
+				attached {SPECIAL [REAL]} a_special as l_nr and not attached {SPECIAL [DOUBLE]} a_special as l_nd and not attached {SPECIAL [POINTER]} a_special as l_np) implies a_tuple.is_uniform_reference
 
 
 		end
@@ -231,7 +231,7 @@ feature {NONE} -- Events
 
 feature {NONE} -- Basic operations
 
-	run_extracted_test (a_routine: !ROUTINE [ANY, TUPLE]; a_operands: !TUPLE)
+	run_extracted_test (a_routine: attached ROUTINE [ANY, TUPLE]; a_operands: attached TUPLE)
 			-- Call routine with given operands.
 			--
 			-- `a_routine': Arbitrary Eiffel routine.
@@ -258,7 +258,7 @@ feature {NONE} -- Object initialization
 			-- Set up `object_under_test' and `routine_arguments' with content from `context'.
 		local
 			i, l_gtype: INTEGER
-			l_object: !ANY
+			l_object: attached ANY
 			l_type: TYPE [ANY]
 		do
 			create object_cache.make (context.lower, context.upper)
@@ -269,24 +269,24 @@ feature {NONE} -- Object initialization
 				i > context.upper
 			loop
 				l_type := context.item (i).type
-				if {l_stype: TYPE [SPECIAL [ANY]]} l_type then
+				if attached {TYPE [SPECIAL [ANY]]} l_type as l_stype then
 					l_object := create_special_object (l_stype, context.item (i).attributes.count)
 				else
-					if {l_s8type: TYPE [STRING]} l_type then
-						if {l_string8_object: !STRING} context.item (i).attributes.item (1) then
+					if attached {TYPE [STRING]} l_type as l_s8type then
+						if attached {attached STRING} context.item (i).attributes.item (1) as l_string8_object then
 							l_object := l_string8_object
 						else
 							assert ("first attribute of a STRING_8 object must be a string", False)
 						end
-					elseif {l_s32type: TYPE [STRING_32]} l_type then
-						if {l_string32_object: !STRING_32} context.item (i).attributes.item (1) then
+					elseif attached {TYPE [STRING_32]} l_type as l_s32type then
+						if attached {attached STRING_32} context.item (i).attributes.item (1) as l_string32_object then
 							l_object := l_string32_object
 						else
 							assert ("first attribute of a STRING_32 object must be a string", False)
 						end
 					else
 						l_gtype := generic_dynamic_type (context.item (i).type, 1)
-						if {l_any: !ANY} new_instance_of (l_gtype) then
+						if attached {attached ANY} new_instance_of (l_gtype) as l_any then
 							l_object := l_any
 						else
 							assert ("objects of type " + type_name_of_type (l_gtype) + " are not supported", False)
@@ -304,14 +304,14 @@ feature {NONE} -- Object initialization
 				i > context.upper
 			loop
 				l_object := object_cache.item (i)
-				if not ({l_s8: !STRING_8} l_object or {l_s32: !STRING_32} l_object) then
-					if {l_special_object: !SPECIAL [ANY]} l_object then
+				if not (attached {attached STRING_8} l_object as l_s8 or attached {attached STRING_32} l_object as l_s32) then
+					if attached {attached SPECIAL [ANY]} l_object as l_special_object then
 						if is_valid_item_tuple (l_special_object, context.item (i).attributes) then
 							set_special_attributes (l_special_object, context.item (i).attributes)
 						else
 							assert ("all items of a special object must be of the same type", False)
 						end
-					elseif {l_tuple_object: !TUPLE} l_object then
+					elseif attached {attached TUPLE} l_object as l_tuple_object then
 							-- First item of `an_attribute_list' describes whether
 							-- `a_tuple' shall compare objects and not references
 						if context.item (i).attributes.count > 0 and then context.item (i).attributes.is_boolean_item (1) then
@@ -346,7 +346,7 @@ feature {NONE} -- Object initialization
 			object_cache_loaded: is_cache_loaded
 		end
 
-	create_special_object (a_special: !TYPE [SPECIAL [ANY]]; a_count: INTEGER): !SPECIAL [ANY]
+	create_special_object (a_special: attached TYPE [SPECIAL [ANY]]; a_count: INTEGER): attached SPECIAL [ANY]
 			-- Creates a special object of type `a_class_name' for `a_count' elements.
 		require
 			a_count_not_negative: a_count >= 0
@@ -355,33 +355,33 @@ feature {NONE} -- Object initialization
 			l_result: like create_special_object
 			l_special: like new_special_any_instance
 		do
-			if {l_b_special: TYPE [SPECIAL [BOOLEAN]]} a_special then
+			if attached {TYPE [SPECIAL [BOOLEAN]]} a_special as l_b_special then
 				Result := create {SPECIAL [BOOLEAN]}.make (a_count)
-			elseif {l_c8_special: TYPE [SPECIAL [CHARACTER_8]]} a_special then
+			elseif attached {TYPE [SPECIAL [CHARACTER_8]]} a_special as l_c8_special then
 				Result := create {SPECIAL [CHARACTER_8]}.make (a_count)
-			elseif {l_c32_special: TYPE [SPECIAL [CHARACTER_32]]} a_special then
+			elseif attached {TYPE [SPECIAL [CHARACTER_32]]} a_special as l_c32_special then
 				Result := create {SPECIAL [CHARACTER_32]}.make (a_count)
-			elseif {l_i8_special: TYPE [SPECIAL [INTEGER_8]]} a_special then
+			elseif attached {TYPE [SPECIAL [INTEGER_8]]} a_special as l_i8_special then
 				Result := create {SPECIAL [INTEGER_8]}.make (a_count)
-			elseif {l_i16_special: TYPE [SPECIAL [INTEGER_16]]} a_special then
+			elseif attached {TYPE [SPECIAL [INTEGER_16]]} a_special as l_i16_special then
 				Result := create {SPECIAL [INTEGER_16]}.make (a_count)
-			elseif {l_i32_special: TYPE [SPECIAL [INTEGER_32]]} a_special then
+			elseif attached {TYPE [SPECIAL [INTEGER_32]]} a_special as l_i32_special then
 				Result := create {SPECIAL [INTEGER_32]}.make (a_count)
-			elseif {l_i64_special: TYPE [SPECIAL [INTEGER_64]]} a_special then
+			elseif attached {TYPE [SPECIAL [INTEGER_64]]} a_special as l_i64_special then
 				Result := create {SPECIAL [INTEGER_64]}.make (a_count)
-			elseif {l_n8_special: TYPE [SPECIAL [NATURAL_8]]} a_special then
+			elseif attached {TYPE [SPECIAL [NATURAL_8]]} a_special as l_n8_special then
 				Result := create {SPECIAL [NATURAL_8]}.make (a_count)
-			elseif {l_n16_special: TYPE [SPECIAL [NATURAL_16]]} a_special then
+			elseif attached {TYPE [SPECIAL [NATURAL_16]]} a_special as l_n16_special then
 				Result := create {SPECIAL [NATURAL_16]}.make (a_count)
-			elseif {l_n32_special: TYPE [SPECIAL [NATURAL_32]]} a_special then
+			elseif attached {TYPE [SPECIAL [NATURAL_32]]} a_special as l_n32_special then
 				Result := create {SPECIAL [NATURAL_32]}.make (a_count)
-			elseif {l_n64_special: TYPE [SPECIAL [NATURAL_64]]} a_special then
+			elseif attached {TYPE [SPECIAL [NATURAL_64]]} a_special as l_n64_special then
 				Result := create {SPECIAL [NATURAL_64]}.make (a_count)
-			elseif {l_r_special: TYPE [SPECIAL [REAL]]} a_special then
+			elseif attached {TYPE [SPECIAL [REAL]]} a_special as l_r_special then
 				Result := create {SPECIAL [REAL]}.make (a_count)
-			elseif {l_d_special: TYPE [SPECIAL [DOUBLE]]} a_special then
+			elseif attached {TYPE [SPECIAL [DOUBLE]]} a_special as l_d_special then
 				Result := create {SPECIAL [DOUBLE]}.make (a_count)
-			elseif {l_p_special: TYPE [SPECIAL [POINTER]]} a_special then
+			elseif attached {TYPE [SPECIAL [POINTER]]} a_special as l_p_special then
 				Result := create {SPECIAL [POINTER]}.make (a_count)
 			else
 
@@ -401,15 +401,15 @@ feature {NONE} -- Object initialization
 			end
 		end
 
-	set_attributes (an_object: !ANY; an_attributes: !TUPLE)
+	set_attributes (an_object: attached ANY; an_attributes: attached TUPLE)
 			-- TODO: Missing header comment.
 		require
 			an_object_not_void: an_object /= Void
 			an_object_valid: not is_tuple (an_object) and not is_special (an_object)
 		local
 			i, j: INTEGER
-			l_attributes: HASH_TABLE [INTEGER, !STRING]
-			l_obj: !ANY
+			l_attributes: HASH_TABLE [INTEGER, attached STRING]
+			l_obj: attached ANY
 			l_name: like field_name
 		do
 			create l_attributes.make (an_attributes.count // 2)
@@ -418,7 +418,7 @@ feature {NONE} -- Object initialization
 			until
 				not an_attributes.valid_index (i + 1)
 			loop
-				if an_attributes.is_reference_item (i) and then {l_key: !STRING} an_attributes.reference_item (i) then
+				if an_attributes.is_reference_item (i) and then attached {attached STRING} an_attributes.reference_item (i) as l_key then
 					l_attributes.force (i + 1, l_key)
 				else
 					assert ("attribute tuple for normal object must always be a pair of strings and values", False)
@@ -437,7 +437,7 @@ feature {NONE} -- Object initialization
 					j := l_attributes.item (l_name)
 					inspect field_type (i, an_object)
 					when reference_type then
-						if an_attributes.is_reference_item (j) and then {l_id: !STRING} an_attributes.reference_item (j) then
+						if an_attributes.is_reference_item (j) and then attached {attached STRING} an_attributes.reference_item (j) as l_id then
 							if is_valid_id (l_id) and then is_existing_id (l_id) then
 								l_obj := object_for_id (l_id)
 								if field_conforms_to (dynamic_type (l_obj), field_static_type_of_type (i, dynamic_type (an_object))) then
@@ -512,11 +512,11 @@ feature {NONE} -- Object initialization
 			end
 		end
 
-	set_tuple_attributes (a_tuple: !TUPLE; an_attributes: !TUPLE; a_offset: NATURAL)
+	set_tuple_attributes (a_tuple: attached TUPLE; an_attributes: attached TUPLE; a_offset: NATURAL)
 			-- Set items of `a_tuple' with values from `an_attribute_list'.
 		local
 			i, j: INTEGER
-			l_obj: !ANY
+			l_obj: attached ANY
 		do
 			from
 				i := 1
@@ -527,7 +527,7 @@ feature {NONE} -- Object initialization
 				inspect
 					a_tuple.item_code (i)
 				when {TUPLE}.reference_code then
-					if an_attributes.is_reference_item (j) and then {l_id: !STRING} an_attributes.reference_item (j) then
+					if an_attributes.is_reference_item (j) and then attached {attached STRING} an_attributes.reference_item (j) as l_id then
 						if is_valid_id (l_id) and then is_existing_id (l_id) then
 							l_obj := object_for_id (l_id)
 							if a_tuple.valid_type_for_index (l_obj, i) then
@@ -596,13 +596,13 @@ feature {NONE} -- Object initialization
 			end
 		end
 
-	set_special_attributes (a_special: !SPECIAL [ANY]; an_attributes: !TUPLE)
+	set_special_attributes (a_special: attached SPECIAL [ANY]; an_attributes: attached TUPLE)
 			-- Assign items of `an_attributes' to items of `a_special'.
 		require
 			attributes_uniform: is_valid_item_tuple (a_special, an_attributes)
 		local
 			i, l_type, l_gtype: INTEGER
-			l_obj: !ANY
+			l_obj: attached ANY
 			l_b_special: SPECIAL [BOOLEAN]
 			l_c8_special: SPECIAL [CHARACTER_8]
 			l_c32_special: SPECIAL [CHARACTER_32]
@@ -618,46 +618,46 @@ feature {NONE} -- Object initialization
 			l_d_special: SPECIAL [DOUBLE]
 			l_p_special: SPECIAL [POINTER]
 		do
-			if {l_s_b: SPECIAL [BOOLEAN]} a_special then
+			if attached {SPECIAL [BOOLEAN]} a_special as l_s_b then
 				l_b_special := l_s_b
 				l_type := boolean_type
-			elseif {l_s_c8: SPECIAL [CHARACTER_8]} a_special then
+			elseif attached {SPECIAL [CHARACTER_8]} a_special as l_s_c8 then
 				l_c8_special := l_s_c8
 				l_type := character_8_type
-			elseif {l_s_c32: SPECIAL [CHARACTER_32]} a_special then
+			elseif attached {SPECIAL [CHARACTER_32]} a_special as l_s_c32 then
 				l_c32_special := l_s_c32
 				l_type := character_32_type
-			elseif {l_s_i8: SPECIAL [INTEGER_8]} a_special then
+			elseif attached {SPECIAL [INTEGER_8]} a_special as l_s_i8 then
 				l_i8_special := l_s_i8
 				l_type := integer_8_type
-			elseif {l_s_i16: SPECIAL [INTEGER_16]} a_special then
+			elseif attached {SPECIAL [INTEGER_16]} a_special as l_s_i16 then
 				l_i16_special := l_s_i16
 				l_type := integer_16_type
-			elseif {l_s_i32: SPECIAL [INTEGER_32]} a_special then
+			elseif attached {SPECIAL [INTEGER_32]} a_special as l_s_i32 then
 				l_i32_special := l_s_i32
 				l_type := integer_32_type
-			elseif {l_s_i64: SPECIAL [INTEGER_64]} a_special then
+			elseif attached {SPECIAL [INTEGER_64]} a_special as l_s_i64 then
 				l_i64_special := l_s_i64
 				l_type := integer_64_type
-			elseif {l_s_n8: SPECIAL [NATURAL_8]} a_special then
+			elseif attached {SPECIAL [NATURAL_8]} a_special as l_s_n8 then
 				l_n8_special := l_s_n8
 				l_type := natural_8_type
-			elseif {l_s_n16: SPECIAL [NATURAL_16]} a_special then
+			elseif attached {SPECIAL [NATURAL_16]} a_special as l_s_n16 then
 				l_n16_special := l_s_n16
 				l_type := natural_16_type
-			elseif {l_s_n32: SPECIAL [NATURAL_32]} a_special then
+			elseif attached {SPECIAL [NATURAL_32]} a_special as l_s_n32 then
 				l_n32_special := l_s_n32
 				l_type := natural_32_type
-			elseif {l_s_n64: SPECIAL [NATURAL_64]} a_special then
+			elseif attached {SPECIAL [NATURAL_64]} a_special as l_s_n64 then
 				l_n64_special := l_s_n64
 				l_type := natural_64_type
-			elseif {l_s_r: SPECIAL [REAL]} a_special then
+			elseif attached {SPECIAL [REAL]} a_special as l_s_r then
 				l_r_special := l_s_r
 				l_type := real_type
-			elseif {l_s_d: SPECIAL [DOUBLE]} a_special then
+			elseif attached {SPECIAL [DOUBLE]} a_special as l_s_d then
 				l_d_special := l_s_d
 				l_type := double_type
-			elseif {l_s_p: SPECIAL [POINTER]} a_special then
+			elseif attached {SPECIAL [POINTER]} a_special as l_s_p then
 				l_p_special := l_s_p
 				l_type := pointer_type
 			else
@@ -673,7 +673,7 @@ feature {NONE} -- Object initialization
 				inspect
 					l_type
 				when reference_type then
-					if {l_id: !STRING} an_attributes.reference_item (i) then
+					if attached {attached STRING} an_attributes.reference_item (i) as l_id then
 						if is_valid_id (l_id) and then is_existing_id (l_id) then
 							l_obj := object_for_id (l_id)
 							if field_conforms_to (dynamic_type (l_obj), l_gtype) then

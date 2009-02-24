@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_docking_manager: SD_DOCKING_MANAGER) is
+	make (a_docking_manager: SD_DOCKING_MANAGER)
 			-- Creation method
 		require
 			a_docking_manager_not_void: a_docking_manager /= Void
@@ -45,7 +45,7 @@ feature -- General command
 			end
 			l_place_holder_content.set_top ({SD_ENUMERATION}.top)
 
-			if {lt_zone: SD_PLACE_HOLDER_ZONE} l_place_holder_content.state.zone then
+			if attached {SD_PLACE_HOLDER_ZONE} l_place_holder_content.state.zone as lt_zone then
 				-- Maybe `user_widget' is cleared
 				if not lt_zone.has_recursive (l_place_holder_content.user_widget) then
 					lt_zone.extend (l_place_holder_content)
@@ -76,7 +76,7 @@ feature -- Command
 			until
 				l_floating_zones.after
 			loop
-				if {lt_widget: EV_WIDGET} l_floating_zones.item then
+				if attached {EV_WIDGET} l_floating_zones.item as lt_widget then
 					lt_widget.destroy
 				else
 					check not_possible: False end
@@ -268,7 +268,7 @@ feature -- Command
 				end
 				l_contents.forth
 			end
-			if {l_place_holder_widget: EV_WIDGET} internal_docking_manager.zones.place_holder_content.state.zone then
+			if attached {EV_WIDGET} internal_docking_manager.zones.place_holder_content.state.zone as l_place_holder_widget then
 				l_parent := l_place_holder_widget.parent
 				if l_parent /= Void then
 					l_parent.prune (l_place_holder_widget)

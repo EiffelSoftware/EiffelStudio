@@ -159,7 +159,7 @@ feature {NONE} -- Implementation
 			-- Compare file content with given string, raise exception if content does not match or file
 			-- could not be read.
 		local
-			l_last_string: ?READABLE_STRING_8
+			l_last_string: detachable READABLE_STRING_8
 		do
 			assert ("file_exists", a_file.exists)
 			assert ("file_readable", a_file.is_readable)

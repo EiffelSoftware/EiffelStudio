@@ -36,7 +36,7 @@ feature -- Access
 			Result_exists: Result /= Void
 		end
 
-	retrieve_by_name (file_name: STRING): ?ANY
+	retrieve_by_name (file_name: STRING): detachable ANY
 			-- Retrieve object structure, from external
 			-- representation previously stored in a file
 			-- called `file_name'.

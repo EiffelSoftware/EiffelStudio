@@ -29,7 +29,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	internal_dialog_make (a_parent: ?WEL_WINDOW; an_id: INTEGER; a_name: ?STRING_GENERAL)
+	internal_dialog_make (a_parent: detachable WEL_WINDOW; an_id: INTEGER; a_name: detachable STRING_GENERAL)
 			-- Create the dialog
 		local
 			c_name: WEL_STRING

@@ -44,7 +44,7 @@ feature -- Creation
 
 feature -- Access and queries
 
-	item (key: H): ?H
+	item (key: H): detachable H
 			-- Item associated with `key', if present
 			-- otherwise default value of type `G'
 		require
@@ -66,7 +66,7 @@ feature -- Access and queries
 			Result := (control = Found_constant)
 		end
 
-	key_at (n: INTEGER): ?H
+	key_at (n: INTEGER): detachable H
 			-- Key corresponding to entry `n'
 		do
 			if n >= 0 and n < content.count then
@@ -85,7 +85,7 @@ feature -- Access and queries
 			-- If found, set `found' to True, and set
 			-- `found_item' to item associated with `key'.
 		local
-			default_value: ?H
+			default_value: detachable H
 		do
 			internal_search (key)
 			if control = Found_constant then
@@ -105,7 +105,7 @@ feature -- Access and queries
 			iteration_position := c
 		end
 
-	found_item: ?H
+	found_item: detachable H
 			-- Item found during a search with `has' to reduce the number of
 			-- search for clients
 
@@ -219,7 +219,7 @@ feature -- Insertion, deletion
 	wipe_out, clear_all
 			-- Reset all items to default values.
 		local
-			default_value: ?H
+			default_value: detachable H
 		do
 			content.clear_all
 			deleted_marks.clear_all
@@ -334,7 +334,7 @@ feature {NONE} -- Internal features
 		local
 			increment, hash_code, table_size, pos: INTEGER
 			first_deleted_position, visited_count: INTEGER
-			old_key, default_key: ?H
+			old_key, default_key: detachable H
 			stop: BOOLEAN
 			local_content: SPECIAL [H]
 			local_deleted_marks: SPECIAL [BOOLEAN]
@@ -422,7 +422,7 @@ feature -- Assertion check
 	valid_key (k: H): BOOLEAN
 			-- Is `k' a valid key?
 		local
-			l_default_key: ?H
+			l_default_key: detachable H
 		do
 			Result := k /= l_default_key
 		ensure
@@ -432,7 +432,7 @@ feature -- Assertion check
 	valid_cursor (c: like cursor): BOOLEAN
 			-- Can cursor be moved to position `c'?
 		local
-			l_default: ?H
+			l_default: detachable H
 		do
 			Result := (c >= capacity) or else (((c >= 0) and (c <= capacity)) and then content.item (c) /= l_default)
 		end

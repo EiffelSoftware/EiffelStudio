@@ -56,7 +56,7 @@ feature {ENCODING} -- Access
 		require
 			last_conversion_successful: last_conversion_successful
 		local
-			l_result: ?STRING_8
+			l_result: detachable STRING_8
 			l_last: like last_converted_string
 		do
 			l_last := last_converted_string
@@ -71,7 +71,7 @@ feature {ENCODING} -- Access
 			last_converted_stream_not_void: Result /= Void
 		end
 
-	last_converted_string: ?STRING_GENERAL
+	last_converted_string: detachable STRING_GENERAL
 			-- Last converted string.
 
 feature {ENCODING} -- Status report

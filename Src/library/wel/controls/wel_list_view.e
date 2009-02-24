@@ -318,7 +318,7 @@ feature -- Status report
 				to_wparam (0), to_lparam (0))
 		end
 
-	get_tooltip: ?WEL_TOOLTIP
+	get_tooltip: detachable WEL_TOOLTIP
 			-- `Result' is tooltip associated with `Current'.
 		local
 			pointer: POINTER
@@ -441,7 +441,7 @@ feature -- Status setting
 			{WEL_API}.send_message (item, Lvm_setcolumn, to_wparam (index), a_column.item)
 		end
 
-	set_image_list (an_imagelist: ?WEL_IMAGE_LIST)
+	set_image_list (an_imagelist: detachable WEL_IMAGE_LIST)
 			-- Set the current "large" image list to `an_imagelist'.
 			-- If `an_imagelist' is set to Void, it removes
 			-- the current associated image list (if any).
@@ -454,7 +454,7 @@ feature -- Status setting
 			end
 		end
 
-	set_small_image_list (an_imagelist: ?WEL_IMAGE_LIST)
+	set_small_image_list (an_imagelist: detachable WEL_IMAGE_LIST)
 			-- Set the current "small" image list to `an_imagelist'.
 			-- If `an_imagelist' is set to Void, it removes
 			-- the current associated image list (if any).

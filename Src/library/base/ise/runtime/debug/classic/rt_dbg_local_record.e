@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 
 feature -- RT internals
 
-	frozen local_value_at (dep: INTEGER; pos: INTEGER; a_rt_type: like rt_type): ?ANY
+	frozen local_value_at (dep: INTEGER; pos: INTEGER; a_rt_type: like rt_type): detachable ANY
 			-- Object attached at local position `pos' for depth `dep'
 			-- (directly or through a reference)
 		require
@@ -65,7 +65,7 @@ feature -- RT internals
 
 feature -- Properties
 
-	value: ?G
+	value: detachable G
 			-- Associated value.
 
 	callstack_depth: INTEGER
@@ -76,13 +76,13 @@ feature -- Properties
 
 feature -- Access
 
-	current_value_record: ?RT_DBG_VALUE_RECORD
+	current_value_record: detachable RT_DBG_VALUE_RECORD
 			-- Record for current value
 		do
 			Result := object_local_record (callstack_depth, position, rt_type)
 		end
 
-	associated_object: ?ANY
+	associated_object: detachable ANY
 			-- Associated object, if any
 		do
 			--| No associated object for locals
@@ -93,7 +93,7 @@ feature -- Access
 
 	is_same_as (other: RT_DBG_VALUE_RECORD): BOOLEAN
 		do
-			Result := {l_loc: like Current} other and then
+			Result := attached {like Current} other as l_loc and then
 					position = l_loc.position and then
 					value = l_loc.value
 		end
@@ -137,7 +137,7 @@ feature -- Change properties
 	get_value
 			-- Get `value'
 		do
-			if {v: like value} local_value_at (callstack_depth, position, rt_type) then
+			if attached {like value} local_value_at (callstack_depth, position, rt_type) as v then
 				value := v
 			else
 				value := default_value
@@ -183,7 +183,7 @@ feature {NONE} -- Internal Implementation
 		require
 			r_attached: r /= Void
 		do
-			if {ot_record: RT_DBG_LOCAL_RECORD [like value]} r then
+			if attached {RT_DBG_LOCAL_RECORD [like value]} r as ot_record then
 				set_local_value_at (callstack_depth, position, rt_type, ot_record.value)
 			else
 				check should_not_occur: False end
@@ -192,7 +192,7 @@ feature {NONE} -- Internal Implementation
 
 feature {NONE} -- Implementation
 
-	default_value: ?G
+	default_value: detachable G
 			-- Default value
 		do
 		end

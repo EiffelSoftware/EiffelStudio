@@ -38,7 +38,7 @@ feature -- Access
 	hash_code: INTEGER
 			-- Hash code value
 		do
-			if {l_item: like item} item then
+			if attached item as l_item then
 				Result := l_item.get_hash_code.hash_code
 			end
 		end

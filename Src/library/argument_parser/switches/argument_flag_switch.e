@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			a_flags_contains_attached_items:
 				a_flags.linear_representation.for_all (agent (ia_item: STRING): BOOLEAN
 					local
-						l_item: ?STRING
+						l_item: detachable STRING
 					do
 						l_item := ia_item
 						Result := l_item /= Void and then not l_item.is_empty
@@ -89,7 +89,7 @@ feature {NONE} -- Initialization
 			a_flags_contains_attached_items:
 				a_flags.linear_representation.for_all (agent (ia_item: STRING): BOOLEAN
 					local
-						l_item: ?STRING
+						l_item: detachable STRING
 					do
 						l_item := ia_item
 						Result := l_item /= Void and then not l_item.is_empty
@@ -196,7 +196,7 @@ feature {NONE} -- Usage
 			a_flags_attached: a_flags /= Void
 			not_a_flags_is_empty: not a_flags.is_empty
 		local
-			l_flag: ?STRING
+			l_flag: detachable STRING
 			l_list: SORTED_TWO_WAY_LIST [CHARACTER]
 			l_keys: ARRAY [CHARACTER]
 			c: CHARACTER
@@ -230,7 +230,7 @@ feature {NONE} -- Usage
 
 feature {NONE} -- Internal implementation cache
 
-	internal_flags: ?like flags
+	internal_flags: detachable like flags
 			-- Cached version of `flags'
 			-- Note: Do not use directly!
 
@@ -240,7 +240,7 @@ invariant
 	flag_descriptions_contains_attached_items:
 		flag_descriptions.linear_representation.for_all (agent (ia_item: STRING): BOOLEAN
 			local
-				l_item: ?STRING
+				l_item: detachable STRING
 			do
 				l_item := ia_item
 				Result := l_item /= Void and then not l_item.is_empty

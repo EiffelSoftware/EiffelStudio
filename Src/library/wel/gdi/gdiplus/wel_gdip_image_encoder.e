@@ -32,7 +32,7 @@ feature -- Query
 	guid: WEL_GUID
 			-- Guid
 
-	find_encoder: ?WEL_GDIP_IMAGE_CODEC_INFO
+	find_encoder: detachable WEL_GDIP_IMAGE_CODEC_INFO
 			-- Find image encoder related.
 		local
 			l_all_encoders: ARRAYED_LIST [WEL_GDIP_IMAGE_CODEC_INFO]
@@ -54,31 +54,31 @@ feature -- Query
 
 feature -- Format encoders enumeration
 
-	bmp: ?WEL_GDIP_IMAGE_ENCODER
+	bmp: detachable WEL_GDIP_IMAGE_ENCODER
 			-- Bmp format encoder
 		do
 			Result := find_encoder_with (create {STRING_32}.make_from_string ("image/bmp"))
 		end
 
-	jpg: ?WEL_GDIP_IMAGE_ENCODER
+	jpg: detachable WEL_GDIP_IMAGE_ENCODER
 			-- Jpeg format encoder
 		do
 			Result := find_encoder_with (create {STRING_32}.make_from_string ("image/jpeg"))
 		end
 
-	gif: ?WEL_GDIP_IMAGE_ENCODER
+	gif: detachable WEL_GDIP_IMAGE_ENCODER
 			-- Gif format encoder
 		do
 			Result := find_encoder_with (create {STRING_32}.make_from_string ("image/gif"))
 		end
 
-	tiff: ?WEL_GDIP_IMAGE_ENCODER
+	tiff: detachable WEL_GDIP_IMAGE_ENCODER
 			-- Tiff format encoder
 		do
 			Result := find_encoder_with (create {STRING_32}.make_from_string ("image/tiff"))
 		end
 
-	png: ?WEL_GDIP_IMAGE_ENCODER
+	png: detachable WEL_GDIP_IMAGE_ENCODER
 			-- Png format encoder
 		do
 			Result := find_encoder_with (create {STRING_32}.make_from_string ("image/png"))
@@ -167,7 +167,7 @@ feature -- Contract support
 
 feature {NONE} -- Implementation
 
-	find_encoder_with (a_mini_type: STRING_32): ?WEL_GDIP_IMAGE_ENCODER
+	find_encoder_with (a_mini_type: STRING_32): detachable WEL_GDIP_IMAGE_ENCODER
 			-- Find encoder which mini type is `a_mini_type'.
 			-- Result void if not found
 		require
@@ -175,7 +175,7 @@ feature {NONE} -- Implementation
 		local
 			l_all_encoders: ARRAYED_LIST [WEL_GDIP_IMAGE_CODEC_INFO]
 			l_image: WEL_GDIP_IMAGE
-			l_info: ?WEL_GDIP_IMAGE_CODEC_INFO
+			l_info: detachable WEL_GDIP_IMAGE_CODEC_INFO
 		do
 			from
 				create l_image

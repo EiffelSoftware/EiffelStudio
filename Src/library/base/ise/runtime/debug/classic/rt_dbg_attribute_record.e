@@ -38,7 +38,7 @@ feature -- Properties
 	object: ANY
 			-- Associated object.
 
-	value: ?G
+	value: detachable G
 			-- Associated value.
 
 	rt_type: NATURAL_32
@@ -46,13 +46,13 @@ feature -- Properties
 
 feature -- Access
 
-	current_value_record: ?RT_DBG_VALUE_RECORD
+	current_value_record: detachable RT_DBG_VALUE_RECORD
 			-- Record for current value
 		do
 			Result := object_attribute_record (offset, rt_type, object)
 		end
 
-	associated_object: ?ANY
+	associated_object: detachable ANY
 			-- Associated object, if any
 		do
 			Result := object
@@ -63,7 +63,7 @@ feature -- Access
 
 	is_same_as (other: RT_DBG_VALUE_RECORD): BOOLEAN
 		do
-			Result := {l_att: like Current} other and then
+			Result := attached {like Current} other as l_att and then
 					offset = l_att.offset and then
 					value = l_att.value
 		end
@@ -108,7 +108,7 @@ feature -- Change properties
 	get_value
 			-- Get `value'
 		do
-			if {v: like value} field_at (offset, rt_type, object) then
+			if attached {like value} field_at (offset, rt_type, object) as v then
 				value := v
 			else
 				value := default_value
@@ -122,7 +122,7 @@ feature -- Runtime
 		do
 			debug ("RT_DBG_REPLAY")
 				dtrace (generator + ".restore (" + object.generator + " #" + offset.out + ")%N")
-				if {fn: like field_name} field_name_at (offset, object) then
+				if attached {like field_name} field_name_at (offset, object) as fn then
  					dtrace (" -> " + fn  + "%N")
  				else
  					dtrace (" -> Unknown name%N")
@@ -160,7 +160,7 @@ feature {NONE} -- Internal Implementation
 			obj_attached: obj /= Void
 			r_attached: r /= Void
 		do
-			if {ot_record: RT_DBG_ATTRIBUTE_RECORD [like value]} r then
+			if attached {RT_DBG_ATTRIBUTE_RECORD [like value]} r as ot_record then
 				set_field_at (offset, rt_type, ot_record.value, obj)
 			else
 				check should_not_occur: False end
@@ -169,7 +169,7 @@ feature {NONE} -- Internal Implementation
 
 feature {NONE} -- Implementation
 
-	default_value: ?G
+	default_value: detachable G
 			-- Default value
 		do
 		end

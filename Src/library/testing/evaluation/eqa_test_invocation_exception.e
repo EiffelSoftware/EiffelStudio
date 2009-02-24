@@ -36,7 +36,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_exception: EXCEPTION; a_class_name, a_feature_name: ?READABLE_STRING_8)
+	make (a_exception: EXCEPTION; a_class_name, a_feature_name: detachable READABLE_STRING_8)
 			-- Initialize `Current'.
 			--
 			-- Note: If `a_test_class_name' is attached, the stack trace will be truncated after the last
@@ -55,29 +55,29 @@ feature {NONE} -- Initialization
 			a_feature_name_not_empty: a_feature_name /= Void implies not a_feature_name.is_empty
 		do
 			code := a_exception.code
-			if {l_type: like class_name} a_exception.type_name then
+			if attached {like class_name} a_exception.type_name as l_type then
 				class_name := l_type.string
 			else
 				create {STRING_8} class_name.make_empty
 			end
-			if {l_rec: like recipient_name} a_exception.recipient_name then
+			if attached {like recipient_name} a_exception.recipient_name as l_rec then
 				recipient_name := l_rec.string
 			else
 				create {STRING_8} recipient_name.make_empty
 			end
-			if {l_tag: like tag_name} a_exception.message then
+			if attached {like tag_name} a_exception.message as l_tag then
 				tag_name := l_tag.string
 			else
 				create {STRING_8} tag_name.make_empty
 			end
-			if {l_trace: like trace} a_exception.exception_trace and then not l_trace.is_empty then
+			if attached {like trace} a_exception.exception_trace as l_trace and then not l_trace.is_empty then
 				parse_trace (l_trace, a_class_name, a_feature_name)
 			else
 				create {STRING_8} trace.make_empty
 			end
 		end
 
-	parse_trace (a_trace: like trace; a_class_name, a_feature_name: ?READABLE_STRING_8)
+	parse_trace (a_trace: like trace; a_class_name, a_feature_name: detachable READABLE_STRING_8)
 			-- Initialize trace from original trace by cutting off routines which invoked testing routine.
 			--
 			-- `a_trace': Original exception trace.
@@ -209,7 +209,7 @@ feature {NONE} -- Implementation
 			start_zero_implies_result_zero: a_start = 0 implies Result = 0
 		end
 
-	is_frame_of_class (a_trace: like trace; a_position: INTEGER; a_class_name: READABLE_STRING_8; a_feature_name: ?READABLE_STRING_8): BOOLEAN
+	is_frame_of_class (a_trace: like trace; a_position: INTEGER; a_class_name: READABLE_STRING_8; a_feature_name: detachable READABLE_STRING_8): BOOLEAN
 			-- Does stack frame represent call to test routine?
 			--
 			-- `a_trace': Complete exception trace.

@@ -103,7 +103,7 @@ feature -- Input
 
 feature {NONE} -- Implementation
 
-	construct: ?STRING;
+	construct: detachable STRING;
 			-- Construct including description
 			-- For error messages
 
@@ -114,7 +114,7 @@ feature {NONE} -- Implementation
 			keyword_h_table := d
 		end;
 
-	token_file: ?PLAIN_TEXT_FILE;
+	token_file: detachable PLAIN_TEXT_FILE;
 
 	record_atomics
 			-- Record the regular expressions with their names and
@@ -123,8 +123,8 @@ feature {NONE} -- Implementation
 			token_file_attached: token_file /= Void
 		local
 			l_token_file: like token_file
-			l_token_name: ?STRING;
-			l_regular: ?STRING
+			l_token_name: detachable STRING;
+			l_regular: detachable STRING
 			id: INTEGER
 		do
 			l_token_file := token_file
@@ -166,7 +166,7 @@ feature {NONE} -- Implementation
 		local
 			l_token_file: like token_file
 			l_token_type_list: like token_type_list
-			l_keyword_name: ?STRING;
+			l_keyword_name: detachable STRING;
 			l_keyword_type: INTEGER
 		do
 			l_token_file := token_file

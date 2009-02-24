@@ -29,10 +29,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	window: ?WEL_WINDOW
+	window: detachable WEL_WINDOW
 			-- Associated window processing messages for Current.
 
-	icon: ?WEL_ICON
+	icon: detachable WEL_ICON
 			-- Associated icon displayed in taskbar.
 
 	tooltip_text: STRING_32
@@ -74,7 +74,7 @@ feature -- Access
 
 feature -- Settings
 
-	set_window (a_window: ?WEL_WINDOW)
+	set_window (a_window: detachable WEL_WINDOW)
 			-- Set `window' with `a_window'.
 		require
 			exists: exists
@@ -89,7 +89,7 @@ feature -- Settings
 			window_set: window = a_window
 		end
 
-	set_icon (a_icon: ?WEL_ICON)
+	set_icon (a_icon: detachable WEL_ICON)
 			-- Set `icon' with `a_icon'.
 		require
 			exists: exists
@@ -105,7 +105,7 @@ feature -- Settings
 			icon_set: icon = a_icon
 		end
 
-	set_tooltip_text (a_str: ?STRING_GENERAL)
+	set_tooltip_text (a_str: detachable STRING_GENERAL)
 			-- Set `a_str' as `tooltip_text'.
 		require
 			exists: exists

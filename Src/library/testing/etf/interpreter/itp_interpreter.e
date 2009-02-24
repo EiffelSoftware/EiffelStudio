@@ -365,7 +365,7 @@ feature{NONE} -- Socket IPC
 				if socket.readable then
 					socket.read_natural_32
 					if socket.last_natural_32 = 1 then
-						if {l_request: like last_request} socket.retrieved  then
+						if attached {like last_request} socket.retrieved as l_request  then
 							last_request := l_request
 						end
 					end

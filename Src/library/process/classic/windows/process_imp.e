@@ -39,7 +39,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_exec_name: STRING; args: ?LIST [STRING]; a_working_directory: ?STRING)
+	make (a_exec_name: STRING; args: detachable LIST [STRING]; a_working_directory: detachable STRING)
 		local
 			l_arg: STRING
 		do
@@ -74,7 +74,7 @@ feature{NONE} -- Initialization
 			initialize_parameter
 		end
 
-	make_with_command_line (cmd_line: STRING; a_working_directory: ?STRING)
+	make_with_command_line (cmd_line: STRING; a_working_directory: detachable STRING)
 		do
 			create child_process.make
 			create input_buffer.make_empty
@@ -112,7 +112,7 @@ feature -- Control
 	terminate
 			-- Terminate launched process.
 		local
-			l_process_info: ?WEL_PROCESS_INFO
+			l_process_info: detachable WEL_PROCESS_INFO
 		do
 			l_process_info := child_process.process_info
 			check l_process_info /= Void end
@@ -275,7 +275,7 @@ feature{PROCESS_IO_LISTENER_THREAD} -- Interprocess IO
 		local
 			l_cnt: INTEGER
 			l_left: INTEGER
-			l_str: ?STRING
+			l_str: detachable STRING
 			l_input_file_handle: like input_file_handle
 		do
 			input_mutex.lock
@@ -308,7 +308,7 @@ feature{PROCESS_IO_LISTENER_THREAD} -- Interprocess IO
 			succ: BOOLEAN
 			bytes_avail: INTEGER
 			l_output_handler: like output_handler
-			l_last_string: ?STRING_8
+			l_last_string: detachable STRING_8
 			l_output_file_handle: like output_file_handle
 		do
 			succ := cwin_peek_named_pipe (child_process.std_output, default_pointer, 0, default_pointer, $bytes_avail, default_pointer)
@@ -341,7 +341,7 @@ feature{PROCESS_IO_LISTENER_THREAD} -- Interprocess IO
 			succ: BOOLEAN
 			bytes_avail: INTEGER
 			l_error_handler: like error_handler
-			l_last_string: ?STRING
+			l_last_string: detachable STRING
 			l_error_file_handle: like error_file_handle
 		do
 			succ := cwin_peek_named_pipe (child_process.std_error, default_pointer, 0, default_pointer, $bytes_avail, default_pointer)
@@ -408,7 +408,7 @@ feature{NONE} -- Implementation
 	initialize_after_launch
 			-- Initialize when process has been launched successfully.
 		local
-			l_process_info: ?WEL_PROCESS_INFO
+			l_process_info: detachable WEL_PROCESS_INFO
 		do
 			l_process_info := child_process.process_info
 			check l_process_info /= Void end
@@ -642,9 +642,9 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Implementation
 
-	out_thread: ?PROCESS_OUTPUT_LISTENER_THREAD
-	err_thread: ?PROCESS_ERROR_LISTENER_THREAD
-	in_thread: ?PROCESS_INPUT_LISTENER_THREAD
+	out_thread: detachable PROCESS_OUTPUT_LISTENER_THREAD
+	err_thread: detachable PROCESS_ERROR_LISTENER_THREAD
+	in_thread: detachable PROCESS_INPUT_LISTENER_THREAD
 			-- Threads to listen to output and error from child process.
 
 	child_process: WEL_PROCESS
@@ -668,7 +668,7 @@ feature{NONE} -- Implementation
 
 	input_file_handle,
 	output_file_handle,
-	error_file_handle: ?FILE_HANDLE
+	error_file_handle: detachable FILE_HANDLE
 			-- Handles used	to read and write file
 
 	internal_id: INTEGER

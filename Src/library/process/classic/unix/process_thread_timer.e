@@ -70,7 +70,7 @@ feature -- Control
 		local
 			l_sleep_time: INTEGER_64
 			l_timeout: BOOLEAN
-			l_start_time: ?DATE_TIME
+			l_start_time: detachable DATE_TIME
 			l_now_time: DATE_TIME
 		do
 			if not destroyed then
@@ -97,7 +97,7 @@ feature -- Control
 					Result := not l_timeout
 				elseif a_timeout = 0 then
 						-- We are not in multithreaded mode, simply wait indefinitely
-					if {l_prc_imp: PROCESS_IMP} process_launcher then
+					if attached {PROCESS_IMP} process_launcher as l_prc_imp then
 						l_prc_imp.check_exit
 					else
 						check launcher_has_valid_type: False end
@@ -121,7 +121,7 @@ feature {NONE} -- Implementation
 		local
 			l_sleep_time: INTEGER_64
 		do
-			if {l_prc_imp: PROCESS_IMP} process_launcher then
+			if attached {PROCESS_IMP} process_launcher as l_prc_imp then
 				from
 					l_sleep_time := sleep_time.to_integer_64 * 1000000
 				until

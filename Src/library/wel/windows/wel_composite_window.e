@@ -83,7 +83,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	scroller: ?WEL_SCROLLER
+	scroller: detachable WEL_SCROLLER
 			-- Scroller object for processing scroll messages.
 
 feature -- Status report
@@ -289,7 +289,7 @@ feature -- Status setting
 		require
 			exists: exists
 			scroller_exists: scroller /= Void
-			position_small_enough: {l_scroller_var: like scroller} scroller and then
+			position_small_enough: attached scroller as l_scroller_var and then
 				l_scroller_var.valid_maximal_horizontal_position (position)
 			position_large_enough: position >= minimal_horizontal_position
 		local
@@ -308,7 +308,7 @@ feature -- Status setting
 		require
 			exists: exists
 			scroller_exists: scroller /= Void
-			position_small_enough: {l_scroller_var: like scroller} scroller and then
+			position_small_enough: attached scroller as l_scroller_var and then
 				l_scroller_var.valid_maximal_vertical_position (position)
 			position_large_enough: position >= minimal_vertical_position
 		local
@@ -372,7 +372,7 @@ feature -- Status setting
 		require
 			exists: exists
 			scroller_not_void: scroller /= Void
-			position_small_enough: {l_scroller: like scroller} scroller and then
+			position_small_enough: attached scroller as l_scroller and then
 				l_scroller.valid_maximal_horizontal_position (position)
 			position_large_enough: position >= minimal_horizontal_position
 		do
@@ -389,7 +389,7 @@ feature -- Status setting
 		require
 			exists: exists
 			scroller_not_void: scroller /= Void
-			position_small_enough: {l_scroller: like scroller} scroller and then
+			position_small_enough: attached scroller as l_scroller and then
 				l_scroller.valid_maximal_vertical_position (position)
 			position_large_enough: position >= minimal_vertical_position
 		do
@@ -514,7 +514,7 @@ feature {NONE}-- Messages
 		do
 		end
 
-	on_menu_select (menu_item, flags: INTEGER; a_menu: ?WEL_MENU)
+	on_menu_select (menu_item, flags: INTEGER; a_menu: detachable WEL_MENU)
 			-- The `menu_item' from `a_menu' is currently
 			-- highlighted by the selection bar. `flags'
 			-- indicates the state of `a_menu'.
@@ -652,7 +652,7 @@ feature {NONE}-- Messages
 		do
 		end
 
-	on_palette_is_changing (window: ?WEL_WINDOW)
+	on_palette_is_changing (window: detachable WEL_WINDOW)
 			-- Wm_paletteischanging.
 			-- Inform that an application is going to realize its
 			-- logical palette. `window' identifies the window
@@ -662,7 +662,7 @@ feature {NONE}-- Messages
 		do
 		end
 
-	on_palette_changed (window: ?WEL_WINDOW)
+	on_palette_changed (window: detachable WEL_WINDOW)
 			-- Wm_palettechanged message.
 			-- This message is sent after the window with the
 			-- keyboard focus has realized its logical palette.
@@ -698,7 +698,7 @@ feature {NONE} -- Implementation
 			-- Wm_notify message
 		local
 			info: WEL_NMHDR
-			control: ?WEL_CONTROL
+			control: detachable WEL_CONTROL
 		do
 			create info.make_by_pointer (lparam)
 			on_notify (wparam.to_integer_32, info)
@@ -722,7 +722,7 @@ feature {NONE} -- Implementation
 		require
 			exists: exists
 		local
-			control: ?WEL_CONTROL
+			control: detachable WEL_CONTROL
 			control_id: INTEGER
 			hwnd_control: POINTER
 			notify_code: INTEGER
@@ -821,7 +821,7 @@ feature {NONE} -- Implementation
 		require
 			exists: exists
 		local
-			a_bar: ?WEL_BAR
+			a_bar: detachable WEL_BAR
 			p: POINTER
 		do
 			p := cwin_get_wm_vscroll_hwnd (wparam, lparam)
@@ -847,7 +847,7 @@ feature {NONE} -- Implementation
 		require
 			exists: exists
 		local
-			a_bar: ?WEL_BAR
+			a_bar: detachable WEL_BAR
 			p: POINTER
 		do
 			p := cwin_get_wm_hscroll_hwnd (wparam, lparam)
@@ -895,7 +895,7 @@ feature {NONE} -- Implementation
 		require
 			exists: exists
 		local
-			control: ?WEL_COLOR_CONTROL
+			control: detachable WEL_COLOR_CONTROL
 			hwnd_control: POINTER
 			paint_dc: WEL_PAINT_DC
 		do
@@ -946,7 +946,7 @@ feature {NONE} -- Implementation
 			-- Update the system colors.
 		local
 			child_wnd: LIST [WEL_WINDOW]
-			control: ?WEL_CONTROL
+			control: detachable WEL_CONTROL
 		do
 				-- Invalidate the colors
 			system_color_scrollbar_cell.put (Void)
@@ -1001,7 +1001,7 @@ feature {WEL_DISPATCHER}
 			msg: INTEGER; wparam, lparam: POINTER): POINTER
 		local
 			called: BOOLEAN
-			l_message: ?WEL_COMMAND_EXEC
+			l_message: detachable WEL_COMMAND_EXEC
 			l_commands: like commands
 		do
 			inspect msg

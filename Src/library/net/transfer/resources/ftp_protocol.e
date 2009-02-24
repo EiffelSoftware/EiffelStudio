@@ -193,7 +193,7 @@ feature -- Status setting
 				end
 			end
 		ensure then
-			connection_established: {l_data_socket: like data_socket} data_socket and then
+			connection_established: attached data_socket as l_data_socket and then
 				(l_data_socket.is_open_read or l_data_socket.is_open_write)
 		rescue
 			error_code := Connection_refused
@@ -359,13 +359,13 @@ feature -- Input
 
 feature {DATA_RESOURCE} -- Implementation
 
-	data_socket: ?NETWORK_STREAM_SOCKET
+	data_socket: detachable NETWORK_STREAM_SOCKET
 			-- Socket for data connection
 
-	accepted_socket: ?NETWORK_STREAM_SOCKET
+	accepted_socket: detachable NETWORK_STREAM_SOCKET
 			-- Handle to socket of incoming connection
 
-	proxy_connection: ?HTTP_PROTOCOL
+	proxy_connection: detachable HTTP_PROTOCOL
 			-- Connection to http proxy
 
 feature {NONE} -- Implementation
@@ -398,7 +398,7 @@ feature {NONE} -- Implementation
 			socket_exists: s /= Void
 			socket_readable: s.is_open_read
 		local
-			l_reply: ?STRING
+			l_reply: detachable STRING
 			go_on: BOOLEAN
 		do
 			from
@@ -551,7 +551,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	get_size (s: ?STRING)
+	get_size (s: detachable STRING)
 			-- Extract file size from `s'.
 		require
 			no_error_occurred: not error

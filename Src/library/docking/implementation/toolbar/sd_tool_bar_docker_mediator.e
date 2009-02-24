@@ -273,7 +273,7 @@ feature {NONE} -- Implementation functions
 			l_pixmaps: EV_STOCK_PIXMAPS
 		do
 			if is_in_orignal_row then
-				if {lt_widget: EV_WIDGET} caller.tool_bar then
+				if attached {EV_WIDGET} caller.tool_bar as lt_widget then
 					if not orignal_row.has (lt_widget) then
 						is_in_orignal_row := False
 					end
@@ -354,7 +354,7 @@ feature {NONE} -- Implementation functions
 
 				docking_manager.command.unlock_update
 			else
-				if {lt_widget: EV_WIDGET} caller.tool_bar then
+				if attached {EV_WIDGET} caller.tool_bar as lt_widget then
 					caller.row.set_item_position_relative (lt_widget, 0)
 				else
 					check not_possible: False end

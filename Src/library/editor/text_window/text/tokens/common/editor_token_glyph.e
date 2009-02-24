@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	glyph: !EV_PIXEL_BUFFER
+	glyph: attached EV_PIXEL_BUFFER
 			-- Graphical image.
 
 	width: INTEGER

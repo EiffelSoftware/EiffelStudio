@@ -144,7 +144,7 @@ feature {NONE} -- Implementation
 	current_char: CHARACTER;
 			-- Character.
 
-	last_string: ?STRING;
+	last_string: detachable STRING;
 			-- String used in `action_set_word' and `action_up_to'.
 
 	build_sequence (end_sequence: CHARACTER)

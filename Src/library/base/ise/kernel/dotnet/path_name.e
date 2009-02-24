@@ -49,7 +49,7 @@ feature -- Comparison
 	is_equal (other: like Current): BOOLEAN
 			-- Is the path name equal to `other'?
 		local
-			l_other_full_path: ?SYSTEM_STRING
+			l_other_full_path: detachable SYSTEM_STRING
 		do
 			--| .Net exceptions may be raised due to invalid characters or io problems.
 			l_other_full_path := {PATH}.get_full_path (other.to_cil)
@@ -63,7 +63,7 @@ feature -- Status report
 		require
 			exists: dir_name /= Void
 		local
-			a_sys_str: ?SYSTEM_STRING
+			a_sys_str: detachable SYSTEM_STRING
 		do
 			a_sys_str := {PATH}.get_full_path (dir_name.to_cil)
 			Result := a_sys_str /= Void and then not a_sys_str.equals (a_sys_str.empty)
@@ -74,7 +74,7 @@ feature -- Status report
 		require
 			exists: vol_name /= Void
 		local
-			a_sys_str: ?SYSTEM_STRING
+			a_sys_str: detachable SYSTEM_STRING
 		do
 			a_sys_str := {PATH}.get_full_path (vol_name.to_cil)
 			Result := a_sys_str /= Void and then a_sys_str.equals ({PATH}.get_path_root (a_sys_str))

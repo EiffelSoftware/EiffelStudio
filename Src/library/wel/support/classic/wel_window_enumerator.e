@@ -38,7 +38,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	internal_children: ?ARRAYED_LIST [WEL_WINDOW]
+	internal_children: detachable ARRAYED_LIST [WEL_WINDOW]
 			-- Temporary container for `enumerate'. Used by `enumerate_child_windows_callback'.
 
 	enumerate_child_windows_callback (child_hwnd: POINTER)
@@ -47,7 +47,7 @@ feature {NONE} -- Implementation
 			child_hwnd_not_null: child_hwnd /= default_pointer
 			internal_children_attached: internal_children /= Void
 		local
-			wnd: ?WEL_WINDOW
+			wnd: detachable WEL_WINDOW
 			l_children: like internal_children
 		do
 			if is_window (child_hwnd) then

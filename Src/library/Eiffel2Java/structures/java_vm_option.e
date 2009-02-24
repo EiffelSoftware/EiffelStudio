@@ -16,7 +16,7 @@ create
 
 feature -- Access
 
-	option_string: ?STRING
+	option_string: detachable STRING
 			-- Associated option string.
 			--| FIXME: This is a bad design, since a query should not change an attribute.
 		local
@@ -54,7 +54,7 @@ feature -- Measurement
 
 feature {NONE} -- Implementation
 
-	internal_option: ?C_STRING
+	internal_option: detachable C_STRING
 			-- To hold data.
 
 	c_structure_size: INTEGER

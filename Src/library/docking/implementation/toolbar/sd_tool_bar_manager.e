@@ -311,7 +311,7 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_OPEN_CONFIG_MEDIATOR, SD_SAVE_CONFIG_MEDI
 			not_floating: not a_tool_bar.is_floating
 			has: contents.has (a_tool_bar.content)
 		do
-			if {lt_widget: EV_WIDGET} a_tool_bar.tool_bar then
+			if attached {EV_WIDGET} a_tool_bar.tool_bar as lt_widget then
 				if docking_manager.tool_bar_container.top.has_recursive (lt_widget) then
 					Result := {SD_ENUMERATION}.top
 				elseif docking_manager.tool_bar_container.bottom.has_recursive (lt_widget) then

@@ -29,7 +29,7 @@ inherit
 
 feature -- Access
 
-	last_exception: ?EXCEPTION
+	last_exception: detachable EXCEPTION
 			-- Last exception
 		do
 			Result := last_exception_cell.item
@@ -51,7 +51,7 @@ feature -- Raise
 					-- Meaning is not yet used in the runtime.
 					-- We passes NULL, until we implemented it.
 				p_meaning := default_pointer
-				if {m: C_STRING} a_exception.c_message then
+				if attached {C_STRING} a_exception.c_message as m then
 					p_message := m.item
 				else
 					p_message := default_pointer
@@ -119,7 +119,7 @@ feature -- Status report
 
 feature {EXCEPTIONS} -- Compatibility support
 
-	type_of_code (a_code: INTEGER): ?TYPE [EXCEPTION]
+	type_of_code (a_code: INTEGER): detachable TYPE [EXCEPTION]
 			-- Exception type of `a_code'
 		do
 			inspect a_code
@@ -196,7 +196,7 @@ feature {EXCEPTIONS} -- Compatibility support
 			end
 		end
 
-	exception_from_code (a_code: INTEGER): ?EXCEPTION
+	exception_from_code (a_code: INTEGER): detachable EXCEPTION
 			-- Create exception object from `a_code'
 		local
 			l_rt_panic: EIFFEL_RUNTIME_PANIC
@@ -290,7 +290,7 @@ feature {EXCEPTIONS} -- Compatibility support
 
 feature {NONE} -- Access
 
-	exception_data: ?TUPLE [code: INTEGER; signal_code: INTEGER; error_code: INTEGER; tag, recipient, eclass: STRING; rf_routine, rf_class: STRING; trace: STRING; line_number: INTEGER; is_invariant_entry: BOOLEAN]
+	exception_data: detachable TUPLE [code: INTEGER; signal_code: INTEGER; error_code: INTEGER; tag, recipient, eclass: STRING; rf_routine, rf_class: STRING; trace: STRING; line_number: INTEGER; is_invariant_entry: BOOLEAN]
 			-- Exception data
 			-- Used to store temporary exception information,
 			-- which is used to create exception object later.
@@ -300,7 +300,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Element change
 
-	set_last_exception (a_last_exception: ?EXCEPTION)
+	set_last_exception (a_last_exception: detachable EXCEPTION)
 			-- Set `last_exception' with `a_last_exception'.
 		do
 			last_exception_cell.put (a_last_exception)
@@ -312,11 +312,11 @@ feature {NONE} -- Element change
 						rf_routine, rf_class: STRING; trace: STRING; line_number: INTEGER; is_invariant_entry: BOOLEAN)
 			-- Set exception data.
 		local
-			l_exception: ?EXCEPTION
+			l_exception: detachable EXCEPTION
 		do
 			exception_data_cell.put ([code, signal_code, error_code, tag, recipient, eclass, rf_routine, rf_class, trace, line_number, is_invariant_entry])
 			if new_obj then
-				if {e: EXCEPTION} exception_from_data then
+				if attached {EXCEPTION} exception_from_data as e then
 					set_last_exception (e)
 				end
 			else
@@ -361,7 +361,7 @@ feature {NONE} -- Implementation
 	is_code_ignored (a_code: INTEGER): BOOLEAN
 			-- Is exception of `a_code' ignored?
 		do
-			if {l_type: TYPE [EXCEPTION]} type_of_code (a_code) then
+			if attached {TYPE [EXCEPTION]} type_of_code (a_code) as l_type then
 				Result := is_ignored (l_type)
 			else
 				Result := True
@@ -370,13 +370,13 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Cells
 
-	exception_data_cell: CELL [?TUPLE [code: INTEGER; signal_code: INTEGER; error_code: INTEGER; tag, recipient, eclass: STRING; rf_routine, rf_class: STRING; trace: STRING; line_number: INTEGER; is_invariant_entry: BOOLEAN]]
+	exception_data_cell: CELL [detachable TUPLE [code: INTEGER; signal_code: INTEGER; error_code: INTEGER; tag, recipient, eclass: STRING; rf_routine, rf_class: STRING; trace: STRING; line_number: INTEGER; is_invariant_entry: BOOLEAN]]
 			-- Cell to hold current exception data
 		once
 			create Result.put (Void)
 		end
 
-	last_exception_cell: CELL [?EXCEPTION]
+	last_exception_cell: CELL [detachable EXCEPTION]
 			-- Cell to hold last exception
 		once
 			create Result.put (Void)
@@ -395,16 +395,16 @@ feature {NONE} -- Cells
 
 feature {NONE} -- Implementation
 
-	exception_from_data: ?EXCEPTION
+	exception_from_data: detachable EXCEPTION
 			-- Create an exception object `exception_data'
 		local
-			t: ?EXCEPTION
+			t: detachable EXCEPTION
 		do
 			if
-				{l_data: like exception_data} exception_data and then
-				{e: EXCEPTION} exception_from_code (l_data.code)
+				attached exception_data as l_data and then
+				attached {EXCEPTION} exception_from_code (l_data.code) as e
 			then
-				if {l_rf: ROUTINE_FAILURE} e then
+				if attached {ROUTINE_FAILURE} e as l_rf then
 					t := last_exception
 					if t /= Void then
 						check e_not_throwing_t: not e.is_throwing (t) end
@@ -412,22 +412,22 @@ feature {NONE} -- Implementation
 					end
 					l_rf.set_routine_name (l_data.rf_routine)
 					l_rf.set_class_name (l_data.rf_class)
-				elseif {l_ov: OLD_VIOLATION} e then
+				elseif attached {OLD_VIOLATION} e as l_ov then
 					t := last_exception
 					if t /= Void then
 						check e_not_throwing_t: not e.is_throwing (t) end
 						e.set_throwing_exception (t)
 					end
 				else
-					if {l_inva: INVARIANT_VIOLATION} e then
+					if attached {INVARIANT_VIOLATION} e as l_inva then
 						l_inva.set_is_entry (l_data.is_invariant_entry)
-					elseif {l_sig: OPERATING_SYSTEM_SIGNAL_FAILURE} e then
+					elseif attached {OPERATING_SYSTEM_SIGNAL_FAILURE} e as l_sig then
 						l_sig.set_signal_code (l_data.signal_code)
-					elseif {l_io: IO_FAILURE} e then
+					elseif attached {IO_FAILURE} e as l_io then
 						l_io.set_error_code (l_data.error_code)
-					elseif {l_sys: OPERATING_SYSTEM_FAILURE} e then
+					elseif attached {OPERATING_SYSTEM_FAILURE} e as l_sys then
 						l_sys.set_error_code (l_data.error_code)
-					elseif {l_com: COM_FAILURE} e then
+					elseif attached {COM_FAILURE} e as l_com then
 						l_com.set_hresult_code (l_data.signal_code)
 						l_com.set_exception_information (l_data.tag)
 					end
@@ -454,7 +454,7 @@ feature {NONE} -- Implementation
 					-- Meaning is not yet used in the runtime.
 					-- We passes NULL, until we implemented it.
 				p_meaning := default_pointer
-				if {m: C_STRING} a_exception.c_message then
+				if attached {C_STRING} a_exception.c_message as m then
 					p_message := m.item
 				else
 					p_message := default_pointer
@@ -491,7 +491,7 @@ feature {NONE} -- Implementation
 
 	frozen free_preallocated_trace
 		local
-			e: ?EXCEPTION
+			e: detachable EXCEPTION
 		do
 			e := no_memory_exception_object_cell.item
 			if e /= Void then

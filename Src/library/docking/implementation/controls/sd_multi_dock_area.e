@@ -100,7 +100,7 @@ feature -- Command
 				save_spliter_position_imp (l_split, l_data)
 			end
 		ensure
-			data_saved: ({lt_widget: SD_MIDDLE_CONTAINER} a_widget) implies has_spliter_data (a_data_name)
+			data_saved: (attached {SD_MIDDLE_CONTAINER} a_widget as lt_widget) implies has_spliter_data (a_data_name)
 		end
 
 	restore_spliter_position (a_widget: EV_WIDGET; a_data_name: STRING)
@@ -109,7 +109,7 @@ feature -- Command
 		require
 			a_widget_not_void: a_widget /= Void
 			not_empty: a_data_name /= Void and then not a_data_name.is_empty
-			data_saved: ({lt_widget: SD_MIDDLE_CONTAINER} a_widget) implies has_spliter_data (a_data_name)
+			data_saved: (attached {SD_MIDDLE_CONTAINER} a_widget as lt_widget) implies has_spliter_data (a_data_name)
 		local
 			l_split: SD_MIDDLE_CONTAINER
 			l_data: like spliters_data
@@ -123,7 +123,7 @@ feature -- Command
 				all_spliters_data.remove (a_data_name)
 			end
 		ensure
-			data_cleared: ({lt_widget_2: SD_MIDDLE_CONTAINER} a_widget) implies not has_spliter_data (a_data_name)
+			data_cleared: (attached {SD_MIDDLE_CONTAINER} a_widget as lt_widget_2) implies not has_spliter_data (a_data_name)
 		end
 
 	update_middle_container
@@ -237,7 +237,7 @@ feature -- Query
 				if l_all_editors.count > 0 then
 					from
 						l_zone := l_all_editors.first
-						if {lt_widget: EV_WIDGET} l_zone then
+						if attached {EV_WIDGET} l_zone as lt_widget then
 							l_parent := lt_widget.parent
 						else
 							check not_possible: False end
@@ -453,7 +453,7 @@ feature {NONE} -- Implementation
 			if l_middle_container /= Void and then l_zone = Void then
 				l_left_all_invisible := update_visible_imp (l_middle_container)
 			else
-				if {lt_widget: EV_WIDGET} l_zone then
+				if attached {EV_WIDGET} l_zone as lt_widget then
 					l_left_all_invisible := not lt_widget.is_displayed
 				else
 					check not_possible: False end
@@ -467,7 +467,7 @@ feature {NONE} -- Implementation
 			if l_middle_container /= Void and then l_zone = Void then
 				l_right_all_invisible := update_visible_imp (l_middle_container)
 			else
-				if {lt_widget_2: EV_WIDGET} l_zone then
+				if attached {EV_WIDGET} l_zone as lt_widget_2 then
 					l_right_all_invisible := not lt_widget_2.is_displayed
 				else
 					check not_possible: False end
@@ -515,7 +515,7 @@ feature {NONE} -- Implementation
 				if l_upper_zone_left /= Void and then l_upper_zone_left.is_displayed then
 					l_left_all_minimized := l_upper_zone_left.is_minimized
 				else
-					if {lt_widget: EV_WIDGET} l_zone then
+					if attached {EV_WIDGET} l_zone as lt_widget then
 						l_left_all_minimized := not lt_widget.is_displayed
 					else
 						check not_possible: False end
@@ -533,7 +533,7 @@ feature {NONE} -- Implementation
 				check not_void: l_zone /= Void end
 				l_upper_zone_right ?= l_zone
 				if l_upper_zone_right /= Void then
-					if {lt_widget_2: EV_WIDGET} l_upper_zone_right then
+					if attached {EV_WIDGET} l_upper_zone_right as lt_widget_2 then
 						if lt_widget_2.is_displayed then
 							l_right_all_minimized := l_upper_zone_right.is_minimized
 						end
@@ -541,7 +541,7 @@ feature {NONE} -- Implementation
 						check not_possible: False end
 					end
 				else
-					if {lt_widget_3: EV_WIDGET} l_zone then
+					if attached {EV_WIDGET} l_zone as lt_widget_3 then
 						l_right_all_minimized := not lt_widget_3.is_displayed
 					else
 						check not_possible: False end

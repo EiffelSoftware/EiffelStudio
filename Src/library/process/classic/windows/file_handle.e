@@ -65,7 +65,7 @@ feature -- Factory
 			end
 		end
 
-	create_pipe_write_inheritable: ?TUPLE [POINTER, POINTER]
+	create_pipe_write_inheritable: detachable TUPLE [POINTER, POINTER]
 			-- Create pipe where `write' part of pipe can be written to.
 			-- Actual type is TUPLE [read, write: POINTER]
 		local
@@ -86,7 +86,7 @@ feature -- Factory
 			end
 		end
 
-	create_pipe_read_inheritable: ?TUPLE [POINTER, POINTER]
+	create_pipe_read_inheritable: detachable TUPLE [POINTER, POINTER]
 			-- Create pipe where `write' part of pipe can be written to.
 			-- Actual type is TUPLE [read, write: POINTER]
 		local
@@ -115,7 +115,7 @@ feature -- Status report
 	last_read_successful: BOOLEAN
 			-- Was last read operation successful?
 
-	last_string: ?STRING
+	last_string: detachable STRING
 			-- Last read string
 
 	last_written_bytes: INTEGER

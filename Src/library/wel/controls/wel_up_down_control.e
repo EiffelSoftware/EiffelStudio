@@ -77,7 +77,7 @@ feature -- Access
 			Result := upper
 		end
 
-	buddy_window: ?WEL_WINDOW
+	buddy_window: detachable WEL_WINDOW
 			-- Current buddy window
 		require
 			exists: exists

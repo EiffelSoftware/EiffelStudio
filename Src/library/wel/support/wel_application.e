@@ -50,7 +50,7 @@ feature -- Access
 			parent_main_window_is_void: Result.parent = Void
 		end
 
-	accelerators: ?WEL_ACCELERATORS
+	accelerators: detachable WEL_ACCELERATORS
 			-- Application's accelerators
 			-- May be redefined (in once) to associate accelerators.
 		do
@@ -119,14 +119,14 @@ feature -- Basic operations
 		require
 			runable: runable
 			main_window_not_void: application_main_window /= Void
-			parent_main_window_is_void: {l_app: like application_main_window} application_main_window and then l_app.parent = Void
+			parent_main_window_is_void: attached application_main_window as l_app and then l_app.parent = Void
 		local
 			l_window: like application_main_window
 		do
 			l_window := application_main_window
 				-- Per precondition.
 			check l_window_attached: l_window /= Void end
-			if {l_dialog: WEL_MAIN_DIALOG} l_window then
+			if attached {WEL_MAIN_DIALOG} l_window as l_dialog then
 				l_dialog.activate
 			end
 			l_window.show_with_option (default_show_command)
@@ -160,8 +160,8 @@ feature {NONE} -- Implementation
 			-- Windows message loop
 		local
 			msg: WEL_MSG
-			accel: ?WEL_ACCELERATORS
-			main_w: ?WEL_WINDOW
+			accel: detachable WEL_ACCELERATORS
+			main_w: detachable WEL_WINDOW
 			done: BOOLEAN
 			dlg: POINTER
 		do

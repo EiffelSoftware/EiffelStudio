@@ -68,7 +68,7 @@ feature -- Status reporting
 	sleep_time: INTEGER
 			-- Time in milliseconds for this timer to sleep	
 
-	process_launcher: ?PROCESS
+	process_launcher: detachable PROCESS
 			-- process launcher to which this timer is attached.
 
 invariant

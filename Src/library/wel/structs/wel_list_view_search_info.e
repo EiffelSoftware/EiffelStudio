@@ -203,7 +203,7 @@ feature -- Measurment
 
 feature {NONE} -- Externals
 
-	str_target: ?WEL_STRING
+	str_target: detachable WEL_STRING
 			-- Buffer for `target' field.
 
 	c_structure_size: INTEGER

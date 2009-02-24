@@ -559,7 +559,7 @@ feature -- Command
 			until
 				l_floating_zones.after
 			loop
-				if {lt_widget: EV_WIDGET} l_floating_zones.item then
+				if attached {EV_WIDGET} l_floating_zones.item as lt_widget then
 					lt_widget.destroy
 				else
 					check not_possible: False end

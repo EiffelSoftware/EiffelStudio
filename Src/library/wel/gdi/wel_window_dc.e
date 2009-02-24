@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	window: ?WEL_WINDOW
+	window: detachable WEL_WINDOW
 			-- Window associated with the dc
 
 feature -- Status report

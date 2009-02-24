@@ -16,7 +16,7 @@ inherit
 
 feature {NONE} -- Access
 
-	frozen diff: !DIFF_TEXT
+	frozen diff: attached DIFF_TEXT
 			-- Shared access to DIFF
 		once
 			create Result
@@ -167,19 +167,19 @@ feature -- Test routines
 
 feature {NONE} -- Constants
 
-	text: !STRING =
+	text: attached STRING =
 		"Test line 1%N%
 		%Test line 2%N%
 		%Test line 3"
 
-	text_merge: !STRING =
+	text_merge: attached STRING =
 		"Test line 1%N%
 		%Inserted line 1%N%
 		%Test line 2%N%
 		%Inserted line 2%N%
 		%Test line 3"
 
-	text_merge_dual: !STRING =
+	text_merge_dual: attached STRING =
 		"Test line 1 changed%N%
 		%Inserted line 1%N%
 		%Test line 3%N%

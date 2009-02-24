@@ -21,7 +21,7 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	make (a_exec_name: STRING; args: ?LIST [STRING]; a_working_directory: like working_directory)
+	make (a_exec_name: STRING; args: detachable LIST [STRING]; a_working_directory: like working_directory)
 			-- Create process object with `a_exec_name' as executable with `args'
 			-- as arguments, and with `a_working_directory' as its working directory.
 			-- Apply Void to `a_working_directory' if no working directory is specified.
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 		ensure
 			command_line_not_empty: command_line /= Void and then not command_line.is_empty
 			working_directory_set: a_working_directory /= Void implies
-				({l_wd: like working_directory} working_directory and then l_wd.same_string (a_working_directory))
+				(attached working_directory as l_wd and then l_wd.same_string (a_working_directory))
 			working_directory_set: a_working_directory = Void implies working_directory = Void
 			init_succeeded: parameter_initialized
 		end
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 		ensure
 			command_line_not_empty: command_line /= Void and then not command_line.is_empty
 			working_directory_set: a_working_directory /= Void implies
-				({l_wd: like working_directory} working_directory and then l_wd.same_string (a_working_directory))
+				(attached working_directory as l_wd and then l_wd.same_string (a_working_directory))
 			working_directory_set: a_working_directory = Void implies working_directory = Void
 			init_succeeded: parameter_initialized
 		end
@@ -107,7 +107,7 @@ feature -- IO redirection
 			process_not_running: not is_running
 			a_file_name_not_void: a_file_name /= Void
 			a_file_name_not_empty: not a_file_name.is_empty
-			output_and_error_file_not_same: {l_fn: like error_file_name} error_file_name implies
+			output_and_error_file_not_same: attached error_file_name as l_fn implies
 				not l_fn.same_string (a_file_name)
 		do
 			output_direction := {PROCESS_REDIRECTION_CONSTANTS}.to_file
@@ -150,7 +150,7 @@ feature -- IO redirection
 		ensure
 			output_redirection_canceled:
 				output_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
-			output_file_name_set: {l_file_name: like output_file_name} output_file_name and then l_file_name.same_string ("")
+			output_file_name_set: attached output_file_name as l_file_name and then l_file_name.same_string ("")
 			output_handler_set: output_handler = Void
 		end
 
@@ -160,7 +160,7 @@ feature -- IO redirection
 			process_not_running: not is_running
 			a_file_name_not_void: a_file_name /= Void
 			a_file_name_not_empty: not a_file_name.is_empty
-			output_and_error_file_not_same: {l_fn: like output_file_name} output_file_name implies
+			output_and_error_file_not_same: attached output_file_name as l_fn implies
 				not l_fn.same_string (a_file_name)
 		do
 			error_direction := {PROCESS_REDIRECTION_CONSTANTS}.to_file
@@ -221,7 +221,7 @@ feature -- IO redirection
 		ensure
 			error_redirection_canceled:
 				error_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
-			error_file_name_set: {l_file_name: like error_file_name} error_file_name and then l_file_name.same_string ("")
+			error_file_name_set: attached error_file_name as l_file_name and then l_file_name.same_string ("")
 			error_handler_set: error_handler = Void
 		end
 
@@ -610,16 +610,16 @@ feature -- Access
 			-- Program name, with its arguments, if any, which will be run
 			-- in launched process
 
-	working_directory: ?STRING
+	working_directory: detachable STRING
 			-- Working directory of the program to be launched
 
-	input_file_name: ?STRING
+	input_file_name: detachable STRING
 			-- File name served as the redirected input stream of the new process
 
-	output_file_name: ?STRING
+	output_file_name: detachable STRING
 			-- File name served as the redirected output stream of the new process
 
-	error_file_name: ?STRING
+	error_file_name: detachable STRING
 			-- File name served as the redirected error stream of the new process
 
 	input_direction: INTEGER
@@ -634,7 +634,7 @@ feature -- Access
 			-- Where will the error stream of the to-be launched process be redirected.
 			-- Valid values are those constants defined in class `PROCESS_REDIRECTION_CONSTANTS'
 
-	environment_variable_table: ?HASH_TABLE [STRING, STRING]
+	environment_variable_table: detachable HASH_TABLE [STRING, STRING]
 			-- Table of environment variables to be passes to new process.
 			-- Key is variable name and value is the value of the variable.
 			-- If this table is Void or empty, environment variables of the parent process will be passes to the new process.
@@ -685,7 +685,7 @@ feature -- Status report
 			-- Will process be launched without any console ?
 			-- Has effects on Windows.
 
-	are_agents_valid (handler: ?PROCEDURE [ANY, TUPLE [STRING]]; is_error: BOOLEAN): BOOLEAN
+	are_agents_valid (handler: detachable PROCEDURE [ANY, TUPLE [STRING]]; is_error: BOOLEAN): BOOLEAN
 			-- Are output redirection agent and error redirection agent valid?
 			-- If you redirect both output and error to one agent,
 			-- they are not valid. You must redirect output and error to
@@ -743,30 +743,30 @@ feature -- Validation checking
 
 feature {PROCESS_IO_LISTENER_THREAD} -- Output/error handlers
 
-	output_handler: ?PROCEDURE [ANY, TUPLE [STRING]]
+	output_handler: detachable PROCEDURE [ANY, TUPLE [STRING]]
 			-- Handler called when output from process arrives
 
-	error_handler: ?PROCEDURE [ANY, TUPLE [STRING]]
+	error_handler: detachable PROCEDURE [ANY, TUPLE [STRING]]
 			-- Handler called when error from process arrives
 
 feature {NONE} -- Implementation
 
-	on_start_handler: ?ROUTINE [ANY, TUPLE]
+	on_start_handler: detachable ROUTINE [ANY, TUPLE]
 			-- Agent called when process starts
 
-	on_exit_handler: ?ROUTINE [ANY, TUPLE]
+	on_exit_handler: detachable ROUTINE [ANY, TUPLE]
 			-- Agent called when process exits
 
-	on_terminate_handler: ?ROUTINE [ANY, TUPLE]
+	on_terminate_handler: detachable ROUTINE [ANY, TUPLE]
 			-- Agent called when process has been terminated
 
-	on_fail_launch_handler: ?ROUTINE [ANY, TUPLE]
+	on_fail_launch_handler: detachable ROUTINE [ANY, TUPLE]
 			-- Agent called when process launch failed
 
-	on_successful_launch_handler: ?ROUTINE [ANY, TUPLE]
+	on_successful_launch_handler: detachable ROUTINE [ANY, TUPLE]
 			-- Agent called when process launch is successful
 
-	arguments: ?LINKED_LIST [STRING]
+	arguments: detachable LINKED_LIST [STRING]
 			-- Arguments of the program indicated by file_name
 
 	timer: PROCESS_TIMER
@@ -818,9 +818,9 @@ feature {NONE} -- Implementation
 			    (input_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection) and
 				(output_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection) and
 				(error_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection) and
-				({l_ifn: like input_file_name} input_file_name and then l_ifn.same_string ("")) and
-				({l_ofn: like output_file_name} output_file_name and then l_ofn.same_string ("")) and
-				({l_efn: like error_file_name} error_file_name and then l_efn.same_string ("")) and
+				(attached input_file_name as l_ifn and then l_ifn.same_string ("")) and
+				(attached output_file_name as l_ofn and then l_ofn.same_string ("")) and
+				(attached error_file_name as l_efn and then l_efn.same_string ("")) and
 				(output_handler = Void) and
 				(error_handler = Void) and
 				(not hidden) and

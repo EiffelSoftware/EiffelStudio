@@ -55,7 +55,7 @@ feature -- Access
 			Result := c_ai_addr (object_ptr)
 		end
 
-	next: ?ADDRINFO
+	next: detachable ADDRINFO
 		local
 			p: POINTER
 		do

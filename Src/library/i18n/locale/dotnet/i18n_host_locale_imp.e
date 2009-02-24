@@ -45,7 +45,7 @@ feature -- Initialization
 	create_locale_info (a_locale_id : I18N_LOCALE_ID): I18N_LOCALE_INFO
 			-- Create locale with a_locale_id
 		do
-			if {l_name: STRING}a_locale_id.name.string then
+			if attached {STRING} a_locale_id.name.string as l_name then
 				create culture_info.make_from_name (format_id_to_dotnet (l_name))
 			end
 			create Result.make
@@ -119,7 +119,7 @@ feature -- Element change
 	set_locale (a_locale_name : STRING_32)
 			-- set current locale to `a_locale_name'
 		do
-			if a_locale_name /= Void and then ({l_name: STRING}a_locale_name.string) then
+			if a_locale_name /= Void and then (attached {STRING} a_locale_name.string as l_name) then
 				create culture_info.make_from_name (format_id_to_dotnet (l_name))
 			end
 		end
@@ -543,7 +543,7 @@ feature {NONE} -- Help fuction
 			end
 		end
 
-	format_id_to_dotnet (a_id: !STRING): !STRING
+	format_id_to_dotnet (a_id: attached STRING): attached STRING
 			-- Format id to dotnet style.
 			-- Replace "_", "@" and "." with "-"
 		local

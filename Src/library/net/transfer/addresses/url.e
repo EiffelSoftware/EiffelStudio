@@ -190,7 +190,7 @@ feature {NONE} -- Implementation
 	address: STRING
 			-- Address string
 
-	proxy_information: ?PROXY_INFORMATION
+	proxy_information: detachable PROXY_INFORMATION
 			-- Information about the proxy to be used
 
 invariant

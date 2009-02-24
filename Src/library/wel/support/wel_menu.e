@@ -329,7 +329,7 @@ feature -- Basic operations
 			show_track_with_option (x, y, window, default_track_option, Void)
 		end
 
-	show_track_with_option (x, y: INTEGER; window: WEL_COMPOSITE_WINDOW; option: INTEGER; rect: ?WEL_RECT)
+	show_track_with_option (x, y: INTEGER; window: WEL_COMPOSITE_WINDOW; option: INTEGER; rect: detachable WEL_RECT)
 			-- Show a track popup menu with `option' at
 			-- the `x' and `y' absolute position.
 			-- `window' will receive the selection in

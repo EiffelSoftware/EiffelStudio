@@ -70,7 +70,7 @@ feature -- Access
 			Result := cwel_drawitemstruct_get_itemstate (item)
 		end
 
-	window_item: ?WEL_CONTROL
+	window_item: detachable WEL_CONTROL
 			-- Identifies the control (cver all cases except menus).
 		require
 			feature_supported: ctl_type /= (create {WEL_ODT_CONSTANTS}).Odt_menu

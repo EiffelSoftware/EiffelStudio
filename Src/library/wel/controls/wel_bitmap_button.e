@@ -212,10 +212,10 @@ feature {NONE} -- Implementation
 						+ Ws_tabstop
 		end
 
-	internal_bitmap: ?WEL_BITMAP
+	internal_bitmap: detachable WEL_BITMAP
 			-- Bitmap currently selected in the button. Void if none
 
-	internal_icon: ?WEL_ICON;
+	internal_icon: detachable WEL_ICON;
 			-- Bitmap currently selected in the button. Void if none
 
 note

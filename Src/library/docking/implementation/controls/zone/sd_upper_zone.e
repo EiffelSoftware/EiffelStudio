@@ -69,7 +69,7 @@ feature -- Command
 								l_other := l_parent.second
 								l_first := True
 							end
-							if {lt_zone: SD_ZONE} Current then
+							if attached {SD_ZONE} Current as lt_zone then
 								internal_docking_manager.query.inner_container (lt_zone).save_spliter_position (l_other, generating_type + ".recover_normal_size_from_minimize")
 							else
 								check not_possible: False end
@@ -94,7 +94,7 @@ feature -- Command
 							end
 
 							if l_other /= Void then
-								if {lt_zone_2: SD_ZONE} Current then
+								if attached {SD_ZONE} Current as lt_zone_2 then
 								internal_docking_manager.query.inner_container (lt_zone_2).restore_spliter_position (l_other, generating_type + ".recover_normal_size_from_minimize")
 								else
 									check not_possible: False end
@@ -107,7 +107,7 @@ feature -- Command
 				is_minimized := False
 				show_notebook_contents (True)
 				internal_notebook.set_show_minimized (is_minimized)
-				if {lt_zone_3: SD_ZONE} Current then
+				if attached {SD_ZONE} Current as lt_zone_3 then
 					internal_docking_manager.query.inner_container (lt_zone_3).update_middle_container
 				else
 					check not_possible: False end
@@ -214,7 +214,7 @@ feature -- Command
 					save_parent_split_position (l_parent_parent)
 					l_last_normal_size := l_parent.split_position
 					l_parent_parent.prune (l_parent)
-					if {lt_zone: SD_ZONE} Current then
+					if attached {SD_ZONE} Current as lt_zone then
 						if l_parent.first = Current then
 							l_other := l_parent.second
 							internal_docking_manager.query.inner_container (lt_zone).save_spliter_position (l_other, generating_type + ".minimize")
@@ -251,7 +251,7 @@ feature -- Command
 				is_minimized := True
 				show_notebook_contents (False)
 				internal_notebook.set_show_minimized (is_minimized)
-				if {lt_zone_2: SD_ZONE} Current then
+				if attached {SD_ZONE} Current as lt_zone_2 then
 					internal_docking_manager.query.inner_container (lt_zone_2).update_middle_container
 				else
 					check not_possible: False end
@@ -261,7 +261,7 @@ feature -- Command
 			end
 			internal_docking_manager.command.resize (True)
 			if l_other /= Void then
-				if {lt_zone_3: SD_ZONE} Current then
+				if attached {SD_ZONE} Current as lt_zone_3 then
 				internal_docking_manager.query.inner_container (lt_zone_3).restore_spliter_position (l_other, generating_type + ".minimize")
 				else
 					check not_possible: False end

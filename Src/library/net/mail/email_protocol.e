@@ -68,7 +68,7 @@ feature {NONE} -- Implementation
 	port: INTEGER
 		-- port number
 
-	socket: ?NETWORK_STREAM_SOCKET
+	socket: detachable NETWORK_STREAM_SOCKET
 		-- Socket use to communicate
 
 feature {NONE} -- Miscellaneous
@@ -98,7 +98,7 @@ feature {NONE} -- Miscellaneous
 			socket_attached: socket /= Void
 		end
 
-	decode (a_socket: !like socket)
+	decode (a_socket: attached like socket)
 			-- Read answer from server and set `code_number'.
 		require
 			a_socket_attached: a_socket /= Void

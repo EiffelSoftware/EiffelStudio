@@ -309,7 +309,7 @@ feature -- Obsolete
 
 feature {NONE} -- Externals
 
-	str_text: ?WEL_STRING
+	str_text: detachable WEL_STRING
 			-- Backend buffer for `text'.
 
 	c_size_of_lv_column: INTEGER

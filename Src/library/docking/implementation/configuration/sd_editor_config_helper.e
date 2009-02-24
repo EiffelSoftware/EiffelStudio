@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 
 feature -- Command
 
-	remember_editors_state (a_config_data: SD_CONFIG_DATA) is
+	remember_editors_state (a_config_data: SD_CONFIG_DATA)
 			-- Remeber editors state before execute operations like {SD_OPEN_CONFIG_MEDITOR}.`open_tools_config'
 		local
 			l_only_one_item: EV_WIDGET
@@ -90,7 +90,7 @@ feature -- Command
 			end
 		end
 
-	restore_editor_state (a_config_data: SD_CONFIG_DATA; a_prior_work_success: BOOLEAN) is
+	restore_editor_state (a_config_data: SD_CONFIG_DATA; a_prior_work_success: BOOLEAN)
 			-- Restore editors state which recorded by `remember_editors_state'
 			-- `a_top_container' can be void
 			-- `a_prior_work_success' means if prior operation failed, this function will not try to restore editors, only do clean up works
@@ -109,7 +109,7 @@ feature -- Command
 					l_place_holder_zone ?= internal_docking_manager.zones.place_holder_content.state.zone
 					if l_place_holder_zone /= Void then
 					-- l_place_holder_zone maybe void because open_config fail.
-						if {lt_container: EV_CONTAINER} l_place_holder_zone then
+						if attached {EV_CONTAINER} l_place_holder_zone as lt_container then
 							l_parent := lt_container.parent
 						else
 							check not_possible: False end
@@ -120,7 +120,7 @@ feature -- Command
 							if l_split /= Void then
 								l_split_position := l_split.split_position
 							end
-							if {lt_widget: EV_WIDGET} l_place_holder_zone then
+							if attached {EV_WIDGET} l_place_holder_zone as lt_widget then
 								l_parent.prune (lt_widget)
 							else
 								check not_possible: False end
@@ -223,7 +223,7 @@ feature -- Query
 	has_place_holder (a_top_container: EV_CONTAINER): BOOLEAN
 			-- If `a_top_container' has place holder widget?
 		do
-			if {lt_widget: EV_WIDGET} internal_docking_manager.zones.place_holder_content.state.zone then
+			if attached {EV_WIDGET} internal_docking_manager.zones.place_holder_content.state.zone as lt_widget then
 				Result := a_top_container.has_recursive (lt_widget)
 			end
 		end

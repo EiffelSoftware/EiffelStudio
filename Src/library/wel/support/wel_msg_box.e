@@ -34,7 +34,7 @@ feature -- Basic operations
 			sublanguage := SUBLANG_ENGLISH_US
 		end
 
-	information_message_box (a_window: ?WEL_WINDOW; a_text, a_title: STRING_GENERAL)
+	information_message_box (a_window: detachable WEL_WINDOW; a_text, a_title: STRING_GENERAL)
 			-- Show an information message box with message `a_text'
 			-- and caption `a_title'
 		require
@@ -47,7 +47,7 @@ feature -- Basic operations
 			message_box_result := cwin_message_box_indirect (a_msgboxparams.item)
 		end
 
-	warning_message_box (a_window: ?WEL_WINDOW; a_text, a_title: STRING_GENERAL)
+	warning_message_box (a_window: detachable WEL_WINDOW; a_text, a_title: STRING_GENERAL)
 			-- Show a warning message box with message `a_text'
 			-- and caption `a_title'
 		require
@@ -60,7 +60,7 @@ feature -- Basic operations
 			message_box_result := cwin_message_box_indirect (a_msgboxparams.item)
 		end
 
-	error_message_box (a_window: ?WEL_WINDOW; a_text, a_title: STRING_GENERAL)
+	error_message_box (a_window: detachable WEL_WINDOW; a_text, a_title: STRING_GENERAL)
 			-- Show an error message box with message `a_text'
 			-- and caption `a_title'
 		require
@@ -73,7 +73,7 @@ feature -- Basic operations
  			message_box_result := cwin_message_box_indirect (a_msgboxparams.item)
 		end
 
-	question_message_box (a_window: ?WEL_WINDOW; a_text, a_title: STRING_GENERAL)
+	question_message_box (a_window: detachable WEL_WINDOW; a_text, a_title: STRING_GENERAL)
 			-- Show a question message box with message `a_text'
 			-- and caption `a_title'
 		require
@@ -86,7 +86,7 @@ feature -- Basic operations
 			message_box_result := cwin_message_box_indirect (a_msgboxparams.item)
 		end
 
-	basic_message_box (a_window: ?WEL_WINDOW; a_text, a_title: STRING_GENERAL; a_style: INTEGER)
+	basic_message_box (a_window: detachable WEL_WINDOW; a_text, a_title: STRING_GENERAL; a_style: INTEGER)
 			-- Show a basic message box with `a_text' inside and
 			-- `a_title' using `a_style'. Basic means `a_style' should not contain
 			-- the flag `MB_USERICON'.
@@ -102,7 +102,7 @@ feature -- Basic operations
 			message_box_result := cwin_message_box_indirect (a_msgboxparams.item)
 		end
 
-	user_icon_message_box (a_window: ?WEL_WINDOW; a_text, a_title: STRING_GENERAL; a_style, an_id: INTEGER)
+	user_icon_message_box (a_window: detachable WEL_WINDOW; a_text, a_title: STRING_GENERAL; a_style, an_id: INTEGER)
 			-- Show a message box with a user icon `an_id',
 			-- `a_text' inside and `a_title' using `a_style'.
 			-- the flag `MB_USERICON' must be present in `a_style'.

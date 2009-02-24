@@ -249,7 +249,7 @@ feature -- Measurement
 
 feature {NONE} -- Implementation
 
-	internal_text: ?WEL_STRING
+	internal_text: detachable WEL_STRING
 			-- Prevent buffer of HDITEM.pszText to be garbage collected
 
 	internal_add_format (a_format: INTEGER)

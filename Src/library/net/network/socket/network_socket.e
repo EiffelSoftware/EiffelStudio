@@ -95,7 +95,7 @@ feature -- Status report
 	address_type: NETWORK_SOCKET_ADDRESS
 			-- <Precursor>
 		local
-			l_result: ?NETWORK_SOCKET_ADDRESS
+			l_result: detachable NETWORK_SOCKET_ADDRESS
 		do
 			check l_result_attached: l_result /= Void end
 			Result := l_result
@@ -140,12 +140,12 @@ feature -- Status report
 			Result := reuse /= 0
 		end
 
-	is_valid_peer_address (addr: !like address): BOOLEAN
+	is_valid_peer_address (addr: attached like address): BOOLEAN
 		do
 			Result := (addr.family = af_inet or else addr.family = af_inet6)
 		end
 
-	is_valid_family (addr: !like address): BOOLEAN
+	is_valid_family (addr: attached like address): BOOLEAN
 		do
 			Result := (addr.family = af_inet or else addr.family = af_inet6)
 		end

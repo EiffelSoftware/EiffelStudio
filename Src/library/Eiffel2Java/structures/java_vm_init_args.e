@@ -40,7 +40,7 @@ feature -- Access
 		require
 			options_set: options_set
 		local
-			l_result: ?like internal_options
+			l_result: detachable like internal_options
 		do
 			l_result := internal_options
 			check l_result_not_void: l_result /= Void end -- Implied from the precondition
@@ -120,7 +120,7 @@ feature -- Measurement
 
 feature {NONE} -- Implementation
 
-	internal_options: ?ARRAY [JAVA_VM_OPTION]
+	internal_options: detachable ARRAY [JAVA_VM_OPTION]
 			-- Hold all C string values.
 
 	c_structure_size: INTEGER

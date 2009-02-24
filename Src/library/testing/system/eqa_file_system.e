@@ -26,18 +26,18 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	environment: !EQA_SYSTEM_ENVIRONMENT
+	environment: attached EQA_SYSTEM_ENVIRONMENT
 			-- Environment for current system test.
 
-	last_created_directory: ?DIRECTORY
+	last_created_directory: detachable DIRECTORY
 			-- Directory last created through `create_directory_from_path'
 
-	last_created_file: ?PLAIN_TEXT_FILE
+	last_created_file: detachable PLAIN_TEXT_FILE
 			-- File last created through `create_file_from_path'
 
 feature -- Query
 
-	build_source_path (a_path: !EQA_SYSTEM_PATH): !STRING
+	build_source_path (a_path: attached EQA_SYSTEM_PATH): attached STRING
 			-- Build the actual path name relative to the source directory for given path.
 			--
 			-- `a_path': Path for which path name should be built
@@ -46,7 +46,7 @@ feature -- Query
 			Result := build_partial_path (a_path, source_directory, 0)
 		end
 
-	build_target_path (a_path: !EQA_SYSTEM_PATH): !STRING
+	build_target_path (a_path: attached EQA_SYSTEM_PATH): attached STRING
 			-- Build the actual path name relative to the target directory for given path.
 			--
 			-- `a_path': Path for which path name should be built
@@ -55,7 +55,7 @@ feature -- Query
 			Result := build_partial_path (a_path, target_directory, 0)
 		end
 
-	has_same_content_as_string (a_path: !EQA_SYSTEM_PATH; a_string: !READABLE_STRING_8): BOOLEAN
+	has_same_content_as_string (a_path: attached EQA_SYSTEM_PATH; a_string: attached READABLE_STRING_8): BOOLEAN
 			-- Does target file for path have same content as given string?
 			--
 			-- `a_path': Path relative to `target_directory' of file
@@ -93,7 +93,7 @@ feature -- Query
 			l_file.close
 		end
 
-	has_same_content_as_path (a_first_path, a_second_path: !EQA_SYSTEM_PATH): BOOLEAN
+	has_same_content_as_path (a_first_path, a_second_path: attached EQA_SYSTEM_PATH): BOOLEAN
 			-- Do target files for given paths have the same content?
 			--
 			-- `a_first': Relative path of first file.
@@ -139,19 +139,19 @@ feature -- Query
 
 feature {NONE} -- Query
 
-	source_directory: !READABLE_STRING_8
+	source_directory: attached READABLE_STRING_8
 			-- Name of directory in which original testing directories are located.
 		do
 			Result := environment.source_directory
 		end
 
-	target_directory: !READABLE_STRING_8
+	target_directory: attached READABLE_STRING_8
 			-- Name of directory in which testing directories are created.
 		do
 			Result := environment.target_directory
 		end
 
-	build_partial_path (a_path: !EQA_SYSTEM_PATH; a_prefix: !READABLE_STRING_8; a_strip: INTEGER): !DIRECTORY_NAME
+	build_partial_path (a_path: attached EQA_SYSTEM_PATH; a_prefix: attached READABLE_STRING_8; a_strip: INTEGER): attached DIRECTORY_NAME
 			-- Build a partial path name relative to to a given directory.
 			--
 			-- `a_path': Path for which path name should be built
@@ -178,7 +178,7 @@ feature {NONE} -- Query
 
 feature -- Basic operations
 
-	create_directory_from_path (a_path: !EQA_SYSTEM_PATH)
+	create_directory_from_path (a_path: attached EQA_SYSTEM_PATH)
 			-- Recursively create target directory from path and store {DIRECTORY} instance in
 			-- `last_created_directory'.
 			--
@@ -188,13 +188,13 @@ feature -- Basic operations
 			create_directory_from_partial_path (a_path, 0)
 		ensure
 			last_created_directory_attached: last_created_directory /= Void
-			last_created_directory_has_correct_path: {l_dir: !like last_created_directory} last_created_directory
+			last_created_directory_has_correct_path: attached last_created_directory as l_dir
 				and then l_dir.name.same_string (build_target_path (a_path))
-			last_created_directory_exists: {l_dir2: !like last_created_directory} last_created_directory
+			last_created_directory_exists: attached last_created_directory as l_dir2
 				and then l_dir2.exists
 		end
 
-	create_file_from_path (a_path: !EQA_SYSTEM_PATH)
+	create_file_from_path (a_path: attached EQA_SYSTEM_PATH)
 			-- Create target file from path recursively and store open writable {PLAIN_TEXT_FILE}
 			-- instance in `last_crerated_file'. Also {DIRECTORY} instance of target directory in which new
 			-- file is located will be stored in `last_created_directory'.
@@ -215,18 +215,18 @@ feature -- Basic operations
 			last_created_file := l_file
 		ensure
 			last_created_file_attached: last_created_file /= Void
-			last_created_file_open_write: {l_last_file: like last_created_file} last_created_file and then
+			last_created_file_open_write: attached last_created_file as l_last_file and then
 				l_last_file.is_open_write
 			last_created_directory_attached: last_created_directory /= Void
-			last_created_directory_has_correct_path: {l_dir: !like last_created_directory} last_created_directory
+			last_created_directory_has_correct_path: attached last_created_directory as l_dir
 				and then l_dir.name.same_string (build_partial_path (a_path, target_directory, 1))
-			last_created_directory_exists: {l_dir2: !like last_created_directory} last_created_directory
+			last_created_directory_exists: attached last_created_directory as l_dir2
 				and then l_dir2.exists
 		end
 
 feature {NONE} -- Implementation
 
-	create_directory_from_partial_path (a_path: !EQA_SYSTEM_PATH; a_strip: INTEGER)
+	create_directory_from_partial_path (a_path: attached EQA_SYSTEM_PATH; a_strip: INTEGER)
 			-- Recursively create target directory from partial path recursively and store {DIRECTORY}
 			-- instance in `last_created_directory'.
 			--
@@ -268,9 +268,9 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			last_created_directory_attached: last_created_directory /= Void
-			last_created_directory_has_correct_path: {l_dir: !like last_created_directory} last_created_directory
+			last_created_directory_has_correct_path: attached last_created_directory as l_dir
 				and then l_dir.name.same_string (build_partial_path (a_path, target_directory, a_strip))
-			last_created_directory_exists: {l_dir2: !like last_created_directory} last_created_directory
+			last_created_directory_exists: attached last_created_directory as l_dir2
 				and then l_dir2.exists
 		end
 
@@ -287,13 +287,13 @@ feature {NONE} -- Implementation
 			assert ("testing_directory_exists", l_directory.exists)
 		ensure
 			last_created_directory_attached: last_created_directory /= Void
-			last_created_directory_has_correct_path: {l_dir: !like last_created_directory} last_created_directory
+			last_created_directory_has_correct_path: attached last_created_directory as l_dir
 				and then l_dir.name.same_string (target_directory)
-			last_created_directory_exists: {l_dir2: !like last_created_directory} last_created_directory
+			last_created_directory_exists: attached last_created_directory as l_dir2
 				and then l_dir2.exists
 		end
 
-	frozen assert (a_tag: !STRING; a_condition: BOOLEAN)
+	frozen assert (a_tag: attached STRING; a_condition: BOOLEAN)
 			-- Assert `a_condition' using asserter from current test set.
 		do
 			environment.test_set.assert (a_tag, a_condition)

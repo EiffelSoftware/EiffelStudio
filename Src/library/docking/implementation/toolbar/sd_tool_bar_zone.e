@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			end
 
 			is_vertical := a_vertical
-			if {lt_widget: EV_WIDGET} tool_bar then
+			if attached {EV_WIDGET} tool_bar as lt_widget then
 				create internal_tool_bar_dot_drawer.make (lt_widget.background_color)
 			else
 				check not_possible: False end
@@ -219,7 +219,7 @@ feature -- Command
 			disable_drag_area
 
 			create floating_tool_bar.make (docking_manager)
-			if {lt_widget: EV_WIDGET} tool_bar then
+			if attached {EV_WIDGET} tool_bar as lt_widget then
 				if lt_widget.parent /= Void then
 					lt_widget.parent.prune (lt_widget)
 				end
@@ -254,7 +254,7 @@ feature -- Command
 
 			assistant.update_indicator
 		ensure
-			pruned: row /= Void and {lt_widget_2: EV_WIDGET} tool_bar implies not row.has (lt_widget_2)
+			pruned: row /= Void and attached {EV_WIDGET} tool_bar as lt_widget_2 implies not row.has (lt_widget_2)
 			is_floating: is_floating
 		end
 
@@ -269,7 +269,7 @@ feature -- Command
 			-- But on Gtk, we need first disable capture then enable capture,
 			-- because it's off-screen widget, it'll not have capture until it show again (in SD_TOOL_BAR_HOT_ZONE).
 			tool_bar.disable_capture
-			if {lt_widget: EV_WIDGET} tool_bar then
+			if attached {EV_WIDGET} tool_bar as lt_widget then
 				floating_tool_bar.prune (lt_widget)
 
 				floating_tool_bar.destroy
@@ -344,7 +344,7 @@ feature -- Command
 			not_destroyed: not is_destroyed
 		do
 			tool_bar.compute_minimum_size
-			if {lt_widget: EV_WIDGET} tool_bar then
+			if attached {EV_WIDGET} tool_bar as lt_widget then
 				if row /= Void and row.has (lt_widget) then
 					row.set_item_size (lt_widget, tool_bar.minimum_width, tool_bar.minimum_height)
 				end
@@ -393,7 +393,7 @@ feature -- Command
 		require
 			not_destroyed: not is_destroyed
 		do
-			if {lt_widget: EV_WIDGET} tool_bar then
+			if attached {EV_WIDGET} tool_bar as lt_widget then
 				lt_widget.show
 			else
 				check not_possible: False end
@@ -405,7 +405,7 @@ feature -- Command
 		require
 			not_destroyed: not is_destroyed
 		do
-			if {lt_widget: EV_WIDGET} tool_bar then
+			if attached {EV_WIDGET} tool_bar as lt_widget then
 				lt_widget.hide
 			else
 				check not_possible: False end
@@ -460,7 +460,7 @@ feature -- Query
 		require
 			not_destroyed: not is_destroyed
 		do
-			if {lt_widget: EV_WIDGET} tool_bar then
+			if attached {EV_WIDGET} tool_bar as lt_widget then
 				Result ?= lt_widget.parent
 			else
 				check not_possible: False end
@@ -493,7 +493,7 @@ feature -- Query
 		require
 			not_destroyed: not is_destroyed
 		do
-			if {lt_widget: EV_WIDGET} tool_bar then
+			if attached {EV_WIDGET} tool_bar as lt_widget then
 				if is_vertical then
 					Result := lt_widget.y_position
 				else

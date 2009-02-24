@@ -73,7 +73,7 @@ feature -- Status report
 			active_window_attached: client_window.active_window /= Void
 		end
 
-	active_window: ?WEL_MDI_CHILD_WINDOW
+	active_window: detachable WEL_MDI_CHILD_WINDOW
 			-- Window currently active
 		require
 			exists: exists
@@ -121,7 +121,7 @@ feature {NONE} -- Implementation
 
 	call_default_window_procedure (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER
 		do
-			if {l_client_window: like client_window} internal_client_window and then l_client_window.exists then
+			if attached internal_client_window as l_client_window and then l_client_window.exists then
 				Result := cwin_def_frame_proc (hwnd, l_client_window.item, msg, wparam, lparam)
 			else
 				Result := cwin_def_frame_proc (hwnd, default_pointer, msg, wparam, lparam)
@@ -140,7 +140,7 @@ feature {NONE} -- Implementation
 			create Result.make_by_sys_color (Color_appworkspace + 1)
 		end
 
-	internal_client_window: ?like client_window
+	internal_client_window: detachable like client_window
 			-- Storage.
 
 feature {NONE} -- Externals

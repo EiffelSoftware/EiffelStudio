@@ -85,7 +85,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	buffer: !STRING
+	buffer: attached STRING
 			-- Buffer containing first part of output
 
 	split_position: INTEGER

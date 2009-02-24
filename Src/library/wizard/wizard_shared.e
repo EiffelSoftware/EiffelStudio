@@ -26,7 +26,7 @@ feature -- Access
 			first_window_not_void: Result /= Void
 		end
 
-	first_window_cell: CELL [?WIZARD_WINDOW]
+	first_window_cell: CELL [detachable WIZARD_WINDOW]
 			-- Main Window ( i.e. the wizard window frame )
 		once
 			create Result.put (Void)
@@ -107,7 +107,7 @@ feature -- Access
 			Result:= app_cell.item
 		end
 
-	app_cell: CELL [?EV_APPLICATION]
+	app_cell: CELL [detachable EV_APPLICATION]
 		once
 			create Result.put (Void)
 		end
@@ -264,7 +264,7 @@ feature -- Interface names
 
 feature {NONE} -- Implementation
 
-	locale_cell: CELL [?I18N_LOCALE]
+	locale_cell: CELL [detachable I18N_LOCALE]
 		once
 			create Result.put (Void)
 		end

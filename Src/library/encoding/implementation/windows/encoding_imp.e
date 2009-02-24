@@ -166,7 +166,7 @@ feature {NONE} -- Access
 			a_code_page_name_not_empty: not a_code_page_name.is_empty
 			a_code_page_valid: is_code_page_valid (a_code_page_name)
 		local
-			l_result: ?STRING
+			l_result: detachable STRING
 		do
 			l_result := code_pages.item (a_code_page_name.as_lower)
 			check l_result_not_void: l_result /= Void end -- Implied by precondition `a_code_page_valid'

@@ -84,10 +84,10 @@ feature -- Access
 	last_character_code: INTEGER;
 			-- Last character code recognized by the language
 
-	tool_list: ?LINKED_LIST [PDFA];
+	tool_list: detachable LINKED_LIST [PDFA];
 			-- Regular expressions used as auxiliary tools
 
-	tool_names: ?LINKED_LIST [STRING];
+	tool_names: detachable LINKED_LIST [STRING];
 			-- Names of regular expressions in tool list
 
 	case_sensitive: BOOLEAN;
@@ -96,10 +96,10 @@ feature -- Access
 	keywords_case_sensitive: BOOLEAN;
 			-- Will future tools be case-sensitive for keywords?
 
-	categories_table: ?ARRAY [INTEGER];
+	categories_table: detachable ARRAY [INTEGER];
 			-- Table of category numbers for each input
 
-	keyword_h_table: ?HASH_TABLE [INTEGER, STRING];
+	keyword_h_table: detachable HASH_TABLE [INTEGER, STRING];
 			-- Keyword table
 
 	error_list: ERROR_LIST
@@ -110,17 +110,17 @@ feature -- Access
 			result_attached: Result /= Void
 		end;
 
-	analyzer: ?LEXICAL;
+	analyzer: detachable LEXICAL;
 			-- The lexical analyzer built so far
 
 	last_created_tool: INTEGER;
 			-- Identification number of the last
 			-- regular expression put in tool_list
 
-	selected_tools: ?LINKED_LIST [INTEGER];
+	selected_tools: detachable LINKED_LIST [INTEGER];
 			-- Regular expressions included in the main one
 
-	token_type_list: ?LINKED_LIST [INTEGER];
+	token_type_list: detachable LINKED_LIST [INTEGER];
 			-- Token types of the selected tools.
 			-- Indexed by tool numbers.
 
@@ -153,7 +153,7 @@ feature -- Status setting
 			-- in future tools.
 			-- This is the default.
 		require
-			no_tool_built: not {l_tools: like tool_list} tool_list or else l_tools.is_empty
+			no_tool_built: not attached tool_list as l_tools or else l_tools.is_empty
 		do
 			keywords_case_sensitive := False
 		ensure
@@ -165,7 +165,7 @@ feature -- Status setting
 			-- in future tools.
 			-- Default is ignore case.
 		require
-			no_tool_built: not {l_tools: like tool_list} tool_list or else l_tools.is_empty
+			no_tool_built: not attached tool_list as l_tools or else l_tools.is_empty
 		do
 			keywords_case_sensitive := True
 		ensure
@@ -319,7 +319,7 @@ feature -- Element change
 		require
 			not_frozen: not lexical_frozen;
 			r_exists: r >= 1 and r <= last_created_tool;
-			r_simple_category: {rl_tools: like tool_list} tool_list and then rl_tools.i_th (r).nb_states = 2
+			r_simple_category: attached tool_list as rl_tools and then rl_tools.i_th (r).nb_states = 2
 		local
 			new: PDFA;
 			cc: INTEGER;
@@ -794,7 +794,7 @@ feature -- Element change
 			b_not_too_large: b <= last_created_tool;
 			a_smaller_than_b: a <= b
 		local
-			new, cat: ?PDFA;
+			new, cat: detachable PDFA;
 			tool_p, length, index: INTEGER;
 			c_name: STRING;
 			cat_set, non_cat_set: FIXED_INTEGER_SET
@@ -1013,7 +1013,7 @@ feature -- Element change
 			--| This is done when the dfa is built.
 		require
 			not_frozen: not lexical_frozen;
-			exp_selected: {rl_token_types: like token_type_list} token_type_list and then rl_token_types.has(exp)
+			exp_selected: attached token_type_list as rl_token_types and then rl_token_types.has(exp)
 		local
 			u, l: STRING;
 			index: INTEGER
@@ -1076,14 +1076,14 @@ feature -- Element change
 		ensure
 			selected_tools_attached: selected_tools /= Void
 			token_types_attached: token_type_list /= Void
-			i_selected: {el_selected_tools: like selected_tools} selected_tools and then el_selected_tools.has (i)
+			i_selected: attached selected_tools as el_selected_tools and then el_selected_tools.has (i)
 		end;
 
 	associate (t, n: INTEGER)
 			-- Associate the `t'-th tool with token type `n'.
 			-- If this routine is not used, the default value is `t'.
 		require
-			t_selected: {rl_selected_tools: like selected_tools} selected_tools and then rl_selected_tools.has (t);
+			t_selected: attached selected_tools as rl_selected_tools and then rl_selected_tools.has (t);
 			n_not_zero: n /= 0;
 			n_not_minus_one: n /= -1
 				-- 0 is reserved for the non-final states.
@@ -1177,7 +1177,7 @@ feature -- Input
 			retrieved_file: RAW_FILE
 		do
 			create retrieved_file.make_open_read (file_name);
-			if {l_analyzer: like analyzer} retrieved_file.retrieved then
+			if attached {like analyzer} retrieved_file.retrieved as l_analyzer then
 				analyzer := l_analyzer
 			else
 				analyzer := Void
@@ -1320,7 +1320,7 @@ feature {NONE} -- Implementation
 			-- purpose is to sort a set of FIX_INT_SET.
 		local
 			in_put: INTEGER;
-			set, old_set: ?FIXED_INTEGER_SET
+			set, old_set: detachable FIXED_INTEGER_SET
 			l_categories: like categories_table
 		do
 			create set_tree.make_filled (nb_states, 0);
@@ -1439,7 +1439,7 @@ feature {NONE} -- Implementation
 		local
 			i: INTEGER;
 			l: LINKED_LIST [INTEGER];
-			l_tokens: ?ARRAY [INTEGER]
+			l_tokens: detachable ARRAY [INTEGER]
 			l_dfa: like dfa
 			l_categories: like categories_table
 		do
@@ -1496,7 +1496,7 @@ feature {NONE} -- Implementation
 			-- Example "aa" is recognized by +(a..z) and 2(a).
 			-- The first will yield the priority to the second.
 		require
-			first_and_second_is_a_token_type: {rl_token_types: like token_type_list} token_type_list and then
+			first_and_second_is_a_token_type: attached token_type_list as rl_token_types and then
 				rl_token_types.has (first) and then
 				rl_token_types.has (second)
 		local
@@ -1537,7 +1537,7 @@ feature {NONE} -- Implementation
 		local
 			message: STRING
 			l_tools_names: like tool_names
-			l_name: ?STRING
+			l_name: detachable STRING
 		do
 			create message.make (0);
 			message.append ("Warning: ");
@@ -1554,7 +1554,7 @@ feature {NONE} -- Implementation
 
 invariant
 	analyzer_attached: initialized implies analyzer /= Void
-	last_created: not {il_tool_list: like tool_list} tool_list or else last_created_tool = il_tool_list.count
+	last_created: not attached tool_list as il_tool_list or else last_created_tool = il_tool_list.count
 
 note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"

@@ -153,7 +153,7 @@ feature  -- Redefine
 			else
 				l_window := internal_mediator.caller_top_window
 
-				if {lt_floating_zone: SD_FLOATING_ZONE} l_window then
+				if attached {SD_FLOATING_ZONE} l_window as lt_floating_zone then
 					lt_floating_zone.set_pointer_style_for_border (a_pointer_style)
 				end
 				l_window.set_pointer_style (a_pointer_style)

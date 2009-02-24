@@ -297,7 +297,7 @@ feature {NONE} -- Implementation
 			state_in_closure: Result.has (state)
 		end;
 
-	move (initial_set: FIXED_INTEGER_SET; i: INTEGER): ?FIXED_INTEGER_SET
+	move (initial_set: FIXED_INTEGER_SET; i: INTEGER): detachable FIXED_INTEGER_SET
 			-- Set of NDFA states to which there is a transition on
 			-- input i from some NDFA state s of initial_set.
 			-- Void if the set if empty.
@@ -396,7 +396,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	find_successors (source, input_doc: INTEGER): ?LINKED_LIST [INTEGER]
+	find_successors (source, input_doc: INTEGER): detachable LINKED_LIST [INTEGER]
 			-- Successors of `source' on `input_doc';
 			-- void if no successor
 		require else
@@ -409,7 +409,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	find_e_successors (source: INTEGER): ?LINKED_LIST [INTEGER]
+	find_e_successors (source: INTEGER): detachable LINKED_LIST [INTEGER]
 			-- Epsilon successors of source;
 			-- Void if no successor
 		require else

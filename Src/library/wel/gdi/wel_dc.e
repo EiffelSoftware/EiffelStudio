@@ -80,22 +80,22 @@ inherit
 
 feature -- Access
 
-	pen: ?WEL_PEN
+	pen: detachable WEL_PEN
 			-- Current pen selected.
 
-	brush: ?WEL_BRUSH
+	brush: detachable WEL_BRUSH
 			-- Current brush selected.
 
-	palette: ?WEL_PALETTE
+	palette: detachable WEL_PALETTE
 			-- Current palette selected.
 
-	region: ?WEL_REGION
+	region: detachable WEL_REGION
 			-- Current region selected.
 
-	font: ?WEL_FONT
+	font: detachable WEL_FONT
 			-- Current font selected.
 
-	bitmap: ?WEL_BITMAP
+	bitmap: detachable WEL_BITMAP
 			-- Current bitmap selected.
 
 feature -- Basic operations
@@ -1093,7 +1093,7 @@ feature -- Basic operations
 			cwin_draw_disabled_text (item, a_wel_string.item, string.count, rect.item, format)
 		end
 
-	draw_state_text (a_brush: ?WEL_BRUSH; string: STRING_GENERAL; x, y: INTEGER; format: INTEGER)
+	draw_state_text (a_brush: detachable WEL_BRUSH; string: STRING_GENERAL; x, y: INTEGER; format: INTEGER)
 			-- Draw the text `string' using `format' at the
 			-- location (`x',`y') using the brush `a_brush' if `format' include `Dss_mono'.
 			--
@@ -1125,7 +1125,7 @@ feature -- Basic operations
 			draw_text (string, rect, Dt_singleline + Dt_center + Dt_vcenter)
 		end
 
-	draw_state_bitmap (a_brush: ?WEL_BRUSH; a_bitmap: WEL_BITMAP; x, y: INTEGER; format: INTEGER)
+	draw_state_bitmap (a_brush: detachable WEL_BRUSH; a_bitmap: WEL_BITMAP; x, y: INTEGER; format: INTEGER)
 			-- Draw the bitmap `a_bitmap' using `format' at the
 			-- location (`x',`y') using the brush `a_brush' if `format' include `Dss_mono'.
 			--
@@ -1145,7 +1145,7 @@ feature -- Basic operations
 			success := cwin_draw_state (item, a_brush_ptr, null, a_bitmap.item, 0, x, y, 0, 0, format | Dst_bitmap)
 		end
 
-	draw_state_icon (a_brush: ?WEL_BRUSH; an_icon: WEL_GRAPHICAL_RESOURCE; x, y: INTEGER; format: INTEGER)
+	draw_state_icon (a_brush: detachable WEL_BRUSH; an_icon: WEL_GRAPHICAL_RESOURCE; x, y: INTEGER; format: INTEGER)
 			-- Draw the icon/cursor `an_icon' using `format' at the
 			-- location (`x',`y') using the brush `a_brush' if `format' include `Dss_mono'.
 			--
@@ -1232,7 +1232,7 @@ feature -- Basic operations
 			cwin_draw_icon (item, x, y, icon.item)
 		end
 
-	draw_icon_ex (icon: WEL_ICON; x, y, icon_width, icon_height, frame_index: INTEGER; flicker_free_background: ?WEL_BRUSH; di_flags: INTEGER)
+	draw_icon_ex (icon: WEL_ICON; x, y, icon_width, icon_height, frame_index: INTEGER; flicker_free_background: detachable WEL_BRUSH; di_flags: INTEGER)
 			-- Draw `icon' at the `x', `y' position.
 		require
 			exists: exists

@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	last_packet: ?STRING
+	last_packet: detachable STRING
 			-- Last packet read
 
 	address: URL

@@ -19,13 +19,13 @@ inherit
 
 feature {NONE} -- Access
 
-	echo_executable_cache: ?like echo_executable
+	echo_executable_cache: detachable like echo_executable
 			-- Cache for `echo_executable'
 
-	current_process: ?PROCESS
+	current_process: detachable PROCESS
 			-- Process instance currently being used for testing
 
-	last_process_output: ?PROCESS_OUTPUT
+	last_process_output: detachable PROCESS_OUTPUT
 			-- Last created {PROCESS_OUTPUT} instance through `launch_process'
 
 feature {NONE} -- Status report
@@ -41,19 +41,19 @@ feature {NONE} -- Status report
 			check l_process /= Void end
 			Result := l_process.launched
 		ensure
-			current_process_not_launched: {l_proc: like current_process} current_process and then l_proc.launched
+			current_process_not_launched: attached current_process as l_proc and then l_proc.launched
 		end
 
 feature {NONE} -- Status setting
 
-	create_process (a_executable: STRING; a_arg_list: ?LIST [STRING])
+	create_process (a_executable: STRING; a_arg_list: detachable LIST [STRING])
 			-- Initialize `current_process' to launch given executable.
 			--
 			-- `a_executable': Name of executable to be launched.
 			-- `a_arg_list': List of arguments to pass to process, can be Void.
 		require
 			a_executable_not_empty: not a_executable.is_empty
-			args_attached_implies_valid: {l_args: LIST [STRING]} a_arg_list implies not l_args.has (Void)
+			args_attached_implies_valid: attached {LIST [STRING]} a_arg_list as l_args implies not l_args.has (Void)
 		local
 			l_factory: PROCESS_FACTORY
 			l_process: like current_process
@@ -69,10 +69,10 @@ feature {NONE} -- Status setting
 			current_process_not_launched: not is_process_launched
 		end
 
-	create_echo_process (a_arg_list: ?LIST [STRING])
+	create_echo_process (a_arg_list: detachable LIST [STRING])
 			-- Initialize `current_process' to launch `echo_executable'.
 		require
-			args_attached_implies_valid: {l_args: LIST [STRING]} a_arg_list implies not l_args.has (Void)
+			args_attached_implies_valid: attached {LIST [STRING]} a_arg_list as l_args implies not l_args.has (Void)
 		do
 			create_process (echo_executable, a_arg_list)
 		ensure
@@ -98,8 +98,8 @@ feature {NONE} -- Status setting
 		ensure
 			last_process_output_attached: last_process_output /= Void
 			current_process_attached: current_process /= Void
-			last_process_output_uses_current_process: {l_out: like last_process_output} last_process_output and then
-				{l_proc: like current_process} current_process and then l_out.process = l_proc
+			last_process_output_uses_current_process: attached last_process_output as l_out and then
+				attached current_process as l_proc and then l_out.process = l_proc
 			process_launched: is_process_launched
 		end
 
@@ -113,7 +113,7 @@ feature {NONE} -- Query
 			--       `eiffel_echo' is reachable from $PATH.
 		local
 			l_env: EXECUTION_ENVIRONMENT
-			l_ise_eiffel, l_ise_platform: ?STRING
+			l_ise_eiffel, l_ise_platform: detachable STRING
 			l_filename: FILE_NAME
 			l_cached: like echo_executable_cache
 		do
@@ -155,7 +155,7 @@ feature {NONE} -- Basic functionality
 			-- `a_from_errors': If True, characters will be received from error output of `process'.
 		require
 			last_process_output_attached: last_process_output /= Void
-			last_process_output_valid: {l_out: like last_process_output} last_process_output and then
+			last_process_output_valid: attached last_process_output as l_out and then
 				l_out.process.launched
 		local
 			l_output: like last_process_output
@@ -204,7 +204,7 @@ feature {NONE} -- Basic functionality
 				assert ("process_exited", l_process.has_exited)
 			end
 		ensure
-			not_running: {l_proc: like current_process} current_process and then not l_proc.is_running
+			not_running: attached current_process as l_proc and then not l_proc.is_running
 		end
 
 	check_successful_exit

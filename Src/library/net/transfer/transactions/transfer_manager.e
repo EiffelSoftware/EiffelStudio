@@ -105,7 +105,7 @@ feature -- Status report
 		local
 			idx: INTEGER
 			error_found: BOOLEAN
-			l_error: ?STRING
+			l_error: detachable STRING
 		do
 			idx := index
 			from start until error_found or after loop

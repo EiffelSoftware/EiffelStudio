@@ -60,7 +60,7 @@ feature -- Access
 		require
 			initialized: is_initialized
 		local
-			l_bitmap: ?WEL_BITMAP
+			l_bitmap: detachable WEL_BITMAP
 		do
 			l_bitmap := internal_mask_bitmap
 				-- Per precondition.
@@ -83,7 +83,7 @@ feature -- Access
 			initialized: is_initialized
 			has_color_bitmap: has_color_bitmap
 		local
-			l_bitmap: ?WEL_BITMAP
+			l_bitmap: detachable WEL_BITMAP
 		do
 			l_bitmap := internal_color_bitmap
 				-- Per precondition.
@@ -169,7 +169,7 @@ feature -- Status Setting
 		require
 			initialized: is_initialized
 		local
-			l_bitmap: ?WEL_BITMAP
+			l_bitmap: detachable WEL_BITMAP
 		do
 			l_bitmap := internal_mask_bitmap
 			check l_bitmap_attached: l_bitmap /= Void end
@@ -202,7 +202,7 @@ feature -- Status Setting
 			a_mask_bitmap_attached: a_mask_bitmap /= Void
 			a_mask_bitmap_exists: a_mask_bitmap.exists
 		local
-			l_bitmap: ?WEL_BITMAP
+			l_bitmap: detachable WEL_BITMAP
 		do
 				-- Remove the existing mask bitmap if any.
 			l_bitmap := internal_mask_bitmap
@@ -228,7 +228,7 @@ feature -- Status Setting
 			a_color_bitmap_attached: a_color_bitmap /= Void
 			a_color_bitmap_exists: a_color_bitmap.exists
 		local
-			l_bitmap: ?WEL_BITMAP
+			l_bitmap: detachable WEL_BITMAP
 		do
 				-- Remove the existing bitmap if any.
 			l_bitmap := internal_color_bitmap
@@ -319,24 +319,24 @@ feature {NONE} -- Removal
 		do
 			Precursor {WEL_STRUCTURE}
 
-			if {l_mask: WEL_BITMAP} eif_id_object (internal_mask_bitmap_object_id) and then l_mask.reference_tracked then
+			if attached {WEL_BITMAP} eif_id_object (internal_mask_bitmap_object_id) as l_mask and then l_mask.reference_tracked then
 				l_mask.decrement_reference
 			end
 
-			if {l_bitmap: WEL_BITMAP} eif_id_object (internal_color_bitmap_object_id) and then l_bitmap.reference_tracked then
+			if attached {WEL_BITMAP} eif_id_object (internal_color_bitmap_object_id) as l_bitmap and then l_bitmap.reference_tracked then
 				l_bitmap.decrement_reference
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	internal_mask_bitmap: ?WEL_BITMAP
+	internal_mask_bitmap: detachable WEL_BITMAP
 			-- Mask bitmap build from the hbmMask pointer.
 
 	internal_mask_bitmap_object_id: INTEGER
 			-- Object id of `internal_mask_bitmap'
 
-	internal_color_bitmap: ?WEL_BITMAP
+	internal_color_bitmap: detachable WEL_BITMAP
 			-- Mask bitmap build from the hbmColor pointer.
 
 	internal_color_bitmap_object_id: INTEGER

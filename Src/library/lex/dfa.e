@@ -17,7 +17,7 @@ feature -- Access
 			-- making transitions from state to state on the
 			-- inputs listed in `l'; 0 if not recognized.
 		local
-			state: ?STATE_OF_DFA;
+			state: detachable STATE_OF_DFA;
 		do
 			from
 				state := start_state;
@@ -35,12 +35,12 @@ feature -- Access
 			end
 		end;
 
-	possible_tokens (l: LINKED_LIST [INTEGER]): ?ARRAY [INTEGER]
+	possible_tokens (l: LINKED_LIST [INTEGER]): detachable ARRAY [INTEGER]
 			-- Attribute ``final_array'' of the state reached in Current after
 			-- making transitions from state to state on the
 			-- inputs listed in `l'; empty if not recognized
 		local
-			state: ?STATE_OF_DFA;
+			state: detachable STATE_OF_DFA;
 		do
 			from
 	   			state := start_state;
@@ -58,7 +58,7 @@ feature -- Access
 			end
 		end;
 
-	find_successor (source, input_doc: INTEGER): ?STATE_OF_DFA
+	find_successor (source, input_doc: INTEGER): detachable STATE_OF_DFA
 			-- Successor of source on `input_doc';
 			-- void if no successor
 		deferred
@@ -77,7 +77,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	start_state: ?STATE_OF_DFA
+	start_state: detachable STATE_OF_DFA
 			-- Start_number-th state
 			-- (Used for the beginning of the course
 			-- through the automaton)

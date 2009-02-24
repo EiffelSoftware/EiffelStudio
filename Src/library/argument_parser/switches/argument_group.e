@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			a_switches_contains_attached_items: a_switches.for_all (
 				agent (ia_item: ARGUMENT_SWITCH): BOOLEAN
 					local
-						l_item: ?ARGUMENT_SWITCH
+						l_item: detachable ARGUMENT_SWITCH
 					do
 						l_item := ia_item
 						Result := l_item /= Void
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 		local
 			i: INTEGER
 			l_upper: INTEGER
-			l_switch: ?ARGUMENT_SWITCH
+			l_switch: detachable ARGUMENT_SWITCH
 		do
 			create switches.make (0)
 			from
@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 			a_switches_contains_attached_items: a_switches.for_all (
 				agent (ia_item: ARGUMENT_SWITCH): BOOLEAN
 					local
-						l_item: ?ARGUMENT_SWITCH
+						l_item: detachable ARGUMENT_SWITCH
 					do
 						l_item := ia_item
 						Result := l_item /= Void

@@ -83,7 +83,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	bitmap: ?WEL_BITMAP
+	bitmap: detachable WEL_BITMAP
 		-- displayed bitmap
 
 feature {NONE} -- Implementation

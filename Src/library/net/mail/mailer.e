@@ -14,15 +14,15 @@ create
 
 feature -- Access
 
-	from_resource: ?EMAIL_RESOURCE
+	from_resource: detachable EMAIL_RESOURCE
 		-- Resource that will be sent.
 
-	to_resource: ?EMAIL_RESOURCE
+	to_resource: detachable EMAIL_RESOURCE
 		-- Resource that will receive.
 
 feature -- Status report
 
-	transfer_error: ?TRANSFER_ERROR
+	transfer_error: detachable TRANSFER_ERROR
 		-- Has the transfer failed?
 
 	error: BOOLEAN

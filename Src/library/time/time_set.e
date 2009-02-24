@@ -36,11 +36,11 @@ feature -- Access
 		require
 			index_in_range: 1 <= i and i <= last
 		local
-			l_result: ?TIME
+			l_result: detachable TIME
 		do
 			if
-				{c_t: INTEGER_REF}item_array ((2 * i) - 1) and then
-				{frac_sec: DOUBLE_REF}item_array (2 * i)
+				attached {INTEGER_REF} item_array ((2 * i) - 1) as c_t and then
+				attached {DOUBLE_REF} item_array (2 * i) as frac_sec
 			then
 				create l_result.make_by_compact_time (c_t.item)
 				l_result.set_fractionals (frac_sec.item)

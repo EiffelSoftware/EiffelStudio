@@ -41,7 +41,7 @@ feature -- Command
 			create l_c_string.make_shared_from_pointer_and_count (a_data_pointer, Result)
 
 			create l_identified
-			if {l_string: CURL_STRING} l_identified.id_object (a_object_id.to_integer_32) then
+			if attached {CURL_STRING} l_identified.id_object (a_object_id.to_integer_32) as l_string then
 				l_string.append (l_c_string.string)
 			else
 				check False end

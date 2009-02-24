@@ -72,7 +72,7 @@ feature -- Attributes
 			-- Name of the code string.
 		local
 			i: INTEGER
-			l_item: ?DATE_TIME_CODE
+			l_item: detachable DATE_TIME_CODE
 		do
 			create Result.make (1)
 			from
@@ -152,7 +152,7 @@ feature -- Interface
 			s_exists: s /= Void
 		local
 			pos1, pos2, i: INTEGER
-			code: ?DATE_TIME_CODE
+			code: detachable DATE_TIME_CODE
 			has_seps: BOOLEAN
 			l_substrgs: like extracted_substrings
 			l_substrg, l_substrg2: STRING
@@ -229,7 +229,7 @@ feature -- Interface
 			int, i, type: INTEGER
 			double: DOUBLE
 			l_tmp: STRING
-			l_item: ?DATE_TIME_CODE
+			l_item: detachable DATE_TIME_CODE
 		do
 			create Result.make (1)
 			date := date_time.date
@@ -397,7 +397,7 @@ feature -- Interface
 		local
 			i: INTEGER
 			l_parser: like parser
-			l_day_text: ?STRING
+			l_day_text: detachable STRING
 		do
 			right_day_text := True
 			l_parser := parser (s)
@@ -521,7 +521,7 @@ feature -- Interface
 		require
 			not_void: value /= Void
 		local
-			l_item, code: ?DATE_TIME_CODE
+			l_item, code: detachable DATE_TIME_CODE
 			i, type: INTEGER
 			has_day, has_month, has_year: BOOLEAN
 		do
@@ -570,7 +570,7 @@ feature -- Interface
 		require
 			not_void: value /= Void
 		local
-			l_item, code: ?DATE_TIME_CODE
+			l_item, code: detachable DATE_TIME_CODE
 			i, type: INTEGER
 			has_hour, has_minute, has_second: BOOLEAN
 		do
@@ -645,7 +645,7 @@ feature {NONE} -- Implementation
 			parser_not_void: Result /= Void
 		end
 
-	internal_parser: ?DATE_TIME_PARSER;
+	internal_parser: detachable DATE_TIME_PARSER;
 			-- Cached instance of date-time string parser
 
 note

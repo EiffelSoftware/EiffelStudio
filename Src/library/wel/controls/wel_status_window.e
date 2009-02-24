@@ -366,7 +366,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Inapplicable
 
-	set_text (a_text: ?STRING_GENERAL)
+	set_text (a_text: detachable STRING_GENERAL)
 			-- Set the window text.
 		do
 		end

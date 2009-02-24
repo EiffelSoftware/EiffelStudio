@@ -39,7 +39,7 @@ feature -- Access
 			result_consistent: Result ~ arguments
 			result_contains_attached_items: Result.for_all (agent (ia_item: STRING): BOOLEAN
 				local
-					l_item: ?STRING
+					l_item: detachable STRING
 				do
 					l_item := ia_item
 					Result := l_item /= Void

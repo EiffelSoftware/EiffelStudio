@@ -37,18 +37,18 @@ feature -- Properties
 	object: ANY
 			-- Associated object.
 
-	value: ?G
+	value: detachable G
 			-- Associated value.
 
 feature -- Access
 
-	current_value_record: ?RT_DBG_VALUE_RECORD
+	current_value_record: detachable RT_DBG_VALUE_RECORD
 			-- Record for current value
 		do
 			Result := object_record (index, object)
 		end
 
-	associated_object: ?ANY
+	associated_object: detachable ANY
 			-- Associated object, if any
 		do
 			Result := object
@@ -60,7 +60,7 @@ feature -- Access
 	is_same_as (other: RT_DBG_VALUE_RECORD): BOOLEAN
 			-- Is Current same as `other' ?
 		do
-			Result := {l_field: like Current} other and then
+			Result := attached {like Current} other as l_field and then
 					index = l_field.index and then
 					value = l_field.value
 		end
@@ -100,7 +100,7 @@ feature -- Change properties
 	get_value
 			-- Get value on `obj'
 		do
-			if {v: like value} field (index, object) then
+			if attached {like value} field (index, object) as v then
 				value := v
 			else
 				value := default_value
@@ -154,67 +154,67 @@ feature {NONE} -- Internal Implementation
 			inspect
 				r.type
 			when Integer_8_type then
-				if {l_fr_integer_8: RT_DBG_FIELD_RECORD [INTEGER_8]} r then
+				if attached {RT_DBG_FIELD_RECORD [INTEGER_8]} r as l_fr_integer_8 then
 					set_integer_8_field (i, obj, (l_fr_integer_8).value)
 				end
 			when Integer_16_type then
-				if {l_fr_integer_16: RT_DBG_FIELD_RECORD [INTEGER_16]} r then
+				if attached {RT_DBG_FIELD_RECORD [INTEGER_16]} r as l_fr_integer_16 then
 					set_integer_16_field (i, obj, (l_fr_integer_16).value)
 				end
 			when integer_32_type then
-				if {l_fr_integer_32: RT_DBG_FIELD_RECORD [INTEGER_32]} r then
+				if attached {RT_DBG_FIELD_RECORD [INTEGER_32]} r as l_fr_integer_32 then
 					set_integer_32_field (i, obj, (l_fr_integer_32).value)
 				end
 			when Integer_64_type then
-				if {l_fr_integer_64: RT_DBG_FIELD_RECORD [INTEGER_64]} r then
+				if attached {RT_DBG_FIELD_RECORD [INTEGER_64]} r as l_fr_integer_64 then
 					set_integer_64_field (i, obj, (l_fr_integer_64).value)
 				end
 			when Natural_8_type then
-				if {l_fr_natural_8: RT_DBG_FIELD_RECORD [NATURAL_8]} r then
+				if attached {RT_DBG_FIELD_RECORD [NATURAL_8]} r as l_fr_natural_8 then
 					set_natural_8_field (i, obj, (l_fr_natural_8).value)
 				end
 			when Natural_16_type then
-				if {l_fr_natural_16: RT_DBG_FIELD_RECORD [NATURAL_16]} r then
+				if attached {RT_DBG_FIELD_RECORD [NATURAL_16]} r as l_fr_natural_16 then
 					set_natural_16_field (i, obj, (l_fr_natural_16).value)
 				end
 			when natural_32_type then
-				if {l_fr_natural_32: RT_DBG_FIELD_RECORD [NATURAL_32]} r then
+				if attached {RT_DBG_FIELD_RECORD [NATURAL_32]} r as l_fr_natural_32 then
 					set_natural_32_field (i, obj, (l_fr_natural_32).value)
 				end
 			when Natural_64_type then
-				if {l_fr_natural_64: RT_DBG_FIELD_RECORD [NATURAL_64]} r then
+				if attached {RT_DBG_FIELD_RECORD [NATURAL_64]} r as l_fr_natural_64 then
 					set_natural_64_field (i, obj, (l_fr_natural_64).value)
 				end
 			when Pointer_type then
-				if {l_fr_pointer: RT_DBG_FIELD_RECORD [POINTER]} r then
+				if attached {RT_DBG_FIELD_RECORD [POINTER]} r as l_fr_pointer then
 					set_pointer_field (i, obj, (l_fr_pointer).value)
 				end
 			when Reference_type then
-				if {l_fr_any: RT_DBG_FIELD_RECORD [ANY]} r and then {vr: ANY} l_fr_any.value then
+				if attached {RT_DBG_FIELD_RECORD [ANY]} r as l_fr_any and then attached {ANY} l_fr_any.value as vr then
 					set_reference_field (i, obj, vr)
 				end
 			when Expanded_type then
-				if {l_fr_eany: RT_DBG_FIELD_RECORD [ANY]} r and then {ve: ANY} l_fr_eany.value then
+				if attached {RT_DBG_FIELD_RECORD [ANY]} r as l_fr_eany and then attached {ANY} l_fr_eany.value as ve then
 					set_reference_field (i, obj, ve)
 				end
 			when Boolean_type then
-				if {l_fr_boolean: RT_DBG_FIELD_RECORD [BOOLEAN]} r then
+				if attached {RT_DBG_FIELD_RECORD [BOOLEAN]} r as l_fr_boolean then
 					set_boolean_field (i, obj, (l_fr_boolean).value)
 				end
 			when real_32_type then
-				if {l_fr_real_32: RT_DBG_FIELD_RECORD [REAL_32]} r then
+				if attached {RT_DBG_FIELD_RECORD [REAL_32]} r as l_fr_real_32 then
 					set_real_32_field (i, obj, (l_fr_real_32).value)
 				end
 			when real_64_type then
-				if {l_fr_real_64: RT_DBG_FIELD_RECORD [REAL_64]} r then
+				if attached {RT_DBG_FIELD_RECORD [REAL_64]} r as l_fr_real_64 then
 					set_real_64_field (i, obj, (l_fr_real_64).value)
 				end
 			when character_8_type then
-				if {l_fr_character_8: RT_DBG_FIELD_RECORD [CHARACTER_8]} r then
+				if attached {RT_DBG_FIELD_RECORD [CHARACTER_8]} r as l_fr_character_8 then
 					set_character_8_field (i, obj, (l_fr_character_8).value)
 				end
 			when character_32_type then
-				if {l_fr_character_32: RT_DBG_FIELD_RECORD [CHARACTER_32]} r then
+				if attached {RT_DBG_FIELD_RECORD [CHARACTER_32]} r as l_fr_character_32 then
 					set_character_32_field (i, obj, (l_fr_character_32).value)
 				end
 --			when Bit_type then
@@ -225,7 +225,7 @@ feature {NONE} -- Internal Implementation
 
 feature {NONE} -- Implementation
 
-	default_value: ?G
+	default_value: detachable G
 			-- Default value
 		do
 		end

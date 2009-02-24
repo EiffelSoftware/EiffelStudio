@@ -130,7 +130,7 @@ feature -- Correction
 				-- In version 5.3 and earlier, we were storing `compact_date' not
 				-- `ordered_compact_date', so now we are retrieving a `compact_date'
 				-- and we need to convert its value to `ordered_compact_date'.
-			if {l_compact_date: INTEGER_REF} Mismatch_information.item (compact_date_attribute_name) then
+			if attached {INTEGER_REF} Mismatch_information.item (compact_date_attribute_name) as l_compact_date then
 				set_private_internal_compact_date (l_compact_date.item)
 			else
 					-- Does not seem to be the old version, we raise an exception

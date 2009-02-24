@@ -137,7 +137,7 @@ feature -- Query
 				l_group.after or Result
 			loop
 				if l_group.item /= Current and then l_group.item.content.state.zone /= Void then
-					if {lt_widget: EV_WIDGET} l_group.item.content.state.zone then
+					if attached {EV_WIDGET} l_group.item.content.state.zone as lt_widget then
 						if not lt_widget.is_destroyed then
 							Result := True
 						end

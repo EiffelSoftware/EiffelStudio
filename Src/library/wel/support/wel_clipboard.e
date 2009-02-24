@@ -46,7 +46,7 @@ feature -- Element Change
 		local
 			shared_string: WEL_SHARED_MEMORY_STRING
 			shared_memory_handle: POINTER
-			l_string: ?like last_string
+			l_string: detachable like last_string
 		do
 			shared_memory_handle := cwel_get_clipboard_data ({WEL_CLIPBOARD_CONSTANTS}.Cf_unicodetext)
 			if shared_memory_handle /= default_pointer then
@@ -75,7 +75,7 @@ feature -- Element Change
 			cwel_set_clipboard_data ({WEL_CLIPBOARD_CONSTANTS}.Cf_unicodetext, shared_string.handle)
 		end
 
-	open_clipboard (window: ?WEL_WINDOW)
+	open_clipboard (window: detachable WEL_WINDOW)
 			-- Open clipboard for `window'. If `Void',
 			-- clipboard is opened to the current task.
 		require

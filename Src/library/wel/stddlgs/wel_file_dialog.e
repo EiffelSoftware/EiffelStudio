@@ -346,16 +346,16 @@ feature {NONE} -- Implementation
 	str_file_title: WEL_STRING
 			-- C string to save the file title
 
-	str_filter: ?WEL_STRING
+	str_filter: detachable WEL_STRING
 			-- C string to save the filters
 
 	str_title: WEL_STRING
 			-- C string to save the title
 
-	str_initial_directory: ?WEL_STRING
+	str_initial_directory: detachable WEL_STRING
 			-- C string to save the initial directory
 
-	str_default_extension: ?WEL_STRING
+	str_default_extension: detachable WEL_STRING
 			-- C string to save the default extension
 
 	Max_file_title_length: INTEGER = 256

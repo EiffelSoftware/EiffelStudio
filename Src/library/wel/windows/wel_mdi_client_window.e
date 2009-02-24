@@ -64,7 +64,7 @@ feature -- Status report
 			Result := active_window /= Void
 		end
 
-	active_window: ?WEL_MDI_CHILD_WINDOW
+	active_window: detachable WEL_MDI_CHILD_WINDOW
 			-- Currently active window.
 		require
 			exists: exists

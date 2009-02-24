@@ -86,7 +86,7 @@ feature  -- Agents
 			until
 				l_zones.after
 			loop
-				if {lt_container: EV_CONTAINER} l_zones.item then
+				if attached {EV_CONTAINER} l_zones.item as lt_container then
 					if not lt_container.is_destroyed and then (lt_container.has_recursive (a_widget) and not ignore_additional_click) and l_zones.item.content /= internal_docking_manager.zones.place_holder_content then
 						if internal_docking_manager.property.last_focus_content /= l_zones.item.content then
 							internal_docking_manager.property.set_last_focus_content (l_zones.item.content)
@@ -133,7 +133,7 @@ feature  -- Agents
 			loop
 				l_upper_zone ?= l_zones.item
 				if l_upper_zone /= Void then
-					if {lt_container: EV_CONTAINER} l_zones.item then
+					if attached {EV_CONTAINER} l_zones.item as lt_container then
 						if lt_container.has_recursive (a_widget) then
 							l_tool_bar ?= a_widget
 							-- We ignore click on tool bar.
@@ -235,7 +235,7 @@ feature  -- Agents
 				l_content := internal_docking_manager.property.last_focus_content
 				l_zone := internal_docking_manager.zones.zone_by_content (l_content)
 				if l_zone /= Void then
-					if {lt_widget: EV_WIDGET} l_zone then
+					if attached {EV_WIDGET} l_zone as lt_widget then
 						if internal_docking_manager.main_container.has_recursive (lt_widget) then
 							l_zone.set_non_focus_selection_color
 						end
@@ -261,7 +261,7 @@ feature  -- Agents
 				l_content := internal_docking_manager.property.last_focus_content
 				l_zone := internal_docking_manager.zones.zone_by_content (l_content)
 				if l_zone /= Void then
-					if {lt_widget: EV_WIDGET} l_zone then
+					if attached {EV_WIDGET} l_zone as lt_widget then
 						if internal_docking_manager.main_container.has_recursive (lt_widget) then
 							l_zone.set_focus_color (True)
 						end

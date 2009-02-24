@@ -61,10 +61,10 @@ feature -- Initialization
 
 feature -- Access
 
-	start_bound: !G
+	start_bound: attached G
 			-- Start bound of the current interval
 
-	end_bound: !G
+	end_bound: attached G
 			-- End bound of the current interval
 
 feature -- Measurement
@@ -294,7 +294,7 @@ feature -- Basic operations
 			result_includes_other: Result.includes (other)
 		end
 
-	intersection (other: like Current): ?like Current
+	intersection (other: like Current): detachable like Current
 			-- Intersection with `other'
 		require
 			other_exists: other /= Void

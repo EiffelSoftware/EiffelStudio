@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			empty: is_empty
 		end
 
-	make (a_items: !FINITE [READABLE_STRING_8])
+	make (a_items: attached FINITE [READABLE_STRING_8])
 			-- Initialize `Current' with given items.
 			--
 			-- `a_items': Items representing relative path.
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			a_items.linear_representation.do_all (agent items.force)
 		end
 
-	make_from_path (a_path: !EQA_SYSTEM_PATH)
+	make_from_path (a_path: attached EQA_SYSTEM_PATH)
 			-- Initialize `Current' from given path.
 			--
 			-- `a_path': Path from which `Current' will create a duplication
@@ -57,7 +57,7 @@ feature -- Access
 			Result := items.count
 		end
 
-	item alias "[]", infix "@" (i: INTEGER): !READABLE_STRING_8
+	item alias "[]", infix "@" (i: INTEGER): attached READABLE_STRING_8
 			-- Item at index `i'
 		require
 			valid_index: i > 0 and i <= count
@@ -67,7 +67,7 @@ feature -- Access
 
 feature {EQA_SYSTEM_PATH} -- Access
 
-	items: !ARRAYED_LIST [like item]
+	items: attached ARRAYED_LIST [like item]
 			-- Items representing path
 
 feature -- Status report
@@ -86,7 +86,7 @@ feature -- Query
 			Result := items ~ a_other.items
 		end
 
-	is_valid_name (a_name: ?READABLE_STRING_8): BOOLEAN
+	is_valid_name (a_name: detachable READABLE_STRING_8): BOOLEAN
 			-- Is `a_name' a valid path component?
 		do
 			Result := a_name /= Void and then not a_name.is_empty and then
@@ -95,7 +95,7 @@ feature -- Query
 
 feature -- Element change
 
-	extend (a_item: !READABLE_STRING_8)
+	extend (a_item: attached READABLE_STRING_8)
 			-- Add `a_item' to `items'.
 		require
 			a_name_valid: is_valid_name (a_item)

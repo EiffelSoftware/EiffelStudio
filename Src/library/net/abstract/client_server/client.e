@@ -17,7 +17,7 @@ feature -- Access
 	in_out: SOCKET;
 			-- Receive and send socket.
 
-	received: ?ANY;
+	received: detachable ANY;
 			-- message received on `in'
 
 	cleanup

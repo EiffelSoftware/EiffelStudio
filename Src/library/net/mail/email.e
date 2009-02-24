@@ -52,7 +52,7 @@ feature -- Basic operations
 		require
 			not_void: header_entry /= Void and then header_key /= Void
 		local
-			a_header: ?HEADER
+			a_header: detachable HEADER
 		do
 			if headers.has (header_key) then
 				a_header:= headers.item (header_key)
@@ -71,7 +71,7 @@ feature -- Basic operations
 			-- Add multiple 'header_entries' at once  to 'header_key',
 			-- If not such header exists. create it.
 		local
-			a_header: ?HEADER
+			a_header: detachable HEADER
 		do
 			if headers.has (header_key) then
 				a_header:= headers.item (header_key)
@@ -91,9 +91,9 @@ feature -- Basic operations
 		require
 			header_exists: headers.has (header_key)
 			header_entry_exists:
-					{l_header: HEADER} headers.item (header_key) and then l_header.entries.has (header_entry)
+					attached {HEADER} headers.item (header_key) as l_header and then l_header.entries.has (header_entry)
 		local
-			a_header: ?HEADER
+			a_header: detachable HEADER
 		do
 			a_header:= headers.item (header_key)
 				-- Per precondition
@@ -101,14 +101,14 @@ feature -- Basic operations
 			a_header.entries.prune (header_entry)
 		ensure
 			header_entry_no_longer_exists:
-				{l_header_after: HEADER} headers.item (header_key) and then not l_header_after.entries.has (header_entry)
+				attached {HEADER} headers.item (header_key) as l_header_after and then not l_header_after.entries.has (header_entry)
 		end
 
 	remove_header_entries (header_key: STRING)
 		require
 			header_exists: headers.has (header_key)
 		local
-			a_header: ?HEADER
+			a_header: detachable HEADER
 		do
 			a_header:= headers.item (header_key)
 				-- Per precondition

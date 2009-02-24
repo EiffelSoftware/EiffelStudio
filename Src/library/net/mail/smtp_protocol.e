@@ -39,7 +39,7 @@ feature -- Initialization
 
 feature -- Access
 
-	smtp_reply: ?STRING
+	smtp_reply: detachable STRING
 		-- Replied message from SMTP protocol
 
 	pipelining: BOOLEAN
@@ -133,10 +133,10 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Basic operations
 
-	decode (a_socket: !like socket)
+	decode (a_socket: attached like socket)
 			-- Retrieve response from server and set `smtp_code_number'.
 		local
-			response: ?STRING
+			response: detachable STRING
 		do
 			from
 				a_socket.read_line
@@ -198,7 +198,7 @@ feature {NONE} -- Basic operations
 
 	send_mails
 		local
-			l_header: ?HEADER
+			l_header: detachable HEADER
 			l_header_from: STRING
 		do
 			l_header := memory_resource.header (H_from)
@@ -216,7 +216,7 @@ feature {NONE} -- Basic operations
 		require
 			header_to_exists: memory_resource.headers.has (H_to)
 		local
-			a_header: ?HEADER
+			a_header: detachable HEADER
 			l_recipients: like recipients
 		do
 			if not bcc_mode then
@@ -274,7 +274,7 @@ feature {NONE} -- Basic operations
 			sub_header_key_not_void: sub_header_key /= Void
 			key_exists: memory_resource.headers.has (sub_header_key)
 		local
-			a_header: ?HEADER
+			a_header: detachable HEADER
 		do
 			a_header:= memory_resource.header (sub_header_key)
 			check a_header_attached: a_header /= Void end
@@ -344,7 +344,7 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Access
 
-	recipients: ?ARRAYED_LIST [STRING]
+	recipients: detachable ARRAYED_LIST [STRING]
 		-- Header to use with the command 'Mail_to'
 
 	sub_header: STRING

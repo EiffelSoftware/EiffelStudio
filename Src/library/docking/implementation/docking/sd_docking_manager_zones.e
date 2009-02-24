@@ -79,7 +79,7 @@ feature -- Zones managements
 				l_zones.after or Result /= Void
 			loop
 				if l_zones.item.is_maximized then
-					if {lt_widget: EV_WIDGET} l_zones.item then
+					if attached {EV_WIDGET} l_zones.item as lt_widget then
 						if l_main_area.has_recursive (lt_widget) then
 							Result := l_zones.item
 						end
@@ -187,7 +187,7 @@ feature -- Zones managements
 		local
 			l_parent: EV_CONTAINER
 		do
-			if {lt_widget: EV_WIDGET} a_zone then
+			if attached {EV_WIDGET} a_zone as lt_widget then
 				if lt_widget.parent /= Void then
 					lt_widget.parent.prune (lt_widget)
 				end
@@ -250,7 +250,7 @@ feature -- Zones managements
 				internal_docking_manager.fixed_area.set_item_size (l_auto_hide_zone, l_width, l_height)
 			end
 		ensure
-			set: {lt_widget: EV_WIDGET} a_zone implies lt_widget.width = a_width and lt_widget.height = a_height
+			set: attached {EV_WIDGET} a_zone as lt_widget implies lt_widget.width = a_width and lt_widget.height = a_height
 		end
 
 	disable_all_zones_focus_color (a_except: SD_ZONE)

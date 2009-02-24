@@ -301,7 +301,7 @@ feature -- Status report
 				Tb_gettooltips, to_wparam (0), to_lparam (0)) /= default_pointer
 		end
 
-	tooltip: ?WEL_TOOLTIP
+	tooltip: detachable WEL_TOOLTIP
 			-- The tooltip associated with the toolbar
 		require
 			tooltip_exists: tooltip_exists
@@ -688,7 +688,7 @@ feature {NONE} -- Inapplicable
 		do
 		end
 
-	set_text (s: ?STRING_GENERAL)
+	set_text (s: detachable STRING_GENERAL)
 		do
 		end
 

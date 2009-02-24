@@ -20,7 +20,7 @@ create
 	make
 
 convert
-	make ({G, !G})
+	make ({G, attached G})
 
 feature {NONE} -- Initialization
 
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item: !G
+	item: attached G
 			-- Implementation item
 
 feature -- Comparison
@@ -51,7 +51,7 @@ feature -- Comparison
 	is_equal (other: like Current): BOOLEAN
 			-- Does table contain the same information as `other'?
 		local
-			l_item, l_other: ?ANY
+			l_item, l_other: detachable ANY
 			l_count, i: INTEGER
 		do
 			l_count := item.count

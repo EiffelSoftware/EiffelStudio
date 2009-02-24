@@ -223,7 +223,7 @@ feature -- Constants
 
 feature {DATA_RESOURCE} -- Implementation
 
-	main_socket: ?NETWORK_STREAM_SOCKET
+	main_socket: detachable NETWORK_STREAM_SOCKET
 
 feature {NONE} -- Implementation
 

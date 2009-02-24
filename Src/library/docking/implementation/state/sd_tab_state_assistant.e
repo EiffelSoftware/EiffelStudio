@@ -80,7 +80,7 @@ feature {SD_TAB_STATE}  -- Implementation functions.
 			l_target_zone_parent_split_position: INTEGER
 			l_target_zone_parent_spliter: EV_SPLIT_AREA
 		do
-			if {lt_widget: EV_WIDGET} a_target_zone then
+			if attached {EV_WIDGET} a_target_zone as lt_widget then
 				internal_docking_manager.command.lock_update (lt_widget, False)
 			else
 				check not_possible: False end
@@ -92,7 +92,7 @@ feature {SD_TAB_STATE}  -- Implementation functions.
 				state.tab_zone.parent.prune (state.tab_zone)
 			end
 
-			if {lt_widget_2: EV_WIDGET} a_target_zone then
+			if attached {EV_WIDGET} a_target_zone as lt_widget_2 then
 				l_target_zone_parent := lt_widget_2.parent
 			else
 				check not_possible: False end
@@ -104,7 +104,7 @@ feature {SD_TAB_STATE}  -- Implementation functions.
 				if l_target_zone_parent_spliter /= Void then
 					l_target_zone_parent_split_position := l_target_zone_parent_spliter.split_position
 				end
-				if {lt_widget_3: EV_WIDGET} a_target_zone then
+				if attached {EV_WIDGET} a_target_zone as lt_widget_3 then
 					l_target_zone_parent.prune (lt_widget_3)
 				else
 					check not_possible: False end
@@ -117,7 +117,7 @@ feature {SD_TAB_STATE}  -- Implementation functions.
 			elseif a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right then
 				create {SD_HORIZONTAL_SPLIT_AREA} l_new_split_area
 			end
-			if {lt_widget_4: EV_WIDGET} a_target_zone then
+			if attached {EV_WIDGET} a_target_zone as lt_widget_4 then
 				if a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.left then
 					l_new_split_area.set_first (state.tab_zone)
 					l_new_split_area.set_second (lt_widget_4)
@@ -140,7 +140,7 @@ feature {SD_TAB_STATE}  -- Implementation functions.
 			internal_docking_manager.query.inner_container (state.tab_zone).remove_empty_split_area
 			internal_docking_manager.command.unlock_update
 		ensure
-			changed: {lt_widget_5: EV_WIDGET} a_target_zone implies lt_widget_5.parent.has (state.tab_zone)
+			changed: attached {EV_WIDGET} a_target_zone as lt_widget_5 implies lt_widget_5.parent.has (state.tab_zone)
 		end
 
 	move_whole_to_docking_zone (a_target_zone: SD_DOCKING_ZONE)

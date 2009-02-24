@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	access_name: ?STRING_32
+	access_name: detachable STRING_32
 			-- Local access to the mapped path.
 			-- Example: "I:"
 

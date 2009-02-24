@@ -13,7 +13,7 @@ class STATE_OF_DFA inherit
 			copy, is_equal
 		end;
 
-	ARRAY [?STATE_OF_DFA]
+	ARRAY [detachable STATE_OF_DFA]
 		rename
 			make as array_make
 		export
@@ -34,7 +34,7 @@ feature -- Initialization
 
 feature -- Element change
 
-	append_transition (i: INTEGER; t: ?STATE_OF_DFA)
+	append_transition (i: INTEGER; t: detachable STATE_OF_DFA)
 			-- Append transition from current state to state t on input i.
 		require
 			no_other_transition: item (i) = Void;
@@ -45,7 +45,7 @@ feature -- Element change
 
 feature -- Cursor movement
 
-	successor (i: INTEGER): ?STATE_OF_DFA
+	successor (i: INTEGER): detachable STATE_OF_DFA
 			-- Successor of current state for input `i';
 			-- Void if no successor
 		require

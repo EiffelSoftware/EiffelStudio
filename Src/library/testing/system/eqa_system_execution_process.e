@@ -50,38 +50,38 @@ feature {EQA_SYSTEM_EXECUTION}
 
 feature {NONE} -- Access
 
-	process: ?PROCESS
+	process: detachable PROCESS
 			-- Actual process instance
 
 feature {NONE} -- Access: threading
 
-	mutex: !MUTEX
+	mutex: attached MUTEX
 			-- Mutex for controlling access to `Current'
 
-	client_condition: !CONDITION_VARIABLE
+	client_condition: attached CONDITION_VARIABLE
 			-- Condition variable for signalling that new output is available
 
-	provider_condition: !CONDITION_VARIABLE
+	provider_condition: attached CONDITION_VARIABLE
 			-- Condition valiablefor signalling that `Current' is waiting for new output
 
-	next_output: ?READABLE_STRING_8
+	next_output: detachable READABLE_STRING_8
 			-- Output to be processed next
 
 feature {NONE} -- Access: io redirection
 
-	output_processor: ?EQA_SYSTEM_OUTPUT_PROCESSOR
+	output_processor: detachable EQA_SYSTEM_OUTPUT_PROCESSOR
 			-- Processor analysing output, Void if output should not be analysed
 
-	error_processor: ?EQA_SYSTEM_OUTPUT_PROCESSOR
+	error_processor: detachable EQA_SYSTEM_OUTPUT_PROCESSOR
 			-- Processor analysing errors, Void if errors should not be analysed
 
-	output_file: ?FILE
+	output_file: detachable FILE
 			-- File to which output will be printed, Void if output should not be stored
 
-	error_file: ?FILE
+	error_file: detachable FILE
 			-- File to which errors will be printed, Void if errors should not be stored
 
-	input_file: ?FILE
+	input_file: detachable FILE
 			-- File from which input will be read, Void if input is not read from a file
 
 feature {EQA_SYSTEM_EXECUTION} -- Status report
@@ -107,7 +107,7 @@ feature {NONE} -- Status report
 
 feature {EQA_SYSTEM_EXECUTION} -- Status setting
 
-	launch (a_exec: !READABLE_STRING_8; a_arg_list: !LIST [!STRING]; a_dir: !READABLE_STRING_8)
+	launch (a_exec: attached READABLE_STRING_8; a_arg_list: attached LIST [attached STRING]; a_dir: attached READABLE_STRING_8)
 		require
 			not_launched: not is_launched
 		local
@@ -141,7 +141,7 @@ feature {NONE} -- Status setting
 
 feature {EQA_SYSTEM_EXECUTION} -- Basic operations
 
-	redirect_input (a_input: !READABLE_STRING_8)
+	redirect_input (a_input: attached READABLE_STRING_8)
 			-- Send input to `process'.
 			--
 			-- `a_input': Input to be sent to process
@@ -210,7 +210,7 @@ feature {EQA_SYSTEM_EXECUTION} -- Basic operations
 
 feature {NONE} -- Basic operations
 
-	append_output (a_output: !STRING; a_is_error: BOOLEAN)
+	append_output (a_output: attached STRING; a_is_error: BOOLEAN)
 			-- Set next output to be processed.
 			--
 			-- `a_output': Output retrieved from `process'.
@@ -232,7 +232,7 @@ feature {NONE} -- Basic operations
 			mutex.unlock
 		end
 
-	prepare_redirection (a_process: !like process)
+	prepare_redirection (a_process: attached like process)
 			-- Prepare redirection for `a_process'.
 		local
 			l_output_proc, l_error_proc: like output_processor

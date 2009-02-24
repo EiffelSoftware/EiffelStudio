@@ -90,7 +90,7 @@ feature -- Open inner container data.
 
 				l_place_holder_content := internal_docking_manager.zones.place_holder_content
 				if editor_helper.has_editor_or_place_holder (l_top_parent) then
-					if {lt_widget: EV_WIDGET} l_place_holder_content.state.zone then
+					if attached {EV_WIDGET} l_place_holder_content.state.zone as lt_widget then
 						-- If this time we only restore a editor place holder zone? No real editors restored.
 						if not internal_docking_manager.main_container.has_recursive (lt_widget) then
 							-- We should close place holder content if exist. Because there is(are) already normal editor zone(s).				
@@ -111,7 +111,7 @@ feature -- Open inner container data.
 						l_top_parent.wipe_out
 					end
 
-					if {lt_zone: SD_PLACE_HOLDER_ZONE} l_place_holder_content.state.zone then
+					if attached {SD_PLACE_HOLDER_ZONE} l_place_holder_content.state.zone as lt_zone then
 						lt_zone.add_to_container (l_top_parent)
 					end
 				end
@@ -309,7 +309,7 @@ feature {NONE} -- Implementation
 				-- Sometime `editor_parent' feature give us a zone as top parent.
 				l_zone ?= Result
 				if l_zone /= Void then
-					if {lt_widget: EV_WIDGET} l_zone then
+					if attached {EV_WIDGET} l_zone as lt_widget then
 						Result := lt_widget.parent
 					else
 						check not_possible: False end
@@ -484,7 +484,7 @@ feature {NONE} -- Implementation
 					end
 					if a_config_data.is_minimized then
 						-- l_state.zone will be void. We should query zone indirectly.
-						if {lt_widget: EV_WIDGET} l_state.content.state.zone then
+						if attached {EV_WIDGET} l_state.content.state.zone as lt_widget then
 							l_parent ?= lt_widget.parent
 						else
 							check not_possible: False end
@@ -493,7 +493,7 @@ feature {NONE} -- Implementation
 						if l_parent /= Void and l_parent.is_minimized then
 							-- Maybe parent not full now, Current is the first child of parent, parent will fill another child immediately.
 							-- check full: l_parent.full end
-							if {lt_widget_2: EV_WIDGET} l_state.content.state.zone then
+							if attached {EV_WIDGET} l_state.content.state.zone as lt_widget_2 then
 								l_parent.disable_item_expand (lt_widget_2)
 							else
 								check not_possible: False end
@@ -792,7 +792,7 @@ feature {NONE} -- Implementation
 
 					l_tool_bar_row.extend (l_tool_bar_zone)
 					l_tool_bar_row.record_state
-					if {lt_widget: EV_WIDGET} l_tool_bar_zone.tool_bar then
+					if attached {EV_WIDGET} l_tool_bar_zone.tool_bar as lt_widget then
 						l_tool_bar_row.set_item_position_relative (lt_widget, l_row_item.pos)
 					else
 						check not_possible: False end

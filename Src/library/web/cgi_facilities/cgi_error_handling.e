@@ -21,8 +21,8 @@ feature -- Basic Operations
 	handle_exception
 			-- General exception hanlding.
 		local
-			msg: ?STRING
-			l_trace: ?STRING
+			msg: detachable STRING
+			l_trace: detachable STRING
 		do
 			msg := raised_error
 			if msg = Void then
@@ -49,7 +49,7 @@ feature -- Basic Operations
 
 feature {CGI_ERROR_HANDLING} -- Access
 
-	raised_error: ?STRING;
+	raised_error: detachable STRING;
 			-- Error explicitely raised by developer code.
 
 note

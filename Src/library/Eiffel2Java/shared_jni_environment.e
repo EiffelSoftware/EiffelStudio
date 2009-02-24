@@ -16,7 +16,7 @@ feature -- Access
 			-- Standard JNI enviroment. It uses value of
 			-- CLASS_PATH environment variable to initialize JVM.
 		local
-			class_path: ?STRING
+			class_path: detachable STRING
 			jvm: JAVA_VM
 			exec: EXECUTION_ENVIRONMENT
 		once

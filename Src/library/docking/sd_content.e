@@ -744,7 +744,7 @@ feature -- States report
 		do
 			l_zone := a_target_content.state.zone
 			if l_zone /= Void then
-				if {lt_widget: EV_WIDGET} l_zone then
+				if attached {EV_WIDGET} l_zone as lt_widget then
 					Result := lt_widget.parent /= Void
 				else
 					check not_possible: False end
@@ -759,7 +759,7 @@ feature -- States report
 		do
 			l_zone := a_target_content.state.zone
 			if l_zone /= Void then
-				if {lt_widget: EV_WIDGET} l_zone then
+				if attached {EV_WIDGET} l_zone as lt_widget then
 					Result := lt_widget.parent /= Void
 				else
 					check not_possible: False end
@@ -851,7 +851,7 @@ feature {SD_STATE, SD_OPEN_CONFIG_MEDIATOR}
 			end
 			l_zone := state.zone
 			if l_zone /= Void then
-				if {lt_widget: EV_WIDGET} l_zone then
+				if attached {EV_WIDGET} l_zone as lt_widget then
 					if not lt_widget.is_destroyed and then not lt_widget.is_displayed then
 						lt_widget.show
 					end

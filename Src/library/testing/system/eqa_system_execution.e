@@ -30,25 +30,25 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	environment: !EQA_SYSTEM_ENVIRONMENT
+	environment: attached EQA_SYSTEM_ENVIRONMENT
 			-- Current environment
 
-	working_directory: !READABLE_STRING_8
+	working_directory: attached READABLE_STRING_8
 			-- Working directory in which process will be launched
 
-	output_path: ?EQA_SYSTEM_PATH
+	output_path: detachable EQA_SYSTEM_PATH
 			-- Path of file to which output will be printed, Void if output should not be stored
 
-	error_path: ?EQA_SYSTEM_PATH
+	error_path: detachable EQA_SYSTEM_PATH
 			-- Path of file to which errors will be printed, Void if errors should not be stored
 
-	input_path: ?EQA_SYSTEM_PATH
+	input_path: detachable EQA_SYSTEM_PATH
 			-- Path of file from which input will be read, Void if input is not read from a file
 
-	output_processor: ?EQA_SYSTEM_OUTPUT_PROCESSOR
+	output_processor: detachable EQA_SYSTEM_OUTPUT_PROCESSOR
 			-- Processor analysing output, Void if output should not be analysed
 
-	error_processor: ?EQA_SYSTEM_OUTPUT_PROCESSOR
+	error_processor: detachable EQA_SYSTEM_OUTPUT_PROCESSOR
 			-- Processor analysing errors, Void if errors should not be analysed
 
 	exit_code: INTEGER
@@ -61,16 +61,16 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	file_system: !EQA_FILE_SYSTEM
+	file_system: attached EQA_FILE_SYSTEM
 			-- Shared instance of {EQA_FILE_SYSTEM}
 		do
 			Result := environment.test_set.file_system
 		end
 
-	arguments: !ARRAYED_LIST [!STRING]
+	arguments: attached ARRAYED_LIST [attached STRING]
 			-- Arguments passed to process when `launch' is called.
 
-	process: ?EQA_SYSTEM_EXECUTION_PROCESS
+	process: detachable EQA_SYSTEM_EXECUTION_PROCESS
 			-- Process for launching system and redirecting in-/output
 
 	last_exit_code: like exit_code
@@ -98,7 +98,7 @@ feature -- Status setting
 		require
 			not_launched: not is_launched
 		local
-			l_dir: ?like working_directory
+			l_dir: detachable like working_directory
 		do
 			l_dir := a_working_directory.string
 			check l_dir /= Void end
@@ -174,7 +174,7 @@ feature -- Status setting
 
 feature {NONE} -- Query
 
-	executable_name: !STRING
+	executable_name: attached STRING
 			-- Name of executable to run system
 		local
 			l_exec_env: EXECUTION_ENVIRONMENT
@@ -198,7 +198,7 @@ feature -- Basic operations
 		local
 			l_status: like process
 			l_output_path, l_error_path, l_input_path: like output_path
-			l_output_file, l_error_file, l_input_file: ?PLAIN_TEXT_FILE
+			l_output_file, l_error_file, l_input_file: detachable PLAIN_TEXT_FILE
 		do
 			l_output_path := output_path
 			if l_output_path /= Void then
@@ -262,7 +262,7 @@ feature -- Basic operations
 			exited: has_exited
 		end
 
-	put_string (a_input: !READABLE_STRING_8)
+	put_string (a_input: attached READABLE_STRING_8)
 			-- Send input to process.
 			--
 			-- `a_input': Input to be sent to process.
@@ -276,7 +276,7 @@ feature -- Basic operations
 
 feature -- Element change
 
-	add_argument (a_argument: !READABLE_STRING_8)
+	add_argument (a_argument: attached READABLE_STRING_8)
 			-- Add `a_arguments' to end of `arguments'.
 		require
 			not_launched: not is_launched
@@ -295,7 +295,7 @@ feature {NONE} -- Implementation
 		require
 			launched: is_launched
 			not_has_exited: not has_exited
-			process_exited: {l_proc: like process} process and then process.has_exited
+			process_exited: attached process as l_proc and then process.has_exited
 		local
 			l_process: like process
 		do
@@ -306,7 +306,7 @@ feature {NONE} -- Implementation
 			exited: has_exited
 		end
 
-	frozen assert (a_tag: !STRING; a_condition: BOOLEAN)
+	frozen assert (a_tag: attached STRING; a_condition: BOOLEAN)
 			-- Assert `a_condition'.
 		do
 			environment.test_set.assert (a_tag, a_condition)
@@ -314,7 +314,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	executable_env: !STRING = "EQA_EXECUTABLE"
+	executable_env: attached STRING = "EQA_EXECUTABLE"
 
 	default_argument_count: INTEGER = 5
 

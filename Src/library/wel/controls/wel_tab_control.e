@@ -151,7 +151,7 @@ feature -- Status report
 			consistent_result: Result /= -1 implies Result >= 0 and Result < count
 		end
 
-	selected_window: ?WEL_WINDOW
+	selected_window: detachable WEL_WINDOW
 			-- Window corresponding to currently selected tab
 		do
 			Result := get_item (current_selection).window
@@ -302,7 +302,7 @@ feature -- Element change
 			index_large_enough: index >= 0
 			index_small_enough: index <= count
 		local
-			window: ?WEL_WINDOW
+			window: detachable WEL_WINDOW
 		do
 			{WEL_API}.send_message (item, Tcm_insertitem, to_wparam (index), an_item.item)
 			window := an_item.window
@@ -380,7 +380,7 @@ feature {NONE} -- Basic operation
 		require
 			exists: exists
 		local
-			selected_item: ?WEL_WINDOW
+			selected_item: detachable WEL_WINDOW
 		do
 			selected_item := get_item (current_selection).window
 			if selected_item /= Void and then selected_item.exists then
@@ -393,7 +393,7 @@ feature {NONE} -- Basic operation
 		require
 			exists: exists
 		local
-			selected_item: ?WEL_WINDOW
+			selected_item: detachable WEL_WINDOW
 		do
 			selected_item := get_item (current_selection).window
 			if selected_item /= Void and then selected_item.exists then
@@ -406,7 +406,7 @@ feature {NONE} -- Basic operation
 			-- to the current size.
 		local
 			index: INTEGER
-			l_window: ?WEL_WINDOW
+			l_window: detachable WEL_WINDOW
 		do
 			from
 				index := 0
@@ -463,7 +463,7 @@ feature {WEL_COMPOSITE_WINDOW} -- Implementation
 			-- the invalid rectangle of the client area that
 			-- needs to be repainted.
 		local
-			bk_brush: ?WEL_BRUSH
+			bk_brush: detachable WEL_BRUSH
 			a_background_region: WEL_REGION
 		do
 			bk_brush := background_brush

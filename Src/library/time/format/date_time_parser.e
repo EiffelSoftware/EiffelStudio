@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	source_string: ?STRING
+	source_string: detachable STRING
 			-- String to be parsed
 
 	year: INTEGER
@@ -88,7 +88,7 @@ feature -- Access
 			Result := fine_second_val
 		end
 
-	day_text: ?STRING
+	day_text: detachable STRING
 			-- Text representation of `day'
 		require
 			value_parsed: parsed
@@ -105,7 +105,7 @@ feature -- Status report
 			-- Has parser been set up completely?
 		do
 			Result := (days /= Void) and (months /= Void) and
-				({l_source_string: like source_string} source_string and then not l_source_string.is_empty)
+				(attached source_string as l_source_string and then not l_source_string.is_empty)
 		end
 
 	is_date: BOOLEAN
@@ -199,7 +199,7 @@ feature -- Basic operations
 			l_is_pm, l_is_pm_computed: BOOLEAN
 			l_hour_val_need_computation: BOOLEAN
 			l_source_string: like source_string
-			l_item: ?DATE_TIME_CODE
+			l_item: detachable DATE_TIME_CODE
 			l_substrg: STRING
 			l_months: like months
 		do
@@ -348,15 +348,15 @@ feature {NONE} -- Implementation
 
 	fine_second_val: DOUBLE
 
-	day_text_val: ?STRING
+	day_text_val: detachable STRING
 
 	code: HASH_TABLE [DATE_TIME_CODE, INTEGER]
 			-- Hash table containing the parsed date/time code
 
-	months: ?ARRAY [STRING]
+	months: detachable ARRAY [STRING]
 			-- Names of months
 
-	days: ?ARRAY [STRING]
+	days: detachable ARRAY [STRING]
 			-- Names of days	
 
 	base_century: INTEGER

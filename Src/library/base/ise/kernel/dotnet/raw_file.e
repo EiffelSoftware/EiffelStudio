@@ -136,7 +136,7 @@ feature -- Output
 		local
 			i: INTEGER
 		do
-			if {l_stream: like internal_stream} internal_stream then
+			if attached internal_stream as l_stream then
 				from
 					i := 0
 				until
@@ -163,7 +163,7 @@ feature -- Output
 				byte_array.put (str_index, s.item (str_index + 1).code.to_natural_8)
 				str_index := str_index + 1
 			end
-			if {l_stream: like internal_stream} internal_stream then
+			if attached internal_stream as l_stream then
 				l_stream.write (byte_array, 0, byte_array.count)
 			end
 		end
@@ -171,7 +171,7 @@ feature -- Output
 	put_character, putchar (c: CHARACTER)
 			-- Write `c' at current position.
 		do
-			if {l_stream: like internal_stream} internal_stream then
+			if attached internal_stream as l_stream then
 				l_stream.write_byte (c.code.to_integer.to_natural_8)
 			end
 		end
@@ -198,7 +198,7 @@ feature -- Input
 				l_last_string.grow (nb_char)
 			end
 			create str_area.make (nb_char)
-			if {l_stream: like internal_stream} internal_stream then
+			if attached internal_stream as l_stream then
 				new_count := l_stream.read (str_area, 0, nb_char)
 			end
 
@@ -303,7 +303,7 @@ feature -- Input
 		local
 		  	a_code: INTEGER
 		do
-			if {l_stream: like internal_stream} internal_stream then
+			if attached internal_stream as l_stream then
 		  		a_code := l_stream.read_byte
 			end
 		  	if a_code = - 1 then
@@ -322,7 +322,7 @@ feature -- Input
 		local
 			i, l_i, l_read: INTEGER
 		do
-			if {l_stream: like internal_stream} internal_stream then
+			if attached internal_stream as l_stream then
 				from
 					i := 0
 					l_i := 0
@@ -351,7 +351,7 @@ feature {NONE} -- Implementation
 			str_area: NATIVE_ARRAY [NATURAL_8]
 		do
 			create str_area.make (nb)
-			if {l_stream: like internal_stream} internal_stream then
+			if attached internal_stream as l_stream then
 				Result := l_stream.read (str_area, 0, nb)
 			end
 			from
@@ -372,7 +372,7 @@ feature {NONE} -- Implementation
 	internal_managed_pointer: MANAGED_POINTER
 			-- Managed pointer for internal use
 		do
-			if {l_ptr: like mgn_ptr} mgn_ptr then
+			if attached mgn_ptr as l_ptr then
 				Result := l_ptr
 			else
 				create Result.make (64)
@@ -380,7 +380,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	mgn_ptr: ?MANAGED_POINTER
+	mgn_ptr: detachable MANAGED_POINTER
 			-- Managed pointer for internal use	
 
 invariant

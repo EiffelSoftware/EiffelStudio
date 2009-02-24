@@ -236,7 +236,7 @@ feature -- Measurement
 
 feature {NONE} -- Implementation
 
-	str_text: ?WEL_STRING
+	str_text: detachable WEL_STRING
 			-- C string to save the text
 
 feature {WEL_LIST_VIEW} -- Implementation

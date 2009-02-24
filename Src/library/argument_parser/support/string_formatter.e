@@ -69,7 +69,7 @@ feature -- Formatting
 			not_a_args_is_empty: not a_args.is_empty
 		local
 			l_str: STRING_32
-			l_arg: ?ANY
+			l_arg: detachable ANY
 			l_count: INTEGER
 			l_arg_count: INTEGER
 			l_match: BOOLEAN

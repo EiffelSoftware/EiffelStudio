@@ -73,7 +73,7 @@ feature -- Access
 			l_formatter: BINARY_FORMATTER
 			l_mem: SYSTEM_MEMORY_STREAM
 			l_buf: NATIVE_ARRAY [NATURAL_8]
-			l_result: ?ANY
+			l_result: detachable ANY
 		do
 			create l_buf.make (buffer_size)
 			{MARSHAL}.copy (item, l_buf, 0, buffer_size)
@@ -352,7 +352,7 @@ feature -- Input
 
 feature {NONE} -- Not exported
 
-	name: ?STRING
+	name: detachable STRING
 			-- Not meaningful
 		do
 		end

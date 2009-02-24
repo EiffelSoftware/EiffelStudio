@@ -37,7 +37,7 @@ feature -- String encoding convertion
 			l_error: INTEGER
 			l_retried: BOOLEAN
 			l_converted: STRING_GENERAL
-			l_exception: ?EXCEPTION
+			l_exception: detachable EXCEPTION
 		do
 			if not l_retried then
 				l_big_endian := is_big_endian_code_page (a_from_code_page) or else (not is_little_endian and not is_little_endian_code_page (a_from_code_page))
@@ -115,7 +115,7 @@ feature -- String encoding convertion
 				l_pointer.memory_free
 			end
 			l_exception := exception_manager.last_exception
-			if l_exception /= Void and then {l_failure: CONVERSION_FAILURE} l_exception.original then
+			if l_exception /= Void and then attached {CONVERSION_FAILURE} l_exception.original as l_failure then
 					-- In the future, a proper mechanism should be worked out
 					-- to reflect such internal errors. For now the rescue
 					-- is mostly for debugging.

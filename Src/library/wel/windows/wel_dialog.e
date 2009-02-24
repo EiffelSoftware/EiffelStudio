@@ -32,7 +32,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_by_id (a_parent: ?WEL_WINDOW; an_id: INTEGER)
+	make_by_id (a_parent: detachable WEL_WINDOW; an_id: INTEGER)
 			-- Initialize a loadable dialog box identified by
 			-- `an_id' using `a_parent' as parent.
 		require
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			dialog_children_not_void: dialog_children /= Void
 		end
 
-	make_by_name (a_parent: ?WEL_COMPOSITE_WINDOW; a_name: STRING_GENERAL)
+	make_by_name (a_parent: detachable WEL_COMPOSITE_WINDOW; a_name: STRING_GENERAL)
 			-- Initialize a loadable dialog box identified by
 			-- `a_name' using `a_parent' as parent.
 		require
@@ -60,11 +60,11 @@ feature {NONE} -- Initialization
 			create dialog_children.make
 		ensure
 			parent_set: parent = a_parent
-			resource_name_set: {l_name: like resource_name} resource_name and then l_name.same_string (a_name)
+			resource_name_set: attached resource_name as l_name and then l_name.same_string (a_name)
 			dialog_children_not_void: dialog_children /= Void
 		end
 
-	make_by_template (a_parent: ?WEL_COMPOSITE_WINDOW; a_template: WEL_DLG_TEMPLATE)
+	make_by_template (a_parent: detachable WEL_COMPOSITE_WINDOW; a_template: WEL_DLG_TEMPLATE)
 		require
 			parent_exists: a_parent /= Void implies a_parent.exists
 		local
@@ -102,7 +102,7 @@ feature -- Basic operations
 			-- Activate the dialog box.
 			-- Can be called several times.
 		require
-			parent_exists: {l_parent: like parent} parent implies l_parent.exists
+			parent_exists: attached parent as l_parent implies l_parent.exists
 			not_exists: not exists
 		do
 			internal_dialog_make (parent, resource_id, resource_name)
@@ -198,7 +198,7 @@ feature {NONE} -- Implementation
 			registered: new_dialog = Current
 		end
 
-	resource_name: ?STRING_GENERAL
+	resource_name: detachable STRING_GENERAL
 			-- Name of the dialog in the resource.
 			-- Void if the dialog is identified by an
 			-- id (`resource_id').
@@ -275,8 +275,8 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	internal_dialog_make (a_parent: ?WEL_WINDOW; an_id: INTEGER;
-			a_name: ?STRING_GENERAL)
+	internal_dialog_make (a_parent: detachable WEL_WINDOW; an_id: INTEGER;
+			a_name: detachable STRING_GENERAL)
 			-- Create the dialog
 		deferred
 		end

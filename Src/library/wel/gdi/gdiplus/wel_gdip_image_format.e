@@ -31,7 +31,7 @@ feature -- Query
 	guid: WEL_GUID
 			-- Guid
 
-	find_encoder: ?WEL_GDIP_IMAGE_CODEC_INFO
+	find_encoder: detachable WEL_GDIP_IMAGE_CODEC_INFO
 			-- Find image encoder related.
 		local
 			l_all_encoders: ARRAYED_LIST [WEL_GDIP_IMAGE_CODEC_INFO]

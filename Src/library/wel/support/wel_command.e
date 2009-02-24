@@ -11,19 +11,19 @@ deferred class
 
 feature -- Access
 
-	message_information: ?WEL_MESSAGE_INFORMATION
+	message_information: detachable WEL_MESSAGE_INFORMATION
 			-- Information associated to the message
 
 feature -- Execution
 
-	execute (argument: ?ANY)
+	execute (argument: detachable ANY)
 			-- Execute the command with `argument'.
 		deferred
 		end
 
 feature -- Element change
 
-	set_message_information (mi: ?WEL_MESSAGE_INFORMATION)
+	set_message_information (mi: detachable WEL_MESSAGE_INFORMATION)
 			-- Set `message_information' with `mi'.
 		do
 			message_information := mi

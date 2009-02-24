@@ -17,15 +17,15 @@ inherit
 create {NONE}
 
 convert
-	to_cil: {SYSTEM_TYPE, ?SYSTEM_TYPE}
+	to_cil: {SYSTEM_TYPE, detachable SYSTEM_TYPE}
 
 feature -- Conversion
 
 	to_cil: SYSTEM_TYPE
 			-- Extract associated .NET type from Current
 		local
-			l_rt_type: ?RT_CLASS_TYPE
-			l_type: ?SYSTEM_TYPE
+			l_rt_type: detachable RT_CLASS_TYPE
+			l_type: detachable SYSTEM_TYPE
 		do
 			l_rt_type := {ISE_RUNTIME}.type_of_generic (Current, 1)
 			check l_rt_type_attached: l_rt_type /= Void end
@@ -34,7 +34,7 @@ feature -- Conversion
 			Result := l_type
 		end
 
-	adapt alias "[]" (g: ?G): ?G
+	adapt alias "[]" (g: detachable G): detachable G
 			-- Adapts `g' or calls necessary conversion routine to adapt `g'
 		do
 			Result := g
@@ -42,17 +42,17 @@ feature -- Conversion
 			adapted: Result ~ g
 		end
 
-	attempt alias "#?" (obj: ?ANY): ?G
+	attempt alias "#?" (obj: detachable ANY): detachable G
 			-- Result of assignment attempt of `obj' to an entity of type G
 		do
-			if {l_g: G} obj then
+			if attached {G} obj as l_g then
 				Result := l_g
 			end
 		ensure
 			assigned_or_void: Result = obj or Result = default_value
 		end
 
-	default_value: ?G
+	default_value: detachable G
 		do
 		end
 
@@ -62,7 +62,7 @@ feature -- Comparison
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		local
-			l_rt_type: ?RT_CLASS_TYPE
+			l_rt_type: detachable RT_CLASS_TYPE
 		do
 			l_rt_type := {ISE_RUNTIME}.type_of_generic (Current, 1)
 			check l_rt_type_attached: l_rt_type /= Void end

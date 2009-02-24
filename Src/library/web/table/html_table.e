@@ -195,7 +195,7 @@ feature -- Routines out: provide STRING representations
 			-- String representation for the attributes
 			-- of the caption
 		do
-			if {l_attr: like caption_attributes} caption_attributes then
+			if attached caption_attributes as l_attr then
 				Result := l_attr;
 			else
 				Result := "";
@@ -205,7 +205,7 @@ feature -- Routines out: provide STRING representations
 	caption_out: STRING
 			-- String representation for the caption
 		do
-			if {l_caption: like caption} caption and then not l_caption.is_empty then
+			if attached caption as l_caption and then not l_caption.is_empty then
 				Result := Caption_start.twin
 				Result.append (caption_attributes_out);
 				Result.append (Tag_end);
@@ -228,7 +228,7 @@ feature -- Routines out: provide STRING representations
 
 feature -- Attributes
 
-	caption: ?STRING;
+	caption: detachable STRING;
 
 	border_value: INTEGER;
 	row_value: INTEGER;
@@ -236,7 +236,7 @@ feature -- Attributes
 
 feature -- Set attributes
 
-	set_caption (s: ?STRING)
+	set_caption (s: detachable STRING)
 			-- Set the caption element
 		do
 			if s /= Void then
@@ -277,9 +277,9 @@ feature -- Set attributes
 
 feature {NONE}
 
-	caption_attributes: ?STRING;
+	caption_attributes: detachable STRING;
 
-	is_text (s: ?STRING): BOOLEAN
+	is_text (s: detachable STRING): BOOLEAN
 			-- Is 's' simple text or key word?
 		do
 			Result := (s /= Void) and then not (s.is_equal(Colspan) or s.is_equal(Rowspan))

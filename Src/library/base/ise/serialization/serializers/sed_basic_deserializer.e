@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Implementation: Access
 
-	dynamic_type_table: ?SPECIAL [INTEGER]
+	dynamic_type_table: detachable SPECIAL [INTEGER]
 			-- Mapping between old dynamic types and new ones.
 
 	new_dynamic_type_id (a_old_type_id: INTEGER): INTEGER

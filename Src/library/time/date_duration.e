@@ -71,7 +71,7 @@ feature -- Attribute
 
 	year: INTEGER
 
-	origin_date: ?DATE
+	origin_date: detachable DATE
 			-- Origin date of duration
 
 	days_count: INTEGER
@@ -174,7 +174,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_origin_date (d: ?DATE)
+	set_origin_date (d: detachable DATE)
 			-- Set `origin_date' to `d'.
 		do
 			origin_date := d
@@ -354,7 +354,7 @@ feature -- Conversion
 invariant
 
 	equal_signs: (has_origin_date and then
-				{l_origin_date: like origin_date} origin_date and then
+				attached origin_date as l_origin_date and then
 				canonical (l_origin_date)) implies
 			(day >= 0 and month >= 0 and year >= 0) or
 			(day <= 0 and month <= 0 and year <= 0)

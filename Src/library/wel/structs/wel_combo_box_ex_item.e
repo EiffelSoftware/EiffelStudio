@@ -217,7 +217,7 @@ feature -- Measurement
 
 feature {WEL_COMBO_BOX_EX} -- Implementation
 
-	str_text: ?WEL_STRING
+	str_text: detachable WEL_STRING
 			-- C string to save the text
 
 	set_mask (value: INTEGER)

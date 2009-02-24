@@ -94,7 +94,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	window: ?WEL_WINDOW
+	window: detachable WEL_WINDOW
 			-- The current window associated to the item.
 		local
 			window_hwmd: POINTER
@@ -176,7 +176,7 @@ feature {WEL_TAB_CONTROL} -- Implementation
 
 feature {NONE} -- Implementation
 
-	str_text: ?WEL_STRING
+	str_text: detachable WEL_STRING
 			-- C string to save the text
 
 feature {NONE} -- Externals

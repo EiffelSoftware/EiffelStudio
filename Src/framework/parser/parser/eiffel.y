@@ -37,7 +37,6 @@ create
 %left		TE_OLD
 %left		TE_DOT
 %right		TE_LPARAN
-%right		TE_ATTACHED
 
 %token <ID_AS> TE_FREE TE_ID TE_TUPLE TE_A_BIT
 %token TE_INTEGER
@@ -209,7 +208,7 @@ create
 %type <CONSTRAINT_LIST_AS> Multiple_constraint_list
 %type <CONSTRAINING_TYPE_AS> Single_constraint
 
-%expect 278
+%expect 309
 
 %%
 
@@ -2660,6 +2659,7 @@ Expression:
 			{ $$ := ast_factory.new_bin_ne_as ($1, $3, $2); has_type := True }
 	|	Qualified_binary_expression
 			{ $$ := $1; has_type := True }
+		-- The following rules adds many shift reduce/conflicts (309 vs 151 without them).
 	|	TE_ATTACHED Expression
 			{
 				$$ := ast_factory.new_object_test_as (extract_keyword ($1), Void, $2, Void, Void)

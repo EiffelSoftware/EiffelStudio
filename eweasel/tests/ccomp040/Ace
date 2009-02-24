@@ -20,6 +20,7 @@
 		<mapping old_name="DOUBLE_REF" new_name="REAL_64_REF" />
 
 		<root cluster="root_cluster" class="test" feature="make"/>
+		<setting name="inlining" value="false"/>
 		<cluster name="root_cluster" location="$CLUSTER\"/>
 
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>

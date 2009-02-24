@@ -9,9 +9,10 @@
 test_name 	c-header-mismatch
 test_description Freezing a particular system generates C code that has a different declarations for the same function, causing compilation to fail.
 
+define INSTRUCTION ""
 copy_sub 	Ace $TEST Ace
 copy_raw	a.e $CLUSTER a.e
-copy_raw	a2.e $CLUSTER a2.e
+copy_sub	a2.e $CLUSTER a2.e
 copy_raw	test.e $CLUSTER test.e
 
 copy_raw	any.e $CLUSTER any.e
@@ -68,5 +69,15 @@ compile_result 	ok
 
 c_compile_final
 c_compile_result ok
+
+define INSTRUCTION "print (v)"
+copy_sub	a2.e $CLUSTER a2.e
+
+compile_final
+compile_result 	ok
+
+c_compile_final
+c_compile_result ok
+
 
 test_end

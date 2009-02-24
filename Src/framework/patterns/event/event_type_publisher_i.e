@@ -26,7 +26,7 @@ feature -- Status report
 
 feature -- Publication
 
-	publish (a_args: ?EVENT_DATA)
+	publish (a_args: detachable EVENT_DATA)
 			-- Publish all not suspended actions from the subscription list.
 			--
 			-- `a_args': Public context arguments to forward to all subscribers.
@@ -38,7 +38,7 @@ feature -- Publication
 			is_publishing_unchanged: is_publishing = old is_publishing
 		end
 
-	publish_if (a_args: ?EVENT_DATA; a_predicate: !PREDICATE [ANY, EVENT_DATA])
+	publish_if (a_args: detachable EVENT_DATA; a_predicate: !PREDICATE [ANY, EVENT_DATA])
 			-- Publishes the event, if the subscriptions have not been suspended.
 			--
 			-- `a_args': Public context arguments to forward to all subscribers.
@@ -46,14 +46,14 @@ feature -- Publication
 		require
 			is_interface_usable: is_interface_usable
 			not_is_publishing: not is_publishing
-			a_args_is_valid: a_predicate /= Void implies a_predicate.valid_operands (a_args)
+			a_args_is_valid: attached a_predicate implies a_predicate.valid_operands (a_args)
 		deferred
 		ensure
 			is_publishing_unchanged: is_publishing = old is_publishing
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -77,11 +77,11 @@ feature -- Publication
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

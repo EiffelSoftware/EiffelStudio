@@ -36,17 +36,17 @@ feature {NONE} -- Clean up
 			-- <Precursor>
 		local
 			l_connections: like internal_connections
-			l_connection: ?G
+			l_connection: detachable G
 		do
 			if a_explicit then
 				l_connections := internal_connections
-				if l_connections /= Void then
+				if attached l_connections then
 						-- If the following is violated then some object did not disconnect the events
 					check l_connections_is_empty: l_connections.is_empty end
 					l_connections := l_connections.twin
 					from l_connections.start until l_connections.after loop
 						l_connection := l_connections.item_for_iteration
-						check l_connection_attached: l_connection /= Void end
+						check l_connection_attached: attached l_connection end
 						disconnect_events (l_connection)
 						l_connections.forth
 					end
@@ -54,27 +54,29 @@ feature {NONE} -- Clean up
 				end
 			end
 		ensure then
-			internal_connections_is_empty: {connections_e1: like internal_connections} old internal_connections implies connections_e1.is_empty
+			internal_connections_is_empty:
+				attached {like internal_connections} old internal_connections as el_connections implies
+				el_connections.is_empty
 		end
 
 feature {NONE} -- Access
 
-	frozen connections: !DS_ARRAYED_LIST [?G]
+	frozen connections: !DS_ARRAYED_LIST [detachable G]
 			-- Current connections to event connections.
 		require
-			is_interface_usable: is_interface_usable
+			is_interface_usable: is_interface_usable and then attached {USABLE_I} Current as l_result
 		local
 			l_result: like internal_connections
 		do
 			l_result := internal_connections
-			if l_result = Void then
+			if attached l_result then
+				Result := l_result
+			else
 				create Result.make (1)
 				internal_connections := Result
-			else
-				Result := l_result
 			end
 		ensure
-			result_consistent: Result ~ connections
+			result_consistent: Result = connections
 		end
 
 	frozen observer_event_action_map_fetch_action: !FUNCTION [I, TUPLE [observer: !G], !ARRAY [TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]]]
@@ -91,7 +93,7 @@ feature -- Status report
 			Result := is_interface_usable
 			if Result then
 				l_connections := internal_connections
-				if l_connections /= Void then
+				if attached l_connections then
 					Result := l_connections.has (a_observer)
 				else
 					Result := False
@@ -106,9 +108,9 @@ feature -- Event connection
 	connect_events (a_observer: !G)
 			-- <Precursor>
 		local
-			l_event_maps: !ARRAY [?TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]]
-			l_event_map: ?TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]
-			l_action: !PROCEDURE [ANY, TUPLE]
+			l_event_maps: ARRAY [detachable TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]]
+			l_event_map: detachable TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]
+			l_action: PROCEDURE [ANY, TUPLE]
 			l_upper, i: INTEGER
 		do
 				-- Subscribe to events on the observer.
@@ -121,7 +123,7 @@ feature -- Event connection
 					i > l_upper
 				loop
 					l_event_map := l_event_maps[i]
-					if l_event_map /= Void then
+					if attached l_event_map then
 						l_action := l_event_map.action
 						l_event_map.event.subscribe (l_action)
 					end
@@ -139,10 +141,10 @@ feature -- Event connection
 			-- <Precursor>
 		local
 			l_connections: like connections
-			l_maps: !ARRAY [?TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]]
-			l_map: ?TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]
-			l_action: !PROCEDURE [ANY, TUPLE]
-			l_event: !EVENT_TYPE [TUPLE]
+			l_maps: ARRAY [detachable TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]]
+			l_map: detachable TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]
+			l_action: PROCEDURE [ANY, TUPLE]
+			l_event: EVENT_TYPE [TUPLE]
 			l_upper, i: INTEGER
 		do
 				-- Remove the connection from the list of managed connections
@@ -161,7 +163,7 @@ feature -- Event connection
 						i > l_upper
 					loop
 						l_map := l_maps[i]
-						if l_map /= Void then
+						if attached l_map then
 							l_action := l_map.action
 							l_event := l_map.event
 							if l_event.is_subscribed (l_action) then
@@ -180,12 +182,12 @@ feature -- Event connection
 
 feature {NONE} -- Internal implementation cache
 
-	internal_connections: ?like connections
+	internal_connections: detachable like connections
 			-- Cached version of `connections'
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -209,11 +211,11 @@ feature {NONE} -- Internal implementation cache
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -41,16 +41,16 @@ feature {NONE} -- Clean up
 			-- <Precursor>
 		do
 			activator := Void
-			internal_object := default_item
+			internal_object := default_object
 			is_revealed := False
 		ensure then
 			activator_detached: activator = Void
-			internal_object_is_default: internal_object = default_item
+			internal_object_is_default: internal_object = default_object
 		end
 
 feature -- Access
 
-	object: ?G
+	object: detachable G
 			-- <Precursor>
 		local
 			l_activator: like activator
@@ -60,7 +60,7 @@ feature -- Access
 				Result := internal_object
 			else
 				l_activator := activator
-				check l_activator_attached: l_activator /= Void end
+				check l_activator_attached: attached l_activator end
 				Result := activator.item (Void)
 					-- Detach activator as it is no longer required
 				activator := Void
@@ -68,24 +68,24 @@ feature -- Access
 				is_revealed := True
 
 				l_events := internal_activated_event
-				if l_events /= Void then
+				if attached l_events then
 					l_events.publish ([Result])
 					l_events.dispose
 				end
 			end
 		ensure then
 			internal_activated_event_disposed:
-				{el_events: like internal_activated_event} internal_activated_event implies not el_events.is_interface_usable
+				attached internal_activated_event as el_events implies not el_events.is_interface_usable
 		end
 
 feature {NONE} -- Access
 
-	activator: ?FUNCTION [ANY, TUPLE, ?G]
+	activator: detachable FUNCTION [ANY, TUPLE, detachable G]
 			-- The function use to active an object for the first time
 			-- Note: Once the object has been activated the function will not long be available.
 
-	default_item: G
-			-- Default generic item.
+	default_object: G
+			-- Default generic object.
 
 feature -- Status report
 
@@ -94,21 +94,21 @@ feature -- Status report
 
 feature -- Event
 
-	activated_event: !EVENT_TYPE [TUPLE [object: ?G]]
+	activated_event: !EVENT_TYPE [TUPLE [object: detachable G]]
 			-- Events called when the object is activated.
 		require
 			is_interface_usable: is_interface_usable
 			not_is_revealed: not is_revealed
 		local
-			l_result: ?EVENT_TYPE [TUPLE [?G]]
+			l_result: detachable EVENT_TYPE [TUPLE [detachable G]]
 		do
 			l_result := internal_activated_event
-			if l_result = Void then
+			if attached l_result then
+				Result := l_result
+			else
 				create Result
 				internal_activated_event := Result
 				automation.auto_dispose (Result)
-			else
-				Result := l_result
 			end
 		ensure
 			result_consistent: Result = activated_event
@@ -116,18 +116,18 @@ feature -- Event
 
 feature {NONE} -- Implementation: Internal cache
 
-	internal_object: ?like object
+	internal_object: detachable like object
 			-- Cached version of `object'.
 			-- Note: Do not use directly!
 
-	internal_activated_event: ?like activated_event
+	internal_activated_event: detachable like activated_event
 			-- Cached version of `activated_event'.
 			-- Note: Do not use directly!
 
 invariant
-	activator_attached: is_interface_usable implies (is_revealed implies activator /= Void)
-	activator_detached: is_interface_usable implies (is_revealed implies activator = Void)
-	is_revealed: is_interface_usable implies (internal_object /= Void implies is_revealed)
+	activator_attached: is_interface_usable implies (is_revealed implies attached activator)
+	activator_detached: is_interface_usable implies (is_revealed implies not attached activator)
+	is_revealed: is_interface_usable implies (attached internal_object implies is_revealed)
 
 note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
@@ -154,11 +154,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

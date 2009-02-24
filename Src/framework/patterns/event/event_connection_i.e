@@ -28,11 +28,13 @@ feature -- Status report
 	is_valid_connection (a_observer: !EVENT_OBSERVER_I): BOOLEAN
 			-- <Precursor>
 		do
-			Result := ({l_usable: USABLE_I} a_observer implies l_usable.is_interface_usable) and then
-				{l_observer: G} a_observer
+			Result :=
+				(attached {USABLE_I} a_observer as l_usable implies l_usable.is_interface_usable) and then
+				(attached {G} a_observer)
 		ensure
-			a_observer_is_interface_usable: Result implies  ({el_usable: USABLE_I} a_observer implies el_usable.is_interface_usable)
-			a_observer_conforms: Result implies {el_observer: G} a_observer
+			a_observer_is_interface_usable:
+				Result implies (attached {USABLE_I} a_observer as l_usable implies l_usable.is_interface_usable)
+			a_observer_conforms: Result implies attached {G} a_observer
 		end
 
 feature -- Event connection
@@ -57,7 +59,7 @@ feature -- Event connection
 		require
 			is_interface_usable: is_interface_usable
 			a_observer_is_connected: is_connected (a_observer)
-			a_observer_is_valid: ({?G}) #? a_observer /= Void
+			a_observer_is_valid: attached {G} a_observer
 		deferred
 		ensure
 			not_a_observer_is_connected: not is_connected (a_observer)

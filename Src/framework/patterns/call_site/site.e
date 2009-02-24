@@ -17,12 +17,13 @@ feature -- Initialization
 			--
 			-- `a_site': The site object to site Current with or Void to unsite.
 		require
-			is_interface_usable: a_site /= Void implies ({l_usable: USABLE_I} Current implies l_usable.is_interface_usable)
-			is_valid_site: a_site /= Void implies is_valid_site (a_site)
-			not_is_sited: a_site /= Void implies not is_sited
+			is_interface_usable: attached a_site implies
+				(attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable)
+			is_valid_site: attached a_site implies is_valid_site (a_site)
+			not_is_sited: attached a_site implies not is_sited
 		local
-			l_old_site: ?G
-			l_entities: !like siteable_entities
+			l_old_site: detachable G
+			l_entities: like siteable_entities
 		do
 			l_old_site := site
 			site := a_site
@@ -52,14 +53,15 @@ feature {NONE} -- Initialization
 			-- Note: This is only called when Current is sited with an object, not when Current is sited
 			--       with Void.
 		require
-			is_interface_usable: {l_usable: USABLE_I} Current implies l_usable.is_interface_usable
+			is_interface_usable: attached {USABLE_I} Current as l_usable implies
+				l_usable.is_interface_usable
 			is_sited: is_sited
 		do
 		end
 
 feature -- Access
 
-	site: ?G assign set_site
+	site: detachable G assign set_site
 			-- Access to sited object instance (Void if unsited)
 			--| Note: Use `set_site' instead of assigning directly in Current!
 
@@ -68,7 +70,8 @@ feature {NONE} -- Access
 	siteable_entities: !ARRAYED_LIST [!SITE [G]]
 			-- List of siteable entities to automatically site when Current is sited.
 		require
-			is_interface_usable: {l_usable: USABLE_I} Current implies l_usable.is_interface_usable
+			is_interface_usable: attached {USABLE_I} Current as l_usable implies
+				l_usable.is_interface_usable
 		do
 			create Result.make (0)
 		end
@@ -78,24 +81,24 @@ feature -- Status report
 	is_sited: BOOLEAN
 			-- Indicates if Current has been sited
 		do
-			Result := site /= Void
+			Result := attached site
 		ensure
-			site_attached: Result implies site /= Void
+			site_attached: Result implies attached site
 		end
 
-	is_valid_site (a_site: ?ANY): BOOLEAN
+	is_valid_site (a_site: detachable ANY): BOOLEAN
 			-- Determines if an object is a valid site object.
 			--
 			-- `a_site': The site object to determine validity of.
 			-- `Result': True if the site object is valid; False otherwise.
 		do
-			Result := {l_ot: G} a_site
+			Result := attached {G} a_site
 		ensure
-			not_a_catcall: {el_ot: G} a_site
+			not_a_catcall: attached {G} a_site
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -108,22 +111,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class {SITE}

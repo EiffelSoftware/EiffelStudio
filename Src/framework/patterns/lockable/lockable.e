@@ -46,7 +46,7 @@ feature -- Basic operations
 				on_locked
 			end
 			l_events := internal_locked_event
-			if l_events /= Void then
+			if attached l_events then
 				l_events.publish ([Current])
 			end
 		ensure then
@@ -66,7 +66,7 @@ feature -- Basic operations
 				on_unlocked
 			end
 			l_events := internal_unlocked_event
-			if l_events /= Void then
+			if attached l_events then
 				l_events.publish ([Current])
 			end
 		ensure then
@@ -99,12 +99,12 @@ feature -- Events
 			l_result: like internal_locked_event
 		do
 			l_result := internal_locked_event
-			if l_result = Void then
+			if attached l_result then
+				Result := l_result
+			else
 				create Result
 				internal_locked_event := Result
 				automation.auto_dispose (Result)
-			else
-				Result := l_result
 			end
 		end
 
@@ -114,22 +114,22 @@ feature -- Events
 			l_result: like internal_unlocked_event
 		do
 			l_result := internal_unlocked_event
-			if l_result = Void then
+			if attached l_result then
+				Result := l_result
+			else
 				create Result
 				internal_unlocked_event := Result
 				automation.auto_dispose (Result)
-			else
-				Result := l_result
 			end
 		end
 
 feature {NONE} -- Implementation: Internal cache
 
-	internal_locked_event: ?like locked_event
+	internal_locked_event: detachable like locked_event
 			-- Cached version of `locked_event'.
 			-- Note: Do not use directly!
 
-	internal_unlocked_event: ?like unlocked_event
+	internal_unlocked_event: detachable like unlocked_event
 			-- Cached version of `unlocked_event'.
 			-- Note: Do not use directly!
 

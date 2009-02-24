@@ -96,7 +96,7 @@ feature -- Event:
 
 feature {NONE} -- Implementation: Internal cache
 
-	internal_lockable_connection: ?like lockable_connection
+	internal_lockable_connection: detachable like lockable_connection
 			-- Cached version of `lockable_connection'.
 			-- Note: Do not use directly!
 

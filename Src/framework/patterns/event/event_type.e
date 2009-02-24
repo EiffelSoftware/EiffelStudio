@@ -32,10 +32,9 @@ feature {NONE} -- Initialization
 			-- Default initialization
 		do
 			create subscribers.make (0)
-			subscribers.set_equality_tester (create {KL_EQUALITY_TESTER [?PROCEDURE [ANY, EVENT_DATA]]})
+			subscribers.set_equality_tester (create {KL_EQUALITY_TESTER [detachable PROCEDURE [ANY, EVENT_DATA]]})
 			create suicide_actions.make (0)
-			suicide_actions.set_equality_tester (create {KL_EQUALITY_TESTER [?PROCEDURE [ANY, EVENT_DATA]]})
-			delayed_auto_dispose (agent: !ANY do create Result end)
+			suicide_actions.set_equality_tester (create {KL_EQUALITY_TESTER [detachable PROCEDURE [ANY, EVENT_DATA]]})
 		end
 
 feature {NONE} -- Clean up
@@ -55,10 +54,10 @@ feature {NONE} -- Clean up
 
 feature {NONE} -- Access
 
-	frozen subscribers: !DS_HASH_SET [?PROCEDURE [ANY, EVENT_DATA]]
+	frozen subscribers: !DS_HASH_SET [detachable PROCEDURE [ANY, EVENT_DATA]]
 			-- List of actions currently subscribed to the event.
 
-	frozen suicide_actions: !DS_HASH_SET [?PROCEDURE [ANY, EVENT_DATA]]
+	frozen suicide_actions: !DS_HASH_SET [detachable PROCEDURE [ANY, EVENT_DATA]]
 			-- List of actions that will be removed after they have been called for the first time.
 			--|This list is a subset of `subscribers'
 
@@ -145,13 +144,13 @@ feature -- Subscription
 
 feature -- Publication
 
-	publish (a_args: ?EVENT_DATA)
+	publish (a_args: detachable EVENT_DATA)
 			-- <Precursor>
 		do
 			publish_internal (a_args, Void)
 		end
 
-	publish_if (a_args: ?EVENT_DATA; a_predicate: !PREDICATE [ANY, EVENT_DATA])
+	publish_if (a_args: detachable EVENT_DATA; a_predicate: !PREDICATE [ANY, EVENT_DATA])
 			-- <Precursor>
 		do
 			publish_internal (a_args, a_predicate)
@@ -159,7 +158,7 @@ feature -- Publication
 
 feature {NONE} -- Publication
 
-	publish_internal (a_args: ?EVENT_DATA; a_predicate: ?PREDICATE [ANY, EVENT_DATA])
+	publish_internal (a_args: detachable EVENT_DATA; a_predicate: detachable PREDICATE [ANY, EVENT_DATA])
 			-- Publishes the event, if the subscriptions have not been suspended.
 			--
 			-- `a_args': Public context arguments to forward to all subscribers.
@@ -169,7 +168,7 @@ feature {NONE} -- Publication
 			not_is_publishing: not is_publishing
 		local
 			l_actions: like suicide_actions
-			l_action: ?PROCEDURE [ANY, EVENT_DATA]
+			l_action: detachable PROCEDURE [ANY, EVENT_DATA]
 			l_subscribers: like subscribers
 			l_suspended: BOOLEAN
 		do
@@ -188,7 +187,7 @@ feature {NONE} -- Publication
 					if a_predicate = Void then
 						from l_subscribers.start until l_subscribers.after loop
 							l_action := l_subscribers.item_for_iteration
-							if l_action /= Void then
+							if attached l_action then
 								l_action.call (a_args)
 							end
 							l_subscribers.forth
@@ -197,7 +196,7 @@ feature {NONE} -- Publication
 						from l_subscribers.start until l_subscribers.after loop
 							if a_predicate = Void or else a_predicate.item (a_args) then
 								l_action := l_subscribers.item_for_iteration
-								if l_action /= Void then
+								if attached l_action then
 									l_action.call (a_args)
 								end
 							end
@@ -215,7 +214,7 @@ feature {NONE} -- Publication
 
 						from l_actions.start until l_actions.after loop
 							l_action := l_actions.item_for_iteration
-							if l_action /= Void then
+							if attached l_action then
 								check is_subscribed: is_subscribed (l_action) end
 								unsubscribe (l_action)
 							end
@@ -245,7 +244,7 @@ invariant
 	not_is_suspended_implies_has_no_suspensions: not is_suspended implies suspension_count = 0
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -269,11 +268,11 @@ invariant
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

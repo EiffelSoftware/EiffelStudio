@@ -60,6 +60,7 @@ feature -- Initialization
 
 	g (o: ANY; u: STRING; i: INTEGER; b: BOOLEAN): ANY
 		do
+			Result := ""
 		ensure
 			e1: attached o
 			e2: attached o as x

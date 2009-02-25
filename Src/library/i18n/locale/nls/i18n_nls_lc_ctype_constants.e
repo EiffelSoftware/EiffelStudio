@@ -8,159 +8,826 @@ note
 class
 	I18N_NLS_LC_CTYPE_CONSTANTS
 
-feature -- LC_CTYPE constants from winnnls.h
+feature -- LC_CTYPE constants (see winnnls.h as reference)
 
-	-- Note: maximum lengths of strings can be found under
-	-- http://msdn.microsoft.com/library/default.asp?url=/library/en-us/intl/nls_0m43.asp
-	-- LC_CTYPE constants here do not have the maximum length specified if we don't use them
-	-- (When things calm down I shall prune the list)
+	-- Note: Constants information can be found under
+	-- http://msdn.microsoft.com/en-us/library/dd319079(VS.85).aspx
 
-	LOCALE_ILANGUAGE: INTEGER =               0x00000001   -- language id
-	LOCALE_SLANGUAGE: INTEGER =               0x00000002   -- localized name of language
-	LOCALE_SENGLANGUAGE: INTEGER =            0x00001001   -- English name of language
-	LOCALE_SABBREVLANGNAME: INTEGER =         0x00000003   -- abbreviated language name
-	LOCALE_SNATIVELANGNAME: INTEGER =         0x00000004   -- native name of language
+	LOCALE_ILANGUAGE: INTEGER
+			-- language id
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_ILANGUAGE;"
+		end
 
-	LOCALE_ICOUNTRY: INTEGER =                0x00000005   -- country code
-	LOCALE_SCOUNTRY: INTEGER =                0x00000006   -- localized name of country
-	LOCALE_SENGCOUNTRY: INTEGER =             0x00001002   -- English name of country
-	LOCALE_SABBREVCTRYNAME: INTEGER =         0x00000007   -- abbreviated country name
-	LOCALE_SNATIVECTRYNAME: INTEGER =         0x00000008   -- native name of country
+	LOCALE_SLANGUAGE: INTEGER
+			-- localized name of language
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SLANGUAGE;"
+		end
 
-	LOCALE_IDEFAULTLANGUAGE: INTEGER =        0x00000009   -- default language id
-	LOCALE_IDEFAULTCOUNTRY: INTEGER =         0x0000000A   -- default country code
-	LOCALE_IDEFAULTCODEPAGE: INTEGER =        0x0000000B   -- default oem code page
-	locale_idefaultcodepage_maxlen: INTEGER = 6
-	LOCALE_IDEFAULTANSICODEPAGE: INTEGER =    0x00001004   -- default ansi code page
-	locale_idefaultansicodepage_maxlen: INTEGER = 6
-	LOCALE_IDEFAULTMACCODEPAGE: INTEGER =     0x00001011   -- default mac code page
-	locale_idefaultmaccodepage_maxlen: INTEGER = 6
+	LOCALE_SENGLANGUAGE: INTEGER
+			-- English name of language
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SENGLANGUAGE;"
+		end
 
-	LOCALE_SLIST: INTEGER =                   0x0000000C   -- list item separator
-	locale_slist_maxlen:INTEGER = 4
+	LOCALE_SABBREVLANGNAME: INTEGER
+			-- abbreviated language name
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SABBREVLANGNAME;"
+		end
 
-	LOCALE_IMEASURE: INTEGER =                0x0000000D   -- 0 = metric, 1 = US
+	LOCALE_SNATIVELANGNAME: INTEGER
+			-- native name of language
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SNATIVELANGNAME;"
+		end
 
-	LOCALE_SDECIMAL: INTEGER =                0x0000000E   -- decimal separator
-	locale_sdecimal_maxlen: INTEGER = 4
-	LOCALE_STHOUSAND: INTEGER =               0x0000000F   -- thousand separator
-	locale_sthousand_maxlen: INTEGER = 4
-	LOCALE_SGROUPING : INTEGER =              0x00000010   -- digit grouping
-	locale_sgrouping_maxlen: INTEGER = 10
-	LOCALE_IDIGITS: INTEGER =                0x00000011   -- number of fractional digits
-	locale_idigits_maxlen: INTEGER = 2 -- not needed really, this can be retrieved as an integer
-	LOCALE_ILZERO: INTEGER =                  0x00000012   -- leading zeros for decimal
-	LOCALE_INEGNUMBER: INTEGER =              0x00001010   -- negative number mode
-	LOCALE_SNATIVEDIGITS: INTEGER =           0x00000013   -- native ascii 0-9
+	LOCALE_ICOUNTRY: INTEGER
+			-- country code
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_ICOUNTRY;"
+		end
 
-	LOCALE_SCURRENCY: INTEGER =               0x00000014   -- local monetary symbol
-	locale_scurrency_maxlen: INTEGER = 4
-	LOCALE_SINTLSYMBOL: INTEGER =             0x00000015   -- intl monetary symbol
-	locale_sintlsymbol_maxlen: INTEGER = 9
-	LOCALE_SMONDECIMALSEP: INTEGER =          0x00000016   -- monetary decimal separator
-	locale_smondecimalsep_maxlen: INTEGER = 4
-	LOCALE_SMONTHOUSANDSEP: INTEGER =        0x00000017   -- monetary thousand separator
-	locale_smonthousandsep_maxlen: INTEGER = 4
-	LOCALE_SMONGROUPING: INTEGER =           0x00000018   -- monetary grouping
-	locale_smongroupinglen:INTEGER = 10
-	LOCALE_ICURRDIGITS: INTEGER =            0x00000019   -- # local monetary digits
-	LOCALE_IINTLCURRDIGITS: INTEGER =        0x0000001A   -- # intl monetary digits
-	LOCALE_ICURRENCY: INTEGER =              0x0000001B   -- positive currency mode
-	LOCALE_INEGCURR: INTEGER =               0x0000001C   -- negative currency mode
+	LOCALE_SCOUNTRY: INTEGER
+			-- localized name of country
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SCOUNTRY;"
+		end
 
-	LOCALE_SDATE: INTEGER =                  0x0000001D   -- date separator
-	LOCALE_STIME: INTEGER =                  0x0000001E   -- time separator
+	LOCALE_SENGCOUNTRY: INTEGER
+			-- English name of country
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SENGCOUNTRY;"
+		end
 
-	LOCALE_SSHORTDATE: INTEGER =             0x0000001F   -- short date format string
-	locale_sshortdate_maxlen: INTEGER = 80
-	LOCALE_SLONGDATE: INTEGER =              0x00000020   -- long date format string
-	locale_slongdate_maxlen: INTEGER = 80
+	LOCALE_SABBREVCTRYNAME: INTEGER
+			-- abbreviated country name
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SABBREVCTRYNAME;"
+		end
 
-	LOCALE_STIMEFORMAT: INTEGER =            0x00001003   -- time format string
-	locale_stimeformat_maxlen: INTEGER = 80
-	LOCALE_IDATE: INTEGER =                  0x00000021   -- short date format ordering
-	LOCALE_ILDATE : INTEGER =                0x00000022   -- long date format ordering
-	LOCALE_ITIME: INTEGER =                  0x00000023   -- time format specifier
-	LOCALE_ITIMEMARKPOSN: INTEGER =          0x00001005   -- time marker position
-	LOCALE_ICENTURY: INTEGER =               0x00000024   -- century format specifier (short date)
-	LOCALE_ITLZERO: INTEGER =                0x00000025   -- leading zeros in time field
-	LOCALE_IDAYLZERO: INTEGER =              0x00000026   -- leading zeros in day field (short date)
-	LOCALE_IMONLZERO: INTEGER =              0x00000027   -- leading zeros in month field (short date)
+	LOCALE_SNATIVECTRYNAME: INTEGER
+			-- native name of country
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SNATIVECTRYNAME;"
+		end
 
-	LOCALE_S1159: INTEGER =                  0x00000028   -- AM designator
-	locale_s1159_maxlen:INTEGER = 15
-	LOCALE_S2359: INTEGER =                  0x00000029   -- PM designator
-	locale_s2359_maxlen:INTEGER = 15
+	LOCALE_IDEFAULTLANGUAGE: INTEGER
+			-- default language id
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_IDEFAULTLANGUAGE;"
+		end
 
-	LOCALE_ICALENDARTYPE: INTEGER =          0x00001009   -- type of calendar specifier
-	LOCALE_IOPTIONALCALENDAR: INTEGER =      0x0000100B   -- additional calendar types specifier
-	LOCALE_IFIRSTDAYOFWEEK: INTEGER =        0x0000100C   -- first day of week specifier
-	LOCALE_IFIRSTWEEKOFYEAR: INTEGER =       0x0000100D   -- first week of year specifier
+	LOCALE_IDEFAULTCOUNTRY: INTEGER
+			-- default country code
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_IDEFAULTCOUNTRY;"
+		end
 
-	LOCALE_SDAYNAME1: INTEGER =              0x0000002A   -- long name for Monday
-	LOCALE_SDAYNAME2: INTEGER =              0x0000002B   -- long name for Tuesday
-	LOCALE_SDAYNAME3: INTEGER =              0x0000002C   -- long name for Wednesday
-	LOCALE_SDAYNAME4: INTEGER =              0x0000002D   -- long name for Thursday
-	LOCALE_SDAYNAME5: INTEGER =             0x0000002E   -- long name for Friday
-	LOCALE_SDAYNAME6: INTEGER =              0x0000002F   -- long name for Saturday
-	LOCALE_SDAYNAME7: INTEGER =              0x00000030   -- long name for Sunday
-	locale_sdayname_maxlen: INTEGER = 80
+	LOCALE_IDEFAULTCODEPAGE: INTEGER
+			-- default oem code page
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_IDEFAULTCODEPAGE;"
+		end
 
+	LOCALE_IDEFAULTANSICODEPAGE: INTEGER
+			-- default ansi code page
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_IDEFAULTANSICODEPAGE;"
+		end
 
-	LOCALE_SABBREVDAYNAME1: INTEGER =        0x00000031   -- abbreviated name for Monday
-	LOCALE_SABBREVDAYNAME2: INTEGER =        0x00000032   -- abbreviated name for Tuesday
-	LOCALE_SABBREVDAYNAME3: INTEGER =        0x00000033   -- abbreviated name for Wednesday
-	LOCALE_SABBREVDAYNAME4: INTEGER =        0x00000034   -- abbreviated name for Thursday
-	LOCALE_SABBREVDAYNAME5: INTEGER =        0x00000035   -- abbreviated name for Friday
-	LOCALE_SABBREVDAYNAME6: INTEGER =        0x00000036   -- abbreviated name for Saturday
-	LOCALE_SABBREVDAYNAME7: INTEGER =        0x00000037   -- abbreviated name for Sunday
-	locale_sabbrevdayname_maxlen: INTEGER = 80
+	LOCALE_IDEFAULTMACCODEPAGE: INTEGER
+			-- default mac code page
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_IDEFAULTMACCODEPAGE;"
+		end
 
-	LOCALE_SMONTHNAME1: INTEGER =            0x00000038   -- long name for January
-	LOCALE_SMONTHNAME2: INTEGER =            0x00000039   -- long name for February
-	LOCALE_SMONTHNAME3: INTEGER =            0x0000003A   -- long name for March
-	LOCALE_SMONTHNAME4: INTEGER =            0x0000003B   -- long name for April
-	LOCALE_SMONTHNAME5: INTEGER =            0x0000003C   -- long name for May
-	LOCALE_SMONTHNAME6: INTEGER =            0x0000003D   -- long name for June
-	LOCALE_SMONTHNAME7: INTEGER =            0x0000003E   -- long name for July
-	LOCALE_SMONTHNAME8: INTEGER =            0x0000003F   -- long name for August
-	LOCALE_SMONTHNAME9: INTEGER =           0x00000040   -- long name for September
-	LOCALE_SMONTHNAME10: INTEGER =           0x00000041   -- long name for October
-	LOCALE_SMONTHNAME11: INTEGER =          0x00000042   -- long name for November
-	LOCALE_SMONTHNAME12: INTEGER =           0x00000043   -- long name for December
-	LOCALE_SMONTHNAME13: INTEGER =           0x0000100E   -- long name for 13th month (if exists)
-	locale_smonthname_maxlen: INTEGER = 80
+	LOCALE_SLIST: INTEGER
+			-- list item separator
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SLIST;"
+		end
 
-	LOCALE_SABBREVMONTHNAME1: INTEGER =      0x00000044   -- abbreviated name for January
-	LOCALE_SABBREVMONTHNAME2: INTEGER =      0x00000045   -- abbreviated name for February
-	LOCALE_SABBREVMONTHNAME3: INTEGER =      0x00000046   -- abbreviated name for March
-	LOCALE_SABBREVMONTHNAME4: INTEGER =      0x00000047   -- abbreviated name for April
-	LOCALE_SABBREVMONTHNAME5: INTEGER =      0x00000048   -- abbreviated name for May
-	LOCALE_SABBREVMONTHNAME6: INTEGER =      0x00000049   -- abbreviated name for June
-	LOCALE_SABBREVMONTHNAME7: INTEGER =      0x0000004A   -- abbreviated name for July
-	LOCALE_SABBREVMONTHNAME8: INTEGER =      0x0000004B   -- abbreviated name for August
-	LOCALE_SABBREVMONTHNAME9: INTEGER =      0x0000004C   -- abbreviated name for September
-	LOCALE_SABBREVMONTHNAME10: INTEGER =     0x0000004D   -- abbreviated name for October
-	LOCALE_SABBREVMONTHNAME11: INTEGER =     0x0000004E   -- abbreviated name for November
-	LOCALE_SABBREVMONTHNAME12: INTEGER =     0x0000004F   -- abbreviated name for December
-	LOCALE_SABBREVMONTHNAME13: INTEGER =     0x0000100F   -- abbreviated name for 13th month (if exists)
-	locale_sabbrevmonthname_maxlen: INTEGER = 80
+	LOCALE_IMEASURE: INTEGER
+			-- 0 = metric, 1 = US
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_IMEASURE;"
+		end
 
-	LOCALE_SPOSITIVESIGN: INTEGER =          0x00000050   -- positive sign
-	locale_spositivesign_maxlen: INTEGER = 5
-	LOCALE_SNEGATIVESIGN: INTEGER =          0x00000051   -- negative sign
-	locale_snegativesign_maxlen: INTEGER = 5
-	LOCALE_IPOSSIGNPOSN: INTEGER =           0x00000052   -- positive sign position
-	LOCALE_INEGSIGNPOSN: INTEGER =           0x00000053   -- negative sign position
-	LOCALE_IPOSSYMPRECEDES: INTEGER =        0x00000054   -- mon sym precedes pos amt
-	LOCALE_IPOSSEPBYSPACE: INTEGER =         0x00000055   -- mon sym sep by space from pos amt
-	LOCALE_INEGSYMPRECEDES: INTEGER =        0x00000056   -- mon sym precedes neg amt
-	LOCALE_INEGSEPBYSPACE: INTEGER =         0x00000057   -- mon sym sep by space from neg amt
+	LOCALE_SDECIMAL: INTEGER
+			-- decimal separator
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SDECIMAL;"
+		end
 
-	LOCALE_SISO639LANGNAME: INTEGER =        0x00000059   -- ISO abbreviated language name
-	locale_siso639langname_maxlen: INTEGER = 9
-	LOCALE_SISO3166CTRYNAME: INTEGER =       0x0000005A   -- ISO abbreviated country name
-	locale_siso3166ctryname_maxlen: INTEGER = 9;
+	LOCALE_STHOUSAND: INTEGER
+			-- thousand separator
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_STHOUSAND;"
+		end
+
+	LOCALE_SGROUPING : INTEGER
+			-- digit grouping
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SGROUPING ;"
+		end
+
+	LOCALE_IDIGITS: INTEGER
+			-- number of fractional digits
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_IDIGITS;"
+		end
+
+	LOCALE_ILZERO: INTEGER
+			-- leading zeros for decimal
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_ILZERO;"
+		end
+
+	LOCALE_INEGNUMBER: INTEGER
+			-- negative number mode
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_INEGNUMBER;"
+		end
+
+	LOCALE_SNATIVEDIGITS: INTEGER
+			-- native ascii 0-9
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SNATIVEDIGITS;"
+		end
+
+	LOCALE_SCURRENCY: INTEGER
+			-- local monetary symbol
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SCURRENCY;"
+		end
+
+	LOCALE_SINTLSYMBOL: INTEGER
+			-- intl monetary symbol
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SINTLSYMBOL;"
+		end
+
+	LOCALE_SMONDECIMALSEP: INTEGER
+			-- monetary decimal separator
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SMONDECIMALSEP;"
+		end
+
+	LOCALE_SMONTHOUSANDSEP: INTEGER
+			-- monetary thousand separator
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SMONTHOUSANDSEP;"
+		end
+
+	LOCALE_SMONGROUPING: INTEGER
+			-- monetary grouping
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SMONGROUPING;"
+		end
+
+	LOCALE_ICURRDIGITS: INTEGER
+			-- # local monetary digits
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_ICURRDIGITS;"
+		end
+
+	LOCALE_IINTLCURRDIGITS: INTEGER
+			-- # intl monetary digits
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_IINTLCURRDIGITS;"
+		end
+
+	LOCALE_ICURRENCY: INTEGER
+			-- positive currency mode
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_ICURRENCY;"
+		end
+
+	LOCALE_INEGCURR: INTEGER
+			-- negative currency mode
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_INEGCURR;"
+		end
+
+	LOCALE_SDATE: INTEGER
+			-- date separator
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SDATE;"
+		end
+
+	LOCALE_STIME: INTEGER
+			-- time separator
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_STIME;"
+		end
+
+	LOCALE_SSHORTDATE: INTEGER
+			-- short date format string
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SSHORTDATE;"
+		end
+
+	LOCALE_SLONGDATE: INTEGER
+			-- long date format string
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SLONGDATE;"
+		end
+
+	LOCALE_STIMEFORMAT: INTEGER
+			-- time format string
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_STIMEFORMAT;"
+		end
+
+	LOCALE_IDATE: INTEGER
+			-- short date format ordering
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_IDATE;"
+		end
+
+	LOCALE_ILDATE : INTEGER
+			-- long date format ordering
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_ILDATE ;"
+		end
+
+	LOCALE_ITIME: INTEGER
+			-- time format specifier
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_ITIME;"
+		end
+
+	LOCALE_ITIMEMARKPOSN: INTEGER
+			-- time marker position
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_ITIMEMARKPOSN;"
+		end
+
+	LOCALE_ICENTURY: INTEGER
+			-- century format specifier (short date)
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_ICENTURY;"
+		end
+
+	LOCALE_ITLZERO: INTEGER
+			-- leading zeros in time field
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_ITLZERO;"
+		end
+
+	LOCALE_IDAYLZERO: INTEGER
+			-- leading zeros in day field (short date)
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_IDAYLZERO;"
+		end
+
+	LOCALE_IMONLZERO: INTEGER
+			-- leading zeros in month field (short date)
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_IMONLZERO;"
+		end
+
+	LOCALE_S1159: INTEGER
+			-- AM designator
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_S1159;"
+		end
+
+	LOCALE_S2359: INTEGER
+			-- PM designator
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_S2359;"
+		end
+
+	LOCALE_ICALENDARTYPE: INTEGER
+			-- type of calendar specifier
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_ICALENDARTYPE;"
+		end
+
+	LOCALE_IOPTIONALCALENDAR: INTEGER
+			-- additional calendar types specifier
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_IOPTIONALCALENDAR;"
+		end
+
+	LOCALE_IFIRSTDAYOFWEEK: INTEGER
+			-- first day of week specifier
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_IFIRSTDAYOFWEEK;"
+		end
+
+	LOCALE_IFIRSTWEEKOFYEAR: INTEGER
+			-- first week of year specifier
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_IFIRSTWEEKOFYEAR;"
+		end
+
+	LOCALE_SDAYNAME1: INTEGER
+			-- long name for Monday
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SDAYNAME1;"
+		end
+
+	LOCALE_SDAYNAME2: INTEGER
+			-- long name for Tuesday
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SDAYNAME2;"
+		end
+
+	LOCALE_SDAYNAME3: INTEGER
+			-- long name for Wednesday
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SDAYNAME3;"
+		end
+
+	LOCALE_SDAYNAME4: INTEGER
+			-- long name for Thursday
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SDAYNAME4;"
+		end
+
+	LOCALE_SDAYNAME5: INTEGER
+			-- long name for Friday
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SDAYNAME5;"
+		end
+
+	LOCALE_SDAYNAME6: INTEGER
+			-- long name for Saturday
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SDAYNAME6;"
+		end
+
+	LOCALE_SDAYNAME7: INTEGER
+			-- long name for Sunday
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SDAYNAME7;"
+		end
+
+	LOCALE_SABBREVDAYNAME1: INTEGER
+			-- abbreviated name for Monday
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SABBREVDAYNAME1;"
+		end
+
+	LOCALE_SABBREVDAYNAME2: INTEGER
+			-- abbreviated name for Tuesday
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SABBREVDAYNAME2;"
+		end
+
+	LOCALE_SABBREVDAYNAME3: INTEGER
+			-- abbreviated name for Wednesday
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SABBREVDAYNAME3;"
+		end
+
+	LOCALE_SABBREVDAYNAME4: INTEGER
+			-- abbreviated name for Thursday
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SABBREVDAYNAME4;"
+		end
+
+	LOCALE_SABBREVDAYNAME5: INTEGER
+			-- abbreviated name for Friday
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SABBREVDAYNAME5;"
+		end
+
+	LOCALE_SABBREVDAYNAME6: INTEGER
+			-- abbreviated name for Saturday
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SABBREVDAYNAME6;"
+		end
+
+	LOCALE_SABBREVDAYNAME7: INTEGER
+			-- abbreviated name for Sunday
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SABBREVDAYNAME7;"
+		end
+
+	LOCALE_SMONTHNAME1: INTEGER
+			-- long name for January
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SMONTHNAME1;"
+		end
+
+	LOCALE_SMONTHNAME2: INTEGER
+			-- long name for February
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SMONTHNAME2;"
+		end
+
+	LOCALE_SMONTHNAME3: INTEGER
+			-- long name for March
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SMONTHNAME3;"
+		end
+
+	LOCALE_SMONTHNAME4: INTEGER
+			-- long name for April
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SMONTHNAME4;"
+		end
+
+	LOCALE_SMONTHNAME5: INTEGER
+			-- long name for May
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SMONTHNAME5;"
+		end
+
+	LOCALE_SMONTHNAME6: INTEGER
+			-- long name for June
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SMONTHNAME6;"
+		end
+
+	LOCALE_SMONTHNAME7: INTEGER
+			-- long name for July
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SMONTHNAME7;"
+		end
+
+	LOCALE_SMONTHNAME8: INTEGER
+			-- long name for August
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SMONTHNAME8;"
+		end
+
+	LOCALE_SMONTHNAME9: INTEGER
+			-- long name for September
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SMONTHNAME9;"
+		end
+
+	LOCALE_SMONTHNAME10: INTEGER
+			-- long name for October
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SMONTHNAME10;"
+		end
+
+	LOCALE_SMONTHNAME11: INTEGER
+			-- long name for November
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SMONTHNAME11;"
+		end
+
+	LOCALE_SMONTHNAME12: INTEGER
+			-- long name for December
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SMONTHNAME12;"
+		end
+
+	LOCALE_SMONTHNAME13: INTEGER
+			-- long name for 13th month (if exists)
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SMONTHNAME13;"
+		end
+
+	LOCALE_SABBREVMONTHNAME1: INTEGER
+			-- abbreviated name for January
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SABBREVMONTHNAME1;"
+		end
+
+	LOCALE_SABBREVMONTHNAME2: INTEGER
+			-- abbreviated name for February
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SABBREVMONTHNAME2;"
+		end
+
+	LOCALE_SABBREVMONTHNAME3: INTEGER
+			-- abbreviated name for March
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SABBREVMONTHNAME3;"
+		end
+
+	LOCALE_SABBREVMONTHNAME4: INTEGER
+			-- abbreviated name for April
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SABBREVMONTHNAME4;"
+		end
+
+	LOCALE_SABBREVMONTHNAME5: INTEGER
+			-- abbreviated name for May
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SABBREVMONTHNAME5;"
+		end
+
+	LOCALE_SABBREVMONTHNAME6: INTEGER
+			-- abbreviated name for June
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SABBREVMONTHNAME6;"
+		end
+
+	LOCALE_SABBREVMONTHNAME7: INTEGER
+			-- abbreviated name for July
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SABBREVMONTHNAME7;"
+		end
+
+	LOCALE_SABBREVMONTHNAME8: INTEGER
+			-- abbreviated name for August
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SABBREVMONTHNAME8;"
+		end
+
+	LOCALE_SABBREVMONTHNAME9: INTEGER
+			-- abbreviated name for September
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SABBREVMONTHNAME9;"
+		end
+
+	LOCALE_SABBREVMONTHNAME10: INTEGER
+			-- abbreviated name for October
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SABBREVMONTHNAME10;"
+		end
+
+	LOCALE_SABBREVMONTHNAME11: INTEGER
+			-- abbreviated name for November
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SABBREVMONTHNAME11;"
+		end
+
+	LOCALE_SABBREVMONTHNAME12: INTEGER
+			-- abbreviated name for December
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SABBREVMONTHNAME12;"
+		end
+
+	LOCALE_SABBREVMONTHNAME13: INTEGER
+			-- abbreviated name for 13th month (if exists)
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SABBREVMONTHNAME13;"
+		end
+
+	LOCALE_SPOSITIVESIGN: INTEGER
+			-- positive sign
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SPOSITIVESIGN;"
+		end
+
+	LOCALE_SNEGATIVESIGN: INTEGER
+			-- negative sign
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SNEGATIVESIGN;"
+		end
+
+	LOCALE_IPOSSIGNPOSN: INTEGER
+			-- positive sign position
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_IPOSSIGNPOSN;"
+		end
+
+	LOCALE_INEGSIGNPOSN: INTEGER
+			-- negative sign position
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_INEGSIGNPOSN;"
+		end
+
+	LOCALE_IPOSSYMPRECEDES: INTEGER
+			-- mon sym precedes pos amt
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_IPOSSYMPRECEDES;"
+		end
+
+	LOCALE_IPOSSEPBYSPACE: INTEGER
+			-- mon sym sep by space from pos amt
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_IPOSSEPBYSPACE;"
+		end
+
+	LOCALE_INEGSYMPRECEDES: INTEGER
+			-- mon sym precedes neg amt
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_INEGSYMPRECEDES;"
+		end
+
+	LOCALE_INEGSEPBYSPACE: INTEGER
+			-- mon sym sep by space from neg amt
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_INEGSEPBYSPACE;"
+		end
+
+	LOCALE_SISO639LANGNAME: INTEGER
+			-- ISO abbreviated language name
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SISO639LANGNAME;"
+		end
+
+	LOCALE_SISO3166CTRYNAME: INTEGER
+			-- ISO abbreviated country name
+		external
+			"C inline use <windows.h>"
+		alias
+			"return LOCALE_SISO3166CTRYNAME;"
+		end
 
 note
 	library:   "Internationalization library"

@@ -57,10 +57,8 @@ feature --Access
 			script: STRING_32
 			i: INTEGER
 		do
-			iso639 := extract_locale_string (lcid, nls_constants.locale_siso639langname,
-												nls_constants.locale_siso639langname_maxlen )
-			iso3166 := extract_locale_string (lcid, nls_constants.locale_siso3166ctryname,
-												nls_constants.locale_siso3166ctryname_maxlen )
+			iso639 := extract_locale_string (lcid, nls_constants.locale_siso639langname)
+			iso3166 := extract_locale_string (lcid, nls_constants.locale_siso3166ctryname)
 				-- We can get away with this because we know scripts is a small array
 			from
 				i := 1

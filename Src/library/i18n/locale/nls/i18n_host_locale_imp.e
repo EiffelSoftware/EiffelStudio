@@ -105,20 +105,17 @@ feature -- Code page
 
 	ansi_code_page: STRING_32
 		do
-			Result := extract_locale_string (current_lcid, nls_constants.locale_idefaultansicodepage,
-											nls_constants.locale_idefaultansicodepage_maxlen)
+			Result := extract_locale_string (current_lcid, nls_constants.locale_idefaultansicodepage)
 		end
 
 	oem_code_page: STRING_32
 		do
-			Result := extract_locale_string (current_lcid, nls_constants.locale_idefaultcodepage,
-											nls_constants.locale_idefaultcodepage_maxlen)
+			Result := extract_locale_string (current_lcid, nls_constants.locale_idefaultcodepage)
 		end
 
 	mac_code_page: STRING_32
 		do
-			Result := extract_locale_string (current_lcid, nls_constants.locale_idefaultmaccodepage,
-											nls_constants.locale_idefaultmaccodepage_maxlen)
+			Result := extract_locale_string (current_lcid, nls_constants.locale_idefaultmaccodepage)
 		end
 
 feature {NONE} -- Value formatting
@@ -126,22 +123,20 @@ feature {NONE} -- Value formatting
 	get_value_group_separator: STRING_32
 			--
 		do
-			Result := extract_locale_string (current_lcid, nls_constants.locale_sthousand,
-											nls_constants.locale_sthousand_maxlen)
+			Result := extract_locale_string (current_lcid, nls_constants.locale_sthousand)
 		end
 
 	get_value_grouping: ARRAY[INTEGER]
 			--
 		do
 			Result := grouping_string_to_integer(extract_locale_string (current_lcid,
-									nls_constants.locale_sgrouping, nls_constants.locale_sgrouping ))
+									nls_constants.locale_sgrouping))
 		end
 
 	get_value_decimal_separator: STRING_32
 			--
 		do
-			Result := extract_locale_string (current_lcid, nls_constants.locale_sdecimal,
-											nls_constants.locale_sdecimal_maxlen)
+			Result := extract_locale_string (current_lcid, nls_constants.locale_sdecimal)
 		end
 
 	get_value_numbers_after_decimal_separator: INTEGER
@@ -153,8 +148,7 @@ feature {NONE} -- Value formatting
 	get_value_number_list_separator: STRING_32
 			--
 		do
-			Result := extract_locale_string (current_lcid, nls_constants.locale_slist,
-											nls_constants.locale_slist_maxlen)
+			Result := extract_locale_string (current_lcid, nls_constants.locale_slist)
 		end
 
 feature {NONE} -- Currency formatting
@@ -162,15 +156,14 @@ feature {NONE} -- Currency formatting
 	get_currency_decimal_separator: STRING_32
 			--
 		do
-			Result := extract_locale_string (current_lcid, nls_constants.locale_smondecimalsep,
-												nls_constants.locale_smondecimalsep_maxlen )
+			Result := extract_locale_string (current_lcid, nls_constants.locale_smondecimalsep)
 		end
 
 	get_currency_grouping: ARRAY[INTEGER]
 			--
 		do
 			Result := grouping_string_to_integer(extract_locale_string (current_lcid,
-									nls_constants.locale_smongrouping, nls_constants.locale_smongrouping ))
+									nls_constants.locale_smongrouping))
 		end
 
 	get_currency_number_list_separator: STRING_32
@@ -182,8 +175,7 @@ feature {NONE} -- Currency formatting
 	get_currency_symbol: STRING_32
 			--
 		do
-			Result := extract_locale_string (current_lcid, nls_constants.locale_scurrency,
-											nls_constants.locale_scurrency_maxlen)
+			Result := extract_locale_string (current_lcid, nls_constants.locale_scurrency)
 		end
 
 	get_currency_symbol_location: INTEGER
@@ -208,8 +200,7 @@ feature {NONE} -- Currency formatting
 	get_currency_group_separator: STRING_32
 			--
 		do
-			Result := extract_locale_string (current_lcid, nls_constants.locale_spositivesign,
-											nls_constants.locale_spositivesign_maxlen)
+			Result := extract_locale_string (current_lcid, nls_constants.locale_spositivesign)
 		end
 
 	get_currency_positive_sign: STRING_32
@@ -223,15 +214,13 @@ feature {NONE} -- Currency formatting
 	get_currency_negative_sign: STRING_32
 			--
 		do
-			Result := extract_locale_string (current_lcid, nls_constants.locale_smonthousandsep,
-											nls_constants.locale_smonthousandsep_maxlen)
+			Result := extract_locale_string (current_lcid, nls_constants.locale_smonthousandsep)
 		end
 
 	get_international_currency_symbol: STRING_32
 			--
 		do
-			Result := extract_locale_string (current_lcid, nls_constants.locale_sintlsymbol,
-											nls_constants.locale_sintlsymbol_maxlen)
+			Result := extract_locale_string (current_lcid, nls_constants.locale_sintlsymbol)
 		end
 
 	get_international_currency_numbers_after_decimal_separator: INTEGER
@@ -264,16 +253,14 @@ feature {NONE} -- date and time formatting
 			--
 		do
 			Result:= translate_date_format (
-				extract_locale_string (current_lcid,nls_constants.locale_sshortdate,
-											nls_constants.locale_sshortdate_maxlen))
+				extract_locale_string (current_lcid,nls_constants.locale_sshortdate))
 		end
 
 	get_long_date_format: STRING_32
 			--
 		do
 			Result:= translate_date_format (
-				extract_locale_string (current_lcid,nls_constants.locale_slongdate,
-											nls_constants.locale_slongdate_maxlen))
+				extract_locale_string (current_lcid,nls_constants.locale_slongdate))
 		end
 
 	get_date_time_format: STRING_32
@@ -287,20 +274,13 @@ feature {NONE} -- date and time formatting
 			--
 		do
 			Result := <<
-							extract_locale_string (current_lcid, nls_constants.locale_sdayname1,
-											nls_constants.locale_sdayname_maxlen),
-							extract_locale_string (current_lcid, nls_constants.locale_sdayname2,
-											nls_constants.locale_sdayname_maxlen),
-							extract_locale_string (current_lcid, nls_constants.locale_sdayname3,
-											nls_constants.locale_sdayname_maxlen),
-							extract_locale_string (current_lcid, nls_constants.locale_sdayname4,
-											nls_constants.locale_sdayname_maxlen),
-							extract_locale_string (current_lcid, nls_constants.locale_sdayname5,
-											nls_constants.locale_sdayname_maxlen),
-							extract_locale_string (current_lcid, nls_constants.locale_sdayname6,
-											nls_constants.locale_sdayname_maxlen),
-							extract_locale_string (current_lcid, nls_constants.locale_sdayname7,
-											nls_constants.locale_sdayname_maxlen)
+							extract_locale_string (current_lcid, nls_constants.locale_sdayname1),
+							extract_locale_string (current_lcid, nls_constants.locale_sdayname2),
+							extract_locale_string (current_lcid, nls_constants.locale_sdayname3),
+							extract_locale_string (current_lcid, nls_constants.locale_sdayname4),
+							extract_locale_string (current_lcid, nls_constants.locale_sdayname5),
+							extract_locale_string (current_lcid, nls_constants.locale_sdayname6),
+							extract_locale_string (current_lcid, nls_constants.locale_sdayname7)
 						>>
 		end
 
@@ -308,20 +288,13 @@ feature {NONE} -- date and time formatting
 			--
 		do
 			Result := <<
-							extract_locale_string (current_lcid, nls_constants.locale_sabbrevdayname1,
-											nls_constants.locale_sabbrevdayname_maxlen),
-							extract_locale_string (current_lcid, nls_constants.locale_sabbrevdayname2,
-											nls_constants.locale_sabbrevdayname_maxlen),
-							extract_locale_string (current_lcid, nls_constants.locale_sabbrevdayname3,
-											nls_constants.locale_sabbrevdayname_maxlen),
-							extract_locale_string (current_lcid, nls_constants.locale_sabbrevdayname4,
-											nls_constants.locale_sabbrevdayname_maxlen),
-							extract_locale_string (current_lcid, nls_constants.locale_sabbrevdayname5,
-											nls_constants.locale_sabbrevdayname_maxlen),
-							extract_locale_string (current_lcid, nls_constants.locale_sabbrevdayname6,
-											nls_constants.locale_sabbrevdayname_maxlen),
-							extract_locale_string (current_lcid, nls_constants.locale_sabbrevdayname7,
-											nls_constants.locale_sabbrevdayname_maxlen)
+							extract_locale_string (current_lcid, nls_constants.locale_sabbrevdayname1),
+							extract_locale_string (current_lcid, nls_constants.locale_sabbrevdayname2),
+							extract_locale_string (current_lcid, nls_constants.locale_sabbrevdayname3),
+							extract_locale_string (current_lcid, nls_constants.locale_sabbrevdayname4),
+							extract_locale_string (current_lcid, nls_constants.locale_sabbrevdayname5),
+							extract_locale_string (current_lcid, nls_constants.locale_sabbrevdayname6),
+							extract_locale_string (current_lcid, nls_constants.locale_sabbrevdayname7)
 						>>
 		end
 
@@ -329,30 +302,18 @@ feature {NONE} -- date and time formatting
 			--
 		do
 			Result := <<
-							extract_locale_string (current_lcid, nls_constants.locale_smonthname1,
-											nls_constants.locale_smonthname_maxlen),
-							extract_locale_string (current_lcid, nls_constants.locale_smonthname2,
-											nls_constants.locale_smonthname_maxlen),
-							extract_locale_string (current_lcid, nls_constants.locale_smonthname3,
-											nls_constants.locale_smonthname_maxlen),
-							extract_locale_string (current_lcid, nls_constants.locale_smonthname4,
-											nls_constants.locale_smonthname_maxlen),
-							extract_locale_string (current_lcid, nls_constants.locale_smonthname5,
-											nls_constants.locale_smonthname_maxlen),
-							extract_locale_string (current_lcid, nls_constants.locale_smonthname6,
-											nls_constants.locale_smonthname_maxlen),
-							extract_locale_string (current_lcid, nls_constants.locale_smonthname7,
-											nls_constants.locale_smonthname_maxlen),
-							extract_locale_string (current_lcid, nls_constants.locale_smonthname8,
-											nls_constants.locale_smonthname_maxlen),
-							extract_locale_string (current_lcid, nls_constants.locale_smonthname9,
-											nls_constants.locale_smonthname_maxlen),
-							extract_locale_string (current_lcid, nls_constants.locale_smonthname10,
-											nls_constants.locale_smonthname_maxlen),
-							extract_locale_string (current_lcid, nls_constants.locale_smonthname11,
-											nls_constants.locale_smonthname_maxlen),
-							extract_locale_string (current_lcid, nls_constants.locale_smonthname12,
-											nls_constants.locale_smonthname_maxlen)
+							extract_locale_string (current_lcid, nls_constants.locale_smonthname1),
+							extract_locale_string (current_lcid, nls_constants.locale_smonthname2),
+							extract_locale_string (current_lcid, nls_constants.locale_smonthname3),
+							extract_locale_string (current_lcid, nls_constants.locale_smonthname4),
+							extract_locale_string (current_lcid, nls_constants.locale_smonthname5),
+							extract_locale_string (current_lcid, nls_constants.locale_smonthname6),
+							extract_locale_string (current_lcid, nls_constants.locale_smonthname7),
+							extract_locale_string (current_lcid, nls_constants.locale_smonthname8),
+							extract_locale_string (current_lcid, nls_constants.locale_smonthname9),
+							extract_locale_string (current_lcid, nls_constants.locale_smonthname10),
+							extract_locale_string (current_lcid, nls_constants.locale_smonthname11),
+							extract_locale_string (current_lcid, nls_constants.locale_smonthname12)
 						>>
 		end
 
@@ -361,30 +322,18 @@ get_abbreviated_month_names: ARRAY[STRING_32]
 			--
 		do
 			Result := <<
-							extract_locale_string (current_lcid, nls_constants.locale_sabbrevmonthname1,
-											nls_constants.locale_sabbrevmonthname_maxlen),
-							extract_locale_string (current_lcid, nls_constants.locale_sabbrevmonthname2,
-											nls_constants.locale_sabbrevmonthname_maxlen),
-							extract_locale_string (current_lcid, nls_constants.locale_sabbrevmonthname3,
-											nls_constants.locale_sabbrevmonthname_maxlen),
-							extract_locale_string (current_lcid, nls_constants.locale_sabbrevmonthname4,
-											nls_constants.locale_sabbrevmonthname_maxlen),
-							extract_locale_string (current_lcid, nls_constants.locale_sabbrevmonthname5,
-											nls_constants.locale_sabbrevmonthname_maxlen),
-							extract_locale_string (current_lcid, nls_constants.locale_sabbrevmonthname6,
-											nls_constants.locale_sabbrevmonthname_maxlen),
-							extract_locale_string (current_lcid, nls_constants.locale_sabbrevmonthname7,
-											nls_constants.locale_sabbrevmonthname_maxlen),
-							extract_locale_string (current_lcid, nls_constants.locale_sabbrevmonthname8,
-											nls_constants.locale_sabbrevmonthname_maxlen),
-							extract_locale_string (current_lcid, nls_constants.locale_sabbrevmonthname9,
-											nls_constants.locale_sabbrevmonthname_maxlen),
-							extract_locale_string (current_lcid, nls_constants.locale_sabbrevmonthname10,
-											nls_constants.locale_sabbrevmonthname_maxlen),
-							extract_locale_string (current_lcid, nls_constants.locale_sabbrevmonthname11,
-											nls_constants.locale_sabbrevmonthname_maxlen),
-							extract_locale_string (current_lcid, nls_constants.locale_sabbrevmonthname12,
-											nls_constants.locale_sabbrevmonthname_maxlen)
+							extract_locale_string (current_lcid, nls_constants.locale_sabbrevmonthname1),
+							extract_locale_string (current_lcid, nls_constants.locale_sabbrevmonthname2),
+							extract_locale_string (current_lcid, nls_constants.locale_sabbrevmonthname3),
+							extract_locale_string (current_lcid, nls_constants.locale_sabbrevmonthname4),
+							extract_locale_string (current_lcid, nls_constants.locale_sabbrevmonthname5),
+							extract_locale_string (current_lcid, nls_constants.locale_sabbrevmonthname6),
+							extract_locale_string (current_lcid, nls_constants.locale_sabbrevmonthname7),
+							extract_locale_string (current_lcid, nls_constants.locale_sabbrevmonthname8),
+							extract_locale_string (current_lcid, nls_constants.locale_sabbrevmonthname9),
+							extract_locale_string (current_lcid, nls_constants.locale_sabbrevmonthname10),
+							extract_locale_string (current_lcid, nls_constants.locale_sabbrevmonthname11),
+							extract_locale_string (current_lcid, nls_constants.locale_sabbrevmonthname12)
 						>>
 		end
 
@@ -393,23 +342,20 @@ feature {NONE} -- time formatting
 	get_am_suffix: STRING_32
 			--
 		do
-			Result := extract_locale_string (current_lcid, nls_constants.locale_s1159,
-											nls_constants.locale_s1159_maxlen)
+			Result := extract_locale_string (current_lcid, nls_constants.locale_s1159)
 		end
 
 	get_pm_suffix: STRING_32
 			--
 		do
-			Result:= extract_locale_string (current_lcid, nls_constants.locale_s2359,
-											nls_constants.locale_s2359_maxlen)
+			Result:= extract_locale_string (current_lcid, nls_constants.locale_s2359)
 		end
 
 	get_short_time_format: STRING_32
 			-- TODO: Returns native string, this needs to fixed when we get the time formatter sorted out!
 		do
 			Result:= translate_time_format (
-					extract_locale_string (current_lcid, nls_constants.locale_stimeformat,
-											nls_constants.locale_stimeformat_maxlen))
+					extract_locale_string (current_lcid, nls_constants.locale_stimeformat))
 		end
 
 	get_long_time_format: STRING_32

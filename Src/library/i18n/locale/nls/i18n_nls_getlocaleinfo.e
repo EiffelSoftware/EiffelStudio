@@ -16,7 +16,7 @@ inherit
 			{NONE} all
 		end
 
-feature -- Interface
+feature {NONE} -- Interface
 
 	extract_locale_integer (lcid: INTEGER; lc_ctype: INTEGER): INTEGER
 			--
@@ -30,27 +30,31 @@ feature -- Interface
 			]"
 		end
 
-	extract_locale_string(lcid: INTEGER; lc_ctype: INTEGER; bufferlen: INTEGER): STRING_32
+	extract_locale_string(lcid: INTEGER; lc_ctype: INTEGER): STRING_32
 			--
 		local
 			pointer: POINTER
+			l_nchar: INTEGER -- Character number including the null char
 		do
-			pointer := c_extract_locale_string(lcid, lc_ctype, bufferlen)
-			Result := pointer_to_string (pointer, bufferlen)
+			pointer := c_extract_locale_string(lcid, lc_ctype, $l_nchar)
+			Result := pointer_to_string (pointer, l_nchar)
 			pointer.memory_free
 		end
 
 feature {NONE} -- C helper
 
-	c_extract_locale_string(lcid: INTEGER; lc_ctype: INTEGER; bufferlen: INTEGER ): POINTER
+	c_extract_locale_string(lcid: INTEGER; lc_ctype: INTEGER; return_len: TYPED_POINTER [INTEGER]): POINTER
 			--
 		external
 			"C inline use <windows.h>"
 		alias
 			"[
 				TCHAR *string;
-				string = malloc(sizeof(TCHAR)*$bufferlen);
-				GetLocaleInfo((LCID) $lcid, (LCTYPE) $lc_ctype, string, (int) $bufferlen);
+				int bufferlen = GetLocaleInfo((LCID) $lcid, (LCTYPE) $lc_ctype, NULL, 0);
+				
+				*$return_len = bufferlen;
+				string = malloc(sizeof(TCHAR)*bufferlen);
+				GetLocaleInfo((LCID) $lcid, (LCTYPE) $lc_ctype, string, bufferlen);
 				return string;
 			]"
 		end
@@ -60,20 +64,14 @@ feature {NONE} -- utf16-LE (aka "wide string") handling
 	pointer_to_string(ptr: POINTER; buf_size: INTEGER): STRING_32
 			-- takes a pointer to a utf16-LE string (the LE is important!)
 			-- and returns the corresponding STRING_32 by means of Horrible Things
+			--
+			-- `buf_size', number of characters, including the null character.
 		require
 				--pointer is not null, I suppose
 			ptr_not_null: ptr /= default_pointer
-		local
-			length: INTEGER
 		do
-				-- Ignore the reminder part, when it doesn't make sense to be a character.
-			if buf_size \\ c_wcsize /= 0 then
-				length := (buf_size // c_wcsize) * c_wcsize
-			else
-				length := buf_size
-			end
-			length := length.min (c_wcslen (ptr) * c_wcsize)
-			Result := pointer_to_wide_string (ptr, length)
+				-- `buf_size - 1' to remove the null character.
+			Result := pointer_to_wide_string (ptr, (buf_size - 1) * c_wcsize)
 			Result := utf16_to_utf32 (Result)
 		end
 

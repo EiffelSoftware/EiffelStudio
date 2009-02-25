@@ -407,7 +407,7 @@ feature {NONE} -- Basic functionality
 		local
 			l_tuple: !TUPLE [index: NATURAL; outcome: ?EQA_TEST_RESULT; attempts: NATURAL]
 			l_done, l_terminate: BOOLEAN
-			l_test: !TEST_I
+			l_test: ?TEST_I
 			l_outcome: EQA_TEST_RESULT
 		do
 			from
@@ -420,6 +420,7 @@ feature {NONE} -- Basic functionality
 					test_map.search (l_tuple.index)
 					if test_map.found and not assigner.is_aborted (l_tuple.index) then
 						l_test := test_map.found_item
+						check l_test /= Void end -- implied by `found'
 						if not l_test.is_running then
 							test_suite.set_test_running (l_test)
 						end

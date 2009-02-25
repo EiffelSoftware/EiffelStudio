@@ -422,6 +422,7 @@ feature -- Status setting
 			-- <Precursor>
 		local
 			l_is_test_class: BOOLEAN
+			l_found_item: ?TEST_CLASS
 		do
 			if not is_updating_tests then
 				is_updating_tests := True
@@ -433,7 +434,9 @@ feature -- Status setting
 					old_class_map := Void
 					if test_class_map.found then
 						create old_class_map.make (1)
-						old_class_map.force (test_class_map.found_item, test_class_map.found_key)
+						l_found_item := test_class_map.found_item
+						check l_found_item /= Void end -- implied by `found'
+						old_class_map.force (l_found_item, test_class_map.found_key)
 						test_class_map.remove_found_item
 					end
 					if l_is_test_class then
@@ -578,7 +581,7 @@ feature {NONE} -- Element change
 			l_names: !DS_HASH_SET [!STRING]
 			l_features: like valid_features
 			l_cursor: DS_HASH_SET_CURSOR [!STRING]
-			l_et: !TEST_I
+			l_et: ?TEST_I
 			l_ctags, l_ftags: !DS_HASH_SET [!STRING]
 			l_tag: !STRING
 			l_name: STRING
@@ -626,6 +629,7 @@ feature {NONE} -- Element change
 					test_exists: test_routine_map.found
 				end
 				l_et := test_routine_map.found_item
+				check l_et /= Void end -- implied by `found'
 				l_features.search (l_cursor.item)
 				if l_features.found then
 					l_note_clause := l_features.found_item.indexes

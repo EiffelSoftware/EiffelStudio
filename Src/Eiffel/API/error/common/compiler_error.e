@@ -24,6 +24,146 @@ inherit
 			{NONE} all
 		end
 
+feature {NONE} -- Access
+
+	help_text: attached LIST [STRING]
+			-- Full help text loaded from disk.
+		local
+			l_cache: like help_text_cache
+			l_file_name: STRING;
+			l_file_path: FILE_NAME;
+			l_user_file_path: FILE_NAME
+			l_file: PLAIN_TEXT_FILE;
+			l_line: STRING
+			l_result: detachable ARRAYED_LIST [STRING]
+		do
+			l_file_name := help_file_name
+			l_cache := help_text_cache
+			l_result := l_cache.item (l_file_name)
+			if attached l_result then
+				Result := l_result
+			else
+					-- No data has been cached, load the text from disk.
+				if subcode /= 0 then
+					l_file_name.append_integer (subcode)
+				end
+
+				create l_file_path.make_from_string (eiffel_layout.error_path.string);
+				l_file_path.extend ("short");
+				l_file_path.set_file_name (l_file_name);
+				l_user_file_path := eiffel_layout.user_priority_file_name (l_file_path, True)
+				if attached l_user_file_path then
+					l_file_path := l_user_file_path
+				end
+
+				create l_file.make (l_file_path.string)
+				if l_file.exists then
+					create l_result.make (10)
+					from l_file.open_read until l_file.end_of_file loop
+						l_file.read_line;
+						l_line := l_file.last_string
+						if attached l_line then
+							l_result.extend (create {STRING_8}.make_from_string (l_line))
+						end
+					end
+					l_file.close
+
+						-- Remove empty-last lines
+					from l_result.finish until l_result.before or else not l_result.item.is_empty loop
+						l_result.remove
+						l_result.finish
+					end
+				else
+					create l_result.make (0)
+				end
+
+				Result := l_result
+				l_cache.put (l_result, l_file_name)
+			end
+		ensure
+			help_text_cache_has_help_file_name: help_text_cache.has (help_file_name)
+			result_is_consistent: Result = help_text
+		end
+
+	single_line_help_text: attached STRING
+			-- Help text for single line error messages.
+		local
+			l_cache: like single_line_help_text_cache
+			l_file_name: STRING
+			l_help_text: like help_text
+			l_line: STRING
+			l_text: STRING
+			l_stop: BOOLEAN
+			l_result: detachable STRING
+			i: INTEGER
+		do
+			l_file_name := help_file_name
+			l_cache := single_line_help_text_cache
+			l_result := l_cache.item (l_file_name)
+			if attached l_result then
+				Result := l_result
+			else
+				l_help_text := help_text
+				if not l_help_text.is_empty then
+					create l_text.make (150)
+					from l_help_text.start until l_help_text.after or l_stop loop
+						l_line := l_help_text.item
+						l_stop := not l_text.is_empty and then not l_line.is_empty and then not l_line.item (1).is_space
+						if not l_stop then
+							l_line := l_line.twin
+							l_line.right_adjust
+							l_line.left_adjust
+							if not l_text.is_empty then
+								l_text.append_character (' ')
+							end
+							l_text.append (l_line)
+						end
+						l_help_text.forth
+					end
+
+						-- Remove error part
+					i := l_text.index_of (':', 1)
+					if i > 0 then
+						l_text.keep_tail (l_text.count - i)
+					end
+					l_text.right_adjust
+					l_text.left_adjust
+					if not l_text.is_empty then
+						if l_text.item (l_text.count) /= '.' and then l_text.item (l_text.count).is_alpha_numeric then
+								-- Append missing punctuation
+							l_text.append_character ('.')
+						end
+						if l_text.item (1).is_alpha then
+								-- Change initial character to upper case
+							l_text.put (l_text.item (1).as_upper, 1)
+						end
+					end
+				end
+
+				if l_text = Void or else l_text.is_empty then
+					l_text := once "Unable to retrieve error help information."
+				end
+
+				Result := l_text
+				l_cache.put (Result, l_file_name)
+			end
+		ensure
+			single_line_help_text_cache_has_help_file_name: single_line_help_text_cache.has (help_file_name)
+			result_is_consistent: Result = single_line_help_text
+		end
+
+	help_text_cache: attached HASH_TABLE [ARRAYED_LIST [STRING], STRING]
+			-- Cached short help text messages, loaded from disk.
+		once
+			create Result.make (13)
+		end
+
+	single_line_help_text_cache: attached HASH_TABLE [STRING, STRING]
+			-- Cached short help text messages, loaded from disk.
+		once
+			create Result.make (13)
+		end
+
 feature {ERROR_TRACER} -- Formatting
 
 	build_explain (a_text_formatter: TEXT_FORMATTER)
@@ -88,67 +228,8 @@ feature {NONE} -- Printing for single lines
 			-- Displays single line help in `a_text_formatter'.
 		require
 			valid_st: a_text_formatter /= Void
-		local
-			l_path: STRING;
-			l_file_name: FILE_NAME;
-			l_file: PLAIN_TEXT_FILE;
-			l_text, l_line: STRING
-			l_stop: BOOLEAN
-			i: INTEGER
 		do
-			create l_file_name.make_from_string (eiffel_layout.error_path);
-			l_file_name.extend ("short");
-			l_file_name.set_file_name (help_file_name);
-			l_path := l_file_name.string
-			if subcode /= 0 then
-				l_path.append_integer (subcode)
-			end;
-			create l_file.make (l_path);
-			if l_file.exists then
-				create l_text.make (255)
-				from
-					l_file.open_read
-				until
-					l_file.end_of_file or l_stop
-				loop
-					l_file.read_line;
-					l_line := l_file.last_string
-					l_stop := not l_text.is_empty and then not l_line.is_empty and then not l_line.item (1).is_space
-					if not l_stop then
-						l_line.prune_all_leading (' ')
-						l_line.prune_all_trailing (' ')
-						if not l_text.is_empty then
-							l_text.append_character (' ')
-						end
-						l_text.append (l_line)
-					end
-				end
-				l_file.close
-
-					-- Remove error part
-				i := l_text.index_of (':', 1)
-				if i > 0 then
-					l_text.keep_tail (l_text.count - i)
-				end
-				l_text.prune_all_leading (' ')
-				l_text.prune_all_trailing (' ')
-				if not l_text.is_empty then
-					if l_text.item (l_text.count) /= '.' and then l_text.item (l_text.count).is_alpha_numeric then
-							-- Append missing punctuation
-						l_text.append_character ('.')
-					end
-					if l_text.item (1).is_alpha then
-							-- Change initial character to upper case
-						l_text.put (l_text.item (1).as_upper, 1)
-					end
-				end
-			end
-
-			if l_text = Void or else l_text.is_empty then
-				l_text := once "Unable to retrieve error help information."
-			end
-
-			a_text_formatter.add (l_text)
+			a_text_formatter.add (single_line_help_text)
 		end
 
 feature {NONE} -- Print for multiple lines
@@ -177,45 +258,31 @@ feature {NONE} -- Print for multiple lines
 		require
 			valid_st: a_text_formatter /= Void
 		local
-			l_file_name: STRING;
-			f_name: FILE_NAME;
-			file: PLAIN_TEXT_FILE;
+			l_text: like help_text
 		do
-			create f_name.make_from_string (eiffel_layout.error_path);
-			f_name.extend ("short");
-			f_name.set_file_name (help_file_name);
-			l_file_name := f_name
-			if subcode /= 0 then
-				l_file_name.append_integer (subcode)
-			end;
-			create file.make (l_file_name);
-			if file.exists then
-				from
-					file.open_read;
-				until
-					file.end_of_file
-				loop
-					file.read_line;
-					a_text_formatter.add (file.last_string.twin)
-					a_text_formatter.add_new_line;
-				end;
-				file.close;
+			a_text_formatter.add_new_line
+
+			l_text := help_text
+			if not l_text.is_empty then
+				from l_text.start until l_text.after loop
+					if not l_text.is_empty then
+						a_text_formatter.add (l_text.item)
+					end
+					a_text_formatter.add_new_line
+					l_text.forth
+				end
 			else
-				a_text_formatter.add_new_line;
 				a_text_formatter.add ("No help available for this error");
-				a_text_formatter.add_new_line;
-				a_text_formatter.add ("(cannot read file: ");
-				a_text_formatter.add (l_file_name);
+				a_text_formatter.add ("(Cannot read file: ")
+				a_text_formatter.add (help_file_name)
 				a_text_formatter.add (")");
-				a_text_formatter.add_new_line;
-				a_text_formatter.add_new_line;
-				a_text_formatter.add ("An error message should always be available.");
-				a_text_formatter.add_new_line;
-				a_text_formatter.add ("Please contact ISE.");
-				a_text_formatter.add_new_line;
 				a_text_formatter.add_new_line
-			end;
-		end;
+				a_text_formatter.add ("An error message should always be available.");
+				a_text_formatter.add ("Please contact ISE.");
+				a_text_formatter.add_new_line
+			end
+			a_text_formatter.add_new_line
+		end
 
 feature {NONE} -- Implementation
 

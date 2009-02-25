@@ -227,34 +227,34 @@ feature {NONE} -- Implementation
 			a_context_class_not_void: a_context_class /= Void
 		do
 			initialize_output
-			a_text_formatter.add ("Line: ")
+			a_text_formatter.add (once "Line: ")
 			a_text_formatter.add (line.out)
 			if a_context_class.lace_class.config_class.has_modification_date_changed then
-				a_text_formatter.add (" (source code has changed)")
+				a_text_formatter.add (once " (source code has changed)")
 				a_text_formatter.add_new_line
 			elseif not has_source_text then
-				a_text_formatter.add (" (source code is not available)")
+				a_text_formatter.add (once " (source code is not available)")
 				a_text_formatter.add_new_line
 			elseif line > 0 then
 				a_text_formatter.add_new_line
-				a_text_formatter.add ("  ")
+				a_text_formatter.add (once "  ")
 				if previous_line /= Void then
 					if not previous_line.is_empty then
-						previous_line.replace_substring_all ("%T", "  ")
+						previous_line.replace_substring_all (once "%T", once "  ")
 					end
 					a_text_formatter.add (previous_line)
 					a_text_formatter.add_new_line
 				end
-				a_text_formatter.add ("->")
+				a_text_formatter.add (once "->")
 				if not current_line.is_empty then
-					current_line.replace_substring_all ("%T", "  ")
+					current_line.replace_substring_all (once "%T", once "  ")
 				end
 				a_text_formatter.add (current_line)
 				a_text_formatter.add_new_line
 				if next_line /= Void then
-					a_text_formatter.add ("  ")
+					a_text_formatter.add (once "  ")
 					if not next_line.is_empty then
-						next_line.replace_substring_all ("%T", "  ")
+						next_line.replace_substring_all (once "%T", once "  ")
 					end
 					a_text_formatter.add (next_line)
 					a_text_formatter.add_new_line

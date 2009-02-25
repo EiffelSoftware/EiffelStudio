@@ -514,8 +514,12 @@ feature {NONE} -- C code generation
 					l_exp_class_type.skeleton.generate_workbench_size (buffer)
 				end
 				buffer.put_two_character (')', ';')
-					-- Update the type information
-				l_exp_class_type.generate_expanded_type_initialization (buffer, "sloc1", gen_param, Current)
+					-- Create expanded type based on the actual generic parameter, and not
+					-- on the recorded derivation (as it would not work if `gen_param' is
+					-- generic. (See eweasel test#exec282 and test#exec283 for an example where
+					-- it does not work).
+				l_exp_class_type.generate_expanded_type_initialization (buffer, "sloc1",
+					create {FORMAL_A}.make (False, False, 1), Current)
 			elseif final_mode and then associated_class.assertion_level.is_precondition then
 				buffer.put_gtcx
 			end
@@ -668,8 +672,10 @@ feature {NONE} -- C code generation
 						buffer.put_string ("RTLR(0, Current);")
 							-- Create expanded type based on the actual generic parameter, and not
 							-- on the recorded derivation (as it would not work if `gen_param' is
-							-- generic. (See eweasel test#exec282 for an example where it does not work).
-						l_exp_class_type.generate_expanded_creation (buffer, "Result", create {FORMAL_A}.make (False, False, 1), Current)
+							-- generic. (See eweasel test#exec282 nd test#exec283 for an example where
+							-- it does not work).
+						l_exp_class_type.generate_expanded_creation (buffer, "Result",
+							create {FORMAL_A}.make (False, False, 1), Current)
 						buffer.put_new_line
 						buffer.put_string ("memcpy (Result, ")
 						buffer.put_string ("Current + arg1 * (")

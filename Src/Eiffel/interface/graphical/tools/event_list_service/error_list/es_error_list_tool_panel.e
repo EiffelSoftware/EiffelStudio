@@ -17,6 +17,7 @@ inherit
 			on_before_initialize,
 			on_after_initialized,
 			internal_recycle,
+			internal_detach_entities,
 			create_right_tool_bar_items,
 			is_appliable_event,
 			is_event_list_synchronized_on_initialized,
@@ -173,6 +174,15 @@ feature {NONE} -- Clean up
 			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_PANEL_BASE}
 		end
 
+	internal_detach_entities
+			-- <Precursor>
+		do
+			Precursor
+			item_count_update_action := Void
+		ensure then
+			item_count_update_action_detached: not attached item_count_update_action
+		end
+
 feature {NONE} -- Access
 
 	error_count: NATURAL
@@ -183,6 +193,11 @@ feature {NONE} -- Access
 
 	managed_syntax_errors: DS_ARRAYED_LIST [EVENT_LIST_ERROR_ITEM_I]
 			-- List of managed syntax errors, used to perform error adoption.
+
+	item_count_update_action: detachable PROCEDURE [ANY, TUPLE]
+			-- Action used to perform an update on the error and warning count
+			--|Note: For performance enhancements to prevent unnecessary redraws.
+			--|      see `update_error_and_warning_counters'.
 
 feature {NONE} -- Access: Help
 
@@ -221,41 +236,58 @@ feature {NONE} -- Element change
 			-- Sets `error_count' to `a_count'
 		local
 			l_text: STRING_32
+			l_action: like item_count_update_action
 		do
 			error_count := a_count
-			create l_text.make (20)
-			l_text.append_natural_32 (a_count)
-			l_text.append_character (' ')
-			if a_count = 1 then
-				l_text.append_string (interface_names.b_error)
-			else
-				l_text.append_string (interface_names.b_errors)
-			end
-			errors_button.set_text (l_text)
-			update_tool_title_and_pixmap
 
+			l_action := item_count_update_action
+			if not attached l_action then
+					-- Create an agent to set the error count on the UI.
+				l_action := agent
+						-- Agent used to set the error count on the UI
+					do
+						if is_interface_usable and is_initialized then
+							update_error_and_warning_counters
+							item_count_update_action := Void
+						end
+					ensure
+						item_count_update_action_detached: not attached item_count_update_action
+					end
+				item_count_update_action := l_action
+				ev_application.do_once_on_idle (l_action)
+			end
 		ensure
 			error_count_set: error_count = a_count
+			item_count_update_action_attached: attached item_count_update_action
 		end
 
 	set_warning_count (a_count: like warning_count)
 			-- Sets `warning_count' to `a_count'
 		local
 			l_text: STRING_32
+			l_action: like item_count_update_action
 		do
 			warning_count := a_count
-			create l_text.make (20)
-			l_text.append_natural_32 (a_count)
-			l_text.append_character (' ')
-			if a_count = 1 then
-				l_text.append_string (interface_names.b_warning)
-			else
-				l_text.append_string (interface_names.b_warnings)
+
+			l_action := item_count_update_action
+			if not attached l_action then
+					-- Create an agent to set the error count on the UI.
+				l_action := agent
+						-- Agent used to set the error count on the UI
+					do
+						if is_interface_usable and is_initialized then
+							update_error_and_warning_counters
+							item_count_update_action := Void
+						end
+					ensure
+						item_count_update_action_detached: not attached item_count_update_action
+					end
+				item_count_update_action := l_action
+				ev_application.do_once_on_idle (l_action)
 			end
-			warnings_button.set_text (l_text)
-			update_tool_title_and_pixmap
 		ensure
 			warning_count_set: warning_count = a_count
+			item_count_update_action_attached: attached item_count_update_action
 		end
 
 feature {NONE} -- Status report
@@ -717,6 +749,37 @@ feature {NONE} -- Basic operations
 				go_to_next_warning_command.disable_sensitive
 				go_to_previous_warning_command.disable_sensitive
 			end
+		end
+
+	update_error_and_warning_counters
+			-- Updates the error and warning counters on the user interface.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+		local
+			l_text: STRING_32
+		do
+			create l_text.make (20)
+			l_text.append_natural_32 (error_count)
+			l_text.append_character (' ')
+			if error_count = 1 then
+				l_text.append_string (interface_names.b_error)
+			else
+				l_text.append_string (interface_names.b_errors)
+			end
+			errors_button.set_text (l_text)
+
+			create l_text.make (20)
+			l_text.append_natural_32 (warning_count)
+			l_text.append_character (' ')
+			if warning_count = 1 then
+				l_text.append_string (interface_names.b_warning)
+			else
+				l_text.append_string (interface_names.b_warnings)
+			end
+			warnings_button.set_text (l_text)
+
+			update_tool_title_and_pixmap
 		end
 
 feature {ES_ERROR_LIST_COMMANDER_I} -- Basic operations: Navigation

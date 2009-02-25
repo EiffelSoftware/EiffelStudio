@@ -55,7 +55,7 @@ CURRENCY INFO TEST
     Grouping: 30
     cur nr list sep: ','
     cur num after dec: '2'
-    currency symbol:'HK'
+    currency symbol:'HK$'
     symbol location: 0
     INT cur dec sep: '.'
     INT cur gr.sep: ','
@@ -66,7 +66,7 @@ CURRENCY INFO TEST
     INT symbol location: 0
 CURRENCY FORMATTER TEST
     Original value: 1324539.2339999999
-    Formatted: HK 1324539.23
+    Formatted: HK$ 1324539.23
 VALUE INFO TEST
     value dec separator: '.'
     value numb after dec. sep: '2'

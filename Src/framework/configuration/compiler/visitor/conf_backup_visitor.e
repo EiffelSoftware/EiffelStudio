@@ -33,6 +33,9 @@ feature -- Access
 	backup_directory: DIRECTORY_NAME
 			-- Location of the backup.
 
+	is_il_generation: BOOLEAN
+			-- Are we processing backup for a project compiled for IL code generation?
+
 feature -- Update
 
 	set_backup_directory (a_dir: like backup_directory)
@@ -43,6 +46,14 @@ feature -- Update
 			backup_directory := a_dir
 		ensure
 			backup_directory_set: backup_directory = a_dir
+		end
+
+	set_is_il_generation (v: BOOLEAN)
+			-- Set `is_il_generation' to `v'
+		do
+			is_il_generation := v
+		ensure
+			is_il_generation_set: is_il_generation = v
 		end
 
 feature -- Visit nodes
@@ -105,15 +116,54 @@ feature -- Visit nodes
 			l_loc: CONF_FILE_LOCATION
 			l_file: FILE_NAME
 		do
-			l_as := an_assembly.location.evaluated_path
-			if not l_as.is_empty then
-				l_new_as := an_assembly.location.evaluated_file
-				create l_loc.make ("..\"+l_new_as, an_assembly.target)
-				an_assembly.set_location (l_loc)
-				create l_file.make_from_string (backup_directory)
-				l_file.set_file_name (l_new_as)
-					-- copy assembly
-				file_system.copy_file (l_as, l_file)
+				-- If we are in IL code generation and that we do not handle assemblies specified by their name, version, public token, culture
+				-- we need to copy the assembly.
+			if is_il_generation and then not an_assembly.is_non_local_assembly then
+					-- Assembly was specifed as a path but actually is a GAC assembly, we skip it.
+				if attached {CONF_PHYSICAL_ASSEMBLY} an_assembly.physical_assembly as l_assembly and then l_assembly.is_in_gac then
+				else
+					l_as := an_assembly.location.evaluated_path
+					if not l_as.is_empty then
+						l_new_as := an_assembly.location.evaluated_file
+						create l_loc.make ("..\"+l_new_as, an_assembly.target)
+						an_assembly.set_location (l_loc)
+						create l_file.make_from_string (backup_directory)
+						l_file.set_file_name (l_new_as)
+							-- copy assembly
+						file_system.copy_file (l_as, l_file)
+					end
+				end
 			end
 		end
+note
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

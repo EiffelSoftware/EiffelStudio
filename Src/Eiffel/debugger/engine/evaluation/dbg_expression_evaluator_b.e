@@ -82,7 +82,7 @@ feature {DBG_EXPRESSION_EVALUATOR} -- Evaluation data
 	tmp_target_dump_value: DUMP_VALUE
 			-- Temporary target value
 		do
-			if {r: like tmp_target} tmp_target then
+			if attached tmp_target as r then
 				Result := r.value
 			end
 		end
@@ -150,7 +150,7 @@ feature {NONE} -- Evaluation
 					--| Compute and get `expression_byte_node'
 				get_byte_node
 				l_error_occurred := error_occurred or else
-						not (({expr_b: EXPR_B} byte_node) or ({inst_b: INSTR_B} byte_node))
+						not ((attached {EXPR_B} byte_node) or (attached {INSTR_B} byte_node))
 			end
 
 				--| FIXME jfiat 2004-12-09 : check if this is a true error or not ..
@@ -172,7 +172,7 @@ feature {NONE} -- Evaluation
 				if tmp_result /= Void then
 					final_result := tmp_result
 				else
-					if {expr: EXPR_B} byte_node and then {ta: TYPE_A} expr.type then
+					if (attached {EXPR_B} byte_node as expr) and then (attached expr.type as ta) then
 						create final_result.make
 						final_result.failed := True
 						final_result.suggest_static_class (ta.associated_class)
@@ -192,7 +192,7 @@ feature {NONE} -- Evaluation
 										error_occurred
 										or (final_result /= Void and then final_result.failed)
 										or (final_result /= Void and then
-											{pdv: DUMP_VALUE} final_result.value and then
+											(attached final_result.value as pdv) and then
 												(pdv.is_type_procedure_return or pdv.is_void)
 											)
 										)
@@ -217,9 +217,9 @@ feature {NONE} -- Evaluation
 				if not keep_assertion_checking then
 					debugger_manager.application.disable_assertion_check
 				end
-				if {expr_b: EXPR_B} byte_node then
+				if attached {EXPR_B} byte_node as expr_b then
 					process_expression_evaluation (expr_b)
-				elseif {inst_b: INSTR_B} byte_node then
+				elseif attached {INSTR_B} byte_node as inst_b then
 					process_instruction_evaluation (inst_b)
 				else
 					--| Error: no expression or instruction!!
@@ -478,24 +478,8 @@ feature {BYTE_NODE} -- Visitor
 
 	process_bin_eq_b (a_node: BIN_EQ_B)
 			-- Process `a_node'.
-		local
-			o: like operands_for_binary_b
-			b: BOOLEAN
-			l,r: DBG_EVALUATED_VALUE
 		do
-			o := operands_for_binary_b (a_node)
-			l := o.left
-			r := o.right
-
-			if
-				(l /= Void and then l.has_value) and
-				(r /= Void and then r.has_value)
-			then
-				b := l.same_as (r)
-			end
-			if not error_occurred then
-				create tmp_result.make_with_value (Debugger_manager.Dump_value_factory.new_boolean_value (b, debugger_manager.compiler_data.boolean_class_c))
-			end
+			process_bin_equal_b_node (a_node, False)
 		end
 
 	process_bin_free_b (a_node: BIN_FREE_B)
@@ -548,24 +532,8 @@ feature {BYTE_NODE} -- Visitor
 
 	process_bin_ne_b (a_node: BIN_NE_B)
 			-- Process `a_node'.
-		local
-			o: like operands_for_binary_b
-			b: BOOLEAN
-			l,r: DBG_EVALUATED_VALUE
 		do
-			o := operands_for_binary_b (a_node)
-			l := o.left
-			r := o.right
-
-			if
-				(l /= Void and then l.has_value) and
-				(r /= Void and then r.has_value)
-			then
-				b := not l.same_as (r)
-			end
-			if not error_occurred then
-				create tmp_result.make_with_value (Debugger_manager.Dump_value_factory.new_boolean_value (b, debugger_manager.compiler_data.boolean_class_c))
-			end
+			process_bin_equal_b_node (a_node, True)
 		end
 
 	process_bin_not_tilde_b (a_node: BIN_NOT_TILDE_B)
@@ -616,8 +584,37 @@ feature {BYTE_NODE} -- Visitor
 
 	process_bin_tilde_b (a_node: BIN_TILDE_B)
 			-- Process `a_node'.
+		local
+			o: like operands_for_binary_b
+			b: BOOLEAN
+			l, r: DBG_EVALUATED_VALUE
 		do
-			process_binary_b (a_node)
+			o := operands_for_binary_b (a_node)
+			l := o.left
+			r := o.right
+			if not error_occurred then
+				if l = Void and r = Void then
+					dbg_error_handler.notify_error_exception_internal_issue
+				else
+					if l.has_attached_value then     --| l/=Void
+						if r.has_attached_value then --| l/=Void and r/=Void
+							b := values_with_same_type (l, r)
+								and then is_equal_evaluation_on_values (l, r)
+						else                         --| l/=Void and r=Void
+							b := False
+						end
+					else --| l=Void
+						if r.has_attached_value then --| l=Void and r/=Void
+							b := False
+						else                         --| l=Void and r=Void
+							b := True
+						end
+					end
+				end
+			end
+			if not error_occurred then
+				create tmp_result.make_with_value (debugger_manager.dump_value_factory.new_boolean_value (b, debugger_manager.compiler_data.boolean_class_c))
+			end
 		end
 
 	process_bin_xor_b (a_node: BIN_XOR_B)
@@ -1506,8 +1503,35 @@ feature {NONE} -- Visitor: implementation
 		do
 			if a_node.access /= Void then
 				a_node.nested_b.process (Current)
+			elseif attached {BIN_TILDE_B} a_node as tb then
+				tb.process (Current)
 			else
 				dbg_error_handler.notify_error_not_supported (a_node)
+			end
+		end
+
+	process_bin_equal_b_node (a_node: BIN_EQUAL_B; a_is_not: BOOLEAN)
+			-- Process BIN EQUAL B node `a_node'
+			-- and if `a_is_not' is true, return the negation
+		local
+			o: like operands_for_binary_b
+			b: BOOLEAN
+			l,r: DBG_EVALUATED_VALUE
+		do
+			o := operands_for_binary_b (a_node)
+			l := o.left
+			r := o.right
+
+			if not error_occurred then
+				if l /= Void and r /= Void then
+					b := equal_evaluation_on_values (l, r)
+					if a_is_not then
+						b := not b
+					end
+				end
+			end
+			if not error_occurred then
+				create tmp_result.make_with_value (Debugger_manager.Dump_value_factory.new_boolean_value (b, debugger_manager.compiler_data.boolean_class_c))
 			end
 		end
 
@@ -1521,7 +1545,9 @@ feature {NONE} -- Visitor: implementation
 			l_right := a_node.right
 
 			l_left_value := standalone_evaluation_expr_b (l_left)
-			l_right_value := standalone_evaluation_expr_b (l_right)
+			if not error_occurred then
+				l_right_value := standalone_evaluation_expr_b (l_right)
+			end
 			Result := [l_left_value, l_right_value]
 		end
 
@@ -1774,7 +1800,7 @@ feature {NONE} -- Visitor: implementation
 			l_expr_b: EXPR_B
 			l_tmp_target_backup: like tmp_target
 		do
-			if {l_param_b: PARAMETER_B} a_node then
+			if attached {PARAMETER_B} a_node as l_param_b then
 				l_expr_b := l_param_b.expression
 			else
 				l_expr_b := a_node
@@ -1986,6 +2012,88 @@ feature {NONE} -- Evaluation: implementation
 			end
 		end
 
+	values_with_same_type (a_left, a_right: DBG_EVALUATED_VALUE): BOOLEAN
+		require
+			a_left_attached: a_left /= Void
+			a_right_attached: a_right /= Void
+		do
+			Result := a_left.dynamic_type ~ a_right.dynamic_type
+		end
+
+	is_equal_evaluation_on_values (a_left, a_right: DBG_EVALUATED_VALUE): BOOLEAN
+			-- Compare using `is_equal'
+		require else
+			same_type: values_with_same_type (a_left, a_right)
+		local
+			cl: CLASS_C
+			f: FEATURE_I
+			params: ARRAYED_LIST [DUMP_VALUE]
+			l_tmp_result_value_backup: like tmp_result
+			l_tmp_target_backup: like tmp_target
+			a_boolean: like tmp_result
+		do
+			cl := a_left.dynamic_class
+			if cl /= Void then
+				f := is_equal_feature (cl)
+			end
+			if f /= Void then
+					-- Backup
+				l_tmp_result_value_backup := tmp_result
+				l_tmp_target_backup := tmp_target
+
+				create params.make_from_array (<<a_right.value>>)
+				evaluate_routine (Void, a_left.value, cl, f, params)
+				a_boolean := tmp_result
+				-- Restore
+				tmp_result := l_tmp_result_value_backup
+				tmp_target := l_tmp_target_backup
+			else
+				dbg_error_handler.notify_error_evaluation_report_to_support (Void)
+			end
+			if a_boolean /= Void and then
+				a_boolean.has_value and then
+				(attached a_boolean.value as a_value) and then
+				a_value.is_type_boolean
+			then
+				Result := a_value.as_dump_value_basic.value_boolean
+			else
+				dbg_error_handler.notify_error_evaluation_report_to_support (Void)
+			end
+		end
+
+	equal_evaluation_on_values (a_left, a_right: DBG_EVALUATED_VALUE): BOOLEAN
+			-- Compare using ` = '
+		local
+			l_left_value, l_right_value: DUMP_VALUE
+		do
+			if a_left.has_attached_value then 		--| l/=Void
+				if a_right.has_attached_value then 	--| l/= Void and r/=Void
+					l_left_value := a_left.value
+					l_right_value := a_right.value
+					check l_left_value /= Void end
+					check l_right_value /= Void end
+					if l_left_value.type = l_right_value.type then
+						if l_left_value.is_type_expanded_object then
+							Result := is_equal_evaluation_on_values (a_left, a_right)
+						else
+							Result := l_left_value.identical_to (l_right_value)
+						end
+					else
+						Result := False
+					end
+				else					  			--| l/=Void and r=Void
+					Result := False
+				end
+			else 					 				--| l=Void
+				if a_right.has_attached_value then 	--| l= Void and r/=Void
+					Result := False
+				else					  			--| l=Void and r=Void
+					Result := True
+				end
+			end
+--			Result := a_left.identical_to (a_right)
+		end
+
 feature -- Context: Element change
 
 	init_context_with_current_callstack
@@ -2173,7 +2281,7 @@ feature -- Access
 
 				--| Get expression_byte_node
 			get_byte_node
-			if not error_occurred and then {expr: EXPR_B} byte_node then
+			if not error_occurred and then (attached {EXPR_B} byte_node as expr) then
 --| Since the Byte_context is used only by debugger and code generation
 --| there is no need to restore previous context
 --| (see below the commented line for restoring class_type_context)
@@ -2320,9 +2428,14 @@ feature {NONE} -- Implementation
 							Ast_context.set_current_feature (context_feature)
 							Ast_context.set_written_class (context_feature.written_class)
 
-							fixme ("jfiat [2004/10/16] : Seems pretty heavy computing ..")
+							debug ("refactor_fixme")
+								fixme ("jfiat [2004/10/16] : Seems pretty heavy computing ..")
+							end
+
 							l_byte_code := context_feature.byte_server.item (context_feature.body_index)
-							Byte_context.set_byte_code (l_byte_code)
+							if l_byte_code /= Void then
+								Byte_context.set_byte_code (l_byte_code)
+							end
 
 								--| Locals
 							f_as := context_feature.real_body

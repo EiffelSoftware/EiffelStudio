@@ -47,6 +47,17 @@ feature -- Class c
 			end
 		end
 
+	any_class_c: CLASS_C
+			-- ANY class
+		local
+			cl_i: CLASS_I
+		do
+			cl_i := Eiffel_system.system.any_class
+			if cl_i /= Void then
+				Result := cl_i.compiled_class
+			end
+		end
+
 feature -- Entry point
 
 	frozen entry_point_class_feature: TUPLE [cl: CLASS_C; feat: FEATURE_I]
@@ -78,6 +89,16 @@ feature -- Entry point
 			if t /= Void then
 				Result := t.feat.api_feature (t.cl.class_id)
 			end
+		end
+
+	frozen is_equal_feature (a_class: CLASS_C): FEATURE_I
+		require
+			a_class_attached: a_class /= Void
+		local
+			f: FEATURE_I
+		do
+			f := any_class_c.feature_named ("is_equal")
+			Result := fi_version_of_class (f, a_class)
 		end
 
 feature -- Type adaptation
@@ -357,9 +378,10 @@ feature -- Feature access
 			end
 		end
 
-	feature_i_for_class_and_offset (a_class: !CLASS_C; a_offset: INTEGER): FEATURE_I
+	feature_i_for_class_and_offset (a_class: CLASS_C; a_offset: INTEGER): FEATURE_I
 			-- Feature associated with `a_class' and `a_offset'
 		require
+			a_class_attached: a_class /= Void
 			a_class_precompiled: a_class.is_precompiled
 		local
 			ri_table: ROUT_INFO_TABLE

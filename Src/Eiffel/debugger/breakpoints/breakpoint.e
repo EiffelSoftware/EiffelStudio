@@ -354,7 +354,7 @@ feature -- Access
 			condition_attached: condition /= Void
 			eval_attached: eval /= Void
 		local
-			ncv: like last_condition_value
+			l_last_cv, l_new_cv: like last_condition_value
 		do
 			if eval.error_occurred then
 				Result := not continue_on_condition_failure
@@ -363,10 +363,19 @@ feature -- Access
 				when Condition_is_type_is_true then
 					Result := eval.value_is_true_boolean_value
 				when Condition_is_type_has_changed then
-					ncv := eval.value
-					Result := last_condition_value = Void or ncv = Void
-						or else (not ncv.same_as (last_condition_value))
-					last_condition_value := ncv
+					l_last_cv := last_condition_value
+					l_new_cv := eval.value
+					if l_last_cv = Void and l_new_cv = Void then
+						Result := False
+					elseif l_last_cv = Void then --| i.e: l_new_cv /= Void
+						Result := True
+					elseif l_new_cv = Void  then --| i.e: l_last_cv /= Void
+						Result := True
+					else --| i.e: l_last_cv /= Void and l_new_cv /= Void
+						Result := not eval.values_are_equal (l_new_cv, l_last_cv)
+					end
+
+					last_condition_value := l_new_cv
 				else
 					Result := True
 				end

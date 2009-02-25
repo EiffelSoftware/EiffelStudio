@@ -79,6 +79,15 @@ feature -- Evaluation: Access
 			end
 		end
 
+	values_are_equal (a_left, a_right: DUMP_VALUE): BOOLEAN
+			-- Are `a_left' and `a_right' equal using the `=' semantic?
+		require
+			a_left_attached: a_left /= Void
+			a_right_attached: a_right /= Void
+		do
+			Result := expression_evaluator.equal_evaluation_on_values (create {DBG_EVALUATED_VALUE}.make_with_value (a_left), create {DBG_EVALUATED_VALUE}.make_with_value (a_right))
+		end
+
 	short_text_from_errors: STRING_32
 			-- Short text from errors
 		require
@@ -243,7 +252,7 @@ feature -- Basic operations: Evaluation
 						if ev /= Void then
 							error_occurred := ev.dbg_error_handler.error_occurred
 							if not error_occurred then
-								if {r: DBG_EVALUATED_VALUE} ev.final_result then
+								if attached ev.final_result as r then
 									value := r.value
 									static_class := r.static_class
 									dynamic_class := r.dynamic_class

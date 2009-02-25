@@ -96,6 +96,22 @@ feature -- Status report
 		deferred
 		end
 
+	is_equal_evaluation_on_values (a_left, a_right: DBG_EVALUATED_VALUE): BOOLEAN
+			-- Compare using `is_equal'
+		require
+			a_left_attached: a_left /= Void and then a_left.has_attached_value
+			a_right_attached: a_right /= Void and then a_right.has_attached_value
+		deferred
+		end
+
+	equal_evaluation_on_values (a_left, a_right: DBG_EVALUATED_VALUE): BOOLEAN
+			-- Compare using ` = '
+		require
+			a_left_attached: a_left /= Void
+			a_right_attached: a_right /= Void
+		deferred
+		end
+
 feature {DBG_EXPRESSION_EVALUATION} -- Evaluation: Access
 
 	final_result: DBG_EVALUATED_VALUE

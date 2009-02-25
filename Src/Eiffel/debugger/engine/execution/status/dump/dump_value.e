@@ -187,15 +187,31 @@ feature {NONE} -- Dotnet specific
 			check only_dotnet: is_dotnet_value end
 		end
 
-feature -- Status report
+feature {DBG_EXPRESSION_EVALUATOR, DBG_EXPRESSION_EVALUATION} -- Status report
 
-	same_as (other: DUMP_VALUE): BOOLEAN
-			-- Do `Current' and `other' represent the same object, in the equality sense?
+	identical_to (other: DUMP_VALUE): BOOLEAN
+			-- Do `Current' and `other' represent the same object, in the ref equality sense?
 		require
-			valid_other: other /= Void
+			other_attached: other /= Void
 		do
-			Result := type = other.type and then output_value (False).is_equal (other.output_value (False))
+			if type = other.type then
+				inspect type
+				when type_procedure_return then
+					Result := True
+				when type_object, type_exception, type_string_dotnet then
+					Result := address.is_equal (other.address)
+				when type_expanded_object then
+					Result := output_value (False).is_equal (other.output_value (False))
+					-- FIXME: this is really poor implementation ...
+				else
+					Result := output_value (False).is_equal (other.output_value (False))
+				end
+			else
+				Result := False
+			end
 		end
+
+feature -- Conversion
 
 	to_basic: DUMP_VALUE
 			-- Convert `Current' from a reference value to a basic value, if possible.
@@ -229,6 +245,8 @@ feature -- Status report
 				end
 			end
 		end
+
+feature -- Status report
 
 	has_formatted_output: BOOLEAN
 			-- Does `Current' have an associated string representation?
@@ -958,6 +976,11 @@ feature {DEBUGGER_EXPORTER, DUMP_VALUE, DBG_EXPRESSION_EVALUATOR, DBG_EVALUATOR}
 			-- Is Current value corresponding to an object or an expanded object?
 		do
 			Result := type = Type_object or type = type_expanded_object
+		end
+
+	is_type_expanded_object: BOOLEAN
+		do
+			Result := type = type_expanded_object
 		end
 
 	is_type_manifest_string: BOOLEAN do Result := type = Type_manifest_string end

@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 		  an_exception_trace: like trace)
 			-- Create new exception.
 		require
+			an_exception_code_valid: valid_code (an_exception_code)
 			an_exception_recipient_name_not_void: an_exception_recipient_name /= Void
 			an_exception_class_name_not_void: an_exception_class_name /= Void
 			an_exception_tag_name_not_void: an_exception_tag_name /= Void
@@ -97,12 +98,22 @@ feature -- Access
 				Result := "Loop_invariant"
 			elseif code = Signal_exception then
 				Result := "Signal_exception"
+			elseif code = eiffel_runtime_panic then
+				Result := "Eiffel_runtime_panic"
 			elseif code = Rescue_exception then
 				Result := "Rescue_exception"
+			elseif code = out_of_memory then
+				Result := "Out_of_memory"
+			elseif code = resumption_failed then
+				Result := "Resumption_failed"
+			elseif code = create_on_deferred then
+				Result := "Create_on_deferred"
 			elseif code = External_exception then
 				Result := "External_exception"
 			elseif code = Void_assigned_to_expanded then
 				Result := "Void_assigned_to_expanded"
+			elseif code = exception_in_signal_handler then
+				Result := "Exception_in_signal_handler"
 			elseif code = Io_exception then
 				Result := "Io_exception"
 			elseif code = Operating_system_exception then
@@ -111,6 +122,10 @@ feature -- Access
 				Result := "Retrieve_exception"
 			elseif code = Developer_exception then
 				Result := "Developer_exception"
+			elseif code = eiffel_runtime_fatal_error then
+				Result := "Eiffel_runtime_fatal_error"
+			elseif code = dollar_applied_to_melted_feature then
+				Result := "Dollar_applied_to_melted_feature"
 			elseif code = Runtime_io_exception then
 				Result := "Runtime_io_exception"
 			elseif code = Com_exception then
@@ -121,10 +136,6 @@ feature -- Access
 				Result := "Old_exception"
 			elseif code = serialization_exception then
 				Result := "Serialization_exception"
-			else
-					check
-						dead_end: False
-					end
 			end
 		end
 
@@ -230,7 +241,7 @@ invariant
 	trace_depth_positive: trace_depth >= 0
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -254,10 +265,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

@@ -36,7 +36,7 @@ note
 		"$Revision$"
 
 class
-	ACTION_SEQUENCE [EVENT_DATA -> TUPLE create default_create end]
+	ACTION_SEQUENCE [EVENT_DATA -> ?TUPLE create default_create end]
 
 inherit
 	ARRAYED_LIST [PROCEDURE [ANY, EVENT_DATA]]
@@ -484,7 +484,7 @@ invariant
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software

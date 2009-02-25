@@ -1,11 +1,18 @@
 test_name various-object-tests
 test_description Verifying that at runtime object tests work.
 
+define COMMENT ""
 copy_sub Ace $TEST Ace
-copy_raw test.e $CLUSTER test.e
+copy_sub test.e $CLUSTER test.e
 
 compile_melted
-compile_result ok
+compile_result validity_error TEST VWOE VWOE VWOE VWOE VWOE VWOE
+
+define COMMENT "--"
+copy_sub test.e $CLUSTER test.e
+
+resume_compile
+compile_result	ok
 
 execute_work 	NONE 	exec_output1
 execute_result 	ok

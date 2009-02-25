@@ -80,23 +80,17 @@ feature -- Initialization
 			e7: attached {STRING} (old o)
 			e7: attached {STRING} (old o) as x
 
-			e1: attached u + u
-			e2: attached u + u as w
-			e3: attached {STRING} u + u
-			e4: attached {STRING} u + u as w
+$COMMENT			e1: attached u + u
+$COMMENT			e3: attached {STRING} u + u
 			e1: attached (u + u)
 			e2: attached (u + u) as w
 			e3: attached {STRING} (u + u)
 			e4: attached {STRING} (u + u) as w
 
-			e1: attached old u + u
-			e2: attached old u + u as w
-			e3: attached {STRING} old u + u
-			e4: attached {STRING} old u + u as w
-			e1: attached old u + old u
-			e2: attached old u + old u as w
-			e3: attached {STRING} old u + old u
-			e4: attached {STRING} old u + old u as w
+$COMMENT			e1: attached old u + u
+$COMMENT			e3: attached {STRING} old u + u
+$COMMENT			e1: attached old u + old u
+$COMMENT			e3: attached {STRING} old u + old u
 			e1: attached old (u + u)
 			e2: attached old (u + u) as w
 			e3: attached {STRING} old (u + u)
@@ -124,18 +118,10 @@ feature -- Initialization
 			e1: attached o ~ u
 			e1: attached o /= u
 			e1: attached o /~ u
-			e1: attached o = u as bool
-			e1: attached o ~ u as bool
-			e1: attached o /= u as bool
-			e1: attached o /~ u as bool
 			e1: attached {STRING} o = u
 			e1: attached {STRING} o ~ u
 			e1: attached {STRING} o /= u
 			e1: attached {STRING} o /~ u
-			e1: attached {STRING} o = u as bool
-			e1: attached {STRING} o ~ u as bool
-			e1: attached {STRING} o /= u as bool
-			e1: attached {STRING} o /~ u as bool
 
 			a1: attached agent f
 			a1: attached agent f as p

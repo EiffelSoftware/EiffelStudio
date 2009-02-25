@@ -31,7 +31,7 @@ feature {NONE} -- Factory
 		do
 			create {EVENT_LIST} Result.make
 		ensure
-			result_is_interface_usable: attached Result implies Result.is_interface_usable
+			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end
 
 	new_logger_service: detachable LOGGER_S
@@ -39,7 +39,7 @@ feature {NONE} -- Factory
 		do
 			create {LOGGER} Result.make
 		ensure
-			result_is_interface_usable: attached Result implies Result.is_interface_usable
+			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end
 
 	new_output_manager_service: detachable OUTPUT_MANAGER_S
@@ -54,7 +54,7 @@ feature {NONE} -- Factory
 		do
 			create {SESSION_MANAGER} Result
 		ensure
-			result_is_interface_usable: attached Result implies Result.is_interface_usable
+			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end
 
 	new_testing_service: detachable TEST_SUITE_S
@@ -63,7 +63,7 @@ feature {NONE} -- Factory
 			create {TEST_SUITE} Result.make (create {TEST_PROJECT_HELPER})
 			register_test_suite_processors (Result)
 		ensure
-			result_not_void_implies_usable: attached Result implies Result.is_interface_usable
+			result_not_void_implies_usable: Result /= Void implies Result.is_interface_usable
 		end
 
 feature {NONE} -- Registration: Output

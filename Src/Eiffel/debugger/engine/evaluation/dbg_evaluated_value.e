@@ -77,15 +77,6 @@ feature -- Status report
 			Result := value /= Void and then not value.is_void
 		end
 
-	same_as (other: DBG_EVALUATED_VALUE): BOOLEAN
-			-- Do `Current' and `other' represent the same object, in the equality sense?
-		require
-			other_attached: other /= Void
-		do
-			Result := (not has_value and not other.has_value) or else (value.same_as (other.value))
-			--| FIXME: maybe we should also compare class and type values
-		end
-
 	failed: BOOLEAN assign set_failed
 			-- Does current represent a failure?
 			-- (error occurred)
@@ -164,9 +155,12 @@ feature -- Element change
 			-- Set `static_class' to `v' if possible
 		require
 			v_attached: v /= Void
+		local
+			dc: like dynamic_class
 		do
 			if static_class = Void then
-				if {dc: like dynamic_class} dynamic_class then
+				dc := dynamic_class
+				if dc /= Void then
 					if dc.conform_to (v) then
 						static_class := v
 					end

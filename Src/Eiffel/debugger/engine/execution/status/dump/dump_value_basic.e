@@ -11,6 +11,7 @@ class
 inherit
 	DUMP_VALUE
 		redefine
+			identical_to,
 			classic_send_value,
 			output_value,
 			hexa_output_value,
@@ -399,7 +400,63 @@ feature -- Access
 			end
 		end
 
-feature -- Status report		
+feature {DBG_EXPRESSION_EVALUATOR} -- Status report
+
+	identical_to (other: DUMP_VALUE): BOOLEAN
+			-- Do `Current' and `other' represents the same object, in the ref equality sense?
+		local
+			l_other_basic: DUMP_VALUE_BASIC
+		do
+			if type = other.type then
+				l_other_basic := other.as_dump_value_basic
+				if l_other_basic /= Void then
+					inspect (type)
+					when Type_boolean then
+						Result := value_boolean = l_other_basic.value_boolean
+					when Type_character_8 then
+						Result := value_character_8 = l_other_basic.value_character_8
+					when Type_character_32 then
+						Result := value_character_32 = l_other_basic.value_character_32
+
+					when Type_integer_8 then
+						Result := value_integer_8 = l_other_basic.value_integer_8
+					when Type_integer_16 then
+						Result := value_integer_16 = l_other_basic.value_integer_16
+					when Type_integer_32 then
+						Result := value_integer_32 = l_other_basic.value_integer_32
+					when Type_integer_64 then
+						Result := value_integer_64 = l_other_basic.value_integer_64
+
+					when Type_natural_8 then
+						Result := value_integer_8 = l_other_basic.value_integer_8
+					when Type_natural_16 then
+						Result := value_integer_16 = l_other_basic.value_integer_16
+					when Type_natural_32 then
+						Result := value_integer_32 = l_other_basic.value_integer_32
+					when Type_natural_64 then
+						Result := value_integer_64 = l_other_basic.value_integer_64
+
+					when type_real_32 then
+						Result := value_real_32 = l_other_basic.value_real_32
+					when type_real_64 then
+						Result := value_real_64 = l_other_basic.value_real_64
+					when Type_pointer then
+						Result := value_pointer = l_other_basic.value_pointer
+					when Type_bits then
+						Result := value_bits = l_other_basic.value_bits
+					else
+						Result := Precursor (l_other_basic)
+					end
+				else
+					Result := Precursor (other)
+				end
+			else
+				Result := False
+			end
+		end
+
+
+feature -- Conversion		
 
 	to_basic: DUMP_VALUE
 		do

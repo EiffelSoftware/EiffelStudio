@@ -235,7 +235,6 @@ feature {NONE} -- Element change
 	set_error_count (a_count: like error_count)
 			-- Sets `error_count' to `a_count'
 		local
-			l_text: STRING_32
 			l_action: like item_count_update_action
 		do
 			error_count := a_count
@@ -264,7 +263,6 @@ feature {NONE} -- Element change
 	set_warning_count (a_count: like warning_count)
 			-- Sets `warning_count' to `a_count'
 		local
-			l_text: STRING_32
 			l_action: like item_count_update_action
 		do
 			warning_count := a_count
@@ -577,6 +575,10 @@ feature {NONE} -- Basic operations
 				else
 					create l_editor_item.make_with_text ("No error message found!")
 				end
+
+					-- Lock update of editor item until everything has been set.
+				l_editor_item.lock_update
+
 				l_editor_item.disable_full_select
 				if is_error_event (a_event_item) then
 					l_editor_item.set_pixmap (stock_pixmaps.tool_error_icon)
@@ -586,9 +588,14 @@ feature {NONE} -- Basic operations
 					check False end
 				end
 				l_editor_item.set_spacing ({ES_UI_CONSTANTS}.grid_editor_item_spacing)
+
+									-- Unlock editor item and call setting changed actions to signify that settings have changed.
+				l_editor_item.unlock_update
+				l_editor_item.try_call_setting_change_actions
+
 				a_row.set_item (error_column, l_editor_item)
 
-					-- Set row hieght
+					-- Set row height
 				a_row.set_height (l_editor_item.label_font_height.max ({ES_UI_CONSTANTS}.grid_row_height))
 
 					-- Build full error text
@@ -609,6 +616,8 @@ feature {NONE} -- Basic operations
 
 					l_editor_item := create_multiline_clickable_grid_item (l_lines, True, False)
 					l_row.set_height (l_tip.required_tooltip_height)
+						-- No extra initialization needed so update `l_editor_item' to reflect settings.
+					l_editor_item.try_call_setting_change_actions
 					l_row.set_item (error_column, l_editor_item)
 				end
 
@@ -616,6 +625,8 @@ feature {NONE} -- Basic operations
 				tracer.trace (l_gen, l_error, {ERROR_TRACER}.context)
 				if l_gen.last_line /= Void then
 					l_editor_item := create_clickable_grid_item (l_gen.last_line, False)
+						-- No extra initialization needed so update `l_editor_item' to reflect settings.
+					l_editor_item.try_call_setting_change_actions
 					a_row.set_item (context_column, l_editor_item)
 					l_content := l_gen.last_line.content
 					if not l_content.is_empty then
@@ -649,6 +660,8 @@ feature {NONE} -- Basic operations
 					create l_line.make_empty_line
 					l_line.append_token (l_pos_token)
 					l_editor_item := create_clickable_grid_item (l_line, False)
+						-- No extra initialization needed so update `l_editor_item' to reflect settings.
+					l_editor_item.try_call_setting_change_actions
 				end
 				a_row.set_item (position_column, l_editor_item)
 			end

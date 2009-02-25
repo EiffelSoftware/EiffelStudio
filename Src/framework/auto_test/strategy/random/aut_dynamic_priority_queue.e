@@ -138,16 +138,19 @@ feature -- Changing Priority
 				l_feat_table.after
 			loop
 				feature_i := l_feat_table.item_for_iteration
-				if
-					feature_i.export_status.is_exported_to (l_any_class) and then
-					not feature_i.is_prefix and then
-					not feature_i.is_infix
-				then
-					create feature_.make (feature_i, a_type)
-					if feature_i.written_class.name.is_case_insensitive_equal ("ANY") then
-						set_static_priority_of_feature (feature_, 0)
-					else
-						set_static_priority_of_feature (feature_, a_priority)
+				if not feature_i.is_prefix and then not feature_i.is_infix then
+						-- Normal exported features.
+					if feature_i.export_status.is_exported_to (l_any_class) then
+						register_feature (feature_i, a_type, False, a_priority)
+					end
+
+						-- For creators: If current feature is an exported creator, we add it.
+						-- It is possible that a feature can be used as both normal feature and creator.
+						-- In such cases, there will be two entries in `priority_table' and `feature_list_table',
+						-- one as normal feature and one as creator.
+						-- This way, classes with a single feature, which is a creator can be tested.
+					if is_exported_creator (feature_i, a_type) then
+						register_feature (feature_i, a_type, True, a_priority)
 					end
 				end
 				l_feat_table.forth
@@ -290,6 +293,66 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	register_feature (a_feature: FEATURE_I; a_type: TYPE_A; a_creator: BOOLEAN; a_priority: INTEGER) is
+			-- Register `a_feature' declared in `a_type' to be a test candidate.
+			-- `a_creator' indicates if `a_feature' should be registered as a creator.
+			-- `a_priority' is the priority under which `a_feature' should be tested.
+		require
+			a_feature_attached: a_feature /= Void
+			a_type_attached: a_type /= Void
+			a_priority_valid: a_priority >= 0
+		local
+			feature_: AUT_FEATURE_OF_TYPE
+			feature_i: FEATURE_I
+		do
+			create feature_.make (a_feature, a_type)
+			if a_creator then
+				feature_.set_is_creator (True)
+			end
+
+			if a_feature.written_class.name.is_case_insensitive_equal ("ANY") then
+				if a_creator then
+						-- If `a_feature' is a creator, even if it comes from {ANY}, we assign a positive priority
+						-- so it will be tested by AutoTest.
+					set_static_priority_of_feature (feature_, 1)
+				else
+					set_static_priority_of_feature (feature_, 0)
+				end
+			else
+				set_static_priority_of_feature (feature_, a_priority)
+			end
+		end
+
+	is_exported_creator (a_feature: FEATURE_I; a_type: TYPE_A): BOOLEAN is
+			-- Is `a_feature' declared in `a_type' a creator which is exported to all classes?
+		require
+			a_feature_attached: a_feature /= Void
+			a_type_attached: a_type /= Void
+		local
+			l_class: CLASS_C
+		do
+			if
+				a_type.has_associated_class and then
+				a_type.associated_class.creators /= Void and then
+				a_type.associated_class.creators.has (a_feature.feature_name)
+			then
+				Result := a_type.associated_class.creators.item (a_feature.feature_name).is_all
+			end
+
+			if a_type.has_associated_class then
+				l_class := a_type.associated_class
+
+				if l_class.creators /= Void and then l_class.creators.has (a_feature.feature_name) then
+						-- For normal creators.
+					Result := l_class.creators.item (a_feature.feature_name).is_all
+
+				elseif l_class.allows_default_creation and then l_class.default_create_feature.feature_name.is_equal (a_feature.feature_name) then
+						-- For default creators.
+					Result := True
+				end
+			end
+		end
+
 feature {NONE} -- Assertion helpers
 
 	is_highest_priority_valid: BOOLEAN
@@ -360,4 +423,35 @@ invariant
 	highest_priority_valid: is_highest_priority_valid
 	tables_valid: are_tables_valid
 
+note
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

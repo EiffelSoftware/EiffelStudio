@@ -14,11 +14,12 @@ inherit
 	ES_CLICKABLE_EVENT_LIST_TOOL_PANEL_BASE
 		redefine
 			build_tool_interface,
+			on_before_initialize,
 			on_after_initialized,
 			internal_recycle,
 			create_right_tool_bar_items,
 			is_appliable_event,
-			surpress_synchronization,
+			is_event_list_synchronized_on_initialized,
 			on_event_item_added,
 			on_event_item_removed,
 			on_handle_key,
@@ -52,37 +53,7 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
-
-	on_after_initialized
-			-- <Precursor>
-		do
-				-- Enable copying to clipboard
-			enable_copy_to_clipboard
-
-				-- Bind redirecting pick and drop actions
-			stone_director.bind (grid_events, Current)
-
-				-- Hook up events for session data
-			if session_manager.is_service_available then
-				session_data.session_connection.connect_events (Current)
-				if {l_expand: !BOOLEAN_REF} session_data.value_or_default (expand_errors_session_id, False) then
-					expand_errors := l_expand.item
-					if expand_errors then
-						expand_errors_button.enable_select
-					else
-						expand_errors_button.disable_select
-					end
-				end
-			end
-
-				-- Set UI based on initial state
-			update_content_applicable_navigation_buttons
-
-			Precursor
-		end
-
-feature {NONE} -- User interface initialization
+feature {NONE} -- Initialization: User interface
 
 	 build_tool_interface (a_widget: ES_GRID)
 			-- Builds the tools user interface elements.
@@ -135,6 +106,58 @@ feature {NONE} -- User interface initialization
 				a_widget.column (position_column)>>)
 		end
 
+	on_before_initialize
+			-- <Precursor>
+		do
+			Precursor
+
+				-- We want the tool to synchronize with the event list, when first initialized.
+			is_event_list_synchronized_on_initialized := True
+
+			create managed_syntax_errors.make_default
+			managed_syntax_errors.set_equality_tester (create {AGENT_BASED_EQUALITY_TESTER [EVENT_LIST_ERROR_ITEM_I]}.make (
+				agent (ia_item: EVENT_LIST_ERROR_ITEM_I; ia_other: EVENT_LIST_ERROR_ITEM_I): BOOLEAN
+						-- Equality tester to ensure two like syntax errors are considered the same.
+					do
+						Result := ia_item ~ ia_other or else (
+								ia_item /= Void and then
+								ia_other /= Void and then
+								attached {SYNTAX_ERROR} ia_item.data as l_item_error and then
+								attached {SYNTAX_ERROR} ia_other.data as l_other_error and then
+								l_item_error.line = l_other_error.line and then
+								l_item_error.column = l_other_error.column and then
+								l_item_error.file_name ~ l_other_error.file_name)
+					end))
+		end
+
+	on_after_initialized
+			-- <Precursor>
+		do
+				-- Enable copying to clipboard
+			enable_copy_to_clipboard
+
+				-- Bind redirecting pick and drop actions
+			stone_director.bind (grid_events, Current)
+
+				-- Hook up events for session data
+			if session_manager.is_service_available then
+				session_data.session_connection.connect_events (Current)
+				if {l_expand: !BOOLEAN_REF} session_data.value_or_default (expand_errors_session_id, False) then
+					is_expanding_errors := l_expand.item
+					if is_expanding_errors then
+						expand_errors_button.enable_select
+					else
+						expand_errors_button.disable_select
+					end
+				end
+			end
+
+				-- Set UI based on initial state
+			update_content_applicable_navigation_buttons
+
+			Precursor
+		end
+
 feature {NONE} -- Clean up
 
 	internal_recycle
@@ -150,7 +173,7 @@ feature {NONE} -- Clean up
 			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_PANEL_BASE}
 		end
 
-feature -- Access
+feature {NONE} -- Access
 
 	error_count: NATURAL
 			-- Number of errors
@@ -158,7 +181,10 @@ feature -- Access
 	warning_count: NATURAL
 			-- Number of warnings
 
-feature -- Access: Help
+	managed_syntax_errors: DS_ARRAYED_LIST [EVENT_LIST_ERROR_ITEM_I]
+			-- List of managed syntax errors, used to perform error adoption.
+
+feature {NONE} -- Access: Help
 
 	help_context_id: !STRING_GENERAL
 			-- <Precursor>
@@ -166,62 +192,129 @@ feature -- Access: Help
 			Result := "62F36EFA-1D3A-9E48-3A6A-7DA40B7E2046"
 		end
 
-feature -- Status report
+feature {NONE} -- Access: User interface
 
-	show_errors: BOOLEAN
-			-- Indicates if errors should be shown
+	errors_button: detachable SD_TOOL_BAR_TOGGLE_BUTTON
+			-- Toogle to show/hide error events
+
+	warnings_button: detachable SD_TOOL_BAR_TOGGLE_BUTTON
+			-- Toogle to show/hide warning events
+
+	expand_errors_button: detachable SD_TOOL_BAR_TOGGLE_BUTTON
+			-- Toogle to expanded error events automatically
+
+	delete_items_button: detachable SD_TOOL_BAR_BUTTON
+			-- Delete selected items button
+
+	error_info_button: detachable SD_TOOL_BAR_BUTTON
+			-- Error information button
+
+	filter_button: detachable SD_TOOL_BAR_POPUP_BUTTON
+			-- Filter button to filter information in list
+
+	filter_widget: detachable ES_WARNINGS_FILTER_WIDGET
+			-- Filter widget
+
+feature {NONE} -- Element change
+
+	set_error_count (a_count: like error_count)
+			-- Sets `error_count' to `a_count'
+		local
+			l_text: STRING_32
+		do
+			error_count := a_count
+			create l_text.make (20)
+			l_text.append_natural_32 (a_count)
+			l_text.append_character (' ')
+			if a_count = 1 then
+				l_text.append_string (interface_names.b_error)
+			else
+				l_text.append_string (interface_names.b_errors)
+			end
+			errors_button.set_text (l_text)
+			update_tool_title_and_pixmap
+
+		ensure
+			error_count_set: error_count = a_count
+		end
+
+	set_warning_count (a_count: like warning_count)
+			-- Sets `warning_count' to `a_count'
+		local
+			l_text: STRING_32
+		do
+			warning_count := a_count
+			create l_text.make (20)
+			l_text.append_natural_32 (a_count)
+			l_text.append_character (' ')
+			if a_count = 1 then
+				l_text.append_string (interface_names.b_warning)
+			else
+				l_text.append_string (interface_names.b_warnings)
+			end
+			warnings_button.set_text (l_text)
+			update_tool_title_and_pixmap
+		ensure
+			warning_count_set: warning_count = a_count
+		end
+
+feature {NONE} -- Status report
+
+	is_error_event (a_event_item: EVENT_LIST_ITEM_I): BOOLEAN
+			-- Determines if event `a_event_item' is an error event
+		do
+			if a_event_item.type = {EVENT_LIST_ITEM_TYPES}.error and then {l_error: !EVENT_LIST_ERROR_ITEM_I} a_event_item then
+				Result := not l_error.is_warning
+			end
+		ensure
+			not_is_warning_event: Result implies not is_warning_event (a_event_item)
+		end
+
+	is_warning_event (a_event_item: EVENT_LIST_ITEM_I): BOOLEAN
+			-- Determines if event `a_event_item' is an error event
+		require
+			a_event_item_attached: a_event_item /= Void
+		do
+			if a_event_item.type = {EVENT_LIST_ITEM_TYPES}.error and then {l_error: !EVENT_LIST_ERROR_ITEM_I} a_event_item then
+				Result := l_error.is_warning
+			end
+		ensure
+			not_is_error_event: Result implies not is_error_event (a_event_item)
+		end
+
+	is_appliable_event (a_event_item: EVENT_LIST_ITEM_I): BOOLEAN
+			-- <Precursor>
+		do
+			Result := is_error_event (a_event_item) or is_warning_event (a_event_item)
+		ensure then
+			is_error_or_warning_event: Result implies (is_error_event (a_event_item) or is_warning_event (a_event_item))
+		end
+
+	is_displaying_errors: BOOLEAN
+			-- Indicates if errors should be shown.
 		do
 			Result := not is_initialized or else errors_button.is_selected
 		end
 
-	show_warnings: BOOLEAN
-			-- Indicates if errors should be shown
+	is_displaying_warnings: BOOLEAN
+			-- Indicates if errors should be shown.
 		do
 			Result := not is_initialized or else warnings_button.is_selected
 		end
 
-	expand_errors: BOOLEAN
-			-- Indicates if errors should be shown automatically
-
-feature {NONE} -- Status report
+	is_expanding_errors: BOOLEAN
+			-- Indicates if errors should be shown automatically.
 
 	is_expanding_all_errors: BOOLEAN
-			-- Indicates if the errors are being expanded, as a result of the expand errors button being pressed.
+			-- Indicates if the errors are being expanded, as a result of the expand errors button being pressed
 
-	frozen surpress_synchronization: BOOLEAN
-			-- State to indicate if synchonization with the event list service should be suppressed
-			-- when initializing.
-
-feature {NONE} -- User interface items
-
-	errors_button: SD_TOOL_BAR_TOGGLE_BUTTON
-			-- Toogle to show/hide error events
-
-	warnings_button: SD_TOOL_BAR_TOGGLE_BUTTON
-			-- Toogle to show/hide warning events
-
-	expand_errors_button: SD_TOOL_BAR_TOGGLE_BUTTON
-			-- Toogle to expanded error events automatically
-
-	delete_items_button: SD_TOOL_BAR_BUTTON
-			-- Delete selected items button
-
-	error_info_button: SD_TOOL_BAR_BUTTON
-			-- Error information button
-
-	filter_button: SD_TOOL_BAR_POPUP_BUTTON
-			-- Filter button to filter information in list
-
-	filter_widget: ES_WARNINGS_FILTER_WIDGET
-			-- Filter widget
+	is_event_list_synchronized_on_initialized: BOOLEAN
+			-- <Precursor>
 
 feature {NONE} -- Command items
 
-	error_info_command: EB_ERROR_INFORMATION_CMD
-			-- Error information command
-
 	go_to_next_error_command: ES_NEXT_ERROR_COMMAND
-			-- Go to next error command
+			-- Go to next error command.
 		do
 			Result := develop_window.commands.go_to_next_error_command
 		ensure
@@ -229,7 +322,7 @@ feature {NONE} -- Command items
 		end
 
 	go_to_previous_error_command: ES_PREVIOUS_ERROR_COMMAND
-			-- Go to previous error command
+			-- Go to previous error command.
 		do
 			Result := develop_window.commands.go_to_previous_error_command
 		ensure
@@ -237,7 +330,7 @@ feature {NONE} -- Command items
 		end
 
 	go_to_next_warning_command: ES_NEXT_WARNING_COMMAND
-			-- Go to next warning command
+			-- Go to next warning command.
 		do
 			Result := develop_window.commands.go_to_next_warning_command
 		ensure
@@ -251,6 +344,9 @@ feature {NONE} -- Command items
 		ensure
 			result_attached: Result /= Void
 		end
+
+	error_info_command: EB_ERROR_INFORMATION_CMD
+			-- Error information command.
 
 feature {NONE} -- Query
 
@@ -316,101 +412,27 @@ feature {NONE} -- Query
 			end
 		end
 
-	is_appliable_event (a_event_item: EVENT_LIST_ITEM_I): BOOLEAN
-			-- Determines if event `a_event_item' can be shown with the current event list tool
-		do
-			Result := is_error_event (a_event_item) or is_warning_event (a_event_item)
-		end
+feature {ES_TOOL} -- Basic operation
 
-	is_error_event (a_event_item: EVENT_LIST_ITEM_I): BOOLEAN
-			-- Determines if event `a_event_item' is an error event
-		do
-			if a_event_item.type = {EVENT_LIST_ITEM_TYPES}.error and then {l_error: !EVENT_LIST_ERROR_ITEM_I} a_event_item then
-				Result := not l_error.is_warning
-			end
-		ensure
-			not_is_warning_event: Result implies not is_warning_event (a_event_item)
-		end
-
-	is_warning_event (a_event_item: EVENT_LIST_ITEM_I): BOOLEAN
-			-- Determines if event `a_event_item' is an error event
-		require
-			a_event_item_attached: a_event_item /= Void
-		do
-			if a_event_item.type = {EVENT_LIST_ITEM_TYPES}.error and then {l_error: !EVENT_LIST_ERROR_ITEM_I} a_event_item then
-				Result := l_error.is_warning
-			end
-		ensure
-			not_is_error_event: Result implies not is_error_event (a_event_item)
-		end
-
-feature {ES_ERROR_LIST_TOOL} -- Navigation
-
-	go_to_next_error (a_cycle: BOOLEAN)
+	show
 			-- <Precursor>
+		local
+			l_width: INTEGER
+			l_platform: PLATFORM
+			l_grid: ES_GRID
 		do
-			if show_errors then
-				if error_count > 0 then
-					move_next (agent (a_item: EVENT_LIST_ITEM_I): BOOLEAN
-						require
-							a_item_attached: a_item /= Void
-						do
-							Result := is_error_event (a_item) and then
-								(event_context_stone (a_item) /= Void or
-									-- C compiler errors have not context stone so we need to account for this.
-								({C_COMPILER_ERROR}) #? a_item.data /= Void)
-						end)
+			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_PANEL_BASE}
+
+			create l_platform
+			if l_platform.is_unix then
+				-- This is hack for bug#13604
+				l_grid := grid_events
+				if l_grid /= Void and then not l_grid.is_destroyed then
+					l_width := l_grid.width
 				end
 			end
 		end
 
-	go_to_previous_error (a_cycle: BOOLEAN)
-			-- <Precursor>
-		do
-			if show_errors then
-				if error_count > 0 then
-					move_previous (agent (a_item: EVENT_LIST_ITEM_I): BOOLEAN
-						require
-							a_item_attached: a_item /= Void
-						do
-							Result := is_error_event (a_item) and then
-								(event_context_stone (a_item) /= Void or
-									-- C compiler errors have not context stone so we need to account for this.
-								({C_COMPILER_ERROR}) #? a_item.data /= Void)
-						end)
-				end
-			end
-		end
-
-	go_to_next_warning (a_cycle: BOOLEAN)
-			-- <Precursor>
-		do
-			if show_warnings then
-				if warning_count > 0 then
-					move_next (agent (a_item: EVENT_LIST_ITEM_I): BOOLEAN
-						require
-							a_item_attached: a_item /= Void
-						do
-							Result := is_warning_event (a_item) and then event_context_stone (a_item) /= Void
-						end)
-				end
-			end
-		end
-
-	go_to_previous_warning (a_cycle: BOOLEAN)
-			-- <Precursor>
-		do
-			if show_warnings then
-				if warning_count > 0 then
-					move_previous (agent (a_item: EVENT_LIST_ITEM_I): BOOLEAN
-						require
-							a_item_attached: a_item /= Void
-						do
-							Result := is_warning_event (a_item) and then event_context_stone (a_item) /= Void
-						end)
-				end
-			end
-		end
 
 feature {NONE} -- Basic operations
 
@@ -472,553 +494,6 @@ feature {NONE} -- Basic operations
 				end
 			end
 
-		end
-
-feature {NONE} -- Action handlers
-
-	on_handle_key (a_key: EV_KEY; a_alt: BOOLEAN; a_ctrl: BOOLEAN; a_shift: BOOLEAN; a_released: BOOLEAN): BOOLEAN
-			-- <Precursor>
-		do
-			if a_released and then not a_alt and then not a_ctrl and then not a_shift then
-				if a_key.code = {EV_KEY_CONSTANTS}.key_delete then
-					remove_all_selected_event_list_rows
-					Result := True
-				end
-			end
-			if not Result then
-				Result := Precursor (a_key, a_alt, a_ctrl, a_shift, a_released)
-			end
-		end
-
-feature {NONE} -- Events
-
-	on_event_item_added (a_service: EVENT_LIST_S; a_event_item: EVENT_LIST_ITEM_I)
-			-- <Precursor>
-		local
-			l_applicable: BOOLEAN
-		do
-			l_applicable := is_appliable_event (a_event_item)
-			if l_applicable and not is_initialized then
-					-- We have to perform initialization to set the icon and counter.
-					-- Synchronization with the event list service is surpress to prevent duplication of event items being added.
-				surpress_synchronization := True
-				initialize
-			end
-
-			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_PANEL_BASE} (a_service, a_event_item)
-
-			if l_applicable then
-				if is_error_event (a_event_item) then
-					set_error_count (error_count + 1)
-				elseif is_warning_event (a_event_item) then
-					set_warning_count (warning_count + 1)
-				else
-					check False end
-				end
-				update_content_applicable_navigation_buttons
-			end
-		ensure then
-			is_initialized: is_appliable_event (a_event_item) implies is_initialized
-		end
-
-	on_event_item_removed (a_service: EVENT_LIST_S; a_event_item: EVENT_LIST_ITEM_I)
-			-- <Precursor>
-		local
-			l_applicable: BOOLEAN
-		do
-			l_applicable := is_appliable_event (a_event_item)
-			if l_applicable and not is_initialized then
-					-- We have to perform initialization to set the icon and counter
-					-- Synchronization with the event list service is surpress to prevent duplication of event items being added.
-				surpress_synchronization := True
-				initialize
-			end
-
-			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_PANEL_BASE} (a_service, a_event_item)
-			if l_applicable then
-				if is_error_event (a_event_item) then
-					set_error_count (error_count - 1)
-				elseif is_warning_event (a_event_item) then
-					set_warning_count (warning_count - 1)
-				else
-					check False end
-				end
-				update_content_applicable_navigation_buttons
-			end
-		ensure then
-			is_initialized: is_appliable_event (a_event_item) implies is_initialized
-		end
-
-	on_toogle_errors_button
-			-- Called when `errors_button' is selected
-		require
-			is_interface_usable: is_interface_usable
-			is_initialized: is_initialized
-		local
-			l_row: EV_GRID_ROW
-			l_event_item: EVENT_LIST_ITEM_I
-			l_count, i: INTEGER
-		do
-			from
-				i := 1
-				l_count := grid_events.row_count
-			until
-				i > l_count
-			loop
-				l_row := grid_events.row (i)
-				l_event_item ?= l_row.data
-				if l_event_item /= Void then
-					if is_error_event (l_event_item) then
-						if show_errors then
-							l_row.show
-						else
-							l_row.hide
-						end
-					end
-				end
-				i := i + 1
-			end
-
-			update_content_applicable_navigation_buttons
-		end
-
-	on_remove_selected_rows
-			-- Caled when the `delete_items_button' is selected.
-		require
-			is_interface_usable: is_interface_usable
-			is_initialized: is_initialized
-		do
-			remove_all_selected_event_list_rows
-		end
-
-	on_toogle_warnings_button
-			-- Called when `warnings_button' is selected
-		require
-			is_interface_usable: is_interface_usable
-			is_initialized: is_initialized
-		local
-			l_row: EV_GRID_ROW
-			l_event_item: EVENT_LIST_ITEM_I
-			l_warning: ERROR
-			l_filter_widget: like filter_widget
-			l_show: BOOLEAN
-			l_count, i: INTEGER
-		do
-			l_filter_widget := filter_widget
-			l_show := show_warnings
-			from
-				i := 1
-				l_count := grid_events.row_count
-			until
-				i > l_count
-			loop
-				l_row := grid_events.row (i)
-				l_event_item ?= l_row.data
-				if l_event_item /= Void then
-					if is_warning_event (l_event_item) then
-						l_warning ?= l_event_item.data
-						check l_warning_attached: l_warning /= Void end
-						if l_warning /= Void and then l_show and l_filter_widget.is_unfiltered (l_warning) then
-							l_row.show
-						else
-							l_row.hide
-						end
-					end
-				end
-				i := i + 1
-			end
-
-			update_content_applicable_navigation_buttons
-		end
-
-	on_toggle_expand_errors_button
-			-- Called when the expand error button is selected
-		require
-			is_interface_usable: is_interface_usable
-			is_initialized: is_initialized
-			not_is_expanding_all_errors: not is_expanding_all_errors
-		local
-			l_expand: BOOLEAN
-			l_grid: like grid_events
-			l_row: EV_GRID_ROW
-			l_event_item: EVENT_LIST_ERROR_ITEM_I
-			l_count, i: INTEGER
-		do
-			l_expand := expand_errors_button.is_selected
-			if expand_errors /= l_expand then
-				is_expanding_all_errors := l_expand
-				expand_errors := l_expand
-				if session_manager.is_service_available then
-					session_manager.service.retrieve (False).set_value (l_expand, expand_errors_session_id)
-				end
-
-					-- Set applicable grid items and open/closed because on expanded status
-				l_grid := grid_events
-				from
-					i := 1
-					l_count := l_grid.row_count
-				until
-					i > l_count
-				loop
-					l_row := l_grid.row (i)
-					if l_row.is_expandable then
-						l_event_item ?= l_row.data
-						if l_event_item /= Void and then is_error_event (l_event_item) then
-							if l_expand then
-								l_row.expand
-							else
-								l_row.collapse
-							end
-						end
-					end
-					i := i + 1
-				end
-				is_expanding_all_errors := False
-			end
-		ensure
-			expand_errors_set: expand_errors = expand_errors_button.is_selected
-			not_is_expanding_all_errors: not is_expanding_all_errors
-		end
-
-	on_expand_event_row (a_row: EV_GRID_ROW)
-			-- Called when the expand error button is selected.
-			--
-			-- `a_row': The row that was expanded.
-		require
-			is_interface_usable: is_interface_usable
-			is_initialized: is_initialized
-			a_row_attached: a_row /= Void
-			not_a_row_is_destroyed: not a_row.is_destroyed
-			a_row_has_grid_events_as_parent: a_row.parent = grid_events
-			a_row_is_expanded: a_row.is_expanded
-		do
-			if not is_expanding_all_errors then
-				grid_events.selected_rows.do_all (agent {EV_GRID_ROW}.disable_select)
-				a_row.enable_select
-				if a_row.subrow_count > 0 then
-						-- Ensure the row is visible.
-					a_row.subrow (1).ensure_visible
-				end
-			end
-		end
-
-	on_error_info
-			-- Call when the error information button is clicked.
-		require
-			is_interface_usable: is_interface_usable
-			is_initialized: is_initialized
-		local
-			l_event: EVENT_LIST_ITEM_I
-			l_error: ERROR
-		do
-			if not grid_events.selected_rows.is_empty then
-					-- Retrieve event item set from {ES_EVENT_LIST_TOOL_PANEL_BASE}.on_event_added
-				l_event ?= grid_events.selected_rows.first.data
-				if l_event /= Void then
-						-- Now retrieve error item
-					l_error ?= l_event.data
-					check
-						l_error_attached: l_error /= Void
-					end
-
-				end
-			end
-
-			if l_error = Void then
-					-- No error found. This can happen when the expanded information row is selected.
-				error_info_command.execute
-			else
-				error_info_command.execute_with_stone (create {ERROR_STONE}.make (l_error))
-			end
-		end
-
-	on_warnings_filter_changed (a_type: TYPE [ANY]; a_exact_only: BOOLEAN; a_exclude: BOOLEAN)
-			-- Called when the filter has been changed
-		require
-			is_interface_usable: is_interface_usable
-			is_initialized: is_initialized
-		local
-			l_filter: ES_WARNINGS_FILTER_WIDGET
-			l_grid: like grid_events
-			l_row: EV_GRID_ROW
-			l_event: EVENT_LIST_ITEM_I
-			l_warning: ERROR
-			l_count, i: INTEGER
-		do
-			l_filter := filter_widget
-			l_grid := grid_events
-			from l_count := l_grid.row_count; i := 1 until i > l_count loop
-				l_row := l_grid.row (i)
-				if a_exclude /= not l_row.is_show_requested then
-					l_event ?= l_row.data
-					if l_event /= Void and then is_warning_event (l_event) then
-						l_warning ?= l_event.data
-						if l_warning /= Void then
-							if not l_filter.is_unfiltered (l_warning) then
-								if a_exclude then
-									l_row.hide
-								end
-							else
-								if not a_exclude then
-									l_row.show
-								end
-							end
-						end
-					end
-				end
-
-				if l_row.subrow_count_recursive > 1 then
-					i := i + l_row.subrow_count_recursive
-				else
-					i := i + 1
-				end
-			end
-
-			if l_filter.filtered.is_empty then
-				filter_button.set_pixel_buffer (stock_pixmaps.errors_and_warnings_filter_icon_buffer)
-				filter_button.set_pixmap (stock_pixmaps.errors_and_warnings_filter_icon)
-			else
-				filter_button.set_pixel_buffer (stock_pixmaps.errors_and_warnings_filter_active_icon_buffer)
-				filter_button.set_pixmap (stock_pixmaps.errors_and_warnings_filter_active_icon)
-			end
-		end
-
-	on_session_value_changed (a_session: SESSION; a_id: STRING_8)
-			-- <Precursor>
-		do
-			if a_id.is_equal (expand_errors_session_id) then
-					-- Retrieve global session
-				if {l_expand: !BOOLEAN_REF} a_session.value_or_default (expand_errors_session_id, False) then
-					if expand_errors /= l_expand.item then
-						expand_errors := l_expand.item
-						if expand_errors then
-							expand_errors_button.enable_select
-						else
-							expand_errors_button.disable_select
-						end
-						on_toggle_expand_errors_button
-					end
-				end
-			end
-		end
-
-feature {NONE} -- Factory
-
-	create_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
-			-- Available tool bar items
-		do
-			create errors_button.make
-			errors_button.set_text (("0 ").as_string_32 + interface_names.b_errors.as_string_32)
-			errors_button.set_pixmap (stock_pixmaps.tool_error_icon)
-			errors_button.set_pixel_buffer (stock_pixmaps.tool_error_icon_buffer)
-			errors_button.enable_select
-			errors_button.select_actions.extend (agent on_toogle_errors_button)
-			errors_button.select_actions.compare_objects
-
-			create warnings_button.make
-			warnings_button.set_text (("0 ").as_string_32 + interface_names.b_warnings.as_string_32)
-			warnings_button.set_pixmap (stock_pixmaps.tool_warning_icon)
-			warnings_button.set_pixel_buffer (stock_pixmaps.tool_warning_icon_buffer)
-			warnings_button.enable_select
-			warnings_button.select_actions.extend (agent on_toogle_warnings_button)
-			warnings_button.select_actions.compare_objects
-
-			create Result.make (3)
-			Result.put_last (errors_button)
-			Result.put_last (create {SD_TOOL_BAR_SEPARATOR}.make)
-			Result.put_last (warnings_button)
-		ensure then
-			errors_button_attached: errors_button /= Void
-			warnings_button_attached: warnings_button /= Void
-		end
-
-	create_right_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
-			-- Available tool bar items
-		local
-			l_button: SD_TOOL_BAR_BUTTON
-		do
-			create Result.make (9)
-
-				-- Navigation buttons
-			l_button := go_to_next_error_command.new_sd_toolbar_item (False)
-			Result.put_last (l_button)
-
-			l_button := go_to_previous_error_command.new_sd_toolbar_item (False)
-			Result.put_last (l_button)
-
-			l_button := go_to_next_warning_command.new_sd_toolbar_item (False)
-			Result.put_last (l_button)
-
-			l_button := go_to_previous_warning_command.new_sd_toolbar_item (False)
-			Result.put_last (l_button)
-
-			create delete_items_button.make
-			delete_items_button.set_pixel_buffer (stock_pixmaps.general_delete_icon_buffer)
-			delete_items_button.set_pixmap (stock_pixmaps.general_delete_icon)
-			delete_items_button.set_tooltip (locale_formatter.translation (tt_delete_items))
-			register_action (delete_items_button.select_actions, agent on_remove_selected_rows)
-			Result.put_last (delete_items_button)
-
-				-- Separator
-			Result.put_last (create {SD_TOOL_BAR_SEPARATOR}.make)
-
-				-- Automatic expand error button
-			create expand_errors_button.make
-			expand_errors_button.set_pixmap (stock_pixmaps.errors_and_warnings_expand_errors_icon)
-			expand_errors_button.set_pixel_buffer (stock_pixmaps.errors_and_warnings_expand_errors_icon_buffer)
-			expand_errors_button.set_tooltip (interface_names.f_toogle_expand_errors)
-			register_action (expand_errors_button.select_actions, agent on_toggle_expand_errors_button)
-			Result.put_last (expand_errors_button)
-
-			create error_info_command.make
-			error_info_button := error_info_command.new_sd_toolbar_item (False)
-				-- We need to do something else, like handle grid selection
-			error_info_button.select_actions.wipe_out
-			register_action (error_info_button.select_actions, agent on_error_info)
-			Result.put_last (error_info_button)
-
-				-- Filter pop up widget
-			create filter_widget.make
-			register_action (filter_widget.filter_changed_actions, agent on_warnings_filter_changed)
-
-				-- Filter button
-			create filter_button.make
-			filter_button.set_pixmap (stock_pixmaps.metric_filter_icon)
-			filter_button.set_pixel_buffer (stock_pixmaps.metric_filter_icon_buffer)
-			filter_button.set_tooltip (interface_names.f_filter_warnings)
-			filter_button.set_popup_widget (filter_widget)
-
-			Result.put_last (filter_button)
-		ensure then
-			filter_button_attached: filter_button /= Void
-		end
-
-feature -- User interface manipulation
-
-	show
-			-- Redefine
-		local
-			l_width: INTEGER
-			l_platform: PLATFORM
-			l_grid: ES_GRID
-		do
-			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_PANEL_BASE}
-
-			create l_platform
-			if l_platform.is_unix then
-				-- This is hack for bug#13604
-				l_grid := grid_events
-				if l_grid /= Void and then not l_grid.is_destroyed then
-					l_width := l_grid.width
-				end
-			end
-		end
-
-feature {NONE} -- User interface manipulation
-
-	set_error_count (a_count: like error_count)
-			-- Sets `error_count' to `a_count'
-		local
-			l_text: STRING_32
-		do
-			error_count := a_count
-			create l_text.make (20)
-			l_text.append_natural_32 (a_count)
-			l_text.append_character (' ')
-			if a_count = 1 then
-				l_text.append_string (interface_names.b_error)
-			else
-				l_text.append_string (interface_names.b_errors)
-			end
-			errors_button.set_text (l_text)
-			update_tool_title_and_pixmap
-
-		ensure
-			error_count_set: error_count = a_count
-		end
-
-	set_warning_count (a_count: like warning_count)
-			-- Sets `warning_count' to `a_count'
-		local
-			l_text: STRING_32
-		do
-			warning_count := a_count
-			create l_text.make (20)
-			l_text.append_natural_32 (a_count)
-			l_text.append_character (' ')
-			if a_count = 1 then
-				l_text.append_string (interface_names.b_warning)
-			else
-				l_text.append_string (interface_names.b_warnings)
-			end
-			warnings_button.set_text (l_text)
-			update_tool_title_and_pixmap
-		ensure
-			warning_count_set: warning_count = a_count
-		end
-
-	update_tool_title_and_pixmap
-			-- Sets the tool's title an pixmap based on the number of items existing in the list
-		local
-			l_title: STRING_32
-			l_buffer: EV_PIXEL_BUFFER
-		do
-			l_title := interface_names.t_errors_and_warnings_tool.twin
-			if item_count > 0 then
-				l_title := l_title + " (" + error_count.out + "|" + warning_count.out + ")"
-				if error_count > 0 and warning_count > 0 then
-					l_buffer := stock_pixmaps.tool_errors_list_with_errors_and_warnings_icon_buffer
-				elseif error_count > 0 then
-					l_buffer := stock_pixmaps.tool_errors_list_with_errors_icon_buffer
-				elseif warning_count > 0 then
-					l_buffer := stock_pixmaps.tool_errors_list_with_warnings_icon_buffer
-				else
-					check False end
-				end
-			end
-
-			if l_title /= Void and then not l_title.is_empty then
-				set_title (l_title)
-			end
-			if l_buffer /= Void then
-				set_icon (l_buffer)
-			else
-				set_icon (stock_pixmaps.tool_errors_list_with_errors_icon_buffer)
-			end
-		end
-
-	update_content_applicable_widgets (a_enable: BOOLEAN)
-			-- Updates widgets on tool that require content to exist
-			--
-			-- `a_enable': True to indicate there is content available, False otherwise
-		do
-			if a_enable and grid_events.selected_rows.count >= 1 then
-				error_info_command.enable_sensitive
-				delete_items_button.enable_sensitive
-			else
-				error_info_command.disable_sensitive
-				delete_items_button.disable_sensitive
-			end
-		end
-
-	update_content_applicable_navigation_buttons
-			-- Updates content applicable navigation buttons
-		do
-			if error_count > 0 and errors_button.is_selected then
-				go_to_next_error_command.enable_sensitive
-				go_to_previous_error_command.enable_sensitive
-			else
-				go_to_next_error_command.disable_sensitive
-				go_to_previous_error_command.disable_sensitive
-			end
-
-			if warning_count > 0  and warnings_button.is_selected then
-				go_to_next_warning_command.enable_sensitive
-				go_to_previous_warning_command.enable_sensitive
-			else
-				go_to_next_warning_command.disable_sensitive
-				go_to_previous_warning_command.disable_sensitive
-			end
 		end
 
 	populate_event_grid_row_items (a_event_item: EVENT_LIST_ITEM_I; a_row: EV_GRID_ROW)
@@ -1156,11 +631,11 @@ feature {NONE} -- User interface manipulation
 
 				-- Set visibility
 			if is_error_event (a_event_item) then
-				if not show_errors then
+				if not is_displaying_errors then
 					a_row.hide
 				end
 			elseif is_warning_event (a_event_item) then
-				if not show_warnings or else filter_widget /= Void and then not filter_widget.is_unfiltered (l_error) then
+				if not is_displaying_warnings or else filter_widget /= Void and then not filter_widget.is_unfiltered (l_error) then
 					a_row.hide
 				end
 			else
@@ -1169,7 +644,7 @@ feature {NONE} -- User interface manipulation
 
 				-- Set expanded status
 			if a_row.is_expandable and then is_error_event (a_event_item) then
-				if expand_errors then
+				if is_expanding_errors then
 					l_expanded := is_expanding_all_errors
 					is_expanding_all_errors := True
 					a_row.expand
@@ -1180,6 +655,618 @@ feature {NONE} -- User interface manipulation
 			end
 		ensure then
 			is_expanding_all_errors_unchanged: is_expanding_all_errors = old is_expanding_all_errors
+		end
+
+	update_tool_title_and_pixmap
+			-- Sets the tool's title an pixmap based on the number of items existing in the list
+		local
+			l_title: STRING_32
+			l_buffer: EV_PIXEL_BUFFER
+		do
+			l_title := interface_names.t_errors_and_warnings_tool.twin
+			if item_count > 0 then
+				l_title := l_title + " (" + error_count.out + "|" + warning_count.out + ")"
+				if error_count > 0 and warning_count > 0 then
+					l_buffer := stock_pixmaps.tool_errors_list_with_errors_and_warnings_icon_buffer
+				elseif error_count > 0 then
+					l_buffer := stock_pixmaps.tool_errors_list_with_errors_icon_buffer
+				elseif warning_count > 0 then
+					l_buffer := stock_pixmaps.tool_errors_list_with_warnings_icon_buffer
+				else
+					check False end
+				end
+			end
+
+			if l_title /= Void and then not l_title.is_empty then
+				set_title (l_title)
+			end
+			if l_buffer /= Void then
+				set_icon (l_buffer)
+			else
+				set_icon (stock_pixmaps.tool_errors_list_with_errors_icon_buffer)
+			end
+		end
+
+	update_content_applicable_widgets (a_enable: BOOLEAN)
+			-- <Precursor>
+		do
+			if a_enable and grid_events.selected_rows.count >= 1 then
+				error_info_command.enable_sensitive
+				delete_items_button.enable_sensitive
+			else
+				error_info_command.disable_sensitive
+				delete_items_button.disable_sensitive
+			end
+		end
+
+	update_content_applicable_navigation_buttons
+			-- Updates content applicable navigation buttons
+		do
+			if error_count > 0 and errors_button.is_selected then
+				go_to_next_error_command.enable_sensitive
+				go_to_previous_error_command.enable_sensitive
+			else
+				go_to_next_error_command.disable_sensitive
+				go_to_previous_error_command.disable_sensitive
+			end
+
+			if warning_count > 0  and warnings_button.is_selected then
+				go_to_next_warning_command.enable_sensitive
+				go_to_previous_warning_command.enable_sensitive
+			else
+				go_to_next_warning_command.disable_sensitive
+				go_to_previous_warning_command.disable_sensitive
+			end
+		end
+
+feature {ES_ERROR_LIST_COMMANDER_I} -- Basic operations: Navigation
+
+	go_to_next_error (a_cycle: BOOLEAN)
+			-- <Precursor>
+		do
+			if is_displaying_errors then
+				if error_count > 0 then
+					move_next (agent (a_item: EVENT_LIST_ITEM_I): BOOLEAN
+						require
+							a_item_attached: a_item /= Void
+						do
+							Result := is_error_event (a_item) and then
+								(event_context_stone (a_item) /= Void or
+									-- C compiler errors have not context stone so we need to account for this.
+								({C_COMPILER_ERROR}) #? a_item.data /= Void)
+						end)
+				end
+			end
+		end
+
+	go_to_previous_error (a_cycle: BOOLEAN)
+			-- <Precursor>
+		do
+			if is_displaying_errors then
+				if error_count > 0 then
+					move_previous (agent (a_item: EVENT_LIST_ITEM_I): BOOLEAN
+						require
+							a_item_attached: a_item /= Void
+						do
+							Result := is_error_event (a_item) and then
+								(event_context_stone (a_item) /= Void or
+									-- C compiler errors have not context stone so we need to account for this.
+								({C_COMPILER_ERROR}) #? a_item.data /= Void)
+						end)
+				end
+			end
+		end
+
+	go_to_next_warning (a_cycle: BOOLEAN)
+			-- <Precursor>
+		do
+			if is_displaying_warnings then
+				if warning_count > 0 then
+					move_next (agent (a_item: EVENT_LIST_ITEM_I): BOOLEAN
+						require
+							a_item_attached: a_item /= Void
+						do
+							Result := is_warning_event (a_item) and then event_context_stone (a_item) /= Void
+						end)
+				end
+			end
+		end
+
+	go_to_previous_warning (a_cycle: BOOLEAN)
+			-- <Precursor>
+		do
+			if is_displaying_warnings then
+				if warning_count > 0 then
+					move_previous (agent (a_item: EVENT_LIST_ITEM_I): BOOLEAN
+						require
+							a_item_attached: a_item /= Void
+						do
+							Result := is_warning_event (a_item) and then event_context_stone (a_item) /= Void
+						end)
+				end
+			end
+		end
+
+feature {NONE} -- Event handlers
+
+	on_event_item_added (a_service: EVENT_LIST_S; a_event_item: EVENT_LIST_ITEM_I)
+			-- <Precursor>
+		local
+			l_applicable: BOOLEAN
+		do
+			l_applicable := is_appliable_event (a_event_item)
+			if l_applicable and not is_initialized then
+					-- We have to perform initialization to set the icon and counter.
+					-- Synchronization with the event list service is surpress to prevent duplication of event items being added.
+				is_event_list_synchronized_on_initialized := False
+				initialize
+			end
+
+			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_PANEL_BASE} (a_service, a_event_item)
+
+			if l_applicable then
+				if is_error_event (a_event_item) then
+					set_error_count (error_count + 1)
+					if (attached {SYNTAX_ERROR} a_event_item.data) and then (attached {EVENT_LIST_ERROR_ITEM_I} a_event_item as l_error_item) then
+						ev_application.do_once_on_idle (agent on_syntax_error_event_item_added (l_error_item))
+					end
+				elseif is_warning_event (a_event_item) then
+					set_warning_count (warning_count + 1)
+				else
+					check False end
+				end
+				update_content_applicable_navigation_buttons
+			end
+		ensure then
+			is_initialized: is_appliable_event (a_event_item) implies is_initialized
+		end
+
+	on_event_item_removed (a_service: EVENT_LIST_S; a_event_item: EVENT_LIST_ITEM_I)
+			-- <Precursor>
+		local
+			l_applicable: BOOLEAN
+		do
+			l_applicable := is_appliable_event (a_event_item)
+			if l_applicable and not is_initialized then
+					-- We have to perform initialization to set the icon and counter
+					-- Synchronization with the event list service is surpress to prevent duplication of event items being added.
+				is_event_list_synchronized_on_initialized := False
+				initialize
+			end
+
+			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_PANEL_BASE} (a_service, a_event_item)
+			if l_applicable then
+				if is_error_event (a_event_item) then
+					set_error_count (error_count - 1)
+					if (attached {SYNTAX_ERROR} a_event_item.data) and then (attached {EVENT_LIST_ERROR_ITEM_I} a_event_item as l_error_item) then
+						ev_application.do_once_on_idle (agent on_syntax_error_event_item_added (l_error_item))
+					end
+				elseif is_warning_event (a_event_item) then
+					set_warning_count (warning_count - 1)
+				else
+					check False end
+				end
+				update_content_applicable_navigation_buttons
+			end
+		ensure then
+			is_initialized: is_appliable_event (a_event_item) implies is_initialized
+		end
+
+	on_syntax_error_event_item_added (a_event_item: !EVENT_LIST_ERROR_ITEM_I)
+			-- <Precursor>
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized or is_initializing
+			a_event_item_is_appliable_event: is_appliable_event (a_event_item)
+			a_event_item_has_syntax_error: attached {SYNTAX_ERROR} a_event_item.data
+		local
+			l_service: EVENT_LIST_S
+			l_errors: like managed_syntax_errors
+			l_item: EVENT_LIST_ERROR_ITEM_I
+		do
+			l_errors := managed_syntax_errors
+			if a_event_item.category = {ENVIRONMENT_CATEGORIES}.editor then
+					-- Incoming editor error, we may need to replace an existing error.
+				l_errors.start
+				l_errors.search_forth (a_event_item)
+				if not l_errors.after then
+						-- There was an error managed by Current.
+					if l_errors.item_for_iteration.category /= {ENVIRONMENT_CATEGORIES}.editor then
+							-- The error is not from the editor.
+						if event_list.is_service_available then
+							l_service := event_list.service
+							l_item := l_errors.item_for_iteration
+							l_errors.remove_at
+							if l_service.has_event_item (l_item) then
+								l_service.prune_event_item (l_item)
+							end
+						end
+					end
+				end
+			else
+				l_errors.force_last (a_event_item)
+			end
+		end
+
+	on_syntax_error_event_item_removed (a_event_item: !EVENT_LIST_ERROR_ITEM_I)
+			-- <Precursor>
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized or is_initializing
+			a_event_item_is_appliable_event: is_appliable_event (a_event_item)
+			a_event_item_has_syntax_error: attached {SYNTAX_ERROR} a_event_item.data
+		local
+			l_errors: like managed_syntax_errors
+		do
+			if a_event_item.category /= {ENVIRONMENT_CATEGORIES}.editor then
+					-- Remove non-editor error from the list of managed syntax errors.
+				l_errors := managed_syntax_errors
+				l_errors.start
+				l_errors.search_forth (a_event_item)
+				if not l_errors.after then
+					l_errors.remove_at
+				end
+			end
+		end
+
+	on_session_value_changed (a_session: SESSION; a_id: STRING_8)
+			-- <Precursor>
+		do
+			if a_id.is_equal (expand_errors_session_id) then
+					-- Retrieve global session
+				if {l_expand: !BOOLEAN_REF} a_session.value_or_default (expand_errors_session_id, False) then
+					if is_expanding_errors /= l_expand.item then
+						is_expanding_errors := l_expand.item
+						if is_expanding_errors then
+							expand_errors_button.enable_select
+						else
+							expand_errors_button.disable_select
+						end
+						on_toggle_expand_errors_button
+					end
+				end
+			end
+		end
+
+feature {NONE} -- Action handlers
+
+	on_handle_key (a_key: EV_KEY; a_alt: BOOLEAN; a_ctrl: BOOLEAN; a_shift: BOOLEAN; a_released: BOOLEAN): BOOLEAN
+			-- <Precursor>
+		do
+			if a_released and then not a_alt and then not a_ctrl and then not a_shift then
+				if a_key.code = {EV_KEY_CONSTANTS}.key_delete then
+					remove_all_selected_event_list_rows
+					Result := True
+				end
+			end
+			if not Result then
+				Result := Precursor (a_key, a_alt, a_ctrl, a_shift, a_released)
+			end
+		end
+
+	on_toogle_errors_button
+			-- Called when `errors_button' is selected.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+		local
+			l_row: EV_GRID_ROW
+			l_event_item: EVENT_LIST_ITEM_I
+			l_count, i: INTEGER
+		do
+			from
+				i := 1
+				l_count := grid_events.row_count
+			until
+				i > l_count
+			loop
+				l_row := grid_events.row (i)
+				l_event_item ?= l_row.data
+				if l_event_item /= Void then
+					if is_error_event (l_event_item) then
+						if is_displaying_errors then
+							l_row.show
+						else
+							l_row.hide
+						end
+					end
+				end
+				i := i + 1
+			end
+
+			update_content_applicable_navigation_buttons
+		end
+
+	on_remove_selected_rows
+			-- Caled when the `delete_items_button' is selected.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+		do
+			remove_all_selected_event_list_rows
+		end
+
+	on_toogle_warnings_button
+			-- Called when `warnings_button' is selected
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+		local
+			l_row: EV_GRID_ROW
+			l_event_item: EVENT_LIST_ITEM_I
+			l_warning: ERROR
+			l_filter_widget: like filter_widget
+			l_show: BOOLEAN
+			l_count, i: INTEGER
+		do
+			l_filter_widget := filter_widget
+			l_show := is_displaying_warnings
+			from
+				i := 1
+				l_count := grid_events.row_count
+			until
+				i > l_count
+			loop
+				l_row := grid_events.row (i)
+				l_event_item ?= l_row.data
+				if l_event_item /= Void then
+					if is_warning_event (l_event_item) then
+						l_warning ?= l_event_item.data
+						check l_warning_attached: l_warning /= Void end
+						if l_warning /= Void and then l_show and l_filter_widget.is_unfiltered (l_warning) then
+							l_row.show
+						else
+							l_row.hide
+						end
+					end
+				end
+				i := i + 1
+			end
+
+			update_content_applicable_navigation_buttons
+		end
+
+	on_toggle_expand_errors_button
+			-- Called when the expand error button is selected
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+			not_is_expanding_all_errors: not is_expanding_all_errors
+		local
+			l_expand: BOOLEAN
+			l_grid: like grid_events
+			l_row: EV_GRID_ROW
+			l_event_item: EVENT_LIST_ERROR_ITEM_I
+			l_count, i: INTEGER
+		do
+			l_expand := expand_errors_button.is_selected
+			if is_expanding_errors /= l_expand then
+				is_expanding_all_errors := l_expand
+				is_expanding_errors := l_expand
+				if session_manager.is_service_available then
+					session_manager.service.retrieve (False).set_value (l_expand, expand_errors_session_id)
+				end
+
+					-- Set applicable grid items and open/closed because on expanded status
+				l_grid := grid_events
+				from
+					i := 1
+					l_count := l_grid.row_count
+				until
+					i > l_count
+				loop
+					l_row := l_grid.row (i)
+					if l_row.is_expandable then
+						l_event_item ?= l_row.data
+						if l_event_item /= Void and then is_error_event (l_event_item) then
+							if l_expand then
+								l_row.expand
+							else
+								l_row.collapse
+							end
+						end
+					end
+					i := i + 1
+				end
+				is_expanding_all_errors := False
+			end
+		ensure
+			is_expanding_errors_set: is_expanding_errors = expand_errors_button.is_selected
+			not_is_expanding_all_errors: not is_expanding_all_errors
+		end
+
+	on_expand_event_row (a_row: EV_GRID_ROW)
+			-- Called when the expand error button is selected.
+			--
+			-- `a_row': The row that was expanded.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+			a_row_attached: a_row /= Void
+			not_a_row_is_destroyed: not a_row.is_destroyed
+			a_row_has_grid_events_as_parent: a_row.parent = grid_events
+			a_row_is_expanded: a_row.is_expanded
+		do
+			if not is_expanding_all_errors then
+				grid_events.selected_rows.do_all (agent {EV_GRID_ROW}.disable_select)
+				a_row.enable_select
+				if a_row.subrow_count > 0 then
+						-- Ensure the row is visible.
+					a_row.subrow (1).ensure_visible
+				end
+			end
+		end
+
+	on_error_info
+			-- Call when the error information button is clicked.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+		local
+			l_event: EVENT_LIST_ITEM_I
+			l_error: ERROR
+		do
+			if not grid_events.selected_rows.is_empty then
+					-- Retrieve event item set from {ES_EVENT_LIST_TOOL_PANEL_BASE}.on_event_added
+				l_event ?= grid_events.selected_rows.first.data
+				if l_event /= Void then
+						-- Now retrieve error item
+					l_error ?= l_event.data
+					check
+						l_error_attached: l_error /= Void
+					end
+
+				end
+			end
+
+			if l_error = Void then
+					-- No error found. This can happen when the expanded information row is selected.
+				error_info_command.execute
+			else
+				error_info_command.execute_with_stone (create {ERROR_STONE}.make (l_error))
+			end
+		end
+
+	on_warnings_filter_changed (a_type: TYPE [ANY]; a_exact_only: BOOLEAN; a_exclude: BOOLEAN)
+			-- Called when the filter has been changed
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+		local
+			l_filter: ES_WARNINGS_FILTER_WIDGET
+			l_grid: like grid_events
+			l_row: EV_GRID_ROW
+			l_event: EVENT_LIST_ITEM_I
+			l_warning: ERROR
+			l_count, i: INTEGER
+		do
+			l_filter := filter_widget
+			l_grid := grid_events
+			from l_count := l_grid.row_count; i := 1 until i > l_count loop
+				l_row := l_grid.row (i)
+				if a_exclude /= not l_row.is_show_requested then
+					l_event ?= l_row.data
+					if l_event /= Void and then is_warning_event (l_event) then
+						l_warning ?= l_event.data
+						if l_warning /= Void then
+							if not l_filter.is_unfiltered (l_warning) then
+								if a_exclude then
+									l_row.hide
+								end
+							else
+								if not a_exclude then
+									l_row.show
+								end
+							end
+						end
+					end
+				end
+
+				if l_row.subrow_count_recursive > 1 then
+					i := i + l_row.subrow_count_recursive
+				else
+					i := i + 1
+				end
+			end
+
+			if l_filter.filtered.is_empty then
+				filter_button.set_pixel_buffer (stock_pixmaps.errors_and_warnings_filter_icon_buffer)
+				filter_button.set_pixmap (stock_pixmaps.errors_and_warnings_filter_icon)
+			else
+				filter_button.set_pixel_buffer (stock_pixmaps.errors_and_warnings_filter_active_icon_buffer)
+				filter_button.set_pixmap (stock_pixmaps.errors_and_warnings_filter_active_icon)
+			end
+		end
+
+feature {NONE} -- Factory
+
+	create_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			-- <Precursor>
+		do
+			create errors_button.make
+			errors_button.set_text (("0 ").as_string_32 + interface_names.b_errors.as_string_32)
+			errors_button.set_pixmap (stock_pixmaps.tool_error_icon)
+			errors_button.set_pixel_buffer (stock_pixmaps.tool_error_icon_buffer)
+			errors_button.enable_select
+			errors_button.select_actions.extend (agent on_toogle_errors_button)
+			errors_button.select_actions.compare_objects
+
+			create warnings_button.make
+			warnings_button.set_text (("0 ").as_string_32 + interface_names.b_warnings.as_string_32)
+			warnings_button.set_pixmap (stock_pixmaps.tool_warning_icon)
+			warnings_button.set_pixel_buffer (stock_pixmaps.tool_warning_icon_buffer)
+			warnings_button.enable_select
+			warnings_button.select_actions.extend (agent on_toogle_warnings_button)
+			warnings_button.select_actions.compare_objects
+
+			create Result.make (3)
+			Result.put_last (errors_button)
+			Result.put_last (create {SD_TOOL_BAR_SEPARATOR}.make)
+			Result.put_last (warnings_button)
+		ensure then
+			errors_button_attached: errors_button /= Void
+			warnings_button_attached: warnings_button /= Void
+		end
+
+	create_right_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			-- <Precursor>
+		local
+			l_button: SD_TOOL_BAR_BUTTON
+		do
+			create Result.make (9)
+
+				-- Navigation buttons
+			l_button := go_to_next_error_command.new_sd_toolbar_item (False)
+			Result.put_last (l_button)
+
+			l_button := go_to_previous_error_command.new_sd_toolbar_item (False)
+			Result.put_last (l_button)
+
+			l_button := go_to_next_warning_command.new_sd_toolbar_item (False)
+			Result.put_last (l_button)
+
+			l_button := go_to_previous_warning_command.new_sd_toolbar_item (False)
+			Result.put_last (l_button)
+
+			create delete_items_button.make
+			delete_items_button.set_pixel_buffer (stock_pixmaps.general_delete_icon_buffer)
+			delete_items_button.set_pixmap (stock_pixmaps.general_delete_icon)
+			delete_items_button.set_tooltip (locale_formatter.translation (tt_delete_items))
+			register_action (delete_items_button.select_actions, agent on_remove_selected_rows)
+			Result.put_last (delete_items_button)
+
+				-- Separator
+			Result.put_last (create {SD_TOOL_BAR_SEPARATOR}.make)
+
+				-- Automatic expand error button
+			create expand_errors_button.make
+			expand_errors_button.set_pixmap (stock_pixmaps.errors_and_warnings_expand_errors_icon)
+			expand_errors_button.set_pixel_buffer (stock_pixmaps.errors_and_warnings_expand_errors_icon_buffer)
+			expand_errors_button.set_tooltip (interface_names.f_toogle_expand_errors)
+			register_action (expand_errors_button.select_actions, agent on_toggle_expand_errors_button)
+			Result.put_last (expand_errors_button)
+
+			create error_info_command.make
+			error_info_button := error_info_command.new_sd_toolbar_item (False)
+				-- We need to do something else, like handle grid selection
+			error_info_button.select_actions.wipe_out
+			register_action (error_info_button.select_actions, agent on_error_info)
+			Result.put_last (error_info_button)
+
+				-- Filter pop up widget
+			create filter_widget.make
+			register_action (filter_widget.filter_changed_actions, agent on_warnings_filter_changed)
+
+				-- Filter button
+			create filter_button.make
+			filter_button.set_pixmap (stock_pixmaps.metric_filter_icon)
+			filter_button.set_pixel_buffer (stock_pixmaps.metric_filter_icon_buffer)
+			filter_button.set_tooltip (interface_names.f_filter_warnings)
+			filter_button.set_popup_widget (filter_widget)
+
+			Result.put_last (filter_button)
+		ensure then
+			filter_button_attached: filter_button /= Void
 		end
 
 feature {NONE} -- Constants

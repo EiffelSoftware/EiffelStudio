@@ -15,7 +15,6 @@ inherit
 		rename
 			show_context_menu as request_show_context_menu
 		redefine
-			build_tool_interface,
 			row_item_text,
 			request_show_context_menu,
 			internal_recycle,
@@ -25,10 +24,7 @@ inherit
 feature {NONE} -- Initialization
 
 	build_tool_interface (a_widget: ES_GRID)
-			-- Builds the tools user interface elements.
-			-- Note: This function is called prior to showing the tool for the first time.
-			--
-			-- `a_widget': A widget to build the tool interface using.
+			-- <Precursor>
 		do
 			grid_token_support.synchronize_color_or_font_change_with_editor
 			grid_token_support.enable_grid_item_pnd_support
@@ -56,7 +52,75 @@ feature {NONE} -- Clean up
 			internal_grid_token_support_detached: internal_grid_token_support = Void
 		end
 
-feature {NONE} -- Access
+feature {NONE} -- Query
+
+	row_item_text (a_item: EV_GRID_ITEM): STRING_32
+			-- <Precursor>
+		local
+			l_editor_item: EB_GRID_EDITOR_TOKEN_ITEM
+		do
+			l_editor_item ?= a_item
+			if l_editor_item /= Void then
+				Result := l_editor_item.text
+			else
+				Result := Precursor {ES_EVENT_LIST_TOOL_PANEL_BASE} (a_item)
+			end
+		end
+
+	tokens_list_from_lines (a_lines: LIST [EIFFEL_EDITOR_LINE]): ARRAYED_LIST [EDITOR_TOKEN]
+			-- Create a list of editor tokens from lines `a_lines'
+			--
+			-- `a_lines': Lines to create a token list from
+		require
+			a_lines_attached: a_lines /= Void
+			not_a_lines_is_empty: not a_lines.is_empty
+		local
+			l_cursor: CURSOR
+			l_eol: EDITOR_TOKEN_EOL
+			l_start: BOOLEAN
+		do
+			create Result.make (20)
+			l_cursor := a_lines.cursor
+			from a_lines.start until a_lines.after loop
+				if not l_start then
+					l_start := a_lines.item.count > 0
+				end
+				if l_start then
+						-- Ensures no blank lines at the beginning of the text
+					Result.append (a_lines.item.content)
+					if not a_lines.islast then
+						Result.extend (create {EDITOR_TOKEN_EOL}.make)
+					end
+				end
+				a_lines.forth
+			end
+			a_lines.go_to (l_cursor)
+
+			if not Result.is_empty then
+					-- Ensures no blank lines at the end of the text
+				l_eol ?= Result.last
+				from Result.finish until Result.before or l_eol = Void loop
+					l_eol ?= Result.item
+					if l_eol /= Void then
+						Result.remove
+					end
+					if not Result.before then
+						Result.back
+					end
+				end
+			end
+		ensure
+			result_attached: Result /= Void
+			a_lines_unmoved: a_lines.cursor.is_equal (old a_lines.cursor)
+		end
+
+feature {NONE} -- Helpers
+
+	token_generator: EB_EDITOR_TOKEN_GENERATOR
+			-- An editor token generator for generating editor token on grid items
+		once
+			Result := (create {EB_SHARED_WRITER}).token_writer
+		end
 
 	frozen grid_token_support: EB_EDITOR_TOKEN_GRID_SUPPORT
 			-- Support for using `grid_events' with editor token-based items
@@ -72,28 +136,35 @@ feature {NONE} -- Access
 			result_consistent: Result = grid_token_support
 		end
 
-	token_generator: EB_EDITOR_TOKEN_GENERATOR
-			-- An editor token generator for generating editor token on grid items
-		once
-			Result := (create {EB_SHARED_WRITER}).token_writer
+feature {NONE} -- Basic operations
+
+	frozen request_show_context_menu (a_item: EV_GRID_ITEM; a_x: INTEGER; a_y: INTEGER)
+			-- <Precursor>
+		do
+			if {l_item: EB_GRID_EDITOR_TOKEN_ITEM} a_item then
+				if grid_token_support.stone_at_position (a_x, a_y) = Void then
+						-- Only show the menu if a pick operation was not performed.
+					show_context_menu (a_item, a_x, a_y)
+				end
+			else
+				show_context_menu (a_item, a_x, a_y)
+			end
 		end
 
-feature {NONE} -- Query
-
-	row_item_text (a_item: EV_GRID_ITEM): STRING_32
-			-- Extracts a string representation of a grid row's cell item.
+	show_context_menu (a_item: EV_GRID_ITEM; a_x: INTEGER; a_y: INTEGER)
+			-- Called to show a context menu at the relative X/Y coordinates to `grid_events'
 			--
-			-- `a_item': Grid item to retrieve string representation for.
-			-- `Result': A string representation of the item or Void if not string representation could be created.
-		local
-			l_editor_item: EB_GRID_EDITOR_TOKEN_ITEM
+			-- `a_item': The grid item to display a context menu for.
+			-- `a_x': The relative X position on `grid_events'.
+			-- `a_t': The relative Y position on `grid_events'.
+		require
+			is_interface_usable: is_interface_usable
+			a_item_attached: a_item /= Void
+			a_item_parented: a_item.row /= Void
+			a_item_parented_to_grid_events: a_item.row.parent = grid_events
+			a_x_positive: a_x > 0
+			a_y_positive: a_y > 0
 		do
-			l_editor_item ?= a_item
-			if l_editor_item /= Void then
-				Result := l_editor_item.text
-			else
-				Result := Precursor {ES_EVENT_LIST_TOOL_PANEL_BASE} (a_item)
-			end
 		end
 
 feature {NONE} -- Factory
@@ -190,92 +261,14 @@ feature {NONE} -- Factory
 			result_attached: Result /= Void
 		end
 
-feature {NONE} -- Basic operations
-
-	frozen request_show_context_menu (a_item: EV_GRID_ITEM; a_x: INTEGER; a_y: INTEGER)
-			-- <Precursor>
-		do
-			if {l_item: EB_GRID_EDITOR_TOKEN_ITEM} a_item then
-				if grid_token_support.stone_at_position (a_x, a_y) = Void then
-						-- Only show the menu if a pick operation was not performed.
-					show_context_menu (a_item, a_x, a_y)
-				end
-			else
-				show_context_menu (a_item, a_x, a_y)
-			end
-		end
-
-	show_context_menu (a_item: EV_GRID_ITEM; a_x: INTEGER; a_y: INTEGER)
-			-- Called to show a context menu at the relative X/Y coordinates to `grid_events'
-			--
-			-- `a_item': The grid item to display a context menu for.
-			-- `a_x': The relative X position on `grid_events'.
-			-- `a_t': The relative Y position on `grid_events'.
-		require
-			is_interface_usable: is_interface_usable
-			a_item_attached: a_item /= Void
-			a_item_parented: a_item.row /= Void
-			a_item_parented_to_grid_events: a_item.row.parent = grid_events
-			a_x_positive: a_x > 0
-			a_y_positive: a_y > 0
-		do
-		end
-
-	tokens_list_from_lines (a_lines: LIST [EIFFEL_EDITOR_LINE]): ARRAYED_LIST [EDITOR_TOKEN]
-			-- Create a list of editor tokens from lines `a_lines'
-			--
-			-- `a_lines': Lines to create a token list from
-		require
-			a_lines_attached: a_lines /= Void
-			not_a_lines_is_empty: not a_lines.is_empty
-		local
-			l_cursor: CURSOR
-			l_eol: EDITOR_TOKEN_EOL
-			l_start: BOOLEAN
-		do
-			create Result.make (20)
-			l_cursor := a_lines.cursor
-			from a_lines.start until a_lines.after loop
-				if not l_start then
-					l_start := a_lines.item.count > 0
-				end
-				if l_start then
-						-- Ensures no blank lines at the beginning of the text
-					Result.append (a_lines.item.content)
-					if not a_lines.islast then
-						Result.extend (create {EDITOR_TOKEN_EOL}.make)
-					end
-				end
-				a_lines.forth
-			end
-			a_lines.go_to (l_cursor)
-
-			if not Result.is_empty then
-					-- Ensures no blank lines at the end of the text
-				l_eol ?= Result.last
-				from Result.finish until Result.before or l_eol = Void loop
-					l_eol ?= Result.item
-					if l_eol /= Void then
-						Result.remove
-					end
-					if not Result.before then
-						Result.back
-					end
-				end
-			end
-		ensure
-			result_attached: Result /= Void
-			a_lines_unmoved: a_lines.cursor.is_equal (old a_lines.cursor)
-		end
-
-feature {NONE} -- Internal implementation cache
+feature {NONE} -- Implementation: Internal cache
 
 	internal_grid_token_support: like grid_token_support
 			-- Cached version of `grid_token_support'
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -299,11 +292,11 @@ feature {NONE} -- Internal implementation cache
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

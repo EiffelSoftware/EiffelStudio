@@ -41,6 +41,9 @@ feature -- Manipulation
 				plural_char_tree.insert (a_entry, a_entry.original_singular)
 			end
 			count := count + 1
+		ensure then
+			extended: has (a_entry.original_singular) or else
+				has_plural (a_entry.original_singular, a_entry.original_plural, 1)
 		end
 
 feature -- Access

@@ -167,6 +167,11 @@ feature -- Initialization
 			c1: attached {STRING} Current.f
 			c1: attached {STRING} Current.f as cur
 
+			e1: attached u implies u.is_empty
+			e1: attached u as w implies w.is_empty
+			e1: attached {STRING} u implies u.is_empty
+			e1: attached {STRING} u as w implies w.is_empty
+
 			e1: attached attached o
 			e2: attached attached o as x
 			e3: attached attached {STRING} o
@@ -184,6 +189,7 @@ feature -- Initialization
 			e6: attached attached (old o) as x
 			e7: attached attached {STRING} (old o)
 			e8: attached attached {STRING} (old o) as x
+
 		end
 
 end

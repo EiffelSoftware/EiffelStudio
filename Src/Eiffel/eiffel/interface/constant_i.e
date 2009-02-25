@@ -230,14 +230,14 @@ feature -- C code generation
 					local_byte_context.add_thread_relative_once (type_c, body_index)
 					buffer.put_new_line
 					if local_byte_context.workbench_mode then
-						buffer.put_string ("RTOID (")
+						buffer.put_string (once "RTOID (")
 						buffer.put_string (internal_name)
 						buffer.put_character (')')
 						buffer.put_new_line
 						buffer.put_new_line
 					elseif not System.has_multithreaded then
 						header_buffer := local_byte_context.header_buffer
-						header_buffer.put_string ("RTOSHF (EIF_REFERENCE, ")
+						header_buffer.put_string (once "RTOSHF (EIF_REFERENCE, ")
 						header_buffer.put_integer (body_index)
 						header_buffer.put_character (')')
 						header_buffer.put_new_line
@@ -263,15 +263,15 @@ feature -- C code generation
 				if local_is_once then
 					buffer.put_new_line
 					if local_byte_context.workbench_mode then
-						buffer.put_string ("RTOTC (")
+						buffer.put_string (once "RTOTC (")
 						buffer.put_string (internal_name)
 						buffer.put_character (',')
 						buffer.put_integer (real_body_id (class_type))
 					elseif System.has_multithreaded then
-						buffer.put_string ("RTOUC (")
+						buffer.put_string (once "RTOUC (")
 						buffer.put_integer (local_byte_context.thread_relative_once_index (body_index))
 					else
-						buffer.put_string ("RTOSC (")
+						buffer.put_string (once "RTOSC (")
 						buffer.put_integer (body_index)
 					end
 					buffer.put_character (',')
@@ -280,24 +280,24 @@ feature -- C code generation
 				else
 					buffer.put_new_line
 					if local_byte_context.workbench_mode then
-						buffer.put_string ("EIF_TYPED_VALUE r;")
+						buffer.put_string (once "EIF_TYPED_VALUE r;")
 						buffer.put_new_line
-						buffer.put_string ("r.")
+						buffer.put_two_character('r', '.')
 						type_c.generate_typed_tag (buffer)
 						buffer.put_character (';')
 						buffer.put_new_line
-						buffer.put_string ("r.")
+						buffer.put_two_character('r', '.')
 						type_c.generate_typed_field (buffer)
-						buffer.put_string (" = ")
+						buffer.put_three_character (' ', '=', ' ')
 					else
-						buffer.put_string ("return ")
+						buffer.put_string (once "return ")
 					end
 					type_c.generate_cast (buffer)
 					value.generate (buffer)
 					if local_byte_context.workbench_mode then
 						buffer.put_character (';')
 						buffer.put_new_line
-						buffer.put_string ("return r")
+						buffer.put_string (once "return r")
 					end
 				end
 				buffer.put_character (';')

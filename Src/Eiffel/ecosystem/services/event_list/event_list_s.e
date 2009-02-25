@@ -19,6 +19,9 @@ deferred class
 inherit
 	SERVICE_I
 
+	LOCKABLE_I
+
+inherit {NONE}
 	EVENT_CONNECTION_POINT_I [EVENT_LIST_OBSERVER, EVENT_LIST_S]
 		rename
 			connection as event_list_connection
@@ -150,30 +153,6 @@ feature -- Events
 		deferred
 		end
 
-feature -- Events: Connection point
-
-	event_list_connection: !EVENT_CONNECTION_I [EVENT_LIST_OBSERVER, EVENT_LIST_S]
-			-- <Precursor>
-		local
-			l_result: like internal_event_list_connection
-		do
-			l_result := internal_event_list_connection
-			if l_result = Void then
-				create {EVENT_CONNECTION [EVENT_LIST_OBSERVER, EVENT_LIST_S]} Result.make (
-					agent (ia_observer: !EVENT_LIST_OBSERVER): !ARRAY [TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]]
-						do
-							Result := << [item_added_event, agent ia_observer.on_event_item_added],
-								[item_adopted_event, agent ia_observer.on_event_item_adopted],
-								[item_changed_event, agent ia_observer.on_event_item_changed],
-								[item_removed_event, agent ia_observer.on_event_item_removed] >>
-						end)
-				automation.auto_dispose (Result)
-				internal_event_list_connection := Result
-			else
-				Result := l_result
-			end
-		end
-
 feature -- Basic operations
 
 	adopt_event_item (a_new_cookie: UUID; a_event_item: EVENT_LIST_ITEM_I)
@@ -266,12 +245,6 @@ feature -- Query
 		do
 			Result := all_items.has (a_event_item)
 		end
-
-feature {NONE} -- Implementation: Internal cache
-
-	internal_event_list_connection: ?like event_list_connection
-			-- Cached version of `event_list_connection'.
-			-- Note: Do not use directly!
 
 ;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

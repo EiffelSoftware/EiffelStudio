@@ -16,6 +16,8 @@ inherit
 
 	DISPOSABLE_SAFE
 
+	LOCKABLE
+
 create
 	make
 
@@ -148,10 +150,14 @@ feature -- Removal
 			l_index_events: DS_ARRAYED_LIST [EVENT_LIST_ITEM_I]
 			l_event_items: DS_ARRAYED_LIST [EVENT_LIST_ITEM_I]
 			l_event_item: EVENT_LIST_ITEM_I
+			l_locked: BOOLEAN
 		do
 			if internal_event_items_index.has (a_context_cookie) then
 				l_index_events := internal_event_items_index.item (a_context_cookie)
 				if l_index_events /= Void then
+					lock
+					l_locked := True
+
 					l_event_items := internal_event_items
 						-- Iterate backwards as it is more optimal when removing items.
 					from l_index_events.finish until l_index_events.before loop
@@ -174,7 +180,14 @@ feature -- Removal
 
 						-- Remove all index events
 					internal_event_items_index.remove (a_context_cookie)
+
+					unlock
+					l_locked := False
 				end
+			end
+		rescue
+			if l_locked then
+				unlock
 			end
 		end
 
@@ -239,6 +252,30 @@ feature -- Events
 
 	item_adopted_event: !EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I; new_cookie: UUID; old_cookie: UUID]]
 			-- <Precursor>
+
+feature -- Events: Connection point
+
+	event_list_connection: !EVENT_CONNECTION_I [EVENT_LIST_OBSERVER, EVENT_LIST_S]
+			-- <Precursor>
+		local
+			l_result: like internal_event_list_connection
+		do
+			l_result := internal_event_list_connection
+			if l_result = Void then
+				create {EVENT_CHAINED_CONNECTION [EVENT_LIST_OBSERVER, EVENT_LIST_S, LOCKABLE_OBSERVER, LOCKABLE_I]} Result.make (
+					agent (ia_observer: !EVENT_LIST_OBSERVER): !ARRAY [TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]]
+						do
+							Result := << [item_added_event, agent ia_observer.on_event_item_added],
+								[item_adopted_event, agent ia_observer.on_event_item_adopted],
+								[item_changed_event, agent ia_observer.on_event_item_changed],
+								[item_removed_event, agent ia_observer.on_event_item_removed] >>
+						end, lockable_connection)
+				automation.auto_dispose (Result)
+				internal_event_list_connection := Result
+			else
+				Result := l_result
+			end
+		end
 
 feature {NONE} -- Events
 
@@ -308,7 +345,7 @@ feature {NONE} -- Events
 			end
 		end
 
-feature {NONE} -- Internal implementation cache
+feature {NONE} -- Implementation: Internal cache
 
 	internal_event_items: DS_ARRAYED_LIST [EVENT_LIST_ITEM_I]
 			-- Mutable events, ordered by addition for the purpose of correct indexing
@@ -316,10 +353,14 @@ feature {NONE} -- Internal implementation cache
 	internal_event_items_index: DS_HASH_TABLE [DS_ARRAYED_LIST [EVENT_LIST_ITEM_I], UUID]
 			-- Mutable event index for fast and context-based access
 
+	internal_event_list_connection: detachable like event_list_connection
+			-- Cached version of `event_list_connection'.
+			-- Note: Do not use directly!
+
 invariant
-	internal_event_items_attached: internal_event_items /= Void
+	internal_event_items_attached: attached internal_event_items /= Void
 	internal_event_items_contains_attached_items: not internal_event_items.has (Void)
-	internal_event_items_index_attached: internal_event_items_index /= Void
+	internal_event_items_index_attached: attached  internal_event_items_index
 	internal_event_items_index_contains_attached_items: not internal_event_items_index.has_item (Void)
 
 ;note

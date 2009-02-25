@@ -17,26 +17,26 @@ inherit
 			on_before_initialize,
 			on_after_initialized,
 			internal_recycle,
-			internal_detach_entities,
-			create_right_tool_bar_items,
 			is_appliable_event,
 			is_event_list_synchronized_on_initialized,
+			show,
+			show_context_menu,
+			update_content_applicable_widgets,
+			on_unlocked,
 			on_event_item_added,
 			on_event_item_removed,
 			on_handle_key,
-			update_content_applicable_widgets,
-			show,
-			show_context_menu
+			create_right_tool_bar_items
+		end
+
+	ES_ERROR_LIST_COMMANDER_I
+		export
+			{ES_ERROR_LIST_COMMANDER_I} all
 		end
 
 	ES_HELP_CONTEXT
 		export
 			{NONE} all
-		end
-
-	ES_ERROR_LIST_COMMANDER_I
-		export
-			{ES_ERROR_LIST_COMMAND} all
 		end
 
 	SESSION_EVENT_OBSERVER
@@ -174,15 +174,6 @@ feature {NONE} -- Clean up
 			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_PANEL_BASE}
 		end
 
-	internal_detach_entities
-			-- <Precursor>
-		do
-			Precursor
-			item_count_update_action := Void
-		ensure then
-			item_count_update_action_detached: not attached item_count_update_action
-		end
-
 feature {NONE} -- Access
 
 	error_count: NATURAL
@@ -193,11 +184,6 @@ feature {NONE} -- Access
 
 	managed_syntax_errors: DS_ARRAYED_LIST [EVENT_LIST_ERROR_ITEM_I]
 			-- List of managed syntax errors, used to perform error adoption.
-
-	item_count_update_action: detachable PROCEDURE [ANY, TUPLE]
-			-- Action used to perform an update on the error and warning count
-			--|Note: For performance enhancements to prevent unnecessary redraws.
-			--|      see `update_error_and_warning_counters'.
 
 feature {NONE} -- Access: Help
 
@@ -234,58 +220,18 @@ feature {NONE} -- Element change
 
 	set_error_count (a_count: like error_count)
 			-- Sets `error_count' to `a_count'
-		local
-			l_action: like item_count_update_action
 		do
 			error_count := a_count
-
-			l_action := item_count_update_action
-			if not attached l_action then
-					-- Create an agent to set the error count on the UI.
-				l_action := agent
-						-- Agent used to set the error count on the UI
-					do
-						if is_interface_usable and is_initialized then
-							update_error_and_warning_counters
-							item_count_update_action := Void
-						end
-					ensure
-						item_count_update_action_detached: not attached item_count_update_action
-					end
-				item_count_update_action := l_action
-				ev_application.do_once_on_idle (l_action)
-			end
 		ensure
 			error_count_set: error_count = a_count
-			item_count_update_action_attached: attached item_count_update_action
 		end
 
 	set_warning_count (a_count: like warning_count)
 			-- Sets `warning_count' to `a_count'
-		local
-			l_action: like item_count_update_action
 		do
 			warning_count := a_count
-
-			l_action := item_count_update_action
-			if not attached l_action then
-					-- Create an agent to set the error count on the UI.
-				l_action := agent
-						-- Agent used to set the error count on the UI
-					do
-						if is_interface_usable and is_initialized then
-							update_error_and_warning_counters
-							item_count_update_action := Void
-						end
-					ensure
-						item_count_update_action_detached: not attached item_count_update_action
-					end
-				item_count_update_action := l_action
-				ev_application.do_once_on_idle (l_action)
-			end
 		ensure
 			warning_count_set: warning_count = a_count
-			item_count_update_action_attached: attached item_count_update_action
 		end
 
 feature {NONE} -- Status report
@@ -864,6 +810,13 @@ feature {ES_ERROR_LIST_COMMANDER_I} -- Basic operations: Navigation
 		end
 
 feature {NONE} -- Event handlers
+
+	on_unlocked (a_sender: !LOCKABLE_I)
+			-- <Precursor>
+		do
+			update_error_and_warning_counters
+			Precursor (a_sender)
+		end
 
 	on_event_item_added (a_service: EVENT_LIST_S; a_event_item: EVENT_LIST_ITEM_I)
 			-- <Precursor>

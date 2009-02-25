@@ -81,7 +81,7 @@ feature -- Basic operations
 
 feature {NONE} -- Basic operations
 
-	show_errors_and_warnings_tool (a_window: EB_DEVELOPMENT_WINDOW)
+	show_errors_and_warnings_tool (a_window: EB_DEVELOPMENT_WINDOW; a_first_time_only: BOOLEAN)
 			-- Shows the error and warnings tool for window `a_window'
 			--
 			-- `a_window': The EiffelStudio development window to display the errors and warnings tool for
@@ -92,7 +92,7 @@ feature {NONE} -- Basic operations
 		do
 			if not a_window.is_recycled and then a_window.is_visible and then a_window = window_manager.last_focused_development_window then
 				l_tool := a_window.shell_tools.tool ({ES_ERROR_LIST_TOOL})
-				if l_tool /= Void and then not l_tool.is_recycled then
+				if l_tool /= Void and then l_tool.is_interface_usable then
 						-- Force tool to be shown
 					l_tool.show (True)
 				end
@@ -109,20 +109,29 @@ feature -- Output
 			l_consumer: SERVICE_CONSUMER [EVENT_LIST_S]
 			l_service: EVENT_LIST_S
 			l_context: UUID
+			l_locked: BOOLEAN
 		do
 			create l_consumer
 			if l_consumer.is_service_available then
 				l_warnings := handler.warning_list
 				if not l_warnings.is_empty then
 					l_service := l_consumer.service
+					l_service.lock
+					l_locked := True
 					l_context := warning_context
 					l_cursor := l_warnings.cursor
 					from l_warnings.start until l_warnings.after loop
 						l_service.put_event_item (l_context, create_warning_event_item (l_warnings.item))
 						l_warnings.forth
 					end
+					l_service.unlock
+					l_locked := False
 					l_warnings.go_to (l_cursor)
 				end
+			end
+		rescue
+			if l_locked and then attached l_service and then l_service.is_interface_usable then
+				l_service.lock
 			end
 		end
 
@@ -135,12 +144,15 @@ feature -- Output
 			l_consumer: SERVICE_CONSUMER [EVENT_LIST_S]
 			l_service: EVENT_LIST_S
 			l_context: UUID
+			l_locked: BOOLEAN
 		do
 			create l_consumer
 			if l_consumer.is_service_available then
 				l_errors := handler.error_list
 				if not l_errors.is_empty then
 					l_service := l_consumer.service
+					l_service.lock
+					l_locked := True
 					l_context := error_context
 					l_cursor := l_errors.cursor
 					from l_errors.start until l_errors.after loop
@@ -153,8 +165,14 @@ feature -- Output
 						end
 						l_errors.forth
 					end
+					l_service.unlock
+					l_locked := False
 					l_errors.go_to (l_cursor)
 				end
+			end
+		rescue
+			if l_locked and then attached l_service and then l_service.is_interface_usable then
+				l_service.lock
 			end
 		end
 

@@ -397,11 +397,12 @@ feature {NONE} -- Query
 					-- Count backwards as it is more optimal for use in item insertion/removal.
 				i := l_grid.row_count
 			until
-				i = 0 or Result /= Void
+				i = 0
 			loop
 				l_row := l_grid.row (i)
 				if l_row.data = a_event_item then
 					Result := l_row
+					i := 0
 				else
 					i := i - 1
 				end

@@ -128,9 +128,9 @@ feature -- Access
 	is_valid: BOOLEAN
 			-- Is the execution unit still valid ?
 		local
-			written_type: CLASS_TYPE
 			written_class: CLASS_C
 			f: FEATURE_AS
+			l_associated_class: CLASS_C
 		do
 			written_class := System.class_of_id (written_in)
 			if
@@ -138,8 +138,9 @@ feature -- Access
 				System.class_type_of_id (type_id) = class_type and then
 				class_type.associated_class.inherits_from (written_class)
 			then
-				written_type :=	class_type.written_type (written_class)
-				if written_type.is_precompiled then
+				if access_in = written_in and then class_type.written_type (written_class).is_precompiled then
+						-- If feature's routine id is generated from the written class and it is precompiled then
+						-- it must be valid.
 					Result := True
 				else
 						-- Feature may have disappeared from system and

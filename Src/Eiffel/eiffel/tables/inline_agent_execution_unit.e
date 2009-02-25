@@ -47,7 +47,8 @@ feature -- Access
 				System.class_type_of_id (type_id) = class_type
 			then
 				written_type :=	class_type.written_type (written_class)
-				if written_type.is_precompiled then
+				if written_in = access_in and then written_type.is_precompiled then
+						-- If routine id is from precompiled class then it must be valid.
 					Result := True
 				else
 						-- Feature may have disappeared from system and

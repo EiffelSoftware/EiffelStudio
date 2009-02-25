@@ -153,22 +153,23 @@ feature -- Removal
 				l_index_events := internal_event_items_index.item (a_context_cookie)
 				if l_index_events /= Void then
 					l_event_items := internal_event_items
-					from l_index_events.start until l_index_events.after loop
+						-- Iterate backwards as it is more optimal when removing items.
+					from l_index_events.finish until l_index_events.before loop
 						l_event_item := l_index_events.item_for_iteration
 
-						from l_event_items.start until l_event_items.after loop
-							l_event_items.search_forth (l_event_item)
-							if not l_event_items.after then
+						from l_event_items.finish until l_event_items.before loop
+							l_event_items.search_back (l_event_item)
+							if not l_event_items.before then
 									-- Remove event
 								l_event_items.remove_at
 
 									-- Fire events
 								on_item_removed (l_event_item)
-								l_event_items.start
+								l_event_items.finish
 							end
 						end
 
-						l_index_events.forth
+						l_index_events.back
 					end
 
 						-- Remove all index events
@@ -322,7 +323,7 @@ invariant
 	internal_event_items_index_contains_attached_items: not internal_event_items_index.has_item (Void)
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -346,11 +347,11 @@ invariant
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

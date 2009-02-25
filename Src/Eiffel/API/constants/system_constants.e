@@ -94,6 +94,8 @@ feature {NONE}
 
 	Eskelet: STRING = "eskelet"
 
+	Enames: STRING = "enames"
+
 	Estructure: STRING = "estructure"
 
 	Evisib: STRING = "evisib"

@@ -1292,17 +1292,29 @@ feature {NONE} -- Implementation
 
 feature -- Skeleton generation
 
+	generate_attribute_names (buffer: GENERATION_BUFFER)
+			-- Generate attributes names of Current class type
+		require
+			skeleton_exists: skeleton /= Void
+		do
+			if not skeleton.empty then
+					-- Generate attribute names sequence
+				buffer.put_string ("char *names")
+				buffer.put_integer (type_id)
+				buffer.put_string (" [] =%N")
+				skeleton.generate_name_array
+			end
+		end
+
 	generate_skeleton1 (buffer: GENERATION_BUFFER)
 			-- Generate skeleton names and types of Current class type
 		require
 			skeleton_exists: skeleton /= Void
 		do
 			if not skeleton.empty then
-					-- Generate attribute names sequence
-				buffer.put_string ("static char *names")
+				buffer.put_string ("extern char *names")
 				buffer.put_integer (type_id)
-				buffer.put_string (" [] =%N")
-				skeleton.generate_name_array
+				buffer.put_four_character ('[', ']', ';', '%N')
 
 					-- Generate attribute types sequence
 				buffer.put_string ("uint32 types")

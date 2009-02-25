@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+
+<project name="ARCHIVE_TOOLS" default="help">
+	<description>
+		description: "archive tools to zip/unzip"
+		author: "Jocelyn Fiat and others"
+	</description>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message=" geant zip -Aarchive={filename} -Afolder={foldername}" />
+		<echo message=" geant unzip -Aarchive={filename} -Afolder={foldername}" />
+	</target>	
+
+	<!-- end of set_version -->
+	<target name="zip">
+		<argument name="archive" />
+		<argument name="folder" />
+		<exec executable="7z a ${archive}.7z ${folder}" accept_errors="true" />
+	</target>
+
+	<target name="unzip">
+		<argument name="archive" />
+		<argument name="folder" />
+		<exec executable="7z x ${archive}.7z -o${folder}" accept_errors="true" />
+	</target>
+
+</project>

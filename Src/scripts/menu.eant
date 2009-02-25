@@ -34,6 +34,7 @@
 		<echo message=" o) Options" />
 		<echo message=" H) Help" />
 		<echo message=" Q) quit" />
+		<local name="answer" />
 		<input message=" -> " variable="answer" answer_required="true" validargs="1,2,3,4,5,6,7,8,w,h,H,o,Q,q" />
 		<set name="answer" value="o" if="$answer=O" />
 		<set name="answer" value="h" if="$answer=H" />
@@ -98,6 +99,8 @@
 		<echo message=" ==== " />
 		<echo message=" S) Save settings to current folder [local_config.eant]" />
 		<echo message=" Q) back to previous menu" />
+
+		<local name="answer_option" />
 		<input message=" -> " variable="answer_option" answer_required="true" validargs="1,2,3,4,5,6,7,8,9,s,S,q,Q" />
 		<geant if="$answer_option=1" target="_toggle_boolean_value" arguments="_EXIT_ON_FAILURE,$_EXIT_ON_FAILURE" />
 		<geant if="$answer_option=2" target="_toggle_boolean_value" arguments="_INCLUDE_DEVPACK,$_INCLUDE_DEVPACK" />
@@ -121,10 +124,9 @@
 		<argument name="a_mesg" />
 		<argument name="a_checked" />
 
-		<set name="tX" value="X" if="$a_checked=true" />
-		<set name="tX" value=" " unless="$a_checked=true" />
+		<local name="tX" value="X" if="$a_checked=true" />
+		<local name="tX" value=" " unless="$a_checked=true" />
 		<echo message=" $a_id) [$tX] $a_mesg" 	/>
-		<unset name="tX" />
 	</target>
 
 	<target name="_menu_clean">
@@ -139,6 +141,7 @@
 		<echo message=" 5) clean target delivery folder (EiffelXX)" />
 		<echo message=" ====" />
 		<echo message="Q) quit" />
+		<local name="$answer_clean" />
 		<input message=" -> " variable="answer_clean" answer_required="true" validargs="1,2,3,4,5,Q,q" />
 		<geant if="$answer_clean=1" target="clean_all" 		/>
 		<geant if="$answer_clean=2" target="clean_binaries_folder" 		/>
@@ -150,8 +153,8 @@
 	<target name="_toggle_boolean_value" >
 		<argument name="a_name" />
 		<argument name="a_value" />
-		<set name="$a_name" value="true" if="$a_value=false"/>
-		<set name="$a_name" value="false" if="$a_value=true"/>
+		<global name="$a_name" value="true" if="$a_value=false"/>
+		<global name="$a_name" value="false" if="$a_value=true"/>
 	</target>
 
 </project>

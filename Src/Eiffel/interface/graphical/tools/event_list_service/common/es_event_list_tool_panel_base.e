@@ -32,38 +32,32 @@ inherit
 feature {NONE} -- Initialization
 
 	on_before_initialize
-			-- Use to perform additional creation initializations, before the UI has been created.
+			-- <Precursor>
 		do
 			Precursor {ES_DOCKABLE_TOOL_PANEL}
 
-				-- Retrieve event list service
+				-- Connect the observer to the event list service.
 			if event_list.is_service_available then
 				event_list.service.event_list_connection.connect_events (Current)
 			end
 		end
 
 	on_after_initialized
-			-- Use to perform additional creation initializations, after the UI has been created.
+			-- <Precursor>
 		do
 				-- Set dynamic function for view optimzations in the grid.
-			grid_events.set_dynamic_content_function (agent (a_row, a_col: INTEGER; a_grid: like grid_events): EV_GRID_ITEM
+			grid_events.set_dynamic_content_function (agent (ia_row, ia_col: INTEGER; ia_grid: like grid_events): EV_GRID_ITEM
 					-- Set partially dynamic content function for populating event list items.
-				require
-					--a_row_small_enough: a_grid.row_count <= a_row
 				local
 					l_row: EV_GRID_ROW
-					l_event_item: EVENT_LIST_ITEM_I
 				do
-					l_row := a_grid.row (a_row)
-					l_event_item ?= l_row.data
-					if l_event_item /= Void then
+					l_row := ia_grid.row (ia_row)
+					if attached {EVENT_LIST_ITEM_I} l_row.data as l_event_item then
 							-- Only for the first request
 						populate_event_grid_row_items (l_event_item, l_row)
-						a_grid.grid_row_fill_empty_cells (l_row)
-					end
-
-					if Result = Void then
-							-- Create empty item
+						ia_grid.grid_row_fill_empty_cells (l_row)
+						Result := l_row.item (ia_col)
+					else
 						create {EV_GRID_ITEM} Result
 					end
 			end (?, ?, grid_events))
@@ -98,7 +92,8 @@ feature {NONE} -- Initialization
 				end (grid_events, ?, ?, ?, ?, ?, ?, ?, ?))
 
 			Precursor {ES_DOCKABLE_TOOL_PANEL}
-			if not surpress_synchronization then
+			if item_count = 0 then
+					-- Attempt synchronization
 				synchronize_event_list_items
 			end
 			update_content_applicable_widgets (item_count > 0)
@@ -141,35 +136,18 @@ feature {NONE} -- Access
 			Result := 0
 		end
 
-	frozen grid_wrapper: EVS_GRID_WRAPPER [EV_GRID_ROW]
-			-- A grid helper class
+feature {NONE} -- Status report
+
+	is_appliable_event (a_event_item: EVENT_LIST_ITEM_I): BOOLEAN
+			-- Determines if event `a_event_item' can be shown with the current event list tool
 		do
-			Result := internal_grid_wrapper
-			if Result = Void then
-				create Result.make (grid_events)
-				internal_grid_wrapper := Result
-				auto_recycle (internal_grid_wrapper)
-			end
-		ensure
-			result_attached: Result /= Void
-			result_consistent: Result = Result
+			Result := True
 		end
 
-feature {NONE} -- Helpers
+feature {NONE} -- Status report: Behaviour
 
-	frozen event_list: SERVICE_CONSUMER [EVENT_LIST_S]
-			-- Access to an event list service {EVENT_LIST_S} consumer
-		once
-			create Result
-		ensure
-			result_attached: Result /= Void
-		end
-
-feature -- Status report
-
-	scroll_list_automatically: BOOLEAN
-			-- Indicates if the list should automatically scroll to
-			-- the last item when a new item is added.
+	is_event_list_scrolled_automatically: BOOLEAN
+			-- Indicates if the list should automatically scroll to the last item when a new item is added.
 		local
 			l_grid: like grid_events
 		do
@@ -183,77 +161,30 @@ feature -- Status report
 			end
 		end
 
-	destory_old_items_automatically: BOOLEAN
+	is_event_list_synchronized_on_initialized: BOOLEAN
+			-- Indicates if synchonization with the event list service should be performed when initializing.
+		do
+				-- By default for list that destory items automatically
+				-- there will be not synchronization, because the will typically be logging tools.
+			Result := not has_maximum_list_length
+		end
+
+	has_maximum_list_length: BOOLEAN
 			-- Indicates if old event items should be destroyed automatically in a FIFO fashion.
 		do
 			Result := maximum_item_count > 0
 		end
 
-	surpress_synchronization: BOOLEAN
-			-- State to indicate if synchonization with the event list service should be suppressed
-			-- when initializing.
+feature {NONE} -- Status setting
+
+	frozen enable_copy_to_clipboard
+			-- Enables copying of grid items to the clipboard.
 		do
-				-- By default for list that destory items automatically
-				-- there will be not synchronization, because the will typically be logging tools.
-			Result := destory_old_items_automatically
+			grid_wrapper.set_selection_function (agent selected_text)
+			grid_wrapper.enable_copy
 		end
 
-feature {NONE} -- Basic operations
-
-	find_event_row (a_event_item: EVENT_LIST_ITEM_I): EV_GRID_ROW
-			-- Attempts to locate a grid row for event `a_event_item'
-		require
-			a_event_attached: a_event_item /= Void
-			a_event_is_appliable_event: is_appliable_event (a_event_item)
-		local
-			l_grid: like grid_events
-			l_row: EV_GRID_ROW
-			l_count, i: INTEGER
-		do
-			l_grid := grid_events
-			from
-				i := 1
-				l_count := l_grid.row_count
-			until
-				i > l_count or Result /= Void
-			loop
-				l_row := l_grid.row (i)
-				if l_row.data = a_event_item then
-					Result := l_row
-				else
-					i := i + 1
-				end
-			end
-		end
-
-	do_default_action (a_row: EV_GRID_ROW)
-			-- Performs a default actions for a given row.
-			--
-			-- `a_row': The row the user requested an action to be performed on.
-		require
-			is_interface_usable: is_interface_usable
-			a_row_attached: a_row /= Void
-			a_row_has_parent: a_row.parent /= Void
-			a_row_is_in_grid_events: a_row.index <= grid_events.row_count and then
-				grid_events.row (a_row.index) = a_row
-		deferred
-		end
-
-	show_context_menu (a_item: EV_GRID_ITEM; a_x: INTEGER; a_y: INTEGER)
-			-- Called to show a context menu at the relative X/Y coordinates to `grid_events'
-			--
-			-- `a_item': The grid item to display a context menu for.
-			-- `a_x': The relative X position on `grid_events'.
-			-- `a_t': The relative Y position on `grid_events'.
-		require
-			is_interface_usable: is_interface_usable
-			a_item_attached: a_item /= Void
-			a_item_parented: a_item.row /= Void
-			a_item_parented_to_grid_events: a_item.row.parent = grid_events
-			a_x_positive: a_x > 0
-			a_y_positive: a_y > 0
-		do
-		end
+feature {NONE} -- Query
 
 	selected_text: STRING_32
 			-- Retrieves selected item's text
@@ -346,48 +277,214 @@ feature {NONE} -- Basic operations
 			result_attached: Result /= Void
 		end
 
+	row_text (a_row: EV_GRID_ROW): STRING_32
+			-- Retrieves text for a given row.
+			--
+			-- `a_row': A row to retrieve a textual representation of.
+			-- `Result': The textual representation of `a_row'.
+		require
+			a_row_attached: a_row /= Void
+			not_a_row_is_destroyed: not a_row.is_destroyed
+		local
+			l_text: STRING_32
+			l_item: EV_GRID_ITEM
+			l_count, i: INTEGER
+		do
+			create Result.make_empty
+			l_count := a_row.count
+			from i := 1 until i > l_count loop
+				l_item := a_row.item (i)
+				if l_item /= Void then
+					l_text := row_item_text (l_item)
+					if l_text /= Void and then not l_text.is_empty then
+						Result.append (l_text)
+						Result.append_character ('%T')
+					end
+				end
+
+				i := i + 1
+			end
+			if not Result.is_empty then
+				Result.prune_all_trailing ('%T')
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
+	row_item_text (a_item: EV_GRID_ITEM): STRING_32
+			-- Extracts a string representation of a grid row's cell item.
+			--
+			-- `a_item': Grid item to retrieve string representation for.
+			-- `Result': A string representation of the item or Void if not string representation could be created.
+		require
+			a_item_attached: a_item /= Void
+			not_a_item_is_destroyed: not a_item.is_destroyed
+			a_item_is_parented: a_item.is_parented
+		local
+			l_label_item: EV_GRID_LABEL_ITEM
+			l_string: STRING_GENERAL
+		do
+			l_label_item ?= a_item
+			if l_label_item /= Void then
+				Result := l_label_item.text
+			end
+			if Result = Void or else Result.is_empty then
+					-- There might be string information in the item data, use that.
+				l_string ?= a_item.data
+				if l_string /= Void then
+					Result := l_string.to_string_32
+				end
+			end
+			if Result = Void then
+				create Result.make_empty
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
+	category_icon_from_event_item (a_event_item: EVENT_LIST_ITEM_I): EV_PIXMAP
+			-- Retrieves a pixmap associated with a event item's category.
+			--
+			-- `a_event_item': The event item to query a category of.
+			-- `a_pixmap': The pixmap representing the event item's category.
+		require
+			a_event_item_attached: a_event_item /= Void
+		do
+			inspect a_event_item.category
+			when {ENVIRONMENT_CATEGORIES}.compilation then
+				Result := stock_pixmaps.compile_animation_7_icon
+			when {ENVIRONMENT_CATEGORIES}.refactoring then
+				Result := stock_pixmaps.refactor_rename_icon
+			when {ENVIRONMENT_CATEGORIES}.editor then
+				Result := stock_pixmaps.general_document_icon
+			when {ENVIRONMENT_CATEGORIES}.debugger then
+				Result := stock_pixmaps.debugger_environment_force_debug_mode_icon
+			else
+				-- No matching category
+			end
+		end
+
+	priority_icon_from_event_item (a_event_item: EVENT_LIST_ITEM_I): EV_PIXMAP
+			-- Retrieves a pixmap associated with a event item's priority.
+			--
+			-- `a_event_item': The event item to query a category of.
+			-- `a_pixmap': The pixmap representing the event items's priority.
+		require
+			a_event_item_attached: a_event_item /= Void
+		do
+			inspect a_event_item.priority
+			when {PRIORITY_LEVELS}.low then
+				Result := stock_pixmaps.priority_low_icon
+			when {PRIORITY_LEVELS}.normal then
+				--| Just return Void
+			when {PRIORITY_LEVELS}.high then
+				Result := stock_pixmaps.priority_high_icon
+			end
+		end
+
+	find_event_row (a_event_item: EVENT_LIST_ITEM_I): EV_GRID_ROW
+			-- Attempts to locate a grid row for event `a_event_item'
+		require
+			a_event_attached: a_event_item /= Void
+			a_event_is_appliable_event: is_appliable_event (a_event_item)
+		local
+			l_grid: like grid_events
+			l_row: EV_GRID_ROW
+			l_count, i: INTEGER
+		do
+			l_grid := grid_events
+			from
+				i := 1
+				l_count := l_grid.row_count
+			until
+				i > l_count or Result /= Void
+			loop
+				l_row := l_grid.row (i)
+				if l_row.data = a_event_item then
+					Result := l_row
+				else
+					i := i + 1
+				end
+			end
+		end
+
+feature {NONE} -- Helpers
+
+	frozen event_list: SERVICE_CONSUMER [EVENT_LIST_S]
+			-- Access to an event list service {EVENT_LIST_S} consumer
+		once
+			create Result
+		ensure
+			result_attached: Result /= Void
+		end
+
+	frozen grid_wrapper: EVS_GRID_WRAPPER [EV_GRID_ROW]
+			-- A grid helper class
+		do
+			Result := internal_grid_wrapper
+			if Result = Void then
+				create Result.make (grid_events)
+				internal_grid_wrapper := Result
+				auto_recycle (internal_grid_wrapper)
+			end
+		ensure
+			result_attached: Result /= Void
+			result_consistent: Result = Result
+		end
+
+feature {NONE} -- Basic operations
+
+	do_default_action (a_row: EV_GRID_ROW)
+			-- Performs a default actions for a given row.
+			--
+			-- `a_row': The row the user requested an action to be performed on.
+		require
+			is_interface_usable: is_interface_usable
+			a_row_attached: a_row /= Void
+			a_row_has_parent: a_row.parent /= Void
+			a_row_is_in_grid_events: a_row.index <= grid_events.row_count and then
+				grid_events.row (a_row.index) = a_row
+		deferred
+		end
+
+	show_context_menu (a_item: EV_GRID_ITEM; a_x: INTEGER; a_y: INTEGER)
+			-- Called to show a context menu at the relative X/Y coordinates to `grid_events'
+			--
+			-- `a_item': The grid item to display a context menu for.
+			-- `a_x': The relative X position on `grid_events'.
+			-- `a_t': The relative Y position on `grid_events'.
+		require
+			is_interface_usable: is_interface_usable
+			a_item_attached: a_item /= Void
+			a_item_parented: a_item.row /= Void
+			a_item_parented_to_grid_events: a_item.row.parent = grid_events
+			a_x_positive: a_x > 0
+			a_y_positive: a_y > 0
+		do
+		end
+
 	synchronize_event_list_items
 			-- Synchronized the event list items already pushed to the service before the tool was shown
 		require
 			is_initialized: is_initialized
-			not_surpress_synchronization: not surpress_synchronization
+			is_event_list_synchronized_on_initialized: is_event_list_synchronized_on_initialized
 		do
 			if event_list.is_service_available then
 				event_list.service.all_items.do_all (agent on_event_item_added (event_list.service, ?))
 			end
 		end
 
-feature {NONE} -- Removal
-
-	remove_all_selected_event_list_rows
-			-- Removes all the selected event list rows.
-		require
-			is_interface_usable: is_interface_usable
-			is_multiple_row_selection_enabled: grid_events.is_multiple_row_selection_enabled
-		local
-			l_selected: ARRAYED_LIST [EV_GRID_ROW]
-		do
-			l_selected := grid_events.selected_rows
-			if l_selected /= Void and then not l_selected.is_empty then
-				l_selected.do_all (agent remove_event_list_row)
-			end
-		end
-
-	remove_event_list_row (a_row: EV_GRID_ROW)
-			-- Removes a single event list row.
+	update_content_applicable_widgets (a_enable: BOOLEAN)
+			-- Updates widgets on tool that require content to exist
 			--
-			-- `a_row': The event list row to remove
+			-- `a_enable': True to indicate there is content available, False otherwise
 		require
-			is_interface_usable: is_interface_usable
-			a_row_attached: a_row /= Void
-			a_row_parented_to_grid_events: a_row.parent = grid_events
+			item_count_positive: a_enable implies grid_events.row_count > 0
+			item_count_is_zero: not a_enable implies grid_events.row_count = 0
 		do
-			if event_list.is_service_available and then {l_item: EVENT_LIST_ITEM_I} a_row.data then
-				event_list.service.prune_event_item (l_item)
-			end
 		end
 
-feature {NONE} -- Navigation
+feature {NONE} -- Basic operations: Navigation
 
 	move_next (a_query_action: FUNCTION [ANY, TUPLE [EVENT_LIST_ITEM_I], BOOLEAN])
 			-- Moves to the next item in the errors and warnings list based on some fundamental conditions.
@@ -663,6 +760,36 @@ feature {NONE} -- Navigation
 			do_default_action (a_row)
 		end
 
+feature {NONE} -- Removal
+
+	remove_event_list_row (a_row: EV_GRID_ROW)
+			-- Removes a single event list row.
+			--
+			-- `a_row': The event list row to remove.
+		require
+			is_interface_usable: is_interface_usable
+			a_row_attached: a_row /= Void
+			a_row_parented_to_grid_events: a_row.parent = grid_events
+		do
+			if event_list.is_service_available and then {l_item: EVENT_LIST_ITEM_I} a_row.data then
+				event_list.service.prune_event_item (l_item)
+			end
+		end
+
+	remove_all_selected_event_list_rows
+			-- Removes all the selected event list rows.
+		require
+			is_interface_usable: is_interface_usable
+			is_multiple_row_selection_enabled: grid_events.is_multiple_row_selection_enabled
+		local
+			l_selected: ARRAYED_LIST [EV_GRID_ROW]
+		do
+			l_selected := grid_events.selected_rows
+			if l_selected /= Void and then not l_selected.is_empty then
+				l_selected.do_all (agent remove_event_list_row)
+			end
+		end
+
 feature {NONE} -- Sort handling
 
 	frozen enable_sorting_on_columns (a_columns: ARRAY [EV_GRID_COLUMN])
@@ -696,13 +823,6 @@ feature {NONE} -- Sort handling
 				end
 				i := i + 1
 			end
-		end
-
-	frozen enable_copy_to_clipboard
-			-- Enables copying of grid items to the clipboard
-		do
-			grid_wrapper.set_selection_function (agent selected_text)
-			grid_wrapper.enable_copy
 		end
 
 	frozen sorting_row_comparer (a_row, a_other_row: EV_GRID_ROW; a_order: INTEGER_32; a_column: INTEGER): BOOLEAN
@@ -841,132 +961,7 @@ feature {NONE} -- Sort handling
 			l_grid.unlock_update
 		end
 
-feature {NONE} -- UI manipulation
-
-	update_content_applicable_widgets (a_enable: BOOLEAN)
-			-- Updates widgets on tool that require content to exist
-			--
-			-- `a_enable': True to indicate there is content available, False otherwise
-		require
-			item_count_positive: a_enable implies grid_events.row_count > 0
-			item_count_is_zero: not a_enable implies grid_events.row_count = 0
-		do
-		end
-
-feature {NONE} -- Query
-
-	is_appliable_event (a_event_item: EVENT_LIST_ITEM_I): BOOLEAN
-			-- Determines if event `a_event_item' can be shown with the current event list tool
-		do
-			Result := True
-		end
-
-	row_item_text (a_item: EV_GRID_ITEM): STRING_32
-			-- Extracts a string representation of a grid row's cell item.
-			--
-			-- `a_item': Grid item to retrieve string representation for.
-			-- `Result': A string representation of the item or Void if not string representation could be created.
-		require
-			a_item_attached: a_item /= Void
-			not_a_item_is_destroyed: not a_item.is_destroyed
-			a_item_is_parented: a_item.is_parented
-		local
-			l_label_item: EV_GRID_LABEL_ITEM
-			l_string: STRING_GENERAL
-		do
-			l_label_item ?= a_item
-			if l_label_item /= Void then
-				Result := l_label_item.text
-			end
-			if Result = Void or else Result.is_empty then
-					-- There might be string information in the item data, use that.
-				l_string ?= a_item.data
-				if l_string /= Void then
-					Result := l_string.to_string_32
-				end
-			end
-			if Result = Void then
-				create Result.make_empty
-			end
-		ensure
-			result_attached: Result /= Void
-		end
-
-	row_text (a_row: EV_GRID_ROW): STRING_32
-			-- Retrieves text for a given row.
-			--
-			-- `a_row': A row to retrieve a textual representation of.
-			-- `Result': The textual representation of `a_row'.
-		require
-			a_row_attached: a_row /= Void
-			not_a_row_is_destroyed: not a_row.is_destroyed
-		local
-			l_text: STRING_32
-			l_item: EV_GRID_ITEM
-			l_count, i: INTEGER
-		do
-			create Result.make_empty
-			l_count := a_row.count
-			from i := 1 until i > l_count loop
-				l_item := a_row.item (i)
-				if l_item /= Void then
-					l_text := row_item_text (l_item)
-					if l_text /= Void and then not l_text.is_empty then
-						Result.append (l_text)
-						Result.append_character ('%T')
-					end
-				end
-
-				i := i + 1
-			end
-			if not Result.is_empty then
-				Result.prune_all_trailing ('%T')
-			end
-		ensure
-			result_attached: Result /= Void
-		end
-
-	category_icon_from_event_item (a_event_item: EVENT_LIST_ITEM_I): EV_PIXMAP
-			-- Retrieves a pixmap associated with a event item's category.
-			--
-			-- `a_event_item': The event item to query a category of.
-			-- `a_pixmap': The pixmap representing the event item's category.
-		require
-			a_event_item_attached: a_event_item /= Void
-		do
-			inspect a_event_item.category
-			when {ENVIRONMENT_CATEGORIES}.compilation then
-				Result := stock_pixmaps.compile_animation_7_icon
-			when {ENVIRONMENT_CATEGORIES}.refactoring then
-				Result := stock_pixmaps.refactor_rename_icon
-			when {ENVIRONMENT_CATEGORIES}.editor then
-				Result := stock_pixmaps.general_document_icon
-			when {ENVIRONMENT_CATEGORIES}.debugger then
-				Result := stock_pixmaps.debugger_environment_force_debug_mode_icon
-			else
-				-- No matching category
-			end
-		end
-
-	priority_icon_from_event_item (a_event_item: EVENT_LIST_ITEM_I): EV_PIXMAP
-			-- Retrieves a pixmap associated with a event item's priority.
-			--
-			-- `a_event_item': The event item to query a category of.
-			-- `a_pixmap': The pixmap representing the event items's priority.
-		require
-			a_event_item_attached: a_event_item /= Void
-		do
-			inspect a_event_item.priority
-			when {PRIORITY_LEVELS}.low then
-				Result := stock_pixmaps.priority_low_icon
-			when {PRIORITY_LEVELS}.normal then
-				--| Just return Void
-			when {PRIORITY_LEVELS}.high then
-				Result := stock_pixmaps.priority_high_icon
-			end
-		end
-
-feature {NONE} -- Events
+feature {EVENT_LIST_OBSERVER} -- Events handlers
 
 	on_event_item_added (a_service: EVENT_LIST_S; a_event_item: EVENT_LIST_ITEM_I)
 			-- <Precursor>
@@ -983,7 +978,7 @@ feature {NONE} -- Events
 				l_grid.header.item.remove_pixmap
 
 				l_add := maximum_item_count = 0 or else item_count < maximum_item_count
-				if not l_add and then destory_old_items_automatically and then l_count > 0 then
+				if not l_add and then has_maximum_list_length and then l_count > 0 then
 						-- Remove top grid item
 					l_event_item ?= l_grid.row (1).data
 					check
@@ -1009,7 +1004,7 @@ feature {NONE} -- Events
 
 				item_count := item_count + 1
 
-				if scroll_list_automatically then
+				if is_event_list_scrolled_automatically then
 					l_row.ensure_visible
 				end
 
@@ -1020,8 +1015,8 @@ feature {NONE} -- Events
 			end
 		ensure then
 			a_event_find_event_row: is_initialized and then is_appliable_event (a_event_item) implies find_event_row (a_event_item) /= Void
-			item_count_increased: (is_initialized and then is_appliable_event (a_event_item) and not destory_old_items_automatically) implies item_count = old item_count + 1
-			item_count_small_enought: destory_old_items_automatically implies item_count <= maximum_item_count
+			item_count_increased: (is_initialized and then is_appliable_event (a_event_item) and not has_maximum_list_length) implies item_count = old item_count + 1
+			item_count_small_enought: has_maximum_list_length implies item_count <= maximum_item_count
 		end
 
 	on_event_item_removed (a_service: EVENT_LIST_S; a_event_item: EVENT_LIST_ITEM_I)
@@ -1117,6 +1112,8 @@ feature {NONE} -- Events
 			a_event_find_event_row: is_initialized and then is_appliable_event (a_event_item) implies find_event_row (a_event_item) /= Void
 		end
 
+feature {NONE} -- Action handlers
+
 	on_grid_events_item_pointer_double_press (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_item: EV_GRID_ITEM)
 			-- Called when the user double clicks the grid
 		do
@@ -1158,14 +1155,14 @@ feature {NONE} -- Factory
 			a_row_has_event_item_data: a_row.data = a_event_item
 		end
 
-feature {NONE} -- Internal implementation cache
+feature {NONE} -- Implementation: Internal cache
 
 	internal_grid_wrapper: like grid_wrapper
 			-- Cached version of `grid_wrapper'
 			-- Note: Do not use directly!
 
 invariant
-	grid_events_attached: is_initialized implies grid_events /= Void
+	grid_events_attached: (is_initialized and is_interface_usable) implies attached grid_events
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

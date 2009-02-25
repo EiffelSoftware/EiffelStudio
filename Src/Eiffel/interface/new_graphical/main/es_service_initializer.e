@@ -52,7 +52,7 @@ feature {NONE} -- Factory
 				extend_code_template_catalog (Result)
 			end
 		ensure
-			result_is_interface_usable: attached Result implies Result.is_interface_usable
+			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end
 
 	new_file_notifier_service: detachable FILE_NOTIFIER_S
@@ -60,7 +60,7 @@ feature {NONE} -- Factory
 		do
 			create {FILE_NOTIFIER} Result.make
 		ensure
-			result_is_interface_usable: attached Result implies Result.is_interface_usable
+			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end
 
 	new_help_providers_service: detachable HELP_PROVIDERS_S
@@ -71,7 +71,7 @@ feature {NONE} -- Factory
 				register_help_providers (Result)
 			end
 		ensure
-			result_is_interface_usable: attached Result implies Result.is_interface_usable
+			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end
 
 	new_status_bar_service: detachable STATUS_BAR_S
@@ -79,7 +79,7 @@ feature {NONE} -- Factory
 		do
 			create {STATUS_BAR} Result
 		ensure
-			result_is_interface_usable: attached Result implies Result.is_interface_usable
+			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end
 
 	new_testing_service: detachable TEST_SUITE_S
@@ -100,7 +100,7 @@ feature {NONE} -- Factory
 		do
 			create {WIZARD_ENGINE} Result
 		ensure
-			result_is_interface_usable: attached Result implies Result.is_interface_usable
+			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end
 
 feature {NONE} -- Registering: Code templates

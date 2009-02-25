@@ -201,6 +201,7 @@ test	attached_tuple_element		syntax052 tcf fail syntax tuple attached
 test	obsolete-inline-agent		syntax053 tcf fail syntax
 test	invalid-manifest-type-char-constant	syntax054 tcf fail syntax
 test	note-syntax				syntax055 tcf pass syntax
+test	attached-syntax				syntax056 tcf pass syntax attached
 
 
 -- Validity tests

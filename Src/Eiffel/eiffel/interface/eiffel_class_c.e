@@ -2233,6 +2233,7 @@ feature {NONE} -- Backup implementation
 				l_system := l_load.last_system
 				create l_vis
 				l_vis.set_backup_directory (create {DIRECTORY_NAME}.make_from_string (a_location))
+				l_vis.set_is_il_generation (system.il_generation)
 				l_system.process (l_vis)
 				create l_file_name.make_from_string (a_location)
 				l_file_name.extend (a_system.uuid.out)

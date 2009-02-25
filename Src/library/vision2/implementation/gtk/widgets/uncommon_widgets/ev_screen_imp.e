@@ -342,7 +342,7 @@ feature {NONE} -- Externals (XTEST extension)
 		external
 			"C inline use <gtk/gtk.h>"
 		alias
-			"return (FUNCTION_CAST(void, (GdkDisplay*, GdkScreen*, gint, gint)) $a_function) ((GdkDisplay*) $a_display, (GdkScreen*) $a_screen, (gint) $a_x, (gint) $a_y)"
+			"(FUNCTION_CAST(void, (GdkDisplay*, GdkScreen*, gint, gint)) $a_function) ((GdkDisplay*) $a_display, (GdkScreen*) $a_screen, (gint) $a_x, (gint) $a_y)"
 		end
 
 	x_keysym_to_keycode_symbol: POINTER

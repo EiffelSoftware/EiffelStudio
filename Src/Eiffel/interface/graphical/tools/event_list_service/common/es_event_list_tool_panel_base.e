@@ -24,6 +24,8 @@ inherit
 
 	EVENT_LIST_OBSERVER
 		redefine
+			on_locked,
+			on_unlocked,
 			on_event_item_added,
 			on_event_item_removed,
 			on_event_item_changed
@@ -91,7 +93,14 @@ feature {NONE} -- Initialization
 					end
 				end (grid_events, ?, ?, ?, ?, ?, ?, ?, ?))
 
-			Precursor {ES_DOCKABLE_TOOL_PANEL}
+			Precursor
+
+			if event_list.is_service_available and then event_list.service.is_locked then
+					-- If the service has already performed a lock, but the UI was not initialized then we need
+					-- to call the lock handler now.
+				on_locked (event_list.service)
+			end
+
 			if item_count = 0 then
 					-- Attempt synchronization
 				synchronize_event_list_items
@@ -465,13 +474,83 @@ feature {NONE} -- Basic operations
 		end
 
 	synchronize_event_list_items
-			-- Synchronized the event list items already pushed to the service before the tool was shown
+			-- Synchronized the event list items already pushed to the service before the tool was shown.
+			-- Note: Do not call more than once and only during initialization.
 		require
 			is_initialized: is_initialized
 			is_event_list_synchronized_on_initialized: is_event_list_synchronized_on_initialized
+		local
+			l_service: EVENT_LIST_S
+			l_items: DS_BILINEAR [EVENT_LIST_ITEM_I]
+			l_cursor: DS_BILINEAR_CURSOR [EVENT_LIST_ITEM_I]
+			l_applicable_items: DS_ARRAYED_LIST [EVENT_LIST_ITEM_I]
+			l_transition: ES_POPUP_TRANSITION_WINDOW
+			l_locked: BOOLEAN
+			l_count, i: INTEGER
 		do
 			if event_list.is_service_available then
-				event_list.service.all_items.do_all (agent on_event_item_added (event_list.service, ?))
+					-- Fake all events to synchronize what is in the event list with the Current panel.
+				check no_rows_added: grid_events.row_count = 0 end
+				l_service := event_list.service
+				l_items := l_service.all_items
+
+				if not l_items.is_empty then
+						-- Perform lock, for UI optimization purposes.
+					if not l_service.is_locked then
+						l_service.lock
+						l_locked := True
+					end
+
+						-- Perform optimization to only display what is necessary.
+						-- This involves extracting only applicable items, and if a maximum item count is
+						-- set, the ensuring we do not add more than the maximum.
+					l_count := l_items.count
+					if has_maximum_list_length then
+						l_count := maximum_item_count.as_integer_32.min (l_count)
+					end
+					create l_applicable_items.make (l_count)
+
+					l_cursor := l_items.new_cursor
+					from l_cursor.finish until i = l_count or l_cursor.before loop
+						if attached l_cursor.item as l_item and then is_appliable_event (l_item) then
+							l_applicable_items.put_last (l_item)
+							i := i + 1
+						end
+						l_cursor.back
+					end
+					if not l_cursor.off then
+							-- Prevent memory leak.
+						l_cursor.start
+						l_cursor.back
+					end
+
+					if l_applicable_items.count > 100 then
+							-- Display a transition window if the error count is high
+						create l_transition.make_with_icon (locale_formatter.translation (l_synchronizing_errors), tool_descriptor.icon)
+						l_transition.show_on_active_window
+					end
+
+						-- Go through the applicable items and add them to the error list tool.
+						-- Note: We loop backwards because the items were added backwards, and for some tools
+						--       order will be quite important.
+					from l_applicable_items.finish until l_applicable_items.before loop
+						if attached l_applicable_items.item_for_iteration as l_item then
+								-- Fake the item added event.
+							on_event_item_added (l_service, l_item)
+						end
+						l_applicable_items.back
+					end
+
+					if l_transition /= Void and then l_transition.is_shown then
+							-- Hide any transition window.
+						l_transition.hide
+					end
+
+					if l_locked then
+							-- Perform unlock, for UI optimization purposes.
+						l_service.unlock
+					end
+				end
 			end
 		end
 
@@ -962,9 +1041,32 @@ feature {NONE} -- Sort handling
 			l_grid.unlock_update
 		end
 
+feature {LOCKABLE_I} -- Event handlers
+
+	on_locked (a_sender: attached LOCKABLE_I)
+			-- <Precursor>
+		do
+			Precursor (a_sender)
+
+			if not is_initialized then
+				initialize
+			end
+			grid_events.lock_update
+		end
+
+	on_unlocked (a_sender: attached LOCKABLE_I)
+			-- <Precursor>
+		do
+			Precursor (a_sender)
+
+			if is_initialized then
+				grid_events.unlock_update
+			end
+		end
+
 feature {EVENT_LIST_OBSERVER} -- Events handlers
 
-	on_event_item_added (a_service: EVENT_LIST_S; a_event_item: EVENT_LIST_ITEM_I)
+	on_event_item_added (a_sender: EVENT_LIST_S; a_event_item: EVENT_LIST_ITEM_I)
 			-- <Precursor>
 		local
 			l_add: BOOLEAN
@@ -973,6 +1075,8 @@ feature {EVENT_LIST_OBSERVER} -- Events handlers
 			l_row: EV_GRID_ROW
 			l_count: INTEGER
 		do
+			Precursor (a_sender, a_event_item)
+
 			if is_initialized and then is_appliable_event (a_event_item) then
 				l_grid := grid_events
 				l_count := l_grid.row_count
@@ -985,7 +1089,7 @@ feature {EVENT_LIST_OBSERVER} -- Events handlers
 					check
 						l_event_attached: l_event_item /= Void
 					end
-					on_event_item_removed (a_service, l_event_item)
+					on_event_item_removed (a_sender, l_event_item)
 				end
 
 				check
@@ -1020,7 +1124,7 @@ feature {EVENT_LIST_OBSERVER} -- Events handlers
 			item_count_small_enought: has_maximum_list_length implies item_count <= maximum_item_count
 		end
 
-	on_event_item_removed (a_service: EVENT_LIST_S; a_event_item: EVENT_LIST_ITEM_I)
+	on_event_item_removed (a_sender: EVENT_LIST_S; a_event_item: EVENT_LIST_ITEM_I)
 			-- <Precursor>
 		local
 			l_grid: like grid_events
@@ -1031,6 +1135,8 @@ feature {EVENT_LIST_OBSERVER} -- Events handlers
 			l_index: INTEGER
 			l_selected: BOOLEAN
 		do
+			Precursor (a_sender, a_event_item)
+
 			if is_initialized and then is_appliable_event (a_event_item) then
 				l_row := find_event_row (a_event_item)
 				if l_row /= Void then
@@ -1096,11 +1202,13 @@ feature {EVENT_LIST_OBSERVER} -- Events handlers
 			item_count_increased: is_initialized and then is_appliable_event (a_event_item) implies item_count = old item_count - 1
 		end
 
-	on_event_item_changed (a_service: EVENT_LIST_S; a_event_item: EVENT_LIST_ITEM_I)
+	on_event_item_changed (a_sender: EVENT_LIST_S; a_event_item: EVENT_LIST_ITEM_I)
 			-- <Precursor>
 		local
 			l_row: EV_GRID_ROW
 		do
+			Precursor (a_sender, a_event_item)
+
 			if is_initialized and then is_appliable_event (a_event_item) then
 				l_row := find_event_row (a_event_item)
 				if l_row /= Void then
@@ -1161,6 +1269,10 @@ feature {NONE} -- Implementation: Internal cache
 	internal_grid_wrapper: like grid_wrapper
 			-- Cached version of `grid_wrapper'
 			-- Note: Do not use directly!
+
+feature {NONE} -- Internationalization
+
+	l_synchronizing_errors: STRING = "Retrieving last compilation's error and warning information..."
 
 invariant
 	grid_events_attached: (is_initialized and is_interface_usable) implies attached grid_events

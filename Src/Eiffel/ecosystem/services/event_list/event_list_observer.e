@@ -13,6 +13,8 @@ class
 inherit
 	EVENT_OBSERVER_I
 
+	LOCKABLE_OBSERVER
+
 feature {EVENT_LIST_S} -- Event handlers
 
 	on_event_item_added (a_service: EVENT_LIST_S; a_event_item: EVENT_LIST_ITEM_I)

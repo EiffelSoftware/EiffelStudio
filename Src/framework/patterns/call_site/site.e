@@ -17,10 +17,10 @@ feature -- Initialization
 			--
 			-- `a_site': The site object to site Current with or Void to unsite.
 		require
-			is_interface_usable: attached a_site implies
+			is_interface_usable: a_site /= Void implies
 				(attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable)
-			is_valid_site: attached a_site implies is_valid_site (a_site)
-			not_is_sited: attached a_site implies not is_sited
+			is_valid_site: a_site /= Void implies is_valid_site (a_site)
+			not_is_sited: a_site /= Void implies not is_sited
 		local
 			l_old_site: detachable G
 			l_entities: like siteable_entities

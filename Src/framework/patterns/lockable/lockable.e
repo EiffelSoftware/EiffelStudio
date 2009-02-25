@@ -47,10 +47,12 @@ feature -- Basic operations
 			end
 			l_events := internal_locked_event
 			if attached l_events then
-				l_events.publish ([Current])
+					-- Only publish events if Curren is locked, because a event handler may cause an unlock to be
+					-- performed.
+				l_events.publish_if ([Current], agent {attached LOCKABLE_I}.is_locked)
 			end
 		ensure then
-			lock_counter_incremented: lock_counter = lock_counter + 1
+			lock_counter_incremented: lock_counter = old lock_counter + 1
 		end
 
 	unlock
@@ -67,10 +69,15 @@ feature -- Basic operations
 			end
 			l_events := internal_unlocked_event
 			if attached l_events then
-				l_events.publish ([Current])
+					-- Only publish events if Curren is unlocked, because a event handler may cause an unlock to be
+					-- performed.
+				l_events.publish_if ([Current], agent (ia_lock: attached LOCKABLE_I): BOOLEAN
+					do
+						Result := not ia_lock.is_locked
+					end)
 			end
 		ensure then
-			lock_counter_incremented: lock_counter = lock_counter - 1
+			lock_counter_incremented: lock_counter = old lock_counter - 1
 		end
 
 feature {NONE} -- Event handlers
@@ -93,7 +100,7 @@ feature {NONE} -- Event handlers
 
 feature -- Events
 
-	locked_event: !EVENT_TYPE [TUPLE [lock: !LOCKABLE_I]]
+	locked_event: attached EVENT_TYPE [TUPLE [sender: attached LOCKABLE_I]]
 			-- <Precursor>
 		local
 			l_result: like internal_locked_event
@@ -108,7 +115,7 @@ feature -- Events
 			end
 		end
 
-	unlocked_event: !EVENT_TYPE [TUPLE [lock: !LOCKABLE_I]]
+	unlocked_event: attached EVENT_TYPE [TUPLE [sender: attached LOCKABLE_I]]
 			-- <Precursor>
 		local
 			l_result: like internal_unlocked_event
@@ -123,6 +130,29 @@ feature -- Events
 			end
 		end
 
+feature -- Events
+
+	lockable_connection: !EVENT_CONNECTION_I [LOCKABLE_OBSERVER, LOCKABLE_I]
+			-- <Precursor>
+		local
+			l_result: like internal_lockable_connection
+		do
+			l_result := internal_lockable_connection
+			if l_result = Void then
+				create {EVENT_CONNECTION [LOCKABLE_OBSERVER, LOCKABLE_I]} Result.make (
+					agent (ia_observer: !LOCKABLE_OBSERVER): !ARRAY [TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]]
+						do
+							Result := <<
+								[locked_event, agent ia_observer.on_locked],
+								[unlocked_event, agent ia_observer.on_unlocked] >>
+						end)
+				automation.auto_dispose (Result)
+				internal_lockable_connection := Result
+			else
+				Result := l_result
+			end
+		end
+
 feature {NONE} -- Implementation: Internal cache
 
 	internal_locked_event: detachable like locked_event
@@ -132,6 +162,10 @@ feature {NONE} -- Implementation: Internal cache
 	internal_unlocked_event: detachable like unlocked_event
 			-- Cached version of `unlocked_event'.
 			-- Note: Do not use directly!
+
+	internal_lockable_connection: detachable like lockable_connection
+			-- Cached version of `lockable_connection'.
+			-- Note: Do not use directly!			
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

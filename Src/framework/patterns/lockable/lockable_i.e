@@ -16,6 +16,7 @@ inherit
 
 	DISPOSABLE_I
 
+inherit {NONE}
 	EVENT_CONNECTION_POINT_I [LOCKABLE_OBSERVER, LOCKABLE_I]
 		rename
 			connection as lockable_connection
@@ -51,8 +52,10 @@ feature -- Basic operations
 
 feature -- Events
 
-	locked_event: !EVENT_TYPE [TUPLE [lock: !LOCKABLE_I]]
+	locked_event: !EVENT_TYPE [TUPLE [sender: !LOCKABLE_I]]
 			-- Events called when a lock has been placed on Current.
+			--
+			-- 'sender': Object locked.
 		require
 			is_interface_usable: is_interface_usable
 		deferred
@@ -61,8 +64,10 @@ feature -- Events
 			result_consistent: Result = locked_event
 		end
 
-	unlocked_event: !EVENT_TYPE [TUPLE [lock: !LOCKABLE_I]]
+	unlocked_event: !EVENT_TYPE [TUPLE [sender: !LOCKABLE_I]]
 			-- Events called when a lock has been placed on Current.
+			--
+			-- 'sender': Object unlocked.
 		require
 			is_interface_usable: is_interface_usable
 		deferred
@@ -70,35 +75,6 @@ feature -- Events
 			result_is_interface_usable: Result.is_interface_usable
 			result_consistent: Result = unlocked_event
 		end
-
-feature -- Event:
-
-	lockable_connection: !EVENT_CONNECTION_I [LOCKABLE_OBSERVER, LOCKABLE_I]
-			-- <Precursor>
-		local
-			l_result: like internal_lockable_connection
-		do
-			l_result := internal_lockable_connection
-			if l_result = Void then
-				create {EVENT_CONNECTION [LOCKABLE_OBSERVER, LOCKABLE_I]} Result.make (
-					agent (ia_observer: !LOCKABLE_OBSERVER): !ARRAY [TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]]
-						do
-							Result := <<
-								[locked_event, agent ia_observer.on_locked],
-								[unlocked_event, agent ia_observer.on_unlocked] >>
-						end)
-				automation.auto_dispose (Result)
-				internal_lockable_connection := Result
-			else
-				Result := l_result
-			end
-		end
-
-feature {NONE} -- Implementation: Internal cache
-
-	internal_lockable_connection: detachable like lockable_connection
-			-- Cached version of `lockable_connection'.
-			-- Note: Do not use directly!
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

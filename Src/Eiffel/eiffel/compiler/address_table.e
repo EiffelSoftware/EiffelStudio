@@ -575,11 +575,11 @@ feature {NONE} -- Generation
 			temp, l_arg: STRING
 		do
 			create Result.make (1, nb + 1)
-			Result.put ("Current", 1)
+			Result.put (once "Current", 1)
 			if nb > 0 then
 				from
 					i := 1
-					l_arg := "arg"
+					l_arg := once "arg"
 				until
 					i > nb
 				loop

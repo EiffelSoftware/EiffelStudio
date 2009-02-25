@@ -15,25 +15,25 @@ inherit
 
 feature {LOCKABLE_I} -- Event handlers
 
-	on_locked (a_lock: !LOCKABLE_I)
+	on_locked (a_sender: !LOCKABLE_I)
 			-- Called when a lockable interface is locked.
 			--
-			-- `a_lock': The locked interface.
+			-- `a_sender': The locked interface.
 		require
 			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable
-			a_lock_is_interface_usable: attached {USABLE_I} Current as l_usable_lock implies l_usable_lock.is_interface_usable
-			a_lock_is_locked: a_lock.is_locked
+			a_sender_is_interface_usable: attached {USABLE_I} a_sender as l_usable_lock implies l_usable_lock.is_interface_usable
+			a_sender_is_locked: a_sender.is_locked
 		do
 		end
 
-	on_unlocked (a_lock: !LOCKABLE_I)
+	on_unlocked (a_sender: !LOCKABLE_I)
 			-- Called when a lockable interface is unlocked.
 			--
-			-- `a_lock': The unlocked interface.
+			-- `a_sender': The unlocked interface.
 		require
 			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable
-			a_lock_is_interface_usable: attached {USABLE_I} Current as l_usable_lock implies l_usable_lock.is_interface_usable
-			not_a_lock_is_locked: not a_lock.is_locked
+			a_sender_is_interface_usable: attached {USABLE_I} a_sender as l_usable_lock implies l_usable_lock.is_interface_usable
+			not_a_sender_is_locked: not a_sender.is_locked
 		do
 		end
 

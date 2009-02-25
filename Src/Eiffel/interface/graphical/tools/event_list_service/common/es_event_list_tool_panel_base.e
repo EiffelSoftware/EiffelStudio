@@ -390,20 +390,20 @@ feature {NONE} -- Query
 		local
 			l_grid: like grid_events
 			l_row: EV_GRID_ROW
-			l_count, i: INTEGER
+			i: INTEGER
 		do
 			l_grid := grid_events
 			from
-				i := 1
-				l_count := l_grid.row_count
+					-- Count backwards as it is more optimal for use in item insertion/removal.
+				i := l_grid.row_count
 			until
-				i > l_count or Result /= Void
+				i = 0 or Result /= Void
 			loop
 				l_row := l_grid.row (i)
 				if l_row.data = a_event_item then
 					Result := l_row
 				else
-					i := i + 1
+					i := i - 1
 				end
 			end
 		end

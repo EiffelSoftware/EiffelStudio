@@ -220,26 +220,26 @@
 		<exit code="1" if="${tmp_ok}=false" />
 
 		<!-- choose ecname -->
-		<unset name="ecname" /><!-- reset variable -->
-		<set name="ecname" value="${EC_NAME}" if="$EC_NAME" />
-		<unset name="ecname" if="-${ecname}-=--" /><!-- unset if empty, and if $ecname is not set  -${ecname}- is -${ecname}- thus not egal to dash dash -->
-		<set name="ecname" value="${ISE_EIFFEL}${path_separator}studio${path_separator}spec${path_separator}${ISE_PLATFORM}${path_separator}bin${path_separator}ec${exe}" unless="$ecname" />
+		<local name="ecname" value="" />
+		<local name="ecname" value="${EC_NAME}" if="$EC_NAME" />
+		<!-- unset if empty, and if $ecname is not set  -${ecname}- is -${ecname}- thus not egal to dash dash -->
+		<local name="ecname" value="${ISE_EIFFEL}${path_separator}studio${path_separator}spec${path_separator}${ISE_PLATFORM}${path_separator}bin${path_separator}ec${exe}" if="-$ecname=-" /> 
 		<!-- by default let's use ${ISE_EIFFEL}/studio/spec/${ISE_PLATFORM}/bin/ec${exe} -->
 
 		<!-- build the command line -->
-		<set name="eccmd" value="${ecname}" />
-		<set name="eccmd" value="${eccmd} -config $a_ecf" />
-		<set name="eccmd" value="${eccmd} -target $a_target" />
-		<set name="eccmd" value="${eccmd} -project_path $a_comp_dir" />
-		<set name="eccmd" value="${eccmd} -freeze " if="${a_compilation_mode}=freeze" />
-		<set name="eccmd" value="${eccmd} -finalize " if="${a_compilation_mode}=finalize" />
-		<set name="eccmd" value="${eccmd} -melt " if="${a_compilation_mode}=melt" />
-		<set name="eccmd" value="${eccmd} -precompile " if="${a_compilation_mode}=precompile" />
-		<set name="eccmd" value="${eccmd} -c_compile" if="$a_c_compile=true" />
-		<set name="eccmd" value="${eccmd} -clean" if="$a_clean=true" />
-		<set name="eccmd" value="${eccmd} -batch" if="$a_batch=true" />
-		<set name="eccmd" value="${eccmd} -use_settings" if="$a_use_settings=true" />
-		<set name="eccmd" value="${eccmd} -gui" if="$a_gui=true" />
+		<local name="eccmd" value="${ecname}" />
+		<local name="eccmd" value="${eccmd} -config $a_ecf" />
+		<local name="eccmd" value="${eccmd} -target $a_target" />
+		<local name="eccmd" value="${eccmd} -project_path $a_comp_dir" />
+		<local name="eccmd" value="${eccmd} -freeze " if="${a_compilation_mode}=freeze" />
+		<local name="eccmd" value="${eccmd} -finalize " if="${a_compilation_mode}=finalize" />
+		<local name="eccmd" value="${eccmd} -melt " if="${a_compilation_mode}=melt" />
+		<local name="eccmd" value="${eccmd} -precompile " if="${a_compilation_mode}=precompile" />
+		<local name="eccmd" value="${eccmd} -c_compile" if="$a_c_compile=true" />
+		<local name="eccmd" value="${eccmd} -clean" if="$a_clean=true" />
+		<local name="eccmd" value="${eccmd} -batch" if="$a_batch=true" />
+		<local name="eccmd" value="${eccmd} -use_settings" if="$a_use_settings=true" />
+		<local name="eccmd" value="${eccmd} -gui" if="$a_gui=true" />
 
 		<echo message=" DIR=${a_comp_dir}" if="$verbose=true" />
 		<echo message=" OUT=${a_output_dir}" if="$verbose=true" />
@@ -253,19 +253,19 @@
 		<mkdir directory="$a_comp_dir" if="${tmp_ok}=false"/>
 		<unset name="tmp_ok" />
 
+		<echo message="eccmd= ${eccmd}" />
 		<geant target="exec" >
 			<argument name="a_cmd" value="$eccmd" />
 			<argument name="a_dir" value="$a_comp_dir" />
 			<argument name="a_var" value="return_code" />
 			<argument name="a_silent" value="$force_silent" />
 		</geant>
-		<unset name="eccmd" />
-		<set name="L_is_from_f_code" 	value="true" 	if="${a_compilation_mode}=finalize" />
-		<set name="L_is_from_f_code" 	value="false" 	unless="${a_compilation_mode}=finalize" />
+		<local name="L_is_from_f_code" 	value="true" 	if="${a_compilation_mode}=finalize" />
+		<local name="L_is_from_f_code" 	value="false" 	unless="${a_compilation_mode}=finalize" />
 
-		<set name="L_ec_c_comp_dir"	value="${a_comp_dir}${path_separator}EIFGENs${path_separator}$a_target" />
-		<set name="L_ec_c_comp_dir"	value="${L_ec_c_comp_dir}${path_separator}W_code" if="${L_is_from_f_code}=false" />
-		<set name="L_ec_c_comp_dir"	value="${L_ec_c_comp_dir}${path_separator}F_code" if="${L_is_from_f_code}=true" />
+		<local name="L_ec_c_comp_dir"	value="${a_comp_dir}${path_separator}EIFGENs${path_separator}$a_target" />
+		<local name="L_ec_c_comp_dir"	value="${L_ec_c_comp_dir}${path_separator}W_code" if="${L_is_from_f_code}=false" />
+		<local name="L_ec_c_comp_dir"	value="${L_ec_c_comp_dir}${path_separator}F_code" if="${L_is_from_f_code}=true" />
 
 		<geant target="_tpl_compile_check_success" unless="$a_c_compile=true" >
 			<argument name="a_c_comp_dir" value="$L_ec_c_comp_dir" />
@@ -287,9 +287,6 @@
 			<argument name="a_is_from_f_code" value="$L_is_from_f_code=true" />
 			<argument name="a_c_compile" value="$a_c_compile" />
 		</geant>
-
-		<unset name="L_ec_c_comp_dir" />
-		<unset name="L_is_from_f_code" />
 	</target>
 
 	<target name="exec" >
@@ -299,15 +296,14 @@
 		<argument name="a_var" />
 		<argument name="a_silent" />
 
-		<set name="l_silent_cmd" value=" > NUL: 2>&amp;1 " if="$is_windows" />
-		<set name="l_silent_cmd" value=" > /dev/null" unless="$is_windows" />
-		<set name="l_silent_cmd" value="" unless="$a_silent=true" />
-		<set name="l_silent_cmd" value="" if="$verbose=true" />
+		<local name="l_silent_cmd" value=" > NUL: 2>&amp;1 " if="$is_windows" />
+		<local name="l_silent_cmd" value=" > /dev/null" unless="$is_windows" />
+		<local name="l_silent_cmd" value="" unless="$a_silent=true" />
+		<local name="l_silent_cmd" value="" if="$verbose=true" />
 
 		<exec executable="$a_cmd$l_silent_cmd" dir="$a_dir" 
 			accept_errors="true" exit_code_variable="$a_var" 
 		/>
-		<unset name="l_silent_cmd" />
 	</target>
 
 	<target name="_tpl_compile_check_success" >

@@ -101,9 +101,9 @@ feature -- Event connection
 			end
 			Precursor (a_observer)
 		ensure then
-			link_disconnected:
-				old (attached {LINKG} a_observer as l_old_observer implies linked_connection.is_connected (l_old_observer)) implies
-				(attached {LINKG} a_observer as l_observer and then linked_connection.is_connected (l_observer))
+--			link_disconnected:
+--				old (attached {LINKG} a_observer as l_old_observer implies linked_connection.is_connected (l_old_observer)) implies
+--				(attached {LINKG} a_observer as l_observer and then linked_connection.is_connected (l_observer))
 		end
 
 ;note

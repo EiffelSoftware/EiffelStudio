@@ -70,7 +70,7 @@ feature -- Access
 			-- will be selected.
 
 	type: TYPE_A
-			-- Type of feature; If `Void' a random type
+			-- Type of the target on which the feature will be called; If `Void' a random type
 			-- will be selected.
 
 	target: ITP_VARIABLE
@@ -79,8 +79,11 @@ feature -- Access
 	receiver: ITP_VARIABLE
 			-- Variable to receive the value of the feature call if that feature is a query
 
-	input_creator: AUT_RANDOM_INPUT_CREATOR
-			-- Input creator used to create arguments for feature call
+	target_creator: AUT_RANDOM_INPUT_CREATOR
+			-- Creator to prepare (either select or create) target object for current feature call
+
+	argument_creator: AUT_RANDOM_INPUT_CREATOR
+			-- Creator to prepare (either select or create) arguments for current feature call
 
 	feature_caller: AUT_RANDOM_FEATURE_CALLER
 			-- Feature call for diversification of object pool
@@ -116,15 +119,17 @@ feature -- Execution
 	start
 		do
 			steps_completed := False
-			input_creator := Void
+			target_creator := Void
 			feature_caller := Void
 			target := Void
 			receiver := Void
+			is_feature_and_type_rechecked := False
 		ensure then
-			input_creator_void: input_creator = Void
+			input_creator_void: target_creator = Void
 			feature_caller_void: feature_caller = Void
 			target_void: target = Void
 			receiver_void: receiver = Void
+			is_feature_argument_check_set: not is_feature_and_type_rechecked
 		end
 
 	step
@@ -132,18 +137,29 @@ feature -- Execution
 			if type = Void then
 				-- 1st step in diversify mode
 				create_input_creator_diversify
-			elseif input_creator = Void then
+			elseif target_creator = Void then
 				-- 1st step in non-diversify mode
-				create_input_creator
+				create_target_creator
 -- the following two lines are commented out in order to disable diversification (uncomment them to re-enable it)
 --				create feature_caller.make (system, interpreter, queue, error_handler, feature_table)
 --				feature_caller.start
-			elseif input_creator.has_next_step then
-				input_creator.step
+			elseif target_creator.has_next_step then
+				target_creator.step
+			elseif not is_feature_and_type_rechecked then
+				is_feature_and_type_rechecked := True
+					-- Recheck `type' and `feature'.
+				recheck_type_and_feature
+
+					-- Create or select objects as arguments of the feature call.
+				if not steps_completed and then feature_to_call.argument_count > 0 then
+					create_argument_creator
+				end
+			elseif argument_creator /= Void and then argument_creator.has_next_step then
+				argument_creator.step
 			elseif feature_caller /= Void and then feature_caller.has_next_step then
 				feature_caller.step
 			else
-				if not input_creator.has_error then
+				if not target_creator.has_error then
 					invoke
 				end
 				steps_completed := True
@@ -166,17 +182,18 @@ feature {NONE} -- Implementation
 feature {NONE} -- Steps
 
 	create_input_creator_diversify
-			-- Create `input_creator' for use in diversify mode.
+			-- Create `target_creator' for use in diversify mode.
 		do
+			fixme ("Does not work for the moment. Jason 25.02.2009")
 			target := interpreter.variable_table.random_variable
 			if target /= Void  then
 				type := interpreter.variable_table.variable_type (target)
 				if not type.is_none and then not type.is_expanded then
 					choose_feature
 					if feature_to_call /= Void then
-						create input_creator.make (system, interpreter, feature_table)
-						add_feature_argument_type_in_input_creator (feature_to_call, type, input_creator)
-						input_creator.start
+						create target_creator.make (system, interpreter, feature_table)
+						add_feature_argument_type_in_input_creator (feature_to_call, type, target_creator)
+						target_creator.start
 					else
 						type := Void
 					end
@@ -190,16 +207,27 @@ feature {NONE} -- Steps
 			feature_and_type_set: has_next_step = ((type /= Void) and (feature_to_call /= Void))
 		end
 
-	create_input_creator
-			-- Create `input_creator' for use in non-diversify mode.
+	create_target_creator
+			-- Create `target_creator' for use in non-diversify mode.
 		require
 			type_not_void: type /= Void
 			feature_not_void: feature_to_call /= Void
 		do
-			create input_creator.make (system,interpreter, feature_table)
-			input_creator.add_type (type)
-			add_feature_argument_type_in_input_creator (feature_to_call, type, input_creator)
-			input_creator.start
+			create target_creator.make (system,interpreter, feature_table)
+			target_creator.add_type (type)
+			target_creator.start
+		end
+
+	create_argument_creator is
+			-- Create `argument_creator'.
+		require
+			feature_need_argument: feature_to_call /= Void and then feature_to_call.argument_count > 0
+		do
+			create argument_creator.make (system, interpreter, feature_table)
+			add_feature_argument_type_in_input_creator (feature_to_call, type, argument_creator)
+			argument_creator.start
+		ensure
+			argument_creator_created: argument_creator /= Void
 		end
 
 	invoke
@@ -208,44 +236,40 @@ feature {NONE} -- Steps
 			type_not_void: type /= Void
 			type_not_expanded: not type.is_expanded
 			feature_not_void: feature_to_call /= Void
-			input_creator_not_void: input_creator /= Void
-			input_creator_done: feature_to_call.arguments /= Void and target /= Void implies input_creator.receivers.count = feature_to_call.arguments.count
-			input_creator_done: feature_to_call.arguments /= Void and target = Void implies input_creator.receivers.count = feature_to_call.arguments.count + 1
+			input_creator_not_void: target_creator /= Void
+			input_creator_done: feature_to_call.arguments /= Void and target /= Void implies target_creator.receivers.count = feature_to_call.arguments.count
+			input_creator_done: feature_to_call.arguments /= Void and target = Void implies target_creator.receivers.count = feature_to_call.arguments.count + 1
 		local
 			list: DS_LIST [ITP_EXPRESSION]
 			normal_response: AUT_NORMAL_RESPONSE
-			l_target_type: TYPE_A
 		do
-			list := input_creator.receivers
-			if target = Void then
-				target ?= list.first
-					-- If `list.first' represents `Void' (ITP_REFERENCE), target will be `Void'.
-				list.remove_first
+			if argument_creator /= Void and then not argument_creator.receivers.is_empty then
+				list := argument_creator.receivers
+			else
+				create {DS_LINKED_LIST [ITP_EXPRESSION]} list.make
 			end
+
 			if target /= Void then
-				l_target_type := interpreter.variable_table.variable_type (target)
-				if not l_target_type.is_none then
-					if feature_to_call.type /= void_type then
-						receiver := interpreter.variable_table.new_variable
-						interpreter.invoke_and_assign_feature (receiver, type, feature_to_call, target, input_creator.receivers)
+				if feature_to_call.type /= void_type then
+					receiver := interpreter.variable_table.new_variable
+					interpreter.invoke_and_assign_feature (receiver, type, feature_to_call, target, list)
+				else
+					interpreter.invoke_feature (type, feature_to_call, target, list)
+				end
+				queue.mark (create {AUT_FEATURE_OF_TYPE}.make (feature_to_call, interpreter.variable_table.variable_type (target)))
+				if not interpreter.last_response.is_bad and not interpreter.last_response.is_error then
+					normal_response ?= interpreter.last_response
+					if normal_response /= Void then
+						if normal_response.exception /= Void then
+							if not (normal_response.exception.name.is_case_insensitive_equal ("Precondition") and
+								normal_response.exception.trace_depth = 1)
+							then
+								interpreter.log_line (exception_thrown_message + error_handler.duration_to_now.second_count.out)
+							end
+						end
 					else
-						interpreter.invoke_feature (type, feature_to_call, target, input_creator.receivers)
-					end
-					queue.mark (create {AUT_FEATURE_OF_TYPE}.make (feature_to_call, interpreter.variable_table.variable_type (target)))
-					if not interpreter.last_response.is_bad and not interpreter.last_response.is_error then
-						normal_response ?= interpreter.last_response
-						if normal_response /= Void then
-							if normal_response.exception /= Void then
-								if not (normal_response.exception.name.is_case_insensitive_equal ("Precondition") and
-									normal_response.exception.trace_depth = 1)
-								then
-									interpreter.log_line (exception_thrown_message + error_handler.duration_to_now.second_count.out)
-								end
-							end
-						else
-							check
-								dead_end: False
-							end
+						check
+							dead_end: False
 						end
 					end
 				end
@@ -321,6 +345,34 @@ feature {NONE} -- Implementation
 			a_class_in_table: a_table.has (a_class)
 		end
 
+	is_feature_and_type_rechecked: BOOLEAN
+			-- Is feature argument creation checked after the target object
+			-- of the feature call has been selected?
+			-- See `recheck_type_and_feature' for the reason of the rechecking
+
+	recheck_type_and_feature is
+			-- Recheck `type' and `feature' after the target object of the feature has been selected.
+			-- This is necessary because depending on the dynamic type of the target object, the feature name
+			-- maybe different (because of feature renaming),
+			-- and the type of the arguments (if any) maybe different too (because of covariant redefinition).
+		require
+			target_creator_attached: target_creator /= Void
+		local
+			l_target_type: TYPE_A
+		do
+			if not target_creator.receivers.is_empty and then {l_target: ITP_VARIABLE} target_creator.receivers.first then
+				l_target_type := interpreter.variable_table.variable_type (l_target)
+				if l_target_type.is_none then
+					cancel
+				else
+					target := l_target
+					set_feature_and_type (l_target_type.associated_class.feature_with_rout_id (feature_to_call.rout_id_set.first).associated_feature_i, l_target_type)
+				end
+			else
+				cancel
+			end
+		end
+
 invariant
 
 	system_not_void: system /= Void
@@ -330,4 +382,35 @@ invariant
 	class_has_feature: (type /= Void) implies has_feature (type.associated_class, feature_to_call)
 	error_handler_not_void: error_handler /= Void
 
+note
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

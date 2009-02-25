@@ -163,6 +163,7 @@ feature -- Object basket managment
 		do
 			add_in_primary_system_basket (Eplug)
 			add_in_primary_system_basket (Eskelet)
+			add_in_primary_system_basket (Enames)
 			add_in_primary_system_basket (Evisib)
 			add_in_primary_system_basket (Ececil)
 			add_in_primary_system_basket (Einit)

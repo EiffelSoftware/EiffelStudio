@@ -4398,7 +4398,7 @@ feature -- Generation
 			-- Generate skeletons of class types
 		local
 			class_array: ARRAY [CLASS_C]
-			j, i, nb, id: INTEGER
+			j, i, nb: INTEGER
 			cl_type: CLASS_TYPE
 			a_class: CLASS_C
 			final_mode: BOOLEAN
@@ -4449,9 +4449,8 @@ feature -- Generation
 							until
 								types.after
 							loop
-								id := types.item.type_id
 								buffer.put_string ("extern uint32 cr")
-								buffer.put_integer (id)
+								buffer.put_integer (types.item.type_id)
 								buffer.put_string ("[];%N")
 								types.forth
 							end
@@ -4463,9 +4462,8 @@ feature -- Generation
 							until
 								types.after
 							loop
-								id := types.item.type_id
 								buffer.put_string ("extern uint32 types")
-								buffer.put_integer (id)
+								buffer.put_integer (types.item.type_id)
 								buffer.put_string ("[];%N")
 								types.forth
 							end
@@ -4480,6 +4478,7 @@ feature -- Generation
 				buffer.start_c_specific_code
 			end
 
+				-- Generates the skeleton data used to fill skeleton.
 			from
 				nb := Type_id_counter.value
 				i := 1
@@ -4503,12 +4502,11 @@ feature -- Generation
 					if not final_mode then
 						cltype_array.put (cl_type, cl_type.static_type_id)
 					end
-				else
-						-- FIXME
 				end
 				i := i + 1
 			end
 
+				-- Generate skeleton.
 			buffer.put_string ("struct cnode egc_fsystem_init[] = {")
 			from
 				i := 1
@@ -4579,6 +4577,39 @@ feature -- Generation
 			buffer.end_c_specific_code
 
 				-- Generate skeleton
+			buffer.put_in_file (skeleton_file)
+			skeleton_file.close
+
+				-- Generates the attribute names outside of `eskelet.c' because it slows
+				-- down the Visual Studio C++ 2005 compiler on 64-bit.
+			create skeleton_file.make_c_code_file (gen_file_name (final_mode, Enames));
+			buffer.clear_all
+			buffer.start_c_specific_code
+			buffer.put_new_line
+			from
+				nb := Type_id_counter.value
+				i := 1
+			until
+				i > nb
+			loop
+				buffer.flush_buffer (skeleton_file)
+				cl_type := class_types.item (i)
+					-- Classes could be removed
+				if cl_type /= Void then
+					if final_mode then
+						if
+							not cl_type.associated_class.is_precompiled or else
+							cl_type.associated_class.is_in_system
+						then
+							cl_type.generate_attribute_names (buffer)
+						end
+					else
+						cl_type.generate_attribute_names (buffer)
+					end
+				end
+				i := i + 1
+			end
+			buffer.end_c_specific_code
 			buffer.put_in_file (skeleton_file)
 			skeleton_file.close
 		end

@@ -46,7 +46,7 @@ feature -- Publication
 		require
 			is_interface_usable: is_interface_usable
 			not_is_publishing: not is_publishing
-			a_args_is_valid: attached a_predicate implies a_predicate.valid_operands (a_args)
+			a_args_is_valid: a_predicate /= Void implies a_predicate.valid_operands (a_args)
 		deferred
 		ensure
 			is_publishing_unchanged: is_publishing = old is_publishing

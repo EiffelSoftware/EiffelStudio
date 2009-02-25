@@ -21,11 +21,11 @@ feature -- Tests
 		local
 			l_dic: I18N_DICTIONARY
 		do
---			create {I18N_CHARACTER_BASED_DICTIONARY} l_dic.make (two_plural_forms_singular_one)
---			make (l_dic, two_plural_forms_singular_one, 1, 100)
+			create {I18N_CHARACTER_BASED_DICTIONARY} l_dic.make (two_plural_forms_singular_one)
+			make (l_dic, two_plural_forms_singular_one, 1, 100)
 
---			create {I18N_CHARACTER_BASED_DICTIONARY} l_dic.make (two_plural_forms_singular_one)
---			make (l_dic, two_plural_forms_singular_one, 50, 100)
+			create {I18N_CHARACTER_BASED_DICTIONARY} l_dic.make (two_plural_forms_singular_one)
+			make (l_dic, two_plural_forms_singular_one, 50, 100)
 
 			create {I18N_HASH_TABLE_DICTIONARY} l_dic.make (two_plural_forms_singular_one)
 			make (l_dic, two_plural_forms_singular_one, 50, 100)

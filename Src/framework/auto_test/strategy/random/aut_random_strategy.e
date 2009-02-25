@@ -108,15 +108,30 @@ feature {NONE} -- Implementation
 			positive_priority: queue.highest_dynamic_priority > 0
 		local
 			caller: AUT_RANDOM_FEATURE_CALLER
+			creator: AUT_RANDOM_OBJECT_CREATOR
+			l_selected_type: TYPE_A
+			l_selected_feature: FEATURE_I
 		do
 			queue.select_next
+
 			selected_feature := queue.last_feature
-			create caller.make (system, interpreter, queue, error_handler, feature_table)
-			caller.set_feature_and_type (selected_feature.feature_, selected_feature.type)
-			sub_task := caller
+			l_selected_feature := selected_feature.feature_
+			l_selected_type := selected_feature.type
+
+			if selected_feature.is_creator then
+				create creator.make (system, interpreter, l_selected_type, feature_table)
+				creator.set_creation_procedure (l_selected_feature)
+				sub_task := creator
+			else
+				create caller.make (system, interpreter, queue, error_handler, feature_table)
+				caller.set_feature_and_type (l_selected_feature, l_selected_type)
+				sub_task := caller
+			end
+
+				-- Start sub task.
 			sub_task.start
 			error_handler.decrease_counter
-			error_handler.report_feature_selection (selected_feature.type, selected_feature.feature_)
+			error_handler.report_feature_selection (l_selected_type, l_selected_feature)
 		end
 
 	sub_task: AUT_TASK
@@ -168,10 +183,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

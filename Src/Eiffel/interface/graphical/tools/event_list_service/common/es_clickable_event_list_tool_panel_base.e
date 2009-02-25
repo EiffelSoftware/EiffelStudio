@@ -79,7 +79,7 @@ feature {NONE} -- Query
 			l_eol: EDITOR_TOKEN_EOL
 			l_start: BOOLEAN
 		do
-			create Result.make (20)
+			create Result.make (a_lines.count)
 			l_cursor := a_lines.cursor
 			from a_lines.start until a_lines.after loop
 				if not l_start then
@@ -189,6 +189,7 @@ feature {NONE} -- Factory
 
 	create_multiline_clickable_grid_item (a_lines: LIST [EIFFEL_EDITOR_LINE]; a_allow_selection: BOOLEAN; a_use_text_wrapping: BOOLEAN): EB_GRID_EDITOR_TOKEN_ITEM
 			-- Create a new grid item to host the context of `a_lines'.
+			-- Caution: It is the responsibility of the caller to call `try_call_setting_change_actions' when Result has been fully initialized.
 			--
 			-- `a_lines': The editor lines containing tokens to render on the resulting grid item.
 			-- `a_allow_selection': True to allow the contents to be selected; False otherwise.
@@ -207,14 +208,19 @@ feature {NONE} -- Factory
 			else
 				create Result
 			end
+				-- Lock update so that the sizing calculation only occurs once everything has been set.
+			Result.lock_update
+
 			Result.set_text_wrap (a_use_text_wrapping)
 			l_tokens := tokens_list_from_lines (a_lines)
 			if not l_tokens.is_empty then
 				create l_shared_writer
+
 				Result.set_left_border (4)
 				Result.set_text_with_tokens (tokens_list_from_lines (a_lines))
 				Result.set_overriden_fonts (l_shared_writer.label_font_table, l_shared_writer.label_font_height)
 			end
+			Result.unlock_update
 		ensure
 			result_attached: Result /= Void
 		end

@@ -47,7 +47,7 @@ DAY/MONTH NAMES TEST
 DATE TIME FORMATTER TEST
     Original string: local_date_time: &c, day: &A
 
-    formatted string: local_date_time: शुक्रवार, फेब्रुअरी 19, 2009 11:45:30 पूर्वाह, day: शुक्रवार
+    formatted string: local_date_time: शुक्रवार, फेब्रुअरी 19, 2009 11:45:30 पूर्वाह्न, day: शुक्रवार
 
 CURRENCY INFO TEST
     cur dec sep: '.'

@@ -208,7 +208,7 @@ create
 %type <CONSTRAINT_LIST_AS> Multiple_constraint_list
 %type <CONSTRAINING_TYPE_AS> Single_constraint
 
-%expect 309
+%expect 269
 
 %%
 
@@ -2660,7 +2660,7 @@ Expression:
 	|	Qualified_binary_expression
 			{ $$ := $1; has_type := True }
 		-- The following rules adds many shift reduce/conflicts (309 vs 151 without them).
-	|	TE_ATTACHED Expression
+	|	TE_ATTACHED Expression %prec TE_NOT
 			{
 				$$ := ast_factory.new_object_test_as (extract_keyword ($1), Void, $2, Void, Void)
 				has_type := True
@@ -2670,7 +2670,7 @@ Expression:
 				$$ := ast_factory.new_object_test_as (extract_keyword ($1), Void, $2, $3, $4)
 				has_type := True
 			}
-	|	TE_ATTACHED TE_LCURLY Type TE_RCURLY Expression
+	|	TE_ATTACHED TE_LCURLY Type TE_RCURLY Expression %prec TE_NOT
 			{
 				if $3 /= Void then
 					$3.set_lcurly_symbol ($2)

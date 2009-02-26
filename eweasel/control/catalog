@@ -481,6 +481,7 @@ test	svalid-multi-constraint-inheritance	svalid015 tcf pass system-validity mult
 test	svalid-conversion-validity-error	svalid016 tcf pass system-validity
 test	svalid-inherited-invariant-not-checked	svalid017 tcf fail system-validity
 test	svalid-invalid-parent			svalid018 tcf fail system-validity conversion
+test	svalid-conversion-with-binary	svalid019 tcf fail system-validity conversion
 
 -- Catcall tests
 test	simple-catcall				catcall001 tcf pass catcall

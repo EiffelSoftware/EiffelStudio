@@ -158,6 +158,16 @@ $COMMENT			e3: attached {STRING} old u + old u
 			e1: attached {STRING} u implies u.is_empty
 			e1: attached {STRING} u as w implies w.is_empty
 
+			e1: attached u and then u.is_empty
+			e1: attached u as w and then w.is_empty
+			e1: attached {STRING} u and then u.is_empty
+			e1: attached {STRING} u as w and then w.is_empty
+
+			e1: not attached u or else u.is_empty
+			e1: not attached u as w or else w.is_empty
+			e1: not attached {STRING} u or else u.is_empty
+			e1: not attached {STRING} u as w or else w.is_empty
+
 			e1: attached attached o
 			e2: attached attached o as x
 			e3: attached attached {STRING} o

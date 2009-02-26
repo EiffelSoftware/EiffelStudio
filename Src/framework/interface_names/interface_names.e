@@ -69,7 +69,7 @@ feature -- Button texts
 	b_Edit_command: STRING_32					do Result := locale.translation("Edit...")	end
 	b_Eiffel_features: STRING_32					do Result := locale.translation("Eiffel Features")	end
 
-	b_Force_debug_mode: STRING_32				do Result := locale.translation("Force Debug Mode")	end
+	b_Force_execution_mode: STRING_32				do Result := locale.translation("Force Execution Mode")	end
 
 	b_Feature_name: STRING_32					do Result := locale.translation("Feature Name")	end
 	b_Finish: STRING_32							do Result := locale.translation("Finish")	end
@@ -423,7 +423,7 @@ feature -- Accelerator, focus label and menu name
 	m_Debug_run_new: STRING_32			do Result := locale.translation("St&art")	end
 	m_Debug_run_continue: STRING_32		do Result := locale.translation("Continue")	end
 
-	m_Force_debug_mode: STRING_32		do Result := locale.translation("Force Debug Mode")	end
+	m_Force_execution_mode: STRING_32		do Result := locale.translation("Force Execution Mode")	end
 	m_Launch_With_Arguments: STRING_32	do Result := locale.translation("Start With Arguments")	end
 	f_diagram_delete: STRING_32			do Result := locale.translation("Delete")	end
 	l_data: STRING_32					do Result := locale.translation("Data")	end
@@ -1412,7 +1412,7 @@ feature -- Label texts
 	l_run_before_each: STRING_32			do Result := "run_before_each" end
 	l_run_after_each: STRING_32			do Result := "run_after_each" end
 	l_Show_all_text: STRING_32			do Result := locale.translation("Show text labels")	end
-	l_Switching_to_debug_mode: STRING_32 do Result := locale.translation("Switching to debug mode...")	end
+	l_Switching_to_execution_mode: STRING_32 do Result := locale.translation("Switching to execution mode...")	end
 	l_Switching_to_normal_mode: STRING_32 do Result := locale.translation("Switching to edit mode...")	end
 
 	l_Query: STRING_32					do Result := locale.translation("Query")	end
@@ -2444,7 +2444,7 @@ feature -- Description texts
 	e_Compilation_succeeded: STRING_32	do Result := locale.translation("Eiffel Compilation Succeeded")	end
 	e_freezing_failed: STRING_32 		do Result := locale.translation("Background Workbench C Compilation Failed")	end
 	e_finalizing_failed: STRING_32		do Result := locale.translation("Background Finalized C compilation Failed")	end
-	e_Force_debug_mode: STRING_32		do Result := locale.translation("Force the environment to stay in debug mode")	end
+	e_force_execution_mode: STRING_32		do Result := locale.translation("Force the environment to stay in execution mode")	end
 	e_freezing_launch_failed: STRING_32 	do Result := locale.translation("Background Workbench C Compilation Launch Failed")	end
 	e_finalizing_launch_failed: STRING_32	do Result := locale.translation("Background Finalized C Compilation Launch Failed")	end
 	e_freezing_launched: STRING_32 		do Result := locale.translation("Background Workbench C Compilation Launched")	end

@@ -348,7 +348,7 @@ feature -- Settings
 			-- Refresh breakpoint tool if needed.
 		do
 			if debugging_window /= Void then
-				if {l_tool: ES_BREAKPOINTS_TOOL} debugging_window.shell_tools.tool ({ES_BREAKPOINTS_TOOL}) then
+				if attached {ES_BREAKPOINTS_TOOL} debugging_window.shell_tools.tool ({ES_BREAKPOINTS_TOOL}) as l_tool then
 					if l_tool.is_shown then
 						l_tool.refresh
 					end
@@ -419,7 +419,7 @@ feature -- Access
 	create_and_show_watch_tool_command: EB_STANDARD_CMD
 			-- Create and show watch tool.
 
-	force_debug_mode_cmd: EB_FORCE_DEBUG_MODE_CMD
+	force_debug_mode_cmd: EB_FORCE_EXECUTION_MODE_CMD
 			-- Force debug mode command.
 
 feature {EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_PART} -- Implementation
@@ -529,10 +529,8 @@ feature -- tools
 				create Result.make
 				l_tools.do_all (agent (a_tool: ES_TOOL [EB_TOOL]; a_result: LINKED_SET [ES_WATCH_TOOL])
 						do
-							if
-								{l_tool: ES_WATCH_TOOL} a_tool
-							then
-								a_result.extend (l_tool)
+							if attached {ES_WATCH_TOOL} a_tool as l_watch_tool then
+								a_result.extend (l_watch_tool)
 							end
 						end (?, Result)
 					)
@@ -936,7 +934,7 @@ feature -- tools management
 			end
 		end
 
-	create_new_watch_tool_tabbed_with (a_window: EB_DEVELOPMENT_WINDOW; a_tool: ?ES_TOOL [EB_TOOL])
+	create_new_watch_tool_tabbed_with (a_window: EB_DEVELOPMENT_WINDOW; a_tool: detachable ES_TOOL [EB_TOOL])
 			-- Create a new watch tool and set it tabbed with `a_tool'
 			-- if `a_tool' is not Void
 			-- Note: the new watch tool is not shown yet.
@@ -945,7 +943,7 @@ feature -- tools management
 			a_window_is_interface_usable: a_window.is_interface_usable
 		do
 				--| IMPORTANT: The following call has the side affect of creating the tool, do not remove it!				
-			if {l_watch_tool: ES_WATCH_TOOL} a_window.shell_tools.tool_next_available_edition ({ES_WATCH_TOOL}, False) then
+			if attached {ES_WATCH_TOOL} a_window.shell_tools.tool_next_available_edition ({ES_WATCH_TOOL}, False) as l_watch_tool then
 				if a_tool /= Void then
 					l_watch_tool.content.set_tab_with (a_tool.content, False)
 				else
@@ -970,7 +968,7 @@ feature -- Windows observer
 				recycle_items_from_window
 				set_debugging_window (window_manager.last_focused_development_window)
 				if debugging_window /= Void and then debug_mode_forced and not raised then
-					force_debug_mode (True)
+					force_execution_mode (True)
 				end
 			end
 		end
@@ -1141,7 +1139,7 @@ feature -- Change
 
 feature -- Status setting
 
-	force_debug_mode (a_save_tools_layout: BOOLEAN)
+	force_execution_mode (a_save_tools_layout: BOOLEAN)
 			-- Force debug mode
 		do
 			debug_mode_forced := True
@@ -1150,7 +1148,7 @@ feature -- Status setting
 			end
 		end
 
-	unforce_debug_mode
+	unforce_execution_mode
 			-- unForce debug mode
 		require
 			debug_mode_forced = True
@@ -1180,7 +1178,7 @@ feature -- Status setting
 					object_viewer_tool.request_update
 					watch_tool_list.do_all (agent {ES_WATCH_TOOL}.request_update)
 
-					if {rep: REPLAYED_CALL_STACK_ELEMENT} application_status.current_replayed_call then
+					if attached application_status.current_replayed_call as rep then
 						lev := application_status.current_call_stack_depth - rep.depth + 1
 						m := application_status.replay_level_limit
 						--| FIXME: jfiat: improve this part to control left,right ...
@@ -1521,7 +1519,7 @@ feature -- Status setting
 			propagate_stone: BOOLEAN
 		do
 			if raised then
-				if {cst: CALL_STACK_STONE} st then
+				if attached {CALL_STACK_STONE} st as cst then
 					if application_is_executing then
 						propagate_stone := application.current_execution_stack_number /= cst.level_number
 						application.set_current_execution_stack_number (cst.level_number)
@@ -1559,16 +1557,16 @@ feature {NONE} -- Raise/unraise notification
 	popup_switching_mode
 		local
 			l_popup: ES_POPUP_TRANSITION_WINDOW
-			l_message: !STRING_32
-			l_icon: !EV_PIXEL_BUFFER
+			l_message: STRING_32
+			l_icon: EV_PIXEL_BUFFER
 		do
-			if debugging_window /= Void and then {l_window: EV_WINDOW} debugging_window.window then
+			if debugging_window /= Void and then (attached {EV_WINDOW} debugging_window.window as l_window) then
 				if raised then
 					create l_message.make_from_string (interface_names.l_Switching_to_normal_mode.as_string_32)
 					l_icon := pixmaps.icon_pixmaps.view_editor_icon_buffer
 				else
-					create l_message.make_from_string (interface_names.l_Switching_to_debug_mode.as_string_32)
-					l_icon := pixmaps.icon_pixmaps.debugger_environment_force_debug_mode_icon_buffer
+					create l_message.make_from_string (interface_names.l_Switching_to_execution_mode.as_string_32)
+					l_icon := pixmaps.icon_pixmaps.debugger_environment_force_execution_mode_icon_buffer
 				end
 				if l_window.is_displayed and then l_window.screen_x + l_window.width > 0 and l_window.screen_y + l_window.height > 0 then
 						-- When window is off-screen, prevent the transition window from being shown.
@@ -1621,22 +1619,36 @@ feature -- Debugging events
 		do
 			record_objects_grids_layout
 			if debugging_window /= Void then
-				if {appstatus: APPLICATION_STATUS} application_status then
+				if attached application_status as appstatus then
 					if
 						appstatus.replay_activated and then
-						{rep: REPLAYED_CALL_STACK_STONE} st
+						(attached {REPLAYED_CALL_STACK_STONE} st as rep)
 					then
 						appstatus.set_replayed_call ([rep.e_feature, rep.call_position.line])
 					else
 						appstatus.set_replayed_call (Void)
 					end
 				end
-				if {feat_tool: ES_FEATURE_RELATION_TOOL} debugging_window.shell_tools.tool ({ES_FEATURE_RELATION_TOOL}) then
+				if attached {ES_FEATURE_RELATION_TOOL} debugging_window.shell_tools.tool ({ES_FEATURE_RELATION_TOOL}) as feat_tool then
 					feat_tool.set_mode ({ES_FEATURE_RELATION_TOOL_VIEW_MODES}.flat)
 					feat_tool.show (False)
 				end
-				debugging_window.tools.launch_stone (st)
+				safe_launch_stone_on_tools (st, debugging_window.tools)
 			end
+		end
+
+	safe_launch_stone_on_tools (st: STONE; a_tools: EB_DEVELOPMENT_WINDOW_TOOLS)
+		require
+			tools_attached: a_tools /= Void
+		local
+			retried: BOOLEAN
+		do
+			if not retried then
+				a_tools.launch_stone (st)
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 	on_application_before_launching
@@ -2176,7 +2188,7 @@ feature {NONE} -- Implementation
 			rb2.enable_select
 			Layout_constants.set_default_width_for_button (okb)
 			Layout_constants.set_default_width_for_button (cancelb)
-			if {prefs: EB_DEBUGGER_DATA} debugger_data then
+			if attached debugger_data as prefs then
 				if prefs.critical_stack_depth > 30000 then
 					element_nb.set_value (30000)
 				elseif prefs.critical_stack_depth = -1 then

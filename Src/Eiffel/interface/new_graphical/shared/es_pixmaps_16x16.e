@@ -2568,20 +2568,20 @@ feature -- Icons
 			Result := named_icon_buffer (callstack_replayed_marked_name)
 		end
 
-	frozen debugger_environment_force_debug_mode_icon: !EV_PIXMAP
+	frozen debugger_environment_force_execution_mode_icon: !EV_PIXMAP
 			-- Access to 'force debug mode' pixmap.
 		require
-			has_named_icon: has_named_icon (debugger_environment_force_debug_mode_name)
+			has_named_icon: has_named_icon (debugger_environment_force_execution_mode_name)
 		once
-			Result := named_icon (debugger_environment_force_debug_mode_name)
+			Result := named_icon (debugger_environment_force_execution_mode_name)
 		end
 
-	frozen debugger_environment_force_debug_mode_icon_buffer: !EV_PIXEL_BUFFER
+	frozen debugger_environment_force_execution_mode_icon_buffer: !EV_PIXEL_BUFFER
 			-- Access to 'force debug mode' pixmap pixel buffer.
 		require
-			has_named_icon: has_named_icon (debugger_environment_force_debug_mode_name)
+			has_named_icon: has_named_icon (debugger_environment_force_execution_mode_name)
 		once
-			Result := named_icon_buffer (debugger_environment_force_debug_mode_name)
+			Result := named_icon_buffer (debugger_environment_force_execution_mode_name)
 		end
 
 	frozen debugger_environment_with_breakpoints_icon: !EV_PIXMAP
@@ -6844,7 +6844,7 @@ feature -- Constants: Icon names
 	callstack_replayed_active_name: !STRING = "callstack replayed active"
 	callstack_replayed_empty_name: !STRING = "callstack replayed empty"
 	callstack_replayed_marked_name: !STRING = "callstack replayed marked"
-	debugger_environment_force_debug_mode_name: !STRING = "debugger environment force debug mode"
+	debugger_environment_force_execution_mode_name: !STRING = "debugger environment force execution mode"
 	debugger_environment_with_breakpoints_name: !STRING = "debugger environment with breakpoints"
 	debugger_environment_without_breakpoints_name: !STRING = "debugger environment without breakpoints"
 	execution_record_name: !STRING = "execution record"
@@ -7262,7 +7262,7 @@ feature {NONE} -- Basic operations
 			a_table.force_last ([{NATURAL_8}4, {NATURAL_8}8], callstack_replayed_active_name)
 			a_table.force_last ([{NATURAL_8}5, {NATURAL_8}8], callstack_replayed_empty_name)
 			a_table.force_last ([{NATURAL_8}6, {NATURAL_8}8], callstack_replayed_marked_name)
-			a_table.force_last ([{NATURAL_8}7, {NATURAL_8}8], debugger_environment_force_debug_mode_name)
+			a_table.force_last ([{NATURAL_8}7, {NATURAL_8}8], debugger_environment_force_execution_mode_name)
 			a_table.force_last ([{NATURAL_8}8, {NATURAL_8}8], debugger_environment_with_breakpoints_name)
 			a_table.force_last ([{NATURAL_8}9, {NATURAL_8}8], debugger_environment_without_breakpoints_name)
 			a_table.force_last ([{NATURAL_8}10, {NATURAL_8}8], execution_record_name)

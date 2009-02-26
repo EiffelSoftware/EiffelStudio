@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 class
-	EB_FORCE_DEBUG_MODE_CMD
+	EB_FORCE_EXECUTION_MODE_CMD
 
 inherit
 	EB_TOOLBARABLE_AND_MENUABLE_TOGGLE_COMMAND
@@ -50,17 +50,17 @@ feature -- Execution
 			internal_is_selected := not internal_is_selected
 			set_select (is_selected)
 			if is_selected then
-				eb_debugger_manager.force_debug_mode (a_save_tools_layout)
+				eb_debugger_manager.force_execution_mode (a_save_tools_layout)
 				if internal_managed_sd_toolbar_items /= Void then
 					internal_managed_sd_toolbar_items.do_all (agent (a_button: like new_sd_toolbar_item) do
 						a_button.set_tooltip (interface_names.e_restore_normal_mode)
 					end)
 				end
 			else
-				eb_debugger_manager.unforce_debug_mode
+				eb_debugger_manager.unforce_execution_mode
 				if internal_managed_sd_toolbar_items /= Void then
 					internal_managed_sd_toolbar_items.do_all (agent (a_button: like new_sd_toolbar_item) do
-						a_button.set_tooltip (interface_names.e_force_debug_mode)
+						a_button.set_tooltip (interface_names.e_force_execution_mode)
 					end)
 				end
 			end
@@ -97,13 +97,13 @@ feature {NONE} -- Properties
 	tooltip: STRING_GENERAL
 			-- Tooltip displayed on `Current's buttons.
 		do
-			Result := Interface_names.e_Force_debug_mode
+			Result := Interface_names.e_force_execution_mode
 		end
 
 	tooltext: STRING_GENERAL
 			-- Text displayed on `Current's buttons.
 		do
-			Result := Interface_names.b_Force_debug_mode
+			Result := Interface_names.b_Force_execution_mode
 		end
 
 	name: STRING = "Force_debug_mode"
@@ -112,23 +112,23 @@ feature {NONE} -- Properties
 	menu_name: STRING_GENERAL
 			-- Menu entry corresponding to `Current'.
 		do
-			Result := Interface_names.m_Force_debug_mode
+			Result := Interface_names.m_Force_execution_mode
 		end
 
 	pixmap: EV_PIXMAP
 			-- Pixmap representing `Current' on buttons.
 		do
-			Result := pixmaps.icon_pixmaps.debugger_environment_force_debug_mode_icon
+			Result := pixmaps.icon_pixmaps.debugger_environment_force_execution_mode_icon
 		end
 
 	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
-			Result := pixmaps.icon_pixmaps.debugger_environment_force_debug_mode_icon_buffer
+			Result := pixmaps.icon_pixmaps.debugger_environment_force_execution_mode_icon_buffer
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -141,22 +141,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

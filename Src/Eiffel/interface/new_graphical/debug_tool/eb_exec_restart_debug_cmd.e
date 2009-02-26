@@ -36,8 +36,8 @@ feature -- Initialization
 			if eb_debugger_manager.application_is_executing then
 
 				if not eb_debugger_manager.debug_mode_forced then
-					eb_debugger_manager.force_debug_mode (True)
-					pre_ag := agent eb_debugger_manager.unforce_debug_mode
+					eb_debugger_manager.force_execution_mode (True)
+					pre_ag := agent eb_debugger_manager.unforce_execution_mode
 					eb_debugger_manager.application_prelaunching_actions.extend_kamikaze (pre_ag)
 				end
 
@@ -54,7 +54,7 @@ feature -- Initialization
 
 				if not kill_requested then
 					if pre_ag /= Void then
-						eb_debugger_manager.unforce_debug_mode
+						eb_debugger_manager.unforce_execution_mode
 						eb_debugger_manager.application_prelaunching_actions.prune_all (pre_ag)
 					end
 					eb_debugger_manager.application_quit_actions.prune_all (ag)

@@ -130,7 +130,7 @@ feature -- Output
 				end
 			end
 		rescue
-			if l_locked and then attached l_service and then l_service.is_interface_usable then
+			if l_locked and then l_service /= Void and then l_service.is_interface_usable then
 				l_service.lock
 			end
 		end
@@ -171,7 +171,7 @@ feature -- Output
 				end
 			end
 		rescue
-			if l_locked and then attached l_service and then l_service.is_interface_usable then
+			if l_locked and then l_service /= Void and then l_service.is_interface_usable then
 				l_service.lock
 			end
 		end

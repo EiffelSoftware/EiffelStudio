@@ -54,6 +54,7 @@ feature {NONE} -- Initialization
 
 			load_object_feature := interpreter_root_class.feature_named (load_object_feature_name)
 			store_object_feature := interpreter_root_class.feature_named (store_object_feature_name)
+			check_object_invariant_feature := interpreter_root_class.feature_named (check_object_invariant_feature_name)
 
 			create expression_type_visitor.make (system, variable_table)
 			create expression_b_visitor.make (system, load_object_feature)
@@ -69,8 +70,10 @@ feature -- Access
 	variable_table: AUT_VARIABLE_TABLE
 			-- Variable table
 
-	last_request: TUPLE [flag: NATURAL_8; data: STRING]
+	last_request: TUPLE [flag: NATURAL_8; data: ANY]
 			-- Last request
+			-- `flag' indicates the type of current request, possible
+			-- values are defined in `ITP_SHARED_CONSTANTS'.			
 
 feature {AUT_REQUEST} -- Processing
 
@@ -102,7 +105,7 @@ feature {AUT_REQUEST} -- Processing
 			l_feature := a_request.creation_procedure
 			l_argument_count := a_request.argument_count
 			l_local_count := l_argument_count + 1
-			l_compound_count := l_argument_count + 2
+			l_compound_count := l_argument_count * 2 + 2
 
 			create l_locals.make (l_local_count)
 			create l_compound.make (l_compound_count)
@@ -163,7 +166,7 @@ feature {AUT_REQUEST} -- Processing
 
 			l_feature := a_request.feature_to_call
 			l_argument_count := a_request.argument_count
-			l_compound_count := l_argument_count + 2 + l_extra_local_count
+			l_compound_count := l_argument_count * 2 + 1 + 2 + l_extra_local_count
 			l_local_count := l_argument_count + 1 + l_extra_local_count
 			l_receiver_index := l_argument_count + 2
 			l_target_index := 1
@@ -243,10 +246,39 @@ feature {AUT_REQUEST} -- Processing
 
 	process_type_request (a_request: AUT_TYPE_REQUEST)
 		do
+				-- Format of type request:
+				-- [type_request_flag: NATURAL_8; variable_index: STRING]
+				-- `variable_index' is the index of the object whose type is asked.
 			last_request := [type_request_flag, a_request.variable.index.out]
 		end
 
 feature {NONE} -- Byte code generation
+
+	new_check_invariant_feature_call (a_local_index: INTEGER; a_local_type: TYPE_A): CALL_ACCESS_B is
+			-- New FEATURE_B instance to check class invariant of the `a_local_index'-th local variable.
+			-- `a_local_type' is the type of that local variable.
+		require
+			a_local_index_positive: a_local_index > 0
+			a_local_type_attached: a_local_type /= Void
+		local
+			l_local_index_param: PARAMETER_B
+			l_object_pool_index_param: PARAMETER_B
+			l_parameters: BYTE_LIST [PARAMETER_B]
+			l_local: LOCAL_B
+		do
+			create l_parameters.make (1)
+
+			create l_local_index_param
+			create l_local
+			l_local.set_position (a_local_index)
+			l_local_index_param.set_expression (l_local)
+			l_local_index_param.set_attachment_type (a_local_type)
+
+			l_parameters.extend (l_local_index_param)
+			Result := new_feature_b (check_object_invariant_feature, void_type, l_parameters)
+		ensure
+			result_attached: Result /= Void
+		end
 
 	new_store_object_feature_call (a_local_index: INTEGER; a_pool_index: INTEGER; a_type: TYPE_A): CALL_ACCESS_B
 			-- New FEATURE_B instance to store the `a_local_index'-th local variable into object pool at position `a_pool_index'
@@ -290,7 +322,7 @@ feature {NONE} -- Byte code generation
 			i: INTEGER
 			l_expr_visitor: like expression_b_visitor
 		do
-			create Result.make (a_expressions.count)
+			create Result.make (a_expressions.count * 2)
 
 			from
 				l_expr_visitor := expression_b_visitor
@@ -301,6 +333,7 @@ feature {NONE} -- Byte code generation
 				l_cursor.after
 			loop
 				Result.extend (new_reverse_b (new_local_b (i), l_expr_visitor.expression (l_cursor.item)))
+				Result.extend (new_check_invariant_byte_code (i))
 				l_cursor.forth
 				i := i + 1
 			end
@@ -320,6 +353,20 @@ feature {NONE} -- Byte code generation
 						a_local_index,
 						a_object_pool_index,
 						store_object_feature.arguments.i_th (1).actual_type))
+		ensure
+			result_attached: Result /= Void
+		end
+
+	new_check_invariant_byte_code (a_local_index: INTEGER): BYTE_NODE
+			-- New byte-node to store local at `a_local_index' in object pool at index `a_index'.
+		require
+			a_local_index_positive: a_local_index > 0
+		do
+			Result :=
+				new_instr_call_b (
+					new_check_invariant_feature_call (
+						a_local_index,
+						check_object_invariant_feature.arguments.i_th (1).actual_type))
 		ensure
 			result_attached: Result /= Void
 		end
@@ -388,7 +435,11 @@ feature {NONE} -- Byte code generation
 			l_byte_array := Byte_array
 			l_byte_code_data := l_byte_array.melted_feature.string_representation
 
-			last_request := [execute_request_flag, l_byte_code_data]
+				-- Format of execute request:
+				-- [execute_request_flag: NATURAL_8, [byte_code: ?STRING, extra_data: ?ANY]]
+				-- `byte_code' is the byte code to execute, `extra_data' stores some
+				-- additional data, which may be used in the future.
+			last_request := [execute_request_flag, [l_byte_code_data, ""]]
 		end
 
 feature{NONE} -- Implementation
@@ -411,6 +462,12 @@ feature{NONE} -- Implementation
 	load_object_feature: FEATURE_I
 			-- Feature to load an object from object pool
 
+	check_object_invariant_feature: FEATURE_I
+			-- Feature to check invariant of an object in interpreter.
+
+	check_object_invariant_feature_name: STRING = "check_invariant"
+			-- Name of feature to check invariant of an object in interpreter.
+
 invariant
 	system_not_void: system /= Void
 	feature_for_byte_code_injection_attached: feature_for_byte_code_injection /= Void
@@ -418,4 +475,35 @@ invariant
 	expression_type_visitor_attached: expression_type_visitor /= Void
 	expression_b_visitor_attached: expression_b_visitor /= Void
 
+note
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

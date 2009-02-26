@@ -12,16 +12,17 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_output: like output; a_error: like error; a_interpreter_error: BOOLEAN)
-			-- Set `output' with `a_output' and `error' with `a_error'.
+	make (a_output: like output; a_error: like error; a_flag: NATURAL_32)
+			-- Set `output' with `a_output' and `error' with `a_error'
+			-- and `flag' with `a_flag'.
 		do
 			set_output (a_output)
 			set_error (a_error)
-			is_interpreter_error := a_interpreter_error
+			set_flag (a_flag)
 		ensure
 			output_set: output = a_output
 			error_set: error = a_error
-			is_interpreter_error_set: is_interpreter_error = a_interpreter_error
+			flag_set: flag = a_flag
 		end
 
 feature -- Access
@@ -37,8 +38,22 @@ feature -- Access
 			-- Contains: 1. error generated from interpreter or
 			--           2. exception trace from testee feature.
 
-	is_interpreter_error: BOOLEAN
+	flag: NATURAL_32
+			-- Flag of current response
+			-- See {ITP_SHARED_CONSTANTS} for defined values for `a_flag'.
+
+	is_interpreter_error: BOOLEAN is
 			-- Is `error' an interpreter error?
+		do
+			Result := flag = {ITP_SHARED_CONSTANTS}.internal_error_respones_flag
+		end
+
+	is_invariant_violation_on_entry: BOOLEAN is
+			-- Does current response contain an invariant violation on
+			-- entry of testee feature?
+		do
+			Result := flag = {ITP_SHARED_CONSTANTS}.invariant_violation_on_entry_response_flag
+		end
 
 feature -- Setting
 
@@ -58,4 +73,43 @@ feature -- Setting
 			error_set: error = a_error
 		end
 
+	set_flag (a_flag: like flag)
+			-- Set `flag' with `a_flag'.
+		do
+			flag := a_flag
+		ensure
+			flag_set: flag = a_flag
+		end
+
+note
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

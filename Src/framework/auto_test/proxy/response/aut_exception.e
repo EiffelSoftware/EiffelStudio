@@ -26,6 +26,7 @@ feature {NONE} -- Initialization
 		  an_exception_recipient_name:  like recipient_name;
 		  an_exception_class_name: like class_name;
 		  an_exception_tag_name: like tag_name;
+		  an_inv_violation_on_entry_flag: BOOLEAN;
 		  an_exception_trace: like trace)
 			-- Create new exception.
 		require
@@ -40,6 +41,7 @@ feature {NONE} -- Initialization
 			class_name := an_exception_class_name
 			tag_name := an_exception_tag_name
 			trace := an_exception_trace
+			set_is_invariant_violation_on_feature_entry (an_inv_violation_on_entry_flag)
 			parse_trace
 		ensure
 			exception_code_set: code = an_exception_code
@@ -141,6 +143,22 @@ feature -- Access
 
 	trace_depth: INTEGER
 			-- Depth of exception trace stored in `trace' (without interpreter frames)
+
+feature -- Status report
+
+	is_invariant_violation_on_feature_entry: BOOLEAN
+			-- Does this exception contain a class invariant violation
+			-- on entry of the testee feature?
+
+feature -- Setting
+
+	set_is_invariant_violation_on_feature_entry (b: BOOLEAN) is
+			-- Set `is_invariant_violation_on_feature_entry' with `b'.
+		do
+			is_invariant_violation_on_feature_entry := b
+		ensure
+			is_invariant_violation_on_feature_entry_set: is_invariant_violation_on_feature_entry = b
+		end
 
 feature {NONE} -- Implementation
 

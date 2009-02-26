@@ -609,7 +609,7 @@ feature -- Response parsing
 	parse_empty_response
 			-- Parse a response consisting of no characters.
 		do
-			raw_response_analyzer.set_raw_response (create {AUT_RAW_RESPONSE}.make ("", "", False))
+			raw_response_analyzer.set_raw_response (create {AUT_RAW_RESPONSE}.make ("", "", {ITP_SHARED_CONSTANTS}.normal_response_flag))
 			last_response := raw_response_analyzer.response
 		end
 
@@ -657,6 +657,7 @@ feature{NONE} -- Process scheduling
 			-- If error occurs, close `socket'.
 		local
 			failed: BOOLEAN
+			l_last_request: TUPLE [flag: NATURAL_8; data: ?ANY]
 		do
 			if not failed then
 --				is_ready := False
@@ -665,8 +666,9 @@ feature{NONE} -- Process scheduling
 					request_count := request_count + 1
 					process.set_timeout (timeout)
 					if socket /= Void and then socket.is_open_write and socket.extendible then
-						socket.put_natural (1)
-						socket.independent_store (socket_data_printer.last_request)
+						l_last_request := socket_data_printer.last_request
+						socket.put_natural_32 (l_last_request.flag)
+						socket.independent_store (l_last_request.data)
 					end
 				else
 					log_line ("-- Error: could not send instruction to interpreter due its input stream being closed.")
@@ -763,18 +765,20 @@ feature -- Socket IPC
 			-- Retrieve response from the interpreter,
 			-- store it in `last_raw_response'.
 		local
-			l_data: TUPLE [output: STRING; is_interpreter_error: BOOLEAN; error: STRING]
+			l_data: TUPLE [output: STRING; error: STRING]
 			l_retried: BOOLEAN
 			l_socket: like socket
+			l_response_flag: NATURAL_32
 		do
 			if not l_retried then
 				l_socket := socket
 				l_socket.read_natural_32
+				l_response_flag := l_socket.last_natural_32
 				l_data ?= l_socket.retrieved
 				process.set_timeout (0)
 				if l_data /= Void then
-					create last_raw_response.make (l_data.output, l_data.error, l_data.is_interpreter_error)
-							-- Fixme: This is a walk around for the issue that we cannot launch a process
+					create last_raw_response.make (l_data.output, l_data.error, l_response_flag)
+						-- Fixme: This is a walk around for the issue that we cannot launch a process
 						-- only with standard input redirected. Remove the following line when fixed,
 						-- because everything that the interpreter output should come from `l_data.output'.
 						-- Jason 2008.10.22
@@ -940,10 +944,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

@@ -3,7 +3,7 @@ class TEST
 inherit
 	B
 		redefine
-			anchor
+			anchor, g
 		end
 
 create
@@ -21,4 +21,9 @@ feature {NONE} -- Test
 
 	anchor: A [STRING]
 
+	g (a: like anchor; b: STRING)
+		do
+		end
+
 end
+

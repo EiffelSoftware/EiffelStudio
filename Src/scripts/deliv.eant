@@ -787,8 +787,8 @@
 		<geant target="copy_library_to" arguments="base,${a_target_dir}" />
 		<geant target="copy_library_to" arguments="base_original,${a_target_dir}" />
 		<geant target="copy_library_to" arguments="testing,${a_target_dir}" />
-		<geant target="copy_library_to" arguments="com,${a_target_dir}" if="${is_windows}" />
 		<geant target="copy_library_to" arguments="Eiffel2Java,${a_target_dir}" />
+		<geant target="copy_library_to" arguments="argument_parser,${a_target_dir}" />
 		<geant target="copy_library_to" arguments="gobo,${a_target_dir}" />
 		<geant target="copy_library_to" arguments="gobo_extension,${a_target_dir}" />
 		<geant target="copy_library_to" arguments="graph,${a_target_dir}" />
@@ -812,6 +812,7 @@
 		<geant target="copy_library_to" arguments="vision2_extension,${a_target_dir}" />
 		<geant target="copy_library_to" arguments="web,${a_target_dir}" />
 		<geant target="copy_library_to" arguments="wel,${a_target_dir}" if="${is_windows}" />
+		<geant target="copy_library_to" arguments="com,${a_target_dir}" if="${is_windows}" />
 
 		<!-- extra libraries -->
 		<geant target="copy_library_to" arguments="diff,${a_target_dir}"/>

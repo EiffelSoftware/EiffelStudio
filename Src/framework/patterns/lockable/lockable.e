@@ -13,7 +13,7 @@ deferred class
 inherit
 	LOCKABLE_I
 
-	DISPOSABLE_I
+	DISPOSABLE_SAFE
 
 feature {NONE} -- Access
 

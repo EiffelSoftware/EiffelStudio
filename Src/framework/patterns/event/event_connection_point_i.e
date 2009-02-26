@@ -12,12 +12,15 @@ note
 deferred class
 	EVENT_CONNECTION_POINT_I [G -> EVENT_OBSERVER_I, I -> USABLE_I]
 
+inherit
+	USABLE_I
+
 feature -- Access
 
 	connection: !EVENT_CONNECTION_I [G, I]
 			-- Connection point.
 		require
-			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable
+			is_interface_usable: is_interface_usable
 		deferred
 		ensure
 			result_is_interface_usable: Result.is_interface_usable

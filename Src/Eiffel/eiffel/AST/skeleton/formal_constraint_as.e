@@ -558,7 +558,7 @@ feature {NONE} -- Implementation
 		do
 			l_has_multi_constraints := has_multi_constraints
 			if l_has_multi_constraints then
-				a_text_formatter.process_symbol_text ("{")
+				a_text_formatter.process_symbol_text (ti_l_curly)
 			end
 
 			l_constraints := constraints
@@ -590,12 +590,13 @@ feature {NONE} -- Implementation
 				end
 				l_constraints.forth
 				if l_has_multi_constraints and not l_constraints.after then
-					a_text_formatter.add (", ")
+					a_text_formatter.add (ti_comma)
+					a_text_formatter.add_space
 				end
 			end
 			l_constraints.go_i_th (l_constraints_cursor)
 			if l_has_multi_constraints then
-				a_text_formatter.process_symbol_text ("}")
+				a_text_formatter.process_symbol_text (ti_r_curly)
 			end
 		end
 
@@ -616,11 +617,8 @@ feature {NONE} -- Implementation
 			l_old_name, l_new_name: ID_AS
 			l_e_feature: E_FEATURE
 			l_alias_name: STRING_AS
-			l_as, l_quote: STRING
 		do
-			l_as := " as "
-			l_quote := "%""
-			a_text_formatter.process_keyword_text ("rename", Void)
+			a_text_formatter.process_keyword_text (ti_rename_keyword, Void)
 			if a_short then
 				a_text_formatter.add (" ... ")
 			else
@@ -643,25 +641,28 @@ feature {NONE} -- Implementation
 						a_text_formatter.add (l_old_name.name)
 					end
 
-					a_text_formatter.add (l_as)
+					a_text_formatter.add_space
+					a_text_formatter.process_keyword_text (ti_as_keyword, Void)
+					a_text_formatter.add_space
 					a_text_formatter.add (l_new_name.name)
 					if l_alias_name /= Void then
 						a_text_formatter.add_space
-						a_text_formatter.process_keyword_text ("alias", Void)
+						a_text_formatter.process_keyword_text (ti_alias_keyword, Void)
 						a_text_formatter.add_space
-						a_text_formatter.process_symbol_text (l_quote)
+						a_text_formatter.process_symbol_text (ti_double_quote)
 						a_text_formatter.add (l_alias_name.value)
-						a_text_formatter.process_symbol_text (l_quote)
+						a_text_formatter.process_symbol_text (ti_double_quote)
 					end
 
 					l_content.forth
 					if not l_content.after then
-						a_text_formatter.add (once ", ")
+						a_text_formatter.add (ti_comma)
+						a_text_formatter.add_space
 					end
 				end
 			end
 			a_Text_formatter.add_space
-			a_text_formatter.process_keyword_text ("end", Void)
+			a_text_formatter.process_keyword_text (ti_end_keyword, Void)
 		end
 
 

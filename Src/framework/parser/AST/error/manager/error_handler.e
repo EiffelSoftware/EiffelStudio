@@ -132,12 +132,16 @@ feature {COMPILER_EXPORTER} -- Output
 		require
 			non_void_error_displayer: error_displayer /= Void
 		do
-			trace_warnings
-
+			error_displayer.trace (Current)
 			if has_error then
-				error_displayer.trace_errors (Current)
 				error_list.wipe_out
 			end
+			if has_warning then
+				warning_list.wipe_out
+			end
+		ensure
+			error_list.is_empty
+			warning_list.is_empty
 		end
 
 	trace_warnings
@@ -149,8 +153,9 @@ feature {COMPILER_EXPORTER} -- Output
 				error_displayer.trace_warnings (Current)
 				warning_list.wipe_out
 			end
+		ensure
+			warning_list.is_empty
 		end
-
 
 feature {COMPILER_EXPORTER} -- Setting
 
@@ -169,7 +174,7 @@ invariant
 	warning_list_exists: warning_list /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -182,22 +187,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

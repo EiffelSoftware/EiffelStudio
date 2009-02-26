@@ -43,6 +43,19 @@ feature -- Output
 		do
 		end
 
+	trace (handler: ERROR_HANDLER)
+			-- <Precursor>
+		do
+				-- For batch compilers etc, we report the errors last to ensure they are shown on the terminal
+				-- closes to the next operation.
+			if handler.has_error then
+				trace_errors (handler)
+			end
+			if handler.has_warning then
+				trace_warnings (handler)
+			end
+		end
+
 	trace_warnings (handler: ERROR_HANDLER)
 			-- Display warnings messages from `handler'.
 		local

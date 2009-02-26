@@ -24,7 +24,8 @@ feature -- Access
 		deferred
 		ensure
 			result_is_interface_usable: Result.is_interface_usable
-			result_consistent: Result = connection
+-- Uncomment when proper replication is done by the compiler
+--			result_consistent: Result = connection
 		end
 
 ;note

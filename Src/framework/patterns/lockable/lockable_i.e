@@ -14,9 +14,7 @@ deferred class
 inherit
 	USABLE_I
 
-	DISPOSABLE_I
-
-inherit {NONE}
+--inherit {NONE}
 	EVENT_CONNECTION_POINT_I [LOCKABLE_OBSERVER, LOCKABLE_I]
 		rename
 			connection as lockable_connection

@@ -13,6 +13,9 @@ class
 
 inherit
 	EVENT_LIST_S
+		select
+			event_list_connection
+		end
 
 	DISPOSABLE_SAFE
 
@@ -358,7 +361,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!
 
 invariant
-	internal_event_items_attached: attached internal_event_items /= Void
+	internal_event_items_attached: attached internal_event_items
 	internal_event_items_contains_attached_items: not internal_event_items.has (Void)
 	internal_event_items_index_attached: attached  internal_event_items_index
 	internal_event_items_index_contains_attached_items: not internal_event_items_index.has_item (Void)

@@ -21,10 +21,12 @@ inherit
 
 	LOCKABLE_I
 
-inherit {NONE}
+--inherit {NONE}
 	EVENT_CONNECTION_POINT_I [EVENT_LIST_OBSERVER, EVENT_LIST_S]
 		rename
 			connection as event_list_connection
+		select
+			event_list_connection
 		end
 
 feature -- Access

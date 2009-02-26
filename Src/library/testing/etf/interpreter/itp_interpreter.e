@@ -108,22 +108,30 @@ feature -- Status report
 	should_quit: BOOLEAN
 			-- Should main loop quit?
 
+	is_request_type_valid (a_type: NATURAL_32): BOOLEAN is
+			-- Is `a_type' a valid request type?
+		do
+			Result :=
+				a_type = start_request_flag or else
+				a_type = quit_request_flag or else
+				a_type = execute_request_flag or else
+				a_type = type_request_flag
+		end
+
 feature {NONE} -- Handlers
 
 	report_type_request
 		require
 			last_request_attached: last_request /= Void
-			last_request_is_type_request: last_request.flag = type_request_flag
+			last_request_is_type_request: last_request_type = type_request_flag
 		local
 			b: BOOLEAN
 			l_index: INTEGER
 			l_value: ANY
-			l_obj_index: STRING
 			l_store: like store
 			l_type: STRING
 		do
-			l_obj_index := last_request.data
-			if l_obj_index /= Void then
+			if {l_obj_index: STRING} last_request then
 				log_message ("report_type_request start%N")
 				l_index := l_obj_index.to_integer
 				l_store := store
@@ -153,6 +161,10 @@ feature {NONE} -- Handlers
 			else
 				report_error (invalid_request_format_error)
 			end
+
+				-- Send response to the proxy.
+			refresh_last_response_flag
+			last_response := [output_buffer, error_buffer]
 			send_response_to_socket
 		end
 
@@ -169,13 +181,13 @@ feature {NONE} -- Handlers
 			-- Report execute request.
 		require
 			last_request_attached: last_request /= Void
-			last_request_is_execute_request: last_request.flag = execute_request_flag
+			last_request_is_execute_request: last_request_type = execute_request_flag
 		local
-			l_byte_code: STRING
+			l_bcode: STRING
 		do
-			l_byte_code := last_request.data
-			if l_byte_code /= Void then
-				if l_byte_code.count = 0 then
+			if {l_last_request: TUPLE [l_byte_code: STRING; l_data: ?ANY]} last_request then
+				l_bcode := l_last_request.l_byte_code
+				if l_bcode.count = 0 then
 					report_error (byte_code_length_error)
 				else
 					log_message ("report_execute_request start%N")
@@ -183,17 +195,33 @@ feature {NONE} -- Handlers
 					eif_override_byte_code_of_body (
 						byte_code_feature_body_id,
 						byte_code_feature_pattern_id,
-						pointer_for_byte_code (l_byte_code),
-						l_byte_code.count)
+						pointer_for_byte_code (l_bcode),
+						l_bcode.count)
 
 						-- Run the feature with newly injected byte-code.
 					execute_protected
 					log_message ("report_execute_request end%N")
 				end
 			else
-				report_error (byte_code_not_found_error)
+				report_error (invalid_request_format_error)
 			end
+
+				-- Send response to the proxy.
+			refresh_last_response_flag
+			last_response := [output_buffer, error_buffer]
 			send_response_to_socket
+		end
+
+	refresh_last_response_flag is
+			-- Refresh the value of `last_response_flag' according to current status.
+		do
+			if has_error then
+				last_response_flag := internal_error_respones_flag
+			elseif is_last_invariant_violated then
+				last_response_flag := invariant_violation_on_entry_response_flag
+			else
+				last_response_flag := normal_response_flag
+			end
 		end
 
 feature {NONE} -- Error Reporting
@@ -293,6 +321,8 @@ feature {NONE} -- Logging
 			l_buffer.append_character ('%N')
 			l_buffer.append (l_tag)
 			l_buffer.append_character ('%N')
+			l_buffer.append (is_last_invariant_violated.out)
+			l_buffer.append_character ('%N')
 			l_buffer.append (l_trace)
 
 				-- Store exception into log file.
@@ -301,6 +331,7 @@ feature {NONE} -- Logging
 			log_message ("%T<tag value='" + l_tag + "'/>%N")
 			log_message ("%T<recipient value='" + l_recipient + "'/>%N")
 			log_message ("%T<class value='" + l_recipient_class_name + "'>%N")
+			log_message ("%T<invariant violation on entry='" + is_last_invariant_violated.out + "'>%N")
 			log_message ("%T<exception_trace>%N<![CDATA[%N")
 			log_message (l_trace)
 			log_message ("]]>%N</exception_trace>%N")
@@ -338,10 +369,20 @@ feature{NONE} -- Socket IPC
 	socket: NETWORK_STREAM_SOCKET
 			-- Socket used for communitation between proxy and current interpreter
 
-	last_request: TUPLE [flag: NATURAL_8; data: STRING]
+	last_request_type: NATURAL_32
+			-- Type of the last request retrieved by `retrieve_request'.
+
+	last_request: ANY
 			-- Last received request by `retrieve_request'
-			-- `flag' indicates request type,
-			-- `data' stores data needed for that reques type.
+--			-- `flag' indicates request type,
+--			-- `data' stores data needed for that reques type.
+
+	last_response_flag: NATURAL_32
+			-- Flag indicating the status of the response
+			-- See {ITP_SHARED_CONSTANTS} for valid values
+
+	last_response: ANY
+			-- Last response to be sent back to the proxy
 
 	retrieve_request
 			-- Retrieve request from proxy and store it in `last_request'.
@@ -354,20 +395,24 @@ feature{NONE} -- Socket IPC
 			l_retried: BOOLEAN
 		do
 			last_request := Void
+			last_response := Void
+			is_last_invariant_violated := False
+
 			if not l_retried then
 					-- Get request from proxy through `socket'.
 					-- This will block Current process.
 				from until
 					socket.readable or socket.is_closed
 				loop
-					sleep (100000000)
+					sleep (100_000_000)
 				end
 				if socket.readable then
+						-- Read the type of the next request.
 					socket.read_natural_32
-					if socket.last_natural_32 = 1 then
-						if attached {like last_request} socket.retrieved as l_request  then
-							last_request := l_request
-						end
+					last_request_type := socket.last_natural_32
+
+					if attached {like last_request} socket.retrieved as l_request then
+						last_request := l_request
 					end
 				end
 			end
@@ -383,12 +428,10 @@ feature{NONE} -- Socket IPC
 			-- If error occurs, close `socket'.
 		local
 			l_retried: BOOLEAN
-			l_response: TUPLE [output: STRING; is_interpreter_error: BOOLEAN; error: STRING]
 		do
 			if not l_retried then
-				socket.put_natural_32 (1)
-				l_response := [output_buffer, has_error, error_buffer]
-				socket.independent_store (l_response)
+				socket.put_natural_32 (last_response_flag)
+				socket.independent_store (last_response)
 			end
 		rescue
 			l_retried := True
@@ -412,30 +455,28 @@ feature{NONE} -- Parsing
 			-- Parse input and call corresponding handler routines (`report_*').
 		require
 			not_has_error: not has_error
-		local
-			l_request_flag: NATURAL_8
 		do
-			if last_request = Void then
-				report_error ("Received data is not recognized as a request.")
-			else
-				l_request_flag := last_request.flag
-				inspect
-					l_request_flag
-				when execute_request_flag then
-					report_execute_request
-
-				when type_request_flag then
-					report_type_request
-
-				when start_request_flag then
-					report_start_request
-
-				when quit_request_flag then
-					report_quit_request
-
+			if is_request_type_valid (last_request_type) then
+				if last_request = Void then
+					report_error ("Received data is not recognized as a request.")
 				else
-					check should_not_arrive: False end
+					inspect
+						last_request_type
+					when execute_request_flag then
+						report_execute_request
+
+					when type_request_flag then
+						report_type_request
+
+					when start_request_flag then
+						report_start_request
+
+					when quit_request_flag then
+						report_quit_request
+					end
 				end
+			else
+				report_error (invalid_request_type_error)
 			end
 		end
 
@@ -543,7 +584,9 @@ feature{NONE} -- Byte code
 			loop
 				wipe_out_buffer
 				retrieve_request
-				parse
+				if not has_error then
+					parse
+				end
 			end
 		end
 
@@ -554,6 +597,30 @@ feature{NONE} -- Error message
 	byte_code_not_found_error: STRING = "No byte-code is found in request."
 
 	byte_code_length_error: STRING = "Length of retrieved byte-code is not the same as specified in request."
+
+	invalid_request_type_error: STRING = "Request type is invalid."
+
+feature{NONE} -- Invariant checking
+
+	is_last_invariant_violated: BOOLEAN
+			-- Is the class invariant violated when `check_invariant' is invoked
+			-- the last time?
+
+	check_invariant (o: ?ANY) is
+			-- Check if the class invariant `o' is satisfied.
+			-- If not satisfied, set `is_last_invariant_violated' to True
+			-- and raise the exception.
+			-- If satisfied, set `is_last_invariant_violated' to False.
+			-- if `o' is detached, set `is_last_invariant_violated' to False and do nothing.
+		local
+			l_retried_times: INTEGER
+		do
+			if {obj: ANY} o then
+				obj.do_nothing
+			end
+		rescue
+			is_last_invariant_violated := True
+		end
 
 invariant
 	log_file_open_write: log_file /= Void implies log_file.is_open_write

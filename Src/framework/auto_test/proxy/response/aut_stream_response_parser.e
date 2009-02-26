@@ -261,6 +261,7 @@ feature {NONE} -- Implementation
 			exception_class_name: STRING
 			exception_tag_name: STRING
 			exception_trace: STRING
+			inv_flag: BOOLEAN
 		do
 			last_exception := Void
 			try_read_line
@@ -275,14 +276,21 @@ feature {NONE} -- Implementation
 						try_read_line
 						if last_string /= Void then
 							exception_tag_name := last_string.twin
-							try_parse_multi_line_value
+							try_read_line
 							if last_string /= Void then
-								exception_trace := last_string.twin
-								create last_exception.make (exception_code,
-															exception_recipient_name,
-															exception_class_name,
-															exception_tag_name,
-															exception_trace)
+								if last_string.is_boolean then
+									inv_flag := last_string.to_boolean
+								end
+								try_parse_multi_line_value
+								if last_string /= Void then
+									exception_trace := last_string.twin
+									create last_exception.make (exception_code,
+																exception_recipient_name,
+																exception_class_name,
+																exception_tag_name,
+																inv_flag,
+																exception_trace)
+								end
 							end
 						end
 					end
@@ -405,7 +413,7 @@ invariant
 	input_stream_open_read: input_stream.is_open_read
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -429,10 +437,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

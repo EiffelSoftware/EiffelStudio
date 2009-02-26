@@ -37,17 +37,16 @@ feature {NONE} -- Access
 			l_line: STRING
 			l_result: detachable ARRAYED_LIST [STRING]
 		do
-			l_file_name := help_file_name
+			create l_file_name.make_from_string (help_file_name)
+			if subcode /= 0 then
+				l_file_name.append_integer (subcode)
+			end
 			l_cache := help_text_cache
 			l_result := l_cache.item (l_file_name)
 			if attached l_result then
 				Result := l_result
 			else
 					-- No data has been cached, load the text from disk.
-				if subcode /= 0 then
-					l_file_name.append_integer (subcode)
-				end
-
 				create l_file_path.make_from_string (eiffel_layout.error_path.string);
 				l_file_path.extend ("short");
 				l_file_path.set_file_name (l_file_name);

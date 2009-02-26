@@ -11,13 +11,15 @@ class
 inherit
 	I18N_FORMATTING_ELEMENT
 
-create
+create {I18N_FORMAT_STRING_PARSER}
 	make
 
-feature {I18N_FORMAT_STRING_PARSER}  -- Initialization
+feature {NONE}  -- Initialization
 
 	make (a_time_action: FUNCTION[ANY,TUPLE[TIME],STRING_32])
 			-- Creation procedure, set `time_action'
+		require
+			a_time_action_not_void: a_time_action /= Void
 		do
 			time_action := a_time_action
 		ensure

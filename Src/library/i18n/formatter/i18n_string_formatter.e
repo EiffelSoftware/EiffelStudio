@@ -77,8 +77,6 @@ feature -- Basic operations
 			l_list_item,
 			l_string: STRING_32
 			l_id: INTEGER
-			test: STRING_GENERAL
-			a_arg: ANY
 		do
 			l_list := a_string.split (escape_character)
 			create Result.make_empty
@@ -111,12 +109,10 @@ feature -- Basic operations
 						l_id := l_string.to_integer
 
 							--FIXME!!! HACK because 'out' in ANY possibly gives a STRING_8 and this is not so good for STRING_32
-						test ?= args_tuple.item (l_id)
-						if test /= Void then
-							Result.append (test.as_string_32)
+						if attached {STRING_GENERAL} args_tuple.item (l_id) as test then
+							Result.append (test)
 						else
-							a_arg := args_tuple.item (l_id)
-							if a_arg /= Void then
+							if attached args_tuple.item (l_id) as a_arg then
 								Result.append (a_arg.out)
 							end
 						end

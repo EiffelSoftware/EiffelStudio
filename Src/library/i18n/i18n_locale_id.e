@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_language, a_region, a_script: STRING_32)
+	make (a_language, a_region: STRING_32; a_script: detachable STRING_32)
 			-- Initialize locale id.
 			--
 			-- `a_language': Language of locale, e.g. 'en'
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 		ensure
 			language_set: language.is_equal (a_language)
 			region_set: region.is_equal (a_region)
-			script_set: script /= Void implies script.is_equal (a_script)
+			script_set: script /= Void implies script ~ a_script
 		end
 
 	make_from_string (identifier: STRING_32)
@@ -140,7 +140,7 @@ feature  -- Access
 	region: STRING_32
 			-- Region of locale id
 
-	script: STRING_32
+	script: detachable STRING_32
 			-- Script of locale id (optional)
 
  	language_id: I18N_LANGUAGE_ID
@@ -170,7 +170,7 @@ feature	 -- Comparison
 
 feature {NONE} -- Implementation
 
-	encoding: STRING_32
+	encoding: detachable STRING_32
 			-- Encoding of locale id (optional)
 
 	set_name

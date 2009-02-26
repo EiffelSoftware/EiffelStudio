@@ -18,30 +18,30 @@ feature {NONE} -- Initialization
 
 feature -- Access: Code pages
 
-	code_page: STRING
+	code_page: detachable STRING
 			-- Take `oem_code_page' as default.
 		do
 			Result := oem_code_page
 		end
 
-	ansi_code_page: STRING
-	oem_code_page: STRING
-	mac_code_page: STRING
+	ansi_code_page: detachable STRING
+	oem_code_page: detachable STRING
+	mac_code_page: detachable STRING
 			-- On windows platform, these values are different.
 
 feature {I18N_HOST_LOCALE} -- Element change: Code pages
 
-	set_ansi_code_page (a_value: STRING)
+	set_ansi_code_page (a_value: like ansi_code_page)
 		do
 			ansi_code_page := a_value
 		end
 
-	set_oem_code_page (a_value: STRING)
+	set_oem_code_page (a_value: like oem_code_page)
 		do
 			oem_code_page := a_value
 		end
 
-	set_mac_code_page (a_value: STRING)
+	set_mac_code_page (a_value: like mac_code_page)
 		do
 			mac_code_page := a_value
 		end

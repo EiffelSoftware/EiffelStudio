@@ -372,6 +372,8 @@ feature {NONE} -- Transformation
 
 	grouping_string_to_integer(string: STRING_32): ARRAY[INTEGER]
 				--
+		require
+			string_not_void: string /= Void
 		local
 			temp: LIST[STRING_32]
 			position: INTEGER

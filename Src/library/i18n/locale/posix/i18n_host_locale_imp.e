@@ -562,6 +562,7 @@ feature {NONE} --Implementation
 			l_ptr, l_null: POINTER
 			l_s, l_name: STRING
 			l_available_locales: like available_locales
+			l_result: detachable STRING
 		do
 			if a_name.has ('_') then
 				create l_str.make (a_name)
@@ -575,28 +576,30 @@ feature {NONE} --Implementation
 						create l_str.make_shared_from_pointer (l_ptr)
 						l_s := l_str.string
 						if l_s.as_lower.has_substring (l_name) then
-							Result := l_s
+							l_result := l_s
 						end
 					end
 						-- Try to find a most matching locale supported.
-					if Result = Void then
+					if l_result = Void then
 						l_available_locales := available_locales
 						from
 							l_available_locales.start
 						until
-							l_available_locales.after or Result /= Void
+							l_available_locales.after or l_result /= Void
 						loop
 							l_s := l_available_locales.item.full_name
 							if l_s.as_lower.has_substring (l_name) then
-								Result := l_s
+								l_result := l_s
 							end
 							l_available_locales.forth
 						end
 					end
 				end
 			end
-			if Result = Void then
+			if l_result = Void then
 				Result := a_name
+			else
+				Result := l_result
 			end
 		ensure
 			result_not_void: Result /= Void

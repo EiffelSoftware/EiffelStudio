@@ -11,7 +11,7 @@ deferred class
 inherit
 	SHARED_I18N_PLURAL_TOOLS
 
-feature	-- creation
+feature {NONE}	-- creation
 
 	make (path: STRING_GENERAL)
 			-- Initialize file from `a_path'.
@@ -25,7 +25,7 @@ feature	-- creation
 
 feature	-- Access
 
- 	locale: STRING_32
+ 	locale: detachable STRING_32
  			-- Locale of file
  			--
  			-- Note: This is a best guess and may not be accurate.

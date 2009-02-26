@@ -54,7 +54,7 @@ feature --Access
 		local
 			iso639: STRING_32
 			iso3166: STRING_32
-			script: STRING_32
+			script: detachable STRING_32
 			i: INTEGER
 		do
 			iso639 := extract_locale_string (lcid, nls_constants.locale_siso639langname)
@@ -84,10 +84,9 @@ feature --Access
 			found: BOOLEAN
 			name, t_string: STRING_32
 		do
-
 			create name.make_from_string(id.language)
-			if (id.script /= Void and then not id.script.is_equal ("euro")) then
-				name.append ("-"+id.script)
+			if (attached id.script as l_script) and then not l_script.is_equal (("euro").as_string_32) then
+				name.append ("-"+l_script)
 			end
 			name.append ("-"+id.region)
 				-- locales is sorted by iso_code, so we can use etienne's well-contracted binary search

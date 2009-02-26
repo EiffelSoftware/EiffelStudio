@@ -14,12 +14,15 @@ inherit
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (a_format_string: STRING_32; a_locale_info: I18N_LOCALE_INFO)
 			-- parse `a_format_string' and put parsed data
 			-- in `element_list', this can than be filled
 			-- with `filled()'
+		require
+			a_format_string_not_void: a_format_string /= Void
+			a_locale_info_not_void: a_locale_info /= Void
 		local
 			parser: I18N_FORMAT_STRING_PARSER
 		do

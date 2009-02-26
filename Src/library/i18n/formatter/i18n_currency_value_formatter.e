@@ -20,12 +20,14 @@ create
 	make_from_locale_info,
 	make_from_currency_info
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make_from_currency_info (a_currency_info: I18N_CURRENCY_INFO)
 			-- Initialize values according
 			-- the currency information in
 			-- `a_locale_info'
+		require
+			a_currency_info_not_void: a_currency_info /= Void
 		do
 			decimal_separator := a_currency_info.currency_decimal_separator
 					-- decimal separator

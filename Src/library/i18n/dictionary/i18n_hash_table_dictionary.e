@@ -17,7 +17,7 @@ inherit
 create
 	make
 
-feature --Creation
+feature {NONE} --Creation
 
 	make (a_plural_form: INTEGER)
 			-- create the datastructure
@@ -46,27 +46,42 @@ feature --Access
 			-- does the dictionary have an entry with `original_singular', `original_plural'
 			-- and does this entry have the `plural_number'-th plural translation
 		local
-			entry: I18N_DICTIONARY_ENTRY
+			entry: detachable I18N_DICTIONARY_ENTRY
+			l_trans: detachable ARRAY [STRING_32]
 		do
 			if hash.has (original_singular.as_string_32) then
 				entry := hash.item (original_singular.as_string_32)
-				if entry.plural_translations.item(reduce (plural_number)) /= Void then
-					Result := True
+				check entry /= Void end -- Implied from `hash.has (original_singular.as_string_32)'
+				if entry.has_plural then
+					l_trans := entry.plural_translations
+					check l_trans /= Void end -- Implied by `entry.has_plural'
+					Result := l_trans.item(reduce (plural_number)) /= Void
 				end
 			end
 		end
 
 	singular (original: STRING_GENERAL): STRING_32
 			-- get the singular translation of `original'
+		local
+			entry: detachable I18N_DICTIONARY_ENTRY
 		do
-			Result := hash.item (original.as_string_32).singular_translation
+			entry := hash.item (original.as_string_32)
+			check entry /= Void end -- Implied from precondition
+			Result := entry.singular_translation
 		end
 
 	plural (original_singular, original_plural: STRING_GENERAL; plural_number: INTEGER): STRING_32
 			-- get the `plural_number'-th plural translation of entry
 			-- with `original_singular' and `original_plural'
+		local
+			entry: detachable I18N_DICTIONARY_ENTRY
+			l_trans: detachable ARRAY [STRING_32]
 		do
-			Result := hash.item(original_singular.as_string_32).plural_translations.item(reduce (plural_number))
+			entry := hash.item(original_singular.as_string_32)
+			check entry /= Void end -- Implied from precondition
+			l_trans := entry.plural_translations
+			check l_trans /= Void end -- Implied by `entry.has_plural'
+			Result := l_trans.item(reduce (plural_number))
 		end
 
 feature --Information

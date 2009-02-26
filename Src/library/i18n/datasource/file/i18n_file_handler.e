@@ -29,13 +29,13 @@ feature -- Status report
 
 feature -- Access
 
-	next: I18N_FILE_HANDLER
+	next: detachable I18N_FILE_HANDLER
 			-- Next handler in chain of responsability
 			-- Void if this is the last handler
 
 feature -- Element change
 
-	set_next (next_handler: I18N_FILE_HANDLER)
+	set_next (next_handler: detachable I18N_FILE_HANDLER)
 			-- Set `next' to `next_handler'.
 			--
 			-- `next_handler': The next handler in the chain
@@ -47,7 +47,7 @@ feature -- Element change
 
 feature -- Locale
 
-	file_scope (a_path: STRING_GENERAL): I18N_FILE_SCOPE_INFORMATION
+	file_scope (a_path: STRING_GENERAL): detachable I18N_FILE_SCOPE_INFORMATION
 			-- Scope of file represented by `a_path'
 			--
 			-- NOTE: Void if scope cannot be determined from file contents.
@@ -60,22 +60,22 @@ feature -- Locale
 				Result := extract_scope (a_path)
 				handled := True
 			else
-				if next /= Void then
-					Result := next.file_scope (a_path)
-					handled := next.handled
+				if attached next as l_next then
+					Result := l_next.file_scope (a_path)
+					handled := l_next.handled
 				else
 					handled := False
 				end
 			end
 		ensure
 			handled_if_can_handle: can_handle (a_path) implies handled
-			next_handeld: (not can_handle (a_path)) and then next /= Void implies handled = next.handled
+			next_handeld: (not can_handle (a_path)) and then (attached next as l_next) implies handled = l_next.handled
 			not_handeled: (not can_handle (a_path)) and then next = Void implies not handled
 		end
 
 feature {NONE} -- Implementation
 
-	extract_scope (a_path: STRING_32): I18N_FILE_SCOPE_INFORMATION
+	extract_scope (a_path: STRING_32): detachable I18N_FILE_SCOPE_INFORMATION
 			-- Extract scope of file at `a_path'
 			-- NOTE: Void if scope cannot be determined from file contents
 		require
@@ -86,7 +86,7 @@ feature {NONE} -- Implementation
 
 feature -- Dictionary
 
-	get_file_dictionary (a_path: STRING_32): I18N_DICTIONARY
+	get_file_dictionary (a_path: STRING_32): detachable I18N_DICTIONARY
 			-- get appropriate dictionary for the file at `a_path'
 		require
 			a_path_exists: a_path /= Void
@@ -95,17 +95,17 @@ feature -- Dictionary
 				Result := extract_dictionary(a_path)
 				handled := True
 			else
-				if next /= Void then
-					Result := next.get_file_dictionary(a_path)
-					handled := next.handled
+				if attached next as l_next then
+					Result := l_next.get_file_dictionary(a_path)
+					handled := l_next.handled
 				else
 					handled := False
 				end
 			end
 		ensure
 			handled_if_can_handle: can_handle (a_path) implies handled
-			next_handeld: ((not can_handle (a_path)) and then next /= Void)
-							implies handled = next.handled
+			next_handeld: ((not can_handle (a_path)) and then (attached next as l_next))
+							implies handled = l_next.handled
 			not_handeled: ((not can_handle (a_path)) and then next = Void)
 							implies not handled
 		end
@@ -123,7 +123,7 @@ feature -- Dictionary
 
 feature {NONE} 	-- Implementation
 
-	file: I18N_FILE;
+	file: detachable I18N_FILE;
 
 note
 	library:   "Internationalization library"

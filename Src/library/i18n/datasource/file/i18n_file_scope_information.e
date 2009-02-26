@@ -15,14 +15,14 @@ create
 	make_with_locale,
 	make_with_language
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make_with_locale (a_locale: I18N_LOCALE_ID )
 			--
 		require
 			a_locale_not_void: a_locale /= Void
 		do
-			scope := 1
+			scope := scope_locale_specific
 			locale := a_locale
 		end
 
@@ -32,7 +32,7 @@ feature -- Initialization
 		require
 			language_not_void: a_language /= Void
 		do
-			scope := 2
+			scope := scope_language_specific
 			language := a_language
 		end
 
@@ -46,26 +46,34 @@ feature -- Scope
 
 feature -- Retrieval
 
-	get_locale:I18N_LOCALE_ID
+	get_locale: attached I18N_LOCALE_ID
 			--
 		require
 			scope = scope_locale_specific
+		local
+			l_locale: like locale
 		do
-			Result := locale
+			l_locale := locale
+			check l_locale /= Void end -- Implied by precondition
+			Result := l_locale
 		end
 
-	get_language: I18N_LANGUAGE_ID
+	get_language: attached I18N_LANGUAGE_ID
 			--
 		require
 			scope = scope_language_specific
+		local
+			l_lang: like language
 		do
-			Result := language
+			l_lang := language
+			check l_lang /= Void end -- Implied by precondition
+			Result := l_lang
 		end
 
 feature {NONE} -- Information
 
-	locale: I18N_LOCALE_ID
-	language: I18N_LANGUAGE_ID;
+	locale: detachable I18N_LOCALE_ID
+	language: detachable I18N_LANGUAGE_ID;
 
 note
 	library:   "Internationalization library"

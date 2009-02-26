@@ -202,6 +202,7 @@ feature {NONE} -- Query
 			l_column: EV_GRID_COLUMN
 			l_row: EV_GRID_ROW
 			l_text: STRING_32
+			l_row_text: STRING_32
 			l_states: SPECIAL [INTEGER]
 			l_none, l_part, l_full: INTEGER
 			l_has_full: BOOLEAN
@@ -264,16 +265,13 @@ feature {NONE} -- Query
 						j > l_column_count
 					loop
 						if l_states.item (j) /= l_none then
-							if l_row.item (j).is_selected and then {lt_text: STRING_GENERAL}row_item_text (l_row.item (j)) then
-								if not lt_text.is_empty then
-									l_text.append (lt_text)
-									l_text.append ("%T")
-								else
-									l_text.append ("%T")
+							if l_row.item (j).is_selected then
+								l_row_text := row_item_text (l_row.item (j))
+								if not l_row_text.is_empty then
+									l_text.append (l_row_text)
 								end
-							else
-								l_text.append ("%T")
 							end
+							l_text.append ("%T")
 						end
 						j := j + 1
 					end
@@ -283,7 +281,7 @@ feature {NONE} -- Query
 			end
 			Result := l_text
 		ensure
-			result_attached: Result /= Void
+			result_attached: attached Result
 		end
 
 	row_text (a_row: EV_GRID_ROW): STRING_32
@@ -303,21 +301,20 @@ feature {NONE} -- Query
 			l_count := a_row.count
 			from i := 1 until i > l_count loop
 				l_item := a_row.item (i)
-				if l_item /= Void then
+				if attached l_item then
 					l_text := row_item_text (l_item)
-					if l_text /= Void and then not l_text.is_empty then
+					if not l_text.is_empty then
 						Result.append (l_text)
 						Result.append_character ('%T')
 					end
 				end
-
 				i := i + 1
 			end
 			if not Result.is_empty then
 				Result.prune_all_trailing ('%T')
 			end
 		ensure
-			result_attached: Result /= Void
+			result_attached: attached Result
 		end
 
 	row_item_text (a_item: EV_GRID_ITEM): STRING_32

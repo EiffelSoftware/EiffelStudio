@@ -16,7 +16,6 @@ inherit
 
 	DISPOSABLE_SAFE
 
-inherit {NONE}
 	EB_SHARED_WINDOW_MANAGER
 		export
 			{NONE} all

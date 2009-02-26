@@ -24,7 +24,6 @@ inherit
 
 	EB_STONABLE_COMMAND
 
-inherit {NONE}
 	EB_SHARED_PIXMAPS
 		export
 			{NONE} all

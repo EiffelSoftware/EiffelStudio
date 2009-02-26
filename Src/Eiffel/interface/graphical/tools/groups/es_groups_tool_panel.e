@@ -28,7 +28,6 @@ inherit
 			{ES_GROUPS_COMMANDER_I} all
 		end
 
-inherit {NONE}
 	SHARED_WORKBENCH
 		export
 			{NONE} all

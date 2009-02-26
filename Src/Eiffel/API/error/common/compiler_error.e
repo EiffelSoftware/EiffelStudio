@@ -80,7 +80,6 @@ feature {NONE} -- Access
 				l_cache.put (l_result, l_file_name)
 			end
 		ensure
-			help_text_cache_has_help_file_name: help_text_cache.has (help_file_name)
 			result_is_consistent: Result = help_text
 		end
 
@@ -96,7 +95,10 @@ feature {NONE} -- Access
 			l_result: detachable STRING
 			i: INTEGER
 		do
-			l_file_name := help_file_name
+			create l_file_name.make_from_string (help_file_name)
+			if subcode /= 0 then
+				l_file_name.append_integer (subcode)
+			end
 			l_cache := single_line_help_text_cache
 			l_result := l_cache.item (l_file_name)
 			if attached l_result then
@@ -147,7 +149,6 @@ feature {NONE} -- Access
 				l_cache.put (Result, l_file_name)
 			end
 		ensure
-			single_line_help_text_cache_has_help_file_name: single_line_help_text_cache.has (help_file_name)
 			result_is_consistent: Result = single_line_help_text
 		end
 

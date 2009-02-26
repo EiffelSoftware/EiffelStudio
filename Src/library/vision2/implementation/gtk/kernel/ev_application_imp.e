@@ -91,8 +91,6 @@ feature {NONE} -- Initialization
 					-- We do not want X Errors to exit the system so we ignore them indefinitely.
 				{EV_GTK_EXTERNALS}.gdk_error_trap_push
 
-				init_connection_number
-
 					-- Check if an GdkImage using the GDK_IMAGE_SHARED flag (first argument '1') may be created, if so then display is local.
 				l_image := {EV_GTK_EXTERNALS}.gdk_image_new (1, {EV_GTK_EXTERNALS}.gdk_rgb_get_visual, 1, 1)
 					-- This may fail if the X Server doesn't support the Shared extension, but if this is the case
@@ -194,73 +192,10 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	display_connection_number: INTEGER
-		-- Connection number of display.
-		-- This is a file descriptor from which we can poll for user events.
-
-	x11_display: POINTER
-		-- Pointer to the default X11 display used by `Current'.
-
-	init_connection_number
-			-- Initialize `display_connection_number'.
-		local
-			l_gdk_display: POINTER
-		do
-			l_gdk_display := {EV_GTK_EXTERNALS}.gdk_get_display
-			x11_display := gdk_drawable_xdisplay ({EV_GTK_EXTERNALS}.gdk_root_parent)
-			display_connection_number := connection_number (x11_display)
-		end
-
 	wait_for_input (msec: INTEGER)
 			-- Wait for at most `msec' milliseconds for an event.
-		local
-			l_result: INTEGER
 		do
-			if xpending (x11_display) = 0 then
-					-- If there are no events then we wait for some.
-					-- The call to XPending will also flush any events in the buffer.
-				l_result := fd_select (display_connection_number, msec * 1000)
-			end
-		end
-
-	fd_select (a_fd, a_timeout: INTEGER): INTEGER
-		external
-			"C inline use <gdk/gdkx.h>"
-		alias
-			"[
-				fd_set rfds;
-				struct timeval tv;
-				int retval;
-
-				FD_ZERO(&rfds);
-				FD_SET((int) $a_fd, &rfds);
-
-				tv.tv_sec = 0;
-				tv.tv_usec = (long) $a_timeout;
-
- 				return select(1, &rfds, NULL, NULL, &tv);
- 			]"
-		end
-
-	gdk_drawable_xdisplay (a_gdk_display: POINTER): POINTER
-		external
-			"C macro use <gdk/gdkx.h>"
-		alias
-			"GDK_DRAWABLE_XDISPLAY"
-		end
-
-	connection_number (a_x_display: POINTER): INTEGER
-		external
-			"C macro use <gdk/gdkx.h>"
-		alias
-			"ConnectionNumber"
-		end
-
-	xpending (a_x_display: POINTER): INTEGER
-		external
-			"C macro use <gdk/gdkx.h>"
-		alias
-			"XPending"
+			sleep (msec)
 		end
 
 	process_underlying_toolkit_event_queue

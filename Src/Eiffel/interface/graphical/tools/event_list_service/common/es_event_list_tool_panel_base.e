@@ -367,7 +367,7 @@ feature {NONE} -- Query
 			when {ENVIRONMENT_CATEGORIES}.editor then
 				Result := stock_pixmaps.general_document_icon
 			when {ENVIRONMENT_CATEGORIES}.debugger then
-				Result := stock_pixmaps.debugger_environment_force_debug_mode_icon
+				Result := stock_pixmaps.debugger_environment_force_execution_mode_icon
 			else
 				-- No matching category
 			end

@@ -867,8 +867,8 @@ feature {NONE} -- Factory
 				-- Create debug button
 			create debug_button.make
 			debug_button.set_tooltip (locale_formatter.translation (f_debug_button))
-			debug_button.set_pixel_buffer (stock_pixmaps.debugger_environment_force_debug_mode_icon_buffer)
-			debug_button.set_pixmap (stock_pixmaps.debugger_environment_force_debug_mode_icon)
+			debug_button.set_pixel_buffer (stock_pixmaps.debugger_environment_force_execution_mode_icon_buffer)
+			debug_button.set_pixmap (stock_pixmaps.debugger_environment_force_execution_mode_icon)
 			register_action (debug_button.select_actions, agent on_run_current (debug_executor_type))
 
 			create l_menu

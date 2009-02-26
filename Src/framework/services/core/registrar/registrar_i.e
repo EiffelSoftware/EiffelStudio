@@ -16,7 +16,7 @@ inherit
 
 	DISPOSABLE_I
 
-inherit {NONE}
+--inherit {NONE}
 	EVENT_CONNECTION_POINT_I [REGISTRAR_OBSERVER [G, K], REGISTRAR_I [G, K]]
 		rename
 			connection as registrar_connection

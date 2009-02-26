@@ -23,7 +23,7 @@ inherit
 create
 	make
 
-feature --Creation
+feature {NONE} --Creation
 
 	make(a_plural_form:INTEGER)
 			-- create the datastructure
@@ -122,10 +122,12 @@ feature--{NONE}	--help functions
 	has_index(original:STRING_GENERAL):INTEGER
 			-- does the dictionary have this entry?
 			-- use binary search algorithm
-			-- require `array'is sorted
+			-- require `array' is sorted
 			-- return the Index of the found item
 			-- return -1 if not found
 			-- based only on the  `key item', no info about translation items
+		require
+			original_not_void: original /= Void
 		local
 			left,right,middle: INTEGER
 			m_string: STRING_32
@@ -166,49 +168,47 @@ feature--{NONE}	--help functions
 
 feature	-- Access
 
-	has_plural(original_singular, original_plural: STRING_GENERAL; plural_number:INTEGER):BOOLEAN
+	has_plural (original_singular, original_plural: STRING_GENERAL; plural_number:INTEGER):BOOLEAN
 			--
 		local
-			entry: I18N_DICTIONARY_ENTRY
+			entry: detachable I18N_DICTIONARY_ENTRY
 			index: INTEGER
+			l_trans: detachable ARRAY [STRING_32]
 		do
 			index:=has_index(original_singular.as_string_32)
 			if index /= -1 then
 				entry := array.item (index)
-				if entry.plural_translations.item(reduce (plural_number)) /= Void then
-						Result := True
+				check entry /= Void end -- Implied from `has_index'
+				l_trans := entry.plural_translations
+				if l_trans /= Void then
+					Result := l_trans.item (reduce (plural_number)) /= Void
 				end
 			end
 		end
 
 	singular(original:STRING_GENERAL): STRING_32
-		--
+			--
 		local
 			entry: I18N_DICTIONARY_ENTRY
 			index: INTEGER
 		do
 			index:=has_index(original.as_string_32)
-			if index /= -1 then
-				entry := array.item (index)
-				Result := entry.singular_translation
-			end
+			entry := array.item (index)
+			Result := entry.singular_translation
 		end
 
 	plural(original_singular, original_plural: STRING_GENERAL; plural_number: INTEGER): STRING_32
-				--
+			--
 		local
 			entry: I18N_DICTIONARY_ENTRY
 			index: INTEGER
+			l_trans: detachable ARRAY [STRING_32]
 		do
-			index:=has_index(original_singular.as_string_32)
-
-				-- i do not know whether it is necessary to check `index /= -1'
-				-- because `has_plural' has checked it already
-
-			if index /= -1 then
-				entry := array.item (index)
-				Result := entry.plural_translations.item (reduce (plural_number))
-			end
+			index := has_index(original_singular.as_string_32)
+			entry := array.item (index)
+			l_trans := entry.plural_translations
+			check l_trans /= Void end
+			Result := l_trans.item (reduce (plural_number))
 		end
 
 

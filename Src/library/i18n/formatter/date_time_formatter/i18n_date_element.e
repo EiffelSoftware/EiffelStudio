@@ -20,6 +20,8 @@ feature {I18N_FORMAT_STRING_PARSER} -- Initialization
 	make (a_date_action: FUNCTION[ANY,TUPLE[DATE],STRING_32])
 			-- creation procedure, make with `a_date_action' as action
 			-- when filled
+		require
+			a_date_action_not_void: a_date_action /= Void
 		do
 			date_action := a_date_action
 		end

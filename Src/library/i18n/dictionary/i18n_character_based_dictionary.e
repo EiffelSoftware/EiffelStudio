@@ -17,7 +17,7 @@ inherit
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make(a_plural_form:INTEGER)
 			-- create the datastructure
@@ -42,8 +42,10 @@ feature -- Manipulation
 			end
 			count := count + 1
 		ensure then
-			extended: has (a_entry.original_singular) or else
-				has_plural (a_entry.original_singular, a_entry.original_plural, 1)
+			item_extended:
+				has (a_entry.original_singular) or else
+				((attached a_entry.original_plural as l_plural) and then
+				has_plural (a_entry.original_singular, l_plural, 1))
 		end
 
 feature -- Access
@@ -60,12 +62,14 @@ feature -- Access
 	has_plural (original_singular, original_plural: STRING_GENERAL; plural_number: INTEGER): BOOLEAN
 			--
 		local
-			entry: I18N_DICTIONARY_ENTRY
+			l_trans: detachable ARRAY [STRING_32]
 		do
-			entry := plural_char_tree.get_item_with_key (original_singular.as_string_32)
-			if entry /= Void and then
-			   entry.plural_translations.item(reduce (plural_number)) /= Void  then
-				Result := True
+			if attached plural_char_tree.get_item_with_key (original_singular.as_string_32) as entry then
+				if entry.has_plural then
+					l_trans := entry.plural_translations
+					check l_trans /= Void end -- Implied by `entry.has_plural'
+					Result := l_trans.item(reduce (plural_number)) /= Void
+				end
 			end
 		end
 
@@ -73,21 +77,36 @@ feature -- Access
 			-- get the translation of `original'
 			-- in the singular form
 		local
-			t_entry: I18N_DICTIONARY_ENTRY
+			t_entry: detachable I18N_DICTIONARY_ENTRY
+			l_result: detachable STRING_32
 		do
 			t_entry := singular_char_tree.get_item_with_key (original.as_string_32)
 			if t_entry /= Void then
-				Result := t_entry.singular_translation
+				l_result := t_entry.singular_translation
 			else -- because of the precondition it has to be in the plural_char_tree
-				Result := plural_char_tree.get (original.as_string_32).singular_translation
+				t_entry := plural_char_tree.get (original.as_string_32)
+				check t_entry /= Void end -- Implied from precondition
+				l_result := t_entry.singular_translation
 			end
+			check l_result /= Void end -- Implied from precondition
+			Result := l_result
 		end
 
 	plural (original_singular, original_plural: STRING_GENERAL; plural_number: INTEGER): STRING_32
 			-- get the translation of `original_singular'
 			-- in the given plural form
+		local
+			l_result: detachable STRING_32
+			l_entry: detachable I18N_DICTIONARY_ENTRY
+			l_trans: detachable ARRAY [STRING_32]
 		do
-			Result := plural_char_tree.get(original_singular.as_string_32).plural_translations.item(reduce (plural_number))
+			l_entry := plural_char_tree.get(original_singular.as_string_32)
+			check l_entry /= Void end -- Implied from precondition
+			l_trans := l_entry.plural_translations
+			check l_trans /= Void end -- Implied from precondition
+			l_result := l_trans.item(reduce (plural_number))
+			check l_result /= Void end -- Implied from precondition
+			Result := l_result
 		end
 
 feature --Information

@@ -11,13 +11,15 @@ class
 inherit
 	I18N_FORMATTING_ELEMENT
 
-create
+create {I18N_FORMAT_STRING_PARSER}
 	make
 
-feature {I18N_FORMAT_STRING_PARSER} -- Initialization
+feature {NONE} -- Initialization
 
 	make (a_string: STRING_32)
 			-- set the `user_string'
+		require
+			a_string_not_void: a_string /= Void
 		do
 			user_string := a_string
 		end

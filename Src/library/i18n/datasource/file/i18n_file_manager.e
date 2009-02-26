@@ -17,7 +17,7 @@ inherit
 create
 	make
 
-feature	-- Creation
+feature	{NONE} -- Creation
 
 	make (an_uri: STRING_GENERAL)
 		do
@@ -37,15 +37,19 @@ feature	-- Access
 
 	dictionary (a_locale: I18N_LOCALE_ID): I18N_DICTIONARY
 			-- return appropriate dictionary
+		local
+			l_result: detachable I18N_DICTIONARY
 		do
 			if available_locales.has (a_locale) then
-				Result := chain.get_file_dictionary (locale_file_list.item (a_locale))
+				l_result := chain.get_file_dictionary (locale_file_list.item (a_locale))
 			elseif available_languages.has (a_locale.language_id) then
-				Result := chain.get_file_dictionary (
+				l_result := chain.get_file_dictionary (
 					language_file_list.item (a_locale.language_id))
-			else
-				create {I18N_DUMMY_DICTIONARY} Result.make(0)
 			end
+			if l_result = Void then
+				create {I18N_DUMMY_DICTIONARY}l_result.make (0)
+			end
+			Result := l_result
 		end
 
 	available_locales: LINEAR[I18N_LOCALE_ID]
@@ -81,7 +85,7 @@ feature {NONE} --Implementation
 			directory_not_void: directory /= Void
 		local
 			temp: LIST[STRING_8]
-			scope: I18N_FILE_SCOPE_INFORMATION
+			scope: detachable I18N_FILE_SCOPE_INFORMATION
 		do
 			create locale_file_list.make(16)
 			create locale_list.make(16)

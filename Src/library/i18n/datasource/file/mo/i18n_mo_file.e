@@ -90,57 +90,75 @@ feature -- Access
 
 	entry_has_plurals (i:INTEGER): BOOLEAN
 			-- does `i'-th entry have a plural?
+		local
+			l_list: detachable LIST [STRING_32]
 		do
 			get_original_entries (i)
-			Result := last_original.list.count > 1
+			l_list := last_original.list
+			check l_list /= Void end -- Implied from postcondition of `get_translated_entries'
+			Result := l_list.count > 1
 		end
 
 	original_singular_string (i:INTEGER): STRING_32
 			-- `i'-th original string
+		local
+			l_list: detachable LIST [STRING_32]
 		do
 			get_original_entries (i)
-			Result := last_original.list.i_th (1)
+			l_list := last_original.list
+			check l_list /= Void end -- Implied from postcondition of `get_translated_entries'
+			Result := l_list.i_th (1)
 		end
 
 	original_plural_string (i:INTEGER): STRING_32
 			-- `i'-th original plural
+		local
+			l_list: detachable LIST [STRING_32]
 		do
 			get_original_entries (i)
-			Result := last_original.list.i_th(2)
+			l_list := last_original.list
+			check l_list /= Void end -- Implied from postcondition of `get_translated_entries'
+			Result := l_list.i_th(2)
 		end
 
 	translated_singular_string (i: INTEGER): STRING_32
 			-- singular translation of `i'-th entry
 		local
 			red: INTEGER
+			l_list: detachable LIST [STRING_32]
 		do
 			get_translated_entries (i)
+			l_list := last_translated.list
+			check l_list /= Void end -- Implied from postcondition of `get_translated_entries'
 			red := plural_tools.get_reduction_agent (plural_form).item ([1])
-			Result := last_translated.list.i_th(red+1)
+			Result := l_list.i_th(red+1)
 		end
 
 	translated_plural_strings (i: INTEGER): ARRAY[STRING_32]
 			-- plural translations of `i'-th entry
 		local
 			counter: INTEGER
+			l_list: detachable LIST [STRING_32]
 		do
 			create Result.make (0, 3)
 			get_translated_entries (i)
+			l_list := last_translated.list
+			check l_list /= Void end -- Implied from postcondition of `get_translated_entries'
 			from
-				last_translated.list.start
+				l_list.start
 				counter := 0
 			until
-				last_translated.list.after
+				l_list.after
 				or
 				counter > 3
 			loop
-				Result.put (last_translated.list.item, counter)
+				Result.put (l_list.item, counter)
 				counter := counter + 1
-				last_translated.list.forth
+				l_list.forth
 			end
 		end
 
-	locale:STRING_32
+	locale: detachable STRING_32
 			-- Best guess at locale of the file. This could also be a language.
 		local
 			file_name: STRING_32
@@ -148,7 +166,6 @@ feature -- Access
 			possible: STRING_32
 			separator_index: INTEGER
 		do
-			Result := Void
 			-- The only inherent locale identifier in a .mo file is the name.
 			-- Any other way to identify it is project dependant, see FILE_MANAGER for more details
 			file_name := file.name.as_string_32
@@ -168,8 +185,8 @@ feature -- Access
 
 feature --Entries
 
-	last_original: TUPLE[i:INTEGER; list:LIST[STRING_32]]
-	last_translated: TUPLE[i:INTEGER; list:LIST[STRING_32]]
+	last_original: TUPLE[i:INTEGER; list: detachable LIST[STRING_32]]
+	last_translated: TUPLE[i:INTEGER; list: detachable LIST[STRING_32]]
 
 	get_original_entries (i_th: INTEGER)
 			-- get `i_th' original entry in the file
@@ -242,19 +259,22 @@ feature {NONE} -- Implementation
 		require
 			correct_file: file.is_open_read and valid
 		local
-			t_list : LIST[STRING_32]
-			t_string : STRING_32
+			t_list : LIST [STRING_32]
+			t_string : detachable STRING_32
 			index : INTEGER
 			char0: WIDE_CHARACTER
 			code0: INTEGER
 			conditional: STRING_32
 			nplurals: INTEGER
+			l_list: detachable LIST [STRING_32]
 		do
 			char0 := '0'
 			code0 := char0.code
 				-- Get the first translated string of the first entry in the .mo file - this is the headers entry (the empty string)
 			get_translated_entries (1)
-			t_list := last_translated.list.i_th(1).split('%N')
+			l_list := last_translated.list
+			check l_list /= Void end -- Implied from postcondition of `get_translated_entries'
+			t_list := l_list.i_th(1).split('%N')
 			 	-- Search the headers
 			from
 				t_list.start

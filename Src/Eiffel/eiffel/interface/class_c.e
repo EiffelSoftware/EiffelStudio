@@ -792,7 +792,7 @@ feature {NONE} -- Class initialization
 
 	similar_parents
 			(a_old_parents, a_new_parents: EIFFEL_LIST [PARENT_AS]): TUPLE [previous_types_remain: BOOLEAN; parents_removed: BOOLEAN]
-		
+
 			-- First element of tuple: Does `a_new_parents' include all types used in
 			-- `a_old_parents' and no type has been removed from `a_old_parents'.
 			-- Second element of tuple: was a parent type of `a_old_parents' removed from
@@ -2518,6 +2518,17 @@ feature -- Validity class
 					error_handler.insert_error (
 						create {SPECIAL_ERROR}.make ("Class ANY must have a boolean query `equal' with 2 reference arguments", Current))
 				end
+				l_feature := feature_table.item_id (names_heap.is_equal_name_id)
+				if
+					l_feature = Void or else
+					l_feature.argument_count /= 1 or else
+					not l_feature.arguments.i_th (1).is_like_current or else
+					not l_feature.arguments.i_th (1).actual_argument_type (l_feature.arguments).is_reference or else
+					not l_feature.type.is_boolean
+				then
+					error_handler.insert_error (
+						create {SPECIAL_ERROR}.make ("Class ANY must have a boolean query `is_equal' with 1 argument of the type `like Current' or of a reference type", Current))
+				end
 				l_feature := feature_table.item_id (names_heap.twin_name_id)
 				if
 					l_feature = Void or else
@@ -3053,7 +3064,7 @@ feature {NONE} -- Implementation: Properties
 	formal_constraint_cache: TUPLE [
 			constraint_classes: ARRAY [CLASS_C];
 			constraint_renaming: ARRAY [RENAMING_A]]
-		
+
 			-- For easy type checking of `constraint_cache'.
 		do
 		end

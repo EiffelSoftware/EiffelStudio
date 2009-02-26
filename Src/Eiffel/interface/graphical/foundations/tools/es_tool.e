@@ -38,7 +38,6 @@ inherit
 			out
 		end
 
-inherit {NONE}
 	ES_SHARED_LOCALE_FORMATTER
 		export
 			{NONE} all

@@ -101,8 +101,21 @@ feature {NONE} -- Basic operations
 
 feature -- Output
 
+	trace (handler: ERROR_HANDLER)
+			-- <Precursor>
+		do
+				-- For EiffelStudio, we report the errors first to ensure they are display on the top of the
+				-- error list tool.
+			if handler.has_error then
+				trace_errors (handler)
+			end
+			if handler.has_warning then
+				trace_warnings (handler)
+			end
+		end
+
 	trace_warnings (handler: ERROR_HANDLER)
-			-- Display warnings messages from `handler'.
+			-- <Precursor>
 		local
 			l_warnings: LIST [ERROR]
 			l_cursor: CURSOR

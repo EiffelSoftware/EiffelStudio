@@ -19,6 +19,12 @@ feature -- Basic operations
 		do
 		end
 
+	is_equal (other: like Current): BOOLEAN
+			-- Is `other' attached to an object considered
+			-- equal to current object?
+		do
+		end
+
 	default_rescue is
 			-- Process exception for routines with no Rescue clause.
 			-- (Default: do nothing.)

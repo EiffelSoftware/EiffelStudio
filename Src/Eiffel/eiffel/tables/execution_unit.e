@@ -130,7 +130,6 @@ feature -- Access
 		local
 			written_class: CLASS_C
 			f: FEATURE_AS
-			l_associated_class: CLASS_C
 		do
 			written_class := System.class_of_id (written_in)
 			if

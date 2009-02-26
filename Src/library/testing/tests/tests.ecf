@@ -13,7 +13,7 @@
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<setting name="multithreaded" value="true"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf" use_application_options="true"/>
 		<tests name="tests" location=".\" recursive="true">
 			<option namespace="Tests">

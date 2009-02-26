@@ -23,6 +23,7 @@ inherit
 
 create
 	make
+
 feature {NONE} -- Initialization
 
 	make (a_agent: like observer_event_action_map_fetch_action; a_link: like linked_connection)

@@ -15,9 +15,11 @@ deferred class
 inherit
 	USABLE_I
 
+	DISPOSABLE_I
+
 feature -- Status report
 
-	is_subscribed (a_action: !PROCEDURE [ANY, EVENT_DATA]): BOOLEAN
+	is_subscribed (a_action: attached PROCEDURE [ANY, EVENT_DATA]): BOOLEAN
 			-- Determines if the event already has a subscription for a specified action.
 			--
 			-- `a_action': An action to check an existing subscription for
@@ -60,7 +62,7 @@ feature -- Status settings
 
 feature -- Subscription
 
-	subscribe (a_action: !PROCEDURE [ANY, EVENT_DATA])
+	subscribe (a_action: attached PROCEDURE [ANY, EVENT_DATA])
 			-- Subscribes an action to the event.
 			--
 			-- `a_action': The action to subscribe.
@@ -72,7 +74,7 @@ feature -- Subscription
 			a_action_subscribed: is_subscribed (a_action)
 		end
 
-	subscribe_for_single_notification (a_action: !PROCEDURE [ANY, EVENT_DATA])
+	subscribe_for_single_notification (a_action: attached PROCEDURE [ANY, EVENT_DATA])
 			-- Subscribes an action to the event for a single publication only.
 			--
 			-- `a_action': The action to subscribe.
@@ -84,7 +86,7 @@ feature -- Subscription
 			a_action_subscribed: is_subscribed (a_action)
 		end
 
-	unsubscribe (a_action: !PROCEDURE [ANY, EVENT_DATA])
+	unsubscribe (a_action: attached PROCEDURE [ANY, EVENT_DATA])
 			-- Unsubscribes an action from the event.
 			-- Note: If a_action_is_subscribed fails then Freeze, you're could be comparing melted and
 			--       frozen agents which are not equal objects.
@@ -100,7 +102,7 @@ feature -- Subscription
 
 feature -- Basic operations
 
-	perform_suspended_action (a_action: !PROCEDURE [ANY, TUPLE])
+	perform_suspended_action (a_action: attached PROCEDURE [ANY, TUPLE])
 			-- Performs a action whilst suspending subscriptions from recieve a publication
 			--
 			-- `a_action': Action to call while the event is suspended.
@@ -123,7 +125,7 @@ feature -- Basic operations
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -147,11 +149,11 @@ feature -- Basic operations
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

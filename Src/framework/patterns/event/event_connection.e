@@ -13,6 +13,8 @@ class
 inherit
 	EVENT_CONNECTION_I [G, I]
 
+	DISPOSABLE_I
+
 	DISPOSABLE_SAFE
 
 create
@@ -64,7 +66,7 @@ feature {NONE} -- Access
 	frozen connections: !DS_ARRAYED_LIST [detachable G]
 			-- Current connections to event connections.
 		require
-			is_interface_usable: is_interface_usable and then attached {USABLE_I} Current as l_result
+			is_interface_usable: is_interface_usable
 		local
 			l_result: like internal_connections
 		do

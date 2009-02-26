@@ -158,6 +158,9 @@ feature -- Status report
 									entry.pattern_id /= first_pattern_id
 							else
 								found := True
+									-- If the pattern ID is does not match the one from the current type
+									-- then the call has to be polymorphic. See eweasel test#ccomp040 and test#ccomp083.
+								Result := first_pattern_id /= entry.pattern_id
 								first_real_body_index := entry.real_body_index
 								first_body_index := entry.body_index
 							end

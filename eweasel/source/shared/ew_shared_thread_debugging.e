@@ -92,8 +92,7 @@ feature {NONE} -- Implementation
 		indexing
             		once_status: global 
 		once
-			create Result
-			Result.put (0)
+			create Result.put (0)
 		end		
 
 	Main_type: STRING = "Main  ";

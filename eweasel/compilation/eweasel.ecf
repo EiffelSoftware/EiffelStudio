@@ -27,7 +27,11 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
-		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</library>
 		<cluster name="eweasel" location="$EWEASEL\source\" recursive="true">
 			<option full_class_checking="true">
 			</option>

@@ -81,7 +81,7 @@ feature -- Basic operations
 
 feature {NONE} -- Basic operations
 
-	show_errors_and_warnings_tool (a_window: EB_DEVELOPMENT_WINDOW; a_first_time_only: BOOLEAN)
+	show_errors_and_warnings_tool (a_window: EB_DEVELOPMENT_WINDOW)
 			-- Shows the error and warnings tool for window `a_window'
 			--
 			-- `a_window': The EiffelStudio development window to display the errors and warnings tool for

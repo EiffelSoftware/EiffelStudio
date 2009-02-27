@@ -1329,31 +1329,28 @@ feature -- Utilities
 			-- If `a_str_list' is empty, return Void.
 		require
 			a_str_list_attached: a_str_list /= Void
+			a_str_list_not_empty: not a_str_list.is_empty
 			a_separator_attached: a_separator /= Void
 		local
 			l_temp_str: STRING_32
 		do
 			create l_temp_str.make (128)
-			if not a_str_list.is_empty then
-				from
-					a_str_list.start
-					check a_str_list.item /= Void end
-					l_temp_str.append (a_str_list.item)
-					a_str_list.forth
-				until
-					a_str_list.after
-				loop
-					l_temp_str.append (a_separator)
-					check a_str_list.item /= Void end
-					l_temp_str.append (a_str_list.item)
-					a_str_list.forth
-				end
+			from
+				a_str_list.start
+				check a_str_list.item /= Void end
+				l_temp_str.append (a_str_list.item)
+				a_str_list.forth
+			until
+				a_str_list.after
+			loop
+				l_temp_str.append (a_separator)
+				check a_str_list.item /= Void end
+				l_temp_str.append (a_str_list.item)
+				a_str_list.forth
 			end
-			if not l_temp_str.is_empty then
-				Result := l_temp_str
-			end
+			Result := l_temp_str
 		ensure
-			good_result: Result /= Void implies not Result.is_empty
+			good_result: Result /= Void and then not Result.is_empty
 		end
 
 	location_section (a_section_name, a_section_type: STRING_GENERAL): STRING_32
@@ -1448,36 +1445,36 @@ feature -- Utilities
 		end
 
 note
-        copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2009, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[
-                        This file is part of Eiffel Software's Eiffel Development Environment.
-                        
-                        Eiffel Software's Eiffel Development Environment is free
-                        software; you can redistribute it and/or modify it under
-                        the terms of the GNU General Public License as published
-                        by the Free Software Foundation, version 2 of the License
-                        (available at the URL listed under "license" above).
-                        
-                        Eiffel Software's Eiffel Development Environment is
-                        distributed in the hope that it will be useful,	but
-                        WITHOUT ANY WARRANTY; without even the implied warranty
-                        of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-                        See the	GNU General Public License for more details.
-                        
-                        You should have received a copy of the GNU General Public
-                        License along with Eiffel Software's Eiffel Development
-                        Environment; if not, write to the Free Software Foundation,
-                        Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
-                ]"
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
         source: "[
-                         Eiffel Software
-                         356 Storke Road, Goleta, CA 93117 USA
-                         Telephone 805-685-1006, Fax 805-685-6869
-                         Website http://www.eiffel.com
-                         Customer support http://support.eiffel.com
-                ]"
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end
 

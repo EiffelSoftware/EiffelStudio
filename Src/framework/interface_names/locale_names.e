@@ -360,7 +360,7 @@ feature -- Access
 		local
 			l_array: like a_array_of_id
 			i: INTEGER
-			l_displayed_name: STRING_GENERAL
+			l_displayed_name: detachable STRING_GENERAL
 			l_langs, l_locales: HASH_TABLE [STRING_32, STRING]
 			l_value: STRING
 		do
@@ -376,8 +376,10 @@ feature -- Access
 				l_value := l_array.item (i).as_lower
 				if l_locales.has_key (l_value) then
 					l_displayed_name := l_locales.found_item
+					check l_displayed_name /= Void end -- Implied from `has_key'.
 				elseif l_langs.has_key (l_value) then
 					l_displayed_name := l_langs.found_item
+					check l_displayed_name /= Void end -- Implied from `has_key'.
 				else
 					l_displayed_name := l_array.item (i)
 				end

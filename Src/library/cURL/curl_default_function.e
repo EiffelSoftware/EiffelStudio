@@ -1,4 +1,4 @@
-note
+indexing
 	description: "[
 					Default implementation of CURL_FUNCTION.
 																				]"
@@ -46,6 +46,11 @@ feature -- Command
 			else
 				check False end
 			end
+		end
+
+	read_function (a_data_pointer: POINTER; a_size, a_nmemb: INTEGER; a_object_id: POINTER): INTEGER
+			-- A callback readfunction
+		do
 		end
 
 	debug_function (a_curl_handle: POINTER; a_curl_infotype: INTEGER; a_char_pointer: POINTER; a_size: INTEGER; a_object_id: POINTER): INTEGER

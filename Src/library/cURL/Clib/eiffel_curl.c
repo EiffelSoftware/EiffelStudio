@@ -34,6 +34,17 @@ typedef EIF_INTEGER (* EIF_CURL_WRITE_PROC) (
 	EIF_INTEGER, /* a_nmemb */
 	EIF_POINTER  /* a_write_pointer */
 	);
+
+typedef EIF_INTEGER (* EIF_CURL_READ_PROC) (
+#ifndef EIF_IL_DLL
+	EIF_REFERENCE,  /* CURL_FUNCTION Eiffel object */
+#endif
+	EIF_POINTER, /* a_data_pointer */
+	EIF_INTEGER, /* a_size */
+	EIF_INTEGER, /* a_nmemb */
+	EIF_POINTER  /* a_write_pointer */
+	);
+
 	
 typedef EIF_INTEGER (* EIF_CURL_DEBUG_PROC) (
 #ifndef EIF_IL_DLL
@@ -54,7 +65,10 @@ static EIF_CURL_PROGRESS_PROC eiffel_progress_function = NULL;
 
 static EIF_CURL_WRITE_PROC eiffel_write_function = NULL;
 	/* Address of Eiffel CURL_FUNCTION.write_function */
-
+	
+static EIF_CURL_READ_PROC eiffel_read_function = NULL;
+	/* Address of Eiffel CURL_FUNCTION.read_function */
+	
 static EIF_CURL_DEBUG_PROC eiffel_debug_function = NULL;
 	/* Address of Eiffel CURL_FUNCTION.debug_function */
 
@@ -86,6 +100,12 @@ void c_set_write_function_address( EIF_POINTER a_address)
 	eiffel_write_function = (EIF_CURL_WRITE_PROC) a_address;
 }
 
+/* Set CURL_FUNCTOIN.read_function address */
+void c_set_read_function_address( EIF_POINTER a_address)
+{
+	eiffel_read_function = (EIF_CURL_READ_PROC) a_address;
+}
+
 /* Set CURL_FUNCTOIN.debug_function address */
 void c_set_debug_function_address (EIF_POINTER a_address)
 {
@@ -109,6 +129,25 @@ size_t curl_write_function (void *ptr, size_t size, size_t nmemb, void *data)
 		return 0;
 	}  
 }
+
+/* 	Eiffel adapter function for CURLOPT_READFUNCTION
+		We need this function since Eiffel function call need first parameter is EIF_REFERENCE. */
+size_t curl_read_function (void *ptr, size_t size, size_t nmemb, void *data)
+{
+	if (eiffel_function_object) {
+		return (size_t) ((eiffel_read_function) (
+#ifndef EIF_IL_DLL
+			(EIF_REFERENCE) eif_access (eiffel_function_object),
+#endif
+			(EIF_POINTER) ptr,
+			(EIF_INTEGER) size,
+			(EIF_INTEGER) nmemb,
+			(EIF_POINTER) data));
+	} else {
+		return 0;
+	}  
+}
+
 
 /* 	Eiffel adapter function for CURLOPT_PROGRESSFUNCTION
 		We need this function since Eiffel function call need first parameter is EIF_REFERENCE. */

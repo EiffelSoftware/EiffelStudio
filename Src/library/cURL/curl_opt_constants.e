@@ -216,8 +216,58 @@ feature -- Enumerations.
 			]"
 		end
 
+	curlopt_readfunction: INTEGER
+			-- Declared as CURLOPT_READFUNCTION.
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"[
+				return CURLOPT_READFUNCTION;
+			]"
+		end
+
+	curlopt_upload: INTEGER
+			-- Declared as CURLOPT_UPLOAD.
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"[
+				return CURLOPT_UPLOAD;
+			]"
+		end
+
+	curlopt_put: INTEGER
+			-- Declared as CURLOPT_PUT.
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"[
+				return CURLOPT_PUT;
+			]"
+		end
+
+	curlopt_readdata: INTEGER
+			-- Declared as CURLOPT_READDATA.
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"[
+				return CURLOPT_READDATA;
+			]"
+		end
+
+	curlopt_infilesize_large: INTEGER
+			-- Declared as CURLOPT_INFILESIZE_LARGE.
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"[
+				return CURLOPT_INFILESIZE_LARGE;
+			]"
+		end
+
 	is_valid (a_integer: INTEGER): BOOLEAN
-			-- If `a_integer' value vaild?
+			-- If `a_integer' value valid?
 		do
 			Result := 	a_integer = curlopt_cookie or
 						a_integer = curlopt_cookiefile or
@@ -238,7 +288,12 @@ feature -- Enumerations.
 						a_integer = curlopt_progressdata or
 						a_integer = curlopt_noprogress or
 						a_integer = curlopt_referer or
-						a_integer = curlopt_httpget
+						a_integer = curlopt_httpget or
+						a_integer = curlopt_readfunction or
+						a_integer = curlopt_upload or
+						a_integer = curlopt_put or
+						a_integer = curlopt_readdata or
+						a_integer = curlopt_infilesize_large
 		end
 
 note

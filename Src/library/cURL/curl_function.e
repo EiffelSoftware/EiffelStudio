@@ -1,4 +1,4 @@
-note
+indexing
 	description: "[
 						cURL curl_easy_setopt callback functions' Eiffel wrappers.
 						We need this class since cURL need a c function pointer as value but
@@ -20,11 +20,12 @@ feature -- Interactive with C
 
 	set_object_and_function_address
 			-- Set object and function addresses.
-			-- Call this feature before call `c_set_progress_function', `c_set_debug_function' and `c_set_write_function'.
+			-- Call this feature before call `c_set_progress_function', `c_set_debug_function' and `c_set_write_function, c_set_read_function'.
 		do
 			c_set_object ($Current)
 			c_set_progress_function_address ($progress_function)
 			c_set_write_function_address ($write_function)
+			c_set_read_function_address ($read_function)
 			c_set_debug_function_address ($debug_function)
 		end
 
@@ -83,6 +84,24 @@ feature -- Interactive with C
 			]"
 		end
 
+	c_set_read_function (a_setopt_api: POINTER; a_curl_handle: POINTER)
+				-- Setting CURLOPT_READFUNCTION option of `a_curl_handle'.
+				-- We need this function since cURL need a c function pointer as value.
+		require
+			exists: a_setopt_api /= default_pointer
+		external
+			"C inline use <eiffel_curl.h>"
+		alias
+			"[
+			{
+				(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_setopt_api)
+												((CURL *) $a_curl_handle,
+												(CURLoption)CURLOPT_READFUNCTION,
+												curl_read_function);
+			}
+			]"
+		end
+
 feature -- cURL curl_easy_setopt functions
 
 	progress_function (a_object_id: POINTER; a_download_total, a_download_now, a_upload_total, a_upload_now: REAL_64): INTEGER
@@ -94,6 +113,13 @@ feature -- cURL curl_easy_setopt functions
 
 	write_function (a_data_pointer: POINTER; a_size, a_nmemb: INTEGER; a_object_id: POINTER): INTEGER
 			-- Function correspond to {CURL_OPT_CONSTANTS}.curlopt_writefunction
+			-- Note, pass a {IDENTIFIED}.object_id as `a_object_id' value is helpful since we can't directly pass an Eiffel Object address which
+			-- may changed during GC.
+		deferred
+		end
+
+	read_function (a_data_pointer: POINTER; a_size, a_nmemb: INTEGER; a_object_id: POINTER): INTEGER
+			-- Function correspond to {CURL_OPT_CONSTANTS}.curlopt_readfunction
 			-- Note, pass a {IDENTIFIED}.object_id as `a_object_id' value is helpful since we can't directly pass an Eiffel Object address which
 			-- may changed during GC.
 		deferred
@@ -130,6 +156,12 @@ feature {NONE} -- Externals
 
 	c_set_write_function_address (a_address: POINTER)
 			-- Set write function address.
+		external
+			"C use %"eiffel_curl.h%""
+		end
+
+	c_set_read_function_address (a_address: POINTER)
+			-- Set read function address.
 		external
 			"C use %"eiffel_curl.h%""
 		end

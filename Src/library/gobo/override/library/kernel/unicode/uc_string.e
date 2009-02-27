@@ -2343,7 +2343,7 @@ feature -- Element change
 			end
 		end
 
-	replace_substring (a_string: READABLE_STRING_8; start_index, end_index: INTEGER) is
+	replace_substring (a_string: STRING; start_index, end_index: INTEGER) is
 			-- Replace the substring from `start_index' to `end_index',
 			-- inclusive, with `a_string'.
 			-- (ELKS 2001 STRING)
@@ -2351,7 +2351,7 @@ feature -- Element change
 			replace_substring_by_string (a_string, start_index, end_index)
 		end
 
-	replace_substring_by_string (a_string: READABLE_STRING_8; start_index, end_index: INTEGER) is
+	replace_substring_by_string (a_string: STRING; start_index, end_index: INTEGER) is
 			-- Replace the substring from `start_index' to `end_index',
 			-- inclusive, with `a_string'.
 		local

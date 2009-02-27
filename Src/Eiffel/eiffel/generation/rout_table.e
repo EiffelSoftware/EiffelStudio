@@ -216,7 +216,7 @@ feature -- Code generation
 			l_min_used: INTEGER
 			l_table_name: STRING
 		do
-			if max_position = 0 then
+			if max_position = 0 or not used then
 				l_table_name := Encoder.routine_table_name (real_rout_id)
 				buffer.put_string ("char *(*");
 				buffer.put_string (l_table_name);

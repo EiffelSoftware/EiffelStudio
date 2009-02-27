@@ -1223,12 +1223,6 @@ feature {NONE} -- Implementation
 						end
 					end
 
-					if l_as.is_left_type_converted then
-						l_left_type := l_right_type
-						l_is_left_multi_constrained := l_is_right_multi_constrained
-						l_left_type_set := l_right_type_set
-					end
-
 					if l_is_left_multi_constrained then
 						check
 							l_left_type_set_not_void: l_left_type_set /= Void

@@ -15,7 +15,7 @@ feature --Constants
 	message_default_bound: NATURAL = 32768
 	default_http_server_port: NATURAL = 3490
 
-	max_tcp_clients: NATURAL = 10
+	max_tcp_clients: NATURAL = 100
 	max_thread_number: NATURAL = 10
 
 
@@ -29,7 +29,7 @@ feature -- Initialization
 		local
 			http_server_main_socket: ?NETWORK_STREAM_SOCKET
 		do
-			create thread_pool.make_with_managed_data (max_thread_number, agent data_spawner)
+			create thread_pool.make_with_managed_target (max_thread_number, agent data_spawner)
             create http_server_main_socket.make_server_by_port (port.as_integer_32)
 
             from

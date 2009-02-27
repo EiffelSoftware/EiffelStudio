@@ -54,7 +54,7 @@ feature -- Access
 					end
 				end
 				mutex.unlock
-				pool.internal_ready (Current)
+				pool.ready (Current)
 			end
 		end
 

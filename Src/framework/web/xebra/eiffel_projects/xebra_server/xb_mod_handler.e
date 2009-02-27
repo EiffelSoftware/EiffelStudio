@@ -15,8 +15,8 @@ feature -- Access
 	data: MANAGED_POINTER
 			-- Buffer for sending and receiving messages
 
-	internal_mod_socket: NETWORK_STREAM_SOCKET
-			-- Socket that communicates with the http server
+--	internal_mod_socket: NETWORK_STREAM_SOCKET
+--			-- Socket that communicates with the http server
 
 	internal_max_size: NATURAL
 			-- Maximal size of a data packet
@@ -36,7 +36,6 @@ feature --Initialization
 		require
 			default_smaller_than_max: message_default_bound < message_upper_bound
 		do
-			create internal_mod_socket.make
 			internal_max_size := message_upper_bound
 			internal_default_size := message_default_bound
 			create data.make (message_default_bound.as_integer_32 + {PLATFORM}.natural_32_bytes)
@@ -48,14 +47,13 @@ feature --Execution
 			-- <Predecessor>
 			-- waits for one incoming module request and delegates it to the appropriate XebraApp
 		require
-			socket_readable: socket.is_readable
 			socket_open: not socket.is_closed
 		local
 			response, message: STRING
 			header: TUPLE [size: NATURAL; fragment: BOOLEAN]
 			i: INTEGER
 		do
-
+			print (".")
 			from
 				message := ""
           		header := [{NATURAL}0, true]
@@ -63,32 +61,22 @@ feature --Execution
            	until
 				not header.fragment
            	loop
-           		internal_mod_socket.read_natural_32
-           		header := encoder.decode_natural_and_flag (internal_mod_socket.last_natural_32)
-           		--print ("size: " + header.size.out + "%N")
+           		socket.read_natural_32
+           		header := encoder.decode_natural_and_flag (socket.last_natural_32)
            		if header.size > internal_max_size then
-           			--print ("Size bigger than max_size, aborting!")
            			header.fragment := false
            		else
-           			message.append_string(internal_read_string (internal_mod_socket, header.size))
+           			message.append_string(internal_read_string (socket, header.size))
            			i := i + 1
            		end
            	end
 
-			response := send_request (message, internal_mod_socket) --FIXME: last argument is WRONG!
-			send_string (response, internal_mod_socket)
-         	internal_mod_socket.cleanup
+			response := send_request (message, socket) --FIXME: last argument is WRONG!
+			send_string (response, socket)
+         	socket.cleanup
             check
-            	internal_mod_socket.is_closed
+            	socket.is_closed
             end
-		end
-
-	set_argument (socket: NETWORK_STREAM_SOCKET)
-			-- <Predecessor>
-		require else
-			socket_open: not socket.is_closed
-		do
-			internal_mod_socket := socket
 		end
 
 feature --Client communication

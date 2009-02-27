@@ -23,6 +23,9 @@ feature -- Access
 	spawner: FUNCTION[ANY, TUPLE, G]
 			-- An agent which spawns objects
 
+	pool_mutex: MUTEX
+		-- Mutex to lock the pool
+
 feature -- Initialization
 
 	make (init_size: NATURAL; object_spawner: FUNCTION[ANY, TUPLE, G])
@@ -34,6 +37,7 @@ feature -- Initialization
 			objects_spawned := 0
 			spawner := object_spawner
 			create unused_objects.make (init_size.as_integer_32)
+			create pool_mutex.make
 		end
 
 feature -- Access
@@ -56,13 +60,15 @@ feature -- Access
 			Result := unused_objects.count > 0
 		end
 
-	internal_ready (object: ?G)
+	ready (object: ?G)
 			-- Used internally. When a thread has finished it's duty it will report to the pool manager.
 			-- Thread will be stored for further use.
 		require
 			object_attached: object /= Void
 		do
+			pool_mutex.lock
 			unused_objects.put (object)
+			pool_mutex.unlock
 		end
 
 	spawn_new_object
@@ -79,7 +85,7 @@ feature -- Access
 	retrieve_available_object: G
 			-- Returns an available objects, if there are any
 		require
-			threads_available: unused_objects.count > 0
+			objects_available: unused_objects.count > 0
 		do
 			Result := unused_objects.item
 			unused_objects.remove

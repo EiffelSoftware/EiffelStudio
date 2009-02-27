@@ -8,7 +8,7 @@ feature
 			l_numeric: NUMERIC
 			l_any: ANY
 			l_comparable: COMPARABLE
-			l_g: G
+			l_g: detachable G
 		do
 			println ("Computation")
 			println (a_g)

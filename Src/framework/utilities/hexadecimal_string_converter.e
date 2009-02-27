@@ -5,7 +5,12 @@ note
 class HEXADECIMAL_STRING_CONVERTER
 
 inherit
+	ANY
+	
 	PLATFORM
+		export
+			{NONE} all
+		end
 
 feature {NONE}
 

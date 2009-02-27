@@ -1082,8 +1082,8 @@ RT_LNK void eif_exit_eiffel_code(void);
 #else
 #define RTLU(x,y)
 #define RTLO(n)	
-#define RTHOOK(n)		exvect->ex_linenum = n
-#define RTNHOOK(n,m)
+#define RTHOOK(n)		exvect->ex_linenum = n; exvect->ex_bpnested = 0;
+#define RTNHOOK(n,m)	exvect->ex_bpnested = m;
 #endif
 
 /* Old expression evaluation */

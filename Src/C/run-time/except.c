@@ -467,7 +467,8 @@ rt_public struct ex_vect *new_exset(char *name, EIF_TYPE_INDEX origin, char *obj
 	vector->ex_rout = name;			/* Set the routine name */
 	vector->ex_orig = origin;		/* And its origin (where it was written) */
 	vector->ex_id = object;			/* The value of Current (Object ID) */
-	vector->ex_linenum = 0;			/* breakable line number */
+	vector->ex_linenum = 0;			/* breakable point index */
+	vector->ex_bpnested = 0;		/* breakable point nested index */
 #ifdef WORKBENCH
 	vector->ex_locnum = loc_nb;		/* number of local variables in the feature */
 	vector->ex_argnum = arg_nb;		/* number of arguments the feature takes */
@@ -1167,7 +1168,8 @@ rt_public void eraise(char *tag, long num)
 	char 			*tg;
 	EIF_REFERENCE obj = NULL;
 	unsigned char	type;
-	int				line_number;	/* line number within feature */
+	int				line_number;	/* breakable point index */
+	int				bpnested_index;	/* breakable nested index */
 	int				eclass = 0;
 	int				signo, eno = signo = -1;
 	char			*reci_name = NULL;
@@ -1250,6 +1252,7 @@ rt_public void eraise(char *tag, long num)
 		echrt = (char *) 0;	/* Null routine name */
 		echclass = 0;		/* Null class name */
 		line_number = 0;	/* Invalid line number */
+		bpnested_index = 0;	/* Invalid breakable nested index */
 	} else {
 		type = vector->ex_type;
 		/* Record recipient and its class name */
@@ -1277,10 +1280,12 @@ rt_public void eraise(char *tag, long num)
 				echrt = (char *) 0;	/* Null routine name */
 				echclass = 0;		/* Null class name */
 				line_number = 0;	/* Invalid line number */
+				bpnested_index = 0;	/* Invalid breakable nested index */
 			} else {
 				echrt = vector->ex_rout;	/* Record routine name */
 				echclass = vector->ex_orig; /* Record class name */
 				line_number = vector->ex_linenum; /* Record line number */
+				bpnested_index = vector->ex_bpnested; /* Record breakable nested index */
 				vector = exget(&eif_stack);
 				if (vector == (struct ex_vect *) 0) {	/* Stack is full now */
 					echmem |= MEM_FULL;					/* Signal it */
@@ -1299,6 +1304,7 @@ rt_public void eraise(char *tag, long num)
 			echrt = vector->ex_rout;	/* Record routine name */
 			echclass = vector->ex_orig; /* Record class name */
 			line_number = vector->ex_linenum; /* Record line number */
+			bpnested_index = vector->ex_bpnested; /* Record breakable nested index */
 		}
 	}
 
@@ -1306,6 +1312,7 @@ rt_public void eraise(char *tag, long num)
 		trace->ex_where = echrt;			/* Save routine in trace for exorig */
 		trace->ex_from = echclass;			/* Save class in trace for exorig */
 		trace->ex_linenum = line_number;	/* Save line number in trace */
+		trace->ex_bpnested = bpnested_index;/* Save breakable nested index */
 	}
 
 	if (trace) {
@@ -1320,13 +1327,14 @@ rt_public void eraise(char *tag, long num)
 			trace->ex_rout = echrt;				/* Save routine in trace */
 			trace->ex_orig = echclass;			/* Save class in trace */
 		}
-		trace->ex_linenum = line_number;	/* Save line number in trace */
+		trace->ex_linenum = line_number;		/* Save line number in trace */
+		trace->ex_bpnested = bpnested_index;	/* Save breakable nested index */
 	}
 
 	SIGRESUME;			/* End of critical section, dispatch queued signals */
 
 	/* INVARIANT_VIOLATION is not raised in here, so we don't care if entry or not. */
-	make_exception (num, signo, eno, echtg, reci_name, Origin(eclass), "", "", line_number, 0, 1); 
+	make_exception (num, signo, eno, echtg, reci_name, Origin(eclass), "", "", line_number, 0, 1); // FIXME:jfiat 
 
 #ifndef NOHOOK
 	exception(PG_RAISE);	/* Debugger hook -- explicitly raised exception */
@@ -2949,6 +2957,7 @@ rt_private void print_top(void (*append_trace)(char *))
 	char			buffer[1024];
 	char			rout_name_buffer[256];	/* To add line number at end of routine name */
 	int				line_number;
+	int				bpnested_index;
 	int				finished = 0;
 	char			code = eif_except.code;	/* Exception's code */
 	struct ex_vect	*top;					/* Top of stack */
@@ -2983,11 +2992,12 @@ rt_private void print_top(void (*append_trace)(char *))
 	/* get the line number, it's situated in the next satck element (the current bottom */
 	/* element gives only the reason of crashes                                         */
 	line_number = (eif_trace.st_bot)->ex_linenum;
+	bpnested_index = (eif_trace.st_bot)->ex_bpnested;
 
 	/* create the 'routine_name@line_number' string. We limit ourself to the first 192
 	 * characters of `routine_name' otherwise we will do a buffer overflow. 
 	 * 189 = 192 - 3, 3 being characters of "..." */
-	if (line_number>0) {
+	if (line_number>0) { //FIXME:jfiat bpnested_index?
 		/* the line number seems valid, so we are going to print it */
 		if (strlen (eif_except.rname) > 189) {
 			sprintf(rout_name_buffer, "%.189s... @%d", eif_except.rname, line_number);
@@ -3691,6 +3701,7 @@ rt_public void draise(long code, char *meaning, char *message)
 	EIF_REFERENCE obj = NULL;
 	unsigned char	type;
 	int				line_number;	/* line number within feature */
+	int				bpnested_index;	/* breakable nested index */
 	int				num;
 	char			*tag;
 	struct ex_vect	*vector_call;
@@ -3749,6 +3760,7 @@ rt_public void draise(long code, char *meaning, char *message)
 		echrt = (char *) 0;	/* Null routine name */
 		echclass = 0;		/* Null class name */
 		line_number = 0;	/* Invalid line number */
+		bpnested_index = 0;	/* Invalid breakable nested index */
 	} else {
 		type = vector->ex_type;
 		/* Record recipient and its class name */
@@ -3776,10 +3788,12 @@ rt_public void draise(long code, char *meaning, char *message)
 				echrt = (char *) 0;	/* Null routine name */
 				echclass = 0;		/* Null class name */
 				line_number = 0;	/* Invalid line number */
+				bpnested_index = 0;	/* Invalid breakable nested index */
 			} else {
 				echrt = vector->ex_rout;	/* Record routine name */
 				echclass = vector->ex_orig; /* Record class name */
 				line_number = vector->ex_linenum; /* Record line number */
+				bpnested_index = vector->ex_bpnested; /* Record breakable nested index */
 				vector = exget(&eif_stack);
 				if (vector == (struct ex_vect *) 0) {	/* Stack is full now */
 					echmem |= MEM_FULL;					/* Signal it */
@@ -3798,6 +3812,7 @@ rt_public void draise(long code, char *meaning, char *message)
 			echrt = vector->ex_rout;	/* Record routine name */
 			echclass = vector->ex_orig; /* Record class name */
 			line_number = vector->ex_linenum; /* Record line number */
+			bpnested_index = vector->ex_bpnested; /* Record breakable nested index */
 		}
 	}
 
@@ -3811,7 +3826,8 @@ rt_public void draise(long code, char *meaning, char *message)
 			trace->ex_rout = echrt;				/* Save routine in trace */
 			trace->ex_orig = echclass;			/* Save class in trace */
 		}
-		trace->ex_linenum = line_number;	/* Save line number in trace */
+		trace->ex_linenum = line_number;		/* Save line number in trace */
+		trace->ex_bpnested = bpnested_index;	/* Save breakable nested index in trace */
 	}
 	SIGRESUME;			/* End of critical section, dispatch queued signals */	
 	

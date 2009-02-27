@@ -94,7 +94,8 @@ rt_public void c_recv_rout_info (EIF_OBJ target)
 	char string [128], *ptr = string;
 	EIF_REFERENCE eif_rout_name, obj_addr;
 	uint32 orig, dtype;
-	int line_number;	/* line number (i.e. break index) where application is stopped within feature */
+	int bp_index;		/* line number (i.e. break index) where application is stopped within feature */
+	int bpnested_index;	/* breakable nested index */
 
 	Request_Clean (pack);
 #ifdef EIF_WINDOWS
@@ -120,20 +121,23 @@ rt_public void c_recv_rout_info (EIF_OBJ target)
 							/* Protect just created object */
 						RT_GC_PROTECT(obj_addr);
 
-						line_number = dump.dmp_vect->ex_linenum;
+						bp_index = dump.dmp_vect->ex_linenum;
+						bpnested_index = dump.dmp_vect->ex_bpnested;
 
 						orig = dump.dmp_vect->ex_orig;
 						dtype = dump.dmp_vect->ex_dtype;
 
 						(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_BOOLEAN, EIF_BOOLEAN, EIF_REFERENCE,
-											EIF_INTEGER, EIF_INTEGER, EIF_REFERENCE, EIF_INTEGER)) set_rout)
+											EIF_INTEGER, EIF_INTEGER, EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER)) set_rout)
 							(eif_access (target),
 							(EIF_BOOLEAN) (dump.dmp_type == DMP_MELTED),
 							(EIF_BOOLEAN) 0,
 							obj_addr,
 							orig, dtype,
 							eif_rout_name,
-							line_number);
+							bp_index,
+							bpnested_index
+							);
 
 							/* Remove 2 protections */
 						RT_GC_WEAN_N(2);
@@ -143,11 +147,11 @@ rt_public void c_recv_rout_info (EIF_OBJ target)
 				}
 			case ACKNLGE:	/* send exhausted */
 				(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_BOOLEAN, EIF_BOOLEAN, EIF_REFERENCE,
-											EIF_INTEGER, EIF_INTEGER, EIF_REFERENCE, EIF_INTEGER)) set_rout)
+											EIF_INTEGER, EIF_INTEGER, EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER)) set_rout)
 					(eif_access (target),
 					(EIF_BOOLEAN) 0,
 					(EIF_BOOLEAN) 1, /* exhausted is true */
-					(EIF_REFERENCE) 0, 0L, 0L, (EIF_REFERENCE) 0, 0L);
+					(EIF_REFERENCE) 0, 0L, 0L, (EIF_REFERENCE) 0, 0L, 0L);
 				return;
 			default:
 				request_dispatch (pack); /* treat asynchronous request */

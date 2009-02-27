@@ -175,6 +175,7 @@ rt_private bool_t idr_Where(IDR *idrs, void *ext)
 	result = result && idr_int(idrs, &whe->wh_origin);
 	result = result && idr_int(idrs, &whe->wh_type);
 	result = result && idr_int(idrs, &whe->wh_offset);
+	result = result && idr_int(idrs, &whe->wh_nested);
 	result = result && idr_rt_uint_ptr(idrs, &whe->wh_thread_id);
 
 	return result;
@@ -195,7 +196,7 @@ rt_private bool_t idr_Notif(IDR *idrs, void *ext)
 	Notif *not = (Notif *) ext;
 	bool_t result;
 	result = idr_int(idrs, &not->st_type);
-	result = result && idr_int(idrs, &not->st_data);
+	result = result && idr_rt_uint_ptr(idrs, &not->st_data);
 	return result;
 }
 
@@ -238,7 +239,8 @@ rt_private bool_t idr_Dumped (IDR *idrs, void *ext)
 				&& idr_string (idrs, &exv->exu.exur.exur_rout, -MAX_FEATURE_LEN)
 				&& idr_type_index (idrs, &exv -> exu.exur.exur_orig)
 				&& idr_type_index (idrs, &exv -> exu.exur.exur_dtype)
-				&& idr_int (idrs, &exv->ex_linenum);
+				&& idr_int (idrs, &exv->ex_linenum)
+				&& idr_int (idrs, &exv->ex_bpnested);
 		default:
 			return idr_string (idrs, &exv->exu.exua.exua_name, -MAX_STRLEN)
 				&& idr_string (idrs, &exv->exu.exua.exua_where, -MAX_STRLEN)

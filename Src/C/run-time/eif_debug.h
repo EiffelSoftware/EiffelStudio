@@ -80,6 +80,7 @@ struct where {					/* Where the program stopped */
 	int wh_origin;				/* Written type (where feature comes from) */
 	int wh_type;				/* Dynamic type of Current */
 	long wh_offset;				/* Offset within byte code if relevant */
+	long wh_nested;				/* Breakable nested index if relevant */
 };
 
 

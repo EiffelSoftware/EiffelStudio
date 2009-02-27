@@ -1,4 +1,4 @@
-note
+indexing
 	description: "[
 					cURL easy externals.
 					For more informaton see:
@@ -95,6 +95,16 @@ feature -- Command
 			end
 		end
 
+	setopt_file (a_curl_handle: POINTER; a_opt: INTEGER; a_file: FILE)
+			-- Declared as curl_easy_setopt().
+		require
+			exists: a_curl_handle /= default_pointer
+			valid: a_opt = {CURL_OPT_CONSTANTS}.curlopt_readdata
+			readable: a_file /= void and then a_file.file_readable
+		do
+			setopt_void_star (a_curl_handle, a_opt, a_file.file_pointer)
+		end
+
 	perform (a_curl_handle: POINTER): INTEGER
 			-- Declared as curl_easy_perform().
 			-- Result is one value from {CURL_CODES}
@@ -167,6 +177,21 @@ feature -- Special setting
 			l_api := api_loader.safe_load_api (module_name, "curl_easy_setopt")
 			if l_api /= default_pointer then
 				curl_function.c_set_write_function (l_api, a_curl_handle)
+			end
+		end
+
+	set_read_function (a_curl_handle: POINTER)
+				-- Set cURL read function
+				-- Set cURL read function with Eiffel default read function.
+				-- So we can use a c file pointer as parameter in {CURL_EASY_EXTERNALS}.setopt_file_pointer when the option is {CURL_OPT_CONSTANTS}.curlopt_readdata
+		require
+			exists: a_curl_handle /= default_pointer
+		local
+			l_api: POINTER
+		do
+			l_api := api_loader.safe_load_api (module_name, "curl_easy_setopt")
+			if l_api /= default_pointer then
+				curl_function.c_set_read_function (l_api, a_curl_handle)
 			end
 		end
 

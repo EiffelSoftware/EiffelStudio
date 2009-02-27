@@ -32,9 +32,11 @@ extern "C" {
 extern void c_set_object(EIF_REFERENCE a_address);
 extern void c_release_object(void);
 extern void c_set_progress_function_address( EIF_POINTER a_address);
+extern void c_set_read_function_address( EIF_POINTER a_address);
 extern void c_set_write_function_address( EIF_POINTER a_address);
 extern void c_set_debug_function_address (EIF_POINTER a_address);
 extern size_t curl_write_function (void *ptr, size_t size, size_t nmemb, void *data);
+extern size_t curl_read_function (void *ptr, size_t size, size_t nmemb, void *data);
 extern size_t curl_progress_function (void * a_object_id, double a_dltotal, double a_dlnow, double a_ultotal, double a_ulnow);
 extern size_t curl_debug_function (CURL * a_curl_handle, curl_infotype a_curl_infotype, unsigned char * a_char_pointer, size_t a_size, void * a_object_id);
  

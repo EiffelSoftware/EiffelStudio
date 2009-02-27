@@ -1174,10 +1174,6 @@ feature -- Implementation
 
 			l_context_current_class := context.current_class
 
-			if not is_static and then not a_type.is_attached and then l_context_current_class.lace_class.is_void_safe then
-				error_handler.insert_error (create {VUTA2}.make (context, a_type, l_feature_name))
-			end
-
 			l_last_type := a_type.actual_type
 			if not l_last_type.is_formal then
 					-- We have no formal, therefore we don't need to recompute `l_last_constrained'
@@ -1219,6 +1215,10 @@ feature -- Implementation
 						check l_last_constrained_is_none: l_last_constrained.is_none end
 					end
 				end
+			end
+
+			if l_vkcn3 = Void and then not is_static and then not a_type.is_attached and then l_context_current_class.lace_class.is_void_safe then
+				error_handler.insert_error (create {VUTA2}.make (context, a_type, l_feature_name))
 			end
 
 				-- Check for `NONE'

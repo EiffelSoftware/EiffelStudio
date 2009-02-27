@@ -10,7 +10,7 @@
 			<exclude>/include$</exclude>
 			<exclude>/tests$</exclude>
 		</file_rule>
-		<option full_class_checking="true" syntax_level="1" namespace="EiffelSoftware.Library">
+		<option syntax_level="1" namespace="EiffelSoftware.Library">
 			<assertions precondition="true"/>
 			<warning name="export_class_missing" enabled="false"/>
 			<warning name="old_verbatim_strings" enabled="false"/>

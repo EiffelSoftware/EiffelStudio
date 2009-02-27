@@ -989,6 +989,9 @@ feature -- Status report
 	raised: BOOLEAN
 			-- Are the debugging tools currently raised?
 
+	resynchronization_requested: BOOLEAN
+			-- resynchronization requested
+
 	debug_mode_forced: BOOLEAN
 			-- Do we force debugger interface to stay raised ?
 
@@ -1525,7 +1528,8 @@ feature -- Status setting
 						application.set_current_execution_stack_number (cst.level_number)
 					end
 				end
-				if propagate_stone then
+				if resynchronization_requested or propagate_stone then
+					resynchronization_requested := False
 					call_stack_tool.set_stone (st)
 					objects_tool.set_stone (st)
 					watch_tool_list.do_all (agent {ES_WATCH_TOOL}.set_stone (st))
@@ -1541,6 +1545,7 @@ feature -- Status setting
 			tid_changed := application_current_thread_id /= tid
 			Precursor (tid)
 			if tid_changed and raised then
+				resynchronization_requested := True
 				call_stack_tool.force_update
 				threads_tool.force_update
 			end

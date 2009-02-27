@@ -392,12 +392,12 @@ feature -- Access
 							else
 								l_feature :=  l_class_c.feature_table.item_id (l_name_id)
 							end
+						else
+							l_feature := Void
 						end
 					end
 
-					if
-						l_feature /= Void
-					then
+					if l_feature /= Void then
 						l_class_type ?= l_item.type
 								-- Precondition should ensure this.
 						check class_type_not_void: l_class_type /= Void end
@@ -705,7 +705,6 @@ feature -- Access for Error handling
 							l_class := a_ext_type.associated_class
 							if l_class.has_feature_table then
 								if a_ext_type.has_renaming then
-										-- After this call l_renamed_id can be -1!
 									l_renamed_id := a_ext_type.renaming.renamed (g_name_id)
 								else
 									l_renamed_id := g_name_id
@@ -713,6 +712,52 @@ feature -- Access for Error handling
 								if l_renamed_id > 0 then
 									Result := [	l_class.feature_with_name_id (l_renamed_id),
 												l_class.feature_of_name_id (l_renamed_id)]
+								end
+							end
+						end
+					end (a_name_id, ?)
+			Result := info_about_feature_by_agent (l_feature_agent, a_formal_position, a_context_class, create {SEARCH_TABLE [INTEGER]}.make (3))
+			Result.set_data (names_heap.item (a_name_id), a_formal_position, a_context_class)
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	info_about_feature_by_alias_name_id (a_name_id: INTEGER; a_formal_position: INTEGER; a_context_class: CLASS_C): like info_about_feature
+			-- Gathers information  about a feature.
+			--
+			-- `a_name_id' is the name ID of the feature for which information is gatherd.
+			-- `a_formal_position' position of the formal to which this typeset belongs.
+			-- `a_context_class' is the class where the formal (denoted by `a_formal_position') has been defined.
+		require
+			a_name_id_valid: a_name_id > 0
+			a_context_class_not_void_if_needed: has_formal implies a_context_class /= Void
+		local
+			l_feature_agent: FUNCTION [ANY, TUPLE [RENAMED_TYPE_A [TYPE_A]], TUPLE [e_feature: E_FEATURE; feature_i: FEATURE_I]]
+		do
+			l_feature_agent :=
+				agent (g_name_id: INTEGER; a_ext_type: RENAMED_TYPE_A [TYPE_A]): TUPLE [E_FEATURE,FEATURE_I]
+					local
+						l_renamed_id: INTEGER
+						l_class: CLASS_C
+						l_feature: FEATURE_I
+					do
+						if a_ext_type.has_associated_class then
+							l_class := a_ext_type.associated_class
+							if l_class.has_feature_table then
+								if a_ext_type.has_renaming then
+									l_renamed_id := a_ext_type.renaming.renamed (g_name_id)
+									if l_renamed_id > 0 then
+										if l_renamed_id = g_name_id then
+											l_feature := l_class.feature_table.item_alias_id (l_renamed_id)
+										else
+											l_feature := l_class.feature_table.item_id (l_renamed_id)
+										end
+									end
+								else
+									l_feature := l_class.feature_table.item_alias_id (g_name_id)
+								end
+								if l_feature /= Void then
+									Result := [l_feature.api_feature (l_class.class_id), l_feature]
 								end
 							end
 						end

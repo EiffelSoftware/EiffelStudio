@@ -1719,7 +1719,7 @@ feature {NONE} -- Implementation
 				routine_id_is_zero: l_as.routine_ids.first /= 0
 			end
 			if not has_error_internal then
-				l_expr_type := expr_type (l_as.expr)
+				l_expr_type := expr_type (l_as.expr).actual_type
 			end
 			if not has_error_internal then
 				if l_expr_type.is_formal then
@@ -1878,13 +1878,6 @@ feature {NONE} -- Implementation
 						else
 							l_right_type := l_formal.constrained_type (current_class)
 						end
-					end
-
-						-- Was the left type converted to the right type?
-					if l_as.is_left_type_converted then
-						l_left_type := l_right_type
-						l_is_left_multi_constrained := l_is_right_multi_constrained
-						l_left_type_set := l_right_type_set
 					end
 
 					if l_is_left_multi_constrained then

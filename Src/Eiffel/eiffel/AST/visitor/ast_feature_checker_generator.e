@@ -1262,7 +1262,8 @@ feature -- Implementation
 						l_result_tuple := l_last_type_set.feature_i_state_by_name_id (l_feature_name.name_id)
 							-- If there we did not found a feature it could still be a tuple item.
 						if l_result_tuple.features_found_count > 1  then
-							insert_vtmc_error (l_feature_name, l_formal.position, l_context_current_class)
+							error_handler.insert_error (
+								new_vtmc_error (l_feature_name, l_formal.position, l_context_current_class, False))
 						else
 							l_feature := l_result_tuple.feature_item
 							l_last_constrained := l_result_tuple.class_type_of_feature
@@ -3896,6 +3897,7 @@ feature -- Implementation
 			l_result_tuple: TUPLE[feature_item: FEATURE_I; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER]
 			l_context_current_class: CLASS_C
 			l_error_level: NATURAL_32
+			l_vtmc_error: VTMC
 		do
 			l_needs_byte_node := is_byte_node_enabled
 
@@ -3930,12 +3932,15 @@ feature -- Implementation
 					l_type_set := last_type.actual_type.to_type_set.constraining_types (l_context_current_class)
 					l_result_tuple := l_type_set.feature_i_state_by_alias_name (l_as.prefix_feature_name)
 					if l_result_tuple.features_found_count > 1 then
-						insert_vtmc_error (create {ID_AS}.initialize (l_as.prefix_feature_name), l_formal.position, l_context_current_class)
+						l_vtmc_error := new_vtmc_error (create {ID_AS}.initialize (l_as.prefix_feature_name),
+								l_formal.position, l_context_current_class, True)
+						l_vtmc_error.set_location (l_as.operator_location)
+						error_handler.insert_error (l_vtmc_error)
 					elseif l_result_tuple.features_found_count = 1 then
-						l_last_class := l_result_tuple.class_type_of_feature.associated_class
-						l_last_constrained := l_last_class.actual_type
-						last_calls_target_type := l_last_constrained
 						l_prefix_feature := l_result_tuple.feature_item
+						l_last_constrained := l_result_tuple.class_type_of_feature
+						l_last_class := l_last_constrained.associated_class
+						last_calls_target_type := l_last_constrained
 					end
 				else
 					check l_last_constrained /= Void end
@@ -4017,11 +4022,13 @@ feature -- Implementation
 											l_prefix_feature_type := l_last_constrained
 										else
 												-- Usual case
+											l_prefix_feature_type := adapted_type (l_prefix_feature_type, last_type, l_last_constrained)
 											l_prefix_feature_type := l_prefix_feature_type.instantiation_in
 															(last_type.as_implicitly_detachable, l_last_class.class_id).actual_type
 										end
 									else
 											-- Usual case
+										l_prefix_feature_type := adapted_type (l_prefix_feature_type, last_type, l_last_constrained)
 										l_prefix_feature_type := l_prefix_feature_type.instantiation_in
 														(last_type.as_implicitly_detachable, l_last_class.class_id).actual_type
 									end
@@ -4241,9 +4248,15 @@ feature -- Implementation
 							-- Conformance: take care of constrained genericity and
 							-- of the balancing rule for the simple numeric types
 						if is_inherited then
-							l_class := system.class_of_id (l_as.class_id)
+							if l_is_left_multi_constrained then
+									-- FIXME: We ought to do better for inherited multiconstraints.
+								l_class := system.class_of_id (l_as.class_id)
+							else
+								l_class := l_left_constrained.associated_class
+							end
 							last_infix_feature := l_class.feature_of_rout_id (l_as.routine_ids.first)
-							l_left_constrained := l_class.actual_type
+							check_infix_feature (last_infix_feature, l_class, l_as.infix_function_name, l_left_type, l_left_constrained, l_right_type)
+							l_error := last_infix_error
 						else
 							if is_infix_valid (l_left_type, l_right_type, l_as.infix_function_name) then
 								check last_calls_target_type /= Void end
@@ -4258,7 +4271,7 @@ feature -- Implementation
 									if is_infix_valid (l_right_type, l_right_type, l_as.infix_function_name) then
 										l_right_constrained := last_calls_target_type
 										l_left_constrained := l_right_constrained
-										l_as.set_left_type_converted (True)
+										l_error := Void
 									else
 										l_target_conv_info := Void
 									end
@@ -4266,7 +4279,9 @@ feature -- Implementation
 							end
 						end
 
-						if last_infix_feature = Void then
+						check no_error_implies_feature: l_error = Void implies last_infix_feature /= Void end
+
+						if l_error /= Void then
 								-- Raise error here
 							l_error.set_location (l_as.operator_location)
 							error_handler.insert_error (l_error)
@@ -4674,7 +4689,8 @@ feature -- Implementation
 					l_type_set := l_formal.constrained_types (l_context_current_class)
 					l_result_tuple := l_type_set.feature_i_state_by_alias_name (bracket_str)
 					if l_result_tuple.features_found_count > 1 then
-						insert_vtmc_error (create {ID_AS}.initialize (bracket_str), l_formal.position, l_context_current_class)
+						error_handler.insert_error (new_vtmc_error (create {ID_AS}.initialize (bracket_str),
+							l_formal.position, l_context_current_class, False))
 					elseif l_result_tuple.features_found_count = 1 then
 						constrained_target_type := l_result_tuple.class_type_of_feature
 						target_class := constrained_target_type.associated_class
@@ -7504,20 +7520,16 @@ feature {NONE} -- Implementation
 			l_class: CLASS_C
 			l_context_current_class: CLASS_C
 			l_vwoe: VWOE
-			l_vwoe1: VWOE1
-			l_vuex: VUEX
-			l_vape: VAPE
-			l_arg_type: TYPE_A
 			l_result_tuple: TUPLE[feature_item: FEATURE_I; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER]
 			l_formal: FORMAL_A
 			l_is_multi_constraint_case: BOOLEAN
 			l_feature_found_count: INTEGER
+			l_vtmc_error: VTMC
 		do
 				-- Reset
 			last_calls_target_type := Void
 			l_context_current_class := context.current_class
 			create l_name.initialize (a_name)
-			last_infix_error := Void
 				-- No need for `a_left_type.actual_type' since it is done in callers of
 				-- `is_infix_valid'.
 			if a_left_type.is_formal  then
@@ -7531,11 +7543,12 @@ feature {NONE} -- Implementation
 						-- We raise an error if there are multiple infix features found
 					l_feature_found_count := l_result_tuple.features_found_count
 					if	l_feature_found_count > 1 then
-						insert_vtmc_error (l_name, l_formal.position, l_context_current_class)
+						l_vtmc_error := new_vtmc_error (l_name, l_formal.position, l_context_current_class, True)
 					elseif l_feature_found_count = 1 then
 						l_infix :=  l_result_tuple.feature_item
-						last_calls_target_type := l_result_tuple.class_type_of_feature
-						l_class := last_calls_target_type.associated_class
+						l_last_constrained := l_result_tuple.class_type_of_feature
+						l_class := l_last_constrained.associated_class
+						last_calls_target_type := l_last_constrained
 					else
 						-- Evereything stays void, an error will be reported.
 					end
@@ -7548,7 +7561,6 @@ feature {NONE} -- Implementation
 			end
 
 			if not l_is_multi_constraint_case  then
-
 				check
 					l_last_constrained_not_void: l_last_constrained /= Void
 					associated_class_not_void: l_last_constrained.associated_class /= Void
@@ -7559,71 +7571,97 @@ feature {NONE} -- Implementation
 				last_calls_target_type := l_class.actual_type
 			end
 
-			if l_infix = Void then
-				create l_vwoe
-				context.init_error (l_vwoe)
-				if l_class /= Void then
-					l_vwoe.set_other_class (l_class)
-				else
-					l_vwoe.set_other_type_set (l_type_set)
-				end
-
-				l_vwoe.set_op_name (a_name)
-				last_infix_error := l_vwoe
-			else
-					-- Export validity
-				last_infix_feature := l_infix
-				if not (context.is_ignoring_export or l_infix.is_exported_for (l_class)) then
-					create l_vuex
-					context.init_error (l_vuex)
-					l_vuex.set_static_class (l_class)
-					l_vuex.set_exported_feature (l_infix)
-					last_infix_error := l_vuex
-				else
-					if
-						not System.do_not_check_vape and then is_checking_precondition and then
-						not current_feature.export_status.is_subset (l_infix.export_status)
-					then
-							-- In precondition and checking for vape
-						create l_vape
-						context.init_error (l_vape)
-						l_vape.set_exported_feature (current_feature)
-						last_infix_error := l_vape
+				-- If there is no VTMC error, then we need to check more
+			if l_vtmc_error = Void then
+				if l_infix = Void then
+					create l_vwoe
+					context.init_error (l_vwoe)
+					if l_class /= Void then
+						l_vwoe.set_other_class (l_class)
 					else
-							-- Conformance initialization
-							-- Argument conformance: infix feature must have one argument
-						l_arg_type := l_infix.arguments.i_th (1)
-						l_arg_type := l_arg_type.instantiation_in (a_left_type.as_implicitly_detachable,
-							l_class.class_id).actual_type
-
-						if not a_right_type.conform_to (context.current_class, l_arg_type) then
-							if a_right_type.convert_to (context.current_class, l_arg_type.deep_actual_type) then
-								last_infix_argument_conversion_info := context.last_conversion_info
-								last_infix_arg_type := l_arg_type
-							else
-									-- No conformance on argument of infix
-								create l_vwoe1
-								context.init_error (l_vwoe1)
-								l_vwoe1.set_other_class (l_class)
-								l_vwoe1.set_op_name (a_name)
-								l_vwoe1.set_formal_type (l_arg_type)
-								l_vwoe1.set_actual_type (a_right_type)
-								last_infix_error := l_vwoe1
-							end
-						else
-							last_infix_arg_type := l_arg_type
-						end
+						l_vwoe.set_other_type_set (l_type_set)
 					end
+
+					l_vwoe.set_op_name (a_name)
+					last_infix_error := l_vwoe
+				else
+						-- Export validity
+					last_infix_feature := l_infix
+					check_infix_feature (l_infix, l_class, a_name, a_left_type, l_last_constrained, a_right_type)
 				end
+			else
+				last_infix_error := l_vtmc_error
 			end
 			if last_infix_error /= Void then
 				last_infix_feature := Void
+				last_infix_arg_type := Void
 				last_infix_argument_conversion_info := Void
 			else
 				Result := True
 			end
 		ensure
 			last_calls_target_type_computed: last_infix_error = Void implies last_calls_target_type /= Void
+		end
+
+	check_infix_feature (a_feature: FEATURE_I; a_context_class: CLASS_C; a_name: STRING; a_left_type, a_left_constrained, a_right_type: TYPE_A)
+				-- Check validity of `a_feature'.
+		require
+			a_feature_attached: a_feature /= Void
+			a_context_class_attached: a_context_class /= Void
+			a_name_attached: a_name /= Void
+			a_left_type_attached: a_left_type /= Void
+			a_right_type_attached: a_right_type /= Void
+		local
+			l_arg_type: TYPE_A
+			l_vuex: VUEX
+			l_vape: VAPE
+			l_vwoe1: VWOE1
+		do
+			if not (context.is_ignoring_export or a_feature.is_exported_for (a_context_class)) then
+				create l_vuex
+				context.init_error (l_vuex)
+				l_vuex.set_static_class (a_context_class)
+				l_vuex.set_exported_feature (a_feature)
+				last_infix_error := l_vuex
+			else
+				if
+					not System.do_not_check_vape and then is_checking_precondition and then
+					not current_feature.export_status.is_subset (a_feature.export_status)
+				then
+						-- In precondition and checking for vape
+					create l_vape
+					context.init_error (l_vape)
+					l_vape.set_exported_feature (current_feature)
+					last_infix_error := l_vape
+				else
+						-- Conformance initialization
+						-- Argument conformance: infix feature must have one argument
+					l_arg_type := a_feature.arguments.i_th (1)
+					l_arg_type := adapted_type (l_arg_type, a_left_type, a_left_constrained)
+					l_arg_type := l_arg_type.instantiation_in (a_left_type.as_implicitly_detachable,
+						a_context_class.class_id).actual_type
+
+					if not a_right_type.conform_to (context.current_class, l_arg_type) then
+						if not is_inherited and then a_right_type.convert_to (context.current_class, l_arg_type.deep_actual_type) then
+							last_infix_argument_conversion_info := context.last_conversion_info
+							last_infix_arg_type := l_arg_type
+							last_infix_error := Void
+						else
+								-- No conformance on argument of infix
+							create l_vwoe1
+							context.init_error (l_vwoe1)
+							l_vwoe1.set_other_class (a_context_class)
+							l_vwoe1.set_op_name (a_name)
+							l_vwoe1.set_formal_type (l_arg_type)
+							l_vwoe1.set_actual_type (a_right_type)
+							last_infix_error := l_vwoe1
+						end
+					else
+						last_infix_arg_type := l_arg_type
+						last_infix_error := Void
+					end
+				end
+			end
 		end
 
 	last_infix_error: ERROR
@@ -9195,15 +9233,18 @@ feature {NONE} -- Variable initialization
 
 feature {NONE} -- Implementation: Error handling
 
-	insert_vtmc_error (a_problematic_feature: ID_AS; a_formal_position: INTEGER; a_context_class: CLASS_C)
+	new_vtmc_error (a_problematic_feature: ID_AS; a_formal_position: INTEGER; a_context_class: CLASS_C; is_alias: BOOLEAN): VTMC
 			-- Computes everything needed to report a proper VTMC error, inserts and raises an error.
 			--
 			-- `a_type_set' for which we produce the error.
 			-- `a_problematic_feature' is the feature which is not unique in the type set.
 			-- If you don't have formals inside your type set you don't need to provide a context class.
 		require
-			is_really_a_problematic_feature:
+			is_really_a_problematic_feature: not is_alias implies
 				a_context_class.constraints (a_formal_position).constraining_types (a_context_class).feature_i_state (a_problematic_feature).features_found_count /= 1
+			is_really_a_problematic_alias_feature: is_alias implies
+				a_context_class.constraints (a_formal_position).constraining_types (a_context_class).feature_i_state_by_alias_name_id (a_problematic_feature.name_id).features_found_count /= 1
+
 		local
 			l_error_report: MC_FEATURE_INFO
 			l_vtmc1: VTMC1
@@ -9211,7 +9252,11 @@ feature {NONE} -- Implementation: Error handling
 			l_constraints: TYPE_SET_A
 		do
 			l_constraints := a_context_class.constraints (a_formal_position)
-			l_error_report := l_constraints.info_about_feature (a_problematic_feature, a_formal_position, a_context_class)
+			if is_alias then
+				l_error_report := l_constraints.info_about_feature_by_alias_name_id (a_problematic_feature.name_id, a_formal_position, a_context_class)
+			else
+				l_error_report := l_constraints.info_about_feature_by_name_id (a_problematic_feature.name_id, a_formal_position, a_context_class)
+			end
 
 			if l_error_report.count < 1 then
 				create l_vtmc1
@@ -9219,16 +9264,15 @@ feature {NONE} -- Implementation: Error handling
 				l_vtmc1.set_location (a_problematic_feature)
 				l_vtmc1.set_feature_call_name (a_problematic_feature.name)
 				l_vtmc1.set_type_set (l_constraints.constraining_types (a_context_class))
-				error_handler.insert_error (l_vtmc1)
-			elseif l_error_report.count > 1 then
+				Result := l_vtmc1
+			else
+				check l_error_report.count > 1 end
+
 				create l_vtmc2
 				context.init_error (l_vtmc2)
 				l_vtmc2.set_location (a_problematic_feature)
 				l_vtmc2.set_error_report (l_error_report)
-				error_handler.insert_error (l_vtmc2)
-			else
-					-- Captured by precondition. This is a correct case and we cannot produce an error.
-				check false end
+				Result := l_vtmc2
 			end
 		end
 

@@ -17,7 +17,7 @@ inherit
 			has_formal_generic, is_loose, valid_generic, actual_argument_type,
 			instantiated_in, good_generics, error_generics, check_constraints,
 			expanded_deferred, valid_expanded_creation, update_dependance,
-			has_expanded, dump, duplicate, reference_type,
+			has_expanded, dump, duplicate, reference_type, formal_instantiation_in,
 			is_equivalent, instantiation_of, same_as, instantiation_in,
 			is_full_named_type, evaluated_type_in_descendant, is_explicit,
 			generate_cid, generate_cid_array, generate_cid_init, has_actual,

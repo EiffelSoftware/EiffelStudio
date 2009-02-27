@@ -24,9 +24,11 @@ inherit
 			as_attached_type,
 			as_implicitly_attached,
 			as_implicitly_detachable,
+			formal_instantiation_in,
 			has_expanded,
 			has_formal_generic,
 			instantiation_in,
+			is_attached,
 			is_loose,
 			internal_is_valid_for_class,
 			is_type_set,
@@ -82,6 +84,27 @@ feature -- Commands
 
 feature -- Access
 
+	formal_instantiation_in (type: TYPE_A; constraint: TYPE_A; written_id: INTEGER): TYPE_SET_A
+			-- <Precursor>
+		local
+			l_instantiated_type: TYPE_A
+			l_item_type: TYPE_A
+		do
+			create Result.make (count)
+			from
+				start
+			until
+				after
+			loop
+				l_item_type := item.type
+				l_instantiated_type := l_item_type.formal_instantiation_in (type, constraint, written_id)
+				if l_instantiated_type /= Void then
+					Result.extend (create {RENAMED_TYPE_A [TYPE_A]}.make (l_instantiated_type, item.renaming))
+				end
+				forth
+			end
+		end
+
 	instantiation_in (a_type: TYPE_A; a_written_id: INTEGER_32): TYPE_A
 			--
 		local
@@ -90,7 +113,6 @@ feature -- Access
 			l_type_set: TYPE_SET_A
 		do
 			create l_type_set.make (count)
-
 			from
 				start
 			until
@@ -1175,6 +1197,17 @@ feature -- Status
 						 		Result := a_item.associated_class.is_deferred
 						 	end
 						 end)
+		end
+
+	is_attached: BOOLEAN
+			-- <Precursor>
+		do
+			Result := there_exists (
+				agent (a_item: RENAMED_TYPE_A [TYPE_A]): BOOLEAN
+					do
+						Result := a_item.type.is_attached
+					end
+				)
 		end
 
 feature -- Access

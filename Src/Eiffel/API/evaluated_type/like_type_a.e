@@ -22,6 +22,7 @@ inherit
 			associated_class_type,
 			has_associated_class_type,
 			has_like,
+			formal_instantiation_in,
 			good_generics,
 			error_generics,
 			instantiated_in,
@@ -237,6 +238,16 @@ feature -- Primitives
 			-- Assign `a' to `actual_type'.
 		do
 			actual_type := a.to_other_immediate_attachment (Current)
+		end
+
+	formal_instantiation_in (type: TYPE_A; constraint: TYPE_A; written_id: INTEGER): TYPE_A
+			-- <Precursor>
+		local
+			t: like Current
+		do
+			t := twin
+			t.set_actual_type (actual_type.formal_instantiation_in (type, constraint, written_id))
+			Result := t
 		end
 
 	instantiation_in (type: TYPE_A written_id: INTEGER): TYPE_A
@@ -487,7 +498,7 @@ feature {TYPE_A} -- Helpers
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

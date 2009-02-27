@@ -1491,10 +1491,8 @@ feature -- Implementation
 											end
 										end
 
-											-- Adapted type in case it is a formal generic parameter or a like.
-										l_formal_arg_type := adapted_type (l_formal_arg_type, l_last_type, l_last_constrained)
 											-- Actual type of feature argument
-										l_formal_arg_type := l_formal_arg_type.instantiation_in (l_last_type.as_implicitly_detachable, l_last_id).actual_type
+										l_formal_arg_type := l_formal_arg_type.formal_instantiation_in (l_last_type.as_implicitly_detachable, l_last_constrained.as_implicitly_detachable, l_last_id).actual_type
 
 											-- Conformance: take care of constrained genericity
 											-- We must generate an error when `l_formal_arg_type' becomes
@@ -1600,7 +1598,6 @@ feature -- Implementation
 								-- Get the type of Current feature.
 							l_result_type := l_feature.type
 								-- Adapted type in case it is a formal generic parameter or a like.
-							l_result_type := adapted_type (l_result_type, l_last_type, l_last_constrained)
 							if l_arg_types /= Void then
 								l_pure_result_type := l_result_type
 								l_result_type := l_result_type.actual_argument_type (l_arg_types)
@@ -1612,7 +1609,7 @@ feature -- Implementation
 									l_result_type := l_pure_result_type.actual_argument_type (l_feature.arguments)
 								end
 							end
-							l_result_type := l_result_type.instantiation_in (l_last_type.as_implicitly_detachable, l_last_id)
+							l_result_type := l_result_type.formal_instantiation_in (l_last_type.as_implicitly_detachable, l_last_constrained.as_implicitly_detachable, l_last_id)
 							if l_arg_types /= Void and then l_pure_result_type.is_like_argument and then is_byte_node_enabled then
 									-- Ensure the expandedness status of the result type matches
 									-- the expandedness status of the argument it is anchored to (if any).
@@ -3925,9 +3922,9 @@ feature -- Implementation
 				end
 
 				l_error_level := error_level
---				if not last_type.is_attached and then l_context_current_class.lace_class.is_void_safe then
---					error_handler.insert_error (create {VUTA2}.make (context, last_type, l_as.operator_location))
---				end
+				if not last_type.is_attached and then l_context_current_class.lace_class.is_void_safe then
+					error_handler.insert_error (create {VUTA2}.make (context, last_type, l_as.operator_location))
+				end
 				if l_is_multi_constrained then
 					l_type_set := last_type.actual_type.to_type_set.constraining_types (l_context_current_class)
 					l_result_tuple := l_type_set.feature_i_state_by_alias_name (l_as.prefix_feature_name)
@@ -3961,7 +3958,11 @@ feature -- Implementation
 							-- Error: not prefixed function found
 						create l_vwoe
 						context.init_error (l_vwoe)
-						l_vwoe.set_other_class (l_last_class)
+						if l_last_class /= Void then
+							l_vwoe.set_other_class (l_last_class)
+						else
+							l_vwoe.set_other_type_set (l_type_set)
+						end
 						l_vwoe.set_op_name (l_as.prefix_feature_name)
 						l_vwoe.set_location (l_as.operator_location)
 						error_handler.insert_error (l_vwoe)
@@ -4022,15 +4023,13 @@ feature -- Implementation
 											l_prefix_feature_type := l_last_constrained
 										else
 												-- Usual case
-											l_prefix_feature_type := adapted_type (l_prefix_feature_type, last_type, l_last_constrained)
-											l_prefix_feature_type := l_prefix_feature_type.instantiation_in
-															(last_type.as_implicitly_detachable, l_last_class.class_id).actual_type
+											l_prefix_feature_type := l_prefix_feature_type.formal_instantiation_in
+															(last_type.as_implicitly_detachable, l_last_constrained.as_implicitly_detachable, l_last_class.class_id).actual_type
 										end
 									else
 											-- Usual case
-										l_prefix_feature_type := adapted_type (l_prefix_feature_type, last_type, l_last_constrained)
-										l_prefix_feature_type := l_prefix_feature_type.instantiation_in
-														(last_type.as_implicitly_detachable, l_last_class.class_id).actual_type
+										l_prefix_feature_type := l_prefix_feature_type.formal_instantiation_in
+														(last_type.as_implicitly_detachable, l_last_constrained.as_implicitly_detachable, l_last_class.class_id).actual_type
 									end
 								end
 								if l_is_assigner_call then
@@ -4309,9 +4308,9 @@ feature -- Implementation
 									l_target_type := l_left_type
 							end
 
---							if not l_target_type.is_attached and then l_context_current_class.lace_class.is_void_safe then
---								error_handler.insert_error (create {VUTA2}.make (context, l_target_type, l_as.operator_location))
---							end
+							if not l_target_type.is_attached and then l_context_current_class.lace_class.is_void_safe then
+								error_handler.insert_error (create {VUTA2}.make (context, l_target_type, l_as.operator_location))
+							end
 
 							if not is_inherited then
 									-- Set type informations
@@ -4355,8 +4354,7 @@ feature -- Implementation
 								l_infix_type := l_target_type
 							else
 									-- Usual case
-								l_infix_type := adapted_type (l_infix_type, l_left_type.actual_type, l_left_constrained)
-								l_infix_type := l_infix_type.instantiation_in (l_target_type.as_implicitly_detachable, l_left_id).actual_type
+								l_infix_type := l_infix_type.formal_instantiation_in (l_target_type.as_implicitly_detachable, l_left_constrained.as_implicitly_detachable, l_left_id).actual_type
 							end
 
 							if l_is_assigner_call then
@@ -4748,7 +4746,7 @@ feature -- Implementation
 						is_qualified_call := True
 						process_call (last_type, Void, id_feature_name, bracket_feature, l_as.operands, False, False, True, False)
 						if error_level = l_error_level then
-							last_type := bracket_feature.type.instantiation_in (target_type.as_implicitly_detachable, l_last_class_id).actual_type
+							last_type := bracket_feature.type.formal_instantiation_in (target_type.as_implicitly_detachable, constrained_target_type.as_implicitly_detachable, l_last_class_id).actual_type
 							is_qualified_call := l_is_qualified_call
 
 							if is_byte_node_enabled then
@@ -7610,6 +7608,7 @@ feature {NONE} -- Implementation
 			a_context_class_attached: a_context_class /= Void
 			a_name_attached: a_name /= Void
 			a_left_type_attached: a_left_type /= Void
+			a_left_constrained_attached: a_left_constrained /= Void
 			a_right_type_attached: a_right_type /= Void
 		local
 			l_arg_type: TYPE_A
@@ -7637,9 +7636,8 @@ feature {NONE} -- Implementation
 						-- Conformance initialization
 						-- Argument conformance: infix feature must have one argument
 					l_arg_type := a_feature.arguments.i_th (1)
-					l_arg_type := adapted_type (l_arg_type, a_left_type, a_left_constrained)
-					l_arg_type := l_arg_type.instantiation_in (a_left_type.as_implicitly_detachable,
-						a_context_class.class_id).actual_type
+					l_arg_type := l_arg_type.formal_instantiation_in (a_left_type.as_implicitly_detachable,
+						a_left_constrained.as_implicitly_detachable, a_context_class.class_id).actual_type
 
 					if not a_right_type.conform_to (context.current_class, l_arg_type) then
 						if not is_inherited and then a_right_type.convert_to (context.current_class, l_arg_type.deep_actual_type) then

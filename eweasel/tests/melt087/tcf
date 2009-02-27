@@ -1,0 +1,26 @@
+
+test_name 	redefined-once-with-alt-precondition
+test_description A once function with a True precondition is redefined in a descendant with an alternate True precondition.  System execution ends with a segmentation fault if the once function is called in the descendant and the system is melted.  Frozen code works correctly.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result	ok
+
+execute_work 	NONE exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+compile_frozen
+compile_result	ok
+
+c_compile_work
+c_compile_result	ok
+
+execute_work 	NONE exec_output2
+execute_result 	ok
+compare		exec_output2 output
+
+test_end

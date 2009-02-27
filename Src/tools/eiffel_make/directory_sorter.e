@@ -12,7 +12,7 @@ class
 	DIRECTORY_SORTER
 
 inherit
-	DS_COMPARATOR [STRING]
+	KL_COMPARATOR [STRING]
 
 feature -- Comparison
 

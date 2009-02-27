@@ -1,9 +1,10 @@
 class TEST
 
 inherit
-	B
+	B [D, TEST]
 		redefine
-			g
+			g,
+			h
 		end
 
 create
@@ -15,11 +16,17 @@ feature {NONE} -- Creation
 			-- Run test.
 		do
 			g (create {A [TEST]}, Current)
+			h (create {D}, Current)
+			(create {C [TEST, TEST, D, TEST]}).h (create {D}, Current)
 		end
 
 feature {NONE} -- Test
 
 	g (a: A [TEST]; b: TEST)
+		do
+		end
+
+	h (a: D; b: TEST)
 		do
 		end
 

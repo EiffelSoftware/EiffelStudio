@@ -2039,6 +2039,7 @@ test	multi-constraint-renaming-to-existing-feature	multicon047 tcf pass multicon
 test	multi-constraint-any-numeric-crash				multicon048 tcf pass multiconstraint
 test	multi-constraint-parallel-renaming				multicon049 tcf pass multiconstraint
 test	multi-constraint-alias-renamed					multicon050 tcf pass multiconstraint
+test	multi-constraint-alias							multicon051 tcf pass multiconstraint system-validity
 
 -- tests for expanded types
 test	expanded-array-attached-reference-array			expanded001 tcf pass expanded

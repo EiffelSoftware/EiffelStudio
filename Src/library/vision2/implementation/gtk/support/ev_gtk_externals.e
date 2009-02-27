@@ -42,7 +42,7 @@ feature
 		external
 			"C signature (gchar*, GModuleFlags): GModule* use <gmodule.h>"
 		end
-		
+
 	frozen g_module_close (a_module: POINTER): BOOLEAN
 		external
 			"C signature (GModule*): gboolean use <gmodule.h>"
@@ -14301,15 +14301,6 @@ feature
 		alias
 			"wmclass_name"
 		end
-
-
-	frozen gdk_display: POINTER
-		external
-			" C [macro <gdk/gdkx.h>]"
-		alias
-			"GDK_DISPLAY()"
-		end
-
 
 	frozen c_gdk_rectangle_struct_allocate: POINTER
 		external

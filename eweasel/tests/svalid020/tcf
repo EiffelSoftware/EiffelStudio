@@ -1,0 +1,13 @@
+test_name 	svalid-undetected-vwoe
+test_description A binary operator is redefined in a descendant but the compiler does not see that inherited code is not valid anymore.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+copy_raw 	test3.e $CLUSTER test3.e
+
+compile_melted
+compile_result validity_error TEST1 VWOE(1)
+
+test_end

@@ -602,7 +602,7 @@ feature -- Status
 		do
 			Result := a_class.class_id = written_in or else is_replicated_directly
 		ensure
-			generate_if_replicated_directly: is_replicated_directly implies Result
+			generate_if_replicated_directly: is_replicated_directly implies (Result or is_deferred)
 		end
 
 	frozen to_implement_in (a_class: CLASS_C): BOOLEAN

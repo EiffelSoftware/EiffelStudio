@@ -229,7 +229,7 @@ feature {ERROR_VISITOR} -- Compute surrounding text around error
 					end
 					current_line := l_contents.i_th (line)
 					if l_contents.count >= line + 1 then
-						next_line := l_contents.i_th (line)
+						next_line := l_contents.i_th (line + 1)
 					end
 				else
 					create current_line.make_empty

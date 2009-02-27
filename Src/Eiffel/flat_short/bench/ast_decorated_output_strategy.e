@@ -103,9 +103,12 @@ feature -- Formatting
 	format_indexing_with_no_keyword (l_as: INDEXING_CLAUSE_AS)
 		require
 			l_as_not_void: l_as /= Void
+		local
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
-			text_formatter_decorator.set_separator (Void)
-			text_formatter_decorator.set_new_line_between_tokens
+			l_text_formatter_decorator := text_formatter_decorator
+			l_text_formatter_decorator.set_separator (Void)
+			l_text_formatter_decorator.set_new_line_between_tokens
 			process_eiffel_list (l_as)
 		end
 
@@ -260,51 +263,53 @@ feature -- Roundtrip
 			l_old_breakpoint_index: INTEGER
 			l_feat: FEATURE_I
 			l_leaf_list: LEAF_AS_LIST
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			if not expr_type_visiting then
 				if l_as.inl_rout_id > 0 then
-					text_formatter_decorator.process_keyword_text (ti_agent_keyword, Void)
+					l_text_formatter_decorator.process_keyword_text (ti_agent_keyword, Void)
 
 					create l_strategy.make_for_inline_agent (Current, l_as)
 
-					l_old_feature_comments := text_formatter_decorator.feature_comments
-					l_old_arguments := text_formatter_decorator.arguments
-					l_old_target_feature := text_formatter_decorator.target_feature
-					l_old_source_feature := text_formatter_decorator.source_feature
-					l_old_e_feature := text_formatter_decorator.e_feature
-					l_old_breakpoint_index := text_formatter_decorator.breakpoint_index
+					l_old_feature_comments := l_text_formatter_decorator.feature_comments
+					l_old_arguments := l_text_formatter_decorator.arguments
+					l_old_target_feature := l_text_formatter_decorator.target_feature
+					l_old_source_feature := l_text_formatter_decorator.source_feature
+					l_old_e_feature := l_text_formatter_decorator.e_feature
+					l_old_breakpoint_index := l_text_formatter_decorator.breakpoint_index
 
 					l_feat := l_strategy.current_feature
 
-					text_formatter_decorator.restore_attributes ( Void, l_as.body.arguments, l_feat,
+					l_text_formatter_decorator.restore_attributes ( Void, l_as.body.arguments, l_feat,
 																  l_strategy.source_feature, l_strategy, 0,
 																  l_feat.api_feature (l_feat.written_in))
 
 					l_as.body.process (l_strategy)
 
-					text_formatter_decorator.restore_attributes ( l_old_feature_comments, l_old_arguments,
+					l_text_formatter_decorator.restore_attributes ( l_old_feature_comments, l_old_arguments,
 																  l_old_target_feature, l_old_source_feature, Current,
 																  l_old_breakpoint_index, l_old_e_feature)
 
 					if l_as.operands /= Void then
 						reset_last_class_and_type
-						text_formatter_decorator.process_symbol_text (ti_space)
-						text_formatter_decorator.begin
-						text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
-						text_formatter_decorator.set_separator (ti_comma)
-						text_formatter_decorator.set_space_between_tokens
+						l_text_formatter_decorator.process_symbol_text (ti_space)
+						l_text_formatter_decorator.begin
+						l_text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
+						l_text_formatter_decorator.set_separator (ti_comma)
+						l_text_formatter_decorator.set_space_between_tokens
 						l_as.operands.process (Current)
-						text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
-						text_formatter_decorator.commit
+						l_text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
+						l_text_formatter_decorator.commit
 					end
 					last_type := expr_type (l_as)
 				else
 					has_error_internal := True
 					l_leaf_list	:= match_list_server.item (current_class.class_id)
 					if l_leaf_list /= Void and then l_as.is_text_available (l_leaf_list) then
-						text_formatter_decorator.add (l_as.text (l_leaf_list))
+						l_text_formatter_decorator.add (l_as.text (l_leaf_list))
 					else
-						text_formatter_decorator.add ("unable_to_show_inline_agent")
+						l_text_formatter_decorator.add ("unable_to_show_inline_agent")
 					end
 				end
 			else
@@ -374,19 +379,22 @@ feature {NONE} -- Implementation
 		end
 
 	process_integer_as (l_as: INTEGER_CONSTANT)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			if l_as.constant_type /= Void then
 				if not expr_type_visiting then
-					text_formatter_decorator.process_symbol_text (ti_l_curly)
+					l_text_formatter_decorator.process_symbol_text (ti_l_curly)
 				end
 				l_as.constant_type.process (Current)
 				if not expr_type_visiting then
-					text_formatter_decorator.process_symbol_text (ti_r_curly)
-					text_formatter_decorator.process_basic_text (ti_space)
+					l_text_formatter_decorator.process_symbol_text (ti_r_curly)
+					l_text_formatter_decorator.process_basic_text (ti_space)
 				end
 			end
 			if not expr_type_visiting then
-				text_formatter_decorator.process_number_text (l_as.string_value)
+				l_text_formatter_decorator.process_number_text (l_as.string_value)
 			end
 			last_type := l_as.manifest_type
 		end
@@ -398,15 +406,17 @@ feature {NONE} -- Implementation
 			l_type: TYPE_A
 			l_static_type: TYPE_A
 			l_actual_argument_typs: like expr_types
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			if not expr_type_visiting then
-				text_formatter_decorator.begin
-				text_formatter_decorator.process_symbol_text (ti_l_curly)
+				l_text_formatter_decorator.begin
+				l_text_formatter_decorator.process_symbol_text (ti_l_curly)
 			end
 			l_as.class_type.process (Current)
 			l_static_type := last_type
 			if not expr_type_visiting then
-				text_formatter_decorator.process_symbol_text (ti_r_curly)
+				l_text_formatter_decorator.process_symbol_text (ti_r_curly)
 			end
 			l_rout_ids := l_as.routine_ids
 			if not has_error_internal and l_as.class_id /= 0 and l_rout_ids /= Void then
@@ -415,27 +425,27 @@ feature {NONE} -- Implementation
 				has_error_internal := True
 			end
 			if not expr_type_visiting then
-				text_formatter_decorator.process_symbol_text (ti_dot)
+				l_text_formatter_decorator.process_symbol_text (ti_dot)
 				if not has_error_internal then
-					text_formatter_decorator.process_feature_text (l_as.feature_name.name, l_feat, False)
+					l_text_formatter_decorator.process_feature_text (l_as.feature_name.name, l_feat, False)
 				else
-					text_formatter_decorator.process_basic_text (l_as.feature_name.name)
+					l_text_formatter_decorator.process_basic_text (l_as.feature_name.name)
 				end
 			end
 			if l_as.parameter_count > 0 then
 				if not expr_type_visiting then
-					text_formatter_decorator.put_space
-					text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
-					text_formatter_decorator.set_separator (ti_comma)
-					text_formatter_decorator.set_space_between_tokens
+					l_text_formatter_decorator.put_space
+					l_text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
+					l_text_formatter_decorator.set_separator (ti_comma)
+					l_text_formatter_decorator.set_space_between_tokens
 				end
 				l_as.parameters.process (Current)
 				if not expr_type_visiting then
-					text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
+					l_text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
 				end
 			end
 			if not expr_type_visiting then
-				text_formatter_decorator.commit
+				l_text_formatter_decorator.commit
 			end
 			if not has_error_internal then
 				if l_feat.is_procedure then
@@ -472,37 +482,39 @@ feature {NONE} -- Implementation
 			i, l_count: INTEGER
 			f: EIFFEL_LIST [FEATURE_AS]
 			next_feat, feat: FEATURE_AS
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
-			text_formatter_decorator.process_symbol_text (ti_feature_keyword)
-			text_formatter_decorator.put_space
+			l_text_formatter_decorator := text_formatter_decorator
+			l_text_formatter_decorator.process_symbol_text (ti_feature_keyword)
+			l_text_formatter_decorator.put_space
 			if l_as.clients /= Void then
-				text_formatter_decorator.set_separator (ti_comma)
-				text_formatter_decorator.set_space_between_tokens
+				l_text_formatter_decorator.set_separator (ti_comma)
+				l_text_formatter_decorator.set_space_between_tokens
 				l_as.clients.process (Current)
 			end
-			comments := l_as.comment (text_formatter_decorator.match_list)
+			comments := l_as.comment (l_text_formatter_decorator.match_list)
 			if comments = Void then
-				text_formatter_decorator.put_new_line
+				l_text_formatter_decorator.put_new_line
 			else
 				if comments.count > 1 then
-					text_formatter_decorator.indent
-					text_formatter_decorator.indent
-					text_formatter_decorator.put_new_line
-					text_formatter_decorator.put_comments (comments)
-					text_formatter_decorator.exdent
-					text_formatter_decorator.exdent
+					l_text_formatter_decorator.indent
+					l_text_formatter_decorator.indent
+					l_text_formatter_decorator.put_new_line
+					l_text_formatter_decorator.put_comments (comments)
+					l_text_formatter_decorator.exdent
+					l_text_formatter_decorator.exdent
 				else
-					text_formatter_decorator.put_space
-					text_formatter_decorator.put_comments (comments)
+					l_text_formatter_decorator.put_space
+					l_text_formatter_decorator.put_comments (comments)
 				end
 			end
-			text_formatter_decorator.put_new_line
-			text_formatter_decorator.indent
-			text_formatter_decorator.put_new_line
-			text_formatter_decorator.set_new_line_between_tokens
-			text_formatter_decorator.set_separator (ti_empty)
+			l_text_formatter_decorator.put_new_line
+			l_text_formatter_decorator.indent
+			l_text_formatter_decorator.put_new_line
+			l_text_formatter_decorator.set_new_line_between_tokens
+			l_text_formatter_decorator.set_separator (ti_empty)
 			f := l_as.features
-			text_formatter_decorator.begin
+			l_text_formatter_decorator.begin
 			from
 				i := 1
 				l_count := f.count
@@ -512,42 +524,47 @@ feature {NONE} -- Implementation
 			until
 				i > l_count
 			loop
-				text_formatter_decorator.new_expression
+				l_text_formatter_decorator.new_expression
 				if i > 1 then
-					text_formatter_decorator.put_separator
+					l_text_formatter_decorator.put_separator
 				end
-				text_formatter_decorator.new_expression
-				text_formatter_decorator.begin
+				l_text_formatter_decorator.new_expression
+				l_text_formatter_decorator.begin
 				i := i + 1
 				feat.process (Current)
 				feat := next_feat
-				text_formatter_decorator.commit
+				l_text_formatter_decorator.commit
 			end
-			text_formatter_decorator.commit
-			text_formatter_decorator.exdent
+			l_text_formatter_decorator.commit
+			l_text_formatter_decorator.exdent
 		end
 
 	process_unique_as (l_as: UNIQUE_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			if not expr_type_visiting then
-				text_formatter_decorator.set_without_tabs
-				text_formatter_decorator.process_keyword_text (ti_unique_keyword, Void)
+				l_text_formatter_decorator := text_formatter_decorator
+				l_text_formatter_decorator.set_without_tabs
+				l_text_formatter_decorator.process_keyword_text (ti_unique_keyword, Void)
 			end
 		end
 
 	process_tuple_as (l_as: TUPLE_AS)
 		local
 			l_tuple_type: TUPLE_TYPE_A
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			if not expr_type_visiting then
-				text_formatter_decorator.process_symbol_text (ti_l_bracket)
-				text_formatter_decorator.set_separator (ti_comma)
-				text_formatter_decorator.set_space_between_tokens
+				l_text_formatter_decorator.process_symbol_text (ti_l_bracket)
+				l_text_formatter_decorator.set_separator (ti_comma)
+				l_text_formatter_decorator.set_space_between_tokens
 			end
 			l_as.expressions.process (Current)
 			if not expr_type_visiting then
-				text_formatter_decorator.set_without_tabs
-				text_formatter_decorator.process_symbol_text (ti_r_bracket)
+				l_text_formatter_decorator.set_without_tabs
+				l_text_formatter_decorator.process_symbol_text (ti_r_bracket)
 			end
 			if not has_error_internal then
 				create l_tuple_type.make (system.tuple_id, expr_types (l_as.expressions))
@@ -556,15 +573,18 @@ feature {NONE} -- Implementation
 		end
 
 	process_real_as (l_as: REAL_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			if not expr_type_visiting then
 				if l_as.constant_type /= Void then
-					text_formatter_decorator.process_symbol_text (ti_l_curly)
+					l_text_formatter_decorator.process_symbol_text (ti_l_curly)
 					l_as.constant_type.process (Current)
-					text_formatter_decorator.process_symbol_text (ti_r_curly)
-					text_formatter_decorator.put_space
+					l_text_formatter_decorator.process_symbol_text (ti_r_curly)
+					l_text_formatter_decorator.put_space
 				end
-				text_formatter_decorator.process_number_text (l_as.value)
+				l_text_formatter_decorator.process_number_text (l_as.value)
 			end
 
 			if l_as.constant_type = Void then
@@ -589,34 +609,40 @@ feature {NONE} -- Implementation
 		end
 
 	process_bit_const_as (l_as: BIT_CONST_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			if not expr_type_visiting then
-				text_formatter_decorator.process_string_text (l_as.value.name, Void)
-				text_formatter_decorator.process_string_text ("B", Void)
+				l_text_formatter_decorator := text_formatter_decorator
+				l_text_formatter_decorator.process_string_text (l_as.value.name, Void)
+				l_text_formatter_decorator.process_string_text ("B", Void)
 			end
 			create {BITS_A} last_type.make (l_as.value.name.count)
 		end
 
 	process_array_as (l_as: COMPILER_ARRAY_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			reset_last_class_and_type
 			if not expr_type_visiting then
-				text_formatter_decorator.process_symbol_text (ti_l_array)
-				text_formatter_decorator.put_space
+				l_text_formatter_decorator.process_symbol_text (ti_l_array)
+				l_text_formatter_decorator.put_space
 			end
 			if not l_as.expressions.is_empty then
 				if not expr_type_visiting then
-					text_formatter_decorator.set_separator (ti_comma)
-					text_formatter_decorator.set_space_between_tokens
+					l_text_formatter_decorator.set_separator (ti_comma)
+					l_text_formatter_decorator.set_space_between_tokens
 				end
 				l_as.expressions.process (Current)
 				if not expr_type_visiting then
-					text_formatter_decorator.put_space
+					l_text_formatter_decorator.put_space
 				end
 			end
 			if not expr_type_visiting then
-				text_formatter_decorator.set_without_tabs
-				text_formatter_decorator.process_symbol_text (ti_r_array)
+				l_text_formatter_decorator.set_without_tabs
+				l_text_formatter_decorator.process_symbol_text (ti_r_array)
 			end
 			last_type := l_as.array_type
 		end
@@ -630,40 +656,46 @@ feature {NONE} -- Implementation
 		end
 
 	process_string_as (l_as: STRING_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			if not expr_type_visiting then
+				l_text_formatter_decorator := text_formatter_decorator
 				if l_as.is_once_string then
-					text_formatter_decorator.process_keyword_text (ti_once_keyword, Void)
-					text_formatter_decorator.put_space
+					l_text_formatter_decorator.process_keyword_text (ti_once_keyword, Void)
+					l_text_formatter_decorator.put_space
 				end
-				text_formatter_decorator.put_string_item (l_as.string_value)
+				l_text_formatter_decorator.put_string_item (l_as.string_value)
 			end
 			last_type := string_type
 		end
 
 	process_verbatim_string_as (l_as: VERBATIM_STRING_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			if not expr_type_visiting then
+				l_text_formatter_decorator := text_formatter_decorator
 				if l_as.is_once_string then
-					text_formatter_decorator.process_keyword_text (ti_once_keyword, Void)
-					text_formatter_decorator.put_space
+					l_text_formatter_decorator.process_keyword_text (ti_once_keyword, Void)
+					l_text_formatter_decorator.put_space
 				end
-				text_formatter_decorator.put_string_item ("%"" + l_as.verbatim_marker)
+				l_text_formatter_decorator.put_string_item ("%"" + l_as.verbatim_marker)
 				if l_as.is_indentable then
-					text_formatter_decorator.put_string_item ("[")
+					l_text_formatter_decorator.put_string_item ("[")
 				else
-					text_formatter_decorator.put_string_item ("{")
+					l_text_formatter_decorator.put_string_item ("{")
 				end
-				text_formatter_decorator.put_new_line
+				l_text_formatter_decorator.put_new_line
 				if not l_as.value.is_empty then
 					append_format_multilined (l_as.value.string, l_as.is_indentable)
 				end
 				if l_as.is_indentable then
-					text_formatter_decorator.put_string_item ("]")
+					l_text_formatter_decorator.put_string_item ("]")
 				else
-					text_formatter_decorator.put_string_item ("}")
+					l_text_formatter_decorator.put_string_item ("}")
 				end
-				text_formatter_decorator.process_string_text (l_as.verbatim_marker + "%"", Void)
+				l_text_formatter_decorator.process_string_text (l_as.verbatim_marker + "%"", Void)
 			end
 			last_type := string_type
 		end
@@ -671,39 +703,41 @@ feature {NONE} -- Implementation
 	process_body_as (l_as: BODY_AS)
 		local
 			l_feat: E_FEATURE
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			check
 				not_expr_type_visiting: not expr_type_visiting
 			end
 			if l_as.arguments /= Void and then not l_as.arguments.is_empty then
-				text_formatter_decorator.put_space
-				text_formatter_decorator.set_without_tabs
-				text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
-				text_formatter_decorator.set_separator (ti_semi_colon)
-				text_formatter_decorator.set_space_between_tokens
+				l_text_formatter_decorator.put_space
+				l_text_formatter_decorator.set_without_tabs
+				l_text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
+				l_text_formatter_decorator.set_separator (ti_semi_colon)
+				l_text_formatter_decorator.set_space_between_tokens
 				l_as.arguments.process (Current)
-				text_formatter_decorator.set_without_tabs
-				text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
+				l_text_formatter_decorator.set_without_tabs
+				l_text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
 			end
 			if l_as.type /= Void then
-				text_formatter_decorator.set_without_tabs
-				text_formatter_decorator.process_symbol_text (ti_colon)
-				text_formatter_decorator.put_space
+				l_text_formatter_decorator.set_without_tabs
+				l_text_formatter_decorator.process_symbol_text (ti_colon)
+				l_text_formatter_decorator.put_space
 				l_as.type.process (Current)
 			end
-			text_formatter_decorator.set_separator (ti_empty)
+			l_text_formatter_decorator.set_separator (ti_empty)
 			if l_as.assigner /= Void then
-				text_formatter_decorator.put_space
-				text_formatter_decorator.set_without_tabs
-				text_formatter_decorator.process_keyword_text (ti_assign_keyword, Void)
-				text_formatter_decorator.put_space
+				l_text_formatter_decorator.put_space
+				l_text_formatter_decorator.set_without_tabs
+				l_text_formatter_decorator.process_keyword_text (ti_assign_keyword, Void)
+				l_text_formatter_decorator.put_space
 				if not has_error_internal then
 					l_feat := current_assigner_feature
 				end
 				if not has_error_internal then
-					text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
+					l_text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
 				else
-					text_formatter_decorator.process_basic_text (l_as.assigner.name)
+					l_text_formatter_decorator.process_basic_text (l_as.assigner.name)
 				end
 			end
 			safe_process (l_as.content)
@@ -713,38 +747,40 @@ feature {NONE} -- Implementation
 			-- Process `l_as'.
 		local
 			l_routine: ROUTINE_AS
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			if l_as.body = Void then
 				process_external_as (l_as)
 			else
 				l_routine ?= l_as.body.body.content
 				if l_routine /= Void then
 					if l_routine.locals /= Void then
-						text_formatter_decorator.process_keyword_text (ti_local_keyword, Void)
-						text_formatter_decorator.put_new_line
+						l_text_formatter_decorator.process_keyword_text (ti_local_keyword, Void)
+						l_text_formatter_decorator.put_new_line
 						if l_routine.locals.count > 0 then
-							text_formatter_decorator.indent
-							text_formatter_decorator.set_separator (Void)
-							text_formatter_decorator.set_new_line_between_tokens
+							l_text_formatter_decorator.indent
+							l_text_formatter_decorator.set_separator (Void)
+							l_text_formatter_decorator.set_new_line_between_tokens
 							processing_locals := True
 							l_routine.locals.process (Current)
 							processing_locals := False
-							text_formatter_decorator.put_new_line
-							text_formatter_decorator.exdent
+							l_text_formatter_decorator.put_new_line
+							l_text_formatter_decorator.exdent
 						end
 					end
 					safe_process (l_routine.routine_body)
 					if l_routine.rescue_clause /= Void then
-						text_formatter_decorator.process_keyword_text (ti_rescue_keyword, Void)
-						text_formatter_decorator.indent
-						text_formatter_decorator.put_new_line
-						text_formatter_decorator.set_separator (Void)
-						text_formatter_decorator.set_new_line_between_tokens
+						l_text_formatter_decorator.process_keyword_text (ti_rescue_keyword, Void)
+						l_text_formatter_decorator.indent
+						l_text_formatter_decorator.put_new_line
+						l_text_formatter_decorator.set_separator (Void)
+						l_text_formatter_decorator.set_new_line_between_tokens
 						if not l_routine.rescue_clause.is_empty then
 							format_compound (l_routine.rescue_clause)
-							text_formatter_decorator.put_new_line
+							l_text_formatter_decorator.put_new_line
 						end
-						text_formatter_decorator.exdent
+						l_text_formatter_decorator.exdent
 					end
 				end
 			end
@@ -793,23 +829,25 @@ feature {NONE} -- Implementation
 			l_pos: INTEGER
 			l_actual_argument_typs: like expr_types
 			l_right_parenthesis_needed: BOOLEAN
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			if l_as.is_argument then
 				if not expr_type_visiting then
-					text_formatter_decorator.process_local_text (current_feature.arguments.item_name (l_as.argument_position))
+					l_text_formatter_decorator.process_local_text (current_feature.arguments.item_name (l_as.argument_position))
 				end
 			elseif l_as.is_local then
 				if not expr_type_visiting then
-					text_formatter_decorator.process_local_text (l_as.access_name)
+					l_text_formatter_decorator.process_local_text (l_as.access_name)
 				end
 			elseif l_as.is_object_test_local then
 				if not expr_type_visiting then
-					text_formatter_decorator.process_local_text (l_as.access_name)
+					l_text_formatter_decorator.process_local_text (l_as.access_name)
 				end
 			elseif l_as.is_tuple_access then
 				if not expr_type_visiting then
-					text_formatter_decorator.process_symbol_text (ti_dot)
-						text_formatter_decorator.process_local_text (l_as.access_name)
+					l_text_formatter_decorator.process_symbol_text (ti_dot)
+						l_text_formatter_decorator.process_local_text (l_as.access_name)
 					end
 			else
 				if not has_error_internal then
@@ -909,35 +947,35 @@ feature {NONE} -- Implementation
 						if l_feat.is_infix and then not l_as.is_qualified  then
 								-- We are in the case where a feature was renamed into an infix. It is an unqualified call so
 								-- we print (Current + b) for example.
-							text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
+							l_text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
 							l_right_parenthesis_needed := True
-							text_formatter_decorator.process_keyword_text (ti_current, Void)
-							text_formatter_decorator.put_space
-							text_formatter_decorator.process_operator_text (l_feat.extract_symbol_from_infix (l_feat.name), l_feat)
+							l_text_formatter_decorator.process_keyword_text (ti_current, Void)
+							l_text_formatter_decorator.put_space
+							l_text_formatter_decorator.process_operator_text (l_feat.extract_symbol_from_infix (l_feat.name), l_feat)
 						elseif l_feat.is_prefix then
-							text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
+							l_text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
 							l_right_parenthesis_needed := True
-							text_formatter_decorator.process_operator_text (l_feat.extract_symbol_from_prefix (l_feat.name), l_feat)
-							text_formatter_decorator.put_space
+							l_text_formatter_decorator.process_operator_text (l_feat.extract_symbol_from_prefix (l_feat.name), l_feat)
+							l_text_formatter_decorator.put_space
 							if l_feat.is_function then
-								text_formatter_decorator.process_keyword_text (ti_current, Void)
+								l_text_formatter_decorator.process_keyword_text (ti_current, Void)
 							end
 						else
 								-- This includes the case where a qualified call on a feature which was renamed into an infix (or aliased).
-							if l_as.is_qualified or text_formatter_decorator.dot_needed then
-								text_formatter_decorator.process_symbol_text (ti_dot)
+							if l_as.is_qualified or l_text_formatter_decorator.dot_needed then
+								l_text_formatter_decorator.process_symbol_text (ti_dot)
 							end
 							if not has_error_internal then
-								text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
+								l_text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
 							else
-								text_formatter_decorator.process_basic_text (l_as.access_name)
+								l_text_formatter_decorator.process_basic_text (l_as.access_name)
 							end
 						end
 					else
-						if l_as.is_qualified or text_formatter_decorator.dot_needed then
-							text_formatter_decorator.process_symbol_text (ti_dot)
+						if l_as.is_qualified or l_text_formatter_decorator.dot_needed then
+							l_text_formatter_decorator.process_symbol_text (ti_dot)
 						end
-						text_formatter_decorator.process_local_text (l_as.access_name)
+						l_text_formatter_decorator.process_local_text (l_as.access_name)
 					end
 				end
 			end
@@ -945,20 +983,20 @@ feature {NONE} -- Implementation
 				l_last_type := last_type
 				l_last_class := last_class
 				reset_last_class_and_type
-				text_formatter_decorator.process_symbol_text (ti_space)
-				text_formatter_decorator.begin
-				text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
-				text_formatter_decorator.set_separator (ti_comma)
-				text_formatter_decorator.set_space_between_tokens
+				l_text_formatter_decorator.process_symbol_text (ti_space)
+				l_text_formatter_decorator.begin
+				l_text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
+				l_text_formatter_decorator.set_separator (ti_comma)
+				l_text_formatter_decorator.set_space_between_tokens
 				l_as.parameters.process (Current)
-				text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
-				text_formatter_decorator.commit
+				l_text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
+				l_text_formatter_decorator.commit
 				last_type := l_last_type
 				last_class := l_last_class
 			end
 			if l_right_parenthesis_needed then
 				check not_expr_type_visiting: not expr_type_visiting end
-				text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
+				l_text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
 			end
 			if l_as.is_argument then
 				last_type := current_feature.arguments.i_th (l_as.argument_position)
@@ -1052,9 +1090,11 @@ feature {NONE} -- Implementation
 			l_current_feature: E_FEATURE
 			l_type: TYPE_A
 			l_actual_argument_typs: like expr_types
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			if not expr_type_visiting then
-				text_formatter_decorator.begin
+				l_text_formatter_decorator.begin
 			end
 			check
 				current_feature.rout_id_set /= Void
@@ -1080,27 +1120,27 @@ feature {NONE} -- Implementation
 			end
 			if not expr_type_visiting then
 				if real_feature /= Void then
-					text_formatter_decorator.process_keyword_text (ti_precursor_keyword, real_feature)
+					l_text_formatter_decorator.process_keyword_text (ti_precursor_keyword, real_feature)
 				else
-					text_formatter_decorator.process_keyword_text (ti_precursor_keyword, Void)
+					l_text_formatter_decorator.process_keyword_text (ti_precursor_keyword, Void)
 				end
 				if l_as.parent_base_class /= Void then
-					text_formatter_decorator.put_space
-					text_formatter_decorator.process_symbol_text (ti_l_curly)
+					l_text_formatter_decorator.put_space
+					l_text_formatter_decorator.process_symbol_text (ti_l_curly)
 					if not has_error_internal then
-						text_formatter_decorator.add_class (l_parent_class.lace_class)
+						l_text_formatter_decorator.add_class (l_parent_class.lace_class)
 					else
-						text_formatter_decorator.process_basic_text (l_as.parent_base_class.class_name.name)
+						l_text_formatter_decorator.process_basic_text (l_as.parent_base_class.class_name.name)
 					end
-					text_formatter_decorator.process_symbol_text (ti_r_curly)
+					l_text_formatter_decorator.process_symbol_text (ti_r_curly)
 				end
 				if l_as.parameter_count > 0 then
-					text_formatter_decorator.process_symbol_text (ti_space)
-					text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
-					text_formatter_decorator.set_separator (ti_comma)
-					text_formatter_decorator.set_space_between_tokens
+					l_text_formatter_decorator.process_symbol_text (ti_space)
+					l_text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
+					l_text_formatter_decorator.set_separator (ti_comma)
+					l_text_formatter_decorator.set_space_between_tokens
 					l_as.parameters.process (Current)
-					text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
+					l_text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
 				end
 			end
 			if real_feature /= Void then
@@ -1132,64 +1172,72 @@ feature {NONE} -- Implementation
 			end
 
 			if not expr_type_visiting then
-				text_formatter_decorator.commit
+				l_text_formatter_decorator.commit
 			end
 		end
 
 	process_nested_expr_as (l_as: NESTED_EXPR_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			if not expr_type_visiting then
-				text_formatter_decorator.begin
+				l_text_formatter_decorator.begin
 				if l_as.has_lparan then
-					text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
+					l_text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
 				end
 			end
 			l_as.target.process (Current)
 			if not expr_type_visiting then
 				if l_as.has_rparan then
-					text_formatter_decorator.set_without_tabs
-					text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
+					l_text_formatter_decorator.set_without_tabs
+					l_text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
 				end
-				text_formatter_decorator.need_dot
+				l_text_formatter_decorator.need_dot
 			end
 			l_as.message.process (Current)
 			if not expr_type_visiting then
-				text_formatter_decorator.commit
+				l_text_formatter_decorator.commit
 			end
 		end
 
 	process_nested_as (l_as: NESTED_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			if not expr_type_visiting then
-				text_formatter_decorator.begin
+				l_text_formatter_decorator.begin
 			end
 			l_as.target.process (Current)
 			if not expr_type_visiting then
-				text_formatter_decorator.need_dot
+				l_text_formatter_decorator.need_dot
 			end
 			l_as.message.process (Current)
 			if not expr_type_visiting then
-				text_formatter_decorator.commit
+				l_text_formatter_decorator.commit
 			end
 		end
 
 	process_creation_expr_as (l_as: CREATION_EXPR_AS)
 		local
 			l_type: TYPE_A
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			if not expr_type_visiting then
-				text_formatter_decorator.process_keyword_text (ti_create_keyword, Void)
-				text_formatter_decorator.process_symbol_text (ti_space)
-				text_formatter_decorator.process_symbol_text (ti_l_curly)
+				l_text_formatter_decorator.process_keyword_text (ti_create_keyword, Void)
+				l_text_formatter_decorator.process_symbol_text (ti_space)
+				l_text_formatter_decorator.process_symbol_text (ti_l_curly)
 			end
 			l_as.type.process (Current)
 			l_type := last_type
 			if not expr_type_visiting then
-				text_formatter_decorator.process_symbol_text (ti_r_curly)
+				l_text_formatter_decorator.process_symbol_text (ti_r_curly)
 			end
 			if l_as.call /= Void then
 				if not expr_type_visiting then
-					text_formatter_decorator.process_symbol_text (ti_dot)
+					l_text_formatter_decorator.process_symbol_text (ti_dot)
 				end
 				l_as.call.process (Current)
 			end
@@ -1197,11 +1245,14 @@ feature {NONE} -- Implementation
 		end
 
 	process_type_expr_as (l_as: TYPE_EXPR_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			if not expr_type_visiting then
-				text_formatter_decorator.process_symbol_text (ti_l_curly)
+				l_text_formatter_decorator := text_formatter_decorator
+				l_text_formatter_decorator.process_symbol_text (ti_l_curly)
 				l_as.type.process (Current)
-				text_formatter_decorator.process_symbol_text (ti_r_curly)
+				l_text_formatter_decorator.process_symbol_text (ti_r_curly)
 			else
 				l_as.type.process (Current)
 			end
@@ -1215,54 +1266,55 @@ feature {NONE} -- Implementation
 			is_inline_agent: BOOLEAN
 			inline_agent_assertion: ROUTINE_ASSERTIONS
 			l_built_in_as: BUILT_IN_AS
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
 			end
+			l_text_formatter_decorator := text_formatter_decorator
 
 			is_inline_agent := current_feature.is_inline_agent
 
 			locals_for_current_feature.wipe_out
 			object_test_locals_for_current_feature.wipe_out
-			text_formatter_decorator.put_new_line
-			if not text_formatter_decorator.is_feature_short then
+			l_text_formatter_decorator.put_new_line
+			if not l_text_formatter_decorator.is_feature_short then
 				if l_as.obsolete_message /= Void then
-					text_formatter_decorator.indent
-					text_formatter_decorator.process_keyword_text (ti_obsolete_keyword, Void)
-					text_formatter_decorator.put_space
+					l_text_formatter_decorator.indent
+					l_text_formatter_decorator.process_keyword_text (ti_obsolete_keyword, Void)
+					l_text_formatter_decorator.put_space
 					l_as.obsolete_message.process (Current)
-					text_formatter_decorator.put_new_line
-					text_formatter_decorator.exdent
+					l_text_formatter_decorator.put_new_line
+					l_text_formatter_decorator.exdent
 				end
 			end
-			text_formatter_decorator.indent
+			l_text_formatter_decorator.indent
 
 			if not is_inline_agent then
-				text_formatter_decorator.indent
-				comments := text_formatter_decorator.feature_comments
+				l_text_formatter_decorator.indent
+				comments := l_text_formatter_decorator.feature_comments
 				if comments /= Void then
-					text_formatter_decorator.put_comments (comments)
+					l_text_formatter_decorator.put_comments (comments)
 				end
-				text_formatter_decorator.put_origin_comment
-				text_formatter_decorator.exdent
+				l_text_formatter_decorator.put_origin_comment
+				l_text_formatter_decorator.exdent
 			end
-			text_formatter_decorator.set_first_assertion (True)
+			l_text_formatter_decorator.set_first_assertion (True)
 
 			if is_inline_agent then
 				create inline_agent_assertion.make_for_inline_agent (current_feature, l_as)
 				if l_as.precondition /= Void then
-					inline_agent_assertion.format_precondition (text_formatter_decorator,
-						not text_formatter_decorator.is_with_breakable)
+					inline_agent_assertion.format_precondition (l_text_formatter_decorator,
+						not l_text_formatter_decorator.is_with_breakable)
 				end
 			else
-				chained_assert := text_formatter_decorator.chained_assertion
-
+				chained_assert := l_text_formatter_decorator.chained_assertion
 				if chained_assert /= Void then
-					chained_assert.format_precondition (text_formatter_decorator)
+					chained_assert.format_precondition (l_text_formatter_decorator)
 				elseif l_as.precondition /= Void then
-					text_formatter_decorator.set_in_assertion
+					l_text_formatter_decorator.set_in_assertion
 					l_as.precondition.process (Current)
-					text_formatter_decorator.set_not_in_assertion
+					l_text_formatter_decorator.set_not_in_assertion
 				end
 			end
 			if l_as.object_test_locals /= Void then
@@ -1286,76 +1338,79 @@ feature {NONE} -- Implementation
 				end
 				expr_type_visiting := False
 			end
-			if not text_formatter_decorator.is_feature_short then
+			if not l_text_formatter_decorator.is_feature_short then
 				if l_as.locals /= Void then
-					text_formatter_decorator.process_keyword_text (ti_local_keyword, Void)
-					text_formatter_decorator.put_new_line
+					l_text_formatter_decorator.process_keyword_text (ti_local_keyword, Void)
+					l_text_formatter_decorator.put_new_line
 					if l_as.locals.count > 0 then
-						text_formatter_decorator.indent
-						text_formatter_decorator.set_separator (Void)
-						text_formatter_decorator.set_new_line_between_tokens
+						l_text_formatter_decorator.indent
+						l_text_formatter_decorator.set_separator (Void)
+						l_text_formatter_decorator.set_new_line_between_tokens
 						processing_locals := True
 						l_as.locals.process (Current)
 						processing_locals := False
-						text_formatter_decorator.put_new_line
-						text_formatter_decorator.exdent
+						l_text_formatter_decorator.put_new_line
+						l_text_formatter_decorator.exdent
 					end
 				end
 				safe_process (l_as.routine_body)
 			end
-			text_formatter_decorator.set_first_assertion (True)
+			l_text_formatter_decorator.set_first_assertion (True)
 			if is_inline_agent then
 				if l_as.postcondition /= Void then
-					inline_agent_assertion.format_postcondition (text_formatter_decorator,
-						not text_formatter_decorator.is_with_breakable)
+					inline_agent_assertion.format_postcondition (l_text_formatter_decorator,
+						not l_text_formatter_decorator.is_with_breakable)
 				end
 			else
 				if chained_assert /= Void then
-					chained_assert.format_postcondition (text_formatter_decorator)
+					chained_assert.format_postcondition (l_text_formatter_decorator)
 				elseif l_as.postcondition /= Void then
-					text_formatter_decorator.set_in_assertion
+					l_text_formatter_decorator.set_in_assertion
 					l_as.postcondition.process (Current)
-					text_formatter_decorator.set_not_in_assertion
+					l_text_formatter_decorator.set_not_in_assertion
 				end
 			end
-			if not text_formatter_decorator.is_feature_short then
+			if not l_text_formatter_decorator.is_feature_short then
 				if l_as.rescue_clause /= Void then
-					text_formatter_decorator.process_keyword_text (ti_rescue_keyword, Void)
-					text_formatter_decorator.indent
-					text_formatter_decorator.put_new_line
-					text_formatter_decorator.set_separator (Void)
-					text_formatter_decorator.set_new_line_between_tokens
+					l_text_formatter_decorator.process_keyword_text (ti_rescue_keyword, Void)
+					l_text_formatter_decorator.indent
+					l_text_formatter_decorator.put_new_line
+					l_text_formatter_decorator.set_separator (Void)
+					l_text_formatter_decorator.set_new_line_between_tokens
 					if not l_as.rescue_clause.is_empty then
 						format_compound (l_as.rescue_clause)
-						text_formatter_decorator.put_new_line
+						l_text_formatter_decorator.put_new_line
 					end
-					text_formatter_decorator.exdent
+					l_text_formatter_decorator.exdent
 				end
 				if not l_as.is_deferred then
 					put_breakable
 				end
-					 -- `end' token should not be printed when the substitution
-					 -- of a built-in is an attribute.
+					-- `end' token should not be printed when the substitution
+					-- of a built-in is an attribute.
 				if not l_as.is_built_in then
-					text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)
+					l_text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)
 				else
 					l_built_in_as ?= l_as.routine_body
 					check l_built_in_as_not_void: l_built_in_as /= Void end
 					if l_built_in_as.body /= Void implies not l_built_in_as.body.is_attribute then
-						text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)
+						l_text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)
 					end
 				end
 			end
-			text_formatter_decorator.exdent
+			l_text_formatter_decorator.exdent
 		end
 
 	process_constant_as (l_as: CONSTANT_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			if not expr_type_visiting then
-				text_formatter_decorator.put_space
-				text_formatter_decorator.set_without_tabs
-				text_formatter_decorator.process_keyword_text (ti_is_keyword, Void)
-				text_formatter_decorator.put_space
+				l_text_formatter_decorator := text_formatter_decorator
+				l_text_formatter_decorator.put_space
+				l_text_formatter_decorator.set_without_tabs
+				l_text_formatter_decorator.process_keyword_text (ti_is_keyword, Void)
+				l_text_formatter_decorator.put_space
 			end
 			l_as.value.process (Current)
 		end
@@ -1365,9 +1420,11 @@ feature {NONE} -- Implementation
 			i, l_count: INTEGER
 			failure: BOOLEAN
 			not_first: BOOLEAN
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			if not expr_type_visiting then
-				text_formatter_decorator.begin
+				l_text_formatter_decorator.begin
 			end
 			from
 				i := 1
@@ -1377,54 +1434,60 @@ feature {NONE} -- Implementation
 			loop
 				if not expr_type_visiting then
 					if not_first then
-						text_formatter_decorator.put_separator
+						l_text_formatter_decorator.put_separator
 					end
-					text_formatter_decorator.new_expression
-					text_formatter_decorator.begin
+					l_text_formatter_decorator.new_expression
+					l_text_formatter_decorator.begin
 				end
 				l_as.i_th (i).process (Current)
 				if not expr_type_visiting then
-					text_formatter_decorator.commit
+					l_text_formatter_decorator.commit
 				end
 				not_first := True
 				i := i + 1
 			end
 			if not expr_type_visiting then
-				text_formatter_decorator.commit
+				l_text_formatter_decorator.commit
 			end
 		end
 
 	process_indexing_clause_as (l_as: INDEXING_CLAUSE_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
 			end
-			text_formatter_decorator.process_filter_item (f_indexing, True)
+			l_text_formatter_decorator := text_formatter_decorator
+			l_text_formatter_decorator.process_filter_item (f_indexing, True)
 			if current_class.lace_class.is_syntax_standard then
-				text_formatter_decorator.process_keyword_text (ti_note_keyword, Void)
+				l_text_formatter_decorator.process_keyword_text (ti_note_keyword, Void)
 			else
-				text_formatter_decorator.process_keyword_text (ti_indexing_keyword, Void)
+				l_text_formatter_decorator.process_keyword_text (ti_indexing_keyword, Void)
 			end
-			text_formatter_decorator.indent
-			text_formatter_decorator.put_new_line
-			text_formatter_decorator.set_separator (Void)
-			text_formatter_decorator.set_new_line_between_tokens
+			l_text_formatter_decorator.indent
+			l_text_formatter_decorator.put_new_line
+			l_text_formatter_decorator.set_separator (Void)
+			l_text_formatter_decorator.set_new_line_between_tokens
 			process_eiffel_list (l_as)
-			text_formatter_decorator.process_filter_item (f_indexing, False)
-			text_formatter_decorator.exdent
-			text_formatter_decorator.put_new_line
-			text_formatter_decorator.put_new_line
+			l_text_formatter_decorator.process_filter_item (f_indexing, False)
+			l_text_formatter_decorator.exdent
+			l_text_formatter_decorator.put_new_line
+			l_text_formatter_decorator.put_new_line
 		end
 
 	process_operand_as (l_as: OPERAND_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			if l_as.class_type /= Void then
 				if not expr_type_visiting then
-					text_formatter_decorator.process_symbol_text (ti_l_curly)
+					l_text_formatter_decorator.process_symbol_text (ti_l_curly)
 				end
 				l_as.class_type.process (Current)
 				if not expr_type_visiting then
-					text_formatter_decorator.process_symbol_text (ti_r_curly)
+					l_text_formatter_decorator.process_symbol_text (ti_r_curly)
 				end
 			else
 				if l_as.expression /= Void then
@@ -1435,7 +1498,7 @@ feature {NONE} -- Implementation
 						l_as.target.process (Current)
 					else
 						if not expr_type_visiting then
-							text_formatter_decorator.process_symbol_text (ti_question)
+							l_text_formatter_decorator.process_symbol_text (ti_question)
 						else
 							create {OPEN_TYPE_A} last_type
 						end
@@ -1466,23 +1529,25 @@ feature {NONE} -- Implementation
 			l_id: INTEGER
 			l_feature: FEATURE_I
 			l_feat: E_FEATURE
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			if not expr_type_visiting then
-				text_formatter_decorator.process_keyword_text (ti_strip_keyword, Void)
-				text_formatter_decorator.put_space
-				text_formatter_decorator.set_without_tabs
-				text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
+				l_text_formatter_decorator := text_formatter_decorator
+				l_text_formatter_decorator.process_keyword_text (ti_strip_keyword, Void)
+				l_text_formatter_decorator.put_space
+				l_text_formatter_decorator.set_without_tabs
+				l_text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
 				from
 					l_names_heap := names_heap
 					l_as.id_list.start
 				until
 					l_as.id_list.after
 				loop
-					text_formatter_decorator.new_expression
+					l_text_formatter_decorator.new_expression
 					if first_printed then
-						text_formatter_decorator.set_without_tabs
-						text_formatter_decorator.process_symbol_text (ti_comma)
-						text_formatter_decorator.put_space
+						l_text_formatter_decorator.set_without_tabs
+						l_text_formatter_decorator.process_symbol_text (ti_comma)
+						l_text_formatter_decorator.put_space
 					end
 					l_id := l_as.id_list.item
 					l_feature := feature_from_ancestors (source_class, l_id)
@@ -1492,15 +1557,15 @@ feature {NONE} -- Implementation
 						end
 					l_feat := feature_in_class (current_class, l_feature.rout_id_set)
 					if not has_error_internal then
-						text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
+						l_text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
 					else
-						text_formatter_decorator.process_basic_text (l_feature.feature_name)
+						l_text_formatter_decorator.process_basic_text (l_feature.feature_name)
 					end
 					first_printed := True
 					l_as.id_list.forth
 				end
-				text_formatter_decorator.set_without_tabs
-				text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
+				l_text_formatter_decorator.set_without_tabs
+				l_text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
 			end
 			last_type := strip_type
 		end
@@ -1510,6 +1575,7 @@ feature {NONE} -- Implementation
 			l_feat: E_FEATURE
 			l_type: TYPE_A
 			l_old_expr_type_visiting: like expr_type_visiting
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			l_old_expr_type_visiting := expr_type_visiting
 			expr_type_visiting := True
@@ -1520,21 +1586,22 @@ feature {NONE} -- Implementation
 			if {l_info: PARENT_CONVERSION_INFO} l_as.data then
 					-- If we have some data about the above with a conversion, we need
 					-- to extract it so that we can recheck the code in the descendant.
+				l_text_formatter_decorator := text_formatter_decorator
 				if l_info.is_from_conversion then
 					l_type := l_info.creation_type.evaluated_type_in_descendant (source_class, current_class, current_feature)
 					if not expr_type_visiting then
-						text_formatter_decorator.process_keyword_text (ti_create_keyword, Void)
-						text_formatter_decorator.put_space
-						text_formatter_decorator.process_symbol_text (ti_l_curly)
-						type_output_strategy.process (l_type, text_formatter_decorator, current_class, current_feature)
-						text_formatter_decorator.process_symbol_text (ti_r_curly)
-						text_formatter_decorator.process_symbol_text (ti_dot)
+						l_text_formatter_decorator.process_keyword_text (ti_create_keyword, Void)
+						l_text_formatter_decorator.put_space
+						l_text_formatter_decorator.process_symbol_text (ti_l_curly)
+						type_output_strategy.process (l_type, l_text_formatter_decorator, current_class, current_feature)
+						l_text_formatter_decorator.process_symbol_text (ti_r_curly)
+						l_text_formatter_decorator.process_symbol_text (ti_dot)
 						l_feat := l_type.associated_class.feature_with_rout_id (l_info.routine_id)
-						text_formatter_decorator.add_feature (l_feat, l_feat.name)
-						text_formatter_decorator.process_symbol_text (ti_space)
-						text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
+						l_text_formatter_decorator.add_feature (l_feat, l_feat.name)
+						l_text_formatter_decorator.process_symbol_text (ti_space)
+						l_text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
 						l_as.expr.process (Current)
-						text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
+						l_text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
 					end
 				else
 					l_feat := last_type.associated_class.feature_with_rout_id (l_info.routine_id)
@@ -1542,8 +1609,8 @@ feature {NONE} -- Implementation
 						l_type := l_feat.type
 						if not expr_type_visiting then
 							l_as.expr.process (Current)
-							text_formatter_decorator.process_symbol_text (ti_dot)
-							text_formatter_decorator.add_feature (l_feat, l_feat.name)
+							l_text_formatter_decorator.process_symbol_text (ti_dot)
+							l_text_formatter_decorator.add_feature (l_feat, l_feat.name)
 						end
 					else
 						set_error_message ("Could not find routine of a given routine ID in an inherited conversion")
@@ -1558,16 +1625,20 @@ feature {NONE} -- Implementation
 		end
 
 	process_paran_as (l_as: PARAN_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
+			l_text_formatter_decorator := text_formatter_decorator
+
 			if not expr_type_visiting then
-				text_formatter_decorator.begin
-				text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
+				l_text_formatter_decorator.begin
+				l_text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
 			end
 			l_as.expr.process (Current)
 			if not expr_type_visiting then
-				text_formatter_decorator.set_without_tabs
-				text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
-				text_formatter_decorator.commit
+				l_text_formatter_decorator.set_without_tabs
+				l_text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
+				l_text_formatter_decorator.commit
 			end
 		end
 
@@ -1578,16 +1649,19 @@ feature {NONE} -- Implementation
 		end
 
 	process_expr_address_as (l_as: EXPR_ADDRESS_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			if not expr_type_visiting then
-				text_formatter_decorator.begin
-				text_formatter_decorator.process_symbol_text (ti_dollar)
-				text_formatter_decorator.set_without_tabs
-				text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
+				l_text_formatter_decorator := text_formatter_decorator
+				l_text_formatter_decorator.begin
+				l_text_formatter_decorator.process_symbol_text (ti_dollar)
+				l_text_formatter_decorator.set_without_tabs
+				l_text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
 				l_as.expr.process (Current)
-				text_formatter_decorator.set_without_tabs
-				text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
-				text_formatter_decorator.commit
+				l_text_formatter_decorator.set_without_tabs
+				l_text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
+				l_text_formatter_decorator.commit
 			end
 			last_type := pointer_type
 		end
@@ -1595,12 +1669,14 @@ feature {NONE} -- Implementation
 	process_address_result_as (l_as: ADDRESS_RESULT_AS)
 		local
 			l_type: TYPE_A
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			if not expr_type_visiting then
-				text_formatter_decorator.set_without_tabs
-				text_formatter_decorator.process_symbol_text (ti_dollar)
-				text_formatter_decorator.set_without_tabs
-				text_formatter_decorator.process_keyword_text (ti_result, Void)
+				l_text_formatter_decorator := text_formatter_decorator
+				l_text_formatter_decorator.set_without_tabs
+				l_text_formatter_decorator.process_symbol_text (ti_dollar)
+				l_text_formatter_decorator.set_without_tabs
+				l_text_formatter_decorator.process_keyword_text (ti_result, Void)
 			end
 			l_type ?= current_feature.type
 			create {TYPED_POINTER_A} last_type.make_typed (l_type)
@@ -1609,12 +1685,14 @@ feature {NONE} -- Implementation
 	process_address_current_as (l_as: ADDRESS_CURRENT_AS)
 		local
 			l_type: TYPE_A
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			if not expr_type_visiting then
-				text_formatter_decorator.set_without_tabs
-				text_formatter_decorator.process_symbol_text (ti_dollar)
-				text_formatter_decorator.set_without_tabs
-				text_formatter_decorator.process_keyword_text (ti_current, Void)
+				l_text_formatter_decorator := text_formatter_decorator
+				l_text_formatter_decorator.set_without_tabs
+				l_text_formatter_decorator.process_symbol_text (ti_dollar)
+				l_text_formatter_decorator.set_without_tabs
+				l_text_formatter_decorator.process_keyword_text (ti_current, Void)
 			end
 			l_type ?= current_class.actual_type
 			create {TYPED_POINTER_A} last_type.make_typed (l_type)
@@ -1623,6 +1701,7 @@ feature {NONE} -- Implementation
 	process_address_as (l_as: ADDRESS_AS)
 		local
 			l_feat: E_FEATURE
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			reset_last_class_and_type
 			if not has_error_internal then
@@ -1645,15 +1724,16 @@ feature {NONE} -- Implementation
 					end
 				end
 				if not expr_type_visiting then
-					text_formatter_decorator.begin
-					text_formatter_decorator.set_without_tabs
-					text_formatter_decorator.process_symbol_text (ti_dollar)
+					l_text_formatter_decorator := text_formatter_decorator
+					l_text_formatter_decorator.begin
+					l_text_formatter_decorator.set_without_tabs
+					l_text_formatter_decorator.process_symbol_text (ti_dollar)
 					if l_feat /= Void then
-						text_formatter_decorator.process_feature_text (l_as.feature_name.internal_name.name, l_feat, False)
+						l_text_formatter_decorator.process_feature_text (l_as.feature_name.internal_name.name, l_feat, False)
 					else
-						text_formatter_decorator.process_local_text (l_as.feature_name.internal_name.name)
+						l_text_formatter_decorator.process_local_text (l_as.feature_name.internal_name.name)
 					end
-					text_formatter_decorator.commit
+					l_text_formatter_decorator.commit
 				end
 			end
 		end
@@ -1661,14 +1741,16 @@ feature {NONE} -- Implementation
 	process_routine_creation_as (l_as: ROUTINE_CREATION_AS)
 		local
 			l_feat: E_FEATURE
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
 				-- No type set for this expression?
 			if not expr_type_visiting then
-				text_formatter_decorator.process_keyword_text (ti_agent_keyword, Void)
-				text_formatter_decorator.put_space
+				l_text_formatter_decorator := text_formatter_decorator
+				l_text_formatter_decorator.process_keyword_text (ti_agent_keyword, Void)
+				l_text_formatter_decorator.put_space
 				if l_as.target /= Void then
 					l_as.target.process (Current)
-					text_formatter_decorator.process_symbol_text (ti_dot)
+					l_text_formatter_decorator.process_symbol_text (ti_dot)
 				end
 				if l_as.class_id /= 0 and l_as.routine_ids /= Void then
 					l_feat := feature_in_class (system.class_of_id (l_as.class_id), l_as.routine_ids)
@@ -1676,21 +1758,21 @@ feature {NONE} -- Implementation
 					has_error_internal := True
 				end
 				if not has_error_internal then
-					text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
+					l_text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
 				else
-					text_formatter_decorator.process_basic_text (l_as.feature_name.name)
+					l_text_formatter_decorator.process_basic_text (l_as.feature_name.name)
 				end
 
 				if l_as.operands /= Void then
 					reset_last_class_and_type
-					text_formatter_decorator.process_symbol_text (ti_space)
-					text_formatter_decorator.begin
-					text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
-					text_formatter_decorator.set_separator (ti_comma)
-					text_formatter_decorator.set_space_between_tokens
+					l_text_formatter_decorator.process_symbol_text (ti_space)
+					l_text_formatter_decorator.begin
+					l_text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
+					l_text_formatter_decorator.set_separator (ti_comma)
+					l_text_formatter_decorator.set_space_between_tokens
 					l_as.operands.process (Current)
-					text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
-					text_formatter_decorator.commit
+					l_text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
+					l_text_formatter_decorator.commit
 				end
 				if not has_error_internal then
 					last_type := expr_type (l_as)
@@ -1711,9 +1793,11 @@ feature {NONE} -- Implementation
 			l_expr_type: TYPE_A
 			l_formal: FORMAL_A
 			l_feature_list: like feature_from_type_set
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			if not expr_type_visiting then
-				text_formatter_decorator.begin
+				l_text_formatter_decorator.begin
 			end
 			check
 				routine_id_is_zero: l_as.routine_ids.first /= 0
@@ -1750,13 +1834,13 @@ feature {NONE} -- Implementation
 							l_name := l_feat.alias_symbol
 						end
 						if in_bench_mode then
-							text_formatter_decorator.process_operator_text (l_name, l_feat)
+							l_text_formatter_decorator.process_operator_text (l_name, l_feat)
 						elseif (l_name @ 1).is_alpha then
-							text_formatter_decorator.process_keyword_text (l_name, Void)
+							l_text_formatter_decorator.process_keyword_text (l_name, Void)
 						else
-							text_formatter_decorator.process_symbol_text (l_name)
+							l_text_formatter_decorator.process_symbol_text (l_name)
 						end
-						text_formatter_decorator.put_space
+						l_text_formatter_decorator.put_space
 					end
 					l_as.expr.process (Current)
 				elseif l_feat.is_infix then
@@ -1766,19 +1850,19 @@ feature {NONE} -- Implementation
 				else
 					l_as.expr.process (Current)
 					if not expr_type_visiting then
-						text_formatter_decorator.process_symbol_text (ti_dot)
-						text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
+						l_text_formatter_decorator.process_symbol_text (ti_dot)
+						l_text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
 					end
 				end
 			else
 				if not expr_type_visiting then
-					text_formatter_decorator.process_basic_text (l_as.operator_name)
-					text_formatter_decorator.put_space
+					l_text_formatter_decorator.process_basic_text (l_as.operator_name)
+					l_text_formatter_decorator.put_space
 				end
 				l_as.expr.process (Current)
 			end
 			if not expr_type_visiting then
-				text_formatter_decorator.commit
+				l_text_formatter_decorator.commit
 			end
 			if not has_error_internal then
 				check l_feat_is_not_procedure: not l_feat.is_procedure end
@@ -1809,15 +1893,18 @@ feature {NONE} -- Implementation
 		end
 
 	process_un_old_as (l_as: UN_OLD_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			if not expr_type_visiting then
-				text_formatter_decorator.begin
-				text_formatter_decorator.process_keyword_text (ti_old_keyword, Void)
-				text_formatter_decorator.put_space
+				l_text_formatter_decorator.begin
+				l_text_formatter_decorator.process_keyword_text (ti_old_keyword, Void)
+				l_text_formatter_decorator.put_space
 			end
 			l_as.expr.process (Current)
 			if not expr_type_visiting then
-				text_formatter_decorator.commit
+				l_text_formatter_decorator.commit
 			end
 		end
 
@@ -1839,9 +1926,11 @@ feature {NONE} -- Implementation
 			l_left_class: CLASS_C
 			l_right_type: TYPE_A
 			l_feature_list: like feature_from_type_set
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			if not expr_type_visiting then
-				text_formatter_decorator.begin
+				l_text_formatter_decorator.begin
 			end
 			reset_last_class_and_type
 			l_as.left.process (Current)
@@ -1915,30 +2004,30 @@ feature {NONE} -- Implementation
 						else
 							l_name := l_feat.alias_symbol
 						end
-						text_formatter_decorator.put_space
+						l_text_formatter_decorator.put_space
 						if in_bench_mode then
-							text_formatter_decorator.process_operator_text (l_name, l_feat)
+							l_text_formatter_decorator.process_operator_text (l_name, l_feat)
 						elseif (l_name @ 1).is_alpha then
-							text_formatter_decorator.process_keyword_text (l_name, Void)
+							l_text_formatter_decorator.process_keyword_text (l_name, Void)
 						else
-							text_formatter_decorator.process_symbol_text (l_name)
+							l_text_formatter_decorator.process_symbol_text (l_name)
 						end
-						text_formatter_decorator.put_space
+						l_text_formatter_decorator.put_space
 						check l_feat_is_not_procedure: not l_feat.is_procedure end
 						l_as.right.process (Current)
 					else
 						l_name := l_feat.name
-						text_formatter_decorator.process_symbol_text (ti_dot)
-						text_formatter_decorator.process_feature_text (l_name, l_feat, False)
-						text_formatter_decorator.put_space
-						text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
+						l_text_formatter_decorator.process_symbol_text (ti_dot)
+						l_text_formatter_decorator.process_feature_text (l_name, l_feat, False)
+						l_text_formatter_decorator.put_space
+						l_text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
 						l_as.right.process (Current)
-						text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
+						l_text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
 					end
 				else
-					text_formatter_decorator.put_space
-					text_formatter_decorator.process_basic_text (l_as.op_name.name)
-					text_formatter_decorator.put_space
+					l_text_formatter_decorator.put_space
+					l_text_formatter_decorator.process_basic_text (l_as.op_name.name)
+					l_text_formatter_decorator.put_space
 					l_as.right.process (Current)
 				end
 			end
@@ -1956,7 +2045,7 @@ feature {NONE} -- Implementation
 				last_type := Void
 			end
 			if not expr_type_visiting then
-				text_formatter_decorator.commit
+				l_text_formatter_decorator.commit
 			end
 		end
 
@@ -2051,12 +2140,15 @@ feature {NONE} -- Implementation
 		end
 
 	process_bin_eq_as (l_as: BIN_EQ_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			l_as.left.process (Current)
 			if not expr_type_visiting then
-				text_formatter_decorator.put_space
-				text_formatter_decorator.process_symbol_text (l_as.op_name.name)
-				text_formatter_decorator.put_space
+				l_text_formatter_decorator := text_formatter_decorator
+				l_text_formatter_decorator.put_space
+				l_text_formatter_decorator.process_symbol_text (l_as.op_name.name)
+				l_text_formatter_decorator.put_space
 			end
 			l_as.right.process (Current)
 			last_type := boolean_type
@@ -2068,12 +2160,15 @@ feature {NONE} -- Implementation
 		end
 
 	process_bin_tilde_as (l_as: BIN_TILDE_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			l_as.left.process (Current)
 			if not expr_type_visiting then
-				text_formatter_decorator.put_space
-				text_formatter_decorator.process_symbol_text (l_as.op_name.name)
-				text_formatter_decorator.put_space
+				l_text_formatter_decorator := text_formatter_decorator
+				l_text_formatter_decorator.put_space
+				l_text_formatter_decorator.process_symbol_text (l_as.op_name.name)
+				l_text_formatter_decorator.put_space
 			end
 			l_as.right.process (Current)
 			last_type := boolean_type
@@ -2093,9 +2188,11 @@ feature {NONE} -- Implementation
 			l_last_type_set: TYPE_SET_A
 			l_last_class: CLASS_C
 			l_result: LIST[TUPLE[feature_item: E_FEATURE; type: RENAMED_TYPE_A [TYPE_A]]]
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			if not expr_type_visiting then
-				text_formatter_decorator.begin
+				l_text_formatter_decorator.begin
 			end
 			l_as.target.process (Current)
 			check
@@ -2122,27 +2219,27 @@ feature {NONE} -- Implementation
 				end
 			end
 			if not expr_type_visiting then
-				text_formatter_decorator.put_space
+				l_text_formatter_decorator.put_space
 				if not has_error_internal then
-					text_formatter_decorator.process_operator_text (ti_l_bracket, l_feat)
+					l_text_formatter_decorator.process_operator_text (ti_l_bracket, l_feat)
 				else
-					text_formatter_decorator.process_basic_text (ti_l_bracket)
+					l_text_formatter_decorator.process_basic_text (ti_l_bracket)
 				end
 				if l_as.operands /= Void then
 					l_last_type := last_type
 					l_last_class := last_class
-					text_formatter_decorator.begin
-					text_formatter_decorator.set_separator (ti_comma)
-					text_formatter_decorator.set_space_between_tokens
+					l_text_formatter_decorator.begin
+					l_text_formatter_decorator.set_separator (ti_comma)
+					l_text_formatter_decorator.set_space_between_tokens
 					l_as.operands.process (Current)
-					text_formatter_decorator.commit
+					l_text_formatter_decorator.commit
 					last_type := l_last_type
 					last_class := l_last_class
 				end
 				if not has_error_internal then
-					text_formatter_decorator.process_operator_text (ti_r_bracket, l_feat)
+					l_text_formatter_decorator.process_operator_text (ti_r_bracket, l_feat)
 				else
-					text_formatter_decorator.process_basic_text (ti_r_bracket)
+					l_text_formatter_decorator.process_basic_text (ti_r_bracket)
 				end
 			end
 			if not has_error_internal then
@@ -2158,33 +2255,36 @@ feature {NONE} -- Implementation
 				end
 			end
 			if not expr_type_visiting then
-				text_formatter_decorator.commit
+				l_text_formatter_decorator.commit
 			end
 		end
 
 	process_object_test_as (l_as: OBJECT_TEST_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 				-- Regardless of the syntax used for object test, we always use the most recent
 				-- one for the formatting.
 			if not expr_type_visiting then
-				text_formatter_decorator.process_keyword_text (ti_attached_keyword, Void)
-				text_formatter_decorator.put_space
+				l_text_formatter_decorator.process_keyword_text (ti_attached_keyword, Void)
+				l_text_formatter_decorator.put_space
 			end
 			if l_as.type /= Void then
 				if not expr_type_visiting then
-					text_formatter_decorator.process_symbol_text (ti_l_curly)
+					l_text_formatter_decorator.process_symbol_text (ti_l_curly)
 					l_as.type.process (Current)
-					text_formatter_decorator.process_symbol_text (ti_r_curly)
-					text_formatter_decorator.put_space
+					l_text_formatter_decorator.process_symbol_text (ti_r_curly)
+					l_text_formatter_decorator.put_space
 				else
 					l_as.type.process (Current)
 				end
 			end
 			l_as.expression.process (Current)
 			if not expr_type_visiting and then l_as.name /= Void then
-				text_formatter_decorator.put_space
-				text_formatter_decorator.process_keyword_text (ti_as_keyword, Void)
-				text_formatter_decorator.put_space
+				l_text_formatter_decorator.put_space
+				l_text_formatter_decorator.process_keyword_text (ti_as_keyword, Void)
+				l_text_formatter_decorator.put_space
 				l_as.name.process (Current)
 			end
 			last_type := boolean_type
@@ -2203,6 +2303,7 @@ feature {NONE} -- Implementation
 			comments: EIFFEL_COMMENTS
 			cont: CONTENT_AS
 			is_const_or_att: BOOLEAN
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
@@ -2210,36 +2311,37 @@ feature {NONE} -- Implementation
 			check
 				current_class /= Void
 			end
-			text_formatter_decorator.begin
-			text_formatter_decorator.set_separator (ti_comma)
-			text_formatter_decorator.set_space_between_tokens
-			text_formatter_decorator.process_feature_dec_item (l_as.feature_names.first.internal_name.name, True)
-			text_formatter_decorator.set_separator (ti_comma)
-			text_formatter_decorator.set_space_between_tokens
+			l_text_formatter_decorator := text_formatter_decorator
+			l_text_formatter_decorator.begin
+			l_text_formatter_decorator.set_separator (ti_comma)
+			l_text_formatter_decorator.set_space_between_tokens
+			l_text_formatter_decorator.process_feature_dec_item (l_as.feature_names.first.internal_name.name, True)
+			l_text_formatter_decorator.set_separator (ti_comma)
+			l_text_formatter_decorator.set_space_between_tokens
 			l_as.feature_names.process (Current)
 			l_as.body.process (Current)
-			text_formatter_decorator.set_without_tabs
-			text_formatter_decorator.process_feature_dec_item (l_as.feature_names.first.internal_name.name, False)
-			if not text_formatter_decorator.is_feature_short then
-				text_formatter_decorator.put_new_line
+			l_text_formatter_decorator.set_without_tabs
+			l_text_formatter_decorator.process_feature_dec_item (l_as.feature_names.first.internal_name.name, False)
+			if not l_text_formatter_decorator.is_feature_short then
+				l_text_formatter_decorator.put_new_line
 			end
 			cont := l_as.body.content
 			is_const_or_att := cont = Void or else cont.is_constant
 			if is_const_or_att then
-				text_formatter_decorator.indent
-				text_formatter_decorator.indent
-				if text_formatter_decorator.is_feature_short then
-					text_formatter_decorator.put_new_line
+				l_text_formatter_decorator.indent
+				l_text_formatter_decorator.indent
+				if l_text_formatter_decorator.is_feature_short then
+					l_text_formatter_decorator.put_new_line
 				end
-				comments := text_formatter_decorator.feature_comments
+				comments := l_text_formatter_decorator.feature_comments
 				if comments /= Void then
-					text_formatter_decorator.put_comments (comments)
+					l_text_formatter_decorator.put_comments (comments)
 				end
-				text_formatter_decorator.put_origin_comment
-				text_formatter_decorator.exdent
-				text_formatter_decorator.exdent
+				l_text_formatter_decorator.put_origin_comment
+				l_text_formatter_decorator.exdent
+				l_text_formatter_decorator.exdent
 			end
-			text_formatter_decorator.commit
+			l_text_formatter_decorator.commit
 		end
 
 	process_infix_prefix_as (l_as: INFIX_PREFIX_AS)
@@ -2247,7 +2349,9 @@ feature {NONE} -- Implementation
 			l_feat: E_FEATURE
 			l_is_infix, l_is_prefix: BOOLEAN
 			l_new_name: BOOLEAN
+			l_text_formatter_decorator: like text_formatter_decorator		
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			check
 				not_expr_type_visiting: not expr_type_visiting
 			end
@@ -2283,8 +2387,8 @@ feature {NONE} -- Implementation
 					l_feat_not_void: l_feat /= Void
 				end
 				if not processing_none_feature_part and then l_feat.is_frozen then
-					text_formatter_decorator.process_keyword_text (ti_frozen_keyword, Void)
-					text_formatter_decorator.put_space
+					l_text_formatter_decorator.process_keyword_text (ti_frozen_keyword, Void)
+					l_text_formatter_decorator.put_space
 				end
 				if processing_formal_dec and then l_new_name then
 						-- Print visual name of the new renamed feature in formal declaration.
@@ -2295,66 +2399,66 @@ feature {NONE} -- Implementation
 					l_is_prefix := l_feat.is_prefix
 				end
 				if l_is_infix then
-					text_formatter_decorator.process_keyword_text (ti_infix_keyword, Void)
-					text_formatter_decorator.put_space
-					text_formatter_decorator.set_without_tabs
-					text_formatter_decorator.process_symbol_text (ti_double_quote)
+					l_text_formatter_decorator.process_keyword_text (ti_infix_keyword, Void)
+					l_text_formatter_decorator.put_space
+					l_text_formatter_decorator.set_without_tabs
+					l_text_formatter_decorator.process_symbol_text (ti_double_quote)
 					if processing_formal_dec then
-						text_formatter_decorator.process_operator_text (l_as.visual_name, l_feat)
+						l_text_formatter_decorator.process_operator_text (l_as.visual_name, l_feat)
 					else
-						text_formatter_decorator.process_operator_text (l_feat.extract_symbol_from_infix (l_feat.name), l_feat)
+						l_text_formatter_decorator.process_operator_text (l_feat.extract_symbol_from_infix (l_feat.name), l_feat)
 					end
-					text_formatter_decorator.process_symbol_text (ti_double_quote)
+					l_text_formatter_decorator.process_symbol_text (ti_double_quote)
 				elseif l_is_prefix then
-					text_formatter_decorator.process_keyword_text (ti_prefix_keyword, Void)
-					text_formatter_decorator.put_space
-					text_formatter_decorator.set_without_tabs
-					text_formatter_decorator.process_symbol_text (ti_double_quote)
+					l_text_formatter_decorator.process_keyword_text (ti_prefix_keyword, Void)
+					l_text_formatter_decorator.put_space
+					l_text_formatter_decorator.set_without_tabs
+					l_text_formatter_decorator.process_symbol_text (ti_double_quote)
 					if processing_formal_dec then
-						text_formatter_decorator.process_operator_text (l_as.visual_name, l_feat)
+						l_text_formatter_decorator.process_operator_text (l_as.visual_name, l_feat)
 					else
-						text_formatter_decorator.process_operator_text (l_feat.extract_symbol_from_prefix (l_feat.name), l_feat)
+						l_text_formatter_decorator.process_operator_text (l_feat.extract_symbol_from_prefix (l_feat.name), l_feat)
 					end
-					text_formatter_decorator.process_symbol_text (ti_double_quote)
+					l_text_formatter_decorator.process_symbol_text (ti_double_quote)
 				else
 					if processing_formal_dec then
-						text_formatter_decorator.process_feature_text (l_as.visual_name, l_feat, False)
+						l_text_formatter_decorator.process_feature_text (l_as.visual_name, l_feat, False)
 					else
-						text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
+						l_text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
 					end
 				end
 			else
 				if not processing_none_feature_part and then l_as.is_frozen then
-					text_formatter_decorator.process_keyword_text (ti_frozen_keyword, Void)
-					text_formatter_decorator.put_space
+					l_text_formatter_decorator.process_keyword_text (ti_frozen_keyword, Void)
+					l_text_formatter_decorator.put_space
 				end
 				if l_as.is_infix then
-					text_formatter_decorator.process_keyword_text (ti_infix_keyword, Void)
-					text_formatter_decorator.put_space
-					text_formatter_decorator.set_without_tabs
-					text_formatter_decorator.process_symbol_text (ti_double_quote)
+					l_text_formatter_decorator.process_keyword_text (ti_infix_keyword, Void)
+					l_text_formatter_decorator.put_space
+					l_text_formatter_decorator.set_without_tabs
+					l_text_formatter_decorator.process_symbol_text (ti_double_quote)
 					if not has_error_internal then
-						text_formatter_decorator.process_operator_text (l_as.visual_name, l_feat)
+						l_text_formatter_decorator.process_operator_text (l_as.visual_name, l_feat)
 					else
-						text_formatter_decorator.process_basic_text (l_as.visual_name)
+						l_text_formatter_decorator.process_basic_text (l_as.visual_name)
 					end
-					text_formatter_decorator.process_symbol_text (ti_double_quote)
+					l_text_formatter_decorator.process_symbol_text (ti_double_quote)
 				elseif l_as.is_prefix then
-					text_formatter_decorator.process_keyword_text (ti_prefix_keyword, Void)
-					text_formatter_decorator.put_space
-					text_formatter_decorator.set_without_tabs
-					text_formatter_decorator.process_symbol_text (ti_double_quote)
+					l_text_formatter_decorator.process_keyword_text (ti_prefix_keyword, Void)
+					l_text_formatter_decorator.put_space
+					l_text_formatter_decorator.set_without_tabs
+					l_text_formatter_decorator.process_symbol_text (ti_double_quote)
 					if not has_error_internal then
-						text_formatter_decorator.process_operator_text (l_as.visual_name, l_feat)
+						l_text_formatter_decorator.process_operator_text (l_as.visual_name, l_feat)
 					else
-						text_formatter_decorator.process_basic_text (l_as.visual_name)
+						l_text_formatter_decorator.process_basic_text (l_as.visual_name)
 					end
-					text_formatter_decorator.process_symbol_text (ti_double_quote)
+					l_text_formatter_decorator.process_symbol_text (ti_double_quote)
 				else
 					if not has_error_internal then
-						text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
+						l_text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
 					else
-						text_formatter_decorator.process_basic_text (l_as.visual_name)
+						l_text_formatter_decorator.process_basic_text (l_as.visual_name)
 					end
 				end
 			end
@@ -2365,7 +2469,9 @@ feature {NONE} -- Implementation
 			l_feat: E_FEATURE
 			l_is_infix, l_is_prefix: BOOLEAN
 			l_new_name: BOOLEAN
+			l_text_formatter_decorator: like text_formatter_decorator		
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			check
 				not_expr_type_visiting: not expr_type_visiting
 			end
@@ -2404,8 +2510,8 @@ feature {NONE} -- Implementation
 						l_feat_not_void: l_feat /= Void
 					end
 					if not processing_none_feature_part and then l_feat.is_frozen then
-						text_formatter_decorator.process_keyword_text (ti_frozen_keyword, Void)
-						text_formatter_decorator.put_space
+						l_text_formatter_decorator.process_keyword_text (ti_frozen_keyword, Void)
+						l_text_formatter_decorator.put_space
 					end
 					if processing_formal_dec and then l_new_name then
 							-- Print visual name of the new renamed feature in formal declaration.
@@ -2416,78 +2522,80 @@ feature {NONE} -- Implementation
 						l_is_prefix := l_feat.is_prefix
 					end
 					if l_is_infix then
-						text_formatter_decorator.process_keyword_text (ti_infix_keyword, Void)
-						text_formatter_decorator.put_space
-						text_formatter_decorator.set_without_tabs
-						text_formatter_decorator.process_symbol_text (ti_double_quote)
+						l_text_formatter_decorator.process_keyword_text (ti_infix_keyword, Void)
+						l_text_formatter_decorator.put_space
+						l_text_formatter_decorator.set_without_tabs
+						l_text_formatter_decorator.process_symbol_text (ti_double_quote)
 						if processing_formal_dec then
-							text_formatter_decorator.process_operator_text (l_as.visual_name, l_feat)
+							l_text_formatter_decorator.process_operator_text (l_as.visual_name, l_feat)
 						else
-							text_formatter_decorator.process_operator_text (l_feat.extract_symbol_from_infix (l_feat.name), l_feat)
+							l_text_formatter_decorator.process_operator_text (l_feat.extract_symbol_from_infix (l_feat.name), l_feat)
 						end
-						text_formatter_decorator.process_symbol_text (ti_double_quote)
+						l_text_formatter_decorator.process_symbol_text (ti_double_quote)
 					elseif l_is_prefix then
-						text_formatter_decorator.process_keyword_text (ti_prefix_keyword, Void)
-						text_formatter_decorator.put_space
-						text_formatter_decorator.set_without_tabs
-						text_formatter_decorator.process_symbol_text (ti_double_quote)
+						l_text_formatter_decorator.process_keyword_text (ti_prefix_keyword, Void)
+						l_text_formatter_decorator.put_space
+						l_text_formatter_decorator.set_without_tabs
+						l_text_formatter_decorator.process_symbol_text (ti_double_quote)
 						if processing_formal_dec then
-							text_formatter_decorator.process_operator_text (l_as.visual_name, l_feat)
+							l_text_formatter_decorator.process_operator_text (l_as.visual_name, l_feat)
 						else
-							text_formatter_decorator.process_operator_text (l_feat.extract_symbol_from_prefix (l_feat.name), l_feat)
+							l_text_formatter_decorator.process_operator_text (l_feat.extract_symbol_from_prefix (l_feat.name), l_feat)
 						end
-						text_formatter_decorator.process_symbol_text (ti_double_quote)
+						l_text_formatter_decorator.process_symbol_text (ti_double_quote)
 					else
 						if processing_formal_dec then
-							text_formatter_decorator.process_feature_text (l_as.visual_name, l_feat, False)
+							l_text_formatter_decorator.process_feature_text (l_as.visual_name, l_feat, False)
 						else
-							text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
+							l_text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
 						end
 					end
 				else
 					if not processing_none_feature_part and then l_as.is_frozen then
-						text_formatter_decorator.process_keyword_text (ti_frozen_keyword, Void)
-						text_formatter_decorator.put_space
+						l_text_formatter_decorator.process_keyword_text (ti_frozen_keyword, Void)
+						l_text_formatter_decorator.put_space
 					end
 					if l_as.is_infix then
-						text_formatter_decorator.process_keyword_text (ti_infix_keyword, Void)
-						text_formatter_decorator.put_space
-						text_formatter_decorator.set_without_tabs
-						text_formatter_decorator.process_symbol_text (ti_double_quote)
+						l_text_formatter_decorator.process_keyword_text (ti_infix_keyword, Void)
+						l_text_formatter_decorator.put_space
+						l_text_formatter_decorator.set_without_tabs
+						l_text_formatter_decorator.process_symbol_text (ti_double_quote)
 						if not has_error_internal then
-							text_formatter_decorator.process_operator_text (l_as.visual_name, l_feat)
+							l_text_formatter_decorator.process_operator_text (l_as.visual_name, l_feat)
 						else
-							text_formatter_decorator.process_basic_text (l_as.visual_name)
+							l_text_formatter_decorator.process_basic_text (l_as.visual_name)
 						end
-						text_formatter_decorator.process_symbol_text (ti_double_quote)
+						l_text_formatter_decorator.process_symbol_text (ti_double_quote)
 					elseif l_as.is_prefix then
-						text_formatter_decorator.process_keyword_text (ti_prefix_keyword, Void)
-						text_formatter_decorator.put_space
-						text_formatter_decorator.set_without_tabs
-						text_formatter_decorator.process_symbol_text (ti_double_quote)
+						l_text_formatter_decorator.process_keyword_text (ti_prefix_keyword, Void)
+						l_text_formatter_decorator.put_space
+						l_text_formatter_decorator.set_without_tabs
+						l_text_formatter_decorator.process_symbol_text (ti_double_quote)
 						if not has_error_internal then
-							text_formatter_decorator.process_operator_text (l_as.visual_name, l_feat)
+							l_text_formatter_decorator.process_operator_text (l_as.visual_name, l_feat)
 						else
-							text_formatter_decorator.process_basic_text (l_as.visual_name)
+							l_text_formatter_decorator.process_basic_text (l_as.visual_name)
 						end
-						text_formatter_decorator.process_symbol_text (ti_double_quote)
+						l_text_formatter_decorator.process_symbol_text (ti_double_quote)
 					else
 						if not has_error_internal then
-							text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
+							l_text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
 						else
-							text_formatter_decorator.process_basic_text (l_as.visual_name)
+							l_text_formatter_decorator.process_basic_text (l_as.visual_name)
 						end
 					end
 				end
 			else
-				text_formatter_decorator.process_basic_text (l_as.visual_name)
+				l_text_formatter_decorator.process_basic_text (l_as.visual_name)
 			end
 		end
 
 	process_feature_name_alias_as (l_as: FEATURE_NAME_ALIAS_AS)
 		local
 			l_feat: E_FEATURE
+			l_text_formatter_decorator: like text_formatter_decorator		
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			check
 				not_expr_type_visiting: not expr_type_visiting
 			end
@@ -2517,35 +2625,38 @@ feature {NONE} -- Implementation
 				end
 			end
 			if l_as.is_frozen then
-				text_formatter_decorator.process_keyword_text (ti_frozen_keyword, Void)
-				text_formatter_decorator.put_space
+				l_text_formatter_decorator.process_keyword_text (ti_frozen_keyword, Void)
+				l_text_formatter_decorator.put_space
 			end
 			if not has_error_internal then
-				text_formatter_decorator.process_feature_text (l_as.visual_name, l_feat, False)
+				l_text_formatter_decorator.process_feature_text (l_as.visual_name, l_feat, False)
 			else
-				text_formatter_decorator.process_basic_text (l_as.visual_name)
+				l_text_formatter_decorator.process_basic_text (l_as.visual_name)
 			end
-			text_formatter_decorator.put_space
-			text_formatter_decorator.process_keyword_text (ti_alias_keyword, Void)
-			text_formatter_decorator.put_space
-			text_formatter_decorator.process_symbol_text (ti_double_quote)
+			l_text_formatter_decorator.put_space
+			l_text_formatter_decorator.process_keyword_text (ti_alias_keyword, Void)
+			l_text_formatter_decorator.put_space
+			l_text_formatter_decorator.process_symbol_text (ti_double_quote)
 			if not has_error_internal then
-				text_formatter_decorator.process_operator_text (l_as.alias_name.value, l_feat)
+				l_text_formatter_decorator.process_operator_text (l_as.alias_name.value, l_feat)
 			else
-				text_formatter_decorator.process_basic_text (l_as.alias_name.value)
+				l_text_formatter_decorator.process_basic_text (l_as.alias_name.value)
 			end
-			text_formatter_decorator.process_symbol_text (ti_double_quote)
+			l_text_formatter_decorator.process_symbol_text (ti_double_quote)
 			if l_as.has_convert_mark then
-				text_formatter_decorator.put_space
-				text_formatter_decorator.process_keyword_text (ti_convert_keyword, Void)
+				l_text_formatter_decorator.put_space
+				l_text_formatter_decorator.process_keyword_text (ti_convert_keyword, Void)
 			end
 		end
 
 	process_feature_list_as (l_as: FEATURE_LIST_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			if not expr_type_visiting then
-				text_formatter_decorator.set_separator (ti_comma)
-				text_formatter_decorator.set_space_between_tokens
+				l_text_formatter_decorator := text_formatter_decorator
+				l_text_formatter_decorator.set_separator (ti_comma)
+				l_text_formatter_decorator.set_space_between_tokens
 			end
 			l_as.features.process (Current)
 		end
@@ -2559,95 +2670,110 @@ feature {NONE} -- Implementation
 		end
 
 	process_assign_as (l_as: ASSIGN_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator		
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			check
 				not_expr_type_visiting: not expr_type_visiting
 			end
 			reset_last_class_and_type
 			if not expr_type_visiting then
 				put_breakable
-				text_formatter_decorator.new_expression
+				l_text_formatter_decorator.new_expression
 			end
 			l_as.target.process (Current)
 			if not expr_type_visiting then
-				text_formatter_decorator.put_space
-				text_formatter_decorator.set_without_tabs
-				text_formatter_decorator.process_symbol_text (ti_assign)
-				text_formatter_decorator.put_space
-				text_formatter_decorator.new_expression
+				l_text_formatter_decorator.put_space
+				l_text_formatter_decorator.set_without_tabs
+				l_text_formatter_decorator.process_symbol_text (ti_assign)
+				l_text_formatter_decorator.put_space
+				l_text_formatter_decorator.new_expression
 			end
 			reset_last_class_and_type
 			l_as.source.process (Current)
 		end
 
 	process_assigner_call_as (l_as: ASSIGNER_CALL_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator		
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			if not expr_type_visiting then
 				reset_last_class_and_type
 				put_breakable
-				text_formatter_decorator.new_expression
+				l_text_formatter_decorator.new_expression
 			end
 			l_as.target.process (Current)
 			if not expr_type_visiting then
-				text_formatter_decorator.put_space
-				text_formatter_decorator.set_without_tabs
-				text_formatter_decorator.process_symbol_text (ti_assign)
-				text_formatter_decorator.put_space
-				text_formatter_decorator.new_expression
+				l_text_formatter_decorator.put_space
+				l_text_formatter_decorator.set_without_tabs
+				l_text_formatter_decorator.process_symbol_text (ti_assign)
+				l_text_formatter_decorator.put_space
+				l_text_formatter_decorator.new_expression
 			end
 			l_as.source.process (Current)
 		end
 
 	process_reverse_as (l_as: REVERSE_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator		
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			if not expr_type_visiting then
 				put_breakable
-				text_formatter_decorator.new_expression
+				l_text_formatter_decorator.new_expression
 			end
 			l_as.target.process (Current)
 			if not expr_type_visiting then
-				text_formatter_decorator.put_space
-				text_formatter_decorator.set_without_tabs
-				text_formatter_decorator.process_symbol_text (ti_reverse_assign)
-				text_formatter_decorator.put_space
-				text_formatter_decorator.new_expression
+				l_text_formatter_decorator.put_space
+				l_text_formatter_decorator.set_without_tabs
+				l_text_formatter_decorator.process_symbol_text (ti_reverse_assign)
+				l_text_formatter_decorator.put_space
+				l_text_formatter_decorator.new_expression
 			end
 			l_as.source.process (Current)
 		end
 
 	process_check_as (l_as: CHECK_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator		
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			check
 				not_expr_type_visiting: not expr_type_visiting
 			end
-			text_formatter_decorator.process_keyword_text (ti_check_keyword, Void)
+			l_text_formatter_decorator.process_keyword_text (ti_check_keyword, Void)
 			if l_as.check_list /= Void then
-				text_formatter_decorator.indent
-				text_formatter_decorator.put_new_line
-				text_formatter_decorator.set_new_line_between_tokens
+				l_text_formatter_decorator.indent
+				l_text_formatter_decorator.put_new_line
+				l_text_formatter_decorator.set_new_line_between_tokens
 				l_as.check_list.process (Current)
-				text_formatter_decorator.exdent
+				l_text_formatter_decorator.exdent
 			end
-			text_formatter_decorator.put_new_line
-			text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)
+			l_text_formatter_decorator.put_new_line
+			l_text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)
 		end
 
 	process_creation_as (l_as: CREATION_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator		
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			if not expr_type_visiting then
 				put_breakable
-				text_formatter_decorator.process_keyword_text (ti_create_keyword, Void)
-				text_formatter_decorator.put_space
+				l_text_formatter_decorator.process_keyword_text (ti_create_keyword, Void)
+				l_text_formatter_decorator.put_space
 			end
 			if l_as.type /= Void then
 				if not expr_type_visiting then
-					text_formatter_decorator.process_symbol_text (ti_l_curly)
+					l_text_formatter_decorator.process_symbol_text (ti_l_curly)
 				end
 				l_as.type.process (Current)
 				if not expr_type_visiting then
-					text_formatter_decorator.set_without_tabs
-					text_formatter_decorator.process_symbol_text (ti_r_curly)
-					text_formatter_decorator.put_space
+					l_text_formatter_decorator.set_without_tabs
+					l_text_formatter_decorator.process_symbol_text (ti_r_curly)
+					l_text_formatter_decorator.put_space
 				end
 			end
 			processing_creation_target := True
@@ -2655,7 +2781,7 @@ feature {NONE} -- Implementation
 			processing_creation_target := False
 			if l_as.call /= Void then
 				if not expr_type_visiting then
-					text_formatter_decorator.need_dot
+					l_text_formatter_decorator.need_dot
 				end
 				l_as.call.process (Current)
 			end
@@ -2663,95 +2789,104 @@ feature {NONE} -- Implementation
 		end
 
 	process_debug_as (l_as: DEBUG_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator		
 		do
-			text_formatter_decorator.process_keyword_text (ti_debug_keyword, Void)
-			text_formatter_decorator.put_space
+			l_text_formatter_decorator := text_formatter_decorator
+			l_text_formatter_decorator.process_keyword_text (ti_debug_keyword, Void)
+			l_text_formatter_decorator.put_space
 			if l_as.keys /= Void and then not l_as.keys.is_empty then
-				text_formatter_decorator.set_without_tabs
-				text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
-				text_formatter_decorator.set_separator (ti_comma)
-				text_formatter_decorator.set_no_new_line_between_tokens
+				l_text_formatter_decorator.set_without_tabs
+				l_text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
+				l_text_formatter_decorator.set_separator (ti_comma)
+				l_text_formatter_decorator.set_no_new_line_between_tokens
 				l_as.keys.process (Current)
-				text_formatter_decorator.set_without_tabs
-				text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
+				l_text_formatter_decorator.set_without_tabs
+				l_text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
 			end
 			if l_as.compound /= Void then
-				text_formatter_decorator.indent
-				text_formatter_decorator.put_new_line
-				text_formatter_decorator.set_separator (Void)
-				text_formatter_decorator.set_new_line_between_tokens
+				l_text_formatter_decorator.indent
+				l_text_formatter_decorator.put_new_line
+				l_text_formatter_decorator.set_separator (Void)
+				l_text_formatter_decorator.set_new_line_between_tokens
 				format_compound (l_as.compound)
-				text_formatter_decorator.exdent
+				l_text_formatter_decorator.exdent
 			end
-			text_formatter_decorator.put_new_line
-			text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)
+			l_text_formatter_decorator.put_new_line
+			l_text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)
 		end
 
 	process_if_as (l_as: IF_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator		
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			put_breakable
-			text_formatter_decorator.process_keyword_text (ti_if_keyword, Void)
-			text_formatter_decorator.put_space
-			text_formatter_decorator.new_expression
+			l_text_formatter_decorator.process_keyword_text (ti_if_keyword, Void)
+			l_text_formatter_decorator.put_space
+			l_text_formatter_decorator.new_expression
 			l_as.condition.process (Current)
-			text_formatter_decorator.put_space
-			text_formatter_decorator.set_without_tabs
-			text_formatter_decorator.process_keyword_text (ti_then_keyword, Void)
-			text_formatter_decorator.put_new_line
+			l_text_formatter_decorator.put_space
+			l_text_formatter_decorator.set_without_tabs
+			l_text_formatter_decorator.process_keyword_text (ti_then_keyword, Void)
+			l_text_formatter_decorator.put_new_line
 			if l_as.compound /= Void then
-				text_formatter_decorator.indent
+				l_text_formatter_decorator.indent
 				format_compound (l_as.compound)
-				text_formatter_decorator.put_new_line
-				text_formatter_decorator.exdent
+				l_text_formatter_decorator.put_new_line
+				l_text_formatter_decorator.exdent
 			end
 			if l_as.elsif_list /= Void then
-				text_formatter_decorator.set_separator (ti_empty)
-				text_formatter_decorator.set_no_new_line_between_tokens
+				l_text_formatter_decorator.set_separator (ti_empty)
+				l_text_formatter_decorator.set_no_new_line_between_tokens
 				l_as.elsif_list.process (Current)
-				text_formatter_decorator.set_separator (Void)
+				l_text_formatter_decorator.set_separator (Void)
 			end
 			if l_as.else_part /= Void then
-				text_formatter_decorator.process_keyword_text (ti_else_keyword, Void)
-				text_formatter_decorator.indent
-				text_formatter_decorator.put_new_line
-				text_formatter_decorator.set_new_line_between_tokens
+				l_text_formatter_decorator.process_keyword_text (ti_else_keyword, Void)
+				l_text_formatter_decorator.indent
+				l_text_formatter_decorator.put_new_line
+				l_text_formatter_decorator.set_new_line_between_tokens
 				format_compound (l_as.else_part)
-				text_formatter_decorator.put_new_line
-				text_formatter_decorator.exdent
+				l_text_formatter_decorator.put_new_line
+				l_text_formatter_decorator.exdent
 			end
-			text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)
+			l_text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)
 		end
 
 	process_inspect_as (l_as: INSPECT_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator		
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			check
 				not_expr_type_visiting: not expr_type_visiting
 			end
 			put_breakable
-			text_formatter_decorator.process_keyword_text (ti_inspect_keyword, Void)
-			text_formatter_decorator.put_space
-			text_formatter_decorator.indent
+			l_text_formatter_decorator.process_keyword_text (ti_inspect_keyword, Void)
+			l_text_formatter_decorator.put_space
+			l_text_formatter_decorator.indent
 			l_as.switch.process (Current)
-			text_formatter_decorator.exdent
-			text_formatter_decorator.put_new_line
+			l_text_formatter_decorator.exdent
+			l_text_formatter_decorator.put_new_line
 			if l_as.case_list /= Void then
-				text_formatter_decorator.set_separator (ti_empty)
-				text_formatter_decorator.set_no_new_line_between_tokens
+				l_text_formatter_decorator.set_separator (ti_empty)
+				l_text_formatter_decorator.set_no_new_line_between_tokens
 				l_as.case_list.process (Current)
 			end
 			if l_as.else_part /= Void then
-				text_formatter_decorator.process_keyword_text (ti_else_keyword, Void)
-				text_formatter_decorator.indent
-				text_formatter_decorator.put_new_line
-				text_formatter_decorator.set_separator (Void)
-				text_formatter_decorator.set_new_line_between_tokens
+				l_text_formatter_decorator.process_keyword_text (ti_else_keyword, Void)
+				l_text_formatter_decorator.indent
+				l_text_formatter_decorator.put_new_line
+				l_text_formatter_decorator.set_separator (Void)
+				l_text_formatter_decorator.set_new_line_between_tokens
 				if not l_as.else_part.is_empty then
 					format_compound (l_as.else_part)
-					text_formatter_decorator.put_new_line
+					l_text_formatter_decorator.put_new_line
 				end
-				text_formatter_decorator.exdent
+				l_text_formatter_decorator.exdent
 			end
-			text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)
+			l_text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)
 		end
 
 	process_instr_call_as (l_as: INSTR_CALL_AS)
@@ -2764,63 +2899,66 @@ feature {NONE} -- Implementation
 		end
 
 	process_loop_as (l_as: LOOP_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator		
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			check
 				not_expr_type_visiting: not expr_type_visiting
 			end
-			text_formatter_decorator.process_keyword_text (ti_from_keyword, Void)
-			text_formatter_decorator.set_separator (Void)
-			text_formatter_decorator.set_new_line_between_tokens
+			l_text_formatter_decorator.process_keyword_text (ti_from_keyword, Void)
+			l_text_formatter_decorator.set_separator (Void)
+			l_text_formatter_decorator.set_new_line_between_tokens
 			if l_as.from_part /= Void then
-				text_formatter_decorator.indent
-				text_formatter_decorator.put_new_line
+				l_text_formatter_decorator.indent
+				l_text_formatter_decorator.put_new_line
 				format_compound (l_as.from_part)
-				text_formatter_decorator.put_new_line
-				text_formatter_decorator.exdent
+				l_text_formatter_decorator.put_new_line
+				l_text_formatter_decorator.exdent
 			else
-				text_formatter_decorator.put_new_line
+				l_text_formatter_decorator.put_new_line
 			end
 			if l_as.invariant_part /= Void then
-				text_formatter_decorator.process_keyword_text (ti_invariant_keyword, Void)
-				text_formatter_decorator.indent
-				text_formatter_decorator.put_new_line
+				l_text_formatter_decorator.process_keyword_text (ti_invariant_keyword, Void)
+				l_text_formatter_decorator.indent
+				l_text_formatter_decorator.put_new_line
 				l_as.invariant_part.process (Current)
-				text_formatter_decorator.put_new_line
-				text_formatter_decorator.exdent
+				l_text_formatter_decorator.put_new_line
+				l_text_formatter_decorator.exdent
 			end
 			if l_as.variant_part /= Void and then not current_class.lace_class.is_syntax_standard then
-				text_formatter_decorator.process_keyword_text (ti_variant_keyword, Void)
-				text_formatter_decorator.indent
-				text_formatter_decorator.put_new_line
+				l_text_formatter_decorator.process_keyword_text (ti_variant_keyword, Void)
+				l_text_formatter_decorator.indent
+				l_text_formatter_decorator.put_new_line
 				l_as.variant_part.process (Current)
-				text_formatter_decorator.put_new_line
-				text_formatter_decorator.exdent
+				l_text_formatter_decorator.put_new_line
+				l_text_formatter_decorator.exdent
 			end
-			text_formatter_decorator.process_keyword_text (ti_until_keyword, Void)
-			text_formatter_decorator.indent
-			text_formatter_decorator.put_new_line
-			text_formatter_decorator.new_expression
+			l_text_formatter_decorator.process_keyword_text (ti_until_keyword, Void)
+			l_text_formatter_decorator.indent
+			l_text_formatter_decorator.put_new_line
+			l_text_formatter_decorator.new_expression
 			put_breakable
 			l_as.stop.process (Current)
-			text_formatter_decorator.exdent
-			text_formatter_decorator.put_new_line
-			text_formatter_decorator.process_keyword_text (ti_loop_keyword, Void)
+			l_text_formatter_decorator.exdent
+			l_text_formatter_decorator.put_new_line
+			l_text_formatter_decorator.process_keyword_text (ti_loop_keyword, Void)
 			if l_as.compound /= Void then
-				text_formatter_decorator.indent
-				text_formatter_decorator.put_new_line
+				l_text_formatter_decorator.indent
+				l_text_formatter_decorator.put_new_line
 				format_compound (l_as.compound)
-				text_formatter_decorator.exdent
+				l_text_formatter_decorator.exdent
 			end
-			text_formatter_decorator.put_new_line
+			l_text_formatter_decorator.put_new_line
 			if l_as.variant_part /= Void and then current_class.lace_class.is_syntax_standard then
-				text_formatter_decorator.process_keyword_text (ti_variant_keyword, Void)
-				text_formatter_decorator.indent
-				text_formatter_decorator.put_new_line
+				l_text_formatter_decorator.process_keyword_text (ti_variant_keyword, Void)
+				l_text_formatter_decorator.indent
+				l_text_formatter_decorator.put_new_line
 				l_as.variant_part.process (Current)
-				text_formatter_decorator.put_new_line
-				text_formatter_decorator.exdent
+				l_text_formatter_decorator.put_new_line
+				l_text_formatter_decorator.exdent
 			end
-			text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)
+			l_text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)
 		end
 
 	process_retry_as (l_as: RETRY_AS)
@@ -2833,104 +2971,121 @@ feature {NONE} -- Implementation
 		end
 
 	process_external_as (l_as: EXTERNAL_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator		
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			check
 				not_expr_type_visiting: not expr_type_visiting
 			end
-			text_formatter_decorator.process_keyword_text (ti_external_keyword, Void)
-			text_formatter_decorator.indent
-			text_formatter_decorator.put_new_line
+			l_text_formatter_decorator.process_keyword_text (ti_external_keyword, Void)
+			l_text_formatter_decorator.indent
+			l_text_formatter_decorator.put_new_line
 			l_as.language_name.process (Current)
-			text_formatter_decorator.exdent
-			text_formatter_decorator.put_new_line
+			l_text_formatter_decorator.exdent
+			l_text_formatter_decorator.put_new_line
 			if l_as.alias_name_literal /= Void then
-				text_formatter_decorator.process_keyword_text (ti_alias_keyword, Void)
-				text_formatter_decorator.indent
-				text_formatter_decorator.put_new_line
+				l_text_formatter_decorator.process_keyword_text (ti_alias_keyword, Void)
+				l_text_formatter_decorator.indent
+				l_text_formatter_decorator.put_new_line
 				l_as.alias_name_literal.process (Current)
-				text_formatter_decorator.put_new_line
-				text_formatter_decorator.exdent
+				l_text_formatter_decorator.put_new_line
+				l_text_formatter_decorator.exdent
 			end
 		end
 
 	process_deferred_as (l_as: DEFERRED_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			check
 				not_expr_type_visiting: not expr_type_visiting
 			end
-			text_formatter_decorator.process_keyword_text (ti_deferred_keyword, Void)
-			text_formatter_decorator.put_new_line
+			l_text_formatter_decorator.process_keyword_text (ti_deferred_keyword, Void)
+			l_text_formatter_decorator.put_new_line
 		end
 
 	process_attribute_as (l_as: ATTRIBUTE_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator		
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			check
 				not_expr_type_visiting: not expr_type_visiting
 			end
-			text_formatter_decorator.process_keyword_text (ti_attribute_keyword, Void)
-			text_formatter_decorator.put_new_line
+			l_text_formatter_decorator.process_keyword_text (ti_attribute_keyword, Void)
+			l_text_formatter_decorator.put_new_line
 			if l_as.compound /= Void then
-				text_formatter_decorator.indent
+				l_text_formatter_decorator.indent
 				format_compound (l_as.compound)
-				text_formatter_decorator.put_new_line
-				text_formatter_decorator.exdent
+				l_text_formatter_decorator.put_new_line
+				l_text_formatter_decorator.exdent
 			end
 		end
 
 	process_do_as (l_as: DO_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator		
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			check
 				not_expr_type_visiting: not expr_type_visiting
 			end
-			text_formatter_decorator.process_keyword_text (ti_do_keyword, Void)
-			text_formatter_decorator.put_new_line
+			l_text_formatter_decorator.process_keyword_text (ti_do_keyword, Void)
+			l_text_formatter_decorator.put_new_line
 			if l_as.compound /= Void then
-				text_formatter_decorator.indent
+				l_text_formatter_decorator.indent
 				format_compound (l_as.compound)
-				text_formatter_decorator.put_new_line
-				text_formatter_decorator.exdent
+				l_text_formatter_decorator.put_new_line
+				l_text_formatter_decorator.exdent
 			end
 		end
 
 	process_once_as (l_as: ONCE_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator		
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			check
 				not_expr_type_visiting: not expr_type_visiting
 			end
-			text_formatter_decorator.process_keyword_text (ti_once_keyword, Void)
-			text_formatter_decorator.put_new_line
+			l_text_formatter_decorator.process_keyword_text (ti_once_keyword, Void)
+			l_text_formatter_decorator.put_new_line
 			if l_as.compound /= Void then
-				text_formatter_decorator.indent
+				l_text_formatter_decorator.indent
 				format_compound (l_as.compound)
-				text_formatter_decorator.put_new_line
-				text_formatter_decorator.exdent
+				l_text_formatter_decorator.put_new_line
+				l_text_formatter_decorator.exdent
 			end
 		end
 
 	process_type_dec_as (l_as: TYPE_DEC_AS)
 		local
 			l_names_heap: like names_heap
+			l_text_formatter_decorator: like text_formatter_decorator		
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			check
 				not_expr_type_visiting: not expr_type_visiting
 			end
-			text_formatter_decorator.set_separator (ti_comma)
-			text_formatter_decorator.set_space_between_tokens
+			l_text_formatter_decorator.set_separator (ti_comma)
+			l_text_formatter_decorator.set_space_between_tokens
 			from
 				l_names_heap := names_heap
 				l_as.id_list.start
 			until
 				l_as.id_list.after
 			loop
-				text_formatter_decorator.process_local_text (l_names_heap.item (l_as.id_list.item))
+				l_text_formatter_decorator.process_local_text (l_names_heap.item (l_as.id_list.item))
 				l_as.id_list.forth
 				if not l_as.id_list.after then
-					text_formatter_decorator.put_separator
+					l_text_formatter_decorator.put_separator
 				end
 			end
-			text_formatter_decorator.set_without_tabs
-			text_formatter_decorator.process_symbol_text (ti_colon)
-			text_formatter_decorator.put_space
+			l_text_formatter_decorator.set_without_tabs
+			l_text_formatter_decorator.process_symbol_text (ti_colon)
+			l_text_formatter_decorator.put_space
 			l_as.type.process (Current)
 			if processing_locals and last_actual_local_type /= Void then
 				from
@@ -2945,14 +3100,17 @@ feature {NONE} -- Implementation
 		end
 
 	process_class_as (l_as: CLASS_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			check
 				not_expr_type_visiting: not expr_type_visiting
 			end
-			text_formatter_decorator.process_filter_item (f_class_declaration, True)
+			l_text_formatter_decorator.process_filter_item (f_class_declaration, True)
 			share_class_processing (l_as)
-			text_formatter_decorator.process_filter_item (f_class_declaration, False)
-			text_formatter_decorator.put_new_line
+			l_text_formatter_decorator.process_filter_item (f_class_declaration, False)
+			l_text_formatter_decorator.put_new_line
 		end
 
 	share_class_processing (l_as: CLASS_AS)
@@ -2962,65 +3120,67 @@ feature {NONE} -- Implementation
 			l_create: CREATE_AS
 			l_features: EIFFEL_LIST [FEATURE_NAME]
 			l_feat: FEATURE_I
+			l_text_formatter_decorator: like text_formatter_decorator		
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			check
 				not_expr_type_visiting: not expr_type_visiting
 			end
 			processing_none_feature_part := True
-			text_formatter_decorator.process_before_class (current_class)
+			l_text_formatter_decorator.process_before_class (current_class)
 			safe_process (l_as.top_indexes)
 			format_header (l_as)
-			if text_formatter_decorator.is_clickable_format and l_as.obsolete_message /= Void then
-				text_formatter_decorator.put_new_line
-				text_formatter_decorator.process_filter_item (f_obsolete, True)
-				text_formatter_decorator.set_without_tabs
-				text_formatter_decorator.process_keyword_text (ti_obsolete_keyword, Void)
-				text_formatter_decorator.put_space
+			if l_text_formatter_decorator.is_clickable_format and l_as.obsolete_message /= Void then
+				l_text_formatter_decorator.put_new_line
+				l_text_formatter_decorator.process_filter_item (f_obsolete, True)
+				l_text_formatter_decorator.set_without_tabs
+				l_text_formatter_decorator.process_keyword_text (ti_obsolete_keyword, Void)
+				l_text_formatter_decorator.put_space
 				l_as.obsolete_message.process (Current)
-				text_formatter_decorator.set_without_tabs
-				text_formatter_decorator.process_filter_item (f_obsolete, False)
-				text_formatter_decorator.put_new_line
+				l_text_formatter_decorator.set_without_tabs
+				l_text_formatter_decorator.process_filter_item (f_obsolete, False)
+				l_text_formatter_decorator.put_new_line
 			end
 				-- Process conforming inheritance.
-			if text_formatter_decorator.is_clickable_format and l_as.conforming_parents /= Void then
-				text_formatter_decorator.put_new_line
-				text_formatter_decorator.process_filter_item (f_inheritance, True)
-				text_formatter_decorator.set_without_tabs
-				text_formatter_decorator.process_keyword_text (ti_inherit_keyword, Void)
-				text_formatter_decorator.indent
-				text_formatter_decorator.put_new_line
-				text_formatter_decorator.set_new_line_between_tokens
-				text_formatter_decorator.set_separator (ti_new_line)
+			if l_text_formatter_decorator.is_clickable_format and l_as.conforming_parents /= Void then
+				l_text_formatter_decorator.put_new_line
+				l_text_formatter_decorator.process_filter_item (f_inheritance, True)
+				l_text_formatter_decorator.set_without_tabs
+				l_text_formatter_decorator.process_keyword_text (ti_inherit_keyword, Void)
+				l_text_formatter_decorator.indent
+				l_text_formatter_decorator.put_new_line
+				l_text_formatter_decorator.set_new_line_between_tokens
+				l_text_formatter_decorator.set_separator (ti_new_line)
 				processing_parents := True
 				l_as.conforming_parents.process (Current)
 				processing_parents := False
-				text_formatter_decorator.process_filter_item (f_inheritance, False)
-				text_formatter_decorator.put_new_line
-				text_formatter_decorator.exdent
+				l_text_formatter_decorator.process_filter_item (f_inheritance, False)
+				l_text_formatter_decorator.put_new_line
+				l_text_formatter_decorator.exdent
 			end
-			text_formatter_decorator.put_new_line
+			l_text_formatter_decorator.put_new_line
 
 				-- Process non-conforming inheritance.
-			if text_formatter_decorator.is_clickable_format and l_as.non_conforming_parents /= Void then
-				text_formatter_decorator.process_filter_item (f_inheritance, True)
-				text_formatter_decorator.set_without_tabs
-				text_formatter_decorator.process_keyword_text (ti_inherit_keyword, Void)
-				text_formatter_decorator.process_basic_text (ti_space)
-				text_formatter_decorator.process_symbol_text (ti_l_curly)
-				text_formatter_decorator.process_basic_text (ti_none_class)
-				text_formatter_decorator.process_symbol_text (ti_r_curly)
-				text_formatter_decorator.indent
-				text_formatter_decorator.put_new_line
-				text_formatter_decorator.set_new_line_between_tokens
-				text_formatter_decorator.set_separator (ti_new_line)
+			if l_text_formatter_decorator.is_clickable_format and l_as.non_conforming_parents /= Void then
+				l_text_formatter_decorator.process_filter_item (f_inheritance, True)
+				l_text_formatter_decorator.set_without_tabs
+				l_text_formatter_decorator.process_keyword_text (ti_inherit_keyword, Void)
+				l_text_formatter_decorator.process_basic_text (ti_space)
+				l_text_formatter_decorator.process_symbol_text (ti_l_curly)
+				l_text_formatter_decorator.process_basic_text (ti_none_class)
+				l_text_formatter_decorator.process_symbol_text (ti_r_curly)
+				l_text_formatter_decorator.indent
+				l_text_formatter_decorator.put_new_line
+				l_text_formatter_decorator.set_new_line_between_tokens
+				l_text_formatter_decorator.set_separator (ti_new_line)
 				processing_parents := True
 				l_as.non_conforming_parents.process (Current)
 				processing_parents := False
-				text_formatter_decorator.process_filter_item (f_inheritance, False)
-				text_formatter_decorator.put_new_line
-				text_formatter_decorator.exdent
+				l_text_formatter_decorator.process_filter_item (f_inheritance, False)
+				l_text_formatter_decorator.put_new_line
+				l_text_formatter_decorator.exdent
 			end
-			text_formatter_decorator.put_new_line
+			l_text_formatter_decorator.put_new_line
 
 			l_creators := l_as.creators
 			if l_creators = Void and then not l_as.is_deferred and then current_class.has_feature_table then
@@ -3037,27 +3197,28 @@ feature {NONE} -- Implementation
 				check
 					class_not_deferred: not l_as.is_deferred
 				end
-				text_formatter_decorator.process_filter_item (f_creators, True)
-				text_formatter_decorator.set_separator (ti_empty)
-				text_formatter_decorator.set_new_line_between_tokens
+				l_text_formatter_decorator.process_filter_item (f_creators, True)
+				l_text_formatter_decorator.set_separator (ti_empty)
+				l_text_formatter_decorator.set_new_line_between_tokens
 				l_creators.process (Current)
-				text_formatter_decorator.process_filter_item (f_creators, False)
+				l_text_formatter_decorator.process_filter_item (f_creators, False)
 			end
 			format_convert_clause (l_as.convertors)
 			processing_none_feature_part := False
-			text_formatter_decorator.format_categories
-			text_formatter_decorator.format_invariants
+			l_text_formatter_decorator.format_categories
+			l_text_formatter_decorator.format_invariants
 			safe_process (l_as.bottom_indexes)
-			text_formatter_decorator.process_filter_item (f_class_end, False)
-			text_formatter_decorator.set_without_tabs
-			text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)
-			text_formatter_decorator.process_after_class (current_class)
-			text_formatter_decorator.process_filter_item (f_class_end, False)
+			l_text_formatter_decorator.process_filter_item (f_class_end, False)
+			l_text_formatter_decorator.set_without_tabs
+			l_text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)
+			l_text_formatter_decorator.process_after_class (current_class)
+			l_text_formatter_decorator.process_filter_item (f_class_end, False)
 		end
 
 	process_parent_as (l_as: PARENT_AS)
 		local
 			end_to_print: BOOLEAN
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
@@ -3092,10 +3253,11 @@ feature {NONE} -- Implementation
 				end_to_print := True
 			end
 			if end_to_print then
-				text_formatter_decorator.indent
-				text_formatter_decorator.put_new_line
-				text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)
-				text_formatter_decorator.exdent
+				l_text_formatter_decorator := text_formatter_decorator
+				l_text_formatter_decorator.indent
+				l_text_formatter_decorator.put_new_line
+				l_text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)
+				l_text_formatter_decorator.exdent
 			end
 		end
 
@@ -3118,6 +3280,8 @@ feature {NONE} -- Implementation
 		end
 
 	process_like_id_as (l_as: LIKE_ID_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			check_type (l_as)
 			if processing_locals then
@@ -3127,14 +3291,15 @@ feature {NONE} -- Implementation
 				if last_type /= Void then
 					type_output_strategy.process (last_type, text_formatter_decorator, current_class, current_feature)
 				else
+					l_text_formatter_decorator := text_formatter_decorator
 					if l_as.has_attached_mark then
-						text_formatter_decorator.process_symbol_text (ti_exclamation)
+						l_text_formatter_decorator.process_symbol_text (ti_exclamation)
 					elseif l_as.has_detachable_mark then
-						text_formatter_decorator.process_symbol_text (ti_question)
+						l_text_formatter_decorator.process_symbol_text (ti_question)
 					end
-					text_formatter_decorator.process_keyword_text (ti_like_keyword, Void)
-					text_formatter_decorator.add_space
-					text_formatter_decorator.process_local_text (l_as.anchor.name)
+					l_text_formatter_decorator.process_keyword_text (ti_like_keyword, Void)
+					l_text_formatter_decorator.add_space
+					l_text_formatter_decorator.process_local_text (l_as.anchor.name)
 				end
 			end
 		end
@@ -3162,20 +3327,22 @@ feature {NONE} -- Implementation
 			l_constrained_type_set: TYPE_SET_A
 			l_is_multi_constrained: BOOLEAN
 			l_formal_dec: FORMAL_CONSTRAINT_AS
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			check
 				not_expr_type_visiting: not expr_type_visiting
 				not_processing_locals: not processing_locals
 			end
 			if l_as.is_reference then
-				text_formatter_decorator.process_keyword_text (ti_reference_keyword, Void)
-				text_formatter_decorator.put_space
+				l_text_formatter_decorator.process_keyword_text (ti_reference_keyword, Void)
+				l_text_formatter_decorator.put_space
 			elseif l_as.is_expanded then
-				text_formatter_decorator.process_keyword_text (ti_expanded_keyword, Void)
-				text_formatter_decorator.put_space
+				l_text_formatter_decorator.process_keyword_text (ti_expanded_keyword, Void)
+				l_text_formatter_decorator.put_space
 			end
 			processing_formal_dec := True
-			text_formatter_decorator.process_generic_text (l_as.name.name)
+			l_text_formatter_decorator.process_generic_text (l_as.name.name)
 			if l_as.has_constraint then
 				l_formal_dec ?= l_as
 				check l_formal_dec_not_void: l_formal_dec /= Void end
@@ -3188,38 +3355,38 @@ feature {NONE} -- Implementation
 					l_constrained_type := l_formal_dec.constraint_type_if_possible (current_class)
 				end
 
-				text_formatter_decorator.put_space
-				text_formatter_decorator.set_without_tabs
-				text_formatter_decorator.process_symbol_text (ti_constraint)
-				text_formatter_decorator.put_space
+				l_text_formatter_decorator.put_space
+				l_text_formatter_decorator.set_without_tabs
+				l_text_formatter_decorator.process_symbol_text (ti_constraint)
+				l_text_formatter_decorator.put_space
 				if l_is_multi_constrained then
-					text_formatter_decorator.process_symbol_text (ti_l_curly)
+					l_text_formatter_decorator.process_symbol_text (ti_l_curly)
 				end
 				l_as.constraints.process (Current)
 				if l_is_multi_constrained then
-					text_formatter_decorator.process_symbol_text (ti_r_curly)
+					l_text_formatter_decorator.process_symbol_text (ti_r_curly)
 				end
 
 				if l_as.has_creation_constraint then
 					from
 						l_as.creation_feature_list.start
-						text_formatter_decorator.put_space
-						text_formatter_decorator.process_keyword_text (ti_create_keyword, Void)
-						text_formatter_decorator.put_space
+						l_text_formatter_decorator.put_space
+						l_text_formatter_decorator.process_keyword_text (ti_create_keyword, Void)
+						l_text_formatter_decorator.put_space
 						feature_name ?= l_as.creation_feature_list.item
 						append_feature_by_id (feature_name, l_constrained_type, l_constrained_type_set)
 						l_as.creation_feature_list.forth
 					until
 						l_as.creation_feature_list.after
 					loop
-						text_formatter_decorator.process_symbol_text (ti_comma)
-						text_formatter_decorator.put_space
+						l_text_formatter_decorator.process_symbol_text (ti_comma)
+						l_text_formatter_decorator.put_space
 						feature_name ?= l_as.creation_feature_list.item
 						append_feature_by_id (feature_name, l_constrained_type, l_constrained_type_set)
 						l_as.creation_feature_list.forth
 					end
-					text_formatter_decorator.put_space
-					text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)
+					l_text_formatter_decorator.put_space
+					l_text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)
 				end
 			end
 			processing_formal_dec := False
@@ -3232,6 +3399,7 @@ feature {NONE} -- Implementation
 			l_cl_type_as: CLASS_TYPE_AS
 			l_tmp_current_class: like current_class
 			l_class_c: CLASS_C
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			l_type := l_as.type
 			process_type_as (l_type)
@@ -3250,12 +3418,13 @@ feature {NONE} -- Implementation
 						has_error_internal := True
 					end
 				end
-				text_formatter_decorator.add_space
-				text_formatter_decorator.process_keyword_text (ti_rename_keyword, Void)
-				text_formatter_decorator.add_space
+				l_text_formatter_decorator := text_formatter_decorator
+				l_text_formatter_decorator.add_space
+				l_text_formatter_decorator.process_keyword_text (ti_rename_keyword, Void)
+				l_text_formatter_decorator.add_space
 				process_rename_clause_as (l_renaming)
-				text_formatter_decorator.add_space
-				text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)
+				l_text_formatter_decorator.add_space
+				l_text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)
 					-- If we changed the current_class set it back.
 				if l_class_c /= Void then
 					check l_tmp_current_class_not_void: l_tmp_current_class /= Void end
@@ -3299,16 +3468,18 @@ feature {NONE} -- Implementation
 		local
 			l_last_parent: like last_parent
 			l_tmp_has_error_internal: BOOLEAN
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			check
 				not_expr_type_visiting: not expr_type_visiting
 			end
 			l_tmp_has_error_internal := has_error_internal
 			l_as.old_name.process (Current)
-			text_formatter_decorator.put_space
-			text_formatter_decorator.set_without_tabs
-			text_formatter_decorator.process_keyword_text (ti_as_keyword, Void)
-			text_formatter_decorator.put_space
+			l_text_formatter_decorator.put_space
+			l_text_formatter_decorator.set_without_tabs
+			l_text_formatter_decorator.process_keyword_text (ti_as_keyword, Void)
+			l_text_formatter_decorator.put_space
 			l_last_parent := last_parent
 			last_parent := Void
 			l_as.new_name.process (Current)
@@ -3317,37 +3488,42 @@ feature {NONE} -- Implementation
 		end
 
 	process_invariant_as (l_as: INVARIANT_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			check
 				not_expr_type_visiting: not expr_type_visiting
 			end
-			text_formatter_decorator.begin
-			text_formatter_decorator.set_new_line_between_tokens
+			l_text_formatter_decorator.begin
+			l_text_formatter_decorator.set_new_line_between_tokens
 			if l_as.assertion_list /= Void then
 				invariant_format_assertions (l_as.assertion_list)
 			end
-			text_formatter_decorator.commit
+			l_text_formatter_decorator.commit
 		end
 
 	process_interval_as (l_as: INTERVAL_AS)
 		local
 			l_feat: E_FEATURE
 			l_id: ID_AS
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 				-- Only ID_AS can be a constant access in current class.
 			l_id ?= l_as.lower
 			if l_id /= Void then
 				l_feat := feature_from_id_as (l_id)
 			end
 			if l_feat /= Void then
-				text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
+				l_text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
 			else
 				l_as.lower.process (Current)
 			end
 			if l_as.upper /= Void then
 				if not expr_type_visiting then
-					text_formatter_decorator.set_without_tabs
-					text_formatter_decorator.process_symbol_text (ti_dotdot)
+					l_text_formatter_decorator.set_without_tabs
+					l_text_formatter_decorator.process_symbol_text (ti_dotdot)
 				end
 				l_id ?= l_as.upper
 				l_feat := Void
@@ -3355,7 +3531,7 @@ feature {NONE} -- Implementation
 					l_feat := feature_from_id_as (l_id)
 				end
 				if l_feat /= Void then
-					text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
+					l_text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
 				else
 					l_as.upper.process (Current)
 				end
@@ -3363,84 +3539,96 @@ feature {NONE} -- Implementation
 		end
 
 	process_index_as (l_as: INDEX_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			check
 				not_expr_type_visiting: not expr_type_visiting
 			end
 			if l_as.tag /= Void then
-				text_formatter_decorator.process_indexing_tag_text (l_as.tag.name.string)
-				text_formatter_decorator.set_without_tabs
-				text_formatter_decorator.process_symbol_text (ti_colon)
-				text_formatter_decorator.put_space
+				l_text_formatter_decorator.process_indexing_tag_text (l_as.tag.name.string)
+				l_text_formatter_decorator.set_without_tabs
+				l_text_formatter_decorator.process_symbol_text (ti_colon)
+				l_text_formatter_decorator.put_space
 			end
-			text_formatter_decorator.set_in_indexing_clause (True)
-			text_formatter_decorator.process_filter_item (f_indexing_content, True)
-			text_formatter_decorator.set_space_between_tokens
-			text_formatter_decorator.set_separator (ti_comma)
+			l_text_formatter_decorator.set_in_indexing_clause (True)
+			l_text_formatter_decorator.process_filter_item (f_indexing_content, True)
+			l_text_formatter_decorator.set_space_between_tokens
+			l_text_formatter_decorator.set_separator (ti_comma)
 			l_as.index_list.process (Current)
-			text_formatter_decorator.process_filter_item (f_indexing_content, False)
-			text_formatter_decorator.set_in_indexing_clause (False)
+			l_text_formatter_decorator.process_filter_item (f_indexing_content, False)
+			l_text_formatter_decorator.set_in_indexing_clause (False)
 		end
 
 	process_export_item_as (l_as: EXPORT_ITEM_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			check
 				not_expr_type_visiting: not expr_type_visiting
 			end
-			text_formatter_decorator.set_separator (ti_comma)
-			text_formatter_decorator.set_space_between_tokens
+			l_text_formatter_decorator.set_separator (ti_comma)
+			l_text_formatter_decorator.set_space_between_tokens
 			l_as.clients.process (Current)
-			text_formatter_decorator.put_space
+			l_text_formatter_decorator.put_space
 			l_as.features.process (Current)
 		end
 
 	process_elseif_as (l_as: ELSIF_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			check
 				not_expr_type_visiting: not expr_type_visiting
 			end
 			put_breakable
-			text_formatter_decorator.process_keyword_text (ti_elseif_keyword, Void)
-			text_formatter_decorator.put_space
-			text_formatter_decorator.new_expression
+			l_text_formatter_decorator.process_keyword_text (ti_elseif_keyword, Void)
+			l_text_formatter_decorator.put_space
+			l_text_formatter_decorator.new_expression
 			l_as.expr.process (Current)
-			text_formatter_decorator.put_space
-			text_formatter_decorator.set_without_tabs
-			text_formatter_decorator.process_keyword_text (ti_then_keyword, Void)
-			text_formatter_decorator.put_new_line
+			l_text_formatter_decorator.put_space
+			l_text_formatter_decorator.set_without_tabs
+			l_text_formatter_decorator.process_keyword_text (ti_then_keyword, Void)
+			l_text_formatter_decorator.put_new_line
 			if l_as.compound /= Void then
-				text_formatter_decorator.indent
+				l_text_formatter_decorator.indent
 				format_compound (l_as.compound)
-				text_formatter_decorator.put_new_line
-				text_formatter_decorator.exdent
+				l_text_formatter_decorator.put_new_line
+				l_text_formatter_decorator.exdent
 			end
 		end
 
 	process_create_as (l_as: CREATE_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			check
 				not_expr_type_visiting: not expr_type_visiting
 			end
-			text_formatter_decorator.begin
-			text_formatter_decorator.process_keyword_text (ti_create_keyword, Void)
-			text_formatter_decorator.put_space
+			l_text_formatter_decorator.begin
+			l_text_formatter_decorator.process_keyword_text (ti_create_keyword, Void)
+			l_text_formatter_decorator.put_space
 			if l_as.clients /= Void then
 				l_as.clients.process (Current)
 			end
-			text_formatter_decorator.put_new_line
+			l_text_formatter_decorator.put_new_line
 			if l_as.feature_list /= Void then
-				text_formatter_decorator.indent
-				if text_formatter_decorator.is_flat_short then
+				l_text_formatter_decorator.indent
+				if l_text_formatter_decorator.is_flat_short then
 					format_creation_features (l_as.feature_list)
 				else
-					text_formatter_decorator.set_new_line_between_tokens
-					text_formatter_decorator.set_separator (ti_comma)
+					l_text_formatter_decorator.set_new_line_between_tokens
+					l_text_formatter_decorator.set_separator (ti_comma)
 					l_as.feature_list.process (Current)
-					text_formatter_decorator.put_new_line
-					text_formatter_decorator.put_new_line
+					l_text_formatter_decorator.put_new_line
+					l_text_formatter_decorator.put_new_line
 				end
 			end
-			text_formatter_decorator.commit
+			l_text_formatter_decorator.commit
 		end
 
 	process_client_as (l_as: CLIENT_AS)
@@ -3449,15 +3637,17 @@ feature {NONE} -- Implementation
 			cluster: CONF_GROUP
 			client_classi: CLASS_I
 			l_export_status: EXPORT_I
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			check
 				not_expr_type_visiting: not expr_type_visiting
 			end
 			cluster := system.class_of_id (current_class.class_id).group
-			text_formatter_decorator.begin
-			text_formatter_decorator.process_symbol_text (ti_l_curly)
-			text_formatter_decorator.set_separator (ti_comma)
-			text_formatter_decorator.set_space_between_tokens
+			l_text_formatter_decorator.begin
+			l_text_formatter_decorator.process_symbol_text (ti_l_curly)
+			l_text_formatter_decorator.set_separator (ti_comma)
+			l_text_formatter_decorator.set_space_between_tokens
 			l_export_status := export_status_generator.export_status (system, current_class, l_as)
 			from
 				l_as.clients.start
@@ -3467,42 +3657,45 @@ feature {NONE} -- Implementation
 				temp := l_as.clients.item.name
 				client_classi := universe.safe_class_named (temp, cluster)
 				if client_classi /= Void then
-					text_formatter_decorator.put_classi (client_classi)
+					l_text_formatter_decorator.put_classi (client_classi)
 				else
-					text_formatter_decorator.add (temp.as_upper)
+					l_text_formatter_decorator.add (temp.as_upper)
 				end
 				l_as.clients.forth
 				if not l_as.clients.after then
-					text_formatter_decorator.set_without_tabs
-					text_formatter_decorator.process_symbol_text (ti_comma)
-					text_formatter_decorator.put_space
+					l_text_formatter_decorator.set_without_tabs
+					l_text_formatter_decorator.process_symbol_text (ti_comma)
+					l_text_formatter_decorator.put_space
 				end
 			end
-			text_formatter_decorator.set_without_tabs
-			text_formatter_decorator.process_symbol_text (ti_r_curly)
-			text_formatter_decorator.commit
+			l_text_formatter_decorator.set_without_tabs
+			l_text_formatter_decorator.process_symbol_text (ti_r_curly)
+			l_text_formatter_decorator.commit
 		end
 
 	process_case_as (l_as: CASE_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			check
 				not_expr_type_visiting: not expr_type_visiting
 			end
-			text_formatter_decorator.process_keyword_text (ti_when_keyword, Void)
-			text_formatter_decorator.put_space
-			text_formatter_decorator.set_separator (ti_comma)
-			text_formatter_decorator.set_space_between_tokens
+			l_text_formatter_decorator.process_keyword_text (ti_when_keyword, Void)
+			l_text_formatter_decorator.put_space
+			l_text_formatter_decorator.set_separator (ti_comma)
+			l_text_formatter_decorator.set_space_between_tokens
 			l_as.interval.process (Current)
-			text_formatter_decorator.put_space
-			text_formatter_decorator.set_without_tabs
-			text_formatter_decorator.process_keyword_text (ti_then_keyword, Void)
-			text_formatter_decorator.put_space
-			text_formatter_decorator.put_new_line
+			l_text_formatter_decorator.put_space
+			l_text_formatter_decorator.set_without_tabs
+			l_text_formatter_decorator.process_keyword_text (ti_then_keyword, Void)
+			l_text_formatter_decorator.put_space
+			l_text_formatter_decorator.put_new_line
 			if l_as.compound /= Void then
-				text_formatter_decorator.indent
+				l_text_formatter_decorator.indent
 				format_compound (l_as.compound)
-				text_formatter_decorator.put_new_line
-				text_formatter_decorator.exdent
+				l_text_formatter_decorator.put_new_line
+				l_text_formatter_decorator.exdent
 			end
 		end
 
@@ -3539,23 +3732,26 @@ feature {NONE} -- Implementation
 		end
 
 	process_convert_feat_as (l_as: CONVERT_FEAT_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			check
 				not_expr_type_visiting: not expr_type_visiting
 			end
 			l_as.feature_name.process (Current)
 			if l_as.is_creation_procedure then
-				text_formatter_decorator.put_space
-				text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
+				l_text_formatter_decorator.put_space
+				l_text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
 			else
-				text_formatter_decorator.process_symbol_text (ti_colon)
-				text_formatter_decorator.put_space
+				l_text_formatter_decorator.process_symbol_text (ti_colon)
+				l_text_formatter_decorator.put_space
 			end
-			text_formatter_decorator.process_symbol_text (ti_l_curly)
+			l_text_formatter_decorator.process_symbol_text (ti_l_curly)
 			l_as.conversion_types.process (Current)
-			text_formatter_decorator.process_symbol_text (ti_r_curly)
+			l_text_formatter_decorator.process_symbol_text (ti_r_curly)
 			if l_as.is_creation_procedure then
-				text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
+				l_text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
 			end
 		end
 
@@ -3800,10 +3996,12 @@ feature {NONE} -- Implementation: helpers
 			l: INTEGER
 			n: INTEGER
 			m: INTEGER
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
-			in_index := text_formatter_decorator.in_indexing_clause
+			l_text_formatter_decorator := text_formatter_decorator
+			in_index := l_text_formatter_decorator.in_indexing_clause
 			if indentable then
-				text_formatter_decorator.indent
+				l_text_formatter_decorator.indent
 			end
 			from
 				l := s.count + 1
@@ -3817,17 +4015,17 @@ feature {NONE} -- Implementation: helpers
 				end
 				sb := s.substring (n, m - 1)
 				if indentable then
-					text_formatter_decorator.put_string_item (sb)
+					l_text_formatter_decorator.put_string_item (sb)
 				elseif in_index then
-					text_formatter_decorator.add_indexing_string (sb)
+					l_text_formatter_decorator.add_indexing_string (sb)
 				else
-					text_formatter_decorator.add_manifest_string (sb)
+					l_text_formatter_decorator.add_manifest_string (sb)
 				end
-				text_formatter_decorator.put_new_line
+				l_text_formatter_decorator.put_new_line
 				n := m + 1
 			end
 			if indentable then
-				text_formatter_decorator.exdent
+				l_text_formatter_decorator.exdent
 			end
 		end
 
@@ -3836,8 +4034,10 @@ feature {NONE} -- Implementation: helpers
 			lc_not_void: lc /= Void
 		local
 			semicolon_candidate: BOOLEAN
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
-			text_formatter_decorator.begin
+			l_text_formatter_decorator := text_formatter_decorator
+			l_text_formatter_decorator.begin
 			from
 				lc.start
 			until
@@ -3845,20 +4045,20 @@ feature {NONE} -- Implementation: helpers
 			loop
 				has_error_internal := False
 				reset_last_class_and_type
-				text_formatter_decorator.new_expression
-				text_formatter_decorator.begin
+				l_text_formatter_decorator.new_expression
+				l_text_formatter_decorator.begin
 				lc.item.process (Current)
-				text_formatter_decorator.commit
+				l_text_formatter_decorator.commit
 				semicolon_candidate := True
 				lc.forth
 				if not lc.after then
 					if semicolon_candidate and then lc.item.starts_with_parenthesis then
-						text_formatter_decorator.process_symbol_text (ti_semi_colon)
+						l_text_formatter_decorator.process_symbol_text (ti_semi_colon)
 					end
-					text_formatter_decorator.put_new_line
+					l_text_formatter_decorator.put_new_line
 				end
 			end
-			text_formatter_decorator.commit
+			l_text_formatter_decorator.commit
 		end
 
 	Carriage_return_char: CHARACTER = '%N'
@@ -3866,60 +4066,69 @@ feature {NONE} -- Implementation: helpers
 	format_header (l_as: CLASS_AS)
 		require
 			l_as_not_void: l_as /= Void
+		local
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
-			text_formatter_decorator.process_filter_item (f_class_header, True)
+			l_text_formatter_decorator := text_formatter_decorator
+			l_text_formatter_decorator.process_filter_item (f_class_header, True)
 			if l_as.is_frozen then
-				text_formatter_decorator.process_keyword_text (ti_frozen_keyword, Void)
-				text_formatter_decorator.put_space
+				l_text_formatter_decorator.process_keyword_text (ti_frozen_keyword, Void)
+				l_text_formatter_decorator.put_space
 			end
 			if l_as.is_expanded then
-				text_formatter_decorator.process_keyword_text (ti_expanded_keyword, Void)
-				text_formatter_decorator.put_space
+				l_text_formatter_decorator.process_keyword_text (ti_expanded_keyword, Void)
+				l_text_formatter_decorator.put_space
 			elseif l_as.is_deferred then
-				text_formatter_decorator.process_keyword_text (ti_deferred_keyword, Void)
-				text_formatter_decorator.put_space
+				l_text_formatter_decorator.process_keyword_text (ti_deferred_keyword, Void)
+				l_text_formatter_decorator.put_space
 			end
-			text_formatter_decorator.process_keyword_text (ti_class_keyword, Void)
-			text_formatter_decorator.put_space
-			if text_formatter_decorator.is_short then
-				text_formatter_decorator.process_keyword_text (ti_interface_keyword, Void)
+			l_text_formatter_decorator.process_keyword_text (ti_class_keyword, Void)
+			l_text_formatter_decorator.put_space
+			if l_text_formatter_decorator.is_short then
+				l_text_formatter_decorator.process_keyword_text (ti_interface_keyword, Void)
 			end
-			text_formatter_decorator.indent
-			text_formatter_decorator.put_new_line
-			text_formatter_decorator.put_classi (current_class.lace_class)
-			text_formatter_decorator.process_filter_item (f_class_header, False)
-			text_formatter_decorator.exdent
+			l_text_formatter_decorator.indent
+			l_text_formatter_decorator.put_new_line
+			l_text_formatter_decorator.put_classi (current_class.lace_class)
+			l_text_formatter_decorator.process_filter_item (f_class_header, False)
+			l_text_formatter_decorator.exdent
 			format_generics (l_as.generics)
-			text_formatter_decorator.put_new_line
+			l_text_formatter_decorator.put_new_line
 		end
 
 	format_generics (l_as: EIFFEL_LIST [FORMAL_DEC_AS])
+		local
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			if l_as /= Void then
-				text_formatter_decorator.put_space
-				text_formatter_decorator.set_without_tabs
-				text_formatter_decorator.process_symbol_text (ti_l_bracket)
-				text_formatter_decorator.set_space_between_tokens
-				text_formatter_decorator.set_separator (ti_comma)
+				l_text_formatter_decorator := text_formatter_decorator
+				l_text_formatter_decorator.put_space
+				l_text_formatter_decorator.set_without_tabs
+				l_text_formatter_decorator.process_symbol_text (ti_l_bracket)
+				l_text_formatter_decorator.set_space_between_tokens
+				l_text_formatter_decorator.set_separator (ti_comma)
 				l_as.process (Current)
-				text_formatter_decorator.set_without_tabs
-				text_formatter_decorator.process_symbol_text (ti_r_bracket)
+				l_text_formatter_decorator.set_without_tabs
+				l_text_formatter_decorator.process_symbol_text (ti_r_bracket)
 			end
 		end
 
 	format_convert_clause (l_as: EIFFEL_LIST [CONVERT_FEAT_AS])
+		local
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			if l_as /= Void then
-				text_formatter_decorator.process_keyword_text (ti_convert_keyword, Void)
-				text_formatter_decorator.indent
-				text_formatter_decorator.put_new_line
-				text_formatter_decorator.set_new_line_between_tokens
-				text_formatter_decorator.set_separator (ti_comma)
+				l_text_formatter_decorator := text_formatter_decorator
+				l_text_formatter_decorator.process_keyword_text (ti_convert_keyword, Void)
+				l_text_formatter_decorator.indent
+				l_text_formatter_decorator.put_new_line
+				l_text_formatter_decorator.set_new_line_between_tokens
+				l_text_formatter_decorator.set_separator (ti_comma)
 				l_as.process (Current)
-				text_formatter_decorator.set_separator (ti_empty)
-				text_formatter_decorator.exdent
-				text_formatter_decorator.put_new_line
-				text_formatter_decorator.put_new_line
+				l_text_formatter_decorator.set_separator (ti_empty)
+				l_text_formatter_decorator.exdent
+				l_text_formatter_decorator.put_new_line
+				l_text_formatter_decorator.put_new_line
 			end
 		end
 
@@ -3930,8 +4139,10 @@ feature {NONE} -- Implementation: helpers
 			i, l_count: INTEGER
 			fc, next_fc: FEATURE_CLAUSE_AS
 			feature_list: EIFFEL_LIST [FEATURE_AS]
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
-			text_formatter_decorator.begin
+			l_text_formatter_decorator := text_formatter_decorator
+			l_text_formatter_decorator.begin
 			from
 				i := 1
 				l_count := l_as.count
@@ -3942,10 +4153,10 @@ feature {NONE} -- Implementation: helpers
 				i > l_count
 			loop
 				if i > 1 then
-					text_formatter_decorator.put_separator
+					l_text_formatter_decorator.put_separator
 				end
-				text_formatter_decorator.new_expression
-				text_formatter_decorator.begin
+				l_text_formatter_decorator.new_expression
+				l_text_formatter_decorator.begin
 				i := i + 1
 				if i <= l_count then
 					next_fc := l_as.i_th (i)
@@ -3953,50 +4164,56 @@ feature {NONE} -- Implementation: helpers
 				feature_list := fc.features
 				fc.process (Current)
 				fc := next_fc
-				text_formatter_decorator.commit
+				l_text_formatter_decorator.commit
 			end
-			text_formatter_decorator.commit
+			l_text_formatter_decorator.commit
 		end
 
 	format_clause (a_keyword: STRING; a_clause: EIFFEL_LIST [AST_EIFFEL]; has_separator: BOOLEAN)
 		require
 			a_keyword_not_void: a_keyword /= Void
 			a_clause_not_void: a_clause /= Void
+		local
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
-			text_formatter_decorator.indent
-			text_formatter_decorator.put_new_line
-			text_formatter_decorator.process_keyword_text (a_keyword, Void)
-			text_formatter_decorator.indent
-			text_formatter_decorator.put_new_line
-			text_formatter_decorator.set_new_line_between_tokens
+			l_text_formatter_decorator := text_formatter_decorator
+			l_text_formatter_decorator.indent
+			l_text_formatter_decorator.put_new_line
+			l_text_formatter_decorator.process_keyword_text (a_keyword, Void)
+			l_text_formatter_decorator.indent
+			l_text_formatter_decorator.put_new_line
+			l_text_formatter_decorator.set_new_line_between_tokens
 			if has_separator then
-				text_formatter_decorator.set_separator (ti_comma)
+				l_text_formatter_decorator.set_separator (ti_comma)
 			else
-				text_formatter_decorator.set_separator (ti_empty)
+				l_text_formatter_decorator.set_separator (ti_empty)
 			end
 			a_clause.process (Current)
-			text_formatter_decorator.exdent
-			text_formatter_decorator.exdent
+			l_text_formatter_decorator.exdent
+			l_text_formatter_decorator.exdent
 		end
 
 	format_tagged_as (l_as: TAGGED_AS; hide_breakable_marks: BOOLEAN)
 		require
 			l_as_not_void: l_as /= Void
+		local
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
-			text_formatter_decorator.new_expression
-			text_formatter_decorator.begin
+			l_text_formatter_decorator := text_formatter_decorator
+			l_text_formatter_decorator.new_expression
+			l_text_formatter_decorator.begin
 			if not hide_breakable_marks then
 				put_breakable
 			end
 			if l_as.tag /= Void then
-				text_formatter_decorator.process_assertion_tag_text (l_as.tag.name.string)
-				text_formatter_decorator.set_without_tabs
-				text_formatter_decorator.process_symbol_text (ti_colon)
-				text_formatter_decorator.put_space
+				l_text_formatter_decorator.process_assertion_tag_text (l_as.tag.name.string)
+				l_text_formatter_decorator.set_without_tabs
+				l_text_formatter_decorator.process_symbol_text (ti_colon)
+				l_text_formatter_decorator.put_space
 			end
-			text_formatter_decorator.new_expression
+			l_text_formatter_decorator.new_expression
 			l_as.expr.process (Current)
-			text_formatter_decorator.commit
+			l_text_formatter_decorator.commit
 		end
 
 	invariant_format_assertions (l_as: EIFFEL_LIST [TAGGED_AS])
@@ -4005,28 +4222,30 @@ feature {NONE} -- Implementation: helpers
 		local
 			i, l_count: INTEGER
 			not_first: BOOLEAN
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			from
-				text_formatter_decorator.begin
+				l_text_formatter_decorator.begin
 				i := 1
 				l_count := l_as.count
 			until
 				i > l_count
 			loop
-				text_formatter_decorator.begin
+				l_text_formatter_decorator.begin
 				if not_first then
-					text_formatter_decorator.put_separator
+					l_text_formatter_decorator.put_separator
 				end
-				text_formatter_decorator.new_expression
+				l_text_formatter_decorator.new_expression
 				l_as.i_th (i).process (Current)
 				not_first := True
-				text_formatter_decorator.commit
+				l_text_formatter_decorator.commit
 				i := i + 1
 			end
 			if not_first then
-				text_formatter_decorator.exdent
+				l_text_formatter_decorator.exdent
 			end
-			text_formatter_decorator.commit
+			l_text_formatter_decorator.commit
 		end
 
 	invariant_simple_format_assertions (l_as: EIFFEL_LIST [TAGGED_AS])
@@ -4035,8 +4254,10 @@ feature {NONE} -- Implementation: helpers
 		local
 			i, l_count: INTEGER
 			not_first: BOOLEAN
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
-			text_formatter_decorator.begin
+			l_text_formatter_decorator := text_formatter_decorator
+			l_text_formatter_decorator.begin
 			from
 				i := 1
 				l_count := l_as.count
@@ -4044,14 +4265,14 @@ feature {NONE} -- Implementation: helpers
 				i > l_count
 			loop
 				if not_first then
-					text_formatter_decorator.put_separator
+					l_text_formatter_decorator.put_separator
 				end
-				text_formatter_decorator.new_expression
+				l_text_formatter_decorator.new_expression
 				l_as.i_th (i).process (Current)
 				not_first := True
 				i := i + 1
 			end
-			text_formatter_decorator.commit
+			l_text_formatter_decorator.commit
 		end
 
 	format_assertions (l_as: EIFFEL_LIST [TAGGED_AS]; hide_breakable_marks: BOOLEAN)
@@ -4060,33 +4281,35 @@ feature {NONE} -- Implementation: helpers
 		local
 			i, l_count: INTEGER
 			not_first: BOOLEAN
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
+			l_text_formatter_decorator := text_formatter_decorator
 			from
-				text_formatter_decorator.begin
+				l_text_formatter_decorator.begin
 				i := 1
 				l_count := l_as.count
 			until
 				i > l_count
 			loop
 				if not_first then
-					text_formatter_decorator.put_separator
+					l_text_formatter_decorator.put_separator
 				end
-				text_formatter_decorator.begin
-				text_formatter_decorator.new_expression
+				l_text_formatter_decorator.begin
+				l_text_formatter_decorator.new_expression
 				if hide_breakable_marks then
 					format_tagged_as (l_as.i_th (i), True)
 				else
 					l_as.i_th (i).process (Current)
 				end
 				not_first := True
-				text_formatter_decorator.commit
+				l_text_formatter_decorator.commit
 				i := i + 1
 			end
 			if not_first then
-				text_formatter_decorator.exdent
-				text_formatter_decorator.put_new_line
+				l_text_formatter_decorator.exdent
+				l_text_formatter_decorator.put_new_line
 			end
-			text_formatter_decorator.commit
+			l_text_formatter_decorator.commit
 		end
 
 	simple_format_assertions (l_as: EIFFEL_LIST [TAGGED_AS])
@@ -4095,8 +4318,10 @@ feature {NONE} -- Implementation: helpers
 		local
 			i, l_count: INTEGER
 			not_first: BOOLEAN
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
-			text_formatter_decorator.begin
+			l_text_formatter_decorator := text_formatter_decorator
+			l_text_formatter_decorator.begin
 			from
 				i := 1
 				l_count := l_as.count
@@ -4104,19 +4329,19 @@ feature {NONE} -- Implementation: helpers
 				i > l_count
 			loop
 				if not_first then
-					text_formatter_decorator.put_separator
+					l_text_formatter_decorator.put_separator
 				end
-				text_formatter_decorator.new_expression
-				text_formatter_decorator.begin
+				l_text_formatter_decorator.new_expression
+				l_text_formatter_decorator.begin
 				l_as.i_th (i).process (Current)
-				text_formatter_decorator.commit
+				l_text_formatter_decorator.commit
 				not_first := True
 				i := i + 1
 			end
 			if l_count > 0 then
-				text_formatter_decorator.put_new_line
+				l_text_formatter_decorator.put_new_line
 			end
-			text_formatter_decorator.commit
+			l_text_formatter_decorator.commit
 		end
 
 	format_assert_list_as (l_as: ASSERT_LIST_AS; a_keyword: STRING)
@@ -4125,26 +4350,28 @@ feature {NONE} -- Implementation: helpers
 			a_keyword_not_void: a_keyword /= Void
 		local
 			source_cl, target_cl: CLASS_C
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			if l_as.assertions /= Void then
-				text_formatter_decorator.begin
-				text_formatter_decorator.process_keyword_text (a_keyword, Void)
-				source_cl := text_formatter_decorator.source_class
+				l_text_formatter_decorator := text_formatter_decorator
+				l_text_formatter_decorator.begin
+				l_text_formatter_decorator.process_keyword_text (a_keyword, Void)
+				source_cl := l_text_formatter_decorator.source_class
 				target_cl := current_class
 				if source_cl /= target_cl then
-					text_formatter_decorator.put_space
-					text_formatter_decorator.process_comment_text (ti_dashdash, Void)
-					text_formatter_decorator.put_space
-					text_formatter_decorator.process_comment_text ("from ", Void)
-					text_formatter_decorator.put_classi (source_cl.lace_class)
+					l_text_formatter_decorator.put_space
+					l_text_formatter_decorator.process_comment_text (ti_dashdash, Void)
+					l_text_formatter_decorator.put_space
+					l_text_formatter_decorator.process_comment_text ("from ", Void)
+					l_text_formatter_decorator.put_classi (source_cl.lace_class)
 				end
-				text_formatter_decorator.indent
-				text_formatter_decorator.put_new_line
-				text_formatter_decorator.set_new_line_between_tokens
+				l_text_formatter_decorator.indent
+				l_text_formatter_decorator.put_new_line
+				l_text_formatter_decorator.set_new_line_between_tokens
 				format_assertions (l_as.assertions, False)
-				text_formatter_decorator.exdent
-				text_formatter_decorator.set_first_assertion (False)
-				text_formatter_decorator.commit
+				l_text_formatter_decorator.exdent
+				l_text_formatter_decorator.set_first_assertion (False)
+				l_text_formatter_decorator.commit
 			end
 		end
 
@@ -4156,9 +4383,11 @@ feature {NONE} -- Implementation: helpers
 			item: FEATURE_NAME
 			creators: HASH_TABLE [FEATURE_ADAPTER, STRING]
 			feat_adapter: FEATURE_ADAPTER
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
-			text_formatter_decorator.begin
-			creators := text_formatter_decorator.format_registration.creation_table
+			l_text_formatter_decorator := text_formatter_decorator
+			l_text_formatter_decorator.begin
+			creators := l_text_formatter_decorator.format_registration.creation_table
 			from
 				i := 1
 				l_count := a_list.count
@@ -4168,12 +4397,12 @@ feature {NONE} -- Implementation: helpers
 				item := a_list.i_th (i)
 				feat_adapter := creators.item (item.internal_name.name)
 				if feat_adapter /= Void then
-					feat_adapter.format (text_formatter_decorator)
-					text_formatter_decorator.put_new_line
+					feat_adapter.format (l_text_formatter_decorator)
+					l_text_formatter_decorator.put_new_line
 				end
 				i := i + 1
 			end
-			text_formatter_decorator.commit
+			l_text_formatter_decorator.commit
 		end
 
 	current_assigner_feature: E_FEATURE
@@ -4534,9 +4763,12 @@ feature {NONE} -- Implementation: helpers
 
 	put_breakable
 			-- Puts a breakable if needed.
+		local
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
-			if text_formatter_decorator.is_with_breakable then
-				text_formatter_decorator.put_breakable
+			l_text_formatter_decorator := text_formatter_decorator
+			if l_text_formatter_decorator.is_with_breakable then
+				l_text_formatter_decorator.put_breakable
 			end
 		end
 

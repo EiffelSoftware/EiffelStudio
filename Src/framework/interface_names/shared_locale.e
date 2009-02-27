@@ -24,10 +24,6 @@ feature -- Access
 			-- Current locale
         do
 			Result := locale_internal.item
-			if Result = Void then
-				Result := empty_locale
-				locale_internal.put (Result)
-			end
 		ensure
 			locale_not_void: Result /= Void
 		end
@@ -127,26 +123,30 @@ feature -- Conversion
 		require
 			a_console_encoding_not_void: a_console_encoding /= Void
 			a_str_not_void: a_str /= Void
+		local
+			l_result: detachable STRING_GENERAL
 		do
 			utf32.convert_to (a_console_encoding, a_str)
 			if utf32.last_conversion_successful then
-				Result := utf32.last_converted_string
+				l_result := utf32.last_converted_string
 			else
 					-- This is a hack, since some OSes don't support convertion from/to UTF-32 to `a_console_encoding'.
 					-- We convert UTF-32 to UTF-8 first, then convert UTF-8 to `a_console_encoding'.
 				if not utf8.is_equal (a_console_encoding) then
 					utf32.convert_to (utf8, a_str)
 					if utf32.last_conversion_successful then
-						Result := utf32.last_converted_string
-						utf8.convert_to (a_console_encoding, Result)
+						l_result := utf32.last_converted_string
+						utf8.convert_to (a_console_encoding, l_result)
 						if utf8.last_conversion_successful then
-							Result := utf8.last_converted_string
-						else
-							Result := a_str
+							l_result := utf8.last_converted_string
 						end
 					end
 				end
+				if l_result = Void then
+					l_result := a_str
+				end
 			end
+			Result := l_result
 		end
 
 	console_encoding_to_utf32 (a_console_encoding: ENCODING; a_str: STRING_GENERAL): STRING_GENERAL
@@ -155,33 +155,37 @@ feature -- Conversion
 		require
 			a_console_encoding_not_void: a_console_encoding /= Void
 			a_str_not_void: a_str /= Void
+		local
+			l_result: detachable STRING_GENERAL
 		do
 			a_console_encoding.convert_to (utf32, a_str)
 			if a_console_encoding.last_conversion_successful then
-				Result := a_console_encoding.last_converted_string
+				l_result := a_console_encoding.last_converted_string
 			else
 					-- This is a hack, since some OSes don't support convertion from/to UTF-32 to `a_console_encoding'.
 					-- We convert `a_console_encoding' to UTF-8 first, then convert UTF-8 to UTF-32.
 				if not utf8.is_equal (a_console_encoding) then
 					a_console_encoding.convert_to (utf8, a_str)
 					if a_console_encoding.last_conversion_successful then
-						Result := a_console_encoding.last_converted_string
-						utf8.convert_to (utf32, Result)
+						l_result := a_console_encoding.last_converted_string
+						utf8.convert_to (utf32, l_result)
 						if utf8.last_conversion_successful then
-							Result := utf8.last_converted_string
-						else
-							Result := a_str
+							l_result := utf8.last_converted_string
 						end
 					end
 				end
+				if l_result = Void then
+					l_result := a_str
+				end
 			end
+			Result := l_result
 		end
 
 feature {NONE} -- Implementation
 
 	locale_internal: CELL [I18N_LOCALE]
 		once
-			create Result.put (Void)
+			create Result.put (empty_locale)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -206,17 +210,13 @@ feature -- File saving
 			-- Save `a_str' in `a_file', according to current locale.
 			-- `a_str' should be UTF-32 string.
 		require
+			a_file_not_void: a_file /= Void
 			a_file_open: a_file.is_open_write
 			a_file_exist: a_file.exists
 			a_str_not_void: a_str /= Void
-		local
-			l_string: STRING_8
 		do
 			utf32.convert_to (system_encoding, a_str)
 			if utf32.last_conversion_successful then
-				check
-					l_string_is_valid_as_string_8: l_string.is_valid_as_string_8
-				end
 				a_file.put_string (utf32.last_converted_stream)
 			else
 				a_file.put_string (a_str.as_string_8)

@@ -139,12 +139,12 @@ feature -- Basic operation
 		do
 			l_gdk_display_warp_pointer_symbol := gdk_display_warp_pointer_symbol
 			if l_gdk_display_warp_pointer_symbol /= default_pointer then
-				l_display := {EV_GTK_EXTERNALS}.gdk_display
+				l_display := gdk_display
 				gdk_display_warp_pointer_call (l_gdk_display_warp_pointer_symbol, l_display, {EV_GTK_EXTERNALS}.gdk_display_get_default_screen (l_display), a_x, a_y)
 			else
 				l_x_test_fake_motion_event_symbol := x_test_fake_motion_event_symbol
 				if l_x_test_fake_motion_event_symbol /= default_pointer then
-					a_success_flag := x_test_fake_motion_event_call (l_x_test_fake_motion_event_symbol, {EV_GTK_EXTERNALS}.gdk_display, -1, a_x, a_y, 0)
+					a_success_flag := x_test_fake_motion_event_call (l_x_test_fake_motion_event_symbol, gdk_display, -1, a_x, a_y, 0)
 				end
 			end
 		end
@@ -166,7 +166,7 @@ feature -- Basic operation
 			if not a_success_flag then
 				l_x_test_fake_button_event_symbol := x_test_fake_button_event_symbol
 				if l_x_test_fake_button_event_symbol /= default_pointer then
-					a_success_flag := x_test_fake_key_button_event_call (l_x_test_fake_button_event_symbol, {EV_GTK_EXTERNALS}.gdk_display, a_button, True, 0)
+					a_success_flag := x_test_fake_key_button_event_call (l_x_test_fake_button_event_symbol, gdk_display, a_button, True, 0)
 				end
 			end
 		end
@@ -188,7 +188,7 @@ feature -- Basic operation
 			if not a_success_flag then
 				l_x_test_fake_button_event_symbol := x_test_fake_button_event_symbol
 				if l_x_test_fake_button_event_symbol /= default_pointer then
-					a_success_flag := x_test_fake_key_button_event_call (l_x_test_fake_button_event_symbol, {EV_GTK_EXTERNALS}.gdk_display, a_button, False, 0)
+					a_success_flag := x_test_fake_key_button_event_call (l_x_test_fake_button_event_symbol, gdk_display, a_button, False, 0)
 				end
 			end
 		end
@@ -219,8 +219,8 @@ feature -- Basic operation
 			if l_x_test_fake_key_event_symbol /= default_pointer then
 				l_x_keysym_to_keycode_symbol := x_keysym_to_keycode_symbol
 				if l_x_keysym_to_keycode_symbol /= default_pointer then
-					a_key_code := x_keysym_to_keycode_call (l_x_keysym_to_keycode_symbol, {EV_GTK_EXTERNALS}.gdk_display, key_conversion.key_code_to_gtk (a_key.code).to_integer_32)
-					a_success_flag := x_test_fake_key_button_event_call (l_x_test_fake_key_event_symbol, {EV_GTK_EXTERNALS}.gdk_display, a_key_code, True, 0)
+					a_key_code := x_keysym_to_keycode_call (l_x_keysym_to_keycode_symbol, gdk_display, key_conversion.key_code_to_gtk (a_key.code).to_integer_32)
+					a_success_flag := x_test_fake_key_button_event_call (l_x_test_fake_key_event_symbol, gdk_display, a_key_code, True, 0)
 				end
 			end
 
@@ -246,8 +246,8 @@ feature -- Basic operation
 			if l_x_test_fake_key_event_symbol /= default_pointer then
 				l_x_keysym_to_keycode_symbol := x_keysym_to_keycode_symbol
 				if l_x_keysym_to_keycode_symbol /= default_pointer then
-					a_key_code := x_keysym_to_keycode_call (l_x_keysym_to_keycode_symbol, {EV_GTK_EXTERNALS}.gdk_display, key_conversion.key_code_to_gtk (a_key.code).to_integer_32)
-					a_success_flag := x_test_fake_key_button_event_call (l_x_test_fake_key_event_symbol, {EV_GTK_EXTERNALS}.gdk_display, a_key_code, False, 0)
+					a_key_code := x_keysym_to_keycode_call (l_x_keysym_to_keycode_symbol, gdk_display, key_conversion.key_code_to_gtk (a_key.code).to_integer_32)
+					a_success_flag := x_test_fake_key_button_event_call (l_x_test_fake_key_event_symbol, gdk_display, a_key_code, False, 0)
 				end
 			end
 
@@ -346,7 +346,7 @@ feature {NONE} -- Externals (XTEST extension)
 		end
 
 	x_keysym_to_keycode_symbol: POINTER
-			-- Symbol for `gdk_display_warp_pointer'.
+			-- Symbol for `x_keysym_to_keycode'.
 		once
 			Result := app_implementation.symbol_from_symbol_name ("XKeysymToKeycode")
 		end
@@ -373,6 +373,29 @@ feature {NONE} -- Externals (XTEST extension)
 		end
 
 feature {NONE} -- Implementation
+
+	frozen gdk_display: POINTER
+		local
+			l_symbol: POINTER
+		do
+			l_symbol := gdk_x11_display_get_xdisplay_symbol
+			if l_symbol /= default_pointer then
+				Result := gdk_x11_display_get_xdisplay_call (l_symbol, {EV_GTK_EXTERNALS}.gdk_display_get_default)
+			end
+		end
+
+	gdk_x11_display_get_xdisplay_symbol: POINTER
+			-- Symbol for `gdk_x11_display_get_xdisplay'.
+		once
+			Result := app_implementation.symbol_from_symbol_name ("gdk_x11_display_get_xdisplay")
+		end
+
+	gdk_x11_display_get_xdisplay_call (a_function, a_display: POINTER): POINTER
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"return (FUNCTION_CAST(EIF_POINTER, (GdkDisplay*)) $a_function) ((GdkDisplay*) $a_display)"
+		end
 
 	app_implementation: EV_APPLICATION_IMP
 			-- Return the instance of EV_APPLICATION_IMP.

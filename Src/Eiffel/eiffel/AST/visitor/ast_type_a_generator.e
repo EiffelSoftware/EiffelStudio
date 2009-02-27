@@ -45,13 +45,21 @@ feature -- Status report
 		require
 			a_type_not_void: a_type /= Void
 			a_context_class_not_void: a_context_class /= Void
+		local
+			old_current_class: like current_class
+			old_is_failure_enabled: like is_failure_enabled
+			old_last_type: like last_type
 		do
+			old_current_class := current_class
+			old_is_failure_enabled := is_failure_enabled
+			old_last_type := last_type
 			is_failure_enabled := True
 			current_class := a_context_class
 			a_type.process (Current)
 			Result := last_type
-			current_class := Void
-			last_type := Void
+			current_class := old_current_class
+			is_failure_enabled := old_is_failure_enabled
+			last_type := old_last_type
 		end
 
 	evaluate_type (a_type: TYPE_AS; a_context_class: CLASS_C): TYPE_A
@@ -60,13 +68,21 @@ feature -- Status report
 			a_type_not_void: a_type /= Void
 			a_context_class_not_void: a_context_class /= Void
 			a_type_is_in_universe: True -- All class identifiers of `a_type' are in the universe.
+		local
+			old_current_class: like current_class
+			old_is_failure_enabled: like is_failure_enabled
+			old_last_type: like last_type
 		do
+			old_current_class := current_class
+			old_is_failure_enabled := is_failure_enabled
+			old_last_type := last_type
 			is_failure_enabled := False
 			current_class := a_context_class
 			a_type.process (Current)
 			Result := last_type
-			current_class := Void
-			last_type := Void
+			current_class := old_current_class
+			is_failure_enabled := old_is_failure_enabled
+			last_type := old_last_type
 		ensure
 			evaluate_type_not_void: Result /= Void
 		end
@@ -78,12 +94,7 @@ feature -- Status report
 			a_context_class_not_void: a_context_class /= Void
 			a_type_is_in_universe: True -- All class identifiers of `a_class_type' are in the universe.
 		do
-			is_failure_enabled := False
-			current_class := a_context_class
-			a_class_type.process (Current)
-			Result ?= last_type
-			current_class := Void
-			last_type := Void
+			Result ?= evaluate_type (a_class_type, a_context_class)
 		ensure
 			evaluate_type_not_void: Result /= Void
 		end
@@ -130,15 +141,64 @@ feature {NONE} -- Visitor implementation
 
 	process_formal_as (l_as: FORMAL_AS)
 		local
-			t: FORMAL_A
+			f: FORMAL_A
+			types_done: LINKED_LIST [INTEGER]
+			types_todo: LINKED_LIST [INTEGER]
+			l: CONSTRAINT_LIST_AS
+			t: TYPE_AS
+			i: INTEGER
 		do
-			create t.make (l_as.is_reference, l_as.is_expanded, l_as.position)
-			last_type := t
+			create f.make (l_as.is_reference, l_as.is_expanded, l_as.position)
+			last_type := f
 			if l_as.has_attached_mark then
-				t.set_attached_mark
-				check t.is_attached end
+				f.set_attached_mark
+				check f.is_attached end
 			elseif l_as.has_detachable_mark then
-				t.set_detachable_mark
+				f.set_detachable_mark
+			elseif current_class.generics [l_as.position].constraints /= Void then
+					-- Check attachment status of constraints.
+				from
+					create types_done.make
+					create types_todo.make
+					types_todo.extend (l_as.position)
+				until
+					types_todo.is_empty
+				loop
+					from
+						types_todo.start
+						l := current_class.generics [types_todo.item_for_iteration].constraints
+						types_done.extend (types_todo.item_for_iteration)
+						types_todo.remove
+						i := l.count
+					until
+						i <= 0
+					loop
+						t := l [i].type
+						if t.has_attached_mark then
+							f.set_is_attached
+							types_todo.wipe_out
+							l.finish
+						elseif {ff: FORMAL_AS} t then
+								-- Record new formal generic for processing (if not done yet).
+							if not types_done.has (ff.position) and then not types_todo.has (ff.position) then
+									-- This is new formal generic type.
+								if current_class.generics [ff.position].constraints = Void then
+										-- Formal generic without constraints does not provide attachment status.
+									types_done.extend (ff.position)
+								else
+										-- The contraints have to be checked.
+									types_todo.extend (ff.position)
+								end
+							end
+						elseif current_class.lace_class.is_attached_by_default then
+								-- The type must be a class type, let's use the `current_class' default attachment settings.
+							f.set_is_attached
+							types_todo.wipe_out
+							l.finish
+						end
+						i := i - 1
+					end
+				end
 			end
 		end
 
@@ -302,7 +362,7 @@ feature {NONE} -- Visitor implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

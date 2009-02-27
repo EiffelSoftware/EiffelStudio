@@ -57,7 +57,7 @@ feature {NONE} -- Modification: nesting
 				from
 					i := count
 				until
-					i < 0
+					i <= 0
 				loop
 						-- Mark only items that are set in both scopes
 					s [i] := s [i] and scope [i]

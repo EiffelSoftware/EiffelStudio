@@ -180,7 +180,6 @@ feature {ERROR_VISITOR} -- Compute surrounding text around error
 			l_file: PLAIN_TEXT_FILE
 			l_line: detachable STRING
 			l_fn: like file_name
-			l_last_fn: detachable STRING
 			l_contents: LIST [STRING]
 			l_ts: INTEGER
 			l_reload: BOOLEAN
@@ -191,8 +190,7 @@ feature {ERROR_VISITOR} -- Compute surrounding text around error
 			next_line := Void
 			create l_file.make (l_fn)
 			if l_file.exists then
-				l_last_fn := last_cached_file_name.item
-				if attached l_last_fn and then l_last_fn ~ l_fn then
+				if last_cached_file_name.item ~ l_fn then
 						-- The last access file source has already been cached.
 					l_ts := l_file.change_date
 					l_reload := l_ts /= last_cached_file_timestamp.item

@@ -156,7 +156,7 @@ rt_public EIF_REFERENCE request_dispatch (Request rqst)
 				notif_info = rqst.rqu.rqu_event;
 				sprintf (ptr, "%i", notif_info.st_type);
 				ptr += strlen (ptr) + 1;
-				sprintf (ptr, "%i", notif_info.st_data);
+				sprintf (ptr, "0x%" EIF_POINTER_DISPLAY, (rt_uint_ptr) notif_info.st_data);
 				ptr += strlen (ptr) + 1;
 				eif_string = makestr (string, ptr - string);
 				(notify_hdlr_set) (eif_access (notify_handler), eif_string);
@@ -178,7 +178,9 @@ rt_public EIF_REFERENCE request_dispatch (Request rqst)
 				ptr += strlen (ptr) + 1;
 				sprintf (ptr, "%i", stop_info.st_where.wh_offset);
 				ptr += strlen (ptr) + 1;
-				sprintf (ptr, "%" EIF_POINTER_DISPLAY, (rt_uint_ptr) stop_info.st_where.wh_thread_id);
+				sprintf (ptr, "%i", stop_info.st_where.wh_nested);
+				ptr += strlen (ptr) + 1;
+				sprintf (ptr, "0x%" EIF_POINTER_DISPLAY, (rt_uint_ptr) stop_info.st_where.wh_thread_id);
 				ptr += strlen (ptr) + 1;
 				sprintf (ptr, "%i", stop_info.st_why);
 				ptr += strlen (ptr) + 1;

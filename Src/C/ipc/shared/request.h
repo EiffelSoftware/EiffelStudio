@@ -68,6 +68,7 @@ typedef struct {			/* Position in program execution flow */
 	int wh_origin;			/* Where feature comes from */
 	int wh_type;			/* Dynamic type of Current */
 	int wh_offset;			/* Offset within byte code (-1 if none) */
+	int wh_nested;			/* breakable nested index (-1 if none) */
 	rt_uint_ptr wh_thread_id;	/* Thread id */
 } Where;
 
@@ -78,7 +79,7 @@ typedef struct {			/* Stopping notification 	*/
 } Stop;
 typedef struct {			/* Event notification */
 	int st_type;			/* Event type */
-	int st_data;			/* Event data */
+	rt_uint_ptr st_data;	/* Event data */
 } Notif;
 
 typedef struct dump Dump;	/* Structure returned by dumps */

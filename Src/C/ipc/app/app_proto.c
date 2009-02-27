@@ -571,6 +571,7 @@ rt_public void stop_rqst(EIF_PSTREAM sp)
 		rqst.st_wh.wh_origin = 0;				/* Written where? */
 		rqst.st_wh.wh_type = 0;					/* Dynamic type */
 		rqst.st_wh.wh_offset = 0;				/* Offset in byte code */
+		rqst.st_wh.wh_nested = 0;				/* breakable nested index */
 		rqst.st_wh.wh_thread_id = (rt_int_ptr) 0;			/* Thread id -> rt_int_ptr for XDR */
 	} 
 	else {
@@ -579,6 +580,7 @@ rt_public void stop_rqst(EIF_PSTREAM sp)
 		rqst.st_wh.wh_origin = wh.wh_origin;		/* Written where? */
 		rqst.st_wh.wh_type = wh.wh_type;			/* Dynamic type */
 		rqst.st_wh.wh_offset = wh.wh_offset;		/* Offset in byte code for melted feature, line number for frozen one */
+		rqst.st_wh.wh_nested = wh.wh_nested;		/* breakable nested index */
 
 #ifdef EIF_THREADS
 		dthread_id = (rt_uint_ptr) eif_thr_id;
@@ -596,7 +598,7 @@ rt_public void stop_rqst(EIF_PSTREAM sp)
 
 }
 
-rt_public void notify_rqst(EIF_PSTREAM sp, int ev_type, int ev_data)
+rt_public void notify_rqst(EIF_PSTREAM sp, int ev_type, rt_uint_ptr ev_data)
 {
 	/* Send a notification
 	 */
@@ -608,7 +610,7 @@ rt_public void notify_rqst(EIF_PSTREAM sp, int ev_type, int ev_data)
 	app_send_packet(sp, &rqst);	/* Send notification */
 }
 
-rt_shared void dnotify(int evt_type, int evt_data)
+rt_shared void dnotify(int evt_type, rt_uint_ptr evt_data)
 {
 	if (!debug_mode)		/* If not in debugging mode */
 		return ;			/* Resume execution immediately */

@@ -219,7 +219,7 @@ rt_public void undiscard_breakpoints(void);	/* un-discard all breakpoints. */
 /* exception trace occurred during debugging evaluation */
 
 rt_shared void debug_initialize(void);	/* Initialize debug information */
-rt_public void dnotify(int, int);		/* Notify the daemon event and data, no answer waited */
+rt_public void dnotify(int, rt_uint_ptr);		/* Notify the daemon event and data, no answer waited */
 rt_public void dstop(struct ex_vect *exvect, uint32 offset); /* Breakable point reached */
 rt_public void dstop_nested(struct ex_vect *exvect, uint32 break_index, uint32 nested_break_index); /* Breakable point in the middle of a nested call reached */
 rt_shared void set_breakpoint_count(int num);	/* Sets the n breakpoint to stop at*/
@@ -531,7 +531,7 @@ rt_public void dnotify_create_thread(EIF_THR_TYPE tid)
 	if (debug_mode) {
 		RT_GET_CONTEXT
 		DBGMTX_LOCK;	/* Enter critical section */
-		dnotify(THR_CREATED, (int) tid);
+		dnotify(THR_CREATED, (rt_uint_ptr) tid);
 		DBGMTX_UNLOCK; /* Leave critical section */
 	}
 }
@@ -540,7 +540,7 @@ rt_public void dnotify_exit_thread(EIF_THR_TYPE tid)
 	if (debug_mode) {
 		RT_GET_CONTEXT
 		DBGMTX_LOCK;	/* Enter critical section */
-		dnotify(THR_EXITED, (int) tid);
+		dnotify(THR_EXITED, (rt_uint_ptr) tid);
 		DBGMTX_UNLOCK; /* Leave critical section */
 	}
 }
@@ -560,6 +560,7 @@ rt_public void dstop(struct ex_vect *exvect, uint32 break_index)
 {
 	/* update execution stack with current line number, i.e. offset */
 	exvect->ex_linenum = break_index;
+	exvect->ex_bpnested = 0;
 			
 	if (debug_mode) {
 		RT_GET_CONTEXT
@@ -636,6 +637,8 @@ rt_public void dstop_nested(struct ex_vect *exvect, uint32 break_index, uint32 n
 	/* args: ex_vect, current execution vector     */
 	/*       break_index, current offset (i.e. line number in stoppoints mode) within feature */
 {
+	/* update execution stack with current line number, i.e. offset */
+	exvect->ex_bpnested = nested_break_index;
 
 	if (debug_mode) {	
 		RT_GET_CONTEXT
@@ -1115,6 +1118,7 @@ rt_shared void ewhere(struct where *where)
 
 	/* update break index (ie line number in stoppoint view) */
 	where->wh_offset = ex->ex_linenum;
+	where->wh_nested = ex->ex_bpnested;
 }
 
 rt_private struct ex_vect *last_call(EIF_CONTEXT_NOARG)

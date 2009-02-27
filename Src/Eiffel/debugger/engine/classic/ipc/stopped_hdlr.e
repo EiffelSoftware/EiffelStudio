@@ -49,14 +49,14 @@ feature -- Execution
 			--    assertion tag (undefined if irrelevant)
 			--
 			-- Check:
-			--		* C\ipc\app\app_proto.c:stop_rqst (..)
-			--		* C\ipc\ewb\eif_in.c:request_dispatch (..) --> case STOPPED: ..
-			--		* C\ipc\shared\rqst_idrs.c:idr_Stop (..)
+			--		* C\ipc\app\app_proto.c:stop_rqst(..)
+			--		* C\ipc\ewb\eif_in.c:request_dispatch(..) --> case STOPPED: ..
+			--		* C\ipc\shared\rqst_idrs.c:idr_Stop(..), idr_Where(..)
 		local
 			feature_name: STRING
 			origine_type_id: INTEGER
 			dynamic_type_id: INTEGER
-			offset: INTEGER
+			offset, nested: INTEGER
 			address: DBG_ADDRESS
 			stopping_reason: INTEGER
 			exception_occurred: BOOLEAN
@@ -119,6 +119,10 @@ feature -- Execution
 					--| Read offset in byte code.
 				read_integer
 				offset := last_integer
+
+					--| Read bp nested index in byte code.
+				read_integer
+				nested := last_integer
 
 					--| Read thread id
 				read_pointer

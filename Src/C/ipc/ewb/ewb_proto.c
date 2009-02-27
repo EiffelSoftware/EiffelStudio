@@ -48,6 +48,9 @@
 #ifdef EIF_WINDOWS
 #include "eif_argcargv.h"
 #endif
+#ifdef DEBUG
+#include "com.h"
+#endif
 
 rt_public int ewb_rqstcnt = 0;		/* Request count, must match with daemon's one */
 

@@ -930,7 +930,7 @@ rt_private Signal_t emergency(int sig)
  */
 
 rt_shared void dserver(void) {}
-rt_shared void dnotify(int evt_type, int evt_data) {}
+rt_shared void dnotify(int evt_type, rt_uint_ptr evt_data) {}
 rt_shared char dinterrupt(void) { return 0; }
 #endif
 

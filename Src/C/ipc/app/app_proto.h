@@ -42,7 +42,7 @@
 extern int app_rqstcnt;				/* Request count (number of requests sent) */
 
 extern void stop_rqst(EIF_PSTREAM);		/* Stop notification to workbench */
-extern void notify_rqst(EIF_PSTREAM, int, int); /* Send notification to ewb */
+extern void notify_rqst(EIF_PSTREAM, int, rt_uint_ptr); /* Send notification to ewb */
 extern void arqsthandle(EIF_PSTREAM s);		/* General request handler */
 
 extern void app_send_packet(EIF_PSTREAM sp, Request *rqst);
@@ -52,7 +52,7 @@ extern int app_recv_packet(EIF_PSTREAM, Request *, BOOL); /* Receive IDR packet 
 extern int app_recv_packet(EIF_PSTREAM, Request *);		/* Receive IDR packet from ised */	
 #endif
 
-extern void dnotify(int, int);		/* Send Notification */
+extern void dnotify(int, rt_uint_ptr);		/* Send Notification */
 extern void app_prt_init(void);			/* Initialize IDR filters */
 
 #endif

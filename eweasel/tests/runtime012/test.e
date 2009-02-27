@@ -11,7 +11,7 @@ feature
 
 	make is
 		local
-			l_spec: SPECIAL [INTEGER_64]
+			l_spec, l_spec_bis: SPECIAL [INTEGER_64]
 			l_spec_exp: SPECIAL [EXP]
 			l_count: NATURAL_64
 		do
@@ -45,6 +45,17 @@ feature
 			collection_off
 
 			create l_spec.make (0x1FFFFFFF)
+			create l_spec_bis.make (0x1FFFFFFF)
+			if l_spec.standard_is_equal (l_spec_bis) or l_spec.is_deep_equal (l_spec_bis) then
+				io.put_string ("Not equal!!")
+				io.put_new_line
+			end
+
+			l_spec_bis := Void
+			collection_on
+			full_collect
+			collection_off
+	
 			l_spec := l_spec.twin
 
 			if l_spec.count /= 536870911 then

@@ -1348,6 +1348,7 @@ test	self-init-attribute-call-to-precursor	exec302 tcf fail execution manual
 test	out-on-nan-violates-invariant		exec303 tcf fail execution
 test	operations-on-numeric-generic		exec304 tcf fail execution
 test	expanded-object-test-infinite-recursion	exec305 tcf fail execution manual
+test	expanded-generic-call-on-void-target	exec306 tcf fail execution
 
 
 -- Compiler termination (exception trace, panic, etc.)

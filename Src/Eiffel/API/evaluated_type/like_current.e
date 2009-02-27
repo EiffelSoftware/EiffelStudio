@@ -17,7 +17,7 @@ inherit
 			is_basic, is_expanded, is_external, is_like_current, is_none, is_reference,
 			meta_type, set_actual_type, evaluated_type_in_descendant, is_tuple,
 			set_attached_mark, set_detachable_mark, set_is_implicitly_attached,
-			unset_is_implicitly_attached, description, c_type, is_explicit,
+			unset_is_implicitly_attached, description, c_type, is_explicit, formal_instantiation_in,
 			generated_id, generate_cid, generate_cid_array, generate_cid_init,
 			make_type_byte_code, generate_gen_type_il, internal_is_valid_for_class,
 			maximum_interval_value, minimum_interval_value, is_optimized_as_frozen,
@@ -402,6 +402,13 @@ feature {COMPILER_EXPORTER} -- Duplication
 
 feature {COMPILER_EXPORTER} -- Primitives
 
+	formal_instantiation_in (type: TYPE_A; constraint: TYPE_A; written_id: INTEGER): TYPE_A
+			-- <Precursor>
+		do
+				-- Use original type.
+			Result := instantiation_in (type, written_id)
+		end
+
 	instantiation_in (type: TYPE_A; written_id: INTEGER): TYPE_A
 			-- Instantiation of Current in the context of `class_type',
 			-- assuming that Current is written in class of id `written_id'.
@@ -493,7 +500,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -21,7 +21,7 @@ inherit
 	TYPE_A
 		redefine
 			renaming, is_renamed_type, has_renaming, instantiated_in,
-			instantiation_in, has_associated_class,
+			instantiation_in, has_associated_class, formal_instantiation_in,
 			to_type_set, conformance_type, actual_type
 		end
 
@@ -87,6 +87,12 @@ feature -- Access
 			-- of `class_type'.
 		do
 			Result := type.instantiated_in (a_class_type)
+		end
+
+	formal_instantiation_in (a_type: TYPE_A; constraint: TYPE_A; written_id: INTEGER): TYPE_A
+			-- <Precursor>
+		do
+			Result := type.formal_instantiation_in (a_type, constraint, written_id)
 		end
 
 	instantiation_in (a_type: TYPE_A; a_written_id: INTEGER): TYPE_A
@@ -204,7 +210,7 @@ invariant
 	no_nested_renamed_types: not type.is_renamed_type
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

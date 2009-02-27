@@ -16,6 +16,7 @@ inherit
 			instantiation_in,
 			has_formal_generic,
 			is_loose,
+			formal_instantiation_in,
 			instantiated_in,
 			adapted_in,
 			skeleton_adapted_in,
@@ -502,14 +503,33 @@ feature -- Access
 			end
 		end
 
+	formal_instantiation_in (type: TYPE_A; constraint_type: TYPE_A; written_id: INTEGER): TYPE_A
+			-- <Precursor>
+		do
+				-- Use constraint type.
+			Result := instantiation_in (constraint_type, written_id)
+		end
+
 	instantiation_in (type: TYPE_A; written_id: INTEGER): TYPE_A
 			-- Instantiation of Current in the context of `class_type',
 			-- assuming that Current is written in class of id `written_id'.
+		local
+			t: ATTACHABLE_TYPE_A
 		do
 			if {l_cl_type: CL_TYPE_A} type.actual_type then
 				Result := l_cl_type.instantiation_of (Current, written_id).to_other_attachment (Current)
 			else
 				Result := Current
+			end
+			if
+				not Result.is_attached and then
+				system.class_of_id (written_id).constrained_types (position).is_attached and then
+				{a: ATTACHABLE_TYPE_A} Result and then not a.has_detachable_mark
+			then
+					-- Promote attachment setting of the current contraint unless the formal has explicit detachable mark.
+				t := a.duplicate
+				t.set_is_attached
+				Result := t
 			end
 		end
 
@@ -577,7 +597,7 @@ feature -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -12,7 +12,7 @@ inherit
 		rename
 			make as cl_make
 		redefine
-			generics, valid_generic, parent_type, dump, ext_append_to,
+			generics, valid_generic, parent_type, dump, ext_append_to, formal_instantiation_in,
 			has_like, has_like_argument, has_like_current, is_loose, duplicate, good_generics,
 			error_generics, check_constraints, has_formal_generic, instantiated_in,
 			has_expanded, internal_is_valid_for_class, expanded_deferred, valid_expanded_creation,
@@ -1026,6 +1026,37 @@ feature -- Primitives
 			end
 		end
 
+	formal_instantiation_in (type: TYPE_A; constraint: TYPE_A; written_id: INTEGER): GEN_TYPE_A
+			-- <Precursor>
+		local
+			i: INTEGER
+			old_generics: like generics
+			new_generics: like generics
+			old_type: TYPE_A
+			new_type: TYPE_A
+		do
+			Result := Current
+			from
+				old_generics := Result.generics
+				i := old_generics.count
+			until
+				i <= 0
+			loop
+				old_type := old_generics.item (i)
+				new_type := old_type.formal_instantiation_in (type, constraint, written_id)
+				if new_type /= old_type then
+						-- Record a new type of a generic parameter.
+					if new_generics = Void then
+							-- Avoid modifying original type descriptor.
+						Result := Result.duplicate_for_instantiation
+						new_generics := Result.generics
+					end
+					new_generics.put (new_type, i)
+				end
+				i := i - 1
+			end
+		end
+
 	instantiation_in (type: TYPE_A; written_id: INTEGER): GEN_TYPE_A
 			-- TODO: new comment
 		local
@@ -1840,7 +1871,7 @@ invariant
 	generics_not_void: generics /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -1872,5 +1903,3 @@ note
 		]"
 
 end -- class GEN_TYPE_A
-
-

@@ -314,9 +314,14 @@ feature {NONE} -- Access
 
 	Constraint_types_containing_any: TYPE_SET_A
 			-- Default constraint actual type
+		local
+			t: CL_TYPE_A
 		once
-			create Result.make(1)
-			Result.extend(create {RENAMED_TYPE_A [TYPE_A]}.make (create {CL_TYPE_A}.make (System.any_id), Void))
+				-- Default constraint class type is detachable
+			create t.make (System.any_id)
+			t.set_detachable_mark
+			create Result.make (1)
+			Result.extend(create {RENAMED_TYPE_A [TYPE_A]}.make (t, Void))
 		end
 
 feature -- Output

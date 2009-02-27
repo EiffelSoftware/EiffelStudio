@@ -1147,6 +1147,20 @@ feature -- Access
 			Result := Current
 		end
 
+	formal_instantiation_in (type: TYPE_A; constraint: TYPE_A; written_id: INTEGER): TYPE_A
+			-- Instantiation of Current written in the class of id `written_id'
+			-- in the context of (possibly formal) `type' with actual (constraint type) `constraint'.
+		require
+			type_attached: type /= Void
+			constraint_attached: constraint /= Void
+			constraint_not_formal: not constraint.is_formal
+			positive_id: written_id > 0
+		do
+			Result := Current
+		ensure
+			result_attached: Result /= Void
+		end
+
 	instantiation_in (type: TYPE_A; written_id: INTEGER): TYPE_A
 			-- Instantiation of Current in the context of `type'
 			-- assuming that Current is written in the class of id `written_id'.
@@ -1469,7 +1483,7 @@ invariant
 	generics_not_void_implies_generics_not_empty_or_tuple: (generics /= Void implies (not generics.is_empty or is_tuple))
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -3,6 +3,7 @@ test_description If we resize a SPECIAL object to have a size greater than 2^31 
 
 copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e
+copy_raw 	exp.e $CLUSTER exp.e
 
 compile_melted
 compile_result ok

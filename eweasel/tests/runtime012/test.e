@@ -12,6 +12,7 @@ feature
 	make is
 		local
 			l_spec: SPECIAL [INTEGER_64]
+			l_spec_exp: SPECIAL [EXP]
 			l_count: NATURAL_64
 		do
 			collection_off
@@ -89,6 +90,13 @@ feature
 				io.put_natural_64 (physical_size_64 (l_spec) - (l_count * 8))
 				io.put_new_line
 			end
+
+			l_spec := Void
+			collection_on
+			full_collect
+			collection_off
+
+			create l_spec_exp.make (0x7FFFFFF)
 		end
 
 end

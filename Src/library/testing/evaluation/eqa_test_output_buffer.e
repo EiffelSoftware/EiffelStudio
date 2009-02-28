@@ -137,7 +137,9 @@ feature -- Output
 			--|       also provide a range on the input string. That would save allocating the substring
 			--|       in the following code.
 		local
-			l_split, l_capacity, l_count, l_start, l_length, l_newpos: INTEGER
+			l_split, l_capacity, l_count, l_start, l_new_tsp: INTEGER
+			l_ccount1: INTEGER
+			l_chunk1, l_chunk2: STRING
 		do
 			if buffer.count + a_string.count > buffer_size then
 				l_split := split_position
@@ -154,11 +156,16 @@ feature -- Output
 					l_count := a_string.count
 				end
 				if truncated_start_position + l_count > buffer_size + 1 then
-					l_length := buffer_size - truncated_start_position
-					l_newpos := l_split + 1 + l_count - l_length
-					buffer.replace_substring (a_string.substring (l_start, l_start + l_length), truncated_start_position, buffer.count)
-					buffer.replace_substring (a_string.substring (l_start + l_length + 1, a_string.count), l_split + 1, l_newpos - 1)
-					truncated_start_position := l_newpos
+					l_ccount1 := buffer_size - truncated_start_position + 1
+					l_new_tsp := l_split + 1 + l_count - l_ccount1
+
+					l_chunk1 := a_string.substring (l_start, l_start + l_ccount1 - 1)
+					buffer.replace_substring (l_chunk1, truncated_start_position, buffer.count)
+
+					l_chunk2 := a_string.substring (l_start + l_ccount1, a_string.count)
+					buffer.replace_substring (l_chunk2, l_split + 1, l_new_tsp - 1)
+
+					truncated_start_position := l_new_tsp
 				else
 					buffer.replace_substring (a_string.substring (l_start, a_string.count), truncated_start_position, truncated_start_position + l_count - 1)
 					if truncated_start_position + l_count > buffer_size then

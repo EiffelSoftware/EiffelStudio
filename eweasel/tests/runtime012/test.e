@@ -56,7 +56,6 @@ feature
 			end
 
 				-- Check various call to copy data between specials
-			create l_spec_bis.make (0x1FFFFFFF)
 			l_spec.copy_data (l_spec_bis, 0x1FFFFFF0, 0x1FFFFFF0, 0xE)
 			l_spec.move_data (0x0, 0x1FFFFFF0, 0xE)
 			l_spec.overlapping_move (0x1FFFFFEF, 0x1FFFFFF0, 0xE)
@@ -156,7 +155,6 @@ feature
 			l_spec_exp.move_data (0x0, 0x7FFFFF0, 0xE)
 			l_spec_exp.overlapping_move (0x7FFFFEF, 0x7FFFFF0, 0xE)
 			l_spec_exp.non_overlapping_move (0x7FFFFE0, 0x7FFFFF0, 0xE)
-
 		end
 
 end

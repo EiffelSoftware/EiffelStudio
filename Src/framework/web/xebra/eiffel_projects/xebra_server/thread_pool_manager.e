@@ -12,6 +12,23 @@ class
 create
 	make
 
+feature {NONE} -- Initialization
+
+	make (max_number_of_threads: NATURAL)
+			-- The maximal number of threads that can be spawned is stored in `max_number_of_threads'. If this limit is
+			-- reached, the requests are queued, until one of the threads is completed.
+		require
+			non_negative_number: max_number_of_threads > 0
+		do
+			maximal_thread_number := max_number_of_threads
+			create thread_pool.make (maximal_thread_number, agent spawn_thread)
+			create pool_mutex.make
+			create {ARRAYED_QUEUE [PROCEDURE [G, TUPLE]]} work_queue.make (max_number_of_threads.as_integer_32)
+			create queue_mutex.make
+		ensure
+			work_queue_set: work_queue.is_empty
+		end
+
 feature {THREAD_POOL_MANAGER} -- Access
 
 	thread_pool: POOL [POOLED_THREAD [G]]
@@ -20,9 +37,6 @@ feature {THREAD_POOL_MANAGER} -- Access
 	pool_mutex: MUTEX
 			-- A mutex that locks the thread pool
 
-	max_threads: NATURAL
-			-- Maximal number of threads allowed (queuing otherwise)
-
 	work_queue: QUEUE [PROCEDURE [G, TUPLE]]
 			-- Qeue that holds unprocessed requests as agents
 
@@ -30,6 +44,9 @@ feature {THREAD_POOL_MANAGER} -- Access
 			-- A mutex that locks the `work_queue'
 
 feature -- Access
+
+	maximal_thread_number: NATURAL
+			-- Maximal number of threads allowed (queuing otherwise)
 
 	count: NATURAL
 			-- Returns the total number of spawned threads
@@ -43,30 +60,7 @@ feature -- Access
 			Result := thread_pool.unused_objects_count
 		end
 
-	maximal_thread_number: NATURAL
-			-- Number of maximally managed threads
-		do
-			Result := max_threads
-		end
-
-feature {NONE} -- Initialization
-
-	make (max_number_of_threads: NATURAL)
-			-- The maximal number of threads that can be spawned is stored in `max_number_of_threads'. If this limit is
-			-- reached, the requests are queued, until one of the threads is completed.
-		require
-			non_negative_number: max_number_of_threads > 0
-		do
-			max_threads := max_number_of_threads
-			create thread_pool.make (max_number_of_threads, agent spawn_thread)
-			create pool_mutex.make
-			create {ARRAYED_QUEUE [PROCEDURE [G, TUPLE]]} work_queue.make (max_number_of_threads.as_integer_32)
-			create queue_mutex.make
-		ensure
-			work_queue_set: work_queue.is_empty
-		end
-
-feature -- Processing
+feature -- Basic operations
 
 	add_work (work: PROCEDURE [G, TUPLE])
 			-- Launches a thread with the specified argument `arg'. Reuse of thread if possible.
@@ -76,20 +70,18 @@ feature -- Processing
 				-- Wait, till possible to lock
 			pool_mutex.lock
 
-			if thread_pool.unused_objects_count = 0 and thread_pool.count = max_threads then
+			if thread_pool.unused_objects_count = 0 and thread_pool.count = maximal_thread_number then
 				queue (work)
-				print ("queue " + count.out + " data " +  work_queue.count.out+ " " + available_count.out + "%N")
 			else
 				thread := retrieve_available_thread
 				thread.launch_with_work(work)
-				print ("launch " + count.out + " data " +  work_queue.count.out+ " " + available_count.out + "%N")
 			end
 
 				-- Let the other threads launch/lock		
 			pool_mutex.unlock
 		end
 
-feature {THREAD_POOL_MANAGER} -- Internal
+feature {THREAD_POOL_MANAGER} -- Implementation
 
 	retrieve_available_thread: POOLED_THREAD [G]
 			-- Returns an unused thread, this method is thread safe
@@ -101,7 +93,7 @@ feature {THREAD_POOL_MANAGER} -- Internal
 			end
 			Result := thread_pool.retrieve_available_object
 		ensure
-			not_too_many_threads: thread_pool.count <= max_threads
+			not_too_many_threads: thread_pool.count <= maximal_thread_number
 		end
 
 	queue (work: PROCEDURE [G, TUPLE])
@@ -127,7 +119,7 @@ feature {THREAD_POOL_MANAGER} -- Internal
 			create Result.make (Current)
 		end
 
-feature {POOLED_THREAD} -- Internal
+feature {POOLED_THREAD} -- Implementation
 
 	ready (thread: POOLED_THREAD [G])
 			-- Internal use. Thread signals, that it has completed its task and is ready for reuse.

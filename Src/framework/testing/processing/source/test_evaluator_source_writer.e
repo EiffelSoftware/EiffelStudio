@@ -45,32 +45,32 @@ feature -- Basic operations
 				agent (a_test: !TEST_I; a_index: NATURAL)
 					do
 						stream.put_line ("Result := True")
-					end)
-			create l_type.make_from_string ("!" + {TEST_CONSTANTS}.common_test_class_ancestor_name)
+					end, True)
+			create l_type.make_from_string ({TEST_CONSTANTS}.common_test_class_ancestor_name)
 			put_query ("test_set_instance", l_type, a_list,
 				agent (a_test: !TEST_I; a_index: NATURAL)
 					do
-						stream.put_string ("Result := create {")
+						stream.put_string ("l_result := create {")
 						stream.put_string (a_test.class_name)
 						stream.put_line ("}")
-					end)
-			create l_type.make_from_string ("!PROCEDURE [ANY, TUPLE [" + {TEST_CONSTANTS}.common_test_class_ancestor_name + "]]")
+					end, False)
+			create l_type.make_from_string ("PROCEDURE [ANY, TUPLE [" + {TEST_CONSTANTS}.common_test_class_ancestor_name + "]]")
 			put_query ("test_procedure", l_type, a_list,
 				agent (a_test: !TEST_I; a_index: NATURAL)
 					do
-						stream.put_string ("Result := agent {")
+						stream.put_string ("l_result := agent {")
 						stream.put_string (a_test.class_name)
 						stream.put_string ("}.")
 						stream.put_line (a_test.name)
-					end)
-			create l_type.make_from_string ("!READABLE_STRING_8")
+					end, False)
+			create l_type.make_from_string ("READABLE_STRING_8")
 			put_query ("test_name", l_type, a_list,
 				agent (a_test: !TEST_I; a_index: NATURAL)
 					do
-						stream.put_string ("Result := %"")
+						stream.put_string ("l_result := %"")
 						stream.put_string (a_test.name)
 						stream.put_line ("%"")
-					end)
+					end, False)
 
 			put_class_footer
 			stream := Void
@@ -78,7 +78,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	put_query (a_name: !STRING; a_result: !STRING; a_list: ?DS_LINEAR [!TEST_I]; a_callback: !PROCEDURE [ANY, TUPLE [t: !TEST_I; i: NATURAL]])
+	put_query (a_name: !STRING; a_result: !STRING; a_list: ?DS_LINEAR [!TEST_I]; a_callback: !PROCEDURE [ANY, TUPLE [t: !TEST_I; i: NATURAL]]; a_is_basic: BOOLEAN)
 			-- Print `test_name' routine to `stream'.
 		require
 			stream_valid: is_writing
@@ -89,8 +89,18 @@ feature {NONE} -- Implementation
 			stream.indent
 			stream.put_string (a_name)
 			stream.put_string (" (a_index: NATURAL): ")
+			if not a_is_basic then
+				stream.put_string ("attached ")
+			end
 			stream.put_line (a_result)
 			stream.indent
+			if not a_is_basic then
+				stream.put_line ("local")
+				stream.indent
+				stream.put_string ("l_result: detachable ")
+				stream.put_line (a_result)
+				stream.dedent
+			end
 			stream.put_line ("do")
 			stream.indent
 			stream.put_line ("inspect")
@@ -118,9 +128,15 @@ feature {NONE} -- Implementation
 			stream.put_line ("else")
 			stream.indent
 			stream.put_line ("-- Invalid index")
+			if not a_is_basic then
+				stream.put_line ("check l_result /= Void end")
+			end
 			stream.dedent
 			stream.put_line ("end")
 			stream.dedent
+			if not a_is_basic then
+				stream.put_line ("Result := l_result")
+			end
 			stream.put_line ("end")
 			stream.dedent
 			stream.dedent
@@ -128,7 +144,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -152,10 +168,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

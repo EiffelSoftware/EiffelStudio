@@ -9,21 +9,12 @@ inherit
 create
     make_with_port
 
-feature --Constants
-
-	message_upper_bound: NATURAL = 65536
-	message_default_bound: NATURAL = 32768
-	default_http_server_port: NATURAL = 3490
-
-	max_tcp_clients: NATURAL = 100
-	max_thread_number: NATURAL = 10
-
-
 feature -- Initialization
+
 	thread_pool: DATA_THREAD_POOL_MANAGER [XB_MOD_HANDLER]
 
 	make_with_port (port: NATURAL)
-			-- creates a server on the specified `port' which listens to a http server mod (xebra)
+			-- Creates a server on the specified `port' which listens to a http server mod (xebra)
 		require
 			not_well_known_port: port >= 1024 --should we allow registered ports?
 		local
@@ -52,10 +43,28 @@ feature -- Initialization
         	end
 		end
 
-feature -- Agents
+feature -- Access
+
+	message_upper_bound: NATURAL = 65536
+			-- Upper bound for a message fragment
+
+	message_default_bound: NATURAL = 32768
+			-- Default bound for a message fragment
+
+	default_http_server_port: NATURAL = 3490
+			-- Port for communication between http-server and `Current'
+
+	max_tcp_clients: NATURAL = 100
+			-- Maximal number of clients which can simultanuously connect
+
+	max_thread_number: NATURAL = 10
+			-- Maximal number of simultaneous threads
+
+feature {POOLED_THREAD} -- Implementation
+
 	data_spawner: XB_MOD_HANDLER
-			-- instantiates a new {XB_MOD_HANDLER}
-			-- used for the thread_manager
+			-- Instantiates a new {XB_MOD_HANDLER}.
+			-- Used for the thread_manager.
 		do
 			create Result.make (message_default_bound, message_upper_bound)
 		end

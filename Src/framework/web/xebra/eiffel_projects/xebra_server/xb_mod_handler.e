@@ -10,23 +10,6 @@ class
 create
 	make
 
-feature -- Access
-
-	data: MANAGED_POINTER
-			-- Buffer for sending and receiving messages
-
---	internal_mod_socket: NETWORK_STREAM_SOCKET
---			-- Socket that communicates with the http server
-
-	internal_max_size: NATURAL
-			-- Maximal size of a data packet
-
-	internal_default_size: NATURAL
-			-- Initial size of data packet. Will be expanded to `internal_default_size' if needed.
-
-	encoder: ENCODING_FACILITIES
-			-- Encodes and decodes incoming and outgoing messages
-
 feature --Initialization
 
 	make (message_default_bound, message_upper_bound: NATURAL)
@@ -42,10 +25,25 @@ feature --Initialization
 			create encoder.make
 		end
 
+feature {NONE} -- Access
+
+	data: MANAGED_POINTER
+			-- Buffer for sending and receiving messages
+
+	internal_max_size: NATURAL
+			-- Maximal size of a data packet
+
+	internal_default_size: NATURAL
+			-- Initial size of data packet. Will be expanded to `internal_default_size' if needed.
+
+	encoder: ENCODING_FACILITIES
+			-- Encodes and decodes incoming and outgoing messages
+
 feature --Execution
+
 	do_execute (socket: NETWORK_STREAM_SOCKET)
 			-- <Predecessor>
-			-- waits for one incoming module request and delegates it to the appropriate XebraApp
+			-- Waits for one incoming module request and delegates it to the appropriate XebraApp
 		require
 			socket_open: not socket.is_closed
 		local
@@ -66,7 +64,7 @@ feature --Execution
            		if header.size > internal_max_size then
            			header.fragment := false
            		else
-           			message.append_string(internal_read_string (socket, header.size))
+           			message.append_string(read_string (socket, header.size))
            			i := i + 1
            		end
            	end
@@ -79,18 +77,18 @@ feature --Execution
             end
 		end
 
-feature --Client communication
+feature {NONE} -- Implementation
+
 	send_request (message: STRING; webapp_socket: NETWORK_STREAM_SOCKET): STRING
-			--sends a request to the correct webserver
+			--Sends a request to the correct webserver.
 		require
 			webapp_connected: not webapp_socket.is_closed
 		do
 			Result := message
 		end
 
-feature --Mod communication
 	send_string (message: STRING; app_socket: NETWORK_STREAM_SOCKET)
-			-- sends a string over the specified socket
+			-- Sends a string over the specified socket.
 		require
 			socket_is_open: not app_socket.is_closed
 		local
@@ -110,17 +108,17 @@ feature --Mod communication
 				fragment := (message.count.as_natural_32 - index) > internal_max_size
 				fragment_size := internal_max_size.min (message.count.as_natural_32-index+1)
 
-				internal_write_message_to_data (data, message, index, index + fragment_size, fragment)
+				write_message_to_data (data, message, index, index + fragment_size, fragment)
 				app_socket.put_managed_pointer (data, 0, fragment_size.as_integer_32 + {PLATFORM}.natural_32_bytes)
 				index := index + fragment_size
 			end
 		end
 
-	internal_write_message_to_data ( d: MANAGED_POINTER;
+	write_message_to_data ( d: MANAGED_POINTER;
 							message: STRING;
 							start_index, end_index: NATURAL;
 							fragment: BOOLEAN)
-			-- encodes the string so that it can be sent over the net and be read by mod_xebra
+			-- Encodes the string so that it can be sent over the net and be read by mod_xebra.
 		require
 			data_attached: d /= Void
 			data_is_allocatd: d.count > 0
@@ -145,8 +143,8 @@ feature --Mod communication
 		end
 
 
-	internal_read_string (socket: NETWORK_STREAM_SOCKET; n: NATURAL): STRING
-			-- reads `n' characters from the socket and concatenates them to a string
+	read_string (socket: NETWORK_STREAM_SOCKET; n: NATURAL): STRING
+			-- Reads `n' characters from the socket and concatenates them to a string
 		require
 			socket_is_open: not socket.is_closed
 			n_small_enough: n <= internal_max_size

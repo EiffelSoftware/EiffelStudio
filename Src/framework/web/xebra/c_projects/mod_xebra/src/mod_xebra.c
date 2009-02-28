@@ -41,7 +41,6 @@ static int xebra_handler(request_rec* r)
 	int numbytes; 				/* number of bytes recieved from server */
 	char* rmsg_buf; 			/* buffer for receiving message */
 
-
 	if (!r->handler || strcmp(r->handler, "mod_xebra"))
 		return DECLINED;
 	
@@ -50,9 +49,7 @@ static int xebra_handler(request_rec* r)
 	*/
 	ap_set_content_type(r, "text/html;charset=ascii");
 
-
 	DEBUG ("\n\n===============NEW REQUEST===============\n");
-
 
 	message = r->the_request;
 
@@ -67,7 +64,7 @@ static int xebra_handler(request_rec* r)
 		fprintf (stderr, "getaddrinfo: %s\n", gai_strerror (rv));
 		fflush (stderr);
 		ap_rputs("Cannot connect to XEbraServer. See error log.", r);
-		return OK;
+		return HTTP_INTERNAL_SERVER_ERROR ;
 	}
 
 	/* loop through all the results and connect to the first we can */
@@ -94,7 +91,7 @@ static int xebra_handler(request_rec* r)
 		fprintf (stderr, "client: failed to connect\n");
 		fflush (stderr);
 		ap_rputs("Cannot connect to XEbraServer. See error log.", r);
-		return 0;
+		return HTTP_INTERNAL_SERVER_ERROR ;
 	}
 
 	inet_ntop (p->ai_family, get_in_addr ((struct sockaddr *) p->ai_addr), s,
@@ -103,13 +100,12 @@ static int xebra_handler(request_rec* r)
 	freeaddrinfo (servinfo);
 
 	DEBUG ("Connected.\n");
-
 	
 	DEBUG ("Sending message.\n");
 
 	if (!send_message_fraged (message, sockfd)){
 		ap_rputs("Error sending message. See error log.", r);
-		return OK;
+		return HTTP_INTERNAL_SERVER_ERROR;
 	}
 
 	DEBUG ("Messages sent. Now waiting for back message...\n");
@@ -120,7 +116,7 @@ static int xebra_handler(request_rec* r)
 		fprintf (stderr, "error in receive_message_fraged\n");
 		fflush (stderr);
 		ap_rputs("Error receiving message. See error log.", r);
-		return 0;
+		return HTTP_INTERNAL_SERVER_ERROR;
 	}
 
 	DEBUG ("All receiving ok.\n");
@@ -130,7 +126,6 @@ static int xebra_handler(request_rec* r)
 
 	shutdown (sockfd, 2);
 	close (sockfd);
-	
 	
 	return OK;
 }

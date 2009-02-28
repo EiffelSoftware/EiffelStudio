@@ -33,20 +33,22 @@ feature
 			l_spec := l_spec.aliased_resized_area (0x20000001)
 
 			if l_spec.count /= 536870913 then
-				io.put_string ("Not OK%N")
+				io.put_string ("Not OK - 1%N")
 			end
 			if l_spec.capacity /= 536870913 then
-				io.put_string ("Not OK%N")
+				io.put_string ("Not OK - 2%N")
 			end
 
 			l_count := l_spec.count.as_natural_64
 
 			if (l_count * 8) > physical_size_64 (l_spec) then
 				if (l_count * 8) - physical_size_64 (l_spec) > 32 then
+					io.put_string ("Not OK - 3%N")
 					io.put_natural_64 ((l_count * 8) - physical_size_64 (l_spec))
 					io.put_new_line
 				end
 			elseif physical_size_64 (l_spec) - (l_count * 8) > 32 then
+				io.put_string ("Not OK - 4%N")
 				io.put_natural_64 (physical_size_64 (l_spec) - (l_count * 8))
 				io.put_new_line
 			end
@@ -63,8 +65,7 @@ feature
 			create l_spec_bis.make (0x1FFFFFFF)
 			create l_string.make_empty
 			if not l_spec.standard_is_equal (l_spec_bis) or not l_spec.is_deep_equal (l_spec_bis) then
-				io.put_string ("Not equal!!")
-				io.put_new_line
+				io.put_string ("Not equal - 1%N")
 			end
 
 				-- Check various call to copy data between specials
@@ -83,20 +84,22 @@ feature
 			l_spec := l_spec.twin
 
 			if l_spec.count /= 536870911 then
-				io.put_string ("Not OK%N")
+				io.put_string ("Not OK - 5%N")
 			end
 			if l_spec.capacity /= 536870911 then
-				io.put_string ("Not OK%N")
+				io.put_string ("Not OK - 6%N")
 			end
 
 			l_count := l_spec.count.as_natural_64
 
 			if (l_count * 8) > physical_size_64 (l_spec) then
 				if (l_count * 8) - physical_size_64 (l_spec) > 32 then
+					io.put_string ("Not OK - 7%N")
 					io.put_natural_64 ((l_count * 8) - physical_size_64 (l_spec))
 					io.put_new_line
 				end
 			elseif physical_size_64 (l_spec) - (l_count * 8) > 32 then
+				io.put_string ("Not OK - 8%N")
 				io.put_natural_64 (physical_size_64 (l_spec) - (l_count * 8))
 				io.put_new_line
 			end
@@ -110,20 +113,22 @@ feature
 			l_spec := l_spec.deep_twin
 
 			if l_spec.count /= 536870911 then
-				io.put_string ("Not OK%N")
+				io.put_string ("Not OK - 9%N")
 			end
 			if l_spec.capacity /= 536870911 then
-				io.put_string ("Not OK%N")
+				io.put_string ("Not OK - 10%N")
 			end
 
 			l_count := l_spec.count.as_natural_64
 
 			if (l_count * 8) > physical_size_64 (l_spec) then
 				if (l_count * 8) - physical_size_64 (l_spec) > 32 then
+					io.put_string ("Not OK - 11%N")
 					io.put_natural_64 ((l_count * 8) - physical_size_64 (l_spec))
 					io.put_new_line
 				end
 			elseif physical_size_64 (l_spec) - (l_count * 8) > 32 then
+				io.put_string ("Not OK - 12%N")
 				io.put_natural_64 (physical_size_64 (l_spec) - (l_count * 8))
 				io.put_new_line
 			end
@@ -144,22 +149,19 @@ feature
 			l_exp.set (0xFFF, 0x0, 0x1, 0xF0F0F0F0)
 
 			if l_expd /~ l_spec_exp.item (0x7FFFFFF) then
-				io.put_string ("Not great")
-				io.put_new_line
+				io.put_string ("Not OK - 13%N")
 			end
 
 			p := l_spec_exp.item_address (0x7FFFFFF)
 
 			l_spec_exp.put (l_exp, 0x7FFFFFF)
 			if l_exp /~ l_spec_exp.item (0x7FFFFFF) then
-				io.put_string ("Not great")
-				io.put_new_line
+				io.put_string ("Not OK - 14%N")
 			end
 
 			l_spec_exp.put_default (0x7FFFFFF)
 			if l_expd /~ l_spec_exp.item (0x7FFFFFF) then
-				io.put_string ("Not great")
-				io.put_new_line
+				io.put_string ("Not OK - 15%N")
 			end
 
 				-- Check various call to copy data between specials
@@ -169,8 +171,7 @@ feature
 				not l_spec_exp.standard_is_equal (l_spec_exp_bis) or
 				not l_spec_exp.is_deep_equal (l_spec_exp_bis)
 			then
-				io.put_string ("Not equal!!")
-				io.put_new_line
+				io.put_string ("Not equal - 2%N")
 			end
 
 			l_spec_exp.copy_data (l_spec_exp_bis, 0x7FFFFF0, 0x7FFFFF0, 0xE)
@@ -195,22 +196,19 @@ feature
 			l_exp2.set (0xFFF, 0x0, 0x1, 0xF0F0F0F0)
 
 			if l_exp2d /~ l_spec_exp2.item (0x7FFFFFF) then
-				io.put_string ("Not great")
-				io.put_new_line
+				io.put_string ("Not OK - 16%N")
 			end
 
 			p := l_spec_exp2.item_address (0x7FFFFFF)
 
 			l_spec_exp2.put (l_exp2, 0x7FFFFFF)
 			if l_exp2 /~ l_spec_exp2.item (0x7FFFFFF) then
-				io.put_string ("Not great")
-				io.put_new_line
+				io.put_string ("Not OK - 17%N")
 			end
 
 			l_spec_exp2.put_default (0x7FFFFFF)
 			if l_exp2d /~ l_spec_exp2.item (0x7FFFFFF) then
-				io.put_string ("Not great")
-				io.put_new_line
+				io.put_string ("Not OK - 18%N")
 			end
 
 				-- Check various call to copy data between specials
@@ -220,8 +218,7 @@ feature
 				not l_spec_exp2.standard_is_equal (l_spec_exp2_bis) or
 				not l_spec_exp2.is_deep_equal (l_spec_exp2_bis)
 			then
-				io.put_string ("Not equal!!")
-				io.put_new_line
+				io.put_string ("Not equal - 3%N")
 			end
 
 			l_spec_exp2.copy_data (l_spec_exp2_bis, 0x7FFFFF0, 0x7FFFFF0, 0xE)

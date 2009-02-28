@@ -1,5 +1,5 @@
-test_name	overflow-special-resizing
-test_description Made sure that various operations on SPECIALs around the 4GB boundary are properly done.
+test_name	overflow-special-expanded-resizing
+test_description Made sure that various operations on SPECIALs around the 4GB boundary are properly done. Like runtime012 but this time with special of expanded.
 
 define	VALUE "true"
 copy_sub 	Ace $TEST Ace

@@ -1668,6 +1668,12 @@ end;
 				inherit_info.a_feature.set_is_origin (False)
 			end
 
+			if inherit_info.a_feature.is_replicated_directly then
+					-- Reset direct replication flag as this cannot be aliased.
+				inherit_info.copy_a_feature_for_feature_table
+				inherit_info.a_feature.set_is_replicated_directly (False)
+			end
+
 			if inherit_info.a_feature.has_property then
 				-- We need to aliasing if not already done
 				inherit_info.copy_a_feature_for_feature_table

@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	buffer: attached STRING
+	buffer: STRING
 			-- Buffer containing current (partial) line retrieved from system.
 
 feature {NONE} -- Status report
@@ -56,8 +56,10 @@ feature {NONE} -- Events
 
 feature {EQA_SYSTEM_EXECUTION, EQA_SYSTEM_EXECUTION_PROCESS} -- Implementation
 
-	append_output (a_output: attached READABLE_STRING_8)
+	append_output (a_output: READABLE_STRING_8)
 			-- Append `a_output' to `buffer' and notify `on_new_character' and `on_new_line' accordingly.
+		require
+			a_output_attached: a_output /= Void
 		local
 			i: INTEGER
 			c: CHARACTER

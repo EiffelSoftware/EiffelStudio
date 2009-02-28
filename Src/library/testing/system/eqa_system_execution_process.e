@@ -55,13 +55,13 @@ feature {NONE} -- Access
 
 feature {NONE} -- Access: threading
 
-	mutex: attached MUTEX
+	mutex: MUTEX
 			-- Mutex for controlling access to `Current'
 
-	client_condition: attached CONDITION_VARIABLE
+	client_condition: CONDITION_VARIABLE
 			-- Condition variable for signalling that new output is available
 
-	provider_condition: attached CONDITION_VARIABLE
+	provider_condition: CONDITION_VARIABLE
 			-- Condition valiablefor signalling that `Current' is waiting for new output
 
 	next_output: detachable READABLE_STRING_8
@@ -88,6 +88,9 @@ feature {EQA_SYSTEM_EXECUTION} -- Status report
 
 	is_launched: BOOLEAN
 			-- Has `Current' been launched yet?
+		do
+			Result := process /= Void
+		end
 
 	has_exited: BOOLEAN
 			-- Has `process' exited yet?
@@ -107,14 +110,17 @@ feature {NONE} -- Status report
 
 feature {EQA_SYSTEM_EXECUTION} -- Status setting
 
-	launch (a_exec: attached READABLE_STRING_8; a_arg_list: attached LIST [attached STRING]; a_dir: attached READABLE_STRING_8)
+	launch (a_exec: READABLE_STRING_8; a_arg_list: LIST [STRING]; a_dir: READABLE_STRING_8)
+			-- Launch `processor'.
 		require
+			a_exec_attached: a_exec /= Void
+			a_arg_list_attached: a_arg_list /= Void
+			a_dir_attached: a_dir /= Void
 			not_launched: not is_launched
 		local
 			l_factory: PROCESS_FACTORY
 			l_process: like process
 		do
-			is_launched := True
 			create l_factory
 			l_process := l_factory.process_launcher (a_exec, a_arg_list, a_dir.string)
 			l_process.enable_launch_in_new_process_group
@@ -141,22 +147,26 @@ feature {NONE} -- Status setting
 
 feature {EQA_SYSTEM_EXECUTION} -- Basic operations
 
-	redirect_input (a_input: attached READABLE_STRING_8)
+	redirect_input (a_input: READABLE_STRING_8)
 			-- Send input to `process'.
 			--
 			-- `a_input': Input to be sent to process
 			--
 			-- Note: this routine has preconditions since it is only meant to be called from the main thread
 		require
+			a_input_attached: a_input /= Void
 			launched: is_launched
 			not_exited: not has_exited
 		local
 			l_input: STRING
+			l_process: like process
 		do
 			mutex.lock
 			if not is_finished then
 				create l_input.make_from_string (a_input)
-				process.put_string (l_input)
+				l_process := process
+				check l_process /= Void end
+				l_process.put_string (l_input)
 			end
 			mutex.unlock
 		end
@@ -172,6 +182,7 @@ feature {EQA_SYSTEM_EXECUTION} -- Basic operations
 			l_output: like next_output
 			l_processor: like output_processor
 			l_file: like output_file
+			l_process: like process
 		do
 			mutex.lock
 			if next_output = Void and not is_finished then
@@ -201,7 +212,9 @@ feature {EQA_SYSTEM_EXECUTION} -- Basic operations
 			next_output := Void
 			if is_finished then
 				cleanup_redirection
-				last_exit_code := process.exit_code
+				l_process := process
+				check l_process /= Void end
+				last_exit_code := l_process.exit_code
 				process := Void
 			end
 			provider_condition.signal
@@ -210,7 +223,7 @@ feature {EQA_SYSTEM_EXECUTION} -- Basic operations
 
 feature {NONE} -- Basic operations
 
-	append_output (a_output: attached STRING; a_is_error: BOOLEAN)
+	append_output (a_output: STRING; a_is_error: BOOLEAN)
 			-- Set next output to be processed.
 			--
 			-- `a_output': Output retrieved from `process'.
@@ -219,6 +232,8 @@ feature {NONE} -- Basic operations
 			-- Note: although `append_output' is thread safe, it is not meant to be called simultaneously
 			--       for the same type of output. Otherwise it can not be guaranteed that the output wil be
 			--       redirected in the same order it was retrieved from the system.
+		require
+			a_output_attached: a_output /= Void
 		do
 			mutex.lock
 			if next_output /= Void then
@@ -232,8 +247,10 @@ feature {NONE} -- Basic operations
 			mutex.unlock
 		end
 
-	prepare_redirection (a_process: attached like process)
+	prepare_redirection (a_process: like process)
 			-- Prepare redirection for `a_process'.
+		require
+			a_process_attached: a_process /= Void
 		local
 			l_output_proc, l_error_proc: like output_processor
 			l_output_file, l_error_file, l_input_file: like output_file

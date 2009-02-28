@@ -9,7 +9,6 @@ note
 class ITP_CONSTANT
 
 inherit
-
 	ITP_EXPRESSION
 
 	ERL_CONSTANTS
@@ -30,16 +29,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	value: ANY
+	value: detachable ANY
 		-- Value
 
 	type_name: STRING
 			-- Type name of constant
+		local
+			l_value: like value
 		do
-			if value = Void then
+			l_value := value
+			if l_value = Void then
 				Result := none_type_name
 			else
-				Result := value.generating_type
+				Result := l_value.generating_type
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -49,6 +51,7 @@ feature -- Access
 feature -- Processing
 
 	process (a_processor: ITP_EXPRESSION_PROCESSOR)
+			-- <Precursor>
 		do
 			a_processor.process_constant (Current)
 		end

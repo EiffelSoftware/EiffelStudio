@@ -43,15 +43,19 @@ feature -- Query
 
 feature -- Access
 
-	exception: attached EQA_TEST_INVOCATION_EXCEPTION
+	exception: EQA_TEST_INVOCATION_EXCEPTION
 			-- Exception thrown during the execution
 		require
 			exceptional: is_exceptional
+		local
+			l_exception: like internal_exception
 		do
-			Result := internal_exception.as_attached
+			l_exception := internal_exception
+			check l_exception /= Void end
+			Result := l_exception
 		end
 
-	output: attached STRING
+	output: STRING
 			-- Output produced by test
 
 feature {NONE} -- Access

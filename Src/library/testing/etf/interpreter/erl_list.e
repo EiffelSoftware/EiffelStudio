@@ -47,21 +47,29 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item (i: INTEGER): G
+	item (i: INTEGER): detachable G
 			-- Item at index `i' in list
 		require
 			i_large_enough: i >= 1
 			i_small_enough: i <= count
+		local
+			l_storage: like storage
 		do
-			Result := storage.item (i)
+			l_storage := storage
+			check l_storage /= Void end
+			Result := l_storage.item (i)
 		end
 
 	first: like item
 			-- First item
 		require
 			not_empty: not is_empty
+		local
+			l_storage: like storage
 		do
-			Result := storage.item (1)
+			l_storage := storage
+			check l_storage /= Void end
+			Result := l_storage.item (1)
 		ensure
 			definition: Result = item (1)
 		end
@@ -70,8 +78,12 @@ feature -- Access
 			-- Last item
 		require
 			not_empty: not is_empty
+		local
+			l_storage: like storage
 		do
-			Result := storage.item (count)
+			l_storage := storage
+			check l_storage /= Void end
+			Result := l_storage.item (count)
 		ensure
 			definition: Result = item (count)
 		end
@@ -83,9 +95,12 @@ feature -- Measurement
 
 	capacity: INTEGER
 			-- Maximum number of items in list
+		local
+			l_storage: like storage
 		do
-			if storage /= Void then
-				Result := storage.count - 1
+			l_storage := storage
+			if l_storage /= Void then
+				Result := l_storage.count - 1
 			end
 		end
 
@@ -104,10 +119,13 @@ feature -- Status report
 			-- (Use `=' as comparison criterion.)
 		local
 			i, nb: INTEGER
+			l_storage: like storage
 		do
 			nb := count
 			from i := 1 until i > nb loop
-				if storage.item (i) = an_item then
+				l_storage := storage
+				check l_storage /= Void end
+				if l_storage.item (i) = an_item then
 					Result := True
 					i := nb + 1 -- Jump out of the loop.
 				else
@@ -122,9 +140,13 @@ feature -- Element change
 			-- Put `an_item' at last position in list.
 		require
 			not_full: count < capacity
+		local
+			l_storage: like storage
 		do
 			count := count + 1
-			storage.put (an_item, count)
+			l_storage := storage
+			check l_storage /= Void end
+			l_storage.put (an_item, count)
 		ensure
 			one_more: count = old count + 1
 			last_set: last = an_item
@@ -136,18 +158,23 @@ feature -- Element change
 		local
 			new_capacity: INTEGER
 			special_maker: TO_SPECIAL [G]
+			l_storage: like storage
 		do
 			if count >= capacity then
 				new_capacity := (capacity + 1) * 2
-				if storage = Void then
+				l_storage := storage
+				if l_storage = Void then
 					create special_maker.make_area (new_capacity + 1)
-					storage := special_maker.area
-				elseif new_capacity + 1 > storage.count then
-					storage := storage.resized_area (new_capacity + 1)
+					l_storage := special_maker.area
+				elseif new_capacity + 1 > l_storage.count then
+					l_storage := l_storage.resized_area (new_capacity + 1)
 				end
+				storage := l_storage
+			else
+				check l_storage /= Void end
 			end
 			count := count + 1
-			storage.put (an_item, count)
+			l_storage.put (an_item, count)
 		ensure
 			one_more: count = old count + 1
 			last_set: last = an_item
@@ -158,8 +185,12 @@ feature -- Element change
 		require
 			i_large_enough: i >= 1
 			i_small_enough: i <= count
+		local
+			l_storage: like storage
 		do
-			storage.put (an_item, i)
+			l_storage := storage
+			check l_storage /= Void end
+			l_storage.put (an_item, i)
 		ensure
 			same_count: count = old count
 			inserted: item (i) = an_item
@@ -172,22 +203,27 @@ feature -- Element change
 		local
 			l_new_capacity: INTEGER
 			l_special_maker: TO_SPECIAL [G]
+			l_storage: like storage
 		do
+			l_storage := storage
 			if i <= count then
-				storage.put (an_item, i)
+				check l_storage /= Void end
+				l_storage.put (an_item, i)
 			elseif i <= capacity then
-				storage.put (an_item, i)
+				check l_storage /= Void end
+				l_storage.put (an_item, i)
 				count := i
 			else
 				l_new_capacity := i * 2 + 1
-				if storage = Void then
+				if l_storage = Void then
 					create l_special_maker.make_area (l_new_capacity)
-					storage := l_special_maker.area
+					l_storage := l_special_maker.area
 				else
-					storage := storage.resized_area (l_new_capacity)
+					l_storage := l_storage.resized_area (l_new_capacity)
 				end
+				storage := l_storage
 				count := i
-				storage.put (an_item, i)
+				l_storage.put (an_item, i)
 			end
 		ensure
 			count_correct: (i <= old count implies count = old count) and (i > old count implies i = count)
@@ -203,8 +239,11 @@ feature -- Removal
 			not_empty: not is_empty
 		local
 			dead_item: like item
+			l_storage: like storage
 		do
-			storage.put (dead_item, count)
+			l_storage := storage
+			check l_storage /= Void end
+			l_storage.put (dead_item, count)
 			count := count - 1
 		ensure
 			one_less: count = old count - 1
@@ -218,14 +257,17 @@ feature -- Removal
 		local
 			j, nb: INTEGER
 			dead_item: like item
+			l_storage: like storage
 		do
 			j := i
 			nb := count - 1
+			l_storage := storage
+			check l_storage /= Void end
 			from until j > nb loop
-				storage.put (storage.item (j + 1), j)
+				l_storage.put (l_storage.item (j + 1), j)
 				j := j + 1
 			end
-			storage.put (dead_item, j)
+			l_storage.put (dead_item, j)
 			count := count - 1
 		ensure
 			one_less: count = old count - 1
@@ -235,10 +277,13 @@ feature -- Removal
 			-- Remove all items.
 		local
 			i: INTEGER
-			dead_item: like item
+			dead_item: detachable like item
+			l_storage: like storage
 		do
 			from i := count until i < 1 loop
-				storage.put (dead_item, i)
+				l_storage := storage
+				check l_storage /= Void end
+				l_storage.put (dead_item, i)
 				i := i - 1
 			end
 			count := 0
@@ -254,13 +299,15 @@ feature -- Resizing
 			nb_positive: nb >= 0
 		local
 			special_maker: TO_SPECIAL [G]
+			l_storage: like storage
 		do
 			if nb > capacity then
-				if storage = Void then
+				l_storage := storage
+				if l_storage = Void then
 					create special_maker.make_area (nb + 1)
 					storage := special_maker.area
-				elseif nb + 1 > storage.count then
-					storage := storage.resized_area (nb + 1)
+				elseif nb + 1 > l_storage.count then
+					l_storage := l_storage.resized_area (nb + 1)
 				end
 			end
 		ensure
@@ -269,7 +316,7 @@ feature -- Resizing
 
 feature {NONE} -- Implementation
 
-	storage: SPECIAL [like item]
+	storage: detachable SPECIAL [like item]
 			-- Internal storage
 
 invariant

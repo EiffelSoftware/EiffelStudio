@@ -51,7 +51,7 @@ feature -- Access
 			Result := option_of_name (port_switch).value.to_integer
 		end
 
-	file_option: attached STRING
+	file_option: STRING
 			-- File name of
 		require
 			successful: is_successful
@@ -59,10 +59,11 @@ feature -- Access
 		do
 			Result := option_of_name (file_switch).value.as_attached
 		ensure
+			result_attached: Result /= Void
 			result_not_empty: not Result.is_empty
 		end
 
-	output_option: attached STRING
+	output_option: STRING
 			-- Location to store test reports
 		require
 			successful: is_successful
@@ -70,6 +71,7 @@ feature -- Access
 		do
 			Result := option_of_name (output_switch).value.as_attached
 		ensure
+			result_attached: Result /= Void
 			result_not_empty: not Result.is_empty
 		end
 

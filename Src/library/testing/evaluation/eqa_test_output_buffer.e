@@ -52,6 +52,7 @@ feature -- Access
 		end
 
 	content: like buffer
+			-- Not truncated content printed to buffer
 		require
 			not_truncated: not is_truncated
 		do
@@ -59,6 +60,7 @@ feature -- Access
 		end
 
 	leading_content: like buffer
+			-- First part of buffer (before truncated section)
 		require
 			truncated: is_truncated
 		local
@@ -70,6 +72,7 @@ feature -- Access
 		end
 
 	closing_content: like buffer
+			-- Second part of buffer (after truncated section)
 		require
 			truncated: is_truncated
 		local
@@ -85,7 +88,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	buffer: attached STRING
+	buffer: STRING
 			-- Buffer containing first part of output
 
 	split_position: INTEGER

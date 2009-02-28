@@ -13,9 +13,12 @@ feature -- Access
 
 	asserter: EQA_ASSERTIONS
 			-- Assertions used to raise an exception to report unexpected behaviour.
+		local
+			l_asserter: like internal_asserter
 		do
-			if internal_asserter /= Void then
-				Result := internal_asserter
+			l_asserter := internal_asserter
+			if l_asserter /= Void then
+				Result := l_asserter
 			else
 				create Result
 				internal_asserter := Result
@@ -66,7 +69,7 @@ feature -- Status setting
 
 feature {EQA_TEST_EVALUATOR} -- Status setting
 
-	frozen prepare (a_name: attached READABLE_STRING_8)
+	frozen prepare (a_name: READABLE_STRING_8)
 			-- Prepare `Current' to execute any test routine.
 			--
 			-- `a_name': Name of the test which will called after preparation.
@@ -99,6 +102,8 @@ feature -- Query
 
 	frozen is_valid_name (a_name: STRING): BOOLEAN
 			-- Is `a_name' a valid name for a test?
+		require
+			a_name_attached: a_name /= Void
 		local
 			i: INTEGER
 			c: CHARACTER
@@ -149,7 +154,7 @@ feature {NONE} -- Events
 
 feature {NONE} -- Implementation
 
-	internal_asserter: like asserter
+	internal_asserter: detachable like asserter
 			-- Once per object storage for `asserter'.
 
 invariant

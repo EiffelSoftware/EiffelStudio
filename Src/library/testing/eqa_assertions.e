@@ -37,6 +37,7 @@ feature -- Basic operations
 			-- Called when a violation occurred in `assert'.
 		require
 			last_assertion_failed: last_assertion_failed
+			a_tag_attached: a_tag /= Void
 		do
 		end
 
@@ -44,6 +45,7 @@ feature -- Basic operations
 			-- Called when no violation occurred in `assert'.
 		require
 			last_assertion_succeeded: not last_assertion_failed
+			a_tag_attached: a_tag /= Void
 		do
 		end
 

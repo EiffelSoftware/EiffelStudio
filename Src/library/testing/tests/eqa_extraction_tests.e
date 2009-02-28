@@ -36,7 +36,7 @@ feature -- Test routines
 			-- Test {STRING_8} obejct restore from `context'.
 		do
 			assert ("string_object_available", is_string_available)
-			if attached {attached STRING} object_for_id ("#2") as l_string then
+			if attached {STRING} object_for_id ("#2") as l_string then
 				assert ("correct_content", l_string.is_equal ("This is an extracted string."))
 			end
 		end
@@ -55,11 +55,11 @@ feature -- Test routines
 
 					assert ("correct_real_value", a_tuple.real_64_item (1) = {REAL_64} -9534.358)
 
-					if attached {attached EQA_TEST_OBJECT} object_for_id ("#1") as l_obj then
+					if attached {EQA_TEST_OBJECT} object_for_id ("#1") as l_obj then
 						assert ("correct_reference_to_#1", a_tuple.reference_item (2) = l_obj)
 					end
 
-					if attached {attached STRING} object_for_id ("#2") as l_string then
+					if attached {STRING} object_for_id ("#2") as l_string then
 						assert ("correct_reference_to_#2", a_tuple.reference_item (3) = l_string)
 					end
 
@@ -91,19 +91,19 @@ feature -- Test routines
 		do
 			run_extracted_test (agent (a_special: attached SPECIAL [attached ANY])
 				do
-					if attached {attached EQA_TEST_OBJECT} object_for_id ("#1") as l_obj then
+					if attached {EQA_TEST_OBJECT} object_for_id ("#1") as l_obj then
 						assert ("correct_reference_to_#1", a_special.item (0) = l_obj)
 					end
 
-					if attached {attached STRING} object_for_id ("#2") as l_string then
+					if attached {STRING} object_for_id ("#2") as l_string then
 						assert ("correct_reference_to_#2", a_special.item (1) = l_string)
 					end
 
-					if attached {attached TUPLE} object_for_id ("#3") as l_tuple then
+					if attached {TUPLE} object_for_id ("#3") as l_tuple then
 						assert ("correct_reference_to_#2", a_special.item (2) = l_tuple)
 					end
 
-					if attached {attached SPECIAL [NATURAL_8]} object_for_id ("#4") as l_special then
+					if attached {SPECIAL [NATURAL_8]} object_for_id ("#4") as l_special then
 						assert ("correct_reference_to_#2", a_special.item (3) = l_special)
 					end
 
@@ -163,4 +163,14 @@ feature {NONE} -- Access
 			>>
 		end
 
+note
+	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

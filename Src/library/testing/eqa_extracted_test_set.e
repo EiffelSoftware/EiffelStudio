@@ -28,7 +28,7 @@ inherit
 
 feature {NONE} -- Access
 
-	context: attached ARRAY [attached TUPLE [type: attached TYPE [ANY]; attributes: attached TUPLE; inv: BOOLEAN]]
+	context: ARRAY [TUPLE [type: TYPE [ANY]; attributes: TUPLE; inv: BOOLEAN]]
 			-- List of objects needed to reconstruct application state as it was when test routines were
 			--     extracted. Once the content is restored (after `prepare' was called), each object can
 			--     be accessed through `object_for_id', where id is is in the form of '#' + index.
@@ -62,9 +62,10 @@ feature -- Status report
 
 feature {NONE} -- Status report
 
-	is_existing_id (a_id: attached STRING): BOOLEAN
+	is_existing_id (a_id: STRING): BOOLEAN
 			-- Is `a_id' an id of an existing object in `context'?
 		require
+			a_id_attached: a_id /= Void
 			a_id_valid: is_valid_id (a_id)
 		local
 			n: like index_of_id
@@ -75,32 +76,18 @@ feature {NONE} -- Status report
 
 	is_cache_loaded: BOOLEAN
 			-- Is `object_cache' filled with all object from `context'?
-		local
-			i: INTEGER
 		do
-			if object_cache /= Void then
-				if context.lower = object_cache.lower and context.upper = object_cache.upper then
-					from
-						i := context.lower
-						Result := True
-					until
-						i > context.upper or not Result
-					loop
-							-- TODO: find a way to assure all objects in `object_cache' have the correct type
-						Result := True -- type_name (object_cache.item (i)).is_equal (context.item (i).type)
-						i := i + 1
-					end
-				end
-			end
+			Result := object_cache /= Void
 		ensure
 			result_implies_attached: Result implies object_cache /= Void
-			result_implies_equal_range: Result implies (context.lower = object_cache.lower and context.upper = object_cache.upper)
 		end
 
 feature {NONE} -- Query
 
-	is_valid_id (a_id: attached STRING): BOOLEAN
+	is_valid_id (a_id: STRING): BOOLEAN
 			-- Is `a_id' a possible identifier for an object in `context'?
+		require
+			a_id_attached: a_id /= Void
 		do
 			if a_id.count > 1 and then a_id.item (1) = '#' then
 				Result := a_id.substring (2, a_id.count).is_natural
@@ -111,9 +98,10 @@ feature {NONE} -- Query
 			result_implies_is_natural: Result implies a_id.substring (2, a_id.count).is_natural
 		end
 
-	index_of_id (a_id: attached STRING): NATURAL
+	index_of_id (a_id: STRING): NATURAL
 			-- Index component of `a_id'.
 		require
+			a_id_attached: a_id /= Void
 			a_id_valid: is_valid_id (a_id)
 		do
 			Result := a_id.substring (2, a_id.count).to_natural
@@ -121,20 +109,30 @@ feature {NONE} -- Query
 			result_valid: ("#" + Result.out).is_equal (a_id)
 		end
 
-	object_for_id (a_id: attached STRING): attached ANY
+	object_for_id (a_id: STRING): ANY
 			-- Cached instance restored from `context' for given id.
 			--
 			-- `a_id': ID used in `context' for requested object.
 			-- `Result': Cached instance of object restored from `context'.
 		require
+			a_id_attached: a_id /= Void
 			a_id_valid: is_existing_id (a_id)
 			object_cache_loaded: is_cache_loaded
+		local
+			l_cache: like object_cache
 		do
-			Result := object_cache.item (index_of_id (a_id).to_integer_32)
+			l_cache := object_cache
+			check l_cache /= Void end
+			Result := l_cache.item (index_of_id (a_id).to_integer_32)
+		ensure
+			result_attached: Result /= Void
 		end
 
-	is_valid_item_tuple (a_special: attached SPECIAL [ANY]; a_tuple: attached TUPLE): BOOLEAN
+	is_valid_item_tuple (a_special: SPECIAL [ANY]; a_tuple: TUPLE): BOOLEAN
 			-- Does `a_tuple' contain valid elements for `a_special'?
+		require
+			a_special_attached: a_special /= Void
+			a_tuple_attached: a_tuple /= Void
 		do
 			if attached {SPECIAL [BOOLEAN]} a_special as l_b_special then
 				Result := a_tuple.is_uniform_boolean
@@ -231,7 +229,7 @@ feature {NONE} -- Events
 
 feature {NONE} -- Basic operations
 
-	run_extracted_test (a_routine: attached ROUTINE [ANY, TUPLE]; a_operands: attached TUPLE)
+	run_extracted_test (a_routine: ROUTINE [ANY, TUPLE]; a_operands: TUPLE)
 			-- Call routine with given operands.
 			--
 			-- `a_routine': Arbitrary Eiffel routine.
@@ -240,6 +238,9 @@ feature {NONE} -- Basic operations
 			-- Note: items in `a_operands' of the form #ID where ID is a valid index for `context', will be
 			--       replaced with the corresponding object instance. If any item in `a_operands' does not
 			--       conform to the operand needed to call `a_routine', an exception will be triggered.
+		require
+			a_routine_attached: a_routine /= Void
+			a_operands_attached: a_operands /= Void
 		local
 			l_new: TUPLE
 		do
@@ -258,10 +259,12 @@ feature {NONE} -- Object initialization
 			-- Set up `object_under_test' and `routine_arguments' with content from `context'.
 		local
 			i, l_gtype: INTEGER
-			l_object: attached ANY
+			l_object: detachable ANY
 			l_type: TYPE [ANY]
+			l_cache: like object_cache
 		do
-			create object_cache.make (context.lower, context.upper)
+			create l_cache.make (context.lower, context.upper)
+			object_cache := l_cache
 				-- Create instance for each object in `context'
 			from
 				i := context.lower
@@ -273,27 +276,29 @@ feature {NONE} -- Object initialization
 					l_object := create_special_object (l_stype, context.item (i).attributes.count)
 				else
 					if attached {TYPE [STRING]} l_type as l_s8type then
-						if attached {attached STRING} context.item (i).attributes.item (1) as l_string8_object then
+						if attached {STRING} context.item (i).attributes.item (1) as l_string8_object then
 							l_object := l_string8_object
 						else
 							assert ("first attribute of a STRING_8 object must be a string", False)
 						end
 					elseif attached {TYPE [STRING_32]} l_type as l_s32type then
-						if attached {attached STRING_32} context.item (i).attributes.item (1) as l_string32_object then
+						if attached {STRING_32} context.item (i).attributes.item (1) as l_string32_object then
 							l_object := l_string32_object
 						else
 							assert ("first attribute of a STRING_32 object must be a string", False)
 						end
 					else
 						l_gtype := generic_dynamic_type (context.item (i).type, 1)
-						if attached {attached ANY} new_instance_of (l_gtype) as l_any then
+						if attached {ANY} new_instance_of (l_gtype) as l_any then
 							l_object := l_any
 						else
 							assert ("objects of type " + type_name_of_type (l_gtype) + " are not supported", False)
 						end
 					end
+					check l_object /= Void end
 				end
-				object_cache.put (l_object, i)
+				check l_object /= Void end
+				l_cache.put (l_object, i)
 				i := i + 1
 			end
 
@@ -303,15 +308,15 @@ feature {NONE} -- Object initialization
 			until
 				i > context.upper
 			loop
-				l_object := object_cache.item (i)
-				if not (attached {attached STRING_8} l_object as l_s8 or attached {attached STRING_32} l_object as l_s32) then
-					if attached {attached SPECIAL [ANY]} l_object as l_special_object then
+				l_object := l_cache.item (i)
+				if not (attached {STRING_8} l_object as l_s8 or attached {STRING_32} l_object as l_s32) then
+					if attached {SPECIAL [ANY]} l_object as l_special_object then
 						if is_valid_item_tuple (l_special_object, context.item (i).attributes) then
 							set_special_attributes (l_special_object, context.item (i).attributes)
 						else
 							assert ("all items of a special object must be of the same type", False)
 						end
-					elseif attached {attached TUPLE} l_object as l_tuple_object then
+					elseif attached {TUPLE} l_object as l_tuple_object then
 							-- First item of `an_attribute_list' describes whether
 							-- `a_tuple' shall compare objects and not references
 						if context.item (i).attributes.count > 0 and then context.item (i).attributes.is_boolean_item (1) then
@@ -333,12 +338,12 @@ feature {NONE} -- Object initialization
 
 				-- Check if each object in context fulfills its invariants if it has to
 			from
-				i := object_cache.lower
+				i := l_cache.lower
 			until
-				i > object_cache.upper
+				i > l_cache.upper
 			loop
 				if context.item (i).inv then
-					object_cache.item (i).do_nothing
+					l_cache.item (i).do_nothing
 				end
 				i := i + 1
 			end
@@ -346,13 +351,14 @@ feature {NONE} -- Object initialization
 			object_cache_loaded: is_cache_loaded
 		end
 
-	create_special_object (a_special: attached TYPE [SPECIAL [ANY]]; a_count: INTEGER): attached SPECIAL [ANY]
+	create_special_object (a_special: TYPE [SPECIAL [ANY]]; a_count: INTEGER): SPECIAL [detachable ANY]
 			-- Creates a special object of type `a_class_name' for `a_count' elements.
 		require
+			a_special_attached: a_special /= Void
 			a_count_not_negative: a_count >= 0
 		local
 			l_type: INTEGER
-			l_result: like create_special_object
+			l_result: detachable like create_special_object
 			l_special: like new_special_any_instance
 		do
 			if attached {TYPE [SPECIAL [BOOLEAN]]} a_special as l_b_special then
@@ -395,21 +401,24 @@ feature {NONE} -- Object initialization
 					l_result := l_special
 				else
 					assert ("special type not supported", False)
+					check l_result /= Void end
 				end
-				check l_result /= Void end
 				Result := l_result
 			end
+		ensure
+			result_attached: Result /= Void
 		end
 
-	set_attributes (an_object: attached ANY; an_attributes: attached TUPLE)
+	set_attributes (an_object: ANY; an_attributes: TUPLE)
 			-- TODO: Missing header comment.
 		require
 			an_object_not_void: an_object /= Void
 			an_object_valid: not is_tuple (an_object) and not is_special (an_object)
+			an_attributes_attached: an_attributes /= Void
 		local
 			i, j: INTEGER
-			l_attributes: HASH_TABLE [INTEGER, attached STRING]
-			l_obj: attached ANY
+			l_attributes: HASH_TABLE [INTEGER, STRING]
+			l_obj: ANY
 			l_name: like field_name
 		do
 			create l_attributes.make (an_attributes.count // 2)
@@ -418,7 +427,7 @@ feature {NONE} -- Object initialization
 			until
 				not an_attributes.valid_index (i + 1)
 			loop
-				if an_attributes.is_reference_item (i) and then attached {attached STRING} an_attributes.reference_item (i) as l_key then
+				if an_attributes.is_reference_item (i) and then attached {STRING} an_attributes.reference_item (i) as l_key then
 					l_attributes.force (i + 1, l_key)
 				else
 					assert ("attribute tuple for normal object must always be a pair of strings and values", False)
@@ -437,7 +446,7 @@ feature {NONE} -- Object initialization
 					j := l_attributes.item (l_name)
 					inspect field_type (i, an_object)
 					when reference_type then
-						if an_attributes.is_reference_item (j) and then attached {attached STRING} an_attributes.reference_item (j) as l_id then
+						if an_attributes.is_reference_item (j) and then attached {STRING} an_attributes.reference_item (j) as l_id then
 							if is_valid_id (l_id) and then is_existing_id (l_id) then
 								l_obj := object_for_id (l_id)
 								if field_conforms_to (dynamic_type (l_obj), field_static_type_of_type (i, dynamic_type (an_object))) then
@@ -512,11 +521,14 @@ feature {NONE} -- Object initialization
 			end
 		end
 
-	set_tuple_attributes (a_tuple: attached TUPLE; an_attributes: attached TUPLE; a_offset: NATURAL)
+	set_tuple_attributes (a_tuple: TUPLE; an_attributes: TUPLE; a_offset: NATURAL)
 			-- Set items of `a_tuple' with values from `an_attribute_list'.
+		require
+			a_tuple_attached: a_tuple /= Void
+			an_attributes_attached: an_attributes /= Void
 		local
 			i, j: INTEGER
-			l_obj: attached ANY
+			l_obj: ANY
 		do
 			from
 				i := 1
@@ -527,7 +539,7 @@ feature {NONE} -- Object initialization
 				inspect
 					a_tuple.item_code (i)
 				when {TUPLE}.reference_code then
-					if an_attributes.is_reference_item (j) and then attached {attached STRING} an_attributes.reference_item (j) as l_id then
+					if an_attributes.is_reference_item (j) and then attached {STRING} an_attributes.reference_item (j) as l_id then
 						if is_valid_id (l_id) and then is_existing_id (l_id) then
 							l_obj := object_for_id (l_id)
 							if a_tuple.valid_type_for_index (l_obj, i) then
@@ -596,27 +608,29 @@ feature {NONE} -- Object initialization
 			end
 		end
 
-	set_special_attributes (a_special: attached SPECIAL [ANY]; an_attributes: attached TUPLE)
+	set_special_attributes (a_special: SPECIAL [ANY]; an_attributes: TUPLE)
 			-- Assign items of `an_attributes' to items of `a_special'.
 		require
+			a_special_attached: a_special /= Void
+			an_attributes_attached: an_attributes /= Void
 			attributes_uniform: is_valid_item_tuple (a_special, an_attributes)
 		local
 			i, l_type, l_gtype: INTEGER
-			l_obj: attached ANY
-			l_b_special: SPECIAL [BOOLEAN]
-			l_c8_special: SPECIAL [CHARACTER_8]
-			l_c32_special: SPECIAL [CHARACTER_32]
-			l_i8_special: SPECIAL [INTEGER_8]
-			l_i16_special: SPECIAL [INTEGER_16]
-			l_i32_special: SPECIAL [INTEGER_32]
-			l_i64_special: SPECIAL [INTEGER_64]
-			l_n8_special: SPECIAL [NATURAL_8]
-			l_n16_special: SPECIAL [NATURAL_16]
-			l_n32_special: SPECIAL [NATURAL_32]
-			l_n64_special: SPECIAL [NATURAL_64]
-			l_r_special: SPECIAL [REAL]
-			l_d_special: SPECIAL [DOUBLE]
-			l_p_special: SPECIAL [POINTER]
+			l_obj: ANY
+			l_b_special: detachable SPECIAL [BOOLEAN]
+			l_c8_special: detachable SPECIAL [CHARACTER_8]
+			l_c32_special: detachable SPECIAL [CHARACTER_32]
+			l_i8_special: detachable SPECIAL [INTEGER_8]
+			l_i16_special: detachable SPECIAL [INTEGER_16]
+			l_i32_special: detachable SPECIAL [INTEGER_32]
+			l_i64_special: detachable SPECIAL [INTEGER_64]
+			l_n8_special: detachable SPECIAL [NATURAL_8]
+			l_n16_special: detachable SPECIAL [NATURAL_16]
+			l_n32_special: detachable SPECIAL [NATURAL_32]
+			l_n64_special: detachable SPECIAL [NATURAL_64]
+			l_r_special: detachable SPECIAL [REAL]
+			l_d_special: detachable SPECIAL [DOUBLE]
+			l_p_special: detachable SPECIAL [POINTER]
 		do
 			if attached {SPECIAL [BOOLEAN]} a_special as l_s_b then
 				l_b_special := l_s_b
@@ -673,7 +687,7 @@ feature {NONE} -- Object initialization
 				inspect
 					l_type
 				when reference_type then
-					if attached {attached STRING} an_attributes.reference_item (i) as l_id then
+					if attached {STRING} an_attributes.reference_item (i) as l_id then
 						if is_valid_id (l_id) and then is_existing_id (l_id) then
 							l_obj := object_for_id (l_id)
 							if field_conforms_to (dynamic_type (l_obj), l_gtype) then

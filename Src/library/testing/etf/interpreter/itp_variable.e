@@ -72,6 +72,7 @@ feature -- Access
 feature -- Processing
 
 	process (a_processor: ITP_EXPRESSION_PROCESSOR)
+			-- <Precursor>
 		do
 			a_processor.process_variable (Current)
 		end

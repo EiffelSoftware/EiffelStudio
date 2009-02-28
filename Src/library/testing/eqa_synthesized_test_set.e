@@ -79,6 +79,7 @@ feature {NONE} -- Basic operations
 	execute_safe (a_routine: ROUTINE [ANY, TUPLE])
 			-- Call `a_agent'
 		require
+			a_routine_attached: a_routine /= Void
 			no_open_args: (attached {TUPLE} a_routine.empty_operands as l_args) and then l_args.count = 0
 		local
 			l_rescued: BOOLEAN

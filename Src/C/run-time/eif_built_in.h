@@ -40,6 +40,7 @@
 #include "eif_eiffel.h"
 #include "eif_misc.h"
 #include "eif_argv.h"
+#include "eif_internal.h"
 
 #ifdef __cplusplus
 extern "C" {

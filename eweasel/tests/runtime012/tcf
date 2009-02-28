@@ -5,6 +5,15 @@ define	VALUE "true"
 copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e
 copy_raw 	exp.e $CLUSTER exp.e
+copy_raw 	exp2.e $CLUSTER exp2.e
+
+compile_frozen
+compile_result ok
+
+c_compile_work
+c_compile_result ok
+
+copy_raw 	test_rev1.e $CLUSTER test.e
 
 compile_melted
 compile_result ok

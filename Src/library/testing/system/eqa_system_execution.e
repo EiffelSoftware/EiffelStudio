@@ -19,6 +19,8 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 			--
 			-- `an_environment': Environment in for current system test.
+		require
+			an_environment_attached: an_environment /= Void
 		local
 			l_empty_path: EQA_SYSTEM_PATH
 		do
@@ -30,10 +32,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	environment: attached EQA_SYSTEM_ENVIRONMENT
+	environment: EQA_SYSTEM_ENVIRONMENT
 			-- Current environment
 
-	working_directory: attached READABLE_STRING_8
+	working_directory: READABLE_STRING_8
 			-- Working directory in which process will be launched
 
 	output_path: detachable EQA_SYSTEM_PATH
@@ -61,13 +63,13 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	file_system: attached EQA_FILE_SYSTEM
+	file_system: EQA_FILE_SYSTEM
 			-- Shared instance of {EQA_FILE_SYSTEM}
 		do
 			Result := environment.test_set.file_system
 		end
 
-	arguments: attached ARRAYED_LIST [attached STRING]
+	arguments: ARRAYED_LIST [STRING]
 			-- Arguments passed to process when `launch' is called.
 
 	process: detachable EQA_SYSTEM_EXECUTION_PROCESS
@@ -96,6 +98,7 @@ feature -- Status setting
 	set_working_directory (a_working_directory: like working_directory)
 			-- Set `working_directory' to `a_working_directory'.
 		require
+			a_working_directory_attached: a_working_directory /= Void
 			not_launched: not is_launched
 		local
 			l_dir: detachable like working_directory
@@ -111,7 +114,7 @@ feature -- Status setting
 			-- Set `output_path' to `a_output_path'.
 		require
 			not_launched: not is_launched
-			a_output_path_not_empty: not a_output_path.is_empty
+			a_output_path_not_empty: a_output_path /= Void implies not a_output_path.is_empty
 		do
 			if a_output_path /= Void then
 				create output_path.make_from_path (a_output_path)
@@ -126,7 +129,7 @@ feature -- Status setting
 			-- Set `error_path' to `a_error_path'.
 		require
 			not_launched: not is_launched
-			a_error_path_not_empty: not a_error_path.is_empty
+			a_error_path_not_empty: a_error_path /= Void implies not a_error_path.is_empty
 		do
 			if a_error_path /= Void then
 				create error_path.make_from_path (a_error_path)
@@ -141,7 +144,7 @@ feature -- Status setting
 			-- Set `input_path' to `a_input_path'.
 		require
 			not_launched: not is_launched
-			a_input_path_not_empty: not a_input_path.is_empty
+			a_input_path_not_empty: a_input_path /= Void implies not a_input_path.is_empty
 		do
 			if a_input_path /= Void then
 				create input_path.make_from_path (a_input_path)
@@ -174,17 +177,16 @@ feature -- Status setting
 
 feature {NONE} -- Query
 
-	executable_name: attached STRING
+	executable_name: STRING
 			-- Name of executable to run system
 		local
 			l_exec_env: EXECUTION_ENVIRONMENT
-			l_cmd: STRING
+			l_cmd: detachable STRING
 		do
 			l_cmd := environment.get (executable_env)
 			if l_cmd = Void then
 				create l_exec_env
 				l_cmd := l_exec_env.command_line.argument (0)
-				check l_cmd /= Void end
 			end
 			Result := l_cmd
 		end
@@ -196,7 +198,7 @@ feature -- Basic operations
 		require
 			not_launched: not is_launched
 		local
-			l_status: like process
+			l_process: like process
 			l_output_path, l_error_path, l_input_path: like output_path
 			l_output_file, l_error_file, l_input_file: detachable PLAIN_TEXT_FILE
 		do
@@ -218,9 +220,9 @@ feature -- Basic operations
 				l_input_file.open_read
 			end
 
-			create l_status.make (output_processor, error_processor, l_output_file, l_error_file, l_input_file)
-			l_status.launch (executable_name, arguments, working_directory)
-			process := l_status
+			create l_process.make (output_processor, error_processor, l_output_file, l_error_file, l_input_file)
+			l_process.launch (executable_name, arguments, working_directory)
+			process := l_process
 			is_launched := True
 		ensure
 			launched: is_launched
@@ -262,7 +264,7 @@ feature -- Basic operations
 			exited: has_exited
 		end
 
-	put_string (a_input: attached READABLE_STRING_8)
+	put_string (a_input: READABLE_STRING_8)
 			-- Send input to process.
 			--
 			-- `a_input': Input to be sent to process.
@@ -270,15 +272,20 @@ feature -- Basic operations
 			launched: is_launched
 			not_exited: not has_exited
 			input_path_detached: input_path = Void
+		local
+			l_process: like process
 		do
-			process.redirect_input (a_input)
+			l_process := process
+			check l_process /= Void end
+			l_process.redirect_input (a_input)
 		end
 
 feature -- Element change
 
-	add_argument (a_argument: attached READABLE_STRING_8)
+	add_argument (a_argument: READABLE_STRING_8)
 			-- Add `a_arguments' to end of `arguments'.
 		require
+			a_argument_attached: a_argument /= Void
 			not_launched: not is_launched
 			a_argument_not_empty: not a_argument.is_empty
 		do
@@ -295,26 +302,29 @@ feature {NONE} -- Implementation
 		require
 			launched: is_launched
 			not_has_exited: not has_exited
-			process_exited: attached process as l_proc and then process.has_exited
+			process_exited: attached process as l_proc and then l_proc.has_exited
 		local
 			l_process: like process
 		do
 			l_process := process
+			check l_process /= Void end
 			last_exit_code := l_process.last_exit_code
 			process := Void
 		ensure
 			exited: has_exited
 		end
 
-	frozen assert (a_tag: attached STRING; a_condition: BOOLEAN)
+	frozen assert (a_tag: STRING; a_condition: BOOLEAN)
 			-- Assert `a_condition'.
+		require
+			a_tag_attached: a_tag /= Void
 		do
 			environment.test_set.assert (a_tag, a_condition)
 		end
 
 feature {NONE} -- Constants
 
-	executable_env: attached STRING = "EQA_EXECUTABLE"
+	executable_env: STRING = "EQA_EXECUTABLE"
 
 	default_argument_count: INTEGER = 5
 

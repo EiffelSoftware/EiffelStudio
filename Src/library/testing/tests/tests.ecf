@@ -8,12 +8,12 @@
 			<exclude>/tests</exclude>
 			<exclude>/EIFGENs</exclude>
 		</file_rule>
-		<option syntax_level="1" namespace="EiffelSoftware.Library">
+		<option warning="true" syntax_level="1" namespace="EiffelSoftware.Library">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<setting name="multithreaded" value="true"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf" use_application_options="true"/>
 		<tests name="tests" location=".\" recursive="true">
 			<option namespace="Tests">

@@ -54,7 +54,7 @@ feature -- Status report
 
 feature -- Access
 
-	variable_value (a_index: INTEGER): ANY
+	variable_value (a_index: INTEGER): detachable ANY
 			-- Value of variable at index `a_index'
 		require
 			a_index_large_enough: a_index > 0
@@ -65,7 +65,7 @@ feature -- Access
 			good_result: Result = storage.item (a_index)
 		end
 
-	expression_value (an_expression: ITP_EXPRESSION): ANY
+	expression_value (an_expression: ITP_EXPRESSION): detachable ANY
 			-- Value of expression `an_expression' in the context of this store.
 		require
 			an_expression_not_void: an_expression /= Void
@@ -84,7 +84,7 @@ feature -- Access
 
 feature -- Basic routines
 
-	assign_value (a_value: ANY; a_index: INTEGER)
+	assign_value (a_value: detachable ANY; a_index: INTEGER)
 			-- Assign the value `a_value' to variable named `a_name'.
 		require
 			a_index_large_enough: a_index > 0
@@ -108,7 +108,7 @@ feature -- Basic routines
 			variable_defined: is_variable_defined (a_index)
 		end
 
-	arguments (an_expression_list: ERL_LIST [ITP_EXPRESSION]): ARRAY [ANY]
+	arguments (an_expression_list: ERL_LIST [ITP_EXPRESSION]): detachable ARRAY [detachable ANY]
 			-- Arguments with the values from `an_expression_list'
 			-- using `variables' to lookup variable values or `Void'
 			-- in case of an error
@@ -117,7 +117,7 @@ feature -- Basic routines
 		local
 			i: INTEGER
 			count: INTEGER
-			expression: ITP_EXPRESSION
+			expression: detachable ITP_EXPRESSION
 		do
 			from
 				count := an_expression_list.count
@@ -127,7 +127,7 @@ feature -- Basic routines
 				i > count or Result = Void
 			loop
 				expression := an_expression_list.item (i)
-				if not is_expression_defined (expression) then
+				if expression = Void or else not is_expression_defined (expression) then
 					Result := Void
 				else
 					Result.put (expression_value (expression), i)

@@ -36,16 +36,19 @@ feature {NONE} -- Initialization
 		local
 			l_quit, l_done: BOOLEAN
 			n: NATURAL
+			l_stream: like stream
 		do
 			if not l_quit then
 				initialize_stream
+				l_stream := stream
+				check l_stream /= Void end
 				from until
 					l_done
 				loop
 					l_done := True
-					stream.read_natural_32
-					if stream.bytes_read = {PLATFORM}.natural_32_bytes then
-						n := stream.last_natural_32
+					l_stream.read_natural_32
+					if l_stream.bytes_read = {PLATFORM}.natural_32_bytes then
+						n := l_stream.last_natural_32
 						if n > 0 then
 							if is_valid_index (n) then
 								run_test (n)
@@ -54,7 +57,7 @@ feature {NONE} -- Initialization
 						end
 					end
 				end
-				stream.put_natural (0)
+				l_stream.put_natural (0)
 				close_stream
 			end
 		rescue
@@ -78,19 +81,21 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	arguments: attached EQA_EVALUATOR_ARGUMENT_PARSER
+	arguments: EQA_EVALUATOR_ARGUMENT_PARSER
 			-- Command line arguments
 
-	evaluator: attached EQA_TEST_EVALUATOR
+	evaluator: EQA_TEST_EVALUATOR
 			-- Evaluator for executing tests
 		require
 			arguments_valid: arguments.is_successful
 		once
 			create Result
 			Result.set_record_output (arguments.has_output_option)
+		ensure
+			result_attached: Result /= Void
 		end
 
-	stream: attached IO_MEDIUM
+	stream: detachable IO_MEDIUM
 			-- Represents the communication medium between interpreter and client
 			--
 			-- Note: this can be a socket or a raw file
@@ -111,7 +116,7 @@ feature {NONE} -- Status setting
 			-- Initialize `stream'.
 		local
 			l_rescued: BOOLEAN
-			l_socket: attached NETWORK_STREAM_SOCKET
+			l_socket: NETWORK_STREAM_SOCKET
 		do
 			if not l_rescued then
 				if arguments.has_port_option then
@@ -127,42 +132,51 @@ feature {NONE} -- Status setting
 				end
 			end
 		ensure
-			stream_initialized: stream.is_open_write
-			stream_supports_storable: stream.support_storable
+			stream_initialized: attached stream as l_s and then l_s.is_open_write
+			stream_supports_storable: attached stream as l_s2 and then l_s2.support_storable
 		rescue
 			is_stream_invalid := True
 		end
 
 	close_stream
 			-- Close `stream' unless standard out
+		local
+			l_stream: like stream
 		do
-			if not stream.is_closed then
-				stream.close
+			l_stream := stream
+			check l_stream /= Void end
+			if not l_stream.is_closed then
+				l_stream.close
 			end
 		end
 
 feature {NONE} -- Query		
 
-	test_set_instance (a_index: NATURAL): attached EQA_TEST_SET
+	test_set_instance (a_index: NATURAL): EQA_TEST_SET
 			-- Instance of a test set class.
 		require
 			a_index_valid: is_valid_index (a_index)
 		deferred
+		ensure
+			result_attached: Result /= Void
 		end
 
-	test_procedure (a_index: NATURAL): attached PROCEDURE [ANY, TUPLE [EQA_TEST_SET]]
+	test_procedure (a_index: NATURAL): PROCEDURE [ANY, TUPLE [EQA_TEST_SET]]
 			-- Agent for a test procedure.
 		require
 			a_index_valid: is_valid_index (a_index)
 		deferred
+		ensure
+			result_attached: Result /= Void
 		end
 
-	test_name (a_index: NATURAL): attached READABLE_STRING_8
+	test_name (a_index: NATURAL): READABLE_STRING_8
 			-- Name of the test procedure
 		require
 			a_index_valid: is_valid_index (a_index)
 		deferred
 		ensure
+			result_attached: Result /= Void
 			result_valid: test_set_instance (a_index).is_valid_name (Result)
 		end
 
@@ -171,13 +185,20 @@ feature {NONE} -- Execution
 	run_test (a_index: NATURAL)
 			-- Run test with `a_index'.
 		require
-			stream_initialized: stream.is_open_write
+			stream_initialized: attached stream as l_s and then l_s.is_open_write
 			a_index_valid: is_valid_index (a_index)
+		local
+			l_result: detachable EQA_TEST_RESULT
+			l_stream: like stream
 		do
 			evaluator.execute (test_set_instance (a_index), test_procedure (a_index), test_name (a_index))
-			if stream.extendible then
-				stream.put_natural (a_index)
-				stream.independent_store (evaluator.last_result)
+			l_stream := stream
+			check l_stream /= Void end
+			if l_stream.extendible then
+				l_stream.put_natural (a_index)
+				l_result := evaluator.last_result
+				check l_result /= Void end
+				l_stream.independent_store (l_result)
 			else
 				is_stream_invalid := True
 			end

@@ -31,7 +31,7 @@ inherit
 			{NONE} all
 		end
 
-feature{NONE} -- Initialization
+feature {NONE} -- Initialization
 
 	execute
 			-- Execute interpreter.
@@ -42,56 +42,66 @@ feature{NONE} -- Initialization
 		local
 			l_log_filename: STRING
 			l_server_url: STRING
-			l_trace: STRING
 			l_port: INTEGER
 		do
-			if argument_count = 5 then
-					-- Read command line argument
-				l_server_url := argument (1)
-				l_port := argument (2).to_integer
-				byte_code_feature_body_id := argument (3).to_integer
-				byte_code_feature_pattern_id := argument (4).to_integer
-				l_log_filename := argument (5)
-
-					-- Redirect standard output to `output_buffer'.
-				create output_buffer.make (buffer_size)
-				create error_buffer.make (buffer_size)
-
-					-- Create object pool
-				create store.make
-
-					-- Create log file.
-				create log_file.make_open_append (l_log_filename)
-				if not log_file.is_open_write then
-					report_error ("could not open log file '" + l_log_filename + "'.")
-					die (1)
-				end
-
-					-- Create socket and connect to proxy.
-				create socket.make_client_by_port (l_port, l_server_url)
-				socket.connect
-				--socket.set_blocking
-					-- Wait for test cases and then execute test cases in a loop.
-				log_message ("<session>%N")
-				main_loop
-				log_message ("</session>%N")
-
-					-- Close log file.
-				if log_file /= Void then
-					log_file.close
-				end
-			else
+			if argument_count /= 5 then
 				check Wrong_number_of_arguments: False end
 			end
+				-- Read command line argument
+			l_server_url := argument (1)
+			l_port := argument (2).to_integer
+			byte_code_feature_body_id := argument (3).to_integer
+			byte_code_feature_pattern_id := argument (4).to_integer
+			l_log_filename := argument (5)
+
+				-- Redirect standard output to `output_buffer'.
+			create output_buffer.make (buffer_size)
+			create error_buffer.make (buffer_size)
+
+				-- Create object pool
+			create store.make
+
+				-- Create log file.
+			create log_file.make_open_append (l_log_filename)
+			if not log_file.is_open_write then
+				report_error ("could not open log file '" + l_log_filename + "'.")
+				die (1)
+			end
+
+			start (l_port, l_server_url)
+
+				-- Close log file.
+			log_file.close
+		end
+
+	start (a_port: INTEGER; a_server_url: STRING)
+			-- Connect to EiffelStudio and initiate `main_loop'.
+		require
+			a_server_url_attached: a_server_url /= Void
+			a_server_url_not_empty: not a_server_url.is_empty
+			a_port_valid: a_port >= 0
+		local
+			l_excpt_trace: like exception_trace
+			l_trace: STRING
+		do
+			create socket.make_client_by_port (a_port, a_server_url)
+			socket.connect
+			--socket.set_blocking
+				-- Wait for test cases and then execute test cases in a loop.
+			log_message ("<session>%N")
+			main_loop
+			log_message ("</session>%N")
 		rescue
 				-- Get an one line trace by replacing new line characters with space, since
 				-- the stream parser from proxy cannot deal with multi line error messages.
 				-- TODO: Added support for multi line error message.
-			l_trace := exception_trace.twin
+			l_excpt_trace:= exception_trace
+			check l_excpt_trace /= Void end
+			l_trace := l_excpt_trace.twin
 			l_trace.replace_substring_all ("%N", " ")
 
 			report_error ("internal. " + l_trace)
-			log_internal_error (exception_trace)
+			log_internal_error (l_excpt_trace)
 			log_message ("</session>%N")
 			die (1)
 		end
@@ -127,11 +137,11 @@ feature {NONE} -- Handlers
 		local
 			b: BOOLEAN
 			l_index: INTEGER
-			l_value: ANY
+			l_value: detachable ANY
 			l_store: like store
 			l_type: STRING
 		do
-			if {l_obj_index: STRING} last_request then
+			if attached {STRING} last_request as l_obj_index then
 				log_message ("report_type_request start%N")
 				l_index := l_obj_index.to_integer
 				l_store := store
@@ -185,7 +195,7 @@ feature {NONE} -- Handlers
 		local
 			l_bcode: STRING
 		do
-			if {l_last_request: TUPLE [l_byte_code: STRING; l_data: ?ANY]} last_request then
+			if attached {TUPLE [l_byte_code: STRING; l_data: detachable ANY]} last_request as l_last_request then
 				l_bcode := l_last_request.l_byte_code
 				if l_bcode.count = 0 then
 					report_error (byte_code_length_error)
@@ -243,13 +253,11 @@ feature {NONE} -- Error Reporting
 			a_reason_attached: a_reason /= Void
 			not_a_reason_is_empty: not a_reason.is_empty
 		do
-			if log_file /= Void and then log_file.is_open_write then
-				log_file.put_string ("<error type='internal'>%N")
-				log_file.put_string ("%T<reason>%N<![CDATA[%N")
-				log_file.put_string (a_reason)
-				log_file.put_string ("]]>%N</reason>%N")
-				log_file.put_string ("</error>%N")
-			end
+			log_file.put_string ("<error type='internal'>%N")
+			log_file.put_string ("%T<reason>%N<![CDATA[%N")
+			log_file.put_string (a_reason)
+			log_file.put_string ("]]>%N</reason>%N")
+			log_file.put_string ("</error>%N")
 		end
 
 feature {NONE} -- Logging
@@ -257,7 +265,7 @@ feature {NONE} -- Logging
 	log_file: PLAIN_TEXT_FILE
 			-- Log file
 
-	log_instance (an_object: ANY)
+	log_instance (an_object: detachable ANY)
 			-- Log an XML representation of `an_object' to `log_file'.
 		do
 			log_message ("<instance<![CDATA[%N")
@@ -274,9 +282,7 @@ feature {NONE} -- Logging
 		require
 			a_message_not_void: a_message /= Void
 		do
-			if log_file /= Void then
-				log_file.put_string (a_message)
-			end
+			log_file.put_string (a_message)
 		end
 
 	report_trace
@@ -286,11 +292,11 @@ feature {NONE} -- Logging
 		local
 			l_buffer: like error_buffer
 			l_exception_code: INTEGER
-			l_recipient: STRING
-			l_recipient_class_name: STRING
-			l_tag: STRING
-			l_trace: STRING
-			l_meaning: STRING
+			l_recipient: like recipient_name
+			l_recipient_class_name: like class_name
+			l_tag: like tag_name
+			l_trace: like exception_trace
+			l_meaning: like meaning
 		do
 				-- Gather exception information.
 			l_exception_code := exception
@@ -299,6 +305,7 @@ feature {NONE} -- Logging
 			l_recipient := recipient_name
 			l_recipient_class_name := class_name
 			l_trace := exception_trace
+			check l_trace /= Void end
 
 			if l_meaning = Void then
 				l_meaning := ""
@@ -338,7 +345,7 @@ feature {NONE} -- Logging
 			log_message ("</call_result>%N")
 		end
 
-feature{NONE} -- IO Buffer
+feature {NONE} -- IO Buffer
 
 	output_buffer: STRING_8
 			-- Buffer used to store standard output from Current process
@@ -364,7 +371,7 @@ feature{NONE} -- IO Buffer
 	buffer_size: INTEGER = 4096
 			-- Size in byte for `output_buffer'
 
-feature{NONE} -- Socket IPC
+feature {NONE} -- Socket IPC
 
 	socket: NETWORK_STREAM_SOCKET
 			-- Socket used for communitation between proxy and current interpreter
@@ -372,16 +379,16 @@ feature{NONE} -- Socket IPC
 	last_request_type: NATURAL_32
 			-- Type of the last request retrieved by `retrieve_request'.
 
-	last_request: ANY
+	last_request: detachable ANY
 			-- Last received request by `retrieve_request'
---			-- `flag' indicates request type,
---			-- `data' stores data needed for that reques type.
+			-- `flag' indicates request type,
+			-- `data' stores data needed for that reques type.
 
 	last_response_flag: NATURAL_32
 			-- Flag indicating the status of the response
 			-- See {ITP_SHARED_CONSTANTS} for valid values
 
-	last_response: ANY
+	last_response: detachable ANY
 			-- Last response to be sent back to the proxy
 
 	retrieve_request
@@ -428,10 +435,13 @@ feature{NONE} -- Socket IPC
 			-- If error occurs, close `socket'.
 		local
 			l_retried: BOOLEAN
+			l_last_response: like last_response
 		do
 			if not l_retried then
 				socket.put_natural_32 (last_response_flag)
-				socket.independent_store (last_response)
+				l_last_response := last_response
+				check l_last_response /= Void end
+				socket.independent_store (l_last_response)
 			end
 		rescue
 			l_retried := True
@@ -449,7 +459,7 @@ feature{NONE} -- Socket IPC
 			output_buffer.append_character ('%N')
 		end
 
-feature{NONE} -- Parsing
+feature {NONE} -- Parsing
 
 	parse
 			-- Parse input and call corresponding handler routines (`report_*').
@@ -464,7 +474,6 @@ feature{NONE} -- Parsing
 						last_request_type
 					when execute_request_flag then
 						report_execute_request
-
 					when type_request_flag then
 						report_type_request
 
@@ -480,12 +489,12 @@ feature{NONE} -- Parsing
 			end
 		end
 
-feature{NONE} -- Object pool
+feature {NONE} -- Object pool
 
 	store: ITP_STORE
 			-- Object store
 
-feature{NONE} -- Byte code
+feature {NONE} -- Byte code
 
 	byte_code_feature_body_id: INTEGER
 			-- ID for feature whose byte-code is to be injected
@@ -542,7 +551,7 @@ feature{NONE} -- Byte code
 			-- Execute test case
 			-- The test case will be written as byte-code.
 		local
-			v_1: STRING
+			v_1: detachable STRING
 		do
 			v_1 := Void
 		end
@@ -553,7 +562,7 @@ feature{NONE} -- Byte code
 			store.assign_value (a_object, a_index)
 		end
 
-	variable_at_index (a_index: INTEGER): ANY
+	variable_at_index (a_index: INTEGER): detachable ANY
 			-- Object in `store' at position `a_index'.
 		do
 			Result := store.variable_value (a_index)
@@ -606,24 +615,22 @@ feature{NONE} -- Invariant checking
 			-- Is the class invariant violated when `check_invariant' is invoked
 			-- the last time?
 
-	check_invariant (o: ?ANY) is
+	check_invariant (o: detachable ANY) is
 			-- Check if the class invariant `o' is satisfied.
 			-- If not satisfied, set `is_last_invariant_violated' to True
 			-- and raise the exception.
 			-- If satisfied, set `is_last_invariant_violated' to False.
 			-- if `o' is detached, set `is_last_invariant_violated' to False and do nothing.
-		local
-			l_retried_times: INTEGER
 		do
-			if {obj: ANY} o then
-				obj.do_nothing
+			if attached {ANY} o as l_obj then
+				l_obj.do_nothing
 			end
 		rescue
 			is_last_invariant_violated := True
 		end
 
 invariant
-	log_file_open_write: log_file /= Void implies log_file.is_open_write
+	log_file_open_write: log_file.is_open_write
 	store_not_void: store /= Void
 	output_buffer_attached: output_buffer /= Void
 	error_buffer_attached: error_buffer /= Void

@@ -24,6 +24,8 @@ feature {NONE} -- Initialization
 			--
 			-- `a_date': Date when outcome was produced.
 			-- `a_is_user_abort': Are the responces missing due to user abort?
+		require
+			a_date_attached: a_date /= Void
 		do
 			date := a_date
 			is_user_abort := a_is_user_abort
@@ -33,11 +35,12 @@ feature {NONE} -- Initialization
 			no_response: not has_response
 		end
 
-	make_with_setup (a_setup_response: like setup_response; a_date: like date)
+	make_with_setup (a_setup_response: attached like setup_response; a_date: like date)
 			-- Initialize `Current' with exceptional setup response.
 			--
 		require
 			a_setup_response_exceptional: a_setup_response.is_exceptional
+			a_date_attached: a_date /= Void
 		do
 			date := a_date
 			setup_response := a_setup_response
@@ -46,11 +49,12 @@ feature {NONE} -- Initialization
 			setup_exceptional: not is_setup_clean
 		end
 
-	make (a_setup_response: like setup_response; a_test_response: like test_response;
-	      a_teardown_response: like teardown_response; a_date: like date)
+	make (a_setup_response: attached like setup_response; a_test_response: attached like test_response;
+	      a_teardown_response: attached like teardown_response; a_date: like date)
 			-- Initialize `Current' with responses for all three stages.
 		require
 			a_setup_response_clean: not a_setup_response.is_exceptional
+			a_date_attached: a_date /= Void
 		do
 			date := a_date
 			setup_response := a_setup_response
@@ -63,7 +67,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	date: attached DATE_TIME
+	date: DATE_TIME
 			-- Date and time `Current' was retrieved
 
 	setup_response: detachable EQA_TEST_INVOCATION_RESPONSE
@@ -79,24 +83,34 @@ feature -- Status report
 
 	is_pass: BOOLEAN
 			-- <Precursor>
+		local
+			l_response: like test_response
 		do
 			if is_setup_clean then
-				Result := not test_response.is_exceptional
+				l_response := test_response
+				check l_response /= Void end
+				Result := not l_response.is_exceptional
 			end
 		ensure
 			result_implies_clean_setup: Result implies is_setup_clean
-			result_implies_clean_test_response: Result implies not test_response.is_exceptional
+			result_implies_clean_test_response: Result implies not
+				(attached test_response as l_tr and then l_tr.is_exceptional)
 		end
 
 	is_fail: BOOLEAN
 			-- <Precursor>
+		local
+			l_response: like test_response
 		do
 			if is_test_response_valid then
-				Result := test_response.is_exceptional
+				l_response := test_response
+				check l_response /= Void end
+				Result := l_response.is_exceptional
 			end
 		ensure
 			result_implies_valid_test_response: Result implies is_test_response_valid
-			result_implies_test_response_exceptional: Result implies test_response.is_exceptional
+			result_implies_test_response_exceptional: Result implies
+				(attached  test_response as l_tr and then l_tr.is_exceptional)
 		end
 
 	is_unresolved: BOOLEAN
@@ -145,13 +159,18 @@ feature -- Status report
 
 	is_setup_clean: BOOLEAN
 			-- Does `Current' contain a test stage response?
+		local
+			l_response: like setup_response
 		do
 			if has_response then
-				Result := not setup_response.is_exceptional
+				l_response := setup_response
+				check l_response /= Void end
+				Result := not l_response.is_exceptional
 			end
 		ensure
 			result_implies_has_response: Result implies has_response
-			result_implies_clean_setup: Result implies not setup_response.is_exceptional
+			result_implies_clean_setup: Result implies
+				(attached setup_response as l_sr and then not l_sr.is_exceptional)
 		end
 
 	is_test_response_valid: BOOLEAN
@@ -160,25 +179,34 @@ feature -- Status report
 			-- Note: the test response is valid if setup stage was not exceptional and no precondition
 			--       violation occured which was caused by a call from TEST_INTERPRETER or any (!) call
 			--       from an agent.
+		local
+			l_response: like test_response
 		do
 			if is_setup_clean then
-				Result := not test_response.is_exceptional or else not test_response.exception.is_test_exceptional
+				l_response := test_response
+				check l_response /= Void end
+				Result := not l_response.is_exceptional or else not l_response.exception.is_test_exceptional
 			end
 		ensure
 			result_implies_clean_setup: Result implies is_setup_clean
-			definition: Result implies (not test_response.is_exceptional or else
-				test_response.exception.is_test_exceptional)
+			definition: Result implies (attached test_response as l_tr and then
+				(not l_tr.is_exceptional or else l_tr.exception.is_test_exceptional))
 		end
 
 	is_teardown_clean: BOOLEAN
 			-- Is tear down
+		local
+			l_response: like teardown_response
 		do
 			if is_setup_clean then
-				Result := not teardown_response.is_exceptional
+				l_response := teardown_response
+				check l_response /= Void end
+				Result := not l_response.is_exceptional
 			end
 		ensure
 			result_implies_clean_setup: Result implies is_setup_clean
-			result_implies_clean_teardown: Result implies not teardown_response.is_exceptional
+			result_implies_clean_teardown: Result implies
+				(attached teardown_response as l_tr and then l_tr.is_exceptional)
 		end
 
 feature {NONE} -- Implementation

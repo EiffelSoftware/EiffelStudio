@@ -21,7 +21,7 @@ inherit
 
 feature {EQA_SYSTEM_EXECUTION} -- Access
 
-	file_system: attached EQA_FILE_SYSTEM
+	file_system: EQA_FILE_SYSTEM
 			-- File system for creating directories and files
 		require
 			prepared: is_prepared
@@ -40,7 +40,7 @@ feature {EQA_SYSTEM_EXECUTION} -- Access
 			Result := l_file_system
 		end
 
-	environment: attached EQA_SYSTEM_ENVIRONMENT
+	environment: EQA_SYSTEM_ENVIRONMENT
 			-- Environment specifying source/target directory for `Current'.
 		require
 			prepared: is_prepared
@@ -69,7 +69,7 @@ feature {NONE} -- Access: caching
 
 feature {NONE} -- Query
 
-	compare_output (a_output: attached READABLE_STRING_8)
+	compare_output (a_output: READABLE_STRING_8)
 		require
 			current_execution_attached: current_execution /= Void
 			current_execution_exited: attached current_execution as l_exec_exited and then
@@ -78,13 +78,16 @@ feature {NONE} -- Query
 				l_exec_out.output_path /= Void
 		local
 			l_path: detachable EQA_SYSTEM_PATH
+			l_execution: like current_execution
 		do
-			l_path := current_execution.output_path
+			l_execution := current_execution
+			check l_execution /= Void end
+			l_path := l_execution.output_path
 			check l_path /= Void end
 			assert ("identical_output", file_system.has_same_content_as_string (l_path, a_output))
 		end
 
-	compare_output_with_file (a_output_path: attached EQA_SYSTEM_PATH)
+	compare_output_with_file (a_output_path: EQA_SYSTEM_PATH)
 		require
 			current_execution_attached: current_execution /= Void
 			current_execution_exited: attached current_execution as l_exec_exited and then
@@ -94,15 +97,18 @@ feature {NONE} -- Query
 			a_output_path_not_empty: not a_output_path.is_empty
 		local
 			l_path: detachable EQA_SYSTEM_PATH
+			l_execution: like current_execution
 		do
-			l_path := current_execution.output_path
+			l_execution := current_execution
+			check l_execution /= Void end
+			l_path := l_execution.output_path
 			check l_path /= Void end
 			assert ("identical_output", file_system.has_same_content_as_path (l_path, a_output_path))
 		end
 
 feature {NONE} -- Basic operations
 
-	prepare_system (a_output_path: attached EQA_SYSTEM_PATH)
+	prepare_system (a_output_path: EQA_SYSTEM_PATH)
 			-- Create new `current_execution' using provided path to store output.
 			--
 			-- `a_output_path': Path where output retrieved from system will be stored.
@@ -122,7 +128,7 @@ feature {NONE} -- Basic operations
 				l_exec_o.output_path ~ old a_output_path
 		end
 
-	run_system (a_args: attached ARRAY [STRING])
+	run_system (a_args: ARRAY [STRING])
 			-- Launch `current_execution' and process output until it exits.
 		require
 			current_execution_attached: current_execution /= Void

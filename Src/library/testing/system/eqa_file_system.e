@@ -19,6 +19,7 @@ feature {NONE} -- Initialization
 			--
 			-- `a_environment': Environment for current system test.
 		require
+			a_environment_attached: a_environment /= Void
 			a_environment_valid: a_environment.test_set.has_valid_name
 		do
 			environment := a_environment
@@ -26,7 +27,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	environment: attached EQA_SYSTEM_ENVIRONMENT
+	environment: EQA_SYSTEM_ENVIRONMENT
 			-- Environment for current system test.
 
 	last_created_directory: detachable DIRECTORY
@@ -37,25 +38,33 @@ feature -- Access
 
 feature -- Query
 
-	build_source_path (a_path: attached EQA_SYSTEM_PATH): attached STRING
+	build_source_path (a_path: EQA_SYSTEM_PATH): STRING
 			-- Build the actual path name relative to the source directory for given path.
 			--
 			-- `a_path': Path for which path name should be built
 			-- `Result': Path name relative to source directory.
+		require
+			a_path_attached: a_path /= Void
 		do
 			Result := build_partial_path (a_path, source_directory, 0)
+		ensure
+			result_attached: Result /= Void
 		end
 
-	build_target_path (a_path: attached EQA_SYSTEM_PATH): attached STRING
+	build_target_path (a_path: EQA_SYSTEM_PATH): STRING
 			-- Build the actual path name relative to the target directory for given path.
 			--
 			-- `a_path': Path for which path name should be built
 			-- `Result': Path name relative to target directory.
+		require
+			a_path_attached: a_path /= Void
 		do
 			Result := build_partial_path (a_path, target_directory, 0)
+		ensure
+			result_attached: Result /= Void
 		end
 
-	has_same_content_as_string (a_path: attached EQA_SYSTEM_PATH; a_string: attached READABLE_STRING_8): BOOLEAN
+	has_same_content_as_string (a_path: EQA_SYSTEM_PATH; a_string: READABLE_STRING_8): BOOLEAN
 			-- Does target file for path have same content as given string?
 			--
 			-- `a_path': Path relative to `target_directory' of file
@@ -64,7 +73,9 @@ feature -- Query
 			--
 			-- Note: if file does not exists or is not readable an exception is raised.
 		require
+			a_path_attached: a_path /= Void
 			a_path_not_empty: not a_path.is_empty
+			a_string_attached: a_string /= Void
 		local
 			l_filename: like build_target_path
 			l_file: FILE
@@ -93,7 +104,7 @@ feature -- Query
 			l_file.close
 		end
 
-	has_same_content_as_path (a_first_path, a_second_path: attached EQA_SYSTEM_PATH): BOOLEAN
+	has_same_content_as_path (a_first_path, a_second_path: EQA_SYSTEM_PATH): BOOLEAN
 			-- Do target files for given paths have the same content?
 			--
 			-- `a_first': Relative path of first file.
@@ -103,7 +114,9 @@ feature -- Query
 			--
 			-- Note: if files do not exist or are not readable an exception is raised.
 		require
+			a_first_path_attached: a_first_path /= Void
 			a_first_path_not_empty: not a_first_path.is_empty
+			a_second_path_attached: a_second_path /= Void
 			a_second_path_not_empty: not a_second_path.is_empty
 		local
 			l_filename1, l_filename2: like build_target_path
@@ -139,19 +152,19 @@ feature -- Query
 
 feature {NONE} -- Query
 
-	source_directory: attached READABLE_STRING_8
+	source_directory: READABLE_STRING_8
 			-- Name of directory in which original testing directories are located.
 		do
 			Result := environment.source_directory
 		end
 
-	target_directory: attached READABLE_STRING_8
+	target_directory: READABLE_STRING_8
 			-- Name of directory in which testing directories are created.
 		do
 			Result := environment.target_directory
 		end
 
-	build_partial_path (a_path: attached EQA_SYSTEM_PATH; a_prefix: attached READABLE_STRING_8; a_strip: INTEGER): attached DIRECTORY_NAME
+	build_partial_path (a_path: EQA_SYSTEM_PATH; a_prefix: READABLE_STRING_8; a_strip: INTEGER): DIRECTORY_NAME
 			-- Build a partial path name relative to to a given directory.
 			--
 			-- `a_path': Path for which path name should be built
@@ -159,6 +172,8 @@ feature {NONE} -- Query
 			-- `a_strip': Numer of items at the end of `a_path' to be neglected.
 			-- `Result': Path name relative to target directory.
 		require
+			a_path_attached: a_path /= Void
+			a_prefix_attached: a_prefix /= Void
 			a_strip_valid: a_strip >= 0 and a_strip <= a_path.count
 		local
 			i, l_count: INTEGER
@@ -174,15 +189,19 @@ feature {NONE} -- Query
 				Result.extend (a_path.item (i))
 				i := i + 1
 			end
+		ensure
+			result_attached: Result /= Void
 		end
 
 feature -- Basic operations
 
-	create_directory_from_path (a_path: attached EQA_SYSTEM_PATH)
+	create_directory_from_path (a_path: EQA_SYSTEM_PATH)
 			-- Recursively create target directory from path and store {DIRECTORY} instance in
 			-- `last_created_directory'.
 			--
 			-- `a_path': Path representing path name for target directory.
+		require
+			a_path_attached: a_path /= Void
 		do
 			last_created_directory := Void
 			create_directory_from_partial_path (a_path, 0)
@@ -194,13 +213,14 @@ feature -- Basic operations
 				and then l_dir2.exists
 		end
 
-	create_file_from_path (a_path: attached EQA_SYSTEM_PATH)
+	create_file_from_path (a_path: EQA_SYSTEM_PATH)
 			-- Create target file from path recursively and store open writable {PLAIN_TEXT_FILE}
 			-- instance in `last_crerated_file'. Also {DIRECTORY} instance of target directory in which new
 			-- file is located will be stored in `last_created_directory'.
 			--
 			-- `a_path': Path representing path name for target file.
 		require
+			a_path_attached: a_path /= Void
 			a_path_not_empty: not a_path.is_empty
 		local
 			l_file: PLAIN_TEXT_FILE
@@ -226,13 +246,14 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	create_directory_from_partial_path (a_path: attached EQA_SYSTEM_PATH; a_strip: INTEGER)
+	create_directory_from_partial_path (a_path: EQA_SYSTEM_PATH; a_strip: INTEGER)
 			-- Recursively create target directory from partial path recursively and store {DIRECTORY}
 			-- instance in `last_created_directory'.
 			--
 			-- `a_path': Path representing path name for target directory.
 			-- `a_strip': Numer of items at the end of `a_path' to be neglected.
 		require
+			a_path_attached: a_path /= Void
 			a_strip_valid: a_strip >= 0 and a_strip <= a_path.count
 		local
 			l_dirname: DIRECTORY_NAME
@@ -293,8 +314,10 @@ feature {NONE} -- Implementation
 				and then l_dir2.exists
 		end
 
-	frozen assert (a_tag: attached STRING; a_condition: BOOLEAN)
+	frozen assert (a_tag: STRING; a_condition: BOOLEAN)
 			-- Assert `a_condition' using asserter from current test set.
+		require
+			a_tag_attached: a_tag /= Void
 		do
 			environment.test_set.assert (a_tag, a_condition)
 		end

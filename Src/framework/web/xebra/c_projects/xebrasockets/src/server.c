@@ -17,7 +17,7 @@
 
 #include "xebrasockets.h"
 
-#define BACKLOG 10     // how many pending connections queue will hold
+#define BACKLOG 1000     // how many pending connections queue will hold
 
 /*
 doc:    <routine name="sigchld_handler" export="public">
@@ -49,7 +49,9 @@ int main ( int argc, char *argv[] )
 	int rv;					/* connection info */
 	int yes=1;
 	int numbytes;				/* number of bytes received */
-
+	
+	printf ("Server ready to rock...\n");
+	
 
 	/* loop endlessly */
 	while (1){
@@ -60,7 +62,8 @@ int main ( int argc, char *argv[] )
 		hints.ai_socktype = SOCK_STREAM;
 		hints.ai_flags = AI_PASSIVE; // use my IP
 		
-		printf ("\n\n\nWaiting for a new client\n");
+		DEBUG ("\n\n\nWaiting for a new client\n");
+		
 	
 		if ((rv = getaddrinfo (NULL, PORT, &hints, &servinfo)) != 0){
 			fprintf  (stderr, "getaddrinfo: %s\n", gai_strerror (rv));
@@ -108,7 +111,7 @@ int main ( int argc, char *argv[] )
 				return 1;
 			}
 
-			printf ("Waiting for connections...\n");
+			DEBUG ("Waiting for connections...\n");
 
 			
 			sin_size = sizeof their_addr;
@@ -121,17 +124,17 @@ int main ( int argc, char *argv[] )
 			inet_ntop (their_addr.ss_family,
 			            get_in_addr ((struct sockaddr *) &their_addr),
 			            s, sizeof s);
-			printf ("Got connection from %s\n", s);
+			DEBUG ("Got connection from %s\n", s);
 
 			numbytes = receive_message_fraged (&rmsg_buf, new_fd);
 
 			if (numbytes < 1){
 
-				printf ("could not receive message");
+				DEBUG ("could not receive message");
 			} else {
-				printf ("NOW I would do something very complicated\n");
+				DEBUG ("NOW I would do something very complicated\n");
 
-				printf ("Sending back message.\n");
+				DEBUG ("Sending back message.\n");
 
 
 				char * message = (char *) malloc (1000 + numbytes);
@@ -148,7 +151,7 @@ int main ( int argc, char *argv[] )
 				
 				free (message);
 		
-				printf ("All done.\n");
+				DEBUG ("All done.\n");
 			}
 			free (rmsg_buf);
 		}

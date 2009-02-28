@@ -1,9 +1,8 @@
 
 # set the include path found by configure
-INCLUDES = $(all_includes) -I/home/fabioz/cprojects/sockettest2/src \
-	-I/usr/include/apr-1.0 -I/home/fabioz/local/apache_src/include \
-	-I/usr/local/home/fabioz/eiffel_src/64dev/C/run-time/include/ -I/usr/local/home/fabioz/eiffel_src/64dev/C/run-time \
-	-I/usr/include/apr-1.0
+INCLUDES = $(all_includes) -I/home/fabioz/xebra/c_projects/xebrasockets/src \
+	-I/home/fabioz/local/apache_src/include -I/usr/include/apr-1.0 \
+	-I/usr/local/home/fabioz/eiffel_src/64dev/C/run-time -I/usr/local/home/fabioz/eiffel_src/64dev/C/run-time/include/
 
 # the library search path.
 lib_LTLIBRARIES = mod_xebra.la

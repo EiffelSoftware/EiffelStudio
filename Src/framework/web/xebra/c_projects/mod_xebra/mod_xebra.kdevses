@@ -2,11 +2,11 @@
 <!DOCTYPE KDevPrjSession>
 <KDevPrjSession>
  <DocsAndViews NumberOfDocuments="2" >
-  <Doc0 NumberOfViews="1" URL="file:///home/fabioz/cprojects/mod_xebra/src/mod_xebra.c" >
-   <View0 Encoding="" line="65" Type="Source" />
+  <Doc0 NumberOfViews="1" URL="file:///home/fabioz/xebra/c_projects/mod_xebra/src/mod_xebra.c" >
+   <View0 Encoding="" line="8" Type="Source" />
   </Doc0>
-  <Doc1 NumberOfViews="1" URL="file:///home/fabioz/cprojects/sockettest2/src/xebrasockets.c" >
-   <View0 Encoding="" line="0" Type="Source" />
+  <Doc1 NumberOfViews="1" URL="file:///home/fabioz/xebra/c_projects/xebrasockets/src/xebrasockets.c" >
+   <View0 Encoding="" line="9" Type="Source" />
   </Doc1>
  </DocsAndViews>
  <pluginList>

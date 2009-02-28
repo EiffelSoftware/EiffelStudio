@@ -50,7 +50,7 @@ feature
 				-- Check that equality works
 			create l_spec.make (0x1FFFFFFF)
 			create l_spec_bis.make (0x1FFFFFFF)
-			if l_spec.standard_is_equal (l_spec_bis) or l_spec.is_deep_equal (l_spec_bis) then
+			if not l_spec.standard_is_equal (l_spec_bis) or not l_spec.is_deep_equal (l_spec_bis) then
 				io.put_string ("Not equal!!")
 				io.put_new_line
 			end
@@ -147,6 +147,11 @@ feature
 
 				-- Check various call to copy data between specials
 			create l_spec_exp_bis.make (0x7FFFFFF)
+			if not l_spec_exp.standard_is_equal (l_spec_exp_bis) or not l_spec_exp.is_deep_equal (l_spec_exp_bis) then
+				io.put_string ("Not equal!!")
+				io.put_new_line
+			end
+
 			l_spec_exp.copy_data (l_spec_exp_bis, 0x7FFFFF0, 0x7FFFFF0, 0xE)
 			l_spec_exp.move_data (0x0, 0x7FFFFF0, 0xE)
 			l_spec_exp.overlapping_move (0x7FFFFEF, 0x7FFFFF0, 0xE)

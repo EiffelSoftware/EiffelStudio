@@ -145,7 +145,7 @@ rt_public EIF_BOOLEAN eequal(register EIF_REFERENCE target, register EIF_REFEREN
 				return EIF_FALSE;
 			} else {
 					/* Second condition: block equality */
-				return EIF_TEST(!memcmp (source, target, s_size * RT_SPECIAL_ELEM_SIZE(source)));
+				return EIF_TEST(!memcmp (source, target, s_size * (rt_uint_ptr) RT_SPECIAL_ELEM_SIZE(source)));
 			}
 		} else if (Dftype(source) == egc_bit_dtype) {
 				/* Eiffel standard equality on BIT objects */
@@ -256,7 +256,7 @@ rt_public EIF_BOOLEAN spiso(register EIF_REFERENCE target, register EIF_REFERENC
 	if (!(s_flags & EO_REF)) {
 #endif
 		/* Case 1: specials filled with direct instances: block comparison */
-		return EIF_TEST(!memcmp (source, target, count * elem_size));
+		return EIF_TEST(!memcmp (source, target, (rt_uint_ptr) count * (rt_uint_ptr) elem_size));
 	}
 
 	if (s_flags & EO_TUPLE) {

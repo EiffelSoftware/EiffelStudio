@@ -1024,7 +1024,7 @@ rt_public void st_write(EIF_REFERENCE object)
 		size = RT_SPECIAL_ELEM_SIZE(object);
 		buffer_write((char *)(&size), sizeof(uint32));
 			/* Compute actual number of bytes we need to store. */
-		nb_char = nb_char * size;
+		nb_char = nb_char * (rt_uint_ptr) size;
 	} else {
 		/* Evaluation of the size of a normal object */
 		nb_char = EIF_Size(dtype);
@@ -1249,14 +1249,15 @@ rt_private void gen_object_write(char *object, uint16 flags, EIF_TYPE_INDEX dfty
 		} 
 	} else {
 		if (flags & EO_SPEC) {		/* Special object */
-			EIF_INTEGER count, elem_size;
+			EIF_INTEGER count;
+			rt_uint_ptr elem_size;
 			EIF_REFERENCE ref, o_ptr;
 
 			o_ptr = RT_SPECIAL_INFO(object);
 			count = RT_SPECIAL_COUNT_WITH_INFO(o_ptr);
 
 			if (flags & EO_TUPLE) {
-				buffer_write (object, count * sizeof(EIF_TYPED_VALUE));
+				buffer_write (object, (rt_uint_ptr) count * sizeof(EIF_TYPED_VALUE));
 			} else {
 				uint32 dgen;
 				EIF_TYPE_INDEX *dynamic_types;
@@ -1284,25 +1285,25 @@ rt_private void gen_object_write(char *object, uint16 flags, EIF_TYPE_INDEX dfty
 	
 				if (!(flags & EO_REF)) {		/* Special of simple types */
 					switch (dgen & SK_HEAD) {
-						case SK_UINT8: buffer_write(object, count*sizeof(EIF_NATURAL_8)); break;
-						case SK_UINT16: buffer_write(object, count*sizeof(EIF_NATURAL_16)); break;
-						case SK_UINT32: buffer_write(object, count*sizeof(EIF_NATURAL_32)); break;
-						case SK_UINT64: buffer_write(object, count*sizeof(EIF_NATURAL_64)); break;
-						case SK_INT8: buffer_write(object, count*sizeof(EIF_INTEGER_8)); break;
-						case SK_INT16: buffer_write(object, count*sizeof(EIF_INTEGER_16)); break;
-						case SK_INT32: buffer_write(object, count*sizeof(EIF_INTEGER_32)); break;
-						case SK_INT64: buffer_write(object, count*sizeof(EIF_INTEGER_64)); break;
-						case SK_WCHAR: buffer_write(object, count*sizeof(EIF_WIDE_CHAR)); break;
+						case SK_UINT8: buffer_write(object, (rt_uint_ptr) count*sizeof(EIF_NATURAL_8)); break;
+						case SK_UINT16: buffer_write(object, (rt_uint_ptr) count*sizeof(EIF_NATURAL_16)); break;
+						case SK_UINT32: buffer_write(object, (rt_uint_ptr) count*sizeof(EIF_NATURAL_32)); break;
+						case SK_UINT64: buffer_write(object, (rt_uint_ptr) count*sizeof(EIF_NATURAL_64)); break;
+						case SK_INT8: buffer_write(object, (rt_uint_ptr) count*sizeof(EIF_INTEGER_8)); break;
+						case SK_INT16: buffer_write(object, (rt_uint_ptr) count*sizeof(EIF_INTEGER_16)); break;
+						case SK_INT32: buffer_write(object, (rt_uint_ptr) count*sizeof(EIF_INTEGER_32)); break;
+						case SK_INT64: buffer_write(object, (rt_uint_ptr) count*sizeof(EIF_INTEGER_64)); break;
+						case SK_WCHAR: buffer_write(object, (rt_uint_ptr) count*sizeof(EIF_WIDE_CHAR)); break;
 						case SK_BOOL:
-						case SK_CHAR: buffer_write(object, count*sizeof(EIF_CHARACTER)); break;
-						case SK_REAL32: buffer_write(object, count*sizeof(EIF_REAL_32)); break;
-						case SK_REAL64: buffer_write(object, count*sizeof(EIF_REAL_64)); break;
-						case SK_POINTER: buffer_write(object, count*sizeof(EIF_POINTER)); break;
+						case SK_CHAR: buffer_write(object, (rt_uint_ptr) count*sizeof(EIF_CHARACTER)); break;
+						case SK_REAL32: buffer_write(object, (rt_uint_ptr) count*sizeof(EIF_REAL_32)); break;
+						case SK_REAL64: buffer_write(object, (rt_uint_ptr) count*sizeof(EIF_REAL_64)); break;
+						case SK_POINTER: buffer_write(object, (rt_uint_ptr) count*sizeof(EIF_POINTER)); break;
 						case SK_BIT:
 							elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
 
 	/*FIXME: header for each object ????*/
-							buffer_write(object, count*elem_size); /* %%ss arg1 was cast (struct bit *) */
+							buffer_write(object, (rt_uint_ptr) count*elem_size); /* %%ss arg1 was cast (struct bit *) */
 							break;
 						case SK_EXP:
 							elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
@@ -1327,7 +1328,7 @@ rt_private void gen_object_write(char *object, uint16 flags, EIF_TYPE_INDEX dfty
 					}
 				} else {
 					if (!(flags & EO_COMP)) {	/* Special of references */
-						buffer_write(object, count*sizeof(EIF_REFERENCE));
+						buffer_write(object, (rt_uint_ptr) count*sizeof(EIF_REFERENCE));
 					} else {			/* Special of composites */
 						elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
 						exp_dftype = eif_gen_param_id(dftype, 1);

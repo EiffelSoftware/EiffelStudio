@@ -163,9 +163,9 @@ feature {NONE} -- Implementation
 					result_reg.print_register
 					buf.put_string (" = RTCL(")
 					gen_reg.print_register
-					buf.put_string (" + OVERHEAD + ")
+					buf.put_string (" + OVERHEAD + (rt_uint_ptr)")
 					parameters.i_th (1).print_register
-					buf.put_string (" * (")
+					buf.put_string (" * (rt_uint_ptr)(")
 					l_exp_class_type.skeleton.generate_size (buf, True)
 					buf.put_string (" + OVERHEAD));")
 					buf.put_new_line
@@ -195,9 +195,9 @@ feature {NONE} -- Implementation
 					result_reg.print_register
 					buf.put_string (", ")
 					gen_reg.print_register
-					buf.put_string (" + ")
+					buf.put_string (" + (rt_uint_ptr)")
 					parameters.i_th (1).print_register
-					buf.put_string (" * (");
+					buf.put_string (" * (rt_uint_ptr)(");
 					l_exp_class_type.skeleton.generate_size (buf, True)
 					buf.put_string ("), ")
 					l_exp_class_type.skeleton.generate_size (buf, True)
@@ -247,20 +247,20 @@ feature {NONE} -- Implementation
 			if l_param_is_expanded then
 				l_exp_class_type := l_gen_param.associated_class_type (context.context_class_type.type)
 				if l_exp_class_type.skeleton.has_references then
-					buf.put_string (" + OVERHEAD + ")
+					buf.put_string (" + OVERHEAD + (rt_uint_ptr)")
 					parameters.i_th (1).print_register
-					buf.put_string (" * (")
+					buf.put_string (" * (rt_uint_ptr)(")
 					l_exp_class_type.skeleton.generate_size (buf, True)
 					buf.put_string (" + OVERHEAD)")
 				else
-					buf.put_string (" + ")
+					buf.put_string (" + (rt_uint_ptr)")
 					parameters.i_th (1).print_register
-					buf.put_string (" * ")
+					buf.put_string (" * (rt_uint_ptr)")
 					l_exp_class_type.skeleton.generate_size (buf, True)
 				end
 			else
 				type_c := l_gen_param.c_type
-				buf.put_string (" + ")
+				buf.put_string (" + (rt_uint_ptr)")
 				parameters.i_th (1).print_register
 				buf.put_string (" * sizeof(")
 				type_c.generate (buf)
@@ -299,18 +299,18 @@ feature {NONE} -- Implementation
 					parameters.i_th (1).print_register
 					buf.put_string (", ")
 					gen_reg.print_register
-					buf.put_string (" + OVERHEAD + ")
+					buf.put_string (" + OVERHEAD + (rt_uint_ptr)")
 					parameters.i_th (2).print_register
-					buf.put_string (" * (")
+					buf.put_string (" * (rt_uint_ptr)(")
 					l_exp_class_type.skeleton.generate_size (buf, True)
 					buf.put_string (" + OVERHEAD));")
 					buf.put_new_line
 				else
 					buf.put_string ("memcpy(")
 					gen_reg.print_register
-					buf.put_string (" + ")
+					buf.put_string (" + (rt_uint_ptr)")
 					parameters.i_th (2).print_register
-					buf.put_string (" * ")
+					buf.put_string (" * (rt_uint_ptr)")
 					l_exp_class_type.skeleton.generate_size (buf, True)
 					buf.put_string (",")
 					parameters.i_th (1).print_register
@@ -376,19 +376,19 @@ feature {NONE} -- Implementation
 
 				buf.put_string ("((char *)")
 				gen_reg.print_register
-				buf.put_string (" + ")
+				buf.put_string (" + (rt_uint_ptr)")
 				parameters.i_th (2).print_register
-				buf.put_string (" * ")
+				buf.put_string (" * (rt_uint_ptr)")
 				l_exp_class_type.skeleton.generate_size (buf, True)
 				buf.put_string (", (char *) ")
 				gen_reg.print_register
-				buf.put_string (" + ")
+				buf.put_string (" + (rt_uint_ptr)")
 				parameters.i_th (1).print_register
-				buf.put_string (" * ")
+				buf.put_string (" * (rt_uint_ptr)")
 				l_exp_class_type.skeleton.generate_size (buf, True)
-				buf.put_string (", ")
+				buf.put_string (", (rt_uint_ptr)")
 				parameters.i_th (3).print_register
-				buf.put_string (" * ")
+				buf.put_string (" * (rt_uint_ptr)")
 				l_exp_class_type.skeleton.generate_size (buf, True)
 			else
 				type_c := l_gen_param.c_type
@@ -402,9 +402,9 @@ feature {NONE} -- Implementation
 				gen_reg.print_register
 				buf.put_string (" + ")
 				parameters.i_th (1).print_register
-				buf.put_string (", ")
+				buf.put_string (", (rt_uint_ptr)")
 				type_c.generate_size (buf)
-				buf.put_string (" * ")
+				buf.put_string (" * (rt_uint_ptr)")
 				parameters.i_th (3).print_register
 			end
 			buf.put_character (')')
@@ -440,19 +440,19 @@ feature {NONE} -- Implementation
 
 				buf.put_string ("memmove((char *)")
 				gen_reg.print_register
-				buf.put_string (" + ")
+				buf.put_string (" + (rt_uint_ptr)")
 				parameters.i_th (3).print_register
-				buf.put_string (" * ")
+				buf.put_string (" * (rt_uint_ptr)")
 				l_exp_class_type.skeleton.generate_size (buf, True)
 				buf.put_string (", (char *) ")
 				parameters.i_th (1).print_register
-				buf.put_string (" + ")
+				buf.put_string (" + (rt_uint_ptr)")
 				parameters.i_th (2).print_register
-				buf.put_string (" * ")
+				buf.put_string (" * (rt_uint_ptr)")
 				l_exp_class_type.skeleton.generate_size (buf, True)
-				buf.put_string (", ")
+				buf.put_string (", (rt_uint_ptr)")
 				parameters.i_th (4).print_register
-				buf.put_string (" * ")
+				buf.put_string (" * (rt_uint_ptr)")
 				l_exp_class_type.skeleton.generate_size (buf, True)
 				buf.put_character (')')
 				buf.put_character (';')
@@ -482,9 +482,9 @@ feature {NONE} -- Implementation
 					parameters.i_th (1).print_register
 					buf.put_string (" + ")
 					parameters.i_th (2).print_register
-					buf.put_string (", ")
+					buf.put_string (", (rt_uint_ptr)")
 					type_c.generate_size (buf)
-					buf.put_string (" * ")
+					buf.put_string (" * (rt_uint_ptr)")
 					parameters.i_th (4).print_register
 				end
 				buf.put_character (')')

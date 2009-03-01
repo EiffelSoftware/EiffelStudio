@@ -382,7 +382,7 @@ rt_private EIF_REFERENCE duplicate(EIF_REFERENCE source, EIF_REFERENCE enclosing
 	flags = zone->ov_flags;			/* Eiffel flags */
 
 	if (flags & EO_SPEC) {
-		size = RT_SPECIAL_COUNT(source) * RT_SPECIAL_ELEM_SIZE(source);
+		size = (rt_uint_ptr) RT_SPECIAL_COUNT(source) * (rt_uint_ptr) RT_SPECIAL_ELEM_SIZE(source);
 	} else {
 		size = EIF_Size(zone->ov_dtype);
 	}
@@ -613,7 +613,7 @@ rt_public void eif_std_ref_copy(register EIF_REFERENCE source, register EIF_REFE
 		} else {
 			/* Copy of source object into target object with same dynamic type. Block copy here. */
 			if (flags & EO_SPEC) {
-				size = RT_SPECIAL_COUNT(source) * RT_SPECIAL_ELEM_SIZE(source);
+				size = (rt_uint_ptr) RT_SPECIAL_COUNT(source) * (rt_uint_ptr) RT_SPECIAL_ELEM_SIZE(source);
 			} else {
 				size = EIF_Size(s_zone->ov_dtype);
 			}
@@ -673,7 +673,7 @@ rt_private void spcopy(register EIF_REFERENCE source, register EIF_REFERENCE tar
 
 	t_count = RT_SPECIAL_COUNT(target);
 	s_count = RT_SPECIAL_COUNT(source);
-	field_size = (t_count > s_count ? s_count : t_count) * RT_SPECIAL_ELEM_SIZE (source);
+	field_size = (t_count > s_count ? s_count : t_count) * (rt_uint_ptr) RT_SPECIAL_ELEM_SIZE (source);
 	memmove(target, source, field_size);			/* Block copy */
 
 #ifdef ISE_GC
@@ -834,7 +834,7 @@ rt_public void sp_copy_data (EIF_REFERENCE Current, EIF_REFERENCE source, EIF_IN
 	 * memory has been properly allocated beforehand.
 	 */
 
-	EIF_INTEGER elem_size;
+	rt_uint_ptr elem_size;
 
 	REQUIRE ("Current not null", Current);
 	REQUIRE ("source not null", source);
@@ -850,7 +850,7 @@ rt_public void sp_copy_data (EIF_REFERENCE Current, EIF_REFERENCE source, EIF_IN
 	REQUIRE ("source_index valid for destination", destination_index + n <= RT_SPECIAL_COUNT(Current));
 
 	elem_size = RT_SPECIAL_ELEM_SIZE(source);
-	memmove(Current + (destination_index * elem_size), source + (source_index * elem_size), n * elem_size);
+	memmove(Current + ((rt_uint_ptr) destination_index * elem_size), source + ((rt_uint_ptr) source_index * elem_size), (rt_uint_ptr) n * elem_size);
 
 #ifdef ISE_GC
 	/* Ok, normally we would have to perform age tests, by scanning the special
@@ -882,7 +882,8 @@ rt_public void spclearall (EIF_REFERENCE spobj)
 	 */
 
 	union overhead *zone;			/* Malloc information zone */
-	EIF_INTEGER count, elem_size;
+	EIF_INTEGER count;
+	rt_uint_ptr elem_size;
 	EIF_REFERENCE ref;
 
 	zone = HEADER(spobj);
@@ -891,7 +892,7 @@ rt_public void spclearall (EIF_REFERENCE spobj)
 	elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(ref);
 
 		/* Reset all memory to zero. */
-	memset (spobj, 0, count * elem_size);
+	memset (spobj, 0, (rt_uint_ptr) count * elem_size);
 	if (zone->ov_flags & EO_COMP) {
 			/* case of a special object of expanded structures */
 			/* Initialize new expanded elements, if any */

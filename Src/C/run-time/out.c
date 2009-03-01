@@ -413,7 +413,7 @@ rt_private void rec_swrite(register EIF_REFERENCE object, int tab)
 	union overhead *zone;		/* Object header */
 	uint16 flags;		/* Object flags */
 	EIF_INTEGER count;		/* Element count */
-	EIF_INTEGER elem_size;	/* Element size */
+	rt_uint_ptr elem_size;	/* Element size */
 	EIF_REFERENCE o_ref;
 	EIF_REFERENCE reference;
 	EIF_INTEGER old_count;

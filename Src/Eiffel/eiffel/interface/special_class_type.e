@@ -373,13 +373,13 @@ feature {NONE} -- C code generation
 					buffer.put_new_line
 					if l_exp_class_type.skeleton.has_references then
 							-- Optimization: size is known at compile time
-						buffer.put_string ("ecopy(arg1, Current + OVERHEAD + arg2 * (");
+						buffer.put_string ("ecopy(arg1, Current + OVERHEAD + (rt_uint_ptr) arg2 * (rt_uint_ptr) (");
 						l_exp_class_type.skeleton.generate_size (buffer, True)
 						buffer.put_string (" + OVERHEAD));")
 					else
 							-- No references, do a simple `memcpy'.
 						buffer.put_new_line
-						buffer.put_string ("memcpy(Current + arg2 * ")
+						buffer.put_string ("memcpy(Current + (rt_uint_ptr) arg2 * (rt_uint_ptr) ")
 						l_exp_class_type.skeleton.generate_size (buffer, True)
 						buffer.put_string (", arg1, ")
 						l_exp_class_type.skeleton.generate_size (buffer, True)
@@ -387,7 +387,7 @@ feature {NONE} -- C code generation
 					end
 				else
 					buffer.put_new_line
-					buffer.put_string ("ecopy(arg1, Current + OVERHEAD + arg2 * (%
+					buffer.put_string ("ecopy(arg1, Current + OVERHEAD + (rt_uint_ptr) arg2 * (rt_uint_ptr) (%
 						%*(EIF_INTEGER *) (Current + %
 						%(HEADER(Current)->ov_size & B_SIZE) - LNGPAD(2) + %
 						%sizeof(EIF_INTEGER))));")
@@ -539,13 +539,13 @@ feature {NONE} -- C code generation
 					buffer.put_new_line
 					if l_exp_class_type.skeleton.has_references then
 							-- Optimization: size is known at compile time
-						buffer.put_string ("ecopy(loc1, Current + OVERHEAD + arg1 * (");
+						buffer.put_string ("ecopy(loc1, Current + OVERHEAD + (rt_uint_ptr) arg1 * (rt_uint_ptr) (");
 						l_exp_class_type.skeleton.generate_size (buffer, True)
 						buffer.put_string (" + OVERHEAD));")
 					else
 							-- No references, do a simple `memcpy'.
 						buffer.put_new_line
-						buffer.put_string ("memcpy(Current + arg1 * ")
+						buffer.put_string ("memcpy(Current + (rt_uint_ptr) arg1 * (rt_uint_ptr) ")
 						l_exp_class_type.skeleton.generate_size (buffer, True)
 						buffer.put_string (", loc1, ")
 						l_exp_class_type.skeleton.generate_size (buffer, True)
@@ -553,7 +553,7 @@ feature {NONE} -- C code generation
 					end
 				else
 					buffer.put_new_line
-					buffer.put_string ("ecopy(loc1, Current + OVERHEAD + arg1 * (%
+					buffer.put_string ("ecopy(loc1, Current + OVERHEAD + (rt_uint_ptr) arg1 * (rt_uint_ptr) (%
 						%*(EIF_INTEGER *) (Current + %
 						%(HEADER(Current)->ov_size & B_SIZE) - LNGPAD(2) + %
 						%sizeof(EIF_INTEGER))));")
@@ -659,7 +659,7 @@ feature {NONE} -- C code generation
 				if final_mode then
 						-- Optimization: size of expanded is known at compile time
 					if l_exp_has_references then
-						buffer.put_string ("return RTCL(Current + OVERHEAD + arg1 * (")
+						buffer.put_string ("return RTCL(Current + OVERHEAD + (rt_uint_ptr) arg1 * (rt_uint_ptr) (")
 						l_exp_class_type.skeleton.generate_size (buffer, True)
 						buffer.put_string (" + OVERHEAD));")
 					else
@@ -678,7 +678,7 @@ feature {NONE} -- C code generation
 							create {FORMAL_A}.make (False, False, 1), Current)
 						buffer.put_new_line
 						buffer.put_string ("memcpy (Result, ")
-						buffer.put_string ("Current + arg1 * (")
+						buffer.put_string ("Current + (rt_uint_ptr) arg1 * (rt_uint_ptr) (")
 						l_exp_class_type.skeleton.generate_size (buffer, True)
 						buffer.put_string ("), ")
 						l_exp_class_type.skeleton.generate_size (buffer, True)
@@ -692,7 +692,7 @@ feature {NONE} -- C code generation
 				else
 					buffer.put_string ("r.")
 					type_c.generate_typed_field (buffer)
-					buffer.put_string (" = RTCL(Current + OVERHEAD + arg1 * (%
+					buffer.put_string (" = RTCL(Current + OVERHEAD + (rt_uint_ptr) arg1 * (rt_uint_ptr) (%
 						%*(EIF_INTEGER *) (Current + %
 						%(HEADER(Current)->ov_size & B_SIZE) - LNGPAD(2) + %
 						%sizeof(EIF_INTEGER))));%N")
@@ -841,20 +841,20 @@ feature {NONE} -- C code generation
 						-- necessary until we are able to do a flat code generation for
 						-- expanded.
 					if True or l_exp_class_type.skeleton.has_references then
-						buffer.put_string ("OVERHEAD + arg1 * (")
+						buffer.put_string ("OVERHEAD + (rt_uint_ptr) arg1 * (rt_uint_ptr) (")
 						l_exp_class_type.skeleton.generate_size (buffer, True)
 						buffer.put_string (" + OVERHEAD));")
 					else
-						buffer.put_string ("arg1 * ")
+						buffer.put_string ("(rt_uint_ptr) arg1 * (rt_uint_ptr) ")
 						l_exp_class_type.skeleton.generate_size (buffer, True)
 						buffer.put_character (')')
 						buffer.put_character (';')
 					end
 				else
-					buffer.put_string ("OVERHEAD + arg1 * sp_elem_size (Current));")
+					buffer.put_string ("OVERHEAD + (rt_uint_ptr) arg1 * (rt_uint_ptr) sp_elem_size (Current));")
 				end
 			else
-				buffer.put_string ("arg1 * sizeof(")
+				buffer.put_string ("(rt_uint_ptr) arg1 * (rt_uint_ptr) sizeof(")
 				type_c.generate (buffer)
 				buffer.put_string ("));")
 			end

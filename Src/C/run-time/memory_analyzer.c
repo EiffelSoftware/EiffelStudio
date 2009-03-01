@@ -42,13 +42,13 @@ doc:<file name="memory_analyzer.c" header="eif_memory_analyzer.h" version="$Id$"
 #include "rt_traverse.h"
 #include "rt_garcol.h"
 #include "rt_types.h"
+#include "rt_macros.h"
 
 rt_public EIF_REFERENCE eif_once_objects_of_result_type(EIF_INTEGER result_type) 
 	/* All once objects held by the system */
 {
 	RT_GET_CONTEXT
 	EIF_REFERENCE Result;
-	EIF_REFERENCE ref;
 	union overhead *zone;
 	struct obj_array l_found;
 	struct obj_array *l_found_p;
@@ -155,12 +155,11 @@ rt_public EIF_REFERENCE eif_once_objects_of_result_type(EIF_INTEGER result_type)
 
 	Result = spmalloc (CHRPAD ((rt_uint_ptr) l_found.count * (rt_uint_ptr) sizeof (EIF_REFERENCE)) + LNGPAD(2), EIF_FALSE);
 	zone = HEADER (Result);
-	ref = Result + (zone->ov_size & B_SIZE) - LNGPAD (2);
 	zone->ov_flags |= EO_REF;
 	zone->ov_dftype = (EIF_TYPE_INDEX) result_type;
 	zone->ov_dtype = To_dtype((EIF_TYPE_INDEX) result_type);
-	*(EIF_INTEGER *) ref = l_found.count;
-	*(EIF_INTEGER *) (ref + sizeof (EIF_INTEGER)) = sizeof (EIF_REFERENCE);
+	RT_SPECIAL_COUNT(Result) = l_found.count;
+	RT_SPECIAL_ELEM_SIZE(Result) = sizeof(EIF_REFERENCE);
 
 		/* Now, populate `Result' with content of `l_found'. Since we just
 		 * created a new Eiffel objects. */

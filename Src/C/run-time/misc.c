@@ -371,10 +371,10 @@ rt_public EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER j,
 	 */
 
 	char *new_area, *ref;
-	long elem_size;			/* Size of each item within area */
-	long old_count;
+	rt_uint_ptr elem_size;			/* Size of each item within area */
+	EIF_INTEGER old_count;
 	EIF_TYPE_INDEX exp_dftype;		/* Full dynamic type of the first expanded object */
-	int n;					/* Counter for initialization of expanded */
+	rt_uint_ptr n;					/* Counter for initialization of expanded */
 
 	REQUIRE ("Must be special", HEADER (area)->ov_flags & EO_SPEC);
 	REQUIRE ("Must not be TUPLE", !(HEADER (area)->ov_flags & EO_TUPLE));
@@ -404,9 +404,9 @@ rt_public EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER j,
 	 * order of the items in the array. 
 	 */
 
-	memmove(new_area + j * elem_size, new_area, k * elem_size); /* takes care of overlaping */
-	memset (new_area, 0, j * elem_size);		/* Fill empty parts of area with 0 */
-	memset (new_area + (j + k) * elem_size, 0, (i - j - k) * elem_size);
+	memmove(new_area + (rt_uint_ptr) j * elem_size, new_area, (rt_uint_ptr) k * elem_size); /* takes care of overlaping */
+	memset (new_area, 0, (rt_uint_ptr) j * elem_size);		/* Fill empty parts of area with 0 */
+	memset (new_area + (rt_uint_ptr) (j + k) * elem_size, 0, (rt_uint_ptr) (i - j - k) * elem_size);
 
 	/* If the new area is full of references and remembered,
 	 * the information in the special table

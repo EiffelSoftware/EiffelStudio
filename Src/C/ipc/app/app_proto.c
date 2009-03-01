@@ -1136,7 +1136,7 @@ rt_private void rec_sinspect(EIF_REFERENCE object, EIF_BOOLEAN skip_items)
 	union overhead *zone;		/* Object header */
 	uint32 flags;		/* Object flags */
 	long sp_index;	/* Element index */
-	EIF_INTEGER elem_size;	/* Element size */
+	rt_uint_ptr elem_size;	/* Element size */
 	char *o_ref;
 	char *reference;
 	int32 count;					/* Element count */
@@ -1184,7 +1184,7 @@ rt_private void rec_sinspect(EIF_REFERENCE object, EIF_BOOLEAN skip_items)
 		if (nb_attr > 0) {
 			if (flags & EO_COMP) {
 					/* Special of expanded object. */
-				for (o_ref = object + OVERHEAD + (sp_start * elem_size),
+				for (o_ref = object + OVERHEAD + ((rt_uint_ptr) sp_start * elem_size),
 							sp_index = sp_start; sp_index <= sp_end;
 							sp_index++, o_ref += elem_size) {
 					sprintf(buffer, "%ld", sp_index);
@@ -1235,7 +1235,7 @@ rt_private void rec_sinspect(EIF_REFERENCE object, EIF_BOOLEAN skip_items)
 					sk_type = SK_BIT;
 				}
 
-				for (o_ref = object + (sp_start * elem_size),
+				for (o_ref = object + ((rt_uint_ptr) sp_start * elem_size),
 									sp_index = sp_start; sp_index <= sp_end;
 									sp_index++, o_ref += elem_size) {
 					sprintf(buffer, "%ld", sp_index);
@@ -1505,15 +1505,13 @@ rt_private unsigned char smodify_attr(char *object, long attr_number, EIF_TYPED_
 
 	union overhead *zone;		/* Object header */
 	uint32 flags;				/* Object flags */
-	EIF_INTEGER elem_size;				/* Element size */
+	rt_uint_ptr elem_size;				/* Element size */
 	char *o_ref;
-	EIF_INTEGER count;					/* Element count */
 	char *new_object_attr;		/* new value for the attribute (if new value is a reference) */
 	unsigned char error_code = 0;
 
 	zone = HEADER(object);
 	o_ref = RT_SPECIAL_INFO_WITH_ZONE (object, zone);
-	count = RT_SPECIAL_COUNT_WITH_INFO (o_ref);
 	elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO (o_ref);
 	flags = zone->ov_flags;
 
@@ -1522,7 +1520,7 @@ rt_private unsigned char smodify_attr(char *object, long attr_number, EIF_TYPED_
 		if (flags & EO_COMP) { /* expanded object */
 			error_code = 2;
 		} else {
-			o_ref = object + (attr_number * elem_size);
+			o_ref = object + ((rt_uint_ptr) attr_number * elem_size);
 			switch(new_value->type & SK_HEAD) {
 				case SK_POINTER: *(char **)o_ref = new_value->it_ptr; break;
 				case SK_BOOL:

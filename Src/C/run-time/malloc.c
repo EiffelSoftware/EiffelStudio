@@ -865,10 +865,9 @@ rt_public EIF_REFERENCE sp_init (EIF_REFERENCE obj, EIF_TYPE_INDEX dftype, EIF_I
 {
 	EIF_GET_CONTEXT
 
-	EIF_INTEGER elem_size, i;
+	rt_uint_ptr elem_size, i, offset;
 	union overhead *zone;
 	EIF_TYPE_INDEX dtype = To_dtype(dftype);
-	EIF_INTEGER offset;
 	void *(*cp) (EIF_REFERENCE);
 	void *(*init) (EIF_REFERENCE, EIF_REFERENCE);
 	
@@ -879,80 +878,82 @@ rt_public EIF_REFERENCE sp_init (EIF_REFERENCE obj, EIF_TYPE_INDEX dftype, EIF_I
 	REQUIRE ("Valid lower", ((lower >= 0) && (lower <= RT_SPECIAL_COUNT(obj))));
 	REQUIRE ("Valid upper", ((upper >= lower - 1) && (upper <= RT_SPECIAL_COUNT(obj))));
 
+	if (upper >= lower) {
 #ifdef WORKBENCH
-	cp = (void *(*) (EIF_REFERENCE)) init_exp;
+		cp = (void *(*) (EIF_REFERENCE)) init_exp;
 #else
-	cp = (void *(*) (EIF_REFERENCE)) egc_exp_create [dtype];
+		cp = (void *(*) (EIF_REFERENCE)) egc_exp_create [dtype];
 #endif
-	init = (void *(*) (EIF_REFERENCE, EIF_REFERENCE)) XCreate(dtype);
+		init = (void *(*) (EIF_REFERENCE, EIF_REFERENCE)) XCreate(dtype);
 
-	elem_size = RT_SPECIAL_ELEM_SIZE(obj);
+		elem_size = RT_SPECIAL_ELEM_SIZE(obj);
 #ifndef WORKBENCH
-	if (References(dtype) > 0) {
+		if (References(dtype) > 0) {
 #endif
-		if (init) {
-			if (cp) {
-				RT_GC_PROTECT(obj);
-				for (i = lower, offset = elem_size * i; i <= upper; i++) {
-					zone = (union overhead *) (obj + offset);
-					zone->ov_size = OVERHEAD + offset;	/* For GC */
-					zone->ov_flags = EO_EXP;	/* Expanded type */
-					zone->ov_dftype = dftype;
-					zone->ov_dtype = dtype;
-					(init) (obj + OVERHEAD + offset, obj + OVERHEAD + offset);
-					(cp) (obj + OVERHEAD + offset);
-					offset += elem_size;
+			if (init) {
+				if (cp) {
+					RT_GC_PROTECT(obj);
+					for (i = lower, offset = elem_size * i; i <= upper; i++) {
+						zone = (union overhead *) (obj + offset);
+						zone->ov_size = OVERHEAD + offset;	/* For GC */
+						zone->ov_flags = EO_EXP;	/* Expanded type */
+						zone->ov_dftype = dftype;
+						zone->ov_dtype = dtype;
+						(init) (obj + OVERHEAD + offset, obj + OVERHEAD + offset);
+						(cp) (obj + OVERHEAD + offset);
+						offset += elem_size;
+					}
+					RT_GC_WEAN(obj);
+				} else {
+					RT_GC_PROTECT(obj);
+					for (i = lower, offset = elem_size * i; i <= upper; i++) {
+						zone = (union overhead *) (obj + offset);
+						zone->ov_size = OVERHEAD + offset;	/* For GC */
+						zone->ov_flags = EO_EXP;	/* Expanded type */
+						zone->ov_dftype = dftype;
+						zone->ov_dtype = dtype;
+						(init) (obj + OVERHEAD + offset, obj + OVERHEAD + offset);
+						offset += elem_size;
+					}
+					RT_GC_WEAN(obj);
 				}
-				RT_GC_WEAN(obj);
 			} else {
-				RT_GC_PROTECT(obj);
-				for (i = lower, offset = elem_size * i; i <= upper; i++) {
-					zone = (union overhead *) (obj + offset);
-					zone->ov_size = OVERHEAD + offset;	/* For GC */
-					zone->ov_flags = EO_EXP;	/* Expanded type */
-					zone->ov_dftype = dftype;
-					zone->ov_dtype = dtype;
-					(init) (obj + OVERHEAD + offset, obj + OVERHEAD + offset);
-					offset += elem_size;
+				if (cp) {
+					RT_GC_PROTECT(obj);
+					for (i = lower, offset = elem_size * i; i <= upper; i++) {
+						zone = (union overhead *) (obj + offset);
+						zone->ov_size = OVERHEAD + offset;	/* For GC */
+						zone->ov_flags = EO_EXP;	/* Expanded type */
+						zone->ov_dftype = dftype;
+						zone->ov_dtype = dtype;
+						(cp) (obj + OVERHEAD + offset);
+						offset += elem_size;
+					}
+					RT_GC_WEAN(obj);
+				} else {
+					EIF_REFERENCE exp = obj;
+					for (i = lower; i <= upper; i++, exp += elem_size) {
+						zone = (union overhead *) exp;
+						zone->ov_size = OVERHEAD + elem_size * i;	/* For GC */
+						zone->ov_flags = EO_EXP;	/* Expanded type */
+						zone->ov_dftype = dftype;
+						zone->ov_dtype = dtype;
+					}
 				}
-				RT_GC_WEAN(obj);
 			}
+#ifndef WORKBENCH
 		} else {
 			if (cp) {
 				RT_GC_PROTECT(obj);
 				for (i = lower, offset = elem_size * i; i <= upper; i++) {
-					zone = (union overhead *) (obj + offset);
-					zone->ov_size = OVERHEAD + offset;	/* For GC */
-					zone->ov_flags = EO_EXP;	/* Expanded type */
-					zone->ov_dftype = dftype;
-					zone->ov_dtype = dtype;
-					(cp) (obj + OVERHEAD + offset);
+					cp (obj + offset);
 					offset += elem_size;
 				}
 				RT_GC_WEAN(obj);
-			} else {
-				EIF_REFERENCE exp = obj;
-				for (i = lower; i <= upper; i++, exp += elem_size) {
-					zone = (union overhead *) exp;
-					zone->ov_size = OVERHEAD + elem_size * i;	/* For GC */
-					zone->ov_flags = EO_EXP;	/* Expanded type */
-					zone->ov_dftype = dftype;
-					zone->ov_dtype = dtype;
-				}
 			}
 		}
-#ifndef WORKBENCH
-	} else {
-		if (cp) {
-			RT_GC_PROTECT(obj);
-			for (i = lower, offset = elem_size * i; i <= upper; i++) {
-				cp (obj + offset);
-				offset += elem_size;
-			}
-			RT_GC_WEAN(obj);
-		}
-	}
 #endif
+	}
 
 	return obj;
 }
@@ -1056,7 +1057,7 @@ rt_public EIF_REFERENCE tuple_malloc_specific (EIF_TYPE_INDEX ftype, uint32 coun
 	uint32 t;
 	REQUIRE("Is a tuple type", To_dtype(ftype) == egc_tup_dtype);
 
-	object = spmalloc (count * sizeof(EIF_TYPED_VALUE) + LNGPAD_2, atomic);
+	object = spmalloc ((rt_uint_ptr) count * (rt_uint_ptr) sizeof(EIF_TYPED_VALUE) + LNGPAD_2, atomic);
 
 	if (object == NULL) {
 		eraise ("Tuple allocation", EN_MEM);	/* signals no more memory */
@@ -1228,8 +1229,8 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, unsigned int nbitems)
 	ref = RT_SPECIAL_INFO_WITH_ZONE(ptr, zone);
 	count = RT_SPECIAL_COUNT_WITH_INFO(ref);		/* Current number of elements */
 	elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(ref);
-	old_real_size = count * elem_size;	/* Size occupied by items in old special */
-	new_real_size = nbitems * elem_size;	/* Size occupied by items in new special */
+	old_real_size = (rt_uint_ptr) count * (rt_uint_ptr) elem_size;	/* Size occupied by items in old special */
+	new_real_size = nbitems * (rt_uint_ptr) elem_size;	/* Size occupied by items in new special */
 	new_size = new_real_size + LNGPAD_2;		/* New required size */
 
 	if (nbitems == count) {		/* OPTIMIZATION: Does resized object have same size? */
@@ -1406,7 +1407,7 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, unsigned int nbitems)
 
 	ENSURE ("Special object", HEADER (object)->ov_flags & EO_SPEC);
 	ENSURE ("Eiffel object", !(HEADER (object)->ov_flags & EO_C));
-	ENSURE ("Valid new size", (int)(HEADER (object)->ov_size & B_SIZE) >= new_size);
+	ENSURE ("Valid new size", (HEADER (object)->ov_size & B_SIZE) >= new_size);
 
 		/* The accounting of memory used by Eiffel is not accurate here, but it is
 		 * not easy to know at this level whether the block was merely extended or
@@ -2245,8 +2246,8 @@ rt_private union overhead *add_core(size_t nbytes, int type)
 		 * is the first and the last one in the chunk, so we set the
 		 * B_LAST bit. All the other flags are set to false.
 		 */
-	CHECK("asked not too big", asked <= 0xFFFFFFFF);
-	oldbrk->ov_size = (uint32) asked | B_LAST;
+	CHECK("asked not too big", asked <= B_SIZE);
+	oldbrk->ov_size = asked | B_LAST;
 
 	SIGRESUME;				/* Critical section ends */
 

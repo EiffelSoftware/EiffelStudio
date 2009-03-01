@@ -181,7 +181,7 @@ feature {NONE} -- C code generation
 				buf.put_character ('{');
 				buf.indent;
 				buf.put_new_line;
-				buf.put_string ("EIF_INTEGER elem_size;");
+				buf.put_string ("rt_uint_ptr elem_size;");
 				buf.put_new_line;
 				buf.put_string ("elem_size = *(EIF_INTEGER *) (");
 				array_area_reg.print_register;
@@ -205,7 +205,7 @@ feature {NONE} -- C code generation
 						item_print_register (expr, target_type)
 						buf.put_string (gc_comma);
 						array_area_reg.print_register;
-						buf.put_string (" + OVERHEAD + elem_size * ");
+						buf.put_string (" + OVERHEAD + (rt_uint_ptr) elem_size * (rt_uint_ptr) ");
 						buf.put_integer (position);
 						buf.put_character (')');
 					else
@@ -219,15 +219,15 @@ feature {NONE} -- C code generation
 							item_print_register (expr, target_type)
 							buf.put_string (gc_comma);
 							array_area_reg.print_register;
-							buf.put_string (" + OVERHEAD + elem_size * ");
+							buf.put_string (" + OVERHEAD + (rt_uint_ptr) elem_size * (rt_uint_ptr) ");
 							buf.put_integer (position);
 							buf.put_character (')');
 						else
 							buf.put_string ("memcpy(")
 							array_area_reg.print_register
-							buf.put_string (" + ")
+							buf.put_string (" + (rt_uint_ptr) ")
 							buf.put_integer (position)
-							buf.put_string (" * ")
+							buf.put_string (" * (rt_uint_ptr) ")
 							l_exp_class_type.skeleton.generate_size (buf, True)
 							buf.put_string (",")
 							item_print_register (expr, target_type)

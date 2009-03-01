@@ -314,7 +314,7 @@ rt_private void read_header(char rt_type);
 		/* Read general header */
 rt_private void object_rread_tuple (EIF_REFERENCE object, uint32 count);
 rt_private EIF_REFERENCE object_rread_special (EIF_REFERENCE object, uint16 flags, EIF_TYPE_INDEX old_dtype, uint32 count);
-rt_private EIF_REFERENCE object_rread_attributes (EIF_REFERENCE object, uint16 new_flags, EIF_TYPE_INDEX old_dftype, long expanded_offset);
+rt_private EIF_REFERENCE object_rread_attributes (EIF_REFERENCE object, uint16 new_flags, EIF_TYPE_INDEX old_dftype, rt_uint_ptr expanded_offset);
 rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent, uint16 flags, EIF_TYPE_INDEX dtype);		/* read the individual attributes of the object*/
 rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent, uint16 flags, EIF_TYPE_INDEX dtype);	/* read the individual attributes of the object*/
 
@@ -830,10 +830,10 @@ rt_private void correct_one_mismatch (
 		if (flags & EO_TUPLE) {
 			correct_object_mismatch (object, values, conversions);
 		} else if (flags & EO_SPEC) {
-			EIF_INTEGER i;
-			EIF_INTEGER ocount = RT_SPECIAL_COUNT (object);
-			EIF_INTEGER oelem_size = RT_SPECIAL_ELEM_SIZE (object);
-			CHECK ("Consistent length", ocount == count);
+			rt_uint_ptr i;
+			rt_uint_ptr ocount = RT_SPECIAL_COUNT (object);
+			rt_uint_ptr oelem_size = RT_SPECIAL_ELEM_SIZE (object);
+			CHECK ("Consistent length", ocount == (rt_uint_ptr) count);
 			for (i=0; i<ocount; i++) {
 				EIF_REFERENCE ref = (EIF_REFERENCE) (
 						(char *) object + OVERHEAD + (i * oelem_size));
@@ -849,7 +849,7 @@ rt_private void correct_one_mismatch (
 			for (i=0; i<num_attr; i++) {
 				EIF_REFERENCE vals = ((EIF_REFERENCE *) values)[i];
 				if (vals != NULL) {
-					long attrib_offset;
+					rt_uint_ptr attrib_offset;
 					EIF_REFERENCE ref;
 					CHECK ("Expanded attribute", (System (dtype).cn_types[i] & SK_HEAD) == SK_EXP);
 					attrib_offset = get_offset (dtype, i);
@@ -1480,7 +1480,7 @@ rt_public EIF_REFERENCE rt_nmake(long int objectCount)
 				/* Special object: read the saved size */
 			buffer_read((char *) &spec_count, (sizeof(uint32)));
 			buffer_read((char *) &spec_elem_size, (sizeof(uint32)));
-			nb_byte = spec_count * spec_elem_size;
+			nb_byte = (rt_uint_ptr) spec_count * (rt_uint_ptr) spec_elem_size;
 			if (flags & EO_TUPLE) {
 				newadd = RTLNT(dftype);
 			} else {
@@ -4081,33 +4081,34 @@ rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent, uin
 		} 
 	} else {
 		if (flags & EO_SPEC) {		/* Special object */
-			EIF_INTEGER count, elem_size;
+			EIF_INTEGER count;
+			rt_uint_ptr elem_size;
 			EIF_REFERENCE ref, o_ptr;
 
 			o_ptr = RT_SPECIAL_INFO(object);
 			count = RT_SPECIAL_COUNT_WITH_INFO(o_ptr);
 
 			if (flags & EO_TUPLE) {
-				buffer_read(object, count * sizeof(EIF_TYPED_VALUE));
+				buffer_read(object, (rt_uint_ptr) count * sizeof(EIF_TYPED_VALUE));
 			} else if (!(flags & EO_REF)) {			/* Special of simple types */
 				uint32 dgen;
 				dgen = special_generic_type (dtype);
 				switch (dgen & SK_HEAD) {
-					case SK_UINT8: buffer_read(object, count*sizeof(EIF_NATURAL_8)); break;
-					case SK_UINT16: buffer_read(object, count*sizeof(EIF_NATURAL_16)); break;
-					case SK_UINT32: buffer_read(object, count*sizeof(EIF_NATURAL_32)); break;
-					case SK_UINT64: buffer_read(object, count*sizeof(EIF_NATURAL_64)); break;
-					case SK_INT8: buffer_read(object, count*sizeof(EIF_INTEGER_8)); break;
-					case SK_INT16: buffer_read(object, count*sizeof(EIF_INTEGER_16)); break;
-					case SK_INT32: buffer_read(object, count*sizeof(EIF_INTEGER_32)); break;
-					case SK_INT64: buffer_read(object, count*sizeof(EIF_INTEGER_64)); break;
+					case SK_UINT8: buffer_read(object, (rt_uint_ptr) count*sizeof(EIF_NATURAL_8)); break;
+					case SK_UINT16: buffer_read(object, (rt_uint_ptr) count*sizeof(EIF_NATURAL_16)); break;
+					case SK_UINT32: buffer_read(object, (rt_uint_ptr) count*sizeof(EIF_NATURAL_32)); break;
+					case SK_UINT64: buffer_read(object, (rt_uint_ptr) count*sizeof(EIF_NATURAL_64)); break;
+					case SK_INT8: buffer_read(object, (rt_uint_ptr) count*sizeof(EIF_INTEGER_8)); break;
+					case SK_INT16: buffer_read(object, (rt_uint_ptr) count*sizeof(EIF_INTEGER_16)); break;
+					case SK_INT32: buffer_read(object, (rt_uint_ptr) count*sizeof(EIF_INTEGER_32)); break;
+					case SK_INT64: buffer_read(object, (rt_uint_ptr) count*sizeof(EIF_INTEGER_64)); break;
 					case SK_BOOL:
 					case SK_CHAR:
-						buffer_read(object, count*sizeof(EIF_CHARACTER));
+						buffer_read(object, (rt_uint_ptr) count*sizeof(EIF_CHARACTER));
 						break;
-					case SK_WCHAR: buffer_read(object, count*sizeof(EIF_WIDE_CHAR)); break;
-					case SK_REAL32: buffer_read(object, count*sizeof(EIF_REAL_32)); break;
-					case SK_REAL64: buffer_read(object, count*sizeof(EIF_REAL_64)); break;
+					case SK_WCHAR: buffer_read(object, (rt_uint_ptr) count*sizeof(EIF_WIDE_CHAR)); break;
+					case SK_REAL32: buffer_read(object, (rt_uint_ptr) count*sizeof(EIF_REAL_32)); break;
+					case SK_REAL64: buffer_read(object, (rt_uint_ptr) count*sizeof(EIF_REAL_64)); break;
 					case SK_EXP: {
 						uint16 hflags;
 						EIF_TYPE_INDEX hdtype, hdftype;
@@ -4137,13 +4138,13 @@ rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent, uin
 						/* uint32 l;*/ /* %%ss removed */
 
 						elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
-						buffer_read(object, count*elem_size); /* %%ss cast was struct bit* */
+						buffer_read(object, (rt_uint_ptr) count*elem_size); /* %%ss cast was struct bit* */
 						}
 						break;
 					case SK_POINTER:
-						buffer_read(object, count*sizeof(EIF_POINTER));
+						buffer_read(object, (rt_uint_ptr) count*sizeof(EIF_POINTER));
 						if (eif_discard_pointer_values) {
-							memset (object, 0, count * sizeof(EIF_POINTER));
+							memset (object, 0, (rt_uint_ptr) count * sizeof(EIF_POINTER));
 						}
 						break;
 					default:
@@ -4152,7 +4153,7 @@ rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent, uin
 				}
 			} else {
 				if (!(flags & EO_COMP)) {		/* Special of references */
-					buffer_read(object, count*sizeof(EIF_REFERENCE));
+					buffer_read(object, (rt_uint_ptr) count*sizeof(EIF_REFERENCE));
 				} else {						/* Special of composites */
 					uint16 hflags;
 					EIF_TYPE_INDEX hdftype, hdtype;
@@ -4340,7 +4341,7 @@ rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent, uint16 
 					case SK_POINTER:
 						ridr_multi_ptr (object, count);
 						if (eif_discard_pointer_values) {
-							memset (object, 0, count * sizeof(EIF_POINTER));
+							memset (object, 0, (rt_uint_ptr) count * sizeof(EIF_POINTER));
 						}
 						break;
 
@@ -4381,7 +4382,7 @@ doc:		<summary>Read a non-special object, of type in storing system described by
 doc:		<param name="object" type="EIF_REFERENCE">Object for which we are retrieving data.</param>
 doc:		<param name="new_flags" type="uint32">New flags of `object' in retrieving system.</param>
 doc:		<param name="old_dtype" type="EIF_TYPE_INDEX">Old dynamic type of `object' in storing system.</param>
-doc:		<param name="expanded_offset" type="long">Offset in `object' from where data should be retrieved.</param>
+doc:		<param name="expanded_offset" type="rt_uint_ptr">Offset in `object' from where data should be retrieved.</param>
 doc:		<return>NULL when there is no mismatch, otherwise a SPECIAL containing the old data for the `object' in the storing system.</return>
 doc:		<thread_safety>Safe using thread safe routines and per thread data.</thread_safety>
 doc:		<synchronization>None</synchronization>
@@ -4389,7 +4390,7 @@ doc:	</routine>
 */
 
 rt_private EIF_REFERENCE object_rread_attributes (
-		EIF_REFERENCE object, uint16 new_flags, EIF_TYPE_INDEX old_dtype, long expanded_offset)
+		EIF_REFERENCE object, uint16 new_flags, EIF_TYPE_INDEX old_dtype, rt_uint_ptr expanded_offset)
 {
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
@@ -4415,8 +4416,7 @@ rt_private EIF_REFERENCE object_rread_attributes (
 			eif_is_nested_expanded(new_flags) || expanded_offset == 0);
 
 #ifdef RECOVERABLE_DEBUG
-	if (expanded_offset > 0)
-		print_object_summary ("      ", object, expanded_offset, old_dtype);
+	print_object_summary ("      ", object, expanded_offset, old_dtype);
 #endif
 
 	if (conv->new_type <= MAX_DTYPE) {
@@ -4445,7 +4445,7 @@ rt_private EIF_REFERENCE object_rread_attributes (
 		int new_attrib_index = attributes[i].new_index;
 		EIF_REFERENCE old_value = NULL;
 		void *attr_address = NULL;
-		long attrib_offset = 0;
+		rt_uint_ptr attrib_offset = 0;
 
 		if (object != NULL && new_attrib_index != -1) {
 			char *obj_address = (char *) object + expanded_offset;
@@ -4661,8 +4661,7 @@ rt_private EIF_REFERENCE object_rread_attributes (
 						old_vals = object_rread_attributes (old_value, hflags, hdtype, 0L);
 					else {
 						attr_address = (char *) object + expanded_offset + attrib_offset;
-						old_vals = object_rread_attributes (
-								object, hflags, hdtype, expanded_offset + attrib_offset);
+						old_vals = object_rread_attributes (object, hflags, hdtype, expanded_offset + attrib_offset);
 						if (mismatched)
 							ecopy (attr_address, old_value);
 					}
@@ -4723,12 +4722,12 @@ rt_private EIF_REFERENCE object_rread_attributes (
 rt_private EIF_REFERENCE object_rread_special_expanded (EIF_REFERENCE object, EIF_INTEGER count)
 {
 	EIF_REFERENCE result = NULL;
-	EIF_INTEGER spec_size = RT_SPECIAL_ELEM_SIZE (object);
+	rt_uint_ptr spec_size = RT_SPECIAL_ELEM_SIZE (object);
 	type_descriptor *conv;
 	uint32 store_flags;
 	uint16 hflags;
 	EIF_TYPE_INDEX old_hdtype, hdtype, hdftype;
-	int i;
+	rt_uint_ptr i;
 #ifndef WORKBENCH
 	int l_has_references;
 #endif
@@ -4752,7 +4751,7 @@ rt_private EIF_REFERENCE object_rread_special_expanded (EIF_REFERENCE object, EI
 #endif
 	for (i=0; i<count; i++) {
 		EIF_REFERENCE old_values, ref = NULL;
-		long offset = 0;
+		rt_uint_ptr offset = 0;
 		if (object != NULL) {
 #ifndef WORKBENCH
 			if (l_has_references) {
@@ -4760,7 +4759,7 @@ rt_private EIF_REFERENCE object_rread_special_expanded (EIF_REFERENCE object, EI
 				offset = OVERHEAD + (i * spec_size);
 				ref = (EIF_REFERENCE)((char *) object + offset);
 				HEADER (ref)->ov_flags = hflags & (EO_REF|EO_EXP|EO_COMP);
-				HEADER (ref)->ov_size = (uint32) offset;
+				HEADER (ref)->ov_size = offset;
 				HEADER (ref)->ov_dtype = hdtype;
 				HEADER (ref)->ov_dftype = hdftype;
 #ifndef WORKBENCH

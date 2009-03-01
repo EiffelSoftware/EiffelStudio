@@ -274,13 +274,13 @@ rt_shared void traversal(EIF_REFERENCE object, int p_accounting)
 
 	EIF_GET_CONTEXT
 	char *object_ref, *reference;
-	EIF_INTEGER count, elem_size;
+	rt_uint_ptr count, elem_size;
 	union overhead *zone;		/* Object header */
 	uint16 flags;				/* Object flags */
 	char *new;					/* Mapped object */
 	EIF_OBJECT mapped;				/* Mapped object protection */
 	int mapped_object = 0;		/* True if maping occurred */
-	int i;						/* To iterate over the references */
+	rt_uint_ptr i;						/* To iterate over the references */
 
 	zone = HEADER(object);
 	flags = zone->ov_flags;
@@ -376,7 +376,7 @@ rt_shared void traversal(EIF_REFERENCE object, int p_accounting)
 			/* Special object filled with expanded objects which are
 			 * necessary not special objects.
 			 */
-			int offset = OVERHEAD;
+			rt_uint_ptr offset = OVERHEAD;
 			elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(object_ref);
 			for (i = 0; i < count; i++, offset += elem_size)
 				traversal(object + offset, p_accounting);
@@ -712,7 +712,6 @@ rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFE
 	struct obj_array l_found, l_marked;
 	union overhead *zone;
 	EIF_REFERENCE Result;
-	EIF_REFERENCE ref;
 	
 		/* Initialize structure that will hold found objects */
 	l_found.count = 0;
@@ -776,12 +775,11 @@ rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFE
 	eif_gc_stop();
 	Result = spmalloc (CHRPAD ((rt_uint_ptr) l_found.count * (rt_uint_ptr) sizeof (EIF_REFERENCE)) + LNGPAD(2), EIF_FALSE);
 	zone = HEADER (Result);
-	ref = Result + (zone->ov_size & B_SIZE) - LNGPAD (2);
 	zone->ov_flags |= EO_REF;
 	zone->ov_dftype = result_type;
 	zone->ov_dtype = To_dtype(result_type);
-	*(EIF_INTEGER *) ref = l_found.count;
-	*(EIF_INTEGER *) (ref + sizeof (EIF_INTEGER)) = sizeof (EIF_REFERENCE);
+	RT_SPECIAL_COUNT(Result) = l_found.count;
+	RT_SPECIAL_ELEM_SIZE(Result) = sizeof(EIF_REFERENCE);
 
 		/* Now, populate `Result' with content of `l_found'. Since we just
 		 * created a new Eiffel objects. */
@@ -979,7 +977,7 @@ rt_private void match_object (EIF_REFERENCE object, void (*action_fnptr) (EIF_RE
 			}
 			return;
 		} else {
-			count = *(EIF_INTEGER *) (object + (zone->ov_size & B_SIZE) - LNGPAD_2);
+			count = RT_SPECIAL_COUNT(object);
 		}
 	} else {
 		count = References(zone->ov_dtype);
@@ -1022,7 +1020,7 @@ rt_private uint32 chknomark(char *object, struct htable *tbl, uint32 object_coun
 	/* First pass of the store mechanism consisting in marking objects. */
 
 	char *object_ref, *reference;
-	EIF_INTEGER count, elem_size;
+	rt_uint_ptr count, elem_size, i;
 	union overhead *zone = HEADER(object);		/* Object header */
 	uint16 flags;								/* Object flags */
 	unsigned long key = ((unsigned long) object) - 1;
@@ -1063,17 +1061,14 @@ rt_private uint32 chknomark(char *object, struct htable *tbl, uint32 object_coun
 		count = RT_SPECIAL_COUNT_WITH_INFO(object_ref);
 
 		if (flags & EO_TUPLE) {
-			EIF_TYPED_VALUE *l_item = (EIF_TYPED_VALUE *) object;
 				/* Don't forget that first element of TUPLE is the BOOLEAN
 				 * `object_comparison' attribute. */
-			l_item++;
-			count--;
-			for (; count > 0; count--, l_item++) {
-				if
-					(eif_is_reference_tuple_item(l_item) &&
-				 	(eif_reference_tuple_item(l_item)))
-				{
-					object_count = chknomark(eif_reference_tuple_item(l_item), tbl, object_count);	
+			for (i = 1; i < count ; i++) {
+				if (eif_item_sk_type(object, i) == SK_REF) {
+					reference = eif_reference_item(object, i);
+					if (reference) {
+						object_count = chknomark(reference, tbl, object_count);	
+					}
 				}
 			}
 		} else if (!(flags & EO_COMP)) {

@@ -61,7 +61,6 @@ doc:<file name="interp.c" header="eif_interp.h" version="$Id$" summary="Byte cod
 #include "eif_main.h"
 #include "rt_gen_conf.h"
 #include "rt_gen_types.h"
-#include "eif_size.h"		/* For LNGPAD */
 #include "eif_misc.h"
 #include "rt_assert.h"
 #include "rt_wbench.h"
@@ -2980,7 +2979,7 @@ rt_private void interpret(int flag, int where)
 			unsigned long stagval;
 			int curr_pos;
 			EIF_TYPED_VALUE *it;
-			long elem_size;
+			rt_uint_ptr elem_size;
 			unsigned char *OLD_IC;
  
 			if (code == BC_PARRAY) {
@@ -3061,8 +3060,8 @@ rt_private void interpret(int flag, int where)
 					case SK_REAL64: *((EIF_REAL_64 *) sp_area + curr_pos) = it->it_real64; break;
 					case SK_POINTER: *((EIF_POINTER *) sp_area + curr_pos) = it->it_ptr; break;
 					case SK_EXP:
-						elem_size = *(EIF_INTEGER_32 *) (sp_area + (HEADER(sp_area)->ov_size & B_SIZE) - LNGPAD_2 + sizeof(EIF_INTEGER_32));
-						ecopy(it->it_ref, sp_area + OVERHEAD + elem_size * curr_pos);
+						elem_size = RT_SPECIAL_ELEM_SIZE(sp_area);
+						ecopy(it->it_ref, sp_area + OVERHEAD + elem_size * (rt_uint_ptr) curr_pos);
 						break;
 					case SK_REF:
 						*((EIF_REFERENCE *) sp_area + curr_pos) = it->it_ref;

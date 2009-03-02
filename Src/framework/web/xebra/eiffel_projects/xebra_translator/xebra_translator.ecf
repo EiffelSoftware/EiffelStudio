@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="xebra_translator" uuid="E8B9E5AE-D395-4C15-8046-98D6BB466377">
+	<target name="xebra_translator">
+		<root class="APPLICATION" feature="make"/>
+		<option warning="true" syntax_level="1">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<precompile name="base_pre" location="$ISE_PRECOMP\base.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf"/>
+		<cluster name="xebra_translator" location=".\" recursive="true">
+			<file_rule>
+				<exclude>/EIFGENs$</exclude>
+				<exclude>/.svn$</exclude>
+				<exclude>/CVS$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+	<target name="xebra_translator_dotnet" extends="xebra_translator">
+		<setting name="msil_generation" value="true"/>
+	</target>
+</system>

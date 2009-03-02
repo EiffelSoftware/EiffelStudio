@@ -75,85 +75,88 @@ feature {NONE} -- Constants
 feature -- Query
 
 	value_of_cst_managed_cb (cst: INTEGER): STRING
+			-- String representation for the entry `cst'	
 		do
-			inspect cst 
-				when Cst_managed_cb_breakpoint then
+			inspect cst
+			when Cst_managed_cb_breakpoint then
 				Result := "breakpoint"
-				when Cst_managed_cb_step_complete then
+			when Cst_managed_cb_step_complete then
 				Result := "step_complete"
-				when Cst_managed_cb_break then
+			when Cst_managed_cb_break then
 				Result := "break"
-				when Cst_managed_cb_exception then
+			when Cst_managed_cb_exception then
 				Result := "exception"
-				when Cst_managed_cb_eval_complete then
+			when Cst_managed_cb_eval_complete then
 				Result := "eval_complete"
-				when Cst_managed_cb_eval_exception then
+			when Cst_managed_cb_eval_exception then
 				Result := "eval_exception"
-				when Cst_managed_cb_create_process then
+			when Cst_managed_cb_create_process then
 				Result := "create_process"
-				when Cst_managed_cb_exit_process then
+			when Cst_managed_cb_exit_process then
 				Result := "exit_process"
-				when Cst_managed_cb_create_thread then
+			when Cst_managed_cb_create_thread then
 				Result := "create_thread"
-				when Cst_managed_cb_exit_thread then
+			when Cst_managed_cb_exit_thread then
 				Result := "exit_thread"
-				when Cst_managed_cb_load_module then
+			when Cst_managed_cb_load_module then
 				Result := "load_module"
-				when Cst_managed_cb_unload_module then
+			when Cst_managed_cb_unload_module then
 				Result := "unload_module"
-				when Cst_managed_cb_load_class then
+			when Cst_managed_cb_load_class then
 				Result := "load_class"
-				when Cst_managed_cb_unload_class then
+			when Cst_managed_cb_unload_class then
 				Result := "unload_class"
-				when Cst_managed_cb_debugger_error then
+			when Cst_managed_cb_debugger_error then
 				Result := "debugger_error"
-				when Cst_managed_cb_log_message then
+			when Cst_managed_cb_log_message then
 				Result := "log_message"
-				when Cst_managed_cb_log_switch then
+			when Cst_managed_cb_log_switch then
 				Result := "log_switch"
-				when Cst_managed_cb_create_app_domain then
+			when Cst_managed_cb_create_app_domain then
 				Result := "create_app_domain"
-				when Cst_managed_cb_exit_app_domain then
+			when Cst_managed_cb_exit_app_domain then
 				Result := "exit_app_domain"
-				when Cst_managed_cb_load_assembly then
+			when Cst_managed_cb_load_assembly then
 				Result := "load_assembly"
-				when Cst_managed_cb_unload_assembly then
+			when Cst_managed_cb_unload_assembly then
 				Result := "unload_assembly"
-				when Cst_managed_cb_control_ctrap then
+			when Cst_managed_cb_control_ctrap then
 				Result := "control_ctrap"
-				when Cst_managed_cb_name_change then
+			when Cst_managed_cb_name_change then
 				Result := "name_change"
-				when Cst_managed_cb_update_module_symbols then
+			when Cst_managed_cb_update_module_symbols then
 				Result := "update_module_symbols"
-				when Cst_managed_cb_edit_and_continue_remap then
+			when Cst_managed_cb_edit_and_continue_remap then
 				Result := "edit_and_continue_remap"
-				when Cst_managed_cb_breakpoint_set_error then
+			when Cst_managed_cb_breakpoint_set_error then
 				Result := "breakpoint_set_error"
-				when Cst_managed_cb2_function_remap_opportunity then
+			when Cst_managed_cb2_function_remap_opportunity then
 				Result := "function_remap_opportunity (2)"
-				when Cst_managed_cb2_create_connection then
+			when Cst_managed_cb2_create_connection then
 				Result := "create_connection (2)"
-				when Cst_managed_cb2_change_connection then
+			when Cst_managed_cb2_change_connection then
 				Result := "change_connection (2)"
-				when Cst_managed_cb2_destroy_connection then
+			when Cst_managed_cb2_destroy_connection then
 				Result := "destroy_connection (2)"
-				when Cst_managed_cb2_exception then
+			when Cst_managed_cb2_exception then
 				Result := "exception (2)"
-				when Cst_managed_cb2_exception_unwind then
+			when Cst_managed_cb2_exception_unwind then
 				Result := "exception_unwind (2)"
-				when Cst_managed_cb2_function_remap_complete then
+			when Cst_managed_cb2_function_remap_complete then
 				Result := "function_remap_complete (2)"
-				when Cst_managed_cb2_mdanotification then
+			when Cst_managed_cb2_mdanotification then
 				Result := "mdanotification (2)"
-				when 0 then
+			when 0 then
 				Result := "no callback"
-				else
-					Result := "ERROR : Unknown managed callback"
+			else
+				Result := "ERROR : Unknown managed callback"
 			end
+		ensure
+			Result_attached: Result /= Void
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -166,22 +169,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EIFNET_DEBUGGER_MANAGED_CALLBACK_CONSTANTS

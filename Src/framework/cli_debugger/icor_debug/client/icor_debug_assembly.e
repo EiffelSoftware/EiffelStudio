@@ -12,9 +12,9 @@ class
 inherit
 	ICOR_OBJECT
 
-create 
+create
 	make_by_pointer
-	
+
 feature {ICOR_EXPORTER} -- Access
 
 	get_process: ICOR_DEBUG_PROCESS
@@ -62,10 +62,10 @@ feature {ICOR_EXPORTER} -- Access
 			mp_name: MANAGED_POINTER
 		do
 			create mp_name.make (256 * 2)
-			
+
 			last_call_success := cpp_get_name (item, 256, $p_cchname, mp_name.item)
 			if mp_name.item /= default_pointer then
-				Result := (create {UNI_STRING}.make_by_pointer (mp_name.item)).string
+				create Result.make_from_string ((create {UNI_STRING}.make_by_pointer (mp_name.item)).string)
 			end
 		ensure
 --			success: last_call_success = 0
@@ -81,7 +81,7 @@ feature {ICOR_EXPORTER} -- Implementation
 			]"
 		alias
 			"GetProcess"
-		end		
+		end
 
 	frozen cpp_get_app_domain (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
@@ -91,7 +91,7 @@ feature {ICOR_EXPORTER} -- Implementation
 			]"
 		alias
 			"GetAppDomain"
-		end		
+		end
 
 	frozen cpp_enumerate_modules (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
@@ -111,7 +111,7 @@ feature {ICOR_EXPORTER} -- Implementation
 			]"
 		alias
 			"GetName"
-		end		
+		end
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

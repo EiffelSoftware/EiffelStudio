@@ -20,7 +20,7 @@ create {ICOR_OBJECTS_MANAGER}
 
 feature -- Addons
 
-	to_function_name: STRING
+	to_function_name: detachable STRING
 		do
 			Result := get_module.md_member_name (token)
 		end
@@ -28,21 +28,24 @@ feature -- Addons
 	to_string: STRING
 			-- String representation of the Current ICorDebugFunction.
 			-- For debug purpose only
-		local
-			l_cl: ICOR_DEBUG_CLASS
-			l_module: ICOR_DEBUG_MODULE
 		do
-			Result := "Function [" + item.out + "] "
-					+ " Token="+ token.out + "~0x" + token.to_hex_string
-			l_cl := get_class
-			if l_cl /= Void then
+			create Result.make_from_string ("Function [")
+			Result.append_string (item.out)
+			Result.append_character (']')
+			Result.append_string (" Token=" + token.out + "~0x" + token.to_hex_string)
+			if attached get_class as l_cl then
 				Result.append (" ClassToken=" + l_cl.token.out + "~0x" + l_cl.token.to_hex_string)
 --				l_cl.clean_on_dispose
 			else
-				Result.append (" Class= not IL ")
+				Result.append (" Class=not IL ")
 			end
-			l_module := get_module
-			Result.append (" Module[" + l_module.get_token.out + "]=" + l_module.name + " .")
+			if attached get_module as l_module then
+				Result.append (" Module[" + l_module.get_token.out + "]=" + l_module.name + " .")
+			else
+				Result.append (" Module=None ")
+			end
+		ensure
+			Result_attached: Result /= Void
 		end
 
 feature {ICOR_EXPORTER} -- Access
@@ -56,7 +59,7 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {ICOR_EXPORTER} -- Access
 
-	get_module: ICOR_DEBUG_MODULE
+	get_module: detachable ICOR_DEBUG_MODULE
 		local
 			p: POINTER
 		do
@@ -68,7 +71,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	get_class: ICOR_DEBUG_CLASS
+	get_class: detachable ICOR_DEBUG_CLASS
 		local
 			p: POINTER
 		do
@@ -80,7 +83,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	get_il_code: ICOR_DEBUG_CODE
+	get_il_code: detachable ICOR_DEBUG_CODE
 		local
 			p: POINTER
 		do
@@ -92,7 +95,7 @@ feature {ICOR_EXPORTER} -- Access
 --			success: last_call_success = 0
 		end
 
-	get_native_code: ICOR_DEBUG_CODE
+	get_native_code: detachable ICOR_DEBUG_CODE
 		local
 			p: POINTER
 		do
@@ -104,7 +107,7 @@ feature {ICOR_EXPORTER} -- Access
 --			success: last_call_success = 0
 		end
 
-	create_breakpoint: ICOR_DEBUG_FUNCTION_BREAKPOINT
+	create_breakpoint: detachable ICOR_DEBUG_FUNCTION_BREAKPOINT
 		local
 			p: POINTER
 		do

@@ -88,8 +88,8 @@ feature {SHARED_ICOR_OBJECTS_MANAGER, ICOR_EXPORTER} -- Access
 		require
 			pointer_valid: p /= default_pointer
 		do
-			if modules.has (p) then
-				Result := modules.item (p)
+			if attached modules.item (p) as l_found_item then
+				Result := l_found_item
 			else
 				create Result.make_by_pointer (p)
 				Result.add_ref
@@ -108,8 +108,8 @@ feature {SHARED_ICOR_OBJECTS_MANAGER, ICOR_EXPORTER} -- Access
 		require
 			pointer_valid: p /= default_pointer
 		do
-			if classes.has (p) then
-				Result := classes.item (p)
+			if attached classes.item (p) as l_found_item then
+				Result := l_found_item
 			else
 				create Result.make_by_pointer (p)
 				Result.add_ref
@@ -128,8 +128,8 @@ feature {SHARED_ICOR_OBJECTS_MANAGER, ICOR_EXPORTER} -- Access
 		require
 			pointer_valid: p /= default_pointer
 		do
-			if functions.has (p) then
-				Result := functions.item (p)
+			if attached functions.item (p) as l_found_item then
+				Result := l_found_item
 			else
 				create Result.make_by_pointer (p)
 				Result.add_ref

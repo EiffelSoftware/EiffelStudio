@@ -121,6 +121,7 @@ feature -- enum CorDebugChainReason
 		end
 
 	enum_cor_debug_chain_reason_to_string (e: INTEGER): STRING
+			-- String representation for the enum entry `e'
 		do
 			if e = enum_cor_debug_chain_reason__CHAIN_NONE then
 				Result := "CHAIN_NONE"
@@ -151,6 +152,8 @@ feature -- enum CorDebugChainReason
 			else
 				Result := "Unknown"
 			end
+		ensure
+			Result_attached: Result /= Void
 		end
 
 note

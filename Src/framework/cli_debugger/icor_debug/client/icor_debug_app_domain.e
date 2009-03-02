@@ -78,7 +78,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	get_name: STRING
+	get_name: detachable STRING
 			-- GetName returns the name of the app domain
 		local
 			p_cchname: NATURAL_32

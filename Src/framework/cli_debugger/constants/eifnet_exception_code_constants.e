@@ -97,177 +97,180 @@ feature {NONE} -- Exception code
 feature
 
 	exception_string_representation (a_code: INTEGER): STRING
+			-- String representation for entry `a_code'
 		do
 			inspect a_code
 			when except_ambiguousmatchexception then
-				Result := "[0x0200012D] AmbiguousMatchException" 
+				Result := "[0x0200012D] AmbiguousMatchException"
 			when except_appdomainunloadedexception then
-				Result := "[0x02000037] AppDomainunLoadedException" 
+				Result := "[0x02000037] AppDomainunLoadedException"
 			when except_applicationexception then
-				Result := "[0x02000025] ApplicationException" 
+				Result := "[0x02000025] ApplicationException"
 			when except_argumentexception then
-				Result := "[0x02000038] ArgumentException" 
+				Result := "[0x02000038] ArgumentException"
 			when except_argumentnullexception then
-				Result := "[0x02000039] ArgumentNullException" 
+				Result := "[0x02000039] ArgumentNullException"
 			when except_argumentoutofrangeexception then
-				Result := "[0x0200003A] ArgumentOutOfRangeException" 
+				Result := "[0x0200003A] ArgumentOutOfRangeException"
 			when except_arithmeticexception then
-				Result := "[0x0200003C] ArithmeticException" 
+				Result := "[0x0200003C] ArithmeticException"
 			when except_arraytypemismatchexception then
-				Result := "[0x0200003D] ArrayTypeMismatchException" 
+				Result := "[0x0200003D] ArrayTypeMismatchException"
 			when except_badimageformatexception then
-				Result := "[0x02000041] BadImageFormatException" 
+				Result := "[0x02000041] BadImageFormatException"
 			when except_cannotunloadappdomainexception then
-				Result := "[0x02000046] CannotUnloadAppDomainException" 
+				Result := "[0x02000046] CannotUnloadAppDomainException"
 			when except_comexception then
-				Result := "[0x020002B4] ComException" 
+				Result := "[0x020002B4] ComException"
 			when except_contextmarshalexception then
-				Result := "[0x02000055] ContextMarshalException" 
+				Result := "[0x02000055] ContextMarshalException"
 			when except_cryptographicexception then
-				Result := "[0x02000216] CryptographicException" 
+				Result := "[0x02000216] CryptographicException"
 			when except_cryptographicunexpectedoperationexception then
-				Result := "[0x02000217] CryptographicUnexpectedOperationException" 
+				Result := "[0x02000217] CryptographicUnexpectedOperationException"
 			when except_customattributeformatexception then
-				Result := "[0x02000144] CustomAttributeFormatException" 
+				Result := "[0x02000144] CustomAttributeFormatException"
 			when except_directorynotfoundexception then
-				Result := "[0x0200031C] DirectoryNotFoundException" 
+				Result := "[0x0200031C] DirectoryNotFoundException"
 			when except_dividebyzeroexception then
-				Result := "[0x02000065] DivideByZeroException" 
+				Result := "[0x02000065] DivideByZeroException"
 			when except_dllnotfoundexception then
-				Result := "[0x0200006B] DllNotFoundException" 
+				Result := "[0x0200006B] DllNotFoundException"
 			when except_duplicatewaitobjectexception then
-				Result := "[0x02000067] DuplicateWaitObjectException" 
+				Result := "[0x02000067] DuplicateWaitObjectException"
 			when except_endofstreamexception then
-				Result := "[0x0200031D] EndOfStreamException" 
+				Result := "[0x0200031D] EndOfStreamException"
 			when except_entrypointnotfoundexception then
-				Result := "[0x0200006A] EntryPointNotFoundException" 
+				Result := "[0x0200006A] EntryPointNotFoundException"
 			when except_exception then
-				Result := "[0x02000012] Exception" 
+				Result := "[0x02000012] Exception"
 			when except_executionengineexception then
-				Result := "[0x02000019] ExecutionEngineException" 
+				Result := "[0x02000019] ExecutionEngineException"
 			when except_externalexception then
-				Result := "[0x020002B3] ExternalException" 
+				Result := "[0x020002B3] ExternalException"
 			when except_fieldaccessexception then
-				Result := "[0x02000070] FieldAccessException" 
+				Result := "[0x02000070] FieldAccessException"
 			when except_fileloadexception then
-				Result := "[0x02000322] FileLoadException" 
+				Result := "[0x02000322] FileLoadException"
 			when except_filenotfoundexception then
-				Result := "[0x02000323] FileNotFoundException" 
+				Result := "[0x02000323] FileNotFoundException"
 			when except_formatexception then
-				Result := "[0x02000072] FormatException" 
+				Result := "[0x02000072] FormatException"
 			when except_indexoutofrangeexception then
-				Result := "[0x02000079] IndexOutOfRangeException" 
+				Result := "[0x02000079] IndexOutOfRangeException"
 			when except_invalidcastexception then
-				Result := "[0x0200007E] InvalidCastException" 
+				Result := "[0x0200007E] InvalidCastException"
 			when except_invalidcomobjectexception then
-				Result := "[0x020002C0] InvalidComObjectException" 
+				Result := "[0x020002C0] InvalidComObjectException"
 			when except_invalidfiltercriteriaexception then
-				Result := "[0x02000151] InvalidFilterCriteriaException" 
+				Result := "[0x02000151] InvalidFilterCriteriaException"
 			when except_invalidolevarianttypeexception then
-				Result := "[0x020002C1] InvalidOleVariantTypeException" 
+				Result := "[0x020002C1] InvalidOleVariantTypeException"
 			when except_invalidoperationexception then
-				Result := "[0x0200007F] InvalidOperationException" 
+				Result := "[0x0200007F] InvalidOperationException"
 			when except_invalidprogramexception then
-				Result := "[0x02000080] InvalidProgramException" 
+				Result := "[0x02000080] InvalidProgramException"
 			when except_ioexception then
-				Result := "[0x0200031B] IOException" 
+				Result := "[0x0200031B] IOException"
 			when except_isolatedstorageexception then
-				Result := "[0x020004CC] IsolatedStorageException" 
+				Result := "[0x020004CC] IsolatedStorageException"
 			when except_marshaldirectiveexception then
-				Result := "[0x020002CF] MarshalDirectiveException" 
+				Result := "[0x020002CF] MarshalDirectiveException"
 			when except_memberaccessexception then
-				Result := "[0x02000023] MemberAccessException" 
+				Result := "[0x02000023] MemberAccessException"
 			when except_methodaccessexception then
-				Result := "[0x02000087] MethodAccessException" 
+				Result := "[0x02000087] MethodAccessException"
 			when except_missingfieldexception then
-				Result := "[0x02000089] MissingFieldException" 
+				Result := "[0x02000089] MissingFieldException"
 			when except_missingmanifestresourceexception then
-				Result := "[0x020001DE] MissingManifestResourceException" 
+				Result := "[0x020001DE] MissingManifestResourceException"
 			when except_missingmemberexception then
-				Result := "[0x02000088] MissingMemberException" 
+				Result := "[0x02000088] MissingMemberException"
 			when except_missingmethodexception then
-				Result := "[0x0200008A] MissingMethodException" 
+				Result := "[0x0200008A] MissingMethodException"
 			when except_multicastnotsupportedexception then
-				Result := "[0x0200008B] MultiCastNotSupportedException" 
+				Result := "[0x0200008B] MultiCastNotSupportedException"
 			when except_notfinitenumberexception then
-				Result := "[0x0200008D] NotFiniteNumberException" 
+				Result := "[0x0200008D] NotFiniteNumberException"
 			when except_notimplementedexception then
-				Result := "[0x0200008E] NotImplementedException" 
+				Result := "[0x0200008E] NotImplementedException"
 			when except_notsupportedexception then
-				Result := "[0x0200008F] NotSupportedException" 
+				Result := "[0x0200008F] NotSupportedException"
 			when except_nullreferenceexception then
-				Result := "[0x02000090] NullReferenceException" 
+				Result := "[0x02000090] NullReferenceException"
 			when except_objectdisposedexception then
-				Result := "[0x02000092] ObjectDisposedException" 
+				Result := "[0x02000092] ObjectDisposedException"
 			when except_outofmemoryexception then
-				Result := "[0x02000017] OutOfMemoryException" 
+				Result := "[0x02000017] OutOfMemoryException"
 			when except_overflowexception then
-				Result := "[0x02000096] OverflowException" 
+				Result := "[0x02000096] OverflowException"
 			when except_pathtoolongexception then
-				Result := "[0x0200032B] PathTooLongException" 
+				Result := "[0x0200032B] PathTooLongException"
 			when except_platformnotsupportedexception then
-				Result := "[0x0200009A] PlatFormnotSupportedException" 
+				Result := "[0x0200009A] PlatFormnotSupportedException"
 			when except_policyexception then
-				Result := "[0x0200026B] PolicyException" 
+				Result := "[0x0200026B] PolicyException"
 			when except_rankexception then
-				Result := "[0x0200009C] RankException" 
+				Result := "[0x0200009C] RankException"
 			when except_reflectiontypeloadexception then
-				Result := "[0x02000163] ReflectionTypeLoadException" 
+				Result := "[0x02000163] ReflectionTypeLoadException"
 			when except_remotingexception then
-				Result := "[0x02000480] RemotingException" 
+				Result := "[0x02000480] RemotingException"
 			when except_remotingtimeoutexception then
-				Result := "[0x02000482] RemotingTimeoutException" 
+				Result := "[0x02000482] RemotingTimeoutException"
 			when except_safearrayrankmismatchexception then
-				Result := "[0x020002D4] SafeArrayRankMismatchException" 
+				Result := "[0x020002D4] SafeArrayRankMismatchException"
 			when except_safearraytypemismatchexception then
-				Result := "[0x020002D5] SafeArrayTypeMismatchException" 
+				Result := "[0x020002D5] SafeArrayTypeMismatchException"
 			when except_securityexception then
-				Result := "[0x020003AB] SecurityException" 
+				Result := "[0x020003AB] SecurityException"
 			when except_sehexception then
-				Result := "[0x020002D6] SehException" 
+				Result := "[0x020002D6] SehException"
 			when except_serializationexception then
-				Result := "[0x02000189] SerializationException" 
+				Result := "[0x02000189] SerializationException"
 			when except_serverexception then
-				Result := "[0x02000481] ServerException" 
+				Result := "[0x02000481] ServerException"
 			when except_stackoverflowexception then
-				Result := "[0x02000018] StackOverflowException" 
+				Result := "[0x02000018] StackOverflowException"
 			when except_synchronizationlockexception then
-				Result := "[0x020000CC] SynchronizationLockException" 
+				Result := "[0x020000CC] SynchronizationLockException"
 			when except_systemexception then
-				Result := "[0x02000016] SystemException" 
+				Result := "[0x02000016] SystemException"
 			when except_targetexception then
-				Result := "[0x0200016C] TargetException" 
+				Result := "[0x0200016C] TargetException"
 			when except_targetinvocationexception then
-				Result := "[0x0200016D] TargetInvocationException" 
+				Result := "[0x0200016D] TargetInvocationException"
 			when except_targetparametercountexception then
-				Result := "[0x0200016E] TargetParameterCountException" 
+				Result := "[0x0200016E] TargetParameterCountException"
 			when except_threadabortexception then
-				Result := "[0x020000CF] ThreadAbortException" 
+				Result := "[0x020000CF] ThreadAbortException"
 			when except_threadinterruptedexception then
-				Result := "[0x020000D2] ThreadInterruptedException" 
+				Result := "[0x020000D2] ThreadInterruptedException"
 			when except_threadstateexception then
-				Result := "[0x020000DB] ThreadStateException" 
+				Result := "[0x020000DB] ThreadStateException"
 			when except_threadstopexception then
-				Result := "[0x020000DD] ThreadStopException" 
+				Result := "[0x020000DD] ThreadStopException"
 			when except_typeinitializationexception then
-				Result := "[0x020000B0] TypeInitializationException" 
+				Result := "[0x020000B0] TypeInitializationException"
 			when except_typeloadexception then
-				Result := "[0x02000069] TypeLoadException" 
+				Result := "[0x02000069] TypeLoadException"
 			when except_typeunloadedexception then
-				Result := "[0x02000052] TypeUnloadedException" 
+				Result := "[0x02000052] TypeUnloadedException"
 			when except_unauthorizedaccessexception then
-				Result := "[0x020000B5] UnauthorizedAccessException" 
+				Result := "[0x020000B5] UnauthorizedAccessException"
 			when except_verificationexception then
-				Result := "[0x020003B0] VerificationException" 
+				Result := "[0x020003B0] VerificationException"
 			when except_xmlsyntaxexception then
-				Result := "[0x02000363] XmlSyntaxException" 
+				Result := "[0x02000363] XmlSyntaxException"
 			else
 				Result := "Unknown Exception"
 			end
+		ensure
+			Result_attached: Result /= Void
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -280,22 +283,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

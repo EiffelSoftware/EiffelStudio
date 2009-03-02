@@ -63,8 +63,10 @@ feature {NONE} -- Status report
 				l_val := get_environment_variable (path_name.item, path.item, 32767)
 				if l_val > 0 then
 					s := path.string
-					s.prepend (";")
-					s.prepend (l_il_env.dotnet_framework_path)
+					if attached l_il_env.dotnet_framework_path as l_dotnet_framework_path then
+						s.prepend (";")
+						s.prepend (l_dotnet_framework_path)
+					end
 					create path.make (s)
 					success := set_environment_variable (path_name.item, path.item)
 				end
@@ -185,7 +187,7 @@ feature {NONE} -- C externals
 
 	frozen strong_name_key_gen (a_container_name: POINTER; flags: INTEGER;
 			a_public_key, a_key_size: POINTER): INTEGER
-		
+
 			-- Generate a new key pair for strong name use.
 		external
 			"dllwin mscorsn.dll signature (LPCWSTR, DWORD, BYTE **, ULONG *): EIF_INTEGER use <StrongName.h>"
@@ -195,7 +197,7 @@ feature {NONE} -- C externals
 
 	frozen strong_name_install (a_container_name: POINTER; a_public_key: POINTER;
 			a_key_size: INTEGER): INTEGER
-		
+
 			-- Import key pair into a key container.
 		external
 			"dllwin mscorsn.dll signature (LPCWSTR, BYTE *, ULONG): EIF_INTEGER use <StrongName.h>"
@@ -213,7 +215,7 @@ feature {NONE} -- C externals
 
 	frozen strong_name_get_public_key (a_container_name: POINTER; a_key_blob: POINTER;
 			a_key_blob_size: INTEGER; a_public_key: POINTER; a_public_key_size: POINTER): INTEGER
-		
+
 			-- Retrieve the public portion of a key pair.
 		external
 			"[
@@ -235,7 +237,7 @@ feature {NONE} -- C externals
 
 	frozen strong_name_signature_size (a_public_key: POINTER; a_key_size: INTEGER;
 			a_hash_size: POINTER): INTEGER
-		
+
 			-- Compute size that needs to be allocated for a signature in an assembly.
 		external
 			"dllwin mscorsn.dll signature (BYTE *, ULONG, DWORD *): EIF_INTEGER use <StrongName.h>"
@@ -245,7 +247,7 @@ feature {NONE} -- C externals
 
 	frozen strong_name_signature_generation (a_file_path, a_container, a_public_key: POINTER;
 			a_public_key_size: INTEGER; a_hash_buffer, a_hash_buffer_size: POINTER): INTEGER
-		
+
 			-- Hash and sign a manifest.
 		external
 			"[
@@ -258,7 +260,7 @@ feature {NONE} -- C externals
 
 	frozen strong_name_token_from_public_key (a_public_key: POINTER; key_length: INTEGER;
 			token, token_lenght: POINTER): INTEGER
-		
+
 			-- Create a strong name token from a public key blob.
 		external
 			"[
@@ -271,7 +273,7 @@ feature {NONE} -- C externals
 
 	frozen get_hash_from_assembly_file (a_file_path: POINTER; a_hash_alg_id: POINTER;
 			a_hash_buffer: POINTER; a_hash_buffer_size: INTEGER; computed_size: POINTER): INTEGER
-		
+
 			-- Compute hash of `a_blob' using `a_hash_alg_id'.
 		external
 			"[
@@ -284,7 +286,7 @@ feature {NONE} -- C externals
 
 	frozen get_hash_from_blob (a_blob: POINTER; a_blob_size: INTEGER; a_hash_alg_id: POINTER;
 			a_hash_buffer: POINTER; a_hash_buffer_size: INTEGER; computed_size: POINTER): INTEGER
-		
+
 				-- Compute hash of `a_blob' using `a_hash_alg_id'.
 		external
 			"[
@@ -298,7 +300,7 @@ feature {NONE} -- C externals
 
 	frozen get_hash_from_file (a_path: POINTER; a_hash_alg_id: POINTER; a_hash_buffer: POINTER;
 			a_hash_buffer_size: INTEGER; computed_size: POINTER): INTEGER
-		
+
 		external
 			"[
 				dllwin mscorsn.dll

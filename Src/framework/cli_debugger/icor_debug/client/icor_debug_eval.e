@@ -122,7 +122,7 @@ feature {ICOR_EXPORTER} -- Access
 			end
 		end
 
-	create_value (a_cor_element_type: INTEGER; a_class: ICOR_DEBUG_CLASS): ICOR_DEBUG_VALUE
+	create_value (a_cor_element_type: INTEGER; a_class: detachable ICOR_DEBUG_CLASS): ICOR_DEBUG_VALUE
 			-- CreateValue creates an ICorDebugValue of the given type for the
 			-- sole purpose of using it in a function evaluation. These can be
 			-- use to pass user constants as parameters. The value has a zero

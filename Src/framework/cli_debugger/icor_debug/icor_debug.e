@@ -265,13 +265,13 @@ feature -- ICorDebugProcess handle
 
 feature {NONE} -- Implementation routines
 
-	last_icd_managed_callback: ICOR_DEBUG_MANAGED_CALLBACK
+	last_icd_managed_callback: detachable ICOR_DEBUG_MANAGED_CALLBACK
 		-- Last ICorDebugManagedCallback associated with Current
 
-	last_icd_unmanaged_callback: ICOR_DEBUG_UNMANAGED_CALLBACK
+	last_icd_unmanaged_callback: detachable ICOR_DEBUG_UNMANAGED_CALLBACK
 		-- Last ICorDebugUnmanagedCallback associated with Current
 
-	process_info: WEL_PROCESS_INFO
+	process_info: detachable WEL_PROCESS_INFO
 			-- Process information
 
 	startup_info: WEL_STARTUP_INFO
@@ -279,6 +279,8 @@ feature {NONE} -- Implementation routines
 		do
 			create Result.make
 			Result.initialize
+		ensure
+			Result_attached: Result /= Void
 		end
 
 	cwin_create_new_console: INTEGER

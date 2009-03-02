@@ -44,8 +44,8 @@ feature {ICOR_OBJECTS_MANAGER} -- Dispose
 			-- Clean data on dispose
 		do
 			Precursor
-			if internal_md_import /= Void then
-				internal_md_import.clean_on_dispose
+			if attached internal_md_import as i then
+				i.clean_on_dispose
 				internal_md_import := Void
 			end
 		end
@@ -53,6 +53,9 @@ feature {ICOR_OBJECTS_MANAGER} -- Dispose
 feature {ICOR_EXPORTER} -- Meta Data queries
 
 	md_member_token_by_names (a_type_name: STRING; a_feat_name: STRING): NATURAL_32
+		require
+			a_type_name_attached: a_type_name /= Void
+			a_feat_name_attached: a_feat_name /= Void
 		local
 			l_type_token: NATURAL_32
 		do
@@ -62,41 +65,46 @@ feature {ICOR_EXPORTER} -- Meta Data queries
 
 	md_class_token_by_type_name (a_type_name: STRING): NATURAL_32
 			-- class token for full type name `a_type_name' using the Meta Data
+		require
+			a_type_name_attached: a_type_name /= Void
 		do
 			Result := interface_md_import.find_type_def_by_name (a_type_name, 0)
 		end
 
 	md_member_token (a_class_token: NATURAL_32; a_feat_name: STRING): NATURAL_32
 			-- member token for type identified by `a_class_token' and `a_feat_name'
+		require
+			a_feat_name_attached: a_feat_name /= Void
 		do
 			Result := interface_md_import.find_member (a_class_token, a_feat_name)
 		end
 
 	md_field_token (a_class_token: NATURAL_32; a_field_name: STRING): NATURAL_32
 			-- field token for type identified by `a_class_token' and `a_field_name'
+		require
+			a_feat_name_attached: a_field_name /= Void
 		do
 			Result := interface_md_import.find_field (a_class_token, a_field_name)
 		end
 
 	md_feature_token (a_class_token: NATURAL_32; a_name: STRING): NATURAL_32
 			-- Function or Method token
+		require
+			a_name_attached: a_name /= Void
 		do
 			Result := interface_md_import.find_method (a_class_token, a_name)
 		end
 
-	md_type_name (a_class_token: NATURAL_32): STRING
+	md_type_name (a_class_token: NATURAL_32): detachable STRING
 			-- Type (Class) name for `a_class_token'.
 		do
 			Result := interface_md_import.get_typedef_props (a_class_token)
 		end
 
-	md_member_name (a_feat_token: NATURAL_32): STRING
+	md_member_name (a_feat_token: NATURAL_32): detachable STRING
 			-- (Feature) name for `a_feat_token'.
-		local
-			t: TUPLE [name:STRING; f:INTEGER]
 		do
-			t := interface_md_import.get_member_props (a_feat_token)
-			if t /= Void then
+			if attached interface_md_import.get_member_props (a_feat_token) as t then
 				Result := t.name
 			end
 		end
@@ -108,7 +116,12 @@ feature {ICOR_EXPORTER} -- Access
 		do
 			Result := private_name
 			if Result = Void then
-				Result := get_name
+				if attached get_name as l_name then
+					Result := l_name
+				else
+					check module_has_name: False end
+					create Result.make_from_string ("Module-" + item.out + "-")
+				end
 				private_name := Result
 			else
 				last_call_success := 0
@@ -336,7 +349,7 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {NONE} -- Access
 
-	get_name: STRING
+	get_name: detachable STRING
 			-- GetName returns the name of the Module
 		local
 			p_cchname: NATURAL_32
@@ -346,7 +359,9 @@ feature {NONE} -- Access
 			create mp_name.make (256 * 2)
 
 			last_call_success := cpp_get_name (item, 256, $p_cchname, mp_name.item)
-			Result := (create {UNI_STRING}.make_by_pointer (mp_name.item)).string
+			if mp_name.item /= Default_pointer then
+				Result := (create {UNI_STRING}.make_by_pointer (mp_name.item)).string
+			end
 		ensure
 			success: last_call_success = 0
 		end
@@ -523,7 +538,7 @@ feature {NONE} -- IID ...
 
 feature {NONE} -- Internal data
 
-	internal_md_import: MD_IMPORT;
+	internal_md_import: detachable MD_IMPORT;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

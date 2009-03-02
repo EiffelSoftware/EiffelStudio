@@ -250,11 +250,13 @@ feature {NONE} -- Implementation
 			l_row.set_item (2, l_link_label)
 		end
 
-	add_exception_details (a_parent: EV_GRID_ROW; a_exception: !EQA_TEST_INVOCATION_EXCEPTION)
+	add_exception_details (a_parent: EV_GRID_ROW; a_exception: EQA_TEST_INVOCATION_EXCEPTION)
 			-- Add rows with exception details
 			--
 			-- `a_parent': Parent row for all new rows.
 			-- `a_exception': Exception containing details to be added.
+		require
+			a_exception_attached: a_exception /= Void
 		local
 			l_pos: INTEGER
 			l_label: EV_GRID_LABEL_ITEM

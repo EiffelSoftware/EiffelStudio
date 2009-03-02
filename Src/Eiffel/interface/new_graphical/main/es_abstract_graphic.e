@@ -195,8 +195,10 @@ feature {NONE} -- Implementation (preparation of all widgets)
 				-- Initialize external command manager
 			incoming_command_manager_cell.put (create {ES_INCOMING_COMMAND_MANAGER}.make (create {ES_COMMAND_RECEIVER_CALLBACKS}.make))
 				-- Retrive EIS storage when project loaded.
-				-- Put font in case the background visitor has been started in prior agents.
+				-- Put front in case the background visitor has been started in prior agents.
 			eiffel_project.manager.load_agents.put_front (agent eis_manager.retrieve_storage)
+				-- Save EIS storage when project is closed.
+			eiffel_project.manager.close_agents.extend (agent eis_manager.save_storage)
 
 				-- If some more arguments were specified, it means that we either asked to retrieve
 				-- an existing project, or to create one.
@@ -356,7 +358,7 @@ feature {NONE} -- Factory
 		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -380,11 +382,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class ES_GRAPHIC

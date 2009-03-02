@@ -12,9 +12,27 @@ frozen class
 
 inherit
 	ES_DEBUGGER_STONABLE_TOOL [ES_OBJECTS_TOOL_PANEL]
+		redefine
+			on_tool_instantiated
+		end
 
 create {NONE}
 	default_create
+
+feature {NONE} -- Events
+
+	on_tool_instantiated
+			-- Called when a tool panel is instatiated and has been built.
+			-- (export status {NONE})
+		do
+			Precursor
+			if delayed_split_proportion > 0 then
+				set_split_proportion (delayed_split_proportion)
+			end
+		end
+
+	delayed_split_proportion: like split_proportion
+			-- Split proportion to set when tool instantiated			
 
 feature {DEBUGGER_MANAGER} -- Status setting
 
@@ -31,6 +49,32 @@ feature {DEBUGGER_MANAGER} -- Status setting
 		do
 			if is_tool_instantiated then
 				panel.enable_refresh
+			end
+		end
+
+feature -- Access: split
+
+	split_exists: BOOLEAN
+		do
+			if is_tool_instantiated then
+				Result := panel.split_exists
+			end
+		end
+
+	split_proportion: REAL
+		require
+			split_exists: split_exists
+		do
+			Result := panel.split_proportion
+		end
+
+	set_split_proportion (p: like split_proportion)
+		do
+			if is_tool_instantiated then
+				delayed_split_proportion := 0
+				panel.set_split_proportion (p)
+			else
+				delayed_split_proportion := p
 			end
 		end
 
@@ -124,11 +168,11 @@ feature {NONE} -- Internationalization
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

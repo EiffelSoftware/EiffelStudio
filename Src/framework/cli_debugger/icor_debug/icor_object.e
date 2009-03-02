@@ -198,7 +198,10 @@ feature {ICOR_EXPORTER} -- Access
 	out: STRING
 			-- Output value
 		do
-			Result := generating_type + "[" + item.out + "]"
+			create Result.make_from_string (generating_type)
+			Result.append_character ('[')
+			Result.append_string (item.out)
+			Result.append_character (']')
 		end
 
 feature -- Access status
@@ -225,7 +228,7 @@ feature -- Access status
 	last_error_code_id: STRING
 			-- Convert `last_call_success' to hex and keep the last word
 		do
-			Result := last_error_code.to_hex_string
+			create Result.make_from_string (last_error_code.to_hex_string)
 			Result.keep_tail (4)
 		end
 

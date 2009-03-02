@@ -13,7 +13,7 @@ class
 inherit
 	ICOR_DEBUG_ENUM
 
---create 
+--create
 --	make_by_pointer
 
 feature {ICOR_EXPORTER} -- Access
@@ -31,7 +31,7 @@ feature {ICOR_EXPORTER} -- Access
 			Result := arr.item (1)
 		end
 
-	next (a_celt: INTEGER): ARRAY [G]
+	next (a_celt: INTEGER): detachable ARRAY [G]
 			-- Array of `a_celt' fetched items.
 			-- index start at '1'
 		require
@@ -76,18 +76,18 @@ feature {ICOR_EXPORTER} -- Access
 feature {NONE} -- Implementation
 
 	icor_object_made_by_pointer (a_p: POINTER): G
-			-- 
+			--
 		do
 			create Result.make_by_pointer (a_p)
 		end
-		
+
 	call_cpp_next (obj: POINTER; a_celt: INTEGER; a_p: POINTER; a_pceltfetched: TYPED_POINTER [INTEGER]): INTEGER
 		deferred
 		end
 
 --		external
 --			"[
---				C++ ICorDebugAppDomainEnum signature(ULONG,ICorDebugAppDomain**, ULONG*): EIF_INTEGER 
+--				C++ ICorDebugAppDomainEnum signature(ULONG,ICorDebugAppDomain**, ULONG*): EIF_INTEGER
 --				use "cli_debugger_headers.h"
 --			]"
 --		alias

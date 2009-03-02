@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="cli_writer" uuid="BE7B7959-6C6E-4C17-8B5C-E3D5E27D876D" library_target="default">
+	<target name="default">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/\.svn$</exclude>
+		</file_rule>
+		<option full_class_checking="true" is_attached_by_default="true" is_void_safe="false" syntax_level="1">
+			<assertions precondition="true"/>
+		</option>
+		<external_include location="$(EIFFEL_SRC)\framework\cli_writer\Clib -D_WIN32_DCOM">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_include>
+		<external_object location="$(EIFFEL_SRC)\framework\cli_writer\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\cli_writer.lib">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_object>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="dotnet_loader" location="$EIFFEL_SRC\framework\dotnet_loader\dotnet_loader-safe.ecf"/>
+		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment-safe.ecf"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel-safe.ecf"/>
+		<cluster name="cli_writer" location=".\" recursive="true">
+			<file_rule>
+				<exclude>/sample$</exclude>
+			</file_rule>
+			<file_rule>
+				<exclude>/md_strong_name\.e$</exclude>
+				<exclude>/md_public_key\.e$</exclude>
+				<exclude>/system_assembly_list_builder\.e$</exclude>
+				<condition>
+					<platform excluded_value="windows"/>
+				</condition>
+			</file_rule>
+			<file_rule>
+				<exclude>/Clib$</exclude>
+				<exclude>/spec$</exclude>
+				<condition>
+					<platform value="windows"/>
+				</condition>
+			</file_rule>
+		</cluster>
+	</target>
+	<target name="sample" extends="default">
+		<root class="ROOT_CLASS" feature="make"/>
+		<cluster name="sample" location="sample\"/>
+	</target>
+</system>

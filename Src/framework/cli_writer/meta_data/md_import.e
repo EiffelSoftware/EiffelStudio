@@ -236,6 +236,8 @@ feature -- Enumerating collections
 feature -- Finding specific item in MetaData
 
 	find_type_def_by_name (a_name: STRING; a_encloser_tok: NATURAL_32): NATURAL_32
+		require
+			a_name_attached: a_name /= Void
 		local
 			l_name: UNI_STRING
 		do
@@ -244,6 +246,8 @@ feature -- Finding specific item in MetaData
 		end
 
 	find_member (a_typedef: NATURAL_32; a_name: STRING): NATURAL_32
+		require
+			a_name_attached: a_name /= Void
 		local
 			l_name: UNI_STRING
 		do
@@ -254,6 +258,8 @@ feature -- Finding specific item in MetaData
 		end
 
 	find_method (a_typedef: NATURAL_32; a_name: STRING): NATURAL_32
+		require
+			a_name_attached: a_name /= Void
 		local
 			l_name: UNI_STRING
 		do
@@ -264,6 +270,8 @@ feature -- Finding specific item in MetaData
 		end
 
 	find_field (a_typedef: NATURAL_32; a_name: STRING): NATURAL_32
+		require
+			a_name_attached: a_name /= Void
 		local
 			l_name: UNI_STRING
 		do
@@ -275,8 +283,8 @@ feature -- Finding specific item in MetaData
 
 feature -- Obtaining Properties of a Specified Object
 
-	get_typedef_props (a_tok: NATURAL_32): STRING
-			--
+	get_typedef_props (a_tok: NATURAL_32): detachable STRING
+			-- Get information stored in metadata for `a_tok'
 		local
 			mp_name: MANAGED_POINTER
 			l_rsize: INTEGER
@@ -286,7 +294,9 @@ feature -- Obtaining Properties of a Specified Object
 			create mp_name.make (256 * 2)
 
 			last_call_success := cpp_get_typedef_props (item, a_tok, mp_name.item, 255, $l_rsize, l_flag, $l_tkext)
-			Result := (create {UNI_STRING}.make_by_pointer (mp_name.item)).string
+			if mp_name.item /= Default_pointer then
+				Result := (create {UNI_STRING}.make_by_pointer (mp_name.item)).string
+			end
 		end
 
 	get_interface_impl_props (a_interface_impl: NATURAL_32): NATURAL_32
@@ -297,7 +307,7 @@ feature -- Obtaining Properties of a Specified Object
 			last_call_success := cpp_get_interface_impl_props (item, a_interface_impl, $Result, $l_interf_tok)
 		end
 
-	get_member_props (a_tok: NATURAL_32): TUPLE [name:STRING; flag:INTEGER]
+	get_member_props (a_tok: NATURAL_32): detachable TUPLE [name:STRING; flag:INTEGER]
 			-- Get member 's name property
 		local
 			mp_name: MANAGED_POINTER
@@ -317,11 +327,12 @@ feature -- Obtaining Properties of a Specified Object
 				$l_flag,
 				l_sig, $l_sigsize,
 				$l_code_rva, l_pdwimpl_flags, l_cplustype_flag, l_cst_ppvalue, $l_pcchvalue)
-
-			Result := [(create {UNI_STRING}.make_by_pointer (mp_name.item)).string, l_flag]
+			if mp_name.item /= Default_pointer then
+				Result := [(create {UNI_STRING}.make_by_pointer (mp_name.item)).string, l_flag]
+			end
 		end
 
-	get_method_props (a_tok: NATURAL_32): STRING
+	get_method_props (a_tok: NATURAL_32): detachable STRING
 			-- Get method 's name property
 		local
 			mp_name: MANAGED_POINTER
@@ -332,17 +343,17 @@ feature -- Obtaining Properties of a Specified Object
 			l_sigsize: INTEGER
 			l_rva: POINTER
 			l_pdw: POINTER
-
 		do
 			create mp_name.make (256 * 2)
 
 			last_call_success := cpp_get_method_props (item, a_tok, $l_r_classtoken, mp_name.item, 255, $l_rsize,
 				l_flag, l_sig, $l_sigsize, $l_rva, $l_pdw)
-
-			Result := (create {UNI_STRING}.make_by_pointer (mp_name.item)).string
+			if mp_name.item /= Default_pointer then
+				Result := (create {UNI_STRING}.make_by_pointer (mp_name.item)).string
+			end
 		end
 
-	get_field_props (a_tok: NATURAL_32): STRING
+	get_field_props (a_tok: NATURAL_32): detachable STRING
 			-- Get field 's name property
 		local
 			mp_name: MANAGED_POINTER
@@ -359,10 +370,12 @@ feature -- Obtaining Properties of a Specified Object
 			last_call_success := cpp_get_field_props (item, a_tok, $l_r_classtoken, mp_name.item, 255, $l_rsize,
 				$last_get_field_dwattr, l_sig, $l_sigsize, l_pdwdef_type, l_ppvalue, $l_pcbvalue)
 
-			Result := (create {UNI_STRING}.make_by_pointer (mp_name.item)).string
+			if mp_name.item /= Default_pointer then
+				Result := (create {UNI_STRING}.make_by_pointer (mp_name.item)).string
+			end
 		end
 
-	get_property_props (a_tok: NATURAL_32): TUPLE [name: STRING; getter: NATURAL_32; flag: INTEGER]
+	get_property_props (a_tok: NATURAL_32): detachable TUPLE [name: STRING; getter: NATURAL_32; flag: INTEGER]
 			-- Get field 's name property
 		local
 			mp_name: MANAGED_POINTER
@@ -388,8 +401,9 @@ feature -- Obtaining Properties of a Specified Object
 				$last_get_property_flags, l_sig, $l_sigsize, l_pdwdef_type, l_ppvalue, $l_pcbvalue,
 				$l_setter, $l_getter, l_mp_tokens.item, l_cmax, $l_pcothermethod
 				)
-
-			Result := [(create {UNI_STRING}.make_by_pointer (mp_name.item)).string, l_getter, last_get_property_flags]
+			if mp_name.item /= Default_pointer then
+				Result := [(create {UNI_STRING}.make_by_pointer (mp_name.item)).string, l_getter, last_get_property_flags]
+			end
 		end
 
 	last_field_is_static: BOOLEAN
@@ -436,14 +450,14 @@ feature -- Status
 
 feature -- Queries
 
-	field_tokens (a_class_token: NATURAL_32): ARRAYED_LIST [NATURAL_32]
+	field_tokens (a_class_token: NATURAL_32): detachable ARRAYED_LIST [NATURAL_32]
 		require
 			a_class_token > 0
 		do
 			Result := enum_tokens (a_class_token, agent enum_fields)
 		end
 
-	property_tokens (a_class_token: NATURAL_32): ARRAYED_LIST [NATURAL_32]
+	property_tokens (a_class_token: NATURAL_32): detachable ARRAYED_LIST [NATURAL_32]
 		require
 			a_class_token > 0
 		do
@@ -452,9 +466,10 @@ feature -- Queries
 
 	enum_tokens (   a_class_token: NATURAL_32;
 					enum_agent: FUNCTION [ANY, TUPLE [TYPED_POINTER [POINTER], NATURAL_32, INTEGER], ARRAY [NATURAL_32]];
-				): ARRAYED_LIST [NATURAL_32]
+				): detachable ARRAYED_LIST [NATURAL_32]
 		require
 			a_class_token > 0
+			enum_agent_attached: enum_agent /= Void
 		local
 			l_tp: TYPED_POINTER [POINTER]
 			l_tokens: ARRAYED_LIST [NATURAL_32]

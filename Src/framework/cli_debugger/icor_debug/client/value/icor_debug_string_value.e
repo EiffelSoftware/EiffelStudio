@@ -25,7 +25,7 @@ feature {ICOR_EXPORTER} -- Access
 			last_call_success := cpp_get_length (item, $Result)
 		end
 
-	get_string (a_len: NATURAL_32): STRING_32
+	get_string (a_len: NATURAL_32): detachable STRING_32
 			-- GetString
 		local
 			p_nbfetched: NATURAL_32

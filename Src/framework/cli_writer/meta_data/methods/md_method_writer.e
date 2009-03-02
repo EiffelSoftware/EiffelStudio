@@ -131,7 +131,7 @@ feature -- Settings
 			l_ex: MD_EXCEPTION_CLAUSE
 			is_fat_seh: BOOLEAN
 			i: INTEGER
-			l_old_exceptions: ARRAY [MD_EXCEPTION_CATCH]
+			l_old_exceptions: detachable ARRAY [MD_EXCEPTION_CATCH]
 		do
 			l_meth := internal_method_body
 			l_pos := current_position

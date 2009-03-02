@@ -111,7 +111,7 @@ feature -- Access
 	once_finally_block: MD_EXCEPTION_FINALLY
 			-- Exception clause for finally wrapper of once feature.
 
-	old_exception_catch_blocks: ARRAY [MD_EXCEPTION_CATCH]
+	old_exception_catch_blocks: detachable ARRAY [MD_EXCEPTION_CATCH]
 			-- Exception clause for catching exception for old expression evaluation.
 
 	current_old_exception_catch_block: MD_EXCEPTION_CATCH

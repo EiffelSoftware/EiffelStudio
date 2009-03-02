@@ -50,20 +50,17 @@ feature {ICOR_EXPORTER} -- Access
 			Result := get_type
 		end
 
-	strong_reference_value: ICOR_DEBUG_HANDLE_VALUE
+	strong_reference_value: detachable ICOR_DEBUG_HANDLE_VALUE
 			-- Strong reference value
 
 feature {ICOR_EXPORTER} -- Query
 
 	get_strong_reference_value
 		local
-			l_icd: ICOR_DEBUG_VALUE
-			l_ref: ICOR_DEBUG_REFERENCE_VALUE
-			l_icd_heap2: ICOR_DEBUG_HEAP_VALUE2
+			l_icd: detachable ICOR_DEBUG_VALUE
 		do
 				--| in specific case, the value can be under reference
-			l_ref := query_interface_icor_debug_reference_value
-			if l_ref /= Void then
+			if attached query_interface_icor_debug_reference_value as l_ref then
 				l_icd := l_ref.dereference
 				l_ref.clean_on_dispose
 			end
@@ -72,8 +69,7 @@ feature {ICOR_EXPORTER} -- Query
 			if l_icd = Void then
 				l_icd := Current
 			end
-			l_icd_heap2 := l_icd.query_interface_icor_debug_heap_value2
-			if l_icd_heap2 /= Void then
+			if attached l_icd.query_interface_icor_debug_heap_value2 as l_icd_heap2 then
 				strong_reference_value := l_icd_heap2.create_strong_handle
 				l_icd_heap2.clean_on_dispose
 			else
@@ -137,8 +133,8 @@ feature -- Cleaning / Dispose
 	clean_on_dispose
 			-- Call this, to clean the object as if it is about to be disposed
 		do
-			if strong_reference_value /= Void then
-				strong_reference_value.clean_on_dispose
+			if attached strong_reference_value as v then
+				v.clean_on_dispose
 				strong_reference_value := Void
 			end
 			Precursor
@@ -146,7 +142,7 @@ feature -- Cleaning / Dispose
 
 feature {ICOR_EXPORTER} -- QueryInterface
 
-	query_interface_icor_debug_generic_value: ICOR_DEBUG_GENERIC_VALUE
+	query_interface_icor_debug_generic_value: detachable ICOR_DEBUG_GENERIC_VALUE
 		require
 			item_not_null: item_not_null
 		local
@@ -158,7 +154,7 @@ feature {ICOR_EXPORTER} -- QueryInterface
 			end
 		end
 
-	query_interface_icor_debug_reference_value: ICOR_DEBUG_REFERENCE_VALUE
+	query_interface_icor_debug_reference_value: detachable ICOR_DEBUG_REFERENCE_VALUE
 		require
 			item_not_null: item_not_null
 		local
@@ -170,7 +166,7 @@ feature {ICOR_EXPORTER} -- QueryInterface
 			end
 		end
 
-	query_interface_icor_debug_handle_value: ICOR_DEBUG_HANDLE_VALUE
+	query_interface_icor_debug_handle_value: detachable ICOR_DEBUG_HANDLE_VALUE
 		require
 			item_not_null: item_not_null
 		local
@@ -182,7 +178,7 @@ feature {ICOR_EXPORTER} -- QueryInterface
 			end
 		end
 
-	query_interface_icor_debug_heap_value: ICOR_DEBUG_HEAP_VALUE
+	query_interface_icor_debug_heap_value: detachable ICOR_DEBUG_HEAP_VALUE
 		require
 			item_not_null: item_not_null
 		local
@@ -194,7 +190,7 @@ feature {ICOR_EXPORTER} -- QueryInterface
 			end
 		end
 
-	query_interface_icor_debug_heap_value2: ICOR_DEBUG_HEAP_VALUE2
+	query_interface_icor_debug_heap_value2: detachable ICOR_DEBUG_HEAP_VALUE2
 		require
 			item_not_null: item_not_null
 		local
@@ -206,7 +202,7 @@ feature {ICOR_EXPORTER} -- QueryInterface
 			end
 		end
 
-	query_interface_icor_debug_object_value: ICOR_DEBUG_OBJECT_VALUE
+	query_interface_icor_debug_object_value: detachable ICOR_DEBUG_OBJECT_VALUE
 		require
 			item_not_null: item_not_null
 		local
@@ -220,7 +216,7 @@ feature {ICOR_EXPORTER} -- QueryInterface
 
 feature {ICOR_EXPORTER} -- QueryInterface HEAP
 
-	query_interface_icor_debug_box_value: ICOR_DEBUG_BOX_VALUE
+	query_interface_icor_debug_box_value: detachable ICOR_DEBUG_BOX_VALUE
 		require
 			item_not_null: item_not_null
 		local
@@ -232,7 +228,7 @@ feature {ICOR_EXPORTER} -- QueryInterface HEAP
 			end
 		end
 
-	query_interface_icor_debug_string_value: ICOR_DEBUG_STRING_VALUE
+	query_interface_icor_debug_string_value: detachable ICOR_DEBUG_STRING_VALUE
 		require
 			item_not_null: item_not_null
 		local
@@ -244,7 +240,7 @@ feature {ICOR_EXPORTER} -- QueryInterface HEAP
 			end
 		end
 
-	query_interface_icor_debug_array_value: ICOR_DEBUG_ARRAY_VALUE
+	query_interface_icor_debug_array_value: detachable ICOR_DEBUG_ARRAY_VALUE
 		require
 			item_not_null: item_not_null
 		local
@@ -416,13 +412,13 @@ feature {NONE} -- Implementation / QueryInterface HEAP
 feature -- only for test purpose (evaluation in debugger)
 
 	query: TUPLE [
-					STRING, ICOR_DEBUG_VALUE, -- object
-					STRING, ICOR_DEBUG_VALUE, -- ref
-					STRING, ICOR_DEBUG_VALUE, -- hdl
-					STRING, ICOR_DEBUG_VALUE, -- str
-					STRING, ICOR_DEBUG_VALUE, -- gene
-					STRING, ICOR_DEBUG_VALUE, -- array
-					STRING, ICOR_DEBUG_VALUE  -- heap2
+					STRING, detachable ICOR_DEBUG_VALUE, -- object
+					STRING, detachable ICOR_DEBUG_VALUE, -- ref
+					STRING, detachable ICOR_DEBUG_VALUE, -- hdl
+					STRING, detachable ICOR_DEBUG_VALUE, -- str
+					STRING, detachable ICOR_DEBUG_VALUE, -- gene
+					STRING, detachable ICOR_DEBUG_VALUE, -- array
+					STRING, detachable ICOR_DEBUG_VALUE  -- heap2
 					]
 			-- Debug purpose only, will be removed soon
 		local
@@ -486,7 +482,7 @@ feature -- only for test purpose (evaluation in debugger)
 --			vi: EIFNET_DEBUG_VALUE_INFO
 --		do
 --			create vi.make (Current)
---			Result := vi.value_to_string --   "test"
+--			create Result.make_from_string (vi.value_to_string) --   "test"
 --			if vi.value_module_file_name /= Void then
 --				Result.append ("%N module=" + vi.value_module_file_name)
 --			end

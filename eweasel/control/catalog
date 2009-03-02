@@ -907,6 +907,7 @@ test	inherited-like-current-object-test	melt084  tcf fail execution melting
 test	melted-anchored-precursor-object-test	melt085  tcf fail execution melting
 test	melted-anchored-precursor-in-tuple	melt086  tcf fail execution melting
 test	redefined-once-with-alt-precondition	melt087  tcf fail execution melting
+test	character_32-constant		melt088  tcf fail execution melting
 
 -- Freezing
 

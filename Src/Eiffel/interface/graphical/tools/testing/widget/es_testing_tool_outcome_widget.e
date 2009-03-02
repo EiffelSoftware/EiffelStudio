@@ -256,6 +256,7 @@ feature {NONE} -- Implementation
 			-- `a_parent': Parent row for all new rows.
 			-- `a_exception': Exception containing details to be added.
 		require
+			a_parent_attached: a_parent /= Void
 			a_exception_attached: a_exception /= Void
 		local
 			l_pos: INTEGER

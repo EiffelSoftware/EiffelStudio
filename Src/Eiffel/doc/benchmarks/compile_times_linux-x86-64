@@ -1,3 +1,18 @@
+Ubuntu 8.10 (dual quad-core Xeon E5420 at 2.5GHz and 6MB of cache per CPU)
+
+6.4
+===
+
+6.4.7.7440 RTEA (multithreaded version):
+607.180u 20.850s 10:30.29 99.6%      0+0k 5144+2070376io 0pf+0w
+
+6.4.7.7440 non-RTEA (multithreaded version):
+433.280u 20.200s 7:34.76 99.7%       0+0k 112+2053288io 0pf+0w
+
+6.4.7.7440 compiled by ecb:
+304.360u 19.530s 5:24.75 99.7%       0+0k 0+2052928io 0pf+0w
+
+
 Fedora Core 3 (AMD64 3500+ at 2.2GHz and 512KB of cache)
 
 5.7

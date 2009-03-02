@@ -80,10 +80,12 @@ feature -- Basic functionality
 
 feature {NONE} -- Basic functionality
 
-	date_time_item (a_date: !DATE_TIME): !EV_GRID_ITEM
+	date_time_item (a_date: DATE_TIME): !EV_GRID_ITEM
 			-- Item displaying how long a given date is in the past.
 			--
 			-- `a_date': Date shown on item.
+		require
+			a_date_attached: a_date /= Void
 		local
 			l_label: EV_GRID_LABEL_ITEM
 			l_now: DATE_TIME
@@ -190,10 +192,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

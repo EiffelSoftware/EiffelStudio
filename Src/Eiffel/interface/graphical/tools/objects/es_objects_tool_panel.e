@@ -535,6 +535,27 @@ feature -- Access
 	debugger_manager: EB_DEBUGGER_MANAGER
 			-- Manager in charge of all debugging operations.
 
+feature -- Status report
+
+	split_exists: BOOLEAN
+		do
+			Result := split /= Void
+		end
+
+	split_proportion: REAL
+		require
+			split_exists: split_exists
+		do
+			Result := split.split_position / split.width
+		end
+
+	set_split_proportion (p: like split_proportion)
+		do
+			if attached split as l_split then
+				l_split.set_proportion (p)
+			end
+		end
+
 feature -- Menu
 
 	open_objects_tool_layout_editor

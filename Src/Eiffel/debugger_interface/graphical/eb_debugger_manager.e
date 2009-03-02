@@ -1339,7 +1339,6 @@ feature -- Status setting
 		require
 			not_already_raised: not raised
 		local
-			split: EV_SPLIT_AREA
 			l_watch_tool: ES_WATCH_TOOL
 			l_wt_lst: like watch_tool_list
 			l_tool: ES_WATCH_TOOL
@@ -1426,12 +1425,10 @@ feature -- Status setting
 
 				--| Set the Grid Objects tool split position to 200 which is the default size of the local tree.
 			if objects_tool.is_interface_usable and then objects_tool.is_tool_instantiated then
-				split ?= objects_tool.panel.widget
-				if split /= Void then
+				if objects_tool.split_exists then
 					if 0 <= objects_split_proportion and objects_split_proportion <= 1 then
-						split.set_proportion (objects_split_proportion)
+						objects_tool.set_split_proportion (objects_split_proportion)
 					end
-					split := Void
 				end
 			end
 
@@ -1452,7 +1449,6 @@ feature -- Status setting
 			not_application_launching_in_progress: not application_launching_in_progress
 			not_application_is_executing: not application_is_executing
 		local
-			split: EV_SPLIT_AREA
 			l_unlock: BOOLEAN
 		do
 			force_debug_mode_cmd.disable_sensitive
@@ -1464,19 +1460,7 @@ feature -- Status setting
 				l_unlock := True
 				debugging_window.window.lock_update
 			end
-
-			if
-				objects_tool.is_interface_usable and then
-				objects_tool.is_tool_instantiated and then
-				objects_tool.panel.is_initialized
-			then
-				objects_tool.panel.save_grids_preferences
-				split ?= objects_tool.panel.widget
-				if split /= Void then
-					objects_split_proportion := split.split_position / split.width
-				end
-			end
-
+			save_specific_debugger_settings
 			debugging_window.docking_layout_manager.save_debug_docking_layout
 			debug_tool_data.number_of_watch_tools_preference.set_value (watch_tool_list.count)
 
@@ -1555,6 +1539,7 @@ feature -- Status setting
 			-- Set `is_exiting_eiffel_studio' with true.
 		do
 			is_exiting_eiffel_studio := True
+			save_specific_debugger_settings
 		end
 
 feature {NONE} -- Raise/unraise notification
@@ -2024,6 +2009,23 @@ feature -- Options
 			-- Do we display extra agent information ?
 
 feature {NONE} -- Implementation
+
+	save_specific_debugger_settings
+			-- Save specific graphical debugger settings
+		do
+			if
+				attached objects_tool as l_objects_tool and then
+				l_objects_tool.is_interface_usable and then
+				l_objects_tool.is_tool_instantiated and then
+				l_objects_tool.panel.is_initialized
+			then
+				l_objects_tool.panel.save_grids_preferences
+				if l_objects_tool.split_exists then
+					objects_split_proportion := l_objects_tool.split_proportion
+				end
+			end
+			debug_tool_data.local_vs_object_proportion_preference.set_value (objects_split_proportion.out)
+		end
 
 	new_std_cmd (a_menu_name: STRING_GENERAL; a_pixmap: EV_PIXMAP;
 					a_shortcut_pref: SHORTCUT_PREFERENCE; a_use_acc: BOOLEAN;

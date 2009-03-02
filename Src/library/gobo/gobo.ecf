@@ -29,35 +29,21 @@
 			<option namespace="Kernel">
 			</option>
 			<file_rule>
-				<exclude>/unicode/uc_string.e$</exclude>
-				<exclude>/unicode/uc_character.e$</exclude>
+				<exclude>/misc/kl_comparable.e$</exclude>
+				<exclude>/misc/kl_string.e$</exclude>
 			</file_rule>
 		</cluster>
 		<cluster name="lexical" location="svn\library\lexical\" recursive="true">
 			<option namespace="Lexical">
 			</option>
-			<file_rule>
-				<exclude>/automaton/lx_nfa_state.e$</exclude>
-				<exclude>/support/lx_rule.e$</exclude>
-			</file_rule>
 		</cluster>
 		<cluster name="math" location="svn\library\math\" recursive="true">
 			<option namespace="Math">
 			</option>
-			<file_rule>
-				<exclude>/decimal/ma_decimal_coefficient.e$</exclude>
-				<exclude>/decimal/ma_decimal.e$</exclude>
-			</file_rule>
 		</cluster>
 		<cluster name="parse" location="svn\library\parse\" recursive="true">
 			<option namespace="Parse">
 			</option>
-			<file_rule>
-				<exclude>/fsm/pr_reduction.e$</exclude>
-				<exclude>/fsm/pr_position.e$</exclude>
-				<exclude>/grammar/pr_rule.e$</exclude>
-				<exclude>/generation/pr_portion.e$</exclude>
-			</file_rule>
 		</cluster>
 		<cluster name="pattern" location="svn\library\pattern\" recursive="true">
 			<option namespace="Pattern">
@@ -78,13 +64,6 @@
 		<cluster name="time" location="svn\library\time\" recursive="true">
 			<option namespace="Time">
 			</option>
-			<file_rule>
-				<exclude>/time_zone/dt_zoned_date_time.e$</exclude>
-				<exclude>/time_zone/dt_fixed_offset_zoned_time.e$</exclude>
-				<exclude>/date/dt_date.e$</exclude>
-				<exclude>/date/dt_date_time.e$</exclude>
-				<exclude>/date/dt_time.e$</exclude>
-			</file_rule>
 		</cluster>
 		<cluster name="tools" location="svn\library\tools\" recursive="true">
 			<option namespace="Tools">
@@ -93,9 +72,6 @@
 		<cluster name="utility" location="svn\library\utility\" recursive="true">
 			<option namespace="Utility">
 			</option>
-			<file_rule>
-				<exclude>/support/ut_version.e$</exclude>
-			</file_rule>
 		</cluster>
 		<cluster name="xml" location="svn\library\xml\" recursive="true">
 			<option namespace="Xml">

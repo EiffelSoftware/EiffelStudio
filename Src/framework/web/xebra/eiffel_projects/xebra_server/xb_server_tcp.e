@@ -1,10 +1,5 @@
 class
     XB_SERVER_TCP
-inherit
-
-    SOCKET_RESOURCES
-
-    STORABLE
 
 create
     make_with_port

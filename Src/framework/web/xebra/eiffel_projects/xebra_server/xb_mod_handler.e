@@ -79,12 +79,27 @@ feature --Execution
 
 feature {NONE} -- Implementation
 
-	send_request (message: STRING; webapp_socket: NETWORK_STREAM_SOCKET): STRING
+	send_request (a_message: STRING; webapp_socket: NETWORK_STREAM_SOCKET): STRING
 			--Sends a request to the correct webserver.
 		require
 			webapp_connected: not webapp_socket.is_closed
+		local
+			soc1: NETWORK_STREAM_SOCKET
+			message: STRING
 		do
-			Result := message
+			create soc1.make_client_by_port (3491, "localhost")
+            soc1.connect
+
+            message := a_message
+
+            soc1.independent_store (message)
+            Result := "Error"
+            if {rec_message: STRING} soc1.retrieved then
+            	Result := rec_message
+            end
+
+            soc1.cleanup
+
 		end
 
 	send_string (message: STRING; app_socket: NETWORK_STREAM_SOCKET)

@@ -86,7 +86,7 @@ feature -- Retrieve and save
 			l_writer: SED_MEDIUM_READER_WRITER
 			l_retried: BOOLEAN
 		do
-			if not l_retried then
+			if not l_retried and then save_needed then
 				l_tuple := [tag_server, entry_server]
 				create l_file.make_create_read_write (storage_file_name)
 				create l_writer.make (l_file)

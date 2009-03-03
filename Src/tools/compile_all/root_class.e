@@ -53,7 +53,7 @@ feature {NONE} -- Implementation
 				load_ignores (arguments.ignore)
 			end
 			if arguments.is_ecb then
-				execution_environment.put ("ecb", "EC_NAME")
+				execution_environment.set_variable_value ("EC_NAME", "ecb")
 			end
 			process_directory (arguments.location)
 		end

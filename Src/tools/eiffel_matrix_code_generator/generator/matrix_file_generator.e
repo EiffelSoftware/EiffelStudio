@@ -121,7 +121,7 @@ feature {NONE} -- Query
 				Result := default_icon_suffix
 			end
 		end
-		
+
 feature -- Basic Operations
 
 	process (a_doc: INI_DOCUMENT; a_post_validate: PROCEDURE [ANY, TUPLE]; a_post_process: PROCEDURE [ANY, TUPLE])
@@ -383,18 +383,19 @@ feature {NONE} -- Formatting
 
 feature {NONE} -- Constants: Defaults
 
-	default_icon_suffix: !STRING = "_icon"
+	default_icon_suffix: STRING = "_icon"
 			-- Default icon suffix for a full icon name generation.
 
 feature {NONE} -- Constants: Property Names
 
-	class_name_property: !STRING = "name"
-	width_property: !STRING = "width"
-	height_property: !STRING = "height"
-	pixel_width_property: !STRING = "pixel_width"
-	pixel_height_property: !STRING = "pixel_height"
-	pixel_border_property: !STRING = "pixel_border"
-	suffix_property: !STRING = "suffix"
+	class_name_property: STRING = "name"
+	width_property: STRING = "width"
+	height_property: STRING = "height"
+	pixel_width_property: STRING = "pixel_width"
+	pixel_height_property: STRING = "pixel_height"
+	pixel_border_property: STRING = "pixel_border"
+	command_line_property: STRING = "command_line"
+	suffix_property: STRING = "suffix"
 
 	continue_mark: CHARACTER = '@'
 			-- Character mark on sections to indication a continuation
@@ -403,8 +404,8 @@ invariant
 	not_suffix_is_empty: suffix /= Void implies not suffix.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
@@ -416,22 +417,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class {MATRIX_FILE_GENERATOR}

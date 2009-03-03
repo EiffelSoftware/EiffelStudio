@@ -139,15 +139,15 @@
 		<echo message="Saving local config to [$l_local_script]" />
 		<echo to_file="$l_local_script" >&lt;project name="LocalConfig" default="init"&gt;
 	&lt;target name="init" &gt;
-		&lt;global name="_FORCE_CLEAN" value="#_FORCE_CLEAN#" unless="$_FORCE_CLEAN" /&gt;
-		&lt;global name="_FORCE_BATCH" value="#_FORCE_BATCH#" unless="$_FORCE_BATCH" /&gt;
-		&lt;global name="_FORCE_SILENT" value="#_FORCE_SILENT#" unless="$_FORCE_SILENT" /&gt;
-		&lt;global name="_CLEAN_AFTER_COMPILE" value="#_CLEAN_AFTER_COMPILE#" unless="$_CLEAN_AFTER_COMPILE" /&gt;
-		&lt;global name="_EXIT_ON_FAILURE" value="#_EXIT_ON_FAILURE#" unless="$_EXIT_ON_FAILURE" /&gt;
-		&lt;global name="_INCLUDE_DEVPACK" value="#_INCLUDE_DEVPACK#" unless="$_INCLUDE_DEVPACK" /&gt;
-		&lt;global name="_INCLUDE_DOTNET" value="#_INCLUDE_DOTNET#" unless="$_INCLUDE_DOTNET" /&gt;
-		&lt;global name="_KEEP_F_CODE" value="#_KEEP_F_CODE#" unless="$_KEEP_F_CODE" /&gt;
-		&lt;global name="_REUSE_F_CODE" value="#_REUSE_F_CODE#" unless="$_REUSE_F_CODE" /&gt;
+		&lt;global name="_FORCE_CLEAN" value="#_FORCE_CLEAN#" unless="$$_FORCE_CLEAN" /&gt;
+		&lt;global name="_FORCE_BATCH" value="#_FORCE_BATCH#" unless="$$_FORCE_BATCH" /&gt;
+		&lt;global name="_FORCE_SILENT" value="#_FORCE_SILENT#" unless="$$_FORCE_SILENT" /&gt;
+		&lt;global name="_CLEAN_AFTER_COMPILE" value="#_CLEAN_AFTER_COMPILE#" unless="$$_CLEAN_AFTER_COMPILE" /&gt;
+		&lt;global name="_EXIT_ON_FAILURE" value="#_EXIT_ON_FAILURE#" unless="$$_EXIT_ON_FAILURE" /&gt;
+		&lt;global name="_INCLUDE_DEVPACK" value="#_INCLUDE_DEVPACK#" unless="$$_INCLUDE_DEVPACK" /&gt;
+		&lt;global name="_INCLUDE_DOTNET" value="#_INCLUDE_DOTNET#" unless="$$_INCLUDE_DOTNET" /&gt;
+		&lt;global name="_KEEP_F_CODE" value="#_KEEP_F_CODE#" unless="$$_KEEP_F_CODE" /&gt;
+		&lt;global name="_REUSE_F_CODE" value="#_REUSE_F_CODE#" unless="$$_REUSE_F_CODE" /&gt;
 	&lt;/target&gt;
 &lt;/project&gt;</echo>
 		<replace file="$l_local_script" token="#_FORCE_CLEAN#" replace="$_FORCE_CLEAN" flags="g" />

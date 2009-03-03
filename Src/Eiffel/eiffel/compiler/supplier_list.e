@@ -234,9 +234,9 @@ feature {NONE} -- Implementation: traversal
 		require
 			valid_id: id >= 0
 		local
-			cur: CURSOR
+			l_index: INTEGER
 		do
-			cur := cursor
+			l_index := index
 			goto (id)
 			if not after then
 					-- We found it.
@@ -245,7 +245,8 @@ feature {NONE} -- Implementation: traversal
 					result_not_void: Result /= Void
 				end
 			end
-			go_to (cur)
+				-- Restore index.
+			go_i_th (l_index)
 		end
 
 note

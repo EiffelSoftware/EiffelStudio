@@ -61,7 +61,7 @@ feature -- Operation
 						{lt_entry: EIS_ENTRY}l_class_modifier.last_create_entry and then
 						{lt_id: STRING}id_solution.id_of_class (class_i.config_class)
 					then
-						storage.register_entry (lt_entry, lt_id)
+						storage.register_entry (lt_entry, lt_id, class_i.date)
 						if extracted_entries = Void then
 							create extracted_entries.make (1)
 						end
@@ -445,7 +445,7 @@ feature {NONE} -- Callbacks
 						if l_done then
 							storage.deregister_entry (lt_entry, component_id)
 							lt_entry.set_name (lt_name)
-							storage.register_entry (lt_entry, component_id)
+							storage.register_entry (lt_entry, component_id, class_i.date)
 						end
 					end
 				end
@@ -483,7 +483,7 @@ feature {NONE} -- Callbacks
 						if l_done then
 							storage.deregister_entry (lt_entry, component_id)
 							lt_entry.set_protocol (lt_protocol)
-							storage.register_entry (lt_entry, component_id)
+							storage.register_entry (lt_entry, component_id, class_i.date)
 						end
 					end
 				end
@@ -521,7 +521,7 @@ feature {NONE} -- Callbacks
 						if l_done then
 							storage.deregister_entry (lt_entry, component_id)
 							lt_entry.set_source (lt_source)
-							storage.register_entry (lt_entry, component_id)
+							storage.register_entry (lt_entry, component_id, class_i.date)
 						end
 					end
 				end
@@ -569,7 +569,7 @@ feature {NONE} -- Callbacks
 							else
 								lt_entry.set_tags (Void)
 							end
-							storage.register_entry (lt_entry, component_id)
+							storage.register_entry (lt_entry, component_id, class_i.date)
 						end
 					end
 				end
@@ -614,7 +614,7 @@ feature {NONE} -- Callbacks
 							else
 								lt_entry.set_others (Void)
 							end
-							storage.register_entry (lt_entry, component_id)
+							storage.register_entry (lt_entry, component_id, class_i.date)
 						end
 					end
 				end
@@ -658,7 +658,7 @@ feature {NONE} -- Callbacks
 									-- Change the id of the entry
 								storage.deregister_entry (l_eis_entry, component_id)
 								l_eis_entry.set_id (component_id)
-								storage.register_entry (l_eis_entry, component_id)
+								storage.register_entry (l_eis_entry, component_id, class_i.date)
 							end
 						else
 							prompts.show_error_prompt (interface_names.l_syntax_error, Void, Void)
@@ -690,7 +690,7 @@ feature {NONE} -- Callbacks
 										-- Change the id of the entry
 								storage.deregister_entry (l_eis_entry, component_id)
 								l_eis_entry.set_id (id_solution.id_of_feature (lt_feature))
-								storage.register_entry (l_eis_entry, component_id)
+								storage.register_entry (l_eis_entry, component_id, class_i.date)
 							end
 						else
 							prompts.show_error_prompt (interface_names.l_syntax_error, Void, Void)
@@ -727,11 +727,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -275,9 +275,9 @@ feature -- Element Change
 	update_for_added (start_index: INTEGER)
 			-- Call `added_item' for all items from index `start_index' to `count'
 		local
-			a_cursor: CURSOR
+			l_index: INTEGER
 		do
-			a_cursor := cursor
+			l_index := index
 			from
 				go_i_th (start_index)
 			until
@@ -286,7 +286,7 @@ feature -- Element Change
 				added_item (item, index)
 				forth
 			end
-			go_to (cursor)
+			go_i_th (l_index)
 		end
 
 feature -- Removal

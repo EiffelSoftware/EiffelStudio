@@ -47,18 +47,22 @@ feature -- Access
 		do
 			Result := encoding_i.last_converted_stream
 		ensure
-			last_conversion_successful_implies_not_void: last_conversion_successful implies Result /= Void
+			last_converted_stream_not_void: Result /= Void
 		end
 
-	last_converted_string: detachable STRING_GENERAL
+	last_converted_string: STRING_GENERAL
 			-- Last converted string.
 			-- Note: Original string object could be returned directly.
 		require
 			last_conversion_successful: last_conversion_successful
+		local
+			l_str: detachable STRING_GENERAL
 		do
-			Result := encoding_i.last_converted_string
+			l_str := encoding_i.last_converted_string
+			check l_str /= Void end -- Implied from the precondition and postcondition of `encoding_i.convert_to'
+			Result := l_str
 		ensure
-			last_conversion_successful_implies_not_void: last_conversion_successful implies Result /= Void
+			last_converted_string_not_void: Result /= Void
 		end
 
 feature -- Conversion
@@ -155,11 +159,11 @@ note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

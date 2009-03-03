@@ -28,12 +28,7 @@
 		<cluster name="math" location="svn\library\math\" recursive="true">
 			<option namespace="Math">
 			</option>
-			<file_rule>
-				<exclude>/decimal/ma_decimal_coefficient.e$</exclude>
-				<exclude>/decimal/ma_decimal.e$</exclude>
-			</file_rule>
 		</cluster>
-		<cluster name="override" location="override\library\math" recursive="true"/>
 	</target>
 </system>
 

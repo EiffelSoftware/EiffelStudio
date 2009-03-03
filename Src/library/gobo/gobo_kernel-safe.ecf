@@ -15,11 +15,11 @@
 			<exclude>/EIFGENs$</exclude>
 			<exclude>/Documentation$</exclude>
 		</file_rule>
-		<option namespace="Gobo.Library">
+		<option full_class_checking="true" is_attached_by_default="true" is_void_safe="true" syntax_level="1" namespace="Gobo.Library">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
-		<library name="eiffelbase" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="eiffeltime" location="$ISE_LIBRARY\library\time\time.ecf"/>
+		<library name="eiffelbase" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="eiffeltime" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
 		<assembly name="eiffelsoftware.runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
 		<cluster name="kernel" location="svn\library\kernel\" recursive="true">
 			<option namespace="Kernel">
@@ -30,6 +30,6 @@
 				<exclude>/misc/kl_string.e$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="override" location="override\library\kernel" recursive="true"/>
+		<cluster name="override" location="override\library\kernel\" recursive="true"/>
 	</target>
 </system>

@@ -30,12 +30,7 @@
 		<cluster name="lexical" location="svn\library\lexical\" recursive="true">
 			<option namespace="Lexical">
 			</option>
-			<file_rule>
-				<exclude>/automaton/lx_nfa_state.e$</exclude>
-				<exclude>/support/lx_rule.e$</exclude>
-			</file_rule>
 		</cluster>
-		<cluster name="override" location="override\library\lexical" recursive="true"/>
 	</target>
 </system>
 

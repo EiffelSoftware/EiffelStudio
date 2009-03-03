@@ -3,6 +3,10 @@ Ubuntu Server 8.04 (2 Intel Xeon Quad Core E5420  @ 2.50GHz with 6MB cache)
 6.4
 ===
 
+6.4.7.7440 non-RTEA, non-MT:
+85.690u 5.700s 1:31.81 99.5% 0+0k 0+794576io 0pf+0w
+86.680u 5.810s 1:34.02 98.3% 0+0k 0+794472io 0pf+0w
+
 6.4.7.6833 non-RTEA, non-multithreaded with FEATURE_I aliasing (COMP size: 127MB):
 85.340u 4.710s 1:30.22 99.8% 0+0k 0+791760io 0pf+0w
 83.310u 4.580s 1:28.47 99.3% 0+0k 24+791840io 0pf+0w

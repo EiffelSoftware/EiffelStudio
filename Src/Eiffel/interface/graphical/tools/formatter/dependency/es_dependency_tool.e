@@ -18,14 +18,14 @@ create {NONE}
 
 feature -- Access
 
-	icon: !EV_PIXEL_BUFFER
+	icon: EV_PIXEL_BUFFER
 			-- <Precursor>
 		do
 				-- FIXME: Paul add new icon
 			Result := stock_pixmaps.diagram_supplier_link_icon_buffer
 		end
 
-	icon_pixmap: !EV_PIXMAP
+	icon_pixmap: EV_PIXMAP
 			-- <Precursor>
 		do
 			Result := stock_pixmaps.diagram_supplier_link_icon
@@ -79,11 +79,11 @@ feature {NONE} -- Internationalization
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

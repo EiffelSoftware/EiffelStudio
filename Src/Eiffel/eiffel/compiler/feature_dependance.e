@@ -78,11 +78,8 @@ feature -- Access
 			l_depend_unit.set_with_level (a_class_id, a_feature, a_context)
 			extend (l_depend_unit)
 			if item = l_depend_unit then
-				-- We have been successfully insert so we add a new version.
+					-- We have been successfully insert so we add a new version.
 				replace (create {DEPEND_UNIT}.make_with_level (a_class_id, a_feature, a_context))
-			else
-					-- The depend unit is already present in `Current'.
-				do_nothing
 			end
 		end
 

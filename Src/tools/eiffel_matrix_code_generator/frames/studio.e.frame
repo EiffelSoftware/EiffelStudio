@@ -1,7 +1,9 @@
-indexing
+note
 	description: "[
 		Automatically generated class for EiffelStudio ${PIXEL_WIDTH}x${PIXEL_HEIGHT} icons.
 	]"
+	generator: "Eiffel Matrix Generator"
+	command_line: "${COMMAND_LINE}"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
 	date: "$Date: 2008-04-25 07:49:06 -0700 (Fri, 25 Apr 2008) $"
@@ -52,13 +54,13 @@ ${ICON_NAMES}
 
 feature {NONE} -- Basic operations
 
-	populate_coordinates_table (a_table: !DS_HASH_TABLE [!TUPLE [x: NATURAL_8; y: NATURAL_8], STRING])
+	populate_coordinates_table (a_table: HASH_TABLE [TUPLE [x: NATURAL_8; y: NATURAL_8], STRING])
 			-- <Precursor>
 		do
 ${COORDINATES}
 		end
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

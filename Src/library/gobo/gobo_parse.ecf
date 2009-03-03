@@ -29,14 +29,7 @@
 		<cluster name="parse" location="svn\library\parse\" recursive="true">
 			<option namespace="Parse">
 			</option>
-			<file_rule>
-				<exclude>/fsm/pr_reduction.e$</exclude>
-				<exclude>/fsm/pr_position.e$</exclude>
-				<exclude>/grammar/pr_rule.e$</exclude>
-				<exclude>/generation/pr_portion.e$</exclude>
-			</file_rule>
 		</cluster>
-		<cluster name="override" location="override\library\parse" recursive="true"/>
 	</target>
 </system>
 

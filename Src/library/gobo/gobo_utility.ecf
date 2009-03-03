@@ -30,11 +30,7 @@
 		<cluster name="utility" location="svn\library\utility\" recursive="true">
 			<option namespace="Utility">
 			</option>
-			<file_rule>
-				<exclude>/support/ut_version.e$</exclude>
-			</file_rule>
 		</cluster>
-		<cluster name="override" location="override\library\utility" recursive="true"/>
 	</target>
 </system>
 

@@ -30,6 +30,7 @@
 			</option>
 			<file_rule>
 				<exclude>/misc/kl_comparable.e$</exclude>
+				<exclude>/misc/kl_numeric.e$</exclude>
 				<exclude>/misc/kl_string.e$</exclude>
 			</file_rule>
 		</cluster>

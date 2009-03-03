@@ -10,10 +10,13 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class KL_STRING
+class KL_STRING
 
 inherit
 
 	STRING
+
+create
+	make
 
 end

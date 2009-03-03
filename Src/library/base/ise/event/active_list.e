@@ -58,21 +58,23 @@ feature -- Miscellaneous
 	on_item_added_at (an_item: like item; item_index: INTEGER)
 			-- `an_item' has just been added at index `item_index'.
 		local
-			a_cursor: CURSOR
+			a_index: INTEGER
 		do
-			a_cursor := cursor
+				-- Store index for resetting after operation to avoid side-effect
+			a_index := index
 			add_actions.call ([an_item])
-			go_to (a_cursor)
+			go_i_th (a_index)
 		end
 
 	on_item_removed_at (an_item: like item; item_index: INTEGER)
 			-- `an_item' has just been removed at index `item_index'.
 		local
-			a_cursor: CURSOR
+			a_index: INTEGER
 		do
-			a_cursor := cursor
+				-- Store index for resetting after operation to avoid side-effect
+			a_index := index
 			remove_actions.call ([an_item])
-			go_to (a_cursor)
+			go_i_th (a_index)
 		end
 
 feature {NONE} -- Implementation

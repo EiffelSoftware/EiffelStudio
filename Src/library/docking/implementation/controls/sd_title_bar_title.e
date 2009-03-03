@@ -80,6 +80,8 @@ feature -- Command
 
 	refresh
 			-- Redraw
+		require
+			not_destroyed: not is_destroyed
 		do
 			on_expose
 		end
@@ -207,6 +209,8 @@ feature {NONE} -- Implementation
 
 	on_expose
 			-- Handle expose actions.
+		require
+			not_destroyed: not is_destroyed
 		local
 			l_helper: SD_COLOR_HELPER
 			l_clipping_width: INTEGER

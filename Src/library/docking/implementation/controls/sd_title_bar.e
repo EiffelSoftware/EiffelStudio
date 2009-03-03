@@ -107,7 +107,7 @@ feature -- Command
 			a_title_not_void: a_title /= Void
 		do
 			internal_title.set_title (a_title)
-			internal_title.refresh
+			add_refresh_title_in_idle_action
 		ensure
 			set: internal_title.title.is_equal (a_title.as_string_32)
 		end
@@ -692,6 +692,36 @@ feature {NONE} -- Implementation
 			Result := l_env.application
 		ensure
 			not_void: Result /= Void
+		end
+
+	add_refresh_title_in_idle_action
+			-- call `internal_title'.refresh in idle actions
+		local
+			l_env: EV_ENVIRONMENT
+		do
+			if title_bar_refresh_agent = Void then
+				title_bar_refresh_agent := agent refresh_title_bar
+				create l_env
+				l_env.application.do_once_on_idle (title_bar_refresh_agent)
+			end
+		ensure
+			created: title_bar_refresh_agent /= Void
+		end
+
+	title_bar_refresh_agent: PROCEDURE [SD_TITLE_BAR, TUPLE]
+			-- Agent for refresh title bar
+
+	refresh_title_bar
+			-- Title bar refresh action in idle action
+		require
+			already_set: title_bar_refresh_agent /= Void
+		do
+			if internal_title /= Void and then not internal_title.is_destroyed then
+				internal_title.refresh
+			end
+			title_bar_refresh_agent := Void
+		ensure
+			cleared: title_bar_refresh_agent = Void
 		end
 
 invariant

@@ -25,5 +25,6 @@
 			<option namespace="Test">
 			</option>
 		</cluster>
+		<cluster name="getest_override" location="$ISE_LIBRARY\library\gobo\override\src\getest\"/>
 	</target>
 </system>

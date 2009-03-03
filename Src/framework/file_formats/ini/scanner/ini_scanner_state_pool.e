@@ -35,14 +35,14 @@ feature -- Access
 			l_key := a_type.generating_type
 			Result := state_pool.item (l_key)
 			if Result = Void then
-				if a_type.is_equal ({INI_SCANNER_INITIAL_STATE}) then
-					create {INI_SCANNER_INITIAL_STATE}Result
-				elseif a_type.is_equal ({INI_SCANNER_OPEN_SECTION_STATE}) then
-					create {INI_SCANNER_OPEN_SECTION_STATE}Result
-				elseif a_type.is_equal ({INI_SCANNER_POST_PROPERTY_STATE}) then
-					create {INI_SCANNER_POST_PROPERTY_STATE}Result
-				elseif a_type.is_equal ({INI_SCANNER_POST_ASSIGNER_STATE}) then
-					create {INI_SCANNER_POST_ASSIGNER_STATE}Result
+				if a_type ~ {INI_SCANNER_INITIAL_STATE} then
+					create {INI_SCANNER_INITIAL_STATE} Result
+				elseif a_type ~ {INI_SCANNER_OPEN_SECTION_STATE} then
+					create {INI_SCANNER_OPEN_SECTION_STATE} Result
+				elseif a_type ~ {INI_SCANNER_POST_PROPERTY_STATE} then
+					create {INI_SCANNER_POST_PROPERTY_STATE} Result
+				elseif a_type ~ {INI_SCANNER_POST_ASSIGNER_STATE} then
+					create {INI_SCANNER_POST_ASSIGNER_STATE} Result
 				end
 				state_pool.extend (Result, l_key)
 			end

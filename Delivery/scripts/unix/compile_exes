@@ -250,6 +250,11 @@ cd $EXPORT_DIR/bin
 untgz_ccode estudio
 move estudio $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/estudio
 
+remtrace Recompile syntax_updater
+cd $EXPORT_DIR/bin
+untgz_ccode syntax_updater
+move syntax_updater $INSTALL_DIR/tools/spec/$ISE_PLATFORM/bin/syntax_updater
+
 remtrace Recompile compile_all
 cd $EXPORT_DIR/bin
 untgz_ccode compile_all

@@ -23,10 +23,10 @@ feature {NONE} -- Validation
 				create l_file.make (a_value)
 				if l_file.exists then
 					if l_file.is_directory or else l_file.is_device then
-						invalidate_option (e_file_does_not_exist)
-					else
 						invalidate_option (e_file_is_not_file)
 					end
+				else
+					invalidate_option (e_file_does_not_exist)
 				end
 			else
 				invalidate_option (e_invalid_file_name)
@@ -47,7 +47,7 @@ feature {NONE} -- Internationalization
 	e_file_does_not_exist: STRING = "The specified file does not exist."
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -71,11 +71,11 @@ feature {NONE} -- Internationalization
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

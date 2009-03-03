@@ -119,18 +119,24 @@ feature {NONE} -- Initialization
 			else
 				if l_error_manager.has_warnings then
 					l_error_manager.trace_warnings (l_printer)
-					io.new_line
+					io.put_new_line
 				end
 				check l_generator_attached: l_generator /= Void end
-				io.put_string ("Generation successful.%N")
+				io.put_string ("Generation successful.")
+				io.put_new_line
 				if a_parser.use_slice_mode then
 					io.put_string ("Output tiles generated into folder: '")
 					io.put_string (a_parser.png_slices_locations)
-				else
+					io.put_string ("'")
+				elseif l_cls_generator.generated_file_name /= Void then
 					io.put_string ("Output generated into file: '")
 					io.put_string (l_cls_generator.generated_file_name)
+					io.put_string ("'")
+				else
+					io.put_string ("Unknown error")
 				end
-				io.put_string ("'%N%N")
+				io.put_new_line
+				io.put_new_line
 			end
 		rescue
 			retried := True
@@ -224,8 +230,8 @@ feature {NONE} -- Constants
 			-- Sub folder where frame files are located
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
@@ -237,22 +243,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class {APPLICATION}

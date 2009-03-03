@@ -22,8 +22,11 @@ feature -- Initialization
 			is_valid_site: a_site /= Void implies is_valid_site (a_site)
 			not_is_sited: a_site /= Void implies not is_sited
 		local
+			l_site: like site
 			l_old_site: detachable G
+			l_sub_site: detachable SITE [G]
 			l_entities: like siteable_entities
+			l_cursor: CURSOR
 		do
 			l_old_site := site
 			site := a_site
@@ -33,17 +36,21 @@ feature -- Initialization
 
 			l_entities := siteable_entities
 			if not l_entities.is_empty then
-				l_entities.do_all (agent (ia_site: !SITE [G])
-					do
-						if ia_site.is_valid_site (site) then
-							ia_site.site := site
-						else
-							check False end
-						end
-					end)
+				l_site := site
+				l_cursor := l_entities.cursor
+				from l_entities.start until l_entities.after loop
+					l_sub_site := l_entities.item_for_iteration
+					check l_sub_site_attached: l_sub_site /= Void end
+					if not l_sub_site.is_sited and then l_sub_site.is_valid_site (l_site) then
+						l_sub_site.set_site (l_site)
+					end
+					l_entities.forth
+				end
+				l_entities.go_to (l_cursor)
 			end
 		ensure
 			site_set: site = a_site
+			siteable_entities_unmoved: siteable_entities.cursor ~ old siteable_entities.cursor
 		end
 
 feature {NONE} -- Initialization
@@ -67,13 +74,16 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	siteable_entities: !ARRAYED_LIST [!SITE [G]]
+	siteable_entities: ARRAYED_LIST [SITE [G]]
 			-- List of siteable entities to automatically site when Current is sited.
 		require
 			is_interface_usable: attached {USABLE_I} Current as l_usable implies
 				l_usable.is_interface_usable
 		do
 			create Result.make (0)
+		ensure
+			result_attached: Result /= Void
+			result_contains_attached_items: not Result.has (Void)
 		end
 
 feature -- Status report
@@ -81,9 +91,9 @@ feature -- Status report
 	is_sited: BOOLEAN
 			-- Indicates if Current has been sited
 		do
-			Result := attached site
+			Result := site /= Void
 		ensure
-			site_attached: Result implies attached site
+			site_attached: Result implies site /= Void
 		end
 
 	is_valid_site (a_site: detachable ANY): BOOLEAN

@@ -25,10 +25,12 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_activator: !like activator)
+	make (a_activator: like activator)
 			-- Initialize concealer with activator function, use to retrieve a concealed object.
 			--
 			-- `a_activator': A function used to retrieve a concealed object on first use.
+		require
+			a_activator_attached: a_activator /= Void
 		do
 			activator := a_activator
 		ensure
@@ -94,7 +96,7 @@ feature -- Status report
 
 feature -- Event
 
-	activated_event: !EVENT_TYPE [TUPLE [object: detachable G]]
+	activated_event: EVENT_TYPE [TUPLE [object: detachable G]]
 			-- Events called when the object is activated.
 		require
 			is_interface_usable: is_interface_usable
@@ -111,6 +113,7 @@ feature -- Event
 				automation.auto_dispose (Result)
 			end
 		ensure
+			result_attached: Result /= Void
 			result_consistent: Result = activated_event
 		end
 

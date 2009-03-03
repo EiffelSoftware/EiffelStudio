@@ -54,10 +54,10 @@ feature {NONE} -- Clean up
 
 feature {NONE} -- Access
 
-	frozen subscribers: attached DS_HASH_SET [detachable PROCEDURE [ANY, EVENT_DATA]]
+	frozen subscribers: DS_HASH_SET [detachable PROCEDURE [ANY, EVENT_DATA]]
 			-- List of actions currently subscribed to the event.
 
-	frozen suicide_actions: attached DS_HASH_SET [detachable PROCEDURE [ANY, EVENT_DATA]]
+	frozen suicide_actions: DS_HASH_SET [detachable PROCEDURE [ANY, EVENT_DATA]]
 			-- List of actions that will be removed after they have been called for the first time.
 			--|This list is a subset of `subscribers'
 
@@ -67,7 +67,7 @@ feature {NONE} -- Access
 
 feature -- Status report
 
-	is_subscribed (a_action: attached PROCEDURE [ANY, EVENT_DATA]): BOOLEAN
+	is_subscribed (a_action: PROCEDURE [ANY, EVENT_DATA]): BOOLEAN
 			-- <Precursor>
 		do
 			Result := subscribers.has (a_action)
@@ -102,7 +102,7 @@ feature -- Status settings
 
 feature -- Subscription
 
-	subscribe (a_action: attached PROCEDURE [ANY, EVENT_DATA])
+	subscribe (a_action: PROCEDURE [ANY, EVENT_DATA])
 			-- <Precursor>
 		do
 			subscribers.force_last (a_action)
@@ -110,7 +110,7 @@ feature -- Subscription
 			subscribers_incremented: subscribers.count = old subscribers.count + 1
 		end
 
-	subscribe_for_single_notification (a_action: attached PROCEDURE [ANY, EVENT_DATA])
+	subscribe_for_single_notification (a_action: PROCEDURE [ANY, EVENT_DATA])
 			-- <Precursor>
 		do
 			suicide_actions.force_last (a_action)
@@ -121,7 +121,7 @@ feature -- Subscription
 			suicide_actions_incremented: suicide_actions.count = old suicide_actions.count + 1
 		end
 
-	unsubscribe (a_action: attached PROCEDURE [ANY, EVENT_DATA])
+	unsubscribe (a_action: PROCEDURE [ANY, EVENT_DATA])
 			-- <Precursor>
 		local
 			l_actions: like suicide_actions
@@ -150,7 +150,7 @@ feature -- Publication
 			publish_internal (a_args, Void)
 		end
 
-	publish_if (a_args: detachable EVENT_DATA; a_predicate: attached PREDICATE [ANY, EVENT_DATA])
+	publish_if (a_args: detachable EVENT_DATA; a_predicate: PREDICATE [ANY, EVENT_DATA])
 			-- <Precursor>
 		do
 			publish_internal (a_args, a_predicate)
@@ -237,6 +237,8 @@ feature {NONE} -- Publication
 		end
 
 invariant
+	subscribers_attached: subscribers /= Void
+	suicide_actions_attached: suicide_actions /= Void
 	subscribers_contains_attached_items: not subscribers.has (Void)
 	suicide_actions_contains_attached_items: not suicide_actions.has (Void)
 	subscribers_contains_suicide_actions: suicide_actions.is_subset (subscribers)

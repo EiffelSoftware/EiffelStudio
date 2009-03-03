@@ -17,7 +17,7 @@ inherit
 
 feature -- Status report
 
-	is_connected (a_observer: !G): BOOLEAN
+	is_connected (a_observer: attached G): BOOLEAN
 			-- Determines if an event handler interface has already been connected to Current.
 			--
 			-- `a_observer': The event handler interface to test for an establish connection.
@@ -25,21 +25,26 @@ feature -- Status report
 		deferred
 		end
 
-	is_valid_connection (a_observer: !EVENT_OBSERVER_I): BOOLEAN
-			-- <Precursor>
+	is_valid_connection (a_observer: EVENT_OBSERVER_I): BOOLEAN
+			-- Determines is an observer can be used as a valid connection for Current.
+			--
+			-- `a_observer': The observer event connection to determin validity for.
+			-- `Result': True if the observer represents a valid connection; False otherwise.
+		require
+			a_observer_attached: a_observer /= Void
 		do
 			Result :=
-				(attached {USABLE_I} a_observer as l_usable implies l_usable.is_interface_usable) and then
+				((attached {USABLE_I} a_observer as l_usable) implies l_usable.is_interface_usable) and then
 				(attached {G} a_observer)
 		ensure
 			a_observer_is_interface_usable:
-				Result implies (attached {USABLE_I} a_observer as l_usable implies l_usable.is_interface_usable)
-			a_observer_conforms: Result implies attached {G} a_observer
+				Result implies ((attached {USABLE_I} a_observer as l_usable) implies l_usable.is_interface_usable)
+			a_observer_conforms: Result implies (attached {G} a_observer)
 		end
 
 feature -- Event connection
 
-	connect_events (a_observer: !G)
+	connect_events (a_observer: attached G)
 			-- Connects event handler interface to Current.
 			--
 			-- `a_observer': Event handler interface to connection to current.
@@ -52,7 +57,7 @@ feature -- Event connection
 			a_observer_is_connected: is_connected (a_observer)
 		end
 
-	disconnect_events (a_observer: !G)
+	disconnect_events (a_observer: attached G)
 			-- Connects event handler interface from Current.
 			--
 			-- `a_observer': Event handler interface to disconnection from current.

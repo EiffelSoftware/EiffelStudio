@@ -15,58 +15,67 @@ inherit
 
 feature -- Status report
 
-	is_notified_on_disposing (a_action: !PROCEDURE [ANY, ?TUPLE]): BOOLEAN
+	is_notified_on_disposing (a_action: PROCEDURE [ANY, TUPLE]): BOOLEAN
 			-- Determines is an action is already recieving notification when disposing is taking place.
 			--
 			-- `a_action': The action to determine a notification status for.
 			-- `Result'  : True if the action is already receiving a notification; False otherwise.
+		require
+			a_action_attached: a_action /= Void
 		deferred
 		end
 
-	is_notified_on_disposed (a_action: !PROCEDURE [ANY, ?TUPLE]): BOOLEAN
+	is_notified_on_disposed (a_action: PROCEDURE [ANY, TUPLE]): BOOLEAN
 			-- Determines is an action is already recieving notification when a dispose has taken place.
 			--
 			-- `a_action': The action to determine a notification status for.
 			-- `Result'  : True if the action is already receiving a notification; False otherwise.
+		require
+			a_action_attached: a_action /= Void
 		deferred
 		end
 
 feature -- Notification
 
-	notify_on_disposing (a_action: !PROCEDURE [ANY, ?TUPLE])
+	notify_on_disposing (a_action: PROCEDURE [ANY, TUPLE])
 			--
 		require
 			is_interface_usable: is_interface_usable
+			a_action_attached: a_action /= Void
 			not_is_notified_on_disposing: not is_notified_on_disposing (a_action)
 		deferred
 		ensure
 			is_notified_on_disposing: is_notified_on_disposing (a_action)
 		end
 
-	ignore_on_disposing (a_action: !PROCEDURE [ANY, ?TUPLE])
+	ignore_on_disposing (a_action: PROCEDURE [ANY, TUPLE])
 			--
 		require
 			is_interface_usable: is_interface_usable
+			a_action_attached: a_action /= Void
 			is_notified_on_disposing: is_notified_on_disposing (a_action)
+
 		deferred
 		ensure
 			not_is_notified_on_disposing: not is_notified_on_disposing (a_action)
 		end
 
-	notify_on_disposed (a_action: !PROCEDURE [ANY, ?TUPLE])
+	notify_on_disposed (a_action: PROCEDURE [ANY, TUPLE])
 			--
 		require
 			is_interface_usable: is_interface_usable
+			a_action_attached: a_action /= Void
 			not_is_notified_on_disposed: not is_notified_on_disposed (a_action)
 		deferred
 		ensure
 			is_notified_on_disposed: is_notified_on_disposed (a_action)
 		end
 
-	ignore_on_disposed (a_action: !PROCEDURE [ANY, ?TUPLE])
+	ignore_on_disposed (a_action: PROCEDURE [ANY, TUPLE])
 			--
 		require
 			is_interface_usable: is_interface_usable
+			a_action_attached: a_action /= Void
 			is_notified_on_disposed: is_notified_on_disposed (a_action)
 		deferred
 		ensure
@@ -75,16 +84,17 @@ feature -- Notification
 
 feature -- Basic operation
 
-	auto_dispose (a_object: !ANY)
+	auto_dispose (a_object: ANY)
 			-- Automatically disposes of an object when Current is disposed of.
 			--
 			-- `a_object': Object to dispose of when Current is disposed.
 		require
 			is_interface_usable: is_interface_usable
+			a_object_attached: a_object /= Void
 		deferred
 		end
 
-	delayed_auto_dispose (a_action: !FUNCTION [ANY, ?TUPLE, !ANY])
+	delayed_auto_dispose (a_action: FUNCTION [ANY, TUPLE, ANY])
 			-- Automatically disposes of an object when Current is disposed of.
 			-- Note: DO NOT create any objects in the performed action, this may be called
 			--       during a real GC dispose.
@@ -93,6 +103,7 @@ feature -- Basic operation
 			--             Warning: The action should not create any objects for Current
 		require
 			is_interface_usable: is_interface_usable
+			a_action_attached: a_action /= Void
 		deferred
 		end
 

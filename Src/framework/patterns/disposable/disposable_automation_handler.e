@@ -20,7 +20,7 @@ inherit
 
 feature {NONE} -- Access
 
-	frozen object_pool: !LIST [!ANY]
+	frozen object_pool: LIST [ANY]
 			-- List of objects to be automatically disposed when Current is disposed.
 			--
 			--| Call `auto_dispose' or `delayed_auto_dispose' rather than use directly!
@@ -32,13 +32,15 @@ feature {NONE} -- Access
 			l_result := internal_object_pool
 			if l_result = Void then
 				check not_is_actively_disposing: not is_actively_disposing end
-				create {ARRAYED_LIST [!ANY]} Result.make (0)
+				create {ARRAYED_LIST [ANY]} Result.make (0)
 				internal_object_pool := Result
 			else
 				Result := l_result
 			end
 		ensure
-			result_is_consistent: Result ~ object_pool
+			result_attached: Result /= Void
+			result_contains_attached_items: not Result.has (Void)
+			result_is_consistent: Result = object_pool
 		end
 
 feature -- Status report
@@ -51,8 +53,7 @@ feature -- Status report
 			not_is_disposed: is_disposed implies not Result
 		end
 
-
-	is_notified_on_disposing (a_action: !PROCEDURE [ANY, ?TUPLE]): BOOLEAN
+	is_notified_on_disposing (a_action: PROCEDURE [ANY, TUPLE]): BOOLEAN
 			-- <Precursor>
 		local
 			l_events: like internal_disposing_event
@@ -67,7 +68,7 @@ feature -- Status report
 			a_action_is_subscribed: is_interface_usable implies disposing_event.is_subscribed (a_action)
 		end
 
-	is_notified_on_disposed (a_action: !PROCEDURE [ANY, ?TUPLE]): BOOLEAN
+	is_notified_on_disposed (a_action: PROCEDURE [ANY, TUPLE]): BOOLEAN
 			-- <Precursor>
 		local
 			l_events: like internal_disposed_event
@@ -92,27 +93,31 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Query
 
-	frozen reveal_disposable_object (a_object: !ANY): !ANY
+	frozen reveal_disposable_object (a_object: ANY): ANY
 			-- Attempts to reveal a disposable item, which will call an agent if the object
 			-- actually represents an agent call to retrieve an object for the classes Current state
 			-- instead of it's initial state.
+		require
+			a_object_attached: a_object /= Void
 		do
-			if {l_action: FUNCTION [ANY, TUPLE, !ANY]} a_object then
+			if {l_action: FUNCTION [ANY, TUPLE, ANY]} a_object then
 				Result := l_action.item (Void)
 			else
 				Result := a_object
 			end
+		ensure
+			result_attached: Result /= Void
 		end
 
 feature {DISPOSABLE_I, DISPOSABLE} -- Basic operations
 
-	perform_automotive_dispose (a_action: !PROCEDURE [ANY, ?TUPLE])
+	perform_automotive_dispose (a_action: PROCEDURE [ANY, TUPLE])
 			-- <Precursor>
 		require
 			is_interface_usable: is_interface_usable
 		local
-			l_event: ?EVENT_TYPE [TUPLE]
-			l_pool: ?like internal_object_pool
+			l_event: detachable EVENT_TYPE [TUPLE]
+			l_pool: detachable like internal_object_pool
 			l_utils: like disposable_utils
 		do
 			check not_is_actively_disposing: not is_actively_disposing end
@@ -173,10 +178,8 @@ feature {DISPOSABLE_I, DISPOSABLE} -- Basic operations
 
 feature -- Basic operation
 
-	frozen auto_dispose (a_object: !ANY)
-			-- Automatically disposes of an object when Current is disposed of.
-			--
-			-- `a_object': Object to dispose of when Current is disposed.
+	frozen auto_dispose (a_object: ANY)
+			-- <Precursor>
 		do
 			check
 				not_is_actively_disposing: not is_actively_disposing
@@ -187,13 +190,8 @@ feature -- Basic operation
 			object_pool_has_a_object: is_interface_usable implies object_pool.has (a_object)
 		end
 
-	frozen delayed_auto_dispose (a_action: !FUNCTION [ANY, ?TUPLE, !ANY])
-			-- Automatically disposes of an object when Current is disposed of.
-			-- Note: DO NOT create any objects in the performed action, this may be called
-			--       during a real GC dispose.
-			--
-			-- `a_action': The action to retrieve a object for when Current is disposed.
-			--             Warning: THe action should not create any objects for Currente
+	frozen delayed_auto_dispose (a_action: FUNCTION [ANY, TUPLE, ANY])
+			-- <Precursor>
 		do
 			check
 				not_is_actively_disposing: not is_actively_disposing
@@ -206,20 +204,20 @@ feature -- Basic operation
 
 feature -- Notification
 
-	notify_on_disposing (a_action: !PROCEDURE [ANY, ?TUPLE])
+	notify_on_disposing (a_action: PROCEDURE [ANY, TUPLE])
 			-- <Precursor>
 		do
 			check not_is_actively_disposing: not is_actively_disposing end
 			disposing_event.subscribe (a_action)
 		end
 
-	ignore_on_disposing (a_action: !PROCEDURE [ANY, ?TUPLE])
+	ignore_on_disposing (a_action: PROCEDURE [ANY, TUPLE])
 			-- <Precursor>
 		do
 			disposing_event.unsubscribe (a_action)
 		end
 
-	notify_on_disposed (a_action: !PROCEDURE [ANY, ?TUPLE])
+	notify_on_disposed (a_action: PROCEDURE [ANY, TUPLE])
 			-- <Precursor>
 		do
 			check not_is_actively_disposing: not is_actively_disposing end
@@ -228,7 +226,7 @@ feature -- Notification
 			end
 		end
 
-	ignore_on_disposed (a_action: !PROCEDURE [ANY, ?TUPLE])
+	ignore_on_disposed (a_action: PROCEDURE [ANY, TUPLE])
 			-- <Precursor>
 		do
 			disposed_event.unsubscribe (a_action)
@@ -236,7 +234,7 @@ feature -- Notification
 
 feature {NONE} -- Events
 
-	disposing_event: !EVENT_TYPE [TUPLE]
+	disposing_event: EVENT_TYPE [TUPLE]
 			-- Event published prior to a dispose of Current.
 		require
 			is_interface_usable: is_interface_usable
@@ -252,10 +250,11 @@ feature {NONE} -- Events
 				Result := l_result
 			end
 		ensure
+			result_attached: Result /= Void
 			result_consistent: Result = disposing_event
 		end
 
-	disposed_event: !EVENT_TYPE [TUPLE]
+	disposed_event: EVENT_TYPE [TUPLE]
 			-- Event published after Current has been disposed of.
 		require
 			is_interface_usable: is_interface_usable
@@ -271,20 +270,21 @@ feature {NONE} -- Events
 				Result := l_result
 			end
 		ensure
+			result_attached: Result /= Void
 			result_consistent: Result = disposed_event
 		end
 
 feature {NONE} -- Implementation: Internal cache
 
-	frozen internal_disposing_event: ?like disposing_event
+	frozen internal_disposing_event: detachable like disposing_event
 			-- Cached version of `disposing_event'.
 			-- Note: Do not use directly!
 
-	frozen internal_disposed_event: ?like disposed_event
+	frozen internal_disposed_event: detachable like disposed_event
 			-- Cached version of `disposed_event'.
 			-- Note: Do not use directly!
 
-	frozen internal_object_pool: ?like object_pool
+	frozen internal_object_pool: detachable like object_pool
 			-- Cached version of `object_pool'
 			-- Note: Do not use directly!
 

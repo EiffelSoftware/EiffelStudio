@@ -17,12 +17,13 @@ inherit
 
 feature -- Access
 
-	connection: !EVENT_CONNECTION_I [G, I]
+	connection: EVENT_CONNECTION_I [G, I]
 			-- Connection point.
 		require
 			is_interface_usable: is_interface_usable
 		deferred
 		ensure
+			result_attached: Result /= Void
 			result_is_interface_usable: Result.is_interface_usable
 -- Uncomment when proper replication is done by the compiler
 --			result_consistent: Result = connection

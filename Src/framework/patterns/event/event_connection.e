@@ -63,7 +63,7 @@ feature {NONE} -- Clean up
 
 feature {NONE} -- Access
 
-	frozen connections: !DS_ARRAYED_LIST [detachable G]
+	frozen connections: DS_ARRAYED_LIST [detachable G]
 			-- Current connections to event connections.
 		require
 			is_interface_usable: is_interface_usable
@@ -78,16 +78,17 @@ feature {NONE} -- Access
 				internal_connections := Result
 			end
 		ensure
+			result_attached: Result /= Void
 			result_consistent: Result = connections
 		end
 
-	frozen observer_event_action_map_fetch_action: !FUNCTION [I, TUPLE [observer: !G], !ARRAY [TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]]]
+	frozen observer_event_action_map_fetch_action: FUNCTION [I, TUPLE [observer: attached G], ARRAY [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]]
 			-- A very confusing looking agent to retrieve an array of tuples, containing an event type and event handler routine on an observer {G}.
 			-- The function should be implemented on the interface {I}.
 
 feature -- Status report
 
-	frozen is_connected (a_observer: !G): BOOLEAN
+	frozen is_connected (a_observer: attached G): BOOLEAN
 			-- <Precursor>
 		local
 			l_connections: like internal_connections
@@ -107,16 +108,16 @@ feature -- Status report
 
 feature -- Event connection
 
-	connect_events (a_observer: !G)
+	connect_events (a_observer: attached G)
 			-- <Precursor>
 		local
-			l_event_maps: ARRAY [detachable TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]]
-			l_event_map: detachable TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]
-			l_action: PROCEDURE [ANY, TUPLE]
+			l_event_maps: detachable ARRAY [detachable TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]
+			l_event_map: detachable TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]
 			l_upper, i: INTEGER
 		do
 				-- Subscribe to events on the observer.
 			l_event_maps := observer_event_action_map_fetch_action.item ([a_observer])
+			check l_event_maps_attached: l_event_maps /= Void end
 			if not l_event_maps.is_empty then
 				from
 					i := l_event_maps.lower
@@ -126,8 +127,7 @@ feature -- Event connection
 				loop
 					l_event_map := l_event_maps[i]
 					if attached l_event_map then
-						l_action := l_event_map.action
-						l_event_map.event.subscribe (l_action)
+						l_event_map.event.subscribe (l_event_map.action)
 					end
 					i := i + 1
 				end
@@ -139,12 +139,12 @@ feature -- Event connection
 			connections_has_a_observer: connections.has (a_observer)
 		end
 
-	disconnect_events (a_observer: !G)
+	disconnect_events (a_observer: attached G)
 			-- <Precursor>
 		local
 			l_connections: like connections
-			l_maps: ARRAY [detachable TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]]
-			l_map: detachable TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]
+			l_maps: ARRAY [detachable TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]
+			l_map: detachable TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]
 			l_action: PROCEDURE [ANY, TUPLE]
 			l_event: EVENT_TYPE [TUPLE]
 			l_upper, i: INTEGER
@@ -187,6 +187,9 @@ feature {NONE} -- Internal implementation cache
 	internal_connections: detachable like connections
 			-- Cached version of `connections'
 			-- Note: Do not use directly!
+
+invariant
+	observer_event_action_map_fetch_action_attached: observer_event_action_map_fetch_action /= Void
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

@@ -143,7 +143,7 @@ feature {NONE} -- Clean Up
 
 feature -- Access
 
-	automation: !DISPOSABLE_AUTOMATION_I
+	automation: DISPOSABLE_AUTOMATION_I
 			-- <Precursor>
 		local
 			l_result: like internal_automation
@@ -180,7 +180,7 @@ feature {NONE} -- Status report
 
 feature {DISPOSABLE_I, DISPOSABLE} -- Basic operation
 
-	frozen auto_dispose (a_object: !ANY)
+	frozen auto_dispose (a_object: ANY)
 			-- <Precursor>
 		do
 			if not is_disposed and then not is_actively_disposing then
@@ -190,7 +190,7 @@ feature {DISPOSABLE_I, DISPOSABLE} -- Basic operation
 			end
 		end
 
-	frozen delayed_auto_dispose (a_action: !FUNCTION [ANY, ?TUPLE, !ANY])
+	frozen delayed_auto_dispose (a_action: FUNCTION [ANY, TUPLE, ANY])
 			-- <Precursor>
 		do
 			if not is_disposed and then not is_actively_disposing then
@@ -202,7 +202,7 @@ feature {DISPOSABLE_I, DISPOSABLE} -- Basic operation
 
 feature {NONE} -- Implementation: Internal cache
 
-	frozen internal_automation: ?DISPOSABLE_AUTOMATION_HANDLER
+	frozen internal_automation: detachable DISPOSABLE_AUTOMATION_HANDLER
 			-- Cached version of `automation'
 			-- Note: Do not use directly!
 
@@ -234,11 +234,11 @@ invariant
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

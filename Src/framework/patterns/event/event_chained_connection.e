@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	linked_connection: !EVENT_CONNECTION_I [LINKG, LINKI]
+	linked_connection: EVENT_CONNECTION_I [LINKG, LINKI]
 			-- Parent connection
 
 feature -- Status report
@@ -57,7 +57,7 @@ feature -- Status report
 			end
 		end
 
-	is_valid_connection (a_observer: !EVENT_OBSERVER_I): BOOLEAN
+	is_valid_connection (a_observer: EVENT_OBSERVER_I): BOOLEAN
 			-- <Precursor>
 		do
 			Result := Precursor (a_observer) and then linked_connection.is_valid_connection (a_observer)
@@ -68,7 +68,7 @@ feature -- Status report
 
 feature -- Event connection
 
-	connect_events (a_observer: !G)
+	connect_events (a_observer: attached G)
 			-- <Precursor>
 		local
 			l_link: like linked_connection
@@ -89,7 +89,7 @@ feature -- Event connection
 				attached {LINKG} a_observer as l_observer implies linked_connection.is_connected (l_observer)
 		end
 
-	disconnect_events (a_observer: !G)
+	disconnect_events (a_observer: attached G)
 			-- <Precursor>
 		local
 			l_link: like linked_connection
@@ -106,6 +106,9 @@ feature -- Event connection
 --				old (attached {LINKG} a_observer as l_old_observer implies linked_connection.is_connected (l_old_observer)) implies
 --				(attached {LINKG} a_observer as l_observer and then linked_connection.is_connected (l_observer))
 		end
+
+invariant
+	linked_connection_attached: linked_connection /= Void
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

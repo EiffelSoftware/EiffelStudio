@@ -12,20 +12,27 @@ frozen class
 
 feature -- Basic operations
 
-	dispose (a_object: !ANY)
+	dispose (a_object: ANY)
 			-- Disposes of an object, if it implemented {DISPOSABLE_I} or {DISPOSABLE}.
+			--
+			-- `a_object': An object to dispose of.
+		require
+			a_object_attached: a_object /= Void
 		do
-			if {l_disposable_safe: DISPOSABLE_I} a_object then
+			if attached {DISPOSABLE_I} a_object as l_disposable_safe then
 				l_disposable_safe.dispose
-			elseif {l_disposable: DISPOSABLE} a_object then
+			elseif attached {DISPOSABLE} a_object as l_disposable then
 				l_disposable.dispose
 			end
 		end
 
-	perform (a_object: !ANY; a_action: !PROCEDURE [ANY, TUPLE])
+	perform (a_object: ANY; a_action: PROCEDURE [ANY, TUPLE])
 			-- Performs an action on with a supplied object and then cleans up the supplied object.
 			-- Note: In the interest of safety `a_object' should not be held on to by any other object
 			--       because it will be disposed of.
+		require
+			a_object_attached: a_object /= Void
+			a_action_attached: a_action /= Void
 		local
 			l_disposed: BOOLEAN
 		do
@@ -39,7 +46,7 @@ feature -- Basic operations
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -63,11 +70,11 @@ feature -- Basic operations
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

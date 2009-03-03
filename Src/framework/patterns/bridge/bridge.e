@@ -12,7 +12,7 @@ deferred class
 
 feature {NONE} -- Access
 
-	frozen bridge: !G
+	frozen bridge: G
 			-- Bridge implementation.
 		require
 			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable
@@ -27,17 +27,20 @@ feature {NONE} -- Access
 				internal_bridge := Result
 			end
 		ensure
+			result_attached: Result /= Void
 			result_consistent: Result = bridge
 		end
 
 feature {NONE} -- Factory
 
-	new_bridge: !G
+	new_bridge: G
 			-- Creates a new implementation instance.
 		require
 			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable
 			internal_bridge_detached: not attached internal_bridge
 		deferred
+		ensure
+			result_attached: Result /= Void
 		end
 
 feature {NONE} -- Implementation: Internal cache

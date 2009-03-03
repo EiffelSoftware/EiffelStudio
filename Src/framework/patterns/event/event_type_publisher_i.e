@@ -38,7 +38,7 @@ feature -- Publication
 			is_publishing_unchanged: is_publishing = old is_publishing
 		end
 
-	publish_if (a_args: detachable EVENT_DATA; a_predicate: attached PREDICATE [ANY, EVENT_DATA])
+	publish_if (a_args: detachable EVENT_DATA; a_predicate: PREDICATE [ANY, EVENT_DATA])
 			-- Publishes the event, if the subscriptions have not been suspended.
 			--
 			-- `a_args': Public context arguments to forward to all subscribers.
@@ -46,7 +46,8 @@ feature -- Publication
 		require
 			is_interface_usable: is_interface_usable
 			not_is_publishing: not is_publishing
-			a_args_is_valid: (attached a_predicate) implies a_predicate.valid_operands (a_args)
+			a_predicate_attached: a_predicate /= Void
+			a_args_is_valid: a_predicate.valid_operands (a_args)
 		deferred
 		ensure
 			is_publishing_unchanged: is_publishing = old is_publishing

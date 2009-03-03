@@ -19,11 +19,13 @@ inherit
 
 feature -- Status report
 
-	is_subscribed (a_action: attached PROCEDURE [ANY, EVENT_DATA]): BOOLEAN
+	is_subscribed (a_action: PROCEDURE [ANY, EVENT_DATA]): BOOLEAN
 			-- Determines if the event already has a subscription for a specified action.
 			--
 			-- `a_action': An action to check an existing subscription for
 			-- `Result': True if the action is already subscribed, False otherwise.
+		require
+			a_action_attached: a_action /= Void
 		deferred
 		ensure
 			not_is_subscribed: not is_interface_usable implies not Result
@@ -62,31 +64,33 @@ feature -- Status settings
 
 feature -- Subscription
 
-	subscribe (a_action: attached PROCEDURE [ANY, EVENT_DATA])
+	subscribe (a_action: PROCEDURE [ANY, EVENT_DATA])
 			-- Subscribes an action to the event.
 			--
 			-- `a_action': The action to subscribe.
 		require
 			is_interface_usable: is_interface_usable
+			a_action_attached: a_action /= Void
 			not_a_action_is_subscribed: not is_subscribed (a_action)
 		deferred
 		ensure
 			a_action_subscribed: is_subscribed (a_action)
 		end
 
-	subscribe_for_single_notification (a_action: attached PROCEDURE [ANY, EVENT_DATA])
+	subscribe_for_single_notification (a_action: PROCEDURE [ANY, EVENT_DATA])
 			-- Subscribes an action to the event for a single publication only.
 			--
 			-- `a_action': The action to subscribe.
 		require
 			is_interface_usable: is_interface_usable
+			a_action_attached: a_action /= Void
 			not_a_action_is_subscribed: not is_subscribed (a_action)
 		deferred
 		ensure
 			a_action_subscribed: is_subscribed (a_action)
 		end
 
-	unsubscribe (a_action: attached PROCEDURE [ANY, EVENT_DATA])
+	unsubscribe (a_action: PROCEDURE [ANY, EVENT_DATA])
 			-- Unsubscribes an action from the event.
 			-- Note: If a_action_is_subscribed fails then Freeze, you're could be comparing melted and
 			--       frozen agents which are not equal objects.
@@ -94,6 +98,7 @@ feature -- Subscription
 			-- `a_action': A previously subscribed action to unsubscribe.
 		require
 			is_interface_usable: is_interface_usable
+			a_action_attached: a_action /= Void
 			a_action_is_subscribed: is_subscribed (a_action)
 		deferred
 		ensure
@@ -102,12 +107,13 @@ feature -- Subscription
 
 feature -- Basic operations
 
-	perform_suspended_action (a_action: attached PROCEDURE [ANY, TUPLE])
+	perform_suspended_action (a_action: PROCEDURE [ANY, TUPLE])
 			-- Performs a action whilst suspending subscriptions from recieve a publication
 			--
 			-- `a_action': Action to call while the event is suspended.
 		require
 			is_interface_usable: is_interface_usable
+			a_action_attached: a_action /= Void
 		local
 			l_suspended: BOOLEAN
 		do

@@ -470,7 +470,7 @@ feature -- C output pixmap management
 	on_draw_c_output_pixmap
 			-- Draw pixmap animation for C output.
 		local
-			l_anim: !ARRAY [!EV_PIXMAP]
+			l_anim: ARRAY [EV_PIXMAP]
 		do
 			l_anim := stock_pixmaps.compile_animation_anim
 			draw_pixmap_on_tab (l_anim.item (c_output_timer_counter.min (l_anim.count)))

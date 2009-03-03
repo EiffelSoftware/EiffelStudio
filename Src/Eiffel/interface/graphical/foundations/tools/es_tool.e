@@ -265,24 +265,26 @@ feature {ES_SHELL_TOOLS} -- Element change
 
 feature -- Access: User interface
 
-	icon: !EV_PIXEL_BUFFER
+	icon: EV_PIXEL_BUFFER
 			-- Tool icon.
 			--|Note: Do not call `tool.icon' as it will create the tool unnecessarly!
 		require
 			is_interface_usable: is_interface_usable
 		deferred
 		ensure
+			icon_attached: Result /= Void
 			not_result_is_destroyed: not Result.is_destroyed
 			result_consistent: Result ~ icon
 		end
 
-	icon_pixmap: !EV_PIXMAP
+	icon_pixmap: EV_PIXMAP
 			-- Tool icon pixmap
 			--|Note: Do not call `tool.icon' as it will create the tool unnecessarly!
 		require
 			is_interface_usable: is_interface_usable
 		deferred
 		ensure
+			icon_pixmap_attached: Result /= Void
 			not_result_is_destroyed: not Result.is_destroyed
 			result_consistent: Result ~ icon_pixmap
 		end

@@ -29,11 +29,13 @@ feature {NONE} -- Initialization
 			name_set: a_name.as_string_32 ~ name.as_string_32
 		end
 
-	make_with_icon (a_name: !READABLE_STRING_GENERAL; a_icon: like icon)
+	make_with_icon (a_name: !READABLE_STRING_GENERAL; a_icon: detachable like icon)
 			-- Initialize a output editor with an representation icon
 			--
 			-- `a_name': A friendly, human readable name for the editor.
 			-- `a_icon': An icon representing the output pane.
+		require
+			a_icon_attached: a_icon /= Void
 		do
 			create name.make_from_string (a_name.as_string_32)
 			icon := a_icon

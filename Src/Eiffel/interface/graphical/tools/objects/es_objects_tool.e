@@ -104,13 +104,13 @@ feature -- Basic operations
 
 feature -- Access
 
-	icon: !EV_PIXEL_BUFFER
+	icon: EV_PIXEL_BUFFER
 			-- <Precursor>
 		do
 			Result := stock_pixmaps.tool_objects_icon_buffer
 		end
 
-	icon_pixmap: !EV_PIXMAP
+	icon_pixmap: EV_PIXMAP
 			-- <Precursor>
 		do
 			Result := stock_pixmaps.tool_objects_icon

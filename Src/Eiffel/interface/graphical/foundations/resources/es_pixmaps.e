@@ -139,7 +139,7 @@ feature {NONE} -- Access
 		deferred
 		end
 
-	frozen icon_coordinates_table: !DS_HASH_TABLE [!TUPLE [x: NATURAL_8; y: NATURAL_8], STRING]
+	frozen icon_coordinates_table: HASH_TABLE [TUPLE [x: NATURAL_8; y: NATURAL_8], STRING]
 			-- Table of icon coordinates.
 			--
 			-- Key: An icon name.
@@ -148,8 +148,7 @@ feature {NONE} -- Access
 			if {l_result: like icon_coordinates_table} internal_icon_coordinates_table then
 				Result := l_result
 			else
-				create Result.make_default
-				Result.set_key_equality_tester (create {KL_STRING_EQUALITY_TESTER})
+				create Result.make (10)
 				populate_coordinates_table (Result)
 				internal_icon_coordinates_table := Result
 			end
@@ -191,7 +190,7 @@ feature {NONE} -- Helpers
 
 feature -- Query
 
-	named_icon_buffer (a_name: !STRING): !EV_PIXEL_BUFFER
+	named_icon_buffer (a_name: !STRING): EV_PIXEL_BUFFER
 			-- Retrieves a icon buffer given a known icon name
 			--
 			-- `a_name':
@@ -200,18 +199,16 @@ feature -- Query
 			not_a_name_is_empty: not a_name.is_empty
 			has_named_icon_a_name: has_named_icon (a_name)
 		local
-			l_coords: !TUPLE [x: NATURAL_8; y: NATURAL_8]
-			l_result: EV_PIXEL_BUFFER
+			l_coords: TUPLE [x: NATURAL_8; y: NATURAL_8]
 		do
 			l_coords := icon_coordinates_table.item (a_name)
-			l_result := matrix_buffer.sub_pixel_buffer (pixel_rectangle (l_coords.x, l_coords.y))
-			check l_result /= Void end
-			Result := l_result
+			Result := matrix_buffer.sub_pixel_buffer (pixel_rectangle (l_coords.x, l_coords.y))
 		ensure
+			named_icon_buffer_attached: Result /= Void
 			not_result_is_destroyed: not Result.is_destroyed
 		end
 
-	named_icon (a_name: !STRING): !EV_PIXMAP
+	named_icon (a_name: !STRING): EV_PIXMAP
 			-- Retrieves a icon buffer given a known icon name
 			--
 			-- `a_name':
@@ -220,14 +217,12 @@ feature -- Query
 			not_a_name_is_empty: not a_name.is_empty
 			has_named_icon_a_name: has_named_icon (a_name)
 		local
-			l_coords: !TUPLE [x: NATURAL_8; y: NATURAL_8]
-			l_result: EV_PIXMAP
+			l_coords: TUPLE [x: NATURAL_8; y: NATURAL_8]
 		do
 			l_coords := icon_coordinates_table.item (a_name)
-			l_result := matrix_buffer.sub_pixmap (pixel_rectangle (l_coords.x, l_coords.y))
-			check l_result /= Void end
-			Result := l_result
+			Result := matrix_buffer.sub_pixmap (pixel_rectangle (l_coords.x, l_coords.y))
 		ensure
+			named_icon_attached: Result /= Void
 			not_result_is_destroyed: not Result.is_destroyed
 		end
 
@@ -301,13 +296,13 @@ feature {NONE} -- Query
 			a_y_positive: a_y > 0
 			a_y_small_enough: a_y <= height
 		local
-			l_x_offset: NATURAL_16
-			l_y_offset: NATURAL_16
-			l_border: like matrix_pixel_border
+			l_x_offset: INTEGER
+			l_y_offset: INTEGER
+			l_border: INTEGER
 		do
 			l_border := matrix_pixel_border
-			l_x_offset := ((a_x.to_natural_16 - 1) * (icon_width + l_border)) + l_border
-			l_y_offset := ((a_y.to_natural_16 - 1) * (icon_height + l_border)) + l_border
+			l_x_offset := ((a_x - 1).to_integer_32 * (icon_width + l_border)) + l_border
+			l_y_offset := ((a_y - 1).to_integer_32 * (icon_height + l_border)) + l_border
 
 			Result := rectangle
 			Result.set_x (l_x_offset)
@@ -339,7 +334,7 @@ feature {NONE} -- Basic operation
 			result_height_big_enough: Result.height.to_natural_32 >= matrix_pixel_height
 		end
 
-	populate_coordinates_table (a_table: !DS_HASH_TABLE [!TUPLE [x: NATURAL_8; y: NATURAL_8], STRING])
+	populate_coordinates_table (a_table: HASH_TABLE [TUPLE [x: NATURAL_8; y: NATURAL_8], STRING])
 			-- Populates a coordinates table with the coordinates for the implemented icons
 		deferred
 		end
@@ -370,7 +365,7 @@ invariant
 	matrix_buffer_height_big_enough: matrix_buffer.height.to_natural_32 >= matrix_pixel_height
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -394,11 +389,11 @@ invariant
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

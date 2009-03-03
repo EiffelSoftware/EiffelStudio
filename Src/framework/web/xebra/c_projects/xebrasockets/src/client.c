@@ -207,14 +207,17 @@ int main (int argc, char *argv[])
 		return 0;
 	}
 
-	fprintf (stderr, "All receiving ok.\n", rmsg_buf);
-	fflush (stderr);
+	printf ("All receiving ok.\n");
+	
+	DEBUG2 ("Received: '%s'\n", rmsg_buf);
+
 
 	free (rmsg_buf);
 
 	shutdown (sockfd, 2);
 	close (sockfd);
 
+	
 	printf ("Reached end of code. good bye\n");
 	return 0;
 }

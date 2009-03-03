@@ -18,6 +18,7 @@ feature
             soc1: NETWORK_STREAM_SOCKET
         do
             create soc1.make_server_by_port (3491)
+            print("XEbra Application started.")
             from
                 soc1.listen (5)
             until
@@ -34,11 +35,27 @@ feature
             soc1.accept
             if {soc2: NETWORK_STREAM_SOCKET} soc1.accepted then
 	            if {message: STRING} soc2.retrieved then
-	            	message.append (" signed by Webapp")
+	            	message.append (read_page("/home/fabioz/local/xebra/websites/red_bull.htm"))
 	            	soc2.independent_store (message)
 	            end
             	soc2.close
             end
         end
 
+
+   read_page(a_file: STRING): STRING
+   		-- reads a text file and returns it as a string
+ 		 require
+ 		 	a_file_not_empty: not a_file.is_empty
+ 		 local
+   			l_file: PLAIN_TEXT_FILE
+ 		 do
+			Result := ""
+			create l_file.make_open_read (a_file)
+	        l_file.read_stream (l_file.count)
+	        if attached {STRING} l_file.last_string as str then
+	        	Result := str.twin
+	        end
+	        l_file.close
+		 end
 end

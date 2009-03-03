@@ -166,7 +166,6 @@ feature {NONE} -- Implementation functions
 			-- On `ok' button pressed.
 		local
 			l_str: STRING_GENERAL
-			l_result: BOOLEAN
 		do
 			l_str := text_for_name.text
 			if l_str /= Void and then not l_str.as_string_8.is_equal ("") then

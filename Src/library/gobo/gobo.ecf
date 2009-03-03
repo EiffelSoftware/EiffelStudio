@@ -81,6 +81,10 @@
 				<exclude>/expat$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="override" location="override" recursive="true"/>
+		<cluster name="override" location="override" recursive="true">
+			<file_rule>
+				<exclude>/src$</exclude>
+			</file_rule>
+		</cluster>
 	</target>
 </system>

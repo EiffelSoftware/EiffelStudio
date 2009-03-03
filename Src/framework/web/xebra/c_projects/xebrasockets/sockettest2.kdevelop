@@ -15,7 +15,7 @@
   </general>
   <kdevautoproject>
     <general>
-      <activetarget>src/server</activetarget>
+      <activetarget>src/client</activetarget>
       <useconfiguration>debug</useconfiguration>
     </general>
     <run>

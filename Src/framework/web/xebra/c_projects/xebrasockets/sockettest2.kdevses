@@ -1,13 +1,16 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
 <!DOCTYPE KDevPrjSession>
 <KDevPrjSession>
- <DocsAndViews NumberOfDocuments="2" >
-  <Doc0 NumberOfViews="1" URL="file:///home/fabioz/xebra/c_projects/xebrasockets/src/server.c" >
+ <DocsAndViews NumberOfDocuments="3" >
+  <Doc0 NumberOfViews="1" URL="file:///usr/local/home/fabioz/xebra/c_projects/xebrasockets/src/client.c" >
    <View0 Encoding="" Type="Source" />
   </Doc0>
-  <Doc1 NumberOfViews="1" URL="file:///home/fabioz/xebra/c_projects/xebrasockets/src/xebrasockets.h" >
-   <View0 Encoding="" line="63" Type="Source" />
+  <Doc1 NumberOfViews="1" URL="file:///usr/local/home/fabioz/xebra/c_projects/xebrasockets/src/xebrasockets.c" >
+   <View0 Encoding="" Type="Source" />
   </Doc1>
+  <Doc2 NumberOfViews="1" URL="file:///usr/local/home/fabioz/xebra/c_projects/xebrasockets/src/xebrasockets.h" >
+   <View0 Encoding="" line="43" Type="Source" />
+  </Doc2>
  </DocsAndViews>
  <pluginList>
   <kdevdebugger>

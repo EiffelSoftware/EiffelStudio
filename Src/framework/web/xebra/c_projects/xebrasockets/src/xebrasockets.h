@@ -36,7 +36,8 @@
 #include "eif_eiffel.h"
 
 
-
+//#define DO_DEBUG
+//#define DO_DEBUG2
 
 
 /*======= DEBUG MACRO ======= */
@@ -56,11 +57,13 @@
 
 
 /*======= SOCKET CONSTANTS =======*/
-//#define DO_DEBUG
-//#define DO_DEBUG2
+
+
 #define FRAG_SIZE 65536 
-#define HOSTNAME "firenze.ise"
+#define HOSTNAME "localhost"
 #define PORT "3490"
+
+//#define HOSTNAME "firenze.ise"
 
 
 /*

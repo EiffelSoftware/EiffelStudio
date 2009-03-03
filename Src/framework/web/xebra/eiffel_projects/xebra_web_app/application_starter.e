@@ -20,6 +20,7 @@ feature {NONE} -- Initialization
 			webapp: WEB_APPLICATION
 		do
 			create webapp.make
+
 		end
 
 end

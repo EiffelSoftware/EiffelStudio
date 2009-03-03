@@ -22,6 +22,8 @@ inherit
 			internal_test
 		end
 
+	KL_IMPORTED_ANY_ROUTINES
+
 feature -- Status report
 
 	test (v, u: attached G): BOOLEAN

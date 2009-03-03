@@ -56,18 +56,24 @@ feature {NONE} -- Implementation
 
 	extract
 			-- Perform extracting
+			-- Always real extracting since it is relatively light for conf notes.
 		local
 			l_notable: like notable
 			l_notes: ARRAYED_LIST [HASH_TABLE [STRING_8, STRING_8]]
 			l_note: HASH_TABLE [STRING_8, STRING_8]
 			l_entries: HASH_TABLE [SEARCH_TABLE [HASHABLE], STRING]
 			l_id: STRING
+			l_date: INTEGER
 		do
 				-- Compute id.
 			if {lt_target: CONF_TARGET}notable then
 				l_id := id_solution.id_of_target (lt_target)
+				l_date := lt_target.system.file_date
 			elseif {lt_cluster: CONF_CLUSTER}notable then
 				l_id := id_solution.id_of_group (lt_cluster)
+				l_date := lt_cluster.target.system.file_date
+			else
+				check not_possible: False end
 			end
 			if {lt_id: STRING}l_id then
 				l_entries := storage.entry_server.entries
@@ -90,7 +96,7 @@ feature {NONE} -- Implementation
 					end
 						-- Register extracted entries to EIS storage.
 					if not eis_entries.is_empty then
-						storage.register_entries_of_component_id (eis_entries, lt_id)
+						storage.register_entries_of_component_id (eis_entries, lt_id, l_date)
 					end
 				else
 					if {lt_entries: like eis_entries}l_entries.found_item then
@@ -137,11 +143,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

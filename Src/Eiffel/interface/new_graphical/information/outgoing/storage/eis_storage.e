@@ -37,6 +37,9 @@ feature {NONE} -- Initialization
 	make
 			-- Initialization
 		do
+			create internal_tag_server
+			create internal_entry_server
+			create internal_date_server.make (10)
 			make_observer_manager
 		end
 
@@ -105,23 +108,27 @@ feature -- Retrieve and save
 
 feature -- Element change
 
-	register_entry (a_entry: !EIS_ENTRY; a_component_id: !STRING)
+	register_entry (a_entry: EIS_ENTRY; a_component_id: STRING; a_date: INTEGER)
 			-- Register an entry from the storage
 			-- Syncronize servers
 			-- `a_component_id' is the class EIS id when `a_entry' is written in a feature
+		require
+			a_entry_attached: a_entry /= Void
+			a_component_id_attached: a_component_id /= Void
+			has_date: a_date /= 0
 		local
 			l_tags: ARRAYED_LIST [STRING_32]
 		do
 			if entry_server.register_entry (a_entry, a_component_id) then
 					-- Syncronize tag server
-				if {lt_tags: ARRAYED_LIST [STRING_32]}a_entry.tags and then not lt_tags.is_empty then
+				if (attached a_entry.tags as lt_tags) and then not lt_tags.is_empty then
 					l_tags := lt_tags.twin
 					from
 						l_tags.start
 					until
 						l_tags.after
 					loop
-						if {lt_tag: STRING_32}l_tags.item and then not lt_tag.is_empty then
+						if (attached l_tags.item as lt_tag) and then not lt_tag.is_empty then
 							if tag_server.register_entry (a_entry, lt_tag) then
 								on_tag_extended (lt_tag)
 							end
@@ -134,28 +141,40 @@ feature -- Element change
 						-- Do nothing.
 					end
 				end
+
+					-- Syncronize date sever
+				date_server.search (a_component_id)
+				if date_server.found then
+					date_server.replace (a_date, a_component_id)
+				else
+					date_server.put (a_date, a_component_id)
+				end
+
 				save_needed := True
 			end
 		end
 
-	deregister_entry (a_entry: !EIS_ENTRY; a_component_id: !STRING)
+	deregister_entry (a_entry: EIS_ENTRY; a_component_id: STRING)
 			-- Deregister an entry from the storage
 			-- Syncronize servers
 			-- `a_component_id' is the class EIS id when `a_entry' is written in a feature
+		require
+			a_entry_attached: a_entry /= Void
+			a_component_id_attached: a_component_id /= Void
 		local
 			l_tags: ARRAYED_LIST [STRING_32]
 			l_entries: SEARCH_TABLE [EIS_ENTRY]
 		do
 			if entry_server.deregister_entry (a_entry, a_component_id) then
 					-- Syncronize tag server
-				if {lt_tags: ARRAYED_LIST [STRING_32]}a_entry.tags and then not lt_tags.is_empty then
+				if (attached a_entry.tags as lt_tags) and then not lt_tags.is_empty then
 					l_tags := lt_tags.twin
 					from
 						l_tags.start
 					until
 						l_tags.after
 					loop
-						if {lt_tag: STRING_32}l_tags.item and then not lt_tag.is_empty then
+						if (attached l_tags.item as lt_tag) and then not lt_tag.is_empty then
 							if tag_server.deregister_entry (a_entry, lt_tag) then
 								l_entries := tag_server.entries_of_id (lt_tag)
 								if l_entries = Void or else l_entries.is_empty then
@@ -171,15 +190,22 @@ feature -- Element change
 						-- Do nothing
 					end
 				end
+
+					-- No need to syncronize the date server.
+
 				save_needed := True
 			end
 		end
 
-	register_entries_of_component_id (a_entries: !SEARCH_TABLE [EIS_ENTRY]; a_component_id: !STRING)
+	register_entries_of_component_id (a_entries: SEARCH_TABLE [EIS_ENTRY]; a_component_id: STRING; a_date: INTEGER)
 			-- Deregister entries of `a_component_id'.
 			-- Syncronize servers
+		require
+			a_entries_attached: a_entries /= Void
+			a_component_id_attached: a_component_id /= Void
+			has_date: a_date /= 0
 		local
-			l_entry: ?EIS_ENTRY
+			l_entry: detachable EIS_ENTRY
 		do
 				-- We need to correctly remove old entries first, and sync tag server.
 			deregister_entries_of_component_id (a_component_id)
@@ -191,23 +217,34 @@ feature -- Element change
 			loop
 				l_entry := a_entries.item_for_iteration
 				check l_entry_not_void: l_entry /= Void end
-				register_entry (l_entry, a_component_id)
+				register_entry (l_entry, a_component_id, a_date)
 				a_entries.forth
 			end
 				-- We still keep the information that the component does not contain any entry.
 			if a_entries.is_empty then
 				entry_server.register_component (a_component_id)
 			end
+				-- We still keep date of the component.
+			if a_entries.is_empty then
+				date_server.search (a_component_id)
+				if date_server.found then
+					date_server.replace (a_date, a_component_id)
+				else
+					date_server.put (a_date, a_component_id)
+				end
+			end
 		end
 
-	deregister_entries_of_component_id (a_component_id: !STRING)
+	deregister_entries_of_component_id (a_component_id: STRING)
 			-- Deregister entries of `a_component_id'.
 			-- Syncronize servers
+		require
+			a_component_id_attached: a_component_id /= Void
 		local
 			l_entries: SEARCH_TABLE [EIS_ENTRY]
-			l_entry: ?EIS_ENTRY
+			l_entry: detachable EIS_ENTRY
 		do
-			if {lt_entries: SEARCH_TABLE [EIS_ENTRY]}entry_server.entries_of_id (a_component_id) then
+			if (attached entry_server.entries_of_id (a_component_id) as lt_entries) then
 					-- Twinning to ensure that the circulation structure is not broken by `deregister_entry'
 				l_entries := lt_entries.twin
 				from
@@ -234,8 +271,10 @@ feature -- Element change
 			until
 				l_entries.after
 			loop
-				if not id_valid (l_entries.key_for_iteration.as_attached) then
-					deregister_entries_of_component_id (l_entries.key_for_iteration.as_attached)
+				if not id_valid (l_entries.key_for_iteration) then
+					deregister_entries_of_component_id (l_entries.key_for_iteration)
+						-- Now remove from the date server, as it is an invalid component id.
+					date_server.remove (l_entries.key_for_iteration)
 				end
 				l_entries.forth
 			end
@@ -243,35 +282,40 @@ feature -- Element change
 
 feature -- Access
 
-	tag_server: !EIS_ENTRY_SERVER [EIS_ENTRY, STRING_32]
+	tag_server: EIS_ENTRY_SERVER [EIS_ENTRY, STRING_32]
 			-- Tag server
 		do
-			if {lt_tag_server: like tag_server}internal_tag_server then
-				Result := lt_tag_server
-			else
-				create Result
-				internal_tag_server := Result
-			end
+			Result := internal_tag_server
+		ensure
+			tag_server_attached: Result /= Void
 		end
 
-	entry_server: !EIS_ENTRY_SERVER [EIS_ENTRY, STRING]
+	entry_server: EIS_ENTRY_SERVER [EIS_ENTRY, STRING]
 			-- Entry server
 		do
-			if {lt_entry_server: like entry_server}internal_entry_server then
-				Result := lt_entry_server
-			else
-				create Result
-				internal_entry_server := Result
-			end
+			Result := internal_entry_server
+		ensure
+			entry_server_attached: Result /= Void
+		end
+
+	date_server: HASH_TABLE [INTEGER, STRING]
+			-- Date server
+			-- Save time stamp for each components.
+		do
+			Result := internal_date_server
+		ensure
+			date_server_attached: Result /= Void
 		end
 
 feature {NONE} -- Access
 
-	storage_file_name: !FILE_NAME
+	storage_file_name: FILE_NAME
 			-- Path of the place to store tags.
 		do
 			create Result.make_from_string (project_location.target_path)
 			Result.set_file_name (eiffel_layout.eis_storage_file)
+		ensure
+			storage_file_name_attached: Result /= Void
 		end
 
 	save_needed: BOOLEAN
@@ -282,6 +326,14 @@ feature {NONE} -- Access
 
 	internal_entry_server: like entry_server;
 			-- Internal entry server
+
+	internal_date_server: like date_server;
+			-- Internal date server
+
+invariant
+	internal_tag_server_attached: internal_tag_server /= Void
+	internal_entry_server_attached: internal_entry_server /= Void
+	internal_date_server_attached: internal_date_server /= Void
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
@@ -308,11 +360,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

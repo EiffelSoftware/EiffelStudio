@@ -73,20 +73,25 @@ feature -- Operation
 		local
 			l_entry: !EIS_ENTRY
 			l_added: BOOLEAN
+			l_system: detachable CONF_SYSTEM
+			l_date: INTEGER
 		do
 			if component_editable then
-				create l_entry.make ("Unnamed", Void, Void, Void, component_id, Void)
 				if {lt_target: CONF_TARGET}conf_notable then
-					if {lt_sys: CONF_SYSTEM}lt_target.system then
-						write_entry (l_entry, lt_target, lt_sys)
-						l_added := last_entry_modified
-						if not l_added then
-							prompts.show_error_prompt (interface_names.l_item_is_not_writable (lt_target.name), Void, Void)
-						end
+					l_system := lt_target.system
+					l_date := l_system.file_date
+					create l_entry.make ("Unnamed", Void, Void, Void, component_id, Void)
+					write_entry (l_entry, lt_target, l_system)
+					l_added := last_entry_modified
+					if not l_added then
+						prompts.show_error_prompt (interface_names.l_item_is_not_writable (lt_target.name), Void, Void)
 					end
 				elseif {lt_cluster: CONF_CLUSTER}conf_notable then
-					if {lt_sys1: CONF_SYSTEM}lt_cluster.target.system and then not lt_cluster.is_readonly then
-						write_entry (l_entry, lt_cluster, lt_sys1)
+					if not lt_cluster.is_readonly then
+						l_system := lt_cluster.target.system
+						l_date := l_system.file_date
+						create l_entry.make ("Unnamed", Void, Void, Void, component_id, Void)
+						write_entry (l_entry, lt_cluster, l_system)
 						l_added := last_entry_modified
 					else
 						prompts.show_error_prompt (interface_names.l_item_is_not_writable (lt_cluster.name), Void, Void)
@@ -94,7 +99,7 @@ feature -- Operation
 				end
 
 				if l_added then
-					storage.register_entry (l_entry, component_id)
+					storage.register_entry (l_entry, component_id, l_date)
 					if extracted_entries = Void then
 						create extracted_entries.make (1)
 					end
@@ -150,11 +155,14 @@ feature -- Operation
 
 feature {NONE} -- Conf modification
 
-	write_entry (a_entry: !EIS_ENTRY; a_conf_notable: !CONF_NOTABLE; a_system: !CONF_SYSTEM)
+	write_entry (a_entry: EIS_ENTRY; a_conf_notable: CONF_NOTABLE; a_system: CONF_SYSTEM)
 			-- Add `a_entry' in `a_conf_notable' without saving.
 			-- `a_conf_notable' to add the entry
 			-- `a_system' to save the configure file.
 		require
+			a_entry_attached: a_entry /= Void
+			a_conf_notable_attached: a_conf_notable /= Void
+			a_system_attached: a_system /= Void
 			a_entry_editable: entry_editable (a_entry)
 		local
 			l_for_conf: BOOLEAN
@@ -300,7 +308,7 @@ feature {NONE} -- Callbacks
 							if last_entry_modified then
 								storage.deregister_entry (lt_entry, component_id)
 								lt_entry.set_name (lt_name)
-								storage.register_entry (lt_entry, component_id)
+								storage.register_entry (lt_entry, component_id, lt_system.file_date)
 							end
 						end
 					end
@@ -329,7 +337,7 @@ feature {NONE} -- Callbacks
 							if last_entry_modified then
 								storage.deregister_entry (lt_entry, component_id)
 								lt_entry.set_protocol (lt_protocol)
-								storage.register_entry (lt_entry, component_id)
+								storage.register_entry (lt_entry, component_id, lt_system.file_date)
 							end
 						end
 					end
@@ -358,7 +366,7 @@ feature {NONE} -- Callbacks
 							if last_entry_modified then
 								storage.deregister_entry (lt_entry, component_id)
 								lt_entry.set_source (lt_source)
-								storage.register_entry (lt_entry, component_id)
+								storage.register_entry (lt_entry, component_id, lt_system.file_date)
 							end
 						end
 					end
@@ -397,7 +405,7 @@ feature {NONE} -- Callbacks
 								else
 									lt_entry.set_tags (Void)
 								end
-								storage.register_entry (lt_entry, component_id)
+								storage.register_entry (lt_entry, component_id, lt_system.file_date)
 							end
 						end
 					end
@@ -433,7 +441,7 @@ feature {NONE} -- Callbacks
 								else
 									lt_entry.set_others (Void)
 								end
-								storage.register_entry (lt_entry, component_id)
+								storage.register_entry (lt_entry, component_id, lt_system.file_date)
 							end
 						end
 					end
@@ -531,11 +539,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

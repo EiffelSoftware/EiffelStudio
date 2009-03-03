@@ -91,29 +91,29 @@ feature {ES_EIS_COMPONENT_VIEW} -- Element change
 
 feature -- Access
 
-	name: STRING_32
+	name: detachable STRING_32
 			-- Name of the entry
 
-	protocol: STRING_32
+	protocol: detachable STRING_32
 			-- Protocol of the entry
 
-	source: STRING_32
+	source: detachable STRING_32
 			-- Source of the entry
 
-	tags: ARRAYED_LIST [STRING_32]
+	tags: detachable ARRAYED_LIST [STRING_32]
 			-- Tags of the entry
 
 	id: STRING
 			-- Id of the entry (from EB_SHARED_ID_SOLUTION)
 
-	others: HASH_TABLE [STRING_32, STRING_32]
+	others: detachable HASH_TABLE [STRING_32, STRING_32]
 			-- Other attributes of the entry
 
-	tags_as_string: STRING_32
+	tags_as_string: detachable STRING_32
 			-- Tags as a string
 			-- Simple combination, not for display popose
 		do
-			if {lt_tags: like tags}tags then
+			if attached tags as lt_tags then
 				create Result.make (10)
 				from
 					lt_tags.start
@@ -129,11 +129,11 @@ feature -- Access
 					tags /= Void implies Result /= Void
 		end
 
-	others_as_string: STRING_32
+	others_as_string: detachable STRING_32
 			-- Others as string
 			-- Simple combination, not for display popose
 		do
-			if {lt_others: like others}others then
+			if attached others as lt_others then
 				create Result.make (10)
 				from
 					lt_others.start
@@ -206,24 +206,24 @@ feature -- Hashable
 	hash_code: INTEGER
 			-- <precursor>
 		local
-			l_string: !STRING_32
+			l_string: STRING_32
 		do
 			Result := internal_hash_code
 			if Result = 0 then
 				create l_string.make (20)
-				if {lt_name: STRING_32}name then
+				if attached name as lt_name then
 					l_string.append (lt_name)
 				end
-				if {lt_protocol: STRING_32}protocol then
+				if attached protocol as lt_protocol then
 					l_string.append (lt_protocol)
 				end
-				if {lt_source: STRING_32}source then
+				if attached source as lt_source then
 					l_string.append (lt_source)
 				end
-				if {lt_tags: like tags_as_string}tags_as_string then
+				if attached tags_as_string as lt_tags then
 					l_string.append (lt_tags)
 				end
-				if {lt_others: like others_as_string}others_as_string then
+				if attached others_as_string as lt_others then
 					l_string.append (lt_others)
 				end
 				Result := l_string.hash_code
@@ -239,7 +239,7 @@ invariant
 	a_id_not_void: id /= Void
 
 note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -263,11 +263,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

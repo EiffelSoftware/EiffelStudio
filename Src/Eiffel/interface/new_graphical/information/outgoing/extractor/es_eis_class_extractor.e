@@ -76,12 +76,14 @@ feature {NONE} -- Implementation
 			-- Perform extracting
 			-- If the information is up-to-date, read cached info from storage.
 		local
-			l_entries: HASH_TABLE [SEARCH_TABLE [HASHABLE], STRING]
+			l_entries: HASH_TABLE [SEARCH_TABLE [EIS_ENTRY], STRING]
+			l_search_entries: detachable SEARCH_TABLE [EIS_ENTRY]
+			l_date: INTEGER
 		do
 				-- Compute EIS class id.
 			eis_class_id := id_solution.id_of_class (class_i.config_class)
 
-			if {lt_id: STRING}eis_class_id then
+			if attached eis_class_id as lt_id then
 				if not location_specialized and not force_extracting then
 					l_entries := storage.entry_server.entries
 					l_entries.search (lt_id)
@@ -89,18 +91,16 @@ feature {NONE} -- Implementation
 							-- No found in the storage, perform a fresh real extracting from text.
 						real_extract (lt_id)
 					else
-						if {lt_entries: like eis_entries}l_entries.found_item then
-							if class_i.config_class.has_modification_date_changed then
-									-- Found in the storage, but has been changed.
-									-- Perform a fresh real extracting from text.
-								real_extract (lt_id)
-							else
-								eis_entries := lt_entries
-							end
+						storage.date_server.search (lt_id)
+						l_date := storage.date_server.found_item
+						if l_date /= 0 implies class_i.date /= l_date then
+								-- Found in the storage, but has been changed.
+								-- Perform a fresh real extracting from text.
+							real_extract (lt_id)
 						else
-							check
-								type_conformace: False
-							end
+							l_search_entries := l_entries.found_item
+							check l_search_entries /= Void end -- Implied from `found'.
+							eis_entries := l_search_entries
 						end
 					end
 				else
@@ -146,7 +146,7 @@ feature {NONE} -- Basic operations
 					-- If `location_specialized', imcomplete entries were possible extracted.
 					-- In this case, we don't register it into the storage.
 				if not location_specialized then
-					storage.register_entries_of_component_id (eis_entries, a_computed_id)
+					storage.register_entries_of_component_id (eis_entries, a_computed_id, class_i.file_date)
 				end
 			end
 		end
@@ -282,11 +282,11 @@ feature {NONE} -- Formatting
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

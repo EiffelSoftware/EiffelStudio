@@ -1012,6 +1012,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			-- Tools docking layout menu
 		local
 			l_new_menu_item: EB_COMMAND_MENU_ITEM
+			l_menu: EV_MENU
 		do
 			create Result.make_with_text (develop_window.Interface_names.m_tools_layout)
 
@@ -1021,15 +1022,50 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 
 			Result.extend (create {EV_MENU_SEPARATOR})
 
-			l_new_menu_item := develop_window.commands.open_layout_command.new_menu_item
-			Result.extend (l_new_menu_item)
-			auto_recycle (l_new_menu_item)
+			create l_menu.make_with_text (develop_window.interface_names.m_open_layout)
+			auto_recycle (l_menu)
+			add_exist_layouts_to (l_menu)
+			develop_window.menus.set_exist_layouts_menu (l_menu)
+			Result.extend (develop_window.menus.exist_layouts_menu)
 
 			l_new_menu_item := develop_window.commands.save_layout_as_command.new_menu_item
 			Result.extend (l_new_menu_item)
 			auto_recycle (l_new_menu_item)
 		ensure
 			not_void: Result /= Void
+		end
+
+	add_exist_layouts_to (a_menu: EV_MENU)
+			-- Initlialize layout list items.
+		require
+			not_void: a_menu /= Void
+			valid: is_open_layout_menu (a_menu)
+		local
+			l_item: EV_MENU_ITEM
+			l_names: DS_HASH_TABLE [TUPLE [FILE_NAME, BOOLEAN], STRING_GENERAL]
+			l_manager: EB_NAMED_LAYOUT_MANAGER
+		do
+			from
+				create l_manager.make (develop_window)
+				l_names := l_manager.layouts
+				l_names.start
+			until
+				l_names.after
+			loop
+				create l_item.make_with_text (l_names.key_for_iteration)
+				l_item.select_actions.extend (agent l_manager.open_layout (l_names.key_for_iteration))
+				auto_recycle (l_item)
+
+				a_menu.extend (l_item)
+
+				l_names.forth
+			end
+
+			if a_menu.count = 0 then
+				a_menu.disable_sensitive
+			else
+				a_menu.enable_sensitive
+			end
 		end
 
 	docking_lock_menu: EV_MENU
@@ -1250,6 +1286,34 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			a_menu.extend (l_menu_item)
 		end
 
+feature {EB_SAVE_LAYOUT_DIALOG} -- Exist docking layout sub menu
+
+	update_exist_layouts_menu
+			--
+		local
+			l_menu: EV_MENU
+			l_found: BOOLEAN
+		do
+			l_menu := develop_window.menus.tools_layout_menu
+			from
+				l_menu.start
+			until
+				l_menu.after or l_found
+			loop
+				if l_menu.item.text ~ develop_window.interface_names.m_open_layout then
+					if attached {EV_MENU} l_menu.item as l_open_layout_menu then
+						l_open_layout_menu.wipe_out
+						add_exist_layouts_to (l_open_layout_menu)
+						l_found := True
+					end
+				end
+
+				l_menu.forth
+			end
+--			check must_found: l_found end
+
+		end
+
 feature {NONE} -- Agents for editor
 
 	current_editor: EB_SMART_EDITOR
@@ -1345,6 +1409,14 @@ feature -- Contract support
 			-- If help menu created?
 		do
 			Result := develop_window.menus.help_menu /= Void
+		end
+
+	is_open_layout_menu (a_menu: EV_MENU): BOOLEAN
+			-- If `a_menu' is open layout menu?
+		require
+			not_void: a_menu /= Void
+		do
+			Result := a_menu.text ~ develop_window.interface_names.m_open_layout
 		end
 
 feature -- Docking library menu items

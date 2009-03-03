@@ -146,7 +146,6 @@ feature -- Command
 
 			l_reset_command: EB_RESET_LAYOUT_COMMAND
 			l_save_layout_as_command: EB_SAVE_LAYOUT_AS_COMMAND
-			l_open_layout_command: EB_OPEN_LAYOUT_COMMAND
 			l_shortcut: SHORTCUT_PREFERENCE
 			l_lock_tool_bar_command: EB_LOCK_TOOL_BAR_COMMAND
 			l_lock_docking_command: EB_LOCK_DOCKING_COMMAND
@@ -343,9 +342,6 @@ feature -- Command
 
 			create l_save_layout_as_command.make (develop_window)
 			l_dev_commands.set_save_layout_as_command (l_save_layout_as_command)
-
-			create l_open_layout_command.make (develop_window)
-			l_dev_commands.set_open_layout_command (l_open_layout_command)
 
 			create l_lock_tool_bar_command.make (develop_window)
 			l_dev_commands.set_lock_tool_bar_command (l_lock_tool_bar_command)

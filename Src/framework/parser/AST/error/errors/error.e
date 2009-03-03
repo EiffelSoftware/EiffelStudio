@@ -39,26 +39,12 @@ feature -- Access
 
 feature {NONE} -- Access: File source caching
 
-	last_cached_file_name: CELL [detachable STRING]
-			-- File name of last cached file text
+	cached_file: !CELL [?CACHED_PLAIN_TEXT_FILE_READER]
+			-- Cached file
+		require
+			has_associated_file
 		once
 			create Result.put (Void)
-		end
-
-	frozen last_cached_file_contents: attached LIST [STRING]
-			-- Contents of last loaded cached file.
-		require
-			has_associated_file: has_associated_file
-		once
-			create {ARRAYED_LIST [STRING]} Result.make (0)
-		end
-
-	frozen last_cached_file_timestamp: CELL [INTEGER]
-			-- Time stamp of the last cached file.
-		require
-			has_associated_file: has_associated_file
-		once
-			create Result.put (0)
 		end
 
 feature -- Properties
@@ -177,63 +163,30 @@ feature {ERROR_VISITOR} -- Compute surrounding text around error
 		require
 			file_name_not_void: file_name /= Void
 		local
-			l_file: PLAIN_TEXT_FILE
-			l_line: detachable STRING
+			l_line: NATURAL
 			l_fn: like file_name
-			l_contents: LIST [STRING]
-			l_ts: INTEGER
-			l_reload: BOOLEAN
+			l_file: ?CACHED_PLAIN_TEXT_FILE_READER
 		do
 			l_fn := file_name
-			previous_line := Void
-			current_line := Void
-			next_line := Void
-			create l_file.make (l_fn)
-			if l_file.exists then
-				if last_cached_file_name.item ~ l_fn then
-						-- The last access file source has already been cached.
-					l_ts := l_file.change_date
-					l_reload := l_ts /= last_cached_file_timestamp.item
-					if not l_reload then
-						l_contents := last_cached_file_contents
-					end
-				else
-						-- There was not cached file or the cached file differs.
-					l_reload := True
-				end
-
-				if l_reload then
-						-- Need to reload the file
-					l_file.open_read
-					l_file.readstream (l_file.count)
-					l_line := l_file.last_string
-					if attached l_line then
-						l_contents := l_file.last_string.split ('%N')
-					else
-						create {ARRAYED_LIST [STRING]} l_contents.make (0)
-					end
-						-- Set cached information.
-					last_cached_file_name.put (l_fn)
-					last_cached_file_timestamp.put (l_file.change_date)
-					last_cached_file_contents.wipe_out
-					last_cached_file_contents.append (l_contents)
-					l_file.close
-				end
-				check l_contents_attached: attached l_contents end
-
-				if l_contents.count >= line then
-					if line > 1 then
-						previous_line := l_contents.i_th (line - 1)
-					end
-					current_line := l_contents.i_th (line)
-					if l_contents.count >= line + 1 then
-						next_line := l_contents.i_th (line + 1)
-					end
-				else
-					create current_line.make_empty
-				end
-				check current_line_not_void: attached current_line end
+			l_file := cached_file.item
+			if l_file = Void or else l_fn /~ l_file.file_name then
+					-- No file, or it has changed/
+				create l_file.make (l_fn.as_attached)
+				cached_file.put (l_file)
 			end
+			l_line := line.as_natural_32
+			if l_line > 1 then
+				l_file.read_line (l_line - 1)
+				previous_line := l_file.last_string
+				current_line := l_file.peek_read_line (l_line)
+			else
+				previous_line := Void
+				l_file.read_line (l_line)
+				current_line := l_file.last_string
+			end
+			next_line := l_file.peek_read_line (l_line + 1)
+
+			check current_line_not_void: attached current_line end
 		end
 
 feature -- Visitor

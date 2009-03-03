@@ -219,10 +219,16 @@ feature -- Basic operations
 					end
 					if i <= l_count then
 						read_lines := l_lines - {NATURAL} 1
-						i := i - {NATURAL} 1
-						position := i
+
+						position := i - {NATURAL} 1
 						if l_start_pos <= i then
-							l_buffer := l_contents.substring (l_start_pos.as_integer_32, i.as_integer_32)
+							i := i - 1
+							if l_start_pos <= i then
+								l_buffer := l_contents.substring (l_start_pos.as_integer_32, i.as_integer_32)
+							else
+									-- The line is empty
+								create l_buffer.make_empty
+							end
 						end
 					end
 					last_string := l_buffer

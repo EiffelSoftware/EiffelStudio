@@ -102,9 +102,6 @@ feature -- Query
 	save_layout_as_command: EB_SAVE_LAYOUT_AS_COMMAND
 			-- Save layout as command.
 
-	open_layout_command: EB_OPEN_LAYOUT_COMMAND
-			-- Open layout command.
-
 	lock_tool_bar_command: EB_LOCK_TOOL_BAR_COMMAND
 			-- Lock tool bar command
 
@@ -403,14 +400,6 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: reset_layout_command = a_cmd
 		end
 
-	set_open_layout_command (a_cmd: like open_layout_command)
-			-- Set `open_layout_command'
-		do
-			open_layout_command := a_cmd
-		ensure
-			set: open_layout_command = a_cmd
-		end
-
 	set_save_layout_as_command (a_cmd: like save_layout_as_command)
 			-- Set `save_layout_as_command'
 		do
@@ -614,7 +603,6 @@ feature -- Recycle
 			new_tab_cmd.recycle
 			reset_layout_command.recycle
 			save_layout_as_command.recycle
-			open_layout_command.recycle
 			lock_docking_command.recycle
 			lock_editor_docking_command.recycle
 			maximize_editor_area_command.recycle

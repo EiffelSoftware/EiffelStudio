@@ -96,6 +96,9 @@ feature -- Query
 	tools_layout_menu: EV_MENU
 			-- Menu containing items for tools docking layout
 
+	exist_layouts_menu: EV_MENU
+			-- Menu containing items for exist named layouts
+
 	docking_lock_menu: EV_MENU
 			-- Menu containing items for lock docking mechanism
 
@@ -295,6 +298,14 @@ feature{EB_DEVELOPMENT_WINDOW_MENU_BUILDER} -- Settings
 			set: tools_layout_menu = a_menu
 		end
 
+	set_exist_layouts_menu (a_menu: like exist_layouts_menu)
+			-- Set `exist_layouts_menu'
+		do
+			exist_layouts_menu := a_menu
+		ensure
+			set: exist_layouts_menu = a_menu
+		end
+
 	set_docking_lock_menu (a_menu: like docking_lock_menu)
 			-- Set `docking_lock_menu'
 		do
@@ -444,6 +455,10 @@ feature -- Recycle
 				tools_layout_menu.destroy
 			end
 
+			if exist_layouts_menu /= Void then
+				exist_layouts_menu.destroy
+			end
+
 			if docking_lock_menu /= Void then
 				docking_lock_menu.destroy
 			end
@@ -460,6 +475,7 @@ feature -- Recycle
 			zoom_font_menu := Void
 			editor_area_manipulation_menu := Void
 			tools_layout_menu := Void
+			exist_layouts_menu := Void
 			docking_lock_menu := Void
 
 			Precursor {EB_DEVELOPMENT_WINDOW_PART}

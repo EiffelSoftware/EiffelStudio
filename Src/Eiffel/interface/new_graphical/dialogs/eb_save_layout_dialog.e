@@ -173,10 +173,7 @@ feature {NONE} -- Implementation functions
 				if manager.layouts.has (l_str) then
 					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_question_prompt (interface_names.l_overwrite_layout (l_str), dialog, agent on_overwirte_and_destroy (l_str), agent veto_close)
 				else
-					l_result := manager.add_layout (l_str)
-					if not l_result then
-						show_last_error
-					end
+					on_overwirte_and_destroy (l_str)
 				end
 			end
 		end
@@ -185,11 +182,15 @@ feature {NONE} -- Implementation functions
 			-- Handle overwrite and destroy actions.
 		local
 			l_result: BOOLEAN
+			l_builder: EB_DEVELOPMENT_WINDOW_MENU_BUILDER
 		do
 			l_result := manager.add_layout (a_name)
 			if not l_result then
 				show_last_error
 			end
+
+			create l_builder.make (development_window)
+			l_builder.update_exist_layouts_menu
 		end
 
 	on_list_select
@@ -246,6 +247,7 @@ feature {NONE} -- Implementation functions
 			l_item: EV_LIST_ITEM
 			l_success: BOOLEAN
 			l_prompt: ES_SHARED_PROMPT_PROVIDER
+			l_builder: EB_DEVELOPMENT_WINDOW_MENU_BUILDER
 		do
 			l_item := list_for_existing_layouts.selected_item
 			l_success := manager.delete_layout (l_item.text)
@@ -253,6 +255,9 @@ feature {NONE} -- Implementation functions
 			if l_success then
 				list_for_existing_layouts.prune_all (l_item)
 				delete_button.disable_sensitive
+
+				create l_builder.make (development_window)
+				l_builder.update_exist_layouts_menu
 			else
 				create l_prompt
 				l_prompt.prompts.show_error_prompt (interface_names.l_cannot_delete_selected_item, void, void)
@@ -368,11 +373,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_SAVE_LAYOUT_DIALOG

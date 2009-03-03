@@ -46,7 +46,9 @@ feature -- Access
 			is_successful: is_successful
 			not_use_slice_mode: not use_slice_mode
 		do
-			Result := option_of_name (frame_switch)
+			if has_option (frame_switch) then
+				Result := option_of_name (frame_switch)
+			end
 		end
 
 	class_name_option: ?ARGUMENT_OPTION
@@ -55,7 +57,9 @@ feature -- Access
 			is_successful: is_successful
 			not_use_slice_mode: not use_slice_mode
 		do
-			Result := option_of_name (class_switch)
+			if has_option (class_switch) then
+				Result := option_of_name (class_switch)
+			end
 		end
 
 	output_file_name_option: ?ARGUMENT_OPTION
@@ -64,7 +68,9 @@ feature -- Access
 			is_successful: is_successful
 			not_use_slice_mode: not use_slice_mode
 		do
-			Result := option_of_name (output_switch)
+			if has_option (output_switch) then
+				Result := option_of_name (output_switch)
+			end
 		end
 
 	slice_matrix: STRING
@@ -109,22 +115,22 @@ feature -- Status report
 
 feature {NONE} -- Usage
 
-	name: !STRING = "EiffelVision2 Pixmap Matrix Code Generator"
+	name: STRING = "EiffelVision2 Pixmap Matrix Code Generator"
 			-- <Precursor>
 
-	version: !STRING = "1.4.1"
+	version: STRING = "1.4.1"
 			-- <Precursor>
 
-	non_switched_argument_name: !STRING = "cfg_file"
+	non_switched_argument_name: STRING = "cfg_file"
 			-- <Precursor>
 
-	non_switched_argument_description: !STRING = "Configuration file, representing a pixmap matrix, to generate an Eiffel class for."
+	non_switched_argument_description: STRING = "Configuration file, representing a pixmap matrix, to generate an Eiffel class for."
 			-- <Precursor>
 
 	non_switched_argument_type: STRING = "Configuration File"
 			-- <Precursor>
 
-	switches: !ARRAYED_LIST [!ARGUMENT_SWITCH]
+	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
 			-- <Precursor>
 		once
 			create Result.make (3)
@@ -136,9 +142,9 @@ feature {NONE} -- Usage
 			Result.extend (create {ARGUMENT_DIRECTORY_SWITCH}.make (pngs_switch, "Specified the location to save sliced PNGs into.", True, False, "dir", "Location to store PNG slices into.", False))
 		end
 
-	switch_groups: !ARRAYED_LIST [!ARGUMENT_GROUP]
+	switch_groups: ARRAYED_LIST [ARGUMENT_GROUP]
 			-- <Precursor>
-		do
+		once
 			create Result.make (2)
 			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (frame_switch), switch_of_name (class_switch), switch_of_name (output_switch)>>, True))
 			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (slice_switch), switch_of_name (pngs_switch)>>, True))
@@ -146,19 +152,19 @@ feature {NONE} -- Usage
 
 feature {NONE} -- Option Names
 
-	frame_switch: !STRING = "f|frame"
+	frame_switch: STRING = "f|frame"
 		-- Frame file switch
 
-	class_switch: !STRING = "n|class_name"
+	class_switch: STRING = "n|class_name"
 		-- Alt class name switch
 
-	output_switch: !STRING = "o|output_file"
+	output_switch: STRING = "o|output_file"
 		-- Alt output file name switch
 
-	slice_switch: !STRING = "s|slice"
+	slice_switch: STRING = "s|slice"
 		-- Location of a PNG matix
 
-	pngs_switch: !STRING = "g|pngs"
+	pngs_switch: STRING = "g|pngs"
 		-- Location where sliced pngs will be stored
 
 ;note

@@ -595,7 +595,7 @@ debug ("GELEX")
 end
 
 				if syntax_version /= obsolete_64_syntax then
-					last_keyword_as_value := ast_factory.new_keyword_as (TE_ATTRIBUTE, Current)
+					last_tuple__keyword_as__id_as__integer__integer__string__value := ast_factory.new_keyword_id_as (TE_ATTRIBUTE, Current)
 					last_token := TE_ATTRIBUTE
 				else
 					process_id_as

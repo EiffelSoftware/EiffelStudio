@@ -1,0 +1,36 @@
+<!-- ++++++++++++++++++++++++ORIGINAL+++++++++++++++++++++++++ -->
+
+<%page presentation="MY_PAGE" controller="MY_CONTROLLER"%>
+<xhtml>
+
+<table>hallo</table>
+<table2>hallo <%=process%> <table2>
+
+<%
+</xhtml>
+
+<!-- 
+++++++++++++++++++++++++PREPROCESS+++++++++++++++++++++++++
+
+<eiffel:page presentation="MY_PAGE" controller="MY_CONTROLLER"?>
+<xhtml>
+
+<table>hallo</table>
+<table2>hallo XXXMARKER1XXX <table2>
+</xhtml>
+
+
+hastable: XXXMARKER1XXX=process
+
+
+
+++++++++++++++++++++++++XML PARSE+++++++++++++++++++++++++
+
+- page objekt mit pres u.s.w.
+
+- string: "<xhtml><table>hallo</table><table2>hallo"
+
+- methodcallwithoutput 'process'
+
+- string  "<table2></xhtml>"
+ -->

@@ -31,16 +31,16 @@ feature {NONE} -- Initialization
 
 feature -- Events
 
-	test_added_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [!TEST_I]; active: !TEST_I]]
+	test_added_event: attached EVENT_TYPE [TUPLE [collection: attached ACTIVE_COLLECTION_I [attached TEST_I]; active: attached TEST_I]]
 			-- <Precursor>
 
-	test_removed_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [!TEST_I]; active: !TEST_I]]
+	test_removed_event: attached EVENT_TYPE [TUPLE [collection: attached ACTIVE_COLLECTION_I [attached TEST_I]; active: attached TEST_I]]
 			-- <Precursor>
 
-	test_changed_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [!TEST_I]; active: !TEST_I]]
+	test_changed_event: attached EVENT_TYPE [TUPLE [collection: attached ACTIVE_COLLECTION_I [attached TEST_I]; active: attached TEST_I]]
 			-- <Precursor>
 
-	tests_reset_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [!TEST_I]]]
+	tests_reset_event: attached EVENT_TYPE [TUPLE [collection: attached ACTIVE_COLLECTION_I [attached TEST_I]]]
 			-- <Precursor>
 
 ;note

@@ -66,7 +66,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	last_pointer_style: ?EV_POINTER_STYLE
+	last_pointer_style: detachable EV_POINTER_STYLE
 			-- Pointer last used for `parent'
 
 feature {NONE} -- Status report

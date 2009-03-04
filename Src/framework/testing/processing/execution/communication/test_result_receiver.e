@@ -20,7 +20,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	port_counter: !CELL [INTEGER]
+	port_counter: attached CELL [INTEGER]
 			-- Counter for port number `Current' listens to
 		once
 			create Result.put (0)
@@ -34,7 +34,7 @@ feature {NONE} -- Access
 
 feature -- Status setting
 
-	receive (a_status: !TEST_EVALUATOR_STATUS)
+	receive (a_status: attached TEST_EVALUATOR_STATUS)
 			-- Wait for incoming connection on socket.
 			--
 			-- Note: `receive' will open a listener socket on a arbitrary available port and simply try to
@@ -45,7 +45,7 @@ feature -- Status setting
 			--
 			-- `a_status': Status to which received results are added
 		local
-			l_socket: ?NETWORK_STREAM_SOCKET
+			l_socket: detachable NETWORK_STREAM_SOCKET
 			l_thread: WORKER_THREAD
 			l_tries: NATURAL
 		do
@@ -75,7 +75,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	listen (a_socket: !NETWORK_STREAM_SOCKET; a_status: !TEST_EVALUATOR_STATUS)
+	listen (a_socket: attached NETWORK_STREAM_SOCKET; a_status: attached TEST_EVALUATOR_STATUS)
 			-- Wait for incoming connection on socket and receive results.
 			--
 			-- `a_socket': Socket to which evaluator will connect to.
@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
 			a_status_is_listening: a_status.is_listening
 		local
 			l_rescued: BOOLEAN
-			l_connection: ?NETWORK_STREAM_SOCKET
+			l_connection: detachable NETWORK_STREAM_SOCKET
 		do
 			if not l_rescued then
 				a_socket.accept
@@ -102,7 +102,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	receive_results (a_socket: NETWORK_STREAM_SOCKET; a_status: !TEST_EVALUATOR_STATUS)
+	receive_results (a_socket: NETWORK_STREAM_SOCKET; a_status: attached TEST_EVALUATOR_STATUS)
 			-- Receive results from socket.
 			--
 			-- `a_socket': Socket through which evaluator sends results.
@@ -121,7 +121,7 @@ feature {NONE} -- Implementation
 					if l_next > 0 then
 						l_flag := evaluator_status (a_socket)
 						if l_flag = l_next then
-							if {l_outcome: EQA_TEST_RESULT} a_socket.retrieved then
+							if attached {EQA_TEST_RESULT} a_socket.retrieved as l_outcome then
 								a_status.put_outcome (l_outcome)
 								l_stop := False
 							end

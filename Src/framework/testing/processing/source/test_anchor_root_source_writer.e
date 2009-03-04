@@ -16,18 +16,18 @@ inherit
 
 feature -- Access
 
-	class_name: !STRING
+	class_name: attached STRING
 			-- Name of class
 		do
 			Result := "EQA_CLASS_ANCHOR_ROOT"
 		end
 
-	root_feature_name: !STRING = "make"
+	root_feature_name: attached STRING = "make"
 			-- <Precursor>
 
 feature -- Basic operations
 
-	write_source (a_file: !KI_TEXT_OUTPUT_STREAM; a_list: !DS_LINEAR [!EIFFEL_CLASS_I])
+	write_source (a_file: attached KI_TEXT_OUTPUT_STREAM; a_list: attached DS_LINEAR [attached EIFFEL_CLASS_I])
 			-- Write anchor root class to file
 		require
 			a_file_open_write: a_file.is_open_write
@@ -42,7 +42,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	put_anchor_routine (a_list: !DS_LINEAR [!EIFFEL_CLASS_I])
+	put_anchor_routine (a_list: attached DS_LINEAR [attached EIFFEL_CLASS_I])
 			--
 		require
 			stream_valid: is_writing
@@ -64,7 +64,7 @@ feature {NONE} -- Implementation
 			stream.put_line ("l_type := {"+ ({EQA_EXTRACTED_TEST_SET}).generating_type +"}")
 			stream.put_line ("l_type := {"+ ({EQA_COMMONLY_USED_ASSERTIONS}).generating_type +"}")
 			stream.put_line ("")
-			a_list.do_all (agent (a_class: !EIFFEL_CLASS_I)
+			a_list.do_all (agent (a_class: attached EIFFEL_CLASS_I)
 				do
 					stream.put_string ("l_type := {")
 					stream.put_string (a_class.name)

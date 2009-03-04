@@ -23,7 +23,7 @@ deferred class
 
 feature -- Query
 
-	service (a_type: !TYPE [SERVICE_I]): ?SERVICE_I
+	service (a_type: attached TYPE [SERVICE_I]): detachable SERVICE_I
 			-- Attempts to retrieve a service.
 			--
 			-- `a_type': The service type to query a compatible service for.

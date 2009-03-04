@@ -18,10 +18,10 @@ inherit
 
 feature -- Basic operations
 
-	launch (a_uri: !READABLE_STRING_GENERAL): BOOLEAN
+	launch (a_uri: attached READABLE_STRING_GENERAL): BOOLEAN
 			-- <Precursor>
 		local
-			l_app: !STRING
+			l_app: attached STRING
 		do
 			check is_unix: {PLATFORM}.is_unix end
 
@@ -36,7 +36,7 @@ feature -- Basic operations
 
 feature {NONE} -- Basic operations
 
-	launch_with_app (a_uri: !READABLE_STRING_GENERAL; a_app: !READABLE_STRING_GENERAL): BOOLEAN
+	launch_with_app (a_uri: attached READABLE_STRING_GENERAL; a_app: attached READABLE_STRING_GENERAL): BOOLEAN
 			-- <Precursor>
 		local
 			l_cmd: STRING_32

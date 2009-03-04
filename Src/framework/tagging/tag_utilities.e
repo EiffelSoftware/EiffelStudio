@@ -11,10 +11,10 @@ class
 
 feature -- Access
 
-	valid_token_chars: !STRING = "_{}()[]:.-"
+	valid_token_chars: attached STRING = "_{}()[]:.-"
 			-- Valid chars to be used in a token other than alpha numeric
 
-	valid_tag_chars: !STRING
+	valid_tag_chars: attached STRING
 			-- Valid chars for tags other than alpha numeric
 		once
 			Result := valid_token_chars + split_char.out
@@ -25,7 +25,7 @@ feature -- Access
 
 feature -- Query
 
-	is_valid_token (a_string: !STRING): BOOLEAN
+	is_valid_token (a_string: attached STRING): BOOLEAN
 			-- Is given string a valid token?
 			--
 			-- `a_string': String for which is determined if it is a valid token.
@@ -48,7 +48,7 @@ feature -- Query
 			end
 		end
 
-	is_valid_tag (a_string: !STRING): BOOLEAN
+	is_valid_tag (a_string: attached STRING): BOOLEAN
 			-- Does a given string represent a valid tag?
 			--
 			-- Note: an empty string is also considered a valid tag
@@ -82,7 +82,7 @@ feature -- Query
 			end
 		end
 
-	is_prefix (a_prefix, a_tag: !STRING): BOOLEAN
+	is_prefix (a_prefix, a_tag: attached STRING): BOOLEAN
 			-- Does some tag begin with the same tokens as some other tag?
 			--
 			-- `a_prefix': A valid tag
@@ -104,7 +104,7 @@ feature -- Query
 				a_tag.starts_with (a_prefix + split_char.out))
 		end
 
-	suffix (a_prefix, a_tag: !STRING): !STRING
+	suffix (a_prefix, a_tag: attached STRING): attached STRING
 			-- Tag containing tokens of `a_tag' whithout leading tokens contained in `a_prefix'
 		require
 			a_prefix_valid: is_valid_tag (a_prefix)
@@ -123,7 +123,7 @@ feature -- Query
 			result_correct: a_tag.is_equal (join_tags (a_prefix, Result))
 		end
 
-	first_token (a_tag: !STRING): !STRING
+	first_token (a_tag: attached STRING): attached STRING
 			-- First token of `a_tag'
 		require
 			a_tag_valid: is_valid_tag (a_tag)
@@ -143,7 +143,7 @@ feature -- Query
 		end
 
 		-- TODO: add attachement mark for `a_item'
-	tag_suffixes (a_list: DS_LINEAR [!STRING]; a_prefix: !STRING): !DS_HASH_SET [!STRING]
+	tag_suffixes (a_list: DS_LINEAR [attached STRING]; a_prefix: attached STRING): attached DS_HASH_SET [attached STRING]
 			-- Computed list of all tags for some item, which have certain prefix
 			--
 			-- `a_item': Item which its tags will be parsed.
@@ -153,9 +153,9 @@ feature -- Query
 			a_list_valid: a_list.for_all (agent is_valid_tag)
 			a_prefix_is_valid_tag: a_prefix.is_empty or else is_valid_tag (a_prefix)
 		local
-			l_cursor: DS_LINEAR_CURSOR [!STRING]
-			l_tag: !STRING
-			l_result: !DS_HASH_SET [!STRING]
+			l_cursor: DS_LINEAR_CURSOR [attached STRING]
+			l_tag: attached STRING
+			l_result: attached DS_HASH_SET [attached STRING]
 		do
 			l_cursor := a_list.new_cursor
 			create l_result.make_default
@@ -177,7 +177,7 @@ feature -- Query
 
 feature -- Basic functionality
 
-	join_tags (a_prefix, a_suffix: !STRING): !STRING
+	join_tags (a_prefix, a_suffix: attached STRING): attached STRING
 			-- Join `a_prefix' and `a_suffix' to a tag using `split_char'.
 		require
 			prefix_is_valid_tag: is_valid_tag (a_prefix)
@@ -198,14 +198,14 @@ feature -- Basic functionality
 			result_correct: suffix (a_prefix, Result).is_equal (a_suffix)
 		end
 
-	find_tags_in_string (a_string: !STRING; a_callback: !PROCEDURE [ANY, TUPLE [!STRING]])
+	find_tags_in_string (a_string: attached STRING; a_callback: attached PROCEDURE [ANY, TUPLE [attached STRING]])
 			-- Extract tags defined in string.
 			--
 			-- `a_string': String to look for tags.
 			-- `a_callback': Routine called once for every tag found in string.
 		local
 			l_start, l_end: INTEGER
-			l_op: TUPLE [!STRING]
+			l_op: TUPLE [attached STRING]
 			l_char: CHARACTER
 		do
 			from

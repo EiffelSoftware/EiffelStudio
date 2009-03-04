@@ -15,7 +15,7 @@ inherit
 
 feature {UNICODE_MARSHALING_UTILITIES} -- Clean up
 
-	free (a_obj: !WEL_STRING)
+	free (a_obj: attached WEL_STRING)
 			-- <Precursor>
 		do
 			-- Do nothing because the GC will handled it.
@@ -23,13 +23,13 @@ feature {UNICODE_MARSHALING_UTILITIES} -- Clean up
 
 feature {UNICODE_MARSHALING_UTILITIES} -- Query
 
-	pointer (a_obj: !WEL_STRING): POINTER
+	pointer (a_obj: attached WEL_STRING): POINTER
 			-- <Precursor>
 		do
 			Result := a_obj.item
 		end
 
-	string (a_obj: !WEL_STRING): !STRING_32
+	string (a_obj: attached WEL_STRING): attached STRING_32
 			-- <Precursor>
 		do
 			Result := a_obj.string.as_attached
@@ -37,19 +37,19 @@ feature {UNICODE_MARSHALING_UTILITIES} -- Query
 
 feature {UNICODE_MARSHALING_UTILITIES} -- Factory
 
-	new_string_handler (a_str: !STRING_GENERAL): !WEL_STRING
+	new_string_handler (a_str: attached STRING_GENERAL): attached WEL_STRING
 			-- <Precursor>
 		do
 			create Result.make (a_str)
 		end
 
-	new_string_handler_from_count (a_count: NATURAL): !WEL_STRING
+	new_string_handler_from_count (a_count: NATURAL): attached WEL_STRING
 			-- <Precursor>
 		do
 			create Result.make_empty (a_count.to_integer_32)
 		end
 
-	new_string_handler_from_pointer (a_ptr: POINTER; a_shared: BOOLEAN): !WEL_STRING
+	new_string_handler_from_pointer (a_ptr: POINTER; a_shared: BOOLEAN): attached WEL_STRING
 			-- <Precursor>
 		do
 			if a_shared then
@@ -59,7 +59,7 @@ feature {UNICODE_MARSHALING_UTILITIES} -- Factory
 			end
 		end
 
-	new_string_handler_from_pointer_and_count (a_ptr: POINTER; a_count: NATURAL; a_shared: BOOLEAN): !WEL_STRING
+	new_string_handler_from_pointer_and_count (a_ptr: POINTER; a_count: NATURAL; a_shared: BOOLEAN): attached WEL_STRING
 			-- <Precursor>
 		do
 			if a_shared then

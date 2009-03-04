@@ -16,7 +16,7 @@ deferred class
 
 feature -- Access
 
-	service: ?SERVICE_I
+	service: detachable SERVICE_I
 			-- Actual service.
 		deferred
 		end

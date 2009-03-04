@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	ise_command: !STRING = "iseexc:";
+	ise_command: attached STRING = "iseexc:";
 
 note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"

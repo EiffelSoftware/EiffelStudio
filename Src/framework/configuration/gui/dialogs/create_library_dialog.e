@@ -194,7 +194,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- GUI elements
 
-	void_safe_check: ?EV_CHECK_BUTTON
+	void_safe_check: detachable EV_CHECK_BUTTON
 			-- Void-safe check button
 
 	libraries_grid: ES_GRID
@@ -229,16 +229,16 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	libraries: !DS_HASH_SET [!STRING]
+	libraries: attached DS_HASH_SET [attached STRING]
 			-- A set of libraries to display in the dialog
 		require
 			is_eiffel_layout_defined: is_eiffel_layout_defined
 		local
-			l_dirs: !like lookup_directories
-			l_libraries: !DS_HASH_SET [!STRING]
-			l_dir: !KL_DIRECTORY
+			l_dirs: attached like lookup_directories
+			l_libraries: attached DS_HASH_SET [attached STRING]
+			l_dir: attached KL_DIRECTORY
 			l_path: STRING
-			l_location: !CONF_DIRECTORY_LOCATION
+			l_location: attached CONF_DIRECTORY_LOCATION
 		do
 			create Result.make_default
 			l_dirs := lookup_directories
@@ -259,15 +259,15 @@ feature {NONE} -- Access
 			end
 		end
 
-	configuration_libraries: !DS_HASH_TABLE [!CONF_SYSTEM, !STRING]
+	configuration_libraries: attached DS_HASH_TABLE [attached CONF_SYSTEM, attached STRING]
 			-- A set of libraries configurations to display in the dialog
 		require
 			is_eiffel_layout_defined: is_eiffel_layout_defined
 		local
-			l_libs: !like libraries
+			l_libs: attached like libraries
 			l_loader: CONF_LOAD
 			l_factory: CONF_PARSE_FACTORY
-			l_location: !CONF_DIRECTORY_LOCATION
+			l_location: attached CONF_DIRECTORY_LOCATION
 		do
 			l_libs := libraries
 			create Result.make (l_libs.count)
@@ -277,19 +277,19 @@ feature {NONE} -- Access
 				create l_loader.make (l_factory)
 				create l_location.make (l_libs.item_for_iteration, target)
 				l_loader.retrieve_configuration (l_location.evaluated_path)
-				if not l_loader.is_error and then {l_system: CONF_SYSTEM} l_loader.last_system and then {l_target: CONF_TARGET} l_system.library_target then
+				if not l_loader.is_error and then attached {CONF_SYSTEM} l_loader.last_system as l_system and then attached {CONF_TARGET} l_system.library_target as l_target then
 					Result.put_last (l_system, l_libs.item_for_iteration)
 				end
 				l_libs.forth
 			end
 		end
 
-	lookup_directories: !DS_ARRAYED_LIST [!TUPLE [path: !STRING; depth: INTEGER]]
+	lookup_directories: attached DS_ARRAYED_LIST [attached TUPLE [path: attached STRING; depth: INTEGER]]
 			-- A list of lookup directories
 		require
 			is_eiffel_layout_defined: is_eiffel_layout_defined
 		local
-			l_file: !FILE_NAME
+			l_file: attached FILE_NAME
 		do
 			create Result.make_default
 
@@ -298,7 +298,7 @@ feature {NONE} -- Access
 				add_lookup_directories (l_file, Result)
 			end
 			if eiffel_layout.is_user_files_supported then
-				if {l_user_file: FILE_NAME} eiffel_layout.user_priority_file_name (l_file.string, True) and then file_system.file_exists (l_user_file) then
+				if attached {FILE_NAME} eiffel_layout.user_priority_file_name (l_file.string, True) as l_user_file and then file_system.file_exists (l_user_file) then
 					add_lookup_directories (l_user_file, Result)
 				end
 			end
@@ -329,10 +329,10 @@ feature {NONE} -- Actions
 			end
 
 			browse_dialog.show_modal_to_window (Current)
-			if {l_fn: STRING_32} browse_dialog.file_name and then not l_fn.is_empty then
+			if attached {STRING_32} browse_dialog.file_name as l_fn and then not l_fn.is_empty then
 				create l_loader.make (create {CONF_PARSE_FACTORY})
 				l_loader.retrieve_configuration (l_fn)
-				if not l_loader.is_error and then {l_system: CONF_SYSTEM} l_loader.last_system and then {l_target: CONF_TARGET} l_system.library_target then
+				if not l_loader.is_error and then attached {CONF_SYSTEM} l_loader.last_system as l_system and then attached {CONF_TARGET} l_system.library_target as l_target then
 					on_library_selected (l_system, l_fn.as_string_8.as_attached)
 				end
 			end
@@ -340,7 +340,7 @@ feature {NONE} -- Actions
 
 feature {NONE} -- Action handlers
 
-	on_library_selected (a_library: !CONF_SYSTEM; a_location: !STRING)
+	on_library_selected (a_library: attached CONF_SYSTEM; a_location: attached STRING)
 			-- Called when a library is selected
 		require
 			has_library_target: a_library.library_target /= Void
@@ -371,7 +371,7 @@ feature {NONE} -- Action handlers
 				i > nb
 			loop
 				l_row := l_grid.row (i)
-				if l_show_all or else ({l_target: CONF_TARGET} l_row.data and then l_target.options.is_void_safe) then
+				if l_show_all or else (attached {CONF_TARGET} l_row.data as l_target and then l_target.options.is_void_safe) then
 					l_row.show
 				else
 					l_row.hide
@@ -514,17 +514,17 @@ feature {NONE} -- Basic operation
 			end
 		end
 
-	add_configs_in_directory (a_dir: !KL_DIRECTORY; a_depth: INTEGER; a_libraries: !DS_HASH_SET [STRING])
+	add_configs_in_directory (a_dir: attached KL_DIRECTORY; a_depth: INTEGER; a_libraries: attached DS_HASH_SET [STRING])
 			-- Add config files in `a_path' to `a_libraries'.
 		require
 			a_dir_is_readable: a_dir.is_readable
 			a_depth_big_enough: a_depth >= -1
 		local
-			l_dir_name: !DIRECTORY_NAME
+			l_dir_name: attached DIRECTORY_NAME
 			l_items: ARRAY [STRING]
 			l_count, i: INTEGER
 			l_lib_file: STRING
-			l_file_name: !FILE_NAME
+			l_file_name: attached FILE_NAME
 			l_file_string: STRING
 		do
 			l_items := a_dir.filenames
@@ -571,7 +571,7 @@ feature {NONE} -- Basic operation
 			end
 		end
 
-	add_lookup_directories (a_path: !FILE_NAME; a_list: !DS_ARRAYED_LIST [!TUPLE [path: !STRING; depth: INTEGER]])
+	add_lookup_directories (a_path: attached FILE_NAME; a_list: attached DS_ARRAYED_LIST [attached TUPLE [path: attached STRING; depth: INTEGER]])
 			-- Adds look up directories from a file located at `a_path' into `a_list'
 		require
 			not_a_path_is_empty: not a_path.is_empty

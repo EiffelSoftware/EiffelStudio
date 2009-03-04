@@ -21,22 +21,22 @@ class
 
 feature -- Access
 
-	frozen service_provider: !SERVICE_PROVIDER_I
+	frozen service_provider: attached SERVICE_PROVIDER_I
 			-- Shared access to the global service provider.
 		local
-			l_provider: !SERVICE_HEAP
+			l_provider: attached SERVICE_HEAP
 		once
 			create l_provider.make
 			Result := l_provider
 
 			l_provider.register_with_activator ({SERVICE_CONTAINER_S},
-				agent (ia_container: !SERVICE_CONTAINER_I): ?SERVICE_CONTAINER_S
+				agent (ia_container: attached SERVICE_CONTAINER_I): detachable SERVICE_CONTAINER_S
 					do
 						create Result.make (ia_container)
 					end (l_provider))
 
 			l_provider.register_with_activator ({SERVICE_PROVIDER_S},
-				agent (ia_provider: !SERVICE_PROVIDER_I): ?SERVICE_PROVIDER_S
+				agent (ia_provider: attached SERVICE_PROVIDER_I): detachable SERVICE_PROVIDER_S
 					do
 						create Result.make (ia_provider)
 					end (l_provider))

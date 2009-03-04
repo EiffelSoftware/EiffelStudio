@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_provider: !like provider)
+	make (a_provider: attached like provider)
 			-- Initializes the service provider service with an actual provider.
 			--
 			-- `a_provider': The actual service provider use to delegate calls to.
@@ -44,7 +44,7 @@ feature {NONE} -- Clean up
 
 feature {NONE} -- Access
 
-	provider: !SERVICE_PROVIDER_I
+	provider: attached SERVICE_PROVIDER_I
 			-- Actual service provider to perform operations on.
 
 feature -- Status report
@@ -53,14 +53,14 @@ feature -- Status report
 			-- <Precursor>
 		do
 			Result := Precursor and then
-				{l_usable: USABLE_I} provider implies l_usable.is_interface_usable
+				attached {USABLE_I} provider as l_usable implies l_usable.is_interface_usable
 		ensure then
-			provider_is_interface_usable: {el_usable: USABLE_I} provider implies el_usable.is_interface_usable
+			provider_is_interface_usable: attached {USABLE_I} provider as el_usable implies el_usable.is_interface_usable
 		end
 
 feature -- Query
 
-	service (a_type: !TYPE [SERVICE_I]): ?SERVICE_I
+	service (a_type: attached TYPE [SERVICE_I]): detachable SERVICE_I
 			-- <Precursor>
 		do
 			Result := provider.service (a_type)

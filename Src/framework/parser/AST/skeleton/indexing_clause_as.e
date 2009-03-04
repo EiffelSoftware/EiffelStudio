@@ -300,7 +300,7 @@ feature -- Access
 
 feature -- Query
 
-	index_as_of_tag_name (tag: READABLE_STRING_GENERAL): ?INDEX_AS
+	index_as_of_tag_name (tag: READABLE_STRING_GENERAL): detachable INDEX_AS
 			-- Find INDEX_AS object holding `tag'
 			-- Void if not found.
 		require

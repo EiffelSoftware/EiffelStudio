@@ -18,20 +18,20 @@ inherit
 
 feature {NONE} -- Query
 
-	is_class_alive (a_class: !EIFFEL_CLASS_C): BOOLEAN
+	is_class_alive (a_class: attached EIFFEL_CLASS_C): BOOLEAN
 			-- Is `a_class' registered in system and contains ast?
 		do
 			Result := a_class.is_valid and then a_class.has_ast
 		end
 
-	is_test_class (a_class: !EIFFEL_CLASS_I): BOOLEAN
+	is_test_class (a_class: attached EIFFEL_CLASS_I): BOOLEAN
 			-- <Precursor>
 		local
 			l_ancestor: like common_ancestor
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
-				if a_class.is_compiled and then {l_class: !EIFFEL_CLASS_C} a_class.compiled_class then
+				if a_class.is_compiled and then attached {attached EIFFEL_CLASS_C} a_class.compiled_class as l_class then
 					l_ancestor := common_ancestor
 					if l_ancestor /= Void and then l_ancestor.is_compiled then
 						Result := l_class.conform_to (l_ancestor.compiled_class)
@@ -51,12 +51,12 @@ feature {NONE} -- Implementation
 			l_ancestor: EIFFEL_CLASS_I
 		do
 			l_ancestor := common_ancestor
-			if l_ancestor /= Void and then l_ancestor.is_compiled and then {a: EIFFEL_CLASS_C} l_ancestor.compiled_class then
+			if l_ancestor /= Void and then l_ancestor.is_compiled and then attached {EIFFEL_CLASS_C} l_ancestor.compiled_class as a then
 				report_descendants (a)
 			end
 		end
 
-	report_descendants (an_ancestor: !EIFFEL_CLASS_C)
+	report_descendants (an_ancestor: attached EIFFEL_CLASS_C)
 			-- Report effective descendants to project as potential test classes.
 			--
 			-- `an_ancestor': Recursively report all errektive descendants (including `an_ancestor') as
@@ -66,7 +66,7 @@ feature {NONE} -- Implementation
 			locating: is_locating
 		local
 			l_list: ARRAYED_LIST [CLASS_C]
-			l_class: ?EIFFEL_CLASS_I
+			l_class: detachable EIFFEL_CLASS_I
 		do
 				-- Note: because of multiple inheritance and possible (but rare) corrupted EIFGENs we need to
 				--       check whether class has already been added to project. Although this gets checked by
@@ -81,7 +81,7 @@ feature {NONE} -- Implementation
 			until
 				l_list.after
 			loop
-				if {l_ec: EIFFEL_CLASS_C} l_list.item and then is_class_alive (l_ec) then
+				if attached {EIFFEL_CLASS_C} l_list.item as l_ec and then is_class_alive (l_ec) then
 					report_descendants (l_ec)
 				end
 				l_list.forth

@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	ancestors: !DS_LINEAR [!STRING]
+	ancestors: attached DS_LINEAR [attached STRING]
 			-- Name of ancestors which were found during last parse
 		do
 			Result := internal_ancestors
@@ -43,7 +43,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	internal_ancestors: !DS_ARRAYED_LIST [!STRING]
+	internal_ancestors: attached DS_ARRAYED_LIST [attached STRING]
 			-- Internal storage for `ancestors'
 
 feature -- Status report
@@ -92,7 +92,7 @@ feature -- Query
 			   a_code = {EIFFEL_TOKENS}.te_invariant or (is_parsing_ancestors and
 			   a_code = {EIFFEL_TOKENS}.te_indexing) then
 				is_parsing_ancestors := False
-				if {l_parser: EIFFEL_PARSER} a_scn then
+				if attached {EIFFEL_PARSER} a_scn as l_parser then
 					l_parser.abort
 				end
 			end
@@ -101,7 +101,7 @@ feature -- Query
 	new_filled_id_as (a_scn: EIFFEL_SCANNER_SKELETON): ID_AS
 			-- <Precursor>
 		local
-			l_type: !STRING
+			l_type: attached STRING
 		do
 			if is_parsing_ancestors then
 				if not is_parsing_parent_clause  then

@@ -24,7 +24,7 @@ inherit
 
 feature -- Query
 
-	api_pointer (a_hnd: POINTER; a_api_name: ?STRING_GENERAL): POINTER
+	api_pointer (a_hnd: POINTER; a_api_name: detachable STRING_GENERAL): POINTER
 			-- Retrieves a pointer to a library's API.
 			--
 			-- `a_hnd': A valid handle pointer to a loaded dynamic library.
@@ -39,7 +39,7 @@ feature -- Query
 			Result := bridge.api_pointer (a_hnd, a_api_name)
 		end
 
-	api_pointer_with_raise (a_hnd: POINTER; a_api_name: ?STRING_GENERAL): POINTER
+	api_pointer_with_raise (a_hnd: POINTER; a_api_name: detachable STRING_GENERAL): POINTER
 			-- Retrieves a pointer to a library's API, and raises an exception if the API feature was not
 			-- found.
 			--
@@ -51,7 +51,7 @@ feature -- Query
 			a_api_name_attached: a_api_name /= Void
 			not_a_api_name_is_empty: not a_api_name.is_empty
 		local
-			l_exception: !DYNAMIC_API_UNAVAILABLE_EXCEPTION
+			l_exception: attached DYNAMIC_API_UNAVAILABLE_EXCEPTION
 		do
 			Result := api_pointer (a_hnd, a_api_name)
 			if Result = default_pointer then
@@ -64,7 +64,7 @@ feature -- Query
 
 feature -- Basic operations
 
-	load_library (a_name: ?STRING_GENERAL; a_version: ?STRING_GENERAL): POINTER
+	load_library (a_name: detachable STRING_GENERAL; a_version: detachable STRING_GENERAL): POINTER
 			-- Attempts to loads a dynamic library using a library name.
 			--
 			-- `a_name': The name of a dynamic library, without an extension.
@@ -78,7 +78,7 @@ feature -- Basic operations
 			Result := bridge.load_library (a_name, a_version)
 		end
 
-	load_library_from_path (a_path: ?STRING_GENERAL): POINTER
+	load_library_from_path (a_path: detachable STRING_GENERAL): POINTER
 			-- Attempts to loads a dynamic library from a path on disk.
 			--
 			-- `a_path': The path to a dynamic library.
@@ -102,7 +102,7 @@ feature -- Basic operations
 
 feature {NONE} -- Factory
 
-	new_bridge: !DYNAMIC_API_LOADER_I
+	new_bridge: attached DYNAMIC_API_LOADER_I
 			-- <Precursor>
 		do
 			create {DYNAMIC_API_LOADER_IMP} Result

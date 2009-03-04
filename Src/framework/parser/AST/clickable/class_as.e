@@ -711,22 +711,22 @@ feature -- Access
 
 feature -- Query
 
-	all_features: !BILINEAR [!FEATURE_AS]
+	all_features: attached BILINEAR [attached FEATURE_AS]
 			-- Retrieves a list of all features of the Current class.
 		local
 			l_fccursor, l_fcursor: INTEGER
-			l_result: !ARRAYED_LIST [!FEATURE_AS]
+			l_result: attached ARRAYED_LIST [attached FEATURE_AS]
 		do
 			create l_result.make (0)
-			if {l_fclauses: like features} features then
+			if attached features as l_fclauses then
 					-- Iterate the features clauses and feature all features
 				l_fccursor := l_fclauses.index
 				from l_fclauses.start until l_fclauses.after loop
-					if {l_fclause: FEATURE_CLAUSE_AS} l_fclauses.item and then {l_features: EIFFEL_LIST [FEATURE_AS]} l_fclause.features then
+					if attached {FEATURE_CLAUSE_AS} l_fclauses.item as l_fclause and then attached {EIFFEL_LIST [FEATURE_AS]} l_fclause.features as l_features then
 							-- Iterate all features and extend the result list
 						l_fcursor := l_features.index
 						from l_features.start until l_features.after loop
-							if {l_feature: FEATURE_AS} l_features.item then
+							if attached {FEATURE_AS} l_features.item as l_feature then
 									-- Add feature
 								l_result.extend (l_feature)
 							end
@@ -753,7 +753,7 @@ feature -- Query
 		local
 			l_fccursor, l_fcursor: INTEGER
 		do
-			if {l_fclauses: !like features} features then
+			if attached features as l_fclauses then
 				l_fccursor := l_fclauses.index
 				if a_reverse_lookup then
 					l_fclauses.finish
@@ -763,7 +763,7 @@ feature -- Query
 
 					-- Iterate the features clauses and feature all features
 				from until l_fclauses.after or Result /= Void loop
-					if {l_fclause: !FEATURE_CLAUSE_AS} l_fclauses.item and then {l_features: !EIFFEL_LIST [FEATURE_AS]} l_fclause.features then
+					if attached {attached FEATURE_CLAUSE_AS} l_fclauses.item as l_fclause and then attached {attached EIFFEL_LIST [FEATURE_AS]} l_fclause.features as l_features then
 						l_fcursor := l_features.index
 						if a_reverse_lookup then
 							l_features.finish
@@ -773,7 +773,7 @@ feature -- Query
 
 							-- Iterate all features and extend the result list
 						from until l_features.after or Result /= Void loop
-							if {l_feature2: !FEATURE_AS} l_features.item then --and then l_feature2.is_named (a_name) then
+							if attached {attached FEATURE_AS} l_features.item as l_feature2 then --and then l_feature2.is_named (a_name) then
 								if l_feature2.is_named (a_name) then
 										-- Feature located
 									Result := l_feature2
@@ -810,23 +810,23 @@ feature -- Query
 			l_helper: AST_HELPER
 			l_stop: BOOLEAN
 		do
-			if {l_fclauses: !like features} features and then not l_fclauses.is_empty then
+			if attached features as l_fclauses and then not l_fclauses.is_empty then
 					-- Iterate the features clauses and feature all features
 				create l_helper
 				l_fccursor := l_fclauses.index
 				from l_fclauses.start until l_stop or else l_fclauses.after loop
-					if {l_fclause: !FEATURE_CLAUSE_AS} l_fclauses.item then
+					if attached {attached FEATURE_CLAUSE_AS} l_fclauses.item as l_fclause then
 						if
 							l_helper.is_valid_positional_node (l_fclause) and then
 							l_helper.is_line_in (l_fclause, a_line)
 						then
-							if {l_features: !EIFFEL_LIST [FEATURE_AS]} l_fclause.features then
+							if attached {attached EIFFEL_LIST [FEATURE_AS]} l_fclause.features as l_features then
 									-- Found a feature clauses
 									-- Iterate all features and extend the result list
 								l_fcursor := l_features.index
 								from l_features.start until l_stop or l_features.after loop
 									if
-										{l_feature: !FEATURE_AS} l_features.item and then
+										attached {attached FEATURE_AS} l_features.item as l_feature and then
 										l_helper.is_valid_positional_node (l_feature) and then
 										l_helper.is_line_in (l_feature, a_line)
 									then

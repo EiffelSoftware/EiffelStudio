@@ -15,7 +15,7 @@ inherit
 
 feature {LOCKABLE_I} -- Event handlers
 
-	on_locked (a_sender: !LOCKABLE_I)
+	on_locked (a_sender: attached LOCKABLE_I)
 			-- Called when a lockable interface is locked.
 			--
 			-- `a_sender': The locked interface.
@@ -26,7 +26,7 @@ feature {LOCKABLE_I} -- Event handlers
 		do
 		end
 
-	on_unlocked (a_sender: !LOCKABLE_I)
+	on_unlocked (a_sender: attached LOCKABLE_I)
 			-- Called when a lockable interface is unlocked.
 			--
 			-- `a_sender': The unlocked interface.

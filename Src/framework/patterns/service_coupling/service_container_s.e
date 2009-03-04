@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_container: !like container)
+	make (a_container: attached like container)
 			-- Initializes the service container service with an actual container.
 			--
 			-- `a_container': The actual service container use to delegate calls to.			
@@ -44,7 +44,7 @@ feature {NONE} -- Clean up
 
 feature {NONE} -- Access
 
-	container: !SERVICE_CONTAINER_I
+	container: attached SERVICE_CONTAINER_I
 			-- Actual service container to perform operations on.
 
 feature -- Status report
@@ -53,19 +53,19 @@ feature -- Status report
 			-- <Precursor>
 		do
 			Result := Precursor and then
-				{l_usable: USABLE_I} container implies l_usable.is_interface_usable
+				attached {USABLE_I} container as l_usable implies l_usable.is_interface_usable
 		ensure then
-			container_is_interface_usable: {el_usable: USABLE_I} container implies el_usable.is_interface_usable
+			container_is_interface_usable: attached {USABLE_I} container as el_usable implies el_usable.is_interface_usable
 		end
 feature -- Extension
 
-	register (a_type: !TYPE [SERVICE_I]; a_service: !SERVICE_I; a_promote: BOOLEAN)
+	register (a_type: attached TYPE [SERVICE_I]; a_service: attached SERVICE_I; a_promote: BOOLEAN)
 			-- <Precursor>
 		do
 			container.register (a_type, a_service, a_promote)
 		end
 
-	register_with_activator (a_type: !TYPE [SERVICE_I]; a_activator: !FUNCTION [ANY, TUPLE, ?SERVICE_I] a_promote: BOOLEAN)
+	register_with_activator (a_type: attached TYPE [SERVICE_I]; a_activator: attached FUNCTION [ANY, TUPLE, detachable SERVICE_I] a_promote: BOOLEAN)
 			-- <Precursor>
 		do
 			container.register_with_activator (a_type, a_activator, a_promote)
@@ -73,7 +73,7 @@ feature -- Extension
 
 feature -- Removal
 
-	revoke (a_type: !TYPE [SERVICE_I]; a_promote: BOOLEAN)
+	revoke (a_type: attached TYPE [SERVICE_I]; a_promote: BOOLEAN)
 			-- <Precursor>
 		do
 			container.revoke (a_type, a_promote)
@@ -81,7 +81,7 @@ feature -- Removal
 
 feature -- Query
 
-	is_service_proffered (a_type: !TYPE [SERVICE_I]; a_promote: BOOLEAN): BOOLEAN
+	is_service_proffered (a_type: attached TYPE [SERVICE_I]; a_promote: BOOLEAN): BOOLEAN
 			-- <Precursor>
 		do
 			Result := container.is_service_proffered (a_type, a_promote)

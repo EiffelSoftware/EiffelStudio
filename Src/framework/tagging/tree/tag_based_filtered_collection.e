@@ -78,7 +78,7 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-	items: !DS_LINEAR [!G]
+	items: attached DS_LINEAR [attached G]
 			-- <Precursor>
 		local
 			l_empty: like empty_items
@@ -96,10 +96,10 @@ feature -- Access
 				Result := l_empty
 			end
 		ensure then
-			results_match_expression: has_expression implies Result.for_all (agent (a_item: !G): BOOLEAN do Result := matches (a_item) end)
+			results_match_expression: has_expression implies Result.for_all (agent (a_item: attached G): BOOLEAN do Result := matches (a_item) end)
 		end
 
-	collection: !like internal_collection
+	collection: attached like internal_collection
 			-- Collection being filtered
 		require
 			connected: is_connected
@@ -113,7 +113,7 @@ feature -- Access
 			observing: Result.active_collection_connection.is_connected (Current)
 		end
 
-	expression: !STRING
+	expression: attached STRING
 			-- Last expression set through `set_expression'.
 		require
 			has_expression: has_expression
@@ -127,22 +127,22 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	internal_items: !DS_HASH_SET [!G]
+	internal_items: attached DS_HASH_SET [attached G]
 			-- Cache holding items currently matching expression
 
-	internal_collection: ?ACTIVE_COLLECTION_I [G]
+	internal_collection: detachable ACTIVE_COLLECTION_I [G]
 			-- Collection beeing filtered
 
-	internal_expression: ?like expression
+	internal_expression: detachable like expression
 			-- Last defined expression
 
-	positive_matchers: !DS_ARRAYED_LIST [!RX_PCRE_REGULAR_EXPRESSION]
+	positive_matchers: attached DS_ARRAYED_LIST [attached RX_PCRE_REGULAR_EXPRESSION]
 			-- Regular expressions which item must match to be in `items'
 
-	negative_matchers: !DS_ARRAYED_LIST [!RX_PCRE_REGULAR_EXPRESSION]
+	negative_matchers: attached DS_ARRAYED_LIST [attached RX_PCRE_REGULAR_EXPRESSION]
 			-- Regular expressions which item must not match to be in `items'
 
-	empty_items: ?DS_ARRAYED_LIST [!G]
+	empty_items: detachable DS_ARRAYED_LIST [attached G]
 			-- Empty list of items
 
 feature -- Status report
@@ -226,21 +226,21 @@ feature -- Status setting
 
 feature -- Events
 
-	item_added_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [G]; active: !G]]
+	item_added_event: attached EVENT_TYPE [TUPLE [collection: attached ACTIVE_COLLECTION_I [G]; active: attached G]]
 			-- <Precursor>
 
-	item_removed_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [G]; active: !G]]
+	item_removed_event: attached EVENT_TYPE [TUPLE [collection: attached ACTIVE_COLLECTION_I [G]; active: attached G]]
 			-- <Precursor>
 
-	item_changed_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [G]; active: !G]]
+	item_changed_event: attached EVENT_TYPE [TUPLE [collection: attached ACTIVE_COLLECTION_I [G]; active: attached G]]
 			-- <Precursor>
 
-	items_reset_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [G]]]
+	items_reset_event: attached EVENT_TYPE [TUPLE [collection: attached ACTIVE_COLLECTION_I [G]]]
 			-- <Precursor>
 
 feature {ACTIVE_COLLECTION_I} -- Events
 
-	on_item_added (a_collection: like collection; an_item: !G)
+	on_item_added (a_collection: like collection; an_item: attached G)
 			-- <Precursor>
 		do
 			if has_expression then
@@ -253,7 +253,7 @@ feature {ACTIVE_COLLECTION_I} -- Events
 			end
 		end
 
-	on_item_removed (a_collection: like collection; an_item: !G)
+	on_item_removed (a_collection: like collection; an_item: attached G)
 			-- <Precursor>
 		do
 			if has_expression then
@@ -267,7 +267,7 @@ feature {ACTIVE_COLLECTION_I} -- Events
 			end
 		end
 
-	on_item_changed (a_collection: like collection; an_item: !G)
+	on_item_changed (a_collection: like collection; an_item: attached G)
 			-- <Precursor>
 		do
 			if has_expression then
@@ -331,7 +331,7 @@ feature {NONE} -- Query
 			end
 		end
 
-	tag_matches_regexes (a_tag: !STRING; a_list: like positive_matchers): BOOLEAN
+	tag_matches_regexes (a_tag: attached STRING; a_list: like positive_matchers): BOOLEAN
 			-- Does `a_tag' match on of matchers in `a_list'?
 		do
 			if not a_list.is_empty then
@@ -346,7 +346,7 @@ feature {NONE} -- Query
 			end
 		end
 
-	tags_match_regex (a_list: !DS_LINEAR [!STRING]; a_regex: like create_matcher): BOOLEAN
+	tags_match_regex (a_list: attached DS_LINEAR [attached STRING]; a_regex: like create_matcher): BOOLEAN
 			-- Does one of the tags satisfy a given regular expression?
 		do
 			if not a_list.is_empty then
@@ -372,8 +372,8 @@ feature {NONE} -- Implementation
 		require
 			connected: is_connected
 		local
-			l_cursor: DS_LINEAR_CURSOR [!G]
-			l_removed, l_added: ?like internal_items
+			l_cursor: DS_LINEAR_CURSOR [attached G]
+			l_removed, l_added: detachable like internal_items
 			l_expr, l_int: BOOLEAN
 		do
 			if collection.are_items_available then
@@ -418,7 +418,7 @@ feature {NONE} -- Implementation
 					until
 						l_added.after
 					loop
-						if {l_added_g: G} l_added.item_for_iteration then
+						if attached {G} l_added.item_for_iteration as l_added_g then
 							item_added_event.publish ([Current, l_added_g])
 						else
 							check False end
@@ -432,7 +432,7 @@ feature {NONE} -- Implementation
 					until
 						l_removed.after
 					loop
-						if {l_removed_g: G} l_removed.item_for_iteration then
+						if attached {G} l_removed.item_for_iteration as l_removed_g then
 							item_removed_event.publish ([Current, l_removed_g])
 						else
 							check False end
@@ -443,13 +443,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_matchers (a_expr: !STRING)
+	add_matchers (a_expr: attached STRING)
 			-- Add matchers to `positive_matchers' and `negative_matchers' according to given expression.
 			--
 			-- `a_expression': Expression from which matchers are created.
 		local
 			i: INTEGER
-			l_expr: ?STRING
+			l_expr: detachable STRING
 			l_pos, l_add: BOOLEAN
 			c: CHARACTER
 			l_new: like create_matcher
@@ -503,7 +503,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Factory
 
-	create_matcher (a_expr: !STRING): !RX_PCRE_REGULAR_EXPRESSION
+	create_matcher (a_expr: attached STRING): attached RX_PCRE_REGULAR_EXPRESSION
 			-- Create new regular expression
 		do
 			create Result.make

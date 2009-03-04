@@ -48,7 +48,7 @@ feature -- Initialization
 		local
 			l_exec: EXECUTION_ENVIRONMENT
 		do
-			if is_dotnet_installed and then {l_path: like dotnet_framework_path} dotnet_framework_path then
+			if is_dotnet_installed and then attached dotnet_framework_path as l_path then
 				create l_exec
 				l_exec.put (l_path.string, ise_dotnet_framework_env)
 			end
@@ -102,7 +102,7 @@ feature -- Access
 	installed_runtimes: ARRAYED_LIST [STRING]
 			-- List all installed version of the runtime.
 		local
-			l_runtime_path: ?STRING
+			l_runtime_path: detachable STRING
 			l_content: ARRAYED_LIST [STRING]
 			l_dir: DIRECTORY
 			l_file_name: FILE_NAME
@@ -146,27 +146,27 @@ feature -- Access
 			installed_runtimes_not_void: Result /= Void
 		end
 
-	dotnet_framework_path: ?STRING
+	dotnet_framework_path: detachable STRING
 			-- Path to .NET Framework of version `version'.
 		require
 			is_dotnet_installed: is_dotnet_installed
 		local
 			l_file_name: FILE_NAME
 		do
-			if {l_path: like dotnet_runtime_path} dotnet_runtime_path then
+			if attached dotnet_runtime_path as l_path then
 				create l_file_name.make_from_string (l_path)
 				l_file_name.extend (version)
 				Result := l_file_name
 			end
 		end
 
-	dotnet_framework_sdk_path: ?STRING
+	dotnet_framework_sdk_path: detachable STRING
 			-- Path to .NET Framework SDK directory of version `version'.
 			-- Void if not installed.
 		local
 			reg: WEL_REGISTRY
 			p: POINTER
-			key: ?WEL_REGISTRY_KEY_VALUE
+			key: detachable WEL_REGISTRY_KEY_VALUE
 			l_major_version: STRING
 		do
 			create reg
@@ -175,7 +175,7 @@ feature -- Access
 			if p /= default_pointer then
 				l_major_version := version.twin
 				l_major_version.keep_head (4)
-				if {l_key: STRING} sdk_keys.item (l_major_version) then
+				if attached {STRING} sdk_keys.item (l_major_version) as l_key then
 					key := reg.key_value (p, l_key)
 					if key /= Void then
 						Result := key.string_value
@@ -185,10 +185,10 @@ feature -- Access
 			end
 		end
 
-	dotnet_framework_sdk_bin_path: ?STRING
+	dotnet_framework_sdk_bin_path: detachable STRING
 			-- Path to bin directory of .NET Framework SDK of version `version'.
 		local
-			l_path: ?STRING
+			l_path: detachable STRING
 		do
 			l_path := Dotnet_framework_sdk_path
 			if l_path /= Void then
@@ -213,12 +213,12 @@ feature -- Query
 			Result := a_string /= Void and then a_string.is_equal ("DbgCLR")
 		end
 
-	dotnet_debugger_path (a_debug: STRING): ?STRING
+	dotnet_debugger_path (a_debug: STRING): detachable STRING
 			-- The path to the .NET debugger associated with 'a_debug'.
 		require
 			a_debug_not_void: a_debug /= Void
 		local
-			l_path: ?STRING
+			l_path: detachable STRING
 		do
 			if use_cordbg (a_debug) then
 				l_path := Dotnet_framework_sdk_bin_path
@@ -233,10 +233,10 @@ feature -- Query
 			end
 		end
 
-	resource_compiler: ?STRING
+	resource_compiler: detachable STRING
 			-- Path to `resgen' tool from .NET Framework SDK.
 		local
-			l_path: ?STRING
+			l_path: detachable STRING
 		do
 			l_path := dotnet_framework_sdk_bin_path
 			if l_path /= Void then
@@ -257,13 +257,13 @@ feature {NONE} -- Implementation
 			sdk_keys_not_void: Result /= Void
 		end
 
-	dotnet_runtime_path: ?STRING
+	dotnet_runtime_path: detachable STRING
 			-- Path to where .NET runtimes are installed. It can be a once since this value is
 			-- not dependent on `version'.
 		local
 			reg: WEL_REGISTRY
 			p: POINTER
-			key: ?WEL_REGISTRY_KEY_VALUE
+			key: detachable WEL_REGISTRY_KEY_VALUE
 		once
 			create reg
 			p := reg.open_key_with_access ("hkey_local_machine\SOFTWARE\Microsoft\.NETFramework",

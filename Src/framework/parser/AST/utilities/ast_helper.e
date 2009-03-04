@@ -12,7 +12,7 @@ class
 
 feature -- Query
 
-	frozen is_valid_positional_node (a_ast: !AST_EIFFEL): BOOLEAN
+	frozen is_valid_positional_node (a_ast: attached AST_EIFFEL): BOOLEAN
 			-- Determines if an AS node is valid for positional queries.
 			--
 			-- `a_ast': An AS node to determine position validity for.
@@ -31,7 +31,7 @@ feature -- Query
 			has_valid_end_location: Result implies (a_ast.end_location /= Void and then not a_ast.end_location.is_null)
 		end
 
-	frozen is_before_line (a_ast: !AST_EIFFEL; a_line: INTEGER): BOOLEAN
+	frozen is_before_line (a_ast: attached AST_EIFFEL; a_line: INTEGER): BOOLEAN
 			-- Determines if an AS node appears before a specified line number
 		require
 			a_ast_is_valid_positional_node: is_valid_positional_node (a_ast)
@@ -40,7 +40,7 @@ feature -- Query
 			Result := a_ast.end_location.line < a_line
 		end
 
-	frozen is_after_line (a_ast: !AST_EIFFEL; a_line: INTEGER): BOOLEAN
+	frozen is_after_line (a_ast: attached AST_EIFFEL; a_line: INTEGER): BOOLEAN
 			-- Determines if an AS node appears before a specified line number
 		require
 			a_ast_is_valid_positional_node: is_valid_positional_node (a_ast)
@@ -49,7 +49,7 @@ feature -- Query
 			Result := a_line > a_ast.start_location.line
 		end
 
-	frozen is_line_in (a_ast: !AST_EIFFEL; a_line: INTEGER): BOOLEAN
+	frozen is_line_in (a_ast: attached AST_EIFFEL; a_line: INTEGER): BOOLEAN
 			-- Determines if a line is within the start/end bounds of a AS node.
 		require
 			a_ast_is_valid_positional_node: is_valid_positional_node (a_ast)
@@ -58,7 +58,7 @@ feature -- Query
 			Result := a_ast.start_location.line <= a_line and a_line <= a_ast.end_location.line
 		end
 
-	frozen is_before_position (a_ast: !AST_EIFFEL; a_line: INTEGER; a_column: INTEGER): BOOLEAN
+	frozen is_before_position (a_ast: attached AST_EIFFEL; a_line: INTEGER; a_column: INTEGER): BOOLEAN
 			-- Determines if an AS node appears before a specified line number
 		require
 			a_ast_is_valid_positional_node: is_valid_positional_node (a_ast)
@@ -73,7 +73,7 @@ feature -- Query
 			Result := l_line < a_line or (l_line = a_line and l_location.column < a_column)
 		end
 
-	frozen is_after_position (a_ast: !AST_EIFFEL; a_line: INTEGER; a_column: INTEGER): BOOLEAN
+	frozen is_after_position (a_ast: attached AST_EIFFEL; a_line: INTEGER; a_column: INTEGER): BOOLEAN
 			-- Determines if an AS node appears before a specified line number
 		require
 			a_ast_is_valid_positional_node: is_valid_positional_node (a_ast)
@@ -88,7 +88,7 @@ feature -- Query
 			Result := a_line < l_line or (a_line = l_line and a_column < l_location.column)
 		end
 
-	frozen is_position_in (a_ast: !AST_EIFFEL; a_line: INTEGER; a_column: INTEGER): BOOLEAN
+	frozen is_position_in (a_ast: attached AST_EIFFEL; a_line: INTEGER; a_column: INTEGER): BOOLEAN
 			-- Determines if a line is within the start/end bounds of a AS node.
 		require
 			a_ast_is_valid_positional_node: is_valid_positional_node (a_ast)

@@ -30,11 +30,11 @@ feature {NONE} -- Access
 	execution_mutex: MUTEX
 			-- Execution locking for reuse
 
-	target: ?G
+	target: detachable G
 			-- Target on which the `thread_procedure' should be applied
 			-- Depending on which launch is used, target is not used
 
-	thread_procedure: ?PROCEDURE [G, TUPLE]
+	thread_procedure: detachable PROCEDURE [G, TUPLE]
 			-- Work that should be executed by the thread
 
 	stop: BOOLEAN
@@ -45,7 +45,7 @@ feature -- Access
 	already_launched: BOOLEAN
 			-- True, as soon as this thread has been launched for the first time
 
-	fetch_data: ?G
+	fetch_data: detachable G
 			-- Returns the data that is currently being used.
 		do
 			Result := target
@@ -68,7 +68,7 @@ feature {NONE} -- Implementation
 				if not stop then
 					l_work := thread_procedure
 					if l_work /= Void then
-						if {l_target: G} target then
+						if attached {G} target as l_target then
 							l_work.call ([l_target])
 						else
 							l_work.call (Void)

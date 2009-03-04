@@ -13,7 +13,7 @@ feature -- Initialization
 		require
 			not_well_known_port: port >= 1024 --should we allow registered ports?
 		local
-			http_server_main_socket: ?NETWORK_STREAM_SOCKET
+			http_server_main_socket: detachable NETWORK_STREAM_SOCKET
 		do
 			create thread_pool.make_with_managed_target (max_thread_number, agent data_spawner)
             create http_server_main_socket.make_server_by_port (port.as_integer_32)
@@ -24,7 +24,7 @@ feature -- Initialization
             	False
             loop
                 http_server_main_socket.accept
-	            if {thread_socket: NETWORK_STREAM_SOCKET} http_server_main_socket.accepted then
+	            if attached {NETWORK_STREAM_SOCKET} http_server_main_socket.accepted as thread_socket then
 	            	thread_pool.add_work (agent {XB_MOD_HANDLER}.do_execute (thread_socket))
 				end
             end

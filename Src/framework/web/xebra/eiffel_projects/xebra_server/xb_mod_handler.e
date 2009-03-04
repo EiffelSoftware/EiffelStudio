@@ -94,7 +94,7 @@ feature {NONE} -- Implementation
 
             soc1.independent_store (message)
             Result := "Error"
-            if {rec_message: STRING} soc1.retrieved then
+            if attached {STRING} soc1.retrieved as rec_message then
             	Result := rec_message
             end
 
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation
 			n_small_enough: n <= internal_max_size
 		local
 			read_size: INTEGER
-			buf: ?STRING
+			buf: detachable STRING
 		do
 			create Result.make (n.as_integer_32)
 			create buf.make (n.as_integer_32)

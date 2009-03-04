@@ -28,7 +28,7 @@ feature -- Operation
 
 feature {NONE} -- Initialization
 
-	make (an_interface: !like interface)
+	make (an_interface: attached like interface)
 			-- Initialization
 		do
 			interface := an_interface
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	interface: !COMMAND_RECEIVER;
+	interface: attached COMMAND_RECEIVER;
 
 note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"

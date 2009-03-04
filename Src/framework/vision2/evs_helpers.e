@@ -105,7 +105,7 @@ feature -- Query
 		do
 			create l_env
 			l_application := l_env.application
-			if {l_widget: EV_WIDGET} l_application.focused_widget then
+			if attached {EV_WIDGET} l_application.focused_widget as l_widget then
 				Result := widget_top_level_window (l_widget, False)
 			end
 		end
@@ -159,7 +159,7 @@ feature -- Screen
 
 feature -- Widget
 
-	maximum_string_width (a_strings: !ARRAY [?READABLE_STRING_GENERAL]; a_font: ?EV_FONT): INTEGER
+	maximum_string_width (a_strings: attached ARRAY [detachable READABLE_STRING_GENERAL]; a_font: detachable EV_FONT): INTEGER
 			-- Maximum width of a collection of strings
 			--
 			-- `a_strings': An array of string to determine the maximum width for.
@@ -170,7 +170,7 @@ feature -- Widget
 			a_strings_contains_attached_items: not a_strings.has (Void)
 			a_font_attached: a_font /= Void
 		local
-			l_str: ?READABLE_STRING_GENERAL
+			l_str: detachable READABLE_STRING_GENERAL
 			l_upper, i: INTEGER
 		do
 			from
@@ -181,7 +181,7 @@ feature -- Widget
 			loop
 				l_str := a_strings [i]
 				if l_str /= Void then
-					if {l_sg: STRING_GENERAL} l_str then
+					if attached {STRING_GENERAL} l_str as l_sg then
 						Result := Result.max (a_font.string_width (l_sg))
 					else
 						Result := Result.max (a_font.string_width (l_str.as_string_32))
@@ -191,7 +191,7 @@ feature -- Widget
 			end
 		end
 
-	maximum_string_size (a_strings: !ARRAY [?READABLE_STRING_GENERAL]; a_font: ?EV_FONT): TUPLE [width: INTEGER; height: INTEGER; left_offset: INTEGER; right_offset: INTEGER]
+	maximum_string_size (a_strings: attached ARRAY [detachable READABLE_STRING_GENERAL]; a_font: detachable EV_FONT): TUPLE [width: INTEGER; height: INTEGER; left_offset: INTEGER; right_offset: INTEGER]
 			-- Maximum width of a collection of strings
 			--
 			-- `a_strings': An array of string to determine the maximum width for.
@@ -202,7 +202,7 @@ feature -- Widget
 			a_strings_contains_attached_items: not a_strings.has (Void)
 			a_font_attached: a_font /= Void
 		local
-			l_str: ?READABLE_STRING_GENERAL
+			l_str: detachable READABLE_STRING_GENERAL
 			l_size: TUPLE [width: INTEGER; height: INTEGER; left_offset: INTEGER; right_offset: INTEGER]
 			l_upper, i: INTEGER
 		do
@@ -214,7 +214,7 @@ feature -- Widget
 			loop
 				l_str := a_strings [i]
 				if l_str /= Void then
-					if {l_sg: STRING_GENERAL} l_str then
+					if attached {STRING_GENERAL} l_str as l_sg then
 						l_size := a_font.string_size (l_sg)
 					else
 						l_size := a_font.string_size (l_str.as_string_32)

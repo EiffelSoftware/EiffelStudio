@@ -100,7 +100,7 @@ feature {NONE} -- Query
 		require
 			a_object_attached: a_object /= Void
 		do
-			if {l_action: FUNCTION [ANY, TUPLE, ANY]} a_object then
+			if attached {FUNCTION [ANY, TUPLE, ANY]} a_object as l_action then
 				Result := l_action.item (Void)
 			else
 				Result := a_object

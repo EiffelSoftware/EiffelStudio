@@ -15,10 +15,10 @@ inherit
 
 feature -- Query
 
-	api_pointer (a_hnd: POINTER; a_api_name: ?STRING_GENERAL): POINTER
+	api_pointer (a_hnd: POINTER; a_api_name: detachable STRING_GENERAL): POINTER
 			-- <Precursor>
 		local
-			l_name: !EV_GTK_C_STRING
+			l_name: attached EV_GTK_C_STRING
 			l_result: BOOLEAN
 		do
 			create l_name.set_with_eiffel_string (a_api_name)
@@ -27,11 +27,11 @@ feature -- Query
 
 feature -- Basic operations
 
-	load_library (a_name: ?STRING_GENERAL; a_version: ?STRING_GENERAL): POINTER
+	load_library (a_name: detachable STRING_GENERAL; a_version: detachable STRING_GENERAL): POINTER
 			-- <Precursor>
 		local
-			l_fn: !FILE_NAME
-			l_mac_fn: !FILE_NAME
+			l_fn: attached FILE_NAME
+			l_mac_fn: attached FILE_NAME
 		do
 			create l_fn.make_from_string (a_name.as_string_8)
 			if {PLATFORM}.is_mac then
@@ -52,10 +52,10 @@ feature -- Basic operations
 			end
 		end
 
-	load_library_from_path (a_path: ?STRING_GENERAL): POINTER
+	load_library_from_path (a_path: detachable STRING_GENERAL): POINTER
 			-- <Precursor>
 		local
-			l_path: !EV_GTK_C_STRING
+			l_path: attached EV_GTK_C_STRING
 		do
 			create l_path.set_with_eiffel_string (a_path)
 			Result := {EV_GTK_EXTERNALS}.g_module_open (l_path.item, 0)

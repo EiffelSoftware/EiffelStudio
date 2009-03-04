@@ -31,7 +31,7 @@ feature -- Visit nodes
 				end
 			end
 		rescue
-			if is_error and then {lt_ex: CONF_EXCEPTION}exception_manager.last_exception.original then
+			if is_error and then attached {CONF_EXCEPTION} exception_manager.last_exception.original as lt_ex then
 				l_retried := True
 				retry
 			end
@@ -51,7 +51,7 @@ feature -- Visit nodes
 				a_target.overrides.linear_representation.do_all (agent {CONF_OVERRIDE}.process (Current))
 			end
 		rescue
-			if {lt_ex: CONF_EXCEPTION}exception_manager.last_exception.original then
+			if attached {CONF_EXCEPTION} exception_manager.last_exception.original as lt_ex then
 				retry
 			end
 		end

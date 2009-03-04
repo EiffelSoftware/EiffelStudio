@@ -26,7 +26,7 @@ inherit
 
 feature {NONE} -- Access
 
-	marshalled_data: !HASH_TABLE [!STRING_HANDLER, POINTER]
+	marshalled_data: attached HASH_TABLE [attached STRING_HANDLER, POINTER]
 			-- Shared marshalled data
 		note
 			once_status: thread
@@ -44,7 +44,7 @@ feature -- Status report
 
 feature -- Conversion: To pointer
 
-	string_to_unicode (a_str: ?READABLE_STRING_GENERAL): POINTER
+	string_to_unicode (a_str: detachable READABLE_STRING_GENERAL): POINTER
 			-- Marshalles a string to an unicode string.
 			-- Note: Please call `free' on the returned pointer once you are finished with the marhalled
 			--       reference. Failure to do so will cause a memory leak!
@@ -54,7 +54,7 @@ feature -- Conversion: To pointer
 		require
 			a_str_attached: a_str /= Void
 		local
-			l_str: !WEL_STRING
+			l_str: attached WEL_STRING
 		do
 			create l_str.make (a_str.to_string_8)
 			Result := l_str.item
@@ -65,7 +65,7 @@ feature -- Conversion: To pointer
 			a_ptr_is_pointer_managed: is_pointer_managed (Result)
 		end
 
-	string_to_ansi (a_str: ?READABLE_STRING_GENERAL): POINTER
+	string_to_ansi (a_str: detachable READABLE_STRING_GENERAL): POINTER
 			-- Marshalles a string to an ANSI string.
 			-- Note: Please call `free' on the returned pointer once you are finished with the marhalled
 			--       reference. Failure to do so will cause a memory leak!
@@ -75,7 +75,7 @@ feature -- Conversion: To pointer
 		require
 			a_str_attached: a_str /= Void
 		local
-			l_str: !C_STRING
+			l_str: attached C_STRING
 		do
 			create l_str.make (a_str)
 			Result := l_str.item
@@ -86,7 +86,7 @@ feature -- Conversion: To pointer
 			a_ptr_is_pointer_managed: is_pointer_managed (Result)
 		end
 
-	string_to_tstring (a_str: ?READABLE_STRING_GENERAL): POINTER
+	string_to_tstring (a_str: detachable READABLE_STRING_GENERAL): POINTER
 			-- Marshalles a string to an compiler-select ANSI/unicode string.
 			-- Note: Please call `free' on the returned pointer once you are finished with the marhalled
 			--       reference. Failure to do so will cause a memory leak!
@@ -108,7 +108,7 @@ feature -- Conversion: To pointer
 
 feature -- Conversion: From pointer
 
-	unicode_to_string (a_ptr: POINTER): !STRING_32
+	unicode_to_string (a_ptr: POINTER): attached STRING_32
 			-- Marshalles a UNICODE string to an Eiffel string.
 			-- Note: Please call `free' on the returned pointer once you are finished with the marhalled
 			--       reference. Failure to do so will cause a memory leak!
@@ -118,9 +118,9 @@ feature -- Conversion: From pointer
 		require
 			not_a_ptr_is_null: a_ptr /= default_pointer
 		local
-			l_str: !WEL_STRING
+			l_str: attached WEL_STRING
 		do
-			if is_pointer_managed (a_ptr) and {l_result: READABLE_STRING_GENERAL} retrieve (agent marshalled_data.item (a_ptr)) then
+			if is_pointer_managed (a_ptr) and attached {READABLE_STRING_GENERAL} retrieve (agent marshalled_data.item (a_ptr)) as l_result then
 				Result := l_result.as_string_32.as_attached
 			else
 				create l_str.make_by_pointer (a_ptr)
@@ -128,7 +128,7 @@ feature -- Conversion: From pointer
 			end
 		end
 
-	ansi_to_string (a_ptr: POINTER): !STRING
+	ansi_to_string (a_ptr: POINTER): attached STRING
 			-- Marshalles a string to an unicode string.
 			-- Note: Please call `free' on the returned pointer once you are finished with the marhalled
 			--       reference. Failure to do so will cause a memory leak!
@@ -138,9 +138,9 @@ feature -- Conversion: From pointer
 		require
 			not_a_ptr_is_null: a_ptr /= default_pointer
 		local
-			l_str: !C_STRING
+			l_str: attached C_STRING
 		do
-			if is_pointer_managed (a_ptr) and {l_result: READABLE_STRING_GENERAL} retrieve (agent marshalled_data.item (a_ptr)) then
+			if is_pointer_managed (a_ptr) and attached {READABLE_STRING_GENERAL} retrieve (agent marshalled_data.item (a_ptr)) as l_result then
 				Result := l_result.as_string_8.as_attached
 			else
 				create l_str.make_by_pointer (a_ptr)
@@ -148,7 +148,7 @@ feature -- Conversion: From pointer
 			end
 		end
 
-	tstring_to_string (a_ptr: POINTER): !STRING
+	tstring_to_string (a_ptr: POINTER): attached STRING
 			-- Marshalles a string to an compiler-select ANSI/unicode string.
 			-- Note: Please call `free' on the returned pointer once you are finished with the marhalled
 			--       reference. Failure to do so will cause a memory leak!
@@ -165,7 +165,7 @@ feature -- Conversion: From pointer
 			end
 		end
 
-	tstring_to_string_32 (a_ptr: POINTER): !STRING_32
+	tstring_to_string_32 (a_ptr: POINTER): attached STRING_32
 			-- Marshalles a string to an compiler-select ANSI/unicode string.
 			-- Note: Please call `free' on the returned pointer once you are finished with the marhalled
 			--       reference. Failure to do so will cause a memory leak!
@@ -187,7 +187,7 @@ feature -- Factory
 	new_unicode_string (a_len: NATURAL): POINTER
 
 		local
-			l_str: !WEL_STRING
+			l_str: attached WEL_STRING
 		do
 			create l_str.make_empty (a_len.to_integer_32)
 			Result := l_str.item
@@ -201,7 +201,7 @@ feature -- Factory
 	new_ansi_string (a_len: NATURAL): POINTER
 
 		local
-			l_str: !C_STRING
+			l_str: attached C_STRING
 		do
 			create l_str.make_empty (a_len.to_integer_32)
 			Result := l_str.item
@@ -247,8 +247,8 @@ feature -- Basic operations
 		do
 			perform (agent (ia_ptr: POINTER)
 				local
-					l_data: !like marshalled_data
-					l_handler: !STRING_HANDLER
+					l_data: attached like marshalled_data
+					l_handler: attached STRING_HANDLER
 				do
 					l_data := marshalled_data
 					if l_data.has (ia_ptr) then
@@ -269,7 +269,7 @@ feature -- Basic operations
 
 feature {NONE} -- Helpers
 
-	unicode_marshaller: !UNICODE_MARSHALING_UTILITIES
+	unicode_marshaller: attached UNICODE_MARSHALING_UTILITIES
 			-- Access to the Unicode string marshaller
 		once
 			create Result

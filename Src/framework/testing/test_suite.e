@@ -62,13 +62,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	processor_registrar: !TEST_PROCESSOR_REGISTRAR_I
+	processor_registrar: attached TEST_PROCESSOR_REGISTRAR_I
 			-- <Precursor>
 		do
 			Result := Current
 		end
 
-	processor_instances (a_test_suite: !TEST_SUITE_S): !DS_LINEAR [!TEST_PROCESSOR_I]
+	processor_instances (a_test_suite: attached TEST_SUITE_S): attached DS_LINEAR [attached TEST_PROCESSOR_I]
 			-- <Precursor>
 		do
 			if a_test_suite = Current then
@@ -80,13 +80,13 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	internal_processors: !DS_LINKED_LIST [!TEST_PROCESSOR_I]
+	internal_processors: attached DS_LINKED_LIST [attached TEST_PROCESSOR_I]
 			-- Internal storage for `processor_instances'
 
-	empty_processor_list: !DS_LINEAR [!TEST_PROCESSOR_I]
+	empty_processor_list: attached DS_LINEAR [attached TEST_PROCESSOR_I]
 			-- Empty list for `processor_instances'
 		once
-			create {!DS_LINKED_LIST [!TEST_PROCESSOR_I]} Result.make
+			create {attached DS_LINKED_LIST [attached TEST_PROCESSOR_I]} Result.make
 		end
 
 feature -- Status report
@@ -97,7 +97,7 @@ feature -- Status report
 			Result := Precursor {DISPOSABLE_SAFE} and then Precursor {TEST_PROJECT}
 		end
 
-	is_registered (a_processor: !TEST_PROCESSOR_I): BOOLEAN
+	is_registered (a_processor: attached TEST_PROCESSOR_I): BOOLEAN
 			-- <Precursor>
 		do
 			Result := internal_processors.has (a_processor)
@@ -117,7 +117,7 @@ feature -- Status setting
 	synchronize_processors
 			-- <Precursor>
 		local
-			l_proc: !TEST_PROCESSOR_I
+			l_proc: attached TEST_PROCESSOR_I
 		do
 			from
 				internal_processors.start
@@ -136,7 +136,7 @@ feature -- Status setting
 			end
 		end
 
-	launch_processor (a_processor: !TEST_PROCESSOR_I; a_arg: !TEST_PROCESSOR_CONF_I; a_blocking: BOOLEAN)
+	launch_processor (a_processor: attached TEST_PROCESSOR_I; a_arg: attached TEST_PROCESSOR_CONF_I; a_blocking: BOOLEAN)
 			-- <Precursor>
 		do
 			a_processor.start (a_arg)
@@ -155,7 +155,7 @@ feature -- Status setting
 
 feature {TEST_PROCESSOR_I} -- Status setting
 
-	propagate_error (a_error: !STRING; a_token_values: !TUPLE; a_processor: !TEST_PROCESSOR_I)
+	propagate_error (a_error: attached STRING; a_token_values: attached TUPLE; a_processor: attached TEST_PROCESSOR_I)
 			-- <Precursor>
 		do
 				-- Note: replace `as_attached' with Current when compiler treats Current as attached
@@ -164,7 +164,7 @@ feature {TEST_PROCESSOR_I} -- Status setting
 
 feature {TEST_EXECUTOR_I} -- Status setting
 
-	set_test_queued (a_test: !TEST_I; a_executor: !TEST_EXECUTOR_I)
+	set_test_queued (a_test: attached TEST_I; a_executor: attached TEST_EXECUTOR_I)
 			-- <Precursor>
 		do
 			a_test.set_queued (a_executor)
@@ -173,7 +173,7 @@ feature {TEST_EXECUTOR_I} -- Status setting
 			a_test.clear_changes
 		end
 
-	set_test_running (a_test: !TEST_I)
+	set_test_running (a_test: attached TEST_I)
 			-- <Precursor>
 		do
 			a_test.set_running
@@ -182,7 +182,7 @@ feature {TEST_EXECUTOR_I} -- Status setting
 			a_test.clear_changes
 		end
 
-	add_outcome_to_test (a_test: !TEST_I; a_outcome: !EQA_TEST_RESULT)
+	add_outcome_to_test (a_test: attached TEST_I; a_outcome: attached EQA_TEST_RESULT)
 			-- <Precursor>
 		local
 			l_old, l_new: NATURAL_8
@@ -211,7 +211,7 @@ feature {TEST_EXECUTOR_I} -- Status setting
 			a_test.clear_changes
 		end
 
-	set_test_aborted (a_test: !TEST_I)
+	set_test_aborted (a_test: attached TEST_I)
 			-- <Precursor>
 		do
 			a_test.abort
@@ -222,7 +222,7 @@ feature {TEST_EXECUTOR_I} -- Status setting
 
 feature -- Query
 
-	is_valid_type (a_type: !TYPE [TEST_PROCESSOR_I]; a_test_suite: !TEST_SUITE_S): BOOLEAN
+	is_valid_type (a_type: attached TYPE [TEST_PROCESSOR_I]; a_test_suite: attached TEST_SUITE_S): BOOLEAN
 			-- <Precursor>
 		local
 			l_start: BOOLEAN
@@ -245,17 +245,17 @@ feature -- Query
 			end
 		end
 
-	is_valid_processor (a_processor: !TEST_PROCESSOR_I): BOOLEAN
+	is_valid_processor (a_processor: attached TEST_PROCESSOR_I): BOOLEAN
 			-- <Precursor>
 		do
 			Result := a_processor.test_suite = Current
 		end
 
-	processor (a_type: !TYPE [TEST_PROCESSOR_I]; a_test_suite: !TEST_SUITE_S): !TEST_PROCESSOR_I
+	processor (a_type: attached TYPE [TEST_PROCESSOR_I]; a_test_suite: attached TEST_SUITE_S): attached TEST_PROCESSOR_I
 			-- <Precursor>
 		local
 			l_start: BOOLEAN
-			l_result: ?like processor
+			l_result: detachable like processor
 		do
 			from
 			until
@@ -279,13 +279,13 @@ feature -- Query
 
 feature -- Element change
 
-	register (a_processor: !TEST_PROCESSOR_I)
+	register (a_processor: attached TEST_PROCESSOR_I)
 			-- <Precursor>
 		do
 			internal_processors.force_last (a_processor)
 		end
 
-	unregister (a_processor: !TEST_PROCESSOR_I)
+	unregister (a_processor: attached TEST_PROCESSOR_I)
 			-- <Precursor>
 		do
 			internal_processors.start
@@ -297,7 +297,7 @@ feature -- Element change
 
 feature {NONE} -- Element change
 
-	remove_test (a_id: !STRING)
+	remove_test (a_id: attached STRING)
 			-- <Precursor>
 		local
 			l_test: TEST_I
@@ -316,7 +316,7 @@ feature {NONE} -- Element change
 
 feature {NONE} -- Basic operations
 
-	proceed_task (a_processor: !TEST_PROCESSOR_I)
+	proceed_task (a_processor: attached TEST_PROCESSOR_I)
 			-- Make `a_processor' proceed with its task. Notify observers of events.
 		require
 			a_processor_usable: a_processor.is_interface_usable
@@ -335,7 +335,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	stop_task (a_processor: !TEST_PROCESSOR_I)
+	stop_task (a_processor: attached TEST_PROCESSOR_I)
 			-- Stop `a_processor' and notify observers as long as processor is not running.
 		require
 			a_processor_usable: a_processor.is_interface_usable
@@ -347,7 +347,7 @@ feature {NONE} -- Basic operations
 			a_processor.stop
 				-- Note: replace `as_attached' with Current when compiler treats Current as attached
 			processor_stopped_event.publish_if ([as_attached, a_processor.as_attached],
-				agent (ts: !like Current; p: !TEST_PROCESSOR_I): BOOLEAN
+				agent (ts: attached like Current; p: attached TEST_PROCESSOR_I): BOOLEAN
 					do
 						Result := not p.is_running
 					end)
@@ -355,23 +355,23 @@ feature {NONE} -- Basic operations
 
 feature -- Events
 
-	processor_launched_event: !EVENT_TYPE [TUPLE [test_suite: !TEST_SUITE_S; processor: !TEST_PROCESSOR_I]]
+	processor_launched_event: attached EVENT_TYPE [TUPLE [test_suite: attached TEST_SUITE_S; processor: attached TEST_PROCESSOR_I]]
 			-- <Precursor>
 
-	processor_proceeded_event: !EVENT_TYPE [TUPLE [test_suite: !TEST_SUITE_S; processor: !TEST_PROCESSOR_I]]
+	processor_proceeded_event: attached EVENT_TYPE [TUPLE [test_suite: attached TEST_SUITE_S; processor: attached TEST_PROCESSOR_I]]
 			-- <Precursor>
 
-	processor_finished_event: !EVENT_TYPE [TUPLE [test_suite: !TEST_SUITE_S; processor: !TEST_PROCESSOR_I]]
+	processor_finished_event: attached EVENT_TYPE [TUPLE [test_suite: attached TEST_SUITE_S; processor: attached TEST_PROCESSOR_I]]
 			-- <Precursor>
 
-	processor_stopped_event: !EVENT_TYPE [TUPLE [test_suite: !TEST_SUITE_S; processor: !TEST_PROCESSOR_I]]
+	processor_stopped_event: attached EVENT_TYPE [TUPLE [test_suite: attached TEST_SUITE_S; processor: attached TEST_PROCESSOR_I]]
 			-- <Precursor>
 
-	processor_error_event: !EVENT_TYPE [TUPLE [test_suite: !TEST_SUITE_S; processor: !TEST_PROCESSOR_I; error: !STRING; token_values: TUPLE]]
+	processor_error_event: attached EVENT_TYPE [TUPLE [test_suite: attached TEST_SUITE_S; processor: attached TEST_PROCESSOR_I; error: attached STRING; token_values: TUPLE]]
 			-- <Precursor>
 
 invariant
-	internal_processors_usable: internal_processors.for_all (agent {!TEST_PROCESSOR_I}.is_interface_usable)
+	internal_processors_usable: internal_processors.for_all (agent {attached TEST_PROCESSOR_I}.is_interface_usable)
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

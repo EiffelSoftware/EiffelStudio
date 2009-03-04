@@ -15,7 +15,7 @@ inherit
 
 feature {REGISTRAR_I} -- Event handlers
 
-	on_registered (a_registrar: !REGISTRAR_I [G, K]; a_registration: !CONCEALER_I [G]; a_key: !K)
+	on_registered (a_registrar: attached REGISTRAR_I [G, K]; a_registration: attached CONCEALER_I [G]; a_key: attached K)
 			-- Called when a registrar has been extended with a new registration object.
 			--
 			-- Note: Be sure to check {CONCEALER_I}.is_revealed before calling {CONCEALER_I}.object to
@@ -25,12 +25,12 @@ feature {REGISTRAR_I} -- Event handlers
 			-- `a_registration': A concealed registration object, just registered with a registrar
 			-- `a_key': A registrar key, used to register the newly registered object.
 		require
-			is_interface_usable: {l_usable: USABLE_I} Current implies l_usable.is_interface_usable
-			is_interface_usable: {l_usable_item: USABLE_I} a_registration implies l_usable_item.is_interface_usable
+			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable
+			is_interface_usable: attached {USABLE_I} a_registration as l_usable_item implies l_usable_item.is_interface_usable
 		do
 		end
 
-	on_unregistered (a_registrar: !REGISTRAR_I [G, K]; a_registration: !CONCEALER_I [G]; a_key: !K)
+	on_unregistered (a_registrar: attached REGISTRAR_I [G, K]; a_registration: attached CONCEALER_I [G]; a_key: attached K)
 			-- Called when a registrar has been pruned with because a registration object has been
 			-- unregistered.
 			--
@@ -41,13 +41,13 @@ feature {REGISTRAR_I} -- Event handlers
 			-- `a_registration': A concealed registration object, just unregistered with a registrar
 			-- `a_key': A registrar key, used to unregister the registered object.
 		require
-			is_interface_usable: {l_usable: USABLE_I} Current implies l_usable.is_interface_usable
+			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable
 		do
 		ensure
 			is_revealed_unchanged: a_registration.is_revealed = old a_registration.is_revealed
 		end
 
-	on_registeration_activated (a_registrar: !REGISTRAR_I [G, K]; a_registration: !G; a_key: !K)
+	on_registeration_activated (a_registrar: attached REGISTRAR_I [G, K]; a_registration: attached G; a_key: attached K)
 			-- Called when a registration object has been revealed and is read for use.
 			--
 			-- Note: Typically, this will be called directly after `on_registered'. However, when
@@ -58,8 +58,8 @@ feature {REGISTRAR_I} -- Event handlers
 			-- `a_registration': A activated registration object.
 			-- `a_key': A registrar key, used when the registration object was registered.
 		require
-			is_interface_usable: {l_usable: USABLE_I} Current implies l_usable.is_interface_usable
-			is_interface_usable: {l_usable_item: USABLE_I} a_registration implies l_usable_item.is_interface_usable
+			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable
+			is_interface_usable: attached {USABLE_I} a_registration as l_usable_item implies l_usable_item.is_interface_usable
 		do
 		end
 

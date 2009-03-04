@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	project: !TEST_PROJECT
+	project: attached TEST_PROJECT
 			-- <Precursor>
 		local
 			l_project: like internal_project
@@ -30,12 +30,12 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	internal_project: ?like project
+	internal_project: detachable like project
 			-- Internal storage of project
 
 feature {NONE} -- Query
 
-	common_ancestor: ?EIFFEL_CLASS_I
+	common_ancestor: detachable EIFFEL_CLASS_I
 			-- Look for compiled test class ancestor and store it in
 			-- `common_compiled_ancestor' if found.
 		require
@@ -51,7 +51,7 @@ feature {NONE} -- Query
 			l_lib_list := l_universe.library_of_uuid (l_uuid, False)
 			if not l_lib_list.is_empty then
 				l_lib := l_lib_list.first
-				if {l_ec: !EIFFEL_CLASS_I} l_universe.safe_class_named ({TEST_CONSTANTS}.common_test_class_ancestor_name, l_lib) then
+				if attached {attached EIFFEL_CLASS_I} l_universe.safe_class_named ({TEST_CONSTANTS}.common_test_class_ancestor_name, l_lib) as l_ec then
 					Result := l_ec
 				end
 			end
@@ -80,7 +80,7 @@ feature {TEST_PROJECT_I} -- Status setting
 
 feature {TEST_PROJECT_I} -- Query
 
-	is_test_class_impl (a_class: !EIFFEL_CLASS_I; a_project: like project): BOOLEAN
+	is_test_class_impl (a_class: attached EIFFEL_CLASS_I; a_project: like project): BOOLEAN
 			-- <Precursor>
 		do
 			internal_project := a_project
@@ -90,7 +90,7 @@ feature {TEST_PROJECT_I} -- Query
 
 feature {NONE} -- Query
 
-	is_test_class (a_class: !EIFFEL_CLASS_I): BOOLEAN
+	is_test_class (a_class: attached EIFFEL_CLASS_I): BOOLEAN
 			-- Is `a_class' a valid test class?
 		require
 			locating: is_locating

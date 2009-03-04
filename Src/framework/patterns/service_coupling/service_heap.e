@@ -34,7 +34,7 @@ create {SHARED_SERVICE_PROVIDER, SERVICE_HEAP}
 
 feature -- Status report
 
-	is_service_proffered (a_type: !TYPE [SERVICE_I]): BOOLEAN
+	is_service_proffered (a_type: attached TYPE [SERVICE_I]): BOOLEAN
 			-- Determines if a service has been registered and is offered for use. I.E. calling `service'
 			-- *should* (not guarenteed because of delayed-initialized services) yield a service object.
 			--
@@ -47,7 +47,7 @@ feature -- Status report
 
 feature -- Extension
 
-	register (a_type: !TYPE [SERVICE_I]; a_service: !SERVICE_I)
+	register (a_type: attached TYPE [SERVICE_I]; a_service: attached SERVICE_I)
 			-- Registers a service object using a identifying service type object.
 			--
 			-- `a_type': The service type that the service object conforms to.
@@ -61,7 +61,7 @@ feature -- Extension
 			is_service_proffered: is_service_proffered (a_type)
 		end
 
-	register_with_activator (a_type: !TYPE [SERVICE_I]; a_activator: !FUNCTION [ANY, TUPLE, ?SERVICE_I])
+	register_with_activator (a_type: attached TYPE [SERVICE_I]; a_activator: attached FUNCTION [ANY, TUPLE, detachable SERVICE_I])
 			-- Registers a service activator function, used to create a service on demand, using a
 			-- identifying service type object.
 			--
@@ -77,7 +77,7 @@ feature -- Extension
 
 feature -- Removal
 
-	revoke (a_type: !TYPE [SERVICE_I])
+	revoke (a_type: attached TYPE [SERVICE_I])
 			-- Revokes a registered service, using the service type object used when registering the service.
 			-- Note: This may not actually remove the service object because the service object may have
 			--       been registered using mulitple service type objects.
@@ -93,7 +93,7 @@ feature -- Removal
 
 feature -- Query
 
-	internal_service (a_type: !TYPE [SERVICE_I]): ?ANY
+	internal_service (a_type: attached TYPE [SERVICE_I]): detachable ANY
 			-- <Precursor>
 		do
 			if is_service_proffered (a_type) then

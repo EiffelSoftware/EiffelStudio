@@ -26,10 +26,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: !STRING
+	name: attached STRING
 			-- <Precursor>
 
-	tags: !DS_HASH_SET [!STRING]
+	tags: attached DS_HASH_SET [attached STRING]
 			-- <Precursor>
 
 	hash_code: INTEGER
@@ -38,7 +38,7 @@ feature -- Access
 			Result := name.hash_code
 		end
 
-	memento: !TAGABLE_MEMENTO_I
+	memento: attached TAGABLE_MEMENTO_I
 			-- <Precursor>
 		do
 		end

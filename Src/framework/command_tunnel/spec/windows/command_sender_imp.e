@@ -18,7 +18,7 @@ inherit
 
 feature -- Operation
 
-	send_command (a_string, a_key: !STRING)
+	send_command (a_string, a_key: attached STRING)
 			-- Send `a_string' as command to receiver processes.
 		local
 			l_string_to_send: STRING
@@ -42,7 +42,7 @@ feature -- Operation
 			end
 		end
 
-	send_command_process (a_string, a_key: !STRING; a_process_id: INTEGER)
+	send_command_process (a_string, a_key: attached STRING; a_process_id: INTEGER)
 			-- Send `a_string' as command to receiver process of `a_process_id' with `a_key'.
 		local
 			l_string_to_send: STRING
@@ -103,7 +103,7 @@ feature {NONE} -- Implementation
 				l_string := a_wel_string.substring (1, nb)
 					-- |Fixeme: Information loss when converting to STRING_8.
 				l_string := l_string.to_string_8
-				if {lt_key: STRING}last_key and then last_copydata /= default_pointer and then lt_key.is_equal (l_string) then
+				if attached {STRING} last_key as lt_key and then last_copydata /= default_pointer and then lt_key.is_equal (l_string) then
 						-- If the receiver return True, it means that the receiver handles the message.
 						-- Window enumerating will stop.
 					Result := not {WEL_API}.send_message_result_boolean (hwnd, {WEL_WM_CONSTANTS}.WM_COPYDATA, default_pointer, last_copydata)
@@ -135,7 +135,7 @@ feature {NONE} -- Implementation
 					l_string := a_wel_string.substring (1, nb)
 						-- |Fixeme: Information loss when converting to STRING_8.
 					l_string := l_string.to_string_8
-					if {lt_key: STRING}last_key and then last_copydata /= default_pointer and then lt_key.is_equal (l_string) then
+					if attached {STRING} last_key as lt_key and then last_copydata /= default_pointer and then lt_key.is_equal (l_string) then
 						last_command_handled := {WEL_API}.send_message_result_boolean (hwnd, {WEL_WM_CONSTANTS}.WM_COPYDATA, default_pointer, last_copydata)
 							-- The window of the process has been found, stop enumerating.
 						last_command_reached := True

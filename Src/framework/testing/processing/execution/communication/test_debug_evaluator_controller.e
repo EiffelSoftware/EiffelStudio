@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	project_helper: !TEST_PROJECT_HELPER_I
+	project_helper: attached TEST_PROJECT_HELPER_I
 			-- Project containing tests to be debugged.
 
 feature -- Status report
@@ -59,10 +59,10 @@ feature -- Status setting
 			end
 		end
 
-	launch_evaluator (a_args: !LIST [!STRING])
+	launch_evaluator (a_args: attached LIST [attached STRING])
 			-- <Precursor>
 		local
-			l_param: !DEBUGGER_EXECUTION_PARAMETERS
+			l_param: attached DEBUGGER_EXECUTION_PARAMETERS
 			l_args: STRING
 		do
 			create l_param

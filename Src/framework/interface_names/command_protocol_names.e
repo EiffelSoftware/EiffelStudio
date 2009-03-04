@@ -13,17 +13,17 @@ class
 
 feature -- Modules
 
-	compiler_module: !STRING = "com.eiffel.compiler"
+	compiler_module: attached STRING = "com.eiffel.compiler"
 
-	eis_incoming_module: !STRING = "com.eiffel.eis_incoming"
+	eis_incoming_module: attached STRING = "com.eiffel.eis_incoming"
 
 feature -- Predefined status ("com.eiffel.compiler")
 
-	project_ready: !STRING = "project_ready"
+	project_ready: attached STRING = "project_ready"
 
 feature -- Command tunnel keys
 
-	eiffel_studio_key: !STRING = "06504BCF-876A-4F90-B7DA-ED15920217BB"
+	eiffel_studio_key: attached STRING = "06504BCF-876A-4F90-B7DA-ED15920217BB"
 		-- Key for EiffelStudio to setup command tunnel.
 
 feature -- Others
@@ -34,7 +34,7 @@ feature -- Others
 
 	system_separator: CHARACTER = '.'
 
-	eiffel_protocol: !STRING = "eiffel:?";
+	eiffel_protocol: attached STRING = "eiffel:?";
 
 note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"

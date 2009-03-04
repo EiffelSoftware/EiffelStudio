@@ -15,12 +15,12 @@ deferred class
 
 feature {NONE} -- Access
 
-	mutex: !MUTEX
+	mutex: attached MUTEX
 			-- A multi-thread access mutex.
 		require
 			is_thread_capable: {PLATFORM}.is_thread_capable
 		do
-			if {l_result: MUTEX} internal_mutex then
+			if attached {MUTEX} internal_mutex as l_result then
 				Result := l_result
 			else
 				create Result.make
@@ -33,7 +33,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Basic operations
 
-	perform (a_action: !PROCEDURE [ANY, TUPLE])
+	perform (a_action: attached PROCEDURE [ANY, TUPLE])
 			-- Performs a synchronous action.
 			--
 			-- `a_action': The action to perform.
@@ -57,7 +57,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	retrieve (a_action: !FUNCTION [ANY, TUPLE, ANY]): ?ANY
+	retrieve (a_action: attached FUNCTION [ANY, TUPLE, ANY]): detachable ANY
 			-- Performs a synchronous action, and returns the result.
 			--
 			-- `a_action': The action to perform.
@@ -82,7 +82,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	test (a_action: !PREDICATE [ANY, TUPLE]; a_expected: BOOLEAN): BOOLEAN
+	test (a_action: attached PREDICATE [ANY, TUPLE]; a_expected: BOOLEAN): BOOLEAN
 			-- Performs a synchronous test, and returns a result base on the expected result.
 			--
 			-- `a_action': The action to perform.
@@ -110,7 +110,7 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Implementation: Internal cache
 
-	internal_mutex: ?like mutex
+	internal_mutex: detachable like mutex
 			-- Cached version of `mutex'
 			-- Note: Do not use directly!
 

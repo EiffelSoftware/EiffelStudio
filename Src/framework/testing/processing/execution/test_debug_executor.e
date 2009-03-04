@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	breakpoints: ?DS_ARRAYED_LIST [!BREAKPOINT]
+	breakpoints: detachable DS_ARRAYED_LIST [attached BREAKPOINT]
 			-- Breakpoints of test routines which have been defined by `Current'
 
 feature -- Status report
@@ -61,10 +61,10 @@ feature {NONE} -- Status setting
 		require
 			running: is_running
 		local
-			l_cursor: DS_LINEAR_CURSOR [!TEST_I]
+			l_cursor: DS_LINEAR_CURSOR [attached TEST_I]
 			l_manager: BREAKPOINTS_MANAGER
 			l_test: TEST_I
-			l_feat: ?E_FEATURE
+			l_feat: detachable E_FEATURE
 			i: INTEGER
 			l_bp: BREAKPOINT
 		do
@@ -139,7 +139,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Factory
 
-	create_evaluator: !TEST_EVALUATOR_CONTROLLER
+	create_evaluator: attached TEST_EVALUATOR_CONTROLLER
 			-- <Precursor>
 		local
 			l_assigner: like assigner

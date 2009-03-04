@@ -15,7 +15,7 @@ inherit
 
 feature {API_MARSHALLER} -- Clean up
 
-	free (a_obj: !STRING_HANDLER)
+	free (a_obj: attached STRING_HANDLER)
 			-- Frees the unmanaged data of the string handler object
 			--
 			-- `a_obj': The string handler object to free.
@@ -28,7 +28,7 @@ feature {API_MARSHALLER} -- Clean up
 
 feature {API_MARSHALLER} -- Query
 
-	pointer (a_obj: !STRING_HANDLER): POINTER
+	pointer (a_obj: attached STRING_HANDLER): POINTER
 			-- Retrieves a pointer from a string handler object.
 			--
 			-- `a_obj': A string handler object.
@@ -39,7 +39,7 @@ feature {API_MARSHALLER} -- Query
 			Result := bridge.pointer (a_obj)
 		end
 
-	string (a_obj: !STRING_HANDLER): !STRING_32
+	string (a_obj: attached STRING_HANDLER): attached STRING_32
 			-- Retrieves a unicode string from a string handler object.
 			--
 			-- `a_obj': A string handler object.
@@ -53,7 +53,7 @@ feature {API_MARSHALLER} -- Query
 
 feature {API_MARSHALLER} -- Status report
 
-	is_valid_string_handler (a_obj: ?ANY): BOOLEAN
+	is_valid_string_handler (a_obj: detachable ANY): BOOLEAN
 			-- Determines if a string handler object is valid for the current unicode string marshaller.
 			--
 			-- `a_obj': A string handler object.
@@ -66,7 +66,7 @@ feature {API_MARSHALLER} -- Status report
 
 feature {API_MARSHALLER} -- Factory
 
-	new_string_handler (a_str: !STRING_GENERAL): !STRING_HANDLER
+	new_string_handler (a_str: attached STRING_GENERAL): attached STRING_HANDLER
 			-- Creates a new unicode string handler from a given string.
 			-- Note: Do not forget to call `free' when the object is no longer required.
 			--
@@ -79,7 +79,7 @@ feature {API_MARSHALLER} -- Factory
 			string_set: a_str.as_string_32.is_equal (string (Result))
 		end
 
-	new_string_handler_from_count (a_count: NATURAL): !STRING_HANDLER
+	new_string_handler_from_count (a_count: NATURAL): attached STRING_HANDLER
 			-- Creates a new unicode string handler from a given string length.
 			-- Note: Do not forget to call `free' when the object is no longer required.
 			--
@@ -92,7 +92,7 @@ feature {API_MARSHALLER} -- Factory
 			string_count_set: string (Result).count = a_count
 		end
 
-	new_string_handler_from_pointer (a_ptr: POINTER; a_shared: BOOLEAN): !STRING_HANDLER
+	new_string_handler_from_pointer (a_ptr: POINTER; a_shared: BOOLEAN): attached STRING_HANDLER
 			-- Creates a new unicode string handler from a given a unmanaged pointer.
 			-- Note: Do not forget to call `free' when the object is no longer required.
 			--       Freeing is not strictly necessary for shared pointers, but it's good practice.
@@ -110,7 +110,7 @@ feature {API_MARSHALLER} -- Factory
 			pointer_set: a_ptr = pointer (Result)
 		end
 
-	new_string_handler_from_pointer_and_count (a_ptr: POINTER; a_count: NATURAL; a_shared: BOOLEAN): !STRING_HANDLER
+	new_string_handler_from_pointer_and_count (a_ptr: POINTER; a_count: NATURAL; a_shared: BOOLEAN): attached STRING_HANDLER
 			-- Creates a new unicode string handler from a given a unmanaged pointer and string length.
 			-- Note: Do not forget to call `free' when the object is no longer required.
 			--       Freeing is not strictly necessary for shared pointers, but it's good practice.
@@ -130,7 +130,7 @@ feature {API_MARSHALLER} -- Factory
 
 feature {NONE} -- Factory
 
-	new_bridge: !UNICODE_MARSHALING_UTILITIES_I [STRING_HANDLER]
+	new_bridge: attached UNICODE_MARSHALING_UTILITIES_I [STRING_HANDLER]
 			-- <Precursor>
 		do
 			create {UNICODE_MARSHALING_UTILITIES_IMP} Result

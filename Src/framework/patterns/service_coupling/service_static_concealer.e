@@ -19,7 +19,7 @@ create {SERVICE_CONTAINER_I}
 
 feature {NONE} -- Initialization
 
-	make (a_service: !like service)
+	make (a_service: attached like service)
 			-- Initializes the service concealer with a service object.
 			--
 			-- `a_service': The services the concealer will reveal on request.
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	service: !SERVICE_I
+	service: attached SERVICE_I
 			-- <Precursor>
 
 ;note

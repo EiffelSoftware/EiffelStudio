@@ -15,7 +15,7 @@ deferred class
 
 feature -- Query
 
-	api_pointer (a_hnd: POINTER; a_api_name: ?STRING_GENERAL): POINTER
+	api_pointer (a_hnd: POINTER; a_api_name: detachable STRING_GENERAL): POINTER
 			-- Retrieves a pointer to a library's API.
 			--
 			-- `a_hnd': A valid handle pointer to a loaded dynamic library.
@@ -31,7 +31,7 @@ feature -- Query
 
 feature -- Basic operations
 
-	load_library (a_name: ?STRING_GENERAL; a_version: ?STRING_GENERAL): POINTER
+	load_library (a_name: detachable STRING_GENERAL; a_version: detachable STRING_GENERAL): POINTER
 			-- Attempts to loads a dynamic library using a library name.
 			--
 			-- `a_name': The name of a dynamic library, without an extension.
@@ -44,7 +44,7 @@ feature -- Basic operations
 		deferred
 		end
 
-	load_library_from_path (a_path: ?STRING_GENERAL): POINTER
+	load_library_from_path (a_path: detachable STRING_GENERAL): POINTER
 			-- Attempts to loads a dynamic library from a path on disk.
 			--
 			-- `a_path': The path to a dynamic library.

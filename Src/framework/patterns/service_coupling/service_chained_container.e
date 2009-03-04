@@ -29,20 +29,20 @@ create
 
 feature -- Extension
 
-	register (a_type: !TYPE [SERVICE_I]; a_service: !SERVICE_I; a_promote: BOOLEAN)
+	register (a_type: attached TYPE [SERVICE_I]; a_service: attached SERVICE_I; a_promote: BOOLEAN)
 			-- <Precursor>
 		do
-			if a_promote and then {l_container: SERVICE_CONTAINER_I} site then
+			if a_promote and then attached {SERVICE_CONTAINER_I} site as l_container then
 				l_container.register (a_type, a_service, True)
 			else
 				Precursor {SERVICE_PROVIDER_CONTAINER} (a_type, a_service, False)
 			end
 		end
 
-	register_with_activator (a_type: !TYPE [SERVICE_I]; a_activator: !FUNCTION [ANY, TUPLE, ?SERVICE_I] a_promote: BOOLEAN)
+	register_with_activator (a_type: attached TYPE [SERVICE_I]; a_activator: attached FUNCTION [ANY, TUPLE, detachable SERVICE_I] a_promote: BOOLEAN)
 			-- <Precursor>
 		do
-			if a_promote and then {l_container: SERVICE_CONTAINER_I} site then
+			if a_promote and then attached {SERVICE_CONTAINER_I} site as l_container then
 				l_container.register_with_activator (a_type, a_activator, True)
 			else
 				Precursor {SERVICE_PROVIDER_CONTAINER} (a_type, a_activator, False)
@@ -51,24 +51,24 @@ feature -- Extension
 
 feature -- Removal
 
-	revoke (a_type: !TYPE [SERVICE_I]; a_promote: BOOLEAN)
+	revoke (a_type: attached TYPE [SERVICE_I]; a_promote: BOOLEAN)
 			-- <Precursor>
 		do
 			if is_service_proffered (a_type, False) then
 				Precursor {SERVICE_PROVIDER_CONTAINER} (a_type, a_promote)
-			elseif a_promote and then {l_container: SERVICE_CONTAINER_I} site then
+			elseif a_promote and then attached {SERVICE_CONTAINER_I} site as l_container then
 				l_container.revoke (a_type, True)
 			end
 		end
 
 feature -- Query
 
-	is_service_proffered (a_type: !TYPE [SERVICE_I]; a_promote: BOOLEAN): BOOLEAN
+	is_service_proffered (a_type: attached TYPE [SERVICE_I]; a_promote: BOOLEAN): BOOLEAN
 			-- <Precursor>
 		do
 			Result := Precursor {SERVICE_PROVIDER_CONTAINER} (a_type, a_promote)
 			if not Result and then a_promote then
-				if {l_container: SERVICE_CONTAINER_I} site then
+				if attached {SERVICE_CONTAINER_I} site as l_container then
 					Result := l_container.is_service_proffered (a_type, True)
 				end
 			end

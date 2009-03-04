@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			name := a_name
 			class_name := a_class_name
 			internal_tags := new_hash_set (0)
-			create {!DS_ARRAYED_LIST [!EQA_TEST_RESULT]} internal_outcomes.make (0)
+			create {attached DS_ARRAYED_LIST [attached EQA_TEST_RESULT]} internal_outcomes.make (0)
 		ensure
 			name_set: name = a_name
 			class_name_set: class_name = a_class_name
@@ -37,25 +37,25 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: !STRING
+	name: attached STRING
 			-- <Precursor>
 
-	class_name: !STRING
+	class_name: attached STRING
 			-- <Precursor>
 
-	tags: !DS_LINEAR [!STRING]
+	tags: attached DS_LINEAR [attached STRING]
 			-- <Precursor>
 		do
 			Result := internal_tags
 		end
 
-	outcomes: !DS_BILINEAR [like last_outcome]
+	outcomes: attached DS_BILINEAR [like last_outcome]
 			-- <Precursor>
 		do
 			Result := internal_outcomes
 		end
 
-	executor: !TEST_EXECUTOR_I
+	executor: attached TEST_EXECUTOR_I
 			-- <Precursor>
 		local
 			l_executor: like internal_executor
@@ -71,7 +71,7 @@ feature -- Access
 			Result := name.hash_code
 		end
 
-	memento: !TEST_MEMENTO_I
+	memento: attached TEST_MEMENTO_I
 			-- <Precursor>
 		do
 			Result := Current
@@ -107,35 +107,35 @@ feature -- Access: Memento
 
 feature {NONE} -- Access
 
-	internal_tags: !DS_HASH_SET [!STRING]
+	internal_tags: attached DS_HASH_SET [attached STRING]
 			-- Internal set of tags
 
-	internal_added_tags: ?like internal_tags
+	internal_added_tags: detachable like internal_tags
 			-- Internal storage for `added_tags'
 
-	internal_removed_tags: ?like internal_tags
+	internal_removed_tags: detachable like internal_tags
 			-- Internal storage for `removed_tags'
 
-	empty_tags: !DS_LINEAR [!STRING]
+	empty_tags: attached DS_LINEAR [attached STRING]
 			-- Empty list of tags
 		once
-			create {DS_ARRAYED_LIST [!STRING]} Result.make (0)
+			create {DS_ARRAYED_LIST [attached STRING]} Result.make (0)
 		ensure
 			empty: Result.is_empty
 		end
 
-	internal_executor: ?TEST_EXECUTOR_I
+	internal_executor: detachable TEST_EXECUTOR_I
 			-- Internal storage for `executor'
 
-	internal_outcomes: !DS_LIST [like last_outcome]
+	internal_outcomes: attached DS_LIST [like last_outcome]
 			-- Internal list of outcomes
 
-	old_tags: ?like internal_tags
+	old_tags: detachable like internal_tags
 			-- Old tags
 
 feature {NONE} -- Query
 
-	outcome_tag: !STRING
+	outcome_tag: attached STRING
 			-- Tag representing status of last outcome
 		require
 			has_been_tested: is_outcome_available
@@ -188,7 +188,7 @@ feature {ACTIVE_COLLECTION_I} -- Status setting
 
 feature {TEST_SUITE_S} -- Status setting
 
-	set_explicit_tags (a_list: !DS_LINEAR [!STRING])
+	set_explicit_tags (a_list: attached DS_LINEAR [attached STRING])
 			-- <Precursor>
 		do
 			old_tags := internal_tags
@@ -224,7 +224,7 @@ feature {TEST_SUITE_S} -- Status setting
 			-- according to `an_outcome' and set `has_changed' to True if `tags'
 			-- has changed. Otherwise `has_changed' is False.
 		local
-			l_old, l_new: !STRING
+			l_old, l_new: attached STRING
 		do
 			if is_outcome_available then
 				l_old := outcome_tag
@@ -268,12 +268,12 @@ feature {TEST_MEMENTO_I} -- Factory
 			-- Create new {DS_HASH_SET [!STRING]} with capacity `n' using a string equality tester.
 		do
 			create Result.make (a_count.to_integer_32)
-			Result.set_equality_tester (create {KL_STRING_EQUALITY_TESTER_A [!STRING]})
+			Result.set_equality_tester (create {KL_STRING_EQUALITY_TESTER_A [attached STRING]})
 		end
 
 feature {NONE} -- Implementation
 
-	add_tag (a_tag: !STRING)
+	add_tag (a_tag: attached STRING)
 			-- Add tag to `internal_tags' and remove it from `old_tags'
 		require
 			old_tags_attached: old_tags /= Void

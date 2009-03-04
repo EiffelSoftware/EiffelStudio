@@ -18,7 +18,7 @@ inherit
 
 feature -- Status report
 
-	error_handler: ?AUT_ERROR_HANDLER
+	error_handler: detachable AUT_ERROR_HANDLER
 			-- Error handler
 
 	output_dirname: STRING

@@ -10,13 +10,13 @@ deferred class
 
 feature -- Action
 
-	send_command (a_string, a_key: !STRING)
+	send_command (a_string, a_key: attached STRING)
 			-- Send `a_string' as command to receiver processes.
 			-- `a_key' to identify receiver.
 		deferred
 		end
 
-	send_command_process (a_string, a_key: !STRING; a_process_id: INTEGER)
+	send_command_process (a_string, a_key: attached STRING; a_process_id: INTEGER)
 			-- Send `a_string' as command to receiver process of `a_process_id' with `a_key'.
 		deferred
 		end

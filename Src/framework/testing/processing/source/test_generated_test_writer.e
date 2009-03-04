@@ -25,7 +25,7 @@ feature {NONE} -- Access
 	counter: NATURAL
 			-- Counter for `print_routine_name' (simple solution for now)
 
-	current_result: ?AUT_TEST_CASE_RESULT assign set_current_result
+	current_result: detachable AUT_TEST_CASE_RESULT assign set_current_result
 			-- Result for which test is currently printed
 
 feature -- Status setting

@@ -21,10 +21,10 @@ inherit
 
 feature -- Basic operations
 
-	launch (a_uri: !READABLE_STRING_GENERAL): BOOLEAN
+	launch (a_uri: attached READABLE_STRING_GENERAL): BOOLEAN
 			-- <Precursor>
 		local
-			l_cleaner: !API_MARSHALLER_AUTO_CLEANER
+			l_cleaner: attached API_MARSHALLER_AUTO_CLEANER
 			l_op: POINTER
 			l_uri: POINTER
 			l_null: POINTER

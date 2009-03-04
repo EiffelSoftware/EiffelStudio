@@ -133,7 +133,7 @@ feature {NONE} -- Action handlers
 		require
 			not_is_destroyed: not is_destroyed
 		local
-			l_font: !like internal_font
+			l_font: attached like internal_font
 		do
 			l_font := internal_font
 			set_font (highlight_font)
@@ -147,7 +147,7 @@ feature {NONE} -- Action handlers
 		require
 			not_is_destroyed: not is_destroyed
 		local
-			l_font: !like internal_font
+			l_font: attached like internal_font
 		do
 			l_font := internal_font
 			set_font (default_font)
@@ -158,7 +158,7 @@ feature {NONE} -- Action handlers
 
 feature {NONE} -- Implementation: Internal cache
 
-	internal_font: !EV_FONT
+	internal_font: attached EV_FONT
 			-- Cached internal font
 
 ;note

@@ -28,9 +28,9 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	tagable1, tagable2: ?TAG_DUMMY_TAGABLE
+	tagable1, tagable2: detachable TAG_DUMMY_TAGABLE
 
-	comparator: ?TAG_COMPARATOR [TAG_DUMMY_TAGABLE]
+	comparator: detachable TAG_COMPARATOR [TAG_DUMMY_TAGABLE]
 
 feature -- Status report
 

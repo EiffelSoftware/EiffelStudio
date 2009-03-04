@@ -19,7 +19,7 @@ create {SERVICE_CONTAINER_I}
 
 feature {NONE} -- Initialization
 
-	make (a_activator: !like activator)
+	make (a_activator: attached like activator)
 			-- Initialize concealer with activator function `activator'
 			--
 			-- `a_activator': A function used to retrieve a service object, when the service is requested
@@ -32,10 +32,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	service: ?SERVICE_I
+	service: detachable SERVICE_I
 			-- <Precursor>
 		local
-			l_activator: ?like activator
+			l_activator: detachable like activator
 		do
 			Result := internal_service
 			if Result = Void then
@@ -56,13 +56,13 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	activator: ?FUNCTION [ANY, TUPLE, ?SERVICE_I]
+	activator: detachable FUNCTION [ANY, TUPLE, detachable SERVICE_I]
 			-- The function use to delay-active a service.
 			-- Note: Once the service has been activated the function will not long be available.
 
 feature {NONE} -- Implementation: Internal cache
 
-	internal_service: ?like service
+	internal_service: detachable like service
 			-- Cached version of `service'.
 			-- Note: Do not use directly!
 

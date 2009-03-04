@@ -36,12 +36,12 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	api_feature_name: !STRING
+	api_feature_name: attached STRING
 			-- The API feature name.
 
 feature {NONE} -- Access
 
-	internal_meaning: !STRING
+	internal_meaning: attached STRING
 			-- <Precursor>
 		do
 			create Result.make (40)

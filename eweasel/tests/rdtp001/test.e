@@ -154,4 +154,11 @@ feature -- Initialization
 			Result := '%/123/'
 		end
 
+	test_class_cache: detachable STRING assign set_test_class
+			-- Cache for `test_class'
+		obsolete
+			"Will be removed as soon as we do not need ES_TEST_WIZARD_CLASS_WINDOW"
+		attribute
+		end
+
 end -- class TUPLE_TEST

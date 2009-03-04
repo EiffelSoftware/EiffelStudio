@@ -18,30 +18,30 @@ inherit
 
 feature -- Status report
 
-	is_valid_state_info (a_info: !ES_EDITOR_ANALYZER_STATE_INFO): BOOLEAN
+	is_valid_state_info (a_info: attached ES_EDITOR_ANALYZER_STATE_INFO): BOOLEAN
 			-- <Precursor>
 		do
 			Result := Precursor (a_info)
-			if Result and then {l_info: ES_EDITOR_ANALYZER_FEATURE_STATE_INFO} a_info then
+			if Result and then attached {ES_EDITOR_ANALYZER_FEATURE_STATE_INFO} a_info as l_info then
 				Result := l_info.has_current_frame
 			end
 		ensure then
 			a_info_has_current_frame: Result implies (
-					({?ES_EDITOR_ANALYZER_FEATURE_STATE_INFO}) #? a_info /= Void and then
-					(({?ES_EDITOR_ANALYZER_FEATURE_STATE_INFO}) #? a_info).has_current_frame
+					({detachable ES_EDITOR_ANALYZER_FEATURE_STATE_INFO}) #? a_info /= Void and then
+					(({detachable ES_EDITOR_ANALYZER_FEATURE_STATE_INFO}) #? a_info).has_current_frame
 				)
 		end
 
 feature {NONE} -- Status report
 
-	is_feature_body_token (a_token: !EDITOR_TOKEN; a_line: !EDITOR_LINE): BOOLEAN
+	is_feature_body_token (a_token: attached EDITOR_TOKEN; a_line: attached EDITOR_LINE): BOOLEAN
 			-- Determines if a token represents a feature body keyword token.
 			--
 			-- `a_token': Token to check as a feature body token.
 			-- `a_line' : The line where the supplied token is resident.
 			-- `Result' : True if the token is a feature body token; False otherwise.
 		local
-			l_next: ?like next_token
+			l_next: detachable like next_token
 		do
 			Result := is_keyword_token (a_token, {EIFFEL_KEYWORD_CONSTANTS}.do_keyword) or else
 				is_keyword_token (a_token, {EIFFEL_KEYWORD_CONSTANTS}.attribute_keyword)
@@ -53,14 +53,14 @@ feature {NONE} -- Status report
 				elseif is_keyword_token (a_token, {EIFFEL_KEYWORD_CONSTANTS}.once_keyword) then
 						-- Make sure there is no string keyword after the once
 					l_next := next_token (a_token, a_line, True, Void, Void)
-					Result := l_next = Void or else not {l_string: EDITOR_TOKEN_STRING} l_next.token
+					Result := l_next = Void or else not attached {EDITOR_TOKEN_STRING} l_next.token as l_string
 				end
 			end
 		end
 
 feature {NONE} -- Helpers
 
-	local_list_state: !ES_EDITOR_ANALYZER_LOCAL_LIST_STATE
+	local_list_state: attached ES_EDITOR_ANALYZER_LOCAL_LIST_STATE
 			-- Access to the local list state.
 		once
 			create Result

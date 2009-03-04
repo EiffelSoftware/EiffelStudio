@@ -24,7 +24,7 @@ create
 
 feature -- Query
 
-	path: !DIRECTORY_NAME
+	path: attached DIRECTORY_NAME
 			-- eweasel root path.
 		do
 			Result := eiffel_layout.shared_path.twin
@@ -110,13 +110,13 @@ feature -- Command
 
 feature {ES_EWEASEL_INIT_PARAMETER_MANAGER} -- Environment variables used by eweasel command line
 
-	eweasel: !STRING
+	eweasel: attached STRING
 			-- eweasel path
 		do
 			Result := path.twin
 		end
 
-	include: !STRING
+	include: attached STRING
 			-- eweasel include folder
 		local
 			l_path: like path
@@ -126,7 +126,7 @@ feature {ES_EWEASEL_INIT_PARAMETER_MANAGER} -- Environment variables used by ewe
 			create Result.make_from_string (l_path)
 		end
 
-	init: !STRING
+	init: attached STRING
 			-- eweasel init folder
 		local
 			l_path: like path
@@ -138,7 +138,7 @@ feature {ES_EWEASEL_INIT_PARAMETER_MANAGER} -- Environment variables used by ewe
 			create Result.make_from_string (l_path)
 		end
 
-	eweasel_platform: !STRING
+	eweasel_platform: attached STRING
 			-- eweasel platform
 		local
 			l_platform: PLATFORM
@@ -157,7 +157,7 @@ feature {ES_EWEASEL_INIT_PARAMETER_MANAGER} -- Environment variables used by ewe
 	eweasel_platform_value: STRING = "1"
 			-- eweasel platform value
 
-	platform_type: !STRING
+	platform_type: attached STRING
 			-- Platform type
 		do
 			Result := eweasel_platform
@@ -174,8 +174,8 @@ feature {ES_EWEASEL_INIT_PARAMETER_MANAGER} -- Environment variables used by ewe
 			l_tmp := l_layout.eiffel_layout.Shared_path.twin
 
 			create l_name_helper
-			if {lt_string: STRING_GENERAL} l_tmp then
-				if {lt_string_32: STRING_32} lt_string.as_string_32 then
+			if attached {STRING_GENERAL} l_tmp as lt_string then
+				if attached {STRING_32} lt_string.as_string_32 as lt_string_32 then
 					Result := l_name_helper.short_name_of (lt_string_32)
 				end
 			else
@@ -196,7 +196,7 @@ feature {ES_EWEASEL_INIT_PARAMETER_MANAGER} -- Environment variables used by ewe
 			not_void: Result /= Void
 		end
 
-	output: !STRING_GENERAL
+	output: attached STRING_GENERAL
 			-- eweasel temporary output directory
 		local
 			l_dir_name: DIRECTORY_NAME
@@ -218,8 +218,8 @@ feature {ES_EWEASEL_INIT_PARAMETER_MANAGER} -- Environment variables used by ewe
 			end
 
 			create l_short_name_helper
-			if {lt_string: STRING_GENERAL} l_dir_name then
-				if {lt_string_32: STRING_32} lt_string.as_string_32 then
+			if attached {STRING_GENERAL} l_dir_name as lt_string then
+				if attached {STRING_32} lt_string.as_string_32 as lt_string_32 then
 					l_final_dir_name := l_short_name_helper.short_name_of (lt_string_32)
 				end
 			end

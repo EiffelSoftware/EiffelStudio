@@ -178,7 +178,7 @@ feature {NONE} -- Visitor implementation
 							f.set_is_attached
 							types_todo.wipe_out
 							l.finish
-						elseif {ff: FORMAL_AS} t then
+						elseif attached {FORMAL_AS} t as ff then
 								-- Record new formal generic for processing (if not done yet).
 							if not types_done.has (ff.position) and then not types_todo.has (ff.position) then
 									-- This is new formal generic type.

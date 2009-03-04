@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	encoding_converter: ?ENCODING_CONVERTER
+	encoding_converter: detachable ENCODING_CONVERTER
 			-- Encoding converter
 		do
 			Result := encoding_converter_cell.item

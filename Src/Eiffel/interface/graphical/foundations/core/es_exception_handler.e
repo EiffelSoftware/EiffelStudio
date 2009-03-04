@@ -17,7 +17,7 @@ feature -- Basic operations
 			show_last_exception_with_template ("$1")
 		end
 
-	show_last_exception_with_template (a_template_1: !STRING_GENERAL)
+	show_last_exception_with_template (a_template_1: attached STRING_GENERAL)
 			-- Displays the last known exception message using a template message.
 			--
 			-- `a_template_1': A template containing a $1 replacement variable for the exception message
@@ -26,13 +26,13 @@ feature -- Basic operations
 			not_a_template_1_is_empty: not a_template_1.is_empty
 		local
 			l_exception: EXCEPTION
-			l_exception_meaning: ?STRING_8
-			l_meaning: !STRING_32
+			l_exception_meaning: detachable STRING_8
+			l_meaning: attached STRING_32
 			l_prompt: ES_ERROR_PROMPT
-			l_locale_formatter: !ES_LOCALE_FORMATTER
+			l_locale_formatter: attached ES_LOCALE_FORMATTER
 		do
 				-- Fetch exception.
-			if {l_exception_manger: EXCEPTION_MANAGER} Current then
+			if attached {EXCEPTION_MANAGER} Current as l_exception_manger then
 				l_exception := l_exception_manger.last_exception
 			else
 				l_exception := (create {EXCEPTION_MANAGER}).last_exception
@@ -43,7 +43,7 @@ feature -- Basic operations
 			end
 
 				-- Translate
-			if {l_formatter: ES_SHARED_LOCALE_FORMATTER} Current then
+			if attached {ES_SHARED_LOCALE_FORMATTER} Current as l_formatter then
 				l_locale_formatter := l_formatter.locale_formatter
 			else
 				l_locale_formatter := (create {ES_SHARED_LOCALE_FORMATTER}).locale_formatter

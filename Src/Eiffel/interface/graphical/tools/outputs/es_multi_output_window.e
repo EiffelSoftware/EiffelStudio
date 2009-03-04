@@ -99,17 +99,17 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	managed_windows: !ARRAYED_SET [OUTPUT_WINDOW]
+	managed_windows: attached ARRAYED_SET [OUTPUT_WINDOW]
 			-- Current set of managed output windows.
 
-	new_managed_windows: !ARRAYED_SET [OUTPUT_WINDOW]
+	new_managed_windows: attached ARRAYED_SET [OUTPUT_WINDOW]
 			-- New set of managed output windows.
 			--|Note: When `start_processing' moves the managed windows from `new_managed_windows' to the
 			--|     active and usable `managed_windows'.
 
 feature {OUTPUT_I} -- Status report
 
-	has_window (a_window: !OUTPUT_WINDOW): BOOLEAN
+	has_window (a_window: attached OUTPUT_WINDOW): BOOLEAN
 			-- Determines if an output window is part of Current.
 			--
 			-- `a_window':
@@ -123,7 +123,7 @@ feature {OUTPUT_I} -- Status report
 
 feature {OUTPUT_I} -- Extension
 
-	extend (a_output: !OUTPUT_WINDOW)
+	extend (a_output: attached OUTPUT_WINDOW)
 			-- Extend the managed set of windows with a new output window.
 			--
 			-- `a_window':

@@ -23,7 +23,7 @@ inherit
 
 feature -- Access
 
-	frozen tool: !ES_TOOL [EB_TOOL]
+	frozen tool: attached ES_TOOL [EB_TOOL]
 			-- <Precursor>
 		do
 			Result := window.shell_tools.tool ({G})
@@ -31,7 +31,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	window: ?EB_DEVELOPMENT_WINDOW
+	window: detachable EB_DEVELOPMENT_WINDOW
 			-- Access to the development window the tool is initialized for.
 			--
 			--| The result type is detachable because of the use of SITE with ESF.

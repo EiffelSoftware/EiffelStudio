@@ -31,7 +31,7 @@ feature {NONE} -- Redefine
 	is_valid_data (a_data: ANY): BOOLEAN
 			-- <Precursor>
 		do
-			if {l_test: ES_EWEASEL_TEST_CASE_ITEM} a_data then
+			if attached {ES_EWEASEL_TEST_CASE_ITEM} a_data as l_test then
 				Result := l_test.is_valid_for_running
 			end
 		end

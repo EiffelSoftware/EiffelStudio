@@ -239,8 +239,8 @@ feature -- C code generation
 							is_void_check or else (
 							not target.type.has_like and then source_type.conform_to (context.context_class_type.associated_class, target.type) or else
 							target.type.same_as (expression.type) or else
-							(target.type.is_like and then {t: LIKE_FEATURE} target.type and then
-							{c: CALL_ACCESS_B} expression and then c.feature_name_id = t.feature_name_id))
+							(target.type.is_like and then attached {LIKE_FEATURE} target.type as t and then
+							attached {CALL_ACCESS_B} expression as c and then c.feature_name_id = t.feature_name_id))
 						then
 								-- There is no need to check actual object type,
 								-- because it always conforms to an object test local type.

@@ -118,8 +118,8 @@ feature {NONE}
 		local
 			l_featc: FEATURE_CLAUSE_AS
 			l_reuse: BOOLEAN
-			l_class: ?EIFFEL_CLASS_I
-			l_name: ?STRING
+			l_class: detachable EIFFEL_CLASS_I
+			l_name: detachable STRING
 			l_name_32: STRING_32
 		do
 			l_featc := wizard_information.feature_clause_cache
@@ -157,12 +157,12 @@ feature {NONE} -- Access
 	wizard_information: ES_TEST_WIZARD_INFORMATION
 			-- Information user has provided to the wizard
 
-	selected_class: ?EIFFEL_CLASS_I
+	selected_class: detachable EIFFEL_CLASS_I
 			-- Class currently selected in `tree_view'
 
 feature {NONE} -- Access: widgets
 
-	class_tree: ?ES_TEST_WIZARD_CLASS_TREE
+	class_tree: detachable ES_TEST_WIZARD_CLASS_TREE
 			-- Tree displaying clusters and existing test classes
 			--
 			-- Note: must be detachable for recycling
@@ -221,7 +221,7 @@ feature {NONE} -- Events
 		do
 			selected_class := Void
 			if class_tree.selected_item /= Void then
-				if {l_eclass: like selected_class} class_tree.selected_item.data then
+				if attached {like selected_class} class_tree.selected_item.data as l_eclass then
 					selected_class := l_eclass
 					wizard_information.set_test_class (l_eclass)
 				else
@@ -252,14 +252,14 @@ feature {NONE} -- Events
 		do
 			wizard_information.feature_clause_cache := Void
 			if feature_clause_box.selected_item /= Void then
-				if {l_fc: FEATURE_CLAUSE_AS} feature_clause_box.selected_item.data then
+				if attached {FEATURE_CLAUSE_AS} feature_clause_box.selected_item.data as l_fc then
 					wizard_information.feature_clause_cache := l_fc
 				end
 			end
 			update_next_button_status
 		end
 
-	on_validate_feature_clause_name (a_name: !STRING_32): !TUPLE [BOOLEAN, ?STRING_32]
+	on_validate_feature_clause_name (a_name: attached STRING_32): attached TUPLE [BOOLEAN, detachable STRING_32]
 			-- Called when `new_feature_clause_name' contents need to be validated.
 		local
 			l_name: STRING

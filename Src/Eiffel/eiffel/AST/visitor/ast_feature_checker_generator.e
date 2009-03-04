@@ -2322,7 +2322,7 @@ feature -- Implementation
 								-- inherited code.
 							l_feature := l_type_a.associated_class.feature_of_rout_id (l_as.routine_ids.first)
 						else
-							if {l_tuple_type: TUPLE_TYPE_A} l_last_type.actual_type then
+							if attached {TUPLE_TYPE_A} l_last_type.actual_type as l_tuple_type then
 								l_is_not_call := True
 								is_last_access_tuple_access := True
 								is_assigner_call := False
@@ -2421,7 +2421,7 @@ feature -- Implementation
 							is_tuple_access: is_last_access_tuple_access
 						end
 						l_as.enable_tuple_access
-						if {l_labeled_tuple: NAMED_TUPLE_TYPE_A} l_last_type.actual_type then
+						if attached {NAMED_TUPLE_TYPE_A} l_last_type.actual_type as l_labeled_tuple then
 							l_as.set_label_position (l_labeled_tuple.label_position (l_as.feature_name.name))
 						else
 							check
@@ -3398,7 +3398,7 @@ feature -- Implementation
 			l_as.expr.process (Current)
 				-- It only make sense to process the conversion data only when
 				-- rechecking the code in a descendant class.
-			if is_inherited and then l_error_level = error_level and then {l_info: PARENT_CONVERSION_INFO} l_as.data then
+			if is_inherited and then l_error_level = error_level and then attached {PARENT_CONVERSION_INFO} l_as.data as l_info then
 					-- If we have some data about the above with a conversion, we need
 					-- to extract it so that we can recheck that the converted code still
 					-- make sense in a descendant.
@@ -5899,7 +5899,7 @@ feature -- Implementation
 				l_create_info := t.create_info
 			end
 
-			if system.il_generation and {l_info: CREATE_FEAT} l_create_info then
+			if system.il_generation and attached {CREATE_FEAT} l_create_info as l_info then
 					-- We need to record into current class that there is a creation
 					-- using a feature, i.e. an anchor. This fixes eweasel test#dotnet100.
 				context.current_class.extend_type_set (l_info.routine_id)
@@ -6259,7 +6259,7 @@ feature -- Implementation
 	process_inspect_as (l_as: INSPECT_AS)
 		local
 			l_vomb1: VOMB1
-			l_controler: ?INSPECT_CONTROL
+			l_controler: detachable INSPECT_CONTROL
 			l_inspect: INSPECT_B
 			l_expr: EXPR_B
 			l_list: BYTE_LIST [BYTE_NODE]
@@ -9052,7 +9052,7 @@ feature {NONE} -- Implementation: type validation
 					Result := a_last_type.actual_type.generics.item (l_formal_type.position)
 				end
 			end
-			if l_formal_type /= Void and then {l_attachable_type: ATTACHABLE_TYPE_A} a_type then
+			if l_formal_type /= Void and then attached {ATTACHABLE_TYPE_A} a_type as l_attachable_type then
 					-- Preserve attachment status of the original type.
 				Result := Result.to_other_attachment (l_attachable_type)
 			end

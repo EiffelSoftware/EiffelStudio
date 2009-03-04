@@ -71,7 +71,7 @@ feature {NONE} -- Implementation
 				until
 					l_tree_items.after
 				loop
-					if {l_feature: E_FEATURE} l_tree_items.item.data then
+					if attached {E_FEATURE} l_tree_items.item.data as l_feature then
 
 						from
 							l_found := False
@@ -252,7 +252,7 @@ feature {NONE} -- Wizard UI Implementation
 		local
 			l_items: like all_items_under
 		do
-			if {l_feature_clause_data: !FEATURE_CLAUSE_AS} a_item.data then
+			if attached {attached FEATURE_CLAUSE_AS} a_item.data as l_feature_clause_data then
 				-- It's a feature clause, we should select all sub nodes.
 				l_items := all_items_under (a_item)
 				l_items.do_all (agent (a_tree_item: EV_TREE_ITEM; a_to_check: BOOLEAN)
@@ -298,7 +298,7 @@ feature {NONE} -- Wizard UI Implementation
 			until
 				l_items.after
 			loop
-				if {l_feature: !E_FEATURE} l_items.item.data then
+				if attached {attached E_FEATURE} l_items.item.data as l_feature then
 					if feature_tree.is_item_checked (l_items.item) then
 						Result.extend (l_feature)
 					end
@@ -429,7 +429,7 @@ feature {NONE}	-- Tree manipulation
 								l_tree.selected_item.disable_select
 							end
 
-							if {l_clauses: !EIFFEL_LIST [FEATURE_CLAUSE_AS]} l_class_ast.features then
+							if attached {attached EIFFEL_LIST [FEATURE_CLAUSE_AS]} l_class_ast.features as l_clauses then
 									-- Build tree from AST nodes
 								build_tree_imp (l_clauses, a_class_c)
 							else
@@ -437,7 +437,7 @@ feature {NONE}	-- Tree manipulation
 								l_tree.extend (create {EV_TREE_ITEM}.make_with_text (warning_messages.w_no_feature_to_display))
 							end
 						end
-					elseif {l_external_classc: !EXTERNAL_CLASS_C} a_class_c then
+					elseif attached {attached EXTERNAL_CLASS_C} a_class_c as l_external_classc then
 						-- Special processing for a .NET type since has no 'ast' in the normal
 						-- sense.
 
@@ -457,7 +457,7 @@ feature {NONE}	-- Tree manipulation
 			end
 		end
 
-	build_tree_for_external (a_class: !EXTERNAL_CLASS_C)
+	build_tree_for_external (a_class: attached EXTERNAL_CLASS_C)
 			-- Build tree for .Net classes
 		do
 			-- FIXIT: Don't support .Net classes for the moment
@@ -610,7 +610,7 @@ feature {NONE} -- Implementation
 						if ef = Void then
 							l_tree_item.set_text (f_item_name)
 							l_tree_item.set_data (f_item_name)
-							if {l_feature_name: !STRING_8} l_first_item_name then
+							if attached {attached STRING_8} l_first_item_name as l_feature_name then
 								l_tree_item.set_pixmap (pixmap_factory.pixmap_from_feature_ast (l_external, fa, f_names.index))
 							end
 						else

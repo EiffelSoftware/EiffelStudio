@@ -40,16 +40,16 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	help_context_id: !STRING_GENERAL
+	help_context_id: attached STRING_GENERAL
 			-- <Precursor>
 
-	help_context_section: ?HELP_CONTEXT_SECTION_I
+	help_context_section: detachable HELP_CONTEXT_SECTION_I
 			-- <Precursor>
 
-	help_context_description: ?STRING_GENERAL
+	help_context_description: detachable STRING_GENERAL
 			-- <Precursor>
 
-	help_provider: !UUID
+	help_provider: attached UUID
 			-- <Precursor>
 		do
 			Result := internal_help_provider

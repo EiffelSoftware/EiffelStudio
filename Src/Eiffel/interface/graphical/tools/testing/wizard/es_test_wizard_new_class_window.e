@@ -96,10 +96,10 @@ feature {NONE} -- Initialization
 			l_hb.disable_item_expand (l_label)
 
 			create class_name.make (create {EV_TEXT_FIELD}, agent validate_class_name)
-			class_name.set_entry_formatter (agent {!STRING_32}.as_upper)
+			class_name.set_entry_formatter (agent {attached STRING_32}.as_upper)
 			class_name.valid_state_changed_actions.extend (agent on_valid_state_changed)
 			class_name.set_entry_validation (
-				agent (a_entry: !STRING_32): BOOLEAN
+				agent (a_entry: attached STRING_32): BOOLEAN
 					do
 						if a_entry.is_empty then
 							Result := True
@@ -194,9 +194,9 @@ feature {NONE} -- Initialization
 	on_after_initialize
 			-- Called after all widgets have been initialized.
 		local
-			l_name, l_path: ?STRING
+			l_name, l_path: detachable STRING
 			l_name_32: STRING_32
-			l_cluster: ?CONF_CLUSTER
+			l_cluster: detachable CONF_CLUSTER
 		do
 			l_name := conf.new_class_name_cache
 			if l_name /= Void and then not l_name.is_empty then
@@ -266,7 +266,7 @@ feature {NONE} -- Access: widgets
 	class_name: ES_VALIDATING_WRAPPED_WIDGET
 			-- Text field for new test class name
 
-	class_tree: ?ES_TEST_WIZARD_CLASS_TREE
+	class_tree: detachable ES_TEST_WIZARD_CLASS_TREE
 			-- Tree displaying clusters and existing test classes
 			--
 			-- Note: must be detachable for recycling
@@ -305,13 +305,13 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Events
 
-	validate_class_name (a_name: !STRING_32): !TUPLE [BOOLEAN, ?STRING_32]
+	validate_class_name (a_name: attached STRING_32): attached TUPLE [BOOLEAN, detachable STRING_32]
 			-- Called when `class_name' contents need to be validated
 		local
 			l_name: STRING
 			l_path: STRING
-			l_error: ?STRING_32
-			l_cluster: ?CONF_CLUSTER
+			l_error: detachable STRING_32
+			l_cluster: detachable CONF_CLUSTER
 		do
 			l_name := a_name.to_string_8
 			check l_name /= Void end
@@ -365,12 +365,12 @@ feature {NONE} -- Events
 			-- Called when item in `class_tree' is selected.
 		local
 			l_parent: CONF_CLUSTER
-			l_path: ?STRING
+			l_path: detachable STRING
 		do
 			conf.cluster_cache := Void
 			conf.path_cache := Void
-			if {l_item: ES_TEST_WIZARD_CLASS_TREE_FOLDER_ITEM} class_tree.selected_item then
-				if {l_eb_cluster: EB_SORTED_CLUSTER} l_item.data then
+			if attached {ES_TEST_WIZARD_CLASS_TREE_FOLDER_ITEM} class_tree.selected_item as l_item then
+				if attached {EB_SORTED_CLUSTER} l_item.data as l_eb_cluster then
 					if l_eb_cluster.actual_group /= Void and then l_eb_cluster.is_cluster then
 						l_parent := l_eb_cluster.actual_cluster
 						conf.cluster_cache := l_parent
@@ -393,7 +393,7 @@ feature {NONE} -- Basic operations
 	validate_cluster
 			-- Validate cluster information
 		local
-			l_error: ?STRING_32
+			l_error: detachable STRING_32
 			l_path: FILE_NAME
 			l_directory: DIRECTORY
 		do

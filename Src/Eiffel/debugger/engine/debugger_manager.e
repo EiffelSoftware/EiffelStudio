@@ -1150,7 +1150,7 @@ feature -- Change
 		do
 				--| Check if RT_EXTENSION is available
 			rt_extension_available := Eiffel_project.system_defined and then
-							{cl_i: CLASS_I} Eiffel_system.system.rt_extension_class and then
+							attached {CLASS_I} Eiffel_system.system.rt_extension_class as cl_i and then
 							cl_i.is_compiled
 		end
 
@@ -1302,7 +1302,7 @@ feature -- Application change
 
 	set_catcall_detection_mode (a_console, a_dbg: BOOLEAN)
 		do
-			if {exc_hld: like exceptions_handler} exceptions_handler then
+			if attached exceptions_handler as exc_hld then
 				if exc_hld.catcall_console_warning_disabled /= not a_console then
 					exc_hld.set_catcall_console_warning_disabled (not a_console)
 				end
@@ -1339,7 +1339,7 @@ feature -- Application change
 		require
 			safe_application_is_stopped: safe_application_is_stopped
 		do
-			if {exc_hld: like exceptions_handler} exceptions_handler then
+			if attached exceptions_handler as exc_hld then
 				application.set_catcall_detection_mode (not exc_hld.catcall_console_warning_disabled, not exc_hld.catcall_debugger_warning_disabled)
 			end
 		end
@@ -1390,7 +1390,7 @@ feature -- Compilation events
 	on_project_recompiled (is_successful: BOOLEAN)
 		do
 			if is_successful then
-				if {bp: like breakpoints_manager} breakpoints_manager then
+				if attached breakpoints_manager as bp then
 					if bp.has_breakpoint then
 						Degree_output.put_resynchronizing_breakpoints_message
 						bp.resynchronize_breakpoints

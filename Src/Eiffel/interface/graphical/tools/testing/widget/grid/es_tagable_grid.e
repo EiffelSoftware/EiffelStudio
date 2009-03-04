@@ -89,10 +89,10 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	grid: !ES_GRID
+	grid: attached ES_GRID
 			-- Actual grid visualizing tree as in items
 
-	layout: !ES_TAGABLE_GRID_LAYOUT [G]
+	layout: attached ES_TAGABLE_GRID_LAYOUT [G]
 			-- Layout responsible for drawing grid items and header
 		local
 			l_layout: like internal_layout
@@ -105,10 +105,10 @@ feature {NONE} -- Access
 			Result := l_layout
 		end
 
-	internal_layout: ?like layout
+	internal_layout: detachable like layout
 			-- Internal storage for factory
 
-	timer: !EV_TIMEOUT
+	timer: attached EV_TIMEOUT
 			-- Timer for redrawing items in `grid'
 
 	timer_interval: INTEGER = 10000
@@ -131,7 +131,7 @@ feature {ES_TAGABLE_TREE_GRID_NODE_CONTAINER} -- Query
 			propagate_selection_events := False
 			l_row := grid.row (a_row_index)
 			l_selected := l_row.is_selected
-			if {l_data: ES_TAGABLE_GRID_DATA [G]} l_row.data then
+			if attached {ES_TAGABLE_GRID_DATA [G]} l_row.data as l_data then
 				l_data.populate_row (layout)
 			else
 				check
@@ -152,7 +152,7 @@ feature {NONE} -- Status report
 
 feature -- Status setting
 
-	set_layout (a_layout: ?like layout)
+	set_layout (a_layout: detachable like layout)
 			-- Define a specific layout for grid items
 			--
 			-- `a_layout': Layout which shall be used to build grid columns and items. Can be Void to make
@@ -167,7 +167,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	highlight_row (a_row: !EV_GRID_ROW)
+	highlight_row (a_row: attached EV_GRID_ROW)
 			-- Make `a_row' look like it is fully selected.
 		do
 			if grid.has_focus then
@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	unhighlight_row (a_row: !EV_GRID_ROW)
+	unhighlight_row (a_row: attached EV_GRID_ROW)
 			-- Make `a_row' look like it is not selected.
 		do
 			a_row.set_background_color (grid.background_color)
@@ -225,22 +225,22 @@ feature {NONE} -- Events
 			timer.set_interval (timer_interval)
 		end
 
-	on_row_select (a_row: !EV_GRID_ROW)
+	on_row_select (a_row: attached EV_GRID_ROW)
 			-- Called when a row in `grid' is selected.
 		do
 			if propagate_selection_events then
-				if {l_data: ES_TAGABLE_GRID_ITEM_DATA [G]} a_row.data then
+				if attached {ES_TAGABLE_GRID_ITEM_DATA [G]} a_row.data as l_data then
 					internal_selected_items.force (l_data.item)
 					item_selected_actions.call ([l_data.item])
 				end
 			end
 		end
 
-	on_row_deselect (a_row: !EV_GRID_ROW)
+	on_row_deselect (a_row: attached EV_GRID_ROW)
 			-- Called when a row in `grid' is deselected.
 		do
 			if propagate_selection_events then
-				if {l_data: ES_TAGABLE_GRID_ITEM_DATA [G]} a_row.data then
+				if attached {ES_TAGABLE_GRID_ITEM_DATA [G]} a_row.data as l_data then
 					internal_selected_items.remove (l_data.item)
 					item_deselected_actions.call ([l_data.item])
 				end
@@ -251,7 +251,7 @@ feature {NONE} -- Events
 			-- Called when a item has been double clicked in `grid'
 		do
 			if a_button = {EV_POINTER_CONSTANTS}.left then
-				if a_item /= Void and then {l_data: ES_TAGABLE_GRID_ITEM_DATA [G]} a_item.row.data then
+				if a_item /= Void and then attached {ES_TAGABLE_GRID_ITEM_DATA [G]} a_item.row.data as l_data then
 					item_pointer_double_press_actions.call ([l_data.item])
 				end
 			end

@@ -15,7 +15,7 @@ inherit
 
 feature -- Access
 
-	document_protocol: !STRING_32
+	document_protocol: attached STRING_32
 			-- Document protocol used by a URI to navigate to the help accessible from the provider.
 		require
 			is_interface_usable: is_interface_usable
@@ -24,7 +24,7 @@ feature -- Access
 			not_result_is_empty: not Result.is_empty
 		end
 
-	document_description: !STRING_32
+	document_description: attached STRING_32
 			-- Document short description
 		require
 			is_interface_usable: is_interface_usable
@@ -33,12 +33,12 @@ feature -- Access
 			not_result_is_empty: not Result.is_empty
 		end
 
-	frozen kind: !UUID
+	frozen kind: attached UUID
 			-- Help provider id, assigned to by the help providers service
 
 feature {HELP_PROVIDERS_S} -- Element change
 
-	frozen set_kind (a_kind: !UUID)
+	frozen set_kind (a_kind: attached UUID)
 			-- Set's help provider's kind ID.
 		do
 			kind := a_kind
@@ -48,7 +48,7 @@ feature {HELP_PROVIDERS_S} -- Element change
 
 feature -- Basic operations
 
-	show_help (a_context_id: !STRING_GENERAL; a_section: ?HELP_CONTEXT_SECTION_I)
+	show_help (a_context_id: attached STRING_GENERAL; a_section: detachable HELP_CONTEXT_SECTION_I)
 			-- Attempts to show help for a specific context using the current help provider
 			--
 			-- `a_context_id': The primary help provider's linkable context content id, used to locate a help document.
@@ -60,7 +60,7 @@ feature -- Basic operations
 		deferred
 		end
 
-	help_title (a_context_id: !STRING_GENERAL; a_section: ?HELP_CONTEXT_SECTION_I): !STRING_32
+	help_title (a_context_id: attached STRING_GENERAL; a_section: detachable HELP_CONTEXT_SECTION_I): attached STRING_32
 			-- A human readable title for a help document, given a context id and section.
 			--
 			-- `a_context_id': The primary help provider's linkable context content id, used to locate a help document.
@@ -72,7 +72,7 @@ feature -- Basic operations
 		do
 			create Result.make (50)
 			Result.append (a_context_id.as_string_32)
-			if {l_section: !STRING_GENERAL} a_section then
+			if attached {attached STRING_GENERAL} a_section as l_section then
 				Result.append ((", ").as_string_32)
 				Result.append (l_section.as_string_32)
 			end
@@ -82,7 +82,7 @@ feature -- Basic operations
 
 feature -- Query
 
-	is_valid_context_id (a_context_id: !STRING_GENERAL): BOOLEAN
+	is_valid_context_id (a_context_id: attached STRING_GENERAL): BOOLEAN
 			-- Determines if a help content context id is valid
 			--
 			-- `a_context_id': A help provider's linkable context content id to validate.

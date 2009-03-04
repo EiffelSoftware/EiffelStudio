@@ -12,15 +12,15 @@ class
 
 feature -- Query
 
-	help_provider_for_protocol (a_protocol: !STRING_GENERAL): UUID
+	help_provider_for_protocol (a_protocol: attached STRING_GENERAL): UUID
 			-- Retrieves a help provider UUID given a protocol string.
 			-- Note: This function has the side effect of loading and initializing all help providers. This is because
 			--       the protocol information is fetched from the help provider it self.
 		require
 			not_a_protocol_is_empty: not a_protocol.is_empty
 		local
-			l_providers: DS_BILINEAR_CURSOR [!HELP_PROVIDER_I]
-			l_provider: !HELP_PROVIDER_I
+			l_providers: DS_BILINEAR_CURSOR [attached HELP_PROVIDER_I]
+			l_provider: attached HELP_PROVIDER_I
 		do
 			if help_providers.is_service_available then
 				l_providers := help_providers.service.help_providers.new_cursor
@@ -36,7 +36,7 @@ feature -- Query
 
 feature -- Basic operations
 
-	parse_help_uri (a_uri: !STRING_GENERAL): HELP_CONTEXT_I
+	parse_help_uri (a_uri: attached STRING_GENERAL): HELP_CONTEXT_I
 			-- Parses a URI and attempts to return a help context base on the information in the string
 			--
 			-- `a_uri': A help URI to parse and retrieve (hopefully) a help context object from.
@@ -50,7 +50,7 @@ feature -- Basic operations
 			l_regex := uri_protocol_regex
 			l_regex.match (a_uri.as_string_8)
 			if l_regex.has_matched and l_regex.match_count > 2 then
-				if {l_protocol: STRING_GENERAL} l_regex.captured_substring (1) and {l_id: STRING_GENERAL} l_regex.captured_substring (2) then
+				if attached {STRING_GENERAL} l_regex.captured_substring (1) as l_protocol and attached {STRING_GENERAL} l_regex.captured_substring (2) as l_id then
 					if l_regex.match_count > 3 then
 						l_section := l_regex.captured_substring (3)
 					end
@@ -74,7 +74,7 @@ feature {NONE} -- Helpers
 
 feature {NONE} -- Factory
 
-	create_help_context (a_protocol: !STRING_GENERAL; a_context_id: !STRING_GENERAL; a_section: ?STRING_GENERAL): HELP_CONTEXT_I
+	create_help_context (a_protocol: attached STRING_GENERAL; a_context_id: attached STRING_GENERAL; a_section: detachable STRING_GENERAL): HELP_CONTEXT_I
 			-- Creates a new help context for a given protocol.
 			--
 			-- `a_protocol': The help protocol to set on a resulting help context.
@@ -87,8 +87,8 @@ feature {NONE} -- Factory
 			not_a_context_id_is_empty: not a_context_id.is_empty
 			not_a_section_is_empty: a_section /= Void implies not a_section.is_empty
 		do
-			if {l_kind: UUID} help_provider_for_protocol (a_protocol) then
-				if {lt_section: STRING_GENERAL}a_section and then not a_section.is_empty then
+			if attached {UUID} help_provider_for_protocol (a_protocol) as l_kind then
+				if attached {STRING_GENERAL} a_section as lt_section and then not a_section.is_empty then
 --					create {BASIC_HELP_CONTEXT} Result.make (a_context_id, create {HELP_CONTEXT_SECTION_STRING}.make (lt_section), Void, l_kind)
 				else
 					create {BASIC_HELP_CONTEXT} Result.make (a_context_id, Void, Void, l_kind)
@@ -101,7 +101,7 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Regular expressions
 
-	uri_protocol_regex: !RX_PATTERN_MATCHER
+	uri_protocol_regex: attached RX_PATTERN_MATCHER
 			-- URI pattern match used to split a help string.
 		once
 			create {RX_PCRE_MATCHER} Result.make

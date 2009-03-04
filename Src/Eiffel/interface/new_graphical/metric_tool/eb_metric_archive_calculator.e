@@ -163,7 +163,7 @@ feature -- Calculation
 			if l_domain_generator.error_handler.has_error then
 				set_last_error_message (l_domain_generator.error_handler.error_list.last.text.as_string_32)
 			else
-				if {lt_ex: UNICODE_MESSAGE_EXCEPTION}exception_manager.last_exception.original then
+				if attached {UNICODE_MESSAGE_EXCEPTION} exception_manager.last_exception.original as lt_ex then
 					set_last_error_message (lt_ex.unicode_message)
 				else
 					set_last_error_message (tag_name)

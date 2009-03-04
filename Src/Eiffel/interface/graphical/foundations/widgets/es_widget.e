@@ -19,7 +19,7 @@ inherit
 		end
 
 convert
-	widget: {EV_WIDGET, !G}
+	widget: {EV_WIDGET, attached G}
 
 feature {NONE} -- User interface initialization
 
@@ -30,7 +30,7 @@ feature {NONE} -- User interface initialization
 			build_widget_interface (widget)
 		end
 
-	build_widget_interface (a_widget: !G)
+	build_widget_interface (a_widget: attached G)
 			-- Builds widget's interface.
 			--
 			-- `a_widget': The widget to initialize of build upon.
@@ -60,12 +60,12 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-	widget: !G
+	widget: attached G
 			-- Actual widget
 
 feature {NONE} -- Access
 
-	window: ?EV_WINDOW
+	window: detachable EV_WINDOW
 			-- Acces to window containing widget
 		require
 			is_interface_usable: is_interface_usable
@@ -245,7 +245,7 @@ feature -- Status setting
 
 feature {NONE} -- Factory
 
-	create_widget: !G
+	create_widget: attached G
 			-- Creates a new widget, which will be initialized when `build_interface' is called.
 		require
 			is_interface_usable: is_interface_usable

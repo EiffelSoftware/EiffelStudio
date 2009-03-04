@@ -3024,7 +3024,7 @@ feature -- Debugging
 	valid_body_id: BOOLEAN
 			-- Use of this routine as precondition for real_body_id.
 		do
-			Result := ((not is_attribute or else {a: ATTRIBUTE_I} Current and then a.has_body)
+			Result := ((not is_attribute or else attached {ATTRIBUTE_I} Current as a and then a.has_body)
 						and then (not is_constant)
 						and then (not is_deferred)
 						and then (not is_unique)

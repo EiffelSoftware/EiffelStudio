@@ -201,7 +201,7 @@ feature {NONE} -- Access
 			-- See {ES_CONTRACT_TOOL_EDIT_MODE} for applicable modes.
 		do
 			if session_manager.is_service_available then
-				if {l_mode: NATURAL_8_REF} project_window_session_data.value (contract_mode_session_id) and then (create {ES_CONTRACT_TOOL_EDIT_MODE}).is_valid_mode (l_mode.item) then
+				if attached {NATURAL_8_REF} project_window_session_data.value (contract_mode_session_id) as l_mode and then (create {ES_CONTRACT_TOOL_EDIT_MODE}).is_valid_mode (l_mode.item) then
 					Result := l_mode.item
 				else
 					Result := {ES_CONTRACT_TOOL_EDIT_MODE}.preconditions
@@ -209,7 +209,7 @@ feature {NONE} -- Access
 			end
 		end
 
-	context: !ES_CONTRACT_EDITOR_CONTEXT [CLASSI_STONE]
+	context: attached ES_CONTRACT_EDITOR_CONTEXT [CLASSI_STONE]
 			-- Available editor context.
 		require
 			is_interface_usable: is_interface_usable
@@ -220,7 +220,7 @@ feature {NONE} -- Access
 			Result := contract_editor.context.as_attached
 		end
 
-	contract_code_templates: !DS_BILINEAR [!CODE_TEMPLATE_DEFINITION]
+	contract_code_templates: attached DS_BILINEAR [attached CODE_TEMPLATE_DEFINITION]
 			-- Code template definitions for contracts.
 		require
 			is_interface_usable: is_interface_usable
@@ -228,7 +228,7 @@ feature {NONE} -- Access
 			has_stone: has_stone
 			code_template_catalog_is_service_available: code_template_catalog.is_service_available
 		local
-			l_categories: DS_ARRAYED_LIST [!STRING]
+			l_categories: DS_ARRAYED_LIST [attached STRING]
 		do
 			create l_categories.make (2)
 			l_categories.put_last ({CODE_TEMPLATE_ENTITY_NAMES}.contract_category)
@@ -238,7 +238,7 @@ feature {NONE} -- Access
 
 feature -- Access: Help
 
-	help_context_id: !STRING_GENERAL
+	help_context_id: attached STRING_GENERAL
 			-- <Precursor>
 		once
 			Result := "28E1B33F-4B74-4DAB-AF6B-51E7E7FBAFCF"
@@ -290,7 +290,7 @@ feature {NONE} -- Status report
 			is_interface_usable: is_interface_usable
 		do
 			if session_manager.is_service_available then
-				if {l_value: BOOLEAN_REF} window_session_data.value (show_all_lines_session_id) then
+				if attached {BOOLEAN_REF} window_session_data.value (show_all_lines_session_id) as l_value then
 					Result := l_value.item
 				end
 			end
@@ -340,7 +340,7 @@ feature {NONE} -- Status setting
 
 feature {ES_STONABLE_I, ES_TOOL} -- Query
 
-	query_set_stone (a_stone: ?STONE): BOOLEAN
+	query_set_stone (a_stone: detachable STONE): BOOLEAN
 			-- <Precursor>
 		do
 			Result := Precursor (a_stone)
@@ -361,7 +361,7 @@ feature {ES_STONABLE_I, ES_TOOL} -- Query
 
 feature {NONE} -- Query
 
-	context_for_mode: ?ES_CONTRACT_EDITOR_CONTEXT [CLASSI_STONE]
+	context_for_mode: detachable ES_CONTRACT_EDITOR_CONTEXT [CLASSI_STONE]
 			-- Fetches an editor context given a stone
 		require
 			is_interface_usable: is_interface_usable
@@ -399,14 +399,14 @@ feature {NONE} -- Query
 		do
 			check is_initialized: is_initialized end
 			if contract_editor.has_context then
-				if {l_feat_context: ES_FEATURE_CONTRACT_EDITOR_CONTEXT} context then
+				if attached {ES_FEATURE_CONTRACT_EDITOR_CONTEXT} context as l_feat_context then
 					create l_features.make_from_array (<<l_feat_context.context_feature>>)
 					create l_save_feature_prompt.make_standard_with_cancel (
 						"The Contract Tool has unsaved class feature changes.%N%N%
 						%Do you wanted to save the following feature?")
 					l_save_feature_prompt.features := l_features
 					l_prompt := l_save_feature_prompt
-				elseif {l_class_context: ES_CLASS_CONTRACT_EDITOR_CONTEXT} context then
+				elseif attached {ES_CLASS_CONTRACT_EDITOR_CONTEXT} context as l_class_context then
 					create l_classes.make_from_array (<<l_class_context.context_class>>)
 					create l_save_classes_prompt.make_standard_with_cancel (
 						"The Contract Tool has unsaved class changes.%N%N%
@@ -455,7 +455,7 @@ feature {NONE} -- Basic operations
 			is_initialized: is_initialized
 			not_is_dirty: not is_dirty
 		do
-			if has_stone and then {l_context: !like context_for_mode} context_for_mode then
+			if has_stone and then attached context_for_mode as l_context then
 				execute_with_busy_cursor (agent contract_editor.set_context (l_context))
 			else
 					-- Clear the editor
@@ -480,8 +480,8 @@ feature {NONE} -- Basic operations
 			if has_stone and then context.has_stone then
 				if
 					file_notifier.is_service_available and then
-					{l_file_name: !FILE_NAME} context.context_class.file_name and then
-					{l_fn: !STRING_32} l_file_name.string.as_string_32
+					attached {attached FILE_NAME} context.context_class.file_name as l_file_name and then
+					attached {attached STRING_32} l_file_name.string.as_string_32 as l_fn
 				then
 						-- Poll for modifications, which will call `on_file_modified' if have occurred.
 					file_notifier.service.poll_modifications (l_fn).do_nothing
@@ -512,13 +512,13 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Helpers
 
-	frozen file_notifier: !SERVICE_CONSUMER [FILE_NOTIFIER_S]
+	frozen file_notifier: attached SERVICE_CONSUMER [FILE_NOTIFIER_S]
 			-- Access to the file notifier service
 		once
 			create Result
 		end
 
-	frozen code_template_catalog: !SERVICE_CONSUMER [CODE_TEMPLATE_CATALOG_S]
+	frozen code_template_catalog: attached SERVICE_CONSUMER [CODE_TEMPLATE_CATALOG_S]
 			-- Access to the code template catalog service
 		once
 			create Result
@@ -526,64 +526,64 @@ feature {NONE} -- Helpers
 
 feature {NONE} -- User interface elements
 
-	save_modifications_button:? SD_TOOL_BAR_BUTTON
+	save_modifications_button:detachable  SD_TOOL_BAR_BUTTON
 			-- Button to save modified contracts.
 
-	add_contract_button: ?SD_TOOL_BAR_DUAL_POPUP_BUTTON
+	add_contract_button: detachable SD_TOOL_BAR_DUAL_POPUP_BUTTON
 			-- Button to add a new contract to the current feature.
 
-	add_menu: ?EV_MENU
+	add_menu: detachable EV_MENU
 			-- Menu to add contracts.
 
-	add_manual_menu_item: ?EV_MENU_ITEM
+	add_manual_menu_item: detachable EV_MENU_ITEM
 			-- Menu item to add contracts manually.
 
-	add_from_template_menu: ?EV_MENU
+	add_from_template_menu: detachable EV_MENU
 			-- Menu to save contracts and open modified class.
 
 --	add_from_template_for_entity_menu: ?EV_MENU
 --			-- Menu to add a template contract for a given argument/class attribute
 
-	edit_menu: ?EV_MENU
+	edit_menu: detachable EV_MENU
 			-- Menu to edit contracts.
 
-	edit_menu_item: ?EV_MENU_ITEM
+	edit_menu_item: detachable EV_MENU_ITEM
 			-- Menu item to edit a selected contract.
 
-	remove_contract_button: ?SD_TOOL_BAR_BUTTON
+	remove_contract_button: detachable SD_TOOL_BAR_BUTTON
 			-- Button to remove a selected contract.
 
-	edit_contract_button: ?SD_TOOL_BAR_BUTTON
+	edit_contract_button: detachable SD_TOOL_BAR_BUTTON
 			-- Button to edit a selected contract.
 
-	move_contract_up_button: ?SD_TOOL_BAR_BUTTON
+	move_contract_up_button: detachable SD_TOOL_BAR_BUTTON
 			-- Button to move the selected contract up.
 
-	move_contract_down_button: ?SD_TOOL_BAR_BUTTON
+	move_contract_down_button: detachable SD_TOOL_BAR_BUTTON
 			-- Button to move the selected contract down.
 
-	refresh_button: ?SD_TOOL_BAR_BUTTON
+	refresh_button: detachable SD_TOOL_BAR_BUTTON
 			-- Button to refresh the selected contract.
 
-	contract_mode_button: ?SD_TOOL_BAR_DUAL_POPUP_BUTTON
+	contract_mode_button: detachable SD_TOOL_BAR_DUAL_POPUP_BUTTON
 			-- Button to select the contract edit mode.
 
-	preconditions_menu_item: ?EV_RADIO_MENU_ITEM
+	preconditions_menu_item: detachable EV_RADIO_MENU_ITEM
 			-- Menu item to show preconditions.
 
-	postconditions_menu_item: ?EV_RADIO_MENU_ITEM
+	postconditions_menu_item: detachable EV_RADIO_MENU_ITEM
 			-- Menu item to show postconditions.
 
-	invaraints_menu_item: ?EV_RADIO_MENU_ITEM
+	invaraints_menu_item: detachable EV_RADIO_MENU_ITEM
 			-- Menu item to show invariants.
 
-	show_all_lines_button: ?SD_TOOL_BAR_TOGGLE_BUTTON
+	show_all_lines_button: detachable SD_TOOL_BAR_TOGGLE_BUTTON
 			-- Button to show/hide hidden non-contract enabled rows.
 
-	show_callers_button: ?SD_TOOL_BAR_BUTTON
+	show_callers_button: detachable SD_TOOL_BAR_BUTTON
 			-- Button to show the callers of the edited feature.
 
-	contract_editor: ?ES_CONTRACT_EDITOR_WIDGET
+	contract_editor: detachable ES_CONTRACT_EDITOR_WIDGET
 			-- The editor used to edit the contracts.
 
 feature {NONE} -- User interface manipulation
@@ -594,7 +594,7 @@ feature {NONE} -- User interface manipulation
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
 		do
-			if {l_fstone: FEATURE_STONE} stone then
+			if attached {FEATURE_STONE} stone as l_fstone then
 					-- Feature context
 				contract_mode_button.enable_sensitive
 				invaraints_menu_item.disable_sensitive
@@ -637,10 +637,10 @@ feature {NONE} -- User interface manipulation
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
 		local
-			l_editor: ?like contract_editor
-			l_source: ?ES_CONTRACT_SOURCE_I
-			l_line: ?ES_CONTRACT_LINE
-			l_contracts: !DS_BILINEAR [!ES_CONTRACT_LINE]
+			l_editor: detachable like contract_editor
+			l_source: detachable ES_CONTRACT_SOURCE_I
+			l_line: detachable ES_CONTRACT_LINE
+			l_contracts: attached DS_BILINEAR [attached ES_CONTRACT_LINE]
 		do
 			l_editor := contract_editor
 			l_source := l_editor.selected_source
@@ -684,9 +684,9 @@ feature {NONE} -- User interface manipulation
 			code_template_catalog_is_service_available: code_template_catalog.is_service_available
 		local
 			l_templates: like contract_code_templates
-			l_cursor: DS_BILINEAR_CURSOR [!CODE_TEMPLATE_DEFINITION]
-			l_definition: !CODE_TEMPLATE_DEFINITION
-			l_title: !STRING_32
+			l_cursor: DS_BILINEAR_CURSOR [attached CODE_TEMPLATE_DEFINITION]
+			l_definition: attached CODE_TEMPLATE_DEFINITION
+			l_title: attached STRING_32
 			l_menu: EV_MENU
 			l_menu_item: EV_MENU_ITEM
 		do
@@ -813,34 +813,34 @@ feature {NONE} -- Event handlers
 
 feature {NONE} -- Tool action handlers
 
-	on_stone_changed (a_old_stone: ?like stone)
+	on_stone_changed (a_old_stone: detachable like stone)
 			-- <Precursor>
 		local
 			l_service: FILE_NOTIFIER_S
 		do
 			if file_notifier.is_service_available then
 				l_service := file_notifier.service
-				if a_old_stone /= Void and then {l_old_cs: !CLASSI_STONE} a_old_stone and then {l_old_fn: !STRING_32} l_old_cs.class_i.file_name.string.as_string_32 then
+				if a_old_stone /= Void and then attached {attached CLASSI_STONE} a_old_stone as l_old_cs and then attached {attached STRING_32} l_old_cs.class_i.file_name.string.as_string_32 as l_old_fn then
 						-- Remove old monitor
 					if l_service.is_monitoring (l_old_fn) then
 						l_service.uncheck_modifications_with_callback (l_old_fn, agent on_file_modified)
 					end
 				end
 
-				if stone /= Void and then {l_new_cs: !CLASSI_STONE} stone and then {l_new_fn: !STRING_32} l_new_cs.class_i.file_name.string.as_string_32 then
+				if stone /= Void and then attached {attached CLASSI_STONE} stone as l_new_cs and then attached {attached STRING_32} l_new_cs.class_i.file_name.string.as_string_32 as l_new_fn then
 						-- Add monitor
 					l_service.check_modifications_with_callback (l_new_fn, agent on_file_modified)
 				end
 			end
 
-			if {l_fs: !FEATURE_STONE} stone then
+			if attached {attached FEATURE_STONE} stone as l_fs then
 				if contract_mode = {ES_CONTRACT_TOOL_EDIT_MODE}.invariants then
 						-- A feature was dropped so we should switch to a feature contract mode.
 						-- Calling `set_contract_mode' will call `update'
 					set_contract_mode ({ES_CONTRACT_TOOL_EDIT_MODE}.preconditions)
 				end
 			else
-				if {l_cs: !CLASSI_STONE} stone then
+				if attached {attached CLASSI_STONE} stone as l_cs then
 					if contract_mode /= {ES_CONTRACT_TOOL_EDIT_MODE}.invariants then
 							-- A feature was dropped so we should switch to a feature contract mode.
 							-- Calling `set_contract_mode' will call `update'
@@ -954,8 +954,8 @@ feature {NONE} -- Action handlers
 			is_dirty: is_dirty
 			not_is_saving: not is_saving
 		local
-			l_contracts: !DS_BILINEAR [!ES_CONTRACT_LINE]
-			l_assertions: !DS_ARRAYED_LIST [STRING]
+			l_contracts: attached DS_BILINEAR [attached ES_CONTRACT_LINE]
+			l_assertions: attached DS_ARRAYED_LIST [STRING]
 			l_error: ES_ERROR_PROMPT
 			l_question: ES_QUESTION_WARNING_PROMPT
 			l_check_modifier: ES_CLASS_TEXT_AST_MODIFIER
@@ -981,7 +981,7 @@ feature {NONE} -- Action handlers
 				end
 
 				if l_question = Void or else l_question.dialog_result = l_question.default_confirm_button then
-					if {l_modifier: ES_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]} context.text_modifier then
+					if attached {ES_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]} context.text_modifier as l_modifier then
 						l_contracts := contract_editor.context_contracts
 						if not l_contracts.is_empty then
 							create l_assertions.make (l_contracts.count)
@@ -1034,7 +1034,7 @@ feature {NONE} -- Action handlers
 		local
 			l_dialog: ES_ADD_CONTRACT_DIALOG
 		do
-			if {l_source: ES_CONTRACT_SOURCE_I} contract_editor.selected_source then
+			if attached {ES_CONTRACT_SOURCE_I} contract_editor.selected_source as l_source then
 				create l_dialog.make
 				l_dialog.show_on_active_window
 				if l_dialog.dialog_result = l_dialog.default_confirm_button then
@@ -1047,7 +1047,7 @@ feature {NONE} -- Action handlers
 			end
 		end
 
-	on_add_contract_from_template (a_template: !CODE_TEMPLATE_DEFINITION)
+	on_add_contract_from_template (a_template: attached CODE_TEMPLATE_DEFINITION)
 			-- Called when the user chooses to add a new contract, from a template, to the existing feature.
 			--
 			-- `a_template': The template to use to render a contract.
@@ -1058,21 +1058,21 @@ feature {NONE} -- Action handlers
 			contract_editor_has_selected_source: contract_editor.selected_source /= Void
 			contract_editor_source_is_editable: contract_editor.selected_source.is_editable
 		local
-			l_template: ?CODE_TEMPLATE
-			l_dialog: !ES_CODE_COMPLETABLE_TEMPLATE_BUILDER_DIALOG
-			l_provider: !EB_NORMAL_COMPLETION_POSSIBILITIES_PROVIDER
-			l_error: !ES_ERROR_PROMPT
-			l_contract: !STRING_32
-			l_symbol_table: !CODE_SYMBOL_TABLE
-			l_value: !CODE_SYMBOL_VALUE
+			l_template: detachable CODE_TEMPLATE
+			l_dialog: attached ES_CODE_COMPLETABLE_TEMPLATE_BUILDER_DIALOG
+			l_provider: attached EB_NORMAL_COMPLETION_POSSIBILITIES_PROVIDER
+			l_error: attached ES_ERROR_PROMPT
+			l_contract: attached STRING_32
+			l_symbol_table: attached CODE_SYMBOL_TABLE
+			l_value: attached CODE_SYMBOL_VALUE
 		do
 			l_template := a_template.applicable_item
-			if l_template /= Void and {l_source: ES_CONTRACT_SOURCE_I} contract_editor.selected_source then
+			if l_template /= Void and attached {ES_CONTRACT_SOURCE_I} contract_editor.selected_source as l_source then
 				create l_dialog.make (l_template)
 
 				if context.context_class.is_compiled then
 						-- Set completion provider
-					if {l_fcontext: ES_FEATURE_CONTRACT_EDITOR_CONTEXT} context then
+					if attached {ES_FEATURE_CONTRACT_EDITOR_CONTEXT} context as l_fcontext then
 						create l_provider.make (l_fcontext.context_class.compiled_class, l_fcontext.text_modifier.ast_feature)
 					else
 						create l_provider.make (context.context_class.compiled_class, Void)
@@ -1082,7 +1082,7 @@ feature {NONE} -- Action handlers
 
 					-- Set context symbol information
 				l_symbol_table := l_dialog.code_symbol_table
-				if {l_fc: ES_FEATURE_CONTRACT_EDITOR_CONTEXT} context then
+				if attached {ES_FEATURE_CONTRACT_EDITOR_CONTEXT} context as l_fc then
 					if l_symbol_table.has_id (feature_name_symbol_id) then
 						l_value := l_symbol_table.item (feature_name_symbol_id)
 						l_value.set_value (l_fc.context_feature.name.as_string_32.as_attached)
@@ -1091,7 +1091,7 @@ feature {NONE} -- Action handlers
 						l_symbol_table.put (l_value, feature_name_symbol_id)
 					end
 				end
-				if {l_cc: ES_CLASS_CONTRACT_EDITOR_CONTEXT} context then
+				if attached {ES_CLASS_CONTRACT_EDITOR_CONTEXT} context as l_cc then
 					if l_symbol_table.has_id (feature_name_symbol_id) then
 						l_value := l_symbol_table.item (class_name_symbol_id)
 						l_value.set_value (l_cc.context_class.name.as_string_32.as_attached)
@@ -1128,12 +1128,12 @@ feature {NONE} -- Action handlers
 			contract_editor_has_selected_source: contract_editor.selected_source /= Void
 			contract_editor_source_is_editable: contract_editor.selected_source.is_editable
 		local
-			l_source: ?ES_CONTRACT_SOURCE_I
+			l_source: detachable ES_CONTRACT_SOURCE_I
 			l_question: ES_QUESTION_WARNING_PROMPT
 		do
 			l_source := contract_editor.selected_source
 			if l_source /= Void then
-				if {l_line: ES_CONTRACT_LINE} l_source then
+				if attached {ES_CONTRACT_LINE} l_source as l_line then
 						-- Remove selected contracts
 					contract_editor.remove_contract (l_line)
 					set_is_dirty (True)
@@ -1157,10 +1157,10 @@ feature {NONE} -- Action handlers
 			contract_editor_has_selected_line: contract_editor.selected_line /= Void
 			contract_editor_line_is_editable: contract_editor.selected_line.is_editable
 		local
-			l_contract: TUPLE [tag: !STRING_32; contract: !STRING_32]
+			l_contract: TUPLE [tag: attached STRING_32; contract: attached STRING_32]
 			l_dialog: ES_EDIT_CONTRACT_DIALOG
 		do
-			if {l_line: ES_CONTRACT_LINE} contract_editor.selected_line then
+			if attached {ES_CONTRACT_LINE} contract_editor.selected_line as l_line then
 				create l_dialog.make
 				l_dialog.set_contract (l_line.tag, l_line.contract)
 				l_dialog.show_on_active_window
@@ -1187,10 +1187,10 @@ feature {NONE} -- Action handlers
 			contract_editor_has_selected_line: contract_editor.selected_line /= Void
 			contract_editor_line_is_editable: contract_editor.selected_line.is_editable
 		local
-			l_contracts: !DS_BILINEAR [!ES_CONTRACT_LINE]
-			l_other_line: !ES_CONTRACT_LINE
+			l_contracts: attached DS_BILINEAR [attached ES_CONTRACT_LINE]
+			l_other_line: attached ES_CONTRACT_LINE
 		do
-			if {l_line: ES_CONTRACT_LINE} contract_editor.selected_line then
+			if attached {ES_CONTRACT_LINE} contract_editor.selected_line as l_line then
 				l_contracts := contract_editor.context_contracts
 				check l_contracts_has_l_line: l_contracts.has (l_line) end
 				l_contracts.start
@@ -1226,10 +1226,10 @@ feature {NONE} -- Action handlers
 			contract_editor_has_selected_line: contract_editor.selected_line /= Void
 			contract_editor_line_is_editable: contract_editor.selected_line.is_editable
 		local
-			l_contracts: !DS_BILINEAR [!ES_CONTRACT_LINE]
-			l_other_line: !ES_CONTRACT_LINE
+			l_contracts: attached DS_BILINEAR [attached ES_CONTRACT_LINE]
+			l_other_line: attached ES_CONTRACT_LINE
 		do
-			if {l_line: ES_CONTRACT_LINE} contract_editor.selected_line then
+			if attached {ES_CONTRACT_LINE} contract_editor.selected_line as l_line then
 				l_contracts := contract_editor.context_contracts
 				check l_contracts_has_l_line: l_contracts.has (l_line) end
 				l_contracts.start
@@ -1308,16 +1308,16 @@ feature {NONE} -- Action handlers
 			is_initialized: is_initialized
 			has_stone: has_stone
 		do
-			if {l_fc: ES_FEATURE_CONTRACT_EDITOR_CONTEXT} context then
-				if {l_ftool: !ES_FEATURE_RELATION_TOOL} develop_window.shell_tools.tool ({ES_FEATURE_RELATION_TOOL}) then
+			if attached {ES_FEATURE_CONTRACT_EDITOR_CONTEXT} context as l_fc then
+				if attached {attached ES_FEATURE_RELATION_TOOL} develop_window.shell_tools.tool ({ES_FEATURE_RELATION_TOOL}) as l_ftool then
 						-- Display feature relation tool using callers mode.
-					l_ftool.set_mode_with_stone ({ES_FEATURE_RELATION_TOOL_VIEW_MODES}.callers, create {!FEATURE_STONE}.make (l_fc.context_feature))
+					l_ftool.set_mode_with_stone ({ES_FEATURE_RELATION_TOOL_VIEW_MODES}.callers, create {attached FEATURE_STONE}.make (l_fc.context_feature))
 					l_ftool.show (True)
 				end
-			elseif {l_cc: ES_CLASS_CONTRACT_EDITOR_CONTEXT} context then
-				if {l_ctool: !ES_CLASS_TOOL} develop_window.shell_tools.tool ({ES_CLASS_TOOL}) then
+			elseif attached {ES_CLASS_CONTRACT_EDITOR_CONTEXT} context as l_cc then
+				if attached {attached ES_CLASS_TOOL} develop_window.shell_tools.tool ({ES_CLASS_TOOL}) as l_ctool then
 						-- Display feature relation tool using callers mode.
-					l_ctool.set_mode_with_stone ({ES_CLASS_TOOL_VIEW_MODES}.descendents, create {!CLASSI_STONE}.make (l_cc.context_class))
+					l_ctool.set_mode_with_stone ({ES_CLASS_TOOL_VIEW_MODES}.descendents, create {attached CLASSI_STONE}.make (l_cc.context_class))
 					l_ctool.show (True)
 				end
 			else
@@ -1332,12 +1332,12 @@ feature {NONE} -- Action handlers
 			is_initialized: is_initialized
 			a_row_attached: a_row /= Void
 		do
-			if {l_row: EV_GRID_ROW} a_row then
+			if attached {EV_GRID_ROW} a_row as l_row then
 				--update_context_buttons (is_editable_row (l_row))
 			end
 		end
 
-	on_source_selected_in_editor (a_source: ?ES_CONTRACT_SOURCE_I)
+	on_source_selected_in_editor (a_source: detachable ES_CONTRACT_SOURCE_I)
 			-- Called when the editor recieves a selection/deselection of a source row.
 			--
 			-- `a_source': A source row (or a contrac line {ES_CONTRACT_LINE}) or Void to indicate a deselection.
@@ -1345,7 +1345,7 @@ feature {NONE} -- Action handlers
 			update_editable_buttons
 		end
 
-	on_row_selected_in_contract_editor (a_row: !EV_GRID_ROW; a_x: INTEGER; a_y: INTEGER; a_button: INTEGER)
+	on_row_selected_in_contract_editor (a_row: attached EV_GRID_ROW; a_x: INTEGER; a_y: INTEGER; a_button: INTEGER)
 			-- Actions called when a row was selected in the editor.
 			--
 			-- `a_row': The row selected in the contract editor widget.
@@ -1542,7 +1542,7 @@ feature {NONE} -- Factory
 			Result.put_last (l_button)
 		end
 
-	contract_mode_label (a_mode: like contract_mode): !STRING_32
+	contract_mode_label (a_mode: like contract_mode): attached STRING_32
 			-- Retrieve the edit label for a given an edit mode.
 			--
 			-- `a_mode': An edit mode. See {ES_CONTRACT_TOOL_EDIT_MODE} for possible values.

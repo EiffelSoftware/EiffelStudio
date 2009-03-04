@@ -48,13 +48,13 @@ feature {NONE} -- Initialization
     build_tool_interface (a_widget: like user_widget)
             -- <Precursor>
 		do
-			if {lt_observer: PROGRESS_OBSERVER} a_widget then
+			if attached {PROGRESS_OBSERVER} a_widget as lt_observer then
 				eis_manager.add_observer (lt_observer)
 			end
 
 			if session_manager.is_service_available then
 					-- Retrieve session data and set button states
-				if {l_toggle: BOOLEAN_REF} session_data.value_or_default (auto_sweep_session_id, False) then
+				if attached {BOOLEAN_REF} session_data.value_or_default (auto_sweep_session_id, False) as l_toggle then
 					if l_toggle.item then
 						a_widget.auto_sweep_button.enable_select
 					else
@@ -101,7 +101,7 @@ feature {NONE} -- Clean up
 					end
 				end
 			end
-			if {lt_observer: PROGRESS_OBSERVER}user_widget then
+			if attached {PROGRESS_OBSERVER} user_widget as lt_observer then
 				eis_manager.remove_observer (lt_observer)
 			end
 			Precursor {ES_DOCKABLE_TOOL_PANEL}
@@ -109,7 +109,7 @@ feature {NONE} -- Clean up
 
 feature -- Access: Help
 
-	help_context_id: !STRING_GENERAL
+	help_context_id: attached STRING_GENERAL
 			-- <Precursor>
 		once
 			Result := "26E2C799-B48A-C588-CDF1-DD47B1994B09"
@@ -152,7 +152,7 @@ feature {NONE} -- Basic operations
 		do
 			if session_manager.is_service_available and then workbench.universe_defined then
 				l_session := session_data
-				if {lt_auto: BOOLEAN_REF} l_session.value_or_default (auto_sweep_session_id, False) then
+				if attached {BOOLEAN_REF} l_session.value_or_default (auto_sweep_session_id, False) as lt_auto then
 					if lt_auto.item then
 						if eis_manager.full_visited then
 							eis_manager.start_background_visitor
@@ -175,7 +175,7 @@ feature {NONE} -- Event handlers
 			if a_id.is_equal (auto_sweep_session_id) then
 				l_button := user_widget.auto_sweep_button
 				if l_button /= Void then
-					if {l_toggle: BOOLEAN_REF} a_session.value_or_default (a_id, False) then
+					if attached {BOOLEAN_REF} a_session.value_or_default (a_id, False) as l_toggle then
 						l_button.select_actions.block
 						if l_toggle.item then
 							l_button.enable_select

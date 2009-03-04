@@ -54,7 +54,7 @@ inherit
 
 feature {NONE} -- Initialization: User interface
 
-	build_tool (a_tool: !G)
+	build_tool (a_tool: attached G)
 			-- Initializes tool after it has been created.
 			--
 			-- `a_tool': Tool to initialize.
@@ -73,7 +73,7 @@ feature {NONE} -- Clean up
 		do
 			l_content := internal_docking_content
 			if l_content /= Void then
-				if {l_stonable: ES_STONABLE_I} Current then
+				if attached {ES_STONABLE_I} Current as l_stonable then
 						-- Remove veto stonable actions
 					l_content.drop_actions.set_veto_pebble_function (agent l_stonable.is_stone_usable)
 				end
@@ -97,7 +97,7 @@ feature {NONE} -- Clean up
 	internal_detach_entities
 			-- <Precursor>
 		local
-			l_default_panel: ?G
+			l_default_panel: detachable G
 		do
 			Precursor
 			internal_panel := l_default_panel
@@ -112,7 +112,7 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-	name: !STRING
+	name: attached STRING
 			-- The tool's associated name, used for modularizing development of a tool.
 			-- Note: the name should be edition independent!
 		require
@@ -137,14 +137,14 @@ feature -- Access
 			-- Note: When `is_supporting_multiple_instances' returns true this will
 			--       be set to an index greater than 1.
 
-	profile_kind: !UUID
+	profile_kind: attached UUID
 			-- Applicable profile kind.
 			-- See {ES_TOOL_PROFILE_KINDS} for applicable built-in types.
 		once
 			Result := (create {ES_TOOL_PROFILE_KINDS}).generic
 		end
 
-	title: !STRING_32
+	title: attached STRING_32
 			-- Tool title.
 			--|Note: Do not call `tool.title' as it will create the tool unnecessarly!
 		require
@@ -155,7 +155,7 @@ feature -- Access
 			result_consistent: Result ~ title
 		end
 
-	edition_title: !STRING_32
+	edition_title: attached STRING_32
 			-- Tool title with an edition number.
 			--|Note: Do not call `tool.title' as it will create the tool unnecessarly!
 		require
@@ -173,7 +173,7 @@ feature -- Access
 			result_consistent: Result ~ edition_title
 		end
 
-	shortcut_preference_name: ?STRING
+	shortcut_preference_name: detachable STRING
 			-- An optional shortcut preference name, for automatic preference binding.
 			-- Note: The preference should be registered in the default.xml file
 			--       as well as in the {EB_MISC_SHORTCUT_DATA} class.
@@ -199,7 +199,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	frozen tool: !like Current
+	frozen tool: attached like Current
 			-- Provides a reference to the actual tool.
 			--|Note, this is for ESF helper functionality that may be optionally inherited in the actual
 			--|      tool. See {ES_TOOL_PIXMAPS_PROVIDER} for an example.
@@ -289,7 +289,7 @@ feature -- Access: User interface
 			result_consistent: Result ~ icon_pixmap
 		end
 
-	frozen panel: !G
+	frozen panel: attached G
 			-- Actual tool panel.
 			-- Note: Only call this feature when absolutely necessary as it will create the tool.
 			--
@@ -308,7 +308,7 @@ feature -- Access: User interface
 				internal_panel := Result
 				if
 					docking_content.is_visible and then
-					{l_panel: ES_DOCKABLE_TOOL_PANEL [EV_WIDGET]} Result and then
+					attached {ES_DOCKABLE_TOOL_PANEL [EV_WIDGET]} Result as l_panel and then
 					not l_panel.is_initialized
 				then
 					l_panel.initialize
@@ -323,7 +323,7 @@ feature -- Access: User interface
 			is_tool_instantiated: is_tool_instantiated
 		end
 
-	frozen content_id: !STRING_32
+	frozen content_id: attached STRING_32
 			-- A content identifier, used to store layout information and reinstantiate the type from
 			-- a stored layout.
 		local
@@ -341,7 +341,7 @@ feature -- Access: User interface
 			result_consistent: Result ~ content_id
 		end
 
-	frozen docking_content, content: !SD_CONTENT
+	frozen docking_content, content: attached SD_CONTENT
 			-- Access the docking content
 		require
 			is_interface_usable: is_interface_usable
@@ -365,15 +365,15 @@ feature -- Access: User interface
 				internal_docking_content := Result
 				auto_recycle (Result)
 
-				if {l_stonable: ES_STONABLE_I} Current then
+				if attached {ES_STONABLE_I} Current as l_stonable then
 						-- Set stonable actions
 
 		        		-- Register the same action with the docking content
-		        	register_action (Result.drop_actions, agent (ia_pebble: ANY; ia_stonable: !ES_STONABLE_I)
+		        	register_action (Result.drop_actions, agent (ia_pebble: ANY; ia_stonable: attached ES_STONABLE_I)
 		        			-- Propagate the stone drop actions	
 		        		do
 		        			if is_interface_usable then
-		        				if {l_stone: !STONE} ia_pebble and then ia_stonable.is_stone_usable (l_stone) then
+		        				if attached {attached STONE} ia_pebble as l_stone and then ia_stonable.is_stone_usable (l_stone) then
 										-- Force tool to be shown. This way any query set stone prompt can be displayed in the correct context.
 									show (True)
 
@@ -393,12 +393,12 @@ feature -- Access: User interface
 		        		end (?, l_stonable))
 
 						-- Set veto function
-					Result.drop_actions.set_veto_pebble_function (agent (ia_pebble: ANY; ia_stonable: !ES_STONABLE_I): BOOLEAN
+					Result.drop_actions.set_veto_pebble_function (agent (ia_pebble: ANY; ia_stonable: attached ES_STONABLE_I): BOOLEAN
 							-- Query if a pebble should be vetoed.
 						do
 							if is_interface_usable then
 								Result := ia_pebble = Void
-								if not Result and then {l_stone: STONE} ia_pebble then
+								if not Result and then attached {STONE} ia_pebble as l_stone then
 									Result := ia_stonable.is_stone_usable (l_stone)
 								end
 							end
@@ -408,7 +408,7 @@ feature -- Access: User interface
 					-- Register the close actions.
 				register_action (Result.close_request_actions, agent close)
 
-				register_kamikaze_action (Result.show_actions, agent (ia_content: !SD_CONTENT)
+				register_kamikaze_action (Result.show_actions, agent (ia_content: attached SD_CONTENT)
 						-- Attach the real panel to the docking manager.
 	                do
 	                    if not is_tool_instantiated then
@@ -535,7 +535,7 @@ feature -- Basic operations
 					check
 							-- FIXME: Paul, when {ES_TOOL} uses {ES_DOCKABLE_TOOL_PANEL} instead of {EB_TOOL} this check
 							-- can be greatly simplified.
-						tool_is_initialized: {cl_panel: ES_DOCKABLE_TOOL_PANEL [EV_WIDGET]} l_panel implies cl_panel.is_initialized
+						tool_is_initialized: attached {ES_DOCKABLE_TOOL_PANEL [EV_WIDGET]} l_panel as cl_panel implies cl_panel.is_initialized
 					end
 					docking_content.set_focus
 				end
@@ -583,7 +583,7 @@ feature -- Action handlers
 
 feature -- Actions
 
-	edition_changed_actions: !ACTION_SEQUENCE [TUPLE [tool: ES_TOOL [EB_TOOL]; old_edition, new_edition: like edition]]
+	edition_changed_actions: attached ACTION_SEQUENCE [TUPLE [tool: ES_TOOL [EB_TOOL]; old_edition, new_edition: like edition]]
 			-- Actions raised when a tool's edition number changes.
 		require
 			is_interface_usable: is_interface_usable
@@ -604,7 +604,7 @@ feature -- Actions
 
 feature {NONE} -- Factory
 
-	new_tool: !G
+	new_tool: attached G
 			-- Creates the tool for first use on the development `window'.
 		require
 			is_interface_usable: is_interface_usable
@@ -620,23 +620,23 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Implementation: Internal cache
 
-	internal_docking_content: ?like docking_content
+	internal_docking_content: detachable like docking_content
 			-- Cached version of `docking_content'.
 			-- Note: Do not use directly!
 
-	internal_panel: ?like panel
+	internal_panel: detachable like panel
 			-- Cached version of `panel'.
 			-- Note: Do not use directly!
 
-	internal_content_id: ?like content_id
+	internal_content_id: detachable like content_id
 			-- Cached version of `type_id'.
 			-- Note: Do not use directly!
 
-	internal_name: ?like name
+	internal_name: detachable like name
 			-- Cached version of `name'.
 			-- Note: Do not use directly!
 
-	internal_edition_changed_actions: ?like edition_changed_actions
+	internal_edition_changed_actions: detachable like edition_changed_actions
 			-- Cached version of `edition_changed_actions'.
 			-- Note: Do not use directly!
 

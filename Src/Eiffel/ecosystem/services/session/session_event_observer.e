@@ -21,7 +21,7 @@ feature {SESSION_I} -- Event handlers
 			-- `a_session': The session where the value changed.
 			-- `a_id': The session data identifier of the changed value.
 		require
-			is_interface_usable: {l_usable: USABLE_I} Current implies l_usable.is_interface_usable
+			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable
 			a_session_attached: a_session /= Void
 			a_id_attached: a_id /= Void
 			not_a_id_is_empty: not a_id.is_empty

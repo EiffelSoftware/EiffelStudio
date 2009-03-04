@@ -20,14 +20,14 @@ inherit
 
 feature -- Access
 
-	processor_instances (a_test_suite: !TEST_SUITE_S): !DS_LINEAR [!TEST_PROCESSOR_I]
+	processor_instances (a_test_suite: attached TEST_SUITE_S): attached DS_LINEAR [attached TEST_PROCESSOR_I]
 			-- Registered processors for `a_test_suite'.
 		require
 			usable: is_interface_usable
 		deferred
 		ensure
 			result_consistent: Result = processor_instances (a_test_suite)
-			processors_valid: Result.for_all (agent (a_p: !TEST_PROCESSOR_I; a_ts: !TEST_SUITE_S): BOOLEAN
+			processors_valid: Result.for_all (agent (a_p: attached TEST_PROCESSOR_I; a_ts: attached TEST_SUITE_S): BOOLEAN
 				do
 					if a_p.is_interface_usable then
 						Result := a_p.test_suite = a_ts
@@ -37,7 +37,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_registered (a_processor: !TEST_PROCESSOR_I): BOOLEAN
+	is_registered (a_processor: attached TEST_PROCESSOR_I): BOOLEAN
 			-- Is processor registered?
 			--
 			-- `a_processor': Eiffel test processor instance.
@@ -52,14 +52,14 @@ feature -- Status report
 
 feature -- Query
 
-	is_valid_type (a_type: !TYPE [TEST_PROCESSOR_I]; a_test_suite: !TEST_SUITE_S): BOOLEAN
+	is_valid_type (a_type: attached TYPE [TEST_PROCESSOR_I]; a_test_suite: attached TEST_SUITE_S): BOOLEAN
 			-- Is processor for `a_type' available?
 		require
 			usable: is_interface_usable
 		deferred
 		end
 
-	processor (a_type: !TYPE [TEST_PROCESSOR_I]; a_test_suite: !TEST_SUITE_S): !TEST_PROCESSOR_I
+	processor (a_type: attached TYPE [TEST_PROCESSOR_I]; a_test_suite: attached TEST_SUITE_S): attached TEST_PROCESSOR_I
 			-- Processor registered for type.
 			--
 			-- `a_type': Type requested processor conforms to.
@@ -75,7 +75,7 @@ feature -- Query
 			instances_has_result: processor_instances (Result.test_suite).has (Result)
 		end
 
-	is_valid_processor (a_processor: !TEST_PROCESSOR_I): BOOLEAN
+	is_valid_processor (a_processor: attached TEST_PROCESSOR_I): BOOLEAN
 			-- Can processor be registered?
 			--
 			-- `a_processor': Processor to be registered.
@@ -87,7 +87,7 @@ feature -- Query
 
 feature -- Element change
 
-	register (a_processor: !TEST_PROCESSOR_I)
+	register (a_processor: attached TEST_PROCESSOR_I)
 			-- Register processor associated with type.
 			--
 			-- `a_processor': Processor to be registered.
@@ -101,7 +101,7 @@ feature -- Element change
 			is_registered: is_registered (a_processor)
 		end
 
-	unregister (a_processor: !TEST_PROCESSOR_I)
+	unregister (a_processor: attached TEST_PROCESSOR_I)
 			-- Unregister processor associated with type.
 			--
 			-- `a_type': Type processor is registered with.

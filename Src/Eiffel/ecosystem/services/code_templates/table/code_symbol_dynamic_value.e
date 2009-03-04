@@ -19,7 +19,7 @@ inherit
 
 feature -- Access
 
-	value: !STRING_32
+	value: attached STRING_32
 			-- The actual value, having been processed
 		do
 			if has_value_been_evaluated then
@@ -54,7 +54,7 @@ feature -- Status setting
 
 feature {NONE} -- Query
 
-	calculate_value: ?STRING_32
+	calculate_value: detachable STRING_32
 			-- Called during a request to re-evaluate Current's `value' to fetch the most current
 			-- value.
 			--
@@ -72,7 +72,7 @@ feature {NONE} -- Basic operations
 		require
 			not_has_value_been_evaluated: not has_value_been_evaluated
 		local
-			l_result: !STRING_32
+			l_result: attached STRING_32
 			l_value: like calculate_value
 			retried: BOOLEAN
 		do

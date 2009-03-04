@@ -81,7 +81,7 @@ feature  -- Access
 			-- Is `other' same as Current?
 			--| By default: Result = equal (Current, other).
 		do
-			if {o: like Current} other then
+			if attached {like Current} other as o then
 				Result := is_equal (o)
 			end
 		end

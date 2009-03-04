@@ -44,7 +44,7 @@ feature -- Command
 						l_last_test_cases_folder := l_catalog_content.item.a_test_cases_folder
 
 						-- Convert to short name, otherwise eweasel will not recognize the long names.
-						if {lt_string: STRING_32} l_last_test_cases_folder.as_string_32 then
+						if attached {STRING_32} l_last_test_cases_folder.as_string_32 as lt_string then
 							l_short_name := short_name_of (lt_string)
 							check not_void: l_short_name /= Void end
 							if l_short_name.last_index_of ('\', l_short_name.count) = l_short_name.count then
@@ -94,7 +94,7 @@ feature -- Query
 			-- Generate eweasel catalog file base on selected rows in test case grid
 			-- Result false if no catalog file content generated
 		local
-			l_selected: !ARRAYED_LIST [EVENT_LIST_TEST_CASE_ITEM]
+			l_selected: attached ARRAYED_LIST [EVENT_LIST_TEST_CASE_ITEM]
 			l_catalog_content: like catalog_file_content
 		do
 			l_selected := manager.testing_tool.test_case_grid_manager.selected_test_cases (a_failed_first)
@@ -120,13 +120,13 @@ feature -- Query
 
 feature {NONE} -- Implementation routines
 
-	short_name_of (a_long_file_name: !STRING_32): !STRING_32
+	short_name_of (a_long_file_name: attached STRING_32): attached STRING_32
 			-- Short name of `a_long_file_name'
 		local
 			l_helper: ES_FILE_NAME_HELPER
 		do
 			create l_helper
-			if {l_result: !STRING_32} l_helper.short_name_of (a_long_file_name) then
+			if attached {attached STRING_32} l_helper.short_name_of (a_long_file_name) as l_result then
 				Result := l_result
 			end
 		end
@@ -195,7 +195,7 @@ feature {NONE} -- Implementation routines
 			l_dir: DIRECTORY_NAME
 			l_class_i: CLASS_I
 		do
-			if {l_test_case_item: ES_EWEASEL_TEST_CASE_ITEM} a_test_case_item.data then
+			if attached {ES_EWEASEL_TEST_CASE_ITEM} a_test_case_item.data as l_test_case_item then
 
 				l_class_i := l_test_case_item.class_i
 				l_test_case_name := l_class_i.file_name
@@ -246,7 +246,7 @@ feature {NONE} -- Implementation routines
 
 			l_tmp_name := Result.twin
 			create l_file_name_helper
-			if {lt_string: STRING_GENERAL} l_tmp_name then
+			if attached {STRING_GENERAL} l_tmp_name as lt_string then
 				-- File must exists before convert to short name
 				create l_file.make (l_tmp_name.as_string_8)
 				if not l_file.exists then

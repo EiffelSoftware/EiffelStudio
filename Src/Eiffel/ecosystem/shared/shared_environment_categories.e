@@ -13,7 +13,7 @@ class
 
 feature -- Access
 
-	categories: !ENVIRONMENT_CATEGORIES
+	categories: attached ENVIRONMENT_CATEGORIES
 			-- Environment categories
 		once
 			create Result

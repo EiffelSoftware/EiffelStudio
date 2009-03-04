@@ -31,7 +31,7 @@ inherit
 
 feature -- Services
 
-	add_core_services (a_container: !SERVICE_CONTAINER_S)
+	add_core_services (a_container: attached SERVICE_CONTAINER_S)
 			-- <Precursor>
 		do
 			Precursor {SERVICE_INITIALIZER} (a_container)
@@ -105,14 +105,14 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Registering: Code templates
 
-	extend_code_template_catalog (a_service: !CODE_TEMPLATE_CATALOG_S)
+	extend_code_template_catalog (a_service: attached CODE_TEMPLATE_CATALOG_S)
 			-- Extends the build in paths to the code template catalog service.
 			--
 			-- `a_service': The service to extend with the build in catalog paths.
 		require
 			a_service_is_interface_usable: a_service.is_interface_usable
 		local
-			l_contracts: !DIRECTORY_NAME
+			l_contracts: attached DIRECTORY_NAME
 		do
 				-- Top level catalog
 			l_contracts := eiffel_layout.templates_path.twin
@@ -127,7 +127,7 @@ feature {NONE} -- Registering: Code templates
 
 feature {NONE} -- Registration: Help
 
-	register_help_providers (a_service: !HELP_PROVIDERS_S)
+	register_help_providers (a_service: attached HELP_PROVIDERS_S)
 			-- Registers all help providers with the help providers service.
 			--
 			-- `a_service': The service interface to register the helper providers on.
@@ -147,7 +147,7 @@ feature {NONE} -- Registration: Help
 
 feature {NONE} -- Registration: Output
 
-	register_outputs (a_service: !OUTPUT_MANAGER_S)
+	register_outputs (a_service: attached OUTPUT_MANAGER_S)
 			-- <Precursor>
 		local
 			l_kinds: OUTPUT_MANAGER_KINDS

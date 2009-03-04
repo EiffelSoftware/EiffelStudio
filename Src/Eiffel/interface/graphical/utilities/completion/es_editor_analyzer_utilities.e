@@ -20,7 +20,7 @@ inherit
 
 feature -- Status report
 
-	is_attachment_token (a_start_token: !EDITOR_TOKEN): BOOLEAN
+	is_attachment_token (a_start_token: attached EDITOR_TOKEN): BOOLEAN
 			-- Determines if a token is an attached/detachable marker token
 			--
 			-- `a_token' : The token to determine if to be a attachment token.
@@ -34,7 +34,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	scan_for_type (a_start_token: !EDITOR_TOKEN; a_start_line: !EDITOR_LINE; a_end_token: ?EDITOR_TOKEN): ?TUPLE [token: !EDITOR_TOKEN; line: !EDITOR_LINE]
+	scan_for_type (a_start_token: attached EDITOR_TOKEN; a_start_line: attached EDITOR_LINE; a_end_token: detachable EDITOR_TOKEN): detachable TUPLE [token: attached EDITOR_TOKEN; line: attached EDITOR_LINE]
 			-- Scans for a type.
 			--
 			-- `a_start_token': A token to commence scanning.
@@ -45,11 +45,11 @@ feature -- Basic operations
 			a_end_token_different_to_a_start_token: a_start_token /~ a_end_token
 			a_start_token_is_text: a_start_token.is_text
 		local
-			l_image: !STRING
-			l_token: !EDITOR_TOKEN
-			l_line: !EDITOR_LINE
-			l_next: ?like next_text_token
-			l_match: ?like next_text_token
+			l_image: attached STRING
+			l_token: attached EDITOR_TOKEN
+			l_line: attached EDITOR_LINE
+			l_next: detachable like next_text_token
+			l_match: detachable like next_text_token
 		do
 			if is_attachment_token (a_start_token) then
 					-- Start of the type, using an attachment mark
@@ -59,7 +59,7 @@ feature -- Basic operations
 			end
 			if l_next /= Void then
 				l_token := l_next.token
-				if {l_class: EDITOR_TOKEN_CLASS} l_token then
+				if attached {EDITOR_TOKEN_CLASS} l_token as l_class then
 					l_line := l_next.line
 
 						-- An actual type declaration.
@@ -95,13 +95,13 @@ feature -- Basic operations
 
 feature {NONE} -- Helpers
 
-	brace_matcher: !ES_EDITOR_BRACE_MATCHER
+	brace_matcher: attached ES_EDITOR_BRACE_MATCHER
 			-- Shared access to a brace matcher to match expressions and signature braces.
 		once
 			create Result
 		end
 
-	block_matcher: !ES_EDITOR_BLOCK_BRACE_MATCHER
+	block_matcher: attached ES_EDITOR_BLOCK_BRACE_MATCHER
 			-- Shared access to a block/brace matcher to match expressions and signature braces.
 		once
 			create Result

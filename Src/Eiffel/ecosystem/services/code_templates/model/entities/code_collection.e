@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	items: !DS_BILINEAR [!G]
+	items: attached DS_BILINEAR [attached G]
 			-- List of current code templates
 		do
 			Result := internal_items
@@ -34,14 +34,14 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	item_equality_tester: ?KL_EQUALITY_TESTER_A [!G]
+	item_equality_tester: detachable KL_EQUALITY_TESTER_A [attached G]
 			-- Optional equality tester for item comparison.
 		do
 		end
 
 feature -- Query
 
-	has (a_item: !G): BOOLEAN
+	has (a_item: attached G): BOOLEAN
 			-- Determines if a given item exists in the collection
 		do
 			Result := internal_items.has (a_item)
@@ -49,7 +49,7 @@ feature -- Query
 
 feature -- Extension
 
-	extend (a_item: !G)
+	extend (a_item: attached G)
 			-- Extends the collection with an item.
 			--
 			-- `a_item': The item to add to the collection.
@@ -63,7 +63,7 @@ feature -- Extension
 
 feature -- Removal
 
-	prune (a_item: !G)
+	prune (a_item: attached G)
 			-- Removed an item from the collection.
 			--
 			-- `a_item': The item to remove from the collection.
@@ -79,7 +79,7 @@ feature -- Removal
 
 feature {NONE} -- Internal implementation cache
 
-	internal_items: !DS_ARRAYED_LIST [!G]
+	internal_items: attached DS_ARRAYED_LIST [attached G]
 			-- Mutable version of `items'
 
 ;note

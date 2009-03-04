@@ -115,7 +115,7 @@ feature -- Access
 
 feature {SESSION_MANAGER_S, SESSION_I} -- Access
 
-	extension_name: ?STRING_8 assign set_extension_name
+	extension_name: detachable STRING_8 assign set_extension_name
 			-- Optional extension name for specialized categories
 
 feature {SESSION_MANAGER_S} -- Access
@@ -147,7 +147,7 @@ feature -- Element change
 		do
 			l_old_value := value (a_id)
 			if l_old_value /= a_value then
-				if {l_old_data: SESSION_DATA_I} l_old_value then
+				if attached {SESSION_DATA_I} l_old_value as l_old_data then
 						-- Remove current session as the owner of the data
 					l_old_data.set_session (Void)
 				end
@@ -155,7 +155,7 @@ feature -- Element change
 				if a_value /= Void then
 					data.force (box_value (a_value), a_id)
 
-					if {l_data: SESSION_DATA_I} a_value and then l_data.session /= Current then
+					if attached {SESSION_DATA_I} a_value as l_data and then l_data.session /= Current then
 							-- Set current session as owner of the data
 						l_data.set_session (Current)
 					end
@@ -210,7 +210,7 @@ feature {SESSION_MANAGER_S} -- Element change
 				l_data.do_all (agent (a_ia_value: ANY)
 						-- Set session as owner on new, loaded data.
 					do
-						if {l_session_data: SESSION_DATA_I} a_ia_value then
+						if attached {SESSION_DATA_I} a_ia_value as l_session_data then
 							l_session_data.set_session (Current)
 						end
 					end)
@@ -247,7 +247,7 @@ feature {SESSION_MANAGER_S} -- Element change
 						-- Publish events for removed data
 					l_cursor := l_old_data.new_cursor
 					from l_cursor.start until l_cursor.after loop
-						if {l_session_data: SESSION_DATA_I} l_cursor.item then
+						if attached {SESSION_DATA_I} l_cursor.item as l_session_data then
 								-- Remove session as owner of the data
 							l_session_data.set_session (Void)
 						end
@@ -304,11 +304,11 @@ feature -- Query
 				l_id := l_internal.dynamic_type (a_value)
 					-- Supporting basic types; {STRING_GENERAL}, reference types inheriting {SESSION_DATA_I} or other type wrapped in a {CELL} (for expanded)
 				Result := l_codes.has (l_id) or else
-					{l_string: STRING_GENERAL} a_value or else
-					{l_session_data: SESSION_DATA_I} a_value or else
+					attached {STRING_GENERAL} a_value as l_string or else
+					attached {SESSION_DATA_I} a_value as l_session_data or else
 					({TUPLE}) #? a_value /= Void or else -- TUPLE cannot be used with explict attachment mark (6.1.7.1179)
-					{l_cell: !CELL [ANY]} a_value or else
-					{l_array: !ARRAY [ANY]} a_value
+					attached {attached CELL [ANY]} a_value as l_cell or else
+					attached {attached ARRAY [ANY]} a_value as l_array
 			end
 		end
 
@@ -340,7 +340,7 @@ feature {NONE} -- Helpers
 
 feature {SESSION_DATA_I, SESSION_I} -- Basic operations
 
-	notify_value_changed (a_value: !SESSION_DATA_I)
+	notify_value_changed (a_value: attached SESSION_DATA_I)
 			-- Used by complex session data objects to notify the session that an inner value has changed.
 			--
 			-- `a_value': The changed session data value.
@@ -362,7 +362,7 @@ feature {SESSION_DATA_I, SESSION_I} -- Basic operations
 
 feature -- Events
 
-	value_changed_event: !EVENT_TYPE [TUPLE [session: SESSION_I; id: STRING_8]]
+	value_changed_event: attached EVENT_TYPE [TUPLE [session: SESSION_I; id: STRING_8]]
 			-- Events fired when a value, indexed by an id, in the session object changes.
 			--
 			-- `session': The session where the change occured.
@@ -376,7 +376,7 @@ feature {SESSION_MANAGER_S} -- Action Handlers
 			data.do_all (agent (a_value: ANY)
 					-- Iterate the values and notify any session data of commencing storage.
 				do
-					if {l_data: !SESSION_DATA_I} a_value and {l_session: !SESSION_I} Current then
+					if attached {attached SESSION_DATA_I} a_value as l_data and attached {attached SESSION_I} Current as l_session then
 						l_data.set_session (Void)
 						l_data.on_begin_store (l_session)
 					end
@@ -391,7 +391,7 @@ feature {SESSION_MANAGER_S} -- Action Handlers
 				require
 					a_value_attached: a_value /= Void
 				do
-					if {l_data: !SESSION_DATA_I} a_value then
+					if attached {attached SESSION_DATA_I} a_value as l_data then
 						l_data.set_session (Current)
 						l_data.on_end_store
 					end

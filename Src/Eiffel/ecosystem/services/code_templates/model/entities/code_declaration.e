@@ -43,10 +43,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	id: !STRING_8 assign set_id
+	id: attached STRING_8 assign set_id
 			-- Declaration identifier
 
-	description: !STRING_32 assign set_description
+	description: attached STRING_32 assign set_description
 			-- Description of the identifier for user interface cues.
 
 feature -- Element change

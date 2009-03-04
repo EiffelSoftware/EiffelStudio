@@ -134,13 +134,13 @@ feature -- Properties
 	is_reference: BOOLEAN
 			-- Is current actual type a reference one?
 		do
-			Result := {a: like actual_type} actual_type and then a.is_reference
+			Result := attached actual_type as a and then a.is_reference
 		end
 
 	is_expanded: BOOLEAN
 			-- Is current actual type an expanded one?
 		do
-			Result := {a: like actual_type} actual_type and then a.is_expanded
+			Result := attached actual_type as a and then a.is_expanded
 		end
 
 	is_none: BOOLEAN
@@ -217,7 +217,7 @@ feature -- Access
 	generics: ARRAY [TYPE_A]
 			-- <Precursor>
 		do
-			if {a: like actual_type} actual_type then
+			if attached actual_type as a then
 				Result := a.generics
 			end
 		end

@@ -34,18 +34,18 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	definition: !CODE_TEMPLATE_DEFINITION
+	definition: attached CODE_TEMPLATE_DEFINITION
 			-- Top level code file.
 		do
 			Result := parent.definition
 		end
 
-	parent: !G assign set_parent
+	parent: attached G assign set_parent
 			-- Parent node of Current node.
 
 feature {CODE_NODE} -- Access
 
-	code_factory: !CODE_FACTORY
+	code_factory: attached CODE_FACTORY
 			-- Factory used for creating code nodes
 		do
 			Result := parent.code_factory

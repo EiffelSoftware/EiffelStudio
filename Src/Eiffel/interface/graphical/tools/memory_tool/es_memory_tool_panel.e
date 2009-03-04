@@ -192,19 +192,19 @@ feature {NONE} -- Access
 
 feature {NONE} -- Access
 
-	help_provider: !UUID
+	help_provider: attached UUID
 			-- <Precursor>
 		once
 			Result := (create {HELP_PROVIDER_KINDS}).wiki
 		end
 
-	help_context_id: !STRING_GENERAL
+	help_context_id: attached STRING_GENERAL
 			-- <Precursor>
 		once
 			Result := "User Interface Memory Managment"
 		end
 
-	help_context_section: ?HELP_CONTEXT_SECTION_I
+	help_context_section: detachable HELP_CONTEXT_SECTION_I
 			-- <Precursor>
 		once
 			create {HELP_CONTEXT_SECTION} Result.make ("Detecting Memory Leaks")
@@ -828,7 +828,7 @@ feature {NONE} -- Analysis
 			Result := l_row /= Void and then l_row.parent = memory_map_grid
 			if not Result then
 					-- If this is the closed arguments tuple of one of our agent, no need to show this object.
-				Result := ({l_discardable_data: TUPLE [like Current]} a_data)
+				Result := (attached {TUPLE [like Current]} a_data as l_discardable_data)
 			end
 		end
 

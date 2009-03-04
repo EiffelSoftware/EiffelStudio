@@ -77,7 +77,7 @@ feature -- Access
 
 	same_as (other: STONE): BOOLEAN
 		do
-			Result := {conv: CALL_STACK_STONE} other and then
+			Result := attached {CALL_STACK_STONE} other as conv and then
 				Precursor {OBJECT_STONE} (other) and then
 				Precursor {FEATURE_STONE} (other)
 		end

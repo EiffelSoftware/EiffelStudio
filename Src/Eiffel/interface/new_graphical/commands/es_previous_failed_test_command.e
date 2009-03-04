@@ -72,7 +72,7 @@ feature {ES_EWEASEL_TESTING_TOOL_PANEL} -- Implementation
 			Result := interface_names.t_Previous_failed_test
 		end
 
-	manager: !ES_EWEASEL_EXECUTION_MANAGER;
+	manager: attached ES_EWEASEL_EXECUTION_MANAGER;
 			-- eweasel execution chief manager
 note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"

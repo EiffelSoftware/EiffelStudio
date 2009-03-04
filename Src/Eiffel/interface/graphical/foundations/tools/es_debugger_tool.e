@@ -25,7 +25,7 @@ inherit
 
 feature -- Access
 
-	profile_kind: !UUID
+	profile_kind: attached UUID
 			-- <Precursor>
 		once
 			Result := (create {ES_TOOL_PROFILE_KINDS}).debugger
@@ -33,15 +33,15 @@ feature -- Access
 
 feature -- Access
 
-	frozen debugger_manager: !EB_DEBUGGER_MANAGER
+	frozen debugger_manager: attached EB_DEBUGGER_MANAGER
 			-- Debugger manager to use for tool creation.
 		require
 			is_interface_usable: is_interface_usable
 			window_is_interface_usable: window.is_interface_usable
 		local
-			l_result: ?EB_DEBUGGER_MANAGER
+			l_result: detachable EB_DEBUGGER_MANAGER
 		do
-			if {l_debugger: EB_DEBUGGER_MANAGER} window.debugger_manager then
+			if attached {EB_DEBUGGER_MANAGER} window.debugger_manager as l_debugger then
 				l_result := l_debugger
 			end
 			check l_result_attached: l_result /= Void end

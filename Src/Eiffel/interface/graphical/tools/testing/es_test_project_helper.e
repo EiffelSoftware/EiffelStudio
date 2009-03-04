@@ -39,7 +39,7 @@ inherit
 
 feature -- Access
 
-	last_added_class: !EIFFEL_CLASS_I
+	last_added_class: attached EIFFEL_CLASS_I
 			-- <Precursor>
 		local
 			l_class: like internal_added_class
@@ -49,7 +49,7 @@ feature -- Access
 			Result := l_class
 		end
 
-	last_added_cluster: !CONF_CLUSTER
+	last_added_cluster: attached CONF_CLUSTER
 			-- <Precursor>
 		local
 			l_cluster: like internal_added_cluster
@@ -59,7 +59,7 @@ feature -- Access
 			Result := l_cluster
 		end
 
-	last_error: !STRING_32
+	last_error: attached STRING_32
 			-- <Precursor>
 		local
 			l_error: like internal_error
@@ -71,13 +71,13 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	internal_added_class: ?like last_added_class
+	internal_added_class: detachable like last_added_class
 			-- <Precursor>
 
-	internal_added_cluster: ?like last_added_cluster
+	internal_added_cluster: detachable like last_added_cluster
 			-- <Precursor>
 
-	internal_error: ?like last_error
+	internal_error: detachable like last_error
 			-- <Precursor>
 
 feature -- Status report
@@ -117,10 +117,10 @@ feature -- Status report
 
 feature -- Element change
 
-	add_class (a_cluster: !CONF_CLUSTER; a_path: !STRING; a_file_name: !STRING; a_class_name: !STRING)
+	add_class (a_cluster: attached CONF_CLUSTER; a_path: attached STRING; a_file_name: attached STRING; a_class_name: attached STRING)
 			-- <Precursor>
 		local
-			l_stone: !CLASSI_STONE
+			l_stone: attached CLASSI_STONE
 			l_list: LIST [CONF_CLUSTER]
 			l_cluster: CONF_CLUSTER
 			l_retried: BOOLEAN
@@ -142,7 +142,7 @@ feature -- Element change
 
 				if l_cluster /= Void then
 					manager.add_class_to_cluster (a_file_name, l_cluster, a_path, a_class_name)
-					if {l_class: like last_added_class} manager.last_added_class then
+					if attached {like last_added_class} manager.last_added_class as l_class then
 						internal_added_class := l_class
 						create l_stone.make (internal_added_class)
 						window_manager.last_focused_development_window.advanced_set_stone (l_stone)
@@ -157,7 +157,7 @@ feature -- Element change
 			retry
 		end
 
-	add_cluster (a_target: !CONF_TARGET; a_path: !STRING)
+	add_cluster (a_target: attached CONF_TARGET; a_path: attached STRING)
 			-- <Precursor>
 		do
 			internal_error := Void
@@ -175,7 +175,7 @@ feature -- Basic operations
 			melt_project_cmd.execute_and_wait
 		end
 
-	run (a_working_directory: ?STRING; a_arguments: ?STRING; a_env: ?HASH_TABLE [!STRING_32, !STRING_32])
+	run (a_working_directory: detachable STRING; a_arguments: detachable STRING; a_env: detachable HASH_TABLE [attached STRING_32, attached STRING_32])
 			-- <Precursor>
 		local
 			l_params: DEBUGGER_EXECUTION_PARAMETERS

@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_tag: !like tag; a_contract: !like contract; a_source: like source)
+	make (a_tag: attached like tag; a_contract: attached like contract; a_source: like source)
 			-- Initializes a contract line
 		require
 			not_a_tag_is_empty: not a_tag.is_empty
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			source_set: source = a_source
 		end
 
-	make_without_tag (a_contract: !like contract; a_source: like source)
+	make_without_tag (a_contract: attached like contract; a_source: like source)
 			-- Initializes a contract line
 		require
 			not_a_contract_is_empty: not a_contract.is_empty
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			is_tagless: is_tagless
 		end
 
-	make_from_string (a_string: !STRING_GENERAL; a_source: like source)
+	make_from_string (a_string: attached STRING_GENERAL; a_source: like source)
 			-- Creates a contract line from a string and attempts to infer the tag and contract from it.
 		require
 			not_a_string_is_empty: not a_string.is_empty
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 			l_data: like split_contract_data
 		do
 			l_data := split_contract_data (format_contract (a_string))
-			if {l_tag: !STRING_32} l_data.tag then
+			if attached {attached STRING_32} l_data.tag as l_tag then
 				make (l_tag, l_data.contract, a_source)
 			else
 				make_without_tag (l_data.contract, a_source)
@@ -67,19 +67,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	tag: !STRING_32 assign set_tag
+	tag: attached STRING_32 assign set_tag
 			-- Contract tag
 
-	contract: !STRING_32 assign set_contract
+	contract: attached STRING_32 assign set_contract
 			-- Contract text
 
-	context: !ES_CONTRACT_EDITOR_CONTEXT [CLASSI_STONE]
+	context: attached ES_CONTRACT_EDITOR_CONTEXT [CLASSI_STONE]
 			-- <Precursor>
 		do
 			Result := source.context
 		end
 
-	source: !ES_CONTRACT_SOURCE_I
+	source: attached ES_CONTRACT_SOURCE_I
 			-- Parent source
 
 feature {NONE} -- Access
@@ -95,7 +95,7 @@ feature {NONE} -- Access
 
 feature -- Element change
 
-	set_tag (a_tag: !like tag)
+	set_tag (a_tag: attached like tag)
 			-- Sets the cotract tag name.
 			--
 			-- `a_tag': The contract tag
@@ -107,7 +107,7 @@ feature -- Element change
 			tag_set: tag.is_equal (a_tag)
 		end
 
-	set_contract (a_contract: !like contract)
+	set_contract (a_contract: attached like contract)
 			-- Set the contract text
 		require
 			not_a_contract_is_empty: not a_contract.is_empty
@@ -134,7 +134,7 @@ feature -- Status report
 
 feature {NONE} -- Helpers
 
-	frozen string_formatter: !STRING_FORMATTER
+	frozen string_formatter: attached STRING_FORMATTER
 			-- Formatter used to format strings
 		once
 			create Result
@@ -142,7 +142,7 @@ feature {NONE} -- Helpers
 
 feature {NONE} -- Basic operations
 
-	split_contract_data (a_string: !STRING_GENERAL): !TUPLE [tag: ?like tag; contract: !like contract]
+	split_contract_data (a_string: attached STRING_GENERAL): attached TUPLE [tag: detachable like tag; contract: attached like contract]
 			-- Splits a contract string into a tag and contract.
 			--
 			-- `a_string': The contract string to split.
@@ -153,8 +153,8 @@ feature {NONE} -- Basic operations
 			not_a_string_is_empty: not a_string.is_empty
 		local
 			l_rx: like contract_tag_regex
-			l_tag: !like tag
-			l_contract: !like contract
+			l_tag: attached like tag
+			l_contract: attached like contract
 		do
 			l_rx := contract_tag_regex
 			l_rx.match (a_string.as_string_8)
@@ -172,7 +172,7 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Formatting
 
-	format_contract (a_string: !STRING_GENERAL): !like contract
+	format_contract (a_string: attached STRING_GENERAL): attached like contract
 			-- Formats a contract string to remove all leading tabulation.
 			--
 			-- `a_string': The contract string to format.
@@ -180,11 +180,11 @@ feature {NONE} -- Formatting
 		local
 			l_string: STRING_32
 			l_tab_spaces: INTEGER
-			l_tab_string: !like contract
+			l_tab_string: attached like contract
 			l_start_count: INTEGER
 			l_start_count_set: BOOLEAN
-			l_lines: LIST [?like contract]
-			l_line: !like contract
+			l_lines: LIST [detachable like contract]
+			l_line: attached like contract
 			l_char_count: INTEGER
 			i, l_count: INTEGER
 		do
@@ -228,7 +228,7 @@ feature {NONE} -- Formatting
 
 feature -- Output
 
-	string: !STRING_32
+	string: attached STRING_32
 			-- Retrieve a string representation of the contract line
 		do
 			create Result.make (75)
@@ -243,7 +243,7 @@ feature -- Output
 
 feature {NONE} -- Regular expressions
 
-	contract_tag_regex: !RX_PCRE_MATCHER
+	contract_tag_regex: attached RX_PCRE_MATCHER
 			-- Contract tag extraction regular expression.
 		once
 			create Result.make

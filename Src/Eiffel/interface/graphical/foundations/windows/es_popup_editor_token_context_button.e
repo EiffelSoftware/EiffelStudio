@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			editor_token_set: editor_token = a_token
 		end
 
-	frozen make_with_widget (a_editor: like editor; a_token: like editor_token; a_popup_widget: !EV_WIDGET)
+	frozen make_with_widget (a_editor: like editor; a_token: like editor_token; a_popup_widget: attached EV_WIDGET)
 			-- Initialize a editor token context button using a popup widget structure, to be shown when the drop down arrow is
 			-- selected.
 			--
@@ -106,12 +106,12 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	editor: !EB_EDITOR
+	editor: attached EB_EDITOR
 			-- The source editor where the context button will be displayed.
 			-- In addition, the editor is needed to propagate events to when the user tries to modify the token
 			-- shown.
 
-	editor_token: !EDITOR_TOKEN
+	editor_token: attached EDITOR_TOKEN
 			-- The template token to display as the context button
 
 feature {ES_EDITOR_TOKEN_HANDLER} -- Access
@@ -224,10 +224,10 @@ feature -- Status setting
 
 feature -- Actions
 
-	token_select_actions: !EV_LITE_ACTION_SEQUENCE [TUPLE [x, y, screen_x, screen_y: INTEGER]]
+	token_select_actions: attached EV_LITE_ACTION_SEQUENCE [TUPLE [x, y, screen_x, screen_y: INTEGER]]
 			-- Actions called when the token part of the popup window was selected
 		do
-			if {l_actions: !EV_LITE_ACTION_SEQUENCE [TUPLE [x, y, screen_x, screen_y: INTEGER]]} internal_token_select_actions then
+			if attached {attached EV_LITE_ACTION_SEQUENCE [TUPLE [x, y, screen_x, screen_y: INTEGER]]} internal_token_select_actions as l_actions then
 				Result := l_actions
 			else
 				create Result
@@ -239,7 +239,7 @@ feature -- Actions
 
 feature -- Query
 
-	is_applicable_editor_token (a_token: !EDITOR_TOKEN): BOOLEAN
+	is_applicable_editor_token (a_token: attached EDITOR_TOKEN): BOOLEAN
 			-- Determines if a token is an applicable editor token for a context button.
 			--
 			-- `a_token': A editor token to determine applicablity.
@@ -397,10 +397,10 @@ feature {NONE} -- User interface elements
 	widget_container: EV_VERTICAL_BOX
 			-- The container to extend a popup widget with.
 
-	token_image: !EV_PIXMAP
+	token_image: attached EV_PIXMAP
 			-- Custom drawing area
 
-	token_image_rectangle: !EV_RECTANGLE
+	token_image_rectangle: attached EV_RECTANGLE
 			-- The rectangle coordinates representing the token in the `token_image' drawing
 			-- area. When select the editor should be focused and the context button should be
 			-- hidden.
@@ -448,7 +448,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	render_smart_token (a_token: !EDITOR_TOKEN; a_dc: !EV_DRAWABLE; a_x: INTEGER; a_y: INTEGER; a_paint: BOOLEAN): TUPLE [coords: !EV_RECTANGLE; token_coords: !EV_RECTANGLE]
+	render_smart_token (a_token: attached EDITOR_TOKEN; a_dc: attached EV_DRAWABLE; a_x: INTEGER; a_y: INTEGER; a_paint: BOOLEAN): TUPLE [coords: attached EV_RECTANGLE; token_coords: attached EV_RECTANGLE]
 			-- Renders a smart token image on a drawing area, at the specified coordinates.
 			--
 			-- `a_token': The editor token to render on a drawable area.
@@ -474,8 +474,8 @@ feature {NONE} -- Basic operations
 			l_glyph: EDITOR_TOKEN_GLYPH
 			l_border: INTEGER
 			l_has_popup_widget: like is_popup_widget_available
-			l_token_rect: !EV_RECTANGLE
-			l_rect: !EV_RECTANGLE
+			l_token_rect: attached EV_RECTANGLE
+			l_rect: attached EV_RECTANGLE
 		do
 			if a_paint then
 					-- Hold on to existing information for later restore.
@@ -558,7 +558,7 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Internal implementation cache
 
-	internal_token_select_actions: ?EV_LITE_ACTION_SEQUENCE [TUPLE [x, y: INTEGER]]
+	internal_token_select_actions: detachable EV_LITE_ACTION_SEQUENCE [TUPLE [x, y: INTEGER]]
 			-- Cached version of `token_select_actions'.
 			-- Note: do not use directly!
 

@@ -32,10 +32,10 @@ feature {NONE} -- User interface initialization
 
 feature -- Access
 
-	path: !STRING_32
+	path: attached STRING_32
 			-- <Precursor>
 		local
-			l_result: ?STRING_32
+			l_result: detachable STRING_32
 			l_separator: CHARACTER_8
 		do
 			l_result := dialog.directory
@@ -50,7 +50,7 @@ feature -- Access
 			end
 		end
 
-	buttons: !DS_SET [INTEGER]
+	buttons: attached DS_SET [INTEGER]
 			-- <Precursor>
 		once
 			Result := dialog_buttons.ok_cancel_buttons.as_attached
@@ -88,10 +88,10 @@ feature -- Status setting
 
 feature {NONE} -- Query
 
-	button_from_dialog_selected_button (a_dialog: !EV_DIRECTORY_DIALOG): INTEGER
+	button_from_dialog_selected_button (a_dialog: attached EV_DIRECTORY_DIALOG): INTEGER
 			-- <Precursor>
 		local
-			l_directory: ?STRING_32
+			l_directory: detachable STRING_32
 		do
 			l_directory := a_dialog.directory
 			if l_directory = Void or else l_directory.is_empty then
@@ -153,7 +153,7 @@ feature {NONE} -- Action handlers
 
 feature {NONE} -- Factory
 
-	new_dialog: !EV_DIRECTORY_DIALOG
+	new_dialog: attached EV_DIRECTORY_DIALOG
 			-- <Precursor>
 		do
 			create Result

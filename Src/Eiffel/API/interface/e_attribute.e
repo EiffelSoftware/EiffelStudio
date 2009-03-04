@@ -62,15 +62,15 @@ feature {NONE} -- Implementation
 			-- Associated routine as used to find out locals and object test locals
 		do
 			if body_index > 0 then
-				if {feat_as: FEATURE_AS} Body_server.item (body_index) then
+				if attached {FEATURE_AS} Body_server.item (body_index) as feat_as then
 						--| feature_as can be Void for invariant routine
 					Result ?= feat_as.body.content
 				end
 			end
 			if Result /= Void then
 				if Result.is_built_in then
-					if {built_in_as: BUILT_IN_AS} Result.routine_body then
-						if {feature_as: FEATURE_AS} built_in_as.body then
+					if attached {BUILT_IN_AS} Result.routine_body as built_in_as then
+						if attached {FEATURE_AS} built_in_as.body as feature_as then
 							Result ?= feature_as.body.content
 						end
 					end

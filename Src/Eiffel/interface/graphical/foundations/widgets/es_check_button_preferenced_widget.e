@@ -21,7 +21,7 @@ convert
 
 feature {NONE} -- Initialization: User interface
 
-	build_widget_interface (a_widget: !EV_CHECK_BUTTON)
+	build_widget_interface (a_widget: attached EV_CHECK_BUTTON)
 			-- <Precursor>
 		do
 		end
@@ -40,7 +40,7 @@ feature {NONE} -- Access
 			Result := widget.is_selected
 		end
 
-	widget_change_actions: !ACTION_SEQUENCE [TUPLE]
+	widget_change_actions: attached ACTION_SEQUENCE [TUPLE]
 			-- <Precursor>
 		local
 			l_actions: ACTION_SEQUENCE [TUPLE]
@@ -70,7 +70,7 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Factory
 
-	create_widget: !EV_CHECK_BUTTON
+	create_widget: attached EV_CHECK_BUTTON
 			-- <Precursor>
 		do
 			create Result

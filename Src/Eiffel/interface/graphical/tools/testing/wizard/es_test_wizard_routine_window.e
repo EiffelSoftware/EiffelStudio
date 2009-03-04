@@ -207,7 +207,7 @@ feature {NONE} -- Initialization
 						l_sitem: EV_LIST_ITEM
 					do
 						l_sitem := template_list.selected_item
-						if l_sitem /= Void and then {l_proc: PROCEDURE [ANY, TUPLE]} l_sitem.data then
+						if l_sitem /= Void and then attached {PROCEDURE [ANY, TUPLE]} l_sitem.data as l_proc then
 							l_proc.call (Void)
 						end
 					end)
@@ -220,7 +220,7 @@ feature {NONE} -- Initialization
 	on_after_initialize
 			-- Called after all widgets have been initialized.
 		local
-			l_name: ?STRING
+			l_name: detachable STRING
 			l_name_32: STRING_32
 		do
 			l_name := conf.name_cache
@@ -246,7 +246,7 @@ feature {NONE} -- Access
 			Result := wizard_information.manual_conf
 		end
 
-	factory_type: !TYPE [TEST_CREATOR_I]
+	factory_type: attached TYPE [TEST_CREATOR_I]
 			-- <Precursor>
 		do
 			Result := manual_factory_type
@@ -305,7 +305,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Events
 
-	on_validate_test_name (a_name: !STRING_32): !TUPLE [BOOLEAN, ?STRING_32]
+	on_validate_test_name (a_name: attached STRING_32): attached TUPLE [BOOLEAN, detachable STRING_32]
 			-- Called when `class_name' content needs to be validated
 		local
 			l_valid: BOOLEAN
@@ -314,7 +314,7 @@ feature {NONE} -- Events
 		do
 			l_name := a_name.to_string_8
 			check l_name /= Void end
-			if not conf.is_new_class and then {l_class: !CLASS_I} conf.test_class_cache then
+			if not conf.is_new_class and then attached {attached CLASS_I} conf.test_class_cache as l_class then
 				feature_name_validator.validate_new_feature_name (l_name, l_class)
 			else
 				feature_name_validator.validate_feature_name (l_name)
@@ -330,10 +330,10 @@ feature {NONE} -- Events
 			Result := [l_valid, l_msg]
 		end
 
-	on_validate_tag_field (a_tag_32: !STRING_32): !TUPLE [BOOLEAN, ?STRING_32]
+	on_validate_tag_field (a_tag_32: attached STRING_32): attached TUPLE [BOOLEAN, detachable STRING_32]
 			-- Called when `tag_field' content needs to be validated
 		local
-			l_error: ?STRING_32
+			l_error: detachable STRING_32
 			l_enable, l_valid: BOOLEAN
 			l_tag: STRING
 		do
@@ -412,8 +412,8 @@ feature {NONE} -- Events
 			-- Add covers tag to `wizard_information'.
 		local
 			l_dialog: ES_TEST_WIZARD_FEATURE_DIALOG
-			l_class: ?CLASS_I
-			l_feature: ?E_FEATURE
+			l_class: detachable CLASS_I
+			l_feature: detachable E_FEATURE
 			l_tag: STRING
 		do
 			create l_dialog.make_with_window (development_window)

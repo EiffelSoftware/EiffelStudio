@@ -180,7 +180,7 @@ feature -- Access
 			is_running: is_running
 			is_stopped: is_stopped
 		do
-			if {ecs: EIFFEL_CALL_STACK} status.current_call_stack then
+			if attached {EIFFEL_CALL_STACK} status.current_call_stack as ecs then
 				Result := ecs.count
 			end
 		end
@@ -191,7 +191,7 @@ feature -- Access
 			is_running: is_running
 			is_stopped: is_stopped
 		do
-			if {ecs: EIFFEL_CALL_STACK} status.current_call_stack then
+			if attached {EIFFEL_CALL_STACK} status.current_call_stack as ecs then
 				Result := ecs.stack_depth
 			end
 		end
@@ -384,7 +384,7 @@ feature -- Remote access to RT_
 	remote_rt_execution_recorder_value: DUMP_VALUE
 			-- Return the remote rt_object.execution_recorder
 		do
-			if {rto: ABSTRACT_REFERENCE_VALUE} remote_rt_object then
+			if attached {ABSTRACT_REFERENCE_VALUE} remote_rt_object as rto then
 				Result := query_evaluation_on (rto, Void, rto.dynamic_class, "execution_recorder", Void)
 			end
 		end
@@ -405,7 +405,7 @@ feature -- Remote access to RT_
 			status.set_replay_recording (b)
 			check status.replay_recording = b end
 
-			if {rto: ABSTRACT_REFERENCE_VALUE} remote_rt_object then
+			if attached {ABSTRACT_REFERENCE_VALUE} remote_rt_object as rto then
 				dbg := debugger_manager
 				dv_fact := dbg.dump_value_factory
 				i32cl := dbg.compiler_data.integer_32_class_c
@@ -415,8 +415,8 @@ feature -- Remote access to RT_
 				dep := 1
 				line := 0
 				if b then
-					if {ecse: EIFFEL_CALL_STACK_ELEMENT} status.current_eiffel_call_stack_element then
-						if {adv: ABSTRACT_DEBUG_VALUE} ecse.current_object_value then
+					if attached {EIFFEL_CALL_STACK_ELEMENT} status.current_eiffel_call_stack_element as ecse then
+						if attached {ABSTRACT_DEBUG_VALUE} ecse.current_object_value as adv then
 							ref := adv.dump_value
 						end
 						ct := ecse.dynamic_type
@@ -470,7 +470,7 @@ feature -- Remote access to RT_
 				d := status.replayed_depth
 				remote_activate_replay (False)
 					--| Reset data of replayed stacks
-				if {ccs: EIFFEL_CALL_STACK} status.current_call_stack then
+				if attached {EIFFEL_CALL_STACK} status.current_call_stack as ccs then
 					from
 						sd := ccs.stack_depth
 					until
@@ -498,13 +498,13 @@ feature -- Remote access to RT_
 			dbg: DEBUGGER_MANAGER
 			res: BOOLEAN
 		do
-			if {ex_rec_dv: DUMP_VALUE} remote_rt_execution_recorder_value and then not ex_rec_dv.is_void then
+			if attached {DUMP_VALUE} remote_rt_execution_recorder_value as ex_rec_dv and then not ex_rec_dv.is_void then
 				dbg := debugger_manager
 				dv_fact := dbg.dump_value_factory
 				create params.make (1)
 				params.extend (dv_fact.new_boolean_value (b, dbg.compiler_data.boolean_class_c))
 				res := command_evaluation_on (Void, ex_rec_dv, ex_rec_dv.dynamic_class, "activate_replay", params)
-				if res and then {rcse: REPLAYED_CALL_STACK_ELEMENT} current_replayed_call then
+				if res and then attached {REPLAYED_CALL_STACK_ELEMENT} current_replayed_call as rcse then
 					status.set_current_replayed_call (rcse)
 				else
 					status.set_current_replayed_call (Void)
@@ -531,7 +531,7 @@ feature -- Remote access to RT_
 
 			nb := 1
 
-			if {ex_rec_dv: DUMP_VALUE} remote_rt_execution_recorder_value and then not ex_rec_dv.is_void then
+			if attached {DUMP_VALUE} remote_rt_execution_recorder_value as ex_rec_dv and then not ex_rec_dv.is_void then
 				dbg := debugger_manager
 				dv_fact := dbg.dump_value_factory
 				i32cl := dbg.compiler_data.integer_32_class_c
@@ -539,11 +539,11 @@ feature -- Remote access to RT_
 				params.extend (dv_fact.new_integer_32_value (dir, i32cl))
 				params.extend (dv_fact.new_integer_32_value (nb, i32cl))
 
-				if {ccs: EIFFEL_CALL_STACK} status.current_call_stack then
+				if attached {EIFFEL_CALL_STACK} status.current_call_stack as ccs then
 					ccs.reset_call_stack_depth (prev_d)
 					Result := command_evaluation_on (Void, ex_rec_dv, ex_rec_dv.dynamic_class, "replay", params)
 					if Result then
-						if {rcse: REPLAYED_CALL_STACK_ELEMENT} current_replayed_call then
+						if attached {REPLAYED_CALL_STACK_ELEMENT} current_replayed_call as rcse then
 							status.set_current_replayed_call (rcse)
 						else
 							check should_not_occur: False end
@@ -570,7 +570,7 @@ feature -- Remote access to RT_
 			dbg: DEBUGGER_MANAGER
 			prev_d,d1,d2: INTEGER
 		do
-			if {ex_rec_dv: DUMP_VALUE} remote_rt_execution_recorder_value and then not ex_rec_dv.is_void then
+			if attached {DUMP_VALUE} remote_rt_execution_recorder_value as ex_rec_dv and then not ex_rec_dv.is_void then
 				prev_d := status.replayed_depth
 
 				dbg := debugger_manager
@@ -579,7 +579,7 @@ feature -- Remote access to RT_
 				params.extend (dv_fact.new_manifest_string_value (a_id, dbg.compiler_data.string_8_class_c))
 				Result := command_evaluation_on (Void, ex_rec_dv, ex_rec_dv.dynamic_class, "replay_to_point", params)
 				if Result then
-					if {rcse: REPLAYED_CALL_STACK_ELEMENT} current_replayed_call then
+					if attached {REPLAYED_CALL_STACK_ELEMENT} current_replayed_call as rcse then
 						status.set_current_replayed_call (rcse)
 					else
 						check should_not_occur: False end
@@ -589,7 +589,7 @@ feature -- Remote access to RT_
 					--| Note: or maybe ... popup error message, and exit debugging ..?
 --						status.set_current_replayed_call (Void)
 				end
-				if {ccs: EIFFEL_CALL_STACK} status.current_call_stack then
+				if attached {EIFFEL_CALL_STACK} status.current_call_stack as ccs then
 					from
 						d2 := status.replayed_depth
 						if d2 > prev_d then
@@ -621,7 +621,7 @@ feature -- Remote access to RT_
 			dbg: DEBUGGER_MANAGER
 		do
 			dir := direction
-			if {ex_rec_dv: DUMP_VALUE} remote_rt_execution_recorder_value and then not ex_rec_dv.is_void then
+			if attached {DUMP_VALUE} remote_rt_execution_recorder_value as ex_rec_dv and then not ex_rec_dv.is_void then
 				dbg := debugger_manager
 				dv_fact := dbg.dump_value_factory
 				i32cl := dbg.compiler_data.integer_32_class_c
@@ -640,12 +640,12 @@ feature -- Remote access to RT_
 			dv: DUMP_VALUE
 			dbg: DEBUGGER_MANAGER
 		do
-			if {ex_rec_dv: DUMP_VALUE} remote_rt_execution_recorder_value and then not ex_rec_dv.is_void then
+			if attached {DUMP_VALUE} remote_rt_execution_recorder_value as ex_rec_dv and then not ex_rec_dv.is_void then
 				dbg := debugger_manager
 				dv_fact := dbg.dump_value_factory
 				dv := query_evaluation_on (Void, ex_rec_dv, ex_rec_dv.dynamic_class, "replayed_call_details", Void)
 				if dv /= Void and then not dv.is_void then
-					if {s32: STRING_32} dv.string_representation and then s32.count > 0 then
+					if attached {STRING_32} dv.string_representation as s32 and then s32.count > 0 then
 						create Result.make_from_string ("" , s32)
 					end
 				end
@@ -661,7 +661,7 @@ feature -- Remote access to RT_
 			dv: DUMP_VALUE
 			dbg: DEBUGGER_MANAGER
 		do
-			if {ex_rec_dv: DUMP_VALUE} remote_rt_execution_recorder_value and then not ex_rec_dv.is_void then
+			if attached {DUMP_VALUE} remote_rt_execution_recorder_value as ex_rec_dv and then not ex_rec_dv.is_void then
 				dbg := debugger_manager
 				dv_fact := dbg.dump_value_factory
 				create params.make (2)
@@ -669,7 +669,7 @@ feature -- Remote access to RT_
 				params.extend (dv_fact.new_integer_32_value (nb, dbg.compiler_data.integer_32_class_c))
 				dv := query_evaluation_on (Void, ex_rec_dv, ex_rec_dv.dynamic_class, "callstack_record_details", params)
 				if dv /= Void and then not dv.is_void then
-					if {s32: STRING_32} dv.string_representation and then s32.count > 0 then
+					if attached {STRING_32} dv.string_representation as s32 and then s32.count > 0 then
 						create Result.make_from_string (a_id , s32)
 					end
 				end
@@ -685,7 +685,7 @@ feature -- Remote access to RT_
 			ref_dv, fn_dv: DUMP_VALUE
 			dbg: DEBUGGER_MANAGER
 		do
-			if {rto: ABSTRACT_REFERENCE_VALUE} remote_rt_object then
+			if attached {ABSTRACT_REFERENCE_VALUE} remote_rt_object as rto then
 				dbg := debugger_manager
 				dv_fact := dbg.dump_value_factory
 				ref_dv := dv_fact.new_object_value (oa, Void)
@@ -708,7 +708,7 @@ feature -- Remote access to RT_
 			ref_dv, fn_dv: DUMP_VALUE
 			dbg: DEBUGGER_MANAGER
 		do
-			if {rto: ABSTRACT_REFERENCE_VALUE} remote_rt_object then
+			if attached {ABSTRACT_REFERENCE_VALUE} remote_rt_object as rto then
 				dbg := debugger_manager
 				dv_fact := dbg.dump_value_factory
 				if oa /= Void then
@@ -1070,7 +1070,7 @@ feature -- Assertion change
 			Result := not last_assertion_check_stack.is_empty
 		end
 
-	last_assertion_check_stack: !LINKED_STACK [BOOLEAN]
+	last_assertion_check_stack: attached LINKED_STACK [BOOLEAN]
 			-- Last assertion check value when it had been disabled by `disable_assertion_check'.
 
 feature {NONE} -- Assertion change Implementation

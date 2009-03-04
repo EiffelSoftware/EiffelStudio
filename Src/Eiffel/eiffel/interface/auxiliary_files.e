@@ -412,7 +412,7 @@ feature -- Plug and Makefile file
 			l_root_malloc: STRING
 			l_root: SYSTEM_ROOT
 			l_root_type: CL_TYPE_A
-			l_root_gen_type: ?GEN_TYPE_A
+			l_root_gen_type: detachable GEN_TYPE_A
 			l_root_create_type: CREATE_TYPE
 			l_root_cl: CLASS_C
 			l_rout_info: ROUT_INFO

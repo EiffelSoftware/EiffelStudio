@@ -40,7 +40,7 @@ feature -- Command
 			set: maximum_remembered_data_count = a_count
 		end
 
-	remove_test_run_data (a_item: !ES_EWEASEL_TEST_RUN_DATA_ITEM)
+	remove_test_run_data (a_item: attached ES_EWEASEL_TEST_RUN_DATA_ITEM)
 			-- Remove `a_list' from `all_test_runs'
 		do
 			internal_total_test_runs.prune_all (a_item)
@@ -48,7 +48,7 @@ feature -- Command
 			pruned: not has_test_data (a_item)
 		end
 
-	append_test_run_data (a_list: !ARRAYED_LIST [ES_EWEASEL_TEST_RESULT_ITEM]; a_related_test_cases: !ARRAYED_LIST [ES_EWEASEL_TEST_CASE_ITEM])
+	append_test_run_data (a_list: attached ARRAYED_LIST [ES_EWEASEL_TEST_RESULT_ITEM]; a_related_test_cases: attached ARRAYED_LIST [ES_EWEASEL_TEST_CASE_ITEM])
 			-- Added a test run data to session data
 		local
 			l_item: ES_EWEASEL_TEST_RUN_DATA_ITEM
@@ -86,7 +86,7 @@ feature -- Query
 	maximum_remembered_data_count: NATURAL
 			-- How many test run data should be remembered?
 
-	has_test_data (a_item: !ES_EWEASEL_TEST_RUN_DATA_ITEM): BOOLEAN
+	has_test_data (a_item: attached ES_EWEASEL_TEST_RUN_DATA_ITEM): BOOLEAN
 			-- Dose Current have `a_item' ?
 		do
 			Result := internal_total_test_runs.has (a_item)
@@ -129,7 +129,7 @@ feature {ES_RUN_ALL_EWEASEL_TEST_RESULTS_DIALOG} -- Internal setting
 
 feature {NONE} -- Implementation
 
-	internal_total_test_runs: !ARRAYED_LIST [ES_EWEASEL_TEST_RUN_DATA_ITEM]
+	internal_total_test_runs: attached ARRAYED_LIST [ES_EWEASEL_TEST_RUN_DATA_ITEM]
 			-- Total test runs data.
 
 

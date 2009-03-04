@@ -16,14 +16,14 @@ inherit
 
 feature -- Access
 
-	document_protocol: !STRING_32
+	document_protocol: attached STRING_32
 			-- Document protocol used by a URI to navigate to the help accessible from the provider.
 		once
 			create Result.make_empty
 			Result.append ("DOC")
 		end
 
-	document_description: !STRING_32
+	document_description: attached STRING_32
 			-- Document short description
 		once
 			create Result.make_empty
@@ -32,7 +32,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	show_help (a_context_id: !STRING_GENERAL; a_section: ?HELP_CONTEXT_SECTION_I)
+	show_help (a_context_id: attached STRING_GENERAL; a_section: detachable HELP_CONTEXT_SECTION_I)
 			-- <precursor>
 		do
 				-- For the moment, DOC is treated as normal URI

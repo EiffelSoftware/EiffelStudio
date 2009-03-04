@@ -25,7 +25,7 @@ convert
 
 feature {NONE} -- Initialization
 
-	build_tool_bar_widget_interface (a_widget: !EV_WIDGET)
+	build_tool_bar_widget_interface (a_widget: attached EV_WIDGET)
 			-- <Precursor>
 		local
 			l_editor: like editor
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			build_editor_interface (l_editor)
 		end
 
-	build_editor_interface (a_editor: !like editor)
+	build_editor_interface (a_editor: attached like editor)
 			-- Build the editor's interface
 		require
 			a_editor_is_interface_usable: a_editor.is_interface_usable
@@ -59,7 +59,7 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-	editor: !EB_CLICKABLE_EDITOR
+	editor: attached EB_CLICKABLE_EDITOR
 			-- Actual editor
 		local
 			l_result: like internal_editor
@@ -83,7 +83,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Factory
 
-	new_editor: !EB_CLICKABLE_EDITOR
+	new_editor: attached EB_CLICKABLE_EDITOR
 			-- Creates a new editor
 		require
 			is_interface_usable: is_interface_usable
@@ -94,12 +94,12 @@ feature {NONE} -- Factory
 			result_is_interface_usable: Result.is_interface_usable
 		end
 
-	new_tool_bar_items: ?DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+	new_tool_bar_items: detachable DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- <Precursor>
 		do
 		end
 
-	frozen new_widget: !EV_WIDGET
+	frozen new_widget: attached EV_WIDGET
 			-- <Precursor>
 		do
 			Result := editor.widget.as_attached
@@ -109,7 +109,7 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Implementation: Internal cache
 
-	internal_editor: ?like editor
+	internal_editor: detachable like editor
 			-- Cached version of `editor'.
 			-- Note: Do not use directly!
 

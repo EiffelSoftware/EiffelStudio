@@ -20,7 +20,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_tool: !ES_TOOL [EB_TOOL]; a_name: !STRING)
+	make (a_tool: attached ES_TOOL [EB_TOOL]; a_name: attached STRING)
 			-- Initialized a tool's pixmap accessor.
 			--
 			-- `a_tool': The tool to retrieve the pixmaps for.
@@ -29,16 +29,16 @@ feature {NONE} -- Initialization
 			a_tool_is_interface_usable: a_tool.is_interface_usable
 			not_a_name_is_empty: not a_name.is_empty
 		local
-			l_matrix: !FILE_NAME
+			l_matrix: attached FILE_NAME
 		do
 				-- Create icon file name
 			create l_matrix.make_from_string (tool_utilities.tool_associated_path (a_tool))
 			l_matrix.set_file_name (a_name)
-			if {l_user_matrix: FILE_NAME} eiffel_layout.user_priority_file_name (l_matrix, True) then
+			if attached {FILE_NAME} eiffel_layout.user_priority_file_name (l_matrix, True) as l_user_matrix then
 					-- The user has replaced the icons.
 				l_matrix := l_user_matrix
 			end
-			if {l_buffer: EV_PIXEL_BUFFER} resource_handler.retrieve_matrix (l_matrix) then
+			if attached {EV_PIXEL_BUFFER} resource_handler.retrieve_matrix (l_matrix) as l_buffer then
 				make_from_buffer (l_buffer)
 			else
 				if logger.is_service_available then
@@ -55,13 +55,13 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Helpers
 
-	resource_handler: !ES_TOOL_PIXMAP_RESOURCE_HANDLER
+	resource_handler: attached ES_TOOL_PIXMAP_RESOURCE_HANDLER
 			-- <Precursor>
 		once
 			create Result.make
 		end
 
-	tool_utilities: !ES_TOOL_UTILITIES
+	tool_utilities: attached ES_TOOL_UTILITIES
 			-- Access to EiffelStudio tool utility functions.
 		once
 			create Result

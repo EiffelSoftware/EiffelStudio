@@ -23,28 +23,28 @@ feature {NONE} -- Initialization
 			--
 			-- `a_factory': Factory used for creating nodes.
 		do
-			set_title (create {!STRING_32}.make_empty)
-			set_description (create {!STRING_32}.make_empty)
-			set_author (create {!STRING_32}.make_empty)
-			set_shortcut (create {!STRING_32}.make_empty)
+			set_title (create {attached STRING_32}.make_empty)
+			set_description (create {attached STRING_32}.make_empty)
+			set_author (create {attached STRING_32}.make_empty)
+			set_shortcut (create {attached STRING_32}.make_empty)
 			set_categories (a_factory.create_code_category_collection (Current))
 		end
 
 feature -- Access
 
-	title: !STRING_32 assign set_title
+	title: attached STRING_32 assign set_title
 			-- Code template title, used by UI for a terse description
 
-	description: !STRING_32 assign set_description
+	description: attached STRING_32 assign set_description
 			-- Code template description, used by UI for a more detailed descrition of its function
 
-	author: !STRING_32 assign set_author
+	author: attached STRING_32 assign set_author
 			-- Owner/author of the code template.
 
-	shortcut: !STRING_32 assign set_shortcut
+	shortcut: attached STRING_32 assign set_shortcut
 			-- Shortcut identifier, used in editing to insert the code template quickly
 
-	categories: !CODE_CATEGORY_COLLECTION assign set_categories
+	categories: attached CODE_CATEGORY_COLLECTION assign set_categories
 			-- A collection of categories that the code template belongs to
 
 feature -- Element change
@@ -92,7 +92,7 @@ feature -- Element change
 
 feature -- Visitor
 
-	process (a_visitor: !CODE_TEMPLATE_VISITOR_I)
+	process (a_visitor: attached CODE_TEMPLATE_VISITOR_I)
 			-- <Precursor>
 		do
 			a_visitor.process_code_metadata (Current)

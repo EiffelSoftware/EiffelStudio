@@ -81,7 +81,7 @@ feature {NONE} -- Redefine
 
 feature {NONE} -- Implementation
 
-	ui_builder: !ES_CHOOSE_CLUSTER_UI_BUILDER
+	ui_builder: attached ES_CHOOSE_CLUSTER_UI_BUILDER
 			-- UI builder
 		once
 			create Result

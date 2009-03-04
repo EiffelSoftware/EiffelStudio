@@ -8,7 +8,7 @@ class
 	ES_TEST_LIST_GRID_LAYOUT
 
 inherit
-	ES_TAGABLE_GRID_LAYOUT [!TEST_I]
+	ES_TAGABLE_GRID_LAYOUT [attached TEST_I]
 		redefine
 			project,
 			is_project_available,
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	project: !E_PROJECT
+	project: attached E_PROJECT
 			-- <Precursor>
 		do
 			Result := test_suite.service.eiffel_project
@@ -87,7 +87,7 @@ feature -- Status report
 
 feature {NONE} -- Query
 
-	status_icon (a_test: !TEST_I): ?EV_PIXMAP
+	status_icon (a_test: attached TEST_I): detachable EV_PIXMAP
 			-- Icon representing status of `a_test'.
 		do
 			if not (a_test.is_queued or a_test.is_running) and a_test.is_outcome_available then
@@ -101,7 +101,7 @@ feature {NONE} -- Query
 			end
 		end
 
-	status_text (a_test: !TEST_I): !STRING_32
+	status_text (a_test: attached TEST_I): attached STRING_32
 			-- Status text for `a_test'.
 		local
 			l_outcome: EQA_TEST_RESULT
@@ -136,7 +136,7 @@ feature {NONE} -- Query
 			end
 		end
 
-	exception_text (a_exception: EQA_TEST_INVOCATION_EXCEPTION): !STRING_32
+	exception_text (a_exception: EQA_TEST_INVOCATION_EXCEPTION): attached STRING_32
 			-- Text describing for given expception
 		require
 			a_exception_attached: a_exception /= Void
@@ -148,7 +148,7 @@ feature {NONE} -- Query
 			Result.append_character (')')
 		end
 
-	status_tooltip (a_test: !TEST_I): !STRING_32
+	status_tooltip (a_test: attached TEST_I): attached STRING_32
 			-- Tooltip for status of `a_test'.
 		local
 			l_outcome: EQA_TEST_RESULT
@@ -188,19 +188,19 @@ feature {NONE} -- Query
 
 feature {NONE} -- Helpers
 
-	icon_provider: !ES_TOOL_ICONS_PROVIDER_I [ES_TESTING_TOOL_ICONS]
+	icon_provider: attached ES_TOOL_ICONS_PROVIDER_I [ES_TESTING_TOOL_ICONS]
 			-- Access to the icons provided by the testing tool.
 
 feature -- Basic operations
 
-	populate_header (a_header: !EV_GRID_HEADER)
+	populate_header (a_header: attached EV_GRID_HEADER)
 			-- <Precursor>
 		do
 			a_header.i_th (tests_column).set_text (locale_formatter.translation (t_tests))
 			a_header.i_th (status_column).set_text (locale_formatter.translation (t_status))
 		end
 
-	populate_item_row (a_row: !EV_GRID_ROW; a_item: !TEST_I)
+	populate_item_row (a_row: attached EV_GRID_ROW; a_item: attached TEST_I)
 			-- <Precursor>
 		do
 			a_row.set_item (tests_column, test_item (a_item))
@@ -209,7 +209,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	test_item (a_test: !TEST_I): EV_GRID_ITEM
+	test_item (a_test: attached TEST_I): EV_GRID_ITEM
 			-- Item representing `a_test'.
 		local
 			l_class: CLASS_I
@@ -251,7 +251,7 @@ feature {NONE} -- Implementation
 			Result := l_eitem
 		end
 
-	status_item (a_test: !TEST_I): EV_GRID_ITEM
+	status_item (a_test: attached TEST_I): EV_GRID_ITEM
 			-- Add status item to row for given tast at index `status_column'.
 		local
 			l_tooltip: STRING
@@ -270,10 +270,10 @@ feature {NONE} -- Implementation
 			Result := l_label
 		end
 
-	append_class_name (a_test: !TEST_I)
+	append_class_name (a_test: attached TEST_I)
 			-- Item showing class for `a_test'.
 		local
-			l_class: ?EIFFEL_CLASS_I
+			l_class: detachable EIFFEL_CLASS_I
 		do
 			token_writer.add_space
 			token_writer.add_char ('(')

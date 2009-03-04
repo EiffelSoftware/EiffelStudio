@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	file_name: !STRING_32
+	file_name: attached STRING_32
 			-- The file name, excluding the path, chosen by the user.
 		require
 			is_interface_usable: is_interface_usable
@@ -38,8 +38,8 @@ feature -- Access
 			is_confirmed: is_confirmed
 		local
 			l_filter: like selected_filter
-			l_extension: !STRING_32
-			l_match: !STRING_32
+			l_extension: attached STRING_32
+			l_match: attached STRING_32
 			l_add_extension: BOOLEAN
 		do
 			create Result.make_from_string (dialog.file_title)
@@ -69,7 +69,7 @@ feature -- Access
 			not_result_is_empty: not Result.is_empty
 		end
 
-	file_path: !STRING_32
+	file_path: attached STRING_32
 			-- Full path to the file.
 		require
 			is_interface_usable: is_interface_usable
@@ -83,10 +83,10 @@ feature -- Access
 			not_result_is_empty: not Result.is_empty
 		end
 
-	path: !STRING_32
+	path: attached STRING_32
 			-- <Precursor>
 		local
-			l_result: ?STRING_32
+			l_result: detachable STRING_32
 			l_separator: CHARACTER
 		do
 			if is_confirmed then
@@ -105,7 +105,7 @@ feature -- Access
 			end
 		end
 
-	selected_filter: ?TUPLE [extension: !STRING_32; description: !STRING_32]
+	selected_filter: detachable TUPLE [extension: attached STRING_32; description: attached STRING_32]
 			-- The filter selected on confirmation.
 		require
 			is_interface_usable: is_interface_usable
@@ -128,12 +128,12 @@ feature -- Access
 			end
 		end
 
-	start_file_name: ?STRING_32 assign set_start_file_name
+	start_file_name: detachable STRING_32 assign set_start_file_name
 			-- Initial file name used when showing the dialog.
 
 feature {NONE} -- Access
 
-	filters: !DS_ARRAYED_LIST [TUPLE [extension: !STRING_32; description: !STRING_32]]
+	filters: attached DS_ARRAYED_LIST [TUPLE [extension: attached STRING_32; description: attached STRING_32]]
 			-- Mutable version of `filters'.
 
 	filter_index: NATURAL_16
@@ -166,7 +166,7 @@ feature -- Element change
 			dialog.set_file_name (l_file_path)
 		end
 
-	set_start_file_name_indexed (a_file_name: like start_file_name; a_separator: ?READABLE_STRING_GENERAL)
+	set_start_file_name_indexed (a_file_name: like start_file_name; a_separator: detachable READABLE_STRING_GENERAL)
 			-- Set a start file name on the dialog using a index prefix so it does not conflict with an
 			-- existing file.
 			--
@@ -209,7 +209,7 @@ feature -- Status report
 		local
 			l_extension: STRING_32
 			l_filters: like filters
-			l_filter: TUPLE [extension: !STRING_32; description: !STRING_32]
+			l_filter: TUPLE [extension: attached STRING_32; description: attached STRING_32]
 		do
 			l_extension := a_extension.as_string_32
 			if {PLATFORM}.is_windows then
@@ -254,7 +254,7 @@ feature -- Basic operations
 			not_is_all_files_filter_supported: not is_all_files_filter_supported
 		end
 
-	add_filter (a_extension: !READABLE_STRING_GENERAL; a_description: !READABLE_STRING_GENERAL; a_set: BOOLEAN)
+	add_filter (a_extension: attached READABLE_STRING_GENERAL; a_description: attached READABLE_STRING_GENERAL; a_set: BOOLEAN)
 			-- Adds a file name filter.
 			--
 			-- `a_extension': The file name extension, minus any wildcard or period.
@@ -288,7 +288,7 @@ feature {NONE} -- Action handlers
 		local
 			l_dialog_filters: ARRAYED_LIST [TUPLE [STRING_GENERAL, STRING_GENERAL]]
 			l_filters: like filters
-			l_filter: TUPLE [extension: !STRING_32; description: !STRING_32]
+			l_filter: TUPLE [extension: attached STRING_32; description: attached STRING_32]
 			l_extension: STRING_32
 			l_description: STRING_32
 		do

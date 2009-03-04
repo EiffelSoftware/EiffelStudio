@@ -54,13 +54,13 @@ inherit
 
 feature -- HELP_CONTEXT_I, Access
 
-	help_context_id: !STRING_GENERAL
+	help_context_id: attached STRING_GENERAL
 			-- <Precursor>
 		local
 			l_eis_entry: EIS_ENTRY
 		do
 			l_eis_entry ?= eis_grid.selected_rows.i_th (1).data
-			if l_eis_entry /= Void and then {lt_src: STRING_GENERAL}l_eis_entry.source and then not lt_src.is_empty then
+			if l_eis_entry /= Void and then attached {STRING_GENERAL} l_eis_entry.source as lt_src and then not lt_src.is_empty then
 				Result := lt_src
 			else
 					-- Looks like the post condition is too strict.
@@ -68,26 +68,26 @@ feature -- HELP_CONTEXT_I, Access
 			end
 		end
 
-	help_context_section: ?HELP_CONTEXT_SECTION_I
+	help_context_section: detachable HELP_CONTEXT_SECTION_I
 			-- <Precursor>
 		do
-			if {lt_entry: EIS_ENTRY}eis_grid.selected_rows.i_th (1).data then
+			if attached {EIS_ENTRY} eis_grid.selected_rows.i_th (1).data as lt_entry then
 				Result := create {HELP_SECTION_EIS_ENTRY}.make (lt_entry)
 			else
 				check entry_not_attached: False end
 			end
 		end
 
-	help_context_description: ?STRING_GENERAL
+	help_context_description: detachable STRING_GENERAL
 			-- An optional description of the context.
 		do
-			if {lt_entry: EIS_ENTRY}eis_grid.selected_rows.i_th (1).data then
+			if attached {EIS_ENTRY} eis_grid.selected_rows.i_th (1).data as lt_entry then
 				eis_output.process (lt_entry)
 				Result := eis_output.last_output_code
 			end
 		end
 
-	help_provider: !UUID
+	help_provider: attached UUID
 			-- <Precursor>
 			-- Help provider computed from selected eis entry
 		local
@@ -186,14 +186,14 @@ feature {NONE} -- Sorting
 		do
 			inspect cached_column
 			when column_location then
-				if {lt_id_u: STRING}u.id then
-					if {lt_id_v: STRING}v.id then
+				if attached {STRING} u.id as lt_id_u then
+					if attached {STRING} v.id as lt_id_v then
 						type_u := id_solution.most_possible_type_of_id (lt_id_u)
 						type_v := id_solution.most_possible_type_of_id (lt_id_v)
 						if type_u = type_v then
 								-- Type is the same, compare the name
 							if type_u = id_solution.target_type then
-								if {lt_target_u: CONF_TARGET}id_solution.target_of_id (lt_id_u) and then {lt_target_v: CONF_TARGET}id_solution.target_of_id (lt_id_v) then
+								if attached {CONF_TARGET} id_solution.target_of_id (lt_id_u) as lt_target_u and then attached {CONF_TARGET} id_solution.target_of_id (lt_id_v) as lt_target_v then
 									Result := lt_target_u.name < lt_target_v.name
 								else
 										-- Simply compare there ids.
@@ -215,8 +215,8 @@ feature {NONE} -- Sorting
 					Result := not Result
 				end
 			when column_name then
-				if {lt_name_u: STRING_32}u.name then
-					if {lt_name_v: STRING_32}v.name then
+				if attached {STRING_32} u.name as lt_name_u then
+					if attached {STRING_32} v.name as lt_name_v then
 						Result := lt_name_u < lt_name_v
 					else
 						Result := True
@@ -226,8 +226,8 @@ feature {NONE} -- Sorting
 					Result := not Result
 				end
 			when column_protocol then
-				if {lt_protocol_u: STRING_32}u.protocol then
-					if {lt_protocol_v: STRING_32}v.protocol then
+				if attached {STRING_32} u.protocol as lt_protocol_u then
+					if attached {STRING_32} v.protocol as lt_protocol_v then
 						Result := lt_protocol_u < lt_protocol_v
 					else
 						Result := True
@@ -237,8 +237,8 @@ feature {NONE} -- Sorting
 					Result := not Result
 				end
 			when column_source then
-				if {lt_source_u: STRING_32}u.source then
-					if {lt_source_v: STRING_32}v.source then
+				if attached {STRING_32} u.source as lt_source_u then
+					if attached {STRING_32} v.source as lt_source_v then
 						Result := lt_source_u < lt_source_v
 					else
 						Result := True
@@ -248,8 +248,8 @@ feature {NONE} -- Sorting
 					Result := not Result
 				end
 			when column_tags then
-				if {lt_tags_u: STRING_32}u.tags_as_string then
-					if {lt_tags_v: STRING_32}v.tags_as_string then
+				if attached {STRING_32} u.tags_as_string as lt_tags_u then
+					if attached {STRING_32} v.tags_as_string as lt_tags_v then
 						Result := lt_tags_u < lt_tags_v
 					else
 						Result := True
@@ -259,8 +259,8 @@ feature {NONE} -- Sorting
 					Result := not Result
 				end
 			when column_others then
-				if {lt_others_u: STRING_32}u.others_as_string then
-					if {lt_others_v: STRING_32}v.others_as_string then
+				if attached {STRING_32} u.others_as_string as lt_others_u then
+					if attached {STRING_32} v.others_as_string as lt_others_v then
 						Result := lt_others_u < lt_others_v
 					else
 						Result := True
@@ -363,7 +363,7 @@ feature {NONE} -- Initialization
 									(not new_entry_possible implies eis_grid.row_count = extracted_entries.count)
 		end
 
-	new_extractor: !ES_EIS_EXTRACTOR
+	new_extractor: attached ES_EIS_EXTRACTOR
 			-- Create extractor
 		deferred
 		end
@@ -431,12 +431,12 @@ feature {NONE} -- Events
 			if new_entry_possible then
 				l_entry_row_count := l_entry_row_count - 1
 			end
-			if a_row > 0 and a_row <= l_entry_row_count and {lt_entries: DS_ARRAYED_LIST [EIS_ENTRY]}extracted_entries then
+			if a_row > 0 and a_row <= l_entry_row_count and attached {DS_ARRAYED_LIST [EIS_ENTRY]} extracted_entries as lt_entries then
 					-- Retrieve corresponding EIS entry.
 				l_eis_entry := lt_entries.item (a_row)
 				check l_eis_entry_not_void: l_eis_entry /= Void end
 					-- Connect the EIS entry to the line of the grid.
-				if not {lt_entry: EIS_ENTRY}eis_grid.row (a_row).data then
+				if not attached {EIS_ENTRY} eis_grid.row (a_row).data as lt_entry then
 					eis_grid.row (a_row).set_data (l_eis_entry)
 				end
 				inspect a_column
@@ -460,7 +460,7 @@ feature {NONE} -- Events
 					-- Setup background colors
 					-- Put a special backgroud color if the line of entry is from inherited.
 
-				if {lt_color: EV_COLOR}background_color_of_entry (l_eis_entry) then
+				if attached {EV_COLOR} background_color_of_entry (l_eis_entry) as lt_color then
 					Result.set_background_color (lt_color)
 				end
 			elseif a_row = eis_grid.row_count and then new_entry_possible then
@@ -515,17 +515,17 @@ feature {NONE} -- Item callbacks
 
 feature {ES_EIS_COMPONENT_VIEW} -- Access
 
-	component: !G
+	component: attached G
 			-- The focusing component
 
-	background_color_of_entry (a_entry: !EIS_ENTRY): EV_COLOR
+	background_color_of_entry (a_entry: attached EIS_ENTRY): EV_COLOR
 			-- Background color of `a_entry'
 		do
 		end
 
 feature {NONE} -- Access
 
-	eis_grid: !ES_EIS_ENTRY_GRID
+	eis_grid: attached ES_EIS_ENTRY_GRID
 			-- Grid to display EIS entries
 
 	extracted_entries: DS_ARRAYED_LIST [EIS_ENTRY]
@@ -538,7 +538,7 @@ feature {NONE} -- Access
 		do
 			if session_manager.is_service_available then
 				l_session := session_manager.service.retrieve (False)
-				if {lt_column: INTEGER_REF} l_session.value_or_default (eis_entry_grid_sorting_column_session_id, False) then
+				if attached {INTEGER_REF} l_session.value_or_default (eis_entry_grid_sorting_column_session_id, False) as lt_column then
 					Result := lt_column.item
 				end
 			end
@@ -556,7 +556,7 @@ feature {NONE} -- Access
 		do
 			if session_manager.is_service_available then
 				l_session := session_manager.service.retrieve (False)
-				if {lt_order: BOOLEAN_REF} l_session.value_or_default (eis_entry_grid_sorting_order_session_id, False) then
+				if attached {BOOLEAN_REF} l_session.value_or_default (eis_entry_grid_sorting_order_session_id, False) as lt_order then
 					Result := lt_order.item
 				end
 			end
@@ -587,7 +587,7 @@ feature {NONE} -- Validation
 	is_name_valid (a_name: STRING_32; a_item: EV_GRID_EDITABLE_ITEM): BOOLEAN
 			-- Can `a_name' be changed in `a_item'?
 		do
-			if {lt_entry: EIS_ENTRY}a_item.row.data then
+			if attached {EIS_ENTRY} a_item.row.data as lt_entry then
 				Result := entry_editable (lt_entry)
 			end
 		end
@@ -595,7 +595,7 @@ feature {NONE} -- Validation
 	is_protocol_valid (a_protocol: STRING_32; a_item: EV_GRID_EDITABLE_ITEM): BOOLEAN
 			-- Can `a_protocol' be changed in `a_item'?
 		do
-			if {lt_entry: EIS_ENTRY}a_item.row.data then
+			if attached {EIS_ENTRY} a_item.row.data as lt_entry then
 				Result := entry_editable (lt_entry)
 			end
 		end
@@ -603,7 +603,7 @@ feature {NONE} -- Validation
 	is_source_valid (a_source: STRING_32; a_item: EV_GRID_EDITABLE_ITEM): BOOLEAN
 			-- Can `a_source' be changed in `a_item'?
 		do
-			if {lt_entry: EIS_ENTRY}a_item.row.data then
+			if attached {EIS_ENTRY} a_item.row.data as lt_entry then
 				Result := entry_editable (lt_entry)
 			end
 		end
@@ -611,7 +611,7 @@ feature {NONE} -- Validation
 	is_tags_valid (a_tags: STRING_32; a_item: EV_GRID_EDITABLE_ITEM): BOOLEAN
 			-- Can `a_tags' be changed in `a_item'?
 		do
-			if {lt_entry: EIS_ENTRY}a_item.row.data then
+			if attached {EIS_ENTRY} a_item.row.data as lt_entry then
 				Result := entry_editable (lt_entry)
 			end
 		end
@@ -619,23 +619,23 @@ feature {NONE} -- Validation
 	is_others_valid (a_others: STRING_32; a_item: EV_GRID_EDITABLE_ITEM): BOOLEAN
 			-- Can `a_others' be changed in `a_item'?
 		do
-			if {lt_entry: EIS_ENTRY}a_item.row.data then
+			if attached {EIS_ENTRY} a_item.row.data as lt_entry then
 				Result := entry_editable (lt_entry)
 			end
 		end
 
-	entry_editable (a_entry: !EIS_ENTRY): BOOLEAN
+	entry_editable (a_entry: attached EIS_ENTRY): BOOLEAN
 			-- If `a_entry' is editable through current view?
 		do
 		end
 
 feature {NONE} -- Grid items
 
-	name_item_from_eis_entry (a_entry: !EIS_ENTRY): !EV_GRID_ITEM
+	name_item_from_eis_entry (a_entry: attached EIS_ENTRY): attached EV_GRID_ITEM
 			-- Grid item of name from an EIS entry.
 		local
 			l_name: STRING_32
-			l_editable_item: !EV_GRID_EDITABLE_ITEM
+			l_editable_item: attached EV_GRID_EDITABLE_ITEM
 		do
 			l_name := a_entry.name
 			if l_name = Void then
@@ -652,11 +652,11 @@ feature {NONE} -- Grid items
 			end
 		end
 
-	protocol_item_from_eis_entry (a_entry: !EIS_ENTRY): !EV_GRID_ITEM
+	protocol_item_from_eis_entry (a_entry: attached EIS_ENTRY): attached EV_GRID_ITEM
 			-- Grid item of protocol from an EIS entry.
 		local
 			l_protocol: STRING_32
-			l_editable_item: !EV_GRID_EDITABLE_ITEM
+			l_editable_item: attached EV_GRID_EDITABLE_ITEM
 		do
 			l_protocol := a_entry.protocol
 			if l_protocol = Void then
@@ -673,11 +673,11 @@ feature {NONE} -- Grid items
 			end
 		end
 
-	source_item_from_eis_entry (a_entry: !EIS_ENTRY): !EV_GRID_ITEM
+	source_item_from_eis_entry (a_entry: attached EIS_ENTRY): attached EV_GRID_ITEM
 			-- Grid item of source from an EIS entry.
 		local
 			l_source: STRING_32
-			l_editable_item: !EV_GRID_EDITABLE_ITEM
+			l_editable_item: attached EV_GRID_EDITABLE_ITEM
 		do
 			l_source := a_entry.source
 			if l_source = Void then
@@ -694,11 +694,11 @@ feature {NONE} -- Grid items
 			end
 		end
 
-	tags_item_from_eis_entry (a_entry: !EIS_ENTRY): !EV_GRID_ITEM
+	tags_item_from_eis_entry (a_entry: attached EIS_ENTRY): attached EV_GRID_ITEM
 			-- Grid item of tags from an EIS entry.
 		local
 			l_tags: STRING_32
-			l_editable_item: !EV_GRID_EDITABLE_ITEM
+			l_editable_item: attached EV_GRID_EDITABLE_ITEM
 		do
 			l_tags := eis_output.tags_as_code (a_entry)
 			if entry_editable (a_entry) then
@@ -712,11 +712,11 @@ feature {NONE} -- Grid items
 			end
 		end
 
-	others_item_from_eis_entry (a_entry: !EIS_ENTRY): !EV_GRID_ITEM
+	others_item_from_eis_entry (a_entry: attached EIS_ENTRY): attached EV_GRID_ITEM
 			-- Grid item of others from an EIS entry.
 		local
-			l_others: !STRING_32
-			l_editable_item: !EV_GRID_EDITABLE_ITEM
+			l_others: attached STRING_32
+			l_editable_item: attached EV_GRID_EDITABLE_ITEM
 		do
 			l_others := eis_output.others_as_code (a_entry)
 			if entry_editable (a_entry) then
@@ -730,7 +730,7 @@ feature {NONE} -- Grid items
 			end
 		end
 
-	location_item_from_eis_entry (a_entry: !EIS_ENTRY): !EV_GRID_ITEM
+	location_item_from_eis_entry (a_entry: attached EIS_ENTRY): attached EV_GRID_ITEM
 			-- Grid item of location from an EIS entry
 		local
 			l_type: NATURAL
@@ -741,7 +741,7 @@ feature {NONE} -- Grid items
 			l_feature: E_FEATURE
 			l_editor_token_item: ES_GRID_LIST_ITEM
 		do
-			if {lt_id: STRING}a_entry.id then
+			if attached {STRING} a_entry.id as lt_id then
 				token_writer.new_line
 				l_type := id_solution.most_possible_type_of_id (lt_id)
 				if l_type = id_solution.target_type then
@@ -761,7 +761,7 @@ feature {NONE} -- Grid items
 					l_feature := id_solution.feature_of_id (lt_id)
 					l_editor_token_item := feature_editor_token_for_location (l_feature, id_solution.last_feature_name)
 				end
-				if {lt_item: ES_GRID_LIST_ITEM}l_editor_token_item then
+				if attached {ES_GRID_LIST_ITEM} l_editor_token_item as lt_item then
 					Result := lt_item
 				else
 					create {EV_GRID_LABEL_ITEM}Result
@@ -771,7 +771,7 @@ feature {NONE} -- Grid items
 			end
 		end
 
-	new_listable_item: !EB_GRID_LISTABLE_CHOICE_ITEM
+	new_listable_item: attached EB_GRID_LISTABLE_CHOICE_ITEM
 			-- New listable item
 		do
 			create Result
@@ -783,12 +783,12 @@ feature {NONE} -- Grid items
 
 feature {NONE} -- Location token
 
-	target_editor_token_for_location (a_item: CONF_TARGET): !ES_GRID_LIST_ITEM
+	target_editor_token_for_location (a_item: CONF_TARGET): attached ES_GRID_LIST_ITEM
 			-- Create editor token for loaction accordingly.
 		local
 			l_editable_item: EB_GRID_LISTABLE_CHOICE_ITEM
 			l_line: EIFFEL_EDITOR_LINE
-			l_item_item: !EB_GRID_LISTABLE_CHOICE_ITEM_ITEM
+			l_item_item: attached EB_GRID_LISTABLE_CHOICE_ITEM_ITEM
 			l_e_com: EB_GRID_EDITOR_TOKEN_COMPONENT
 		do
 			if a_item /= Void then
@@ -801,19 +801,19 @@ feature {NONE} -- Location token
 				l_item_item.set_data (a_item)
 				l_editable_item.set_list_item (l_item_item)
 			end
-			if {lt_item: EB_GRID_LISTABLE_CHOICE_ITEM}l_editable_item then
+			if attached {EB_GRID_LISTABLE_CHOICE_ITEM} l_editable_item as lt_item then
 				Result := lt_item
 			else
 				create Result
 			end
 		end
 
-	group_editor_token_for_location (a_item: CONF_GROUP): !ES_GRID_LIST_ITEM
+	group_editor_token_for_location (a_item: CONF_GROUP): attached ES_GRID_LIST_ITEM
 			-- Create editor token for loaction accordingly.
 		local
 			l_editable_item: EB_GRID_LISTABLE_CHOICE_ITEM
 			l_line: EIFFEL_EDITOR_LINE
-			l_item_item: !EB_GRID_LISTABLE_CHOICE_ITEM_ITEM
+			l_item_item: attached EB_GRID_LISTABLE_CHOICE_ITEM_ITEM
 			l_e_com: EB_GRID_EDITOR_TOKEN_COMPONENT
 		do
 			if a_item /= Void then
@@ -826,19 +826,19 @@ feature {NONE} -- Location token
 				l_item_item.set_data (a_item)
 				l_editable_item.set_list_item (l_item_item)
 			end
-			if {lt_item: EB_GRID_LISTABLE_CHOICE_ITEM}l_editable_item then
+			if attached {EB_GRID_LISTABLE_CHOICE_ITEM} l_editable_item as lt_item then
 				Result := lt_item
 			else
 				create Result
 			end
 		end
 
-	folder_editor_token_for_location (a_item: EB_FOLDER): !ES_GRID_LIST_ITEM
+	folder_editor_token_for_location (a_item: EB_FOLDER): attached ES_GRID_LIST_ITEM
 			-- Create editor token for loaction accordingly.
 		local
 			l_editable_item: EB_GRID_LISTABLE_CHOICE_ITEM
 			l_line: EIFFEL_EDITOR_LINE
-			l_item_item: !EB_GRID_LISTABLE_CHOICE_ITEM_ITEM
+			l_item_item: attached EB_GRID_LISTABLE_CHOICE_ITEM_ITEM
 			l_e_com: EB_GRID_EDITOR_TOKEN_COMPONENT
 		do
 			if a_item /= Void then
@@ -851,19 +851,19 @@ feature {NONE} -- Location token
 				l_item_item.set_data (a_item)
 				l_editable_item.set_list_item (l_item_item)
 			end
-			if {lt_item: EB_GRID_LISTABLE_CHOICE_ITEM}l_editable_item then
+			if attached {EB_GRID_LISTABLE_CHOICE_ITEM} l_editable_item as lt_item then
 				Result := lt_item
 			else
 				create Result
 			end
 		end
 
-	class_editor_token_for_location (a_item: CLASS_I): !ES_GRID_LIST_ITEM
+	class_editor_token_for_location (a_item: CLASS_I): attached ES_GRID_LIST_ITEM
 			-- Create editor token for loaction accordingly.
 		local
-			l_editable_item: !EB_GRID_LISTABLE_CHOICE_ITEM
+			l_editable_item: attached EB_GRID_LISTABLE_CHOICE_ITEM
 			l_line: EIFFEL_EDITOR_LINE
-			l_item_item: !EB_GRID_LISTABLE_CHOICE_ITEM_ITEM
+			l_item_item: attached EB_GRID_LISTABLE_CHOICE_ITEM_ITEM
 			l_e_com: EB_GRID_EDITOR_TOKEN_COMPONENT
 		do
 			if a_item /= Void then
@@ -876,21 +876,21 @@ feature {NONE} -- Location token
 				l_item_item.set_data (a_item)
 				l_editable_item.set_list_item (l_item_item)
 			end
-			if {lt_item: EB_GRID_LISTABLE_CHOICE_ITEM}l_editable_item then
+			if attached {EB_GRID_LISTABLE_CHOICE_ITEM} l_editable_item as lt_item then
 				Result := lt_item
 			else
 				create Result
 			end
 		end
 
-	feature_editor_token_for_location (a_item: E_FEATURE; a_name: STRING): !ES_GRID_LIST_ITEM
+	feature_editor_token_for_location (a_item: E_FEATURE; a_name: STRING): attached ES_GRID_LIST_ITEM
 			-- Create editor token for loaction accordingly.
 		require
 			a_item_void_implies_a_name_not_void: a_item = Void implies a_name /= Void
 		local
-			l_editable_item: !EB_GRID_LISTABLE_CHOICE_ITEM
+			l_editable_item: attached EB_GRID_LISTABLE_CHOICE_ITEM
 			l_line: EIFFEL_EDITOR_LINE
-			l_item_item: !EB_GRID_LISTABLE_CHOICE_ITEM_ITEM
+			l_item_item: attached EB_GRID_LISTABLE_CHOICE_ITEM_ITEM
 			l_e_com: EB_GRID_EDITOR_TOKEN_COMPONENT
 			l_component: ES_GRID_PIXMAP_COMPONENT
 		do
@@ -911,7 +911,7 @@ feature {NONE} -- Location token
 			create l_item_item.make (create {ARRAYED_LIST [ES_GRID_ITEM_COMPONENT]}.make_from_array (<<l_component, l_e_com>>))
 			l_item_item.set_data (a_item)
 			l_editable_item.set_list_item (l_item_item)
-			if {lt_item: EB_GRID_LISTABLE_CHOICE_ITEM}l_editable_item then
+			if attached {EB_GRID_LISTABLE_CHOICE_ITEM} l_editable_item as lt_item then
 				Result := lt_item
 			else
 				create Result
@@ -920,13 +920,13 @@ feature {NONE} -- Location token
 
 feature {NONE} -- Pixmap component
 
-	target_pixmap_component: !ES_GRID_PIXMAP_COMPONENT
+	target_pixmap_component: attached ES_GRID_PIXMAP_COMPONENT
 			-- Target pixmap component
 		do
 			create Result.make (pixmaps.icon_pixmaps.folder_target_icon)
 		end
 
-	group_pixmap_component (a_group: CONF_GROUP): !ES_GRID_PIXMAP_COMPONENT
+	group_pixmap_component (a_group: CONF_GROUP): attached ES_GRID_PIXMAP_COMPONENT
 			-- Group pixmap component
 		require
 			a_group_not_void: a_group /= Void
@@ -934,19 +934,19 @@ feature {NONE} -- Pixmap component
 			create Result.make (icon_factory.pixmap_from_group (a_group))
 		end
 
-	folder_pixmap_component: !ES_GRID_PIXMAP_COMPONENT
+	folder_pixmap_component: attached ES_GRID_PIXMAP_COMPONENT
 			-- Folder pixmap component
 		do
 			create Result.make (pixmaps.icon_pixmaps.folder_blank_icon)
 		end
 
-	class_pixmap_component (a_class: CLASS_I): !ES_GRID_PIXMAP_COMPONENT
+	class_pixmap_component (a_class: CLASS_I): attached ES_GRID_PIXMAP_COMPONENT
 			-- Class pixmap component
 		do
 			create Result.make (icon_factory.pixmap_from_class_i (a_class))
 		end
 
-	feature_pixmap_component (a_feature: E_FEATURE): !ES_GRID_PIXMAP_COMPONENT
+	feature_pixmap_component (a_feature: E_FEATURE): attached ES_GRID_PIXMAP_COMPONENT
 			-- Feature pixmap component
 		require
 			a_feature_not_void: a_feature /= Void
@@ -954,7 +954,7 @@ feature {NONE} -- Pixmap component
 			create Result.make (icon_factory.pixmap_from_e_feature (a_feature))
 		end
 
-	uncompiled_feature_pixmap_component: !ES_GRID_PIXMAP_COMPONENT
+	uncompiled_feature_pixmap_component: attached ES_GRID_PIXMAP_COMPONENT
 			-- Uncompiled feature pixmap component
 		do
 			create Result.make (pixmaps.icon_pixmaps.feature_obsolete_routine_icon)
@@ -962,9 +962,9 @@ feature {NONE} -- Pixmap component
 
 feature {NONE} -- Session IDs
 
-	eis_entry_grid_sorting_column_session_id: !STRING_8 = "com.eiffel.eis_tool.entry_grid_sorting_column"
+	eis_entry_grid_sorting_column_session_id: attached STRING_8 = "com.eiffel.eis_tool.entry_grid_sorting_column"
 
-	eis_entry_grid_sorting_order_session_id: !STRING_8 = "com.eiffel.eis_tool.entry_grid_sorting_order"
+	eis_entry_grid_sorting_order_session_id: attached STRING_8 = "com.eiffel.eis_tool.entry_grid_sorting_order"
 
 feature {NONE} -- Column constants
 

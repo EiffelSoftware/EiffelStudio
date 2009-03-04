@@ -286,7 +286,7 @@ feature {NONE} -- Positioning
 	requested_y_position: INTEGER
 			-- Requested show Y position
 
-	relative_widget: ?EV_WIDGET
+	relative_widget: detachable EV_WIDGET
 			-- The widget the popup window is shown relative to
 
 feature {NONE} -- Query
@@ -356,7 +356,7 @@ feature -- Basic operations
 			not_is_committed_on_closed: not is_committed_on_closed
 		end
 
-	show_relative_to_widget (a_widget: ?EV_WIDGET; a_x: INTEGER a_y: INTEGER; a_mouse_x: INTEGER; a_mouse_y: INTEGER)
+	show_relative_to_widget (a_widget: detachable EV_WIDGET; a_x: INTEGER a_y: INTEGER; a_mouse_x: INTEGER; a_mouse_y: INTEGER)
 			-- Displays the pop up window at a position relative to a widget.
 			--
 			-- `a_widget': A widget to show the window relative to.
@@ -378,7 +378,7 @@ feature -- Basic operations
 			not_is_committed_on_closed: not is_committed_on_closed
 		end
 
-	show_relative_to_window (a_window: ?EV_WINDOW)
+	show_relative_to_window (a_window: detachable EV_WINDOW)
 			-- Shows popup window centered to a parent window.
 			--
 			-- `a_window': The window to show the popup window centered to.
@@ -396,7 +396,7 @@ feature -- Basic operations
 					-- Show initially off-screen to retrieve width and height.
 			create l_screen
 			popup_window.set_position (l_screen.width + 1, l_screen.height + 1)
-			register_kamikaze_action (show_actions, agent (a_ia_window: !EV_WINDOW)
+			register_kamikaze_action (show_actions, agent (a_ia_window: attached EV_WINDOW)
 				do
 					if is_interface_usable and is_initialized and then not a_ia_window.is_destroyed and then a_ia_window.is_displayed then
 							-- Set requested x and y positions so `ensure_popup_window_visible_on_screen' will make the necessary correct
@@ -420,7 +420,7 @@ feature -- Basic operations
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
 		local
-			l_window: ?EB_WINDOW
+			l_window: detachable EB_WINDOW
 		do
 			l_window := window_manager.last_focused_window
 			if l_window /= Void then
@@ -526,7 +526,7 @@ feature {NONE} -- Basic operation
 			is_initialized: is_initialized or is_initializing
 			has_border: has_border
 		do
-			if {l_colorizable: !EV_COLORIZABLE} border_widget then
+			if attached {attached EV_COLORIZABLE} border_widget as l_colorizable then
 				if has_mouse_pointer then
 					l_colorizable.set_background_color (active_border_color)
 				else
@@ -546,7 +546,7 @@ feature {NONE} -- Basic operation
 			l_window: EB_WINDOW
 			l_position: like window_on_screen_position
 		do
-			if {l_widget: !EV_WIDGET} relative_widget then
+			if attached {attached EV_WIDGET} relative_widget as l_widget then
 				l_position := window_on_screen_position (l_widget, False)
 			else
 				create l_manager
@@ -570,10 +570,10 @@ feature {NONE} -- User interface elements
 
 feature -- Actions
 
-	frozen show_actions: !EV_LITE_ACTION_SEQUENCE [TUPLE]
+	frozen show_actions: attached EV_LITE_ACTION_SEQUENCE [TUPLE]
 			-- Actions performed when the window is shown
 
-	frozen hide_actions: !EV_LITE_ACTION_SEQUENCE [TUPLE]
+	frozen hide_actions: attached EV_LITE_ACTION_SEQUENCE [TUPLE]
 			-- Actions performed when the window is shown
 
 feature {NONE} -- Action handlers
@@ -784,7 +784,7 @@ feature -- Conversion
 
 feature {NONE} -- Factory
 
-	create_popup_window: !EV_POPUP_WINDOW
+	create_popup_window: attached EV_POPUP_WINDOW
 			-- Creates an implementation popup window
 		require
 			is_interface_usable: is_interface_usable

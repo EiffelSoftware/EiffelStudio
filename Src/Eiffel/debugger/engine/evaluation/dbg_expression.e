@@ -165,7 +165,7 @@ feature -- Access
 			--| If `Current' relies on an object, it is clearly
 			--| no longer reusable when a new debugging session starts.	
 		do
-			Result := {ctx: like context} context and then (
+			Result := attached context as ctx and then (
 						ctx.is_coherent and
 						not ctx.on_object and
 						ctx.is_valid
@@ -289,7 +289,7 @@ feature {DBG_EXPRESSION, DBG_EXPRESSION_EVALUATION, DBG_EXPRESSION_EVALUATOR} --
 		do
 			Result := expr /= Void and then
 						expr.is_valid_as_string_8 and then
-						{s8: STRING_8} expr.to_string_8 and then
+						attached {STRING_8} expr.to_string_8 as s8 and then
 						not s8.is_empty and then
 						not s8.has ('%R') and then
 						not s8.has ('%N')

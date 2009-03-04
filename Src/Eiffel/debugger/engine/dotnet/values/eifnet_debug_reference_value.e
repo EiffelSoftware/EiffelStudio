@@ -221,7 +221,7 @@ feature {APPLICATION_EXECUTION} -- Query
 				if l_icd_class /= Void then
 					cl := dynamic_class
 					if cl /= Void then
-						if {f: FEATURE_I} cl.feature_named (att_name) and then f.is_attribute then
+						if attached {FEATURE_I} cl.feature_named (att_name) as f and then f.is_attribute then
 							Result := attribute_value (object_value, l_icd_class, f)
 						end
 					end

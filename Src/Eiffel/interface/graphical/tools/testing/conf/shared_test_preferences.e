@@ -14,7 +14,7 @@ feature -- Access
 	preferences: TEST_PREFERENCES
 			-- Testing preferences
 		local
-			l_result: ?like preferences
+			l_result: detachable like preferences
 		do
 			l_result := preferences_cell.item
 			if l_result = Void then
@@ -28,7 +28,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	preferences_cell: CELL [?TEST_PREFERENCES]
+	preferences_cell: CELL [detachable TEST_PREFERENCES]
 			-- Once cell for `preferences'
 		once
 			create Result.put (Void)

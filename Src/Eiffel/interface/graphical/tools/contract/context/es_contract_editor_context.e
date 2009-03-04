@@ -38,16 +38,16 @@ feature -- Access
 			is_interface_usable: is_interface_usable
 			has_stone: has_stone
 		do
-			if {l_result: G} stone then
+			if attached {G} stone as l_result then
 				Result := l_result
 			else
 				check not_possible: False end
 			end
 		ensure
-			context_stone_not_void: {l_g: G} Result
+			context_stone_not_void: attached {G} Result as l_g
 		end
 
-	context_class: !CLASS_I
+	context_class: attached CLASS_I
 			-- Context class for contract modifications
 		require
 			is_interface_usable: is_interface_usable
@@ -56,13 +56,13 @@ feature -- Access
 			Result := context_stone.class_i.as_attached
 		end
 
-	context_parents: !DS_LINKED_LIST [CLASS_C]
+	context_parents: attached DS_LINKED_LIST [CLASS_C]
 			-- Context parent classes containing contracts
 		require
 			is_interface_usable: is_interface_usable
 			has_stone: has_stone
 		do
-			if {l_result: like context_parents} internal_context_parents then
+			if attached {like context_parents} internal_context_parents as l_result then
 				Result := l_result
 			else
 				create Result.make_default
@@ -80,7 +80,7 @@ feature -- Access
 			is_interface_usable: is_interface_usable
 			has_stone: has_stone
 		do
-			if {l_result: like text_modifier} internal_text_modifier then
+			if attached {like text_modifier} internal_text_modifier as l_result then
 				Result := l_result
 			else
 				Result := create_text_modifier
@@ -93,7 +93,7 @@ feature -- Access
 
 feature -- Contracts
 
-	contracts_for_class (a_class: !CLASS_I; a_live: BOOLEAN): !TUPLE [contracts: !DS_LIST [TAGGED_AS]; modifier: !ES_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]]
+	contracts_for_class (a_class: attached CLASS_I; a_live: BOOLEAN): attached TUPLE [contracts: attached DS_LIST [TAGGED_AS]; modifier: attached ES_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]]
 			-- Retrieves the contacts for a given class with an associated text modifier.
 			--
 			-- `a_class': The class interface to retrieve the contracts for.
@@ -126,17 +126,17 @@ feature -- Status report
 
 feature {NONE} -- Status report
 
-	internal_is_stone_usable (a_stone: !like stone): BOOLEAN
+	internal_is_stone_usable (a_stone: attached like stone): BOOLEAN
 			-- <Precursor>
 		do
-			Result := {l_g: G} a_stone
+			Result := attached {G} a_stone as l_g
 		ensure then
-			is_class_stone: Result implies ({?G}) #? a_stone /= Void
+			is_class_stone: Result implies ({detachable G}) #? a_stone /= Void
 		end
 
 feature -- Query
 
-	contract_keywords (a_origin: BOOLEAN): !ARRAYED_LIST [EDITOR_TOKEN]
+	contract_keywords (a_origin: BOOLEAN): attached ARRAYED_LIST [EDITOR_TOKEN]
 			-- Retrieve contract keyword list of tokens.
 			--
 			-- `a_origin': True when requiring the feature origin.
@@ -149,7 +149,7 @@ feature -- Query
 			not_result_is_empty: not Result.is_empty
 		end
 
-	template_category: !STRING
+	template_category: attached STRING
 			-- Code template category name
 		require
 			is_interface_usable: is_interface_usable
@@ -160,7 +160,7 @@ feature -- Query
 
 feature {NONE} -- Query
 
-	calculate_parents (a_class: !CLASS_I; a_list: !DS_LIST [CLASS_C])
+	calculate_parents (a_class: attached CLASS_I; a_list: attached DS_LIST [CLASS_C])
 			-- Context parent classes containing contracts
 			--
 			-- `a_class': The class to retrieve applicable parent for.
@@ -175,7 +175,7 @@ feature {NONE} -- Query
 
 feature -- Basic operations
 
-	query_set_stone (a_stone: ?STONE): BOOLEAN
+	query_set_stone (a_stone: detachable STONE): BOOLEAN
 			-- <Precursor>
 		do
 			Result := True
@@ -209,7 +209,7 @@ feature -- Synchronization
 
 feature {NONE} -- Action handlers
 
-	on_stone_changed (a_old_stone: ?STONE)
+	on_stone_changed (a_old_stone: detachable STONE)
 			-- <Precursor>
 		do
 				-- Reset any cached data
@@ -221,7 +221,7 @@ feature {NONE} -- Action handlers
 
 feature {NONE} -- Factory
 
-	create_text_modifier: !ES_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]
+	create_text_modifier: attached ES_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]
 			-- Creates a text modifier
 		require
 			is_interface_usable: is_interface_usable
@@ -244,11 +244,11 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Internal implementation cache
 
-	internal_text_modifier: ?like text_modifier
+	internal_text_modifier: detachable like text_modifier
 			-- Cached version `text_modifier'
 			-- Note: Do not use directly!
 
-	internal_context_parents: ?like context_parents
+	internal_context_parents: detachable like context_parents
 			-- Cached version `context_parentes'
 			-- Note: Do not use directly!
 

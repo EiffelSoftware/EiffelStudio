@@ -34,7 +34,7 @@ create
 
 feature -- Status report
 
-	is_valid_registration_key (a_key: !UUID): BOOLEAN
+	is_valid_registration_key (a_key: attached UUID): BOOLEAN
 			-- <Precursor>
 		do
 			Result := Precursor (a_key) and then not a_key.is_null
@@ -44,7 +44,7 @@ feature -- Status report
 
 feature {NONE} -- Factory
 
-	new_output (a_key: !UUID): !OUTPUT_I
+	new_output (a_key: attached UUID): attached OUTPUT_I
 			-- <Precursor>
 		do
 			create {OUTPUT_TTY} Result

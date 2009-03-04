@@ -140,7 +140,7 @@ feature {NONE} -- User interface initialization
 
 feature -- Access: Help
 
-	help_context_id: !STRING_GENERAL
+	help_context_id: attached STRING_GENERAL
 			-- <Precursor>
 		once
 			Result := "1AC830AB-7600-8E52-2351-C515BCC31D41"
@@ -942,7 +942,7 @@ feature -- change
 				if wh_a = Void then
 					insert_when_hits_action_print_message_entry (Void, box, a_has_focus)
 				else
-					if {x1: BREAKPOINT_WHEN_HITS_ACTION_PRINT_MESSAGE} wh_a then
+					if attached {BREAKPOINT_WHEN_HITS_ACTION_PRINT_MESSAGE} wh_a as x1 then
 						insert_when_hits_action_print_message_entry (x1, box, a_has_focus)
 					end
 				end
@@ -950,7 +950,7 @@ feature -- change
 				if wh_a = Void then
 					insert_when_hits_action_change_breakpoints_status_entry (Void, box, a_has_focus)
 				else
-					if {x2: BREAKPOINT_WHEN_HITS_ACTION_CHANGE_BREAKPOINTS_STATUS} wh_a then
+					if attached {BREAKPOINT_WHEN_HITS_ACTION_CHANGE_BREAKPOINTS_STATUS} wh_a as x2 then
 						insert_when_hits_action_change_breakpoints_status_entry (x2, box, a_has_focus)
 					end
 				end
@@ -959,7 +959,7 @@ feature -- change
 					if wh_a = Void then
 						insert_when_hits_action_change_assertion_checking_entry (Void, box, a_has_focus)
 					else
-						if {x3: BREAKPOINT_WHEN_HITS_ACTION_CHANGE_ASSERTION_CHECKING} wh_a then
+						if attached {BREAKPOINT_WHEN_HITS_ACTION_CHANGE_ASSERTION_CHECKING} wh_a as x3 then
 							insert_when_hits_action_change_assertion_checking_entry (x3, box, a_has_focus)
 						end
 					end
@@ -969,7 +969,7 @@ feature -- change
 					if wh_a = Void then
 						insert_when_hits_action_execution_recording_entry (Void, box, a_has_focus)
 					else
-						if {x4: BREAKPOINT_WHEN_HITS_ACTION_EXECUTION_RECORDING} wh_a then
+						if attached {BREAKPOINT_WHEN_HITS_ACTION_EXECUTION_RECORDING} wh_a as x4 then
 							insert_when_hits_action_execution_recording_entry (x4, box, a_has_focus)
 						end
 					end
@@ -979,7 +979,7 @@ feature -- change
 					if wh_a = Void then
 						insert_when_hits_action_reset_hits_count_entry (Void, box, a_has_focus)
 					else
-						if {x5: BREAKPOINT_WHEN_HITS_ACTION_RESET_HIT_COUNT} wh_a then
+						if attached {BREAKPOINT_WHEN_HITS_ACTION_RESET_HIT_COUNT} wh_a as x5 then
 							insert_when_hits_action_reset_hits_count_entry (x5, box, a_has_focus)
 						end
 					end

@@ -13,7 +13,7 @@ inherit
 
 feature -- Access
 
-	default_encoding: !ENCODING
+	default_encoding: attached ENCODING
 			-- Default encoding reading/writing from file.
 		do
 			Result := iso_8859_1
@@ -21,7 +21,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	iso_8859_1: !ENCODING
+	iso_8859_1: attached ENCODING
 			-- Encoding ISO-8859-1 encoding.
 			-- TODO: This encoding should be eventually integrated
 			-- into encoding library.

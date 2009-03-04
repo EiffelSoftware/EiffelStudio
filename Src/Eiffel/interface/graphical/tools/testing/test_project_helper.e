@@ -43,7 +43,7 @@ feature -- Basic operations
 			end
 		end
 
-	run (a_working_directory: ?STRING; a_arguments: ?STRING; a_env: ?HASH_TABLE [!STRING_32, !STRING_32])
+	run (a_working_directory: detachable STRING; a_arguments: detachable STRING; a_env: detachable HASH_TABLE [attached STRING_32, attached STRING_32])
 			-- <Precursor>
 		do
 		end

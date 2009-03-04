@@ -85,10 +85,10 @@ feature {NONE} -- Implementation
 			if l_icdv_obj = Void then
 				dbg_error_handler.notify_error_evaluation (Debugger_names.cst_error_unable_to_get_target_object)
 			else
-				if {nat_ct: NATIVE_ARRAY_CLASS_TYPE} l_ctype then
+				if attached {NATIVE_ARRAY_CLASS_TYPE} l_ctype as nat_ct then
 					if 
 						a_target /= Void and then
-						{nat_edv: EIFNET_DEBUG_NATIVE_ARRAY_VALUE} a_target.as_dump_value_dotnet.eifnet_debug_value
+						attached {EIFNET_DEBUG_NATIVE_ARRAY_VALUE} a_target.as_dump_value_dotnet.eifnet_debug_value as nat_edv
 					then
 						internal_evaluate_function_on_native_array (nat_edv, realf, l_params)
 					else
@@ -102,7 +102,7 @@ feature {NONE} -- Implementation
 					if l_icd_function = Void then
 						dbg_error_handler.notify_error_evaluation (Debugger_names.Cst_error_unable_to_get_icd_function)
 					else
-						if {dv: DUMP_VALUE} dotnet_evaluate_icd_function (l_icdv_obj, l_icd_function, l_params, l_ctype.is_external, f.is_function) then
+						if attached {DUMP_VALUE} dotnet_evaluate_icd_function (l_icdv_obj, l_icd_function, l_params, l_ctype.is_external, f.is_function) as dv then
 							create last_result.make_with_value (dv)
 						else
 							-- FIXME: should we return a last_result.failed?
@@ -253,7 +253,7 @@ feature {NONE} -- Implementation
 				else
 						--| The current feature is used only for external function
 						--| Then we pass `True' to set the `is_external' argument.
-					if {dv: DUMP_VALUE} dotnet_evaluate_icd_function (l_icdv_obj, l_icd_function, l_params, True, True) then
+					if attached {DUMP_VALUE} dotnet_evaluate_icd_function (l_icdv_obj, l_icd_function, l_params, True, True) as dv then
 						create last_result.make_with_value (dv)
 					else
 						-- FIXME: should we return last_result.failed?
@@ -382,7 +382,7 @@ feature {NONE} -- Implementation
 
 					dbg_error_handler.notify_error_evaluation ("Once feature [" + f.feature_name + "]: not yet called")
 				elseif last_once_failed then
-					if {arv: ABSTRACT_REFERENCE_VALUE} l_adv then
+					if attached {ABSTRACT_REFERENCE_VALUE} l_adv as arv then
 						create exc_dv.make_with_value (arv)
 					else
 						create exc_dv.make_without_any_value
@@ -432,7 +432,7 @@ feature {NONE} -- Implementation
 							dbg_error_handler.notify_error_evaluation (Void)
 						else
 								--| At this point l_icd_value represents an instance of INTERNAL
-							if {dv: DUMP_VALUE} new_empty_instance_of_using_internal (a_type_i, l_icd_value, l_class_c) then
+							if attached {DUMP_VALUE} new_empty_instance_of_using_internal (a_type_i, l_icd_value, l_class_c) as dv then
 								create last_result.make_with_value (dv)
 							else
 								--FIXME: should we return last_result.failed?
@@ -473,7 +473,7 @@ feature {NONE} -- Implementation
 						dbg_error_handler.notify_error_evaluation (Void)
 					else
 							--| At this point l_icd_value represents an instance of INTERNAL
-							if {dv: DUMP_VALUE} new_special_any_instance_using_internal (a_type_i, a_count, l_icd_value, l_class_c) then
+							if attached {DUMP_VALUE} new_special_any_instance_using_internal (a_type_i, a_count, l_icd_value, l_class_c) as dv then
 								create last_result.make_with_value (dv)
 							else
 								-- FIXME: should we return last_result.failed?
@@ -772,7 +772,7 @@ feature {NONE} -- Implementation
 				if eifnet_evaluator.last_eval_aborted then
 					dbg_error_handler.notify_error_evaluation_aborted (Void)
 				elseif eifnet_evaluator.last_eval_is_exception then
-					if {arv: ABSTRACT_REFERENCE_VALUE} debug_value_from_icdv (l_result, Void) then
+					if attached {ABSTRACT_REFERENCE_VALUE} debug_value_from_icdv (l_result, Void) as arv then
 						create l_exc_dv.make_with_value (arv)
 					else
 						create l_exc_dv.make_without_any_value

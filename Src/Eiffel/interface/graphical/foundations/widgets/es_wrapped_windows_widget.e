@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_widget: !like widget; a_window: !like develop_window)
+	make (a_widget: attached like widget; a_window: attached like develop_window)
 			-- Initializes a standard window widget.
 			--
 			-- `a_widget': The source EiffelVision2 widget to wrap.
@@ -38,14 +38,14 @@ feature {NONE} -- Initialization
 			develop_window_set: develop_window = a_window
 		end
 
-	build_widget_interface (a_widget: !G)
+	build_widget_interface (a_widget: attached G)
 			-- <Precursor>
 		do
 		end
 
 feature {NONE} -- Factory
 
-	create_widget: !G
+	create_widget: attached G
 			-- <Precursor>
 		do
 			Result := internal_widget
@@ -53,7 +53,7 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Implementation: Internal cache
 
-	internal_widget: !G
+	internal_widget: attached G
 			-- Cached version of `widget', used only for fake creation.
 			-- Note: Do not use directly!
 

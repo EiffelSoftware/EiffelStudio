@@ -101,7 +101,7 @@ feature {NONE} -- Initialization
 			Precursor
 
 				-- Set default tag name
-			tag_text.set_text (create {!STRING_32}.make_from_string ("new_contract"))
+			tag_text.set_text (create {attached STRING_32}.make_from_string ("new_contract"))
 			tag_text.validate
 			register_kamikaze_action (show_actions, agent
 				do
@@ -129,7 +129,7 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-	contract: ?TUPLE [tag: !STRING_32; contract: !STRING_32]
+	contract: detachable TUPLE [tag: attached STRING_32; contract: attached STRING_32]
 			-- Resulting contact
 
 feature -- Dialog access
@@ -172,15 +172,15 @@ feature -- Dialog access
 
 feature {NONE} -- User interface elements
 
-	tag_text: !ES_VALIDATING_WRAPPED_WIDGET
+	tag_text: attached ES_VALIDATING_WRAPPED_WIDGET
 			-- Contract tag text field
 
-	contract_editor: !EB_SMART_EDITOR
+	contract_editor: attached EB_SMART_EDITOR
 			-- Editor use to edit the contract
 
 feature {NONE} -- Helpers
 
-	expression_parser: !EIFFEL_PARSER
+	expression_parser: attached EIFFEL_PARSER
 			-- Parser used to parse Eiffel expression
 		once
 			create Result.make_with_factory (create {AST_NULL_FACTORY})
@@ -191,7 +191,7 @@ feature {NONE} -- Helpers
 
 feature {NONE} -- Validation
 
-	validate_tag_text (a_text: !STRING_32): !TUPLE [is_valid: BOOLEAN; reason: ?STRING_32]
+	validate_tag_text (a_text: attached STRING_32): attached TUPLE [is_valid: BOOLEAN; reason: detachable STRING_32]
 			--
 		require
 			is_interface_usable: is_interface_usable
@@ -261,7 +261,7 @@ feature {TEXT_OBSERVER_MANAGER} -- Observer handler
 
 feature {NONE} -- Regular expression
 
-	contract_tag_name_regex: !RX_PCRE_MATCHER
+	contract_tag_name_regex: attached RX_PCRE_MATCHER
 			-- Regular expression for contract tags
 		once
 			create Result.make

@@ -13,25 +13,25 @@ class
 
 feature -- Access
 
-	frozen generic: !UUID
+	frozen generic: attached UUID
 			-- Generic tool profile kind.
 		once
 			create Result.make_from_string (generic_uuid_string)
 		end
 
-	frozen eiffel: !UUID
+	frozen eiffel: attached UUID
 			-- Eiffel specific tool profile kind.
 		once
 			create Result.make_from_string (eiffel_uuid_string)
 		end
 
-	frozen debugger: !UUID
+	frozen debugger: attached UUID
 			-- Debugger tool profile kind.
 		once
 			create Result.make_from_string (debugger_uuid_string)
 		end
 
-	frozen testing: !UUID
+	frozen testing: attached UUID
 			-- Testing tool profile kind.
 		once
 			create Result.make_from_string (testing_uuid_string)

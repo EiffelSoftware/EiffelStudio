@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	value: !STRING_32 assign set_value
+	value: attached STRING_32 assign set_value
 			-- The actual value, having been processed
 		local
 			l_result: like internal_value
@@ -47,12 +47,12 @@ feature -- Access
 			end
 		end
 
-	default_value: !STRING_32
+	default_value: attached STRING_32
 			-- A default value for a symbol table value
 
 feature {CODE_SYMBOL_TABLE} -- Access
 
-	symbol_table: ?CODE_SYMBOL_TABLE assign set_symbol_table
+	symbol_table: detachable CODE_SYMBOL_TABLE assign set_symbol_table
 			-- Symbol table of code values where Current resides
 
 feature -- Element change
@@ -65,7 +65,7 @@ feature -- Element change
 			if internal_value = Void or else not internal_value.is_equal (a_value) then
 				internal_value := a_value
 				l_table := symbol_table
-				if l_table /= Void and then {l_id: !STRING} l_table.id_of_value (Current) then
+				if l_table /= Void and then attached {attached STRING} l_table.id_of_value (Current) as l_id then
 					l_table.value_changed_events.publish ([l_id])
 				end
 			end
@@ -88,7 +88,7 @@ feature {CODE_SYMBOL_TABLE} -- Element change
 
 feature {NONE} -- Internal implementation cache
 
-	internal_value: ?STRING_32
+	internal_value: detachable STRING_32
 			-- Cached value of `value'
 			-- Note: Do not use directly!
 

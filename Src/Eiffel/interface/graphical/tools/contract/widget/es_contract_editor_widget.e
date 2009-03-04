@@ -29,7 +29,7 @@ convert
 
 feature {NONE} -- Initialization
 
-	build_widget_interface (a_widget: !ES_GRID)
+	build_widget_interface (a_widget: attached ES_GRID)
 			-- <Precursor>
 		local
 			l_col: EV_GRID_COLUMN
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			register_action (edit_contract_grid.row_select_actions, agent (a_row: EV_GRID_ROW)
 					-- Call the source select actions
 				local
-					l_source: ?ES_CONTRACT_SOURCE_I
+					l_source: detachable ES_CONTRACT_SOURCE_I
 				do
 					if is_interface_usable and then is_initialized then
 						l_source ?= a_row.data
@@ -79,10 +79,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	context: ?ES_CONTRACT_EDITOR_CONTEXT [CLASSI_STONE] assign set_context
+	context: detachable ES_CONTRACT_EDITOR_CONTEXT [CLASSI_STONE] assign set_context
 			-- Contract editor context information
 
-	context_contracts: !DS_ARRAYED_LIST [!ES_CONTRACT_LINE]
+	context_contracts: attached DS_ARRAYED_LIST [attached ES_CONTRACT_LINE]
 			-- Retrieves just the context's contracts.
 			-- Note: Only the top contracts are returned because we only support edition of the context contracts,
 			--       in the future this may change.
@@ -91,12 +91,12 @@ feature -- Access
 			is_initialized: is_initialized
 			has_context: has_context
 		local
-			l_grid: !like edit_contract_grid
+			l_grid: attached like edit_contract_grid
 			l_row: EV_GRID_ROW
 			l_sub_row: EV_GRID_ROW
 			l_count, i: INTEGER
 		do
-			if {l_contract: like context_contracts} internal_context_contracts then
+			if attached {like context_contracts} internal_context_contracts as l_contract then
 				Result := l_contract
 			else
 				create Result.make_default
@@ -106,7 +106,7 @@ feature -- Access
 					l_count := l_row.subrow_count_recursive
 					from i := 1 until i > l_count loop
 						l_sub_row := l_row.subrow (i)
-						if {l_line: !ES_CONTRACT_LINE} l_sub_row.data then
+						if attached {attached ES_CONTRACT_LINE} l_sub_row.data as l_line then
 							Result.force_last (l_line)
 						end
 						i := i + l_sub_row.subrow_count_recursive + 1
@@ -130,7 +130,7 @@ feature {NONE} -- Access
 
 feature -- Element change
 
-	set_context (a_context: ?like context)
+	set_context (a_context: detachable like context)
 			-- Set contract editor context.
 			--
 			-- `a_context': A contract editor context to set.
@@ -201,7 +201,7 @@ feature -- Status setting
 
 feature -- Query
 
-	selected_source: ?ES_CONTRACT_SOURCE_I
+	selected_source: detachable ES_CONTRACT_SOURCE_I
 			-- The currently active contract source.
 		require
 			is_interface_usable: is_interface_usable
@@ -215,7 +215,7 @@ feature -- Query
 			end
 		end
 
-	selected_line: ?ES_CONTRACT_LINE
+	selected_line: detachable ES_CONTRACT_LINE
 			-- The currently active selected contract line.
 		require
 			is_interface_usable: is_interface_usable
@@ -232,11 +232,11 @@ feature -- Basic operations
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
 		local
-			l_grid: !like edit_contract_grid
+			l_grid: attached like edit_contract_grid
 			l_selected_rows: ARRAYED_LIST [EV_GRID_ROW]
 			l_selected_index: INTEGER
 			l_visible_index: INTEGER
-			l_parents: !DS_LIST [CLASS_C]
+			l_parents: attached DS_LIST [CLASS_C]
 			l_parent: CLASS_I
 			l_row: EV_GRID_ROW
 			l_col: EV_GRID_COLUMN
@@ -269,7 +269,7 @@ feature -- Basic operations
 				-- Set the column size.
 			l_grid.column (context_column).set_width (16)
 
-			if {l_context: !like context} context then
+			if attached context as l_context then
 					-- Extract contracts for current class
 				l_grid.set_row_count_to (l_grid.row_count + 1)
 				l_row := l_grid.row (1)
@@ -322,7 +322,7 @@ feature -- Basic operations
 
 feature {NONE} -- Basic operations
 
-	find_row (a_source: !ES_CONTRACT_SOURCE_I): ?EV_GRID_ROW
+	find_row (a_source: attached ES_CONTRACT_SOURCE_I): detachable EV_GRID_ROW
 			-- Attempt to locate a grid row for a given source
 			--
 			-- `a_source': The contract source to locate a row for.
@@ -332,8 +332,8 @@ feature {NONE} -- Basic operations
 			is_initialized: is_initialized
 			has_context: has_context
 		local
-			l_source: !ES_CONTRACT_SOURCE_I
-			l_grid: !like edit_contract_grid
+			l_source: attached ES_CONTRACT_SOURCE_I
+			l_grid: attached like edit_contract_grid
 			l_row: EV_GRID_ROW
 			l_sub_row: EV_GRID_ROW
 			l_count, i: INTEGER
@@ -371,7 +371,7 @@ feature {NONE} -- Basic operations
 
 feature -- Modification
 
-	add_contract (a_tag: !STRING_32; a_contract: !STRING_32; a_source: !ES_CONTRACT_SOURCE_I)
+	add_contract (a_tag: attached STRING_32; a_contract: attached STRING_32; a_source: attached ES_CONTRACT_SOURCE_I)
 			-- Adds a contract using a seperate tag name and contract.
 			--
 			-- `a_tag': The contract tag name.
@@ -394,7 +394,7 @@ feature -- Modification
 			add_contract_string (l_line.string, a_source)
 		end
 
-	add_contract_string (a_contract: !STRING_32; a_source: !ES_CONTRACT_SOURCE_I)
+	add_contract_string (a_contract: attached STRING_32; a_source: attached ES_CONTRACT_SOURCE_I)
 			-- Adds a contract using a contract string, containing both a tag name and contract as if it was extracted directly
 			-- from the editor.
 			--
@@ -412,7 +412,7 @@ feature -- Modification
 			l_selected: BOOLEAN
 			i: INTEGER
 		do
-			if {l_row: EV_GRID_ROW} find_row (a_source) then
+			if attached {EV_GRID_ROW} find_row (a_source) as l_row then
 				l_selected := l_row.is_selected
 				if l_selected then
 					l_row.disable_select
@@ -445,7 +445,7 @@ feature -- Modification
 			end
 		end
 
-	remove_contract (a_line: !ES_CONTRACT_LINE)
+	remove_contract (a_line: attached ES_CONTRACT_LINE)
 			-- Removes a contract.
 			--
 			-- `a_line': A contract line to remove from the editor.
@@ -457,10 +457,10 @@ feature -- Modification
 			a_line_is_editable: a_line.is_editable
 			context_contracts_has_a_line: context_contracts.has (a_line)
 		local
-			l_grid: !like edit_contract_grid
+			l_grid: attached like edit_contract_grid
 			l_row: EV_GRID_ROW
 			l_sub_row: EV_GRID_ROW
-			l_source: !ES_CONTRACT_SOURCE_I
+			l_source: attached ES_CONTRACT_SOURCE_I
 			l_count, i: INTEGER
 			l_sub_count, j: INTEGER
 			l_removed: BOOLEAN
@@ -523,7 +523,7 @@ feature -- Modification
 			check removed: l_removed end
 		end
 
-	replace_contract (a_tag: !STRING_32; a_contract: !STRING_32; a_line: !ES_CONTRACT_LINE)
+	replace_contract (a_tag: attached STRING_32; a_contract: attached STRING_32; a_line: attached ES_CONTRACT_LINE)
 			-- Replaces an existing contract.
 			-- Note: `a_line' will probably be invalid after replacing the contract. There is no guarentee of it remaining the same.
 			--
@@ -553,7 +553,7 @@ feature -- Modification
 			end
 		end
 
-	swap_contracts (a_line: !ES_CONTRACT_LINE; a_other_line: !ES_CONTRACT_LINE)
+	swap_contracts (a_line: attached ES_CONTRACT_LINE; a_other_line: attached ES_CONTRACT_LINE)
 			-- Swaps two contracts.
 			--
 			-- `a_line': Orginal contracts line.
@@ -569,8 +569,8 @@ feature -- Modification
 			a_other_line_is_editable: a_other_line.is_editable
 			context_contracts_has_a_other_line: context_contracts.has (a_other_line)
 		local
-			l_row: ?like find_row
-			l_other_row: ?like find_row
+			l_row: detachable like find_row
+			l_other_row: detachable like find_row
 			l_selected: BOOLEAN
 			l_other_selected: BOOLEAN
 		do
@@ -608,25 +608,25 @@ feature -- Modification
 
 feature {NONE} -- Helpers
 
-	frozen context_printer: !ERROR_CONTEXT_PRINTER
+	frozen context_printer: attached ERROR_CONTEXT_PRINTER
 			-- Printer used to print context information
 		once
 			create Result
 		end
 
-	frozen pixmap_factory: !EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
+	frozen pixmap_factory: attached EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
 			-- Pixmap factory
 		once
 			create Result
 		end
 
-	frozen token_scanner: !EDITOR_EIFFEL_SCANNER
+	frozen token_scanner: attached EDITOR_EIFFEL_SCANNER
 			-- Scanner used to tokenize Eiffel code
 		once
 			create Result.make
 		end
 
-	frozen string_formatter: !STRING_FORMATTER
+	frozen string_formatter: attached STRING_FORMATTER
 			-- Formatter used to format strings
 		once
 			create Result
@@ -634,7 +634,7 @@ feature {NONE} -- Helpers
 
 feature {NONE} -- User interface elements
 
-	edit_contract_grid: !ES_GRID
+	edit_contract_grid: attached ES_GRID
 			-- The grid used to display and edit the contracts for the current context
 		do
 			Result := widget
@@ -642,19 +642,19 @@ feature {NONE} -- User interface elements
 
 feature -- Actions
 
-	commit_edit_actions: !EV_LITE_ACTION_SEQUENCE [TUPLE [code: !STRING_32; old_code: STRING_32]]
+	commit_edit_actions: attached EV_LITE_ACTION_SEQUENCE [TUPLE [code: attached STRING_32; old_code: STRING_32]]
 			-- Actions called to inform subscribers of the commit actions just taken place.
 			--
 			-- `' DO NOT USE
 
-	source_selection_actions: !EV_LITE_ACTION_SEQUENCE [!TUPLE [source: ?ES_CONTRACT_SOURCE_I]]
+	source_selection_actions: attached EV_LITE_ACTION_SEQUENCE [attached TUPLE [source: detachable ES_CONTRACT_SOURCE_I]]
 			-- Actions called when a contract source is selected/deselected
 			--
 			-- `source': The selected source or Void if not source was selected
 
 feature {NONE} -- Population
 
-	populate_contracts_row (a_class: !CLASS_I; a_row: !EV_GRID_ROW; a_context: !like context)
+	populate_contracts_row (a_class: attached CLASS_I; a_row: attached EV_GRID_ROW; a_context: attached like context)
 			-- Populates a inherited read-only grid row for a given class.
 			--
 			-- `a_class': Current class where the context feature resides.
@@ -670,8 +670,8 @@ feature {NONE} -- Population
 		local
 			l_grid: like edit_contract_grid
 			l_editable: BOOLEAN
-			l_mod_contract: TUPLE [contracts: !DS_LIST [TAGGED_AS]; modifier: !ES_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]]
-			l_contracts: !DS_LIST [TAGGED_AS]
+			l_mod_contract: TUPLE [contracts: attached DS_LIST [TAGGED_AS]; modifier: attached ES_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]]
+			l_contracts: attached DS_LIST [TAGGED_AS]
 			l_tagged: TAGGED_AS
 			l_decorator: TEXT_FORMATTER_DECORATOR
 			l_feat_decorator: FEAT_TEXT_FORMATTER_DECORATOR
@@ -679,12 +679,12 @@ feature {NONE} -- Population
 			l_feature_i: FEATURE_I
 			l_row: EV_GRID_ROW
 			l_editor_item: EB_GRID_EDITOR_TOKEN_ITEM
-			l_scanner: ?like token_scanner
+			l_scanner: detachable like token_scanner
 			l_tagged_text: STRING
 			l_left_border: INTEGER
 			l_class_c: CLASS_C
-			l_contract_source: !ES_CONTRACT_SOURCE
-			l_contract_line: !ES_CONTRACT_LINE
+			l_contract_source: attached ES_CONTRACT_SOURCE
+			l_contract_line: attached ES_CONTRACT_LINE
 			i: INTEGER
 		do
 			l_grid := edit_contract_grid
@@ -737,7 +737,7 @@ feature {NONE} -- Population
 
 							l_tagged_text := l_tagged.text (l_mod_contract.modifier.ast_match_list)
 								-- Because the tagged text is coming from an AST node the initial tabbing is missing.
-							if {l_inv: ES_INVARIANT_CONTRACT_EDITOR_CONTEXT} context then
+							if attached {ES_INVARIANT_CONTRACT_EDITOR_CONTEXT} context as l_inv then
 								l_tagged_text.prepend ("%T")
 							else
 								l_tagged_text.prepend ("%T%T%T")
@@ -748,7 +748,7 @@ feature {NONE} -- Population
 						else
 								-- Perform formatting with decorator, enabling clickable text.
 							l_class_c := l_mod_contract.modifier.context_class.compiled_class
-							if {l_fmodifier: !ES_FEATURE_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]} l_mod_contract.modifier then
+							if attached {attached ES_FEATURE_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]} l_mod_contract.modifier as l_fmodifier then
 								l_feature_i := l_class_c.feature_of_feature_id (l_fmodifier.context_feature.feature_id)
 								create l_feat_decorator.make (l_class_c, l_token_generator)
 								l_feat_decorator.init_feature_context (l_feature_i, l_feature_i, l_fmodifier.context_feature.ast)
@@ -824,7 +824,7 @@ feature {NONE} -- Population
 			a_row_data_set: a_context.text_modifier.is_ast_available implies (({ES_CONTRACT_SOURCE_I}) #? a_row.data) /= Void
 		end
 
-	populate_contract_header_row (a_class: !CLASS_I; a_row: !EV_GRID_ROW; a_context: !like context; a_editable: BOOLEAN)
+	populate_contract_header_row (a_class: attached CLASS_I; a_row: attached EV_GRID_ROW; a_context: attached like context; a_editable: BOOLEAN)
 			-- Populates a contract header row.
 			--
 			-- `a_class': Current class where the context feature resides.
@@ -857,7 +857,7 @@ feature {NONE} -- Population
 			create l_generator.make
 			l_generator.disable_multiline
 
-			if {l_context: !ES_FEATURE_CONTRACT_EDITOR_CONTEXT} a_context then
+			if attached {attached ES_FEATURE_CONTRACT_EDITOR_CONTEXT} a_context as l_context then
 					-- Keywords
 				create l_item
 
@@ -938,7 +938,7 @@ feature {NONE} -- Population
 			end
 		end
 
-	populate_editable_contract_row (a_contract: !STRING_32; a_source: !ES_CONTRACT_SOURCE_I; a_row: !EV_GRID_ROW)
+	populate_editable_contract_row (a_contract: attached STRING_32; a_source: attached ES_CONTRACT_SOURCE_I; a_row: attached EV_GRID_ROW)
 			-- Populates a inherited read-only grid row for a given class.
 			--
 			-- `a_class': Current class where the context feature resides.
@@ -956,11 +956,11 @@ feature {NONE} -- Population
 		local
 			l_selected: BOOLEAN
 			l_editor_item: EB_GRID_EDITOR_TOKEN_ITEM
-			l_scanner: !like token_scanner
+			l_scanner: attached like token_scanner
 			l_editable_lines: LIST [STRING_32]
 			l_editor_tokens: LINKED_LIST [EDITOR_TOKEN]
 			l_line: EIFFEL_EDITOR_LINE
-			l_contract_line: !ES_CONTRACT_LINE
+			l_contract_line: attached ES_CONTRACT_LINE
 		do
 			l_selected := a_row.is_selected
 
@@ -1017,7 +1017,7 @@ feature {NONE} -- Population
 			a_row_selected: old a_row.is_selected implies a_row.is_selected
 		end
 
-	populate_no_contract_row (a_row: !EV_GRID_ROW)
+	populate_no_contract_row (a_row: attached EV_GRID_ROW)
 			-- Populates a row to indicate that no contracts exist.
 			--
 			-- `a_row': The grid row to populate with the message.
@@ -1035,9 +1035,9 @@ feature {NONE} -- Population
 			a_row.clear
 
 				-- Use an editor grid item to replicate the style
-			if {l_pre: ES_PRECONDITION_CONTRACT_EDITOR_CONTEXT} context then
+			if attached {ES_PRECONDITION_CONTRACT_EDITOR_CONTEXT} context as l_pre then
 				create l_editor_item.make_with_text (interface_names.t_contract_no_preconditions.as_string_8)
-			elseif {l_post: ES_POSTCONDITION_CONTRACT_EDITOR_CONTEXT} context then
+			elseif attached {ES_POSTCONDITION_CONTRACT_EDITOR_CONTEXT} context as l_post then
 				create l_editor_item.make_with_text (interface_names.t_contract_no_postcondtions.as_string_8)
 			else
 				create l_editor_item.make_with_text (interface_names.t_contract_no_invariants.as_string_8)
@@ -1057,7 +1057,7 @@ feature {NONE} -- Population
 			a_row_data_set: a_row.data = a_row.parent_row.data
 		end
 
-	populate_syntax_error_row (a_class: !CLASS_I; a_row: !EV_GRID_ROW)
+	populate_syntax_error_row (a_class: attached CLASS_I; a_row: attached EV_GRID_ROW)
 			-- Populates a row to indicate the supplied class has a syntax error.
 			--
 			-- `a_class': Current class where the syntax error occurred.
@@ -1102,7 +1102,7 @@ feature {NONE} -- Population
 
 feature {NONE} -- Factory
 
-	create_widget: !ES_GRID
+	create_widget: attached ES_GRID
 			-- Creates a new widget, which will be initialized when `build_interface' is called.
 		do
 			create {ES_EDITOR_TOKEN_GRID}Result
@@ -1123,7 +1123,7 @@ feature -- Synchronization
 
 feature {NONE} -- Internal implementation cache
 
-	internal_context_contracts: ?like context_contracts
+	internal_context_contracts: detachable like context_contracts
 			-- Cached version of `context_contracts'
 			-- Note: Do not use directly!
 

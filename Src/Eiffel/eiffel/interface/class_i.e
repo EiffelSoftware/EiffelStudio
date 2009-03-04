@@ -442,7 +442,7 @@ feature -- Status report
 			retry
 		end
 
-	encoding: ?ANY
+	encoding: detachable ANY
 			-- Encoding of original text.
 
 feature -- Output

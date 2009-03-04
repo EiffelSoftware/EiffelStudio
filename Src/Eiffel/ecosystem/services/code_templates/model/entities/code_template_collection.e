@@ -11,19 +11,19 @@ class
 	CODE_TEMPLATE_COLLECTION
 
 inherit
-	CODE_COLLECTION [!CODE_TEMPLATE]
+	CODE_COLLECTION [attached CODE_TEMPLATE]
 
 create
 	make
 
 feature -- Query
 
-	applicable_item: ?CODE_TEMPLATE
+	applicable_item: detachable CODE_TEMPLATE
 			-- Attempts to retreive the most applicable code template for the version of the compiler.
 			--
 			-- `Result': A code template with no version; Otherwise Void if not applicable template was located.
 		local
-			l_version: !STRING_32
+			l_version: attached STRING_32
 		do
 			create l_version.make_from_string ((create {SYSTEM_CONSTANTS}).compiler_version_number.version)
 			Result := applicable_item_with_version (l_version)
@@ -32,7 +32,7 @@ feature -- Query
 			end
 		end
 
-	applicable_default_item: ?CODE_TEMPLATE
+	applicable_default_item: detachable CODE_TEMPLATE
 			-- Attempts to retreive the default (unversioned) code template.
 			--
 			-- `Result': A code template with no version; Otherwise Void if not applicable template was located.
@@ -40,7 +40,7 @@ feature -- Query
 			l_template: CODE_TEMPLATE
 			l_versioned_template: CODE_VERSIONED_TEMPLATE
 		do
-			if {l_templates: !DS_BILINEAR_CURSOR [!CODE_TEMPLATE]} items.new_cursor then
+			if attached {attached DS_BILINEAR_CURSOR [attached CODE_TEMPLATE]} items.new_cursor as l_templates then
 				from l_templates.start until l_templates.after loop
 					l_template := l_templates.item
 					l_versioned_template ?= l_template
@@ -55,10 +55,10 @@ feature -- Query
 				check gobo_cursor_cleaned_up: l_templates.off end
 			end
 		ensure
-			result_is_unversioned: not {e1: CODE_VERSIONED_TEMPLATE} Result
+			result_is_unversioned: not attached {CODE_VERSIONED_TEMPLATE} Result as e1
 		end
 
-	applicable_item_with_version (a_version: !STRING_32): ?CODE_TEMPLATE
+	applicable_item_with_version (a_version: attached STRING_32): detachable CODE_TEMPLATE
 			-- Attempts to retreive the most applicable code template, given a string version.
 			--
 			-- `a_version': Version to find the most applicable template with.
@@ -66,13 +66,13 @@ feature -- Query
 		require
 			not_a_version_is_empty: not a_version.is_empty
 		local
-			l_version: !CODE_VERSION
+			l_version: attached CODE_VERSION
 		do
 			l_version := (create {CODE_FORMAT_UTILITIES}).parse_version (a_version, create {CODE_FACTORY})
 			Result := applicable_item_with_code_version (l_version)
 		end
 
-	applicable_item_with_code_version (a_version: !CODE_VERSION): ?CODE_TEMPLATE
+	applicable_item_with_code_version (a_version: attached CODE_VERSION): detachable CODE_TEMPLATE
 			-- Attempts to retreive the most applicable code template, given a version.
 			--
 			-- `a_version': Version to find the most applicable template with.
@@ -81,18 +81,18 @@ feature -- Query
 			not_a_version_is_default: not a_version.is_equal (create {CODE_NUMERIC_VERSION}.make (0, 0, 0, 0))
 		local
 			l_templates: like items
-			l_template: !CODE_TEMPLATE
-			l_versioned_templates: !DS_ARRAYED_LIST [!CODE_VERSIONED_TEMPLATE]
+			l_template: attached CODE_TEMPLATE
+			l_versioned_templates: attached DS_ARRAYED_LIST [attached CODE_VERSIONED_TEMPLATE]
 			l_ver_template: CODE_VERSIONED_TEMPLATE
-			l_next_ver_template: !CODE_VERSIONED_TEMPLATE
-			l_cursor: DS_BILINEAR_CURSOR [!CODE_TEMPLATE]
+			l_next_ver_template: attached CODE_VERSIONED_TEMPLATE
+			l_cursor: DS_BILINEAR_CURSOR [attached CODE_TEMPLATE]
 		do
 			l_templates := items
 			if not l_templates.is_empty then
 				if l_templates.count = 1 then
 						-- There's only one template
 					Result := l_templates.first
-					if {l_vt1: CODE_VERSIONED_TEMPLATE} Result and then not l_vt1.is_compatible_with (a_version) then
+					if attached {CODE_VERSIONED_TEMPLATE} Result as l_vt1 and then not l_vt1.is_compatible_with (a_version) then
 							-- The template is not usable, so unset it.
 						Result := Void
 					end
@@ -103,7 +103,7 @@ feature -- Query
 					if l_cursor /= Void then
 							-- Compile a list of versioned templates
 						from l_cursor.start until l_cursor.after loop
-							if {l_vt2: CODE_VERSIONED_TEMPLATE} l_cursor.item then
+							if attached {CODE_VERSIONED_TEMPLATE} l_cursor.item as l_vt2 then
 								l_versioned_templates.force_last (l_vt2)
 							else
 									-- Keep the unversioned template, incase there are no versioned ones
@@ -139,7 +139,7 @@ feature -- Query
 
 feature -- Visitor
 
-	process (a_visitor: !CODE_TEMPLATE_VISITOR_I)
+	process (a_visitor: attached CODE_TEMPLATE_VISITOR_I)
 			-- <Precursor>
 		do
 			a_visitor.process_code_template_collection (Current)

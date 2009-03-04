@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	active_sessions: !DS_ARRAYED_LIST [SESSION_I]
+	active_sessions: attached DS_ARRAYED_LIST [SESSION_I]
 			-- List of currently active sessions.
 		require
 			is_interface_usable: is_interface_usable
@@ -65,7 +65,7 @@ feature -- Storage
 
 feature -- Retrieval
 
-	retrieve (a_per_project: BOOLEAN): ?SESSION_I
+	retrieve (a_per_project: BOOLEAN): detachable SESSION_I
 			-- Retrieve's a session based on specified paramaters.
 			--
 			-- `a_per_project': True to retireve a session for the active project, False otherwise
@@ -80,7 +80,7 @@ feature -- Retrieval
 			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end
 
-	retrieve_extended (a_per_project: BOOLEAN; a_extension: ?STRING_8): ?SESSION_I
+	retrieve_extended (a_per_project: BOOLEAN; a_extension: detachable STRING_8): detachable SESSION_I
 			-- Retrieve's a session based on specified paramaters, using a extension name for non-global conflicting session objects.
 			--
 			-- `a_per_project': True to retireve a session for the active project, False otherwise
@@ -99,7 +99,7 @@ feature -- Retrieval
 			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end
 
-	retrieve_per_window (a_window: SHELL_WINDOW_I; a_per_project: BOOLEAN): ?SESSION_I
+	retrieve_per_window (a_window: SHELL_WINDOW_I; a_per_project: BOOLEAN): detachable SESSION_I
 			-- Retrieve's a window session based on specified paramaters.
 			--
 			-- `a_window': The window to retrieve a window-based session for.
@@ -118,7 +118,7 @@ feature -- Retrieval
 			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end
 
-	retrieve_per_window_extended (a_window: SHELL_WINDOW_I; a_per_project: BOOLEAN; a_extension: ?STRING_8): ?SESSION_I
+	retrieve_per_window_extended (a_window: SHELL_WINDOW_I; a_per_project: BOOLEAN; a_extension: detachable STRING_8): detachable SESSION_I
 			-- Retrieve's a window session based on specified paramaters, using a extension name for non-global conflicting session objects.
 			--
 			-- `a_window': The window to retrieve a window-based session for.
@@ -140,7 +140,7 @@ feature -- Retrieval
 			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end
 
-	retrieve_from_disk (a_file_name: STRING_8): ?SESSION_I
+	retrieve_from_disk (a_file_name: STRING_8): detachable SESSION_I
 			-- Retrieves a session object from disk, if it exists.
 			-- If no file exists then a new session is created.
 			--

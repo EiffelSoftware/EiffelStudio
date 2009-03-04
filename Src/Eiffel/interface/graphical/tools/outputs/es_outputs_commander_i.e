@@ -15,7 +15,7 @@ inherit
 
 feature -- Access
 
-	output: ?ES_OUTPUT_PANE_I
+	output: detachable ES_OUTPUT_PANE_I
 			-- Current active output object.
 		require
 			is_interface_usable: is_interface_usable
@@ -24,7 +24,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	set_output (a_output: !ES_OUTPUT_PANE_I)
+	set_output (a_output: attached ES_OUTPUT_PANE_I)
 			-- Sets an output object on the tool.
 			--
 			-- `a_output': The new output object to set.

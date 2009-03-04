@@ -10,12 +10,12 @@ deferred class
 
 feature -- Callbacks
 
-	on_tag_added (a_tag: !STRING_32)
+	on_tag_added (a_tag: attached STRING_32)
 			-- `a_tag' was added.
 		deferred
 		end
 
-	on_tag_removed (a_tag: !STRING_32)
+	on_tag_removed (a_tag: attached STRING_32)
 			-- `a_tab' was removed.
 		deferred
 		end

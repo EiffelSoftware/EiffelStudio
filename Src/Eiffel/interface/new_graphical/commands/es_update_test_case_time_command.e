@@ -36,7 +36,7 @@ feature -- Command
 
 feature {ES_EWEASEL_TESTING_TOOL_PANEL} -- Implementation
 
-	manager: !ES_EWEASEL_EXECUTION_MANAGER
+	manager: attached ES_EWEASEL_EXECUTION_MANAGER
 			-- eweasel chief manager
 
 	menu_name: STRING_GENERAL

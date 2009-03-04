@@ -30,7 +30,7 @@ feature {NONE} -- Clean up
 
 feature -- Element change
 
-	set_text (a_text: !READABLE_STRING_GENERAL; a_style: NATURAL_8)
+	set_text (a_text: attached READABLE_STRING_GENERAL; a_style: NATURAL_8)
 			-- <Precursor>
 		local
 			l_windows: LIST [EB_DEVELOPMENT_WINDOW]
@@ -47,10 +47,10 @@ feature -- Element change
 			end
 		end
 
-	set_text_on_window (a_text: !READABLE_STRING_GENERAL; a_style: NATURAL_8; a_window: !SHELL_WINDOW_I)
+	set_text_on_window (a_text: attached READABLE_STRING_GENERAL; a_style: NATURAL_8; a_window: attached SHELL_WINDOW_I)
 			-- <Precursor>
 		do
-			if {l_window: EB_DEVELOPMENT_WINDOW} a_window then
+			if attached {EB_DEVELOPMENT_WINDOW} a_window as l_window then
 				inspect a_style
 				when {STATUS_BAR_TEXT_STYLE}.normal then
 					l_window.status_bar.display_message (a_text.as_string_32)

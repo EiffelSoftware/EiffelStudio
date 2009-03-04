@@ -1152,7 +1152,7 @@ feature {NONE} -- Agents
 
 					-- If `l_editor' is fake editor, `editor_drawing_area' is void
 					if
-						{draw: EV_DRAWING_AREA} a_editor.editor_drawing_area and then
+						attached {EV_DRAWING_AREA} a_editor.editor_drawing_area as draw and then
 						(draw.is_displayed and draw.is_sensitive)
 					then
 						a_editor.editor_drawing_area.set_focus

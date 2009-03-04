@@ -143,7 +143,7 @@ feature -- Basic operations
 
 						-- Notify service of file change
 					create l_notifier
-					if l_notifier.is_service_available and then {l_fn: !STRING_32} a_file_name.as_string_32 then
+					if l_notifier.is_service_available and then attached {attached STRING_32} a_file_name.as_string_32 as l_fn then
 							-- Poll modifications, allowing subscribers to recieve change modifications.
 						l_notifier.service.poll_modifications (l_fn).do_nothing
 					end

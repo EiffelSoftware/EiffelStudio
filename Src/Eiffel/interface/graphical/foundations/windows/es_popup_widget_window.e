@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	widget: !ES_WIDGET [EV_WIDGET]
+	widget: attached ES_WIDGET [EV_WIDGET]
 			-- Inner popup window widget, set during creation
 
 feature -- Status report

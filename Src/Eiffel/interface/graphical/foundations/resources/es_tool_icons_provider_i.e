@@ -19,12 +19,12 @@ inherit
 
 feature -- Access
 
-	frozen icons: !G
+	frozen icons: attached G
 			-- Access to the a tool's icons (16x16).
 		require
 			is_interface_usable: is_interface_usable
 		do
-			if {l_icons: G} internal_icons then
+			if attached {G} internal_icons as l_icons then
 				Result := l_icons
 			else
 				Result := new_icons
@@ -36,7 +36,7 @@ feature -- Access
 
 feature {NONE} -- Factory
 
-	new_icons: !G
+	new_icons: attached G
 			-- Factory to create a new tool's icon object.
 		require
 			is_interface_usable: is_interface_usable
@@ -46,7 +46,7 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Implementation: Internal cache
 
-	internal_icons: ?G
+	internal_icons: detachable G
 			-- Cached version of `icons'.
 			-- Note: Do not use directly!
 

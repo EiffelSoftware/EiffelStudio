@@ -1508,7 +1508,7 @@ feature -- Docking library menu items
 			l_menu_item: EV_MENU_ITEM
 		do
 			if a_content.type = {SD_ENUMERATION}.editor then
-				if {lt_box: EV_HORIZONTAL_BOX} a_content.user_widget then
+				if attached {EV_HORIZONTAL_BOX} a_content.user_widget as lt_box then
 
 					from
 						l_all_editors := a_dev_window.editors_manager.editors
@@ -1522,7 +1522,7 @@ feature -- Docking library menu items
 						l_all_editors.forth
 					end
 					if l_editor /= Void then
-						if {lt_class_stone: CLASSI_STONE} l_editor.stone then
+						if attached {CLASSI_STONE} l_editor.stone as lt_class_stone then
 							l_file_name := lt_class_stone.file_name
 							if l_file_name /= Void and then not l_file_name.is_empty then
 								create l_menu_item.make_with_text (a_dev_window.interface_names.m_Copy_full_path)

@@ -162,10 +162,10 @@ feature -- Query
 	go_to_previous_warning_command: ES_PREVIOUS_WARNING_COMMAND
 			-- Go to previous warning command
 
-	edit_contracts_command: !ES_EDIT_CONTRACTS_COMMAND
+	edit_contracts_command: attached ES_EDIT_CONTRACTS_COMMAND
 			-- Edit contracts command
 
-	find_class_or_cluster_command: !ES_FIND_CLASS_OR_CLUSTER_CMD
+	find_class_or_cluster_command: attached ES_FIND_CLASS_OR_CLUSTER_CMD
 			-- Command used to locate a class or cluster
 
 feature -- Commands

@@ -88,8 +88,8 @@ feature -- Command
 			l_solution: EB_SHARED_ID_SOLUTION
 		do
 			create l_solution
-			if {l_conf_class: CONF_CLASS} l_solution.class_of_id (class_id.as_string_8) then
-				if {l_class_i: CLASS_I} l_conf_class then
+			if attached {CONF_CLASS} l_solution.class_of_id (class_id.as_string_8) as l_conf_class then
+				if attached {CLASS_I} l_conf_class as l_class_i then
 					class_i:= l_class_i
 					if class_i /= Void then
 						class_id := Void

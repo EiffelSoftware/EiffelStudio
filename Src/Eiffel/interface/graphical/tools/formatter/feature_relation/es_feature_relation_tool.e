@@ -35,7 +35,7 @@ feature -- Access
 			Result := stock_pixmaps.tool_feature_icon
 		end
 
-	title: !STRING_32
+	title: attached STRING_32
 			-- <Precursor>
 		do
 			Result := locale_formatter.translation (t_tool_title)
@@ -78,7 +78,7 @@ feature -- Status report
 
 feature {NONE} -- Factory
 
-	new_tool: !ES_FEATURES_RELATION_TOOL_PANEL
+	new_tool: attached ES_FEATURES_RELATION_TOOL_PANEL
 			-- <Precursor>
 		do
 			create Result.make (window, Current)

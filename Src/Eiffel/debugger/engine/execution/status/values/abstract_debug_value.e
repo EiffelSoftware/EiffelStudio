@@ -241,7 +241,7 @@ feature {NONE} -- Implementation
 			-- <Precursor>
 		do
 			create Result.make_empty
-			if {n: like name} name then
+			if attached name as n then
 				Result.append ("name=" + n)
 			end
 		end

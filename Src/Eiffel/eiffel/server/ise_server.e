@@ -154,7 +154,7 @@ feature -- Status report
 	found: BOOLEAN
 			-- Did last operation find the item sought?
 
-	found_item: ?G
+	found_item: detachable G
 			-- Item, if any, yielded by last search operation
 
 	count: INTEGER
@@ -236,7 +236,7 @@ feature {NONE} -- HASH_TABLE like features
 		do
 		end
 
-	tbl_item (key: INTEGER): ?G
+	tbl_item (key: INTEGER): detachable G
 			-- Item associated with `key', if present
 			-- otherwise default value of type `G'
 		require

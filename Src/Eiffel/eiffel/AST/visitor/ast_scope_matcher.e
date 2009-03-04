@@ -63,16 +63,16 @@ feature {AST_EIFFEL} -- Visitor pattern
 					from
 						expr := l_as.expression
 					until
-						not {left_paran_as: PARAN_AS} expr
+						not attached {PARAN_AS} expr as left_paran_as
 					loop
 						expr := left_paran_as.expr
 					end
-					if {expr_call_as: EXPR_CALL_AS} expr then
-						if {access_id_as: ACCESS_ID_AS} expr_call_as.call then
+					if attached {EXPR_CALL_AS} expr as expr_call_as then
+						if attached {ACCESS_ID_AS} expr_call_as.call as access_id_as then
 							add_access_scope (access_id_as)
-						elseif {access_assert_as: ACCESS_ASSERT_AS} expr_call_as.call then
+						elseif attached {ACCESS_ASSERT_AS} expr_call_as.call as access_assert_as then
 							add_access_scope (access_assert_as)
-						elseif {result_as: RESULT_AS} expr_call_as.call then
+						elseif attached {RESULT_AS} expr_call_as.call as result_as then
 							add_result_scope
 						end
 					end
@@ -114,7 +114,7 @@ feature {NONE} -- Check for void test
 				from
 					left := equality_as.left
 				until
-					not {left_paran_as: PARAN_AS} left
+					not attached {PARAN_AS} left as left_paran_as
 				loop
 					left := left_paran_as.expr
 				end
@@ -122,22 +122,22 @@ feature {NONE} -- Check for void test
 				from
 					right := equality_as.right
 				until
-					not {right_paran_as: PARAN_AS} right
+					not attached {PARAN_AS} right as right_paran_as
 				loop
 					right := right_paran_as.expr
 				end
 					-- Check that one side of the equality expression is "Void".
-				if {v1: VOID_AS} left then
+				if attached {VOID_AS} left as v1 then
 					e := right
-				elseif {v2: VOID_AS} right then
+				elseif attached {VOID_AS} right as v2 then
 					e := left
 				end
-				if {expr_call_as: EXPR_CALL_AS} e then
-					if {access_id_as: ACCESS_ID_AS} expr_call_as.call then
+				if attached {EXPR_CALL_AS} e as expr_call_as then
+					if attached {ACCESS_ID_AS} expr_call_as.call as access_id_as then
 						add_access_scope (access_id_as)
-					elseif {access_assert_as: ACCESS_ASSERT_AS} expr_call_as.call then
+					elseif attached {ACCESS_ASSERT_AS} expr_call_as.call as access_assert_as then
 						add_access_scope (access_assert_as)
-					elseif {result_as: RESULT_AS} expr_call_as.call then
+					elseif attached {RESULT_AS} expr_call_as.call as result_as then
 						add_result_scope
 					end
 				end

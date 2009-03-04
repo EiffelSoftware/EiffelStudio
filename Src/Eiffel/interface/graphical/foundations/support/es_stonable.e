@@ -15,7 +15,7 @@ inherit
 
 feature -- Access
 
-	stone: ?STONE assign set_stone
+	stone: detachable STONE assign set_stone
 			-- <Precursor>
 
 feature -- Element change
@@ -34,7 +34,7 @@ feature -- Element change
 
 feature {NONE} -- Action handler
 
-	on_stone_changed (a_old_stone: ?like stone)
+	on_stone_changed (a_old_stone: detachable like stone)
 			-- Called when the stone changed.
 			--
 			-- `a_old_stone': Previous stone set in Current.

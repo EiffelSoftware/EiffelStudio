@@ -359,7 +359,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	project_docking_standard_file_name: !FILE_NAME
+	project_docking_standard_file_name: attached FILE_NAME
 			-- Docking config file name.
 		do
 			create Result.make_from_string (develop_window.project_location.target_path)

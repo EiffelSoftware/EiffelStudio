@@ -31,7 +31,7 @@ feature {NONE} -- User interface initialization
 
 feature -- Access
 
-	buttons: !DS_SET [INTEGER]
+	buttons: attached DS_SET [INTEGER]
 			-- <Precursor>
 		once
 			Result := dialog_buttons.open_cancel_buttons.as_attached
@@ -39,10 +39,10 @@ feature -- Access
 
 feature {NONE} -- Query
 
-	button_from_dialog_selected_button (a_dialog: !EV_FILE_OPEN_DIALOG): INTEGER
+	button_from_dialog_selected_button (a_dialog: attached EV_FILE_OPEN_DIALOG): INTEGER
 			-- <Precursor>
 		local
-			l_file_name: ?STRING_32
+			l_file_name: detachable STRING_32
 		do
 			l_file_name := a_dialog.file_title
 			if l_file_name = Void or else l_file_name.is_empty then
@@ -75,7 +75,7 @@ feature {NONE} -- Action handlers
 
 feature {NONE} -- Factory
 
-	new_dialog: !EV_FILE_OPEN_DIALOG
+	new_dialog: attached EV_FILE_OPEN_DIALOG
 			-- <Precursor>
 		do
 			create Result

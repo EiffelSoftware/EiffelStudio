@@ -18,10 +18,14 @@ feature {NONE} -- Initialization
 
 	make (a_call_back: like command_receiver_callback)
 			-- Initialization
+		require
+			a_call_back_attached: a_call_back /= Void
 		do
 			command_receiver_callback := a_call_back
 			make_key ({COMMAND_PROTOCOL_NAMES}.eiffel_studio_key)
 			set_external_command_action (agent external_command_action_handler)
+		ensure
+			command_receiver_callback_set: command_receiver_callback = a_call_back
 		end
 
 feature -- Action
@@ -34,10 +38,10 @@ feature -- Action
 			l_action_module, l_action: STRING
 		do
 			command_receiver_callback.reset
-			if {lt_string: STRING}a_string and then not lt_string.is_empty then
-				if protocol_regex.recognizes (lt_string) then
+			if a_string /= Void and then not a_string.is_empty then
+				if protocol_regex.recognizes (a_string) then
 						-- 1. Module
-					extract_regex.match (lt_string)
+					extract_regex.match (a_string)
 					l_action_module := extract_regex.captured_substring (1)
 						-- 2. Action or the condition
 					extract_regex.next_match
@@ -57,14 +61,14 @@ feature -- Action
 							extract_regex.next_match
 							if extract_regex.match_count > 1 then
 								l_action := extract_regex.captured_substring (1)
-								if {lt_cm: STRING}l_condition_module and {lt_c: STRING}l_condition and {lt_am: STRING}l_action_module and {lt_a: STRING}l_action then
-									command_receiver_callback.on_condition_found (lt_cm, lt_c)
-									command_receiver_callback.on_action_found (lt_am, lt_a)
+								if l_condition_module /= Void and l_condition /= Void and l_action_module /= Void and l_action /= Void then
+									command_receiver_callback.on_condition_found (l_condition_module, l_condition)
+									command_receiver_callback.on_action_found (l_action_module, l_action)
 								end
 							end
 						else
-							if {lt_am_1: STRING}l_action_module and {lt_a_1: STRING}l_action then
-								command_receiver_callback.on_action_found (lt_am_1, lt_a_1)
+							if l_action_module /= Void and l_action /= Void then
+								command_receiver_callback.on_action_found (l_action_module, l_action)
 							end
 						end
 					end
@@ -76,16 +80,18 @@ feature -- Action
 
 feature -- Callback
 
-	command_receiver_callback: !ES_COMMAND_RECEIVER_CALLBACKS
+	command_receiver_callback: ES_COMMAND_RECEIVER_CALLBACKS
 			-- Command recever callbacks
 
 feature -- Notification
 
-	notify_created_starting_dialog (a_dialog: !EB_STARTING_DIALOG)
+	notify_created_starting_dialog (a_dialog: EB_STARTING_DIALOG)
 			-- Notify current `a_dialog' has just been created.
 			-- The dialog will be kept until `notify_created_starting_dialog' is called.
 			-- Be careful doing this, since the dialog will not be GCed
 			-- if `notify_created_starting_dialog' is not called.
+		require
+			a_dialog_attached: a_dialog /= Void
 		do
 			starting_dialog := a_dialog
 			command_receiver_callback.set_starting_dialog (a_dialog)
@@ -104,7 +110,7 @@ feature -- Notification
 
 feature {NONE} -- Implementation
 
-	starting_dialog: ?EB_STARTING_DIALOG
+	starting_dialog: detachable EB_STARTING_DIALOG
 			-- Reference to keep starting dialog
 
 	id_solution: EB_SHARED_ID_SOLUTION
@@ -127,8 +133,11 @@ feature {NONE} -- Implementation
 			Result.compile ("<([^>]*)>")
 		end
 
+invariant
+	command_receiver_callback_attached: command_receiver_callback /= Void
+
 note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -152,11 +161,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

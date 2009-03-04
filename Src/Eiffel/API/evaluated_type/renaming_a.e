@@ -83,11 +83,11 @@ feature {NONE} -- Initialization
 						-- Add new name to the list.
 					put (l_old_name_id, l_new_name.internal_name.name_id)
 
-					if {l_infix_prefix_name: INFIX_PREFIX_AS} l_new_name then
+					if attached {INFIX_PREFIX_AS} l_new_name as l_infix_prefix_name then
 							-- Check validity of infix/prefix for that particular routine.
 						process_alias (l_rename.new_name, l_old_feature)
 							-- No need to add it, because infix have the same internal name as their alias.
-					elseif {l_alias_name: FEATURE_NAME_ALIAS_AS} l_new_name then
+					elseif attached {FEATURE_NAME_ALIAS_AS} l_new_name as l_alias_name then
 							-- Check validity of alias for that particular routine.
 						process_alias (l_rename.new_name, l_old_feature)
 							-- Because `l_old_name_id' is already there, we do not want to generate an error

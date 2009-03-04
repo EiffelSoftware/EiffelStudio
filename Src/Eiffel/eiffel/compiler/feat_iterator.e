@@ -52,7 +52,7 @@ feature {NONE} -- Modification
 			unit: ROUT_ENTRY
 			old_position: INTEGER
 		do
-			if {table: ROUT_TABLE} Tmp_poly_server.item (rout_id) then
+			if attached {ROUT_TABLE} Tmp_poly_server.item (rout_id) as table then
 				from
 					table.start
 				until

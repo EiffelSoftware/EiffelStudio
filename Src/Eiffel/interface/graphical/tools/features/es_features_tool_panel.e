@@ -69,21 +69,21 @@ feature {NONE} -- User interface initialization
 				l_session := session_data
 
 					-- Retrieve session data and set button states
-				if {l_toggle1: !BOOLEAN_REF} l_session.value_or_default (show_alias_session_id, False) then
+				if attached {attached BOOLEAN_REF} l_session.value_or_default (show_alias_session_id, False) as l_toggle1 then
 					if l_toggle1.item then
 						show_alias_button.enable_select
 					else
 						show_alias_button.disable_select
 					end
 				end
-				if {l_toggle2: !BOOLEAN_REF} l_session.value_or_default (show_assigners_session_id, False) then
+				if attached {attached BOOLEAN_REF} l_session.value_or_default (show_assigners_session_id, False) as l_toggle2 then
 					if l_toggle2.item then
 						show_assigners_button.enable_select
 					else
 						show_assigners_button.disable_select
 					end
 				end
-				if {l_toggle3: !BOOLEAN_REF} l_session.value_or_default (show_signatures_session_id, False) then
+				if attached {attached BOOLEAN_REF} l_session.value_or_default (show_signatures_session_id, False) as l_toggle3 then
 					if l_toggle3.item then
 						show_signatures_button.enable_select
 					else
@@ -128,7 +128,7 @@ feature {NONE} -- Access
 
 feature -- Access: Help
 
-	help_context_id: !STRING_GENERAL
+	help_context_id: attached STRING_GENERAL
 			-- <Precursor>
 		once
 			Result := "BC9B2EF1-B4C4-773A-9BA8-97143FB2727A"
@@ -162,7 +162,7 @@ feature {ES_FEATURES_GRID} -- Status report
 
 feature {NONE} -- Status report
 
-	is_stone_sychronization_required (a_old_stone: ?STONE; a_new_stone: ?STONE): BOOLEAN
+	is_stone_sychronization_required (a_old_stone: detachable STONE; a_new_stone: detachable STONE): BOOLEAN
 			-- <Precursor>
 		do
 				-- Always update the view.
@@ -171,7 +171,7 @@ feature {NONE} -- Status report
 
 feature {ES_TOOL} -- Basic operations
 
-	select_feature_item (a_feature: ?E_FEATURE)
+	select_feature_item (a_feature: detachable E_FEATURE)
 			-- Selects a feature in the feature tree
 			--
 			-- `a_feature': The feature to select an assocated node in the feature tree.
@@ -181,7 +181,7 @@ feature {ES_TOOL} -- Basic operations
 			end
 		end
 
-	select_feature_item_by_name (a_feature: !STRING_GENERAL)
+	select_feature_item_by_name (a_feature: attached STRING_GENERAL)
 			-- Selects a feature in the feature tree, using a string name
 			--
 			-- `a_feature': The name of a feature to select an assocated node in the feature tree.
@@ -193,7 +193,7 @@ feature {ES_TOOL} -- Basic operations
 
 feature {NONE} -- Basic operations
 
-	select_feature_item_by_Data (a_data: ?ANY; a_compare_object: BOOLEAN)
+	select_feature_item_by_Data (a_data: detachable ANY; a_compare_object: BOOLEAN)
 			-- Selects a feature in the feature tree
 			--
 			-- `a_feature': The feature to select an assocated node in the feature tree.
@@ -205,12 +205,12 @@ feature {NONE} -- Basic operations
 			l_tree: like features_tree
 		do
 			l_tree := features_tree
-			if a_data /= Void and then {l_row: !EV_GRID_ROW} l_tree.retrieve_row_recursively_by_data (a_data, a_compare_object) then
+			if a_data /= Void and then attached {attached EV_GRID_ROW} l_tree.retrieve_row_recursively_by_data (a_data, a_compare_object) as l_row then
 				l_row.enable_select
 				if l_row.is_displayed then
 					l_row.ensure_visible
 				end
-			elseif {l_selected_row: !EV_GRID_ROW} l_tree.selected_row then
+			elseif attached {attached EV_GRID_ROW} l_tree.selected_row as l_selected_row then
 					-- No node located so deselect any selected node.
 				l_selected_row.disable_select
 			end
@@ -232,7 +232,7 @@ feature {NONE} -- Event handlers
 			end
 
 			if l_button /= Void then
-				if {l_toggle: !BOOLEAN_REF} a_session.value_or_default (a_id, False) then
+				if attached {attached BOOLEAN_REF} a_session.value_or_default (a_id, False) as l_toggle then
 					if l_toggle.item then
 						l_button.enable_select
 					else
@@ -284,7 +284,7 @@ feature {NONE} -- Action handlers
 			features_tree.update_all
 		end
 
-	on_stone_changed (a_old_stone: ?like stone)
+	on_stone_changed (a_old_stone: detachable like stone)
 			-- Called when the set stone changes.
 			-- Note: This routine can be called when `stone' is Void, to indicate a stone has been cleared.
 			--       Be sure to check `is_in_stone_synchronization' to determine if a stone has change through an explicit
@@ -297,7 +297,7 @@ feature {NONE} -- Action handlers
 		do
 			l_tree := features_tree
 
-			if {l_class_stone: !CLASSC_STONE} stone then
+			if attached {attached CLASSC_STONE} stone as l_class_stone then
 				l_class := l_class_stone.e_class
 
 				if l_class /= current_compiled_class or is_in_stone_synchronization then
@@ -318,11 +318,11 @@ feature {NONE} -- Action handlers
 						end
 
 						if l_class_ast /= Void then
-							if {l_row: !EV_GRID_ROW} l_tree.selected_row then
+							if attached {attached EV_GRID_ROW} l_tree.selected_row as l_row then
 								l_row.disable_select
 							end
 
-							if {l_clauses: !EIFFEL_LIST [FEATURE_CLAUSE_AS]} l_class_ast.features then
+							if attached {attached EIFFEL_LIST [FEATURE_CLAUSE_AS]} l_class_ast.features as l_clauses then
 									-- Build tree from AST nodes
 								l_tree.build_tree (l_clauses, l_class)
 							else
@@ -330,12 +330,12 @@ feature {NONE} -- Action handlers
 								l_tree.extend_item (create {EV_GRID_LABEL_ITEM}.make_with_text (warning_messages.w_no_feature_to_display))
 							end
 						end
-					elseif {l_external_classc: !EXTERNAL_CLASS_C} l_class then
+					elseif attached {attached EXTERNAL_CLASS_C} l_class as l_external_classc then
 							-- Special processing for a .NET type since has no 'ast' in the normal
 							-- sense.
 						current_compiled_class := l_class
 
-						if {l_row2: !EV_GRID_ROW} l_tree.selected_row then
+						if attached {attached EV_GRID_ROW} l_tree.selected_row as l_row2 then
 							l_row2.disable_select
 						end
 						l_tree.wipe_out

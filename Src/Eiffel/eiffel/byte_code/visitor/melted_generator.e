@@ -1607,7 +1607,7 @@ feature {NONE} -- Visitors
 				check l_expr_not_void: l_expr /= Void end
 				l_expr.process (Current)
 				if l_expr.is_hector then
-					if {l_hector_b: HECTOR_B} l_expr then
+					if attached {HECTOR_B} l_expr as l_hector_b then
 						make_protected_byte_code (l_hector_b, 0)
 					else
 						check

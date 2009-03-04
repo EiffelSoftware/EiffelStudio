@@ -22,12 +22,12 @@ create
 
 feature -- Access
 
-	feature_name: ?STRING_32 assign set_feature_name
+	feature_name: detachable STRING_32 assign set_feature_name
 			-- The name of the located feature
 
 feature -- Element change
 
-	set_feature_name (a_name: ?like feature_name)
+	set_feature_name (a_name: detachable like feature_name)
 			-- Set the current state result's feature name
 			--
 			-- `a_name': The name of the feature.

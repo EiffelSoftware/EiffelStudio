@@ -15,7 +15,7 @@ inherit
 
 feature {NONE} -- Access
 
-	symbol_table: ?CODE_SYMBOL_TABLE
+	symbol_table: detachable CODE_SYMBOL_TABLE
 			-- Symbol table
 
 feature -- Status report
@@ -30,7 +30,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	render_template (a_template: !CODE_TEMPLATE; a_table: !CODE_SYMBOL_TABLE)
+	render_template (a_template: attached CODE_TEMPLATE; a_table: attached CODE_SYMBOL_TABLE)
 			-- Renders a code template.
 		require
 			a_template_is_interface_usable: a_template.is_interface_usable

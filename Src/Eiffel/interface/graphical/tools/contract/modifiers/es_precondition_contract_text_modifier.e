@@ -18,10 +18,10 @@ create
 
 feature -- Access
 
-	contract_ast: ?REQUIRE_AS
+	contract_ast: detachable REQUIRE_AS
 			-- <Precursor>
 		local
-			l_routine: ?ROUTINE_AS
+			l_routine: detachable ROUTINE_AS
 		do
 			l_routine ?= ast_feature.body.content
 			if l_routine /= Void then
@@ -33,8 +33,8 @@ feature -- Access
 			-- <Precursor>
 		local
 			l_ast: like contract_ast
-			l_routine: ?ROUTINE_AS
-			l_locals: ?LOCAL_DEC_LIST_AS
+			l_routine: detachable ROUTINE_AS
+			l_locals: detachable LOCAL_DEC_LIST_AS
 		do
 			l_ast := contract_ast
 			if l_ast /= Void then
@@ -56,7 +56,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	template_identifier: !STRING_32
+	template_identifier: attached STRING_32
 			-- <Precursor>
 		once
 			create Result.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.require_keyword)
@@ -64,14 +64,14 @@ feature {NONE} -- Access
 
 feature {NONE} -- Element change
 
-	set_template_values (a_table: !CODE_SYMBOL_TABLE)
+	set_template_values (a_table: attached CODE_SYMBOL_TABLE)
 			-- Sets the values use in rendering a template.
 			--
 			-- `a_table': The symbol table used to render a template
 		local
 			l_parents: ARRAYED_LIST [CLASS_C]
-			l_value: !CODE_SYMBOL_VALUE
-			l_str_value: !STRING_32
+			l_value: attached CODE_SYMBOL_VALUE
+			l_str_value: attached STRING_32
 		do
 			l_parents := context_feature.precursors
 			if l_parents = Void or else l_parents.is_empty then

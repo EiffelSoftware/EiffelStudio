@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 	make
 			-- Initializes a cursor place-holder code token.
 		do
-			make_token_id (create {!STRING_32}.make_from_string ({CODE_TOKEN_NAMES}.cursor_token_name))
+			make_token_id (create {attached STRING_32}.make_from_string ({CODE_TOKEN_NAMES}.cursor_token_name))
 		end
 
 feature -- Access
@@ -41,7 +41,7 @@ feature -- Access
 
 feature -- Visitor
 
-	process (a_visitor: !CODE_TOKEN_VISITOR_I)
+	process (a_visitor: attached CODE_TOKEN_VISITOR_I)
 			-- <Precursor>
 		do
 			a_visitor.process_code_token_cursor (Current)

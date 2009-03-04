@@ -136,10 +136,10 @@ feature -- Status setting
 			-- Associate `Current' with class contained in `new_stone'.
 		do
 			stone := new_stone
-			if {l_new_stone: CLASSI_STONE} new_stone and then l_new_stone.class_i.is_external_class then
+			if attached {CLASSI_STONE} new_stone as l_new_stone and then l_new_stone.class_i.is_external_class then
 				set_dotnet_mode (True)
 				if
-					{l_classc_stone: CLASSC_STONE} l_new_stone and then
+					attached {CLASSC_STONE} l_new_stone as l_classc_stone and then
 					l_classc_stone.e_class /= Void and then
 					l_classc_stone.e_class.has_feature_table
 				then

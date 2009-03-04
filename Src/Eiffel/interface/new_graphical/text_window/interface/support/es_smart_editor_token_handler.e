@@ -32,14 +32,14 @@ feature -- Access
 			is_interface_usable: is_interface_usable
 			is_editing_eiffel_class: is_editing_eiffel_class
 		do
-			if {l_class_stone: !CLASSI_STONE} editor.stone and then {l_class: !EIFFEL_CLASS_I} l_class_stone.class_i then
+			if attached {attached CLASSI_STONE} editor.stone as l_class_stone and then attached {attached EIFFEL_CLASS_I} l_class_stone.class_i as l_class then
 				Result := l_class
 			end
 		end
 
 feature {NONE} -- Access
 
-	popup_window: ?ES_POPUP_EDITOR_TOKEN_CONTEXT_BUTTON
+	popup_window: detachable ES_POPUP_EDITOR_TOKEN_CONTEXT_BUTTON
 			-- Pop up window used to display the token options
 
 feature -- Status report
@@ -47,7 +47,7 @@ feature -- Status report
 	is_active: BOOLEAN
 			-- <Precursor>
 		local
-			l_window: ?like popup_window
+			l_window: detachable like popup_window
 		do
 			l_window := popup_window
 			if l_window /= Void then
@@ -63,14 +63,14 @@ feature -- Status report
 		require
 			is_interface_usable: is_interface_usable
 		do
-			Result := {l_class_stone: !CLASSI_STONE} editor.stone and then {l_class: !EIFFEL_CLASS_I} l_class_stone.class_i
+			Result := attached {attached CLASSI_STONE} editor.stone as l_class_stone and then attached {attached EIFFEL_CLASS_I} l_class_stone.class_i as l_class
 		ensure
 			editor_has_class_i_stone: Result implies (({CLASSI_STONE}) #? editor.stone /= Void and then ({EIFFEL_CLASS_I}) #? (({CLASSI_STONE}) #? editor.stone).class_i /= Void)
 		end
 
 feature -- Query
 
-	is_applicable_token (a_token: !EDITOR_TOKEN): BOOLEAN
+	is_applicable_token (a_token: attached EDITOR_TOKEN): BOOLEAN
 			-- Determines if a token is applicable for processing.
 			--
 			-- `a_token': Token to test for applicablity.
@@ -85,10 +85,10 @@ feature -- Query
 				if
 					l_editor.has_focus and then
 					l_editor.dev_window /= Void and then
-					{l_formatter: !EB_BASIC_TEXT_FORMATTER} l_editor.dev_window.selected_formatter
+					attached {attached EB_BASIC_TEXT_FORMATTER} l_editor.dev_window.selected_formatter as l_formatter
 				then
-					if {l_class_stone: !CLASSI_STONE} l_editor.stone then -- Nested if because of a code generation bug.
-						Result := {l_ky_token: !EDITOR_TOKEN_FEATURE_START} a_token
+					if attached {attached CLASSI_STONE} l_editor.stone as l_class_stone then -- Nested if because of a code generation bug.
+						Result := attached {attached EDITOR_TOKEN_FEATURE_START} a_token as l_ky_token
 					end
 				end
 			end
@@ -112,7 +112,7 @@ feature -- Query
 
 feature {NONE} -- Query
 
-	token_widget (a_token: !EDITOR_TOKEN; a_line: INTEGER): ?EV_WIDGET
+	token_widget (a_token: attached EDITOR_TOKEN; a_line: INTEGER): detachable EV_WIDGET
 			-- Retrieve's a token's widget structure for the token's popped up window.
 			--
 			-- `a_token': The token to retrieve a widget structure for.
@@ -123,15 +123,15 @@ feature {NONE} -- Query
 			a_token_is_applicable_token: is_applicable_token (a_token)
 			a_line_positive: a_line > 0
 		local
-			l_viewer: !ES_CONTRACT_VIEWER_WIDGET
+			l_viewer: attached ES_CONTRACT_VIEWER_WIDGET
 			l_feature: E_FEATURE
 		do
-			if editor_class /= Void and then editor_class.is_compiled and then {l_class: !CLASS_C} editor_class.compiled_class then
+			if editor_class /= Void and then editor_class.is_compiled and then attached {attached CLASS_C} editor_class.compiled_class as l_class then
 				if l_class.has_feature_table then
-					if {l_fstart: !EDITOR_TOKEN_FEATURE_START} a_token then
+					if attached {attached EDITOR_TOKEN_FEATURE_START} a_token as l_fstart then
 							-- Create contract viewer widget
 						l_feature := l_class.feature_with_name (l_fstart.wide_image)
-						if {l_feat: !E_FEATURE} l_feature then
+						if attached {attached E_FEATURE} l_feature as l_feat then
 							create l_viewer.make
 								-- Register the close action for the widget
 							l_viewer.register_action (l_viewer.edit_contract_label.select_actions, agent
@@ -153,7 +153,7 @@ feature {NONE} -- Query
 			not_result_unparented: Result /= Void implies not Result.has_parent
 		end
 
-	token_action (a_token: !EDITOR_TOKEN; a_line: INTEGER): ?PROCEDURE [ANY, TUPLE]
+	token_action (a_token: attached EDITOR_TOKEN; a_line: INTEGER): detachable PROCEDURE [ANY, TUPLE]
 			-- Retrieve's an action for a token, called when the token in selected in the pop up window.
 			--
 			-- `a_token': The token to retrieve a action for.
@@ -169,7 +169,7 @@ feature {NONE} -- Query
 
 feature -- Basic operations
 
-	perform_on_token_with_mouse_coords (a_instant: BOOLEAN; a_token: !EDITOR_TOKEN; a_line: INTEGER; a_x: INTEGER; a_y: INTEGER; a_screen_x: INTEGER; a_screen_y: INTEGER)
+	perform_on_token_with_mouse_coords (a_instant: BOOLEAN; a_token: attached EDITOR_TOKEN; a_line: INTEGER; a_x: INTEGER; a_y: INTEGER; a_screen_x: INTEGER; a_screen_y: INTEGER)
 			-- <Precursor>
 		local
 			l_cursor: EIFFEL_EDITOR_CURSOR
@@ -193,7 +193,7 @@ feature -- Basic operations
 						-- Offset y position by 1 because of padding.
 					l_y_offset := 1
 
-					if {l_text: !CLICKABLE_TEXT} editor.text_displayed then
+					if attached {attached CLICKABLE_TEXT} editor.text_displayed as l_text then
 							-- Determine if a pop window can be shown.
 						l_can_show := not editor.is_empty and then editor.text_displayed /= Void
 						if l_can_show then
@@ -235,7 +235,7 @@ feature -- Basic operations
 
 					if l_can_show and then (l_window = Void or else not l_window.is_interface_usable) then
 							-- Create new window
-						if {l_widget: !EV_WIDGET} l_token_widget then
+						if attached {attached EV_WIDGET} l_token_widget as l_widget then
 							create l_window.make_with_widget (editor, a_token, l_widget)
 						else
 							create l_window.make (editor, a_token)
@@ -249,7 +249,7 @@ feature -- Basic operations
 							l_window.show_popup_widget
 						end
 
-						if {l_action: !PROCEDURE [ANY, TUPLE]} l_token_action then
+						if attached {attached PROCEDURE [ANY, TUPLE]} l_token_action as l_action then
 							l_window.register_action (l_window.token_select_actions, l_action)
 						end
 
@@ -267,7 +267,7 @@ feature -- Basic operations
 						end
 
 							-- Show window
-						if {l_editor_widget: !EV_WIDGET} editor.editor_drawing_area then
+						if attached {attached EV_WIDGET} editor.editor_drawing_area as l_editor_widget then
 							l_window.show_relative_to_widget (l_editor_widget, l_x_offset, l_y_offset, a_x, a_y)
 
 								-- The precusor will not be called because the handler is to be considered "active".
@@ -294,7 +294,7 @@ feature -- Basic operations
 			--
 			-- `a_force': True to ignore check and perform an exit; False otherwise
 		local
-			l_window: ?like popup_window
+			l_window: detachable like popup_window
 		do
 				-- Exit is only performed if the popup window doesn't have the mouse.
 			l_window := popup_window

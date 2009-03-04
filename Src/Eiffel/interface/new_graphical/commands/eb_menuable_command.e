@@ -103,7 +103,7 @@ feature -- Basic operations
 			create Result.make (Current)
 			initialize_menu_item (Result)
 			Result.select_actions.extend (agent execute)
-			if {l_stoneable: EB_STONABLE_COMMAND} Current then
+			if attached {EB_STONABLE_COMMAND} Current as l_stoneable then
 				Result.drop_actions.extend (agent l_stoneable.execute_with_stone)
 				Result.drop_actions.set_veto_pebble_function (agent l_stoneable.is_valid_stone)
 			end
@@ -116,7 +116,7 @@ feature -- Basic operations
 			create Result
 			initialize_menu_item (Result)
 			Result.select_actions.extend (agent execute)
-			if {l_stoneable: EB_STONABLE_COMMAND} Current then
+			if attached {EB_STONABLE_COMMAND} Current as l_stoneable then
 				Result.drop_actions.extend (agent l_stoneable.execute_with_stone)
 				Result.drop_actions.set_veto_pebble_function (agent l_stoneable.is_valid_stone)
 			end

@@ -56,8 +56,8 @@ feature {NONE} -- Initialization
 
 	make_with_window (w: EV_WINDOW)
 		local
-			menu_item: !EV_MENU_ITEM
-			menu: !EV_MENU
+			menu_item: attached EV_MENU_ITEM
+			menu: attached EV_MENU
 		do
 			window := w
 			default_create
@@ -103,12 +103,12 @@ feature {NONE} -- Initialization
 			extend (menu_item)
 		end
 
-	build_tools_sub_menu (a_menu: !EV_MENU)
+	build_tools_sub_menu (a_menu: attached EV_MENU)
 			-- Builds the tools submenu
 		require
 			not_a_menu_is_destroyed: not a_menu.is_destroyed
 		local
-			l_menu_item: !EV_MENU_ITEM
+			l_menu_item: attached EV_MENU_ITEM
 		do
 				--| UUID Generator
 			create l_menu_item.make_with_text_and_action ("UUID Generator", agent on_generate_uuid)
@@ -129,12 +129,12 @@ feature {NONE} -- Initialization
 			a_menu.extend (l_menu_item)
 		end
 
-	build_services_sub_menu (a_menu: !EV_MENU)
+	build_services_sub_menu (a_menu: attached EV_MENU)
 			-- Builds the services submenu
 		require
 			not_a_menu_is_destroyed: not a_menu.is_destroyed
 		local
-			l_menu_item: !EV_MENU_ITEM
+			l_menu_item: attached EV_MENU_ITEM
 		do
 			create l_menu_item.make_with_text_and_action ("Save All Session Data", agent on_save_session_data)
 			a_menu.extend (l_menu_item)
@@ -157,12 +157,12 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	build_editor_sub_menu (a_menu: !EV_MENU)
+	build_editor_sub_menu (a_menu: attached EV_MENU)
 			-- Builds the editor submenu
 		require
 			not_a_menu_is_destroyed: not a_menu.is_destroyed
 		local
-			l_menu_item: !EV_MENU_ITEM
+			l_menu_item: attached EV_MENU_ITEM
 		do
 				--| Force compilation
 			create l_menu_item.make_with_text_and_action ("Force Compilation", agent on_force_compile_class)
@@ -203,13 +203,13 @@ feature {NONE} -- Access
 
 feature {NONE} -- Services
 
-	frozen session_manager: !SERVICE_CONSUMER [SESSION_MANAGER_S]
+	frozen session_manager: attached SERVICE_CONSUMER [SESSION_MANAGER_S]
 			-- Access to the session manager service
 		once
 			create Result
 		end
 
-	frozen code_template_catalog: !SERVICE_CONSUMER [CODE_TEMPLATE_CATALOG_S]
+	frozen code_template_catalog: attached SERVICE_CONSUMER [CODE_TEMPLATE_CATALOG_S]
 			-- Access to the code template catalog service
 		once
 			create Result
@@ -217,11 +217,11 @@ feature {NONE} -- Services
 
 feature {NONE} -- Query
 
-	active_editor: ?EB_SMART_EDITOR
+	active_editor: detachable EB_SMART_EDITOR
 			-- Attempts to locate the last active editor.
 		do
-			if {l_window: EB_DEVELOPMENT_WINDOW} window_manager.last_focused_development_window and then l_window.is_interface_usable then
-				if {l_editor: EB_SMART_EDITOR} l_window.editors_manager.current_editor and then l_editor.is_interface_usable then
+			if attached {EB_DEVELOPMENT_WINDOW} window_manager.last_focused_development_window as l_window and then l_window.is_interface_usable then
+				if attached {EB_SMART_EDITOR} l_window.editors_manager.current_editor as l_editor and then l_editor.is_interface_usable then
 					Result := l_editor
 				end
 			end
@@ -312,10 +312,10 @@ feature {NONE} -- Actions
 		do
 			if not eiffel_project.is_compiling then
 					-- Do not process this whilst compiling
-				if {l_window: EB_DEVELOPMENT_WINDOW} window_manager.last_focused_development_window and then l_window.is_interface_usable then
-					if {l_editor: EB_SMART_EDITOR} active_editor and then {l_class: CLASSI_STONE} l_editor.stone then
+				if attached {EB_DEVELOPMENT_WINDOW} window_manager.last_focused_development_window as l_window and then l_window.is_interface_usable then
+					if attached {EB_SMART_EDITOR} active_editor as l_editor and then attached {CLASSI_STONE} l_editor.stone as l_class then
 							-- We have the class stone
-						if {l_class_i: CLASS_I} l_class.class_i then
+						if attached {CLASS_I} l_class.class_i as l_class_i then
 							if l_class_i.is_compiled then
 								create l_error.make_standard ("The class " + l_class_i.name + " is already compiled!")
 								l_error.show_on_active_window
@@ -345,14 +345,14 @@ feature {NONE} -- Actions
 					-- Do not process this whilst compiling
 				l_windows := window_manager.windows
 				if l_windows /= Void then
-					if {l_window: EB_DEVELOPMENT_WINDOW} l_windows.item and then l_window.is_interface_usable then
+					if attached {EB_DEVELOPMENT_WINDOW} l_windows.item as l_window and then l_window.is_interface_usable then
 						l_editors := l_window.editors_manager.editors
 						if l_editors /= Void then
 							create l_classes.make (256)
 							from l_editors.start until l_editors.after loop
-								if {l_editor: EB_SMART_EDITOR} l_editors.item and then l_editor.is_interface_usable and then {l_class: CLASSI_STONE} l_editor.stone then
+								if attached {EB_SMART_EDITOR} l_editors.item as l_editor and then l_editor.is_interface_usable and then attached {CLASSI_STONE} l_editor.stone as l_class then
 										-- We have the class stone
-									if {l_class_i: CLASS_I} l_class.class_i then
+									if attached {CLASS_I} l_class.class_i as l_class_i then
 										if l_class_i.is_compiled then
 											l_classes.append_string_general (l_class_i.name)
 											l_classes.append_character ('%N')
@@ -417,8 +417,8 @@ feature {NONE} -- Actions
 	on_force_show_tools
 			-- Force the display of all the tools, useful when diagnosing memory leaks
 		local
-			l_window: ?EB_DEVELOPMENT_WINDOW
-			l_error: !ES_ERROR_PROMPT
+			l_window: detachable EB_DEVELOPMENT_WINDOW
+			l_error: attached ES_ERROR_PROMPT
 		do
 			l_window := window_manager.last_focused_development_window
 			if l_window /= Void and then l_window.is_interface_usable then
@@ -439,7 +439,7 @@ feature {NONE} -- Actions
 						if ia_cmd /= Void and then ia_cmd.is_interface_usable then
 							l_tool := ia_cmd.tool
 							if l_tool /= Void and then l_tool.is_interface_usable then
-								if {l_dm: EB_DEBUGGER_MANAGER} l_tool.window.debugger_manager then
+								if attached {EB_DEBUGGER_MANAGER} l_tool.window.debugger_manager as l_dm then
 									l_show_debug_tools := l_dm.raised
 								end
 								if l_show_debug_tools or else not l_tool.profile_kind.is_equal ((create {ES_TOOL_PROFILE_KINDS}).debugger) then
@@ -492,11 +492,11 @@ feature {NONE} -- Actions
 			-- This applies all automatic behaviors enabled though the preferences in the editor to classes.
 			-- Trailing space removing, copyright info, for example.
 		local
-			l_window: ?EB_DEVELOPMENT_WINDOW
-			l_target: ?CONF_TARGET
+			l_window: detachable EB_DEVELOPMENT_WINDOW
+			l_target: detachable CONF_TARGET
 			l_clusters: HASH_TABLE [CONF_CLUSTER, STRING_8]
 			l_classes_in_cluster: PROCEDURE [ANY, TUPLE [CONF_CLUSTER]]
-			l_stone: ?STONE
+			l_stone: detachable STONE
 		do
 			l_window := window_manager.last_focused_development_window
 
@@ -506,7 +506,7 @@ feature {NONE} -- Actions
 				check l_target_not_void: l_target /= Void end
 
 				l_classes_in_cluster :=
-				agent (a_cluster: ?CONF_CLUSTER; a_window: EB_DEVELOPMENT_WINDOW)
+				agent (a_cluster: detachable CONF_CLUSTER; a_window: EB_DEVELOPMENT_WINDOW)
 					local
 						l_classes: HASH_TABLE [CONF_CLASS, STRING_8]
 						l_class_stone: CLASSI_STONE
@@ -520,7 +520,7 @@ feature {NONE} -- Actions
 							until
 								l_classes.after
 							loop
-								if {lt_class: CLASS_I}l_classes.item_for_iteration then
+								if attached {CLASS_I} l_classes.item_for_iteration as lt_class then
 									create l_class_stone.make (lt_class)
 									a_window.set_stone (l_class_stone)
 									l_editor := a_window.editors_manager.current_editor

@@ -29,11 +29,11 @@ create
 
 feature {NONE} -- Initialzation
 
-	make (a_entry: !EIS_ENTRY)
+	make (a_entry: attached EIS_ENTRY)
 			-- Initialization
 		do
 			entry := a_entry
-			if {lt_source: STRING_GENERAL}a_entry.source then
+			if attached {STRING_GENERAL} a_entry.source as lt_source then
 				help_context_id := lt_source
 			else
 				help_context_id := "No source available"
@@ -51,20 +51,20 @@ feature -- Querry
 
 feature -- Access
 
-	help_context_id: !STRING_GENERAL
+	help_context_id: attached STRING_GENERAL
 			-- <precursor>
 
-	help_context_section: ?HELP_CONTEXT_SECTION_I
+	help_context_section: detachable HELP_CONTEXT_SECTION_I
 			-- <precursor>
 
-	help_context_description: ?STRING_GENERAL
+	help_context_description: detachable STRING_GENERAL
 			-- An optional description of the context.
 		do
 			eis_output.process (entry)
 			Result := eis_output.last_output_code
 		end
 
-	help_provider: !UUID
+	help_provider: attached UUID
 			-- <precursor>
 		do
 			Result := help_provider_from_protocol (entry.protocol)
@@ -72,7 +72,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	entry: !EIS_ENTRY;
+	entry: attached EIS_ENTRY;
 			-- The entry
 
 note

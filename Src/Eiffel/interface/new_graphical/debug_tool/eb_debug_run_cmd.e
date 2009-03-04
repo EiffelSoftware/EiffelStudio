@@ -80,7 +80,7 @@ feature -- Access
 			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} (display_text)
 			l_tool_bar := Result.tool_bar
 			check not_void: l_tool_bar /= Void end
-			if {lt_widget: EV_WIDGET} l_tool_bar then
+			if attached {EV_WIDGET} l_tool_bar as lt_widget then
 				Result.select_actions.put_front (agent execute_from (lt_widget))
 			else
 				check not_possible: False end

@@ -22,7 +22,7 @@ inherit
 
 feature -- Access
 
-	name: !IMMUTABLE_STRING_32
+	name: attached IMMUTABLE_STRING_32
 			-- Name given the output editor
 		require
 			is_interface_usable: is_interface_usable
@@ -32,7 +32,7 @@ feature -- Access
 			result_consistent: Result ~ name
 		end
 
-	output_window: !OUTPUT_WINDOW
+	output_window: attached OUTPUT_WINDOW
 			-- Name given the output editor
 		require
 			is_interface_usable: is_interface_usable

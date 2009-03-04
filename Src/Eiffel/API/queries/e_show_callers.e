@@ -26,7 +26,7 @@ feature -- Access
 	features: QL_FEATURE_DOMAIN
 			-- Features as result of Current formatter
 		do
-			if {lt_result: QL_FEATURE_DOMAIN}system_target_domain.new_domain (domain_generator) then
+			if attached {QL_FEATURE_DOMAIN} system_target_domain.new_domain (domain_generator) as lt_result then
 				Result := lt_result
 			else
 				check Result /= Void end

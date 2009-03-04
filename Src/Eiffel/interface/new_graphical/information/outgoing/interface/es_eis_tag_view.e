@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_tag: !STRING_32; a_eis_grid: !ES_EIS_ENTRY_GRID)
+	make (a_tag: attached STRING_32; a_eis_grid: attached ES_EIS_ENTRY_GRID)
 			-- Initialized with `a_conf_notable' and `a_eis_grid'.
 		require
 			a_eis_grid_not_destroyed: not a_eis_grid.is_destroyed
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	new_extractor: !ES_EIS_EXTRACTOR
+	new_extractor: attached ES_EIS_EXTRACTOR
 			-- Create extractor
 		do
 			create {ES_EIS_TAG_EXTRACTOR}Result.make (tag)

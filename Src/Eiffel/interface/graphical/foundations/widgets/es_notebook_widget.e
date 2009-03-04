@@ -22,7 +22,7 @@ convert
 
 feature {NONE} -- Initialization
 
-	frozen build_widget_interface (a_widget: !EV_VERTICAL_BOX)
+	frozen build_widget_interface (a_widget: attached EV_VERTICAL_BOX)
 			-- <Precursor>
 		local
 			l_tool_bar_container: like create_tool_container_widget
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			a_widget.extend (notebook_widget)
 		end
 
-	build_notebook_widget_interface (a_widget: !G)
+	build_notebook_widget_interface (a_widget: attached G)
 			-- Builds notebook widget's interface.
 			--
 			-- `a_widget': The widget to initialize of build upon.
@@ -82,12 +82,12 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-	notebook_widget: !G
+	notebook_widget: attached G
 			-- Actual widget, used `widget' to access the top level widget.
 
 feature {NONE} -- Access
 
-    frozen tool_bar_widget: ?SD_GENERIC_TOOL_BAR
+    frozen tool_bar_widget: detachable SD_GENERIC_TOOL_BAR
             -- Main tool tool bar
         local
             l_cell: like internal_tool_bar_widget
@@ -112,7 +112,7 @@ feature {NONE} -- Access
             result_consistent: Result = tool_bar_widget
         end
 
-    frozen right_tool_bar_widget: ?SD_GENERIC_TOOL_BAR
+    frozen right_tool_bar_widget: detachable SD_GENERIC_TOOL_BAR
             -- Secondary right tool bar
         local
             l_cell: like internal_right_tool_bar_widget
@@ -147,13 +147,13 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Factory
 
-	frozen create_widget: !EV_VERTICAL_BOX
+	frozen create_widget: attached EV_VERTICAL_BOX
 			-- <Precursor>
 		do
 			create Result
 		end
 
-	create_notebook_widget: !G
+	create_notebook_widget: attached G
 			-- Creates a new widget, which will be initialized when `build_interface' is called.
 		require
 			is_interface_usable: is_interface_usable
@@ -165,7 +165,7 @@ feature {NONE} -- Factory
 			not_result_has_parent: not Result.has_parent
 		end
 
-    create_tool_bar_items: ?DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+    create_tool_bar_items: detachable DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
             -- Retrieves a list of tool bar items to display at the top of the tool.
         deferred
         ensure
@@ -173,7 +173,7 @@ feature {NONE} -- Factory
             result_contains_attached_items: Result /= Void implies not Result.has (Void)
         end
 
-    create_right_tool_bar_items: ?DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+    create_right_tool_bar_items: detachable DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
             -- Retrieves a list of tool bar items that should be displayed at the top, but right aligned.
             -- Note: Redefine to add a right tool bar.
         do
@@ -182,7 +182,7 @@ feature {NONE} -- Factory
             result_contains_attached_items: Result /= Void implies not Result.has (Void)
         end
 
-    create_tool_container_widget (a_widget: EV_VERTICAL_BOX): !EV_VERTICAL_BOX
+    create_tool_container_widget (a_widget: EV_VERTICAL_BOX): attached EV_VERTICAL_BOX
             -- Creates the tool's tool bars if `tool_bar_items' and/or `right_tool_bar_items' contain items
             --
             -- `a_widget': The user widget to place in container.
@@ -208,7 +208,7 @@ feature {NONE} -- Factory
 
                 -- Add left tool bar
             if l_tool_bar /= Void then
-				if {lt_widget: EV_WIDGET} l_tool_bar then
+				if attached {EV_WIDGET} l_tool_bar as lt_widget then
 					l_container.extend (lt_widget)
 				else
 					check not_possible: False end
@@ -217,7 +217,7 @@ feature {NONE} -- Factory
 
                 -- Add right tool bar
             if l_right_tool_bar /= Void then
-				if {lt_widget_2: EV_WIDGET} l_right_tool_bar then
+				if attached {EV_WIDGET} l_right_tool_bar as lt_widget_2 then
 	                create l_padding
 	                l_container.extend (l_padding)
 	                l_container.extend (lt_widget_2)

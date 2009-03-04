@@ -3752,7 +3752,7 @@ feature {NONE} -- Implementation: assignments
 						cl_type.implemented_type (attr.written_in), attr.attribute_id)
 				end
 			elseif a_node.is_local then
-				if {o: OBJECT_TEST_LOCAL_B} a_node then
+				if attached {OBJECT_TEST_LOCAL_B} a_node as o then
 					il_generator.generate_local_assignment (context.object_test_local_position (o))
 				else
 					loc ?= a_node

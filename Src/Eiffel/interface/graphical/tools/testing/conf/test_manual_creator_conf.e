@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: !STRING
+	name: attached STRING
 			-- <Precursor>
 		local
 			l_name: like name_cache
@@ -42,7 +42,7 @@ feature -- Access
 			Result := l_name
 		end
 
-	test_class: !EIFFEL_CLASS_I
+	test_class: attached EIFFEL_CLASS_I
 			-- <Precursor>
 		local
 			l_class: like test_class_cache
@@ -52,7 +52,7 @@ feature -- Access
 			Result := l_class
 		end
 
-	feature_clause: !FEATURE_CLAUSE_AS
+	feature_clause: attached FEATURE_CLAUSE_AS
 			-- <Precursor>
 		local
 			l_fc: like feature_clause_cache
@@ -62,7 +62,7 @@ feature -- Access
 			Result := l_fc
 		end
 
-	feature_clause_name: !STRING
+	feature_clause_name: attached STRING
 			-- <Precursor>
 		local
 			l_name: like feature_clause_name_cache
@@ -74,16 +74,16 @@ feature -- Access
 
 feature -- Access: caches
 
-	name_cache: ?like name assign set_name
+	name_cache: detachable like name assign set_name
 			-- Cache for `name'
 
-	test_class_cache: ?like test_class assign set_test_class
+	test_class_cache: detachable like test_class assign set_test_class
 			-- Cache for `test_class'
 
-	feature_clause_cache: ?like feature_clause assign set_feature_clause
+	feature_clause_cache: detachable like feature_clause assign set_feature_clause
 			-- Cache for `feature_clause'
 
-	feature_clause_name_cache: ?like feature_clause_name assign set_feature_clause_name
+	feature_clause_name_cache: detachable like feature_clause_name assign set_feature_clause_name
 			-- Cache for `feature_clause_name'
 
 	is_new_feature_clause_cache: BOOLEAN assign set_is_new_feature_clause

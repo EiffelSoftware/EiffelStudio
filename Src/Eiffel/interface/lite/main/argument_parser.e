@@ -199,40 +199,40 @@ feature -- Status report
 
 feature {NONE} -- Usage
 
-	name: !STRING
+	name: attached STRING
 			-- Full name of application
 		once
 			Result := "Eiffel Compiler Lite Edition"
 		end
 
-	version: !STRING
+	version: attached STRING
 			-- Version number of application
 		once
 			Result := "6.4.0"
 		end
 
-	non_switched_argument_name: !STRING_8
+	non_switched_argument_name: attached STRING_8
 			-- Name of lose argument, used in usage information
 		do
 			Result := "ecf"
 		end
 
-	non_switched_argument_description: !STRING_8
+	non_switched_argument_description: attached STRING_8
 			-- Description of loose argument, used in usage information
 		do
 			Result := "Eiffel compiler configuration file."
 		end
 
-	non_switched_argument_type: !STRING_8
+	non_switched_argument_type: attached STRING_8
 			-- Type of lose argument, used in usage information.
 		do
 			Result := "configuration file"
 		end
 
-	switches: ARRAYED_LIST [!ARGUMENT_SWITCH]
+	switches: ARRAYED_LIST [attached ARGUMENT_SWITCH]
 			-- Retrieve a list of available switch
 		local
-			l_optimize_flags: HASH_TABLE [!STRING_8, CHARACTER]
+			l_optimize_flags: HASH_TABLE [attached STRING_8, CHARACTER]
 		once
 			create l_optimize_flags.make (1)
 			l_optimize_flags.put ("Keep assertions", {OPTIMIZED_ARGUMENT_SWITCH}.keep_flag)
@@ -251,7 +251,7 @@ feature {NONE} -- Usage
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make_hidden (alias_switch, "Sets a project alias for error reporting.", True, False, "Name", "Project alias name", False))
 		end
 
-	switch_groups: ARRAYED_LIST [!ARGUMENT_GROUP]
+	switch_groups: ARRAYED_LIST [attached ARGUMENT_GROUP]
 			-- Valid switch grouping
 		do
 			create Result.make (4)

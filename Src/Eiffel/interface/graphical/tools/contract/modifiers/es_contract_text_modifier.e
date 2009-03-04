@@ -15,7 +15,7 @@ inherit
 
 feature -- Access
 
-	contract_ast: ?G
+	contract_ast: detachable G
 			-- Applicable contract AST node
 		require
 			is_prepared: is_prepared
@@ -35,7 +35,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	template: ?CODE_TEMPLATE_DEFINITION
+	template: detachable CODE_TEMPLATE_DEFINITION
 			-- Contract code template
 		local
 			l_service: like code_template_catalog
@@ -46,7 +46,7 @@ feature {NONE} -- Access
 			end
 		end
 
-	template_identifier: !STRING_32
+	template_identifier: attached STRING_32
 			-- Template identifer used to look up the contract code template
 		deferred
 		ensure
@@ -55,7 +55,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Element change
 
-	set_template_values (a_table: !CODE_SYMBOL_TABLE)
+	set_template_values (a_table: attached CODE_SYMBOL_TABLE)
 			-- Sets the values use in rendering a template.
 			--
 			-- `a_table': The symbol table used to render a template
@@ -84,14 +84,14 @@ feature -- Basic operations
 			a_assertions_attached: a_assertions /= Void
 			a_assertions_contains_attached_items: not a_assertions.has (Void)
 		local
-			l_code: !STRING
-			l_ws: !STRING_32
+			l_code: attached STRING
+			l_ws: attached STRING_32
 			l_pos: INTEGER
 			l_st_builder: CODE_SYMBOL_TABLE_BUILDER
-			l_table: !CODE_SYMBOL_TABLE
-			l_value: !CODE_SYMBOL_VALUE
-			l_renderer: !CODE_TEMPLATE_STRING_RENDERER
-			l_contract_ast: ?G
+			l_table: attached CODE_SYMBOL_TABLE
+			l_value: attached CODE_SYMBOL_VALUE
+			l_renderer: attached CODE_TEMPLATE_STRING_RENDERER
+			l_contract_ast: detachable G
 			l_contract: STRING_32
 		do
 			if not a_assertions.is_empty then
@@ -102,7 +102,7 @@ feature -- Basic operations
 					l_ws := initial_whitespace (l_pos)
 				end
 
-				if {l_template: !like template} template then
+				if attached template as l_template then
 						-- Build symbol table and code template.
 					create l_st_builder.make (l_template)
 					l_table := l_st_builder.symbol_table
@@ -122,7 +122,7 @@ feature -- Basic operations
 					end
 
 						-- Set value.
-					if {l_code_32: !STRING_32} l_code.as_string_32 then
+					if attached {attached STRING_32} l_code.as_string_32 as l_code_32 then
 						if l_table.has_id ({CODE_TEMPLATE_ENTITY_NAMES}.selection_token_name) then
 							l_value := l_table.item ({CODE_TEMPLATE_ENTITY_NAMES}.selection_token_name)
 							l_value.set_value (l_code_32)
@@ -136,7 +136,7 @@ feature -- Basic operations
 					set_template_values (l_table)
 
 						-- Render template.
-					if {l_actual_template: !CODE_TEMPLATE} l_template.applicable_item then
+					if attached {attached CODE_TEMPLATE} l_template.applicable_item as l_actual_template then
 						create l_renderer
 						l_renderer.render_template (l_actual_template, l_table)
 

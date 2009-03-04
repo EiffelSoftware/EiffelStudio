@@ -38,7 +38,7 @@ create
 
 feature {NONE} -- Initialization: User interface
 
-	build_tool_interface (a_widget: !EB_CLASSES_TREE)
+	build_tool_interface (a_widget: attached EB_CLASSES_TREE)
 			-- <Precursor>
 		do
 			a_widget.associate_with_window (develop_window)
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization: User interface
 	on_after_initialized
 			-- <Precursor>
 		local
-			l_project_manager: ?EB_PROJECT_MANAGER
+			l_project_manager: detachable EB_PROJECT_MANAGER
 		do
 			Precursor
 
@@ -71,7 +71,7 @@ feature {NONE} -- Access: User interface elements
 	new_library_button: SD_TOOL_BAR_BUTTON
 			-- Button use to add a new library.
 
-	new_assembly_button: ?SD_TOOL_BAR_BUTTON
+	new_assembly_button: detachable SD_TOOL_BAR_BUTTON
 			-- Button use to add a new assembly.
 
 	new_class_button: SD_TOOL_BAR_BUTTON
@@ -85,7 +85,7 @@ feature {NONE} -- Access: User interface elements
 
 feature -- Access: Help
 
-	help_context_id: !STRING_GENERAL
+	help_context_id: attached STRING_GENERAL
 			-- <Precursor>
 		once
 			Result := "0BAEBAA5-A9C8-4C7C-6ACE-C11D82804906"
@@ -93,7 +93,7 @@ feature -- Access: Help
 
 feature {NONE} -- Status report
 
-	is_stone_sychronization_required (a_old_stone: ?STONE; a_new_stone: ?STONE): BOOLEAN
+	is_stone_sychronization_required (a_old_stone: detachable STONE; a_new_stone: detachable STONE): BOOLEAN
 			-- <Precursor>
 		do
 				-- No synchornization required, stone setting is only used to locate a stone.
@@ -102,7 +102,7 @@ feature {NONE} -- Status report
 
 feature {ES_GROUPS_COMMANDER_I} -- Basic operations
 
-	highlight_stone (a_stone: !STONE)
+	highlight_stone (a_stone: attached STONE)
 			-- <Precursor>
 		do
 			set_stone (a_stone)
@@ -111,8 +111,8 @@ feature {ES_GROUPS_COMMANDER_I} -- Basic operations
 	highlight_editor_stone
 			-- <Precursor>
 		local
-			l_editor: ?EB_SMART_EDITOR
-			l_stone: ?STONE
+			l_editor: detachable EB_SMART_EDITOR
+			l_stone: detachable STONE
 			l_error: ES_ERROR_PROMPT
 		do
 			l_editor := develop_window.editors_manager.current_editor
@@ -136,16 +136,16 @@ feature {ES_GROUPS_COMMANDER_I} -- Basic operations
 
 feature {NONE} -- Action handlers
 
-	on_stone_changed (a_old_stone: ?like stone)
+	on_stone_changed (a_old_stone: detachable like stone)
 			-- <Precursor>
 		local
 			l_stone: like stone
 		do
 			l_stone := stone
 			if l_stone /= Void and then not user_widget.is_empty then
-				if {l_class: CLASSI_STONE} l_stone then
+				if attached {CLASSI_STONE} l_stone as l_class then
 					user_widget.show_class (l_class.class_i)
-				elseif {l_group: CLUSTER_STONE} l_stone then
+				elseif attached {CLUSTER_STONE} l_stone as l_group then
 					user_widget.show_subfolder (l_group.group, l_group.path)
 				else
 					user_widget.show_stone (l_stone)
@@ -165,13 +165,13 @@ feature {NONE} -- Action handlers
 
 feature {NONE} -- Factory
 
-    create_widget: !EB_CLASSES_TREE
+    create_widget: attached EB_CLASSES_TREE
 			-- <Precursor>
 		do
 			create Result.make (context_menus)
 		end
 
-    create_mini_tool_bar_items: ?DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+    create_mini_tool_bar_items: detachable DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- <Precursor>
 		local
 			l_button: SD_TOOL_BAR_BUTTON
@@ -211,7 +211,7 @@ feature {NONE} -- Factory
 			Result.put_last (l_button)
 		end
 
-    create_tool_bar_items: ?DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+    create_tool_bar_items: detachable DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- <Precursor>
 		do
 		end

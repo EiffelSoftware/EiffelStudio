@@ -12,7 +12,7 @@ deferred class
 
 feature -- Access
 
-	frozen session: ?SESSION_I
+	frozen session: detachable SESSION_I
 			-- Session object the current data is part of.
 			-- Note: During a storage operation this will be Void!
 
@@ -47,7 +47,7 @@ feature {NONE} -- Basic operations
 		require
 			is_part_of_session: is_part_of_session
 		do
-			if {l_data: !SESSION_DATA_I} Current then
+			if attached {attached SESSION_DATA_I} Current as l_data then
 				session.notify_value_changed (l_data)
 			end
 		ensure
@@ -56,7 +56,7 @@ feature {NONE} -- Basic operations
 
 feature {SESSION_I} -- Action handlers
 
-	on_begin_store (a_session: !SESSION_I)
+	on_begin_store (a_session: attached SESSION_I)
 			-- Called to notify the session that a store is about to take place.
 			--
 			-- `a_session': The session object that the session data is part of.

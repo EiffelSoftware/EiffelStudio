@@ -26,7 +26,7 @@ convert
 
 feature {NONE} -- Initialization
 
-	frozen build_widget_interface (a_container_widget: !EV_VERTICAL_BOX)
+	frozen build_widget_interface (a_container_widget: attached EV_VERTICAL_BOX)
 			-- <Precursor>
 		local
             l_top_padding: EV_CELL
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 
 	                -- Add left tool bar
 	            if l_tool_bar /= Void then
-					if {lt_widget: EV_WIDGET} l_tool_bar then
+					if attached {EV_WIDGET} l_tool_bar as lt_widget then
 						l_container.extend (lt_widget)
 					else
 						check not_possible: False end
@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 
 	                -- Add right tool bar
 	            if l_right_tool_bar /= Void then
-					if {lt_widget_2: EV_WIDGET} l_right_tool_bar then
+					if attached {EV_WIDGET} l_right_tool_bar as lt_widget_2 then
 		                create l_padding
 		                l_container.extend (l_padding)
 		                l_container.extend (lt_widget_2)
@@ -119,7 +119,7 @@ feature {NONE} -- Initialization
         	end
 		end
 
-	build_tool_bar_widget_interface (a_widget: !G)
+	build_tool_bar_widget_interface (a_widget: attached G)
 			-- Builds tool bar widget's interface.
 			--
 			-- `a_widget': The widget to initialize of build upon.
@@ -138,7 +138,7 @@ feature {NONE} -- Clean up
 	internal_recycle
 			-- <Precursor>
 		local
-			l_widget: ?CELL [SD_GENERIC_TOOL_BAR]
+			l_widget: detachable CELL [SD_GENERIC_TOOL_BAR]
 		do
 			l_widget := internal_tool_bar_widget
 			if l_widget /= Void and l_widget.item /= Void and then not l_widget.item.is_destroyed then
@@ -164,12 +164,12 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-	widget: !G
+	widget: attached G
 			-- Actual widget, used `widget' to access the top level widget.
 
 feature {NONE} -- Access
 
-	frozen tool_bar_widget: ?SD_GENERIC_TOOL_BAR
+	frozen tool_bar_widget: detachable SD_GENERIC_TOOL_BAR
 			-- Main tool tool bar
 		local
 			l_cell: like internal_tool_bar_widget
@@ -194,7 +194,7 @@ feature {NONE} -- Access
 			result_consistent: Result = tool_bar_widget
 		end
 
-	frozen right_tool_bar_widget: ?SD_GENERIC_TOOL_BAR
+	frozen right_tool_bar_widget: detachable SD_GENERIC_TOOL_BAR
 			-- Secondary right tool bar
 		local
 			l_cell: like internal_right_tool_bar_widget
@@ -243,7 +243,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Factory
 
-	new_widget: !G
+	new_widget: attached G
 			-- Creates a new widget, which will be initialized when `build_interface' is called.
 		require
 			is_interface_usable: is_interface_usable
@@ -255,7 +255,7 @@ feature {NONE} -- Factory
 			not_result_has_parent: not Result.has_parent
 		end
 
-	new_tool_bar_items: ?DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+	new_tool_bar_items: detachable DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- Retrieves a list of tool bar items to display at the top of the tool.
 		deferred
 		ensure
@@ -263,7 +263,7 @@ feature {NONE} -- Factory
 			result_contains_attached_items: Result /= Void implies not Result.has (Void)
 		end
 
-	new_right_tool_bar_items: ?DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+	new_right_tool_bar_items: detachable DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- Retrieves a list of tool bar items that should be displayed at the top, but right aligned.
 			-- Note: Redefine to add a right tool bar.
 		do
@@ -272,7 +272,7 @@ feature {NONE} -- Factory
 			result_contains_attached_items: Result /= Void implies not Result.has (Void)
 		end
 
-	frozen new_container_widget: !EV_VERTICAL_BOX
+	frozen new_container_widget: attached EV_VERTICAL_BOX
 			-- <Precursor>
 		do
 			create Result
@@ -280,10 +280,10 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Internal implementation cache
 
-	internal_tool_bar_widget: ?CELL [like tool_bar_widget]
+	internal_tool_bar_widget: detachable CELL [like tool_bar_widget]
 			-- Cached version of `tool_bar_widget'
 
-	internal_right_tool_bar_widget: ?CELL [like right_tool_bar_widget]
+	internal_right_tool_bar_widget: detachable CELL [like right_tool_bar_widget]
 			-- Cached version of `right_tool_bar_widget'
 
 ;note

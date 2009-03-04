@@ -153,7 +153,7 @@ feature -- Properties
 			end
 		end
 
-	all_possible_client_classes (a_class: CLASS_I): !DS_HASH_SET [!CLASS_I]
+	all_possible_client_classes (a_class: CLASS_I): attached DS_HASH_SET [attached CLASS_I]
 			-- Retrieves all classes that could potential be a client to the class `a_class'.
 		require
 			a_class_attached: a_class /= Void
@@ -167,12 +167,12 @@ feature -- Properties
 			l_target: CONF_TARGET
 			l_libraries: ARRAYED_LIST [CONF_LIBRARY]
 			l_sub_libraries: ARRAYED_LIST [CONF_LIBRARY]
-			l_apt_library_targets: HASH_TABLE [?CONF_TARGET, UUID]
+			l_apt_library_targets: HASH_TABLE [detachable CONF_TARGET, UUID]
 			l_library: CONF_LIBRARY
 			l_uuid: UUID
 			l_cursor: CURSOR
 		do
-			check is_eiffel_class: ({?EIFFEL_CLASS_I}) #? a_class /= Void end
+			check is_eiffel_class: ({detachable EIFFEL_CLASS_I}) #? a_class /= Void end
 
 				-- Step #1
 				-- Retrieve class target and applicable extended targets for the supplied class.
@@ -278,7 +278,7 @@ feature -- Properties
 				from l_clusters.start until l_clusters.after loop
 					l_cluster_classes := l_clusters.item.classes.linear_representation
 					from l_cluster_classes.start until l_cluster_classes.after loop
-						if {l_class_i: CLASS_I} l_cluster_classes.item_for_iteration and then l_class_i.target = l_target then
+						if attached {CLASS_I} l_cluster_classes.item_for_iteration as l_class_i and then l_class_i.target = l_target then
 							if not Result.has (l_class_i) then
 								Result.force (l_class_i)
 							end
@@ -510,7 +510,7 @@ feature -- Access
 			end
 		end
 
-	library_of_uuid (a_uuid: !UUID; a_recursive: BOOLEAN): !LIST [!CONF_LIBRARY]
+	library_of_uuid (a_uuid: attached UUID; a_recursive: BOOLEAN): attached LIST [attached CONF_LIBRARY]
 			-- Return list of libraries identified by UUID
 			--
 			-- Note: Since it is possible that multiple libraries share the same UUID, a list of
@@ -532,12 +532,12 @@ feature -- Access
 			Result := l_visitor.found_libraries
 		ensure
 			results_match_uuid: Result.for_all (
-				agent (a_lib: !CONF_LIBRARY; a_id: !UUID): BOOLEAN
+				agent (a_lib: attached CONF_LIBRARY; a_id: attached UUID): BOOLEAN
 					do
 						Result := a_lib.library_target.system.uuid.is_equal (a_id)
 					end (?, a_uuid))
 			results_match_recursion: not a_recursive implies Result.for_all (
-				agent (a_lib: !CONF_LIBRARY): BOOLEAN
+				agent (a_lib: attached CONF_LIBRARY): BOOLEAN
 					local
 						l_target: CONF_TARGET
 					do

@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	version: !STRING_32 assign set_version
+	version: attached STRING_32 assign set_version
 			-- Raw version string
 
 feature -- Element change
@@ -76,7 +76,7 @@ feature -- Query
 			not_a_version_is_empty: Result implies not a_version.is_empty
 		end
 
-	is_compatible_with (a_other: !CODE_VERSION): BOOLEAN
+	is_compatible_with (a_other: attached CODE_VERSION): BOOLEAN
 			-- Determines if the Current version is compatible with another version
 			--
 			-- `a_other': The other version to check compatibilty with.
@@ -87,7 +87,7 @@ feature -- Query
 
 feature -- Visitor
 
-	process (a_visitor: !CODE_TEMPLATE_VISITOR_I)
+	process (a_visitor: attached CODE_TEMPLATE_VISITOR_I)
 			-- <Precursor>
 		do
 		end

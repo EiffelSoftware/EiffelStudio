@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_window: !like development_window; a_parser: !like xml_parser)
+	make (a_window: attached like development_window; a_parser: attached like xml_parser)
 			-- Initializes callbacks using an existing XML parser.
 			-- Note: Initialization will set the parser's callbacks to Current.
 			--
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	development_window: !EB_DEVELOPMENT_WINDOW
+	development_window: attached EB_DEVELOPMENT_WINDOW
 			-- Window used to modify docking layout data.
 
 feature {NONE} -- Access
@@ -54,7 +54,7 @@ feature {NONE} -- Access
 	current_zone_size: NATURAL_8
 			-- Current zone's percentage of usage.
 
-	current_zone_tools: !DS_ARRAYED_LIST [!STRING]
+	current_zone_tools: attached DS_ARRAYED_LIST [attached STRING]
 			-- Current zone's tool identifiers.
 
 feature {NONE} -- Access: Defaults
@@ -118,16 +118,16 @@ feature {NONE} -- Basic operation
 		require
 			not_current_zone_tools_is_empty: not current_zone_tools.is_empty
 		local
-			l_zones: !like current_zone_tools
-			l_item: !STRING
-			l_type: ?TYPE [ES_TOOL [EB_TOOL]]
-			l_tool: ?ES_TOOL [EB_TOOL]
+			l_zones: attached like current_zone_tools
+			l_item: attached STRING
+			l_type: detachable TYPE [ES_TOOL [EB_TOOL]]
+			l_tool: detachable ES_TOOL [EB_TOOL]
 			l_first_tool: ES_TOOL [EB_TOOL]
 			l_first_tool_set: BOOLEAN
 			l_auto_hide: BOOLEAN
 			l_is_auto_hidden: BOOLEAN
 		do
-			if {l_tools: ES_SHELL_TOOLS} development_window.shell_tools and then l_tools.is_interface_usable then
+			if attached {ES_SHELL_TOOLS} development_window.shell_tools as l_tools and then l_tools.is_interface_usable then
 				l_zones := current_zone_tools
 				from l_zones.finish until l_zones.before loop
 					l_item := l_zones.item_for_iteration
@@ -259,7 +259,7 @@ feature {NONE} -- Process
 	process_zone
 			-- Process a zone declaration.
 		local
-			l_attributes: !like current_attributes
+			l_attributes: attached like current_attributes
 			l_value: STRING
 			l_size: NATURAL_8
 		do
@@ -321,7 +321,7 @@ feature {NONE} -- Process
 	process_tool
 			-- Process a tool declaration.
 		local
-			l_attributes: !like current_attributes
+			l_attributes: attached like current_attributes
 			l_value: STRING
 		do
 			l_attributes := current_attributes
@@ -335,10 +335,10 @@ feature {NONE} -- Process
 
 feature {NONE} -- State transistions
 
-	tag_state_transitions: !DS_HASH_TABLE [!DS_HASH_TABLE [NATURAL_8, !STRING], NATURAL_8]
+	tag_state_transitions: attached DS_HASH_TABLE [attached DS_HASH_TABLE [NATURAL_8, attached STRING], NATURAL_8]
 			-- <Precursor>
 		local
-			l_trans: !DS_HASH_TABLE [NATURAL_8, !STRING]
+			l_trans: attached DS_HASH_TABLE [NATURAL_8, attached STRING]
 		do
 			create Result.make (8)
 
@@ -363,10 +363,10 @@ feature {NONE} -- State transistions
 			Result.put (l_trans, t_zone)
 		end
 
-	attribute_states: !DS_HASH_TABLE [!DS_HASH_TABLE [NATURAL_8, !STRING], NATURAL_8]
+	attribute_states: attached DS_HASH_TABLE [attached DS_HASH_TABLE [NATURAL_8, attached STRING], NATURAL_8]
 			-- <Precursor>
 		local
-			l_attr: !DS_HASH_TABLE [NATURAL_8, !STRING]
+			l_attr: attached DS_HASH_TABLE [NATURAL_8, attached STRING]
 		once
 			create Result.make_default
 

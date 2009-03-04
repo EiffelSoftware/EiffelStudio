@@ -33,13 +33,13 @@ feature -- Access
 			Result := stock_pixmaps.tool_external_output_icon
 		end
 
-	title: !STRING_32
+	title: attached STRING_32
 			-- <Precursor>
 		do
 			Result := locale_formatter.translation (t_tool_title)
 		end
 
-	shortcut_preference_name: !STRING
+	shortcut_preference_name: attached STRING
 			-- <Precursor>
 		do
 			Result := "show_external_output_tool"
@@ -47,7 +47,7 @@ feature -- Access
 
 feature {NONE} -- Factory
 
-	new_tool: !ES_CONSOLE_TOOL_PANEL
+	new_tool: attached ES_CONSOLE_TOOL_PANEL
 			-- <Precursor>
 		do
 			create Result.make (window, Current)

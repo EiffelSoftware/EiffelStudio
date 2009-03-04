@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_value: !STRING_32 assign set_default_value
+	default_value: attached STRING_32 assign set_default_value
 			-- A default value for the declaration to show for in-place UI editions.
 
 feature -- Element change
@@ -69,7 +69,7 @@ feature -- Status setting
 
 feature -- Visitor
 
-	process (a_visitor: !CODE_TEMPLATE_VISITOR_I)
+	process (a_visitor: attached CODE_TEMPLATE_VISITOR_I)
 			-- <Precursor>
 		do
 			a_visitor.process_code_literal_declaration (Current)

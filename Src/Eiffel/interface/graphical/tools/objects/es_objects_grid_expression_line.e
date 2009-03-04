@@ -112,7 +112,7 @@ feature -- Refresh management
 
 			if
 				not evaluation_requested --| i.e: evaluate only on `grid_display_compute'
-				and then {evl: like expression_evaluation} expression_evaluation
+				and then attached expression_evaluation as evl
 				and then evl.evaluated
 			then
 				if not evl.error_occurred then
@@ -232,7 +232,7 @@ feature -- Properties
 				Result := title
 			elseif expression.text /= Void then
 				Result := expression.text
-			elseif {oadd: like object_address} object_address then
+			elseif attached object_address as oadd then
 				Result := oadd.output
 			end
 		end
@@ -263,7 +263,7 @@ fixme ("find a smarter way to get a valid value")
 			dmp := last_dump_value
 			if dmp /= Void and then dmp.is_type_exception and then dmp.value_exception /= Void then
 				Result := dmp.value_exception.sorted_children
-			elseif {oadd: like object_address} object_address and then not oadd.is_void then
+			elseif attached object_address as oadd and then not oadd.is_void then
 				Result := debugger_manager.object_manager.sorted_attributes_at_address (oadd, object_spec_lower, object_spec_upper)
 			end
 		end
@@ -271,7 +271,7 @@ fixme ("find a smarter way to get a valid value")
 	sorted_once_routines: LIST [E_FEATURE]
 			-- <Precursor>	
 		do
-			if {cl: like object_dynamic_class} object_dynamic_class then
+			if attached object_dynamic_class as cl then
 				Result := cl.once_routines
 			end
 		end
@@ -279,7 +279,7 @@ fixme ("find a smarter way to get a valid value")
 	sorted_constant_features: LIST [E_CONSTANT]
 			-- <Precursor>
 		do
-			if {cl: like object_dynamic_class} object_dynamic_class then
+			if attached object_dynamic_class as cl then
 				Result := cl.constant_features
 			end
 		end
@@ -522,7 +522,7 @@ feature -- Graphical changes
 
 					create l_tooltip.make (20)
 
-					if exp.is_context_object and then {ctxadd: DBG_ADDRESS} exp.context.associated_address then
+					if exp.is_context_object and then attached {DBG_ADDRESS} exp.context.associated_address as ctxadd then
 						if exp.name /= Void then
 							set_title (exp.name)
 						else
@@ -579,7 +579,7 @@ feature -- Graphical changes
 							elseif evl.has_error_evaluation then
 								set_error_pixmap (pixmaps.icon_pixmaps.general_mini_error_icon)
 							end
-							if {l_exception_dump_value: DUMP_VALUE} evl.value then
+							if attached {DUMP_VALUE} evl.value as l_exception_dump_value then
 								if l_exception_dump_value.is_type_exception then
 									if evl.has_error_exception then
 										l_title := interface_names.l_Exception_object

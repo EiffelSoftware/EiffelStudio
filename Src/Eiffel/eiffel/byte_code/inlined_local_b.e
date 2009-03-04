@@ -69,7 +69,7 @@ feature -- Register and code generation
 	used (r: REGISTRABLE): BOOLEAN
 			-- Is `r' the same as us ?
 		do
-			if {l_local: like Current} r then
+			if attached {like Current} r as l_local then
 				Result := l_local.position = position
 			end
 		end

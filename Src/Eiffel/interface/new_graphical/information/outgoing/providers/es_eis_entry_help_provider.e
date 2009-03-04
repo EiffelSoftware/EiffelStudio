@@ -24,10 +24,10 @@ inherit
 
 feature {NONE} -- Variable expansion
 
-	last_entry: ?EIS_ENTRY
+	last_entry: detachable EIS_ENTRY
 			-- Last shown entry.
 
-	context_variables: !HASH_TABLE [STRING_8, STRING_8]
+	context_variables: attached HASH_TABLE [STRING_8, STRING_8]
 			-- A table of context variables, indexed by a variable name
 		local
 			l_type: NATURAL
@@ -37,9 +37,9 @@ feature {NONE} -- Variable expansion
 			l_class: CONF_CLASS
 			l_feature: E_FEATURE
 		do
-			if {entry: EIS_ENTRY}last_entry then
+			if attached {EIS_ENTRY} last_entry as entry then
 				create Result.make (5)
-				if {l_id: STRING}entry.id then
+				if attached {STRING} entry.id as l_id then
 					l_target := id_solution.target_of_id (l_id)
 					l_type := id_solution.most_possible_type_of_id (l_id)
 					if l_type = id_solution.feature_type then
@@ -52,16 +52,16 @@ feature {NONE} -- Variable expansion
 						l_group := id_solution.group_of_id (l_id)
 					end
 
-					if {lt_target: STRING}id_solution.last_target_name then
+					if attached {STRING} id_solution.last_target_name as lt_target then
 						Result.force (lt_target, {ES_EIS_TOKENS}.target_name_var_name)
 					end
-					if {lt_group: STRING}id_solution.last_group_name then
+					if attached {STRING} id_solution.last_group_name as lt_group then
 						Result.force (lt_group, {ES_EIS_TOKENS}.group_name_var_name)
 					end
-					if {lt_class: STRING}id_solution.last_class_name then
+					if attached {STRING} id_solution.last_class_name as lt_class then
 						Result.force (lt_class, {ES_EIS_TOKENS}.class_name_var_name)
 					end
-					if {lt_feature: STRING}id_solution.last_feature_name then
+					if attached {STRING} id_solution.last_feature_name as lt_feature then
 						Result.force (lt_feature, {ES_EIS_TOKENS}.feature_name_var_name)
 					end
 						-- Add variables defined in the target.

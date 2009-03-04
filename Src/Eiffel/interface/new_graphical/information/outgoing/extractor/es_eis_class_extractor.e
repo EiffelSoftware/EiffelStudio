@@ -46,13 +46,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	eis_full_entries: !SEARCH_TABLE [EIS_ENTRY]
+	eis_full_entries: attached SEARCH_TABLE [EIS_ENTRY]
 			-- <precursor>
 		local
 			l_conf_extractor: ES_EIS_CONF_EXTRACTOR
 		do
-			if not {lt_full_entries: like eis_full_entries}internal_eis_full_entries then
-				if {lt_cluster: CONF_CLUSTER}class_i.config_class.group then
+			if not attached {like eis_full_entries} internal_eis_full_entries as lt_full_entries then
+				if attached {CONF_CLUSTER} class_i.config_class.group as lt_cluster then
 					create l_conf_extractor.make (lt_cluster, True)
 					Result := l_conf_extractor.eis_full_entries.twin
 					Result.merge (eis_entries.twin)
@@ -112,13 +112,13 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Access
 
-	class_i: !CLASS_I
+	class_i: attached CLASS_I
 			-- A help context class
 
 	location: INTEGER
 			-- Location in the text where including EIS entries are calculated
 
-	eis_class_id: ?STRING
+	eis_class_id: detachable STRING
 			-- Class ID for EIS entry.
 
 	eis_feature_id: like eis_class_id
@@ -129,7 +129,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Basic operations
 
-	real_extract (a_computed_id: !STRING)
+	real_extract (a_computed_id: attached STRING)
 			-- Perform real extract from the class text.
 			-- Register result into storage.
 		local
@@ -138,7 +138,7 @@ feature {NONE} -- Basic operations
 			create l_class_modifier.make (class_i)
 			l_class_modifier.prepare
 				-- Compute EIS entries.
-			if l_class_modifier.is_ast_available and then {l_class_as: CLASS_AS}l_class_modifier.ast then
+			if l_class_modifier.is_ast_available and then attached {CLASS_AS} l_class_modifier.ast as l_class_as then
 				probe_ast (l_class_as)
 					-- Register extracted entries to EIS storage.
 					-- We register empty entries to show that there is really not
@@ -151,24 +151,24 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	probe_ast (a_ast: !CLASS_AS)
+	probe_ast (a_ast: attached CLASS_AS)
 			-- Probes an AST root node to locate and scavenge any help context information.
 		local
-			l_indexing_clauses: !DS_ARRAYED_LIST [INDEXING_CLAUSE_AS]
+			l_indexing_clauses: attached DS_ARRAYED_LIST [INDEXING_CLAUSE_AS]
 			l_feature_clauses: EIFFEL_LIST [FEATURE_CLAUSE_AS]
 			l_features: EIFFEL_LIST [FEATURE_AS]
 			l_feature: FEATURE_AS
-			l_feature_name: ?STRING_8
+			l_feature_name: detachable STRING_8
 			l_class: CONF_CLASS
 		do
 			create l_indexing_clauses.make_default
 			l_class := class_i.config_class
 
 				-- Add top and bottom class indexing clauses.
-			if {lt_clause3: INDEXING_CLAUSE_AS}a_ast.bottom_indexes then
+			if attached {INDEXING_CLAUSE_AS} a_ast.bottom_indexes as lt_clause3 then
 				extract_enties_from_index_clause (lt_clause3, False)
 			end
-			if {lt_clause4: INDEXING_CLAUSE_AS}a_ast.top_indexes then
+			if attached {INDEXING_CLAUSE_AS} a_ast.top_indexes as lt_clause4 then
 				extract_enties_from_index_clause (lt_clause4, False)
 			end
 
@@ -194,7 +194,7 @@ feature {NONE} -- Basic operations
 								if location >= l_feature.start_location.position  and then location <= l_feature.end_location.position then
 										-- Set feature name, for URI replacement
 									l_feature_name := l_feature.feature_name.name
-									if {lt_clause1: INDEXING_CLAUSE_AS}l_feature.indexes then
+									if attached {INDEXING_CLAUSE_AS} l_feature.indexes as lt_clause1 then
 										extract_enties_from_index_clause (lt_clause1, True)
 									end
 								end
@@ -219,7 +219,7 @@ feature {NONE} -- Basic operations
 							loop
 								l_feature := l_features.item
 								eis_feature_id := id_solution.id_of_feature_ast (l_class, l_feature)
-								if {lt_clause2: INDEXING_CLAUSE_AS}l_feature.indexes then
+								if attached {INDEXING_CLAUSE_AS} l_feature.indexes as lt_clause2 then
 									extract_enties_from_index_clause (lt_clause2, True)
 								end
 								l_features.forth
@@ -233,7 +233,7 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Formatting
 
-	extract_enties_from_index_clause (a_clause: !INDEXING_CLAUSE_AS; a_for_feature: BOOLEAN)
+	extract_enties_from_index_clause (a_clause: attached INDEXING_CLAUSE_AS; a_for_feature: BOOLEAN)
 			-- Extract entries from indexing clause into `eis_entries'.
 		local
 			l_id: like eis_class_id
@@ -243,13 +243,13 @@ feature {NONE} -- Formatting
 			until
 				a_clause.after
 			loop
-				if {lt_index: INDEX_AS}a_clause.item then
+				if attached {INDEX_AS} a_clause.item as lt_index then
 					if a_for_feature then
 						l_id := eis_feature_id
 					else
 						l_id := eis_class_id
 					end
-					if {lt_eis_entry: EIS_ENTRY}eis_entry_from_index (lt_index, l_id) then
+					if attached {EIS_ENTRY} eis_entry_from_index (lt_index, l_id) as lt_eis_entry then
 						eis_entries.force (lt_eis_entry)
 					end
 				end

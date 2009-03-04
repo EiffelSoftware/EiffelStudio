@@ -316,7 +316,7 @@ feature {NONE} -- Implementation
 			valid_feat: feat /= Void
 			valid_format_reg: format_reg /= Void
 		do
-			if {l_feat: !E_FEATURE} feat.e_feature then
+			if attached {attached E_FEATURE} feat.e_feature as l_feat then
 				comments := (create {COMMENT_EXTRACTOR}).feature_comments (l_feat)
 			else
 				comments := Void

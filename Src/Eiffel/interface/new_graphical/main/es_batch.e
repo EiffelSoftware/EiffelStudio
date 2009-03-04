@@ -36,7 +36,7 @@ feature {NONE} -- Initialization: Services
 		do
 			create l_container
 			check is_service_available: l_container.is_service_available end
-			if l_container.is_service_available and then {l_service: SERVICE_CONTAINER_S} l_container.service then
+			if l_container.is_service_available and then attached {SERVICE_CONTAINER_S} l_container.service as l_service then
 				service_initializer.add_core_services (l_service)
 			end
 		end
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization: Services
 
 feature {NONE} -- Access
 
-	service_initializer: !SERVICE_INITIALIZER
+	service_initializer: attached SERVICE_INITIALIZER
 			-- Initializer used to register all services.
 		once
 			create Result

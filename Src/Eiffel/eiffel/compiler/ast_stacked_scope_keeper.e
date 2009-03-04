@@ -124,7 +124,7 @@ feature {NONE} -- Storage
 	outer_scopes: STACK [like scope]
 			-- Outer scopes
 
-	inner_scopes: STACK [?like scope]
+	inner_scopes: STACK [detachable like scope]
 			-- Inner scopes
 
 feature {NONE} -- Initialization

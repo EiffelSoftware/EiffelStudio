@@ -18,8 +18,8 @@ feature -- Output
 			a_formatter_attached: a_formatter /= Void
 			a_group_attached: a_group /= Void
 		do
-			if {l_cluster: !CONF_CLUSTER} a_group then
-				if {l_parent: !CONF_GROUP} l_cluster.parent then
+			if attached {attached CONF_CLUSTER} a_group as l_cluster then
+				if attached {attached CONF_GROUP} l_cluster.parent as l_parent then
 					print_context_group (a_formatter, l_parent)
 					a_formatter.add (".")
 				end
@@ -34,7 +34,7 @@ feature -- Output
 			a_class_attached: a_class /= Void
 		do
 			a_class.append_name (a_formatter)
-			if {l_group: !CONF_GROUP} a_class.group then
+			if attached {attached CONF_GROUP} a_class.group as l_group then
 				a_formatter.add_space
 				a_formatter.add ("(")
 				print_context_group (a_formatter, l_group)
@@ -49,7 +49,7 @@ feature -- Output
 			a_class_attached: a_class /= Void
 		do
 			a_class.append_name (a_formatter)
-			if {l_group: !CONF_GROUP} a_class.group then
+			if attached {attached CONF_GROUP} a_class.group as l_group then
 				a_formatter.add_space
 				a_formatter.add ("(")
 				print_context_group (a_formatter, l_group)
@@ -67,7 +67,7 @@ feature -- Output
 			a_class.append_name (a_formatter)
 			a_formatter.add (".")
 			a_feature.append_name (a_formatter)
-			if {l_group: !CONF_GROUP} a_class.group then
+			if attached {attached CONF_GROUP} a_class.group as l_group then
 				a_formatter.add_space
 				a_formatter.add ("(")
 				print_context_group (a_formatter, l_group)
@@ -95,7 +95,7 @@ feature -- Output
 				a_class.append_name (a_formatter)
 				a_formatter.add (".")
 				a_formatter.add (a_feature_name)
-				if {l_group: !CONF_GROUP} a_class.group then
+				if attached {attached CONF_GROUP} a_class.group as l_group then
 					a_formatter.add_space
 					a_formatter.add ("(")
 					print_context_group (a_formatter, l_group)

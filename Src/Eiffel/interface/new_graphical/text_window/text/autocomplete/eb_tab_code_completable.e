@@ -55,7 +55,7 @@ feature -- Access
 	possibilities_provider: EB_COMPLETION_POSSIBILITIES_PROVIDER
 			-- Possibilities provider
 
-	focus_back_actions: !EV_NOTIFY_ACTION_SEQUENCE
+	focus_back_actions: attached EV_NOTIFY_ACTION_SEQUENCE
 			-- Called after focus is set back to code completable when necessary.
 
 feature {NONE} -- Access

@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 	on_before_initialize
 			-- <Precursor>
 		local
-			l_et: KL_STRING_EQUALITY_TESTER_A [!STRING]
+			l_et: KL_STRING_EQUALITY_TESTER_A [attached STRING]
 		do
 			Precursor
 			create l_et
@@ -211,13 +211,13 @@ feature {NONE} -- Initialization: widget status
 
 feature -- Access: help
 
-	help_provider: !UUID
+	help_provider: attached UUID
 			-- <Precursor>
 		once
 			Result := (create {HELP_PROVIDER_KINDS}).wiki
 		end
 
-	help_context_id: !STRING_GENERAL
+	help_context_id: attached STRING_GENERAL
 			-- <Precursor>
 		once
 			Result := "Testing Tool (Specification)"
@@ -225,16 +225,16 @@ feature -- Access: help
 
 feature {NONE} -- Access
 
-	tree_view: !ES_TAGABLE_TREE_GRID [!TEST_I]
+	tree_view: attached ES_TAGABLE_TREE_GRID [attached TEST_I]
 			-- Tree view displaying tests
 
-	filter: !TAG_BASED_FILTERED_COLLECTION [!TEST_I]
+	filter: attached TAG_BASED_FILTERED_COLLECTION [attached TEST_I]
 			-- Collection used for filter
 
-	outcome_tab: !ES_TESTING_TOOL_OUTCOME_WIDGET
+	outcome_tab: attached ES_TESTING_TOOL_OUTCOME_WIDGET
 			-- Tab showing details of a selected test
 
-	current_window: !EV_WINDOW
+	current_window: attached EV_WINDOW
 			-- <Precursor>
 		local
 			l_window: EV_WINDOW
@@ -246,52 +246,52 @@ feature {NONE} -- Access
 
 feature {NONE} -- Access: widgets
 
-	view_box: !EV_COMBO_BOX
+	view_box: attached EV_COMBO_BOX
 			-- Combo box which defines prefix for `tree_view'
 
-	filter_box: !EV_COMBO_BOX
+	filter_box: attached EV_COMBO_BOX
 			-- Combo box containing pattern for filtering tests
 
-	split_area: !EV_VERTICAL_SPLIT_AREA
+	split_area: attached EV_VERTICAL_SPLIT_AREA
 			-- Splitting area for grid and notebook
 
-	notebook: !EV_NOTEBOOK
+	notebook: attached EV_NOTEBOOK
 			-- Notebook for detailed information
 
-	runs_label: !EV_LABEL
+	runs_label: attached EV_LABEL
 			-- Label showing number of tests which have been executed
 
-	errors_label: !EV_LABEL
+	errors_label: attached EV_LABEL
 			-- Label showing number of tests currently failing
 
-	errors_pixmap: !EV_PIXMAP
+	errors_pixmap: attached EV_PIXMAP
 
 feature {NONE} -- Access: view
 
-	view_templates: !DS_ARRAYED_LIST [!STRING]
+	view_templates: attached DS_ARRAYED_LIST [attached STRING]
 			-- List of predefined tags to be used in `tree_view'
 
-	view_template_descriptions: !DS_ARRAYED_LIST [!STRING]
+	view_template_descriptions: attached DS_ARRAYED_LIST [attached STRING]
 			-- List of readable descriptions for each tag in `view_templates'
 
-	view_history: !DS_LINKED_LIST [!STRING]
+	view_history: attached DS_LINKED_LIST [attached STRING]
 			-- List of tags user has entered recently
 
 feature {NONE} -- Access: buttons
 
-	wizard_button: !SD_TOOL_BAR_BUTTON
+	wizard_button: attached SD_TOOL_BAR_BUTTON
 			-- Button for launching test wizard
 
-	run_button: !SD_TOOL_BAR_DUAL_POPUP_BUTTON
+	run_button: attached SD_TOOL_BAR_DUAL_POPUP_BUTTON
 			-- Button for launching the test executor
 
-	debug_button: !SD_TOOL_BAR_DUAL_POPUP_BUTTON
+	debug_button: attached SD_TOOL_BAR_DUAL_POPUP_BUTTON
 			-- Button for debugging tests
 
-	stop_button: !SD_TOOL_BAR_BUTTON
+	stop_button: attached SD_TOOL_BAR_BUTTON
 			-- Button for stopping any current test execution
 
-	clear_filter_button: !SD_TOOL_BAR_BUTTON
+	clear_filter_button: attached SD_TOOL_BAR_BUTTON
 			-- Button for clearing any filter
 
 feature {NONE} -- Access: menus
@@ -299,13 +299,13 @@ feature {NONE} -- Access: menus
 	run_all_menu,
 	run_failing_menu,
 	run_selected_menu,
-	run_filtered_menu: !EV_MENU_ITEM
+	run_filtered_menu: attached EV_MENU_ITEM
 			-- Menu items for running tests in background
 
 	debug_all_menu,
 	debug_failing_menu,
 	debug_selected_menu,
-	debug_filtered_menu: !EV_MENU_ITEM
+	debug_filtered_menu: attached EV_MENU_ITEM
 			-- Menu items for debugging tests
 
 feature {NONE} -- Status setting: view
@@ -314,7 +314,7 @@ feature {NONE} -- Status setting: view
 			-- Called when the user enters a new view definition
 		local
 			l_orig_tag: STRING
-			l_tag: !STRING
+			l_tag: attached STRING
 		do
 			l_orig_tag := view_box.text.to_string_8
 			check l_orig_tag /= Void end
@@ -352,7 +352,7 @@ feature {NONE} -- Status setting: view
 	on_select_view
 			-- Called when a view new view is selected
 		do
-			if {l_tag: STRING} view_box.selected_item.data then
+			if attached {STRING} view_box.selected_item.data as l_tag then
 				view_box.set_text (l_tag)
 				execute_with_busy_cursor (agent update_view)
 			end
@@ -374,7 +374,7 @@ feature {NONE} -- Status setting: view
 	update_view_box
 			-- Update proposal list for `view_box'
 		local
-			l_cursor: DS_LINEAR_CURSOR [!STRING]
+			l_cursor: DS_LINEAR_CURSOR [attached STRING]
 			i: INTEGER
 			l_item: EV_LIST_ITEM
 		do
@@ -455,14 +455,14 @@ feature {NONE} -- Status setting: view
 
 feature {NONE} -- Status setting: stones
 
-	on_stone_changed (a_old_stone: ?like stone)
+	on_stone_changed (a_old_stone: detachable like stone)
 			-- <Precursor>
 		local
 			l_view_text, l_filter_text: STRING
 			l_is_test_class: BOOLEAN
 		do
 			if not is_in_stone_synchronization then
-				if {l_class_stone: !CLASSI_STONE} stone and then {l_class: !EIFFEL_CLASS_I} l_class_stone.class_i then
+				if attached {attached CLASSI_STONE} stone as l_class_stone and then attached {attached EIFFEL_CLASS_I} l_class_stone.class_i as l_class then
 					create l_filter_text.make (40)
 					l_filter_text.append ("class:")
 					l_filter_text.append (l_class_stone.class_name)
@@ -475,11 +475,11 @@ feature {NONE} -- Status setting: stones
 					else
 						l_view_text := "covers"
 					end
-					if {l_feature_stone: FEATURE_STONE} stone then
+					if attached {FEATURE_STONE} stone as l_feature_stone then
 						l_filter_text.append_character (' ')
 						l_filter_text.append (l_feature_stone.feature_name)
 					end
-				elseif {l_cluster: CLUSTER_STONE} stone then
+				elseif attached {CLUSTER_STONE} stone as l_cluster then
 					create l_filter_text.make (40)
 					if l_cluster.group.is_cluster then
 						l_filter_text.append ("cluster:")
@@ -556,7 +556,7 @@ feature {NONE} -- Events: wizard
 
 feature {NONE} -- Events: test execution
 
-	on_run_current (a_type: !TYPE [TEST_EXECUTOR_I])
+	on_run_current (a_type: attached TYPE [TEST_EXECUTOR_I])
 			-- Called when user presses `run_button' or `debug_button' directly.
 		do
 			if not tree_view.selected_items.is_empty then
@@ -566,18 +566,18 @@ feature {NONE} -- Events: test execution
 			end
 		end
 
-	on_run_all (a_type: !TYPE [TEST_EXECUTOR_I])
+	on_run_all (a_type: attached TYPE [TEST_EXECUTOR_I])
 			-- Called when user selects "run all" item of `run_button'.
 		do
 			launch_executor (Void, a_type)
 		end
 
-	on_run_failing (a_type: !TYPE [TEST_EXECUTOR_I])
+	on_run_failing (a_type: attached TYPE [TEST_EXECUTOR_I])
 			-- Called when user selectes "run failing" item of `run_button'.
 		local
-			l_item: !TEST_I
-			l_list: !DS_ARRAYED_LIST [!TEST_I]
-			l_cursor: DS_LINEAR_CURSOR [!TEST_I]
+			l_item: attached TEST_I
+			l_list: attached DS_ARRAYED_LIST [attached TEST_I]
+			l_cursor: DS_LINEAR_CURSOR [attached TEST_I]
 		do
 			if test_suite.is_service_available then
 				create l_list.make (test_suite.service.tests.count)
@@ -599,7 +599,7 @@ feature {NONE} -- Events: test execution
 			end
 		end
 
-	on_run_filtered (a_type: !TYPE [TEST_EXECUTOR_I])
+	on_run_filtered (a_type: attached TYPE [TEST_EXECUTOR_I])
 			-- Called when user selects "run filteres" item of `run_button'.
 		do
 			if filter.has_expression then
@@ -609,13 +609,13 @@ feature {NONE} -- Events: test execution
 			end
 		end
 
-	on_run_selected (a_type: !TYPE [TEST_EXECUTOR_I])
+	on_run_selected (a_type: attached TYPE [TEST_EXECUTOR_I])
 			-- Called when user selects "run selected" item of `run_button'.
 		do
 			launch_executor (tree_view.selected_items, a_type)
 		end
 
-	launch_executor (a_list: ?DS_LINEAR [!TEST_I]; a_type: !TYPE [TEST_EXECUTOR_I])
+	launch_executor (a_list: detachable DS_LINEAR [attached TEST_I]; a_type: attached TYPE [TEST_EXECUTOR_I])
 			-- Try to run all tests in a given list through the background executor. If of some reason
 			-- the tests can not be executed, show an error message.
 		local
@@ -669,13 +669,13 @@ feature {NONE} -- Events: labels
 
 feature {TEST_SUITE_S} -- Events: test suite
 
-	on_test_added (a_collection: !ACTIVE_COLLECTION_I [!TEST_I]; a_item: !TEST_I)
+	on_test_added (a_collection: attached ACTIVE_COLLECTION_I [attached TEST_I]; a_item: attached TEST_I)
 			-- <Precursor>
 		do
 			update_run_labels
 		end
 
-	on_test_changed (a_test_suite: !ACTIVE_COLLECTION_I [!TEST_I]; a_test: !TEST_I)
+	on_test_changed (a_test_suite: attached ACTIVE_COLLECTION_I [attached TEST_I]; a_test: attached TEST_I)
 			-- <Precursor>
 		do
 			if outcome_tab.is_active and then outcome_tab.test = a_test then
@@ -684,7 +684,7 @@ feature {TEST_SUITE_S} -- Events: test suite
 			update_run_labels
 		end
 
-	on_test_removed (a_collection: !ACTIVE_COLLECTION_I [!TEST_I]; a_item: !TEST_I)
+	on_test_removed (a_collection: attached ACTIVE_COLLECTION_I [attached TEST_I]; a_item: attached TEST_I)
 			-- <Precursor>
 		do
 			if outcome_tab.is_active and then outcome_tab.test = a_item then
@@ -693,7 +693,7 @@ feature {TEST_SUITE_S} -- Events: test suite
 			update_run_labels
 		end
 
-	on_processor_launched (a_test_suite: !TEST_SUITE_S; a_processor: !TEST_PROCESSOR_I)
+	on_processor_launched (a_test_suite: attached TEST_SUITE_S; a_processor: attached TEST_PROCESSOR_I)
 			-- <Precursor>
 		local
 			l_new_tab: ES_TESTING_TOOL_PROCESSOR_WIDGET
@@ -705,7 +705,7 @@ feature {TEST_SUITE_S} -- Events: test suite
 			until
 				notebook.after or l_found
 			loop
-				if {l_tab: ES_TESTING_TOOL_PROCESSOR_WIDGET} notebook.item_for_iteration.data then
+				if attached {ES_TESTING_TOOL_PROCESSOR_WIDGET} notebook.item_for_iteration.data as l_tab then
 					if l_tab.processor = a_processor then
 						l_found := True
 						notebook.item_tab (l_tab.widget).enable_select
@@ -717,11 +717,11 @@ feature {TEST_SUITE_S} -- Events: test suite
 			if not l_found then
 				l_window := develop_window
 				check l_window /= Void end
-				if {l_executor: TEST_EXECUTOR_I} a_processor then
+				if attached {TEST_EXECUTOR_I} a_processor as l_executor then
 					create {ES_TESTING_TOOL_EXECUTOR_WIDGET} l_new_tab.make (l_executor, l_window)
-				elseif {l_generator: TEST_GENERATOR_I} a_processor then
+				elseif attached {TEST_GENERATOR_I} a_processor as l_generator then
 					create {ES_TESTING_TOOL_GENERATOR_WIDGET} l_new_tab.make (l_generator, l_window)
-				elseif {l_creator: TEST_CREATOR_I} a_processor then
+				elseif attached {TEST_CREATOR_I} a_processor as l_creator then
 					create {ES_TESTING_TOOL_CREATOR_WIDGET} l_new_tab.make (l_creator, l_window)
 				end
 				if l_new_tab /= Void then
@@ -743,7 +743,7 @@ feature {TEST_SUITE_S} -- Events: test suite
 			end
 		end
 
- 	on_processor_stopped (a_test_suite: !TEST_SUITE_S; a_processor: !TEST_PROCESSOR_I)
+ 	on_processor_stopped (a_test_suite: attached TEST_SUITE_S; a_processor: attached TEST_PROCESSOR_I)
  			-- <Precursor>
  		do
  			if background_executor_type.attempt (a_processor) /= Void then
@@ -753,7 +753,7 @@ feature {TEST_SUITE_S} -- Events: test suite
 			end
  		end
 
- 	on_processor_error (a_test_suite: !TEST_SUITE_S; a_processor: !TEST_PROCESSOR_I; a_error: !STRING_8; a_token_values: TUPLE)
+ 	on_processor_error (a_test_suite: attached TEST_SUITE_S; a_processor: attached TEST_PROCESSOR_I; a_error: attached STRING_8; a_token_values: TUPLE)
  			-- <Precursor>
  		do
  			if window_manager.last_focused_window = develop_window then
@@ -764,7 +764,7 @@ feature {TEST_SUITE_S} -- Events: test suite
 
 feature {ES_TAGABLE_TREE_GRID} -- Events: tree view
 
-	on_item_double_press (a_item: !TEST_I; a_in_tree_view: BOOLEAN)
+	on_item_double_press (a_item: attached TEST_I; a_in_tree_view: BOOLEAN)
 			-- Called when user double presses on item in of the grids
 		do
 			if a_in_tree_view then
@@ -777,7 +777,7 @@ feature {ES_TAGABLE_TREE_GRID} -- Events: tree view
 			end
 		end
 
-	on_selection_change (a_test: !TEST_I; a_is_selected: BOOLEAN)
+	on_selection_change (a_test: attached TEST_I; a_is_selected: BOOLEAN)
 			-- Called when item is selected or deselected.
 		do
 			if tree_view.selected_items.is_empty then

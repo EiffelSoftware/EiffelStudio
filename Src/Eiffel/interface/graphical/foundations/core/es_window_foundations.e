@@ -42,7 +42,7 @@ feature {NONE} -- Access
 
 feature -- Actions
 
-	show_actions: !EV_LITE_ACTION_SEQUENCE [TUPLE]
+	show_actions: attached EV_LITE_ACTION_SEQUENCE [TUPLE]
 			-- Actions performed when the foundation widget is shown.
 		require
 			is_interface_usable: is_interface_usable
@@ -51,7 +51,7 @@ feature -- Actions
 			result_contains_attached_items: not Result.has (Void)
 		end
 
-	hide_actions: !EV_LITE_ACTION_SEQUENCE [TUPLE]
+	hide_actions: attached EV_LITE_ACTION_SEQUENCE [TUPLE]
 			-- Actions performed when the foundation widget is hidden.
 		require
 			is_interface_usable: is_interface_usable

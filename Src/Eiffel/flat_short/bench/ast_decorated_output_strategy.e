@@ -1583,7 +1583,7 @@ feature {NONE} -- Implementation
 			l_as.expr.process (Current)
 			expr_type_visiting := l_old_expr_type_visiting
 
-			if {l_info: PARENT_CONVERSION_INFO} l_as.data then
+			if attached {PARENT_CONVERSION_INFO} l_as.data as l_info then
 					-- If we have some data about the above with a conversion, we need
 					-- to extract it so that we can recheck the code in the descendant.
 				l_text_formatter_decorator := text_formatter_decorator

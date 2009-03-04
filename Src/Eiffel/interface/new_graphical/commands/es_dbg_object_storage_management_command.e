@@ -139,7 +139,7 @@ feature -- Status report
 	accepts_stone (a_stone: ANY): BOOLEAN
 			-- Can the user drop `st'?
 		do
-			Result := {st: OBJECT_STONE} a_stone
+			Result := attached {OBJECT_STONE} a_stone as st
 		end
 
 feature -- Basic operations
@@ -167,7 +167,7 @@ feature -- Basic operations
 				dlg.set_is_modal (True)
 				dlg.show_on_active_window
 
-				if active_watch_tool /= Void and {dv: DUMP_VALUE} dlg.object_value then
+				if active_watch_tool /= Void and attached {DUMP_VALUE} dlg.object_value as dv then
 					active_watch_tool.add_dump_value (dv)
 				end
 			end

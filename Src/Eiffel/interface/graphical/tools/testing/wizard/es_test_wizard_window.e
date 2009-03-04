@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 			a_container_has_parent: a_container.parent /= Void
 			a_container_has_grand_parent: a_container.parent.parent /= Void
 		do
-			if {l_box: EV_BOX} a_container.parent.parent then
+			if attached {EV_BOX} a_container.parent.parent as l_box then
 				Result := l_box
 				Result.wipe_out
 			end
@@ -87,7 +87,7 @@ feature {NONE} -- Access
 	development_window: EB_DEVELOPMENT_WINDOW
 			-- Window `Current' is attached to.
 
-	current_window: !EV_WINDOW
+	current_window: attached EV_WINDOW
 			-- <Precursor>
 		local
 			l_window: EV_WINDOW
@@ -105,12 +105,12 @@ feature {NONE} -- Access
 			not_void: Result /= Void
 		end
 
-	t_title: !STRING
+	t_title: attached STRING
 			-- Window title
 		deferred
 		end
 
-	t_subtitle: !STRING
+	t_subtitle: attached STRING
 			-- Window subtitle
 		deferred
 		end
@@ -146,7 +146,7 @@ feature {NONE} -- Status setting
 			-- <Precursor>
 		do
 			title.set_text (locale_formatter.translation (t_title))
-			if {l_init: ES_TEST_WIZARD_INITIAL_WINDOW} Current then
+			if attached {ES_TEST_WIZARD_INITIAL_WINDOW} Current as l_init then
 				message.set_text (locale_formatter.translation (t_subtitle))
 			else
 				subtitle.set_text (locale_formatter.translation (t_subtitle))

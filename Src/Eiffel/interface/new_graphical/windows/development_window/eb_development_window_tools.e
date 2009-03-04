@@ -188,7 +188,7 @@ feature -- Access
 				l_format_tool ?= l_tools.item
 				if l_format_tool /= Void and then l_format_tool.is_customizable then
 						-- The tool is customizable so activate the tool instance
-					if {l_tool: EB_CUSTOMIZED_TOOL} l_format_tool.panel and then not l_customized_tools.has (l_tool) then
+					if attached {EB_CUSTOMIZED_TOOL} l_format_tool.panel as l_tool and then not l_customized_tools.has (l_tool) then
 							-- Only add the tool if it's not a customized tool because these will be added later
 						Result.extend (l_tool)
 					end

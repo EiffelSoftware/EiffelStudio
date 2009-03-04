@@ -25,7 +25,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	frozen make (a_title: !READABLE_STRING_GENERAL)
+	frozen make (a_title: attached READABLE_STRING_GENERAL)
 			-- Initialize a new standard dialog.
 			--
 			-- `a_title': The title to set on the standard dialog.
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 			is_initializing_unchanged: old is_initializing = is_initializing
 		end
 
-	frozen make_with_window (a_title: !READABLE_STRING_GENERAL; a_window: !like development_window)
+	frozen make_with_window (a_title: attached READABLE_STRING_GENERAL; a_window: attached like development_window)
 			-- Initialize a new standard dialog assigned to a development window.
 			--
 			-- `a_title': The title to set on the standard dialog.
@@ -142,7 +142,7 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-	dialog: !G
+	dialog: attached G
 			-- Actual dialog.
 		local
 			l_result: like internal_dialog
@@ -158,7 +158,7 @@ feature -- Access
 			result_consistent: Result = dialog
 		end
 
-	buttons: !DS_SET [INTEGER]
+	buttons: attached DS_SET [INTEGER]
 			-- Set of button id's for dialog
 			-- Note: Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
 		deferred
@@ -190,7 +190,7 @@ feature {NONE} -- Access
 			l_result: like internal_development_window
 			l_window: EV_WINDOW
 			l_windows: BILINEAR [EB_WINDOW]
-			l_wm: ?EB_WINDOW_MANAGER
+			l_wm: detachable EB_WINDOW_MANAGER
 		do
 			l_result := internal_development_window
 			if l_result = Void then
@@ -202,7 +202,7 @@ feature {NONE} -- Access
 						-- Attempt to find matching top level window.
 					l_windows := (create {EB_SHARED_WINDOW_MANAGER}).window_manager.windows
 					from l_windows.start until l_windows.after or l_result /= Void loop
-						if l_window = l_windows.item.window and then {l_result_window: EB_DEVELOPMENT_WINDOW} l_windows.item then
+						if l_window = l_windows.item.window and then attached {EB_DEVELOPMENT_WINDOW} l_windows.item as l_result_window then
 							l_result := l_result_window
 						end
 						l_windows.forth
@@ -219,7 +219,7 @@ feature {NONE} -- Access
 			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end
 
-	frozen button_actions: !DS_HASH_TABLE [PROCEDURE [ANY, TUPLE], INTEGER]
+	frozen button_actions: attached DS_HASH_TABLE [PROCEDURE [ANY, TUPLE], INTEGER]
 			-- Dialog button actions.
 
 feature -- Element change
@@ -264,7 +264,7 @@ feature {NONE} -- Status report
 
 feature -- Query
 
-	button_action (a_id: INTEGER): ?PROCEDURE [ANY, TUPLE]
+	button_action (a_id: INTEGER): detachable PROCEDURE [ANY, TUPLE]
 			-- Button action for a specific button.
 			--
 			-- `a_id': A button id corresponding to an actual dialog button.
@@ -281,7 +281,7 @@ feature -- Query
 
 feature {NONE} -- Query
 
-	button_from_dialog_selected_button (a_dialog: !G): INTEGER
+	button_from_dialog_selected_button (a_dialog: attached G): INTEGER
 			-- Retrieves a corresponding button ID from the actual dialog
 		require
 			is_interface_usable: is_interface_usable
@@ -294,7 +294,7 @@ feature {NONE} -- Query
 
 feature {NONE} -- Helpers
 
-	frozen helpers: !EVS_HELPERS
+	frozen helpers: attached EVS_HELPERS
 			-- Helpers to extend the operations of EiffelVision2
 		once
 			create Result
@@ -302,7 +302,7 @@ feature {NONE} -- Helpers
 
 feature -- Basic operations
 
-	show (a_window: !EV_WINDOW)
+	show (a_window: attached EV_WINDOW)
 			-- Show the standard dialog on a designated window.
 			--
 			-- `a_window': The window to show the dialog modal to.
@@ -427,7 +427,7 @@ feature {NONE} -- Action handlers
 
 feature {NONE} -- Factory
 
-	new_dialog: !G
+	new_dialog: attached G
 			-- Creates a new file dialog
 		deferred
 		ensure
@@ -436,11 +436,11 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Implementation: Internal cache
 
-	internal_development_window: ?like development_window
+	internal_development_window: detachable like development_window
 			-- Set version of `development_window'.
 			-- Note: Used during creation to indicate an assigned window.
 
-	internal_dialog: ?like dialog
+	internal_dialog: detachable like dialog
 			-- Cached version of `dialog'.
 			-- Note: Do not use directly!
 

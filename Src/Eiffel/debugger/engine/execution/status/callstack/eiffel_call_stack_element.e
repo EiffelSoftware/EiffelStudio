@@ -124,7 +124,7 @@ feature -- Properties
 		do
 			locs := locals
 			if locs /= Void then
-				if {lst: EIFFEL_LIST [TYPE_DEC_AS]} routine.locals then
+				if attached {EIFFEL_LIST [TYPE_DEC_AS]} routine.locals as lst then
 					Result := locs.i_th (lst.count + i)
 				end
 			end
@@ -185,7 +185,7 @@ feature -- Properties
 	argument (pos: INTEGER): ABSTRACT_DEBUG_VALUE
 			-- Argument at position `pos'
 		do
-			if {args: like arguments} arguments then
+			if attached arguments as args then
 				if args.valid_index (pos) then
 					Result := args.i_th (pos)
 				end

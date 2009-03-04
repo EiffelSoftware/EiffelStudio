@@ -189,13 +189,13 @@ feature -- Query
 	has_once_routine: BOOLEAN
 			-- Current value has once feature?
 		do
-			Result := {list: like sorted_once_routines} sorted_once_routines and then not list.is_empty
+			Result := attached sorted_once_routines as list and then not list.is_empty
 		end
 
 	has_constant: BOOLEAN
 			-- Current value has constant feature?
 		do
-			Result := {list: like sorted_constant_features} sorted_constant_features and then not list.is_empty
+			Result := attached sorted_constant_features as list and then not list.is_empty
 		end
 
 	reset_special_attributes_values
@@ -271,7 +271,7 @@ feature {NONE} -- Pick and Drop implementation
 			t: like internal_item_stone_data_i_th
 		do
 			create internal_items_stone_data.make (row.count + 1) -- FIXME: upper value ?
-			if {oadd: like object_address} object_address and then not oadd.is_void then
+			if attached object_address as oadd and then not oadd.is_void then
 					--| For now we don't support this for external type
 				ostn := object_name
 				if ostn = Void then
@@ -710,7 +710,7 @@ feature {NONE} -- Filling
 		do
 			cmd := parent_grid.slices_cmd
 			if cmd /= Void then
-				if {os: OBJECT_STONE} item_stone (col_value_index) then
+				if attached {OBJECT_STONE} item_stone (col_value_index) as os then
 					cmd.drop_object_stone (os)
 				end
 			end
@@ -953,7 +953,7 @@ feature {NONE} -- Filling
 					flist.after
 				loop
 					c := flist.item
-					if {ci: CONSTANT_I} c.associated_feature_i then
+					if attached {CONSTANT_I} c.associated_feature_i as ci then
 						cdv := deval.value_from_constant_i (ci)
 						if cdv /= Void then
 							cdv.set_name (flist.item.name)
@@ -1084,7 +1084,7 @@ feature {NONE} -- Agent filling
 				if v_item /= Void then
 					n := v_item.name
 					if n /= Void and then n.count > 3 then
-						if {vi: DEBUG_BASIC_VALUE [INTEGER]} v_item then
+						if attached {DEBUG_BASIC_VALUE [INTEGER]} v_item as vi then
 							if vi.name /= Void then
 								if v_class_id = Void and n.item (1) = 'c' and then n.is_equal ("class_id") then
 									v_nb := v_nb + 1
@@ -1094,7 +1094,7 @@ feature {NONE} -- Agent filling
 									v_feature_id := vi
 								end
 							end
-						elseif {vb: DEBUG_BASIC_VALUE [BOOLEAN]} list_cursor.item then
+						elseif attached {DEBUG_BASIC_VALUE [BOOLEAN]} list_cursor.item as vb then
 							if v_is_precompiled = void and n.item (1) = 'i' and then n.is_equal ("is_precompiled") then
 								v_nb := v_nb + 1
 								v_is_precompiled := vb

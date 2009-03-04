@@ -23,7 +23,7 @@ inherit
 
 feature {NONE} -- Access
 
-	test_suite: !SERVICE_CONSUMER [TEST_SUITE_S]
+	test_suite: attached SERVICE_CONSUMER [TEST_SUITE_S]
 			-- <Precursor>
 		local
 			l_observer: ES_TEST_CLUSTER_OBSERVER
@@ -36,12 +36,12 @@ feature {NONE} -- Access
 			end
 		end
 
-	current_window: !EV_WINDOW
+	current_window: attached EV_WINDOW
 			-- Window in which `Current' is used.
 		deferred
 		end
 
-	observer_cell: CELL [?ES_TEST_CLUSTER_OBSERVER]
+	observer_cell: CELL [detachable ES_TEST_CLUSTER_OBSERVER]
 			-- Observer which notifies test suite whenever a class is removed
 		once
 			create Result.put (Void)
@@ -51,7 +51,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Events
 
-	on_processor_launch_error (a_error: like error_message; a_type: !TYPE [TEST_PROCESSOR_I]; a_code: NATURAL)
+	on_processor_launch_error (a_error: like error_message; a_type: attached TYPE [TEST_PROCESSOR_I]; a_code: NATURAL)
 			-- <Precursor>
 		do
 			prompts.show_error_prompt (a_error, current_window, Void)

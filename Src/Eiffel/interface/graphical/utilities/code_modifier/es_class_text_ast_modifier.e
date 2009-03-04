@@ -27,7 +27,7 @@ create
 
 feature -- Access
 
-	ast: ?CLASS_AS
+	ast: detachable CLASS_AS
 			-- Resulting class AST node.
 			-- Note: This is the original AST node not the modified one. To access the modified one
 			--       the changes must be commited and the ast re-prepared.
@@ -38,7 +38,7 @@ feature -- Access
 			Result := modified_data.ast
 		end
 
-	ast_match_list: ?LEAF_AS_LIST
+	ast_match_list: detachable LEAF_AS_LIST
 			-- Resulting class AST node match list (for roundtrip)
 			-- Note: This is the original AST match list not the modified one. To access the modified one
 			--       the changes must be commited and the ast re-prepared.
@@ -51,7 +51,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	modified_data: !ES_CLASS_TEXT_AST_MODIFIER_DATA
+	modified_data: attached ES_CLASS_TEXT_AST_MODIFIER_DATA
 			-- <Precursor>
 
 feature -- Status report
@@ -68,7 +68,7 @@ feature -- Status report
 
 feature {NONE} -- Helpers
 
-	validating_parser: !EIFFEL_PARSER
+	validating_parser: attached EIFFEL_PARSER
 			-- A parser used to validate a parse
 		once
 			create Result.make_with_factory (create {AST_NULL_FACTORY})
@@ -76,7 +76,7 @@ feature {NONE} -- Helpers
 
 feature -- Query
 
-	ast_position (a_ast: ?AST_EIFFEL): !TUPLE [start_position: INTEGER; end_position: INTEGER]
+	ast_position (a_ast: detachable AST_EIFFEL): attached TUPLE [start_position: INTEGER; end_position: INTEGER]
 			-- Retrieve an AST node's position.
 			-- Note: The result is unadjusted! To account for ajustement, pass through `modified_data.adjusted_position'.
 			--
@@ -107,7 +107,7 @@ feature -- Query
 
 feature -- Basic operations
 
-	remove_ast_code (a_ast: ?AST_EIFFEL; a_remove_ws: INTEGER)
+	remove_ast_code (a_ast: detachable AST_EIFFEL; a_remove_ws: INTEGER)
 			-- Removes an AST node and sets `insertion_position' to the beginning of the removed AST position.
 			--
 			-- `a_ast': The AST node to remove from the code.
@@ -188,12 +188,12 @@ feature -- Operation constants
 
 feature {NONE} -- Factory
 
-	new_modified_data: !like modified_data
+	new_modified_data: attached like modified_data
 			-- <Precursor>
 		local
-			l_class: !like context_class
+			l_class: attached like context_class
 			l_editor: like active_editor_for_class
-			l_text: !STRING_32
+			l_text: attached STRING_32
 		do
 			l_class := context_class
 			l_editor := active_editor_for_class (l_class)

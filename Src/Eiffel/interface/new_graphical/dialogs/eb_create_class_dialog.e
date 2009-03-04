@@ -310,19 +310,19 @@ feature -- Basic operations
 
 feature {NONE} -- Basic operations
 
-	render_class_template (a_dest_file_name: !STRING)
+	render_class_template (a_dest_file_name: attached STRING)
 			-- Renders a class name into a choose destination file
 			--
 			-- `a_dest_file_name': The destination file to render the default class template file into.
 		local
 			l_wizard: SERVICE_CONSUMER [WIZARD_ENGINE_S]
-			l_source_file: !FILE_NAME
-			l_user_file: ?FILE_NAME
-			l_params: !DS_HASH_TABLE [!ANY, !STRING]
-			l_buffer: !STRING_32
+			l_source_file: attached FILE_NAME
+			l_user_file: detachable FILE_NAME
+			l_params: attached DS_HASH_TABLE [attached ANY, attached STRING]
+			l_buffer: attached STRING_32
 			l_parents: EV_LIST
-			l_creation_routine: ?STRING_32
-			l_class_name: ?STRING_32
+			l_creation_routine: detachable STRING_32
+			l_class_name: detachable STRING_32
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -534,7 +534,7 @@ feature {NONE} -- Implementation
 	create_new_class
 			-- Create a new class
 		local
-			f_name: !FILE_NAME
+			f_name: attached FILE_NAME
 			file: RAW_FILE -- Windows specific
 			base_name: STRING
 			retried: BOOLEAN

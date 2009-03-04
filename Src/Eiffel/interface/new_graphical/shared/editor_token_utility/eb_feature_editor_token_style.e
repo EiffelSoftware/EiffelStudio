@@ -491,7 +491,7 @@ feature{NONE} -- Implementation
 			else
 					-- For normal features
 				token_writer.new_line
-				if {l_feat: !E_FEATURE} a_feature then
+				if attached {attached E_FEATURE} a_feature as l_feat then
 					l_comments :=  (create {COMMENT_EXTRACTOR}).feature_comments (l_feat)
 
 					if l_comments /= Void and then l_comments.count > 0 then

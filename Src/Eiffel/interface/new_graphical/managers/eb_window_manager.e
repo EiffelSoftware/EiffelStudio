@@ -260,7 +260,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	development_windows: !ARRAYED_LIST [EB_DEVELOPMENT_WINDOW]
+	development_windows: attached ARRAYED_LIST [EB_DEVELOPMENT_WINDOW]
 			-- All development windows managed by Current
 		local
 			l_windows: like managed_windows
@@ -273,7 +273,7 @@ feature -- Access
 			until
 				l_windows.after
 			loop
-				if {lt_dev_window: EB_DEVELOPMENT_WINDOW} l_windows.item then
+				if attached {EB_DEVELOPMENT_WINDOW} l_windows.item as lt_dev_window then
 					Result.extend (lt_dev_window)
 				end
 
@@ -460,7 +460,7 @@ feature -- Query
 			l_windows.go_i_th (i)
 		end
 
-	active_editor_for_class (a_class: CLASS_I): ?EB_SMART_EDITOR
+	active_editor_for_class (a_class: CLASS_I): detachable EB_SMART_EDITOR
 			-- Attempts to retrieve the most applicable editor for a given class.
 			--
 			-- `a_class': The class to retrieve the most applicable editor for.
@@ -486,7 +486,7 @@ feature -- Query
 			end
 		end
 
-	active_editors_for_class (a_class: CLASS_I): !DS_ARRAYED_LIST [EB_SMART_EDITOR]
+	active_editors_for_class (a_class: CLASS_I): attached DS_ARRAYED_LIST [EB_SMART_EDITOR]
 			-- Retrieves all applicable editors for a given class.
 			--
 			-- `a_class': The class to retrieve the most applicable editors for.
@@ -504,7 +504,7 @@ feature -- Query
 			l_windows := windows
 			if l_windows /= Void and then not l_windows.is_empty then
 				from l_windows.start until l_windows.after loop
-					if {l_dev_window: EB_DEVELOPMENT_WINDOW} l_windows.item_for_iteration then
+					if attached {EB_DEVELOPMENT_WINDOW} l_windows.item_for_iteration as l_dev_window then
 						l_editor_manager := l_dev_window.editors_manager
 						if l_editor_manager /= Void then
 							l_editors := l_editor_manager.editor_editing (a_class)

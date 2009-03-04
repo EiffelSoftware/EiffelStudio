@@ -541,7 +541,7 @@ feature {NONE} -- File contents
 			not_void: Result /= Void
 		end
 
-	class_content_file_name: !FILE_NAME
+	class_content_file_name: attached FILE_NAME
 			-- Class file content file name
 		do
 			create Result.make
@@ -549,7 +549,7 @@ feature {NONE} -- File contents
 			Result.set_file_name ("eiffel_unit_test_class_template.e")
 		end
 
-	ecf_content_file_name: !FILE_NAME
+	ecf_content_file_name: attached FILE_NAME
 			-- Ecf content file name
 		do
 			create Result.make
@@ -557,7 +557,7 @@ feature {NONE} -- File contents
 			Result.set_file_name ("eiffel_unit_test_ecf_template.ecf")
 		end
 
-	notes_content_file_name: !FILE_NAME
+	notes_content_file_name: attached FILE_NAME
 			-- Default note file name.
 		do
 			create Result.make
@@ -565,7 +565,7 @@ feature {NONE} -- File contents
 			Result.set_file_name ("eiffel_unit_test_note_template.txt")
 		end
 
-	tcf_content_file_name: !FILE_NAME
+	tcf_content_file_name: attached FILE_NAME
 			-- Default eweasel tcf file name
 		do
 			create Result.make
@@ -573,83 +573,83 @@ feature {NONE} -- File contents
 			Result.set_file_name ("eiffel_unit_test_tcf_template.txt")
 		end
 
-	run_before_all_string: !STRING
+	run_before_all_string: attached STRING
 			-- Predefined feature name
 		do
-			if {l_string: STRING} interface_names.l_run_before_all then
+			if attached {STRING} interface_names.l_run_before_all as l_string then
 				Result := l_string
 			else
 				check not_possible: False end
 			end
 		end
 
-	run_after_all_string: !STRING
+	run_after_all_string: attached STRING
 			-- Predefined feature name
 		do
-			if {l_string: STRING} interface_names.l_run_after_all then
+			if attached {STRING} interface_names.l_run_after_all as l_string then
 				Result := l_string
 			else
 				check not_possible: False end
 			end
 		end
 
-	run_before_each_string: !STRING
+	run_before_each_string: attached STRING
 			-- Predefined feature name
 		do
-			if {l_string: STRING} interface_names.l_run_before_each then
+			if attached {STRING} interface_names.l_run_before_each as l_string then
 				Result := l_string
 			else
 				check not_possible: False end
 			end
 		end
 
-	run_after_each_string: !STRING
+	run_after_each_string: attached STRING
 			-- Predefined feature name
 		do
-			if {l_string: STRING} interface_names.l_run_after_each then
+			if attached {STRING} interface_names.l_run_after_each as l_string then
 				Result := l_string
 			else
 				check not_possible: False end
 			end
 		end
 
-	class_comment_string: !STRING
+	class_comment_string: attached STRING
 			-- $ string in template file
 		do
 			create Result.make_from_string ("$CLASS_COMMENT")
 		end
 
-	start_after_test_actions_template_string: !STRING
+	start_after_test_actions_template_string: attached STRING
 			-- $ string in template file
 		do
 			create Result.make_from_string ("$start_after_test_actions")
 		end
 
-	start_test_class_actions_in_make_template_string: !STRING
+	start_test_class_actions_in_make_template_string: attached STRING
 			-- $ string in template file
 		do
 			create Result.make_from_string ("$start_test_class_actions_in_make")
 		end
 
-	after_test_class_actions_in_make_template_string: !STRING
+	after_test_class_actions_in_make_template_string: attached STRING
 			-- $ string in template file
 		do
 			create Result.make_from_string ("$after_test_class_actions_in_make")
 		end
 
-	core_test_in_make_template_string: !STRING
+	core_test_in_make_template_string: attached STRING
 			-- $ string in template file
 		do
 			create Result.make_from_string ("$core_test_in_make")
 		end
 
-	features_to_test_template_string: !STRING
+	features_to_test_template_string: attached STRING
 			-- $ string in template file
 		do
 			create Result.make_from_string ("$features_to_test")
 		end
 
-	inherit_class_template_string: !STRING
+	inherit_class_template_string: attached STRING
 			-- $ string in template file
 		do
 			create Result.make_from_string ("$INHERIT_CLASS")
@@ -657,7 +657,7 @@ feature {NONE} -- File contents
 
 feature {NONE} -- Utility
 
-	test_feature_name (a_feature_to_test: STRING): !STRING
+	test_feature_name (a_feature_to_test: STRING): attached STRING
 			-- Test feature name for `a_feature_to_test'
 		require
 			not_void: a_feature_to_test /= Void and then not a_feature_to_test.is_empty

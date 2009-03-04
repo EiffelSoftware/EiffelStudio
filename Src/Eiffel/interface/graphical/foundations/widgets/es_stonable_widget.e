@@ -16,7 +16,7 @@ inherit
 	ES_STONABLE
 
 convert
-	widget: {EV_WIDGET, !EV_WIDGET, G, !G}
+	widget: {EV_WIDGET, attached EV_WIDGET, G, attached G}
 
 feature {NONE} -- Basic operations
 
@@ -33,7 +33,7 @@ feature {NONE} -- Basic operations
         			-- Propagate the stone drop actions	
         		do
         			if is_interface_usable and is_initialized then
-        				if {l_stone: !STONE} ia_pebble and then is_stone_usable (l_stone) then
+        				if attached {attached STONE} ia_pebble as l_stone and then is_stone_usable (l_stone) then
         					set_stone_with_query (l_stone)
         				end
 					end
@@ -58,7 +58,7 @@ feature {NONE} -- Basic operations
 							-- Query if a pebble should be vetoed.
 						do
 							Result := ia_pebble = Void
-							if not Result and then {l_stone: STONE} ia_pebble then
+							if not Result and then attached {STONE} ia_pebble as l_stone then
 								Result := is_stone_usable (l_stone)
 							end
 						end)

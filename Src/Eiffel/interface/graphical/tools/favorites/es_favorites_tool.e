@@ -30,7 +30,7 @@ feature -- Access
 			Result := stock_pixmaps.tool_favorites_icon
 		end
 
-	title: !STRING_32
+	title: attached STRING_32
 			-- <Precursor>
 		do
 			Result := locale_formatter.translation (t_tool_title)
@@ -38,17 +38,17 @@ feature -- Access
 
 feature {NONE} -- Status report
 
-	internal_is_stone_usable (a_stone: !like stone): BOOLEAN
+	internal_is_stone_usable (a_stone: attached like stone): BOOLEAN
 			-- <Precursor>
 		do
-			Result := {l_cs: CLASSI_STONE} a_stone
+			Result := attached {CLASSI_STONE} a_stone as l_cs
 		ensure then
-			a_stone_is_class_stone: {el_cs: CLASSI_STONE} a_stone
+			a_stone_is_class_stone: attached {CLASSI_STONE} a_stone as el_cs
 		end
 
 feature {NONE} -- Factory
 
-	new_tool: !ES_FAVORITES_TOOL_PANEL
+	new_tool: attached ES_FAVORITES_TOOL_PANEL
 			-- <Precursor>
 		do
 			create Result.make (window, Current)

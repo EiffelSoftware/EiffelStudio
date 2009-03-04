@@ -54,20 +54,20 @@ feature -- Access
 			end
 		end
 
-	title_string: !STRING_GENERAL
+	title_string: attached STRING_GENERAL
 			-- Message string shown in title
 		do
-			if {l_string: STRING_GENERAL} interface_names.t_Welcome_to_new_unit_test_wizard then
+			if attached {STRING_GENERAL} interface_names.t_Welcome_to_new_unit_test_wizard as l_string then
 				Result := l_string
 			else
 				check not_possible: False end
 			end
 		end
 
-	message_string: !STRING_GENERAL
+	message_string: attached STRING_GENERAL
 			-- Message string shown in the wizard
 		do
-			if {l_string: STRING_GENERAL} interface_names.t_Using_this_wizard then
+			if attached {STRING_GENERAL} interface_names.t_Using_this_wizard as l_string then
 				Result := l_string
 			else
 				check not_possible: False end

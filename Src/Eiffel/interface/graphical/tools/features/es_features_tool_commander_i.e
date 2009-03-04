@@ -15,7 +15,7 @@ inherit
 
 feature -- Basic operations
 
-	select_feature_item (a_feature: ?E_FEATURE)
+	select_feature_item (a_feature: detachable E_FEATURE)
 			-- Selects a feature in the feature tree
 			--
 			-- `a_feature': The feature to select an assocated node in the feature tree.
@@ -24,7 +24,7 @@ feature -- Basic operations
 		deferred
 		end
 
-	select_feature_item_by_name (a_feature: !STRING_GENERAL)
+	select_feature_item_by_name (a_feature: attached STRING_GENERAL)
 			-- Selects a feature in the feature tree, using a string name
 			--
 			-- `a_feature': The name of a feature to select an assocated node in the feature tree.

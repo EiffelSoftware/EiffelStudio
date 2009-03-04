@@ -31,7 +31,7 @@ feature {NONE} -- File was changed
 
 feature -- Access
 
-	file_name: !STRING_32
+	file_name: attached STRING_32
 			-- The associate file record's absolute file path.
 
 	time_stamp: INTEGER_32

@@ -127,14 +127,14 @@ feature -- Access
 		do
 			a_value_i := a_constant_i.value
 			if a_value_i.is_integer then
-				if {l_integer: INTEGER_CONSTANT} a_value_i then
+				if attached {INTEGER_CONSTANT} a_value_i as l_integer then
 					Result := value_from_integer_constant (l_integer)
 				else
 					check False end
 				end
 			else
 				if a_value_i.is_string then
-					if {l_string: STRING_VALUE_I} a_value_i then
+					if attached {STRING_VALUE_I} a_value_i as l_string then
 						create m.make_with_name (a_constant_i.feature_name)
 						m.set_message (l_string.string_value)
 						m.set_display_kind ({VALUE_TYPES}.Reference_value)
@@ -143,7 +143,7 @@ feature -- Access
 				elseif a_value_i.is_boolean then
 					create {DEBUG_BASIC_VALUE[BOOLEAN]} Result.make ({SK_CONST}.sk_bool, a_value_i.boolean_value)
 				elseif a_value_i.is_character then
-					if {l_char: CHAR_VALUE_I} a_value_i then
+					if attached {CHAR_VALUE_I} a_value_i as l_char then
 						if l_char.is_character_32 then
 							create {DEBUG_BASIC_VALUE[CHARACTER_32]} Result.make ({SK_CONST}.sk_wchar, l_char.character_value)
 						else
@@ -151,7 +151,7 @@ feature -- Access
 						end
 					end
 				elseif a_value_i.is_real then
-					if {l_real: REAL_VALUE_I} a_value_i then
+					if attached {REAL_VALUE_I} a_value_i as l_real then
 						if l_real.is_real_32 then
 							create {DEBUG_BASIC_VALUE[REAL_32]} Result.make ({SK_CONST}.sk_real32, l_real.real_32_value)
 						else
@@ -279,7 +279,7 @@ feature {NONE} -- Parameters Implementation
 					check dmp_not_void: dmp /= Void end
 					if dmp.is_basic then
 						if dt /= Void and f /= Void then
-							if {ta: TYPE_A} f.arguments.i_th (params.index) then
+							if attached {TYPE_A} f.arguments.i_th (params.index) as ta then
 								l_type := ta.instantiation_in (dt.type, f.written_in)
 							end
 							if l_type /= Void and then not l_type.is_basic then
@@ -319,7 +319,7 @@ feature -- Concrete evaluation
 
 			effective_evaluate_static_function (f, l_dyntype, params)
 
-			if last_result /= Void and then {sc: CLASS_C} class_c_from_type_a (f.type, cl) then
+			if last_result /= Void and then attached {CLASS_C} class_c_from_type_a (f.type, cl) as sc then
 				last_result.suggest_static_class (sc)
 			end
 			if last_result = Void or else not last_result.has_value then

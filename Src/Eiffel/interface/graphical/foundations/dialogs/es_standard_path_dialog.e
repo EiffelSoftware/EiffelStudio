@@ -30,7 +30,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_with_sticky_path (a_title: !READABLE_STRING_GENERAL; a_id: !like sticky_path_id)
+	make_with_sticky_path (a_title: attached READABLE_STRING_GENERAL; a_id: attached like sticky_path_id)
 			-- Initializes the dialog and perserves the path automatically between showns.
 			--
 			-- `a_title': The title to set on the standard dialog.
@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	start_path: !STRING_32 assign set_start_path
+	start_path: attached STRING_32 assign set_start_path
 			-- Initial path nagivated to when showing the dialog
 		require
 			is_interface_usable: is_interface_usable
@@ -106,7 +106,7 @@ feature -- Access
 					 Result.item (Result.count) /= operating_environment.directory_separator
 		end
 
-	path: !STRING_32
+	path: attached STRING_32
 			-- Retrieves the dialog's path, which will be used on next show
 		require
 			is_interface_usable: is_interface_usable
@@ -121,13 +121,13 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	sticky_paths: !DS_HASH_TABLE [!STRING_32, STRING]
+	sticky_paths: attached DS_HASH_TABLE [attached STRING_32, STRING]
 			-- Table of sticky path names.
 		once
 			create Result.make_default
 		end
 
-	sticky_path_id: ?STRING
+	sticky_path_id: detachable STRING
 			-- ID use to retain a sticky path to the last navigated folder.
 
 feature {NONE} -- Element change
@@ -144,7 +144,7 @@ feature {NONE} -- Element change
 				a_path.item (a_path.count) /= operating_environment.directory_separator
 			a_path_exists: a_path /= Void implies (create {DIRECTORY}.make (a_path)).exists
 		local
-			l_path: ?like start_path
+			l_path: detachable like start_path
 		do
 			if a_path /= Void then
 				internal_start_path := a_path.twin
@@ -160,7 +160,7 @@ feature {NONE} -- Element change
 
 feature {NONE} -- Element change
 
-	set_start_path_on_dialog (a_path: ?like start_path; a_dialog: like dialog)
+	set_start_path_on_dialog (a_path: detachable like start_path; a_dialog: like dialog)
 			-- Sets the start path on a dialog.
 			--
 			-- `a_path': The initial start location to set.
@@ -187,7 +187,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Helpers
 
-	file_utilities: !FILE_UTILITIES
+	file_utilities: attached FILE_UTILITIES
 			-- File utilities
 		once
 			create Result
@@ -211,7 +211,7 @@ feature {NONE} -- Action handlers
 
 feature {NONE} -- Implementation: Internal cache
 
-	internal_start_path: ?like start_path
+	internal_start_path: detachable like start_path
 			-- Cached version of `start_path'.
 			-- Note: Do not use directly!
 

@@ -38,13 +38,13 @@ feature -- Access
 			Result := stock_pixmaps.tool_clusters_icon
 		end
 
-	title: !STRING_32
+	title: attached STRING_32
 			-- <Precursor>
 		do
 			Result := locale_formatter.translation (t_tool_title)
 		end
 
-	shortcut_preference_name: !STRING
+	shortcut_preference_name: attached STRING
 			-- <Precursor>
 		do
 			Result := "show_clusters_tool"
@@ -52,7 +52,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	highlight_stone (a_stone: !STONE)
+	highlight_stone (a_stone: attached STONE)
 			-- <Precursor>
 		do
 				-- Must create the tool and show it so there is no need to check for the tool's instantiation
@@ -72,16 +72,16 @@ feature -- Basic operations
 
 feature {NONE} -- Status report
 
-	internal_is_stone_usable (a_stone: !like stone): BOOLEAN
+	internal_is_stone_usable (a_stone: attached like stone): BOOLEAN
 			-- <Precursor>
 		do
-			Result := {l_cluster: CLUSTER_STONE} a_stone or else
-				{l_class: CLASSI_STONE} a_stone
+			Result := attached {CLUSTER_STONE} a_stone as l_cluster or else
+				attached {CLASSI_STONE} a_stone as l_class
 		end
 
 feature {NONE} -- Factory
 
-	new_tool: !ES_GROUPS_TOOL_PANEL
+	new_tool: attached ES_GROUPS_TOOL_PANEL
 			-- <Precursor>
 		do
 			create Result.make (window, Current)

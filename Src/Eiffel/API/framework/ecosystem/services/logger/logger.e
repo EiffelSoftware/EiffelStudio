@@ -84,7 +84,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	frozen event_list_service: !SERVICE_CONSUMER [EVENT_LIST_S]
+	frozen event_list_service: attached SERVICE_CONSUMER [EVENT_LIST_S]
 			-- Event list service to send log item to.
 		once
 				-- Use local service provider when creating the event list service consumer.
@@ -92,13 +92,13 @@ feature {NONE} -- Access
 			create Result.make_with_provider (site)
 		end
 
-	context_cookie: !UUID
+	context_cookie: attached UUID
 			-- Context cookie for event list service
 		once
 			create Result.make_from_string ("E1FFE100-0106-4145-A53F-ED44CE92714D")
 		end
 
-	log_cache: !DS_LINKED_LIST [!EVENT_LIST_LOG_ITEM_I]
+	log_cache: attached DS_LINKED_LIST [attached EVENT_LIST_LOG_ITEM_I]
 			-- Cache of all logged items
 
 feature -- Element change
@@ -136,7 +136,7 @@ feature -- Extension
 			l_item: like create_event_list_log_item
 			l_service: like event_list_service
 		do
-			if {l_string: !STRING_32} a_msg.as_string_32 then
+			if attached {attached STRING_32} a_msg.as_string_32 as l_string then
 				l_service := event_list_service
 				if l_service.is_service_available then
 					l_item := create_event_list_log_item (l_string, a_cat, a_level)
@@ -169,7 +169,7 @@ feature -- Removal
 
 feature -- Events
 
-	message_logged_events: !EVENT_TYPE [TUPLE [message: !STRING_32; category: NATURAL_8; level: INTEGER_8]]
+	message_logged_events: attached EVENT_TYPE [TUPLE [message: attached STRING_32; category: NATURAL_8; level: INTEGER_8]]
 			-- <Precursor>
 
 feature {EVENT_LIST_S} -- Event handlers
@@ -180,7 +180,7 @@ feature {EVENT_LIST_S} -- Event handlers
 			l_service: like event_list_service
 			l_cache: like log_cache
 		do
-			if {l_log_item: !EVENT_LIST_LOG_ITEM_I} a_event_item then
+			if attached {attached EVENT_LIST_LOG_ITEM_I} a_event_item as l_log_item then
 				l_cache := log_cache
 				if l_cache.count = log_cache_length then
 						-- Too many items, remove the first.
@@ -194,7 +194,7 @@ feature {EVENT_LIST_S} -- Event handlers
 				l_cache.force_last (l_log_item)
 			end
 		ensure then
-			log_cache_has_a_event_item: {i: EVENT_LIST_LOG_ITEM_I} a_event_item implies log_cache.has (i)
+			log_cache_has_a_event_item: attached {EVENT_LIST_LOG_ITEM_I} a_event_item as i implies log_cache.has (i)
 		end
 
 	on_event_item_removed (a_service: EVENT_LIST_S; a_event_item: EVENT_LIST_ITEM_I)
@@ -202,7 +202,7 @@ feature {EVENT_LIST_S} -- Event handlers
 		local
 			l_cache: like log_cache
 		do
-			if {l_log_item: EVENT_LIST_LOG_ITEM_I} a_event_item then
+			if attached {EVENT_LIST_LOG_ITEM_I} a_event_item as l_log_item then
 				l_cache := log_cache
 				if not l_cache.is_empty then
 					if l_cache.first = a_event_item then
@@ -219,12 +219,12 @@ feature {EVENT_LIST_S} -- Event handlers
 				end
 			end
 		ensure then
-			not_log_cache_has_a_event_item: {i: EVENT_LIST_LOG_ITEM_I} a_event_item implies not log_cache.has (i)
+			not_log_cache_has_a_event_item: attached {EVENT_LIST_LOG_ITEM_I} a_event_item as i implies not log_cache.has (i)
 		end
 
 feature {NONE} -- Factory
 
-	create_event_list_log_item (a_msg: !STRING_32; a_cat: NATURAL_8; a_level: INTEGER_8): !EVENT_LIST_LOG_ITEM_I
+	create_event_list_log_item (a_msg: attached STRING_32; a_cat: NATURAL_8; a_level: INTEGER_8): attached EVENT_LIST_LOG_ITEM_I
 			-- <Precursor>
 		require
 			not_a_msg_is_empty: not a_msg.is_empty
@@ -232,7 +232,7 @@ feature {NONE} -- Factory
 			a_level_is_valid_severity_level: is_valid_severity_level (a_level)
 			is_event_list_service_available: event_list_service.is_service_available
 		do
-			create {!EVENT_LIST_LOG_ITEM} Result.make (a_cat, a_msg, a_level)
+			create {attached EVENT_LIST_LOG_ITEM} Result.make (a_cat, a_msg, a_level)
 		ensure
 			result_is_log_item: Result.type = {EVENT_LIST_ITEM_TYPES}.log
 		end

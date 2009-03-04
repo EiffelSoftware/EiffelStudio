@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			set: manager = a_manager
 		end
 
-	manager: !ES_EWEASEL_EXECUTION_MANAGER
+	manager: attached ES_EWEASEL_EXECUTION_MANAGER
 			-- eweasel chief manager
 
 feature -- Command

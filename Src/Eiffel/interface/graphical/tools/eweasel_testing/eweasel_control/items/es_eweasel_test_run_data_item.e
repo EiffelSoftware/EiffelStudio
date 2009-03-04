@@ -23,13 +23,13 @@ feature {NONE} -- Initialization
 
 feature -- Query
 
-	test_run_data: !ARRAYED_LIST [ES_EWEASEL_TEST_RESULT_ITEM]
+	test_run_data: attached ARRAYED_LIST [ES_EWEASEL_TEST_RESULT_ITEM]
 			-- All test cases
 
 	date_time: DT_DATE_TIME
 			-- Date and time on which this test run happened
 
-	related_test_cases: !ARRAYED_LIST [ES_EWEASEL_TEST_CASE_ITEM]
+	related_test_cases: attached ARRAYED_LIST [ES_EWEASEL_TEST_CASE_ITEM]
 			-- Test cases realted with `test_run_data'
 		local
 			l_data: ES_EWEASEL_TEST_CASE_ITEM
@@ -93,7 +93,7 @@ feature -- Command
 
 feature {NONE} -- Implementation
 
-	internal_test_cases_data: !ARRAYED_LIST [ES_EWEASEL_TEST_CASE_ITEM]
+	internal_test_cases_data: attached ARRAYED_LIST [ES_EWEASEL_TEST_CASE_ITEM]
 			-- Cache for `test_run_data'
 
 

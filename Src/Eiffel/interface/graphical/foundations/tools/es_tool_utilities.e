@@ -20,7 +20,7 @@ inherit
 
 feature {NONE} -- Helpers
 
-	file_utils: !FILE_UTILITIES
+	file_utils: attached FILE_UTILITIES
 			-- Access to file utilies
 		once
 			create Result
@@ -28,7 +28,7 @@ feature {NONE} -- Helpers
 
 feature -- Query
 
-	tool_id (a_tool: !ES_TOOL [EB_TOOL]): !STRING_32
+	tool_id (a_tool: attached ES_TOOL [EB_TOOL]): attached STRING_32
 			-- Retrieves a type identifier, used in storing and retrieving layout information, for a tool.
 			--
 			-- `a_tool': A tool descriptor to retrieve a type identifier for.
@@ -54,7 +54,7 @@ feature -- Query
 			result_consistent: Result.is_equal (tool_id (a_tool))
 		end
 
-	tool_info (a_tool_id: STRING_32): ?TUPLE [type: TYPE [ES_TOOL [EB_TOOL]]; edition: NATURAL_8]
+	tool_info (a_tool_id: STRING_32): detachable TUPLE [type: TYPE [ES_TOOL [EB_TOOL]]; edition: NATURAL_8]
 			-- Examines a tool identifier and splits it into a tool type and edition.
 			--
 			-- `a_tool_id': A tool identifier as created with `tool_id'
@@ -108,7 +108,7 @@ feature -- Query
 			result_edition_big_enough: Result /= Void implies Result.edition > 0
 		end
 
-	tool_associated_name (a_tool: !ES_TOOL [EB_TOOL]): !STRING
+	tool_associated_name (a_tool: attached ES_TOOL [EB_TOOL]): attached STRING
 			-- The tool's associated name, used for modularizing development of a tool.
 			--
 			-- `a_tool': A tool descriptor to retrieve a type identifier for.
@@ -134,7 +134,7 @@ feature -- Query
 			result_consistent: Result.is_equal (tool_associated_name (a_tool))
 		end
 
-	tool_associated_path (a_tool: !ES_TOOL [EB_TOOL]): !DIRECTORY_NAME
+	tool_associated_path (a_tool: attached ES_TOOL [EB_TOOL]): attached DIRECTORY_NAME
 			-- The tool's associated folder, used for modularizing development of a tool.
 			--
 			-- `a_tool': A tool descriptor to retrieve a type identifier for.

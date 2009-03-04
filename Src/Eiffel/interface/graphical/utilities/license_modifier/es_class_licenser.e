@@ -45,13 +45,13 @@ inherit
 
 feature {NONE} -- Helpers
 
-	frozen logger: !SERVICE_CONSUMER [LOGGER_S]
+	frozen logger: attached SERVICE_CONSUMER [LOGGER_S]
 			-- Access to the logger service.
 		once
 			create Result
 		end
 
-	frozen wizard_enginer: !SERVICE_CONSUMER [WIZARD_ENGINE_S]
+	frozen wizard_enginer: attached SERVICE_CONSUMER [WIZARD_ENGINE_S]
 			-- Access to the wizard engine service.
 		once
 			create Result
@@ -59,21 +59,21 @@ feature {NONE} -- Helpers
 
 feature -- Basic operatons
 
-	relicense (a_class: !CLASS_I)
+	relicense (a_class: attached CLASS_I)
 			-- Initialize a class licenser for a given class.
 			--
 			-- `a_class': The class to license.
 		local
-			l_mod: !ES_CLASS_LICENSE_MODIFIER
-			l_name: ?STRING_32
-			l_fn: ?FILE_NAME
-			l_path: ?STRING_32
+			l_mod: attached ES_CLASS_LICENSE_MODIFIER
+			l_name: detachable STRING_32
+			l_fn: detachable FILE_NAME
+			l_path: detachable STRING_32
 			l_index: INTEGER
-			l_license: ?like load_license
-			l_libraries: !LIST [!CONF_LIBRARY]
-			l_library: !CONF_LIBRARY
+			l_license: detachable like load_license
+			l_libraries: attached LIST [attached CONF_LIBRARY]
+			l_library: attached CONF_LIBRARY
 			l_uuid: UUID
-			l_parameters: !DS_HASH_TABLE [!ANY, !STRING]
+			l_parameters: attached DS_HASH_TABLE [attached ANY, attached STRING]
 			l_use_old_syntax: BOOLEAN
 			l_load_default: BOOLEAN
 		do
@@ -174,7 +174,7 @@ feature -- Basic operatons
 
 feature {NONE} -- Basic operation
 
-	load_license (a_file_name: !STRING_32; a_use_old_syntax: BOOLEAN): ?STRING_32
+	load_license (a_file_name: attached STRING_32; a_use_old_syntax: BOOLEAN): detachable STRING_32
 			-- Attempt to load a license file
 			--
 			-- `a_file_name': The file name of the license file to load.
@@ -183,8 +183,8 @@ feature {NONE} -- Basic operation
 		require
 			not_a_file_name_is_empty: not a_file_name.is_empty
 		local
-			l_name: ?STRING_32
-			l_parameters: !DS_HASH_TABLE [!ANY, !STRING]
+			l_name: detachable STRING_32
+			l_parameters: attached DS_HASH_TABLE [attached ANY, attached STRING]
 			l_index: INTEGER
 			retried: BOOLEAN
 		do
@@ -232,7 +232,7 @@ feature {NONE} -- Basic operation
 			retry
 		end
 
-	load_named_license (a_name: !STRING_32; a_use_old_syntax: BOOLEAN): ?STRING_32
+	load_named_license (a_name: attached STRING_32; a_use_old_syntax: BOOLEAN): detachable STRING_32
 			-- Attempt to load a license from the licenses folder.
 			--
 			-- `a_name': The name of the license file to load.
@@ -241,9 +241,9 @@ feature {NONE} -- Basic operation
 		require
 			not_a_name_is_empty: not a_name.is_empty
 		local
-			l_fn: !FILE_NAME
-			l_user_fn: ?FILE_NAME
-			l_path: ?STRING_32
+			l_fn: attached FILE_NAME
+			l_user_fn: detachable FILE_NAME
+			l_path: detachable STRING_32
 			retried: BOOLEAN
 		do
 			if not retried then

@@ -137,13 +137,13 @@ feature -- basic operations
 		do
 			Result := token /= Void
 			if Result and then a_pos_in_token > 1 then
-				Result := not ({l_number: EDITOR_TOKEN_NUMBER} token or else
-					{l_string: EDITOR_TOKEN_STRING} token or else
-					{l_character: EDITOR_TOKEN_CHARACTER} token)
+				Result := not (attached {EDITOR_TOKEN_NUMBER} token as l_number or else
+					attached {EDITOR_TOKEN_STRING} token as l_string or else
+					attached {EDITOR_TOKEN_CHARACTER} token as l_character)
 			end
 		end
 
-	string_32_to_lower (a_str: ?STRING_32): !STRING_32
+	string_32_to_lower (a_str: detachable STRING_32): attached STRING_32
 			-- Make all possible char in `a_str' to lower.
 			-- |FIXME: We need real Unicode as lower.
 			-- |For the moment, only ANSII code are concerned.
@@ -168,7 +168,7 @@ feature -- basic operations
 			end
 		end
 
-	string_32_to_upper (a_str: ?STRING_32): !STRING_32
+	string_32_to_upper (a_str: detachable STRING_32): attached STRING_32
 			-- Make all possible char in `a_str' to upper.
 			-- |FIXME: We need real Unicode as upper.
 			-- |For the moment, only ANSII code are concerned.

@@ -39,12 +39,12 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	factory: !TEST_GENERATOR_I
+	factory: attached TEST_GENERATOR_I
 			-- <Precursor>
 
 feature {NONE} -- Access
 
-	status_label: !EV_LABEL
+	status_label: attached EV_LABEL
 			-- Label showing status of generator
 
 feature {NONE} -- Status report
@@ -81,7 +81,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_processor_error (a_error: !STRING_8; a_tokens: TUPLE)
+	on_processor_error (a_error: attached STRING_8; a_tokens: TUPLE)
 			-- <Precursor>
 		do
 			has_error := True
@@ -91,7 +91,7 @@ feature {NONE} -- Events
 			-- <Precursor>
 		local
 			l_dir: DIRECTORY_NAME
-			l_message: !STRING_32
+			l_message: attached STRING_32
 		do
 			if not has_error then
 				create l_dir.make_from_string (factory.test_suite.eiffel_project.project_directory.testing_results_path)

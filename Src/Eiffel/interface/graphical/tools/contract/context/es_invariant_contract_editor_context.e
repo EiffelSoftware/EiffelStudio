@@ -15,17 +15,17 @@ inherit
 
 feature -- Contracts
 
-	contracts_for_class (a_class: !CLASS_I; a_live: BOOLEAN): !TUPLE [contracts: !DS_LIST [TAGGED_AS]; modifier: !ES_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]]
+	contracts_for_class (a_class: attached CLASS_I; a_live: BOOLEAN): attached TUPLE [contracts: attached DS_LIST [TAGGED_AS]; modifier: attached ES_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]]
 			-- <Precursor>
 		local
 			l_modifier: like text_modifier
-			l_class_i: !CLASS_I
+			l_class_i: attached CLASS_I
 			l_class_c: CLASS_C
-			l_class_as: ?CLASS_AS
-			l_invariant_as: ?INVARIANT_AS
-			l_invariants: ?EIFFEL_LIST [TAGGED_AS]
+			l_class_as: detachable CLASS_AS
+			l_invariant_as: detachable INVARIANT_AS
+			l_invariants: detachable EIFFEL_LIST [TAGGED_AS]
 			l_parent_context: ES_INVARIANT_CONTRACT_EDITOR_CONTEXT
-			l_result: !DS_ARRAYED_LIST [TAGGED_AS]
+			l_result: attached DS_ARRAYED_LIST [TAGGED_AS]
 		do
 			create l_result.make_default
 
@@ -88,7 +88,7 @@ feature -- Contracts
 
 feature -- Query
 
-	contract_keywords (a_origin: BOOLEAN): !ARRAYED_LIST [EDITOR_TOKEN]
+	contract_keywords (a_origin: BOOLEAN): attached ARRAYED_LIST [EDITOR_TOKEN]
 			-- <Precursor>
 		do
 			create Result.make (1)
@@ -97,13 +97,13 @@ feature -- Query
 
 feature {NONE} -- Factory
 
-	create_text_modifier: !ES_INVARIANT_CONTRACT_TEXT_MODIFIER
+	create_text_modifier: attached ES_INVARIANT_CONTRACT_TEXT_MODIFIER
 			-- <Precursor>
 		do
 			create Result.make (context_class)
 		end
 
-	create_parent_text_modifier (a_parent: !CLASS_C): !ES_INVARIANT_CONTRACT_TEXT_MODIFIER
+	create_parent_text_modifier (a_parent: attached CLASS_C): attached ES_INVARIANT_CONTRACT_TEXT_MODIFIER
 			-- <Precursor>
 		local
 			l_class_i: CLASS_I

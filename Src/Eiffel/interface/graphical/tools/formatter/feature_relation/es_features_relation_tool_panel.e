@@ -62,7 +62,7 @@ feature {ES_FEATURE_RELATION_TOOL} -- Access
 			l_formatters := predefined_formatters
 			l_cursor := l_formatters.cursor
 			from l_formatters.start until l_formatters.after or l_stop loop
-				if {l_formatter: !EB_FEATURE_INFO_FORMATTER} l_formatters.item and then l_formatter.selected then
+				if attached {attached EB_FEATURE_INFO_FORMATTER} l_formatters.item as l_formatter and then l_formatter.selected then
 					Result := l_formatter.mode
 					l_stop := True
 				else
@@ -89,7 +89,7 @@ feature {ES_FEATURE_RELATION_TOOL} -- Element change
 				l_formatters := predefined_formatters
 				l_cursor := l_formatters.cursor
 				from l_formatters.start until l_formatters.after or l_stop loop
-					if {l_formatter: !EB_FEATURE_INFO_FORMATTER} l_formatters.item and then l_formatter.mode = a_mode then
+					if attached {attached EB_FEATURE_INFO_FORMATTER} l_formatters.item as l_formatter and then l_formatter.mode = a_mode then
 							-- Execute formatter
 						l_formatter.execute
 						l_stop := True
@@ -258,7 +258,7 @@ feature -- Status setting
 			if
 				l_index >= 1 and
 				l_index <= formatters.count and then
-				{l_formatter: !EB_FEATURE_INFO_FORMATTER} formatters.i_th (l_index)
+				attached {attached EB_FEATURE_INFO_FORMATTER} formatters.i_th (l_index) as l_formatter
 			then
 				l_mode := l_formatter.mode
 			end

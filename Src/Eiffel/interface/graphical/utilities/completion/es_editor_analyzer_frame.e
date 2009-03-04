@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_class: !like context_class; a_feature: !like context_feature)
+	make (a_class: attached like context_class; a_feature: attached like context_feature)
 			-- Initialize a new context frame.
 			--
 			-- `a_class'  : A context class to use to resolve type information from.
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			context_feature_set: context_feature = a_feature
 		end
 
-	make_parented (a_class: !like context_class; a_feature: !like context_feature; a_parent: !like parent)
+	make_parented (a_class: attached like context_class; a_feature: attached like context_feature; a_parent: attached like parent)
 			-- Initialize a context frame with a parent frame.
 			--
 			-- `a_class'  : A context class to use to resolve type information from.
@@ -60,10 +60,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	context_class: !CLASS_C
+	context_class: attached CLASS_C
 			-- The context class of the current frame, used to resolve type information.
 
-	context_feature: !FEATURE_I
+	context_feature: attached FEATURE_I
 			-- The context feature of the current frame, used to resolve type information.
 
 feature {ES_EDITOR_ANALYZER_FRAME} -- Access
@@ -73,13 +73,13 @@ feature {ES_EDITOR_ANALYZER_FRAME} -- Access
 
 feature {NONE} -- Access
 
-	string_local_declarations: !HASH_TABLE [!STRING_32, !STRING_32]
+	string_local_declarations: attached HASH_TABLE [attached STRING_32, attached STRING_32]
 			-- Table of raw string local declarations, ones the were added through `add_local'
 			--
 			-- value: Class type description.
 			-- key: Entity name.
 		local
-			l_result: ?like internal_string_local_declarations
+			l_result: detachable like internal_string_local_declarations
 		do
 			l_result := internal_string_local_declarations
 			if l_result = Void then
@@ -94,13 +94,13 @@ feature {NONE} -- Access
 			result_compares_objects: Result.object_comparison
 		end
 
-	ast_local_declarations: !HASH_TABLE [!TYPE_AS, !STRING_32]
+	ast_local_declarations: attached HASH_TABLE [attached TYPE_AS, attached STRING_32]
 			-- Table of AST local declarations, ones the were added through `add_local'
 			--
 			-- value: Class type description.
 			-- key: Entity name.
 		local
-			l_result: ?like internal_ast_local_declarations
+			l_result: detachable like internal_ast_local_declarations
 		do
 			l_result := internal_ast_local_declarations
 			if l_result = Void then
@@ -138,10 +138,10 @@ feature -- Status report
 			has_parent: not Result implies has_parent
 		end
 
-	is_parented_to_current (a_parent: !ES_EDITOR_ANALYZER_FRAME): BOOLEAN
+	is_parented_to_current (a_parent: attached ES_EDITOR_ANALYZER_FRAME): BOOLEAN
 			-- Determines if a parent has Current has a parent.
 		local
-			l_next_parent: ?like parent
+			l_next_parent: detachable like parent
 		do
 			if not a_parent.is_stop_frame then
 				Result := a_parent.parent = Current
@@ -166,22 +166,22 @@ feature {NONE} -- Status report
 
 feature -- Query
 
-	locals: !HASH_TABLE [TYPE_A, !STRING_32]
+	locals: attached HASH_TABLE [TYPE_A, attached STRING_32]
 			-- Type evaluated local entities of the Current frame.
 			--
 			-- value: Class type description.
 			-- key: Local entity name.
 		local
-			l_result: ?like internal_locals
-			l_class: !like context_class
-			l_feature: !like context_feature
-			l_ast_locals: ?like internal_ast_local_declarations
-			l_string_locals: ?like internal_string_local_declarations
-			l_parsed_locals: !HASH_TABLE [!TYPE_AS, !STRING_32]
-			l_locals: !HASH_TABLE [!TYPE_AS, !STRING_32]
+			l_result: detachable like internal_locals
+			l_class: attached like context_class
+			l_feature: attached like context_feature
+			l_ast_locals: detachable like internal_ast_local_declarations
+			l_string_locals: detachable like internal_string_local_declarations
+			l_parsed_locals: attached HASH_TABLE [attached TYPE_AS, attached STRING_32]
+			l_locals: attached HASH_TABLE [attached TYPE_AS, attached STRING_32]
 			l_generator: like type_a_generator
 			l_checker: like type_a_checker
-			l_name: !STRING_32
+			l_name: attached STRING_32
 			l_type: TYPE_A
 		do
 			create Result.make (7)
@@ -228,7 +228,7 @@ feature -- Query
 			result_is_consitent: Result = locals
 		end
 
-	all_locals: !HASH_TABLE [TYPE_A, !STRING_32]
+	all_locals: attached HASH_TABLE [TYPE_A, attached STRING_32]
 			-- Complete list of entities, including parent frames.
 			--
 			-- value: Class type description.
@@ -246,7 +246,7 @@ feature -- Query
 
 feature {NONE} -- Query
 
-	parsed_string_local_declarations: !HASH_TABLE [!TYPE_AS, !STRING_32]
+	parsed_string_local_declarations: attached HASH_TABLE [attached TYPE_AS, attached STRING_32]
 			-- Parses the string local declarations to retrieve a list of parsed AST declarations, similar
 			-- to `ast_local_declarations'.
 			--
@@ -256,16 +256,16 @@ feature {NONE} -- Query
 			internal_string_local_declarations_attached: internal_string_local_declarations /= Void
 			not_internal_string_local_declarations_is_empty: not internal_string_local_declarations.is_empty
 		local
-			l_string_locals: !like string_local_declarations
-			l_local_string: !STRING_32
+			l_string_locals: attached like string_local_declarations
+			l_local_string: attached STRING_32
 			l_context_class: like context_class
 			l_option: CONF_OPTION
 			l_parser: EIFFEL_PARSER
 			l_parser_wrapper: like eiffel_parser_wrapper
 			l_declarations: ARRAYED_LIST [TYPE_DEC_AS]
-			l_entity_name_map: !HASH_TABLE [!STRING_32, !STRING_32]
-			l_entity_name: !STRING_32
-			l_prefix: !STRING_32
+			l_entity_name_map: attached HASH_TABLE [attached STRING_32, attached STRING_32]
+			l_entity_name: attached STRING_32
+			l_prefix: attached STRING_32
 			l_type_dec: TYPE_DEC_AS
 			l_type: TYPE_AS
 			l_ids: IDENTIFIER_LIST
@@ -375,7 +375,7 @@ feature {NONE} -- Helpers
 
 feature -- Extension
 
-	add_local (a_type: !TYPE_DEC_AS)
+	add_local (a_type: attached TYPE_DEC_AS)
 			-- Adds a local entity to the frame, from an AST local declaration.
 			--
 			-- `a_type': The local type declaration.
@@ -405,7 +405,7 @@ feature -- Extension
 			not_is_empty: not is_empty
 		end
 
-	add_local_string (a_name: !STRING_32; a_type_name: !STRING_32)
+	add_local_string (a_name: attached STRING_32; a_type_name: attached STRING_32)
 			-- Adds a local entity to the frame.
 			--
 			-- `a_name'     : The name of the local entity.
@@ -424,15 +424,15 @@ feature -- Extension
 
 feature {NONE} -- Implementation: Internal cache
 
-	internal_string_local_declarations: ?like string_local_declarations
+	internal_string_local_declarations: detachable like string_local_declarations
 			-- Cached version of `string_local_declarations'.
 			-- Note: Do not use directly!
 
-	internal_ast_local_declarations: ?like ast_local_declarations
+	internal_ast_local_declarations: detachable like ast_local_declarations
 			-- Cached version of `ast_local_declarations'.
 			-- Note: Do not use directly!
 
-	internal_locals: ?like locals
+	internal_locals: detachable like locals
 			-- Cached version of `locals'.
 			-- Note: Do not use directly!
 

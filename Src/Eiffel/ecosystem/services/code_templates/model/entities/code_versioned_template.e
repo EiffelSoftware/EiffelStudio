@@ -36,12 +36,12 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	version: !CODE_VERSION
+	version: attached CODE_VERSION
 			-- Minumum compiled version for the template
 
 feature -- Query
 
-	is_compatible_with (a_version: !CODE_VERSION): BOOLEAN
+	is_compatible_with (a_version: attached CODE_VERSION): BOOLEAN
 			-- Determines if the Current template is compatible with the specificed version
 			--
 			-- `a_version': The other version to check compatibilty with.

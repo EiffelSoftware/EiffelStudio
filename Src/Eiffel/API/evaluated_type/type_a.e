@@ -699,7 +699,7 @@ feature -- Comparison
 			is_valid: is_valid
 		do
 			if other /= Void and then other.same_type (Current) then
-				Result := {l_other: like Current} other and then
+				Result := attached {like Current} other as l_other and then
 					l_other.is_valid and then is_equivalent (l_other)
 			end
 		end;
@@ -1391,7 +1391,7 @@ feature {TYPE_A} -- Helpers
 			other_not_void: other /= Void
 			other_derived: other.internal_generic_derivation (a_level).same_as (other)
 		do
-			if {l_like_current: like Current} other then
+			if attached {like Current} other as l_like_current then
 				Result := is_equal (l_like_current)
 			end
 		ensure

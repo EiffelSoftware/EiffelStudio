@@ -61,19 +61,19 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-	code_templates: !DS_BILINEAR [!CODE_TEMPLATE_DEFINITION]
+	code_templates: attached DS_BILINEAR [attached CODE_TEMPLATE_DEFINITION]
 			-- <Precursor>
 		local
-			l_result: DS_ARRAYED_LIST [!CODE_TEMPLATE_DEFINITION]
-			l_cursor: DS_HASH_TABLE_CURSOR [!TUPLE [definition: ?CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8], STRING]
+			l_result: DS_ARRAYED_LIST [attached CODE_TEMPLATE_DEFINITION]
+			l_cursor: DS_HASH_TABLE_CURSOR [attached TUPLE [definition: detachable CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8], STRING]
 		do
-			if {l_templates: like code_templates} internal_code_templates then
+			if attached {like code_templates} internal_code_templates as l_templates then
 				Result := l_templates
 			else
 				create l_result.make_default
 				l_cursor := cataloged_template_definitions.new_cursor
 				from l_cursor.start until l_cursor.after loop
-					if {l_definition: !CODE_TEMPLATE_DEFINITION} l_cursor.item.definition then
+					if attached {attached CODE_TEMPLATE_DEFINITION} l_cursor.item.definition as l_definition then
 						l_result.force_last (l_definition)
 					end
 					l_cursor.forth
@@ -85,19 +85,19 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	cataloged_folder_files: !DS_HASH_TABLE [!DS_ARRAYED_LIST [!READABLE_STRING_GENERAL], STRING]
+	cataloged_folder_files: attached DS_HASH_TABLE [attached DS_ARRAYED_LIST [attached READABLE_STRING_GENERAL], STRING]
 			-- Cataloged folders, where template files are extracted from.
 			-- Key: Folder path
 			-- Value: List of file names
 
-	cataloged_template_definitions: !DS_HASH_TABLE [!TUPLE [definition: ?CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8], STRING]
+	cataloged_template_definitions: attached DS_HASH_TABLE [attached TUPLE [definition: detachable CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8], STRING]
 			-- Cataloged code template definitions, with reference count.
 			-- Key: Code template definition file name
 			-- Value: A code template definition with a cataloged reference count.
 
 feature -- Status report
 
-	is_cataloged (a_folder: !READABLE_STRING_GENERAL): BOOLEAN
+	is_cataloged (a_folder: attached READABLE_STRING_GENERAL): BOOLEAN
 			-- <Precursor>
 		do
 			Result := cataloged_folder_files.has (a_folder.as_string_8.as_attached)
@@ -107,10 +107,10 @@ feature -- Status report
 
 feature -- Query
 
-	template_by_file_name (a_file_name: !READABLE_STRING_GENERAL): ?CODE_TEMPLATE_DEFINITION
+	template_by_file_name (a_file_name: attached READABLE_STRING_GENERAL): detachable CODE_TEMPLATE_DEFINITION
 			-- <Precursor>
 		local
-			l_fn: !READABLE_STRING_8
+			l_fn: attached READABLE_STRING_8
 			l_templates: like cataloged_template_definitions
 		do
 			l_fn := a_file_name.as_string_8.as_attached
@@ -120,11 +120,11 @@ feature -- Query
 			end
 		end
 
-	template_by_title (a_title: !READABLE_STRING_GENERAL): ?CODE_TEMPLATE_DEFINITION
+	template_by_title (a_title: attached READABLE_STRING_GENERAL): detachable CODE_TEMPLATE_DEFINITION
 			-- <Precursor>
 		local
-			l_template: !CODE_TEMPLATE_DEFINITION
-			l_cursor: DS_BILINEAR_CURSOR [!CODE_TEMPLATE_DEFINITION]
+			l_template: attached CODE_TEMPLATE_DEFINITION
+			l_cursor: DS_BILINEAR_CURSOR [attached CODE_TEMPLATE_DEFINITION]
 		do
 			l_cursor := code_templates.new_cursor
 			from l_cursor.finish until l_cursor.before loop
@@ -139,11 +139,11 @@ feature -- Query
 			check gobo_cursor_cleaned_up: l_cursor.off end
 		end
 
-	template_by_shortcut (a_shortcut: !READABLE_STRING_GENERAL): ?CODE_TEMPLATE_DEFINITION
+	template_by_shortcut (a_shortcut: attached READABLE_STRING_GENERAL): detachable CODE_TEMPLATE_DEFINITION
 			-- <Precursor>
 		local
-			l_template: !CODE_TEMPLATE_DEFINITION
-			l_cursor: DS_BILINEAR_CURSOR [!CODE_TEMPLATE_DEFINITION]
+			l_template: attached CODE_TEMPLATE_DEFINITION
+			l_cursor: DS_BILINEAR_CURSOR [attached CODE_TEMPLATE_DEFINITION]
 		do
 			l_cursor := code_templates.new_cursor
 			from l_cursor.finish until l_cursor.before loop
@@ -158,13 +158,13 @@ feature -- Query
 			check gobo_cursor_cleaned_up: l_cursor.off end
 		end
 
-	templates_by_category (a_categories: !DS_BILINEAR [!READABLE_STRING_GENERAL]; a_conjunctive: BOOLEAN): !DS_ARRAYED_LIST [!CODE_TEMPLATE_DEFINITION]
+	templates_by_category (a_categories: attached DS_BILINEAR [attached READABLE_STRING_GENERAL]; a_conjunctive: BOOLEAN): attached DS_ARRAYED_LIST [attached CODE_TEMPLATE_DEFINITION]
 			-- <Precursor>
 		local
-			l_categories: !CODE_CATEGORY_COLLECTION
-			l_cat_cursor: DS_BILINEAR_CURSOR [!READABLE_STRING_GENERAL]
-			l_cursor: DS_HASH_TABLE_CURSOR [TUPLE [definition: ?CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8], READABLE_STRING_8]
-			l_item: TUPLE [definition: ?CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8]
+			l_categories: attached CODE_CATEGORY_COLLECTION
+			l_cat_cursor: DS_BILINEAR_CURSOR [attached READABLE_STRING_GENERAL]
+			l_cursor: DS_HASH_TABLE_CURSOR [TUPLE [definition: detachable CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8], READABLE_STRING_8]
+			l_item: TUPLE [definition: detachable CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8]
 			l_continue: BOOLEAN
 		do
 			create Result.make_default
@@ -174,7 +174,7 @@ feature -- Query
 				-- Iterate code template definitions for matching categories
 			from l_cursor.start until l_cursor.after loop
 				l_item := l_cursor.item
-				if l_item /= Void and then {l_definition: !CODE_TEMPLATE_DEFINITION} l_item.definition then
+				if l_item /= Void and then attached {attached CODE_TEMPLATE_DEFINITION} l_item.definition as l_definition then
 						-- Iterate supplied applicable categories for a matching code template definition category.
 					l_continue := False
 					l_categories := l_definition.metadata.categories
@@ -203,15 +203,15 @@ feature -- Query
 
 feature -- Events
 
-	catalog_changed_event: !EVENT_TYPE [TUPLE]
+	catalog_changed_event: attached EVENT_TYPE [TUPLE]
 			-- <Precursor>
 
 feature {NONE} -- Helpers
 
-	logger_service: !SERVICE_CONSUMER [LOGGER_S]
+	logger_service: attached SERVICE_CONSUMER [LOGGER_S]
 			-- Access to logger service
 		do
-			if {l_service: !SERVICE_CONSUMER [LOGGER_S]} internal_logger_service then
+			if attached {attached SERVICE_CONSUMER [LOGGER_S]} internal_logger_service as l_service then
 				Result := l_service
 			else
 				create Result
@@ -221,7 +221,7 @@ feature {NONE} -- Helpers
 
 feature -- Basic operations
 
-	rescan (a_folder: !READABLE_STRING_GENERAL)
+	rescan (a_folder: attached READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_empty: BOOLEAN
@@ -279,13 +279,13 @@ feature -- Basic operations
 
 feature -- Extension
 
-	extend_catalog (a_folder: !READABLE_STRING_GENERAL)
+	extend_catalog (a_folder: attached READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_definitions: like cataloged_template_definitions
-			l_definition: TUPLE [definition: ?CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8]
-			l_files: !DS_ARRAYED_LIST [!STRING]
-			l_file: !STRING
+			l_definition: TUPLE [definition: detachable CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8]
+			l_files: attached DS_ARRAYED_LIST [attached STRING]
+			l_file: attached STRING
 			l_changed: BOOLEAN
 		do
 			l_files := file_utilities.scan_for_files (a_folder, -1, code_file_regex, Void)
@@ -325,14 +325,14 @@ feature -- Extension
 
 feature -- Removal
 
-	remove_catalog (a_folder: !READABLE_STRING_GENERAL)
+	remove_catalog (a_folder: attached READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_catalog: like cataloged_folder_files
 			l_folder: STRING
-			l_files: !DS_ARRAYED_LIST [!READABLE_STRING_GENERAL]
+			l_files: attached DS_ARRAYED_LIST [attached READABLE_STRING_GENERAL]
 			l_definitions: like cataloged_template_definitions
-			l_definition: TUPLE [definition: ?CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8]
+			l_definition: TUPLE [definition: detachable CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8]
 			l_file: STRING
 			l_changed: BOOLEAN
 		do
@@ -374,13 +374,13 @@ feature -- Removal
 
 feature {NONE} -- Helpers
 
-	file_utilities: !FILE_UTILITIES
+	file_utilities: attached FILE_UTILITIES
 			-- Shared access to file utilities.
 		once
 			create Result
 		end
 
-	xml_parser: !XM_EIFFEL_PARSER
+	xml_parser: attached XM_EIFFEL_PARSER
 			-- Xml parser used to parse the code template files.
 		once
 			create Result.make
@@ -388,7 +388,7 @@ feature {NONE} -- Helpers
 
 feature {NONE} -- Basic operations
 
-	build_template (a_file_name: !READABLE_STRING_GENERAL): ?CODE_TEMPLATE_DEFINITION
+	build_template (a_file_name: attached READABLE_STRING_GENERAL): detachable CODE_TEMPLATE_DEFINITION
 			-- Builds a code template definition model from a file.
 			--
 			-- `a_file_name': Path to the code template file.
@@ -399,8 +399,8 @@ feature {NONE} -- Basic operations
 		local
 			l_parser: like xml_parser
 			l_file_name: STRING
-			l_resolver: !XM_FILE_EXTERNAL_RESOLVER
-			l_callbacks: !CODE_TEMPLATE_LOAD_CALLBACK
+			l_resolver: attached XM_FILE_EXTERNAL_RESOLVER
+			l_callbacks: attached CODE_TEMPLATE_LOAD_CALLBACK
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -412,7 +412,7 @@ feature {NONE} -- Basic operations
 				if not l_resolver.has_error then
 						-- File is loaded, create the callbacks and parse the XML.
 					l_parser := xml_parser
-					create l_callbacks.make (create {!CODE_FACTORY}, l_parser)
+					create l_callbacks.make (create {attached CODE_FACTORY}, l_parser)
 					check
 						l_parser_callbacks_set: l_parser.callbacks = l_callbacks
 					end
@@ -455,7 +455,7 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Regular expressions
 
-	frozen code_file_regex: !RX_PCRE_MATCHER
+	frozen code_file_regex: attached RX_PCRE_MATCHER
 			-- Regular expression for match code template file names
 		once
 			create Result.make
@@ -467,11 +467,11 @@ feature {NONE} -- Regular expressions
 
 feature {NONE} -- Internal implementation cache
 
-	internal_code_templates: ?like code_templates
+	internal_code_templates: detachable like code_templates
 			-- Cached version of `code_templates'.
 			-- Note: Do not use directly!
 
-	internal_logger_service: ?like logger_service
+	internal_logger_service: detachable like logger_service
 			-- Cached version of `logger_service'.
 			-- Note: Do not use directly!
 

@@ -91,7 +91,7 @@ feature -- Editor menu
 				setup_pick_item (a_menu, a_pebble)
 				extend_separator (a_menu)
 				if a_pebble /= Void then
-					if not ({l_stone: STONE} a_pebble and then l_stone.same_as (a_editor.stone)) then
+					if not (attached {STONE} a_pebble as l_stone and then l_stone.same_as (a_editor.stone)) then
 							-- If the current stone is the same as the editor stone then we
 							-- do not need a Retarget menu.
 						extend_retarget_tool_menu (a_source, a_menu, a_pebble)
@@ -629,7 +629,7 @@ feature {NONE} -- Menu section, Granularity 1.
 				a_menu.last.select_actions.extend (agent (dev_window.commands.shell_cmd).execute_with_stone (l_stone))
 			end
 
-			if {l_cs: CLASSI_STONE} a_stone and then dev_window.commands.edit_contracts_command.is_stone_usable (l_cs) then
+			if attached {CLASSI_STONE} a_stone as l_cs and then dev_window.commands.edit_contracts_command.is_stone_usable (l_cs) then
 				l_menu_item := extend_show_tool_command (dev_window.commands.edit_contracts_command, l_cs)
 				if l_cs.class_i.is_read_only then
 					l_menu_item.disable_sensitive
@@ -664,7 +664,7 @@ feature {NONE} -- Menu section, Granularity 1.
 				-- context menu, we know in which order we should do it.
 			is_editable := a_editor.is_editable
 			l_has_selection := a_editor.has_selection
-			l_unmanaged_editor := {lt_editor: EB_GRID_EDITOR}a_editor
+			l_unmanaged_editor := attached {EB_GRID_EDITOR} a_editor as lt_editor
 --			l_editor_is_current_editor := a_editor = dev_window.editors_manager.current_editor
 --			a_menu.extend (dev_window.commands.undo_cmd.new_menu_item_unmanaged)
 --			if not is_editable then
@@ -1354,7 +1354,7 @@ feature {NONE} -- Menu section, Granularity 1.
 			end
 		end
 
-	extend_show_tool_command (a_cmd: ES_SHOW_TOOL_COMMAND; a_stone: STONE): !EV_MENU_ITEM
+	extend_show_tool_command (a_cmd: ES_SHOW_TOOL_COMMAND; a_stone: STONE): attached EV_MENU_ITEM
 			-- Extends a menu item to show a stonable tool.
 		require
 			a_cmd_is_attached: a_cmd /= Void
@@ -1362,7 +1362,7 @@ feature {NONE} -- Menu section, Granularity 1.
 			a_stone_is_usable: a_cmd.is_stone_usable (a_stone)
 			a_stone_attached: a_stone /= Void
 		local
-			l_menu_item: ?EV_MENU_ITEM
+			l_menu_item: detachable EV_MENU_ITEM
 			l_old_stone: STONE
 		do
 				-- Set the stone temporarly to retrieve the menu name, if it's based on the set stone.

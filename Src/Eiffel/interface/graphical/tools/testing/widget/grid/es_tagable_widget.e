@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	collection: !ACTIVE_COLLECTION_I [G]
+	collection: attached ACTIVE_COLLECTION_I [G]
 			-- Collection of tagables shown by widget.
 		require
 			usable: is_interface_usable
@@ -39,7 +39,7 @@ feature -- Access
 		deferred
 		end
 
-	selected_items: !DS_LINEAR [G]
+	selected_items: attached DS_LINEAR [G]
 			-- Selected items in widget
 		require
 			usable: is_interface_usable
@@ -52,7 +52,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	internal_selected_items: !DS_HASH_SET [G]
+	internal_selected_items: attached DS_HASH_SET [G]
 			-- Internal storage for `selected_items'
 
 feature -- Status report
@@ -66,13 +66,13 @@ feature -- Status report
 
 feature -- Events
 
-	item_pointer_double_press_actions: !ACTION_SEQUENCE [TUPLE [G]]
+	item_pointer_double_press_actions: attached ACTION_SEQUENCE [TUPLE [G]]
 			-- Events called when user double clicks on item row in `widget'
 
-	item_selected_actions: !ACTION_SEQUENCE [TUPLE [G]]
+	item_selected_actions: attached ACTION_SEQUENCE [TUPLE [G]]
 			-- Events called when a item is selected in `widget'
 
-	item_deselected_actions: !ACTION_SEQUENCE [TUPLE [G]]
+	item_deselected_actions: attached ACTION_SEQUENCE [TUPLE [G]]
 			-- Events called when an item is deselected in `widget'
 
 end

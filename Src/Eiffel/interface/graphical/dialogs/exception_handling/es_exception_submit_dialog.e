@@ -353,7 +353,7 @@ feature {NONE} -- Implementation: access
 	default_synopsis: STRING = "Enter synopsis"
 			-- Default text for the bug report synopsis
 
-	default_description: !STRING
+	default_description: attached STRING
 			-- Default text for the bug report description
 		do
 			if last_description /= Void then
@@ -375,7 +375,7 @@ feature {NONE} -- Status report
 			is_initialized: is_initialized or is_initializing
 		do
 			if session_manager.is_service_available then
-				if {l_ref: !BOOLEAN_REF} session_data.value_or_default (remembered_session_id, False) then
+				if attached {attached BOOLEAN_REF} session_data.value_or_default (remembered_session_id, False) as l_ref then
 					Result := l_ref.item
 				end
 			end

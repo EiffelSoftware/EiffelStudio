@@ -99,10 +99,10 @@ feature -- C code generation
 					context.add_dftype_current
 				else
 					l_type := entry.first.type.deep_actual_type
-					if {l_gen_type: GEN_TYPE_A} l_type then
+					if attached {GEN_TYPE_A} l_type as l_gen_type then
 						context.mark_current_used
 						context.add_dftype_current
-					elseif {l_formal: FORMAL_A} l_type then
+					elseif attached {FORMAL_A} l_type as l_formal then
 						context.add_dftype_current
 					end
 				end
@@ -136,7 +136,7 @@ feature -- C code generation
 					if l_type.has_generics then
 						buffer.put_string ("typres")
 						buffer.put_natural_32 (a_level)
-					elseif {l_formal: FORMAL_A} l_type then
+					elseif attached {FORMAL_A} l_type as l_formal then
 						buffer.put_string ("eif_gen_param_id(")
 						context.generate_current_dftype
 						buffer.put_two_character (',', ' ')

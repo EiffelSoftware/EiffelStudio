@@ -68,7 +68,7 @@ feature -- Query
 			Precursor
 			if
 				not user_cancelled_activation and then
-				{t: like text} text and then
+				attached text as t and then
 				not t.is_empty
 			then
 				apply_actions.call ([t])

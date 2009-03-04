@@ -19,19 +19,19 @@ inherit
 
 feature -- Access: tags
 
-	tags: !DS_LINEAR [!STRING]
+	tags: attached DS_LINEAR [attached STRING]
 			-- Predefined tags for new test
 		require
 			usable: is_interface_usable
 		deferred
 		ensure
 			result_consistent: Result = tags
-			not_contains_empty: not Result.there_exists (agent {!STRING}.is_empty)
+			not_contains_empty: not Result.there_exists (agent {attached STRING}.is_empty)
 		end
 
 feature -- Access: new class
 
-	new_class_name: !STRING
+	new_class_name: attached STRING
 			-- Name of the new class. If `is_multiple_new_classes' is true, it will be used as a prefix for
 			-- all new classes.
 		require
@@ -40,7 +40,7 @@ feature -- Access: new class
 		deferred
 		end
 
-	cluster: !CONF_CLUSTER
+	cluster: attached CONF_CLUSTER
 			-- Cluster in which new test classes will be created
 		require
 			usable: is_interface_usable
@@ -48,7 +48,7 @@ feature -- Access: new class
 		deferred
 		end
 
-	path: !STRING
+	path: attached STRING
 			-- Path relativ to location of `cluster' where new test classes will be created
 		require
 			usable: is_interface_usable

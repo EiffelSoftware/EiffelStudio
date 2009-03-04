@@ -11,7 +11,7 @@ deferred class
 
 feature -- Access
 
-	test: !TEST_I
+	test: attached TEST_I
 			-- Test currently beeing shown
 		require
 			active: is_active
@@ -27,7 +27,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	show_test (a_test: !TEST_I)
+	show_test (a_test: attached TEST_I)
 			-- Display information about a test.
 			--
 			-- `a_test': Test for which information should be displayed.

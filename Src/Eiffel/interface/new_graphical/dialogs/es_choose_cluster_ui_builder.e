@@ -140,7 +140,7 @@ feature {NONE} -- Agents
 
 feature {NONE} -- Implementation
 
-	interface_names: !INTERFACE_NAMES
+	interface_names: attached INTERFACE_NAMES
 			-- Access to EiffelStudio's interface names
 		once
 			create Result

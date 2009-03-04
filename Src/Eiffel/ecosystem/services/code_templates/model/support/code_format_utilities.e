@@ -12,7 +12,7 @@ class
 
 feature -- Parsing
 
-	parse_version (a_version: !STRING_32; a_factory: !CODE_FACTORY): !CODE_VERSION
+	parse_version (a_version: attached STRING_32; a_factory: attached CODE_FACTORY): attached CODE_VERSION
 			-- Parses a code version string and creates a new code version.
 			--
 			-- `a_version': Version string to parse and create a version for.
@@ -62,13 +62,13 @@ feature -- Parsing
 			end
 		end
 
-	to_version_string (a_version: !CODE_VERSION): !STRING_32
+	to_version_string (a_version: attached CODE_VERSION): attached STRING_32
 			-- Converts a code version into a version string.
 			--
 			-- `a_version': The code version to convert to a string.
 			-- `Result': A produced string representation of the supplied code version.
 		do
-			if {l_nv: !CODE_NUMERIC_VERSION} a_version then
+			if attached {attached CODE_NUMERIC_VERSION} a_version as l_nv then
 				create Result.make (10)
 				Result.append_natural_16 (l_nv.major)
 				Result.append_character ('.')
@@ -86,7 +86,7 @@ feature -- Parsing
 
 feature {CODE_VERSION} -- Access
 
-	version_regex: !RX_PCRE_MATCHER
+	version_regex: attached RX_PCRE_MATCHER
 			-- Raw version regular expression
 		once
 			create Result.make

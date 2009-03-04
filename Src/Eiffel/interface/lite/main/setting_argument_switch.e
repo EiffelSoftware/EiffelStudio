@@ -20,7 +20,7 @@ create
 
 feature -- Access
 
-	value_validator: !SETTING_ARGUMENT_VALIDATOR
+	value_validator: attached SETTING_ARGUMENT_VALIDATOR
 			-- Retrieves an validator used to check current switch value
 		once
 			create Result

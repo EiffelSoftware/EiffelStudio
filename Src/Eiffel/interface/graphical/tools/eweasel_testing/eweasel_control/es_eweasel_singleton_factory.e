@@ -12,13 +12,13 @@ class
 
 feature -- Query
 
-	manager: !ES_EWEASEL_EXECUTION_MANAGER
+	manager: attached ES_EWEASEL_EXECUTION_MANAGER
 			-- Execution manger singleton factory method
 		once
 			create Result.make
 		end
 
-	result_analyzer: !ES_EWEASEL_RESULT_ANALYZER
+	result_analyzer: attached ES_EWEASEL_RESULT_ANALYZER
 			-- Result analyzer singleton factory method
 		once
 			create Result.make

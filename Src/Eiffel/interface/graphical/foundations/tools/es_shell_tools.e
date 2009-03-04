@@ -329,7 +329,7 @@ feature -- Query
 			end
 		end
 
-	frozen tool (a_type: TYPE [ES_TOOL [EB_TOOL]]): !ES_TOOL [EB_TOOL]
+	frozen tool (a_type: TYPE [ES_TOOL [EB_TOOL]]): attached ES_TOOL [EB_TOOL]
 			-- Retrieves an activate tool associated with a particular type.
 			-- Note: Requesting a tool descriptor that has not yet been instantiated will instatiate it before
 			--       it is returned.
@@ -340,7 +340,7 @@ feature -- Query
 			is_interface_usable: is_interface_usable
 			a_type_attached: a_type /= Void
 		local
-			l_tool: ?like tool
+			l_tool: detachable like tool
 		do
 			l_tool := tool_edition (a_type, 1)
 			check l_tool_not_void: l_tool /= Void end
@@ -597,7 +597,7 @@ feature -- Basic operation
 			a_edition_positive: a_edition > 0
 			a_edition_small_enough: a_edition <= editions_of_tool (a_type, False) + 1
 		local
-			l_tool: ?like tool
+			l_tool: detachable like tool
 		do
 			l_tool := tool_edition (a_type, a_edition)
 			l_tool.show (a_activate)
@@ -616,7 +616,7 @@ feature -- Basic operation
 			is_interface_usable: is_interface_usable
 			a_type_attached: a_type /= Void
 		local
-			l_tool: ?like tool
+			l_tool: detachable like tool
 		do
 			l_tool := tool_next_available_edition (a_type, a_reuse)
 			l_tool.show (a_activate)
@@ -680,11 +680,11 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Internal implementation cache
 
-	internal_all_tools: ?like all_tools
+	internal_all_tools: detachable like all_tools
 			-- Cached version of `all_tools'
 			-- Note: Do not use directly!
 
-	internal_requested_tools: ?like requested_tools
+	internal_requested_tools: detachable like requested_tools
 			-- Mutable version of `requested_tools'
 			-- Note: Functions wanting to add tools to `requested_tools' should use this attribute instead
 			--       of `requested_tools'. All queries should use `requested_tools' and not this attribute!

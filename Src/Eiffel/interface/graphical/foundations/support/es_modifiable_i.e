@@ -58,7 +58,7 @@ feature -- Query
 
 feature -- Basic operations
 
-	perform_query_save_modified (a_action: !PROCEDURE [ANY, TUPLE])
+	perform_query_save_modified (a_action: attached PROCEDURE [ANY, TUPLE])
 			-- Performs an action, on the condition and modifications are saved or discarded.
 			--
 			-- `a_action': A protected action to perform, which will only be executed if Current is unmodified for the user
@@ -82,7 +82,7 @@ feature -- Basic operations
 
 feature -- Events
 
-	dirty_state_change_event: !EVENT_TYPE [TUPLE [is_dirty: BOOLEAN]]
+	dirty_state_change_event: attached EVENT_TYPE [TUPLE [is_dirty: BOOLEAN]]
 			-- Actions called when the dirty state chages.
 			--
 			-- 'is_dirty': Reflects the dirty state.

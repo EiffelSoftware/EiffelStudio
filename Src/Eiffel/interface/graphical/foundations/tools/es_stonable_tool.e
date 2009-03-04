@@ -22,12 +22,12 @@ inherit
 
 feature {ES_DOCKABLE_STONABLE_TOOL_PANEL} -- Access
 
-	previous_stone: ?STONE
+	previous_stone: detachable STONE
 			-- Previous stone of `stone', if any
 
 feature {NONE} -- Basic operations
 
-	query_set_stone (a_stone: ?STONE): BOOLEAN
+	query_set_stone (a_stone: detachable STONE): BOOLEAN
 			-- <Precursor>
 		do
 			if is_tool_instantiated then
@@ -39,7 +39,7 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Action handler
 
-	on_stone_changed (a_old_stone: ?like stone)
+	on_stone_changed (a_old_stone: detachable like stone)
 			-- <Precusor>
 		do
 			previous_stone := a_old_stone

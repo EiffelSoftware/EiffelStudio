@@ -18,7 +18,7 @@ feature {CODE_TEMPLATE_CATALOG_S} -- Event handlers
 	on_catalog_changed
 			-- Called when the code template catalog is updated in any respect.
 		require
-			is_interface_usable: {l_usable: USABLE_I} Current implies l_usable.is_interface_usable
+			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable
 		do
 		end
 

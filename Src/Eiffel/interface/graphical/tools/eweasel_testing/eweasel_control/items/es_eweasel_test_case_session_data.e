@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature -- Command
 
-	append_test_cases (a_list: !ARRAYED_LIST [ES_EWEASEL_TEST_CASE_ITEM])
+	append_test_cases (a_list: attached ARRAYED_LIST [ES_EWEASEL_TEST_CASE_ITEM])
 			-- Append `a_list' to current
 			-- This feature will append items in `a_list' as saving state.
 		local
@@ -85,7 +85,7 @@ feature -- Query
 
 feature {NONE} -- Implementation
 
-	all_test_cases: !ARRAYED_LIST [ES_EWEASEL_TEST_CASE_ITEM]
+	all_test_cases: attached ARRAYED_LIST [ES_EWEASEL_TEST_CASE_ITEM]
 			-- All test cases
 
 

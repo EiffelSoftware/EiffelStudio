@@ -236,7 +236,7 @@ feature -- Access
 	is_stone_valid (a_stone: ANY): BOOLEAN
 			-- Is `st' valid stone for Current?
 		do
-			Result := {st: OBJECT_STONE} a_stone and then valid_viewer (st) /= Void
+			Result := attached {OBJECT_STONE} a_stone as st and then valid_viewer (st) /= Void
 		end
 
 	current_object: OBJECT_STONE

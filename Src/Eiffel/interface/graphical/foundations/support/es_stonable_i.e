@@ -15,7 +15,7 @@ inherit
 
 feature -- Access
 
-	stone: ?STONE assign set_stone
+	stone: detachable STONE assign set_stone
 			-- Last set stone.
 		require
 			is_interface_usable: is_interface_usable
@@ -24,7 +24,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_stone (a_stone: ?like stone)
+	set_stone (a_stone: detachable like stone)
 			-- Sets current stone.
 			-- Note: This call is unprotected and will set the stone regardless. For a protected call
 			--       use `set_stone_with_query', which will interactive with the user if necessary
@@ -38,7 +38,7 @@ feature -- Element change
 			stone_set: equal (stone, a_stone)
 		end
 
-	frozen set_stone_with_query (a_stone: ?like stone)
+	frozen set_stone_with_query (a_stone: detachable like stone)
 			-- Sets the current stone and preforms a protected call to ensure a stone can be set.
 			-- This does not guarentee a stone will be set because it depends on possible user interaction
 			-- to confirm setting.
@@ -77,7 +77,7 @@ feature -- Status report
 	is_setting_stone_with_query: BOOLEAN
 			-- Indicates if a stone is currenly being set using `set_stone_with_query'
 
-	frozen is_stone_usable (a_stone: ?like stone): BOOLEAN
+	frozen is_stone_usable (a_stone: detachable like stone): BOOLEAN
 			--  Determines if a stone can be used by Current.
 			--| Note: Redefine `internal_is_stone_usable' to extend usablity checking.
 			--
@@ -86,7 +86,7 @@ feature -- Status report
 		require
 			is_interface_usable: is_interface_usable
 		do
-			if {l_stone: like stone} a_stone then
+			if attached {like stone} a_stone as l_stone then
 				Result := l_stone.is_valid and then internal_is_stone_usable (l_stone)
 			else
 				Result := a_stone = Void
@@ -97,7 +97,7 @@ feature -- Status report
 
 feature {NONE} -- Status report
 
-	internal_is_stone_usable (a_stone: !like stone): BOOLEAN
+	internal_is_stone_usable (a_stone: attached like stone): BOOLEAN
 			-- Determines if a stone can be used by Current.
 			--
 			-- `a_stone': Stone to determine usablity.
@@ -109,7 +109,7 @@ feature {NONE} -- Status report
 
 feature -- Query
 
-	query_set_stone (a_stone: ?like stone): BOOLEAN
+	query_set_stone (a_stone: detachable like stone): BOOLEAN
 			-- Determines if a stone can be set, possibly using a UI to ask the user for confirmation.
 			-- Note: This function should not be used in any contracts due to the possibility of UI presentation.
 			--

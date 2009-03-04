@@ -52,7 +52,7 @@ feature -- Status setting
 			-- Associate `Current' with class contained in `new_stone'.
 		do
 			force_stone (new_stone)
-			if {l_new_stone: FEATURE_STONE} new_stone and then l_new_stone.class_i.is_external_class then
+			if attached {FEATURE_STONE} new_stone as l_new_stone and then l_new_stone.class_i.is_external_class then
 				set_dotnet_mode (True)
 				internal_consumed_type := consumed_type (l_new_stone.class_i)
 			else

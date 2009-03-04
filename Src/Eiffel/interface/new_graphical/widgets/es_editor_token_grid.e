@@ -68,7 +68,7 @@ feature {NONE} -- Implementation
 			redraw
 		end
 
-	set_colors_and_redraw_agent: ?PROCEDURE [ANY, TUPLE];
+	set_colors_and_redraw_agent: detachable PROCEDURE [ANY, TUPLE];
 			-- Saved agent to be recycled.
 
 note

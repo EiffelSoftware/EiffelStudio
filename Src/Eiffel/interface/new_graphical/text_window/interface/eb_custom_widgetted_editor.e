@@ -87,7 +87,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	token_handler: ?ES_EDITOR_TOKEN_HANDLER
+	token_handler: detachable ES_EDITOR_TOKEN_HANDLER
 			-- Access to a token handler, for processing actions on tokens
 		do
 			Result := internal_token_handler
@@ -551,11 +551,11 @@ feature {NONE} -- Action hanlders
 			if text_is_fully_loaded then
 				l_handler := token_handler
 				if l_handler /= Void then
-					if {l_clickable_text: !CLICKABLE_TEXT} text_displayed then
+					if attached {attached CLICKABLE_TEXT} text_displayed as l_clickable_text then
 							-- Fetch token at current mouse position
 						create l_cursor.make_from_character_pos (1, 1, l_clickable_text)
 						position_cursor (l_cursor, a_abs_x, a_abs_y - editor_viewport.y_offset)
-						if {l_token: !EDITOR_TOKEN} l_cursor.token then
+						if attached {attached EDITOR_TOKEN} l_cursor.token as l_token then
 								-- An instant key (CTRL) allows direct processing of the token.
 							l_instant := (ev_application.ctrl_pressed and then not ev_application.alt_pressed and then not ev_application.shift_pressed)
 							if l_instant or else not l_handler.is_active then
@@ -597,7 +597,7 @@ feature {NONE} -- Action hanlders
 
 feature {NONE} -- Factory
 
-	create_token_handler: ?ES_EDITOR_TOKEN_HANDLER
+	create_token_handler: detachable ES_EDITOR_TOKEN_HANDLER
 			-- Create a token handler, used to perform actions or respond to mouse/keyboard events
 			-- Note: Return Void to prevent any handling from takening place.
 		do

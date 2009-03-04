@@ -280,13 +280,13 @@ feature -- Feature access
 			f: E_FEATURE
 		do
 			if is_invariant_feature_name (a_featname) then
-				if {inv: INVARIANT_FEAT_I} a_written_class.invariant_feature then
+				if attached {INVARIANT_FEAT_I} a_written_class.invariant_feature as inv then
 					Result := inv.api_feature (a_written_class.class_id)
 				end
 			else
 				Result := a_written_class.feature_with_name (a_featname)
 				if Result = Void then
-					if {eclc: EIFFEL_CLASS_C} a_written_class then
+					if attached {EIFFEL_CLASS_C} a_written_class as eclc then
 						Result := eclc.api_inline_agent_of_name (a_featname)
 					end
 				end
@@ -340,7 +340,7 @@ feature -- Feature access
 				l_cc := l_ct.associated_class
 				if l_cc /= Void and then fe_id /= 0 then
 					check is_not_is_precompiled: not l_cc.is_precompiled end
-					if {l_ecc: EIFFEL_CLASS_C} l_cc then
+					if attached {EIFFEL_CLASS_C} l_cc as l_ecc then
 						Result := l_ecc.feature_with_feature_id (fe_id)
 						if Result = Void then
 							l_fi := l_ecc.inline_agent_of_id (fe_id)
@@ -368,7 +368,7 @@ feature -- Feature access
 				l_cc := l_ct.associated_class
 				if l_cc /= Void then
 					check is_precompiled: l_cc.is_precompiled end
-					if {l_ecc: EIFFEL_CLASS_C} l_cc then
+					if attached {EIFFEL_CLASS_C} l_cc as l_ecc then
 						l_fi := feature_i_for_class_and_offset (l_cc, a_offset)
 						if l_fi /= Void then
 							Result := l_fi.api_feature (l_ecc.class_id)
@@ -393,7 +393,7 @@ feature -- Feature access
 			until
 				ri_table.after or rid /= 0
 			loop
-				if {ri: ROUT_INFO} ri_table.item_for_iteration then
+				if attached {ROUT_INFO} ri_table.item_for_iteration as ri then
 					if
 						ri.offset = a_offset and
 						ri.origin = a_class.class_id

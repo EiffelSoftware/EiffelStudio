@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	must_conform_to: !STRING_32 assign set_must_conform_to
+	must_conform_to: attached STRING_32 assign set_must_conform_to
 			-- A object value conformance type.
 
 feature -- Element change
@@ -53,7 +53,7 @@ feature -- Element change
 
 feature -- Visitor
 
-	process (a_visitor: !CODE_TEMPLATE_VISITOR_I)
+	process (a_visitor: attached CODE_TEMPLATE_VISITOR_I)
 			-- <Precursor>
 		do
 			a_visitor.process_code_object_declaration (Current)

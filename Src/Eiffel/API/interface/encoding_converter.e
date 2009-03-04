@@ -22,12 +22,12 @@ feature -- Conversion
 
 feature -- Detection
 
-	detected_encoding: ?ANY
+	detected_encoding: detachable ANY
 			-- Detected encoding
 		deferred
 		end
 
-	detect_encoding (a_str: ?STRING_GENERAL)
+	detect_encoding (a_str: detachable STRING_GENERAL)
 			-- Detect encoding of `a_str'
 		require
 			a_str_not_void: a_str /= Void

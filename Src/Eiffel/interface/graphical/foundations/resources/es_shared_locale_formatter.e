@@ -12,7 +12,7 @@ class
 
 feature -- Access
 
-	frozen locale_formatter: !ES_LOCALE_FORMATTER
+	frozen locale_formatter: attached ES_LOCALE_FORMATTER
 			-- Shared access to a locale formatter.
 		once
 			create Result

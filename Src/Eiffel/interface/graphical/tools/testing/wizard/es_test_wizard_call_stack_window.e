@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 	on_after_initialize
 			-- Called after all widgets have been initialized.
 		local
-			l_stack: ?EIFFEL_CALL_STACK
+			l_stack: detachable EIFFEL_CALL_STACK
 			i: INTEGER
 			l_reg: TEST_PROCESSOR_REGISTRAR_I
 			l_row: EV_GRID_ROW
@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 			if test_suite.is_service_available then
 				l_reg := test_suite.service.processor_registrar
 				if l_reg.is_valid_type (extractor_factory_type, test_suite.service) then
-					if {l_extractor: like extractor} test_suite.service.factory (extractor_factory_type) then
+					if attached {like extractor} test_suite.service.factory (extractor_factory_type) as l_extractor then
 						extractor := l_extractor
 					end
 				end
@@ -105,16 +105,16 @@ feature {NONE} -- Access
 			Result := wizard_information.extractor_conf
 		end
 
-	factory_type: !TYPE [TEST_CREATOR_I]
+	factory_type: attached TYPE [TEST_CREATOR_I]
 			-- <Precursor>
 		do
 			Result := extractor_factory_type
 		end
 
-	grid: !ES_GRID
+	grid: attached ES_GRID
 			-- Grid showing call stack
 
-	extractor: ?TEST_EXTRACTOR_I
+	extractor: detachable TEST_EXTRACTOR_I
 			-- Extractor instance
 
 	selection_count: NATURAL
@@ -136,7 +136,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Query
 
-	populate_row (a_row: !EV_GRID_ROW; a_cse: !CALL_STACK_ELEMENT)
+	populate_row (a_row: attached EV_GRID_ROW; a_cse: attached CALL_STACK_ELEMENT)
 			-- Populate row items with information from call stack element
 			--
 			--| Note: this code is a modified version of {ES_CALL_STACK_TOOL_PANEL}.compute_stack_grid_row
@@ -190,7 +190,7 @@ feature {NONE} -- Query
 				--| Object address
 			l_obj_address_info := a_cse.object_address.output
 
-			if {e_cse: EIFFEL_CALL_STACK_ELEMENT} a_cse then
+			if attached {EIFFEL_CALL_STACK_ELEMENT} a_cse as e_cse then
 					--| Origin class
 				dc := e_cse.dynamic_class
 				oc := e_cse.written_class
@@ -216,14 +216,14 @@ feature {NONE} -- Query
 				end
 
 				if
-					{dotnet_cse: CALL_STACK_ELEMENT_DOTNET} e_cse
+					attached {CALL_STACK_ELEMENT_DOTNET} e_cse as dotnet_cse
 					and then dotnet_cse.dotnet_module_name /= Void
 				then
 					l_tooltip.append_string (interface_names.l_module_is (dotnet_cse.dotnet_module_name))
 				end
 			else --| It means, this is an EXTERNAL_CALL_STACK_ELEMENT
 				l_orig_class_info := ""
-				if {ext_cse: EXTERNAL_CALL_STACK_ELEMENT} a_cse then
+				if attached {EXTERNAL_CALL_STACK_ELEMENT} a_cse as ext_cse then
 					l_extra_info := ext_cse.info
 				end
 			end
@@ -296,8 +296,8 @@ feature {NONE} -- Events
 			until
 				i > grid.row_count
 			loop
-				if {l_item: EV_GRID_CHECKABLE_LABEL_ITEM} grid.row (i).item (1) then
-					if l_item.is_checked and {l_cse: EIFFEL_CALL_STACK_ELEMENT} l_item.data then
+				if attached {EV_GRID_CHECKABLE_LABEL_ITEM} grid.row (i).item (1) as l_item then
+					if l_item.is_checked and attached {EIFFEL_CALL_STACK_ELEMENT} l_item.data as l_cse then
 						l_set.force (l_cse.level_in_stack)
 					end
 				end

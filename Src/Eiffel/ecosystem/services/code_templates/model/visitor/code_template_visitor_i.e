@@ -15,7 +15,7 @@ inherit
 
 feature {CODE_NODE} -- Processing
 
-	process_code_category_collection (a_value: !CODE_CATEGORY_COLLECTION)
+	process_code_category_collection (a_value: attached CODE_CATEGORY_COLLECTION)
 			-- Process object `a_value'.
 		require
 			is_interface_usable: is_interface_usable
@@ -23,7 +23,7 @@ feature {CODE_NODE} -- Processing
 		deferred
 		end
 
-	process_code_declaration_collection (a_value: !CODE_DECLARATION_COLLECTION)
+	process_code_declaration_collection (a_value: attached CODE_DECLARATION_COLLECTION)
 			-- Process object `a_value'.
 		require
 			is_interface_usable: is_interface_usable
@@ -31,7 +31,7 @@ feature {CODE_NODE} -- Processing
 		deferred
 		end
 
-	process_code_literal_declaration (a_value: !CODE_LITERAL_DECLARATION)
+	process_code_literal_declaration (a_value: attached CODE_LITERAL_DECLARATION)
 			-- Process object `a_value'.
 		require
 			is_interface_usable: is_interface_usable
@@ -39,7 +39,7 @@ feature {CODE_NODE} -- Processing
 		deferred
 		end
 
-	process_code_metadata (a_value: !CODE_METADATA)
+	process_code_metadata (a_value: attached CODE_METADATA)
 			-- Process object `a_value'.
 		require
 			is_interface_usable: is_interface_usable
@@ -47,7 +47,7 @@ feature {CODE_NODE} -- Processing
 		deferred
 		end
 
-	process_code_object_declaration (a_value: !CODE_OBJECT_DECLARATION)
+	process_code_object_declaration (a_value: attached CODE_OBJECT_DECLARATION)
 			-- Process object `a_value'.
 		require
 			is_interface_usable: is_interface_usable
@@ -55,7 +55,7 @@ feature {CODE_NODE} -- Processing
 		deferred
 		end
 
-	process_code_template (a_value: !CODE_TEMPLATE)
+	process_code_template (a_value: attached CODE_TEMPLATE)
 			-- Process object `a_value'.
 		require
 			is_interface_usable: is_interface_usable
@@ -63,7 +63,7 @@ feature {CODE_NODE} -- Processing
 		deferred
 		end
 
-	process_code_template_collection (a_value: !CODE_TEMPLATE_COLLECTION)
+	process_code_template_collection (a_value: attached CODE_TEMPLATE_COLLECTION)
 			-- Process object `a_value'.
 		require
 			is_interface_usable: is_interface_usable
@@ -71,7 +71,7 @@ feature {CODE_NODE} -- Processing
 		deferred
 		end
 
-	process_code_template_definition (a_value: !CODE_TEMPLATE_DEFINITION)
+	process_code_template_definition (a_value: attached CODE_TEMPLATE_DEFINITION)
 			-- Process object `a_value'.
 		require
 			is_interface_usable: is_interface_usable
@@ -79,7 +79,7 @@ feature {CODE_NODE} -- Processing
 		deferred
 		end
 
-	process_code_versioned_template (a_value: !CODE_VERSIONED_TEMPLATE)
+	process_code_versioned_template (a_value: attached CODE_VERSIONED_TEMPLATE)
 			-- Process object `a_value'.
 		require
 			is_interface_usable: is_interface_usable
@@ -89,7 +89,7 @@ feature {CODE_NODE} -- Processing
 
 feature {NONE} -- Processing
 
-	process_collection (a_collection: !CODE_COLLECTION [ANY])
+	process_collection (a_collection: attached CODE_COLLECTION [ANY])
 			-- Processes a collection of code nodes.
 			--
 			-- `a_collection': The collection items to process.	
@@ -100,7 +100,7 @@ feature {NONE} -- Processing
 		do
 			l_items := a_collection.items.new_cursor
 			from l_items.start until l_items.after loop
-				if {l_node: CODE_NODE} l_items.item and then is_applicable_visitation_entity (l_node) then
+				if attached {CODE_NODE} l_items.item as l_node and then is_applicable_visitation_entity (l_node) then
 					l_node.process (Current)
 				end
 				l_items.forth
@@ -109,7 +109,7 @@ feature {NONE} -- Processing
 
 feature {CODE_NODE} -- Query
 
-	is_applicable_visitation_entity (a_value: !ANY): BOOLEAN
+	is_applicable_visitation_entity (a_value: attached ANY): BOOLEAN
 			-- Determines if object instance `a_value' is applicable for a visitation
 		do
 			Result := True

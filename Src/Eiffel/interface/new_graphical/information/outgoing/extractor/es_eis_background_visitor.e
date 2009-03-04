@@ -51,7 +51,7 @@ feature -- Operation
 			end
 
 				-- Setup background visiting
-			if {lt_target: CONF_TARGET}universe.target then
+			if attached {CONF_TARGET} universe.target as lt_target then
 				lt_target.process (Current)
 				if background_procedures.count > 0 then
 					on_progress_start (background_procedures.count)
@@ -156,14 +156,14 @@ feature {NONE} -- Implementation
 			l_conf_tuple.t_procedure := l_procedure
 			background_procedures.extend (l_procedure)
 
-			if a_group.classes_set and then {lt_classes: ARRAYED_LIST [CONF_CLASS]}a_group.classes.linear_representation then
+			if a_group.classes_set and then attached {ARRAYED_LIST [CONF_CLASS]} a_group.classes.linear_representation as lt_classes then
 					-- Collect actions to be managed.
 				from
 					lt_classes.start
 				until
 					lt_classes.after
 				loop
-					if {lt_class: CONF_CLASS}lt_classes.item then
+					if attached {CONF_CLASS} lt_classes.item as lt_class then
 						create l_tuple
 						l_procedure := agent process_class_internal (l_tuple)
 						l_tuple.t_class := lt_class
@@ -184,7 +184,7 @@ feature {NONE} -- Implementation
 		local
 			l_extractor: ES_EIS_CONF_EXTRACTOR
 		do
-			if {lt_notable: CONF_NOTABLE}a_tuple.t_notable then
+			if attached {CONF_NOTABLE} a_tuple.t_notable as lt_notable then
 				create l_extractor.make (lt_notable, False)
 			end
 			background_procedures.prune_all (a_tuple.t_procedure)
@@ -217,7 +217,7 @@ feature {NONE} -- Implementation
 		local
 			l_extractor: ES_EIS_CLASS_EXTRACTOR
 		do
-			if {lt_class: CLASS_I}a_tuple.t_class then
+			if attached {CLASS_I} a_tuple.t_class as lt_class then
 				create l_extractor.make (lt_class, False)
 			end
 			background_procedures.prune_all (a_tuple.t_procedure)
@@ -241,7 +241,7 @@ feature {NONE} -- Implementation
 			background_procedures_not_has: not background_procedures.has (a_tuple.t_procedure)
 		end
 
-	background_procedures: !LINKED_LIST [PROCEDURE [ANY, TUPLE]];
+	background_procedures: attached LINKED_LIST [PROCEDURE [ANY, TUPLE]];
 			-- All managed background procedures.
 
 note

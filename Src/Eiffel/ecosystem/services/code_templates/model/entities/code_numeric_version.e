@@ -57,7 +57,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	frozen format_utilities: !CODE_FORMAT_UTILITIES
+	frozen format_utilities: attached CODE_FORMAT_UTILITIES
 			-- Access to code formatting utilities
 		once
 			create Result
@@ -142,18 +142,18 @@ feature -- Query
 			a_version_matches_version_regex: Result implies format_utilities.version_regex.matches (a_version)
 		end
 
-	is_compatible_with (a_other: !CODE_VERSION): BOOLEAN
+	is_compatible_with (a_other: attached CODE_VERSION): BOOLEAN
 			-- <Precursor>
 		do
 			Result := Precursor (a_other)
-			if not Result and then {l_numeric_ver: !like Current} a_other then
+			if not Result and then attached {attached like Current} a_other as l_numeric_ver then
 				Result := l_numeric_ver > Current
 			end
 		end
 
 feature -- Visitor
 
-	process (a_visitor: !CODE_TEMPLATE_VISITOR_I)
+	process (a_visitor: attached CODE_TEMPLATE_VISITOR_I)
 			-- <Precursor>
 		do
 		end
@@ -163,7 +163,7 @@ feature {NONE} -- Basic operations
 	rebuild_version
 			-- Rebuilds the raw version string from the current set version parts
 		do
-			if {l_cur: !like Current} Current then
+			if attached {attached like Current} Current as l_cur then
 				version := format_utilities.to_version_string (l_cur)
 			end
 		end
@@ -175,7 +175,7 @@ feature {NONE} -- Actions handlers
 		do
 			Precursor {CODE_VERSION} (a_old)
 
-			if {l_version: !CODE_NUMERIC_VERSION} format_utilities.parse_version (version, create {!CODE_FACTORY}) then
+			if attached {attached CODE_NUMERIC_VERSION} format_utilities.parse_version (version, create {attached CODE_FACTORY}) as l_version then
 				major := l_version.major
 				minor := l_version.minor
 				revision := l_version.revision
@@ -196,7 +196,7 @@ feature -- Comparison
 	is_less alias "<" (other: like Current): BOOLEAN
 			-- <Precursor>
 		do
-			if {l_other: !CODE_NUMERIC_VERSION} other then
+			if attached {attached CODE_NUMERIC_VERSION} other as l_other then
 				Result := major < l_other.major or else
 					(major = l_other.major and then (minor < l_other.minor or else
 						(minor = l_other.minor and then (revision < l_other.revision or else
@@ -209,7 +209,7 @@ feature -- Comparison
 	is_equal (other: like Current): BOOLEAN
 			-- <Precursor>
 		do
-			if {l_other: !CODE_NUMERIC_VERSION} other then
+			if attached {attached CODE_NUMERIC_VERSION} other as l_other then
 				Result := major < l_other.major and then
 					major = l_other.major and then
 					revision = l_other.revision and then

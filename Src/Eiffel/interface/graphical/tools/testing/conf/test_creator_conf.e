@@ -18,13 +18,13 @@ feature {NONE} -- Initialization
 			a_preference_attached: a_preference /= Void
 		do
 			create tags_cache.make_default
-			tags_cache.set_equality_tester (create {KL_EQUALITY_TESTER_A [!STRING]})
+			tags_cache.set_equality_tester (create {KL_EQUALITY_TESTER_A [attached STRING]})
 			create new_class_name_cache.make_from_string (default_new_class_name)
 		end
 
 feature -- Access
 
-	new_class_name: !STRING
+	new_class_name: attached STRING
 			-- <Precursor>
 		local
 			l_name: like new_class_name_cache
@@ -34,7 +34,7 @@ feature -- Access
 			Result := l_name
 		end
 
-	cluster: !CONF_CLUSTER
+	cluster: attached CONF_CLUSTER
 			-- <Precursor>
 		local
 			l_cluster: like cluster_cache
@@ -44,7 +44,7 @@ feature -- Access
 			Result := l_cluster
 		end
 
-	path: !STRING
+	path: attached STRING
 			-- <Precursor>
 		local
 			l_path: like path_cache
@@ -54,7 +54,7 @@ feature -- Access
 			Result := l_path
 		end
 
-	tags: !DS_LINEAR [!STRING]
+	tags: attached DS_LINEAR [attached STRING]
 			-- <Precursor>
 		do
 			Result := tags_cache
@@ -62,21 +62,21 @@ feature -- Access
 
 feature -- Access: cache
 
-	new_class_name_cache: ?like new_class_name assign set_new_class_name
+	new_class_name_cache: detachable like new_class_name assign set_new_class_name
 			-- Cache for `new_class_name'
 
-	tags_cache: !DS_HASH_SET [!STRING]
+	tags_cache: attached DS_HASH_SET [attached STRING]
 			-- List of tags for new test routine
 
-	cluster_cache: ?like cluster assign set_cluster
+	cluster_cache: detachable like cluster assign set_cluster
 			-- Cache for `cluster'
 
-	path_cache: ?like path assign set_path
+	path_cache: detachable like path assign set_path
 			-- Cache for `path'
 
 feature {NONE} -- Query
 
-	same_string (a_string1, a_string2: ?READABLE_STRING_8): BOOLEAN
+	same_string (a_string1, a_string2: detachable READABLE_STRING_8): BOOLEAN
 			-- Do `a_string1' and `a_string2' represent the same string?
 		do
 			if a_string1 /= Void and a_string2 /= Void then

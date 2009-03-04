@@ -73,7 +73,7 @@ feature {NONE} -- Implementation
 			Result := interface_names.t_compare_with_expected_result
 		end
 
-	manager: !ES_EWEASEL_EXECUTION_MANAGER;
+	manager: attached ES_EWEASEL_EXECUTION_MANAGER;
 			-- eweasel chief manager		
 note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"

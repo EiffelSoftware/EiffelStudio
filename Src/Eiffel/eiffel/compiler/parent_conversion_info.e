@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 			a_feature_conversion_not_void: a_feature_conversion /= Void
 			a_feature_conversion_has_depend_unit: a_feature_conversion.has_depend_unit
 		do
-			if {l_info: FEATURE_CONVERSION_INFO} a_feature_conversion then
+			if attached {FEATURE_CONVERSION_INFO} a_feature_conversion as l_info then
 				is_from_conversion := l_info.is_from_conversion
 				if is_from_conversion then
 						-- Unfortunately we have to duplicate, because otherwise we have

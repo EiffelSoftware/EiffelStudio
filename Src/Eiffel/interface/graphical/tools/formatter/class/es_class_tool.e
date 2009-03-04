@@ -35,7 +35,7 @@ feature -- Access
 			Result := stock_pixmaps.tool_class_icon
 		end
 
-	title: !STRING_32
+	title: attached STRING_32
 			-- <Precursor>
 		do
 			Result := locale_formatter.translation (t_tool_title)
@@ -71,7 +71,7 @@ feature -- Element change
 				-- Now set the mode and stone.
 			set_mode (a_mode)
 			l_stone ?= a_stone
-			if l_stone = Void and then {l_cis: CLASSI_STONE} a_stone then
+			if l_stone = Void and then attached {CLASSI_STONE} a_stone as l_cis then
 				if l_cis.class_i.is_compiled then
 					create l_stone.make (l_cis.class_i.compiled_class)
 				end
@@ -88,7 +88,7 @@ feature -- Status report
 
 feature {NONE} -- Factory
 
-	new_tool: !ES_CLASS_TOOL_PANEL
+	new_tool: attached ES_CLASS_TOOL_PANEL
 			-- <Precursor>
 		do
 			create Result.make (window, Current)

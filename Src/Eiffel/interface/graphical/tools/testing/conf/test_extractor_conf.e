@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			until
 				a_cs.after
 			loop
-				if {l_cse: EIFFEL_CALL_STACK_ELEMENT} a_cs.item then
+				if attached {EIFFEL_CALL_STACK_ELEMENT} a_cs.item as l_cse then
 					if is_selected_cse (l_cse) and a_cs.count /= l_cse.level_in_stack then
 						call_stack_elements_cache.force (l_cse.level_in_stack)
 					end
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	call_stack_elements: !DS_LINEAR [INTEGER]
+	call_stack_elements: attached DS_LINEAR [INTEGER]
 			-- <Precursor>
 		do
 			Result := call_stack_elements_cache
@@ -67,7 +67,7 @@ feature -- Access
 
 feature -- Access: cache
 
-	call_stack_elements_cache: !DS_HASH_SET [INTEGER]
+	call_stack_elements_cache: attached DS_HASH_SET [INTEGER]
 
 feature {NONE} -- Query
 
@@ -76,7 +76,7 @@ feature {NONE} -- Query
 		require
 			a_cse_attached: a_cse /= Void
 		do
-			if {l_ec: EIFFEL_CLASS_C} a_cse.dynamic_class then
+			if attached {EIFFEL_CLASS_C} a_cse.dynamic_class as l_ec then
 				Result := a_cse.level_in_stack = 1 or not
 					(l_ec.cluster.is_used_in_library and l_ec.cluster.is_readonly)
 			end

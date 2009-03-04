@@ -43,7 +43,7 @@ feature -- Element change
 			item_components_set: item_components = a_item_components
 		end
 
-	set_list_item (a_item: !EB_GRID_LISTABLE_CHOICE_ITEM_ITEM)
+	set_list_item (a_item: attached EB_GRID_LISTABLE_CHOICE_ITEM_ITEM)
 			-- Set current as `a_item'
 		local
 			i, l_count: INTEGER
@@ -87,10 +87,10 @@ feature -- Access
 	item_components: INDEXABLE [EB_GRID_LISTABLE_CHOICE_ITEM_ITEM, INTEGER]
 		-- Item tokens used to make up the list.
 
-	selected_item: ?EB_GRID_LISTABLE_CHOICE_ITEM_ITEM
+	selected_item: detachable EB_GRID_LISTABLE_CHOICE_ITEM_ITEM
 			-- Selected item.
 		local
-			l_list: !ARRAYED_LIST [ES_GRID_ITEM_COMPONENT]
+			l_list: attached ARRAYED_LIST [ES_GRID_ITEM_COMPONENT]
 		do
 			if selected_item_internal = Void then
 				create l_list.make (0)
@@ -100,7 +100,7 @@ feature -- Access
 			end
 		end
 
-	selection_changing_action: ?FUNCTION [ANY, TUPLE [EB_GRID_LISTABLE_CHOICE_ITEM_ITEM], BOOLEAN]
+	selection_changing_action: detachable FUNCTION [ANY, TUPLE [EB_GRID_LISTABLE_CHOICE_ITEM_ITEM], BOOLEAN]
 			-- Called on selected value changing
 			-- Result indicate if the real change should be conducted.
 			-- If not set, value will always be changed.
@@ -301,7 +301,7 @@ feature {NONE} -- Implementation
 				if has_user_selected_item and then not choice_list.selected_rows.is_empty then
 					l_item ?= choice_list.selected_rows.first.item (1)
 					if l_item /= Void then
-						if {lt_selected_item: EB_GRID_LISTABLE_CHOICE_ITEM_ITEM}l_item.data and then lt_selected_item /= selected_item then
+						if attached {EB_GRID_LISTABLE_CHOICE_ITEM_ITEM} l_item.data as lt_selected_item and then lt_selected_item /= selected_item then
 							if selection_changing_action /= Void then
 								if selection_changing_action.item ([lt_selected_item]) then
 									set_list_item (lt_selected_item)
@@ -410,7 +410,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	selected_item_internal: ?EB_GRID_LISTABLE_CHOICE_ITEM_ITEM
+	selected_item_internal: detachable EB_GRID_LISTABLE_CHOICE_ITEM_ITEM
 
 	context_menu_factory: EB_CONTEXT_MENU_FACTORY
 			-- Context menu factory

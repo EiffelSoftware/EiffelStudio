@@ -23,7 +23,7 @@ feature -- Redefine
 				Result.set_title (signature_string)
 				Result.set_result_type ({ES_EWEASEL_RESULT_TYPE}.error)
 
-				if {l_lines: LIST [STRING]} a_lines then
+				if attached {LIST [STRING]} a_lines as l_lines then
 					Result.set_original_eweasel_ouput (to_one_string (l_lines))
 				end
 

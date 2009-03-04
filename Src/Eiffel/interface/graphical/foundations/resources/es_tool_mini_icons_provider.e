@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_window: !like window)
+	make (a_window: attached like window)
 			-- Initializes the icon provider using a
 		require
 			a_window_is_interface_usable: a_window.is_interface_usable
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	window: !EB_DEVELOPMENT_WINDOW
+	window: attached EB_DEVELOPMENT_WINDOW
 			-- <Precursor>
 
 ;note

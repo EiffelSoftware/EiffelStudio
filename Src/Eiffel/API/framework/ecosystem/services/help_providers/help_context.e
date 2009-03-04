@@ -18,16 +18,16 @@ inherit
 
 feature -- Access
 
-	frozen help_context_id: !STRING_GENERAL
+	frozen help_context_id: attached STRING_GENERAL
 			-- <Precursor>
 		do
-			create {!STRING_8} Result.make_empty
-			if {l_result: !STRING_GENERAL} help_context then
+			create {attached STRING_8} Result.make_empty
+			if attached {attached STRING_GENERAL} help_context as l_result then
 				Result.append (l_result)
 			end
 		end
 
-	help_context_section: ?HELP_CONTEXT_SECTION_I
+	help_context_section: detachable HELP_CONTEXT_SECTION_I
 			-- <Precursor>
 		do
 			--| Dummy implementation descendents can override to support a sub-section.
@@ -35,7 +35,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	help_context: ?STRING_GENERAL
+	help_context: detachable STRING_GENERAL
 			-- A contextual identifer to link an associated help through.
 		require
 			is_interface_usable: is_interface_usable

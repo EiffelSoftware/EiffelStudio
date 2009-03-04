@@ -40,7 +40,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_conf_notable: !CONF_NOTABLE; a_eis_grid: !ES_EIS_ENTRY_GRID)
+	make (a_conf_notable: attached CONF_NOTABLE; a_eis_grid: attached ES_EIS_ENTRY_GRID)
 			-- Initialized with `a_conf_notable' and `a_eis_grid'.
 		require
 			a_eis_grid_not_destroyed: not a_eis_grid.is_destroyed
@@ -54,10 +54,10 @@ feature {NONE} -- Initialization
 
 feature -- Querry
 
-	valid_notable (a_notable: !CONF_NOTABLE): BOOLEAN
+	valid_notable (a_notable: attached CONF_NOTABLE): BOOLEAN
 			-- Is `a_notable' a supported component?
 		do
-			Result := {lt_target: CONF_TARGET}a_notable or else {lt_cluster: CONF_CLUSTER}a_notable
+			Result := attached {CONF_TARGET} a_notable as lt_target or else attached {CONF_CLUSTER} a_notable as lt_cluster
 		end
 
 	component_editable: BOOLEAN
@@ -71,13 +71,13 @@ feature -- Operation
 	create_new_entry
 			-- Create new EIS entry in `a_conf_notable'.
 		local
-			l_entry: !EIS_ENTRY
+			l_entry: attached EIS_ENTRY
 			l_added: BOOLEAN
 			l_system: detachable CONF_SYSTEM
 			l_date: INTEGER
 		do
 			if component_editable then
-				if {lt_target: CONF_TARGET}conf_notable then
+				if attached {CONF_TARGET} conf_notable as lt_target then
 					l_system := lt_target.system
 					l_date := l_system.file_date
 					create l_entry.make ("Unnamed", Void, Void, Void, component_id, Void)
@@ -86,7 +86,7 @@ feature -- Operation
 					if not l_added then
 						prompts.show_error_prompt (interface_names.l_item_is_not_writable (lt_target.name), Void, Void)
 					end
-				elseif {lt_cluster: CONF_CLUSTER}conf_notable then
+				elseif attached {CONF_CLUSTER} conf_notable as lt_cluster then
 					if not lt_cluster.is_readonly then
 						l_system := lt_cluster.target.system
 						l_date := l_system.file_date
@@ -135,8 +135,8 @@ feature -- Operation
 					until
 						l_selected_rows.after
 					loop
-						if {lt_entry: EIS_ENTRY}l_selected_rows.item_for_iteration.data then
-							if entry_editable (lt_entry) and then {lt_system: CONF_SYSTEM}system_of_conf_notable (conf_notable) then
+						if attached {EIS_ENTRY} l_selected_rows.item_for_iteration.data as lt_entry then
+							if entry_editable (lt_entry) and then attached {CONF_SYSTEM} system_of_conf_notable (conf_notable) as lt_system then
 								remove_entry (lt_entry, conf_notable, lt_system)
 								extracted_entries.remove (l_selected_rows.item_for_iteration.index)
 								l_removed := True
@@ -178,7 +178,7 @@ feature {NONE} -- Conf modification
 			last_entry_modified := a_system.store_successful
 		end
 
-	modify_entry_in_conf (a_old_entry, a_new_entry: !EIS_ENTRY; a_conf: CONF_NOTABLE; a_system: !CONF_SYSTEM)
+	modify_entry_in_conf (a_old_entry, a_new_entry: attached EIS_ENTRY; a_conf: CONF_NOTABLE; a_system: attached CONF_SYSTEM)
 			-- Modify `a_old_entry' into `a_new_entry' in `a_conf'
 		require
 			a_old_entry_editable: entry_editable (a_old_entry)
@@ -196,7 +196,7 @@ feature {NONE} -- Conf modification
 			until
 				l_notes.after or l_found
 			loop
-				if {lt_entry: EIS_ENTRY}eis_entry_from_conf_note (l_notes.item_for_iteration, component_id) then
+				if attached {EIS_ENTRY} eis_entry_from_conf_note (l_notes.item_for_iteration, component_id) as lt_entry then
 					if lt_entry.same_entry (a_old_entry) then
 						eis_output.process (a_new_entry)
 						a_conf.replace_note (l_notes.item_for_iteration, eis_output.last_output_conf)
@@ -212,7 +212,7 @@ feature {NONE} -- Conf modification
 			end
 		end
 
-	remove_entry (a_entry: !EIS_ENTRY; a_conf_notable: !CONF_NOTABLE; a_system: !CONF_SYSTEM)
+	remove_entry (a_entry: attached EIS_ENTRY; a_conf_notable: attached CONF_NOTABLE; a_system: attached CONF_SYSTEM)
 			-- Remove `a_entry' from `a_conf_notable' and save in `a_system'
 		require
 			a_entry_editable: entry_editable (a_entry)
@@ -227,7 +227,7 @@ feature {NONE} -- Conf modification
 			until
 				l_notes.after or l_found
 			loop
-				if {lt_entry: EIS_ENTRY}eis_entry_from_conf_note (l_notes.item_for_iteration, component_id) then
+				if attached {EIS_ENTRY} eis_entry_from_conf_note (l_notes.item_for_iteration, component_id) as lt_entry then
 					if lt_entry.same_entry (a_entry) then
 						conf_notable.remove_note (l_notes.item_for_iteration)
 						l_found := True
@@ -241,13 +241,13 @@ feature {NONE} -- Conf modification
 			end
 		end
 
-	entry_editable (a_entry: !EIS_ENTRY): BOOLEAN
+	entry_editable (a_entry: attached EIS_ENTRY): BOOLEAN
 			-- If `a_entry' is editable through current view?
 		local
 			l_type: NATURAL
 			l_target: CONF_TARGET
 		do
-			if {lt_id: STRING}a_entry.id then
+			if attached {STRING} a_entry.id as lt_id then
 				l_type := id_solution.most_possible_type_of_id (lt_id)
 				if l_type = id_solution.target_type and then lt_id.is_equal (component_id) then
 					l_target := id_solution.target_of_id (lt_id)
@@ -255,7 +255,7 @@ feature {NONE} -- Conf modification
 						Result := conf_notable_editable (l_target)
 					end
 				elseif l_type = id_solution.group_type and then lt_id.is_equal (component_id) then
-					if {lt_cluster: CONF_CLUSTER}id_solution.group_of_id (lt_id) then
+					if attached {CONF_CLUSTER} id_solution.group_of_id (lt_id) as lt_cluster then
 						Result := conf_notable_editable (lt_cluster)
 					end
 				end
@@ -267,7 +267,7 @@ feature {NONE} -- Conf modification
 		local
 			l_lib: CONF_LIBRARY
 		do
-			if {lt_target: CONF_TARGET}conf_notable then
+			if attached {CONF_TARGET} conf_notable as lt_target then
 				l_lib := lt_target.system.application_target_library
 				if l_lib /= Void then
 					Result := not l_lib.is_readonly
@@ -277,7 +277,7 @@ feature {NONE} -- Conf modification
 				else
 					Result := not lt_target.system.is_readonly
 				end
-			elseif {lt_cluster: CONF_CLUSTER}conf_notable then
+			elseif attached {CONF_CLUSTER} conf_notable as lt_cluster then
 				Result := not lt_cluster.is_readonly
 			end
 		end
@@ -291,15 +291,15 @@ feature {NONE} -- Callbacks
 			-- On name changed
 			-- We modify neither the referenced EIS entry when the modification is done.
 		local
-			l_new_entry: !EIS_ENTRY
+			l_new_entry: attached EIS_ENTRY
 		do
-			if {lt_entry: EIS_ENTRY}a_item.row.data and then {lt_name: STRING_32}a_item.text then
+			if attached {EIS_ENTRY} a_item.row.data as lt_entry and then attached {STRING_32} a_item.text as lt_name then
 				if lt_entry.name /= Void and then lt_name.is_equal (lt_entry.name) then
 						-- Do nothing when the name is not actually changed
 				else
 					if entry_editable (lt_entry) then
-						if {lt_system: CONF_SYSTEM}system_of_conf_notable (conf_notable) then
-							if {lt_new_entry: EIS_ENTRY}lt_entry.twin then
+						if attached {CONF_SYSTEM} system_of_conf_notable (conf_notable) as lt_system then
+							if attached {EIS_ENTRY} lt_entry.twin as lt_new_entry then
 								l_new_entry := lt_new_entry
 							end
 							l_new_entry.set_name (lt_name)
@@ -320,15 +320,15 @@ feature {NONE} -- Callbacks
 			-- On protocol changed
 			-- We modify neither the referenced EIS entry when the modification is done.
 		local
-			l_new_entry: !EIS_ENTRY
+			l_new_entry: attached EIS_ENTRY
 		do
-			if {lt_entry: EIS_ENTRY}a_item.row.data and then {lt_protocol: STRING_32}a_item.text then
+			if attached {EIS_ENTRY} a_item.row.data as lt_entry and then attached {STRING_32} a_item.text as lt_protocol then
 				if lt_entry.protocol /= Void and then lt_protocol.is_equal (lt_entry.protocol) then
 						-- Do nothing when the protocol is not actually changed
 				else
 					if entry_editable (lt_entry) then
-						if {lt_system: CONF_SYSTEM}system_of_conf_notable (conf_notable) then
-							if {lt_new_entry: EIS_ENTRY}lt_entry.twin then
+						if attached {CONF_SYSTEM} system_of_conf_notable (conf_notable) as lt_system then
+							if attached {EIS_ENTRY} lt_entry.twin as lt_new_entry then
 								l_new_entry := lt_new_entry
 							end
 							l_new_entry.set_protocol (lt_protocol)
@@ -349,15 +349,15 @@ feature {NONE} -- Callbacks
 			-- On source changed
 			-- We modify neither the referenced EIS entry when the modification is done.
 		local
-			l_new_entry: !EIS_ENTRY
+			l_new_entry: attached EIS_ENTRY
 		do
-			if {lt_entry: EIS_ENTRY}a_item.row.data and then {lt_source: STRING_32}a_item.text then
+			if attached {EIS_ENTRY} a_item.row.data as lt_entry and then attached {STRING_32} a_item.text as lt_source then
 				if lt_entry.source /= Void and then lt_source.is_equal (lt_entry.source) then
 						-- Do nothing when the source is not actually changed
 				else
 					if entry_editable (lt_entry) then
-						if {lt_system: CONF_SYSTEM}system_of_conf_notable (conf_notable) then
-							if {lt_new_entry: EIS_ENTRY}lt_entry.twin then
+						if attached {CONF_SYSTEM} system_of_conf_notable (conf_notable) as lt_system then
+							if attached {EIS_ENTRY} lt_entry.twin as lt_new_entry then
 								l_new_entry := lt_new_entry
 							end
 							l_new_entry.set_source (lt_source)
@@ -378,12 +378,12 @@ feature {NONE} -- Callbacks
 			-- On tags changed
 			-- We modify neither the referenced EIS entry when the modification is done.
 		local
-			l_new_entry: !EIS_ENTRY
-			l_tags: !ARRAYED_LIST [STRING_32]
+			l_new_entry: attached EIS_ENTRY
+			l_tags: attached ARRAYED_LIST [STRING_32]
 		do
-			if {lt_entry: EIS_ENTRY}a_item.row.data and then {lt_tags: STRING_32}a_item.text then
+			if attached {EIS_ENTRY} a_item.row.data as lt_entry and then attached {STRING_32} a_item.text as lt_tags then
 					 -- |FIXME: Bad conversion, should not convert to string_8.
-				if {lt_tags_str_8: STRING}lt_tags.as_string_8 then
+				if attached {STRING} lt_tags.as_string_8 as lt_tags_str_8 then
 					l_tags := parse_tags (lt_tags_str_8)
 					l_tags.compare_objects
 				end
@@ -391,8 +391,8 @@ feature {NONE} -- Callbacks
 						-- Do nothing when the tags is not actually changed
 				else
 					if entry_editable (lt_entry) then
-						if {lt_system: CONF_SYSTEM}system_of_conf_notable (conf_notable) then
-							if {lt_new_entry: EIS_ENTRY}lt_entry.twin then
+						if attached {CONF_SYSTEM} system_of_conf_notable (conf_notable) as lt_system then
+							if attached {EIS_ENTRY} lt_entry.twin as lt_new_entry then
 								l_new_entry := lt_new_entry
 							end
 							l_new_entry.set_tags (l_tags)
@@ -417,18 +417,18 @@ feature {NONE} -- Callbacks
 			-- On others changed
 			-- We modify neither the referenced EIS entry when the modification is done.
 		local
-			l_new_entry: !EIS_ENTRY
-			l_others: !HASH_TABLE [STRING_32, STRING_32]
+			l_new_entry: attached EIS_ENTRY
+			l_others: attached HASH_TABLE [STRING_32, STRING_32]
 		do
-			if {lt_entry: EIS_ENTRY}a_item.row.data and then {lt_others: STRING_32}a_item.text then
+			if attached {EIS_ENTRY} a_item.row.data as lt_entry and then attached {STRING_32} a_item.text as lt_others then
 				l_others := parse_others (lt_others)
 				l_others.compare_objects
 				if lt_entry.others /= Void and then lt_entry.others.is_equal (l_others) then
 						-- Do nothing when the others is not actually changed
 				else
 					if entry_editable (lt_entry) then
-						if {lt_system: CONF_SYSTEM}system_of_conf_notable (conf_notable) then
-							if {lt_new_entry: EIS_ENTRY}lt_entry.twin then
+						if attached {CONF_SYSTEM} system_of_conf_notable (conf_notable) as lt_system then
+							if attached {EIS_ENTRY} lt_entry.twin as lt_new_entry then
 								l_new_entry := lt_new_entry
 							end
 							l_new_entry.set_others (l_others)
@@ -451,29 +451,29 @@ feature {NONE} -- Callbacks
 
 feature {NONE} -- Implementation
 
-	system_of_conf_notable (a_notable: !CONF_NOTABLE): ?CONF_SYSTEM
+	system_of_conf_notable (a_notable: attached CONF_NOTABLE): detachable CONF_SYSTEM
 			-- Get system from `a_notable'
 		do
-			if {lt_target: CONF_TARGET}a_notable then
+			if attached {CONF_TARGET} a_notable as lt_target then
 				Result := lt_target.system
-			elseif {lt_cluster: CONF_CLUSTER}a_notable then
+			elseif attached {CONF_CLUSTER} a_notable as lt_cluster then
 				Result := lt_cluster.target.system
 			end
 		ensure
 			valid_a_notable_implies_not_void: valid_notable (a_notable) implies Result /= Void
 		end
 
-	new_extractor: !ES_EIS_EXTRACTOR
+	new_extractor: attached ES_EIS_EXTRACTOR
 			-- Create extractor
 		do
 			create {ES_EIS_CONF_EXTRACTOR}Result.make (conf_notable, True)
 		end
 
-	background_color_of_entry (a_entry: !EIS_ENTRY): EV_COLOR
+	background_color_of_entry (a_entry: attached EIS_ENTRY): EV_COLOR
 			-- Background color of `a_entry'
 		do
 			if
-				{lt_id: STRING}a_entry.id and then
+				attached {STRING} a_entry.id as lt_id and then
 				(lt_id.is_equal (component_id) or id_solution.most_possible_type_of_id (lt_id) = id_solution.feature_type)
 			then
 					-- Default background color without change
@@ -482,33 +482,33 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	component_id: !STRING
+	component_id: attached STRING
 			-- Component ID
 		do
 			if internal_component_id = Void then
-				if {lt_id: STRING}computed_component_id then
+				if attached {STRING} computed_component_id as lt_id then
 					Result := lt_id
 				end
 			else
-				if {lt_id1: STRING}internal_component_id then
+				if attached {STRING} internal_component_id as lt_id1 then
 					Result := lt_id1
 				end
 			end
 		end
 
-	computed_component_id: ?STRING
+	computed_component_id: detachable STRING
 			-- <Precursor>
 		do
-			if {lt_cluster: CONF_CLUSTER}conf_notable then
+			if attached {CONF_CLUSTER} conf_notable as lt_cluster then
 				Result := id_solution.id_of_group (lt_cluster)
-			elseif {lt_target: CONF_TARGET}conf_notable then
+			elseif attached {CONF_TARGET} conf_notable as lt_target then
 				Result := id_solution.id_of_target (lt_target)
 			end
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	internal_component_id: ?STRING;
+	internal_component_id: detachable STRING;
 			-- Buffered component ID
 
 invariant

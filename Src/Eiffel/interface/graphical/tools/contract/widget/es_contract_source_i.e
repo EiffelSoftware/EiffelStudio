@@ -12,12 +12,12 @@ deferred class
 
 feature -- Access
 
-	context: !ES_CONTRACT_EDITOR_CONTEXT [CLASSI_STONE]
+	context: attached ES_CONTRACT_EDITOR_CONTEXT [CLASSI_STONE]
 			-- Context associated with a contract source
 		deferred
 		end
 
-	source: !ES_CONTRACT_SOURCE_I
+	source: attached ES_CONTRACT_SOURCE_I
 			-- The actual contract source
 		deferred
 		end

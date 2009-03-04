@@ -106,7 +106,7 @@ feature -- Status report
 	accepts_stone (a_stone: ANY): BOOLEAN
 			-- Can the user drop `st'?
 		do
-			Result := {st: OBJECT_STONE} a_stone
+			Result := attached {OBJECT_STONE} a_stone as st
 		end
 
 feature -- Basic operations

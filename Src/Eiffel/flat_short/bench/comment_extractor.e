@@ -19,7 +19,7 @@ class
 
 feature -- Query
 
-	feature_comments (a_feature: !E_FEATURE): ?EIFFEL_COMMENTS
+	feature_comments (a_feature: attached E_FEATURE): detachable EIFFEL_COMMENTS
 			-- Retrieve's the feature comments from a given compiled feature.
 			--
 			-- `a_feature': The feature to show comments for.
@@ -28,15 +28,15 @@ feature -- Query
 			Result := feature_comments_ex (a_feature, False)
 		end
 
-	feature_comments_ex (a_feature: !E_FEATURE; a_show_impl: BOOLEAN): ?EIFFEL_COMMENTS
+	feature_comments_ex (a_feature: attached E_FEATURE; a_show_impl: BOOLEAN): detachable EIFFEL_COMMENTS
 			-- Retrieve's the feature comments from a given compiled feature, with the option to include implementation comments
 			--
 			-- `a_feature': The feature to show comments for.
 			-- `a_show_impl': True if the feature's implmentation comments should be displayed; False otherwise.
 			-- `Result': A list of tokens or Void if no comments were found.
 		local
-			l_parent_comments: ?EIFFEL_COMMENTS
-			l_parent_feature: ?like find_ancestors_feature
+			l_parent_comments: detachable EIFFEL_COMMENTS
+			l_parent_feature: detachable like find_ancestors_feature
 			l_comments: EIFFEL_COMMENTS
 			l_comment: EIFFEL_COMMENT_LINE
 			l_string: STRING_8
@@ -46,7 +46,7 @@ feature -- Query
 		do
 			create Result.make
 
-			if {l_mls: !MATCH_LIST_SERVER} a_feature.system.match_list_server then
+			if attached {attached MATCH_LIST_SERVER} a_feature.system.match_list_server as l_mls then
 				l_leaf := l_mls.item (a_feature.written_class.class_id)
 				if l_leaf /= Void then
 					l_comments := a_feature.ast.comment (l_leaf)
@@ -140,7 +140,7 @@ feature -- Query
 
 feature {NONE} -- Query
 
-	find_ancestors_feature (a_feature: !E_FEATURE; a_parent_name: ?STRING_8): ?E_FEATURE
+	find_ancestors_feature (a_feature: attached E_FEATURE; a_parent_name: detachable STRING_8): detachable E_FEATURE
 			-- Attempts to locate an ancestor feature. This also respects ancestor features for attributes.
 			--
 			-- `a_feature': The feature to locate a first parent from.
@@ -149,8 +149,8 @@ feature {NONE} -- Query
 		require
 			not_a_parent_name_is_empty: a_parent_name /= Void implies not a_parent_name.is_empty
 		do
-			if {l_class: CLASS_C} a_feature.associated_class then
-				Result := find_ancestors_feature_internal (a_feature, l_class, a_parent_name, create {ARRAYED_LIST [!CLASS_C]}.make (20))
+			if attached {CLASS_C} a_feature.associated_class as l_class then
+				Result := find_ancestors_feature_internal (a_feature, l_class, a_parent_name, create {ARRAYED_LIST [attached CLASS_C]}.make (20))
 			end
 		end
 
@@ -167,7 +167,7 @@ feature {NONE} -- Regular expressions
 
 feature {NONE} -- Implementation: Query
 
-	find_ancestors_feature_internal (a_feature: !E_FEATURE; a_class: !CLASS_C; a_parent_name: ?STRING_8; a_processed: !ARRAYED_LIST [!CLASS_C]): ?E_FEATURE
+	find_ancestors_feature_internal (a_feature: attached E_FEATURE; a_class: attached CLASS_C; a_parent_name: detachable STRING_8; a_processed: attached ARRAYED_LIST [attached CLASS_C]): detachable E_FEATURE
 			-- Attepts to locate an ancestor feature. This also respects ancestor features for attributes.
 			--
 			-- `a_feature': The feature to locate a first parent from.
@@ -189,7 +189,7 @@ feature {NONE} -- Implementation: Query
 			l_parents := a_class.parents
 			if not l_parents.is_empty then
 				from l_parents.start until l_parents.after or Result /= Void or l_matched_parent loop
-					if {l_parent: CLASS_C} l_parents.item.associated_class and then not a_processed.has (l_parent) then
+					if attached {CLASS_C} l_parents.item.associated_class as l_parent and then not a_processed.has (l_parent) then
 							-- The parent class has not get been processed.
 						l_matched_parent := a_parent_name /= Void and then l_parent.name_in_upper.is_equal (a_parent_name)
 						if a_parent_name = Void or l_matched_parent then

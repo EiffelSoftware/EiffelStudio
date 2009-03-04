@@ -20,7 +20,7 @@ inherit
 
 feature -- Access
 
-	code_templates: !DS_BILINEAR [!CODE_TEMPLATE_DEFINITION]
+	code_templates: attached DS_BILINEAR [attached CODE_TEMPLATE_DEFINITION]
 			--
 		require
 			is_interface_usable: is_interface_usable
@@ -31,7 +31,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_cataloged (a_folder: !READABLE_STRING_GENERAL): BOOLEAN
+	is_cataloged (a_folder: attached READABLE_STRING_GENERAL): BOOLEAN
 			-- Determines if a folder is currently cataloged
 		require
 			is_interface_usable: is_interface_usable
@@ -41,7 +41,7 @@ feature -- Status report
 
 feature -- Query
 
-	template_by_file_name (a_file_name: !READABLE_STRING_GENERAL): ?CODE_TEMPLATE_DEFINITION
+	template_by_file_name (a_file_name: attached READABLE_STRING_GENERAL): detachable CODE_TEMPLATE_DEFINITION
 			-- Retrieves the first code template defintion match by a specified file name.
 			--
 			-- `a_file_name': The full path to a code template definition file.
@@ -52,7 +52,7 @@ feature -- Query
 		deferred
 		end
 
-	template_by_title (a_title: !READABLE_STRING_GENERAL): ?CODE_TEMPLATE_DEFINITION
+	template_by_title (a_title: attached READABLE_STRING_GENERAL): detachable CODE_TEMPLATE_DEFINITION
 			-- Retrieves the first code template defintion match by a specified title.
 			--
 			-- `a_title': The title to match a code template definition to in the catalog.
@@ -63,7 +63,7 @@ feature -- Query
 		deferred
 		end
 
-	template_by_shortcut (a_shortcut: !READABLE_STRING_GENERAL): ?CODE_TEMPLATE_DEFINITION
+	template_by_shortcut (a_shortcut: attached READABLE_STRING_GENERAL): detachable CODE_TEMPLATE_DEFINITION
 			-- Retrieves the first code template defintion match by a specified shortcut.
 			--
 			-- `a_shortcut': The shortcut to match a code template definition to in the catalog.
@@ -74,7 +74,7 @@ feature -- Query
 		deferred
 		end
 
-	templates_by_category (a_categories: !DS_BILINEAR [!READABLE_STRING_GENERAL]; a_conjunctive: BOOLEAN): !DS_ARRAYED_LIST [!CODE_TEMPLATE_DEFINITION]
+	templates_by_category (a_categories: attached DS_BILINEAR [attached READABLE_STRING_GENERAL]; a_conjunctive: BOOLEAN): attached DS_ARRAYED_LIST [attached CODE_TEMPLATE_DEFINITION]
 			-- Retrieves a list of code template defintions by specifying a list of matching categories.
 			--
 			-- `a_categories': The categories to match code templates for in the catalog.
@@ -89,7 +89,7 @@ feature -- Query
 
 feature -- Events
 
-	catalog_changed_event: !EVENT_TYPE [TUPLE]
+	catalog_changed_event: attached EVENT_TYPE [TUPLE]
 			-- Events called when the catalog is modified in some way; templates added, templates removed
 			-- or a rescan was performed
 		require
@@ -99,7 +99,7 @@ feature -- Events
 
 feature -- Events: Connection point
 
-	code_template_catalog_connection: !EVENT_CONNECTION_I [CODE_TEMPLATE_CATALOG_OBSERVER, CODE_TEMPLATE_CATALOG_S]
+	code_template_catalog_connection: attached EVENT_CONNECTION_I [CODE_TEMPLATE_CATALOG_OBSERVER, CODE_TEMPLATE_CATALOG_S]
 			-- <Precursor>
 		local
 			l_result: like internal_code_template_catalog_connection
@@ -107,7 +107,7 @@ feature -- Events: Connection point
 			l_result := internal_code_template_catalog_connection
 			if l_result = Void then
 				create {EVENT_CONNECTION [CODE_TEMPLATE_CATALOG_OBSERVER, CODE_TEMPLATE_CATALOG_S]} Result.make (
-					agent (ia_observer: !CODE_TEMPLATE_CATALOG_OBSERVER): !ARRAY [TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]]
+					agent (ia_observer: attached CODE_TEMPLATE_CATALOG_OBSERVER): attached ARRAY [TUPLE [event: attached EVENT_TYPE [TUPLE]; action: attached PROCEDURE [ANY, TUPLE]]]
 						do
 							Result := << [catalog_changed_event, agent ia_observer.on_catalog_changed] >>
 						end)
@@ -120,7 +120,7 @@ feature -- Events: Connection point
 
 feature -- Basic operations
 
-	rescan (a_folder: !READABLE_STRING_GENERAL)
+	rescan (a_folder: attached READABLE_STRING_GENERAL)
 			-- Rescans an existing catalog and update the templates associated with the cataloged folder.
 			--
 			-- `a_folder': The cataloged folder to rescan and update the templates
@@ -142,17 +142,17 @@ feature -- Basic operations
 
 feature {NONE} -- Basic operation
 
-	sort_templates_by_title (a_list: !DS_INDEXABLE [!CODE_TEMPLATE_DEFINITION])
+	sort_templates_by_title (a_list: attached DS_INDEXABLE [attached CODE_TEMPLATE_DEFINITION])
 			-- Sorts a template list by title.
 			--
 			-- `a_list': A template list to sort by title.
 		require
 			is_interface_usable: is_interface_usable
 		local
-			l_comparer: AGENT_BASED_EQUALITY_TESTER [!CODE_TEMPLATE_DEFINITION]
-			l_sorter: DS_QUICK_SORTER [!CODE_TEMPLATE_DEFINITION]
+			l_comparer: AGENT_BASED_EQUALITY_TESTER [attached CODE_TEMPLATE_DEFINITION]
+			l_sorter: DS_QUICK_SORTER [attached CODE_TEMPLATE_DEFINITION]
 		do
-			create l_comparer.make (agent (ia_template, ia_other_template: !CODE_TEMPLATE_DEFINITION): BOOLEAN
+			create l_comparer.make (agent (ia_template, ia_other_template: attached CODE_TEMPLATE_DEFINITION): BOOLEAN
 				do
 					Result := ia_template.metadata.title < ia_other_template.metadata.title
 				end)
@@ -162,7 +162,7 @@ feature {NONE} -- Basic operation
 
 feature -- Extension
 
-	extend_catalog (a_folder: !READABLE_STRING_GENERAL)
+	extend_catalog (a_folder: attached READABLE_STRING_GENERAL)
 			-- Extends the code template catalog with a folder full of templates
 		require
 			is_interface_usable: is_interface_usable
@@ -175,7 +175,7 @@ feature -- Extension
 
 feature -- Removal
 
-	remove_catalog (a_folder: !READABLE_STRING_GENERAL)
+	remove_catalog (a_folder: attached READABLE_STRING_GENERAL)
 		require
 			is_interface_usable: is_interface_usable
 			not_a_folder_is_empty: not a_folder.is_empty
@@ -187,7 +187,7 @@ feature -- Removal
 
 feature {NONE} -- Implementation: INternal cached
 
-	internal_code_template_catalog_connection: ?like code_template_catalog_connection
+	internal_code_template_catalog_connection: detachable like code_template_catalog_connection
 			-- Cached version of `code_template_catalog_connection'.
 			-- Note: Do not use directly!
 

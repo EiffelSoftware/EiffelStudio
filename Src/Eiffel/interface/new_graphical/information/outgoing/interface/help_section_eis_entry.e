@@ -36,19 +36,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	section: !STRING_GENERAL
+	section: attached STRING_GENERAL
 			-- String representation of the section
 		do
-			if {lt_name: STRING_GENERAL}entry.name and then not lt_name.is_empty then
+			if attached {STRING_GENERAL} entry.name as lt_name and then not lt_name.is_empty then
 				Result := lt_name
-			elseif {lt_name1: STRING_GENERAL}interface_names.l_unnamed and then not lt_name1.is_empty then
+			elseif attached {STRING_GENERAL} interface_names.l_unnamed as lt_name1 and then not lt_name1.is_empty then
 				Result := lt_name1
 			else
 				check empty_translation: False end
 			end
 		end
 
-	entry: !EIS_ENTRY;
+	entry: attached EIS_ENTRY;
 			-- The EIS entry
 
 note

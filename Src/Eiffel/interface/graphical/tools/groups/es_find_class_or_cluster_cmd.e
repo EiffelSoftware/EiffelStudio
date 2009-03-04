@@ -115,7 +115,7 @@ feature -- Status report
 	is_valid_stone (a_stone: STONE): BOOLEAN
 			-- <Precursor>
 		do
-			if {l_tool: ES_GROUPS_TOOL} target.shell_tools.tool ({ES_GROUPS_TOOL}) then
+			if attached {ES_GROUPS_TOOL} target.shell_tools.tool ({ES_GROUPS_TOOL}) as l_tool then
 				Result := l_tool.is_stone_usable (a_stone)
 			end
 		end
@@ -125,7 +125,7 @@ feature -- Basic operations
 	execute
 			-- <Precursor>
 		do
-			if {l_commander: ES_GROUPS_COMMANDER_I} target.shell_tools.tool ({ES_GROUPS_TOOL}) then
+			if attached {ES_GROUPS_COMMANDER_I} target.shell_tools.tool ({ES_GROUPS_TOOL}) as l_commander then
 				l_commander.highlight_editor_stone
 			end
 		end
@@ -133,7 +133,7 @@ feature -- Basic operations
 	execute_with_stone (a_stone: STONE)
 			-- <Precursor>
 		do
-			if a_stone /= Void and then {l_commander: ES_GROUPS_COMMANDER_I} target.shell_tools.tool ({ES_GROUPS_TOOL}) then
+			if a_stone /= Void and then attached {ES_GROUPS_COMMANDER_I} target.shell_tools.tool ({ES_GROUPS_TOOL}) as l_commander then
 				l_commander.highlight_stone (a_stone)
 			end
 		end

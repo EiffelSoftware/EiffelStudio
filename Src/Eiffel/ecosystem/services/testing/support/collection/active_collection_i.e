@@ -21,7 +21,7 @@ inherit
 
 feature -- Access
 
-	items: !DS_LINEAR [!G]
+	items: attached DS_LINEAR [attached G]
 			-- List being observed
 		require
 			usable: is_interface_usable
@@ -44,7 +44,7 @@ feature -- Status report
 
 feature -- Events
 
-	item_added_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [G]; active: !G]]
+	item_added_event: attached EVENT_TYPE [TUPLE [collection: attached ACTIVE_COLLECTION_I [G]; active: attached G]]
 			-- Events called after an item was added to `items'.
 			--
 			-- collection: `Current'
@@ -54,7 +54,7 @@ feature -- Events
 		deferred
 		end
 
-	item_removed_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [G]; active: !G]]
+	item_removed_event: attached EVENT_TYPE [TUPLE [collection: attached ACTIVE_COLLECTION_I [G]; active: attached G]]
 			-- Events called after an item was removed from `items'.
 			--
 			-- collection: `Current'
@@ -64,7 +64,7 @@ feature -- Events
 		deferred
 		end
 
-	item_changed_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [G]; active: !G]]
+	item_changed_event: attached EVENT_TYPE [TUPLE [collection: attached ACTIVE_COLLECTION_I [G]; active: attached G]]
 			-- Events called after the state of an item has changed
 			--
 			-- collection: `Current'
@@ -74,7 +74,7 @@ feature -- Events
 		deferred
 		end
 
-	items_reset_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [G]]]
+	items_reset_event: attached EVENT_TYPE [TUPLE [collection: attached ACTIVE_COLLECTION_I [G]]]
 			-- Events called to indicate that `items' is empty and may or may not be available.
 			--
 			-- collection: `Current'
@@ -85,7 +85,7 @@ feature -- Events
 
 feature -- Events: Connection point
 
-	active_collection_connection: !EVENT_CONNECTION_I [ACTIVE_COLLECTION_OBSERVER [G], ACTIVE_COLLECTION_I [G]]
+	active_collection_connection: attached EVENT_CONNECTION_I [ACTIVE_COLLECTION_OBSERVER [G], ACTIVE_COLLECTION_I [G]]
 			-- <Precursor>
 		local
 			l_result: like internal_active_collection_connection
@@ -93,7 +93,7 @@ feature -- Events: Connection point
 			l_result := internal_active_collection_connection
 			if l_result = Void then
 				create {EVENT_CONNECTION [ACTIVE_COLLECTION_OBSERVER [G], ACTIVE_COLLECTION_I [G]]} Result.make (
-					agent (ia_observer: !ACTIVE_COLLECTION_OBSERVER [G]): !ARRAY [TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]]
+					agent (ia_observer: attached ACTIVE_COLLECTION_OBSERVER [G]): attached ARRAY [TUPLE [event: attached EVENT_TYPE [TUPLE]; action: attached PROCEDURE [ANY, TUPLE]]]
 						do
 							Result := <<
 								[item_added_event, agent ia_observer.on_item_added],
@@ -110,7 +110,7 @@ feature -- Events: Connection point
 
 feature {NONE} -- Implementation: Internal cache
 
-	internal_active_collection_connection: !EVENT_CONNECTION_I [ACTIVE_COLLECTION_OBSERVER [G], ACTIVE_COLLECTION_I [G]]
+	internal_active_collection_connection: attached EVENT_CONNECTION_I [ACTIVE_COLLECTION_OBSERVER [G], ACTIVE_COLLECTION_I [G]]
 			-- Cached version of `active_collection_connection'.
 			-- Note: Do not use directly!
 

@@ -310,7 +310,7 @@ feature {NONE} -- Click ast exploration
 					if current_class_as = Void then
 							-- If a syntax error ocurred, we retrieve the old ast.
 						current_class_as := c.ast
-						if error_handler.has_error and then {l_syn: SYNTAX_ERROR} error_handler.error_list.first then
+						if error_handler.has_error and then attached {SYNTAX_ERROR} error_handler.error_list.first as l_syn then
 								-- Set the new syntax error
 							last_syntax_error := l_syn
 						end
@@ -1584,9 +1584,9 @@ feature {NONE}-- Implementation
 			l_token: EDITOR_TOKEN
 			l_line: EDITOR_LINE
 			l_name: STRING_32
-			l_analyzer: !ES_EDITOR_CLASS_ANALYZER
-			l_result: ?ES_EDITOR_ANALYZER_STATE_INFO
-			l_locals: !HASH_TABLE [?TYPE_A, STRING_32]
+			l_analyzer: attached ES_EDITOR_CLASS_ANALYZER
+			l_result: detachable ES_EDITOR_ANALYZER_STATE_INFO
+			l_locals: attached HASH_TABLE [detachable TYPE_A, STRING_32]
 			l_feature: like current_feature_i
 			l_class: like current_class_c
 			retried: BOOLEAN
@@ -1609,7 +1609,7 @@ feature {NONE}-- Implementation
 								end
 							end
 						else
-							if {l_found_locals: HASH_TABLE [?TYPE_A, STRING_32]} locals_from_local_entities_finder then
+							if attached {HASH_TABLE [detachable TYPE_A, STRING_32]} locals_from_local_entities_finder as l_found_locals then
 								l_name := a_name.as_string_32
 								if l_found_locals.has (l_name) then
 									Result := l_found_locals.item (l_name)
@@ -1624,7 +1624,7 @@ feature {NONE}-- Implementation
 			retry
 		end
 
-	locals_from_local_entities_finder: HASH_TABLE [?TYPE_A, !STRING_32]
+	locals_from_local_entities_finder: HASH_TABLE [detachable TYPE_A, attached STRING_32]
 			-- Stack entities from finder
 			--| could be finder from AST for instance
 			-- i.e: Locals,arguments,object test locals

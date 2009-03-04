@@ -19,14 +19,14 @@ feature {NONE} -- Implementation
 	process_imp (a_lines: LIST [STRING]): ES_EWEASEL_TEST_RESULT_ITEM
 			-- Redefine
 		do
-			if {l_lines: !LIST [STRING]} a_lines then
+			if attached {attached LIST [STRING]} a_lines as l_lines then
 				if l_lines.first.has_substring (passed_signature) then
 					create Result
 					Result.set_result_type ({ES_EWEASEL_RESULT_TYPE}.passed)
 					Result.set_original_eweasel_ouput (to_one_string (l_lines.twin))
 					Result.set_title (l_lines.first.twin)
 					Result.set_root_class_name (class_name_in_string (l_lines.first.twin))
-					if {l_test: ES_EWEASEL_TEST_RESULT_ITEM} Result then
+					if attached {ES_EWEASEL_TEST_RESULT_ITEM} Result as l_test then
 						set_with_current_item (l_test)
 					end
 					result_analyzer.reset_cache

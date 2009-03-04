@@ -18,7 +18,7 @@ create
 
 feature -- Access
 
-	contract_ast: ?INVARIANT_AS
+	contract_ast: detachable INVARIANT_AS
 			-- <Precursor>
 		do
 				-- We use the `ast.internal_invariant' because `ast.invariant_part' is detached when there
@@ -54,7 +54,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	template_identifier: !STRING_32
+	template_identifier: attached STRING_32
 			-- <Precursor>
 		once
 			create Result.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.invariant_keyword)
@@ -62,7 +62,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Element change
 
-	set_template_values (a_table: !CODE_SYMBOL_TABLE)
+	set_template_values (a_table: attached CODE_SYMBOL_TABLE)
 			-- Sets the values use in rendering a template.
 			--
 			-- `a_table': The symbol table used to render a template

@@ -85,10 +85,10 @@ feature -- Access
 			Result := stock_pixmaps.feature_routine_icon_buffer
 		end
 
-	selected_class: ?CLASS_I
+	selected_class: detachable CLASS_I
 			-- Class last selected by user
 
-	selected_feature: ?E_FEATURE
+	selected_feature: detachable E_FEATURE
 			-- Feature last selected by user
 
 	buttons: DS_SET [INTEGER]
@@ -119,7 +119,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	class_tree: ?EB_CLASSES_TREE
+	class_tree: detachable EB_CLASSES_TREE
 			-- Tree showing all classes in the system
 			--
 			-- Note: must be detachable for recycling
@@ -134,7 +134,7 @@ feature {NONE} -- Events
 		do
 			selected_feature := Void
 			if feature_tree.selected_item /= Void then
-				if {l_feat: like selected_feature} feature_tree.selected_item.data then
+				if attached {like selected_feature} feature_tree.selected_item.data as l_feat then
 					selected_feature := l_feat
 				end
 			end
@@ -150,7 +150,7 @@ feature {NONE} -- Events
 			feature_tree.wipe_out
 			selected_class := Void
 			selected_feature := Void
-			if {l_item: EB_CLASSES_TREE_CLASS_ITEM} class_tree.selected_item then
+			if attached {EB_CLASSES_TREE_CLASS_ITEM} class_tree.selected_item as l_item then
 				l_classi := l_item.data
 				selected_class := l_classi
 				if l_classi.is_compiled then
@@ -224,7 +224,7 @@ feature {NONE} -- Implementation: feature tree
 						l_tree.extend (create {EV_TREE_ITEM}.make_with_text (warning_messages.w_no_feature_to_display))
 					end
 				end
-			elseif {l_external_classc: EXTERNAL_CLASS_C} a_class_c then
+			elseif attached {EXTERNAL_CLASS_C} a_class_c as l_external_classc then
 				-- Special processing for a .NET type since has no 'ast' in the normal
 				-- sense.
 
@@ -243,7 +243,7 @@ feature {NONE} -- Implementation: feature tree
 			end
 		end
 
-	build_tree_for_external (a_class: !EXTERNAL_CLASS_C)
+	build_tree_for_external (a_class: attached EXTERNAL_CLASS_C)
 			-- Build tree for .Net classes
 		do
 			-- FIXIT: Don't support .Net classes for the moment

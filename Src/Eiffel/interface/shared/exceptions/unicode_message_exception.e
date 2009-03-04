@@ -13,7 +13,7 @@ inherit
 
 feature -- Access
 
-	unicode_message: ?STRING_32
+	unicode_message: detachable STRING_32
 
 feature -- Status settings
 

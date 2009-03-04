@@ -20,11 +20,11 @@ create
 	make
 
 convert
-	widget: {EV_WIDGET, !EV_WIDGET}
+	widget: {EV_WIDGET, attached EV_WIDGET}
 
 feature {NONE} -- Initialization
 
-	make (a_widget: !G; a_predicate: !like predicate; a_formatter: ?like format_function)
+	make (a_widget: attached G; a_predicate: attached like predicate; a_formatter: detachable like format_function)
 			-- Initializes a bordered widget with a existing widget.
 			--
 			-- `a_widget'   : The widget to restrict input of.
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			is_initializing_unchanged: old is_initializing = is_initializing
 		end
 
-	build_widget_interface (a_widget: !G)
+	build_widget_interface (a_widget: attached G)
 			-- <Precursor>
 		do
 			--a_widget.set_default_key_processing_handler (agent on_handle_default_key_processing)
@@ -55,15 +55,15 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	predicate: !PREDICATE [ANY, TUPLE [text: !STRING_32]]
+	predicate: attached PREDICATE [ANY, TUPLE [text: attached STRING_32]]
 			-- A predicate used to determine if the changed text is valid for the textable widget
 
-	format_function: ?FUNCTION [ANY, TUPLE [!STRING_32], !STRING_32]
+	format_function: detachable FUNCTION [ANY, TUPLE [attached STRING_32], attached STRING_32]
 			-- The optional function used to format the entered text
 
 feature {NONE} -- Access
 
-	old_text: ?STRING_32
+	old_text: detachable STRING_32
 			-- The preserved old text value of the set widget.
 
 	old_caret_position: INTEGER
@@ -77,8 +77,8 @@ feature {NONE} -- Action handlers
 			is_interface_usable: is_interface_usable
 		local
 			l_text: STRING_32
-			l_old_text: ?like old_text
-			l_function: ?like format_function
+			l_old_text: detachable like old_text
+			l_function: detachable like format_function
 		do
 			l_text := widget.text
 			if l_text /= Void then
@@ -106,7 +106,7 @@ feature {NONE} -- Action handlers
 
 feature {NONE} -- Factory
 
-	create_widget: !G
+	create_widget: attached G
 			-- <Precrsor>
 		do
 			Result := internal_widget
@@ -114,7 +114,7 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Implementation: Internal cache
 
-	internal_widget: !G
+	internal_widget: attached G
 			-- Cached version of `widget'.
 			-- Note: Do not use directly!
 

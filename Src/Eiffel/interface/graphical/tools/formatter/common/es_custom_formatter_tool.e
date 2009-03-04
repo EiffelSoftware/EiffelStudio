@@ -23,13 +23,13 @@ create {NONE}
 
 feature -- Access
 
-	icon: !EV_PIXEL_BUFFER
+	icon: attached EV_PIXEL_BUFFER
 			-- Tool icon
 			-- Note: Do not call `tool.icon' as it will create the tool unnecessarly!
 		local
 			l_path: like icon_file_path
 		do
-			if {l_icon: like icon} internal_icon then
+			if attached {like icon} internal_icon as l_icon then
 				Result := l_icon
 			else
 				l_path := icon_file_path
@@ -46,13 +46,13 @@ feature -- Access
 			retry
 		end
 
-	icon_pixmap: !EV_PIXMAP
+	icon_pixmap: attached EV_PIXMAP
 			-- Tool icon pixmap
 			-- Note: Do not call `tool.icon' as it will create the tool unnecessarly!
 		local
 			l_path: like icon_file_path
 		do
-			if {l_icon: like icon_pixmap} internal_icon_pixmap then
+			if attached {like icon_pixmap} internal_icon_pixmap as l_icon then
 				Result := l_icon
 			else
 				l_path := icon_file_path
@@ -69,12 +69,12 @@ feature -- Access
 			retry
 		end
 
-	title: !STRING_32 assign set_title
+	title: attached STRING_32 assign set_title
 			-- Tool title.
 
 feature {NONE} -- Access
 
-	shortcut_preference_name: ?STRING
+	shortcut_preference_name: detachable STRING
 			-- An optional shortcut preference name, for automatic preference binding.
 		do
 			--| No shortcut preference for customized tools
@@ -131,7 +131,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Factory
 
-	new_tool: !EB_CUSTOMIZED_TOOL
+	new_tool: attached EB_CUSTOMIZED_TOOL
 			-- Creates the tool for first use on the development `window'
 		do
 				-- Needs to be fixed. Code was added to make the compiler happy.
@@ -140,11 +140,11 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Internal implementation cache
 
-	internal_icon: ?like icon
+	internal_icon: detachable like icon
 			-- Cached version of `icon'
 			-- Note: Do not use directly
 
-	internal_icon_pixmap: ?like icon_pixmap
+	internal_icon_pixmap: detachable like icon_pixmap
 			-- Cached version of `icon_pixmap'
 			-- Note: Do not use directly
 

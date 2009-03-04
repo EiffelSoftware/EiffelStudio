@@ -55,7 +55,7 @@ feature -- Initialization
 
 feature -- Access
 
-	key (a_item: G): ?H
+	key (a_item: G): detachable H
 			-- Key associated with `item', if present;
 		do
 			if internal_table_built then
@@ -87,7 +87,7 @@ feature -- Access
 			Result := internal_table.valid_key (a_item)
 		end
 
-	found_key: ?H
+	found_key: detachable H
 			-- Key found during a search with `has_item' to reduce the number of
 			-- search for clients
 
@@ -142,7 +142,7 @@ feature -- Element change
 			-- Make `replaced' true if and only if a replacement has
 			-- been made (i.e. `old_key' was present).
 		local
-			l_old_item: ?G
+			l_old_item: detachable G
 		do
 			Precursor {HASH_TABLE} (new_key, old_key)
 			if replaced then
@@ -162,7 +162,7 @@ feature -- Element change
 		require
 			valid_items: valid_item (new_item) and valid_item (old_item)
 		local
-			l_old_key:? H
+			l_old_key:detachable  H
 		do
 			if not internal_table_built then
 				build_internal_table
@@ -184,7 +184,7 @@ feature -- Removal
 			-- removed (i.e. `key' was not present).
 			-- Reset `found_item' to its default value if `removed'.
 		local
-			l_item: ?G
+			l_item: detachable G
 		do
 			if internal_table_built then
 				l_item := item (a_key)

@@ -46,11 +46,11 @@ feature {NONE} -- Initialization
 			l_test_case_prefix: STRING_32
 		do
 			if wizard_information.new_class_name /= Void then
-				if {lt_string: STRING_32} wizard_information.test_case_name.as_string_32 then
+				if attached {STRING_32} wizard_information.test_case_name.as_string_32 as lt_string then
 					test_case_name.set_text (lt_string)
 				end
 
-				if {lt_string_2: STRING_32} wizard_information.new_class_name.as_string_32 then
+				if attached {STRING_32} wizard_information.new_class_name.as_string_32 as lt_string_2 then
 					class_name.set_text (lt_string_2)
 				end
 
@@ -85,11 +85,11 @@ feature {NONE} -- Initialization
 						l_counter := l_counter + 1
 					end
 				end
-				if {l_string: STRING_32} (l_test_case_prefix + l_counter.out) then
-					if {l_lower: STRING_32} l_string.as_lower then
+				if attached {STRING_32} (l_test_case_prefix + l_counter.out) as l_string then
+					if attached {STRING_32} l_string.as_lower as l_lower then
 						test_case_name.set_text (l_lower)
 					end
-					if {l_upper: STRING_32} l_string.as_upper then
+					if attached {STRING_32} l_string.as_upper as l_upper then
 						class_name.set_text (l_upper)
 					end
 				end
@@ -376,7 +376,7 @@ feature {NONE}	-- Agents
 			end
 		end
 
-	on_valid_test_case_name (a_string: !STRING_32): !TUPLE [BOOLEAN, STRING_32]
+	on_valid_test_case_name (a_string: attached STRING_32): attached TUPLE [BOOLEAN, STRING_32]
 			-- Valid test case name `a_string'
 		local
 			l_valid: BOOLEAN
@@ -393,7 +393,7 @@ feature {NONE}	-- Agents
 					end
 				end
 
-				 if {l_result: TUPLE [BOOLEAN, STRING_32]} [l_valid, l_error_message] then
+				 if attached {TUPLE [BOOLEAN, STRING_32]} [l_valid, l_error_message] as l_result then
 				 	Result := l_result
 				 end
 			else
@@ -416,7 +416,7 @@ feature {NONE}	-- Agents
 			end
 		end
 
-	on_valid_class_name (a_string: !STRING_32): !TUPLE [BOOLEAN, STRING_32]
+	on_valid_class_name (a_string: attached STRING_32): attached TUPLE [BOOLEAN, STRING_32]
 			-- Valid class name `a_string'
 		local
 			l_valid: BOOLEAN
@@ -436,7 +436,7 @@ feature {NONE}	-- Agents
 					end
 				end
 
-				 if {l_result: TUPLE [BOOLEAN, STRING_32]} [l_valid, l_error_message] then
+				 if attached {TUPLE [BOOLEAN, STRING_32]} [l_valid, l_error_message] as l_result then
 				 	Result := l_result
 				 end
 			else

@@ -608,17 +608,17 @@ feature {NONE} -- Implementation
 			at_least_one_element_in_result: Result.count > 0
 		end
 
-	add_names_to_completion_list (a_start_token: !like current_token; a_start_line: !like current_line)
+	add_names_to_completion_list (a_start_token: attached like current_token; a_start_line: attached like current_line)
 			-- Adds locals and arguments to completion list and adds 'Current' based on `a_current'
 		local
 			l_basic: EB_NAME_FOR_COMPLETION
 			l_typed_basic: EB_NAME_WITH_TYPE_FOR_COMPLETION
-			l_name: !STRING_32
-			l_type: ?TYPE_A
+			l_name: attached STRING_32
+			l_type: detachable TYPE_A
 			l_feature: FEATURE_I
-			l_analyzer: !ES_EDITOR_CLASS_ANALYZER
-			l_result: ?ES_EDITOR_ANALYZER_STATE_INFO
-			l_locals: !HASH_TABLE [?TYPE_A, !STRING_32]
+			l_analyzer: attached ES_EDITOR_CLASS_ANALYZER
+			l_result: detachable ES_EDITOR_ANALYZER_STATE_INFO
+			l_locals: attached HASH_TABLE [detachable TYPE_A, attached STRING_32]
 		do
 				-- Add Current, because it's always available.
 			create l_basic.make_token (create {EDITOR_TOKEN_KEYWORD}.make ({EIFFEL_KEYWORD_CONSTANTS}.current_keyword))
@@ -632,7 +632,7 @@ feature {NONE} -- Implementation
 
 				-- Add local declarations
 			l_feature := current_feature_i
-			if l_feature /= Void and then {l_class: CLASS_C} current_class_c then
+			if l_feature /= Void and then attached {CLASS_C} current_class_c as l_class then
 				create l_analyzer.make_with_feature (l_class, l_feature)
 				l_result := l_analyzer.scan (a_start_token, a_start_line)
 				if l_result /= Void and then l_result.has_current_frame then
@@ -667,10 +667,10 @@ feature {NONE} -- Implementation
 		local
 			l_basic: EB_NAME_FOR_COMPLETION
 			l_typed_basic: EB_NAME_WITH_TYPE_FOR_COMPLETION
-			l_name: !STRING_32
-			l_type: ?TYPE_A
+			l_name: attached STRING_32
+			l_type: detachable TYPE_A
 		do
-			if {l_locals: !HASH_TABLE [?TYPE_A, !STRING_32]} locals_from_local_entities_finder then
+			if attached {attached HASH_TABLE [detachable TYPE_A, attached STRING_32]} locals_from_local_entities_finder as l_locals then
 				from
 					l_locals.start
 				until
@@ -692,13 +692,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	locals_from_local_entities_finder: HASH_TABLE [?TYPE_A, !STRING_32]
+	locals_from_local_entities_finder: HASH_TABLE [detachable TYPE_A, attached STRING_32]
 			-- <Precursor>
 			--| The finder is using AST
 			--| FIXME jfiat [2008/11/28] : this is to fix bug#15080
 		local
-			l_name: !STRING_32
-			l_type: ?TYPE_A
+			l_name: attached STRING_32
+			l_type: detachable TYPE_A
 			l_names_heap: NAMES_HEAP
 			l_feature: FEATURE_I
 			l_feature_as: FEATURE_AS
@@ -709,14 +709,14 @@ feature {NONE} -- Implementation
 			i: INTEGER
 		do
 			l_feature := current_feature_i
-			if l_feature /= Void and then {l_class: CLASS_C} current_class_c then
+			if l_feature /= Void and then attached {CLASS_C} current_class_c as l_class then
 				if current_feature_as /= Void then
 					l_feature_as := current_feature_as.feat_as
 					if l_feature_as /= Void then
-						if {l_body: BODY_AS} l_feature_as.body then
+						if attached {BODY_AS} l_feature_as.body as l_body then
 							l_names_heap := names_heap
 							l_arguments := l_body.arguments
-							if {r_as: ROUTINE_AS} l_body.content then
+							if attached {ROUTINE_AS} l_body.content as r_as then
 								l_locals := r_as.locals
 								l_obj_test_locals := r_as.object_test_locals
 							end
@@ -735,15 +735,15 @@ feature {NONE} -- Implementation
 							until
 								i > l_type_dec_as_lists.upper
 							loop
-								if {ast_locs: EIFFEL_LIST [TYPE_DEC_AS]} l_type_dec_as_lists[i] then
+								if attached {EIFFEL_LIST [TYPE_DEC_AS]} l_type_dec_as_lists[i] as ast_locs then
 									from
 										ast_locs.start
 									until
 										ast_locs.after
 									loop
-										if {tda: TYPE_DEC_AS} ast_locs.item then
+										if attached {TYPE_DEC_AS} ast_locs.item as tda then
 											if
-												{id_list: IDENTIFIER_LIST} tda.id_list and then
+												attached {IDENTIFIER_LIST} tda.id_list as id_list and then
 												not id_list.is_empty
 											then
 												from
@@ -751,7 +751,7 @@ feature {NONE} -- Implementation
 												until
 													id_list.after
 												loop
-													if {s: STRING} l_names_heap.item (id_list.item) then
+													if attached {STRING} l_names_heap.item (id_list.item) as s then
 														l_name := s.as_string_32.as_attached
 														l_type := type_a_generator.evaluate_type_if_possible (tda.type, l_class)
 														Result.force (l_type, l_name)
@@ -772,7 +772,7 @@ feature {NONE} -- Implementation
 								until
 									l_obj_test_locals.after
 								loop
-									if {s2: STRING} l_names_heap.item (l_obj_test_locals.item.name.name_id) then
+									if attached {STRING} l_names_heap.item (l_obj_test_locals.item.name.name_id) as s2 then
 										l_name := s2.as_string_32.as_attached
 										l_type := type_a_generator.evaluate_type_if_possible (l_obj_test_locals.item.type, l_class)
 										Result.force (l_type, l_name)

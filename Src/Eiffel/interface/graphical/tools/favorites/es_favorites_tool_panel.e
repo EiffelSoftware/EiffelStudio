@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization: User interface
 
-    build_tool_interface (a_widget: !EB_FAVORITES_TREE)
+    build_tool_interface (a_widget: attached EB_FAVORITES_TREE)
             -- <Precursor>
 		do
 
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization: User interface
 
 feature {NONE} -- Access
 
-	favorites_manager: !EB_FAVORITES_MANAGER
+	favorites_manager: attached EB_FAVORITES_MANAGER
 			-- Associated favorites manager.
 		do
 			Result := develop_window.favorites_manager.as_attached
@@ -41,12 +41,12 @@ feature {NONE} -- Access
 
 feature {NONE} -- Access: User interface
 
-	edit_tool_bar_button: ?SD_TOOL_BAR_BUTTON
+	edit_tool_bar_button: detachable SD_TOOL_BAR_BUTTON
 			-- Edit tool bar button.
 
 feature -- Access: Help
 
-	help_context_id: !STRING_GENERAL
+	help_context_id: attached STRING_GENERAL
 			-- <Precursor>
 		once
 			Result := "75CFEDA2-3823-EF29-130A-39E686116F40"
@@ -54,7 +54,7 @@ feature -- Access: Help
 
 feature {NONE} -- Action handlers
 
-	on_stone_changed (a_old_stone: ?like stone)
+	on_stone_changed (a_old_stone: detachable like stone)
 			-- <Precursor>
 		local
 			l_stone: like stone
@@ -74,13 +74,13 @@ feature {NONE} -- Action handlers
 
 feature {NONE} -- Factory
 
-    create_widget: !EB_FAVORITES_TREE
+    create_widget: attached EB_FAVORITES_TREE
     		-- <Precursor>
 		do
 			Result := favorites_manager.widget.as_attached
 		end
 
-    create_mini_tool_bar_items: ?DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+    create_mini_tool_bar_items: detachable DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
     		-- <Precursor>
     	local
     		l_button: SD_TOOL_BAR_BUTTON
@@ -98,7 +98,7 @@ feature {NONE} -- Factory
 			Result.put_last (l_button)
 		end
 
-    create_tool_bar_items: ?DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+    create_tool_bar_items: detachable DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
     		-- <Precursor>
 		do
 		end

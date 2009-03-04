@@ -15,7 +15,7 @@ inherit
 
 feature -- Access
 
-	metadata (a_id: !STRING_8): ?STRING_GENERAL
+	metadata (a_id: attached STRING_8): detachable STRING_GENERAL
 			-- Retrieve a metadata asscociated with an identifier
 		require
 			is_interface_usable: is_interface_usable
@@ -23,7 +23,7 @@ feature -- Access
 		deferred
 		end
 
-	metakeys: !DS_BILINEAR [!STRING_8]
+	metakeys: attached DS_BILINEAR [attached STRING_8]
 			-- List of metadata keys data is index by
 		require
 			is_interface_usable: is_interface_usable
@@ -34,7 +34,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_metadata (a_value: ?STRING_GENERAL; a_id: !STRING_8)
+	set_metadata (a_value: detachable STRING_GENERAL; a_id: attached STRING_8)
 			-- Sets a metadata value associate with id.
 			--
 			-- `a_value': Value
@@ -49,7 +49,7 @@ feature -- Element change
 			metadata_set: a_value /= Void implies equal (metadata (a_id), a_value)
 		end
 
-	merge (a_metadata: !METADATA_ACCESSIBLE_I)
+	merge (a_metadata: attached METADATA_ACCESSIBLE_I)
 			-- Merges other metadata store with the current metadata store
 			--
 			-- `a_metadata': Other metadata to add or override the current metadata with
@@ -57,10 +57,10 @@ feature -- Element change
 			is_interface_usable: is_interface_usable
 			a_metadata_is_interface_usable: a_metadata.is_interface_usable
 		local
-			l_key: !STRING_8
-			l_value: ?STRING_GENERAL
+			l_key: attached STRING_8
+			l_value: detachable STRING_GENERAL
 		do
-			if {l_cursor: !DS_BILINEAR_CURSOR [!STRING_8]} a_metadata.metakeys then
+			if attached {attached DS_BILINEAR_CURSOR [attached STRING_8]} a_metadata.metakeys as l_cursor then
 				from l_cursor.start until l_cursor.after loop
 					l_key := l_cursor.item
 					if is_valid_metadata_id (l_key) then
@@ -78,7 +78,7 @@ feature -- Element change
 		end
 feature -- Query
 
-	is_valid_metadata_id (a_id: !STRING_8): BOOLEAN
+	is_valid_metadata_id (a_id: attached STRING_8): BOOLEAN
 			-- Detemines if an identifier is a valid metadata identifier for `Current'
 		require
 			is_interface_usable: is_interface_usable
@@ -88,7 +88,7 @@ feature -- Query
 			not_a_id_is_empty: Result implies not a_id.is_empty
 		end
 
-	is_valid_metadata_value (a_value: ?STRING_GENERAL; a_id: !STRING_8): BOOLEAN
+	is_valid_metadata_value (a_value: detachable STRING_GENERAL; a_id: attached STRING_8): BOOLEAN
 			-- Determines if a metadata value is valid given a metadata associated with a metadata identifier
 		require
 			is_interface_usable: is_interface_usable
@@ -100,7 +100,7 @@ feature -- Query
 
 feature -- Events
 
-	changed_events: !EVENT_TYPE [TUPLE [a_id: !STRING_8; new_value: ?STRING_GENERAL; old_value: ?STRING_GENERAL]]
+	changed_events: attached EVENT_TYPE [TUPLE [a_id: attached STRING_8; new_value: detachable STRING_GENERAL; old_value: detachable STRING_GENERAL]]
 			-- Events fired when a piece of metadata changes.
 		require
 			is_interface_usable: is_interface_usable

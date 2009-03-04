@@ -96,7 +96,7 @@ feature {NONE} -- Initialization
         			-- We need a widget that is parented to a window so we need to wait until after the
         			-- docking content is attached to the window.
         		do
-		        	if {l_window: !EV_WINDOW} helpers.widget_top_level_window (user_widget, False) then
+		        	if attached {attached EV_WINDOW} helpers.widget_top_level_window (user_widget, False) as l_window then
 		        			-- Set up help shortcut binding
 		        		bind_help_shortcut (l_window)
 		        	end
@@ -287,7 +287,7 @@ feature {NONE} -- Access
             not_result_is_empty: not Result.is_empty
         end
 
-	frozen name: !STRING
+	frozen name: attached STRING
 			-- The tool's associated name, used for modularizing development of a tool.
 		require
 			is_interface_usable: is_interface_usable
@@ -370,7 +370,7 @@ feature {NONE} -- Helpers
 			result_attached: Result /= Void
 		end
 
-	context_menus: !EB_CONTEXT_MENU_FACTORY
+	context_menus: attached EB_CONTEXT_MENU_FACTORY
 			-- Access to the window's content menu factory
 		require
 			is_interface_usable: is_interface_usable
@@ -494,21 +494,21 @@ feature {NONE} -- Basic operations (Note code is replicated from ES_TOOL_FOUNDAT
 				a_action.call ([a_start_widget])
 			end
 
-			if {l_list: !EV_WIDGET_LIST} a_start_widget then
+			if attached {attached EV_WIDGET_LIST} a_start_widget as l_list then
 				l_cursor := l_list.cursor
 				from l_list.start until l_list.after loop
-					if {l_widget: !EV_WIDGET} l_list.item and then not l_widget.is_destroyed then
+					if attached {attached EV_WIDGET} l_list.item as l_widget and then not l_widget.is_destroyed then
 							-- Perform action on all child widgets
 						propagate_action (l_widget, a_action, a_excluded)
 					end
 					l_list.forth
 				end
 				l_list.go_to (l_cursor)
-			elseif {l_split: EV_SPLIT_AREA} a_start_widget then
-				if {l_first: !EV_WIDGET} l_split.first and then not l_first.is_destroyed then
+			elseif attached {EV_SPLIT_AREA} a_start_widget as l_split then
+				if attached {attached EV_WIDGET} l_split.first as l_first and then not l_first.is_destroyed then
 					propagate_action (l_first, a_action, a_excluded)
 				end
-				if {l_second: !EV_WIDGET} l_split.second and then not l_second.is_destroyed then
+				if attached {attached EV_WIDGET} l_split.second as l_second and then not l_second.is_destroyed then
 					propagate_action (l_second, a_action, a_excluded)
 				end
 			end
@@ -537,7 +537,7 @@ feature {NONE} -- Basic operations (Note code is replicated from ES_TOOL_FOUNDAT
 				end
 			end
 
-			if {l_window: !EV_WINDOW} a_start_widget then
+			if attached {attached EV_WINDOW} a_start_widget as l_window then
 				if not l_window.is_empty then
 					l_start_widget := l_window.item
 				end
@@ -545,21 +545,21 @@ feature {NONE} -- Basic operations (Note code is replicated from ES_TOOL_FOUNDAT
 				l_start_widget := a_start_widget
 			end
 
-			if {l_list: !EV_WIDGET_LIST} l_start_widget then
+			if attached {attached EV_WIDGET_LIST} l_start_widget as l_list then
 				l_cursor := l_list.cursor
 				from l_list.start until l_list.after loop
-					if {l_widget: !EV_WIDGET} l_list.item and then not l_widget.is_destroyed then
+					if attached {attached EV_WIDGET} l_list.item as l_widget and then not l_widget.is_destroyed then
 							-- Apply addition to all child widgets
 						propagate_register_action (l_widget, a_sequence, a_action, a_excluded)
 					end
 					l_list.forth
 				end
 				l_list.go_to (l_cursor)
-			elseif {l_split: EV_SPLIT_AREA} l_start_widget then
-				if {l_first: !EV_WIDGET} l_split.first and then not l_first.is_destroyed then
+			elseif attached {EV_SPLIT_AREA} l_start_widget as l_split then
+				if attached {attached EV_WIDGET} l_split.first as l_first and then not l_first.is_destroyed then
 					propagate_register_action (l_first, a_sequence, a_action, a_excluded)
 				end
-				if {l_second: !EV_WIDGET} l_split.second and then not l_second.is_destroyed then
+				if attached {attached EV_WIDGET} l_split.second as l_second and then not l_second.is_destroyed then
 					propagate_register_action (l_second, a_sequence, a_action, a_excluded)
 				end
 			end
@@ -620,7 +620,7 @@ feature {NONE} -- User interface elements
             -- Access to user widget, as `widget' may not be the indicated user widget due to
             -- tool bar additions
         local
-            l_result: ?G
+            l_result: detachable G
         do
             l_result := internal_user_widget
             if l_result = Void then
@@ -630,13 +630,13 @@ feature {NONE} -- User interface elements
 				internal_user_widget := Result
 
                     -- If user widget is siteable then site with the development window
-                if {l_site: SITE [EB_DEVELOPMENT_WINDOW]} Result then
+                if attached {SITE [EB_DEVELOPMENT_WINDOW]} Result as l_site then
                     l_site.set_site (develop_window)
                 end
 			else
 				check
 					correctly_sited: is_recycling or else
-						({l_other_site: SITE [EB_DEVELOPMENT_WINDOW]} l_result implies l_other_site.site ~ develop_window)
+						(attached {SITE [EB_DEVELOPMENT_WINDOW]} l_result as l_other_site implies l_other_site.site ~ develop_window)
 				end
 				Result := l_result
             end
@@ -645,13 +645,13 @@ feature {NONE} -- User interface elements
             result_consistent: Result = user_widget
         end
 
-    frozen mini_tool_bar_widget: ?SD_WIDGET_TOOL_BAR
+    frozen mini_tool_bar_widget: detachable SD_WIDGET_TOOL_BAR
             -- Access to user widget, as `widget' may not be the indicated user widget due to
             -- tool bar additions
         local
             l_cell: like internal_mini_tool_bar_widget
             l_items: DS_LINEAR [SD_TOOL_BAR_ITEM]
-            l_help_button: ?SD_TOOL_BAR_ITEM
+            l_help_button: detachable SD_TOOL_BAR_ITEM
             l_multi: BOOLEAN
             l_command: ES_NEW_TOOL_COMMAND
             l_tools: ES_SHELL_TOOLS
@@ -662,7 +662,7 @@ feature {NONE} -- User interface elements
                 create l_cell.put (Void)
                 internal_mini_tool_bar_widget := l_cell
                 l_multi := tool_descriptor.is_multiple_edition
-				if {l_context: HELP_CONTEXT_I} Current then
+				if attached {HELP_CONTEXT_I} Current as l_context then
 						-- Create the help button
 					l_help_button := create_help_button
 				end
@@ -682,10 +682,10 @@ feature {NONE} -- User interface elements
 							-- Note: This is done after all of the tool bar items have been added because extending the tool bar
 							--       causes a resize, which in turn causes a post-condition violation in a deeper call.
 						from l_items.start until l_items.after loop
-							if {l_widget: SD_TOOL_BAR_WIDGET_ITEM} l_items.item_for_iteration then
+							if attached {SD_TOOL_BAR_WIDGET_ITEM} l_items.item_for_iteration as l_widget then
 									-- The tool bar is a widget item, so register resize actions to recompute the minimum width
 									-- when the widget changes size.
-								register_action (l_widget.widget.resize_actions, agent (ia_tool_bar: !SD_GENERIC_TOOL_BAR; ia_x: INTEGER_32; ia_y: INTEGER_32; ia_width: INTEGER_32; ia_height: INTEGER_32)
+								register_action (l_widget.widget.resize_actions, agent (ia_tool_bar: attached SD_GENERIC_TOOL_BAR; ia_x: INTEGER_32; ia_y: INTEGER_32; ia_width: INTEGER_32; ia_height: INTEGER_32)
 									do
 										if is_interface_usable then
 											ia_tool_bar.update_size
@@ -744,10 +744,10 @@ feature {NONE} -- User interface elements
 						-- Note: This is done after all of the tool bar items have been added because extending the tool bar
 						--       causes a resize, which in turn causes a post-condition violation in a deeper call.
 					from l_items.start until l_items.after loop
-						if {l_widget: SD_TOOL_BAR_WIDGET_ITEM} l_items.item_for_iteration then
+						if attached {SD_TOOL_BAR_WIDGET_ITEM} l_items.item_for_iteration as l_widget then
 								-- The tool bar is a widget item, so register resize actions to recompute the minimum width
 								-- when the widget changes size.
-							register_action (l_widget.widget.resize_actions, agent (ia_tool_bar: !SD_GENERIC_TOOL_BAR; ia_x: INTEGER_32; ia_y: INTEGER_32; ia_width: INTEGER_32; ia_height: INTEGER_32)
+							register_action (l_widget.widget.resize_actions, agent (ia_tool_bar: attached SD_GENERIC_TOOL_BAR; ia_x: INTEGER_32; ia_y: INTEGER_32; ia_width: INTEGER_32; ia_height: INTEGER_32)
 								do
 									if is_interface_usable then
 										ia_tool_bar.update_size
@@ -913,7 +913,7 @@ feature {NONE} -- Factory
             result_attached: Result /= Void
         end
 
-    create_mini_tool_bar_items: ?DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+    create_mini_tool_bar_items: detachable DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
             -- Retrieves a list of tool bar items to display on the window title
         do
         ensure
@@ -921,7 +921,7 @@ feature {NONE} -- Factory
             result_contains_attached_items: Result /= Void implies not Result.has (Void)
         end
 
-    create_tool_bar_items: ?DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+    create_tool_bar_items: detachable DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
             -- Retrieves a list of tool bar items to display at the top of the tool.
         deferred
         ensure
@@ -929,7 +929,7 @@ feature {NONE} -- Factory
             result_contains_attached_items: Result /= Void implies not Result.has (Void)
         end
 
-    create_right_tool_bar_items: ?DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+    create_right_tool_bar_items: detachable DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
             -- Retrieves a list of tool bar items that should be displayed at the top, but right aligned.
             -- Note: Redefine to add a right tool bar.
         do
@@ -966,7 +966,7 @@ feature {NONE} -- Factory
 
                 -- Add left tool bar
             if l_tool_bar /= Void then
-				if {lt_widget: EV_WIDGET} l_tool_bar then
+				if attached {EV_WIDGET} l_tool_bar as lt_widget then
 					l_container.extend (lt_widget)
 				else
 					check not_possible: False end
@@ -975,7 +975,7 @@ feature {NONE} -- Factory
 
                 -- Add right tool bar
             if l_right_tool_bar /= Void then
-				if {lt_widget_2: EV_WIDGET} l_right_tool_bar then
+				if attached {EV_WIDGET} l_right_tool_bar as lt_widget_2 then
 	                create l_padding
 	                l_container.extend (l_padding)
 	                l_container.extend (lt_widget_2)
@@ -1041,28 +1041,28 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Internal implementation cache
 
-    internal_icon_pixmap: ?like icon_pixmap
+    internal_icon_pixmap: detachable like icon_pixmap
             -- Cached version of `pixmap'
 
-    internal_icon: ?like icon
+    internal_icon: detachable like icon
             -- Cached version of `icon'
 
-    internal_title: ?like title
+    internal_title: detachable like title
             -- Mutable version of `title'
 
-    internal_widget: ?like widget
+    internal_widget: detachable like widget
             -- Cached version of `widget'
 
-    internal_user_widget: ?G
+    internal_user_widget: detachable G
             -- User widget, which was returned from `create_widget'
 
-    internal_mini_tool_bar_widget: ?CELL [?like mini_tool_bar_widget]
+    internal_mini_tool_bar_widget: detachable CELL [detachable like mini_tool_bar_widget]
             -- Cached version of `mini_tool_bar_widget'
 
-    internal_tool_bar_widget: ?CELL [?like tool_bar_widget]
+    internal_tool_bar_widget: detachable CELL [detachable like tool_bar_widget]
             -- Cached version of `tool_bar_widget'
 
-    internal_right_tool_bar_widget: ?CELL [?like right_tool_bar_widget]
+    internal_right_tool_bar_widget: detachable CELL [detachable like right_tool_bar_widget]
             -- Cached version of `right_tool_bar_widget'
 
 invariant

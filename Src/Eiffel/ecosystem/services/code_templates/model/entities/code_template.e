@@ -30,10 +30,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	text: !STRING_32
+	text: attached STRING_32
 			-- Raw text of the code template.
 		local
-			l_tokens: DS_BILINEAR_CURSOR [!CODE_TOKEN]
+			l_tokens: DS_BILINEAR_CURSOR [attached CODE_TOKEN]
 			l_token: CODE_TOKEN
 			l_is_id: BOOLEAN
 		do
@@ -45,7 +45,7 @@ feature -- Access
 				l_tokens := tokens.new_cursor
 				from l_tokens.start until l_tokens.after loop
 					l_token := l_tokens.item
-					l_is_id := {l_id: CODE_TOKEN_ID} l_token
+					l_is_id := attached {CODE_TOKEN_ID} l_token as l_id
 					if l_is_id then
 						Result.append ("${")
 					end
@@ -60,7 +60,7 @@ feature -- Access
 			end
 		end
 
-	tokens: !DS_BILINEAR [!CODE_TOKEN] assign set_tokens
+	tokens: attached DS_BILINEAR [attached CODE_TOKEN] assign set_tokens
 			-- List of code tokens that make up the template
 		do
 			Result := internal_tokens
@@ -68,7 +68,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	tokenizer: !CODE_TOKENIZER
+	tokenizer: attached CODE_TOKENIZER
 			-- Code tokenized, used to create code tokens from a code string.
 		once
 			create Result
@@ -85,7 +85,7 @@ feature -- Element change
 			internal_tokens.append_last (a_tokens)
 		end
 
-	set_tokens_with_text (a_text: !STRING_32)
+	set_tokens_with_text (a_text: attached STRING_32)
 			-- Sets the code template using a code token string.
 			--
 			-- `a_text': Code template text.
@@ -105,7 +105,7 @@ feature -- Status report
 
 feature -- Visitor
 
-	process (a_visitor: !CODE_TEMPLATE_VISITOR_I)
+	process (a_visitor: attached CODE_TEMPLATE_VISITOR_I)
 			-- <Precursor>
 		do
 			a_visitor.process_code_template (Current)
@@ -113,12 +113,12 @@ feature -- Visitor
 
 feature -- Basic operations
 
-	process_tokens (a_visitor: !CODE_TOKEN_VISITOR_I)
+	process_tokens (a_visitor: attached CODE_TOKEN_VISITOR_I)
 			-- Processes all tokens.
 			--
 			-- `a_visitor': Visitor to process all tokens with
 		local
-			l_tokens: DS_ARRAYED_LIST_CURSOR [!CODE_TOKEN]
+			l_tokens: DS_ARRAYED_LIST_CURSOR [attached CODE_TOKEN]
 		do
 			l_tokens := internal_tokens.new_cursor
 			from l_tokens.start until l_tokens.after loop
@@ -129,7 +129,7 @@ feature -- Basic operations
 
 feature {NONE} -- Internal implementation cache
 
-	internal_tokens: !DS_ARRAYED_LIST [!CODE_TOKEN]
+	internal_tokens: attached DS_ARRAYED_LIST [attached CODE_TOKEN]
 			-- Mutable version of `tokens'
 
 ;note

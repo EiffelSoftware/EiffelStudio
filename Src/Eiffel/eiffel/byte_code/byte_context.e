@@ -1974,7 +1974,7 @@ feature -- Access
 					-- type of the expected type. However when the expected type is a formal, or an anchor
 					-- then we cannot do this optimization as the type of the formal or the anchor depends on
 					-- the actual object's type.
-				if not a_type.is_attached and then not a_type.is_formal and then not {l_anchor: LIKE_TYPE_A} a_type then
+				if not a_type.is_attached and then not a_type.is_formal and then not attached {LIKE_TYPE_A} a_type as l_anchor then
 					l_if_required := True
 					buf.put_new_line
 					buf.put_four_character ('i', 'f', ' ', '(')
@@ -2007,7 +2007,7 @@ feature -- Access
 				buf.put_integer (a_pos)
 				buf.put_two_character (',', ' ')
 				if l_optimized then
-					if {l_type_1: ATTACHABLE_TYPE_A} a_type then
+					if attached {ATTACHABLE_TYPE_A} a_type as l_type_1 then
 						if l_type_1.has_attached_mark then
 							buf.put_string ("eif_attached_type(")
 							byte_code.feature_origin (buf)
@@ -2024,7 +2024,7 @@ feature -- Access
 					end
 					buf.put_two_character (')', ';')
 				else
-					if {l_type_2: ATTACHABLE_TYPE_A} a_type then
+					if attached {ATTACHABLE_TYPE_A} a_type as l_type_2 then
 						if l_type_2.has_attached_mark then
 							buf.put_string ("eif_attached_type(")
 							l_info.generate_type_id (buf, final_mode, 0)
@@ -2079,7 +2079,7 @@ feature -- Access
 					-- We sometime need to convert a type to either it associated attached/non-attached
 					-- version. First boolean is to figure out if there is an action to be taken, the
 					-- second which action.
-				if {l_type_1: ATTACHABLE_TYPE_A} a_type then
+				if attached {ATTACHABLE_TYPE_A} a_type as l_type_1 then
 					if l_type_1.has_attached_mark then
 						ba.append_boolean (True)
 						ba.append_boolean (True)

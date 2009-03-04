@@ -139,7 +139,7 @@ feature -- Basic operations
 			bp: BREAKPOINT
 		do
 			bpm := breakpoints_manager
-			if {loc: BREAKPOINT_LOCATION} bpm.breakpoint_location (routine, index, False) then
+			if attached {BREAKPOINT_LOCATION} bpm.breakpoint_location (routine, index, False) as loc then
 				if bpm.is_user_breakpoint_set_at (loc) then
 					bp := bpm.user_breakpoint_at (loc)
 				end
@@ -308,8 +308,8 @@ feature -- state of breakpoint
 	has_associated_user_breakpoint: BOOLEAN
 			-- Has associated breakpoint?
 		do
-			Result := {bpm: BREAKPOINTS_MANAGER} breakpoints_manager and then
-					{loc: BREAKPOINT_LOCATION} bpm.breakpoint_location (routine, index, False) and then
+			Result := attached {BREAKPOINTS_MANAGER} breakpoints_manager as bpm and then
+					attached {BREAKPOINT_LOCATION} bpm.breakpoint_location (routine, index, False) as loc and then
 					bpm.is_user_breakpoint_set_at (loc)
 		end
 

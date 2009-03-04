@@ -410,7 +410,7 @@ feature -- Access
 			c := written_class;
 			class_text := c.text;
 			if class_text /= Void then
-				if {l_name: !STRING_GENERAL} name then
+				if attached {attached STRING_GENERAL} name as l_name then
 						-- Attempt to locate a feature using the same name as Current
 					body_as := c.ast.feature_of_name (l_name, False)
 				end

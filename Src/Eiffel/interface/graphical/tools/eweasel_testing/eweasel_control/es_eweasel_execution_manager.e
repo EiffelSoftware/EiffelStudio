@@ -233,79 +233,79 @@ feature -- Query
 
 feature -- UI commands
 
-	new_manual_test_command: !ES_NEW_UNIT_TEST_CASE_COMMAND
+	new_manual_test_command: attached ES_NEW_UNIT_TEST_CASE_COMMAND
 			-- New manual/eweasel test case command
 		once
 			create Result.make (Current)
 		end
 
-	del_test_case_command: !ES_DELETE_TEST_CASE_COMMAND
+	del_test_case_command: attached ES_DELETE_TEST_CASE_COMMAND
 			-- Delete test case from grid command
 		once
 			create Result.make (Current)
 		end
 
-	start_test_run_command: !ES_START_TEST_RUN_COMMAND
+	start_test_run_command: attached ES_START_TEST_RUN_COMMAND
 			-- Start test run command
 		once
 			create Result.make (Current)
 		end
 
-	start_test_run_failed_first_command: !ES_START_TEST_RUN_FAILED_FIRST_COMMAND
+	start_test_run_failed_first_command: attached ES_START_TEST_RUN_FAILED_FIRST_COMMAND
 			-- Start test run failed first command
 		once
 			create Result.make (Current)
 		end
 
-	stop_test_run_command: !ES_STOP_TEST_RUN_COMMAND
+	stop_test_run_command: attached ES_STOP_TEST_RUN_COMMAND
 			-- Stop test run command
 		once
 			create Result.make (Current)
 		end
 
-	next_failed_test_command: !ES_NEXT_FAILED_TEST_COMMAND
+	next_failed_test_command: attached ES_NEXT_FAILED_TEST_COMMAND
 			-- Next failed test command
 		once
 			create Result.make (Current)
 		end
 
-	previous_failed_test_command: !ES_PREVIOUS_FAILED_TEST_COMMAND
+	previous_failed_test_command: attached ES_PREVIOUS_FAILED_TEST_COMMAND
 			-- Previous failed test command
 		once
 			create Result.make (Current)
 		end
 
-	show_failed_tests_only_command: !ES_SHOW_FAILED_TESTS_ONLY_COMMAND
+	show_failed_tests_only_command: attached ES_SHOW_FAILED_TESTS_ONLY_COMMAND
 			-- Show failed tests only command
 		once
 			create Result.make (Current)
 		end
 
-	update_last_changed_time_command: !ES_UPDATE_TEST_CASE_TIME_COMMAND
+	update_last_changed_time_command: attached ES_UPDATE_TEST_CASE_TIME_COMMAND
 			-- Update test case last changed time command
 		once
 			create Result.make (Current)
 		end
 
-	find_test_case_command: !ES_FIND_TEST_CASE_COMMAND
+	find_test_case_command: attached ES_FIND_TEST_CASE_COMMAND
 			-- Find test case command
 		once
 			create Result.make (Current)
 		end
 
-	all_test_run_results_command: !ES_ALL_TEST_RUN_RESULTS_COMMAND
+	all_test_run_results_command: attached ES_ALL_TEST_RUN_RESULTS_COMMAND
 			-- All test run results command
 		once
 			create Result.make (Current)
 		end
 
-	see_testing_failure_trace_command: !ES_SHOW_FAILURE_TRACE_COMMAND
+	see_testing_failure_trace_command: attached ES_SHOW_FAILURE_TRACE_COMMAND
 			-- See testing failure trace command
 		once
 			create Result.make (Current)
 		end
 
-	compare_with_expected_result_command: !ES_COMPARE_RESULT_COMMAND
+	compare_with_expected_result_command: attached ES_COMPARE_RESULT_COMMAND
 			-- Compare with expected result command
 		once
 			create Result.make (Current)

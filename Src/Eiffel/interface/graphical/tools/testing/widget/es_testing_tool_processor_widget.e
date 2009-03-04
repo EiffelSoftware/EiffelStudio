@@ -113,13 +113,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	processor: !TEST_PROCESSOR_I
+	processor: attached TEST_PROCESSOR_I
 			-- Executor being visualized by `Current'
 
-	grid: !ES_TAGABLE_LIST_GRID [!TEST_I]
+	grid: attached ES_TAGABLE_LIST_GRID [attached TEST_I]
 			-- Grid displaying list of tests
 
-	title: !STRING_32
+	title: attached STRING_32
 			-- Caption for tab
 		deferred
 		end
@@ -140,23 +140,23 @@ feature -- Access
 
 feature -- Access: widgets
 
-	close_button: !SD_TOOL_BAR_BUTTON
+	close_button: attached SD_TOOL_BAR_BUTTON
 			-- Button for closing/removing `Current' from widget
 
 feature {NONE} -- Access
 
-	stop_button: !SD_TOOL_BAR_BUTTON
+	stop_button: attached SD_TOOL_BAR_BUTTON
 			-- Button for stopping test execution
 
-	progress_bar: !EV_HORIZONTAL_PROGRESS_BAR
+	progress_bar: attached EV_HORIZONTAL_PROGRESS_BAR
 			-- Bar showing `processor' progress
 
-	progress_widget: !EV_VERTICAL_BOX
+	progress_widget: attached EV_VERTICAL_BOX
 			-- Widget containing `progress_bar'
 
 feature {NONE} -- Events: test suite
 
-	frozen on_processor_launched_frozen (a_test_suite: !TEST_SUITE_S; a_processor: !TEST_PROCESSOR_I)
+	frozen on_processor_launched_frozen (a_test_suite: attached TEST_SUITE_S; a_processor: attached TEST_PROCESSOR_I)
 			-- <Precursor>
 		do
 			if a_processor = processor then
@@ -166,7 +166,7 @@ feature {NONE} -- Events: test suite
 			end
 		end
 
-	frozen on_processor_finished_frozen (a_test_suite: !TEST_SUITE_S; a_processor: !TEST_PROCESSOR_I)
+	frozen on_processor_finished_frozen (a_test_suite: attached TEST_SUITE_S; a_processor: attached TEST_PROCESSOR_I)
 			-- <Precursor>
 		do
 			if a_processor = processor then
@@ -175,7 +175,7 @@ feature {NONE} -- Events: test suite
 			end
 		end
 
-	frozen on_processor_stopped_frozen (a_test_suite: !TEST_SUITE_S; a_processor: !TEST_PROCESSOR_I)
+	frozen on_processor_stopped_frozen (a_test_suite: attached TEST_SUITE_S; a_processor: attached TEST_PROCESSOR_I)
 			-- <Precursor>
 		do
 			if a_processor = processor then
@@ -185,7 +185,7 @@ feature {NONE} -- Events: test suite
 			end
 		end
 
-	frozen on_processor_proceeded_frozen (a_test_suite: !TEST_SUITE_S; a_processor: !TEST_PROCESSOR_I)
+	frozen on_processor_proceeded_frozen (a_test_suite: attached TEST_SUITE_S; a_processor: attached TEST_PROCESSOR_I)
 			-- <Precursor>
 		do
 			if a_processor = processor then
@@ -194,7 +194,7 @@ feature {NONE} -- Events: test suite
 			end
 		end
 
-	frozen on_processor_error_frozen (a_test_suite: !TEST_SUITE_S; a_processor: !TEST_PROCESSOR_I; a_error: !STRING_8; a_tokens: TUPLE)
+	frozen on_processor_error_frozen (a_test_suite: attached TEST_SUITE_S; a_processor: attached TEST_PROCESSOR_I; a_error: attached STRING_8; a_tokens: TUPLE)
 			-- <Precursor>
 		do
 			if a_processor = processor then
@@ -255,7 +255,7 @@ feature {NONE} -- Events: processor
 		do
 		end
 
-	on_processor_error (a_error: !STRING_8; a_tokens: TUPLE)
+	on_processor_error (a_error: attached STRING_8; a_tokens: TUPLE)
 			-- Called when `processor' reports an error
 		require
 			a_tokens_attached: a_tokens /= Void
@@ -280,13 +280,13 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Factory
 
-	create_tool_bar_items: ?DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+	create_tool_bar_items: detachable DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- <Precursor>
 		do
 
 		end
 
-	create_right_tool_bar_items: ?DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+	create_right_tool_bar_items: detachable DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- <Precursor>
 		do
 			create Result.make (1)
@@ -298,7 +298,7 @@ feature {NONE} -- Factory
 			Result.force_last (close_button)
 		end
 
-	create_progress_bar_items: !DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+	create_progress_bar_items: attached DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- Create items shown to the right of `progress_bar'
 		do
 			create Result.make (1)

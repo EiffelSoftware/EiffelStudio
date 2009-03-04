@@ -31,10 +31,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	tag: !STRING_32
+	tag: attached STRING_32
 			-- The tag to extract
 
-	eis_full_entries: !SEARCH_TABLE [EIS_ENTRY]
+	eis_full_entries: attached SEARCH_TABLE [EIS_ENTRY]
 			-- EIS entries including all flat entries from all associated component
 		do
 			Result := eis_entries

@@ -60,7 +60,7 @@ feature -- Access
 			until
 				after or Result /= Void
 			loop
-				if {c: EIFFEL_CALL_STACK_ELEMENT} item and then stack_depth - c.level_in_stack + 1 = dep then
+				if attached {EIFFEL_CALL_STACK_ELEMENT} item as c and then stack_depth - c.level_in_stack + 1 = dep then
 					Result := c
 				end
 				forth
@@ -99,7 +99,7 @@ feature -- Change
 	reset_call_stack_depth (dep: INTEGER)
 			-- Reset call stack element of callstack depth `dep'
 		do
-			if {c: like eiffel_call_stack_element} eiffel_call_stack_element (dep) then
+			if attached {like eiffel_call_stack_element} eiffel_call_stack_element (dep) as c then
 				c.reset_stack
 			end
 		end
@@ -108,7 +108,7 @@ feature -- Change
 			-- Reset call stack element of callstack level `lev'
 		do
 			if valid_index (lev) then
-				if {c: like eiffel_call_stack_element} i_th (lev) then
+				if attached {like eiffel_call_stack_element} i_th (lev) as c then
 					c.reset_stack
 				end
 			end

@@ -72,12 +72,12 @@ feature {NONE} -- Initialization
 			develop_window := a_window
 			tool_descriptor := a_tool
 			build_interface
-			if not {l_dockable: ES_DOCKABLE_TOOL_PANEL [EV_WIDGET]} Current then
+			if not attached {ES_DOCKABLE_TOOL_PANEL [EV_WIDGET]} Current as l_dockable then
 					-- Hack for transition period.
 					-- This is done in {ES_DOCKABLE_TOOL_PANEL}.initialize
 				build_mini_toolbar
 				if mini_toolbar /= Void then
-					if {l_widget_tb: SD_WIDGET_TOOL_BAR} mini_toolbar then
+					if attached {SD_WIDGET_TOOL_BAR} mini_toolbar as l_widget_tb then
 						l_widget_tb.compute_minimum_size
 					end
 					content.set_mini_toolbar (mini_toolbar)
@@ -112,7 +112,7 @@ feature -- Access
 
 feature {NONE} -- Access: User interface
 
-	content: !SD_CONTENT
+	content: attached SD_CONTENT
 			-- Access to the tool's docking content
 		require
 			is_interface_usable: is_interface_usable
@@ -155,7 +155,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	tool_descriptor: !ES_TOOL [EB_TOOL]
+	tool_descriptor: attached ES_TOOL [EB_TOOL]
 			-- Descriptor used to created tool.
 
 feature -- Status report
@@ -235,19 +235,19 @@ feature -- Status setting
 
 feature {NONE} -- Helpers
 
-	frozen stock_pixmaps: !ES_PIXMAPS_16X16
+	frozen stock_pixmaps: attached ES_PIXMAPS_16X16
 			-- Shared access to stock 16x16 EiffelStudio pixmaps
 		once
 			Result := (create {EB_SHARED_PIXMAPS}).icon_pixmaps
 		end
 
-	frozen stock_mini_pixmaps: !ES_PIXMAPS_10X10
+	frozen stock_mini_pixmaps: attached ES_PIXMAPS_10X10
 			-- Shared access to stock 10x10 EiffelStudio pixmaps
 		once
 			Result := (create {EB_SHARED_PIXMAPS}).mini_pixmaps
 		end
 
-	frozen stone_director: !ES_TOOL_STONE_REDIRECT_HELPER
+	frozen stone_director: attached ES_TOOL_STONE_REDIRECT_HELPER
 			-- Shared access to a stone redirection helper
 		require
 			develop_window_is_interface_usable: internal_stone_director = Void implies develop_window.is_interface_usable
@@ -368,7 +368,7 @@ feature {NONE} -- Memory management
 
 feature {NONE} -- Implementation: Internal cache
 
-	internal_stone_director: ?like stone_director
+	internal_stone_director: detachable like stone_director
 			-- Cached version of `stone_director'
 			-- Note: Do not use directly!
 

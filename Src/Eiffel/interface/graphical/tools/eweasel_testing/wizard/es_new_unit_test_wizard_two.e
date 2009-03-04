@@ -75,7 +75,7 @@ feature {NONE} -- Redefine
 			l_horizontal_box.extend (create {EV_CELL})
 
 			create l_window_manager
-			if {l_a_win: EB_DEVELOPMENT_WINDOW} l_window_manager.window_manager.last_focused_development_window then
+			if attached {EB_DEVELOPMENT_WINDOW} l_window_manager.window_manager.last_focused_development_window as l_a_win then
 				ui_builder.prepare (l_a_win.menus.context_menu_factory, l_top_container)
 				ui_builder.cluster_name_entry.change_actions.extend (agent on_cluster_changed)
 				ui_builder.cluster_name_entry.hide
@@ -144,7 +144,7 @@ feature {NONE} -- Wizard UI Implementation
 			end
 		end
 
-	ui_builder: !ES_CHOOSE_CLUSTER_UI_BUILDER
+	ui_builder: attached ES_CHOOSE_CLUSTER_UI_BUILDER
 			-- UI builder
 		once
 			create Result

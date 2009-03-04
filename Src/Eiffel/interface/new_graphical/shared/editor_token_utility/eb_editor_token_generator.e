@@ -54,7 +54,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	tokens (a_indents: INTEGER): !LINKED_LIST [EDITOR_TOKEN]
+	tokens (a_indents: INTEGER): attached LINKED_LIST [EDITOR_TOKEN]
 			-- Create a list of editor tokens from lines `a_lines'
 			--
 			-- `a_indents': The number of surplus indentations to push the result tokens to.

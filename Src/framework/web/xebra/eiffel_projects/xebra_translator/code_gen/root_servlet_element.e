@@ -164,7 +164,7 @@ feature -- Implementation
 
 
 
-			create request_feature.make_with_locals (request_name, xhtml_elements, local_list)
+			create request_feature.make_with_locals (request_name, feature_elements, local_list)
 
 			request_feature.serialize (buffer)
 		end

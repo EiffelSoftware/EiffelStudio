@@ -53,10 +53,10 @@ feature {NONE} -- Status setting
 
 feature -- Events
 
-	dirty_state_change_event: !EVENT_TYPE [TUPLE [is_dirty: BOOLEAN]]
+	dirty_state_change_event: attached EVENT_TYPE [TUPLE [is_dirty: BOOLEAN]]
 			-- <Precursor>
 		do
-			if {l_event: like dirty_state_change_event} internal_dirty_state_change_event then
+			if attached {like dirty_state_change_event} internal_dirty_state_change_event as l_event then
 				Result := l_event
 			else
 				create Result
@@ -75,7 +75,7 @@ feature {NONE} -- Event handlers
 
 feature {NONE} -- Internal implementation cache
 
-	internal_dirty_state_change_event: ?like dirty_state_change_event
+	internal_dirty_state_change_event: detachable like dirty_state_change_event
 			-- Cached version of `dirty_state_change_event'
 			-- Note: Do not use directly!
 

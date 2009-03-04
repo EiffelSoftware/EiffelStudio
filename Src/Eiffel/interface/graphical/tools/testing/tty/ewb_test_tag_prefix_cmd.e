@@ -40,11 +40,11 @@ feature -- Access
 
 feature {NONE} -- Basic operations
 
-	execute_with_test_suite (a_test_suite: !TEST_SUITE_S)
+	execute_with_test_suite (a_test_suite: attached TEST_SUITE_S)
 			-- <Precursor>
 		local
 			l_view: like tree_view
-			l_expr: ?STRING
+			l_expr: detachable STRING
 		do
 			print_string (locale.translation (q_enter_prefix))
 			io.read_line

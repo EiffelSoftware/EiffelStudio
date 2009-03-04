@@ -13,7 +13,7 @@ deferred class
 
 feature -- Access
 
-	section: !STRING_GENERAL
+	section: attached STRING_GENERAL
 			-- String representation of the page navigation section locator.
 		deferred
 		ensure

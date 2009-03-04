@@ -327,7 +327,7 @@ feature -- Change
 				if t /= Void then
 					item ?= a_row.item (1)
 					if item /= Void then
-						if {p: EV_PIXMAP} Status_pixmaps[t.role] then
+						if attached {EV_PIXMAP} Status_pixmaps[t.role] as p then
 							item.set_pixmap (p)
 						else
 							item.remove_pixmap

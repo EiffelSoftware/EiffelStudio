@@ -46,7 +46,7 @@ feature -- Clean up
 
 feature -- Access
 
-	develop_window: ?EB_DEVELOPMENT_WINDOW
+	develop_window: detachable EB_DEVELOPMENT_WINDOW
 			-- Access to the development window
 
 invariant

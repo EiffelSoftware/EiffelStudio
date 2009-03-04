@@ -64,10 +64,10 @@ feature -- Query
 
 feature {NONE} -- Access
 
-	internal_class_type: ?like class_type
+	internal_class_type: detachable like class_type
 			-- Internal storage for `class_type'
 
-	internal_class_type_as: ?like class_type_as
+	internal_class_type_as: detachable like class_type_as
 			-- Internal storage for `class_type_as'
 
 feature -- Status report

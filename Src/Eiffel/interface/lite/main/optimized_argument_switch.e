@@ -23,13 +23,13 @@ feature -- Status report
 
 feature {ARGUMENT_PARSER} -- Factory functions
 
-	new_option: !OPTIMIZED_ARGUMENT_OPTION
+	new_option: attached OPTIMIZED_ARGUMENT_OPTION
 			-- Creates a new argument option for switch
 		do
 			create Result.make ("", create {ARRAYED_LIST [CHARACTER_8]}.make (0), is_case_sensitive, Current)
 		end
 
-	new_value_option (a_value: !STRING_8): !OPTIMIZED_ARGUMENT_OPTION
+	new_value_option (a_value: attached STRING_8): attached OPTIMIZED_ARGUMENT_OPTION
 			-- Creates a new argument option given a value `a_value'
 		local
 			l_flags: ARRAYED_LIST [CHARACTER_8]

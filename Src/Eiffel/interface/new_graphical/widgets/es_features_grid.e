@@ -205,7 +205,7 @@ feature -- Basic operations
 
 feature -- Basic operations
 
-	nagivate_to_feature (a_feature: !E_FEATURE)
+	nagivate_to_feature (a_feature: attached E_FEATURE)
 			-- Navigates to a feature in using a default view.
 			--
 			-- `a_feature': A feature to navigate to.
@@ -214,11 +214,11 @@ feature -- Basic operations
 		do
 			l_window := features_tool.develop_window
 			l_window.set_feature_locating (True)
-			l_window.set_stone (create {!FEATURE_STONE}.make (a_feature))
+			l_window.set_stone (create {attached FEATURE_STONE}.make (a_feature))
 			l_window.set_feature_locating (False)
 		end
 
-	nagivate_to_feature_by_name (a_feature: !STRING)
+	nagivate_to_feature_by_name (a_feature: attached STRING)
 			-- Navigates to a feature in using a default view.
 			--
 			-- `a_feature': A feature name used to navigate to a feature.
@@ -228,15 +228,15 @@ feature -- Basic operations
 			l_window: EB_DEVELOPMENT_WINDOW
 		do
 			l_window := features_tool.develop_window
-			if {l_editor: EB_SMART_EDITOR} l_window.editors_manager.current_editor then
-				if {l_formatter: EB_BASIC_TEXT_FORMATTER} l_window.pos_container then
+			if attached {EB_SMART_EDITOR} l_window.editors_manager.current_editor as l_editor then
+				if attached {EB_BASIC_TEXT_FORMATTER} l_window.pos_container as l_formatter then
 					l_window.managed_main_formatters.first.execute
 				end
 				l_editor.find_feature_named (a_feature)
 			end
 		end
 
-	nagivate_to_feature_clause (a_clause: !FEATURE_CLAUSE_AS; a_focus: BOOLEAN)
+	nagivate_to_feature_clause (a_clause: attached FEATURE_CLAUSE_AS; a_focus: BOOLEAN)
 			-- Navigates to a feature clause in the default view.
 			--
 			-- `a_clause': The feature clause to navigate too.
@@ -250,15 +250,15 @@ feature -- Basic operations
 				a_clause_is_valid: a_clause.start_position > 0
 			end
 			l_window := features_tool.develop_window
-			if {l_editor: EB_SMART_EDITOR} l_window.editors_manager.current_editor then
-				if {l_class: CLASS_I} last_class then
+			if attached {EB_SMART_EDITOR} l_window.editors_manager.current_editor as l_editor then
+				if attached {CLASS_I} last_class as l_class then
 					l_text := l_class.text
 				end
 				if l_text = Void then
 					l_text := l_editor.wide_text
 				end
 
-				if l_text /= Void and then {l_formatter: EB_BASIC_TEXT_FORMATTER} l_window.pos_container then
+				if l_text /= Void and then attached {EB_BASIC_TEXT_FORMATTER} l_window.pos_container as l_formatter then
 						-- Ensure we are in edit mode in the editor.
 
 						-- Fetch line number
@@ -289,7 +289,7 @@ feature {NONE} -- Basic operations
 			a_row_attached: a_row /= Void
 		do
 			if a_row.count > 0 then
-				if {l_ef: E_FEATURE} data_from_row (a_row) then
+				if attached {E_FEATURE} data_from_row (a_row) as l_ef then
 					update_tree_item_for_e_feature (a_row, l_ef)
 				end
 			end
@@ -561,13 +561,13 @@ feature {NONE} -- Context menu handler
 		do
 			if is_clickable then
 				l_factory := features_tool.develop_window.menus.context_menu_factory
-				if {fst: FEATURE_STONE} a_pebble then
-					if {fe: E_FEATURE} fst.e_feature and then fe.is_compiled then
+				if attached {FEATURE_STONE} a_pebble as fst then
+					if attached {E_FEATURE} fst.e_feature as fe and then fe.is_compiled then
 						l_factory.standard_compiler_item_menu (a_menu, a_target_list, a_source, a_pebble)
 					else
 						l_factory.uncompiled_feature_item_menu (a_menu, a_target_list, a_source, a_pebble, fst.feature_name)
 					end
-				elseif {fc: FEATURE_CLAUSE_AS} (data_from_row (selected_row)) then
+				elseif attached {FEATURE_CLAUSE_AS} (data_from_row (selected_row)) as fc then
 					l_factory.feature_clause_item_menu (a_menu, a_target_list, a_source, a_pebble, fc)
 				end
 			end
@@ -581,7 +581,7 @@ feature {NONE} -- Event handler
 			st: FEATURE_STONE
 		do
 			if ab = {EV_POINTER_CONSTANTS}.right and ev_application.ctrl_pressed then
-				if a_item /= Void and then {fe: E_FEATURE} data_from_item (a_item) then
+				if a_item /= Void and then attached {E_FEATURE} data_from_item (a_item) as fe then
 					create st.make (fe)
 					if st.is_valid then
 						(create {EB_CONTROL_PICK_HANDLER}).launch_stone (st)
@@ -606,10 +606,10 @@ feature {NONE} -- Event handler
 			d: like data_from_item
 		do
 			if not ev_application.ctrl_pressed then
-				if {gf: EB_GRID_EDITOR_TOKEN_ITEM} a_item then
+				if attached {EB_GRID_EDITOR_TOKEN_ITEM} a_item as gf then
 				else
 					d := data_from_item (a_item)
-					if {ef: E_FEATURE} d  then
+					if attached {E_FEATURE} d as ef  then
 						create {FEATURE_STONE} Result.make (ef)
 					end
 				end
@@ -619,7 +619,7 @@ feature {NONE} -- Event handler
 	on_item_accept_cursor_function (a_item: EV_GRID_ITEM): EV_POINTER_STYLE
 			-- Accept cursor computing
 		do
-			if {st: STONE} on_pebble_function (a_item) then
+			if attached {STONE} on_pebble_function (a_item) as st then
 				Result := st.stone_cursor
 			end
 		end
@@ -627,7 +627,7 @@ feature {NONE} -- Event handler
 	on_item_deny_cursor_function (a_item: EV_GRID_ITEM): EV_POINTER_STYLE
 			-- Deny cursor computing
 		do
-			if {st: STONE} on_pebble_function (a_item) then
+			if attached {STONE} on_pebble_function (a_item) as st then
 				Result := st.X_stone_cursor
 			end
 		end
@@ -641,13 +641,13 @@ feature {NONE} -- Event handler
 		do
 				-- When features grid is created, there is no element and therefore
 				-- no selected items.
-			if {l_row: EV_GRID_ROW} selected_row then
+			if attached {EV_GRID_ROW} selected_row as l_row then
 				l_data := data_from_row (l_row)
 			end
 			if a_key.code = {EV_KEY_CONSTANTS}.Key_enter and then l_data /= Void then
-				if {l_feature: E_FEATURE} l_data then
+				if attached {E_FEATURE} l_data as l_feature then
 					nagivate_to_feature (l_feature)
-				elseif {l_clause: FEATURE_CLAUSE_AS} l_data then
+				elseif attached {FEATURE_CLAUSE_AS} l_data as l_clause then
 					nagivate_to_feature_clause (l_clause, True)
 				end
 			end
@@ -662,7 +662,7 @@ feature {NONE} -- Event handler
 		local
 			l_stone: FEATURE_STONE
 		do
-			if {l_ef: E_FEATURE} ef then
+			if attached {E_FEATURE} ef as l_ef then
 				if a_button = 1 then
 					nagivate_to_feature (l_ef)
 				elseif a_button = 3 then
@@ -683,7 +683,7 @@ feature {NONE} -- Event handler
 		require
 			fclause_not_void: fclause /= Void
 		do
-			if a_button = 1 and {l_clause: FEATURE_CLAUSE_AS} fclause then
+			if a_button = 1 and attached {FEATURE_CLAUSE_AS} fclause as l_clause then
 				nagivate_to_feature_clause (l_clause, False)
 			end
 		end
@@ -926,7 +926,7 @@ feature {NONE} -- Tree item factory
 			lab.set_pixmap (pix)
 			lab.set_data (a_text)
 			if is_clickable then
-				if {l_feature_name: STRING_8} ffn then
+				if attached {STRING_8} ffn as l_feature_name then
 					lab.pointer_button_press_actions.force_extend (agent nagivate_to_feature_by_name (l_feature_name))
 				end
 			end

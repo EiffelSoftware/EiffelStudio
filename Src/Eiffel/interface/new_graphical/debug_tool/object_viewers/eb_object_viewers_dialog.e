@@ -74,8 +74,8 @@ feature {NONE} -- Initialization
 				--| Toolbar
 			if v /= Void then
 				v.build_tool_bar
-				if {w: EV_WIDGET} v.tool_bar then
-					if {wp: EV_WIDGET} w.parent then
+				if attached {EV_WIDGET} v.tool_bar as w then
+					if attached {EV_WIDGET} w.parent as wp then
 						if wp /= viewer_header_cell then
 							--| wp is already parented somewhere
 							--| then let's wipe out `viewer_header_cell'

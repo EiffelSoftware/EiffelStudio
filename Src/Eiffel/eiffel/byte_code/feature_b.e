@@ -99,7 +99,7 @@ feature -- Visitor
 			else
 					-- Create new byte node and process it instead of the current one.
 				l_node := byte_node (f, c)
-				if {l_feat: like Current} l_node then
+				if attached {like Current} l_node as l_feat then
 					v.process_feature_b (l_feat)
 				else
 					l_node.process (v)
@@ -560,7 +560,7 @@ feature {NONE} -- Normalization of types
 					if l_type.has_formal_generic then
 							-- If it is a generic at the right position, no need to duplicate
 							-- the generics.
-						if not (l_type.is_formal and then {l_formal: FORMAL_A} l_type and then l_formal.position = i) then
+						if not (l_type.is_formal and then attached {FORMAL_A} l_type as l_formal and then l_formal.position = i) then
 							if l_generics = a_type.generics then
 								Result := a_type.duplicate
 								l_generics := Result.generics

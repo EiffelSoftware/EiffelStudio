@@ -9,13 +9,13 @@ class SHARED_INSPECT
 
 feature {NONE}
 
-	Inspect_control: ?INSPECT_CONTROL
+	Inspect_control: detachable INSPECT_CONTROL
 			-- Controler of multi-branch instruction (if any)
 		do
 			Result := Inspect_controlers.first
 		end
 
-	Inspect_controlers: LINKED_LIST [?INSPECT_CONTROL]
+	Inspect_controlers: LINKED_LIST [detachable INSPECT_CONTROL]
 		once
 			create Result.make
 		end

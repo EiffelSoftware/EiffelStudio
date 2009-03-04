@@ -168,7 +168,7 @@ feature -- Execution
 				l_status.set (feature_name, address, origine_type_id, dynamic_type_id, offset, stopping_reason)
 				l_status.set_exception_occurred (exception_occurred)
 				if exception_occurred then
-					if {e: EXCEPTION_DEBUG_VALUE} l_app.remote_current_exception_value then
+					if attached {EXCEPTION_DEBUG_VALUE} l_app.remote_current_exception_value as e then
 						e.update_data
 						l_status.set_exception (e)
 					else
@@ -351,7 +351,7 @@ feature {NONE} -- Implementation
 				else
 					io.put_string ("Ignore exception")
 				end
-				if {s: STRING} (app.status.exception_type_name) then
+				if attached {STRING} (app.status.exception_type_name) as s then
 					io.put_string (": " + s)
 				end
 				io.new_line

@@ -36,7 +36,7 @@ feature {NONE} -- User interface initialization
 
 feature -- Access: Help
 
-	help_context_id: !STRING_GENERAL
+	help_context_id: attached STRING_GENERAL
 			-- <Precursor>
 		once
 			Result := "57B14A4B-8694-12F6-06C8-24411E331559"

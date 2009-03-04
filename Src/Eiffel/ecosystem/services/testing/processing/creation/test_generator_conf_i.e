@@ -14,7 +14,7 @@ inherit
 
 feature -- Access
 
-	types: !DS_LINEAR [!STRING]
+	types: attached DS_LINEAR [attached STRING]
 			-- Names of classes to be tested
 		require
 			usable: is_interface_usable

@@ -57,7 +57,7 @@ feature -- Access
 	same_as (other: TYPE_A): BOOLEAN
 			-- Is the current type the same as `other' ?
 		do
-			Result := {n: NATURAL_A} other and then size = n.size
+			Result := attached {NATURAL_A} other as n and then size = n.size
 		end
 
 	associated_class: CLASS_C

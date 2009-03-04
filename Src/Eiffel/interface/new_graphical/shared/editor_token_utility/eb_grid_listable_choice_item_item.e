@@ -13,7 +13,7 @@ create
 
 feature	{NONE} -- Initialization
 
-	make (a_item: !like item_components)
+	make (a_item: attached like item_components)
 			-- Initialization
 		do
 			item_components := a_item
@@ -33,10 +33,10 @@ feature -- Element change
 
 feature -- Access
 
-	item_components: !ARRAYED_LIST [ES_GRID_ITEM_COMPONENT]
+	item_components: attached ARRAYED_LIST [ES_GRID_ITEM_COMPONENT]
 			-- Components of the item
 
-	data: ?ANY;
+	data: detachable ANY;
 			-- Associated data
 
 note

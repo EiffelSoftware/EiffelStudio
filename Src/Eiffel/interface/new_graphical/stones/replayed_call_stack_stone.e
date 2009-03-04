@@ -42,7 +42,7 @@ feature -- Status report
 			-- Is `other' the same stone?
 			-- Ie: does `other' represent the same feature?
 		do
-			if {st: like Current} other then
+			if attached {like Current} other as st then
 				Result := Precursor (st) and then st.call_position.is_equal (call_position)
 			end
 		end

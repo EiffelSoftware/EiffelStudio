@@ -144,7 +144,7 @@ feature {NONE} -- Initialization
 				vbox.disable_item_expand (start_wb_button)
 				start_wb_button.set_pixmap (cmd.pixmap)
 				start_wb_button.set_tooltip (cmd.tooltip)
-				if {wbcmd: EB_EXEC_WORKBENCH_CMD} eb_debugger_manager.run_workbench_cmd then
+				if attached {EB_EXEC_WORKBENCH_CMD} eb_debugger_manager.run_workbench_cmd as wbcmd then
 					start_wb_button.select_actions.extend (agent execute_operation (agent wbcmd.execute_with_parameters))
 				end
 				Layout_constants.set_default_width_for_button (start_wb_button)
@@ -155,7 +155,7 @@ feature {NONE} -- Initialization
 				vbox.disable_item_expand (start_final_button)
 				start_final_button.set_pixmap (cmd.pixmap)
 				start_final_button.set_tooltip (cmd.tooltip)
-				if {fncmd: EB_EXEC_FINALIZED_CMD} eb_debugger_manager.run_finalized_cmd then
+				if attached {EB_EXEC_FINALIZED_CMD} eb_debugger_manager.run_finalized_cmd as fncmd then
 					start_final_button.select_actions.extend (agent execute_operation (agent fncmd.execute_with_parameters))
 				end
 				Layout_constants.set_default_width_for_button (start_final_button)
@@ -175,12 +175,12 @@ feature {NONE} -- session data
 	keep_opened_status: BOOLEAN
 			-- Access to keep_opened_status' data
 		local
-    		consumer: !SERVICE_CONSUMER [!SESSION_MANAGER_S]
+    		consumer: attached SERVICE_CONSUMER [attached SESSION_MANAGER_S]
 		do
 			create consumer
     		if consumer.is_service_available then
-				if {session: SESSION_I} consumer.service.retrieve (True) then
-					if {ref: BOOLEAN_REF} session.value (keep_opened_status_session_data_id) then
+				if attached {SESSION_I} consumer.service.retrieve (True) as session then
+					if attached {BOOLEAN_REF} session.value (keep_opened_status_session_data_id) as ref then
 						Result := ref.item
 					else
 						Result := False
@@ -192,11 +192,11 @@ feature {NONE} -- session data
 	save_keep_opened_status
 			-- Change keep_opened_status' data.
 		local
-    		consumer: !SERVICE_CONSUMER [!SESSION_MANAGER_S]
+    		consumer: attached SERVICE_CONSUMER [attached SESSION_MANAGER_S]
 		do
 			create consumer
     		if consumer.is_service_available then
-				if {session: SESSION_I} consumer.service.retrieve (True) then
+				if attached {SESSION_I} consumer.service.retrieve (True) as session then
         			session.set_value (keep_opened_check_button.is_selected, keep_opened_status_session_data_id)
         		end
       		end

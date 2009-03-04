@@ -39,7 +39,7 @@ convert
 
 feature {NONE} -- Initialization
 
-	build_widget_interface (a_widget: !EV_VERTICAL_BOX)
+	build_widget_interface (a_widget: attached EV_VERTICAL_BOX)
 			-- Builds widget's interface.
 			-- `a_widget': The widget to initialize of build upon.
 		local
@@ -363,7 +363,7 @@ feature {NONE} -- Display profiles impl
 
 feature {NONE} -- Factory
 
-	create_widget: !EV_VERTICAL_BOX
+	create_widget: attached EV_VERTICAL_BOX
 			-- Creates a new widget, which will be initialized when `build_interface' is called.
 		do
 			create Result
@@ -432,9 +432,9 @@ feature {NONE} -- Grid events
 			c: INTEGER
 			d: INTEGER
 		do
-			if {lst: LIST [EV_GRID_ROW]} profiles_grid.grid_selected_top_rows (profiles_grid) then
+			if attached {LIST [EV_GRID_ROW]} profiles_grid.grid_selected_top_rows (profiles_grid) as lst then
 				if lst.count > 0 then
-					if {row: EV_GRID_ROW} lst.first then
+					if attached {EV_GRID_ROW} lst.first as row then
 						d := default_profile_row.index
 							--| Do not move the first row (which is the default profile)
 						if row.index /= d and row.index + offset /= d then

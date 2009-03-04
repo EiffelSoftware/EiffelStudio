@@ -20,7 +20,7 @@ inherit
 
 feature -- Access
 
-	tool: !ES_TOOL [EB_TOOL]
+	tool: attached ES_TOOL [EB_TOOL]
 			-- Provides a reference to the actual tool.
 		require
 			is_interface_usable: is_interface_usable

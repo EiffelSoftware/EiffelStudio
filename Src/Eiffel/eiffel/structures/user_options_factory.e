@@ -27,7 +27,7 @@ feature -- Access
 
 feature -- Query
 
-	mapped_uuid (a_file_path: STRING): ?UUID
+	mapped_uuid (a_file_path: STRING): detachable UUID
 			-- Retrieves a mapped UUID for a given file path
 		require
 			a_file_path_attached: a_file_path /= Void

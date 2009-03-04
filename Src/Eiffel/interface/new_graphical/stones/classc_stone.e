@@ -40,21 +40,21 @@ feature -- Properties
 
 	group: CONF_GROUP
 		do
-			if {c: like e_class} e_class then
+			if attached e_class as c then
 				Result := c.group
 			end
 		end
 
 	class_name: STRING
 		do
-			if {c: like e_class} e_class then
+			if attached e_class as c then
 				Result := c.name
 			end
 		end
 
 	class_i: CLASS_I
 		do
-			if {c: like e_class} e_class then
+			if attached e_class as c then
 				Result := c.lace_class
 			end
 		end
@@ -63,7 +63,7 @@ feature -- Access
 
 	stone_signature: STRING
 		do
-			if {c: like e_class} e_class then
+			if attached e_class as c then
 				Result := c.class_signature
 			end
 		end
@@ -77,7 +77,7 @@ feature -- Access
 			-- Display class name, class' cluster and class location in
 			-- window title bar.
 		do
-			if {c: like e_class} e_class then
+			if attached e_class as c then
 				if c.is_precompiled then
 					Result := interface_names.l_classc_header_precompiled (eiffel_system.name,
 																			eiffel_universe.target_name,

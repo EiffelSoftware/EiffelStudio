@@ -34,19 +34,19 @@ feature -- Access
 
 feature {NONE} -- Query
 
-	item_sorter: DS_SORTER [!TEST_I]
+	item_sorter: DS_SORTER [attached TEST_I]
 			-- Sorter for {TEST_I}.
 			--
 			-- Note: this sorter also takes class names in account.
 		local
 			l_cache: like item_sorter_cache
-			l_comparator: AGENT_BASED_EQUALITY_TESTER [!TEST_I]
-			l_sorter: DS_QUICK_SORTER [!TEST_I]
+			l_comparator: AGENT_BASED_EQUALITY_TESTER [attached TEST_I]
+			l_sorter: DS_QUICK_SORTER [attached TEST_I]
 		do
 			l_cache := item_sorter_cache
 			if l_cache = Void then
 				create l_comparator.make (
-					agent (a_test1, a_test2: !TEST_I): BOOLEAN
+					agent (a_test1, a_test2: attached TEST_I): BOOLEAN
 						do
 							if a_test1.class_name.same_string (a_test2.class_name) then
 								Result := a_test1.name < a_test2.name
@@ -64,16 +64,16 @@ feature {NONE} -- Query
 			result_attached: Result /= Void
 		end
 
-	item_sorter_cache: ?like item_sorter
+	item_sorter_cache: detachable like item_sorter
 			-- Cache for `node_sorter'
 
 feature {NONE} -- Basic operations
 
-	execute_with_test_suite (a_test_suite: !TEST_SUITE_S)
+	execute_with_test_suite (a_test_suite: attached TEST_SUITE_S)
 			-- <Precursor>
 		local
-			l_items: DS_ARRAYED_LIST [!TEST_I]
-			l_item: !TEST_I
+			l_items: DS_ARRAYED_LIST [attached TEST_I]
+			l_item: attached TEST_I
 		do
 			print_current_expression (a_test_suite, False)
 			create l_items.make_from_linear (filtered_tests (a_test_suite).items)

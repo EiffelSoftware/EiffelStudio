@@ -12,7 +12,7 @@ class
 	ES_EDITOR_HELP_CONTEXT_SCAVENGER
 
 inherit
-	ES_HELP_CONTEXT_SCAVENGER [!EB_SMART_EDITOR]
+	ES_HELP_CONTEXT_SCAVENGER [attached EB_SMART_EDITOR]
 
 feature -- Status report
 
@@ -24,7 +24,7 @@ feature -- Status report
 
 feature {NONE} -- Basic operations
 
-	probe_object (a_object: !EB_SMART_EDITOR): !DS_ARRAYED_LIST [!HELP_CONTEXT_I]
+	probe_object (a_object: attached EB_SMART_EDITOR): attached DS_ARRAYED_LIST [attached HELP_CONTEXT_I]
 			-- Probes an object to locate and scavenge any help context information to be used with a help provider.
 			--
 			-- `a_object': Object to probe to scavenge help contexts
@@ -32,19 +32,19 @@ feature {NONE} -- Basic operations
 		local
 			l_class_extractor: ES_EIS_CLASS_EXTRACTOR
 			l_cluster_extractor: ES_EIS_CONF_EXTRACTOR
-			l_entries: ?SEARCH_TABLE [EIS_ENTRY]
-			l_entry: ?EIS_ENTRY
+			l_entries: detachable SEARCH_TABLE [EIS_ENTRY]
+			l_entry: detachable EIS_ENTRY
 		do
 			create Result.make_default
-			if {lt_class_stone: CLASSI_STONE}a_object.stone then
+			if attached {CLASSI_STONE} a_object.stone as lt_class_stone then
 				if a_object.text_is_fully_loaded then
-					if {lt_class: CLASS_I}lt_class_stone.class_i then
+					if attached {CLASS_I} lt_class_stone.class_i as lt_class then
 						create l_class_extractor.make_with_location (a_object.position, lt_class, True)
 						l_entries := l_class_extractor.eis_full_entries
 					end
 				end
-			elseif {lt_cluster_stone: CLUSTER_STONE}a_object.stone then
-				if {lt_cluster: CONF_CLUSTER}lt_cluster_stone.group then
+			elseif attached {CLUSTER_STONE} a_object.stone as lt_cluster_stone then
+				if attached {CONF_CLUSTER} lt_cluster_stone.group as lt_cluster then
 					create l_cluster_extractor.make (lt_cluster, True)
 					l_entries := l_class_extractor.eis_full_entries
 				end

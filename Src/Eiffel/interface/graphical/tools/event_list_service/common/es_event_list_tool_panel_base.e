@@ -848,7 +848,7 @@ feature {NONE} -- Removal
 			a_row_attached: a_row /= Void
 			a_row_parented_to_grid_events: a_row.parent = grid_events
 		do
-			if event_list.is_service_available and then {l_item: EVENT_LIST_ITEM_I} a_row.data then
+			if event_list.is_service_available and then attached {EVENT_LIST_ITEM_I} a_row.data as l_item then
 				event_list.service.prune_event_item (l_item)
 			end
 		end

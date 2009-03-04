@@ -15,11 +15,11 @@ inherit
 
 feature -- Basic operations
 
-	highlight_stone (a_stone: !STONE)
+	highlight_stone (a_stone: attached STONE)
 			-- Attempts to highlight a given stone in the groups tree.
 		require
 			is_interface_usable: is_interface_usable
-			a_stone_is_stone_usable: {rl_stonable: ES_STONABLE_I} Current implies rl_stonable.is_stone_usable (a_stone)
+			a_stone_is_stone_usable: attached {ES_STONABLE_I} Current as rl_stonable implies rl_stonable.is_stone_usable (a_stone)
 		deferred
 		ensure
 --			a_stone_set:  {el_stonable: ES_STONABLE_I} Current implies el_stonable.stone ~ a_stone

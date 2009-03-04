@@ -17,7 +17,7 @@ inherit
 
 feature -- Query
 
-	is_valid_file_name (a_file_name: ?READABLE_STRING_GENERAL): BOOLEAN
+	is_valid_file_name (a_file_name: detachable READABLE_STRING_GENERAL): BOOLEAN
 			-- Determines if a file name is valid.
 			--
 			-- `a_file_name': The file name to check for validity.
@@ -33,7 +33,7 @@ feature -- Query
 
 feature -- Basic operations
 
-	render_template (a_template: !READABLE_STRING_GENERAL; a_parameters: ?DS_TABLE [!ANY, STRING]): !STRING_32
+	render_template (a_template: attached READABLE_STRING_GENERAL; a_parameters: detachable DS_TABLE [attached ANY, STRING]): attached STRING_32
 			-- Renders a text template.
 			--
 			-- `a_template': The tokenized text to render with the supplied parameters.
@@ -45,7 +45,7 @@ feature -- Basic operations
 		deferred
 		end
 
-	render_template_from_file (a_file_name: !READABLE_STRING_GENERAL; a_parameters: ?DS_TABLE [!ANY, STRING]): ?STRING_32
+	render_template_from_file (a_file_name: attached READABLE_STRING_GENERAL; a_parameters: detachable DS_TABLE [attached ANY, STRING]): detachable STRING_32
 			-- Renders a text template from a file.
 			--
 			-- `a_file_name': The source file name to retrieve a tokenized template from.
@@ -57,7 +57,7 @@ feature -- Basic operations
 		deferred
 		end
 
-	render_template_to_file (a_template: !READABLE_STRING_GENERAL; a_parameters: ?DS_HASH_TABLE [!ANY, STRING]; a_destination_file: !READABLE_STRING_GENERAL)
+	render_template_to_file (a_template: attached READABLE_STRING_GENERAL; a_parameters: detachable DS_HASH_TABLE [attached ANY, STRING]; a_destination_file: attached READABLE_STRING_GENERAL)
 			-- Renders a text template to a destination file.
 			--
 			-- `a_template': The tokenized text to render with the supplied parameters.
@@ -70,7 +70,7 @@ feature -- Basic operations
 		deferred
 		end
 
-	render_template_from_file_to_file (a_file_name: !READABLE_STRING_GENERAL; a_parameters: ?DS_TABLE [!ANY, STRING]; a_destination_file: !READABLE_STRING_GENERAL)
+	render_template_from_file_to_file (a_file_name: attached READABLE_STRING_GENERAL; a_parameters: detachable DS_TABLE [attached ANY, STRING]; a_destination_file: attached READABLE_STRING_GENERAL)
 			-- Renders a text template from a file to a destination file.
 			--
 			-- `a_file_name': The source file name to retrieve a tokenized template from.

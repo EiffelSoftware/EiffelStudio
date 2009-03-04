@@ -60,7 +60,7 @@ feature {NONE} -- Clean up
 
 feature {NONE} -- Access
 
-	stone_session: ?SESSION_I
+	stone_session: detachable SESSION_I
 			-- The session data object used to store and retrieve stone information
 		require
 			is_interface_usable: is_interface_usable
@@ -89,12 +89,12 @@ feature -- Element change
 
 			if not is_processing_persistance and then l_old_stone /= stone and then is_stone_persistable then
 					-- Store changed stone in the session.
-				if {l_session: !like stone_session} stone_session then
+				if attached stone_session as l_session then
 					l_old_is_processing_persistance := is_processing_persistance
 					is_processing_persistance := True
 
 					persist_stone (l_session, stone)
-					l_session.value_changed_event.perform_suspended_action (agent (a_ia_session: !like stone_session; a_ia_store: BOOLEAN)
+					l_session.value_changed_event.perform_suspended_action (agent (a_ia_session: attached like stone_session; a_ia_store: BOOLEAN)
 							-- HACK: Using an inline agents to circumvent a compiled bug with agent Tuple Boolean conversion with a target type ANY.
 						do
 							a_ia_session.set_value (a_ia_store, tool_session_id (stone_session_id))
@@ -125,7 +125,7 @@ feature {NONE} -- Status report
 
 feature -- Query
 
-	frozen tool_session_id (a_id: !STRING): !STRING
+	frozen tool_session_id (a_id: attached STRING): attached STRING
 			-- A tool's stone session identifier.
 			--
 			-- `a_id': Base ID for a tool session ID.
@@ -151,17 +151,17 @@ feature -- Query
 
 feature {NONE} -- Helpers
 
-	frozen session_manager: !SERVICE_CONSUMER [SESSION_MANAGER_S]
+	frozen session_manager: attached SERVICE_CONSUMER [SESSION_MANAGER_S]
 			-- Access to session manager service.
 		once
 			check is_interface_usable: is_interface_usable end
 			create Result
 		end
 
-	frozen persistance_utilities: !ES_PERSISTABLE_STONE_UTILITIES
+	frozen persistance_utilities: attached ES_PERSISTABLE_STONE_UTILITIES
 			-- Access to persistance utilties for stone persistance
 		do
-			if {l_utils: like persistance_utilities} internal_persistance_utilities then
+			if attached {like persistance_utilities} internal_persistance_utilities as l_utils then
 				Result := l_utils
 			else
 				Result := create_persistance_utilities
@@ -171,7 +171,7 @@ feature {NONE} -- Helpers
 
 feature {NONE} -- Basic operations
 
-	resurrect_stone (a_session: !SESSION_I): ?STONE
+	resurrect_stone (a_session: attached SESSION_I): detachable STONE
 			-- Resurrects a stone from previously stored session data.
 			--
 			-- `a_session': The session object to retrieve stone information from.
@@ -191,7 +191,7 @@ feature {NONE} -- Basic operations
 			result_is_stone_usable: Result /= Void implies is_stone_usable (Result)
 		end
 
-	persist_stone (a_session: !SESSION_I; a_stone: ?STONE)
+	persist_stone (a_session: attached SESSION_I; a_stone: detachable STONE)
 			-- Stores a stone's reference information in the given session, for later resurrection.
 			-- Note: Do *not* store the stone object in the session! This will include too much data.
 			--
@@ -213,13 +213,13 @@ feature -- Action handlers
 	on_tool_instantiated
 			-- <Precursor>
 		local
-			l_stone: ?STONE
+			l_stone: detachable STONE
 		do
 			Precursor {ES_STONABLE_TOOL}
 
 			if is_stone_persistable and then stone = Void then
 					-- Store stone in the project window session
-				if {l_session: !like stone_session} stone_session then
+				if attached stone_session as l_session then
 						-- Resurrect stone and set if necessary.
 					l_stone := resurrect_stone (l_session)
 					if l_stone /= Void and l_stone /= stone then
@@ -237,13 +237,13 @@ feature {SESSION_I} -- Event handlers
 	on_session_value_changed (a_session: SESSION_I; a_id: STRING_8)
 			-- <Precursor>
 		local
-			l_stone: ?STONE
+			l_stone: detachable STONE
 		do
 			Precursor {SESSION_EVENT_OBSERVER} (a_session, a_id)
 
 			if not is_processing_persistance and then a_id.is_equal (tool_session_id (stone_session_id)) then
 					-- The session value changed
-				if {l_session: SESSION_I} a_session then
+				if attached {SESSION_I} a_session as l_session then
 						-- Resurrect stone and set.
 					l_stone := resurrect_stone (l_session)
 					if l_stone /= stone and then (l_stone = Void or else is_stone_usable (l_stone)) then
@@ -260,7 +260,7 @@ feature {SESSION_I} -- Event handlers
 
 feature {NONE} -- Factory
 
-	create_persistance_utilities: !ES_PERSISTABLE_STONE_UTILITIES
+	create_persistance_utilities: attached ES_PERSISTABLE_STONE_UTILITIES
 			-- Creates a stone persistance utility.
 		do
 			create Result.make (False)
@@ -274,11 +274,11 @@ feature -- Constants
 
 feature {NONE} -- Internal implementation cache
 
-	internal_stone_session: ?SESSION_I
+	internal_stone_session: detachable SESSION_I
 			-- Cached version of `stone_session'
 			-- Note: Do not use directly!
 
-	internal_persistance_utilities: ?ES_PERSISTABLE_STONE_UTILITIES
+	internal_persistance_utilities: detachable ES_PERSISTABLE_STONE_UTILITIES
 			-- Cached version of `persistance_utilities'
 			-- Note: Do not use directly!
 

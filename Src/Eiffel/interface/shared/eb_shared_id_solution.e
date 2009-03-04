@@ -433,7 +433,7 @@ feature -- Querry
 			end
 		end
 
-	possible_name_of_id (a_id: !STRING): !STRING
+	possible_name_of_id (a_id: attached STRING): attached STRING
 			-- Extracted name from `a_id'
 			-- Despite of id type, the last section is extracted as name.
 			-- Target id is not appliable.
@@ -443,14 +443,14 @@ feature -- Querry
 			l_strings: like strings
 		do
 			l_strings := a_id.split (name_sep)
-			if {lt_name: STRING}decode (l_strings.last) then
+			if attached {STRING} decode (l_strings.last) as lt_name then
 				Result := lt_name
 			else
 				create Result.make_empty
 			end
 		end
 
-	most_possible_type_of_id (a_id: !STRING): NATURAL
+	most_possible_type_of_id (a_id: attached STRING): NATURAL
 			-- Most possible type of the given `a_id'
 			-- target, group, folder, class or feature.
 			-- This querry can not distinguish folder and class.

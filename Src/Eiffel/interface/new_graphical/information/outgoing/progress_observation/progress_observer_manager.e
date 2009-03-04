@@ -10,7 +10,7 @@ deferred class
 
 feature -- Element Change
 
-	add_observer (a_observer: !PROGRESS_OBSERVER)
+	add_observer (a_observer: attached PROGRESS_OBSERVER)
 			-- Add observer to be managed
 		do
 			if progress_observers = Void then
@@ -19,7 +19,7 @@ feature -- Element Change
 			progress_observers.extend (a_observer)
 		end
 
-	remove_observer (a_observer: !PROGRESS_OBSERVER)
+	remove_observer (a_observer: attached PROGRESS_OBSERVER)
 			-- Add observer to be managed
 		do
 			if progress_observers /= Void and then not progress_observers.is_empty then
@@ -124,7 +124,7 @@ feature {NONE} -- Querry
 
 feature {NONE} -- Observers
 
-	progress_observers: ?ARRAYED_LIST [PROGRESS_OBSERVER]
+	progress_observers: detachable ARRAYED_LIST [PROGRESS_OBSERVER]
 			-- List of observers
 
 	total: INTEGER;

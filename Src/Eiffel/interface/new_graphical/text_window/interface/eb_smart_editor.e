@@ -92,17 +92,17 @@ feature {NONE} -- Initialize
 			set_completion_possibilities_provider (text_displayed)
 			text_displayed.set_code_completable (Current)
 
-			if {l_window: !EV_WINDOW} a_dev_window then
+			if attached {attached EV_WINDOW} a_dev_window as l_window then
 				bind_help_shortcut (l_window)
 			end
 		end
 
 feature {NONE} -- Access
 
-	editor_context_cookie: !UUID
+	editor_context_cookie: attached UUID
 			-- The associated editor's context cookie for use with the event list service.
 		do
-			if {l_cookie: UUID} internal_editor_context_cookie then
+			if attached {UUID} internal_editor_context_cookie as l_cookie then
 				Result := l_cookie
 			else
 				Result := (create {UUID_GENERATOR}).generate_uuid.as_attached
@@ -110,13 +110,13 @@ feature {NONE} -- Access
 			end
 		end
 
-	event_list: !SERVICE_CONSUMER [EVENT_LIST_S]
+	event_list: attached SERVICE_CONSUMER [EVENT_LIST_S]
 			-- Access to the event list service for adding class syntax errors/warnings.
 		once
 			create Result
 		end
 
-	help_uri_scavenger: !ES_HELP_CONTEXT_SCAVENGER [!EB_SMART_EDITOR]
+	help_uri_scavenger: attached ES_HELP_CONTEXT_SCAVENGER [attached EB_SMART_EDITOR]
 			-- Scavenger used to local help contexts within the editor
 		require
 			help_providers_is_service_available: help_providers.is_service_available
@@ -132,13 +132,13 @@ feature {NONE} -- Basic operations
 			-- Attempts to show help given the current help context implemented on Current.
 		local
 			l_uri_scavenger: like help_uri_scavenger
-			l_contexts: !DS_BILINEAR [!HELP_CONTEXT_I]
+			l_contexts: attached DS_BILINEAR [attached HELP_CONTEXT_I]
 			l_dialog: ES_HELP_SELECTOR_DIALOG
 		do
 			if help_providers.is_service_available and then has_focus then
 					-- Look for help contexts
 				l_uri_scavenger := help_uri_scavenger
-				if {l_editor: !EB_SMART_EDITOR} Current then
+				if attached {attached EB_SMART_EDITOR} Current as l_editor then
 					l_uri_scavenger.probe (l_editor)
 					if l_uri_scavenger.has_probed then
 						l_contexts := l_uri_scavenger.scavenged_contexts
@@ -294,7 +294,7 @@ feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_MENU_BUILDER} 
 			not_is_empty: not is_empty
 			text_is_fully_loaded: text_is_fully_loaded
 		local
-			l_brace: ?like brace_match_caret_token
+			l_brace: detachable like brace_match_caret_token
 			l_caret_outside: BOOLEAN
 		do
 			l_brace := brace_match_caret_token
@@ -315,7 +315,7 @@ feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_MENU_BUILDER} 
 					end
 
 						-- Set new cursor position
-					if {l_eiffel_line: EIFFEL_EDITOR_LINE} l_brace.line then
+					if attached {EIFFEL_EDITOR_LINE} l_brace.line as l_eiffel_line then
 						check valid_line: l_eiffel_line.is_valid end
 						text_displayed.cursor.set_line (l_eiffel_line)
 						if brace_matcher.is_closing_brace (l_brace.token) then
@@ -661,7 +661,7 @@ feature {EB_CODE_COMPLETION_WINDOW} -- automatic completion
 			Result := Result - 20
 
 			create l_helpers
-			if {l_window: !EV_TITLED_WINDOW} l_helpers.widget_top_level_window (widget, True) and then l_window.is_maximized then
+			if attached {attached EV_TITLED_WINDOW} l_helpers.widget_top_level_window (widget, True) as l_window and then l_window.is_maximized then
 				Result := l_helpers.suggest_pop_up_widget_location_with_size (l_window, Result, 0, list_width, 10).x
 			end
 			Result := Result.max (0)
@@ -682,7 +682,7 @@ feature {EB_CODE_COMPLETION_WINDOW} -- automatic completion
 				-- Get y pos of cursor
 			create l_helpers
 
-			if {l_window: !EV_TITLED_WINDOW} l_helpers.widget_top_level_window (widget, True) and then l_window.is_maximized then
+			if attached {attached EV_TITLED_WINDOW} l_helpers.widget_top_level_window (widget, True) as l_window and then l_window.is_maximized then
 				l_height := l_helpers.window_working_area (l_window).height
 			end
 			if l_height = 0 then
@@ -810,7 +810,7 @@ feature {EB_CODE_COMPLETION_WINDOW} -- automatic completion
 
 feature {NONE} -- Brace matching
 
-	brace_matcher: !ES_EDITOR_BRACE_MATCHER
+	brace_matcher: attached ES_EDITOR_BRACE_MATCHER
 			-- Brace matcher utility access.
 		require
 			is_interface_usable: is_interface_usable
@@ -818,7 +818,7 @@ feature {NONE} -- Brace matching
 			create Result
 		end
 
-	brace_match_caret_token: ?TUPLE [token: !EDITOR_TOKEN; line: !EDITOR_LINE]
+	brace_match_caret_token: detachable TUPLE [token: attached EDITOR_TOKEN; line: attached EDITOR_LINE]
 			-- Attempts to retrieve the most applicable brace match token under the caret.
 			--
 			-- `Result': The most applicable token or Void if no token was found.
@@ -827,10 +827,10 @@ feature {NONE} -- Brace matching
 			not_is_empty: not is_empty
 			text_is_fully_loaded: text_is_fully_loaded
 		local
-			l_utils: !like brace_matcher
-			l_token: ?EDITOR_TOKEN
-			l_prev_token: ?EDITOR_TOKEN
-			l_line: ?EDITOR_LINE
+			l_utils: attached like brace_matcher
+			l_token: detachable EDITOR_TOKEN
+			l_prev_token: detachable EDITOR_TOKEN
+			l_line: detachable EDITOR_LINE
 		do
 				-- Locate applicable tokens
 			l_utils := brace_matcher
@@ -872,13 +872,13 @@ feature {NONE} -- Brace matching
 			not_is_empty: not is_empty
 			text_is_fully_loaded: text_is_fully_loaded
 		local
-			l_utils: !like brace_matcher
-			l_token: !EDITOR_TOKEN
-			l_line: !EDITOR_LINE
-			l_brace: ?like brace_match_caret_token
+			l_utils: attached like brace_matcher
+			l_token: attached EDITOR_TOKEN
+			l_line: attached EDITOR_LINE
+			l_brace: detachable like brace_match_caret_token
 			l_invalidated_lines: ARRAYED_SET [EDITOR_LINE]
-			l_last_matches: !like last_highlighted_matched_braces
-			l_invalidated_line: ?EDITOR_LINE
+			l_last_matches: attached like last_highlighted_matched_braces
+			l_invalidated_line: detachable EDITOR_LINE
 		do
 			create l_invalidated_lines.make (2)
 
@@ -936,7 +936,7 @@ feature {NONE} -- Brace matching
 			end
 		end
 
-	last_highlighted_matched_braces: !ARRAYED_LIST [!TUPLE [token: EDITOR_TOKEN; line: EDITOR_LINE]]
+	last_highlighted_matched_braces: attached ARRAYED_LIST [attached TUPLE [token: EDITOR_TOKEN; line: EDITOR_LINE]]
 			-- Last matched brace tokens, set in `highlight_matched_braces'.
 		require
 			is_interface_usable: is_interface_usable
@@ -1108,7 +1108,7 @@ feature {NONE} -- Implementation
 					create l_item.make ({ENVIRONMENT_CATEGORIES}.editor, l_error.out, l_error)
 					event_list.service.put_event_item (editor_context_cookie, l_item)
 
-					if {l_tool: ES_ERROR_LIST_TOOL} dev_window.shell_tools.tool ({ES_ERROR_LIST_TOOL}) then
+					if attached {ES_ERROR_LIST_TOOL} dev_window.shell_tools.tool ({ES_ERROR_LIST_TOOL}) as l_tool then
 						if not l_tool.is_tool_instantiated then
 								-- If the error list tool is not yet shown, show it, but just the first time.
 								-- The purpose is two fold; This is the first error generated and so the user should
@@ -1317,12 +1317,12 @@ feature {NONE} -- Memory management
 
 feature {NONE} -- Factory
 
-	create_token_handler: ?ES_EDITOR_TOKEN_HANDLER
+	create_token_handler: detachable ES_EDITOR_TOKEN_HANDLER
 			-- Create a token handler, used to perform actions or respond to mouse/keyboard events
 			-- Note: Return Void to prevent any handling from takening place.
 		do
-			if {l_editor: !EB_CUSTOM_WIDGETTED_EDITOR} Current then
-				create {!ES_SMART_EDITOR_TOKEN_HANDLER} Result.make (l_editor)
+			if attached {attached EB_CUSTOM_WIDGETTED_EDITOR} Current as l_editor then
+				create {attached ES_SMART_EDITOR_TOKEN_HANDLER} Result.make (l_editor)
 			end
 		end
 
@@ -1649,7 +1649,7 @@ feature {NONE} -- Code completable implementation
 					until
 						l_current_token = Void or else
 						l_current_token = l_current_line.eol_token or else
-						{lt_com: EDITOR_TOKEN_COMMENT}l_current_token
+						attached {EDITOR_TOKEN_COMMENT} l_current_token as lt_com
 					loop
 						if
 							not l_has_right_brace_following and then
@@ -1893,7 +1893,7 @@ feature {NONE} -- Code completable implementation
 
 feature {NONE} -- Implementation: Internal cache
 
-	internal_editor_context_cookie: ?like editor_context_cookie
+	internal_editor_context_cookie: detachable like editor_context_cookie
 			-- Cached version of `editor_context_cookie'
 			-- Note: Do not use directly!
 

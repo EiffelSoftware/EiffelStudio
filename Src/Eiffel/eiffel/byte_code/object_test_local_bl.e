@@ -68,7 +68,7 @@ feature -- Status report
 	used (r: REGISTRABLE): BOOLEAN
 			-- Is `r' the same as `Current'?
 		do
-			if {o: OBJECT_TEST_LOCAL_B} r then
+			if attached {OBJECT_TEST_LOCAL_B} r as o then
 				Result := same (o)
 			end
 		end

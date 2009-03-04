@@ -599,7 +599,7 @@ feature {NONE} -- Implementation
 						j = nb
 					loop
 							-- Compute number of real elements that are going to be inserted.
-						if not ({l_discardable_data_1: TUPLE [like Current]} l_data.item (j)) then
+						if not (attached {TUPLE [like Current]} l_data.item (j) as l_discardable_data_1) then
 							l_count := l_count + 1
 						end
 						j := j + 1
@@ -616,7 +616,7 @@ feature {NONE} -- Implementation
 					loop
 						l_any := l_data.item (j)
 							-- We are not interested in seeing objects of the grid
-						if not ({l_discardable_data_2: TUPLE [like Current]} l_any) then
+						if not (attached {TUPLE [like Current]} l_any as l_discardable_data_2) then
 							create l_item.make_with_text ((i - l_row_index).out + ": " + l_int.type_name (l_any))
 							output_grid.set_item (1, i, l_item)
 							create l_item.make_with_text (($l_any).out)

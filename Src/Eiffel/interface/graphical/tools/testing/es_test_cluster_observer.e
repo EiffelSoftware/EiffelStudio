@@ -36,7 +36,7 @@ feature {NONE} -- Events
 	on_class_removed (a_class: CLASS_I)
 			-- <Precursor>
 		do
-			if {l_class: !EIFFEL_CLASS_I} a_class and then test_suite.is_service_available then
+			if attached {attached EIFFEL_CLASS_I} a_class as l_class and then test_suite.is_service_available then
 				test_suite.service.synchronize_with_class (l_class)
 			end
 		end

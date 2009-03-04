@@ -19,19 +19,19 @@ create {NONE}
 
 feature -- Access
 
-	icon: !EV_PIXEL_BUFFER
+	icon: attached EV_PIXEL_BUFFER
 			-- <Precursor>
 		do
 			Result := stock_pixmaps.testing_result_tool_icon_buffer
 		end
 
-	icon_pixmap: !EV_PIXMAP
+	icon_pixmap: attached EV_PIXMAP
 			-- <Precursor>
 		do
 			Result := stock_pixmaps.testing_result_tool_icon
 		end
 
-	title: !STRING_32
+	title: attached STRING_32
 			-- <Precursor>
 		do
 			Result := locale_formatter.translation (t_tool_title)
@@ -39,7 +39,7 @@ feature -- Access
 
 feature {NONE} -- Factory
 
-	new_tool: !ES_EWEASEL_TESTING_RESULT_TOOL_PANEL
+	new_tool: attached ES_EWEASEL_TESTING_RESULT_TOOL_PANEL
 			-- <Precursor>
 		do
 			create Result.make (window, Current)

@@ -27,7 +27,7 @@ convert
 
 feature {NONE} -- Initialization
 
-	make (a_text_field: !like text_field; a_function: !like entry_error_function)
+	make (a_text_field: attached like text_field; a_function: attached like entry_error_function)
 			-- Initializes a validation text field.
 			--
 			-- `a_text_field': The text field to wrap.
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Initialization: User interface
 
-	build_widget_interface (a_widget: !EV_HORIZONTAL_BOX)
+	build_widget_interface (a_widget: attached EV_HORIZONTAL_BOX)
 			-- <Precursor>
 		do
 			a_widget.set_padding ({ES_UI_CONSTANTS}.label_horizontal_padding)
@@ -87,13 +87,13 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-	text: !STRING_32 assign set_text
+	text: attached STRING_32 assign set_text
 			-- Actual text
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
 		do
-			if {l_text: STRING_32} text_field.text then
+			if attached {STRING_32} text_field.text as l_text then
 				Result := l_text
 			else
 				create Result.make_empty
@@ -102,7 +102,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	old_text: ?STRING_32
+	old_text: detachable STRING_32
 			-- The preserved old text value of the set widget.
 
 	old_caret_position: INTEGER
@@ -110,33 +110,33 @@ feature {NONE} -- Access
 
 feature -- Access: Validataion and formatting
 
-	entry_error_function: ?FUNCTION [ANY, TUPLE [!STRING_32], !TUPLE [is_valid: BOOLEAN; reason: ?STRING_32]]
+	entry_error_function: detachable FUNCTION [ANY, TUPLE [attached STRING_32], attached TUPLE [is_valid: BOOLEAN; reason: detachable STRING_32]]
 			-- Function used to validate the entered text, which upon failing will display an error message.
 
-	entry_validation: ?PREDICATE [ANY, TUPLE [text: !STRING_32]] assign set_entry_validation
+	entry_validation: detachable PREDICATE [ANY, TUPLE [text: attached STRING_32]] assign set_entry_validation
 			-- An optional predicate used to determine if the changed text is valid for the widget.
 			-- Note: This differs from `entry_error_function' because text will be disallowed where
 			--       as the `entry_error_function' will allow text but display an error.
 
-	entry_formatter: ?FUNCTION [ANY, TUPLE [!STRING_32], !STRING_32] assign set_entry_formatter
+	entry_formatter: detachable FUNCTION [ANY, TUPLE [attached STRING_32], attached STRING_32] assign set_entry_formatter
 			-- An optional function used to format the entered text.
 
 feature -- User interface elements
 
-	text_field: !EV_TEXT_FIELD
+	text_field: attached EV_TEXT_FIELD
 			-- Actual text field.
 
 feature {NONE} -- User interface elements
 
-	validation_pixmap: !EV_PIXMAP
+	validation_pixmap: attached EV_PIXMAP
 			-- Validation pixmap to show when not validated.
 
-	original_foreground_color: !EV_COLOR
+	original_foreground_color: attached EV_COLOR
 			-- Original text field forground color.
 
 feature -- Element change
 
-	set_text (a_text: !like text)
+	set_text (a_text: attached like text)
 			-- Set field text.
 			--
 			-- `a_text': The new text to set.
@@ -201,7 +201,7 @@ feature -- Basic operations
 
 feature -- Actions
 
-	valid_state_changed_actions: !ACTION_SEQUENCE [TUPLE [is_valid: BOOLEAN]]
+	valid_state_changed_actions: attached ACTION_SEQUENCE [TUPLE [is_valid: BOOLEAN]]
 			-- Event published when the valid state of Current changes.
 		require
 			is_interface_usable: is_interface_usable
@@ -259,12 +259,12 @@ feature {NONE} -- Action handlers
 		local
 			l_text: like text
 			l_old_text: like old_text
-			l_formatter: ?like entry_formatter
-			l_predicate: ?like entry_validation
-			l_item: !TUPLE [is_valid: BOOLEAN; reason: ?STRING_32]
+			l_formatter: detachable like entry_formatter
+			l_predicate: detachable like entry_validation
+			l_item: attached TUPLE [is_valid: BOOLEAN; reason: detachable STRING_32]
 			l_old_is_valid: like is_valid
 			l_tooltip: STRING_32
-			l_reason: ?STRING_32
+			l_reason: detachable STRING_32
 			l_actions: like internal_valid_state_changed_actions
 		do
 			l_text := text
@@ -323,7 +323,7 @@ feature {NONE} -- Action handlers
 
 feature {NONE} -- Factory
 
-	create_widget: !EV_HORIZONTAL_BOX
+	create_widget: attached EV_HORIZONTAL_BOX
 			-- <Precursor>
 		do
 			create Result
@@ -335,7 +335,7 @@ feature {NONE} -- Internationalization
 
 feature {NONE} -- Implementation: Internal cache
 
-	internal_valid_state_changed_actions: ?like valid_state_changed_actions
+	internal_valid_state_changed_actions: detachable like valid_state_changed_actions
 			-- Cached version of `valid_state_changed_actions'.
 			-- Note: Do not use directly!
 

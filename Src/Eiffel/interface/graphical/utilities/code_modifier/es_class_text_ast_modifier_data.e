@@ -27,15 +27,15 @@ create
 
 feature -- Access
 
-	ast: ?CLASS_AS
+	ast: detachable CLASS_AS
 			-- Root AST node of prepared class.
 
-	ast_match_list: ?LEAF_AS_LIST
+	ast_match_list: detachable LEAF_AS_LIST
 			-- Match list produced by the last parse.
 
 feature {NONE} -- Access
 
-	parser: !EIFFEL_PARSER
+	parser: attached EIFFEL_PARSER
 			-- Eiffel code parser used to prepare the data of Current.
 		once
 			create Result.make_with_factory (create {AST_ROUNDTRIP_COMPILER_FACTORY})
@@ -59,11 +59,11 @@ feature -- Basic operations
 	prepare
 			-- <Precursor>
 		local
-			l_parser: !like parser
-			l_class: !like associated_class
-			l_wrapper: !like eiffel_parser_wrapper
-			l_current_class: ?CLASS_C
-			l_current_group: ?CONF_GROUP
+			l_parser: attached like parser
+			l_class: attached like associated_class
+			l_wrapper: attached like eiffel_parser_wrapper
+			l_current_class: detachable CLASS_C
+			l_current_group: detachable CONF_GROUP
 			l_options: CONF_OPTION
 		do
 			reset

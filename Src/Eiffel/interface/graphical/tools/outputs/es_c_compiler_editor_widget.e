@@ -65,19 +65,19 @@ feature {NONE} -- Initialization: User interface
 
 feature {NONE} -- Access: User interface
 
-	open_button: !SD_TOOL_BAR_POPUP_BUTTON
+	open_button: attached SD_TOOL_BAR_POPUP_BUTTON
 			-- Button used to open a folder.
 
-	open_project_menu_item: ?EV_MENU_ITEM
+	open_project_menu_item: detachable EV_MENU_ITEM
 			-- Menu item used to open the project folder.
 
-	open_workbench_menu_item: ?EV_MENU_ITEM
+	open_workbench_menu_item: detachable EV_MENU_ITEM
 			-- Menu item used to open the compilation workbench folder.
 
-	open_finalized_menu_item: ?EV_MENU_ITEM
+	open_finalized_menu_item: detachable EV_MENU_ITEM
 			-- Menu item used to open the compilation finalized folder.
 
-	open_file_button: !SD_TOOL_BAR_BUTTON
+	open_file_button: attached SD_TOOL_BAR_BUTTON
 			-- Button use to open a parsed C/C++ file name in an external editor.
 
 feature -- Status report
@@ -87,7 +87,7 @@ feature -- Status report
 
 feature {NONE} -- Basic operations
 
-	open_folder (a_folder: !READABLE_STRING_GENERAL)
+	open_folder (a_folder: attached READABLE_STRING_GENERAL)
 			-- Attempts to open a folder in the default file browser.
 			--
 			-- `a_folder': The folder to open.
@@ -138,7 +138,7 @@ feature {NONE} -- Action handlers
 
 feature {NONE} -- Factory
 
-	new_right_tool_bar_items: ?DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+	new_right_tool_bar_items: detachable DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- <Precursor>
 		local
 			l_popup_button: SD_TOOL_BAR_POPUP_BUTTON

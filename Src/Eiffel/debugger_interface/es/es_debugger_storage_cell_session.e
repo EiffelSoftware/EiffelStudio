@@ -107,7 +107,7 @@ feature -- Access
 			dbg_session: SESSION_I
 		do
 			dbg_session := session_data
-			if {c: CELL_SESSION_DATA [like breakpoints_data_from_storage]} dbg_session.value (Breakpoints_session_data_id) then
+			if attached {CELL_SESSION_DATA [like breakpoints_data_from_storage]} dbg_session.value (Breakpoints_session_data_id) as c then
 				data_cells.force (c, Breakpoints_session_data_id)
 				Result := c.item
 			else
@@ -121,7 +121,7 @@ feature -- Access
 			dbg_session: SESSION_I
 		do
 			dbg_session := session_data
-			if {c: CELL_SESSION_DATA [like exceptions_handler_data_from_storage]} dbg_session.value (Exception_handler_session_data_id) then
+			if attached {CELL_SESSION_DATA [like exceptions_handler_data_from_storage]} dbg_session.value (Exception_handler_session_data_id) as c then
 				data_cells.force (c, Exception_handler_session_data_id)
 				Result := c.item
 			else
@@ -135,7 +135,7 @@ feature -- Access
 			dbg_session: SESSION_I
 		do
 			dbg_session := profiles_session_data
-			if {c: CELL_SESSION_DATA [like profiles_data_from_storage]} dbg_session.value (Profiles_session_data_id) then
+			if attached {CELL_SESSION_DATA [like profiles_data_from_storage]} dbg_session.value (Profiles_session_data_id) as c then
 				data_cells.force (c, Profiles_session_data_id)
 				Result := c.item
 			else

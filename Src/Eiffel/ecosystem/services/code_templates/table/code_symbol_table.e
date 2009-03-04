@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item (a_id: !STRING): !CODE_SYMBOL_VALUE
+	item (a_id: attached STRING): attached CODE_SYMBOL_VALUE
 			-- Retrieve the current value for a given symbol identifier.
 			--
 			-- `a_id': A symbol identifier to retrieve a value for.
@@ -45,12 +45,12 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	content_table: !DS_HASH_TABLE [!CODE_SYMBOL_VALUE, STRING]
+	content_table: attached DS_HASH_TABLE [attached CODE_SYMBOL_VALUE, STRING]
 			-- Table of indentiers and mapped values
 
 feature -- Element change
 
-	put (a_value: !CODE_SYMBOL_VALUE; a_id: !STRING)
+	put (a_value: attached CODE_SYMBOL_VALUE; a_id: attached STRING)
 			-- Extends the symbol table with a new id/value pair.
 			--
 			-- `a_value': A value to associated with an indentifier in the symbol table.
@@ -68,7 +68,7 @@ feature -- Element change
 			a_value_symbol_table_set: a_value.symbol_table = Current
 		end
 
-	force (a_value: !CODE_SYMBOL_VALUE; a_id: !STRING)
+	force (a_value: attached CODE_SYMBOL_VALUE; a_id: attached STRING)
 			-- Forces extending of the symbol table with a new id/value pair.
 			--
 			-- `a_value': A value to associated with an indentifier in the symbol table.
@@ -87,7 +87,7 @@ feature -- Element change
 
 feature -- Query
 
-	has_id (a_id: !STRING): BOOLEAN
+	has_id (a_id: attached STRING): BOOLEAN
 			-- Determines if the symbol table contains an identifier.
 			--
 			-- `a_id': The identifier to check for existence.
@@ -102,7 +102,7 @@ feature -- Query
 
 feature {CODE_SYMBOL_VALUE} -- Query
 
-	id_of_value (a_value: !CODE_SYMBOL_VALUE): ?STRING
+	id_of_value (a_value: attached CODE_SYMBOL_VALUE): detachable STRING
 			-- Retrieves the ID of a code symbol value.
 			--
 			-- `a_value': The value to retrieve an ID for
@@ -120,7 +120,7 @@ feature {CODE_SYMBOL_VALUE} -- Query
 
 feature -- Events
 
-	value_changed_events: !EVENT_TYPE [TUPLE [id: !STRING]]
+	value_changed_events: attached EVENT_TYPE [TUPLE [id: attached STRING]]
 			-- Actions called when a value in the symbol table is changed
 		local
 			l_result: like internal_value_changed_events
@@ -136,7 +136,7 @@ feature -- Events
 
 feature {NONE} -- Internal implementation cache
 
-	internal_value_changed_events: EVENT_TYPE [TUPLE [id: !STRING]]
+	internal_value_changed_events: EVENT_TYPE [TUPLE [id: attached STRING]]
 			-- Cached version of `value_changed_events'
 			-- Note: Do not use directly!
 

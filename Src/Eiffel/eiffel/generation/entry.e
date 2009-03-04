@@ -167,8 +167,8 @@ feature -- from ENTRY
 			--| We exclude expanded types since they are by default attached and thus only have
 			--| one type at runtime.
 		do
-			Result := {l_gtype: GEN_TYPE_A} type or else not type.is_explicit or else
-				({l_attached_type: ATTACHABLE_TYPE_A} type and then not type.is_expanded and then l_attached_type.is_attached)
+			Result := attached {GEN_TYPE_A} type as l_gtype or else not type.is_explicit or else
+				(attached {ATTACHABLE_TYPE_A} type as l_attached_type and then not type.is_expanded and then l_attached_type.is_attached)
 		end
 
 	generate_cid (buffer: GENERATION_BUFFER; final_mode: BOOLEAN)

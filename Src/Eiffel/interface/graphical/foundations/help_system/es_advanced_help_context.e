@@ -21,7 +21,7 @@ inherit
 
 feature {NONE} -- Access
 
-	help_context_id: !STRING_GENERAL
+	help_context_id: attached STRING_GENERAL
 			-- A contextual identifer to link an associated help through, when no applicable widget is
 			-- selected.
 		require
@@ -29,7 +29,7 @@ feature {NONE} -- Access
 		deferred
 		end
 
-	help_context_ids: !LIST [!TUPLE [widget: EV_WIDGET; id: !STRING_GENERAL; section: ?HELP_CONTEXT_SECTION_I]]
+	help_context_ids: attached LIST [attached TUPLE [widget: EV_WIDGET; id: attached STRING_GENERAL; section: detachable HELP_CONTEXT_SECTION_I]]
 			-- Contextual identifers to link an associated help through, binding context id's to a specific
 			-- widget.
 		require
@@ -37,7 +37,7 @@ feature {NONE} -- Access
 		deferred
 		end
 
-	help_context_section: ?HELP_CONTEXT_SECTION_I
+	help_context_section: detachable HELP_CONTEXT_SECTION_I
 			-- An optional sub-section in the help document, located using `help_context_id' to navigate to,
 			-- when no applicable widget is selected.
 		require
@@ -47,13 +47,13 @@ feature {NONE} -- Access
 
 feature {NONE} -- Implementation: Internal
 
-	frozen internal_help_context_id: !STRING_GENERAL
+	frozen internal_help_context_id: attached STRING_GENERAL
 			-- <Precursor>
 		local
-			l_ids: !like help_context_ids
-			l_item: !TUPLE [widget: EV_WIDGET; id: !STRING_GENERAL; section: ?HELP_CONTEXT_SECTION_I]
-			l_widget: ?EV_WIDGET
-			l_result: ?STRING_GENERAL
+			l_ids: attached like help_context_ids
+			l_item: attached TUPLE [widget: EV_WIDGET; id: attached STRING_GENERAL; section: detachable HELP_CONTEXT_SECTION_I]
+			l_widget: detachable EV_WIDGET
+			l_result: detachable STRING_GENERAL
 			l_stop: BOOLEAN
 		do
 			l_widget := (create {EV_SHARED_APPLICATION}).ev_application.focused_widget
@@ -89,13 +89,13 @@ feature {NONE} -- Implementation: Internal
 			end
 		end
 
-	frozen internal_help_context_section: ?HELP_CONTEXT_SECTION_I
+	frozen internal_help_context_section: detachable HELP_CONTEXT_SECTION_I
 			-- <Precursor>
 		local
-			l_ids: !like help_context_ids
-			l_item: !TUPLE [widget: EV_WIDGET; id: !STRING_GENERAL; section: ?HELP_CONTEXT_SECTION_I]
-			l_widget: ?EV_WIDGET
-			l_result: ?HELP_CONTEXT_SECTION_I
+			l_ids: attached like help_context_ids
+			l_item: attached TUPLE [widget: EV_WIDGET; id: attached STRING_GENERAL; section: detachable HELP_CONTEXT_SECTION_I]
+			l_widget: detachable EV_WIDGET
+			l_result: detachable HELP_CONTEXT_SECTION_I
 			l_stop: BOOLEAN
 		do
 			l_widget := (create {EV_SHARED_APPLICATION}).ev_application.focused_widget

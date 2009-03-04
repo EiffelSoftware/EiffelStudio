@@ -44,24 +44,24 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen definition: !CODE_TEMPLATE_DEFINITION
+	frozen definition: attached CODE_TEMPLATE_DEFINITION
 			-- Top level code file.
 		do
 			Result := Current
 		end
 
-	metadata: !CODE_METADATA assign set_metadata
+	metadata: attached CODE_METADATA assign set_metadata
 			-- Metadata for a give code file.
 
-	declarations: !CODE_DECLARATION_COLLECTION assign set_declarations
+	declarations: attached CODE_DECLARATION_COLLECTION assign set_declarations
 			-- Identifier declarations for a given code file.
 
-	templates: !CODE_TEMPLATE_COLLECTION assign set_templates
+	templates: attached CODE_TEMPLATE_COLLECTION assign set_templates
 			-- Code templates (versioned and unversioned) for a given code file.
 
 feature {CODE_NODE} -- Access
 
-	code_factory: !CODE_FACTORY
+	code_factory: attached CODE_FACTORY
 			-- Factory used for creating code nodes
 
 feature -- Element change
@@ -101,7 +101,7 @@ feature -- Element change
 
 feature -- Query
 
-	applicable_item: ?CODE_TEMPLATE
+	applicable_item: detachable CODE_TEMPLATE
 			-- Attempts to retreive the most applicable code template for the version of the compiler.
 			--
 			-- `Result': A code template with no version; Otherwise Void if not applicable template was located.
@@ -109,7 +109,7 @@ feature -- Query
 			Result := templates.applicable_item
 		end
 
-	applicable_default_item: ?CODE_TEMPLATE
+	applicable_default_item: detachable CODE_TEMPLATE
 			-- Attempts to retreive the default (unversioned) code template.
 			--
 			-- `Result': A code template with no version; Otherwise Void if not applicable template was located.
@@ -119,7 +119,7 @@ feature -- Query
 			result_is_unversioned: ({CODE_VERSIONED_TEMPLATE}) #? Result = Void
 		end
 
-	applicable_item_with_version (a_version: !STRING_32): ?CODE_TEMPLATE
+	applicable_item_with_version (a_version: attached STRING_32): detachable CODE_TEMPLATE
 			-- Attempts to retreive the most applicable code template, given a string version.
 			--
 			-- `a_version': Version to find the most applicable template with.
@@ -130,20 +130,20 @@ feature -- Query
 			Result := templates.applicable_item_with_version (a_version)
 		end
 
-	applicable_item_with_code_version (a_version: !CODE_VERSION): ?CODE_TEMPLATE
+	applicable_item_with_code_version (a_version: attached CODE_VERSION): detachable CODE_TEMPLATE
 			-- Attempts to retreive the most applicable code template, given a version.
 			--
 			-- `a_version': Version to find the most applicable template with.
 			-- `Result': A code template that best matches the supplied [minimum] version; Otherwise Void if not applicable template was located.
 		require
-			not_a_version_is_default: not a_version.is_equal (create {!CODE_NUMERIC_VERSION}.make (0, 0, 0, 0))
+			not_a_version_is_default: not a_version.is_equal (create {attached CODE_NUMERIC_VERSION}.make (0, 0, 0, 0))
 		do
 			Result := templates.applicable_item_with_code_version (a_version)
 		end
 
 feature -- Visitor
 
-	process (a_visitor: !CODE_TEMPLATE_VISITOR_I)
+	process (a_visitor: attached CODE_TEMPLATE_VISITOR_I)
 			-- <Precursor>
 		do
 			a_visitor.process_code_template_definition (Current)

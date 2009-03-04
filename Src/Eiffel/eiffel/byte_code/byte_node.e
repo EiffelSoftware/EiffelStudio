@@ -110,8 +110,8 @@ feature -- Eiffel source line information
 				buf.put_new_line
 				if a_target.is_attribute then
 					--| Note: cf {MELTED_ASSIGNMENT_GENERATOR}.process_attribute_b ...
-					if {attb: !ATTRIBUTE_B} a_target then
-						if {l_instant_context_type: CL_TYPE_A} attb.context_type then
+					if attached {attached ATTRIBUTE_B} a_target as attb then
+						if attached {CL_TYPE_A} attb.context_type as l_instant_context_type then
 							l_base_class := l_instant_context_type.associated_class
 							if Compilation_modes.is_precompiling or else l_base_class.is_precompiled then
 								l_precomp := 1
@@ -151,7 +151,7 @@ feature -- Eiffel source line information
 						buf.put_string (" */")
 					end
 				elseif a_target.is_local then
-					if {locb: !LOCAL_B} a_target then
+					if attached {attached LOCAL_B} a_target as locb then
 						buf.put_string ("RTDBGAL(")
 						context.current_register.print_register
 						buf.put_string (gc_comma)
@@ -172,7 +172,7 @@ feature -- Eiffel source line information
 						buf.put_string (" */")
 					end
 				elseif a_target.is_result then
-					if {resb: !RESULT_B} a_target then
+					if attached {attached RESULT_B} a_target as resb then
 						buf.put_string ("RTDBGAL(")
 						context.current_register.print_register
 						buf.put_string (gc_comma)

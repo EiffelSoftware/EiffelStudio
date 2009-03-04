@@ -13,25 +13,25 @@ class
 
 feature -- Access
 
-	general: !UUID
+	general: attached UUID
 			-- General purpose output.
 		once
 			create Result.make_from_string (general_string)
 		end
 
-	eiffel_compiler: !UUID
+	eiffel_compiler: attached UUID
 			-- Eiffel compiler output.
 		once
 			create Result.make_from_string (eiffel_compiler_string)
 		end
 
-	c_compiler: !UUID
+	c_compiler: attached UUID
 			-- C compiler output.
 		once
 			create Result.make_from_string (c_compiler_string)
 		end
 
-	testing: !UUID
+	testing: attached UUID
 			-- Testing tools output.
 		once
 			create Result.make_from_string (testing_string)

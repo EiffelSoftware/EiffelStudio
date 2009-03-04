@@ -57,7 +57,7 @@ feature -- Access
 	same_as (other: TYPE_A): BOOLEAN
 			-- Is the current type the same as `other' ?
 		do
-			Result := {i: INTEGER_A} other and then size = i.size
+			Result := attached {INTEGER_A} other as i and then size = i.size
 		end
 
 	associated_class: CLASS_C

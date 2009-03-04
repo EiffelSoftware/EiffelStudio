@@ -1127,7 +1127,7 @@ end
 			is_force_rebuild := True
 		end
 
-	rebuild_configuration_actions: !ACTION_SEQUENCE [TUPLE[]]
+	rebuild_configuration_actions: attached ACTION_SEQUENCE [TUPLE[]]
 			-- Rebuild configuration actions hooks.
 		once
 			create Result
@@ -1360,7 +1360,7 @@ end
 			end
 		end
 
-	eifgens_cluster: ?CONF_CLUSTER
+	eifgens_cluster: detachable CONF_CLUSTER
 			-- Cluster added to universe target pointing to "Cluster" directory in "EIFGENs", Void if cluster
 			-- has not been added yet.
 		local
@@ -1984,7 +1984,7 @@ end
 				until
 					l_classes.after
 				loop
-					if {l_class_i: CLASS_I} l_classes.item then
+					if attached {CLASS_I} l_classes.item as l_class_i then
 						l_class_i.reset_options
 					end
 					l_classes.forth
@@ -2425,7 +2425,7 @@ end
 			l_root: SYSTEM_ROOT
 			l_root_cl: CLASS_C
 			l_root_dtype: INTEGER
-			l_root_ft: ?FEATURE_I
+			l_root_ft: detachable FEATURE_I
 			l_root_rout_info: ROUT_INFO
 			l_root_rout_id: INTEGER
 			l_rcorigin, l_rcoffset: INTEGER
@@ -5750,9 +5750,9 @@ feature {NONE} -- Element change: Root creators
 			vd19: VD19
 			vd20: VD20
 			vd29: VD29
-			l_type_as: ?CLASS_TYPE_AS
+			l_type_as: detachable CLASS_TYPE_AS
 			l_system_root: SYSTEM_ROOT
-			l_class: ?CLASS_I
+			l_class: detachable CLASS_I
 		do
 			type_parser.parse_from_string ("type " + a_class_name, Void)
 			l_type_as ?= type_parser.type_node

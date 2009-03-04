@@ -12,50 +12,50 @@ class
 
 feature -- Access
 
-	frozen default_help: !UUID
+	frozen default_help: attached UUID
 			-- Default help system.
 		once
 				-- Compiled URI help system is the default help for now.
 			Result := raw_uri
 		end
 
-	frozen chm: !UUID
+	frozen chm: attached UUID
 			-- Compiled HTML help system.
 		once
 			create Result.make_from_string (chm_uuid_string)
 		end
 
-	frozen eiffel_doc: !UUID
+	frozen eiffel_doc: attached UUID
 			-- Eiffel documentation help system.
 		once
 			create Result.make_from_string (eiffel_doc_string)
 		end
 
-	frozen wiki: !UUID
+	frozen wiki: attached UUID
 			-- Public Eiffel Wiki help system.
 		once
 			create Result.make_from_string (wiki_uuid_string)
 		end
 
-	frozen raw_uri: !UUID
+	frozen raw_uri: attached UUID
 			-- Raw URI help system
 		once
 			create Result.make_from_string (raw_uri_uuid_string)
 		end
 
-	frozen pdf: !UUID
+	frozen pdf: attached UUID
 			-- PDF help system
 		once
 			create Result.make_from_string (pdf_uuid_string)
 		end
 
-	frozen doc: !UUID
+	frozen doc: attached UUID
 			-- Microsoft DOC help system
 		once
 			create Result.make_from_string (doc_uuid_string)
 		end
 
-	frozen eis_default: !UUID
+	frozen eis_default: attached UUID
 			-- Default EIS provider
 		once
 			create Result.make_from_string (eis_uuid_string)

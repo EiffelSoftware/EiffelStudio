@@ -21,7 +21,7 @@ create {NONE}
 
 feature {NONE} -- Initialization
 
-	build_tool (a_tool: !ES_SEARCH_REPORT_TOOL_PANEL)
+	build_tool (a_tool: attached ES_SEARCH_REPORT_TOOL_PANEL)
 			-- <Precursor>
 		do
 			Precursor {ES_TOOL} (a_tool)
@@ -42,7 +42,7 @@ feature -- Access
 			Result := stock_pixmaps.tool_find_results_icon
 		end
 
-	title: !STRING_32
+	title: attached STRING_32
 			-- <Precursor>
 		do
 			Result := locale_formatter.translation (t_tool_title)
@@ -50,7 +50,7 @@ feature -- Access
 
 feature {NONE} -- Factory
 
-	new_tool: !ES_SEARCH_REPORT_TOOL_PANEL
+	new_tool: attached ES_SEARCH_REPORT_TOOL_PANEL
 			-- <Precursor>
 		do
 			create Result.make (window, Current)

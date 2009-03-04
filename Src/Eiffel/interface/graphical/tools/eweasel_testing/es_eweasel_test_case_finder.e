@@ -44,7 +44,7 @@ feature -- Command
 
 feature -- Query
 
-	conf_class_of (a_class_name: !STRING): CONF_CLASS
+	conf_class_of (a_class_name: attached STRING): CONF_CLASS
 			-- Result void if not found
 		local
 			l_class_i: CLASS_I
@@ -56,7 +56,7 @@ feature -- Query
 			end
 		end
 
-	class_i_of (a_class_name: !STRING): CLASS_I
+	class_i_of (a_class_name: attached STRING): CLASS_I
 			-- Result void if not found
 			-- Find unique Result of `a_class_name'
 		local
@@ -97,15 +97,15 @@ feature -- Query
 	is_test_case_class (a_class: CLASS_I): BOOLEAN
 			-- If `a_class' is test case class?
 		local
-			l_string: !STRING
+			l_string: attached STRING
 		do
-			if {l_class: CLASS_I} a_class then
+			if attached {CLASS_I} a_class as l_class then
 				create l_string.make_from_string ("test_case")
 				Result := is_class_with_indexing (l_class, l_string)
 			end
 		end
 
-	all_test_case_classes: !ARRAYED_LIST [CLASS_I]
+	all_test_case_classes: attached ARRAYED_LIST [CLASS_I]
 			-- All test case classes in Current whole system
 		once
 			create Result.make (100)
@@ -113,7 +113,7 @@ feature -- Query
 
 feature {NONE} -- Implementation
 
-	agent_cell: !CELL [PROCEDURE [ES_EWEASEL_TEST_CASE_FINDER, TUPLE]]
+	agent_cell: attached CELL [PROCEDURE [ES_EWEASEL_TEST_CASE_FINDER, TUPLE]]
 			-- Agent cell for `add_all_test_case_classes_to_compile'
 		once
 			create Result.put (Void)
@@ -139,7 +139,7 @@ feature {NONE} -- Implementation
 			until
 				l_cursor.after
 			loop
-				if {lt_class_i: CLASS_I} l_cursor.item then
+				if attached {CLASS_I} l_cursor.item as lt_class_i then
 					if is_test_case_class (lt_class_i) then
 						all_test_case_classes.extend (l_cursor.item)
 
@@ -155,7 +155,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_class_with_indexing (a_class: !CLASS_I; a_indexing_to_test: !STRING): BOOLEAN
+	is_class_with_indexing (a_class: attached CLASS_I; a_indexing_to_test: attached STRING): BOOLEAN
 			-- If `a_class''s class indexing have the key `a_indexing_to_test' ?
 		local
 			l_tag: ID_AS

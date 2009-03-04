@@ -72,7 +72,7 @@ feature {NONE} -- Implementation
 			Result := interface_names.t_New_manual_test_case
 		end
 
-	manager: !ES_EWEASEL_EXECUTION_MANAGER;
+	manager: attached ES_EWEASEL_EXECUTION_MANAGER;
 			-- Chief eweasel execution manager		
 note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"

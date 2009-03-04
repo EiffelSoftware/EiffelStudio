@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_factory: like code_factory; a_parser: !like xml_parser)
+	make (a_factory: like code_factory; a_parser: attached like xml_parser)
 			-- Initializes a XML load callback using a code factory.
 			--
 			-- `a_factory': A factory for creating code template nodes.
@@ -44,15 +44,15 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	last_code_template_definition: ?CODE_TEMPLATE_DEFINITION
+	last_code_template_definition: detachable CODE_TEMPLATE_DEFINITION
 			-- The last parsed code template definition.
 
 feature {NONE} -- Access
 
-	last_declaration: ?CODE_DECLARATION
+	last_declaration: detachable CODE_DECLARATION
 			-- Last literal code declaration processed.
 
-	code_factory: !CODE_FACTORY
+	code_factory: attached CODE_FACTORY
 			-- Factory for generating code template nodes.
 
 feature {NONE} -- Status report
@@ -63,7 +63,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Helpers
 
-	format_utilities: !CODE_FORMAT_UTILITIES
+	format_utilities: attached CODE_FORMAT_UTILITIES
 			-- Shared access to code formatting utilies.
 		once
 			create Result
@@ -82,7 +82,7 @@ feature {NONE} -- Basic operations
 
 feature -- Formatting
 
-	format_template (a_template: !STRING_32): !STRING_32
+	format_template (a_template: attached STRING_32): attached STRING_32
 			-- Formats a template examining extracting it if any template delimiter are defined.
 			--
 			-- `a_template': The orginal template text to extract a delimited template from
@@ -92,7 +92,7 @@ feature -- Formatting
 		local
 			l_delimiter: STRING_32
 			l_stop: BOOLEAN
-			l_result: ?STRING_32
+			l_result: detachable STRING_32
 			l_start, l_end: INTEGER
 			l_count: INTEGER
 		do
@@ -259,7 +259,7 @@ feature {NONE} -- Production processing
 		require
 			last_code_template_definition_attached: last_code_template_definition /= Void
 		local
-			l_categories: !CODE_CATEGORY_COLLECTION
+			l_categories: attached CODE_CATEGORY_COLLECTION
 			l_category: like current_content
 		do
 			l_category := current_content
@@ -284,20 +284,20 @@ feature {NONE} -- Production processing
 		require
 			last_code_template_definition_attached: last_code_template_definition /= Void
 		local
-			l_literal: !CODE_LITERAL_DECLARATION
+			l_literal: attached CODE_LITERAL_DECLARATION
 			l_attributes: like current_attributes
-			l_declarations: !CODE_DECLARATION_COLLECTION
-			l_default: !STRING_32
+			l_declarations: attached CODE_DECLARATION_COLLECTION
+			l_default: attached STRING_32
 		do
 			last_declaration := Void
 
 				-- Fetch literal ID
 			l_attributes := current_attributes
-			if l_attributes.has (at_id) and then {l_id: STRING_8} l_attributes.item (at_id).as_string_8 and then not l_id.is_empty then
+			if l_attributes.has (at_id) and then attached {STRING_8} l_attributes.item (at_id).as_string_8 as l_id and then not l_id.is_empty then
 				l_declarations := last_code_template_definition.declarations
 				if l_declarations.declaration (l_id) = Void or else not is_strict then
 					l_literal := code_factory.create_code_literal_declaration (l_id, l_declarations)
-					if l_attributes.has (at_editable) and then {l_editable: STRING_32} l_attributes.item (at_editable) and then not l_editable.is_empty then
+					if l_attributes.has (at_editable) and then attached {STRING_32} l_attributes.item (at_editable) as l_editable and then not l_editable.is_empty then
 						l_literal.is_editable := to_boolean ({CODE_TEMPLATE_ENTITY_NAMES}.editable_attribute, l_editable, False)
 					end
 						-- Set the default value to the declaration name
@@ -323,20 +323,20 @@ feature {NONE} -- Production processing
 		require
 			last_code_template_definition_attached: last_code_template_definition /= Void
 		local
-			l_object: !CODE_OBJECT_DECLARATION
+			l_object: attached CODE_OBJECT_DECLARATION
 			l_attributes: like current_attributes
-			l_declarations: !CODE_DECLARATION_COLLECTION
-			l_default: !STRING_32
+			l_declarations: attached CODE_DECLARATION_COLLECTION
+			l_default: attached STRING_32
 		do
 			last_declaration := Void
 
 				-- Fetch object ID
 			l_attributes := current_attributes
-			if l_attributes.has (at_id) and then {l_id: STRING_8} l_attributes.item (at_id).as_string_8 and then not l_id.is_empty then
+			if l_attributes.has (at_id) and then attached {STRING_8} l_attributes.item (at_id).as_string_8 as l_id and then not l_id.is_empty then
 				l_declarations := last_code_template_definition.declarations
 				if l_declarations.declaration (l_id) = Void or else not is_strict then
 					l_object := code_factory.create_code_object_declaration (l_id, l_declarations)
-					if l_attributes.has (at_editable) and then {l_editable: STRING_32} l_attributes.item (at_editable) and then not l_editable.is_empty then
+					if l_attributes.has (at_editable) and then attached {STRING_32} l_attributes.item (at_editable) as l_editable and then not l_editable.is_empty then
 						l_object.is_editable := to_boolean ({CODE_TEMPLATE_ENTITY_NAMES}.editable_attribute, l_editable, False)
 					end
 
@@ -346,7 +346,7 @@ feature {NONE} -- Production processing
 						l_object.default_value := l_default
 					end
 
-					if l_attributes.has (at_conforms_to) and then {l_type: STRING_32} l_attributes.item (at_conforms_to) and then not l_type.is_empty then
+					if l_attributes.has (at_conforms_to) and then attached {STRING_32} l_attributes.item (at_conforms_to) as l_type and then not l_type.is_empty then
 							-- Set the conformance type
 						l_object.must_conform_to := l_type
 					end
@@ -382,7 +382,7 @@ feature {NONE} -- Production processing
 			last_declaration_attached: last_declaration /= Void
 			last_declaration_is_literal: ({CODE_LITERAL_DECLARATION}) #? last_declaration /= Void
 		do
-			if not current_content.is_empty and then {l_literal: CODE_LITERAL_DECLARATION} last_declaration then
+			if not current_content.is_empty and then attached {CODE_LITERAL_DECLARATION} last_declaration as l_literal then
 				l_literal.default_value := current_content
 			end
 		end
@@ -401,9 +401,9 @@ feature {NONE} -- Production processing
 			last_code_template_definition_attached: last_code_template_definition /= Void
 		local
 			l_attributes: like current_attributes
-			l_templates: !CODE_TEMPLATE_COLLECTION
-			l_version: !CODE_VERSION
-			l_template: !CODE_TEMPLATE
+			l_templates: attached CODE_TEMPLATE_COLLECTION
+			l_version: attached CODE_VERSION
+			l_template: attached CODE_TEMPLATE
 			l_text: like current_content
 		do
 			l_text := current_content
@@ -414,7 +414,7 @@ feature {NONE} -- Production processing
 			l_templates := last_code_template_definition.templates
 			l_attributes := current_attributes
 			if l_attributes.has (at_version) then
-				if {l_value: STRING_32} l_attributes.item (at_version) and then not l_value.is_empty then
+				if attached {STRING_32} l_attributes.item (at_version) as l_value and then not l_value.is_empty then
 						-- Create a version template
 					l_version := format_utilities.parse_version (l_value, code_factory)
 					l_template := code_factory.create_code_versioned_template (l_version, l_templates)
@@ -433,7 +433,7 @@ feature {NONE} -- Production processing
 
 feature {NONE} -- Action handlers
 
-	on_error (a_msg: !STRING_32; a_line: NATURAL; a_char: NATURAL)
+	on_error (a_msg: attached STRING_32; a_line: NATURAL; a_char: NATURAL)
 			-- <Precursor>
 		do
 			Precursor (a_msg, a_line, a_char)
@@ -442,10 +442,10 @@ feature {NONE} -- Action handlers
 
 feature {NONE} -- State transistions
 
-	tag_state_transitions: !DS_HASH_TABLE [!DS_HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
+	tag_state_transitions: attached DS_HASH_TABLE [attached DS_HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
 			-- <Precursor>
 		local
-			l_trans: !DS_HASH_TABLE [NATURAL_8, STRING]
+			l_trans: attached DS_HASH_TABLE [NATURAL_8, STRING]
 		once
 			create Result.make (8)
 
@@ -515,10 +515,10 @@ feature {NONE} -- State transistions
 			Result.put (l_trans, t_templates)
 		end
 
-	attribute_states: !DS_HASH_TABLE [!DS_HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
+	attribute_states: attached DS_HASH_TABLE [attached DS_HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
 			-- <Precursor>
 		local
-			l_attr: !DS_HASH_TABLE [NATURAL_8, STRING]
+			l_attr: attached DS_HASH_TABLE [NATURAL_8, STRING]
 		once
 			create Result.make (4)
 

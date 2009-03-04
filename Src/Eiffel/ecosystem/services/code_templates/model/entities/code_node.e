@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	definition: !CODE_TEMPLATE_DEFINITION
+	definition: attached CODE_TEMPLATE_DEFINITION
 			-- Top level code file.
 		require
 			is_interface_usable: is_interface_usable
@@ -53,7 +53,7 @@ feature -- Access
 
 feature {CODE_NODE} -- Access
 
-	code_factory: !CODE_FACTORY
+	code_factory: attached CODE_FACTORY
 			-- Factory used for creating code nodes
 		deferred
 		end
@@ -73,7 +73,7 @@ feature {NONE} -- Status report
 
 feature -- Visitor
 
-	process (a_visitor: !CODE_TEMPLATE_VISITOR_I)
+	process (a_visitor: attached CODE_TEMPLATE_VISITOR_I)
 			-- Visit's the current node and processes it.
 		require
 			is_interface_usable: is_interface_usable

@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_class: !like context_class; a_token: !like current_token; a_line: !like current_line)
+	make (a_class: attached like context_class; a_token: attached like current_token; a_line: attached like current_line)
 			-- Initialize a state result using a context class and an initial editor token and hosting line.
 			--
 			-- `a_class': The context class, used to resolve any type or feature information.
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			current_token_set: current_token ~ a_token
 		end
 
-	make_with_feature (a_class: !like context_class; a_feature: !like context_feature; a_token: !like current_token; a_line: !like current_line)
+	make_with_feature (a_class: attached like context_class; a_feature: attached like context_feature; a_token: attached like current_token; a_line: attached like current_line)
 			-- Initialize a state result using a context class and an initial editor token and hosting line.
 			--
 			-- `a_class'  : The context class, used to resolve any type or feature information.
@@ -55,19 +55,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	context_class: !CLASS_C
+	context_class: attached CLASS_C
 			-- The context class
 
-	context_feature: ?FEATURE_I
+	context_feature: detachable FEATURE_I
 			-- The context feature
 
-	current_token: !EDITOR_TOKEN assign set_current_token
+	current_token: attached EDITOR_TOKEN assign set_current_token
 			-- Last editor token processed.
 
-	current_line: !EDITOR_LINE
+	current_line: attached EDITOR_LINE
 			-- Last editor line processed.
 
-	current_frame: !ES_EDITOR_ANALYZER_FRAME
+	current_frame: attached ES_EDITOR_ANALYZER_FRAME
 			-- Current class context frame, used for local entity storage.
 		require
 			has_current_frame: has_current_frame
@@ -77,12 +77,12 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	frames: !ARRAYED_STACK [!ES_EDITOR_ANALYZER_FRAME]
+	frames: attached ARRAYED_STACK [attached ES_EDITOR_ANALYZER_FRAME]
 			-- Stack of context frames used for local entity storage.
 
 feature -- Element change
 
-	set_current_token (a_token: !like current_token)
+	set_current_token (a_token: attached like current_token)
 			-- Sets the current token.
 			-- Note: Setting the current token in this fashion assumes the token belongs to the current
 			--       line. Use `set_current_line' when changing lines and tokens.
@@ -96,7 +96,7 @@ feature -- Element change
 			current_token_set: current_token ~ a_token
 		end
 
-	set_current_line (a_line: !like current_line; a_initial_token: !like current_token)
+	set_current_line (a_line: attached like current_line; a_initial_token: attached like current_token)
 			-- Stets the current line and current token
 			--
 			-- `a_line'         : The new line to set on the state result.
@@ -151,8 +151,8 @@ feature -- Basic operation
 		require
 			has_context_feature: has_context_feature
 		local
-			l_frame: ?like current_frame
-			l_feature: ?like context_feature
+			l_frame: detachable like current_frame
+			l_feature: detachable like context_feature
 		do
 			if not a_force_new and has_current_frame then
 				l_frame := current_frame

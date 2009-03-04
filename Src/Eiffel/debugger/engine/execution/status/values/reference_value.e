@@ -34,7 +34,7 @@ create {DEBUG_VALUE_EXPORTER}
 
 feature {NONE} -- Initialization
 
-	make (ref: !like address; id: like dynamic_type_id)
+	make (ref: attached like address; id: like dynamic_type_id)
 			-- Set `address' to (attached)  `ref' address
 			-- and `dynamic_type_id' to `id'.
 		do
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_attribute (attr_name: like name; a_class: like e_class;
-						type: like dynamic_type_id; addr: !like address)
+						type: like dynamic_type_id; addr: attached like address)
 		require
 			not_attr_name_void: attr_name /= Void
 		do
@@ -128,7 +128,7 @@ feature {NONE} -- Output value
 					create Result.make (60)
 					Result.append (ec.name_in_upper)
 					Result.append (Left_address_delim)
-					if {add: like address} address then
+					if attached address as add then
 						Result.append (add.output)
 					else
 						Result.append ("Void")

@@ -17,11 +17,11 @@ inherit
 		end
 
 convert
-	widget: {EV_WIDGET, !G}
+	widget: {EV_WIDGET, attached G}
 
 feature {NONE} -- Initialization
 
-	frozen make (a_widget: !G; a_preference: !P)
+	frozen make (a_widget: attached G; a_preference: attached P)
 			-- Initialize a widget based on a preference.
 			--
 			-- `a_widget'    : The widget to bind to the ESF widget.
@@ -41,14 +41,14 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- User interface initialization
 
-	build_widget_interface (a_widget: !G)
+	build_widget_interface (a_widget: attached G)
 			-- <Precursor>
 		do
 		end
 
 feature {NONE} -- Factory
 
-	frozen create_widget: !G
+	frozen create_widget: attached G
 			-- <Precursor>
 		do
 			Result := internal_widget
@@ -58,7 +58,7 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Implementation: Internal cache
 
-	internal_widget: !G
+	internal_widget: attached G
 			-- Cached version of `widget'.
 			-- Note: Do not use directly!
 

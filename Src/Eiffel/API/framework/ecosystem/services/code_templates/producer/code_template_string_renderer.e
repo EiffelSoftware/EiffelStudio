@@ -19,7 +19,7 @@ inherit
 
 feature -- Access
 
-	code: ?STRING_32
+	code: detachable STRING_32
 			-- The rendered code.
 
 feature -- Status report
@@ -46,24 +46,24 @@ feature {NONE} -- Basic operations
 
 feature {CODE_TOKEN} -- Processing
 
-	process_code_token_cursor (a_value: !CODE_TOKEN_CURSOR)
+	process_code_token_cursor (a_value: attached CODE_TOKEN_CURSOR)
 			-- <Precursor>
 		do
 		end
 
-	process_code_token_eol (a_value: !CODE_TOKEN_EOL)
+	process_code_token_eol (a_value: attached CODE_TOKEN_EOL)
 			-- <Precursor>
 		do
 			code.append_character ('%N')
 		end
 
-	process_code_token_id (a_value: !CODE_TOKEN_ID)
+	process_code_token_id (a_value: attached CODE_TOKEN_ID)
 			-- <Precursor>
 		local
 			l_table: like symbol_table
 		do
 			l_table := symbol_table
-			if {l_id: !STRING_8} a_value.text.as_string_8 then
+			if attached {attached STRING_8} a_value.text.as_string_8 as l_id then
 				if l_table.has_id (l_id) then
 					code.append (l_table.item (l_id).value)
 				else
@@ -72,13 +72,13 @@ feature {CODE_TOKEN} -- Processing
 			end
 		end
 
-	process_code_token_id_ref (a_value: !CODE_TOKEN_ID_REF)
+	process_code_token_id_ref (a_value: attached CODE_TOKEN_ID_REF)
 			-- <Precursor>
 		do
 			process_code_token_id (a_value.code_token_id)
 		end
 
-	process_code_token_text (a_value: !CODE_TOKEN_TEXT)
+	process_code_token_text (a_value: attached CODE_TOKEN_TEXT)
 			-- <Precursor>
 		do
 			code.append (a_value.printable_text)

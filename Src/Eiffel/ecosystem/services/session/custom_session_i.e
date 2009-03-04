@@ -21,7 +21,7 @@ feature -- Access
 			Result := (create {SESSION_KINDS}).custom
 		end
 
-	file_name: !STRING_8
+	file_name: attached STRING_8
 			-- File name for the custom session
 		deferred
 		ensure

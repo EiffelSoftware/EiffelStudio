@@ -35,7 +35,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	build_interface (a_widget: !G)
+	build_interface (a_widget: attached G)
 			-- Builds the interface for the widget.
 			--
 			-- `a_widget': The widget to build/initialize.
@@ -69,7 +69,7 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-	output_window: !ES_MULTI_OUTPUT_WINDOW
+	output_window: attached ES_MULTI_OUTPUT_WINDOW
 			-- <Precursor>
 		local
 			l_result: like internal_output_window
@@ -85,7 +85,7 @@ feature -- Access
 
 feature {NONE} -- Access: User interface
 
-	widget_table: ?DS_HASH_TABLE [!G, NATURAL]
+	widget_table: detachable DS_HASH_TABLE [attached G, NATURAL]
 			-- Table of requested widgets, indexed by a window ID.
 			--
 			-- Key: Window ID
@@ -103,7 +103,7 @@ feature -- Status report
 			-- <Precursor>
 		local
 			l_table: like widget_table
-			l_cursor: DS_HASH_TABLE_CURSOR [!G, NATURAL]
+			l_cursor: DS_HASH_TABLE_CURSOR [attached G, NATURAL]
 		do
 			l_table := widget_table
 			if not l_table.is_empty then
@@ -117,7 +117,7 @@ feature -- Status report
 
 feature {NONE} -- Query
 
-	widget_output_window (a_widget: !G; a_window: !SHELL_WINDOW_I): !OUTPUT_WINDOW
+	widget_output_window (a_widget: attached G; a_window: attached SHELL_WINDOW_I): attached OUTPUT_WINDOW
 			-- Retrieves an output window from a created widget.
 			--
 			-- `a_widget': The widget to fetch the output window from.
@@ -132,7 +132,7 @@ feature {NONE} -- Query
 
 feature -- Query: User interface elements
 
-	widget_for_window (a_window: !SHELL_WINDOW_I): !G
+	widget_for_window (a_window: attached SHELL_WINDOW_I): attached G
 			-- <Precursor>
 		local
 			l_table: like widget_table
@@ -171,7 +171,7 @@ feature -- Query: User interface elements
 
 feature {NONE} -- Factory
 
-	new_widget (a_window: !SHELL_WINDOW_I): !G
+	new_widget (a_window: attached SHELL_WINDOW_I): attached G
 			-- Creates a new widget for the output pane.
 			--
 			-- `a_window': The window where the widget will be displayed.
@@ -186,7 +186,7 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Implementation: Internal cache
 
-	internal_output_window: ?like output_window
+	internal_output_window: detachable like output_window
 			-- Cached version of `output_window'.
 			-- Note: Do not use directly!
 

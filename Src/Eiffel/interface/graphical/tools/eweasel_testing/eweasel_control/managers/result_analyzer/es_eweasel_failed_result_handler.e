@@ -23,11 +23,11 @@ feature {NONE} -- Implementation
 		do
 			if a_lines.first.has_substring (signature) then
 				create Result
-				if {l_lines: !LIST [STRING]} a_lines then
+				if attached {attached LIST [STRING]} a_lines as l_lines then
 					Result.set_original_eweasel_ouput (to_one_string (l_lines))
 				end
 				Result.set_title (a_lines.first)
-				if {l_test: ES_EWEASEL_TEST_RESULT_ITEM} Result then
+				if attached {ES_EWEASEL_TEST_RESULT_ITEM} Result as l_test then
 					set_with_current_item (l_test)
 				end
 

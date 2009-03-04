@@ -15,7 +15,7 @@ inherit
 
 feature -- Access
 
-	opening_brace_map: !HASH_TABLE [!STRING_32, !STRING_32]
+	opening_brace_map: attached HASH_TABLE [attached STRING_32, attached STRING_32]
 			-- <Precursor>
 		once
 			create Result.make (4)

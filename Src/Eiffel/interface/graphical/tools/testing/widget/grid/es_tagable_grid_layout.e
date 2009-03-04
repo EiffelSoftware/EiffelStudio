@@ -31,7 +31,7 @@ inherit
 
 feature -- Access
 
-	project: !E_PROJECT
+	project: attached E_PROJECT
 			-- Project used to find classes and features
 		require
 			available: is_project_available
@@ -48,7 +48,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	internal_project: ?like project
+	internal_project: detachable like project
 			-- Internal storage for `project'
 
 feature -- Status report
@@ -103,7 +103,7 @@ feature -- Status setting
 
 feature -- Query
 
-	has_attached_items (a_row: !EV_GRID_ROW): BOOLEAN
+	has_attached_items (a_row: attached EV_GRID_ROW): BOOLEAN
 			-- Are all items of `a_row' attached?
 		local
 			i: INTEGER
@@ -121,7 +121,7 @@ feature -- Query
 
 feature {NONE} -- Query
 
-	class_from_name (a_name: !STRING; a_group: ?CONF_GROUP): ?CLASS_I
+	class_from_name (a_name: attached STRING; a_group: detachable CONF_GROUP): detachable CLASS_I
 			-- Class in `project' with `a_name'. Void if no class with name exists.
 		local
 			l_group: CONF_GROUP
@@ -140,14 +140,14 @@ feature {NONE} -- Query
 
 feature -- Basic functionality
 
-	populate_header (a_header: !EV_GRID_HEADER)
+	populate_header (a_header: attached EV_GRID_HEADER)
 			-- Populate header with items
 		require
 			valid_item_count: a_header.count = column_count
 		do
 		end
 
-	populate_node_row (a_row: !EV_GRID_ROW; a_node: !TAG_BASED_TREE_NODE [G])
+	populate_node_row (a_row: attached EV_GRID_ROW; a_node: attached TAG_BASED_TREE_NODE [G])
 			-- Populate row with tree node information
 		require
 			valid_item_count: a_row.count = column_count
@@ -158,7 +158,7 @@ feature -- Basic functionality
 			items_attached: has_attached_items (a_row)
 		end
 
-	populate_item_row (a_row: !EV_GRID_ROW; a_item: !G)
+	populate_item_row (a_row: attached EV_GRID_ROW; a_item: attached G)
 			-- Populate row with item information
 		require
 			valid_item_count: a_row.count = column_count
@@ -170,7 +170,7 @@ feature -- Basic functionality
 			items_attached: has_attached_items (a_row)
 		end
 
-	populate_text_row (a_row: !EV_GRID_ROW; a_text: !STRING)
+	populate_text_row (a_row: attached EV_GRID_ROW; a_text: attached STRING)
 			-- Populate untagged row
 		require
 			valid_item_count: a_row.count = column_count
@@ -183,13 +183,13 @@ feature -- Basic functionality
 
 feature {NONE} -- Factory
 
-	new_empty_item: !EV_GRID_ITEM
+	new_empty_item: attached EV_GRID_ITEM
 			-- Create an empty grid item
 		do
 			create Result
 		end
 
-	new_label_item (a_token: !STRING): !EV_GRID_LABEL_ITEM
+	new_label_item (a_token: attached STRING): attached EV_GRID_LABEL_ITEM
 			-- Create a new label item
 			--
 			-- `a_token': Text used in new label item.
@@ -197,30 +197,30 @@ feature {NONE} -- Factory
 			create Result.make_with_text (a_token)
 		end
 
-	new_token_item (a_node: !TAG_BASED_TREE_NODE [G]): !EV_GRID_ITEM
+	new_token_item (a_node: attached TAG_BASED_TREE_NODE [G]): attached EV_GRID_ITEM
 			-- Create new item according to given node.
 			--
 			-- `a_node': Node for which token item should be created.
 		local
-			l_token: !STRING
-			l_name, l_uuid: ?STRING
+			l_token: attached STRING
+			l_name, l_uuid: detachable STRING
 			l_editor_item: EB_GRID_EDITOR_TOKEN_ITEM
 			l_label_item: EV_GRID_LABEL_ITEM
 			l_pixmap: EV_PIXMAP
-			l_pnode: ?TAG_BASED_TREE_NODE [G]
-			l_cluster: ?CONF_CLUSTER
+			l_pnode: detachable TAG_BASED_TREE_NODE [G]
+			l_cluster: detachable CONF_CLUSTER
 			l_library: CONF_LIBRARY
 			l_list: LIST [CONF_LIBRARY]
-			l_class: ?CLASS_I
-			l_feature: ?E_FEATURE
+			l_class: detachable CLASS_I
+			l_feature: detachable E_FEATURE
 		do
 			l_token := a_node.token
 			token_writer.new_line
-			if {l_pnode2: TAG_BASED_TREE_NODE [G]} a_node.parent then
+			if attached {TAG_BASED_TREE_NODE [G]} a_node.parent as l_pnode2 then
 				l_pnode := l_pnode2
-				if {l_data: CONF_CLUSTER} l_pnode.data then
+				if attached {CONF_CLUSTER} l_pnode.data as l_data then
 					l_cluster := l_data
-				elseif {l_lib_data: CONF_LIBRARY} l_pnode.data then
+				elseif attached {CONF_LIBRARY} l_pnode.data as l_lib_data then
 					l_library := l_lib_data
 				end
 			end
@@ -237,7 +237,7 @@ feature {NONE} -- Factory
 			elseif l_token.starts_with (feature_prefix) and l_token.count > feature_prefix.count then
 				l_name := l_token.substring (feature_prefix.count + 1, l_token.count)
 				l_pixmap := pixmaps.icon_pixmaps.feature_routine_icon
-				if l_pnode /= Void and then {l_classi: CLASS_I} l_pnode.data then
+				if l_pnode /= Void and then attached {CLASS_I} l_pnode.data as l_classi then
 					if l_classi.is_compiled and then l_classi.compiled_class.has_feature_table then
 						l_feature := l_classi.compiled_class.feature_with_name (l_name)
 						if l_feature /= Void then
@@ -346,7 +346,7 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Implementation
 
-	fill_with_empty_items (a_row: !EV_GRID_ROW; a_start: INTEGER)
+	fill_with_empty_items (a_row: attached EV_GRID_ROW; a_start: INTEGER)
 			-- Fill missing items of row with empty items.
 			--
 			-- `a_row': Row to be filled with empty items
@@ -364,7 +364,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_token (a_token: !STRING): !STRING
+	process_token (a_token: attached STRING): attached STRING
 			-- Replace underscores in `a_token' with whitespace
 		local
 			i: INTEGER

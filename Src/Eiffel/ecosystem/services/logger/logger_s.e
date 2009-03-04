@@ -123,7 +123,7 @@ feature -- Removal
 
 feature -- Events
 
-	message_logged_events: !EVENT_TYPE [TUPLE [message: !STRING_32; category: NATURAL_8; level: INTEGER_8]]
+	message_logged_events: attached EVENT_TYPE [TUPLE [message: attached STRING_32; category: NATURAL_8; level: INTEGER_8]]
 			-- Events called when a message has been logged.
 		require
 			is_interface_usable: is_interface_usable

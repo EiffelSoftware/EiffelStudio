@@ -34,7 +34,7 @@ feature {NONE} -- Query
 			-- <Precursor>
 		do
 			if Precursor {EB_CLASSES_TREE_FOLDER_ITEM} (a_class) then
-				if test_suite.is_service_available and {l_class: !EIFFEL_CLASS_I} a_class then
+				if test_suite.is_service_available and attached {attached EIFFEL_CLASS_I} a_class as l_class then
 					Result := test_suite.service.is_test_class (l_class)
 				end
 			end

@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_from_string (a_id: STRING; s32: !STRING_32)
+	make_from_string (a_id: STRING; s32: attached STRING_32)
 			-- Initialize `Current'.
 		local
 			p,q,i: INTEGER
@@ -97,7 +97,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	index_of_right_limit_position (s32: !STRING_32; i: INTEGER): INTEGER
+	index_of_right_limit_position (s32: attached STRING_32; i: INTEGER): INTEGER
 			-- Index of next right limit position  i.e index of associated ']'
 		local
 			p: INTEGER
@@ -123,7 +123,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	extract_properties (s32: !STRING_32)
+	extract_properties (s32: attached STRING_32)
 			-- Extract stack properties
 		require
 			s32_not_empty: not s32.is_empty
@@ -200,19 +200,19 @@ feature -- Properties
 			create Result.make_empty
 			Result.append_integer (depth)
 			Result.append_character ('.')
-			if {dct: CLASS_TYPE} dynamic_class_type then
+			if attached {CLASS_TYPE} dynamic_class_type as dct then
 				Result.append_integer (dct.type_id)
 			else
 				Result.append_character ('?')
 			end
 			Result.append_character ('.')
-			if {wct: CLASS_TYPE} class_type then
+			if attached {CLASS_TYPE} class_type as wct then
 				Result.append_integer (wct.type_id)
 			else
 				Result.append_character ('?')
 			end
 			Result.append_character ('.')
-			if {fi: FEATURE_I} feature_i then
+			if attached {FEATURE_I} feature_i as fi then
 				if fi.valid_body_id then
 					Result.append_integer (fi.real_body_id (class_type))
 				else
@@ -280,7 +280,7 @@ feature -- Call stack element access
 
 	class_name: STRING
 		do
-			if {dc: CLASS_C} dynamic_class then
+			if attached {CLASS_C} dynamic_class as dc then
 				Result := dc.name_in_upper
 			end
 		end
@@ -292,14 +292,14 @@ feature -- Call stack element access
 
 	dynamic_class: CLASS_C
 		do
-			if {ct: CLASS_TYPE} dynamic_class_type then
+			if attached {CLASS_TYPE} dynamic_class_type as ct then
 				Result := ct.associated_class
 			end
 		end
 
 	written_class: CLASS_C
 		do
-			if {ct: CLASS_TYPE} class_type then
+			if attached {CLASS_TYPE} class_type as ct then
 				Result := ct.associated_class
 			end
 		end
@@ -332,7 +332,7 @@ feature -- change
 
 feature -- Access
 
-	to_string: !STRING
+	to_string: attached STRING
 		local
 			fi: FEATURE_I
 		do

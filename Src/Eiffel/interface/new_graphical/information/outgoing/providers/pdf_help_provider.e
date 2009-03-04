@@ -16,14 +16,14 @@ inherit
 
 feature -- Access
 
-	document_protocol: !STRING_32
+	document_protocol: attached STRING_32
 			-- Document protocol used by a URI to navigate to the help accessible from the provider.
 		once
 			create Result.make_empty
 			Result.append ("PDF")
 		end
 
-	document_description: !STRING_32
+	document_description: attached STRING_32
 			-- Document short description
 		once
 			create Result.make_empty
@@ -32,17 +32,17 @@ feature -- Access
 
 feature -- Basic operations
 
-	show_help (a_context_id: !STRING_GENERAL; a_section: ?HELP_CONTEXT_SECTION_I)
+	show_help (a_context_id: attached STRING_GENERAL; a_section: detachable HELP_CONTEXT_SECTION_I)
 			-- <precursor>
 		local
 			l_file_type: BOOLEAN
-			l_str: !STRING
+			l_str: attached STRING
 		do
-			if {lt_section: HELP_SECTION_EIS_ENTRY}a_section then
-				if {lt_entry: EIS_ENTRY}lt_section.entry and then lt_entry.source /= Void and then {lt_src: STRING}lt_entry.source.as_string_8.twin then
+			if attached {HELP_SECTION_EIS_ENTRY} a_section as lt_section then
+				if attached {EIS_ENTRY} lt_section.entry as lt_entry and then lt_entry.source /= Void and then attached {STRING} lt_entry.source.as_string_8.twin as lt_src then
 					last_entry := lt_entry
 					format_uris (lt_src)
-					if {lt_others: HASH_TABLE [STRING_32, STRING_32]}lt_entry.others then
+					if attached {HASH_TABLE [STRING_32, STRING_32]} lt_entry.others as lt_others then
 						lt_others.search (pdf_type_string.as_string_32)
 						if lt_others.found then
 							if lt_others.found_item.is_case_insensitive_equal (pdf_type_file_string.as_string_32) then
@@ -70,10 +70,10 @@ feature -- Basic operations
 			end
 		end
 
-	append_acrobat_url_arguments (a_string: !STRING; a_entry: !EIS_ENTRY)
+	append_acrobat_url_arguments (a_string: attached STRING; a_entry: attached EIS_ENTRY)
 			-- Append acrobat url arguments to `a_string'.
 		local
-			l_args: ?STRING
+			l_args: detachable STRING
 		do
 			l_args := pdf_arguments_from_entry (a_entry)
 			if l_args /= Void then
@@ -82,27 +82,27 @@ feature -- Basic operations
 			end
 		end
 
-	append_acrobat_command_arguments (a_string: !STRING; a_entry: !EIS_ENTRY)
+	append_acrobat_command_arguments (a_string: attached STRING; a_entry: attached EIS_ENTRY)
 			-- Append acrobat command arguments to `a_string'.
 		local
-			l_args: ?STRING
+			l_args: detachable STRING
 		do
 			l_args := pdf_arguments_from_entry (a_entry)
 			a_string.append (acrobat_command_string)
-			if {lt_args: STRING}l_args then
+			if attached {STRING} l_args as lt_args then
 				a_string.append (acrobat_action_string)
 				a_string.append (quoted_string (lt_args))
 				a_string.append (" ")
 			end
 		end
 
-	pdf_arguments_from_entry (a_entry: !EIS_ENTRY): ?STRING
+	pdf_arguments_from_entry (a_entry: attached EIS_ENTRY): detachable STRING
 			-- PDF arguments from `a_entry'
 		local
 			l_result: STRING
 			l_found: BOOLEAN
 		do
-			if {lt_others: HASH_TABLE [STRING_32, STRING_32]}a_entry.others then
+			if attached {HASH_TABLE [STRING_32, STRING_32]} a_entry.others as lt_others then
 				create l_result.make (5)
 				lt_others.search (acrobat_page)
 				if lt_others.found then
@@ -127,7 +127,7 @@ feature -- Basic operations
 			end
 		end
 
-	quoted_string (a_string: !STRING): !STRING
+	quoted_string (a_string: attached STRING): attached STRING
 			-- Quoted string of `a_string'
 		do
 			create Result.make_from_string (a_string)
@@ -135,10 +135,10 @@ feature -- Basic operations
 			Result.append ("%"")
 		end
 
-	launch_command (a_command: !STRING_8)
+	launch_command (a_command: attached STRING_8)
 			-- Launches a command
 		do
-			if {l_process: PROCESS} (create {PROCESS_FACTORY}).process_launcher (a_command, Void, Void) then
+			if attached {PROCESS} (create {PROCESS_FACTORY}).process_launcher (a_command, Void, Void) as l_process then
 				l_process.set_hidden (True)
 				l_process.launch
 			end

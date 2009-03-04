@@ -72,12 +72,12 @@ feature {NONE} -- Initialize
 
 feature -- Access
 
-	parent: !ES_TAGABLE_TREE_GRID_NODE_CONTAINER [G]
+	parent: attached ES_TAGABLE_TREE_GRID_NODE_CONTAINER [G]
 			-- <Precursor>
 
 feature {TAG_BASED_TREE_NODE_CONTAINER} -- Access
 
-	tree: !ES_TAGABLE_TREE_GRID [G]
+	tree: attached ES_TAGABLE_TREE_GRID [G]
 			-- <Precursor>
 
 feature {NONE} -- Access
@@ -104,7 +104,7 @@ feature -- Basic functionality
 
 feature {TAG_BASED_TREE_NODE_CONTAINER} -- Element change
 
-	propagate_item_change (a_tag: !STRING_8; a_item: !G)
+	propagate_item_change (a_tag: attached STRING_8; a_item: attached G)
 			-- <Precursor>
 		local
 			i: INTEGER

@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	frozen internal: !INTERNAL
+	frozen internal: attached INTERNAL
 			-- Shared access to an instance of {INTERNAL}
 		once
 			create Result
@@ -60,7 +60,7 @@ feature -- Status setting
 
 feature {NONE} -- Query
 
-	frozen session_id (a_base_id: !STRING; a_id: !STRING;): !STRING
+	frozen session_id (a_base_id: attached STRING; a_id: attached STRING;): attached STRING
 			-- A tool's stone session identifier.
 			--
 			-- `a_id': Base ID for a tool session ID.
@@ -79,7 +79,7 @@ feature {NONE} -- Query
 
 feature -- Basic operations
 
-	frozen resurrect_stone (a_session: !SESSION_I; a_base_id: !STRING): ?STONE
+	frozen resurrect_stone (a_session: attached SESSION_I; a_base_id: attached STRING): detachable STONE
 			-- Resurrects a stone from previously persisted session data.
 			--
 			-- `a_session': The session object to retrieve stone information from.
@@ -90,14 +90,14 @@ feature -- Basic operations
 			a_session_is_per_project: a_session.is_per_project
 			not_a_base_id_is_empty: not a_base_id.is_empty
 		local
-			l_type_name: ?STRING
+			l_type_name: detachable STRING
 			l_type_id: INTEGER
 		do
 			if workbench.system_defined and then workbench.is_already_compiled then
 				l_type_name ?= a_session.value (session_id (a_base_id, type_session_id))
 				if l_type_name /= Void and then not l_type_name.is_empty then
 					l_type_id := internal.dynamic_type_from_string (l_type_name)
-					if {l_type: TYPE [STONE]} internal.new_instance_of (l_type_id) then
+					if attached {TYPE [STONE]} internal.new_instance_of (l_type_id) as l_type then
 						Result := delegate_resurrect_stone (l_type, a_session, a_base_id)
 						if Result /= Void and then not internal.type_of (Result).conforms_to (l_type) then
 								-- Incompatible type
@@ -111,7 +111,7 @@ feature -- Basic operations
 			raise_events_unchanged: raise_events = old raise_events
 		end
 
-	frozen persist_stone (a_session: !SESSION_I; a_base_id: !STRING; a_stone: ?STONE)
+	frozen persist_stone (a_session: attached SESSION_I; a_base_id: attached STRING; a_stone: detachable STONE)
 			-- Stores a stone's reference information in the given session, for later resurrection.
 			--| Note: Do *not* store the stone object in the session! This will include too much data.
 			--
@@ -125,7 +125,7 @@ feature -- Basic operations
 		do
 			if workbench.system_defined and then workbench.is_already_compiled then
 				if raise_events or else a_session.value_changed_event.is_suspended then
-					if a_stone /= Void and then {l_type: TYPE [STONE]} internal.type_of (a_stone) and then delegate_persist_stone (l_type, a_session, a_base_id, a_stone) then
+					if a_stone /= Void and then attached {TYPE [STONE]} internal.type_of (a_stone) as l_type and then delegate_persist_stone (l_type, a_session, a_base_id, a_stone) then
 							-- Stone was persisted, so update the necessary stone type information to reflect a persisted stone.
 						a_session.set_value (l_type.generating_type, session_id (a_base_id, type_session_id))
 					else
@@ -144,7 +144,7 @@ feature -- Basic operations
 
 feature {NONE} -- Deletgation
 
-	delegate_resurrect_stone (a_type: !TYPE [STONE]; a_session: !SESSION_I; a_base_id: !STRING): ?STONE
+	delegate_resurrect_stone (a_type: attached TYPE [STONE]; a_session: attached SESSION_I; a_base_id: attached STRING): detachable STONE
 			-- Delegates resurrection of a stone from previously persisted session data.
 			--
 			-- `a_type': The type of stone to resurrect.
@@ -169,7 +169,7 @@ feature {NONE} -- Deletgation
 			result_type_conforms_to_a_type: Result /= Void implies internal.type_of (Result).conforms_to (a_type)
 		end
 
-	delegate_persist_stone (a_type: !TYPE [STONE]; a_session: !SESSION_I; a_base_id: !STRING; a_stone: ?STONE): BOOLEAN
+	delegate_persist_stone (a_type: attached TYPE [STONE]; a_session: attached SESSION_I; a_base_id: attached STRING; a_stone: detachable STONE): BOOLEAN
 			-- Delegates storage a stone's reference information in the given session, for later resurrection.
 			--| Note: Do *not* store the stone object in the session! This will include too much data.
 			--
@@ -185,13 +185,13 @@ feature {NONE} -- Deletgation
 			not_a_base_id_is_empty: not a_base_id.is_empty
 			a_type_match_a_stone_type: a_stone /= Void implies internal.type_of (a_stone).is_equal (a_type)
 		do
-			if {l_feature: FEATURE_STONE} a_stone then
+			if attached {FEATURE_STONE} a_stone as l_feature then
 				persist_feature_stone (a_session, a_base_id, l_feature)
 				Result := True
-			elseif {l_classc: CLASSC_STONE} a_stone then
+			elseif attached {CLASSC_STONE} a_stone as l_classc then
 				persist_classc_stone (a_session, a_base_id, l_classc)
 				Result := True
-			elseif {l_classi: CLASSI_STONE} a_stone then
+			elseif attached {CLASSI_STONE} a_stone as l_classi then
 				persist_classi_stone (a_session, a_base_id, l_classi)
 				Result := True
 			else
@@ -208,7 +208,7 @@ feature {NONE} -- Deletgation
 
 feature {NONE} -- Specifics
 
-	resurrect_classc_stone (a_session: !SESSION_I; a_base_id: !STRING): ?CLASSC_STONE
+	resurrect_classc_stone (a_session: attached SESSION_I; a_base_id: attached STRING): detachable CLASSC_STONE
 			-- Resurrects a class stone from previously stored session data.
 			--
 			-- `a_session': The session object to retrieve stone information from.
@@ -221,8 +221,8 @@ feature {NONE} -- Specifics
 			a_session_is_per_project: a_session.is_per_project
 			not_a_base_id_is_empty: not a_base_id.is_empty
 		local
-			l_class_c: ?CLASS_C
-			l_classi_stone: ?CLASSI_STONE
+			l_class_c: detachable CLASS_C
+			l_classi_stone: detachable CLASSI_STONE
 		do
 			l_classi_stone := resurrect_classi_stone (a_session, a_base_id)
 			if l_classi_stone /= Void then
@@ -233,7 +233,7 @@ feature {NONE} -- Specifics
 			end
 		end
 
-	persist_classc_stone (a_session: !SESSION_I; a_base_id: !STRING; a_stone: ?CLASSC_STONE)
+	persist_classc_stone (a_session: attached SESSION_I; a_base_id: attached STRING; a_stone: detachable CLASSC_STONE)
 			-- Stores a stone's reference information in the given session, for later resurrection.
 			-- Note: Do *not* store the stone object in the session! This will include too much data.
 			--
@@ -250,7 +250,7 @@ feature {NONE} -- Specifics
 			persist_classi_stone (a_session, a_base_id, a_stone)
 		end
 
-	resurrect_classi_stone (a_session: !SESSION_I; a_base_id: !STRING): ?CLASSI_STONE
+	resurrect_classi_stone (a_session: attached SESSION_I; a_base_id: attached STRING): detachable CLASSI_STONE
 			-- Resurrects a class stone from previously stored session data.
 			--
 			-- `a_session': The session object to retrieve stone information from.
@@ -265,10 +265,10 @@ feature {NONE} -- Specifics
 		local
 			l_groups: HASH_TABLE [CONF_GROUP, STRING_8]
 			l_group: CONF_GROUP
-			l_group_name: ?STRING
-			l_class_name: ?STRING
-			l_class: ?CLASS_I
-			l_file_name: ?STRING
+			l_group_name: detachable STRING
+			l_class_name: detachable STRING
+			l_class: detachable CLASS_I
+			l_file_name: detachable STRING
 		do
 			l_group_name ?= a_session.value (session_id (a_base_id, group_name_session_id))
 			if l_group_name /= Void and then not l_group_name.is_empty then
@@ -291,7 +291,7 @@ feature {NONE} -- Specifics
 			end
 		end
 
-	persist_classi_stone (a_session: !SESSION_I; a_base_id: !STRING; a_stone: ?CLASSI_STONE)
+	persist_classi_stone (a_session: attached SESSION_I; a_base_id: attached STRING; a_stone: detachable CLASSI_STONE)
 			-- Stores a stone's reference information in the given session, for later resurrection.
 			-- Note: Do *not* store the stone object in the session! This will include too much data.
 			--
@@ -316,7 +316,7 @@ feature {NONE} -- Specifics
 			end
 		end
 
-	resurrect_feature_stone (a_session: !SESSION_I; a_base_id: !STRING): ?FEATURE_STONE
+	resurrect_feature_stone (a_session: attached SESSION_I; a_base_id: attached STRING): detachable FEATURE_STONE
 			-- Resurrects a stone from previously stored session data.
 			--
 			-- `a_session': The session object to retrieve stone information from.
@@ -329,8 +329,8 @@ feature {NONE} -- Specifics
 			a_session_is_per_project: a_session.is_per_project
 			not_a_base_id_is_empty: not a_base_id.is_empty
 		local
-			l_name: ?STRING
-			l_class_stone: ?CLASSC_STONE
+			l_name: detachable STRING
+			l_class_stone: detachable CLASSC_STONE
 			l_class: CLASS_C
 			l_feautre: E_FEATURE
 		do
@@ -349,7 +349,7 @@ feature {NONE} -- Specifics
 			end
 		end
 
-	persist_feature_stone (a_session: !SESSION_I; a_base_id: !STRING; a_stone: ?FEATURE_STONE)
+	persist_feature_stone (a_session: attached SESSION_I; a_base_id: attached STRING; a_stone: detachable FEATURE_STONE)
 			-- Stores a stone's reference information in the given session, for later resurrection.
 			-- Note: Do *not* store the stone object in the session! This will include too much data.
 			--

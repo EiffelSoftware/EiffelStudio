@@ -55,7 +55,7 @@ feature -- Status report
 
 feature -- Access
 
-	conf_type: !TEST_GENERATOR_CONF_I
+	conf_type: attached TEST_GENERATOR_CONF_I
 			-- <Precursor>
 		do
 		end

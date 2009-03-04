@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 			Result := interface_names.t_See_failure_trace
 		end
 
-	manager: !ES_EWEASEL_EXECUTION_MANAGER;
+	manager: attached ES_EWEASEL_EXECUTION_MANAGER;
 			-- eweasel chief manager		
 note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"

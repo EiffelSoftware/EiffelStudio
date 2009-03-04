@@ -19,7 +19,7 @@ inherit
 
 feature -- Validation
 
-	validate_value (a_value: !STRING)
+	validate_value (a_value: attached STRING)
 			-- Validates option value against any defined rules.
 			-- `is_option_valid' will be set upon completion.
 		local

@@ -14,7 +14,7 @@ inherit
 
 feature -- Access
 
-	last_added_class: !EIFFEL_CLASS_I
+	last_added_class: attached EIFFEL_CLASS_I
 			-- Class last added to `project' through call to `add_class'
 		require
 			usable: is_interface_usable
@@ -22,7 +22,7 @@ feature -- Access
 		deferred
 		end
 
-	last_added_cluster: !CONF_CLUSTER
+	last_added_cluster: attached CONF_CLUSTER
 			-- Cluster last added to `project' through call to `add_cluster'
 		require
 			usable: is_interface_usable
@@ -30,7 +30,7 @@ feature -- Access
 		deferred
 		end
 
-	last_error: !STRING_32
+	last_error: attached STRING_32
 			-- Error message if last call to either `add_class' or `add_cluster' has failed.
 		require
 			usable: is_interface_usable
@@ -79,7 +79,7 @@ feature -- Status report
 
 feature -- Element change
 
-	add_class (a_cluster: !CONF_CLUSTER; a_path: !STRING; a_file_name: !STRING; a_class_name: !STRING)
+	add_class (a_cluster: attached CONF_CLUSTER; a_path: attached STRING; a_file_name: attached STRING; a_class_name: attached STRING)
 			-- Try to create a new {EIFFEL_TEST_I} instance and add it to cluster.
 			--
 			-- Note: if successful, new class instance will be available through `last_added_class',
@@ -98,7 +98,7 @@ feature -- Element change
 			succeeded_xor_error: is_class_added xor has_error
 		end
 
-	add_cluster (a_target: !CONF_TARGET; a_path: !STRING)
+	add_cluster (a_target: attached CONF_TARGET; a_path: attached STRING)
 			-- Try to create new {CONF_CLUSTER} instance and add it to target.
 			--
 			-- Note: if successful, new clsuter instance will be available through `last_added_cluster',
@@ -126,7 +126,7 @@ feature -- Basic operations
 		deferred
 		end
 
-	run (a_working_directory: ?STRING; a_arguments: ?STRING; a_env: ?HASH_TABLE [!STRING_32, !STRING_32])
+	run (a_working_directory: detachable STRING; a_arguments: detachable STRING; a_env: detachable HASH_TABLE [attached STRING_32, attached STRING_32])
 			-- Launch compiled application in debugger.
 			--
 			-- Note: this routine will return immediatly.

@@ -80,7 +80,7 @@ feature {ES_EWEASEL_TESTING_TOOL_PANEL} -- Implementation
 			Result := interface_names.t_Show_failures_only
 		end
 
-	manager: !ES_EWEASEL_EXECUTION_MANAGER;
+	manager: attached ES_EWEASEL_EXECUTION_MANAGER;
 			-- eweasel execution manager
 
 note

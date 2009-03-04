@@ -18,31 +18,31 @@ inherit
 
 feature -- Access
 
-	stock_pixmaps: !EV_STOCK_PIXMAPS
+	stock_pixmaps: attached EV_STOCK_PIXMAPS
 			-- EiffelVision2 OS pixmaps
 		once
 			create Result
 		end
 
-	mini_pixmaps: !ES_PIXMAPS_10X10
+	mini_pixmaps: attached ES_PIXMAPS_10X10
 			-- Title bar pixmaps (10px)
 		once
 			create Result.make ("10x10")
 		end
 
-	small_pixmaps: !ES_PIXMAPS_12X12
+	small_pixmaps: attached ES_PIXMAPS_12X12
 			-- Small icon pixmaps (12px)
 		once
 			create Result.make ("12x12")
 		end
 
-	icon_pixmaps: !ES_PIXMAPS_16X16
+	icon_pixmaps: attached ES_PIXMAPS_16X16
 			-- Normal sized icon pixmaps (16px)
 		once
 			create Result.make ("16x16")
 		end
 
-	configuration_pixmaps: !ES_CONFIGURATION_PIXMAPS
+	configuration_pixmaps: attached ES_CONFIGURATION_PIXMAPS
 			-- Configuration system pixmaps (16px)
 		once
 			create Result.make ("16x16")
@@ -50,7 +50,7 @@ feature -- Access
 
 feature -- Helpers
 
-	resource_handler: !ES_PIXMAP_RESOURCE_HANDLER
+	resource_handler: attached ES_PIXMAP_RESOURCE_HANDLER
 			-- Shared access to an icon resource handled
 		once
 			create Result.make

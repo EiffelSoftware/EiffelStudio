@@ -123,10 +123,10 @@ feature -- Status report
 			-- Is `Current' a valid stone?
 		do
 			if
-				{dbg: like debugger_manager} Debugger_manager and then
+				attached Debugger_manager as dbg and then
 				dbg.application_is_executing
 			then
-				Result := {app: APPLICATION_EXECUTION} dbg.application and then
+				Result := attached {APPLICATION_EXECUTION} dbg.application as app and then
 						app.is_stopped and then
 						app.is_valid_object_address (object_address)
 			end

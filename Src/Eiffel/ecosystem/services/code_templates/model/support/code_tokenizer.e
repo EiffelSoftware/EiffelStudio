@@ -12,7 +12,7 @@ class
 
 feature -- Basic operations
 
-	tokenize (a_template: !STRING_32; a_factory: !CODE_FACTORY): !DS_ARRAYED_LIST [!CODE_TOKEN]
+	tokenize (a_template: attached STRING_32; a_factory: attached CODE_FACTORY): attached DS_ARRAYED_LIST [attached CODE_TOKEN]
 			-- Tokenizes a code template string.
 			--
 			-- `a_template': A code template raw string to tokenize.
@@ -24,13 +24,13 @@ feature -- Basic operations
 			c: CHARACTER_32
 			c2, c3: CHARACTER_8
 			l_count, i: INTEGER
-			l_buffer: !STRING_32
-			l_id: !STRING_32
-			l_token_id: !CODE_TOKEN_ID
+			l_buffer: attached STRING_32
+			l_id: attached STRING_32
+			l_token_id: attached CODE_TOKEN_ID
 			l_cont: BOOLEAN
 			l_escape: BOOLEAN
 			l_match_para: BOOLEAN
-			l_id_table: DS_HASH_TABLE [!CODE_TOKEN_ID, STRING_32]
+			l_id_table: DS_HASH_TABLE [attached CODE_TOKEN_ID, STRING_32]
 		do
 			create Result.make_default
 			create l_id_table.make_default

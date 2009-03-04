@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (a_visitor: !CODE_TOKEN_VISITOR_I)
+	process (a_visitor: attached CODE_TOKEN_VISITOR_I)
 			-- <Precursor>
 		do
 			a_visitor.process_code_token_eol (Current)

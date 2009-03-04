@@ -20,13 +20,13 @@ inherit
 
 feature -- Basic operations
 
-	translation (a_string: !STRING_GENERAL): !STRING_32
+	translation (a_string: attached STRING_GENERAL): attached STRING_32
 			-- Translation of `a_string' in locale
 			--
 			-- `a_string': String to translate
 			-- `Result': Translated string, or the original string if no translation is available
 		do
-			if {l_result: !STRING_32} locale.translation (a_string) then
+			if attached {attached STRING_32} locale.translation (a_string) as l_result then
 				Result := l_result
 			else
 				check False end
@@ -34,7 +34,7 @@ feature -- Basic operations
 			end
 		end
 
-	plural_translation (a_singular, a_plural: !STRING_GENERAL; a_plural_number: INTEGER): !STRING_32
+	plural_translation (a_singular, a_plural: attached STRING_GENERAL; a_plural_number: INTEGER): attached STRING_32
 			-- Translation of `a_singular' or `a_plural' in locale depending on `a_plural_number'
 			--
 			-- `a_singular': String to translate if singular is used
@@ -44,7 +44,7 @@ feature -- Basic operations
 		require
 			a_plural_number_non_negative: a_plural_number >= 0
 		do
-			if {l_result: !STRING_32} locale.plural_translation (a_singular, a_plural, a_plural_number) then
+			if attached {attached STRING_32} locale.plural_translation (a_singular, a_plural, a_plural_number) as l_result then
 				Result := l_result
 			else
 				check False end
@@ -52,7 +52,7 @@ feature -- Basic operations
 			end
 		end
 
-	formatted_translation (a_string: !STRING_GENERAL; a_values: !TUPLE): !STRING_32
+	formatted_translation (a_string: attached STRING_GENERAL; a_values: attached TUPLE): attached STRING_32
 			-- String which has it's tokens replaced by given values
 			--
 			-- The string given can have token placeholders in the form of '$1'
@@ -66,7 +66,7 @@ feature -- Basic operations
 			-- `a_values': Values which will be replaced in the placeholders
 			-- `Result': String which has token placeholders replaced with values
 		do
-			if {l_result: STRING_32} locale.formatted_string (a_string, a_values) then
+			if attached {STRING_32} locale.formatted_string (a_string, a_values) as l_result then
 				Result := l_result
 			else
 				check False end

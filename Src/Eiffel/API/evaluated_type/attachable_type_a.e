@@ -177,7 +177,7 @@ feature -- Duplication
 				else
 					c := other.actual_type
 				end
-				if c /= Void and then c /= Result and then {t: ATTACHABLE_TYPE_A} c then
+				if c /= Void and then c /= Result and then attached {ATTACHABLE_TYPE_A} c as t then
 						-- Apply attachment settings of anchor if applicable and current type has none.
 					o := t
 				else

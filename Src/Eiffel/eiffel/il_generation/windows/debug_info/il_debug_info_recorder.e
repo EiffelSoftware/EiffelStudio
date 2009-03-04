@@ -168,7 +168,7 @@ feature -- Queries : eStudio data
 			a_class_c_attached: a_class_c /= Void
 			a_class_type_attached: a_class_type /= Void
 		do
-			if {clta: CL_TYPE_A} a_class_type.type.implemented_type (a_class_c.class_id) then
+			if attached {CL_TYPE_A} a_class_type.type.implemented_type (a_class_c.class_id) as clta then
 				Result := clta.associated_class_type (Void)
 			else
 				Result := a_class_type

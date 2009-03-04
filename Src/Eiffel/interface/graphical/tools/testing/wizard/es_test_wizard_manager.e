@@ -138,10 +138,10 @@ feature {NONE} -- Access
 	development_window: EB_DEVELOPMENT_WINDOW
 			-- Development window in which `Current' was launched
 
-	current_window: !EV_WINDOW
+	current_window: attached EV_WINDOW
 			-- <Precursor>
 		local
-			l_window: ?like current_window
+			l_window: detachable like current_window
 		do
 			l_window := first_window
 			if l_window = Void then
@@ -154,7 +154,7 @@ feature {NONE} -- Access
 	wizard_info: ES_TEST_WIZARD_INFORMATION
 			-- Information
 
-	library_prompt_cell: !CELL [BOOLEAN]
+	library_prompt_cell: attached CELL [BOOLEAN]
 			-- Cell containing status of library prompt
 		once
 			create Result.put (False)

@@ -3554,7 +3554,7 @@ feature -- Access
 			loop
 				feat := f_table.item_for_iteration
 				if feat.is_constant then
-					if {e_cst: E_CONSTANT} feat.api_feature (cid) then
+					if attached {E_CONSTANT} feat.api_feature (cid) as e_cst then
 						Result.put_front (e_cst)
 					else
 						check invalid_constant_feature: False end

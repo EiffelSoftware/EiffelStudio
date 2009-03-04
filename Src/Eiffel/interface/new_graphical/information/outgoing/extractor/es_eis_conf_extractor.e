@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_notable: !CONF_NOTABLE; a_force: BOOLEAN)
+	make (a_notable: attached CONF_NOTABLE; a_force: BOOLEAN)
 			-- Initialize with `a_notable'.
 		do
 			notable := a_notable
@@ -31,15 +31,15 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	eis_full_entries: !SEARCH_TABLE [EIS_ENTRY]
+	eis_full_entries: attached SEARCH_TABLE [EIS_ENTRY]
 			-- EIS entries including all flat entries from all associated component
 		local
 			l_conf_extractor: ES_EIS_CONF_EXTRACTOR
 		do
-			if not {lt_full_entries: like internal_eis_full_entries}internal_eis_full_entries then
-				if {lt_target: CONF_TARGET}notable then
+			if not attached internal_eis_full_entries as lt_full_entries then
+				if attached {CONF_TARGET} notable as lt_target then
 					Result := eis_entries
-				elseif {lt_group: CONF_CLUSTER}notable and then {lt_group_target: CONF_TARGET}lt_group.target then
+				elseif attached {CONF_CLUSTER} notable as lt_group and then attached {CONF_TARGET} lt_group.target as lt_group_target then
 					create l_conf_extractor.make (lt_group_target, True)
 					Result := l_conf_extractor.eis_entries.twin
 					Result.merge (eis_entries.twin)
@@ -66,16 +66,16 @@ feature {NONE} -- Implementation
 			l_date: INTEGER
 		do
 				-- Compute id.
-			if {lt_target: CONF_TARGET}notable then
+			if attached {CONF_TARGET} notable as lt_target then
 				l_id := id_solution.id_of_target (lt_target)
 				l_date := lt_target.system.file_date
-			elseif {lt_cluster: CONF_CLUSTER}notable then
+			elseif attached {CONF_CLUSTER} notable as lt_cluster then
 				l_id := id_solution.id_of_group (lt_cluster)
 				l_date := lt_cluster.target.system.file_date
 			else
 				check not_possible: False end
 			end
-			if {lt_id: STRING}l_id then
+			if attached {STRING} l_id as lt_id then
 				l_entries := storage.entry_server.entries
 				l_entries.search (lt_id)
 				if not l_entries.found or force_extracting then
@@ -88,7 +88,7 @@ feature {NONE} -- Implementation
 							l_notes.after
 						loop
 							l_note := l_notes.item_for_iteration
-							if {lt_entry: EIS_ENTRY}eis_entry_from_conf_note (l_note, lt_id) then
+							if attached {EIS_ENTRY} eis_entry_from_conf_note (l_note, lt_id) as lt_entry then
 								eis_entries.force (lt_entry)
 							end
 							l_notes.forth
@@ -99,7 +99,7 @@ feature {NONE} -- Implementation
 						storage.register_entries_of_component_id (eis_entries, lt_id, l_date)
 					end
 				else
-					if {lt_entries: like eis_entries}l_entries.found_item then
+					if attached {like eis_entries} l_entries.found_item as lt_entries then
 						eis_entries := lt_entries
 					else
 						check
@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Access
 
-	notable: !CONF_NOTABLE
+	notable: attached CONF_NOTABLE
 			-- The item to extract EIS info from.
 
 	internal_eis_full_entries: like eis_full_entries;

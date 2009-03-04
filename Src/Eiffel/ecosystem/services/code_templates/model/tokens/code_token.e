@@ -34,7 +34,7 @@ feature -- Access
 			Result := text
 		end
 
-	text: !STRING_32
+	text: attached STRING_32
 			-- The token text
 		deferred
 		ensure
@@ -50,7 +50,7 @@ feature -- Status report
 
 feature -- Visitor
 
-	process (a_visitor: !CODE_TOKEN_VISITOR_I)
+	process (a_visitor: attached CODE_TOKEN_VISITOR_I)
 			-- Visit's the current token and processes it.
 		require
 			a_visitor_is_interface_usable: a_visitor.is_interface_usable

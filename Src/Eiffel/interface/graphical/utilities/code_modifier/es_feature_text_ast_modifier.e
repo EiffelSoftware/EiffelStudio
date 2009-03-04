@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_feature: !like context_feature; a_class: !like context_class)
+	make (a_feature: attached like context_feature; a_class: attached like context_class)
 			-- Initialize a contract text modifier for a feature
 			--
 			-- `a_class': Associated context class to modify class text for.
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	ast_feature: ?FEATURE_AS
+	ast_feature: detachable FEATURE_AS
 			-- Resulting feature AST node.
 			-- Note: This is the original AST node not the modified one. To access the modified one
 			--       the changes must be commited and the ast re-prepared.
@@ -52,17 +52,17 @@ feature -- Access
 			Result := modified_data.ast_feature
 		end
 
-	context_feature: !E_FEATURE
+	context_feature: attached E_FEATURE
 			-- Context feature.
 
 feature {NONE} -- Access
 
-	modified_data: !ES_FEATURE_TEXT_AST_MODIFIER_DATA
+	modified_data: attached ES_FEATURE_TEXT_AST_MODIFIER_DATA
 			-- <Precursor>
 
 feature {NONE} -- Query
 
-	find_actual_context_feature (a_feature: !like context_feature; a_class: !like context_class): !like context_feature
+	find_actual_context_feature (a_feature: attached like context_feature; a_class: attached like context_class): attached like context_feature
 			-- Locates the actual context feature given a class.
 			--
 			-- `a_feature': The feature to resolve an actual feature for.
@@ -72,9 +72,9 @@ feature {NONE} -- Query
 			is_interface_usable: is_interface_usable
 			a_class_is_compiled: a_class.is_compiled
 		local
-			l_feature_i: ?FEATURE_I
+			l_feature_i: detachable FEATURE_I
 			l_class_c: CLASS_C
-			l_result: ?like context_feature
+			l_result: detachable like context_feature
 		do
 			if a_class.is_compiled then
 				l_class_c := a_class.compiled_class
@@ -101,12 +101,12 @@ feature {NONE} -- Query
 
 feature {NONE} -- Factory
 
-	new_modified_data: !like modified_data
+	new_modified_data: attached like modified_data
 			-- <Precursor>
 		local
-			l_class: !like context_class
+			l_class: attached like context_class
 			l_editor: like active_editor_for_class
-			l_text: !STRING_32
+			l_text: attached STRING_32
 		do
 			l_class := context_class
 			l_editor := active_editor_for_class (l_class)

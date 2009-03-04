@@ -26,14 +26,14 @@ inherit
 		end
 
 feature
-	argument: !DS_LINEAR [!TEST_I]
+	argument: attached DS_LINEAR [attached TEST_I]
 		do
 		end
 
 
 feature -- Access
 
-	active_tests: !DS_LINEAR [!TEST_I]
+	active_tests: attached DS_LINEAR [attached TEST_I]
 			-- <Precursor>
 			--
 			-- Note: list contains tests which are queued or currently executed.
@@ -52,7 +52,7 @@ feature {NONE} -- Query
 
 		end
 
-	frozen is_test_executable (a_test: !TEST_I): BOOLEAN
+	frozen is_test_executable (a_test: attached TEST_I): BOOLEAN
 			-- Can test instance be executed by `Current'?
 			--
 			-- `a_test': Test to be executed.
@@ -68,7 +68,7 @@ feature {NONE} -- Query
 
 feature -- Status setting
 
-	skip_test (a_test: !TEST_I)
+	skip_test (a_test: attached TEST_I)
 			-- Remove test from `active_tests'
 			--
 			-- `a_test': Test to be removed from active tests.
@@ -83,7 +83,7 @@ feature -- Status setting
 
 feature {NONE} -- Typing
 
-	conf_type: !TEST_EXECUTOR_CONF_I
+	conf_type: attached TEST_EXECUTOR_CONF_I
 			-- <Precursor>
 		do
 		end

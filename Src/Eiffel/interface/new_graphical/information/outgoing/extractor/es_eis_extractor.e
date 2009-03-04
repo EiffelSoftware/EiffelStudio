@@ -18,11 +18,11 @@ inherit
 
 feature -- Access
 
-	eis_entries: !SEARCH_TABLE [EIS_ENTRY]
+	eis_entries: attached SEARCH_TABLE [EIS_ENTRY]
 			-- EIS entries
 			-- Only physical appearances of current component
 
-	eis_full_entries: !SEARCH_TABLE [EIS_ENTRY]
+	eis_full_entries: attached SEARCH_TABLE [EIS_ENTRY]
 			-- EIS entries including all flat entries from all associated component
 		deferred
 		end

@@ -21,7 +21,7 @@ feature {NONE} -- Redefine
 	is_valid_data (a_data: ANY): BOOLEAN
 			-- Redefine
 		do
-			Result := {l_test: ES_EWEASEL_TEST_RESULT_ITEM} a_data
+			Result := attached {ES_EWEASEL_TEST_RESULT_ITEM} a_data as l_test
 		end
 
 	description: STRING_32

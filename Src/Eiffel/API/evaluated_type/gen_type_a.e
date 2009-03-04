@@ -771,7 +771,7 @@ feature {TYPE_A} -- Helpers
 			l_formal: FORMAL_A
 		do
 			if
-				same_type (other) and then {l_gen_type_i: !like Current} other and then
+				same_type (other) and then attached {attached like Current} other as l_gen_type_i and then
 				l_gen_type_i.class_id = class_id and then
 						-- 'class_id' is the same therefore we can compare 'declaration_mark'.
 						-- If 'declaration_mark' is not the same for both then we have to make sure
@@ -1519,7 +1519,7 @@ feature -- Primitives
 								--| Knowing that formals (FORMAL_A) just take of their "layers" and fall back to their constraints and ask and ask again until they match.
 								--| Example: [G -> H, H -> I, I -> J] Question: Is G conform to J? Answer of `conform_to' is yes.
 								--| Knowing that there is no recursion in such a case: X -> LIST[X] because either the input really matches LIST and then we _have_ to continue or then it does not and we stop.
-							if {a: ATTACHABLE_TYPE_A} l_generic_parameter then
+							if attached {ATTACHABLE_TYPE_A} l_generic_parameter as a then
 									-- Use attachment status of an actual generic parameter
 									-- to check conformance to the formal generic parameter.
 								l_constraint_item := l_constraint_item.to_other_attachment (a)

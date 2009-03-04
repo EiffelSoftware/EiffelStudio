@@ -36,10 +36,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	executor: !TEST_EXECUTOR_I
+	executor: attached TEST_EXECUTOR_I
 			-- Executor being visualized by `Current'
 
-	title: !STRING_32
+	title: attached STRING_32
 			-- <Precursor>
 		do
 			if debug_executor_type.attempt (executor) /= Void then
@@ -71,10 +71,10 @@ feature -- Access
 
 feature {NONE} -- Access: buttons
 
-	run_button: !SD_TOOL_BAR_BUTTON
+	run_button: attached SD_TOOL_BAR_BUTTON
 			-- Button for relaunching past execution
 
-	skip_button: !SD_TOOL_BAR_BUTTON
+	skip_button: attached SD_TOOL_BAR_BUTTON
 			-- Button for skipping tests during execution
 
 feature {NONE} -- Status setting
@@ -131,7 +131,7 @@ feature {NONE} -- Events: widgets
 			-- Called when `run_button' is selected
 		local
 			l_conf: TEST_EXECUTOR_CONF
-			l_list: ?DS_LINEAR [!TEST_I]
+			l_list: detachable DS_LINEAR [attached TEST_I]
 			l_is_dbg: BOOLEAN
 		do
 			if not grid.selected_items.is_empty then
@@ -155,7 +155,7 @@ feature {NONE} -- Events: widgets
 	on_skip
 			-- Called when `skip_button' is selected
 		local
-			l_cursor: DS_LINEAR_CURSOR [!TEST_I]
+			l_cursor: DS_LINEAR_CURSOR [attached TEST_I]
 		do
 			if executor.is_interface_usable and then executor.is_running then
 				l_cursor := grid.selected_items.new_cursor
@@ -172,7 +172,7 @@ feature {NONE} -- Events: widgets
 			end
 		end
 
-	on_selection_change (a_test: !TEST_I)
+	on_selection_change (a_test: attached TEST_I)
 			-- <Precursor>
 		do
 			adapt_executor_status
@@ -180,7 +180,7 @@ feature {NONE} -- Events: widgets
 
 feature {NONE} -- Factory
 
-	create_tool_bar_items: ?DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+	create_tool_bar_items: detachable DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- <Precursor>
 		local
 			l_items: like create_tool_bar_items

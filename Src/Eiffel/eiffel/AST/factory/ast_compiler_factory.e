@@ -296,7 +296,7 @@ feature -- Access
 				end
 
 				if b.is_unique then
-					if {l_class_c: CLASS_C} parser.current_class then
+					if attached {CLASS_C} parser.current_class as l_class_c then
 						l_class_c.set_has_unique
 					end
 				end

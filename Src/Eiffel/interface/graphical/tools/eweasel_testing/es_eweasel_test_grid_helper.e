@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_grid: !EV_GRID)
+	make (a_grid: attached EV_GRID)
 			-- Creation method
 		do
 			grid := a_grid
@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 
 feature -- Command
 
-	new_editor_token_item (a_class_name: !STRING): !EB_GRID_EDITOR_TOKEN_ITEM
+	new_editor_token_item (a_class_name: attached STRING): attached EB_GRID_EDITOR_TOKEN_ITEM
 			-- Create a grid editor token item base on `a_class_name'
 		local
 			l_class_token: EDITOR_TOKEN_CLASS
@@ -65,7 +65,7 @@ feature -- Command
 					if (0 <= l_x and l_x <= grid.virtual_width) and
 						(0 <= l_y and l_y <= grid.virtual_height) then
 
-						if {l_edit_grid_item: EV_GRID_EDITABLE_ITEM} grid.item_at_virtual_position (l_x, l_y)  then
+						if attached {EV_GRID_EDITABLE_ITEM} grid.item_at_virtual_position (l_x, l_y) as l_edit_grid_item  then
 							l_edit_grid_item.activate
 						end
 					end
@@ -75,7 +75,7 @@ feature -- Command
 
 feature {NONE} -- Implementation
 
-	grid: !EV_GRID;
+	grid: attached EV_GRID;
 			-- Grid current helping
 note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"

@@ -86,14 +86,14 @@ feature -- Query
 
 	has_attributes_values: BOOLEAN
 		do
-			if {oadd: like object_address} object_address and then is_valid_object_address (oadd) then
+			if attached object_address as oadd and then is_valid_object_address (oadd) then
 				Result := debugger_manager.object_manager.object_at_address_has_attributes (oadd)
 			end
 		end
 
 	sorted_attributes_values: DS_LIST [ABSTRACT_DEBUG_VALUE]
 		do
-			if {oadd: like object_address} object_address and then is_valid_object_address (oadd) then
+			if attached object_address as oadd and then is_valid_object_address (oadd) then
 				Result := debugger_manager.object_manager.sorted_attributes_at_address (oadd, object_spec_lower, object_spec_upper)
 			end
 		end
@@ -101,7 +101,7 @@ feature -- Query
 	sorted_once_routines: LIST [E_FEATURE]
 			-- <Precursor>	
 		do
-			if {cl: like object_dynamic_class} object_dynamic_class then
+			if attached object_dynamic_class as cl then
 				Result := cl.once_routines
 			end
 		end
@@ -109,7 +109,7 @@ feature -- Query
 	sorted_constant_features: LIST [E_CONSTANT]
 			-- <Precursor>
 		do
-			if {cl: like object_dynamic_class} object_dynamic_class then
+			if attached object_dynamic_class as cl then
 				Result := cl.constant_features
 			end
 		end

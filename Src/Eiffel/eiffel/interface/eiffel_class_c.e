@@ -659,7 +659,7 @@ feature -- Third pass: byte code production and type check
 
 							-- No type check for constants and attributes.
 							-- [It is done in second pass.]
-						if feature_i.is_routine or else feature_i.is_attribute and then {a: ATTRIBUTE_I} feature_i and then a.has_body then
+						if feature_i.is_routine or else feature_i.is_attribute and then attached {ATTRIBUTE_I} feature_i as a and then a.has_body then
 							if
 								feature_changed
 								or else

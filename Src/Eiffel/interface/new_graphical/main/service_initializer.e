@@ -12,7 +12,7 @@ class
 
 feature -- Services
 
-	add_core_services (a_container: !SERVICE_CONTAINER_S)
+	add_core_services (a_container: attached SERVICE_CONTAINER_S)
 			-- Adds all the core services.
 			--
 			-- `a_container': The service container to add services to.
@@ -68,7 +68,7 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Registration: Output
 
-	register_outputs (a_service: !OUTPUT_MANAGER_S)
+	register_outputs (a_service: attached OUTPUT_MANAGER_S)
 			-- Registers all default output providers with the output managers service.
 			--
 			-- `a_service': The service interface to register the outputs on.
@@ -91,7 +91,7 @@ feature {NONE} -- Registration: Output
 
 feature {NONE} -- Registrations: Testing
 
-	register_test_suite_processors (a_service: !TEST_SUITE_S)
+	register_test_suite_processors (a_service: attached TEST_SUITE_S)
 			-- Register standard test processors for test suite service.
 			--
 			-- `a_service': Service in which test processors are registered.

@@ -116,7 +116,7 @@ feature -- Change
 				loop
 					tbi := sd_toolbar_items.item
 					if tbi /= Void then
-						if {it: STRING_GENERAL} (tbi.text) and then not it.is_empty then
+						if attached {STRING_GENERAL} (tbi.text) as it and then not it.is_empty then
 							tbi.set_text (t)
 						end
 						tbi.set_tooltip (tt)

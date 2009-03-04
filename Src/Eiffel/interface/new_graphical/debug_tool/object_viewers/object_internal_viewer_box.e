@@ -112,7 +112,7 @@ feature -- Access
 	is_valid_stone (a_stone: ANY; is_strict: BOOLEAN): BOOLEAN
 			-- Is `st' valid stone for Current?
 		do
-			Result := {st: OBJECT_STONE} a_stone
+			Result := attached {OBJECT_STONE} a_stone as st
 		end
 
 feature -- Change
@@ -238,7 +238,7 @@ feature {NONE} -- Event handling
 					until
 						i > r.count
 					loop
-						if {lab: EV_GRID_LABEL_ITEM} r.item (i) then
+						if attached {EV_GRID_LABEL_ITEM} r.item (i) as lab then
 							s.append (lab.text)
 						else
 							s.append_character ('%T')

@@ -70,7 +70,7 @@ feature -- Execution
 					l_match_list := match_list_server.item (written_in_class.class_id)
 
 					if target_feat.is_invariant then
-						if {inv_ast: INVARIANT_AS} target_feat.inv_ast_server.item (target_feat.written_in) then
+						if attached {INVARIANT_AS} target_feat.inv_ast_server.item (target_feat.written_in) as inv_ast then
 							set_is_without_breakable
 							create assert_server.make_for_class_only
 							source_class := target_feat.written_class
@@ -102,7 +102,7 @@ feature -- Execution
 								f_ast := normal_to_deferred_feature_as (f_ast, l_match_list)
 							end
 
-							if {l_feat: !E_FEATURE} a_target_feat then
+							if attached {attached E_FEATURE} a_target_feat as l_feat then
 								feature_comments := (create {COMMENT_EXTRACTOR}).feature_comments (l_feat)
 							end
 

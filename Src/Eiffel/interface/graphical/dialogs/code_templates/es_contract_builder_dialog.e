@@ -19,7 +19,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_template: !like code_template; a_context: like contract_context)
+	make (a_template: attached like code_template; a_context: like contract_context)
 			-- Initialize dialog using a specific development window
 		require
 			a_template_is_interface_usable: a_template.is_interface_usable
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	contract_context: !ES_CONTRACT_EDITOR_CONTEXT [CLASSI_STONE]
+	contract_context: attached ES_CONTRACT_EDITOR_CONTEXT [CLASSI_STONE]
 			-- The contract editor context used to apply an commited changes
 
 ;note

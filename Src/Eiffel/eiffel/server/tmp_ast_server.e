@@ -401,7 +401,7 @@ feature {NONE} -- Store to disk
 			create read_info.make (file_position, current_file_id)
 			read_info.set_object_count (object_count)
 
-			if {feat: !FEATURE_AS} obj then
+			if attached {attached FEATURE_AS} obj as feat then
 				tmp_body_info.force (read_info, feat.id)
 			else
 				invariant_info.put (read_info, current_class_id)

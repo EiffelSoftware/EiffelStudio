@@ -24,13 +24,13 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-	name: !IMMUTABLE_STRING_32
+	name: attached IMMUTABLE_STRING_32
 			-- <Precursor>
 		once
 			Result := "Terminal"
 		end
 
-	output_window: !OUTPUT_WINDOW
+	output_window: attached OUTPUT_WINDOW
 			-- <Precursor>
 		attribute
 			create {TERM_WINDOW} Result

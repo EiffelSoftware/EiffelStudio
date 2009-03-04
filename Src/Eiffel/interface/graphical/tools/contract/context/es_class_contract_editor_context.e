@@ -15,7 +15,7 @@ inherit
 
 feature {NONE} -- Query
 
-	calculate_parents (a_class: !CLASS_I; a_list: !DS_LIST [CLASS_C])
+	calculate_parents (a_class: attached CLASS_I; a_list: attached DS_LIST [CLASS_C])
 			-- <Precursor>
 		local
 			l_class_i: CLASS_I

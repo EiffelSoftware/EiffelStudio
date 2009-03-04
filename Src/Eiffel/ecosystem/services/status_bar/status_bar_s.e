@@ -19,7 +19,7 @@ inherit
 
 feature -- Element change
 
-	set_text (a_text: !READABLE_STRING_GENERAL; a_style: NATURAL_8)
+	set_text (a_text: attached READABLE_STRING_GENERAL; a_style: NATURAL_8)
 			-- Sets the status bar message text on all windows.
 			--
 			-- `a_text': The text to set on the status bar.
@@ -29,7 +29,7 @@ feature -- Element change
 		deferred
 		end
 
-	set_text_on_window (a_text: !READABLE_STRING_GENERAL; a_style: NATURAL_8; a_window: !SHELL_WINDOW_I)
+	set_text_on_window (a_text: attached READABLE_STRING_GENERAL; a_style: NATURAL_8; a_window: attached SHELL_WINDOW_I)
 			-- Sets the status bar message text on a selected window.
 			--
 			-- `a_text': The text to set on the status bar.
@@ -51,7 +51,7 @@ feature -- Basic operations
 			set_text ("", {STATUS_BAR_TEXT_STYLE}.normal)
 		end
 
-	clear_on_window (a_text: !READABLE_STRING_GENERAL; a_window: !SHELL_WINDOW_I)
+	clear_on_window (a_text: attached READABLE_STRING_GENERAL; a_window: attached SHELL_WINDOW_I)
 			-- Clears the status bar text on a selected window.
 			--
 			-- `a_text': The text to set on the status bar.

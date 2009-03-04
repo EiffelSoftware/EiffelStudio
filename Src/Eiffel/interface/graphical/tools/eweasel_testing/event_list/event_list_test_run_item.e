@@ -29,7 +29,7 @@ feature {NONE} -- Redefine
 			-- Redefine
 		do
 			if a_data /= Void then
-				Result := {l_test: ES_EWEASEL_TEST_RUN_DATA_ITEM} a_data
+				Result := attached {ES_EWEASEL_TEST_RUN_DATA_ITEM} a_data as l_test
 			end
 		end
 

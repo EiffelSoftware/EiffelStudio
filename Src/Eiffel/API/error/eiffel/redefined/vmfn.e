@@ -63,7 +63,7 @@ feature -- Output
 	trace_primary_context (a_text_formatter: TEXT_FORMATTER)
 			-- Build the primary context string so errors can be navigated to
 		do
-			if {l_formatter: !TEXT_FORMATTER} a_text_formatter and then {l_feature: !like a_feature} a_feature and then {l_class: !like class_c} class_c then
+			if attached {attached TEXT_FORMATTER} a_text_formatter as l_formatter and then attached a_feature as l_feature and then attached class_c as l_class then
 				print_context_feature (l_formatter, l_feature, l_class)
 			else
 				Precursor (a_text_formatter)

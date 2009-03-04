@@ -24,9 +24,9 @@ feature -- Access
 	menu_name: STRING_GENERAL
 			-- <Precursor>
 		do
-			if {l_fs: FEATURE_STONE} stone then
+			if attached {FEATURE_STONE} stone as l_fs then
 				Result := interface_names.m_edit_feature_contracts (l_fs.e_feature.name)
-			elseif {l_cs: CLASSI_STONE} stone then
+			elseif attached {CLASSI_STONE} stone as l_cs then
 				Result := interface_names.m_edit_class_contracts (l_cs.class_i.name)
 			else
 					-- Default to the tool name

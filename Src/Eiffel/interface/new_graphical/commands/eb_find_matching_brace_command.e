@@ -67,7 +67,7 @@ feature {NONE} -- Clean up
 
 feature {NONE} -- Access
 
-	editor: ?EB_SMART_EDITOR
+	editor: detachable EB_SMART_EDITOR
 			-- Editor corresponding to Current
 		do
 			Result ?= target.ui.current_editor

@@ -27,10 +27,10 @@ inherit
 
 feature -- Access
 
-	help_title (a_context_id: !STRING_GENERAL; a_section: ?HELP_CONTEXT_SECTION_I): !STRING_32
+	help_title (a_context_id: attached STRING_GENERAL; a_section: detachable HELP_CONTEXT_SECTION_I): attached STRING_32
 			-- <Precursor>
 		local
-			l_title: ?STRING_32
+			l_title: detachable STRING_32
 		do
 			if is_accessible then
 					-- `is_accessible' requires calling {CURL_ACCESS}.make
@@ -45,7 +45,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	base_url: !STRING
+	base_url: attached STRING
 			-- Base URL used to locate help documentation.
 		deferred
 		ensure
@@ -71,7 +71,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Query
 
-	full_url (a_context_id: !STRING_GENERAL; a_section: ?HELP_CONTEXT_SECTION_I): !STRING
+	full_url (a_context_id: attached STRING_GENERAL; a_section: detachable HELP_CONTEXT_SECTION_I): attached STRING
 			-- Full URL to navigate to, base on the help content context.
 		require
 			not_a_context_id_is_empty: not a_context_id.is_empty
@@ -87,7 +87,7 @@ feature {NONE} -- Query
 			not_result_is_empty: not Result.is_empty
 		end
 
-	document_title (a_url: !STRING_GENERAL; a_trim: BOOLEAN): ?STRING_32
+	document_title (a_url: attached STRING_GENERAL; a_trim: BOOLEAN): detachable STRING_32
 			-- Attempts to retrieve a document title from a URL.
 			--
 			-- `a_url': URL to fetch a document title from
@@ -97,8 +97,8 @@ feature {NONE} -- Query
 			is_accessible: is_accessible -- Need to call `make' from {CURL_ACCESS}.
 		local
 			l_curl: like curl
-			l_data: !CURL_STRING
-			l_result: ?STRING_GENERAL
+			l_data: attached CURL_STRING
+			l_result: detachable STRING_GENERAL
 			l_regex: like title_extract_regex
 			i: INTEGER
 		do
@@ -132,7 +132,7 @@ feature {NONE} -- Query
 
 feature -- Basic operations
 
-	show_help (a_context_id: !STRING_GENERAL; a_section: ?HELP_CONTEXT_SECTION_I)
+	show_help (a_context_id: attached STRING_GENERAL; a_section: detachable HELP_CONTEXT_SECTION_I)
 			-- <Precursor>
 		do
 			Precursor (full_url (a_context_id, a_section), a_section)
@@ -140,7 +140,7 @@ feature -- Basic operations
 
 feature {NONE} -- Formatting
 
-	format_context_id (a_context_id: !STRING_GENERAL): !STRING
+	format_context_id (a_context_id: attached STRING_GENERAL): attached STRING
 			-- Formats the context id so it may be used in a URL.
 			--
 			-- `a_context_id': A help content context identifier to format
@@ -153,7 +153,7 @@ feature {NONE} -- Formatting
 			not_result_id_is_empty: not Result.is_empty
 		end
 
-	format_context_section (a_section: !STRING_GENERAL): !STRING
+	format_context_section (a_section: attached STRING_GENERAL): attached STRING
 			-- Formats the context section so it may be used in a URL.
 			--
 			-- `a_section': A help content context section to format
@@ -166,7 +166,7 @@ feature {NONE} -- Formatting
 			not_result_id_is_empty: not Result.is_empty
 		end
 
-	format_context (a_context: !STRING_GENERAL): !STRING
+	format_context (a_context: attached STRING_GENERAL): attached STRING
 			-- Formats the context so it may be used in a URL.
 			--
 			-- `a_context': A help content context of session context identifier to format
@@ -184,7 +184,7 @@ feature {NONE} -- Formatting
 
 feature {NONE} -- Regular expressions
 
-	title_extract_regex: !RX_PCRE_MATCHER
+	title_extract_regex: attached RX_PCRE_MATCHER
 			-- Regular expression to extract an HTML title
 		once
 			create Result.make

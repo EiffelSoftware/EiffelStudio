@@ -13,7 +13,7 @@ inherit
 
 feature -- Operation
 
-	process (a_entry: !EIS_ENTRY)
+	process (a_entry: attached EIS_ENTRY)
 			-- Start process `a_entry'
 		local
 			l_output: STRING_32
@@ -73,7 +73,7 @@ feature -- Operation
 				if a_entry.tags /= Void and then not a_entry.tags.is_empty then
 					last_output_conf.force (tags_as_code (a_entry), {ES_EIS_TOKENS}.tag_string)
 				end
-				if {lt_others: HASH_TABLE [STRING_32, STRING_32]}a_entry.others and then not a_entry.others.is_empty then
+				if attached {HASH_TABLE [STRING_32, STRING_32]} a_entry.others as lt_others and then not a_entry.others.is_empty then
 					from
 						lt_others.start
 					until
@@ -110,19 +110,19 @@ feature -- Status change
 
 feature -- Access
 
-	last_output_code: ?STRING_32
+	last_output_code: detachable STRING_32
 			-- Last output of code.
 
 	last_output_conf: HASH_TABLE [STRING, STRING]
 			-- Last output of conf note.
 
-	tags_as_code (a_entry: !EIS_ENTRY): !STRING_32
+	tags_as_code (a_entry: attached EIS_ENTRY): attached STRING_32
 			-- Tags as a string of code.
 			-- Unquoted
 		local
 			l_found: BOOLEAN
 		do
-			if {lt_tags: ARRAYED_LIST [STRING_32]}a_entry.tags then
+			if attached {ARRAYED_LIST [STRING_32]} a_entry.tags as lt_tags then
 				create Result.make (10)
 				from
 					lt_tags.start
@@ -145,7 +145,7 @@ feature -- Access
 			end
 		end
 
-	others_as_code (a_entry: !EIS_ENTRY): !STRING_32
+	others_as_code (a_entry: attached EIS_ENTRY): attached STRING_32
 			-- Others as string of code.
 			-- Quoted
 		local
@@ -154,7 +154,7 @@ feature -- Access
 			l_value: STRING_32
 			l_found: BOOLEAN
 		do
-			if {lt_others: HASH_TABLE [STRING_32, STRING_32]}a_entry.others then
+			if attached {HASH_TABLE [STRING_32, STRING_32]} a_entry.others as lt_others then
 				create Result.make (10)
 				from
 					lt_others.start
@@ -185,7 +185,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	quoted_string (a_string: STRING_32): !STRING_32
+	quoted_string (a_string: STRING_32): attached STRING_32
 			-- Quoted `a_string'
 		require
 			a_string_not_void: a_string /= Void

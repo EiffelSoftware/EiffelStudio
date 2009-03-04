@@ -183,7 +183,7 @@ feature {NONE} -- Initialization
 
 feature -- Access: Help
 
-	help_context_id: !STRING_GENERAL
+	help_context_id: attached STRING_GENERAL
 			-- <Precursor>
 		once
 			Result := "6B736424-1729-0B6F-6DDD-8240F9F8FFD6"
@@ -409,7 +409,7 @@ feature {NONE} -- Interface
 		do
 			m := tool_menu (True)
 			if m /= Void then
-				if tbi /= Void and then {rect: EV_RECTANGLE} tbi.rectangle then
+				if tbi /= Void and then attached {EV_RECTANGLE} tbi.rectangle as rect then
 					m.show_at (mini_toolbar, rect.x, rect.y)
 				else
 					m.show_at (mini_toolbar, 0, 0)
@@ -780,14 +780,14 @@ feature {NONE} -- Row actions
 
 feature {NONE} -- event handlers
 
-	on_stone_changed (a_old_stone: ?like stone)
+	on_stone_changed (a_old_stone: detachable like stone)
 			-- Assign `a_stone' as new stone.
 		do
 			debug ("debug_recv")
 				print ("ES_OBJECTS_TOOL.set_stone%N")
 			end
 			if can_refresh then
-				if {conv_stack: CALL_STACK_STONE} stone then
+				if attached {CALL_STACK_STONE} stone as conv_stack then
 					update
 				end
 			end
@@ -1359,7 +1359,7 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 		local
 			row: EV_GRID_ROW
 		do
-			if {ost: OBJECT_STONE} a_stone then
+			if attached {OBJECT_STONE} a_stone as ost then
 				row ?= ost.ev_item
 				if row /= Void then
 					Result := is_removable_debugged_object_row (row)
@@ -1381,7 +1381,7 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 				until
 					displayed_objects.after or else Result
 				loop
-					if {oa: DBG_ADDRESS} displayed_objects.item.object_address then
+					if attached {DBG_ADDRESS} displayed_objects.item.object_address as oa then
 						Result := oa.is_equal (addr)
 					end
 					displayed_objects.forth

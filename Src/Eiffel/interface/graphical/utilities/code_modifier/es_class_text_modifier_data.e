@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_class: !like associated_class; a_text: !like text)
+	make (a_class: attached like associated_class; a_text: attached like text)
 			-- Initializes the data required to perform class modifications.
 			--
 			-- `a_class': The associated class to perform modifications on.
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	text: !STRING_32 assign set_text
+	text: attached STRING_32 assign set_text
 			-- Modified text.
 
 	original_count: INTEGER
@@ -59,15 +59,15 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	associated_class: !CLASS_I
+	associated_class: attached CLASS_I
 			-- Class associated with Current
 
-	position_adjustments: !DS_ARRAYED_LIST [TUPLE [position: INTEGER; adjustment: INTEGER]]
+	position_adjustments: attached DS_ARRAYED_LIST [TUPLE [position: INTEGER; adjustment: INTEGER]]
 			-- Positional adjustments for batch modifications.
 
 feature {ES_CLASS_TEXT_MODIFIER} -- Element change
 
-	set_text (a_text: !like text)
+	set_text (a_text: attached like text)
 			-- Sets new modifier text.
 			-- Note: Please use only when commiting changes for synchronization purposes
 		do

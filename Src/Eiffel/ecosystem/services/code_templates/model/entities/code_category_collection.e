@@ -21,15 +21,15 @@ create
 
 feature {NONE} -- Access
 
-	item_equality_tester: !KL_STRING_EQUALITY_TESTER_A [!READABLE_STRING_GENERAL]
+	item_equality_tester: attached KL_STRING_EQUALITY_TESTER_A [attached READABLE_STRING_GENERAL]
 			-- Optional equality tester for item comparison.
 		do
-			create {KL_CASE_INSENSITIVE_STRING_EQUALITY_TESTER_A [!READABLE_STRING_GENERAL]} Result
+			create {KL_CASE_INSENSITIVE_STRING_EQUALITY_TESTER_A [attached READABLE_STRING_GENERAL]} Result
 		end
 
 feature -- Visitor
 
-	process (a_visitor: !CODE_TEMPLATE_VISITOR_I)
+	process (a_visitor: attached CODE_TEMPLATE_VISITOR_I)
 			-- <Precursor>
 		do
 			a_visitor.process_code_category_collection (Current)

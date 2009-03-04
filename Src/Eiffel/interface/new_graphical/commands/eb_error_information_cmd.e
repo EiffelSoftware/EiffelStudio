@@ -34,7 +34,7 @@ feature -- Status report
 	is_valid_stone (a_stone: STONE): BOOLEAN
 			-- <Precursor>
 		do
-			Result := {l_error: ERROR_STONE} a_stone
+			Result := attached {ERROR_STONE} a_stone as l_error
 		end
 
 feature -- Basic operations
@@ -48,7 +48,7 @@ feature -- Basic operations
 	execute_with_stone (a_stone: STONE)
 			-- <Precursor>
 		do
-			if {l_error: ERROR_STONE} a_stone then
+			if attached {ERROR_STONE} a_stone as l_error then
 				execute_with_text (l_error.help_text)
 			end
 		end

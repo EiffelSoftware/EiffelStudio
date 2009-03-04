@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_window: ?like development_window)
+	make (a_window: detachable like development_window)
 			-- Initialze the redirect helper for a development window
 			--
 			-- `a_window': The development window to redirect drop actions to
@@ -53,12 +53,12 @@ feature {NONE} -- Clean up
 
 feature {NONE} -- Access
 
-	development_window: ?EB_DEVELOPMENT_WINDOW
+	development_window: detachable EB_DEVELOPMENT_WINDOW
 			-- Development window to redirect actions to
 
 feature -- Basic operations
 
-	bind (a_widget: ?EV_PICK_AND_DROPABLE_ACTION_SEQUENCES; a_recycler: ?EB_RECYCLABLE)
+	bind (a_widget: detachable EV_PICK_AND_DROPABLE_ACTION_SEQUENCES; a_recycler: detachable EB_RECYCLABLE)
 			-- Bind drop actions to a widget.
 			--
 			-- `a_widget': Widget to bind common drop actions to.
@@ -70,7 +70,7 @@ feature -- Basic operations
 			a_recycler.register_action (a_widget.drop_actions, agent on_drop)
 		end
 
-	unbind (a_widget: ?EV_PICK_AND_DROPABLE_ACTION_SEQUENCES; a_recycler: ?EB_RECYCLABLE)
+	unbind (a_widget: detachable EV_PICK_AND_DROPABLE_ACTION_SEQUENCES; a_recycler: detachable EB_RECYCLABLE)
 			-- Unbinds drop actions to a widget.
 			-- Note: This doesn't have to be called because binding with a recycler will unregister
 			--       any bound actions automatically. Only use this when explicit unbinding is required.
@@ -85,7 +85,7 @@ feature -- Basic operations
 
 feature {NONE} -- Action handlers
 
-	on_drop (a_stone: ?STONE)
+	on_drop (a_stone: detachable STONE)
 			-- Drops the stone.
 			--
 			-- `a_stone': The dropped stone.
@@ -93,11 +93,11 @@ feature {NONE} -- Action handlers
 			a_stone_attached: a_stone /= Void
 		do
 			if a_stone.is_valid then
-				if {l_cluster: CLUSTER_STONE} a_stone then
+				if attached {CLUSTER_STONE} a_stone as l_cluster then
 					drop_cluster (l_cluster)
-				elseif {l_feature: FEATURE_STONE} a_stone then
+				elseif attached {FEATURE_STONE} a_stone as l_feature then
 					drop_feature (l_feature)
-				elseif {l_class: CLASSI_STONE} a_stone then
+				elseif attached {CLASSI_STONE} a_stone as l_class then
 					drop_class (l_class)
 				end
 			end
@@ -105,7 +105,7 @@ feature {NONE} -- Action handlers
 
 feature {NONE} -- Redirects
 
-	drop_class (a_stone: !CLASSI_STONE)
+	drop_class (a_stone: attached CLASSI_STONE)
 			-- Redirects a class stone.
 			--
 			-- `a_stone': Stone to redirect the drop actions to.
@@ -117,7 +117,7 @@ feature {NONE} -- Redirects
 		do
 			l_class_tool ?= development_window.shell_tools.tool ({ES_CLASS_TOOL})
 			if l_class_tool /= Void and then l_class_tool.is_interface_usable then
-				if {l_stonable: ES_STONABLE_I} l_class_tool then
+				if attached {ES_STONABLE_I} l_class_tool as l_stonable then
 					check
 						refactored: False -- Remove check and remove OT else condition.
 					end
@@ -133,7 +133,7 @@ feature {NONE} -- Redirects
 			end
 		end
 
-	drop_feature (a_stone: !FEATURE_STONE)
+	drop_feature (a_stone: attached FEATURE_STONE)
 			-- Redirects a feature stone.
 			--
 			-- `a_stone': Stone to redirect the drop actions to.
@@ -145,7 +145,7 @@ feature {NONE} -- Redirects
 		do
 			l_feature_tool ?= development_window.shell_tools.tool ({ES_FEATURE_RELATION_TOOL})
 			if l_feature_tool /= Void and then l_feature_tool.is_interface_usable then
-				if {l_stonable: ES_STONABLE_I} l_feature_tool then
+				if attached {ES_STONABLE_I} l_feature_tool as l_stonable then
 					check
 						refactored: False -- Remove check and remove OT else condition.
 					end
@@ -161,7 +161,7 @@ feature {NONE} -- Redirects
 			end
 		end
 
-	drop_cluster (a_stone: !CLUSTER_STONE)
+	drop_cluster (a_stone: attached CLUSTER_STONE)
 			-- Redirects a cluster stone.
 			--
 			-- `a_stone': Stone to redirect the drop actions to.

@@ -164,7 +164,7 @@ feature -- Output
 						items.resize (nb_items)
 					end
 					get_array_value
-					if {arrval: like array_value} array_value then
+					if attached array_value as arrval then
 						from
 							i := sp_lower
 						until

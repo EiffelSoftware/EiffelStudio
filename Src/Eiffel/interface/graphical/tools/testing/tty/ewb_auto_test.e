@@ -52,7 +52,7 @@ feature -- Properties
 
 feature -- Execution
 
-	execute_with_test_suite (a_test_suite: !TEST_SUITE_S)
+	execute_with_test_suite (a_test_suite: attached TEST_SUITE_S)
 			-- Action performed when invoked from the
 			-- command line.
 		local
@@ -110,7 +110,7 @@ feature -- Execution
 				l_root_group := l_project.system.system.root_creators.first.cluster
 
 				if l_root_group.is_cluster then
-					if {l_cluster: CONF_CLUSTER} l_root_group then
+					if attached {CONF_CLUSTER} l_root_group as l_cluster then
 						l_conf.set_cluster (l_cluster)
 						l_conf.set_path ("")
 					end
@@ -125,7 +125,7 @@ feature -- Execution
 		--	create l_auto_test.execute (system.eiffel_project, auto_test_arguments, create {TEST_PROJECT_HELPER})
 		end
 
-	auto_test_arguments: ?DS_LIST [STRING]
+	auto_test_arguments: detachable DS_LIST [STRING]
 			-- Arguments for AutoTest
 
 	check_arguments_and_execute
@@ -167,10 +167,10 @@ feature -- Execution
 
 feature {NONE} -- Events
 
-	on_processor_proceeded (a_test_suite: !TEST_SUITE_S; a_processor: !TEST_PROCESSOR_I)
+	on_processor_proceeded (a_test_suite: attached TEST_SUITE_S; a_processor: attached TEST_PROCESSOR_I)
 			-- <Precursor>
 		local
-			l_generator: ?TEST_GENERATOR_I
+			l_generator: detachable TEST_GENERATOR_I
 		do
 			l_generator := generator_factory_type.attempt (a_processor)
 			if l_generator /= Void then

@@ -27,19 +27,19 @@ create {NONE}
 
 feature -- Access
 
-	icon: !EV_PIXEL_BUFFER
+	icon: attached EV_PIXEL_BUFFER
 			-- <Precursor>
 		do
 			Result := stock_pixmaps.tool_output_icon_buffer
 		end
 
-	icon_pixmap: !EV_PIXMAP
+	icon_pixmap: attached EV_PIXMAP
 			-- <Precursor>
 		do
 			Result := stock_pixmaps.tool_output_icon
 		end
 
-	title: !STRING_32
+	title: attached STRING_32
 			-- <Precursor>
 		do
 			Result := locale_formatter.translation (t_tool_title)
@@ -47,7 +47,7 @@ feature -- Access
 
 feature -- Access
 
-	output: ?ES_OUTPUT_PANE_I
+	output: detachable ES_OUTPUT_PANE_I
 			-- <Precursor>
 		do
 			if is_tool_instantiated then
@@ -57,7 +57,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	set_output (a_output: !ES_OUTPUT_PANE_I)
+	set_output (a_output: attached ES_OUTPUT_PANE_I)
 			-- <Precursor>
 		do
 			panel.set_output (a_output)
@@ -65,7 +65,7 @@ feature -- Basic operations
 
 feature {NONE} -- Factory
 
-	new_tool: !ES_OUTPUTS_TOOL_PANEL
+	new_tool: attached ES_OUTPUTS_TOOL_PANEL
 			-- <Precursor>
 		do
 			create Result.make (window, Current)

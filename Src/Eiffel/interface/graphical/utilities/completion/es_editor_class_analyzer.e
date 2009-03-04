@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_class: !like context_class)
+	make (a_class: attached like context_class)
 			-- Initialize the class context analyzer.
 			--
 			-- `a_class': The context class to analyze the class for.
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			context_class_set: context_class ~ a_class
 		end
 
-	make_with_feature (a_class: !like context_class; a_feature: !like context_feature)
+	make_with_feature (a_class: attached like context_class; a_feature: attached like context_feature)
 			-- Initialize the class context analyzer.
 			--
 			-- `a_class': The context class to analyze the class for.
@@ -50,22 +50,22 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	context_class: !CLASS_C
+	context_class: attached CLASS_C
 			-- The class analyzer's context class.
 
-	context_feature: ?FEATURE_I
+	context_feature: detachable FEATURE_I
 			-- The class analyzer's context feature, for specialized analysis.
 
 feature {NONE} -- Status report
 
-	is_feature_body_token (a_token: !EDITOR_TOKEN; a_line: !EDITOR_LINE): BOOLEAN
+	is_feature_body_token (a_token: attached EDITOR_TOKEN; a_line: attached EDITOR_LINE): BOOLEAN
 			-- Determines if a token represents a feature body keyword token.
 			--
 			-- `a_token': Token to check as a feature body token.
 			-- `a_line' : The line where the supplied token is resident.
 			-- `Result' : True if the token is a feature body token; False otherwise.
 		local
-			l_next: ?like next_token
+			l_next: detachable like next_token
 		do
 			Result := is_keyword_token (a_token, {EIFFEL_KEYWORD_CONSTANTS}.do_keyword) or else
 				is_keyword_token (a_token, {EIFFEL_KEYWORD_CONSTANTS}.attribute_keyword)
@@ -77,14 +77,14 @@ feature {NONE} -- Status report
 				elseif is_keyword_token (a_token, {EIFFEL_KEYWORD_CONSTANTS}.once_keyword) then
 						-- Make sure there is no string keyword after the once
 					l_next := next_token (a_token, a_line, True, Void, Void)
-					Result := l_next = Void or else not {l_string: EDITOR_TOKEN_STRING} l_next.token
+					Result := l_next = Void or else not attached {EDITOR_TOKEN_STRING} l_next.token as l_string
 				end
 			end
 		end
 
 feature {NONE} -- Query
 
-	token_context_state (a_token: !EDITOR_TOKEN; a_line: !EDITOR_LINE): ?TUPLE [token: !EDITOR_TOKEN; line: !EDITOR_LINE; state: !ES_EDITOR_ANALYZER_STATE [ES_EDITOR_ANALYZER_STATE_INFO]]
+	token_context_state (a_token: attached EDITOR_TOKEN; a_line: attached EDITOR_LINE): detachable TUPLE [token: attached EDITOR_TOKEN; line: attached EDITOR_LINE; state: attached ES_EDITOR_ANALYZER_STATE [ES_EDITOR_ANALYZER_STATE_INFO]]
 			-- Evalues a token and returns a state processing object.
 			--
 			-- `a_token': The token on the supplied line to start the upward locating scan on.
@@ -96,13 +96,13 @@ feature {NONE} -- Query
 			a_line_has_a_token: a_line.has_token (a_token)
 			not_is_scanning_comments: not is_scanning_comments
 		local
-			l_matcher: ?like brace_matcher
-			l_prev: ?like previous_text_token
-			l_peek: ?like previous_text_token
-			l_token: !EDITOR_TOKEN
-			l_line: !EDITOR_LINE
+			l_matcher: detachable like brace_matcher
+			l_prev: detachable like previous_text_token
+			l_peek: detachable like previous_text_token
+			l_token: attached EDITOR_TOKEN
+			l_line: attached EDITOR_LINE
 			l_stop: BOOLEAN
-			l_feature_state: ?like new_feature_state
+			l_feature_state: detachable like new_feature_state
 		do
 			l_matcher := brace_matcher
 			l_prev := [a_token, a_line]
@@ -157,7 +157,7 @@ feature {NONE} -- Query
 			end
 		end
 
-	feature_start_token (a_token: !EDITOR_TOKEN; a_line: !EDITOR_LINE): ?TUPLE [token: !EDITOR_TOKEN; line: !EDITOR_LINE]
+	feature_start_token (a_token: attached EDITOR_TOKEN; a_line: attached EDITOR_LINE): detachable TUPLE [token: attached EDITOR_TOKEN; line: attached EDITOR_LINE]
 			-- Searches to what is considered to be a "start" token, which represents where the context
 			-- scanner will start its scan from.
 			-- The function takes into consideration in line agents, routines, feature clauses and class
@@ -171,12 +171,12 @@ feature {NONE} -- Query
 			a_line_has_a_token: a_line.has_token (a_token)
 			not_is_scanning_comments: not is_scanning_comments
 		local
-			l_matcher: ?like brace_matcher
-			l_prev: ?like previous_text_token
-			l_peek: ?like previous_text_token
-			l_token: !EDITOR_TOKEN
-			l_line: !EDITOR_LINE
-			l_top_feature_keyword_token: !TUPLE [token: !EDITOR_TOKEN; line: !EDITOR_LINE]
+			l_matcher: detachable like brace_matcher
+			l_prev: detachable like previous_text_token
+			l_peek: detachable like previous_text_token
+			l_token: attached EDITOR_TOKEN
+			l_line: attached EDITOR_LINE
+			l_top_feature_keyword_token: attached TUPLE [token: attached EDITOR_TOKEN; line: attached EDITOR_LINE]
 			l_stop: BOOLEAN
 		do
 			l_matcher := brace_matcher
@@ -273,14 +273,14 @@ feature {NONE} -- Query
 										not (
 											is_keyword_token (l_peek.token, {EIFFEL_KEYWORD_CONSTANTS}.like_keyword) or else
 											is_keyword_token (l_peek.token, {EIFFEL_KEYWORD_CONSTANTS}.assign_keyword) or else
-											{l_class: EDITOR_TOKEN_CLASS} l_token
+											attached {EDITOR_TOKEN_CLASS} l_token as l_class
 										)
 								then
 										-- We are just looking for a feature name or argument parenthesis, so we ignore feature name
 										-- checking when using like.
 									if not is_keyword_token (l_token, Void) and then token_text (l_token).item (1).to_character_8.is_alpha then
 											-- Finally, nothing else is in the way, check it's a feature name.
-										if not token_text (l_token).is_empty and then not {l_string: EDITOR_TOKEN_STRING} l_token then
+										if not token_text (l_token).is_empty and then not attached {EDITOR_TOKEN_STRING} l_token as l_string then
 											Result := [l_token, l_line]
 											l_stop := True
 										else
@@ -309,7 +309,7 @@ feature {NONE} -- Query
 
 feature -- Basic operation
 
-	scan (a_token: !EDITOR_TOKEN; a_line: !EDITOR_LINE): ?ES_EDITOR_ANALYZER_STATE_INFO
+	scan (a_token: attached EDITOR_TOKEN; a_line: attached EDITOR_LINE): detachable ES_EDITOR_ANALYZER_STATE_INFO
 			-- Scans the editor content for a context given the token.
 			--
 			-- `a_token': The start token to begin scanning at.
@@ -318,11 +318,11 @@ feature -- Basic operation
 		require
 			a_line_has_a_token: a_line.has_token (a_token)
 		local
-			l_context_state: ?like token_context_state
-			l_info: !like new_state_info_for_state
-			l_state: !ES_EDITOR_ANALYZER_STATE [ES_EDITOR_ANALYZER_STATE_INFO]
-			l_token: !EDITOR_TOKEN
-			l_line: !EDITOR_LINE
+			l_context_state: detachable like token_context_state
+			l_info: attached like new_state_info_for_state
+			l_state: attached ES_EDITOR_ANALYZER_STATE [ES_EDITOR_ANALYZER_STATE_INFO]
+			l_token: attached EDITOR_TOKEN
+			l_line: attached EDITOR_LINE
 		do
 			reset
 			l_context_state := token_context_state (a_token, a_line)
@@ -351,7 +351,7 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Factory
 
-	new_feature_state (a_token: !EDITOR_TOKEN; a_line: !EDITOR_LINE): ?ES_EDITOR_ANALYZER_FEATURE_STATE
+	new_feature_state (a_token: attached EDITOR_TOKEN; a_line: attached EDITOR_LINE): detachable ES_EDITOR_ANALYZER_FEATURE_STATE
 			-- Create a new feature level state object using the supplied feature tokens.
 			--
 			-- `a_token': The token to start processing the state at.
@@ -363,7 +363,7 @@ feature {NONE} -- Factory
 			create Result
 		end
 
-	new_state_info_for_state (a_token: !EDITOR_TOKEN; a_line: !EDITOR_LINE; a_state: !ES_EDITOR_ANALYZER_STATE [ES_EDITOR_ANALYZER_STATE_INFO]): !ES_EDITOR_ANALYZER_STATE_INFO
+	new_state_info_for_state (a_token: attached EDITOR_TOKEN; a_line: attached EDITOR_LINE; a_state: attached ES_EDITOR_ANALYZER_STATE [ES_EDITOR_ANALYZER_STATE_INFO]): attached ES_EDITOR_ANALYZER_STATE_INFO
 			-- Create a new state info object for a given editor analyzer's state.
 			--
 			-- `a_token': The token to start processing the state at.
@@ -374,11 +374,11 @@ feature {NONE} -- Factory
 			a_line_has_a_token: a_line.has_token (a_token)
 			a_token_is_valid_start_token: a_state.is_valid_start_token (a_token, a_line)
 		local
-			l_feature_info: !ES_EDITOR_ANALYZER_FEATURE_STATE_INFO
-			l_feature: ?like context_feature
+			l_feature_info: attached ES_EDITOR_ANALYZER_FEATURE_STATE_INFO
+			l_feature: detachable like context_feature
 		do
 			l_feature := context_feature
-			if {l_feature_state: ES_EDITOR_ANALYZER_FEATURE_STATE} a_state and then l_feature /= Void then
+			if attached {ES_EDITOR_ANALYZER_FEATURE_STATE} a_state as l_feature_state and then l_feature /= Void then
 				create l_feature_info.make (context_class, l_feature, a_token, a_line)
 				l_feature_info.increment_current_frame (True)
 				Result := l_feature_info

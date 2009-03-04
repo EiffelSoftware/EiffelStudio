@@ -16,14 +16,14 @@ inherit
 
 feature -- Access
 
-	document_protocol: !STRING_32
+	document_protocol: attached STRING_32
 			-- Document protocol used by a URI to navigate to the help accessible from the provider.
 		once
 			create Result.make_empty
 			Result.append ("URI")
 		end
 
-	document_description: !STRING_32
+	document_description: attached STRING_32
 			-- Document short description
 		once
 			create Result.make_empty
@@ -32,15 +32,15 @@ feature -- Access
 
 feature -- Basic operation
 
-	show_help (a_context_id: !STRING_GENERAL; a_section: ?HELP_CONTEXT_SECTION_I)
+	show_help (a_context_id: attached STRING_GENERAL; a_section: detachable HELP_CONTEXT_SECTION_I)
 			-- <precursor>
 		do
 			if
-				{lt_section: HELP_SECTION_EIS_ENTRY}a_section and then
-				{lt_entry: EIS_ENTRY}lt_section.entry and then
+				attached {HELP_SECTION_EIS_ENTRY} a_section as lt_section and then
+				attached {EIS_ENTRY} lt_section.entry as lt_entry and then
 				lt_entry.source /= Void and then
 				not lt_entry.source.is_empty and then
-				{lt_src: STRING}lt_entry.source.as_string_8.twin	 -- |FIXME: Bad conversion to STRING_8
+				attached {STRING} lt_entry.source.as_string_8.twin as lt_src	 -- |FIXME: Bad conversion to STRING_8
 			then
 				last_entry := lt_entry
 				format_uris (lt_src)

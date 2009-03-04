@@ -34,21 +34,21 @@ inherit
 
 feature -- Access
 
-	general_output: !OUTPUT_I
+	general_output: attached OUTPUT_I
 			-- The default, general purpose output pane.
 		require
 			is_interface_usable: is_interface_usable
 		do
 			Result := output_or_default ((create {OUTPUT_MANAGER_KINDS}).general)
 		ensure
-			is_interface_usable: {l_usable: USABLE_I} Result implies l_usable.is_interface_usable
+			is_interface_usable: attached {USABLE_I} Result as l_usable implies l_usable.is_interface_usable
 			result_is_valid_output: is_valid_output (Result)
 			result_consistent: Result = general_output
 		end
 
 feature -- Query
 
-	output_or_default (a_key: !UUID): !OUTPUT_I
+	output_or_default (a_key: attached UUID): attached OUTPUT_I
 			-- Retrieves a registered output or a default output if it has not been registered yet.
 			-- This has the side-affect of registering the output if a default output is returned.
 			--
@@ -64,7 +64,7 @@ feature -- Query
 				register (Result, a_key)
 			end
 		ensure
-			is_interface_usable: {l_usable: USABLE_I} Result implies l_usable.is_interface_usable
+			is_interface_usable: attached {USABLE_I} Result as l_usable implies l_usable.is_interface_usable
 			result_is_valid_output: is_valid_output (Result)
 			a_key_is_output_available: is_output_available (a_key)
 			result_consistent: Result = output_or_default (a_key)
@@ -72,7 +72,7 @@ feature -- Query
 
 feature {NONE} -- Factory
 
-	new_output (a_key: !UUID): !OUTPUT_I
+	new_output (a_key: attached UUID): attached OUTPUT_I
 			-- Creates a new output, used for the `general_output' feature
 		require
 			is_interface_usable: is_interface_usable
@@ -80,7 +80,7 @@ feature {NONE} -- Factory
 			not_a_key_is_output_available: not is_output_available (a_key)
 		deferred
 		ensure
-			is_interface_usable: {l_usable: USABLE_I} Result implies l_usable.is_interface_usable
+			is_interface_usable: attached {USABLE_I} Result as l_usable implies l_usable.is_interface_usable
 		end
 
 ;note

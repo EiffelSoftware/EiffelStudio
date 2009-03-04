@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 		do
 			body_index := f.body_index
 			pattern_id := f.pattern_id
-			if {l_attr: ATTRIBUTE_I} f then
+			if attached {ATTRIBUTE_I} f as l_attr then
 				written_in := l_attr.generate_in
 				if written_in = 0 then
 						-- Attribute has come from a non-conforming branch so use

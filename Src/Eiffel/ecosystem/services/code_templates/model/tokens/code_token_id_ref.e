@@ -40,13 +40,13 @@ feature -- Access
 			Result := code_token_id.printable_text
 		end
 
-	text: !STRING_32
+	text: attached STRING_32
 			-- <Precursor>
 		do
 			Result := code_token_id.text
 		end
 
-	code_token_id: !CODE_TOKEN_ID
+	code_token_id: attached CODE_TOKEN_ID
 			-- Reference code token id, use to extract the values
 
 feature -- Status report
@@ -67,7 +67,7 @@ feature -- Query
 
 feature -- Visitor
 
-	process (a_visitor: !CODE_TOKEN_VISITOR_I)
+	process (a_visitor: attached CODE_TOKEN_VISITOR_I)
 			-- <Precursor>
 		do
 			a_visitor.process_code_token_id_ref (Current)

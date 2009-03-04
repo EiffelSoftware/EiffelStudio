@@ -42,7 +42,7 @@ feature {NONE} -- Output
 		do
 			if
 				is_null or else
-				(not {add: like address} address or else add.is_void)
+				(not attached address as add or else add.is_void)
 			then
 				Result := "Void"
 			else

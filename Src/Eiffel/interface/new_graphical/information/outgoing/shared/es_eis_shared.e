@@ -15,13 +15,13 @@ inherit
 
 feature -- Access
 
-	id_solution: !EB_SHARED_ID_SOLUTION
+	id_solution: attached EB_SHARED_ID_SOLUTION
 			-- ID solution
 		once
 			create Result
 		end
 
-	icon_factory: !EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
+	icon_factory: attached EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
 			-- Icon factory
 		once
 			create Result
@@ -34,7 +34,7 @@ feature -- Access
 			create Result
 		end
 
-	storage: !EIS_STORAGE
+	storage: attached EIS_STORAGE
 			-- Shared EIS storage
 		once
 			create Result.make

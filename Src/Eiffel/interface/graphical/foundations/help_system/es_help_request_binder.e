@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Helpers
 
-	frozen help_providers: !SERVICE_CONSUMER [HELP_PROVIDERS_S]
+	frozen help_providers: attached SERVICE_CONSUMER [HELP_PROVIDERS_S]
 			-- Access to the help providers service {HELP_PROVIDERS_S} consumer
 		once
 			check is_interface_usable: is_interface_usable end
@@ -50,7 +50,7 @@ feature {NONE} -- Basic operations
 		do
 			if help_providers.is_service_available then
 					-- Add a help button, if help is available
-				if {l_help_context: HELP_CONTEXT_I} Current and then l_help_context.is_help_available then
+				if attached {HELP_CONTEXT_I} Current as l_help_context and then l_help_context.is_help_available then
 					on_help_requested (l_help_context)
 				end
 			end
@@ -58,7 +58,7 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Action handlers
 
-	on_help_requested (a_context: !HELP_CONTEXT_I)
+	on_help_requested (a_context: attached HELP_CONTEXT_I)
 			-- Called when help is requested for the dialog.
 			--
 			-- `a_context': The help context to show help for
@@ -73,7 +73,7 @@ feature {NONE} -- Action handlers
 
 feature {NONE} -- Factory
 
-	frozen create_help_request_shortcut: !EV_ACCELERATOR
+	frozen create_help_request_shortcut: attached EV_ACCELERATOR
 			-- Help request shortcut accelerator key
 		require
 			is_interface_usable: is_interface_usable

@@ -640,7 +640,7 @@ feature {NONE} -- Actions implementation
 	on_pointer_double_press_item (ax,ay,ab: INTEGER; a_item: EV_GRID_ITEM)
 		do
 			if ab = 1 then
-				if {ei: ES_OBJECTS_GRID_CELL} a_item then
+				if attached {ES_OBJECTS_GRID_CELL} a_item as ei then
 					activate_grid_item (ei)
 				end
 			end
@@ -651,10 +651,10 @@ feature {NONE} -- Actions implementation
 			-- Behavior is launch the stone contained in pointer hovered editor token in a new development window.	
 		do
 			if
-				{i: EV_GRID_ITEM} a_item and then
+				attached {EV_GRID_ITEM} a_item as i and then
 				(ab =  {EV_POINTER_CONSTANTS}.right and ev_application.ctrl_pressed)
 			then
-				if {l_stone: STONE} grid_pebble_from_cell (i) and then l_stone.is_valid then
+				if attached {STONE} grid_pebble_from_cell (i) as l_stone and then l_stone.is_valid then
 					(create {EB_CONTROL_PICK_HANDLER}).launch_stone (l_stone)
 				end
 			end

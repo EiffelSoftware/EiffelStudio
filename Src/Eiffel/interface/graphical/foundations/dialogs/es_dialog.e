@@ -91,7 +91,7 @@ feature {NONE} -- Initialization
 				dialog.set_default_push_button (dialog_window_buttons.item (default_button))
 			end
 
-			if help_providers.is_service_available and then {l_context: !HELP_CONTEXT_I} Current then
+			if help_providers.is_service_available and then attached {attached HELP_CONTEXT_I} Current as l_context then
 				bind_help_shortcut (dialog)
 			end
 
@@ -219,7 +219,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	dialog: !EV_DIALOG
+	dialog: attached EV_DIALOG
 			-- Actual dialog.
 		local
 			l_result: like internal_dialog
@@ -284,7 +284,7 @@ feature {NONE} -- Access
 			l_result: like internal_development_window
 			l_window: EV_WINDOW
 			l_windows: BILINEAR [EB_WINDOW]
-			l_wm: ?EB_WINDOW_MANAGER
+			l_wm: detachable EB_WINDOW_MANAGER
 		do
 			l_result := internal_development_window
 			if l_result = Void then
@@ -298,7 +298,7 @@ feature {NONE} -- Access
 						-- Attempt to find matching top level window.
 					l_windows := (create {EB_SHARED_WINDOW_MANAGER}).window_manager.windows
 					from l_windows.start until l_windows.after or l_result /= Void loop
-						if l_window = l_windows.item.window and then {l_result_window: EB_DEVELOPMENT_WINDOW} l_windows.item then
+						if l_window = l_windows.item.window and then attached {EB_DEVELOPMENT_WINDOW} l_windows.item as l_result_window then
 							l_result := l_result_window
 						end
 						l_windows.forth
@@ -352,7 +352,7 @@ feature {NONE} -- Access
 	frozen button_actions: DS_HASH_TABLE [TUPLE [action: like button_action; before_close: BOOLEAN], INTEGER]
 			-- Dialog button actions
 
-	dialog_session_id: !STRING_8
+	dialog_session_id: attached STRING_8
 			-- Dialog session ID for storing size/position information
 		require
 			is_interface_usable: is_interface_usable
@@ -798,10 +798,10 @@ feature {NONE} -- Basic operation
 
 feature -- Actions
 
-	frozen show_actions: !EV_LITE_ACTION_SEQUENCE [TUPLE]
+	frozen show_actions: attached EV_LITE_ACTION_SEQUENCE [TUPLE]
 			-- Actions performed when the window is shown
 
-	frozen hide_actions: !EV_LITE_ACTION_SEQUENCE [TUPLE]
+	frozen hide_actions: attached EV_LITE_ACTION_SEQUENCE [TUPLE]
 			-- Actions performed when the window is hided
 
 feature {NONE} -- Action handlers
@@ -936,7 +936,7 @@ feature {NONE} -- Action handlers
 					else
 					end
 				elseif not Result and not a_alt and not a_shift and then (is_confirmation_key_active or a_ctrl) and a_key.code = {EV_KEY_CONSTANTS}.key_enter then
-					if a_ctrl or else ({l_widget: !EV_WIDGET} ev_application.focused_widget and then not {l_button: !EV_BUTTON} l_widget) then
+					if a_ctrl or else (attached {attached EV_WIDGET} ev_application.focused_widget as l_widget and then not attached {attached EV_BUTTON} l_widget as l_button) then
 							-- We check if the focus widget is Void, because if it is then, technically the dialog does not have focus.
 							-- The key processing will stil be effective if there is no focused widget, which could be a bug.
 						on_confirm_dialog
@@ -980,7 +980,7 @@ feature {NONE} -- Factory
 
 			if help_providers.is_service_available then
 					-- Add a help button, if help is available
-				if {l_help_context: !HELP_CONTEXT_I} Current and then l_help_context.is_help_available then
+				if attached {attached HELP_CONTEXT_I} Current as l_help_context and then l_help_context.is_help_available then
 					l_button := create_help_button
 					l_container.extend (l_button)
 					l_container.disable_item_expand (l_button)
@@ -1068,7 +1068,7 @@ feature {NONE} -- Factory
 			Result.set_pixmap (stock_pixmaps.command_system_info_icon)
 
 			l_enable_help := True
-			if {l_context: !HELP_CONTEXT_I} Current then
+			if attached {attached HELP_CONTEXT_I} Current as l_context then
 				l_enable_help := l_context.is_interface_usable and then help_providers.service.is_provider_available (l_context.help_provider)
 			end
 

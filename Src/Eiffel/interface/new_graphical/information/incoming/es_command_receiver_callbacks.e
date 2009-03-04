@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 
 feature -- Callbacks
 
-	on_condition_found (a_condition_module, a_condition: !STRING)
+	on_condition_found (a_condition_module, a_condition: attached STRING)
 			-- A condition found in the processing command
 		do
 			condition_found := True
@@ -76,7 +76,7 @@ feature -- Callbacks
 			condition_module_not_void: condition_module /= Void
 		end
 
-	on_action_found (a_action_module, a_action: !STRING)
+	on_action_found (a_action_module, a_action: attached STRING)
 			-- A action has been found
 		do
 			action_found := True
@@ -94,7 +94,7 @@ feature -- Callbacks
 			if action_found then
 					-- EIS incoming module
 				if action_module.is_case_insensitive_equal ({COMMAND_PROTOCOL_NAMES}.eis_incoming_module) then
-					if {lt_action: STRING}action.twin then
+					if attached {STRING} action.twin as lt_action then
 						if lt_action.starts_with ({COMMAND_PROTOCOL_NAMES}.eiffel_protocol) then
 							lt_action.remove_head ({COMMAND_PROTOCOL_NAMES}.eiffel_protocol.count)
 								-- Remove the trailing '/' if any.
@@ -150,7 +150,7 @@ feature -- Element Change
 
 feature {NONE} -- EIS implementation
 
-	extract_eis_attributes (a_string: !STRING)
+	extract_eis_attributes (a_string: attached STRING)
 			-- Extract attributes from the reference.
 		require
 			eiffel_protocol_removed: not a_string.starts_with ({COMMAND_PROTOCOL_NAMES}.eiffel_protocol)
@@ -204,7 +204,7 @@ feature {NONE} -- EIS implementation
 	eis_prepare_action
 			-- Prepare EIS incoming command response actions
 		local
-			l_tuple: !TUPLE [name, uuid: STRING]
+			l_tuple: attached TUPLE [name, uuid: STRING]
 			l_system_name, l_system_uuid,
 			l_target_name, l_target_uuid,
 			l_group_name, l_class_name, l_feature_name: STRING
@@ -215,14 +215,14 @@ feature {NONE} -- EIS implementation
 			l_uuid: UUID
 		do
 			eis_component_found_table.search (system_id)
-			if eis_component_found_table.found and then {lt_string: STRING}eis_component_found_table.found_item then
+			if eis_component_found_table.found and then attached {STRING} eis_component_found_table.found_item as lt_string then
 				l_tuple := name_and_uuid_from_raw_string (lt_string)
 				l_system_name := l_tuple.name
 				l_system_uuid := l_tuple.uuid
 			end
 
 			eis_component_found_table.search (target_id)
-			if eis_component_found_table.found and then {lt_string1: STRING}eis_component_found_table.found_item then
+			if eis_component_found_table.found and then attached {STRING} eis_component_found_table.found_item as lt_string1 then
 				l_tuple := name_and_uuid_from_raw_string (lt_string1)
 				l_target_name := l_tuple.name
 				l_target_uuid := l_tuple.uuid
@@ -267,9 +267,9 @@ feature {NONE} -- EIS implementation
 						command_accepted := True
 
 							-- Place to search and open possible project.
-						if {lt_path: STRING}preferences.misc_data.eis_path then
+						if attached {STRING} preferences.misc_data.eis_path as lt_path then
 							project_searcher.search_project (lt_path, l_system_name, l_system_uuid, l_target_name, l_target_uuid)
-							if project_searcher.project_found and then {lt_project: STRING}project_searcher.found_project then
+							if project_searcher.project_found and then attached {STRING} project_searcher.found_project as lt_project then
 								discard_start_dialog := True
 									-- Trying to open the project directly, the starting window is not needed anymore.
 								if starting_dialog /= Void and then not starting_dialog.is_destroyed then
@@ -315,11 +315,11 @@ feature {NONE} -- EIS implementation
 
 	locate (a_system_name, a_system_uuid,
 			a_target_name, a_target_uuid,
-			a_group_name, a_class_name, a_feature_name: ?STRING)
+			a_group_name, a_class_name, a_feature_name: detachable STRING)
 					-- Locate the place from arguments.
 		local
-			l_target: ?CONF_TARGET
-			l_system: ?CONF_SYSTEM
+			l_target: detachable CONF_TARGET
+			l_system: detachable CONF_SYSTEM
 			l_group: CONF_GROUP
 			l_class: CONF_CLASS
 			l_feature: E_FEATURE
@@ -382,7 +382,7 @@ feature {NONE} -- EIS implementation
 			a_class_not_void: a_class /= Void
 			a_feature_string_not_void: a_feature_string /= Void
 		do
-			if {lt_class: CLASS_I}a_class and then lt_class.is_compiled then
+			if attached {CLASS_I} a_class as lt_class and then lt_class.is_compiled then
 				Result := lt_class.compiled_representation.feature_with_name (a_feature_string.as_lower)
 			end
 		end
@@ -406,7 +406,7 @@ feature {NONE} -- EIS implementation
 			l_list: LIST [CLASS_I]
 		do
 			l_list := universe.classes_with_name (a_class_string.as_upper)
-			if not l_list.is_empty and then {lt_class: CLASS_I}l_list.first then
+			if not l_list.is_empty and then attached {CLASS_I} l_list.first as lt_class then
 				Result := lt_class.config_class
 			end
 		end
@@ -420,13 +420,13 @@ feature {NONE} -- EIS implementation
 			Result := a_target.groups.item (a_group_string)
 		end
 
-	check_system (a_system_name, a_system_uuid: ?STRING): ?CONF_SYSTEM
+	check_system (a_system_name, a_system_uuid: detachable STRING): detachable CONF_SYSTEM
 			-- Get possible system
 			-- If Void is returned, `a_raw_system_string' is not recognized as possible system
 		local
 			l_system_name, l_uuid_string: STRING
 			l_uuid: UUID
-			l_current_system: ?CONF_SYSTEM
+			l_current_system: detachable CONF_SYSTEM
 		do
 			l_current_system := universe.conf_system
 			if a_system_name /= Void or a_system_uuid /= Void then
@@ -469,14 +469,14 @@ feature {NONE} -- EIS implementation
 			end
 		end
 
-	check_target (a_target_name, a_target_uuid: ?STRING): ?CONF_TARGET
+	check_target (a_target_name, a_target_uuid: detachable STRING): detachable CONF_TARGET
 			-- Get possible target from given string.
 			-- If `a_raw_target_string' is Void, return system target
 			-- If Void is returned, `a_raw_target_string' is not recognized as possible target
 		local
 			l_target_name, l_uuid_string: STRING
 			l_uuid: UUID
-			l_current_system: ?CONF_SYSTEM
+			l_current_system: detachable CONF_SYSTEM
 			l_target: CONF_TARGET
 			l_arrayed_targets: ARRAYED_LIST [CONF_TARGET]
 		do
@@ -549,7 +549,7 @@ feature {NONE} -- EIS implementation
 			end
 		end
 
-	name_and_uuid_from_raw_string (a_raw_string: !STRING): !TUPLE [name, uuid: STRING]
+	name_and_uuid_from_raw_string (a_raw_string: attached STRING): attached TUPLE [name, uuid: STRING]
 			-- Name and UUID from `a_raw_string'
 		local
 			l_name, l_uuid: STRING
@@ -602,13 +602,13 @@ feature {NONE} -- EIS implementation
 		require
 			a_stone_not_void: a_stone /= Void
 		do
-			if {lt_window: EB_DEVELOPMENT_WINDOW}window_manager.last_focused_development_window then
+			if attached {EB_DEVELOPMENT_WINDOW} window_manager.last_focused_development_window as lt_window then
 				lt_window.show
 				lt_window.set_stone (a_stone)
 			end
 		end
 
-	show_error (an_error: ?STRING_GENERAL)
+	show_error (an_error: detachable STRING_GENERAL)
 			-- Show `an_error'
 		do
 			if an_error /= Void then
@@ -618,10 +618,10 @@ feature {NONE} -- EIS implementation
 
 feature {NONE} -- EIS access
 
-	eis_component_found_table: !HASH_TABLE [STRING, INTEGER]
+	eis_component_found_table: attached HASH_TABLE [STRING, INTEGER]
 			-- Found component table [found_value, component_id]
 
-	eis_component_table: !HASH_TABLE [INTEGER, STRING]
+	eis_component_table: attached HASH_TABLE [INTEGER, STRING]
 			-- EIS component table.
 			-- With keys in lower cases.
 		once
@@ -667,7 +667,7 @@ feature -- Query
 
 feature {NONE} -- Implementation
 
-	starting_dialog: ?EB_STARTING_DIALOG
+	starting_dialog: detachable EB_STARTING_DIALOG
 			-- Starting dialog
 
 	on_project_openned
@@ -707,13 +707,13 @@ feature {NONE} -- Access
 
 	action_found: BOOLEAN
 
-	condition_module: ?STRING
+	condition_module: detachable STRING
 
-	condition: ?STRING
+	condition: detachable STRING
 
-	action_module: ?STRING
+	action_module: detachable STRING
 
-	action: ?STRING;
+	action: detachable STRING;
 
 note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"

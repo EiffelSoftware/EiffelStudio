@@ -13,9 +13,9 @@ inherit
 
 feature {NONE} -- Implementation
 
-	fill_from_key_value (a_key: !STRING;
-						a_value: !STRING;
-						a_eis_tuple: !TUPLE [
+	fill_from_key_value (a_key: attached STRING;
+						a_value: attached STRING;
+						a_eis_tuple: attached TUPLE [
 											name: STRING_32;
 											protocol: STRING_32;
 											source: STRING_32;
@@ -45,16 +45,16 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	eis_entry_from_index (a_index: !INDEX_AS; a_eis_id: ?STRING): ?EIS_ENTRY
+	eis_entry_from_index (a_index: attached INDEX_AS; a_eis_id: detachable STRING): detachable EIS_ENTRY
 			-- EIS entry from `a_clause'
 		local
 			l_index_list: EIFFEL_LIST [ATOMIC_AS]
 			l_atomic: ATOMIC_AS
-			l_attribute_pair: !STRING
-			l_others: !HASH_TABLE [STRING_32, STRING_32]
-			l_tags: !ARRAYED_LIST [STRING_32]
+			l_attribute_pair: attached STRING
+			l_others: attached HASH_TABLE [STRING_32, STRING_32]
+			l_tags: attached ARRAYED_LIST [STRING_32]
 
-			l_entry_tuple: !TUPLE [
+			l_entry_tuple: attached TUPLE [
 							name: STRING_32;
 							protocol: STRING_32;
 							source: STRING_32;
@@ -76,7 +76,7 @@ feature {NONE} -- Implementation
 					l_index_list.after
 				loop
 					l_atomic := l_index_list.item_for_iteration
-					if {lt_string: STRING}l_atomic.string_value then
+					if attached {STRING} l_atomic.string_value as lt_string then
 						create l_attribute_pair.make_from_string (lt_string.twin)
 						l_attribute_pair.left_adjust
 						l_attribute_pair.right_adjust
@@ -86,8 +86,8 @@ feature {NONE} -- Implementation
 						l_attribute_pair.right_adjust
 						if attribute_regex_matcher.matches (l_attribute_pair) then
 							if
-								{lt_key: STRING}attribute_regex_matcher.captured_substring (1) and then
-								{lt_value: STRING}attribute_regex_matcher.captured_substring (2)
+								attached {STRING} attribute_regex_matcher.captured_substring (1) as lt_key and then
+								attached {STRING} attribute_regex_matcher.captured_substring (2) as lt_value
 							then
 								lt_key.left_adjust
 								lt_key.right_adjust
@@ -114,12 +114,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	eis_entry_from_conf_note (a_note: HASH_TABLE [STRING, STRING]; l_id: !STRING): ?EIS_ENTRY
+	eis_entry_from_conf_note (a_note: HASH_TABLE [STRING, STRING]; l_id: attached STRING): detachable EIS_ENTRY
 			-- EIS entry from conf note element.
 		local
-			l_others: !HASH_TABLE [STRING_32, STRING_32]
-			l_tags: !ARRAYED_LIST [STRING_32]
-			l_entry_tuple: !TUPLE [
+			l_others: attached HASH_TABLE [STRING_32, STRING_32]
+			l_tags: attached ARRAYED_LIST [STRING_32]
+			l_entry_tuple: attached TUPLE [
 							name: STRING_32;
 							protocol: STRING_32;
 							source: STRING_32;
@@ -142,8 +142,8 @@ feature {NONE} -- Implementation
 						a_note.after
 					loop
 						if
-							{lt_key: STRING}a_note.key_for_iteration and then
-							{lt_value: STRING}a_note.item_for_iteration
+							attached {STRING} a_note.key_for_iteration as lt_key and then
+							attached {STRING} a_note.item_for_iteration as lt_value
 						then
 							lt_key.left_adjust
 							lt_key.right_adjust
@@ -165,12 +165,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	parse_tags (a_tag_string: !STRING): !ARRAYED_LIST [STRING_32]
+	parse_tags (a_tag_string: attached STRING): attached ARRAYED_LIST [STRING_32]
 			-- Parse `a_tag_string' into an array.
 			-- tag string should be in the form of "tag1, tag2, tag3"
 		do
-			if {lt_tag_string: STRING_32}a_tag_string.as_string_32 then
-				if {lt_splitted: ARRAYED_LIST [STRING_32]}lt_tag_string.split ({ES_EIS_TOKENS}.tag_seperator) then
+			if attached {STRING_32} a_tag_string.as_string_32 as lt_tag_string then
+				if attached {ARRAYED_LIST [STRING_32]} lt_tag_string.split ({ES_EIS_TOKENS}.tag_seperator) as lt_splitted then
 					lt_splitted.do_all (
 							agent (aa_string: STRING_32)
 								do
@@ -191,17 +191,17 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	parse_others (a_others_string: !STRING_32): !HASH_TABLE [STRING_32, STRING_32]
+	parse_others (a_others_string: attached STRING_32): attached HASH_TABLE [STRING_32, STRING_32]
 			-- Parse `a_others_string' into an array.
 			-- others string should be in the form of
 			-- "other1=value1, other2=value2, other3=value3"
 			-- Or ""other1=value1", other2=value2, "other3=value3""
 		do
-			if {lt_tag_string: STRING_32}a_others_string then
-				if {lt_splitted: ARRAYED_LIST [STRING_32]}lt_tag_string.split ({ES_EIS_TOKENS}.attribute_seperator) then
+			if attached {STRING_32} a_others_string as lt_tag_string then
+				if attached {ARRAYED_LIST [STRING_32]} lt_tag_string.split ({ES_EIS_TOKENS}.attribute_seperator) as lt_splitted then
 					create Result.make (1)
 					lt_splitted.do_all (
-							agent (aa_string: !STRING_32; a_result: !HASH_TABLE [STRING_32, STRING_32])
+							agent (aa_string: attached STRING_32; a_result: attached HASH_TABLE [STRING_32, STRING_32])
 								do
 									aa_string.left_adjust
 									aa_string.right_adjust
@@ -211,8 +211,8 @@ feature {NONE} -- Implementation
 									aa_string.right_adjust
 									if attribute_regex_matcher.matches (aa_string) then
 										if
-											{lt_key: STRING}attribute_regex_matcher.captured_substring (1) and then
-											{lt_value: STRING}attribute_regex_matcher.captured_substring (2)
+											attached {STRING} attribute_regex_matcher.captured_substring (1) as lt_key and then
+											attached {STRING} attribute_regex_matcher.captured_substring (2) as lt_value
 										then
 											lt_key.left_adjust
 											lt_key.right_adjust
@@ -232,7 +232,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implemetation
 
-	attribute_regex_matcher: !RX_PCRE_MATCHER
+	attribute_regex_matcher: attached RX_PCRE_MATCHER
 		once
 			create Result.make
 			Result.compile ("^(\w+)=(.*)$")

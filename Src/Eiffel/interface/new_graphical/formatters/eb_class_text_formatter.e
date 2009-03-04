@@ -158,7 +158,7 @@ feature -- Status setting
 			-- Associate current formatter with class contained in `a_stone'.
 		do
 			force_stone (new_stone)
-			if {l_classc_stone: CLASSC_STONE} new_stone then
+			if attached {CLASSC_STONE} new_stone as l_classc_stone then
 				if (not l_classc_stone.class_i.is_external_class) or is_dotnet_formatter then
 					set_class (l_classc_stone.e_class)
 				end

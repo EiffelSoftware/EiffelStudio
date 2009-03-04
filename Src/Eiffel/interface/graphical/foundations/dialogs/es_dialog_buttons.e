@@ -20,7 +20,7 @@ class
 
 feature -- Access
 
-	frozen ok_buttons: !DS_HASH_SET [INTEGER]
+	frozen ok_buttons: attached DS_HASH_SET [INTEGER]
 		once
 			create Result.make (1)
 			Result.put_last (ok_button)
@@ -30,7 +30,7 @@ feature -- Access
 			result_contains_valid_items: Result.for_all (agent is_valid_button_id)
 		end
 
-	frozen ok_cancel_buttons: !DS_HASH_SET [INTEGER]
+	frozen ok_cancel_buttons: attached DS_HASH_SET [INTEGER]
 		once
 			create Result.make (2)
 --			if {PLATFORM}.is_windows then
@@ -46,7 +46,7 @@ feature -- Access
 			result_contains_valid_items: Result.for_all (agent is_valid_button_id)
 		end
 
-	frozen yes_no_buttons: !DS_HASH_SET [INTEGER]
+	frozen yes_no_buttons: attached DS_HASH_SET [INTEGER]
 		once
 			create Result.make (2)
 --			if {PLATFORM}.is_windows then
@@ -62,7 +62,7 @@ feature -- Access
 			result_contains_valid_items: Result.for_all (agent is_valid_button_id)
 		end
 
-	frozen yes_no_cancel_buttons: !DS_HASH_SET [INTEGER]
+	frozen yes_no_cancel_buttons: attached DS_HASH_SET [INTEGER]
 		once
 			create Result.make (3)
 --			if {PLATFORM}.is_windows then
@@ -80,7 +80,7 @@ feature -- Access
 			result_contains_valid_items: Result.for_all (agent is_valid_button_id)
 		end
 
-	frozen abort_retry_ignore_buttons: !DS_HASH_SET [INTEGER]
+	frozen abort_retry_ignore_buttons: attached DS_HASH_SET [INTEGER]
 		once
 			create Result.make (3)
 --			if {PLATFORM}.is_windows then
@@ -98,7 +98,7 @@ feature -- Access
 			result_contains_valid_items: Result.for_all (agent is_valid_button_id)
 		end
 
-	frozen retry_cancel_buttons: !DS_HASH_SET [INTEGER]
+	frozen retry_cancel_buttons: attached DS_HASH_SET [INTEGER]
 		once
 			create Result.make (2)
 --			if {PLATFORM}.is_windows then
@@ -114,7 +114,7 @@ feature -- Access
 			result_contains_valid_items: Result.for_all (agent is_valid_button_id)
 		end
 
-	frozen reset_ok_cancel_buttons: !DS_HASH_SET [INTEGER]
+	frozen reset_ok_cancel_buttons: attached DS_HASH_SET [INTEGER]
 		once
 			create Result.make (3)
 --			if {PLATFORM}.is_windows then
@@ -132,7 +132,7 @@ feature -- Access
 			result_contains_valid_items: Result.for_all (agent is_valid_button_id)
 		end
 
-	frozen save_cancel_buttons: !DS_HASH_SET [INTEGER]
+	frozen save_cancel_buttons: attached DS_HASH_SET [INTEGER]
 		once
 			create Result.make (2)
 --			if {PLATFORM}.is_windows then
@@ -148,7 +148,7 @@ feature -- Access
 			result_contains_valid_items: Result.for_all (agent is_valid_button_id)
 		end
 
-	frozen open_cancel_buttons: !DS_HASH_SET [INTEGER]
+	frozen open_cancel_buttons: attached DS_HASH_SET [INTEGER]
 		once
 			create Result.make (2)
 --			if {PLATFORM}.is_windows then
@@ -164,7 +164,7 @@ feature -- Access
 			result_contains_valid_items: Result.for_all (agent is_valid_button_id)
 		end
 
-	frozen print_cancel_buttons: !DS_HASH_SET [INTEGER]
+	frozen print_cancel_buttons: attached DS_HASH_SET [INTEGER]
 		once
 			create Result.make (2)
 --			if {PLATFORM}.is_windows then
@@ -180,7 +180,7 @@ feature -- Access
 			result_contains_valid_items: Result.for_all (agent is_valid_button_id)
 		end
 
-	frozen close_buttons: !DS_HASH_SET [INTEGER]
+	frozen close_buttons: attached DS_HASH_SET [INTEGER]
 		once
 			create Result.make (1)
 			Result.put_last (close_button)

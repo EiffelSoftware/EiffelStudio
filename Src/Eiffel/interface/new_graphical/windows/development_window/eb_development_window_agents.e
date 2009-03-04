@@ -179,7 +179,7 @@ feature -- Agents
 				check l_history_manager_is_interface_usable: l_history_manager.is_interface_usable end
 				if l_history_manager.is_back_possible then
 					l_history_manager.back_command.execute
-					if {l_tool: ES_DOCKABLE_TOOL_PANEL [EV_WIDGET]} l_history_owner then
+					if attached {ES_DOCKABLE_TOOL_PANEL [EV_WIDGET]} l_history_owner as l_tool then
 						l_tool.show
 					end
 				end
@@ -199,7 +199,7 @@ feature -- Agents
 				check l_history_manager_is_interface_usable: l_history_manager.is_interface_usable end
 				if l_history_manager.is_forth_possible then
 					l_history_manager.forth_command.execute
-					if {l_tool: ES_DOCKABLE_TOOL_PANEL [EV_WIDGET]} l_history_owner then
+					if attached {ES_DOCKABLE_TOOL_PANEL [EV_WIDGET]} l_history_owner as l_tool then
 						l_tool.show
 					end
 				end
@@ -348,7 +348,7 @@ feature -- Agents
 
 feature {NONE} -- Query
 
-	active_history_owner: ?EB_HISTORY_OWNER
+	active_history_owner: detachable EB_HISTORY_OWNER
 			-- A history owner for an active tool in the UI.
 		require
 			is_interface_usable: is_interface_usable
@@ -366,7 +366,7 @@ feature {NONE} -- Query
 				from l_tool_types.start until l_tool_types.after or Result /= Void loop
 					l_tool := l_tool_types.item_for_iteration
 					if l_tool.is_interface_usable and then l_tool.is_tool_instantiated then
-						if {l_ho: EB_HISTORY_OWNER} l_tool.panel then
+						if attached {EB_HISTORY_OWNER} l_tool.panel as l_ho then
 							if l_tool.panel.has_focus then
 								Result := l_ho
 							end

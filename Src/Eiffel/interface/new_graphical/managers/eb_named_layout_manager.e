@@ -40,7 +40,7 @@ feature {NONE} -- Initlization
 			init_existing_layouts_imp (layout_file_path (is_normal_mode), is_normal_mode)
 		end
 
-	init_existing_layouts_imp (a_dir: !DIRECTORY_NAME; a_from_normal_mode: BOOLEAN)
+	init_existing_layouts_imp (a_dir: attached DIRECTORY_NAME; a_from_normal_mode: BOOLEAN)
 			-- Used by `init_eixisting_layouts'.
 		require
 			dir_not_empty: not a_dir.is_empty
@@ -205,7 +205,7 @@ feature -- Query
 
 feature {NONE} -- Query
 
-	layout_file_name (a_file_name: STRING; a_normal_mode: BOOLEAN): !FILE_NAME
+	layout_file_name (a_file_name: STRING; a_normal_mode: BOOLEAN): attached FILE_NAME
 			-- Retrieve a full path for a docking layout file name
 		require
 			a_file_name_attached: a_file_name /= Void
@@ -218,7 +218,7 @@ feature {NONE} -- Query
 			not_result_is_empty: not Result.is_empty
 		end
 
-	layout_file_path (a_normal_mode: BOOLEAN): !DIRECTORY_NAME
+	layout_file_path (a_normal_mode: BOOLEAN): attached DIRECTORY_NAME
 			-- Retrieve a full path for a docking layout file name
 		do
 			Result := eiffel_layout.user_docking_path.twin

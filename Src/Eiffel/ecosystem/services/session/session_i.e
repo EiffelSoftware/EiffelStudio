@@ -45,7 +45,7 @@ feature -- Access
 
 feature {SESSION_MANAGER_S, SESSION_I} -- Access
 
-	extension_name: ?STRING_8 assign set_extension_name
+	extension_name: detachable STRING_8 assign set_extension_name
 			-- Optional extension name for specialized categories
 		require
 			is_interface_usable: is_interface_usable
@@ -81,7 +81,7 @@ feature -- Element change
 		ensure
 			value_set: equal (a_value, value (a_id))
 			is_dirty: not equal (a_value, old value (a_id)) implies is_dirty
-			session_set_on_session_data: {l_session_data: !SESSION_DATA_I} a_value implies (({SESSION_DATA_I}) #? a_value).session = Current
+			session_set_on_session_data: attached {attached SESSION_DATA_I} a_value as l_session_data implies (({SESSION_DATA_I}) #? a_value).session = Current
 		end
 
 feature {SESSION_MANAGER_S, SESSION_I} -- Element change
@@ -183,7 +183,7 @@ feature {SESSION_MANAGER_S} -- Status setting
 
 feature {SESSION_DATA_I, SESSION_I} -- Basic operations
 
-	notify_value_changed (a_value: !SESSION_DATA_I)
+	notify_value_changed (a_value: attached SESSION_DATA_I)
 			-- Used by complex session data objects to notify the session that an inner value has changed.
 			--
 			-- `a_value': The changed session data value.
@@ -197,7 +197,7 @@ feature {SESSION_DATA_I, SESSION_I} -- Basic operations
 
 feature -- Events
 
-	value_changed_event: !EVENT_TYPE [TUPLE [session: SESSION_I; id: STRING_8]]
+	value_changed_event: attached EVENT_TYPE [TUPLE [session: SESSION_I; id: STRING_8]]
 			-- Events fired when a value, indexed by an id, in the session object changes.
 			--
 			-- `session': The session where the change occured.
@@ -209,7 +209,7 @@ feature -- Events
 
 feature -- Events: Connection point
 
-	session_connection: !EVENT_CONNECTION_I [SESSION_EVENT_OBSERVER, SESSION_I]
+	session_connection: attached EVENT_CONNECTION_I [SESSION_EVENT_OBSERVER, SESSION_I]
 			-- <Precursor>
 		local
 			l_result: like internal_session_connection
@@ -217,7 +217,7 @@ feature -- Events: Connection point
 			l_result := internal_session_connection
 			if l_result = Void then
 				create {EVENT_CONNECTION [SESSION_EVENT_OBSERVER, SESSION_I]} Result.make (
-					agent (ia_observer: !SESSION_EVENT_OBSERVER): !ARRAY [TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]]
+					agent (ia_observer: attached SESSION_EVENT_OBSERVER): attached ARRAY [TUPLE [event: attached EVENT_TYPE [TUPLE]; action: attached PROCEDURE [ANY, TUPLE]]]
 						do
 							Result := << [value_changed_event, agent ia_observer.on_session_value_changed] >>
 						end)
@@ -246,7 +246,7 @@ feature {SESSION_MANAGER_S} -- Action Handlers
 
 feature {NONE} -- Implementation: Internal cache
 
-	internal_session_connection: ?like session_connection
+	internal_session_connection: detachable like session_connection
 			-- Cached version of `session_connection'
 			-- Note: Do not use directly!
 

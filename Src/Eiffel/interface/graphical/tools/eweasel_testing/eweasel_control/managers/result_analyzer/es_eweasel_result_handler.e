@@ -66,7 +66,7 @@ feature {NONE} -- Implementation
 			cleared: Result /= Void implies (lines = Void and one_block = Void)
 		end
 
-	to_one_string (a_lines: !LIST [STRING]): !STRING
+	to_one_string (a_lines: attached LIST [STRING]): attached STRING
 			-- Join each lines of string in `a_line' to one string.
 		local
 			l_item: STRING
@@ -91,7 +91,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_with_current_item (a_item: !ES_EWEASEL_TEST_RESULT_ITEM)
+	set_with_current_item (a_item: attached ES_EWEASEL_TEST_RESULT_ITEM)
 			-- Set `a_item' with Current date and time.
 		local
 			l_date_time: DT_DATE_TIME
@@ -187,7 +187,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Non string implementation
 
-	result_analyzer: !ES_EWEASEL_RESULT_ANALYZER
+	result_analyzer: attached ES_EWEASEL_RESULT_ANALYZER
 			-- Manager of Current
 		local
 			l_shared: ES_EWEASEL_SINGLETON_FACTORY

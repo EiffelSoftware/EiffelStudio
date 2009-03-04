@@ -194,7 +194,7 @@ feature {NONE} -- Checking
 					l_vrft.set_feature (a_context_feature)
 				end
 				if a_node /= Void then
-					if {l_tuple_node: NAMED_TUPLE_TYPE_AS} a_node then
+					if attached {NAMED_TUPLE_TYPE_AS} a_node as l_tuple_node then
 						l_vrft.set_location (l_tuple_node.i_th_type_declaration (a_pos).start_location)
 					else
 						l_vrft.set_location (a_node.start_location)

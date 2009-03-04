@@ -22,11 +22,11 @@ create
 
 feature -- Access
 
-	editor: ?EB_GRID_EDITOR
+	editor: detachable EB_GRID_EDITOR
 		-- Editor used to display `Current' on `activate'.
 		-- Void when `Current' isn't being activated.
 
-	viewport: ?EV_VIEWPORT
+	viewport: detachable EV_VIEWPORT
 		-- Viewport to hold the editor.
 
 feature -- Action
@@ -66,7 +66,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_popup_dimensions (a_popup: !EV_POPUP_WINDOW)
+	update_popup_dimensions (a_popup: attached EV_POPUP_WINDOW)
 			-- Update dimensions and positioning for `a_popup'.
 		local
 			l_x_offset: INTEGER

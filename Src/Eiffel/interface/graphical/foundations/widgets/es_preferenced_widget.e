@@ -19,11 +19,11 @@ inherit
 		end
 
 convert
-	widget: {EV_WIDGET, !G}
+	widget: {EV_WIDGET, attached G}
 
 feature {NONE} -- Initialization
 
-	frozen make (a_preference: !P)
+	frozen make (a_preference: attached P)
 			-- Initialize a widget based on a preference.
 			--
 			-- `a_preference': The preference object a widget is bound to.
@@ -56,10 +56,10 @@ feature {NONE} -- User interface initialization
 
 feature {NONE} -- Access
 
-	preference: !P
+	preference: attached P
 			-- The preference the widget is bound to.
 
-	preference_value: ?V
+	preference_value: detachable V
 			-- Preference value.
 		require
 			is_interface_usable: is_interface_usable
@@ -67,7 +67,7 @@ feature {NONE} -- Access
 		deferred
 		end
 
-	widget_value: ?V
+	widget_value: detachable V
 			-- Widget value.
 		require
 			is_interface_usable: is_interface_usable
@@ -82,7 +82,7 @@ feature -- Status report
 
 feature {NONE} -- Status report
 
-	is_value_equal (a_new: ?V; a_old: ?V): BOOLEAN
+	is_value_equal (a_new: detachable V; a_old: detachable V): BOOLEAN
 			-- Determines if a changing value is equal.
 		require
 			is_interface_usable: is_interface_usable
@@ -130,7 +130,7 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Actions
 
-	widget_change_actions: !ACTION_SEQUENCE [TUPLE]
+	widget_change_actions: attached ACTION_SEQUENCE [TUPLE]
 			-- The actions used to notify current of a change in value.
 		require
 			is_interface_usable: is_interface_usable
@@ -147,8 +147,8 @@ feature {NONE} -- Action handler
 			is_initialized: is_initialized
 		local
 			l_syncing: BOOLEAN
-			l_new: ?V
-			l_old: ?V
+			l_new: detachable V
+			l_old: detachable V
 		do
 			l_syncing := is_synchronizing_values
 			if not l_syncing then
@@ -177,8 +177,8 @@ feature {NONE} -- Action handler
 			is_initialized: is_initialized
 		local
 			l_syncing: BOOLEAN
-			l_new: ?V
-			l_old: ?V
+			l_new: detachable V
+			l_old: detachable V
 		do
 			l_syncing := is_synchronizing_values
 			if not l_syncing then

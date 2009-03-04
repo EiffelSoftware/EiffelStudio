@@ -72,7 +72,7 @@ feature {NONE} -- User interface initialization
 			-- <Precursor>
 		local
 			l_output_manager: like output_manager
-			l_active_outputs: !DS_LINEAR [OUTPUT_I]
+			l_active_outputs: attached DS_LINEAR [OUTPUT_I]
 			l_first_output: ES_OUTPUT_PANE_I
 		do
 			Precursor
@@ -83,7 +83,7 @@ feature {NONE} -- User interface initialization
 				l_output_manager.service.output_manager_event_connection.connect_events (Current)
 				l_active_outputs := l_output_manager.service.active_outputs
 				from l_active_outputs.start until l_active_outputs.after loop
-					if {l_output_pane: ES_OUTPUT_PANE_I} l_active_outputs.item_for_iteration then
+					if attached {ES_OUTPUT_PANE_I} l_active_outputs.item_for_iteration as l_output_pane then
 						if l_first_output = Void then
 							l_first_output := l_output_pane
 						end
@@ -93,7 +93,7 @@ feature {NONE} -- User interface initialization
 				end
 
 					-- Set best output
-				if {l_active_output: ES_OUTPUT_PANE_I} l_output_manager.service.general_output then
+				if attached {ES_OUTPUT_PANE_I} l_output_manager.service.general_output as l_active_output then
 						-- The general output is a EiffelStudio output pane.
 					set_output (l_active_output)
 				else
@@ -134,12 +134,12 @@ feature {NONE} -- Access
 	last_output: detachable ES_OUTPUT_PANE_I
 			-- The previously active output
 
-	modified_outputs: !DS_HASH_TABLE [TUPLE [output: !ES_OUTPUT_PANE_I; button: !SD_TOOL_BAR_BUTTON], IMMUTABLE_STRING_32]
+	modified_outputs: attached DS_HASH_TABLE [TUPLE [output: attached ES_OUTPUT_PANE_I; button: attached SD_TOOL_BAR_BUTTON], IMMUTABLE_STRING_32]
 			-- Modified output panes, used to manage the show modified outputs buttons
 
 feature -- Access: Help
 
-	help_context_id: !STRING_GENERAL
+	help_context_id: attached STRING_GENERAL
 			-- <Precursor>
 		once
 			Result := "BC9B2EF1-B4C4-773A-9BA8-97143FB2727A"
@@ -161,7 +161,7 @@ feature {NONE} -- Access: User interface
 
 feature {ES_OUTPUTS_COMMANDER_I} -- Element change
 
-	set_output (a_output: !ES_OUTPUT_PANE_I)
+	set_output (a_output: attached ES_OUTPUT_PANE_I)
 			-- <Precursor>
 		local
 			l_combo: like selection_combo
@@ -224,7 +224,7 @@ feature -- Status report
 
 feature {NONE} -- Helpers
 
-	frozen output_manager: !SERVICE_CONSUMER [OUTPUT_MANAGER_S]
+	frozen output_manager: attached SERVICE_CONSUMER [OUTPUT_MANAGER_S]
 			-- Shared access to the output manager service
 		once
 			create Result
@@ -232,7 +232,7 @@ feature {NONE} -- Helpers
 
 feature {NONE} -- Basic operations
 
-	extend_output (a_editor: !ES_OUTPUT_PANE_I)
+	extend_output (a_editor: attached ES_OUTPUT_PANE_I)
 			-- Extends the panel with the given output panel.
 			--
 			-- `a_output': Output pane to extend current with.
@@ -297,7 +297,7 @@ feature {NONE} -- Basic operations
 			selection_combo_changed_actions_restored: selection_combo.change_actions.state = old selection_combo.change_actions.state
 		end
 
-	remove_output (a_output: !ES_OUTPUT_PANE_I)
+	remove_output (a_output: attached ES_OUTPUT_PANE_I)
 			-- Removes a output pane from the panel.
 			--
 			-- `a_output': The output pane to remove.
@@ -331,7 +331,7 @@ feature {NONE} -- Basic operations
 			l_widget.recycle
 		end
 
-	inject_output_widget (a_output: !ES_OUTPUT_PANE_I)
+	inject_output_widget (a_output: attached ES_OUTPUT_PANE_I)
 			-- Extends the panel with the given output panel.
 			--
 			-- `a_output': Output pane to extend current with.
@@ -360,7 +360,7 @@ feature {NONE} -- Basic operations
 			user_widget.extend (l_ev_widget)
 		end
 
-	save_output (a_output: !ES_OUTPUT_PANE_I; a_file_path: !STRING_32)
+	save_output (a_output: attached ES_OUTPUT_PANE_I; a_file_path: attached STRING_32)
 			-- Saves the selected output to disk.
 			--
 			-- `a_output': The output to save to disk.
@@ -399,9 +399,9 @@ feature {NONE} -- Action handlers
 		do
 			l_item := selection_combo.selected_item
 			check l_item_attached: l_item /= Void end
-			if {l_active_output: like output} l_item.data then
+			if attached {like output} l_item.data as l_active_output then
 				l_window := develop_window.as_attached
-				if {l_old_output: like output} output then
+				if attached output as l_old_output then
 					l_widget := l_old_output.widget_for_window (l_window)
 					if l_widget.is_interface_usable then
 						l_widget.widget.hide
@@ -466,28 +466,28 @@ feature {NONE} -- Action handlers
 
 feature {REGISTRAR_I} -- Event handlers
 
-	on_output_registered (a_registrar: !OUTPUT_MANAGER_S; a_registration: !CONCEALER_I [OUTPUT_I]; a_key: !UUID)
+	on_output_registered (a_registrar: attached OUTPUT_MANAGER_S; a_registration: attached CONCEALER_I [OUTPUT_I]; a_key: attached UUID)
 			-- <Precursor>
 		do
 				-- We have to force revealing the object to retrieve the
-			if {l_output_pane: ES_OUTPUT_PANE_I} a_registration.object then
+			if attached {ES_OUTPUT_PANE_I} a_registration.object as l_output_pane then
 				extend_output (l_output_pane)
 			else
 				check must_have_object: False end
 			end
 		end
 
-	on_output_unregistered (a_registrar: !OUTPUT_MANAGER_S; a_registration: !CONCEALER_I [OUTPUT_I]; a_key: !UUID)
+	on_output_unregistered (a_registrar: attached OUTPUT_MANAGER_S; a_registration: attached CONCEALER_I [OUTPUT_I]; a_key: attached UUID)
 			-- <Precursor>
 		do
 			if a_registration.is_revealed then
-				if {l_output_pane: ES_OUTPUT_PANE_I} a_registration.object then
+				if attached {ES_OUTPUT_PANE_I} a_registration.object as l_output_pane then
 					remove_output (l_output_pane)
 				end
 			end
 		end
 
-	on_output_activated (a_registrar: !OUTPUT_MANAGER_S; a_registration: !OUTPUT_I; a_key: !UUID)
+	on_output_activated (a_registrar: attached OUTPUT_MANAGER_S; a_registration: attached OUTPUT_I; a_key: attached UUID)
 			-- <Precursor>
 		do
 				-- The output pane has been created in the registrar (as `on_output_activated' is a renamed
@@ -496,7 +496,7 @@ feature {REGISTRAR_I} -- Event handlers
 
 feature {LOCKABLE_I} -- Event handlers
 
-	on_output_locked (a_lock: !ES_OUTPUT_PANE_I)
+	on_output_locked (a_lock: attached ES_OUTPUT_PANE_I)
 			-- <Precursor>
 		do
 			if is_initialized and then a_lock ~ output then
@@ -504,7 +504,7 @@ feature {LOCKABLE_I} -- Event handlers
 			end
 		end
 
-	on_output_unlocked (a_lock: !ES_OUTPUT_PANE_I)
+	on_output_unlocked (a_lock: attached ES_OUTPUT_PANE_I)
 			-- <Precursor>
 		do
 			if is_initialized and then a_lock ~ output then
@@ -514,7 +514,7 @@ feature {LOCKABLE_I} -- Event handlers
 
 feature {NONE} -- Events handlers
 
-	on_output_modified (a_output: !ES_OUTPUT_PANE_I)
+	on_output_modified (a_output: attached ES_OUTPUT_PANE_I)
 			-- Called when an output pane has been modified with new text
 		require
 			is_interface_usable: is_interface_usable
@@ -524,7 +524,7 @@ feature {NONE} -- Events handlers
 			l_outputs: like modified_outputs
 			l_tool_bar: like modified_outputs_tool_bar
 			l_main_tool_bar: like tool_bar_widget
-			l_name: !IMMUTABLE_STRING_32
+			l_name: attached IMMUTABLE_STRING_32
 			l_button: SD_TOOL_BAR_BUTTON
 			l_output_window: OUTPUT_WINDOW
 		do
@@ -564,7 +564,7 @@ feature {NONE} -- Events handlers
 			modified_outputs_tool_bar_is_displayed: is_shown implies modified_outputs_tool_bar.is_displayed
 		end
 
-	on_output_shown (a_output: !ES_OUTPUT_PANE_I)
+	on_output_shown (a_output: attached ES_OUTPUT_PANE_I)
 			-- Called when an output pane is shown on the UI.
 		require
 			is_interface_usable: is_interface_usable
@@ -573,8 +573,8 @@ feature {NONE} -- Events handlers
 			l_outputs: like modified_outputs
 			l_tool_bar: like modified_outputs_tool_bar
 			l_main_tool_bar: like tool_bar_widget
-			l_name: !IMMUTABLE_STRING_32
-			l_item: TUPLE [output: !ES_OUTPUT_PANE_I; button: !SD_TOOL_BAR_BUTTON]
+			l_name: attached IMMUTABLE_STRING_32
+			l_item: TUPLE [output: attached ES_OUTPUT_PANE_I; button: attached SD_TOOL_BAR_BUTTON]
 		do
 			l_outputs := modified_outputs
 			l_name := a_output.name

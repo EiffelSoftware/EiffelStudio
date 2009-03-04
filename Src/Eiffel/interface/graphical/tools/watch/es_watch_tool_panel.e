@@ -204,7 +204,7 @@ feature {NONE} -- Initialization
 
 feature -- Access: Help
 
-	help_context_id: !STRING_GENERAL
+	help_context_id: attached STRING_GENERAL
 			-- <Precursor>
 		once
 			Result := "E70D5827-A00D-47EE-9E7A-B7B4BFB34CCF"
@@ -306,7 +306,7 @@ feature {ES_OBJECTS_GRID_SLICES_CMD} -- Query
 
 feature {NONE} -- Stone handlers
 
-	on_stone_changed (a_old_stone: ?like stone)
+	on_stone_changed (a_old_stone: detachable like stone)
 			-- Assign `a_stone' as new stone.
 		local
 			cst: CALL_STACK_STONE
@@ -647,7 +647,7 @@ feature {NONE} -- Event handling
 			end
 
 
-			if tbi /= Void and then {rect: EV_RECTANGLE} tbi.rectangle then
+			if tbi /= Void and then attached {EV_RECTANGLE} tbi.rectangle as rect then
 				m.show_at (w, rect.x, rect.y)
 			else
 				m.show_at (w, 0, 0)
@@ -778,9 +778,9 @@ feature {NONE} -- Event handling
 		do
 			if
 				object_viewer_cmd /= Void and then
-				{g: like watches_grid} watches_grid and then g.selected_rows.count > 0
+				attached watches_grid as g and then g.selected_rows.count > 0
 			then
-				if {ost: OBJECT_STONE} g.grid_pebble_from_row_and_column (g.selected_rows.first, Void) then
+				if attached {OBJECT_STONE} g.grid_pebble_from_row_and_column (g.selected_rows.first, Void) as ost then
 					object_viewer_cmd.set_stone (ost)
 				end
 			end
@@ -1150,7 +1150,7 @@ feature {NONE} -- Element change: expression moving
 			until
 				a_rows.after
 			loop
-				if {r: EV_GRID_ROW} a_rows.item and then r.parent_row = Void then
+				if attached {EV_GRID_ROW} a_rows.item as r and then r.parent_row = Void then
 					Result.put_last (r.index)
 				end
 				a_rows.forth
@@ -1211,7 +1211,7 @@ feature {NONE} -- Element change: expression moving
 			sel_index := a_index
 			sel := g.row (a_index)
 			check sel_is_top_row: sel.parent_row = Void end
-			if {line: ES_OBJECTS_GRID_EXPRESSION_LINE} sel.data then
+			if attached {ES_OBJECTS_GRID_EXPRESSION_LINE} sel.data as line then
 				witems := watched_items
 				if witems /= Void then
 					witems.start
@@ -1354,7 +1354,7 @@ feature -- Expressions storage management
 			if not retried then
 				Result := internal_default_watches_storage_folder
 				if Result = Void then
-					if {d: STRING} system.eiffel_project.project_location.location then
+					if attached {STRING} system.eiffel_project.project_location.location as d then
 						Result := d
 					end
 					internal_default_watches_storage_folder := Result
@@ -1373,7 +1373,7 @@ feature -- Expressions storage management
 			retried: BOOLEAN
 		do
 			if not retried then
-				if {d: STRING} system.eiffel_project.project_location.location then
+				if attached {STRING} system.eiffel_project.project_location.location as d then
 					Result := system.eiffel_project.project_location.target + "-watch#" + watch_id.out + ".txt"
 				end
 			end
@@ -1389,7 +1389,7 @@ feature -- Expressions storage management
 			exp: DBG_EXPRESSION
 		do
 			create Result.make_empty
-			if {lst: like watched_items} watched_items then
+			if attached watched_items as lst then
 				from
 					lst.start
 				until
@@ -1399,7 +1399,7 @@ feature -- Expressions storage management
 					if line /= Void then
 						if
 							not only_selection or else
-							({r: EV_GRID_ROW} line.row and then r.is_selected)
+							(attached {EV_GRID_ROW} line.row as r and then r.is_selected)
 						then
 							exp := line.expression
 							if exp /= Void and then exp.is_reusable then
@@ -1427,7 +1427,7 @@ feature -- Expressions storage management
 				until
 					expr_list.after
 				loop
-					if {e: STRING_32} expr_list.item_for_iteration then
+					if attached {STRING_32} expr_list.item_for_iteration as e then
 						if valid_expression_text (e) then
 							add_new_expression_for_context (e)
 						end
@@ -1458,7 +1458,7 @@ feature -- Expressions storage management
 					if
 						grid.col_name_index <= row.count
 					then
-						if {empty_expression_cell: ES_OBJECTS_GRID_EMPTY_EXPRESSION_CELL} row.item (grid.col_name_index) then
+						if attached {ES_OBJECTS_GRID_EMPTY_EXPRESSION_CELL} row.item (grid.col_name_index) as empty_expression_cell then
 							if text_data.occurrences ('%N') > 0 then
 								load_expressions_from_text (text_data)
 							else
@@ -1481,9 +1481,9 @@ feature -- Expressions storage management
 			s := expressions_to_text (False)
 			if s /= Void and then not s.is_empty then
 				create f_dlg.make_with_title (interface_names.t_select_a_file)
-				if {d: STRING} default_watches_storage_folder then
+				if attached {STRING} default_watches_storage_folder as d then
 					f_dlg.set_start_directory (d)
-					if {n: STRING} default_watches_storage_filename then
+					if attached {STRING} default_watches_storage_filename as n then
 						f_dlg.set_file_name (n)
 					end
 				end
@@ -1510,9 +1510,9 @@ feature -- Expressions storage management
 			f: PLAIN_TEXT_FILE
 		do
 			create f_dlg.make_with_title (interface_names.t_select_a_file)
-			if {d: STRING} default_watches_storage_folder then
+			if attached {STRING} default_watches_storage_folder as d then
 				f_dlg.set_start_directory (d)
-				if {n: STRING} default_watches_storage_filename then
+				if attached {STRING} default_watches_storage_filename as n then
 					f_dlg.set_file_name (n)
 				end
 			end

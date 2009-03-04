@@ -57,7 +57,7 @@ feature -- Status setting
 			-- Associate current formatter with feature contained in `new_stone'.
 		do
 			force_stone (new_stone)
-			if {l_new_stone: FEATURE_STONE} new_stone then
+			if attached {FEATURE_STONE} new_stone as l_new_stone then
 				if (not l_new_stone.class_i.is_external_class) or is_dotnet_formatter then
 					set_feature (l_new_stone.e_feature)
 				end

@@ -27,12 +27,12 @@ inherit
 
 feature {NONE} -- Access
 
-	modified_data: !ES_FEATURE_TEXT_AST_MODIFIER_DATA
+	modified_data: attached ES_FEATURE_TEXT_AST_MODIFIER_DATA
 			-- <Precursor {ES_FEATURE_TEXT_AST_MODIFIER}>
 
 feature {NONE} -- Factory
 
-	new_modified_data: !like modified_data
+	new_modified_data: attached like modified_data
 			-- <Precursor {ES_FEATURE_TEXT_AST_MODIFIER}>
 		do
 			Result := Precursor {ES_FEATURE_TEXT_AST_MODIFIER}

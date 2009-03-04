@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_section: !like section)
+	make (a_section: attached like section)
 			-- Initialize a help context section (page part).
 			--
 			-- `a_section': The context help page section to set.
@@ -31,12 +31,12 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	section: !STRING_GENERAL assign set_section
+	section: attached STRING_GENERAL assign set_section
 			-- <Precursor>
 
 feature -- Element change
 
-	set_section (a_section: !like section)
+	set_section (a_section: attached like section)
 			-- Set the help context page section.
 			--
 			-- `a_section': The context help page section to set.

@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 
 feature -- Query
 
-	manager: !ES_EWEASEL_EXECUTION_MANAGER
+	manager: attached ES_EWEASEL_EXECUTION_MANAGER
 			-- Chief manager
 		local
 			l_shared: ES_EWEASEL_SINGLETON_FACTORY

@@ -335,7 +335,7 @@ feature -- Call Stack element related
 			i: INTEGER
 		do
 			i := application.current_execution_stack_number
-			if {ccs: like current_call_stack} current_call_stack and then ccs.valid_index (i) then
+			if attached current_call_stack as ccs and then ccs.valid_index (i) then
 				Result := ccs.i_th (i)
 			end
 		end
@@ -513,14 +513,14 @@ feature -- Access
 		do
 			if current_call_stack /= Void then
 				if
-					{rep: like current_replayed_call} current_replayed_call  and then
-					{r_fe: E_FEATURE} rep.e_feature and then
+					attached current_replayed_call as rep  and then
+					attached {E_FEATURE} rep.e_feature as r_fe and then
 					r_fe.body_id_for_ast = fe.body_index
 				then
 					Result := [rep.replayed_break_index, r_fe.feature_id]
 				elseif
-					{stel: EIFFEL_CALL_STACK_ELEMENT} current_call_stack_element and then
-					{ot_fe: E_FEATURE} stel.routine and then
+					attached {EIFFEL_CALL_STACK_ELEMENT} current_call_stack_element as stel and then
+					attached {E_FEATURE} stel.routine as ot_fe and then
 					ot_fe.body_id_for_ast = fe.body_index
 				then
 					Result := [stel.break_index, ot_fe.feature_id]
@@ -538,22 +538,22 @@ feature -- Access
 			n: INTEGER
 		do
 			if is_stopped then
-				if {crep: like current_replayed_call} current_replayed_call then
+				if attached current_replayed_call as crep then
 					if crep.replayed_break_index = index then
-						Result := {fi: FEATURE_I} crep.feature_i and then fi.body_index = f_body_index
+						Result := attached {FEATURE_I} crep.feature_i as fi and then fi.body_index = f_body_index
 					end
 				end
 				if not Result then
-					if {rep: like replayed_call} replayed_call then
+					if attached replayed_call as rep then
 						if rep.line = index then
-							Result := {f: E_FEATURE} rep.feat and then f.body_index = f_body_index
+							Result := attached {E_FEATURE} rep.feat as f and then f.body_index = f_body_index
 						end
 					else
-						if {l_ccs: EIFFEL_CALL_STACK} current_call_stack and then not l_ccs.is_empty then
+						if attached {EIFFEL_CALL_STACK} current_call_stack as l_ccs and then not l_ccs.is_empty then
 							n := Application.current_execution_stack_number
-							Result := {stack_elem: EIFFEL_CALL_STACK_ELEMENT} l_ccs.i_th (n)
+							Result := attached {EIFFEL_CALL_STACK_ELEMENT} l_ccs.i_th (n) as stack_elem
 									and then stack_elem.break_index = index
-									and then {ef: E_FEATURE} stack_elem.routine
+									and then attached {E_FEATURE} stack_elem.routine as ef
 									and then ef.body_index = f_body_index
 						end
 					end
@@ -569,16 +569,16 @@ feature -- Access
 			n: INTEGER
 		do
 			if is_stopped then
-				if {rep: like current_replayed_call} current_replayed_call then
+				if attached current_replayed_call as rep then
 					if rep.replayed_break_index = index then
-						Result := {fi: FEATURE_I} rep.feature_i and then fi.body_index = f_body_index
+						Result := attached {FEATURE_I} rep.feature_i as fi and then fi.body_index = f_body_index
 					end
 				else
-					if {l_ccs: EIFFEL_CALL_STACK} current_call_stack and then not l_ccs.is_empty then
+					if attached {EIFFEL_CALL_STACK} current_call_stack as l_ccs and then not l_ccs.is_empty then
 						n := 1
-						Result := {stack_elem: EIFFEL_CALL_STACK_ELEMENT} l_ccs.i_th (n)
+						Result := attached {EIFFEL_CALL_STACK_ELEMENT} l_ccs.i_th (n) as stack_elem
 								and then stack_elem.break_index = index
-								and then {ef: E_FEATURE} stack_elem.routine
+								and then attached {E_FEATURE} stack_elem.routine as ef
 								and then ef.body_index = f_body_index
 					end
 				end
@@ -623,7 +623,7 @@ feature -- Execution replay
 	replayed_depth: INTEGER
 			-- Current replayed depth
 		do
-			if {rc: like current_replayed_call} current_replayed_call then
+			if attached current_replayed_call as rc then
 				Result := rc.depth
 			else
 				--| 0 which mean ... not replayed

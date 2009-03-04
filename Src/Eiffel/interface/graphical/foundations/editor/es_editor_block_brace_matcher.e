@@ -31,7 +31,7 @@ inherit
 
 feature -- Access
 
-	opening_brace_map: !HASH_TABLE [!STRING_32, !STRING_32]
+	opening_brace_map: attached HASH_TABLE [attached STRING_32, attached STRING_32]
 			-- <Precursor>
 		once
 			create Result.make (20)
@@ -41,28 +41,28 @@ feature -- Access
 
 feature -- Status report
 
-	is_opening_brace (a_token: !EDITOR_TOKEN): BOOLEAN
+	is_opening_brace (a_token: attached EDITOR_TOKEN): BOOLEAN
 			-- <Precursor>
 		do
 			Result := Precursor {ES_EDITOR_BRACE_MATCHER} (a_token) or else
 				Precursor {ES_EDITOR_KEYWORD_BRACE_MATCHER} (a_token)
 		end
 
-	is_opening_match_exception (a_token: !EDITOR_TOKEN; a_line: !EDITOR_LINE): BOOLEAN
+	is_opening_match_exception (a_token: attached EDITOR_TOKEN; a_line: attached EDITOR_LINE): BOOLEAN
 			-- <Precursor>
 		do
 			Result := Precursor {ES_EDITOR_BRACE_MATCHER} (a_token, a_line) or else
 				Precursor {ES_EDITOR_KEYWORD_BRACE_MATCHER} (a_token, a_line)
 		end
 
-	is_closing_brace (a_token: !EDITOR_TOKEN): BOOLEAN
+	is_closing_brace (a_token: attached EDITOR_TOKEN): BOOLEAN
 			-- <Precursor>
 		do
 			Result := Precursor {ES_EDITOR_BRACE_MATCHER} (a_token) or else
 				Precursor {ES_EDITOR_KEYWORD_BRACE_MATCHER} (a_token)
 		end
 
-	is_closing_match_exception (a_token: !EDITOR_TOKEN; a_line: !EDITOR_LINE): BOOLEAN
+	is_closing_match_exception (a_token: attached EDITOR_TOKEN; a_line: attached EDITOR_LINE): BOOLEAN
 			-- <Precursor>
 		do
 			Result := Precursor {ES_EDITOR_BRACE_MATCHER} (a_token, a_line) or else

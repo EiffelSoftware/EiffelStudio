@@ -18,7 +18,7 @@ create
 
 feature -- Modification: Feature
 
-	modify_feature_entry (a_old_entry, a_new_entry: !EIS_ENTRY)
+	modify_feature_entry (a_old_entry, a_new_entry: attached EIS_ENTRY)
 			-- Modify `a_old_entry' to `a_new_entry' in the feature.
 		require
 			is_interface_usable: is_interface_usable
@@ -41,7 +41,7 @@ feature -- Modification: Feature
 			is_dirty: is_dirty
 		end
 
-	write_feature_entry (a_entry: !EIS_ENTRY)
+	write_feature_entry (a_entry: attached EIS_ENTRY)
 			-- Write `a_entry' into the class.
 		require
 			is_interface_usable: is_interface_usable
@@ -49,14 +49,14 @@ feature -- Modification: Feature
 			is_ast_available: is_ast_available
 			is_modifiable: is_modifiable
 		local
-			l_ast: ?FEATURE_AS
-			l_indexes: ?INDEXING_CLAUSE_AS
+			l_ast: detachable FEATURE_AS
+			l_indexes: detachable INDEXING_CLAUSE_AS
 			l_insertion_point: INTEGER
 			l_p: TUPLE [start_position: INTEGER; end_position: INTEGER]
 			l_insertion_code: STRING_32
 			l_output: ES_EIS_ENTRY_OUTPUT
-			l_entry: !EIS_ENTRY
-			l_routine: ?ROUTINE_AS
+			l_entry: attached EIS_ENTRY
+			l_routine: detachable ROUTINE_AS
 		do
 			l_entry := a_entry
 			l_ast := ast_feature
@@ -89,7 +89,7 @@ feature -- Modification: Feature
 			is_dirty: is_dirty
 		end
 
-	remove_feature_entry (a_entry: !EIS_ENTRY; a_clean_empty_clause: BOOLEAN)
+	remove_feature_entry (a_entry: attached EIS_ENTRY; a_clean_empty_clause: BOOLEAN)
 			-- Remove `a_entry' from the class if exists.
 			-- `a_clean_empty_clause' to clean the leading empty clause if any.
 		require
@@ -98,10 +98,10 @@ feature -- Modification: Feature
 			is_ast_available: is_ast_available
 			is_modifiable: is_modifiable
 		local
-			l_ast: ?FEATURE_AS
-			l_indexes: ?INDEXING_CLAUSE_AS
-			l_entry: ?EIS_ENTRY
-			l_feature_id: ?STRING
+			l_ast: detachable FEATURE_AS
+			l_indexes: detachable INDEXING_CLAUSE_AS
+			l_entry: detachable EIS_ENTRY
+			l_feature_id: detachable STRING
 			l_found: BOOLEAN
 		do
 			last_entry_removed := False
@@ -115,7 +115,7 @@ feature -- Modification: Feature
 				until
 					l_indexes.after or l_found
 				loop
-					if {lt_index: INDEX_AS}l_indexes.item then
+					if attached {INDEX_AS} l_indexes.item as lt_index then
 						l_entry := eis_entry_from_index (lt_index, l_feature_id)
 						if l_entry /= Void and then l_entry.same_entry (a_entry) then
 							if l_indexes.count = 1 and then a_clean_empty_clause then
@@ -145,7 +145,7 @@ feature {NONE} -- Implementation
 
 	last_removed_position: INTEGER
 
-	keyword_note_or_indexing: !STRING
+	keyword_note_or_indexing: attached STRING
 			-- Get eis container structure keyword from parser.
 			-- Either note or indexing
 		local

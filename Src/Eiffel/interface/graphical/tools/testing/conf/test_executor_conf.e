@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	tests: !DS_LINEAR [!TEST_I]
+	tests: attached DS_LINEAR [attached TEST_I]
 			-- <Precursor>
 		local
 			l_tests: like internal_tests
@@ -71,7 +71,7 @@ feature -- Access
 			Result := l_tests
 		end
 
-	sorter_prefix: !STRING
+	sorter_prefix: attached STRING
 			-- <Precursor>
 
 	evaluator_count: NATURAL
@@ -79,7 +79,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	internal_tests: ?DS_ARRAYED_LIST [!TEST_I]
+	internal_tests: detachable DS_ARRAYED_LIST [attached TEST_I]
 			-- Internal storage for `tests'
 
 feature -- Status report

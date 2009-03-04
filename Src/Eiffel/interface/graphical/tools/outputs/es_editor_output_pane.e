@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: !READABLE_STRING_GENERAL)
+	make (a_name: attached READABLE_STRING_GENERAL)
 			-- Initialize a output editor
 			--
 			-- `a_name': A friendly, human readable name for the editor.
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			name_set: a_name.as_string_32 ~ name.as_string_32
 		end
 
-	make_with_icon (a_name: !READABLE_STRING_GENERAL; a_icon: detachable like icon)
+	make_with_icon (a_name: attached READABLE_STRING_GENERAL; a_icon: detachable like icon)
 			-- Initialize a output editor with an representation icon
 			--
 			-- `a_name': A friendly, human readable name for the editor.
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			icon_set: icon ~ a_icon
 		end
 
-	build_interface (a_widget: !ES_EDITOR_WIDGET)
+	build_interface (a_widget: attached ES_EDITOR_WIDGET)
 			-- <Precursor>
 		do
 			a_widget.editor.disable_line_numbers
@@ -68,15 +68,15 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-	icon: !EV_PIXEL_BUFFER
+	icon: attached EV_PIXEL_BUFFER
 			-- <Precursor>
 
-	name: !IMMUTABLE_STRING_32
+	name: attached IMMUTABLE_STRING_32
 			-- <Precursor>
 
 feature -- Query
 
-	text_for_window (a_window: !SHELL_WINDOW_I): !STRING_32
+	text_for_window (a_window: attached SHELL_WINDOW_I): attached STRING_32
 			-- <Precursor>
 		local
 			l_widget: like widget_for_window
@@ -89,11 +89,11 @@ feature -- Query
 			end
 		end
 
-	output_window_for_window (a_window: !SHELL_WINDOW_I): !OUTPUT_WINDOW
+	output_window_for_window (a_window: attached SHELL_WINDOW_I): attached OUTPUT_WINDOW
 			-- <Precursor>
 		local
 			l_widget: ES_EDITOR_WIDGET
-			l_result: ?OUTPUT_WINDOW
+			l_result: detachable OUTPUT_WINDOW
 		do
 			l_widget := widget_table.item (a_window.window_id)
 			check l_widget_attached: l_widget /= Void end
@@ -104,10 +104,10 @@ feature -- Query
 
 feature {NONE} -- Query
 
-	widget_output_window (a_widget: !ES_EDITOR_WIDGET; a_window: !SHELL_WINDOW_I): !OUTPUT_WINDOW
+	widget_output_window (a_widget: attached ES_EDITOR_WIDGET; a_window: attached SHELL_WINDOW_I): attached OUTPUT_WINDOW
 			-- <Precursor>
 		local
-			l_result: ?OUTPUT_WINDOW
+			l_result: detachable OUTPUT_WINDOW
 		do
 			l_result := a_widget.editor
 			check l_result_attached: l_result /= Void end
@@ -124,10 +124,10 @@ feature -- Basic operations
 
 feature {NONE} -- Factory
 
-	new_widget (a_window: !SHELL_WINDOW_I): !ES_EDITOR_WIDGET
+	new_widget (a_window: attached SHELL_WINDOW_I): attached ES_EDITOR_WIDGET
 			-- <Precursor>
 		do
-			if {l_window: EB_DEVELOPMENT_WINDOW} a_window then
+			if attached {EB_DEVELOPMENT_WINDOW} a_window as l_window then
 				create {ES_C_COMPILER_EDITOR_WIDGET} Result.make (l_window)
 			else
 				check False end

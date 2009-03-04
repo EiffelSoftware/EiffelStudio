@@ -124,10 +124,10 @@ feature -- Access
 
 feature {NONE} -- Status report
 
-	internal_is_stone_usable (a_stone: !like stone): BOOLEAN
+	internal_is_stone_usable (a_stone: attached like stone): BOOLEAN
 			-- <Precursor>
 		do
-			if {l_stonable: ES_STONABLE_I} tool then
+			if attached {ES_STONABLE_I} tool as l_stonable then
 				Result := l_stonable.is_stone_usable (a_stone)
 			end
 		end
@@ -141,7 +141,7 @@ feature -- Execution
 			l_x, l_y: INTEGER
 			l_window: EV_WINDOW
 			l_content: SD_CONTENT
-			l_stonable: ?ES_STONABLE_I
+			l_stonable: detachable ES_STONABLE_I
 		do
 			-- We have to check whether docking manager has Current tool's SD_CONTENT since debugger related tools not exist in normal mode.
 			-- They only exist in debug mode. See bug#13826.
@@ -218,7 +218,7 @@ feature -- Element change
 
 feature {NONE} -- Action handler
 
-	on_stone_changed (a_old_stone: ?like stone)
+	on_stone_changed (a_old_stone: detachable like stone)
 			-- <Precursor>
 		do
 		end

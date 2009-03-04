@@ -13,7 +13,7 @@ class
 
 feature -- Access
 
-	priorities: !PRIORITY_LEVELS
+	priorities: attached PRIORITY_LEVELS
 			-- Priority levels
 		once
 			create Result

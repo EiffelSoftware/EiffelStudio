@@ -60,7 +60,7 @@ feature -- Status report
 
 feature -- Element Change
 
-	add_observer (a_observer: !PROGRESS_OBSERVER)
+	add_observer (a_observer: attached PROGRESS_OBSERVER)
 			-- Add observer to be managed
 		do
 			if background_visitor = Void then
@@ -69,7 +69,7 @@ feature -- Element Change
 			background_visitor.add_observer (a_observer)
 		end
 
-	remove_observer (a_observer: !PROGRESS_OBSERVER)
+	remove_observer (a_observer: attached PROGRESS_OBSERVER)
 			-- Add observer to be managed
 		do
 			if background_visitor /= Void then
@@ -79,7 +79,7 @@ feature -- Element Change
 
 feature {NONE} -- Implementation
 
-	background_visitor: ?ES_EIS_BACKGROUND_VISITOR;
+	background_visitor: detachable ES_EIS_BACKGROUND_VISITOR;
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

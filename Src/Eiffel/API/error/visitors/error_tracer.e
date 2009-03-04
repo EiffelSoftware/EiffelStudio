@@ -100,7 +100,7 @@ feature -- Processing
 				text_formatter.add ("Syntax error at line ")
 				text_formatter.add_int (a_value.line)
 					-- Error happened in a class
-				if {l_class1: !CLASS_C} a_value.associated_class then
+				if attached {attached CLASS_C} a_value.associated_class as l_class1 then
 					text_formatter.add (" in class ")
 					text_formatter.add_class_syntax (a_value, l_class1, l_class1.class_signature)
 				elseif a_value.file_name /= Void then
@@ -130,8 +130,8 @@ feature -- Processing
 					text_formatter.add_new_line
 				end
 			elseif type = context then
-				if {l_class2: !CLASS_C} a_value.associated_class then
-					if {l_formatter: !TEXT_FORMATTER} text_formatter then
+				if attached {attached CLASS_C} a_value.associated_class as l_class2 then
+					if attached {attached TEXT_FORMATTER} text_formatter as l_formatter then
 						print_context_class (l_formatter, l_class2)
 					end
 				elseif a_value.file_name /= Void then
@@ -160,7 +160,7 @@ feature -- Processing
 				text_formatter.add (" syntax used at line ")
 				text_formatter.add_int (a_value.line)
 					-- Error happened in a class
-				if {l_class1: !CLASS_C} a_value.associated_class then
+				if attached {attached CLASS_C} a_value.associated_class as l_class1 then
 					text_formatter.add (" in class ")
 					text_formatter.add_class_syntax (a_value, l_class1, l_class1.class_signature)
 				end
@@ -188,8 +188,8 @@ feature -- Processing
 				text_formatter.add (". ")
 				text_formatter.add (a_value.warning_message)
 			elseif type = context then
-				if {l_class2: !CLASS_C} a_value.associated_class then
-					if {l_formatter: !TEXT_FORMATTER} text_formatter then
+				if attached {attached CLASS_C} a_value.associated_class as l_class2 then
+					if attached {attached TEXT_FORMATTER} text_formatter as l_formatter then
 						print_context_class (l_formatter, l_class2)
 					end
 				else
@@ -201,7 +201,7 @@ feature -- Processing
 	process_user_defined_error (a_value: USER_DEFINED_ERROR)
 			-- Process object `a_value'.
 		do
-			if {l_compiler_error: !COMPILER_ERROR} a_value then
+			if attached {attached COMPILER_ERROR} a_value as l_compiler_error then
 				inspect type
 				when normal then
 					l_compiler_error.trace (text_formatter)
@@ -227,7 +227,7 @@ feature -- Processing
 			if type = normal then
 				print_error_message (text_formatter, a_value)
 				a_value.initialize_output
-				if {l_class: !CLASS_C} a_value.associated_class then
+				if attached {attached CLASS_C} a_value.associated_class as l_class then
 					text_formatter.add ("Class: ")
 					text_formatter.add_class_syntax (a_value, l_class, l_class.class_signature)
 					text_formatter.add_new_line
@@ -271,7 +271,7 @@ feature {NONE} -- Trace
 			is_defined: a_error.is_defined
 		do
 			print_error_message (a_text_formatter, a_error);
-			if {l_compiler_error: !COMPILER_ERROR} a_error then
+			if attached {attached COMPILER_ERROR} a_error as l_compiler_error then
 				l_compiler_error.build_explain (a_text_formatter);
 			end
 		end;

@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	context_feature: !E_FEATURE
+	context_feature: attached E_FEATURE
 			-- Context class for contract modifications
 		require
 			is_interface_usable: is_interface_usable
@@ -29,16 +29,16 @@ feature -- Access
 
 feature -- Contracts
 
-	contracts_for_class (a_class: !CLASS_I; a_live: BOOLEAN): !TUPLE [contracts: !DS_LIST [TAGGED_AS]; modifier: !ES_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]]
+	contracts_for_class (a_class: attached CLASS_I; a_live: BOOLEAN): attached TUPLE [contracts: attached DS_LIST [TAGGED_AS]; modifier: attached ES_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]]
 			-- <Precursor>
 		local
 			l_modifier: like create_text_modifier
-			l_e_feature: ?like context_feature
+			l_e_feature: detachable like context_feature
 			l_class_c: CLASS_C
-			l_feature_as: ?FEATURE_AS
-			l_assertions: ?EIFFEL_LIST [TAGGED_AS]
+			l_feature_as: detachable FEATURE_AS
+			l_assertions: detachable EIFFEL_LIST [TAGGED_AS]
 			l_cursor: CURSOR
-			l_result: !DS_ARRAYED_LIST [TAGGED_AS]
+			l_result: attached DS_ARRAYED_LIST [TAGGED_AS]
 		do
 			create l_result.make_default
 
@@ -90,12 +90,12 @@ feature -- Contracts
 				end
 			end
 
-			Result := [l_result, (({!ES_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]}) #? l_modifier).as_attached]
+			Result := [l_result, (({attached ES_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]}) #? l_modifier).as_attached]
 		end
 
 feature {NONE} -- Contracts
 
-	contracts_for_feature (a_feature: !FEATURE_AS): ?EIFFEL_LIST [TAGGED_AS]
+	contracts_for_feature (a_feature: attached FEATURE_AS): detachable EIFFEL_LIST [TAGGED_AS]
 			-- Retrieves a list of contracts given a feature.
 		require
 			is_interface_usable: is_interface_usable
@@ -105,29 +105,29 @@ feature {NONE} -- Contracts
 
 feature {NONE} -- Status report
 
-	internal_is_stone_usable (a_stone: !like stone): BOOLEAN
+	internal_is_stone_usable (a_stone: attached like stone): BOOLEAN
 			-- <Precursor>
 		do
 			Result := Precursor {ES_CONTRACT_EDITOR_CONTEXT} (a_stone)
 			if Result then
-				if {l_stone: FEATURE_STONE} a_stone then
-					Result := {l_routine: E_ROUTINE} l_stone.e_feature
+				if attached {FEATURE_STONE} a_stone as l_stone then
+					Result := attached {E_ROUTINE} l_stone.e_feature as l_routine
 				else
 					Result := False
 				end
 			end
 		ensure then
-			is_feature_stone: Result implies ({?E_ROUTINE}) #? (({!FEATURE_STONE}) #? a_stone).e_feature /= Void
+			is_feature_stone: Result implies ({detachable E_ROUTINE}) #? (({attached FEATURE_STONE}) #? a_stone).e_feature /= Void
 		end
 
 feature {NONE} -- Query
 
-	calculate_parents (a_class: !CLASS_I; a_list: !DS_LIST [CLASS_C])
+	calculate_parents (a_class: attached CLASS_I; a_list: attached DS_LIST [CLASS_C])
 			-- <Precursor>
 		local
-			l_precusors: ?ARRAYED_LIST [CLASS_C]
-			l_feature_i: ?FEATURE_I
-			l_e_feature: ?E_FEATURE
+			l_precusors: detachable ARRAYED_LIST [CLASS_C]
+			l_feature_i: detachable FEATURE_I
+			l_e_feature: detachable E_FEATURE
 			l_class_c: CLASS_C
 		do
 			if a_class = context_class then
@@ -152,7 +152,7 @@ feature {NONE} -- Query
 
 feature {NONE} -- Factory
 
-	create_text_modifier: !ES_FEATURE_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]
+	create_text_modifier: attached ES_FEATURE_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]
 			-- Creates a text modifier
 		deferred
 		end

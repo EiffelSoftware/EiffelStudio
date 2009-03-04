@@ -86,7 +86,7 @@ feature {NONE} -- Output
 	output_value: STRING_32
 			-- A STRING representation of the value of `Current'.
 		do
-			if {add: like address} address then
+			if attached address as add then
 				Result := add.output
 			end
 		end

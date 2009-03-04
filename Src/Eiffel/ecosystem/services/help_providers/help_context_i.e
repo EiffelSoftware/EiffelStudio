@@ -15,28 +15,28 @@ inherit
 
 feature -- Access
 
-	help_context_id: !STRING_GENERAL
+	help_context_id: attached STRING_GENERAL
 			-- A contextual identifer to link an associated help through.
 		require
 			is_interface_usable: is_interface_usable
 		deferred
 		end
 
-	help_context_section: ?HELP_CONTEXT_SECTION_I
+	help_context_section: detachable HELP_CONTEXT_SECTION_I
 			-- An optional sub-section in the help document, located using `help_context_id' to navigate to.
 		require
 			is_interface_usable: is_interface_usable
 		deferred
 		end
 
-	help_context_description: ?STRING_GENERAL
+	help_context_description: detachable STRING_GENERAL
 			-- An optional description of the context.
 		require
 			is_interface_usable: is_interface_usable
 		deferred
 		end
 
-	help_provider: !UUID
+	help_provider: attached UUID
 			-- Help provider kind best used for the help context.
 			-- See {HELP_PROVIDER_KINDS} for a list of built-in help providers.
 			--

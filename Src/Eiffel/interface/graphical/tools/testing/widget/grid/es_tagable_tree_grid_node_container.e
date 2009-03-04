@@ -31,12 +31,12 @@ inherit
 
 feature -- Access
 
-	parent: !ES_TAGABLE_TREE_GRID_NODE_CONTAINER [G]
+	parent: attached ES_TAGABLE_TREE_GRID_NODE_CONTAINER [G]
 			-- <Precursor>
 		do
 		end
 
-	row: !EV_GRID_ROW
+	row: attached EV_GRID_ROW
 			-- <Precursor>
 		require
 			not_root: not is_root
@@ -45,14 +45,14 @@ feature -- Access
 
 feature {TAG_BASED_TREE_NODE_CONTAINER} -- Access
 
-	tree: !ES_TAGABLE_TREE_GRID [G]
+	tree: attached ES_TAGABLE_TREE_GRID [G]
 			-- <Precursor>
 		deferred
 		end
 
 feature {NONE} -- Access
 
-	first_item_subrow: ?EV_GRID_ROW
+	first_item_subrow: detachable EV_GRID_ROW
 			-- First subrow that contains an item, Void if `Current' does not contain any items
 
 	first_child_index: INTEGER
@@ -83,7 +83,7 @@ feature {NONE} -- Access
 
 feature -- Query
 
-	child_for_token (a_token: !STRING): !ES_TAGABLE_GRID_TAG_DATA [G]
+	child_for_token (a_token: attached STRING): attached ES_TAGABLE_GRID_TAG_DATA [G]
 			-- <Precursor>
 		do
 			Result := cached_children.item (a_token)
@@ -91,14 +91,14 @@ feature -- Query
 
 feature {NONE} -- Query
 
-	row_data_for_item (a_item: !G): !ES_TAGABLE_GRID_ITEM_DATA [G]
+	row_data_for_item (a_item: attached G): attached ES_TAGABLE_GRID_ITEM_DATA [G]
 			-- {ES_TAGABLE_GRID_ITEM_DATA} instance for item
 		require
 			usable: is_interface_usable
 			evaluated: is_evaluated
 			a_item_added: items.has (a_item)
 		local
-			l_data: ?like row_data_for_item
+			l_data: detachable like row_data_for_item
 			i: INTEGER
 		do
 			from
@@ -106,7 +106,7 @@ feature {NONE} -- Query
 			until
 				l_data /= Void
 			loop
-				if {l_row_data: like row_data_for_item} tree.grid.row (i).data then
+				if attached {like row_data_for_item} tree.grid.row (i).data as l_row_data then
 					l_data := l_row_data
 				end
 				check l_data /= Void end
@@ -123,7 +123,7 @@ feature {NONE} -- Query
 
 feature {NONE} -- Element change
 
-	insert_tag_for_item (a_tag: !STRING; a_item: !G)
+	insert_tag_for_item (a_tag: attached STRING; a_item: attached G)
 			-- <Precursor>
 		local
 			l_expand: BOOLEAN
@@ -148,7 +148,7 @@ feature {NONE} -- Element change
 			end
 		end
 
-	add_child (a_token: !STRING)
+	add_child (a_token: attached STRING)
 			-- <Precursor>
 		local
 			i: INTEGER
@@ -158,7 +158,7 @@ feature {NONE} -- Element change
 			from
 				i := first_child_index
 			until
-				i = last_child_index or else ({l_item: ES_TAGABLE_GRID_TAG_DATA [G]} tree.grid.row (i).data and then
+				i = last_child_index or else (attached {ES_TAGABLE_GRID_TAG_DATA [G]} tree.grid.row (i).data as l_item and then
 					l_item.token > a_token)
 			loop
 				i := i + tree.grid.row (i).subrow_count_recursive + 1
@@ -175,7 +175,7 @@ feature {NONE} -- Element change
 			cached_children.force (l_new, a_token)
 		end
 
-	add_item (a_item: !G)
+	add_item (a_item: attached G)
 			-- <Precursor>
 		local
 			i: INTEGER
@@ -185,7 +185,7 @@ feature {NONE} -- Element change
 			from
 				i := first_item_index
 			until
-				i = last_item_index or else ({l_data: ES_TAGABLE_GRID_ITEM_DATA [G]} tree.grid.row (i).data and then
+				i = last_item_index or else (attached {ES_TAGABLE_GRID_ITEM_DATA [G]} tree.grid.row (i).data as l_data and then
 					l_data.item.name > a_item.name)
 			loop
 				i := i + tree.grid.row (i).subrow_count_recursive + 1
@@ -204,7 +204,7 @@ feature {NONE} -- Element change
 			Precursor (a_item)
 		end
 
-	remove_child (a_token: !STRING)
+	remove_child (a_token: attached STRING)
 			-- <Precursor>
 		local
 			l_node: like child_for_token
@@ -214,7 +214,7 @@ feature {NONE} -- Element change
 			Precursor (a_token)
 		end
 
-	remove_item (a_item: !G)
+	remove_item (a_item: attached G)
 			-- <Precursor>
 		local
 			i: INTEGER
@@ -233,14 +233,14 @@ feature {NONE} -- Element change
 
 feature {ES_TAGABLE_TREE_GRID_NODE_CONTAINER} -- Basic functionality
 
-	show_nodes_for_item (a_item: !G; a_tag: !STRING)
+	show_nodes_for_item (a_item: attached G; a_tag: attached STRING)
 			-- Expand rows for children showing item in given tag and select row that contains item.
 		require
 			a_tag_valid: is_valid_tag (a_tag)
 			a_item_has_tag: a_item.tags.has (join_tags (tag, a_tag))
 			evaluated: is_evaluated
 		local
-			l_token: !STRING
+			l_token: attached STRING
 			l_child: ES_TAGABLE_TREE_GRID_NODE_CONTAINER [G]
 		do
 			if a_tag.is_empty then
@@ -255,7 +255,7 @@ feature {ES_TAGABLE_TREE_GRID_NODE_CONTAINER} -- Basic functionality
 			end
 		end
 
-	show_subrow_with_item (a_item: !G)
+	show_subrow_with_item (a_item: attached G)
 			-- Select row containing `a_item'.
 		require
 			evaluated: is_evaluated

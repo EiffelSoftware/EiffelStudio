@@ -84,7 +84,7 @@ feature {NONE} -- Initialization: User interface
 
 feature -- Access: Help
 
-	help_context_id: !STRING_GENERAL
+	help_context_id: attached STRING_GENERAL
 			-- <Precursor>
 		once
 			Result := "62002CE3-37F9-22DE-39F0-0930468A67BE"
@@ -210,13 +210,13 @@ feature -- Events
 			-- Is stone `a_stone' valid ?
 		do
 			Result := viewers_manager /= Void and
-					({ost: OBJECT_STONE} a_stone and then viewers_manager.is_stone_valid (ost))
+					(attached {OBJECT_STONE} a_stone as ost and then viewers_manager.is_stone_valid (ost))
 		end
 
 	set_stone (a_stone: STONE)
 			--	Stone dropped
 		do
-			if {ost: OBJECT_STONE} a_stone then
+			if attached {OBJECT_STONE} a_stone as ost then
 				viewers_manager.set_stone (ost)
 			end
 		end

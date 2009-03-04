@@ -182,7 +182,7 @@ feature {NONE} -- Factory
 
                 -- Add left tool bar
             if l_tool_bar /= Void then
-            	if {lt_widget: EV_WIDGET} l_tool_bar then
+            	if attached {EV_WIDGET} l_tool_bar as lt_widget then
 					l_container.extend (lt_widget)
 				else
 					check not_possible: False end
@@ -191,7 +191,7 @@ feature {NONE} -- Factory
 
                 -- Add right tool bar
             if l_right_tool_bar /= Void then
-				if {lt_widget_2: EV_WIDGET} l_right_tool_bar then
+				if attached {EV_WIDGET} l_right_tool_bar as lt_widget_2 then
 	                create l_padding
 	                l_container.extend (l_padding)
 	                l_container.extend (lt_widget_2)

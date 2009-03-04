@@ -17,26 +17,26 @@ inherit
 
 feature -- Access
 
-	name: !STRING
+	name: attached STRING
 			-- Name of the test routine
 		deferred
 		end
 
-	class_name: !STRING
+	class_name: attached STRING
 			-- Name of class in which `Current' is defined
 		require
 			usable: is_interface_usable
 		deferred
 		end
 
-	outcomes: !DS_BILINEAR [like last_outcome]
+	outcomes: attached DS_BILINEAR [like last_outcome]
 			-- Test results from passed executions where the last is the most recent one.
 		require
 			usable: is_interface_usable
 		deferred
 		end
 
-	last_outcome: !EQA_TEST_RESULT
+	last_outcome: attached EQA_TEST_RESULT
 			-- Last test result if `Current' has been tested
 		require
 			usable: is_interface_usable
@@ -47,14 +47,14 @@ feature -- Access
 			result_is_last: Result = outcomes.last
 		end
 
-	executor: !TEST_EXECUTOR_I
+	executor: attached TEST_EXECUTOR_I
 			-- Executor running `Current' or having `Current' queued.
 		require
 			queued_or_running: is_queued or is_running
 		deferred
 		end
 
-	memento: !TEST_MEMENTO_I
+	memento: attached TEST_MEMENTO_I
 			-- <Precursor>
 		deferred
 		end
@@ -114,7 +114,7 @@ feature {TEST_PROJECT_I} -- Status setting
 		require
 			usable: is_interface_usable
 			a_list_valid: a_list.for_all (agent is_valid_tag)
-			not_a_list_has_empty: not a_list.there_exists (agent {!STRING}.is_empty)
+			not_a_list_has_empty: not a_list.there_exists (agent {attached STRING}.is_empty)
 		deferred
 		ensure
 			tags_contains_list: a_list.for_all (agent tags.has)

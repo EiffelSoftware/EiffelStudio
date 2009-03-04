@@ -20,10 +20,10 @@ feature -- Contracts
 
 feature {NONE} -- Contracts
 
-	contracts_for_feature (a_feature: !FEATURE_AS): ?EIFFEL_LIST [TAGGED_AS]
+	contracts_for_feature (a_feature: attached FEATURE_AS): detachable EIFFEL_LIST [TAGGED_AS]
 			-- <Precursor>
 		local
-			l_routine: ?ROUTINE_AS
+			l_routine: detachable ROUTINE_AS
 		do
 			l_routine ?= a_feature.body.content
 			if l_routine /= Void and then l_routine.has_precondition then
@@ -33,7 +33,7 @@ feature {NONE} -- Contracts
 
 feature {NONE} -- Population
 
-	contract_keywords (a_origin: BOOLEAN): !ARRAYED_LIST [EDITOR_TOKEN]
+	contract_keywords (a_origin: BOOLEAN): attached ARRAYED_LIST [EDITOR_TOKEN]
 			-- <Precursor>
 		do
 			if a_origin then
@@ -50,13 +50,13 @@ feature {NONE} -- Population
 
 feature {NONE} -- Factory
 
-	create_text_modifier: !ES_PRECONDITION_CONTRACT_TEXT_MODIFIER
+	create_text_modifier: attached ES_PRECONDITION_CONTRACT_TEXT_MODIFIER
 			-- <Precursor>
 		do
 			create Result.make (context_feature, context_class)
 		end
 
-	create_parent_text_modifier (a_parent: !CLASS_C): !ES_PRECONDITION_CONTRACT_TEXT_MODIFIER
+	create_parent_text_modifier (a_parent: attached CLASS_C): attached ES_PRECONDITION_CONTRACT_TEXT_MODIFIER
 			-- <Precursor>
 		local
 			l_class_i: CLASS_I

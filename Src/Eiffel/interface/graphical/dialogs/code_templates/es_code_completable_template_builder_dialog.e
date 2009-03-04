@@ -21,12 +21,12 @@ create
 
 feature -- Acccess
 
-	completion_provider: !COMPLETION_POSSIBILITIES_PROVIDER assign set_completion_provider
+	completion_provider: attached COMPLETION_POSSIBILITIES_PROVIDER assign set_completion_provider
 			-- Completion provider for completion text boxes
 
 feature -- Status report
 
-	set_completion_provider (a_provider: !like completion_provider)
+	set_completion_provider (a_provider: attached like completion_provider)
 			-- Sets the completion provider for the text boxes
 			--
 			-- `a_provider': A completion provider
@@ -35,9 +35,9 @@ feature -- Status report
 			is_initialized: is_initialized
 		do
 			completion_provider := a_provider
-			declaration_text_fields.do_all (agent (ia_item: !EV_TEXT_FIELD; ia_provider: !like completion_provider)
+			declaration_text_fields.do_all (agent (ia_item: attached EV_TEXT_FIELD; ia_provider: attached like completion_provider)
 				do
-					if {l_completable: CODE_COMPLETABLE} ia_item then
+					if attached {CODE_COMPLETABLE} ia_item as l_completable then
 							-- Set completion provider on a code completable text field
 						l_completable.set_completion_possibilities_provider (ia_provider)
 						register_action (ia_item.focus_in_actions, agent ia_provider.set_code_completable (l_completable))
@@ -49,7 +49,7 @@ feature -- Status report
 
 feature {NONE} -- Factory
 
-	create_declaration_text_widget (a_declaration: !CODE_DECLARATION): !EV_TEXT_FIELD
+	create_declaration_text_widget (a_declaration: attached CODE_DECLARATION): attached EV_TEXT_FIELD
 			-- <Precursor>
 		do
 			create {EB_CODE_COMPLETABLE_TEXT_FIELD} Result

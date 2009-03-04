@@ -141,7 +141,7 @@ feature {NONE} -- Basic operations
 	frozen request_show_context_menu (a_item: EV_GRID_ITEM; a_x: INTEGER; a_y: INTEGER)
 			-- <Precursor>
 		do
-			if {l_item: EB_GRID_EDITOR_TOKEN_ITEM} a_item then
+			if attached {EB_GRID_EDITOR_TOKEN_ITEM} a_item as l_item then
 				if grid_token_support.stone_at_position (a_x, a_y) = Void then
 						-- Only show the menu if a pick operation was not performed.
 					show_context_menu (a_item, a_x, a_y)

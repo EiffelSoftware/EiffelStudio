@@ -35,7 +35,7 @@ feature -- Access
 			Result := stock_pixmaps.tool_features_icon
 		end
 
-	title: !STRING_32
+	title: attached STRING_32
 			-- <Precursor>
 		do
 			Result := locale_formatter.translation (t_tool_title)
@@ -43,15 +43,15 @@ feature -- Access
 
 feature {NONE} -- Status report
 
-	internal_is_stone_usable (a_stone: !like stone): BOOLEAN
+	internal_is_stone_usable (a_stone: attached like stone): BOOLEAN
 			-- <Precursor>
 		do
-			Result := ({l_stone: !CLASSI_STONE} a_stone or {l_cluster: !CLUSTER_STONE} a_stone)
+			Result := (attached {attached CLASSI_STONE} a_stone as l_stone or attached {attached CLUSTER_STONE} a_stone as l_cluster)
 		end
 
 feature -- Basic operations
 
-	select_feature_item (a_feature: ?E_FEATURE)
+	select_feature_item (a_feature: detachable E_FEATURE)
 			-- <Precursor>
 		do
 			if is_tool_instantiated then
@@ -59,7 +59,7 @@ feature -- Basic operations
 			end
 		end
 
-	select_feature_item_by_name (a_feature: !STRING_GENERAL)
+	select_feature_item_by_name (a_feature: attached STRING_GENERAL)
 			-- <Precursor>
 		do
 			if is_tool_instantiated then
@@ -69,7 +69,7 @@ feature -- Basic operations
 
 feature {NONE} -- Factory
 
-	new_tool: !ES_FEATURES_TOOL_PANEL
+	new_tool: attached ES_FEATURES_TOOL_PANEL
 			-- <Precursor>
 		do
 			create Result.make (window, Current)

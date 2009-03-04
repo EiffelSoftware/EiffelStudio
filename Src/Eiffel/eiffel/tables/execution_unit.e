@@ -177,7 +177,7 @@ feature -- Access
 		do
 				-- Slow part, but we do not have any other way to find the
 				-- associated feature with current information.
-			if {l_encapsulated_feat: ENCAPSULATED_I} system.class_of_id (access_in).feature_table.feature_of_body_index (body_index) then
+			if attached {ENCAPSULATED_I} system.class_of_id (access_in).feature_table.feature_of_body_index (body_index) as l_encapsulated_feat then
 				Result := l_encapsulated_feat.generate_in > 0 or else l_encapsulated_feat.is_replicated_directly
 			end
 		end

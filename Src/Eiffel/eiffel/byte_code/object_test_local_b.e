@@ -76,7 +76,7 @@ feature -- Comparison
 	same (other: ACCESS_B): BOOLEAN
 			-- Is `other' the same access as Current ?
 		do
-			if {o: OBJECT_TEST_LOCAL_B} other then
+			if attached {OBJECT_TEST_LOCAL_B} other as o then
 				Result := o.position = position and then
 					o.body_id = body_id
 			end

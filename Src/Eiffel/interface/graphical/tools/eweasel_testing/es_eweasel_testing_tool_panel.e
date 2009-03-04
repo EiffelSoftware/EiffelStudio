@@ -116,7 +116,7 @@ feature {NONE} -- Initialization
 			l_contexts: ES_EWEASEL_TESTING_EVENT_LIST_CONTEXTS
 		do
 			if a_event_list_item.category = {ENVIRONMENT_CATEGORIES}.testing then
-				if {l_data: ES_EWEASEL_TEST_RESULT_ITEM} a_event_list_item.data then
+				if attached {ES_EWEASEL_TEST_RESULT_ITEM} a_event_list_item.data as l_data then
 					create l_contexts
 
 					if a_service.items (l_contexts.eweasel_result_analyzer).has (a_event_list_item) then
@@ -129,7 +129,7 @@ feature {NONE} -- Initialization
 	populate_event_grid_row_items (a_event_item: EVENT_LIST_ITEM_I; a_row: EV_GRID_ROW)
 			-- <Precursor>
 		do
-			if {l_test_case_item: EVENT_LIST_TEST_CASE_ITEM} a_event_item then
+			if attached {EVENT_LIST_TEST_CASE_ITEM} a_event_item as l_test_case_item then
 				test_case_grid_manager.add_test_case (l_test_case_item, a_row)
 			else
 				check not_possible: False end
@@ -145,8 +145,8 @@ feature {NONE} -- Initialization
 		local
 			l_class_stone: CLASSI_STONE
 		do
-			if {l_event_list_item: EVENT_LIST_ITEM} a_row.data then
-				if {l_test_case: ES_EWEASEL_TEST_CASE_ITEM} l_event_list_item.data then
+			if attached {EVENT_LIST_ITEM} a_row.data as l_event_list_item then
+				if attached {ES_EWEASEL_TEST_CASE_ITEM} l_event_list_item.data as l_test_case then
 					check is_running_state: l_test_case.is_valid_for_running end
 					create l_class_stone.make (l_test_case.class_i)
 					(create {EB_CONTROL_PICK_HANDLER}).launch_stone (l_class_stone)
@@ -156,7 +156,7 @@ feature {NONE} -- Initialization
 
 feature -- Query
 
-	unit_test_manager: !ES_EWEASEL_EXECUTION_MANAGER
+	unit_test_manager: attached ES_EWEASEL_EXECUTION_MANAGER
 			-- Manager of manual unit test.
 		local
 			l_shared: ES_EWEASEL_SINGLETON_FACTORY
@@ -170,7 +170,7 @@ feature -- Query
 		do
 			Result := internal_test_case_grid_manager
 			if Result = Void then
-				if {l_grid: ES_GRID} test_case_grid then
+				if attached {ES_GRID} test_case_grid as l_grid then
 					create Result.make (l_grid)
 				else
 					check not_possible: False end
@@ -266,12 +266,12 @@ feature {NONE}	-- Implementation
 			l_tester: ES_EWEASEL_TEST_CASE_FINDER
 		do
 			Result := a_item /= Void and then a_item.category = {ENVIRONMENT_CATEGORIES}.testing
-			if {l_item: ES_EWEASEL_TEST_CASE_ITEM} a_item.data then
+			if attached {ES_EWEASEL_TEST_CASE_ITEM} a_item.data as l_item then
 				create l_tester
 				Result := l_tester.is_test_case_class (l_item.class_i)
 			end
 			if Result then
-				Result := {l_test_case_item: EVENT_LIST_TEST_CASE_ITEM} a_item
+				Result := attached {EVENT_LIST_TEST_CASE_ITEM} a_item as l_test_case_item
 			end
 		end
 

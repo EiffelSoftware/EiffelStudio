@@ -106,7 +106,7 @@ feature -- Analysis preparation
 							next := token.next
 							create {EDITOR_TOKEN_FEATURE_START} tfs.make_with_pos (token.wide_image,
 								features_position.item.start_pos, features_position.item.end_pos)
-							if is_string (token) or else ({l_fst: EDITOR_TOKEN_FEATURE_START} token and then l_fst.text_color_id = l_fst.string_text_color_id) then
+							if is_string (token) or else (attached {EDITOR_TOKEN_FEATURE_START} token as l_fst and then l_fst.text_color_id = l_fst.string_text_color_id) then
 									-- This happens when processing a prefix/infix feature or reprocessing
 									-- the click text.
 								tfs.set_text_color_string
@@ -391,7 +391,7 @@ feature -- Click list update
 							next := token.next
 							create {EDITOR_TOKEN_FEATURE_START} tfs.make_with_pos (token.wide_image,
 								features_position.item.start_pos, features_position.item.end_pos)
-							if is_string (token) or else ({l_fst: EDITOR_TOKEN_FEATURE_START} token and then l_fst.text_color_id = l_fst.string_text_color_id) then
+							if is_string (token) or else (attached {EDITOR_TOKEN_FEATURE_START} token as l_fst and then l_fst.text_color_id = l_fst.string_text_color_id) then
 									-- This happens when processing a prefix/infix feature or reprocessing
 									-- the click text.
 								tfs.set_text_color_string

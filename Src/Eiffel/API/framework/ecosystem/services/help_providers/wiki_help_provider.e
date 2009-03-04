@@ -22,13 +22,13 @@ create
 
 feature -- Access
 
-	document_protocol: !STRING_32
+	document_protocol: attached STRING_32
 			-- <Precursor>
 		once
 			create Result.make_from_string ("wiki")
 		end
 
-	document_description: !STRING_32
+	document_description: attached STRING_32
 			-- <Precursor>
 		once
 			create Result.make_from_string ("Wiki")
@@ -36,7 +36,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	base_url: !STRING
+	base_url: attached STRING
 			-- <Precursor>
 		once
 			create Result.make_from_string ("http://dev.eiffel.com/")
@@ -44,7 +44,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Formatting
 
-	format_context (a_context: !STRING_GENERAL): !STRING
+	format_context (a_context: attached STRING_GENERAL): attached STRING
 			-- <Precursor>
 		local
 			l_count, i: INTEGER

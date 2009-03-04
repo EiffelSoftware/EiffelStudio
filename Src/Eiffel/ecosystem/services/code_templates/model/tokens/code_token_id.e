@@ -75,13 +75,13 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	evaluate (a_table: !CODE_SYMBOL_TABLE)
+	evaluate (a_table: attached CODE_SYMBOL_TABLE)
 			-- Evalutes the current token to determine it's printable value.
 			--
 			-- `a_table': A code symbol table to take evaluated values from.
 		local
-			l_value: !CODE_SYMBOL_VALUE
-			l_id: !STRING
+			l_value: attached CODE_SYMBOL_VALUE
+			l_id: attached STRING
 		do
 			l_id := text.as_string_8.as_attached
 			if a_table.has_id (l_id) then
@@ -96,7 +96,7 @@ feature -- Basic operations
 
 feature -- Visitor
 
-	process (a_visitor: !CODE_TOKEN_VISITOR_I)
+	process (a_visitor: attached CODE_TOKEN_VISITOR_I)
 			-- <Precursor>
 		do
 			a_visitor.process_code_token_id (Current)
@@ -115,7 +115,7 @@ feature -- Output
 
 feature {NONE} -- Internal implementation cache
 
-	internal_printable_text: ?STRING_32
+	internal_printable_text: detachable STRING_32
 			-- Mutable version of `printable_text'		
 
 ;note

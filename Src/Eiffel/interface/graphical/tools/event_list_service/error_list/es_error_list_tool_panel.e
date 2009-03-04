@@ -143,7 +143,7 @@ feature {NONE} -- Initialization: User interface
 				-- Hook up events for session data
 			if session_manager.is_service_available then
 				session_data.session_connection.connect_events (Current)
-				if {l_expand: !BOOLEAN_REF} session_data.value_or_default (expand_errors_session_id, False) then
+				if attached {attached BOOLEAN_REF} session_data.value_or_default (expand_errors_session_id, False) as l_expand then
 					is_expanding_errors := l_expand.item
 					if is_expanding_errors then
 						expand_errors_button.enable_select
@@ -187,7 +187,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Access: Help
 
-	help_context_id: !STRING_GENERAL
+	help_context_id: attached STRING_GENERAL
 			-- <Precursor>
 		once
 			Result := "62F36EFA-1D3A-9E48-3A6A-7DA40B7E2046"
@@ -239,7 +239,7 @@ feature {NONE} -- Status report
 	is_error_event (a_event_item: EVENT_LIST_ITEM_I): BOOLEAN
 			-- Determines if event `a_event_item' is an error event
 		do
-			if a_event_item.type = {EVENT_LIST_ITEM_TYPES}.error and then {l_error: !EVENT_LIST_ERROR_ITEM_I} a_event_item then
+			if a_event_item.type = {EVENT_LIST_ITEM_TYPES}.error and then attached {attached EVENT_LIST_ERROR_ITEM_I} a_event_item as l_error then
 				Result := not l_error.is_warning
 			end
 		ensure
@@ -251,7 +251,7 @@ feature {NONE} -- Status report
 		require
 			a_event_item_attached: a_event_item /= Void
 		do
-			if a_event_item.type = {EVENT_LIST_ITEM_TYPES}.error and then {l_error: !EVENT_LIST_ERROR_ITEM_I} a_event_item then
+			if a_event_item.type = {EVENT_LIST_ITEM_TYPES}.error and then attached {attached EVENT_LIST_ERROR_ITEM_I} a_event_item as l_error then
 				Result := l_error.is_warning
 			end
 		ensure
@@ -445,7 +445,7 @@ feature {NONE} -- Basic operations
 			l_menu: EV_MENU
 			l_remove: EV_MENU_ITEM
 		do
-			if {l_item: EVENT_LIST_ITEM_I} a_item.row.data then
+			if attached {EVENT_LIST_ITEM_I} a_item.row.data as l_item then
 				create l_menu
 
 					-- Remove, singluar
@@ -579,9 +579,9 @@ feature {NONE} -- Basic operations
 							-- Set context pebble by iterating through the context content to find a feature
 							-- or class token.
 						from l_content.finish until l_content.before or l_context_stone /= Void loop
-							if {l_ft: !EDITOR_TOKEN_FEATURE} l_content.item_for_iteration then
+							if attached {attached EDITOR_TOKEN_FEATURE} l_content.item_for_iteration as l_ft then
 								l_context_stone ?= l_ft.pebble
-							elseif {l_ct: !EDITOR_TOKEN_CLASS} l_content.item_for_iteration then
+							elseif attached {attached EDITOR_TOKEN_CLASS} l_content.item_for_iteration as l_ct then
 								l_context_stone ?= l_ct.pebble
 							end
 							l_content.back
@@ -811,7 +811,7 @@ feature {ES_ERROR_LIST_COMMANDER_I} -- Basic operations: Navigation
 
 feature {NONE} -- Event handlers
 
-	on_unlocked (a_sender: !LOCKABLE_I)
+	on_unlocked (a_sender: attached LOCKABLE_I)
 			-- <Precursor>
 		do
 			update_error_and_warning_counters
@@ -881,7 +881,7 @@ feature {NONE} -- Event handlers
 			is_initialized: is_appliable_event (a_event_item) implies is_initialized
 		end
 
-	on_syntax_error_event_item_added (a_event_item: !EVENT_LIST_ERROR_ITEM_I)
+	on_syntax_error_event_item_added (a_event_item: attached EVENT_LIST_ERROR_ITEM_I)
 			-- <Precursor>
 		require
 			is_interface_usable: is_interface_usable
@@ -917,7 +917,7 @@ feature {NONE} -- Event handlers
 			end
 		end
 
-	on_syntax_error_event_item_removed (a_event_item: !EVENT_LIST_ERROR_ITEM_I)
+	on_syntax_error_event_item_removed (a_event_item: attached EVENT_LIST_ERROR_ITEM_I)
 			-- <Precursor>
 		require
 			is_interface_usable: is_interface_usable
@@ -943,7 +943,7 @@ feature {NONE} -- Event handlers
 		do
 			if a_id.is_equal (expand_errors_session_id) then
 					-- Retrieve global session
-				if {l_expand: !BOOLEAN_REF} a_session.value_or_default (expand_errors_session_id, False) then
+				if attached {attached BOOLEAN_REF} a_session.value_or_default (expand_errors_session_id, False) as l_expand then
 					if is_expanding_errors /= l_expand.item then
 						is_expanding_errors := l_expand.item
 						if is_expanding_errors then

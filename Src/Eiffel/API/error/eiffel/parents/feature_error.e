@@ -107,8 +107,8 @@ feature -- Output
 	trace_primary_context (a_text_formatter: TEXT_FORMATTER)
 			-- Build the primary context string so errors can be navigated to
 		local
-			l_class: ?CLASS_C
-			l_feature: ?like e_feature
+			l_class: detachable CLASS_C
+			l_feature: detachable like e_feature
 		do
 			l_class := written_class
 			if l_class = Void then

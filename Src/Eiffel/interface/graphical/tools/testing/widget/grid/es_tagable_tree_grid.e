@@ -71,7 +71,7 @@ feature {NONE} --Initialization
 
 				-- Create expansion cache
 			create expansion_cache.make
-			expansion_cache.set_equality_tester (create {KL_STRING_EQUALITY_TESTER_A [!STRING]})
+			expansion_cache.set_equality_tester (create {KL_STRING_EQUALITY_TESTER_A [attached STRING]})
 		end
 
 	on_after_initialized
@@ -86,7 +86,7 @@ feature {NONE} --Initialization
 
 feature -- Access
 
-	tree: !ES_TAGABLE_TREE_GRID [G]
+	tree: attached ES_TAGABLE_TREE_GRID [G]
 			-- <Precursor>
 		do
 			Result := Current
@@ -94,7 +94,7 @@ feature -- Access
 
 feature {ES_TAGABLE_TREE_GRID_NODE_CONTAINER} -- Access
 
-	expansion_cache: !DS_LINKED_LIST [!STRING]
+	expansion_cache: attached DS_LINKED_LIST [attached STRING]
 			-- Tags of nodes which are currently expanded in `grid'
 			--
 			-- Note: this list holds not more than `max_expansion_cache_count', where the first one the list
@@ -102,7 +102,7 @@ feature {ES_TAGABLE_TREE_GRID_NODE_CONTAINER} -- Access
 
 feature {NONE} -- Access
 
-	untagged_subrow: ?EV_GRID_ROW
+	untagged_subrow: detachable EV_GRID_ROW
 			-- Anchor for row where list of untagged items start
 
 	first_child_index: INTEGER
@@ -170,7 +170,7 @@ feature {NONE} -- Element change
 			initialize_layout
 		end
 
-	add_untagged_item (a_item: !G)
+	add_untagged_item (a_item: attached G)
 			-- <Precursor>
 		local
 			i: INTEGER
@@ -182,7 +182,7 @@ feature {NONE} -- Element change
 				from
 					i := first_untagged_index
 				until
-					i = last_untagged_index or else ({l_data: ES_TAGABLE_GRID_ITEM_DATA [G]} grid.row (i).data and then
+					i = last_untagged_index or else (attached {ES_TAGABLE_GRID_ITEM_DATA [G]} grid.row (i).data as l_data and then
 					l_data.item.name > a_item.name)
 				loop
 					i := i + grid.row (i).subrow_count_recursive + 1
@@ -207,7 +207,7 @@ feature {NONE} -- Element change
 			create l_new.make (l_row, a_item)
 		end
 
-	remove_untagged_item (a_item: !G)
+	remove_untagged_item (a_item: attached G)
 			-- <Precursor>
 		local
 			i: INTEGER
@@ -221,7 +221,7 @@ feature {NONE} -- Element change
 				from
 					i := first_untagged_index
 				until
-					{l_data: ES_TAGABLE_GRID_ITEM_DATA [G]} tree.grid.row (i).data and then
+					attached {ES_TAGABLE_GRID_ITEM_DATA [G]} tree.grid.row (i).data as l_data and then
 						l_data.item = a_item
 				loop
 					i := i + grid.row (i).subrow_count_recursive + 1
@@ -232,13 +232,13 @@ feature {NONE} -- Element change
 
 feature -- Basic functionality
 
-	show_row_for_item (a_item: !G)
+	show_row_for_item (a_item: attached G)
 			-- Expand all rows in `Current' displaying `a_item' and select them.
 		require
 			connected: is_connected
 			a_item_in_collection: collection.items.has (a_item)
 		local
-			l_tags: !DS_HASH_SET [!STRING]
+			l_tags: attached DS_HASH_SET [attached STRING]
 			i: INTEGER
 		do
 			l_tags := tag_suffixes (a_item.tags, tag_prefix)
@@ -258,7 +258,7 @@ feature -- Basic functionality
 					from
 						i := first_untagged_index
 					until
-						{l_data: ES_TAGABLE_GRID_ITEM_DATA [G]} tree.grid.row (i).data and then
+						attached {ES_TAGABLE_GRID_ITEM_DATA [G]} tree.grid.row (i).data as l_data and then
 							l_data.item = a_item
 					loop
 						i := i + grid.row (i).subrow_count_recursive + 1
@@ -273,7 +273,7 @@ feature {NONE} -- Implementation
 	on_row_expansion (a_row: EV_GRID_ROW)
 			-- Make sure tree node represented by `a_row' is evaluated.
 		do
-			if {l_node: ES_TAGABLE_GRID_TAG_DATA [G]} a_row.data then
+			if attached {ES_TAGABLE_GRID_TAG_DATA [G]} a_row.data as l_node then
 				if not l_node.is_evaluated then
 					l_node.compute_descendants
 				end
@@ -289,7 +289,7 @@ feature {NONE} -- Implementation
 	on_row_collapse (a_row: EV_GRID_ROW)
 			-- Remove tag from `expansion_cache' if which is represented by node.
 		do
-			if {l_node: ES_TAGABLE_GRID_TAG_DATA [G]} a_row.data then
+			if attached {ES_TAGABLE_GRID_TAG_DATA [G]} a_row.data as l_node then
 				expansion_cache.start
 				expansion_cache.search_forth (l_node.tag)
 				if not expansion_cache.off then

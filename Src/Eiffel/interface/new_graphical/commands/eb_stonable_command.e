@@ -21,7 +21,7 @@ feature -- Status report
 	is_valid_stone (a_stone: STONE): BOOLEAN
 			-- Inidicates if the stone is valid for execution with a context stone
 		require
-			is_interface_usable: {rl_usable: USABLE_I} Current implies rl_usable.is_interface_usable
+			is_interface_usable: attached {USABLE_I} Current as rl_usable implies rl_usable.is_interface_usable
 			executable: executable
 			a_stone_attached: a_stone /= Void
 		deferred
@@ -32,7 +32,7 @@ feature -- Basic operations
 	execute_with_stone (a_stone: STONE)
 			-- Execute with a context stone
 		require
-			is_interface_usable: {rl_usable: USABLE_I} Current implies rl_usable.is_interface_usable
+			is_interface_usable: attached {USABLE_I} Current as rl_usable implies rl_usable.is_interface_usable
 			executable: executable
 			a_stone_attached: a_stone /= Void
 		deferred

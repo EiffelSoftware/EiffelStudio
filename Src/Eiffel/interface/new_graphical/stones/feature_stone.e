@@ -123,7 +123,7 @@ feature -- Status report
 			-- Is `other' the same stone?
 			-- Ie: does `other' represent the same feature?
 		do
-			Result := {fns: FEATURE_STONE} other and then same_feature (e_feature, fns.e_feature)
+			Result := attached {FEATURE_STONE} other as fns and then same_feature (e_feature, fns.e_feature)
 		end
 
 	is_valid: BOOLEAN
@@ -235,7 +235,7 @@ feature -- dragging
 		do
 			if internal_start_position = -1 and then e_feature /= Void then
 					-- Position has not been initialized
-				if not e_feature.is_il_external and then {l_body_as: FEATURE_AS} e_feature.ast then
+				if not e_feature.is_il_external and then attached {FEATURE_AS} e_feature.ast as l_body_as then
 					internal_start_position := l_body_as.start_position
 					internal_end_position := l_body_as.end_position
 					internal_start_line_number := l_body_as.start_location.line

@@ -77,7 +77,7 @@ feature -- Access
 	same_as (other: TYPE_A): BOOLEAN
 			-- Is `other' the same as Current?
 		do
-			Result := {b: BITS_A} other and then  bit_count = b.bit_count
+			Result := attached {BITS_A} other as b and then  bit_count = b.bit_count
 		end
 
 	associated_class: CLASS_C

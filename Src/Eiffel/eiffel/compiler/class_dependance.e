@@ -39,14 +39,14 @@ feature
 			Result := System.class_of_id (class_id)
 		end
 
-	put (f: ?FEATURE_DEPENDANCE; bindex: INTEGER)
+	put (f: detachable FEATURE_DEPENDANCE; bindex: INTEGER)
 			-- We must update the correspondance table in the server
 		do
 			System.depend_server.add_correspondance (bindex, class_id)
 			Precursor {HASH_TABLE} (f, bindex)
 		end
 
-	force (f: ?FEATURE_DEPENDANCE; bindex: INTEGER)
+	force (f: detachable FEATURE_DEPENDANCE; bindex: INTEGER)
 			-- We must update the correspondance table in the server
 		do
 			System.depend_server.add_correspondance (bindex, class_id)

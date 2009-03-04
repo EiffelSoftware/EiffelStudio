@@ -15,7 +15,7 @@ inherit
 
 feature -- Query
 
-	search_help (a_search: !STRING_GENERAL): !DS_LIST [TUPLE [title: !STRING_GENERAL; context_id: !STRING_GENERAL]]
+	search_help (a_search: attached STRING_GENERAL): attached DS_LIST [TUPLE [title: attached STRING_GENERAL; context_id: attached STRING_GENERAL]]
 			-- Searches help provider for documents using a search string.
 			-- Note: Search is syncronous and may be slow to retrieve results.
 			--
@@ -24,7 +24,7 @@ feature -- Query
 		deferred
 		ensure
 			result_contains_attached_items: not Result.has (Void)
-			result_contains_valid_items: Result.for_all (agent (a_ia_item: TUPLE [title: !STRING_GENERAL; context_id: !STRING_GENERAL]): BOOLEAN
+			result_contains_valid_items: Result.for_all (agent (a_ia_item: TUPLE [title: attached STRING_GENERAL; context_id: attached STRING_GENERAL]): BOOLEAN
 				do
 					Result := not a_ia_item.title.is_empty and not a_ia_item.context_id.is_empty and then is_valid_context_id (a_ia_item.context_id)
 				end)

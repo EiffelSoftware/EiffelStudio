@@ -53,7 +53,7 @@ feature -- Command
 	build_columns
 			-- Init columns of `grid'.
 		local
-			l_grid: !ES_GRID
+			l_grid: attached ES_GRID
 			l_columns: like all_columns_titles
 			l_helper: ES_EWEASEL_TEST_GRID_HELPER
 		do
@@ -78,7 +78,7 @@ feature -- Command
 			added: grid.column_count = 4
 		end
 
-	append_result_item (a_item: !ES_EWEASEL_TEST_RESULT_ITEM; a_row: EV_GRID_ROW)
+	append_result_item (a_item: attached ES_EWEASEL_TEST_RESULT_ITEM; a_row: EV_GRID_ROW)
 			-- Append grid items whose information query from `a_item' to `a_row'
 		require
 			not_void: a_row /= Void
@@ -105,7 +105,7 @@ feature -- Command
 						l_grid_item.set_tooltip (a_item.orignal_eweasel_ouput)
 					end
 				when 2 then
-					if {l_time: DT_DATE_TIME} a_item.test_run_time then
+					if attached {DT_DATE_TIME} a_item.test_run_time as l_time then
 						create {EV_GRID_LABEL_ITEM} l_grid_item.make_with_text (l_time.out)
 					else
 						create {EV_GRID_LABEL_ITEM} l_grid_item.make_with_text (time_string)
@@ -126,7 +126,7 @@ feature -- Command
 					check not_possible: False end
 				end
 
-				if {lt_grid_item: !EV_GRID_ITEM } l_grid_item then
+				if attached {attached EV_GRID_ITEM} l_grid_item as lt_grid_item then
 					a_row.set_item (l_all_columns.index, lt_grid_item)
 
 					set_forground_color_of_item (a_item, lt_grid_item)
@@ -160,7 +160,7 @@ feature -- Command
 		local
 			l_shared: EB_SHARED_WINDOW_MANAGER
 			l_list: like all_test_runs_from_grid
-			l_test_cases: !ARRAYED_LIST [ES_EWEASEL_TEST_CASE_ITEM]
+			l_test_cases: attached ARRAYED_LIST [ES_EWEASEL_TEST_CASE_ITEM]
 		do
 			l_list := all_test_runs_from_grid
 			l_test_cases := unit_test_manager.testing_tool.test_case_grid_manager.all_test_cases_from_grid
@@ -168,7 +168,7 @@ feature -- Command
 			session_data.append_test_run_data (l_list, l_test_cases)
 
 			create l_shared
-			if {l_dev_window: EB_DEVELOPMENT_WINDOW} l_shared.window_manager.last_focused_development_window then
+			if attached {EB_DEVELOPMENT_WINDOW} l_shared.window_manager.last_focused_development_window as l_dev_window then
 				l_dev_window.session_data.set_value (session_data, session_data_id)
 			end
 		end
@@ -179,8 +179,8 @@ feature -- Command
 			l_shared: EB_SHARED_WINDOW_MANAGER
 		do
 			create l_shared
-			if {l_dev_window: EB_DEVELOPMENT_WINDOW} l_shared.window_manager.last_focused_development_window then
-				if {l_data: like session_data} l_dev_window.session_data.value (session_data_id) then
+			if attached {EB_DEVELOPMENT_WINDOW} l_shared.window_manager.last_focused_development_window as l_dev_window then
+				if attached {like session_data} l_dev_window.session_data.value (session_data_id) as l_data then
 					internal_session_data := l_data
 				end
 			end
@@ -216,7 +216,7 @@ feature -- Command
 
 feature -- Query
 
-	all_columns: !ARRAYED_LIST [EV_GRID_COLUMN]
+	all_columns: attached ARRAYED_LIST [EV_GRID_COLUMN]
 			-- All columns in `grid'
 		local
 			l_index, l_count: INTEGER
@@ -235,10 +235,10 @@ feature -- Query
 			end
 		end
 
-	session_data: !ES_EWEASEL_TEST_RUN_SESSION_DATA
+	session_data: attached ES_EWEASEL_TEST_RUN_SESSION_DATA
 			-- Session data
 		do
-			if not {l_test: !ES_EWEASEL_TEST_RUN_SESSION_DATA} internal_session_data then
+			if not attached {attached ES_EWEASEL_TEST_RUN_SESSION_DATA} internal_session_data as l_test then
 				create internal_session_data.make
 			end
 			Result := internal_session_data
@@ -253,7 +253,7 @@ feature {NONE} -- Implementation commands
 			l_current_session_data: ARRAYED_LIST [ES_EWEASEL_TEST_RESULT_ITEM]
 		do
 			l_list := all_test_runs_from_grid
-			if {l_session_data: ES_EWEASEL_TEST_RUN_DATA_ITEM} session_data.current_session_data then
+			if attached {ES_EWEASEL_TEST_RUN_DATA_ITEM} session_data.current_session_data as l_session_data then
 				l_current_session_data := l_session_data.test_run_data
 				if l_current_session_data /= Void then
 					check same_size: l_list.count = l_current_session_data.count end
@@ -273,26 +273,26 @@ feature {NONE} -- Implementation commands
 			end
 		end
 
-	add_column_source (a_item: !ES_EWEASEL_TEST_RESULT_ITEM; a_row: EV_GRID_ROW): !EV_GRID_ITEM
+	add_column_source (a_item: attached ES_EWEASEL_TEST_RESULT_ITEM; a_row: EV_GRID_ROW): attached EV_GRID_ITEM
 			-- Add item to column `source'
 		require
 			not_void: a_row /= Void
 		local
-			l_token_item: !EB_GRID_EDITOR_TOKEN_ITEM
+			l_token_item: attached EB_GRID_EDITOR_TOKEN_ITEM
 			l_helper: ES_EWEASEL_TEST_GRID_HELPER
 		do
 			if a_item.execution_error_in /= Void then
 				create {EV_GRID_LABEL_ITEM} Result.make_with_text (a_item.execution_error_in)
 			elseif a_item.root_class_name /= Void then
 				create l_helper.make (grid)
-				if {lt_class_name: STRING} a_item.root_class_name.as_string_8 then
+				if attached {STRING} a_item.root_class_name.as_string_8 as lt_class_name then
 					l_token_item := l_helper.new_editor_token_item (lt_class_name)
 					Result := l_token_item
 				end
 			end
 		end
 
-	show_failure_trace_of (a_row: !EV_GRID_ROW)
+	show_failure_trace_of (a_row: attached EV_GRID_ROW)
 			-- Show failure details of `a_row'
 			-- This feature will add subrow into `a_row'
 		local
@@ -302,14 +302,14 @@ feature {NONE} -- Implementation commands
 				l_item := result_item_of (a_row)
 				check not_void: l_item /= Void end
 
-			 	if {lt_item: ES_EWEASEL_TEST_RESULT_ITEM} l_item then
+			 	if attached {ES_EWEASEL_TEST_RESULT_ITEM} l_item as lt_item then
 			 		add_sub_row_items (lt_item, a_row)
 			 	end
 
 			end
 		end
 
-	add_sub_row_items (a_item: !ES_EWEASEL_TEST_RESULT_ITEM; a_parent_row: !EV_GRID_ROW)
+	add_sub_row_items (a_item: attached ES_EWEASEL_TEST_RESULT_ITEM; a_parent_row: attached EV_GRID_ROW)
 			-- Add detail information rows to `a_row'
 		local
 			l_item: EV_GRID_LABEL_ITEM
@@ -335,7 +335,7 @@ feature {NONE} -- Implementation commands
 			end
 		end
 
-	set_forground_color_of_item (a_eweasel_result: !ES_EWEASEL_TEST_RESULT_ITEM; a_grid_item: !EV_GRID_ITEM)
+	set_forground_color_of_item (a_eweasel_result: attached ES_EWEASEL_TEST_RESULT_ITEM; a_grid_item: attached EV_GRID_ITEM)
 			-- Set forground color of `a_grid_item' base on `a_eweasel_result'.
 		local
 			l_colors: ES_SHARED_FONTS_AND_COLORS
@@ -358,12 +358,12 @@ feature {NONE} -- Implementation commands
 		local
 			l_row: EV_GRID_ROW
 		do
-			if {l_item: EV_GRID_EDITABLE_ITEM} grid.activated_item then
+			if attached {EV_GRID_EDITABLE_ITEM} grid.activated_item as l_item then
 				l_row := l_item.row
 
-				if {l_event_list_item: EVENT_LIST_TESTING_RESULT_ITEM} l_row.data then
-					 if {l_data: ES_EWEASEL_TEST_RESULT_ITEM} l_event_list_item.data then
-						if {l_grid_item: EV_GRID_EDITABLE_ITEM} grid.activated_item then
+				if attached {EVENT_LIST_TESTING_RESULT_ITEM} l_row.data as l_event_list_item then
+					 if attached {ES_EWEASEL_TEST_RESULT_ITEM} l_event_list_item.data as l_data then
+						if attached {EV_GRID_EDITABLE_ITEM} grid.activated_item as l_grid_item then
 							l_data.set_tag (l_grid_item.text)
 
 							update_current_session_data
@@ -389,7 +389,7 @@ feature {NONE} -- Implementation queries
 			column_count_right: Result.count = 4
 		end
 
-	grid: !ES_GRID
+	grid: attached ES_GRID
 			-- Grid managed.
 
 	testing_result_tool: ES_EWEASEL_TESTING_RESULT_TOOL_PANEL
@@ -406,11 +406,11 @@ feature {NONE} -- Implementation queries
 			end
 		end
 
-	result_item_of (a_row: !EV_GRID_ROW): ES_EWEASEL_TEST_RESULT_ITEM
+	result_item_of (a_row: attached EV_GRID_ROW): ES_EWEASEL_TEST_RESULT_ITEM
 			-- eweasel result item data in `a_row'
 		do
-			if {l_event_data: EVENT_LIST_TESTING_RESULT_ITEM} a_row.data then
-				if {l_test_case: ES_EWEASEL_TEST_RESULT_ITEM} l_event_data.data then
+			if attached {EVENT_LIST_TESTING_RESULT_ITEM} a_row.data as l_event_data then
+				if attached {ES_EWEASEL_TEST_RESULT_ITEM} l_event_data.data as l_test_case then
 					Result := l_test_case
 				else
 					check not_possible: False end
@@ -420,7 +420,7 @@ feature {NONE} -- Implementation queries
 			end
 		end
 
-	all_test_runs_from_grid: !ARRAYED_LIST [ES_EWEASEL_TEST_RESULT_ITEM]
+	all_test_runs_from_grid: attached ARRAYED_LIST [ES_EWEASEL_TEST_RESULT_ITEM]
 			-- Fectch all test case items information from `grid'
 		local
 			l_grid: like grid
@@ -435,7 +435,7 @@ feature {NONE} -- Implementation queries
 			until
 				l_index > l_count
 			loop
-				if {l_row: EV_GRID_ROW} l_grid.row (l_index) then
+				if attached {EV_GRID_ROW} l_grid.row (l_index) as l_row then
 					l_item := result_item_of (l_row)
 					if l_item /= Void then
 						Result.extend (l_item)
@@ -445,13 +445,13 @@ feature {NONE} -- Implementation queries
 			end
 		end
 
-	time_string: !STRING_GENERAL
+	time_string: attached STRING_GENERAL
 			-- Default time string used in grid items
 		do
 			create {STRING} Result.make_from_string ("")
 		end
 
-	tag_string: !STRING_GENERAL
+	tag_string: attached STRING_GENERAL
 			-- Default tag string used in grid items
 		do
 			create {STRING} Result.make_from_string ("")
@@ -460,7 +460,7 @@ feature {NONE} -- Implementation queries
 	session_data_id: STRING = "com.eiffel.testing.test_run_data_id"
 			-- Session data used for session service
 
-	unit_test_manager: !ES_EWEASEL_EXECUTION_MANAGER
+	unit_test_manager: attached ES_EWEASEL_EXECUTION_MANAGER
 			-- Manager of manual unit test.
 		local
 			l_shared: ES_EWEASEL_SINGLETON_FACTORY

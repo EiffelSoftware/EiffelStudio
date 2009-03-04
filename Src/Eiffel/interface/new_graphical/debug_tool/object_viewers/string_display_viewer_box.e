@@ -54,7 +54,7 @@ feature {NONE} -- Implementation
 			build_slices_box
 			if is_associated_with_tool then
 				build_tool_bar
-				if {lt_widget: EV_WIDGET} tool_bar then
+				if attached {EV_WIDGET} tool_bar as lt_widget then
 					vb.extend (lt_widget)
 					vb.disable_item_expand (lt_widget)
 				else
@@ -254,13 +254,13 @@ feature {NONE} -- Implementation
 	update_word_wrap_buttons (a_selected: BOOLEAN)
 			-- Update all word wrap button to `a_selected' state
 		do
-			if {lst: like word_wrap_buttons} word_wrap_buttons and then lst.count > 1 then
+			if attached word_wrap_buttons as lst and then lst.count > 1 then
 				from
 					lst.start
 				until
 					lst.after
 				loop
-					if {bt: SD_TOOL_BAR_TOGGLE_BUTTON} lst.item then
+					if attached {SD_TOOL_BAR_TOGGLE_BUTTON} lst.item as bt then
 						bt.select_actions.block
 						if a_selected then
 							bt.enable_select
@@ -343,7 +343,7 @@ feature -- Access
 	is_valid_stone (a_stone: ANY; is_strict: BOOLEAN): BOOLEAN
 			-- Is `st' valid stone for Current?
 		do
-			Result := {st: OBJECT_STONE} a_stone and then
+			Result := attached {OBJECT_STONE} a_stone as st and then
 				debugger_manager.dump_value_factory.new_object_value (st.object_address, st.dynamic_class).has_formatted_output
 		end
 

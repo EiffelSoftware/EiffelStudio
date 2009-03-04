@@ -453,7 +453,7 @@ feature -- Access
 				-- Use `other.conformance_type' rather than `other' to get deanchored form.
 			t := other.conformance_type
 			Result := same_as (t)
-			if not Result and then {c: like Current} t and then is_equivalent (c) then
+			if not Result and then attached {like Current} t as c and then is_equivalent (c) then
 					-- The rules are as follows, but we need to take care about implicit attachment status:
     				-- 1. !G conforms to G, ?G and !G.
 					-- 2. G conforms to G and ?G.
@@ -516,7 +516,7 @@ feature -- Access
 		local
 			t: ATTACHABLE_TYPE_A
 		do
-			if {l_cl_type: CL_TYPE_A} type.actual_type then
+			if attached {CL_TYPE_A} type.actual_type as l_cl_type then
 				Result := l_cl_type.instantiation_of (Current, written_id).to_other_attachment (Current)
 			else
 				Result := Current
@@ -524,7 +524,7 @@ feature -- Access
 			if
 				not Result.is_attached and then
 				system.class_of_id (written_id).constrained_types (position).is_attached and then
-				{a: ATTACHABLE_TYPE_A} Result and then not a.has_detachable_mark
+				attached {ATTACHABLE_TYPE_A} Result as a and then not a.has_detachable_mark
 			then
 					-- Promote attachment setting of the current contraint unless the formal has explicit detachable mark.
 				t := a.duplicate

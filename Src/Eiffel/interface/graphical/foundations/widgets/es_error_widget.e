@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			text_set: a_text.as_string_32.is_equal (text)
 		end
 
-	build_widget_interface (a_widget: !EV_HORIZONTAL_BOX)
+	build_widget_interface (a_widget: attached EV_HORIZONTAL_BOX)
 			-- Builds widget's interface.
 			--
 			-- `a_widget': The widget to initialize of build upon.
@@ -85,7 +85,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	text: !STRING_32
+	text: attached STRING_32
 			-- Text, as displayed on the label.
 		require
 			is_interface_usable: is_interface_usable
@@ -116,15 +116,15 @@ feature -- Element change
 
 feature {NONE} -- User interface elements
 
-	icon: !EV_PIXMAP
+	icon: attached EV_PIXMAP
 			-- Error icon.
 
-	label: !EV_LABEL
+	label: attached EV_LABEL
 			-- Label shown as error message.
 
 feature -- Actions
 
-	select_actions: !EV_LITE_ACTION_SEQUENCE [TUPLE]
+	select_actions: attached EV_LITE_ACTION_SEQUENCE [TUPLE]
 			-- Actions called when the widget is selected.
 
 feature {NONE} -- Actions handlers
@@ -142,7 +142,7 @@ feature {NONE} -- Actions handlers
 
 feature {NONE} -- Factory
 
-	create_widget: !EV_HORIZONTAL_BOX
+	create_widget: attached EV_HORIZONTAL_BOX
 			-- Creates a new widget, which will be initialized when `build_interface' is called.
 		do
 			create Result

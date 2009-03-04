@@ -10,11 +10,11 @@ class
 
 feature {NONE} -- Access
 
-	help_provider_from_protocol (a_protocol: ?STRING_32): !UUID
+	help_provider_from_protocol (a_protocol: detachable STRING_32): attached UUID
 			-- Helper provider from `a_protocol'
 		do
 			if a_protocol /= Void and then not a_protocol.is_empty then
-				if {lt_uuid: UUID}providers.item (a_protocol) then
+				if attached {UUID} providers.item (a_protocol) as lt_uuid then
 					Result := lt_uuid
 				else
 					Result := (create {HELP_PROVIDER_KINDS}).eis_default
@@ -24,7 +24,7 @@ feature {NONE} -- Access
 			end
 		end
 
-	providers: !HASH_TABLE [UUID, STRING_32]
+	providers: attached HASH_TABLE [UUID, STRING_32]
 			-- Provider mappings.
 			-- String in lower.
 		local

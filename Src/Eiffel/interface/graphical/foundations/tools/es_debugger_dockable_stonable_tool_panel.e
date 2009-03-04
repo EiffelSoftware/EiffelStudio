@@ -20,7 +20,7 @@ inherit
 
 feature {NONE} -- Access
 
-	tool_descriptor: !ES_DEBUGGER_STONABLE_TOOL [ES_DEBUGGER_DOCKABLE_STONABLE_TOOL_PANEL [EV_WIDGET]]
+	tool_descriptor: attached ES_DEBUGGER_STONABLE_TOOL [ES_DEBUGGER_DOCKABLE_STONABLE_TOOL_PANEL [EV_WIDGET]]
 			-- <Precursor>
 
 ;note

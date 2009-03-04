@@ -461,7 +461,7 @@ feature -- Display
 			end
 		end
 
-	display_on_editor (a_editor: !EB_CLICKABLE_EDITOR)
+	display_on_editor (a_editor: attached EB_CLICKABLE_EDITOR)
 			-- Display text on editor
 		local
 			l_tokens: like adapted_tokens

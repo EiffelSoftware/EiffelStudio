@@ -15,7 +15,7 @@ inherit
 
 feature -- Access
 
-	icon: !EV_PIXEL_BUFFER
+	icon: attached EV_PIXEL_BUFFER
 			-- An icon representing the output pane.
 		require
 			is_interface_usable: is_interface_usable
@@ -24,7 +24,7 @@ feature -- Access
 			not_result_is_destroyed: not Result.is_destroyed
 		end
 
-	icon_pixmap: !EV_PIXMAP
+	icon_pixmap: attached EV_PIXMAP
 			-- A pixmap icon representing the output pane.
 		require
 			is_interface_usable: is_interface_usable
@@ -36,7 +36,7 @@ feature -- Access
 
 feature -- Query
 
-	text_for_window (a_window: !SHELL_WINDOW_I): !STRING_32
+	text_for_window (a_window: attached SHELL_WINDOW_I): attached STRING_32
 			-- Retrieves current text for a given shell window.
 			--
 			-- `a_window': A window to retrieve an text for.
@@ -47,7 +47,7 @@ feature -- Query
 		deferred
 		end
 
-	output_window_for_window (a_window: !SHELL_WINDOW_I): !OUTPUT_WINDOW
+	output_window_for_window (a_window: attached SHELL_WINDOW_I): attached OUTPUT_WINDOW
 			-- Retrieves a writer for a given shell window.
 			--
 			-- `a_window': A window to retrieve an output window for.
@@ -62,7 +62,7 @@ feature -- Query
 
 feature -- Query: User interface elements
 
-	widget_for_window (a_window: !SHELL_WINDOW_I): !ES_WIDGET [EV_WIDGET]
+	widget_for_window (a_window: attached SHELL_WINDOW_I): attached ES_WIDGET [EV_WIDGET]
 			-- Retrieves a graphical widget reprentation of the output for a given shell window.
 			--
 			-- `a_window': A window to retrieve an output window for.
@@ -78,7 +78,7 @@ feature -- Query: User interface elements
 
 feature -- Basic operations
 
-	clear_window (a_window: !SHELL_WINDOW_I)
+	clear_window (a_window: attached SHELL_WINDOW_I)
 			-- Clears any cached output.
 			--
 			-- `a_window': A window to clear the output on.

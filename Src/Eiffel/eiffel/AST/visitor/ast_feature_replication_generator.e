@@ -135,7 +135,7 @@ feature -- Processing
 
 					-- Make sure that `generate_in' is reset for non-conforming attributes as it is
 					-- not needed due to flat inheritance.
-				if a_parent_c.is_non_conforming and then {l_attr: ENCAPSULATED_I} a_feature then
+				if a_parent_c.is_non_conforming and then attached {ENCAPSULATED_I} a_feature as l_attr then
 					l_attr.set_generate_in (0)
 				end
 			else

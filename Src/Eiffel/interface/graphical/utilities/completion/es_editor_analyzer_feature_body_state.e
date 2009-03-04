@@ -18,7 +18,7 @@ inherit
 
 feature -- Status report
 
-	is_valid_start_token (a_token: !EDITOR_TOKEN; a_line: !EDITOR_LINE): BOOLEAN
+	is_valid_start_token (a_token: attached EDITOR_TOKEN; a_line: attached EDITOR_LINE): BOOLEAN
 			-- <Precursor>
 		do
 			Result := Precursor (a_token, a_line) and then (is_feature_body_token (a_token, a_line))
@@ -26,16 +26,16 @@ feature -- Status report
 
 feature {NONE} -- Basic operation
 
-	process_next_tokens (a_info: !ES_EDITOR_ANALYZER_FEATURE_STATE_INFO; a_end_token: ?EDITOR_TOKEN)
+	process_next_tokens (a_info: attached ES_EDITOR_ANALYZER_FEATURE_STATE_INFO; a_end_token: detachable EDITOR_TOKEN)
 			-- <Precursor>
 		local
-			l_next: ?like next_token
+			l_next: detachable like next_token
 			l_state: ES_EDITOR_ANALYZER_STATE [ES_EDITOR_ANALYZER_FEATURE_STATE_INFO]
 			l_stop: BOOLEAN
 		do
 			from until l_stop loop
 				l_next := next_token (a_info.current_token, a_info.current_line, True, a_end_token,
-					agent (ia_start_token: !EDITOR_TOKEN; ia_start_line: !EDITOR_LINE): BOOLEAN
+					agent (ia_start_token: attached EDITOR_TOKEN; ia_start_line: attached EDITOR_LINE): BOOLEAN
 							-- Locate an if token.
 						do
 							Result := is_keyword_token (ia_start_token, {EIFFEL_KEYWORD_CONSTANTS}.if_keyword)

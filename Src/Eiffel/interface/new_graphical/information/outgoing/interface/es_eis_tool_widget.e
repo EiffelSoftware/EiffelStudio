@@ -182,7 +182,7 @@ feature {NONE} -- Initialization
 			split_area.set_first (l_vbox)
 
 				-- The tree
-			if {lt_widget: ES_EIS_TOOL_WIDGET}Current then
+			if attached {ES_EIS_TOOL_WIDGET} Current as lt_widget then
 				create l_tree.make_eis_tree (context_menu_factory, lt_widget)
 			end
 			tree := l_tree

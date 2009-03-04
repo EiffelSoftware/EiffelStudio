@@ -18,7 +18,7 @@ create
 
 feature -- Query
 
-	declaration (a_id: !STRING_8): CODE_DECLARATION
+	declaration (a_id: attached STRING_8): CODE_DECLARATION
 			-- Retrieve a code declaration via an identifier
 			--
 			-- `a_id': A case-insensitive declaration identifier to retrieve a code declaration.
@@ -27,10 +27,10 @@ feature -- Query
 			not_a_id_is_empty: not a_id.is_empty
 		local
 			l_items: like items
-			l_decl: !CODE_DECLARATION
+			l_decl: attached CODE_DECLARATION
 		do
 			l_items := items
-			if not l_items.is_empty and then {l_cursor: !DS_BILINEAR_CURSOR [!CODE_DECLARATION]} l_items.new_cursor then
+			if not l_items.is_empty and then attached {attached DS_BILINEAR_CURSOR [attached CODE_DECLARATION]} l_items.new_cursor as l_cursor then
 				from l_cursor.start until l_cursor.after loop
 					l_decl := l_cursor.item
 					if l_decl.id.is_case_insensitive_equal (a_id) then
@@ -48,7 +48,7 @@ feature -- Query
 
 feature -- Visitor
 
-	process (a_visitor: !CODE_TEMPLATE_VISITOR_I)
+	process (a_visitor: attached CODE_TEMPLATE_VISITOR_I)
 			-- <Precursor>
 		do
 			a_visitor.process_code_declaration_collection (Current)

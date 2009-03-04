@@ -76,7 +76,7 @@ feature -- Properties
 
 feature -- Access: Help
 
-	help_context_id: !STRING_GENERAL
+	help_context_id: attached STRING_GENERAL
 			-- <Precursor>
 		once
 			Result := "457B71DC-4609-DAC1-8458-CD9B64FD5945"

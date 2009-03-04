@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_id: !like help_context_id; a_section: ?like help_context_section)
+	make (a_id: attached like help_context_id; a_section: detachable like help_context_section)
 			-- Initialize a new custom help context.
 		require
 			not_a_id_is_empty: not a_id.is_empty
@@ -39,18 +39,18 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	help_context_id: !STRING_GENERAL
+	help_context_id: attached STRING_GENERAL
 			-- <Precursor>
 
-	help_context_section: ?STRING_GENERAL
+	help_context_section: detachable STRING_GENERAL
 			-- -- An optional sub-section in the help document, located using `help_context_id' to navigate to.
 
 feature {NONE} -- Access
 
-	internal_help_context_section: ?HELP_CONTEXT_SECTION_I
+	internal_help_context_section: detachable HELP_CONTEXT_SECTION_I
 			-- <Precursor>
 		local
-			l_section: ?like help_context_section
+			l_section: detachable like help_context_section
 		do
 			l_section := help_context_section
 			if l_section /= Void then

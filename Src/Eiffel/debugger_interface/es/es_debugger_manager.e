@@ -143,7 +143,7 @@ feature -- Settings
 			-- <Precursor>
 		do
 			if a_string /= Void then
-				Result := {bp: BOOLEAN_PREFERENCE} preferences.preferences.get_preference (a_string) and then bp.value
+				Result := attached {BOOLEAN_PREFERENCE} preferences.preferences.get_preference (a_string) as bp and then bp.value
 			end
 		end
 
@@ -162,10 +162,10 @@ feature -- Logger
 
 feature {NONE} -- Logger
 
-	logger_service: !SERVICE_CONSUMER [LOGGER_S]
+	logger_service: attached SERVICE_CONSUMER [LOGGER_S]
 			-- Access to logger service
 		do
-			if {l_service: SERVICE_CONSUMER [LOGGER_S]} internal_logger_service then
+			if attached {SERVICE_CONSUMER [LOGGER_S]} internal_logger_service as l_service then
 				Result := l_service
 			else
 				create Result

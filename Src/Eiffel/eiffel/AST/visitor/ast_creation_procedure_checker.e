@@ -185,7 +185,7 @@ feature {NONE} -- Processing
 			l_attached: l /= Void
 		do
 			if f.type.is_initialization_required and then not attribute_initialization.is_attribute_set (attributes.item (f.feature_id)) then
-				if {d: ATTRIBUTE_I} f and then d.has_body and then not bodies.has (d.body_index) then
+				if attached {ATTRIBUTE_I} f as d and then d.has_body and then not bodies.has (d.body_index) then
 						-- Attribute is self-initializing and not processed yet
 						-- (there is no recursion for an uninitialized self-initializing attribute).
 					process (f)

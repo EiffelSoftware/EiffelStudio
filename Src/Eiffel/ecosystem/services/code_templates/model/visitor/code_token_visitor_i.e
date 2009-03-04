@@ -15,7 +15,7 @@ inherit
 
 feature {CODE_TOKEN} -- Processing
 
-	process_code_token_cursor (a_value: !CODE_TOKEN_CURSOR)
+	process_code_token_cursor (a_value: attached CODE_TOKEN_CURSOR)
 			-- Process object `a_value'.
 		require
 			is_interface_usable: is_interface_usable
@@ -23,7 +23,7 @@ feature {CODE_TOKEN} -- Processing
 		deferred
 		end
 
-	process_code_token_eol (a_value: !CODE_TOKEN_EOL)
+	process_code_token_eol (a_value: attached CODE_TOKEN_EOL)
 			-- Process object `a_value'.
 		require
 			is_interface_usable: is_interface_usable
@@ -31,7 +31,7 @@ feature {CODE_TOKEN} -- Processing
 		deferred
 		end
 
-	process_code_token_id (a_value: !CODE_TOKEN_ID)
+	process_code_token_id (a_value: attached CODE_TOKEN_ID)
 			-- Process object `a_value'.
 		require
 			is_interface_usable: is_interface_usable
@@ -39,7 +39,7 @@ feature {CODE_TOKEN} -- Processing
 		deferred
 		end
 
-	process_code_token_id_ref (a_value: !CODE_TOKEN_ID_REF)
+	process_code_token_id_ref (a_value: attached CODE_TOKEN_ID_REF)
 			-- Process object `a_value'.
 		require
 			is_interface_usable: is_interface_usable
@@ -47,7 +47,7 @@ feature {CODE_TOKEN} -- Processing
 		deferred
 		end
 
-	process_code_token_text (a_value: !CODE_TOKEN_TEXT)
+	process_code_token_text (a_value: attached CODE_TOKEN_TEXT)
 			-- Process object `a_value'.
 		require
 			is_interface_usable: is_interface_usable
@@ -57,7 +57,7 @@ feature {CODE_TOKEN} -- Processing
 
 feature {CODE_TOKEN} -- Query
 
-	is_applicable_visitation_entity (a_value: !ANY): BOOLEAN
+	is_applicable_visitation_entity (a_value: attached ANY): BOOLEAN
 			-- Determines if object instance `a_value' is applicable for a visitation
 		do
 			Result := True

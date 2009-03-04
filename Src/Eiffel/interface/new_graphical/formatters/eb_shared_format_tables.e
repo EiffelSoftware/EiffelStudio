@@ -255,7 +255,7 @@ feature {NONE} -- Attributes .NET
 			l_consumed_types.search (a_class.name)
 			if l_consumed_types.found then
 				Result := l_consumed_types.found_item
-			elseif {l_ext_class: EXTERNAL_CLASS_I} a_class then
+			elseif attached {EXTERNAL_CLASS_I} a_class as l_ext_class then
 				Result := l_ext_class.external_consumed_type
 				if Result /= Void then
 					l_consumed_types.put (Result, a_class.name)

@@ -12,7 +12,7 @@ class
 
 feature -- Factory
 
-	create_code_built_in_literal_declaration (a_id: !STRING_8; a_parent: !CODE_DECLARATION_COLLECTION): !CODE_LITERAL_DECLARATION
+	create_code_built_in_literal_declaration (a_id: attached STRING_8; a_parent: attached CODE_DECLARATION_COLLECTION): attached CODE_LITERAL_DECLARATION
 			-- Creates a built-in code literal declaration.
 			--
 			-- `a_id': A code declaration identifier.
@@ -23,19 +23,19 @@ feature -- Factory
 			result_is_built_in: Result.is_built_in
 		end
 
-	create_code_category_collection (a_parent: !CODE_METADATA): !CODE_CATEGORY_COLLECTION
+	create_code_category_collection (a_parent: attached CODE_METADATA): attached CODE_CATEGORY_COLLECTION
 			-- Creates a code category collection node.
 		do
 			create Result.make (a_parent)
 		end
 
-	create_code_declaration_collection (a_parent: !CODE_TEMPLATE_DEFINITION): !CODE_DECLARATION_COLLECTION
+	create_code_declaration_collection (a_parent: attached CODE_TEMPLATE_DEFINITION): attached CODE_DECLARATION_COLLECTION
 			-- Creates a code declarations collection node.
 		do
 			create Result.make (a_parent)
 		end
 
-	create_code_literal_declaration (a_id: !STRING_8; a_parent: !CODE_DECLARATION_COLLECTION): !CODE_LITERAL_DECLARATION
+	create_code_literal_declaration (a_id: attached STRING_8; a_parent: attached CODE_DECLARATION_COLLECTION): attached CODE_LITERAL_DECLARATION
 			-- Creates a code literal declaration.
 			--
 			-- `a_id': A code declaration identifier.
@@ -46,13 +46,13 @@ feature -- Factory
 			not_result_is_built_in_set: not Result.is_built_in
 		end
 
-	create_code_metadata (a_parent: !CODE_TEMPLATE_DEFINITION): !CODE_METADATA
+	create_code_metadata (a_parent: attached CODE_TEMPLATE_DEFINITION): attached CODE_METADATA
 			-- Creates a code metadata section.
 		do
 			create Result.make (a_parent)
 		end
 
-	create_code_numeric_version (a_major, a_minor, a_revision, a_qfe: NATURAL_16): !CODE_NUMERIC_VERSION
+	create_code_numeric_version (a_major, a_minor, a_revision, a_qfe: NATURAL_16): attached CODE_NUMERIC_VERSION
 			-- Creates a numerical code version.
 			--
 			-- `a_major': A major version part.
@@ -63,7 +63,7 @@ feature -- Factory
 			create Result.make (a_major, a_minor, a_revision, a_qfe)
 		end
 
-	create_code_object_declaration (a_id: !STRING_8; a_parent: !CODE_DECLARATION_COLLECTION): !CODE_OBJECT_DECLARATION
+	create_code_object_declaration (a_id: attached STRING_8; a_parent: attached CODE_DECLARATION_COLLECTION): attached CODE_OBJECT_DECLARATION
 			-- Creates a code object declaration.
 			--
 			-- `a_id': A code declaration identifier.
@@ -74,25 +74,25 @@ feature -- Factory
 			not_result_is_built_in_set: not Result.is_built_in
 		end
 
-	create_code_template_collection (a_parent: !CODE_TEMPLATE_DEFINITION): !CODE_TEMPLATE_COLLECTION
+	create_code_template_collection (a_parent: attached CODE_TEMPLATE_DEFINITION): attached CODE_TEMPLATE_COLLECTION
 			-- Creates a code templates collections node.
 		do
 			create Result.make (a_parent)
 		end
 
-	create_code_template_defintion: !CODE_TEMPLATE_DEFINITION
+	create_code_template_defintion: attached CODE_TEMPLATE_DEFINITION
 			-- Creates a root code template file.
 		do
 			create Result.make (Current)
 		end
 
-	create_code_template (a_parent: !CODE_TEMPLATE_COLLECTION): !CODE_TEMPLATE
+	create_code_template (a_parent: attached CODE_TEMPLATE_COLLECTION): attached CODE_TEMPLATE
 			-- Creates a simple, unversioned code template.
 		do
 			create Result.make (a_parent)
 		end
 
-	create_code_version (a_version: !STRING_32): !CODE_VERSION
+	create_code_version (a_version: attached STRING_32): attached CODE_VERSION
 			-- Creates an arbitary code version.
 			--
 			-- `a_version': A version string indicating the version.
@@ -100,7 +100,7 @@ feature -- Factory
 			create Result.make (a_version)
 		end
 
-	create_code_versioned_template (a_version: !CODE_VERSION; a_parent: !CODE_TEMPLATE_COLLECTION): !CODE_VERSIONED_TEMPLATE
+	create_code_versioned_template (a_version: attached CODE_VERSION; a_parent: attached CODE_TEMPLATE_COLLECTION): attached CODE_VERSIONED_TEMPLATE
 			-- Create a versioned code template, specifying the minimum version of the compiler required
 			-- to use the code template.
 			--
@@ -111,19 +111,19 @@ feature -- Factory
 
 feature -- Token factory
 
-	create_cursor_token: !CODE_TOKEN_CURSOR
+	create_cursor_token: attached CODE_TOKEN_CURSOR
 			-- Creates a new cursor place holder code token.
 		do
 			create Result.make
 		end
 
-	create_eol_token: !CODE_TOKEN_EOL
+	create_eol_token: attached CODE_TOKEN_EOL
 			-- Creates a new end-of-line code token.
 		do
 			create Result.make
 		end
 
-	create_id_token (a_id: !STRING_32): !CODE_TOKEN_ID
+	create_id_token (a_id: attached STRING_32): attached CODE_TOKEN_ID
 			-- Creates a ID code token to represent a replacable declaration in the code template.
 			--
 			-- `a_text': A unique id text string.
@@ -133,7 +133,7 @@ feature -- Token factory
 			create Result.make (a_id)
 		end
 
-	create_id_ref_token (a_token: !CODE_TOKEN_ID): !CODE_TOKEN_ID_REF
+	create_id_ref_token (a_token: attached CODE_TOKEN_ID): attached CODE_TOKEN_ID_REF
 			-- Creates a ID code token to represent a replacable declaration in the code template.
 			--
 			-- `a_token': A source code id token, the resulting tokens refers to.
@@ -141,7 +141,7 @@ feature -- Token factory
 			create Result.make (a_token)
 		end
 
-	create_text_token (a_text: !STRING_32): !CODE_TOKEN_TEXT
+	create_text_token (a_text: attached STRING_32): attached CODE_TOKEN_TEXT
 			-- Creates a basic text snippet token, with no operational semantics
 			--
 			-- `a_text': The non-empty string composing a code token text.

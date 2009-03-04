@@ -226,7 +226,7 @@ feature -- Implementation
 							create {EXCEPTION_DEBUG_VALUE} Result.make_without_any_value
 						end
 					else
-						if {arv: ABSTRACT_REFERENCE_VALUE} item then
+						if attached {ABSTRACT_REFERENCE_VALUE} item as arv then
 							create {EXCEPTION_DEBUG_VALUE} Result.make_with_value (arv)
 						else
 							check should_not_occurred: False end

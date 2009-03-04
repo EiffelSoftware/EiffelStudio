@@ -99,7 +99,7 @@ feature {NONE} -- User interface initialization
 			-- Note: No user interface initialization should be done here! Use build_dialog_interface instead
 		do
 			Precursor {ES_DIALOG}
-			create {!DS_ARRAYED_LIST [!HELP_CONTEXT_I]} links.make_default
+			create {attached DS_ARRAYED_LIST [attached HELP_CONTEXT_I]} links.make_default
 		ensure then
 			links_attached: links /= Void
 		end
@@ -111,7 +111,7 @@ feature {NONE} -- User interface initialization
 
 			if session_manager.is_service_available then
 					-- Set UI based on session data
-				if {l_close: !BOOLEAN_REF} session_data.value_or_default (close_on_launch_session_id, True) then
+				if attached {attached BOOLEAN_REF} session_data.value_or_default (close_on_launch_session_id, True) as l_close then
 					if l_close.item then
 						close_on_launch_check.enable_select
 					else
@@ -126,7 +126,7 @@ feature {NONE} -- User interface initialization
 
 feature -- Access
 
-	links: DS_BILINEAR [!HELP_CONTEXT_I]
+	links: DS_BILINEAR [attached HELP_CONTEXT_I]
 			-- Help context links
 
 feature -- Access
@@ -199,7 +199,7 @@ feature {NONE} -- User interface elements
 
 feature -- Query
 
-	is_context_valid (a_context: !HELP_CONTEXT_I): BOOLEAN
+	is_context_valid (a_context: attached HELP_CONTEXT_I): BOOLEAN
 			-- Determines if a help context is valid to be linked to.
 			--
 			-- `a_context': A help context to validate.
@@ -215,7 +215,7 @@ feature -- Query
 
 feature {NONE} -- Query
 
-	help_context_document_title (a_context: !HELP_CONTEXT_I): !STRING_GENERAL
+	help_context_document_title (a_context: attached HELP_CONTEXT_I): attached STRING_GENERAL
 			-- Retrieves a title for a given help context.
 			--
 			-- `a_context': A help context to build a help document title for.
@@ -223,15 +223,15 @@ feature {NONE} -- Query
 		require
 			is_context_valid: is_context_valid (a_context)
 		local
-			l_provider: !HELP_PROVIDER_I
+			l_provider: attached HELP_PROVIDER_I
 		do
 			if help_providers.is_service_available and help_providers.service.is_provider_available (a_context.help_provider) then
 				l_provider := help_providers.service.provider (a_context.help_provider)
 				Result := l_provider.help_title (a_context.help_context_id, a_context.help_context_section)
 			else
-				create {!STRING_32} Result.make (100)
+				create {attached STRING_32} Result.make (100)
 				Result.append (a_context.help_context_id)
-				if {l_section: !STRING_GENERAL} a_context.help_context_section.section then
+				if attached {attached STRING_GENERAL} a_context.help_context_section.section as l_section then
 					Result.append (", ")
 					Result.append (l_section)
 				end
@@ -251,7 +251,7 @@ feature {NONE} -- Basic operations
 			links_attached: links /= Void
 		local
 			l_grid: like help_documents_grid
-			l_cursor: DS_BILINEAR_CURSOR [!HELP_CONTEXT_I]
+			l_cursor: DS_BILINEAR_CURSOR [attached HELP_CONTEXT_I]
 			i: INTEGER
 		do
 			l_grid := help_documents_grid
@@ -260,7 +260,7 @@ feature {NONE} -- Basic operations
 			l_cursor := links.new_cursor
 			from l_cursor.start until l_cursor.after loop
 				i := i + 1
-				if {l_row: !EV_GRID_ROW} l_grid.row (i) then
+				if attached {attached EV_GRID_ROW} l_grid.row (i) as l_row then
 					populate_help_document_row (l_cursor.item, l_row)
 				end
 				l_cursor.forth
@@ -282,7 +282,7 @@ feature {NONE} -- Action handlers
 			l_enable: BOOLEAN
 		do
 			if a_row /= Void then
-				if help_providers.is_service_available and then {l_context: !HELP_CONTEXT_I} a_row.data then
+				if help_providers.is_service_available and then attached {attached HELP_CONTEXT_I} a_row.data as l_context then
 					l_enable := help_providers.service.is_provider_available (l_context.help_provider)
 				end
 			end
@@ -321,7 +321,7 @@ feature {NONE} -- Action handlers
 				l_rows := help_documents_grid.selected_rows
 				l_cursor := l_rows.cursor
 				from l_rows.start until l_rows.after loop
-					if {l_context: !HELP_CONTEXT_I} l_rows.item.data then
+					if attached {attached HELP_CONTEXT_I} l_rows.item.data as l_context then
 							-- Launch help
 						l_service.show_help (l_context)
 					else
@@ -342,7 +342,7 @@ feature {NONE} -- Action handlers
 
 feature {NONE} -- Factory
 
-	populate_help_document_row (a_context: !HELP_CONTEXT_I; a_row: !EV_GRID_ROW)
+	populate_help_document_row (a_context: attached HELP_CONTEXT_I; a_row: attached EV_GRID_ROW)
 			-- Populates a single grid row using a help context.
 			--
 			-- `a_context': The help context to populate information on a row with.
@@ -353,8 +353,8 @@ feature {NONE} -- Factory
 			not_a_row_is_destroy: not a_row.is_destroyed
 			a_row_is_parented: a_row.parent /= Void
 		local
-			l_item: !EV_GRID_LABEL_ITEM
-			l_provider: !HELP_PROVIDER_I
+			l_item: attached EV_GRID_LABEL_ITEM
+			l_provider: attached HELP_PROVIDER_I
 			l_available: BOOLEAN
 		do
 			l_available := help_providers.is_service_available and then help_providers.service.is_provider_available (a_context.help_provider)

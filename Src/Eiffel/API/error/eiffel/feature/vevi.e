@@ -81,7 +81,7 @@ feature {NONE} -- Variable name
 
 feature {NONE} -- Context
 
-	creation_procedure: ?E_FEATURE
+	creation_procedure: detachable E_FEATURE
 			-- Creation procedure that causes the error (if different from `current_feature')
 
 feature -- Output

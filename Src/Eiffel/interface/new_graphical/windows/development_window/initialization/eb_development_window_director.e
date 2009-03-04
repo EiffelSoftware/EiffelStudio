@@ -119,7 +119,7 @@ feature -- Command
 			l_debugger_manager: EB_DEBUGGER_MANAGER
 			l_session_data, l_project_session_data: EB_DEVELOPMENT_WINDOW_SESSION_DATA
 			l_builder: EB_DEVELOPMENT_WINDOW_MAIN_BUILDER
-			l_open_classes, l_open_clusters: ?HASH_TABLE [STRING_8, STRING_8]
+			l_open_classes, l_open_clusters: detachable HASH_TABLE [STRING_8, STRING_8]
 		do
 			if a_dev_window = Void then
 				construct

@@ -440,7 +440,7 @@ feature {NONE} -- Implementation
 
 				create l_wrapper
 				l_wrapper.parse_with_option (l_parser, text.as_attached, l_option, True, Void)
-				if not l_wrapper.has_error and then {l_class: CLASS_AS} l_wrapper.ast_node and then {l_match_list: LEAF_AS_LIST} l_wrapper.ast_match_list then
+				if not l_wrapper.has_error and then attached {CLASS_AS} l_wrapper.ast_node as l_class and then attached {LEAF_AS_LIST} l_wrapper.ast_match_list as l_match_list then
 					ast := l_class
 					match_list := l_match_list
 					check is_parsed: is_parsed end

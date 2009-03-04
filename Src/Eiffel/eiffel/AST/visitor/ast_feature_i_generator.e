@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 					end
 
 					if l_routine.is_built_in then
-						if {l_built_in_as: !BUILT_IN_AS} l_routine.routine_body then
+						if attached {attached BUILT_IN_AS} l_routine.routine_body as l_built_in_as then
 							l_feature_as := l_built_in_as.body
 						end
 					end
@@ -237,7 +237,7 @@ feature {NONE} -- Implementation
 					type_exists: l_as.type /= Void
 				end
 				if l_routine.is_built_in then
-					if {l_built_in: !BUILT_IN_AS} l_routine.routine_body then
+					if attached {attached BUILT_IN_AS} l_routine.routine_body as l_built_in then
 						l_feature_as := l_built_in.body
 					end
 					if l_feature_as /= Void then

@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	text: !STRING_32
+	text: attached STRING_32
 			-- <Precursor>
 
 feature -- Status report
@@ -55,7 +55,7 @@ feature -- Query
 
 feature -- Visitor
 
-	process (a_visitor: !CODE_TOKEN_VISITOR_I)
+	process (a_visitor: attached CODE_TOKEN_VISITOR_I)
 			-- <Precursor>
 		do
 			a_visitor.process_code_token_text (Current)

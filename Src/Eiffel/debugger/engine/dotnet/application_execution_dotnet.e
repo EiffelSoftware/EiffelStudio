@@ -397,7 +397,7 @@ feature -- Remote access to RT_
 			icdv: ICOR_DEBUG_VALUE
 		do
 			icdv := remote_rt_object_icd_value
-			if icdv /= Void and then {cl: CLASS_I} system.rt_extension_class then
+			if icdv /= Void and then attached {CLASS_I} system.rt_extension_class as cl then
 				Result := debug_value_from_icdv (icdv, cl.compiled_class)
 			end
 
@@ -415,7 +415,7 @@ feature -- Remote access to RT_
 		do
 			--| This is optimization for dotnet
 			--| do not call Precursor
-			if {dv: EIFNET_ABSTRACT_DEBUG_VALUE} kept_object_item (oa) then
+			if attached {EIFNET_ABSTRACT_DEBUG_VALUE} kept_object_item (oa) as dv then
 				rto := remote_rt_object
 				if rto /= Void then
 					icdf := rto.icd_value_info.value_icd_function ("saved_object_to")
@@ -446,7 +446,7 @@ feature -- Remote access to RT_
 		do
 			--| This is optimization for dotnet
 			--| do not call Precursor
-			if {rto: like remote_rt_object} remote_rt_object then
+			if attached remote_rt_object as rto then
 				icdv := rto.icd_referenced_value
 				icdf := rto.icd_value_info.value_icd_function ("object_loaded_from")
 				if icdf /= Void then
@@ -459,7 +459,7 @@ feature -- Remote access to RT_
 					i_fn := eifnet_debugger.eifnet_dbg_evaluator.new_eiffel_string_evaluation (Void, fn)
 					args := <<icdv, i_ref, i_fn>>
 					r := eifnet_debugger.eifnet_dbg_evaluator.function_evaluation (Void, icdf, args)
-					if {adv: ABSTRACT_DEBUG_VALUE} debug_value_from_icdv (r, Void) then
+					if attached {ABSTRACT_DEBUG_VALUE} debug_value_from_icdv (r, Void) as adv then
 						Result := adv.dump_value
 					end
 				end
@@ -511,7 +511,7 @@ feature -- Remote access to Exceptions
 			icdv: ICOR_DEBUG_VALUE
 		do
 			icdv := remote_exception_manager_icd_value
-			if icdv /= Void and then {cl: CLASS_I} system.ise_exception_manager_class then
+			if icdv /= Void and then attached {CLASS_I} system.ise_exception_manager_class as cl then
 				Result := debug_value_from_icdv (icdv, cl.compiled_class)
 			end
 		end
@@ -526,7 +526,7 @@ feature -- Remote access to Exceptions
 				icdv := Eifnet_debugger.new_active_exception_value_from_thread
 				if icdv /= Void then
 					val ?= debug_value_from_icdv (icdv, Void)
-					if {wrap: ABSTRACT_REFERENCE_VALUE} eiffel_wrapper_exception (icdv) then
+					if attached {ABSTRACT_REFERENCE_VALUE} eiffel_wrapper_exception (icdv) as wrap then
 						create Result.make_with_value (wrap)
 					else
 						--| should not occur but:
@@ -536,14 +536,14 @@ feature -- Remote access to Exceptions
 					end
 					if val /= Void then
 						check Result_not_void: Result /= Void end
-						if {s8: STRING_8} eifnet_debugger.exception_class_name (val) then
+						if attached {STRING_8} eifnet_debugger.exception_class_name (val) as s8 then
 							Result.set_exception_others (s8, {APPLICATION_STATUS_DOTNET}.exception_il_type_name_key)
 							if not Result.has_value then
 								--| Let's use the il type name as meaning
 								Result.set_user_meaning (s8)
 							end
 						end
-						if not Result.has_value and then {s32: STRING_32} eifnet_debugger.exception_text (val) then
+						if not Result.has_value and then attached {STRING_32} eifnet_debugger.exception_text (val) as s32 then
 							--| Let's use the il exception text
 							Result.set_user_text (s32)
 						end
@@ -582,7 +582,7 @@ feature -- Remote access to Exceptions
 		require
 			e_not_void: e /= Void
 		do
-			if {v: EIFNET_DEBUG_REFERENCE_VALUE} e.debug_value then
+			if attached {EIFNET_DEBUG_REFERENCE_VALUE} e.debug_value as v then
 				Result ?= v.attribute_value_for (Exception_dotnet_exception_attribute_name)
 				if Result = Void then
 					Result ?= v
@@ -659,7 +659,7 @@ feature -- Query
 						end
 						odv := err_dv
 					elseif l_eifnet_debugger.last_once_failed then
-						if {arv: ABSTRACT_REFERENCE_VALUE} debug_value_from_icdv (icdv, Void) then
+						if attached {ABSTRACT_REFERENCE_VALUE} debug_value_from_icdv (icdv, Void) as arv then
 							create exc_dv.make_with_value (arv)
 						else
 							check should_not_occur: False end

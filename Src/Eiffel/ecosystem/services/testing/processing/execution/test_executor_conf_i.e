@@ -14,7 +14,7 @@ inherit
 
 feature -- Access
 
-	tests: !DS_LINEAR [!TEST_I]
+	tests: attached DS_LINEAR [attached TEST_I]
 			-- Tests to be executed
 		require
 			usable: is_interface_usable
@@ -22,7 +22,7 @@ feature -- Access
 		deferred
 		end
 
-	sorter_prefix: !STRING
+	sorter_prefix: attached STRING
 			-- Prefix used to sort tests for execution
 		require
 			usable: is_interface_usable

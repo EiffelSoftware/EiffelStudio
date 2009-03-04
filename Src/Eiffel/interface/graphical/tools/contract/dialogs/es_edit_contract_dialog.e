@@ -50,7 +50,7 @@ feature {NONE} -- Clean up
 
 feature -- Element change
 
-	set_contract (a_tag: !STRING_GENERAL; a_contract: !STRING_GENERAL)
+	set_contract (a_tag: attached STRING_GENERAL; a_contract: attached STRING_GENERAL)
 			-- Set the contract text.
 		require
 			is_interface_usable: is_interface_usable

@@ -32,15 +32,15 @@ feature {NONE} -- Clean up
 
 feature -- Basic operations
 
-	render_template (a_template: !READABLE_STRING_GENERAL; a_parameters: ?DS_HASH_TABLE [!ANY, STRING]): !STRING_32
+	render_template (a_template: attached READABLE_STRING_GENERAL; a_parameters: detachable DS_HASH_TABLE [attached ANY, STRING]): attached STRING_32
 			-- <Precursor>
 		local
-			l_templates: !like build_code_template
-			l_renderer: !CODE_TEMPLATE_STRING_RENDERER
+			l_templates: attached like build_code_template
+			l_renderer: attached CODE_TEMPLATE_STRING_RENDERER
 			l_result: STRING_32
 		do
 			l_templates := build_code_template (a_template.as_string_32, a_parameters)
-			if {l_default_template: CODE_TEMPLATE} l_templates.template.applicable_default_item then
+			if attached {CODE_TEMPLATE} l_templates.template.applicable_default_item as l_default_template then
 				create l_renderer
 				l_renderer.render_template (l_default_template, l_templates.symbol_table)
 				l_result := l_renderer.code
@@ -57,11 +57,11 @@ feature -- Basic operations
 			end
 		end
 
-	render_template_from_file (a_file_name: !READABLE_STRING_GENERAL; a_parameters: ?DS_HASH_TABLE [!ANY, STRING]): ?STRING_32
+	render_template_from_file (a_file_name: attached READABLE_STRING_GENERAL; a_parameters: detachable DS_HASH_TABLE [attached ANY, STRING]): detachable STRING_32
 			-- <Precursor>
 		local
 			l_file: KI_TEXT_INPUT_FILE
-			l_contents: ?STRING
+			l_contents: detachable STRING
 			l_count: INTEGER
 		do
 			l_file := file_system.new_input_file (a_file_name.as_string_8)
@@ -86,11 +86,11 @@ feature -- Basic operations
 			end
 		end
 
-	render_template_to_file (a_template: !READABLE_STRING_GENERAL; a_parameters: ?DS_HASH_TABLE [!ANY, STRING]; a_destination_file: !READABLE_STRING_GENERAL)
+	render_template_to_file (a_template: attached READABLE_STRING_GENERAL; a_parameters: detachable DS_HASH_TABLE [attached ANY, STRING]; a_destination_file: attached READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_file: KI_TEXT_OUTPUT_FILE
-			l_rendered: ?STRING_32
+			l_rendered: detachable STRING_32
 		do
 			l_rendered := render_template (a_template, a_parameters)
 			if l_rendered /= Void then
@@ -107,11 +107,11 @@ feature -- Basic operations
 			end
 		end
 
-	render_template_from_file_to_file (a_file_name: !READABLE_STRING_GENERAL; a_parameters: ?DS_HASH_TABLE [!ANY, STRING]; a_destination_file: !READABLE_STRING_GENERAL)
+	render_template_from_file_to_file (a_file_name: attached READABLE_STRING_GENERAL; a_parameters: detachable DS_HASH_TABLE [attached ANY, STRING]; a_destination_file: attached READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_file: KI_TEXT_OUTPUT_FILE
-			l_rendered: ?STRING_32
+			l_rendered: detachable STRING_32
 		do
 			l_rendered := render_template_from_file (a_file_name, a_parameters)
 			if l_rendered /= Void then
@@ -130,7 +130,7 @@ feature -- Basic operations
 
 feature {NONE} -- Basic operations
 
-	build_code_template (a_template: ?STRING_32; a_parameters: ?DS_HASH_TABLE [!ANY, STRING]): !TUPLE [template: !CODE_TEMPLATE_DEFINITION; symbol_table: !CODE_SYMBOL_TABLE]
+	build_code_template (a_template: detachable STRING_32; a_parameters: detachable DS_HASH_TABLE [attached ANY, STRING]): attached TUPLE [template: attached CODE_TEMPLATE_DEFINITION; symbol_table: attached CODE_SYMBOL_TABLE]
 			-- Builds a code template definition file from a template text.
 			--
 			-- `a_template': The tokenized text to render with the supplied parameters.
@@ -141,16 +141,16 @@ feature {NONE} -- Basic operations
 			not_a_template_is_empty: not a_template.is_empty
 			a_parameters_attached: a_parameters /= Void
 		local
-			l_cursor: DS_HASH_TABLE_CURSOR [!ANY, STRING]
+			l_cursor: DS_HASH_TABLE_CURSOR [attached ANY, STRING]
 			l_key: STRING
-			l_factory: !CODE_FACTORY
-			l_definition: !CODE_TEMPLATE_DEFINITION
-			l_declarations: !CODE_DECLARATION_COLLECTION
-			l_literal_declaration: !CODE_LITERAL_DECLARATION
-			l_templates: !CODE_TEMPLATE_COLLECTION
-			l_template: !CODE_TEMPLATE
-			l_table_builder: !CODE_SYMBOL_TABLE_BUILDER
-			l_table: !CODE_SYMBOL_TABLE
+			l_factory: attached CODE_FACTORY
+			l_definition: attached CODE_TEMPLATE_DEFINITION
+			l_declarations: attached CODE_DECLARATION_COLLECTION
+			l_literal_declaration: attached CODE_LITERAL_DECLARATION
+			l_templates: attached CODE_TEMPLATE_COLLECTION
+			l_template: attached CODE_TEMPLATE
+			l_table_builder: attached CODE_SYMBOL_TABLE_BUILDER
+			l_table: attached CODE_SYMBOL_TABLE
 		do
 			create l_factory
 			create l_definition.make (l_factory)
@@ -162,7 +162,7 @@ feature {NONE} -- Basic operations
 				l_key := l_cursor.key
 				check l_key_attached: l_key /= Void end
 				l_literal_declaration := l_factory.create_code_literal_declaration (l_key, l_declarations)
-				if {l_value: STRING_32} l_cursor.item.out.as_string_32 then
+				if attached {STRING_32} l_cursor.item.out.as_string_32 as l_value then
 					l_literal_declaration.default_value := l_value
 				end
 				l_declarations.extend (l_literal_declaration)

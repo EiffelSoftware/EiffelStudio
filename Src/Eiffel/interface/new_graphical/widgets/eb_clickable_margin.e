@@ -82,7 +82,7 @@ feature {EB_CLICKABLE_MARGIN} -- Pick and drop
 	on_breakable_stone_dropped (a_bp: BREAKABLE_STONE)
 		do
 			if ev_application.ctrl_pressed then
-				if {bp: BREAKABLE_STONE} breakable_stone_at (0, margin_viewport.pointer_position.y_abs + margin_viewport.y_offset) then
+				if attached {BREAKABLE_STONE} breakable_stone_at (0, margin_viewport.pointer_position.y_abs + margin_viewport.y_offset) as bp then
 					bp.drop_bkpt (a_bp)
 					refresh_now
 				end

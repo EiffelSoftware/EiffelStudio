@@ -53,7 +53,7 @@ feature -- Access
 	same_as (other: TYPE_A): BOOLEAN
 			-- Is the current type the same as `other' ?
 		do
-			Result := {c: CHARACTER_A} other and then is_character_32 = c.is_character_32
+			Result := attached {CHARACTER_A} other as c and then is_character_32 = c.is_character_32
 		end
 
 	associated_class: CLASS_C

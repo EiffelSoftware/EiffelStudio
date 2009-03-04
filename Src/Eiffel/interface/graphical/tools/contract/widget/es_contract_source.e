@@ -33,10 +33,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	context: !ES_CONTRACT_EDITOR_CONTEXT [CLASSI_STONE]
+	context: attached ES_CONTRACT_EDITOR_CONTEXT [CLASSI_STONE]
 			-- <Precursor>
 
-	source: !ES_CONTRACT_SOURCE_I
+	source: attached ES_CONTRACT_SOURCE_I
 			-- <Precursor>
 		do
 			Result := Current

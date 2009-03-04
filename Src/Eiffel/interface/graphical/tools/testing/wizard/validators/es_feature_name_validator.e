@@ -23,7 +23,7 @@ inherit
 
 feature -- Validation
 
-	validate_feature_name (a_feature_name: !STRING)
+	validate_feature_name (a_feature_name: attached STRING)
 			-- Is name a vlaid name for an Eiffel feature?
 			--
 			-- `a_feature_name': Name to be validated.
@@ -36,19 +36,19 @@ feature -- Validation
 			end
 		end
 
-	validate_new_feature_name (a_feature_name: !STRING; a_class: !CLASS_I)
+	validate_new_feature_name (a_feature_name: attached STRING; a_class: attached CLASS_I)
 			-- Is name a valid name for a new feature?
 			--
 			-- `a_feature_name': Name of new Eiffel feature.
 			-- `a_class': Class in which new feature will be created.
 		local
-			l_ast: ?CLASS_AS
+			l_ast: detachable CLASS_AS
 			l_file: KL_BINARY_INPUT_FILE
 			b: BOOLEAN
 		do
 			validate_feature_name (a_feature_name)
 			if is_valid then
-				if a_class.is_compiled and then {l_classc: CLASS_C} a_class.compiled_class then
+				if a_class.is_compiled and then attached {CLASS_C} a_class.compiled_class as l_classc then
 					if l_classc.feature_named (a_feature_name) /= Void then
 						set_formatted_error (e_feature_already_exists, [a_class.name, a_feature_name])
 					end

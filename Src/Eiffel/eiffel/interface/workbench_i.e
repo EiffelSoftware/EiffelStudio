@@ -430,7 +430,7 @@ feature -- Commands
 		rescue
 			if Rescue_status.is_error_exception then
 				Error_handler.force_display
-				if {l_vige: VIGE} error_handler.error_list.item then
+				if attached {VIGE} error_handler.error_list.item as l_vige then
 						-- An error occurs during IL generation, we need to
 						-- save current project otherwise EIFGEN is corrupted
 						-- due to a bad project file. We also increment
@@ -446,13 +446,13 @@ feature -- Commands
 					Error_handler.error_list.start
 					if
 						not degree_6_done and then
-						({l_vtct: VTCT} error_handler.error_list.item or else
-						{l_vd71: VD71} error_handler.error_list.item or else
-						{l_vd29: VD29} error_handler.error_list.item or else
-						{l_vd21: VD21} error_handler.error_list.item or else
-						{l_vd20: VD20} error_handler.error_list.item or else
-						{l_vscn: VSCN} error_handler.error_list.item or else
-						({l_int: INTERNAL_ERROR} error_handler.error_list.item and then l_int.is_class_name_mismatch))
+						(attached {VTCT} error_handler.error_list.item as l_vtct or else
+						attached {VD71} error_handler.error_list.item as l_vd71 or else
+						attached {VD29} error_handler.error_list.item as l_vd29 or else
+						attached {VD21} error_handler.error_list.item as l_vd21 or else
+						attached {VD20} error_handler.error_list.item as l_vd20 or else
+						attached {VSCN} error_handler.error_list.item as l_vscn or else
+						(attached {INTERNAL_ERROR} error_handler.error_list.item as l_int and then l_int.is_class_name_mismatch))
 					then
 						missing_class_error := True
 						lace.reset_date_stamp

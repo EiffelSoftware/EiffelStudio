@@ -43,14 +43,14 @@ feature {ES_STONABLE_I, ES_TOOL} -- Access
 	frozen stone: STONE
 			-- <Precursor>
 		do
-			if {l_stonable: !ES_STONABLE_I} tool_descriptor then
+			if attached {attached ES_STONABLE_I} tool_descriptor as l_stonable then
 				Result := l_stonable.stone
 			end
 		end
 
 feature {NONE} -- Access
 
-	tool_descriptor: !ES_STONABLE_TOOL [ES_DOCKABLE_STONABLE_TOOL_PANEL [EV_WIDGET]]
+	tool_descriptor: attached ES_STONABLE_TOOL [ES_DOCKABLE_STONABLE_TOOL_PANEL [EV_WIDGET]]
 			-- <Precursor>
 
 feature {ES_STONABLE_I, ES_TOOL} -- Element change
@@ -62,7 +62,7 @@ feature {ES_STONABLE_I, ES_TOOL} -- Element change
 					-- Client is setting the stone directly, and not through {ES_STONABLE_TOOL}
 					-- This is normal because of the transistion of tool development to ESF.
 					-- See notes for `stone_change_notified'.
-				if {l_stonable: !ES_STONABLE_I} tool_descriptor then
+				if attached {attached ES_STONABLE_I} tool_descriptor as l_stonable then
 					l_stonable.set_stone (a_stone)
 				end
 			else
@@ -79,7 +79,7 @@ feature {NONE} -- Status report
 	is_in_stone_synchronization: BOOLEAN
 			-- Indicates if a stone synchronization is taking place instead of a simple change of stone
 
-	is_stone_sychronization_required (a_old_stone: ?STONE; a_new_stone: ?STONE): BOOLEAN
+	is_stone_sychronization_required (a_old_stone: detachable STONE; a_new_stone: detachable STONE): BOOLEAN
 			-- Determines if stone synchronization is required given two stones.
 			--|Note: Redefine to better determine if a stone is applicable for synchronization, rather than
 			--|      redefine `synchronize'.
@@ -100,7 +100,7 @@ feature {NONE} -- Status report
 			--       as ESF dictates that no interaction should be perform with the panel (Current) but
 			--       the tool descritor (`tool_descriptor').
 
-	internal_is_stone_usable (a_stone: !like stone): BOOLEAN
+	internal_is_stone_usable (a_stone: attached like stone): BOOLEAN
 			-- <Precursor>
 		do
 			Result := tool_descriptor.is_stone_usable (a_stone)
@@ -121,7 +121,7 @@ feature {NONE} -- Basic opertations
         			-- Propagate the stone drop actions	
         		do
         			if is_interface_usable and is_initialized and then tool_descriptor.is_interface_usable then
-        				if {l_stone: !STONE} ia_pebble and then tool_descriptor.is_stone_usable (l_stone) then
+        				if attached {attached STONE} ia_pebble as l_stone and then tool_descriptor.is_stone_usable (l_stone) then
       							-- Force stone on descriptor, which will optimize the display of the stone on Current.
 	        					-- I cannot see any reason why the tool would not be shown when a drop action occurs (unless the action is published programmatically),
 	        					-- but going through the descriptor is the safest and most optimized means of setting a stone.
@@ -149,7 +149,7 @@ feature {NONE} -- Basic opertations
 							-- Query if a pebble should be vetoed.
 						do
 							Result := ia_pebble = Void
-							if not Result and then {l_stone: STONE} ia_pebble then
+							if not Result and then attached {STONE} ia_pebble as l_stone then
 								Result := is_stone_usable (l_stone)
 							end
 						end)
@@ -192,7 +192,7 @@ feature {NONE} -- Action handlers
 	on_show
 			-- Called when the tool is brought into view.
 		local
-			l_previous_stone: ?STONE
+			l_previous_stone: detachable STONE
 		do
 			Precursor {ES_DOCKABLE_TOOL_PANEL}
 
@@ -206,7 +206,7 @@ feature {NONE} -- Action handlers
         	end
 		end
 
-	on_stone_changed (a_old_stone: ?like stone)
+	on_stone_changed (a_old_stone: detachable like stone)
 			-- Called when the set stone changes.
 			-- Note: This routine can be called when `stone' is Void, to indicate a stone has been cleared.
 			--       Be sure to check `is_in_stone_synchronization' to determine if a stone has change through an explicit
@@ -222,7 +222,7 @@ feature {NONE} -- Action handlers
 			not_stone_change_notified: not has_performed_stone_change_notification
 		end
 
-	frozen internal_on_stone_changed (a_old_stone: ?like stone)
+	frozen internal_on_stone_changed (a_old_stone: detachable like stone)
 			-- Called when the set stone changes.
 			-- Note: This routine can be called when `stone' if Void.
 		require

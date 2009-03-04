@@ -20,18 +20,18 @@ inherit
 
 feature -- Status report
 
-	is_valid_state_info (a_info: !ES_EDITOR_ANALYZER_STATE_INFO): BOOLEAN
+	is_valid_state_info (a_info: attached ES_EDITOR_ANALYZER_STATE_INFO): BOOLEAN
 			-- Detemines if a given state info object is valid for Current.
 			--
 			-- `a_info': The info object to test for validity.
 			-- `Result': True if the given object was valid; False otherwise.
 		do
-			Result := (({?G}) #? a_info) /= Void
+			Result := (({detachable G}) #? a_info) /= Void
 		ensure
-			non_generic_cat_call: Result implies (({?G}) #? a_info) /= Void
+			non_generic_cat_call: Result implies (({detachable G}) #? a_info) /= Void
 		end
 
-	is_valid_start_token (a_token: !EDITOR_TOKEN; a_line: !EDITOR_LINE): BOOLEAN
+	is_valid_start_token (a_token: attached EDITOR_TOKEN; a_line: attached EDITOR_LINE): BOOLEAN
 			-- Determines if a given token is valid as the state's start token.
 			--
 			-- `a_token': The editor token to test to applicablity for use as the state's starting token.
@@ -42,7 +42,7 @@ feature -- Status report
 
 feature -- Basic operation
 
-	frozen process (a_info: !G; a_end_token: ?EDITOR_TOKEN)
+	frozen process (a_info: attached G; a_end_token: detachable EDITOR_TOKEN)
 			-- Processes a token for the next state.
 			--
 			-- `a_info'     : The state information to use when processing the tokens.
@@ -62,7 +62,7 @@ feature -- Basic operation
 
 feature {NONE} -- Basic operation
 
-	process_next_tokens (a_info: !G; a_end_token: ?EDITOR_TOKEN)
+	process_next_tokens (a_info: attached G; a_end_token: detachable EDITOR_TOKEN)
 			-- Processes a token for the current state.
 			--
 			-- `a_info'     : The state information to use when processing the tokens.

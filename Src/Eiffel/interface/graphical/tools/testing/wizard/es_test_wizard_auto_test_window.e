@@ -134,9 +134,9 @@ feature {NONE} -- Initialization
 					end)
 
 			create type_field.make (l_textfield, agent on_validate_type)
-			type_field.set_entry_formatter (agent {!STRING_32}.as_upper)
+			type_field.set_entry_formatter (agent {attached STRING_32}.as_upper)
 			type_field.set_entry_validation (
-				agent (a_string: !STRING_32): BOOLEAN
+				agent (a_string: attached STRING_32): BOOLEAN
 					local
 						i: INTEGER
 						nb: INTEGER
@@ -184,7 +184,7 @@ feature {NONE} -- Initialization
 			a_parent.extend (l_vbox)
 		end
 
-	append_option (a_parent: EV_BOX; a_name: !STRING; a_widget: EV_WIDGET)
+	append_option (a_parent: EV_BOX; a_name: attached STRING; a_widget: EV_WIDGET)
 		local
 			l_hbox: EV_HORIZONTAL_BOX
 			l_label: EV_LABEL
@@ -204,7 +204,7 @@ feature {NONE} -- Initialization
 	on_after_initialize
 			-- Called after all widgets have been created
 		local
-			l_cursor: DS_LINEAR_CURSOR [!STRING]
+			l_cursor: DS_LINEAR_CURSOR [attached STRING]
 			l_types: STRING_32
 		do
 			timeout_field.set_text (conf.time_out_cache.out)
@@ -242,7 +242,7 @@ feature {NONE} -- Initialization
 			end
 
 			conf.types_cache.do_all (
-				agent (a_type: !STRING)
+				agent (a_type: attached STRING)
 					do
 						type_list.extend (create {EV_LIST_ITEM}.make_with_text (a_type))
 					end)
@@ -259,7 +259,7 @@ feature {NONE} -- Access
 			Result := wizard_information.generator_conf
 		end
 
-	factory_type: !TYPE [TEST_CREATOR_I]
+	factory_type: attached TYPE [TEST_CREATOR_I]
 			-- <Precursor>
 		do
 			Result := generator_factory_type
@@ -310,17 +310,17 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Events
 
-	on_validate_type (a_input: !STRING_32): !TUPLE [valid: BOOLEAN; error: ?STRING_32]
+	on_validate_type (a_input: attached STRING_32): attached TUPLE [valid: BOOLEAN; error: detachable STRING_32]
 			-- Called when input of `types' has to be validated.
 		local
 			l_types: STRING
 			l_system: SYSTEM_I
-			l_root: ?SYSTEM_ROOT
-			l_root_group: ?CONF_GROUP
-			l_root_class, l_class: ?CLASS_C
-			l_root_feature: ?FEATURE_I
-			l_type_as: ?TYPE_AS
-			l_type_a: ?TYPE_A
+			l_root: detachable SYSTEM_ROOT
+			l_root_group: detachable CONF_GROUP
+			l_root_class, l_class: detachable CLASS_C
+			l_root_feature: detachable FEATURE_I
+			l_type_as: detachable TYPE_AS
+			l_type_a: detachable TYPE_A
 			i: INTEGER
 			l_level: NATURAL
 		do
@@ -344,7 +344,7 @@ feature {NONE} -- Events
 								end
 							end
 							if l_root_class /= Void and l_root_group /= Void and l_root_feature /= Void then
-								if {l_class_type: CLASS_TYPE_AS} l_type_as then
+								if attached {CLASS_TYPE_AS} l_type_as as l_class_type then
 									l_type_a := type_a_generator.evaluate_type_if_possible (l_type_as, l_root_class)
 									if l_type_a /= Void and l_class_type.generics = Void then
 										l_class := l_type_a.associated_class

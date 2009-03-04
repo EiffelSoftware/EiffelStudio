@@ -76,7 +76,7 @@ feature {NONE} -- Output
 	output_value: STRING_32
 			-- A STRING representation of the value of `Current'.
 		do
-			if {add: DBG_ADDRESS} address then
+			if attached {DBG_ADDRESS} address as add then
 				Result := add.output
 			end
 		end

@@ -78,7 +78,7 @@ feature
 			tmp_register: REGISTER;
 		do
 			if context_type.is_basic and then
-				{basic_i: BASIC_A} context_type and then
+				attached {BASIC_A} context_type as basic_i and then
 				(not is_feature_special (True, basic_i) or else basic_i.is_bit)
 			then
 					-- Get a register to store the metamorphosed basic type,

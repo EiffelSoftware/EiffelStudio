@@ -8,20 +8,20 @@ note
 	revision: "$Revision$"
 
 deferred class
-	ES_HELP_CONTEXT_SCAVENGER [G -> !ANY]
+	ES_HELP_CONTEXT_SCAVENGER [G -> attached ANY]
 
 inherit
 	USABLE_I
 
 feature -- Access
 
-	scavenged_contexts: !DS_ARRAYED_LIST [!HELP_CONTEXT_I]
+	scavenged_contexts: attached DS_ARRAYED_LIST [attached HELP_CONTEXT_I]
 			-- List of contexts scavenged when probing the last object using `probe'
 		require
 			is_interface_usable: is_interface_usable
 			has_probed: has_probed
 		do
-			if {l_results: like scavenged_contexts} internal_scavenged_contexts then
+			if attached {like scavenged_contexts} internal_scavenged_contexts as l_results then
 				Result := l_results
 			else
 				create Result.make_default
@@ -29,7 +29,7 @@ feature -- Access
 			end
 		ensure
 			result_consistent: Result = scavenged_contexts
-			result_contains_usable_items: Result.for_all (agent {!HELP_CONTEXT_I}.is_interface_usable)
+			result_contains_usable_items: Result.for_all (agent {attached HELP_CONTEXT_I}.is_interface_usable)
 		end
 
 feature -- Status report
@@ -67,7 +67,7 @@ feature {NONE} -- Basic operations
 			internal_scavenged_contexts_is_empty: internal_scavenged_contexts.is_empty
 		end
 
-	probe_object (a_object: G): !DS_ARRAYED_LIST [!HELP_CONTEXT_I]
+	probe_object (a_object: G): attached DS_ARRAYED_LIST [attached HELP_CONTEXT_I]
 			-- Probes an object to locate and scavenge any help context information to be used with a help provider.
 			--
 			-- `a_object': Object to probe to scavenge help contexts
@@ -78,12 +78,12 @@ feature {NONE} -- Basic operations
 		deferred
 		ensure
 			not_has_probed: not has_probed
-			result_contains_usable_items: Result.for_all (agent {!HELP_CONTEXT_I}.is_interface_usable)
+			result_contains_usable_items: Result.for_all (agent {attached HELP_CONTEXT_I}.is_interface_usable)
 		end
 
 feature {NONE} -- Internal implementation cache
 
-	frozen internal_scavenged_contexts: ?like scavenged_contexts
+	frozen internal_scavenged_contexts: detachable like scavenged_contexts
 			-- Cached version of `scavenged_contexts'
 
 ;note

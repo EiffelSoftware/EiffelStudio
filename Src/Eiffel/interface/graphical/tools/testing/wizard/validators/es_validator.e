@@ -14,7 +14,7 @@ inherit
 
 feature -- Access
 
-	last_error_message: ?STRING_32
+	last_error_message: detachable STRING_32
 			-- Error message of last validation if any
 
 feature -- Status report
@@ -29,7 +29,7 @@ feature -- Status report
 
 feature {NONE} -- Status setting
 
-	set_error (a_message: !STRING)
+	set_error (a_message: attached STRING)
 			-- Set error message for current validation
 			--
 			-- `a_message': Error message
@@ -39,7 +39,7 @@ feature {NONE} -- Status setting
 			not_valid: not is_valid
 		end
 
-	set_formatted_error (a_message: !STRING; a_tokens: !TUPLE)
+	set_formatted_error (a_message: attached STRING; a_tokens: attached TUPLE)
 			-- Set error message for current validation and replace tokens
 			--
 			-- `a_message': Error message with tokens

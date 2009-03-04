@@ -185,7 +185,7 @@ feature {NONE} -- Initialization
 
 				-- Set button states based on session data
 			if session_manager.is_service_available then
-				if {s: STRING} window_session_data.value (columns_sorting_data_session_id) then
+				if attached {STRING} window_session_data.value (columns_sorting_data_session_id) as s then
 					grid_wrapper.set_sorting_status (grid_wrapper.sorted_columns_from_string (s))
 				end
 			end
@@ -218,7 +218,7 @@ feature {NONE} -- Initialization
 
 feature -- Access: Help
 
-	help_context_id: !STRING_GENERAL
+	help_context_id: attached STRING_GENERAL
 			-- <Precursor>
 		once
 			Result := "9FA30DD2-231F-C1F2-4139-F8E90DF0E77F"
@@ -397,7 +397,7 @@ feature -- Events
 			-- Handle item pebble function
 		do
 			if gi /= Void then
-				if {bpl: ES_GRID_BREAKPOINT_LOCATION_ITEM} gi then
+				if attached {ES_GRID_BREAKPOINT_LOCATION_ITEM} gi as bpl then
 					Result := bpl.pebble_at_position
 				else
 					Result ?= gi.data
@@ -454,7 +454,7 @@ feature -- Updating
 						r = 0
 					loop
 						l_row := g.row (r)
-						if {bp: BREAKPOINT} l_row.data then
+						if attached {BREAKPOINT} l_row.data as bp then
 							l_row.clear
 						end
 						r := r - 1
@@ -1276,7 +1276,7 @@ feature {NONE} -- Events on grid
 							l_selected_rows.after
 						loop
 							l_row := l_selected_rows.item
-							if {bp_s: BREAKPOINT} (l_row.data) then
+							if attached {BREAKPOINT} (l_row.data) as bp_s then
 								if bp_s.is_enabled then
 									bp_s.disable
 								else
@@ -1294,7 +1294,7 @@ feature {NONE} -- Events on grid
 							l_selected_rows.after
 						loop
 							l_row := l_selected_rows.item
-							if {bp_d: BREAKPOINT} (l_row.data) then
+							if attached {BREAKPOINT} (l_row.data) as bp_d then
 								l_selected_rows.remove
 								bp_d.discard
 								bp_changed := True
@@ -1305,7 +1305,7 @@ feature {NONE} -- Events on grid
 						end
 						l_selected_rows := Void
 					when {EV_KEY_CONSTANTS}.key_enter then
-						if {bp_e: BREAKPOINT} (l_selected_rows.first.data) then
+						if attached {BREAKPOINT} (l_selected_rows.first.data) as bp_e then
 							create bp_stone.make_from_breakpoint (bp_e)
 							bp_stone.display_bkpt_menu
 						end

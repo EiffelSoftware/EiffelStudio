@@ -50,11 +50,11 @@ feature {NONE} -- Initialization
 	initialize_services
 			-- Initializes graphical services
 		local
-			l_container: !SERVICE_CONSUMER [SERVICE_CONTAINER_S]
+			l_container: attached SERVICE_CONSUMER [SERVICE_CONTAINER_S]
 		do
 			create l_container
 			check is_service_available: l_container.is_service_available end
-			if l_container.is_service_available and then {l_service: SERVICE_CONTAINER_S} l_container.service then
+			if l_container.is_service_available and then attached {SERVICE_CONTAINER_S} l_container.service as l_service then
 				service_initializer.add_core_services (l_service)
 			end
 		end
@@ -157,10 +157,10 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	service_initializer: !SERVICE_INITIALIZER
+	service_initializer: attached SERVICE_INITIALIZER
 			-- Initializer used to register all services.
 		once
-			create {!ES_SERVICE_INITIALIZER} Result
+			create {attached ES_SERVICE_INITIALIZER} Result
 		end
 
 feature {NONE} -- Implementation (preparation of all widgets)
@@ -317,7 +317,7 @@ feature {NONE} -- Exception handling
 	try_to_save_session_data
 			-- In case of a crash, try to store the session data.
 		local
-			l_service: !SERVICE_CONSUMER [SESSION_MANAGER_S]
+			l_service: attached SERVICE_CONSUMER [SESSION_MANAGER_S]
 			retried: BOOLEAN
 		do
 			if not retried then

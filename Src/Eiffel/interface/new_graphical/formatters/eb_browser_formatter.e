@@ -92,7 +92,7 @@ feature -- Setting
 			a_displayer_not_void: a_displayer /= Void
 		do
 			displayer := a_displayer
-			if {l_browser: like browser} displayer.browser then
+			if attached {like browser} displayer.browser as l_browser then
 				browser := l_browser
 			else
 					-- Clearly we should not go there, but the code is badely designed here.

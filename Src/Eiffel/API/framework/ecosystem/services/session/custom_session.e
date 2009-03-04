@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	file_name: !STRING_8
+	file_name: attached STRING_8
 			-- File name for the custom session
 
 ;note

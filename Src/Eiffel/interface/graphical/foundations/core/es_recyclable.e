@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		EiffelStudio's user interface resource recycler, used to free allocated resources after a piece of
 		the UI is considered no longer usable.
@@ -30,7 +30,7 @@ deferred class
 inherit
 	EB_RECYCLABLE
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

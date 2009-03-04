@@ -15,7 +15,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize_metadata (a_table: !DS_HASH_TABLE [!STRING_GENERAL, !STRING_8])
+	initialize_metadata (a_table: attached DS_HASH_TABLE [attached STRING_GENERAL, attached STRING_8])
 			-- Initializes metadata table on first use.
 			-- Note: No change events are raised during initialization
 			--
@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 		local
 			l_table: like internal_metadata_table
 			l_key: STRING_8
-			l_cursor: DS_HASH_TABLE_CURSOR [!STRING_GENERAL, !STRING_8]
+			l_cursor: DS_HASH_TABLE_CURSOR [attached STRING_GENERAL, attached STRING_8]
 		do
 			l_table := internal_metadata_table
 			if l_table = Void or else l_table.is_empty then
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 				from l_cursor.start until l_cursor.after loop
 					l_key := l_cursor.key
 					if is_valid_metadata_id (l_key) then
-						if {l_value: STRING_GENERAL} l_cursor.item then
+						if attached {STRING_GENERAL} l_cursor.item as l_value then
 							if is_valid_metadata_value (l_value, l_key) then
 								l_table.force (l_value, l_key)
 							end
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	metadata (a_id: !STRING_8): ?STRING_GENERAL assign set_metadata
+	metadata (a_id: attached STRING_8): detachable STRING_GENERAL assign set_metadata
 			-- Retrieve a metadata asscociated with an identifier
 		local
 			l_table: like internal_metadata_table
@@ -63,10 +63,10 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	frozen metadata_table: !DS_HASH_TABLE [!STRING_GENERAL, !STRING_8]
+	frozen metadata_table: attached DS_HASH_TABLE [attached STRING_GENERAL, attached STRING_8]
 			-- Table of stored properties.
 		local
-			l_result: ?like metadata_table
+			l_result: detachable like metadata_table
 		do
 			l_result := internal_metadata_table
 			if l_result = Void then
@@ -81,17 +81,17 @@ feature {NONE} -- Access
 
 feature -- Element change
 
-	set_metadata (a_value: ?STRING_GENERAL; a_id: !STRING_8)
+	set_metadata (a_value: detachable STRING_GENERAL; a_id: attached STRING_8)
 			-- Sets a metadata value associate with id.
 			--
 			-- `a_value': Value
 		local
-			l_old_value: ?STRING_GENERAL
+			l_old_value: detachable STRING_GENERAL
 			l_table: like internal_metadata_table
 		do
 			l_old_value := metadata (a_id)
 			if not equal (l_old_value, a_value) then
-				if {l_value: STRING_GENERAL} a_value then
+				if attached {STRING_GENERAL} a_value as l_value then
 					metadata_table.force (l_value, a_id)
 				else
 					l_table := internal_metadata_table
@@ -107,7 +107,7 @@ feature -- Element change
 
 feature -- Events
 
-	changed_events: !EVENT_TYPE [TUPLE [a_id: !STRING_8; new_value: ?STRING_GENERAL; old_value: ?STRING_GENERAL]]
+	changed_events: attached EVENT_TYPE [TUPLE [a_id: attached STRING_8; new_value: detachable STRING_GENERAL; old_value: detachable STRING_GENERAL]]
 			-- Events fired when a piece of metadata changes.
 		local
 			l_result: like internal_changed_events
@@ -123,11 +123,11 @@ feature -- Events
 
 feature {NONE} -- Internal implementation cache
 
-	frozen internal_metadata_table: ?DS_HASH_TABLE [!STRING_GENERAL, !STRING_8]
+	frozen internal_metadata_table: detachable DS_HASH_TABLE [attached STRING_GENERAL, attached STRING_8]
 			-- Cached version of `metadata_table'
 			-- Note: Do not use directly!
 
-	frozen internal_changed_events: ?EVENT_TYPE [TUPLE [a_id: !STRING_8; new_value: ?STRING_GENERAL; old_value: ?STRING_GENERAL]]
+	frozen internal_changed_events: detachable EVENT_TYPE [TUPLE [a_id: attached STRING_8; new_value: detachable STRING_GENERAL; old_value: detachable STRING_GENERAL]]
 			-- Cached version of `changed_events'
 			-- Note: Do not use directly!
 

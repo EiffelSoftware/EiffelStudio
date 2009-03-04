@@ -16,19 +16,19 @@ inherit
 
 feature -- Access
 
-	help_context_section: ?HELP_CONTEXT_SECTION_I
+	help_context_section: detachable HELP_CONTEXT_SECTION_I
 			-- <Precursor>
 		do
 			-- No additional section.
 		end
 
-	help_context_description: ?STRING_GENERAL
+	help_context_description: detachable STRING_GENERAL
 			-- An optional description of the context.
 		once
 			Result := "Internal Help"
 		end
 
-	help_provider: !UUID
+	help_provider: attached UUID
 			-- Help provider kind best used for the help context.
 			-- See {HELP_PROVIDER_KINDS} for a list of built-in help providers.
 		once

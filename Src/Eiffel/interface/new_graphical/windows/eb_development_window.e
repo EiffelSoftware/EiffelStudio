@@ -346,12 +346,12 @@ feature -- Access
 			result_consistent: Result = project_session_data
 		end
 
-	frozen layout_manager: !ES_DEVELOPMENT_WINDOW_LAYOUT_MANAGER
+	frozen layout_manager: attached ES_DEVELOPMENT_WINDOW_LAYOUT_MANAGER
 			-- Handles all docking layout management
 		require
 			is_interface_usable: is_interface_usable
 		local
-			l_result: ?like internal_layout_manager
+			l_result: detachable like internal_layout_manager
 		do
 			l_result := internal_layout_manager
 			if l_result = Void then
@@ -596,7 +596,7 @@ feature -- Update
 				-- Synchronizes all stonable tools
 			shell_tools.all_requested_tools.do_all (agent (a_tool: ES_TOOL [EB_TOOL])
 				do
-					if a_tool.is_interface_usable and then {l_stonable: !ES_STONABLE_I} a_tool then
+					if a_tool.is_interface_usable and then attached {attached ES_STONABLE_I} a_tool as l_stonable then
 							-- Synchronize stonable tool
 						l_stonable.synchronize
 					end
@@ -650,7 +650,7 @@ feature -- Update
 	update_eis_system
 			-- Update EIS storage and the tool if needed.
 		do
-			if {l_info_tool_commander: !ES_INFORMATION_TOOL_COMMANDER_I} shell_tools.tool ({ES_INFORMATION_TOOL}) then
+			if attached {attached ES_INFORMATION_TOOL_COMMANDER_I} shell_tools.tool ({ES_INFORMATION_TOOL}) as l_info_tool_commander then
 					-- Update Information tool.
 				l_info_tool_commander.refresh_list
 				l_info_tool_commander.request_eis_visit
@@ -1048,7 +1048,7 @@ feature -- Resource Update
 		do
 			Precursor
 			l_editor := editors_manager.current_editor
-			if l_editor /= Void and then l_editor.is_interface_usable and then {l_class: CLASSI_STONE} l_editor.stone then
+			if l_editor /= Void and then l_editor.is_interface_usable and then attached {CLASSI_STONE} l_editor.stone as l_class then
 					-- We have the class stone
 				l_class_i := l_class.class_i
 				if l_class_i /= Void then
@@ -1079,7 +1079,7 @@ feature -- Resource Update
 			end
 			update_formatters
 			lock_update
-			if {l_features_tool: !ES_FEATURES_TOOL} shell_tools.tool ({ES_FEATURES_TOOL}) then
+			if attached {attached ES_FEATURES_TOOL} shell_tools.tool ({ES_FEATURES_TOOL}) as l_features_tool then
 					-- Update features tool.
 				l_features_tool.synchronize
 			end
@@ -1472,7 +1472,7 @@ feature {EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Implemen
 				old_set_stone (Void)
 				if shell_tools.is_interface_usable then
 						-- Remove stone from tool.
-					if {l_stonable: !ES_STONABLE_I} shell_tools.tool ({ES_FEATURES_TOOL}) then
+					if attached {attached ES_STONABLE_I} shell_tools.tool ({ES_FEATURES_TOOL}) as l_stonable then
 						l_stonable.set_stone_with_query (Void)
 					end
 				end
@@ -1970,7 +1970,7 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 				else
 					l_commander ?= shell_tools.tool ({ES_FEATURES_TOOL})
 					check l_commander_attached: l_commander /= Void end
-					if l_commander /= Void and {l_name: !STRING_GENERAL} a_feature_name.internal_name.name then
+					if l_commander /= Void and attached {attached STRING_GENERAL} a_feature_name.internal_name.name as l_name then
 						l_commander.select_feature_item_by_name (l_name)
 					end
 				end
@@ -1984,7 +1984,7 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 			-- Seek and select item contains data of `a_feature' in features tool.
 			-- If `a_feature' is void, deselect item in features tool.
 		do
-			if {l_commander: !ES_FEATURES_TOOL_COMMANDER_I} shell_tools.tool ({ES_FEATURES_TOOL}) then
+			if attached {attached ES_FEATURES_TOOL_COMMANDER_I} shell_tools.tool ({ES_FEATURES_TOOL}) as l_commander then
 				l_commander.select_feature_item (a_feature)
 			else
 				check False end
@@ -2460,15 +2460,15 @@ feature {NONE} -- Window management
 
 feature {NONE} -- Internal implementation cache
 
-	internal_session_data: ?like session_data
+	internal_session_data: detachable like session_data
 			-- Cached version of `session_data'.
 			-- Note: Do not use directly!
 
-	internal_project_session_data: ?like project_session_data
+	internal_project_session_data: detachable like project_session_data
 			-- Cached version of `project_session_data'.
 			-- Note: Do not use directly!
 
-	internal_layout_manager: ?like layout_manager
+	internal_layout_manager: detachable like layout_manager
 			-- Cached version of `layout_manager'.
 			-- Note: Do not use directly!
 

@@ -86,7 +86,7 @@ feature {NONE} -- Clean up
 
 feature {SESSION_MANAGER_S} -- Access
 
-	inner_session: ?SESSION_I assign set_inner_session
+	inner_session: detachable SESSION_I assign set_inner_session
 			-- Inner session object
 
 feature {SESSION_MANAGER_S} -- Element change

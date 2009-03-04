@@ -152,7 +152,7 @@ feature -- Query
 
 	reset_special_attributes_values
 		do
-			if {spec_items: ABSTRACT_SPECIAL_VALUE} object then
+			if attached {ABSTRACT_SPECIAL_VALUE} object as spec_items then
 				spec_items.reset_items
 				spec_items.set_sp_bounds (object_spec_lower, object_spec_upper)
 			end
@@ -165,7 +165,7 @@ feature -- Query
 
 	sorted_once_routines: LIST [E_FEATURE]
 		do
-			if {l_class: like object_dynamic_class} object_dynamic_class then
+			if attached object_dynamic_class as l_class then
 				Result := l_class.once_routines
 			else
 				--| Q: Why do we have Void dynamic_class ?
@@ -176,7 +176,7 @@ feature -- Query
 
 	sorted_constant_features: LIST [E_CONSTANT]
 		do
-			if {l_class: like object_dynamic_class} object_dynamic_class then
+			if attached object_dynamic_class as l_class then
 				Result := l_class.constant_features
 			else
 				--| Q: Why do we have Void dynamic_class ?

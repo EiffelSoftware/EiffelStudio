@@ -38,7 +38,7 @@ feature -- Query
 
 feature {NONE} -- Typing
 
-	conf_type: !TEST_EXTRACTOR_CONF_I
+	conf_type: attached TEST_EXTRACTOR_CONF_I
 			-- <Precursor>
 		do
 		end

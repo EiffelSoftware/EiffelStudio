@@ -14,8 +14,9 @@ feature {NONE} -- Initialization
 	make
 			-- Initialization for `Current'.
 		do
-			xml := ""
-			create tag_list.make
+	--		xml := ""
+		--	create tag_list.make
+
 			is_correct := False
 		end
 
@@ -23,21 +24,21 @@ feature {NONE} -- Initialization
 feature {NONE} -- Constants
 
 	Start_tag: STRING = "<%%"
-		-- the string defining the start of a tag
+		-- the string defining the start of a tag, has to be of length 2
 
 	End_tag: STRING = "%%>"
-		-- the stirng defining the end of a tag
+		-- the stirng defining the end of a tag, has to be of length 2
 
 
 feature -- Access
 
-	tag_list: LINKED_LIST[STRING]
+--	tag_list: LINKED_LIST[STRING]
 		--a list of strings containing all tag elements
 
-	xml: STRING
+--	xml: STRING
 		--the xml text without the tags
 
---	servlet_elements: LINKED_LIST[SERVLET_ELEMENTS]
+		--
 
 
 feature -- Status Report	
@@ -48,7 +49,7 @@ feature -- Status Report
 
 feature -- Features yet to be named
 
-	parse_from_stream (a_stream: KI_CHARACTER_INPUT_STREAM)
+	parse_from_stream (root: ROOT_SERVLET_ELEMENT; a_stream: KI_CHARACTER_INPUT_STREAM)
 			-- Parse document from input stream.
 		require
 			a_stream_not_void: a_stream /= Void
@@ -66,37 +67,42 @@ feature -- Features yet to be named
 				--can be 0: reading xml text
 				--can be 1: reading tag	text
 		do
-			xml_buf := ""
-			tag_buf := ""
-			buf := ""
-			state := 0
-
 
 			from
-			--	a_stream.rewind
+				xml_buf := ""
+				tag_buf := ""
+				buf := ""
+				state := 0
 			until
 				a_stream.end_of_input
 			loop
 				a_stream.read_character
 				c := a_stream.last_character
-
 				buf.append_character (c)
 
-				if buf.count >= 2 then
+				if a_stream.end_of_input then
+						root.put_xhtml_elements (create {PLAIN_XHTML_ELEMENT}.make (xml_buf.twin))
+						print ("adding xml: '" + xml_buf + "'%N")
+						xml_buf.wipe_out
+				end
 
+				if buf.count >= 2 then
 					if buf.is_equal (Start_tag) then
 						state := 1
 						buf.wipe_out
 						is_correct := false
+						root.put_xhtml_elements (create {PLAIN_XHTML_ELEMENT}.make (xml_buf.twin))
+						print ("adding xml: '" + xml_buf + "'%N")
+						xml_buf.wipe_out
 
 					elseif	buf.is_equal (End_tag) 	then
 						state := 0
 						buf.wipe_out
 						is_correct := true
-						tag_list.put_right (tag_buf.twin)
+						root.put_xhtml_elements (create {CALL_ELEMENT}.make (tag_buf.twin))
+						print ("adding tag: '" + tag_buf + "'%N")
 						tag_buf.wipe_out
 					end
-
 
 					if not buf.is_empty then
 						if state = 1 then
@@ -107,16 +113,9 @@ feature -- Features yet to be named
 						buf.remove_head (1)
 					end
 				end
-
 			end
 
-			print ("XML: '" + xml_buf + "'%NTAG: '" + tag_buf + "'%N")
-
-			xml.append(xml_buf.twin)
 		end
-
-
-
 
 
 --	find_all (input: STRING; other: STRING): LIST[INTEGER]

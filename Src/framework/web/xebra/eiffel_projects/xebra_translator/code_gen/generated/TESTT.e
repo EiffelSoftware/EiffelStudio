@@ -3,7 +3,7 @@ note
 	author: "XEB Code Generation"
 
 class
-	HELLO_WORLD
+	TESTT
 
 inherit
 	SERVLET
@@ -19,7 +19,7 @@ feature -- Initialization
 
 feature {NONE} -- Access
 
-	controller: MY_CONTROLLER
+	controller: testt_controller
 
 feature -- Implementation
 
@@ -28,10 +28,12 @@ feature -- Implementation
 			response: RESPONSE
 		do
 			response.append ("[
-				<html><body /> </html>
+				fabio
 			]")
-			controller.do_something
-			buffer.put_string (controller.return_something)
+			controller.sandro
+			response.append ("[
+				monic
+			]")
 		end
 
 end

@@ -35,7 +35,7 @@ feature -- Document
 	on_start
 			-- Called when parsing starts.
 		do
-			create root.make ("hello_world")
+			create root.make ("HELLO_WORLD","HELLO_WORLD_CONTROLLER")
 			create cursor_buf.make_empty
 		end
 
@@ -100,7 +100,7 @@ feature -- Tag
 			-- End of start tag.
 		do
 				cursor_buf.append (">")
-				
+
 		end
 
 	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)

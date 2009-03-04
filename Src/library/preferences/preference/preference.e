@@ -47,8 +47,8 @@ feature -- Status setting
 			a_value_valid: valid_value_string (a_value)
 		do
 			internal_default_value := a_value
-			if internal_change_actions /= Void then
-				internal_change_actions.call ([Current])
+			if attached internal_change_actions as l_actions then
+				l_actions.call ([Current])
 			end
 		ensure
 			default_value_set: internal_default_value = a_value
@@ -66,11 +66,15 @@ feature -- Status setting
 			-- Reset value to `default_value'.
 		require
 			has_default_value: has_default_value
+		local
+			l_default_value: like default_value
 		do
-			if auto_preference /= Void then
-				set_value_from_string (auto_preference.string_value)
+			if attached auto_preference as l_auto_preference then
+				set_value_from_string (l_auto_preference.string_value)
 			else
-				set_value_from_string (default_value)
+				l_default_value := default_value
+				check attached l_default_value end -- implied by precondition `has_default_value' and `auto_preference = Void'
+				set_value_from_string (l_default_value)
 			end
 		ensure
 			is_reset: is_default_value
@@ -89,16 +93,16 @@ feature -- Access
 	name: STRING
 			-- Name of the preference as it appears in the preference file.
 
-	description: STRING
+	description: detachable STRING
 			-- Description of what the preference is all about.
 
-	default_value: STRING
+	default_value: detachable STRING
 			-- Value to be used for default.
 		do
-			if auto_preference = Void then
-				Result := internal_default_value
+			if attached auto_preference as l_auto_preference then
+				Result := l_auto_preference.string_value
 			else
-				Result := auto_preference.string_value
+				Result := internal_default_value
 			end
 		end
 
@@ -128,7 +132,7 @@ feature -- Access
 	manager: PREFERENCE_MANAGER
 			-- Manager to which Current belongs.
 
-	auto_preference: like Current
+	auto_preference: detachable like Current
 			-- Preference to use for auto color.
 
 feature -- Query
@@ -147,8 +151,10 @@ feature -- Query
 	is_default_value: BOOLEAN
 			-- Is this preference value the same as the default value?
 		do
-			if has_default_value then
-				Result := string_value.as_lower.is_equal (default_value.as_lower)
+			if attached default_value as l_default_value then
+				Result := string_value.is_case_insensitive_equal (l_default_value)
+			else
+				check has_no_default_value: not has_default_value end
 			end
 		end
 
@@ -166,29 +172,34 @@ feature -- Query
 			-- Is a restart required to apply the preference when changed? (Default: False)
 
 	is_auto: BOOLEAN
-			-- Is Current using auto value?		
+			-- Is Current using auto value?
 
 feature -- Actions
 
 	change_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions to be performed when `value' changes, after call to `set_value'.
+		local
+			l_result: like internal_change_actions
 		do
-			Result := internal_change_actions
-			if Result = Void then
-				create Result
-				internal_change_actions := Result
+			l_result := internal_change_actions
+			if l_result = Void then
+				create l_result
+				internal_change_actions := l_result
 			end
+			Result := l_result
+		ensure
+			Result_attached: Result /= Void
 		end
 
 feature {NONE} -- Implementation
 
-	internal_change_actions: like change_actions
+	internal_change_actions: detachable like change_actions
 			-- Storage for `change_actions'.
 
 	auto_string: STRING = "auto"
 			-- Auto
 
-	internal_default_value: STRING
+	internal_default_value: detachable STRING
 			-- Internal default value
 
 invariant

@@ -35,12 +35,8 @@ feature -- Query
 
 	valid_value_string (a_string: STRING): BOOLEAN
 			-- Is `a_string' valid for this preference type to convert into a value?
-		local
-			l_string: STRING
 		do
-			l_string := a_string.twin
-			l_string.to_lower
-			Result := l_string.is_equal ("true") or l_string.is_equal ("false")
+			Result := a_string.is_case_insensitive_equal ("true") or a_string.is_case_insensitive_equal ("false")
 		end
 
 feature -- settings
@@ -65,12 +61,8 @@ feature -- Status Setting
 
 	set_value_from_string (a_value: STRING)
 			-- Parse the string value `a_value' and set `value'.
-		local
-			l_value: STRING
 		do
-			l_value := a_value.twin
-			l_value.to_lower
-			set_value (l_value.is_equal ("true"))
+			set_value (a_value.is_case_insensitive_equal ("true"))
 		end
 
 feature {NONE} -- Implementation

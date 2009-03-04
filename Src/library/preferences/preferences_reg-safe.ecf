@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-2-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-2-0 http://www.eiffel.com/developers/xml/configuration-1-2-0.xsd" name="preferences" uuid="9647AA82-399B-486F-9E41-5373590095B7" library_target="preferences">
+	<target name="preferences">
+		<description>Preferences library.
+      Copyright (c) 1984-2006, Eiffel Software and others.
+      Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/\.svn</exclude>
+		</file_rule>
+		<option full_class_checking="true" is_attached_by_default="true" is_void_safe="true" syntax_level="1" namespace="EiffelSoftware.Library">
+		</option>
+		<setting name="dotnet_naming_convention" value="true"/>
+		<!-- For now, only batch is void-safe. Remove next line, when Vision2 is ready -->
+		<variable name="batch_preferences" value="true"/>
+
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel-safe.ecf"/>
+		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure-safe.ecf"/>
+		<library name="gobo_xml" location="$ISE_LIBRARY\library\gobo\gobo_xml-safe.ecf"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf">
+			<condition>
+				<custom name="batch_preferences" excluded_value="true"/>
+			</condition>
+		</library>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel-safe.ecf"/>
+		<cluster name="interface" location="interface\" recursive="true">
+			<condition>
+				<custom name="batch_preferences" excluded_value="true"/>
+			</condition>
+			<option namespace="Preferences.Interface">
+			</option>
+		</cluster>
+		<cluster name="interface_batch" location="interface\" recursive="true">
+			<condition>
+				<custom name="batch_preferences" value="true"/>
+			</condition>
+			<option namespace="Preferences.Interface">
+			</option>
+			<file_rule>
+				<exclude>/graphical$</exclude>
+				<exclude>/build_project$</exclude>
+				<exclude>/shortcut_management$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="preference" location="preference\" recursive="true">
+			<condition>
+				<custom name="batch_preferences" excluded_value="true"/>
+			</condition>
+			<option namespace="Preferences">
+			</option>
+		</cluster>
+		<cluster name="preference_batch" location="preference\" recursive="true">
+			<condition>
+				<custom name="batch_preferences" value="true"/>
+			</condition>
+			<option namespace="Preferences">
+			</option>
+			<file_rule>
+				<exclude>/graphical$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="preferences" location=".\">
+			<option namespace="Preferences">
+			</option>
+		</cluster>
+		<cluster name="storage" location="storage\" recursive="true">
+			<option namespace="Storage">
+			</option>
+			<file_rule>
+				<exclude>/xml_implementation$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+</system>

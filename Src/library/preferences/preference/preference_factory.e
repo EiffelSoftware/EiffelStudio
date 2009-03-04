@@ -25,37 +25,36 @@ feature -- Commands
 			name_not_empty: not a_name.is_empty
 			value_not_void: a_fallback_value /= Void
 		local
-			l_fullname,
-			l_value,
-			l_desc: STRING
+			l_fullname: STRING
+			l_value, l_desc: detachable STRING
 		do
 			l_fullname := a_name
-			if preferences.session_values.has (l_fullname) then
+			l_value := preferences.session_values.item (l_fullname)
+			if l_value /= Void then
 					-- Retrieve from saved values.
-				l_value := preferences.session_values.item (l_fullname)
 				create Result.make_from_string_value (a_manager, a_name, l_value)
-				if preferences.default_values.has (l_fullname) then
-					Result.set_hidden (preferences.default_values.item (l_fullname).hidden)
-					Result.set_restart_required (preferences.default_values.item (l_fullname).restart)
+				if attached preferences.default_values.item (l_fullname) as l_dft_value then
+					Result.set_hidden (l_dft_value.hidden)
+					Result.set_restart_required (l_dft_value.restart)
 				end
-			elseif preferences.default_values.has (l_fullname) then
+			elseif attached preferences.default_values.item (l_fullname) as l_dft_value then
 					-- Retrieve from default values.
-				l_value := preferences.default_values.item (l_fullname).value
+				l_value := l_dft_value.value
 				if l_value = Void then
 					l_value := ""
 				end
 				create Result.make_from_string_value (a_manager, a_name, l_value)
-				Result.set_hidden (preferences.default_values.item (l_fullname).hidden)
-				Result.set_restart_required (preferences.default_values.item (l_fullname).restart)
+				Result.set_hidden (l_dft_value.hidden)
+				Result.set_restart_required (l_dft_value.restart)
 			else
 					-- Create with `a_value'.
 				create Result.make (a_manager, a_name, a_fallback_value)
 			end
 
 					-- Set the default value for future resetting by user.
-			if preferences.default_values.has (l_fullname) then
-				l_desc := preferences.default_values.item (l_fullname).description
-				l_value := preferences.default_values.item (l_fullname).value
+			if attached preferences.default_values.item (l_fullname) as l_dft_value then
+				l_desc := l_dft_value.description
+				l_value := l_dft_value.value
 				if l_desc /= Void and then not l_desc.is_empty then
 					Result.set_description (l_desc)
 				end

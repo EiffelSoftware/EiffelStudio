@@ -69,13 +69,14 @@ feature {NONE} -- Initialization
 		require
 			a_storage_not_void: a_storage /= Void
 		do
-			preferences_storage := a_storage
-			preferences_storage.initialize_with_preferences (Current)
-			session_values := preferences_storage.session_values
 			create managers.make (2)
 			managers.compare_objects
 			create preferences.make (2)
 			create default_values.make (2)
+			create session_values.make (0) -- Dummy object
+			preferences_storage := a_storage
+			session_values := a_storage.session_values
+			a_storage.initialize_with_preferences (Current)
 		ensure
 			has_session_values: session_values /= Void
 			has_preferences_storage: preferences_storage /= Void
@@ -174,8 +175,8 @@ feature -- Importation
 			a_storage_not_void: a_storage /= Void
 		local
 			vals: like session_values
-			k,v: STRING_32
-			p: PREFERENCE
+			k,v: STRING
+			p: detachable PREFERENCE
 		do
 			a_storage.initialize_with_preferences (Current)
 			vals := a_storage.session_values
@@ -184,11 +185,12 @@ feature -- Importation
 			until
 				vals.after
 			loop
-				k := vals.key_for_iteration.twin
-				v := vals.item_for_iteration.twin
+				k := vals.key_for_iteration.string
+				v := vals.item_for_iteration.string
 				session_values.force (v, k)
-				if preferences.has (k) then
-					p := preferences.item (k)
+				p := preferences.item (k)
+				if p /= Void then
+					check preferences.has (k) end
 					p.set_value_from_string (v)
 				end
 				vals.forth
@@ -205,7 +207,7 @@ feature -- Importation
 
 feature -- Access
 
-	error_message: STRING
+	error_message: detachable STRING
 			-- Message explaining why `Current' could not be initialized.	
 
 	save_defaults_to_store: BOOLEAN
@@ -243,8 +245,12 @@ feature -- Manager
 			namespace_not_void: a_namespace /= Void
 			namespace_not_empty: not a_namespace.is_empty
 			has_manager: has_manager (a_namespace)
+		local
+			l_result: detachable like manager
 		do
-			Result := managers.item (a_namespace)
+			l_result := managers.item (a_namespace)
+			check attached l_result end -- implied by precondition `has_manager'
+			Result := l_result
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -279,8 +285,12 @@ feature -- Preference
 			name_not_void: a_name /= Void
 			name_not_empty: not a_name.is_empty
 			has_preference: has_preference (a_name)
+		local
+			l_result: detachable like get_preference
 		do
-			Result := preferences.item (a_name)
+			l_result := preferences.item (a_name)
+			check l_result /= Void end -- implied by precondition `has_preference'
+			Result := l_result
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -291,7 +301,7 @@ feature -- Preference
 			Result := get_preference (a_name)
 		end
 
-	get_preference_value_direct (a_name: STRING): STRING
+	get_preference_value_direct (a_name: STRING): detachable STRING
 			-- Fetch the preference string value with `a_name' directly from the underlying datastore.
 			-- Ignore values currently in `session_values' and `preferences'.  Use this if the
 			-- preference value has been changed externally and you need the updated value.
@@ -304,7 +314,7 @@ feature -- Preference
 			Result := preferences_storage.get_preference_value (a_name)
 		end
 
-	get_resource_value_direct (a_name: STRING): STRING
+	get_resource_value_direct (a_name: STRING): like get_preference_value_direct
 		obsolete "[2006-01-13] use get_preference_value_direct instead of get_resource_value_direct"
 		do
 			Result := get_preference_value_direct (a_name)
@@ -405,7 +415,7 @@ feature -- Storage access
 
 feature {PREFERENCE_FACTORY, PREFERENCE_MANAGER, PREFERENCE_VIEW, PREFERENCES_STORAGE_I} -- Implementation
 
-	default_values: HASH_TABLE [TUPLE [description: STRING; value: STRING; hidden: BOOLEAN; restart: BOOLEAN], STRING]
+	default_values: HASH_TABLE [TUPLE [description, value: detachable STRING; hidden: BOOLEAN; restart: BOOLEAN], STRING]
 			-- Hash table of known preference default values.  [[Description, Value, Hidden, Restart], Name].
 
 	session_values: HASH_TABLE [STRING, STRING]
@@ -441,7 +451,8 @@ feature {NONE} -- Implementation
 			l_file: KL_TEXT_INPUT_FILE
 			l_tree_pipe: XM_TREE_CALLBACKS_PIPE
 			l_concat_filter: XM_CONTENT_CONCATENATOR
-			xml_data: XM_ELEMENT
+			xml_data: detachable XM_ELEMENT
+			l_document: detachable XM_DOCUMENT
 			has_error: BOOLEAN
 		do
 			create parser.make
@@ -463,7 +474,9 @@ feature {NONE} -- Implementation
     		elseif l_tree_pipe.error.has_error then
     			error_message := a_default_file_name + "is not a valid preference file%N"
     		else
-    			xml_data := l_tree_pipe.document.root_element
+    			l_document := l_tree_pipe.document
+    			check l_document /= Void end -- implied by `not l_tree_pipe.error.has_error'
+    			xml_data := l_document.root_element
     			load_default_attributes (xml_data)
     		end
 		end
@@ -473,12 +486,12 @@ feature {NONE} -- Implementation
 		require
 			element_not_void: xml_elem /= Void
 		local
-			node, sub_node: XM_ELEMENT
-			l_attribute: XM_ATTRIBUTE
+			node, sub_node: detachable XM_ELEMENT
+			l_attribute: detachable XM_ATTRIBUTE
 			pref_name,
 			pref_description,
 			pref_value,
-			att_pref_value: STRING
+			att_pref_value: detachable STRING
 			pref_hidden,
 			pref_restart,
 			retried: BOOLEAN
@@ -511,14 +524,14 @@ feature {NONE} -- Implementation
 
 								l_attribute := node.attribute_by_name (once "HIDDEN")
 								if l_attribute /= Void then
-									pref_hidden := l_attribute.value.as_lower.is_equal (once "true")
+									pref_hidden := l_attribute.value.is_case_insensitive_equal (once "true")
 								else
 									pref_hidden := False
 								end
 
 								l_attribute := node.attribute_by_name (once "RESTART")
 								if l_attribute /= Void then
-									pref_restart := l_attribute.value.as_lower.is_equal (once "true")
+									pref_restart := l_attribute.value.is_case_insensitive_equal (once "true")
 								else
 									pref_restart := False
 								end
@@ -555,10 +568,14 @@ feature {NONE} -- Implementation
 
 										-- Found preference default value
 									pref_value := sub_node.text
-									if att_pref_value /= Void and then not att_pref_value.is_empty then
-										pref_value.prepend (att_pref_value)
+									if pref_value /= Void then
+										if att_pref_value /= Void and then not att_pref_value.is_empty then
+											pref_value.prepend (att_pref_value)
+										end
+										default_values.force ([pref_description, pref_value, pref_hidden, pref_restart], pref_name)
+									else
+										check sub_node_has_text: False end
 									end
-									default_values.force ([pref_description, pref_value, pref_hidden, pref_restart], pref_name)
 								end
 							end
 						end

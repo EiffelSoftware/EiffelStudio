@@ -46,6 +46,7 @@ feature {PREFERENCES} -- Initialization
 		require
 			not_initialized: not initialized
 			preferences_is_void: preferences = Void
+			a_preferences_not_void: a_preferences /= Void
 		do
 			initialized := True
 			preferences := a_preferences
@@ -67,7 +68,7 @@ feature {PREFERENCES} -- Query
 		deferred
 		end
 
-	get_preference_value (a_name: STRING): STRING
+	get_preference_value (a_name: STRING): detachable STRING
 			-- Retrieve the preference string value from the underlying store.
 		require
 			initialized: initialized
@@ -89,7 +90,7 @@ feature {PREFERENCES} -- Access
 	session_values: HASH_TABLE [STRING, STRING]
 			-- Hash of user-defined values which have been loaded.
 
-	preferences: PREFERENCES
+	preferences: detachable PREFERENCES
 			-- Actual preferences
 
 feature {PREFERENCES} -- Save

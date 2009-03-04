@@ -66,17 +66,17 @@ feature -- Access
 		end
 
 	new_color_resource_value (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: EV_COLOR): COLOR_PREFERENCE
-		obsolete "use new_color_preference_value."
+		obsolete "[2006-01-13] use new_color_preference_value."
 		do
 			Result := new_color_preference_value (a_manager, a_name, a_fallback_value)
 		end
 	new_font_resource_value (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: EV_FONT): FONT_PREFERENCE
-		obsolete "use new_font_preference_value."
+		obsolete "[2006-01-13] use new_font_preference_value."
 		do
 			Result := new_font_preference_value (a_manager, a_name, a_fallback_value)
 		end
 	new_shortcut_resource_value (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING]): SHORTCUT_PREFERENCE
-		obsolete "use new_shortcut_preference_value."
+		obsolete "[2006-01-13] use new_shortcut_preference_value."
 		do
 			Result := new_shortcut_preference_value (a_manager, a_name, a_fallback_value)
 		end

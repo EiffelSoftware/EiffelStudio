@@ -124,8 +124,10 @@ clean: local_clean
 realclean: local_realclean
 clobber: local_clobber
 
-local_realclean::
+local_clean::
 	$(RM) core *~ *.o *.so *.a
+
+local_realclean:: local_clean
 
 local_clobber:: local_realclean
 	$(RM) Makefile config.sh

@@ -96,16 +96,16 @@ feature {NONE} -- Access
 	preferences: TEST_PREFERENCES
 			-- Preferences used in configurations
 
-	manual_conf_cache: ?like manual_conf
+	manual_conf_cache: detachable like manual_conf
 			-- Cache for `manual_conf'
 
-	extractor_conf_cache: ?like extractor_conf
+	extractor_conf_cache: detachable like extractor_conf
 			-- Cache for `extractor_conf'
 
-	generator_conf_cache: ?like generator_conf
+	generator_conf_cache: detachable like generator_conf
 			-- Cache for `generator_conf'
 
-	internal_conf: ?like current_conf
+	internal_conf: detachable like current_conf
 			-- Internal storage for `current_conf'
 
 feature -- Status report
@@ -161,21 +161,21 @@ feature -- Obsolete features
 		attribute
 		end
 
-	feature_clause_name_cache: ?STRING assign set_feature_clause_name
+	feature_clause_name_cache: detachable STRING assign set_feature_clause_name
 			-- Cache for `feature_clause_name'
 		obsolete
 			"Will be removed as soon as we do not need ES_TEST_WIZARD_CLASS_WINDOW"
 		attribute
 		end
 
-	feature_clause_cache: ?FEATURE_CLAUSE_AS assign set_feature_clause
+	feature_clause_cache: detachable FEATURE_CLAUSE_AS assign set_feature_clause
 			-- Cache for `feature_clause'
 		obsolete
 			"Will be removed as soon as we do not need ES_TEST_WIZARD_CLASS_WINDOW"
 		attribute
 		end
 
-	test_class_cache: ?EIFFEL_CLASS_I assign set_test_class
+	test_class_cache: detachable EIFFEL_CLASS_I assign set_test_class
 			-- Cache for `test_class'
 		obsolete
 			"Will be removed as soon as we do not need ES_TEST_WIZARD_CLASS_WINDOW"

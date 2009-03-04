@@ -451,6 +451,7 @@ test	undetected-vycp-vycq-with-generic	valid242 tcf fail validity
 test	inherited-binary-with-generic		valid243 tcf pass validity formal generic binary operator
 test	bogus-vuta-on-procedure-target		valid244 tcf pass validity attached void_safe
 test	explicit-anchored-expanded-creation-type valid245 tcf pass validity
+test	inherited-conversion-to-like-current	valid246 tcf pass validity
 
 -- Multiple error reporting tests
 test	multi-error-degree-4	multierr001 tcf pass multi-errors

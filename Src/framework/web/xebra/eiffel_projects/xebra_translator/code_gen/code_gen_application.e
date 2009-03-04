@@ -37,5 +37,4 @@ feature -- Access
 			servlet.serialize (buf)
 			buf.close
 		end
-
 end

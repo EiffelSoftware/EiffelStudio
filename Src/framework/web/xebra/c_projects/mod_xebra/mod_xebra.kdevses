@@ -3,13 +3,13 @@
 <KDevPrjSession>
  <DocsAndViews NumberOfDocuments="3" >
   <Doc0 NumberOfViews="1" URL="file:///usr/local/home/fabioz/xebra/c_projects/mod_xebra/src/mod_xebra.c" >
-   <View0 Encoding="" line="16" Type="Source" />
+   <View0 Encoding="" Type="Source" />
   </Doc0>
   <Doc1 NumberOfViews="1" URL="file:///usr/local/home/fabioz/xebra/c_projects/xebrasockets/src/xebrasockets.c" >
-   <View0 Encoding="" line="15" Type="Source" />
+   <View0 Encoding="" Type="Source" />
   </Doc1>
   <Doc2 NumberOfViews="1" URL="file:///usr/local/home/fabioz/xebra/c_projects/xebrasockets/src/xebrasockets.h" >
-   <View0 Encoding="" line="62" Type="Source" />
+   <View0 Encoding="" line="52" Type="Source" />
   </Doc2>
  </DocsAndViews>
  <pluginList>

@@ -1,0 +1,12 @@
+
+test_name 	inherited-conversion-to-like-current
+test_description An assignment to an entity of type "like Current" that is valid because of a conversion procedure is rejected in the descendant as a VJAR violation, though it seems to be valid.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result 	ok
+
+test_end

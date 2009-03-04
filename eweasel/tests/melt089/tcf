@@ -1,0 +1,28 @@
+
+test_name 	alt-precondition-call-on-void-target
+test_description A function whose return type is expanded is redefined in a descendant with with an alternate True precondition.  A call to the function returns void in a void-safe system, which should be impossible, but only if the system is melted.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test0.e $CLUSTER test0.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result	ok
+
+execute_work 	NONE exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+compile_frozen
+compile_result	ok
+
+c_compile_work
+c_compile_result	ok
+
+execute_work 	NONE exec_output2
+execute_result 	ok
+compare		exec_output2 output
+
+test_end

@@ -486,32 +486,32 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Internationalization
 
-	t_title: !STRING = "Generate tests through AutoTest"
-	t_subtitle: !STRING = "Define commands to run auto test"
+	t_title: STRING = "Generate tests through AutoTest"
+	t_subtitle: STRING = "Define commands to run auto test"
 
-	b_timeout: !STRING = "Duration (minutes)"
-	b_proxy_timeout: !STRING = "Routine timeout (seconds)"
-	b_seed: !STRING = "Random number generation seed"
-	b_ddmin: !STRING = "Use ddmin for minimization"
-	b_slicing: !STRING = "Use slicing for minimization"
-	b_html_output: !STRING = "Create HTML output"
-	b_new_type: !STRING = "Class or type name"
+	b_timeout: STRING = "Duration (minutes)"
+	b_proxy_timeout: STRING = "Routine timeout (seconds)"
+	b_seed: STRING = "Random number generation seed"
+	b_ddmin: STRING = "Use ddmin for minimization"
+	b_slicing: STRING = "Use slicing for minimization"
+	b_html_output: STRING = "Create HTML output"
+	b_new_type: STRING = "Class or type name"
 
-	e_no_valid_type_name: !STRING = "$1 is not a valid type name"
-	e_unable_to_check_compiled_classes: !STRING = "Unable to check if types or valid, please recompile and start again"
-	e_class_not_compiled: !STRING = "$1 is not a compiled type"
-	e_attachment_marks_not_supported: !STRING = "Attachment marks are not supported"
-	e_no_expanded_types: !STRING = "AutoTest is not able to test expanded types"
-	e_invalid_type_definition: !STRING = "$1 is not a valid type definition AutoTest can use"
-	e_type_unkown: !STRING = "$1 contains uncompiled types"
-	e_type_contains_invalid_generic: !STRING = "$1 contains invalid generic parameters"
-	e_multiple_constrains_not_supported: !STRING = "Type $1 can not be tested since it contains open generic parameters with multiple constraints. Please be more specific."
-	e_recursive_generics_not_supported: !STRING = "Type $1 can not be used for testing since it contains open recursive generic parameters. Please be more specific."
+	e_no_valid_type_name: STRING = "$1 is not a valid type name"
+	e_unable_to_check_compiled_classes: STRING = "Unable to check if types or valid, please recompile and start again"
+	e_class_not_compiled: STRING = "$1 is not a compiled type"
+	e_attachment_marks_not_supported: STRING = "Attachment marks are not supported"
+	e_no_expanded_types: STRING = "AutoTest is not able to test expanded types"
+	e_invalid_type_definition: STRING = "$1 is not a valid type definition AutoTest can use"
+	e_type_unkown: STRING = "$1 contains uncompiled types"
+	e_type_contains_invalid_generic: STRING = "$1 contains invalid generic parameters"
+	e_multiple_constrains_not_supported: STRING = "Type $1 can not be tested since it contains open generic parameters with multiple constraints. Please be more specific."
+	e_recursive_generics_not_supported: STRING = "Type $1 can not be used for testing since it contains open recursive generic parameters. Please be more specific."
 
 feature {NONE} -- Constants
 
-	b_add_type: !STRING = "+"
-	b_remove_type: !STRING = "-"
+	b_add_type: STRING = "+"
+	b_remove_type: STRING = "-"
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

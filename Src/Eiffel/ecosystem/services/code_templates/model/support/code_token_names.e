@@ -12,9 +12,9 @@ class
 
 feature -- Token values
 
-	cursor_token_name: !STRING_8 = "cursor"
+	cursor_token_name: STRING_8 = "cursor"
 
-	selection_token_name: !STRING_8 = "selection"
+	selection_token_name: STRING_8 = "selection"
 
 ;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"

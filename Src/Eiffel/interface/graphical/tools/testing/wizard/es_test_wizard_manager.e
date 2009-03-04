@@ -211,17 +211,17 @@ feature {NONE} -- Internationalization
 
 	t_title: STRING = "New Eiffel test"
 
-	q_add_library: !STRING =
+	q_add_library: STRING =
 		"The testing library which is needed to compile and execute tests has not been added yet.%N%N%
 		%Since you are currently debugging an application, EiffelStudio will add the library without recompiling the project. %
 		%New tests will not appear in the testing tool until you stop the debugging session and recompile the project manually.%N%N%
 		%Would you like EiffelStudio to add the testing library before launching the test creation wizard?"
 
-	q_add_library_and_recompile: !STRING =
+	q_add_library_and_recompile: STRING =
 		"The testing library which is needed to compile and execute tests has not been added yet.%N%N%
 		%Would you like EiffelStudio to add the library and recompile before launching the test creation wizard?"
 
-	e_project_not_compiled: !STRING = "Please compile the project first"
+	e_project_not_compiled: STRING = "Please compile the project first"
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

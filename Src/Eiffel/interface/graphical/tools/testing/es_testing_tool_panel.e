@@ -958,25 +958,25 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Internationalization
 
-	tt_wizard: !STRING = "Create new tests"
-	f_run_button: !STRING = "Run all tests in background"
-	f_debug_button: !STRING = "Debug all tests in EiffelStudio"
-	f_stop_button: !STRING = "Stop all execution"
-	tt_clear_filter: !STRING = "Clear filter"
+	tt_wizard: STRING = "Create new tests"
+	f_run_button: STRING = "Run all tests in background"
+	f_debug_button: STRING = "Debug all tests in EiffelStudio"
+	f_stop_button: STRING = "Stop all execution"
+	tt_clear_filter: STRING = "Clear filter"
 
-	m_run_all: !STRING = "Run all"
-	m_run_failing: !STRING = "Run failing"
-	m_run_filtered: !STRING = "Run filtered"
-	m_run_selected: !STRING = "Run selected"
-	m_debug_all: !STRING = "Debug all"
-	m_debug_failing: !STRING = "Debug failing"
-	m_debug_filtered: !STRING = "Debug filtered"
-	m_debug_selected: !STRING = "Debug selected"
+	m_run_all: STRING = "Run all"
+	m_run_failing: STRING = "Run failing"
+	m_run_filtered: STRING = "Run filtered"
+	m_run_selected: STRING = "Run selected"
+	m_debug_all: STRING = "Debug all"
+	m_debug_failing: STRING = "Debug failing"
+	m_debug_filtered: STRING = "Debug filtered"
+	m_debug_selected: STRING = "Debug selected"
 
-	l_view: !STRING = "View"
-	l_filter: !STRING = "Filter"
-	l_outcome_view: !STRING = "outcome"
-	l_filter_not_passing: !STRING = "-outcome/passes"
+	l_view: STRING = "View"
+	l_filter: STRING = "Filter"
+	l_outcome_view: STRING = "outcome"
+	l_filter_not_passing: STRING = "-outcome/passes"
 
 invariant
 	predefined_view_count_correct: view_template_descriptions.count = view_templates.count

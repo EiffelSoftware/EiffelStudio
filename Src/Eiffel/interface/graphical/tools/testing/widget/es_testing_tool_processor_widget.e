@@ -313,10 +313,10 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Internationalization
 
-	b_close: !STRING = "Close"
+	b_close: STRING = "Close"
 
-	tt_stop: !STRING = "Stop current execution"
-	tt_close: !STRING = "Close tab"
+	tt_stop: STRING = "Stop current execution"
+	tt_close: STRING = "Close tab"
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

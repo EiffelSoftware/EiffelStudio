@@ -103,8 +103,8 @@ feature {NONE} -- Events
 
 feature {NONE} -- Internationalization
 
-	i_done_message: !STRING = "AutoTest is finished!%N%NResults can be found in: $1"
-	i_please_be_patient: !STRING = "Please be patient while AutoTest generates results.%N(The window might become unresponsive during that time)"
+	i_done_message: STRING = "AutoTest is finished!%N%NResults can be found in: $1"
+	i_please_be_patient: STRING = "Please be patient while AutoTest generates results.%N(The window might become unresponsive during that time)"
 
 	l_compiling: STRING = "Compiling"
 	l_random_testing: STRING = "Generating and executing routine invocations"

@@ -318,8 +318,8 @@ feature {NONE} -- Events
 
 feature {NONE} -- Internationalization
 
-	t_title: !STRING = "Extract application state"
-	t_subtitle: !STRING = "Chose features on call stack for which test should be created"
+	t_title: STRING = "Extract application state"
+	t_subtitle: STRING = "Chose features on call stack for which test should be created"
 
 	h_feature: STRING = "Feature"
 	h_dtype: STRING = "In Class"

@@ -15,7 +15,7 @@ inherit
 
 feature -- Contracts
 
-	template_category: !STRING = "postcondition"
+	template_category: STRING = "postcondition"
 			-- <Precondition>
 
 feature {NONE} -- Contracts

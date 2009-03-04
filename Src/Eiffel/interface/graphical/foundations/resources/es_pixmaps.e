@@ -353,7 +353,7 @@ feature {NONE} -- Implementation: cache
 
 feature {NONE} -- Internationalization
 
-	w_could_not_load_matrix: !STRING = "Cannot read pixmap file:%N$1.%N%NPlease make sure the installation is not corrupted."
+	w_could_not_load_matrix: STRING = "Cannot read pixmap file:%N$1.%N%NPlease make sure the installation is not corrupted."
 
 invariant
 	width_positive: width > 0

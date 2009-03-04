@@ -1572,10 +1572,10 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Constants
 
-	contract_mode_session_id: !STRING = "com.eiffel.contract_tool.mode"
-	show_all_lines_session_id: !STRING = "com.eiffel.contract_tool.show_all_lines"
-	class_name_symbol_id: !STRING = "class_name"
-	feature_name_symbol_id: !STRING = "feature_name"
+	contract_mode_session_id: STRING = "com.eiffel.contract_tool.mode"
+	show_all_lines_session_id: STRING = "com.eiffel.contract_tool.show_all_lines"
+	class_name_symbol_id: STRING = "class_name"
+	feature_name_symbol_id: STRING = "feature_name"
 
 invariant
 	save_modifications_button_attached: (is_initialized and is_interface_usable) implies save_modifications_button /= Void

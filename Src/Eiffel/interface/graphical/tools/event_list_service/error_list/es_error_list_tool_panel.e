@@ -1305,11 +1305,11 @@ feature {NONE} -- Constants
 	context_column: INTEGER = 4
 	position_column: INTEGER = 5
 
-	expand_errors_session_id: !STRING = "com.eiffel.error_list.expand_errors"
+	expand_errors_session_id: STRING = "com.eiffel.error_list.expand_errors"
 
 feature {NONE} -- Internationalization
 
-	tt_delete_items: !STRING = "Delete all the selected [completed] items"
+	tt_delete_items: STRING = "Delete all the selected [completed] items"
 
 invariant
 	errors_button_attached: is_initialized implies errors_button /= Void

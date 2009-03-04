@@ -209,8 +209,8 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Internationalization
 
-	t_title_background: !STRING = "Execution"
-	t_title_debugger: !STRING = "Debugging"
+	t_title_background: STRING = "Execution"
+	t_title_debugger: STRING = "Debugging"
 
 	tt_run: STRING = "Relaunch previous execution"
 	b_skip: STRING = "Skip"

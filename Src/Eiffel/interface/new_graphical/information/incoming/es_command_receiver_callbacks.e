@@ -634,17 +634,17 @@ feature {NONE} -- EIS access
 			Result.compare_objects
 		end
 
-	system_id: !INTEGER = unique
-	target_id: !INTEGER = unique
-	cluster_id: !INTEGER = unique
-	class_id: !INTEGER = unique
-	feature_id: !INTEGER = unique
+	system_id: INTEGER = unique
+	target_id: INTEGER = unique
+	cluster_id: INTEGER = unique
+	class_id: INTEGER = unique
+	feature_id: INTEGER = unique
 
-	system_string: !STRING = "system"
-	target_string: !STRING = "target"
-	cluster_string: !STRING = "cluster"
-	class_string: !STRING = "class"
-	feature_string: !STRING = "feature"
+	system_string: STRING = "system"
+	target_string: STRING = "target"
+	cluster_string: STRING = "cluster"
+	class_string: STRING = "class"
+	feature_string: STRING = "feature"
 
 feature -- Query
 

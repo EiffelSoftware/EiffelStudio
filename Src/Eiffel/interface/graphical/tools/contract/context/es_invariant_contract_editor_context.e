@@ -83,7 +83,7 @@ feature -- Contracts
 			Result := [l_result, l_modifier]
 		end
 
-	template_category: !STRING = "invariant"
+	template_category: STRING = "invariant"
 			-- <Precondition>		
 
 feature -- Query

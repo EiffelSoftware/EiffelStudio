@@ -69,7 +69,7 @@ feature {NONE} -- Helpers
 
 feature {NONE} -- Internationalization
 
-	w_could_not_load_tool_icons: !STRING = "Cannot read pixmap icon file for $1.%N%NPlease make sure the installation is not corrupted."
+	w_could_not_load_tool_icons: STRING = "Cannot read pixmap icon file for $1.%N%NPlease make sure the installation is not corrupted."
 
 ;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"

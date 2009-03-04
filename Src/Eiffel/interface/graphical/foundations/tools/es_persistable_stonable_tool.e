@@ -270,7 +270,7 @@ feature {NONE} -- Factory
 
 feature -- Constants
 
-	stone_session_id: !STRING = "com.eiffel.stone"
+	stone_session_id: STRING = "com.eiffel.stone"
 
 feature {NONE} -- Internal implementation cache
 

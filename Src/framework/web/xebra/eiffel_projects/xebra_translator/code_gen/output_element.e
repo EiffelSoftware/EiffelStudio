@@ -12,4 +12,17 @@ inherit
 
 feature -- Access
 
+	controller_var: STRING
+	buffer_var: STRING
+
+	set_controller_var (a_name: STRING)
+		do
+			controller_var := a_name
+		end
+
+	set_buffer_var (a_name: STRING)
+		do
+			buffer_var := a_name
+		end
+
 end

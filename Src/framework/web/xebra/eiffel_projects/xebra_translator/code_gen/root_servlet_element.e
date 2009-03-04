@@ -15,56 +15,40 @@ create
 
 feature --Initialization
 
-	make (a_name: STRING)
+	make (a_name: STRING; a_controller_name: STRING)
 			-- `a_name': The name of the servlet
 		do
 			name := a_name
 			name.to_upper
+			controller_name := a_controller_name
+
 			create {LINKED_LIST [OUTPUT_ELEMENT]} xhtml_elements.make
-			create {LINKED_LIST [VARIABLE_ELEMENT]} session_variables.make
-			create {LINKED_LIST [VARIABLE_ELEMENT]} local_variables.make
+			create controller_variable.make (controller_var, a_controller_name)
+			create response_variable.make (response_name, "RESPONSE")
+			create make_feature.make ("make", xhtml_elements)
 		end
 
 feature -- Access
 
 	name: STRING
 
+	controller_name: STRING
+
 	xhtml_elements: LIST [OUTPUT_ELEMENT]
 
-	session_variables: LIST [VARIABLE_ELEMENT]
+	controller_variable: VARIABLE_ELEMENT
 
-	local_variables: LIST [VARIABLE_ELEMENT]
+	response_variable: VARIABLE_ELEMENT
+
+	make_feature: FEATURE_ELEMENT
 
 feature -- Access
 
-	set_xhtml_elements (elements: LIST [OUTPUT_ELEMENT])
-		do
-			xhtml_elements := elements
-		end
-
-	set_session_variables (elements: LIST [VARIABLE_ELEMENT])
-		do
-			session_variables := elements
-		end
-
-	set_local_variables (elements: LIST [VARIABLE_ELEMENT])
-		do
-			local_variables := elements
-		end
-
 	put_xhtml_elements (element: OUTPUT_ELEMENT)
 		do
-			xhtml_elements.put (element)
-		end
-
-	put_session_variables (element: VARIABLE_ELEMENT)
-		do
-			session_variables.put (element)
-		end
-
-	put_local_variables (element: VARIABLE_ELEMENT)
-		do
-			local_variables.put (element)
+			element.set_buffer_var (buffer_var)
+			element.set_controller_var (controller_var)
+			xhtml_elements.extend (element)
 		end
 
 	response_name: STRING = "response"
@@ -78,6 +62,8 @@ feature {NONE} -- Access
 	local_kw: STRING = "local"
 	do_kw: STRING = "do"
 	end_kw: STRING = "end"
+	buffer_var: STRING = "buffer"
+	controller_var: STRING = "controller"
 	constructor_name: STRING = "make"
 	request_name: STRING = "handle_request (request: REQUEST): RESPONSE"
 
@@ -128,16 +114,21 @@ feature -- Implementation
 			buf.unindent
 			buf.put_new_line
 
-			buf.put_string (feature_kw + "-- Access")
+			buf.put_string (feature_kw + " {NONE}-- Access")
 			buf.put_new_line
 			buf.indent
-			write_session_variables (buf)
+			controller_variable.serialize (buf)
+
+			buf.put_new_line
+			make_feature.serialize (buf)
+			buf.put_new_line
+
 			buf.unindent
 
 			buf.put_string (feature_kw + "-- Implementation")
 			buf.put_new_line
 			buf.indent
-			write_request_feature (buf, ind)
+			write_request_feature (buf)
 			buf.unindent
 
 			buf.new_line
@@ -145,43 +136,16 @@ feature -- Implementation
 			buf.put_string (end_kw)
 		end
 
-	write_session_variables (buffer: INDENDATION_STREAM)
+	write_request_feature (buffer: INDENDATION_STREAM)
 			-- writes the session variables as features of the servlet
 		local
-			var: VARIABLE_ELEMENT
-		do
-			from
-				session_variables.start
-			until
-				session_variables.after
-			loop
-				var := session_variables.item
-				var.serialize (buffer)
-				buffer.put_new_line
-				session_variables.forth
-			end
-		end
-
-	write_request_feature (buffer: INDENDATION_STREAM; indendation: NATURAL)
-			-- writes the session variables as features of the servlet
-		local
-			var: VARIABLE_ELEMENT
 			xhtml_element: OUTPUT_ELEMENT
 		do
 			buffer.put_string (request_name)
 			buffer.indent
 			buffer.put_string (local_kw)
 			buffer.indent
-			from
-				local_variables.start
-			until
-				local_variables.after
-			loop
-				var := local_variables.item
-				var.serialize (buffer)
-				local_variables.forth
-			end
-			buffer.put_string (response_name + ": " + response_type)
+			response_variable.serialize (buffer)
 			buffer.unindent
 			buffer.put_string (do_kw)
 			buffer.indent

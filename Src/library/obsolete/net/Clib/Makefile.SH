@@ -105,8 +105,6 @@ libnet.so: $(OBJECTS)
 	$(RM) $@
 	$(SHAREDLINK) $(LDSHAREDFLAGS) $@ $(OBJECTS)
 
-local_realclean::
-	$(RM) $(NET_LIBS) $(ALL_OBJECTS)
 ########################################################################
 # Common rules for all Makefiles -- do not edit
 
@@ -117,7 +115,7 @@ realclean: local_realclean
 clobber: local_clobber
 
 local_clean::
-	$(RM) core *~ *.o
+	$(RM) core *~ *.o *.so *.a
 
 local_realclean:: local_clean
 

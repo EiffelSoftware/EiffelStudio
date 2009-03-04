@@ -52,8 +52,6 @@ all: $(ALL_OBJECTS)
 MTload_pixmap.o: load_pixmap.c
 	$(CC) -c $(MTCFLAGS) $? -o $@
 
-local_realclean::
-	$(RM) $(ALL_OBJECTS)
 ########################################################################
 # Common rules for all Makefiles -- do not edit
 
@@ -64,7 +62,7 @@ realclean: local_realclean
 clobber: local_clobber
 
 local_clean::
-	$(RM) core *~ *.o
+	$(RM) core *~ *.o *.so *.a
 
 local_realclean:: local_clean
 

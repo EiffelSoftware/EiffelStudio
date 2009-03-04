@@ -49,7 +49,7 @@ feature -- Query
 		end
 
 	known_resource (a_name: STRING): BOOLEAN
-		obsolete "use know_preference instead of know_resource"
+		obsolete "[2006-01-13] use know_preference instead of know_resource"
 		do
 			Result := known_preference (a_name)
 		end

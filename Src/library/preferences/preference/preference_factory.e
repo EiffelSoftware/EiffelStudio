@@ -74,7 +74,7 @@ feature -- Commands
 		end
 
 	new_resource (preferences: PREFERENCES; a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: G): H
-		obsolete "use new_preference instead of new_resource."
+		obsolete "[2006-01-13] use new_preference instead of new_resource."
 		do
 			Result := new_preference (preferences, a_manager, a_name, a_fallback_value)
 		end

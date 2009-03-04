@@ -13,12 +13,12 @@ inherit
 		redefine
 			set_value
 		end
-	
+
 	EV_FONT_CONSTANTS
 		undefine
 			is_equal
 		end
-		
+
 create {PREFERENCE_FACTORY}
 	make, make_from_string_value
 
@@ -42,14 +42,14 @@ feature -- Status Setting
 			shape := a_value.shape
 			weight := a_value.weight
 			height := a_value.height_in_points
-			family := a_value.family			
+			family := a_value.family
 		end
 
 	string_type: STRING
 			-- String description of this preference type.
 		once
 			Result := "FONT"
-		end	
+		end
 
 feature -- Query
 
@@ -60,7 +60,7 @@ feature -- Query
 			s: STRING
 		do
 			s := a_string.twin
-			Result := s.occurrences ('-') = 4			
+			Result := s.occurrences ('-') = 4
 		end
 
 feature {PREFERENCES} -- Access
@@ -75,9 +75,9 @@ feature {NONE} -- Implementation
 
 	face: STRING
 			-- Font faces
-	shape, 
-	weight, 
-	height, 
+	shape,
+	weight,
+	height,
 	family: INTEGER
 		-- Attributes
 
@@ -86,6 +86,7 @@ feature {NONE} -- Implementation
 		local
 			s: STRING
 			i: INTEGER
+			l_value: like value
 		do
 			s := a_value.twin
 			i := s.index_of('-', 1)
@@ -107,10 +108,13 @@ feature {NONE} -- Implementation
 						end
 					end
 				end
-				create internal_value.make_with_values (family, weight, shape, height)
-				internal_value.set_height_in_points (height)
-				internal_value.preferred_families.extend (face)
-				set_value (internal_value)
+				create l_value.make_with_values (family, weight, shape, height)
+				internal_value := l_value
+				l_value.set_height_in_points (height)
+				l_value.preferred_families.extend (face)
+				set_value (l_value)
+			else
+				create internal_value
 			end
 		end
 
@@ -120,18 +124,22 @@ feature {NONE} -- Implementation
 			has_value: value /= Void
 		local
 			v: STRING
+			l_value: like value
 		do
+			l_value := value
+			check attached l_value end -- implied by precondition `has_value'
+
 			create v.make (50)
 			v.append (face)
 			v.append ("-")
-			inspect value.shape
+			inspect l_value.shape
 			when shape_italic then
 				v.append ("i")
 			when shape_regular then
 				v.append ("r")
 			end
 			v.append ("-")
-			inspect value.weight
+			inspect l_value.weight
 			when weight_black then
 				v.append ("black")
 			when weight_thin then
@@ -144,7 +152,8 @@ feature {NONE} -- Implementation
 			v.append ("-")
 			v.append (height.out)
 			v.append ("-")
-			inspect value.family
+
+			inspect l_value.family
 			when family_roman then
 				v.append ("roman")
 			when family_screen then
@@ -166,8 +175,7 @@ feature {NONE} -- Implementation
 		local
 			s1: STRING
 		do
-			s1 := s
-			s1.to_lower
+			s1 := s.as_lower
 			if s1.is_equal ("i") or s1.is_equal ("italic") then
 				shape := shape_italic
 			elseif s1.is_equal ("r") or s1.is_equal ("regular") then
@@ -182,8 +190,7 @@ feature {NONE} -- Implementation
 		local
 			s1: STRING
 		do
-			s1 := s
-			s1.to_lower
+			s1 := s.as_lower
 			if s1.is_equal ("thin") then
 				weight := weight_thin
 			elseif s1.is_equal ("regular") then
@@ -202,8 +209,7 @@ feature {NONE} -- Implementation
 		local
 			s1: STRING
 		do
-			s1 := s
-			s1.to_lower
+			s1 := s.as_lower
 			if s1.is_equal ("screen") then
 				family := family_screen
 			elseif s1.is_equal ("roman") then
@@ -234,14 +240,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

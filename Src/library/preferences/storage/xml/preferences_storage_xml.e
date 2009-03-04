@@ -39,21 +39,23 @@ feature {NONE} -- Initialization
 			-- For operating systems which support it it will stored in the users home directory.  For operating
 			-- systems that do not support home directories it will be stored in the current working directory.
 		local
-			l_loc: STRING
+			l_loc: detachable STRING
 			l_exec: EXECUTION_ENVIRONMENT
 			l_op: OPERATING_ENVIRONMENT
+			fn: FILE_NAME
 		do
 			create l_exec
 			l_op := l_exec.operating_environment
 
 			if l_op.home_directory_supported then
 				l_loc := l_exec.home_directory_name
+				check l_loc /= Void end -- implied by `home_directory_supported'
 			else
 				l_loc := l_exec.current_working_directory
 			end
-			l_loc.append_character (l_op.directory_separator)
-			l_loc.append ("stored_preferences.xml")
-			make_with_location (l_loc)
+			create fn.make_from_string (l_loc)
+			fn.set_file_name ("stored_preferences.xml")
+			make_with_location (fn.string)
 		end
 
 	make_with_location (a_location: STRING)
@@ -89,7 +91,7 @@ feature {PREFERENCES} -- Resource Management
 			Result := session_values.has (a_name)
 		end
 
-	get_preference_value (a_name: STRING): STRING
+	get_preference_value (a_name: STRING): detachable STRING
 			-- Retrieve the preference string value from the underlying store.
 		do
 			Result := session_values.item (a_name)
@@ -97,9 +99,13 @@ feature {PREFERENCES} -- Resource Management
 
 	save_preference (a_preference: PREFERENCE)
 			-- Save `a_preference' to the file on disk.
+		local
+			l_preferences: like preferences
 		do
 				-- TODO: neilc.  How to save only a single preference to the file?
-			save_preferences (preferences.preferences.linear_representation, True)
+			l_preferences := preferences
+			check attached l_preferences end -- implied by precondition `initialized'
+			save_preferences (l_preferences.preferences.linear_representation, True)
 		end
 
 	save_preferences (a_preferences: ARRAYED_LIST [PREFERENCE]; a_save_modified_values_only: BOOLEAN)
@@ -149,7 +155,7 @@ feature {PREFERENCES} -- Resource Management
 
 feature {NONE} -- Implementation
 
-	xml_structure: XM_DOCUMENT
+	xml_structure: detachable XM_DOCUMENT
 			-- XML structure built from parsing of `file'.
 
 	extract_preferences_from_file
@@ -161,10 +167,12 @@ feature {NONE} -- Implementation
 			l_file: KL_TEXT_INPUT_FILE
 			l_tree_pipe: XM_TREE_CALLBACKS_PIPE
 			l_concat_filter: XM_CONTENT_CONCATENATOR
-			l_attrib: XM_ATTRIBUTE
+			l_attrib: detachable XM_ATTRIBUTE
 			pref_name,
-			pref_value: STRING
-			node: XM_ELEMENT
+			pref_value: detachable STRING
+			node: detachable XM_ELEMENT
+			l_root_element: XM_ELEMENT
+			t_preference, t_name, t_value: STRING
 		do
 			create parser.make
 			create l_tree_pipe.make
@@ -176,29 +184,40 @@ feature {NONE} -- Implementation
 			if l_file.is_open_read then
 				parser.parse_from_stream (l_file)
 				l_file.close
-	    		if not l_tree_pipe.error.has_error then
-	    			xml_structure := l_tree_pipe.document
+	    		if not l_tree_pipe.error.has_error and then
+	    			(attached l_tree_pipe.document as l_xml_structure) -- should be implied by `not has_error'
+	    		then
+	    			xml_structure := l_xml_structure
 	    			from
-						xml_structure.root_element.start
+	    				t_preference := "PREFERENCE"
+	    				t_name := "NAME"
+	    				t_value := "VALUE"
+
+	    				l_root_element := l_xml_structure.root_element
+						l_root_element.start
 					until
-						xml_structure.root_element.after
+						l_root_element.after
 					loop
-						node ?= xml_structure.root_element.item_for_iteration
+						node ?= l_root_element.item_for_iteration
 						if node /= Void then
-							if node.name.is_equal ("PREFERENCE") then
+							if node.name ~ t_preference then
 									-- Found preference
-								l_attrib := node.attribute_by_name ("NAME")
+								l_attrib := node.attribute_by_name (t_name)
 								if l_attrib /= Void then
 									pref_name := l_attrib.value
-									l_attrib := node.attribute_by_name ("VALUE")
+									l_attrib := node.attribute_by_name (t_value)
 									if l_attrib /= Void then
 										pref_value := l_attrib.value
+									end
+									if pref_value = Void then
+										check xml_contain_value: False end
+										create pref_value.make_empty
 									end
 									session_values.put (pref_value, pref_name)
 								end
 							end
 						end
-						xml_structure.root_element.forth
+						l_root_element.forth
 					end
 				else
 					fixme ("Add code to let callers know that XML file was invalid")
@@ -210,16 +229,16 @@ feature {NONE} -- Implementation
 
 	escape_xml (a_string: STRING): STRING
 			-- Escape xml entities in `a_string'.
+		require
+			a_string_not_void: a_string /= Void
 		do
-			if a_string /= Void then
-				create Result.make_from_string (a_string)
-				Result.replace_substring_all (Amp_string, amp_entity)
-				Result.replace_substring_all (Lt_string, Lt_entity)
-				Result.replace_substring_all (Gt_string, Gt_entity)
-				Result.replace_substring_all (Quot_string, quot_entity)
-			end
+			create Result.make_from_string (a_string)
+			Result.replace_substring_all (Amp_string, amp_entity)
+			Result.replace_substring_all (Lt_string, Lt_entity)
+			Result.replace_substring_all (Gt_string, Gt_entity)
+			Result.replace_substring_all (Quot_string, quot_entity)
 		ensure
-			result_void_iff_a_string_void: (Result = Void) = (a_string = Void)
+			result_not_void: Result /= Void
 		end
 
 	Lt_string: STRING

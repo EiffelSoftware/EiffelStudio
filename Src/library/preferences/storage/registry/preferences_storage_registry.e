@@ -44,8 +44,8 @@ feature {PREFERENCES} -- Initialization
 	initialize_with_preferences (a_preferences: PREFERENCES)
 	   	local
 			l_keyp: POINTER
-			l_name,
-			l_value: STRING
+			l_name: STRING
+			l_value: detachable STRING
 			l_key_values: LINKED_LIST [STRING]
 		do
 			Precursor (a_preferences)
@@ -60,12 +60,16 @@ feature {PREFERENCES} -- Initialization
 						l_key_values.after
 					loop
 						l_name := l_key_values.item
-						l_value := key_value (l_keyp, l_name).string_value
-						if l_name.has ('_') then
-							l_name := l_name.substring (l_name.index_of ('_', 1) + 1, l_name.count)
-						end
-						if not session_values.has (l_name) then
-							session_values.put (l_value, l_name)
+						if attached key_value (l_keyp, l_name) as l_key_value then
+							l_value := l_key_value.string_value
+							if l_name.has ('_') then
+								l_name := l_name.substring (l_name.index_of ('_', 1) + 1, l_name.count)
+							end
+							if not session_values.has (l_name) then
+								session_values.put (l_value, l_name)
+							end
+						else
+							check key_value_exists: False end
 						end
 						l_key_values.forth
 					end
@@ -91,17 +95,15 @@ feature {PREFERENCES} -- Resource Management
 			Result := get_preference_value (a_name) /= Void
 		end
 
-	get_preference_value (a_name: STRING): STRING
+	get_preference_value (a_name: STRING): detachable STRING
 			-- Retrieve the preference string value from the underlying store.
 		local
 			l_handle: POINTER
-			l_key_value: WEL_REGISTRY_KEY_VALUE
 		do
 			l_handle := open_key_with_access (location, Key_read)
 
 			if valid_value_for_hkey (l_handle) then
-				l_key_value := key_value (l_handle, a_name)
-				if l_key_value /= Void then
+				if attached key_value (l_handle, a_name) as l_key_value then
 					Result := l_key_value.string_value
 				end
 				close_key (l_handle)

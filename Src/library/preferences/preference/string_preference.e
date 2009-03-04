@@ -10,16 +10,32 @@ class
 
 inherit
 	TYPED_PREFERENCE [STRING]
+		redefine
+			init_value_from_string
+		end
 
 create {PREFERENCE_FACTORY}
 	make, make_from_string_value
+
+feature {NONE} -- Initialization
+
+	init_value_from_string (a_value: STRING)
+			-- Set initial value from String `a_value'
+		do
+			internal_value := a_value
+			Precursor {TYPED_PREFERENCE} (a_value)
+		end
 
 feature -- Access
 
 	string_value: STRING
 			-- String representation of `value'.
+		local
+			l_value: like value
 		do
-			create Result.make_from_string (value)
+			l_value := value
+			check attached l_value end -- implied by precondition `has_value'
+			create Result.make_from_string (l_value)
 		end
 
 	string_type: STRING

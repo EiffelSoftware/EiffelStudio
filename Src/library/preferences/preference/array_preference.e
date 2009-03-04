@@ -21,20 +21,24 @@ feature -- Access
 		local
 			index: INTEGER
 			l_value: STRING
+			l_array: like value
 		do
 			create Result.make_empty
 			from
-				index := value.lower
+				l_array := value
+				check l_array /= Void end -- implied by precondition `has_value'
+
+				index := l_array.lower
 			until
-				index > value.upper
+				index > l_array.upper
 			loop
-				l_value := value.item (index)
+				l_value := l_array.item (index)
 				if is_choice and then index = selected_index then
 					Result.append ("[" + l_value + "]")
 				else
 					Result.append (l_value)
 				end
-				if not (index = value.count) then
+				if not (index = l_array.count) then
 					Result.append (";")
 				end
 				index := index + 1
@@ -47,11 +51,14 @@ feature -- Access
 			Result := "LIST"
 		end
 
-	selected_value: STRING
+	selected_value: detachable STRING
 			-- Value of the selected index.
 		do
-			if value.valid_index (selected_index) then
-				Result := value.item (selected_index)
+			if
+				(attached value as l_value) and then
+				l_value.valid_index (selected_index)
+			then
+				Result := l_value.item (selected_index)
 			end
 		end
 
@@ -84,25 +91,28 @@ feature -- Status Setting
 			-- Parse the string value `a_value' and set `value'.
 		local
 			cnt: INTEGER
-			l_value: STRING
+			s: STRING
 			values: LIST [STRING]
+			l_value: like value
 		do
 			create internal_value.make (1, 0)
 			values := a_value.split (';')
 			if values.count > 1 or not values.first.is_empty then
 				from
+					l_value := value
+					check l_value /= Void end -- implied by `internal_value /= Void'
 					values.start
 					cnt := 1
 				until
 					values.after
 				loop
-					l_value := values.item
-					if not l_value.is_empty and then l_value.item (1) = '[' and then l_value.item (l_value.count) = ']' then
-						l_value := l_value.substring (2, l_value.count - 1)
+					s := values.item
+					if not s.is_empty and then s.item (1) = '[' and then s.item (s.count) = ']' then
+						s := s.substring (2, s.count - 1)
 						is_choice := True
 						set_selected_index (cnt)
 					end
-					value.force (l_value, cnt)
+					l_value.force (s, cnt)
 					values.forth
 					cnt := cnt + 1
 				end

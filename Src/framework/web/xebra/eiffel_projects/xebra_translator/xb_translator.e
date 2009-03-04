@@ -15,16 +15,12 @@ feature {NONE} -- Initialization
 	make
 			-- Initialization for `XB_TRANSLATOR'.
 		do
-
 			create error_handler.make_standard
 			create preprocessor.make
-
-				print ("%N+++++++++++++++++++ START TRANSLATOR+++++++++++++++++++%N")
-			print ("%N+++++++++++++++++++ END TRANSLATOR++++++++++++++++++++++++++++++++++++++%N")
 		end
 
 
-feature -- Access
+feature {NONE} -- Access
 
 	error_handler: UT_ERROR_HANDLER
 			-- Error handler
@@ -33,48 +29,62 @@ feature -- Access
 			-- Preprocesses the file
 
 
-feature -- Processing
+feature {NONE} -- Processing
 
 
-	process (filename: STRING): BOOLEAN
-			-- -- reads a xebra scriptlet from a_filename and writes
-			-- a eiffel class document. Returns if it was successfull.
-		require
-			filename_not_void: filename /= Void
+	read_file (a_filename: STRING): STRING
+			--reads a file into a string			
 		local
 			a_file: KL_TEXT_INPUT_FILE
+			cannot_read: UT_CANNOT_READ_FILE_ERROR
+		do
+			Result := ""
+			create a_file.make (a_filename)
+			a_file.open_read
+			if not a_file.is_open_read then
+				create cannot_read.make (a_filename)
+				error_handler.report_error (cannot_read)
+
+			else
+				a_file.read_string (a_file.count)
+				Result := a_file.last_string
+			end
+
+		end
+
+
+feature -- Processing
+
+	process_with_file (a_filename: STRING): BOOLEAN
 				--
+		do
+			Result := process_with_string (read_file(a_filename))
+		end
+
+
+	process_with_string (a_string: STRING): BOOLEAN
+			--
+		local
+			a_file: KL_TEXT_INPUT_FILE				--
 			cannot_read: UT_CANNOT_READ_FILE_ERROR
 			id_stream: INDENDATION_STREAM
 			temp_root: ROOT_SERVLET_ELEMENT
 			fn: STRING
 					--only temp
 		do
-			error_handler.report_info_message ("Parsing...")
-			create a_file.make (filename)
-			a_file.open_read
-			if not a_file.is_open_read then
-				create cannot_read.make (filename)
-				error_handler.report_error (cannot_read)
-				Result := False
-			else
+
 				fn := "testt"
 
 				create temp_root.make (fn, fn + "_controller")
 
-				preprocessor.parse_from_stream (temp_root, a_file)
-				a_file.close
+				preprocessor.parse_string (temp_root, a_string)
 
-				if preprocessor.is_correct  then
+				create id_stream.make_open_write ("code_gen/generated/" + fn + ".e")
+				id_stream.set_ind_character ('%T')
+				temp_root.serialize (id_stream)
+				id_stream.close
 
-					create id_stream.make_open_write ("code_gen/generated/" + fn + ".e")
-					id_stream.set_ind_character ('%T')
-					temp_root.serialize (id_stream)
-					id_stream.close
-				else
-					Result := False
-				end
-			end
+
 		end
 
 

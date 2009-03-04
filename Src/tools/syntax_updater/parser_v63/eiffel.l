@@ -4,8 +4,8 @@ note
 	description: "Scanners for Eiffel parsers"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date: 2009-02-16 11:37:37 -0800 (Mon, 16 Feb 2009) $"
-	revision: "$Revision: 77174 $"
+	date: "$Date: 2009-02-20 17:52:43 -0800 (Fri, 20 Feb 2009) $"
+	revision: "$Revision: 77243 $"
 
 class EIFFEL_SCANNER
 
@@ -271,7 +271,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 			}
 [aA][tT][tT][rR][iI][bB][uU][tT][eE] {
 				if syntax_version /= obsolete_64_syntax then
-					last_keyword_as_value := ast_factory.new_keyword_as (TE_ATTRIBUTE, Current)
+					last_tuple__keyword_as__id_as__integer__integer__string__value := ast_factory.new_keyword_id_as (TE_ATTRIBUTE, Current)
 					last_token := TE_ATTRIBUTE
 				else
 					process_id_as

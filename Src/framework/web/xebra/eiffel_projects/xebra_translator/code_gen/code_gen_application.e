@@ -24,6 +24,7 @@ feature -- Access
 			op_call: OUTPUT_CALL_ELEMENT
 		do
 			name := "hello_world"
+			create buf.make_open_write ("/home/sandrod/workspace/xebra/eiffel_projects/xebra_translator/code_gen/" + name + ".e")
 			controller_name := "MY_CONTROLLER"
 			create {ROOT_SERVLET_ELEMENT} servlet.make (name, controller_name)
 			create oe.make ("<html><body /> </html>")
@@ -32,7 +33,6 @@ feature -- Access
 			servlet.put_xhtml_elements (oe)
 			servlet.put_xhtml_elements (call)
 			servlet.put_xhtml_elements (op_call)
-			create buf.make_open_write ("/home/sandrod/workspace/xebra/eiffel_projects/xebra_translator/code_gen/" + name + ".e")
 			buf.set_ind_character ('%T')
 			servlet.serialize (buf)
 			buf.close

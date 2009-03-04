@@ -25,13 +25,11 @@ feature -- Access
 		serialize (buf: INDENDATION_STREAM)
 			-- <Precursor>			
 		do
-
 			buf.put_string ({ROOT_SERVLET_ELEMENT}.response_name + ".append (%"[")
 			buf.indent
 			buf.put_string (html_text)
 			buf.unindent
 			buf.put_string ("]%")")
-
 		end
 
 end

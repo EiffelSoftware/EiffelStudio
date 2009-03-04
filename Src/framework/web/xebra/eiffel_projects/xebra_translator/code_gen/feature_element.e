@@ -51,6 +51,7 @@ feature -- Access
 					locals.item.serialize (buf)
 					locals.forth
 				end
+				buf.unindent
 			end
 			buf.put_string ("do")
 			buf.indent

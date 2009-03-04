@@ -93,56 +93,60 @@ feature -- Update
 	to_upper
 			-- Make sure `name' is in upper case
 		local
-			l_lower, l_upper, l_code: CHARACTER_8
+			l_code: CHARACTER_8
 			l_area: SPECIAL [CHARACTER_8]
 			l_index: INTEGER
+			l_needs_uppering: BOOLEAN
 		do
 				-- We only want to duplicate string if necessary
 			from
 				l_area := name.area
 				l_index := l_area.count - 2
-				l_lower := 'a'
-				l_upper := 'z'
 					-- We have to take null character in to account
 			until
 				l_index < 0
 			loop
 				l_code := l_area [l_index]
-				if l_code >= l_lower and then l_code <= l_upper then
+				if l_code /= l_code.as_upper then
 						-- Character is lower case so we make sure `Current' is correctly initialized.
-					initialize (name.as_upper)
+					l_needs_uppering := True
 					l_index := -1
 				else
 					l_index := l_index - 1
 				end
+			end
+			if l_needs_uppering then
+				initialize (name.as_upper)
 			end
 		end
 
 	to_lower
 			-- Make sure `name' is in upper case
 		local
-			l_lower, l_upper, l_code: CHARACTER_8
+			l_code: CHARACTER_8
 			l_area: SPECIAL [CHARACTER_8]
 			l_index: INTEGER
+			l_needs_lowering: BOOLEAN
 		do
 				-- We only want to duplicate string if necessary
 			from
 				l_area := name.area
 				l_index := l_area.count - 2
-				l_lower := 'A'
-				l_upper := 'Z'
 					-- We have to take null character in to account
 			until
 				l_index < 0
 			loop
 				l_code := l_area [l_index]
-				if l_code >= l_lower and then l_code <= l_upper then
+				if l_code /= l_code.as_lower then
 						-- Character is upper case so we make sure `Current' is correctly initialized.
-					initialize (name.as_lower)
+					l_needs_lowering := True
 					l_index := -1
 				else
 					l_index := l_index - 1
 				end
+			end
+			if l_needs_lowering then
+				initialize (name.as_lower)
 			end
 		end
 

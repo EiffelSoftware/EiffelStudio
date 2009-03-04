@@ -10,7 +10,7 @@ class
 
 feature -- Query
 
-	short_name_of (a_long_file_name: !STRING_GENERAL): STRING_32
+	short_name_of (a_long_file_name: attached STRING_GENERAL): STRING_32
 			-- Short name of `a_long_file_name'
 		do
 			-- FIXIT: not implemented yet

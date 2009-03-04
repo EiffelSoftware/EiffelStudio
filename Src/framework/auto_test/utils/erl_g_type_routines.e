@@ -150,7 +150,7 @@ feature {NONE} -- Parsing class types
 				l_type_as := type_parser.type_node
 
 					-- Generate TYPE_A object from type AST node.
-				if l_type_as /= Void and then {l_context_class: CLASS_C} interpreter_root_class then
+				if l_type_as /= Void and then attached {CLASS_C} interpreter_root_class as l_context_class then
 					Result := type_a_generator.evaluate_type_if_possible (l_type_as, l_context_class)
 				end
 			end

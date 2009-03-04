@@ -13,7 +13,7 @@ inherit
 
 feature -- Access
 
-	application_name: !STRING_8
+	application_name: attached STRING_8
 			-- <Precursor>
 		once
 			Result := "finish_freezing"
@@ -21,7 +21,7 @@ feature -- Access
 
 feature -- Directories
 
-	config_eif_path: !DIRECTORY_NAME
+	config_eif_path: attached DIRECTORY_NAME
 			-- Path to directory containing `config.eif'.
 		require
 			is_valid_environment: is_valid_environment
@@ -35,7 +35,7 @@ feature -- Directories
 
 feature -- Files
 
-	config_eif_file_name: !FILE_NAME
+	config_eif_file_name: attached FILE_NAME
 			-- Location of `config.eif' file.
 		require
 			is_valid_environment: is_valid_environment

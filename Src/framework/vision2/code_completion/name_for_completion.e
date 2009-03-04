@@ -276,7 +276,7 @@ feature {CODE_COMPLETION_WINDOW} -- Children
 
 feature {NONE} -- Implementation
 
-	string_32_to_lower (a_str: ?STRING_32): !STRING_32
+	string_32_to_lower (a_str: detachable STRING_32): attached STRING_32
 			-- Make all possible char in `a_str' to lower.
 			-- |FIXME: We need real Unicode as lower.
 		require

@@ -16,26 +16,26 @@ inherit
 
 feature -- Access
 
-	class_name: !STRING
+	class_name: attached STRING
 			-- <Precursor>
 
-	ancestor_names: !ARRAY [!STRING]
+	ancestor_names: attached ARRAY [attached STRING]
 			-- <Precursor>
 		do
 			Result := << synthesized_ancestor_name >>
 		end
 
-	root_feature_name: !STRING = ""
+	root_feature_name: attached STRING = ""
 			-- <Precursor>
 
 feature {NONE} -- Access
 
-	test_writer: ?TEST_GENERATED_TEST_WRITER
+	test_writer: detachable TEST_GENERATED_TEST_WRITER
 			-- Writer printing AutoTest  results
 
 feature -- Status setting
 
-	prepare (a_file: !KI_TEXT_OUTPUT_STREAM; a_class_name: !STRING; a_system: !SYSTEM_I)
+	prepare (a_file: attached KI_TEXT_OUTPUT_STREAM; a_class_name: attached STRING; a_system: attached SYSTEM_I)
 			-- Prepare printing a new axtracted application state to `a_file'.
 		require
 			not_writing: not is_writing
@@ -83,7 +83,7 @@ feature {NONE} -- Output
 
 feature {NONE} -- Constants
 
-	synthesized_ancestor_name: !STRING = "EQA_SYNTHESIZED_TEST_SET"
+	synthesized_ancestor_name: attached STRING = "EQA_SYNTHESIZED_TEST_SET"
 
 invariant
 	writing_implies_writer_attached: is_writing implies test_writer /= Void

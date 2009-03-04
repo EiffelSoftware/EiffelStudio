@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	services: !HASH_TABLE [!SERVICE_CONCEALER_I, !HASHABLE]
+	services: attached HASH_TABLE [attached SERVICE_CONCEALER_I, attached HASHABLE]
 			-- Local registered services indexed by a service type hash code
 			--
 			-- Key: Computed type hash using `type_hash'
@@ -38,7 +38,7 @@ feature {NONE} -- Access
 
 feature -- Status report
 
-	is_service_proffered (a_type: !TYPE [SERVICE_I]; a_promote: BOOLEAN): BOOLEAN
+	is_service_proffered (a_type: attached TYPE [SERVICE_I]; a_promote: BOOLEAN): BOOLEAN
 			-- <Precursor>.
 		do
 			Result := services.has (type_hash (a_type))
@@ -46,7 +46,7 @@ feature -- Status report
 
 feature -- Query
 
-	frozen service (a_type: !TYPE [SERVICE_I]): ?SERVICE_I
+	frozen service (a_type: attached TYPE [SERVICE_I]): detachable SERVICE_I
 			-- <Precursor>
 		local
 			l_obj: ANY
@@ -56,14 +56,14 @@ feature -- Query
 				Result := reveal (l_obj)
 			end
 
-			if Result /= Void and then {l_provider: !SERVICE_PROVIDER_I} Current and then Result.site /= l_provider then
+			if Result /= Void and then attached {attached SERVICE_PROVIDER_I} Current as l_provider and then Result.site /= l_provider then
 				Result.site := l_provider
 			end
 		end
 
 feature {NONE} -- Query
 
-	frozen type_hash (a_type: !TYPE [SERVICE_I]): !HASHABLE
+	frozen type_hash (a_type: attached TYPE [SERVICE_I]): attached HASHABLE
 			-- Retrieves a hashable object given a type.
 			-- Note: This is added for compatiblity, given that {TYPE} is not yet {HASHABLE}. When this is
 			--       changed this feature is to be removed and the type used directly.
@@ -71,14 +71,14 @@ feature {NONE} -- Query
 			-- `a_type': The service type to retrieve a hashable object for.
 			-- `Result': A hashable object to use with `services'.
 		do
-			if {l_hashable: HASHABLE} a_type then
+			if attached {HASHABLE} a_type as l_hashable then
 				Result := l_hashable
 			else
 				Result := a_type.generating_type.as_attached
 			end
 		end
 
-	internal_service (a_type: !TYPE [SERVICE_I]): ?ANY
+	internal_service (a_type: attached TYPE [SERVICE_I]): detachable ANY
 			-- Attempts to retrieve a service or a service concealer ({SERVICE_CONCEALER_I}).
 			--
 			-- `a_type': The service type to query the `services' table with.
@@ -91,10 +91,10 @@ feature {NONE} -- Query
 
 feature -- Extension
 
-	register (a_type: !TYPE [SERVICE_I]; a_service: !SERVICE_I; a_promote: BOOLEAN)
+	register (a_type: attached TYPE [SERVICE_I]; a_service: attached SERVICE_I; a_promote: BOOLEAN)
 			-- <Precursor>
 		do
-			if a_promote and then {l_container: SERVICE_CONTAINER_S} service_provider.service ({SERVICE_CONTAINER_S}) then
+			if a_promote and then attached {SERVICE_CONTAINER_S} service_provider.service ({SERVICE_CONTAINER_S}) as l_container then
 				l_container.register (a_type, a_service, False)
 			else
 					-- Not promoted or Current is the top-level provider.
@@ -102,10 +102,10 @@ feature -- Extension
 			end
 		end
 
-	register_with_activator (a_type: !TYPE [SERVICE_I]; a_activator: !FUNCTION [ANY, TUPLE, ?SERVICE_I] a_promote: BOOLEAN)
+	register_with_activator (a_type: attached TYPE [SERVICE_I]; a_activator: attached FUNCTION [ANY, TUPLE, detachable SERVICE_I] a_promote: BOOLEAN)
 			-- <Precursor>
 		do
-			if a_promote and then {l_container: SERVICE_CONTAINER_S} service_provider.service ({SERVICE_CONTAINER_S}) then
+			if a_promote and then attached {SERVICE_CONTAINER_S} service_provider.service ({SERVICE_CONTAINER_S}) as l_container then
 				l_container.register_with_activator (a_type, a_activator, False)
 			else
 					-- Not promoted or Current is the top-level provider.
@@ -115,7 +115,7 @@ feature -- Extension
 
 feature -- Removal
 
-	revoke (a_type: !TYPE [SERVICE_I]; a_promote: BOOLEAN)
+	revoke (a_type: attached TYPE [SERVICE_I]; a_promote: BOOLEAN)
 			-- <Precursor>
 		do
 			if is_service_proffered (a_type, False) then
@@ -125,13 +125,13 @@ feature -- Removal
 
 feature {NONE} -- Basic operations
 
-	reveal (a_obj: !ANY): ?SERVICE_I
+	reveal (a_obj: attached ANY): detachable SERVICE_I
 			-- Extracts `a_service' from a possible concealed service.s
 			--
 			-- `a_service': The service to reveal.
 			-- `Result': A revealed service or Void is no service could be revealed.
 		do
-			if {l_concealer: SERVICE_CONCEALER_I} a_obj then
+			if attached {SERVICE_CONCEALER_I} a_obj as l_concealer then
 				Result := l_concealer.service
 			else
 				Result ?= a_obj

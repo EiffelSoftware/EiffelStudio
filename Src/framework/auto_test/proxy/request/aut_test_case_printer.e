@@ -68,7 +68,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	used_vars: ?DS_HASH_TABLE [TUPLE [type: ?TYPE_A; name: ?STRING; check_dyn_type: BOOLEAN], ITP_VARIABLE]
+	used_vars: detachable DS_HASH_TABLE [TUPLE [type: detachable TYPE_A; name: detachable STRING; check_dyn_type: BOOLEAN], ITP_VARIABLE]
 			-- Set of used variables: keys are variables, items are tuples of static type of variable
 			-- and a boolean flag showing if the static type should be checked against dynamic type
 			-- (is only the case for variables returned as results of function calls and those whose type
@@ -103,7 +103,7 @@ feature {NONE} -- Query
 	variable_type_name (a_var: ITP_VARIABLE): STRING
 			-- Type name of `a_var'.
 		local
-			l_result: ?like variable_type_name
+			l_result: detachable like variable_type_name
 		do
 			if used_vars /= Void then
 				used_vars.search (a_var)
@@ -123,7 +123,7 @@ feature {NONE} -- Query
 	variable_type (a_var: ITP_VARIABLE): TYPE_A
 			-- Type of `a_var'.
 		local
-			l_result: ?like variable_type
+			l_result: detachable like variable_type
 			l_name: STRING
 		do
 			if used_vars /= Void then
@@ -159,7 +159,7 @@ feature -- Basic operations
 			no_request_void: not a_request_list.has (Void)
 		local
 			cs: DS_BILINEAR_CURSOR [AUT_REQUEST]
-			l_cursor: DS_HASH_TABLE_CURSOR [TUPLE [type: ?TYPE_A; name: ?STRING; check_dyn_type: BOOLEAN], ITP_VARIABLE]
+			l_cursor: DS_HASH_TABLE_CURSOR [TUPLE [type: detachable TYPE_A; name: detachable STRING; check_dyn_type: BOOLEAN], ITP_VARIABLE]
 			l_type: TYPE_A
 		do
 			used_vars := a_var_list
@@ -237,7 +237,7 @@ feature {AUT_REQUEST} -- Processing
 
 	process_create_object_request (a_request: AUT_CREATE_OBJECT_REQUEST)
 		local
-			l_args: ?DS_LINEAR [ITP_EXPRESSION]
+			l_args: detachable DS_LINEAR [ITP_EXPRESSION]
 			l_type: STRING
 			i: INTEGER
 		do
@@ -347,10 +347,10 @@ feature {AUT_REQUEST} -- Processing
 						output_stream.put_string ("last_real_32")
 					elseif l_rec_type.is_real_64 then
 						output_stream.put_string ("last_real_64")
-					elseif {l_int_type: INTEGER_A} l_rec_type then
+					elseif attached {INTEGER_A} l_rec_type as l_int_type then
 						output_stream.put_string ("last_integer_")
 						output_stream.put_integer (l_int_type.size)
-					elseif {l_nat_type: NATURAL_A} l_rec_type then
+					elseif attached {NATURAL_A} l_rec_type as l_nat_type then
 						output_stream.put_string ("last_natural_")
 						output_stream.put_integer (l_nat_type.size)
 					else
@@ -383,7 +383,7 @@ feature {AUT_REQUEST} -- Processing
 		do
 			l_type := variable_type (a_request.receiver)
 			if l_type /= none_type then
-				if {l_var: ITP_VARIABLE} a_request.expression then
+				if attached {ITP_VARIABLE} a_request.expression as l_var then
 					check initialized: interpreter_root_class /= Void end
 					l_use_ot := not variable_type (l_var).conform_to (interpreter_root_class, l_type)
 				end

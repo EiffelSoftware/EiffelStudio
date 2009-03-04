@@ -1,4 +1,4 @@
-indexing
+note
 	description : "xebra_translator application root class"
 	date        : "$Date$"
 	revision    : "$Revision$"
@@ -53,7 +53,7 @@ feature -- Processing
 		end
 
 
-	process_file (filename: STRING) is
+	process_file (filename: STRING)
 			-- Parse file.
 		require
 			filename_not_void: filename /= Void

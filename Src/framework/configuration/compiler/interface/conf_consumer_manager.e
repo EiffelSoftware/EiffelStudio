@@ -167,7 +167,7 @@ feature -- Commands
 			check
 				is_error: is_error
 			end
-			if {lt_ex: CONF_EXCEPTION}exception_manager.last_exception.original then
+			if attached {CONF_EXCEPTION} exception_manager.last_exception.original as lt_ex then
 				l_retried := True
 				retry
 			end

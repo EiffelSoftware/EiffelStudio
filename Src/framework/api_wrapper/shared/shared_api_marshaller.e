@@ -12,7 +12,7 @@ class
 
 feature -- Access
 
-	marshaller: !API_MARSHALLER
+	marshaller: attached API_MARSHALLER
 			-- Shared access to an API marshaller.
 		once
 			create Result

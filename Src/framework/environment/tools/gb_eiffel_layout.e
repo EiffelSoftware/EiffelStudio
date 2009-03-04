@@ -20,7 +20,7 @@ feature -- Access
 	application_name: STRING = "esbuilder"
 			-- <Precursor>
 
-	distribution_name: !STRING_8
+	distribution_name: attached STRING_8
 			-- <Precursor>
 		once
 			Result := application_name

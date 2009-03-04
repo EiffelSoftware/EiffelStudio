@@ -30,7 +30,7 @@ feature -- Operation
 
 feature {NONE} -- Initialization
 
-	make (an_interface: !like interface)
+	make (an_interface: attached like interface)
 			-- Initialization
 		do
 			interface := an_interface
@@ -54,7 +54,7 @@ feature {NONE} -- Implementation
 			l_string: STRING
 			l_result: BOOLEAN
 		do
-			if message_information /= Void and then {lt_action: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]}interface.external_command_action then
+			if message_information /= Void and then attached {FUNCTION [ANY, TUPLE [STRING], BOOLEAN]} interface.external_command_action as lt_action then
 				l_wel_string := command_string (message_information.l_param)
 					-- |Fixme: Causes information loss doing as_string_8.
 				l_string := l_wel_string.string.as_string_8
@@ -70,7 +70,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	message_window: ?EV_INTERNAL_SILLY_WINDOW_IMP
+	message_window: detachable EV_INTERNAL_SILLY_WINDOW_IMP
 
 	command_string (a_pointer: POINTER): WEL_STRING
 			-- `a_pointer' points to COPYDATASTRUCT structure.
@@ -105,7 +105,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	interface: !COMMAND_RECEIVER;
+	interface: attached COMMAND_RECEIVER;
 
 note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"

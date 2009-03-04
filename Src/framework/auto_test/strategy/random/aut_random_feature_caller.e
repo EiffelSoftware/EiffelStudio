@@ -218,7 +218,7 @@ feature {NONE} -- Steps
 			target_creator.start
 		end
 
-	create_argument_creator is
+	create_argument_creator
 			-- Create `argument_creator'.
 		require
 			feature_need_argument: feature_to_call /= Void and then feature_to_call.argument_count > 0
@@ -350,7 +350,7 @@ feature {NONE} -- Implementation
 			-- of the feature call has been selected?
 			-- See `recheck_type_and_feature' for the reason of the rechecking
 
-	recheck_type_and_feature is
+	recheck_type_and_feature
 			-- Recheck `type' and `feature' after the target object of the feature has been selected.
 			-- This is necessary because depending on the dynamic type of the target object, the feature name
 			-- maybe different (because of feature renaming),
@@ -360,7 +360,7 @@ feature {NONE} -- Implementation
 		local
 			l_target_type: TYPE_A
 		do
-			if not target_creator.receivers.is_empty and then {l_target: ITP_VARIABLE} target_creator.receivers.first then
+			if not target_creator.receivers.is_empty and then attached {ITP_VARIABLE} target_creator.receivers.first as l_target then
 				l_target_type := interpreter.variable_table.variable_type (l_target)
 				if l_target_type.is_none then
 					cancel

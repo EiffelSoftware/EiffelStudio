@@ -24,7 +24,7 @@ inherit
 
 feature -- Access
 
-	active_registrations: !DS_LINEAR [G]
+	active_registrations: attached DS_LINEAR [G]
 			-- Current registration object that can be used.
 		require
 			is_interface_usable: is_interface_usable
@@ -34,11 +34,11 @@ feature -- Access
 --			result_contains_attached_items: not Result.has (Void)
 			result_contains_usable_items: Result.for_all (agent (ia_item: G): BOOLEAN
 				do
-					Result := {l_usable: USABLE_I} ia_item implies l_usable.is_interface_usable
+					Result := attached {USABLE_I} ia_item as l_usable implies l_usable.is_interface_usable
 				end)
 		end
 
-	registrations: !DS_LINEAR [CONCEALER_I [G]]
+	registrations: attached DS_LINEAR [CONCEALER_I [G]]
 			-- Current registrations.
 		require
 			is_interface_usable: is_interface_usable
@@ -48,13 +48,13 @@ feature -- Access
 --			result_contains_attached_items: not Result.has (Void)
 			result_contains_usable_items: Result.for_all (agent (ia_item: CONCEALER_I [G]): BOOLEAN
 				do
-					Result := {l_usable: USABLE_I} ia_item implies l_usable.is_interface_usable
+					Result := attached {USABLE_I} ia_item as l_usable implies l_usable.is_interface_usable
 				end)
 		end
 
 feature -- Status report
 
-	is_valid_registration_key (a_key: !K): BOOLEAN
+	is_valid_registration_key (a_key: attached K): BOOLEAN
 			-- Determines if a registeration key is valid for the registrar.
 			--
 			-- `a_key': The registeration key to determine validity for.
@@ -63,10 +63,10 @@ feature -- Status report
 			is_interface_usable: is_interface_usable
 		deferred
 		ensure
-			a_key_is_interface_usable: {l_usable: USABLE_I} a_key implies l_usable.is_interface_usable
+			a_key_is_interface_usable: attached {USABLE_I} a_key as l_usable implies l_usable.is_interface_usable
 		end
 
-	is_valid_registration (a_item: !G): BOOLEAN
+	is_valid_registration (a_item: attached G): BOOLEAN
 			-- Determines if a registeration object is valid for the registrar.
 			--
 			-- `a_item': The registeration object to determine validity for.
@@ -75,10 +75,10 @@ feature -- Status report
 			is_interface_usable: is_interface_usable
 		deferred
 		ensure
-			a_item_is_interface_usable: {l_usable: USABLE_I} a_item implies l_usable.is_interface_usable
+			a_item_is_interface_usable: attached {USABLE_I} a_item as l_usable implies l_usable.is_interface_usable
 		end
 
-	is_registered (a_key: !K): BOOLEAN
+	is_registered (a_key: attached K): BOOLEAN
 			-- Determins if a object has been registered already.
 			--
 			-- `a_key': A registeration key.
@@ -91,7 +91,7 @@ feature -- Status report
 
 feature -- Query
 
-	registration alias "[]" (a_key: !K): !G assign register
+	registration alias "[]" (a_key: attached K): attached G assign register
 			-- Retrieves an object registered with the supplied registration key.
 			--
 			-- `a_key': The registeration key to retrieve an registration object for.
@@ -105,7 +105,7 @@ feature -- Query
 
 feature -- Basic operations
 
-	register (a_item: !G; a_key: !K)
+	register (a_item: attached G; a_key: attached K)
 			-- Registers an object with the registrar.
 			--
 			-- `a_item': The object to register.
@@ -118,10 +118,10 @@ feature -- Basic operations
 		deferred
 		ensure
 			is_registered_a_key: is_registered (a_key)
-			a_item_sited: {l_site: SITE [REGISTRAR_I [G, K]]} a_item implies (l_site.is_sited and then l_site.site = Current)
+			a_item_sited: attached {SITE [REGISTRAR_I [G, K]]} a_item as l_site implies (l_site.is_sited and then l_site.site = Current)
 		end
 
-	register_with_activator (a_activator: !FUNCTION [ANY, TUPLE, !G]; a_key: !K)
+	register_with_activator (a_activator: attached FUNCTION [ANY, TUPLE, attached G]; a_key: attached K)
 			-- Registers an activator function, used to retrieve a registration object upon request.
 			--
 			-- `a_item': The object to register.
@@ -135,7 +135,7 @@ feature -- Basic operations
 			a_key_is_registered: is_registered (a_key)
 		end
 
-	register_with_type_activator (a_type: !TYPE [G]; a_key: !K)
+	register_with_type_activator (a_type: attached TYPE [G]; a_key: attached K)
 			-- Registers an activator with the registrar, which will be used to instantiate the registration
 			-- object when the first request is made.
 			--
@@ -154,7 +154,7 @@ feature -- Basic operations
 			is_registered_a_key: is_registered (a_key)
 		end
 
-	unregister (a_key: !K)
+	unregister (a_key: attached K)
 			-- Unregisters a previous registered object or activator.
 			--
 			-- `a_key': The key originally used to register an object or activator.
@@ -165,12 +165,12 @@ feature -- Basic operations
 		deferred
 		ensure
 			not_is_registered_a_key: not is_registered (a_key)
-			a_item_unsited: {l_site: SITE [REGISTRAR_I [G, K]]} old registration (a_key) implies not l_site.is_sited
+			a_item_unsited: attached {SITE [REGISTRAR_I [G, K]]} old registration (a_key) as l_site implies not l_site.is_sited
 		end
 
 feature -- Events
 
-	registered_event: !EVENT_TYPE [TUPLE [registrar: REGISTRAR_I [G, K]; registration: !CONCEALER_I [G]; key: !K]]
+	registered_event: attached EVENT_TYPE [TUPLE [registrar: REGISTRAR_I [G, K]; registration: attached CONCEALER_I [G]; key: attached K]]
 			-- Events called after an item was added to the dictionary.
 			--
 			-- new_item: The context item added to the dictionary.
@@ -183,7 +183,7 @@ feature -- Events
 			result_is_interface_usable: Result.is_interface_usable
 		end
 
-	unregistered_event: !EVENT_TYPE [TUPLE [registrar: REGISTRAR_I [G, K]; registration: !CONCEALER_I [G]; key: !K]]
+	unregistered_event: attached EVENT_TYPE [TUPLE [registrar: REGISTRAR_I [G, K]; registration: attached CONCEALER_I [G]; key: attached K]]
 			-- Events called after an item was removed to the dictionary.
 			--
 			-- old_item: The context item removed from the dictionary.
@@ -196,7 +196,7 @@ feature -- Events
 			result_is_interface_usable: Result.is_interface_usable
 		end
 
-	registration_activated_event: !EVENT_TYPE [TUPLE [registrar: REGISTRAR_I [G, K]; registration: !G; key: !K]]
+	registration_activated_event: attached EVENT_TYPE [TUPLE [registrar: REGISTRAR_I [G, K]; registration: attached G; key: attached K]]
 			-- Events called after an item was removed to the dictionary.
 			--
 			-- new_item: The context item changed to in the dictionary.

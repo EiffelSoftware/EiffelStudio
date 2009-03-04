@@ -61,10 +61,10 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	repository: ?AUT_TEST_CASE_RESULT_REPOSITORY
+	repository: detachable AUT_TEST_CASE_RESULT_REPOSITORY
 			-- Result repository for which documentation is currently generated
 
-	cursor: ?DS_LINEAR_CURSOR [CLASS_C]
+	cursor: detachable DS_LINEAR_CURSOR [CLASS_C]
 			-- Cursor pointing to current class being processed by `step'
 
 	state: NATURAL_8

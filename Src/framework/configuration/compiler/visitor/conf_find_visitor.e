@@ -30,12 +30,12 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	found_groups: !LINKED_SET [!G]
+	found_groups: attached LINKED_SET [attached G]
 			-- Classes with `name' retrieved during last process.
 
 feature {NONE} -- Access
 
-	visited_targets: !SEARCH_TABLE [UUID]
+	visited_targets: attached SEARCH_TABLE [UUID]
 			-- Targets which have been traversed by last search
 
 feature -- Status report
@@ -71,7 +71,7 @@ feature -- Status setting
 
 feature {NONE} -- Query
 
-	is_matching (a_group: !G): BOOLEAN
+	is_matching (a_group: attached G): BOOLEAN
 			-- Does `a_group' match what we are searching for?
 		deferred
 		end
@@ -81,7 +81,7 @@ feature -- Visiting
 	process_group (a_group: CONF_GROUP)
 			-- <Precursor>
 		do
-			if {l_group: G} a_group and then is_matching (l_group) then
+			if attached {G} a_group as l_group and then is_matching (l_group) then
 				found_groups.force (l_group)
 			end
 		end

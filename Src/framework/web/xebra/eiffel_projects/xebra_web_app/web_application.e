@@ -33,8 +33,8 @@ feature
             -- Receive a message, extend it, and send it back
         do
             soc1.accept
-            if {soc2: NETWORK_STREAM_SOCKET} soc1.accepted then
-	            if {message: STRING} soc2.retrieved then
+            if attached {NETWORK_STREAM_SOCKET} soc1.accepted as soc2 then
+	            if attached {STRING} soc2.retrieved as message then
 	            	message.append (read_page("/home/fabioz/local/xebra/websites/red_bull.htm"))
 	            	soc2.independent_store (message)
 	            end

@@ -22,7 +22,7 @@ feature -- Access
 			l_class: CLASS_I
 		do
 			interpreter_root_class_cell.put (Void)
-			if {l_cluster: CONF_CLUSTER} system.eifgens_cluster then
+			if attached {CONF_CLUSTER} system.eifgens_cluster as l_cluster then
 				l_class := system.universe.class_named (interpreter_root_class_name, l_cluster)
 				if l_class /= Void and then l_class.is_compiled then
 					interpreter_root_class_cell.put (l_class.compiled_class)
@@ -30,12 +30,12 @@ feature -- Access
 			end
 		end
 
-	interpreter_class: ?CLASS_C
+	interpreter_class: detachable CLASS_C
 			-- Compiled representation of "ITP_INTERPRETER"
 		local
 			l_parents: FIXED_LIST [CLASS_C]
 		do
-			if {l_root: CLASS_C} interpreter_root_class then
+			if attached {CLASS_C} interpreter_root_class as l_root then
 				l_parents := l_root.parents_classes
 				if not l_parents.is_empty then
 					Result := l_parents.first
@@ -43,13 +43,13 @@ feature -- Access
 			end
 		end
 
-	interpreter_root_class: ?CLASS_C
+	interpreter_root_class: detachable CLASS_C
 			-- Compiled representation of "ITP_INTERPRETER_ROOT"
 		do
 			Result := interpreter_root_class_cell.item
 		end
 
-	interpreter_root_class_cell: CELL [?CLASS_C]
+	interpreter_root_class_cell: CELL [detachable CLASS_C]
 			-- Once per thread cell for `interpreter_root_class'
 		once
 			create Result.put (Void)

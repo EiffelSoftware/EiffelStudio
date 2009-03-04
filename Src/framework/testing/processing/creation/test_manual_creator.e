@@ -41,7 +41,7 @@ feature {NONE} -- Basic operations
 			is_finished := True
 		end
 
-	print_new_class (a_file: !KL_TEXT_OUTPUT_FILE; a_class_name: !STRING)
+	print_new_class (a_file: attached KL_TEXT_OUTPUT_FILE; a_class_name: attached STRING)
 			-- Create test routine in new class
 		do
 			a_file.close
@@ -84,13 +84,13 @@ feature {NONE} -- Basic operations
 			retry
 		end
 
-	template_parameters: DS_HASH_TABLE [!STRING, !STRING]
+	template_parameters: DS_HASH_TABLE [attached STRING, attached STRING]
 			-- Template parameters for creating actual class text from template file.
 		local
 			l_redefine, l_body, l_indexing, l_name: STRING
-			l_cursor: DS_LINEAR_CURSOR [!STRING]
+			l_cursor: DS_LINEAR_CURSOR [attached STRING]
 			l_count: INTEGER
-			l_tags: !DS_LINEAR [!STRING]
+			l_tags: attached DS_LINEAR [attached STRING]
 		do
 			create Result.make_default
 			if configuration.cluster.options.syntax_level.item = {CONF_OPTION}.syntax_level_obsolete then
@@ -181,19 +181,19 @@ feature {NONE} -- Constants
 	w_wizard_service_not_available: STRING = "Could not generate class text because wizard service not available."
 	w_template_file: STRING = "Template file $1 does not exists."
 
-	v_note_keyword: !STRING = "NOTE_KEYWORD"
-	v_class_name: !STRING = "CLASS_NAME"
-	v_test_set_ancestor: !STRING = "TEST_SET_ANCESTOR"
-	v_redefine_events: !STRING = "REDEFINE_EVENTS"
-	v_test_name: !STRING = "TEST_NAME"
-	v_indexing: !STRING = "INDEXING"
+	v_note_keyword: attached STRING = "NOTE_KEYWORD"
+	v_class_name: attached STRING = "CLASS_NAME"
+	v_test_set_ancestor: attached STRING = "TEST_SET_ANCESTOR"
+	v_redefine_events: attached STRING = "REDEFINE_EVENTS"
+	v_test_name: attached STRING = "TEST_NAME"
+	v_indexing: attached STRING = "INDEXING"
 
-	test_set_ancestor: !STRING
+	test_set_ancestor: attached STRING
 		do
 			Result := {TEST_CONSTANTS}.common_test_class_ancestor_name
 		end
 
-	system_level_test_ancestor: !STRING
+	system_level_test_ancestor: attached STRING
 		do
 			Result := {TEST_CONSTANTS}.system_level_test_ancestor_name
 		end

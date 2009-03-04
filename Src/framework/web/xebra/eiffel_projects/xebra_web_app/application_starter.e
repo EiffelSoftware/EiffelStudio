@@ -1,4 +1,4 @@
-indexing
+note
 	description : "xebra_web_app application root class"
 	date        : "$Date$"
 	revision    : "$Revision$"

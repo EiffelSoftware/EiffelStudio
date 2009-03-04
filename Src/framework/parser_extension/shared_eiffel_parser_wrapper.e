@@ -12,7 +12,7 @@ class
 
 feature -- Access
 
-	eiffel_parser_wrapper: !EIFFEL_PARSER_WRAPPER
+	eiffel_parser_wrapper: attached EIFFEL_PARSER_WRAPPER
 			-- Shared access to an Eiffel parser wrapper for error free parsing.
 		once
 			create Result

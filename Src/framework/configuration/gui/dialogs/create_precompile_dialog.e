@@ -38,10 +38,10 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	lookup_directories: !DS_ARRAYED_LIST [!TUPLE [path: !STRING; depth: INTEGER]]
+	lookup_directories: attached DS_ARRAYED_LIST [attached TUPLE [path: attached STRING; depth: INTEGER]]
 			-- A list of lookup directories
 		local
-			l_file: !FILE_NAME
+			l_file: attached FILE_NAME
 		do
 			create Result.make_default
 
@@ -50,7 +50,7 @@ feature {NONE} -- Access
 				add_lookup_directories (l_file, Result)
 			end
 			if eiffel_layout.is_user_files_supported then
-				if {l_user_file: FILE_NAME} eiffel_layout.user_priority_file_name (l_file.string, True) and then file_system.file_exists (l_user_file) then
+				if attached {FILE_NAME} eiffel_layout.user_priority_file_name (l_file.string, True) as l_user_file and then file_system.file_exists (l_user_file) then
 					add_lookup_directories (l_user_file, Result)
 				end
 			end
@@ -63,7 +63,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Action handlers
 
-	on_library_selected (a_library: !CONF_SYSTEM; a_location: !STRING)
+	on_library_selected (a_library: attached CONF_SYSTEM; a_location: attached STRING)
 			-- <Precursor>
 		do
 			name.set_text (a_library.library_target.name + "_precompile")

@@ -45,7 +45,7 @@ feature {NONE} -- Implementation
 		local
 			current_character, last_character: CHARACTER;
 			s1: STRING
-			s2: ?STRING;
+			s2: detachable STRING;
 			i, j: INTEGER;
 			stop : BOOLEAN;
 		do
@@ -146,7 +146,7 @@ feature {NONE} -- Implementation
 			good_result: Result /= Void;
 		end;
 
-	variable_value (a_name: STRING): ?STRING
+	variable_value (a_name: STRING): detachable STRING
 			-- Value of variable `a_name', if any.
 		require
 			attached_name: a_name /= Void

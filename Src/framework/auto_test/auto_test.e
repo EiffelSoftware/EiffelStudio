@@ -678,7 +678,7 @@ feature {NONE} -- Implementation
 	successfully_minimized_witnesses: DS_ARRAYED_LIST [AUT_WITNESS]
 			-- List of witnesses that could be minimized and are added to the result repository
 
-	all_used_vars (a_req_list: DS_LIST [AUT_REQUEST]): DS_HASH_TABLE [TUPLE [type: ?TYPE_A; name: ?STRING; check_dyn_type: BOOLEAN], ITP_VARIABLE]
+	all_used_vars (a_req_list: DS_LIST [AUT_REQUEST]): DS_HASH_TABLE [TUPLE [type: detachable TYPE_A; name: detachable STRING; check_dyn_type: BOOLEAN], ITP_VARIABLE]
 			-- All variables used in the request list `a_req_list' with the names of their types
 		require
 			a_req_list_not_void: a_req_list /= Void

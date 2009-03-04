@@ -88,13 +88,13 @@ feature {NONE} -- Access
 	status: NATURAL
 			-- Current status
 
-	current_task: ?AUT_TASK
+	current_task: detachable AUT_TASK
 			-- Task `Current' works on every time `proceed' is called.
 
-	current_results: ?DS_ARRAYED_LIST [!AUT_TEST_CASE_RESULT]
+	current_results: detachable DS_ARRAYED_LIST [attached AUT_TEST_CASE_RESULT]
 			-- Results printed to new test class
 
-	source_writer: !TEST_GENERATED_SOURCE_WRITER
+	source_writer: attached TEST_GENERATED_SOURCE_WRITER
 			-- Source writer used for creating test classes
 
 	class_names: DS_LIST [STRING_8]
@@ -157,7 +157,7 @@ feature {NONE} -- Basic operations
 		local
 			l_total: INTEGER
 			l_progress: REAL
-			l_file: ?KI_TEXT_OUTPUT_STREAM
+			l_file: detachable KI_TEXT_OUTPUT_STREAM
 			l_cancel: BOOLEAN
 		do
 			is_finished := is_stop_requested
@@ -247,7 +247,7 @@ feature {NONE} -- Basic operations
 						is_finished := True
 					end
 				else
-					if {l_task: AUT_HTML_STATISTICS_GENERATOR} current_task then
+					if attached {AUT_HTML_STATISTICS_GENERATOR} current_task as l_task then
 						if l_task.has_fatal_error then
 							error_handler.report_html_generation_error
 						else
@@ -361,7 +361,7 @@ feature {NONE} -- Implementation
 
 			proxy_time_out := configuration.proxy_time_out.as_integer_32
 
-			create {DS_ARRAYED_LIST [!STRING]} class_names.make_from_linear (configuration.types)
+			create {DS_ARRAYED_LIST [attached STRING]} class_names.make_from_linear (configuration.types)
 		end
 
 	prepare_witness_minimization
@@ -471,7 +471,7 @@ feature{NONE} -- Test case generation and execution
 			l_class_set: DS_HASH_SET [CLASS_I]
 			l_class_cur: DS_HASH_SET_CURSOR [CLASS_I]
 			l_type: TYPE_A
-			l_class_name_set: DS_HASH_SET [!STRING]
+			l_class_name_set: DS_HASH_SET [attached STRING]
 			l_name_cur: DS_HASH_SET_CURSOR [STRING]
 			l_name: STRING
 		do
@@ -485,7 +485,7 @@ feature{NONE} -- Test case generation and execution
 				-- If actual generic parameter is given, that particular generic derivation is testes,
 				-- otherwise, the default generic parameter constraint is used to get a valid generic derivation.
 			create l_class_name_set.make (50)
-			l_class_name_set.set_equality_tester (create {KL_STRING_EQUALITY_TESTER_A [!STRING]})
+			l_class_name_set.set_equality_tester (create {KL_STRING_EQUALITY_TESTER_A [attached STRING]})
 			if class_names.count > 0 then
 					-- If type names are given explicitly (either from command line or from compiler,
 					-- we only test those classes, of course their supplier classes will also be tested in passing.
@@ -516,8 +516,8 @@ feature{NONE} -- Test case generation and execution
 					l_type := base_type (l_name_cur.item)
 					if l_type /= Void then
 						if l_type.associated_class.is_generic then
-							if not {l_gen_type: GEN_TYPE_A} l_type then
-								if {l_gen_type2: GEN_TYPE_A} l_type.associated_class.actual_type then
+							if not attached {GEN_TYPE_A} l_type as l_gen_type then
+								if attached {GEN_TYPE_A} l_type.associated_class.actual_type as l_gen_type2 then
 									l_type := generic_derivation_of_type (l_gen_type2, l_gen_type2.associated_class)
 								else
 									check
@@ -526,7 +526,7 @@ feature{NONE} -- Test case generation and execution
 								end
 							end
 						end
-						if {l_class_type: CL_TYPE_A} l_type then
+						if attached {CL_TYPE_A} l_type as l_class_type then
 								-- Only compiled classes are taken into consideration.
 							if l_class_type.associated_class /= Void then
 								if not interpreter_related_classes.has (l_class_type.name) then
@@ -752,7 +752,7 @@ feature{NONE} -- Test result analyizing
 			end
 		end
 
-	add_result (a_result: !AUT_TEST_CASE_RESULT)
+	add_result (a_result: attached AUT_TEST_CASE_RESULT)
 		require
 			current_results_attached: current_results /= Void
 			a_result_fails: a_result.is_fail
@@ -783,7 +783,7 @@ feature{NONE} -- Test result analyizing
 			end
 		end
 
-	print_new_class (a_file: !KL_TEXT_OUTPUT_FILE; a_class_name: !STRING)
+	print_new_class (a_file: attached KL_TEXT_OUTPUT_FILE; a_class_name: attached STRING)
 			-- <Precursor>
 		local
 			l_system: like system

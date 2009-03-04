@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_marshaller: !like marshaller)
+	make (a_marshaller: attached like marshaller)
 			-- Initialize an marshaller cleaner for a given marshaller
 		do
 			marshaller := a_marshaller
@@ -42,12 +42,12 @@ feature -- Clean up
 
 feature -- Access
 
-	marshaller: !API_MARSHALLER
+	marshaller: attached API_MARSHALLER
 			-- The marshaller to use to clean up allocated resources
 
 feature {NONE} -- Access
 
-	pointers: !ARRAYED_SET [POINTER]
+	pointers: attached ARRAYED_SET [POINTER]
 			-- The pointers managed by the cleaner
 
 feature -- Basic operations
@@ -55,8 +55,8 @@ feature -- Basic operations
 	clean
 			-- Performs a clean up
 		local
-			l_pointers: !like pointers
-			l_marshaller: !like marshaller
+			l_pointers: attached like pointers
+			l_marshaller: attached like marshaller
 			l_p: POINTER
 		do
 			l_pointers := pointers

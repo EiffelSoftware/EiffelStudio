@@ -23,7 +23,7 @@ inherit
 
 feature {NONE} -- Initialize
 
-	make (a_api: !like api)
+	make (a_api: attached like api)
 			-- Initialize the dynamic module by attempting to load it.
 		require
 			a_api_is_interface_usable: a_api.is_interface_usable
@@ -51,7 +51,7 @@ feature -- Clean up
 
 feature -- Access
 
-	api: !DYNAMIC_API
+	api: attached DYNAMIC_API
 			-- Shared dynamic API.
 
 feature -- Status report
@@ -64,7 +64,7 @@ feature -- Status report
 
 feature -- Query
 
-	api_pointer (a_api_name: ?STRING_GENERAL): POINTER
+	api_pointer (a_api_name: detachable STRING_GENERAL): POINTER
 			-- Retrieve an API function/variable pointer given an API name.
 			--
 			-- `a_api_name': An API function or variable name.

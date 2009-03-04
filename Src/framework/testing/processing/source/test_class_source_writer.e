@@ -11,25 +11,25 @@ deferred class
 
 feature -- Access
 
-	class_name: !STRING
+	class_name: attached STRING
 			-- Name of class
 		deferred
 		end
 
-	ancestor_names: !ARRAY [!STRING]
+	ancestor_names: attached ARRAY [attached STRING]
 			-- Name of ancestor classes
 		do
 			Result := << >>
 		end
 
-	root_feature_name: !STRING
+	root_feature_name: attached STRING
 			-- Name for root feature
 		deferred
 		end
 
 feature {NONE} -- Access
 
-	stream: ?TEST_INDENTING_SOURCE_WRITER
+	stream: detachable TEST_INDENTING_SOURCE_WRITER
 
 feature -- Status report
 
@@ -80,8 +80,8 @@ feature {NONE} -- Output
 		require
 			stream_valid: is_writing
 		local
-			l_ancs: ARRAY [!STRING]
-			l_root: ?STRING
+			l_ancs: ARRAY [attached STRING]
+			l_root: detachable STRING
 			i: INTEGER
 		do
 			stream.put_line ("class")

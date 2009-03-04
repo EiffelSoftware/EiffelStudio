@@ -32,13 +32,13 @@ inherit
 
 feature -- Access
 
-	class_name: !STRING = "ITP_INTERPRETER_ROOT"
+	class_name: attached STRING = "ITP_INTERPRETER_ROOT"
 			-- <Precursor>
 
-	root_feature_name: !STRING = "execute"
+	root_feature_name: attached STRING = "execute"
 			-- <Precursor>
 
-	ancestor_names: !ARRAY [!STRING]
+	ancestor_names: attached ARRAY [attached STRING]
 			-- <Precursor>
 		do
 			Result := << "ITP_INTERPRETER" >>
@@ -46,13 +46,13 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	root_group: ?CONF_GROUP
-	root_class: ?CLASS_C
-	root_feature: ?FEATURE_I
+	root_group: detachable CONF_GROUP
+	root_class: detachable CLASS_C
+	root_feature: detachable FEATURE_I
 
 feature -- Basic operations
 
-	write_class (a_file: !KI_TEXT_OUTPUT_STREAM; a_type_list: !DS_LINEAR [STRING]; a_system: !SYSTEM_I)
+	write_class (a_file: attached KI_TEXT_OUTPUT_STREAM; a_type_list: attached DS_LINEAR [STRING]; a_system: attached SYSTEM_I)
 			-- Print root class refering to types in `a_type_list'
 		require
 			a_file_open_write: a_file.is_open_write
@@ -83,7 +83,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	put_anchor_routine (a_types: !DS_LINEAR [STRING])
+	put_anchor_routine (a_types: attached DS_LINEAR [STRING])
 			--
 		require
 			stream_valid: is_writing
@@ -136,12 +136,12 @@ feature {NONE} -- Implementation
 		local
 			l_type_a, l_gtype: TYPE_A
 			l_class: CLASS_C
-			l_type: ?STRING
+			l_type: detachable STRING
 			i: INTEGER
 		do
 			type_parser.parse_from_string ("type " + a_type, root_class)
 			error_handler.wipe_out
-			if {l_type_as: CLASS_TYPE_AS} type_parser.type_node then
+			if attached {CLASS_TYPE_AS} type_parser.type_node as l_type_as then
 				l_type_a := type_a_generator.evaluate_type_if_possible (l_type_as, root_class)
 				if l_type_a /= Void then
 					create l_type.make (20)
@@ -178,12 +178,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_type (a_string: !STRING; a_type: TYPE_A)
+	append_type (a_string: attached STRING; a_type: TYPE_A)
 			-- Append type name for `a_type' to `a_string' without formal parameters.
 		local
 			i: INTEGER
 		do
-			if not a_type.is_formal and {l_class_type: CL_TYPE_A} a_type then
+			if not a_type.is_formal and attached {CL_TYPE_A} a_type as l_class_type then
 				a_string.append (l_class_type.associated_class.name)
 				if l_class_type.has_generics then
 					a_string.append (" [")

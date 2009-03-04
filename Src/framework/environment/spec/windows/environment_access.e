@@ -13,14 +13,14 @@ inherit
 
 feature -- Access
 
-	get_from_application (a_var, a_app: STRING): ?STRING
+	get_from_application (a_var, a_app: STRING): detachable STRING
 			-- Get `a_var' as if we were `a_app'.
 		require
 			a_var_ok: a_var /= Void and then not a_var.has ('%U')
 			a_app_ok: a_app /= Void and then not a_app.has ('%U')
 		local
 			l_reg: WEL_REGISTRY
-			l_key: ?WEL_REGISTRY_KEY_VALUE
+			l_key: detachable WEL_REGISTRY_KEY_VALUE
 			l_s32: STRING_32
 			l_eiffel: STRING
 		do

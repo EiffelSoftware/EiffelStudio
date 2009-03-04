@@ -39,7 +39,7 @@ feature -- Access
 
 feature {NONE} -- Access: File source caching
 
-	cached_file: !CELL [?CACHED_PLAIN_TEXT_FILE_READER]
+	cached_file: attached CELL [detachable CACHED_PLAIN_TEXT_FILE_READER]
 			-- Cached file
 		require
 			has_associated_file
@@ -165,7 +165,7 @@ feature {ERROR_VISITOR} -- Compute surrounding text around error
 		local
 			l_line: NATURAL
 			l_fn: like file_name
-			l_file: ?CACHED_PLAIN_TEXT_FILE_READER
+			l_file: detachable CACHED_PLAIN_TEXT_FILE_READER
 		do
 			l_fn := file_name
 			l_file := cached_file.item

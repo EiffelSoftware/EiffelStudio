@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 			e_not_void: e /= Void
 			d_not_void: d /= Void
 		do
-			if {l_already_converted: like Current} e then
+			if attached {like Current} e as l_already_converted then
 				expr := l_already_converted.expr
 			else
 				expr := e

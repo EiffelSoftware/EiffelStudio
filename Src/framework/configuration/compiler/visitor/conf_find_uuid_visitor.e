@@ -9,7 +9,7 @@ class
 	CONF_FIND_UUID_VISITOR
 
 inherit
-	CONF_FIND_VISITOR [!CONF_LIBRARY]
+	CONF_FIND_VISITOR [attached CONF_LIBRARY]
 		rename
 			found_groups as found_libraries
 		end
@@ -34,7 +34,7 @@ feature -- Status setting
 
 feature {NONE} -- Query
 
-	is_matching (a_library: !CONF_LIBRARY): BOOLEAN
+	is_matching (a_library: attached CONF_LIBRARY): BOOLEAN
 			-- <Precursor>
 		do
 			if a_library.library_target /= Void then

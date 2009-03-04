@@ -18,7 +18,7 @@ inherit
 
 feature -- Formatting
 
-	format (a_str: STRING_GENERAL; a_args: TUPLE): !STRING
+	format (a_str: STRING_GENERAL; a_args: TUPLE): attached STRING
 			-- Replaces each format item in `a_str' with the text equivalent of a corresponding to
 			-- and object's value at `a_args' @ i.
 			--
@@ -46,7 +46,7 @@ feature -- Formatting
 			not_result_is_empty: not Result.is_empty
 		end
 
-	format_unicode (a_str: STRING_GENERAL; a_args: TUPLE): !STRING_32
+	format_unicode (a_str: STRING_GENERAL; a_args: TUPLE): attached STRING_32
 			-- Replaces each format item in `a_str' with the text equivalent of a corresponding to
 			-- and object's value at `a_args' @ i.
 			--
@@ -147,7 +147,7 @@ feature -- Formatting
 			not_result_is_empty: not Result.is_empty
 		end
 
-	ellipse (a_str: STRING; a_max_len: INTEGER): !STRING
+	ellipse (a_str: STRING; a_max_len: INTEGER): attached STRING
 			-- If `a_str' is bigger than `ellipse_threshold'
 		require
 			a_str_attached: a_str /= Void
@@ -166,7 +166,7 @@ feature -- Formatting
 			result_not_is_a_str: Result /= a_str
 		end
 
-	ellipse_unicode (a_str: STRING_GENERAL; a_max_len: INTEGER): !STRING_32
+	ellipse_unicode (a_str: STRING_GENERAL; a_max_len: INTEGER): attached STRING_32
 			-- If `a_str' is bigger than `ellipse_threshold'
 		require
 			a_str_attached: a_str /= Void
@@ -187,7 +187,7 @@ feature -- Formatting
 
 feature -- Formatting
 
-	tabbify (a_str: STRING_GENERAL; a_tab_chars: INTEGER): !STRING
+	tabbify (a_str: STRING_GENERAL; a_tab_chars: INTEGER): attached STRING
 			-- Tabbifies a string by replacing spaces with tabs.
 			--
 			-- `a_str': A string to tabbify.
@@ -203,7 +203,7 @@ feature -- Formatting
 			not_result_is_empty: not Result.is_empty
 		end
 
-	tabbify_unicode (a_str: STRING_GENERAL; a_tab_chars: INTEGER): !STRING_32
+	tabbify_unicode (a_str: STRING_GENERAL; a_tab_chars: INTEGER): attached STRING_32
 			-- Tabbifies a string by replacing spaces with tabs.
 			--
 			-- `a_str': A string to tabbify.

@@ -12,7 +12,7 @@ class
 
 feature -- Access
 
-	frozen api_loader: !DYNAMIC_API_LOADER
+	frozen api_loader: attached DYNAMIC_API_LOADER
 			-- Shared access to the API loader
 		once
 			create Result

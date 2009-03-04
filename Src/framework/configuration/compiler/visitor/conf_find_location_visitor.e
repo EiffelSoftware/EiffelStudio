@@ -9,7 +9,7 @@ class
 	CONF_FIND_LOCATION_VISITOR
 
 inherit
-	CONF_FIND_VISITOR [!CONF_CLUSTER]
+	CONF_FIND_VISITOR [attached CONF_CLUSTER]
 		rename
 			found_groups as found_clusters
 		end
@@ -36,7 +36,7 @@ feature -- Update
 
 feature {NONE} -- Query
 
-	is_matching (a_cluster: !CONF_CLUSTER): BOOLEAN
+	is_matching (a_cluster: attached CONF_CLUSTER): BOOLEAN
 			-- <Precursor>
 		do
 			Result := a_cluster.location.evaluated_directory.is_equal (directory)

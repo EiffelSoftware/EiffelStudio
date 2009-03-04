@@ -10,7 +10,7 @@ class
 
 feature -- Operation
 
-	send_command (a_string, a_key: !STRING)
+	send_command (a_string, a_key: attached STRING)
 			-- Send `a_string' as command to receiver processes with `a_key'.
 			-- `a_key' to identify receivers.
 			-- The `a_key' is recommended to be an UUID.
@@ -21,7 +21,7 @@ feature -- Operation
 			implementation.send_command (a_string, a_key)
 		end
 
-	send_command_process (a_string, a_key: !STRING; a_process_id: INTEGER)
+	send_command_process (a_string, a_key: attached STRING; a_process_id: INTEGER)
 			-- Send `a_string' as command to receiver process of `a_process_id' with `a_key'.
 		do
 			if implementation = Void then
@@ -50,7 +50,7 @@ feature -- Querry
 
 feature {NONE} -- Implementation
 
-	implementation: ?COMMAND_SENDER_I
+	implementation: detachable COMMAND_SENDER_I
 
 feature {NONE} -- Implementation
 

@@ -50,7 +50,7 @@ feature -- Basic operations
 
 feature -- Events
 
-	locked_event: !EVENT_TYPE [TUPLE [sender: !LOCKABLE_I]]
+	locked_event: attached EVENT_TYPE [TUPLE [sender: attached LOCKABLE_I]]
 			-- Events called when a lock has been placed on Current.
 			--
 			-- 'sender': Object locked.
@@ -62,7 +62,7 @@ feature -- Events
 			result_consistent: Result = locked_event
 		end
 
-	unlocked_event: !EVENT_TYPE [TUPLE [sender: !LOCKABLE_I]]
+	unlocked_event: attached EVENT_TYPE [TUPLE [sender: attached LOCKABLE_I]]
 			-- Events called when a lock has been placed on Current.
 			--
 			-- 'sender': Object unlocked.

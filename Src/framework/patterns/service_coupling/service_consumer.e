@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_provider (a_provider: ?like service_provider)
+	make_with_provider (a_provider: detachable like service_provider)
 			-- Initialize a service consumer using an alternative (local) service provider.
 			--
 			-- `a_provider': A service provider to use when querying for a service, instead of the global
@@ -44,17 +44,17 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	service: !G
+	service: attached G
 			-- Access to the service
 		require
 			is_service_available: is_service_available
 		local
-			l_service: ?G
+			l_service: detachable G
 		do
-			if {l_internal_service: G} internal_service then
+			if attached {G} internal_service as l_internal_service then
 				Result := l_internal_service
 			else
-				if {l_other_service: G} service_provider.service ({G}) then
+				if attached {G} service_provider.service ({G}) as l_other_service then
 					l_service := l_other_service
 				else
 					check False end
@@ -67,10 +67,10 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	service_provider: !SERVICE_PROVIDER_I
+	service_provider: attached SERVICE_PROVIDER_I
 			-- Access to the set service provider, or global service provider if no local provider was set.
 		do
-			if {l_provider :like internal_service_provider} internal_service_provider then
+			if attached internal_service_provider as l_provider then
 				Result := l_provider
 			else
 				Result := global_service_provider
@@ -91,11 +91,11 @@ feature -- Status report
 
 feature {NONE} -- Implementation: Internal cache
 
-	internal_service: ?G
+	internal_service: detachable G
 			-- Cached version of `service'.
 			-- Note: Do not use directly!
 
-	internal_service_provider: ?like service_provider
+	internal_service_provider: detachable like service_provider
 			-- Cached version of `service_provider'
 			-- Note: Do not use directly!
 

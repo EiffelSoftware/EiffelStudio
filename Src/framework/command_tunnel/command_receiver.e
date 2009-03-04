@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_key (a_key: !STRING)
+	make_key (a_key: attached STRING)
 			-- Initialization
 		do
 			key := a_key
@@ -22,11 +22,11 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	external_command_action: ?FUNCTION [ANY, TUPLE [STRING], BOOLEAN]
+	external_command_action: detachable FUNCTION [ANY, TUPLE [STRING], BOOLEAN]
 			-- Function to be called when command is received.
 			-- Return True to claim that the command can be handled.
 
-	key: !STRING
+	key: attached STRING
 			-- The key to identify current
 
 feature -- Element change
@@ -50,7 +50,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	implementation: ?COMMAND_RECEIVER_I
+	implementation: detachable COMMAND_RECEIVER_I
 
 feature {NONE} -- Implementation
 

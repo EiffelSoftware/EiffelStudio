@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	tag_prefix: !STRING
+	tag_prefix: attached STRING
 			-- Tag defining which tag are used to build tree
 		local
 			l_result: like internal_prefix
@@ -85,14 +85,14 @@ feature -- Access
 		do
 			Result := internal_untagged_items
 		ensure
-			results_valid: ({!DS_LINEAR [!G]} #? Result).for_all (
-				agent (a_item: !G): BOOLEAN
+			results_valid: ({attached DS_LINEAR [attached G]} #? Result).for_all (
+				agent (a_item: attached G): BOOLEAN
 					do
 						Result := tag_suffixes (a_item.tags, tag_prefix).is_empty
 					end)
 		end
 
-	collection: !ACTIVE_COLLECTION_I [G]
+	collection: attached ACTIVE_COLLECTION_I [G]
 			-- Collection for which tree is maintained
 		require
 			usable: is_interface_usable
@@ -107,7 +107,7 @@ feature -- Access
 
 feature {TAG_BASED_TREE_NODE_CONTAINER} -- Access
 
-	tree: !TAG_BASED_TREE [G]
+	tree: attached TAG_BASED_TREE [G]
 			-- <Precursor>
 		do
 			Result := Current
@@ -115,13 +115,13 @@ feature {TAG_BASED_TREE_NODE_CONTAINER} -- Access
 
 feature {NONE} -- Access
 
-	internal_prefix: ?STRING
+	internal_prefix: detachable STRING
 			-- Internal storage for `prefix'
 
-	internal_collection: ?ACTIVE_COLLECTION_I [G]
+	internal_collection: detachable ACTIVE_COLLECTION_I [G]
 			-- Internal storage for `observed_collection'
 
-	internal_untagged_items: !DS_HASH_SET [!G]
+	internal_untagged_items: attached DS_HASH_SET [attached G]
 			-- Items which do not contain a tag prefixed with `tag'
 
 feature -- Status report
@@ -189,7 +189,7 @@ feature -- Status setting
 
 feature {NONE} -- Element change
 
-	add_untagged_item (a_item: !G)
+	add_untagged_item (a_item: attached G)
 			-- Add `a_item' to `untagged_items'.
 		require
 			a_item_not_added: not untagged_items.has (a_item)
@@ -200,7 +200,7 @@ feature {NONE} -- Element change
 			a_item_added: untagged_items.has (a_item)
 		end
 
-	remove_untagged_item (a_item: !G)
+	remove_untagged_item (a_item: attached G)
 			-- Remove `a_item' from `untagged_items'.
 		require
 			a_item_added: untagged_items.has (a_item)
@@ -236,12 +236,12 @@ feature {NONE} -- Element change
 
 feature {NONE} -- Events
 
-	frozen on_item_added (a_collection: like collection; a_item: !G)
+	frozen on_item_added (a_collection: like collection; a_item: attached G)
 			-- <Precursor>
 		require else
 			a_collection_valid: a_collection = collection
 		local
-			l_tags: !DS_HASH_SET [!STRING]
+			l_tags: attached DS_HASH_SET [attached STRING]
 		do
 			l_tags := tag_suffixes (a_item.tags, tag_prefix)
 			if l_tags.is_empty then
@@ -251,12 +251,12 @@ feature {NONE} -- Events
 			end
 		end
 
-	frozen on_item_removed (a_collection: like collection; a_item: !G)
+	frozen on_item_removed (a_collection: like collection; a_item: attached G)
 			-- <Precursor>
 		require else
 			a_collection_valid: a_collection = collection
 		local
-			l_tags: !DS_HASH_SET [!STRING]
+			l_tags: attached DS_HASH_SET [attached STRING]
 		do
 			l_tags := tag_suffixes (a_item.tags, tag_prefix)
 			if l_tags.is_empty then
@@ -266,12 +266,12 @@ feature {NONE} -- Events
 			end
 		end
 
-	frozen on_item_changed (a_collection: like collection; a_item: !G)
+	frozen on_item_changed (a_collection: like collection; a_item: attached G)
 			-- <Precursor>
 		require else
 			a_collection_valid: a_collection = collection
 		local
-			l_tags, l_unchanged_tags: !DS_HASH_SET [!STRING]
+			l_tags, l_unchanged_tags: attached DS_HASH_SET [attached STRING]
 			l_is_tagged: BOOLEAN
 		do
 			l_tags := tag_suffixes (a_item.memento.added_tags, tag_prefix)

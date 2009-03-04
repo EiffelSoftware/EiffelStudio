@@ -40,10 +40,10 @@ feature {NONE} -- Status setting
 
 feature {NONE} -- Factory
 
-	create_evaluator: !TEST_EVALUATOR_CONTROLLER
+	create_evaluator: attached TEST_EVALUATOR_CONTROLLER
 			-- <Precursor>
 		local
-			l_exec: !STRING
+			l_exec: attached STRING
 			l_assigner: like assigner
 		do
 				-- TODO: use temporary executable

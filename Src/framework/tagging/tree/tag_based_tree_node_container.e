@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen children: !DS_LINEAR [like child_for_token]
+	frozen children: attached DS_LINEAR [like child_for_token]
 			-- Child nodes of `Current'
 		require
 			usable: is_interface_usable
@@ -38,7 +38,7 @@ feature -- Access
 			check l_cached /= Void end
 			Result := l_cached
 		ensure
-			results_valid: ({!DS_LINEAR [like child_for_token]} #? Result).for_all (
+			results_valid: ({attached DS_LINEAR [like child_for_token]} #? Result).for_all (
 				agent (a_child: like child_for_token): BOOLEAN
 					do
 						Result := a_child.tree = tree and then
@@ -46,7 +46,7 @@ feature -- Access
 					end)
 		end
 
-	frozen items: !DS_LINEAR [!G]
+	frozen items: attached DS_LINEAR [attached G]
 			-- Items tagged with `tag'
 		require
 			usable: is_interface_usable
@@ -60,14 +60,14 @@ feature -- Access
 			check l_items /= Void end
 			Result := l_items
 		ensure
-			results_valid: ({!DS_LINEAR [!G]} #? Result).for_all (
-				agent (a_item: !G): BOOLEAN
+			results_valid: ({attached DS_LINEAR [attached G]} #? Result).for_all (
+				agent (a_item: attached G): BOOLEAN
 					do
 						Result := a_item.tags.has (tag)
 					end)
 		end
 
-	tag: !STRING
+	tag: attached STRING
 			-- Tag which `Current' represents
 		require
 			usable: is_interface_usable
@@ -77,7 +77,7 @@ feature -- Access
 			empty_implies_root: Result.is_empty implies is_root
 		end
 
-	token: !STRING
+	token: attached STRING
 			-- Token represented by `Current'
 		require
 			usable: is_interface_usable
@@ -87,7 +87,7 @@ feature -- Access
 			valid: is_valid_token (Result)
 		end
 
-	parent: !TAG_BASED_TREE_NODE_CONTAINER [G]
+	parent: attached TAG_BASED_TREE_NODE_CONTAINER [G]
 			-- Node listing `Current' as one of its children
 		require
 			usable: is_interface_usable
@@ -99,14 +99,14 @@ feature -- Access
 
 feature {TAG_BASED_TREE_NODE_CONTAINER} -- Acccess
 
-	tree: !TAG_BASED_TREE [G]
+	tree: attached TAG_BASED_TREE [G]
 			-- Tree in which `Current' represents a node
 		require
 			usable: is_interface_usable
 		deferred
 		end
 
-	descending_tags: ?DS_HASH_TABLE [NATURAL, !STRING]
+	descending_tags: detachable DS_HASH_TABLE [NATURAL, attached STRING]
 			-- Tag suffixes of all tags found in collection with begin with `tag'.
 
 	item_count: NATURAL
@@ -114,10 +114,10 @@ feature {TAG_BASED_TREE_NODE_CONTAINER} -- Acccess
 
 feature {NONE} -- Access
 
-	cached_children: ?DS_HASH_TABLE [like child_for_token, !STRING]
+	cached_children: detachable DS_HASH_TABLE [like child_for_token, attached STRING]
 			-- Children having `tag' as prefix
 
-	cached_items: ?DS_HASH_SET [!G]
+	cached_items: detachable DS_HASH_SET [attached G]
 			-- Items tagged with `tag'
 
 feature -- Status report
@@ -134,7 +134,7 @@ feature -- Status report
 		deferred
 		end
 
-	has_child_for_token (a_token: !STRING): BOOLEAN
+	has_child_for_token (a_token: attached STRING): BOOLEAN
 			-- Does `Current' contain a child for `a_token'?
 		require
 			usable: is_interface_usable
@@ -185,7 +185,7 @@ feature {TAG_BASED_TREE_NODE_CONTAINER} -- Status setting
 
 feature -- Query
 
-	child_for_token (a_token: !STRING): !TAG_BASED_TREE_NODE [G]
+	child_for_token (a_token: attached STRING): attached TAG_BASED_TREE_NODE [G]
 			-- Item in `children' for `a_token'.
 		require
 			usable: is_interface_usable
@@ -199,7 +199,7 @@ feature -- Query
 
 feature {TAG_BASED_TREE_NODE_CONTAINER} -- Element change
 
-	insert_tag_for_item (a_tag: !STRING; a_item: !G)
+	insert_tag_for_item (a_tag: attached STRING; a_item: attached G)
 			-- Recursively add tag for given item to subtree represented by `Current'.
 			--
 			-- `a_tag': Suffix of original tag that has `tag' as prefix
@@ -209,7 +209,7 @@ feature {TAG_BASED_TREE_NODE_CONTAINER} -- Element change
 			a_tag_valid: is_valid_tag (a_tag)
 			a_item_tagged: a_item.tags.has (join_tags (tag, a_tag))
 		local
-			l_token, l_suffix: !STRING
+			l_token, l_suffix: attached STRING
 		do
 			if a_tag.is_empty then
 				if is_evaluated then
@@ -241,7 +241,7 @@ feature {TAG_BASED_TREE_NODE_CONTAINER} -- Element change
 			inserted: (a_tag.is_empty and is_evaluated) implies cached_items.has (a_item)
 		end
 
-	remove_tag_for_item (a_tag: !STRING; a_item: !G)
+	remove_tag_for_item (a_tag: attached STRING; a_item: attached G)
 			-- Recursively remove tag for given item from subtree represented by `Current'.
 			--
 			-- `a_tag': Suffix of original tag that has `tag' as prefix
@@ -251,7 +251,7 @@ feature {TAG_BASED_TREE_NODE_CONTAINER} -- Element change
 			a_tag_valid: is_valid_tag (a_tag)
 		local
 			l_child: like child_for_token
-			l_token, l_suffix: !STRING
+			l_token, l_suffix: attached STRING
 		do
 			if a_tag.is_empty then
 				if is_evaluated then
@@ -285,7 +285,7 @@ feature {TAG_BASED_TREE_NODE_CONTAINER} -- Element change
 			item_removed: (a_tag.is_empty and is_evaluated) implies not cached_items.has (a_item)
 		end
 
-	add_item (a_item: !G)
+	add_item (a_item: attached G)
 			-- Add item to `items'
 		require
 			usable: is_interface_usable
@@ -298,7 +298,7 @@ feature {TAG_BASED_TREE_NODE_CONTAINER} -- Element change
 			a_item_added: items.has (a_item)
 		end
 
-	remove_item (a_item: !G)
+	remove_item (a_item: attached G)
 			-- Remove item from `items'
 		require
 			usable: is_interface_usable
@@ -310,13 +310,13 @@ feature {TAG_BASED_TREE_NODE_CONTAINER} -- Element change
 			a_item_removed: not items.has (a_item)
 		end
 
-	propagate_item_change (a_tag: !STRING; a_item: !G)
+	propagate_item_change (a_tag: attached STRING; a_item: attached G)
 			-- Notify nodes representing tag that an item has changed.
 		require
 			usable: is_interface_usable
 			a_tag_valid: is_valid_tag (a_tag)
 		local
-			l_token: !STRING
+			l_token: attached STRING
 		do
 			if is_evaluated then
 				if not a_tag.is_empty then
@@ -328,7 +328,7 @@ feature {TAG_BASED_TREE_NODE_CONTAINER} -- Element change
 
 feature {NONE} -- Element change
 
-	add_child (a_token: !STRING)
+	add_child (a_token: attached STRING)
 			-- Add child to node in `Current'
 		require
 			usable: is_interface_usable
@@ -346,7 +346,7 @@ feature {NONE} -- Element change
 			child_empty: child_for_token (a_token).is_empty
 		end
 
-	remove_child (a_token: !STRING)
+	remove_child (a_token: attached STRING)
 			-- Remove child for `a_token'
 		require
 			usable: is_interface_usable
@@ -367,8 +367,8 @@ feature {TAG_BASED_TREE} -- Implementation
 			usable: is_interface_usable
 			not_evaluated: not is_evaluated
 		local
-			l_cursor: DS_HASH_TABLE_CURSOR [NATURAL, !STRING]
-			l_tag, l_token: !STRING
+			l_cursor: DS_HASH_TABLE_CURSOR [NATURAL, attached STRING]
+			l_tag, l_token: attached STRING
 			i: INTEGER
 			l_child: like child_for_token
 		do
@@ -421,7 +421,7 @@ feature {NONE} -- Implementation
 			collection_usable: tree.collection.is_interface_usable
 			evaluated: is_evaluated
 		local
-			l_collection: !ACTIVE_COLLECTION_I [G]
+			l_collection: attached ACTIVE_COLLECTION_I [G]
 			l_cursor: DS_LINEAR_CURSOR [G]
 		do
 			if item_count > 0 then
@@ -432,7 +432,7 @@ feature {NONE} -- Implementation
 				until
 					l_cursor.after
 				loop
-					if {l_item: !G} l_cursor.item then
+					if attached {attached G} l_cursor.item as l_item then
 						if l_item.tags.has (tag) then
 							add_item (l_item)
 						end

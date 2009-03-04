@@ -15,7 +15,7 @@ inherit
 
 feature -- Basic operations
 
-	launch (a_uri: !READABLE_STRING_GENERAL): BOOLEAN
+	launch (a_uri: attached READABLE_STRING_GENERAL): BOOLEAN
 			-- Launches a URI in the system's default web-browser.
 			--
 			-- `a_uri' : The URI to launch.
@@ -26,7 +26,7 @@ feature -- Basic operations
 			Result := bridge.launch (a_uri)
 		end
 
-	launch_with_default_app (a_uri: !READABLE_STRING_GENERAL; a_default_app: !READABLE_STRING_GENERAL): BOOLEAN
+	launch_with_default_app (a_uri: attached READABLE_STRING_GENERAL; a_default_app: attached READABLE_STRING_GENERAL): BOOLEAN
 			-- Launches a URI in the system's default web-browser, or if that fails, then the supplied
 			-- default application.
 			--
@@ -42,7 +42,7 @@ feature -- Basic operations
 
 feature {NONE} -- Factory
 
-	new_bridge: !URI_LAUNCHER_I
+	new_bridge: attached URI_LAUNCHER_I
 			-- <Precursor>
 		do
 			create {URI_LAUNCHER_IMP} Result

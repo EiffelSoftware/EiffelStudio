@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 	make (a_class: like eiffel_class)
 			-- Initialize `Current'.
 		local
-			l_classname, l_filename: !STRING
+			l_classname, l_filename: attached STRING
 		do
 			eiffel_class := a_class
 			create l_classname.make_from_string (eiffel_class.name)
@@ -28,29 +28,29 @@ feature {NONE} -- Initialization
 			identifier.append (l_classname)
 			identifier.append (l_filename)
 			create internal_names.make_default
-			internal_names.set_equality_tester (create {KL_STRING_EQUALITY_TESTER_A [!STRING]})
+			internal_names.set_equality_tester (create {KL_STRING_EQUALITY_TESTER_A [attached STRING]})
 		end
 
 feature -- Access
 
-	eiffel_class: !EIFFEL_CLASS_I
+	eiffel_class: attached EIFFEL_CLASS_I
 			-- Class in system carrying tests
 
-	identifier: !STRING
+	identifier: attached STRING
 			-- Unique identifier for `eiffel_class'
 
-	frozen test_routine_names: !DS_LINEAR [!STRING]
+	frozen test_routine_names: attached DS_LINEAR [attached STRING]
 			-- Names of test routines defined in `eiffel_class'.
 		do
 			Result := internal_names
 		ensure
-			results_not_empty: not Result.there_exists (agent {!STRING}.is_empty)
-			correct_equality_tester: {l_tester: KL_STRING_EQUALITY_TESTER_A [!STRING]} Result.equality_tester
+			results_not_empty: not Result.there_exists (agent {attached STRING}.is_empty)
+			correct_equality_tester: attached {KL_STRING_EQUALITY_TESTER_A [attached STRING]} Result.equality_tester as l_tester
 		end
 
 feature {TEST_PROJECT_I} -- Access
 
-	internal_names: !DS_HASH_SET [!STRING]
+	internal_names: attached DS_HASH_SET [attached STRING]
 			-- Internal storage for `test_routine_names'
 
 ;note

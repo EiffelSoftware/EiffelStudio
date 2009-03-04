@@ -45,7 +45,7 @@ feature {NONE} -- Access
 			result_attached: Result /= Void
 		end
 
-	connection: ?NETWORK_STREAM_SOCKET
+	connection: detachable NETWORK_STREAM_SOCKET
 			-- Connection to client once established
 
 feature -- Status report
@@ -108,7 +108,7 @@ feature -- Basic functionality
 
 feature {NONE} -- Implementation
 
-	open_listener: ?NETWORK_STREAM_SOCKET
+	open_listener: detachable NETWORK_STREAM_SOCKET
 			-- Create listening socket. If no available port was found Void is returned.
 		local
 			l_attempts: NATURAL
@@ -153,7 +153,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	start_listening (a_socket: !like open_listener)
+	start_listening (a_socket: attached like open_listener)
 			-- Start listening to `a_socket' for incomming connection. Once connection is established and
 			-- `is_listening' is still True, set `connection' to new connection with client.
 			--

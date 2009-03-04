@@ -35,7 +35,7 @@ feature -- Access
 		require
 			is_eiffel_layout_defined: is_eiffel_layout_defined
 		local
-			l_result: ?EIFFEL_ENV
+			l_result: detachable EIFFEL_ENV
 		do
 			l_result := eiffel_layout_cell.item
 			check l_result_attached: l_result /= Void end
@@ -46,7 +46,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	eiffel_layout_cell: CELL [?EIFFEL_ENV]
+	eiffel_layout_cell: CELL [detachable EIFFEL_ENV]
 			-- Cell to hold the layout.
 		note
 			once_status: global

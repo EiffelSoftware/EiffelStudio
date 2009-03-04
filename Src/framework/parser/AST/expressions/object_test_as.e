@@ -70,10 +70,10 @@ feature -- Visitor
 
 feature -- Attributes
 
-	name: ?ID_AS
+	name: detachable ID_AS
 			-- Name of read-only entity
 
-	type: ?TYPE_AS
+	type: detachable TYPE_AS
 			-- Type to check
 
 	expression: EXPR_AS

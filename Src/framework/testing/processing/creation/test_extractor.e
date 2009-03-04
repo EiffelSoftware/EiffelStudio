@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	capturer: !TEST_CAPTURER
+	capturer: attached TEST_CAPTURER
 			-- Capturer retrieving objects from running application.
 
 feature {NONE} -- Status report
@@ -47,12 +47,12 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Status setting
 
-	print_new_class (a_file: !KL_TEXT_OUTPUT_FILE; a_class_name: !STRING)
+	print_new_class (a_file: attached KL_TEXT_OUTPUT_FILE; a_class_name: attached STRING)
 			-- <Precursor>
 		local
-			l_source_writer: !TEST_EXTRACTED_SOURCE_WRITER
-			l_app_stat: ?APPLICATION_STATUS
-			l_cs: ?EIFFEL_CALL_STACK
+			l_source_writer: attached TEST_EXTRACTED_SOURCE_WRITER
+			l_app_stat: detachable APPLICATION_STATUS
+			l_cs: detachable EIFFEL_CALL_STACK
 		do
 			create l_source_writer.make
 			capturer.observers.force_last (l_source_writer)
@@ -69,7 +69,7 @@ feature {NONE} -- Status setting
 						l_cs.after
 					loop
 						if
-							{l_cse: !EIFFEL_CALL_STACK_ELEMENT} l_cs.item and then
+							attached {attached EIFFEL_CALL_STACK_ELEMENT} l_cs.item as l_cse and then
 							configuration.call_stack_elements.has (l_cse.level_in_stack)
 						then
 							capturer.capture_call_stack_element (l_cse)
@@ -121,7 +121,7 @@ feature -- Query
 			if debugger_manager.application_is_executing and then debugger_manager.application_is_stopped then
 				l_cs := debugger_manager.application_status.current_call_stack
 				if l_cs /= Void and then l_cs.count >= a_index then
-					if {l_cse: EIFFEL_CALL_STACK_ELEMENT} l_cs.i_th(a_index) then
+					if attached {EIFFEL_CALL_STACK_ELEMENT} l_cs.i_th(a_index) as l_cse then
 						Result := capturer.is_valid_call_stack_element (l_cse)
 					end
 				end

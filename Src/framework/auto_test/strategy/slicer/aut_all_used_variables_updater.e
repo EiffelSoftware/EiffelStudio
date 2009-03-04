@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	variables: DS_HASH_TABLE [TUPLE [type: ?TYPE_A; name: ?STRING; check_dyn_type: BOOLEAN], ITP_VARIABLE]
+	variables: DS_HASH_TABLE [TUPLE [type: detachable TYPE_A; name: detachable STRING; check_dyn_type: BOOLEAN], ITP_VARIABLE]
 			-- Set of used variables: keys are variables, items are tuples of static type of variable
 			-- and a boolean flag showing if the static type should be checked against dynamic type
 			-- (is only the case for variables returned as results of function calls and those whose type
@@ -97,13 +97,13 @@ feature{AUT_REQUEST} -- Processing
 			else
 				l_rec := variables.item (a_request.receiver)
 			end
-			if {l_var: ITP_VARIABLE} a_request.expression then
+			if attached {ITP_VARIABLE} a_request.expression as l_var then
 				variables.force ([Void, Void, True], l_var.deep_twin)
 
 					-- TODO: this is a workaround for variables containing `default_pointer', where the
 					--       interpreter wrongly reports them to be Void
-			elseif {l_const: ITP_CONSTANT} a_request.expression and then l_rec.name = Void then
-				if {l_pointer: POINTER} l_const.value and then l_pointer = default_pointer then
+			elseif attached {ITP_CONSTANT} a_request.expression as l_const and then l_rec.name = Void then
+				if attached {POINTER} l_const.value as l_pointer and then l_pointer = default_pointer then
 					l_rec.name := "POINTER"
 				end
 			end

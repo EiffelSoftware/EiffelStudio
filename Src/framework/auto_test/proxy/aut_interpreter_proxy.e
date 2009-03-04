@@ -265,7 +265,7 @@ feature -- Execution
 --					(create {EXECUTION_ENVIRONMENT}).sleep (1000000000)
 --					socket := l_socket.accepted
 
-					if {l_socket: like socket} l_listener.wait_for_connection (5000) then
+					if attached {like socket} l_listener.wait_for_connection (5000) as l_socket then
 						socket := l_socket
 						process.set_timeout (timeout)
 						log_stream.string.wipe_out
@@ -657,7 +657,7 @@ feature{NONE} -- Process scheduling
 			-- If error occurs, close `socket'.
 		local
 			failed: BOOLEAN
-			l_last_request: TUPLE [flag: NATURAL_8; data: ?ANY]
+			l_last_request: TUPLE [flag: NATURAL_8; data: detachable ANY]
 		do
 			if not failed then
 --				is_ready := False

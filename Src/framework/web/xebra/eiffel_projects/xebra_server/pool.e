@@ -82,7 +82,7 @@ feature -- Resizing
 
 feature {THREAD_POOL_MANAGER} -- Implementation
 
-	ready (an_object: ?G)
+	ready (an_object: detachable G)
 			-- Used internally. When a thread has finished it's duty it will report to the pool manager.
 			-- Thread will be stored for further use.
 		require

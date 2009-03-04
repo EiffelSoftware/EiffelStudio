@@ -25,7 +25,7 @@ feature -- Initialization
 
 feature {NONE} -- Access
 
-	utilities: !TAG_UTILITIES
+	utilities: attached TAG_UTILITIES
 
 feature -- Tests
 
@@ -35,7 +35,7 @@ feature -- Tests
 			testing: "covers/{TAG_UTILITIES}.is_valid_token",
 			         "tests/eiffel/statics/tagable"
 		local
-			l_string: !STRING
+			l_string: attached STRING
 		do
 			asserter.disassert ("empty_token_invalid",
 			                    utilities.is_valid_token (""))
@@ -55,7 +55,7 @@ feature -- Tests
 			testing: "covers/{TAG_UTILITIES}.is_valid_token",
 			         "tests/eiffel/statics/tagable"
 		local
-			l_tag1, l_tag2, l_result: !STRING
+			l_tag1, l_tag2, l_result: attached STRING
 		do
 			l_tag1 := ""
 			l_tag2 := ""

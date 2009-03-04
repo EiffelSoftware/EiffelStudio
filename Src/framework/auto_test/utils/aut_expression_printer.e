@@ -90,13 +90,13 @@ feature {ITP_EXPRESSION} -- Processing
 				output_stream.put_string (l_type)
 				output_stream.put_character ('}')
 				output_stream.put_character (' ')
-				if {l_char_8: CHARACTER_8} a_value.value then
+				if attached {CHARACTER_8} a_value.value as l_char_8 then
 					put_quoted_eiffel_character (output_stream, l_char_8)
-				elseif {l_char_32: CHARACTER_32} a_value.value then
+				elseif attached {CHARACTER_32} a_value.value as l_char_32 then
 					put_quoted_eiffel_character (output_stream, l_char_32.to_character_8)
 				else
 					l_value := a_value.value.out
-					if {l_dbl: DOUBLE} a_value.value or {l_real: REAL} a_value.value then
+					if attached {DOUBLE} a_value.value as l_dbl or attached {REAL} a_value.value as l_real then
 						if not l_value.has ('.') then
 							l_value.append (".0")
 						end

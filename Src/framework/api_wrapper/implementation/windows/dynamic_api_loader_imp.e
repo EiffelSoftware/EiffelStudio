@@ -15,10 +15,10 @@ inherit
 
 feature -- Query
 
-	api_pointer (a_hnd: POINTER; a_api_name: ?STRING_GENERAL): POINTER
+	api_pointer (a_hnd: POINTER; a_api_name: detachable STRING_GENERAL): POINTER
 			-- <Precursor>
 		local
-			l_name: !C_STRING
+			l_name: attached C_STRING
 		do
 			create l_name.make (a_api_name)
 			Result := c_get_proc_address (a_hnd, l_name.item)
@@ -26,7 +26,7 @@ feature -- Query
 
 feature -- Basic operations
 
-	load_library (a_name: ?STRING_GENERAL; a_version: ?STRING_GENERAL): POINTER
+	load_library (a_name: detachable STRING_GENERAL; a_version: detachable STRING_GENERAL): POINTER
 			-- <Precursor>
 		local
 			l_fn: FILE_NAME
@@ -52,10 +52,10 @@ feature -- Basic operations
 			end
 		end
 
-	load_library_from_path (a_path: ?STRING_GENERAL): POINTER
+	load_library_from_path (a_path: detachable STRING_GENERAL): POINTER
 			-- <Precursor>
 		local
-			l_path: !WEL_STRING
+			l_path: attached WEL_STRING
 		do
 			create l_path.make (a_path)
 			Result := c_load_library (l_path.item)

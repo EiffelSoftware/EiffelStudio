@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	string: !STRING
+	string: attached STRING
 			-- <Precursor>
 
 feature -- Status report

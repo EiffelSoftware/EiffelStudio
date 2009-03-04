@@ -1,4 +1,4 @@
-indexing
+note
 	description : "test_project application root class"
 	author		: "sdz"
 	date        : "$Date$"

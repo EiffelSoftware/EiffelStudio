@@ -1034,7 +1034,7 @@ test	memory_leak_with_invariant_on	runtime008	tcf pass runtime
 test	missing-marking-with-no-gc		runtime009	tcf pass runtime
 test	zero-sized-objects-slowdown 	runtime010	tcf pass runtime
 test	tuple-special-twin-bug			runtime011	tcf pass runtime special
-test	overflow-special-resizing		runtime012	tcf pass runtime special
+test	overflow-special-resizing		runtime012	tcf pass runtime special manual
 test	overflow-special-expanded-resizing		runtime013	tcf pass runtime special expanded
 
 -- Thread

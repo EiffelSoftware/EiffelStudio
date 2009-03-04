@@ -114,7 +114,7 @@ feature {NONE} -- Access
 			result_attached: Result /= Void
 		end
 
-	default_tag_prefix: !STRING = "class"
+	default_tag_prefix: STRING = "class"
 			-- Default tag prefix for `tree_view'
 
 feature {NONE} -- Query

@@ -69,9 +69,9 @@ feature {NONE} -- Events
 
 feature {NONE} -- Internationalization
 
-	t_generator_title: !STRING = "Generation"
-	t_extractor_title: !STRING = "Extraction"
-	t_creator_title: !STRING = "New manual tests"
+	t_generator_title: STRING = "Generation"
+	t_extractor_title: STRING = "Extraction"
+	t_creator_title: STRING = "New manual tests"
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

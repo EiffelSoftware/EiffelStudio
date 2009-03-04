@@ -366,8 +366,8 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Internationalization
 
-	t_title: !STRING = "Results"
-	l_click_to_view: !STRING = "Click here to view"
+	t_title: STRING = "Results"
+	l_click_to_view: STRING = "Click here to view"
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

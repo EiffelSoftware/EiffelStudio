@@ -146,25 +146,25 @@ feature -- Basic operations
 
 feature {NONE} -- Constants
 
-	pdf_type_string: !STRING = "type"
+	pdf_type_string: STRING = "type"
 
-	pdf_type_file_string: !STRING = "file"
+	pdf_type_file_string: STRING = "file"
 
-	windows_file_protocol: !STRING = "file:///"
+	windows_file_protocol: STRING = "file:///"
 
-	acrobat_url_sep: !STRING = "#"
+	acrobat_url_sep: STRING = "#"
 
-	acrobat_sep: !STRING = "&"
+	acrobat_sep: STRING = "&"
 
-	acrobat_attri_sep: !STRING = "="
+	acrobat_attri_sep: STRING = "="
 
-	acrobat_command_string: !STRING = "acrobat "
+	acrobat_command_string: STRING = "acrobat "
 
-	acrobat_action_string: !STRING = "/A "
+	acrobat_action_string: STRING = "/A "
 
-	acrobat_page: !STRING = "page"
+	acrobat_page: STRING = "page"
 
-	acrobat_nameddest: !STRING = "nameddest";
+	acrobat_nameddest: STRING = "nameddest";
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

@@ -179,31 +179,31 @@ feature {NONE} -- Constants
 	processor_not_ready_code: NATURAL = 3
 	configuration_not_valid_code: NATURAL = 4
 
-	testing_library_uuid: !STRING = "B77B3A44-A1A9-4050-8DF9-053598561C33"
-	testing_library_path: !STRING = "$ISE_LIBRARY/library/testing/testing.ecf"
+	testing_library_uuid: STRING = "B77B3A44-A1A9-4050-8DF9-053598561C33"
+	testing_library_path: STRING = "$ISE_LIBRARY/library/testing/testing.ecf"
 
 feature {NONE} -- Internationalization
 
-	e_service_not_available: !STRING = "Testing service is currently not available."
+	e_service_not_available: STRING = "Testing service is currently not available."
 
-	e_execution_unavailable: !STRING = "Test execution is currently unavailable"
-	e_debugging_unavailable: !STRING = "Test debugging is currently unavailable"
-	e_creation_unavailable: !STRING = "Test creation is currently unavailable"
-	e_extraction_unavailable: !STRING = "Test extraction is currently unavailable"
-	e_generation_unavailable: !STRING = "AutoTest is currently unavailable"
+	e_execution_unavailable: STRING = "Test execution is currently unavailable"
+	e_debugging_unavailable: STRING = "Test debugging is currently unavailable"
+	e_creation_unavailable: STRING = "Test creation is currently unavailable"
+	e_extraction_unavailable: STRING = "Test extraction is currently unavailable"
+	e_generation_unavailable: STRING = "AutoTest is currently unavailable"
 
-	e_execution_not_ready: !STRING = "Can not launch test execution because it is currently executing tests."
-	e_debugging_not_ready: !STRING = "Can not debug test because debugger is currently running."
-	e_creation_not_ready: !STRING = "Currently unable to create new tests."
-	e_extraction_not_ready: !STRING = "Can not extract any tests, please check debugger state."
-	e_generation_not_ready: !STRING = "Can not launch AutoTest because it is already running."
+	e_execution_not_ready: STRING = "Can not launch test execution because it is currently executing tests."
+	e_debugging_not_ready: STRING = "Can not debug test because debugger is currently running."
+	e_creation_not_ready: STRING = "Currently unable to create new tests."
+	e_extraction_not_ready: STRING = "Can not extract any tests, please check debugger state."
+	e_generation_not_ready: STRING = "Can not launch AutoTest because it is already running."
 
-	e_execution_conf_invalid: !STRING = "Can not execute selected tests. Make sure none of the tests are already queued or running by a differend executor."
-	e_creation_conf_invalid: !STRING = "Unable to create new tests."
-	e_extraction_conf_invalid: !STRING = "Unable to extract tests for selected call stack frames."
-	e_generation_conf_invalid: !STRING = "Unable to launch AutoTest with provided options."
+	e_execution_conf_invalid: STRING = "Can not execute selected tests. Make sure none of the tests are already queued or running by a differend executor."
+	e_creation_conf_invalid: STRING = "Unable to create new tests."
+	e_extraction_conf_invalid: STRING = "Unable to extract tests for selected call stack frames."
+	e_generation_conf_invalid: STRING = "Unable to launch AutoTest with provided options."
 
-	e_unkonwn_error: !STRING = "Unable to launch processor"
+	e_unkonwn_error: STRING = "Unable to launch processor"
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

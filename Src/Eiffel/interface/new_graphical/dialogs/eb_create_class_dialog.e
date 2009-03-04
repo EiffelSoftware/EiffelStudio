@@ -790,15 +790,15 @@ feature {NONE} -- Constants
 
 feature {NONE} -- Constants
 
-	note_keyword_symbol: !STRING = "NOTE_KEYWORD"
-	class_name_symbol: !STRING = "CLASS_NAME"
-	class_modifiers_symbol: !STRING = "CLASS_MODIFIERS"
-	inherit_clause_symbol: !STRING = "INHERIT_CLAUSE"
-	create_clause_symbol: !STRING = "CREATE_CLAUSE"
-	init_clause_symbol: !STRING = "INIT_CLAUSE"
-	year_symbol: !STRING = "YEAR"
+	note_keyword_symbol: STRING = "NOTE_KEYWORD"
+	class_name_symbol: STRING = "CLASS_NAME"
+	class_modifiers_symbol: STRING = "CLASS_MODIFIERS"
+	inherit_clause_symbol: STRING = "INHERIT_CLAUSE"
+	create_clause_symbol: STRING = "CREATE_CLAUSE"
+	init_clause_symbol: STRING = "INIT_CLAUSE"
+	year_symbol: STRING = "YEAR"
 
-	default_class_template: !STRING = "class%N%T$CLASS_NAME%N%N-- Class template file not found in the installation!%N%Nend"
+	default_class_template: STRING = "class%N%T$CLASS_NAME%N%N-- Class template file not found in the installation!%N%Nend"
 
 invariant
 	create_button_valid: create_button /= Void and then not create_button.is_destroyed

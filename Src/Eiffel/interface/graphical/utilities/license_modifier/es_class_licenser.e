@@ -269,18 +269,18 @@ feature {NONE} -- Basic operation
 
 feature {NONE} -- Constants: Symbols
 
-	note_keyword_symbol: !STRING = "NOTE_KEYWORD"
+	note_keyword_symbol: STRING = "NOTE_KEYWORD"
 			-- Keyword symbol in the template license file.
 
-	year_symbol: !STRING = "YEAR"
+	year_symbol: STRING = "YEAR"
 			-- Year symbol in the template license file.
 
-	reference_prefix: !STRING = "reference:"
+	reference_prefix: STRING = "reference:"
 			-- Reference prefix for named licenses.
 
 feature {NONE} -- Internationalization
 
-	invalid_license_license: !STRING = "${NOTE_KEYWORD}%N%Tlicense: %"The specified license contains syntax errors!%""
+	invalid_license_license: STRING = "${NOTE_KEYWORD}%N%Tlicense: %"The specified license contains syntax errors!%""
 			-- Default invalid license.
 
 ;note

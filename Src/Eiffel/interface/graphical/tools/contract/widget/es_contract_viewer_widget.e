@@ -427,11 +427,11 @@ feature {NONE} -- Regular expressions
 
 feature {NONE} -- Internationalization
 
-	l_do_not_auto_show: !STRING = "Pop-up automatically"
-	f_do_not_auto_show: !STRING = "Uncheck to prevent the contract viewer from being displayed automatically. Use CTRL to force the show of this information in the future."
-	l_edit_contracts: !STRING = "Edit Contracts..."
-	l_view_contracts: !STRING = "View Contracts..."
-	f_edit_contracts: !STRING = "Places the current feature in the contract editor for edition"
+	l_do_not_auto_show: STRING = "Pop-up automatically"
+	f_do_not_auto_show: STRING = "Uncheck to prevent the contract viewer from being displayed automatically. Use CTRL to force the show of this information in the future."
+	l_edit_contracts: STRING = "Edit Contracts..."
+	l_view_contracts: STRING = "View Contracts..."
+	f_edit_contracts: STRING = "Places the current feature in the contract editor for edition"
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

@@ -263,7 +263,7 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Constants
 
-	auto_sweep_session_id: !STRING = "com.eiffel.eis_tool.auto_sweep";
+	auto_sweep_session_id: STRING = "com.eiffel.eis_tool.auto_sweep";
 			-- Session IDs
 
 note

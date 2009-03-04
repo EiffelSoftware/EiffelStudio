@@ -12,43 +12,43 @@ class
 
 feature -- Access
 
-	layout_tag: !STRING_8 = "layout"
+	layout_tag: STRING_8 = "layout"
 
-	zone_tag: !STRING_8 = "zone"
+	zone_tag: STRING_8 = "zone"
 
-	tool_tag: !STRING_8 = "tool"
+	tool_tag: STRING_8 = "tool"
 
 feature -- Attribute
 
-	name_attribute: !STRING_8 = "name"
+	name_attribute: STRING_8 = "name"
 
-	dock_attribute: !STRING_8 = "dock"
+	dock_attribute: STRING_8 = "dock"
 
-	style_attribute: !STRING_8 = "style"
+	style_attribute: STRING_8 = "style"
 
-	size_attribute: !STRING_8 = "size"
+	size_attribute: STRING_8 = "size"
 
-	id_attribute: !STRING_8 = "id"
+	id_attribute: STRING_8 = "id"
 
 feature -- Values
 
-	none_dock_value: !STRING = "none"
+	none_dock_value: STRING = "none"
 
-	botton_dock_value: !STRING = "bottom"
+	botton_dock_value: STRING = "bottom"
 
-	top_dock_value: !STRING = "top"
+	top_dock_value: STRING = "top"
 
-	left_dock_value: !STRING = "left"
+	left_dock_value: STRING = "left"
 
-	right_dock_value: !STRING = "right"
+	right_dock_value: STRING = "right"
 
-	floating_style_value: !STRING = "floating"
+	floating_style_value: STRING = "floating"
 
-	tiled_style_value: !STRING = "tiled"
+	tiled_style_value: STRING = "tiled"
 
-	tabbed_style_value: !STRING = "tabbed"
+	tabbed_style_value: STRING = "tabbed"
 
-	auto_hide_style_value: !STRING = "auto-hide"
+	auto_hide_style_value: STRING = "auto-hide"
 
 ;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"

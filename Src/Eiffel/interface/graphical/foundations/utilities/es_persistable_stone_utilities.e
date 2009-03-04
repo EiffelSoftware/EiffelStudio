@@ -373,12 +373,12 @@ feature {NONE} -- Specifics
 
 feature {NONE} -- Constants
 
-	type_session_id: !STRING = "type"
-	location_session_id: !STRING = "location"
-	type_id_session_id: !STRING = "type_id"
-	feature_name_session_id: !STRING = "feature_name"
-	class_name_session_id: !STRING = "class_name"
-	group_name_session_id: !STRING = "group_name"
+	type_session_id: STRING = "type"
+	location_session_id: STRING = "location"
+	type_id_session_id: STRING = "type_id"
+	feature_name_session_id: STRING = "feature_name"
+	class_name_session_id: STRING = "class_name"
+	group_name_session_id: STRING = "group_name"
 
 ;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"

@@ -218,7 +218,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	mapping_file_name: !STRING = "mapping.info"
+	mapping_file_name: STRING = "mapping.info"
 			-- Name of file where `mapping' is stored.
 
 end

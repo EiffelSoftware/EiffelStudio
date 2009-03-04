@@ -20,7 +20,7 @@ create
 	make_open_read_append
 
 
-feature {NONE} -- Access
+feature -- Access
 
 	indendation: NATURAL
 			-- By how many times strings should be indendanted with `ind_character'
@@ -65,8 +65,12 @@ feature
 
 	unindent
 			-- Unindents by one character
+		require
+			indendation > 0
 		do
 			indendation := indendation - 1
+		ensure
+			indendation >= 0
 		end
 
 feature {INDENDATION_STREAM} -- Implementation

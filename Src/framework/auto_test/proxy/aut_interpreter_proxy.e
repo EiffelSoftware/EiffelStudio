@@ -115,6 +115,8 @@ feature {NONE} -- Initialization
 			error_handler := a_error_handler
 			timeout := default_timeout
 			set_is_logging_enabled (True)
+			set_is_speed_logging_enabled (True)
+			set_is_test_case_index_logging_enabled (True)
 		ensure
 			executable_file_name_set: executable_file_name = an_executable_file_name
 			system_set: system = a_system
@@ -159,6 +161,9 @@ feature -- Status
 			-- Should inter-process communication between the proxy and the interpreter
 			-- be logged into a file?
 			-- Default: True
+
+	is_test_case_index_logging_enabled: BOOLEAN
+			-- Should `test_case_index' be logged?
 
 feature -- Access
 
@@ -221,6 +226,14 @@ feature -- Settings
 			log_line ("-- An existing proxy has switched to this log file.")
 		end
 
+	set_is_test_case_index_logging_enabled (b: BOOLEAN) is
+			-- Set `is_test_case_index_logging_enabled' with `b'.
+		do
+			is_test_case_index_logging_enabled := b
+		ensure
+			is_test_case_index_logging_enabled_set: is_test_case_index_logging_enabled = b
+		end
+
 feature -- Execution
 
 	start
@@ -264,7 +277,6 @@ feature -- Execution
 --					fixme ("If interpreter process dies now, current thread will be blocked forever.")
 --					(create {EXECUTION_ENVIRONMENT}).sleep (1000000000)
 --					socket := l_socket.accepted
-
 					if attached {like socket} l_listener.wait_for_connection (5000) as l_socket then
 						socket := l_socket
 						process.set_timeout (timeout)
@@ -363,6 +375,7 @@ feature -- Execution
 			create l_request.make (system, a_receiver, a_type, a_procedure, l_arg_list)
 
 			last_request := l_request
+			log_test_case_index (last_request)
 			last_request.process (request_printer)
 			flush_process
 			parse_invoke_response
@@ -382,6 +395,7 @@ feature -- Execution
 				is_ready := False
 			end
 			stop_process_on_problems (last_response)
+			log_speed
 		ensure
 			last_request_not_void: last_request /= Void
 		end
@@ -416,6 +430,7 @@ feature -- Execution
 			l_invoke_request.set_target_type (l_target_type)
 
 			last_request := l_invoke_request
+			log_test_case_index (last_request)
 			last_request.process (request_printer)
 			flush_process
 			parse_invoke_response
@@ -426,6 +441,7 @@ feature -- Execution
 				is_ready := False
 			end
 			stop_process_on_problems (last_response)
+			log_speed
 		ensure
 			last_request_not_void: last_request /= Void
 		end
@@ -453,6 +469,7 @@ feature -- Execution
 			create l_invoke_request.make_assign (system, a_receiver, a_query.feature_name, a_target, an_argument_list)
 			l_invoke_request.set_target_type (a_type)
 			last_request := l_invoke_request
+			log_test_case_index (last_request)
 			last_request.process (request_printer)
 			flush_process
 			parse_invoke_response
@@ -478,6 +495,7 @@ feature -- Execution
 					retrieve_type_of_variable (a_receiver)
 				end
 			end
+			log_speed
 		ensure
 			last_request_not_void: last_request /= Void
 		end
@@ -862,6 +880,22 @@ feature {NONE} -- Logging
 			log_line (duration.millisecond_count.out)
 		end
 
+	log_test_case_index (a_request: like last_request) is
+			-- Log `test_case_index' in `a_request' and
+		require
+			a_request_attached: a_request /= Void
+		do
+			if is_test_case_index_logging_enabled then
+	            test_case_count := test_case_count + 1
+	            last_request.set_test_case_index (test_case_count)
+			end
+		ensure
+			test_case_logged:
+				is_test_case_index_logging_enabled implies (
+					test_case_count = old test_case_count + 1 and
+					last_request.test_case_index = test_case_count)
+		end
+
 feature {NONE} -- Implementation
 
 	executable_file_name: STRING
@@ -902,6 +936,53 @@ feature {NONE} -- Implementation
 
 	default_timeout: INTEGER = 5
 			-- Default value in second for `timeout'
+
+	test_case_count: INTEGER
+			-- Number of executed test cases so far
+
+feature{NONE} -- Speed logging
+
+	is_speed_logging_enabled: BOOLEAN
+			-- Is testing speed logging enabled?
+
+	last_speed_check_time: DT_DATE_TIME
+			-- Last time point when testing speed is checked
+
+	test_case_log_count: INTEGER
+			-- Test case count for speed logging
+
+	set_is_speed_logging_enabled (b: BOOLEAN) is
+			-- Set `is_speed_logging_enabled' with `b'.
+		do
+			is_speed_logging_enabled := b
+		ensure
+			is_speed_logging_enabled_set: is_speed_logging_enabled = b
+		end
+
+	log_speed is
+			-- Log testing speed when `is_speed_logging_enabled' is True.
+		local
+			l_time_now: DT_DATE_TIME
+			l_speed: INTEGER
+			l_second_count: INTEGER
+        do
+			if is_speed_logging_enabled then
+				l_time_now := system_clock.date_time_now
+				if last_speed_check_time /= Void then
+					l_second_count := l_time_now.duration (last_speed_check_time).second_count
+					if l_second_count > 60 then
+						l_speed := ((test_case_log_count.to_real / l_second_count) * 60).floor
+						log_line ("-- testing speed: " + l_speed.out + " test cases per minute.")
+						test_case_log_count := 0
+						last_speed_check_time := l_time_now
+					else
+						test_case_log_count := test_case_log_count + 1
+					end
+				else
+					last_speed_check_time := l_time_now
+				end
+			end
+		end
 
 invariant
 	is_running_implies_reader: is_running implies (stdout_reader /= Void)

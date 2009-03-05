@@ -355,7 +355,6 @@ feature {NONE} -- Implementation
 			else
 				random.set_seed ((create {TIME}.make_now).milli_second)
 			end
-
 			is_text_statistics_format_enabled := True
 			is_html_statistics_format_enabled := configuration.is_html_output
 
@@ -556,6 +555,7 @@ feature{NONE} -- Test case generation and execution
 			cs: DS_LINEAR_CURSOR [CL_TYPE_A]
 			strategy: AUT_RANDOM_STRATEGY
 		do
+			interpreter.log_line ("-- seed: " + random.seed.out)
 			interpreter.set_is_in_replay_mode (False)
 			create strategy.make (system, interpreter, error_handler)
 			from

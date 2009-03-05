@@ -199,7 +199,7 @@ feature -- Basic operations
 					until
 						i > l_count or l_lines = a_line + {NATURAL} 1
 					loop
-						c := l_contents.item (i.as_integer_16)
+						c := l_contents.item (i.as_integer_32)
 						if c = '%N' then
 							l_lines := l_lines + {NATURAL} 1
 							if a_line > 1 then

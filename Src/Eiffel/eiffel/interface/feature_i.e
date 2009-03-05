@@ -960,6 +960,7 @@ feature -- Incrementality
 				and then is_once = other.is_once
 				and then is_process_relative = other.is_process_relative
 				and then is_constant = other.is_constant
+				and then is_stable = other.is_stable
 				and then alias_name_id = other.alias_name_id
 				and then has_convert_mark = other.has_convert_mark
 				and then assigner_name_id = other.assigner_name_id
@@ -1084,6 +1085,9 @@ end
 
 				-- Still a once
 			Result := Result and then is_once = other.is_once
+
+				-- Of the same stability
+			Result := Result and then is_stable = other.is_stable
 		end
 
 feature -- creation of default rescue clause
@@ -1252,6 +1256,13 @@ feature -- Conveniences
 	is_process_relative: BOOLEAN
 			-- Is feature process-wide (rather than thread-local)?
 			-- (Usually applies to once routines.)
+		do
+			-- False by default
+		end
+
+	is_stable: BOOLEAN
+			-- Is feature stable, i.e. never gets Void after returning a non-void value?
+			-- (Usually applies to attributes.)
 		do
 			-- False by default
 		end
@@ -2160,7 +2171,8 @@ end
 			if old_feature.is_attribute and then
 				(not is_attribute or else
 				old_feature.type.is_expanded /= type.is_expanded or else
-				old_feature.type.is_reference /= type.is_reference)
+				old_feature.type.is_reference /= type.is_reference or else
+				old_feature.is_stable /= is_stable)
 			then
 				create vdrd6
 				vdrd6.init (old_feature, Current)
@@ -3104,6 +3116,7 @@ feature {FEATURE_I} -- Implementation
 	is_replicated_directly_mask: NATURAL_32 = 0x400000
 	from_non_conforming_parent_mask: NATURAL_32 = 0x800000
 	is_selected_mask: NATURAL_32 = 0x1000000
+	is_stable_mask: NATURAL_32 = 0x2000000 -- Used in ATTRIBUTE_I
 			-- Mask used for each feature property.
 
 	internal_export_status: like export_status

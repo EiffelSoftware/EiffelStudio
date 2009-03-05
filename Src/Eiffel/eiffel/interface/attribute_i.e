@@ -12,7 +12,7 @@ inherit
 		redefine
 			assigner_name_id, transfer_to, unselected, extension,
 			new_attr_entry, new_rout_entry, melt, access_for_feature, generate, new_rout_id,
-			set_type, type, is_attribute,
+			set_type, type, is_attribute, is_stable,
 			undefinable, check_expanded, transfer_from
 		end
 
@@ -106,6 +106,13 @@ feature -- Status report
 			Result := feature_flags & has_body_mask = has_body_mask
 		end
 
+	is_stable: BOOLEAN
+			-- Is feature stable, i.e. never gets Void after returning a non-void value?
+			-- (Usually applies to attributes.)
+		do
+			Result := feature_flags & is_stable_mask = is_stable_mask
+		end
+
 feature -- Status setting
 
 	set_has_function_origin (b: BOOLEAN)
@@ -122,6 +129,14 @@ feature -- Status setting
 			feature_flags := feature_flags.set_bit_with_mask (b, has_body_mask)
 		ensure
 			has_body_set: has_body = b
+		end
+
+	set_is_stable
+			-- Set `is_stable' to `True'.
+		do
+			feature_flags := feature_flags | is_stable_mask
+		ensure
+			is_stable: is_stable
 		end
 
 feature -- Element Change
@@ -451,6 +466,9 @@ feature -- Element Change
 			other.set_type (type, assigner_name_id)
 			other.set_has_function_origin (has_function_origin)
 			extension := other.extension
+			if is_stable then
+				other.set_is_stable
+			end
 		end
 
 	transfer_from (other: like Current)
@@ -462,6 +480,9 @@ feature -- Element Change
 				-- `has_function_origin' is set in FEATURE_I
 --			has_function_origin := other.has_function_origin
 			extension := other.extension
+			if other.is_stable then
+				set_is_stable
+			end
 		end
 
 	melt (exec: EXECUTION_UNIT)

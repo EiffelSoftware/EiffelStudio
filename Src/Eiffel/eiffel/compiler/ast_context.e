@@ -53,6 +53,7 @@ feature {NONE} -- Initialization
 			create scopes.make (0)
 			create object_test_scopes.make (0)
 			create object_test_locals.make_map (0)
+			create attributes.make (0)
 		end
 
 feature -- Access
@@ -225,6 +226,24 @@ feature {AST_FEATURE_CHECKER_GENERATOR, AST_CONTEXT} -- Local scopes: status rep
 			end
 		end
 
+	is_attribute_attached (id: INTEGER_32): BOOLEAN
+			-- Is attribute `id' in the scope where it is considered attached?
+		local
+			f: FEATURE_I
+			p: INTEGER_32
+		do
+			Result := scopes.has (id)
+			if not Result then
+				f := current_class.feature_of_name_id (id)
+				if f /= Void then
+					p := attributes.item (f.feature_id)
+					if p > 0 then
+						Result := attribute_initialization.is_attribute_set (p)
+					end
+				end
+			end
+		end
+
 feature {AST_CONTEXT} -- Local scopes
 
 	scopes: ARRAYED_LIST [INTEGER_32]
@@ -239,7 +258,12 @@ feature {AST_CONTEXT} -- Local scopes
 	object_test_scopes: ARRAYED_LIST [ID_AS]
 			-- Currently active scopes of object test locals
 
-feature -- Scope state
+feature {AST_CREATION_PROCEDURE_CHECKER, AST_FEATURE_CHECKER_GENERATOR, AST_CONTEXT} -- Attribute positions
+
+	attributes: HASH_TABLE [INTEGER_32, INTEGER_32]
+			-- Attribute indecies indexed by their feature ID
+
+feature {AST_FEATURE_CHECKER_GENERATOR, AST_CONTEXT} -- Scope state
 
 	scope: INTEGER
 			-- Current scope ID
@@ -276,14 +300,20 @@ feature -- Scope state
 
 	init_variable_scopes
 			-- Prepare structures to track variable scopes.
+		require
+			locals_attached: locals /= Void
+			attributes_attached: attributes /= Void
 		do
 			create local_initialization.make (locals.count)
 			create local_scope.make (locals.count)
+			create attribute_initialization.make (attributes.count)
 		ensure
 			local_initialization_attached: local_initialization /= Void
 			local_initialization_initialized: local_initialization.local_count = locals.count
 			local_scope_attached: local_scope /= Void
 			local_scope_initialized: local_scope.local_count = locals.count
+			attribute_initialization_attached: attribute_initialization /= Void
+			attribute_initialization_initialized: attribute_initialization.attribute_count = attributes.count
 		end
 
 	local_initialization: AST_LOCAL_INITIALIZATION_TRACKER
@@ -291,6 +321,9 @@ feature -- Scope state
 
 	local_scope: AST_LOCAL_SCOPE_TRACKER
 			-- Tracker of scopes of non-void locals
+
+	attribute_initialization: AST_ATTRIBUTE_INITIALIZATION_TRACKER
+			-- Tracker of initialized stable attributes
 
 feature {AST_SCOPE_MATCHER, AST_FEATURE_CHECKER_GENERATOR} -- Local scopes: modification
 
@@ -327,6 +360,15 @@ feature {AST_SCOPE_MATCHER, AST_FEATURE_CHECKER_GENERATOR} -- Local scopes: modi
 			is_result_attached: is_result_attached
 		end
 
+	add_attribute_expression_scope (id: INTEGER_32)
+			-- Add a scope for an attribute identified by `id'.
+		do
+			scopes.extend (id)
+		ensure
+			scope_count_inremented: scope_count = old scope_count + 1
+			is_attribute_attached: is_attribute_attached (id)
+		end
+
 	add_argument_instruction_scope (id: INTEGER_32)
 			-- Add a scope for an argument identified by `id'.
 		do
@@ -349,6 +391,21 @@ feature {AST_SCOPE_MATCHER, AST_FEATURE_CHECKER_GENERATOR} -- Local scopes: modi
 			local_scope.start_result_scope
 		ensure
 			is_result_attached: is_result_attached
+		end
+
+	add_attribute_instruction_scope (id: INTEGER_32)
+			-- Add a scope for a local identified by `id'.
+		local
+			f: FEATURE_I
+			p: INTEGER_32
+		do
+			f := current_class.feature_of_name_id (id)
+			if f /= Void then
+				p := attributes.item (f.feature_id)
+				if p > 0 then
+					attribute_initialization.set_attribute (p)
+				end
+			end
 		end
 
 	set_local (id: INTEGER_32)
@@ -438,6 +495,7 @@ feature -- Local initialization and scopes: nesting
 		do
 			local_initialization.keeper.enter_realm
 			local_scope.keeper.enter_realm
+			attribute_initialization.keeper.enter_realm
 		end
 
 	update_realm
@@ -445,6 +503,7 @@ feature -- Local initialization and scopes: nesting
 		do
 			local_initialization.keeper.update_realm
 			local_scope.keeper.update_realm
+			attribute_initialization.keeper.update_realm
 		end
 
 	save_sibling
@@ -453,6 +512,7 @@ feature -- Local initialization and scopes: nesting
 		do
 			local_initialization.keeper.save_sibling
 			local_scope.keeper.save_sibling
+			attribute_initialization.keeper.save_sibling
 		end
 
 	leave_realm
@@ -460,6 +520,7 @@ feature -- Local initialization and scopes: nesting
 		do
 			local_initialization.keeper.leave_realm
 			local_scope.keeper.leave_realm
+			attribute_initialization.keeper.leave_realm
 		end
 
 	leave_optional_realm
@@ -468,6 +529,7 @@ feature -- Local initialization and scopes: nesting
 		do
 			local_initialization.keeper.leave_optional_realm
 			local_scope.keeper.leave_optional_realm
+			attribute_initialization.keeper.leave_optional_realm
 		end
 
 feature -- Status report
@@ -487,6 +549,9 @@ feature -- Setting
 			a_class_not_void: a_class /= Void
 			a_feat_tbl_not_void: a_feat_tbl /= Void
 			a_type_not_void: a_type /= Void
+		local
+			s: GENERIC_SKELETON
+			i: INTEGER
 		do
 			current_class := a_class
 			create current_class_type
@@ -506,6 +571,18 @@ feature -- Setting
 			end
 			current_feature_table := a_feat_tbl
 			written_class := Void
+			from
+				s := a_class.skeleton
+				if s /= Void then
+					i := s.count
+				end
+				create attributes.make (i)
+			until
+				i <= 0
+			loop
+				attributes.put (i, s [i].feature_id)
+				i := i - 1
+			end
 		ensure
 			current_class_set: current_class = a_class
 			current_class_type_set: current_class_type.conformance_type = a_type
@@ -701,6 +778,7 @@ feature -- Managing the type stack
 			current_class := Void
 			current_class_type := Void
 			current_feature_table := Void
+			attributes.wipe_out
 			clear_feature_context
 		end
 
@@ -740,6 +818,7 @@ feature	-- Saving contexts
 			object_test_scopes.copy (Result.object_test_scopes)
 			local_scope := Void
 			local_initialization := Void
+			attribute_initialization := Void
 		end
 
 	restore (context: AST_CONTEXT)

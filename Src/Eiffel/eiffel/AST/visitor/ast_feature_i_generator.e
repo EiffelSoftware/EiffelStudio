@@ -63,6 +63,8 @@ feature -- Factory
 					else
 						fixme ("support process-relative constants (e.g., string constants)")
 					end
+				elseif Result.is_attribute and then a_node.indexes.is_stable and then attached {ATTRIBUTE_I} Result as a then
+					a.set_is_stable
 				end
 				if a_node.property_name /= Void then
 					Result.set_has_property (True)
@@ -361,7 +363,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

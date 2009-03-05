@@ -168,6 +168,9 @@ feature {NONE} -- Context
 				add_argument_scope (a.feature_name.name_id)
 			elseif a.is_local then
 				add_local_scope (a.feature_name.name_id)
+			elseif not a.is_object_test_local and then not a.is_tuple_access then
+					-- It must be a feature
+				add_attribute_scope (a.feature_name.name_id)
 			end
 		end
 
@@ -175,6 +178,12 @@ feature {NONE} -- Context
 			-- Add scope of a non-void argument.
 		do
 			context.add_argument_instruction_scope (id)
+		end
+
+	add_attribute_scope (id: INTEGER_32)
+			-- Add scope of a non-void attribute.
+		do
+			context.add_attribute_instruction_scope (id)
 		end
 
 	add_local_scope (id: INTEGER_32)

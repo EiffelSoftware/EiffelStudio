@@ -58,24 +58,11 @@ feature {NONE} -- Creation
 		require
 			f_attached: f /= Void
 			c_attached: c /= Void
-		local
-			s: GENERIC_SKELETON
-			i: INTEGER
 		do
 			creation_procedure := f
 			context := c
 			create {ARRAYED_STACK [INTEGER_32]} bodies.make (1)
-			from
-				s := current_class.skeleton
-				i := s.count
-				create attribute_initialization.make (i)
-				create attributes.make (i)
-			until
-				i <= 0
-			loop
-				attributes.put (i, s [i].feature_id)
-				i := i - 1
-			end
+			create attribute_initialization.make (c.attributes.count)
 			process (f)
 			check_attributes (f.body.last_token (Void))
 		end
@@ -184,7 +171,7 @@ feature {NONE} -- Processing
 			f_attached: f /= Void
 			l_attached: l /= Void
 		do
-			if f.type.is_initialization_required and then not attribute_initialization.is_attribute_set (attributes.item (f.feature_id)) then
+			if f.type.is_initialization_required and then not attribute_initialization.is_attribute_set (context.attributes.item (f.feature_id)) then
 				if attached {ATTRIBUTE_I} f as d and then d.has_body and then not bodies.has (d.body_index) then
 						-- Attribute is self-initializing and not processed yet
 						-- (there is no recursion for an uninitialized self-initializing attribute).
@@ -195,7 +182,7 @@ feature {NONE} -- Processing
 				end
 					-- Mark that the attribute is initialized because it is self-initializing
 					-- or just to avoid repeated errors.
-				attribute_initialization.set_attribute (attributes.item (f.feature_id))
+				attribute_initialization.set_attribute (context.attributes.item (f.feature_id))
 			end
 		end
 
@@ -240,7 +227,7 @@ feature {AST_EIFFEL} -- Visitor: access to features
 							process (f)
 						elseif f.is_attribute then
 							if is_attachment then
-								attribute_initialization.set_attribute (attributes.item (f.feature_id))
+								attribute_initialization.set_attribute (context.attributes.item (f.feature_id))
 							else
 								check_attribute (f, a.feature_name)
 							end
@@ -496,9 +483,6 @@ feature {NONE} -- Access
 		do
 			Result := context.written_class
 		end
-
-	attributes: HASH_TABLE [INTEGER_32, INTEGER_32]
-			-- Attribute indecies indexed by their feature ID
 
 	attribute_initialization: AST_ATTRIBUTE_INITIALIZATION_TRACKER
 			-- Storage to track attributes usage

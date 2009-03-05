@@ -44,7 +44,7 @@ feature -- Measurement
 			non_negative_result: Result >= 0
 		end
 
-feature {AST_CREATION_PROCEDURE_CHECKER} -- Element change
+feature {AST_CONTEXT, AST_CREATION_PROCEDURE_CHECKER} -- Element change
 
 	set_attribute (position: like attribute_count)
 			-- Mark that an attribute with the given `position' is set.

@@ -26,7 +26,7 @@ inherit
 			provider_revoke,
 			provider_is_service_proffered
 		redefine
-			internal_service
+			service_internal
 		end
 
 create {SHARED_SERVICE_PROVIDER, SERVICE_HEAP}
@@ -34,25 +34,39 @@ create {SHARED_SERVICE_PROVIDER, SERVICE_HEAP}
 
 feature -- Status report
 
-	is_service_proffered (a_type: attached TYPE [SERVICE_I]): BOOLEAN
+	is_service_proffered (a_type: TYPE [SERVICE_I]): BOOLEAN
 			-- Determines if a service has been registered and is offered for use. I.E. calling `service'
 			-- *should* (not guarenteed because of delayed-initialized services) yield a service object.
 			--
 			-- `a_type': The service type that the service object is associated with.
 			-- `a_promote': True to use the global service container; False to use the Current provider
 			--              only.
+		require
+			a_type_attached: a_type /= Void
 		do
 			Result := provider_is_service_proffered (a_type, False)
 		end
 
+feature {NONE} -- Query
+
+	service_internal (a_type: TYPE [SERVICE_I]): detachable ANY
+			-- <Precursor>
+		do
+			if is_service_proffered (a_type) then
+				Result := services [type_hash (a_type)]
+			end
+		end
+
 feature -- Extension
 
-	register (a_type: attached TYPE [SERVICE_I]; a_service: attached SERVICE_I)
+	register (a_type: TYPE [SERVICE_I]; a_service: SERVICE_I)
 			-- Registers a service object using a identifying service type object.
 			--
 			-- `a_type': The service type that the service object conforms to.
 			-- `a_service': The actual service object to register.
 		require
+			a_type_attached: a_type /= Void
+			a_service_attached: a_service /= Void
 			not_is_service_proffered: not is_service_proffered (a_type)
 			a_service_conforms_to_a_type: (a_type #? a_service) /= Void
 		do
@@ -61,13 +75,15 @@ feature -- Extension
 			is_service_proffered: is_service_proffered (a_type)
 		end
 
-	register_with_activator (a_type: attached TYPE [SERVICE_I]; a_activator: attached FUNCTION [ANY, TUPLE, detachable SERVICE_I])
+	register_with_activator (a_type: TYPE [SERVICE_I]; a_activator: FUNCTION [ANY, TUPLE, detachable SERVICE_I])
 			-- Registers a service activator function, used to create a service on demand, using a
 			-- identifying service type object.
 			--
 			-- `a_type': The service type that the service object conforms to.
 			-- `a_activator': The function used to attempt to retrieve a service object.
 		require
+			a_type_attached: a_type /= Void
+			a_activator_attached: a_activator /= Void
 			not_is_service_proffered: not is_service_proffered (a_type)
 		do
 			provider_register_with_activator (a_type, a_activator, False)
@@ -77,13 +93,14 @@ feature -- Extension
 
 feature -- Removal
 
-	revoke (a_type: attached TYPE [SERVICE_I])
+	revoke (a_type: TYPE [SERVICE_I])
 			-- Revokes a registered service, using the service type object used when registering the service.
 			-- Note: This may not actually remove the service object because the service object may have
 			--       been registered using mulitple service type objects.
 			--
 			-- `a_type': The service type that the service object is associated with.
 		require
+			a_type_attached: a_type /= Void
 			is_service_proffered: is_service_proffered (a_type)
 		do
 			provider_revoke (a_type, False)
@@ -91,18 +108,8 @@ feature -- Removal
 			not_is_service_proffered: not is_service_proffered (a_type)
 		end
 
-feature -- Query
-
-	internal_service (a_type: attached TYPE [SERVICE_I]): detachable ANY
-			-- <Precursor>
-		do
-			if is_service_proffered (a_type) then
-				Result := services [type_hash (a_type)]
-			end
-		end
-
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -115,22 +122,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class {SERVICE_HEAP}

@@ -25,10 +25,12 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_container: attached like container)
+	make (a_container: like container)
 			-- Initializes the service container service with an actual container.
 			--
-			-- `a_container': The actual service container use to delegate calls to.			
+			-- `a_container': The actual service container use to delegate calls to.
+		require
+			a_container_attached: a_container /= Void
 		do
 			container := a_container
 		ensure
@@ -44,7 +46,7 @@ feature {NONE} -- Clean up
 
 feature {NONE} -- Access
 
-	container: attached SERVICE_CONTAINER_I
+	container: SERVICE_CONTAINER_I
 			-- Actual service container to perform operations on.
 
 feature -- Status report
@@ -55,17 +57,17 @@ feature -- Status report
 			Result := Precursor and then
 				attached {USABLE_I} container as l_usable implies l_usable.is_interface_usable
 		ensure then
-			container_is_interface_usable: attached {USABLE_I} container as el_usable implies el_usable.is_interface_usable
+			container_is_interface_usable: attached {USABLE_I} container as l_usable implies l_usable.is_interface_usable
 		end
 feature -- Extension
 
-	register (a_type: attached TYPE [SERVICE_I]; a_service: attached SERVICE_I; a_promote: BOOLEAN)
+	register (a_type: TYPE [SERVICE_I]; a_service: SERVICE_I; a_promote: BOOLEAN)
 			-- <Precursor>
 		do
 			container.register (a_type, a_service, a_promote)
 		end
 
-	register_with_activator (a_type: attached TYPE [SERVICE_I]; a_activator: attached FUNCTION [ANY, TUPLE, detachable SERVICE_I] a_promote: BOOLEAN)
+	register_with_activator (a_type: TYPE [SERVICE_I]; a_activator: FUNCTION [ANY, TUPLE, detachable SERVICE_I] a_promote: BOOLEAN)
 			-- <Precursor>
 		do
 			container.register_with_activator (a_type, a_activator, a_promote)
@@ -73,7 +75,7 @@ feature -- Extension
 
 feature -- Removal
 
-	revoke (a_type: attached TYPE [SERVICE_I]; a_promote: BOOLEAN)
+	revoke (a_type: TYPE [SERVICE_I]; a_promote: BOOLEAN)
 			-- <Precursor>
 		do
 			container.revoke (a_type, a_promote)
@@ -81,14 +83,17 @@ feature -- Removal
 
 feature -- Query
 
-	is_service_proffered (a_type: attached TYPE [SERVICE_I]; a_promote: BOOLEAN): BOOLEAN
+	is_service_proffered (a_type: TYPE [SERVICE_I]; a_promote: BOOLEAN): BOOLEAN
 			-- <Precursor>
 		do
 			Result := container.is_service_proffered (a_type, a_promote)
 		end
 
+invariant
+	container_attached: container /= Void
+
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -112,11 +117,11 @@ feature -- Query
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

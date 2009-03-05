@@ -1,9 +1,9 @@
 note
 	description: "[
-		A support class to assisting in multi-threaded synchronized access to resources.
+		Mono-threaded implementation of {MULTI_THREADER_I}.
 		
-		The class can be used in non-multi-threaded systems without incident or any contract violations.
-		Depending on the project's multi-threaded settings, different functionality is performed.
+		Due to a mono-threaded environment there is no need for any protection so calls are made
+		directly instead of using an form of locking or signaling.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -11,11 +11,9 @@ note
 	revision: "$Revision$"
 
 class
-	MULTI_THREADER
+	MULTI_THREADER_IMP
 
 inherit
-	BRIDGE [MULTI_THREADER_I]
-
 	MULTI_THREADER_I
 
 feature -- Basic operations
@@ -23,27 +21,19 @@ feature -- Basic operations
 	perform (a_action: PROCEDURE [ANY, TUPLE])
 			-- <Precursor>
 		do
-			bridge.perform (a_action)
+			a_action.call (Void)
 		end
 
 	retrieve (a_action: FUNCTION [ANY, TUPLE, detachable ANY]): detachable ANY
 			-- <Precursor>
 		do
-			Result := bridge.retrieve (a_action)
+			Result := a_action.item (Void)
 		end
 
 	test (a_action: PREDICATE [ANY, TUPLE]; a_expected: BOOLEAN): BOOLEAN
 			-- <Precursor>
 		do
-			Result := bridge.test (a_action, a_expected)
-		end
-
-feature {NONE} -- Factory
-
-	new_bridge: attached MULTI_THREADER_I
-			-- <Precursor>
-		do
-			create {MULTI_THREADER_IMP} Result
+			Result := (a_action.item (Void) = a_expected)
 		end
 
 ;note

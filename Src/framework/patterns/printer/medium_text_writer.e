@@ -1,6 +1,6 @@
 note
 	description: "[
-		Basic implementation of a status printer for outputing information to a {IO_MEDIUM} descendent.
+		Basic implementation of a writer for outputing information to a {IO_MEDIUM} descendent.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -8,10 +8,10 @@ note
 	revision: "$Revision $"
 
 class
-	BASIC_TEXT_PRINTER
+	MEDIUM_TEXT_WRITER
 
 inherit
-	TEXT_PRINTER
+	TEXT_WRITER
 
 create
 	make
@@ -19,7 +19,9 @@ create
 feature {NONE} -- Initialization
 
 	make (a_medium: like medium)
-			-- Initialize printer using medium `a_medium'
+			-- Initialize a medium printer using a predefined medium.
+			--
+			-- `a_medium': The medium to delegate writing to.
 		require
 			a_medium_attached: a_medium /= Void
 			a_medium_is_open_write: a_medium.is_open_write
@@ -31,111 +33,108 @@ feature {NONE} -- Initialization
 
 feature -- Output
 
-	new_line
-			-- Write a new line character to medium
+	put_boolean (a_value: BOOLEAN)
+			-- <Precursor>
 		do
-			medium.new_line
-		end
-
-	put_string_8 (a_value: STRING_8)
-			-- Write `a_value' to printer.
-		do
-			medium.put_string (a_value)
-		end
-
-	put_string_32 (a_value: STRING_32)
-			-- Write `a_value' to printer.
-		do
-			check not_impl: False end
-		end
-
-	put_character_8 (a_value: CHARACTER_8)
-			-- Write `a_value' to printer.
-		do
-			medium.put_character (a_value)
-		end
-
-	put_character_32 (a_value: CHARACTER_32)
-			-- Write `a_value' to printer.
-		do
-			check not_impl: False end
+			medium.put_boolean (a_value)
 		end
 
 	put_integer_8 (a_value: INTEGER_8)
-			-- Write `a_value' to printer.
+			-- <Precursor>
 		do
 			medium.put_integer_8 (a_value)
 		end
 
 	put_integer_16 (a_value: INTEGER_16)
-			-- Write `a_value' to printer.
+			-- <Precursor>
 		do
 			medium.put_integer_16 (a_value)
 		end
 
 	put_integer_32 (a_value: INTEGER)
-			-- Write `a_value' to printer.
+			-- <Precursor>
 		do
 			medium.put_integer_32 (a_value)
 		end
 
 	put_integer_64 (a_value: INTEGER_64)
-			-- Write `a_value' to printer.
+			-- <Precursor>
 		do
 			medium.put_integer_64 (a_value)
 		end
 
 	put_natural_8 (a_value: NATURAL_8)
-			-- Write `a_value' to printer.
+			-- <Precursor>
 		do
 			medium.put_natural_8 (a_value)
 		end
 
 	put_natural_16 (a_value: NATURAL_16)
-			-- Write `a_value' to printer.
+			-- <Precursor>
 		do
 			medium.put_natural_16 (a_value)
 		end
 
 	put_natural_32 (a_value: NATURAL_32)
-			-- Write `a_value' to printer.
+			-- <Precursor>
 		do
 			medium.put_natural_32 (a_value)
 		end
 
 	put_natural_64 (a_value: NATURAL_64)
-			-- Write `a_value' to printer.
+			-- <Precursor>
 		do
 			medium.put_natural_64 (a_value)
 		end
 
-	put_boolean (a_value: BOOLEAN)
-			-- Write `a_value' to printer.
-		do
-			medium.put_boolean (a_value)
-		end
-
 	put_real_32 (a_value: REAL_32)
-			-- Write `a_value' to printer.
+			-- <Precursor>
 		do
 			medium.put_real (a_value)
 		end
 
 	put_real_64 (a_value: REAL_64)
-			-- Write `a_value' to printer.
+			-- <Precursor>
 		do
 			medium.put_double (a_value)
+		end
+
+	put_character_8 (a_value: CHARACTER_8)
+			-- <Precursor>
+		do
+			medium.put_character (a_value)
+		end
+
+	put_character_32 (a_value: CHARACTER_32)
+			-- <Precursor>
+		do
+			check not_impl: False end
+		end
+
+	put_string_8 (a_value: READABLE_STRING_8)
+			-- <Precursor>
+		do
+			medium.put_string (a_value)
+		end
+
+	put_string_32 (a_value: READABLE_STRING_32)
+			-- <Precursor>
+		do
+			check not_impl: False end
+		end
+
+	new_line
+			-- <Precursor>
+		do
+			medium.new_line
 		end
 
 feature -- Basic operations
 
 	flush
-			-- Flushes any buffered content.
-		local
-			l_file: FILE
+			-- <Precursor>
 		do
-			l_file ?= medium
-			if l_file /= Void then
+			if attached {FILE} medium as l_file then
 				l_file.flush
 			end
 		end
@@ -143,7 +142,7 @@ feature -- Basic operations
 feature -- Status report
 
 	is_writable: BOOLEAN
-			-- Determines if printer can be written to
+			-- <Precursor>
 		do
 			Result := medium.is_open_write
 		end
@@ -157,7 +156,7 @@ invariant
 	medium_attached: medium /= Void
 
 ;note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -170,22 +169,22 @@ invariant
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class {BASIC_TEXT_PRINTER}

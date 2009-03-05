@@ -46,7 +46,7 @@ feature -- Basic operations
 				on_locked
 			end
 			l_events := internal_locked_event
-			if attached l_events then
+			if l_events /= Void then
 					-- Only publish events if Curren is locked, because a event handler may cause an unlock to be
 					-- performed.
 				l_events.publish_if ([Current], agent {attached LOCKABLE_I}.is_locked)
@@ -68,7 +68,7 @@ feature -- Basic operations
 				on_unlocked
 			end
 			l_events := internal_unlocked_event
-			if attached l_events then
+			if l_events /= Void then
 					-- Only publish events if Curren is unlocked, because a event handler may cause an unlock to be
 					-- performed.
 				l_events.publish_if ([Current], agent (ia_lock: attached LOCKABLE_I): BOOLEAN
@@ -100,7 +100,7 @@ feature {NONE} -- Event handlers
 
 feature -- Events
 
-	locked_event: attached EVENT_TYPE [TUPLE [sender: attached LOCKABLE_I]]
+	locked_event: EVENT_TYPE [TUPLE [sender: attached LOCKABLE_I]]
 			-- <Precursor>
 		local
 			l_result: like internal_locked_event
@@ -115,7 +115,7 @@ feature -- Events
 			end
 		end
 
-	unlocked_event: attached EVENT_TYPE [TUPLE [sender: attached LOCKABLE_I]]
+	unlocked_event: EVENT_TYPE [TUPLE [sender: attached LOCKABLE_I]]
 			-- <Precursor>
 		local
 			l_result: like internal_unlocked_event
@@ -132,7 +132,7 @@ feature -- Events
 
 feature -- Events
 
-	lockable_connection: attached EVENT_CONNECTION_I [LOCKABLE_OBSERVER, LOCKABLE_I]
+	lockable_connection: EVENT_CONNECTION_I [LOCKABLE_OBSERVER, LOCKABLE_I]
 			-- <Precursor>
 		local
 			l_result: like internal_lockable_connection
@@ -140,7 +140,7 @@ feature -- Events
 			l_result := internal_lockable_connection
 			if l_result = Void then
 				create {EVENT_CONNECTION [LOCKABLE_OBSERVER, LOCKABLE_I]} Result.make (
-					agent (ia_observer: attached LOCKABLE_OBSERVER): attached ARRAY [TUPLE [event: attached EVENT_TYPE [TUPLE]; action: attached PROCEDURE [ANY, TUPLE]]]
+					agent (ia_observer: attached LOCKABLE_OBSERVER): ARRAY [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]
 						do
 							Result := <<
 								[locked_event, agent ia_observer.on_locked],

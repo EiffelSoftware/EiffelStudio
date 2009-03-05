@@ -8,7 +8,7 @@ note
 	revision: "$Revision $"
 
 class
-	SITE [G -> ANY]
+	SITE [G]
 
 feature -- Initialization
 
@@ -24,7 +24,7 @@ feature -- Initialization
 		local
 			l_site: like site
 			l_old_site: detachable G
-			l_sub_site: detachable SITE [G]
+			l_sub_site: detachable SITE [detachable G]
 			l_entities: like siteable_entities
 			l_cursor: CURSOR
 		do
@@ -74,7 +74,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	siteable_entities: ARRAYED_LIST [SITE [G]]
+	siteable_entities: ARRAYED_LIST [SITE [detachable G]]
 			-- List of siteable entities to automatically site when Current is sited.
 		require
 			is_interface_usable: attached {USABLE_I} Current as l_usable implies
@@ -83,7 +83,8 @@ feature {NONE} -- Access
 			create Result.make (0)
 		ensure
 			result_attached: Result /= Void
-			result_contains_attached_items: not Result.has (Void)
+			result_contains_attached_items: attached {ARRAYED_LIST [detachable ANY]} Result as l_list implies
+				not l_list.has (Void)
 		end
 
 feature -- Status report
@@ -104,7 +105,7 @@ feature -- Status report
 		do
 			Result := attached {G} a_site
 		ensure
-			not_a_catcall: attached {G} a_site
+			not_a_catcall: Result implies attached {G} a_site
 		end
 
 note

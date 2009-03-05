@@ -46,8 +46,15 @@ feature {NONE} -- Processing
 				error_handler.report_error (cannot_read)
 
 			else
-				a_file.read_string (a_file.count)
-				Result := a_file.last_string
+				from
+
+				until
+					a_file.end_of_file
+				loop
+					a_file.read_line
+					Result.append(a_file.last_string)
+				end
+
 			end
 
 		end
@@ -65,8 +72,6 @@ feature -- Processing
 	process_with_string (a_string: STRING): BOOLEAN
 			--
 		local
-			a_file: KL_TEXT_INPUT_FILE				--
-			cannot_read: UT_CANNOT_READ_FILE_ERROR
 			id_stream: INDENDATION_STREAM
 			temp_root: ROOT_SERVLET_ELEMENT
 			fn: STRING

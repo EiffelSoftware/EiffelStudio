@@ -18,8 +18,8 @@ feature {NONE} -- Initialization
 
 
 			--------ADD TAGS HERE------
-
-			
+			parse_tags.put_right (create {XB_PARSE_TAG_OUTPUT_CALL}.make)
+	--		parse_tags.put_right (create {XB_PARSE_TAG_CALL}.make)
 
 		end
 

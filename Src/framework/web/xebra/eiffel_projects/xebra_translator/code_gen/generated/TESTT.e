@@ -27,13 +27,22 @@ feature -- Implementation
 		local
 			response: RESPONSE
 		do
+			create response.make
 			response.append ("[
-				fabio
+				Fabio1
 			]")
-			controller.sandro
+			controller.Sandro
 			response.append ("[
-				monic
+				Janus
 			]")
+			controller.=Hermann
+			response.append ("[
+				Tepter
+			]")
+			response.append ("[
+				Fabio1JanusTepter
+			]")
+			Result := response
 		end
 
 end

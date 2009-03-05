@@ -38,21 +38,22 @@ feature {NONE} -- Clean up
 			-- <Precursor>
 		local
 			l_connections: like internal_connections
+			l_connection_copy: like internal_connections
 			l_connection: detachable G
 		do
 			if a_explicit then
 				l_connections := internal_connections
-				if attached l_connections then
+				if l_connections /= Void then
 						-- If the following is violated then some object did not disconnect the events
 					check l_connections_is_empty: l_connections.is_empty end
-					l_connections := l_connections.twin
-					from l_connections.start until l_connections.after loop
-						l_connection := l_connections.item_for_iteration
+					l_connection_copy := l_connections.twin
+					from l_connection_copy.start until l_connection_copy.after loop
+						l_connection := l_connection_copy.item_for_iteration
 						check l_connection_attached: attached l_connection end
 						disconnect_events (l_connection)
-						l_connections.forth
+						l_connection_copy.forth
 					end
-					internal_connections.wipe_out
+					l_connections.wipe_out
 				end
 			end
 		ensure then
@@ -63,7 +64,7 @@ feature {NONE} -- Clean up
 
 feature {NONE} -- Access
 
-	frozen connections: DS_ARRAYED_LIST [detachable G]
+	frozen connections: ARRAYED_LIST [detachable G]
 			-- Current connections to event connections.
 		require
 			is_interface_usable: is_interface_usable
@@ -134,7 +135,7 @@ feature -- Event connection
 			end
 
 				-- Add the connection to the list of managed connections.
-			connections.force_last (a_observer)
+			connections.extend (a_observer)
 		ensure then
 			connections_has_a_observer: connections.has (a_observer)
 		end
@@ -152,7 +153,7 @@ feature -- Event connection
 				-- Remove the connection from the list of managed connections
 			l_connections := connections
 			l_connections.start
-			l_connections.search_forth (a_observer)
+			l_connections.search (a_observer)
 			check not_l_connections_after: not l_connections.after end
 			if not l_connections.after then
 					-- Unsubscribe to events on the observer.
@@ -176,7 +177,7 @@ feature -- Event connection
 					end
 				end
 					-- Remove the connection.
-				l_connections.remove_at
+				l_connections.remove
 			end
 		ensure then
 			not_connections_has_a_observer: not connections.has (a_observer)

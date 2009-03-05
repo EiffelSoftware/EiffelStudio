@@ -2135,6 +2135,7 @@ test	same-object-test-local-failure					attach052 tcf fail void_safe attached_ty
 test	various-object-tests							attach053 tcf fail void_safe attached_types
 test	recursive-once-function-call-on-void-target			attach054 tcf fail void_safe attached_types
 test	bogus-vevi-when-inherit-expanded			attach055 tcf fail void_safe attached_types
+test	stable-attribute-redeclaration				attach056 tcf pass stable attribute redeclaration validity
 
 -- Tests for conformance in general
 test	basic-conformance		conform001 tcf pass conformance

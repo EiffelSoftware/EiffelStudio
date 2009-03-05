@@ -13,16 +13,33 @@ inherit
 feature -- Access
 
 	controller_var: STRING
-	buffer_var: STRING
+			-- Variable name of the controller
+
+	response_var: STRING
+			-- Variable name of the response
 
 	set_controller_var (a_name: STRING)
+			-- Sets the name of the controller variable
 		do
 			controller_var := a_name
 		end
 
-	set_buffer_var (a_name: STRING)
+	set_response_var (a_name: STRING)
+			-- Sets the name of the response variable
 		do
-			buffer_var := a_name
+			response_var := a_name
+		end
+
+
+	response_name: STRING
+			-- The response variable name
+
+	set_response_name(a_name: STRING)
+			-- Sets the response variable name.
+		require
+			name_is_valid: not a_name.is_empty
+		do
+			response_name := a_name
 		end
 
 end

@@ -16,11 +16,19 @@ create
 feature -- Access
 
 	feature_name: STRING
+		-- name of the feature call on the controller
+
+feature -- Initialization
 
 	make (a_feature_name: STRING)
+			-- `a_feature_name': Name of the feature that should be applied on the controller.
+		require
+			feature_is_valid: not a_feature_name.is_empty
 		do
 			feature_name := a_feature_name
 		end
+
+feature -- Processing
 
 	serialize (buf: INDENDATION_STREAM)
 			-- <Precursor>			

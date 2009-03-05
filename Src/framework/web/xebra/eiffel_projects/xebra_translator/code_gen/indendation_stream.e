@@ -19,7 +19,6 @@ create
 	make_open_read_write, make_create_read_write,
 	make_open_read_append
 
-
 feature -- Access
 
 	indendation: NATURAL
@@ -32,6 +31,8 @@ feature
 
 	set_indendation (an_indendation: NATURAL)
 			-- Sets the indendantion.
+		require
+			indent_geq_0: an_indendation >= 0
 		do
 			indendation := an_indendation
 		end
@@ -44,7 +45,7 @@ feature
 
 	put_string (a_string: STRING)
 			-- <Precursor>
-			-- String is automatically indendated.
+			-- String is automatically indendated and a new line added.
 		do
 			indendate
 			Precursor (a_string)
@@ -52,7 +53,7 @@ feature
 		end
 
 	append_string (a_string: STRING)
-			-- Appends a string without indendation.
+			-- Appends a string without indendation
 		do
 			put_string (a_string)
 		end

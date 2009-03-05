@@ -1,7 +1,7 @@
 indexing
 
 	description: "Parser token codes"
-	generator: "geyacc version 3.7"
+	generator: "geyacc version 3.9"
 
 class TS_CONFIG_TOKENS
 

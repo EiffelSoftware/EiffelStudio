@@ -198,7 +198,7 @@ debug ("GEYACC")
 end
 
 last_config := new_config (yyvs2.item (yyvsp2).name, testgen, compile, execute, yyvs4.item (yyvsp4)) 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 6
 	yyvsp1 := yyvsp1 -3
 	yyvsp2 := yyvsp2 -1
@@ -212,7 +212,7 @@ debug ("GEYACC")
 end
 
 set_defaults (yyvs2.item (yyvsp2).name) 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
@@ -240,7 +240,7 @@ debug ("GEYACC")
 end
 
 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
@@ -268,7 +268,7 @@ debug ("GEYACC")
 end
 
 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvs1.put (yyval1, yyvsp1)
 end
@@ -279,7 +279,7 @@ debug ("GEYACC")
 end
 
 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
 	yyvs1.put (yyval1, yyvsp1)
@@ -291,7 +291,7 @@ debug ("GEYACC")
 end
 
 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvs1.put (yyval1, yyvsp1)
 end
@@ -302,7 +302,7 @@ debug ("GEYACC")
 end
 
 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
 	yyvs1.put (yyval1, yyvsp1)
@@ -318,7 +318,7 @@ end
 				class_regexp := Default_class_regexp
 			end
 		
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp1 := yyvsp1 -2
 	yyvsp2 := yyvsp2 -1
@@ -335,7 +335,7 @@ end
 				feature_regexp := Default_feature_regexp
 			end
 		
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp1 := yyvsp1 -2
 	yyvsp2 := yyvsp2 -1
@@ -348,7 +348,7 @@ debug ("GEYACC")
 end
 
 class_prefix := yyvs2.item (yyvsp2).name 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp1 := yyvsp1 -2
 	yyvsp2 := yyvsp2 -1
@@ -361,7 +361,7 @@ debug ("GEYACC")
 end
 
 compile := yyvs2.item (yyvsp2).name 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp1 := yyvsp1 -2
 	yyvsp2 := yyvsp2 -1
@@ -374,7 +374,7 @@ debug ("GEYACC")
 end
 
 execute := yyvs2.item (yyvsp2).name 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp1 := yyvsp1 -2
 	yyvsp2 := yyvsp2 -1
@@ -387,7 +387,7 @@ debug ("GEYACC")
 end
 
 testgen := yyvs2.item (yyvsp2).name 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp1 := yyvsp1 -2
 	yyvsp2 := yyvsp2 -1
@@ -402,7 +402,7 @@ end
 			create {DS_ARRAYED_LIST [TS_CLUSTER]} yyval4.make (1)
 			yyval4.put_last (default_cluster)
 		
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp4 := yyvsp4 + 1
 	if yyvsp4 >= yyvsc4 then
@@ -432,7 +432,7 @@ end
 			create {DS_ARRAYED_LIST [TS_CLUSTER]} yyval4.make (1)
 			yyval4.put_last (default_cluster)
 		
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp4 := yyvsp4 + 1
 	yyvsp1 := yyvsp1 -1
@@ -461,7 +461,7 @@ debug ("GEYACC")
 end
 
 yyval4 := yyvs4.item (yyvsp4) 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
 	yyvs4.put (yyval4, yyvsp4)
@@ -475,7 +475,7 @@ end
 			create {DS_ARRAYED_LIST [TS_CLUSTER]} yyval4.make (5)
 			yyval4.put_last (yyvs3.item (yyvsp3))
 		
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp4 := yyvsp4 + 1
 	yyvsp3 := yyvsp3 -1
@@ -504,7 +504,7 @@ debug ("GEYACC")
 end
 
 yyval4 := yyvs4.item (yyvsp4); yyval4.force_last (yyvs3.item (yyvsp3)) 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp3 := yyvsp3 -1
 	yyvs4.put (yyval4, yyvsp4)
@@ -516,7 +516,7 @@ debug ("GEYACC")
 end
 
 yyval3 := new_cluster (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2)) 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp3 := yyvsp3 + 1
 	yyvsp2 := yyvsp2 -2
@@ -546,7 +546,7 @@ debug ("GEYACC")
 end
 
 yyval2 := yyvs2.item (yyvsp2) 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvs2.put (yyval2, yyvsp2)
 end
@@ -557,7 +557,7 @@ debug ("GEYACC")
 end
 
 yyval2 := yyvs2.item (yyvsp2) 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvs2.put (yyval2, yyvsp2)
 end

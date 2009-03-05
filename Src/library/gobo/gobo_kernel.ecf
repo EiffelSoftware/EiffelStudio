@@ -31,5 +31,6 @@
 			</file_rule>
 		</cluster>
 		<cluster name="override" location="override\library\kernel" recursive="true"/>
+		<cluster name="override_generated" location="override\generated\library\kernel" recursive="true"/>
 	</target>
 </system>

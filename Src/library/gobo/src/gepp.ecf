@@ -23,6 +23,6 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf"/>
 		<cluster name="gepp" location="$ISE_LIBRARY\library\gobo\svn\src\gepp\"/>
-		<cluster name="gepp_override" location="$ISE_LIBRARY\library\gobo\override\src\gepp\"/>
+		<cluster name="gepp_override" location="$ISE_LIBRARY\library\gobo\override\generated\src\gepp\"/>
 	</target>
 </system>

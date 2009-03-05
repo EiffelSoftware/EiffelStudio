@@ -8,7 +8,7 @@ note
 	revision: "$Revision $"
 
 deferred class
-	CONCEALER_I [G -> ANY]
+	CONCEALER_I [G]
 
 feature -- Access
 

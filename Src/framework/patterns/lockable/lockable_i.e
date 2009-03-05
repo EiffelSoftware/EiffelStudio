@@ -50,7 +50,7 @@ feature -- Basic operations
 
 feature -- Events
 
-	locked_event: attached EVENT_TYPE [TUPLE [sender: attached LOCKABLE_I]]
+	locked_event: EVENT_TYPE [TUPLE [sender: attached LOCKABLE_I]]
 			-- Events called when a lock has been placed on Current.
 			--
 			-- 'sender': Object locked.
@@ -58,11 +58,12 @@ feature -- Events
 			is_interface_usable: is_interface_usable
 		deferred
 		ensure
+			result_attached: Result /= Void
 			result_is_interface_usable: Result.is_interface_usable
 			result_consistent: Result = locked_event
 		end
 
-	unlocked_event: attached EVENT_TYPE [TUPLE [sender: attached LOCKABLE_I]]
+	unlocked_event: EVENT_TYPE [TUPLE [sender: attached LOCKABLE_I]]
 			-- Events called when a lock has been placed on Current.
 			--
 			-- 'sender': Object unlocked.
@@ -70,6 +71,7 @@ feature -- Events
 			is_interface_usable: is_interface_usable
 		deferred
 		ensure
+			result_attached: Result /= Void
 			result_is_interface_usable: Result.is_interface_usable
 			result_consistent: Result = unlocked_event
 		end

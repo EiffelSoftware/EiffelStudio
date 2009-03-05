@@ -11,7 +11,7 @@ class
 	MEDIUM_TEXT_WRITER
 
 inherit
-	TEXT_WRITER
+	TEXT_WRITER_I
 
 create
 	make

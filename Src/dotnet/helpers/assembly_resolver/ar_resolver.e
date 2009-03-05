@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			common_initialization
 		end
 
-	make_with_name (a_name: like friendly_name)
+	make_with_name (a_name: attached like friendly_name)
 			-- Initialize instance and set `friendly_name' with `a_name'
 		require
 			a_name_not_void: a_name /= Void
@@ -57,25 +57,25 @@ feature -- Access
 			result_compares_objects: Result.object_comparison
 		end
 
-	friendly_name: STRING
+	friendly_name: detachable STRING
 			-- Resolver friendly name
 
 feature {AR_SUBSCRIPTION} -- Access
 
-	resolve_event_handler: RESOLVE_EVENT_HANDLER
+	resolve_event_handler: detachable RESOLVE_EVENT_HANDLER
 			-- Retrieve an event handler for `Current'
 
 feature {NONE} -- Resolution
 
-	resolve (a_sender: SYSTEM_OBJECT; a_args: RESOLVE_EVENT_ARGS): ASSEMBLY
+	resolve (a_sender: SYSTEM_OBJECT; a_args: RESOLVE_EVENT_ARGS): detachable ASSEMBLY
 			-- Event handler for System.AppDomain.AssemblyResolve event
 		require
 			a_send_not_void: a_sender /= Void
 			a_args_not_void: a_args /= Void
 		local
-			l_domain: APP_DOMAIN
-			l_parts: LIST [STRING]
-
+			l_domain: detachable APP_DOMAIN
+			l_parts: LIST [detachable STRING]
+			l_name: detachable STRING
 		do
 			l_domain ?= a_sender
 			check
@@ -86,30 +86,35 @@ feature {NONE} -- Resolution
 			l_parts := split_assembly_name (a_args.name)
 
 				-- Attempt to resolve assembly dependency
-			Result := resolve_assembly_by_name (l_domain, l_parts @ 1, l_parts @ 2, l_parts @ 3, l_parts @ 4)
+			l_name := l_parts [1]
+			check l_name_attached: l_name /= Void end
+			Result := resolve_assembly_by_name (l_domain, l_name, l_parts [2], l_parts [3], l_parts [4])
 		end
 
 feature -- Resolution
 
-	resolve_by_assembly_name (a_domain: APP_DOMAIN; a_name: ASSEMBLY_NAME): STRING
+	resolve_by_assembly_name (a_domain: APP_DOMAIN; a_name: ASSEMBLY_NAME): detachable STRING
 			-- Resolve an assembly in app domain `a_domain' where name of assembly comprises of `a_name'
 		require
 			a_domain_not_void: a_domain /= Void
 			a_name_not_void: a_name /= Void
 		local
-			l_parts: LIST [STRING]
+			l_parts: LIST [detachable STRING]
+			l_name: detachable STRING
 		do
 				-- Split assembly name to be resolved into relivent chunks
 			l_parts := split_assembly_name (a_name.to_string)
 
 				-- Attempt to resolve assembly dependency
-			Result := resolve_by_name (a_domain, l_parts @ 1, l_parts @ 2, l_parts @ 3, l_parts @ 4)
+			l_name := l_parts [1]
+			check l_name_attached: l_name /= Void end
+			Result := resolve_by_name (a_domain, l_name, l_parts [2], l_parts [3], l_parts [4])
 		ensure
 			not_resolve_paths_moved: resolve_paths.cursor.is_equal (old resolve_paths.cursor)
 			not_result_is_empty: Result /= Void implies not Result.is_empty
 		end
 
-	resolve_by_name (a_domain: APP_DOMAIN; a_name: STRING; a_version: STRING; a_culture: STRING; a_key: STRING): STRING
+	resolve_by_name (a_domain: APP_DOMAIN; a_name: STRING; a_version: detachable STRING; a_culture: detachable STRING; a_key: detachable STRING): detachable STRING
 			-- Resolve an assembly in app domain `a_domain' where name of assembly comprises of assembly name `a_name'
 			-- and optionally version `a_version', culture `a_culture' and public key token `a_key', and return file name
 		require
@@ -122,12 +127,12 @@ feature -- Resolution
 			l_paths: like resolve_paths
 			l_file_name: FILE_NAME
 			l_file_path: STRING
-			l_name: ASSEMBLY_NAME
+			l_name: detachable ASSEMBLY_NAME
 		do
 			debug ("trace")
 				{SYSTEM_DLL_TRACE}.write_string ("Attempting to use custom assembly resolver")
-				if friendly_name /= Void then
-					{SYSTEM_DLL_TRACE}.write_string (" '" + friendly_name + "'")
+				if attached friendly_name as l_friendly_name then
+					{SYSTEM_DLL_TRACE}.write_string (" '" + l_friendly_name + "'")
 				end
 				{SYSTEM_DLL_TRACE}.write_line_string (".")
 			end
@@ -184,7 +189,7 @@ feature -- Resolution
 			not_result_is_empty: Result /= Void implies not Result.is_empty
 		end
 
-	resolve_assembly_by_name (a_domain: APP_DOMAIN; a_name: STRING; a_version: STRING; a_culture: STRING; a_key: STRING): ASSEMBLY
+	resolve_assembly_by_name (a_domain: APP_DOMAIN; a_name: STRING; a_version: detachable STRING; a_culture: detachable STRING; a_key: detachable STRING): detachable ASSEMBLY
 			-- Resolve an assembly in app domain `a_domain' where name of assembly comprises of assembly name `a_name'
 			-- and optionally version `a_version', culture `a_culture' and public key token `a_key'
 			--
@@ -195,7 +200,7 @@ feature -- Resolution
 			not_a_name_is_empty: not a_name.is_empty
 			not_a_version_is_empty: a_version /= Void implies not a_version.is_empty
 		local
-			l_file_name: STRING
+			l_file_name: detachable STRING
 		do
 			l_file_name := resolve_by_name (a_domain, a_name, a_version, a_culture, a_key)
 			if l_file_name /= Void then
@@ -207,7 +212,7 @@ feature -- Resolution
 
 feature -- Query
 
-	does_name_match (a_asm_name: ASSEMBLY_NAME; a_name: STRING; a_version: STRING; a_culture: STRING; a_key: STRING): BOOLEAN
+	does_name_match (a_asm_name: ASSEMBLY_NAME; a_name: STRING; a_version: detachable STRING; a_culture: detachable STRING; a_key: detachable STRING): BOOLEAN
 			-- Does `a_asm_name' match `a_name', `a_version', `a_culture' and `a_key'
 		require
 			a_asm_name_not_void: a_asm_name /= Void
@@ -215,20 +220,23 @@ feature -- Query
 			not_a_name_is_empty: not a_name.is_empty
 			not_a_version_is_empty: a_version /= Void implies not a_version.is_empty
 		local
-			l_key: NATIVE_ARRAY [NATURAL_8]
+			l_key: detachable NATIVE_ARRAY [NATURAL_8]
+			l_string: detachable SYSTEM_STRING
 		do
 			Result := a_name.is_equal (a_asm_name.name)
-			if Result and then a_version /= Void then
-				Result := is_near_version_match (a_version, a_asm_name.version.to_string)
+			if Result and then a_version /= Void and then attached {VERSION} a_asm_name.version as l_asm_version then
+				Result := is_near_version_match (a_version, l_asm_version.to_string)
 			end
-			if Result and then a_culture /= Void then
-				Result := a_culture.as_lower.is_equal (a_asm_name.culture_info.to_string.to_lower)
+			if Result and then a_culture /= Void and then attached {CULTURE_INFO} a_asm_name.culture_info as l_asm_culture then
+				l_string := l_asm_culture.to_string
+				check l_string_attached: l_string /= Void end
+				Result := a_culture.as_lower.is_equal (l_string.to_lower)
 			end
 			if Result and then a_key /= Void then
 				l_key := a_asm_name.get_public_key_token
 				if a_key.is_empty then
 					Result := l_key = Void or else l_key.length = 0
-				else
+				elseif l_key /= Void then
 					Result := encoded_key (l_key).as_lower.is_equal (a_key.as_lower)
 				end
 			end
@@ -421,7 +429,7 @@ feature {NONE} -- Implementation
 			not_result_is_empty: not Result.is_empty
 		end
 
-	split_assembly_name (a_full_name: STRING): LIST [STRING]
+	split_assembly_name (a_full_name: STRING): LIST [detachable STRING]
 			-- Splits `a_full_name' into a 4 part list
 			-- @ 1: Assembly Name
 			-- @ 2: Version
@@ -433,13 +441,13 @@ feature {NONE} -- Implementation
 			a_full_name_not_void: a_full_name /= Void
 			not_a_full_name_is_empty: not a_full_name.is_empty
 		local
-			l_res: ARRAYED_LIST [STRING]
+			l_res: ARRAYED_LIST [detachable STRING]
 			l_parts: LIST [STRING]
 			l_name: STRING
 			l_item: STRING
-			l_version: STRING
-			l_culture: STRING
-			l_key: STRING
+			l_version: detachable STRING
+			l_culture: detachable STRING
+			l_key: detachable STRING
 			l_set_for_it: BOOLEAN
 			i: INTEGER
 		do
@@ -496,11 +504,10 @@ feature {NONE} -- Implementation
 		ensure
 			result_not_void: Result /= Void
 			result_count_is_4: Result.count >= 4
-			item_1_not_void: Result @ 1 /= Void
-			not_item_1_is_empty: not (Result @ 1).is_empty
+			item_1_not_void_and_not_empty: attached {STRING} Result [1] as l_ass_name and then not l_ass_name.is_empty
 		end
 
-	load_assembly (a_path: STRING): ASSEMBLY
+	load_assembly (a_path: STRING): detachable ASSEMBLY
 			-- Attempts to load assembly from `a_path'
 		require
 			a_path_not_void: a_path /= Void
@@ -521,7 +528,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	get_assembly_name (a_path: STRING): ASSEMBLY_NAME
+	get_assembly_name (a_path: STRING): detachable ASSEMBLY_NAME
 			-- Retrieve an assembly name from `a_path'
 		require
 			a_path_not_void: a_path /= Void
@@ -564,9 +571,12 @@ feature {NONE} -- Implementation
 		local
 			l_file: FILE_INFO
 			l_type: SYSTEM_TYPE
+			l_assembly: detachable ASSEMBLY
 		do
 			l_type := {AR_RESOLVER}
-			create l_file.make (l_type.assembly.location)
+			l_assembly := l_type.assembly
+			check l_assembly_attached: l_assembly /= Void end
+			create l_file.make (l_assembly.location)
 			add_resolve_path (l_file.directory_name)
 		end
 

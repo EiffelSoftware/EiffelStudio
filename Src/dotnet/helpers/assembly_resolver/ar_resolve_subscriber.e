@@ -11,10 +11,10 @@ note
 
 class
 	AR_RESOLVE_SUBSCRIBER
-	
+
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make
@@ -22,8 +22,8 @@ feature {NONE} -- Initialization
 		do
 			create subscriptions.make
 		end
-		
-	
+
+
 feature -- Access
 
 	subscribed_domains: LIST [APP_DOMAIN]
@@ -43,11 +43,12 @@ feature -- Access
 				subscriptions.forth
 			end
 			subscriptions.go_to (l_cursor)
+			Result := l_res
 		ensure
 			result_not_void: Result /= Void
 			matched_subscriptions_count: subscriptions.count = Result.count
 		end
-		
+
 	has_subscription (a_domain: APP_DOMAIN): BOOLEAN
 			-- Does `a_domain' already have a subscription?
 		require
@@ -55,8 +56,8 @@ feature -- Access
 		do
 			Result := subscription (a_domain) /= Void
 		end
-		
-	subscription (a_domain: APP_DOMAIN): AR_SUBSCRIPTION
+
+	subscription (a_domain: APP_DOMAIN): detachable AR_SUBSCRIPTION
 			-- Retrieve subscription for `a_domain'.
 		require
 			a_domain_not_void: a_domain /= Void
@@ -87,7 +88,7 @@ feature -- Subscribe
 			not_a_domain_is_unloading: not a_domain.is_finalizing_for_unload
 			a_resolver_not_void: a_resolver /= Void
 		local
-			l_subscription: AR_SUBSCRIPTION
+			l_subscription: detachable AR_SUBSCRIPTION
 		do
 			l_subscription := subscription (a_domain)
 			if l_subscription = Void then
@@ -100,7 +101,7 @@ feature -- Subscribe
 				l_subscription.add_resolver (a_resolver)
 			end
 		end
-		
+
 	unsubscribe (a_domain: APP_DOMAIN; a_resolver: AR_RESOLVER)
 			-- Unsubscribes `a_resolver' from `a_domain's resolver event.
 		require
@@ -109,7 +110,7 @@ feature -- Subscribe
 		do
 			a_domain.remove_domain_unload (create {EVENT_HANDLER}.make (Current, $unsubscribe_for_unload))
 		end
-		
+
 feature {NONE} -- Implementation
 
 	unsubscribe_for_unload (a_sender: SYSTEM_OBJECT; a_args: EVENT_ARGS)
@@ -118,20 +119,20 @@ feature {NONE} -- Implementation
 			a_sender_not_void: a_sender /= Void
 			a_args_not_void: a_args /= Void
 		local
-			l_domain: APP_DOMAIN
+			l_domain: detachable APP_DOMAIN
 		do
 			l_domain ?= a_sender
 			check
-				invalid_sender: l_domain /= Void	
+				invalid_sender: l_domain /= Void
 			end
 		end
-		
+
 	subscriptions: LINKED_LIST [AR_SUBSCRIPTION]
 			-- List of subscriptions.
-			
+
 invariant
 	subscriptions_not_void: subscriptions /= Void
-	
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

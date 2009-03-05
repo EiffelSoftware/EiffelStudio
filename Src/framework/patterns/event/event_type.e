@@ -32,9 +32,9 @@ feature {NONE} -- Initialization
 			-- Default initialization
 		do
 			create subscribers.make (0)
-			subscribers.set_equality_tester (create {KL_EQUALITY_TESTER [detachable PROCEDURE [ANY, EVENT_DATA]]})
+			subscribers.compare_objects
 			create suicide_actions.make (0)
-			suicide_actions.set_equality_tester (create {KL_EQUALITY_TESTER [detachable PROCEDURE [ANY, EVENT_DATA]]})
+			suicide_actions.compare_objects
 		end
 
 feature {NONE} -- Clean up
@@ -54,10 +54,10 @@ feature {NONE} -- Clean up
 
 feature {NONE} -- Access
 
-	frozen subscribers: DS_HASH_SET [detachable PROCEDURE [ANY, EVENT_DATA]]
+	frozen subscribers: ARRAYED_SET [detachable PROCEDURE [ANY, EVENT_DATA]]
 			-- List of actions currently subscribed to the event.
 
-	frozen suicide_actions: DS_HASH_SET [detachable PROCEDURE [ANY, EVENT_DATA]]
+	frozen suicide_actions: ARRAYED_SET [detachable PROCEDURE [ANY, EVENT_DATA]]
 			-- List of actions that will be removed after they have been called for the first time.
 			--|This list is a subset of `subscribers'
 
@@ -105,7 +105,7 @@ feature -- Subscription
 	subscribe (a_action: PROCEDURE [ANY, EVENT_DATA])
 			-- <Precursor>
 		do
-			subscribers.force_last (a_action)
+			subscribers.extend (a_action)
 		ensure then
 			subscribers_incremented: subscribers.count = old subscribers.count + 1
 		end
@@ -113,7 +113,7 @@ feature -- Subscription
 	subscribe_for_single_notification (a_action: PROCEDURE [ANY, EVENT_DATA])
 			-- <Precursor>
 		do
-			suicide_actions.force_last (a_action)
+			suicide_actions.extend (a_action)
 			subscribe (a_action)
 		ensure then
 			a_action_added_as_single: suicide_actions.has (a_action)
@@ -124,15 +124,23 @@ feature -- Subscription
 	unsubscribe (a_action: PROCEDURE [ANY, EVENT_DATA])
 			-- <Precursor>
 		local
-			l_actions: like suicide_actions
+			l_subscribers: LIST [detachable PROCEDURE [ANY, EVENT_DATA]]
+			l_actions: LIST [detachable PROCEDURE [ANY, EVENT_DATA]]
 		do
 				-- Remove subscriber
-			subscribers.remove (a_action)
+			l_subscribers :=  subscribers
+			l_subscribers.search (a_action)
+			if not l_subscribers.after then
+				l_subscribers.remove
+			else
+				check freeze_your_code: False end
+			end
 
 				-- Attempt to remove any single subscribers
 			l_actions := suicide_actions
 			if l_actions.has (a_action) then
-				l_actions.remove (a_action)
+				l_actions.search (a_action)
+				l_actions.remove
 			end
 		ensure then
 			subscribers_decremented:
@@ -186,7 +194,7 @@ feature {NONE} -- Publication
 
 					if a_predicate = Void then
 						from l_subscribers.start until l_subscribers.after loop
-							l_action := l_subscribers.item_for_iteration
+							l_action := l_subscribers.item
 							if attached l_action then
 								l_action.call (a_args)
 							end
@@ -195,7 +203,7 @@ feature {NONE} -- Publication
 					else
 						from l_subscribers.start until l_subscribers.after loop
 							if a_predicate = Void or else a_predicate.item (a_args) then
-								l_action := l_subscribers.item_for_iteration
+								l_action := l_subscribers.item
 								if attached l_action then
 									l_action.call (a_args)
 								end
@@ -213,7 +221,7 @@ feature {NONE} -- Publication
 						l_actions := suicide_actions.twin
 
 						from l_actions.start until l_actions.after loop
-							l_action := l_actions.item_for_iteration
+							l_action := l_actions.item
 							if attached l_action then
 								check is_subscribed: is_subscribed (l_action) end
 								unsubscribe (l_action)
@@ -238,7 +246,9 @@ feature {NONE} -- Publication
 
 invariant
 	subscribers_attached: subscribers /= Void
+	subscribers_compares_object: subscribers.object_comparison
 	suicide_actions_attached: suicide_actions /= Void
+	suicide_actions_compares_object: suicide_actions.object_comparison
 	subscribers_contains_attached_items: not subscribers.has (Void)
 	suicide_actions_contains_attached_items: not suicide_actions.has (Void)
 	subscribers_contains_suicide_actions: suicide_actions.is_subset (subscribers)

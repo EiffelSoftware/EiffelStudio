@@ -14,7 +14,6 @@
 				<exclude>/.svn$</exclude>
 				<exclude>/CVS$</exclude>
 			</file_rule>
-			<cluster name="parser" location="\home\fabioz\local\xebra\eiffel_projects\xebra_translator\parser\"/>
 		</cluster>
 	</target>
 	<target name="xebra_translator_dotnet" extends="xebra_translator">

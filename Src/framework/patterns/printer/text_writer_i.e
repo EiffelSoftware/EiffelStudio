@@ -8,7 +8,7 @@ note
 	revision: "$Revision $"
 
 deferred class
-	TEXT_WRITER
+	TEXT_WRITER_I
 
 feature -- Output
 

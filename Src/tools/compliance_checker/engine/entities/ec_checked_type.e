@@ -26,12 +26,13 @@ feature {NONE} -- Initialization
 		require
 			a_type_not_void: a_type /= Void
 		local
-			l_element: EC_CHECKED_TYPE
-			l_elm_type: SYSTEM_TYPE
+			l_element: detachable EC_CHECKED_TYPE
+			l_elm_type: detachable SYSTEM_TYPE
 		do
 			type := a_type
 			if a_type.has_element_type then
 				l_elm_type := a_type.get_element_type
+				check l_elm_type_attached: l_elm_type /= Void end
 				l_element ?= checked_entities.item (l_elm_type)
 				if l_element = Void then
 					create l_element.make (l_elm_type)
@@ -47,7 +48,7 @@ feature -- Access
 	type: SYSTEM_TYPE
 			-- Type that was examined.
 
-	element_checked_type: EC_CHECKED_TYPE
+	element_checked_type: detachable EC_CHECKED_TYPE
 			-- Checked type for `type' element
 
 feature -- Query
@@ -71,7 +72,7 @@ feature {NONE} -- Basic Operations {EC_CHECKED_ENTITY}
 		local
 			l_type: like type
 			l_checked_asm: EC_CHECKED_ASSEMBLY
-			l_asm: ASSEMBLY
+			l_asm: detachable ASSEMBLY
 			l_element: like element_checked_type
 			l_compliant: BOOLEAN
 		do
@@ -83,6 +84,7 @@ feature {NONE} -- Basic Operations {EC_CHECKED_ENTITY}
 				non_compliant_reason := non_compliant_reasons.reason_type_marked_non_cls_compliant
 			elseif has_element_checked_type then
 				l_element := element_checked_type
+				check l_element_attached: l_element /= Void end
 				internal_is_marked := l_element.is_marked
 				l_compliant := l_element.is_compliant
 				if l_compliant then
@@ -96,6 +98,7 @@ feature {NONE} -- Basic Operations {EC_CHECKED_ENTITY}
 						-- type was not marked with CLS-compliant attribute, but it might be marked on an
 						-- assembly level.
 					l_asm := type.assembly
+					check l_asm_attached: l_asm /= Void end
 					l_checked_asm := checked_assembly (l_asm)
 					internal_is_marked := l_checked_asm.is_marked
 					l_compliant := l_checked_asm.is_compliant
@@ -120,24 +123,26 @@ feature {NONE} -- Basic Operations {EC_CHECKED_ENTITY}
 			l_type: SYSTEM_TYPE
 			l_element_type: like element_checked_type
 			l_checked_asm: EC_CHECKED_ASSEMBLY
-			l_asm: ASSEMBLY
+			l_asm: detachable ASSEMBLY
 			retried: BOOLEAN
 		do
 			if not retried then
 				Precursor {EC_CACHABLE_CHECKED_ENTITY}
 				if internal_is_eiffel_compliant then
 					l_asm := type.assembly
+					check l_asm_attached: l_asm /= Void end
 					l_checked_asm := checked_assembly (l_asm)
 					internal_is_marked := l_checked_asm.is_marked
 					l_compliant := l_checked_asm.is_eiffel_compliant
 					if l_compliant then
 						l_type := type
-						l_compliant := l_type.full_name /= Void and then not (l_type.full_name.index_of_character ('`') >= 0)
+						l_compliant := attached l_type.full_name as l_full_name and then not (l_full_name.index_of_character ('`') >= 0)
 						if l_compliant then
 							l_compliant := not l_type.is_pointer
 							if l_compliant then
 								if has_element_checked_type then
 									l_element_type := element_checked_type
+									check l_element_type_attached: l_element_type /= Void end
 									l_compliant := l_element_type.is_eiffel_compliant
 									if not l_compliant then
 										non_eiffel_compliant_reason := l_element_type.non_eiffel_compliant_reason
@@ -176,7 +181,7 @@ invariant
 	element_checked_type_not_void: type.has_element_type implies element_checked_type /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -189,21 +194,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end -- class EC_CHECKED_TYPE

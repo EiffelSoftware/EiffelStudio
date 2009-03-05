@@ -16,6 +16,8 @@ deferred class
 	EC_CHECKED_ENTITY
 
 inherit
+	ANY
+
 	EC_CHECKED_CACHE
 		export
 			{NONE} all
@@ -76,10 +78,10 @@ feature -- Access
 	is_being_checked: BOOLEAN
 		-- Is entity in the process of being checked?
 
-	non_compliant_reason: STRING
+	non_compliant_reason: detachable STRING
 			-- Reason why entity is non-CLS-compliant
 
-	non_eiffel_compliant_reason: STRING
+	non_eiffel_compliant_reason: detachable STRING
 			-- Reason why entity is non-Eiffel-compliant
 
 	has_been_checked: BOOLEAN
@@ -158,12 +160,16 @@ feature {NONE} -- Query
 		require
 			a_member_not_void: a_member /= Void
 		local
-			l_name: NATIVE_ARRAY [CHARACTER]
+			l_name: detachable NATIVE_ARRAY [CHARACTER]
 			l_count: INTEGER
 			i: INTEGER
 			c: CHARACTER
+			l_string: detachable SYSTEM_STRING
 		do
-			l_name := a_member.name.to_char_array
+			l_string := a_member.name
+			check l_string_attached: l_string /= Void end
+			l_name := l_string.to_char_array
+			check l_name_attached: l_name /= Void end
 			l_count := l_name.count
 			if l_count > 0 then
 				Result := l_name.item (0).is_alpha
@@ -204,17 +210,15 @@ feature {NONE} -- Implementation
 		require
 			a_provider_not_void: a_provider /= Void
 		local
-			l_attributes: NATIVE_ARRAY [SYSTEM_OBJECT]
-			l_cls_comp_attr: CLS_COMPLIANT_ATTRIBUTE
-			l_eiffel_attr: EIFFEL_CONSUMABLE_ATTRIBUTE
-			l_enum: IENUMERATOR
+			l_attributes: detachable NATIVE_ARRAY [detachable SYSTEM_OBJECT]
+			l_cls_comp_attr: detachable CLS_COMPLIANT_ATTRIBUTE
+			l_eiffel_attr: detachable EIFFEL_CONSUMABLE_ATTRIBUTE
 			l_compliant: BOOLEAN
 		do
 			l_compliant := True
 			l_attributes := {RT_CUSTOM_ATTRIBUTE_DATA}.get_eiffel_custom_attributes ({CLS_COMPLIANT_ATTRIBUTE}, a_provider)
-			if l_attributes /= Void and then l_attributes.count > 0 then
+			if l_attributes /= Void and then l_attributes.count > 0 and then attached l_attributes.get_enumerator as l_enum then
 				from
-					l_enum := l_attributes.get_enumerator
 				until
 					not l_enum.move_next or else
 					l_cls_comp_attr /= Void
@@ -229,9 +233,8 @@ feature {NONE} -- Implementation
 			internal_is_compliant := l_compliant
 
 			l_attributes := {RT_CUSTOM_ATTRIBUTE_DATA}.get_eiffel_custom_attributes ({EIFFEL_CONSUMABLE_ATTRIBUTE}, a_provider)
-			if l_attributes /= Void and then l_attributes.count > 0 then
+			if l_attributes /= Void and then l_attributes.count > 0  and then attached l_attributes.get_enumerator as l_enum then
 				from
-					l_enum := l_attributes.get_enumerator
 				until
 					not l_enum.move_next or else
 					l_eiffel_attr /= Void
@@ -251,7 +254,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -264,21 +267,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end -- class EC_CHECKED_ENTITY

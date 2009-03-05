@@ -23,18 +23,22 @@ create
 	make
 
 feature -- Access {EC_CHECKED_MEMBER}
-		
+
 	member: EVENT_INFO
 			-- Member that was examined.
-			
+
 feature -- Access {EC_CHECKED_MEMBER}
-			
+
 	checked_event_type: EC_CHECKED_TYPE
 			-- `member' event handler type checked type.
+		local
+			l_type: detachable SYSTEM_TYPE
 		do
-			Result := checked_type (member.event_handler_type)
+			l_type := member.event_handler_type
+			check l_type_attached: l_type /= Void end
+			Result := checked_type (l_type)
 		end
-		
+
 feature {NONE} -- Basic Operations {EC_CHECKED_MEMBER}
 
 	check_extended_compliance
@@ -52,7 +56,7 @@ feature {NONE} -- Basic Operations {EC_CHECKED_MEMBER}
 					if not l_compliant then
 						non_compliant_reason := non_compliant_reasons.reason_field_uses_non_complaint_type
 					end
-				else	
+				else
 					non_compliant_reason := non_compliant_reasons.reason_event_name_is_non_compliant
 				end
 				internal_is_compliant := l_compliant
@@ -75,12 +79,12 @@ feature {NONE} -- Basic Operations {EC_CHECKED_MEMBER}
 					else
 						non_eiffel_compliant_reason := non_compliant_reasons.reason_field_uses_non_complaint_type
 					end
-				end	
+				end
 			end
 		end
-			
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -93,21 +97,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end -- class EC_CHECKED_MEMBER_EVENT

@@ -35,10 +35,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	non_compliant_interface_reason: STRING
+	non_compliant_interface_reason: detachable STRING
 			-- Reason why entity is non-CLS-compliant interface
 
-	non_eiffel_compliant_interface_reason: STRING
+	non_eiffel_compliant_interface_reason: detachable STRING
 			-- Reason why entity is non-Eiffel-compliant interface
 
 	has_interface_been_checked: BOOLEAN
@@ -110,9 +110,8 @@ feature {NONE} -- Basic Operations
 			has_been_checked: has_been_checked
 			not_has_interface_been_checked: not has_interface_been_checked
 		local
-			l_members: NATIVE_ARRAY [MEMBER_INFO]
-			l_member: MEMBER_INFO
-			l_checked_member: EC_CHECKED_MEMBER
+			l_members: detachable NATIVE_ARRAY [detachable MEMBER_INFO]
+			l_checked_member: detachable EC_CHECKED_MEMBER
 			l_compliant: BOOLEAN
 			l_eiffel_compliant: BOOLEAN
 			i: INTEGER
@@ -120,6 +119,7 @@ feature {NONE} -- Basic Operations
 			l_compliant := True
 			l_eiffel_compliant := True
 			l_members := type.get_members
+			check l_members_attached: l_members /= Void end
 			i := l_members.count - 1
 			if i > 0 then
 				from
@@ -127,8 +127,7 @@ feature {NONE} -- Basic Operations
 					i < 0 or
 					(not l_compliant and not l_eiffel_compliant)
 				loop
-					l_member := l_members.item (i)
-					if is_applicable_member (l_member) then
+					if attached l_members.item (i) as l_member and then is_applicable_member (l_member) then
 						l_checked_member := checked_member (l_member)
 						if l_checked_member /= Void then
 							if l_compliant then
@@ -164,10 +163,10 @@ feature {NONE} -- Implementation
 		require
 			a_member_not_void: a_member /= Void
 		local
-			l_method: METHOD_INFO
+			l_method: detachable METHOD_INFO
 		do
 			l_method ?= a_member
-			if l_method /= Void and not l_method.is_constructor then
+			if l_method /= Void and then not l_method.is_constructor then
 				Result := l_method.is_abstract and (l_method.is_public or l_method.is_family or l_method.is_family_or_assembly)
 			end
 		end
@@ -179,7 +178,7 @@ invariant
 	type_need_implementing: type.is_abstract or type.is_interface
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -192,21 +191,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end -- class EC_CHECKED_ABSTRACT_TYPE

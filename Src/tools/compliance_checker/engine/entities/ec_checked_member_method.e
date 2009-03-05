@@ -23,23 +23,23 @@ create
 	make
 
 feature -- Access {EC_CHECKED_MEMBER}
-		
+
 	member: METHOD_INFO
 			-- Member that was examined.
 
 feature -- Access	
-			
-	checked_return_type: EC_CHECKED_TYPE
+
+	checked_return_type: detachable EC_CHECKED_TYPE
 			-- `member' field type checked type.
 		local
-			l_member: like member
+			l_type: detachable SYSTEM_TYPE
 		do
-			l_member := member
-			if l_member.return_type /= Void then
-				Result := checked_type (l_member.return_type)
+			l_type := member.return_type
+			if l_type /= Void then
+				Result := checked_type (l_type)
 			end
 		end
-			
+
 feature {NONE} -- Basic Operations {EC_CHECKED_MEMBER}
 
 	check_extended_compliance
@@ -56,8 +56,8 @@ feature {NONE} -- Basic Operations {EC_CHECKED_MEMBER}
 					if l_compliant then
 						l_compliant := are_parameters_compliant (False)
 						if l_compliant then
-							if l_member.return_type /= Void then
-								l_compliant := checked_return_type.is_compliant
+							if attached checked_return_type as l_checked_type then
+								l_compliant := l_checked_type.is_compliant
 								if not l_compliant then
 									non_compliant_reason := non_compliant_reasons.reason_method_returns_non_complaint_type
 								end
@@ -82,14 +82,14 @@ feature {NONE} -- Basic Operations {EC_CHECKED_MEMBER}
 			l_member: like member
 			l_compliant: BOOLEAN
 		do
-			l_member := member	
+			l_member := member
 			if (l_member.is_public or l_member.is_family or l_member.is_family_or_assembly) then
 				Precursor {EC_CHECKED_MEMBER_METHOD_BASE}
 				if internal_is_eiffel_compliant then
 					l_compliant := are_parameters_compliant (True)
 					if l_compliant then
-						if l_member.return_type /= Void then
-							l_compliant := checked_return_type.is_eiffel_compliant
+						if attached checked_return_type as l_checked_type then
+							l_compliant := l_checked_type.is_eiffel_compliant
 							if not l_compliant then
 								non_eiffel_compliant_reason := non_compliant_reasons.reason_method_returns_non_complaint_type
 							end
@@ -101,9 +101,9 @@ feature {NONE} -- Basic Operations {EC_CHECKED_MEMBER}
 				internal_is_eiffel_compliant := l_compliant
 			end
 		end
-			
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -116,21 +116,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end -- class EC_CHECKED_MEMBER_METHOD

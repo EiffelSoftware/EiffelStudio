@@ -261,8 +261,9 @@ feature {NONE} -- Steps
 					normal_response ?= interpreter.last_response
 					if normal_response /= Void then
 						if normal_response.exception /= Void then
-							if not (normal_response.exception.name.is_case_insensitive_equal ("Precondition") and
-								normal_response.exception.trace_depth = 1)
+							if
+								not (normal_response.exception.name.is_case_insensitive_equal ("Precondition") and normal_response.exception.trace_depth = 1) and
+								not (normal_response.exception.is_invariant_violation_on_feature_entry)
 							then
 								interpreter.log_line (exception_thrown_message + error_handler.duration_to_now.second_count.out)
 							end

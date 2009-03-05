@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {FEATURE_ELEMENT}."
-	author: "sandro"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -16,29 +15,47 @@ create
 
 feature -- Access
 
-	feature_name: STRING
-	locals: LIST [VARIABLE_ELEMENT]
-	content: LIST [SERVLET_ELEMENT]
+	signature: STRING
+			-- Signature of the feature
 
-	make (a_feature_name: STRING; a_content: LIST[SERVLET_ELEMENT])
+	locals: LIST [VARIABLE_ELEMENT]
+			-- The local variables of the feature
+
+	content: LIST [SERVLET_ELEMENT]
+			-- The body expressions of the feature
+
+feature -- Initialization
+
+	make (a_signature: STRING; a_content: LIST [SERVLET_ELEMENT])
+			-- `a_signature': The signature of the feature
+			-- `a_content': The feature body
+		require
+			signature_valid: not a_signature.is_empty
 		local
 			list: LIST [VARIABLE_ELEMENT]
 		do
 			create {LINKED_LIST [VARIABLE_ELEMENT]} list.make
-			make_with_locals (a_feature_name, a_content, list)
+			make_with_locals (a_signature, a_content, list)
 		end
 
-	make_with_locals (a_feature_name: STRING; a_content: LIST[SERVLET_ELEMENT]; some_locals: LIST[VARIABLE_ELEMENT])
+	make_with_locals (a_signature: STRING; a_content: LIST [SERVLET_ELEMENT]; some_locals: LIST[VARIABLE_ELEMENT])
+			-- `a_signature': The signature of the feature
+			-- `a_content': The feature body
+			-- `some_locals': The local variables of the feature
+		require
+			signature_valid: not a_signature.is_empty
 		do
-			feature_name := a_feature_name
+			signature := a_signature
 			locals := some_locals
 			content := a_content
 		end
 
+feature -- Processing
+
 	serialize (buf: INDENDATION_STREAM)
 			-- <Precursor>			
 		do
-			buf.put_string (feature_name)
+			buf.put_string (signature)
 			buf.indent
 			if not locals.is_empty then
 				buf.put_string ("local")

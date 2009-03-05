@@ -17,86 +17,53 @@ feature --Initialization
 
 	make (a_name: STRING; a_controller_name: STRING)
 			-- `a_name': The name of the servlet
-		local
-			make_code: PLAIN_CODE_ELEMENT
-			code_list: LIST [PLAIN_CODE_ELEMENT]
+			-- `a_controller_name': The name of the controller class
+		require
+			name_is_valid: not a_name.is_empty
+			controller_name_is_valid: not a_controller_name.is_empty
 		do
 			name := a_name
 			name.to_upper
 			controller_name := a_controller_name
-			create make_code.make (create_kw + " " + controller_var + ".make")
-			create {LINKED_LIST [PLAIN_CODE_ELEMENT]} code_list.make
-			code_list.extend (make_code)
-
 			create {LINKED_LIST [OUTPUT_ELEMENT]} xhtml_elements.make
 			create controller_variable.make (controller_var, a_controller_name)
 			create response_variable.make (response_name, "RESPONSE")
-			create make_feature.make ("make", code_list)
 		end
 
 feature -- Access
 
 	name: STRING
+			-- Name of the page
 
 	controller_name: STRING
+			-- Name of the used controller class
 
 	xhtml_elements: LIST [OUTPUT_ELEMENT]
+			-- All elements which have to be displayed on the page
+			-- Including controller calls and plain code
 
 	controller_variable: VARIABLE_ELEMENT
+			-- Controller variable
 
 	response_variable: VARIABLE_ELEMENT
-
-	make_feature: FEATURE_ELEMENT
+			-- Response variable
 
 feature -- Access
 
 	put_xhtml_elements (element: OUTPUT_ELEMENT)
+			-- Adds an {OUTPUT_ELEMENT} to the list.
 		do
-			element.set_buffer_var (buffer_var)
+			element.set_response_var (response_name)
 			element.set_controller_var (controller_var)
+			element.set_response_name (response_name)
 			xhtml_elements.extend (element)
 		end
-
-	response_name: STRING = "response"
-
-feature {NONE} -- Access
-
-	class_kw: STRING = "class"
-	feature_kw: STRING = "feature"
-	inherit_kw: STRING = "inherit"
-	create_kw: STRING = "create"
-	local_kw: STRING = "local"
-	do_kw: STRING = "do"
-	end_kw: STRING = "end"
-	buffer_var: STRING = "buffer"
-	controller_var: STRING = "controller"
-	constructor_name: STRING = "make"
-	request_name: STRING = "handle_request (request: REQUEST): RESPONSE"
-
-	response_type: STRING = "RESPONSE"
-
-	servlet_class: STRING = "SERVLET"
-
-	header_note: STRING = "[
-note
-	description: "Generated code!"
-	author: "XEB Code Generation"
-			]"
-
-	newline: STRING = "%N"
-	tab: STRING = "%T"
-	newline_tab: STRING = "%N%T"
 
 feature -- Implementation
 
 	serialize (buf: INDENDATION_STREAM)
-			-- <Precursor>
-		local
-			make_element: CREATE_FEATURE_ELEMENT
-			ind: NATURAL
+			-- <Precursor>		
 		do
-			create make_element.make (constructor_name)
-			ind := 1
 
 			buf.put_string (header_note)
 
@@ -122,7 +89,8 @@ feature -- Implementation
 
 			buf.put_string (feature_kw + " -- Initialization")
 			buf.indent
-			make_feature.serialize (buf)
+			--make_feature.serialize (buf)
+			write_make_feature (buf)
 			buf.unindent
 			buf.put_new_line
 
@@ -144,8 +112,22 @@ feature -- Implementation
 			buf.put_string (end_kw)
 		end
 
+	write_make_feature (buffer: INDENDATION_STREAM)
+			-- Serializes the make feature of the {SERVLET}
+		local
+			make_feature: FEATURE_ELEMENT
+			make_code: PLAIN_CODE_ELEMENT
+			code_list: LIST [PLAIN_CODE_ELEMENT]
+		do
+			create make_code.make (create_kw + " " + controller_var + ".make")
+			create {LINKED_LIST [PLAIN_CODE_ELEMENT]} code_list.make
+			code_list.extend (make_code)
+			create make_feature.make ("make", code_list)
+			make_feature.serialize (buffer)
+		end
+
 	write_request_feature (buffer: INDENDATION_STREAM)
-			-- writes the session variables as features of the servlet
+			-- Serializes the request feature of the {SERVLET}
 		local
 			request_feature: FEATURE_ELEMENT
 			local_list: LIST [VARIABLE_ELEMENT]
@@ -154,6 +136,7 @@ feature -- Implementation
 		do
 			create {LINKED_LIST [VARIABLE_ELEMENT]} local_list.make
 			local_list.extend (response_variable)
+
 			create content_make.make (create_kw + " " + response_name + ".make")
 			create result_equals.make ("Result := " + response_name)
 
@@ -162,11 +145,37 @@ feature -- Implementation
 			feature_elements.append (xhtml_elements)
 			feature_elements.extend (result_equals)
 
-
-
 			create request_feature.make_with_locals (request_name, feature_elements, local_list)
 
 			request_feature.serialize (buffer)
 		end
+
+feature {NONE} -- Access
+
+	class_kw: STRING = "class"
+	feature_kw: STRING = "feature"
+	inherit_kw: STRING = "inherit"
+	create_kw: STRING = "create"
+	local_kw: STRING = "local"
+	do_kw: STRING = "do"
+	end_kw: STRING = "end"
+	controller_var: STRING = "controller"
+	response_name: STRING = "response"
+	constructor_name: STRING = "make"
+	request_name: STRING = "handle_request (request: REQUEST): RESPONSE"
+
+	response_type: STRING = "RESPONSE"
+
+	servlet_class: STRING = "SERVLET"
+
+	header_note: STRING = "[
+note
+	description: "Generated code!"
+	author: "XEB Code Generation"
+			]"
+
+	newline: STRING = "%N"
+	tab: STRING = "%T"
+	newline_tab: STRING = "%N%T"
 
 end

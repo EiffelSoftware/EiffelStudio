@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {SERVLET}."
+	description: "The {SERVLET} handles a page request."
 	author: "sandro"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -10,7 +10,7 @@ deferred class
 feature -- Access
 
 	handle_request (request: REQUEST): RESPONSE
-			-- handles a request from a client
+			-- Handles a request from a client.
 		deferred
 		end
 

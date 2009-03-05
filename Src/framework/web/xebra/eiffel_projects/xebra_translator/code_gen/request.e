@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {REQUEST}."
+	description: "The {REQUEST} object contains all data from a user request."
 	author: "sandro"
 	date: "$Date$"
 	revision: "$Revision$"

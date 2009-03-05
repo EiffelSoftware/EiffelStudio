@@ -127,7 +127,7 @@ feature {NONE} -- Processing
 			end
 				-- Process routine body
 			context.set_written_class (f.written_class)
-			f.body.process (Current)
+			safe_process (f.body)
 				-- Process postcondition
 			if s /= Void then
 				from

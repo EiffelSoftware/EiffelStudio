@@ -1,50 +1,41 @@
 note
 	description: "[
-		Rudimentary implementation of a bridge pattern.
+		Bridged test interface.
 	]"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
+	status: "See notice at end of class."
+	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
-	BRIDGE [G]
+class
+	BRIDGE_TEST_INTERFACE
 
-feature {NONE} -- Access
+inherit
+	BRIDGE [BRIDGE_TEST_INTERFACE_I]
 
-	frozen bridge: attached G
-			-- Bridge implementation.
-		require
-			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable
-		local
-			l_result: like internal_bridge
+inherit {NONE}
+	BRIDGE_TEST_INTERFACE_I
+
+feature -- Access
+
+	name: READABLE_STRING_8
+			-- <Precursor>
 		do
-			l_result := internal_bridge
-			if attached l_result then
-				Result := l_result
-			else
-				Result := new_bridge
-				internal_bridge := Result
-			end
-		ensure
-			result_consistent: Result = bridge
+			Result := bridge.name
 		end
 
 feature {NONE} -- Factory
 
-	new_bridge: attached G
-			-- Creates a new implementation instance.
-		require
-			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable
-			internal_bridge_detached: not attached internal_bridge
-		deferred
+	new_bridge: BRIDGE_TEST_INTERFACE_IMPL
+			-- <Precursor>
+		do
+			create Result
 		end
 
-feature {NONE} -- Implementation: Internal cache
+feature -- Constants
 
-	frozen internal_bridge: detachable like bridge
-			-- Cached version of `bridge'
-			-- Note: Do not use directly!
+	windows_name: STRING = "Windows"
+	unix_name: STRING = "*nix"
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

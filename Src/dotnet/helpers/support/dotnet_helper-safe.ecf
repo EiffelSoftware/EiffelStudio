@@ -5,11 +5,11 @@
 		<file_rule>
 			<exclude>/.svn$</exclude>
 		</file_rule>
-		<option warning="true" syntax_level="1" namespace="EiffelSoftware.Helpers">
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" is_void_safe="true" syntax_level="1" namespace="EiffelSoftware.Helpers">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<setting name="msil_generation" value="True"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="true"/>
 		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
 		<assembly name="mscorlib" location="${ISE_DOTNET_FRAMEWORK}\mscorlib.dll"/>
 		<assembly name="system_" location="${ISE_DOTNET_FRAMEWORK}\system.dll" prefix="SYSTEM_DLL_"/>

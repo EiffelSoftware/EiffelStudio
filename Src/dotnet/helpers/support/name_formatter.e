@@ -26,8 +26,12 @@ feature -- Access
 			-- `has_special_type_name' last
 		require
 			was_special: was_special
+		local
+			l_result: detachable STRING
 		do
-			Result := full_name_type_mapping_table.found_item
+			l_result := full_name_type_mapping_table.found_item
+			check l_result_attached: l_result /= Void end
+			Result := l_result
 		ensure
 			non_void_name: Result /= Void
 		end
@@ -75,12 +79,13 @@ feature -- Access
 			container, nested: STRING
 		do
 			full_name_type_mapping_table.search (name)
-			if full_name_type_mapping_table.found then
-				Result := full_name_type_mapping_table.found_item
+			if full_name_type_mapping_table.found and then attached full_name_type_mapping_table.found_item as l_result then
+				Result := l_result
 			else
 				index := name.occurrences ('.')
 				if index > 0 then
 					from
+						Result := ""
 						count := name.count
 						pos := name.last_index_of ('.', count)
 						simple_name := name.substring (pos + 1, count)
@@ -97,8 +102,8 @@ feature -- Access
 				end
 
 				variable_mapping_table.search (simple_name.as_lower)
-				if variable_mapping_table.found then
-					Result := variable_mapping_table.found_item.as_upper
+				if variable_mapping_table.found and then attached variable_mapping_table.found_item as l_result then
+					Result := l_result.as_upper
 				else
 					create Result.make_from_string (simple_name)
 					if Result.item (simple_name.count) = ']' then
@@ -149,8 +154,8 @@ feature -- Access
 			l_name: STRING
 		do
 			operators.search (name)
-			if operators.found then
-				Result := operators.found_item
+			if operators.found and then attached operators.found_item as l_result then
+				Result := l_result
 			else
 				l_name := name.twin
 				if l_name.item (1) = '_'  then
@@ -202,8 +207,8 @@ feature -- Access
 			l_name.to_lower
 			l_var := variable_mapping_table
 			l_var.search (l_name)
-			if l_var.found then
-				Result := l_var.found_item
+			if l_var.found and then attached l_var.found_item as l_result then
+				Result := l_result
 			else
 				create Result.make_from_string (name)
 				if Result.item (Result.count) = '&' then
@@ -242,8 +247,8 @@ feature -- Access
 			end
 			l_arg := argument_mapping_table
 			l_arg.search (Result)
-			if l_arg.found then
-				Result := l_arg.found_item
+			if l_arg.found and then attached l_arg.found_item as l_result then
+				Result := l_result
 			else
 				i := name.index_of ('+', 1)
 				if i > 0 then
@@ -291,8 +296,8 @@ feature -- Access
 			l_name.to_lower
 			l_var := variable_mapping_table
 			l_var.search (l_name)
-			if l_var.found then
-				Result := l_var.found_item
+			if l_var.found and then attached l_var.found_item as l_result then
+				Result := l_result
 			else
 				if name.item (1) = '_' then
 					create Result.make (name.count + 1)

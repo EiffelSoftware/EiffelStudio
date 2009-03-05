@@ -88,6 +88,9 @@ feature -- Execution
 				interpreter.stop
 			end
 			if not interpreter.is_running then
+				if sub_task /= Void then
+					sub_task.cancel
+				end
 				interpreter.start
 				assign_void
 			end

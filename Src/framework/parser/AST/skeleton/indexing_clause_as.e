@@ -270,6 +270,34 @@ feature -- Access
 			end
 		end
 
+	is_stable: BOOLEAN
+			-- Is feature marked as stable?
+			-- (Used to mark stable attributes.)
+		local
+			i: INDEX_AS
+			list: EIFFEL_LIST [ATOMIC_AS]
+		do
+			i := index_as_of_tag_name (option_header)
+			if i /= Void then
+				list := i.index_list
+				if not list.is_empty then
+					from
+						list.start
+					until
+						list.after or Result
+					loop
+						if
+							attached {STRING_AS} list.item as s and then s.value.is_equal (stable_option_value) or else
+							attached {ID_AS} list.item as id and then id.name.is_equal (stable_option_value)
+						then
+							Result := True
+						end
+						list.forth
+					end
+				end
+			end
+		end
+
 	enum_type: STRING
 			-- Is current once construct used to be a global once in
 			-- multithreaded context?
@@ -376,6 +404,9 @@ feature {NONE} -- Constants
 	Once_status_header: STRING = "once_status"
 			-- Index name under which globalness of a once is specified.
 
+	option_header: STRING = "option"
+			-- Note name under which the attribute may be marked as stable.
+
 	Property_name_header: STRING = "property"
 			-- Index name which holds name of an associated property.
 
@@ -384,6 +415,9 @@ feature {NONE} -- Constants
 
 	global_value: STRING = "global"
 			-- Value name of `Once_status_header'.
+
+	stable_option_value: STRING = "stable"
+			-- Predefined value of `option_header'.
 
 	obsolete_tags: HASH_TABLE [STRING, STRING]
 			-- Table indexed by obsoleted indexing tag, where key is new indexing tag that
@@ -543,11 +577,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class FEATURE_LIST_AS
+end

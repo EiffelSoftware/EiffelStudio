@@ -1775,6 +1775,23 @@ feature -- Implementation
 								last_feature_name_correct: last_feature_name = l_feature.feature_name
 							end
 							last_routine_id_set := l_feature.rout_id_set
+							if not is_qualified_call and then last_access_writable and then l_feature.is_stable then
+								if l_is_in_assignment or else l_is_target_of_creation_instruction then
+										-- The attribute might change its attachment status.
+										-- It is recorded for future checks because
+										-- it might be still safe to use the attribute in the expression
+										-- before actual reattachment takes place.
+									last_reinitialized_local := - l_feature.feature_name_id
+								elseif not l_result_type.is_attached and then context.is_attribute_attached (l_feature.feature_id) then
+										-- Attribute is of a detachable type, but it's safe to use it as an attached one.
+									if context.current_class.lace_class.is_void_safe then
+										l_result_type := l_result_type.as_attached_type
+									else
+										l_result_type := l_result_type.as_implicitly_attached
+									end
+									last_type := l_result_type
+								end
+							end
 						else
 								-- `l_feature' was not valid for current, report
 								-- corresponding error.
@@ -2243,10 +2260,6 @@ feature -- Implementation
 						last_byte_node := l_result
 					end
 					if is_in_assignment or else is_target_of_creation_instruction then
-						if l_feat_type.is_attached then
-								-- Mark that Result is initialized.
-							record_initialized_result
-						end
 							-- "Result" might change its attachment status.
 							-- It is recorded for future checks because
 							-- it might be still safe to use it in the expression
@@ -2574,10 +2587,6 @@ feature -- Implementation
 						l_veen2b.set_location (l_as.feature_name)
 						error_handler.insert_error (l_veen2b)
 					elseif is_in_assignment or else is_target_of_creation_instruction then
-							-- Mark that the local is initialized.
-						if l_type.is_attached then
-							record_initialized_local (l_local_info.position)
-						end
 							-- The local might change its attachment status.
 							-- It is recorded for future checks because
 							-- it might be still safe to use the local in the expression
@@ -3038,6 +3047,16 @@ feature -- Implementation
 				create precondition_scope.make (current_feature, context)
 			end
 
+				-- Check local variables before checking precondition because local count is used to initialize the structures.
+			if l_as.locals /= Void then
+				check_locals (l_as)
+				l_has_invalid_locals := error_level /= l_error_level
+			end
+				-- Initialize structures to record variable scopes.
+				-- This should be done before checking precondition that may reference attributes,
+				-- but after checking locals that sets their count.
+			context.init_variable_scopes
+
 				-- Check preconditions
 			if l_as.precondition /= Void then
 					-- Set Result access analysis level to `is_checking_precondition': locals
@@ -3051,15 +3070,8 @@ feature -- Implementation
 				set_is_checking_precondition (False)
 			end
 
-				-- Check local variables
-			if l_as.locals /= Void then
-				check_locals (l_as)
-				l_has_invalid_locals := error_level /= l_error_level
-			end
-
 			if not l_has_invalid_locals then
 					-- Check body
-				context.init_variable_scopes
 				l_as.routine_body.process (Current)
 				if l_needs_byte_node and then error_level = l_error_level then
 					l_byte_code ?= last_byte_node
@@ -5100,26 +5112,28 @@ feature -- Implementation
 						l_assign.set_line_pragma (l_as.line_pragma)
 						last_byte_node := l_assign
 					end
-					if l_reinitialized_local /= 0 then -- and then not l_target_type.is_attached then
+					if l_reinitialized_local /= 0 then
 						if l_source_type.is_attached or else l_source_type.is_implicitly_attached then
 								-- Local variable is initialized to a non-void value.
 							if l_reinitialized_local = result_name_id then
 								context.add_result_instruction_scope
-							else
+							elseif l_reinitialized_local > 0 then
 								context.add_local_instruction_scope (l_reinitialized_local)
+							else
+								context.add_attribute_instruction_scope (l_reinitialized_local)
 							end
 						else
 								-- Local variable might become Void.
 							if l_reinitialized_local = result_name_id then
 								context.remove_result_scope
-							else
+							elseif l_reinitialized_local > 0 then
 								context.remove_local_scope (l_reinitialized_local)
 							end
 						end
 							-- The variable is initialized.
 						if l_reinitialized_local = result_name_id then
 							context.set_result
-						else
+						elseif l_reinitialized_local > 0 then
 							context.set_local (l_reinitialized_local)
 						end
 					end
@@ -5434,7 +5448,7 @@ feature -- Implementation
 							-- Local variable might become Void.
 						if l_reinitialized_local = result_name_id then
 							context.remove_result_scope
-						else
+						elseif l_reinitialized_local > 0 then
 							context.remove_local_scope (l_reinitialized_local)
 						end
 					end
@@ -6054,14 +6068,16 @@ feature -- Implementation
 						end
 					end
 				end
-				if l_reinitialized_local /= 0 then -- and then not l_target_type.is_attached then
+				if l_reinitialized_local /= 0 then
 						-- Local variable is now attached.
 					if l_reinitialized_local = result_name_id then
 						context.add_result_instruction_scope
 						context.set_result
-					else
+					elseif l_reinitialized_local > 0 then
 						context.add_local_instruction_scope (l_reinitialized_local)
 						context.set_local (l_reinitialized_local)
+					else
+						context.add_attribute_instruction_scope (l_reinitialized_local)
 					end
 				end
 			end
@@ -9202,28 +9218,9 @@ feature {NONE} -- Implementation: checking locals
 
 feature {NONE} -- Variable initialization
 
-	last_initialized_variable: INTEGER
-			-- Last variable initialized by (reverse) assignment or creation instruction:
-			-- 0 - result
-			-- positive - local position
-			-- negative - feature id
-
-	record_initialized_local (position: INTEGER)
-			-- Record that result is about to be set.
-		require
-			positive_position: position > 0
-		do
-			last_initialized_variable := position
-		end
-
-	record_initialized_result
-			-- Record that result is about to be set.
-		do
-			last_initialized_variable := 0
-		end
-
 	last_reinitialized_local: INTEGER_32
 			-- Name ID of the last reinitialized local (the one that is assigned a new value)
+			-- or negated name ID of the last reinitialized stable attribute.
 
 	result_name_id: INTEGER_32 = 0x7fffffff
 			-- Value of `last_reinitialized_local' that indicates

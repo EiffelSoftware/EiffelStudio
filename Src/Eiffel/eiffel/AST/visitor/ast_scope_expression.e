@@ -11,6 +11,7 @@ inherit
 	AST_SCOPE_MATCHER
 		redefine
 			add_argument_scope,
+			add_attribute_scope,
 			add_local_scope,
 			add_object_test_scope,
 			add_result_scope,
@@ -42,6 +43,12 @@ feature {NONE} -- Context
 			-- Add scope of a non-void argument.
 		do
 			context.add_argument_expression_scope (id)
+		end
+
+	add_attribute_scope (id: INTEGER_32)
+			-- Add scope of a non-void attribute.
+		do
+			context.add_attribute_expression_scope (id)
 		end
 
 	add_local_scope (id: INTEGER_32)

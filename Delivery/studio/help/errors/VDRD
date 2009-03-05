@@ -28,7 +28,9 @@ VDRD, chapter 10 (Feature adaptation), page 163
 
         6 If `f' is an attribute, `g' is an attribute, `f'
           and  `g'  are both variable, and their types are
-          either both expanded or both non-expanded.
+          either both expanded or both non-expanded and
+          (ISE Eiffel extension:) and they are either both
+          stable or both non-stable.
 
         8 (ISE Eiffel temporary limitation)  For  every 
           element  `a'  of the signature of `f', if `b' is

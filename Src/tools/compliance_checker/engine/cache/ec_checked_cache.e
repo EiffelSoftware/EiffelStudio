@@ -24,7 +24,7 @@ feature -- Access
 		do
 			Result := checked_entities_table
 		end
-	
+
 feature -- Extension
 
 	set_checked_entity (a_entity: ICUSTOM_ATTRIBUTE_PROVIDER; a_checked_entity: EC_CHECKED_ENTITY)
@@ -39,7 +39,7 @@ feature -- Extension
 		ensure
 			a_entity_added: checked_entities.item (a_entity) /= Void
 		end
-		
+
 feature -- Removal
 
 	wipe_out_cache
@@ -50,7 +50,7 @@ feature -- Removal
 			checked_entities_table.clear
 			add_predefine_checked_entities (checked_entities_table)
 		end
-	
+
 feature {NONE} -- Implementation
 
 	checked_entities_table: HASHTABLE
@@ -69,69 +69,86 @@ feature {NONE} -- Implementation
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	add_predefine_checked_entities (a_table: HASHTABLE)
 			-- Predefined checked entities.
 		require
 			a_table_not_void: a_table /= Void
 		local
-			l_type: SYSTEM_TYPE
-		do			
+			l_type: detachable SYSTEM_TYPE
+		do
 			l_type := {SYSTEM_TYPE}.get_type ("System.Byte")
+			check l_type_attached: l_type /= Void end
 			a_table.add (l_type, create {EC_STATIC_CHECKED_TYPE}.make (l_type, True, True))
-			
+
 			l_type := {SYSTEM_TYPE}.get_type ("System.Int16")
+			check l_type_attached: l_type /= Void end
 			a_table.add (l_type, create {EC_STATIC_CHECKED_TYPE}.make (l_type, True, True))
-			
+
 			l_type := {SYSTEM_TYPE}.get_type ("System.Int32")
+			check l_type_attached: l_type /= Void end
 			a_table.add (l_type, create {EC_STATIC_CHECKED_TYPE}.make (l_type, True, True))
-			
+
 			l_type := {SYSTEM_TYPE}.get_type ("System.Int64")
+			check l_type_attached: l_type /= Void end
 			a_table.add (l_type, create {EC_STATIC_CHECKED_TYPE}.make (l_type, True, True))
-			
+
 			l_type := {SYSTEM_TYPE}.get_type ("System.IntPtr")
+			check l_type_attached: l_type /= Void end
 			a_table.add (l_type, create {EC_STATIC_CHECKED_TYPE}.make (l_type, True, True))
-			
+
 			l_type := {SYSTEM_TYPE}.get_type ("System.Single")
+			check l_type_attached: l_type /= Void end
 			a_table.add (l_type, create {EC_STATIC_CHECKED_TYPE}.make (l_type, True, True))
-			
+
 			l_type := {SYSTEM_TYPE}.get_type ("System.Double")
+			check l_type_attached: l_type /= Void end
 			a_table.add (l_type, create {EC_STATIC_CHECKED_TYPE}.make (l_type, True, True))
-			
+
 			l_type := {SYSTEM_TYPE}.get_type ("System.Char")
+			check l_type_attached: l_type /= Void end
 			a_table.add (l_type, create {EC_STATIC_CHECKED_TYPE}.make (l_type, True, True))
-			
+
 			l_type := {SYSTEM_TYPE}.get_type ("System.Boolean")
+			check l_type_attached: l_type /= Void end
 			a_table.add (l_type, create {EC_STATIC_CHECKED_TYPE}.make (l_type, True, True))
-			
+
 			l_type := {SYSTEM_TYPE}.get_type ("System.String")
+			check l_type_attached: l_type /= Void end
 			a_table.add (l_type, create {EC_STATIC_CHECKED_TYPE}.make (l_type, True, True))
-			
+
 			l_type := {SYSTEM_TYPE}.get_type ("System.SByte")
+			check l_type_attached: l_type /= Void end
 			a_table.add (l_type, create {EC_STATIC_CHECKED_TYPE}.make (l_type, False, True))
-			
+
 			l_type := {SYSTEM_TYPE}.get_type ("System.UInt16")
+			check l_type_attached: l_type /= Void end
 			a_table.add (l_type, create {EC_STATIC_CHECKED_TYPE}.make (l_type, False, True))
-			
+
 			l_type := {SYSTEM_TYPE}.get_type ("System.UInt32")
+			check l_type_attached: l_type /= Void end
 			a_table.add (l_type, create {EC_STATIC_CHECKED_TYPE}.make (l_type, False, True))
-			
+
 			l_type := {SYSTEM_TYPE}.get_type ("System.UInt64")
+			check l_type_attached: l_type /= Void end
 			a_table.add (l_type, create {EC_STATIC_CHECKED_TYPE}.make (l_type, False, True))
-			
+
 			l_type := {SYSTEM_TYPE}.get_type ("System.UIntPtr")
+			check l_type_attached: l_type /= Void end
 			a_table.add (l_type, create {EC_STATIC_CHECKED_TYPE}.make (l_type, False, False))
-			
+
 			l_type := {SYSTEM_TYPE}.get_type ("System.Void")
+			check l_type_attached: l_type /= Void end
 			a_table.add (l_type, create {EC_STATIC_CHECKED_TYPE}.make (l_type, True, True))
-			
+
 			l_type := {SYSTEM_TYPE}.get_type ("System.TypedReference")
+			check l_type_attached: l_type /= Void end
 			a_table.add (l_type, create {EC_STATIC_CHECKED_TYPE}.make (l_type, False, False))
 		end
-		
+
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -144,21 +161,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end -- class EC_CHECKED_CACHE

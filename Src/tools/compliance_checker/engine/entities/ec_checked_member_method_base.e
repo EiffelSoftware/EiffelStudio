@@ -72,22 +72,29 @@ feature -- Access
 	checked_parameter_types: ARRAY [EC_CHECKED_TYPE]
 			-- `member' method checked parameter types.
 		local
-			l_params: NATIVE_ARRAY [PARAMETER_INFO]
 			l_type: EC_CHECKED_TYPE
 			i: INTEGER
 		do
-			l_params := member.get_parameters
-			i := l_params.count
-			create Result.make (1, i)
-			if i > 0 then
-				from
-				until
-					i = 0
-				loop
-					l_type := checked_type (l_params.item (i - 1).parameter_type)
-					Result.put (l_type, i)
-					i := i - 1
+			if attached member.get_parameters as l_params then
+				i := l_params.count
+				create Result.make (1, i)
+				if i > 0 then
+					from
+					until
+						i = 0
+					loop
+						if
+							attached l_params.item (i - 1) as l_info and then
+							attached l_info.parameter_type as l_sys_type
+						then
+							l_type := checked_type (l_sys_type)
+							Result.put (l_type, i)
+						end
+						i := i - 1
+					end
 				end
+			else
+				create Result.make (1, 0)
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -123,7 +130,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -136,21 +143,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end -- class EC_CHECKED_MEMBER_METHOD_BASE

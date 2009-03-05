@@ -1,9 +1,7 @@
 note
 	description: "[
-		A support class to assisting in multi-threaded synchronized access to resources.
-		
-		The class can be used in non-multi-threaded systems without incident or any contract violations.
-		Depending on the project's multi-threaded settings, different functionality is performed.
+		Multi-threaded implementation of {MULTI_THREADER_I}, using a mutex to synchorize access to
+		resources of an object.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -11,40 +9,94 @@ note
 	revision: "$Revision$"
 
 class
-	MULTI_THREADER
+	MULTI_THREADER_IMP
 
 inherit
-	BRIDGE [MULTI_THREADER_I]
-
 	MULTI_THREADER_I
 
-feature -- Basic operations
+feature {NONE} -- Access
+
+	mutex: MUTEX
+			-- A multi-thread access mutex.
+		require
+			is_thread_capable: {PLATFORM}.is_thread_capable
+		local
+			l_result: like internal_mutex
+		do
+			l_result := internal_mutex
+			if l_result /= Void then
+				Result := l_result
+			else
+				create Result.make
+				internal_mutex := Result
+			end
+		ensure
+			result_attached: Result /= Void
+			result_is_set: Result.is_set
+			result_consistent: Result = mutex
+		end
+
+feature {NONE} -- Basic operations
 
 	perform (a_action: PROCEDURE [ANY, TUPLE])
 			-- <Precursor>
+		local
+			l_locked: BOOLEAN
 		do
-			bridge.perform (a_action)
+			l_locked := True
+			mutex.lock
+			a_action.call (Void)
+			l_locked := False
+			mutex.unlock
+		rescue
+			if l_locked then
+				check is_thread_capable: {PLATFORM}.is_thread_capable end
+				l_locked := False
+				mutex.unlock
+			end
 		end
 
 	retrieve (a_action: FUNCTION [ANY, TUPLE, detachable ANY]): detachable ANY
 			-- <Precursor>
+		local
+			l_locked: BOOLEAN
 		do
-			Result := bridge.retrieve (a_action)
+			l_locked := True
+			mutex.lock
+			Result := a_action.item (Void)
+			l_locked := False
+			mutex.unlock
+		rescue
+			if l_locked then
+				check is_thread_capable: {PLATFORM}.is_thread_capable end
+				l_locked := False
+				mutex.unlock
+			end
 		end
 
 	test (a_action: PREDICATE [ANY, TUPLE]; a_expected: BOOLEAN): BOOLEAN
 			-- <Precursor>
+		local
+			l_locked: BOOLEAN
 		do
-			Result := bridge.test (a_action, a_expected)
+			l_locked := True
+			mutex.lock
+			Result := (a_action.item (Void) = a_expected)
+			l_locked := False
+			mutex.unlock
+		rescue
+			if l_locked then
+				check is_thread_capable: {PLATFORM}.is_thread_capable end
+				l_locked := False
+				mutex.unlock
+			end
 		end
 
-feature {NONE} -- Factory
+feature {NONE} -- Implementation: Internal cache
 
-	new_bridge: attached MULTI_THREADER_I
-			-- <Precursor>
-		do
-			create {MULTI_THREADER_IMP} Result
-		end
+	internal_mutex: detachable like mutex
+			-- Cached version of `mutex'
+			-- Note: Do not use directly!
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

@@ -15,6 +15,13 @@ create
 
 feature --Initialization
 
+
+	make_with_elements  (a_name: STRING; a_controller_name: STRING; some_elements: LIST[OUTPUT_ELEMENT])
+			--
+		do
+
+		end
+
 	make (a_name: STRING; a_controller_name: STRING)
 			-- `a_name': The name of the servlet
 			-- `a_controller_name': The name of the controller class

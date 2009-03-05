@@ -14,27 +14,21 @@ class
 inherit
 	MULTI_THREADER_I
 
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make
+			-- Initializes the multi-threader
+		do
+			create mutex.make
+		end
+
 feature {NONE} -- Access
 
 	mutex: MUTEX
 			-- A multi-thread access mutex.
-		require
-			is_thread_capable: {PLATFORM}.is_thread_capable
-		local
-			l_result: like internal_mutex
-		do
-			l_result := internal_mutex
-			if l_result /= Void then
-				Result := l_result
-			else
-				create Result.make
-				internal_mutex := Result
-			end
-		ensure
-			result_attached: Result /= Void
-			result_is_set: Result.is_set
-			result_consistent: Result = mutex
-		end
 
 feature {NONE} -- Basic operations
 
@@ -92,11 +86,9 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-feature {NONE} -- Implementation: Internal cache
-
-	internal_mutex: detachable like mutex
-			-- Cached version of `mutex'
-			-- Note: Do not use directly!
+invariant
+	mutex_attached: mutex /= Void
+	mutex_is_set: mutex.is_set
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

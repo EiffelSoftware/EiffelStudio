@@ -43,7 +43,7 @@ feature {NONE} -- Factory
 	new_bridge: attached MULTI_THREADER_I
 			-- <Precursor>
 		do
-			create {MULTI_THREADER_IMP} Result
+			create {MULTI_THREADER_IMP} Result.make
 		end
 
 ;note

@@ -16,6 +16,16 @@ class
 inherit
 	MULTI_THREADER_I
 
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make
+			-- Initializes the multi-threader
+		do
+		end
+
 feature -- Basic operations
 
 	perform (a_action: PROCEDURE [ANY, TUPLE])

@@ -76,100 +76,116 @@ feature -- Basic operatons
 			l_parameters: attached DS_HASH_TABLE [attached ANY, attached STRING]
 			l_use_old_syntax: BOOLEAN
 			l_load_default: BOOLEAN
+			retried: BOOLEAN
 		do
-			create l_mod.make (a_class)
-			l_mod.prepare
-			if l_mod.is_prepared and then l_mod.is_ast_available then
-				l_use_old_syntax := a_class.options.syntax_level.item = {CONF_OPTION}.syntax_level_obsolete
+			if not retried then
+				create l_mod.make (a_class)
+				l_mod.prepare
+				if l_mod.is_prepared and then l_mod.is_ast_available then
+					l_use_old_syntax := a_class.options.syntax_level.item = {CONF_OPTION}.syntax_level_obsolete
 
-					-- Parsed successfully.
-				l_name := l_mod.license_name
-				if l_name /= Void then
-						-- Try to load the license
-					l_license := load_named_license (l_name, l_use_old_syntax)
-				else
-						-- Try to use a license file from an ECF because there was not license referene name in the class.
-					if a_class.target.system /~ a_class.universe.conf_system then
-							-- Libraries do not have variables so we need to load the configuration and fetch the variables.
-						l_uuid := a_class.target.system.uuid
-						if l_uuid /= Void then
-								-- Fetch the library reference and load the configuration.
-							l_libraries := a_class.universe.library_of_uuid (l_uuid, True)
-							if not l_libraries.is_empty then
-									-- Create the path to the license file.
-								l_library := l_libraries.first
-								l_path := l_library.location.evaluated_path.as_string_32
-							end
-						end
+						-- Parsed successfully.
+					l_name := l_mod.license_name
+					if l_name /= Void then
+							-- Try to load the license
+						l_license := load_named_license (l_name, l_use_old_syntax)
 					else
-						check system_defined: a_class.workbench.system_defined end
-						l_path := a_class.workbench.eiffel_ace.file_name.as_string_32
-					end
-
-					l_load_default := True
-					if l_path /= Void then
-						l_index := l_path.last_index_of ('.', l_path.count)
-						if l_index > 1 then
-							l_path.keep_head (l_index - 1)
-							create l_fn.make_from_string (l_path)
-							l_fn.add_extension ("lic")
-
-								-- Try to load the license
-							l_path := l_fn.string.as_string_32
-							if l_path /= Void and then (create {RAW_FILE}.make (l_path)).exists then
-								l_license := load_license (l_path, l_use_old_syntax)
-								l_load_default := False
-							end
-						end
-					end
-
-					if l_load_default then
-						check l_license_detached: l_license = Void end
-
-							-- No license was loaded, try the default
-						l_license := load_named_license (create {STRING_32}.make_from_string ("default"), l_use_old_syntax)
-					end
-				end
-
-				if l_license /= Void then
-					if not l_license.is_empty then
-						if not l_mod.is_valid_license (l_license) then
-								-- Render the invalid license template.
-							l_license := locale_formatter.translation (invalid_license_license)
-							if wizard_enginer.is_service_available then
-								create l_parameters.make_default
-								if l_use_old_syntax then
-									l_parameters.put_last ({EIFFEL_KEYWORD_CONSTANTS}.indexing_keyword, note_keyword_symbol)
-								else
-									l_parameters.put_last ({EIFFEL_KEYWORD_CONSTANTS}.note_keyword, note_keyword_symbol)
+							-- Try to use a license file from an ECF because there was not license referene name in the class.
+						if a_class.target.system /~ a_class.universe.conf_system then
+								-- Libraries do not have variables so we need to load the configuration and fetch the variables.
+							l_uuid := a_class.target.system.uuid
+							if l_uuid /= Void then
+									-- Fetch the library reference and load the configuration.
+								l_libraries := a_class.universe.library_of_uuid (l_uuid, True)
+								if not l_libraries.is_empty then
+										-- Create the path to the license file.
+									l_library := l_libraries.first
+									l_path := l_library.location.evaluated_path.as_string_32
 								end
-								l_license := wizard_enginer.service.render_template (l_license, l_parameters)
-							else
-								l_license := Void
-							end
-						end
-
-						if l_license /= Void and then l_mod.is_valid_license (l_license) then
-							l_mod.set_license (l_license)
-							if l_mod.is_dirty then
-								l_mod.commit
 							end
 						else
-							check False end
+							check system_defined: a_class.workbench.system_defined end
+							l_path := a_class.workbench.eiffel_ace.file_name.as_string_32
 						end
+
+						l_load_default := True
+						if l_path /= Void then
+							l_index := l_path.last_index_of ('.', l_path.count)
+							if l_index > 1 then
+								l_path.keep_head (l_index - 1)
+								create l_fn.make_from_string (l_path)
+								l_fn.add_extension ("lic")
+
+									-- Try to load the license
+								l_path := l_fn.string.as_string_32
+								if l_path /= Void and then (create {RAW_FILE}.make (l_path)).exists then
+									l_license := load_license (l_path, l_use_old_syntax)
+									l_load_default := False
+								end
+							end
+						end
+
+						if l_load_default then
+							check l_license_detached: l_license = Void end
+
+								-- No license was loaded, try the default
+							l_license := load_named_license (create {STRING_32}.make_from_string ("default"), l_use_old_syntax)
+						end
+					end
+
+					if l_license /= Void then
+						if not l_license.is_empty then
+							if not l_mod.is_valid_license (l_license) then
+									-- Render the invalid license template.
+								l_license := locale_formatter.translation (invalid_license_license)
+								if wizard_enginer.is_service_available then
+									create l_parameters.make_default
+									if l_use_old_syntax then
+										l_parameters.put_last ({EIFFEL_KEYWORD_CONSTANTS}.indexing_keyword, note_keyword_symbol)
+									else
+										l_parameters.put_last ({EIFFEL_KEYWORD_CONSTANTS}.note_keyword, note_keyword_symbol)
+									end
+									l_license := wizard_enginer.service.render_template (l_license, l_parameters)
+								else
+									l_license := Void
+								end
+							end
+
+							if l_license /= Void and then l_mod.is_valid_license (l_license) then
+								l_mod.set_license (l_license)
+								if l_mod.is_dirty then
+									l_mod.commit
+								end
+							else
+								check False end
+							end
+						end
+					end
+				else
+						-- The class contains sytax errors
+					if logger.is_service_available then
+							-- Log error.
+						logger.service.put_message_format_with_severity (
+							"Unable to apply license because class {1} contains syntax errors.",
+							[a_class.name],
+							{ENVIRONMENT_CATEGORIES}.editor,
+							{PRIORITY_LEVELS}.high)
 					end
 				end
 			else
-					-- The class contains sytax errors
+					-- There was an exception
 				if logger.is_service_available then
 						-- Log error.
 					logger.service.put_message_format_with_severity (
-						"Unable to apply license because class {1} contains syntax errors.",
+						"Unable to apply license to class {1} because of an internal exception.",
 						[a_class.name],
 						{ENVIRONMENT_CATEGORIES}.editor,
 						{PRIORITY_LEVELS}.high)
 				end
 			end
+		rescue
+			retried := True
+			retry
 		end
 
 feature {NONE} -- Basic operation

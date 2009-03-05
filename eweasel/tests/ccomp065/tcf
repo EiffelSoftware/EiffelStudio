@@ -1,5 +1,5 @@
 test_name 	 built-in-unary-plus
-test_description A generic class with a multi constrained formal is derrived with DOUBLE. The unary the unary plus uf numeric is renamed into something else and `out' us rebaned into the new unary plus. This causes a c compilation error
+test_description A generic class with a multi-constrained formal is derived with DOUBLE. The unary plus of NUMERIC is renamed into something else and `out' is rename into the new unary plus. This causes a C compilation error
 
 copy_raw	test1.e $CLUSTER test1.e
 copy_raw	test.e $CLUSTER test.e

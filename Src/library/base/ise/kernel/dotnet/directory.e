@@ -175,7 +175,7 @@ feature -- Measurement
 		require
 			directory_exists: exists
 		do
-			if attached {NATIVE_ARRAY [detachable SYSTEM_STRING]} {SYSTEM_DIRECTORY}.get_file_system_entries ( name.to_cil) as ent then
+			if attached {SYSTEM_DIRECTORY}.get_file_system_entries ( name.to_cil) as ent then
 				Result := ent.count
 			end
 		end

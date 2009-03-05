@@ -1609,10 +1609,10 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 			l_handler: ASSEMBLY_LOAD_EVENT_HANDLER
 		once
-			if attached {APP_DOMAIN} {APP_DOMAIN}.current_domain as l_domain then
+			if attached {APP_DOMAIN}.current_domain as l_domain then
 				create l_handler.make (Current, $assembly_load_event)
 				l_domain.add_assembly_load (l_handler)
-				if attached {NATIVE_ARRAY [ASSEMBLY]} l_domain.get_assemblies as l_assemblies then
+				if attached l_domain.get_assemblies as l_assemblies then
 					from
 						nb := l_assemblies.count
 					until

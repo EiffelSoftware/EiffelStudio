@@ -20,8 +20,8 @@ feature {NONE} -- Initialization
 				create_source
 				if source_ready then
 					print ("Source created successfully")
-				else
-					print ("Source could not be created: " + create {STRING}.make_from_cil ({ISE_RUNTIME}.last_exception.to_string))
+				elseif attached {ISE_RUNTIME}.last_exception as l_exception then
+					print ("Source could not be created: " + create {STRING}.make_from_cil (l_exception.to_string))
 				end
 			else
 				print ("Source already exists")

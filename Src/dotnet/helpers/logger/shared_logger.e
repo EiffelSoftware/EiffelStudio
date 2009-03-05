@@ -33,9 +33,11 @@ feature -- Basic Operations
 		local
 			l_log: SYSTEM_DLL_EVENT_LOG
 		do
-			create l_log.make (Log_name, ".", Log_source)
-			l_log.write_entry ({ISE_RUNTIME}.last_exception.to_string, {SYSTEM_DLL_EVENT_LOG_ENTRY_TYPE}.error)
-			l_log.close
+			if attached {ISE_RUNTIME}.last_exception as l_exception then
+				create l_log.make (Log_name, ".", Log_source)
+				l_log.write_entry (l_exception.to_string, {SYSTEM_DLL_EVENT_LOG_ENTRY_TYPE}.error)
+				l_log.close
+			end
 		end
 
 	log_message (a_message: STRING)

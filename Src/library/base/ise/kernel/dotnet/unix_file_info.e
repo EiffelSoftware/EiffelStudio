@@ -185,7 +185,7 @@ feature -- Element change
 			change_date := f.change_date
 			l_name := fi.full_name
 			check l_name_attached: l_name /= Void end
-			device := (l_name.to_char_array @ 0).code - ('A').code
+			device := l_name.chars (0).code - ('A').code
 			device_type := device
 			links := 1
 			is_owner := True

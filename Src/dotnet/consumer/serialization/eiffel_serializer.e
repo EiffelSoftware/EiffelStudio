@@ -17,6 +17,8 @@ inherit
 	SHARED_LOGGER
 		export
 			{NONE} all
+		undefine
+			default_create
 		end
 
 note

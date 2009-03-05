@@ -10,10 +10,22 @@ class
 
 inherit
 	ANY
+		redefine
+			default_create
+		end
 
 	SED_STORABLE_FACILITIES
 		export
 			{NONE} all
+		redefine
+			default_create
+		end
+
+feature {NONE} -- Initialization
+
+	default_create
+		do
+			create error_message.make_empty
 		end
 
 feature -- Access
@@ -24,7 +36,7 @@ feature -- Access
 	last_file_position: INTEGER
 			-- Position after last serialization
 
-	error_message: detachable STRING
+	error_message: STRING
 			-- Reason for failure
 
 feature -- Status report

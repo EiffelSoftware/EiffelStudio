@@ -9,7 +9,7 @@ note
 	revision: "$Revision $"
 
 frozen class
-	CONCEALER_STATIC [G ->  ANY]
+	CONCEALER_STATIC [G]
 
 inherit
 	CONCEALER_I [G]

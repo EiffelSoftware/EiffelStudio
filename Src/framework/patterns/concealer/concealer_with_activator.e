@@ -9,7 +9,7 @@ note
 	revision: "$Revision $"
 
 class
-	CONCEALER_WITH_ACTIVATOR [G -> ANY]
+	CONCEALER_WITH_ACTIVATOR [G]
 
 inherit
 	USABLE_I
@@ -63,7 +63,7 @@ feature -- Access
 			else
 				l_activator := activator
 				check l_activator_attached: attached l_activator end
-				Result := activator.item (Void)
+				Result := l_activator.item (Void)
 					-- Detach activator as it is no longer required
 				activator := Void
 				internal_object := Result
@@ -86,7 +86,7 @@ feature {NONE} -- Access
 			-- The function use to active an object for the first time
 			-- Note: Once the object has been activated the function will not long be available.
 
-	default_object: G
+	default_object: detachable G
 			-- Default generic object.
 
 feature -- Status report

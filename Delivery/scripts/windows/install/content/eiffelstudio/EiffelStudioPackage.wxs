@@ -47,11 +47,11 @@
 						<RegistryValue Id="RegVal.clsid.inproc.1" Value="mscoree.dll" Type="string"/>
 						<RegistryValue Id="RegVal.clsid.inproc.2" Name="ThreadingModel" Value="Both" Type="string"/>
 						<RegistryValue Id="RegVal.clsid.inproc.3" Name="Class" Value="EiffelSoftware.MetadataConsumer.Interop.COM_CACHE_MANAGER" Type="string"/>
-						<RegistryValue Id="RegVal.clsid.inproc.4" Name="Assembly" Value="EiffelSoftware.MetadataConsumer, Version=6.0.6.5856, Culture=neutral, PublicKeyToken=def26f296efef469" Type="string"/>
+						<RegistryValue Id="RegVal.clsid.inproc.4" Name="Assembly" Value="EiffelSoftware.MetadataConsumer, Version=6.4.6.7571, Culture=neutral, PublicKeyToken=def26f296efef469" Type="string"/>
 						<RegistryValue Id="RegVal.clsid.inproc.5" Name="RuntimeVersion" Value="v2.0.50727" Type="string"/>
-						<RegistryKey Id="Reg.clsid.3" Key="6.0.6.5856" Action="createAndRemoveOnUninstall" >
+						<RegistryKey Id="Reg.clsid.3" Key="6.4.6.7571" Action="createAndRemoveOnUninstall" >
 							<RegistryValue Id="RegVal.clsid.inproc.version.1" Name="Class" Value="EiffelSoftware.MetadataConsumer.Interop.COM_CACHE_MANAGER" Type="string"/>
-							<RegistryValue Id="RegVal.clsid.inproc.version.2" Name="Assembly" Value="EiffelSoftware.MetadataConsumer, Version=6.0.6.5856, Culture=neutral, PublicKeyToken=def26f296efef469" Type="string"/>
+							<RegistryValue Id="RegVal.clsid.inproc.version.2" Name="Assembly" Value="EiffelSoftware.MetadataConsumer, Version=6.4.6.7571, Culture=neutral, PublicKeyToken=def26f296efef469" Type="string"/>
 							<RegistryValue Id="RegVal.clsid.inproc.version.3" Name="RuntimeVersion" Value="v2.0.50727" Type="string"/>
 						</RegistryKey>
 					</RegistryKey>

@@ -11,15 +11,18 @@ inherit
 	SERVLET_ELEMENT
 
 create
-	make
+	make, make_with_elements
 
 feature --Initialization
 
 
 	make_with_elements  (a_name: STRING; a_controller_name: STRING; some_elements: LIST[OUTPUT_ELEMENT])
-			--
+			-- `a_name': The name of the servlet
+			-- `a_controller_name': The name of the controller class
+			-- `some_elements': The elements which should be executed and written to the page
 		do
-
+			make (a_name, a_controller_name)
+			xhtml_elements := some_elements
 		end
 
 	make (a_name: STRING; a_controller_name: STRING)

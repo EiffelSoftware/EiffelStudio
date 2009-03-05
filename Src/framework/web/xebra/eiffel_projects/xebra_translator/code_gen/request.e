@@ -7,6 +7,19 @@ note
 class
 	REQUEST
 
+create
+	make
+
 feature -- Access
+
+	file_identifier: STRING
+
+feature -- Initialization
+
+	make
+			--TODO
+		do
+
+		end
 
 end

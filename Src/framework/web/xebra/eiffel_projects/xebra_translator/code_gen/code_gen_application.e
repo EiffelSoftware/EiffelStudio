@@ -17,14 +17,13 @@ feature -- Access
 		local
 			servlet: ROOT_SERVLET_ELEMENT
 			oe: PLAIN_XHTML_ELEMENT
-			buf: INDENDATION_STREAM
 			name: STRING
 			controller_name: STRING
 			call: CALL_ELEMENT
 			op_call: OUTPUT_CALL_ELEMENT
+			gen: WEBAPP_GENERATOR
 		do
 			name := "hello_world"
-			create buf.make_open_write ("/home/sandrod/workspace/xebra/eiffel_projects/xebra_translator/code_gen/" + name + ".e")
 			controller_name := "MY_CONTROLLER"
 			create {ROOT_SERVLET_ELEMENT} servlet.make (name, controller_name)
 			create oe.make ("<html><body /> </html>")
@@ -33,8 +32,9 @@ feature -- Access
 			servlet.put_xhtml_elements (oe)
 			servlet.put_xhtml_elements (call)
 			servlet.put_xhtml_elements (op_call)
-			buf.set_ind_character ('%T')
-			servlet.serialize (buf)
-			buf.close
+
+			create gen.make ("my_web_app")
+			gen.put_servlet (servlet)
+			gen.generate
 		end
 end

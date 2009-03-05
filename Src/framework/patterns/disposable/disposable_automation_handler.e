@@ -39,7 +39,8 @@ feature {NONE} -- Access
 			end
 		ensure
 			result_attached: Result /= Void
-			result_contains_attached_items: not Result.has (Void)
+			result_contains_attached_items: attached {LIST [detachable ANY]} Result as l_list implies
+				not l_list.has (Void)
 			result_is_consistent: Result = object_pool
 		end
 
@@ -60,7 +61,7 @@ feature -- Status report
 		do
 			if is_interface_usable then
 				l_events := internal_disposing_event
-				if l_events /= Void and l_events.is_interface_usable then
+				if l_events /= Void and then l_events.is_interface_usable then
 					Result := l_events.is_subscribed (a_action)
 				end
 			end
@@ -75,7 +76,7 @@ feature -- Status report
 		do
 			if is_interface_usable then
 				l_events := internal_disposed_event
-				if l_events /= Void and l_events.is_interface_usable then
+				if l_events /= Void and then l_events.is_interface_usable then
 					Result := l_events.is_subscribed (a_action)
 				end
 			end
@@ -154,21 +155,21 @@ feature {DISPOSABLE_I, DISPOSABLE} -- Basic operations
 			is_actively_disposing := False
 		ensure
 			internal_object_pool_is_empty:
-				old internal_object_pool /= Void implies (old internal_object_pool).is_empty
+				attached old internal_object_pool as el_pool implies el_pool.is_empty
 			not_internal_disposing_event_is_interface_usable:
-				old internal_disposing_event /= Void implies not (old internal_disposing_event).is_interface_usable
+				attached old internal_disposing_event as l_disposing implies not l_disposing.is_interface_usable
 			not_internal_disposed_event_is_interface_usable:
-				old internal_disposed_event /= Void implies not (old internal_disposed_event).is_interface_usable
+				attached old internal_disposed_event as l_disposed implies not l_disposed.is_interface_usable
 			is_disposed: is_disposed
 		rescue
 			is_actively_disposing := False
 			is_disposed := True
 			l_event := internal_disposing_event
-			if l_event /= Void and l_event.is_interface_usable then
+			if l_event /= Void and then l_event.is_interface_usable then
 				l_event.dispose
 			end
 			l_event := internal_disposed_event
-			if l_event /= Void and l_event.is_interface_usable then
+			if l_event /= Void and then l_event.is_interface_usable then
 				l_event.dispose
 			end
 			debug ("dispose")

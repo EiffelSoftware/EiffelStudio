@@ -1782,7 +1782,7 @@ feature -- Implementation
 										-- it might be still safe to use the attribute in the expression
 										-- before actual reattachment takes place.
 									last_reinitialized_local := - l_feature.feature_name_id
-								elseif not l_result_type.is_attached and then context.is_attribute_attached (l_feature.feature_id) then
+								elseif not l_result_type.is_attached and then context.is_attribute_attached (l_feature.feature_name_id) then
 										-- Attribute is of a detachable type, but it's safe to use it as an attached one.
 									if context.current_class.lace_class.is_void_safe then
 										l_result_type := l_result_type.as_attached_type

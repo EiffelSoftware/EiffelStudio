@@ -11,7 +11,7 @@ feature -- Element change
 
 	append (a_string: STRING)
 		do
-			print ("RESPONSE:  " + a_string)
+			print ("APPEND:  " + a_string)
 		end
 
 end

@@ -30,6 +30,7 @@
 			<option namespace="Parse">
 			</option>
 		</cluster>
+		<cluster name="override_generated" location="override\generated\library\parse" recursive="true"/>
 	</target>
 </system>
 

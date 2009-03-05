@@ -1,7 +1,7 @@
 indexing
 
 	description: "Parser token codes"
-	generator: "geyacc version 3.8"
+	generator: "geyacc version 3.9"
 
 class LX_WILDCARD_TOKENS
 

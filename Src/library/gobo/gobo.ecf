@@ -83,7 +83,8 @@
 		</cluster>
 		<cluster name="override" location="override" recursive="true">
 			<file_rule>
-				<exclude>/src$</exclude>
+				<exclude>/generated/src$</exclude>
+				<exclude>/generated/library/test$</exclude>
 			</file_rule>
 		</cluster>
 	</target>

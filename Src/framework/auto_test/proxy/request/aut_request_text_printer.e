@@ -74,6 +74,7 @@ feature {AUT_REQUEST} -- Processing
 
 	process_create_object_request (a_request: AUT_CREATE_OBJECT_REQUEST)
 		do
+			print_test_case_index (a_request)
 			output_stream.put_string (execute_request_header)
 			output_stream.put_string ("create {")
 			output_stream.put_string (type_name (a_request.target_type, a_request.creation_procedure))
@@ -89,6 +90,7 @@ feature {AUT_REQUEST} -- Processing
 
 	process_invoke_feature_request (a_request: AUT_INVOKE_FEATURE_REQUEST)
 		do
+			print_test_case_index (a_request)
 			output_stream.put_string (execute_request_header)
 			if a_request.is_feature_query then
 				output_stream.put_string (a_request.receiver.name (variable_name_prefix))
@@ -152,6 +154,17 @@ feature {NONE} -- Printing
 			end
 		end
 
+	print_test_case_index (a_request: AUT_REQUEST) is
+			-- Print test case index from `a_request'.
+		require
+			a_request_attached: a_request /= Void
+		do
+			if a_request.test_case_index > 0 then
+				output_stream.put_string ("-- test case No." + a_request.test_case_index.out)
+				output_stream.put_new_line
+			end
+		end
+
 	expression_printer: AUT_EXPRESSION_PRINTER
 			-- Expression printer
 
@@ -163,4 +176,35 @@ invariant
 	output_stream_not_void: output_stream /= Void
 	output_stream_is_writable: output_stream.is_open_write
 
+note
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

@@ -18,6 +18,10 @@ feature
 
 			temp := tw1.twin
 			temp.merge_left (tw2)
+
+			create tw2.make
+			tw2.extend ("foo2")
+			tw2.extend ("bar2")
 			temp.merge_right (tw2)
 
 			from

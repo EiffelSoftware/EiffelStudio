@@ -15,6 +15,9 @@ note
 class
 	API_MARSHALLER
 
+inherit
+	ANY
+
 feature {NONE} -- Access
 
 	marshalled_data: HASH_TABLE [STRING_HANDLER, POINTER]
@@ -46,7 +49,11 @@ feature -- Conversion: To pointer
 			-- `Result': A pointer to an unicode string.
 		require
 			a_str_attached: a_str /= Void
+		local
+			l_str: WEL_STRING
 		do
+			create l_str.make (a_str.to_string_8)
+			Result := l_str.item
 			check not_marshalled_data_has_result: multi_threader.test (agent marshalled_data.has (Result), False) end
 			multi_threader.perform (agent marshalled_data.put (l_str, Result))
 		ensure
@@ -106,6 +113,8 @@ feature -- Conversion: From pointer
 			-- `Result': A pointer to an ANSI string.
 		require
 			not_a_ptr_is_null: a_ptr /= default_pointer
+		local
+			l_str: WEL_STRING
 		do
 			if is_pointer_managed (a_ptr) and attached {READABLE_STRING_GENERAL} multi_threader.retrieve (agent marshalled_data.item (a_ptr)) as l_result then
 				Result := l_result.as_string_32.as_attached
@@ -202,7 +211,11 @@ feature -- Factory
 			--
 			-- `a_len': Length of the new unicode string to create.
 			-- `Result': A pointer to the new string.
+		local
+			l_str: WEL_STRING
 		do
+			create l_str.make_empty (a_len.to_integer_32)
+			Result := l_str.item
 			check not_marshalled_data_has_result: multi_threader.test (agent marshalled_data.has (Result), False) end
 			multi_threader.perform (agent marshalled_data.put (l_str, Result))
 		ensure

@@ -16,11 +16,14 @@ feature {NONE} -- Initialization
 
 	make
 			-- Run application.
+		local
+			useless: BOOLEAN
 		do
-			create translator.make
+			create translator.make ("testapp")
 			print ("%N+++++++++++++++++++ START TRANSLATOR+++++++++++++++++++%N")
 
-			print (translator.process_with_file ( "../../websites/test.html"))
+			translator.set_output_path ("../../websites/testapp/")
+			useless := translator.process_with_file ("../../websites/testapp/testapp.xbr")
 
 			print ("%N+++++++++++++++++++ END TRANSLATOR++++++++++++++++++++++++++++++++++++++%N")
 		end

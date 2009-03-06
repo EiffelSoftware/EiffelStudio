@@ -2349,7 +2349,7 @@ feature {NONE} -- Implementation
 			l_feat: E_FEATURE
 			l_is_infix, l_is_prefix: BOOLEAN
 			l_new_name: BOOLEAN
-			l_text_formatter_decorator: like text_formatter_decorator		
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			l_text_formatter_decorator := text_formatter_decorator
 			check
@@ -2469,7 +2469,7 @@ feature {NONE} -- Implementation
 			l_feat: E_FEATURE
 			l_is_infix, l_is_prefix: BOOLEAN
 			l_new_name: BOOLEAN
-			l_text_formatter_decorator: like text_formatter_decorator		
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			l_text_formatter_decorator := text_formatter_decorator
 			check
@@ -2593,7 +2593,7 @@ feature {NONE} -- Implementation
 	process_feature_name_alias_as (l_as: FEATURE_NAME_ALIAS_AS)
 		local
 			l_feat: E_FEATURE
-			l_text_formatter_decorator: like text_formatter_decorator		
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			l_text_formatter_decorator := text_formatter_decorator
 			check
@@ -2671,7 +2671,7 @@ feature {NONE} -- Implementation
 
 	process_assign_as (l_as: ASSIGN_AS)
 		local
-			l_text_formatter_decorator: like text_formatter_decorator		
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			l_text_formatter_decorator := text_formatter_decorator
 			check
@@ -2696,7 +2696,7 @@ feature {NONE} -- Implementation
 
 	process_assigner_call_as (l_as: ASSIGNER_CALL_AS)
 		local
-			l_text_formatter_decorator: like text_formatter_decorator		
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			l_text_formatter_decorator := text_formatter_decorator
 			if not expr_type_visiting then
@@ -2717,7 +2717,7 @@ feature {NONE} -- Implementation
 
 	process_reverse_as (l_as: REVERSE_AS)
 		local
-			l_text_formatter_decorator: like text_formatter_decorator		
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			l_text_formatter_decorator := text_formatter_decorator
 			if not expr_type_visiting then
@@ -2737,7 +2737,7 @@ feature {NONE} -- Implementation
 
 	process_check_as (l_as: CHECK_AS)
 		local
-			l_text_formatter_decorator: like text_formatter_decorator		
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			l_text_formatter_decorator := text_formatter_decorator
 			check
@@ -2757,7 +2757,7 @@ feature {NONE} -- Implementation
 
 	process_creation_as (l_as: CREATION_AS)
 		local
-			l_text_formatter_decorator: like text_formatter_decorator		
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			l_text_formatter_decorator := text_formatter_decorator
 			if not expr_type_visiting then
@@ -2790,7 +2790,7 @@ feature {NONE} -- Implementation
 
 	process_debug_as (l_as: DEBUG_AS)
 		local
-			l_text_formatter_decorator: like text_formatter_decorator		
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			l_text_formatter_decorator := text_formatter_decorator
 			l_text_formatter_decorator.process_keyword_text (ti_debug_keyword, Void)
@@ -2818,7 +2818,7 @@ feature {NONE} -- Implementation
 
 	process_if_as (l_as: IF_AS)
 		local
-			l_text_formatter_decorator: like text_formatter_decorator		
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			l_text_formatter_decorator := text_formatter_decorator
 			put_breakable
@@ -2856,7 +2856,7 @@ feature {NONE} -- Implementation
 
 	process_inspect_as (l_as: INSPECT_AS)
 		local
-			l_text_formatter_decorator: like text_formatter_decorator		
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			l_text_formatter_decorator := text_formatter_decorator
 			check
@@ -2900,8 +2900,12 @@ feature {NONE} -- Implementation
 
 	process_loop_as (l_as: LOOP_AS)
 		local
-			l_text_formatter_decorator: like text_formatter_decorator		
+			l_text_formatter_decorator: like text_formatter_decorator
+			l_variant_after_body: BOOLEAN
 		do
+				--| for now, the debugger supports only previous declaration
+			l_variant_after_body := not is_with_breakable and then current_class.lace_class.is_syntax_standard
+
 			l_text_formatter_decorator := text_formatter_decorator
 			check
 				not_expr_type_visiting: not expr_type_visiting
@@ -2926,7 +2930,7 @@ feature {NONE} -- Implementation
 				l_text_formatter_decorator.put_new_line
 				l_text_formatter_decorator.exdent
 			end
-			if l_as.variant_part /= Void and then not current_class.lace_class.is_syntax_standard then
+			if l_as.variant_part /= Void and then not l_variant_after_body then
 				l_text_formatter_decorator.process_keyword_text (ti_variant_keyword, Void)
 				l_text_formatter_decorator.indent
 				l_text_formatter_decorator.put_new_line
@@ -2950,7 +2954,7 @@ feature {NONE} -- Implementation
 				l_text_formatter_decorator.exdent
 			end
 			l_text_formatter_decorator.put_new_line
-			if l_as.variant_part /= Void and then current_class.lace_class.is_syntax_standard then
+			if l_as.variant_part /= Void and then l_variant_after_body then
 				l_text_formatter_decorator.process_keyword_text (ti_variant_keyword, Void)
 				l_text_formatter_decorator.indent
 				l_text_formatter_decorator.put_new_line
@@ -2972,7 +2976,7 @@ feature {NONE} -- Implementation
 
 	process_external_as (l_as: EXTERNAL_AS)
 		local
-			l_text_formatter_decorator: like text_formatter_decorator		
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			l_text_formatter_decorator := text_formatter_decorator
 			check
@@ -3008,7 +3012,7 @@ feature {NONE} -- Implementation
 
 	process_attribute_as (l_as: ATTRIBUTE_AS)
 		local
-			l_text_formatter_decorator: like text_formatter_decorator		
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			l_text_formatter_decorator := text_formatter_decorator
 			check
@@ -3026,7 +3030,7 @@ feature {NONE} -- Implementation
 
 	process_do_as (l_as: DO_AS)
 		local
-			l_text_formatter_decorator: like text_formatter_decorator		
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			l_text_formatter_decorator := text_formatter_decorator
 			check
@@ -3044,7 +3048,7 @@ feature {NONE} -- Implementation
 
 	process_once_as (l_as: ONCE_AS)
 		local
-			l_text_formatter_decorator: like text_formatter_decorator		
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			l_text_formatter_decorator := text_formatter_decorator
 			check
@@ -3063,7 +3067,7 @@ feature {NONE} -- Implementation
 	process_type_dec_as (l_as: TYPE_DEC_AS)
 		local
 			l_names_heap: like names_heap
-			l_text_formatter_decorator: like text_formatter_decorator		
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			l_text_formatter_decorator := text_formatter_decorator
 			check
@@ -3120,7 +3124,7 @@ feature {NONE} -- Implementation
 			l_create: CREATE_AS
 			l_features: EIFFEL_LIST [FEATURE_NAME]
 			l_feat: FEATURE_I
-			l_text_formatter_decorator: like text_formatter_decorator		
+			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			l_text_formatter_decorator := text_formatter_decorator
 			check

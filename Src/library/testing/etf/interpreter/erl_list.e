@@ -160,9 +160,9 @@ feature -- Element change
 			special_maker: TO_SPECIAL [G]
 			l_storage: like storage
 		do
+			l_storage := storage
 			if count >= capacity then
 				new_capacity := (capacity + 1) * 2
-				l_storage := storage
 				if l_storage = Void then
 					create special_maker.make_area (new_capacity + 1)
 					l_storage := special_maker.area

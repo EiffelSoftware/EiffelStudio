@@ -24,6 +24,7 @@ test	array-is-equal			array001 tcf pass array
 test	array-consistency		array002 tcf pass array
 test	array-has			array003 tcf pass array
 test	array-occurrences		array004 tcf pass array
+test	array2-wipe-out			array005 tcf pass array
 
 test	list-is-equal			list001 tcf pass list
 test	list-put-extend			list002 tcf pass list
@@ -448,7 +449,7 @@ test	diamond-pattern-vmrc			valid239 tcf fail validity
 test	explicit-attachment-mark-convert-fail	valid240 tcf fail validity
 test	indirect-type-evaluation		valid241 tcf pass validity formal multiconstraint generic anchored_types
 test	undetected-vycp-vycq-with-generic	valid242 tcf fail validity
-test	inherited-binary-with-generic		valid243 tcf pass validity formal generic binary operator
+test	inherited-binary-with-generic		valid243 tcf pass validity formal generic binary operator multiconstraint
 test	bogus-vuta-on-procedure-target		valid244 tcf pass validity attached void_safe
 test	explicit-anchored-expanded-creation-type valid245 tcf pass validity
 test	inherited-conversion-to-like-current	valid246 tcf pass validity

@@ -35,7 +35,6 @@ feature {NONE} -- Initialization
 			create internal_remove_actions
 		end
 
-
 feature {EV_ANY_I, EV_ANY} -- Implementation
 
 	on_item_added_at (an_item: like item; item_index: INTEGER)

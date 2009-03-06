@@ -75,21 +75,20 @@ feature -- Processing
 			id_stream: INDENDATION_STREAM
 			temp_root: ROOT_SERVLET_ELEMENT
 			fn: STRING
+			output_elements: LIST[OUTPUT_ELEMENT]
 					--only temp
 		do
 
 				fn := "testt"
 
-				create temp_root.make (fn, fn + "_controller")
+				output_elements := preprocessor.parse_string (a_string)
 
-				preprocessor.parse_string (temp_root, a_string)
+				create temp_root.make_with_elements (fn, fn + "_controller", output_elements)
 
 				create id_stream.make_open_write ("code_gen/generated/" + fn + ".e")
 				id_stream.set_ind_character ('%T')
 				temp_root.serialize (id_stream)
 				id_stream.close
-
-
 		end
 
 

@@ -29,18 +29,16 @@ feature -- Implementation
 		do
 			create response.make
 			response.append ("[
-				Fabio1
+				petersilie
 			]")
-			controller.Sandro
+			controller.333
+			response.put_string (controller.222)
 			response.append ("[
-				Janus
+				test
 			]")
-			controller.=Hermann
+			controller.111
 			response.append ("[
-				Tepter
-			]")
-			response.append ("[
-				Fabio1JanusTepter
+				fabio
 			]")
 			Result := response
 		end

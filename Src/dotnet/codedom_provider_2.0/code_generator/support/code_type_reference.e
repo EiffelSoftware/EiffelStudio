@@ -43,7 +43,7 @@ inherit
 		redefine
 			is_equal
 		end
-	
+
 	CODE_SHARED_EMPTY_ENTITIES
 		export
 			{NONE} all
@@ -67,18 +67,18 @@ feature {NONE} -- Initialization
 		ensure
 			name_set: name = a_name
 		end
-	
+
 feature -- Access
 
 	name: STRING
 			-- .NET simple name
-	
+
 	namespace: STRING
 			-- .NET namespace
 		do
 			Result := name.substring (1, name.last_index_of ('.', name.count) - 1)
 		end
-	
+
 	eiffel_name: STRING
 			-- Eiffel name
 		local
@@ -99,11 +99,11 @@ feature -- Access
 						-- Not a generated type
 						Result := Metadata_provider.type_eiffel_name (dotnet_type)
 						if Result = Void then
-							Result := Name_formatter.full_formatted_type_name (name)
+							Result := Name_formatter.full_formatted_type_name (name, Void)
 						end
 					else
 						-- Type hasn't been generated yet, give it its Eiffel name
-						Result := Name_formatter.full_formatted_type_name (name)
+						Result := Name_formatter.full_formatted_type_name (name, Void)
 					end
 				end
 				internal_eiffel_name := Result
@@ -149,7 +149,7 @@ feature -- Access
 			valid_type: Result /= Void implies Result.full_name.equals (name.to_cil)
 			search_done: search_for_type = False
 		end
-	
+
 	element_type: CODE_TYPE_REFERENCE
 			-- Reference to type of array elements if any
 		require
@@ -160,7 +160,7 @@ feature -- Access
 			if search_for_element_type then
 				if dotnet_type /= Void then
 					l_type := dotnet_type.get_element_type
-					if l_type /= Void then				
+					if l_type /= Void then
 						Result := Type_reference_factory.type_reference_from_type (l_type)
 					end
 				end
@@ -185,7 +185,7 @@ feature -- Access
 			end
 			Result := member (a_feature.name, l_code_arguments)
 		end
-		
+
 	member (a_name: STRING; a_arguments: LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]): CODE_MEMBER_REFERENCE
 			-- Reference to member with .NET name `a_name', arguments `a_arguments' and `is_redefined' with `a_is_redefined'.
 		require
@@ -276,7 +276,7 @@ feature -- Access
 				Result := dotnet_member_from_name (a_name)
 			end
 		end
-	
+
 	members: LIST [LIST [CODE_MEMBER_REFERENCE]]
 			-- All members of dotnet type
 			-- Ordered by .NET name
@@ -335,7 +335,7 @@ feature -- Status Report
 			end
 		end
 
-feature -- Element Settings 
+feature -- Element Settings
 
 	set_initialized (a_value: like initialized)
 			-- Set `initialized' to `a_value'.
@@ -375,7 +375,7 @@ feature {CODE_TYPE_REFERENCE_FACTORY} -- Elements Settings
 		ensure
 			name_set: eiffel_name = a_eiffel_name
 		end
-	
+
 	set_dotnet_type (a_type: like dotnet_type)
 			-- Set `dotnet_type' with `a_type'.
 		require
@@ -385,7 +385,7 @@ feature {CODE_TYPE_REFERENCE_FACTORY} -- Elements Settings
 		ensure
 			type_set: dotnet_type = a_type
 		end
-		
+
 	set_element_type (a_element_type: like element_type)
 			-- Set `element_type' with `a_element_type'.
 		require
@@ -403,7 +403,7 @@ feature {CODE_TYPE_REFERENCE_FACTORY} -- Elements Settings
 		ensure
 			search_for_type_set: search_for_type = a_search_for_type
 		end
-	
+
 	set_search_for_element_type (a_search_for_element_type: like search_for_element_type)
 			-- Set `search_for_element_type' with `a_search_for_element_type'.
 		do
@@ -540,7 +540,7 @@ feature {NONE} -- Private Access
 
 	search_for_type: BOOLEAN
 			-- Should call to `type' trigger a search?
-			
+
 	search_for_element_type: BOOLEAN
 			-- Should call to `element_type' trigger a search?
 
@@ -560,7 +560,7 @@ feature {NONE} -- Private Access
 			-- Members cache
 			-- Key is member .NET name
 			-- Value is list of corresponding members
-	
+
 invariant
 	non_void_name: name /= Void
 	non_void_namespace: initialized implies namespace /= Void

@@ -29,7 +29,7 @@ feature -- Access
 	cache_reflection: CACHE_REFLECTION
 			-- Access to Eiffel Assemblies Cache
 		once
-			Result := cache_manager.cache_reader
+			create Result
 		end
 		
 	cache_writer: CACHE_WRITER

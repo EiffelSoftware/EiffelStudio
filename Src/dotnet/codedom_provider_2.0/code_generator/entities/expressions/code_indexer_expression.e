@@ -1,10 +1,10 @@
-note 
+note
 	description: "Source code generator for indexer expressions"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$$"
 	revision: "$$"
-	
+
 class
 	CODE_INDEXER_EXPRESSION
 
@@ -30,15 +30,15 @@ feature {NONE} -- Initialization
 			target_set: target = a_target
 			indices_set: indices = a_indices
 		end
-		
+
 feature -- Access
 
 	target: CODE_EXPRESSION
 			-- Target object
-	
+
 	indices: LIST [CODE_EXPRESSION]
 			-- Linked_list indexer indices
-		
+
 	code: STRING
 			-- | Result := "`target_object'.item (`indices', ...)".
 			-- Eiffel code of indexer expression
@@ -60,16 +60,16 @@ feature -- Access
 			end
 			Result.append_character (')')
 		end
-		
+
 feature -- Status Report
 
 	type: CODE_TYPE_REFERENCE
 			-- Type
 		local
 			l_type: SYSTEM_TYPE
-			l_members: ARRAY [MEMBER_INFO]
+			l_members: detachable NATIVE_ARRAY [detachable MEMBER_INFO]
 			i, j, l_count, l_par_count: INTEGER
-			l_parameters: ARRAY [PARAMETER_INFO]
+			l_parameters: detachable NATIVE_ARRAY [detachable PARAMETER_INFO]
 			l_method: METHOD_INFO
 			l_property: PROPERTY_INFO
 			l_not_conform: BOOLEAN
@@ -80,9 +80,9 @@ feature -- Status Report
 				from
 					l_type := Void
 					l_count := l_members.count
-					i := 1
+					i := 0
 				until
-					i > l_count or Result /= Void
+					i = l_count or Result /= Void
 				loop
 					l_property ?= l_members.item (i)
 					if l_property /= Void and then l_property.property_type /= Void then
@@ -99,9 +99,9 @@ feature -- Status Report
 						l_par_count := l_parameters.count
 						if l_par_count = indices.count then
 							from
-								j := 1
+								j := 0
 							until
-								j > l_par_count or l_not_conform
+								j = l_par_count or l_not_conform
 							loop
 								l_not_conform := not Type_reference_factory.type_reference_from_type (l_parameters.item (j).parameter_type).conforms_to (indices.i_th (j).type)
 								j := j + 1
@@ -109,20 +109,20 @@ feature -- Status Report
 							if not l_not_conform then
 								Result := Type_reference_factory.type_reference_from_type (l_type)
 							end
-						end						
+						end
 					end
 					i := i + 1
 				end
 			end
 			if Result = Void then
 				Event_manager.raise_event ({CODE_EVENTS_IDS}.Incorrect_result, ["type from indexer expression for indexer of " + target.type.name])
-				Result := target.type 
+				Result := target.type
 			end
 		end
-		
+
 invariant
 	non_void_indices: indices /= Void
-	
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

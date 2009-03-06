@@ -22,10 +22,10 @@ feature {NONE} -- Initialization
 		do
 			create generated_names.make (100)
 		end
-		
+
 feature -- Access
 
-	full_formatted_type_name (name: STRING): STRING
+	full_formatted_type_name (name: STRING; used_names: HASH_TABLE [STRING, STRING]): STRING
 			-- Format .NET type name `name' to Eiffel class name.
 			-- Ensure result is unique since last call to `reset'.
 		local
@@ -38,7 +38,7 @@ feature -- Access
 			else
 				l_name := name
 			end
-			Result := Precursor {NAME_FORMATTER} (l_name)
+			Result := Precursor {NAME_FORMATTER} (l_name, used_names)
 			from
 				if generated_names.has (Result) then
 					Result.append ("_2")

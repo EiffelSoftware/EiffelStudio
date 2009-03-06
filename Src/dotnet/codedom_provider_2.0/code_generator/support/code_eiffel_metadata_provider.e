@@ -116,7 +116,7 @@ feature -- Access
 							Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_feature, [a_name, a_type.full_name])
 						end
 					else
-						Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_parameters, ["feature " + a_name + " from " + a_type.full_name])
+						Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_parameters, ["feature " + a_name + " from " + create {STRING}.make_from_cil (a_type.full_name)])
 						l_type := l_entities.first.return_type
 					end
 				elseif l_entities.count = 1 then

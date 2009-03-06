@@ -10,7 +10,7 @@ class
 
 inherit
 	SYSTEM_DLL_ICODE_GENERATOR
-	CODE_SHARED_ANALYSIS_CONTEXT	
+	CODE_SHARED_ANALYSIS_CONTEXT
 		rename
 			reset as reset_context
 		end
@@ -333,7 +333,7 @@ feature -- Interface
 				end
 			end
 			if Result = Void then
-				Result := (create {NAME_FORMATTER}).full_formatted_type_name (a_type.base_type)
+				Result := (create {NAME_FORMATTER}).full_formatted_type_name (a_type.base_type, Void)
 			end
 			Event_manager.raise_event ({CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.GetTypeOutput"])
 		ensure then

@@ -161,14 +161,8 @@ feature -- Basic Operations
 						end
 						i := i + 1
 					end
-					merge_partial_classes (compilation_directory)
-					if last_merge_error = Void then
-						compile
-						Result := last_compilation_results;
-					else
-						create Result.make (a_options.temp_files)
-						l_res := Result.errors.add (create {SYSTEM_DLL_COMPILER_ERROR}.make_with_file_name ("", 0, 0, "0", last_merge_error))
-					end
+					compile
+					Result := last_compilation_results;
 				else
 					create Result.make (a_options.temp_files)
 					l_res := Result.errors.add (create {SYSTEM_DLL_COMPILER_ERROR}.make_with_file_name ("", 0, 0, "0", "Compiler initialization failed (3)"))
@@ -337,7 +331,7 @@ feature {NONE} -- Implementation
 				l_system.add_target (l_target)
 				l_cluster := l_factory.new_cluster ("root_cluster", create {CONF_DIRECTORY_LOCATION}.make (compilation_directory, l_target), l_target)
 				if Compilation_context.namespace /= Void then
-					l_cluster.changeable_internal_options.set_namespace (Compilation_context.namespace)
+					l_cluster.changeable_internal_options.set_local_namespace (Compilation_context.namespace)
 				end
 				l_target.add_cluster (l_cluster)
 
@@ -445,7 +439,7 @@ feature {NONE} -- Implementation
 				-- Add base library
 				l_library := l_factory.new_library ("base", create {CONF_FILE_LOCATION}.make ("$ISE_EIFFEL\library\base\base.ecf", l_target), l_target)
 				create l_option
-				l_option.set_namespace ("EiffelSoftware.Library.Base")
+				l_option.set_local_namespace ("EiffelSoftware.Library.Base")
 				l_library.set_options (l_option)
 				l_target.add_library (l_library)
 
@@ -575,7 +569,7 @@ feature {NONE} -- Implementation
 		do
 			if not l_retried then
 				last_compilation_results.set_native_compiler_return_value (1)
-				l_dir_name := default_f_code_path (compilation_directory) 
+				l_dir_name := default_f_code_path (compilation_directory)
 				create l_dir.make (l_dir_name)
 				if l_dir.exists then
 					l_system_dir := system_path.substring (1, system_path.last_index_of (Directory_separator, system_path.count) - 1)
@@ -617,26 +611,6 @@ feature {NONE} -- Implementation
 		rescue
 			l_retried := True
 			retry
-		end
-
-	merge_partial_classes (a_directory: STRING)
-			-- Merge all partial classes found in `a_directory'.
-		local
-			l_merger: EPC_APPLICATION
-			l_list: ARRAYED_LIST [STRING]
-		do
-			last_merge_error := Void
-			create l_merger
-			create l_list.make (1)
-			l_list.extend (a_directory)
-			l_merger.process_directories_with_error_handler (l_list, a_directory, false, agent on_merge_error)
-		end
-
-	on_merge_error (a_error: STRING)
-			-- Partial class could not be merged, report error.
-		do
-			Event_manager.raise_event ({CODE_EVENTS_IDS}.Failed_merge, [a_error])
-			last_merge_error := a_error
 		end
 
 	cleanup
@@ -763,12 +737,9 @@ feature {NONE} -- Private access
 	output_stream, error_stream: STREAM_READER
 			-- Compiler process output and error streams
 
-	compiler_error, compiler_output: STRING
+	compiler_error, compiler_output: STRING;
 			-- Compiler output and error if any
 
-	last_merge_error: STRING;
-			-- Last error that occurred when executing `merge_partial_classes'
-			
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

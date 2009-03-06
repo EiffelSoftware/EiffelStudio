@@ -39,7 +39,7 @@ feature -- Access
 					Result.append ("--#line ")
 					Result.append (pragma.line_number.out)
 					Result.append (" %"")
-					Result.append (pragma.file_name)
+					Result.append (create {STRING}.make_from_cil (pragma.file_name))
 					Result.append ("%"")
 					Result.append (Line_return)
 				end

@@ -46,10 +46,27 @@ feature -- Features yet to be named
 		do
 			create output_elements.make
 			first_parse_handler.handle_string (output_elements, a_string, 0)
-			Result := output_elements
+				--there is probably a better way to do this instead of inverting the list...
+			Result := invert_list (output_elements)
 		end
 
 
+
+
+	invert_list (in: LINKED_LIST[OUTPUT_ELEMENT]): LINKED_LIST [OUTPUT_ELEMENT]
+			-- inverts a linked list
+		do
+			create Result.make
+
+			from
+				in.start
+			until
+				in.after
+			loop
+				Result.put_right (in.item)
+				in.forth
+			end
+		end
 
 
 --	sort_elements (output_elements_unsorted: DS_HASH_TABLE [OUTPUT_ELEMENT, INTEGER]): LINKED_LIST[OUTPUT_ELEMENT]

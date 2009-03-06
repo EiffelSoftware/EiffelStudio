@@ -25,6 +25,9 @@ feature -- Processing
 	 		-- Handles the string
 	 	deferred
 	 	end
+
+
+
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
@@ -56,4 +59,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

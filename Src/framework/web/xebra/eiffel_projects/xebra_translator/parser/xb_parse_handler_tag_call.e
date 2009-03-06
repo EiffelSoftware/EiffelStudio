@@ -51,6 +51,7 @@ feature -- Process
 			print ("-processing CALL string '" + an_inner_string + "' at pos " + a_position.out + "%N")
 			output_elements.put_front (create {CALL_ELEMENT}.make (an_inner_string))
 		end
+
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

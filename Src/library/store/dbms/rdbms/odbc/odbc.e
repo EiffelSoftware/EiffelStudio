@@ -1157,17 +1157,12 @@ feature {NONE} -- External features
 				end
 
 				if type = -1 then
-					print ("stop please")
-				end
-
-				check
-					valid_type: type > 0
+					para.set (Void, i)
+				else
+					para.set (l_managed_pointer, i)
 				end
 
 				tmp_str.wipe_out
-
-				para.set (l_managed_pointer, i)
-
 				if l_value_count = 0 then
 					l_value_count := 1
 				end

@@ -1528,6 +1528,7 @@ test	keyword-in-multi-constraint-generic-crash	term171	tcf fail termination
 test	catcall-crash-is-covariant-to	term172	tcf fail termination catcall
 test	conversion-query-constant-attribute	term173	tcf fail termination convert
 test	create-generic-constrained-by-none	term174	tcf fail termination
+test	create-constrained-generic-crash	term175	tcf fail termination
 
 -- Config
 

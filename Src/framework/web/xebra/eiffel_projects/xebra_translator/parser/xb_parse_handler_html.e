@@ -23,12 +23,12 @@ feature {NONE} -- Initialization
 
 feature -- Processing		
 
-	handle_string (output_elements: DS_HASH_TABLE [OUTPUT_ELEMENT, INTEGER];
+	handle_string (output_elements: LINKED_LIST [OUTPUT_ELEMENT];
 	 a_string: STRING; a_start_pos: INTEGER)
 	 		-- Handles the string
 	 	do
 	 		print ("-processing HTML string '" + a_string + "' at pos " + a_start_pos.out + "%N")
-			output_elements.force_new (create {PLAIN_XHTML_ELEMENT}.make (a_string), a_start_pos)
+			output_elements.put_front (create {PLAIN_XHTML_ELEMENT}.make (a_string))
 	 	end
 
 note

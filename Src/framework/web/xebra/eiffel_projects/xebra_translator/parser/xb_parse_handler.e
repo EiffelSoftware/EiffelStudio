@@ -21,8 +21,7 @@ feature -- Status Setting
 
 feature -- Processing		
 
-	handle_string (output_elements: DS_HASH_TABLE [OUTPUT_ELEMENT, INTEGER];
-	 a_string: STRING; a_start_pos: INTEGER)
+	handle_string (output_elements: LINKED_LIST [OUTPUT_ELEMENT]; a_string: STRING; a_start_pos: INTEGER)
 	 		-- Handles the string
 	 	deferred
 	 	end

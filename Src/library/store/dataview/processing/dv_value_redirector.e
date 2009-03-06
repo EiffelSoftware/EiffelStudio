@@ -46,8 +46,6 @@ feature -- Access
 				else
 					if redirector /= Void then
 						Result := redirector.item ([h])
-			-- Bug on `extend'.
-			--			result_table.extend (Result, h)
 						result_table.put (Result, h)
 					end
 				end
@@ -68,8 +66,6 @@ feature -- Access
 			else
 				if invertor /= Void then
 					Result := invertor.item ([s])
-		-- Bug on `extend'.
-		--			result_table.extend (Result, s)
 					inversion_table.put (Result, s)
 				end
 			end

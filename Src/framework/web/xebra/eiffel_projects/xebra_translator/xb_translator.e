@@ -67,9 +67,7 @@ feature {NONE} -- Processing
 						Result.append ("")
 					end
 				end
-
 			end
-
 		end
 
 feature -- Status setting
@@ -86,7 +84,6 @@ feature -- Status setting
 			name := a_name
 		end
 
-
 feature -- Processing
 
 	process_with_file (a_filename: STRING): BOOLEAN
@@ -95,24 +92,20 @@ feature -- Processing
 			Result := process_with_string (read_file(a_filename))
 		end
 
-
 	process_with_string (a_string: STRING): BOOLEAN
 			--
 		local
-			id_stream: INDENDATION_STREAM
+			webapp_generator: WEBAPP_GENERATOR
 			root_element: ROOT_SERVLET_ELEMENT
 			output_elements: LIST[OUTPUT_ELEMENT]
 		do
+				create webapp_generator.make (name, output_path)
 				output_elements := preprocessor.parse_string (a_string)
 				create root_element.make_with_elements (name, name + "_controller", output_elements)
-				create id_stream.make_open_write (output_path + name + ".e")
-				id_stream.set_ind_character ('%T')
-				root_element.serialize (id_stream)
-				id_stream.close
-				Result := true
+				webapp_generator.put_servlet (root_element)
+				webapp_generator.generate
+				Result := true --?
 		end
-
-
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

@@ -15,18 +15,19 @@ inherit
 
 feature -- Basic operations
 
-	launch (a_uri: attached READABLE_STRING_GENERAL): BOOLEAN
+	launch (a_uri: READABLE_STRING_GENERAL): BOOLEAN
 			-- Launches a URI in the system's default web-browser.
 			--
 			-- `a_uri' : The URI to launch.
 			-- `Result': True if the URI was launched; False otherwise.
 		require
+			a_uri_attached: a_uri /= Void
 			not_a_uri_is_empty: not a_uri.is_empty
 		do
 			Result := bridge.launch (a_uri)
 		end
 
-	launch_with_default_app (a_uri: attached READABLE_STRING_GENERAL; a_default_app: attached READABLE_STRING_GENERAL): BOOLEAN
+	launch_with_default_app (a_uri: READABLE_STRING_GENERAL; a_default_app: READABLE_STRING_GENERAL): BOOLEAN
 			-- Launches a URI in the system's default web-browser, or if that fails, then the supplied
 			-- default application.
 			--
@@ -34,7 +35,9 @@ feature -- Basic operations
 			-- `a_default_app': The default application to use in case of system default failure.
 			-- `Result'       : True if the URI was launched; False otherwise.
 		require
+			a_uri_attached: a_uri /= Void
 			not_a_uri_is_empty: not a_uri.is_empty
+			a_default_app_attached: a_default_app /= Void
 			not_a_default_app_is_empty: not a_default_app.is_empty
 		do
 			Result := bridge.launch_with_default_app (a_uri, a_default_app)
@@ -42,14 +45,14 @@ feature -- Basic operations
 
 feature {NONE} -- Factory
 
-	new_bridge: attached URI_LAUNCHER_I
+	new_bridge: URI_LAUNCHER_I
 			-- <Precursor>
 		do
 			create {URI_LAUNCHER_IMP} Result
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -62,22 +65,22 @@ feature {NONE} -- Factory
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

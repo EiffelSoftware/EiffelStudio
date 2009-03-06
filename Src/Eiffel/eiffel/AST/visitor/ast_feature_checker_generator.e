@@ -1781,7 +1781,7 @@ feature -- Implementation
 										-- It is recorded for future checks because
 										-- it might be still safe to use the attribute in the expression
 										-- before actual reattachment takes place.
-									last_reinitialized_local := - l_feature.feature_name_id
+									last_reinitialized_variable := - l_feature.feature_name_id
 								elseif not l_result_type.is_attached and then context.is_attribute_attached (l_feature.feature_name_id) then
 										-- Attribute is of a detachable type, but it's safe to use it as an attached one.
 									if context.current_class.lace_class.is_void_safe then
@@ -2264,7 +2264,7 @@ feature -- Implementation
 							-- It is recorded for future checks because
 							-- it might be still safe to use it in the expression
 							-- before actual reattachment takes place.
-						last_reinitialized_local := result_name_id
+						last_reinitialized_variable := result_name_id
 					elseif context.is_result_attached then
 						if not l_feat_type.is_attached then
 								-- "Result" is of a detachable type, but it's safe
@@ -2591,7 +2591,7 @@ feature -- Implementation
 							-- It is recorded for future checks because
 							-- it might be still safe to use the local in the expression
 							-- before actual reattachment takes place.
-						last_reinitialized_local := l_as.feature_name.name_id
+						last_reinitialized_variable := l_as.feature_name.name_id
 					elseif context.is_local_attached (l_as.feature_name.name_id) then
 						if not l_type.is_attached then
 								-- Local is of a detachable type, but it's safe
@@ -5021,7 +5021,7 @@ feature -- Implementation
 			l_vjar: VJAR
 			l_vncb: VNCB
 			l_warning_count: INTEGER
-			l_reinitialized_local: like last_reinitialized_local
+			l_reinitialized_variable: like last_reinitialized_variable
 		do
 			break_point_slot_count := break_point_slot_count + 1
 
@@ -5029,13 +5029,13 @@ feature -- Implementation
 			reset_for_unqualified_call_checking
 
 				-- Type check the target
-			last_reinitialized_local := 0
+			last_reinitialized_variable := 0
 			set_is_in_assignment (True)
 			last_access_writable := False
 			l_as.target.process (Current)
 			set_is_in_assignment (False)
 				-- Record initialized variable to commit it after the expression is processed.
-			l_reinitialized_local := last_reinitialized_local
+			l_reinitialized_variable := last_reinitialized_variable
 			l_target_type := last_type
 			if l_target_type /= Void then
 				current_target_type := l_target_type
@@ -5112,29 +5112,29 @@ feature -- Implementation
 						l_assign.set_line_pragma (l_as.line_pragma)
 						last_byte_node := l_assign
 					end
-					if l_reinitialized_local /= 0 then
+					if l_reinitialized_variable /= 0 then
 						if l_source_type.is_attached or else l_source_type.is_implicitly_attached then
 								-- Local variable is initialized to a non-void value.
-							if l_reinitialized_local = result_name_id then
+							if l_reinitialized_variable = result_name_id then
 								context.add_result_instruction_scope
-							elseif l_reinitialized_local > 0 then
-								context.add_local_instruction_scope (l_reinitialized_local)
+							elseif l_reinitialized_variable > 0 then
+								context.add_local_instruction_scope (l_reinitialized_variable)
 							else
-								context.add_attribute_instruction_scope (l_reinitialized_local)
+								context.add_attribute_instruction_scope (- l_reinitialized_variable)
 							end
 						else
 								-- Local variable might become Void.
-							if l_reinitialized_local = result_name_id then
+							if l_reinitialized_variable = result_name_id then
 								context.remove_result_scope
-							elseif l_reinitialized_local > 0 then
-								context.remove_local_scope (l_reinitialized_local)
+							elseif l_reinitialized_variable > 0 then
+								context.remove_local_scope (l_reinitialized_variable)
 							end
 						end
 							-- The variable is initialized.
-						if l_reinitialized_local = result_name_id then
+						if l_reinitialized_variable = result_name_id then
 							context.set_result
-						elseif l_reinitialized_local > 0 then
-							context.set_local (l_reinitialized_local)
+						elseif l_reinitialized_variable > 0 then
+							context.set_local (l_reinitialized_variable)
 						end
 					end
 				end
@@ -5346,7 +5346,7 @@ feature -- Implementation
 			l_vjrv3: VJRV3
 			l_attribute: ATTRIBUTE_B
 			l_create_info: CREATE_INFO
-			l_reinitialized_local: like last_reinitialized_local
+			l_reinitialized_variable: like last_reinitialized_variable
 		do
 			break_point_slot_count := break_point_slot_count + 1
 
@@ -5354,13 +5354,13 @@ feature -- Implementation
 			reset_for_unqualified_call_checking
 
 				-- Type check the target
-			last_reinitialized_local := 0
+			last_reinitialized_variable := 0
 			last_access_writable := False
 			set_is_in_assignment (True)
 			l_as.target.process (Current)
 			set_is_in_assignment (False)
 			l_target_type := last_type
-			l_reinitialized_local := last_reinitialized_local
+			l_reinitialized_variable := last_reinitialized_variable
 			if l_target_type /= Void then
 				current_target_type := l_target_type
 
@@ -5444,12 +5444,12 @@ feature -- Implementation
 						l_reverse.set_info (l_create_info)
 						last_byte_node := l_reverse
 					end
-					if l_reinitialized_local /= 0 then
+					if l_reinitialized_variable /= 0 then
 							-- Local variable might become Void.
-						if l_reinitialized_local = result_name_id then
+						if l_reinitialized_variable = result_name_id then
 							context.remove_result_scope
-						elseif l_reinitialized_local > 0 then
-							context.remove_local_scope (l_reinitialized_local)
+						elseif l_reinitialized_variable > 0 then
+							context.remove_local_scope (l_reinitialized_variable)
 						end
 					end
 				end
@@ -5955,7 +5955,7 @@ feature -- Implementation
 			l_needs_byte_node: BOOLEAN
 			l_error_level: NATURAL_32
 			l_warning_count: INTEGER
-			l_reinitialized_local: like last_reinitialized_local
+			l_reinitialized_variable: like last_reinitialized_variable
 			l_current_class_void_safe: BOOLEAN
 		do
 			l_error_level := error_level
@@ -5968,13 +5968,13 @@ feature -- Implementation
 				-- not just a normal feature call. It is reset as soon as it is processed.
 			is_target_of_creation_instruction := True
 			last_access_writable := False
-			last_reinitialized_local := 0
+			last_reinitialized_variable := 0
 			l_as.target.process (Current)
 			if l_needs_byte_node then
 				l_access ?= last_byte_node
 			end
 				-- Record initialized variable to commit it after the call is processed.
-			l_reinitialized_local := last_reinitialized_local
+			l_reinitialized_variable := last_reinitialized_variable
 				-- Although it might be already reset when `target' is indeed
 				-- a feature of the current class, it is not reset when it is a local,
 				-- that's why we reset it.
@@ -6068,16 +6068,16 @@ feature -- Implementation
 						end
 					end
 				end
-				if l_reinitialized_local /= 0 then
+				if l_reinitialized_variable /= 0 then
 						-- Local variable is now attached.
-					if l_reinitialized_local = result_name_id then
+					if l_reinitialized_variable = result_name_id then
 						context.add_result_instruction_scope
 						context.set_result
-					elseif l_reinitialized_local > 0 then
-						context.add_local_instruction_scope (l_reinitialized_local)
-						context.set_local (l_reinitialized_local)
+					elseif l_reinitialized_variable > 0 then
+						context.add_local_instruction_scope (l_reinitialized_variable)
+						context.set_local (l_reinitialized_variable)
 					else
-						context.add_attribute_instruction_scope (l_reinitialized_local)
+						context.add_attribute_instruction_scope (- l_reinitialized_variable)
 					end
 				end
 			end
@@ -9218,12 +9218,12 @@ feature {NONE} -- Implementation: checking locals
 
 feature {NONE} -- Variable initialization
 
-	last_reinitialized_local: INTEGER_32
+	last_reinitialized_variable: INTEGER_32
 			-- Name ID of the last reinitialized local (the one that is assigned a new value)
 			-- or negated name ID of the last reinitialized stable attribute.
 
 	result_name_id: INTEGER_32 = 0x7fffffff
-			-- Value of `last_reinitialized_local' that indicates
+			-- Value of `last_reinitialized_variable' that indicates
 			-- that the local is a special entity "Result"
 
 feature {NONE} -- Implementation: Error handling

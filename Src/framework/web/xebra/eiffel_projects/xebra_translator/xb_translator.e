@@ -13,10 +13,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_name: STRING)
 			-- Initialization for `XB_TRANSLATOR'.
 		do
 			create preprocessor.make
+				-- Create a default output_path
+			output_path := "code_gen/generated/"
+			name := a_name
 		end
 
 
@@ -25,6 +28,14 @@ feature {NONE} -- Access
 	preprocessor: XB_PREPROCESSOR
 			-- Preprocesses the file
 
+
+feature -- Access
+
+	output_path: STRING assign set_output_path
+			-- Defines where the files should be written		
+
+	name: STRING assign set_name
+			-- Name of the system
 
 feature {NONE} -- Processing
 
@@ -61,6 +72,20 @@ feature {NONE} -- Processing
 
 		end
 
+feature -- Status setting
+
+	set_output_path (a_path: like output_path)
+		-- Sets the output_path
+		do
+			output_path := a_path
+		end
+
+	set_name (a_name: like name)
+		-- Sets the name
+		do
+			name := a_name
+		end
+
 
 feature -- Processing
 
@@ -75,17 +100,16 @@ feature -- Processing
 			--
 		local
 			id_stream: INDENDATION_STREAM
-			temp_root: ROOT_SERVLET_ELEMENT
-			fn: STRING
+			root_element: ROOT_SERVLET_ELEMENT
 			output_elements: LIST[OUTPUT_ELEMENT]
 		do
-				fn := "testt"
 				output_elements := preprocessor.parse_string (a_string)
-				create temp_root.make_with_elements (fn, fn + "_controller", output_elements)
-				create id_stream.make_open_write ("code_gen/generated/" + fn + ".e")
+				create root_element.make_with_elements (name, name + "_controller", output_elements)
+				create id_stream.make_open_write (output_path + name + ".e")
 				id_stream.set_ind_character ('%T')
-				temp_root.serialize (id_stream)
+				root_element.serialize (id_stream)
 				id_stream.close
+				Result := true
 		end
 
 

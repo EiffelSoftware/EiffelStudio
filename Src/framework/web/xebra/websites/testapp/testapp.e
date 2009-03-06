@@ -1,45 +1,45 @@
 note
-	description: "Summary description for {VARIABLE_ELEMENT}."
-	author: "sandro"
+	description: "[
+		No comment yet
+	]"
+	legal: "See notice at end of class."
+	status: "Prototyping phase"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	VARIABLE_ELEMENT
+	TESTAPP_SERVLET
 
 inherit
-	SERVLET_ELEMENT
+	SERVLET
 
 create
 	make
 
-feature -- Access
+feature-- Access
 
-	name: STRING
-			-- The name of the variable
-	type: STRING
-			-- The type of the variable
+	controller: TESTAPP_CONTROLLER
 
-feature -- Initialization
+feature-- Implementation
 
-	make (a_name: STRING; a_type: STRING)
-			-- `a_name': The name of the variable
-			-- `a_type': The type of the variable
-		require
-			name_is_valid: not a_name.is_empty
-			type_is_valid: not a_type.is_empty
+	make
 		do
-			name := a_name
-			type := a_type
+			create controller.make
 		end
 
-feature -- Processing
-
-	serialize (buf: INDENDATION_STREAM)
-			-- <Precursor>
+	handle_request (request: REQUEST): RESPONSE
+		local
+			response: RESPONSE
 		do
-
-			buf.put_string (name + ": " + type.as_upper)
+			create response.make
+			response.append ("[
+				<html><head><title>Sample Application XEBRA Page</title></head><body bgcolor=white><table border="0"><tr><td align=center><img src="images/tomcat.gif"></td><td><h1>Sample Application XEBRA Page</h1>This is the output of a XEBRA page that is part of the Hello, Worldapplication.</td></tr></table>
+			]")
+			response.put_string (controller.give_me_a_hello)
+			response.append ("[
+				</body></html>
+			]")
+			Result := response
 		end
 
 note

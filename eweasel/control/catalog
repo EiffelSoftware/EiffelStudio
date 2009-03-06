@@ -39,6 +39,7 @@ test	fixed-list-queries		list010 tcf pass list
 test	merging-compatible-arrayed-list	list011 tcf pass list
 test	sorted-two-way-list-invariant-violation	list012 tcf pass list
 test	do-all-with-index-arrayed-list	list013 tcf pass list
+test	two-way-list-merge		list014 tcf pass list
 
 test	priority-queue-basics	queue001 tcf pass queue
 

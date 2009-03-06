@@ -1,6 +1,7 @@
 note
-	description: "Summary description for {ROOT_SERVLET_ELEMENT}."
-	author: "sandro"
+	description: "[
+			Element which renders a class that handles 
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -1,6 +1,7 @@
 note
-	description: "Summary description for {PLAIN_XHTML_ELEMENT}."
-	author: "sandro"
+	description: "[
+		Used to put xhtml code to the page result of the response
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 

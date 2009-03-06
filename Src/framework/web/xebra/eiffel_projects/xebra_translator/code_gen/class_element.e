@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {CLASS_ELEMENT}."
+	description: "[
+		Used to render a class with its features, inherit and create clause
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -1,6 +1,7 @@
 note
-	description: "Summary description for {CALL_ELEMENT}."
-	author: "sandro"
+	description: "[
+		Used to render a call to the controller that writes to the xhtml page of the response
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 

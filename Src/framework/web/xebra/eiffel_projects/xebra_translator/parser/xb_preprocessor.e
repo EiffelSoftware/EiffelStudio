@@ -1,6 +1,6 @@
 note
 	description: "[
-		Splits an input stream into two parts: a xml only text and a list of tags
+
 	]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,6 +21,7 @@ feature {NONE} -- Initialization
 			html_parse: XB_PARSE_HANDLER_HTML
 
 		do
+				--create parse handlers and create chain
 			create output_call_parse.make
 			create call_parse.make
 			create html_parse.make
@@ -38,82 +39,120 @@ feature -- Access
 
 feature -- Features yet to be named
 
-	sort_elements (output_elements_unsorted: DS_HASH_TABLE [OUTPUT_ELEMENT, INTEGER]): LINKED_LIST[OUTPUT_ELEMENT]
-			-- sorts elements from a hashmap according to an integer and puts them into a list
-		local
-			sorter: DS_ARRAY_QUICK_SORTER [INTEGER]
-			keys: ARRAY [INTEGER]
-			i: INTEGER
-		do
-			create {LINKED_LIST[OUTPUT_ELEMENT]}Result.make
-			create sorter.make (create {KL_COMPARABLE_COMPARATOR [INTEGER]}.make)
-
-			keys := output_elements_unsorted.keys.to_array
-
-			sorter.sort (keys)
-
-			from
-				i := 1
-			until
-				i > keys.count
-			loop
-				Result.put_right ( output_elements_unsorted.item (keys.item (i)))
-				i := i + 1
-			end
-		end
-
-
-	debug_dontsort (output_elements_unsorted: DS_HASH_TABLE [OUTPUT_ELEMENT, INTEGER]): LIST[OUTPUT_ELEMENT]
-			--test
-		local
-			ll: LINKED_LIST[OUTPUT_ELEMENT]
-		do
-
-			create ll.make
-
-			from
-				output_elements_unsorted.start
-			until
-				output_elements_unsorted.after
-			loop
-				ll.put_right (output_elements_unsorted.item_for_iteration)
-				output_elements_unsorted.forth
-			end
-			Result := ll
-		end
-
 	parse_string (a_string: STRING): LIST[OUTPUT_ELEMENT]
 			-- parses string with the list of parse tags.
-		require
 		local
-		--	temp_string: STRING
-			output_elements_unsorted: DS_HASH_TABLE [OUTPUT_ELEMENT, INTEGER]
+			output_elements:  LINKED_LIST [OUTPUT_ELEMENT]
 		do
-			create output_elements_unsorted.make_map_default
-
-			first_parse_handler.handle_string (output_elements_unsorted, a_string, 0)
-
-		--	Result := sort_elements (output_elements_unsorted)
-			Result := debug_dontsort (output_elements_unsorted)
-
-
-			--delegate string parsing to registered parse_tags
---			from
---				parse_tags.start
---				temp_string := a_string
---			until
---				parse_tags.after
---			loop
---				temp_string := parse_tags.item.parse_string (output_elements_unsorted, temp_string)
---				parse_tags.forth
---			end
-
-
-
-
-		--	Result := sort_elements (output_elements_unsorted)
-
+			create output_elements.make
+			first_parse_handler.handle_string (output_elements, a_string, 0)
+			Result := output_elements
 		end
+
+
+
+
+--	sort_elements (output_elements_unsorted: DS_HASH_TABLE [OUTPUT_ELEMENT, INTEGER]): LINKED_LIST[OUTPUT_ELEMENT]
+--			-- sorts elements from a hashmap according to an integer and puts them into a list
+--		local
+--			sorter: DS_ARRAY_QUICK_SORTER [INTEGER]
+--			keys: ARRAY [INTEGER]
+--			i: INTEGER
+--		do
+--			create {LINKED_LIST[OUTPUT_ELEMENT]}Result.make
+--			create sorter.make (create {KL_COMPARABLE_COMPARATOR [INTEGER]}.make)
+
+--			keys := output_elements_unsorted.keys.to_array
+
+--			sorter.sort (keys)
+
+--			from
+--				i := 1
+--			until
+--				i > keys.count
+--			loop
+--				Result.put_right ( output_elements_unsorted.item (keys.item (i)))
+--				i := i + 1
+--			end
+--		end
+
+
+--	debug_dontsort (output_elements_unsorted: DS_HASH_TABLE [OUTPUT_ELEMENT, INTEGER]): LIST[OUTPUT_ELEMENT]
+--			--test
+--		local
+--			ll: LINKED_LIST[OUTPUT_ELEMENT]
+--		do
+
+--			create ll.make
+
+--			from
+--				output_elements_unsorted.start
+--			until
+--				output_elements_unsorted.after
+--			loop
+--				ll.put_right (output_elements_unsorted.item_for_iteration)
+--				output_elements_unsorted.forth
+--			end
+--			Result := ll
+--		end
+--	debug_dontsort (output_elements_unsorted: DS_HASH_TABLE [OUTPUT_ELEMENT, INTEGER]): LIST[OUTPUT_ELEMENT]
+--			--test
+--		local
+--			ll: LINKED_LIST[OUTPUT_ELEMENT]
+--		do
+
+--			create ll.make
+
+--			from
+--				output_elements_unsorted.start
+--			until
+--				output_elements_unsorted.after
+--			loop
+--				ll.put_right (output_elements_unsorted.item_for_iteration)
+--				output_elements_unsorted.forth
+--			end
+--			Result := ll
+--		end
+--	debug_dontsort (output_elements_unsorted: DS_HASH_TABLE [OUTPUT_ELEMENT, INTEGER]): LIST[OUTPUT_ELEMENT]
+--			--test
+--		local
+--			ll: LINKED_LIST[OUTPUT_ELEMENT]
+--		do
+
+--			create ll.make
+
+--			from
+--				output_elements_unsorted.start
+--			until
+--				output_elements_unsorted.after
+--			loop
+--				ll.put_right (output_elements_unsorted.item_for_iteration)
+--				output_elements_unsorted.forth
+--			end
+--			Result := ll
+--		end
+--	debug_dontsort (output_elements_unsorted: DS_HASH_TABLE [OUTPUT_ELEMENT, INTEGER]): LIST[OUTPUT_ELEMENT]
+--			--test
+--		local
+--			ll: LINKED_LIST[OUTPUT_ELEMENT]
+--		do
+
+--			create ll.make
+
+--			from
+--				output_elements_unsorted.start
+--			until
+--				output_elements_unsorted.after
+--			loop
+--				ll.put_right (output_elements_unsorted.item_for_iteration)
+--				output_elements_unsorted.forth
+--			end
+--			Result := ll
+--		end
+
+
+
+
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

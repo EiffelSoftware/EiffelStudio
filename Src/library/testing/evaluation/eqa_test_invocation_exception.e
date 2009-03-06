@@ -90,7 +90,7 @@ feature {NONE} -- Initialization
 			code_valid: valid_code (code)
 		local
 			i, l_last, l_depth: INTEGER
-			l_prev, l_found: BOOLEAN
+			l_prev, l_found, l_bp_set: BOOLEAN
 		do
 				-- `i': Cursor position in `a_trace'
 				-- `l_last': Last character in `a_trace' which will be added to truncated `trace'
@@ -110,14 +110,26 @@ feature {NONE} -- Initialization
 					if not l_found then
 						l_depth := l_depth + 1
 					end
-					if is_frame_of_class (a_trace, i, a_class_name, a_feature_name) then
-						l_found := True
-						l_prev := True
-					elseif l_prev then
-						l_last := i - 1
-						l_prev := False
+					parse_frame (a_trace, i)
+					if not l_bp_set then
+						breakpoint_slot := last_breakpoint_slot
+						l_bp_set := True
 					end
-					i := go_after_next_dash_line (a_trace, i)
+					if attached last_class_name as l_cn then
+						if
+							l_cn.same_string (a_class_name) and
+							(a_feature_name /= Void implies (attached last_routine_name as l_rn and then l_rn.same_string (a_feature_name)))
+						then
+							l_found := True
+							l_prev := True
+						elseif l_prev then
+							l_last := i - 1
+							l_prev:= False
+						end
+						i := go_after_next_dash_line (a_trace, i)
+					else
+						i := 0
+					end
 				end
 
 				if l_found then
@@ -136,6 +148,8 @@ feature {NONE} -- Initialization
 					l_last := a_trace.count
 				end
 			else
+				parse_frame (a_trace, i)
+				breakpoint_slot := last_breakpoint_slot
 				is_trace_valid := i > 0
 				l_last := a_trace.count
 			end
@@ -159,6 +173,20 @@ feature -- Access
 
 	trace: READABLE_STRING_8
 			-- Text based representation of the stack trace
+
+	breakpoint_slot: INTEGER
+			--
+
+feature {NONE} -- Access: parsing
+
+	last_class_name: detachable like trace
+			-- Class name last parsed through `parse_frame'
+
+	last_routine_name: detachable like trace
+			-- Routine name last parsed through `parse_frame'
+
+	last_breakpoint_slot: like breakpoint_slot
+			-- Last breakpoint slot parsed by `is_trace_valid', zero if slot information could not be found.
 
 feature -- Status report
 
@@ -209,38 +237,58 @@ feature {NONE} -- Implementation
 			start_zero_implies_result_zero: a_start = 0 implies Result = 0
 		end
 
-	is_frame_of_class (a_trace: like trace; a_position: INTEGER; a_class_name: READABLE_STRING_8; a_feature_name: detachable READABLE_STRING_8): BOOLEAN
-			-- Does stack frame represent call to test routine?
+	parse_frame (a_trace: like trace; a_position: INTEGER)
+			-- Parse current frame in stack trace and set `last_class', `last_routine' and
+			-- `last_breakpoint_slot' accordingly.
 			--
-			-- `a_trace': Complete exception trace.
-			-- `a_position': Start position of current stack frame.
-			-- `a_class_name': Test class name.
-			-- `a_feature_name': Name of test feature in which exception was raised, or Void.
-			-- `Result': True is current stack frame calls test routine, False otherwise.
+			-- `a_trace': Complete stack trace.
+			-- `a_position': Position in `a_trace' where current frame begins.
 		require
+			a_trace_attached: a_trace /= Void
 			a_position_valid: a_position > 0 and a_position <= a_trace.count
-			a_class_name_attached: a_class_name /= Void
-			a_class_name_not_empty: not a_class_name.is_empty
-			a_feature_name_not_empty: a_feature_name /= Void implies not a_feature_name.is_empty
 		local
-			i, l_count, l_after: INTEGER
+			i, j, l_count, l_bp: INTEGER
+			l_done: BOOLEAN
+			l_substring: like trace
+			c: CHARACTER
 		do
-			l_after := a_position + a_class_name.count
-			if a_trace.substring_index_in_bounds (a_class_name, a_position, l_after - 1) = a_position then
+			last_class_name := Void
+			last_routine_name := Void
+			last_breakpoint_slot := 0
+			from
+				j := a_position
 				l_count := a_trace.count
-				Result := l_after > l_count or else a_trace.item (l_after).is_space
-				if a_feature_name /= Void then
-					from
-						i := l_after
-					until
-						i > l_count or else not a_trace.item (i).is_space
-					loop
-						i := i + 1
+			until
+				l_done
+			loop
+				from
+					i := j
+				until
+					j > l_count or else (a_trace.item (j).is_space and i < j)
+				loop
+					c := a_trace.item (j)
+					j := j + 1
+					if c.is_space or c = '@' then
+						i := j
 					end
-					l_after := i + a_feature_name.count
-					Result := l_after - 1 <= l_count and then
-						a_trace.substring_index_in_bounds (a_feature_name, i, l_after - 1) = i and then
-						(l_after > l_count or else a_trace.item (l_after).is_space)
+				end
+				if i < j then
+					l_substring := a_trace.substring (i, j - 1)
+					if last_class_name = Void then
+						last_class_name := l_substring
+					elseif last_routine_name = Void then
+						last_routine_name := l_substring
+					else
+						if l_substring.is_integer then
+							l_bp := l_substring.to_integer
+							if l_bp > 0 then
+								last_breakpoint_slot := l_bp
+							end
+						end
+						l_done := True
+					end
+				else
+					l_done := True
 				end
 			end
 		end
@@ -260,10 +308,10 @@ note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

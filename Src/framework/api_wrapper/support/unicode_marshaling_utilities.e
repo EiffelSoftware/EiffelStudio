@@ -78,7 +78,7 @@ feature {API_MARSHALLER} -- Factory
 
 feature {NONE} -- Factory
 
-	new_bridge: UNICODE_MARSHALING_UTILITIES_I [STRING_HANDLER]
+	new_bridge: attached UNICODE_MARSHALING_UTILITIES_I [STRING_HANDLER]
 			-- <Precursor>
 		do
 			create {UNICODE_MARSHALING_UTILITIES_IMP} Result

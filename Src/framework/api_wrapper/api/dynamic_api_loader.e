@@ -16,30 +16,22 @@ class
 inherit
 	ANY
 
--- inherit {NONE}
 	BRIDGE [DYNAMIC_API_LOADER_I]
 		export
 			{NONE} all
 		end
 
+	DYNAMIC_API_LOADER_I
+
 feature -- Query
 
-	api_pointer (a_hnd: POINTER; a_api_name: detachable STRING_GENERAL): POINTER
-			-- Retrieves a pointer to a library's API.
-			--
-			-- `a_hnd': A valid handle pointer to a loaded dynamic library.
-			-- `a_api_name': The API feature name to fetch a pointer to.
-			-- `Result': A pointer to an API feature or `default_pointer' if the API routine could not be
-			--           found.
-		require
-			not_a_hnd_is_null: a_hnd /= default_pointer
-			a_api_name_attached: a_api_name /= Void
-			not_a_api_name_is_empty: not a_api_name.is_empty
+	api_pointer (a_hnd: POINTER; a_api_name: READABLE_STRING_GENERAL): POINTER
+			-- <Precursor>
 		do
 			Result := bridge.api_pointer (a_hnd, a_api_name)
 		end
 
-	api_pointer_with_raise (a_hnd: POINTER; a_api_name: detachable STRING_GENERAL): POINTER
+	api_pointer_with_raise (a_hnd: POINTER; a_api_name: detachable READABLE_STRING_GENERAL): POINTER
 			-- Retrieves a pointer to a library's API, and raises an exception if the API feature was not
 			-- found.
 			--
@@ -64,38 +56,20 @@ feature -- Query
 
 feature -- Basic operations
 
-	load_library (a_name: detachable STRING_GENERAL; a_version: detachable STRING_GENERAL): POINTER
-			-- Attempts to loads a dynamic library using a library name.
-			--
-			-- `a_name': The name of a dynamic library, without an extension.
-			-- `a_version': An optional version string of the library to load.
-			-- `Result': A pointer to the loaded library module, or `default_pointer' if the library could not be loaded.
-		require
-			a_name_attached: a_name /= Void
-			not_a_name_is_empty: not a_name.is_empty
-			not_a_version_is_empty: a_version /= Void implies not a_version.is_empty
+	load_library (a_name: READABLE_STRING_GENERAL; a_version: detachable READABLE_STRING_GENERAL): POINTER
+			-- <Precursor>
 		do
 			Result := bridge.load_library (a_name, a_version)
 		end
 
-	load_library_from_path (a_path: detachable STRING_GENERAL): POINTER
-			-- Attempts to loads a dynamic library from a path on disk.
-			--
-			-- `a_path': The path to a dynamic library.
-			-- `Result': A pointer to the loaded library module, or `default_pointer' if the library could not be loaded.
-		require
-			a_path_attached: a_path /= Void
-			not_a_path_is_empty: not a_path.is_empty
+	load_library_from_path (a_path: READABLE_STRING_GENERAL): POINTER
+			-- <Precursor>
 		do
 			Result := bridge.load_library_from_path (a_path)
 		end
 
 	unload_library (a_hnd: POINTER)
-			-- Attempts to unloads a dynamic library using a library name.
-			--
-			-- `a_hnd': The module handle pointer returned from `load_library' or `load_library_from_path'.
-		require
-			not_a_hnd_is_null: a_hnd /= default_pointer
+			-- <Precursor>
 		do
 			bridge.unload_library (a_hnd)
 		end
@@ -109,7 +83,7 @@ feature {NONE} -- Factory
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -122,22 +96,22 @@ feature {NONE} -- Factory
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -15,27 +15,27 @@ inherit
 
 feature -- Query
 
-	api_pointer (a_hnd: POINTER; a_api_name: detachable STRING_GENERAL): POINTER
+	api_pointer (a_hnd: POINTER; a_api_name: READABLE_STRING_GENERAL): POINTER
 			-- <Precursor>
 		local
 			l_name: attached EV_GTK_C_STRING
 			l_result: BOOLEAN
 		do
-			create l_name.set_with_eiffel_string (a_api_name)
+			create l_name.set_with_eiffel_string (a_api_name.as_string_32)
 			l_result := {EV_GTK_EXTERNALS}.g_module_symbol (a_hnd, l_name.item, $Result)
 		end
 
 feature -- Basic operations
 
-	load_library (a_name: detachable STRING_GENERAL; a_version: detachable STRING_GENERAL): POINTER
+	load_library (a_name: READABLE_STRING_GENERAL; a_version: detachable READABLE_STRING_GENERAL): POINTER
 			-- <Precursor>
 		local
-			l_fn: attached FILE_NAME
-			l_mac_fn: attached FILE_NAME
+			l_fn: FILE_NAME
+			l_mac_fn: FILE_NAME
 		do
 			create l_fn.make_from_string (a_name.as_string_8)
 			if {PLATFORM}.is_mac then
-				l_mac_fn ?= l_fn.twin
+				l_mac_fn := l_fn.twin
 				if a_version /= Void then
 					l_mac_fn.add_extension (a_version.as_string_8)
 				end
@@ -52,12 +52,12 @@ feature -- Basic operations
 			end
 		end
 
-	load_library_from_path (a_path: detachable STRING_GENERAL): POINTER
+	load_library_from_path (a_path: READABLE_STRING_GENERAL): POINTER
 			-- <Precursor>
 		local
-			l_path: attached EV_GTK_C_STRING
+			l_path: EV_GTK_C_STRING
 		do
-			create l_path.set_with_eiffel_string (a_path)
+			create l_path.set_with_eiffel_string (a_path.as_string_32)
 			Result := {EV_GTK_EXTERNALS}.g_module_open (l_path.item, 0)
 		end
 
@@ -71,7 +71,7 @@ feature -- Basic operations
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -84,22 +84,22 @@ feature -- Basic operations
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -1,6 +1,6 @@
 note
 	description: "[
-
+		Windows implementation of Unicode marshalling utilities.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -15,7 +15,7 @@ inherit
 
 feature {UNICODE_MARSHALING_UTILITIES} -- Clean up
 
-	free (a_obj: attached WEL_STRING)
+	free (a_obj: WEL_STRING)
 			-- <Precursor>
 		do
 			-- Do nothing because the GC will handled it.
@@ -23,13 +23,13 @@ feature {UNICODE_MARSHALING_UTILITIES} -- Clean up
 
 feature {UNICODE_MARSHALING_UTILITIES} -- Query
 
-	pointer (a_obj: attached WEL_STRING): POINTER
+	pointer (a_obj: WEL_STRING): POINTER
 			-- <Precursor>
 		do
 			Result := a_obj.item
 		end
 
-	string (a_obj: attached WEL_STRING): attached STRING_32
+	string (a_obj: WEL_STRING): STRING_32
 			-- <Precursor>
 		do
 			Result := a_obj.string.as_attached
@@ -37,19 +37,19 @@ feature {UNICODE_MARSHALING_UTILITIES} -- Query
 
 feature {UNICODE_MARSHALING_UTILITIES} -- Factory
 
-	new_string_handler (a_str: attached STRING_GENERAL): attached WEL_STRING
+	new_string_handler (a_str: READABLE_STRING_GENERAL): WEL_STRING
 			-- <Precursor>
 		do
-			create Result.make (a_str)
+			create Result.make (a_str.as_string_32)
 		end
 
-	new_string_handler_from_count (a_count: NATURAL): attached WEL_STRING
+	new_string_handler_from_count (a_count: NATURAL): WEL_STRING
 			-- <Precursor>
 		do
 			create Result.make_empty (a_count.to_integer_32)
 		end
 
-	new_string_handler_from_pointer (a_ptr: POINTER; a_shared: BOOLEAN): attached WEL_STRING
+	new_string_handler_from_pointer (a_ptr: POINTER; a_shared: BOOLEAN): WEL_STRING
 			-- <Precursor>
 		do
 			if a_shared then
@@ -59,7 +59,7 @@ feature {UNICODE_MARSHALING_UTILITIES} -- Factory
 			end
 		end
 
-	new_string_handler_from_pointer_and_count (a_ptr: POINTER; a_count: NATURAL; a_shared: BOOLEAN): attached WEL_STRING
+	new_string_handler_from_pointer_and_count (a_ptr: POINTER; a_count: NATURAL; a_shared: BOOLEAN): WEL_STRING
 			-- <Precursor>
 		do
 			if a_shared then
@@ -69,8 +69,11 @@ feature {UNICODE_MARSHALING_UTILITIES} -- Factory
 			end
 		end
 
+invariant
+	is_windows: {PLATFORM}.is_windows
+
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -83,22 +86,22 @@ feature {UNICODE_MARSHALING_UTILITIES} -- Factory
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

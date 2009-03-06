@@ -15,7 +15,7 @@ deferred class
 
 feature -- Query
 
-	api_pointer (a_hnd: POINTER; a_api_name: detachable STRING_GENERAL): POINTER
+	api_pointer (a_hnd: POINTER; a_api_name: READABLE_STRING_GENERAL): POINTER
 			-- Retrieves a pointer to a library's API.
 			--
 			-- `a_hnd': A valid handle pointer to a loaded dynamic library.
@@ -31,7 +31,7 @@ feature -- Query
 
 feature -- Basic operations
 
-	load_library (a_name: detachable STRING_GENERAL; a_version: detachable STRING_GENERAL): POINTER
+	load_library (a_name: READABLE_STRING_GENERAL; a_version: detachable READABLE_STRING_GENERAL): POINTER
 			-- Attempts to loads a dynamic library using a library name.
 			--
 			-- `a_name': The name of a dynamic library, without an extension.
@@ -44,7 +44,7 @@ feature -- Basic operations
 		deferred
 		end
 
-	load_library_from_path (a_path: detachable STRING_GENERAL): POINTER
+	load_library_from_path (a_path: READABLE_STRING_GENERAL): POINTER
 			-- Attempts to loads a dynamic library from a path on disk.
 			--
 			-- `a_path': The path to a dynamic library.
@@ -65,7 +65,7 @@ feature -- Basic operations
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -78,22 +78,22 @@ feature -- Basic operations
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

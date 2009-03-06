@@ -100,7 +100,7 @@ feature -- Processing
 			create {LINKED_LIST [SERVLET_ELEMENT]} feature_body.make
 			feature_body.extend (wrap ("create request_handler.make"))
 			feature_body.extend (wrap ("request_handler.run"))
-			create request_handler_local.make ("request_handler", "REQUEST_HANDLER")
+			create request_handler_local.make ("request_handler", webapp_name.as_upper + "_REQUEST_HANDLER")
 			create {LINKED_LIST [VARIABLE_ELEMENT]} locals.make
 			locals.extend (request_handler_local)
 			create constructor.make_with_locals ("make", feature_body, locals)
@@ -125,7 +125,7 @@ feature -- Processing
 				some_servlets.after
 			loop
 				servlet := some_servlets.item
-				feature_body.extend (wrap ("create {" + servlet.name.as_upper + "_SERVLET} servlet.make"))
+				feature_body.extend (wrap ("create {" + servlet.name.as_upper + "} servlet.make"))
 				feature_body.extend (wrap ("servlets.put (servlet, %"" + servlet.name.as_upper + "%")"))
 				some_servlets.forth
 			end

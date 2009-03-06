@@ -1,28 +1,18 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<system
-	 xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
-	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
-	 name="eiffelsoftware.codedom" uuid="CB76EC4F-25F4-4A53-9D2A-54135BB271B5">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="eiffelsoftware.codedom" uuid="CB76EC4F-25F4-4A53-9D2A-54135BB271B5">
 	<target name="codedom_provider_common">
-		<description>
-			Codedom provider
-		</description>
-
-		<root feature="default_create" class="CODE_DOM_PROVIDER"/>
-
+		<description>Codedom provider</description>
+		<root cluster="codedom_provider" class="CODE_DOM_PROVIDER" feature="default_create"/>
 		<version major="5" minor="7" release="509" build="0"/>
-
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-
 		<option>
-			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+			<assertions precondition="true"/>
 		</option>
-
 		<setting name="cls_compliant" value="true"/>
 		<setting name="dotnet_naming_convention" value="true"/>
+		<setting name="executable_name" value="EiffelSoftware.Codedom2_0"/>
 		<setting name="il_verifiable" value="true"/>
 		<setting name="msil_assembly_compatibility" value="None"/>
 		<setting name="msil_clr_version" value="v2.0.50727"/>
@@ -32,25 +22,20 @@
 		<setting name="msil_use_optimized_precompile" value="true"/>
 		<setting name="use_all_cluster_name_as_namespace" value="false"/>
 		<setting name="use_cluster_name_as_namespace" value="false"/>
-		<setting name="executable_name" value="EiffelSoftware.Codedom2_0"/>
-
 		<precompile name="precompile" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\configuration\cache_browser.ecf"/>
-
-		<library name="codedom_provider" location="codedom_provider_library.ecf" readonly="true"/>
+		<library name="codedom_provider" location="codedom_provider_library.ecf" readonly="false"/>
 	</target>
-
 	<target name="codedom_provider_debug" extends="codedom_provider_common">
 		<option debug="true">
 			<debug name="log_exceptions" enabled="true"/>
-			<assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false"/>
+			<assertions/>
 		</option>
 		<setting name="line_generation" value="true"/>
 	</target>
-
 	<target name="codedom_provider_release" extends="codedom_provider_common">
 		<option debug="false">
 			<debug name="log_exceptions" enabled="false"/>
-			<assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false"/>
+			<assertions/>
 		</option>
 		<setting name="line_generation" value="false"/>
 	</target>

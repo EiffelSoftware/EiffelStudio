@@ -1,6 +1,8 @@
 note
-	description: "Summary description for {XB_PARSE_TAG}."
-	author: ""
+	description: "[
+			See XB_PARSE_HANDLER. Extracts a string inside a tag
+			and passes the rest of the string to the next XB_PARSE_HANDLER.
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 

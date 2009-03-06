@@ -1,6 +1,8 @@
 note
-	description: "Summary description for {XB_PARSE_HANDLER_HTML}."
-	author: ""
+	description: "[
+			See XB_PARSE_HANDLER. Does not extract a tag but stores the string as an 
+			PLAIN_XHTML_ELEMENT.
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -18,7 +20,7 @@ feature {NONE} -- Initialization
 	make
 			-- Initialization for `Current'.
 		do
-		
+
 		end
 
 feature -- Processing		

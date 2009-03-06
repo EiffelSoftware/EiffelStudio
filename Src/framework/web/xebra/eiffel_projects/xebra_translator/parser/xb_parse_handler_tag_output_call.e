@@ -1,6 +1,8 @@
 note
-	description: "Summary description for {XB_PARSE_TAG_OUTPUT_CALL}."
-	author: ""
+	description: "[
+			See XB_PARSE_HANDLER_TAG. A OUTPUT_CALL_ELEMENT is 
+			created from the inner string.
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 

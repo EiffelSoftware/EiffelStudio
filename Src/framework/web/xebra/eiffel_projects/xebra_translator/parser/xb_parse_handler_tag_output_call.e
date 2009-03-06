@@ -49,7 +49,7 @@ feature -- Process
 			-- Knows what to do with the string inside a tag.
 	do
 			print ("-processing OUTP string '" + an_inner_string + "' at pos " + a_position.out + "%N")
-			output_elements.put_front (create {OUTPUT_CALL_ELEMENT}.make (an_inner_string))
+			output_elements.put_right (create {OUTPUT_CALL_ELEMENT}.make (an_inner_string))
 	end
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

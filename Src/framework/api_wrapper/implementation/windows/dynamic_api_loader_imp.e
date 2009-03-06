@@ -15,10 +15,10 @@ inherit
 
 feature -- Query
 
-	api_pointer (a_hnd: POINTER; a_api_name: detachable STRING_GENERAL): POINTER
+	api_pointer (a_hnd: POINTER; a_api_name: READABLE_STRING_GENERAL): POINTER
 			-- <Precursor>
 		local
-			l_name: attached C_STRING
+			l_name: C_STRING
 		do
 			create l_name.make (a_api_name)
 			Result := c_get_proc_address (a_hnd, l_name.item)
@@ -26,7 +26,7 @@ feature -- Query
 
 feature -- Basic operations
 
-	load_library (a_name: detachable STRING_GENERAL; a_version: detachable STRING_GENERAL): POINTER
+	load_library (a_name: READABLE_STRING_GENERAL; a_version: detachable READABLE_STRING_GENERAL): POINTER
 			-- <Precursor>
 		local
 			l_fn: FILE_NAME
@@ -37,7 +37,7 @@ feature -- Basic operations
 			else
 				create l_fn.make_from_string (a_name.as_string_8 + a_version.as_string_8)
 			end
-			l_dll_fn ?= l_fn.twin
+			l_dll_fn := l_fn.twin
 			l_dll_fn.add_extension (once "dll")
 			Result := load_library_from_path (l_dll_fn.string)
 			if Result = default_pointer then
@@ -52,12 +52,12 @@ feature -- Basic operations
 			end
 		end
 
-	load_library_from_path (a_path: detachable STRING_GENERAL): POINTER
+	load_library_from_path (a_path: READABLE_STRING_GENERAL): POINTER
 			-- <Precursor>
 		local
-			l_path: attached WEL_STRING
+			l_path: WEL_STRING
 		do
-			create l_path.make (a_path)
+			create l_path.make (a_path.as_string_32)
 			Result := c_load_library (l_path.item)
 		end
 
@@ -116,7 +116,7 @@ feature {NONE} -- Externals
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -129,22 +129,22 @@ feature {NONE} -- Externals
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

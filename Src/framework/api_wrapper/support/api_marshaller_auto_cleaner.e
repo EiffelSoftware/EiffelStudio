@@ -15,16 +15,13 @@ note
 frozen class
 	API_MARSHALLER_AUTO_CLEANER
 
-inherit
-	DISPOSABLE
-
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_marshaller: attached like marshaller)
-			-- Initialize an marshaller cleaner for a given marshaller
+	make (a_marshaller: like marshaller)
+			-- Initialize an marshaller cleaner for a given marshaller.
 		do
 			marshaller := a_marshaller
 			create pointers.make (3)
@@ -32,31 +29,23 @@ feature {NONE} -- Initialization
 			marshaller_set: marshaller = a_marshaller
 		end
 
-feature -- Clean up
-
-	dispose
-			-- <Precursor>
-		do
-			clean
-		end
-
 feature -- Access
 
-	marshaller: attached API_MARSHALLER
-			-- The marshaller to use to clean up allocated resources
+	marshaller: API_MARSHALLER
+			-- The marshaller to use to clean up allocated resources.
 
 feature {NONE} -- Access
 
-	pointers: attached ARRAYED_SET [POINTER]
-			-- The pointers managed by the cleaner
+	pointers: ARRAYED_SET [POINTER]
+			-- The pointers managed by the cleaner.
 
 feature -- Basic operations
 
 	clean
-			-- Performs a clean up
+			-- Performs a clean up of all managed pointers.
 		local
-			l_pointers: attached like pointers
-			l_marshaller: attached like marshaller
+			l_pointers: like pointers
+			l_marshaller: like marshaller
 			l_p: POINTER
 		do
 			l_pointers := pointers
@@ -75,10 +64,11 @@ feature -- Basic operations
 				end
 			end
 		ensure
-			all_pointers_freed: (old pointers).linear_representation.for_all (agent (ia_ptr: POINTER): BOOLEAN
-				do
-					Result := not marshaller.is_pointer_managed (ia_ptr)
-				end)
+			pointers_items_freed: (old pointers).linear_representation.for_all (
+				agent (ia_ptr: POINTER): BOOLEAN
+					do
+						Result := not marshaller.is_pointer_managed (ia_ptr)
+					end)
 			pointers_is_empty: pointers.is_empty
 		end
 
@@ -86,6 +76,8 @@ feature -- Removal
 
 	auto_free (a_ptr: POINTER)
 			-- Auto-frees a pointer retrieved from the associated marshaller.
+			--
+			-- `a_ptr': The pointer to free.
 		require
 			not_a_ptr_is_null: a_ptr /= default_pointer
 			a_ptr_is_managed: marshaller.is_pointer_managed (a_ptr)
@@ -100,8 +92,12 @@ feature -- Removal
 			pointers_has_a_ptr: pointers.has (a_ptr)
 		end
 
+invariant
+	marshaller_attached: marshaller /= Void
+	pointers_attached: pointers /= Void
+
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -114,22 +110,22 @@ feature -- Removal
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

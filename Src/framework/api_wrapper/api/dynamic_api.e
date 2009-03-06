@@ -11,9 +11,11 @@ deferred class
 	DYNAMIC_API
 
 inherit
+	USABLE_I
+
 	DISPOSABLE
 		export
-			{NONE} all
+			{NONE} dispose
 		end
 
 	SHARED_DYNAMIC_API_LOADER
@@ -96,16 +98,16 @@ feature {NONE} -- Access
 feature -- Status report
 
 	is_interface_usable: BOOLEAN
-			-- Indicates if the API is usable.
+			-- <Precursor>
 		do
 			Result := module_handle /= default_pointer
-		ensure
+		ensure then
 			not_module_handle_is_null: Result implies module_handle /= default_pointer
 		end
 
 feature -- Query
 
-	api_pointer (a_api_name: detachable STRING_GENERAL): POINTER
+	api_pointer (a_api_name: READABLE_STRING_GENERAL): POINTER
 			-- Retrieve an API function/variable pointer given an API name.
 			--
 			-- `a_api_name': An API function or variable name.
@@ -122,7 +124,7 @@ feature -- Query
 
 feature {NONE} -- Basic operations
 
-	load_library (a_name: attached STRING_32; a_version: detachable STRING_32): POINTER
+	load_library (a_name: READABLE_STRING_GENERAL; a_version: detachable READABLE_STRING_GENERAL): POINTER
 			-- Attempts to load a library from a module name.
 			--
 			--| Note: Redefine if the API needs to load a library using a path, or some other special
@@ -133,7 +135,9 @@ feature {NONE} -- Basic operations
 			-- `Result': A module handle pointer of the loaded library or null if the library could
 			--           not be loaded.
 		require
+			a_name_attached: a_name /= Void
 			not_a_name_is_empty: not a_name.is_empty
+			not_a_version_is_empty: a_version /= Void implies not a_version.is_empty
 		do
 			Result := api_loader.load_library (a_name, a_version)
 		end
@@ -147,7 +151,7 @@ invariant
 	not_module_handle_is_null: is_interface_usable implies module_handle /= default_pointer
 
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -160,22 +164,22 @@ invariant
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

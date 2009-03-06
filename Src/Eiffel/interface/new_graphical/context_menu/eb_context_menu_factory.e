@@ -1330,7 +1330,7 @@ feature {NONE} -- Menu section, Granularity 1.
 				check l_tool_attached: l_tool /= Void end
 				if l_tool.panel.dropable (l_stone) then
 					create l_menu_item.make_with_text (l_tool.title)
-					l_menu_item.select_actions.extend (agent l_tool.show)
+					l_menu_item.select_actions.extend (agent l_tool.show (True))
 					l_menu_item.select_actions.extend (agent (l_tool.panel).set_stone (l_stone))
 					a_menu.extend (create {EV_MENU_SEPARATOR})
 					a_menu.extend (l_menu_item)

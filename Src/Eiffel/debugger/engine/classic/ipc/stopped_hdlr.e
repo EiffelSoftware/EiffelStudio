@@ -168,7 +168,7 @@ feature -- Execution
 				l_status.set (feature_name, address, origine_type_id, dynamic_type_id, offset, stopping_reason)
 				l_status.set_exception_occurred (exception_occurred)
 				if exception_occurred then
-					if attached {EXCEPTION_DEBUG_VALUE} l_app.remote_current_exception_value as e then
+					if attached l_app.remote_current_exception_value as e then
 						e.update_data
 						l_status.set_exception (e)
 					else
@@ -351,7 +351,7 @@ feature {NONE} -- Implementation
 				else
 					io.put_string ("Ignore exception")
 				end
-				if attached {STRING} (app.status.exception_type_name) as s then
+				if attached app.status.exception_type_name as s then
 					io.put_string (": " + s)
 				end
 				io.new_line
@@ -379,15 +379,14 @@ feature {NONE} -- Implementation
 			cse: CALL_STACK_ELEMENT_CLASSIC
 		do
 			l_status ?= app.status
+			check l_status /= Void end -- implied by `STOPPED_HDLR' only for classic execution.
+			
 			Result := [False, False]
 
 				--| debuggee stopped on a Breakpoint
 
 				--| Initialize the stack with a dummy first call stack element
 				--| to be able to operation on the current feature
---			if app. then
---				
---			end
 			cse := l_status.dummy_call_stack_element
 			l_status.current_call_stack.extend (cse)
 			app.set_current_execution_stack_number (1)

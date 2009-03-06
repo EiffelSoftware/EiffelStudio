@@ -1150,7 +1150,7 @@ feature -- Change
 		do
 				--| Check if RT_EXTENSION is available
 			rt_extension_available := Eiffel_project.system_defined and then
-							attached {CLASS_I} Eiffel_system.system.rt_extension_class as cl_i and then
+							(attached Eiffel_system.system.rt_extension_class as cl_i) and then
 							cl_i.is_compiled
 		end
 

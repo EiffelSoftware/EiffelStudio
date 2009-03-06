@@ -280,7 +280,7 @@ feature -- Feature access
 			f: E_FEATURE
 		do
 			if is_invariant_feature_name (a_featname) then
-				if attached {INVARIANT_FEAT_I} a_written_class.invariant_feature as inv then
+				if attached a_written_class.invariant_feature as inv then
 					Result := inv.api_feature (a_written_class.class_id)
 				end
 			else
@@ -393,7 +393,7 @@ feature -- Feature access
 			until
 				ri_table.after or rid /= 0
 			loop
-				if attached {ROUT_INFO} ri_table.item_for_iteration as ri then
+				if attached ri_table.item_for_iteration as ri then
 					if
 						ri.offset = a_offset and
 						ri.origin = a_class.class_id

@@ -279,7 +279,7 @@ feature {NONE} -- Parameters Implementation
 					check dmp_not_void: dmp /= Void end
 					if dmp.is_basic then
 						if dt /= Void and f /= Void then
-							if attached {TYPE_A} f.arguments.i_th (params.index) as ta then
+							if attached f.arguments.i_th (params.index) as ta then
 								l_type := ta.instantiation_in (dt.type, f.written_in)
 							end
 							if l_type /= Void and then not l_type.is_basic then
@@ -319,7 +319,7 @@ feature -- Concrete evaluation
 
 			effective_evaluate_static_function (f, l_dyntype, params)
 
-			if last_result /= Void and then attached {CLASS_C} class_c_from_type_a (f.type, cl) as sc then
+			if last_result /= Void and then (attached class_c_from_type_a (f.type, cl) as sc) then
 				last_result.suggest_static_class (sc)
 			end
 			if last_result = Void or else not last_result.has_value then

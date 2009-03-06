@@ -86,7 +86,7 @@ feature {NONE} -- Implementation
 				dbg_error_handler.notify_error_evaluation (Debugger_names.cst_error_unable_to_get_target_object)
 			else
 				if attached {NATIVE_ARRAY_CLASS_TYPE} l_ctype as nat_ct then
-					if 
+					if
 						a_target /= Void and then
 						attached {EIFNET_DEBUG_NATIVE_ARRAY_VALUE} a_target.as_dump_value_dotnet.eifnet_debug_value as nat_edv
 					then
@@ -102,7 +102,7 @@ feature {NONE} -- Implementation
 					if l_icd_function = Void then
 						dbg_error_handler.notify_error_evaluation (Debugger_names.Cst_error_unable_to_get_icd_function)
 					else
-						if attached {DUMP_VALUE} dotnet_evaluate_icd_function (l_icdv_obj, l_icd_function, l_params, l_ctype.is_external, f.is_function) as dv then
+						if attached dotnet_evaluate_icd_function (l_icdv_obj, l_icd_function, l_params, l_ctype.is_external, f.is_function) as dv then
 							create last_result.make_with_value (dv)
 						else
 							-- FIXME: should we return a last_result.failed?
@@ -253,7 +253,7 @@ feature {NONE} -- Implementation
 				else
 						--| The current feature is used only for external function
 						--| Then we pass `True' to set the `is_external' argument.
-					if attached {DUMP_VALUE} dotnet_evaluate_icd_function (l_icdv_obj, l_icd_function, l_params, True, True) as dv then
+					if attached dotnet_evaluate_icd_function (l_icdv_obj, l_icd_function, l_params, True, True) as dv then
 						create last_result.make_with_value (dv)
 					else
 						-- FIXME: should we return last_result.failed?
@@ -432,7 +432,7 @@ feature {NONE} -- Implementation
 							dbg_error_handler.notify_error_evaluation (Void)
 						else
 								--| At this point l_icd_value represents an instance of INTERNAL
-							if attached {DUMP_VALUE} new_empty_instance_of_using_internal (a_type_i, l_icd_value, l_class_c) as dv then
+							if attached new_empty_instance_of_using_internal (a_type_i, l_icd_value, l_class_c) as dv then
 								create last_result.make_with_value (dv)
 							else
 								--FIXME: should we return last_result.failed?
@@ -473,7 +473,7 @@ feature {NONE} -- Implementation
 						dbg_error_handler.notify_error_evaluation (Void)
 					else
 							--| At this point l_icd_value represents an instance of INTERNAL
-							if attached {DUMP_VALUE} new_special_any_instance_using_internal (a_type_i, a_count, l_icd_value, l_class_c) as dv then
+							if attached new_special_any_instance_using_internal (a_type_i, a_count, l_icd_value, l_class_c) as dv then
 								create last_result.make_with_value (dv)
 							else
 								-- FIXME: should we return last_result.failed?

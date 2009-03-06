@@ -124,7 +124,7 @@ feature -- Properties
 		do
 			locs := locals
 			if locs /= Void then
-				if attached {EIFFEL_LIST [TYPE_DEC_AS]} routine.locals as lst then
+				if attached routine.locals as lst then
 					Result := locs.i_th (lst.count + i)
 				end
 			end

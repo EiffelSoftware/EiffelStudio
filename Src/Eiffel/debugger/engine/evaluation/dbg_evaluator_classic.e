@@ -120,7 +120,7 @@ feature {NONE} -- Implementation
 					-- Receive the Result.
 				recv_value (Current)
 				if is_exception then
-					if attached {EXCEPTION_DEBUG_VALUE} exception_item as exv then
+					if attached exception_item as exv then
 						exv.set_hector_addr
 						dbg_error_handler.notify_error_exception (Debugger_names.msg_error_exception_occurred_during_evaluation (fi.written_class.name_in_upper, fi.feature_name, exv.long_description))
 					else
@@ -132,7 +132,7 @@ feature {NONE} -- Implementation
 					if fi.is_function then
 						if item /= Void then
 							item.set_hector_addr
-							if attached {DUMP_VALUE} item.dump_value as dv then
+							if attached item.dump_value as dv then
 								create last_result.make_with_value (dv)
 							else
 								--FIXME: should we create last_result.failed
@@ -161,7 +161,7 @@ feature {NONE} -- Implementation
 					else
 						if res /= Void then
 							create last_result.make_with_value (res.dump_value)
-							if attached {CLASS_C} f.type.associated_class as cl then
+							if attached f.type.associated_class as cl then
 								last_result.suggest_static_class (cl)
 							end
 						else
@@ -194,7 +194,7 @@ feature {NONE} -- Implementation
 			end
 			if item /= Void then
 				item.set_hector_addr
-				if attached {DUMP_VALUE} item.dump_value as dv then
+				if attached item.dump_value as dv then
 					create last_result.make_with_value (dv)
 				else
 					--FIXME: should we create last_result.failed

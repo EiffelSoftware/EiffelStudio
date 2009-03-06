@@ -397,7 +397,7 @@ feature -- Remote access to RT_
 			icdv: ICOR_DEBUG_VALUE
 		do
 			icdv := remote_rt_object_icd_value
-			if icdv /= Void and then attached {CLASS_I} system.rt_extension_class as cl then
+			if icdv /= Void and then (attached system.rt_extension_class as cl) then
 				Result := debug_value_from_icdv (icdv, cl.compiled_class)
 			end
 
@@ -459,7 +459,7 @@ feature -- Remote access to RT_
 					i_fn := eifnet_debugger.eifnet_dbg_evaluator.new_eiffel_string_evaluation (Void, fn)
 					args := <<icdv, i_ref, i_fn>>
 					r := eifnet_debugger.eifnet_dbg_evaluator.function_evaluation (Void, icdf, args)
-					if attached {ABSTRACT_DEBUG_VALUE} debug_value_from_icdv (r, Void) as adv then
+					if attached debug_value_from_icdv (r, Void) as adv then
 						Result := adv.dump_value
 					end
 				end
@@ -511,7 +511,7 @@ feature -- Remote access to Exceptions
 			icdv: ICOR_DEBUG_VALUE
 		do
 			icdv := remote_exception_manager_icd_value
-			if icdv /= Void and then attached {CLASS_I} system.ise_exception_manager_class as cl then
+			if icdv /= Void and then (attached system.ise_exception_manager_class as cl) then
 				Result := debug_value_from_icdv (icdv, cl.compiled_class)
 			end
 		end
@@ -536,14 +536,14 @@ feature -- Remote access to Exceptions
 					end
 					if val /= Void then
 						check Result_not_void: Result /= Void end
-						if attached {STRING_8} eifnet_debugger.exception_class_name (val) as s8 then
+						if attached eifnet_debugger.exception_class_name (val) as s8 then
 							Result.set_exception_others (s8, {APPLICATION_STATUS_DOTNET}.exception_il_type_name_key)
 							if not Result.has_value then
 								--| Let's use the il type name as meaning
 								Result.set_user_meaning (s8)
 							end
 						end
-						if not Result.has_value and then attached {STRING_32} eifnet_debugger.exception_text (val) as s32 then
+						if not Result.has_value and then attached eifnet_debugger.exception_text (val) as s32 then
 							--| Let's use the il exception text
 							Result.set_user_text (s32)
 						end
@@ -555,7 +555,7 @@ feature -- Remote access to Exceptions
 			end
 		end
 
-	eiffel_wrapper_exception (e: ICOR_DEBUG_VALUE): ABSTRACT_DEBUG_VALUE
+	eiffel_wrapper_exception (e: ICOR_DEBUG_VALUE): detachable ABSTRACT_DEBUG_VALUE
 			-- Wrapped .NET exception
 		require
 			e_not_void: e /= Void
@@ -577,7 +577,7 @@ feature -- Remote access to Exceptions
 			end
 		end
 
-	associated_dotnet_exception (e: EXCEPTION_DEBUG_VALUE): ABSTRACT_REFERENCE_VALUE
+	associated_dotnet_exception (e: EXCEPTION_DEBUG_VALUE): detachable ABSTRACT_REFERENCE_VALUE
 			-- Wrapped .NET exception icor debug value.
 		require
 			e_not_void: e /= Void
@@ -706,7 +706,7 @@ feature -- Query
 			end
 		end
 
-	dump_value_at_address_with_class (a_addr: DBG_ADDRESS; a_cl: CLASS_C): DUMP_VALUE
+	dump_value_at_address_with_class (a_addr: DBG_ADDRESS; a_cl: CLASS_C): detachable DUMP_VALUE
 		local
 			l_dv: ABSTRACT_DEBUG_VALUE
 		do
@@ -716,7 +716,7 @@ feature -- Query
 			end
 		end
 
-	debug_value_at_address_with_class (a_addr: DBG_ADDRESS; a_cl: CLASS_C): ABSTRACT_DEBUG_VALUE
+	debug_value_at_address_with_class (a_addr: DBG_ADDRESS; a_cl: CLASS_C): detachable ABSTRACT_DEBUG_VALUE
 		do
 			if know_about_kept_object (a_addr) then
 				Result := kept_object_item (a_addr)

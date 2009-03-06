@@ -91,7 +91,7 @@ feature -- Element change
 
 feature -- Status setting
 
-	set_ht (table: HASH_TABLE [ANY, STRING])
+	set_ht (table: like ht)
 			-- Pass map `table' to current.
 			-- Set `ht' with `table'.
 		require else

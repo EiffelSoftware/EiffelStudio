@@ -59,7 +59,7 @@ feature -- Processing
 				servlets.after
 			loop
 				servlet := servlets.item
-				create buf.make_open_write (path + servlet.name.as_lower + "_servlet.e")
+				create buf.make_open_write (path + servlet.name.as_lower + ".e")
 				buf.set_ind_character ('%T')
 				servlet.serialize (buf)
 				servlets.forth
@@ -82,19 +82,40 @@ feature -- Processing
 			create buf.make_open_write (path + webapp_name.as_lower + "_application.e")
 			buf.set_ind_character ('%T')
 			create application_class.make (webapp_name.as_upper + "_APPLICATION")
+			application_class.set_constructor_name ("make")
+			application_class.add_feature (generate_contructor_for_application)
 			application_class.serialize (buf)
 			buf.close
 
 		end
+
+	generate_contructor_for_application: FEATURE_ELEMENT
+			-- Generates the constructor for the application
+		local
+			constructor: FEATURE_ELEMENT
+			feature_body: LIST [SERVLET_ELEMENT]
+			locals: LIST [VARIABLE_ELEMENT]
+			request_handler_local: VARIABLE_ELEMENT
+		do
+			create {LINKED_LIST [SERVLET_ELEMENT]} feature_body.make
+			feature_body.extend (wrap ("create request_handler.make"))
+			feature_body.extend (wrap ("request_handler.run"))
+			create request_handler_local.make ("request_handler", "REQUEST_HANDLER")
+			create {LINKED_LIST [VARIABLE_ELEMENT]} locals.make
+			locals.extend (request_handler_local)
+			create constructor.make_with_locals ("make", feature_body, locals)
+			Result := constructor
+		end
+
 
 	generate_constructor_for_request_handler (some_servlets: LIST [ROOT_SERVLET_ELEMENT]): FEATURE_ELEMENT
 			-- Generates the constructor for the request handler
 		local
 			constructor: FEATURE_ELEMENT
 			feature_body: LIST [SERVLET_ELEMENT]
-			servlet: ROOT_SERVLET_ELEMENT
 			locals: LIST [VARIABLE_ELEMENT]
 			servlet_local: VARIABLE_ELEMENT
+			servlet: ROOT_SERVLET_ELEMENT
 		do
 			create {LINKED_LIST [SERVLET_ELEMENT]} feature_body.make
 			feature_body.extend (wrap ("create {HASH_TABLE [SERVLET, STRING]} servlets.make"))

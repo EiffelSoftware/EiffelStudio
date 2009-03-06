@@ -1,0 +1,15 @@
+test_name	two-way-list-merge
+test_description Calling `merge_left' or `merge_right' could violate some invariants.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+execute_work	NONE	exec_output
+execute_result	ok
+
+compare	exec_output output
+
+test_end

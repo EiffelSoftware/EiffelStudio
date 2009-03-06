@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 			create translator.make
 			print ("%N+++++++++++++++++++ START TRANSLATOR+++++++++++++++++++%N")
 
-			print (translator.process_with_file ( "../../websites/small_test.html"))
+			print (translator.process_with_file ( "../../websites/test.html"))
 
 			print ("%N+++++++++++++++++++ END TRANSLATOR++++++++++++++++++++++++++++++++++++++%N")
 		end

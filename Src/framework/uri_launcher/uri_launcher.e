@@ -45,7 +45,7 @@ feature -- Basic operations
 
 feature {NONE} -- Factory
 
-	new_bridge: URI_LAUNCHER_I
+	new_bridge: attached URI_LAUNCHER_I
 			-- <Precursor>
 		do
 			create {URI_LAUNCHER_IMP} Result

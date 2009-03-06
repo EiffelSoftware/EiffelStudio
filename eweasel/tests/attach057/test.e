@@ -14,7 +14,12 @@ feature {NONE} -- Creation
 			if a /= Void then
 				x := a
 				a.f
+			elseif a = Current then
+				create a.make
+			else
+				a := Current
 			end
+			x := a
 		end
 
 feature {TEST} -- Tests

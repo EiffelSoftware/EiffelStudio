@@ -40,7 +40,7 @@ feature -- Access
 		do
 			Result := type_references_cache.has (a_type.name)
 		end
-		
+
 feature -- Basic Operations
 
 	register (a_type: CODE_TYPE_REFERENCE)
@@ -53,7 +53,7 @@ feature -- Basic Operations
 		ensure
 			registered: is_registered (a_type)
 		end
-	
+
 	reset_cache
 			-- Reset content of `type_references_cache'.
 		do
@@ -119,7 +119,7 @@ feature -- Factory
 		ensure
 			non_void_type_reference: Result /= Void
 		end
-	
+
 	type_reference_from_name (a_name: STRING): CODE_TYPE_REFERENCE
 			-- Initialize instance from .NET full name.
 		require
@@ -129,7 +129,7 @@ feature -- Factory
 		ensure
 			non_void_type_reference: Result /= Void
 		end
-	
+
 	type_reference_from_type (a_type: SYSTEM_TYPE): CODE_TYPE_REFERENCE
 			-- Initialize instance from `a_type'.
 		require
@@ -181,7 +181,7 @@ feature {NONE} -- Implementation
 			if Result = Void then
 				create Result.make (a_name)
 				if a_eiffel_name /= Void then
-					Result.set_eiffel_name (a_eiffel_name)	
+					Result.set_eiffel_name (a_eiffel_name)
 				end
 				if a_type /= Void then
 					Result.set_dotnet_type (a_type)
@@ -195,7 +195,7 @@ feature {NONE} -- Implementation
 				type_references_cache.put (Result, a_name)
 			end
 		end
-		
+
 	add_members (a_declaration: SYSTEM_DLL_CODE_TYPE_DECLARATION; a_type: CODE_TYPE_REFERENCE)
 			-- Add members of `a_declaration' and its parents to `a_type'.
 		require
@@ -228,12 +228,12 @@ feature {NONE} -- Implementation
 						l_property ?= l_member
 						if l_property /= Void then
 							if l_property.has_get then
-								create l_member_reference.make ("get_" + l_property.name, a_type, l_property.attributes & {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Override = {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Override)
+								create l_member_reference.make ("get_" + create {STRING}.make_from_cil (l_property.name), a_type, l_property.attributes & {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Override = {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Override)
 								l_member_reference.set_initialized
 								a_type.add_member (l_member_reference)
 							end
 							if l_property.has_set then
-								create l_member_reference.make ("set_" + l_property.name, a_type, l_property.attributes & {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Override = {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Override)
+								create l_member_reference.make ("set_" + create {STRING}.make_from_cil (l_property.name), a_type, l_property.attributes & {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Override = {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Override)
 								create l_argument.make (create {CODE_VARIABLE_REFERENCE}.make ("value", type_reference_from_reference (l_property.type), a_type), in_argument)
 								l_member_reference.add_argument (l_argument)
 								l_member_reference.set_initialized
@@ -248,13 +248,13 @@ feature {NONE} -- Implementation
 							else
 								l_event ?= l_member
 								if l_event /= Void then
-									create l_member_reference.make ("add_" + l_member.name, a_type, l_event.attributes & {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Override = {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Override)
+									create l_member_reference.make ("add_" + create {STRING}.make_from_cil (l_member.name), a_type, l_event.attributes & {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Override = {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Override)
 									create l_argument.make (create {CODE_VARIABLE_REFERENCE}.make ("value", type_reference_from_reference (l_event.type), a_type), in_argument)
 									l_member_reference.add_argument (l_argument)
 									l_member_reference.set_initialized
 									a_type.add_member (l_member_reference)
-									
-									create l_member_reference.make ("remove_" + l_member.name, a_type, l_event.attributes & {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Override = {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Override)
+
+									create l_member_reference.make ("remove_" + create {STRING}.make_from_cil (l_member.name), a_type, l_event.attributes & {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Override = {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Override)
 									create l_argument.make (create {CODE_VARIABLE_REFERENCE}.make ("value", type_reference_from_reference (l_event.type), a_type), in_argument)
 									l_member_reference.add_argument (l_argument)
 									l_member_reference.set_initialized
@@ -267,7 +267,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 feature {NONE} -- Private Access
 
 	type_references_cache: HASH_TABLE [CODE_TYPE_REFERENCE, STRING]

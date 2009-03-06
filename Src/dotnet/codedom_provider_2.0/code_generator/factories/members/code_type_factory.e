@@ -148,7 +148,7 @@ feature {NONE} -- Type generation
 				loop
 					l_comment := l_comments.item (i).comment
 					if l_comment.doc_comment then
-						l_text.append (l_comment.text)
+						l_text.append (create {STRING}.make_from_cil (l_comment.text))
 					end
 					i := i + 1
 				end

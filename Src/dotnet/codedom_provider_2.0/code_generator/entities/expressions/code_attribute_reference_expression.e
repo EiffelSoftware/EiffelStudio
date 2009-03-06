@@ -26,22 +26,22 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_attribute: like attribute; a_target: like target)
+	make (a_attribute: like attribute_value; a_target: like target)
 			-- Initialize instance.
 		require
 			non_void_attribute: a_attribute /= Void
 			non_void_target: a_target /= Void
 		do
-			attribute := a_attribute
+			attribute_value := a_attribute
 			target := a_target
 		ensure
-			attribute_set: attribute = a_attribute
+			attribute_set: attribute_value = a_attribute
 			target_set: target = a_target
 		end
 
 feature -- Access
 
-	attribute: STRING
+	attribute_value: STRING
 			-- Attribute
 
 	target: CODE_EXPRESSION
@@ -89,13 +89,13 @@ feature -- Access
 				if member /= Void then	
 					l_name := member.eiffel_name
 				else
-					l_name := Name_formatter.formatted_feature_name (attribute)
+					l_name := Name_formatter.formatted_feature_name (attribute_value)
 				end
 			else
 				if setter /= Void then
 					l_name := setter.eiffel_name
 				else
-					l_name := "set_" + Name_formatter.formatted_feature_name (attribute)
+					l_name := "set_" + Name_formatter.formatted_feature_name (attribute_value)
 				end
 			end
 			Result.append (l_name)
@@ -129,9 +129,9 @@ feature {NONE} -- Implementation
 			-- Corresponding member
 		do
 			if not member_searched then
-				internal_member := target.type.member (attribute, Void)
+				internal_member := target.type.member (attribute_value, Void)
 				if internal_member = Void then
-					Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_feature, [attribute, target.type.name])
+					Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_feature, [attribute_value, target.type.name])
 				end
 				member_searched := True
 			end
@@ -142,9 +142,9 @@ feature {NONE} -- Implementation
 			-- Corresponding member setter
 		do
 			if not setter_searched then
-				internal_setter := target.type.member_from_name ("set_" + attribute)
+				internal_setter := target.type.member_from_name ("set_" + attribute_value)
 				if internal_setter = Void then
-					Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_feature, ["set_" + attribute, target.type.name])
+					Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_feature, ["set_" + attribute_value, target.type.name])
 				end
 				setter_searched := True
 			end
@@ -164,7 +164,7 @@ feature {NONE} -- Implementation
 			-- Was `setter' called?
 
 invariant
-	non_void_attribute: attribute /= Void
+	non_void_attribute: attribute_value /= Void
 	non_void_target: target /= Void
 	
 note

@@ -562,8 +562,8 @@ feature {NONE} -- Replay helpers
 			lev: INTEGER
 			l_id: STRING
 		do
-			if attached {EV_GRID_ROW} stack_grid.single_selected_row as l_row then
-				if attached {like replayed_call_stack_element_from_row} replayed_call_stack_element_from_row (l_row) as rcse then
+			if attached stack_grid.single_selected_row as l_row then
+				if attached replayed_call_stack_element_from_row (l_row) as rcse then
 					l_id := rcse.id
 				else
 					lev := level_from_row (l_row)
@@ -879,15 +879,15 @@ feature {NONE} -- Catcall warning access
 					Result.append (" for ")
 						--| Get info with compiler data
 					if f /= Void then
-						if attached {E_FEATURE_ARGUMENTS} (f.arguments) as args and then args.count >= rtcc.pos then
-							if attached {LIST [STRING]} (args.argument_names) as argnames then
+						if attached f.arguments as args and then args.count >= rtcc.pos then
+							if attached args.argument_names as argnames then
 								argnames.start
 								argnames.move (rtcc.pos - 1)
 								argname := argnames.item
 							end
 							args.start
 							args.move (rtcc.pos - 1)
-							if attached {TYPE_A} args.item as typ then
+							if attached args.item as typ then
 								l_static_argtypename := typ.name
 							end
 						end
@@ -1021,7 +1021,7 @@ feature {NONE} -- Implementation: threads
 
 						create mi.make_with_text_and_action ("Show threads panel", agent
 								do
-									if attached {ES_THREADS_TOOL} eb_debugger_manager.threads_tool as th then
+									if attached eb_debugger_manager.threads_tool as th then
 										th.show (True)
 									end
 								end)
@@ -1721,7 +1721,7 @@ feature {NONE} -- Grid Implementation
 		do
 			Result := replayed_call_stack_element_from_row (a_row)
 			if Result /= Void and then not Result.rt_information_available then
-				if attached {EV_GRID_ROW} a_row.parent_row as p then
+				if attached a_row.parent_row as p then
 					Result := replayed_call_stack_element_from_row_with_rt_info (p)
 				end
 			end
@@ -1740,7 +1740,7 @@ feature {NONE} -- Grid Implementation
 	is_eiffel_callstack_at (lev: INTEGER): BOOLEAN
 			-- Is stack data related to `lev' an Eiffel call stack ?
 		do
-			Result := attached {like stack_data_at} stack_data_at (lev) as s and then s.is_eiffel_call_stack_element
+			Result := (attached stack_data_at (lev) as s) and then s.is_eiffel_call_stack_element
 		end
 
 	level_associated_with (rep: REPLAYED_CALL_STACK_ELEMENT): INTEGER
@@ -1818,7 +1818,7 @@ feature {NONE} -- Grid Implementation
 					level := level_from_row (l_row)
 					if level > 0 then
 						if
-							attached {EIFFEL_CALL_STACK_ELEMENT} Debugger_manager.application_status.current_call_stack.i_th (level) as elem and then
+							attached {EIFFEL_CALL_STACK_ELEMENT} debugger_manager.application_status.current_call_stack.i_th (level) as elem and then
 							elem.dynamic_class /= Void and then
 							elem.dynamic_class.has_feature_table
 						then
@@ -1848,13 +1848,13 @@ feature {NONE} -- Grid Implementation
 		do
 			if attached {INTEGER} level_from_row (a_row) as lev and then is_eiffel_callstack_at (lev) then
 				select_element_by_level (lev)
-			elseif attached {like replayed_call_stack_element_from_row} replayed_call_stack_element_from_row (a_row) as rep then
+			elseif attached replayed_call_stack_element_from_row (a_row) as rep then
 				if rep.rt_information_available then
 					l := level_associated_with (rep)
 					if
 						rep.replayed_break_index /= rep.break_index --| later take also into account nested index...
 					then
-						if attached {E_FEATURE} rep.e_feature as rep_fe then
+						if attached rep.e_feature as rep_fe then
 							create rst.make (rep_fe, [rep.replayed_break_index, rep.replayed_break_nested_index])
 							st := rst
 						end
@@ -1863,25 +1863,25 @@ feature {NONE} -- Grid Implementation
 				if l = 0 then
 						--| Change call stack element with the best stack possible
 					if
-						attached {EV_GRID_ROW} a_row.parent_row as pr and then
-						attached {like replayed_call_stack_element_from_row} replayed_call_stack_element_from_row (pr) as rep_par
+						attached a_row.parent_row as pr and then
+						attached replayed_call_stack_element_from_row (pr) as rep_par
 					then
 						if rep_par.rt_information_available then
 								--| If parent has rt_information_available
 							l := level_associated_with (rep_par)
 						else --| Else find a parent replayed call with rt_information_available
-							if attached {like replayed_call_stack_element_from_row} replayed_call_stack_element_from_row_with_rt_info (pr) as rep2 then
+							if attached replayed_call_stack_element_from_row_with_rt_info (pr) as rep2 then
 								l := level_associated_with (rep2)
 							end
 						end
-						if attached {E_FEATURE} rep_par.e_feature as rep_par_fe then
+						if attached rep_par.e_feature as rep_par_fe then
 							create rst.make (rep_par_fe, [rep.break_index, rep.break_nested_index])
 							st := rst
 						end
 					end
 
 						--| And then switch to the associated feature
-					if st = Void and attached {E_FEATURE} rep.e_feature as fe then
+					if st = Void and attached rep.e_feature as fe then
 						create st.make (fe)
 					end
 				end
@@ -1951,14 +1951,14 @@ feature {NONE} -- Grid Implementation
 				then
 					lev := level_from_row (a_row)
 					if lev > 0 then
-						if attached {REPLAYED_CALL_STACK_ELEMENT} debugger_manager.application.replay_callstack_details ((-lev).out, 1) as rcse then
+						if attached debugger_manager.application.replay_callstack_details ((-lev).out, 1) as rcse then
 							a_row.insert_subrows (1, a_row.subrow_count + 1)
 							r := a_row.subrow (a_row.subrow_count)
 							fill_replayed_call_stack (r, rcse)
 						end
 					elseif attached {REPLAYED_CALL_STACK_ELEMENT} a_row.data as rcse2 then
 						if rcse2.calls_count > 0 and then rcse2.calls = Void then
-							if attached {REPLAYED_CALL_STACK_ELEMENT} debugger_manager.application.replay_callstack_details (rcse2.id, 1) as rcse3 then
+							if attached debugger_manager.application.replay_callstack_details (rcse2.id, 1) as rcse3 then
 								rcse2.calls := rcse3.calls
 								fill_replayed_call_stack (a_row, rcse2)
 							end
@@ -1978,7 +1978,7 @@ feature {NONE} -- Grid Implementation
 				a_row.set_data (rcse)
 				check a_row.subrow_count = 0 end
 				if rcse.calls_count > 0 then
-					if attached {ARRAY [REPLAYED_CALL_STACK_ELEMENT]} rcse.calls as subrcse then
+					if attached rcse.calls as subrcse then
 						from
 							i := subrcse.lower
 						until
@@ -2015,8 +2015,8 @@ feature {NONE} -- Implementation, cosmetic
 	set_focus_if_visible
 			-- Set focus if visible
 		do
-			if content /= Void and then content.is_visible then
-				content.set_focus
+			if attached content as l_content and then l_content.is_visible then
+				l_content.set_focus
 			end
 		end
 

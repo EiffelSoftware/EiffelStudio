@@ -220,8 +220,8 @@ feature {NONE} -- Query
 	active_editor: detachable EB_SMART_EDITOR
 			-- Attempts to locate the last active editor.
 		do
-			if attached {EB_DEVELOPMENT_WINDOW} window_manager.last_focused_development_window as l_window and then l_window.is_interface_usable then
-				if attached {EB_SMART_EDITOR} l_window.editors_manager.current_editor as l_editor and then l_editor.is_interface_usable then
+			if attached window_manager.last_focused_development_window as l_window and then l_window.is_interface_usable then
+				if attached l_window.editors_manager.current_editor as l_editor and then l_editor.is_interface_usable then
 					Result := l_editor
 				end
 			end
@@ -312,10 +312,16 @@ feature {NONE} -- Actions
 		do
 			if not eiffel_project.is_compiling then
 					-- Do not process this whilst compiling
-				if attached {EB_DEVELOPMENT_WINDOW} window_manager.last_focused_development_window as l_window and then l_window.is_interface_usable then
-					if attached {EB_SMART_EDITOR} active_editor as l_editor and then attached {CLASSI_STONE} l_editor.stone as l_class then
+				if 
+					attached window_manager.last_focused_development_window as l_window and then
+					l_window.is_interface_usable 
+				then
+					if 
+						attached active_editor as l_editor and then 
+						attached {CLASSI_STONE} l_editor.stone as l_class 
+					then
 							-- We have the class stone
-						if attached {CLASS_I} l_class.class_i as l_class_i then
+						if attached l_class.class_i as l_class_i then
 							if l_class_i.is_compiled then
 								create l_error.make_standard ("The class " + l_class_i.name + " is already compiled!")
 								l_error.show_on_active_window
@@ -335,24 +341,24 @@ feature {NONE} -- Actions
 	on_force_compile_all_classes
 			-- Forces the active editor's class to be compiled.
 		local
-			l_windows: BILINEAR [EB_WINDOW]
-			l_editors: ARRAYED_LIST [EB_SMART_EDITOR]
 			l_error: ES_ERROR_PROMPT
 			l_classes: STRING
 			l_nb: INTEGER
 		do
 			if not eiffel_project.is_compiling then
 					-- Do not process this whilst compiling
-				l_windows := window_manager.windows
-				if l_windows /= Void then
+				if attached window_manager.windows as l_windows then
 					if attached {EB_DEVELOPMENT_WINDOW} l_windows.item as l_window and then l_window.is_interface_usable then
-						l_editors := l_window.editors_manager.editors
-						if l_editors /= Void then
+						if attached l_window.editors_manager.editors as l_editors then
 							create l_classes.make (256)
 							from l_editors.start until l_editors.after loop
-								if attached {EB_SMART_EDITOR} l_editors.item as l_editor and then l_editor.is_interface_usable and then attached {CLASSI_STONE} l_editor.stone as l_class then
+								if 
+									attached l_editors.item as l_editor and then
+									l_editor.is_interface_usable and then 
+									attached {CLASSI_STONE} l_editor.stone as l_class 
+								then
 										-- We have the class stone
-									if attached {CLASS_I} l_class.class_i as l_class_i then
+									if attached l_class.class_i as l_class_i then
 										if l_class_i.is_compiled then
 											l_classes.append_string_general (l_class_i.name)
 											l_classes.append_character ('%N')

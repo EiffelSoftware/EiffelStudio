@@ -160,7 +160,7 @@ feature -- Basic operations
 			l_addr: DBG_ADDRESS
 		do
 			if ost /= Void then
-				if attached {EV_ANY} ost.ev_item as l_item then
+				if attached ost.ev_item as l_item then
 					Result ?= l_item.data
 				end
 				if Result = Void then

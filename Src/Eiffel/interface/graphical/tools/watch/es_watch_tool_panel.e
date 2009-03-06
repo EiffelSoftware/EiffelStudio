@@ -647,7 +647,7 @@ feature {NONE} -- Event handling
 			end
 
 
-			if tbi /= Void and then attached {EV_RECTANGLE} tbi.rectangle as rect then
+			if tbi /= Void and then attached tbi.rectangle as rect then
 				m.show_at (w, rect.x, rect.y)
 			else
 				m.show_at (w, 0, 0)
@@ -1150,7 +1150,7 @@ feature {NONE} -- Element change: expression moving
 			until
 				a_rows.after
 			loop
-				if attached {EV_GRID_ROW} a_rows.item as r and then r.parent_row = Void then
+				if attached a_rows.item as r and then r.parent_row = Void then
 					Result.put_last (r.index)
 				end
 				a_rows.forth
@@ -1354,7 +1354,7 @@ feature -- Expressions storage management
 			if not retried then
 				Result := internal_default_watches_storage_folder
 				if Result = Void then
-					if attached {STRING} system.eiffel_project.project_location.location as d then
+					if attached system.eiffel_project.project_location.location as d then
 						Result := d
 					end
 					internal_default_watches_storage_folder := Result
@@ -1373,7 +1373,7 @@ feature -- Expressions storage management
 			retried: BOOLEAN
 		do
 			if not retried then
-				if attached {STRING} system.eiffel_project.project_location.location as d then
+				if attached system.eiffel_project.project_location.location as d then
 					Result := system.eiffel_project.project_location.target + "-watch#" + watch_id.out + ".txt"
 				end
 			end
@@ -1399,7 +1399,7 @@ feature -- Expressions storage management
 					if line /= Void then
 						if
 							not only_selection or else
-							(attached {EV_GRID_ROW} line.row as r and then r.is_selected)
+							(attached line.row as r and then r.is_selected)
 						then
 							exp := line.expression
 							if exp /= Void and then exp.is_reusable then
@@ -1427,7 +1427,7 @@ feature -- Expressions storage management
 				until
 					expr_list.after
 				loop
-					if attached {STRING_32} expr_list.item_for_iteration as e then
+					if attached expr_list.item_for_iteration as e then
 						if valid_expression_text (e) then
 							add_new_expression_for_context (e)
 						end
@@ -1481,9 +1481,9 @@ feature -- Expressions storage management
 			s := expressions_to_text (False)
 			if s /= Void and then not s.is_empty then
 				create f_dlg.make_with_title (interface_names.t_select_a_file)
-				if attached {STRING} default_watches_storage_folder as d then
+				if attached default_watches_storage_folder as d then
 					f_dlg.set_start_directory (d)
-					if attached {STRING} default_watches_storage_filename as n then
+					if attached default_watches_storage_filename as n then
 						f_dlg.set_file_name (n)
 					end
 				end
@@ -1510,9 +1510,9 @@ feature -- Expressions storage management
 			f: PLAIN_TEXT_FILE
 		do
 			create f_dlg.make_with_title (interface_names.t_select_a_file)
-			if attached {STRING} default_watches_storage_folder as d then
+			if attached default_watches_storage_folder as d then
 				f_dlg.set_start_directory (d)
-				if attached {STRING} default_watches_storage_filename as n then
+				if attached default_watches_storage_filename as n then
 					f_dlg.set_file_name (n)
 				end
 			end

@@ -651,7 +651,7 @@ feature {NONE} -- Actions implementation
 			-- Behavior is launch the stone contained in pointer hovered editor token in a new development window.	
 		do
 			if
-				attached {EV_GRID_ITEM} a_item as i and then
+				attached a_item as i and then
 				(ab =  {EV_POINTER_CONSTANTS}.right and ev_application.ctrl_pressed)
 			then
 				if attached {STONE} grid_pebble_from_cell (i) as l_stone and then l_stone.is_valid then

@@ -167,7 +167,7 @@ feature -- Basic operations
 				dlg.set_is_modal (True)
 				dlg.show_on_active_window
 
-				if active_watch_tool /= Void and attached {DUMP_VALUE} dlg.object_value as dv then
+				if active_watch_tool /= Void and attached dlg.object_value as dv then
 					active_watch_tool.add_dump_value (dv)
 				end
 			end

@@ -522,7 +522,7 @@ feature -- Graphical changes
 
 					create l_tooltip.make (20)
 
-					if exp.is_context_object and then attached {DBG_ADDRESS} exp.context.associated_address as ctxadd then
+					if exp.is_context_object and then attached exp.context.associated_address as ctxadd then
 						if exp.name /= Void then
 							set_title (exp.name)
 						else
@@ -579,7 +579,7 @@ feature -- Graphical changes
 							elseif evl.has_error_evaluation then
 								set_error_pixmap (pixmaps.icon_pixmaps.general_mini_error_icon)
 							end
-							if attached {DUMP_VALUE} evl.value as l_exception_dump_value then
+							if attached evl.value as l_exception_dump_value then
 								if l_exception_dump_value.is_type_exception then
 									if evl.has_error_exception then
 										l_title := interface_names.l_Exception_object

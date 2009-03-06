@@ -409,7 +409,7 @@ feature {NONE} -- Interface
 		do
 			m := tool_menu (True)
 			if m /= Void then
-				if tbi /= Void and then attached {EV_RECTANGLE} tbi.rectangle as rect then
+				if tbi /= Void and then attached tbi.rectangle as rect then
 					m.show_at (mini_toolbar, rect.x, rect.y)
 				else
 					m.show_at (mini_toolbar, 0, 0)
@@ -1170,11 +1170,8 @@ feature {NONE} -- Current objects grid Implementation
 feature {NONE} -- Impl : Debugged objects grid specifics
 
 	object_stone_dropped_on_grid (a_grid: like objects_grid; st: OBJECT_STONE)
-		local
-			cst: CALL_STACK_STONE
 		do
-			cst ?= st
-			if cst /= Void then
+			if attached {CALL_STACK_STONE} st as cst then
 				drop_stack_element (cst)
 			else
 				check a_grid = dropped_objects_grid end
@@ -1184,15 +1181,12 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 
 	grid_veto_pebble_function (a_grid: like objects_grid; a_pebble: ANY): BOOLEAN
 		local
-			ost: OBJECT_STONE
 			cst: CALL_STACK_STONE
 		do
 			if a_grid = dropped_objects_grid then
-				ost ?= a_pebble
-				Result := ost /= Void
+				Result := attached {OBJECT_STONE} a_pebble
 			else
-				cst ?= a_pebble
-				Result := cst /= Void
+				Result := attached {CALL_STACK_STONE} a_pebble
 			end
 		end
 
@@ -1204,8 +1198,6 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 		local
 			l_stone_addr: DBG_ADDRESS
 			n_obj: ES_OBJECTS_GRID_OBJECT_LINE
-			conv_spec: SPECIAL_VALUE
-			abstract_value: ABSTRACT_DEBUG_VALUE
 			exists: BOOLEAN
 			l_item: EV_ANY
 			g: like objects_grid
@@ -1232,14 +1224,12 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 				l_item := a_stone.ev_item
 				if l_item /= Void then
 					if debugger_manager.is_dotnet_project then
-						abstract_value ?= grid_data_from_widget (l_item)
+						if attached {ABSTRACT_DEBUG_VALUE} grid_data_from_widget (l_item) as abstract_value then
 							--| FIXME jfiat : check if it is safe to use a Value ?
-						if abstract_value /= Void then
 							create {ES_OBJECTS_GRID_VALUE_LINE} n_obj.make_with_value (abstract_value, g)
 						end
 					else
-						conv_spec ?= grid_data_from_widget (l_item)
-						if conv_spec /= Void then
+						if attached {SPECIAL_VALUE} grid_data_from_widget (l_item) as conv_spec then
 							create {ES_OBJECTS_GRID_VALUE_LINE} n_obj.make_with_value (conv_spec, g)
 						end
 					end
@@ -1261,18 +1251,16 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 		end
 
 	remove_dropped_debugged_object (ost: OBJECT_STONE)
-		local
-			row: EV_GRID_ROW
-			gline: ES_OBJECTS_GRID_OBJECT_LINE
-			sline: ES_OBJECTS_GRID_SPECIFIC_LINE
+		require
+			ost_attached: ost /= Void
 		do
-			row ?= ost.ev_item
-			if row /= Void then
-				gline ?= row.data
-				sline ?= gline
+			if attached {EV_GRID_ROW} ost.ev_item as row then
 				if
-					gline /= Void
-					and then (sline = Void or else not gline.is_read_only)
+					(attached {ES_OBJECTS_GRID_OBJECT_LINE} row.data as gline) 
+					and then (
+						(not attached {ES_OBJECTS_GRID_SPECIFIC_LINE} gline)
+						or else not gline.is_read_only
+					)
 				then
 					remove_debugged_object_line (gline)
 				end
@@ -1283,7 +1271,7 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 		local
 			glines: LIST [ES_OBJECTS_GRID_OBJECT_LINE]
 			line: ES_OBJECTS_GRID_OBJECT_LINE
-			sline: ES_OBJECTS_GRID_SPECIFIC_LINE
+			line_row: EV_GRID_ROW
 		do
 			glines := selected_debugged_object_lines
 			if glines /= Void then
@@ -1293,16 +1281,17 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 					glines.after
 				loop
 					line := glines.item
+					check attached line end
 
-					check
-						line /= Void
-						line.row /= Void
-					end
-					sline ?= line
+					line_row := line.row
+					check attached line_row end
 					if
 						is_removable_debugged_object_row (line.row)
 						and then is_removable_debugged_object_address (line.object_address)
-						and then (sline = Void or else not line.is_read_only) --| might be only `not line.is_read_only'
+						and then (
+							(not attached {ES_OBJECTS_GRID_SPECIFIC_LINE} line) or else
+							not line.is_read_only
+							) --| might be only `not line.is_read_only'
 					then
 						remove_debugged_object_line (line)
 					end
@@ -1316,13 +1305,11 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 			gline_not_void: gline /= Void
 		local
 			row: EV_GRID_ROW
-			g: like objects_grid
 		do
 			row := gline.row
 			gline.unattach
 			displayed_objects.prune_all (gline)
-			g := gline.parent_grid
-			if g /= Void then
+			if attached gline.parent_grid as g then
 --| bug#11272 : using the next line raises display issue:
 --|				g.remove_row (row.index)
 				g.remove_rows (row.index, row.index + row.subrow_count_recursive)
@@ -1333,7 +1320,6 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 		local
 			row: EV_GRID_ROW
 			rows: ARRAYED_LIST [EV_GRID_ROW]
-			gline: ES_OBJECTS_GRID_OBJECT_LINE
 			g: like objects_grid
 		do
 			g := dropped_objects_grid
@@ -1346,8 +1332,7 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 					rows.after
 				loop
 					row := rows.item
-					gline ?= row.data
-					if gline /= Void then
+					if attached {ES_OBJECTS_GRID_OBJECT_LINE} row.data as gline then
 						Result.extend (gline)
 					end
 					rows.forth
@@ -1356,12 +1341,9 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 		end
 
 	is_removable_debugged_object (a_stone: ANY): BOOLEAN
-		local
-			row: EV_GRID_ROW
 		do
 			if attached {OBJECT_STONE} a_stone as ost then
-				row ?= ost.ev_item
-				if row /= Void then
+				if attached {EV_GRID_ROW} ost.ev_item as row then
 					Result := is_removable_debugged_object_row (row)
 				end
 				Result := Result and then is_removable_debugged_object_address (ost.object_address)
@@ -1369,11 +1351,13 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 		end
 
 	is_removable_debugged_object_row (row: EV_GRID_ROW): BOOLEAN
+		require
+			row_attached: row /= Void
 		do
 			Result := row.parent_row = Void
 		end
 
-	is_removable_debugged_object_address (addr: DBG_ADDRESS): BOOLEAN
+	is_removable_debugged_object_address (addr: detachable DBG_ADDRESS): BOOLEAN
 		do
 			if addr /= Void then
 				from

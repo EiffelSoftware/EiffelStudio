@@ -1,6 +1,8 @@
 note
-	description: "Summary description for {OUTPUT_ELEMENT}."
-	author: "sandro"
+	description: "[
+		Deferred class which defines all the {SERVLET_ELEMENT}s generated directly
+		from the xeb-page
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -52,7 +54,7 @@ feature -- Status Setting
 		do
 			response_name := a_name
 		end
-		
+
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -1,6 +1,7 @@
 note
 	description: "[
-			Summary description for {CALL_ELEMENT}.
+			{CALL_ELEMENT} is used to render a call statement on the controller
+			in a xeb-file.
 	]"
 	date: "$Date$"
 	revision: "$Revision$"

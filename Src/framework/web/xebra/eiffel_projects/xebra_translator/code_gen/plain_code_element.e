@@ -1,6 +1,7 @@
 note
-	description: "Summary description for {PLAIN_CODE_ELEMENT}."
-	author: "sandro"
+	description: "[
+		Used to render a statement which just adds the code to a feature.
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 

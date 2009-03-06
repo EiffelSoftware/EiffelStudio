@@ -1,6 +1,7 @@
 note
-	description: "Summary description for {VARIABLE_ELEMENT}."
-	author: "sandro"
+	description: "[
+		Used to render a name and its type.
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 

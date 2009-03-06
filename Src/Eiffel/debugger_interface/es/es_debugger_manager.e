@@ -165,7 +165,7 @@ feature {NONE} -- Logger
 	logger_service: attached SERVICE_CONSUMER [LOGGER_S]
 			-- Access to logger service
 		do
-			if attached {SERVICE_CONSUMER [LOGGER_S]} internal_logger_service as l_service then
+			if attached internal_logger_service as l_service then
 				Result := l_service
 			else
 				create Result

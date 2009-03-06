@@ -514,13 +514,13 @@ feature -- Access
 			if current_call_stack /= Void then
 				if
 					attached current_replayed_call as rep  and then
-					attached {E_FEATURE} rep.e_feature as r_fe and then
+					attached rep.e_feature as r_fe and then
 					r_fe.body_id_for_ast = fe.body_index
 				then
 					Result := [rep.replayed_break_index, r_fe.feature_id]
 				elseif
 					attached {EIFFEL_CALL_STACK_ELEMENT} current_call_stack_element as stel and then
-					attached {E_FEATURE} stel.routine as ot_fe and then
+					attached stel.routine as ot_fe and then
 					ot_fe.body_id_for_ast = fe.body_index
 				then
 					Result := [stel.break_index, ot_fe.feature_id]
@@ -540,20 +540,20 @@ feature -- Access
 			if is_stopped then
 				if attached current_replayed_call as crep then
 					if crep.replayed_break_index = index then
-						Result := attached {FEATURE_I} crep.feature_i as fi and then fi.body_index = f_body_index
+						Result := attached crep.feature_i as fi and then fi.body_index = f_body_index
 					end
 				end
 				if not Result then
 					if attached replayed_call as rep then
 						if rep.line = index then
-							Result := attached {E_FEATURE} rep.feat as f and then f.body_index = f_body_index
+							Result := attached rep.feat as f and then f.body_index = f_body_index
 						end
 					else
-						if attached {EIFFEL_CALL_STACK} current_call_stack as l_ccs and then not l_ccs.is_empty then
+						if attached current_call_stack as l_ccs and then not l_ccs.is_empty then
 							n := Application.current_execution_stack_number
 							Result := attached {EIFFEL_CALL_STACK_ELEMENT} l_ccs.i_th (n) as stack_elem
 									and then stack_elem.break_index = index
-									and then attached {E_FEATURE} stack_elem.routine as ef
+									and then attached stack_elem.routine as ef
 									and then ef.body_index = f_body_index
 						end
 					end
@@ -571,14 +571,14 @@ feature -- Access
 			if is_stopped then
 				if attached current_replayed_call as rep then
 					if rep.replayed_break_index = index then
-						Result := attached {FEATURE_I} rep.feature_i as fi and then fi.body_index = f_body_index
+						Result := attached rep.feature_i as fi and then fi.body_index = f_body_index
 					end
 				else
-					if attached {EIFFEL_CALL_STACK} current_call_stack as l_ccs and then not l_ccs.is_empty then
+					if attached current_call_stack as l_ccs and then not l_ccs.is_empty then
 						n := 1
 						Result := attached {EIFFEL_CALL_STACK_ELEMENT} l_ccs.i_th (n) as stack_elem
 								and then stack_elem.break_index = index
-								and then attached {E_FEATURE} stack_elem.routine as ef
+								and then attached stack_elem.routine as ef
 								and then ef.body_index = f_body_index
 					end
 				end

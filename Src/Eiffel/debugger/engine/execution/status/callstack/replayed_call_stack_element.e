@@ -200,19 +200,19 @@ feature -- Properties
 			create Result.make_empty
 			Result.append_integer (depth)
 			Result.append_character ('.')
-			if attached {CLASS_TYPE} dynamic_class_type as dct then
+			if attached dynamic_class_type as dct then
 				Result.append_integer (dct.type_id)
 			else
 				Result.append_character ('?')
 			end
 			Result.append_character ('.')
-			if attached {CLASS_TYPE} class_type as wct then
+			if attached class_type as wct then
 				Result.append_integer (wct.type_id)
 			else
 				Result.append_character ('?')
 			end
 			Result.append_character ('.')
-			if attached {FEATURE_I} feature_i as fi then
+			if attached feature_i as fi then
 				if fi.valid_body_id then
 					Result.append_integer (fi.real_body_id (class_type))
 				else
@@ -280,7 +280,7 @@ feature -- Call stack element access
 
 	class_name: STRING
 		do
-			if attached {CLASS_C} dynamic_class as dc then
+			if attached dynamic_class as dc then
 				Result := dc.name_in_upper
 			end
 		end
@@ -292,14 +292,14 @@ feature -- Call stack element access
 
 	dynamic_class: CLASS_C
 		do
-			if attached {CLASS_TYPE} dynamic_class_type as ct then
+			if attached dynamic_class_type as ct then
 				Result := ct.associated_class
 			end
 		end
 
 	written_class: CLASS_C
 		do
-			if attached {CLASS_TYPE} class_type as ct then
+			if attached class_type as ct then
 				Result := ct.associated_class
 			end
 		end

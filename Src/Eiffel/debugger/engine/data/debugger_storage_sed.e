@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 			if is_eiffel_layout_defined then
 				create fn.make_from_string (eiffel_layout.user_session_path)
 				if workbench.system_defined then
-					if attached {attached UUID} (create {USER_OPTIONS_FACTORY}).mapped_uuid (workbench.lace.file_name) as l_uuid then
+					if attached (create {USER_OPTIONS_FACTORY}).mapped_uuid (workbench.lace.file_name) as l_uuid then
 						l_ver := l_uuid.out
 					else
 						l_ver := workbench.lace.target.system.uuid.out

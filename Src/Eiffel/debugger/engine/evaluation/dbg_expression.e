@@ -289,7 +289,7 @@ feature {DBG_EXPRESSION, DBG_EXPRESSION_EVALUATION, DBG_EXPRESSION_EVALUATOR} --
 		do
 			Result := expr /= Void and then
 						expr.is_valid_as_string_8 and then
-						attached {STRING_8} expr.to_string_8 as s8 and then
+						(attached expr.to_string_8 as s8) and then
 						not s8.is_empty and then
 						not s8.has ('%R') and then
 						not s8.has ('%N')

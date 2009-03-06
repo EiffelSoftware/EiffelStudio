@@ -1550,7 +1550,7 @@ feature {NONE} -- Raise/unraise notification
 			l_message: STRING_32
 			l_icon: EV_PIXEL_BUFFER
 		do
-			if debugging_window /= Void and then (attached {EV_WINDOW} debugging_window.window as l_window) then
+			if debugging_window /= Void and then (attached debugging_window.window as l_window) then
 				if raised then
 					create l_message.make_from_string (interface_names.l_Switching_to_normal_mode.as_string_32)
 					l_icon := pixmaps.icon_pixmaps.view_editor_icon_buffer

@@ -1,6 +1,7 @@
 note
-	description: "Summary description for {CALL_ELEMENT}."
-	author: "sandro"
+	description: "[
+			Summary description for {CALL_ELEMENT}.
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 

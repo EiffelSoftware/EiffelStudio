@@ -1,6 +1,9 @@
 note
-	description: "Summary description for {XB_PARSE_HANLDER}."
-	author: ""
+	description: "[
+			The XB_PROCESSOR calls successors of XB_PARSE_HANDLER to 
+			extract tags from the string to be parsed. Each XB_PARSE_HANLDER
+			has a next handler.
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 

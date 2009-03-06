@@ -1,6 +1,9 @@
 note
 	description: "[
-
+			Generates a list of OUTPUT_ELEMENTS out of an input string 
+			that can be handed over to ROOT_SERVLET_ELEMENT. It does that
+			by passing the string to a chain of XB_PARSE_HANDLERs that each
+			extract one tag.
 	]"
 	date: "$Date$"
 	revision: "$Revision$"

@@ -1,5 +1,5 @@
 note
-	description : "xebra_translator application root class"
+	description : "Runns the xebra translator"
 	date        : "$Date$"
 	revision    : "$Revision$"
 

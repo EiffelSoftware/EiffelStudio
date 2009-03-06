@@ -41,38 +41,38 @@ feature -- Access
 			-- `has_special_type_name' have a special Eiffel name?
 			-- False if `has_special_type_name' was not called.
 
-	formatted_type_name (name: STRING; used_names: HASH_TABLE [STRING, STRING]): STRING
+	formatted_type_name (name: STRING; used_names: detachable HASH_TABLE [STRING, STRING]): STRING
 			-- Format `name' to Eiffel conventions.
 		require
 			non_void_name: name /= Void
 			valid_name: not name.is_empty and then name.item (1) /= '.'
-			used_names_not_void: used_names /= Void
 		local
 			count: INTEGER
 		do
 			Result := full_formatted_type_name (name, used_names)
-			if used_names.has (Result) then
-				from
-					count := 2
-				until
-					not used_names.has (Result)
-				loop
-					trim_end_digits (Result)
-					Result.append (count.out)
-					count := count + 1
+			if used_names /= Void then
+				if used_names.has (Result) then
+					from
+						count := 2
+					until
+						not used_names.has (Result)
+					loop
+						trim_end_digits (Result)
+						Result.append (count.out)
+						count := count + 1
+					end
 				end
+				used_names.put (Result, Result)
 			end
-			used_names.put (Result, Result)
 		ensure
 			non_void_name: Result /= Void
 		end
 
-	full_formatted_type_name (name: STRING; used_names: HASH_TABLE [STRING, STRING]): STRING
+	full_formatted_type_name (name: STRING; used_names: detachable HASH_TABLE [STRING, STRING]): STRING
 			-- Format .NET type name `name' to Eiffel class name.
 		require
 			non_void_name: name /= Void
 			valid_name: not name.is_empty
-			used_names_not_void: used_names /= Void
 		local
 			simple_name: STRING
 			count, pos, index, i: INTEGER
@@ -91,7 +91,7 @@ feature -- Access
 						simple_name := name.substring (pos + 1, count)
 						i := 2
 					until
-						i > index or else not used_names.has (Result)
+						i > index or else (used_names /= Void and then not used_names.has (Result))
 					loop
 						pos := name.last_index_of ('.', pos - 1)
 						simple_name := name.substring (pos + 1, count)

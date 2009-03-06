@@ -1276,7 +1276,7 @@ feature {NONE} -- Events on grid
 							l_selected_rows.after
 						loop
 							l_row := l_selected_rows.item
-							if attached {BREAKPOINT} (l_row.data) as bp_s then
+							if attached {BREAKPOINT} l_row.data as bp_s then
 								if bp_s.is_enabled then
 									bp_s.disable
 								else
@@ -1294,7 +1294,7 @@ feature {NONE} -- Events on grid
 							l_selected_rows.after
 						loop
 							l_row := l_selected_rows.item
-							if attached {BREAKPOINT} (l_row.data) as bp_d then
+							if attached {BREAKPOINT} l_row.data as bp_d then
 								l_selected_rows.remove
 								bp_d.discard
 								bp_changed := True
@@ -1305,7 +1305,7 @@ feature {NONE} -- Events on grid
 						end
 						l_selected_rows := Void
 					when {EV_KEY_CONSTANTS}.key_enter then
-						if attached {BREAKPOINT} (l_selected_rows.first.data) as bp_e then
+						if attached {BREAKPOINT} l_selected_rows.first.data as bp_e then
 							create bp_stone.make_from_breakpoint (bp_e)
 							bp_stone.display_bkpt_menu
 						end

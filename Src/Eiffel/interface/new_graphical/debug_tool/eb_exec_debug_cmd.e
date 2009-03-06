@@ -192,7 +192,7 @@ feature {NONE} -- Attributes
 
 				--| Catcall warning status
 --| FIXME: we should create specific _CMD for thoses		
-			if attached {DBG_EXCEPTION_HANDLER} (dbg.exceptions_handler) as exc_hdlr then
+			if attached dbg.exceptions_handler as exc_hdlr then
 				create l_cb_item.make_with_text (interface_names.m_Dbg_disable_catcall_console_warning)
 				Result.extend (l_cb_item)
 				if exc_hdlr.catcall_console_warning_disabled then

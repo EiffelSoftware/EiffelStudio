@@ -1,84 +1,82 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<system
-	 xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
-	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
-	 name="eiffelsoftware.codedom" uuid="7CBA8D0E-4597-4910-81BB-AC88AEC83601"
-	 library_target="codedom_provider_common">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="eiffelsoftware.codedom" uuid="7CBA8D0E-4597-4910-81BB-AC88AEC83601" library_target="codedom_provider_common">
 	<target name="codedom_provider_common">
-		<description>
-			Codedom Provider Library
-		</description>
-
+		<description>Codedom Provider Library</description>
 		<root class="ANY"/>
-
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-
 		<option syntax_level="1">
-			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+			<assertions precondition="true"/>
 		</option>
-
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<library name="cache_browser" location="cache_browser_library.ecf" readonly="true"/>
-		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf" readonly="true">
-			<option namespace="EiffelSoftware.CodeDom.Support" />
-		</library>
-		<library name="classes_merger" location="$EIFFEL_SRC\tools\partial_classes_merger\src\class_merger.ecf" readonly="true">
-			<option namespace="EiffelSoftware.Library.Merger" />
-		</library>
-		<library name="configuration" location="$EIFFEL_SRC\Eiffel\library\configuration\configuration.ecf" readonly="true">
-			<option namespace="EiffelSoftware.CodeDom.Support" />
-		</library>
-		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf" readonly="true">
-			<option namespace="EiffelSoftware.CodeDom.Support" />
-		</library>
 		<library name="compiler_parser" location="$EIFFEL_SRC\framework\parser\parser.ecf" readonly="true">
-			<option namespace="EiffelSoftware.CodeDom.Support" />
+			<option namespace="EiffelSoftware.CodeDom.Support">
+			</option>
 		</library>
+		<library name="configuration_compiler" location="$EIFFEL_SRC\framework\configuration\configuration_compiler.ecf" readonly="true">
+			<option namespace="EiffelSoftware.CodeDom.Support">
+			</option>
+		</library>
+		<library name="configuration_parser" location="$EIFFEL_SRC\framework\configuration\configuration_parser.ecf"/>
 		<library name="consumer" location="$EIFFEL_SRC\dotnet\consumer\consumer.ecf" readonly="true">
-			<option namespace="EiffelSoftware.CodeDom.Support" />
+			<option namespace="EiffelSoftware.CodeDom.Support">
+			</option>
+		</library>
+		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
+		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf" readonly="true">
+			<option namespace="EiffelSoftware.CodeDom.Support">
+			</option>
 		</library>
 		<library name="helper" location="$EIFFEL_SRC\dotnet\helpers\support\dotnet_helper.ecf" readonly="true">
-			<option namespace="EiffelSoftware.CodeDom.Support" />
+			<option namespace="EiffelSoftware.CodeDom.Support">
+			</option>
+		</library>
+		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf" readonly="true">
+			<option namespace="EiffelSoftware.CodeDom.Support">
+			</option>
 		</library>
 		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
-		<assembly name="system_" location="$ISE_DOTNET_FRAMEWORK\System.dll" prefix="SYSTEM_DLL_"/>
 		<assembly name="system.configuration.install" location="$ISE_DOTNET_FRAMEWORK\System.Configuration.Install.dll" prefix="CONFIG_INSTALL_"/>
-
-		<cluster name="interface" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\interface" recursive="true">
-			<option namespace="EiffelSoftware.CodeDom" />
-		</cluster>
-		<cluster name="code_generator" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\code_generator" recursive="true">
-			<option namespace="EiffelSoftware.CodeDom.CodeGenerator" />
+		<assembly name="system_" location="$ISE_DOTNET_FRAMEWORK\System.dll" prefix="SYSTEM_DLL_"/>
+		<cluster name="code_generator" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\code_generator\" recursive="true">
+			<option namespace="EiffelSoftware.CodeDom.CodeGenerator">
+			</option>
 			<file_rule>
 				<exclude>/interface$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="code_generator_interface" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\code_generator\interface">
-			<option namespace="EiffelSoftware.CodeDom" />
+		<cluster name="code_generator_interface" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\code_generator\interface\">
+			<option namespace="EiffelSoftware.CodeDom">
+			</option>
 		</cluster>
-		<cluster name="compiler" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\compiler" recursive="true">
-			<option namespace="EiffelSoftware.CodeDom.Compiler" />
+		<cluster name="compiler" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\compiler\" recursive="true">
+			<option namespace="EiffelSoftware.CodeDom.Compiler">
+			</option>
 			<file_rule>
 				<exclude>/interface$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="compiler_interface" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\compiler\interface">
-			<option namespace="EiffelSoftware.CodeDom" />
+		<cluster name="compiler_interface" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\compiler\interface\">
+			<option namespace="EiffelSoftware.CodeDom">
+			</option>
 		</cluster>
-		<cluster name="parser" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\parser" recursive="true">
+		<cluster name="interface" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\interface\" recursive="true">
+			<option namespace="EiffelSoftware.CodeDom">
+			</option>
+		</cluster>
+		<cluster name="parser" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\parser\" recursive="true">
 			<option namespace="EiffelSoftware.CodeDom.Parser">
 			</option>
 			<file_rule>
 				<exclude>/interface$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="parser_interface" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\parser\interface">
-			<option namespace="EiffelSoftware.CodeDom" />
+		<cluster name="parser_interface" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\parser\interface\">
+			<option namespace="EiffelSoftware.CodeDom">
+			</option>
 		</cluster>
-		
 	</target>
 </system>

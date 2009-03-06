@@ -9,7 +9,7 @@ class
 	PARAMETER_HDL
 
 inherit
-	
+
 	STRING_HDL
 		redefine
 			set_map_name,
@@ -79,7 +79,7 @@ feature -- Status report
 
 	is_executed: BOOLEAN
 			-- Is the statement has been executed ?
-		
+
 	parameter_count : INTEGER
 			-- number of parameters, set by 'prepare'
 		do
@@ -101,16 +101,16 @@ feature -- setting
 --			parameters_value.force (value, ke))
 			from
 				i := parameters.lower
-			until 
+			until
 				i > parameters.upper
 			loop
 				if parameters.item (i).is_equal (key) then
 					parameters_value.force (value, i)
 				end
 				i := i + 1
-			end			
+			end
 		end
-	
+
 	set_parameters_value (p : ARRAY[ANY])
 		require
 			has_parameters: parameter_count > 0
@@ -142,22 +142,22 @@ feature -- setting
 				i := i + 1
 			end
 		end
-		
+
 feature {PARAMETER_HDL}
 
-	
+
 	parameters_value: ARRAY [ANY]
 			-- Values of the parameters of the sql statement
 
 	parameters : ARRAY[STRING]
-	
+
 	init
 		do
 			create parameters_value.make(1,1)
 			create parameters.make (1,1)
 			parameters.compare_objects
 --			create parameter_name_to_position.make (1)
-		end	
+		end
 
 	init_implementation (pv : like parameters_value; pp : like parameters)
 		require
@@ -173,7 +173,7 @@ feature {PARAMETER_HDL}
 			parameters = pp
 		end
 
---	parameter_name_to_position : HASH_TABLE [INTEGER, STRING]
+--	parameter_name_to_position : DB_STRING_HASH_TABLE [INTEGER]
 
 	replacement_string (key, destination: STRING)
 			-- Replace object associated with `key' by a '?' in `destination'.

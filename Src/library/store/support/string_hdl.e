@@ -73,7 +73,7 @@ feature -- Status report
 
 feature -- Status report
 
-	ht: HASH_TABLE [ANY, STRING]
+	ht: DB_STRING_HASH_TABLE [ANY]
 		-- Correspondence table between object references
 		-- and mapped keys
 

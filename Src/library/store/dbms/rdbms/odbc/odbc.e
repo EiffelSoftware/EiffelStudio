@@ -113,7 +113,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 
 	normal_parse: BOOLEAN = False
 
-	parse (descriptor: INTEGER; uht: HASH_TABLE [ANY, STRING]; ht_order: ARRAYED_LIST [STRING]; uhandle: HANDLE; sql: STRING): BOOLEAN
+	parse (descriptor: INTEGER; uht: DB_STRING_HASH_TABLE [ANY]; ht_order: ARRAYED_LIST [STRING]; uhandle: HANDLE; sql: STRING): BOOLEAN
 		local
 			tmp_str: STRING
 			c_temp: C_STRING
@@ -1063,7 +1063,7 @@ feature {NONE} -- External features
 
 	para: DB_PARA_ODBC
 
-	bind_args_value (descriptor: INTEGER; uht: HASH_TABLE [ANY, STRING]; ht_order: ARRAYED_LIST [STRING])
+	bind_args_value (descriptor: INTEGER; uht: DB_STRING_HASH_TABLE [ANY]; ht_order: ARRAYED_LIST [STRING])
 			-- Append map variables name from to `s'.
 			-- Map variables are used for set input arguments.
 		require

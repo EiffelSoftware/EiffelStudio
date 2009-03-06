@@ -18,7 +18,7 @@ feature {NONE} -- Initialization
 	make
 			-- Initialization for `Current'.
 		do
-
+		
 		end
 
 feature -- Processing		

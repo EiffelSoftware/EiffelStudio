@@ -15,14 +15,14 @@ feature {NONE} -- Initialization
 	make
 			-- Initialization for `XB_TRANSLATOR'.
 		do
-			create error_handler.make_standard
+		--	create error_handler.make_standard
 			create preprocessor.make
 		end
 
 
 feature {NONE} -- Access
 
-	error_handler: UT_ERROR_HANDLER
+--	error_handler: UT_ERROR_HANDLER
 			-- Error handler
 
 	preprocessor: XB_PREPROCESSOR
@@ -35,15 +35,15 @@ feature {NONE} -- Processing
 	read_file (a_filename: STRING): STRING
 			--reads a file into a string			
 		local
-			a_file: KL_TEXT_INPUT_FILE
-			cannot_read: UT_CANNOT_READ_FILE_ERROR
+			a_file: PLAIN_TEXT_FILE
+		--	cannot_read: UT_CANNOT_READ_FILE_ERROR
 		do
 			Result := ""
 			create a_file.make (a_filename)
 			a_file.open_read
 			if not a_file.is_open_read then
-				create cannot_read.make (a_filename)
-				error_handler.report_error (cannot_read)
+		--		create cannot_read.make (a_filename)
+			--	error_handler.report_error (cannot_read)
 
 			else
 				from
@@ -52,7 +52,12 @@ feature {NONE} -- Processing
 					a_file.end_of_file
 				loop
 					a_file.read_line
-					Result.append(a_file.last_string)
+
+					if attached {STRING} a_file.last_string as s then
+						Result.append(s)
+					else
+						Result.append ("")
+					end
 				end
 
 			end
@@ -120,9 +125,9 @@ feature {NONE} -- Implementation
 --		end
 
 invariant
-	error_handler_not_void: error_handler /= Void
+--	error_handler_not_void: error_handler /= Void
 
-	
+
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

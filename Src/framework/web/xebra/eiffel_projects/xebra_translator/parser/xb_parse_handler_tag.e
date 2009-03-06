@@ -66,8 +66,8 @@ feature -- Processing
 		--		print ("-found start_tag at " + (start_tag_pos+cut_away).out + "%N")
 
 					-- Hand all of the left part before the start tag over to the next parse_tag				
-				if next /= void then
-					next.handle_string (output_elements,string.substring (1, start_tag_pos-1), cut_away)
+				if attached {XB_PARSE_HANDLER} next as n then
+					n.handle_string (output_elements,string.substring (1, start_tag_pos-1), cut_away)
 				end
 
 					-- Remove the left side
@@ -89,8 +89,8 @@ feature -- Processing
 			end
 
 				-- Hand right side of most right tag over to next parse_tag
-			if next /= void then
-				next.handle_string (output_elements, string, end_tag_pos+a_start_pos+cut_away)
+			if attached {XB_PARSE_HANDLER} next as n then
+				n.handle_string (output_elements, string, end_tag_pos+a_start_pos+cut_away)
 			end
 		--	print ("Parse_tag_" + name + " is done. --%N")
 		end

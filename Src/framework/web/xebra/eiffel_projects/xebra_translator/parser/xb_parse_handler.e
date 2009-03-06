@@ -9,7 +9,7 @@ deferred class
 
 feature -- Access
 
-	next: XB_PARSE_HANDLER
+	next: detachable XB_PARSE_HANDLER
 
 
 feature -- Status Setting

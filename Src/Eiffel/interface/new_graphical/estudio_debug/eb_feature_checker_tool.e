@@ -51,6 +51,7 @@ feature {NONE} -- Initialization
 			create l_ev_frame_1
 			create l_ev_vertical_box_2
 			create ignore_library_check
+			create ignore_dotnet_classes_check
 			create immediate_check
 			create arguments_check
 			create function_check
@@ -75,6 +76,7 @@ feature {NONE} -- Initialization
 			l_ev_vertical_box_1.extend (l_ev_frame_1)
 			l_ev_frame_1.extend (l_ev_vertical_box_2)
 			l_ev_vertical_box_2.extend (ignore_library_check)
+			l_ev_vertical_box_2.extend (ignore_dotnet_classes_check)
 			l_ev_vertical_box_2.extend (immediate_check)
 			l_ev_vertical_box_2.extend (arguments_check)
 			l_ev_vertical_box_2.extend (function_check)
@@ -105,11 +107,13 @@ feature {NONE} -- Initialization
 			l_ev_vertical_box_2.set_padding (5)
 			l_ev_vertical_box_2.set_border_width (5)
 			l_ev_vertical_box_2.disable_item_expand (ignore_library_check)
+			l_ev_vertical_box_2.disable_item_expand (ignore_dotnet_classes_check)
 			l_ev_vertical_box_2.disable_item_expand (immediate_check)
 			l_ev_vertical_box_2.disable_item_expand (arguments_check)
 			l_ev_vertical_box_2.disable_item_expand (function_check)
 			l_ev_vertical_box_2.disable_item_expand (reference_arguments_check)
 			ignore_library_check.set_text ("Ignore library classes")
+			ignore_dotnet_classes_check.set_text ("Ignore .NET classes")
 			immediate_check.set_text ("Immediate")
 			arguments_check.set_text ("Arguments")
 			function_check.set_text ("Function")
@@ -161,6 +165,7 @@ feature {NONE} -- Access
 	load_button, next_button: EV_BUTTON
 	class_selector: EV_SPIN_BUTTON
 	ignore_library_check,
+	ignore_dotnet_classes_check,
 	immediate_check,
 	arguments_check,
 	function_check,
@@ -291,8 +296,11 @@ feature {NONE} -- Actions
 		do
 			if a_class /= Void then
 				Result := True
+				if Result and then ignore_dotnet_classes_check.is_selected then
+					Result := not a_class.is_external_class_c
+				end
 				if Result and then ignore_library_check.is_selected then
-					Result := a_class.lace_class.target = universe.target
+					Result := a_class.lace_class.target.system = universe.target.system
 				end
 			end
 		end
@@ -374,10 +382,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

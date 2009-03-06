@@ -88,7 +88,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE, DATABASE_PROC
 			end
 		end
 
-	parse (descriptor: INTEGER; uht: HASH_TABLE [ANY, STRING]; ht_order: ARRAYED_LIST [STRING]; uhandle: HANDLE; sql: STRING): BOOLEAN
+	parse (descriptor: INTEGER; uht: DB_STRING_HASH_TABLE [ANY]; ht_order: ARRAYED_LIST [STRING]; uhandle: HANDLE; sql: STRING): BOOLEAN
 		do
 			Result := true
 		end

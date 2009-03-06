@@ -93,7 +93,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 			end
 		end
 
-	parse (descriptor: INTEGER; uht: HASH_TABLE [ANY, STRING]; ht_order: ARRAYED_LIST [STRING]; uhandle: HANDLE; sql: STRING): BOOLEAN
+	parse (descriptor: INTEGER; uht: DB_STRING_HASH_TABLE [ANY]; ht_order: ARRAYED_LIST [STRING]; uhandle: HANDLE; sql: STRING): BOOLEAN
 		do
 			if uhandle.execution_type.immediate_execution then
 				Result := True
@@ -123,7 +123,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 			is_error_updated := False
 		end
 
-	bind_args_value (descriptor: INTEGER; uht: HASH_TABLE [ANY, STRING]; sql: STRING)
+	bind_args_value (descriptor: INTEGER; uht: DB_STRING_HASH_TABLE [ANY]; sql: STRING)
 			-- Append map variables name from to `s'.
 			-- Map variables are used for set input arguments.
 			-- `uht' can be empty (for stored procedures).

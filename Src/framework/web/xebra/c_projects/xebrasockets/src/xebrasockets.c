@@ -44,7 +44,6 @@ doc:            <thread_safety></thread_safety>
 doc:            <synchronization></synchronization>
 doc:    </routine>
 */
-
 char * intToByteArray (EIF_INTEGER_32 i)
 {
 	char * bb;

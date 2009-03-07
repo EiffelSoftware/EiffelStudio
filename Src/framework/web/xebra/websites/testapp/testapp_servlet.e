@@ -1,40 +1,52 @@
 note
-	description : "Runns the xebra translator"
-	date        : "$Date$"
-	revision    : "$Revision$"
+	description: "[
+		No comment yet
+	]"
+	legal: "See notice at end of class."
+	status: "Prototyping phase"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
-	APPLICATION
+	TESTAPP_SERVLET
 
 inherit
-	ARGUMENTS
+	SERVLET
 
 create
 	make
 
-feature {NONE} -- Initialization
+feature-- Access
+
+	controller: TESTAPP_CONTROLLER
+
+feature-- Implementation
 
 	make
-			-- Run application.
-		local
-			useless: BOOLEAN
 		do
-			create translator.make ("testapp")
-			print ("%N+++++++++++++++++++ START TRANSLATOR+++++++++++++++++++%N")
-
-			translator.set_output_path ("../../websites/testapp/")
-			useless := translator.process_with_file ("../../websites/testapp/testapp.xeb")
-
-			print ("%N+++++++++++++++++++ END TRANSLATOR++++++++++++++++++++++++++++++++++++++%N")
+			create controller.make
 		end
 
+	handle_request (request: REQUEST): RESPONSE
+		local
+			response: RESPONSE
+		do
+			create response.make
+			response.append ("[
+				<html>
+			]")
+			controller.print_to_console
+			response.append ("[
+				<head><title>Sample Application XEBRA Page</title></head><body bgcolor=white><table border="0">	<tr>		<td align=center></td>		<td>		<h1>Sample Application XEBRA Page</h1>		This is the output of a XEBRA page that is part of the Hello, World		application.</td>	</tr></table> 
+			]")
+			response.append (controller.give_me_a_hello)
+			response.append ("[
+				</body></html>
+			]")
+			Result := response
+		end
 
-feature -- Access
-
-	translator: XB_TRANSLATOR
-
-
-;note
+note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
@@ -66,6 +78,3 @@ feature -- Access
 			Customer support http://support.eiffel.com
 		]"
 end
-
-
-

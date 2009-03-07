@@ -1180,8 +1180,6 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 		end
 
 	grid_veto_pebble_function (a_grid: like objects_grid; a_pebble: ANY): BOOLEAN
-		local
-			cst: CALL_STACK_STONE
 		do
 			if a_grid = dropped_objects_grid then
 				Result := attached {OBJECT_STONE} a_pebble
@@ -1256,7 +1254,7 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 		do
 			if attached {EV_GRID_ROW} ost.ev_item as row then
 				if
-					(attached {ES_OBJECTS_GRID_OBJECT_LINE} row.data as gline) 
+					(attached {ES_OBJECTS_GRID_OBJECT_LINE} row.data as gline)
 					and then (
 						(not attached {ES_OBJECTS_GRID_SPECIFIC_LINE} gline)
 						or else not gline.is_read_only

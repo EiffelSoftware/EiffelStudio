@@ -1,19 +1,20 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-1-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-1-0 http://www.eiffel.com/developers/xml/configuration-1-1-0.xsd" name="espawn" uuid="54DE756C-427E-4BF1-A915-7BB301D58F26">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="espawn" uuid="54DE756C-427E-4BF1-A915-7BB301D58F26">
 	<target name="espawn">
 		<description>eSpawn, a tool to launching multiple processes asynchronously with the same environment established in finish_freezing.</description>
 		<root class="APPLICATION" feature="make"/>
-		<option warning="true">
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" is_void_safe="true" syntax_level="1">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" supplier_precondition="true"/>
 		</option>
-		<setting name="multithreaded" value="true"/>
 		<setting name="console_application" value="true"/>
-		<library name="argument_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf"/>
-		<library name="base" location="${ISE_LIBRARY}\library\base\base.ecf"/>
-		<library name="environment" location="${EIFFEL_SRC}\framework\environment\environment.ecf"/>
-		<library name="finish_freezing" location="${EIFFEL_SRC}\tools\finish_freezing\finish_freezing.ecf"/>
-		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
-		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
-		<cluster name="espawn" location="${EIFFEL_SRC}\tools\espawn" recursive="true">
+		<setting name="multithreaded" value="true"/>
+		<library name="argument_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser-safe.ecf"/>
+		<library name="base" location="${ISE_LIBRARY}\library\base\base-safe.ecf"/>
+		<library name="environment" location="${EIFFEL_SRC}\framework\environment\environment-safe.ecf"/>
+		<library name="finish_freezing" location="${EIFFEL_SRC}\tools\finish_freezing\finish_freezing-safe.ecf"/>
+		<library name="process" location="$ISE_LIBRARY\library\process\process-safe.ecf"/>
+		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf"/>
+		<cluster name="espawn" location="${EIFFEL_SRC}\tools\espawn\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>
 				<exclude>/.svn$</exclude>

@@ -93,12 +93,12 @@ feature -- Access
 			-- Maximum number of processors to untilize
 		require
 			is_successful: is_successful
-		local
-			l_option: ARGUMENT_NATURAL_OPTION
 		once
 			if asynchronous then
-				l_option ?= option_of_name (aync_switch)
-				if l_option /= Void and then l_option.has_value then
+				if
+					attached {ARGUMENT_NATURAL_OPTION} option_of_name (aync_switch) as l_option and then
+					l_option.has_value
+				then
 					Result := l_option.natural_16_value
 				end
 				if Result = 0 or Result > resident_cpu_count then

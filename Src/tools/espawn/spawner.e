@@ -11,6 +11,8 @@ class
 	SPAWNER
 
 inherit
+	ANY
+	
 	THREAD_CONTROL
 		export
 			{NONE} all
@@ -26,6 +28,7 @@ feature -- Initialization
 		require
 			a_threshold_positive: a_threshold > 0
 		do
+			create mutex.make
 			create internal_running_processes.make (concurrent_threshold)
 			create internal_unsuccessful_processes.make (0)
 			concurrent_threshold := a_threshold
@@ -56,6 +59,8 @@ feature -- Access
 			mutex.unlock
 		ensure
 			result_attached: Result /= Void
+			result_contains_attached_items: attached {LIST [detachable ANY]} Result as l_processes and then
+				not l_processes.has (Void)
 		end
 
 	unsuccessful_processes: ARRAYED_LIST [PROCESS]
@@ -68,6 +73,8 @@ feature -- Access
 			mutex.unlock
 		ensure
 			result_attached: Result /= Void
+			result_contains_attached_items: attached {LIST [detachable ANY]} Result as l_processes and then
+				not l_processes.has (Void)
 		end
 
 feature {NONE} -- Access
@@ -107,6 +114,16 @@ feature {NONE} -- Status report
 	exit_failure: BOOLEAN
 			-- Indicates if there was a process exit failure
 
+feature {NONE} -- Helpers
+
+	execution_environment: EXECUTION_ENVIRONMENT
+			-- Access to the execution environment.
+		once
+			create Result
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature -- Basic operations
 
 	reset
@@ -135,7 +152,7 @@ feature -- Basic operations
 				start_process (a_process, a_fail_on_error)
 				from until not is_at_threshold loop
 					yield
-					sleep (10)
+					execution_environment.sleep (10)
 				end
 			end
 		end
@@ -145,7 +162,7 @@ feature -- Basic operations
 		do
 			from until not is_running loop
 				yield
-				sleep (10)
+				execution_environment.sleep (10)
 			end
 		end
 
@@ -208,31 +225,19 @@ feature {NONE} -- Implementation
 
 	mutex: MUTEX
 			-- Global mutext for controlling access to `Current'
-		do
-			Result := internal_mutex
-			if Result = Void then
-				create Result.make
-				internal_mutex := Result
-			end
-		ensure
-			result_attached: Result /= Void
-		end
 
-feature {NONE} -- Internal implementation cache
+feature {NONE} -- Internal implementation cache			
 
-	internal_mutex: like mutex
-			-- Cached version of `mutex'
-			-- Note: Do not use directly!			
-
-	internal_unsuccessful_processes: ARRAYED_LIST [PROCESS]
+	internal_unsuccessful_processes: attached ARRAYED_LIST [PROCESS]
 			-- Cached version of `unsuccessful_processes'
 			-- Note: Do not use directly!
 
-	internal_running_processes: ARRAYED_LIST [PROCESS]
+	internal_running_processes: attached ARRAYED_LIST [PROCESS]
 			-- Cached version of `running_processes'
 			-- Note: Do not use directly!		
 
 invariant
+	mutex_attached: mutex /= Void
 	running_small_enough: running <= concurrent_threshold
 	concurrent_threshold_positive: concurrent_threshold > 0
 	internal_unsuccessful_processes_attached: internal_unsuccessful_processes /= Void

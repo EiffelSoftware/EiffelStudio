@@ -4,17 +4,17 @@
 		<file_rule>
 			<exclude>\.svn$</exclude>
 		</file_rule>
-		<option trace="false" full_class_checking="true"  syntax_level="1">
-			<assertions precondition="true" postcondition="true" check="true"/>
+		<option full_class_checking="true" is_attached_by_default="true" is_void_safe="true" syntax_level="1">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
 		</option>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf" readonly="false"/>
-		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment-safe.ecf" readonly="true"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel-safe.ecf"/>
 		<cluster name="c_config_library" location="main\config\" recursive="true"/>
 	</target>
 	<target name="finish_freezing" extends="c_config_library">
 		<root class="FINISH_FREEZING" feature="make"/>
-		<option trace="false" profile="false" debug="false">
+		<option full_class_checking="true" is_attached_by_default="true" is_void_safe="true" syntax_level="1">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="True"/>
@@ -23,9 +23,9 @@
 		<setting name="inlining" value="True"/>
 		<setting name="inlining_size" value="0"/>
 		<setting name="multithreaded" value="true"/>
-		<library name="argument_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf"/>
-		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
-		<library name="resources" location="$EIFFEL_SRC\framework\resources\resources.ecf"/>
+		<library name="argument_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser-safe.ecf"/>
+		<library name="process" location="$ISE_LIBRARY\library\process\process-safe.ecf"/>
+		<library name="resources" location="$EIFFEL_SRC\framework\resources\resources-safe.ecf"/>
 		<cluster name="finish_freezing" location="$EIFFEL_SRC\tools\finish_freezing\main\"/>
 		<cluster name="spec" location="$EIFFEL_SRC\tools\finish_freezing\spec\windows\"/>
 	</target>

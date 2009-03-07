@@ -23,8 +23,8 @@ feature {NONE} -- Initialization
 
 		end
 
-feature -- Processing		
 
+feature -- Processing		
 
 	handle_string (output_elements: LINKED_LIST [OUTPUT_ELEMENT];
 	 a_string: STRING; a_start_pos: INTEGER)

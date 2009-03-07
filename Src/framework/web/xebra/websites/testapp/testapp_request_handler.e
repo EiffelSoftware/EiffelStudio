@@ -1,40 +1,35 @@
 note
-	description : "Runns the xebra translator"
-	date        : "$Date$"
-	revision    : "$Revision$"
+	description: "[
+		No comment yet
+	]"
+	legal: "See notice at end of class."
+	status: "Prototyping phase"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
-	APPLICATION
+	TESTAPP_REQUEST_HANDLER
 
 inherit
-	ARGUMENTS
+	REQUEST_HANDLER
 
 create
 	make
 
-feature {NONE} -- Initialization
+feature-- Access
+
+feature-- Implementation
 
 	make
-			-- Run application.
 		local
-			useless: BOOLEAN
+			servlet: SERVLET
 		do
-			create translator.make ("testapp")
-			print ("%N+++++++++++++++++++ START TRANSLATOR+++++++++++++++++++%N")
-
-			translator.set_output_path ("../../websites/testapp/")
-			useless := translator.process_with_file ("../../websites/testapp/testapp.xeb")
-
-			print ("%N+++++++++++++++++++ END TRANSLATOR++++++++++++++++++++++++++++++++++++++%N")
+			create {HASH_TABLE [SERVLET, STRING]} servlets.make (5)
+			create {TESTAPP_SERVLET} servlet.make
+			servlets.put (servlet, "TESTAPP_SERVLET")
 		end
 
-
-feature -- Access
-
-	translator: XB_TRANSLATOR
-
-
-;note
+note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
@@ -66,6 +61,3 @@ feature -- Access
 			Customer support http://support.eiffel.com
 		]"
 end
-
-
-

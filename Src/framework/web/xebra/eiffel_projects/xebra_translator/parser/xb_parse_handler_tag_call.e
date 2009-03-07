@@ -30,7 +30,6 @@ feature -- Access
 			Result := "<%%"
 		end
 
-
 	end_tag: STRING
 			-- The ending tag
 		do
@@ -52,6 +51,7 @@ feature -- Process
 			print ("-processing CALL string '" + an_inner_string + "' at pos " + a_position.out + "%N")
 			output_elements.put_front (create {CALL_ELEMENT}.make (an_inner_string))
 		end
+
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

@@ -1,0 +1,18 @@
+<html>
+<%print_to_console%>
+<head>
+<title>Sample Application XEBRA Page</title>
+</head>
+<body bgcolor=white>
+<table border="0">
+	<tr>
+		<td align=center></td>
+		<td>
+		<h1>Sample Application XEBRA Page</h1>
+		This is the output of a XEBRA page that is part of the Hello, World
+		application.</td>
+	</tr>
+</table>
+ <%=give_me_a_hello%>
+</body>
+</html>

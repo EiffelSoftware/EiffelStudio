@@ -19,6 +19,7 @@
 				<exclude>/CVS$</exclude>
 			</file_rule>
 		</cluster>
+		<cluster name="xebra_translator" location="\home\sandrod\workspace\xebra\eiffel_projects\xebra_translator\code_gen\" recursive="true"/>
 	</target>
 	<target name="xebra_server_dotnet" extends="xebra_server">
 		<setting name="msil_generation" value="true"/>

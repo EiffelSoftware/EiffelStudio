@@ -12,6 +12,8 @@ deferred class
 feature -- Access
 
 	servlets: TABLE [SERVLET, STRING]
+			-- All the servlets of the web application
+			-- Stored with a key, to be able to retrieve them
 
 	run
 			-- Starts the web application.
@@ -51,15 +53,27 @@ feature -- Processing
 			-- Transforms a plain text message into a {REQUEST} object
 			-- for further use in on the page
 		do
-			--TODO
-			create Result.make
+			create Result.make (extract_web_app_name(message).as_upper + "_SERVLET")
+		end
+
+	extract_web_app_name (message: STRING): STRING
+			-- Extracts the webapp name from the get-parameter.
+		do
+			Result := message.substring (16, message.count)
+			Result := Result.substring (1, Result.substring_index (" ", 1)-1)
 		end
 
 	handle_request (request: REQUEST): RESPONSE
 			-- Routes the request to the appropriate controller
 		do
 			-- TODO: Check, wether request.get_file is in the table or not
-			Result := servlets [request.file_identifier].handle_request (request)
+			--Result := servlets [request.file_identifier].handle_request (request)
+			if attached servlets [request.file_identifier] as servlet then
+				Result := servlet.handle_request (request)
+			else
+				create Result.make
+				Result.text := "Application not found: %"" + request.file_identifier + "%""
+			end
 		end
 
 note

@@ -14,13 +14,14 @@ create
 feature -- Access
 
 	file_identifier: STRING
+			-- Identifies the identifier of the requested web application
 
 feature -- Initialization
 
-	make
-			--TODO
+	make (a_file_identifier: STRING)
+			--`a_file_identifier': Identifies the identifier of the requested web application
 		do
-
+			file_identifier := a_file_identifier
 		end
 
 note

@@ -118,7 +118,7 @@ feature -- Processing
 			servlet: ROOT_SERVLET_ELEMENT
 		do
 			create {LINKED_LIST [SERVLET_ELEMENT]} feature_body.make
-			feature_body.extend (wrap ("create {HASH_TABLE [SERVLET, STRING]} servlets.make"))
+			feature_body.extend (wrap ("create {HASH_TABLE [SERVLET, STRING]} servlets.make (5)"))
 			from
 				some_servlets.start
 			until

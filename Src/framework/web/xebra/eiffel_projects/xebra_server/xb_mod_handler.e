@@ -47,7 +47,8 @@ feature --Execution
 		require
 			socket_open: not socket.is_closed
 		local
-			response, message: STRING
+			message: STRING
+			response: RESPONSE
 			header: TUPLE [size: NATURAL; fragment: BOOLEAN]
 			i: INTEGER
 		do
@@ -69,8 +70,8 @@ feature --Execution
            		end
            	end
 
-			response := send_request (message, socket) --FIXME: last argument is WRONG!
-			send_string (response, socket)
+			response := send_request (message, socket)
+			send_string (response.text, socket)
          	socket.cleanup
             check
             	socket.is_closed
@@ -79,7 +80,7 @@ feature --Execution
 
 feature {NONE} -- Implementation
 
-	send_request (a_message: STRING; webapp_socket: NETWORK_STREAM_SOCKET): STRING
+	send_request (a_message: STRING; webapp_socket: NETWORK_STREAM_SOCKET): RESPONSE
 			--Sends a request to the correct webserver.
 		require
 			webapp_connected: not webapp_socket.is_closed
@@ -93,13 +94,12 @@ feature {NONE} -- Implementation
             message := a_message
 
             soc1.independent_store (message)
-            Result := "Error"
-            if attached {STRING} soc1.retrieved as rec_message then
+            create Result.make
+            if attached {RESPONSE} soc1.retrieved as rec_message then
             	Result := rec_message
             end
 
             soc1.cleanup
-
 		end
 
 	send_string (message: STRING; app_socket: NETWORK_STREAM_SOCKET)

@@ -8,11 +8,34 @@ note
 class
 	RESPONSE
 
+create
+	make
+
+feature -- Access
+
+	text: STRING assign set_text
+			-- Reponse text (xhtml)
+
+feature -- Initialization
+
+	make
+			-- 
+		do
+			text := ""
+		end
+
 feature -- Element change
 
 	append (a_string: STRING)
+			-- Appends `a_string' to the text
 		do
-			print ("APPEND:  " + a_string)
+			text.append (a_string)
+		end
+
+	set_text (a_text: STRING)
+			-- Sets the text
+		do
+			text := a_text
 		end
 
 note

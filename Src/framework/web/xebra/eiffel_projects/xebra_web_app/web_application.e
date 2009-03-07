@@ -44,7 +44,7 @@ feature
 
 
    read_page(a_file: STRING): STRING
-   		-- reads a text file and returns it as a string
+   			-- Reads a text file and returns it as a string
  		 require
  		 	a_file_not_empty: not a_file.is_empty
  		 local
@@ -58,4 +58,5 @@ feature
 	        end
 	        l_file.close
 		 end
+
 end

@@ -35,7 +35,7 @@ feature -- Processing
 	serialize (buf: INDENDATION_STREAM)
 			-- <Precursor>			
 		do
-			buf.put_string (response_var + ".put_string (" + controller_var + "." + feature_name + ")")
+			buf.put_string (response_var + ".append (" + controller_var + "." + feature_name + ")")
 		end
 
 note

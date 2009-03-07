@@ -11,6 +11,8 @@ class
 	APPLICATION
 
 inherit
+	ANY
+	
 	ENV_CONSTANTS
 		export
 			{NONE} all
@@ -69,7 +71,7 @@ feature -- Basic operations
 			a_env_attached: a_env /= Void
 		local
 			l_manager: C_CONFIG_MANAGER
-			l_config: C_CONFIG
+			l_config: detachable C_CONFIG
 		do
 			if not a_options.manual then
 					-- Configure environment
@@ -147,7 +149,7 @@ feature -- Basic operations
 			l_manager: C_CONFIG_MANAGER
 			l_codes: LIST [STRING]
 			l_cursor: CURSOR
-			l_config: C_CONFIG
+			l_config: detachable C_CONFIG
 			l_code: STRING
 			l_count: INTEGER
 		do
@@ -167,13 +169,14 @@ feature -- Basic operations
 
 				from l_codes.start until l_codes.after loop
 					l_config := l_manager.config_from_code (l_codes.item, False)
-					check l_config_attached: l_config /= Void end
 					if l_config /= Void then
 						check l_config_exists: l_config.exists end
 						l_code := l_config.code
 						print ("   " + l_code)
 						print (create {STRING}.make_filled (' ', l_count - l_code.count))
 						print (":  " + l_config.description + "%N")
+					else
+						check False end
 					end
 					l_codes.forth
 				end
@@ -190,21 +193,20 @@ feature {NONE} -- Basic operations
 			not_a_name_is_empty: not a_name.is_empty
 			a_env_attached: a_env /= Void
 		local
-			l_var: STRING
+			l_var: detachable STRING
 			l_new_var: STRING
 		do
 			if a_values /= Void and then not a_values.is_empty then
 				l_var := a_env.get_environment (a_name)
 				if l_var = Void or else l_var.is_empty then
 					l_new_var := a_values
-
 				else
 					create l_new_var.make (a_values.count + l_var.count)
 					l_new_var.append (a_values)
 					l_new_var.append_character (';')
 					l_new_var.append (l_var)
 				end
-				a_env.set_environment (a_values, a_name)
+				a_env.set_environment (l_new_var, a_name)
 			end
 		end
 

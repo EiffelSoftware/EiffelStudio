@@ -48,7 +48,7 @@ feature {NONE} -- Initalization
 		end
 
 	on_initialize
-			-- Does actual initialization
+			-- <Precursor>
 		local
 			l_file_name: like batch_file_name
 			l_parser: ENV_PARSER
@@ -77,8 +77,7 @@ feature {NONE} -- Initalization
 feature {NONE} -- Clean up
 
 	on_dispose
-			-- Action to be executed just before garbage collection
-			-- reclaims an object.
+			-- <Precursor>
 		do
 			if internal_reg_key /= default_pointer then
 				reset_key
@@ -99,27 +98,30 @@ feature {NONE} -- Clean up
 feature -- Access
 
 	install_path: STRING
-			-- Location of Visual Studio install base
+			-- <Precursor>
 		local
-			l_value: WEL_REGISTRY_KEY_VALUE
+			l_value: detachable WEL_REGISTRY_KEY_VALUE
+			l_result: detachable STRING
 		do
 			initialize
 			l_value := registry.key_value (internal_reg_key, install_path_value_name)
 			if l_value /= Void and then l_value.type = {WEL_REGISTRY_KEY_VALUE}.reg_sz then
-				Result := l_value.string_value
-				if not Result.is_empty then
-					if Result.item (Result.count) /= operating_environment.directory_separator then
-						Result.append_character (operating_environment.directory_separator)
+				l_result := l_value.string_value
+				if not l_result.is_empty then
+					if l_result.item (l_result.count) /= operating_environment.directory_separator then
+						l_result.append_character (operating_environment.directory_separator)
 					end
 				end
 			end
-			if Result = Void or else Result.is_empty then
+			if l_result = Void or else l_result.is_empty then
 				Result := ".\"
+			else
+				Result := l_result
 			end
 		end
 
 	compiler_file_name: STRING
-			-- The compiler's file name
+			-- <Precursor>
 		once
 			Result := "cl.exe"
 		end
@@ -136,13 +138,13 @@ feature {NONE} -- Access
 			not_result_is_empty: not Result.is_empty
 		end
 
-	batch_file_arguments: STRING
+	batch_file_arguments: detachable STRING
 			-- Arguments for `batch_file_name' execution
 		require
 			exists: exists
 		do
 		ensure
-			not_result_sis_empty: Result /= Void implies not Result.is_empty
+			not_result_is_empty: Result /= Void implies not Result.is_empty
 		end
 
 	batch_file_options: STRING
@@ -169,38 +171,43 @@ feature {NONE} -- Access
 	install_path_value_name: STRING
 			-- Key value name for install location
 		deferred
-		end
-
-	registry: WEL_REGISTRY
-			-- Access to registry
-		once
-			create Result
 		ensure
 			result_attached: Result /= Void
+			not_result_is_empty: not Result.is_empty
 		end
 
 feature -- Status report
 
 	exists: BOOLEAN
-			-- Indicates if the product exists
+			-- <Precursor>
 		do
 			initialize
 			Result := internal_reg_key /= default_pointer
 		end
 
 	is_deprecated: BOOLEAN
-			-- Indicates if the product is deprecated.
+			-- <Precursor>
 
 feature {NONE} -- Basic operations
 
 	open_key
-			-- Attempts to open the specified registery key
+			-- Attempts to open the specified registery key.
 		require
 			not_is_initialized: not is_initialized
 			not_exists: not exists
 		do
 			check internal_reg_key_is_null: internal_reg_key = default_pointer end
 			internal_reg_key := registry.open_key_with_access (full_product_reg_path, {WEL_REGISTRY_ACCESS_MODE}.key_read)
+		end
+
+feature {NONE} -- Helpers
+
+	registry: WEL_REGISTRY
+			-- Access to registry.
+		once
+			create Result
+		ensure
+			result_attached: Result /= Void
 		end
 
 feature {NONE} -- Internal implementation cache
@@ -212,7 +219,7 @@ invariant
 	internal_reg_key_not_null: exists implies internal_reg_key /= default_pointer
 
 ;note
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -225,22 +232,22 @@ invariant
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -23,23 +23,34 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	c_configuration: !C_CONFIG
+	c_configuration: C_CONFIG
 			-- The best matched C configuration.
 		require
 			has_checked: has_checked
 			has_valid_configuration: has_valid_configuration
+		local
+			l_result: like internal_c_configuration
 		do
-			Result := internal_c_configuration.as_attached
+			l_result := internal_c_configuration
+			check l_result_attached: l_result /= Void end
+			Result := l_result
+		ensure
+			result_attached: Result /= Void
 		end
 
-	c_configuration_error: !STRING
+	c_configuration_error: STRING
 			-- The message associated with a detected C compiler configuration.
 		require
 			has_checked: has_checked
 			not_has_valid_configuration: not has_valid_configuration
+		local
+			l_result: like internal_c_configuration_error
 		do
-			Result := internal_c_configuration_error.as_attached
+			l_result := internal_c_configuration_error
+			check l_result_attached: l_result /= Void end
+			Result := l_result
 		ensure
+			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
 		end
 
@@ -61,16 +72,18 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_error (a_error: !STRING; a_args: ?TUPLE)
+	set_error (a_error: STRING; a_args: detachable TUPLE)
 			-- Sets an error state for Current.
 			--
 			-- `a_error': An error string.
 			-- `a_args': Any argument to replace $n with.
 		require
+			a_error_attached: a_error /= Void
 			not_a_error_is_empty: not a_error.is_empty
 		local
 			l_count, i: INTEGER
 			l_error: STRING
+			l_item: detachable ANY
 		do
 			internal_c_configuration := Void
 
@@ -78,7 +91,12 @@ feature -- Status setting
 			if a_args /= Void then
 				l_count := a_args.count
 				from i := 1 until i > l_count loop
-					l_error.replace_substring_all ("$" + i.out, a_args.item (i).out)
+					l_item := a_args.item (i)
+					if l_item = Void then
+						create {STRING_8} l_item.make_empty
+					end
+					l_error.replace_substring_all ("$" + i.out, l_item.out)
+
 					i := i + 1
 				end
 			end
@@ -86,20 +104,22 @@ feature -- Status setting
 		ensure
 			internal_c_configuration_detached: internal_c_configuration = Void
 			internal_c_configuration_error_attached: internal_c_configuration_error /= Void
-			not_internal_c_configuration_error_is_empty: not internal_c_configuration_error.is_empty
+			not_internal_c_configuration_error_is_empty: attached internal_c_configuration_error as l_cfg_error and then
+				not l_cfg_error.is_empty
 		end
 
 feature {NONE} -- Query
 
-	file_assembly_type (a_exec: !STRING): INTEGER
+	file_assembly_type (a_exec: STRING): INTEGER
 			-- Determines what a PE file's assembly type is (x64/x86).
 			--
 			-- `a_exec': The location of an executable file name.
 		require
+			a_exec_attached: a_exec /= Void
 			not_a_exec_is_empty: not a_exec.is_empty
 			a_exec_exists: (create {RAW_FILE}.make (a_exec)).exists
 		local
-			l_file: !RAW_FILE
+			l_file: detachable RAW_FILE
 			l_offset: NATURAL
 			retried: BOOLEAN
 		do
@@ -130,7 +150,7 @@ feature {NONE} -- Query
 				end
 			end
 
-			if not l_file.is_closed then
+			if l_file /= Void and then not l_file.is_closed then
 				l_file.close
 			end
 		ensure
@@ -151,9 +171,9 @@ feature -- Basic operations
 		local
 			l_manager: C_CONFIG_MANAGER
 			l_x86_manager: C_CONFIG_MANAGER
-			l_config: ?C_CONFIG
+			l_config: detachable C_CONFIG
 			l_no_compatible: BOOLEAN
-			l_compilers: !STRING
+			l_compilers: STRING
 		do
 			reset
 			has_checked := True
@@ -168,7 +188,9 @@ feature -- Basic operations
 					create l_x86_manager.make (True)
 					if l_x86_manager.has_applicable_config then
 							-- 32bit environment found, indicate the error.
-						set_error (e_x86_version_installed_1, [l_x86_manager.best_configuration.description])
+						l_config := l_x86_manager.best_configuration
+						check l_config_attached: l_config /= Void end
+						set_error (e_x86_version_installed_1, [l_config.description])
 					else
 						l_no_compatible := True
 					end
@@ -216,15 +238,16 @@ feature {NONE} -- Basic operations
 			internal_c_configuration_error_detached: internal_c_configuration_error = Void
 		end
 
-	check_compiler_executable (a_config: !C_CONFIG)
+	check_compiler_executable (a_config: C_CONFIG)
 			-- Checks of a given file name in a canonicalized list of paths.
 			--
 			-- `a_config': A C configuration to use to locate the matching compiler'.
 		require
+			a_config_attached: a_config /= Void
 			a_config_exists: a_config.exists
 		local
 			l_var_path: STRING
-			l_var: STRING
+			l_var: detachable STRING
 			l_paths: LIST [STRING]
 			l_path: STRING
 			l_file_name: STRING
@@ -293,11 +316,11 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Implementation: Internal cache
 
-	internal_c_configuration: ?like c_configuration
+	internal_c_configuration: detachable like c_configuration
 			-- Cached version of `c_configuration'.
 			-- Note: Do not use directly!
 
-	internal_c_configuration_error: ?like c_configuration_error
+	internal_c_configuration_error: detachable like c_configuration_error
 			-- Cached version of `c_configuration_error'.
 			-- Note: Do not use directly!
 
@@ -310,16 +333,16 @@ feature {NONE} -- Constants
 
 feature {NONE} -- Localization
 
-	e_x86_version_installed_1: !STRING = "The installed version of $1 is a 32-bit (x86) environment. You are currently running a 64-bit (x64) application!"
-	e_no_compatible_compiler_1: !STRING = "No compatible version of Visual Studio, VC Express, or Windows SDK found!%NThe following environments are supported:$1"
-	e_x86_compiler_binary_1: !STRING = "The located Microsoft C/C++ compiler at '$1' is a 32-bit compiler. Please install the 64-bit (x64) C/C++ tools!"
-	e_x64_compiler_binary_1: !STRING = "The located Microsoft C/C++ compiler at '$1'  is a 64-bit compiler. Please install the 32-bit (x86) C/C++ tools!"
-	e_corrupt_compiler_binary_1: !STRING = "The located Microsoft C/C++ compiler at '$1' is not a valid executable file!"
-	e_no_compiler_1: !STRING = "$1 was found but could not be configured, indicating some of its installation files have been moved or deleted. Please also check you have installed the $2 C/C++ compiler tools."
-	e_compiler_deprecated_1: !STRING = "The located Microsoft C/C++ compiler at '$1' has been deprecated and cannot be used. Please upgrade to one of the supported C/C++ compilers."
+	e_x86_version_installed_1: STRING = "The installed version of $1 is a 32-bit (x86) environment. You are currently running a 64-bit (x64) application!"
+	e_no_compatible_compiler_1: STRING = "No compatible version of Visual Studio, VC Express, or Windows SDK found!%NThe following environments are supported:$1"
+	e_x86_compiler_binary_1: STRING = "The located Microsoft C/C++ compiler at '$1' is a 32-bit compiler. Please install the 64-bit (x64) C/C++ tools!"
+	e_x64_compiler_binary_1: STRING = "The located Microsoft C/C++ compiler at '$1'  is a 64-bit compiler. Please install the 32-bit (x86) C/C++ tools!"
+	e_corrupt_compiler_binary_1: STRING = "The located Microsoft C/C++ compiler at '$1' is not a valid executable file!"
+	e_no_compiler_1: STRING = "$1 was found but could not be configured, indicating some of its installation files have been moved or deleted. Please also check you have installed the $2 C/C++ compiler tools."
+	e_compiler_deprecated_1: STRING = "The located Microsoft C/C++ compiler at '$1' has been deprecated and cannot be used. Please upgrade to one of the supported C/C++ compilers."
 
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -332,22 +355,22 @@ feature {NONE} -- Localization
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

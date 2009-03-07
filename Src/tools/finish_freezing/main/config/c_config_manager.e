@@ -26,38 +26,46 @@ feature -- Access
 	for_32bit: BOOLEAN
 			-- Indicates if manager is to be used in a 32bit environment
 
-	config_codes: !LIST [!STRING]
+	config_codes: LIST [STRING]
 			-- List of available configuration codes
 		local
-			l_codes: !ARRAYED_LIST [!STRING]
-			l_configs: !like configs
+			l_codes: ARRAYED_LIST [STRING]
+			l_configs: like configs
+			l_config: detachable C_CONFIG
+			l_result: like internal_config_codes
+			l_cursor: CURSOR
 		do
-			if {l_result: LIST [!STRING]} internal_config_codes then
+			l_result := internal_config_codes
+			if l_result /= Void then
 				Result := l_result
 			else
 				l_configs := configs
 				create l_codes.make (l_configs.count)
 				l_codes.compare_objects
-				l_configs.do_all (agent (ia_item: !C_CONFIG; ia_list: !ARRAYED_LIST [!STRING])
-					do
-						if {l_code: STRING} ia_item.code.as_string_8 then
-							ia_list.extend (l_code)
-						end
-					end (?, l_codes))
+				l_cursor := l_configs.cursor
+				from l_configs.start until l_configs.after loop
+					l_config := l_configs.item_for_iteration
+					check l_config_attached: l_config /= Void end
+					l_codes.extend (l_config.code)
+					l_configs.forth
+				end
 				Result := l_codes
 				internal_config_codes := Result
 			end
 		ensure
-			result_consistent: Result = config_codes
+			configs_unmoved: configs.cursor ~ old configs.cursor
 			result_count_matches_config_count: Result.count = configs.count
 			result_compares_objects: Result.object_comparison
-			configs_unmoved: configs.cursor.is_equal (old configs.cursor)
+			result_consistent: Result = config_codes
 		end
 
-	configs: !LIST [!C_CONFIG]
-			-- List of C compiler configurations
+	configs: LIST [C_CONFIG]
+			-- List of C compiler configurations.
+		local
+			l_result: like internal_configs
 		do
-			if {l_result: LIST [!C_CONFIG]} internal_configs then
+			l_result := internal_configs
+			if l_result /= Void then
 				Result := l_result
 			else
 				Result := create_configs (for_32bit or not {PLATFORM_CONSTANTS}.is_64_bits)
@@ -65,7 +73,7 @@ feature -- Access
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty
-			ordered_deprecation: Result.for_all (agent (ia_item: !C_CONFIG; ia_dep: !CELL [BOOLEAN]): BOOLEAN
+			ordered_deprecation: Result.for_all (agent (ia_item: C_CONFIG; ia_dep: CELL [BOOLEAN]): BOOLEAN
 				do
 					if ia_item.is_deprecated then
 						ia_dep.put (True)
@@ -77,15 +85,17 @@ feature -- Access
 			result_consistent: Result = configs
 		end
 
-	ordered_configs: !LIST [!C_CONFIG]
+	ordered_configs: LIST [C_CONFIG]
 			-- List of sorted configurations, by description.
 		local
-			l_configs: !like configs
+			l_result: like internal_ordered_configs
+			l_configs: like configs
 			l_cursor: CURSOR
-			l_item: !C_CONFIG
-			l_ordered_list: !ARRAYED_LIST [!C_CONFIG]
+			l_item: C_CONFIG
+			l_ordered_list: ARRAYED_LIST [C_CONFIG]
 		do
-			if {l_result: LIST [!C_CONFIG]} internal_ordered_configs then
+			l_result := internal_ordered_configs
+			if l_result /= Void then
 				Result := l_result
 			else
 				l_configs := configs
@@ -113,55 +123,60 @@ feature -- Access
 				internal_ordered_configs := Result
 			end
 		ensure
-			configs_unmoved: configs.cursor.is_equal (old configs.cursor)
+			configs_unmoved: configs.cursor ~ old configs.cursor
 			not_result_is_empty: not Result.is_empty
 			result_count_matches_config_count: Result.count = configs.count
 			result_consistent: Result = ordered_configs
 		end
 
-	applicable_config_codes: !LIST [!STRING]
-			-- List of available and applicable configuration codes
+	applicable_config_codes: LIST [STRING]
+			-- List of available and applicable configuration codes.
 		local
-			l_list: !ARRAYED_LIST [!STRING]
-			l_configs: !like applicable_configs
+			l_result: like internal_applicable_config_codes
+			l_list: ARRAYED_LIST [STRING]
+			l_configs: like applicable_configs
+			l_config: detachable C_CONFIG
+			l_cursor: CURSOR
+			l_code: STRING
 		do
-			if {l_result: !LIST [!STRING]} internal_applicable_config_codes then
+			l_result := internal_applicable_config_codes
+			if l_result /= Void then
 				Result := l_result
 			else
 				l_configs := applicable_configs
 				create l_list.make (l_configs.count)
 				l_list.compare_objects
-
-				l_configs.do_all (agent (ia_item: !C_CONFIG; ia_list: !ARRAYED_LIST [!STRING])
-					local
-						l_code: STRING
-					do
-						if ia_item /= Void then
-							check ia_item_exists: ia_item.exists end
-							l_code := ia_item.code
-							if l_code /= Void then
-								ia_list.extend (l_code)
-							end
-						end
-					end (?, l_list))
+				l_cursor := l_configs.cursor
+				from l_configs.start until l_configs.after loop
+					l_config := l_configs.item_for_iteration
+					check l_config_attached: l_config /= Void end
+					if l_config /= Void then
+						check l_config_exists: l_config.exists end
+						l_code := l_config.code
+						l_list.extend (l_code)
+					end
+					l_configs.forth
+				end
 				Result := l_list
 				internal_applicable_config_codes := Result
 			end
 		ensure
-			result_count_big_enough: Result.count <= configs.count
+			result_count_small_enough: Result.count <= configs.count
 			result_compares_objects: Result.object_comparison
-			configs_unmoved: configs.cursor.is_equal (old configs.cursor)
+			configs_unmoved: configs.cursor ~ old configs.cursor
 			result_consistent: Result = applicable_config_codes
 		end
 
-	applicable_configs: !LIST [!C_CONFIG]
+	applicable_configs: LIST [C_CONFIG]
 			-- Applicable configurations given user's machine state.
 		local
-			l_list: !ARRAYED_LIST [!C_CONFIG]
-			l_configs: !like configs
-			l_config: !C_CONFIG
+			l_list: ARRAYED_LIST [C_CONFIG]
+			l_configs: like configs
+			l_config: C_CONFIG
+			l_result: like internal_applicable_configs
 		do
-			if {l_result: !LIST [!C_CONFIG]} internal_applicable_configs then
+			l_result := internal_applicable_configs
+			if l_result /= Void then
 				Result := l_result
 			else
 				l_configs := configs
@@ -179,7 +194,8 @@ feature -- Access
 				internal_applicable_configs := Result
 			end
 		ensure
-			configs_unmoved: configs.cursor.is_equal (old configs.cursor)
+			result_count_small_enough: Result.count <= configs.count
+			configs_unmoved: configs.cursor ~ old configs.cursor
 			result_consistent: Result = applicable_configs
 		end
 
@@ -198,16 +214,15 @@ feature -- Status report
 				l_config := l_configs.item
 				Result := l_config.exists
 				if not Result then
-					l_config := Void
 					l_configs.forth
 				end
 			end
 			l_configs.go_to (l_cursor)
 		ensure
-			configs_unmoved: configs.cursor.is_equal (old configs.cursor)
+			configs_unmoved: configs.cursor ~ old configs.cursor
 		end
 
-	best_configuration: ?C_CONFIG
+	best_configuration: detachable C_CONFIG
 			-- Retrieve's the best C compiler configuration given the state of a user's system
 		require
 			has_applicable_config: has_applicable_config
@@ -229,9 +244,10 @@ feature -- Status report
 			l_configs.go_to (l_cursor)
 		ensure
 			result_attached: Result /= Void
+			configs_unmoved: configs.cursor ~ old configs.cursor
 		end
 
-	config_from_code (a_code: STRING; a_applicable_only: BOOLEAN): ?C_CONFIG
+	config_from_code (a_code: STRING; a_applicable_only: BOOLEAN): detachable C_CONFIG
 			-- Retrieves a config from the code `a_code'. If `a_applicable_only' is set to True
 			-- the located configuration must exists in order to return a result
 		require
@@ -257,12 +273,12 @@ feature -- Status report
 			l_configs.go_to (l_cursor)
 		ensure
 			result_exists: a_applicable_only implies (Result = Void or else Result.exists)
-			configs_unmoved: configs.cursor.is_equal (old configs.cursor)
+			configs_unmoved: configs.cursor ~ old configs.cursor
 		end
 
 feature {NONE} -- Access
 
-	create_configs (a_use_32bit: BOOLEAN): !ARRAYED_LIST [!C_CONFIG]
+	create_configs (a_use_32bit: BOOLEAN): ARRAYED_LIST [C_CONFIG]
 			-- Visual Studio configuration for x64/x86 platforms.
 			--|Be sure to place deprecated configurations after all valid configurations!
 		require
@@ -293,6 +309,7 @@ feature {NONE} -- Access
 				Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\6.0\Setup\Microsoft Visual C++", True, "VC60", "Microsoft Visual Studio VC++ (6.0)", "199x-VS", True))
 			end
 		ensure
+			result_attached: Result /= Void
 			ordered_deprecation: Result.for_all (agent (ia_item: !C_CONFIG; ia_dep: !CELL [BOOLEAN]): BOOLEAN
 				do
 					if ia_item.is_deprecated then
@@ -306,28 +323,28 @@ feature {NONE} -- Access
 
 feature {NONE} -- Internal implementation cache
 
-	internal_config_codes: ?like config_codes
+	internal_config_codes: detachable like config_codes
 			-- Cached version of `config_codes'
 			-- Note: Do not use directly
 
-	internal_configs: ?like configs
+	internal_configs: detachable like configs
 			-- Cached version of `configs'
 			-- Note: Do not use directly
 
-	internal_ordered_configs: ?like ordered_configs
+	internal_ordered_configs: detachable like ordered_configs
 			-- Cached version of `ordered_configs'
 			-- Note: Do not use directly
 
-	internal_applicable_config_codes: like applicable_config_codes
+	internal_applicable_config_codes: detachable like applicable_config_codes
 			-- Cached version of `applicable_config_codes'
 			-- Note: Do not use directly
 
-	internal_applicable_configs: like applicable_configs
+	internal_applicable_configs: detachable like applicable_configs
 			-- Cached version of `applicable_configs'
 			-- Note: Do not use directly
 
 ;note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -340,21 +357,21 @@ feature {NONE} -- Internal implementation cache
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

@@ -1,7 +1,6 @@
 
 test_name pattern-of-id-crash
 test_description After a sequence of changes, the compiler crashes with a call on Void target in {PATTERN_TABLE}.pattern_of_id
--- FIXME: Possibly change Ace to use precompile of base.ecf and change base-safe.ecf to base.ecf
 
 copy_sub Ace $TEST Ace
 copy_raw test.e $CLUSTER test.e

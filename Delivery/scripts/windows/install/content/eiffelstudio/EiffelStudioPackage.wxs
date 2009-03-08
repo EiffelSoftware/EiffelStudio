@@ -39,7 +39,7 @@
 				</RegistryKey>
 			</Component>
 			<!-- Registry settings for .NET consumer -->
-			<Component Id="Comp.studio_consumer" Guid="21889690-D448-4CD6-AA7C-9F914815CD33" Win64="$(var.IsWin64)">a
+			<Component Id="Comp.studio_consumer" Guid="21889690-D448-4CD6-AA7C-9F914815CD33" Win64="$(var.IsWin64)">
 				<RegistryKey Id="Reg.CCManager" Root="HKCR" Key="EiffelSoftware.MetadataConsumer.Interop.COM_CACHE_MANAGER" Action="createAndRemoveOnUninstall">
 					<RegistryValue Id="RegVal.CCManager" Value="EiffelSoftware.MetadataConsumer.Interop.COM_CACHE_MANAGER" Type="string">
 					</RegistryValue>

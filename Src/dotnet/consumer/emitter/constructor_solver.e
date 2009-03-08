@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: STRING
+	name: detachable STRING
 			-- Eiffel name of constructor
 
 	arguments: ARRAY [CONSUMED_ARGUMENT]
@@ -56,9 +56,15 @@ feature -- Access
 			-- Generate consumed constructor from `name' and `internal_constructor'.
 		require
 			name_set: name /= Void
+		local
+			l_name: like name
+			l_type: detachable SYSTEM_TYPE
 		do
-			create Result.make (name, arguments, is_public,
-				referenced_type_from_type (internal_constructor.declaring_type))
+			l_name := name
+			check l_name_attached: l_name /= Void end
+			l_type := internal_constructor.declaring_type
+			check l_type_attached: l_type /= Void end
+			create Result.make (l_name, arguments, is_public, referenced_type_from_type (l_type))
 		ensure
 			non_void_constructor: Result /= Void
 		end

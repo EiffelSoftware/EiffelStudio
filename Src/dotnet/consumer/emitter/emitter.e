@@ -53,7 +53,6 @@ feature {NONE} -- Initialization
 			valid_clr_version: not clr_version.is_empty and then clr_version.item (1).as_lower = 'v'
 		do
 			create cache_writer.make
-			create cache_reader
 		ensure
 			non_void_cache_writer: cache_writer /= Void
 		end
@@ -95,12 +94,8 @@ feature {NONE} -- Implementation
 	cache_writer: CACHE_WRITER
 			-- cache writer to manipulate contents of specified EAC.
 
-	cache_reader: CACHE_REFLECTION
-			-- Cache reflection to read contents of specified EAC
-
 invariant
 	non_void_cache_writer: cache_writer /= Void
-	non_void_cache_reader: cache_reader /= Void
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -5,7 +5,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	CACHE_MANAGER_ERRORS
 
 inherit
@@ -14,7 +14,7 @@ inherit
 feature -- Access
 
 	Error_category: INTEGER_8 = 0x05
-	
+
 	Cannot_load_assembly: INTEGER = 0x02000003
 
 feature {NONE} -- Implementation
@@ -25,7 +25,7 @@ feature {NONE} -- Implementation
 			create Result.make (2)
 			Result.put ("Cannot load assembly. Check the assembly is present at the specified path, and check assembly all dependancies.", Cannot_load_assembly)
 		end
-		
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

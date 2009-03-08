@@ -6,7 +6,7 @@ note
 	revision: "$Revision$"
 	interface_metadata:
 		create {COM_VISIBLE_ATTRIBUTE}.make (True) end,
-		create {GUID_ATTRIBUTE}.make ("E1FFE1AC-A8FB-44AE-9451-0D5595E8E620") end
+		create {GUID_ATTRIBUTE}.make ("E1FFE1AC-8466-4E95-9C3F-3FEB392F8F32") end
 
 deferred class
 	I_COM_CACHE_MANAGER
@@ -53,14 +53,14 @@ feature -- Access
 		deferred
 		end
 
-	last_error_message: SYSTEM_STRING
+	last_error_message: detachable SYSTEM_STRING
 			-- Last error message
 		deferred
 		end
 
 feature -- Basic Operations
 
-	consume_assembly (a_name, a_version, a_culture, a_key: SYSTEM_STRING; a_info_only: BOOLEAN)
+	consume_assembly (a_name: SYSTEM_STRING; a_version, a_culture, a_key: detachable SYSTEM_STRING; a_info_only: BOOLEAN)
 			-- consume an assembly using it's display name parts.
 			-- "`a_name', Version=`a_version', Culture=`a_culture', PublicKeyToken=`a_key'"
 		require
@@ -70,7 +70,7 @@ feature -- Basic Operations
 		deferred
 		end
 
-	consume_assembly_from_path (a_path: SYSTEM_STRING; a_info_only: BOOLEAN; a_references: SYSTEM_STRING)
+	consume_assembly_from_path (a_path: SYSTEM_STRING; a_info_only: BOOLEAN; a_references: detachable SYSTEM_STRING)
 			-- Consume assembly located `a_path'
 		require
 			current_initialized: is_initialized
@@ -81,7 +81,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	eac_path: SYSTEM_STRING
+	eac_path: detachable SYSTEM_STRING
 			-- Location of EAC `Eiffel Assembly Cache'
 		note
 			metadata: create {COM_VISIBLE_ATTRIBUTE}.make (False) end

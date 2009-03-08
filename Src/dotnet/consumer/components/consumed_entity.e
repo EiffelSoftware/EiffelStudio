@@ -13,7 +13,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (en: STRING; pub: BOOLEAN; a_type: CONSUMED_REFERENCED_TYPE)
+	make (en, dn: STRING; pub: BOOLEAN; a_type: CONSUMED_REFERENCED_TYPE)
 			-- Initialize `Current' with `en', `pub' written in `a_type'.
 		require
 			eiffel_name_not_void: en /= Void
@@ -21,10 +21,12 @@ feature {NONE} -- Initialization
 			a_type_not_void: a_type /= Void
 		do
 			e := en
+			n := dn
 			set_is_public (pub)
 			d := a_type
 		ensure
 			eiffel_name_set: eiffel_name = en
+			dotnet_name_set: dotnet_name = dn
 			is_public_set: is_public = pub
 			declared_type_set: declared_type = a_type
 		end
@@ -59,14 +61,14 @@ feature -- Access
 			Result := d
 		end
 
-	arguments: ARRAY [CONSUMED_ARGUMENT]
+	arguments: detachable ARRAY [CONSUMED_ARGUMENT]
 			-- Arguments if any.
 		do
 		ensure
 			arguments_not_void: has_arguments implies Result /= Void
 		end
 
-	return_type: CONSUMED_REFERENCED_TYPE
+	return_type: detachable CONSUMED_REFERENCED_TYPE
 			-- Return type if any.
 		do
 		end
@@ -214,8 +216,8 @@ feature -- Status report
 			-- Is current entity a 'Status Setting' type?
 		do
 			if
-				eiffel_name.substring (1, 4).is_equal ("set_") and
-					(has_arguments and then arguments.count = 1)
+				eiffel_name.substring (1, 4).is_equal ("set_") and then
+				(has_arguments and then attached arguments as l_args and then l_args.count = 1)
 			then
 				Result := True
 			end

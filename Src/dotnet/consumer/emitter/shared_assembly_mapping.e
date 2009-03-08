@@ -23,27 +23,36 @@ feature -- Access
 		local
 			l_name: STRING
 			am: like assembly_mapping
+			l_type: detachable SYSTEM_TYPE
+			l_assembly: detachable ASSEMBLY
+			l_full_name: detachable SYSTEM_STRING
 		do
 			if t.is_by_ref then
-				Result := referenced_type_from_type (t.get_element_type)
+				l_type := t.get_element_type
+				check l_type_attached: l_type /= Void end
+				Result := referenced_type_from_type (l_type)
 				Result.set_is_by_ref
 			else
 				am := assembly_mapping
-				am.search (t.assembly.full_name)
-				if am.found then
-					l_name := t.full_name
-					if t.is_array then
-						create {CONSUMED_ARRAY_TYPE} Result.make (
-							l_name, am.found_item,
-							referenced_type_from_type (t.get_element_type))
-					else
-						create Result.make (l_name,
-							am.found_item)
-					end
+				l_assembly := t.assembly
+				check l_assembly_attached: l_assembly /= Void end
+				l_full_name := l_assembly.full_name
+				check l_full_name_attached: l_full_name /= Void end
+				am.search (l_full_name)
+				check found: am.found end
+				l_name := t.full_name
+				if t.is_array then
+					l_type := t.get_element_type
+					check l_type_attached: l_type /= Void end
+					create {CONSUMED_ARRAY_TYPE} Result.make (
+						l_name, am.found_item,
+						referenced_type_from_type (l_type))
+				else
+					create Result.make (l_name, am.found_item)
 				end
 			end
 		end
-		
+
 feature -- Basic Operations
 
 	reset_assembly_mapping
@@ -58,7 +67,7 @@ feature {NONE} -- Implementation
 		once
 			create Result.put (create {HASH_TABLE [INTEGER, STRING]}.make (20))
 		end
-		
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

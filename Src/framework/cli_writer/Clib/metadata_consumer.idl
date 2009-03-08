@@ -3,20 +3,20 @@
 // typelib filename: EiffelSoftware.MetadataConsumer.tlb
 
 [
-  uuid(3A1E9458-D7EE-3E85-AE85-7A51F270639D),
-  version(6.0)
+  uuid(7D31F607-90E3-3281-9917-B6A798492F76),
+  version(6.4)
 ]
 library EiffelSoftware_MetadataConsumer
 {
     // TLib : OLE Automation : {00020430-0000-0000-C000-000000000046}
-    importlib("stdole2.tlb");
+    importlib("STDOLE2.TLB");
 
     // Forward declare all types defined in this typelib
     interface EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER;
 
     [
       odl,
-      uuid(E1FFE1AC-A8FB-44AE-9451-0D5595E8E620),
+      uuid(E1FFE1AC-8466-4E95-9C3F-3FEB392F8F32),
       version(1.0),
       dual,
       oleautomation
@@ -32,10 +32,9 @@ library EiffelSoftware_MetadataConsumer
         [id(0x60020001)]
         HRESULT consume_assembly_from_path(
                         [in] BSTR a_path, 
-                        [in] VARIANT_BOOL a_info_only,
+                        [in] VARIANT_BOOL a_info_only, 
                         [in] BSTR a_references);
-        [id(0x60020002)]
-        HRESULT eac_path([out, retval] BSTR* pRetVal);
+        [restricted] void Missing9();
         [id(0x60020003)]
         HRESULT initialize();
         [id(0x60020004)]
@@ -51,10 +50,11 @@ library EiffelSoftware_MetadataConsumer
     };
 
     [
-      uuid(E1FFE1AC-C5BD-492B-924A-8DBC9D2112F5),
+      uuid(E1FFE1AC-C88F-4CD5-BBCB-1B1B82308654),
       version(1.0)
     ]
     coclass EiffelSoftware_MetadataConsumer_Interop_COM_CACHE_MANAGER {
         [default] interface EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER;
     };
 };
+

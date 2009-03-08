@@ -197,21 +197,22 @@ feature {CACHE_READER} -- Access
 		local
 			retried: BOOLEAN
 			l_dir_sep: CHARACTER
+			l_result: detachable STRING
 		once
 			if not retried then
 				l_dir_sep := (create {OPERATING_ENVIRONMENT}).Directory_separator
-				if internal_eiffel_cache_path.item = Void then
+				if attached internal_eiffel_cache_path.item as l_cache then
+					Result := l_cache
+				else
 					if is_eiffel_layout_defined then
-						Result := eiffel_layout.install_path
+						l_result := eiffel_layout.install_path
 					end
-					if Result = Void then
-						Result := (create {EXECUTION_ENVIRONMENT}).current_working_directory
+					if l_result = Void then
+						l_result := (create {EXECUTION_ENVIRONMENT}).current_working_directory
 					else
-						Result := Result.twin
+						l_result := l_result.twin
 					end
-					check
-						Ise_eiffel_defined: Result /= Void
-					end
+					Result := l_result
 					if Result.item (Result.count) /= l_dir_sep then
 						Result.append_character (l_dir_sep)
 					end
@@ -219,8 +220,6 @@ feature {CACHE_READER} -- Access
 
 						-- set internal EAC path to registry key
 					internal_eiffel_cache_path.put (Result)
-				else
-					Result := internal_eiffel_cache_path.item
 				end
 				if Result.item (Result.count) /= l_dir_sep then
 					Result.append_character (l_dir_sep)
@@ -228,6 +227,7 @@ feature {CACHE_READER} -- Access
 			else
 					-- FIXME: Manu 05/14/2002: we should raise an error here.
 				io.error.put_string ("ISE_EIFFEL environment variable is not defined!%N")
+				create Result.make_empty
 			end
 		ensure
 			exist: Result /= Void
@@ -272,7 +272,7 @@ feature {EMITTER} -- Access
 			ends_with_directory_separator: Result.item (Result.count) = (create {OPERATING_ENVIRONMENT}).Directory_separator
 		end
 
-	internal_eiffel_cache_path: CELL [STRING]
+	internal_eiffel_cache_path: CELL [detachable STRING]
 			-- internal eiffel cache path
 		once
 			create Result.put (Void)

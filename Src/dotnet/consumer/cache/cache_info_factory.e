@@ -18,11 +18,11 @@ feature -- Factory Functions
 			not_a_path_is_empty: not a_path.is_empty
 		local
 			l_file: FILE_INFO
-			l_dir: DIRECTORY_INFO
+			l_dir: detachable DIRECTORY_INFO
 		do
 			create l_file.make (a_path)
 			l_dir := l_file.directory
-			if not l_dir.exists then
+			if l_dir /= Void and then not l_dir.exists then
 				l_dir.create_
 			end
 			create Result

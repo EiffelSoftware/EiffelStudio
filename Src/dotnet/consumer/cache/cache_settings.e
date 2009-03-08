@@ -20,11 +20,16 @@ feature -- Access
 			-- cache access by different users is not supported.
 		local
 			l_cr: CACHE_READER
+			l_result: detachable SYSTEM_STRING
 		once
 			create l_cr
-			Result := l_cr.eiffel_assembly_cache_path
-			Result := Result.replace_character (':', '!')
-			Result := Result.replace_character ('\', '!')
+			l_result := l_cr.eiffel_assembly_cache_path
+			check l_result_attached: l_result /= Void end
+			l_result := l_result.replace_character (':', '!')
+			check l_result_attached: l_result /= Void end
+			l_result := l_result.replace_character ('\', '!')
+			check l_result_attached: l_result /= Void end
+			Result := l_result
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: Result.length > 0

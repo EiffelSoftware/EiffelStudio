@@ -26,11 +26,11 @@ feature {NONE} -- Initialization
 		require
 			a_ca_attached: a_ca /= Void
 			a_path_attached: a_path /= Void
-			not_a_path_is_empty: a_path.length > 0
+			not_a_path_is_empty: not a_path.is_empty
 			a_reason_attached: a_reason /= Void
-			not_a_reason_is_empty: a_reason.length > 0
+			not_a_reason_is_empty: not a_reason.is_empty
 			a_cache_attached: a_cache /= Void
-			not_a_cache_is_empty: a_cache.length > 0
+			not_a_cache_is_empty: not a_cache.is_empty
 		do
 			assembly := a_ca
 			assembly_path := a_path
@@ -47,17 +47,17 @@ feature {NONE} -- Initialization
 	initialize_message_template
 			-- Initializes `message_template'.
 		local
-			l_value: SYSTEM_STRING
+			l_value: detachable STRING
 		do
-			l_value := {ENVIRONMENT}.get_environment_variable (message_variable)
-			if l_value = Void or else l_value.length = 0 then
+			l_value := (create {EXECUTION_ENVIRONMENT}).get (message_variable)
+			if l_value = Void or else l_value.is_empty then
 				message_template := default_message
 			else
 				message_template := l_value
 			end
 		ensure
 			message_template_attached: message_template /= Void
-			not_message_template_is_empty: message_template.length > 0
+			not_message_template_is_empty: not message_template.is_empty
 		end
 
 feature -- Access
@@ -65,59 +65,67 @@ feature -- Access
 	assembly: CONSUMED_ASSEMBLY
 			-- Consumed assembly
 
-	assembly_path: SYSTEM_STRING
+	assembly_path: STRING
 			-- Path to assembly being consumed
 
-	reason: SYSTEM_STRING
+	reason: STRING
 			-- Reason why assembly is being consumed
 
-	cache_path: SYSTEM_STRING
+	cache_path: STRING
 			-- Path to Eiffel Assembly Cache
 
-	message: SYSTEM_STRING
+	message: STRING
 			-- Full notify message
 		local
 			l_functions: like functions
-			l_sb: STRING_BUILDER
 			l_pattern: SYSTEM_DLL_REGEX
-			l_match: SYSTEM_DLL_MATCH
-			l_matches: SYSTEM_DLL_MATCH_COLLECTION
-			l_var: SYSTEM_STRING
-			l_func: SYSTEM_STRING
-			l_value: SYSTEM_STRING
+			l_match: detachable SYSTEM_DLL_MATCH
+			l_var: detachable STRING
+			l_func: detachable STRING
+			l_value: STRING
 			l_count: INTEGER
 			i: INTEGER
 		do
-			Result := internal_message
-			if Result = Void then
+			if attached internal_message as l_result then
+				Result := l_result
+			else
 				l_functions := functions
-				Result := message_template
-				create l_sb.make (256)
-				l_sb := l_sb.append (Result)
+				create Result.make_from_string (default_message)
 				l_pattern := variable_pattern
-				l_matches := l_pattern.matches (Result)
-				if l_matches.count > 0 then
+				if
+					attached l_pattern.matches (default_message) as l_matches and then
+					l_matches.count > 0
+				then
 					from l_count := l_matches.count until i = l_count loop
 						l_match := l_matches.item (i)
-						l_var := l_match.groups.item (0).value
-						if l_match.groups.count >= 2 then
-							l_func := l_match.groups.item (1).value
-							if l_functions.has (l_func) then
-								l_value := evaluate_function (l_func)
-							else
-								l_value := l_var
+						check l_match_attached: l_match /= Void end
+						if
+							attached l_match.groups as l_groups and then
+							attached l_groups.item (0) as l_group
+						then
+							l_var := l_group.value
+							if l_var /= Void then
+								if
+									l_groups.count >= 2 and then
+									attached l_groups.item (1) as l_second_group
+								then
+									l_func := l_second_group.value
+									if l_func /= Void and then l_functions.has (l_func) then
+										l_value := evaluate_function (l_func)
+									else
+										l_value := l_var
+									end
+								else
+									l_value := l_var
+								end
+								Result.replace_substring_all (l_var, l_value)
 							end
-						else
-							l_value := l_var
 						end
-						check l_value_attached: l_value /= Void end
-						l_sb := l_sb.replace (l_var, l_value)
 						i := i + 1
 					end
 				end
-				l_sb := l_sb.replace ("%%N", "%N")
-				l_sb := l_sb.replace ("%%T", "%T")
-				Result := l_sb.to_string
+				Result.replace_substring_all ("%%N", "%N")
+				Result.replace_substring_all ("%%T", "%T")
 				internal_message := Result
 			end
 		ensure
@@ -126,71 +134,73 @@ feature -- Access
 
 feature {NONE} -- Evaluation
 
-	evaluate_function (a_name: SYSTEM_STRING): SYSTEM_STRING
+	evaluate_function (a_name: STRING): STRING
 			-- Evaluates function with the name `a_name'
 		require
 			a_name_attached: a_name /= Void
-			not_a_name_is_empty: a_name.length > 0
+			not_a_name_is_empty: not a_name.is_empty
 			functions_has_a_name: functions.has (a_name)
 		local
-			l_names: NATIVE_ARRAY [SYSTEM_STRING]
-			l_ns: SYSTEM_STRING
-			l_func: SYSTEM_STRING
+			l_names: LIST [STRING]
+			l_ns: STRING
+			l_func: STRING
 		do
-			l_names := a_name.to_lower.split (<<namespace_delimiter>>)
-			check l_names_count_is_two: l_names.length = 2 end
-			if l_names.length = 2 then
-				l_ns := l_names.item (0)
-				l_func := l_names.item (1)
-				if module_namespace.equals (l_ns) then
-					if l_func.equals (name_function) then
+			l_names := a_name.as_lower.split (namespace_delimiter)
+			if l_names.count = 2 then
+				l_ns := l_names.i_th (1)
+				l_func := l_names.i_th (2)
+				if module_namespace.same_string (l_ns) then
+					if l_func.same_string (name_function) then
 						Result := current_assembly_name.name
-					elseif l_func.equals (version_function) then
-						Result := current_assembly_name.version.to_string
-					elseif l_func.equals (culture_function) then
-						Result := current_assembly_name.culture_info.to_string
-					elseif l_func.equals (key_function) then
+					elseif l_func.same_string (version_function) and then attached current_assembly_name.version as l_version then
+						Result := l_version.to_string
+					elseif l_func.same_string (culture_function) and then attached current_assembly_name.culture_info as l_culture then
+						Result := l_culture.to_string
+					elseif l_func.same_string (key_function) then
 						Result := current_assembly_name.name
-					elseif l_func.equals (full_name_function) then
+					elseif l_func.same_string (full_name_function) then
 						Result := current_assembly_name.full_name
-					elseif l_func.equals (path_function) then
+					elseif l_func.same_string (path_function) then
 						Result := current_assembly.location
-					elseif l_func.equals (clr_function) then
-						Result := {ENVIRONMENT}.version.to_string
+					elseif l_func.same_string (clr_function) and then attached {ENVIRONMENT}.version as l_version then
+						Result := l_version.to_string
 					else
+						create Result.make_empty
 						check False end
 					end
-				elseif assembly_namespace.equals (l_ns) then
-					if l_func.equals (name_function) then
+				elseif assembly_namespace.same_string (l_ns) then
+					if l_func.same_string (name_function) then
 						Result := assembly.name
-					elseif l_func.equals (version_function) then
+					elseif l_func.same_string (version_function) then
 						Result := assembly.version
-					elseif l_func.equals (culture_function) then
+					elseif l_func.same_string (culture_function) then
 						Result := assembly.culture
-					elseif l_func.equals (key_function) then
+					elseif l_func.same_string (key_function) then
 						Result := assembly.key
-					elseif l_func.equals (full_name_function) then
-						Result := {SYSTEM_STRING}.format (({SYSTEM_STRING})["{0}, Ver={1}, Cul={2}, PKT={3}"], ({NATIVE_ARRAY [?SYSTEM_STRING]})[<<({SYSTEM_STRING})[assembly.name], ({SYSTEM_STRING})[assembly.version], ({SYSTEM_STRING})[assembly.culture], ({SYSTEM_STRING})[assembly.key]>>])
-					elseif l_func.equals (path_function) then
+					elseif l_func.same_string (full_name_function) then
+						Result := {SYSTEM_STRING}.format (({SYSTEM_STRING})["{0}, Ver={1}, Cul={2}, PKT={3}"], ({NATIVE_ARRAY [detachable SYSTEM_STRING]})[<<({SYSTEM_STRING})[assembly.name], ({SYSTEM_STRING})[assembly.version], ({SYSTEM_STRING})[assembly.culture], ({SYSTEM_STRING})[assembly.key]>>])
+					elseif l_func.same_string (path_function) then
 						Result := assembly_path
 					else
+						create Result.make_empty
 						check False end
 					end
-				elseif consume_namespace.equals (l_ns) then
-					if l_func.equals (reason_function) then
+				elseif consume_namespace.same_string (l_ns) then
+					if l_func.same_string (reason_function) then
 						Result := reason
-					elseif l_func.equals (cache_id_function) then
+					elseif l_func.same_string (cache_id_function) then
 						Result := assembly.folder_name
-					elseif l_func.equals (cache_path_function) then
+					elseif l_func.same_string (cache_path_function) then
 						Result := cache_path
 					else
+						create Result.make_empty
 						check False end
 					end
+				else
+					create Result.make_empty
 				end
-			end
-
-			if Result = Void then
-				Result := {SYSTEM_STRING}.empty
+			else
+				create Result.make_empty
 			end
 		ensure
 			result_attached: Result /= Void
@@ -198,29 +208,37 @@ feature {NONE} -- Evaluation
 
 feature {NONE} -- Constants
 
-	message_variable: SYSTEM_STRING = "MDC_BALLOON_MSG"
+	message_variable: STRING = "MDC_BALLOON_MSG"
 			-- Notify message environment variable
 
-	default_message: SYSTEM_STRING = "Consuming assembly '${assembly:name}, Version=${assembly:version}'.%N%NCLR Version: ${module:clr}%NReason: ${consume:reason}%NAssembly:${assembly:path}%N%NID: ${consume:cache_id}"
+	default_message: STRING = "Consuming assembly '${assembly:name}, Version=${assembly:version}'.%N%NCLR Version: ${module:clr}%NReason: ${consume:reason}%NAssembly:${assembly:path}%N%NID: ${consume:cache_id}"
 			-- Default notify message
 
 feature {NONE} -- Implementation
 
-	message_template: SYSTEM_STRING
+	message_template: STRING
 			-- Message template
 
 	current_assembly: ASSEMBLY
 			-- Executing assembly
+		local
+			l_assembly: detachable ASSEMBLY
 		once
-			Result := ({like Current}).to_cil.assembly
+			l_assembly := ({like Current}).to_cil.assembly
+			check l_assembly_attached: l_assembly /= Void end
+			Result := l_assembly
 		ensure
 			Result_attached: Result /= Void
 		end
 
 	current_assembly_name: ASSEMBLY_NAME
 			-- Name of executing assembly
+		local
+			l_name: detachable ASSEMBLY_NAME
 		once
-			Result := current_assembly.get_name
+			l_name := current_assembly.get_name
+			check l_name_attached: l_name /= Void end
+			Result := l_name
 		ensure
 			result_attached: Result /= Void
 		end
@@ -235,13 +253,13 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Internal Implementation Cache
 
-	internal_message: SYSTEM_STRING
+	internal_message: detachable STRING
 			-- Cached version of `message'
 			-- Note: Do not use directly!
 
 invariant
 	message_template_attached: message_template /= Void
-	not_message_template_is_empty: message_template.length > 0
+	not_message_template_is_empty: not message_template.is_empty
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

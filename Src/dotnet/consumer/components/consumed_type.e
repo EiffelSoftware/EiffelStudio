@@ -60,135 +60,125 @@ feature -- Access
 	dotnet_name: STRING
 			-- Type full name
 
-	parent: CONSUMED_REFERENCED_TYPE
+	parent: detachable CONSUMED_REFERENCED_TYPE
 			-- Parent type
 
 	eiffel_name: STRING
 			-- Eiffel class name
 
-	constructors: ARRAYED_LIST [CONSUMED_CONSTRUCTOR]
+	constructors: detachable ARRAYED_LIST [CONSUMED_CONSTRUCTOR]
 			-- Class constructors
 
-	fields: ARRAYED_LIST [CONSUMED_FIELD]
+	fields: detachable ARRAYED_LIST [CONSUMED_FIELD]
 			-- Class fields
 
 	interfaces: ARRAYED_LIST [CONSUMED_REFERENCED_TYPE]
 			-- Implemented interfaces
 
-	properties: ARRAYED_LIST [CONSUMED_PROPERTY]
+	properties: detachable ARRAYED_LIST [CONSUMED_PROPERTY]
 			-- Properties
 
-	events: ARRAYED_LIST [CONSUMED_EVENT]
+	events: detachable ARRAYED_LIST [CONSUMED_EVENT]
 			-- Events
 
-	procedures: ARRAYED_LIST [CONSUMED_PROCEDURE]
+	procedures: detachable ARRAYED_LIST [CONSUMED_PROCEDURE]
 			-- All procedures in type.
 			-- ie: immediate and inherited procedures, but also procedures associated
 			-- to a property or an event.
 		local
 			l_estimated_count: INTEGER
-			l_event: CONSUMED_EVENT
 			l_prop: CONSUMED_PROPERTY
 		do
 			if
-				(properties = Void or else properties.is_empty) and
-				(events = Void or else events.is_empty)
+				(not attached properties as l_props or else l_props.is_empty) and
+				(not attached events as l_events or else l_events.is_empty)
 			then
 				Result := internal_procedures
 			else
-				if properties /= Void then
-					l_estimated_count := properties.count
+				if attached properties as l_props then
+					l_estimated_count := l_props.count
 				end
-				if events /= Void then
+				if attached events as l_events then
 						-- 3 because per event there are 3 routines.
-					l_estimated_count := l_estimated_count + 3 * events.count
+					l_estimated_count := l_estimated_count + 3 * l_events.count
 				end
-				if internal_procedures /= Void then
-					l_estimated_count := l_estimated_count + internal_procedures.count
+				if attached internal_procedures as l_procs then
+					l_estimated_count := l_estimated_count + l_procs.count
 				end
 				create Result.make (l_estimated_count)
 
-				if internal_procedures /= Void then
+				if attached internal_procedures as l_procs then
 					from
-						internal_procedures.start
+						l_procs.start
 					until
-						internal_procedures.after
+						l_procs.after
 					loop
-						Result.extend (internal_procedures.item)
-						internal_procedures.forth
+						Result.extend (l_procs.item)
+						l_procs.forth
 					end
 				end
 
-				if properties /= Void and then not properties.is_empty then
+				if attached properties as l_props and then not l_props.is_empty then
 					from
-						properties.start
+						l_props.start
 					until
-						properties.after
+						l_props.after
 					loop
-						l_prop := properties.item
-						if l_prop.setter /= Void then
-							Result.extend (l_prop.setter)
+						l_prop := l_props.item
+						if attached l_prop.setter as l_setter then
+							Result.extend (l_setter)
 						end
-						properties.forth
+						l_props.forth
 					end
 				end
 
-				if events /= Void and then not events.is_empty then
+				if attached events as l_events and then not l_events.is_empty then
 					from
-						events.start
+						l_events.start
 					until
-						events.after
+						l_events.after
 					loop
-						l_event := events.item
-						if l_event.raiser /= Void then
-							Result.extend (l_event.raiser)
-						end
-						if l_event.remover /= Void then
-							Result.extend (l_event.remover)
-						end
-						if l_event.adder /= Void then
-							Result.extend (l_event.adder)
-						end
-						events.forth
+						Result.append (l_events.item.eiffelized_consumed_entities)
+						l_events.forth
 					end
 				end
 			end
 		end
 
-	functions: ARRAYED_LIST [CONSUMED_FUNCTION]
+	functions: detachable ARRAYED_LIST [CONSUMED_FUNCTION]
 			-- All functions in type.
 			-- ie: immediate and inherited functions, but also functions associated
 			-- to a property or an event.
 		local
 			l_prop: CONSUMED_PROPERTY
 		do
-			if properties = Void or else properties.is_empty then
+			if not attached properties as l_properties or else l_properties.is_empty then
 				Result := internal_functions
 			else
-				if internal_functions /= Void then
-					create Result.make (internal_functions.count + properties.count)
+				if attached internal_functions as l_funcs then
+					create Result.make (l_funcs.count + l_properties.count)
 					from
-						internal_functions.start
+						l_funcs.start
 					until
-						internal_functions.after
+						l_funcs.after
 					loop
-						Result.extend (internal_functions.item)
-						internal_functions.forth
+						Result.extend (l_funcs.item)
+						l_funcs.forth
 					end
 				else
-					create Result.make (properties.count)
+					create Result.make (l_properties.count)
 				end
 
 				from
-					properties.start
+					l_properties.start
 				until
-					properties.after
+					l_properties.after
 				loop
-					l_prop := properties.item
-					if l_prop.getter /= Void then
-						Result.extend (l_prop.getter)
+					l_prop := l_properties.item
+					if attached l_prop.getter as l_getter then
+						Result.extend (l_getter)
 					end
-					properties.forth
+					l_properties.forth
 				end
 			end
 		end
@@ -196,10 +186,10 @@ feature -- Access
 
 feature {NONE} -- Internal vales
 
-	internal_procedures: ARRAYED_LIST [CONSUMED_PROCEDURE]
+	internal_procedures: detachable ARRAYED_LIST [CONSUMED_PROCEDURE]
 			-- Class procedures
 
-	internal_functions: ARRAYED_LIST [CONSUMED_FUNCTION]
+	internal_functions: detachable ARRAYED_LIST [CONSUMED_FUNCTION]
 			-- Class functions
 
 feature -- Status Setting
@@ -301,11 +291,13 @@ feature -- Functions used for easy browsing of data from ConsumerWrapper.
 	associated_reference_type: CONSUMED_REFERENCED_TYPE
 			-- Reference type of `Current'.
 		do
-			if internal_associated_reference_type = Void then
-				create internal_associated_reference_type.make (dotnet_name, 1)
-				-- FIXME IEK The assembly id of 1 has to be checked
+			if attached internal_associated_reference_type as l_ref_type then
+				Result := l_ref_type
+			else
+					-- FIXME IEK The assembly id of 1 has to be checked
+				create Result.make (dotnet_name, 1)
+				internal_associated_reference_type := Result
 			end
-			Result := internal_associated_reference_type
 		end
 
 	consumed_constructors: ARRAYED_LIST [CONSUMED_ENTITY]
@@ -314,8 +306,8 @@ feature -- Functions used for easy browsing of data from ConsumerWrapper.
 			constructors_not_void: constructors /= Void
 		do
 			create Result.make (0)
-			if constructors /= Void then
-				Result.fill (constructors)
+			if attached constructors as l_constructors then
+				Result.fill (l_constructors)
 			end
 		end
 
@@ -350,14 +342,14 @@ feature -- Functions used for easy browsing of data from ConsumerWrapper.
 			if interfaces /= Void then
 				Result.fill (interfaces)
 			end
-			if parent /= Void then
-				Result.extend (parent)
+			if attached parent as l_parent then
+				Result.extend (l_parent)
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	internal_associated_reference_type: CONSUMED_REFERENCED_TYPE
+	internal_associated_reference_type: detachable CONSUMED_REFERENCED_TYPE
 		-- Reference type of `Current'.
 
 feature {NONE} -- Internal
@@ -368,37 +360,37 @@ feature {NONE} -- Internal
 		local
 			nb: INTEGER
 		do
-			if fields /= Void then
-				nb := fields.count
+			if attached fields as l_fields then
+				nb := l_fields.count
 			end
-			if internal_functions /= Void then
-				nb := nb + internal_functions.count
+			if attached internal_functions as l_funcs then
+				nb := nb + l_funcs.count
 			end
-			if internal_procedures /= Void then
-				nb := nb + internal_procedures.count
+			if attached internal_procedures as l_procs then
+				nb := nb + l_procs.count
 			end
-			if events /= Void then
-				nb := nb + events.count
+			if attached events as l_events then
+				nb := nb + l_events.count
 			end
-			if properties /= Void then
-				nb := nb + properties.count
+			if attached properties as l_props then
+				nb := nb + l_props.count
 			end
 
 			create Result.make (nb)
-			if fields /= Void then
-				consumed_a_type_entities (fields, a_immediate, Result)
+			if attached fields as l_fields then
+				consumed_a_type_entities (l_fields, a_immediate, Result)
 			end
-			if internal_functions /= Void then
-				consumed_a_type_entities (internal_functions, a_immediate, Result)
+			if attached internal_functions as l_funcs then
+				consumed_a_type_entities (l_funcs, a_immediate, Result)
 			end
-			if internal_procedures /= Void then
-				consumed_a_type_entities (internal_procedures, a_immediate, Result)
+			if attached internal_procedures as l_procs then
+				consumed_a_type_entities (l_procs, a_immediate, Result)
 			end
-			if events /= Void then
-				consumed_a_type_entities (events, a_immediate, Result)
+			if attached events as l_events then
+				consumed_a_type_entities (l_events, a_immediate, Result)
 			end
-			if properties /= Void then
-				consumed_a_type_entities (properties, a_immediate, Result)
+			if attached properties as l_props then
+				consumed_a_type_entities (l_props, a_immediate, Result)
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -406,7 +398,7 @@ feature {NONE} -- Internal
 
 	consumed_a_type_entities (
 			a_features: ARRAYED_LIST [CONSUMED_ENTITY]; a_immediate: BOOLEAN; a_result: like consumed_type_entities)
-		
+
 			-- All fields, procedures, functions, properties and events implemented by type.
 			-- If `a_immediate' then return immediate features, else return inherited.
 		require

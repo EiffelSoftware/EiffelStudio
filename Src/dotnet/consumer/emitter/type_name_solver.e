@@ -20,10 +20,18 @@ feature {NONE} -- Initialization
 			-- Initialize from .NET type `t'.
 		require
 			non_void_type: t /= Void
+		local
+			l_str: detachable SYSTEM_STRING
 		do
 			internal_type := t
 			create simple_name.make_from_cil (internal_type.name)
-			weight := t.full_name.split (dot_array).count - 1
+			create eiffel_name.make_empty
+			l_str := t.full_name
+			if l_str /= Void and then attached l_str.split (dot_array) as l_split then
+				weight := l_split.count - 1
+			else
+				weight := 0
+			end
 		ensure
 			non_void_internal_type: internal_type /= Void
 			non_void_simple_name: simple_name /= Void

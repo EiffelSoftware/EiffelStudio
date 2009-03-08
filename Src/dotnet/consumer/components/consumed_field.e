@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 
 	make (en, dn: STRING; rt: CONSUMED_REFERENCED_TYPE; static, pub, init_only: BOOLEAN;
 			a_type: CONSUMED_REFERENCED_TYPE)
-		
+
 			-- Initialize field.
 		require
 			non_void_eiffel_name: en /= Void
@@ -58,7 +58,7 @@ feature -- Access
 			Result := r
 		end
 
-	setter: CONSUMED_PROCEDURE assign set_setter
+	setter: detachable CONSUMED_PROCEDURE assign set_setter
 			-- Setter procedure
 		do
 			Result := s

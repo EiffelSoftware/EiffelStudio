@@ -26,12 +26,12 @@ feature {NONE} -- Initialization
 		ensure
 			count_set: count = a_count
 		end
-		
+
 feature -- Access
 
 	eiffel_names: SPECIAL [STRING]
 			-- Assembly types eiffel name
-	
+
 	dotnet_names: SPECIAL [STRING]
 			-- Assembly types .NET name
 
@@ -41,7 +41,7 @@ feature -- Access
 
 	positions: SPECIAL [INTEGER]
 			-- Position of types.
-	
+
 	count: INTEGER
 			-- Number of types.
 
@@ -49,7 +49,8 @@ feature -- Access
 			-- Namespaces
 		local
 			i, l_index, namespace_count, l_count: INTEGER
-			namespace, name: STRING
+			namespace: detachable STRING
+			name: STRING
 			l_namespaces: ARRAYED_LIST [STRING]
 		do
 			create l_namespaces.make (count)
@@ -89,11 +90,11 @@ feature -- Access
 			Result.compare_objects
 			-- We compare by object to satisfy assertions.
 		end
-	
+
 	namespace_types (namespace_name: STRING): ARRAY [INTEGER]
 			-- Indices of types that belong to namespace `namespace_name'.
 		require
-			non_void_name: namespace_name /= Void 
+			non_void_name: namespace_name /= Void
 			valid_name: namespaces.has (namespace_name)
 		local
 			i, l_index, types_count, l_count: INTEGER
@@ -127,7 +128,7 @@ feature -- Access
 				l_types_index.forth
 			end
 		end
-		
+
 feature -- Element Settings	
 
 	put (dn, en: STRING; int, enum, dele, val: BOOLEAN; a_pos: INTEGER)

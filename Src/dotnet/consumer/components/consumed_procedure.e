@@ -13,7 +13,7 @@ inherit
 		rename
 			make as member_make
 		redefine
-			has_arguments, arguments, q, dotnet_eiffel_name
+			has_arguments, arguments, q
 		end
 create
 	make,
@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 
 	make (en, dn, den: STRING; args: like arguments; froz, static, defer, pub, ns, virt, poe: BOOLEAN;
 			a_type: CONSUMED_REFERENCED_TYPE)
-		
+
 			-- Initialize consumed method.
 		require
 			non_void_eiffel_name: en /= Void
@@ -38,6 +38,8 @@ feature {NONE} -- Initialization
 			member_make (en, dn, pub, a_type)
 			if not den.is_equal (en) then
 				q := den
+			else
+				q := en
 			end
 			a := args
 			if froz or not virt then
@@ -56,7 +58,7 @@ feature {NONE} -- Initialization
 				f := f | {FEATURE_ATTRIBUTE}.Is_virtual
 			end
 			if poe then
-				f := f | {FEATURE_ATTRIBUTE}.Is_property_or_event				
+				f := f | {FEATURE_ATTRIBUTE}.Is_property_or_event
 			end
 		ensure
 			eiffel_name_set: eiffel_name = en
@@ -84,10 +86,11 @@ feature {NONE} -- Initialization
 			a_type_not_void: a_type /= Void
 		do
 			member_make (en, dn, True, a_type)
+			q := en
 			a := <<arg>>
 			f := f | {FEATURE_ATTRIBUTE}.Is_frozen
 			if a_is_static then
-				f := f | {FEATURE_ATTRIBUTE}.Is_static	
+				f := f | {FEATURE_ATTRIBUTE}.Is_static
 			end
 			f := f | {FEATURE_ATTRIBUTE}.Is_attribute_setter
 		ensure
@@ -113,17 +116,6 @@ feature -- Access
 			Result := a
 		end
 
-	dotnet_eiffel_name: STRING
-			-- Eiffel entity name without overloading resolved.
-		do
-			if q = Void then
-					-- If `q' is not set then it is identical to the `eiffel_name'.
-				Result := e
-			else
-				Result := q
-			end
-		end
-
 feature -- Status report
 
 	has_arguments: BOOLEAN
@@ -131,7 +123,7 @@ feature -- Status report
 		do
 			Result := arguments /= Void and then arguments.count /= 0
 		end
-		
+
 feature {NONE} -- Access
 
 	a: like arguments

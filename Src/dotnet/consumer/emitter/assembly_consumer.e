@@ -46,6 +46,9 @@ feature {NONE} -- Initialization
 		require
 			non_void_writer: a_writer /= Void
 		do
+			create type_consumers.make (0)
+			create assembly_ids.make
+			create destination_path.make_empty
 			cache_writer := a_writer
 		ensure
 			cache_writer_set: cache_writer = a_writer
@@ -61,25 +64,26 @@ feature -- Basic Operations
 			valid_destination_path: (create {DIRECTORY}.make (destination_path)).exists
 			a_loader_attached: a_loader /= Void
 		local
-			referenced_assemblies: NATIVE_ARRAY [ASSEMBLY_NAME]
 			count: INTEGER
-			ca: CONSUMED_ASSEMBLY
 		do
 			{SYSTEM_DLL_TRACE}.write_line ({SYSTEM_STRING}.format ("Beginning consumption for assembly '{0}'.", ass.to_string))
 			{SYSTEM_DLL_TRACE}.write_line ({SYSTEM_STRING}.format ("Consuming into '{0}'.", destination_path))
 
-			referenced_assemblies := ass.get_referenced_assemblies
 			reset_assembly_mapping
-			count := referenced_assemblies.count
-			create assembly_ids.make
-			ca := cache_writer.consumed_assembly_from_path (ass.location)
-			last_index := 1
-			assembly_ids.extend (ca)
-			assembly_mapping.put (last_index, ass.full_name)
-			assembly_mapping.compare_objects
-			build_referenced_assemblies (ass, a_loader)
-			prepare_consumed_types (ass, a_info_only)
-			serialize_consumed_types (a_info_only)
+			if
+				attached ass.get_referenced_assemblies as referenced_assemblies and then
+				attached cache_writer.consumed_assembly_from_path (ass.location) as ca
+			then
+				count := referenced_assemblies.count
+				assembly_ids.wipe_out
+				last_index := 1
+				assembly_ids.extend (ca)
+				assembly_mapping.put (last_index, ass.full_name)
+				assembly_mapping.compare_objects
+				build_referenced_assemblies (ass, a_loader)
+				prepare_consumed_types (ass, a_info_only)
+				serialize_consumed_types (a_info_only)
+			end
 		end
 
 feature -- Access
@@ -115,16 +119,16 @@ feature -- Element Settings
 
 feature {NONE} -- Implementation
 
-	fetch_module_types (a_mod: MODULE): NATIVE_ARRAY [SYSTEM_TYPE]
+	fetch_module_types (a_mod: MODULE): NATIVE_ARRAY [detachable SYSTEM_TYPE]
 			-- Retrieves a module's types, respecting that a security exception
 			-- may prevent retrieval.
 		local
 			retried: BOOLEAN
 		do
-			if not retried then
-				Result := a_mod.get_types
+			if not retried and then attached a_mod.get_types as l_types then
+				Result := l_types
 			else
-				Result := create {NATIVE_ARRAY [SYSTEM_TYPE]}.make (0)
+				Result := create {NATIVE_ARRAY [detachable SYSTEM_TYPE]}.make (0)
 			end
 		ensure
 			result_attached: Result /= Void
@@ -144,33 +148,33 @@ feature {NONE} -- Implementation
 			assembly_mapping_object_comparison: assembly_mapping.object_comparison
 			a_loader_attached: a_loader /= Void
 		local
-			referenced_assemblies: NATIVE_ARRAY [ASSEMBLY_NAME]
+			referenced_assemblies: detachable NATIVE_ARRAY [detachable ASSEMBLY_NAME]
 			i, count: INTEGER
-			ca: CONSUMED_ASSEMBLY
-			l_ref_ass: ASSEMBLY
+			ca: detachable CONSUMED_ASSEMBLY
 		do
 			referenced_assemblies := ass.get_referenced_assemblies
-			count := referenced_assemblies.count
-			from
-				i := 1
-			until
-				i > count
-			loop
-				l_ref_ass := a_loader.load (referenced_assemblies.item (i - 1))
-				check
-					non_void_referenced_assembly: l_ref_ass /= Void
-				end
-				if l_ref_ass /= Void then
-					ca := cache_writer.consumed_assembly_from_path (l_ref_ass.location)
-					if not assembly_mapping.has (l_ref_ass.full_name) then
-						last_index := last_index + 1
-						assembly_ids.extend (ca)
-						assembly_mapping.put (last_index, l_ref_ass.full_name)
-							-- add also referenced assemblies of assembly referenced.
-						build_referenced_assemblies (l_ref_ass, a_loader)
+			if referenced_assemblies /= Void then
+				count := referenced_assemblies.count
+				from
+					i := 1
+				until
+					i > count
+				loop
+					if
+						attached referenced_assemblies.item (i - 1) as l_assembly_name and then
+						attached a_loader.load (l_assembly_name) as l_ref_ass
+					then
+						ca := cache_writer.consumed_assembly_from_path (l_ref_ass.location)
+						if ca /= Void and then not assembly_mapping.has (l_ref_ass.full_name) then
+							last_index := last_index + 1
+							assembly_ids.extend (ca)
+							assembly_mapping.put (last_index, l_ref_ass.full_name)
+								-- add also referenced assemblies of assembly referenced.
+							build_referenced_assemblies (l_ref_ass, a_loader)
+						end
 					end
+					i := i + 1
 				end
-				i := i + 1
 			end
 		end
 
@@ -179,61 +183,59 @@ feature {NONE} -- Implementation
 		require
 			non_void_assembly: ass /= Void
 		local
-			modules: NATIVE_ARRAY [MODULE]
+			modules: detachable NATIVE_ARRAY [detachable MODULE]
 			i, j, type_count, module_count, generated_count: INTEGER
 			done: BOOLEAN
 			type_consumer: TYPE_CONSUMER
-			module_types: NATIVE_ARRAY [SYSTEM_TYPE]
-			t: SYSTEM_TYPE
+			module_types: NATIVE_ARRAY [detachable SYSTEM_TYPE]
+			t: detachable SYSTEM_TYPE
 			type_name: TYPE_NAME_SOLVER
 			simple_name, dotnet_name: STRING
 			list: SORTED_TWO_WAY_LIST [TYPE_NAME_SOLVER]
-			used_names: HASH_TABLE [STRING, STRING]
+			used_names: detachable HASH_TABLE [STRING, STRING]
 			names: HASH_TABLE [SORTED_TWO_WAY_LIST [TYPE_NAME_SOLVER], STRING]
 			l_string_tuple: like string_tuple
-			l_empty_tuple: like empty_tuple
 		do
 			modules := ass.get_modules
+			check modules_attached: modules /= Void end
 			module_count := modules.count
 			create names.make (1024)
 			l_string_tuple := string_tuple
-			l_empty_tuple := empty_tuple
 			from
 				i := 0
 			until
 				i >= module_count or done
 			loop
-				from
-					module_types := fetch_module_types (modules.item (i))
-					type_count := module_types.count
-					j := 0
-				until
-					j >= type_count
-				loop
-					t := module_types.item (j)
-					if is_consumed_type (t) then
-						generated_count := generated_count + 1
-						create type_name.make (t)
-						simple_name := type_name.simple_name
-						names.search (simple_name)
-						if names.found then
-							names.found_item.extend (type_name)
-						else
-							create list.make
-							list.extend (type_name)
-							names.put (list, simple_name)
+				if attached modules.item (i) as l_module then
+					from
+						module_types := fetch_module_types (l_module)
+						type_count := module_types.count
+						j := 0
+					until
+						j >= type_count
+					loop
+						t := module_types.item (j)
+						if t /= Void and then is_consumed_type (t) then
+							generated_count := generated_count + 1
+							create type_name.make (t)
+							simple_name := type_name.simple_name
+							names.search (simple_name)
+							if names.found and attached names.found_item as l_names then
+								l_names.extend (type_name)
+							else
+								create list.make
+								list.extend (type_name)
+								names.put (list, simple_name)
+							end
 						end
+						j := j + 1
 					end
-					j := j + 1
 				end
-				if status_querier /= Void then
-					status_querier.call (l_empty_tuple)
-					done := status_querier.last_result
+				if attached status_querier as l_status_querier then
+					done := l_status_querier.item (Void)
 				end
 				i := i + 1
 			end
-
-			{SYSTEM_THREAD}.current_thread.sleep (100)
 
 			create used_names.make (generated_count)
 			create type_consumers.make (generated_count)
@@ -254,15 +256,12 @@ feature {NONE} -- Implementation
 					type_name.set_eiffel_name (simple_name)
 					list.forth
 				end
-				if status_querier /= Void then
-					status_querier.call (l_empty_tuple)
-					done := status_querier.last_result
+				if attached status_querier as l_status_querier then
+					done := l_status_querier.item (Void)
 				end
 				names.forth
 			end
 			used_names := Void
-
-			{SYSTEM_THREAD}.current_thread.sleep (100)
 
 			from
 				names.start
@@ -283,20 +282,18 @@ feature {NONE} -- Implementation
 					end
 
 					type_consumers.put (type_consumer, type_name.eiffel_name)
-					if status_printer /= Void then
+					if attached status_printer as l_status_printer then
 						l_string_tuple.put ("Analyzed " +
 							create {STRING}.make_from_cil (type_name.internal_type.full_name), 1)
-						status_printer.call (l_string_tuple)
+						l_status_printer.call (l_string_tuple)
 					end
-					if status_querier /= Void then
-						status_querier.call (l_empty_tuple)
-						done := status_querier.last_result
+					if attached status_querier as l_status_querier then
+						done := l_status_querier.item (Void)
 					end
 					list.forth
 				end
-				if status_querier /= Void then
-					status_querier.call (l_empty_tuple)
-					done := status_querier.last_result
+				if attached status_querier as l_status_querier then
+					done := l_status_querier.item (Void)
 				end
 				names.forth
 			end
@@ -310,11 +307,10 @@ feature {NONE} -- Implementation
 			s: STRING
 			done: BOOLEAN
 			type: CONSUMED_TYPE
-			parent: CONSUMED_REFERENCED_TYPE
+			parent: detachable CONSUMED_REFERENCED_TYPE
 			types: CONSUMED_ASSEMBLY_TYPES
 			mapping: CONSUMED_ASSEMBLY_MAPPING
 			l_string_tuple: like string_tuple
-			l_empty_tuple: like empty_tuple
 			l_is_delegate, l_is_value_type: BOOLEAN
 			l_file_position: INTEGER
 		do
@@ -323,7 +319,6 @@ feature {NONE} -- Implementation
 			create serializer
 			create types.make (type_consumers.count)
 			l_string_tuple := string_tuple
-			l_empty_tuple := empty_tuple
 
 			from
 				type_consumers.start
@@ -364,18 +359,17 @@ feature {NONE} -- Implementation
 
 							serializer.serialize (type, s, True)
 							l_file_position := serializer.last_file_position
-							if not serializer.successful and error_printer /= Void then
+							if not serializer.successful and attached error_printer as l_error_printer then
 								set_error (Serialization_error, type.eiffel_name + ", " + serializer.error_message)
 								l_string_tuple.put (error_message, 1)
-								error_printer.call (l_string_tuple)
+								l_error_printer.call (l_string_tuple)
 							else
-								if status_printer /= Void then
+								if attached status_printer as l_status_printer then
 									l_string_tuple.put ("Written " + s, 1)
-									status_printer.call (l_string_tuple)
+									l_status_printer.call (l_string_tuple)
 								end
-								if status_querier /= Void then
-									status_querier.call (l_empty_tuple)
-									done := status_querier.last_result
+								if attached status_querier as l_status_querier then
+									done := l_status_querier.item (Void)
 								end
 							end
 						end
@@ -424,12 +418,6 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE} -- Constants
-
-	empty_tuple: TUPLE
-			-- Empty tuple to avoid too many TUPLE creation which can be slow.
-		once
-			create Result
-		end
 
 	string_tuple: TUPLE [STRING]
 			-- Tuple that contain only a string object.

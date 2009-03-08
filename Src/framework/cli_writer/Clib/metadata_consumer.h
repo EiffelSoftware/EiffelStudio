@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 6.00.0365 */
-/* at Wed Jan 17 15:51:27 2007
+/* at Fri Mar 06 20:08:11 2009
  */
 /* Compiler settings for metadata_consumer.idl:
     Oicf, W1, Zp8, env=Win64 (32b run)
@@ -88,7 +88,7 @@ EXTERN_C const IID IID_EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAG
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
     
-    MIDL_INTERFACE("E1FFE1AC-A8FB-44AE-9451-0D5595E8E620")
+    MIDL_INTERFACE("E1FFE1AC-8466-4E95-9C3F-3FEB392F8F32")
     EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER : public IDispatch
     {
     public:
@@ -104,8 +104,7 @@ EXTERN_C const IID IID_EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAG
             /* [in] */ VARIANT_BOOL a_info_only,
             /* [in] */ BSTR a_references) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE eac_path( 
-            /* [retval][out] */ BSTR *pRetVal) = 0;
+        virtual /* [restricted] */ void STDMETHODCALLTYPE Missing9( void) = 0;
         
         virtual /* [id] */ HRESULT STDMETHODCALLTYPE initialize( void) = 0;
         
@@ -185,9 +184,8 @@ EXTERN_C const IID IID_EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAG
             /* [in] */ VARIANT_BOOL a_info_only,
             /* [in] */ BSTR a_references);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *eac_path )( 
-            EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER * This,
-            /* [retval][out] */ BSTR *pRetVal);
+        /* [restricted] */ void ( STDMETHODCALLTYPE *Missing9 )( 
+            EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER * This);
         
         /* [id] */ HRESULT ( STDMETHODCALLTYPE *initialize )( 
             EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER * This);
@@ -253,8 +251,8 @@ EXTERN_C const IID IID_EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAG
 #define EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER_consume_assembly_from_path(This,a_path,a_info_only,a_references)	\
     (This)->lpVtbl -> consume_assembly_from_path(This,a_path,a_info_only,a_references)
 
-#define EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER_eac_path(This,pRetVal)	\
-    (This)->lpVtbl -> eac_path(This,pRetVal)
+#define EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER_Missing9(This)	\
+    (This)->lpVtbl -> Missing9(This)
 
 #define EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER_initialize(This)	\
     (This)->lpVtbl -> initialize(This)
@@ -311,12 +309,11 @@ void __RPC_STUB EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER_cons
     DWORD *_pdwStubPhase);
 
 
-/* [id] */ HRESULT STDMETHODCALLTYPE EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER_eac_path_Proxy( 
-    EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER * This,
-    /* [retval][out] */ BSTR *pRetVal);
+/* [restricted] */ void STDMETHODCALLTYPE EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER_Missing9_Proxy( 
+    EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER * This);
 
 
-void __RPC_STUB EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER_eac_path_Stub(
+void __RPC_STUB EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER_Missing9_Stub(
     IRpcStubBuffer *This,
     IRpcChannelBuffer *_pRpcChannelBuffer,
     PRPC_MESSAGE _pRpcMessage,
@@ -401,7 +398,7 @@ EXTERN_C const CLSID CLSID_EiffelSoftware_MetadataConsumer_Interop_COM_CACHE_MAN
 
 #ifdef __cplusplus
 
-class DECLSPEC_UUID("E1FFE1AC-C5BD-492B-924A-8DBC9D2112F5")
+class DECLSPEC_UUID("E1FFE1AC-C88F-4CD5-BBCB-1B1B82308654")
 EiffelSoftware_MetadataConsumer_Interop_COM_CACHE_MANAGER;
 #endif
 #endif /* __EiffelSoftware_MetadataConsumer_LIBRARY_DEFINED__ */

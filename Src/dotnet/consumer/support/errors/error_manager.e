@@ -18,15 +18,19 @@ feature -- Access
 	last_error: INTEGER
 			-- Last error code
 
-	last_error_context: STRING
+	last_error_context: detachable STRING
 			-- Additional information on last error
 
 	error_message: STRING
 			-- Error message for `last_error'
 		do
-			Result := error_message_table.item (last_error).twin
-			if Result /= Void and last_error_context /= Void then
-				Result.append (": " + last_error_context)
+			if attached error_message_table.item (last_error) as l_error_message then
+				Result := l_error_message.twin
+				if attached last_error_context as l_error_context then
+					Result.append (": " + l_error_context)
+				end
+			else
+				create Result.make_empty
 			end
 		end
 

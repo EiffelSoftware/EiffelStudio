@@ -29,8 +29,7 @@ feature {NONE} -- Initialization
 			valid_dotnet_name: not dn.is_empty
 			a_type_not_void: a_type /= Void
 		do
-			entity_make (en, pub, a_type)
-			n := dn
+			entity_make (en, dn, pub, a_type)
 		ensure
 			eiffel_name_set: eiffel_name = en
 			dotnet_name_set: dotnet_name = dn
@@ -70,14 +69,14 @@ feature -- Status report
 			Result := f & {FEATURE_ATTRIBUTE}.Is_artificially_added =
 				{FEATURE_ATTRIBUTE}.Is_artificially_added
 		end
-	
+
 	is_property_or_event: BOOLEAN
 			-- Is feature property or event related?
 		do
 			Result := f & {FEATURE_ATTRIBUTE}.Is_property_or_event =
 				{FEATURE_ATTRIBUTE}.Is_property_or_event
 		end
-		
+
 	is_new_slot: BOOLEAN
 			-- Is current marked with `new_slot' flag?
 		do
@@ -93,7 +92,7 @@ feature -- Status report
 	is_attribute_setter: BOOLEAN
 			-- Is feature an setter of an attribute of current class?
 		do
-			Result := f & {FEATURE_ATTRIBUTE}.Is_attribute_setter = 
+			Result := f & {FEATURE_ATTRIBUTE}.Is_attribute_setter =
 				{FEATURE_ATTRIBUTE}.Is_attribute_setter
 		end
 
@@ -120,7 +119,7 @@ feature -- Settings
 		ensure
 			is_artificially_added_set: is_artificially_added = val
 		end
-		
+
 feature {CONSUMED_MEMBER} -- Internal
 
 	f: INTEGER

@@ -28,73 +28,74 @@ create
 
 feature -- Access
 
-	assemblies: ARRAY [CONSUMED_ASSEMBLY]
+	assemblies: detachable ARRAYED_LIST [CONSUMED_ASSEMBLY]
 			-- Returns all assemblies registered in EAC.
 			-- Note: Unconsumed assemblies will be returned also.
 		do
-			if is_initialized then
-				Result := info.assemblies.twin
+			if is_initialized and then attached info as l_cache_info then
+				Result := l_cache_info.assemblies.twin
 			end
 		end
 
-	consumed_assemblies: ARRAY [CONSUMED_ASSEMBLY]
+	consumed_assemblies: like assemblies
 			-- Returns all completed consumed assemblies
 		local
-			l_assemblies: ARRAYED_LIST [CONSUMED_ASSEMBLY]
-			l_cached_assemblies: ARRAY [CONSUMED_ASSEMBLY]
+			l_assemblies: like assemblies
+			l_cached_assemblies: like assemblies
 			l_ca: CONSUMED_ASSEMBLY
-			l_upper: INTEGER
-			i: INTEGER
 		do
-			if is_initialized then
-				l_cached_assemblies := info.assemblies
+			if is_initialized and then attached info as l_cache_info then
+				l_cached_assemblies := l_cache_info.assemblies
 				create l_assemblies.make (l_cached_assemblies.count)
 				from
-					i := l_cached_assemblies.lower
-					l_upper := l_cached_assemblies.upper
+					l_cached_assemblies.start
 				until
-					i > l_upper
+					l_cached_assemblies.after
 				loop
-					l_ca := l_cached_assemblies[i]
+					l_ca := l_cached_assemblies.item
 					if l_ca.is_consumed then
 						l_assemblies.extend (l_ca)
 					end
-					i := i + 1
+					l_cached_assemblies.forth
 				end
 				Result := l_assemblies
 			end
 		end
 
-	consumed_assembly_from_path (a_path: STRING): CONSUMED_ASSEMBLY
+	consumed_assembly_from_path (a_path: STRING): detachable CONSUMED_ASSEMBLY
 			-- Find a consumed assembly in cache that matches `a_path'.
 		require
 			non_void_path: a_path /= Void
 			valid_path: not a_path.is_empty
+			is_initialized: is_initialized
 		local
-			l_path: STRING
-			i: INTEGER
-			l_consumed_assemblies: ARRAY [CONSUMED_ASSEMBLY]
+			l_path: detachable STRING
+			l_consumed_assemblies: like assemblies
+			l_assembly: CONSUMED_ASSEMBLY
+			l_info: like info
 		do
-			l_consumed_assemblies := info.assemblies
+			l_info := info
+			check l_info_attached: l_info /= Void end
+			l_consumed_assemblies := l_info.assemblies
 			from
-				i := 1
+				l_consumed_assemblies.start
 			until
-				i > l_consumed_assemblies.count or Result /= Void
+				l_consumed_assemblies.after or Result /= Void
 			loop
-				if l_consumed_assemblies.item (i) /= Void then
-					if l_path = Void then
-						l_path := l_consumed_assemblies.item (i).format_path (a_path)
-						l_path := {PATH}.get_full_path (l_path)
-					end
-					if l_consumed_assemblies.item (i).has_same_ready_formatted_path (l_path) then
-						Result := l_consumed_assemblies.item (i)
-					end
+				l_assembly := l_consumed_assemblies.item
+				if l_path = Void then
+					l_path := l_assembly.format_path (a_path)
+					l_path := {PATH}.get_full_path (l_path)
+					check l_path_attached: l_path /= Void end
 				end
-				i := i + 1
+				if l_assembly.has_same_ready_formatted_path (l_path) then
+					Result := l_assembly
+				end
+				l_consumed_assemblies.forth
 			end
 		end
 
-	assembly_types (a_assembly: CONSUMED_ASSEMBLY): CONSUMED_ASSEMBLY_TYPES
+	assembly_types (a_assembly: CONSUMED_ASSEMBLY): detachable CONSUMED_ASSEMBLY_TYPES
 			-- Assembly information from EAC
 		require
 			non_void_assembly: a_assembly /= Void
@@ -105,11 +106,9 @@ feature -- Access
 			create des
 			des.deserialize (absolute_assembly_path_from_consumed_assembly (a_assembly) + assembly_types_file_name, 0)
 			Result ?= des.deserialized_object
-		ensure
-			non_void_info: Result /= Void
 		end
 
-	consumed_type_from_dotnet_type_name (a_assembly: CONSUMED_ASSEMBLY; a_type: STRING): CONSUMED_TYPE
+	consumed_type_from_dotnet_type_name (a_assembly: CONSUMED_ASSEMBLY; a_type: STRING): detachable CONSUMED_TYPE
 			-- Type information from type `type' contained in `ca'
 		require
 			a_assembly_not_void: a_assembly /= Void
@@ -128,21 +127,20 @@ feature -- Access
 				l_des.deserialize (l_type_path, l_pos)
 				Result ?= l_des.deserialized_object
 			end
-		ensure
-			non_void_result: Result /= Void
 		end
 
-	consumed_type_from_consumed_referenced_type (a_assembly: CONSUMED_ASSEMBLY; a_crt: CONSUMED_REFERENCED_TYPE): CONSUMED_TYPE
+	consumed_type_from_consumed_referenced_type (a_assembly: CONSUMED_ASSEMBLY; a_crt: CONSUMED_REFERENCED_TYPE): detachable CONSUMED_TYPE
 			-- Type information from consumed referenced type `crt'.
 		require
 			non_void_assembly: a_assembly /= Void
 			valid_assembly: is_assembly_in_cache (a_assembly.gac_path, True)
 			non_void_referenced_type: a_crt /= Void
 		local
-			l_ca_mapping: CONSUMED_ASSEMBLY_MAPPING
+			l_ca_mapping: detachable CONSUMED_ASSEMBLY_MAPPING
 			l_name: STRING
 		do
 			l_ca_mapping := assembly_mapping_from_consumed_assembly (a_assembly)
+			check l_ca_mapping_attached: l_ca_mapping /= Void end
 
 			if a_crt.is_by_ref then
 				l_name := a_crt.name.twin
@@ -152,11 +150,9 @@ feature -- Access
 			end
 
 			Result := consumed_type_from_dotnet_type_name (l_ca_mapping.assemblies @ a_crt.assembly_id, l_name)
-		ensure
-			non_void_info: Result /= Void
 		end
 
-	assembly_mapping_from_consumed_assembly (a_assembly: CONSUMED_ASSEMBLY): CONSUMED_ASSEMBLY_MAPPING
+	assembly_mapping_from_consumed_assembly (a_assembly: CONSUMED_ASSEMBLY): detachable CONSUMED_ASSEMBLY_MAPPING
 			-- Assembly information from EAC for `a_assembly'.
 		require
 			non_void_assembly: a_assembly /= Void
@@ -167,59 +163,54 @@ feature -- Access
 			create des
 			des.deserialize (absolute_assembly_path_from_consumed_assembly (a_assembly) + Assembly_mapping_file_name, 0)
 			Result ?= des.deserialized_object
-		ensure
-			non_void_info: Result /= Void
 		end
 
-	consumed_type (a_type: SYSTEM_TYPE): CONSUMED_TYPE
+	consumed_type (a_type: SYSTEM_TYPE): detachable CONSUMED_TYPE
 			-- Consumed type corresponding to `a_type'.
 		require
 			a_type_not_void: a_type /= Void
 			a_type_is_in_cache: is_type_in_cache (a_type)
 		local
 			l_des: EIFFEL_DESERIALIZER
-			l_ca: CONSUMED_ASSEMBLY
+			l_ca: detachable CONSUMED_ASSEMBLY
 			l_pos: INTEGER
 		do
 			l_pos := type_position_from_type (a_type)
 			if l_pos >= 0 then
-				l_ca := consumed_assembly_from_path (a_type.assembly.location)
+				l_ca := consumed_assembly_from_path (assembly_location (a_type))
 				if l_ca /= Void then
 					create l_des
 					l_des.deserialize (absolute_type_path (l_ca), l_pos)
 					Result ?= l_des.deserialized_object
 				end
 			end
-		ensure
-			non_void_consumed_type: Result /= Void
 		end
 
-	client_assemblies (a_assembly: CONSUMED_ASSEMBLY): ARRAY [CONSUMED_ASSEMBLY]
+	client_assemblies (a_assembly: CONSUMED_ASSEMBLY): detachable ARRAYED_LIST [CONSUMED_ASSEMBLY]
 			-- List of assemblies in EAC depending on `a_assembly'.
 		require
 			non_void_assembly: a_assembly /= Void
 		local
-			l_client_assemblies: ARRAYED_LIST [CONSUMED_ASSEMBLY]
 			l_referenced_assemblies: like assembly_mapping_from_consumed_assembly
-			l_assemblies: like consumed_assemblies
-			i: INTEGER
+			l_assembly: CONSUMED_ASSEMBLY
 		do
-			l_assemblies := consumed_assemblies
-			create l_client_assemblies.make (l_assemblies.count)
-			from
-				i := 1
-			until
-				i > l_assemblies.count
-			loop
-				if l_assemblies.item (i) /= Void then
-					l_referenced_assemblies := assembly_mapping_from_consumed_assembly (l_assemblies.item (i))
-					if l_referenced_assemblies.assemblies.has (a_assembly) then
-						l_client_assemblies.extend (l_assemblies.item (i))
+			if attached consumed_assemblies as l_assemblies then
+				create Result.make (l_assemblies.count)
+				from
+					l_assemblies.start
+				until
+					l_assemblies.after
+				loop
+					l_assembly := l_assemblies.item
+					if l_assembly /= Void then
+						l_referenced_assemblies := assembly_mapping_from_consumed_assembly (l_assembly)
+						if l_referenced_assemblies /= Void and then l_referenced_assemblies.assemblies.has (a_assembly) then
+							Result.extend (l_assembly)
+						end
 					end
+					l_assemblies.forth
 				end
-				i := i + 1
 			end
-			Result := l_client_assemblies
 		end
 
 feature -- Status Report
@@ -236,10 +227,10 @@ feature -- Status Report
 			non_void_path: a_path /= Void
 			valid_path: not a_path.is_empty
 		local
-			l_ca: CONSUMED_ASSEMBLY
+			l_ca: detachable CONSUMED_ASSEMBLY
 		do
 			l_ca := consumed_assembly_from_path (a_path)
-			Result := l_ca /= Void and (not a_consumed or l_ca.is_consumed)
+			Result := l_ca /= Void and then (not a_consumed or l_ca.is_consumed)
 		end
 
 	is_type_in_cache (a_type: SYSTEM_TYPE): BOOLEAN
@@ -247,13 +238,13 @@ feature -- Status Report
 		require
 			non_void_type: a_type /= Void
 		local
-			l_ca: CONSUMED_ASSEMBLY
+			l_ca: detachable CONSUMED_ASSEMBLY
 			l_type_path: STRING
 			l_pos: INTEGER
 		do
 			l_pos := type_position_from_type (a_type)
 			if l_pos >= 0 then
-				l_ca := consumed_assembly_from_path (a_type.assembly.location)
+				l_ca := consumed_assembly_from_path (assembly_location (a_type))
 				if l_ca /= Void then
 					l_type_path := absolute_type_path (l_ca)
 					if l_type_path /= Void and not l_type_path.is_empty then
@@ -270,13 +261,13 @@ feature -- Status Report
 			non_void_path: a_path /= Void
 			valid_path: not a_path.is_empty
 		local
-			l_ca: CONSUMED_ASSEMBLY
+			l_ca: detachable CONSUMED_ASSEMBLY
 			l_consume_path: STRING
 			l_file_info: FILE_INFO
 			l_dir_info: DIRECTORY_INFO
-			l_so: SYSTEM_OBJECT
-			l_new_ca: CONSUMED_ASSEMBLY
-			l_reason: STRING
+			l_so: detachable SYSTEM_OBJECT
+			l_reason: detachable STRING
+			l_type: detachable SYSTEM_TYPE
 		do
 			l_ca := consumed_assembly_from_path (a_path)
 			if l_ca /= Void and then l_ca.is_consumed then
@@ -288,7 +279,9 @@ feature -- Status Report
 				if not Result then
 						-- now check in consumer is newer
 					l_so := Current
-					create l_file_info.make (l_so.get_type.assembly.location)
+					l_type := l_so.get_type
+					check l_type_attached: l_type /= Void end
+					create l_file_info.make (assembly_location (l_type))
 					Result := {SYSTEM_DATE_TIME}.compare (l_file_info.last_write_time, l_dir_info.creation_time) > 0
 					if Result then
 						l_reason := "The consumer is newer than the generate contents."
@@ -313,13 +306,13 @@ feature -- Status Report
 
 feature {CACHE_WRITER} -- Implementation
 
-	info: CACHE_INFO
+	info: detachable CACHE_INFO
 			-- Information on EAC content
 		require
 			non_void_clr_version: clr_version /= Void
 		local
 			des: EIFFEL_DESERIALIZER
-			l_ci: CACHE_INFO
+			l_ci: detachable CACHE_INFO
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -374,7 +367,7 @@ feature -- Reset
 
 feature {NONE} -- Implementation
 
-	internal_info: CELL [CACHE_INFO]
+	internal_info: CELL [detachable CACHE_INFO]
 			-- cache `info'
 		once
 			create Result.put (Void)
@@ -386,9 +379,9 @@ feature {NONE} -- Implementation
 		require
 			a_type_not_void: a_type /= Void
 		local
-			l_ca: CONSUMED_ASSEMBLY
+			l_ca: detachable CONSUMED_ASSEMBLY
 		do
-			l_ca := consumed_assembly_from_path (a_type.assembly.location)
+			l_ca := consumed_assembly_from_path (assembly_location (a_type))
 			if l_ca /= Void then
 				Result := type_position_from_type_name (l_ca, a_type.full_name)
 			else
@@ -428,6 +421,21 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			valid_result: Result =-1 or Result >= 0
+		end
+
+	assembly_location (a_type: SYSTEM_TYPE): STRING
+			-- Get the location of assembly  in which `a_type' belongs.
+		require
+			a_type_attached: a_type /= Void
+		local
+			l_ass: detachable ASSEMBLY
+			l_path: detachable SYSTEM_STRING
+		do
+			l_ass := a_type.assembly
+			check l_ass_attached: l_ass /= Void end
+			l_path := l_ass.location
+			check l_path_attached: l_path /= Void end
+			Result := l_path
 		end
 
 note

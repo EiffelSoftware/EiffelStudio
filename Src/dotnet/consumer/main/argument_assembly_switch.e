@@ -19,7 +19,7 @@ create
 
 feature -- Access
 
-	value_validator: !ARGUMENT_ASSEMBLY_VALIDATOR
+	value_validator: ARGUMENT_ASSEMBLY_VALIDATOR
 			-- Retrieves an validator used to check current switch value
 		once
 			create Result

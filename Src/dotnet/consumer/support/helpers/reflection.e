@@ -20,12 +20,18 @@ feature -- Status Report
 
 	is_consumed_type (t: SYSTEM_TYPE): BOOLEAN
 			-- Is `t' a public CLS compliant type?
+		require
+			t_attached: t /= Void
+		local
+			l_type: detachable SYSTEM_TYPE
 		do
 			if is_eiffel_compliant_type (t) then
 				Result := is_visible_type (t)
 				if not Result then
 					if t.is_nested_public or t.is_nested_family or t.is_nested_fam_or_assem then
-						Result := is_consumed_type (t.declaring_type)
+						l_type := t.declaring_type
+						check l_type_attached: l_type /= Void end
+						Result := is_consumed_type (l_type)
 					end
 				end
 			end
@@ -69,7 +75,7 @@ feature -- Status Report
 	is_cls_generic_type (a_type: SYSTEM_TYPE): BOOLEAN
 			--
 		local
-			l_name: SYSTEM_STRING
+			l_name: detachable SYSTEM_STRING
 		do
 				-- If `a_type.full_name' is Void, it means it is a formal generic parameter.
 				-- We consider this case and the case where the string contains ``'
@@ -92,11 +98,13 @@ feature -- Status Report
 	is_eiffel_compliant_member (member: MEMBER_INFO): BOOLEAN
 			-- 	Is `member' Eiffel-compliant?
 		local
-			l_type: SYSTEM_TYPE
+			l_type: detachable SYSTEM_TYPE
 		do
 			l_type ?= member
 			if l_type = Void then
-				Result := checked_member (member).is_eiffel_compliant
+				if attached checked_member (member) as l_member then
+					Result := l_member.is_eiffel_compliant
+				end
 			else
 				Result := is_eiffel_compliant_type (l_type)
 			end
@@ -120,24 +128,21 @@ feature {NONE} -- Implementation
 			-- Determines if type `a_type' is really visible, which is require on 2.0 to test if types are really public!
 		require
 			a_type_attached: a_type /= Void
-		local
-			l_call: like is_visible_function
 		do
 			Result := a_type.is_public
-			if Result then
-				l_call := is_visible_function
-				if l_call /= Void then
-					Result ?= l_call.invoke_object_object_array (a_type, create {NATIVE_ARRAY [SYSTEM_OBJECT]}.make (0))
+			if Result and then attached is_visible_function as l_call then
+				if attached {BOOLEAN} l_call.invoke_object_object_array (a_type, create {NATIVE_ARRAY [SYSTEM_OBJECT]}.make (0)) as l_bool then
+					Result := l_bool
 				end
 			end
 		end
 
-	is_visible_function: METHOD_INFO
+	is_visible_function: detachable METHOD_INFO
 			-- get_IsVisible function from System.Type
 		local
 			l_type: SYSTEM_TYPE
 		once
-			if {ENVIRONMENT}.version.major >= 2 then
+			if attached {ENVIRONMENT}.version as l_version and then l_version.major >= 2 then
 				l_type := {SYSTEM_TYPE}
 				Result := l_type.get_method ("get_IsVisible")
 			end

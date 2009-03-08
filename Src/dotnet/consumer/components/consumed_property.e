@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (dn: STRING; pub, stat: BOOLEAN; decl_type: CONSUMED_REFERENCED_TYPE; cp_getter: CONSUMED_FUNCTION; cp_setter: CONSUMED_PROCEDURE)
+	make (dn: STRING; pub, stat: BOOLEAN; decl_type: CONSUMED_REFERENCED_TYPE; cp_getter: detachable CONSUMED_FUNCTION; cp_setter: detachable CONSUMED_PROCEDURE)
 			-- Initialize event.
 		require
 			non_void_dotnet_name: dn /= Void
@@ -36,14 +36,13 @@ feature {NONE} -- Initialization
 		local
 			l_name: like dotnet_eiffel_name
 		do
-			n := dn
 			p := pub
 			t := stat
-			entity_make (dn, pub, decl_type)
+			entity_make (dn, dn, pub, decl_type)
 			g := cp_getter
 				-- Remove `get_' from property name.
-			if g /= Void then
-				l_name := g.dotnet_eiffel_name
+			if cp_getter /= Void then
+				l_name := cp_getter.dotnet_eiffel_name
 				if l_name.count > 4 and then l_name.substring (1, 4).is_equal ("get_") then
 					l_name.remove_head (4)
 				end
@@ -54,7 +53,7 @@ feature {NONE} -- Initialization
 			getter_set: getter = cp_getter
 			setter_set: setter = cp_setter
 		end
-	
+
 feature -- ConsumerWrapper functions
 
 	is_property: BOOLEAN
@@ -62,19 +61,19 @@ feature -- ConsumerWrapper functions
 		do
 			Result := True
 		end
-		
+
 	is_property_or_event: BOOLEAN
 			-- Is 'Current' a .NET Property or Event?
 		do
 			Result := True
 		end
-		
+
 	is_public: BOOLEAN
 			-- Is `Current' public.
 		do
 			Result := p
 		end
-			
+
 	is_static: BOOLEAN
 			-- Is `Current' static.
 		do
@@ -87,21 +86,21 @@ feature -- Access
 			-- List of eiffelized Consumed Entities relative to `Current'.
 		do
 			create Result.make (0)
-			if getter /= Void then
-				Result.extend (getter)
+			if attached getter as l_getter then
+				Result.extend (l_getter)
 			end
-			if setter /= Void then
-				Result.extend (setter)
+			if attached setter as l_setter then
+				Result.extend (l_setter)
 			end
 		end
 
-	getter: CONSUMED_FUNCTION
+	getter: detachable CONSUMED_FUNCTION
 			-- Property getter function
 		do
 			Result := g
 		end
-	
-	setter: CONSUMED_PROCEDURE
+
+	setter: detachable CONSUMED_PROCEDURE
 			-- Property setter procedure
 		do
 			Result := s
@@ -111,13 +110,13 @@ feature {NONE} -- Access
 
 	g: like getter
 			-- Internal data for `getter'.
-	
+
 	s: like setter
 			-- Internal data for `setter'.
-	
+
 	p: like is_public
 			-- Internal data for `is_public'.
-	
+
 	t: like is_static;
 			-- Internal data for `is_static'.
 

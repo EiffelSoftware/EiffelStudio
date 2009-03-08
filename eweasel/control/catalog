@@ -2270,4 +2270,5 @@ test object-test-assertion-crash	dotnet109 tcf pass dotnet
 test dotnet-polymorphism			dotnet110 tcf pass dotnet
 if DOTNET test assigner-name-incrementality	dotnet111 tcf pass dotnet
 test dotnet-special-handling-crash	dotnet112 tcf pass dotnet
+if DOTNET test  dotnet-object-test-basic-type	dotnet113 tcf pass dotnet attached_types
 

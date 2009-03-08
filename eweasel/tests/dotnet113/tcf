@@ -1,0 +1,14 @@
+test_name	dotnet-object-test-basic-type
+test_description When performing an object test where type is a basic expanded type, it does not work.
+
+copy_sub	Ace	$TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+execute_work 	NONE 	exec_output
+execute_result 	ok
+compare		exec_output output
+
+test_end

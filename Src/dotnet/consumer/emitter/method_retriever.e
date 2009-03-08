@@ -9,6 +9,8 @@ class
 	METHOD_RETRIEVER
 
 inherit
+	ANY
+
 	SHARED_LOGGER
 		export
 			{NONE} all
@@ -16,7 +18,7 @@ inherit
 
 feature -- Implementation
 
-	property_getter (prop: PROPERTY_INFO): METHOD_INFO
+	property_getter (prop: PROPERTY_INFO): detachable METHOD_INFO
 			-- Get `getter' of `prop' if it exists.
 		local
 			retried: BOOLEAN
@@ -32,7 +34,7 @@ feature -- Implementation
 			retry
 		end
 
-	property_setter (prop: PROPERTY_INFO): METHOD_INFO
+	property_setter (prop: PROPERTY_INFO):detachable  METHOD_INFO
 			-- Get `setter' of `prop' if it exists.
 		local
 			retried: BOOLEAN
@@ -48,7 +50,7 @@ feature -- Implementation
 			retry
 		end
 
-	event_adder (event: EVENT_INFO): METHOD_INFO
+	event_adder (event: EVENT_INFO): detachable METHOD_INFO
 			-- Get `adder' of `event' if it exists.
 		local
 			retried: BOOLEAN
@@ -64,7 +66,7 @@ feature -- Implementation
 			retry
 		end
 
-	event_remover (event: EVENT_INFO): METHOD_INFO
+	event_remover (event: EVENT_INFO): detachable METHOD_INFO
 			-- Get `remover' of `event' if it exists.
 		local
 			retried: BOOLEAN
@@ -80,7 +82,7 @@ feature -- Implementation
 			retry
 		end
 
-	event_raiser (event: EVENT_INFO): METHOD_INFO
+	event_raiser (event: EVENT_INFO): detachable METHOD_INFO
 			-- Get `raiser' of `event' if it exists.
 		local
 			retried: BOOLEAN

@@ -13,17 +13,18 @@ feature -- Access
 
 	clr_version: STRING
 			-- Executing version of CLR, for use with consumer folder.
-		local
-			l_ver: VERSION
-		once	
-			l_ver := {ENVIRONMENT}.version
+		once
 			create Result.make (10)
 			Result.append_character ('v')
-			Result.append_integer (l_ver.major)
-			Result.append_character ('.')
-			Result.append_integer (l_ver.minor)
-			Result.append_character ('.')
-			Result.append_integer (l_ver.build)
+			if attached {ENVIRONMENT}.version as l_ver then
+				Result.append_integer (l_ver.major)
+				Result.append_character ('.')
+				Result.append_integer (l_ver.minor)
+				Result.append_character ('.')
+				Result.append_integer (l_ver.build)
+			else
+				Result.append ("0.0.0")
+			end
 		ensure
 			result_not_void: Result /= Void
 			not_reuslt_is_empty: not Result.is_empty

@@ -21,19 +21,31 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize notifier
 		local
-			l_thread: SYSTEM_THREAD
+			l_thread: detachable SYSTEM_THREAD
 			l_start: THREAD_START
 		do
+			create notify_form.make
+
+				-- To make void-safe happy.
+			l_thread := {SYSTEM_THREAD}.current_thread
+			check l_thread_attached: l_thread /= Void end
+			application_thread := l_thread
+
+				-- Create the real thread
 			create l_start.make (Current, $on_init)
 			create l_thread.make (l_start)
+			application_thread := l_thread
 			l_thread.priority := {THREAD_PRIORITY}.highest
 			l_thread.name := "Notifer"
 			l_thread.start
 
-			from until
-				notify_form /= Void and then notify_form.visible
+			from
+				l_thread := {SYSTEM_THREAD}.current_thread
+				check l_thread_attached: l_thread /= Void end
+			until
+				notify_form.visible
 			loop
-				{SYSTEM_THREAD}.current_thread.sleep (10)
+				l_thread.sleep (10)
 			end
 		ensure
 			application_thread_attached: application_thread /= Void
@@ -45,8 +57,6 @@ feature {NONE} -- Initialization
 		local
 			l_context: WINFORMS_APPLICATION_CONTEXT
 		do
-			application_thread := {SYSTEM_THREAD}.current_thread
-			create notify_form.make
 			create l_context.make_from_main_form (notify_form)
 			{WINFORMS_APPLICATION}.run (l_context)
 			check notify_form_attached: notify_form /= Void end
@@ -58,20 +68,13 @@ feature -- Clean Up
 	dispose
 			-- Disposes of notifier
 		do
-			check
-				notify_form_attached: notify_form /= Void
-				application_thread_attached: application_thread /= Void
-			end
 			if notify_form /= Void then
 				{WINFORMS_APPLICATION}.exit
 			end
-			if application_thread /= Void and then application_thread.is_alive then
+			if application_thread.is_alive then
 				application_thread.join
 			end
-			application_thread := Void
 		ensure then
-			notify_form_unattached: notify_form = Void
-			application_thread_unattached: application_thread = Void
 			is_zombie: is_zombie
 		end
 

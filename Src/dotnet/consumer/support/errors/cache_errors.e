@@ -5,7 +5,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	CACHE_ERRORS
 
 inherit
@@ -14,17 +14,17 @@ inherit
 feature -- Access
 
 	Error_category: INTEGER_8 = 0x02
-	
+
 	Assembly_not_found_error: INTEGER = 0x02000001
 
 	Consume_error: INTEGER = 0x02000002
-	
+
 	Remove_error: INTEGER = 0x02000003
-	
+
 	Not_in_eac_error: INTEGER = 0x02000004
-	
+
 	Update_error: INTEGER = 0x02000005
-	
+
 	Assembly_dependancies_not_found_error: INTEGER = 0x02000006
 
 feature {NONE} -- Implementation
@@ -40,7 +40,7 @@ feature {NONE} -- Implementation
 			Result.put ("Could not update assembly", Update_error)
 			Result.put ("Could not load one or more of assemblies dependancies", Assembly_dependancies_not_found_error)
 		end
-		
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

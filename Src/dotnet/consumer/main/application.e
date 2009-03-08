@@ -9,6 +9,8 @@ class
 	APPLICATION
 
 inherit
+	ANY
+
 	AR_SHARED_SUBSCRIBER
 		export
 			{NONE} all
@@ -50,7 +52,7 @@ feature {NONE} -- Initialization
 			l_cache_writer: CACHE_WRITER
 			l_writer: like writer
 			l_error: BOOLEAN
-			l_receiver: SYSTEM_OBJECT
+			l_receiver: detachable SYSTEM_OBJECT
 		do
 			if a_parser.use_specified_cache then
 				create l_manager.make_with_path (a_parser.cache_path)
@@ -103,7 +105,7 @@ feature {NONE} -- Initialization
 					l_assembly := l_assemblies.item
 					{SYSTEM_DLL_TRACE}.write_line ({SYSTEM_STRING}.format ("Requesting consumption of assembly '{0}'.", l_assembly), "Info")
 					l_writer.put_string ("Requesting consumption of assembly '" + l_assembly + "' into '")
-					l_writer.put_string (l_manager.cache_reader.absolute_consume_path)
+					l_writer.put_string (cache_reader.absolute_consume_path)
 					l_writer.put_string ("'...%N")
 					l_cache_writer.add_assembly (l_assembly, l_info_only)
 					if not l_cache_writer.successful then
@@ -125,7 +127,7 @@ feature {NONE} -- Initialization
 					l_assembly := l_assemblies.item
 					{SYSTEM_DLL_TRACE}.write_line ({SYSTEM_STRING}.format ("Unconsuming assembly '{0}'.", l_assembly), "Info")
 					l_writer.put_string ("Unconsuming assembly '" + l_assembly + "' from '")
-					l_writer.put_string (l_manager.cache_reader.absolute_consume_path)
+					l_writer.put_string (cache_reader.absolute_consume_path)
 					l_writer.put_string ("'...%N")
 					l_cache_writer.unconsume_assembly (l_assembly)
 					if not l_manager.is_successful then
@@ -142,7 +144,7 @@ feature {NONE} -- Initialization
 				display_cache_content (l_manager, a_parser.show_verbose_output)
 			elseif a_parser.clean_cache then
 				l_writer.put_string ("Cleaning and compacting cache '")
-				l_writer.put_string (l_manager.cache_reader.absolute_consume_path)
+				l_writer.put_string (cache_reader.absolute_consume_path)
 				l_writer.put_string ("'...%N")
 				l_manager.cache_writer.clean_cache
 			end
@@ -168,42 +170,51 @@ feature {NONE} -- Output
 			a_manager_attached: a_manager /= Void
 		local
 			l_writer: like writer
-			l_assemblies: ARRAY [CONSUMED_ASSEMBLY]
+			l_assemblies: detachable ARRAYED_LIST [CONSUMED_ASSEMBLY]
 			l_assembly: CONSUMED_ASSEMBLY
 			l_index: INTEGER
 			l_sindex: STRING
 			l_prefix: STRING
-			l_is_empty: BOOLEAN
 			l_cp: CACHE_PATH
 			l_corrupted: ARRAYED_LIST [CONSUMED_ASSEMBLY]
 			l_partial_count, l_full_count, l_awaiting_count: INTEGER
 			l_count: INTEGER
 			i: INTEGER
 		do
-			l_assemblies := a_manager.cache_reader.assemblies
-			l_is_empty := l_assemblies.is_empty
-			if not l_is_empty then
-				l_is_empty := l_assemblies.for_all (agent (a_item: CONSUMED_ASSEMBLY): BOOLEAN
-					do
-						Result := a_item = Void or else not a_item.is_consumed
-					end)
+			l_assemblies := cache_reader.assemblies
+			if l_assemblies /= Void then
+				if l_assemblies.is_empty then
+					l_assemblies := Void
+				end
+			end
+			if l_assemblies /= Void then
+				if
+					l_assemblies.for_all (agent (a_item: CONSUMED_ASSEMBLY): BOOLEAN
+						do
+							Result := a_item = Void or else not a_item.is_consumed
+						end)
+				then
+					l_assemblies := Void
+				end
 			end
 
 			l_writer := writer
 
 			l_writer.put_string ("Displaying contents of Eiffel Assembly Cache%N")
-			l_writer.put_string (a_manager.cache_reader.absolute_consume_path)
+			l_writer.put_string (cache_reader.absolute_consume_path)
 			l_writer.put_string (":%N")
 
 			create l_cp
 			create l_corrupted.make (0)
 
-			if not l_is_empty then
+			if l_assemblies /= Void then
 				l_count := l_assemblies.count
 
 				create l_sindex.make_filled (' ', (l_count ^ 0.1).truncated_to_integer + 1)
 				if a_verbose then
 					create l_prefix.make_filled (' ', l_sindex.count + 2)
+				else
+					l_prefix := ""
 				end
 				from i := 1 until i > l_count loop
 					l_assembly := l_assemblies [i]
@@ -302,6 +313,7 @@ feature {NONE} -- Output
 						l_writer.new_line
 						l_writer.put_string ("Cache contains corrupted entries!")
 						from l_corrupted.start until l_corrupted.after loop
+							l_assembly := l_corrupted.item
 							l_writer.new_line
 							l_writer.put_string (l_sindex)
 							l_writer.put_string ("Entry: ")
@@ -360,6 +372,12 @@ feature {NONE} -- Output
 			-- Writer used to display verbose error information
 		once
 			Result := io.error
+		end
+feature {NONE} -- Implementation
+
+	cache_reader: CACHE_READER
+		once
+			create Result
 		end
 
 note

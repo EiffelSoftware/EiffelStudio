@@ -21,6 +21,7 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize form.
 		do
+			notify_string := ""
 			initialize_component
 		end
 
@@ -28,15 +29,17 @@ feature {NONE} -- Initialization
 			-- Initialize form controls
 		local
 			l_rm: RESOURCE_MANAGER
-			l_icon: DRAWING_ICON
+			l_icon: detachable DRAWING_ICON
 			l_location: DRAWING_POINT
+			l_type: SYSTEM_TYPE
 		do
-			create l_rm.make (resource_name, (({SYSTEM_TYPE})[{NOTIFY_FORM}]).assembly)
+			l_type := {NOTIFY_FORM}
+			create l_rm.make (resource_name, (l_type.assembly))
 			l_icon ?= l_rm.get_object (tray_icon_resource_name)
 			check l_icon_attached: l_icon /= Void end
 
-			{WINFORMS_APPLICATION}.add_idle (create {EVENT_HANDLER}.make (Current, $on_idle))
 			create notify_icon.make
+			{WINFORMS_APPLICATION}.add_idle (create {EVENT_HANDLER}.make (Current, $on_idle))
 
 			create l_location.make_from_x_and_y (-1000, -1000)
 			set_location (l_location)
@@ -58,13 +61,8 @@ feature {NONE} -- Clean Up
 		do
 			Precursor {WINFORMS_FORM} (a_disposing)
 			if a_disposing then
-				if notify_icon /= Void then
-					notify_icon.dispose
-					notify_icon := Void
-				end
+				notify_icon.dispose
 			end
-		ensure then
-			notify_icon_unattached: notify_icon = Void
 		end
 
 feature -- Status Setting
@@ -79,14 +77,14 @@ feature -- Status Setting
 			last_notification_set: last_notification = old notify_string
 		end
 
-	notify_info (a_message: SYSTEM_STRING)
+	notify_info (a_message: STRING)
 			-- Notifier user of an event
 		require
 			a_message_attached: a_message /= Void
-			not_a_message_is_empty: a_message.length > 0
+			not_a_message_is_empty: not a_message.is_empty
 		do
 			last_notification := notify_string
-			if a_message.length > 64 then
+			if a_message.count > 64 then
 				notify_string := a_message.substring (0, 63)
 			else
 				notify_string := a_message
@@ -98,8 +96,8 @@ feature -- Status Setting
 	restore_last_notification
 			-- Restores last message
 		do
-			if last_notification /= Void then
-				notify_info (last_notification)
+			if attached last_notification as l_notification then
+				notify_info (l_notification)
 			else
 				clear_notification
 			end
@@ -119,17 +117,15 @@ feature -- Access
 	notify_icon: WINFORMS_NOTIFY_ICON
 			-- Notify icon
 
-	notify_string: SYSTEM_STRING
+	notify_string: STRING
 			-- String used to populate notify icon ballon
 
 feature -- Events
 
-	on_idle (a_sender: SYSTEM_OBJECT; a_args: EVENT_ARGS)
+	on_idle (a_sender: detachable SYSTEM_OBJECT; a_args: detachable EVENT_ARGS)
 			-- Processes application idle events.
 		do
-			if notify_icon /= Void then
-				notify_icon.text := notify_string
-			end
+			notify_icon.text := notify_string
 		end
 
 feature {NONE} -- Constants
@@ -142,7 +138,7 @@ feature {NONE} -- Constants
 
 feature {NONE} -- Implementation
 
-	last_notification: SYSTEM_STRING;
+	last_notification: detachable SYSTEM_STRING;
 			-- Last set notification
 
 note

@@ -515,24 +515,23 @@ feature {NONE} -- retrieving information from cache
 			a_location_set: a_location /= Void and then not a_location.is_empty
 		local
 			l_formated_location: STRING
-			l_assemblies: ARRAY [CONSUMED_ASSEMBLY]
+			l_assemblies: ARRAYED_LIST [CONSUMED_ASSEMBLY]
 			l_as: CONSUMED_ASSEMBLY
-			i, cnt: INTEGER
 		do
 				-- find the assembly in the cache
 			l_formated_location := format_path (a_location)
 			from
 				l_assemblies := cache_content.assemblies
-				i := l_assemblies.lower
-				cnt := l_assemblies.upper
+				l_assemblies.start
 			until
-				Result /= Void or i > cnt
+				l_assemblies.after
 			loop
-				l_as := l_assemblies[i]
+				l_as := l_assemblies.item
 				if l_as.has_same_ready_formatted_path (l_formated_location) then
 					Result := l_as
+					l_assemblies.finish
 				end
-				i := i + 1
+				l_assemblies.forth
 			end
 
 				-- check if the cache information is up to date
@@ -548,9 +547,8 @@ feature {NONE} -- retrieving information from cache
 			an_assembly_ok: an_assembly /= Void and then an_assembly.is_non_local_assembly
 		local
 			l_name, l_version, l_culture, l_key: STRING
-			l_assemblies: ARRAY [CONSUMED_ASSEMBLY]
+			l_assemblies: ARRAYED_LIST [CONSUMED_ASSEMBLY]
 			l_as: CONSUMED_ASSEMBLY
-			i, cnt: INTEGER
 		do
 			l_name := an_assembly.assembly_name
 			l_version := an_assembly.assembly_version
@@ -558,16 +556,16 @@ feature {NONE} -- retrieving information from cache
 			l_key := an_assembly.assembly_public_key_token
 			from
 				l_assemblies := cache_content.assemblies
-				i := l_assemblies.lower
-				cnt := l_assemblies.upper
+				l_assemblies.start
 			until
-				Result /= Void or i > cnt
+				Result /= Void or l_assemblies.after
 			loop
-				l_as := l_assemblies[i]
+				l_as := l_assemblies.item
 				if l_as.has_same_gac_information (l_name, l_version, l_culture, l_key) then
 					Result := l_as
+					l_assemblies.finish
 				end
-				i := i + 1
+				l_assemblies.forth
 			end
 
 				-- check if the cache information is up to date
@@ -770,21 +768,19 @@ feature {NONE} -- helpers
 			old_assemblies_not_void: old_assemblies /= Void
 			cache_content_not_void: cache_content /= Void
 		local
-			l_assemblies: ARRAY [CONSUMED_ASSEMBLY]
+			l_assemblies: ARRAYED_LIST [CONSUMED_ASSEMBLY]
 			l_guids: SEARCH_TABLE [STRING]
-			i, cnt: INTEGER
 		do
 				-- build list of guids in cache
 			from
 				l_assemblies := cache_content.assemblies
 				create l_guids.make (l_assemblies.count)
-				i := l_assemblies.lower
-				cnt := l_assemblies.upper
+				l_assemblies.start
 			until
-				i > cnt
+				l_assemblies.after
 			loop
-				l_guids.force (l_assemblies.item (i).unique_id)
-				i := i + 1
+				l_guids.force (l_assemblies.item.unique_id)
+				l_assemblies.forth
 			end
 
 			from
@@ -887,7 +883,7 @@ invariant
 	consume_assembly_observer_not_void: consume_assembly_observer /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -900,21 +896,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

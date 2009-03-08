@@ -14,10 +14,6 @@ inherit
 	ARGUMENT_OPTION_PARSER
 		rename
 			make as make_parser
-		export
-			{NONE} all
-			{APPLICATION} execute
-			{ANY} is_successful
 		redefine
 			switch_groups
 		end
@@ -155,13 +151,21 @@ feature {NONE} -- Usage
 	name: STRING = "Eiffel Assembly Metadata %"Consumer%""
 			-- Full name of application
 
-	Version: !STRING
+	Version: STRING
 			-- Version number of application
 		once
-			Result := ({EMITTER}).to_cil.assembly.get_name.version.to_string
+			if
+				attached ({EMITTER}).to_cil.assembly as l_assembly and then
+				attached l_assembly.get_name as l_ass_name and then
+				attached l_ass_name.version as l_version
+			then
+				Result := l_version.to_string
+			else
+				create Result.make_from_string ("0.0.0.0")
+			end
 		end
 
-	switches: ?ARRAYED_LIST [!ARGUMENT_SWITCH]
+	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
 			-- Retrieve a list of switch used for a specific application
 			-- (export status {NONE})
 		once
@@ -178,7 +182,7 @@ feature {NONE} -- Usage
 
 		end
 
-	switch_groups: ?ARRAYED_LIST [!ARGUMENT_GROUP]
+	switch_groups: ARRAYED_LIST [ARGUMENT_GROUP]
 			-- Valid switch grouping
 		once
 			create Result.make (4)

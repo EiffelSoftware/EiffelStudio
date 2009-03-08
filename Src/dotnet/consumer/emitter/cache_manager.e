@@ -15,7 +15,7 @@ inherit
 		export
 			{NONE} all
 			{CACHE_MANAGER} clr_version
-			{ANY} cache_reader, cache_writer
+			{ANY} cache_writer
 		end
 
 	SHARED_ASSEMBLY_LOADER
@@ -47,7 +47,6 @@ feature {NONE}-- Initialization
 			is_successful := True
 			last_error_message := ""
 			create cache_writer.make
-			create cache_reader
 		end
 
 	make_with_path (a_path: STRING)
@@ -69,8 +68,8 @@ feature -- Clean Up
 			-- resources should be able to be resurected.
 
 		do
-			if notifier /= Void then
-				notifier.dispose
+			if attached notifier as l_notifier then
+				l_notifier.dispose
 				notifier := Void
 			end
 			cache_writer.dispose
@@ -86,15 +85,16 @@ feature -- Access
 
 feature -- Basic Oprtations
 
-	consume_assembly (a_name, a_version, a_culture, a_key: STRING; a_info_only: BOOLEAN)
+	consume_assembly (a_name: STRING; a_version, a_culture, a_key: detachable STRING; a_info_only: BOOLEAN)
 			-- consume an assembly using it's display name parts.
 			-- "`a_name', Version=`a_version', Culture=`a_culture', PublicKeyToken=`a_key'"
 		require
 			non_void_name: a_name /= Void
 			valid_name: not a_name.is_empty
 		local
-			l_assembly: ASSEMBLY
+			l_assembly: detachable ASSEMBLY
 			l_resolver: CONSUMER_AGUMENTED_RESOLVER
+			l_current_domain: detachable APP_DOMAIN
 		do
 			is_successful := True
 			last_error_message := ""
@@ -104,17 +104,19 @@ feature -- Basic Oprtations
 				create l_resolver.make (create {ARRAYED_LIST [STRING]}.make (0))
 				l_resolver.add_resolve_path ({RUNTIME_ENVIRONMENT}.get_runtime_directory)
 				l_resolver.add_resolve_path_from_file_name (l_assembly.location)
-				resolve_subscriber.subscribe ({APP_DOMAIN}.current_domain, l_resolver)
+				l_current_domain := {APP_DOMAIN}.current_domain
+				check l_current_domain_attached: l_current_domain /= Void end
+				resolve_subscriber.subscribe (l_current_domain, l_resolver)
 				assembly_loader.set_resolver (l_resolver)
 				cache_writer.add_assembly_ex (l_assembly.location, a_info_only, Void, create {ARRAYED_LIST [STRING]}.make (0))
 				assembly_loader.set_resolver (Void)
-				resolve_subscriber.unsubscribe ({APP_DOMAIN}.current_domain, l_resolver)
+				resolve_subscriber.unsubscribe (l_current_domain, l_resolver)
 			end
 		ensure
 			successful: is_successful
 		end
 
-	consume_assembly_from_path (a_path: STRING; a_info_only: BOOLEAN; a_references: STRING)
+	consume_assembly_from_path (a_path: STRING; a_info_only: BOOLEAN; a_references: detachable STRING)
 			-- Consume assembly located `a_path'
 		require
 			non_void_path: a_path /= Void
@@ -125,6 +127,7 @@ feature -- Basic Oprtations
 			l_processed: ARRAYED_LIST [STRING]
 			l_refs: LIST [STRING]
 			l_files: ARRAYED_LIST [STRING]
+			l_current_domain: detachable APP_DOMAIN
 		do
 			is_successful := True
 			last_error_message := ""
@@ -152,7 +155,9 @@ feature -- Basic Oprtations
 			end
 
 			create l_resolver.make (l_files)
-			resolve_subscriber.subscribe ({APP_DOMAIN}.current_domain, l_resolver)
+			l_current_domain := {APP_DOMAIN}.current_domain
+			check l_current_domain_attached: l_current_domain /= Void end
+			resolve_subscriber.subscribe (l_current_domain, l_resolver)
 
 			create l_processed.make (l_paths.count * 3)
 			l_processed.compare_objects
@@ -169,18 +174,18 @@ feature -- Basic Oprtations
 				l_resolver.remove_resolve_path_from_file_name (l_paths.item)
 				l_paths.forth
 			end
-			resolve_subscriber.unsubscribe ({APP_DOMAIN}.current_domain, l_resolver)
+			resolve_subscriber.unsubscribe (l_current_domain, l_resolver)
 		ensure
 			successful: is_successful
 		end
 
-	relative_folder_name (a_name, a_version, a_culture, a_key: STRING): STRING
+	relative_folder_name (a_name: STRING; a_version, a_culture, a_key: detachable STRING): detachable STRING
 			-- returns the relative path to an assembly using at least `a_name'
 		require
 			non_void_name: a_name /= Void
 			valid_name: not a_name.is_empty
 		local
-			l_ca: CONSUMED_ASSEMBLY
+			l_ca: detachable CONSUMED_ASSEMBLY
 		do
 			l_ca := assembly_info (a_name, a_version, a_culture, a_key)
 			if l_ca /= Void then
@@ -189,14 +194,14 @@ feature -- Basic Oprtations
 			end
 		end
 
-	relative_folder_name_from_path (a_path: STRING): STRING
+	relative_folder_name_from_path (a_path: STRING): detachable STRING
 			-- Relative path to consumed assembly metadata given `a_path'
 		require
 			non_void_path: a_path /= Void
 			valid_path: not a_path.is_empty
 		local
-			l_ca: CONSUMED_ASSEMBLY
-			l_assembly: ASSEMBLY
+			l_ca: detachable CONSUMED_ASSEMBLY
+			l_assembly: detachable ASSEMBLY
 		do
 			l_assembly := assembly_loader.load_from (a_path)
 			if l_assembly /= Void then
@@ -215,7 +220,7 @@ feature -- Basic Oprtations
 			end
 		end
 
-	assembly_info_from_path (a_path: STRING): CONSUMED_ASSEMBLY
+	assembly_info_from_path (a_path: STRING): detachable CONSUMED_ASSEMBLY
 			-- retrieve a local assembly's information.
 			-- If assembly has already been consumed then function will
 			-- return found matching CONSUMED_ASSEMBLY.
@@ -229,7 +234,7 @@ feature -- Basic Oprtations
 			Result := cache_writer.consumed_assembly_from_path (a_path)
 		end
 
-	assembly_info (a_name: STRING; a_version: STRING; a_culture: STRING; a_key: STRING): CONSUMED_ASSEMBLY
+	assembly_info (a_name: STRING; a_version, a_culture, a_key: detachable STRING): detachable CONSUMED_ASSEMBLY
 			-- retrieve a assembly's information.
 			-- If assembly has already been consumed then function will
 			-- return found matching CONSUMED_ASSEMBLY.
@@ -240,7 +245,7 @@ feature -- Basic Oprtations
 			a_name_attached: a_name /= Void
 			not_a_name_is_empty: not a_name.is_empty
 		local
-			l_assembly: ASSEMBLY
+			l_assembly: detachable ASSEMBLY
 		do
 			l_assembly := assembly_loader.load_from_full_name (fully_quantified_name (a_name, a_version, a_culture, a_key))
 			if l_assembly /= Void then
@@ -250,21 +255,21 @@ feature -- Basic Oprtations
 
 feature {NONE} -- Basic Operations
 
-	fully_quantified_name (a_name, a_version, a_culture, a_key: STRING): STRING
+	fully_quantified_name (a_name: STRING; a_version, a_culture, a_key: detachable STRING): STRING
 			-- returns "`a_name', Version=`a_version', Culture=`a_culture', PublicKeyToken=`a_key'"
 		require
 			non_void_name: a_name /= Void
 			valid_name: not a_name.is_empty
 		do
 			Result := a_name.twin
-			if a_version /= Void and not a_version.is_empty then
+			if a_version /= Void and then not a_version.is_empty then
 				Result.append (", Version=" + a_version)
-				if a_culture /= Void and not a_culture.is_empty then
+				if a_culture /= Void and then not a_culture.is_empty then
 					if not a_culture.is_case_insensitive_equal (neutral_culture) then
 						Result.append (", Culture=" + a_culture)
 					end
 				end
-				if a_key /= Void and not a_key.is_empty then
+				if a_key /= Void and then not a_key.is_empty then
 					Result.append (", PublicKeyToken=" + a_key)
 				end
 			end
@@ -279,12 +284,11 @@ feature {NONE} -- Constants
 
 feature {NONE} -- Implementation
 
-	notifier: NOTIFIER
+	notifier: detachable NOTIFIER
 			-- Notifier used to notifer user of cache operations.
 
 invariant
 	cache_writer_not_void: cache_writer /= Void
-	cache_reader_not_void: cache_reader /= Void
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

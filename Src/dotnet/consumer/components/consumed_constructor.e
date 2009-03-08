@@ -13,7 +13,6 @@ inherit
 		rename
 			make as entity_make
 		redefine
-			dotnet_name,
 			dotnet_eiffel_name,
 			has_arguments, arguments, is_public,
 			is_frozen,
@@ -34,7 +33,7 @@ feature {NONE} -- Initialization
 			non_void_arguments: args /= Void
 			a_type_not_void: a_type /= Void
 		do
-			entity_make (en, pub, a_type)
+			entity_make (en, ".ctor", pub, a_type)
 			a := args
 		ensure
 			eiffel_name_set: eiffel_name = en
@@ -62,9 +61,6 @@ feature -- Access
 
 	is_constructor: BOOLEAN = True
 			-- A constructor is a constructor.
-
-	dotnet_name: STRING = ".ctor"
-			-- Name of a .NET constructor.
 
 	dotnet_eiffel_name: STRING = "make"
 			-- Eiffelized name of .NET constructor.

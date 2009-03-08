@@ -5,7 +5,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	NAME_SOLVER
 
 inherit
@@ -20,25 +20,25 @@ feature -- Access
 			valid_name: not name.is_empty
 		local
 			count: INTEGER
-			l_names: like reserved_names
 		do
 			count := 2
-			l_names := reserved_names
 			Result := formatted_feature_name (name)
-			if not ub_operator_names.has (name) then
-					-- If execution ends up here then we are not dealing with
-					-- infix/prefix operators. Infix and prefixes need not be solved, unless an
-					-- infix/prefix is overloaded. In that case, execution will end up here.
-				from
-				until
-					not l_names.has (Result)
-				loop
-					trim_end_digits (Result)
-					Result.append (count.out)
-					count := count + 1
+			if attached reserved_names as l_names then
+				if not ub_operator_names.has (name) then
+						-- If execution ends up here then we are not dealing with
+						-- infix/prefix operators. Infix and prefixes need not be solved, unless an
+						-- infix/prefix is overloaded. In that case, execution will end up here.
+					from
+					until
+						not l_names.has (Result)
+					loop
+						trim_end_digits (Result)
+						Result.append (count.out)
+						count := count + 1
+					end
 				end
+				l_names.put (Result, Result)
 			end
-			l_names.put (Result, Result)
 		end
 
 	reserved_names: HASH_TABLE [STRING, STRING]
@@ -83,7 +83,6 @@ feature {TYPE_CONSUMER} -- Element Settings
 			-- Set `reserved_names' with `names' .
 		require
 			non_void_names: names /= Void
-			not_set_yet: reserved_names = Void
 		do
 			reserved_names := names
 		ensure

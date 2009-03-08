@@ -5,7 +5,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	ASSEMBLY_CONSUMPTION_ERRORS
 
 inherit
@@ -36,7 +36,7 @@ feature {NONE} -- Implementation
 			Result.put ("Could not find assembly", Assembly_not_found_error)
 			Result.put ("Could not serialize type.%NThis is usually due to an implementation problem in one of its features, or a missing resource.", Type_initialization_error)
 		end
-		
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -66,7 +66,7 @@ feature -- Access
 			Result := count > 0
 		end
 
-	notifier: NOTIFIER
+	notifier: detachable NOTIFIER
 			-- Notifier used to inform user of locks
 
 feature -- Element change
@@ -139,10 +139,10 @@ feature {NONE} -- Implementation
 			a_mutex_not_void: a_mutex /= Void
 		local
 			retried: BOOLEAN
-			l_security: MUTEX_SECURITY
+			l_security: detachable MUTEX_SECURITY
 			l_rule: MUTEX_ACCESS_RULE
 			l_account: NT_ACCOUNT
-			l_identity: IDENTITY_REFERENCE
+			l_identity: detachable IDENTITY_REFERENCE
 		do
 			if not retried then
 				create l_account.make ("Everyone")
@@ -153,6 +153,7 @@ feature {NONE} -- Implementation
 						-- If it fails it simply keeps the default access control.
 					l_identity := l_account.translate ({SECURITY_IDENTIFIER})
 					l_security := a_mutex.get_access_control
+					check l_security_attached: l_security /= Void end
 					create l_rule.make (l_identity, {MUTEX_RIGHTS}.Full_control, {ACCESS_CONTROL_TYPE}.Allow)
 					l_security.add_access_rule (l_rule)
 					a_mutex.set_access_control (l_security)

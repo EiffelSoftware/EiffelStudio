@@ -15,12 +15,12 @@ inherit
 			assembly_types
 		end
 
-create {EMITTER}
+create
 	default_create
 
 feature -- Redefined
 
-	consumed_type (t: SYSTEM_TYPE): CONSUMED_TYPE
+	consumed_type (t: SYSTEM_TYPE): detachable CONSUMED_TYPE
 			-- Consumed type corresponding to `t'.
 		local
 			l_cache: like types_cache
@@ -37,7 +37,7 @@ feature -- Redefined
 			end
 		end
 
-	assembly_types (a_assembly: CONSUMED_ASSEMBLY): CONSUMED_ASSEMBLY_TYPES
+	assembly_types (a_assembly: CONSUMED_ASSEMBLY): detachable CONSUMED_ASSEMBLY_TYPES
 			-- Assembly information from EAC
 		local
 			l_cache: like assembly_types_cache
@@ -64,7 +64,7 @@ feature -- Initialization
 			not_empty_path: not a_path.is_empty
 		local
 			l_raw_file: RAW_FILE
-			l_consumed_types: LINKED_LIST [CONSUMED_TYPE]
+			l_consumed_types: detachable LINKED_LIST [CONSUMED_TYPE]
 			l_cache: like types_cache
 		do
 			if {SYSTEM_FILE}.exists (a_path.to_cil) then
@@ -90,10 +90,10 @@ feature -- Initialization
 
 feature -- Access
 
-	type_name (t: SYSTEM_TYPE): STRING
+	type_name (t: SYSTEM_TYPE): detachable STRING
 			-- Eiffel name of .NET type `t'.
 		local
-			ct: CONSUMED_TYPE
+			ct: detachable CONSUMED_TYPE
 		do
 			if is_type_in_cache (t) then
 				ct := consumed_type (t)
@@ -103,7 +103,7 @@ feature -- Access
 			end
 		end
 
-	feature_name (t: SYSTEM_TYPE; dotnet_name: STRING; args: NATIVE_ARRAY [SYSTEM_TYPE]): STRING
+	feature_name (t: SYSTEM_TYPE; dotnet_name: STRING; args: NATIVE_ARRAY [SYSTEM_TYPE]): detachable STRING
 			-- Eiffel name of .NET function `dotnet_name' from type `t' with arguments `args'.
 		require
 			non_void_type: t /= Void
@@ -111,22 +111,24 @@ feature -- Access
 			valid_name: not dotnet_name.is_empty
 			valid_args: args /= Void implies args.count >= 0
 		local
-			ct: CONSUMED_TYPE
+			ct: detachable CONSUMED_TYPE
 			crt: CONSUMED_REFERENCED_TYPE
-			fields: ARRAY [CONSUMED_FIELD]
-			procedures: ARRAY [CONSUMED_PROCEDURE]
-			functions: ARRAY [CONSUMED_FUNCTION]
-			constructors: ARRAY [CONSUMED_CONSTRUCTOR]
+			fields: detachable ARRAYED_LIST [CONSUMED_FIELD]
+			procedures: detachable ARRAYED_LIST [CONSUMED_PROCEDURE]
+			functions: detachable ARRAYED_LIST [CONSUMED_FUNCTION]
+			constructors: detachable ARRAYED_LIST [CONSUMED_CONSTRUCTOR]
 			found: BOOLEAN
 			i, j, count: INTEGER
-			ca: CONSUMED_ASSEMBLY
+			ca: detachable CONSUMED_ASSEMBLY
 			cargs: ARRAY [CONSUMED_ARGUMENT]
-			am: ARRAY [CONSUMED_ASSEMBLY]
+			am: detachable ARRAYED_LIST [CONSUMED_ASSEMBLY]
 		do
 			if is_type_in_cache (t) then
 				ct := consumed_type (t)
 			end
-			ca := consumed_assembly_from_path (t.assembly.location)
+			if attached t.assembly as l_assembly and then attached l_assembly.location as l_ass_location then
+				ca := consumed_assembly_from_path (l_ass_location)
+			end
 			if ca /= Void then
 				am := assembly_mapping_array (ca)
 			end
@@ -140,7 +142,7 @@ feature -- Access
 						until
 							i > count or found
 						loop
-							cargs := constructors.item (i).arguments
+							cargs := constructors.i_th (i).arguments
 							if cargs.count = args.count then
 								from
 									j := 1
@@ -150,12 +152,14 @@ feature -- Access
 								loop
 									crt := cargs.item (j).type
 									found := crt.name.to_cil.equals (args.item (j - 1).full_name) and then
-										am.item (crt.assembly_id).is_equal (consumed_assembly_from_path (args.item (j - 1).assembly.location))
+										attached args.item (j - 1).assembly as l_assembly and then
+										attached l_assembly.location as l_ass_location and then
+										(am.i_th (crt.assembly_id) ~ consumed_assembly_from_path (l_ass_location))
 									j := j + 1
 								end
 							end
 							if found then
-								Result := constructors.item (i).eiffel_name
+								Result := constructors.i_th (i).eiffel_name
 							end
 							i := i + 1
 						end
@@ -168,8 +172,8 @@ feature -- Access
 						until
 							i > functions.count or found
 						loop
-							if functions.item (i).dotnet_name.is_equal (dotnet_name) then
-								cargs := functions.item (i).arguments
+							if functions.i_th (i).dotnet_name.is_equal (dotnet_name) then
+								cargs := functions.i_th (i).arguments
 								if cargs.count = args.count then
 									from
 										j := 1
@@ -179,13 +183,15 @@ feature -- Access
 									loop
 										crt := cargs.item (j).type
 										found := crt.name.to_cil.equals (args.item (j - 1).full_name) and then
-											am.item (crt.assembly_id).is_equal (consumed_assembly_from_path (args.item (j - 1).assembly.location))
+											attached args.item (j - 1).assembly as l_assembly and then
+											attached l_assembly.location as l_ass_location and then
+											(am.i_th (crt.assembly_id) ~ consumed_assembly_from_path (l_ass_location))
 										j := j + 1
 									end
 								end
 							end
 							if found then
-								Result := functions.item (i).eiffel_name
+								Result := functions.i_th (i).eiffel_name
 							end
 							i := i + 1
 						end
@@ -198,8 +204,8 @@ feature -- Access
 							until
 								i > procedures.count or found
 							loop
-								if procedures.item (i).dotnet_name.is_equal (dotnet_name) then
-									cargs := procedures.item (i).arguments
+								if procedures.i_th (i).dotnet_name.is_equal (dotnet_name) then
+									cargs := procedures.i_th (i).arguments
 									if cargs.count = args.count then
 										from
 											j := 1
@@ -209,13 +215,15 @@ feature -- Access
 										loop
 											crt := cargs.item (j).type
 											found := crt.name.to_cil.equals (args.item (j - 1).full_name) and then
-												am.item (crt.assembly_id).is_equal (consumed_assembly_from_path (args.item (j - 1).assembly.location))
+												attached args.item (j - 1).assembly as l_assembly and then
+												attached l_assembly.location as l_ass_location and then
+												(am.i_th (crt.assembly_id) ~ consumed_assembly_from_path (l_ass_location))
 											j := j + 1
 										end
 									end
 								end
 								if found then
-									Result := procedures.item (i).eiffel_name
+									Result := procedures.i_th (i).eiffel_name
 								end
 								i := i + 1
 							end
@@ -230,9 +238,9 @@ feature -- Access
 						until
 							i > fields.count or found
 						loop
-							found := fields.item (i).dotnet_name.is_equal (dotnet_name)
+							found := fields.i_th (i).dotnet_name.is_equal (dotnet_name)
 							if found then
-								Result := fields.item (i).eiffel_name
+								Result := fields.i_th (i).eiffel_name
 							end
 							i := i + 1
 						end
@@ -245,9 +253,9 @@ feature -- Access
 							until
 								i > functions.count or found
 							loop
-								found := functions.item (i).dotnet_name.is_equal (dotnet_name)
+								found := functions.i_th (i).dotnet_name.is_equal (dotnet_name)
 								if found then
-									Result := functions.item (i).eiffel_name
+									Result := functions.i_th (i).eiffel_name
 								end
 								i := i + 1
 							end
@@ -261,9 +269,9 @@ feature -- Access
 							until
 								i > procedures.count or found
 							loop
-								found := procedures.item (i).dotnet_name.is_equal (dotnet_name)
+								found := procedures.i_th (i).dotnet_name.is_equal (dotnet_name)
 								if found then
-									Result := procedures.item (i).eiffel_name
+									Result := procedures.i_th (i).eiffel_name
 								end
 								i := i + 1
 							end
@@ -273,7 +281,7 @@ feature -- Access
 			end
 		end
 
- 	assembly_mapping_array (a_assembly: CONSUMED_ASSEMBLY): ARRAY [CONSUMED_ASSEMBLY]
+ 	assembly_mapping_array (a_assembly: CONSUMED_ASSEMBLY): ARRAYED_LIST [CONSUMED_ASSEMBLY]
  			-- Assembly mapping for assembly `a_assembly'.
  		require
  			non_void_assembly: a_assembly /= Void
@@ -283,22 +291,24 @@ feature -- Access
  		do
  			l_cache := assemblies_mappings_cache
 			l_cache.search (a_assembly.gac_path)
-			if l_cache.found then
-				Result := l_cache.found_item
-			else
-				Result := assembly_mapping_from_consumed_assembly (a_assembly).assemblies
+			if l_cache.found and then attached l_cache.found_item as l_result then
+				Result := l_result
+			elseif attached assembly_mapping_from_consumed_assembly (a_assembly) as l_mapping then
+				Result := l_mapping.assemblies
 				l_cache.put (Result, a_assembly.gac_path)
+			else
+				create Result.make (0)
 			end
   		end
 
-	entity (entities_list: LIST [CONSUMED_ENTITY]; args: NATIVE_ARRAY [SYSTEM_TYPE]): CONSUMED_ENTITY
+	entity (entities_list: LIST [CONSUMED_ENTITY]; args: NATIVE_ARRAY [SYSTEM_TYPE]): detachable CONSUMED_ENTITY
 			-- return `consumed_entity' corresponding to parameters.
 			-- `entities_list' is given by `entities'.
 		require
 			valid_entities: entities_list /= Void
 			valid_args: args /= Void implies args.count >= 0
 		local
-			cargs: ARRAY [CONSUMED_ARGUMENT]
+			cargs: detachable ARRAY [CONSUMED_ARGUMENT]
 			crt: CONSUMED_REFERENCED_TYPE
 			found: BOOLEAN
 			i: INTEGER
@@ -311,7 +321,7 @@ feature -- Access
 				cargs := entities_list.item.arguments
 				if (cargs = Void or else cargs.count = 0) and args = Void then
 					Result := entities_list.item
-				elseif cargs /= Void and args /= Void and then cargs.count = args.count then
+				elseif cargs /= Void and then args /= Void and then cargs.count = args.count then
 					-- compare arguments
 					from
 						i := 1
@@ -339,11 +349,11 @@ feature -- Access
 			non_void_dotnet_feature_name: dotnet_feature_name /= Void
 			not_empty_dotnet_feature_name: not dotnet_feature_name.is_empty
 		local
-			ct: CONSUMED_TYPE
-			fields: ARRAY [CONSUMED_FIELD]
-			procedures: ARRAY [CONSUMED_PROCEDURE]
-			functions: ARRAY [CONSUMED_FUNCTION]
-			constructors: ARRAY [CONSUMED_CONSTRUCTOR]
+			ct: detachable CONSUMED_TYPE
+			fields: detachable ARRAYED_LIST [CONSUMED_FIELD]
+			procedures: detachable ARRAYED_LIST [CONSUMED_PROCEDURE]
+			functions: detachable ARRAYED_LIST [CONSUMED_FUNCTION]
+			constructors: detachable ARRAYED_LIST [CONSUMED_CONSTRUCTOR]
 			i: INTEGER
 			l_cache: like types_cache
 		do
@@ -368,7 +378,7 @@ feature -- Access
 						until
 							i > constructors.count
 						loop
-							Result.extend (constructors.item (i))
+							Result.extend (constructors.i_th (i))
 							i := i + 1
 						end
 					end
@@ -380,8 +390,8 @@ feature -- Access
 						until
 							i > functions.count
 						loop
-							if functions.item (i).dotnet_name.is_equal (dotnet_feature_name) then
-								Result.extend (functions.item (i))
+							if functions.i_th (i).dotnet_name.is_equal (dotnet_feature_name) then
+								Result.extend (functions.i_th (i))
 							end
 							i := i + 1
 						end
@@ -394,8 +404,8 @@ feature -- Access
 						until
 							i > procedures.count
 						loop
-							if procedures.item (i).dotnet_name.is_equal (dotnet_feature_name) then
-								Result.extend (procedures.item (i))
+							if procedures.i_th (i).dotnet_name.is_equal (dotnet_feature_name) then
+								Result.extend (procedures.i_th (i))
 							end
 							i := i + 1
 						end
@@ -408,8 +418,8 @@ feature -- Access
 						until
 							i > fields.count
 						loop
-							if fields.item (i).dotnet_name.is_equal (dotnet_feature_name) then
-								Result.extend (fields.item (i))
+							if fields.i_th (i).dotnet_name.is_equal (dotnet_feature_name) then
+								Result.extend (fields.i_th (i))
 							end
 							i := i + 1
 						end
@@ -438,7 +448,7 @@ feature {NONE} -- Implementation
 
 	constructor_name: STRING = ".ctor"
 
-	assemblies_mappings_cache: CACHE [ARRAY [CONSUMED_ASSEMBLY], STRING]
+	assemblies_mappings_cache: CACHE [ARRAYED_LIST [CONSUMED_ASSEMBLY], STRING]
 			-- Cache for assemblies ids mappings
 		once
 			create Result.make (max_cache_items)

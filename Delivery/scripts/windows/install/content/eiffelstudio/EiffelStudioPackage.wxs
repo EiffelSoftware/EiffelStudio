@@ -39,8 +39,16 @@
 				</RegistryKey>
 			</Component>
 			<!-- Registry settings for .NET consumer -->
-			<Component Id="Comp.studio_consumer" Guid="21889690-D448-4CD6-AA7C-9F914815CD33" Win64="$(var.IsWin64)">
-				<RegistryKey Id="Reg.clsid" Root="HKCR" Key="CLSID\{E1FFE1AC-C5BD-492B-924A-8DBC9D2112F5}" Action="createAndRemoveOnUninstall">
+			<Component Id="Comp.studio_consumer" Guid="21889690-D448-4CD6-AA7C-9F914815CD33" Win64="$(var.IsWin64)">a
+				<RegistryKey Id="Reg.CCManager" Root="HKCR" Key="EiffelSoftware.MetadataConsumer.Interop.COM_CACHE_MANAGER" Action="createAndRemoveOnUninstall">
+					<RegistryValue Id="RegVal.CCManager" Value="EiffelSoftware.MetadataConsumer.Interop.COM_CACHE_MANAGER" Type="string">
+					</RegistryValue>
+				</RegistryKey>
+				<RegistryKey Id="Reg.CCManager.clsid" Root="HKCR" Key="EiffelSoftware.MetadataConsumer.Interop.COM_CACHE_MANAGER\CLSID" Action="createAndRemoveOnUninstall">
+					<RegistryValue Id="RegVal.CCManager.clsid" Value="{E1FFE1AC-C88F-4CD5-BBCB-1B1B82308654}" Type="string">
+					</RegistryValue>
+				</RegistryKey>
+				<RegistryKey Id="Reg.clsid" Root="HKCR" Key="CLSID\{E1FFE1AC-C88F-4CD5-BBCB-1B1B82308654}" Action="createAndRemoveOnUninstall">
 					<RegistryValue Id="RegVal.clsid.default" Value="EiffelSoftware.MetadataConsumer.Interop.COM_CACHE_MANAGER" Type="string"/>
 					<RegistryKey Id="Reg.clsid.1" Key="Implemented Categories\{62C8FE65-4EBB-45e7-B440-6E39B2CDBF29}" Action="createAndRemoveOnUninstall" />
 					<RegistryKey Id="Reg.clsid.2" Key="InprocServer32" Action="createAndRemoveOnUninstall" >

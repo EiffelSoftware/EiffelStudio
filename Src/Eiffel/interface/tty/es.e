@@ -617,6 +617,7 @@ feature -- Update
 			ewb_senders: EWB_SENDERS
 			ewb_callees: EWB_CALLEES
 			l_arg: STRING
+			l_at_args: LINKED_LIST [STRING]
 		do
 			filter_name := ""
 			option := argument (current_option);
@@ -1226,7 +1227,17 @@ feature -- Update
 			elseif option.is_equal ("-compat") then
 					-- This option enables the default set of options of 6.3 and earlier if not specified in the ECF file.
 				set_is_63_compatible (True)
-
+			elseif option.is_equal ("-auto_test") then
+				create l_at_args.make
+				from
+					current_option := current_option + 1
+				until
+					current_option > argument_count
+				loop
+					l_at_args.force (argument (current_option))
+					current_option := current_option + 1
+				end
+				create {EWB_AUTO_TEST} command.make_with_arguments (l_at_args)
 			elseif is_eiffel_class_file_name (option) then
 					-- This option is only valid if no other config options are set
 				if config_file_name = Void and target_name = Void and old_ace_file = Void and old_project_file = Void then

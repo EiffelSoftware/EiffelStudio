@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 			l_parser.execute (agent start (l_parser))
 			if not l_parser.is_successful then
 				(create {EXCEPTIONS}).die (1)
-			elseif not error_handler.successful then
+			elseif not error_handler.is_successful then
 				(create {EXCEPTIONS}).die (2)
 			end
 		end
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			-- Application start
 		require
 			a_parser_attached: a_parser /= Void
-			a_parser_successful: a_parser.is_successful
+			a_parser_is_successful: a_parser.is_successful
 		local
 			l_reader: REG_FILE_READER
 			l_reg_files: HASH_TABLE [REG_FILE, STRING]
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 			l_reg_files := l_reader.load_reg_files (a_parser.reg_files)
 			l_files := l_reg_files.linear_representation
 
-			if l_eh.successful then
+			if l_eh.is_successful then
 				l_files.prune_all (Void)
 				if not l_files.is_empty then
 					create l_generator.make (error_handler)
@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 					end
 					save_xml_document (l_document, l_output_file_name)
 				else
-					l_eh.add_error (create {RWEF}.make, False)
+					l_eh.add_error (create {RWEF}.make (Void), False)
 				end
 			end
 
@@ -73,7 +73,7 @@ feature {NONE} -- Initialization
 				l_eh.trace_warnings (l_printer)
 				l_traced := True
 			end
-			if not l_eh.successful then
+			if not l_eh.has_errors then
 				l_eh.trace_errors (l_printer)
 				l_traced := True
 			else
@@ -146,7 +146,7 @@ feature {NONE} -- Internal implementation cache
 			-- Note: Do not use directly.
 
 ;note
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -159,22 +159,22 @@ feature {NONE} -- Internal implementation cache
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

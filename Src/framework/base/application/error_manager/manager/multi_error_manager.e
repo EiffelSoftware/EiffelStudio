@@ -15,7 +15,7 @@ inherit
 			set_last_error as add_error
 		redefine
 			make,
-			successful,
+			is_successful,
 			pop_error,
 			add_error
 		end
@@ -34,46 +34,67 @@ feature {NONE} -- Implementation
 
 feature -- Access
 
-	errors: DYNAMIC_LIST [ERROR_ERROR_INFO]
-			-- List of errors
+	errors: LINEAR [ERROR_ERROR_INFO]
+			-- List of errors.
+		require
+			has_errors: has_errors
 		do
 			Result := internal_errors
 		ensure
 			result_not_void: result /= Void
 		end
 
-	successful: BOOLEAN
-			-- Have no errors been raised, indicating a successful result
+feature -- Status report
+
+	is_successful: BOOLEAN
+			-- <Precursor>
 		do
-			Result := errors.is_empty
+			Result := not has_errors
+		ensure then
+			not_has_errors: not has_errors
+		end
+
+	has_errors: BOOLEAN
+			-- Does error manager have any errors to report?
+		do
+			Result := not errors.is_empty
 		end
 
 feature -- Query
 
 	pop_error: ERROR_ERROR_INFO
-			-- Retrieves last error and clears `last_error'
+			-- <Precursor>
+		local
+			l_errors: like internal_errors
+			l_error: like last_error
 		do
-			Result := last_error
-			internal_errors.finish
-			internal_errors.remove
-			if not internal_errors.is_empty then
-				last_error := internal_errors.last
+			l_error := last_error
+			check l_error_attached: l_error /= Void end
+			Result := l_error
+
+			l_errors := internal_errors
+			l_errors.finish
+			l_errors.remove
+			if not l_errors.is_empty then
+				last_error := l_errors.last
 			else
 				last_error := Void
 			end
+		ensure then
+			internal_errors_decremented: internal_errors.count = old internal_errors.count - 1
 		end
 
 feature -- Status Setting
 
-	add_error (a_err: ERROR_ERROR_INFO; a_raise: BOOLEAN)
-			-- Sets last error and will raise an exception if `a_raise' is `True'
+	add_error (a_error: ERROR_ERROR_INFO; a_raise: BOOLEAN)
+			-- <Precursor>
 		do
-			internal_add_error (a_err)
+			internal_add_error (a_error)
 			if a_raise then
 				raise_on_error
 			end
 		ensure then
-			not_successful: not successful
+			not_is_successful: not is_successful
 		end
 
 feature -- Basic Operations
@@ -85,9 +106,13 @@ feature -- Basic Operations
 		require
 			a_printer_attached: a_printer /= Void
 			not_successful: not successful
+		local
+			l_error: like pop_error
 		do
 			from until successful loop
-				a_printer.print_error (pop_error)
+				l_error := pop_error
+				check l_error_attached: l_error /= Void end
+				a_printer.print_error (l_error)
 			end
 		end
 
@@ -116,8 +141,8 @@ invariant
 	internal_errors_attached: internal_errors /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
@@ -129,22 +154,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class {MULTI_ERROR_MANAGER}

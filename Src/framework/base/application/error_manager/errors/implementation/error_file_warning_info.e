@@ -16,7 +16,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_with_context (a_file_name: like file_name; a_line_number: like line_number; a_context: like context)
+	make (a_file_name: like file_name; a_line_number: like line_number; a_context: like context)
 			-- Initializes a file warning with a file name and line number
 			--
 			-- `a_file_name': The path to the file where the warning is present.

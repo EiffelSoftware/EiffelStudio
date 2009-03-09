@@ -41,7 +41,7 @@ feature {NONE} -- Creation
 
 feature -- Comparison
 
-	same_breakpoint_key (other: like Current): BOOLEAN
+	frozen same_breakpoint_key (other: BREAKPOINT_KEY): BOOLEAN
 			-- Is `other' equal to `Current'?
 			-- `other' equals to `Current' if they represent
 			-- the same physical breakpoint, in other words they

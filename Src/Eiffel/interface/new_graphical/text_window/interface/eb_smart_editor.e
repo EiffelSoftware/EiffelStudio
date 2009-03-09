@@ -878,7 +878,7 @@ feature {NONE} -- Brace matching
 			l_invalidated_lines: ARRAYED_SET [EDITOR_LINE]
 			l_last_matches: attached like last_highlighted_matched_braces
 			l_invalidated_line: detachable EDITOR_LINE
-			l_action: PROCEDURE [ANY, TUPLE]
+			l_action: PROCEDURE [EB_CLICKABLE_EDITOR, TUPLE]
 		do
 			if text_is_fully_loaded then
 				create l_invalidated_lines.make (2)

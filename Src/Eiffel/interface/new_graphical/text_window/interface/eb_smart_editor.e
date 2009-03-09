@@ -870,7 +870,6 @@ feature {NONE} -- Brace matching
 		require
 			is_interface_usable: is_interface_usable
 			not_is_empty: not is_empty
-			text_is_fully_loaded: text_is_fully_loaded
 		local
 			l_utils: attached like brace_matcher
 			l_token: attached EDITOR_TOKEN
@@ -879,59 +878,69 @@ feature {NONE} -- Brace matching
 			l_invalidated_lines: ARRAYED_SET [EDITOR_LINE]
 			l_last_matches: attached like last_highlighted_matched_braces
 			l_invalidated_line: detachable EDITOR_LINE
+			l_action: PROCEDURE [ANY, TUPLE]
 		do
-			create l_invalidated_lines.make (2)
+			if text_is_fully_loaded then
+				create l_invalidated_lines.make (2)
 
-				-- Remove last matches
-			l_last_matches := last_highlighted_matched_braces
-			from l_last_matches.start until l_last_matches.after loop
-				l_brace ?= l_last_matches.item
-				if l_brace /= Void then
-					l_brace.token.set_highlighted (False)
-					if not l_invalidated_lines.has (l_brace.line) then
-						l_invalidated_lines.extend (l_brace.line)
+					-- Remove last matches
+				l_last_matches := last_highlighted_matched_braces
+				from l_last_matches.start until l_last_matches.after loop
+					l_brace ?= l_last_matches.item
+					if l_brace /= Void then
+						l_brace.token.set_highlighted (False)
+						if not l_invalidated_lines.has (l_brace.line) then
+							l_invalidated_lines.extend (l_brace.line)
+						end
 					end
+					l_last_matches.remove
 				end
-				l_last_matches.remove
-			end
 
-			if not has_selection and then preferences.editor_data.highlight_matching_braces then
-					-- Locate applicable tokens
-				l_brace := brace_match_caret_token
-				if l_brace /= Void then
-					l_token := l_brace.token
-					l_line := l_brace.line
+				if not has_selection and then preferences.editor_data.highlight_matching_braces then
+						-- Locate applicable tokens
+					l_brace := brace_match_caret_token
+					if l_brace /= Void then
+						l_token := l_brace.token
+						l_line := l_brace.line
 
-						-- Find matching brace tokens.
-					l_utils := brace_matcher
-					if l_utils.is_brace (l_token) and then l_line.has_token (l_token) then
-						l_brace := l_utils.match_brace (l_token, l_line, Void)
-						if l_brace /= Void then
-								-- There was a match.
-							l_token.set_highlighted (True)
-							if not l_invalidated_lines.has (l_line) then
-								l_invalidated_lines.extend (l_line)
+							-- Find matching brace tokens.
+						l_utils := brace_matcher
+						if l_utils.is_brace (l_token) and then l_line.has_token (l_token) then
+							l_brace := l_utils.match_brace (l_token, l_line, Void)
+							if l_brace /= Void then
+									-- There was a match.
+								l_token.set_highlighted (True)
+								if not l_invalidated_lines.has (l_line) then
+									l_invalidated_lines.extend (l_line)
+								end
+								l_last_matches.extend ([l_token, l_line])
+
+								l_brace.token.set_highlighted (True)
+								if not l_invalidated_lines.has (l_brace.line) then
+									l_invalidated_lines.extend (l_brace.line)
+								end
+								l_last_matches.extend ([l_brace.token, l_brace.line])
 							end
-							l_last_matches.extend ([l_token, l_line])
-
-							l_brace.token.set_highlighted (True)
-							if not l_invalidated_lines.has (l_brace.line) then
-								l_invalidated_lines.extend (l_brace.line)
-							end
-							l_last_matches.extend ([l_brace.token, l_brace.line])
 						end
 					end
 				end
-			end
 
-			if a_update and then not l_invalidated_lines.is_empty then
-					-- Perform line redraws
-				from l_invalidated_lines.start until l_invalidated_lines.after loop
-					l_invalidated_line := l_invalidated_lines.item
-					if l_invalidated_line.is_valid then
-						invalidate_line (l_invalidated_line.index, True)
+				if a_update and then not l_invalidated_lines.is_empty then
+						-- Perform line redraws
+					from l_invalidated_lines.start until l_invalidated_lines.after loop
+						l_invalidated_line := l_invalidated_lines.item
+						if l_invalidated_line.is_valid then
+							invalidate_line (l_invalidated_line.index, True)
+						end
+						l_invalidated_lines.forth
 					end
-					l_invalidated_lines.forth
+				end
+			else
+					-- We are not ready to hightlight braces just yet, deferred until the text
+					-- has been fully loaded.
+				l_action := agent highlight_matched_braces (a_update)
+				if not after_reading_text_actions.has (l_action) then
+					after_reading_text_actions.extend (l_action)
 				end
 			end
 		end

@@ -129,6 +129,7 @@ feature -- Subscription
 		do
 				-- Remove subscriber
 			l_subscribers :=  subscribers
+			l_subscribers.start
 			l_subscribers.search (a_action)
 			if not l_subscribers.after then
 				l_subscribers.remove
@@ -139,6 +140,7 @@ feature -- Subscription
 				-- Attempt to remove any single subscribers
 			l_actions := suicide_actions
 			if l_actions.has (a_action) then
+				l_actions.start
 				l_actions.search (a_action)
 				l_actions.remove
 			end

@@ -1556,11 +1556,6 @@ rt_private void internal_marking(MARKER marking, int moving)
 #endif /* EIF_THREADS */
 
 #if ! defined CUSTOM || defined NEED_OBJECT_ID_H
-#ifdef CONCURRENT_EIFFEL
-	/* The separate_object_id_set records object referenced by other processors */
-	mark_simple_stack(&separate_object_id_set, marking, moving);
-#endif
-
 	/* process overflow_stack_set */
 	mark_overflow_stack(marking, moving);
 

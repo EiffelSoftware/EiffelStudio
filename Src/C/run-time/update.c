@@ -312,13 +312,8 @@ rt_public void update(char ignore_updt, char *argv0)
 	egc_prof_enabled = wint32();
 
 		/* Allocation of variable `esystem' */
-#if CONCURRENT_EIFFEL
-	SAFE_ALLOC(esystem, struct cnode, count + 1);
-	memcpy (esystem, egc_fsystem, (scount+1) * sizeof(struct cnode));
-#else
 	SAFE_ALLOC(esystem, struct cnode, count);
 	memcpy (esystem, egc_fsystem, scount * sizeof(struct cnode));
-#endif
 
 		/* Allocation of the variable `ecall' */
 	SAFE_ALLOC(ecall, int32 *, count);

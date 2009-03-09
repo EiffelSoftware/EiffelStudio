@@ -63,43 +63,32 @@ feature -- Basic Operations
 
 feature {NONE} -- Output
 
-	print_name (a_err: ERROR_ERROR_INFO)
-			-- Prints `a_err' name
+	print_name (a_error: ERROR_ERROR_INFO)
+			-- Prints `a_error' name
 		require
-			a_err_attached: a_err /= Void
+			a_error_attached: a_error /= Void
 		local
-			l_file_err: ERROR_FILE_ERROR_INFO
-			l_file_warn: ERROR_FILE_WARNING_INFO
-
+			l_file_name: detachable STRING
+			l_ln: INTEGER
 			l_sep: CHARACTER
 			l_cwd: STRING
-			l_file_name: STRING
 			l_path: STRING
-			l_ln: INTEGER
-
-			l_name: STRING
+			l_name: detachable STRING
 		do
 			l_ln := -1
-			l_file_err ?= a_err
-			if l_file_err /= Void then
-				l_file_name := l_file_err.file_name
-				l_ln := l_file_err.line_number
+			if attached {ERROR_FILE_ERROR_INFO} a_error as l_file_error then
+				l_file_name := l_file_error.file_name
+				l_ln := l_file_error.line_number
+			elseif attached {ERROR_FILE_WARNING_INFO} a_error as l_file_warning then
+				l_file_name := l_file_warning.file_name
+				l_ln := l_file_warning.line_number
 			else
-				l_file_warn ?= a_err
-				if l_file_warn /= Void then
-					l_file_name := l_file_warn.file_name
-					l_ln := l_file_warn.line_number
-				else
-					l_name := app_name
-				end
+				l_name := app_name
 			end
 
 			if l_file_name /= Void and then not l_file_name.is_empty then
-				check
-					l_ln_positive: l_ln >= 0
-				end
-
-				l_sep := (create {OPERATING_ENVIRONMENT}).directory_separator
+				check l_ln_positive: l_ln >= 0 end
+				l_sep := operating_environment.directory_separator
 
 					-- Create relative path	for file names	
 				l_cwd := (create {EXECUTION_ENVIRONMENT}).current_working_directory.as_lower
@@ -124,7 +113,7 @@ feature {NONE} -- Output
 			end
 
 			check
-				l_name_not_void: l_name /= Void
+				l_name_attached: l_name /= Void
 				not_l_name_is_empty: not l_name.is_empty
 			end
 			io.error.put_string (l_name)
@@ -173,8 +162,8 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
@@ -186,22 +175,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class {ERROR_CUI_PRINTER}

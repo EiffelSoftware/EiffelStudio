@@ -8522,8 +8522,15 @@ feature {NONE} -- Agents
 
 	compute_feature_fake_inline_agent (a_rc: ROUTINE_CREATION_AS; a_feature: FEATURE_I; a_target: BYTE_NODE;
 								a_target_type: TYPE_A; a_agent_type: TYPE_A)
+		local
+			l_result_type: TYPE_A
 		do
-			compute_fake_inline_agent (a_rc, a_feature.access (a_feature.type, True), a_feature.type, a_target,
+				-- We need to adapt type of agent to its context, as otherwise we have the wrong signature
+				-- See eweasel test#agent010 where the FORMAL_A was not translated into CL_TYPE_A and we got
+				-- a compilation crash at degree 2; as well as test#agent004.
+			l_result_type := a_feature.type
+			l_result_type := l_result_type.instantiation_in (a_target_type.as_implicitly_detachable, a_rc.class_id)
+			compute_fake_inline_agent (a_rc, a_feature.access (l_result_type, True), l_result_type, a_target,
 									a_target_type, a_agent_type, a_feature)
 		end
 
@@ -8571,7 +8578,6 @@ feature {NONE} -- Agents
 			l_rout_creation: ROUTINE_CREATION_B
 			l_depend_unit: DEPEND_UNIT
 		do
-
 			l_target_closed := not (a_rc.target /= Void and then a_rc.target.is_open)
 			l_cur_class := context.current_class.eiffel_class_c
 			create l_func

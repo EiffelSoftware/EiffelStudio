@@ -184,7 +184,7 @@ feature {NONE} -- Formatting
 			l_start_count: INTEGER
 			l_start_count_set: BOOLEAN
 			l_lines: LIST [detachable like contract]
-			l_line: like contract
+			l_line: STRING_32
 			l_char_count: INTEGER
 			i, l_count: INTEGER
 		do

@@ -842,15 +842,20 @@ feature -- Directories (top-level user)
 				if {PLATFORM}.is_windows then
 					create l_dir.make (20)
 					l_dir.append (product_version_name.as_lower)
+					if is_workbench then
+						l_dir.append (wkbench_suffix)
+					end
 				else
-					create l_dir.make (20)
-					l_dir.append (".es")
+					l_dir := ".es"
+					if is_workbench then
+						l_dir.append (wkbench_suffix)
+					end
+					l_dir_name.extend (l_dir)
+					safe_create_dir (l_dir_name.string)
+
+					create l_dir.make (5)
 					l_dir.append_integer ({EIFFEL_ENVIRONMENT_CONSTANTS}.major_version)
 					l_dir.append_integer ({EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version)
-				end
-
-				if is_workbench then
-					l_dir.append (wkbench_suffix)
 				end
 				l_dir_name.extend (l_dir)
 			end

@@ -158,7 +158,7 @@ create
 %type <REQUIRE_AS>			Precondition
 %type <REVERSE_AS>			Reverse_assignment
 %type <ROUT_BODY_AS>		Routine_body
-%type <ROUTINE_AS>			Routine Optional_attribute_or_routine
+%type <ROUTINE_AS>			Routine
 %type <ROUTINE_CREATION_AS>	Agent_call
 %type <STRING_AS>			Manifest_string Non_empty_string Default_manifest_string Typed_manifest_string Infix_operator Prefix_operator Alias_name
 %type <TAGGED_AS>			Assertion_clause
@@ -2441,7 +2441,7 @@ Creation_clause:
 	;
 
 Agent_call: 
-		TE_AGENT Optional_formal_arguments Type_mark {add_feature_frame} Optional_attribute_or_routine {remove_feature_frame} Delayed_actuals
+		TE_AGENT Optional_formal_arguments Type_mark {add_feature_frame} Routine {remove_feature_frame} Delayed_actuals
 		{
 			if $3 /= Void then
 				last_type := $3.second
@@ -2486,13 +2486,6 @@ Type_mark:
 	|	TE_COLON Type
 		{
 			create $$.make ($1, $2)
-		}
-	;
-
-Optional_attribute_or_routine:
-		Routine
-		{
-			$$ := $1
 		}
 	;
 

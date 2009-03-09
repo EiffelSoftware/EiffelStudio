@@ -21,10 +21,6 @@
 			<option namespace="EiffelSoftware.Library">
 			</option>
 		</library>
-		<library name="error_manager" location="$EIFFEL_SRC\framework\base\application\error_manager\error_manager.ecf">
-			<option namespace="EiffelSoftware.Framework">
-			</option>
-		</library>
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
 		<assembly name="system" location="$ISE_DOTNET_FRAMEWORK\System.dll"/>
 		<assembly name="system.xml" location="$ISE_DOTNET_FRAMEWORK\System.XML.dll"/>

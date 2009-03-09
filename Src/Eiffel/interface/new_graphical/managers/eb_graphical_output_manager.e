@@ -426,38 +426,8 @@ feature {NONE} -- Text formatter
 			end
 		end
 
-	process_breakpoint (a_feature: E_FEATURE; a_index: INTEGER)
-			-- <Precursor>
-		do
-			from
-				managed_output_tools.start
-			until
-				managed_output_tools.after
-			loop
-				if managed_output_tools.item.is_general then
-					managed_output_tools.item.text_area.text_displayed.process_padded
-				end
-				managed_output_tools.forth
-			end
-		end
-
-	process_breakpoint_index (a_feature: E_FEATURE; a_index: INTEGER; a_cond: BOOLEAN)
-			-- <Precursor>
-		do
-			from
-				managed_output_tools.start
-			until
-				managed_output_tools.after
-			loop
-				if managed_output_tools.item.is_general then
-					managed_output_tools.item.text_area.text_displayed.process_padded
-				end
-				managed_output_tools.forth
-			end
-		end
-
 	process_padded
-			-- <Precursor>
+			-- Process padded item at start of non breakpoint line.
 		do
 			from
 				managed_output_tools.start

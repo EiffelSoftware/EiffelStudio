@@ -98,8 +98,6 @@ feature {NONE} -- Initialization
 			vp: EV_VIEWPORT
 			f: EV_FRAME
 			cel: EV_CELL
-			l_hbox: EV_HORIZONTAL_BOX
-			l_pixmap: EV_PIXMAP
 		do
 				-- Create all widgets.
 			create widget
@@ -125,18 +123,9 @@ feature {NONE} -- Initialization
 			coordinate_label.set_tooltip (Interface_names.e_Cursor_position)
 			debugger_icon.clear
 
-				-- Organize widgets.
-			l_pixmap := pixmaps.icon_pixmaps.tool_output_icon
-
-			create l_hbox
-			l_hbox.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
-			l_hbox.extend (l_pixmap)
-			l_hbox.disable_item_expand (l_pixmap)
-			l_hbox.extend (label)
-
 			create vp
-			vp.extend (l_hbox)
-			vp.set_offset (-1, -(16 - l_hbox.height) // 2)
+			vp.extend (label)
+			vp.set_offset (-1, -(16 - label.height) // 2)
 
 			create f
 			f.set_style ({EV_FRAME_CONSTANTS}.Ev_frame_lowered)

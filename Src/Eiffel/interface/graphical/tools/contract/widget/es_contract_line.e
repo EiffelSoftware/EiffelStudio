@@ -70,7 +70,7 @@ feature -- Access
 	tag: attached STRING_32 assign set_tag
 			-- Contract tag
 
-	contract: attached STRING_32 assign set_contract
+	contract: STRING_32 assign set_contract
 			-- Contract text
 
 	context: attached ES_CONTRACT_EDITOR_CONTEXT [CLASSI_STONE]
@@ -107,7 +107,7 @@ feature -- Element change
 			tag_set: tag.is_equal (a_tag)
 		end
 
-	set_contract (a_contract: attached like contract)
+	set_contract (a_contract: like contract)
 			-- Set the contract text
 		require
 			not_a_contract_is_empty: not a_contract.is_empty
@@ -184,7 +184,7 @@ feature {NONE} -- Formatting
 			l_start_count: INTEGER
 			l_start_count_set: BOOLEAN
 			l_lines: LIST [detachable like contract]
-			l_line: attached like contract
+			l_line: like contract
 			l_char_count: INTEGER
 			i, l_count: INTEGER
 		do
@@ -260,7 +260,7 @@ invariant
 	not_is_tagless: not tag.is_empty implies not is_tagless
 
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -273,22 +273,22 @@ invariant
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

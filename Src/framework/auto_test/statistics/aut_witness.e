@@ -197,7 +197,7 @@ feature {NONE} -- Implementation
 							classifications.force_last (classification)
 						end
 					else
-						if not normal_response.exception.is_test_exceptional then
+						if not normal_response.exception.is_test_invalid then
 							is_fail := True
 							-- TODO: if the exception trace is bigger than one, we should create a classification
 							-- for each routine that failed, not only for the bottom most

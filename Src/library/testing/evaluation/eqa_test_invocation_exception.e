@@ -134,9 +134,9 @@ feature {NONE} -- Initialization
 
 				if l_found then
 					if code = precondition then
-						is_test_exceptional := l_depth <= 2
+						is_test_invalid := l_depth <= 2
 					else
-						is_test_exceptional := l_depth <= 1
+						is_test_invalid := l_depth <= 1
 					end
 					if l_prev then
 							-- Note: special case where the last frame was a feature of the test class
@@ -144,7 +144,7 @@ feature {NONE} -- Initialization
 					end
 					is_trace_valid := True
 				else
-					is_test_exceptional := True
+					is_test_invalid := True
 					l_last := a_trace.count
 				end
 			else
@@ -198,8 +198,11 @@ feature -- Status report
 			-- Note: is provided class/feature name in creation procedure was not found in exception trace,
 			--       `trace' will contain the original exception trace and `is_trace_valid' will be False.
 
-	is_test_exceptional: BOOLEAN
-			-- Is recipient of exception a feature of the test class?
+	is_test_invalid: BOOLEAN
+			-- Does this exception show that the associated test is invalid.
+			-- An invalid test happens when the system is not brought into a state
+			-- suitable to test the feature under test. For example, if the precondition
+			-- of the feature under test is not satisfied.
 
 feature {NONE} -- Implementation
 

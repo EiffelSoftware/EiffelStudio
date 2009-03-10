@@ -185,12 +185,12 @@ feature -- Status report
 			if is_setup_clean then
 				l_response := test_response
 				check l_response /= Void end
-				Result := not l_response.is_exceptional or else not l_response.exception.is_test_exceptional
+				Result := not l_response.is_exceptional or else not l_response.exception.is_test_invalid
 			end
 		ensure
 			result_implies_clean_setup: Result implies is_setup_clean
 			definition: Result implies (attached test_response as l_tr and then
-				(not l_tr.is_exceptional or else l_tr.exception.is_test_exceptional))
+				(not l_tr.is_exceptional or else l_tr.exception.is_test_invalid))
 		end
 
 	is_teardown_clean: BOOLEAN

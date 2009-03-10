@@ -386,7 +386,7 @@ feature -- Command
 			l_factory: EW_EQA_TEST_FACTORY
 			l_dest_directory: STRING
 		do
-			if {l_inst: EW_COPY_INST} test_command_table.item (Copy_raw_keyword) then
+			if attached {EW_COPY_INST} test_command_table.item (Copy_raw_keyword) as l_inst then
 				create l_factory
 				l_dest_directory := l_factory.environment.substitute (a_dest_directory)
 				l_inst.inst_initialize_with (a_source_file, l_dest_directory, a_dest_file)
@@ -410,7 +410,7 @@ feature -- Command
 		local
 			l_factory: EW_EQA_TEST_FACTORY
 		do
-			if {l_inst: EW_COPY_INST} test_command_table.item (Copy_sub_keyword) then
+			if attached {EW_COPY_INST} test_command_table.item (Copy_sub_keyword) as l_inst then
 				create l_factory
 				l_inst.inst_initialize_with (a_source_file, a_dest_directory, a_dest_file)
 				init_command (l_inst, "copy_sub", "")

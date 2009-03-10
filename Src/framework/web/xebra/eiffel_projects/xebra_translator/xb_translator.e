@@ -107,7 +107,7 @@ feature -- Processing
 		do
 				create webapp_generator.make (name, output_path)
 				output_elements := preprocessor.parse_string (a_string)
-				create root_element.make_with_elements (name, name + "_controller", output_elements)
+				create root_element.make_with_elements (name, name + "_controller", True, output_elements) -- calculate last argument (stateful)
 				webapp_generator.put_servlet (root_element)
 				webapp_generator.generate
 		end

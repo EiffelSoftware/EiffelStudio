@@ -197,19 +197,16 @@ feature {NONE} -- Implementation
 							classifications.force_last (classification)
 						end
 					else
-						if
-							(normal_response.exception.code = Precondition and normal_response.exception.trace_depth = 1) or else
-							normal_response.exception.is_invariant_violation_on_feature_entry
-						then
-							is_invalid := True
+						if not normal_response.exception.is_test_exceptional then
+							is_fail := True
+							-- TODO: if the exception trace is bigger than one, we should create a classification
+							-- for each routine that failed, not only for the bottom most
 							if feature_ /= Void then
 								create classification.make (Current, class_, feature_)
 								classifications.force_last (classification)
 							end
 						else
-							is_fail := True
-							-- TODO: if the exception trace is bigger than one, we should create a classification
-							-- for each routine that failed, not only for the bottom most
+							is_invalid := True
 							if feature_ /= Void then
 								create classification.make (Current, class_, feature_)
 								classifications.force_last (classification)

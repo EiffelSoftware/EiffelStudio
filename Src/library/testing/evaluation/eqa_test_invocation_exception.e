@@ -112,7 +112,7 @@ feature {NONE} -- Initialization
 					end
 					parse_frame (a_trace, i)
 					if not l_bp_set then
-						breakpoint_slot := last_breakpoint_slot
+						break_point_slot := last_break_point_slot
 						l_bp_set := True
 					end
 					if attached last_class_name as l_cn then
@@ -149,7 +149,7 @@ feature {NONE} -- Initialization
 				end
 			else
 				parse_frame (a_trace, i)
-				breakpoint_slot := last_breakpoint_slot
+				break_point_slot := last_break_point_slot
 				is_trace_valid := i > 0
 				l_last := a_trace.count
 			end
@@ -174,8 +174,10 @@ feature -- Access
 	trace: READABLE_STRING_8
 			-- Text based representation of the stack trace
 
-	breakpoint_slot: INTEGER
-			--
+	break_point_slot: INTEGER
+			-- Break point slot in exception recipient that triggered exception;
+			-- Note that the number of slots available in a routine may change depending
+			-- on the level of assertion monitoring.
 
 feature {NONE} -- Access: parsing
 
@@ -185,7 +187,7 @@ feature {NONE} -- Access: parsing
 	last_routine_name: detachable like trace
 			-- Routine name last parsed through `parse_frame'
 
-	last_breakpoint_slot: like breakpoint_slot
+	last_break_point_slot: like break_point_slot
 			-- Last breakpoint slot parsed by `is_trace_valid', zero if slot information could not be found.
 
 feature -- Status report
@@ -239,7 +241,7 @@ feature {NONE} -- Implementation
 
 	parse_frame (a_trace: like trace; a_position: INTEGER)
 			-- Parse current frame in stack trace and set `last_class', `last_routine' and
-			-- `last_breakpoint_slot' accordingly.
+			-- `last_break_point_slot' accordingly.
 			--
 			-- `a_trace': Complete stack trace.
 			-- `a_position': Position in `a_trace' where current frame begins.
@@ -254,7 +256,7 @@ feature {NONE} -- Implementation
 		do
 			last_class_name := Void
 			last_routine_name := Void
-			last_breakpoint_slot := 0
+			last_break_point_slot := 0
 			from
 				j := a_position
 				l_count := a_trace.count
@@ -282,7 +284,7 @@ feature {NONE} -- Implementation
 						if l_substring.is_integer then
 							l_bp := l_substring.to_integer
 							if l_bp > 0 then
-								last_breakpoint_slot := l_bp
+								last_break_point_slot := l_bp
 							end
 						end
 						l_done := True
@@ -303,6 +305,7 @@ invariant
 	class_name_attached: class_name /= Void
 	tag_attached: tag_name /= Void
 	trace_attached: trace /= Void
+	exception_break_point_slot_positive: break_point_slot >= 0
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"

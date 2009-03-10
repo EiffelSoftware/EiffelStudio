@@ -65,6 +65,8 @@ test	replace_key_replace_item	table004 tcf pass table
 test	iteration-with-default-key	table005 tcf pass table
 test	infinite-loop-on-removal-then-addition	table006 tcf pass table
 
+test	recursive-delete-with-symlinks	directory001 tcf pass directory
+
 -- EiffelNet test
 test	net-out-of-descriptor	net001 tcf pass net
 

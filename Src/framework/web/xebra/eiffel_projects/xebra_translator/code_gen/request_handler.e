@@ -1,7 +1,10 @@
 note
 	description: "[
 		Handler of the connection with the XEbra-server. Delegates all incoming
-		requests to the appropriate servlet.
+		requests to the appropriate servlet. Caching of sessions and session objects
+		handled as well.
+		A specific handler which inherits from this class is generated to accomodate
+		all the xeb pages of a particular web application.
 	]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -11,9 +14,15 @@ deferred class
 
 feature -- Access
 
-	servlets: TABLE [SERVLET, STRING]
-			-- All the servlets of the web application
-			-- Stored with a key, to be able to retrieve them
+	request_pool: THREAD_POOL_MANAGER [SERVLET_HANDLER]
+			-- A thread pool for the incoming requests from the xebra server
+
+	stateless_servlets: TABLE [STATELESS_SERVLET, STRING]
+			-- All the servlets which do not need a state
+			-- Page id points to the thread pool of servlets
+
+	session_map: TABLE [SESSION, STRING]
+			-- A table which maps a session id on a session
 
 	run
 			-- Starts the web application.
@@ -33,7 +42,7 @@ feature -- Access
         end
 
     process (server_socket: NETWORK_STREAM_SOCKET)
-            -- Receive a message, extend it, and send it back
+            -- Receive a message, handle it, and send it back
         local
             request: REQUEST
         do
@@ -51,9 +60,11 @@ feature -- Processing
 
 	build_request (message: STRING): REQUEST
 			-- Transforms a plain text message into a {REQUEST} object
-			-- for further use in on the page
+			-- for further use in he servlet.
+			-- Session is retrieved and set
 		do
-			create Result.make (extract_web_app_name(message).as_upper + "_SERVLET")
+			-- TODO: Proper session creation, management etc.
+			create Result.make (extract_web_app_name (message).as_upper + "_SERVLET", create {SESSION})
 		end
 
 	extract_web_app_name (message: STRING): STRING
@@ -65,14 +76,28 @@ feature -- Processing
 
 	handle_request (request: REQUEST): RESPONSE
 			-- Routes the request to the appropriate controller
+		local
+			servlet: detachable SERVLET
 		do
-			-- TODO: Check, wether request.get_file is in the table or not
-			--Result := servlets [request.file_identifier].handle_request (request)
-			if attached servlets [request.file_identifier] as servlet then
+			servlet := find_servlet (request)
+			if attached servlet then
 				Result := servlet.handle_request (request)
 			else
 				create Result.make
 				Result.text := "Application not found: %"" + request.file_identifier + "%""
+			end
+		end
+
+	find_servlet (request: REQUEST): detachable SERVLET
+			-- Searches for the servlet requested by `request'
+			-- 1. Stateless servlet?
+			-- 2. Servlet in session?
+			-- 3. If not found := Void
+		do
+			if attached {STATELESS_SERVLET} stateless_servlets [request.file_identifier] as servlet then
+				Result := servlet
+			else
+				Result := request.session.get_servlet
 			end
 		end
 

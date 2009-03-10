@@ -1,31 +1,19 @@
 note
 	description: "[
-		The {REQUEST} object contains all data from a user request.
+		Holds all session data for a client. This includes servlets which are session bound.
 	]"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	REQUEST
-
-create
-	make
+	SESSION
 
 feature -- Access
 
-	file_identifier: STRING
-			-- Identifies the identifier of the requested web application
-
-	session: SESSION
-			-- The session associated with this request
-
-feature -- Initialization
-
-	make (a_file_identifier: STRING; a_session: SESSION)
-			--`a_file_identifier': Identifies the identifier of the requested web application
+	get_servlet: detachable SERVLET
+			-- Returns the current servlet. Might be not available.
 		do
-			file_identifier := a_file_identifier
-			session := a_session
+
 		end
 
 note

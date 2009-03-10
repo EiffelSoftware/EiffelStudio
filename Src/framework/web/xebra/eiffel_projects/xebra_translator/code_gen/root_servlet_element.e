@@ -1,6 +1,6 @@
 note
 	description: "[
-			Element which renders a class that handles 
+			Element which renders a class that handles
 	]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,12 +16,12 @@ create
 
 feature --Initialization
 
-	make_with_elements  (a_name: STRING; a_controller_name: STRING; some_elements: LIST[OUTPUT_ELEMENT])
+	make_with_elements  (a_name: STRING; a_controller_name: STRING; is_stateful: BOOLEAN; some_elements: LIST[OUTPUT_ELEMENT])
 			-- `a_name': The name of the servlet
 			-- `a_controller_name': The name of the controller class
 			-- `some_elements': The elements which should be executed and written to the page
 		do
-			make (a_name, a_controller_name)
+			make (a_name, a_controller_name, stateful)
 			from
 				some_elements.start
 			until
@@ -32,7 +32,7 @@ feature --Initialization
 			end
 		end
 
-	make (a_name: STRING; a_controller_name: STRING)
+	make (a_name: STRING; a_controller_name: STRING; is_stateful: BOOLEAN)
 			-- `a_name': The name of the servlet
 			-- `a_controller_name': The name of the controller class
 		require
@@ -40,10 +40,10 @@ feature --Initialization
 			controller_name_is_valid: not a_controller_name.is_empty
 		do
 			name := a_name + "_SERVLET"
+			stateful := is_stateful
 			controller_name := a_controller_name
 			create {LINKED_LIST [OUTPUT_ELEMENT]} xhtml_elements.make
 			create controller_variable.make (controller_var, a_controller_name)
-			create response_variable.make (response_name, "RESPONSE")
 		end
 
 feature -- Access
@@ -59,19 +59,19 @@ feature -- Access
 			-- Including controller calls and plain code
 
 	controller_variable: VARIABLE_ELEMENT
-			-- Controller variable
+			-- Controller variable	
 
-	response_variable: VARIABLE_ELEMENT
-			-- Response variable
+	stateful: BOOLEAN
+			-- Is the controller of the servlet stateful?
 
-feature -- Access
+feature -- Element change
 
 	put_xhtml_elements (element: OUTPUT_ELEMENT)
 			-- Adds an {OUTPUT_ELEMENT} to the list.
 		do
-			element.set_response_var (response_name)
+			element.set_response_var ("Result")
 			element.set_controller_var (controller_var)
-			element.set_response_name (response_name)
+			element.set_response_name ("Result")
 			xhtml_elements.extend (element)
 		end
 
@@ -83,7 +83,11 @@ feature -- Implementation
 			servlet: CLASS_ELEMENT
 		do
 			create servlet.make (name.as_upper)
-			servlet.set_inherit (servlet_class)
+			if stateful then
+				servlet.set_inherit (stateful_servlet_class)
+			else
+				servlet.set_inherit (stateless_servlet_class)
+			end
 			servlet.set_constructor_name (constructor_name)
 			servlet.add_feature (build_constructor_feature)
 			servlet.add_feature (build_request_feature)
@@ -106,37 +110,25 @@ feature -- Implementation
 	build_request_feature: FEATURE_ELEMENT
 			-- Serializes the request feature of the {SERVLET}
 		local
-			local_list: LIST [VARIABLE_ELEMENT]
 			feature_elements: LIST [SERVLET_ELEMENT]
-			content_make, result_equals: PLAIN_CODE_ELEMENT
 		do
-			create {LINKED_LIST [VARIABLE_ELEMENT]} local_list.make
-			local_list.extend (response_variable)
-
-			create content_make.make ("create " + response_name + "." + constructor_name)
-			create result_equals.make ("Result := " + response_name)
-
 			create {LINKED_LIST [SERVLET_ELEMENT]} feature_elements.make
-			feature_elements.extend (content_make)
+			feature_elements.extend (create {PLAIN_CODE_ELEMENT}.make ("create Result." + constructor_name))
 			feature_elements.append (xhtml_elements)
-			feature_elements.extend (result_equals)
 
-
-			create Result.make_with_locals (request_name, feature_elements, local_list)
-
-
+			create Result.make (request_name, feature_elements)
 		end
 
 feature {NONE} -- Access
 
 	controller_var: STRING = "controller"
-	response_name: STRING = "response"
 	constructor_name: STRING = "make"
 	request_name: STRING = "handle_request (request: REQUEST): RESPONSE"
 
 	response_type: STRING = "RESPONSE"
 
-	servlet_class: STRING = "SERVLET"
+	stateful_servlet_class: STRING = "STATEFUL_SERVLET"
+	stateless_servlet_class: STRING = "STATELESS_SERVLET"
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

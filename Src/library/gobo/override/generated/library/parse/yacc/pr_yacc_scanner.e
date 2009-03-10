@@ -45,10 +45,10 @@ feature {NONE} -- Implementation
 	yy_execute_action (yy_act: INTEGER) is
 			-- Execute semantic action.
 		do
-if yy_act <= 33 then
-if yy_act <= 17 then
-if yy_act <= 9 then
-if yy_act <= 5 then
+if yy_act <= 43 then
+if yy_act <= 22 then
+if yy_act <= 11 then
+if yy_act <= 6 then
 if yy_act <= 3 then
 if yy_act <= 2 then
 if yy_act = 1 then
@@ -72,6 +72,7 @@ end
 last_token := T_RIGHT
 end
 else
+if yy_act <= 5 then
 if yy_act = 4 then
 --|#line 42 "pr_yacc_scanner.l"
 debug ("GELEX")
@@ -85,29 +86,30 @@ debug ("GELEX")
 end
 last_token := T_TYPE
 end
-end
 else
-if yy_act <= 7 then
-if yy_act = 6 then
 --|#line 44 "pr_yacc_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 44")
 end
 last_token := T_START
+end
+end
 else
+if yy_act <= 9 then
+if yy_act <= 8 then
+if yy_act = 7 then
 --|#line 45 "pr_yacc_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 45")
 end
 last_token := T_EXPECT
-end
 else
-if yy_act = 8 then
 --|#line 46 "pr_yacc_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 46")
 end
 last_token := Comma_code
+end
 else
 --|#line 47 "pr_yacc_scanner.l"
 debug ("GELEX")
@@ -115,11 +117,7 @@ debug ("GELEX")
 end
 last_token := Less_than_code
 end
-end
-end
 else
-if yy_act <= 13 then
-if yy_act <= 11 then
 if yy_act = 10 then
 --|#line 48 "pr_yacc_scanner.l"
 debug ("GELEX")
@@ -133,7 +131,12 @@ debug ("GELEX")
 end
 last_token := Left_bracket_code
 end
+end
+end
 else
+if yy_act <= 17 then
+if yy_act <= 14 then
+if yy_act <= 13 then
 if yy_act = 12 then
 --|#line 50 "pr_yacc_scanner.l"
 debug ("GELEX")
@@ -150,10 +153,7 @@ end
 						set_start_condition (EIFFEL_CODE)
 					
 end
-end
 else
-if yy_act <= 15 then
-if yy_act = 14 then
 --|#line 55 "pr_yacc_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 55")
@@ -161,7 +161,10 @@ end
 
 						set_start_condition (EIFFEL_CODE)
 					
+end
 else
+if yy_act <= 16 then
+if yy_act = 15 then
 --|#line 58 "pr_yacc_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 58")
@@ -170,14 +173,13 @@ end
 						last_token := T_2PERCENTS
 						set_start_condition (SECTION2)
 					
-end
 else
-if yy_act = 16 then
 --|#line 62 "pr_yacc_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 62")
 end
 last_token := T_UNKNOWN
+end
 else
 --|#line 66 "pr_yacc_scanner.l"
 debug ("GELEX")
@@ -186,11 +188,8 @@ end
 -- Separator or comment.
 end
 end
-end
-end
 else
-if yy_act <= 25 then
-if yy_act <= 21 then
+if yy_act <= 20 then
 if yy_act <= 19 then
 if yy_act = 18 then
 --|#line 67 "pr_yacc_scanner.l"
@@ -209,71 +208,73 @@ end
 					
 end
 else
-if yy_act = 20 then
 --|#line 73 "pr_yacc_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 73")
 end
 
-						last_token := T_BOOLEAN
+						last_token := T_INTEGER_8
 						last_string_value := text
 					
+end
 else
+if yy_act = 21 then
 --|#line 77 "pr_yacc_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 77")
 end
 
-						last_token := T_REAL
+						last_token := T_INTEGER_16
 						last_string_value := text
 					
-end
-end
 else
-if yy_act <= 23 then
-if yy_act = 22 then
 --|#line 81 "pr_yacc_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 81")
 end
 
-						last_token := T_DOUBLE
+						last_token := T_INTEGER_32
 						last_string_value := text
 					
+end
+end
+end
+end
 else
+if yy_act <= 33 then
+if yy_act <= 28 then
+if yy_act <= 25 then
+if yy_act <= 24 then
+if yy_act = 23 then
 --|#line 85 "pr_yacc_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 85")
 end
 
-						last_token := T_CHARACTER
+						last_token := T_INTEGER_64
 						last_string_value := text
 					
-end
 else
-if yy_act = 24 then
 --|#line 89 "pr_yacc_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 89")
 end
 
-						last_token := T_POINTER
+						last_token := T_NATURAL
 						last_string_value := text
 					
+end
 else
 --|#line 93 "pr_yacc_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 93")
 end
 
-						last_token := T_LIKE
+						last_token := T_NATURAL_8
 						last_string_value := text
 					
 end
-end
-end
 else
-if yy_act <= 29 then
 if yy_act <= 27 then
 if yy_act = 26 then
 --|#line 97 "pr_yacc_scanner.l"
@@ -281,13 +282,244 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 97")
 end
 
-						last_token := T_IDENTIFIER
+						last_token := T_NATURAL_16
 						last_string_value := text
 					
 else
 --|#line 101 "pr_yacc_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 101")
+end
+
+						last_token := T_NATURAL_32
+						last_string_value := text
+					
+end
+else
+--|#line 105 "pr_yacc_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 105")
+end
+
+						last_token := T_NATURAL_64
+						last_string_value := text
+					
+end
+end
+else
+if yy_act <= 31 then
+if yy_act <= 30 then
+if yy_act = 29 then
+--|#line 109 "pr_yacc_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 109")
+end
+
+						last_token := T_BOOLEAN
+						last_string_value := text
+					
+else
+--|#line 113 "pr_yacc_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 113")
+end
+
+						last_token := T_REAL
+						last_string_value := text
+					
+end
+else
+--|#line 117 "pr_yacc_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 117")
+end
+
+						last_token := T_REAL_32
+						last_string_value := text
+					
+end
+else
+if yy_act = 32 then
+--|#line 121 "pr_yacc_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 121")
+end
+
+						last_token := T_REAL_64
+						last_string_value := text
+					
+else
+--|#line 125 "pr_yacc_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 125")
+end
+
+						last_token := T_DOUBLE
+						last_string_value := text
+					
+end
+end
+end
+else
+if yy_act <= 38 then
+if yy_act <= 36 then
+if yy_act <= 35 then
+if yy_act = 34 then
+--|#line 129 "pr_yacc_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 129")
+end
+
+						last_token := T_CHARACTER
+						last_string_value := text
+					
+else
+--|#line 133 "pr_yacc_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 133")
+end
+
+						last_token := T_CHARACTER_8
+						last_string_value := text
+					
+end
+else
+--|#line 137 "pr_yacc_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 137")
+end
+
+						last_token := T_CHARACTER_32
+						last_string_value := text
+					
+end
+else
+if yy_act = 37 then
+--|#line 141 "pr_yacc_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 141")
+end
+
+						last_token := T_POINTER
+						last_string_value := text
+					
+else
+--|#line 145 "pr_yacc_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 145")
+end
+
+						last_token := T_TUPLE
+						last_string_value := text
+					
+end
+end
+else
+if yy_act <= 41 then
+if yy_act <= 40 then
+if yy_act = 39 then
+--|#line 149 "pr_yacc_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 149")
+end
+
+						last_token := T_LIKE
+						last_string_value := text
+					
+else
+--|#line 153 "pr_yacc_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 153")
+end
+
+						last_token := T_CURRENT
+						last_string_value := text
+					
+end
+else
+--|#line 157 "pr_yacc_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 157")
+end
+
+						last_token := T_EXPANDED
+						last_string_value := text
+					
+end
+else
+if yy_act = 42 then
+--|#line 161 "pr_yacc_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 161")
+end
+
+						last_token := T_REFERENCE
+						last_string_value := text
+					
+else
+--|#line 165 "pr_yacc_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 165")
+end
+
+						last_token := T_SEPARATE
+						last_string_value := text
+					
+end
+end
+end
+end
+end
+else
+if yy_act <= 65 then
+if yy_act <= 54 then
+if yy_act <= 49 then
+if yy_act <= 46 then
+if yy_act <= 45 then
+if yy_act = 44 then
+--|#line 169 "pr_yacc_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 169")
+end
+
+						last_token := T_ATTACHED
+						last_string_value := text
+					
+else
+--|#line 173 "pr_yacc_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 173")
+end
+
+						last_token := T_DETACHABLE
+						last_string_value := text
+					
+end
+else
+--|#line 177 "pr_yacc_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 177")
+end
+
+						last_token := T_AS
+						last_string_value := text
+					
+end
+else
+if yy_act <= 48 then
+if yy_act = 47 then
+--|#line 181 "pr_yacc_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 181")
+end
+
+						last_token := T_IDENTIFIER
+						last_string_value := text
+					
+else
+--|#line 185 "pr_yacc_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 185")
 end
 
 						last_token := T_NUMBER
@@ -298,19 +530,23 @@ end
 					
 end
 else
-if yy_act = 28 then
---|#line 108 "pr_yacc_scanner.l"
+--|#line 192 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 108")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 192")
 end
 
 						last_token := T_CHAR
 						last_string_value := text
 					
+end
+end
 else
---|#line 112 "pr_yacc_scanner.l"
+if yy_act <= 52 then
+if yy_act <= 51 then
+if yy_act = 50 then
+--|#line 196 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 112")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 196")
 end
 
 						last_token := T_STR
@@ -319,20 +555,17 @@ end
 							report_invalid_string_token_error (text)
 						end
 					
-end
-end
 else
-if yy_act <= 31 then
-if yy_act = 30 then
---|#line 122 "pr_yacc_scanner.l"
+--|#line 206 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 122")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 206")
 end
 last_token := T_PREC
+end
 else
---|#line 123 "pr_yacc_scanner.l"
+--|#line 207 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 123")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 207")
 end
 
 						last_token := T_ERROR
@@ -341,19 +574,19 @@ end
 					
 end
 else
-if yy_act = 32 then
---|#line 128 "pr_yacc_scanner.l"
+if yy_act = 53 then
+--|#line 212 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 128")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 212")
 end
 
 						last_token := Colon_code
 						last_integer_value := line_nb
 					
 else
---|#line 132 "pr_yacc_scanner.l"
+--|#line 216 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 132")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 216")
 end
 
 						last_token := Bar_code
@@ -362,23 +595,20 @@ end
 end
 end
 end
-end
-end
 else
-if yy_act <= 49 then
-if yy_act <= 41 then
-if yy_act <= 37 then
-if yy_act <= 35 then
-if yy_act = 34 then
---|#line 136 "pr_yacc_scanner.l"
+if yy_act <= 60 then
+if yy_act <= 57 then
+if yy_act <= 56 then
+if yy_act = 55 then
+--|#line 220 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 136")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 220")
 end
 last_token := Semicolon_code
 else
---|#line 137 "pr_yacc_scanner.l"
+--|#line 221 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 137")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 221")
 end
 
 						line_nb := line_nb + 1
@@ -386,204 +616,185 @@ end
 					
 end
 else
-if yy_act = 36 then
---|#line 141 "pr_yacc_scanner.l"
+--|#line 225 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 141")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 225")
 end
 
 						set_start_condition (EIFFEL_ACTION)
 					
+end
 else
---|#line 144 "pr_yacc_scanner.l"
+if yy_act <= 59 then
+if yy_act = 58 then
+--|#line 228 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 144")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 228")
 end
 
 						last_token := T_2PERCENTS
 						set_start_condition (SECTION3)
 					
-end
-end
 else
-if yy_act <= 39 then
-if yy_act = 38 then
---|#line 151 "pr_yacc_scanner.l"
+--|#line 235 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 151")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 235")
 end
 
 						last_token := T_USER_CODE
 						last_string_value := text
 					
+end
 else
---|#line 158 "pr_yacc_scanner.l"
+--|#line 242 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 158")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 242")
 end
 -- Separator or comment.
 end
+end
 else
-if yy_act = 40 then
---|#line 159 "pr_yacc_scanner.l"
+if yy_act <= 63 then
+if yy_act <= 62 then
+if yy_act = 61 then
+--|#line 243 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 159")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 243")
 end
 line_nb := line_nb + 1
 else
---|#line 161 "pr_yacc_scanner.l"
+--|#line 245 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 161")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 245")
 end
 last_token := Left_parenthesis_code
 end
-end
-end
 else
-if yy_act <= 45 then
-if yy_act <= 43 then
-if yy_act = 42 then
---|#line 162 "pr_yacc_scanner.l"
+--|#line 246 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 162")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 246")
 end
 last_token := Right_parenthesis_code
+end
 else
---|#line 163 "pr_yacc_scanner.l"
+if yy_act = 64 then
+--|#line 247 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 163")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 247")
 end
 
 						last_token := T_NUMBER
 						last_error := text.to_integer
 						last_integer_value := last_error
 					
-end
 else
-if yy_act = 44 then
---|#line 168 "pr_yacc_scanner.l"
+--|#line 252 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 168")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 252")
 end
 
 						line_nb := line_nb + 1
 						set_start_condition (ERROR_ACTION)
 					
+end
+end
+end
+end
 else
---|#line 172 "pr_yacc_scanner.l"
+if yy_act <= 76 then
+if yy_act <= 71 then
+if yy_act <= 68 then
+if yy_act <= 67 then
+if yy_act = 66 then
+--|#line 256 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 172")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 256")
 end
 
 						set_start_condition (ERROR_ACTION)
 					
-end
-end
 else
-if yy_act <= 47 then
-if yy_act = 46 then
---|#line 178 "pr_yacc_scanner.l"
+--|#line 262 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 178")
-end
-more
-else
---|#line 179 "pr_yacc_scanner.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 179")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 262")
 end
 more
 end
 else
-if yy_act = 48 then
---|#line 180 "pr_yacc_scanner.l"
+--|#line 263 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 180")
-end
-more
-else
---|#line 181 "pr_yacc_scanner.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 181")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 263")
 end
 more
 end
-end
-end
-end
 else
-if yy_act <= 57 then
-if yy_act <= 53 then
-if yy_act <= 51 then
-if yy_act = 50 then
---|#line 182 "pr_yacc_scanner.l"
+if yy_act <= 70 then
+if yy_act = 69 then
+--|#line 264 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 182")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 264")
 end
 more
 else
---|#line 183 "pr_yacc_scanner.l"
+--|#line 265 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 183")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 265")
+end
+more
+end
+else
+--|#line 266 "pr_yacc_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 266")
+end
+more
+end
+end
+else
+if yy_act <= 74 then
+if yy_act <= 73 then
+if yy_act = 72 then
+--|#line 267 "pr_yacc_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 267")
 end
 
 					line_nb := line_nb + 1
 					more
 				
-end
 else
-if yy_act = 52 then
---|#line 187 "pr_yacc_scanner.l"
+--|#line 271 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 187")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 271")
 end
 
 					last_token := T_EIFFEL
 					last_string_value := text_substring (1, text_count - 2)
 					set_start_condition (INITIAL)
 				
-else
---|#line 201 "pr_yacc_scanner.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 201")
-end
-
-					action_buffer.append_string (text)
-				
-end
 end
 else
-if yy_act <= 55 then
-if yy_act = 54 then
---|#line 202 "pr_yacc_scanner.l"
+--|#line 285 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 202")
-end
-
-					action_buffer.append_string (text)
-				
-else
---|#line 203 "pr_yacc_scanner.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 203")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 285")
 end
 
 					action_buffer.append_string (text)
 				
 end
 else
-if yy_act = 56 then
---|#line 204 "pr_yacc_scanner.l"
+if yy_act = 75 then
+--|#line 286 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 204")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 286")
 end
 
 					action_buffer.append_string (text)
 				
 else
---|#line 205 "pr_yacc_scanner.l"
+--|#line 287 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 205")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 287")
 end
 
 					action_buffer.append_string (text)
@@ -592,21 +803,41 @@ end
 end
 end
 else
-if yy_act <= 61 then
-if yy_act <= 59 then
-if yy_act = 58 then
---|#line 208 "pr_yacc_scanner.l"
+if yy_act <= 81 then
+if yy_act <= 79 then
+if yy_act <= 78 then
+if yy_act = 77 then
+--|#line 288 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 208")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 288")
+end
+
+					action_buffer.append_string (text)
+				
+else
+--|#line 289 "pr_yacc_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 289")
+end
+
+					action_buffer.append_string (text)
+				
+end
+else
+--|#line 292 "pr_yacc_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 292")
 end
 
 					line_nb := line_nb + text_count
 					action_buffer.append_string (text)
 				
+end
 else
---|#line 212 "pr_yacc_scanner.l"
+if yy_act = 80 then
+--|#line 296 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 212")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 296")
 end
 
 					if start_condition = ERROR_ACTION then
@@ -618,12 +849,10 @@ end
 						action_buffer.append_string ("$$")
 					end
 				
-end
 else
-if yy_act = 60 then
---|#line 222 "pr_yacc_scanner.l"
+--|#line 306 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 222")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 306")
 end
 
 					if text_substring (2, text_count).is_integer then
@@ -641,10 +870,15 @@ end
 						action_buffer.append_string (text)
 					end
 				
+end
+end
 else
---|#line 238 "pr_yacc_scanner.l"
+if yy_act <= 84 then
+if yy_act <= 83 then
+if yy_act = 82 then
+--|#line 322 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 238")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 322")
 end
 
 					if text_substring (3, text_count).is_integer then
@@ -662,23 +896,20 @@ end
 						action_buffer.append_string (text)
 					end
 				
-end
-end
 else
-if yy_act <= 63 then
-if yy_act = 62 then
---|#line 254 "pr_yacc_scanner.l"
+--|#line 338 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 254")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 338")
 end
 
 					action_buffer.append_character ('{')
 					nb_open_brackets := nb_open_brackets + 1
 				
+end
 else
---|#line 258 "pr_yacc_scanner.l"
+--|#line 342 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 258")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 342")
 end
 
 					if nb_open_brackets = 0 then
@@ -693,10 +924,10 @@ end
 				
 end
 else
-if yy_act = 64 then
---|#line 278 "pr_yacc_scanner.l"
+if yy_act = 85 then
+--|#line 362 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 278")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 362")
 end
 
 					last_token := text_item (1).code
@@ -751,239 +982,357 @@ end
 feature {NONE} -- Table templates
 
 	yy_nxt_template: SPECIAL [INTEGER] is
+		local
+			an_array: ARRAY [INTEGER]
 		once
-			Result := yy_fixed_array (<<
+			create an_array.make (0, 1056)
+			yy_nxt_template_1 (an_array)
+			yy_nxt_template_2 (an_array)
+			Result := yy_fixed_array (an_array)
+		end
+
+	yy_nxt_template_1 (an_array: ARRAY [INTEGER]) is
+		do
+			yy_array_subcopy (an_array, <<
 			    0,   16,   17,   18,   17,   19,   16,   20,   21,   16,
-			   16,   22,   23,   16,   24,   24,   16,   16,   25,   26,
-			   27,   28,   29,   30,   27,   27,   27,   27,   31,   27,
-			   27,   32,   27,   27,   33,   34,   27,   27,   27,   27,
-			   27,   35,   16,   36,   16,   16,   16,   16,   37,   64,
-			   98,   64,   16,   78,   78,  139,   87,   38,   39,   16,
-			   16,   44,   95,   45,   96,   46,   47,   44,  200,   45,
-			   48,   46,   47,   88,  114,  114,   48,   90,   91,   90,
-			   78,   78,   16,   89,   16,  199,   40,   41,   50,  198,
-			   51,   52,   51,   53,  104,  106,  105,   54,   95,  122,
+			   16,   22,   23,   16,   24,   24,   24,   24,   24,   24,
+			   24,   24,   16,   16,   25,   26,   27,   28,   29,   30,
+			   31,   32,   32,   32,   33,   32,   32,   34,   35,   32,
+			   36,   37,   38,   39,   32,   32,   32,   40,   16,   41,
+			   16,   16,   16,   16,   42,   49,   88,   50,   16,   51,
+			   52,   69,  100,   69,   53,   85,   86,   89,  284,   43,
+			   44,   16,   16,   49,   90,   50,  281,   51,   52,  103,
+			  104,  103,   53,   91,  108,  101,  109,  108,  117,  109,
+			  118,  119,  280,  279,   16,  102,   16,  120,   45,   46,
 
-			   96,  107,  197,  108,  108,  112,  123,  112,  115,  116,
-			  115,   64,   75,   64,   74,  124,   74,  201,  126,   90,
-			   91,   90,   95,   95,   96,   96,  137,  104,  125,  105,
-			   55,  196,   56,   50,  151,   51,   52,   51,   53,  201,
-			   97,  195,   54,  127,  141,  141,  108,  108,  140,  109,
-			  112,  194,  112,  193,  143,  114,  114,  115,  116,  115,
-			  162,  162,  163,  163,  164,  164,  141,  141,  165,  165,
-			  125,   94,  162,  162,  192,   55,   75,   56,   57,   58,
-			   57,   98,  163,  163,  191,   59,   60,  190,   61,  189,
-			   62,   62,  103,  164,  164,  109,  165,  165,  152,  188,
+			   42,  125,  135,  125,   16,  128,  129,  128,   69,  136,
+			   69,   79,  137,   79,  152,   43,   44,   16,   16,  153,
+			  103,  104,  103,  108,  285,  109,  108,  111,  109,  117,
+			  285,  118,  160,  158,  278,  110,  122,  285,  277,  161,
+			   16,  164,   16,  285,   45,   46,   55,  276,   56,   57,
+			   56,   58,  125,  138,  125,   59,  128,  129,  128,  172,
+			  172,  172,  172,  172,  172,  138,  233,  282,  234,  275,
+			  283,   80,   80,   80,   80,   80,   80,  265,  274,  266,
+			  273,  267,  268,  269,  264,  270,  263,  271,  272,  262,
+			  261,  260,  259,  258,   60,  257,   61,   55,  256,   56,
 
-			  152,  152,   75,  187,   75,   75,  186,  185,  184,  183,
-			  182,  181,  180,  179,  178,  177,  176,  175,  174,  173,
-			  125,   63,   57,   58,   57,  172,  171,  170,  169,   59,
-			   60,  168,   61,  167,   62,   62,  166,  161,  160,  159,
-			  158,  157,  156,  155,  154,  153,  125,  150,  149,  148,
-			  147,  146,  145,  144,  142,  102,  138,  136,  135,  134,
-			  133,  132,  131,  130,  129,   63,   50,  128,   51,   52,
-			   51,   53,  125,  121,  120,   54,  119,  118,  117,   66,
-			  113,  111,  110,  102,  100,   99,   86,   85,   84,   83,
-			   82,   81,   80,   77,   76,   66,  201,  201,  201,  201,
+			   57,   56,   58,  255,  254,  253,   59,   83,   83,   83,
+			   83,   83,   83,   83,  127,  127,  127,  127,  127,  127,
+			  127,  162,  162,  162,  162,  162,  162,  162,  191,  191,
+			  191,  191,  191,  191,  191,  192,  192,  192,  192,  192,
+			  192,  192,  252,  251,  250,   60,  249,   61,   62,   63,
+			   62,  248,  247,  246,  245,   64,   65,  244,   66,  243,
+			   67,   67,   67,   67,   67,   67,   67,   67,  193,  193,
+			  193,  193,  193,  193,  193,  194,  194,  194,  194,  194,
+			  194,  194,  242,  241,  240,  239,  238,  237,  236,  235,
+			  232,  231,  230,  229,  228,  227,  226,   68,   62,   63,
 
-			  201,  201,  201,  201,  201,  201,  201,  201,   55,  201,
-			   56,   50,  201,   51,   52,   51,   53,  201,  201,  201,
-			   54,  201,  201,  201,  201,  201,  201,  201,  201,  201,
-			  201,  201,  201,  201,  201,  201,  201,  201,  201,  201,
-			  201,  201,  201,  201,  201,  201,  201,  201,  201,  201,
-			  201,  201,  201,   55,  201,   56,   67,  201,  201,  201,
-			  201,  201,  201,  201,  201,  201,  201,  201,  201,  201,
-			  201,  201,  201,   68,  201,  201,  201,  201,  201,  201,
-			   69,   70,  201,  201,   71,   72,   73,  201,  201,  201,
-			  201,  201,  201,  201,   74,   42,   42,   42,   42,   42,
+			   62,  225,  224,  223,  222,   64,   65,  221,   66,  220,
+			   67,   67,   67,   67,   67,   67,   67,   67,  219,  218,
+			  122,  116,  111,  107,  217,  216,  215,  214,  213,  212,
+			  211,  210,  209,  208,  207,  206,  205,  204,  203,  202,
+			  138,  201,  200,  199,  198,  197,  196,   68,   55,  195,
+			   56,   57,   56,   58,  190,  189,  188,   59,  187,  186,
+			  185,  184,  183,  182,  181,  180,  179,  178,  177,  176,
+			  175,  174,  138,  171,  170,  169,  168,  167,  166,  165,
+			  163,  115,  159,  157,  156,  155,  154,  151,  150,  149,
+			  148,  147,  146,  145,  144,  143,   60,  142,   61,   55,
 
-			   42,   42,   42,   42,   42,   42,   42,   42,   42,   42,
-			   42,   42,   42,   43,   43,   43,   43,   43,   43,   43,
-			   43,   43,   43,   43,   43,   43,   43,   43,   43,   43,
-			   43,   49,   49,   49,   49,   49,   49,   49,   49,   49,
-			   49,   49,   49,   49,   49,   49,   49,   49,   49,   16,
+			  141,   56,   57,   56,   58,  138,  134,  133,   59,  132,
+			  131,  130,   71,  126,  124,  123,  115,  113,  112,   99,
+			   98,   97,   96,   95,   94,   93,   92,   87,   82,   81,
+			   71,  285,  285,  285,  285,  285,  285,  285,  285,  285,
+			  285,  285,  285,  285,  285,  285,  285,   60,  285,   61,
+			   72,  285,  285,  285,  285,  285,  285,  285,  285,  285,
+			  285,  285,  285,  285,  285,  285,  285,  285,  285,  285,
+			  285,  285,  285,   73,  285,  285,  285,  285,  285,  285,
+			   74,   75,  285,  285,   76,   77,   78,  285,  285,  285,
+			  285,  285,  285,  285,   79,   80,  285,  285,  285,  285,
+
+			  285,  139,  139,  139,  139,  139,  139,  285,  285,  285,
+			  285,  285,  285,  285,  285,  285,  285,  285,  285,  285,
+			  285,  285,  285,  285,  285,  285,  285,  285,  285,  285,
+			  285,  285,  140,   47,   47,   47,   47,   47,   47,   47,
+			   47,   47,   47,   47,   47,   47,   47,   47,   47,   47,
+			   47,   47,   47,   47,   47,   47,   47,   47,   48,   48,
+			   48,   48,   48,   48,   48,   48,   48,   48,   48,   48,
+			   48,   48,   48,   48,   48,   48,   48,   48,   48,   48,
+			   48,   48,   48,   54,   54,   54,   54,   54,   54,   54,
+			   54,   54,   54,   54,   54,   54,   54,   54,   54,   54,
+
+			   54,   54,   54,   54,   54,   54,   54,   54,   16,   16,
 			   16,   16,   16,   16,   16,   16,   16,   16,   16,   16,
-			   16,   16,   16,   16,   16,   16,   16,   65,  201,   65,
-			   65,   65,   65,   65,   65,   65,   65,   65,   65,   65,
-			   65,   65,   65,   65,   65,   75,  201,   75,   75,   75,
-			  201,   75,   75,   75,   75,   75,   75,   75,   75,   75,
+			   16,   16,   16,   16,   16,   16,   16,   16,   16,   16,
+			   16,   16,   16,   70,  285,   70,   70,   70,   70,   70,
+			   70,   70,   70,   70,   70,   70,   70,   70,   70,   70,
+			   70,   70,   70,   70,   70,   70,   70,   70,   80,  285,
+			   80,   80,   80,  285,   80,   80,   80,   80,   80,   80,
+			   80,   80,   80,   80,   80,   80,   80,   80,   80,   80,
+			   80,   80,   80,   84,   84,   84,   84,   84,   84,   84,
+			   84,   84,   84,   84,   84,   84,   84,   84,   84,  105,
 
-			   75,   75,   75,   79,   79,   79,   79,   79,   79,   79,
-			   79,   79,   79,   92,   92,   92,   92,   92,   92,   92,
-			   92,   92,   92,   92,   92,   92,   92,   92,   92,   92,
-			   92,   93,  201,  201,   93,  201,  201,  201,   93,   93,
-			   93,   93,   93,   93,   93,   93,   93,   93,   93,   94,
-			  201,   94,   94,   94,   94,   94,   94,   94,   94,   94,
-			   94,   94,   94,   94,   94,   94,   94,   98,  201,   98,
-			   98,   98,  201,   98,   98,   98,   98,   98,   98,   98,
-			   98,   98,   98,   98,   98,  101,  201,  201,  201,  201,
-			  201,  201,  101,  101,  101,  101,  101,  101,  101,  101,
-
-			  101,  101,  103,  201,  103,  103,  103,  103,  103,  103,
-			  103,  103,  103,  103,  103,  103,  103,  103,  103,  103,
-			  109,  201,  109,  109,  109,  201,  109,  109,  109,  109,
-			  109,  109,  109,  109,  109,  109,  109,  109,   77,  201,
-			   77,   77,   77,   77,   77,   77,   77,   77,   77,   77,
-			   77,   77,   77,   77,   77,   77,  100,  201,  100,  100,
-			  100,  100,  100,  100,  100,  100,  100,  100,  100,  100,
-			  100,  100,  100,  100,  111,  201,  111,  111,  111,  111,
+			  105,  105,  105,  105,  105,  105,  105,  105,  105,  105,
+			  105,  105,  105,  105,  105,  105,  105,  105,  105,  105,
+			  105,  105,  105,  105,  106,  285,  285,  106,  285,  285,
+			  285,  106,  106,  106,  106,  106,  106,  106,  106,  106,
+			  106,  106,  106,  106,  106,  106,  106,  106,  106,  107,
+			  285,  107,  107,  107,  107,  107,  107,  107,  107,  107,
+			  107,  107,  107,  107,  107,  107,  107,  107,  107,  107,
+			  107,  107,  107,  107,  111,  285,  111,  111,  111,  285,
 			  111,  111,  111,  111,  111,  111,  111,  111,  111,  111,
-			  111,  111,  113,  201,  113,  113,  113,  113,  113,  113,
+			  111,  111,  111,  111,  111,  111,  111,  111,  111,  114,
 
+			  285,  285,  285,  285,  285,  285,  114,  114,  114,  114,
+			  114,  114,  114,  114,  114,  114,  114,  114,  114,  114,
+			  114,  114,  116,  285,  116,  116,  116,  116,  116,  116,
+			  116,  116,  116,  116,  116,  116,  116,  116,  116,  116,
+			  116,  116,  116,  116,  116,  116,  116,  121,  285,  285,
+			  121,  121,  121,  121,  121,  121,  121,  121,  122,  285,
+			  122,  122,  122,  285,  122,  122,  122,  122,  122,  122,
+			  122,  122,  122,  122,  122,  122,  122,  122,  122,  122,
+			  122,  122,  122,   82,  285,   82,   82,   82,   82,   82,
+			   82,   82,   82,   82,   82,   82,   82,   82,   82,   82,
+
+			   82,   82,   82,   82,   82,   82,   82,   82,  113,  285,
 			  113,  113,  113,  113,  113,  113,  113,  113,  113,  113,
-			   15,  201,  201,  201,  201,  201,  201,  201,  201,  201,
-			  201,  201,  201,  201,  201,  201,  201,  201,  201,  201,
-			  201,  201,  201,  201,  201,  201,  201,  201,  201,  201,
-			  201,  201,  201,  201,  201,  201,  201,  201,  201,  201,
-			  201,  201,  201,  201,  201,  201,  201,  201, yy_Dummy>>)
+			  113,  113,  113,  113,  113,  113,  113,  113,  113,  113,
+			  113,  113,  113,  124,  285,  124,  124,  124,  124,  124,
+			  124,  124,  124,  124,  124,  124,  124,  124,  124,  124,
+			  124,  124,  124,  124,  124,  124,  124,  124,  126,  285,
+			  126,  126,  126,  126,  126,  126,  126,  126,  126,  126,
+			  126,  126,  126,  126,  126,  126,  126,  126,  126,  126,
+			  126,  126,  126,  173,  285,  173,  173,  173,  173,  173,
+			  173,  173,  173,   80,  285,   80,   80,   80,   80,   80, yy_Dummy>>,
+			1, 1000, 0)
+		end
+
+	yy_nxt_template_2 (an_array: ARRAY [INTEGER]) is
+		do
+			yy_array_subcopy (an_array, <<
+			   80,   80,   80,   15,  285,  285,  285,  285,  285,  285,
+			  285,  285,  285,  285,  285,  285,  285,  285,  285,  285,
+			  285,  285,  285,  285,  285,  285,  285,  285,  285,  285,
+			  285,  285,  285,  285,  285,  285,  285,  285,  285,  285,
+			  285,  285,  285,  285,  285,  285,  285,  285,  285,  285,
+			  285,  285,  285,  285,  285,  285,  285, yy_Dummy>>,
+			1, 57, 1000)
 		end
 
 	yy_chk_template: SPECIAL [INTEGER] is
+		local
+			an_array: ARRAY [INTEGER]
 		once
-			Result := yy_fixed_array (<<
+			create an_array.make (0, 1056)
+			yy_chk_template_1 (an_array)
+			yy_chk_template_2 (an_array)
+			Result := yy_fixed_array (an_array)
+		end
+
+	yy_chk_template_1 (an_array: ARRAY [INTEGER]) is
+		do
+			yy_array_subcopy (an_array, <<
 			    0,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    1,    1,    1,    1,    1,    1,    1,    3,   17,
-			   99,   17,    3,   24,   24,   99,   37,    3,    3,    3,
-			    3,    7,   45,    7,   45,    7,    7,    8,  198,    8,
-			    7,    8,    8,   37,   62,   62,    8,   40,   40,   40,
-			   78,   78,    3,   37,    3,  197,    3,    3,    9,  194,
-			    9,    9,    9,    9,   51,   52,   51,    9,   46,   73,
+			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+			    1,    1,    1,    1,    3,    7,   29,    7,    3,    7,
+			    7,   17,   42,   17,    7,   27,   27,   29,  282,    3,
+			    3,    3,    3,    8,   30,    8,  271,    8,    8,   45,
+			   45,   45,    8,   30,   50,   42,   50,   51,   56,   51,
+			   56,   57,  270,  269,    3,   42,    3,   57,    3,    3,
 
-			   46,   52,  192,   52,   52,   57,   73,   57,   63,   63,
-			   63,   64,   76,   64,   74,   74,   74,   96,   76,   90,
-			   90,   90,   94,   97,   94,   97,   96,  103,  126,  103,
-			    9,  189,    9,   10,  126,   10,   10,   10,   10,  105,
-			   46,  188,   10,   76,  107,  107,  108,  108,  105,  110,
-			  112,  186,  112,  185,  110,  114,  114,  115,  115,  115,
-			  137,  137,  139,  139,  140,  140,  141,  141,  143,  143,
-			  151,  162,  162,  162,  181,   10,  151,   10,   11,   11,
-			   11,  163,  163,  163,  180,   11,   11,  178,   11,  177,
-			   11,   11,  164,  164,  164,  165,  165,  165,  220,  176,
+			    4,   62,   78,   62,    4,   68,   68,   68,   69,   78,
+			   69,   79,   79,   79,   97,    4,    4,    4,    4,   97,
+			  103,  103,  103,  107,  109,  107,  110,  112,  110,  116,
+			  118,  116,  112,  109,  267,   51,  123,  121,  266,  118,
+			    4,  123,    4,  121,    4,    4,    9,  265,    9,    9,
+			    9,    9,  125,  139,  125,    9,  128,  128,  128,  139,
+			  139,  139,  139,  139,  139,  172,  212,  274,  212,  264,
+			  274,  172,  172,  172,  172,  172,  172,  258,  263,  258,
+			  260,  258,  258,  259,  256,  259,  255,  259,  259,  253,
+			  252,  251,  247,  246,    9,  245,    9,   10,  244,   10,
 
-			  220,  220,  221,  175,  221,  221,  174,  173,  171,  170,
-			  169,  168,  166,  161,  160,  158,  156,  155,  154,  153,
-			  152,   11,   12,   12,   12,  150,  149,  148,  147,   12,
-			   12,  146,   12,  145,   12,   12,  144,  136,  135,  134,
-			  133,  132,  131,  130,  129,  128,  127,  123,  122,  121,
-			  120,  119,  118,  117,  109,  102,   98,   89,   88,   86,
-			   85,   84,   83,   82,   81,   12,   13,   80,   13,   13,
-			   13,   13,   75,   72,   71,   13,   70,   69,   68,   65,
-			   61,   54,   53,   50,   48,   47,   34,   33,   32,   31,
-			   30,   29,   28,   23,   21,   19,   15,    0,    0,    0,
+			   10,   10,   10,  242,  240,  239,   10,  292,  292,  292,
+			  292,  292,  292,  292,  302,  302,  302,  302,  302,  302,
+			  302,  305,  305,  305,  305,  305,  305,  305,  309,  309,
+			  309,  309,  309,  309,  309,  310,  310,  310,  310,  310,
+			  310,  310,  236,  235,  234,   10,  233,   10,   11,   11,
+			   11,  232,  231,  230,  229,   11,   11,  227,   11,  226,
+			   11,   11,   11,   11,   11,   11,   11,   11,  311,  311,
+			  311,  311,  311,  311,  311,  312,  312,  312,  312,  312,
+			  312,  312,  225,  224,  223,  219,  218,  216,  214,  213,
+			  211,  210,  209,  208,  207,  206,  205,   11,   12,   12,
 
-			    0,    0,    0,    0,    0,    0,    0,    0,   13,    0,
-			   13,   14,    0,   14,   14,   14,   14,    0,    0,    0,
-			   14,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-			    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-			    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-			    0,    0,    0,   14,    0,   14,   20,    0,    0,    0,
+			   12,  204,  203,  202,  200,   12,   12,  199,   12,  198,
+			   12,   12,   12,   12,   12,   12,   12,   12,  197,  195,
+			  194,  193,  192,  191,  190,  189,  188,  187,  186,  185,
+			  184,  183,  181,  180,  179,  178,  177,  176,  175,  174,
+			  173,  171,  170,  169,  168,  167,  166,   12,   13,  165,
+			   13,   13,   13,   13,  157,  156,  155,   13,  154,  153,
+			  152,  151,  150,  149,  148,  147,  146,  145,  144,  143,
+			  142,  141,  140,  136,  135,  134,  133,  132,  131,  130,
+			  122,  115,  111,  102,  101,   99,   98,   96,   95,   94,
+			   93,   92,   91,   90,   89,   88,   13,   87,   13,   14,
+
+			   86,   14,   14,   14,   14,   80,   77,   76,   14,   75,
+			   74,   73,   70,   66,   59,   58,   55,   53,   52,   39,
+			   38,   37,   36,   35,   34,   33,   31,   28,   23,   21,
+			   19,   15,    0,    0,    0,    0,    0,    0,    0,    0,
+			    0,    0,    0,    0,    0,    0,    0,   14,    0,   14,
+			   20,    0,    0,    0,    0,    0,    0,    0,    0,    0,
 			    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
 			    0,    0,    0,   20,    0,    0,    0,    0,    0,    0,
 			   20,   20,    0,    0,   20,   20,   20,    0,    0,    0,
-			    0,    0,    0,    0,   20,  202,  202,  202,  202,  202,
+			    0,    0,    0,    0,   20,   81,    0,    0,    0,    0,
 
-			  202,  202,  202,  202,  202,  202,  202,  202,  202,  202,
-			  202,  202,  202,  203,  203,  203,  203,  203,  203,  203,
-			  203,  203,  203,  203,  203,  203,  203,  203,  203,  203,
-			  203,  204,  204,  204,  204,  204,  204,  204,  204,  204,
-			  204,  204,  204,  204,  204,  204,  204,  204,  204,  205,
-			  205,  205,  205,  205,  205,  205,  205,  205,  205,  205,
-			  205,  205,  205,  205,  205,  205,  205,  206,    0,  206,
-			  206,  206,  206,  206,  206,  206,  206,  206,  206,  206,
-			  206,  206,  206,  206,  206,  207,    0,  207,  207,  207,
-			    0,  207,  207,  207,  207,  207,  207,  207,  207,  207,
+			    0,   81,   81,   81,   81,   81,   81,    0,    0,    0,
+			    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+			    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+			    0,    0,   81,  286,  286,  286,  286,  286,  286,  286,
+			  286,  286,  286,  286,  286,  286,  286,  286,  286,  286,
+			  286,  286,  286,  286,  286,  286,  286,  286,  287,  287,
+			  287,  287,  287,  287,  287,  287,  287,  287,  287,  287,
+			  287,  287,  287,  287,  287,  287,  287,  287,  287,  287,
+			  287,  287,  287,  288,  288,  288,  288,  288,  288,  288,
+			  288,  288,  288,  288,  288,  288,  288,  288,  288,  288,
 
-			  207,  207,  207,  208,  208,  208,  208,  208,  208,  208,
-			  208,  208,  208,  209,  209,  209,  209,  209,  209,  209,
-			  209,  209,  209,  209,  209,  209,  209,  209,  209,  209,
-			  209,  210,    0,    0,  210,    0,    0,    0,  210,  210,
-			  210,  210,  210,  210,  210,  210,  210,  210,  210,  211,
-			    0,  211,  211,  211,  211,  211,  211,  211,  211,  211,
-			  211,  211,  211,  211,  211,  211,  211,  212,    0,  212,
-			  212,  212,    0,  212,  212,  212,  212,  212,  212,  212,
-			  212,  212,  212,  212,  212,  213,    0,    0,    0,    0,
-			    0,    0,  213,  213,  213,  213,  213,  213,  213,  213,
+			  288,  288,  288,  288,  288,  288,  288,  288,  289,  289,
+			  289,  289,  289,  289,  289,  289,  289,  289,  289,  289,
+			  289,  289,  289,  289,  289,  289,  289,  289,  289,  289,
+			  289,  289,  289,  290,    0,  290,  290,  290,  290,  290,
+			  290,  290,  290,  290,  290,  290,  290,  290,  290,  290,
+			  290,  290,  290,  290,  290,  290,  290,  290,  291,    0,
+			  291,  291,  291,    0,  291,  291,  291,  291,  291,  291,
+			  291,  291,  291,  291,  291,  291,  291,  291,  291,  291,
+			  291,  291,  291,  293,  293,  293,  293,  293,  293,  293,
+			  293,  293,  293,  293,  293,  293,  293,  293,  293,  294,
 
-			  213,  213,  214,    0,  214,  214,  214,  214,  214,  214,
-			  214,  214,  214,  214,  214,  214,  214,  214,  214,  214,
-			  215,    0,  215,  215,  215,    0,  215,  215,  215,  215,
-			  215,  215,  215,  215,  215,  215,  215,  215,  216,    0,
-			  216,  216,  216,  216,  216,  216,  216,  216,  216,  216,
-			  216,  216,  216,  216,  216,  216,  217,    0,  217,  217,
-			  217,  217,  217,  217,  217,  217,  217,  217,  217,  217,
-			  217,  217,  217,  217,  218,    0,  218,  218,  218,  218,
-			  218,  218,  218,  218,  218,  218,  218,  218,  218,  218,
-			  218,  218,  219,    0,  219,  219,  219,  219,  219,  219,
+			  294,  294,  294,  294,  294,  294,  294,  294,  294,  294,
+			  294,  294,  294,  294,  294,  294,  294,  294,  294,  294,
+			  294,  294,  294,  294,  295,    0,    0,  295,    0,    0,
+			    0,  295,  295,  295,  295,  295,  295,  295,  295,  295,
+			  295,  295,  295,  295,  295,  295,  295,  295,  295,  296,
+			    0,  296,  296,  296,  296,  296,  296,  296,  296,  296,
+			  296,  296,  296,  296,  296,  296,  296,  296,  296,  296,
+			  296,  296,  296,  296,  297,    0,  297,  297,  297,    0,
+			  297,  297,  297,  297,  297,  297,  297,  297,  297,  297,
+			  297,  297,  297,  297,  297,  297,  297,  297,  297,  298,
 
-			  219,  219,  219,  219,  219,  219,  219,  219,  219,  219,
-			  201,  201,  201,  201,  201,  201,  201,  201,  201,  201,
-			  201,  201,  201,  201,  201,  201,  201,  201,  201,  201,
-			  201,  201,  201,  201,  201,  201,  201,  201,  201,  201,
-			  201,  201,  201,  201,  201,  201,  201,  201,  201,  201,
-			  201,  201,  201,  201,  201,  201,  201,  201, yy_Dummy>>)
+			    0,    0,    0,    0,    0,    0,  298,  298,  298,  298,
+			  298,  298,  298,  298,  298,  298,  298,  298,  298,  298,
+			  298,  298,  299,    0,  299,  299,  299,  299,  299,  299,
+			  299,  299,  299,  299,  299,  299,  299,  299,  299,  299,
+			  299,  299,  299,  299,  299,  299,  299,  300,    0,    0,
+			  300,  300,  300,  300,  300,  300,  300,  300,  301,    0,
+			  301,  301,  301,    0,  301,  301,  301,  301,  301,  301,
+			  301,  301,  301,  301,  301,  301,  301,  301,  301,  301,
+			  301,  301,  301,  303,    0,  303,  303,  303,  303,  303,
+			  303,  303,  303,  303,  303,  303,  303,  303,  303,  303,
+
+			  303,  303,  303,  303,  303,  303,  303,  303,  304,    0,
+			  304,  304,  304,  304,  304,  304,  304,  304,  304,  304,
+			  304,  304,  304,  304,  304,  304,  304,  304,  304,  304,
+			  304,  304,  304,  306,    0,  306,  306,  306,  306,  306,
+			  306,  306,  306,  306,  306,  306,  306,  306,  306,  306,
+			  306,  306,  306,  306,  306,  306,  306,  306,  307,    0,
+			  307,  307,  307,  307,  307,  307,  307,  307,  307,  307,
+			  307,  307,  307,  307,  307,  307,  307,  307,  307,  307,
+			  307,  307,  307,  308,    0,  308,  308,  308,  308,  308,
+			  308,  308,  308,  313,    0,  313,  313,  313,  313,  313, yy_Dummy>>,
+			1, 1000, 0)
+		end
+
+	yy_chk_template_2 (an_array: ARRAY [INTEGER]) is
+		do
+			yy_array_subcopy (an_array, <<
+			  313,  313,  313,  285,  285,  285,  285,  285,  285,  285,
+			  285,  285,  285,  285,  285,  285,  285,  285,  285,  285,
+			  285,  285,  285,  285,  285,  285,  285,  285,  285,  285,
+			  285,  285,  285,  285,  285,  285,  285,  285,  285,  285,
+			  285,  285,  285,  285,  285,  285,  285,  285,  285,  285,
+			  285,  285,  285,  285,  285,  285,  285, yy_Dummy>>,
+			1, 57, 1000)
 		end
 
 	yy_base_template: SPECIAL [INTEGER] is
 		once
 			Result := yy_fixed_array (<<
-			    0,    0,    0,   41,    0,    0,    0,   58,   64,   85,
-			  130,  176,  220,  263,  308,  296,  710,   47,  710,  290,
-			  349,  252,  710,  281,   39,  710,  710,    0,  259,  264,
-			  257,  257,  260,  254,  262,  710,  710,   49,  710,  710,
-			   75,  710,    0,    0,  710,   57,   93,  278,  272,    0,
-			  280,   89,   89,  275,  269,  710,  710,  103,  710,  710,
-			  710,  268,   60,  106,  109,  274,  710,  710,  239,  253,
-			  243,  246,  236,   66,  112,  264,  104,    0,   66,    0,
-			  234,  244,  225,  225,  231,  232,  239,  710,  223,  222,
-			  117,  710,    0,    0,  117,  710,  113,  118,  248,   42,
+			    0,    0,    0,   47,   93,    0,    0,   52,   70,  143,
+			  194,  246,  296,  345,  396,  431, 1003,   59, 1003,  425,
+			  443,  381, 1003,  416,    0, 1003, 1003,   23,  388,   23,
+			   44,  381,    0,  387,  390,  397,  383,  391,  390,  375,
+			 1003, 1003,   55, 1003, 1003,   77, 1003,    0,    0, 1003,
+			   79,   82,  411,  405,    0,  413,   83,   85,  408,  402,
+			 1003, 1003,   99, 1003, 1003, 1003,  401,    0,  103,  106,
+			  407, 1003, 1003,  366,  380,  370,  373,  363,   63,  109,
+			  397,  487,    0,    0,    0,    0,  357,  358,  369,  353,
+			  350,  348,  351,  347,  353,  345,  353,   88,  346,  345,
 
-			    0,    0,  252,  122,  710,  135,  710,  130,  132,  246,
-			  141,    0,  148,    0,  141,  155,  710,  219,  227,  219,
-			  224,  229,  218,  213,  710,  710,  120,  238,  214,  209,
-			  222,  218,  217,  208,  208,  203,  213,  146,  710,  148,
-			  150,  152,  710,  154,  212,  196,  211,  201,  192,  202,
-			  201,  162,  212,  195,  198,  186,  190,    0,  178,    0,
-			  181,  191,  158,  168,  179,  182,  190,  710,  175,  173,
-			  172,  176,  710,  187,  184,  179,  175,  165,  152,  710,
-			  147,  138,  710,  710,  710,  121,  114,    0,  106,   96,
-			  710,  710,   69,    0,   65,    0,    0,   63,   33,  710,
+			 1003,  343,  342,  118, 1003,    0,    0,  118, 1003,  120,
+			  121,  374,  119,    0,    0,  378,  124, 1003,  126, 1003,
+			    0,  131,  372,  128,    0,  150,    0,    0,  154, 1003,
+			  339,  347,  339,  344,  349,  338,  333, 1003, 1003,  145,
+			  364,  345,  333,  328,  327,  341,  339,  339,  334,  333,
+			  318,  323,  323,  329,  332,  319,  314,  324,    0, 1003,
+			    0,    0,    0, 1003,    0,  319,  303,  319,  311,  302,
+			  312,  311,  157,  332,  311,  308,  311,  306,  307,  297,
+			  295,  300,    0,  290,  287,  279,  287,  286,  296,  286,
+			  296,  310,  309,  308,  307,  291, 1003,  276,  266,  264,
 
-			    0,  710,  394,  412,  430,  448,  466,  484,  495,  512,
-			  530,  548,  566,  584,  601,  619,  637,  655,  673,  691,
-			  192,  196, yy_Dummy>>)
+			  266, 1003,  270,  276,  273,  258,  262,  264,  264,  262,
+			  265,  260,  149,  259,  262,    0,  246, 1003,  243,  243,
+			 1003, 1003, 1003,  254,  245,  239,  216,  231,    0,  224,
+			  212,  215,  210,  230,  226,  205,  199, 1003, 1003,  166,
+			  175,    0,  173,    0,  171,  166,  143,  142,    0,    0,
+			    0,  163,  160,  161,    0,  145,  147,    0,  162,  168,
+			  150,    0, 1003,  128,  139,  128,  122,  116,    0,   74,
+			   76,   58,    0,    0,  150,    0,    0,    0,    0,    0,
+			    0,    0,   52,    0,    0, 1003,  532,  557,  582,  607,
+			  632,  657,  199,  675,  698,  723,  748,  773,  798,  821,
+
+			  843,  857,  206,  882,  907,  213,  932,  957,  977,  220,
+			  227,  260,  267,  987, yy_Dummy>>)
 		end
 
 	yy_def_template: SPECIAL [INTEGER] is
 		once
 			Result := yy_fixed_array (<<
-			    0,  201,    1,    1,    3,  202,  202,  203,  203,  204,
-			  204,  205,  205,  204,  204,  201,  201,  201,  201,  206,
-			  201,  207,  201,  201,  201,  201,  201,  208,  208,  208,
-			  208,  208,  208,  208,  208,  201,  201,  201,  201,  201,
-			  201,  201,  209,  210,  201,  211,  211,  212,  201,  213,
-			  201,  214,  201,  215,  201,  201,  201,  201,  201,  201,
-			  201,  201,  201,  201,  201,  206,  201,  201,  201,  201,
-			  201,  201,  201,  201,  201,  201,  207,  216,  201,  208,
-			  208,  208,  208,  208,  208,  208,  208,  201,  201,  201,
-			  201,  201,  209,  210,  211,  201,  211,  211,  201,  212,
+			    0,  285,    1,    1,    1,  286,  286,  287,  287,  288,
+			  288,  289,  289,  288,  288,  285,  285,  285,  285,  290,
+			  285,  291,  285,  285,  292,  285,  285,  293,  293,  293,
+			  293,  293,  293,  293,  293,  293,  293,  293,  293,  293,
+			  285,  285,  285,  285,  285,  285,  285,  294,  295,  285,
+			  296,  296,  297,  285,  298,  285,  299,  300,  301,  285,
+			  285,  285,  285,  285,  285,  285,  285,  302,  285,  285,
+			  290,  285,  285,  285,  285,  285,  285,  285,  285,  285,
+			  285,  291,  303,  292,  293,  293,  293,  293,  293,  293,
+			  293,  293,  293,  293,  293,  293,  293,  293,  293,  293,
 
-			  217,  213,  201,  214,  201,  214,  201,  201,  201,  201,
-			  215,  218,  201,  219,  201,  201,  201,  201,  201,  201,
-			  201,  201,  201,  201,  201,  201,  201,  220,  208,  208,
-			  208,  208,  208,  208,  208,  201,  201,  201,  201,  201,
-			  201,  201,  201,  201,  201,  201,  201,  201,  201,  201,
-			  201,  201,  221,  208,  208,  208,  208,  208,  208,  208,
-			  201,  201,  201,  201,  201,  201,  201,  201,  201,  201,
-			  201,  201,  201,  208,  208,  208,  208,  208,  201,  201,
-			  201,  201,  201,  201,  201,  208,  208,  208,  208,  208,
-			  201,  201,  201,  208,  208,  208,  208,  201,  208,  201,
+			  285,  285,  285,  285,  285,  294,  295,  296,  285,  296,
+			  296,  285,  297,  304,  298,  285,  299,  285,  299,  285,
+			  305,  300,  285,  301,  306,  285,  307,  302,  285,  285,
+			  285,  285,  285,  285,  285,  285,  285,  285,  285,  285,
+			  308,  293,  293,  293,  293,  293,  293,  293,  293,  293,
+			  293,  293,  293,  293,  293,  293,  285,  285,  309,  285,
+			  310,  311,  305,  285,  312,  285,  285,  285,  285,  285,
+			  285,  285,  285,  313,  293,  293,  293,  293,  293,  293,
+			  293,  293,  293,  293,  293,  293,  293,  293,  293,  285,
+			  285,  309,  310,  311,  312,  285,  285,  285,  285,  285,
 
-			  208,    0,  201,  201,  201,  201,  201,  201,  201,  201,
-			  201,  201,  201,  201,  201,  201,  201,  201,  201,  201,
-			  201,  201, yy_Dummy>>)
+			  285,  285,  293,  293,  293,  293,  293,  293,  293,  293,
+			  293,  293,  293,  293,  293,  293,  285,  285,  285,  285,
+			  285,  285,  285,  293,  293,  293,  293,  293,  293,  293,
+			  293,  293,  293,  293,  293,  293,  293,  285,  285,  285,
+			  293,  293,  293,  293,  293,  293,  293,  293,  293,  293,
+			  293,  293,  293,  285,  293,  293,  293,  293,  293,  293,
+			  293,  293,  285,  293,  293,  293,  293,  293,  293,  293,
+			  293,  293,  293,  293,  293,  293,  293,  293,  293,  293,
+			  293,  293,  293,  293,  293,    0,  285,  285,  285,  285,
+			  285,  285,  285,  285,  285,  285,  285,  285,  285,  285,
+
+			  285,  285,  285,  285,  285,  285,  285,  285,  285,  285,
+			  285,  285,  285,  285, yy_Dummy>>)
 		end
 
 	yy_ec_template: SPECIAL [INTEGER] is
@@ -993,16 +1342,16 @@ feature {NONE} -- Table templates
 			    3,    1,    1,    4,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    2,    1,    5,    1,    6,    7,    1,    8,
-			    9,   10,    1,    1,   11,   12,    1,   13,   14,   14,
-			   14,   14,   14,   14,   14,   14,   15,   15,   16,   17,
-			   18,    1,   19,    1,    1,   20,   21,   22,   23,   24,
-			   25,   26,   27,   28,   29,   30,   31,   29,   32,   33,
-			   34,   29,   35,   36,   37,   38,   29,   29,   39,   40,
-			   29,   41,   42,   43,    1,   44,    1,   20,   21,   22,
+			    9,   10,    1,    1,   11,   12,    1,   13,   14,   15,
+			   16,   17,   18,   14,   19,   14,   20,   21,   22,   23,
+			   24,    1,   25,    1,    1,   26,   27,   28,   29,   30,
+			   31,   32,   33,   34,   35,   36,   37,   35,   38,   39,
+			   40,   35,   41,   42,   43,   44,   35,   35,   45,   46,
+			   35,   47,   48,   49,    1,   50,    1,   26,   27,   28,
 
-			   23,   24,   25,   26,   27,   28,   29,   30,   31,   29,
-			   32,   33,   34,   29,   35,   36,   37,   38,   29,   29,
-			   39,   40,   29,   45,   46,   47,    1,    1,    1,    1,
+			   29,   30,   31,   32,   33,   34,   35,   36,   37,   35,
+			   38,   39,   40,   35,   41,   42,   43,   44,   35,   35,
+			   45,   46,   35,   51,   52,   53,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -1023,50 +1372,59 @@ feature {NONE} -- Table templates
 		once
 			Result := yy_fixed_array (<<
 			    0,    1,    1,    2,    1,    3,    4,    5,    6,    1,
-			    1,    1,    7,    1,    8,    9,    1,    1,    1,    1,
-			    8,    8,    8,    8,    8,    8,   10,   10,   10,   10,
-			   10,   10,   10,   10,   10,   11,   12,   13,   14,   15,
-			   16,    1,    1,    1,   17,   18,    1,    4, yy_Dummy>>)
+			    1,    1,    7,    1,    8,    8,    9,   10,   11,   12,
+			   13,   14,    1,    1,    1,    1,   15,   15,   15,   15,
+			   15,   15,   16,   16,   16,   16,   16,   16,   16,   16,
+			   16,   17,   18,   19,   20,   21,   22,    1,    1,    1,
+			   23,   24,    1,   25, yy_Dummy>>)
 		end
 
 	yy_accept_template: SPECIAL [INTEGER] is
 		once
 			Result := yy_fixed_array (<<
-			    0,    0,    0,    0,    0,    0,    0,   46,   46,   53,
-			   53,    0,    0,   53,   53,   66,   64,   17,   18,   64,
-			   16,   64,    8,   64,   27,    9,   10,   26,   26,   26,
-			   26,   26,   26,   26,   26,   11,   12,   64,   32,   34,
-			   36,   33,   38,   46,   51,   50,   50,   50,   50,   53,
-			   58,   57,   57,   57,   57,   62,   63,   39,   40,   41,
-			   42,   64,   43,   45,   17,    0,   29,   15,    0,    0,
-			    0,    0,    0,    0,   14,    0,    0,   17,   27,   26,
-			   26,   26,   26,   26,   26,   26,   26,   37,    0,    0,
-			   36,   35,   38,   46,    0,   47,   47,   52,    0,    0,
+			    0,    0,    0,    0,    0,    0,    0,   67,   67,   74,
+			   74,    0,    0,   74,   74,   87,   85,   17,   18,   85,
+			   16,   85,    8,   85,   48,    9,   10,   47,   47,   47,
+			   47,   47,   47,   47,   47,   47,   47,   47,   47,   47,
+			   11,   12,   85,   53,   55,   57,   54,   59,   67,   72,
+			   71,   71,   71,   71,   74,   79,   78,   78,   78,   78,
+			   83,   84,   60,   61,   62,   63,   85,   64,   66,   17,
+			    0,   50,   15,    0,    0,    0,    0,    0,    0,   14,
+			    0,    0,   17,   48,   47,   46,   47,   47,   47,   47,
+			   47,   47,   47,   47,   47,   47,   47,   47,   47,   47,
 
-			   49,   53,   58,    0,   54,   54,   59,    0,   60,    0,
-			    0,   56,   39,   39,   43,   45,   44,    0,    0,    0,
-			    0,    0,    0,    0,   13,   28,    0,    0,   26,   26,
-			   26,   26,   26,   26,   26,    0,    0,    0,   48,    0,
-			    0,   61,   55,    0,    0,    0,    0,    0,    0,    0,
-			    0,    0,    0,   26,   26,   26,   26,   25,   26,   21,
-			    0,    0,    0,    0,    0,    0,    0,    2,    0,    0,
-			    0,    0,    5,   26,   26,   26,   26,   26,    0,   30,
-			    0,    0,    3,    6,    1,   26,   26,   22,   26,   26,
-			   31,    7,    0,   20,   26,   19,   24,    0,   26,    4,
+			   58,    0,    0,   57,   56,   59,   67,    0,   68,   68,
+			   73,    0,    0,   70,   74,   79,    0,   75,   75,   80,
+			    0,   81,    0,    0,   77,   60,   60,   64,   66,   65,
+			    0,    0,    0,    0,    0,    0,    0,   13,   49,    0,
+			    0,   47,   47,   47,   47,   47,   47,   47,   47,   47,
+			   47,   47,   47,   47,   47,   47,    0,    0,    0,   69,
+			    0,    0,   82,   76,    0,    0,    0,    0,    0,    0,
+			    0,    0,    0,    0,   47,   47,   47,   47,   47,   47,
+			   47,   47,   39,   47,   47,   30,   47,   47,   47,    0,
+			    0,    0,    0,    0,    0,    0,    2,    0,    0,    0,
 
-			   23,    0, yy_Dummy>>)
+			    0,    5,   47,   47,   47,   47,   47,   47,   47,   47,
+			   47,   47,   47,   47,   47,   38,    0,   51,    0,    0,
+			    3,    6,    1,   47,   47,   47,   47,   47,   33,   47,
+			   47,   47,   47,   47,   47,   47,   47,   52,    7,    0,
+			   47,   29,   47,   40,   47,   47,   19,   24,   37,   31,
+			   32,   47,   47,    0,   44,   47,   47,   41,   47,   47,
+			   47,   43,    4,   34,   47,   47,   47,   47,   20,   47,
+			   47,   47,   25,   42,   47,   45,   21,   22,   23,   26,
+			   27,   28,   47,   35,   36,    0, yy_Dummy>>)
 		end
 
 feature {NONE} -- Constants
 
-	yyJam_base: INTEGER is 710
+	yyJam_base: INTEGER is 1003
 			-- Position in `yy_nxt'/`yy_chk' tables
 			-- where default jam table starts
 
-	yyJam_state: INTEGER is 201
+	yyJam_state: INTEGER is 285
 			-- State id corresponding to jam state
 
-	yyTemplate_mark: INTEGER is 202
+	yyTemplate_mark: INTEGER is 286
 			-- Mark between normal states and templates
 
 	yyNull_equiv_class: INTEGER is 1
@@ -1085,10 +1443,10 @@ feature {NONE} -- Constants
 			-- regular expression with both leading
 			-- and trailing parts having variable length?
 
-	yyNb_rules: INTEGER is 65
+	yyNb_rules: INTEGER is 86
 			-- Number of rules
 
-	yyEnd_of_buffer: INTEGER is 66
+	yyEnd_of_buffer: INTEGER is 87
 			-- End of buffer rule code
 
 	yyLine_used: BOOLEAN is false

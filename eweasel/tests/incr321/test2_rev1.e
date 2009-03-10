@@ -13,8 +13,7 @@ inherit
 create
 	default_create, make_from_test
 convert
-	make_from_test ({TEST}),
-	to_test1: {TEST}
+	make_from_test ({TEST})
 
 feature
 	make_from_test (a: TEST)

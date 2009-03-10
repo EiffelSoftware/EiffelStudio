@@ -14,6 +14,7 @@ feature {NONE} -- Creation
 			if a /= Void then
 				x := a
 				a.f
+				g (a)
 			elseif a = Current then
 				create a.make
 			else
@@ -35,6 +36,10 @@ feature {TEST} -- Tests
 			a_attached: a /= Void
 		do
 			a.f
+		end
+
+	g (x: attached TEST)
+		do
 		end
 
 end

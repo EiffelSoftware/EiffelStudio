@@ -129,10 +129,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	write_message_to_data ( d: MANAGED_POINTER;
-							message: STRING;
-							start_index, end_index: NATURAL;
-							fragment: BOOLEAN)
+	write_message_to_data (d: MANAGED_POINTER;
+						   message: STRING;
+						   start_index, end_index: NATURAL;
+						   fragment: BOOLEAN)
 			-- Encodes the string so that it can be sent over the net and be read by mod_xebra.
 		require
 			data_attached: d /= Void

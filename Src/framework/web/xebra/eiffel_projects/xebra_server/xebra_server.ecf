@@ -12,6 +12,7 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net-safe.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf"/>
+		<cluster name="thread_utilities" location="\home\sandrod\workspace\xebra\eiffel_projects\thread_utilities\" recursive="true"/>
 		<cluster name="xebra_server" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

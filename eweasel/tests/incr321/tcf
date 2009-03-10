@@ -9,10 +9,8 @@
 test_name 	 eif-gen-conf-init-crash
 test_description After a sequence of changes ending with a melt, system execution crashes with a seg fault in eif_gen_conf_init and no exception trace
 
-
 copy_sub 	Ace $TEST Ace
 copy_raw 	test_rev1.e $CLUSTER test.e
-copy_raw 	test1_rev1.e $CLUSTER test1.e
 copy_raw 	test2_rev1.e $CLUSTER test2.e
 
 compile_frozen
@@ -25,6 +23,7 @@ execute_work 	NONE 	exec_output1
 execute_result 	ok
 compare		exec_output1 output
 
+-- We are adding TEST1 to the universe.
 copy_raw 	test1_rev2.e $CLUSTER test1.e
 copy_raw 	test_rev2.e $CLUSTER test.e
 compile_melted
@@ -34,8 +33,8 @@ execute_work 	NONE 	exec_output2
 execute_result 	ok
 compare		exec_output2 output
 
+-- We are removing TEST1 from the universe
 copy_raw 	test_rev3.e $CLUSTER test.e
-copy_raw 	test1_rev3.e $CLUSTER test1.e
 
 compile_melted
 compile_result ok
@@ -55,25 +54,7 @@ execute_final 	none 	exec_output4
 execute_result 	ok
 compare		exec_output4 output
 
-copy_raw 	test_rev4.e $CLUSTER test.e
-
-compile_melted
-compile_result 	ok
-
-execute_work 	NONE 	exec_output5
-execute_result 	ok
-compare		exec_output5 output
-
-compile_frozen
-compile_result 	ok
-
-c_compile_work
-c_compile_result ok
-
-execute_work 	NONE 	exec_output6
-execute_result 	ok
-compare		exec_output6 output
-
+-- We are adding some new generic derivations of TEST2
 copy_raw 	test_rev5.e $CLUSTER test.e
 copy_raw 	test2_rev2.e $CLUSTER test2.e
 compile_melted

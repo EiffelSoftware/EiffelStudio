@@ -38,7 +38,9 @@ feature -- Access
 		local
 			l_context: like context
 		do
-			if internal_description = Void then
+			if attached internal_description as l_result then
+				Result := l_result
+			else
 				if has_context then
 					l_context := context
 					check l_context_attached: l_context /= Void end
@@ -48,10 +50,10 @@ feature -- Access
 				end
 				internal_description := Result
 			end
-			Result := internal_description
 		ensure
 			result_not_void: Result /= Void
 			not_result_is_empty: not Result.is_empty
+			result_consistent: Result ~ description
 		end
 
 	error_level_tag: STRING
@@ -109,7 +111,7 @@ feature {NONE} -- Helpers
 
 feature {NONE} -- Implementation: Internal cache
 
-	internal_description: STRING
+	internal_description: detachable STRING
 			-- Cached version of `description'.
 			-- Note: Do not use directly!
 

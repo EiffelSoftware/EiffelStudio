@@ -11,6 +11,8 @@ deferred class
 
 inherit
 	XB_PARSE_HANDLER
+	ERROR_SHARED_ERROR_MANAGER
+
 
 feature -- Access
 
@@ -34,78 +36,76 @@ feature -- Access
 		deferred
 		end
 
-
 feature -- Processing
 
-	handle_string (output_elements: LINKED_LIST [OUTPUT_ELEMENT];
-	 a_string: STRING; a_start_pos: INTEGER)
+	handle_string (a_output_elements: LINKED_LIST [OUTPUT_ELEMENT];
+	 a_string: STRING)
 			-- Extracts the specified tags and handles it with process_inner.
-			-- The strings around the tags are handed over to the next XB_PARSE_TAG.
-			-- The start_pos is needed to correctly fill the position integer in the
-			-- elements hash map.
+			-- The strings around the tags are passed to the next XB_PARSE_TAG.
 		local
-			string: STRING
-			start_tag_pos: INTEGER
-			end_tag_pos: INTEGER
-			cut_away: INTEGER
-			outer: STRING
-			inner: STRING
+			l_string: STRING
+				-- Temp buffer for the input string
+			l_start_tag_pos: INTEGER
+				-- Stores where the start tag begins
+			l_next_start_pos: INTEGER
+				-- Used to ensure there are not two following start tags	
+			l_end_tag_pos: INTEGER
+				-- Stores where the end tag begins
+			l_ok: BOOLEAN
+				-- Is the string accepted	
 		do
-			cut_away := 0
-			string := a_string
-			outer := ""
-			inner := ""
+			l_string := a_string
+			l_ok := true
 
-		--	print ("Entering parse_tag_" + name + " --%N-- will process '" + string + "' which starts at " + a_start_pos.out + " from the orig string.%N")
-			from
+			from until not (l_string.has_substring (start_tag) and l_string.has_substring (end_tag) and l_ok) loop
+					-- Search for start and end pos
+				l_start_tag_pos := l_string.substring_index (start_tag, 1)
+				l_next_start_pos := l_string.substring_index (start_tag, l_start_tag_pos+1)
+				l_end_tag_pos := l_string.substring_index (end_tag, 1)
 
-			until
-				not (string.has_substring (start_tag) and string.has_substring (end_tag))
-			loop
-					-- Search for start tag
-				start_tag_pos := string.substring_index (start_tag, 1)
+				if (l_end_tag_pos <= l_start_tag_pos) or ((l_next_start_pos <= l_end_tag_pos) and (l_next_start_pos > 0))then
+					error_manager.set_last_error (create {ERROR_LONELY_TAG}.make ([l_string]), false)
+					l_ok := false
+				else
+						-- Hand all of the left part before the start tag over to the next parse_tag				
+					if attached {XB_PARSE_HANDLER} next as n then
+						n.handle_string (a_output_elements, l_string.substring (1, l_start_tag_pos-1))
+					end
 
-		--		print ("-found start_tag at " + (start_tag_pos+cut_away).out + "%N")
+						-- Remove the left side
+					l_string.remove_head (l_start_tag_pos + start_tag.count-1)
 
-					-- Hand all of the left part before the start tag over to the next parse_tag				
-				if attached {XB_PARSE_HANDLER} next as n then
-					n.handle_string (output_elements,string.substring (1, start_tag_pos-1), cut_away)
+						-- Search for end tag
+					l_end_tag_pos := l_string.substring_index (end_tag, 1)
+
+						-- Do something meaningfull with the inner string
+					process_inner (l_string.substring (1, l_end_tag_pos-1), a_output_elements)
+
+						-- Remove inner string
+					l_string.remove_head (l_end_tag_pos + end_tag.count-1)
+				end
+			end
+
+			if l_ok then
+				if (l_string.has_substring (start_tag) xor l_string.has_substring (end_tag) and not attached next) then
+					error_manager.set_last_error (create {ERROR_LONELY_TAG}.make ([l_string]), false)
 				end
 
-					-- Remove the left side
-				string.remove_head (start_tag_pos + start_tag.count-1)
-
-					-- Search for end tag
-				end_tag_pos := string.substring_index (end_tag, 1)
-
-					-- Do something meaningfull with the inner string
-				process_inner (string.substring (1, end_tag_pos-1), output_elements, start_tag_pos+a_start_pos+cut_away)
-				cut_away := cut_away + start_tag_pos + start_tag.count-1
-
-
-		--		print ("-found end_tag at " + (cut_away + end_tag_pos).out + "%N")
-
-					-- Remove inner string
-				string.remove_head (end_tag_pos + end_tag.count-1)
-				cut_away := cut_away +end_tag_pos + end_tag.count-1
-			end
-
 				-- Hand right side of most right tag over to next parse_tag
-			if attached {XB_PARSE_HANDLER} next as n then
-				n.handle_string (output_elements, string, end_tag_pos+a_start_pos+cut_away)
+				if (attached {XB_PARSE_HANDLER} next as n) then
+					n.handle_string (a_output_elements, l_string)
+				end
 			end
-		--	print ("Parse_tag_" + name + " is done. --%N")
+
 		end
 
-	process_inner (an_inner_string: STRING; output_elements: LINKED_LIST [OUTPUT_ELEMENT];
-			a_position: INTEGER )
+	process_inner (a_inner_string: STRING; a_output_elements: LINKED_LIST [OUTPUT_ELEMENT])
 			-- Knows what to do with the string inside a tag.
 		deferred
 		end
 
 invariant
 	tags_not_equal: not start_tag.is_equal(end_tag)
-
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

@@ -24,8 +24,8 @@ feature -- Status Setting
 
 feature -- Processing		
 
-	handle_string (output_elements: LINKED_LIST [OUTPUT_ELEMENT]; a_string: STRING; a_start_pos: INTEGER)
-	 		-- Handles the string
+	handle_string (output_elements: LINKED_LIST [OUTPUT_ELEMENT]; a_string: STRING)
+	 		-- Handles the string.
 	 	deferred
 	 	end
 

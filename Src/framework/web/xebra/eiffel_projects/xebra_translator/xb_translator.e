@@ -8,6 +8,9 @@ note
 class
 	XB_TRANSLATOR
 
+inherit
+	ERROR_SHARED_ERROR_MANAGER
+
 create
 	make
 
@@ -22,12 +25,10 @@ feature {NONE} -- Initialization
 			name := a_name
 		end
 
-
 feature {NONE} -- Access
 
 	preprocessor: XB_PREPROCESSOR
-			-- Preprocesses the file
-
+			-- Used to parse the file
 
 feature -- Access
 
@@ -39,61 +40,66 @@ feature -- Access
 
 feature {NONE} -- Processing
 
-
 	read_file (a_filename: STRING): STRING
 			--reads a file into a string			
 		local
-			a_file: PLAIN_TEXT_FILE
-		--	cannot_read: UT_CANNOT_READ_FILE_ERROR
+			l_file: PLAIN_TEXT_FILE
+			l_failed: BOOLEAN
 		do
 			Result := ""
-			create a_file.make (a_filename)
-			a_file.open_read
-			if not a_file.is_open_read then
-		--		create cannot_read.make (a_filename)
-			--	error_handler.report_error (cannot_read)
-
+			if l_failed then
+				error_manager.set_last_error (create {ERROR_FILENOTFOUND}.make ([a_filename]), false)
 			else
-				from
-
-				until
-					a_file.end_of_file
-				loop
-					a_file.read_line
-
-					if attached {STRING} a_file.last_string as s then
-						Result.append(s)
+				create l_file.make (a_filename)
+				if not l_file.exists then
+					error_manager.set_last_error (create {ERROR_FILENOTFOUND}.make ([a_filename]), false)
+				else
+					l_file.open_read
+					if not l_file.is_open_read then
+						error_manager.set_last_error (create {ERROR_FILENOTFOUND}.make ([a_filename]), false)
 					else
-						Result.append ("")
+						from until l_file.end_of_file
+						loop
+							l_file.read_line
+
+							if attached {STRING} l_file.last_string as s then
+								Result.append(s)
+							else
+								Result.append ("")
+							end
+						end
 					end
 				end
 			end
+			rescue
+				l_failed := true
+				retry
 		end
 
 feature -- Status setting
 
 	set_output_path (a_path: like output_path)
-		-- Sets the output_path
+			-- Sets the output_path
 		do
 			output_path := a_path
 		end
 
 	set_name (a_name: like name)
-		-- Sets the name
+			-- Sets the name
 		do
 			name := a_name
 		end
 
 feature -- Processing
 
-	process_with_file (a_filename: STRING): BOOLEAN
-				--
+	process_with_file (a_filename: STRING)
+			-- Processes a file.
 		do
-			Result := process_with_string (read_file(a_filename))
+			process_with_string (read_file(a_filename))
 		end
 
-	process_with_string (a_string: STRING): BOOLEAN
-			--
+	process_with_string (a_string: STRING)
+			-- Processes a string.
 		local
 			webapp_generator: WEBAPP_GENERATOR
 			root_element: ROOT_SERVLET_ELEMENT
@@ -104,7 +110,6 @@ feature -- Processing
 				create root_element.make_with_elements (name, name + "_controller", output_elements)
 				webapp_generator.put_servlet (root_element)
 				webapp_generator.generate
-				Result := true --?
 		end
 
 note

@@ -1,59 +1,45 @@
 note
-	description : "Runns the xebra translator"
-	date        : "$Date$"
-	revision    : "$Revision$"
+	description: "[
+		no comment yet
+	]"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
-	APPLICATION
+	ERROR_FILENOTFOUND
 
 inherit
-	ERROR_SHARED_ERROR_MANAGER
+	ERROR_ERROR_INFO
+	redefine
+		make
+		end
 
 create
 	make
 
-feature {NONE} -- Initialization
+feature {NONE} -- Access
 
-	make
-			-- Make the application.
+	make (a_context: like context)
+			-- Initializes an error.
+			--
+			-- `a_context': Any optional contextual information.
 		do
-			create translator.make ("testapp")
-			run
+			context := a_context
+			internal_description := ""
 		end
 
-	run
-			-- Runns the application.
-		local
-			l_printer: ERROR_CUI_PRINTER
+
+	dollar_description: STRING
+			-- Dollar encoded description. ${n} are replaced by array indicies.
+			-- See {STRING_FORMATTER}
 		do
-			print ("%N============================%NTranslator started...%N")
-
-
-			translator.set_output_path ("../../websites/testapp/")
-			translator.process_with_file ("../../websites/testapp/testapp.xeb")
-
-
-			create l_printer.default_create
-			if error_manager.has_warnings then
-				error_manager.trace_warnings (l_printer)
-			end
-
-			if not error_manager.is_successful then
-				error_manager.trace_last_error (l_printer)
-			else
-				print ("Output file generated to '")
-				print (translator.output_path)
-				print ("'.")
-			end
+			Result := "File not found ${1}"
 		end
 
-feature -- Access
 
-	translator: XB_TRANSLATOR
-		-- Parses the file
-
-
-;note
+note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
@@ -85,6 +71,3 @@ feature -- Access
 			Customer support http://support.eiffel.com
 		]"
 end
-
-
-

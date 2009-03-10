@@ -18,10 +18,9 @@ create
 feature {NONE} -- Initialization
 
 	make
-			-- Initialization for `Current'.
+			-- Initialization for `XB_PARSE_HANDLER_TAG_OUTPUT_CALL'.
 		do
 		end
-
 
 feature -- Access
 
@@ -31,7 +30,6 @@ feature -- Access
 			Result := "<%%="
 		end
 
-
 	end_tag: STRING
 			-- The ending tag
 		do
@@ -39,20 +37,20 @@ feature -- Access
 		end
 
 	name: STRING
+			-- The name of the current parse tag
 		do
 			Result := "<%%="
 		end
 
-
 feature -- Process
 
-	process_inner (an_inner_string: STRING;  output_elements: LINKED_LIST [OUTPUT_ELEMENT];
-			a_position: INTEGER )
+	process_inner (a_inner_string: STRING;  a_output_elements: LINKED_LIST [OUTPUT_ELEMENT])
 			-- Knows what to do with the string inside a tag.
 	do
-			print ("-processing OUTP string '" + an_inner_string + "' at pos " + a_position.out + "%N")
-			output_elements.put_right (create {OUTPUT_CALL_ELEMENT}.make (an_inner_string))
+			print ("-processing OUTP string '" + a_inner_string + "'%N")
+			a_output_elements.put_right (create {OUTPUT_CALL_ELEMENT}.make (a_inner_string))
 	end
+
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -18,19 +18,17 @@ create
 feature {NONE} -- Initialization
 
 	make
-			-- Initialization for `Current'.
+			-- Initialization for `XB_PARSE_HANDLER_HTML'.
 		do
-
 		end
-
 
 feature -- Processing		
 
 	handle_string (output_elements: LINKED_LIST [OUTPUT_ELEMENT];
-	 a_string: STRING; a_start_pos: INTEGER)
-	 		-- Handles the string
+	 a_string: STRING)
+	 		-- Handles the string.
 	 	do
-	 		print ("-processing HTML string '" + a_string + "' at pos " + a_start_pos.out + "%N")
+	 		print ("-processing HTML string '" + a_string + "'%N")
 			output_elements.put_right (create {PLAIN_XHTML_ELEMENT}.make (a_string))
 	 	end
 

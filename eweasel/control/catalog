@@ -456,6 +456,7 @@ test	inherited-binary-with-generic		valid243 tcf pass validity formal generic bi
 test	bogus-vuta-on-procedure-target		valid244 tcf pass validity attached void_safe
 test	explicit-anchored-expanded-creation-type valid245 tcf pass validity
 test	inherited-conversion-to-like-current	valid246 tcf pass validity
+test	undetected-vycq-error				valid247 tcf pass validity conversion
 
 -- Multiple error reporting tests
 test	multi-error-degree-4	multierr001 tcf pass multi-errors
@@ -2082,6 +2083,7 @@ test	agent-dotnet-failure			agent007 tcf pass agents dotnet
 test	agent-on-tuple-label			agent008 tcf pass agents tuple
 test	agent-on-with-attached-operands	agent009 tcf fail agents tuple
 test	agent-calling-attribute-with-formal-type	agent010 tcf pass agents formal generic
+test	various-agent-creation-and-calls	agent011 tcf pass agents
 
 -- Tests for platform specific results
 test	print-large-pointer				platform001 tcf pass platform

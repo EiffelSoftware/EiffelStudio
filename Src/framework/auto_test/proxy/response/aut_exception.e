@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			trace := an_exception_trace
 			set_is_invariant_violation_on_feature_entry (an_inv_violation_on_entry_flag)
 			parse_trace (trace, {AUT_SHARED_INTERPRETER_INFO}.interpreter_root_class_name, {AUT_SHARED_INTERPRETER_INFO}.feature_name_for_byte_code_injection)
-			is_test_exceptional := is_test_exceptional or else is_invariant_violation_on_feature_entry
+			is_test_invalid := is_test_invalid or else is_invariant_violation_on_feature_entry
 		ensure
 			exception_code_set: code = an_exception_code
 			exception_recipient_name_set: recipient_name = an_exception_recipient_name

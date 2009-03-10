@@ -13,11 +13,8 @@ copy_sub 	Ace $TEST Ace
 copy_raw 	test_rev1.e $CLUSTER test.e
 copy_raw 	test2_rev1.e $CLUSTER test2.e
 
-compile_frozen
+compile_melted
 compile_result 	ok
-
-c_compile_work
-c_compile_result ok
 
 execute_work 	NONE 	exec_output1
 execute_result 	ok

@@ -107,31 +107,28 @@ feature -- Processing
 			Result := constructor
 		end
 
-
 	generate_constructor_for_request_handler (some_servlets: LIST [ROOT_SERVLET_ELEMENT]): FEATURE_ELEMENT
 			-- Generates the constructor for the request handler
 		local
 			constructor: FEATURE_ELEMENT
 			feature_body: LIST [SERVLET_ELEMENT]
 			locals: LIST [VARIABLE_ELEMENT]
-			servlet_local: VARIABLE_ELEMENT
 			servlet: ROOT_SERVLET_ELEMENT
 		do
 			create {LINKED_LIST [SERVLET_ELEMENT]} feature_body.make
-			feature_body.extend (wrap ("create {HASH_TABLE [SERVLET, STRING]} servlets.make (5)"))
+			feature_body.extend (wrap ("create request_pool.make (10)"))
+			feature_body.extend (wrap ("create {HASH_TABLE [SESSION, STRING]} session_map.make (5)"))
+			feature_body.extend (wrap ("create {HASH_TABLE [STATELESS_SERVLET, STRING]} stateless_servlets.make (5)"))
 			from
 				some_servlets.start
 			until
 				some_servlets.after
 			loop
 				servlet := some_servlets.item
-				feature_body.extend (wrap ("create {" + servlet.name.as_upper + "} servlet.make"))
-				feature_body.extend (wrap ("servlets.put (servlet, %"" + servlet.name.as_upper + "%")"))
+				feature_body.extend (wrap ("stateless_servlets.put (create {" + servlet.name.as_upper + "}.make , %"" + servlet.name.as_upper + "%")"))
 				some_servlets.forth
 			end
-			create servlet_local.make ("servlet", "SERVLET")
 			create {LINKED_LIST [VARIABLE_ELEMENT]} locals.make
-			locals.extend (servlet_local)
 			create constructor.make_with_locals ("make", feature_body, locals)
 			Result := constructor
 		end

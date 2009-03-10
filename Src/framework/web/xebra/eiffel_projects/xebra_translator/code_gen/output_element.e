@@ -15,7 +15,7 @@ inherit
 feature -- Initialisation
 
 	make_empty
-		-- Set all string attributes to empty
+		-- All string attributes are initialized empty
 		do
 			controller_var := ""
 			response_name := ""

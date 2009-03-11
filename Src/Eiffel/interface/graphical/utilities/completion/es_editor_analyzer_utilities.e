@@ -20,16 +20,47 @@ inherit
 
 feature -- Status report
 
-	is_attachment_token (a_start_token: attached EDITOR_TOKEN): BOOLEAN
+	is_attachment_token (a_token: attached EDITOR_TOKEN; a_line: attached EDITOR_LINE): BOOLEAN
 			-- Determines if a token is an attached/detachable marker token
 			--
 			-- `a_token' : The token to determine if to be a attachment token.
 			-- `Result'  : True if the supplied token is a atachment token; False otherwise.
 		do
-			Result := is_keyword_token (a_start_token, {EIFFEL_KEYWORD_CONSTANTS}.detachable_keyword) or else
-					is_keyword_token (a_start_token, {EIFFEL_KEYWORD_CONSTANTS}.attached_keyword) or else
-					is_text_token (a_start_token, "?", False) or else
-					is_text_token (a_start_token, "!", False)
+			Result := is_keyword_token (a_token, {EIFFEL_KEYWORD_CONSTANTS}.detachable_keyword) or else
+					is_keyword_token (a_token, {EIFFEL_KEYWORD_CONSTANTS}.attached_keyword) or else
+					is_text_token (a_token, "?", False) or else
+					is_text_token (a_token, "!", False)
+		end
+
+	is_identifier_token (a_token: attached EDITOR_TOKEN; a_line: attached EDITOR_LINE): BOOLEAN
+			--
+		local
+			l_image: STRING_32
+			i, l_count: INTEGER
+			c32: CHARACTER_32
+			c: CHARACTER
+		do
+			if is_text_token (a_token, Void, False) and then not is_keyword_token (a_token, Void) then
+				l_image := a_token.wide_image
+				check attached l_image end
+				if not l_image.is_empty then
+					Result := True
+					l_count := l_image.count
+					from i := 1 until i > l_count or not Result loop
+						c32 := l_image.item (i)
+						if c32.is_character_8 then
+							c := c.to_character_8
+							Result := c.is_alpha
+							if not Result and then i > 1 then
+								Result := c.is_digit or else c = '_'
+							end
+						else
+							check editor_is_now_accepting_unicode: False end
+						end
+						i := i + 1
+					end
+				end
+			end
 		end
 
 feature -- Basic operations
@@ -51,7 +82,7 @@ feature -- Basic operations
 			l_next: detachable like next_text_token
 			l_match: detachable like next_text_token
 		do
-			if is_attachment_token (a_start_token) then
+			if is_attachment_token (a_start_token, a_start_line) then
 					-- Start of the type, using an attachment mark
 				l_next := next_text_token (a_start_token, a_start_line, True, a_end_token)
 			else

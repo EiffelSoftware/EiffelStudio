@@ -57,7 +57,7 @@ feature
 		local
 			prog, exec_dir, infile, outfile, savefile: STRING;
 			execute_cmd, exec_error: STRING;
-			prog_file: RAW_FILE;
+			prog_file, input_file: RAW_FILE;
 			execution: EW_SYSTEM_EXECUTION;
 		do
 			execute_cmd := test.environment.value (Execute_command_name);
@@ -83,9 +83,21 @@ feature
 				create prog_file.make (prog);
 				exec_error := executable_file_error (prog)
 				if exec_error = Void then
-					create execution.make (prog, arguments, execute_cmd, exec_dir, infile, outfile, savefile);
-					test.set_execution_result (execution.next_execution_result);
-					execute_ok := True;
+					execute_ok := True
+					if infile /= Void and then not infile.is_equal (os.null_file_name) then
+						create input_file.make (infile)
+						if not input_file.exists then
+							failure_explanation := "input file not found";
+							execute_ok := False
+						elseif not input_file.is_plain then
+							failure_explanation := "input file not a plain file";
+							execute_ok := False
+						end
+					end
+					if execute_ok then
+						create execution.make (prog, arguments, execute_cmd, exec_dir, infile, outfile, savefile);
+						test.set_execution_result (execution.next_execution_result);
+					end
 				else
 					failure_explanation := exec_error
 					execute_ok := False;

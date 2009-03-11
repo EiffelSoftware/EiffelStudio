@@ -47,7 +47,7 @@ compile_result 	ok
 c_compile_final
 c_compile_result	ok
 
-execute_final 	none 	exec_output4
+execute_final 	NONE 	exec_output4
 execute_result 	ok
 compare		exec_output4 output
 

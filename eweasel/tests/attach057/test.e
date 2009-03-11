@@ -15,6 +15,7 @@ feature {NONE} -- Creation
 				x := a
 				a.f
 				g (a)
+				a.g (a)
 			elseif a = Current then
 				create a.make
 			else

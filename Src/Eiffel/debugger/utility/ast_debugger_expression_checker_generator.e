@@ -16,7 +16,8 @@ inherit
 			process_access_feat_as,
 			check_type,
 			feature_with_name_using,
-			match_list_of_class
+			match_list_of_class,
+			is_void_safe
 		end
 
 feature -- Settings
@@ -128,6 +129,15 @@ feature -- Type checking
 			type_a_checker.init_for_checking (context.current_feature, context.current_class, Void, error_handler)
 			check_type (a_type_as)
 			Result := last_type
+		end
+
+feature {AST_FEATURE_CHECKER_GENERATOR}
+
+	is_void_safe (a_class: CLASS_C): BOOLEAN
+			-- <Precursor>
+			-- Never check void-safety for debugger's expressions
+		do
+			-- Result := False
 		end
 
 feature {NONE} -- Implementation

@@ -23,8 +23,8 @@ feature -- Status report
 	is_attachment_token (a_token: attached EDITOR_TOKEN; a_line: attached EDITOR_LINE): BOOLEAN
 			-- Determines if a token is an attached/detachable marker token
 			--
-			-- `a_token' : The token to determine if to be a attachment token.
-			-- `Result'  : True if the supplied token is a atachment token; False otherwise.
+			-- `a_token' : The token to determine if to be an attachment token.
+			-- `Result'  : True if the supplied token is an atachment token; False otherwise.
 		do
 			Result := is_keyword_token (a_token, {EIFFEL_KEYWORD_CONSTANTS}.detachable_keyword) or else
 					is_keyword_token (a_token, {EIFFEL_KEYWORD_CONSTANTS}.attached_keyword) or else
@@ -33,7 +33,10 @@ feature -- Status report
 		end
 
 	is_identifier_token (a_token: attached EDITOR_TOKEN; a_line: attached EDITOR_LINE): BOOLEAN
+			-- Determines if a token is an Eiffel identifier token
 			--
+			-- `a_token' : The token to determine if to be an identifier token.
+			-- `Result'  : True if the supplied token is an identifier token; False otherwise.
 		local
 			l_image: STRING_32
 			i, l_count: INTEGER
@@ -49,7 +52,7 @@ feature -- Status report
 					from i := 1 until i > l_count or not Result loop
 						c32 := l_image.item (i)
 						if c32.is_character_8 then
-							c := c.to_character_8
+							c := c32.to_character_8
 							Result := c.is_alpha
 							if not Result and then i > 1 then
 								Result := c.is_digit or else c = '_'

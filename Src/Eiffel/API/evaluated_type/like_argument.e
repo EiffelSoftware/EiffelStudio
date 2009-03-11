@@ -111,9 +111,11 @@ feature -- Output
 		do
 			st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_L_bracket)
 			if has_attached_mark then
-				st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_exclamation)
+				st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_attached_keyword, Void)
+				st.add_space
 			elseif has_detachable_mark then
-				st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_question)
+				st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_detachable_keyword, Void)
+				st.add_space
 			end
 			st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_Like_keyword, Void)
 			st.add_space

@@ -107,9 +107,11 @@ feature {TYPE_A} -- Visitors
 			l_class: CLASS_C
 		do
 			if a_type.has_attached_mark then
-				text_formatter.process_symbol_text (ti_exclamation)
+				text_formatter.process_keyword_text (ti_attached_keyword, Void)
+				text_formatter.add_space
 			elseif a_type.has_detachable_mark then
-				text_formatter.process_symbol_text (ti_question)
+				text_formatter.process_keyword_text (ti_detachable_keyword, Void)
+				text_formatter.add_space
 			end
 			if a_type.has_expanded_mark then
 				text_formatter.process_keyword_text (ti_expanded_keyword, Void)
@@ -135,9 +137,11 @@ feature {TYPE_A} -- Visitors
 			-- Process `a_type'.
 		do
 			if a_type.has_attached_mark then
-				text_formatter.process_symbol_text (ti_exclamation)
+				text_formatter.process_keyword_text (ti_attached_keyword, Void)
+				text_formatter.add_space
 			elseif a_type.has_detachable_mark then
-				text_formatter.process_symbol_text (ti_question)
+				text_formatter.process_keyword_text (ti_detachable_keyword, Void)
+				text_formatter.add_space
 			end
 			if current_feature /= Void and then current_feature.has_replicated_ast then
 					-- Current feature may be Void.
@@ -186,9 +190,11 @@ feature {TYPE_A} -- Visitors
 			-- Process `a_type'.
 		do
 			if a_type.has_attached_mark then
-				text_formatter.process_symbol_text (ti_exclamation)
+				text_formatter.process_keyword_text (ti_attached_keyword, Void)
+				text_formatter.add_space
 			elseif a_type.has_detachable_mark then
-				text_formatter.process_symbol_text (ti_question)
+				text_formatter.process_keyword_text (ti_detachable_keyword, Void)
+				text_formatter.add_space
 			end
 			text_formatter.process_keyword_text (ti_like_keyword, Void)
 			text_formatter.add_space
@@ -204,9 +210,11 @@ feature {TYPE_A} -- Visitors
 			-- Process `a_type'.
 		do
 			if a_type.has_attached_mark then
-				text_formatter.process_symbol_text (ti_exclamation)
+				text_formatter.process_keyword_text (ti_attached_keyword, Void)
+				text_formatter.add_space
 			elseif a_type.has_detachable_mark then
-				text_formatter.process_symbol_text (ti_question)
+				text_formatter.process_keyword_text (ti_detachable_keyword, Void)
+				text_formatter.add_space
 			end
 			text_formatter.process_keyword_text (ti_like_keyword, Void)
 			text_formatter.add_space
@@ -219,9 +227,11 @@ feature {TYPE_A} -- Visitors
 			l_feat: E_FEATURE
 		do
 			if a_type.has_attached_mark then
-				text_formatter.process_symbol_text (ti_exclamation)
+				text_formatter.process_keyword_text (ti_attached_keyword, Void)
+				text_formatter.add_space
 			elseif a_type.has_detachable_mark then
-				text_formatter.process_symbol_text (ti_question)
+				text_formatter.process_keyword_text (ti_detachable_keyword, Void)
+				text_formatter.add_space
 			end
 			text_formatter.process_keyword_text (ti_like_keyword, Void)
 			text_formatter.add_space

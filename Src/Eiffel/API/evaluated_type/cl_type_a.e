@@ -291,9 +291,11 @@ feature -- Output
 	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C)
 		do
 			if has_attached_mark then
-				st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_exclamation)
+				st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_attached_keyword, Void)
+				st.add_space
 			elseif has_detachable_mark then
-				st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_question)
+				st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_detachable_keyword, Void)
+				st.add_space
 			end
 			if has_expanded_mark then
 				st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_expanded_keyword, Void)

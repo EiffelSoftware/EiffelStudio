@@ -57,6 +57,9 @@ feature -- Keywords
 	ti_Deferred_keyword: STRING = "deferred"
 			-- "deferred" keyword
 
+	ti_detachable_keyword: STRING = "detachable"
+			-- "attached" keyword
+
 	ti_Do_keyword: STRING = "do"
 			-- "do" keyword
 

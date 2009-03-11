@@ -176,9 +176,11 @@ feature -- Output
 			ec := Eiffel_system.class_of_id (class_id)
 			st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_l_bracket)
 			if has_attached_mark then
-				st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_exclamation)
+				st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_attached_keyword, Void)
+				st.add_space
 			elseif has_detachable_mark then
-				st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_question)
+				st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_detachable_keyword, Void)
+				st.add_space
 			end
 			st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_like_keyword, Void)
 			st.add_space

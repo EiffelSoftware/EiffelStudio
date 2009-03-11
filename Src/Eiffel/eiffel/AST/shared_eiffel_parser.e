@@ -66,7 +66,7 @@ feature -- Access
 		end
 
 	entity_feature_parser: EIFFEL_PARSER
-			-- Entity declaration parser.
+			-- Entity feature parser.
 		once
 			create Result.make_with_factory (create {AST_COMPILER_FACTORY})
 			Result.set_feature_parser

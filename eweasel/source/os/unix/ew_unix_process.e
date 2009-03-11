@@ -138,22 +138,22 @@ feature -- Properties
 	input_file_name: STRING;
 			-- Name of file to be used as standard input in
 			-- spawned process if `input_descriptor' is not a
-			-- valid descriptor and `input_piped' is false.  
-			-- A Void value leaves standard input same as 
+			-- valid descriptor and `input_piped' is false.
+			-- A Void value leaves standard input same as
 			-- parent's and an empty string closes standard input
 
 	output_file_name: STRING;
 			-- Name of file to be used as standard output in
 			-- spawned process if `output_descriptor' is not a
-			-- valid descriptor and `output_piped' is false.  
-			-- A Void value leaves standard output same as 
+			-- valid descriptor and `output_piped' is false.
+			-- A Void value leaves standard output same as
 			-- parent's and an empty string closes standard output
 
 	error_file_name: STRING;
 			-- Name of file to be used as standard error in
 			-- spawned process if `error_descriptor' is not a
-			-- valid descriptor and `error_piped' is false.  
-			-- A Void value leaves standard error same as 
+			-- valid descriptor and `error_piped' is false.
+			-- A Void value leaves standard error same as
 			-- parent's and an empty string closes standard error
 
 	input_piped: BOOLEAN;
@@ -179,7 +179,7 @@ feature -- Properties
 feature -- Execution properties
 
 	is_executing: BOOLEAN;
-			-- Is process represented by `Current' currently 
+			-- Is process represented by `Current' currently
 			-- executing?
 
 	process_id: INTEGER;
@@ -271,7 +271,7 @@ feature -- Modification
 
 	set_output_file_name (fname: STRING) is
 			-- Set `output_file_name' to `fname', which must
-			-- be the name of a file writable by the parent 
+			-- be the name of a file writable by the parent
 			-- process.  File is created if it does not exist
 			-- and truncated if it does
 		require
@@ -288,7 +288,7 @@ feature -- Modification
 
 	set_error_file_name (fname: STRING) is
 			-- Set `error_file_name' to `fname', which must
-			-- be the name of a file writable by the parent 
+			-- be the name of a file writable by the parent
 			-- process.  File is created if it does not exist
 			-- and truncated if it does
 		require
@@ -368,7 +368,7 @@ feature -- Modification
 feature -- Execution
 
 	spawn_nowait is
-			-- Spawn process and do not wait for it to report 
+			-- Spawn process and do not wait for it to report
 			-- status before returning.  This routine may
 			-- raise an exception in the parent and/or child
 			-- process.  Feature `in_child' distinguishes whether
@@ -401,7 +401,7 @@ feature -- Execution
 
 	get_status_block is
 			-- Wait for executing child process to report status
-			-- and put it in `status'.  If child has not 
+			-- and put it in `status'.  If child has not
 			-- reported status yet, block until it does
 		require
 			process_executing: is_executing
@@ -419,7 +419,7 @@ feature -- Execution
 		do
 			unix_send_signal (sig, process_id)
 		end
-	
+
 	terminate_hard is
 			-- Send a kill signal (SIGKILL) to child process
 		require
@@ -433,7 +433,7 @@ feature {NONE} -- Implementation
 	build_argument_list is
 			-- Build argument list for `exec_process' call
 			-- and put it in `arguments_for_exec'.
-			-- Make `process_name' argument 0 and append 
+			-- Make `process_name' argument 0 and append
 			-- `arguments' as the rest of the arguments
 		local
 			k, count, lower, pos: INTEGER
@@ -469,9 +469,9 @@ feature {NONE} -- Implementation
 			end
 			arguments_for_exec := a;
 		end
-	
+
 	open_files_and_pipes is
-			-- Open any files that the child process will use 
+			-- Open any files that the child process will use
 			-- for standard input, output or error.  Create
 			-- any pipes that will be needed
 		do
@@ -487,9 +487,14 @@ feature {NONE} -- Implementation
 			elseif input_file_name.is_empty then
 				-- No action
 			else 	-- input_file_name is non-empty
-				create in_file.make_open_read (input_file_name);
+				create in_file.make (input_file_name)
+				if in_file.exists then
+					in_file.open_read
+				else
+					in_file := Void
+				end
 			end
-			
+
 			child_output_file := Void
 			shared_output_pipe := Void
 			out_file := Void
@@ -504,7 +509,7 @@ feature {NONE} -- Implementation
 			else 	-- output_file_name is non-empty
 				create out_file.make_open_write (output_file_name);
 			end
-			
+
 			child_error_file := Void
 			shared_error_pipe := Void
 			err_file := Void
@@ -522,7 +527,7 @@ feature {NONE} -- Implementation
 				create err_file.make_open_write (error_file_name);
 			end
 		end
-	
+
 	setup_parent_process_files is
 			-- Setup files for parent after doing fork
 		do
@@ -542,7 +547,7 @@ feature {NONE} -- Implementation
 			end
 			shared_input_pipe := Void
 			in_file := Void
-			
+
 			if output_piped then
 				create child_output_file.make ("Output_from_child");
 				child_output_file.fd_open_read (shared_output_pipe.read_descriptor)
@@ -559,7 +564,7 @@ feature {NONE} -- Implementation
 			end
 			shared_output_pipe := Void
 			out_file := Void
-			
+
 			if error_same_as_output then
 				-- No action
 			elseif error_piped then
@@ -578,12 +583,12 @@ feature {NONE} -- Implementation
 			end
 			shared_error_pipe := Void
 			err_file := Void
-			
+
 		end
-	
+
 	setup_child_process_files is
 			-- Setup standard input, output and error in
-			-- child process after fork and before calling 
+			-- child process after fork and before calling
 			-- `exec_process'
 		require
 			in_child_process: in_child
@@ -600,7 +605,7 @@ feature {NONE} -- Implementation
 			else 	-- input_file_name is non-empty
 				move_desc (in_file.descriptor, Stdin_descriptor)
 			end
-			
+
 			if output_piped then
 				move_desc (shared_output_pipe.write_descriptor, Stdout_descriptor)
 				shared_output_pipe.close_read_descriptor
@@ -613,7 +618,7 @@ feature {NONE} -- Implementation
 			else 	-- output_file_name is non-empty
 				move_desc (out_file.descriptor, Stdout_descriptor)
 			end
-			
+
 			if error_same_as_output then
 				duplicate_file_descriptor (Stdout_descriptor, Stderr_descriptor)
 			elseif error_piped then
@@ -628,14 +633,14 @@ feature {NONE} -- Implementation
 			else 	-- error_file_name is non-empty
 				move_desc (err_file.descriptor, Stderr_descriptor)
 			end
-		
+
 			-- Close `input_descriptor', `output_descriptor'
 			-- and `error_descriptor' if valid
 
 			if valid_file_descriptor (input_descriptor) then
 				close_file_descriptor (input_descriptor)
 			end
-			if valid_file_descriptor (output_descriptor) and 
+			if valid_file_descriptor (output_descriptor) and
 			   output_descriptor /= input_descriptor then
 				close_file_descriptor (output_descriptor)
 			end
@@ -646,9 +651,9 @@ feature {NONE} -- Implementation
 			end
 
 		end
-	
+
 	move_desc (source, dest: INTEGER) is
-			-- If descriptor `source' is different than 
+			-- If descriptor `source' is different than
 			-- descriptor `dest', duplicate `source' onto `dest'
 			-- and close `source'
 		do
@@ -656,33 +661,33 @@ feature {NONE} -- Implementation
 				duplicate_file_descriptor (source, dest)
 				close_file_descriptor (source)
 			end
-			
+
 		end
-	
+
 	in_file: RAW_FILE
 			-- File to be used by child process for standard input
 			-- when it comes from a file
-	
+
 	out_file: RAW_FILE
 			-- File to be used by child process for standard output
 			-- when it goes to a file
-	
+
 	err_file: RAW_FILE
 			-- File to be used by child process for standard error
 			-- when it goes to a file
-	
+
 	shared_input_pipe: EW_UNIX_PIPE
 			-- Pipe to be used by child process for standard input
-	
+
 	shared_output_pipe: EW_UNIX_PIPE
 			-- Pipe to be used by child process for standard output
-	
+
 	shared_error_pipe: EW_UNIX_PIPE
 			-- Pipe to be used by child process for standard error
-	
+
 	arguments_for_exec: ARRAY [STRING]
 			-- Arguments to be passed to `exec_process'
-	
+
 	child_input_file: RAW_FILE;
 			-- File from which child reads input (and to
 			-- which parent writes output) when
@@ -703,51 +708,51 @@ feature {NONE} -- Implementation
 
 	Stdout_descriptor: INTEGER is 1
 			-- File descriptor for standard output
-	
+
 	Stderr_descriptor: INTEGER is 2
 			-- File descriptor for standard error
 
 invariant
 
-	input_piped_no_desc: input_piped implies 
+	input_piped_no_desc: input_piped implies
 		not valid_file_descriptor (input_descriptor)
-	output_piped_no_desc: output_piped implies 
+	output_piped_no_desc: output_piped implies
 		not valid_file_descriptor (output_descriptor)
-	error_piped_no_desc: error_piped implies 
+	error_piped_no_desc: error_piped implies
 		not valid_file_descriptor (error_descriptor)
-	
+
 	input_piped_no_file: input_piped implies input_file_name = Void
 	output_piped_no_file: output_piped implies output_file_name = Void
 	error_piped_no_file: error_piped implies error_file_name = Void
-	
-	input_named_no_desc: input_file_name /= Void implies 
+
+	input_named_no_desc: input_file_name /= Void implies
 		not valid_file_descriptor (input_descriptor)
-	output_named_no_desc: output_file_name /= Void implies 
+	output_named_no_desc: output_file_name /= Void implies
 		not valid_file_descriptor (output_descriptor)
-	error_named_no_desc: error_file_name /= Void implies 
+	error_named_no_desc: error_file_name /= Void implies
 		not valid_file_descriptor (error_descriptor)
-	
-	input_named_no_pipe: input_file_name /= Void implies 
+
+	input_named_no_pipe: input_file_name /= Void implies
 		not input_piped
-	output_named_no_pipe: output_file_name /= Void implies 
+	output_named_no_pipe: output_file_name /= Void implies
 		not output_piped
-	error_named_no_pipe: error_file_name /= Void implies 
+	error_named_no_pipe: error_file_name /= Void implies
 		not error_piped
-	
+
 	input_desc_no_file: valid_file_descriptor (input_descriptor) implies
 		input_file_name = Void
 	output_desc_no_file: valid_file_descriptor (output_descriptor) implies
 		output_file_name = Void
 	error_desc_no_file: valid_file_descriptor (error_descriptor) implies
 		error_file_name = Void
-	
+
 	input_desc_no_pipe: valid_file_descriptor (input_descriptor) implies
 		not input_piped
 	output_desc_no_pipe: valid_file_descriptor (output_descriptor) implies
 		not output_piped
 	error_desc_no_pipe: valid_file_descriptor (error_descriptor) implies
 		not error_piped
-	
+
 	invalid_descriptor_invalid: not valid_file_descriptor (Invalid_file_descriptor)
 	valid_stdin_descriptor: valid_file_descriptor (Stdin_descriptor)
 	valid_stdout_descriptor: valid_file_descriptor (Stdout_descriptor)

@@ -1783,7 +1783,7 @@ feature -- Implementation
 								last_feature_name_correct: last_feature_name = l_feature.feature_name
 							end
 							last_routine_id_set := l_feature.rout_id_set
-							if not is_qualified_call and then last_access_writable and then l_feature.is_stable then
+							if not is_qualified and then last_access_writable and then l_feature.is_stable then
 								if l_is_in_assignment or else l_is_target_of_creation_instruction then
 										-- The attribute might change its attachment status.
 										-- It is recorded for future checks because

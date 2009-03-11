@@ -3054,6 +3054,7 @@ feature -- Final mode generation
 			retried: BOOLEAN
 			d1, d2: DATE_TIME
 			l_type_id_mapping: ARRAY [INTEGER]
+			l_old_type_id_counter: INTEGER
 		do
 			eiffel_project.terminate_c_compilation
 			if not retried and is_finalization_needed then
@@ -3061,7 +3062,8 @@ feature -- Final mode generation
 				if not il_generation then
 					internal_retrieved_finalized_type_mapping := Void
 					create l_type_id_mapping.make (0, static_type_id_counter.count)
-					process_dynamic_types (False, l_type_id_mapping)
+					l_old_type_id_counter := type_id_counter.value
+					process_dynamic_types (False, l_type_id_mapping, 0)
 				end
 					-- Reset `disposable_descendants' since they can have changed
 					--| Note: That is important to recompute it, as this is a once
@@ -3219,7 +3221,7 @@ feature -- Final mode generation
 						if universe.target.options.is_profile then
 							store_finalized_type_mapping (l_type_id_mapping)
 						end
-						process_dynamic_types (True, l_type_id_mapping)
+						process_dynamic_types (True, l_type_id_mapping, l_old_type_id_counter)
 					end
 				end
 				skeleton_table := Void
@@ -3251,7 +3253,7 @@ feature -- Final mode generation
 				if il_generation then
 					process_optimized_single_types (True, l_type_id_mapping)
 				else
-					process_dynamic_types (True, l_type_id_mapping)
+					process_dynamic_types (True, l_type_id_mapping, l_old_type_id_counter)
 				end
 			end
 
@@ -3922,7 +3924,7 @@ feature -- Generation
 			retry
 		end
 
-	process_dynamic_types (is_restoring: BOOLEAN; a_backup: ARRAY [INTEGER])
+	process_dynamic_types (is_restoring: BOOLEAN; a_backup: ARRAY [INTEGER]; a_type_id_counter_value: INTEGER)
 			-- Processing of the dynamic types.
 			-- This is only needed when finalizing because this is where it is important
 			-- to have `type_id' sorted in topological order. This solves eweasel test#exec256.
@@ -3931,12 +3933,13 @@ feature -- Generation
 			a_backup_not_void: a_backup /= Void
 			a_backup_valid_for_restoring: is_restoring implies
 				(a_backup.lower >= 0 and a_backup.upper <= static_type_id_counter.count)
+			valid_counter_value: is_restoring implies a_type_id_counter_value > 0
 		local
 			class_array: ARRAY [CLASS_C]
 			class_list: ARRAY [CLASS_C]
 			a_class: CLASS_C
 			types: TYPE_LIST
-			l_max_type_id, l_type_id, i, nb: INTEGER
+			l_type_id, i, nb: INTEGER
 			l_class_is_finalized: BOOLEAN
 		do
 			if is_restoring then
@@ -3958,14 +3961,13 @@ feature -- Generation
 							types.after
 						loop
 							l_type_id := a_backup [types.item.static_type_id]
-							l_max_type_id := l_max_type_id.max (l_type_id)
 							reset_type_id (types.item, a_backup [types.item.static_type_id])
 							types.forth
 						end
 					end
 					i := i + 1
 				end
-				type_id_counter.set_value (l_max_type_id)
+				type_id_counter.set_value (a_type_id_counter_value)
 			else
 					-- We simply take types in their topological order from CLASS_C.topological_id
 					-- and then traverse the list and reset the dynamic type id.

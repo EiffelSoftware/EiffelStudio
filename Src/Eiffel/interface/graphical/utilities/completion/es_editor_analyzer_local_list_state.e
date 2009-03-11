@@ -62,7 +62,9 @@ feature {NONE} -- Status report
 				if l_image /= Void and then not l_image.is_empty then
 						-- The only accepted keywords are 'Current' and 'like'.
 					Result := not (l_image.is_case_insensitive_equal ({EIFFEL_KEYWORD_CONSTANTS}.current_keyword) or else
-						l_image.is_case_insensitive_equal ({EIFFEL_KEYWORD_CONSTANTS}.like_keyword))
+						l_image.is_case_insensitive_equal ({EIFFEL_KEYWORD_CONSTANTS}.like_keyword) or else
+						l_image.is_case_insensitive_equal ({EIFFEL_KEYWORD_CONSTANTS}.attached_keyword) or else
+						l_image.is_case_insensitive_equal ({EIFFEL_KEYWORD_CONSTANTS}.detachable_keyword))
 				end
 			elseif attached {EDITOR_TOKEN_TEXT} a_token as l_text then
 					-- Check for end braces, the local could be an object test or argument list.
@@ -84,8 +86,7 @@ feature {NONE} -- Basic operation
 			l_token: attached EDITOR_TOKEN
 			l_line: attached EDITOR_LINE
 			l_stop: BOOLEAN
-			l_parser: like entity_declaration_parser
-			l_declarations: detachable EIFFEL_LIST [TYPE_DEC_AS]
+			l_wrapper: like eiffel_parser_wrapper
 			l_type_dec: detachable TYPE_DEC_AS
 			l_current_frame: attached ES_EDITOR_ANALYZER_FRAME
 		do
@@ -132,10 +133,9 @@ feature {NONE} -- Basic operation
 						-- Parse local declaration block.
 					l_result.prepend_character (' ')
 					l_result.prepend ({EIFFEL_KEYWORD_CONSTANTS}.local_keyword)
-					l_parser ?= entity_declaration_parser
-					l_parser.parse_from_string (l_result, Void)
-					l_declarations ?= l_parser.entity_declaration_node
-					if l_declarations /= Void then
+					l_wrapper := eiffel_parser_wrapper
+					l_wrapper.parse_with_option (entity_declaration_parser.as_attached, l_result, a_info.context_class.group.options, True, a_info.context_class)
+					if attached {EIFFEL_LIST [TYPE_DEC_AS]} l_wrapper.ast_node as l_declarations then
 						l_current_frame := a_info.current_frame
 						from l_declarations.start until l_declarations.after loop
 							l_type_dec := l_declarations.item
@@ -146,8 +146,6 @@ feature {NONE} -- Basic operation
 							l_declarations.forth
 						end
 					end
-						-- Clear any errors
-					error_handler.wipe_out
 				end
 			end
 		end

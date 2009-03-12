@@ -18,24 +18,17 @@ inherit
 		rename
 			bind as socket_bind,
 			close as socket_close
-		select
-			name,
-			cleanup,
-			address
+		undefine
+			send
+		redefine
+			put_managed_pointer
 		end
 
 	DATAGRAM_SOCKET
-		rename
-			name as socket_name,
-			cleanup as socket_cleanup,
-			address as socket_address
 		undefine
-			put_character, putchar, put_string, putstring,
-			put_integer, putint, put_integer_32,
-			put_integer_8, put_integer_16, put_integer_64,
-			put_natural_8, put_natural_16, put_natural, put_natural_32, put_natural_64,
-			put_boolean, putbool,
-			put_real, putreal, put_double, putdouble, put_managed_pointer
+			address_type, cleanup, name
+		redefine
+			put_managed_pointer
 		end
 
 create
@@ -81,13 +74,17 @@ feature -- Input
 		local
 			return_val: INTEGER;
 			peer_addr_size: INTEGER
+			l_peer_address: like peer_address
 		do
 			if peer_address = Void then
 				make_peer_address
 			end
-			peer_addr_size := peer_address.count;
+			l_peer_address := peer_address
+				-- Per postcondition of `make_peer_address' if `peer_address' was Void.
+			check l_peer_address_attached: l_peer_address /= Void end
+			peer_addr_size := l_peer_address.count;
 			create Result.make (size);
-			return_val := c_rcv_from (descriptor, Result.data.item, Result.count, flags, peer_address.socket_address.item, $peer_addr_size);
+			return_val := c_rcv_from (descriptor, Result.data.item, Result.count, flags, l_peer_address.socket_address.item, $peer_addr_size);
 		end
 
 feature -- Output
@@ -117,197 +114,25 @@ feature -- Miscellaneous
 			-- Create a peer address.
 		do
 			create peer_address.make
+		ensure
+			peer_address_attached: peer_address /= Void
 		end
-
-	put_string, putstring (s: STRING)
-			-- Send string `s' through socket.
-		require else
-			socket_exists: exists;
-			opened_for_write: is_open_write;
-			valid_peer: peer_address /= Void
-		local
-			ext: C_STRING
-		do
-			create ext.make (s)
-			c_send_stream_to (descriptor, ext.item, s.count, 0,
-				peer_address.socket_address.item, peer_address.count)
-		end;
 
 	put_managed_pointer (p: MANAGED_POINTER; start_pos, nb_bytes: INTEGER)
 			-- Put data of length `nb_bytes' pointed by `start_pos' index in `p' at
 			-- current position.
-		require else
-			p_not_void: p /= Void
-			p_large_enough: p.count >= nb_bytes + start_pos
-			socket_exists: exists;
-			opened_for_write: is_open_write;
-			valid_peer: peer_address /= Void
+		local
+			l_peer_address: like peer_address
 		do
-			c_send_stream_to (descriptor, p.item + start_pos, nb_bytes, 0,
-				peer_address.socket_address.item, peer_address.count)
-		end
-
-	put_character, putchar (c: CHARACTER)
-			-- Send character `c' through socket.
-		require else
-			socket_exists: exists;
-			opened_for_write: is_open_write;
-			valid_peer: peer_address /= Void
-		do
-			c_send_char_to (descriptor, c, 0, peer_address.socket_address.item, peer_address.count)
-		end;
-
-	put_real, putreal (r: REAL)
-			-- Send real `r' through socket.
-		require else
-			socket_exists: exists;
-			opened_for_write: is_open_write;
-			valid_peer: peer_address /= Void
-		do
-			c_send_float_to (descriptor, r, 0, peer_address.socket_address.item, peer_address.count)
-		end;
-
-	put_integer, putint, put_integer_32 (i: INTEGER)
-			-- Send integer `i' through socket.
-		require else
-			socket_exists: exists;
-			opened_for_write: is_open_write;
-			valid_peer: peer_address /= Void
-		do
-			c_send_int_to (descriptor, i, 0, peer_address.socket_address.item, peer_address.count)
-		end;
-
-	put_integer_8 (i: INTEGER_8)
-			-- Send integer `i' through socket.
-		require else
-			socket_exists: exists;
-			opened_for_write: is_open_write;
-			valid_peer: peer_address /= Void
-		do
-			socket_buffer.put_integer_8_be (i, 0)
-			put_managed_pointer (socket_buffer, 0, integer_8_bytes)
-		end
-
-	put_integer_16 (i: INTEGER_16)
-			-- Send integer `i' through socket.
-		require else
-			socket_exists: exists;
-			opened_for_write: is_open_write;
-			valid_peer: peer_address /= Void
-		do
-			socket_buffer.put_integer_16_be (i, 0)
-			put_managed_pointer (socket_buffer, 0, integer_16_bytes)
-		end
-
-	put_integer_64 (i: INTEGER_64)
-			-- Send integer `i' through socket.
-		require else
-			socket_exists: exists;
-			opened_for_write: is_open_write;
-			valid_peer: peer_address /= Void
-		do
-			socket_buffer.put_integer_64_be (i, 0)
-			put_managed_pointer (socket_buffer, 0, integer_64_bytes)
-		end
-
-	put_natural_8 (i: NATURAL_8)
-			-- Send integer `i' through socket.
-		require else
-			socket_exists: exists;
-			opened_for_write: is_open_write;
-			valid_peer: peer_address /= Void
-		do
-			socket_buffer.put_natural_8_be (i, 0)
-			put_managed_pointer (socket_buffer, 0, natural_8_bytes)
-		end
-
-	put_natural_16 (i: NATURAL_16)
-			-- Send integer `i' through socket.
-		require else
-			socket_exists: exists;
-			opened_for_write: is_open_write;
-			valid_peer: peer_address /= Void
-		do
-			socket_buffer.put_natural_16_be (i, 0)
-			put_managed_pointer (socket_buffer, 0, natural_16_bytes)
-		end
-
-	put_natural, put_natural_32 (i: NATURAL_32)
-			-- Send integer `i' through socket.
-		require else
-			socket_exists: exists;
-			opened_for_write: is_open_write;
-			valid_peer: peer_address /= Void
-		do
-			socket_buffer.put_natural_32_be (i, 0)
-			put_managed_pointer (socket_buffer, 0, natural_32_bytes)
-		end
-
-	put_natural_64 (i: NATURAL_64)
-			-- Send integer `i' through socket.
-		require else
-			socket_exists: exists;
-			opened_for_write: is_open_write;
-			valid_peer: peer_address /= Void
-		do
-			socket_buffer.put_natural_64_be (i, 0)
-			put_managed_pointer (socket_buffer, 0, natural_64_bytes)
-		end
-
-
-	put_boolean, putbool (b: BOOLEAN)
-			-- Send boolean `b' through socket.
-		require else
-			socket_exists: exists;
-			opened_for_write: is_open_write;
-			valid_peer: peer_address /= Void
-		do
-			if b then
-				put_character ('T')
-			else
-				put_character ('F')
+			l_peer_address := peer_address
+				-- If we haven't set a `peer_address' yet, we don't send anything.
+			if l_peer_address /= Void then
+				c_send_stream_to (descriptor, p.item + start_pos, nb_bytes, 0,
+					l_peer_address.socket_address.item, l_peer_address.count)
 			end
-		end;
-
-	put_double, putdouble (d: DOUBLE)
-			-- Send double `d' through socket.
-		require else
-			socket_exists: exists;
-			opened_for_write: is_open_write;
-			valid_peer: peer_address /= Void
-		do
-			c_send_double_to (descriptor, d, 0, peer_address.socket_address.item, peer_address.count)
-		end;
+		end
 
 feature {NONE} -- Externals
-
-	c_send_char_to (fd: INTEGER; c: CHARACTER; flags: INTEGER; addr: POINTER; length: INTEGER)
-			-- External routine to send character `c' to address `addr'
-			-- through socket `fd'
-		external
-			"C blocking"
-		end;
-
-	c_send_int_to (fd: INTEGER; i: INTEGER; flags: INTEGER; addr: POINTER; length: INTEGER)
-			-- External routine to send integer `i' to address `addr'
-			-- through socket `fd'
-		external
-			"C blocking"
-		end;
-
-	c_send_float_to (fd: INTEGER; r: REAL; flags: INTEGER; addr: POINTER; length: INTEGER)
-			-- External routine to send real `r' to address `addr'
-			-- through socket `fd'
-		external
-			"C blocking"
-		end;
-
-	c_send_double_to (fd: INTEGER; d: DOUBLE; flags: INTEGER; addr: POINTER; length: INTEGER)
-			-- External routine to send double `d' to address `addr'
-			-- through socket `fd'
-		external
-			"C blocking"
-		end;
 
 	c_send_stream_to (fd: INTEGER; s: POINTER; l: INTEGER; flags: INTEGER; addr: POINTER; length: INTEGER)
 			-- External routine to send stream pointed by `s'
@@ -331,7 +156,6 @@ feature {NONE} -- Externals
 		external
 			"C blocking"
 		end;
-
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

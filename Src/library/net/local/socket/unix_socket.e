@@ -15,14 +15,8 @@ deferred class
 inherit
 
 	SOCKET
-		undefine
-			send, put_character, putchar, put_string, putstring,
-			put_integer, putint, put_integer_32, put_boolean, putbool,
-			put_integer_8, put_integer_16, put_integer_64,
-			put_natural_8, put_natural_16, put_natural, put_natural_32, put_natural_64,
-			put_real, putreal, put_double, putdouble, put_managed_pointer
 		redefine
-			address, cleanup, name
+			address_type, cleanup, name
 		end
 
 feature -- Initialization
@@ -31,18 +25,20 @@ feature -- Initialization
 			-- Create socket from descriptor `fd'.
 		local
 			retried: BOOLEAN
+			l_address: like address
 		do
 			if not retried then
 				descriptor := fd;
-				create address.make;
-				c_sock_name (descriptor, address.socket_address.item, address.count);
-				family := address.family;
+				create l_address.make
+				address := l_address
+				c_sock_name (descriptor, l_address.socket_address.item, l_address.count);
+				family := l_address.family;
 				descriptor_available := True;
 				is_open_read := True;
 				is_open_write := True
 			end
 		ensure
-			family_valid: family = address.family;
+			family_valid: attached address as l_address_att and then family = l_address_att.family;
 			opened_all: is_open_write and is_open_read
 		rescue
 			if not assertion_violation then
@@ -72,9 +68,13 @@ feature
 			-- Bind socket to local address in `address'.
 		local
 			retried: BOOLEAN
+			l_address: like address
 		do
 			if not retried then
-				c_bind (descriptor, address.socket_address.item, address.count);
+				l_address := address
+					-- Per inherited precondition
+				check l_address_attached: l_address /= Void end
+				c_bind (descriptor, l_address.socket_address.item, l_address.count);
 				is_open_read := True
 			end
 		rescue
@@ -89,9 +89,13 @@ feature
 			-- Connect socket to peer address.
 		local
 			retried: BOOLEAN
+			l_peer_address: like peer_address
 		do
 			if not retried then
-				c_connect (descriptor, peer_address.socket_address.item, peer_address.count);
+				l_peer_address := peer_address
+					-- Per inherited precondition
+				check l_peer_address_attached: l_peer_address /= Void end
+				c_connect (descriptor, l_peer_address.socket_address.item, l_peer_address.count);
 				is_open_write := True;
 				is_open_read := True
 			end
@@ -127,8 +131,14 @@ feature
 
 feature -- Status Report
 
-	address: UNIX_SOCKET_ADDRESS;
-			-- Local address of socket
+	address_type: UNIX_SOCKET_ADDRESS
+			-- <Precursor>
+		local
+			l_result: detachable like address_type
+		do
+			check l_result_attached: l_result /= Void end
+			Result := l_result
+		end
 
 	cleanup
 			-- Close socket and unlink it from file system.
@@ -143,9 +153,14 @@ feature -- Status Report
 			-- Socket name
 		require else
 			valid_address: address /= Void
+		local
+			l_address: like address
 		do
 			create Result.make (10);
-			Result.append (address.path)
+			l_address := address
+				-- Per precondition
+			check l_address_attached: l_address /= Void end
+			Result.append (l_address.path)
 		end
 
 feature -- Status setting

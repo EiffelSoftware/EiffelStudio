@@ -19,6 +19,9 @@ inherit
 			in_out
 		end
 
+create
+	make
+
 feature -- Access
 
 	in_out: UNIX_STREAM_SOCKET

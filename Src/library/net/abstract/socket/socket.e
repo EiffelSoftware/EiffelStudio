@@ -270,7 +270,7 @@ feature -- Output
 			ext: C_STRING
 		do
 			create ext.make (s)
-			c_put_stream (descriptor, ext.item, s.count)
+			put_managed_pointer (ext.managed_data, 0, s.count)
 		end
 
 	put_managed_pointer (p: MANAGED_POINTER; start_pos, nb_bytes: INTEGER)

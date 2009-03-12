@@ -50,14 +50,18 @@ feature -- Access
 		do
 			in.accept;
 			outflow ?= in.accepted;
-			received ?= outflow.retrieved
+			if attached outflow as l_outflow then
+				received ?= l_outflow.retrieved
+			else
+				received := Void
+			end
 		end;
-	
+
 	close
 			-- Close socket.
 		do
-			if outflow /= Void and then not outflow.is_closed then
-				outflow.close
+			if attached outflow as l_outflow and then not l_outflow.is_closed then
+				l_outflow.close
 			end
 		end
 

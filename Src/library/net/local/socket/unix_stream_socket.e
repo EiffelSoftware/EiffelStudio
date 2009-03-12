@@ -15,19 +15,15 @@ class
 inherit
 
 	STREAM_SOCKET
-		rename
-			address as old_socket_address,
-			cleanup as old_socket_cleanup,
-			name as old_socket_name
+		undefine
+			address_type,
+			cleanup,
+			name
 		end
 
 	UNIX_SOCKET
 		undefine
 			support_storable
-		select
-			address,
-			cleanup,
-			name
 		end
 
 create {UNIX_STREAM_SOCKET}
@@ -54,10 +50,13 @@ feature -- Initialization
 			-- address set to `a_peer'.
 		require
 			valid_path: a_peer /= Void
+		local
+			l_peer_address: like peer_address
 		do
-			make;
-			create peer_address.make;
-			peer_address.set_path (a_peer.twin)
+			make
+			create l_peer_address.make
+			peer_address := l_peer_address
+			l_peer_address.set_path (a_peer.twin)
 		end;
 
 	make_server (a_name: STRING)
@@ -65,10 +64,13 @@ feature -- Initialization
 			-- address `a_name'.
 		require
 			valid_path: a_name /= Void and then not a_name.is_empty
+		local
+			l_address: like address
 		do
 			make;
-			create address.make;
-			address.set_path (a_name.twin);
+			create l_address.make
+			address := l_address
+			l_address.set_path (a_name.twin);
 			bind
 		end
 
@@ -85,13 +87,18 @@ feature
 			-- Accepted service socket available in `accepted'.
 		local
 			pass_address: like address;
+			l_accepted: like accepted
 			return: INTEGER;
 		do
-			pass_address := address.twin
-			return := c_accept (descriptor, pass_address.socket_address.item, address.count);
+			pass_address := address
+				-- Per inherited precondition
+			check pass_address_attached: pass_address /= Void end
+			pass_address := pass_address.twin
+			return := c_accept (descriptor, pass_address.socket_address.item, pass_address.count);
 			if return > 0 then
-				create accepted.create_from_descriptor (return);
-				accepted.set_peer_address (pass_address)
+				create l_accepted.create_from_descriptor (return);
+				accepted := l_accepted
+				l_accepted.set_peer_address (pass_address)
 			else
 				accepted := Void
 			end

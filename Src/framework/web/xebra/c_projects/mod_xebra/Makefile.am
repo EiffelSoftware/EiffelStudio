@@ -1,7 +1,7 @@
 
 # set the include path found by configure
-INCLUDES = $(all_includes) -I$(APACHE_SRC)/include \
-	-I/usr/include/apr-1.0 -I$(EIFFEL_SRC)/C/run-time \
+INCLUDES = $(all_includes) -I$(APACHE_SRC)/include/ \
+	-I/usr/include/apr-1.0 -I$(EIFFEL_SRC)/C/run-time/ \
 	-I$(EIFFEL_SRC)/C/run-time/include/
 
 # the library search path.

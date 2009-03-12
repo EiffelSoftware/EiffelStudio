@@ -172,6 +172,7 @@ feature {ERROR_VISITOR} -- Compute surrounding text around error
 			if l_file = Void or else l_fn /~ l_file.file_name then
 					-- No file, or it has changed/
 				create l_file.make (l_fn.as_attached)
+				l_file.is_contents_auto_refreshed := True
 				cached_file.put (l_file)
 			end
 			l_line := line.as_natural_32

@@ -107,6 +107,7 @@ test	precondition-violation-infinite-loop	except033 tcf fail exception
 test	last-exception-not-cleared		except034 tcf fail exception
 test	code-compatible-io-failure		except035 tcf fail exception
 test	original_routines_in_exceptions		except036 tcf pass exception
+test	exception_cause				except037 tcf pass exception
 
 -- Non Conforming Inheritance
 test basic-non-conforming-inheritance			noncon001 tcf pass non-conforming

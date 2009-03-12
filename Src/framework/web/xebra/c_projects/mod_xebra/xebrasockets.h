@@ -60,7 +60,7 @@
 
 
 #define FRAG_SIZE 65536 
-#define HOSTNAME   "10.0.10.157" //"localhost"
+#define HOSTNAME  "localhost"
 #define PORT "3490"
 
 //#define HOSTNAME "firenze.ise"

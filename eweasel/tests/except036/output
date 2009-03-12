@@ -1,0 +1,17 @@
+Exception 1: 
+original_exception: 24
+meaing: Developer exception.
+original_tag_name: Weasels
+original_recipient_name: raise
+original_class_name: EXCEPTIONS
+
+
+Exception 2: 
+original_exception: 24
+meaing: Developer exception.
+original_tag_name: Weasels
+original_recipient_name: raise
+original_class_name: EXCEPTIONS
+
+
+Execution completed

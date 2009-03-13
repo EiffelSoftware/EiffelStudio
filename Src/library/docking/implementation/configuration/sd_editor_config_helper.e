@@ -100,7 +100,7 @@ feature -- Command
 			l_place_holder_zone: SD_ZONE
 			l_parent: EV_CONTAINER
 			l_split: EV_SPLIT_AREA
-			l_split_position: INTEGER
+			l_split_proportion: REAL
 			l_env: EV_ENVIRONMENT
 		do
 			if a_prior_work_success then
@@ -118,7 +118,7 @@ feature -- Command
 						if l_parent /= Void then
 							l_split ?= l_parent
 							if l_split /= Void then
-								l_split_position := l_split.split_position
+								l_split_proportion := l_split.proportion
 							end
 							if attached {EV_WIDGET} l_place_holder_zone as lt_widget then
 								l_parent.prune (lt_widget)
@@ -135,8 +135,8 @@ feature -- Command
 								check not_possible: False end
 							end
 
-							if l_split /= Void and then l_split.minimum_split_position <= l_split_position and l_split_position <= l_split.maximum_split_position then
-								l_split.set_split_position (l_split_position)
+							if l_split /= Void and then 0 <= l_split_proportion and l_split_proportion <= 1 then
+								l_split.set_proportion (l_split_proportion)
 							end
 						else
 							check not_possible: False end

@@ -24,13 +24,16 @@ feature -- Parsing
 			table_not_void: table /= Void
 		local
 			resource_name: STRING
+			l_last_token: like last_token
+			l_resource_file: like resource_file
 		do
-			create resource_file.make (filename);
-			if not resource_file.exists then 
+			create l_resource_file.make (filename);
+			resource_file := l_resource_file
+			if not l_resource_file.exists then
 				-- Do nothing (no message) if the resource file does not exist
-			elseif resource_file.is_readable then
-				resource_file.open_read;
-				if resource_file.readable then
+			elseif l_resource_file.is_readable then
+				l_resource_file.open_read;
+				if l_resource_file.readable then
 					from
 						line_number := 0;
 						read_line;
@@ -39,10 +42,11 @@ feature -- Parsing
 						end_of_file
 					loop
 						parse_name;
-						if last_token = Void then
+						l_last_token := last_token
+						if l_last_token = Void then
 							syntax_error ("Resource name expected")
 						else
-							resource_name := last_token;
+							resource_name := l_last_token;
 							resource_name.to_lower;
 							parse_colon;
 							if last_token = Void then
@@ -52,14 +56,14 @@ feature -- Parsing
 								if last_token = Void then
 									syntax_error ("Resource value expected")
 								else
-									table.force (last_token, resource_name)
+									table.force (l_last_token, resource_name)
 								end
 							end
 						end;
 						parse_separators
 					end
 				end;
-				resource_file.close
+				l_resource_file.close
 			else
 				io.error.put_string ("Warning: Cannot read resource file %"");
 				io.error.put_string (filename);
@@ -67,7 +71,7 @@ feature -- Parsing
 				io.error.put_new_line
 			end
 		end;
-				
+
 feature -- Errors
 
 	syntax_error (message: STRING)
@@ -75,9 +79,14 @@ feature -- Errors
 			-- Move the pointer to the next line in the file.
 		require
 			message_not_void: message /= Void
+			resource_file_attached: resource_file /= Void
+		local
+			l_resource_file: like resource_file
 		do
+			l_resource_file := resource_file
+			check attached l_resource_file end -- implied by precondition `resource_file_attached'
 			io.error.put_string ("Warning: resource file %"");
-			io.error.put_string (resource_file.name);
+			io.error.put_string (l_resource_file.name);
 			io.error.put_string ("%"%N%TSyntax error, line ");
 			io.error.put_integer (line_number);
 			io.error.put_string (": ");
@@ -87,7 +96,7 @@ feature -- Errors
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -100,22 +109,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class RESOURCE_PARSER

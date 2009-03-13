@@ -27,6 +27,11 @@ feature -- Access
 			-- The original exception caused current exception
 		do
 		end
+		
+	frozen cause: EXCEPTION
+			-- The cause of current exception raised during rescue processing
+		do
+		end
 
 	frozen throwing_exception: EXCEPTION
 			-- The exception throwing current exception

@@ -3,7 +3,7 @@
 	<target name="test">
 		<root cluster="root_cluster" class="TEST" feature="make"/>
 		<option>
-			<assertions />
+			<assertions precondition="true"/>
 			<warning name="syntax" enabled="false"/>
 		</option>
 		<precompile name="precompile" location="$PRECOMPILED_BASE"/>

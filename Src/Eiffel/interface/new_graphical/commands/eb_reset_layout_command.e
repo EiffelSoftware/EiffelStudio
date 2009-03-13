@@ -49,10 +49,10 @@ feature -- Command
 				create l_stock_pixmaps
 				develop_window.window.set_pointer_style (l_stock_pixmaps.busy_cursor)
 
-				develop_window.docking_layout_manager.restore_standard_tools_docking_layout
+				develop_window.docking_layout_manager.construct_standard_layout_by_code
 
 				if l_graphical_debugger.raised then
-					develop_window.docking_layout_manager.restore_standard_debug_docking_layout
+					develop_window.docking_layout_manager.restore_standard_debug_docking_layout_by_code
 				end
 
 				develop_window.window.set_pointer_style (l_pointer_style)
@@ -92,11 +92,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_RESET_LAYOUT_COMMAND

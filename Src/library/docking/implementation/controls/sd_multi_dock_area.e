@@ -818,14 +818,14 @@ feature {NONE} -- Implementation
 				-- There should by only one, because Postorder, so NO recursive needed.
 				-- The split area must full, because Postorder recursive.
 
-				-- FIXIT: following If cluse is for GTK, on MsWin is not needed.
-					if l_spliter_position < l_temp_spliter.minimum_split_position then
-						l_spliter_position := l_temp_spliter.minimum_split_position
-					end
-					if l_spliter_position > l_temp_spliter.maximum_split_position then
-						l_spliter_position := l_temp_spliter.maximum_split_position
-					end
-					l_temp_spliter.set_split_position (l_spliter_position)
+				-- FIXIT: following if clause is used for GTK, on MsWin it's not needed.
+				if l_spliter_position < l_temp_spliter.minimum_split_position then
+					l_spliter_position := l_temp_spliter.minimum_split_position
+				end
+				if l_spliter_position > l_temp_spliter.maximum_split_position then
+					l_spliter_position := l_temp_spliter.maximum_split_position
+				end
+				l_temp_spliter.set_split_position (l_spliter_position)
 			end
 
 			if l_widget_split /= Void then

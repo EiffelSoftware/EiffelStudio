@@ -1,6 +1,6 @@
 note
 	description: "[
-		No comment yet
+		no comment yet
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"
@@ -8,40 +8,22 @@ note
 	revision: "$Revision$"
 
 class
-	TESTAPP_SERVLET
+	ERROR_PARSE
 
 inherit
-	STATELESS_SERVLET
+	ERROR_ERROR_INFO
+
 
 create
 	make
 
-feature-- Access
+feature {NONE} -- Access
 
-	controller: TESTAPP_CONTROLLER
-
-feature-- Implementation
-
-	make
+	dollar_description: STRING
+			-- Dollar encoded description. ${n} are replaced by array indicies.
+			-- See {STRING_FORMATTER}
 		do
-			create controller.make
-		end
-
-	handle_request (request: REQUEST): RESPONSE
-		do
-			create Result.make
-			Result.append ("[
-				<html>
-<body>
-	hello my dear
-	 
-			]")
-			controller.blublublub
-			Result.append ("[
-				
-</body>
-</html> 
-			]")
+			Result := "There is a error in the xeb file: '${1}'"
 		end
 
 note

@@ -21,12 +21,11 @@ feature-- Access
 feature-- Implementation
 
 	make
-		local
-			servlet: SERVLET
 		do
-			create {HASH_TABLE [SERVLET, STRING]} servlets.make (5)
-			create {TESTAPP_SERVLET} servlet.make
-			servlets.put (servlet, "TESTAPP_SERVLET")
+			create request_pool.make (10)
+			create {HASH_TABLE [SESSION, STRING]} session_map.make (5)
+			create {HASH_TABLE [STATELESS_SERVLET, STRING]} stateless_servlets.make (5)
+			stateless_servlets.put (create {TESTAPP_SERVLET}.make , "TESTAPP_SERVLET")
 		end
 
 note

@@ -1,6 +1,6 @@
 note
 	description: "[
-		No comment yet
+		no comment yet
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"
@@ -8,41 +8,45 @@ note
 	revision: "$Revision$"
 
 class
-	TESTAPP_SERVLET
-
-inherit
-	STATELESS_SERVLET
+	XB_TAG_ATTRIBUTE
 
 create
 	make
 
-feature-- Access
+feature {NONE} -- Initialization
 
-	controller: TESTAPP_CONTROLLER
-
-feature-- Implementation
-
-	make
+	make  (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
+			-- Creates 	XB_TAG_ATTRIBUTE
 		do
-			create controller.make
+			namespace := a_namespace
+			i_prefix := a_prefix
+			local_part := a_local_part
+			value := a_value
+		ensure
+			namespace_set: namespace = a_namespace
+			i_prefix_set: i_prefix = a_prefix
+			local_part_set: local_part = a_local_part
+			value_set: value  = a_value
 		end
 
-	handle_request (request: REQUEST): RESPONSE
-		do
-			create Result.make
-			Result.append ("[
-				<html>
-<body>
-	hello my dear
-	 
-			]")
-			controller.blublublub
-			Result.append ("[
-				
-</body>
-</html> 
-			]")
-		end
+feature -- Access
+
+	namespace: STRING
+	i_prefix: STRING
+	local_part: STRING
+	value: STRING
+
+feature -- Measurement
+
+feature -- Element change
+
+feature -- Status report
+
+feature -- Status setting
+
+feature -- Basic operations
+
+feature {NONE} -- Implementation
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

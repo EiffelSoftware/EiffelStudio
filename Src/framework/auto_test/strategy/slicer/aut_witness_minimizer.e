@@ -295,7 +295,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	all_used_vars (a_req_list: DS_LIST [AUT_REQUEST]): DS_HASH_TABLE [TUPLE [type: detachable TYPE_A; name: detachable STRING; check_dyn_type: BOOLEAN], ITP_VARIABLE]
+	all_used_vars (a_req_list: DS_LIST [AUT_REQUEST]): DS_HASH_TABLE [TUPLE [type: detachable TYPE_A; name: detachable STRING; check_dyn_type: BOOLEAN; use_void: BOOLEAN], ITP_VARIABLE]
 			-- All variables used in the request list `a_req_list' with the names of their types
 		require
 			a_req_list_not_void: a_req_list /= Void
@@ -346,13 +346,44 @@ feature {NONE} -- Implementation
 						Result.item_for_iteration.check_dyn_type and
 						l_type_name.is_equal (none_type_name)
 					then
-							-- Do nothing.
+						Result.force ([l_type, l_type_name, False, True], Result.key_for_iteration)
 					else
-						Result.force ([l_type, l_type_name, False], Result.key_for_iteration)
+						Result.force ([l_type, l_type_name, False, False], Result.key_for_iteration)
 					end
 				end
 				Result.forth
 			end
 		end
 
+note
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

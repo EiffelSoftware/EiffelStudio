@@ -68,11 +68,13 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	used_vars: detachable DS_HASH_TABLE [TUPLE [type: detachable TYPE_A; name: detachable STRING; check_dyn_type: BOOLEAN], ITP_VARIABLE]
+	used_vars: detachable DS_HASH_TABLE [TUPLE [type: detachable TYPE_A; name: detachable STRING; check_dyn_type: BOOLEAN; use_void: BOOLEAN], ITP_VARIABLE]
 			-- Set of used variables: keys are variables, items are tuples of static type of variable
 			-- and a boolean flag showing if the static type should be checked against dynamic type
 			-- (is only the case for variables returned as results of function calls and those whose type
 			-- is left Void)
+			-- If `use_void' is True, in the use site, the variable will be replaced by Void. This is OK because
+			-- `use_void' is only True if the variable is detached in that use site.
 
 	ot_counter: NATURAL
 			-- Counter vor object test locals
@@ -148,6 +150,17 @@ feature {NONE} -- Query
 			end
 		ensure
 			result_attached: Result /= Void
+		end
+
+	should_use_void (a_var: ITP_VARIABLE): BOOLEAN is
+			-- Use use Void instead `a_var' in feature argument?
+		do
+			if used_vars /= Void then
+				used_vars.search (a_var)
+				if used_vars.found then
+					Result := used_vars.found_item.use_void
+				end
+			end
 		end
 
 feature -- Basic operations
@@ -469,7 +482,7 @@ feature {NONE} -- Printing
 							output_stream.put_string (l_type.name)
 						end
 					else
-						if l_type = none_type then
+						if l_type = none_type or else (l_var /= Void and then should_use_void (l_var)) then
 								-- Replace variables whose type is NONE by Void
 							output_stream.put_string ("Void")
 						else

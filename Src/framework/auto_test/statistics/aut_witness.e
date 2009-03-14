@@ -108,7 +108,7 @@ feature -- Access
 			used_vars_set: used_vars = a_used_vars
 		end
 
-	used_vars: DS_HASH_TABLE [TUPLE [type: detachable TYPE_A; name: detachable STRING; check_dyn_type: BOOLEAN], ITP_VARIABLE]
+	used_vars: DS_HASH_TABLE [TUPLE [type: detachable TYPE_A; name: detachable STRING; check_dyn_type: BOOLEAN; use_void: BOOLEAN], ITP_VARIABLE]
 			-- Set of used variables: keys are variables, items are tuples of static type of variable
 			-- and a boolean flag showing if the static type should be checked against dynamic type
 			-- (is only the case for variables returned as results of function calls and those whose type

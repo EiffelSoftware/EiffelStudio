@@ -1,6 +1,6 @@
 note
 	description: "[
-		No comment yet
+		no comment yet
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"
@@ -8,41 +8,77 @@ note
 	revision: "$Revision$"
 
 class
-	TESTAPP_SERVLET
-
-inherit
-	STATELESS_SERVLET
+	XB_TAG
 
 create
 	make
 
-feature-- Access
-
-	controller: TESTAPP_CONTROLLER
-
-feature-- Implementation
+feature {NONE} -- Initialization
 
 	make
+			-- Creates XB_TAG
 		do
-			create controller.make
+			create attributes.make
+			create subtags.make
+			reset
 		end
 
-	handle_request (request: REQUEST): RESPONSE
+feature -- Access
+
+	name: STRING assign set_name
+		-- The name of the tag
+
+	attributes: LINKED_LIST [XB_TAG_ATTRIBUTE]
+		--	The attributes of the tag	
+
+	subtags: LINKED_LIST [like current]
+		-- Represents the children of this tag
+
+feature -- Measurement
+
+feature -- Element change
+
+	set_name (s: STRING)
+			-- Sets the name.
 		do
-			create Result.make
-			Result.append ("[
-				<html>
-<body>
-	hello my dear
-	 
-			]")
-			controller.blublublub
-			Result.append ("[
-				
-</body>
-</html> 
-			]")
+			name := s
+		ensure
+			name_set: name = s
 		end
+
+	put_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
+			-- Adds a new attribute.
+		do
+			attributes.put_right (create {XB_TAG_ATTRIBUTE}.make (a_namespace, a_prefix, a_local_part, a_value))
+		ensure
+			more_attributes: attributes.count > old attributes.count
+		end
+
+	put_subtag (v: like current)
+			-- Adds a child
+		do
+			subtags.put_right (v)
+		ensure
+			more_kids: subtags.count > old subtags.count
+		end
+
+feature -- Status report
+
+
+
+feature -- Status setting
+
+	reset
+			-- Clears all elements
+		do
+			name := ""
+			attributes.wipe_out
+
+		end
+
+feature -- Basic operations
+
+feature {NONE} -- Implementation
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

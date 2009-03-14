@@ -8,6 +8,8 @@ class
 
 inherit
 	ERROR_SHARED_ERROR_MANAGER
+	KL_SHARED_ARGUMENTS
+
 
 create
 	make
@@ -16,42 +18,35 @@ feature {NONE} -- Initialization
 
 	make
 			-- Make the application.
-		do
-			create translator.make ("testapp")
-			run
-		end
-
-	run
-			-- Runns the application.
 		local
 			l_printer: ERROR_CUI_PRINTER
+			l_translator: XB_TRANSLATOR
 		do
-			print ("%N============================%NTranslator started...%N")
-
-
-			translator.set_output_path ("../../websites/testapp/")
-			translator.process_with_file ("../../websites/testapp/testapp.xeb")
-
-
-			create l_printer.default_create
-			if error_manager.has_warnings then
-				error_manager.trace_warnings (l_printer)
-			end
-
-			if not error_manager.is_successful then
-				error_manager.trace_last_error (l_printer)
+			if false then --if Arguments.argument_count /= 3 then
+				print ("usage: translator project_name input_file output_path%N")
 			else
-				print ("Output file generated to '")
-				print (translator.output_path)
-				print ("'.")
+				print ("%N============================%NTranslator started...%N")
+
+				create l_translator.make ("testapp") --Arguments.argument (1))
+
+				l_translator.set_output_path ("../../websites/testapp/") --Arguments.argument (2)) --
+				l_translator.process_with_file ("../../websites/testapp/testapp.xeb") --Arguments.argument (3)) --"../../websites/testapp/testapp.xeb")
+
+
+				create l_printer.default_create
+				if error_manager.has_warnings then
+					error_manager.trace_warnings (l_printer)
+				end
+
+				if not error_manager.is_successful then
+					error_manager.trace_last_error (l_printer)
+				else
+					print ("Output file generated to '")
+					print (l_translator.output_path)
+					print ("'.")
+				end
 			end
 		end
-
-feature -- Access
-
-	translator: XB_TRANSLATOR
-		-- Parses the file
-
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

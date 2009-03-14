@@ -1,6 +1,6 @@
-note
+ note
 	description: "[
-		No comment yet
+		no comment yet
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"
@@ -8,41 +8,47 @@ note
 	revision: "$Revision$"
 
 class
-	TESTAPP_SERVLET
-
-inherit
-	STATELESS_SERVLET
+	XB_OUTPUT_ELEMENT_GENERATOR
 
 create
 	make
 
-feature-- Access
-
-	controller: TESTAPP_CONTROLLER
-
-feature-- Implementation
+feature {NONE} -- Initialization
 
 	make
+			-- Initialization for `Current'.
 		do
-			create controller.make
+
 		end
 
-	handle_request (request: REQUEST): RESPONSE
+feature -- Basic operations
+
+	generate (a_tag: XB_TAG): OUTPUT_ELEMENT
+			--
 		do
-			create Result.make
-			Result.append ("[
-				<html>
-<body>
-	hello my dear
-	 
-			]")
-			controller.blublublub
-			Result.append ("[
-				
-</body>
-</html> 
-			]")
+			if a_tag.name.is_equal ("call") then
+			--	Result := create {CALL_ELEMENT}.make (.attributes.i_tha_tag (1))
+			end
+
+
+
+
+
 		end
+
+feature -- Access
+
+feature -- Measurement
+
+feature -- Element change
+
+feature -- Status report
+
+feature -- Status setting
+
+feature -- Basic operations
+
+feature {NONE} -- Implementation
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

@@ -231,7 +231,7 @@ feature {NONE} -- Basic Operations
 				l_file.open_write
 				l_file.put_string (a_content)
 			else
-				error_manager.set_last_error (create {ERROR_CREATING_FILE}.make_with_context ([a_file_name]), False)
+				error_manager.set_last_error (create {ERROR_CREATING_FILE}.make ([a_file_name]), False)
 			end
 			if l_file /= Void and then not l_file.is_closed then
 				l_file.close
@@ -361,16 +361,16 @@ feature {NONE} -- Validation
 		do
 			Precursor {MATRIX_FILE_GENERATOR} (a_doc)
 			if a_doc.property_of_name (icons_token, True) /= Void then
-				add_error (create {ERROR_MISSING_INI_RESERVED_PROPERTY}.make_with_context ([icons_token]), False)
+				add_error (create {ERROR_MISSING_INI_RESERVED_PROPERTY}.make ([icons_token]), False)
 			end
 			if a_doc.property_of_name (animations_token, True) /= Void then
-				add_error (create {ERROR_MISSING_INI_RESERVED_PROPERTY}.make_with_context ([animations_token]), False)
+				add_error (create {ERROR_MISSING_INI_RESERVED_PROPERTY}.make ([animations_token]), False)
 			end
 			if a_doc.property_of_name (icon_names_token, True) /= Void then
-				add_error (create {ERROR_MISSING_INI_RESERVED_PROPERTY}.make_with_context ([icon_names_token]), False)
+				add_error (create {ERROR_MISSING_INI_RESERVED_PROPERTY}.make ([icon_names_token]), False)
 			end
 			if a_doc.property_of_name (coordinates_token, True) /= Void then
-				add_error (create {ERROR_MISSING_INI_RESERVED_PROPERTY}.make_with_context ([coordinates_token]), False)
+				add_error (create {ERROR_MISSING_INI_RESERVED_PROPERTY}.make ([coordinates_token]), False)
 			end
 		end
 

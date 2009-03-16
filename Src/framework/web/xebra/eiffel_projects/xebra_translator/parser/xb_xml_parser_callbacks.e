@@ -65,9 +65,9 @@ feature -- Document
 	on_finish
 			-- Called when parsing finished.
 		do
-			create_html_tag
+
 		ensure then
-			only_root_on_stack: tag_stack.count = 1
+		--	only_root_on_stack: tag_stack.count = 1
 		end
 
 	on_xml_declaration (a_version: STRING; an_encoding: STRING; a_standalone: BOOLEAN)
@@ -135,12 +135,12 @@ feature -- Tag
 			end
 
 			if state = 1 then
-				create_html_tag
 				create l_tmp_tag.make
 				tag_stack.item.put_subtag (l_tmp_tag)
 				tag_stack.put (l_tmp_tag)
-				tag_stack.item.set_name (l_local_part)
+				tag_stack.item.set_name (l_prefix  + l_local_part)
 			elseif state = 0 then
+				html_buf := ""
 				html_buf.append ("<" + l_prefix +  l_local_part)
 			end
 		end
@@ -154,27 +154,34 @@ feature -- Tag
 			l_local_part: STRING
 			l_value: STRING
 		do
+			if attached a_namespace then
+				l_namespace := a_namespace
+			else
+				l_namespace := ""
+			end
+			if attached a_prefix then
+				l_prefix := a_prefix
+			else
+				l_prefix := ""
+			end
+			if attached a_local_part then
+				l_local_part := a_local_part
+			else
+				l_local_part := ""
+			end
+			if attached a_value then
+				l_value := a_value
+			else
+				l_value := ""
+			end
+
 			if state = 1 then
-				tag_stack.item.put_attribute (a_namespace, a_prefix, a_local_part, a_value)
+				tag_stack.item.put_attribute (l_namespace, l_prefix, l_local_part, l_value)
 
 			elseif state = 0 then
-
-				if attached a_prefix then
-					l_prefix := a_prefix + ":"
-				else
-					l_prefix := ""
+				if not l_prefix.is_empty then
+					l_prefix := l_prefix + ":"
 				end
-				if attached a_local_part then
-					l_local_part := a_local_part
-				else
-					l_local_part := ""
-				end
-				if attached a_value then
-					l_value := a_value
-				else
-					l_value := ""
-				end
-
 				html_buf.append ( " " + l_prefix  + l_local_part + "=%"" +  l_value + "%"")
 			end
 		end
@@ -183,10 +190,9 @@ feature -- Tag
 			-- End of start tag.
 		do
 			if state = 1 then
-
-
 			elseif state = 0 then
 				html_buf.append (">")
+				create_html_tag_put
 			end
 		end
 
@@ -198,25 +204,27 @@ feature -- Tag
 			l_prefix: STRING
 			l_local_part: STRING
 		do
-			if state = 1 then
-					tag_stack.remove
-					if tag_stack.count = 1 then
-						state := 0
-					end
-			elseif state = 0 then
+			if attached a_prefix then
+				l_prefix := a_prefix
+			else
+				l_prefix := ""
+			end
 
-				if attached a_prefix then
-					l_prefix := a_prefix + ":"
-				else
-					l_prefix := ""
-				end
-				if attached a_local_part then
-					l_local_part := a_local_part
-				else
-					l_local_part := ""
-				end
+			if attached a_local_part then
+				l_local_part := a_local_part
+			else
+				l_local_part := ""
+			end
 
-				html_buf.append ("</" + l_prefix +  l_local_part + ">")
+
+			tag_stack.remove
+
+
+			if not l_prefix.is_equal (Tag_keyword) then
+				if not l_prefix.is_empty then
+					l_prefix := l_prefix + ":"
+				end
+				create_html_tag_with_text ("</" + l_prefix  + l_local_part + ">")
 			end
 		end
 
@@ -228,12 +236,7 @@ feature -- Content
 			-- without a markup event in between.
 			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		do
-			if state = 1 then
-				create_html_tag_with_text (a_content)
-			elseif state = 0 then
-				html_buf.append (a_content)
-			end
-
+			create_html_tag_with_text (a_content)
 		end
 
 feature {NONE} -- Implementation
@@ -246,17 +249,32 @@ feature {NONE} -- Implementation
 			if not s.is_empty then
 				create l_tag.make
 				l_tag.set_name ("HTML")
-				l_tag.put_attribute ("", "","code", s)
-				tag_stack.item.put_subtag (l_tag.twin)
+				l_tag.put_attribute ("", "","code", s.twin)
+				tag_stack.item.put_subtag (l_tag)
 			end
 		end
 
-	create_html_tag
+	create_html_tag_with_text_put (s: STRING)
+			-- Creates a XB_TAG from s and adds it to top element on stack.
+		local
+			l_tag: XB_TAG
+		do
+			if not s.is_empty then
+				create l_tag.make
+				l_tag.set_name ("HTML")
+				l_tag.put_attribute ("", "","code", s.twin)
+				tag_stack.item.put_subtag (l_tag)
+				tag_stack.put (l_tag)
+			end
+		end
+
+	create_html_tag_put
 			-- Creates a XB_TAG from html_buf and adds it to top element on stack.
 		do
-			create_html_tag_with_text (html_buf)
+			create_html_tag_with_text_put (html_buf)
 			html_buf.wipe_out
 		end
+
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -52,7 +52,6 @@ feature {MAIN_WINDOW} -- Initialization tree
 			tree_item, tree_item1: EV_COMPARABLE_TREE_ITEM
 			eac: EAC_BROWSER
 			ci: CACHE_INFO
-			counter: INTEGER
 			l_ico: EV_PIXMAP
 			unclassified_assemblies: LINKED_LIST [EV_COMPARABLE_TREE_ITEM]
 		do
@@ -66,17 +65,17 @@ feature {MAIN_WINDOW} -- Initialization tree
 
 			create eac
 			ci := eac.info
-			from
-				counter := 1
-				create unclassified_assemblies.make
-			until
-				ci = Void
-				or else counter > ci.assemblies.count
-			loop
-				tree_item1 := initialize_tree_item_assembly (ci.assemblies.item (counter))
-				unclassified_assemblies.extend (tree_item1)
-
-				counter := counter + 1
+			if ci /= Void then
+				from
+					create unclassified_assemblies.make
+					ci.assemblies.start
+				until
+					ci.assemblies.after
+				loop
+					tree_item1 := initialize_tree_item_assembly (ci.assemblies.item)
+					unclassified_assemblies.extend (tree_item1)
+					ci.assemblies.forth
+				end
 			end
 
 			tree_item.append (classify_assemblies (unclassified_assemblies))

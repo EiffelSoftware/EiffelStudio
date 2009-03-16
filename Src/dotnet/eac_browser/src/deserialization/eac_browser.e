@@ -92,7 +92,7 @@ feature -- Access
 		do
 			l_cam ?= referenced_assemblies (an_assembly)
 
-			Result := l_cam.assemblies.item (assembly_id)
+			Result := l_cam.assemblies.i_th (assembly_id)
 		end
 
 	info: CACHE_INFO
@@ -121,7 +121,7 @@ feature -- Access
 --			l_array_referenced_type: CONSUMED_ARRAY_TYPE
 		do
 			l_referenced_assemblies := referenced_assemblies (an_assembly)
-			l_assembly_of_referenced_type := l_referenced_assemblies.assemblies.item (a_referenced_type.assembly_id)
+			l_assembly_of_referenced_type := l_referenced_assemblies.assemblies.i_th (a_referenced_type.assembly_id)
 
 --			l_array_referenced_type ?= a_referenced_type
 --			if l_array_referenced_type = Void then

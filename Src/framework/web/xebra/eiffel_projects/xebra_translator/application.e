@@ -32,7 +32,6 @@ feature {NONE} -- Initialization
 				l_translator.set_output_path ("../../websites/testapp/") --Arguments.argument (2)) --
 				l_translator.process_with_file ("../../websites/testapp/testapp.xeb") --Arguments.argument (3)) --"../../websites/testapp/testapp.xeb")
 
-
 				create l_printer.default_create
 				if error_manager.has_warnings then
 					error_manager.trace_warnings (l_printer)

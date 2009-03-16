@@ -19,15 +19,15 @@ feature {NONE} -- Initialization
 	make (a_name: STRING)
 			-- Initialization for `XB_TRANSLATOR'.
 		do
-			create preprocessor.make
+		--	create preprocessor.make
 				-- Create a default output_path
-			output_path := "code_gen/generated/"
+			output_path := "generated/" + a_name + "/"
 			name := a_name
 		end
 
 feature {NONE} -- Access
 
-	preprocessor: XB_PREPROCESSOR
+--	preprocessor: XB_PREPROCESSOR
 			-- Used to parse the file
 
 feature -- Access
@@ -98,32 +98,32 @@ feature -- Processing
 				l_parser.parse_from_stream (a_stream)
 
 				l_root_tag := l_p_callback.root_tag
-				print ("done")
+				l_root_tag.pout
 			--	create l_root_element.make_with_elements (name, name + "_controller", True, l_p_callback.elements_inverted) -- calculate last argument (stateful)
 			--	l_webapp_generator.put_servlet (l_root_element)
 			--	l_webapp_generator.generate
 
 		end
 
-	old_process_with_file (a_filename: STRING)
-			-- Processes a file.
-		do
-			old_process_with_string (read_file(a_filename))
-		end
+--	old_process_with_file (a_filename: STRING)
+--			-- Processes a file.
+--		do
+--			old_process_with_string (read_file(a_filename))
+--		end
 
-	old_process_with_string (a_string: STRING)
-			-- Processes a string.
-		local
-			webapp_generator: WEBAPP_GENERATOR
-			root_element: ROOT_SERVLET_ELEMENT
-			output_elements: LIST[OUTPUT_ELEMENT]
-		do
-				create webapp_generator.make (name, output_path)
-				output_elements := preprocessor.parse_string (a_string)
-				create root_element.make_with_elements (name, name + "_controller", True, output_elements) -- calculate last argument (stateful)
-				webapp_generator.put_servlet (root_element)
-				webapp_generator.generate
-		end
+--	old_process_with_string (a_string: STRING)
+--			-- Processes a string.
+--		local
+--			webapp_generator: WEBAPP_GENERATOR
+--			root_element: ROOT_SERVLET_ELEMENT
+--			output_elements: LIST[OUTPUT_ELEMENT]
+--		do
+--				create webapp_generator.make (name, output_path)
+--				output_elements := preprocessor.parse_string (a_string)
+--				create root_element.make_with_elements (name, name + "_controller", True, output_elements) -- calculate last argument (stateful)
+--				webapp_generator.put_servlet (root_element)
+--				webapp_generator.generate
+--		end
 
 feature {NONE} -- Implementation
 

@@ -64,7 +64,29 @@ feature -- Element change
 
 feature -- Status report
 
+	pout
+			-- debug
+		local
+			i: INTEGER
+		do
+			print ( "tag: '" + name + "'%N")
+			from attributes.start until attributes.after loop
+				print ("        " + attributes.item_for_iteration.local_part + "=%"" + attributes.item_for_iteration.value + "%"%N")
+				attributes.forth
+			end
 
+			from
+				subtags.start
+				i := 1
+			 until
+			 	subtags.after
+			 loop
+			--	print ("c " + i.out + " ")
+				subtags.item_for_iteration.pout
+				subtags.forth
+				i := 1 + i
+			end
+		end
 
 feature -- Status setting
 

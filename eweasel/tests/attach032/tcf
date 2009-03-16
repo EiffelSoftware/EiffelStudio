@@ -6,6 +6,6 @@ copy_raw	test.e $CLUSTER test.e
 copy_raw	a.e $CLUSTER a.e
 
 compile_melted
-compile_result validity_error A VJAR
+compile_result validity_error TEST VJAR
 
 test_end

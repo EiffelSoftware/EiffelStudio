@@ -2144,10 +2144,11 @@ test	vevi-missed-for-once-routine					attach050 tcf fail void_safe attached_type
 test	detach-to-attach-assignment						attach051 tcf fail void_safe validity dotnet attached_types
 test	same-object-test-local-failure					attach052 tcf fail void_safe attached_types
 test	various-object-tests							attach053 tcf fail void_safe attached_types
-test	recursive-once-function-call-on-void-target			attach054 tcf fail void_safe attached_types
-test	bogus-vevi-when-inherit-expanded			attach055 tcf fail void_safe attached_types
-test	stable-attribute-redeclaration				attach056 tcf pass stable attribute redeclaration validity
-test	stable-attribute-caps					attach057 tcf pass stable attribute attached_types
+test	recursive-once-function-call-on-void-target		attach054 tcf fail void_safe attached_types
+test	bogus-vevi-when-inherit-expanded				attach055 tcf fail void_safe attached_types
+test	stable-attribute-redeclaration					attach056 tcf pass stable attribute redeclaration validity
+test	stable-attribute-caps							attach057 tcf pass stable attribute attached_types
+test	void-safety-level								attach058 tcf pass void_safe validity dotnet attached_types
 
 -- Tests for conformance in general
 test	basic-conformance		conform001 tcf pass conformance

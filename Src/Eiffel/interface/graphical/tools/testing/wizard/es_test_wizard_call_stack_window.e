@@ -26,6 +26,8 @@ feature {NONE} -- Initialization
 			l_parent: EV_BOX
 			l_vb: EV_VERTICAL_BOX
 		do
+			first_window.set_final_state (locale_formatter.translation (b_create))
+
 			l_parent := initialize_container (choice_box)
 
 			create grid
@@ -320,6 +322,8 @@ feature {NONE} -- Internationalization
 
 	t_title: STRING = "Extract application state"
 	t_subtitle: STRING = "Chose features on call stack for which test should be created"
+
+	b_create: STRING = "Extract"
 
 	h_feature: STRING = "Feature"
 	h_dtype: STRING = "In Class"

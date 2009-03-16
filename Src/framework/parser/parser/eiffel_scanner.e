@@ -562,7 +562,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 				
-				last_tuple__keyword_as__id_as__integer__integer__string__value := ast_factory.new_keyword_id_as (TE_ASSIGN, Current)
+				last_keyword_id_value := ast_factory.new_keyword_id_as (TE_ASSIGN, Current)
 				last_token := TE_ASSIGN
 			
 when 48 then
@@ -574,7 +574,7 @@ debug ("GELEX")
 end
 
 				if syntax_version /= obsolete_64_syntax then
-					last_tuple__keyword_as__id_as__integer__integer__string__value := ast_factory.new_keyword_id_as (TE_ATTACHED, Current)
+					last_keyword_id_value := ast_factory.new_keyword_id_as (TE_ATTACHED, Current)
 					last_token := TE_ATTACHED
 				else
 					process_id_as
@@ -595,7 +595,7 @@ debug ("GELEX")
 end
 
 				if syntax_version /= obsolete_64_syntax then
-					last_tuple__keyword_as__id_as__integer__integer__string__value := ast_factory.new_keyword_id_as (TE_ATTRIBUTE, Current)
+					last_keyword_id_value := ast_factory.new_keyword_id_as (TE_ATTRIBUTE, Current)
 					last_token := TE_ATTRIBUTE
 				else
 					process_id_as
@@ -720,7 +720,7 @@ debug ("GELEX")
 end
 
 				if syntax_version /= obsolete_64_syntax then
-					last_tuple__keyword_as__id_as__integer__integer__string__value := ast_factory.new_keyword_id_as (TE_DETACHABLE, Current)
+					last_keyword_id_value := ast_factory.new_keyword_id_as (TE_DETACHABLE, Current)
 					last_token := TE_DETACHABLE
 				else
 					process_id_as

@@ -777,7 +777,7 @@ feature {NONE} -- Implementation
 						yyvs15 := yyspecial_routines15.resize (yyvs15, yyvsc15)
 					end
 				end
-				yyvs15.put (last_tuple__keyword_as__id_as__integer__integer__string__value, yyvsp15)
+				yyvs15.put (last_keyword_id_value, yyvsp15)
 			else
 				debug ("GEYACC")
 					std.error.put_string ("Error in parser: not a token type: ")
@@ -24536,8 +24536,8 @@ feature {NONE} -- Semantic value stacks
 	yyspecial_routines12: KL_SPECIAL_ROUTINES [KEYWORD_AS]
 			-- Routines that ought to be in SPECIAL [KEYWORD_AS]
 
-	yyvs13: SPECIAL [INTEGER]
-			-- Stack for semantic values of type INTEGER
+	yyvs13: SPECIAL [STRING]
+			-- Stack for semantic values of type STRING
 
 	yyvsc13: INTEGER
 			-- Capacity of semantic value stack `yyvs13'
@@ -24545,11 +24545,11 @@ feature {NONE} -- Semantic value stacks
 	yyvsp13: INTEGER
 			-- Top of semantic value stack `yyvs13'
 
-	yyspecial_routines13: KL_SPECIAL_ROUTINES [INTEGER]
-			-- Routines that ought to be in SPECIAL [INTEGER]
+	yyspecial_routines13: KL_SPECIAL_ROUTINES [STRING]
+			-- Routines that ought to be in SPECIAL [STRING]
 
-	yyvs14: SPECIAL [STRING]
-			-- Stack for semantic values of type STRING
+	yyvs14: SPECIAL [INTEGER]
+			-- Stack for semantic values of type INTEGER
 
 	yyvsc14: INTEGER
 			-- Capacity of semantic value stack `yyvs14'
@@ -24557,8 +24557,8 @@ feature {NONE} -- Semantic value stacks
 	yyvsp14: INTEGER
 			-- Top of semantic value stack `yyvs14'
 
-	yyspecial_routines14: KL_SPECIAL_ROUTINES [STRING]
-			-- Routines that ought to be in SPECIAL [STRING]
+	yyspecial_routines14: KL_SPECIAL_ROUTINES [INTEGER]
+			-- Routines that ought to be in SPECIAL [INTEGER]
 
 	yyvs15: SPECIAL [TUPLE [KEYWORD_AS, ID_AS, INTEGER, INTEGER, STRING]]
 			-- Stack for semantic values of type TUPLE [KEYWORD_AS, ID_AS, INTEGER, INTEGER, STRING]

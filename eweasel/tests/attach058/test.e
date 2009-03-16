@@ -23,7 +23,7 @@ feature {NONE} -- Creation
 
 feature {NONE} -- Tests
 
-	f (a: attached ANY; b: detachable ANY): attached ANY
+	f (a: detachable ANY; b: attached ANY): detachable ANY
 		do
 			Result := Precursor (a, b)
 			Result := a

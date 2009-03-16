@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			create string_buffer.make (102400)
 
 				--
-			argument_make (false, True)
+			argument_make (False, True)
 			is_using_builtin_switches := False
 			argument_execute (agent execute)
 		end
@@ -61,7 +61,7 @@ feature {NONE} -- File discovering and processing
 			until
 				l_values.after
 			loop
-				l_dir := Execution_environment.interpreted_string (l_values.item)
+				l_dir := execution_environment.interpreted_string (l_values.item)
 				create dir.make (l_dir)
 				if not dir.exists then
 					if not l_dir.is_empty and then (l_dir.item (l_dir.count) = '/' or l_dir.item (l_dir.count) = '\') then

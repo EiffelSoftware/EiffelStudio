@@ -12,7 +12,7 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<library name="com" location="$ISE_LIBRARY\library\com\com.ecf" readonly="true"/>
 		<library name="eiffel2java" location="$ISE_LIBRARY\library\Eiffel2Java\Eiffel2Java.ecf" readonly="true"/>
-		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf" readonly="true"/>
+		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo_all.ecf" readonly="true"/>
 		<library name="lex" location="$ISE_LIBRARY\library\lex\lex.ecf" readonly="true"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf" readonly="true"/>
 		<library name="parse" location="$ISE_LIBRARY\library\parse\parse.ecf" readonly="true"/>

@@ -26,7 +26,6 @@
 		<library name="dotnet_assembly_documentation" location="$EIFFEL_SRC\dotnet\assembly_info\dotnet_assembly_information.ecf"/>
 		<library name="dotnet_helper" location="$EIFFEL_SRC\dotnet\helpers\support\dotnet_helper.ecf" readonly="false"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf" readonly="true"/>
-		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
 		<cluster name="root_cluster" location="$EIFFEL_SRC\dotnet\eac_browser\root\" recursive="true"/>

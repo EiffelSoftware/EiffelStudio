@@ -5,7 +5,7 @@
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option warning="true" syntax_level="1">
+		<option warning="true" syntax_level="1" full_class_checking="true" is_void_safe="true" is_attached_by_default="true">
 			<warning name="old_verbatim_strings" enabled="false"/>
 		</option>
 		<external_include location="$(EIFFEL_SRC)/C/bench">
@@ -94,41 +94,41 @@
 				<platform value="windows"/>
 			</condition>
 		</external_object>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
-		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
-		<library name="cli_writer" location="$EIFFEL_SRC\framework\cli_writer\cli_writer.ecf"/>
-		<library name="configuration_compiler" location="$EIFFEL_SRC\framework\configuration\configuration_compiler.ecf"/>
-		<library name="configuration_parser" location="$EIFFEL_SRC\framework\configuration\configuration_parser.ecf"/>
-		<library name="consumer" location="$EIFFEL_SRC\dotnet\consumer\consumer.ecf"/>
-		<library name="dotnet_helper" location="$EIFFEL_SRC\dotnet\helpers\support\dotnet_helper.ecf"/>
-		<library name="dotnet_loader" location="$EIFFEL_SRC\framework\dotnet_loader\dotnet_loader.ecf"/>
-		<library name="eiffel_identifier" location="$EIFFEL_SRC\framework\eiffel_identifier\eiffel_identifier.ecf"/>
-		<library name="emitter_loader" location="$EIFFEL_SRC\framework\emitter_loader\emitter_loader.ecf"/>
-		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
-		<library name="gobo_extension" location="$ISE_LIBRARY\library\gobo_extension\gobo_extension.ecf"/>
-		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
-		<library name="gobo_regexp" location="$ISE_LIBRARY\library\gobo\gobo_regexp.ecf"/>
-		<library name="gobo_lexical" location="$ISE_LIBRARY\library\gobo\gobo_lexical.ecf"/>
-		<library name="gobo_parse" location="$ISE_LIBRARY\library\gobo\gobo_parse.ecf"/>
-		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure.ecf"/>
-		<library name="i18n" location="$ISE_LIBRARY\library\i18n\i18n.ecf"/>
-		<library name="interface_names" location="$EIFFEL_SRC\framework\interface_names\interface_names.ecf"/>
-		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser.ecf"/>
-		<library name="preferences_reg" location="$ISE_LIBRARY\library\preferences\preferences_reg.ecf">
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="false"/>
+		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension-safe.ecf"/>
+		<library name="cli_writer" location="$EIFFEL_SRC\framework\cli_writer\cli_writer-safe.ecf"/>
+		<library name="configuration_compiler" location="$EIFFEL_SRC\framework\configuration\configuration_compiler-safe.ecf"/>
+		<library name="configuration_parser" location="$EIFFEL_SRC\framework\configuration\configuration_parser-safe.ecf"/>
+		<library name="consumer" location="$EIFFEL_SRC\dotnet\consumer\consumer-safe.ecf"/>
+		<library name="dotnet_helper" location="$EIFFEL_SRC\dotnet\helpers\support\dotnet_helper-safe.ecf"/>
+		<library name="dotnet_loader" location="$EIFFEL_SRC\framework\dotnet_loader\dotnet_loader-safe.ecf"/>
+		<library name="eiffel_identifier" location="$EIFFEL_SRC\framework\eiffel_identifier\eiffel_identifier-safe.ecf"/>
+		<library name="emitter_loader" location="$EIFFEL_SRC\framework\emitter_loader\emitter_loader-safe.ecf"/>
+		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment-safe.ecf"/>
+		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel-safe.ecf"/>
+		<library name="gobo_regexp" location="$ISE_LIBRARY\library\gobo\gobo_regexp-safe.ecf"/>
+		<library name="gobo_lexical" location="$ISE_LIBRARY\library\gobo\gobo_lexical-safe.ecf"/>
+		<library name="gobo_parse" location="$ISE_LIBRARY\library\gobo\gobo_parse-safe.ecf"/>
+		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure-safe.ecf"/>
+		<library name="gobo_extension" location="$ISE_LIBRARY\library\gobo_extension\gobo_extension-safe.ecf"/>
+		<library name="i18n" location="$ISE_LIBRARY\library\i18n\i18n-safe.ecf"/>
+		<library name="interface_names" location="$EIFFEL_SRC\framework\interface_names\interface_names-safe.ecf"/>
+		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser-safe.ecf"/>
+		<library name="preferences_reg" location="$ISE_LIBRARY\library\preferences\preferences_reg-safe.ecf">
 			<condition>
 				<platform value="windows"/>
 			</condition>
 		</library>
-		<library name="preferences_xml" location="$ISE_LIBRARY\library\preferences\preferences_xml.ecf">
+		<library name="preferences_xml" location="$ISE_LIBRARY\library\preferences\preferences_xml-safe.ecf">
 			<condition>
 				<platform excluded_value="windows"/>
 			</condition>
 		</library>
-		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
-		<library name="resources" location="$EIFFEL_SRC\framework\resources\resources.ecf"/>
-		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
-		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf"/>
-		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
+		<library name="process" location="$ISE_LIBRARY\library\process\process-safe.ecf"/>
+		<library name="resources" location="$EIFFEL_SRC\framework\resources\resources-safe.ecf"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
+		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid-safe.ecf"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel-safe.ecf"/>
 		<cluster name="compiler" location="$EIFFEL_SRC\Eiffel\eiffel\" recursive="true">
 			<file_rule>
 				<exclude>/com_il_generation$</exclude>

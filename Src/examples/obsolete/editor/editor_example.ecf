@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-2-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-2-0 http://www.eiffel.com/developers/xml/configuration-1-2-0.xsd" name="editor_example" uuid="3155EA9B-1B12-4425-9EE8-FDD9AA46ED65">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="editor_example" uuid="3155EA9B-1B12-4425-9EE8-FDD9AA46ED65">
 	<target name="editor_example">
 		<root class="ROOT_CLASS" feature="make_and_launch"/>
 		<option trace="false" profile="false" debug="false" warning="true">
@@ -8,7 +8,6 @@
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="editor" location="$EIFFEL_SRC\library\editor\editor.ecf" readonly="false"/>
-		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf"/>
 		<library name="lex" location="$ISE_LIBRARY\library\lex\lex.ecf"/>
 		<library name="patterns" location="$EIFFEL_SRC\library\patterns\patterns.ecf"/>
 		<library name="preferences_reg" location="$ISE_LIBRARY\library\preferences\preferences_reg.ecf" readonly="false">

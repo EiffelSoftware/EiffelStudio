@@ -2,24 +2,24 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="testing" uuid="B77B3A44-A1A9-4050-8DF9-053598561C33" library_target="testing">
 	<target name="testing">
 		<root all_classes="true"/>
-		<option namespace="EiffelSoftware.Library" syntax_level="1">
-		</option>
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 			<exclude>/tests$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
+		<option syntax_level="1" namespace="EiffelSoftware.Library">
+		</option>
 		<library name="argument_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
 		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
+		<cluster name="etf" location=".\etf\" recursive="true"/>
 		<cluster name="testing" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/etf$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="etf" location=".\etf" recursive="true"/>
 	</target>
 </system>

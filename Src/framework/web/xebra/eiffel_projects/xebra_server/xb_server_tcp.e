@@ -6,7 +6,7 @@ create
 
 feature -- Initialization
 
-	thread_pool: DATA_THREAD_POOL_MANAGER [XB_MOD_HANDLER]
+	thread_pool: DATA_THREAD_POOL [XB_MOD_HANDLER]
 
 	make_with_port (port: NATURAL)
 			-- Creates a server on the specified `port' which listens to a http server mod (xebra)
@@ -15,7 +15,7 @@ feature -- Initialization
 		local
 			http_server_main_socket: detachable NETWORK_STREAM_SOCKET
 		do
-			create thread_pool.make_with_managed_target (max_thread_number, agent data_spawner)
+			create thread_pool.make (max_thread_number, agent data_spawner)
             create http_server_main_socket.make_server_by_port (port.as_integer_32)
 
             from

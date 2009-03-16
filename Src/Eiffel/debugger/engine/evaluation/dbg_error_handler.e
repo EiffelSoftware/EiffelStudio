@@ -302,7 +302,7 @@ feature -- Error notification : exception error
 			notify_error_exception (Debugger_names.cst_error_evaluation_failed_with_internal_exception)
 		end
 
-	notify_error_exception_during_evaluation (m: STRING_GENERAL)
+	notify_error_exception_during_evaluation (m: detachable STRING_GENERAL)
 		do
 			if m = Void then
 				notify_error_exception (Debugger_names.cst_error_exception_during_evaluation)

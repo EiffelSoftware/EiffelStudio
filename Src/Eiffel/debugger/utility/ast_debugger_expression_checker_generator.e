@@ -124,10 +124,23 @@ feature -- Type checking
 
 	type_a_from_type_as (a_type_as: TYPE_AS): TYPE_A
 			-- TYPE_A related to `a_type_as'.
+		require
+			a_type_as_attached: a_type_as /= Void
 		do
 			reset
 			type_a_checker.init_for_checking (context.current_feature, context.current_class, Void, error_handler)
 			check_type (a_type_as)
+			Result := last_type
+		end
+
+	type_a_from_expr_as (a_expr_as: EXPR_AS): TYPE_A
+			-- TYPE_A related to `a_expr_as'.
+		require
+			a_expr_as_attached: a_expr_as /= Void
+		do
+			reset
+			type_a_checker.init_for_checking (context.current_feature, context.current_class, Void, error_handler)
+			a_expr_as.process (Current)
 			Result := last_type
 		end
 

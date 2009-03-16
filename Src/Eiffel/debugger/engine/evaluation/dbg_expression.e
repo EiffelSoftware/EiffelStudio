@@ -317,6 +317,7 @@ feature {DBG_EXPRESSION, DBG_EXPRESSION_EVALUATION, DBG_EXPRESSION_EVALUATOR} --
 				else
 					create sp
 					p := sp.expression_parser
+					p.set_syntax_version (p.transitional_64_syntax)
 					check expression_not_void: text /= Void end
 					s8 := text.as_string_8
 					p.parse_from_string (once "check " + s8, context.associated_class)
@@ -331,6 +332,8 @@ feature {DBG_EXPRESSION, DBG_EXPRESSION_EVALUATION, DBG_EXPRESSION_EVALUATOR} --
 						else
 							has_syntax_error := True
 						end
+					else
+						get_analysis_error_message (p)
 					end
 				end
 			else
@@ -339,17 +342,28 @@ feature {DBG_EXPRESSION, DBG_EXPRESSION_EVALUATION, DBG_EXPRESSION_EVALUATOR} --
 					io.error.put_string (p.error_message + "%N")
 				end
 				has_syntax_error := True
-				if p.error_message = Void or else p.error_message.is_empty  then
-					create analysis_error_message.make_from_string (Cst_syntax_error)
-				else
-					create analysis_error_message.make_from_string (p.error_message)
-				end
+				get_analysis_error_message (p)
 			end
 		rescue
 			retried := True
 			retry
 		end
 
+	get_analysis_error_message (p: EIFFEL_PARSER)
+			-- Get `analysis_error_message' from parser `p'
+		require
+			has_syntax_error: has_syntax_error
+		do
+			if
+				p = Void
+				or else
+					(p.error_message = Void or else p.error_message.is_empty)
+			then
+				create analysis_error_message.make_from_string (Cst_syntax_error)
+			else
+				create analysis_error_message.make_from_string (p.error_message)
+			end
+		end
 
 feature -- Recycling
 

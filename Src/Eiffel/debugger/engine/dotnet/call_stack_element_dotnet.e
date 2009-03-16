@@ -634,7 +634,7 @@ feature {NONE} -- Implementation
 						end
 						if not l_list.after then
 								--| Remaining locals, should be OT locals
-							l_ot_locals := object_test_locals_from (rout)
+							l_ot_locals := object_test_locals_from (dynamic_type ,rout)
 							if l_ot_locals /= Void and then not l_ot_locals.is_empty then
 								from
 									l_ot_locals.start
@@ -645,7 +645,7 @@ feature {NONE} -- Implementation
 									value.set_item_number (counter)
 									counter := counter + 1
 									value.set_name (l_names_heap.item (l_ot_locals.item.id.name_id))
-									l_stat_class := static_class_for_local (l_ot_locals.item.type, rout_i, l_wc)
+									l_stat_class := static_class_for_local_from_type_a (l_ot_locals.item.type, rout_i, l_wc)
 									if l_stat_class /= Void then
 										value.set_static_class (l_stat_class)
 									end
@@ -655,6 +655,24 @@ feature {NONE} -- Implementation
 								end
 							end
 						end
+--| Note: keep this code for later, if we want to handle those extra values...						
+--						if not l_list.after then
+--								--| For some reason, there are remaining values on the stack
+--								--| let's considers them as locals
+--							from
+--							until
+--								l_list.after
+--							loop
+--								value := l_list.item
+--								value.set_item_number (counter)
+--								value.set_name ("value #" + counter.out)
+--								counter := counter + 1
+--								locals_list.extend (value)
+--								l_list.forth
+--							end
+--						end
+--						check all_value_handled: l_list.after end
+
 						if l_old_group /= Void then
 							inst_context.set_group (l_old_group)
 						end

@@ -203,6 +203,7 @@ feature {NONE} -- Evaluation
 		do
 			tmp_result := Void
 			tmp_target := Void
+			clean_expression_object_test_locals
 		end
 
 	process_byte_node_evaluation (keep_assertion_checking: BOOLEAN)
@@ -1148,8 +1149,27 @@ feature {BYTE_NODE} -- Visitor
 
 	process_object_test_b (a_node: OBJECT_TEST_B)
 			-- Process `a_node'.
+		local
+			l_tmp_target_backup: like tmp_target
+			l_expr_value: DBG_EVALUATED_VALUE
+			l_res: BOOLEAN
+			cl: CLASS_C
 		do
-			dbg_error_handler.notify_error_should_not_occur_in_expression_evaluation (a_node)
+			l_tmp_target_backup := tmp_target
+			l_expr_value := standalone_evaluation_expr_b (a_node.expression)
+
+			if not error_occurred then
+				l_res := l_expr_value.has_attached_value
+				if l_res and not a_node.is_void_check then
+					cl := l_expr_value.dynamic_class
+					l_res := cl /= Void and then cl.actual_type.conform_to (context_class, a_node.info.type_to_create)
+				end
+				create tmp_result.make_with_value (Debugger_manager.Dump_value_factory.new_boolean_value (l_res, debugger_manager.compiler_data.boolean_class_c))
+				if l_res and attached a_node.target as l_ot then
+					record_expression_object_test_locals (a_node.target, l_expr_value)
+				end
+			end
+			tmp_target := l_tmp_target_backup
 		end
 
 	process_object_test_local_b (a_node: OBJECT_TEST_LOCAL_B)
@@ -1161,8 +1181,15 @@ feature {BYTE_NODE} -- Visitor
 			t := current_call_stack_data_for_evaluation
 			if t /= Void then
 				dv :=  t.cse.object_test_local_value (a_node.position)
-				create tmp_result.make_with_value (dv.dump_value)
-				-- FIXME jfiat [2004/02/26] : optimisation : maybe compute the static type ....
+				if dv /= Void then
+					create tmp_result.make_with_value (dv.dump_value)
+				else
+					tmp_result := expression_object_test_locals_value (a_node.position)
+				end
+				if tmp_result = Void then
+					dbg_error_handler.notify_error_exception_during_evaluation (Void)
+				end
+				-- FIXME jfiat [2004/02/26] : optimization : maybe compute the static type ....
 			else
 				check error_occurred: error_occurred end
 			end
@@ -2094,6 +2121,53 @@ feature {NONE} -- Evaluation: implementation
 --			Result := a_left.identical_to (a_right)
 		end
 
+feature {NONE} -- Implementation: recorded object test locals' value
+
+	expression_object_test_locals: LINKED_LIST [TUPLE [position: INTEGER; value: like tmp_result]]
+			-- Object test locals' container for the Current expression
+
+	record_expression_object_test_locals (a_node: OBJECT_TEST_LOCAL_B; a_value: like tmp_result)
+			-- Record object test's value created during expression
+		require
+			a_node_attached: a_node /= Void
+			a_value_attached: a_value /= Void
+		local
+			l_recorder: like expression_object_test_locals
+		do
+			l_recorder := expression_object_test_locals
+			if l_recorder = Void then
+				create l_recorder.make
+				expression_object_test_locals := l_recorder
+			end
+			l_recorder.force ([a_node.position, a_value])
+		end
+
+	expression_object_test_locals_value (a_position: INTEGER): detachable like tmp_result
+			-- Expression's object test local value at position `a_position'
+		do
+			if attached expression_object_test_locals as lst then
+				from
+					lst.start
+				until
+					lst.after or Result /= Void
+				loop
+					if lst.item.position = a_position then
+						Result := lst.item.value
+					end
+					lst.forth
+				end
+			end
+		end
+
+	clean_expression_object_test_locals
+			-- Clean recorded object test locals.
+		do
+			if attached expression_object_test_locals as lst then
+				lst.wipe_out
+				expression_object_test_locals := Void
+			end
+		end
+
 feature -- Context: Element change
 
 	init_context_with_current_callstack
@@ -2558,35 +2632,39 @@ feature {NONE} -- OT locals
 		require
 			f_not_void: f /= Void
 		local
-			lst: LIST [TUPLE [id_as: ID_AS; type_as: TYPE_AS]]
 			ta: TYPE_A
-			tu: TUPLE [id_as: ID_AS; type_as: TYPE_AS]
+			tu: TUPLE [id: ID_AS; type: TYPE_A]
 			li: LOCAL_INFO
-			ast_v: AST_DEBUGGER_EXPRESSION_CHECKER_GENERATOR
 			l_name_id: INTEGER
+			ct: CLASS_TYPE
 		do
-			lst := f.object_test_locals
-			if lst /= Void and then not lst.is_empty then
-				create ast_v
-				ast_v.init (Ast_context)
+			ct := context_class_type
+			if ct = Void then
+				ct := f.associated_class.types.first
+			end
+			if
+				attached debugger_manager.compiler_data.object_test_locals (ct, f) as lst and then
+				not lst.is_empty
+			then
 				from
 					lst.start
 				until
 					lst.after
 				loop
 					tu := lst.item_for_iteration
-					l_name_id := tu.id_as.name_id
+					l_name_id := tu.id.name_id
+					ta := tu.type
+
 					create li
 					li.set_position (Ast_context.next_object_test_local_position)
-					ta := ast_v.type_a_from_type_as (tu.type_as)
 					li.set_type (ta)
 					li.set_is_used (True)
 
 					debug ("to_implement")
 						to_implement ("Support object test locals of the same name.")
 					end
-					Ast_context.add_object_test_local (li, tu.id_as)
-					Ast_context.add_object_test_expression_scope (tu.id_as)
+					Ast_context.add_object_test_local (li, tu.id)
+					Ast_context.add_object_test_expression_scope (tu.id)
 					lst.forth
 				end
 			end

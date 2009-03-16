@@ -23,7 +23,7 @@ feature -- Last values
 	last_current_as_value: CURRENT_AS
 	last_deferred_as_value: DEFERRED_AS
 	last_void_as_value: VOID_AS
-	last_tuple__keyword_as__id_as__integer__integer__string__value: TUPLE [KEYWORD_AS, ID_AS, INTEGER, INTEGER, STRING]
+	last_keyword_id_value: TUPLE [KEYWORD_AS, ID_AS, INTEGER, INTEGER, STRING]
 
 feature -- Access
 

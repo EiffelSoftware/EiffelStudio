@@ -14,8 +14,7 @@ inherit
 	MULTI_ERROR_MANAGER
 		rename
 			make as make_error_manager,
-			reset as reset_error_manager,
-			class_name as c_class_name
+			reset as reset_error_manager
 		export
 			{NONE} all
 			{ANY} successful, trace_errors, trace_warnings, errors, warnings
@@ -261,7 +260,7 @@ feature {NONE} -- Processing
 				if y <= l_height then
 					process_section (l_item)
 				else
-					add_warning (create {WARNING_OUT_OF_BOUNDS}.make_with_context ([l_item.label, "section"]))
+					add_warning (create {WARNING_OUT_OF_BOUNDS}.make ([l_item.label, "section"]))
 				end
 				a_sections.forth
 			end
@@ -301,7 +300,7 @@ feature {NONE} -- Processing
 					if y <= l_height then
 						process_literal_item (l_lit, x, y)
 					else
-						add_warning (create {WARNING_OUT_OF_BOUNDS}.make_with_context ([l_lit.name, "item"]))
+						add_warning (create {WARNING_OUT_OF_BOUNDS}.make ([l_lit.name, "item"]))
 					end
 
 					l_literals.forth
@@ -333,16 +332,16 @@ feature {NONE} -- Validation
 			a_doc_attached: a_doc /= Void
 		do
 			if pixel_height = 0 then
-				add_error (create {ERROR_MISSING_INI_FILE_PROPERTIES}.make_with_context ([pixel_width_property]), False)
+				add_error (create {ERROR_MISSING_INI_FILE_PROPERTIES}.make ([pixel_width_property]), False)
 			end
 			if pixel_width = 0 then
-				add_error (create {ERROR_MISSING_INI_FILE_PROPERTIES}.make_with_context ([pixel_height_property]), False)
+				add_error (create {ERROR_MISSING_INI_FILE_PROPERTIES}.make ([pixel_height_property]), False)
 			end
 			if width = 0 then
-				add_error (create {ERROR_MISSING_INI_FILE_PROPERTIES}.make_with_context ([width_property]), False)
+				add_error (create {ERROR_MISSING_INI_FILE_PROPERTIES}.make ([width_property]), False)
 			end
 			if height = 0 then
-				add_error (create {ERROR_MISSING_INI_FILE_PROPERTIES}.make_with_context ([height_property]), False)
+				add_error (create {ERROR_MISSING_INI_FILE_PROPERTIES}.make ([height_property]), False)
 			end
 		end
 

@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 									Result.set_with_named_file (a_fn)
 								else
 									create Result.make_with_size (10, 10)
-									error_manager.add_error (create {ERROR_INVALID_MATRIX_PNG}.make_with_context ([a_fn]), False)
+									error_manager.add_error (create {ERROR_INVALID_MATRIX_PNG}.make ([a_fn]), False)
 								end
 							rescue
 								retried_il := True
@@ -109,7 +109,7 @@ feature {NONE} -- Initialization
 						end
 					end
 				else
-					l_error_manager.add_error (create {ERROR_INVALID_INI_FILE}.make_with_context ([l_source_fn]), False)
+					l_error_manager.add_error (create {ERROR_INVALID_INI_FILE}.make ([l_source_fn]), False)
 				end
 			end
 
@@ -164,7 +164,7 @@ feature {NONE} -- Basic Operations
 				if l_reader.successful then
 					Result := l_reader.read_document
 				else
-					error_manager.add_error (create {ERROR_INVALID_INI_FILE}.make_with_context ([a_file_name]), False)
+					error_manager.add_error (create {ERROR_INVALID_INI_FILE}.make ([a_file_name]), False)
 				end
 			end
 			if l_file /= Void and then not l_file.is_closed then
@@ -201,11 +201,11 @@ feature {NONE} -- Basic Operations
 						end
 					end
 				else
-					error_manager.add_error (create {ERROR_INVALID_FRAME_FILE}.make_with_context ([a_file_name]), False)
+					error_manager.add_error (create {ERROR_INVALID_FRAME_FILE}.make ([a_file_name]), False)
 					Result := Void
 				end
 			else
-				error_manager.add_error (create {ERROR_FRAME_FILE_NOT_READABLE}.make_with_context ([a_file_name]), False)
+				error_manager.add_error (create {ERROR_FRAME_FILE_NOT_READABLE}.make ([a_file_name]), False)
 				Result := Void
 			end
 			if l_file /= Void and then not l_file.is_closed then

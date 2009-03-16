@@ -50,13 +50,13 @@ feature -- Access
 
 	folder: STRING
 			-- Folder containing Eiffel multi-class files
-	
+
 	regexp: STRING
 			-- Regular expression that Eiffel multi-class files must match to be processed
-	
+
 	destination_folder: STRING
 			-- Folder where Eiffel class files should be generated
-	
+
 	process_subfolders: BOOLEAN
 			-- Should subfolders of `folder' be scanned for Eiffel multi-class files?
 
@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 							if l_dir.exists then
 								if process_subfolders then
 									split_files_in_folder (l_full_path)
-								end	
+								end
 							elseif l_regexp.matches (l_file) then
 								split_file (l_full_path)
 							end
@@ -163,12 +163,12 @@ feature {NONE} -- Implementation
 			end
 		rescue
 			l_retried := True
-			raise_event (create {CODE_ES_EVENT}.make ("The following exception was raised: " + {ISE_RUNTIME}.last_exception.to_string,
+			raise_event (create {CODE_ES_EVENT}.make ("The following exception was raised: " + create {STRING_8}.make_from_cil ({ISE_RUNTIME}.last_exception.to_string),
 														"Exception Raised",
 														{EV_THREAD_SEVERITY_CONSTANTS}.Error))
 			retry
 		end
-	
+
 	split_file (a_file_path: STRING)
 			-- Split file at path `a_file'.
 		require
@@ -230,12 +230,12 @@ feature {NONE} -- Implementation
 			end
 		rescue
 			l_retried := True
-			raise_event (create {CODE_ES_EVENT}.make ("The following exception was raised: " + {ISE_RUNTIME}.last_exception.to_string,
+			raise_event (create {CODE_ES_EVENT}.make ("The following exception was raised: " + create {STRING_8}.make_from_cil ({ISE_RUNTIME}.last_exception.to_string),
 														"Exception Raised",
 														{EV_THREAD_SEVERITY_CONSTANTS}.Error))
 			retry
 		end
-	
+
 	write_class (a_class_text, a_directory: STRING)
 			-- Write Eiffel class with content `a_class_text'.
 		require
@@ -248,9 +248,9 @@ feature {NONE} -- Implementation
 			l_name, l_class_name: STRING
 		do
 			if not l_retried then
-				parser.parse_from_string (a_class_text)
+				parser.parse_from_string (a_class_text, Void)
 				if parser.root_node /= Void and then parser.root_node.class_name /= Void then
-					l_class_name := parser.root_node.class_name.as_lower
+					l_class_name := parser.root_node.class_name.name.as_lower
 					create l_name.make (a_directory.count + l_class_name.count + 2)
 					l_name.append (a_directory)
 					l_name.append (l_class_name)
@@ -277,12 +277,12 @@ feature {NONE} -- Implementation
 			end
 		rescue
 			l_retried := True
-			raise_event (create {CODE_ES_EVENT}.make ("The following exception was raised: " + {ISE_RUNTIME}.last_exception.to_string,
+			raise_event (create {CODE_ES_EVENT}.make ("The following exception was raised: " + create {STRING_8}.make_from_cil ({ISE_RUNTIME}.last_exception.to_string),
 														"Exception Raised",
 														{EV_THREAD_SEVERITY_CONSTANTS}.Error))
 			retry
 		end
-		
+
 	raise_event (a_event: EV_THREAD_EVENT)
 			-- Call event handler.
 		require
@@ -290,7 +290,7 @@ feature {NONE} -- Implementation
 		do
 			event_handler.call ([a_event])
 		end
-	
+
 	parser: EIFFEL_PARSER
 			-- Eiffel parser
 

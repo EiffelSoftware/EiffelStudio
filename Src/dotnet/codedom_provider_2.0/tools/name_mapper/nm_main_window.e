@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			saved_make
 			default_create
 		end
-		
+
 	user_initialization
 			-- Initialize instance.
 		local
@@ -121,7 +121,7 @@ feature {NONE} -- Events Handling
 			end
 			on_member_change
 		end
-	
+
 	on_member_change
 			-- Called by `change_actions' of `input_feature_text_field'.
 		local
@@ -225,7 +225,7 @@ feature {NONE} -- Events Handling
 								assemblies_list.forth
 							end
 						end
-						Referenced_assemblies.forth						
+						Referenced_assemblies.forth
 					end
 				end
 			end
@@ -245,7 +245,7 @@ feature {NONE} -- Events Handling
 		do
 			on_column_resize (1)
 		end
-	
+
 	on_close
 			-- Save settings then close.
 		do
@@ -255,7 +255,7 @@ feature {NONE} -- Events Handling
 			save_y_pos (y_position)
 			((create {EV_ENVIRONMENT}).application).destroy
 		end
-		
+
 	on_about
 			-- Called by `select_actions' of `about_menu_item'.
 		local
@@ -303,7 +303,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		rescue
-			create l_error_dialog.make_with_text ("Could not add assembly reference, caught the following exception:%N%N" + {ISE_RUNTIME}.last_exception.message)
+			create l_error_dialog.make_with_text ("Could not add assembly reference, caught the following exception:%N%N" + create {STRING}.make_from_cil ({ISE_RUNTIME}.last_exception.message))
 			l_error_dialog.set_title ("Add Reference Error")
 			l_error_dialog.set_buttons (<<"Cancel">>)
 			l_error_dialog.set_pixmap (Default_pixmaps.error_pixmap)
@@ -311,7 +311,7 @@ feature {NONE} -- Implementation
 			l_retried := True
 			retry
 		end
-		
+
 feature {NONE} -- Private Access
 
 	class_finder: NM_CLASS_FINDER
@@ -329,7 +329,7 @@ feature {NONE} -- Private Access
 		once
 			Result := (create {EV_STOCK_COLORS}).Black
 		end
-		
+
 	Red: EV_COLOR
 			-- Red
 		once

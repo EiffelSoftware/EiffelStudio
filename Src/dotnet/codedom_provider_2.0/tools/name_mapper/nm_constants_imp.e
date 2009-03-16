@@ -7,7 +7,7 @@ note
 
 class
 	NM_CONSTANTS_IMP
-	
+
 feature {NONE} -- Initialization
 
 	initialize_constants
@@ -86,7 +86,7 @@ feature -- Access
 		end
 
 	string_constant_by_name (a_name: STRING): STRING
-			-- `Result' is STRING 
+			-- `Result' is STRING
 		require
 			initialized: constants_initialized
 			name_valid: a_name /= Void and not a_name.is_empty
@@ -96,9 +96,9 @@ feature -- Access
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
+
 	integer_constant_by_name (a_name: STRING): INTEGER
-			-- `Result' is STRING 
+			-- `Result' is STRING
 		require
 			initialized: constants_initialized
 			name_valid: a_name /= Void and not a_name.is_empty
@@ -110,10 +110,10 @@ feature -- Access
 			check
 				is_integer: l_string.is_integer
 			end
-			
+
 			Result := l_string.to_integer
 		end
-		
+
 	has_constant (a_name: STRING): BOOLEAN
 			-- Does constant `a_name' exist?
 		require
@@ -128,22 +128,22 @@ feature {NONE} -- Implementation
 	initialized_cell: CELL [BOOLEAN]
 			-- A cell to hold whether the constants have been loaded.
 		once
-			create Result
+			create Result.put (False)
 		end
-		
+
 	all_constants: HASH_TABLE [STRING, STRING]
 			-- All constants loaded from constants file.
 		once
 			create Result.make (4)
 		end
-		
+
 	file_name: STRING = "constants.txt"
 		-- File name from which constants must be loaded.
-		
+
 	String_constant: STRING = "STRING"
-	
+
 	Integer_constant: STRING = "INTEGER"
-		
+
 	parse_file_contents (content: STRING)
 			-- Parse contents of `content' into `all_constants'.
 		local
@@ -173,7 +173,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	first_line (content: STRING): STRING
 			-- `Result' is first line of `Content',
 			-- which will be stripped from `content'.
@@ -181,7 +181,7 @@ feature {NONE} -- Implementation
 			content_not_void: content /= Void
 			content_not_empty: not content.is_empty
 		local
-			new_line_index: INTEGER		
+			new_line_index: INTEGER
 		do
 			new_line_index := content.index_of ('%N', 1)
 			if new_line_index /= 0 then

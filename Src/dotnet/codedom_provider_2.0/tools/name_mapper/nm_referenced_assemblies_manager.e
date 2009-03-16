@@ -54,7 +54,7 @@ feature -- Access
 		do
 			Result := a_string.as_lower.is_equal (a_string)
 		end
-		
+
 feature -- Status Report
 
 	is_startup_assembly (a_path: STRING): BOOLEAN
@@ -116,7 +116,7 @@ feature -- Basic Operations
 			l_retried := True
 			retry
 		end
-		
+
 	save_assemblies
 			-- Persist referenced assemblies list.
 		local
@@ -129,14 +129,14 @@ feature -- Basic Operations
 				from
 					Referenced_assemblies.start
 					if not Referenced_assemblies.after then
-						l_assemblies.append (Referenced_assemblies.item.assembly.location)
+						l_assemblies.append (create {STRING}.make_from_cil (Referenced_assemblies.item.assembly.location))
 						Referenced_assemblies.forth
 					end
 				until
 					Referenced_assemblies.after
 				loop
 					l_assemblies.append_character (Separator)
-					l_assemblies.append (Referenced_assemblies.item.assembly.location)
+					l_assemblies.append (create {STRING}.make_from_cil (Referenced_assemblies.item.assembly.location))
 					Referenced_assemblies.forth
 				end
 				l_key := {REGISTRY}.Current_user.open_sub_key (Saved_settings_key, True)

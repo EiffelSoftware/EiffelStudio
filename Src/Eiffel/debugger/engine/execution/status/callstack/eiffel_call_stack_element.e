@@ -19,6 +19,8 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_DEBUGGER_MANAGER
+
 feature -- Properties
 
 	is_eiffel_call_stack_element: BOOLEAN = True
@@ -121,11 +123,15 @@ feature -- Properties
 			routine_attached: routine /= Void
 		local
 			locs: like locals
+			pos: INTEGER
 		do
 			locs := locals
 			if locs /= Void then
 				if attached routine.locals as lst then
-					Result := locs.i_th (lst.count + i)
+					pos := lst.count + i
+					if locs.valid_index (pos) then
+						Result := locs.i_th (pos)
+					end
 				end
 			end
 		end
@@ -222,10 +228,13 @@ feature {NONE} -- Implementation
 			Result := feat.locals
 		end
 
-	object_test_locals_from (feat: E_FEATURE): LIST [TUPLE [id: ID_AS; type: TYPE_AS]]
+	object_test_locals_from (a_class_type: CLASS_TYPE; a_feat: E_FEATURE): LIST [TUPLE [id: ID_AS; type: TYPE_A]]
 			-- Locals declaration groups for `feat'.
+		require
+			a_class_type_attached: a_class_type /= Void
+			a_feat_attached: a_feat /= Void
 		do
-			Result := feat.object_test_locals
+			Result := debugger_manager.compiler_data.object_test_locals (a_class_type, a_feat)
 		end
 
 feature {NONE} -- Implementation Properties

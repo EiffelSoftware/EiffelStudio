@@ -12,6 +12,11 @@ class
 inherit
 	SHARED_EIFFEL_PROJECT
 
+	SHARED_AST_CONTEXT
+		rename
+			context as ast_context
+		end
+
 create
 	make
 
@@ -158,6 +163,76 @@ feature {NONE} -- Initialization
 			if cl_i /= Void then
 				exception_manager_class_c := cl_i.compiled_class
 			end
+		end
+
+feature -- Query
+
+	object_test_locals (a_class_type: CLASS_TYPE; a_feat: E_FEATURE): ARRAYED_LIST [TUPLE [id: ID_AS; type: TYPE_A]]
+			-- Object test locals from `a_feat' in the context of class `a_class_type'
+		require
+			a_class_type /= Void
+			a_feat /= Void
+		local
+			type_vis: AST_DEBUGGER_EXPRESSION_CHECKER_GENERATOR
+			l_type_as: TYPE_AS
+			l_cl_type_a: CL_TYPE_A
+			l_type_a: TYPE_A
+			l_old_ast_context, l_ast_context: like ast_context
+			retried: BOOLEAN
+			cl: CLASS_C
+		do
+			if not retried then
+				if attached create {AST_DEBUGGER_OBJECT_TEST_LOCAL_VISITOR} as vis then
+					vis.get_object_test_locals (a_feat.ast)
+					if attached vis.object_test_locals as l_object_test_locals then
+							--| FIXME jfiat [2009/03/16] : we should cache `vis.object_test_locals', to avoid recomputation...
+						create type_vis
+						l_ast_context := ast_context
+						l_old_ast_context := l_ast_context.twin
+						l_ast_context.clear_all
+						if a_class_type = Void then
+							cl := a_feat.associated_class
+							l_cl_type_a := cl.actual_type
+						else
+							cl := a_class_type.associated_class
+							l_cl_type_a := a_class_type.type
+						end
+						l_ast_context.initialize (cl, l_cl_type_a, cl.feature_table)
+						l_ast_context.set_current_feature (a_feat.associated_feature_i)
+						type_vis.init (l_ast_context)
+						type_vis.set_current_feature (a_feat.associated_feature_i)
+						from
+							create Result.make (l_object_test_locals.count)
+							l_object_test_locals.start
+						until
+							l_object_test_locals.after
+						loop
+							if attached l_object_test_locals.item as l_item then
+								l_type_as := l_item.type
+								if l_type_as /= Void then
+									l_type_a := type_vis.type_a_from_type_as (l_type_as)
+								else
+									l_type_a := type_vis.type_a_from_expr_as (l_object_test_locals.item.exp)
+								end
+								Result.force ([l_item.name, l_type_a])
+							else
+								check should_not_occur: False end
+							end
+							l_object_test_locals.forth
+						end
+						l_ast_context.restore (l_old_ast_context)
+					end
+--				else
+--					Result := a_feat.object_test_locals
+				end
+			else
+				if l_ast_context /= Void and l_old_ast_context /= Void then
+					l_ast_context.restore (l_old_ast_context)
+				end
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 feature -- Access

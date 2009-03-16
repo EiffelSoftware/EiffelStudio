@@ -49,8 +49,6 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_DEBUGGER_MANAGER
-
 	SHARED_WORKBENCH
 		export
 			{NONE} all
@@ -324,7 +322,6 @@ feature {NONE} -- Implementation
 	initialize_stack
 		local
 			local_decl_grps: like local_decl_grps_from
-			l_ot_locals: like object_test_locals_from
 			id_list: IDENTIFIER_LIST
 			l_count: INTEGER
 			value: ABSTRACT_DEBUG_VALUE
@@ -471,8 +468,10 @@ feature {NONE} -- Implementation
 
 						if l_index <= l_upper then
 								--| Remaining locals, should be OT locals
-							l_ot_locals := object_test_locals_from (rout)
-							if l_ot_locals /= Void and then not l_ot_locals.is_empty then
+							if
+								attached object_test_locals_from (dynamic_type, rout) as l_ot_locals and then
+								not l_ot_locals.is_empty
+							then
 								from
 									l_ot_locals.start
 								until
@@ -482,7 +481,7 @@ feature {NONE} -- Implementation
 									value.set_item_number (counter)
 									counter := counter + 1
 									value.set_name (l_names_heap.item (l_ot_locals.item_for_iteration.id.name_id))
-									l_stat_class := static_class_for_local (l_ot_locals.item.type, rout_i, l_wc)
+									l_stat_class := static_class_for_local_from_type_a (l_ot_locals.item.type, rout_i, l_wc)
 									if l_stat_class /= Void then
 										value.set_static_class (l_stat_class)
 									end

@@ -35,6 +35,11 @@ inherit
 			{NONE} all
 		end
 
+	EXCEPTION_CODE_MEANING
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -140,11 +145,18 @@ feature {NONE} -- Query
 			-- Text describing for given expception
 		require
 			a_exception_attached: a_exception /= Void
+		local
+			l_tag: READABLE_STRING_8
 		do
 			create Result.make (a_exception.tag_name.count + 2)
 			Result.append_character (' ')
 			Result.append_character ('(')
-			Result.append (a_exception.tag_name)
+			l_tag := a_exception.tag_name
+			if l_tag.is_empty then
+				Result.append (exception_code_meaning (a_exception.code))
+			else
+				Result.append (l_tag)
+			end
 			Result.append_character (')')
 		end
 

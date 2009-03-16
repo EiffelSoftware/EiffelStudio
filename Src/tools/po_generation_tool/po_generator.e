@@ -73,7 +73,7 @@ feature -- Generation
 			l_string_low := l_string.as_lower
 			if l_string_low.has_substring (name_of_translate) or else l_string_low.has_substring (name_of_translate_plural) or else l_string_low.has_substring (name_of_feature_clause.as_lower) then
 				eiffel_parser.reset
-				eiffel_parser.parse_from_string (l_string)
+				eiffel_parser.parse_from_string (l_string, Void)
 				if eiffel_parser.error_count > 0 then
 					has_error := true
 				else
@@ -117,7 +117,7 @@ invariant
 	file_not_void: file /= Void
 
 note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -141,11 +141,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

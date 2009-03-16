@@ -36,7 +36,7 @@ note
 		"$Revision$"
 
 class
-	ACTION_SEQUENCE [EVENT_DATA -> ?TUPLE create default_create end]
+	ACTION_SEQUENCE [EVENT_DATA -> detachable TUPLE create default_create end]
 
 inherit
 	ARRAYED_LIST [PROCEDURE [ANY, EVENT_DATA]]

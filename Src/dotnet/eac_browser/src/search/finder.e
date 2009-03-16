@@ -34,7 +34,7 @@ feature -- Access
 			until
 				i > ca.assemblies.count
 			loop
-				l_type := find_eiffel_type_name_in_assembly (ca.assemblies.item (i), an_eiffel_type_name)
+				l_type := find_eiffel_type_name_in_assembly (ca.assemblies.i_th (i), an_eiffel_type_name)
 				if l_type /= Void then
 					Result.extend (l_type)
 				end
@@ -217,7 +217,7 @@ feature -- Name
 				or else
 				i > referenced_assemblies.assemblies.count --or Result /= Void
 			loop
-				cat := eac.consumed_assembly (referenced_assemblies.assemblies.item (i))
+				cat := eac.consumed_assembly (referenced_assemblies.assemblies.i_th (i))
 				from
 					j := 1
 				until

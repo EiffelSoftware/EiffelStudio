@@ -1,6 +1,6 @@
 note
 	description: "[
-		no comment yet
+		Generates a tree of XB_TAGs
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"
@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 		--	create {LINKED_LIST [OUTPUT_ELEMENT]}elements.make
 			create root_tag.make
 			root_tag.set_name ("ROOT_TAG")
-			create tag_stack.make (1000)
+			create tag_stack.make (1)
 		--	create tag_buf.make
 			create html_buf.make_empty
 		end
@@ -42,11 +42,13 @@ feature -- Access
 		-- 1 reading a tag
 
 	html_buf: STRING
+		-- Stores html text until a tag is created from it
+
 	root_tag : XB_TAG
+		-- Represents the root of the XB_TAG tree
 
 	tag_stack: ARRAYED_STACK [XB_TAG]
-
---	tag_buf: XB_TAG
+		-- The stack is used to generate the tree
 
 
 
@@ -113,40 +115,35 @@ feature -- Tag
 			l_local_part: STRING
 			l_tmp_tag: XB_TAG
 		do
-
-				if attached a_prefix then
-					if a_prefix.is_equal (Tag_keyword) then
-						state := 1
-					else
-						state := 0
-					end
-
-					l_prefix := a_prefix + ":"
+			if attached a_prefix then
+				if a_prefix.is_equal (Tag_keyword) then
+					state := 1
 				else
-					l_prefix := ""
 					state := 0
 				end
 
-				if attached a_local_part then
-					l_local_part := a_local_part
-				else
-					l_local_part := ""
-				end
+				l_prefix := a_prefix + ":"
+			else
+				l_prefix := ""
+				state := 0
+			end
 
+			if attached a_local_part then
+				l_local_part := a_local_part
+			else
+				l_local_part := ""
+			end
 
-
-				if state = 1 then
-					create_html_tag
-					create l_tmp_tag.make
-					tag_stack.item.put_subtag (l_tmp_tag)
-					tag_stack.put (l_tmp_tag)
-					tag_stack.item.set_name (l_local_part)
-				elseif state = 0 then
-					html_buf.append ("<" + l_prefix +  l_local_part)
-				end
+			if state = 1 then
+				create_html_tag
+				create l_tmp_tag.make
+				tag_stack.item.put_subtag (l_tmp_tag)
+				tag_stack.put (l_tmp_tag)
+				tag_stack.item.set_name (l_local_part)
+			elseif state = 0 then
+				html_buf.append ("<" + l_prefix +  l_local_part)
+			end
 		end
-
-
 
 	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
 			-- Start of attribute.
@@ -157,30 +154,29 @@ feature -- Tag
 			l_local_part: STRING
 			l_value: STRING
 		do
+			if state = 1 then
+				tag_stack.item.put_attribute (a_namespace, a_prefix, a_local_part, a_value)
 
-				if state = 1 then
-					tag_stack.item.put_attribute (l_namespace, l_prefix, l_local_part, l_value)
+			elseif state = 0 then
 
-				elseif state = 0 then
-
-					if attached a_prefix then
-						l_prefix := a_prefix + ":"
-					else
-						l_prefix := ""
-					end
-					if attached a_local_part then
-						l_local_part := a_local_part
-					else
-						l_local_part := ""
-					end
-					if attached a_value then
-						l_value := a_value
-					else
-						l_value := ""
-					end
-
-					html_buf.append ( " " + l_prefix  + l_local_part + "=%"" +  l_value + "%"")
+				if attached a_prefix then
+					l_prefix := a_prefix + ":"
+				else
+					l_prefix := ""
 				end
+				if attached a_local_part then
+					l_local_part := a_local_part
+				else
+					l_local_part := ""
+				end
+				if attached a_value then
+					l_value := a_value
+				else
+					l_value := ""
+				end
+
+				html_buf.append ( " " + l_prefix  + l_local_part + "=%"" +  l_value + "%"")
+			end
 		end
 
 	on_start_tag_finish
@@ -194,7 +190,6 @@ feature -- Tag
 			end
 		end
 
-
 	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- End tag.
 			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
@@ -205,7 +200,9 @@ feature -- Tag
 		do
 			if state = 1 then
 					tag_stack.remove
-					state := 0
+					if tag_stack.count = 1 then
+						state := 0
+					end
 			elseif state = 0 then
 
 				if attached a_prefix then
@@ -222,7 +219,6 @@ feature -- Tag
 				html_buf.append ("</" + l_prefix +  l_local_part + ">")
 			end
 		end
-
 
 feature -- Content
 
@@ -247,11 +243,12 @@ feature {NONE} -- Implementation
 		local
 			l_tag: XB_TAG
 		do
-			create l_tag.make
-			l_tag.set_name ("HTML")
-			l_tag.put_attribute ("", "","HTML", s)
-
-			tag_stack.item.put_subtag (l_tag.twin)
+			if not s.is_empty then
+				create l_tag.make
+				l_tag.set_name ("HTML")
+				l_tag.put_attribute ("", "","code", s)
+				tag_stack.item.put_subtag (l_tag.twin)
+			end
 		end
 
 	create_html_tag

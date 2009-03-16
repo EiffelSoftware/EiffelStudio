@@ -1,16 +1,18 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="dotnet_assembly_documentation" uuid="C8C55A64-BC51-4e1d-A758-B06D19244E1A" library_target="dotnet_assembly_documentation">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="dotnet_assembly_documentation" uuid="C8C55A64-BC51-4E1D-A758-B06D19244E1A" library_target="dotnet_assembly_documentation">
 	<target name="dotnet_assembly_documentation">
 		<file_rule>
 			<exclude>/.svn$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
 		<option trace="false" profile="false" debug="false" syntax_level="1">
-			<assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false"/>
+			<assertions/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="dotnet_helper" location="$EIFFEL_SRC\dotnet\helpers\support\dotnet_helper.ecf"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
-		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf"/>
-		<cluster name="src" location="."/>
+		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
+		<library name="gobo_xml" location="$ISE_LIBRARY\library\gobo\gobo_xml.ecf"/>
+		<cluster name="src" location=".\"/>
 	</target>
 </system>

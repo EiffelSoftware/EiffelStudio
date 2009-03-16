@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="configuration_compiler" uuid="D99D877F-0F37-4B82-8FB6-EE98AF7B13D7" library_target="default">
+	<target name="default">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/\.svn$</exclude>
+		</file_rule>
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" is_void_safe="true" syntax_level="1" namespace="EiffelSoftware.Framework.Ecf">
+		</option>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="false"/>
+		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension-safe.ecf"/>
+		<library name="configuration_parser" location="configuration_parser-safe.ecf" readonly="false"/>
+		<library name="consumer" location="$EIFFEL_SRC\dotnet\consumer\consumer-safe.ecf" readonly="false"/>
+		<library name="emitter_loader" location="$EIFFEL_SRC\framework\emitter_loader\emitter_loader-safe.ecf"/>
+		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment-safe.ecf"/>
+		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel-safe.ecf"/>
+		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure-safe.ecf"/>
+		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser-safe.ecf"/>
+		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid-safe.ecf"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel-safe.ecf"/>
+		<cluster name="configuration" location="compiler\" recursive="true">
+			<option namespace="Compiler">
+			</option>
+			<file_rule>
+				<exclude>/implementation$</exclude>
+			</file_rule>
+			<cluster name="implementation" location="$|implementation\" recursive="true">
+				<option namespace="Spec">
+				</option>
+			</cluster>
+		</cluster>
+	</target>
+</system>

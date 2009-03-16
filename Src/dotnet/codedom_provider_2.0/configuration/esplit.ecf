@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system
-	 xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
-	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
-	 name="esplitter" uuid="F0BDAC07-73F2-4fa7-8644-D30849C54389">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="esplitter" uuid="F0BDAC07-73F2-4FA7-8644-D30849C54389">
 	<target name="esplit_common">
-		<description>
-			eSplitter utility
-		</description>
-		
-		<option syntax_level="1"/>
+		<description>eSplitter utility</description>
 		<version major="5" minor="7" release="426" build="0"/>
-		
+		<file_rule>
+			<exclude>/\.svn$</exclude>
+		</file_rule>
+		<option syntax_level="1">
+		</option>
 		<setting name="cls_compliant" value="true"/>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<setting name="il_verifiable" value="true"/>
@@ -22,86 +18,73 @@
 		<setting name="msil_use_optimized_precompile" value="true"/>
 		<setting name="use_all_cluster_name_as_namespace" value="true"/>
 		<setting name="use_cluster_name_as_namespace" value="false"/>
-
 		<precompile name="precompile" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\configuration\vision2.ecf"/>
-
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<library name="cache_browser" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\configuration\cache_browser_library.ecf" readonly="true"/>
+		<library name="gobo_regexp" location="$ISE_LIBRARY\library\gobo\gobo_regexp.ecf" readonly="true"/>
+		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser.ecf" readonly="true"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf" readonly="true"/>
 		<library name="vision2_extension" location="$ISE_LIBRARY\library\vision2_extension\vision2_extension.ecf" readonly="true"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf" readonly="true"/>
-		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf" readonly="true"/>
-		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser.ecf" readonly="true"/>
-
 		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
 		<assembly name="system_" location="$ISE_DOTNET_FRAMEWORK\system.dll" prefix="SYSTEM_DLL_"/>
 		<assembly name="system_windows_forms" location="$ISE_DOTNET_FRAMEWORK\System.Windows.Forms.dll" prefix="WINFORMS_"/>
-
-		<file_rule>
-			<exclude>/\.svn$</exclude>
-		</file_rule>
-		
 		<cluster name="tools_common" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\tools\common\">
-			<option namespace="EiffelSoftware.Codedom.Tools" />
+			<option namespace="EiffelSoftware.Codedom.Tools">
+			</option>
 		</cluster>
 	</target>
-	
 	<target name="esplit_console_debug" extends="esplit_common">
-		<root feature="make" class="CODE_ES_APPLICATION"/>
-		<setting name="line_generation" value="true"/>
-		<setting name="executable_name" value="esplit2_0"/>
-		<setting name="console_application" value="true"/>
-		
+		<root class="CODE_ES_APPLICATION" feature="make"/>
 		<option debug="true">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
 		</option>
-
+		<setting name="console_application" value="true"/>
+		<setting name="executable_name" value="esplit2_0"/>
+		<setting name="line_generation" value="true"/>
+		<cluster name="eclop" location="$EIFFEL_SRC\free_add_ons\eclop\eclop\" recursive="true">
+			<option namespace="Eclop">
+			</option>
+		</cluster>
 		<cluster name="root_cluster" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\tools\splitter\" recursive="true">
-			<option namespace="EiffelSoftware.Codedom.Esplit" />
+			<option namespace="EiffelSoftware.Codedom.Esplit">
+			</option>
 			<file_rule>
 				<exclude>/bin$</exclude>
 				<exclude>/gui$</exclude>
 			</file_rule>
 		</cluster>
-
-		<cluster name="eclop" location="$EIFFEL_SRC\free_add_ons\eclop\eclop\" recursive="true">
-			<option namespace="Eclop" />
-		</cluster>
 	</target>
-
 	<target name="esplit_console_release" extends="esplit_console_debug">
-		<root feature="make" class="CODE_ES_APPLICATION"/>
-		<setting name="line_generation" value="false"/>
+		<root class="CODE_ES_APPLICATION" feature="make"/>
 		<option debug="false">
-			<assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false"/>
-		</option>		
-	</target>
-
-	<target name="esplit_graphical_debug" extends="esplit_common">
-		<root feature="make" class="CODE_ES_APPLICATION"/>
-		<setting name="line_generation" value="true"/>
-		<setting name="executable_name" value="esplitter2_0"/>
-		<setting name="console_application" value="false"/>
-
-		<option debug="true">
-			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+			<assertions/>
 		</option>
-
+		<setting name="line_generation" value="false"/>
+	</target>
+	<target name="esplit_graphical_debug" extends="esplit_common">
+		<root class="CODE_ES_APPLICATION" feature="make"/>
+		<option debug="true">
+			<assertions precondition="true"/>
+		</option>
+		<setting name="console_application" value="false"/>
+		<setting name="executable_name" value="esplitter2_0"/>
+		<setting name="line_generation" value="true"/>
 		<cluster name="root_cluster" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\tools\splitter\" recursive="true">
-			<option namespace="EiffelSoftware.Codedom.Esplit" />
+			<option namespace="EiffelSoftware.Codedom.Esplit">
+			</option>
 			<file_rule>
 				<exclude>/bin$</exclude>
 				<exclude>/text$</exclude>
 			</file_rule>
 		</cluster>
 	</target>
-
 	<target name="esplit_graphical_release" extends="esplit_graphical_debug">
-		<root feature="make" class="CODE_ES_APPLICATION"/>
-		<setting name="line_generation" value="false"/>
+		<root class="CODE_ES_APPLICATION" feature="make"/>
 		<option debug="false">
-			<assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false"/>
-		</option>		
+			<assertions/>
+		</option>
+		<setting name="line_generation" value="false"/>
 	</target>
 </system>

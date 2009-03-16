@@ -22,7 +22,7 @@
 		<library name="argument_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="error_manager" location="$EIFFEL_SRC\framework\base\application\error_manager\error_manager.ecf"/>
-		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf"/>
+		<library name="gobo_regexp" location="$ISE_LIBRARY\library\gobo\gobo_regexp.ecf"/>
 		<library name="ini" location="$EIFFEL_SRC\framework\file_formats\ini.ecf"/>
 		<library name="text" location="$EIFFEL_SRC\framework\base\text\text.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf">

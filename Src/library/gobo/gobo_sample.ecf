@@ -17,7 +17,21 @@
 		</file_rule>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<library name="eiffelbase" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="gobo" location="gobo.ecf"/>
+		<library name="gobo_argument" location="gobo_argument.ecf"/>
+		<library name="gobo_kernel" location="gobo_kernel.ecf"/>
+		<library name="gobo_lexical" location="gobo_lexical.ecf"/>
+		<library name="gobo_math" location="gobo_math.ecf"/>
+		<library name="gobo_parse" location="gobo_parse.ecf"/>
+		<library name="gobo_pattern" location="gobo_pattern.ecf"/>
+		<library name="gobo_regexp" location="gobo_regexp.ecf"/>
+		<library name="gobo_sample" location="gobo_sample.ecf"/>
+		<library name="gobo_string" location="gobo_string.ecf"/>
+		<library name="gobo_structure" location="gobo_structure.ecf"/>
+		<library name="gobo_test" location="gobo_test.ecf"/>
+		<library name="gobo_time" location="gobo_time.ecf"/>
+		<library name="gobo_tools" location="gobo_tools.ecf"/>
+		<library name="gobo_utility" location="gobo_utility.ecf"/>
+		<library name="gobo_xml" location="gobo_xml.ecf"/>
 		<cluster name="sample" location="." recursive="true"/>
 	</target>
 </system>

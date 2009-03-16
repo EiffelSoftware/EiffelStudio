@@ -21,7 +21,10 @@
 		<setting name="msil_generation_type" value="exe"/>
 		<setting name="multithreaded" value="false"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf"/>
+		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
+		<library name="gobo_parse" location="$ISE_LIBRARY\library\gobo\gobo_parse.ecf"/>
+		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure.ecf"/>
+		<library name="gobo_utility" location="$ISE_LIBRARY\library\gobo\gobo_utility.ecf"/>
 		<cluster name="geyacc" location="$ISE_LIBRARY\library\gobo\svn\src\geyacc"/>
 	</target>
 </system>

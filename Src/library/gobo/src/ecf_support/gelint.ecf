@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-3-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-3-0 http://www.eiffel.com/developers/xml/configuration-1-3-0.xsd" name="gelint">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="gelint" uuid="94AB60A5-5FAC-4B79-BA7F-7BC327B432CD">
 	<target name="gelint">
 		<root class="ECF_GELINT" feature="execute"/>
 		<option trace="false" profile="false" debug="false" warning="true">
@@ -22,10 +22,15 @@
 		<setting name="msil_generation_type" value="exe"/>
 		<setting name="multithreaded" value="false"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf"/>
 		<library name="configuration_parser" location="$EIFFEL_SRC\framework\configuration\configuration_parser.ecf"/>
-		<library name="environment" location="$EIFFEL_SRC\framework/environment/environment.ecf"/>
-		<override name="ecf_support" location="$ISE_LIBRARY\library\gobo\src\ecf_support\" recursive="true"/>
+		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
+		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
+		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure.ecf"/>
+		<library name="gobo_regexp" location="$ISE_LIBRARY\library\gobo\gobo_regexp.ecf"/>
+		<library name="gobo_string" location="$ISE_LIBRARY\library\gobo\gobo_string.ecf"/>
+		<library name="gobo_tools" location="$ISE_LIBRARY\library\gobo\gobo_tools.ecf"/>
+		<library name="gobo_utility" location="$ISE_LIBRARY\library\gobo\gobo_utility.ecf"/>
 		<cluster name="gelint" location="$ISE_LIBRARY\library\gobo\svn\src\gelint\" recursive="true"/>
+		<override name="ecf_support" location="$ISE_LIBRARY\library\gobo\src\ecf_support\" recursive="true"/>
 	</target>
 </system>

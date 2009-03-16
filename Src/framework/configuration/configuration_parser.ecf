@@ -5,13 +5,18 @@
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option namespace="EiffelSoftware.Framework.Ecf" syntax_level="1">
+		<option syntax_level="1" namespace="EiffelSoftware.Framework.Ecf">
 			<assertions precondition="true"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="base_extension" location="$EIFFEL_SRC\library\base_extension\base_extension.ecf"/>
 		<library name="eiffel_identifier" location="$EIFFEL_SRC\framework\eiffel_identifier\eiffel_identifier.ecf"/>
-		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf"/>
+		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
+		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure.ecf"/>
+		<library name="gobo_lexical" location="$ISE_LIBRARY\library\gobo\gobo_lexical.ecf"/>
+		<library name="gobo_parse" location="$ISE_LIBRARY\library\gobo\gobo_parse.ecf"/>
+		<library name="gobo_regexp" location="$ISE_LIBRARY\library\gobo\gobo_regexp.ecf"/>
+		<library name="gobo_xml" location="$ISE_LIBRARY\library\gobo\gobo_xml.ecf"/>
 		<library name="interface_names" location="$EIFFEL_SRC\framework\interface_names\interface_names.ecf"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf"/>
 		<cluster name="parser" location="parser\" recursive="true">

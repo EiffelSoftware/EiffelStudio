@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="carbon_api" uuid="D8DA2332-0232-4B5D-A6D3-6605880F7D99" library_target="carbon_api">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="carbon_api" uuid="D8DA2332-0232-4B5D-A6D3-6605880F7D99" library_target="carbon_api">
 	<target name="carbon_api">
-	
+		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/\.svn</exclude>
 			<exclude>/EIFGEN.{0,1}$</exclude>
@@ -10,20 +10,14 @@
 			<exclude>/release$</exclude>
 			<exclude>/obsolete$</exclude>
 		</file_rule>
-		
-		<root all_classes="true"/>
-		<option warning="true"/>
-		<library name="base" location="$ISE_LIBRARY/library/base/base.ecf" readonly="True"/>
-		<library name="time" location="$ISE_LIBRARY/library/time/time.ecf" readonly="True"/>
-		<external_include location="${ISE_LIBRARY_CARBON}/library/vision2/implementation/carbon/wrapper/generated_wrapper/c/include" />
-		<external_include location="${ISE_LIBRARY_CARBON}/library/vision2/implementation/carbon/wrapper/generated_wrapper/c/include/spec/ise -isysroot /Developer/SDKs/MacOSX10.4u.sdk -mmacosx-version-min=10.4" />
-		<external_object location="${ISE_LIBRARY_CARBON}/library/vision2/implementation/carbon/wrapper/carbon_c_eiffel_glue_library_ise_gcc.a -framework Carbon" />
-		<cluster name="ewg" location="${EWG}\library\runtime\eiffel\">
-			<cluster name="spec" location="$|spec">
-				<cluster name="ise" location="$|ise"/>
-			</cluster>
-		</cluster>
-		<library name="gobo" location="$ISE_LIBRARY/library/gobo/gobo.ecf" readonly="True"/>
+		<option warning="true">
+		</option>
+		<external_include location="$ISE_LIBRARY/library/vision2/implementation/carbon/wrapper/generated_wrapper/c/include"/>
+		<external_include location="$ISE_LIBRARY/library/vision2/implementation/carbon/wrapper/generated_wrapper/c/include/spec/ise -isysroot /Developer/SDKs/MacOSX10.4u.sdk -mmacosx-version-min=10.4"/>
+		<external_object location="$ISE_LIBRARY/library/vision2/implementation/carbon/wrapper/carbon_c_eiffel_glue_library_ise_gcc.a -framework Carbon"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf" readonly="true"/>
+		<cluster name="additional_wrappers" location="manual_wrapper\" recursive="true"/>
 		<cluster name="carbon" location="generated_wrapper\eiffel\">
 			<cluster name="abstraction" location="$|abstraction\">
 				<cluster name="abstraction_callback" location="$|callback\"/>
@@ -55,6 +49,5 @@
 				</cluster>
 			</cluster>
 		</cluster>
-		<cluster name="Additional_wrappers" location="manual_wrapper" recursive="true" />
 	</target>
 </system>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="parser" uuid="EEDEBEBE-5DC8-4B41-B999-CC31DB3B54F6" library_target="parser">
+	<target name="parser">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/.svn$</exclude>
+		</file_rule>
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" is_void_safe="true" syntax_level="1" namespace="EiffelSoftware.Language">
+			<assertions precondition="true"/>
+		</option>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="base_extension" location="$EIFFEL_SRC\library\base_extension\base_extension-safe.ecf"/>
+		<library name="eiffel_identifier" location="$EIFFEL_SRC\framework\eiffel_identifier\eiffel_identifier-safe.ecf"/>
+		<library name="framework_file" location="$EIFFEL_SRC\framework\base\file\file-safe.ecf"/>
+		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel-safe.ecf"/>
+		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure-safe.ecf"/>
+		<library name="gobo_lexical" location="$ISE_LIBRARY\library\gobo\gobo_lexical-safe.ecf"/>
+		<library name="gobo_parse" location="$ISE_LIBRARY\library\gobo\gobo_parse-safe.ecf"/>
+		<cluster name="parser" location=".\" recursive="true"/>
+	</target>
+</system>

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-2-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-2-0 http://www.eiffel.com/developers/xml/configuration-1-2-0.xsd" name="reg2wix" uuid="D7B7A46D-EABC-436C-A181-55C71E24C593">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="reg2wix" uuid="D7B7A46D-EABC-436C-A181-55C71E24C593">
 	<target name="reg2wix_library" abstract="true">
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="error_manager" location="$EIFFEL_SRC\framework\base\application\error_manager\error_manager.ecf" readonly="false"/>
-		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf"/>
+		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
+		<library name="gobo_xml" location="$ISE_LIBRARY\library\gobo\gobo_xml.ecf"/>
 		<library name="ini" location="$EIFFEL_SRC\framework\file_formats\ini.ecf"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf"/>
 		<cluster name="engine" location=".\" recursive="true">

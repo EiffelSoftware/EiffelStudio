@@ -25,10 +25,9 @@
 			</option>
 		</library>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
-		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf" readonly="true">
-			<option namespace="EiffelSoftware.CodeDom.Support">
-			</option>
-		</library>
+		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf" readonly="true"/>
+		<library name="gobo_lexical" location="$ISE_LIBRARY\library\gobo\gobo_lexical.ecf" readonly="true"/>
+		<library name="gobo_parse" location="$ISE_LIBRARY\library\gobo\gobo_parse.ecf" readonly="true"/>
 		<library name="helper" location="$EIFFEL_SRC\dotnet\helpers\support\dotnet_helper.ecf" readonly="true">
 			<option namespace="EiffelSoftware.CodeDom.Support">
 			</option>

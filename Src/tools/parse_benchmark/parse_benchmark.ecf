@@ -20,10 +20,7 @@
 			</option>
 		</library>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
-		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf">
-			<option warning="false">
-			</option>
-		</library>
+		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
 		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser.ecf">
 			<option warning="false">
 			</option>

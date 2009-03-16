@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-1-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-1-0 http://www.eiffel.com/developers/xml/configuration-1-1-0.xsd" name="po_generation_tool" uuid="4EE327BA-5DF8-4A53-8088-0D2E3F33456E">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="po_generation_tool" uuid="4EE327BA-5DF8-4A53-8088-0D2E3F33456E">
 	<target name="po_generation_tool">
 		<root class="ROOT_CLASS" feature="make"/>
 		<option debug="false" warning="true">
@@ -7,7 +8,7 @@
 		</option>
 		<setting name="console_application" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
-		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf" readonly="true"/>
+		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf" readonly="true"/>
 		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser.ecf" readonly="true"/>
 		<cluster name="root_cluster" location=".\" recursive="true">
 			<file_rule>

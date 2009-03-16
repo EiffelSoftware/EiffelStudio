@@ -13,7 +13,8 @@
 		<library name="consumer" location="$EIFFEL_SRC\dotnet\consumer\consumer.ecf" readonly="false"/>
 		<library name="emitter_loader" location="$EIFFEL_SRC\framework\emitter_loader\emitter_loader.ecf"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
-		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf"/>
+		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
+		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure.ecf"/>
 		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser.ecf"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>

@@ -4,8 +4,8 @@ note
 	description: "Scanners for Eiffel parsers"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date: 2009-02-20 17:52:43 -0800 (Fri, 20 Feb 2009) $"
-	revision: "$Revision: 77243 $"
+	date: "$Date: 2009-03-15 21:53:56 -0700 (Sun, 15 Mar 2009) $"
+	revision: "$Revision: 77731 $"
 
 class EIFFEL_SCANNER
 
@@ -252,12 +252,12 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_token := TE_AS
 			}
 [aA][sS][sS][iI][gG][nN] {				
-				last_tuple__keyword_as__id_as__integer__integer__string__value := ast_factory.new_keyword_id_as (TE_ASSIGN, Current)
+				last_keyword_id_value := ast_factory.new_keyword_id_as (TE_ASSIGN, Current)
 				last_token := TE_ASSIGN
 			}
 [aA][tT][tT][aA][cC][hH][eE][dD] {
 				if syntax_version /= obsolete_64_syntax then
-					last_tuple__keyword_as__id_as__integer__integer__string__value := ast_factory.new_keyword_id_as (TE_ATTACHED, Current)
+					last_keyword_id_value := ast_factory.new_keyword_id_as (TE_ATTACHED, Current)
 					last_token := TE_ATTACHED
 				else
 					process_id_as
@@ -271,7 +271,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 			}
 [aA][tT][tT][rR][iI][bB][uU][tT][eE] {
 				if syntax_version /= obsolete_64_syntax then
-					last_tuple__keyword_as__id_as__integer__integer__string__value := ast_factory.new_keyword_id_as (TE_ATTRIBUTE, Current)
+					last_keyword_id_value := ast_factory.new_keyword_id_as (TE_ATTRIBUTE, Current)
 					last_token := TE_ATTRIBUTE
 				else
 					process_id_as
@@ -326,7 +326,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 			}
 [dD][eE][tT][aA][cC][hH][aA][bB][lL][eE]	{
 				if syntax_version /= obsolete_64_syntax then
-					last_tuple__keyword_as__id_as__integer__integer__string__value := ast_factory.new_keyword_id_as (TE_DETACHABLE, Current)
+					last_keyword_id_value := ast_factory.new_keyword_id_as (TE_DETACHABLE, Current)
 					last_token := TE_DETACHABLE
 				else
 					process_id_as

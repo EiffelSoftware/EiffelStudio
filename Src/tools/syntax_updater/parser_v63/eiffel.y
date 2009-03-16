@@ -37,7 +37,6 @@ create
 %left		TE_OLD
 %left		TE_DOT
 %right		TE_LPARAN
-%right		TE_ATTACHED
 
 %token <ID_AS> TE_FREE TE_ID TE_TUPLE TE_A_BIT
 %token TE_INTEGER
@@ -85,7 +84,7 @@ create
 %token <KEYWORD_AS> TE_THEN TE_UNDEFINE	TE_UNTIL TE_VARIANT TE_WHEN	
 %token <KEYWORD_AS> TE_XOR
 -- Special type for keywords that are either keyword or identifier
-%token <TUPLE [KEYWORD_AS, ID_AS, INTEGER, INTEGER, STRING]> TE_ASSIGN TE_ATTRIBUTE TE_ATTACHED TE_DETACHABLE
+%token <TUPLE [KEYWORD_AS, ID_AS, INTEGER, INTEGER, STRING] as keyword_id> TE_ASSIGN TE_ATTRIBUTE TE_ATTACHED TE_DETACHABLE
 
 %token TE_STRING TE_EMPTY_STRING TE_VERBATIM_STRING	TE_EMPTY_VERBATIM_STRING
 %token TE_STR_LT TE_STR_LE TE_STR_GT TE_STR_GE TE_STR_MINUS
@@ -159,7 +158,7 @@ create
 %type <REQUIRE_AS>			Precondition
 %type <REVERSE_AS>			Reverse_assignment
 %type <ROUT_BODY_AS>		Routine_body
-%type <ROUTINE_AS>			Routine Optional_attribute_or_routine
+%type <ROUTINE_AS>			Routine
 %type <ROUTINE_CREATION_AS>	Agent_call
 %type <STRING_AS>			Manifest_string Non_empty_string Default_manifest_string Typed_manifest_string Infix_operator Prefix_operator Alias_name
 %type <TAGGED_AS>			Assertion_clause
@@ -209,7 +208,7 @@ create
 %type <CONSTRAINT_LIST_AS> Multiple_constraint_list
 %type <CONSTRAINING_TYPE_AS> Single_constraint
 
-%expect 278
+%expect 269
 
 %%
 
@@ -416,9 +415,9 @@ Note_list: Note_entry
 					$$.reverse_extend ($1)
 				end
 			}
-	|	Note_entry Increment_counter Note_list
+	|	Note_entry ASemi Increment_counter Note_list
 			{
-				$$ := $3
+				$$ := $4
 				if $$ /= Void and $1 /= Void then
 					$$.reverse_extend ($1)
 				end
@@ -448,7 +447,7 @@ Index_clause_impl: Identifier_as_lower TE_COLON Index_terms ASemi
 			}
 	;
 
-Note_entry_impl: Identifier_as_lower TE_COLON Note_values ASemi
+Note_entry_impl: Identifier_as_lower TE_COLON Note_values
 			{
 				$$ := ast_factory.new_index_as ($1, $3, $2)
 			}
@@ -2442,7 +2441,7 @@ Creation_clause:
 	;
 
 Agent_call: 
-		TE_AGENT Optional_formal_arguments Type_mark {add_feature_frame} Optional_attribute_or_routine {remove_feature_frame} Delayed_actuals
+		TE_AGENT Optional_formal_arguments Type_mark {add_feature_frame} Routine {remove_feature_frame} Delayed_actuals
 		{
 			if $3 /= Void then
 				last_type := $3.second
@@ -2487,13 +2486,6 @@ Type_mark:
 	|	TE_COLON Type
 		{
 			create $$.make ($1, $2)
-		}
-	;
-
-Optional_attribute_or_routine:
-		Routine
-		{
-			$$ := $1
 		}
 	;
 
@@ -2660,7 +2652,8 @@ Expression:
 			{ $$ := ast_factory.new_bin_ne_as ($1, $3, $2); has_type := True }
 	|	Qualified_binary_expression
 			{ $$ := $1; has_type := True }
-	|	TE_ATTACHED Expression
+		-- The following rules adds many shift reduce/conflicts (309 vs 151 without them).
+	|	TE_ATTACHED Expression %prec TE_NOT
 			{
 				$$ := ast_factory.new_object_test_as (extract_keyword ($1), Void, $2, Void, Void)
 				has_type := True
@@ -2670,7 +2663,7 @@ Expression:
 				$$ := ast_factory.new_object_test_as (extract_keyword ($1), Void, $2, $3, $4)
 				has_type := True
 			}
-	|	TE_ATTACHED TE_LCURLY Type TE_RCURLY Expression
+	|	TE_ATTACHED TE_LCURLY Type TE_RCURLY Expression %prec TE_NOT
 			{
 				if $3 /= Void then
 					$3.set_lcurly_symbol ($2)

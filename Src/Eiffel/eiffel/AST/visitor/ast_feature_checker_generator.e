@@ -9640,26 +9640,6 @@ feature {NONE} -- Implementation: catcall check
 			retry
 		end
 
-	safe_conform_to (a_context: CLASS_C; a_descendant, a_parent: TYPE_A): BOOLEAN
-			--
-		require
-			a_context_not_void: a_context /= Void
-			a_descendant_not_void: a_descendant /= Void
-			a_parent_not_void: a_parent /= Void
-		local
-			retried: BOOLEAN
-		do
-			if not retried then
-				Result := a_descendant.conform_to (a_context, a_parent)
-			else
-					-- We could not check conformance properly, we simply say it conforms
-				Result := True
-			end
-		rescue
-			retried := True
-			retry
-		end
-
 note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

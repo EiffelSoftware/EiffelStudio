@@ -237,7 +237,9 @@ feature -- C code generation
 					else
 						if
 							is_void_check or else (
-							not target.type.has_like and then source_type.conform_to (context.context_class_type.associated_class, target.type) or else
+							not target.type.has_like and then
+							(source_type.is_attached and then source_type.conform_to (context.context_class_type.associated_class, target.type) or else
+							not source_type.is_attached and then source_type.as_attached_type.conform_to (context.context_class_type.associated_class, target.type)) or else
 							target.type.same_as (expression.type) or else
 							(target.type.is_like and then attached {LIKE_FEATURE} target.type as t and then
 							attached {CALL_ACCESS_B} expression as c and then c.feature_name_id = t.feature_name_id))
@@ -246,7 +248,7 @@ feature -- C code generation
 								-- because it always conforms to an object test local type.
 							if register_propagated and then target = expression.register then
 									-- Target is already set to the expression value.
-								if source_type.is_expanded then
+								if source_type.is_attached then
 									result_value := true_constant
 								else
 									result_value := target_variable
@@ -256,7 +258,7 @@ feature -- C code generation
 									-- Target register is different from expression register.
 								target.print_register
 								buf.put_string (" = ")
-								if source_type.is_expanded then
+								if source_type.is_attached then
 									register.print_register
 									result_value := true_constant
 								else
@@ -348,7 +350,7 @@ feature {NONE} -- Object test value
 			-- Expression value is stored in a target register
 
 note
-	copyright:	"Copyright (c) 2007-2008, Eiffel Software"
+	copyright:	"Copyright (c) 2007-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

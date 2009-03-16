@@ -179,7 +179,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 					i := 1
 					count := generics.count
 					other_count := other_generics.count
-					Result := count >= other_count and then is_attachable_to (tuple_type)
+					Result := count >= other_count and then (a_context_class.lace_class.is_void_safe implies is_attachable_to (tuple_type))
 				until
 					(i > other_count) or else (not Result)
 				loop
@@ -256,7 +256,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -288,4 +288,3 @@ note
 		]"
 
 end -- class TUPLE_TYPE_A
-

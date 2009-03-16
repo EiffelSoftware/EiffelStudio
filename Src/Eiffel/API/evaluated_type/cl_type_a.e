@@ -667,7 +667,7 @@ feature {COMPILER_EXPORTER} -- Conformance
 						end
 						Result := other_class_type.class_id = system.system_object_id
 					end
-					if Result then
+					if Result and then a_context_class.lace_class.is_void_safe then
 							-- We should still verify that the attachment marks are taken into account.
 						Result := is_attachable_to (other_class_type)
 					end
@@ -965,7 +965,7 @@ invariant
 		class_declaration_mark = no_mark or class_declaration_mark = expanded_mark
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -309,17 +309,24 @@ feature -- Access
 	current_project_name: STRING_32
 			-- Current project name
 		local
-			l_name: STRING
+			l_name, l_target_name: STRING
 		do
-			if eiffel_project.initialized and then eiffel_project.system_defined then
-				l_name := eiffel_system.name
-				if l_name.is_equal (eiffel_ace.lace.target_name) then
+			if eiffel_project.initialized then
+				l_target_name := eiffel_ace.lace.target_name
+				if eiffel_project.system_defined then
+					l_name := eiffel_system.name
+				else
+					l_name := eiffel_ace.lace.conf_system.name
+				end
+			end
+			if l_name /= Void then
+				if l_name.is_equal (l_target_name) then
 					Result := l_name
 				else
-					create Result.make (l_name.count + 1 + eiffel_ace.lace.target_name.count)
+					create Result.make (l_name.count + 1 + l_target_name.count)
 					Result.append (l_name)
 					Result.append_character (':')
-					Result.append (eiffel_ace.lace.target_name)
+					Result.append (l_target_name)
 				end
 			else
 				Result := interface_names.l_no_project
@@ -411,6 +418,7 @@ feature {NONE} -- Implementation: event handling
 	on_project_created (dbg: DEBUGGER_MANAGER)
 			-- The project has been created.
 		do
+			set_project_name (current_project_name)
 			on_project_updated
 			on_application_exited (dbg)
 		end

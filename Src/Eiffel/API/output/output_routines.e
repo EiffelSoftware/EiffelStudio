@@ -39,7 +39,7 @@ feature -- Miscellaneous
 			text.add_new_line
 
 			text.add_indent
-			text.process_indexing_tag_text ("config file: ")
+			text.process_indexing_tag_text ("configuration: ")
 			text.process_basic_text (Eiffel_ace.file_name)
 			text.add_new_line
 

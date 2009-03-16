@@ -43,6 +43,8 @@ feature {NONE} -- Initialization
 			l_parent: EV_BOX
 			l_hbox: EV_HORIZONTAL_BOX
 		do
+			first_window.set_final_state (locale_formatter.translation (b_create))
+
 			l_parent := initialize_container (choice_box)
 			create l_hbox
 			l_hbox.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
@@ -496,6 +498,7 @@ feature {NONE} -- Internationalization
 	b_slicing: STRING = "Use slicing for minimization"
 	b_html_output: STRING = "Create HTML output"
 	b_new_type: STRING = "Class or type name"
+	b_create: STRING = "Start"
 
 	e_no_valid_type_name: STRING = "$1 is not a valid type name"
 	e_unable_to_check_compiled_classes: STRING = "Unable to check if types or valid, please recompile and start again"

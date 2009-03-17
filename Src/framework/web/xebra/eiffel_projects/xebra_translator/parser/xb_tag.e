@@ -64,7 +64,7 @@ feature -- Element change
 
 feature -- Status report
 
-	pout (int: STRING)
+	print_tree (int: STRING)
 			-- debug
 		local
 			i: INTEGER
@@ -87,7 +87,7 @@ feature -- Status report
 			 	subtags.before
 			 loop
 			--	print ("c " + i.out + " ")
-				subtags.item_for_iteration.pout (l_int)
+				subtags.item_for_iteration.print_tree (l_int)
 				subtags.back
 				i := 1 + i
 			end

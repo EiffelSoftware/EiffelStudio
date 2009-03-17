@@ -474,10 +474,10 @@ feature {NONE} -- Implementation
 						end
 						done := s.count = 0
 					else
-						done := true
+						done := True
 					end
 				else
-					done := true
+					done := True
 				end
 			end
 		end

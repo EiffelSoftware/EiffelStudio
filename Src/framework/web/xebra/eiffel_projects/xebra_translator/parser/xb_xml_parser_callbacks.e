@@ -50,8 +50,6 @@ feature -- Access
 	tag_stack: ARRAYED_STACK [XB_TAG]
 		-- The stack is used to generate the tree
 
-
-
 feature -- Document
 
 	on_start
@@ -67,7 +65,7 @@ feature -- Document
 		do
 
 		ensure then
-		--	only_root_on_stack: tag_stack.count = 1
+			only_root_on_stack: tag_stack.count = 1
 		end
 
 	on_xml_declaration (a_version: STRING; an_encoding: STRING; a_standalone: BOOLEAN)
@@ -99,9 +97,7 @@ feature -- Meta
 			-- Atomic: single comment produces single event
 			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		do
-		--	if state = 0 then
-		--		html_buf.append ("<!-- " + a_content + "-->")
-		--	end
+			create_html_tag_with_text ("<!--" + a_content + "-->")
 		end
 
 feature -- Tag
@@ -143,6 +139,8 @@ feature -- Tag
 				html_buf := ""
 				html_buf.append ("<" + l_prefix +  l_local_part)
 			end
+		ensure then
+			stack_bigger_or_html_tag: (tag_stack.count = old tag_stack.count) implies state = 0
 		end
 
 	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
@@ -194,6 +192,8 @@ feature -- Tag
 				html_buf.append (">")
 				create_html_tag_put
 			end
+		ensure then
+			html_tag_increase_stack: state = 0 implies tag_stack.count > old tag_stack.count
 		end
 
 	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
@@ -216,9 +216,7 @@ feature -- Tag
 				l_local_part := ""
 			end
 
-
 			tag_stack.remove
-
 
 			if not l_prefix.is_equal (Tag_keyword) then
 				if not l_prefix.is_empty then
@@ -226,6 +224,9 @@ feature -- Tag
 				end
 				create_html_tag_with_text ("</" + l_prefix  + l_local_part + ">")
 			end
+
+		ensure then
+			stack_smaller: tag_stack.count < old tag_stack.count
 		end
 
 feature -- Content
@@ -255,7 +256,7 @@ feature {NONE} -- Implementation
 		end
 
 	create_html_tag_with_text_put (s: STRING)
-			-- Creates a XB_TAG from s and adds it to top element on stack.
+			-- Creates a XB_TAG from s and adds it to top element on stack and then pushes it onto the stack.
 		local
 			l_tag: XB_TAG
 		do
@@ -269,7 +270,7 @@ feature {NONE} -- Implementation
 		end
 
 	create_html_tag_put
-			-- Creates a XB_TAG from html_buf and adds it to top element on stack.
+			-- Creates a XB_TAG from html_buf and adds it to top element on stack then pushes it onto the stack.
 		do
 			create_html_tag_with_text_put (html_buf)
 			html_buf.wipe_out

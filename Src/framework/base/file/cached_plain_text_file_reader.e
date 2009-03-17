@@ -56,7 +56,7 @@ feature -- Access
 			create l_file.make (file_name)
 			if l_refresh and then l_file.exists and then l_file.is_readable then
 				l_ts := time_stamp
-				if l_file.change_date /= l_ts.to_integer_32 then
+				if l_file.date /= l_ts.to_integer_32 then
 						-- File change changed and must be re-read.
 					l_result := Void
 				end
@@ -67,7 +67,7 @@ feature -- Access
 					l_result := l_file.last_string
 					if l_result /= Void then
 						internal_contents := l_result
-						time_stamp := l_file.change_date.as_natural_32
+						time_stamp := l_file.date.as_natural_32
 						reset
 					end
 				end

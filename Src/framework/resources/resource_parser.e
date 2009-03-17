@@ -53,7 +53,8 @@ feature -- Parsing
 								syntax_error ("%":%" expected")
 							else
 								parse_value;
-								if last_token = Void then
+								l_last_token := last_token
+								if l_last_token = Void then
 									syntax_error ("Resource value expected")
 								else
 									table.force (l_last_token, resource_name)

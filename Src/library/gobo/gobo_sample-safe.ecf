@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-2-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-2-0 http://www.eiffel.com/developers/xml/configuration-1-2-0.xsd" name="gobo_sample">
+	<target name="gobo_sample">
+		<root class="THE_ROOT_CLASS_HERE" feature="make"/>
+		<file_rule>
+			<exclude>/\.svn</exclude>
+			<exclude>/hact$</exclude>
+			<exclude>/se$</exclude>
+			<exclude>/ve$</exclude>
+			<exclude>/ge$</exclude>
+			<exclude>/base$</exclude>
+			<exclude>/cvs$</exclude>
+			<exclude>/other$</exclude>
+			<exclude>/free_elks$</exclude>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/Documentation$</exclude>
+		</file_rule>
+		<option full_class_checking="true" is_attached_by_default="true" is_void_safe="true" syntax_level="1" namespace="Gobo.Library" />
+		<setting name="dotnet_naming_convention" value="true"/>
+		<library name="eiffelbase" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="gobo" location="gobo-safe.ecf"/>
+		<cluster name="sample" location="." recursive="true"/>
+	</target>
+</system>

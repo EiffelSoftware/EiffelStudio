@@ -116,7 +116,7 @@ feature -- Processing
 			servlet: ROOT_SERVLET_ELEMENT
 		do
 			create {LINKED_LIST [SERVLET_ELEMENT]} feature_body.make
-			feature_body.extend (wrap ("create request_pool.make (10)"))
+			feature_body.extend (wrap ("create request_pool.make  (10, agent servlet_handler_spawner)"))
 			feature_body.extend (wrap ("create {HASH_TABLE [SESSION, STRING]} session_map.make (5)"))
 			feature_body.extend (wrap ("create {HASH_TABLE [STATELESS_SERVLET, STRING]} stateless_servlets.make (5)"))
 			from

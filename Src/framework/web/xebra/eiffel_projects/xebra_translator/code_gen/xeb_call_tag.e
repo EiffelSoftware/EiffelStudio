@@ -1,44 +1,32 @@
 note
-	description: "[
-		Used to put xhtml code to the page result of the response
-	]"
+	description: "Summary description for {XEB_CALL_TAG}."
+	author: "sandro"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	PLAIN_XHTML_ELEMENT
+	XEB_CALL_TAG
 
 inherit
-	OUTPUT_ELEMENT
+	TAG_SERIALIZER
 
 create
 	make
 
 feature -- Access
 
-		html_text: STRING
-				-- XHTML text that should be written to the response
+	make (params: TABLE [STRING, STRING])
+		do
+			feature_name := params ["feature"]
+		end
 
-feature -- Initialization
+	feature_name: STRING
 
-		make (a_html_text: STRING)
-				-- `a_html_text': XHTML text that should be written to the response
-			do
-				make_empty
-				html_text := a_html_text
-			end
-
-feature -- Processing
-
-		serialize (buf: INDENDATION_STREAM)
-				-- <Precursor>			
-			do
-				buf.put_string (response_name + ".append (%"[")
-				buf.indent
-				buf.put_string (html_text)
-				buf.unindent
-				buf.put_string ("]%")")
-			end
+	output (parent: SERVLET): STRING
+		do
+			parent.call_on_controller (feature_name)
+			Result := ""
+		end
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

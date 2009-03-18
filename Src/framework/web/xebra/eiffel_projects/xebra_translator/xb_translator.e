@@ -86,9 +86,11 @@ feature -- Processing
 			-- Processes a file.
 		local
 			l_webapp_generator: WEBAPP_GENERATOR
-			l_root_tag: XB_TAG
+			l_root_tag: TAG_ELEMENT
 			l_parser: XM_PARSER
 			l_p_callback: XB_XML_PARSER_CALLBACKS
+			wgenerator: WEBAPP_GENERATOR
+			root_servlet_element: ROOT_SERVLET_ELEMENT
 		do
 				create l_webapp_generator.make (name, output_path)
 
@@ -98,7 +100,12 @@ feature -- Processing
 				l_parser.parse_from_stream (a_stream)
 
 				l_root_tag := l_p_callback.root_tag
-				l_root_tag.print_tree ("")
+				create wgenerator.make ("TESTAPP", output_path)
+				create root_servlet_element.make ("testapp", "TESTAPP_CONTROLLER", False)
+				root_servlet_element.set_tag (l_root_tag)
+				wgenerator.put_servlet (root_servlet_element)
+				wgenerator.generate
+			--	l_root_tag.print_tree ("")
 			--	create l_root_element.make_with_elements (name, name + "_controller", True, l_p_callback.elements_inverted) -- calculate last argument (stateful)
 			--	l_webapp_generator.put_servlet (l_root_element)
 			--	l_webapp_generator.generate

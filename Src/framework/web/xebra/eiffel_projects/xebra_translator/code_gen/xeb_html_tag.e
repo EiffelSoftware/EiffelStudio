@@ -1,42 +1,28 @@
 note
-	description: "[
-			{CALL_ELEMENT} is used to render a call statement on the controller
-			in a xeb-file.
-	]"
+	description: "Summary description for {XEB_HTML_TAG}."
+	author: "sandro"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	CALL_ELEMENT
+	XEB_HTML_TAG
 
 inherit
-	OUTPUT_ELEMENT
+	TAG_SERIALIZER
 
 create
 	make
 
 feature -- Access
 
-	feature_name: STRING
-		-- name of the feature call on the controller
-
-feature -- Initialization
-
-	make (a_feature_name: STRING)
-			-- `a_feature_name': Name of the feature that should be applied on the controller.
-		require
-			feature_is_valid: not a_feature_name.is_empty
+	make (params: TABLE [STRING, STRING])
 		do
-			make_empty
-			feature_name := a_feature_name
+
 		end
 
-feature -- Processing
-
-	serialize (buf: INDENDATION_STREAM)
-			-- <Precursor>			
+	output (parent: SERVLET): STRING
 		do
-			buf.put_string (controller_var + "." + feature_name)
+			Result := "Bipede bapede?"
 		end
 
 note

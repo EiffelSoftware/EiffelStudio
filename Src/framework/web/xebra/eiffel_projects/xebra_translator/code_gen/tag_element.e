@@ -1,19 +1,54 @@
 note
-	description: "[
-		Holds all session data for a client. This includes servlets which are session bound.
-	]"
+	description: "Summary description for {TAG_ELEMENT}."
+	author: "sandro"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	SESSION
+	TAG_ELEMENT
+
+inherit
+	SERVLET_ELEMENT
+
+create
+	make
+
+feature -- Initialization
+
+	make (a_class_name: STRING)
+		do
+			class_name := a_class_name
+			create {ARRAYED_LIST [TAG_ELEMENT]} children.make (3)
+			create {HASH_TABLE [STRING, STRING]} parameters.make (3)
+		end
 
 feature -- Access
 
-	get_stateful_servlet: detachable SERVLET
-			-- Returns the current servlet. Might be not available.
+	class_name: STRING
+	parameters: HASH_TABLE [STRING, STRING]
+	children: LIST [TAG_ELEMENT]
+
+feature -- Access
+
+	has_children: BOOLEAN
 		do
-				-- TODO
+			Result := not children.is_empty
+		end
+
+	put_subtag (child: like Current)
+		do
+			children.extend (child)
+		end
+
+	put_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
+		do
+			parameters.put (a_value, a_local_part)
+		end
+
+	serialize (stream: INDENDATION_STREAM)
+			-- <Precursor>
+		do
+			stream.put_string (class_name + ".serialize")
 		end
 
 note

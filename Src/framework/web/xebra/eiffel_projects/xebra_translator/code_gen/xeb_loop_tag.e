@@ -1,19 +1,40 @@
 note
-	description: "[
-		Holds all session data for a client. This includes servlets which are session bound.
-	]"
+	description: "Summary description for {XEB_LOOP_TAG}."
+	author: "sandro"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	SESSION
+	XEB_LOOP_TAG
+
+inherit
+	TAG_SERIALIZER
+
+create
+	make
 
 feature -- Access
 
-	get_stateful_servlet: detachable SERVLET
-			-- Returns the current servlet. Might be not available.
+	make (params: TABLE [STRING, STRING])
 		do
-				-- TODO
+			n := 2--params ["times"]
+		end
+
+	n: NATURAL
+
+	output (parent: SERVLET): STRING
+		local
+			i: NATURAL
+		do
+			from
+				i := 0
+				Result := ""
+			until
+				i > n
+			loop
+				--Result := Result + body.output (parent)
+				i := i + 1
+			end
 		end
 
 note

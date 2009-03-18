@@ -14,17 +14,21 @@ inherit
 		rename
 			make as make_compressed_scanner_skeleton
 		redefine
-			reset
+			reset, fatal_error
 		end
 
 	EXTERNAL_TOKENS
+		export {NONE} all end
+
+	SHARED_ERROR_HANDLER
 		export {NONE} all end
 
 create
     make
 %}
 
-%option nodefault position outfile="external_scanner.e"
+%option nodefault line position outfile="external_scanner.e"
+
 
 A		([a-z]|[A-Z]|[0-9]|_|&)
 X		([a-z]|[A-Z]|[0-9]|_|\+|\.|\]|\[|%,\ |=|&)
@@ -196,8 +200,14 @@ N		[0-9]
 				last_token := TE_FILE_ID
 			}
 
-.
-			
+
+<<EOF>>		{
+				terminate
+			}
+.			{
+				 report_unrecognized_character_error (text_item (1))
+			}
+
 %%
 
 feature {NONE} -- Initialization
@@ -218,6 +228,15 @@ feature -- Initialization
 		do
 			Precursor
 			token_buffer.clear_all
+			current_class := Void
+		end
+
+	set_trigger_error (v: like trigger_error)
+			-- Set `trigger_error' with `v'.
+		do
+			trigger_error := v
+		ensure
+			tirgger_error_set: trigger_error = v
 		end
 
 feature -- Access
@@ -227,6 +246,47 @@ feature -- Access
 
 	last_value: ANY
 			-- Semantic value to be passed to the parser
+
+	trigger_error: BOOLEAN
+			-- Should error be triggered?
+
+	filename: STRING
+			-- Current parsed file.
+
+	file_line, file_column: INTEGER
+			-- Current line and column of parsing in class text `filename'.
+
+	current_class: ABSTRACT_CLASS_C
+			-- Class in which syntax error occurs.
+
+feature {NONE} -- Error handling
+
+	fatal_error (a_message: STRING)
+			-- A fatal error occurred.
+			-- Log `a_message' and raise an exception.
+		do
+			report_one_error (create {SYNTAX_ERROR}.make (file_line + line - 1, file_column + column - 1, filename, a_message))
+		end
+
+	report_one_error (a_error: ERROR)
+			-- Log `a_error'.
+		require
+			a_error_not_void: a_error /= Void
+		do
+			if trigger_error then
+				a_error.set_associated_class (current_class)
+				error_handler.insert_error (a_error)
+			end
+				-- To avoid reporting more than one error for the same lexical error
+				-- we simply abort the scanning.
+			terminate
+		end
+
+	report_unrecognized_character_error (c: CHARACTER)
+			-- Syntax error for unrecognized character `c'.
+		do
+			report_one_error (create {SYNTAX_ERROR}.make (file_line + line - 1, file_column + column - 1, filename, "Unrecognized character `" + c.out + "'"))
+		end
 
 feature {NONE} -- Constants
 

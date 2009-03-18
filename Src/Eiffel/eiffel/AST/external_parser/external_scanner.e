@@ -1,4 +1,4 @@
-note
+indexing
 	description: "Scanners for external parsers"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,10 +13,13 @@ inherit
 		rename
 			make as make_compressed_scanner_skeleton
 		redefine
-			reset
+			reset, fatal_error
 		end
 
 	EXTERNAL_TOKENS
+		export {NONE} all end
+
+	SHARED_ERROR_HANDLER
 		export {NONE} all end
 
 create
@@ -24,7 +27,7 @@ create
 
 feature -- Status report
 
-	valid_start_condition (sc: INTEGER): BOOLEAN
+	valid_start_condition (sc: INTEGER): BOOLEAN is
 			-- Is `sc' a valid start condition?
 		do
 			Result := (sc = INITIAL)
@@ -32,7 +35,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	yy_build_tables
+	yy_build_tables is
 			-- Build scanner tables.
 		do
 			yy_nxt := yy_nxt_template
@@ -44,11 +47,12 @@ feature {NONE} -- Implementation
 			yy_accept := yy_accept_template
 		end
 
-	yy_execute_action (yy_act: INTEGER)
+	yy_execute_action (yy_act: INTEGER) is
 			-- Execute semantic action.
 		do
 			inspect yy_act
 when 1 then
+	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -56,6 +60,7 @@ debug ("GELEX")
 end
 
 when 2 then
+yy_set_line (0)
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -63,6 +68,7 @@ debug ("GELEX")
 end
 
 when 3 then
+	yy_column := yy_column + 1
 	yy_position := yy_position + 1
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -72,6 +78,7 @@ end
 				last_token := TE_COLON
 			
 when 4 then
+	yy_column := yy_column + 1
 	yy_position := yy_position + 1
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -81,6 +88,7 @@ end
 				last_token := TE_LPARAN
 			
 when 5 then
+	yy_column := yy_column + 1
 	yy_position := yy_position + 1
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -90,6 +98,7 @@ end
 				last_token := TE_RPARAN
 			
 when 6 then
+	yy_column := yy_column + 1
 	yy_position := yy_position + 1
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -99,6 +108,7 @@ end
 				last_token := TE_COMMA
 			
 when 7 then
+	yy_column := yy_column + 1
 	yy_position := yy_position + 1
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -108,6 +118,7 @@ end
 				last_token := TE_STAR
 			
 when 8 then
+	yy_column := yy_column + 1
 	yy_position := yy_position + 1
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -117,6 +128,7 @@ end
 				last_token := TE_ADDRESS
 			
 when 9 then
+	yy_column := yy_column + 1
 	yy_position := yy_position + 1
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -126,6 +138,7 @@ end
 				last_token := TE_LT
 			
 when 10 then
+	yy_column := yy_column + 1
 	yy_position := yy_position + 1
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -135,6 +148,7 @@ end
 				last_token := TE_GT
 			
 when 11 then
+	yy_column := yy_column + 1
 	yy_position := yy_position + 1
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -144,6 +158,7 @@ end
 				last_token := TE_DQUOTE
 			
 when 12 then
+	yy_column := yy_column + 6
 	yy_position := yy_position + 6
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -153,6 +168,7 @@ end
 				last_token := TE_ACCESS
 			
 when 13 then
+	yy_column := yy_column + 8
 	yy_position := yy_position + 8
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -162,6 +178,7 @@ end
 				last_token := TE_BLOCKING
 			
 when 14 then
+	yy_column := yy_column + 8
 	yy_position := yy_position + 8
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -171,6 +188,7 @@ end
 				last_token := TE_BUILT_IN
 			
 when 15 then
+	yy_column := yy_column + 1
 	yy_position := yy_position + 1
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -180,6 +198,7 @@ end
 				last_token := TE_C_LANGUAGE
 			
 when 16 then
+	yy_column := yy_column + 16
 	yy_position := yy_position + 16
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -189,6 +208,7 @@ end
 				last_token := TE_C_LANGUAGE
 			
 when 17 then
+	yy_column := yy_column + 22
 	yy_position := yy_position + 22
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -198,6 +218,7 @@ end
 				last_token := TE_C_LANGUAGE
 			
 when 18 then
+	yy_column := yy_column + 3
 	yy_position := yy_position + 3
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -207,6 +228,7 @@ end
 				last_token := TE_CPP_LANGUAGE
 			
 when 19 then
+	yy_column := yy_column + 5
 	yy_position := yy_position + 5
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -216,6 +238,7 @@ end
 				last_token := TE_CONST
 			
 when 20 then
+	yy_column := yy_column + 7
 	yy_position := yy_position + 7
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -225,6 +248,7 @@ end
 				last_token := TE_CREATOR
 			
 when 21 then
+	yy_column := yy_column + 8
 	yy_position := yy_position + 8
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -234,6 +258,7 @@ end
 				last_token := TE_DEFERRED
 			
 when 22 then
+	yy_column := yy_column + 6
 	yy_position := yy_position + 6
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -243,6 +268,7 @@ end
 				last_token := TE_DELETE
 			
 when 23 then
+	yy_column := yy_column + 3
 	yy_position := yy_position + 3
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -252,6 +278,7 @@ end
 				last_token := TE_DLL_LANGUAGE
 			
 when 24 then
+	yy_column := yy_column + 6
 	yy_position := yy_position + 6
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -261,6 +288,7 @@ end
 				last_token := TE_DLLWIN_LANGUAGE
 			
 when 25 then
+	yy_column := yy_column + 4
 	yy_position := yy_position + 4
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -270,6 +298,7 @@ end
 				last_token := TE_ENUM
 			
 when 26 then
+	yy_column := yy_column + 5
 	yy_position := yy_position + 5
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -279,6 +308,7 @@ end
 				last_token := TE_FIELD
 			
 when 27 then
+	yy_column := yy_column + 12
 	yy_position := yy_position + 12
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -288,6 +318,7 @@ end
 				last_token := TE_GET_PROPERTY
 			
 when 28 then
+	yy_column := yy_column + 2
 	yy_position := yy_position + 2
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -297,6 +328,7 @@ end
 				last_token := TE_IL_LANGUAGE
 			
 when 29 then
+	yy_column := yy_column + 6
 	yy_position := yy_position + 6
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -306,6 +338,7 @@ end
 				last_token := TE_INLINE
 			
 when 30 then
+	yy_column := yy_column + 3
 	yy_position := yy_position + 3
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -315,6 +348,7 @@ end
 				last_token := TE_JAVA_LANGUAGE
 			
 when 31 then
+	yy_column := yy_column + 5
 	yy_position := yy_position + 5
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -324,6 +358,7 @@ end
 				last_token := TE_MACRO
 			
 when 32 then
+	yy_column := yy_column + 8
 	yy_position := yy_position + 8
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -333,6 +368,7 @@ end
 				last_token := TE_OPERATOR
 			
 when 33 then
+	yy_column := yy_column + 9
 	yy_position := yy_position + 9
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -342,6 +378,7 @@ end
 				last_token := TE_SET_FIELD
 			
 when 34 then
+	yy_column := yy_column + 12
 	yy_position := yy_position + 12
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -351,6 +388,7 @@ end
 				last_token := TE_SET_PROPERTY
 			
 when 35 then
+	yy_column := yy_column + 16
 	yy_position := yy_position + 16
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -360,6 +398,7 @@ end
 				last_token := TE_SET_STATIC_FIELD
 			
 when 36 then
+	yy_column := yy_column + 9
 	yy_position := yy_position + 9
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -369,6 +408,7 @@ end
 				last_token := TE_SIGNATURE
 			
 when 37 then
+	yy_column := yy_column + 6
 	yy_position := yy_position + 6
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -378,6 +418,7 @@ end
 				last_token := TE_SIGNED
 			
 when 38 then
+	yy_column := yy_column + 6
 	yy_position := yy_position + 6
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -387,6 +428,7 @@ end
 				last_token := TE_STATIC
 			
 when 39 then
+	yy_column := yy_column + 12
 	yy_position := yy_position + 12
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -396,6 +438,7 @@ end
 				last_token := TE_STATIC_FIELD
 			
 when 40 then
+	yy_column := yy_column + 6
 	yy_position := yy_position + 6
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -405,6 +448,7 @@ end
 				last_token := TE_STRUCT
 			
 when 41 then
+	yy_column := yy_column + 4
 	yy_position := yy_position + 4
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -414,6 +458,7 @@ end
 				last_token := TE_TYPE
 			
 when 42 then
+	yy_column := yy_column + 8
 	yy_position := yy_position + 8
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -423,6 +468,7 @@ end
 				last_token := TE_UNSIGNED
 			
 when 43 then
+	yy_column := yy_column + 3
 	yy_position := yy_position + 3
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -432,6 +478,7 @@ end
 				last_token := TE_USE
 			
 when 44 then
+	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -444,6 +491,7 @@ end
 				last_token := TE_INTEGER
 			
 when 45 then
+	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -457,6 +505,7 @@ end
 				last_token := TE_ID
 			
 when 46 then
+	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -469,6 +518,7 @@ end
 				last_token := TE_ID
 			
 when 47 then
+	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -483,13 +533,17 @@ end
 				last_token := TE_FILE_ID
 			
 when 48 then
+	yy_column := yy_column + 1
 	yy_position := yy_position + 1
 --|#line <not available> "external.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'external.l' at line <not available>")
 end
 
+				 report_unrecognized_character_error (text_item (1))
+			
 when 49 then
+yy_set_line_column
 	yy_position := yy_position + 1
 --|#line <not available> "external.l"
 debug ("GELEX")
@@ -503,15 +557,26 @@ fatal_error ("scanner jammed")
 			end
 		end
 
-	yy_execute_eof_action (yy_sc: INTEGER)
+	yy_execute_eof_action (yy_sc: INTEGER) is
 			-- Execute EOF semantic action.
 		do
-			terminate
+			inspect yy_sc
+when 0 then
+--|#line <not available> "external.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'external.l' at line <not available>")
+end
+
+				terminate
+			
+			else
+				terminate
+			end
 		end
 
 feature {NONE} -- Table templates
 
-	yy_nxt_template: SPECIAL [INTEGER]
+	yy_nxt_template: SPECIAL [INTEGER] is
 		local
 			an_array: ARRAY [INTEGER]
 		once
@@ -521,7 +586,7 @@ feature {NONE} -- Table templates
 			Result := yy_fixed_array (an_array)
 		end
 
-	yy_nxt_template_1 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_1 (an_array: ARRAY [INTEGER]) is
 		do
 			yy_array_subcopy (an_array, <<
 			    0,    4,    5,    6,    5,    7,    8,    9,   10,   11,
@@ -636,7 +701,7 @@ feature {NONE} -- Table templates
 			1, 1000, 0)
 		end
 
-	yy_nxt_template_2 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_2 (an_array: ARRAY [INTEGER]) is
 		do
 			yy_array_subcopy (an_array, <<
 			   42,  154,   42,   40,   40,  236,   42,  153,   42,   42,
@@ -743,7 +808,7 @@ feature {NONE} -- Table templates
 			1, 920, 1000)
 		end
 
-	yy_chk_template: SPECIAL [INTEGER]
+	yy_chk_template: SPECIAL [INTEGER] is
 		local
 			an_array: ARRAY [INTEGER]
 		once
@@ -753,7 +818,7 @@ feature {NONE} -- Table templates
 			Result := yy_fixed_array (an_array)
 		end
 
-	yy_chk_template_1 (an_array: ARRAY [INTEGER])
+	yy_chk_template_1 (an_array: ARRAY [INTEGER]) is
 		do
 			yy_array_subcopy (an_array, <<
 			    0,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -868,7 +933,7 @@ feature {NONE} -- Table templates
 			1, 1000, 0)
 		end
 
-	yy_chk_template_2 (an_array: ARRAY [INTEGER])
+	yy_chk_template_2 (an_array: ARRAY [INTEGER]) is
 		do
 			yy_array_subcopy (an_array, <<
 			  134,  132,  134,  135,  137,    0,  136,  130,  136,  132,
@@ -975,7 +1040,7 @@ feature {NONE} -- Table templates
 			1, 920, 1000)
 		end
 
-	yy_base_template: SPECIAL [INTEGER]
+	yy_base_template: SPECIAL [INTEGER] is
 		once
 			Result := yy_fixed_array (<<
 			    0,    0,    0,  138, 1846,   72,  131, 1846,  119,   69,
@@ -1006,7 +1071,7 @@ feature {NONE} -- Table templates
 			 1755, 1761, 1780, 1772, 1776, 1786, 1846,   78,   91,   74, yy_Dummy>>)
 		end
 
-	yy_def_template: SPECIAL [INTEGER]
+	yy_def_template: SPECIAL [INTEGER] is
 		once
 			Result := yy_fixed_array (<<
 			    0,  236,    1,  236,  236,  236,  236,  236,  236,  237,
@@ -1037,7 +1102,7 @@ feature {NONE} -- Table templates
 			  237,  237,  237,  237,  237,  237,    0,  236,  236,  236, yy_Dummy>>)
 		end
 
-	yy_ec_template: SPECIAL [INTEGER]
+	yy_ec_template: SPECIAL [INTEGER] is
 		once
 			Result := yy_fixed_array (<<
 			    0,    1,    1,    1,    1,    1,    1,    1,    1,    2,
@@ -1070,7 +1135,7 @@ feature {NONE} -- Table templates
 			    1,    1,    1,    1,    1,    1,    1, yy_Dummy>>)
 		end
 
-	yy_meta_template: SPECIAL [INTEGER]
+	yy_meta_template: SPECIAL [INTEGER] is
 		once
 			Result := yy_fixed_array (<<
 			    0,    1,    1,    1,    1,    1,    2,    3,    1,    1,
@@ -1083,7 +1148,7 @@ feature {NONE} -- Table templates
 			    3,    3,    3,    3, yy_Dummy>>)
 		end
 
-	yy_accept_template: SPECIAL [INTEGER]
+	yy_accept_template: SPECIAL [INTEGER] is
 		once
 			Result := yy_fixed_array (<<
 			    0,    0,    0,   50,   48,    1,    2,   11,   48,    8,
@@ -1116,45 +1181,45 @@ feature {NONE} -- Table templates
 
 feature {NONE} -- Constants
 
-	yyJam_base: INTEGER = 1846
+	yyJam_base: INTEGER is 1846
 			-- Position in `yy_nxt'/`yy_chk' tables
 			-- where default jam table starts
 
-	yyJam_state: INTEGER = 236
+	yyJam_state: INTEGER is 236
 			-- State id corresponding to jam state
 
-	yyTemplate_mark: INTEGER = 237
+	yyTemplate_mark: INTEGER is 237
 			-- Mark between normal states and templates
 
-	yyNull_equiv_class: INTEGER = 1
+	yyNull_equiv_class: INTEGER is 1
 			-- Equivalence code for NULL character
 
-	yyReject_used: BOOLEAN = false
+	yyReject_used: BOOLEAN is false
 			-- Is `reject' called?
 
-	yyVariable_trail_context: BOOLEAN = false
+	yyVariable_trail_context: BOOLEAN is false
 			-- Is there a regular expression with
 			-- both leading and trailing parts having
 			-- variable length?
 
-	yyReject_or_variable_trail_context: BOOLEAN = false
+	yyReject_or_variable_trail_context: BOOLEAN is false
 			-- Is `reject' called or is there a
 			-- regular expression with both leading
 			-- and trailing parts having variable length?
 
-	yyNb_rules: INTEGER = 49
+	yyNb_rules: INTEGER is 49
 			-- Number of rules
 
-	yyEnd_of_buffer: INTEGER = 50
+	yyEnd_of_buffer: INTEGER is 50
 			-- End of buffer rule code
 
-	yyLine_used: BOOLEAN = false
+	yyLine_used: BOOLEAN is true
 			-- Are line and column numbers used?
 
-	yyPosition_used: BOOLEAN = true
+	yyPosition_used: BOOLEAN is true
 			-- Is `position' used?
 
-	INITIAL: INTEGER = 0
+	INITIAL: INTEGER is 0
 			-- Start condition codes
 
 feature -- User-defined features
@@ -1163,7 +1228,7 @@ feature -- User-defined features
 
 feature {NONE} -- Initialization
 
-	make
+	make is
 			-- Create a new external scanner.
 		do
 			make_with_buffer (Empty_buffer)
@@ -1172,13 +1237,22 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset
+	reset is
 			-- Reset scanner before scanning next input source.
 			-- (This routine can be called in wrap before scanning
 			-- another input buffer.)
 		do
 			Precursor
 			token_buffer.clear_all
+			current_class := Void
+		end
+
+	set_trigger_error (v: like trigger_error)
+			-- Set `trigger_error' with `v'.
+		do
+			trigger_error := v
+		ensure
+			tirgger_error_set: trigger_error = v
 		end
 
 feature -- Access
@@ -1189,15 +1263,56 @@ feature -- Access
 	last_value: ANY
 			-- Semantic value to be passed to the parser
 
+	trigger_error: BOOLEAN
+			-- Should error be triggered?
+
+	filename: STRING
+			-- Current parsed file.
+
+	file_line, file_column: INTEGER
+			-- Current line and column of parsing in class text `filename'.
+
+	current_class: ABSTRACT_CLASS_C
+			-- Class in which syntax error occurs.
+
+feature {NONE} -- Error handling
+
+	fatal_error (a_message: STRING)
+			-- A fatal error occurred.
+			-- Log `a_message' and raise an exception.
+		do
+			report_one_error (create {SYNTAX_ERROR}.make (file_line + line - 1, file_column + column - 1, filename, a_message))
+		end
+
+	report_one_error (a_error: ERROR)
+			-- Log `a_error'.
+		require
+			a_error_not_void: a_error /= Void
+		do
+			if trigger_error then
+				a_error.set_associated_class (current_class)
+				error_handler.insert_error (a_error)
+			end
+				-- To avoid reporting more than one error for the same lexical error
+				-- we simply abort the scanning.
+			terminate
+		end
+
+	report_unrecognized_character_error (c: CHARACTER)
+			-- Syntax error for unrecognized character `c'.
+		do
+			report_one_error (create {SYNTAX_ERROR}.make (file_line + line - 1, file_column + column - 1, filename, "Unrecognized character `" + c.out + "'"))
+		end
+
 feature {NONE} -- Constants
 
-	Initial_buffer_size: INTEGER = 1024 
+	Initial_buffer_size: INTEGER is 1024 
 				-- Initial size for `token_buffer'
 
 invariant
 	token_buffer_not_void: token_buffer /= Void
 
-note
+indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

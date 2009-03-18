@@ -40,6 +40,9 @@ feature -- Properties
 			-- mode we need to ensure that GC will not be blocked waiting for the
 			-- blocking call to resume.
 
+	has_parsing_error: BOOLEAN
+			-- Did last call to `parse' succeed?
+
 feature -- Conveniences
 
 	has_signature: BOOLEAN
@@ -53,6 +56,7 @@ feature {EXTERNAL_LANG_AS} -- Implementation
 	parse
 			-- Parse the external extension.
 		do
+			has_parsing_error := False
 			parse_signature
 			parse_include_files
 			parse_special_part
@@ -109,7 +113,6 @@ feature -- Type check
 					create ext_same_sign
 					context.init_error (ext_same_sign)
 					Error_handler.insert_error (ext_same_sign)
-					Error_handler.raise_error
 				end
 			end
 		end
@@ -301,12 +304,8 @@ end
 
 	insert_error (msg: STRING)
 			-- Raise syntax error (`msg' is the explanation).
-		local
-			ext_error: EXTERNAL_SYNTAX_ERROR
 		do
-			create ext_error.init (eiffel_parser)
-			ext_error.set_external_error_message (msg)
-			Error_handler.insert_error (ext_error)
+			has_parsing_error := True
 		end
 
 feature {NONE} -- Implementation

@@ -82,19 +82,36 @@ feature {NONE} -- Implementation
 		local
 			parser: like external_parser
 			is_yacc_parsing_successful: BOOLEAN
+			l_real_line_number, l_real_column_number: INTEGER
 		do
 			parser := External_parser
-			parser.parse_external (Eiffel_parser.line,
-									Eiffel_parser.filename, language_name.value)
+			parser.set_trigger_error (False)
+				-- Workaround while waiting STRING_AS and descendants to have the proper line number and column number.
+			if attached {VERBATIM_STRING_AS} language_name as verbatim_string then
+				l_real_line_number := (verbatim_string.line - verbatim_string.value.occurrences ('%N') - 1).max (1)
+				l_real_column_number := verbatim_string.column
+			else
+				l_real_line_number := language_name.line
+				l_real_column_number := language_name.column + 1
+			end
+			parser.parse_external (Eiffel_parser.current_class, l_real_line_number, l_real_column_number, Eiffel_parser.filename, language_name.value)
 			extension := parser.root_node
-			is_yacc_parsing_successful := not parser.has_error and then extension /= Void
+			is_yacc_parsing_successful := extension /= Void
 			if not is_yacc_parsing_successful then
 				extension := Void
 				old_parse
+				if has_parsing_error then
+						-- Use the new syntax to report the error
+					parser.set_trigger_error (True)
+					parser.parse_external (Eiffel_parser.current_class, l_real_line_number, l_real_column_number, Eiffel_parser.filename, language_name.value)
+				end
 			end
 		ensure
 			extension_set: error_handler.error_level = old error_handler.error_level implies extension /= Void
 		end
+
+	has_parsing_error: BOOLEAN
+			-- Is last call to `old_parse' successful?
 
 	old_parse
 			-- Parse external declaration
@@ -115,6 +132,7 @@ feature {NONE} -- Implementation
 			dll_index: INTEGER
 			nb: INTEGER
 		do
+			has_parsing_error := False
 			source := language_name.value
 			debug
 				io.error.put_string ("Parsing ")
@@ -162,14 +180,14 @@ feature {NONE} -- Implementation
 					debug
 						io.error.put_string ("Void%N")
 					end
-					insert_external_error ("Unrecognized external language", 1)
+					has_parsing_error := True
 				else
 					debug
 						io.error.put_string (ext_language_name)
 						io.error.put_new_line
 					end
 					pos := source.substring_index (ext_language_name,1)
-					insert_external_error ("Unrecognized external language", pos)
+					has_parsing_error := True
 				end
 			else
 					-- cleaning string for next operation
@@ -181,9 +199,9 @@ feature {NONE} -- Implementation
 					start_special_part := source.index_of ('[', 1)
 					end_special_part := source.index_of (']', 1)
 					if end_special_part = 0 then
-						insert_external_error ("Missing closing bracket ']'", start_special_part)
+						has_parsing_error := True
 					elseif end_special_part = start_special_part + 1 then
-						insert_external_error ("Empty brackets" , start_special_part)
+						has_parsing_error := True
 					else
 						special_part := source.substring (start_special_part + 1, end_special_part - 1)
 						special_part.right_adjust
@@ -208,8 +226,7 @@ feature {NONE} -- Implementation
 						end
 						if pos = 0 then
 								-- Only one word in brackets
-							insert_external_error ("Only one word between brackets",
-								source.index_of ('[', 1) + 1)
+								has_parsing_error := True
 						else
 								-- Is it a C++ external?
 							is_cpp_extension := ext_language_name.is_equal ("C++")
@@ -220,7 +237,7 @@ feature {NONE} -- Implementation
 
 							dll_index := -1
 							from
-								done :=false
+								done := False
 								nb := special_type.count
 								index_pos := 1
 							until
@@ -276,8 +293,7 @@ feature {NONE} -- Implementation
 				if image.count /= 0 and then image.item (1) = '(' then
 					pos := image.index_of (')',2)
 					if pos = 0 then
-						insert_external_error ("Missing closing parenthesis ) in signature clause",
-							source.index_of ('(', 1))
+						has_parsing_error := True
 					else
 						signature_part := image.substring (1, pos)
 
@@ -310,7 +326,7 @@ feature {NONE} -- Implementation
 				if signature_part /= Void or else image.count /= 0 then
 					if extension = Void then
 						if ext_language_name.is_equal ("C++") then
-							insert_external_error ("Missing special part", 1)
+							has_parsing_error := True
 						else
 							create {C_EXTENSION_AS} extension
 						end
@@ -337,21 +353,29 @@ feature {NONE} -- Implementation
 						debug
 							io.error.put_string (image)
 						end
-						insert_external_error ("Extra text at end of external language specification",
-							source.substring_index (image,1))
+						has_parsing_error := True
 					end
 				end
 
 				if extension = Void and ext_language_name.is_equal ("C++") then
-					insert_external_error ("Missing special part", 1)
+					has_parsing_error := True
+				else
+					if extension /= Void then
+						extension.parse
+						if extension.has_parsing_error then
+							has_parsing_error := True
+						else
+								-- For old external we generate a syntax warning if option is turned on.
+							insert_external_warning
+						end
+					else
+							-- For old external we generate a syntax warning if option is turned on.
+						insert_external_warning
+					end
 				end
-
-				if extension /= Void then
-					extension.parse
-				end
-
-					-- For old external we generate a syntax warning if option is turned on.
-				insert_external_warning
+			end
+			if has_parsing_error then
+				extension := Void
 			end
 		end
 
@@ -360,10 +384,7 @@ feature {NONE} -- Implementation
 		local
 			l_warning: SYNTAX_WARNING
 		do
-				-- FIXME: Manu 10/09/2003. We do not yet raise a warning for 5.4
-				-- as new external syntax is not clearly specified.
 			if
-				False and
 				(attached {CLASS_C} eiffel_parser.current_class as l_class_c and then
 				l_class_c.lace_class.options.is_warning_enabled (w_syntax))
 			then
@@ -371,19 +392,9 @@ feature {NONE} -- Implementation
 					eiffel_parser.line,
 					eiffel_parser.column,
 					eiffel_parser.filename, "Use new external syntax instead.")
+				l_warning.set_associated_class (eiffel_parser.current_class)
 				Error_handler.insert_warning (l_warning)
 			end
-		end
-
-	insert_external_error (msg: STRING; start_p: INTEGER)
-			-- Raises error occurred while parsing
-		local
-			ext_error: EXTERNAL_SYNTAX_ERROR
-		do
-			create ext_error.init (eiffel_parser)
-			ext_error.set_column (start_p)
-			ext_error.set_external_error_message (msg)
-			Error_handler.insert_error (ext_error)
 		end
 
 invariant

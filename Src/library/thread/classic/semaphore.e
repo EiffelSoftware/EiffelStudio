@@ -127,7 +127,7 @@ feature {NONE} -- Externals
 
 	eif_thr_sem_destroy (a_sem_pointer: POINTER)
 		external
-			"C | %"eif_threads.h%""
+			"C use %"eif_threads.h%""
 		end
 
 invariant

@@ -110,9 +110,8 @@ feature -- Access
 			end
 		end;
 
-	get_string (name: STRING; default_value: like get_string): detachable STRING
-			-- Value of the resource `name';
-			-- `default_value' if this value is not known
+	get_string (name: STRING): detachable STRING
+			-- Value of the resource `name'
 		require
 			name_not_void: name /= Void
 		local
@@ -123,12 +122,29 @@ feature -- Access
 				string_value := found_item
 				check attached string_value end -- implied by `found'
 				Result := string_value
-			else
-				Result := default_value
 			end
 		end;
 
-	get_array (name: STRING; default_value: like get_array): detachable ARRAY [STRING]
+	get_string_or_default (name: STRING; default_value: like get_string_or_default): STRING
+			-- Value of the resource `name';
+			-- `default_value' if this value is not known
+		require
+			name_not_void: name /= Void
+			default_value_attached: default_value /= Void
+		local
+			l_result: like get_string
+		do
+			l_result := get_string (name)
+			if l_result = Void then
+				Result := default_value
+			else
+				Result := l_result
+			end
+		ensure
+			result_attached: Result /= Void
+		end;
+
+	get_array (name: STRING): detachable ARRAY [STRING]
 			-- Array value of the resource `name';
 			-- `default_value' if this value is not known
 		require
@@ -183,10 +199,25 @@ feature -- Access
 					pos := pos + 1
 					a_list.forth
 				end
-			else
-				Result := default_value
 			end
 		end;
+
+	get_array_or_default (name: STRING; default_value: like get_array_or_default): ARRAY [STRING]
+			-- Array value of the resource `name';
+			-- `default_value' if this value is not known
+		require
+			name_not_void: name /= Void
+			default_value_attached: default_value /= Void
+		local
+			l_result: like get_array
+		do
+			l_result := get_array (name)
+			if l_result = Void then
+				Result := default_value
+			else
+				Result := l_result
+			end
+		end
 
 	get_character (name: STRING; default_value: CHARACTER): CHARACTER
 			-- Value of the resource `name';

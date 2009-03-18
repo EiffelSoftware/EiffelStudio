@@ -39,9 +39,10 @@ feature -- Basic Operations
 		local
 			a_wel_string1: WEL_STRING
 			a_wel_string2: WEL_STRING
+			l_process_info: like process_info
 			last_launch_successful: BOOLEAN
 		do
-			create process_info.make
+			create l_process_info.make
 			create a_wel_string1.make (a_command_line)
 			create a_wel_string2.make (a_working_directory)
 			last_launch_successful := cwin_create_process (
@@ -54,12 +55,14 @@ feature -- Basic Operations
 				default_pointer,
 				a_wel_string2.item,
 				startup_info.item,
-				process_info.item)
+				l_process_info.item)
+
+			process_info := l_process_info
 		end
 
 feature {NONE} -- Implementation
 
-	process_info: WEL_PROCESS_INFO
+	process_info: detachable WEL_PROCESS_INFO
 			-- Process information
 
 	startup_info: WEL_STARTUP_INFO
@@ -90,7 +93,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -103,22 +106,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class PROCESS_LAUNCHER

@@ -41,42 +41,49 @@ feature -- Initialization
 			retried: BOOLEAN -- did an error occur?
 			c_error: BOOLEAN -- did an error occur during C compilation?
 			l_msg, make_util: STRING -- the C make utility for this platform
-			status_box: STATUS_BOX -- the status box displayed at the end of execution
-			location: STRING
-			location_index: INTEGER
-			unc_mapper: UNC_PATH_MAPPER
-			mapped_path: BOOLEAN
+			l_location: STRING
+			l_location_index: INTEGER
+			l_unc_mapper: detachable UNC_PATH_MAPPER
+			l_mapped_path: BOOLEAN
 			l_exception: EXCEPTIONS
 			l_processors: NATURAL_8
-			gen_only: BOOLEAN
+			l_gen_only: BOOLEAN
 			l_library_cmd: STRING
 			l_c_setup: COMPILER_SETUP
 			l_options: RESOURCE_TABLE
+			l_output: FILE
+			l_translator: MAKEFILE_TRANSLATOR
 		do
 			if not retried then
+				if attached io.default_output as l_default_output then
+					l_output := l_default_output
+				else
+					l_output := io.output
+				end
+
 					-- if location has been specified, update it
 				if a_parser.has_location then
-					location := a_parser.location
+					l_location := a_parser.location
 				else
 						-- Location defaults to the current directory
-					location := current_working_directory
+					l_location := current_working_directory
 				end
 
 					-- if generate_only is specified then only generate makefile
-				gen_only := a_parser.generate_only
+				l_gen_only := a_parser.generate_only
 
 					-- Map `location' if it is a network path if needed
-				if location.substring (1, 2).is_equal ("\\") then
-					create unc_mapper.make (location)
-					if unc_mapper.access_name /= Void then
-						mapped_path := True
-						location := unc_mapper.access_name + "\"
+				if l_location.substring (1, 2) ~ "\\" then
+					create l_unc_mapper.make (l_location)
+					if attached l_unc_mapper.access_name as l_access_name then
+						l_mapped_path := True
+						l_location := l_access_name + "\"
 					end
 				end
 
 					-- Change the working directory if needed
-				if not location.is_equal (current_working_directory) then
-					change_working_directory (location)
+				if l_location /~ current_working_directory then
+					change_working_directory (l_location)
 				end
 
 				if a_parser.has_max_processors then
@@ -85,7 +92,6 @@ feature -- Initialization
 						-- Use default
 					l_processors := 0
 				end
-
 
 				create l_options.make (20)
 				read_options_in (l_options)
@@ -101,51 +107,50 @@ feature -- Initialization
 					l_library_cmd.append_character ('"')
 					env.system (l_library_cmd)
 				else
-					create translator.make (l_options, mapped_path, a_parser.force_32bit_code_generation, l_processors)
+					create l_translator.make (l_options, l_mapped_path, a_parser.force_32bit_code_generation, l_processors, l_output)
 
-					translator.translate
-					if not gen_only and translator.has_makefile_sh then
+					l_translator.translate
+					if not l_gen_only and l_translator.has_makefile_sh then
 							-- We don't want to be launched when there is no Makefile.SH file.
-						translator.run_make
+						l_translator.run_make
 						c_error := c_compilation_error
 					end
 
-					if not gen_only then
+					if not l_gen_only then
 							-- Reduce execution priority
 						if a_parser.use_low_priority_mode then
 							demote_execution_priority
 						end
 
-						if translator = Void then
+						if l_translator = Void then
 							l_msg := "Internal error during Makefile translation preparation.%N%N%
 									%Please report this problem to Eiffel Software at:%N%
 									%http://support.eiffel.com"
-							io.put_string (l_msg)
-							io.default_output.flush
+							l_output.put_string (l_msg)
+							l_output.flush
 						else
-							if translator.has_makefile_sh then
+							if l_translator.has_makefile_sh then
 								if not c_error then
 										-- For eweasel processing
-									io.put_string ("C compilation completed%N")
+									l_output.put_string ("C compilation completed%N")
 								end
-								io.default_output.flush
-							elseif translator.is_il_code and not c_error then
+								l_output.flush
+							elseif l_translator.is_il_code and not c_error then
 									-- For eweasel processing
-								io.put_string ("C compilation completed%N")
-								io.default_output.flush
+								l_output.put_string ("C compilation completed%N")
+								l_output.flush
 							end
 						end
 					end
 				end
 
 					-- Destroy network path mapping if any
-				if unc_mapper /= Void then
-					unc_mapper.destroy
-					unc_mapper := Void
+				if l_unc_mapper /= Void then
+					l_unc_mapper.destroy
 				end
 			end
 
-			if retried or else (c_error and not gen_only) then
+			if retried or else (c_error and not l_gen_only) then
 					-- Make the application return a non-zero value to OS to flag an error
 					-- to calling process.
 				create l_exception
@@ -157,9 +162,6 @@ feature -- Initialization
 		end
 
 feature -- Access
-
-	translator: MAKEFILE_TRANSLATOR
-			-- used to translate Makefile.SH into Makefile
 
 	env: EXECUTION_ENVIRONMENT
 		once
@@ -197,12 +199,13 @@ feature -- Implementation
 			a_options_not_void: a_options /= Void
 		local
 			reader: RESOURCE_PARSER
-			l_layout: FINISH_FREEZING_EIFFEL_LAYOUT
 		do
 			create reader
-			l_layout ?= eiffel_layout
-			check layout_not_void: l_layout /= Void end
-			reader.parse_file (l_layout.config_eif_file_name, a_options)
+			if attached {FINISH_FREEZING_EIFFEL_LAYOUT} eiffel_layout as l_layout then
+				reader.parse_file (l_layout.config_eif_file_name, a_options)
+			else
+				check not_correctly_initialized: False end
+			end
 		end
 
 feature {NONE} -- Externals
@@ -236,7 +239,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -249,22 +252,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class FINISH_FREEZING

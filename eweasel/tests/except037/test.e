@@ -15,6 +15,7 @@ feature
 			if not tried then
 				test_none_once
 				test_once
+				test_process_once
 			end
 		rescue
 			tried := True
@@ -126,13 +127,81 @@ feature -- Non once
 		rescue
 			-- Make a ROUTINE_FAILURE
 		end
+		
+feature -- Test process once
+
+	test_process_once
+		local
+			tried: INTEGER
+		do
+			if tried = 0 then
+				o_try2_process
+			elseif tried = 1 then
+				o_try2_another_path_to_get_process_once
+			end
+		rescue
+			print_exception (exception_manager.last_exception)
+			print_exception (exception_manager.last_exception.original)
+			print_exception (exception_manager.last_exception.cause)
+			print_exception (exception_manager.last_exception.cause.original)
+			tried := tried + 1
+			retry
+		end
+
+	o_try2_process
+		do
+			o_try6
+		rescue
+			print_exception (exception_manager.last_exception)
+			print_exception (exception_manager.last_exception.original)
+			print_exception (exception_manager.last_exception.cause)
+			print_exception (exception_manager.last_exception.cause.original)
+			o_try4_process
+		end
+		
+	o_try2_another_path_to_get_process_once
+		do
+			o_try7
+		rescue
+			print_exception (exception_manager.last_exception)
+			print_exception (exception_manager.last_exception.original)
+			print_exception (exception_manager.last_exception.cause)
+			print_exception (exception_manager.last_exception.cause.original)
+			o_try4_process
+		end
+		
+	o_try4_process
+		note
+			once_status: global
+		once
+			raise ("My Exception 4 for global once")
+		rescue
+			-- Make a ROUTINE_FAILURE
+		end
+		
+	o_try6
+		do
+			raise ("My Exception 5 for global once")
+		rescue
+			-- Make a ROUTINE_FAILURE
+		end
+		
+	o_try7
+		do
+			raise ("My Exception 6 for global once")
+		rescue
+			-- Make a ROUTINE_FAILURE
+		end
 
 feature
 
 	print_exception (a_ex: EXCEPTION)
 		do
 			print (a_ex.generating_type + ": ")
-			print (a_ex.message + "%N")
+			if a_ex.message /= Void then
+				print (a_ex.message)
+			end
+			print ("%N")
 		end
 
 end

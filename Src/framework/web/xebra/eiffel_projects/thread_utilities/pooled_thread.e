@@ -50,26 +50,53 @@ feature {NONE} -- Implementation
 
 	execute
 			-- <Precursor>
+		local
+			done: BOOLEAN
 		do
+--			from
+--				semaphore.wait
+--			until
+--				thread_pool.over
+--			loop
+--				if (not thread_pool.over) then
+--							-- We have some work now				
+--					from
+--						thread_procedure := thread_pool.get_work (Current)
+--					until
+--						thread_procedure = Void
+--					loop
+--						if attached thread_procedure as l_work then
+--							if attached {G} target as l_target then
+--								l_work.call ([l_target])
+--							else
+--								l_work.call (Void)
+--							end
+--						end
+--						thread_procedure := thread_pool.get_work (Current)
+--					end
+--				end
+--				semaphore.wait
+--			end
+--			thread_pool.thread_terminated
 			from
-			until
-				thread_pool.over
-			loop
 				semaphore.wait
-				if not thread_pool.over then
-							-- We have some work now				
-					from
-						thread_procedure := thread_pool.get_work (Current)
-					until
-						thread_procedure = Void
-					loop
-						if attached thread_procedure as l_work then
-							if attached {G} target as l_target then
-								l_work.call ([l_target])
-							else
-								l_work.call (Void)
-							end
-						end
+				thread_procedure := thread_pool.get_work (Current)
+			until
+				done
+			loop
+				if attached thread_procedure as l_work then
+					if attached {G} target as l_target then
+						l_work.call ([l_target])
+					else
+						l_work.call (Void)
+					end
+				end
+				if thread_pool.over then
+					done := True
+				else
+					thread_procedure := thread_pool.get_work (Current)
+					if thread_procedure = Void then
+						semaphore.wait
 						thread_procedure := thread_pool.get_work (Current)
 					end
 				end

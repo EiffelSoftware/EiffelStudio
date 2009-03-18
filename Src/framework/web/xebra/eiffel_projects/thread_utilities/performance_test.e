@@ -18,33 +18,36 @@ feature {NONE} -- Initialization
 	make
 			--
 		local
-			pool: THREAD_POOL [PERFORMANCE_TEST]
-			times, i: NATURAL
+			pool: THREAD_POOL [ANY]
+			times, size, i: NATURAL
+			integrate_agent: PROCEDURE [ANY, TUPLE]
 		do
 			times := argument (1).to_natural_32
-			print ("%Nstart%N")
-			--create pool.make (argument(2).to_natural_32, agent integral_generator)
-			create pool.make (argument(2).to_natural_32)
-			from
-				i := 0
-			until
-				i >= times
-			loop
-				integral (0, 100)
-				i := i + 1
+			size := argument(2).to_natural_32
+			print ("Pool size: " + size.out + " Executions:" + times.out + "%N")
+			if size = 0 then
+				from
+					i := 0
+				until
+					i >= times
+				loop
+					integral (0, 100)
+					i := i + 1
+				end
+			else
+				create pool.make (size)
+				from
+					i := 0
+					integrate_agent := agent integral (0, 10)
+				until
+					i >= times
+				loop
+					pool.add_work (integrate_agent)
+					i := i + 1
+				end
+				pool.wait_for_completion
+				pool.terminate
 			end
-			print ("middle%N")
-			from
-				i := 0
-			until
-				i >= times
-			loop
-				pool.add_work (agent integral (0, 10))
-				i := i + 1
-			end
-			print ("%Nstop%N")
-			pool.terminate
-			print ("all finished%N")
 		end
 
 	make_empty
@@ -82,6 +85,5 @@ feature -- Agent
 				res := res + step * f(x)
 				x := x + step
 			end
-			print (".")
 		end
 end

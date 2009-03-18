@@ -9,6 +9,6 @@ compile_result ok
 
 execute_work   NONE exec_output
 execute_result ok
-compare        exec_output output
+if not DOTNET compare        exec_output output
 
 test_end

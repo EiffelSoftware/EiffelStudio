@@ -1,0 +1,9 @@
+test_name 	 external-with-invalid-use
+test_description Compiler accepts the % as a valid token when it should not
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+compile_melted
+compile_result 	 syntax_error TEST 14
+
+test_end

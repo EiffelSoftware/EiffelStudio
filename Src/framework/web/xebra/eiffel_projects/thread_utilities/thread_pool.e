@@ -9,6 +9,9 @@ note
 class
 	THREAD_POOL [G]
 
+inherit
+	EXECUTION_ENVIRONMENT
+
 create
 	make
 
@@ -23,10 +26,10 @@ feature {NONE} -- Initialization
 			i: NATURAL
 		do
 			capacity := n
-			create {ARRAYED_QUEUE [PROCEDURE [G, TUPLE]]} work_queue.make (n.to_integer_32)
-			--create queue_mutex.make
+			create work_queue.make (n.to_integer_32)
 			create work_queue_mutex.make
 			create over_mutex.make
+			create termination_mutex.make
 			create work_semaphore.make (capacity.as_integer_32)
 			from
 				i := 1
@@ -69,7 +72,9 @@ feature -- Access
 	queue_count: NATURAL
 			-- Number of items in queue
 		do
+			work_queue_mutex.lock
 			Result := work_queue.count.as_natural_32
+			work_queue_mutex.unlock
 		end
 
 feature -- Status report
@@ -90,7 +95,7 @@ feature -- Basic operations
 		do
 			work_queue_mutex.lock
 			work_queue.extend (work)
-			if work_queue.count < capacity.as_integer_32 then
+			if work_queue.count <= capacity.as_integer_32 then
 					-- Let one thread wake up and do the work
 				work_semaphore.post
 			end
@@ -108,19 +113,42 @@ feature -- Basic operations
 	thread_terminated
 			-- Notifies the thread pool that a thread has terminated its execution.
 		do
+			termination_mutex.lock
 			terminated_count := terminated_count - 1
+			termination_mutex.unlock
 		end
 
 	get_work (requester: POOLED_THREAD [G]): detachable PROCEDURE [G, TUPLE]
 			-- If there is work to do, it is returned
 			-- Yields Void otherwise
 		do
-			work_queue_mutex.lock
-			if not work_queue.is_empty then
-				Result := work_queue.item
-				work_queue.remove
+			if not over then
+				work_queue_mutex.lock
+				if not work_queue.is_empty then
+					Result := work_queue.item
+					work_queue.remove
+				end
+				work_queue_mutex.unlock
 			end
-			work_queue_mutex.unlock
+		end
+
+	wait_for_completion
+			-- Wait until there is no more work to be completed
+		local
+			done: BOOLEAN
+		do
+			from
+
+			until
+				done
+			loop
+				work_queue_mutex.lock
+				done := work_queue.is_empty
+				work_queue_mutex.unlock
+				if not done then
+					sleep (1)
+				end
+			end
 		end
 
 	terminate
@@ -130,17 +158,20 @@ feature -- Basic operations
 			is_over := True
 			over_mutex.unlock
 			from
-
+				termination_mutex.lock
 			until
 				terminated_count = 0
 			loop
 				work_semaphore.post
+				termination_mutex.unlock
+				termination_mutex.lock
 			end
+			termination_mutex.unlock
 		end
 
 feature {NONE} -- Implementation: Access
 
-	work_queue: QUEUE [PROCEDURE [G, TUPLE]]
+	work_queue: ARRAYED_QUEUE [PROCEDURE [G, TUPLE]]
 			-- Queue that holds unprocessed requests as agents
 			-- Thread-safe access when accessor holds `queue_mutex'
 
@@ -160,4 +191,5 @@ feature {NONE} -- Implementation: Access
 	over_mutex: MUTEX
 			-- Mutex for the `is_over' variable
 
+	termination_mutex: MUTEX
 end

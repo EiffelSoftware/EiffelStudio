@@ -67,8 +67,8 @@ feature -- Command
 
 	slist_append (a_list: POINTER; a_string: STRING_GENERAL): POINTER
 			-- Declared as curl_slist_append ().
+			-- note: call with a null `a_list' to get initialized pointer as Result
 		require
-			exists: a_list /= default_pointer
 			not_void: a_string /= Void
 		local
 			l_c_string: C_STRING

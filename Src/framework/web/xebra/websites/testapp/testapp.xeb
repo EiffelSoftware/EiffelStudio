@@ -2,9 +2,9 @@
 	dear
 	<one>
 		<two>was</two>
-		<xeb:punga atri1="%asda%">
-			<xeb:element item="a_list_timtme"></xeb:element>
+		<xeb:call feature="asda" chocolate="black">
+			<xeb:loop item="a_list_time"></xeb:loop>
 			<tringo></tringo>
-		</xeb:punga>
+		</xeb:call>
 	</one>
 </html>

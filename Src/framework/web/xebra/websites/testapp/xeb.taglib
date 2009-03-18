@@ -1,0 +1,4 @@
+<taglib name= "xeb">
+	<tag name="call" class="XEB_CALL_TAG">
+	<tag name="loop" class="XEB_LOOP_TAG">
+</taglib>

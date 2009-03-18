@@ -14,7 +14,7 @@ feature -- Basic operations
 			-- The calling thread yields its execution in favor of another
 			-- thread for an OS specific amount of time.
 		external
-			"C | %"eif_threads.h%""
+			"C use %"eif_threads.h%""
 		alias
 			"eif_thr_yield"
 		end
@@ -62,7 +62,7 @@ feature {NONE} -- Implementation
 	exit
 			-- Exit calling thread. Must be called from the thread itself.
 		external
-			"C | %"eif_threads.h%""
+			"C use %"eif_threads.h%""
 		alias
 			"eif_thr_exit"
 		end
@@ -90,7 +90,7 @@ feature {NONE} -- Externals
 	get_current_id: POINTER
 			-- Returns a pointer to the thread-id of the thread.
 		external
-			"C | %"eif_threads.h%""
+			"C use %"eif_threads.h%""
 		alias
 			"eif_thr_thread_id"
 		end
@@ -98,7 +98,7 @@ feature {NONE} -- Externals
 	last_created_thread: POINTER
 			-- Returns a pointer to the thread-id of the last created thread.
 		external
-			"C | %"eif_threads.h%""
+			"C use %"eif_threads.h%""
 		alias
 			"eif_thr_last_thread"
 		end

@@ -114,7 +114,7 @@ feature {NONE} -- Externals
 
 	eif_thr_rwl_create: POINTER
 		external
-			"C | %"eif_threads.h%""
+			"C use %"eif_threads.h%""
 		end
 
 	eif_thr_rwl_rdlock (an_item: POINTER)
@@ -124,7 +124,7 @@ feature {NONE} -- Externals
 
 	eif_thr_rwl_unlock (an_item: POINTER)
 		external
-			"C | %"eif_threads.h%""
+			"C use %"eif_threads.h%""
 		end
 
 	eif_thr_rwl_wrlock (an_item: POINTER)
@@ -134,7 +134,7 @@ feature {NONE} -- Externals
 
 	eif_thr_rwl_destroy (an_item: POINTER)
 		external
-			"C | %"eif_threads.h%""
+			"C use %"eif_threads.h%""
 		end
 
 invariant

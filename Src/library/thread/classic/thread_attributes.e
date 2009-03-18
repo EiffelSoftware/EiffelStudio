@@ -76,7 +76,7 @@ feature -- Externals
 	default_priority: INTEGER
 			-- Get default thread priority for the current architecture.
 		external
-			"C | %"eif_threads.h%""
+			"C use %"eif_threads.h%""
 		alias
 			"eif_thr_default_priority"
 		end
@@ -84,7 +84,7 @@ feature -- Externals
 	min_priority: INTEGER
 			-- Get minimum thread priority for the current architecture.
 		external
-			"C | %"eif_threads.h%""
+			"C use %"eif_threads.h%""
 		alias
 			"eif_thr_min_priority"
 		end
@@ -92,7 +92,7 @@ feature -- Externals
 	max_priority: INTEGER
 			-- Get maximum thread priority for the current architecture.
 		external
-			"C | %"eif_threads.h%""
+			"C use %"eif_threads.h%""
 		alias
 			"eif_thr_max_priority"
 		end

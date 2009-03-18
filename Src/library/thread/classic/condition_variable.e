@@ -100,17 +100,17 @@ feature {NONE} -- Externals
 
 	eif_thr_cond_create: POINTER
 		external
-			"C | %"eif_threads.h%""
+			"C use %"eif_threads.h%""
 		end
 
 	eif_thr_cond_broadcast (a_cond_ptr: POINTER)
 		external
-			"C | %"eif_threads.h%""
+			"C use %"eif_threads.h%""
 		end
 
 	eif_thr_cond_signal (a_cond_ptr: POINTER)
 		external
-			"C | %"eif_threads.h%""
+			"C use %"eif_threads.h%""
 		end
 
 	eif_thr_cond_wait (a_cond_ptr: POINTER; a_mutex_ptr: POINTER)
@@ -129,7 +129,7 @@ feature {NONE} -- Externals
 
 	eif_thr_cond_destroy (a_mutex_ptr: POINTER)
 		external
-			"C | %"eif_threads.h%""
+			"C use %"eif_threads.h%""
 		end
 
 note

@@ -22,4 +22,20 @@ ROUTINE_FAILURE:
 DEVELOPER_EXCEPTION: My Exception 2 for once
 ROUTINE_FAILURE: 
 DEVELOPER_EXCEPTION: My Exception 3 for once
+ROUTINE_FAILURE: 
+DEVELOPER_EXCEPTION: My Exception 5 for global once
+ROUTINE_FAILURE: 
+DEVELOPER_EXCEPTION: My Exception 5 for global once
+ROUTINE_FAILURE: 
+DEVELOPER_EXCEPTION: My Exception 4 for global once
+ROUTINE_FAILURE: 
+DEVELOPER_EXCEPTION: My Exception 5 for global once
+ROUTINE_FAILURE: 
+DEVELOPER_EXCEPTION: My Exception 6 for global once
+ROUTINE_FAILURE: 
+DEVELOPER_EXCEPTION: My Exception 6 for global once
+ROUTINE_FAILURE: 
+DEVELOPER_EXCEPTION: My Exception 4 for global once
+ROUTINE_FAILURE: 
+DEVELOPER_EXCEPTION: My Exception 6 for global once
 Execution completed

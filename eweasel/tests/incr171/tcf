@@ -32,7 +32,7 @@ compile_result 	validity_error TEST VMFN
 define ROUTINE1 ""
 copy_sub 	test1.e $CLUSTER test1.e
 resume_compile
-compile_result 	validity_error TEST EXT_SAME_SIGN
+compile_result 	validity_error TEST EXT_SAME_SIGN VXRC
 
 define ROUTINE2 "b: BOOLEAN is external "C" rescue end"
 copy_sub 	test.e $CLUSTER test.e

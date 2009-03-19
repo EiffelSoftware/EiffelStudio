@@ -77,9 +77,8 @@ LOCAL_DEPENDENCIES = $(MAKEFILE_DEPENDENCIES) $(TOP)/eif_config.h $(TOP)/eif_por
 #LIBIDR = [--.idrs]
 
 LSRC =	ipcvms.c    \
-	com.c identify.c lock.c logfile.c network.c \
-	select.c shword.c stack.c stream.c system.c \
-	transfer.c rqst_idrs.c
+	com.c identify.c logfile.c network.c select.c shword.c stack.c \
+	stream.c system.c transfer.c rqst_idrs.c
 
 #LOBJ = ipcvms.obj  \
 #	com.obj identify.obj lock.obj logfile.obj network.obj \

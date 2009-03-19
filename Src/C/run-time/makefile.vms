@@ -35,11 +35,10 @@ SED = edit
 ########################################################################
 # Automatically generated parameters -- do not edit
 
-#OBJECTS =  $(ROBJ) $(WKOBJ) $(EOBJ) x2c.obj debug.obj interp.obj option.obj update.obj wbench.obj main.obj
-OBJECTS =  $(VMS_OBJ) $(LOBJ) x2c.obj $(MT_LOBJ) # $(WOBJ) $(EOBJ) x2c.obj # option.obj main.obj # # $(MT_WOBJ)
+#OBJECTS =  \$(MT_LOBJ) \$(MT_WOBJ) \$(LOBJ) \$(WOBJ) x2c.o offset.o runtime_validation.o offset.o
+OBJECTS =  $(VMS_OBJ) $(LOBJ) x2c.obj offset.obj runtime_validation.obj
 LSCRIPTS =  eif_size.h
-SOURCES =  $(VMS_SRC) $(LSRC) $(OTHER) $(WADD) x2c.c
-
+SOURCES =  $(VMS_SRC) $(LSRC) $(WADD) x2c.c runtime_validation.c
 
 
 ########################################################################
@@ -62,7 +61,7 @@ DPFLAGS = $(CDEFINES)
 # This macro is used by the specialized .c.xxxobj rules in this file
 # it does not define the include path, because it differs for some files
 #CFLAGS_NOINC = $(DECC_FLAGS)$(DPFLAGS)
-# This macro is provided ONLY for the standard .c.obj rule in makeinc.vms
+# This macro is provided ONLY for the standard .c.obj rule in Makeinc.VMS
 #CFLAGS = $(CFLAGS_NOINC)$(CINCLUDES)
 
 CINCLUDES = [C.ipc.app],[],[.include],[C.idrs]
@@ -85,12 +84,12 @@ LSRC = malloc.c garcol.c local.c except.c store.c retrieve.c \
 	hash.c traverse.c hashin.c tools.c internal.c plug.c \
 	copy.c equal.c lmalloc.c out.c timer.c urgent.c sig.c \
 	hector.c cecil.c bits.c file.c dir.c misc.c \
-	error.c umain.c memory.c argv.c boolstr.c search.c \
+	error.c umain.c memory.c memory_analyzer.c argv.c boolstr.c search.c \
 	run_idr.c path_name.c object_id.c eif_threads.c eif_project.c\
 	eif_rw_lock.c gen_conf.c eif_type_id.c rout_obj.c \
 	option.c compress.c console.c memory_analyzer.c
 
-OTHER = main.c except.c
+#OTHER = main.c except.c
 
 # these files need to be compiled with -DWORKBENCH
 WADD = debug.c interp.c update.c wbench.c
@@ -134,6 +133,7 @@ WOBJ =		    \
 	error.obj_wk \
 	umain.obj_wk \
 	memory.obj_wk \
+	memory_analyzer.obj_wk \
 	argv.obj_wk \
 	boolstr.obj_wk \
 	search.obj_wk \
@@ -149,9 +149,9 @@ WOBJ =		    \
 	option.obj_wk \
 	compress.obj_wk \
 	console.obj_wk \
+	offset.obj_wk \
 	main.obj_wk \
-	except.obj_wk \
-	memory_analyzer.obj_wk
+	except.obj_wk
 
 LOBJ_EXTRA = \
 	$(IDRS_OBJ)
@@ -183,6 +183,7 @@ LOBJ = \
 	error.obj \
 	umain.obj \
 	memory.obj \
+	memory_analyzer.obj \
 	argv.obj \
 	boolstr.obj \
 	search.obj \
@@ -241,6 +242,7 @@ EOBJ = \
 	werror.obj \
 	wumain.obj \
 	wmemory.obj \
+	wmemory_analyzer.obj \
 	wargv.obj \
 	wboolstr.obj \
 	wsearch.obj \
@@ -290,6 +292,7 @@ MT_LOBJ = \
 	MTerror.obj \
 	MTumain.obj \
 	MTmemory.obj \
+	MTmemory_analyzer.obj \
 	MTargv.obj \
 	MTboolstr.obj \
 	MTsearch.obj \
@@ -333,11 +336,11 @@ $(LOBJ_EXTRA) $(MT_LOBJ_EXTRA) : $(EXTRA_DEPENDENCIES)
 all ::
 
 # ancillary targets; need to be created before any compilation is done
-LOCAL_ANCILLARY_FILES: # eif_size.h ### in top level makefile
+LOCAL_ANCILLARY_FILES: eif_size.h ### also in top level makefile
 
 all :: $(LOCAL_ANCILLARY_FILES)
 
-eif_size.h : eif_size_h.vms  ### no $(LOCAL_MAKEFILE)
+eif_size.h : eif_size_h.vms 
 #	backup $?;0 $@/new/log	# backup preserves dates; we dont want that here
 	$(COPY) $? $@ 
 
@@ -354,7 +357,7 @@ size.obj : eif_size.h # eif_size_h.vms # size.vms
 eifrtvms_test:
 	CC/debug/noopt/diag $(CFLAGS) eifrtvms/obj=eifrtvms_test.obj /define=(TEST) $(MY_CFLAGS)
 #	LINK/debug $(MY_LINKFLAGS) eifrtvms_test.obj,path_name.obj,[c.ipc.shared]ipc/libr,vms_jackets_root:[lib]vms_jackets_dbg.olb/libr
-	LINK/debug $(MY_LINKFLAGS) eifrtvms_test.obj, [c.ipc.shared]ipc/libr, vms_jackets_root:[lib]vms_jackets_dbg.olb/libr
+	LINK/debug $(LINKFLAGS) eifrtvms_test.obj, [c.ipc.shared]ipc/libr, vms_jackets_root:[lib]vms_jackets_dbg.olb/libr
 
 eifrtvms.lis vms_names.lis : $(EXTRA_DEPENDENCIES)
 
@@ -392,10 +395,10 @@ eiflib : $(EIFLIB)finalized.olb # $(EIFLIB)MTfinalized.olb
 #eiflib_finalized : $(EIFLIB)finalized.olb
 
 $(EIFLIB)finalized.olb : []finalized.olb
-	copy $^ $(EIFLIB)
+	$(COPY) $^ $(EIFLIB)
 
 $(EIFLIB)MTfinalized.olb : []MTfinalized.olb
-	copy $^ $(EIFLIB)
+	$(COPY) $^ $(EIFLIB)
 
 
 #all :: finalized.olb
@@ -407,18 +410,18 @@ local_realclean ::
 finalized.olb : $(VMS_OBJ) $(LOBJ) $(LOBJ_EXTRA)
 	libr/create/insert $@ $^
 	libr/insert $@ [-.ipc.shared]shword.obj,system.obj	! needed by eifrtvms
-##	copy $@ ise_eiffel:[studio.spec.$(ISE_PLATFORM).lib] ! eiflib: 
+##	$(COPY) $@ ise_eiffel:[studio.spec.$(ISE_PLATFORM).lib] ! eiflib: 
 	@purge/nolog *.*obj*
 	@-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
 
 #all :: MTfinalized.olb
 
 #MTfinalized.olb : finalized.olb
-#	copy $^ $@
+#	$(COPY) $^ $@
 MTfinalized.olb : $(VMS_OBJ) $(MT_LOBJ) $(MT_LOBJ_EXTRA)
 	libr/create/insert $@ $^
 	libr/insert $@ [-.ipc.shared]shword.obj,system.obj	! needed by eifrtvms
-##	copy $@ ise_eiffel:[studio.spec.$(ISE_PLATFORM).lib] ! eiflib: 
+##	$(COPY) $@ ise_eiffel:[studio.spec.$(ISE_PLATFORM).lib] ! eiflib: 
 	@purge/nolog *.*obj*
 	@-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
 
@@ -431,15 +434,11 @@ local_realclean ::
 #$(ROBJ) $(COMOBJ) : $(MARKER)
 
 runtime.olb : $(ROBJ) $(COMOBJ)
-#	$(AR) $@ *.obj
-#	rename $@ eiflib: 
-#	rename/nolog *.obj *.robj/excl=(console.obj,path_name.obj)
-#	$(RANLIB) $@
-#	libr/create/insert $@ $^	# doesn't work, line too long
+#	libr/create/insert $@ $^	# doesn't work, line too long ***BUT MAYBE NOW IT DOES?***
 	libr/create/insert $@ $(COMOBJC), *.robj
 	libr/insert $@ [-.ipc.shared]shword.obj,system.obj
 	libr/insert $@ [-.idrs]idrs.obj
-	copy $@ ise_eiffel:[studio.spec.$(ISE_PLATFORM).lib] 
+	$(COPY) $@ ise_eiffel:[studio.spec.$(ISE_PLATFORM).lib] 
 
 
 #all :: wkbench.olb
@@ -452,7 +451,7 @@ local_realclean ::
 wkbench.olb : $(WKOBJ) $(COMOBJ) 
 	libr/create/insert $@ $(COMOBJC), *.wkobj,*.wobj
 	libr/insert $@ [-.ipc.app]*.obj,[-.ipc.shared]*.obj,[-.idrs]idrs.obj
-	copy $@ ise_eiffel:[studio.spec.$(ISE_PLATFORM).lib] 
+	$(COPY) $@ ise_eiffel:[studio.spec.$(ISE_PLATFORM).lib] 
 
 #all :: ebench.olb
 
@@ -463,13 +462,8 @@ local_realclean ::
 #*.eobj : $(MARKER)
 
 ebench.olb : $(EOBJ)
-#	$(AR) $@ *.obj
-#	rename/nolog bmain.obj,bexcept.obj *.eobj
-#	$(RANLIB) $@
 #	libr/create/insert $@ $^    # doesn't work, line too long
 	libr/create/insert $@ $(COMOBJC),*.eobj,*.wobj
-
-
 
 
 
@@ -478,13 +472,11 @@ all :: x2c.exe
 local_realclean :: 
 	$(RM) x2c.exe
 
-#x2c.obj : x2c.c # $(MAKEFILE_DEPENDENCIES)
-#	$(CC) $</obj=$@ /NOOBJ $(DECC_FLAGS) /INCLUDE=
 
 x2c.obj : x2c.c $(LOCAL_ANCILLARY_FILES) # eif_size.h 
 
-x2c.exe : x2c.obj 
-	link /exe=$@ x2c.obj,ISE_EIFFEL:[C_library.VMS.Porting.LIB]VMS_JACKETS.OLB/libr
+x2c.exe : x2c.obj offset.obj 
+	link /exe=$@$(LINKFLAGS) $^, EIFFEL_SRC:[C_library.VMS.Porting.LIB]VMS_JACKETS.OLB/libr
 
 
 #all :: $(TOP)eif_config.h $(TOP)eif_portable.h $(TOP)eif_confmagic.h

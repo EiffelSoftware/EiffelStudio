@@ -22,11 +22,10 @@ feature {NONE} -- Initialization
 	make
 			-- Create XB_XML_PARSER_CALLBACKS.
 		do
-		--	create {LINKED_LIST [OUTPUT_ELEMENT]}elements.make
-			create root_tag.make (HTML_TAG_NAME)
+			create root_tag.make ("html", HTML_TAG_NAME)
 			create tag_stack.make (10)
-		--	create tag_buf.make
 			create html_buf.make_empty
+			create {ARRAYED_LIST [STRING]} controller_calls.make (10)
 		end
 
 feature -- Constants
@@ -53,6 +52,16 @@ feature -- Access
 
 	tag_stack: ARRAYED_STACK [TAG_ELEMENT]
 		-- The stack is used to generate the tree
+
+	taglib: TAG_LIBRARY
+
+	controller_calls: LIST [STRING]
+
+	put_taglib (a_taglib: TAG_LIBRARY)
+			-- Adds a taglib to the parser
+		do
+			taglib := a_taglib
+		end
 
 feature -- Document
 
@@ -142,7 +151,7 @@ feature -- Tag
 			end
 
 			if state = READING_TAG then
-				create l_tmp_tag.make ("XEB_" + l_local_part.as_upper + "_TAG")
+				create l_tmp_tag.make (a_local_part, taglib.get_class_for_name (l_local_part.as_upper))
 					-- TODO: Read tag class name from taglib file!
 				tag_stack.item.put_subtag (l_tmp_tag)
 				tag_stack.put (l_tmp_tag)
@@ -188,6 +197,11 @@ feature -- Tag
 
 			if state = READING_TAG then
 				tag_stack.item.put_attribute (l_namespace, l_prefix, l_local_part, l_value)
+				if taglib.is_call_feature (tag_stack.item.id, l_local_part) then
+					tag_stack.item.put_controller_call (l_value)
+					controller_calls.extend (l_value)
+				end
+
 			elseif state = READING_HTML then
 				if not l_prefix.is_empty then
 					l_prefix := l_prefix + ":"
@@ -259,7 +273,7 @@ feature {NONE} -- Implementation
 			l_tag: TAG_ELEMENT
 		do
 			if not s.is_empty then
-				create l_tag.make (HTML_TAG_NAME)
+				create l_tag.make ("html", HTML_TAG_NAME)
 --				l_tag.put_attribute ("", "","code", s.twin) --TODO BODY
 				tag_stack.item.put_subtag (l_tag)
 			end
@@ -271,7 +285,7 @@ feature {NONE} -- Implementation
 			l_tag: TAG_ELEMENT
 		do
 			if not s.is_empty then
-				create l_tag.make (HTML_TAG_NAME)
+				create l_tag.make ("html", HTML_TAG_NAME)
 				l_tag.put_attribute ("", "", "text", s)
 --				l_tag.put_attribute ("", "","code", s.twin) -- TODO BODY
 				tag_stack.item.put_subtag (l_tag)
@@ -283,6 +297,7 @@ feature {NONE} -- Implementation
 			-- Creates a XB_TAG from html_buf and adds it to top element on stack then pushes it onto the stack.
 		do
 			create_html_tag_with_text_put (html_buf.out)
+				-- Don't use html_buf, since it will be wiped_out in the html_tag as well
 			html_buf.wipe_out
 		end
 

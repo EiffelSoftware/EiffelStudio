@@ -1,43 +1,45 @@
 note
-	description: "[
-		Example implementation of how to generate code with {SERV_ELMENT}s
-	]"
+	description: "Summary description for {TAG_DESCRIPTION_ATTRIBUTE}."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	CODE_GEN_APPLICATION
+	TAG_DESCRIPTION_ATTRIBUTE
+
+inherit
+	TAG_LIB_ITEM
 
 create
 	make
 
 feature -- Access
 
-	make
-		-- for testing
-		local
-			servlet: ROOT_SERVLET_ELEMENT
-			oe: PLAIN_XHTML_ELEMENT
-			name: STRING
-			controller_name: STRING
-			call: CALL_ELEMENT
-			op_call: OUTPUT_CALL_ELEMENT
-			gen: WEBAPP_GENERATOR
-		do
-			name := "hello_world"
-			controller_name := "MY_CONTROLLER"
-			create {ROOT_SERVLET_ELEMENT} servlet.make (name, controller_name)
-			create oe.make ("<html><body /> </html>")
-			create op_call.make ("return_something")
-			create call.make ("do_something")
-			servlet.put_xhtml_elements (oe)
-			servlet.put_xhtml_elements (call)
-			servlet.put_xhtml_elements (op_call)
+	id: STRING
+	call: BOOLEAN
 
-			create gen.make ("my_web_app", "code_gen/generated/")
-			gen.put_servlet (servlet)
-			gen.generate
+	make
+		do
+			id := ""
+			call := False
 		end
+
+	put (child: TAG_LIB_ITEM)
+			-- <Precursor>
+		do
+			-- Do nothing
+		end
+
+	set_attribute (a_id: STRING; value: STRING)
+			-- <Precursor>
+		do
+			if a_id.is_equal ("id") then
+				id := value
+			end
+			if a_id.is_equal ("call") then
+				call := value.to_boolean
+			end
+		end
+
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

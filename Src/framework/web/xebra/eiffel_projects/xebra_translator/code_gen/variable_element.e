@@ -18,7 +18,7 @@ feature -- Access
 
 	name: STRING
 			-- The name of the variable
-			
+
 	type: STRING
 			-- The type of the variable
 

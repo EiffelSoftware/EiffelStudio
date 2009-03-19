@@ -1,36 +1,20 @@
 note
-	description: "Summary description for {XEB_CALL_TAG}."
+	description: "Summary description for {TAG_LIB_ITEM}."
 	author: "sandro"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	XEB_CALL_TAG
-
-inherit
-	TAG_SERIALIZER
-		redefine
-			output
-		end
-
-create
-	make
+deferred class
+	TAG_LIB_ITEM
 
 feature -- Access
 
-	make (params: TABLE [STRING, STRING])
-		do
-			make_base
-			feature_name := params ["feature"]
+	put (child: TAG_LIB_ITEM)
+		deferred
 		end
 
-	feature_name: STRING
-			-- The name of the feature to call
-
-	output (parent: SERVLET; buf: INDENDATION_STREAM)
-			-- <Precursor>
-		do
---				parent.call_on_controller (feature_name) -- UNCOMMENT ASAP
+	set_attribute (id: STRING; value: STRING)
+		deferred
 		end
 
 note

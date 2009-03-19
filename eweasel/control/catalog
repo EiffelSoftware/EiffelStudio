@@ -825,6 +825,7 @@ test	remove-convert-clause-bogus-vncp	incr318	tcf fail incrementality
 test	execution-failure-after-vevi		incr319	tcf fail incrementality
 test	switch-to-conforming-inheritance	incr320	tcf fail incrementality
 test	eif-gen-conf-init-crash			incr321	tcf fail incrementality
+test	function-to-attribute-refinalize	incr322	tcf fail incrementality
 
 
 -- Melting

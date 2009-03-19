@@ -388,7 +388,7 @@ feature -- Query
 				end)
 		end
 
-	tool_edition (a_type: TYPE [ES_TOOL [EB_TOOL]]; a_edition: NATURAL_8): ES_TOOL [EB_TOOL]
+	tool_edition (a_type: TYPE [ES_TOOL [EB_TOOL]]; a_edition: NATURAL_8): attached ES_TOOL [EB_TOOL]
 			-- Retrieves an activate edition of a tool associated with a particular type.
 			-- Note: Requesting a tool descriptor that has not yet been instantiated will instatiate it before
 			--       it is returned.
@@ -427,7 +427,9 @@ feature -- Query
 				l_editions_attached: l_editions /= Void
 				l_editions_big_enough: l_editions.count >= a_edition
 			end
-			Result := l_editions.item (a_edition)
+			l_tool := l_editions.item (a_edition)
+			check l_tool_attached: l_tool /= Void end
+			Result := l_tool
 		ensure
 			result_attached: Result /= Void
 			not_result_is_recycled: not Result.is_recycled

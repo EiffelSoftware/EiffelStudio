@@ -29,10 +29,10 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	name: !STRING = "Eiffel Parser SpeedMark"
+	name: STRING = "Eiffel Parser SpeedMark"
 			-- <Precursor>
 
-	version: !STRING
+	version: STRING
 			-- <Precursor>
 		once
 			create Result.make (5)
@@ -41,7 +41,7 @@ feature {NONE} -- Access
 			Result.append_natural_16 ({EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version)
 		end
 
-	switches: !ARRAYED_LIST [!ARGUMENT_SWITCH]
+	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
 			-- <Precursor>
 		once
 			create Result.make (5)
@@ -132,7 +132,7 @@ feature -- Access
 			if has_option (location_switch) then
 				Result := option_of_name (location_switch).value
 			else
-				Result := (create {EXECUTION_ENVIRONMENT}).current_working_directory.as_attached
+				Result := (create {EXECUTION_ENVIRONMENT}).current_working_directory
 			end
 		ensure
 			location_not_void: Result /= Void
@@ -158,7 +158,7 @@ feature -- Access
 
 feature {NONE} -- Basic Operations
 
-	execute_noop (a_agent: !PROCEDURE [ANY, TUPLE])
+	execute_noop (a_agent: PROCEDURE [ANY, TUPLE])
 			-- <Precursor>
 		do
 			display_usage
@@ -170,8 +170,8 @@ feature {NONE} -- Switch names
 	parser_level_switch: STRING = "s|syntax_level"
 			-- Factory switch
 
-	location_switch: !STRING = "l|location"
-	recursive_switch: !STRING = "r|recursive"
+	location_switch: STRING = "l|location"
+	recursive_switch: STRING = "r|recursive"
 			-- Location switches
 
 	error_switch: STRING = "e|error"

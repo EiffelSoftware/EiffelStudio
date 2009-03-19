@@ -1,4 +1,8 @@
-<taglib name= "xeb">
-	<tag name="call" class="XEB_CALL_TAG">
-	<tag name="loop" class="XEB_LOOP_TAG">
+<taglib id= "xeb">
+	<tag id="call" class="XEB_CALL_TAG">
+		<attribute id="feature" call="True" />
+	</tag>
+	<tag id="loop" class="XEB_LOOP_TAG">
+		<attribute id="times" call="False" />
+	</tag>
 </taglib>

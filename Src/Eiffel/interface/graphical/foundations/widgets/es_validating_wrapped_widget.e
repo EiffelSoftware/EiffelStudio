@@ -93,7 +93,7 @@ feature -- Access
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
 		do
-			if attached {STRING_32} text_field.text as l_text then
+			if attached text_field.text as l_text then
 				Result := l_text
 			else
 				create Result.make_empty

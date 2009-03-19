@@ -13,7 +13,7 @@ deferred class
 inherit
 	ES_CONTRACT_EDITOR_CONTEXT [FEATURE_STONE]
 		redefine
-			internal_is_stone_usable
+			is_stone_usable_internal
 		end
 
 feature -- Access
@@ -105,7 +105,7 @@ feature {NONE} -- Contracts
 
 feature {NONE} -- Status report
 
-	internal_is_stone_usable (a_stone: attached like stone): BOOLEAN
+	is_stone_usable_internal (a_stone: attached like stone): BOOLEAN
 			-- <Precursor>
 		do
 			Result := Precursor {ES_CONTRACT_EDITOR_CONTEXT} (a_stone)

@@ -27,13 +27,13 @@ create {NONE}
 
 feature -- Access
 
-	icon: attached EV_PIXEL_BUFFER
+	icon: EV_PIXEL_BUFFER
 			-- <Precursor>
 		do
 			Result := stock_pixmaps.tool_output_icon_buffer
 		end
 
-	icon_pixmap: attached EV_PIXMAP
+	icon_pixmap: EV_PIXMAP
 			-- <Precursor>
 		do
 			Result := stock_pixmaps.tool_output_icon

@@ -114,14 +114,6 @@ feature {NONE} -- Query
 			Result := l_result
 		end
 
-feature -- Basic operations
-
-	activate
-			-- <Precursor>
-		do
-			check not_implemented: False end
-		end
-
 feature {NONE} -- Factory
 
 	new_widget (a_window: attached SHELL_WINDOW_I): attached ES_EDITOR_WIDGET

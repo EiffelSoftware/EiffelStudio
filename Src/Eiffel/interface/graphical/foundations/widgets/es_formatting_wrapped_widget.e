@@ -55,11 +55,18 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	predicate: attached PREDICATE [ANY, TUPLE [text: attached STRING_32]]
-			-- A predicate used to determine if the changed text is valid for the textable widget
-
-	format_function: detachable FUNCTION [ANY, TUPLE [attached STRING_32], attached STRING_32]
-			-- The optional function used to format the entered text
+	text: attached STRING_32 assign set_text
+			-- Actual text
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+		do
+			if attached widget.text as l_text then
+				Result := l_text
+			else
+				create Result.make_empty
+			end
+		end
 
 feature {NONE} -- Access
 
@@ -68,6 +75,29 @@ feature {NONE} -- Access
 
 	old_caret_position: INTEGER
 			-- The preserved old caret position of the set widget.
+
+feature -- Access: Validation and formatting
+
+	predicate: attached PREDICATE [ANY, TUPLE [text: attached STRING_32]]
+			-- A predicate used to determine if the changed text is valid for the textable widget
+
+	format_function: detachable FUNCTION [ANY, TUPLE [attached STRING_32], attached STRING_32]
+			-- The optional function used to format the entered text
+
+feature -- Element change
+
+	set_text (a_text: attached like text)
+			-- Set widget text.
+			--
+			-- `a_text': The new text to set.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+		do
+			widget.set_text (a_text)
+		ensure
+			text_set: text ~ a_text
+		end
 
 feature {NONE} -- Action handlers
 

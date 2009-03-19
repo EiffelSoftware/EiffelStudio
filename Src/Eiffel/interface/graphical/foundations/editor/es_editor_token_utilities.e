@@ -102,13 +102,13 @@ feature -- Status report
 						if a_ignore_case then
 							Result := a_token.wide_image.is_case_insensitive_equal (l_wide_string)
 						else
-							Result := a_token.wide_image.is_equal (l_wide_string)
+							Result := a_token.wide_image ~ l_wide_string
 						end
 					else
 						if a_ignore_case then
 							Result := a_token.wide_image.as_string_8.is_case_insensitive_equal (a_text.as_string_8)
 						else
-							Result := a_token.wide_image.as_string_8.is_equal (a_text.as_string_8)
+							Result := a_token.wide_image.as_string_8 ~ a_text.as_string_8
 						end
 					end
 				end

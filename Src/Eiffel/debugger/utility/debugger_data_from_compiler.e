@@ -188,8 +188,11 @@ feature -- Query
 							--| FIXME jfiat [2009/03/16] : we should cache `vis.object_test_locals', to avoid recomputation...
 						create type_vis
 						l_ast_context := ast_context
-						l_old_ast_context := l_ast_context.twin
-						l_ast_context.clear_all
+						if l_ast_context.current_class /= Void then
+							l_old_ast_context := l_ast_context.save
+						else
+							l_old_ast_context := l_ast_context.twin
+						end
 						if a_class_type = Void then
 							cl := a_feat.associated_class
 							l_cl_type_a := cl.actual_type
@@ -197,6 +200,7 @@ feature -- Query
 							cl := a_class_type.associated_class
 							l_cl_type_a := a_class_type.type
 						end
+						l_ast_context.clear_all
 						l_ast_context.initialize (cl, l_cl_type_a, cl.feature_table)
 						l_ast_context.set_current_feature (a_feat.associated_feature_i)
 						type_vis.init (l_ast_context)

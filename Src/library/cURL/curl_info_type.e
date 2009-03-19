@@ -38,13 +38,20 @@ feature -- Contract support
 	is_valid (a_type: INTEGER): BOOLEAN
 			-- If `a_type' valid?
 		do
-			Result := 	a_type = curlinfo_data_in or
-						a_type = curlinfo_data_out or
-						a_type = curlinfo_header_in or
-						a_type = curlinfo_header_out or
-						a_type = curlinfo_ssl_data_in or
-						a_type = curlinfo_ssl_data_out or
-						a_type = curlinfo_text
+			inspect a_type
+			when
+				curlinfo_data_in,
+				curlinfo_data_out,
+				curlinfo_header_in,
+				curlinfo_header_out,
+				curlinfo_ssl_data_in,
+				curlinfo_ssl_data_out,
+				curlinfo_text
+			then
+				Result := True
+			else
+				Result := False
+			end
 		end
 
 note

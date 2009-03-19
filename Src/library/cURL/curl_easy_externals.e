@@ -100,7 +100,7 @@ feature -- Command
 		require
 			exists: a_curl_handle /= default_pointer
 			valid: a_opt = {CURL_OPT_CONSTANTS}.curlopt_readdata
-			readable: a_file /= void and then a_file.file_readable
+			readable: a_file /= Void and then a_file.file_readable
 		do
 			setopt_void_star (a_curl_handle, a_opt, a_file.file_pointer)
 		end
@@ -135,6 +135,53 @@ feature -- Command
 		end
 
 feature -- Query
+
+	getinfo (a_curl_handle: POINTER; a_info: INTEGER; a_data: CELL [detachable ANY]): INTEGER
+			-- `curl_getinfo
+			--|* Request internal information from the curl session with this function.  The
+ 			--|* third argument MUST be a pointer to a long, a pointer to a char * or a
+ 			--|* pointer to a double (as the documentation describes elsewhere).  The data
+ 			--|* pointed to will be filled in accordingly and can be relied upon only if the
+ 			--|* function returns CURLE_OK.  This function is intended to get used *AFTER* a
+ 			--|* performed transfer, all results from this function are undefined until the
+ 			--|* transfer is completed.
+		require
+			exists: a_curl_handle /= default_pointer
+			valid: (create {CURL_INFO_CONSTANTS}).is_valid (a_info)
+		local
+			l_api: POINTER
+			mp: detachable MANAGED_POINTER
+			l: INTEGER
+			cs: C_STRING
+			d: REAL_64
+		do
+			a_data.replace (Void)
+			l_api := api_loader.safe_load_api (module_name, "curl_easy_getinfo")
+			if l_api /= default_pointer then
+				if a_info & {CURL_INFO_CONSTANTS}.curlinfo_long /= 0 then
+					create mp.make ({PLATFORM}.integer_32_bytes)
+				elseif a_info & {CURL_INFO_CONSTANTS}.curlinfo_string /= 0 then
+					create mp.make ({PLATFORM}.pointer_bytes)
+				elseif a_info & {CURL_INFO_CONSTANTS}.curlinfo_double /= 0 then
+					create mp.make ({PLATFORM}.real_64_bytes)
+				end
+				if mp /= Void then
+					Result := c_getinfo (l_api, a_curl_handle, a_info, mp.item)
+					if Result = {CURL_CODES}.curle_ok then
+						if a_info & {CURL_INFO_CONSTANTS}.curlinfo_long /= 0 then
+							l := mp.read_integer_32 (0)
+							a_data.put (l)
+						elseif a_info & {CURL_INFO_CONSTANTS}.curlinfo_string /= 0 then
+							create cs.make_shared_from_pointer (mp.read_pointer (0))
+							a_data.put (cs.string)
+						elseif a_info & {CURL_INFO_CONSTANTS}.curlinfo_double /= 0 then
+							d := mp.read_real_64 (0)
+							a_data.put (d)
+						end
+					end
+				end
+			end
+		end
 
 	is_dynamic_library_exists: BOOLEAN
 			-- If dll/so files exist?
@@ -334,6 +381,24 @@ feature {NONE} -- C externals
 												(CURLoption)$a_opt,
 												$a_data);			
 			}
+			]"
+		end
+
+	c_getinfo (a_api: POINTER; a_curl_handle: POINTER; a_opt: INTEGER; a_data: POINTER): INTEGER
+			-- C implementation of `curl_easy_getinfo'.
+			-- Declared as curl_easy_setopt ().
+		require
+			exists: a_api /= default_pointer
+			exists: a_curl_handle /= default_pointer
+			valid: (create {CURL_OPT_CONSTANTS}).is_valid (a_opt)
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"[
+				return (FUNCTION_CAST(CURLcode, (CURL *, CURLINFO info, ...)) $a_api)
+												((CURL *) $a_curl_handle,
+												(CURLINFO)$a_opt,
+												$a_data);
 			]"
 		end
 

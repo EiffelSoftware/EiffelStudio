@@ -21,19 +21,17 @@ feature -- Basic Operations
 			not_a_source_id_is_empty: not a_source_id.is_empty
 			a_error_positive: a_error > 0
 		local
-			l_then: NATURAL_64
-			l_now: NATURAL_64
 			l_ticks: REAL_64
 			i: INTEGER
 		do
-			l_then := c_ticks
+			start_time.make_now
 			from i := 0 until i = a_error loop
 				a_parser.parse (a_source)
 				i := i + 1
 			end
-			l_now := c_ticks
-			l_ticks := ((l_now - l_then) / a_error)
-			create Result.make (a_source_id, l_ticks.max (1), a_parser.successful, a_parser.identity)
+			end_time.make_now
+			l_ticks := (end_time.relative_duration (start_time).fine_seconds_count) / a_error
+			create Result.make (a_source_id, l_ticks, a_parser.successful, a_parser.identity)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -48,52 +46,32 @@ feature -- Basic Operations
 			a_fn_exists: (create {RAW_FILE}.make (a_fn)).exists
 			a_error_positive: a_error > 0
 		local
-			l_then: NATURAL_64
-			l_now: NATURAL_64
 			l_ticks: REAL_64
 			i: INTEGER
 		do
-			l_then := c_ticks
+			start_time.make_now
 			from i := 0 until i = a_error loop
 				a_parser.parse_file (a_fn)
 				i := i + 1
 			end
-			l_now := c_ticks
-			l_ticks := ((l_now - l_then) / a_error)
-			create Result.make (a_fn, l_ticks.max (1), a_parser.successful, a_parser.identity)
+			end_time.make_now
+			l_ticks := (end_time.relative_duration (start_time).fine_seconds_count) / a_error
+			create Result.make (a_fn, l_ticks, a_parser.successful, a_parser.identity)
 		ensure
 			result_attached: Result /= Void
 		end
 
-feature {NONE} -- Externals
+feature {NONE} -- Timing
 
-	c_ticks: NATURAL_64
-		external
-			"C inline use %"time.h%""
-		alias
-			"[
-				clock_t t = clock();
-				return (unsigned long) (long)t;
-			]"
-		end
-
-	c_ticks_per_millisecond: NATURAL_64
-		external
-			"C inline use %"time.h%""
-		alias
-			"[
-				#ifdef CLK_TCK
-						// Deprecated in some systems.
-					return (unsigned long) ((long)CLK_TCK / 1000L);
-				#else
-					return (unsigned long) ((long)CLOCKS_PER_SEC / 1000L);
-				#endif
-			]"
+	start_time, end_time: TIME
+			-- Time used for computation
+		once
+			create Result.make_now
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
@@ -105,22 +83,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class {EIFFEL_PARSER_TESTER}

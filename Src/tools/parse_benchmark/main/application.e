@@ -34,30 +34,33 @@ feature -- Initialization
 			l_writer: IO_MEDIUM
 		do
 			l_writer := io.default_output
-			l_writer.put_string ("Caching parsers...%N%N")
+			l_writer.put_string ("Caching parsers...%N")
 
 			create l_parsers.make (4)
 			if a_parser.process_null_factory then
 				create l_parser.make ("null", create {AST_NULL_FACTORY})
+				initialize_parser (a_parser, l_parser)
 				l_parsers.extend (l_parser)
 			end
 			if a_parser.process_basic_factory then
 				create l_parser.make ("basic", create {AST_FACTORY})
+				initialize_parser (a_parser, l_parser)
 				l_parsers.extend (l_parser)
 			end
 			if a_parser.process_lite_factory then
 				create l_parser.make ("lite", create {AST_ROUNDTRIP_LIGHT_FACTORY})
+				initialize_parser (a_parser, l_parser)
 				l_parsers.extend (l_parser)
 			end
 			if a_parser.process_roundtrip_factory then
 				create l_parser.make ("roundtrip", create {AST_ROUNDTRIP_FACTORY})
+				initialize_parser (a_parser, l_parser)
 				l_parsers.extend (l_parser)
 			end
 
 				-- Retrieve file(s) to parse
 			if not a_parser.use_file_location then
 				l_writer.put_string ("Generating file list...")
-				l_writer.new_line
 				l_writer.new_line
 				l_files := directory_content (a_parser.location, a_parser.recursive_lookup)
 			else
@@ -68,19 +71,7 @@ feature -- Initialization
 			if not l_parsers.is_empty then
 				if not l_files.is_empty then
 					l_error := a_parser.error_count
-					l_writer.put_string ("Results are formatted in the form of:%N")
-					l_writer.put_string ("  Test: <file_name>%N")
-					l_writer.put_string ("  <parser>: <speed in ticks> : <frozen speed in ticks> (<parse successful>)%N%N")
-
-					l_writer.put_string ("Tesing parameters: using ")
-					l_writer.put_string ("parser, ")
-					l_writer.put_string ("parsing ")
-					if a_parser.test_disk_access then
-						l_writer.put_string ("disk access and")
-					end
-					l_writer.put_string ("content.%N%N")
-
-					l_writer.put_string ("Beginning speed bench marks...%N%N")
+					l_writer.put_string ("Starting benchmarks...%N")
 					test_parsers (l_parsers, l_files, l_error, a_parser.test_disk_access, l_writer)
 				else
 					l_writer.put_string ("No files selected!")
@@ -93,6 +84,21 @@ feature -- Initialization
 		end
 
 feature {NONE} -- Testing
+
+	initialize_parser (a_arg_parser: ARGUMENT_PARSER; a_parser: TEST_EIFFEL_PARSER)
+			-- Set some properties on the parser.
+		require
+			a_arg_parser_attached: a_arg_parser /= Void
+			a_parser_attached: a_parser /= Void
+		do
+			if a_arg_parser.process_obsolete_syntax then
+				a_parser.set_syntax_level ({EIFFEL_PARSER}.obsolete_64_syntax)
+			elseif a_arg_parser.process_standard_syntax then
+				a_parser.set_syntax_level ({EIFFEL_PARSER}.ecma_syntax)
+			else
+				a_parser.set_syntax_level ({EIFFEL_PARSER}.transitional_64_syntax)
+			end
+		end
 
 	test_parsers (a_parsers: LIST [TEST_EIFFEL_PARSER]; a_fns: LIST [STRING]; a_error: NATURAL_8; a_disk: BOOLEAN; a_writer: IO_MEDIUM)
 			-- Tests all parsers in `a_parsers' with file `a_fn'
@@ -107,6 +113,7 @@ feature {NONE} -- Testing
 		local
 			l_cursor: CURSOR
 			l_results: like test_parsers_with_file
+			l_stats: ARRAYED_LIST [TUPLE [label, value, success: STRING]]
 			l_result: PARSE_TEST_RESULT
 			l_times: HASH_TABLE [REAL_64, STRING]
 			l_ftimes: HASH_TABLE [REAL_64, STRING]
@@ -123,22 +130,31 @@ feature {NONE} -- Testing
 				create l_failures.make (a_fns.count)
 			end
 
-			l_cursor := a_fns.cursor
-			from a_fns.start until a_fns.after loop
+			if a_fns.count >= 1 then
 					-- Run pretest. This is for .NET systems to ensure that the information is cached.
 					-- This pretest has to be run for every test to ensure all code executed prior to the
 					-- actual test has been jitted.
-				l_results := test_parsers_with_file (a_parsers, a_fns.item, 1, a_disk)
+				l_results := test_parsers_with_file (a_parsers, a_fns.first, 1, a_disk)
+			end
 
+			l_cursor := a_fns.cursor
+			from
+				a_fns.start
+			until
+				a_fns.after
+			loop
 				l_results := test_parsers_with_file (a_parsers, a_fns.item, a_error, a_disk)
-				write_test_results (a_writer, l_results)
-				if not a_fns.islast then
-					a_writer.new_line
-				end
-				a_fns.forth
-
-				if l_summarize then
-					from l_results.start until l_results.after loop
+				if not l_summarize then
+					write_test_results (a_writer, l_results)
+					if not a_fns.islast then
+						a_writer.new_line
+					end
+				else
+					from
+						l_results.start
+					until
+						l_results.after
+					loop
 						l_result := l_results.item
 						l_id := l_result.parser_id
 						l_times.force (l_times[l_id] + l_result.completion_ticks, l_id)
@@ -150,48 +166,47 @@ feature {NONE} -- Testing
 						l_results.forth
 					end
 				end
+				a_fns.forth
 			end
 			a_fns.go_to (l_cursor)
 
 			if l_summarize then
 				a_writer.new_line
-				a_writer.new_line
 				a_writer.put_string ("Summary Information:")
-				a_writer.new_line
-				a_writer.new_line
 
+				create l_stats.make (l_results.count)
 					-- Total result time
 				from l_results.start until l_results.after loop
 					l_result := l_results.item
-					l_id := l_result.parser_id
-					l_results.put (create {PARSE_TEST_RESULT}.make ("summary_1", l_times[l_id], l_result.successful, l_result.parser_id))
+					l_stats.extend ([l_result.parser_id, l_times [l_result.parser_id].out, Void])
 					l_results.forth
 				end
 				a_writer.new_line
 				a_writer.put_string ("Total time taken")
-				write_results (a_writer, l_results, False)
+				write_results (a_writer, l_stats)
 
 					-- Mean result times
+				l_stats.wipe_out
 				from l_results.start until l_results.after loop
 					l_result := l_results.item
-					l_results.put (create {PARSE_TEST_RESULT}.make ("summary_2", (l_result.completion_ticks / a_fns.count), l_result.successful, l_result.parser_id))
+					l_stats.extend ([l_result.parser_id, (l_result.completion_ticks / a_fns.count).out, Void])
 					l_results.forth
 				end
 				a_writer.new_line
 				a_writer.put_string ("Mean time")
-				write_results (a_writer, l_results, False)
+				write_results (a_writer, l_stats)
 
 					-- Successes/Failures
+				l_stats.wipe_out
 				from l_results.start until l_results.after loop
 					l_result := l_results.item
 					l_id := l_result.parser_id
-					l_results.put (create {PARSE_TEST_RESULT}.make ("summary_3", l_successes[l_id], l_result.successful, l_result.parser_id))
-					l_results.item.set_frozen_completion_ticks (l_failures[l_id])
+					l_stats.extend ([l_result.parser_id, l_successes[l_id].out + "/" + l_failures [l_id].out, Void])
 					l_results.forth
 				end
 				a_writer.new_line
 				a_writer.put_string ("Successes/Failures")
-				write_results (a_writer, l_results, True)
+				write_results (a_writer, l_stats)
 			end
 		end
 
@@ -237,14 +252,18 @@ feature {NONE} -- Reporting
 			a_writer_writable: a_writer.is_open_write
 			a_results_attached: a_results /= Void
 			not_a_results_is_empty: not a_results.is_empty
+		local
+			l_stats: ARRAYED_LIST [TUPLE [label, value, success: STRING]]
 		do
 			a_writer.put_string (once "Test: ")
 			a_writer.put_string (a_results.first.file_name)
 
-			write_results (a_writer, a_results, True)
+			create l_stats.make (1)
+			l_stats.extend ([a_results.first.parser_id, a_results.first.completion_ticks.out, "(" + a_results.first.successful.out + ")"])
+			write_results (a_writer, l_stats)
 		end
 
-	write_results (a_writer: IO_MEDIUM; a_results: LIST [PARSE_TEST_RESULT]; a_show_success: BOOLEAN)
+	write_results (a_writer: IO_MEDIUM; a_results: LIST [TUPLE [label, value, success: STRING]])
 			-- Writes test results in `a_results' to `a_writer'
 		require
 			a_writer_attached: a_writer /= Void
@@ -253,7 +272,7 @@ feature {NONE} -- Reporting
 			not_a_results_is_empty: not a_results.is_empty
 		local
 			l_cursor: CURSOR
-			l_result: PARSE_TEST_RESULT
+			l_result: TUPLE [label, value, success: STRING]
 			l_max_pad: INTEGER
 			l_pad: INTEGER
 		do
@@ -261,19 +280,18 @@ feature {NONE} -- Reporting
 			l_cursor := a_results.cursor
 			from a_results.start until a_results.after loop
 				l_result := a_results.item
-			a_writer.new_line
-			a_writer.put_string (once "  > ")
-				a_writer.put_string (l_result.parser_id)
-				l_pad := l_max_pad - l_result.parser_id.count
+				a_writer.new_line
+				a_writer.put_string (once "  > ")
+				a_writer.put_string (l_result.label)
+				l_pad := l_max_pad - l_result.label.count
 				if l_pad > 0 then
 					a_writer.put_string (create {STRING}.make_filled (' ', l_pad))
 				end
 				a_writer.put_string (once ": ")
-				a_writer.put_real (l_result.completion_ticks)
-				if a_show_success then
-					a_writer.put_string (once " (")
-					a_writer.put_boolean (l_result.successful)
-					a_writer.put_character (')')
+				a_writer.put_string (l_result.value)
+				if l_result.success /= Void then
+					a_writer.put_string (" ")
+					a_writer.put_string (l_result.success)
 				end
 				a_results.forth
 			end
@@ -295,6 +313,7 @@ feature {NONE} -- Implementation
 			create l_file.make_open_read (a_fn)
 			l_file.read_stream (l_file.count)
 			Result := l_file.last_string
+			l_file.close
 		ensure
 			result_attached: Result /= Void
 		end
@@ -355,7 +374,7 @@ feature {NONE} -- Implementation
 --			result_contains_e_files: Result.for_all (agent (a_item: STRING) do a_item.substring (a_item.count - 1, a_item.count).as_lower.is_equal (once ".e") end)
 		end
 
-	parser_id_max_len (a_results: LIST [PARSE_TEST_RESULT]): INTEGER
+	parser_id_max_len (a_results: LIST [TUPLE [label: STRING]]): INTEGER
 			-- Retrieve maximum parser id length from `a_results'
 		require
 			a_results_attached: a_results /= Void
@@ -368,7 +387,7 @@ feature {NONE} -- Implementation
 			if l_cache = Void then
 				l_cursor := a_results.cursor
 				from a_results.start until a_results.after loop
-					Result := Result.max (a_results.item.parser_id.count)
+					Result := Result.max (a_results.item.label.count)
 					a_results.forth
 				end
 				a_results.go_to (l_cursor)
@@ -395,8 +414,8 @@ feature {NONE} -- Internal implementation cache
 			-- Note: Do not use directly!
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
@@ -408,22 +427,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class {APPLICATION}

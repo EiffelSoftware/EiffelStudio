@@ -1,0 +1,24 @@
+test_name 	finalize-creation-expression-corruption
+test_description Finalizing a system with a call to a creation expression whose arguments reuse the target could override the value of the target before it is used as argument in the creation expression.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+execute_work	NONE exec_output1
+execute_result	ok
+compare		exec_output1 output
+
+compile_final
+compile_result 	ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final 	NONE exec_output2
+execute_result 	ok
+compare		exec_output2 output
+
+test_end

@@ -127,6 +127,12 @@ feature {NONE} -- Initialization
 				--| Show logger tool
 			create l_menu_item.make_with_text_and_action ("Show Logger Tool", agent on_show_logger_tool)
 			a_menu.extend (l_menu_item)
+
+			if (create {SERVICE_CONSUMER [OUTPUT_MANAGER_S]}).is_service_available then
+					--| Show logger tool
+				create l_menu_item.make_with_text_and_action ("Show Outputs Tool (Experimental)", agent on_show_outputs_tool)
+				a_menu.extend (l_menu_item)
+			end
 		end
 
 	build_services_sub_menu (a_menu: attached EV_MENU)
@@ -269,6 +275,12 @@ feature {NONE} -- Actions
 			window_manager.last_focused_development_window.shell_tools.show_tool ({ES_LOGGER_TOOL}, True)
 		end
 
+	on_show_outputs_tool
+			-- Shows the integrated memory tool
+		do
+			window_manager.last_focused_development_window.shell_tools.show_tool ({ES_OUTPUTS_TOOL}, True)
+		end
+
 	on_generate_uuid
 			-- Launch UUID generator
 		local
@@ -312,13 +324,13 @@ feature {NONE} -- Actions
 		do
 			if not eiffel_project.is_compiling then
 					-- Do not process this whilst compiling
-				if 
+				if
 					attached window_manager.last_focused_development_window as l_window and then
-					l_window.is_interface_usable 
+					l_window.is_interface_usable
 				then
-					if 
-						attached active_editor as l_editor and then 
-						attached {CLASSI_STONE} l_editor.stone as l_class 
+					if
+						attached active_editor as l_editor and then
+						attached {CLASSI_STONE} l_editor.stone as l_class
 					then
 							-- We have the class stone
 						if attached l_class.class_i as l_class_i then
@@ -352,10 +364,10 @@ feature {NONE} -- Actions
 						if attached l_window.editors_manager.editors as l_editors then
 							create l_classes.make (256)
 							from l_editors.start until l_editors.after loop
-								if 
+								if
 									attached l_editors.item as l_editor and then
-									l_editor.is_interface_usable and then 
-									attached {CLASSI_STONE} l_editor.stone as l_class 
+									l_editor.is_interface_usable and then
+									attached {CLASSI_STONE} l_editor.stone as l_class
 								then
 										-- We have the class stone
 									if attached l_class.class_i as l_class_i then

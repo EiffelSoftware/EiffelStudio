@@ -1,1 +1,0 @@
-apxs2 -c -I$EIFFEL_SRC/C/run-time -I$EIFFEL_SRC/C/run-time/include mod_xebra.c mod_xebra.h

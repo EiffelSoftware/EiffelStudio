@@ -69,7 +69,7 @@ feature {NONE} -- Implementation
 	c_prof_enabled: INTEGER
 			-- C variables which gives the status on the profiler.
 		external
-			"C [macro %"eif_project.h%"]"
+			"C macro use %"eif_project.h%""
 		alias
 			"egc_prof_enabled"
 		end
@@ -77,7 +77,7 @@ feature {NONE} -- Implementation
 	set_prof_enabled
 			-- Enable profiler.
 		external
-			"C [macro %"eif_eiffel.h%"]"
+			"C macro use %"eif_eiffel.h%""
 		alias
 			"egc_prof_enabled = 3"
 		end
@@ -85,7 +85,7 @@ feature {NONE} -- Implementation
 	set_prof_disabled
 			-- Disable profiler.
 		external
-			"C [macro %"eif_eiffel.h%"]"
+			"C macro use %"eif_eiffel.h%""
 		alias
 			"egc_prof_enabled = 0"
 		end

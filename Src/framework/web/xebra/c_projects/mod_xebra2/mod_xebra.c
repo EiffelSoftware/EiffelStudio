@@ -46,15 +46,11 @@ static int read_from_POST (request_rec* r, char **buf)
 		bytes = MAX_SIZE;
 	}
 
-	DEBUG2 ("create brigades");
-
 	bb = apr_brigade_create (r->pool, r->connection->bucket_alloc);
 	bbin = apr_brigade_create (r->pool, r->connection->bucket_alloc);
 	count = 0;
 
 	do {
-
-		DEBUG2 ("do");
 
 		rv = ap_get_brigade (r->input_filters, bbin, AP_MODE_READBYTES,
 				APR_BLOCK_READ, bytes);
@@ -109,8 +105,6 @@ static int read_from_POST (request_rec* r, char **buf)
 		}
 	} while (!eos);
 
-	DEBUG2 ("end while");
-
 	/* done with data, kill request if too much data */
 	if (count > MAX_SIZE) {
 		ap_log_rerror (APLOG_MARK, APLOG_ERR, rv, r,
@@ -127,6 +121,16 @@ static int read_from_POST (request_rec* r, char **buf)
 	}
 	(*buf)[count] = '\0';
 	return OK;
+}
+
+char *table_buf;
+
+static int print_item (void* rec, const char *key, const char *value)
+{
+	request_rec* r = rec;
+	table_buf
+			= apr_pstrcat (r->pool, table_buf, "#$#", key, "#&#", value, NULL);
+	return 1;
 }
 
 static int xebra_handler (request_rec* r)
@@ -154,40 +158,34 @@ static int xebra_handler (request_rec* r)
 
 	ap_set_content_type (r, "text/html;charset=ascii");
 
+	message = apr_pstrcat (r->pool, r->the_request, NULL);
+
+	/* Read headers into message buffer */
+	DEBUG2 ("Reading in headers...");
+	apr_table_do (print_item, r, r->headers_in, NULL);
+	apr_table_do (print_item, r, r->headers_out, NULL);
+	apr_table_do (print_item, r, r->subprocess_env, NULL);
+	message = apr_pstrcat (r->pool, message, "#HEADERS#", table_buf, NULL);
+
+	/* If there are, read POST parameters into message buffer */\
+
 	if (r->method_number == M_POST) {
-		ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r, "it is post");
+		DEBUG2 ("Reading POST parameters...")
 		const char* ctype = apr_table_get (r->headers_in, "Content-Type");
 
 		if (ctype && (strcasecmp (ctype, "application/x-www-form-urlencoded")
 				== 0)) {
-			ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r, "reading....");
 			rv = read_from_POST (r, &post_buf);
-			ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r, "read");
-
-		} else {
-			ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r, "not good ctype");
 		}
-
 		if (rv != OK) {
-			// ap_rputs ("Error reading from data!",r);
+			ap_rputs ("Error reading from data!", r);
 			return rv;
 		}
-
-		message = apr_palloc (r->pool, strlen (post_buf) + strlen (
-				r->the_request) + 1);
-		//	message = apr_pstrcat (r->pool, r->the_request, post_buf);
-
-
-		// message = apr_palloc (r->pool, strlen(post_buf) + strlen(r->the_request) +1 );
-		strcpy (message, "");
-		strcat (message, r->the_request);
-		strcat (message, post_buf);
-		//memcpy (*msg_buf + msg_buf_strlength, frag_buf, numbytes);
-
-
-	} else {
-		message = r->the_request;
+		message = apr_pstrcat (r->pool, message, "#POSTPARAM#", post_buf, NULL);
 	}
+
+	//ap_rputs (message, r);
+
 
 	/* set up connection to server */
 	DEBUG ("Setting up connection.\n");

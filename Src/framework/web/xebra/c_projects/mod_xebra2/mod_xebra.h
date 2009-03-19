@@ -32,10 +32,10 @@
 
 /*======= DEBUG MACRO ======= */
 #ifdef DO_DEBUG
-	#define DEBUG(...) ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r, __VA_ARGS__);
+	#define DEBUG(...) ap_log_rerror (APLOG_MARK, APLOG_DEBUG, 0, r, __VA_ARGS__);
 
 	#ifdef DO_DEBUG2
-		#define DEBUG2(...) ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r, __VA_ARGS__);
+		#define DEBUG2(...) ap_log_rerror (APLOG_MARK, APLOG_DEBUG, 0, r, __VA_ARGS__);
 	#else
 		#define DEBUG2(...)
 	#endif

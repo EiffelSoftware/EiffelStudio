@@ -15,7 +15,7 @@ feature -- Measurement
 			-- Size of the object_id stack in chunks
 			--| a chunk contains 1000 elements
 		external
-			"C | %"eif_object_id.h%""
+			"C use %"eif_object_id.h%""
 		alias
 			"eif_object_id_stack_size"
 		end
@@ -28,7 +28,7 @@ feature -- Status setting
 		require
 			positive_nb: nb_chunks > 0 
 		external
-			"C | %"eif_object_id.h%""
+			"C use %"eif_object_id.h%""
 		alias
 			"eif_extend_object_id_stack"
 		end
